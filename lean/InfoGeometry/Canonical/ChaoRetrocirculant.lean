@@ -33,6 +33,21 @@ def IsFixed {n : ℕ} (σ : FinPerm n) (i : Fin n) : Prop :=
 def IsTwoCycle {n : ℕ} (σ : FinPerm n) (i j : Fin n) : Prop :=
   i ≠ j ∧ σ i = j ∧ σ j = i
 
+/--
+An additive permutation of the cyclic index monoid `Fin n`.
+
+This is the concrete algebraic content of the additive-automorphism
+hypothesis in Chao's permutation theorem.  The additive equivalence is a
+Mathlib owner of both the homomorphism law and bijectivity; the final equality
+identifies its underlying permutation with `σ`.
+-/
+def IsAdditivePermutation {n : ℕ} (σ : FinPerm n) : Prop :=
+  ∃ e : AddEquiv (Fin n) (Fin n), ∀ i : Fin n, e i = σ i
+
+/-- Matrix of a finite permutation acting on coordinate vectors. -/
+def permutationMatrix {n : ℕ} (σ : FinPerm n) : Matrix (Fin n) (Fin n) ℂ :=
+  fun i j => if σ j = i then 1 else 0
+
 /-- Entrywise Fourier-side retrocirculant normal form `Pσ D`. -/
 def retroEntry {n : ℕ} (σ : FinPerm n) (μ : Fin n → ℂ) (r c : Fin n) : ℂ :=
   if σ c = r then μ c else 0
@@ -100,25 +115,34 @@ theorem twoCycle_root_of_sq_eq_mul {a b lam : ℂ} (h : lam ^ 2 = a * b) :
 /-- Fourier commutation certificate from Chao Theorem 1. -/
 structure FourierPermutationCommutationCertificate (n : ℕ) where
   σ : FinPerm n
-  isAdditiveAutomorphism : Prop
+  isAdditiveAutomorphism : IsAdditivePermutation σ
   orderTwo : IsInvolution σ
-  commutesWithFourier : Prop
-  theorem1_forward : commutesWithFourier → isAdditiveAutomorphism ∧ IsInvolution σ
-  theorem1_backward : isAdditiveAutomorphism ∧ IsInvolution σ → commutesWithFourier
+  fourierMatrix : Matrix (Fin n) (Fin n) ℂ
+  commutesWithFourier :
+    permutationMatrix σ * fourierMatrix = fourierMatrix * permutationMatrix σ
+  theorem1_forward :
+    (permutationMatrix σ * fourierMatrix = fourierMatrix * permutationMatrix σ) →
+      IsAdditivePermutation σ ∧ IsInvolution σ
+  theorem1_backward :
+    IsAdditivePermutation σ ∧ IsInvolution σ →
+      permutationMatrix σ * fourierMatrix = fourierMatrix * permutationMatrix σ
 
 namespace FourierPermutationCommutationCertificate
 
 variable {n : ℕ} (C : FourierPermutationCommutationCertificate n)
 
 /-- Chao Theorem 1 forward readout. -/
-theorem automorphism_and_orderTwo_of_commutes (h : C.commutesWithFourier) :
-    C.isAdditiveAutomorphism ∧ IsInvolution C.σ :=
+theorem automorphism_and_orderTwo_of_commutes
+    (h : permutationMatrix C.σ * C.fourierMatrix =
+      C.fourierMatrix * permutationMatrix C.σ) :
+    IsAdditivePermutation C.σ ∧ IsInvolution C.σ :=
   C.theorem1_forward h
 
 /-- Chao Theorem 1 backward readout. -/
 theorem commutes_of_automorphism_and_orderTwo
-    (h : C.isAdditiveAutomorphism ∧ IsInvolution C.σ) :
-    C.commutesWithFourier :=
+    (h : IsAdditivePermutation C.σ ∧ IsInvolution C.σ) :
+    permutationMatrix C.σ * C.fourierMatrix =
+      C.fourierMatrix * permutationMatrix C.σ :=
   C.theorem1_backward h
 
 end FourierPermutationCommutationCertificate
@@ -132,11 +156,19 @@ structure ChaoRetrocirculantSpectralCertificate (n : ℕ) where
   fixed_eigenvalue : ∀ k : Fin n, IsFixed σ k → isEigenvalue (μ k)
   twoCycle_eigenvalue : ∀ i j : Fin n, IsTwoCycle σ i j →
     ∀ lam : ℂ, lam ^ 2 = μ i * μ j → isEigenvalue lam
-  cp_same_spectrum : Prop
+  /-- The permutation/circulant products have the same characteristic polynomial. -/
+  cp_same_spectrum :
+    Matrix.charpoly (permutationMatrix σ * Matrix.diagonal μ) =
+      Matrix.charpoly (Matrix.diagonal μ * permutationMatrix σ)
 
 namespace ChaoRetrocirculantSpectralCertificate
 
 variable {n : ℕ} (S : ChaoRetrocirculantSpectralCertificate n)
+
+theorem cp_same_spectrum_holds :
+    Matrix.charpoly (permutationMatrix S.σ * Matrix.diagonal S.μ) =
+      Matrix.charpoly (Matrix.diagonal S.μ * permutationMatrix S.σ) := by
+  exact Matrix.charpoly_mul_comm _ _
 
 /-- Fixed points contribute eigenvalue `μ k`. -/
 theorem fixed_readout {k : Fin n} (hk : IsFixed S.σ k) :

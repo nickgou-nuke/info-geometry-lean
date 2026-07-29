@@ -23,11 +23,11 @@ the anomaly/projector obstruction, so downstream callers can route through a
 single constructive witness instead of threading a bare `(hA, hAMP, hAD)`
 triple.
 -/
-structure KKTWingWitness
-    (X : InfoGeometry.Quantum.RealSplitCl11Action E) where
-  hA : InfoGeometry.Canonical.KKTCore.IsGOne X CI.A
-  hAMP : InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_MP
-  hAD : InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_D
+abbrev KKTWingWitness
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E) : Prop :=
+  InfoGeometry.Canonical.KKTCore.IsGOne X CI.A ∧
+    InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_MP ∧
+      InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_D
 
 /-- Canonical obstruction operator: the spectral/metric projector commutator. -/
 noncomputable abbrev projectorObstruction : E →L[ℝ] E :=
@@ -66,7 +66,7 @@ theorem projectorObstruction_isGZero_of_kktWingWitness
     (W : CI.KKTWingWitness X) :
     InfoGeometry.Canonical.KKTCore.IsGZero X CI.projectorObstruction := by
   exact
-    CI.projectorObstruction_isGZero_of_kkt_wings X W.hA W.hAMP W.hAD
+    CI.projectorObstruction_isGZero_of_kkt_wings X W.1 W.2.1 W.2.2
 
 theorem projectorObstruction_gOnePart_eq_zero_of_kkt_wings
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
@@ -88,7 +88,7 @@ theorem projectorObstruction_gOnePart_eq_zero_of_kktWingWitness
     (W : CI.KKTWingWitness X) :
     InfoGeometry.Canonical.KKTCore.gOnePart X CI.projectorObstruction = 0 := by
   exact
-    CI.projectorObstruction_gOnePart_eq_zero_of_kkt_wings X W.hA W.hAMP W.hAD
+    CI.projectorObstruction_gOnePart_eq_zero_of_kkt_wings X W.1 W.2.1 W.2.2
 
 theorem projectorObstruction_gNegOnePart_eq_zero_of_kkt_wings
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
@@ -110,7 +110,7 @@ theorem projectorObstruction_gNegOnePart_eq_zero_of_kktWingWitness
     (W : CI.KKTWingWitness X) :
     InfoGeometry.Canonical.KKTCore.gNegOnePart X CI.projectorObstruction = 0 := by
   exact
-    CI.projectorObstruction_gNegOnePart_eq_zero_of_kkt_wings X W.hA W.hAMP W.hAD
+    CI.projectorObstruction_gNegOnePart_eq_zero_of_kkt_wings X W.1 W.2.1 W.2.2
 
 theorem projectorObstruction_eq_diagonal_blocks_of_kkt_wings
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
@@ -140,7 +140,7 @@ theorem projectorObstruction_eq_diagonal_blocks_of_kktWingWitness
         + InfoGeometry.Canonical.KKTCore.minusProjector X * CI.projectorObstruction
           * InfoGeometry.Canonical.KKTCore.minusProjector X := by
   exact
-    CI.projectorObstruction_eq_diagonal_blocks_of_kkt_wings X W.hA W.hAMP W.hAD
+    CI.projectorObstruction_eq_diagonal_blocks_of_kkt_wings X W.1 W.2.1 W.2.2
 
 theorem projectorObstruction_plusProjector_mul_mul_minusProjector_eq_zero_of_kkt_wings
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
@@ -680,7 +680,7 @@ theorem squashedProjectorObstruction_isGZero_of_kktWingWitness
     (W : CI.KKTWingWitness X) :
     InfoGeometry.Canonical.KKTCore.IsGZero X CI.squashedProjectorObstruction := by
   exact
-    CI.squashedProjectorObstruction_isGZero_of_kkt_wings X W.hA W.hAMP W.hAD
+    CI.squashedProjectorObstruction_isGZero_of_kkt_wings X W.1 W.2.1 W.2.2
 
 /--
 The bounded squashed obstruction remains block-diagonal in the KKT split.

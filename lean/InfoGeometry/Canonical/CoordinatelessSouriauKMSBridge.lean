@@ -38,13 +38,14 @@ local notation "Obs" => AlgebraEnd H
 /--
 Coordinate-free algebraic state on the observable algebra.
 
-`positive` and `normalized` are kept as explicit predicates because the current
-repo does not provide a full C*-positive cone for arbitrary `AlgebraEnd H`.
+Positivity is the native algebraic-state condition on noncommutative squares:
+`ω(A⋆A) ≥ 0`.  It is stated before any trace, density-matrix, or coordinate
+readout.
 -/
 @[rep_depth operator]
 structure AlgebraicState where
-  functional : Obs → ℝ
-  positive : Prop
+  functional : Obs →ₗ[ℝ] ℝ
+  positive : ∀ A : Obs, 0 ≤ functional (star A * A)
   normalized : functional 1 = 1
 
 namespace AlgebraicState
@@ -53,6 +54,13 @@ namespace AlgebraicState
 
 theorem normalized_eq_one (s : AlgebraicState (H := H)) : s.functional 1 = 1 :=
   s.normalized
+
+/-- An algebraic state is nonnegative on every noncommutative square `A⋆A`. -/
+@[rep_depth operator]
+theorem eval_star_mul_self_nonneg
+    (s : AlgebraicState (H := H)) (A : Obs) :
+    0 ≤ s.functional (star A * A) :=
+  s.positive A
 
 variable (ω : AlgebraicState (H := H))
 

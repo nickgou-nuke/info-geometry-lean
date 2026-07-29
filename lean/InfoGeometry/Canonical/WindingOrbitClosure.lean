@@ -617,22 +617,29 @@ vanishes by the real even/odd intersection rule.
 -/
 theorem modularTransportGenerator_commutator_clockAxis_eq_zero_of_cartanDualGrade
     (hMod : EndH)
-    (D : InfoGeometry.Core.SymmetricLieAlgebra.CartanPhaseAxisForcingData EndH)
-    (hK :
-      D.K =
-        InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-    (hI : D.I = clockAxis H)
-    (hEven : ⁅D.K, D.I⁆ ∈ D.S.𝔨) :
+    (S : InfoGeometry.Core.SymmetricLieAlgebra EndH)
+    (hK_odd :
+      InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod
+        ∈ S.𝔭)
+    (hI_even : clockAxis H ∈ S.𝔨)
+    (hEven :
+      ⁅InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod,
+          clockAxis H⁆ ∈ S.𝔨) :
     InfoGeometry.Canonical.BogoliubovTransport.transportCommutator (E := H)
       (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
       (clockAxis H)
       = 0 := by
   have hZero :
-      ⁅D.K, D.I⁆ = 0 :=
+      ⁅InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod,
+          clockAxis H⁆ = 0 :=
     InfoGeometry.Core.SymmetricLieAlgebra.commutator_KI_eq_zero_of_dual_grade_forcing
-      D hEven
-  simpa [InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator,
-    hK, hI] using hZero
+      S
+      (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
+      (clockAxis H)
+      hK_odd
+      hI_even
+      hEven
+  simpa [InfoGeometry.Canonical.BogoliubovTransport.lieBracket_eq_transportCommutator] using hZero
 
 theorem modularTransportGenerator_commutator_clockAxis_eq_zero_of_scalePart_eq_zero
     (hMod : EndH)
@@ -703,18 +710,20 @@ the winding periodicity owner theorem.
 -/
 theorem modularTransportGenerator_commutes_clockAxis_of_cartanDualGrade
     (hMod : EndH)
-    (D : InfoGeometry.Core.SymmetricLieAlgebra.CartanPhaseAxisForcingData EndH)
-    (hK :
-      D.K =
-        InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-    (hI : D.I = clockAxis H)
-    (hEven : ⁅D.K, D.I⁆ ∈ D.S.𝔨) :
+    (S : InfoGeometry.Core.SymmetricLieAlgebra EndH)
+    (hK_odd :
+      InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod
+        ∈ S.𝔭)
+    (hI_even : clockAxis H ∈ S.𝔨)
+    (hEven :
+      ⁅InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod,
+          clockAxis H⁆ ∈ S.𝔨) :
     Commute
       (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
       (clockAxis H) := by
   exact (nonEquilibriumClockDefect_eq_zero_iff_commute (H := H) hMod).1
     (modularTransportGenerator_commutator_clockAxis_eq_zero_of_cartanDualGrade
-      (H := H) hMod D hK hI hEven)
+      (H := H) hMod S hK_odd hI_even hEven)
 
 /--
 Winding periodicity obtained directly from an explicit Cartan dual-grade
@@ -722,12 +731,14 @@ certificate, without an exposed raw commutation hypothesis.
 -/
 theorem winding_orbit_periodicity_of_cartanDualGrade
     (hMod : EndH) (N : ℤ)
-    (D : InfoGeometry.Core.SymmetricLieAlgebra.CartanPhaseAxisForcingData EndH)
-    (hK :
-      D.K =
-        InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-    (hI : D.I = clockAxis H)
-    (hEven : ⁅D.K, D.I⁆ ∈ D.S.𝔨) :
+    (S : InfoGeometry.Core.SymmetricLieAlgebra EndH)
+    (hK_odd :
+      InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod
+        ∈ S.𝔭)
+    (hI_even : clockAxis H ∈ S.𝔨)
+    (hEven :
+      ⁅InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod,
+          clockAxis H⁆ ∈ S.𝔨) :
     NormedSpace.exp
       (multiBranchedGenerator
         (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) N) =
@@ -738,7 +749,7 @@ theorem winding_orbit_periodicity_of_cartanDualGrade
     (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
     (N := N)
     (modularTransportGenerator_commutes_clockAxis_of_cartanDualGrade
-      (H := H) hMod D hK hI hEven)
+      (H := H) hMod S hK_odd hI_even hEven)
 
 /--
 Successor branch periodicity obtained directly from the Cartan dual-grade
@@ -746,12 +757,14 @@ certificate.
 -/
 theorem winding_orbit_periodicity_succ_of_cartanDualGrade
     (hMod : EndH) (N : ℤ)
-    (D : InfoGeometry.Core.SymmetricLieAlgebra.CartanPhaseAxisForcingData EndH)
-    (hK :
-      D.K =
-        InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
-    (hI : D.I = clockAxis H)
-    (hEven : ⁅D.K, D.I⁆ ∈ D.S.𝔨) :
+    (S : InfoGeometry.Core.SymmetricLieAlgebra EndH)
+    (hK_odd :
+      InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod
+        ∈ S.𝔭)
+    (hI_even : clockAxis H ∈ S.𝔨)
+    (hEven :
+      ⁅InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod,
+          clockAxis H⁆ ∈ S.𝔨) :
     NormedSpace.exp
       (multiBranchedGenerator
         (InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod) (N + 1)) =
@@ -763,7 +776,7 @@ theorem winding_orbit_periodicity_succ_of_cartanDualGrade
     (K := InfoGeometry.Canonical.BogoliubovTransport.modularTransportGenerator (E := H) hMod)
     (N := N)
     (modularTransportGenerator_commutes_clockAxis_of_cartanDualGrade
-      (H := H) hMod D hK hI hEven)
+      (H := H) hMod S hK_odd hI_even hEven)
 
 /--
 The non-equilibrium defect is sourced exactly by the Cartan-odd scale channel.

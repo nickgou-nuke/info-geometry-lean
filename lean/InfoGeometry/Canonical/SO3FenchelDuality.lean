@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.LinearAlgebra.CrossProduct
 import InfoGeometry.Canonical.LieGeometricDuality
 
 /-!
@@ -23,6 +24,14 @@ open scoped Matrix
 
 abbrev V3 : Type := Fin 3 → ℝ
 abbrev SO3 : Type := Matrix.specialOrthogonalGroup (Fin 3) ℝ
+
+local instance : LieRing V3 := Cross.lieRing
+
+local instance : LieAlgebra ℝ V3 := by
+  refine { lie_smul := ?_ }
+  intro a x y
+  change crossProduct x (a • y) = a • crossProduct x y
+  simpa using (crossProduct x).map_smul a y
 
 /-- `SO(3)` action on vectors and hence on momentum coordinates. -/
 def so3Action (R : SO3) (x : V3) : V3 := (R : Matrix (Fin 3) (Fin 3) ℝ) *ᵥ x
@@ -100,14 +109,12 @@ theorem dual_invariant (I : ℝ) (R : SO3) (L : V3) :
 
 /-- KKS 2-form on a dual orbit (in coordinates): `ωₗ(X,Y)=⟨L,[X,Y]⟩ = L·(X×Y)`. -/
 def kksForm (L : V3) : V3 → V3 → ℝ :=
-  fun X Y => L ⬝ᵥ (X ⨯₃ Y)
+  fun X Y => L ⬝ᵥ ⁅X, Y⁆
 
 /-- KKS form is skew-symmetric in the two arguments. -/
 theorem kksForm_skew (L : V3) (X Y : V3) : kksForm L X Y = -kksForm L Y X := by
   unfold kksForm
-  have hneg : (L ⬝ᵥ (Y ⨯₃ X)) = -(L ⬝ᵥ (X ⨯₃ Y)) := by
-    simpa using (dotProduct_neg L (X ⨯₃ Y))
-  linarith
+  rw [← lie_skew X Y, dotProduct_neg]
 
 /-- Unit-sphere Bregman picture (spherical slice at fixed Casimir level):
 The following identity expresses the standard tangent-space metric of the quadratic
@@ -358,18 +365,10 @@ theorem so3_converse_equal_casimir (x y : V3) (h : casimir x = casimir y) :
     simpa [so3Action, hxrepr, hyrepr] using hmul
 
 /-- Tangent identification by cross-product: a coadjoint-orbit tangent at `L` is `L × ξ`. -/
-def tangentVectorFromGenerator (L ξ : V3) : V3 := L ⨯₃ ξ
+def tangentVectorFromGenerator (L ξ : V3) : V3 := ⁅L, ξ⁆
 
 
 section LieBridge
-
-local instance : LieRing V3 := Cross.lieRing
-
-local instance : LieAlgebra ℝ V3 := by
-  refine { lie_smul := ?_ }
-  intro a x y
-  change x ⨯₃ (a • y) = a • (x ⨯₃ y)
-  simpa using (crossProduct x).map_smul a y
 
 /-- Bundle SO(3) vectors into the abstract dual via Euclidean pairing. -/
 def so3ToDual (L : V3) : LieDual V3 :=
@@ -386,9 +385,9 @@ theorem so3_coadjointPairing_eq_apply (ξ : LieDual V3) (X : V3) :
     coadjointPairing ξ X = ξ.toFun X := by
   rfl
 
-/-- Abstract KKS form matches the explicit `\u27C3₃` bracket form for this `LieRing` instance. -/
+/-- Abstract KKS form matches the cross-product bracket for this `LieRing` instance. -/
 theorem so3_kksForm_eq_lieKks (ξ : LieDual V3) (X Y : V3) :
-    LieGeometricDuality.kksForm ξ X Y = ξ.toFun (X ⨯₃ Y) := by
+    LieGeometricDuality.kksForm ξ X Y = ξ.toFun ⁅X, Y⁆ := by
   rfl
 
 /-- Concrete SO(3) KKS form is the abstract KKS form under this embedding. -/

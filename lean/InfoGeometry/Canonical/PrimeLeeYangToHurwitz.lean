@@ -4,6 +4,7 @@ import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
 import InfoGeometry.Canonical.PrimeHurwitzLimit
 import InfoGeometry.Canonical.PrimeLeeYangConvergence
+import InfoGeometry.Analysis.LeeYangRootLimit
 
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangToHurwitz
@@ -24,6 +25,7 @@ namespace InfoGeometry.Canonical.PrimeLeeYangToHurwitz
 open InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
 open InfoGeometry.Canonical.PrimeHurwitzLimit
 open InfoGeometry.Canonical.PrimeLeeYangConvergence
+open InfoGeometry.Analysis.LeeYangRootLimit
 
 /--
 Bridge packet from a convergence witness to a Hurwitz transfer witness.
@@ -43,27 +45,33 @@ structure PrimeLeeYangToHurwitzWitness
   hurwitz :
     CorrectHurwitzZeroTransferWitness Ξ A
 
-  /-- Guardrail: this relay is conditional and does not prove RH. -/
-  no_unconditional_RH_claim_guard : Type
-
-namespace PrimeLeeYangToHurwitzWitness
+  /-- The two sockets describe the same limiting Cayley readout. -/
+  convergence_limit_eq_hurwitz_limit :
+    convergence.limitF = hurwitz.limitF
 
 variable {Ξ : CompletedXiZeroPredicate}
 variable {A : LeeYangApproximants}
-variable (W : PrimeLeeYangToHurwitzWitness Ξ A)
 
-/-- The relay maps completed-`xi` zeros to the Lee--Yang circle. -/
+/--
+Completed-`xi` zeros map to the Lee--Yang circle when they are limits of
+actual roots of the finite renormalized approximants.
+
+Unlike the former relay theorem, this statement consumes no witness packet and
+does not store the desired zero-location conclusion as data.
+-/
 @[rep_depth operator]
 theorem xiZeros_map_to_unit_circle
-    (W : PrimeLeeYangToHurwitzWitness Ξ A)
+    (A : LeeYangApproximants)
+    (root : ℂ → ℕ → ℂ)
+    (hroot :
+      ∀ s, Ξ.XiZero s → ∀ n, A.renormZ n (root s n) = 0)
+    (hlim :
+      ∀ s, Ξ.XiZero s →
+        Filter.Tendsto (root s) Filter.atTop (nhds (cayley s)))
     (s : ℂ)
-    (hs_ne_one : s ≠ 1)
     (hs : Ξ.XiZero s) :
     OnUnitCircle (cayley s) :=
-by
-  exact corrected_hurwitz_xiZeros_map_to_unit_circle
-    W.hurwitz s hs_ne_one hs
-
-end PrimeLeeYangToHurwitzWitness
+  zeroPredicate_maps_to_unitCircle_of_root_limit
+    Ξ.XiZero A root hroot hlim s hs
 
 end InfoGeometry.Canonical.PrimeLeeYangToHurwitz

@@ -21,10 +21,48 @@ set_option linter.dupNamespace false in
 @[rep_depth thermo]
 structure SouriauThermalEvaluation (L : FormalPrimeRootLattice) where
   beta : ℝ
+  /-- Souriau pairing of a prime root with the inverse-temperature element. -/
+  rootPairing : ℕ → ℝ
   p_neg_beta : ℕ → ℝ
   e_neg_alpha : ℕ → ℝ
+  /-- Prime-root pairing is the logarithmic prime energy weighted by `β`. -/
+  pairing_eq_beta_log :
+    ∀ p ∈ L.primes, rootPairing p = beta * Real.log (p : ℝ)
+  /-- The evaluated formal root exponential is the exponential of the pairing. -/
+  e_neg_alpha_eq_exp_neg_pairing :
+    ∀ p ∈ L.primes, e_neg_alpha p = Real.exp (-rootPairing p)
+  /-- The conventional prime thermal weight is `exp (-β log p)`. -/
+  p_neg_beta_eq_exp_neg_beta_log :
+    ∀ p ∈ L.primes, p_neg_beta p = Real.exp (-beta * Real.log (p : ℝ))
   e_neg_alpha_eq_p_neg_beta : ∀ p ∈ L.primes, e_neg_alpha p = p_neg_beta p
-  pairing_eq_beta_log : Prop
+
+namespace SouriauThermalEvaluation
+
+variable {L : FormalPrimeRootLattice}
+variable (E : SouriauThermalEvaluation L)
+
+/-- Native readback of the Souriau prime-root pairing. -/
+@[rep_depth thermo]
+theorem rootPairing_eq_beta_log
+    (p : ℕ) (hp : p ∈ L.primes) :
+    E.rootPairing p = E.beta * Real.log (p : ℝ) :=
+  E.pairing_eq_beta_log p hp
+
+/-- Thermal root evaluation is the exponential of the negative Souriau pairing. -/
+@[rep_depth thermo]
+theorem e_neg_alpha_eq_exp_neg_rootPairing
+    (p : ℕ) (hp : p ∈ L.primes) :
+    E.e_neg_alpha p = Real.exp (-E.rootPairing p) :=
+  E.e_neg_alpha_eq_exp_neg_pairing p hp
+
+/-- Prime thermal weight has the native Boltzmann logarithmic form. -/
+@[rep_depth thermo]
+theorem p_neg_beta_eq_boltzmannRootVariable
+    (p : ℕ) (hp : p ∈ L.primes) :
+    E.p_neg_beta p = boltzmannRootVariable E.beta p := by
+  simpa [boltzmannRootVariable] using E.p_neg_beta_eq_exp_neg_beta_log p hp
+
+end SouriauThermalEvaluation
 
 /-- Product of evaluated prime factors on a subset. -/
 @[rep_depth thermo]

@@ -55,12 +55,14 @@ theorem riemannReflection_eq_fugacityInversion
 
 /-- Conditional RH readout remains routed through the witness-gated Lee--Yang bridge. -/
 theorem conditional_RH_from_primeLeeYang
-    {CompletedXiReadout : Type*}
-    (R : CompletedXiReadout)
-    (C : CayleyCriticalLineWitness)
-    (A : LeeYangPrimeApproximation CompletedXiReadout) :
-    True :=
-  trivial
+    {n : ℕ}
+    (W : InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain.LeeYangStabilityWitness (n := n))
+    (hLeeYang : ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
+    {z : ℂ}
+    (hz : W.partitionPolynomial.IsRoot z)
+    (hpole : z.re ≠ -1) :
+    OnCriticalLine (cayleyToTemperature z) :=
+  partitionRoot_mapsToCriticalLine W hLeeYang hz hpole
 
 /-! ## Prime chain and zero-temperature KMS readouts -/
 

@@ -69,12 +69,17 @@ amplituhedron/combinatorial lane):
 structure PlabicReflectionPacket (H : Type*) [NormedAddCommGroup H]
     [InnerProductSpace ℂ H] [CompleteSpace H]
     (Op : Type*) [Ring Op]
-    (amp : InfoGeometry.Topology.AmplituhedronBoundary.Amplituhedron3Point Op)
+    (amp : InfoGeometry.Topology.AmplituhedronBoundary.AmplituhedronBoundaryPacket Op)
     (cws : CuntzWeylSystem H) where
-  bcfwReadout : Prop
-  reflection_of_readout : bcfwReadout →
-    (cws.cell.e_plus ∘L cws.cell.e_minus) ∘L cws.S_L =
-      - (cws.S_L ∘L (cws.cell.e_plus ∘L cws.cell.e_minus))
+  bcfwReadout : Op
+  bcfwReadout_eq_amplituhedron : bcfwReadout = amp.bcfwReadout
+  readoutToOperator : Op → H →L[ℂ] H
+  readoutToOperator_eq_reflection :
+    readoutToOperator bcfwReadout =
+      (cws.cell.e_plus ∘L cws.cell.e_minus) ∘L cws.S_L
+  reflection_of_readout :
+    readoutToOperator bcfwReadout =
+      -(cws.S_L ∘L (cws.cell.e_plus ∘L cws.cell.e_minus))
 
 /--
 Conservative transport: given a plabic/BCFW comparison packet, and a readout of the
@@ -83,13 +88,17 @@ associated `bcfwReadout`, the Weyl-Cuntz reflection identity follows directly.
 theorem weyl_cuntz_reflection_from_bcfw_packet
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
     {Op : Type*} [Ring Op]
-    (amp : InfoGeometry.Topology.AmplituhedronBoundary.Amplituhedron3Point Op)
+    (amp : InfoGeometry.Topology.AmplituhedronBoundary.AmplituhedronBoundaryPacket Op)
     (cws : CuntzWeylSystem H)
-    (P : PlabicReflectionPacket H Op amp cws)
-    (hReadout : P.bcfwReadout) :
+    (P : PlabicReflectionPacket H Op amp cws) :
     (cws.cell.e_plus ∘L cws.cell.e_minus) ∘L cws.S_L =
       - (cws.S_L ∘L (cws.cell.e_plus ∘L cws.cell.e_minus)) := by
-  exact P.reflection_of_readout hReadout
+  calc
+    (cws.cell.e_plus ∘L cws.cell.e_minus) ∘L cws.S_L =
+        P.readoutToOperator P.bcfwReadout :=
+      P.readoutToOperator_eq_reflection.symm
+    _ = -(cws.S_L ∘L (cws.cell.e_plus ∘L cws.cell.e_minus)) :=
+      P.reflection_of_readout
 
 /--
 Trace parity match for the Weyl/Cuntz bridge.

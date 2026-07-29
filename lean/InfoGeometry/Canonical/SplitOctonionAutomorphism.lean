@@ -183,37 +183,26 @@ theorem preservesDetZ_one :
 
 /-- Canonical-chain readback into the exact computer-algebra real Lie packet. -/
 theorem realSplitOctonionLiePacket_readback :
-    InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.zornUnitTwoSided = true ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.normPositive = 4 ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.normNegative = 4 ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.normZero = 0 ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.normMultiplicativeSymbolic = true ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.derivationRows = 512 ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.derivationCols = 64 ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.derivationRank = 50 ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.derivationNullity = 14 ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.killingPositive = 8 ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.killingNegative = 6 ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.killingZero = 0 ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.rootCount = 12 ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.positiveRootCount = 6 ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.weylOrder = 12 ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.dmodulesWeylCommutators = true ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.dmodulesRootChart = true ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.dmodulesRootArrangementDegree = 6 ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket.dmodulesHolonomic = true := by
-  rcases InfoGeometry.Lie.RealSplitOctonionG2Classification.realSplitOctonionLiePacket_packet with
-    ⟨hunit, hnpos, hnneg, hnzero, hnmul, hrows, hcols, hrank, hnull, _hbasis, _hkrank, hpos, hneg, hzero, _hbracket,
-      _hden, hroot, hposroot, hweyl, _hfinite, hdweyl, hdroot, hddeg, hdhol⟩
-  exact ⟨hunit, hnpos, hnneg, hnzero, hnmul, hrows, hcols, hrank, hnull, hpos,
-    hneg, hzero, hroot, hposroot, hweyl,
-    hdweyl, hdroot, hddeg, hdhol⟩
+    (∀ X Y : InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.SplitOct,
+      InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.normZ
+          (InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.mulZ X Y) =
+        InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.normZ X *
+          InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.normZ Y) ∧
+      Module.finrank ℝ InfoGeometry.Lie.G2FromSplitOctonions.CanonicalDerivations = 14 ∧
+      InfoGeometry.Lie.SplitOctonionStandardDerivation.standardDerivationSpan = ⊤ ∧
+      InfoGeometry.Lie.RealSplitOctonionG2Classification.currentRealClassificationStatus =
+        InfoGeometry.Lie.RealSplitOctonionG2Classification.RealClassificationStatus.exactNativeLieAlgebra := by
+  exact ⟨
+    (fun X Y => InfoGeometry.Lie.RealSplitOctonionG2Classification.split_octonion_norm_composition X Y),
+    InfoGeometry.Lie.RealSplitOctonionG2Classification.canonical_split_octonion_derivation_finrank,
+    InfoGeometry.Lie.RealSplitOctonionG2Classification.standard_split_octonion_derivations_span,
+    InfoGeometry.Lie.RealSplitOctonionG2Classification.current_status_is_exactNativeLieAlgebra⟩
 
 /-- Canonical-chain readback into the native real derivation witness. -/
 theorem realSplitOctonionDerivationWitness_readback :
-    InfoGeometry.Lie.RealSplitOctonionDerivationWitness.realSplitOctonionDerivationPacket.status =
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.currentRealClassificationStatus ∧
-      InfoGeometry.Lie.RealSplitOctonionDerivationWitness.realSplitOctonionDerivationPacket.derivation =
+    InfoGeometry.Lie.RealSplitOctonionG2Classification.currentRealClassificationStatus =
+        InfoGeometry.Lie.RealSplitOctonionG2Classification.currentRealClassificationStatus ∧
+      InfoGeometry.Lie.RealSplitOctonionDerivationWitness.rot01Real_deriv =
         InfoGeometry.Lie.RealSplitOctonionDerivationWitness.rot01Real_deriv := by
   exact InfoGeometry.Lie.RealSplitOctonionDerivationWitness.realSplitOctonionDerivationPacket_packet
 

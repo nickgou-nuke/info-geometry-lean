@@ -40,12 +40,15 @@ Souriau thermal generator, i.e. the moment operator evaluated at the geometric
 temperature.
 -/
 @[rep_depth operator]
-structure SouriauTomitaLogContext where
-  souriauMoment : OperatorSouriauMoment (H := H) Symmetry
+abbrev SouriauTomitaLogContext : Type _ :=
+  OperatorSouriauMoment (H := H) Symmetry
 
 namespace SouriauTomitaLogContext
 
 variable (C : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry))
+
+def souriauMoment : OperatorSouriauMoment (H := H) Symmetry :=
+  C
 
 /-- The real Tomita logarithm data exposed as an operator on the observable carrier. -/
 @[rep_depth operator]
@@ -209,8 +212,8 @@ that moment definitionally zero.
 @[rep_depth operator]
 noncomputable def SouriauTomitaLogContext.ofZeroThermalMoment
     (geometricTemperature : Symmetry) :
-    SouriauTomitaLogContext (H := H) (Symmetry := Symmetry) where
-  souriauMoment := zeroThermalSouriauMoment (H := H) geometricTemperature
+    SouriauTomitaLogContext (H := H) (Symmetry := Symmetry) :=
+  zeroThermalSouriauMoment (H := H) geometricTemperature
 
 namespace SouriauTomitaLogContext
 

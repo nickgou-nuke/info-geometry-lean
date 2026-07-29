@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.DrazinKreinCompatibility
 import InfoGeometry.Canonical.MoorePenrose
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.OperatorAlgebra.CrossoverResidue
 
 /-!
 # InfoGeometry.Canonical.SignedParticleBridge
@@ -21,6 +22,7 @@ open InfoGeometry.Canonical
 open DrazinKreinCompatibility
 open InfoGeometry.Canonical.MoorePenrose
 open InfoGeometry.Krein
+open InfoGeometry.OperatorAlgebra.CrossoverResidue
 
 variable {E : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -29,18 +31,24 @@ local notation "Op" => DoubledSpace E →L[ℝ] DoubledSpace E
 
 /-- Minimal signed contribution object: positive or negative transport weight. -/
 @[rep_depth operator]
-structure SignedContribution where
-  sign : Bool
+abbrev SignedContribution := Chirality
+
+namespace SignedContribution
+
+/-- Projection-compatible name for the direct chirality carrier. -/
+abbrev chirality (s : SignedContribution) : Chirality := s
+
+end SignedContribution
 
 /-- Positive lane predicate. -/
 @[rep_depth operator]
 def SignedContribution.isPositive (s : SignedContribution) : Prop :=
-  s.sign = true
+  s = Chirality.left
 
 /-- Negative lane predicate. -/
 @[rep_depth operator]
 def SignedContribution.isNegative (s : SignedContribution) : Prop :=
-  s.sign = false
+  s = Chirality.right
 
 /--
 A signed-particle shadow packet over a doubled carrier operator package.

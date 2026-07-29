@@ -91,10 +91,20 @@ intended model is `XiZero s := ξ(s) = 0`, where `ξ` is the completed Riemann x
 function.
 -/
 @[rep_depth operator]
-structure CompletedXiZeroPredicate where
-  XiZero : ℂ → Prop
-  zero_ne_one :
+abbrev CompletedXiZeroPredicate : Type :=
+  Σ' XiZero : ℂ → Prop,
     ∀ s : ℂ, XiZero s → s ≠ 1
+
+namespace CompletedXiZeroPredicate
+
+def XiZero (Ξ : CompletedXiZeroPredicate) : ℂ → Prop :=
+  Ξ.1
+
+def zero_ne_one (Ξ : CompletedXiZeroPredicate) :
+    ∀ s : ℂ, XiZero Ξ s → s ≠ 1 :=
+  Ξ.2
+
+end CompletedXiZeroPredicate
 
 /-- RH stated relative to a completed-`xi` zero predicate. -/
 @[rep_depth operator]
@@ -108,20 +118,11 @@ Cayley geometry witness.
 The facts are elementary complex algebra, but are stored as a witness so this
 file remains focused on the Hurwitz/Lee--Yang proof interface.
 -/
-@[rep_depth operator]
-structure CayleyCriticalWitness where
-  cayleyInv_cayley :
-    ∀ s : ℂ, s ≠ 1 → cayleyInv (cayley s) = s
-
-  unit_of_critical :
-    ∀ s : ℂ, s ≠ 1 → OnCriticalLine s → OnUnitCircle (cayley s)
-
-  critical_of_unit :
-    ∀ s : ℂ, s ≠ 1 → OnUnitCircle (cayley s) → OnCriticalLine s
-
-  reflection_to_inversion :
-    ∀ s : ℂ, s ≠ 0 → s ≠ 1 →
-      cayley (1 - s) = (cayley s)⁻¹
+abbrev CayleyCriticalWitness : Prop :=
+  (∀ s : ℂ, s ≠ 1 → cayleyInv (cayley s) = s) ∧
+    (∀ s : ℂ, s ≠ 1 → OnCriticalLine s → OnUnitCircle (cayley s)) ∧
+      (∀ s : ℂ, s ≠ 1 → OnUnitCircle (cayley s) → OnCriticalLine s) ∧
+        (∀ s : ℂ, s ≠ 0 → s ≠ 1 → cayley (1 - s) = (cayley s)⁻¹)
 
 namespace CayleyCriticalWitness
 
@@ -198,10 +199,10 @@ theorem cayley_reflection_to_inversion
 /-- Native proof-carrying Cayley geometry witness. -/
 @[rep_depth operator]
 def canonicalCayleyCriticalWitness : CayleyCriticalWitness :=
-  { cayleyInv_cayley := cayleyInv_cayley_eq
-    unit_of_critical := cayley_unit_of_critical
-    critical_of_unit := cayley_critical_of_unit
-    reflection_to_inversion := cayley_reflection_to_inversion }
+  ⟨cayleyInv_cayley_eq,
+    cayley_unit_of_critical,
+      cayley_critical_of_unit,
+        cayley_reflection_to_inversion⟩
 
 end CayleyCriticalWitness
 
@@ -311,23 +312,24 @@ Until that colimit theorem is formalized, we store the transfer as data.
 structure HurwitzZeroTransferWitness
     (Ξ : CompletedXiZeroPredicate)
     (A : LeeYangApproximants) where
-  /--
-  Intended locally-uniform convergence statement for `A.renormZ`.
-
-  This is deliberately a `Prop` witness rather than a fake theorem.  A later
-  categorical owner should replace it by the precise filtered-colimit
-  convergence statement on the Cayley/Hestenes--Krein chart.
-  -/
-  locallyUniformRenormalizedLimit : Prop
-
-  /-- The limit is not identically zero on the zero-free components. -/
-  nontrivialLimitOnComplement : Prop
-
-  /-- No spurious zeros are produced by renormalization or limiting. -/
-  noSpuriousZeros : Prop
-
   /-- Zero-free transfer on the two complement components. -/
   zeroFreeTransfer : ZeroFreeDomainTransfer
+
+  /--
+  Locally-uniform convergence of the finite renormalized approximants to the
+  transferred limiting readout.
+  -/
+  locallyUniformRenormalizedLimit :
+    LocallyUniformLimit A.renormZ zeroFreeTransfer.limitF
+
+  /-- The limit is nontrivial on both zero-free components. -/
+  nontrivialLimitOnComplement :
+    (∃ z : ℂ, InUnitDisk z ∧ zeroFreeTransfer.limitF z ≠ 0) ∧
+      (∃ z : ℂ, OutsideUnitDisk z ∧ zeroFreeTransfer.limitF z ≠ 0)
+
+  /-- Every zero of the transferred limit lies on the Lee--Yang circle. -/
+  noSpuriousZeros :
+    ∀ z : ℂ, zeroFreeTransfer.limitF z = 0 → OnUnitCircle z
 
   /--
   Link from the abstract completed-`xi` zero predicate to the limiting Cayley
@@ -362,7 +364,8 @@ theorem RH_of_Hurwitz_LeeYang_limit
     Ξ.zero_ne_one s hs
   have hcircle : OnUnitCircle (cayley s) :=
     hurwitz_xiZeros_map_to_unit_circle H s hs
-  exact C.critical_of_unit s hs_ne_one hcircle
+  rcases C with ⟨_, _, critical_of_unit, _⟩
+  exact critical_of_unit s hs_ne_one hcircle
 
 /-! ## Stronger split-domain witness -/
 
@@ -385,7 +388,9 @@ structure CorrectHurwitzZeroTransferWitness
     ∃ z : ℂ, InUnitDisk z ∧ limitF z ≠ 0
   nontrivial_out :
     ∃ z : ℂ, OutsideUnitDisk z ∧ limitF z ≠ 0
-  noSpuriousZeros : Prop
+  /-- Every zero of the limit lies on the Lee--Yang circle. -/
+  noSpuriousZeros :
+    ∀ z : ℂ, limitF z = 0 → OnUnitCircle z
   transfer :
     ZeroFreeDomainTransfer
   transfer_limitF :
@@ -431,6 +436,7 @@ theorem RH_from_Correct_Hurwitz_LeeYang
     Ξ.zero_ne_one s hs
   have hcircle : OnUnitCircle (cayley s) :=
     corrected_hurwitz_xiZeros_map_to_unit_circle H s hs_ne_one hs
-  exact C.critical_of_unit s hs_ne_one hcircle
+  rcases C with ⟨_, _, critical_of_unit, _⟩
+  exact critical_of_unit s hs_ne_one hcircle
 
 end InfoGeometry.Canonical.PrimeHurwitzLimit

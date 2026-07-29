@@ -1,121 +1,207 @@
 import InfoGeometry.Canonical.OperatorProjectorMismatch
+import InfoGeometry.Singular.NormalAnomaly
 
 /-!
-# Normal semisimple agreement witness
+# Projector agreement in the normal semisimple lane
 
-Safe agreement theorem surface: Drazin and Moore--Penrose zero projectors agree
-only when the necessary analytic/metric hypotheses are supplied by an explicit
-witness, e.g. normal or self-adjoint finite-dimensional Hilbert data.
-
-This module does not claim that semisimple zero alone is sufficient.
+This file exposes the actual owner predicates from `OperatorProjectorMismatch`.
+It does not replace missing analytic normality hypotheses by unconstrained
+`Prop` fields.
 -/
 
 namespace InfoGeometry.Canonical.NormalSemisimpleAgreement
 
 open InfoGeometry.Canonical.OperatorProjectorMismatch
+open InfoGeometry.Singular.MoorePenrose
+open InfoGeometry.Singular.Drazin
+open InfoGeometry.Singular.NormalAnomaly
 
-variable {R : Type*} [Ring R]
+variable {R : Type*} [Ring R] [StarRing R]
 
-/-- Explicit witness that the operator is in a safe normal/self-adjoint agreement regime. -/
-@[rep_depth transport]
-structure NormalSemisimpleAgreementWitness where
-  pair : ProjectorPair (R := R)
-  normalOrSelfAdjointWitness : Prop
-  projectorAgreement : pair.PD = pair.PMP
+/-- For an EP operator, its Moore-Penrose inverse is a Drazin inverse of
+index one.  This derives the generalized-inverse laws from native
+noncommutative owner predicates instead of storing projector agreement as an
+unconstrained field. -/
+theorem moorePenrose_isDrazinInverse_one_of_isEP
+    {A B : R}
+    (hMP : IsMoorePenroseInverse A B)
+    (hEP : IsEP A B hMP) :
+    IsDrazinInverse A B 1 := by
+  rcases EP_implies_group_inverse A B hMP hEP with
+    ⟨h_outer, h_comm, h_index⟩
+  exact IsDrazinInverse.mk h_outer h_comm (by simpa [pow_two, mul_assoc] using h_index)
 
-/-- Constructive owner-side witness: projector agreement is supplied as the
-canonical zero-mismatch predicate, not as a raw equality between the two
-projector slots.  The analytic normal/self-adjoint regime remains an explicit
-marker; the algebraic equality is recovered through `ProjectorPair`'s owner
-`projectorAgreement_iff_eq` theorem. -/
-@[rep_depth transport]
-structure ConstructiveNormalSemisimpleAgreementWitness where
-  pair : ProjectorPair (R := R)
-  normalOrSelfAdjointWitness : Prop
-  projectorAgreementOwner : pair.ProjectorAgreement
+/-- Drazin uniqueness identifies an arbitrary Drazin inverse with the
+Moore-Penrose inverse in the EP lane. -/
+theorem drazinInverse_eq_moorePenrose_of_isEP
+    {A B D : R} {k : ℕ}
+    (hMP : IsMoorePenroseInverse A B)
+    (hD : IsDrazinInverse A D k)
+    (hEP : IsEP A B hMP) :
+    D = B :=
+  Drazin_unique_of_indices hD
+    (moorePenrose_isDrazinInverse_one_of_isEP hMP hEP)
+
+/-- Concrete Drazin/Moore-Penrose projector data built from the repository's
+native generalized-inverse owners. -/
+def projectorPairOfInverseData
+    (A B D : R) {k : ℕ}
+    (hMP : IsMoorePenroseInverse A B)
+    (hD : IsDrazinInverse A D k) :
+    ProjectorPair (R := R) where
+  PD := Drazin_Projector A D k hD
+  PMP := MP_Projector A B hMP
+  PD_idempotent := Drazin_Projector_idempotent hD
+  PMP_idempotent := MP_Projector_idempotent hMP
+
+/-- EP data forces equality of the native Drazin and Moore-Penrose
+projectors. -/
+theorem drazinProjector_eq_moorePenroseProjector_of_isEP
+    {A B D : R} {k : ℕ}
+    (hMP : IsMoorePenroseInverse A B)
+    (hD : IsDrazinInverse A D k)
+    (hEP : IsEP A B hMP) :
+    Drazin_Projector A D k hD = MP_Projector A B hMP := by
+  unfold Drazin_Projector MP_Projector
+  rw [drazinInverse_eq_moorePenrose_of_isEP hMP hD hEP]
+
+/-- Constructive projector agreement obtained from noncommutative inverse
+data. -/
+theorem projectorAgreement_of_isEP
+    {A B D : R} {k : ℕ}
+    (hMP : IsMoorePenroseInverse A B)
+    (hD : IsDrazinInverse A D k)
+    (hEP : IsEP A B hMP) :
+    (projectorPairOfInverseData A B D hMP hD).ProjectorAgreement :=
+  (ProjectorPair.projectorAgreement_iff_eq
+    (P := projectorPairOfInverseData A B D hMP hD)).2
+    (drazinProjector_eq_moorePenroseProjector_of_isEP hMP hD hEP)
+
+/-- EP inverse data rules out every projector anomaly for the concretely
+constructed pair. -/
+theorem no_projector_anomaly_of_isEP
+    {A B D : R} {k : ℕ}
+    (hMP : IsMoorePenroseInverse A B)
+    (hD : IsDrazinInverse A D k)
+    (hEP : IsEP A B hMP) :
+    ¬ (projectorPairOfInverseData A B D hMP hD).HasProjectorAnomaly := by
+  intro hAnomaly
+  have hMismatch :
+      (projectorPairOfInverseData A B D hMP hD).HasMismatchAnomaly :=
+    (ProjectorPair.hasProjectorAnomaly_iff_hasMismatch
+      (P := projectorPairOfInverseData A B D hMP hD)).1 hAnomaly
+  exact hMismatch (projectorAgreement_of_isEP hMP hD hEP)
+
+/-- A concrete Drazin/Moore-Penrose tear obstructs the EP relation. -/
+theorem inverseData_projectorAnomaly_implies_not_isEP
+    {A B D : R} {k : ℕ}
+    (hMP : IsMoorePenroseInverse A B)
+    (hD : IsDrazinInverse A D k)
+    (hAnomaly :
+      (projectorPairOfInverseData A B D hMP hD).HasProjectorAnomaly) :
+    ¬ IsEP A B hMP := by
+  intro hEP
+  exact no_projector_anomaly_of_isEP hMP hD hEP hAnomaly
 
 namespace ConstructiveNormalSemisimpleAgreementWitness
 
-/-- Convert the owner-predicate witness into the legacy equality-bearing packet. -/
-def toNormalSemisimpleAgreementWitness
-    (W : ConstructiveNormalSemisimpleAgreementWitness (R := R)) :
-    NormalSemisimpleAgreementWitness (R := R) where
-  pair := W.pair
-  normalOrSelfAdjointWitness := W.normalOrSelfAdjointWitness
-  projectorAgreement := (ProjectorPair.projectorAgreement_iff_eq (P := W.pair)).1
-    W.projectorAgreementOwner
+/-- Compatibility accessor for the historical field name.  The value is the
+native projector-agreement predicate itself, not an independent marker. -/
+theorem projectorAgreementOwner
+    (P : ProjectorPair (R := R))
+    (h : P.ProjectorAgreement) :
+    P.ProjectorAgreement :=
+  h
+
+/-- Historical conversion API, now stated directly on the owner predicate. -/
+theorem toNormalSemisimpleAgreementWitness
+    (P : ProjectorPair (R := R))
+    (h : P.ProjectorAgreement) :
+    P.ProjectorAgreement :=
+  h
 
 /-- Constructive route: owner zero-mismatch agreement implies projectors agree. -/
 theorem projectors_agree
-    (W : ConstructiveNormalSemisimpleAgreementWitness (R := R)) :
-    W.pair.PD = W.pair.PMP :=
-  (W.toNormalSemisimpleAgreementWitness).projectorAgreement
+    (P : ProjectorPair (R := R))
+    (h : P.ProjectorAgreement) :
+    P.PD = P.PMP :=
+  (ProjectorPair.projectorAgreement_iff_eq (P := P)).1 h
 
 /-- Constructive route: owner zero-mismatch agreement implies no mismatch anomaly. -/
 theorem no_mismatch
-    (W : ConstructiveNormalSemisimpleAgreementWitness (R := R)) :
-    W.pair.ProjectorAgreement :=
-  W.projectorAgreementOwner
+    (P : ProjectorPair (R := R))
+    (h : P.ProjectorAgreement) :
+    P.ProjectorAgreement :=
+  h
 
 /-- Constructive route: owner zero-mismatch agreement rules out every projector anomaly,
 including the noncommuting branch, because the owner mismatch surface already collapses. -/
 theorem no_projector_anomaly
-    (W : ConstructiveNormalSemisimpleAgreementWitness (R := R)) :
-    ¬ W.pair.HasProjectorAnomaly := by
-  intro h
-  have hMismatch : W.pair.HasMismatchAnomaly :=
-    (ProjectorPair.hasProjectorAnomaly_iff_hasMismatch (P := W.pair)).1 h
-  exact hMismatch W.no_mismatch
+    (P : ProjectorPair (R := R))
+    (h : P.ProjectorAgreement) :
+    ¬ P.HasProjectorAnomaly := by
+  intro hAnomaly
+  have hMismatch : P.HasMismatchAnomaly :=
+    (ProjectorPair.hasProjectorAnomaly_iff_hasMismatch (P := P)).1 hAnomaly
+  exact hMismatch h
 
 end ConstructiveNormalSemisimpleAgreementWitness
 
-/-- Safe theorem: with the witness, the projectors agree. -/
+/-- Owner agreement implies equality of the projector slots. -/
 theorem normalSemisimple_projectors_agree
-    (W : NormalSemisimpleAgreementWitness (R := R)) :
-    W.pair.PD = W.pair.PMP :=
-  W.projectorAgreement
+    (P : ProjectorPair (R := R))
+    (h : P.ProjectorAgreement) :
+    P.PD = P.PMP :=
+  (ProjectorPair.projectorAgreement_iff_eq (P := P)).1 h
 
-/-- Compatibility theorem: the constructive owner-predicate packet discharges the
-legacy agreement theorem without carrying a raw projector-equality field. -/
+/-- Compatibility theorem for the constructive predicate name. -/
 theorem normalSemisimple_projectors_agree_of_constructive
-    (W : ConstructiveNormalSemisimpleAgreementWitness (R := R)) :
-    W.pair.PD = W.pair.PMP :=
-  W.projectors_agree
+    (P : ProjectorPair (R := R))
+    (h : P.ProjectorAgreement) :
+    P.PD = P.PMP :=
+  ConstructiveNormalSemisimpleAgreementWitness.projectors_agree P h
 
-/-- Agreement witness implies no mismatch anomaly. -/
+/-- Agreement is exactly the absence of mismatch. -/
 theorem normalSemisimple_no_mismatch
-    (W : NormalSemisimpleAgreementWitness (R := R)) :
-    W.pair.ProjectorAgreement := by
-  exact (ProjectorPair.projectorAgreement_iff_eq (P := W.pair)).2 W.projectorAgreement
+    (P : ProjectorPair (R := R))
+    (h : P.ProjectorAgreement) :
+    P.ProjectorAgreement :=
+  h
 
-/-- Agreement witness rules out every projector anomaly, not only the raw mismatch field. -/
+/-- Agreement rules out every projector anomaly. -/
 theorem normalSemisimple_no_projector_anomaly
-    (W : NormalSemisimpleAgreementWitness (R := R)) :
-    ¬ W.pair.HasProjectorAnomaly := by
-  intro h
-  have hMismatch : W.pair.HasMismatchAnomaly :=
-    (ProjectorPair.hasProjectorAnomaly_iff_hasMismatch (P := W.pair)).1 h
-  exact hMismatch (normalSemisimple_no_mismatch (R := R) W)
+    (P : ProjectorPair (R := R))
+    (h : P.ProjectorAgreement) :
+    ¬ P.HasProjectorAnomaly := by
+  intro hAnomaly
+  have hMismatch : P.HasMismatchAnomaly :=
+    (ProjectorPair.hasProjectorAnomaly_iff_hasMismatch (P := P)).1 hAnomaly
+  exact hMismatch h
 
-/-- Constructive compatibility route for downstream users that can provide the
-owner zero-mismatch predicate instead of a raw equality packet. -/
+/-- Constructive compatibility route for the owner predicate. -/
 theorem normalSemisimple_no_mismatch_of_constructive
-    (W : ConstructiveNormalSemisimpleAgreementWitness (R := R)) :
-    W.pair.ProjectorAgreement :=
-  W.no_mismatch
+    (P : ProjectorPair (R := R))
+    (h : P.ProjectorAgreement) :
+    P.ProjectorAgreement :=
+  h
 
-/-- Constructive compatibility route for downstream users that need the full no-anomaly
-readback, not just the mismatch-equality packet. -/
+/-- Constructive compatibility route for absence of projector anomalies. -/
 theorem normalSemisimple_no_projector_anomaly_of_constructive
-    (W : ConstructiveNormalSemisimpleAgreementWitness (R := R)) :
-    ¬ W.pair.HasProjectorAnomaly :=
-  W.no_projector_anomaly
+    (P : ProjectorPair (R := R))
+    (h : P.ProjectorAgreement) :
+    ¬ P.HasProjectorAnomaly :=
+  ConstructiveNormalSemisimpleAgreementWitness.no_projector_anomaly P h
 
-/-- Marker for the forbidden shortcut: diagonalizable/nonnormal data alone is not enough. -/
+/-- A nonnormal tear point is an actual projector anomaly, not an unconstrained
+pair of marker propositions. -/
 @[rep_depth transport]
-structure NonnormalTearPoint where
-  pair : ProjectorPair (R := R)
-  nonnormalityObstruction : Prop
-  agreementRequiresMetricWitness : Prop
+def NonnormalTearPoint (P : ProjectorPair (R := R)) : Prop :=
+  P.HasProjectorAnomaly
+
+/-- A tear point is exactly a genuine projector anomaly. -/
+theorem nonnormalTearPoint_iff_hasProjectorAnomaly
+    (P : ProjectorPair (R := R)) :
+    NonnormalTearPoint P ↔ P.HasProjectorAnomaly :=
+  Iff.rfl
 
 end InfoGeometry.Canonical.NormalSemisimpleAgreement

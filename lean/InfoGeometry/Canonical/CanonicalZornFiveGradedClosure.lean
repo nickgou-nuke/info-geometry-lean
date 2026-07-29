@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Physics.SplitOctonionBraidSU3
 import InfoGeometry.Canonical.TKKJordanPairData
 import InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
@@ -244,13 +245,15 @@ def gradeMinusTwoGenerator : ConformalMatrix :=
   ⁅zornNegativeTarget zornCoordinateZero, zornNegative zornCoordinateZero⁆
 
 theorem gradeTwoGenerator_mem : gradeTwoGenerator ∈ conformalGrade p2 := by
-  exact bracket_grade_closed canonicalFiveGradedLieAlgebra (by rfl)
+  exact bracket_grade_closed canonicalFiveGradedLieAlgebra
+    (show gradeAdd p1 p1 = some p2 by rfl)
     (zornPositive_mem zornCoordinateZero)
     (zornPositiveSource_mem zornCoordinateZero)
 
 theorem gradeMinusTwoGenerator_mem :
     gradeMinusTwoGenerator ∈ conformalGrade m2 := by
-  exact bracket_grade_closed canonicalFiveGradedLieAlgebra (by rfl)
+  exact bracket_grade_closed canonicalFiveGradedLieAlgebra
+    (show gradeAdd m1 m1 = some m2 by rfl)
     (zornNegativeTarget_mem zornCoordinateZero)
     (zornNegative_mem zornCoordinateZero)
 

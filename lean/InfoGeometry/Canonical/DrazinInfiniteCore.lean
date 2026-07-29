@@ -376,8 +376,16 @@ structure HasClassicalRieszDecompositionAtZero (T : E →L[𝕂] E) where
 Generalized Riesz-style interface at `0` for a bounded operator.
 
 This is intentionally weaker than the classical finite-index Drazin lane:
-the defect side is tracked via a separate quasinilpotent witness field.
+the defect side is tracked by an explicit nilpotence law on the complementary
+operator.  This is the algebraic statement owned by the constructive Riesz
+decomposition below; it is not silently identified with analytic
+quasinilpotence.
 -/
+@[rep_depth operator]
+def NilpotentOnDefect
+    (T P : E →L[𝕂] E) : Prop :=
+  ∃ k : ℕ, T ^ k * (1 - P) = 0
+
 @[rep_depth operator]
 structure HasGeneralizedRieszDecompositionAtZero (T : E →L[𝕂] E) where
   P : E →L[𝕂] E
@@ -388,7 +396,7 @@ structure HasGeneralizedRieszDecompositionAtZero (T : E →L[𝕂] E) where
     (T * P) * S = P
   right_inverse_on_regular :
     S * (T * P) = P
-  quasinilpotent_on_defect : Prop
+  quasinilpotent_on_defect : NilpotentOnDefect T P
 
 /--
 Witness-free constructive Riesz decomposition surface at `0`.

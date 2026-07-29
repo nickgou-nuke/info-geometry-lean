@@ -25,8 +25,8 @@ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSp
 /-- Chemical-potential background gauge coupling to the Bogoliubov number operator. -/
 @[rep_depth thermo]
 noncomputable def fockNumberGauge
-    (B : BogoliubovMixingParams) : WeylGaugeField ℝ (FockEndomorphism E) where
-  gaugeOf μ := μ • bogoliubovNumberOperator (E := E) B
+    (B : BogoliubovMixingParams) : WeylGaugeField ℝ (FockEndomorphism E) :=
+  fun μ => μ • bogoliubovNumberOperator (E := E) B
 
 /-- Pointwise expansion of the Fock number gauge coupling. -/
 @[simp]

@@ -77,7 +77,8 @@ theorem freeEnergy_eq_neg_log_partition
     (W : VirasoroWardEquilibriumPacket Alg Op) :
     W.thermodynamics.freeEnergy =
       - Real.log W.thermodynamics.partitionFunction :=
-  W.thermodynamics.freeEnergy_eq_neg_log_partition
+  OperatorThermodynamicsPacket.freeEnergy_eq_neg_log_partition'
+    W.thermodynamics
 
 /-- The Ward residual is the abstract action applied to the free-energy readout. -/
 def wardResidual (W : VirasoroWardEquilibriumPacket Alg Op) (n : ℤ) : ℝ :=

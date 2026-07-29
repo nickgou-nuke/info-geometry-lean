@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Analysis.AsanoContractionNative
 import InfoGeometry.Analysis.AsanoRuelleObstruction
+import InfoGeometry.Analysis.MultiaffinePolynomialSlices
 import InfoGeometry.Canonical.AsanoRuelleCounterexample
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 import InfoGeometry.Canonical.PrimePartitionPolynomials
@@ -938,6 +939,23 @@ theorem asanoRuelleLemmaSourceClaim_of_endpointNonDeg
      TwoVarAffinePolynomial.contract]
     using hne
 
+/-- Invariance of a finite-coordinate function under every coordinate permutation. -/
+def IsPermutationInvariant
+    {n : ℕ} (Φ : (Fin n → ℂ) → ℂ) : Prop :=
+  ∀ (σ : Equiv.Perm (Fin n)) (y : Fin n → ℂ),
+    Φ (fun i => y (σ i)) = Φ y
+
+/--
+Separate affineness in every coordinate, expressed by interpolation between
+the coordinate values `0` and `1`.
+-/
+def IsSeparatelyAffine
+    {n : ℕ} (Φ : (Fin n → ℂ) → ℂ) : Prop :=
+  ∀ (i : Fin n) (y : Fin n → ℂ) (z : ℂ),
+    Φ (Function.update y i z) =
+      (1 - z) * Φ (Function.update y i 0) +
+        z * Φ (Function.update y i 1)
+
 /--
 Source theorem shape for Grace's theorem in the Lee--Yang proof family.
 
@@ -954,8 +972,8 @@ structure GraceSourceData (n : ℕ) where
   Φ : (Fin n → ℂ) → ℂ
   diagonal :
     ∀ z : ℂ, Φ (fun _ : Fin n => z) = Q.eval z
-  symmetric : Prop
-  multiaffine : Prop
+  symmetric : IsPermutationInvariant Φ
+  multiaffine : IsSeparatelyAffine Φ
 
 /-- The diagonal slice of a Grace source datum is exactly the univariate slice. -/
 @[rep_depth thermo]
@@ -963,6 +981,22 @@ theorem GraceSourceData.diagonal_const
     {n : ℕ} (D : GraceSourceData n) (z : ℂ) :
     D.Φ (fun _ : Fin n => z) = D.Q.eval z :=
   D.diagonal z
+
+/-- The Grace source is invariant under every permutation of its coordinates. -/
+theorem GraceSourceData.permutation_invariant
+    {n : ℕ} (D : GraceSourceData n)
+    (σ : Equiv.Perm (Fin n)) (y : Fin n → ℂ) :
+    D.Φ (fun i => y (σ i)) = D.Φ y :=
+  D.symmetric σ y
+
+/-- The Grace source is affine in each coordinate separately. -/
+theorem GraceSourceData.coordinate_affine
+    {n : ℕ} (D : GraceSourceData n)
+    (i : Fin n) (y : Fin n → ℂ) (z : ℂ) :
+    D.Φ (Function.update y i z) =
+      (1 - z) * D.Φ (Function.update y i 0) +
+        z * D.Φ (Function.update y i 1) :=
+  D.multiaffine i y z
 
 /--
 Grace theorem source claim for a multiaffine symmetric diagonal slice.
@@ -1013,6 +1047,35 @@ def leeYangPolydiscWitness_of_sourceClaim
 namespace AsanoInduction
 
 open MvPolynomial
+
+/--
+Evaluation of a polynomial of degree at most one is an affine function.
+
+This is the native polynomial owner for the affine witnesses consumed by the
+two-variable Asano interpolation below.
+-/
+theorem polynomialEval_affine_of_natDegree_le_one
+    (p : Polynomial ℂ)
+    (hp : p.natDegree ≤ 1) :
+    ∃ a b : ℂ, ∀ x : ℂ, p.eval x = a + b * x := by
+  rcases Polynomial.exists_eq_X_add_C_of_natDegree_le_one hp with ⟨b, a, rfl⟩
+  exact ⟨a, b, by intro x; simp [add_comm]⟩
+
+/--
+A family represented by degree-at-most-one polynomial slices is separately
+affine.  The polynomial family owns the witness; no affine law is stored as an
+independent structure field.
+-/
+theorem separatelyAffine_of_polynomialSlices
+    (f : ℂ → ℂ → ℂ)
+    (slice : ℂ → Polynomial ℂ)
+    (hslice : ∀ y x, f x y = (slice y).eval x)
+    (hdegree : ∀ y, (slice y).natDegree ≤ 1) :
+    ∀ y, ∃ a b : ℂ, ∀ x, f x y = a + b * x := by
+  intro y
+  rcases polynomialEval_affine_of_natDegree_le_one (slice y) (hdegree y) with
+    ⟨a, b, hab⟩
+  exact ⟨a, b, fun x => (hslice y x).trans (hab x)⟩
 
 /-- 
 Key identity: a multiaffine function in two variables is determined by its values at 0 and 1.
@@ -1135,12 +1198,72 @@ theorem asanoInductiveStep_of_separatelyAffine
   · exact hz
 
 /--
+One Asano contraction step derived directly from the multiaffine support bound.
+
+Unlike `asanoInductiveStep_of_separatelyAffine`, this theorem does not accept
+separate affine witnesses.  Mathlib's canonical one-coordinate polynomial
+slice supplies both affine laws.
+-/
+theorem asanoInductiveStep_of_supportDegree
+    {n : ℕ}
+    (P : MvPolynomial (Fin 2 ⊕ Fin n) ℂ)
+    (hmulti : ∀ m ∈ P.support, ∀ i, (m i : ℕ) ≤ 1)
+    (K : Fin 2 ⊕ Fin n → Set ℂ)
+    (hzero : ∀ i, 0 ∉ K i)
+    (hclosed₀ : IsClosed (K (Sum.inl 0)))
+    (hclosed₁ : IsClosed (K (Sum.inl 1)))
+    (hfree :
+      ∀ z : Fin 2 ⊕ Fin n → ℂ,
+        (∀ i, z i ∉ K i) → eval z P ≠ 0)
+    (hAR : AsanoRuelleLemmaSourceClaim)
+    (w : Fin n → ℂ)
+    (hw : ∀ j : Fin n, w j ∉ K (Sum.inr j))
+    (z : ℂ)
+    (hz : z ∉ asanoForbiddenSet (K (Sum.inl 0)) (K (Sum.inl 1))) :
+    (toTwoVar P w).contract z ≠ 0 := by
+  open InfoGeometry.Analysis.MultiaffinePolynomialSlices in
+    apply asanoInductiveStep_of_separatelyAffine
+      P K hzero hclosed₀ hclosed₁ hfree hAR w hw
+    · intro y
+      let g : Fin 2 ⊕ Fin n → ℂ := fun i =>
+        match i with
+        | Sum.inl i => Fin.cases 0 (fun _ => y) i
+        | Sum.inr j => w j
+      rcases eval_update_affine P hmulti (Sum.inl 0) g with ⟨a, b, hab⟩
+      exact ⟨a, b, fun x => by
+        rw [← hab x]
+        unfold splitEval
+        apply congrArg (fun h : Fin 2 ⊕ Fin n → ℂ => MvPolynomial.eval h P)
+        funext i
+        rcases i with i | j
+        · fin_cases i
+          · simp [g]
+          · change y = y
+            rfl
+        · simp [g]⟩
+    · intro x
+      let g : Fin 2 ⊕ Fin n → ℂ := fun i =>
+        match i with
+        | Sum.inl i => Fin.cases x (fun _ => 0) i
+        | Sum.inr j => w j
+      rcases eval_update_affine P hmulti (Sum.inl 1) g with ⟨a, b, hab⟩
+      exact ⟨a, b, fun y => by
+        rw [← hab y]
+        unfold splitEval
+        apply congrArg (fun h : Fin 2 ⊕ Fin n → ℂ => MvPolynomial.eval h P)
+        funext i
+        rcases i with i | j
+        · fin_cases i <;> simp [g]
+        · simp [g]⟩
+    · exact hz
+
+/--
 Main Asano induction source claim.
 
 This records the missing repeated-contraction theorem shape without claiming a
-kernel-checked proof.  The multiaffine linearity step needed to prove this
-claim is intentionally kept as explicit closure debt instead of hidden behind a
-`sorry`.
+kernel-checked proof.  The multiaffine linearity step is discharged by
+`asanoInductiveStep_of_supportDegree`; the remaining source-claim mismatch is
+the absent closedness hypothesis for the two contracted forbidden sets.
 -/
 def AsanoInductiveStepSourceClaim : Prop :=
   ∀ {n : ℕ} (P : MvPolynomial (Fin 2 ⊕ Fin n) ℂ),

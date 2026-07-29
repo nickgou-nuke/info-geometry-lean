@@ -4,12 +4,11 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.Canonical.PrimeGasSuperKMS
 
-Witness-gated bridge between a prime-gas max-entropy packet and a super-KMS
-temperature packet.
+Bridge between a prime-gas max-entropy packet and a super-KMS temperature
+packet.
 
-This file deliberately does not import open-problem theorem packets. It stores
-the necessary compatibility data explicitly and proves only consequences of the
-stored fields.
+The super-temperature is owned by the KMS target.  It is not duplicated in the
+bridge and no separate compatibility witness is required.
 -/
 
 noncomputable section
@@ -23,13 +22,24 @@ structure PrimeGasMaxEntPacket where
   entropyReadout : ℝ
   freeEnergyReadout : ℝ
 
-/-- witness-gated (Native Closure Mandated: Closure Debt) Jaynes/Riemannian readout bridge. -/
+/-- Native equality relation between the Jaynes and RN entropy readouts. -/
 @[rep_depth operator]
-structure PrimeGasJaynesRNBridge where
-  jaynesEntropy : ℝ
-  rnEntropy : ℝ
-  jaynes_eq_rn :
-    jaynesEntropy = rnEntropy
+abbrev PrimeGasJaynesRNBridge :=
+  {readouts : ℝ × ℝ // readouts.1 = readouts.2}
+
+namespace PrimeGasJaynesRNBridge
+
+abbrev jaynesEntropy (B : PrimeGasJaynesRNBridge) : ℝ :=
+  B.1.1
+
+abbrev rnEntropy (B : PrimeGasJaynesRNBridge) : ℝ :=
+  B.1.2
+
+theorem jaynes_eq_rn (B : PrimeGasJaynesRNBridge) :
+    B.jaynesEntropy = B.rnEntropy :=
+  B.2
+
+end PrimeGasJaynesRNBridge
 
 /-- Super-geometric temperature split into even and odd readouts. -/
 @[rep_depth operator]
@@ -66,47 +76,43 @@ theorem toSuperGeometricTemperature_zero_odd
     (toSuperGeometricTemperature K).oddTemperature = 0 :=
   K.zero_odd
 
-/--
-Prime-gas/super-KMS bridge.
-
-All cross-surface identifications are stored explicitly as witness fields.
--/
+/-- Prime-gas/super-KMS bridge using the KMS target as temperature owner. -/
 @[rep_depth operator]
 structure PrimeGasSuperKMSBridge where
   primeGas : PrimeGasMaxEntPacket
   jaynesRN : PrimeGasJaynesRNBridge
   kmsTarget : PrimeGasKMSTargetBridge
-  superTemperature : SuperGeometricTemperature
-  superTemperature_eq :
-    superTemperature = toSuperGeometricTemperature kmsTarget
 
-/-- Witness-form compatibility surface for the super-temperature/KMS target match. -/
-@[rep_depth operator]
-structure SuperTemperatureCompatibilityWitness where
-  kmsTarget : PrimeGasKMSTargetBridge
-  superTemperature : SuperGeometricTemperature
-  superTemperature_eq :
-    superTemperature = toSuperGeometricTemperature kmsTarget
+/-- The bridge temperature is canonically the temperature owned by its KMS target. -/
+def PrimeGasSuperKMSBridge.superTemperature
+    (B : PrimeGasSuperKMSBridge) : SuperGeometricTemperature :=
+  toSuperGeometricTemperature B.kmsTarget
 
-/-- Recover the compatibility equality from an explicit witness packet. -/
+/--
+Compatibility is reflexivity for the canonical KMS-owned temperature.
+
+The historical theorem name is retained for downstream compatibility; no
+witness packet is involved.
+-/
 theorem superTemperature_eq_toSuperGeometricTemperature_of_witness
-    (W : SuperTemperatureCompatibilityWitness) :
-    W.superTemperature = toSuperGeometricTemperature W.kmsTarget :=
-  W.superTemperature_eq
+    (K : PrimeGasKMSTargetBridge) :
+    toSuperGeometricTemperature K = K.superTemperature :=
+  toSuperGeometricTemperature_eq K
 
-/-- Construct the witness-form compatibility packet from a bridge. -/
-def PrimeGasSuperKMSBridge.toSuperTemperatureCompatibilityWitness
-    (B : PrimeGasSuperKMSBridge) : SuperTemperatureCompatibilityWitness where
-  kmsTarget := B.kmsTarget
-  superTemperature := B.superTemperature
-  superTemperature_eq := B.superTemperature_eq
+/--
+Historical compatibility name, now exposing the canonical equality directly
+instead of constructing an evidence record.
+-/
+theorem PrimeGasSuperKMSBridge.toSuperTemperatureCompatibilityWitness
+    (B : PrimeGasSuperKMSBridge) :
+    B.superTemperature = toSuperGeometricTemperature B.kmsTarget :=
+  rfl
 
-/-- Witness-routed readback of the bridge temperature/KMS compatibility. -/
+/-- Direct readback of the bridge temperature/KMS compatibility. -/
 theorem PrimeGasSuperKMSBridge.superTemperature_eq_toSuperGeometricTemperature_viaWitness
     (B : PrimeGasSuperKMSBridge) :
-    B.superTemperature = toSuperGeometricTemperature B.kmsTarget := by
-  exact superTemperature_eq_toSuperGeometricTemperature_of_witness
-    (B.toSuperTemperatureCompatibilityWitness)
+    B.superTemperature = toSuperGeometricTemperature B.kmsTarget :=
+  B.toSuperTemperatureCompatibilityWitness
 
 namespace PrimeGasSuperKMSBridge
 
@@ -115,21 +121,20 @@ variable (B : PrimeGasSuperKMSBridge)
 /-- The bridge's stored super-temperature is exactly the KMS target temperature. -/
 @[simp]
 theorem superTemperature_eq_kmsTargetTemperature :
-    B.superTemperature = B.kmsTarget.superTemperature := by
-  rw [B.superTemperature_eq, toSuperGeometricTemperature_eq]
+    B.superTemperature = B.kmsTarget.superTemperature :=
+  rfl
 
 /-- The bridge's super-temperature is the same as the extracted KMS temperature. -/
 @[simp]
 theorem superTemperature_eq_toSuperGeometricTemperature :
-    B.superTemperature = toSuperGeometricTemperature B.kmsTarget := by
-  rw [B.superTemperature_eq]
+    B.superTemperature = toSuperGeometricTemperature B.kmsTarget :=
+  rfl
 
 /-- The odd super-temperature vanishes by the stored KMS witness. -/
 @[simp]
 theorem superTemperature_odd_eq_zero :
-    B.superTemperature.oddTemperature = 0 := by
-  rw [B.superTemperature_eq]
-  exact toSuperGeometricTemperature_zero_odd B.kmsTarget
+    B.superTemperature.oddTemperature = 0 :=
+  toSuperGeometricTemperature_zero_odd B.kmsTarget
 
 /-- Detailed balance is exposed directly from the KMS target packet. -/
 theorem detailedBalance :

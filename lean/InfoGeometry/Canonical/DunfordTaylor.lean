@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.Normed.Algebra.Spectrum
 
 /-!
 # InfoGeometry/Canonical/DunfordTaylor.lean
@@ -80,7 +81,8 @@ theorem mem_resolventSet_iff (A : EndH) (z : ℂ) :
 /-- The resolvent set is open. -/
 theorem isOpen_resolventSet (A : EndH) :
     IsOpen (resolventSet A) := by
-  simpa [resolventSet] using spectrum.isOpen_resolventSet A
+  rw [resolventSet_eq_compl_spectrum]
+  exact (spectrum.isClosed A).isOpen_compl
 
 omit [CompleteSpace E] in
 /-- Left resolvent identity: `(zI - A) R(z,A) = I`. -/

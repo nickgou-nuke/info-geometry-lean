@@ -1,5 +1,6 @@
 import InfoGeometry.Meta.Architecture
 import Mathlib.Tactic
+import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 open scoped InnerProductSpace
 

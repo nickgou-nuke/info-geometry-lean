@@ -35,6 +35,7 @@ export InfoGeometry.Canonical.PrimeParafermionGrandCanonicalClock (
   parafermionLocalFactor
   stateProbability
   stateSurprisal
+  stateSurprisal_eq_massieu_sub_logWeight
   stateSurprisal_eq_boltzmannEntropy
   parafermionMassieu
   parafermionGrandPotential

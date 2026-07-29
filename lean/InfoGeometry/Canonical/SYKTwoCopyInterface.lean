@@ -35,33 +35,43 @@ inductive ClaimTier where
   | externalInterpretation
   deriving DecidableEq, Repr
 
-/-- A proposition tagged by claim-status band. -/
+/--
+A proposition indexed by claim-status band.
+
+The proposition is a type parameter rather than an opaque structure field, so
+claim classification cannot erase the theorem being classified.
+-/
 @[rep_depth transport]
-structure TaggedClaim where
+structure TaggedClaim (statement : Prop) where
   tier : ClaimTier
-  statement : Prop
 
 namespace TaggedClaim
 
+/-- Proposition indexed by a tagged claim, retained under the historical name. -/
+@[rep_depth transport]
+def statement {P : Prop} (_C : TaggedClaim P) : Prop :=
+  P
+
 /-- Predicate: this claim is in the compiled owner theorem band. -/
 @[rep_depth transport]
-def isRepoTheorem (C : TaggedClaim) : Prop :=
+def isRepoTheorem {P : Prop} (C : TaggedClaim P) : Prop :=
   C.tier = ClaimTier.repoTheorem
 
 /-- Predicate: this claim is tagged as a formalizable-next-owner target. -/
 @[owner_target_tag]
-def isFormalizableNextOwnerTarget (C : TaggedClaim) : Prop :=
+def isFormalizableNextOwnerTarget {P : Prop} (C : TaggedClaim P) : Prop :=
   C.tier = ClaimTier.formalizableNextOwnerTarget
 
 /-- Predicate: this claim is an external interpretation claim. -/
 @[rep_depth transport]
-def isExternalInterpretation (C : TaggedClaim) : Prop :=
+def isExternalInterpretation {P : Prop} (C : TaggedClaim P) : Prop :=
   C.tier = ClaimTier.externalInterpretation
 
 /-- Formalizable-next-owner claims are not repo-theorem claims. -/
 @[rep_depth transport]
 theorem formalizableNextOwnerTarget_not_repoTheorem
-    (C : TaggedClaim)
+    {P : Prop}
+    (C : TaggedClaim P)
     (hTarget : C.isFormalizableNextOwnerTarget) :
     ¬ C.isRepoTheorem := by
   intro hRepo
@@ -73,7 +83,8 @@ theorem formalizableNextOwnerTarget_not_repoTheorem
 /-- External-interpretation claims are not repo-theorem claims. -/
 @[rep_depth transport]
 theorem externalInterpretation_not_repoTheorem
-    (C : TaggedClaim)
+    {P : Prop}
+    (C : TaggedClaim P)
     (hExt : C.isExternalInterpretation) :
     ¬ C.isRepoTheorem := by
   intro hRepo
@@ -161,9 +172,8 @@ structure TFDLikePreparation where
 
 /-- Formalizable-next-target protocol claim constructor. -/
 @[rep_depth transport]
-def traversableProtocolTargetClaim : TaggedClaim where
+def traversableProtocolTargetClaim : TaggedClaim S.traversableWindowOpen where
   tier := ClaimTier.formalizableNextOwnerTarget
-  statement := S.traversableWindowOpen
 
 /-- The formalizable target claim is explicitly non-repo by tier tag. -/
 @[rep_depth transport]
@@ -175,9 +185,8 @@ theorem traversableProtocolTargetClaim_not_repo :
 
 /-- External ER=EPR interpretation claim constructor (kept non-owner by type tag). -/
 @[rep_depth transport]
-def erEprInterpretationClaim : TaggedClaim where
+def erEprInterpretationClaim : TaggedClaim S.traversableWindowOpen where
   tier := ClaimTier.externalInterpretation
-  statement := S.traversableWindowOpen
 
 /-- The ER=EPR interpretation constructor is never tagged as repo theorem. -/
 @[rep_depth transport]
@@ -198,9 +207,9 @@ structure TraversableProtocolWitness where
 
 /-- Repo-tier claim materialized from a closed finite protocol witness. -/
 @[rep_depth transport]
-def traversableProtocolRepoClaim (_w : TraversableProtocolWitness (S := S)) : TaggedClaim where
+def traversableProtocolRepoClaim (_w : TraversableProtocolWitness (S := S)) :
+    TaggedClaim S.traversableWindowOpen where
   tier := ClaimTier.repoTheorem
-  statement := S.traversableWindowOpen
 
 /-- Witness-built repo claim is tagged in the repo theorem band. -/
 @[rep_depth transport]
@@ -237,14 +246,14 @@ theorem topologicalIndexZ2_append_owner
 
 /-- Tagged repo-tier claim for the finite `ℤ₂` append owner theorem. -/
 @[rep_depth transport]
-def topologicalIndexZ2_append_owner_claim.{u} : TaggedClaim where
+def topologicalIndexZ2_append_owner_claim.{u} :
+    TaggedClaim
+      (∀ (chain₁ chain₂ : List (InfoGeometry.Quantum.KitaevChain.KitaevCell.{u})),
+        macroscopicVolume chain₁ ≠ 0 →
+        macroscopicVolume chain₂ ≠ 0 →
+        topologicalIndexZ2 (chain₁ ++ chain₂)
+          = topologicalIndexZ2 chain₁ + topologicalIndexZ2 chain₂) where
   tier := ClaimTier.repoTheorem
-  statement :=
-    ∀ (chain₁ chain₂ : List (InfoGeometry.Quantum.KitaevChain.KitaevCell.{u})),
-      macroscopicVolume chain₁ ≠ 0 →
-      macroscopicVolume chain₂ ≠ 0 →
-      topologicalIndexZ2 (chain₁ ++ chain₂)
-        = topologicalIndexZ2 chain₁ + topologicalIndexZ2 chain₂
 
 /-- The finite `ℤ₂` append owner claim is tagged as repo theorem. -/
 @[rep_depth transport]
@@ -279,14 +288,14 @@ theorem connesCocycle_state_chain_owner
 
 /-- Tagged repo-tier claim for the Connes cocycle owner chain law. -/
 @[rep_depth transport]
-def connesCocycle_state_chain_owner_claim : TaggedClaim where
+def connesCocycle_state_chain_owner_claim :
+    TaggedClaim
+      (∀ (σ : AdditiveModularFlow (H := E))
+        (u : ℝ → AlgebraEnd E),
+        IsConnesCocycle σ u →
+        ∀ (s t : ℝ),
+        u (s + t) = u s * σ s (u t)) where
   tier := ClaimTier.repoTheorem
-  statement :=
-    ∀ (σ : AdditiveModularFlow (H := E))
-      (u : ℝ → AlgebraEnd E),
-      IsConnesCocycle σ u →
-      ∀ (s t : ℝ),
-      u (s + t) = u s * σ s (u t)
 
 /-- The Connes cocycle owner claim is tagged as repo theorem. -/
 @[rep_depth transport]

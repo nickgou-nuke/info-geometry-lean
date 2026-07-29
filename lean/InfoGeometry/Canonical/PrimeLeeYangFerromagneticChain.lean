@@ -1,4 +1,6 @@
-import Mathlib.Tactic
+import Mathlib.Data.Real.Basic
+import Mathlib.Data.Nat.Prime.Basic
+import Mathlib.Tactic.Linarith
 import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
@@ -477,7 +479,9 @@ structure LeeYangStabilityWitness where
   chain : PrimeFerromagneticChain n
   partitionPolynomial : Polynomial ℂ
   fieldToFugacity : (Fin n → ℝ) → ℂ
-  noRiemannHypothesisClaimGuard : Type*
+  /-- Actual Lee--Yang root-location law for the stored polynomial. -/
+  leeYangRootLocationLaw :
+    ∀ z : ℂ, partitionPolynomial.IsRoot z → OnLeeYangCircle z
 
 namespace LeeYangStabilityWitness
 
@@ -485,11 +489,10 @@ variable (W : LeeYangStabilityWitness (n := n))
 
 /-- Apply an externally proved Lee--Yang circle theorem to the stored polynomial. -/
 theorem root_lies_on_leeYang_circle
-    (hLeeYang : ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
     (z : ℂ)
     (hz : W.partitionPolynomial.IsRoot z) :
     OnLeeYangCircle z :=
-  hLeeYang z hz
+  W.leeYangRootLocationLaw z hz
 
 end LeeYangStabilityWitness
 

@@ -95,9 +95,9 @@ encoding.
 @[rep_depth projective]
 theorem rn_projectiveRotorCocycle_chain
     (B : HasScalarRNBridge A) (f g : A) :
-    toProjectiveRotorCocycle B.vol (f * g) PUnit.unit =
-      toProjectiveRotorCocycle B.vol f PUnit.unit *
-        toProjectiveRotorCocycle B.vol g PUnit.unit :=
+    toProjectiveRotorCocycle B (f * g) PUnit.unit =
+      toProjectiveRotorCocycle B f PUnit.unit *
+        toProjectiveRotorCocycle B g PUnit.unit :=
 by
   simp [toProjectiveRotorCocycle, rn_chain_rule]
 

@@ -4,8 +4,10 @@ import InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
 import InfoGeometry.Canonical.SouriauKreinMetriplecticContext
 import InfoGeometry.Canonical.SouriauThermodynamics
 import InfoGeometry.Canonical.SuperchargeCARCCRBridge
+import InfoGeometry.Canonical.LiteratureGrandCanonicalWeylTKK
 import InfoGeometry.GrandCanonical.Core
 import InfoGeometry.GrandCanonical.ResponseMatrix
+import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.Vacuity
 
@@ -54,13 +56,29 @@ optimization model must supply before the Souriau/KKT language can be used as a
 Lean theorem.
 -/
 @[rep_depth thermo]
-structure KKTEntropyStationarityShadow where
-  coneAdmissible : Prop
-  stationarity : Prop
-  complementarySlackness : Prop
-  finitePartitionAdmissible : Prop
+abbrev KKTEntropyStationarityShadow :=
+  LiteratureGrandCanonicalWeylTKK.KarushKuhnTuckerThermodynamicData
 
 namespace KKTEntropyStationarityShadow
+
+open LiteratureGrandCanonicalWeylTKK
+
+/-- Cone admissibility is genuine primal and dual KKT feasibility. -/
+def coneAdmissible (K : KKTEntropyStationarityShadow) : Prop :=
+  K.primalFeasible ∧ K.dualFeasible
+
+/-- Compatibility projection to the native Lagrangian stationarity law. -/
+abbrev stationarity (K : KKTEntropyStationarityShadow) : Prop :=
+  LiteratureGrandCanonicalWeylTKK.KarushKuhnTuckerThermodynamicData.stationarity K
+
+/-- Compatibility projection to native complementary slackness. -/
+abbrev complementarySlackness (K : KKTEntropyStationarityShadow) : Prop :=
+  LiteratureGrandCanonicalWeylTKK.KarushKuhnTuckerThermodynamicData.complementarySlackness K
+
+/-- Compatibility projection to the finite Gibbs partition equality. -/
+abbrev finitePartitionAdmissible
+    (K : KKTEntropyStationarityShadow) : Prop :=
+  LiteratureGrandCanonicalWeylTKK.KarushKuhnTuckerThermodynamicData.finitePartitionAdmissible K
 
 -- theorem-class: bridge
 /-- The KKT shadow is only a packet of explicit hypotheses. -/
@@ -82,21 +100,39 @@ This narrows the old four-hypothesis packet to one constructive object carrying
 exactly the owned proofs needed to recover the original conjunction surface.
 -/
 @[rep_depth thermo]
-structure Witness where
-  shadow : KKTEntropyStationarityShadow
-  hCone : shadow.coneAdmissible
-  hStationarity : shadow.stationarity
-  hSlack : shadow.complementarySlackness
-  hFinite : shadow.finitePartitionAdmissible
+abbrev Witness := KKTEntropyStationarityShadow
 
 namespace Witness
 
 /-- Recover the full KKT stationarity packet from the proof-carrying witness. -/
 @[rep_depth thermo]
 theorem packet (W : KKTEntropyStationarityShadow.Witness) :
-    W.shadow.coneAdmissible ∧ W.shadow.stationarity ∧
-      W.shadow.complementarySlackness ∧ W.shadow.finitePartitionAdmissible :=
-  ⟨W.hCone, W.hStationarity, W.hSlack, W.hFinite⟩
+    W.coneAdmissible ∧ W.stationarity ∧
+      W.complementarySlackness ∧ W.finitePartitionAdmissible :=
+  ⟨⟨W.primalFeasible_proof, W.dualFeasible_proof⟩,
+    W.stationarity_proof,
+    W.complementarySlackness_proof,
+    W.finitePartitionAdmissible_proof⟩
+
+/-- Historical cone proof projection, now derived from the KKT owner. -/
+theorem hCone (W : KKTEntropyStationarityShadow.Witness) :
+    W.coneAdmissible :=
+  W.packet.1
+
+/-- Historical stationarity proof projection. -/
+theorem hStationarity (W : KKTEntropyStationarityShadow.Witness) :
+    W.stationarity :=
+  W.packet.2.1
+
+/-- Historical complementary-slackness proof projection. -/
+theorem hSlack (W : KKTEntropyStationarityShadow.Witness) :
+    W.complementarySlackness :=
+  W.packet.2.2.1
+
+/-- Historical finite-partition proof projection. -/
+theorem hFinite (W : KKTEntropyStationarityShadow.Witness) :
+    W.finitePartitionAdmissible :=
+  W.packet.2.2.2
 
 end Witness
 
@@ -111,23 +147,18 @@ from squares; exact stationarity and complementarity become constructive only
 when the residuals are definitionally zero or supplied by a concrete model.
 -/
 @[rep_depth thermo]
-structure DimensionAgnosticKKTResiduals where
-  coneSlack : ℝ
-  stationarityResidual : ℝ
-  complementarityResidual : ℝ
-  partitionResidual : ℝ
+abbrev DimensionAgnosticKKTResiduals :=
+  KKTEntropyStationarityShadow
 
 namespace DimensionAgnosticKKTResiduals
 
 variable (R : DimensionAgnosticKKTResiduals)
 
-/-- Convert real KKT residual channels into the existing stationarity packet. -/
+/-- Compatibility projection from the former residual carrier to its native
+KKT datum. -/
 @[rep_depth thermo]
-def toShadow : KKTEntropyStationarityShadow where
-  coneAdmissible := 0 ≤ R.coneSlack ^ (2 : ℕ)
-  stationarity := R.stationarityResidual = 0
-  complementarySlackness := R.complementarityResidual = 0
-  finitePartitionAdmissible := 0 ≤ R.partitionResidual ^ (2 : ℕ)
+def toShadow : KKTEntropyStationarityShadow :=
+  R
 
 /--
 Proof-carrying residual witness for the dimension-agnostic KKT lane.
@@ -138,61 +169,80 @@ residuals are carried once, while cone/partition admissibility are recovered
 constructively from squares.
 -/
 @[rep_depth thermo]
-structure ConstructiveWitness where
-  residuals : DimensionAgnosticKKTResiduals
-  hStationarity : residuals.stationarityResidual = 0
-  hComplementarity : residuals.complementarityResidual = 0
+abbrev ConstructiveWitness := DimensionAgnosticKKTResiduals
 
 namespace ConstructiveWitness
 
 /-- Recover the full KKT shadow witness from the residual witness packet. -/
 @[rep_depth thermo]
 def toShadowWitness (W : DimensionAgnosticKKTResiduals.ConstructiveWitness) :
-    KKTEntropyStationarityShadow.Witness where
-  shadow := W.residuals.toShadow
-  hCone := by
-    dsimp [DimensionAgnosticKKTResiduals.toShadow]
-    exact sq_nonneg W.residuals.coneSlack
-  hStationarity := by
-    simpa [DimensionAgnosticKKTResiduals.toShadow] using W.hStationarity
-  hSlack := by
-    simpa [DimensionAgnosticKKTResiduals.toShadow] using W.hComplementarity
-  hFinite := by
-    dsimp [DimensionAgnosticKKTResiduals.toShadow]
-    exact sq_nonneg W.residuals.partitionResidual
+    KKTEntropyStationarityShadow.Witness :=
+  W.toShadow
 
 /-- Recover the old KKT conjunction from the constructive residual witness. -/
 @[rep_depth thermo]
 theorem packet (W : DimensionAgnosticKKTResiduals.ConstructiveWitness) :
-    W.residuals.toShadow.coneAdmissible ∧
-      W.residuals.toShadow.stationarity ∧
-      W.residuals.toShadow.complementarySlackness ∧
-      W.residuals.toShadow.finitePartitionAdmissible :=
+    W.toShadow.coneAdmissible ∧
+      W.toShadow.stationarity ∧
+      W.toShadow.complementarySlackness ∧
+      W.toShadow.finitePartitionAdmissible :=
   W.toShadowWitness.packet
 
 end ConstructiveWitness
 
-/-- The exact-equilibrium residual packet. -/
+/-- Exact unconstrained equilibrium with a singleton finite partition.
+
+The partition energy and inverse temperature vanish, hence the genuine Gibbs
+sum is `exp 0 = 1`.  There are no inequality or equality constraints, so all
+KKT laws hold by elimination rather than by scalar squared-residual tricks. -/
 @[rep_depth thermo]
 def exact : DimensionAgnosticKKTResiduals where
-  coneSlack := 0
-  stationarityResidual := 0
-  complementarityResidual := 0
-  partitionResidual := 0
+  Primal := Unit
+  InequalityIndex := Empty
+  EqualityIndex := Empty
+  PartitionIndex := Unit
+  point := ()
+  inequalityMultiplier := Empty.elim
+  equalityMultiplier := Empty.elim
+  inequalityConstraint := Empty.elim
+  equalityConstraint := Empty.elim
+  objectiveDerivative := fun _ => 0
+  inequalityDerivative := Empty.elim
+  equalityDerivative := Empty.elim
+  partitionEnergy := fun _ => 0
+  inverseTemperature := 0
+  partitionFunction := 1
+  inequality_feasible := by
+    intro i
+    exact Empty.elim i
+  equality_feasible := by
+    intro j
+    exact Empty.elim j
+  multiplier_nonnegative := by
+    intro i
+    exact Empty.elim i
+  lagrangian_stationary := by
+    intro direction
+    simp
+  complementary_slackness := by
+    intro i
+    exact Empty.elim i
+  partitionFunction_eq := by
+    simp
 
 -- theorem-class: bridge
 /-- Cone admissibility is constructive from the square slack channel. -/
 @[rep_depth thermo]
 theorem coneAdmissible_of_square :
     R.toShadow.coneAdmissible := by
-  exact sq_nonneg R.coneSlack
+  exact ⟨R.primalFeasible_proof, R.dualFeasible_proof⟩
 
 -- theorem-class: bridge
 /-- Partition admissibility is constructive from the square partition channel. -/
 @[rep_depth thermo]
 theorem partitionAdmissible_of_square :
     R.toShadow.finitePartitionAdmissible := by
-  exact sq_nonneg R.partitionResidual
+  exact R.finitePartitionAdmissible_proof
 
 -- theorem-class: bridge
 /--
@@ -200,18 +250,8 @@ Exact residuals construct a proof-carrying KKT witness without external KKT
 hypotheses.
 -/
 @[rep_depth thermo]
-def exactWitness : KKTEntropyStationarityShadow.Witness where
-  shadow := exact.toShadow
-  hCone := by
-    dsimp [exact, toShadow]
-    norm_num
-  hStationarity := by
-    dsimp [exact, toShadow]
-  hSlack := by
-    dsimp [exact, toShadow]
-  hFinite := by
-    dsimp [exact, toShadow]
-    norm_num
+def exactWitness : KKTEntropyStationarityShadow.Witness :=
+  exact.toShadow
 
 -- theorem-class: bridge
 /--
@@ -221,8 +261,8 @@ KKT hypotheses.
 @[rep_depth thermo]
 theorem exact_stationarity_packet :
     let W := exactWitness
-    W.shadow.coneAdmissible ∧ W.shadow.stationarity ∧
-      W.shadow.complementarySlackness ∧ W.shadow.finitePartitionAdmissible := by
+    W.coneAdmissible ∧ W.stationarity ∧
+      W.complementarySlackness ∧ W.finitePartitionAdmissible := by
   simpa using exactWitness.packet
 
 attribute [terminal] exact_stationarity_packet
@@ -748,18 +788,23 @@ the non-coordinate target for later C*- or von-Neumann-algebra instantiations;
 it does not introduce a background spacetime coordinate chart.
 -/
 @[rep_depth operator]
-structure CoordinatelessKMSFisherState (Obs : Type*) where
+structure CoordinatelessKMSFisherState (Obs : Type*) [Ring Obs] where
   state : Obs → ℝ
   souriauMomentGenerator : Obs
-  kmsEquilibrium : Prop
-  weylAutomorphismInvariant : Prop
+  modularFlow :
+    InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow Obs
+  kmsEquilibrium :
+    ∀ t x, state (modularFlow.flow t x) = state x
+  weylAutomorphism : Obs ≃+* Obs
+  weylAutomorphismInvariant :
+    ∀ x, state (weylAutomorphism x) = state x
   quantumFisherMetric : ℝ
 -- theorem-class: bridge
   quantumFisherMetric_nonneg : 0 ≤ quantumFisherMetric
 
 namespace CoordinatelessKMSFisherState
 
-variable {Obs : Type*}
+variable {Obs : Type*} [Ring Obs]
 variable (K : CoordinatelessKMSFisherState Obs)
 
 -- theorem-class: bridge
@@ -773,11 +818,12 @@ theorem fisherMetric_nonneg :
 /-- KMS and Weyl covariance are explicit algebraic hypotheses, not coordinates. -/
 @[rep_depth operator]
 theorem algebraic_equilibrium_packet
-    (hKMS : K.kmsEquilibrium)
-    (hWeyl : K.weylAutomorphismInvariant) :
-    K.kmsEquilibrium ∧ K.weylAutomorphismInvariant ∧
+    (t : ℝ) (x : Obs) :
+    K.state (K.modularFlow.flow t x) = K.state x ∧
+      K.state (K.weylAutomorphism x) = K.state x ∧
       0 ≤ K.quantumFisherMetric :=
-  ⟨hKMS, hWeyl, K.fisherMetric_nonneg⟩
+  ⟨K.kmsEquilibrium t x, K.weylAutomorphismInvariant x,
+    K.fisherMetric_nonneg⟩
 
 /--
 Proof-carrying algebraic equilibrium witness for the coordinateless KMS/Fisher lane.
@@ -787,19 +833,18 @@ object carrying exactly the owned equilibrium proofs needed to recover the
 existing algebraic packet.
 -/
 @[rep_depth operator]
-structure EquilibriumWitness where
-  state : CoordinatelessKMSFisherState Obs
-  hKMS : state.kmsEquilibrium
-  hWeyl : state.weylAutomorphismInvariant
+abbrev EquilibriumWitness := CoordinatelessKMSFisherState Obs
 
 namespace EquilibriumWitness
 
 /-- Recover the old algebraic equilibrium packet from the proof-carrying witness. -/
 @[rep_depth operator]
-theorem packet (W : CoordinatelessKMSFisherState.EquilibriumWitness (Obs := Obs)) :
-    W.state.kmsEquilibrium ∧ W.state.weylAutomorphismInvariant ∧
-      0 ≤ W.state.quantumFisherMetric :=
-  W.state.algebraic_equilibrium_packet W.hKMS W.hWeyl
+theorem packet (W : CoordinatelessKMSFisherState.EquilibriumWitness (Obs := Obs))
+    (t : ℝ) (x : Obs) :
+    W.state (W.modularFlow.flow t x) = W.state x ∧
+      W.state (W.weylAutomorphism x) = W.state x ∧
+      0 ≤ W.quantumFisherMetric :=
+  algebraic_equilibrium_packet W t x
 
 end EquilibriumWitness
 
@@ -1564,9 +1609,9 @@ This narrows the explicit four-hypothesis packet to a single constructive object
 whose shadow is definitionally tied back to `C.kktStationarity`.
 -/
 @[rep_depth thermo]
-structure KKTStationarityWitness where
-  witness : KKTEntropyStationarityShadow.Witness
-  shadow_eq : witness.shadow = C.kktStationarity
+abbrev KKTStationarityWitness : Prop :=
+  ∃ witness : KKTEntropyStationarityShadow.Witness,
+    witness = C.kktStationarity
 
 namespace KKTStationarityWitness
 
@@ -1574,10 +1619,11 @@ namespace KKTStationarityWitness
 @[rep_depth thermo]
 theorem packet (W : C.KKTStationarityWitness) :
     C.kktStationarity.coneAdmissible ∧ C.kktStationarity.stationarity ∧
-      C.kktStationarity.complementarySlackness ∧
+    C.kktStationarity.complementarySlackness ∧
         C.kktStationarity.finitePartitionAdmissible := by
-  rw [← W.shadow_eq]
-  exact W.witness.packet
+  rcases W with ⟨witness, shadow_eq⟩
+  rw [← shadow_eq]
+  exact witness.packet
 
 end KKTStationarityWitness
 
@@ -1605,20 +1651,18 @@ object whose field records that `C.kktStationarity` is definitionally the owned
 exact residual packet.
 -/
 @[rep_depth thermo]
-structure ExactKKTStationarityWitness where
-  shadow_eq :
-    C.kktStationarity =
-      DimensionAgnosticKKTResiduals.toShadow DimensionAgnosticKKTResiduals.exact
+abbrev ExactKKTStationarityWitness : Prop :=
+  C.kktStationarity =
+    DimensionAgnosticKKTResiduals.toShadow DimensionAgnosticKKTResiduals.exact
 
 namespace ExactKKTStationarityWitness
 
 /-- Recover the local KKT stationarity witness from the exact residual branch. -/
 @[rep_depth thermo]
 def toKKTStationarityWitness (W : C.ExactKKTStationarityWitness) :
-    C.KKTStationarityWitness where
-  witness := DimensionAgnosticKKTResiduals.exactWitness
-  shadow_eq := by
-    simpa [DimensionAgnosticKKTResiduals.exactWitness] using W.shadow_eq.symm
+    C.KKTStationarityWitness := by
+  refine ⟨DimensionAgnosticKKTResiduals.exactWitness, ?_⟩
+  simpa [DimensionAgnosticKKTResiduals.exactWitness] using W.symm
 
 end ExactKKTStationarityWitness
 
@@ -1648,7 +1692,7 @@ theorem kktStationarity_packet_of_exact
   exact
     kktStationarity_packet_of_exactWitness
       (C := C)
-      { shadow_eq := hExact }
+      hExact
 
 /-! ## Combined finite/operatorial second-law readout -/
 

@@ -70,6 +70,7 @@ theorem ber_exp_eq_exp_str_debt (a b c d : ℝ) :
     berezinian (Real.exp a * Real.exp b) (Real.exp c * Real.exp d)
       (mul_ne_zero (Real.exp_ne_zero c) (Real.exp_ne_zero d)) =
     Real.exp (supertrace (a + b) (c + d)) :=
-  ber_exp_eq_exp_str a b c d
+  by
+    simp [berezinian, supertrace, Real.exp_add, Real.exp_sub]
 
 end InfoGeometry.Canonical.BerezinianTrace

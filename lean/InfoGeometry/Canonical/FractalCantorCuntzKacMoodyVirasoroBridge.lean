@@ -2,11 +2,12 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 import InfoGeometry.Canonical.CantorBinaryTiltCARCCRBridge
 import InfoGeometry.Core.MajoranaLiftPacket
-import InfoGeometry.Canonical.MajoranaLiftPacketBridge
+import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Geometry.RealMoebiusAction
 import InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
 import InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
+import InfoGeometry.OperatorAlgebra.VirasoroProjectBridge
 import InfoGeometry.OperatorAlgebra.SuperVirasoroExtension
 import InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift
 import InfoGeometry.Meta.Architecture
@@ -51,6 +52,7 @@ open InfoGeometry.Geometry
 open InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
 open InfoGeometry.Arithmetic.PrimeWeylDenominatorBridge
 open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
+open InfoGeometry.OperatorAlgebra.VirasoroProjectBridge
 open InfoGeometry.OperatorAlgebra.SuperVirasoroExtension
 open InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift
 
@@ -63,6 +65,53 @@ abbrev InfiniteBinaryWordSpace :=
 @[rep_depth operator]
 abbrev FiniteBinaryWord :=
   InfoGeometry.Canonical.FractalCantorCliffordFockBridge.FiniteBinaryWord
+
+/-! ## Native VirasoroProject owner -/
+
+/--
+The fractal/Cuntz bridge imports a concrete Virasoro owner rather than treating
+the existence of Virasoro generators as an evidence field.
+-/
+@[rep_depth operator]
+theorem virasoroProject_owner_exists :
+    ∃ V : VirasoroDatum (VirasoroProject.VirasoroAlgebra ℝ),
+      VirasoroProjectRealizes V :=
+  virasoro_project_has_realized_datum
+
+/--
+The central element in the imported Virasoro owner genuinely commutes with
+every Virasoro element.
+-/
+@[rep_depth operator]
+theorem virasoroProject_central_commutes :
+    ∀ X : VirasoroProject.VirasoroAlgebra ℝ,
+      ⁅virasoroProjectVirasoroDatum.central, X⁆ = 0 :=
+  virasoroProjectVirasoroDatum_central_commutes
+
+/--
+The imported Virasoro generators satisfy the native coefficient-normalized
+Virasoro bracket.
+-/
+@[rep_depth operator]
+theorem virasoroProject_bracket :
+    ∀ m n : ℤ,
+      ⁅virasoroProjectVirasoroDatum.Lmode m,
+          virasoroProjectVirasoroDatum.Lmode n⁆ =
+        (m - n : ℝ) • virasoroProjectVirasoroDatum.Lmode (m + n) +
+          (virasoroCentralCoefficient m n : ℝ) •
+            virasoroProjectVirasoroDatum.central :=
+  virasoroProjectVirasoroDatum_bracket
+
+/--
+A proved Heisenberg current representation induces genuine Sugawara Virasoro
+modes; their bracket is inherited from `VirasoroProject.Sugawara`.
+-/
+@[rep_depth operator]
+abbrev heisenbergCurrent_sugawara_bracket
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (H :
+      InfoGeometry.Canonical.CurrentSugawaraBridge.CurrentHeisenbergRep ℝ V) :=
+  currentHeisenbergVirasoroDatum_bracket H
 
 /--
 Compatibility packet for the Cantor/Cuntz/Kac--Moody/Virasoro owner surfaces.
@@ -77,10 +126,8 @@ finite Cantor/Cuntz/CAR data:
 * `boost` carries the prime-mode spinor square-root dictionary;
 * `majorana` carries the real-carrier doubling lift;
 * `bogoljubov` carries the real Bogoliubov KAN shadow;
-* `kacMoody` carries the supplied affine current algebra;
-* `virasoro` carries the supplied Virasoro modes and central element;
-* `bridge` ties the supplied affine and Virasoro layers together;
-* `sugawara` carries the supplied mode-sum construction;
+* `sugawara` carries the supplied mode-sum construction and owns its
+  affine/Virasoro bridge;
 * `superVirasoro` carries the supplied super-Virasoro extension.
 -/
 @[rep_depth operator]
@@ -107,41 +154,18 @@ structure FractalCantorCuntzKacMoodyVirasoroBridge
   boost :
     PrimeSpinorSquareRootPacket ℕ ℝ
 
-  /-- The canonical Majorana lift packet. -/
-  majorana :
-    MajoranaLiftPacket (E := E)
-
   /-- Real Bogoliubov transformation shadow data. -/
   bogoljubov :
     BogoliubovKANShadowPacket E Op Op Op Op Op
 
-  /-- The affine-current Kac--Moody owner datum. -/
-  kacMoody :
-    AffineCurrentDatum Finite Alg
+  /--
+  The supplied Sugawara mode-sum construction.
 
-  /-- The Virasoro owner datum. -/
-  virasoro :
-    VirasoroDatum Alg
-
-  /-- The combined affine-current / Virasoro bridge. -/
-  bridge :
-    AffineVirasoroBridgeDatum Finite Alg
-
-  /-- The bridge's affine layer is the supplied Kac--Moody datum. -/
-  bridge_affine_eq :
-    bridge.affine = kacMoody
-
-  /-- The bridge's Virasoro layer is the supplied Virasoro datum. -/
-  bridge_virasoro_eq :
-    bridge.virasoro = virasoro
-
-  /-- The supplied Sugawara mode-sum construction. -/
+  Its `bridge` field is the unique owner of the affine-current and Virasoro
+  data, avoiding parallel carriers connected only by equality fields.
+  -/
   sugawara :
     SugawaraModeConstructionDatum Finite Alg
-
-  /-- The Sugawara datum uses the same affine/Virasoro bridge. -/
-  sugawara_uses_bridge :
-    sugawara.bridge = bridge
 
   /-- The super-Virasoro owner datum. -/
   superVirasoro :
@@ -160,6 +184,39 @@ variable
 
 variable (B : FractalCantorCuntzKacMoodyVirasoroBridge E Op H Finite Alg)
 
+/-- The affine/Virasoro bridge owned by the Sugawara construction. -/
+@[rep_depth operator]
+abbrev bridge : AffineVirasoroBridgeDatum Finite Alg :=
+  B.sugawara.bridge
+
+/-- The affine-current datum owned by the Sugawara bridge. -/
+@[rep_depth operator]
+abbrev kacMoody : AffineCurrentDatum Finite Alg :=
+  B.sugawara.bridge.affine
+
+/-- The Virasoro datum owned by the Sugawara bridge. -/
+@[rep_depth operator]
+abbrev virasoro : VirasoroDatum Alg :=
+  B.sugawara.bridge.virasoro
+
+/-- The bridge's affine readout is definitionally the Kac--Moody readout. -/
+@[rep_depth operator]
+theorem bridge_affine_eq :
+    B.bridge.affine = B.kacMoody :=
+  rfl
+
+/-- The bridge's Virasoro readout is definitionally the Virasoro readout. -/
+@[rep_depth operator]
+theorem bridge_virasoro_eq :
+    B.bridge.virasoro = B.virasoro :=
+  rfl
+
+/-- The Sugawara datum definitionally uses the exposed bridge readout. -/
+@[rep_depth operator]
+theorem sugawara_uses_bridge :
+    B.sugawara.bridge = B.bridge :=
+  rfl
+
 /-- The spinor-boost dictionary validates the bilinear partition law. -/
 @[rep_depth operator]
 theorem boost_bilinear_partition_holds :
@@ -168,21 +225,35 @@ theorem boost_bilinear_partition_holds :
         (fun p => scalarWeightFromSpinor (B.boost.amplitude p)) :=
   B.boost.bilinear_partition
 
-/-- The Majorana packet exposes the phase-axis square law. -/
+/-- The canonical doubled-space Majorana phase axis squares to `-Id`. -/
+@[rep_depth krein]
+theorem majorana_phase_axis_sq_eq_neg_id :
+    (InfoGeometry.Krein.complex_i (E := E)).comp
+        (InfoGeometry.Krein.complex_i (E := E)) =
+      -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) := by
+  exact InfoGeometry.Krein.complex_i_sq (E := E)
+
+/--
+Recovered Majorana API: the canonical owner phase axis squares to `-Id`.
+
+Unlike the former packet theorem, this statement is directly about the
+repo-owned continuous linear map and stores no duplicate operator or proof
+field.
+-/
 @[rep_depth krein]
 theorem majorana_packet_K_sq_eq_neg_id :
-    B.majorana.K.comp B.majorana.K =
-      -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) := by
-  simpa using
-    (InfoGeometry.Core.MajoranaLiftPacket.K_sq_eq_neg_id
-      (E := E) (P := B.majorana))
+    (InfoGeometry.Core.canonicalMajoranaK (E := E)).comp
+        (InfoGeometry.Core.canonicalMajoranaK (E := E)) =
+      -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) :=
+  InfoGeometry.Core.canonicalMajoranaK_sq_eq_neg_id (E := E)
 
-/-- Backwards-compatible name for the Majorana packet square law. -/
+/-- Compatibility theorem for the recovered canonical Majorana square law. -/
 @[rep_depth krein]
 theorem majorana_packet_holds :
-    B.majorana.K.comp B.majorana.K =
+    (InfoGeometry.Core.canonicalMajoranaK (E := E)).comp
+        (InfoGeometry.Core.canonicalMajoranaK (E := E)) =
       -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) :=
-  majorana_packet_K_sq_eq_neg_id (B := B)
+  majorana_packet_K_sq_eq_neg_id (E := E)
 
 /-- The Bogoliubov shadow exposes the phase-axis force law from the Cartan shadow. -/
 @[rep_depth operator]

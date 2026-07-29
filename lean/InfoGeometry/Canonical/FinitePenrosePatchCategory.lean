@@ -29,32 +29,22 @@ section PatchOrder
 variable {α : Type u}
 
 /-- A finite patch is just a finite set of events. -/
-structure FinitePatch where
-  carrier : Finset α
+abbrev FinitePatch := Finset α
+
+namespace FinitePatch
+
+/-- Projection-compatible name for the native finite-set carrier. -/
+abbrev carrier (P : FinitePatch (α := α)) : Finset α := P
+
+end FinitePatch
 
 @[ext] theorem FinitePatch.ext {P Q : FinitePatch (α := α)}
     (h : P.carrier = Q.carrier) : P = Q := by
-  cases P
-  cases Q
-  cases h
-  rfl
-
-instance : LE (FinitePatch (α := α)) where
-  le P Q := P.carrier ⊆ Q.carrier
+  exact h
 
 @[simp] theorem patch_le_def {P Q : FinitePatch (α := α)} :
     P ≤ Q ↔ P.carrier ⊆ Q.carrier :=
   Iff.rfl
-
-instance : PartialOrder (FinitePatch (α := α)) where
-  le := (· ≤ ·)
-  le_refl P := by
-    exact fun _ ha => ha
-  le_trans _ _ _ hPQ hQR := by
-    exact fun _ ha => hQR (hPQ ha)
-  le_antisymm P Q hPQ hQP := by
-    apply FinitePatch.ext
-    exact Finset.Subset.antisymm hPQ hQP
 
 /-- Patch arrows are inclusions of finite carriers. -/
 abbrev PatchHom (P Q : FinitePatch (α := α)) : Type := PLift (P ≤ Q)

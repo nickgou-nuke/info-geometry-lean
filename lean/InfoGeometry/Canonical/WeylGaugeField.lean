@@ -20,16 +20,31 @@ together with:
 -/
 
 /-- Abstract local Weyl gauge boson/connection field. -/
-structure WeylGaugeField (X A : Type*) where
-  gaugeOf : X → A
+abbrev WeylGaugeField (X A : Type*) := X → A
+
+namespace WeylGaugeField
+
+abbrev gaugeOf {X A : Type*} (B : WeylGaugeField X A) : X → A := B
+
+end WeylGaugeField
 
 /-- Local Weyl gauge parameter (additive shift data). -/
-structure WeylGaugeParameter (X A : Type*) where
-  shiftOf : X → A
+abbrev WeylGaugeParameter (X A : Type*) := X → A
+
+namespace WeylGaugeParameter
+
+abbrev shiftOf {X A : Type*} (σ : WeylGaugeParameter X A) : X → A := σ
+
+end WeylGaugeParameter
 
 /-- Weyl field-strength/curvature object induced by a gauge field. -/
-structure WeylFieldStrength (X A : Type*) where
-  strengthOf : X → A
+abbrev WeylFieldStrength (X A : Type*) := X → A
+
+namespace WeylFieldStrength
+
+abbrev strengthOf {X A : Type*} (F : WeylFieldStrength X A) : X → A := F
+
+end WeylFieldStrength
 
 /--
 Abstract first-order differential interface for local Weyl data.
@@ -94,22 +109,23 @@ variable {W X A R : Type*}
 
 /-- Pull a Weyl gauge field along a logarithmic generator. -/
 def along (B : WeylGaugeField X A) (L : LogGenerator W X) : W → A :=
-  fun w => B.gaugeOf (L.logGen w)
+  fun w => B.gaugeOf (LogGenerator.apply L w)
 
 /-- Pointwise expansion of `WeylGaugeField.along`. -/
 @[simp] theorem along_apply (B : WeylGaugeField X A) (L : LogGenerator W X) (w : W) :
-    B.along L w = B.gaugeOf (L.logGen w) := by
+    B.along L w = B.gaugeOf (LogGenerator.apply L w) := by
   rfl
 
 /-- Read a geometric response through a Weyl gauge field. -/
 def respond (B : WeylGaugeField X A) (resp : GeometricResponse A R) (L : LogGenerator W X) :
     W → R :=
-  fun w => resp.responseOf (B.gaugeOf (L.logGen w))
+  fun w => resp.responseOf (B.gaugeOf (LogGenerator.apply L w))
 
 /-- Pointwise expansion of `WeylGaugeField.respond`. -/
 @[simp] theorem respond_apply
     (B : WeylGaugeField X A) (resp : GeometricResponse A R) (L : LogGenerator W X) (w : W) :
-    B.respond resp L w = resp.responseOf (B.gaugeOf (L.logGen w)) := by
+    B.respond resp L w =
+      resp.responseOf (B.gaugeOf (LogGenerator.apply L w)) := by
   rfl
 
 section GaugeTransform
@@ -117,8 +133,8 @@ section GaugeTransform
 variable [AddMonoid A]
 
 /-- Local Weyl gauge transformation: additive shift of the gauge field. -/
-def transform (B : WeylGaugeField X A) (σ : WeylGaugeParameter X A) : WeylGaugeField X A where
-  gaugeOf x := B.gaugeOf x + σ.shiftOf x
+def transform (B : WeylGaugeField X A) (σ : WeylGaugeParameter X A) : WeylGaugeField X A :=
+  fun x => B.gaugeOf x + σ.shiftOf x
 
 /-- Pointwise expansion of `transform`. -/
 @[simp] theorem transform_apply
@@ -128,12 +144,12 @@ def transform (B : WeylGaugeField X A) (σ : WeylGaugeParameter X A) : WeylGauge
 
 /-- Identity gauge transform (`σ = 0`) leaves the field unchanged. -/
 @[simp] theorem transform_zero (B : WeylGaugeField X A) :
-    B.transform ⟨fun _ => 0⟩ = B := by
-  cases B
+    B.transform (fun _ => 0) = B := by
+  funext x
   simp [transform]
 
 @[simp] theorem transform_zero_apply (B : WeylGaugeField X A) (x : X) :
-    (B.transform ⟨fun _ => 0⟩).gaugeOf x = B.gaugeOf x := by
+    (B.transform (fun _ => 0)).gaugeOf x = B.gaugeOf x := by
   simp
 
 /-- Successive gauge transforms compose by pointwise addition of shifts. -/
@@ -141,10 +157,8 @@ theorem transform_comp
     (B : WeylGaugeField X A)
     (σ₁ σ₂ : WeylGaugeParameter X A) :
     (B.transform σ₁).transform σ₂ =
-      B.transform ⟨fun x => σ₁.shiftOf x + σ₂.shiftOf x⟩ := by
-  cases B
-  cases σ₁
-  cases σ₂
+      B.transform (fun x => σ₁.shiftOf x + σ₂.shiftOf x) := by
+  funext x
   simp [transform, add_assoc]
 
 /-- A response is gauge-invariant if additive local shifts do not change readout. -/
@@ -160,7 +174,8 @@ theorem respond_transform_eq_of_isGaugeInvariant
     (hInv : IsGaugeInvariant resp) :
     (B.transform σ).respond resp L = B.respond resp L := by
   funext w
-  exact hInv (B.gaugeOf (L.logGen w)) (σ.shiftOf (L.logGen w))
+  exact hInv (B.gaugeOf (LogGenerator.apply L w))
+    (σ.shiftOf (LogGenerator.apply L w))
 
 end GaugeTransform
 
@@ -176,8 +191,8 @@ Weyl gauge transformation written in local-potential form:
 def transformByPotential
     (Δ : WeylDifferentialOperator K X A)
     (B : WeylGaugeField X A)
-    (α : WeylGaugeParameter X A) : WeylGaugeField X A where
-  gaugeOf x := B.gaugeOf x - Δ.diff α.shiftOf x
+    (α : WeylGaugeParameter X A) : WeylGaugeField X A :=
+  fun x => B.gaugeOf x - Δ.diff α.shiftOf x
 
 /-- Pointwise expansion of `transformByPotential`. -/
 @[simp] theorem transformByPotential_apply
@@ -191,8 +206,7 @@ def transformByPotential
 /-- Direct field-strength object associated to a Weyl gauge field. -/
 def fieldStrength
     (Δ : WeylDifferentialOperator K X A)
-    (B : WeylGaugeField X A) : WeylFieldStrength X A where
-  strengthOf := Δ.diff B.gaugeOf
+    (B : WeylGaugeField X A) : WeylFieldStrength X A := Δ.diff B.gaugeOf
 
 /-- Pointwise expansion of `fieldStrength`. -/
 @[simp] theorem fieldStrength_apply
@@ -246,11 +260,11 @@ theorem fieldStrength_transformByPotential_eq
     (B : WeylGaugeField X A)
     (α : WeylGaugeParameter X A) :
     (B.transformByPotential Δ α).fieldStrength Δ = B.fieldStrength Δ := by
-  cases B
-  cases α
-  apply congrArg WeylFieldStrength.mk
   funext x
-  simp [transformByPotential, WeylDifferentialOperator.map_sub]
+  change Δ.diff (fun y => B.gaugeOf y - Δ.diff α.shiftOf y) x =
+    Δ.diff B.gaugeOf x
+  rw [Δ.map_sub]
+  simp
 
 /--
 Gauge-invariant responses are unchanged by local potential gauge
@@ -266,7 +280,8 @@ theorem respond_transformByPotential_eq_of_isGaugeInvariant
     (B.transformByPotential Δ α).respond resp L = B.respond resp L := by
   funext w
   simpa [sub_eq_add_neg] using
-    hInv (B.gaugeOf (L.logGen w)) (-Δ.diff α.shiftOf (L.logGen w))
+    hInv (B.gaugeOf (LogGenerator.apply L w))
+      (-Δ.diff α.shiftOf (LogGenerator.apply L w))
 
 /-- Covariant derivative obeys the Weyl compensation law. -/
 theorem covariantDerivative_transformSection_eq

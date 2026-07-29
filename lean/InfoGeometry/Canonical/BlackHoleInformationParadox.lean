@@ -1,4 +1,5 @@
 import Mathlib.Topology.Basic
+import Mathlib.Topology.ContinuousMap.Basic
 import Mathlib.Topology.Instances.Int
 import Mathlib.Topology.Connected.Basic
 import Mathlib.Data.Real.Basic
@@ -25,15 +26,30 @@ def EmergentMetricSpace (M : Type*) := M → ℝ
 /-- A Gravitational Collapse is modeled as a continuous trajectory of metrics 
     parameterized by time $t \in \mathbb{R}$. $t=0$ is the initial state, 
     and $t=1$ represents the Black Hole singularity. -/
-structure GravitationalCollapse (M : Type*) where
-  trajectory : ℝ → EmergentMetricSpace M
+abbrev GravitationalCollapse (M : Type*) := ℝ → EmergentMetricSpace M
+
+namespace GravitationalCollapse
+
+/-- Projection-compatible name for the direct metric trajectory carrier. -/
+abbrev trajectory (C : GravitationalCollapse M) : ℝ → EmergentMetricSpace M := C
+
+end GravitationalCollapse
 
 /-- The Topological Spinor Phase is a continuous map from time to the integers (winding number).
     Since $\mathbb{Z}$ has the discrete topology, any continuous function from $\mathbb{R}$
     to $\mathbb{Z}$ must be globally constant because $\mathbb{R}$ is a connected space. -/
-structure TopologicalSpinorPhase where
-  value : ℝ → ℤ
-  continuous : Continuous value
+abbrev TopologicalSpinorPhase := ContinuousMap ℝ ℤ
+
+namespace TopologicalSpinorPhase
+
+/-- Projection-compatible function view of the native continuous-map carrier. -/
+abbrev value (phase : TopologicalSpinorPhase) : ℝ → ℤ := phase
+
+/-- Projection-compatible continuity fact supplied by `ContinuousMap`. -/
+abbrev continuous (phase : TopologicalSpinorPhase) : Continuous phase.value :=
+  ContinuousMap.continuous phase
+
+end TopologicalSpinorPhase
 
 /-- Theorem: Black Hole Information Preservation.
     The spinor phase information evaluated at the initial flat spacetime ($t=0$)

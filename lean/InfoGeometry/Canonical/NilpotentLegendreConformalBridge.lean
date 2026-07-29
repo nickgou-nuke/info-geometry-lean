@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Core.MajoranaLiftPacket
 import InfoGeometry.Canonical.PrimeCl11ModularAtom
 import InfoGeometry.Canonical.Cl11LorentzAction
 import InfoGeometry.Convex.Legendre
@@ -17,8 +16,7 @@ This bridge is intentionally theorem-safe:
 * the nilpotent translation is an explicit square-zero operator field;
 * the conformal chart is an explicit Legendre-potential readout;
 * the dual-flat affine chart is its derivative coordinate readout;
-* the doubled Majorana lift and `Cl(1,1)` atom are carried by existing root
-  owners;
+* the doubled `Cl(1,1)` atom is carried by its existing root owner;
 * the boost action is the existing `Cl11LorentzAction` modular flow.
 
 The file does not claim any new analytic theorem about nilpotent exponentials
@@ -29,7 +27,6 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.NilpotentLegendreConformalBridge
 
-open InfoGeometry.Core
 open InfoGeometry.Convex
 open InfoGeometry.Canonical.PrimeCl11ModularAtom
 open InfoGeometry.Canonical.Cl11LorentzAction
@@ -52,14 +49,11 @@ local instance : IsTopologicalRing EndH := inferInstance
 /--
 Nilpotent/Legendre conformal bridge packet.
 
-The doubled-real Majorana lift and the split `Cl(1,1)` atom are carried as
-data.  The nilpotent translation and the conformal/dual-flat charts are the
-bridge's explicit operatorial and convex readouts.
+The split `Cl(1,1)` atom is carried as data. The nilpotent translation and the
+conformal/dual-flat charts are the bridge's explicit operatorial and convex
+readouts.
 -/
 structure NilpotentLegendreConformalBridge where
-  /-- Doubled-real Majorana lift. -/
-  majorana : MajoranaLiftPacket (E := E)
-
   /-- Local `Cl(1,1)` atom on the doubled-real carrier. -/
   atom : Cl11Atom EndH
 

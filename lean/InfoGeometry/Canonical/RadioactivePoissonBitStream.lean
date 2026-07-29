@@ -199,21 +199,19 @@ structure ParityPoissonCalibrationAssumption
   oddProbability_eq_poisson :
     oddProbability = ch.idealOddProbability
 
-/-- Four raw bit streams used as a stochastic spinor socket. -/
+/-! A spinor socket is the indexed family of bit streams itself. -/
 @[socket_debt_tag, rep_depth projective]
-structure SpinorSocket where
-  streams : Fin 4 → BitStream
+abbrev SpinorSocket := Fin 4 → BitStream
 
-/-- Four independent radioactive decay channels for a spinor socket. -/
+/-! A radioactive spinor socket is the indexed family of decay channels itself. -/
 @[socket_debt_tag, rep_depth projective]
-structure RadioactiveSpinorSocket where
-  channels : Fin 4 → RadioactiveDecayChannel
+abbrev RadioactiveSpinorSocket := Fin 4 → RadioactiveDecayChannel
 
 /-- Convert four radioactive channels to four parity-bit streams. -/
 @[rep_depth projective]
 def RadioactiveSpinorSocket.toSpinorSocket
-    (rss : RadioactiveSpinorSocket) : SpinorSocket where
-  streams i := (rss.channels i).bitstream
+    (rss : RadioactiveSpinorSocket) : SpinorSocket :=
+  fun i => (rss i).bitstream
 
 /-- Centered and variance-normalized bit readout for a Bernoulli probability `p`. -/
 @[rep_depth projective]
@@ -242,7 +240,7 @@ structure IndependentCenteredSpinorCalibration
   centered : Fin 4 → ℕ → ℝ
   covariance : Fin 4 → Fin 4 → ℝ
   centered_eq :
-    ∀ i n, centered i n = centeredBit (covariance i i) (S.streams i) n
+    ∀ i n, centered i n = centeredBit (covariance i i) (S i) n
   covariance_eq_delta :
     ∀ i j, covariance i j = deltaFin4 i j
 

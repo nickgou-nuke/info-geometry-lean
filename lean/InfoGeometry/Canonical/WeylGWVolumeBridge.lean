@@ -196,7 +196,7 @@ volume is an external predicate below.
 -/
 @[rep_depth projective]
 structure ProjectiveDrazinWeylGWVolumeFusion
-    (G T Target Coeff Op State : Type*) where
+    (G T Target Coeff Op State : Type*) [Add Op] [Mul Op] where
   projectiveCounts : GWProjectiveCountCalibration G T Target Coeff
   drazinGW : DrazinGWVolumeCalibration Op State
   volume : WeylGWVolumeCarrier State
@@ -204,7 +204,7 @@ structure ProjectiveDrazinWeylGWVolumeFusion
 /-- External predicate: physical volume is calibrated to the existing Drazin/GW volume. -/
 @[rep_depth projective]
 def PhysicalVolumeCalibratesDrazinGW
-    {G T Target Coeff Op State : Type*}
+    {G T Target Coeff Op State : Type*} [Add Op] [Mul Op]
     (F : ProjectiveDrazinWeylGWVolumeFusion G T Target Coeff Op State) : Prop :=
   ∀ s : State,
     F.drazinGW.functional.readout.valid s →
@@ -212,7 +212,7 @@ def PhysicalVolumeCalibratesDrazinGW
 
 namespace ProjectiveDrazinWeylGWVolumeFusion
 
-variable {G T Target Coeff Op State : Type*}
+variable {G T Target Coeff Op State : Type*} [Add Op] [Mul Op]
 variable (F : ProjectiveDrazinWeylGWVolumeFusion G T Target Coeff Op State)
 
 @[rep_depth projective]

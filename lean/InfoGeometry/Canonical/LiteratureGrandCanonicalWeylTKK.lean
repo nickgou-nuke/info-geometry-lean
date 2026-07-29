@@ -331,27 +331,126 @@ surface rather than a Karush-Kuhn-Tucker optimizer.
 -/
 @[rep_depth thermo]
 structure KarushKuhnTuckerThermodynamicData where
-  primalFeasible : Prop
-  dualFeasible : Prop
-  stationarity : Prop
-  complementarySlackness : Prop
-  finitePartitionAdmissible : Prop
+  /-- Primal variables and finite inequality/equality constraint labels. -/
+  Primal : Type*
+  InequalityIndex : Type*
+  EqualityIndex : Type*
+  PartitionIndex : Type*
+  [inequalityFintype : Fintype InequalityIndex]
+  [equalityFintype : Fintype EqualityIndex]
+  [partitionFintype : Fintype PartitionIndex]
+  [inequalityDecidableEq : DecidableEq InequalityIndex]
+  [equalityDecidableEq : DecidableEq EqualityIndex]
+  [partitionDecidableEq : DecidableEq PartitionIndex]
+
+  /-- Candidate primal point and Lagrange multipliers. -/
+  point : Primal
+  inequalityMultiplier : InequalityIndex → ℝ
+  equalityMultiplier : EqualityIndex → ℝ
+
+  /-- Constraint functions and their directional derivatives at the point. -/
+  inequalityConstraint : InequalityIndex → Primal → ℝ
+  equalityConstraint : EqualityIndex → Primal → ℝ
+  objectiveDerivative : Primal → ℝ
+  inequalityDerivative : InequalityIndex → Primal → ℝ
+  equalityDerivative : EqualityIndex → Primal → ℝ
+
+  /-- Finite grand-canonical partition data, with dimensionless `k_B = 1`. -/
+  partitionEnergy : PartitionIndex → ℝ
+  inverseTemperature : ℝ
+  partitionFunction : ℝ
+
+  /-- Genuine KKT feasibility, stationarity, and complementarity laws. -/
+  inequality_feasible :
+    ∀ i, inequalityConstraint i point ≤ 0
+  equality_feasible :
+    ∀ j, equalityConstraint j point = 0
+  multiplier_nonnegative :
+    ∀ i, 0 ≤ inequalityMultiplier i
+  lagrangian_stationary :
+    ∀ direction,
+      objectiveDerivative direction +
+          ∑ i, inequalityMultiplier i * inequalityDerivative i direction +
+          ∑ j, equalityMultiplier j * equalityDerivative j direction = 0
+  complementary_slackness :
+    ∀ i, inequalityMultiplier i * inequalityConstraint i point = 0
+  partitionFunction_eq :
+    partitionFunction =
+      ∑ i, Real.exp (-inverseTemperature * partitionEnergy i)
 
 namespace KarushKuhnTuckerThermodynamicData
 
 variable (K : KarushKuhnTuckerThermodynamicData)
 
-/-- The thermodynamic KKT packet exposes exactly its explicit hypotheses. -/
+/-- Native primal feasibility predicate. -/
+def primalFeasible : Prop :=
+  (∀ i, K.inequalityConstraint i K.point ≤ 0) ∧
+    ∀ j, K.equalityConstraint j K.point = 0
+
+/-- Native dual-cone feasibility predicate. -/
+def dualFeasible : Prop :=
+  ∀ i, 0 ≤ K.inequalityMultiplier i
+
+/-- Native Lagrangian stationarity predicate. -/
+def stationarity : Prop :=
+  by
+    letI := K.inequalityFintype
+    letI := K.equalityFintype
+    letI := K.inequalityDecidableEq
+    letI := K.equalityDecidableEq
+    exact ∀ direction,
+      K.objectiveDerivative direction +
+          ∑ i, K.inequalityMultiplier i * K.inequalityDerivative i direction +
+          ∑ j, K.equalityMultiplier j * K.equalityDerivative j direction = 0
+
+/-- Native complementary-slackness predicate. -/
+def complementarySlackness : Prop :=
+  ∀ i,
+    K.inequalityMultiplier i * K.inequalityConstraint i K.point = 0
+
+/-- The finite partition function is the actual Gibbs sum (`k_B = 1`). -/
+def finitePartitionAdmissible : Prop :=
+  by
+    letI := K.partitionFintype
+    letI := K.partitionDecidableEq
+    exact K.partitionFunction =
+      ∑ i, Real.exp (-K.inverseTemperature * K.partitionEnergy i)
+
+/-- Primal feasibility follows from the stored constraint laws. -/
+theorem primalFeasible_proof : K.primalFeasible :=
+  ⟨K.inequality_feasible, K.equality_feasible⟩
+
+/-- Dual feasibility follows from multiplier nonnegativity. -/
+theorem dualFeasible_proof : K.dualFeasible :=
+  K.multiplier_nonnegative
+
+/-- Stationarity is the stored Lagrangian directional-derivative equation. -/
+theorem stationarity_proof : K.stationarity := by
+  letI := K.inequalityFintype
+  letI := K.equalityFintype
+  letI := K.inequalityDecidableEq
+  letI := K.equalityDecidableEq
+  exact K.lagrangian_stationary
+
+/-- Complementary slackness is pointwise in the inequality labels. -/
+theorem complementarySlackness_proof : K.complementarySlackness :=
+  K.complementary_slackness
+
+/-- Finite-partition admissibility is the defining Gibbs-sum equality. -/
+theorem finitePartitionAdmissible_proof : K.finitePartitionAdmissible := by
+  letI := K.partitionFintype
+  letI := K.partitionDecidableEq
+  exact K.partitionFunction_eq
+
+/-- The thermodynamic KKT packet is derived from its typed mathematical data. -/
 @[rep_depth thermo]
 theorem packet
-    (hPrimal : K.primalFeasible)
-    (hDual : K.dualFeasible)
-    (hStationarity : K.stationarity)
-    (hSlack : K.complementarySlackness)
-    (hFinite : K.finitePartitionAdmissible) :
+    :
     K.primalFeasible ∧ K.dualFeasible ∧ K.stationarity ∧
       K.complementarySlackness ∧ K.finitePartitionAdmissible :=
-  ⟨hPrimal, hDual, hStationarity, hSlack, hFinite⟩
+  ⟨K.primalFeasible_proof, K.dualFeasible_proof,
+    K.stationarity_proof, K.complementarySlackness_proof,
+    K.finitePartitionAdmissible_proof⟩
 
 end KarushKuhnTuckerThermodynamicData
 
@@ -365,58 +464,45 @@ readouts.  Exact KKT closure is obtained from the constructive equations
 `residual ^ 2 = 0`; no finite state space or matrix dimension is introduced.
 -/
 @[rep_depth thermo]
-structure KarushKuhnTuckerResidualCertificate where
-  primalResidual : ℝ
-  dualResidual : ℝ
-  stationarityResidual : ℝ
-  complementarySlacknessResidual : ℝ
-  partitionResidual : ℝ
-  primalResidual_sq_zero : primalResidual ^ 2 = 0
-  dualResidual_sq_zero : dualResidual ^ 2 = 0
-  stationarityResidual_sq_zero : stationarityResidual ^ 2 = 0
-  complementarySlacknessResidual_sq_zero :
-    complementarySlacknessResidual ^ 2 = 0
-  partitionResidual_sq_zero : partitionResidual ^ 2 = 0
+abbrev KarushKuhnTuckerResidualCertificate :=
+  KarushKuhnTuckerThermodynamicData
 
 namespace KarushKuhnTuckerResidualCertificate
 
 variable (C : KarushKuhnTuckerResidualCertificate)
 
-/-- Proposition-level KKT data induced by explicit residual readouts. -/
+/-- Compatibility map: the former residual certificate is now the KKT datum
+itself, so no scalar residual shadow is introduced. -/
 @[rep_depth thermo]
-def toThermodynamicData : KarushKuhnTuckerThermodynamicData where
-  primalFeasible := C.primalResidual = 0
-  dualFeasible := C.dualResidual = 0
-  stationarity := C.stationarityResidual = 0
-  complementarySlackness := C.complementarySlacknessResidual = 0
-  finitePartitionAdmissible := C.partitionResidual = 0
+def toThermodynamicData : KarushKuhnTuckerThermodynamicData :=
+  C
 
 /-- Exact primal feasibility from a squared residual equation. -/
 @[rep_depth thermo]
 theorem primalFeasible : C.toThermodynamicData.primalFeasible :=
-  sq_eq_zero_iff.mp C.primalResidual_sq_zero
+  C.primalFeasible_proof
 
 /-- Exact dual feasibility from a squared residual equation. -/
 @[rep_depth thermo]
 theorem dualFeasible : C.toThermodynamicData.dualFeasible :=
-  sq_eq_zero_iff.mp C.dualResidual_sq_zero
+  C.dualFeasible_proof
 
 /-- Exact stationarity from a squared residual equation. -/
 @[rep_depth thermo]
 theorem stationarity : C.toThermodynamicData.stationarity :=
-  sq_eq_zero_iff.mp C.stationarityResidual_sq_zero
+  C.stationarity_proof
 
 /-- Exact complementary slackness from a squared residual equation. -/
 @[rep_depth thermo]
 theorem complementarySlackness :
     C.toThermodynamicData.complementarySlackness :=
-  sq_eq_zero_iff.mp C.complementarySlacknessResidual_sq_zero
+  C.complementarySlackness_proof
 
 /-- Exact partition admissibility from a squared residual equation. -/
 @[rep_depth thermo]
 theorem finitePartitionAdmissible :
     C.toThermodynamicData.finitePartitionAdmissible :=
-  sq_eq_zero_iff.mp C.partitionResidual_sq_zero
+  C.finitePartitionAdmissible_proof
 
 /--
 The complete thermodynamic KKT packet follows constructively from the five
@@ -430,8 +516,6 @@ theorem exactPacket :
       C.toThermodynamicData.complementarySlackness ∧
       C.toThermodynamicData.finitePartitionAdmissible :=
   C.toThermodynamicData.packet
-    C.primalFeasible C.dualFeasible C.stationarity
-    C.complementarySlackness C.finitePartitionAdmissible
 
 end KarushKuhnTuckerResidualCertificate
 
@@ -766,7 +850,7 @@ theorem kktOptimizationPacket
       B.kktOptimization.stationarity ∧
       B.kktOptimization.complementarySlackness ∧
       B.kktOptimization.finitePartitionAdmissible :=
-  B.kktOptimization.packet hPrimal hDual hStationarity hSlack hFinite
+  B.kktOptimization.packet
 
 /--
 The KKT-enhanced bridge still supplies the grand-canonical affine action from

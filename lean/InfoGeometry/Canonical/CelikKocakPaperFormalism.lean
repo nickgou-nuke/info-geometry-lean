@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.LinearAlgebra.TensorProduct.Matrix
 import InfoGeometry.Canonical.CelikKocakCantorOperators
 import InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge
 import InfoGeometry.Clifford.Cl11Matrix

@@ -223,14 +223,13 @@ theorem splitClifford_cliffordConcreteIsCARPair
       (cliffordConcreteCreation (E := E)) :=
   cliffordConcreteIsCARPair (E := E)
 
-/-- The lightcone Sugawara readout is the supplied mode sum whenever the compatibility predicate holds. -/
+/-- The lightcone Sugawara readout is the supplied mode sum. -/
 theorem lightconeSugawara_virasoro_mode_eq_rescaled_sum
     {E Finite Alg Bog Korth Asplit Nshear CartanDiag : Type*}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
     (S : Calibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
-    (hUse : S.UsesLightConeAffineBridge)
     (n : ℤ)
     (hsum :
       ∀ n : ℤ,
@@ -239,7 +238,7 @@ theorem lightconeSugawara_virasoro_mode_eq_rescaled_sum
             S.sugawara.modeSum n) :
     S.kanAffine.affineLightCone.bridge.virasoro.Lmode n =
       S.sugawaraFactor • S.modeSum n :=
-  S.lightcone_virasoro_mode_eq_rescaled_sum hUse n hsum
+  S.lightcone_virasoro_mode_eq_rescaled_sum n hsum
 
 /-- The lightcone Sugawara Virasoro action on positive currents is available directly. -/
 theorem lightconeSugawara_virasoro_acts_on_uPlusCurrent
@@ -248,7 +247,6 @@ theorem lightconeSugawara_virasoro_acts_on_uPlusCurrent
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
     (S : Calibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
-    (hUse : S.UsesLightConeAffineBridge)
     (m n : ℤ)
     (hact :
       ∀ (m n : ℤ) (X : Finite),
@@ -257,7 +255,7 @@ theorem lightconeSugawara_virasoro_acts_on_uPlusCurrent
           (-(n : ℝ)) • S.kanAffine.affineLightCone.bridge.affine.Current (m + n) X) :
     ⁅S.sugawara.bridge.virasoro.Lmode m, S.kanAffine.uPlusCurrent n⁆ =
       (-(n : ℝ)) • S.kanAffine.uPlusCurrent (m + n) :=
-  S.sugawara_virasoro_acts_on_uPlusCurrent hUse m n hact
+  S.sugawara_virasoro_acts_on_uPlusCurrent m n hact
 
 /-- The lightcone Sugawara Virasoro action on negative currents is available directly. -/
 theorem lightconeSugawara_virasoro_acts_on_uMinusCurrent
@@ -266,7 +264,6 @@ theorem lightconeSugawara_virasoro_acts_on_uMinusCurrent
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
     (S : Calibration E Finite Alg Bog Korth Asplit Nshear CartanDiag)
-    (hUse : S.UsesLightConeAffineBridge)
     (m n : ℤ)
     (hact :
       ∀ (m n : ℤ) (X : Finite),
@@ -275,7 +272,7 @@ theorem lightconeSugawara_virasoro_acts_on_uMinusCurrent
           (-(n : ℝ)) • S.kanAffine.affineLightCone.bridge.affine.Current (m + n) X) :
     ⁅S.sugawara.bridge.virasoro.Lmode m, S.kanAffine.uMinusCurrent n⁆ =
       (-(n : ℝ)) • S.kanAffine.uMinusCurrent (m + n) :=
-  S.sugawara_virasoro_acts_on_uMinusCurrent hUse m n hact
+  S.sugawara_virasoro_acts_on_uMinusCurrent m n hact
 
 /-- The lightcone Sugawara central charge calibration is available directly. -/
 theorem lightconeSugawara_centralCharge_calibrated

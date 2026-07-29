@@ -168,6 +168,55 @@ theorem liftFlux_cube_zero
           simp
     _ = 0 := by simp [hright]
 
+/-! ## Tensor propagation of two logarithmic Jordan nilpotents -/
+
+/--
+Nilpotent part of the tensor-sum operator
+`(h₁ I + N₁) ⊗ 1 + 1 ⊗ (h₂ I + N₂)`.
+-/
+def tensorJordanNilpotent (N₁ N₂ : A) : A ⊗[R] A :=
+  N₁ ⊗ₜ[R] (1 : A) + (1 : A) ⊗ₜ[R] N₂
+
+/--
+For two square-zero Jordan nilpotents, the square of their tensor sum is the
+mixed tensor term `2 • (N₁ ⊗ N₂)`.
+-/
+theorem tensorJordanNilpotent_sq
+    (N₁ N₂ : A)
+    (hN₁ : N₁ * N₁ = 0)
+    (hN₂ : N₂ * N₂ = 0) :
+    tensorJordanNilpotent (R := R) N₁ N₂ *
+        tensorJordanNilpotent (R := R) N₁ N₂ =
+      (2 : R) • (N₁ ⊗ₜ[R] N₂ : A ⊗[R] A) := by
+  unfold tensorJordanNilpotent
+  rw [add_mul, mul_add, mul_add]
+  simp [Algebra.TensorProduct.tmul_mul_tmul, hN₁, hN₂, two_smul]
+
+/--
+The tensor sum of two square-zero Jordan nilpotents is nilpotent of order at
+most three.
+-/
+theorem tensorJordanNilpotent_cube_zero
+    (N₁ N₂ : A)
+    (hN₁ : N₁ * N₁ = 0)
+    (hN₂ : N₂ * N₂ = 0) :
+    tensorJordanNilpotent (R := R) N₁ N₂ *
+        tensorJordanNilpotent (R := R) N₁ N₂ *
+        tensorJordanNilpotent (R := R) N₁ N₂ = 0 := by
+  rw [tensorJordanNilpotent_sq (R := R) N₁ N₂ hN₁ hN₂]
+  calc
+    (2 : R) • (N₁ ⊗ₜ[R] N₂ : A ⊗[R] A) *
+          tensorJordanNilpotent (R := R) N₁ N₂ =
+        (2 : R) •
+          ((N₁ ⊗ₜ[R] N₂ : A ⊗[R] A) *
+            tensorJordanNilpotent (R := R) N₁ N₂) := by
+      simp
+    _ = (2 : R) •
+          ((N₁ * N₁) ⊗ₜ[R] N₂ + N₁ ⊗ₜ[R] (N₂ * N₂)) := by
+      simp [tensorJordanNilpotent, mul_add,
+        Algebra.TensorProduct.tmul_mul_tmul]
+    _ = 0 := by simp [hN₁, hN₂]
+
 end
 
 end InfoGeometry.Canonical.ModularCoproductFlux

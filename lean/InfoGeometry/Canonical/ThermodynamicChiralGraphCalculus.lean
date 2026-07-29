@@ -302,9 +302,18 @@ The analytic proof of this law needs positivity of all rate ratios plus a list
 `log`/`prod` exchange theorem.  The packet keeps the boundary explicit without
 using placeholder proofs: a later owner module may construct this structure from those
 positivity assumptions. -/
-structure LogWilsonCycleLaw (C : Cycle E) : Prop where
-  detailedBalance_iff_zero_log_curvature :
-    G.DetailedBalanceOnCycle C ↔ G.cycleCurvatureLog C = 0
+def LogWilsonCycleLaw (C : Cycle E) : Prop :=
+  G.DetailedBalanceOnCycle C ↔ G.cycleCurvatureLog C = 0
+
+namespace LogWilsonCycleLaw
+
+/-- Compatibility theorem for the former one-field law packet. -/
+theorem detailedBalance_iff_zero_log_curvature
+    (h : G.LogWilsonCycleLaw C) :
+    G.DetailedBalanceOnCycle C ↔ G.cycleCurvatureLog C = 0 :=
+  h
+
+end LogWilsonCycleLaw
 
 /-- Global detailed balance relative to a chosen family of cycles. -/
 def GlobalDetailedBalance (cycles : Set (Cycle E)) : Prop :=
@@ -565,10 +574,8 @@ the cycle.  This is the constructive owner proof that fills the abstract
 theorem logWilsonCycleLaw_of_pos
     (C : Cycle E)
     (hpos : ∀ e ∈ C.edges, 0 < G.forwardRate e / G.reverseRate e) :
-    G.LogWilsonCycleLaw C where
-  detailedBalance_iff_zero_log_curvature := by
-    rw [DetailedBalanceOnCycle, G.wilsonLoop_eq_exp_cycleCurvatureLog C hpos,
-        Real.exp_eq_one_iff]
+    G.LogWilsonCycleLaw C :=
+  G.wilsonLoop_eq_one_iff_cycleCurvatureLog_eq_zero_of_pos C hpos
 
 /-- Under positivity on every selected cycle, global detailed balance is
 equivalent to vanishing log-curvature on every selected cycle. -/
@@ -865,6 +872,87 @@ theorem graph_cycleCurvatureLog_gauge_invariant
 
 end ChiralTriangleGraph
 
+namespace DirectedThermoGraph
+
+variable {V E : Type}
+
+def ThermodynamicSemantics (G : DirectedThermoGraph V E) : Prop :=
+  (∀ e : E,
+    G.stochasticCurrent e =
+      G.probability (G.src e) * G.forwardRate e -
+        G.probability (G.dst e) * G.reverseRate e) ∧
+  (∀ v : V,
+    G.storedCharge v = G.capacity v * G.potential v)
+
+def CircuitSemantics (G : DirectedThermoGraph V E) : Prop :=
+  ∀ e : E,
+    G.circuitCurrent e =
+      G.conductance e *
+        (G.potential (G.src e) - G.potential (G.dst e) + G.bias e)
+
+def WilsonLoopSemantics (G : DirectedThermoGraph V E) : Prop :=
+  ∀ C : Cycle E,
+    G.wilsonLoop C =
+      (C.edges.map (fun e => G.forwardRate e / G.reverseRate e)).prod
+
+theorem thermodynamicSemantics_holds (G : DirectedThermoGraph V E) :
+    ThermodynamicSemantics G := by
+  constructor
+  · intro e
+    exact G.stochasticCurrent_eq e
+  · intro v
+    exact G.storedCharge_eq v
+
+theorem circuitSemantics_holds (G : DirectedThermoGraph V E) :
+    CircuitSemantics G := by
+  intro e
+  exact G.circuitCurrent_eq e
+
+theorem wilsonLoopSemantics_holds (G : DirectedThermoGraph V E) :
+    WilsonLoopSemantics G := by
+  intro C
+  rfl
+
+end DirectedThermoGraph
+
+/-! ## Linear resource owner
+
+The syntax-level resource predicate is declared before packets that consume
+it, so those packets can refer to the actual owner rather than an untyped
+semantic certificate.
+-/
+
+namespace ThermoTerm
+
+/-- Count free-variable occurrences of de Bruijn index `k` in a term. -/
+def freeVarCount (k : Nat) : ThermoTerm → Nat
+  | db n => if n = k then 1 else 0
+  | lam body => body.freeVarCount (k + 1)
+  | app fn arg => fn.freeVarCount k + arg.freeVarCount k
+  | nu body => body.freeVarCount (k + 1)
+  | edge _ _ _ _ => 0
+  | tensor l r => l.freeVarCount k + r.freeVarCount k
+  | trace body => body.freeVarCount k
+
+/-- A term satisfies the linear resource discipline at de Bruijn depth `d`. -/
+def IsLinearAt (d : Nat) : ThermoTerm → Prop
+  | db n => n < d
+  | lam body => body.IsLinearAt (d + 1) ∧ body.freeVarCount d ≤ 1
+  | app fn arg =>
+      fn.IsLinearAt d ∧ arg.IsLinearAt d ∧
+      ∀ k, k < d → fn.freeVarCount k + arg.freeVarCount k ≤ 1
+  | nu body => body.IsLinearAt (d + 1) ∧ body.freeVarCount d ≤ 1
+  | edge _ _ _ _ => ∀ k, k < d → (0 : Nat) ≤ 1
+  | tensor l r =>
+      l.IsLinearAt d ∧ r.IsLinearAt d ∧
+      ∀ k, k < d → l.freeVarCount k + r.freeVarCount k ≤ 1
+  | trace body => body.IsLinearAt d
+
+/-- Top-level linear resource discipline. -/
+def IsLinear (t : ThermoTerm) : Prop := t.IsLinearAt 0
+
+end ThermoTerm
+
 /-- Conservative interface packet connecting de Bruijn syntax to decorated graph semantics.
 
 The fields are deliberately proof-carrying assumptions/witnesses, not analytic
@@ -874,38 +962,64 @@ structure ThermodynamicGraphLambdaPacket where
   Vertex : Type
   Edge : Type
   graph : DirectedThermoGraph Vertex Edge
-  semanticInterpretation : Prop
-  linearResourceDiscipline : Prop
-  probabilisticSemantics : Prop
-  circuitSemantics : Prop
-  wilsonLoopSemantics : Prop
-  semanticInterpretation_cert : semanticInterpretation
-  linearResourceDiscipline_cert : linearResourceDiscipline
-  probabilisticSemantics_cert : probabilisticSemantics
-  circuitSemantics_cert : circuitSemantics
-  wilsonLoopSemantics_cert : wilsonLoopSemantics
+  semanticInterpretation : DirectedThermoGraph.ThermodynamicSemantics graph
+  linearResourceDiscipline : ThermoTerm.IsLinear term
+  probabilisticSemantics : ∀ v : Vertex, 0 ≤ graph.probability v
+  circuitSemantics : DirectedThermoGraph.CircuitSemantics graph
+  wilsonLoopSemantics : DirectedThermoGraph.WilsonLoopSemantics graph
+  semanticInterpretation_cert : DirectedThermoGraph.ThermodynamicSemantics graph
+  linearResourceDiscipline_cert : ThermoTerm.IsLinear term
+  probabilisticSemantics_cert : ∀ v : Vertex, 0 ≤ graph.probability v
+  circuitSemantics_cert : DirectedThermoGraph.CircuitSemantics graph
+  wilsonLoopSemantics_cert : DirectedThermoGraph.WilsonLoopSemantics graph
 
 namespace ThermodynamicGraphLambdaPacket
 
 @[simp] theorem semanticInterpretation_holds (P : ThermodynamicGraphLambdaPacket) :
-    P.semanticInterpretation :=
+    DirectedThermoGraph.ThermodynamicSemantics P.graph :=
   P.semanticInterpretation_cert
 
 @[simp] theorem linearResourceDiscipline_holds (P : ThermodynamicGraphLambdaPacket) :
-    P.linearResourceDiscipline :=
+    ThermoTerm.IsLinear P.term :=
   P.linearResourceDiscipline_cert
 
 @[simp] theorem probabilisticSemantics_holds (P : ThermodynamicGraphLambdaPacket) :
-    P.probabilisticSemantics :=
+    ∀ v : P.Vertex, 0 ≤ P.graph.probability v :=
   P.probabilisticSemantics_cert
 
 @[simp] theorem circuitSemantics_holds (P : ThermodynamicGraphLambdaPacket) :
-    P.circuitSemantics :=
+    DirectedThermoGraph.CircuitSemantics P.graph :=
   P.circuitSemantics_cert
 
 @[simp] theorem wilsonLoopSemantics_holds (P : ThermodynamicGraphLambdaPacket) :
-    P.wilsonLoopSemantics :=
+    DirectedThermoGraph.WilsonLoopSemantics P.graph :=
   P.wilsonLoopSemantics_cert
+
+/-- Construct a packet from the actual syntax and probability obligations.
+
+The graph readout fields are supplied by their native definitions and theorems;
+they are not additional semantic witness sockets. -/
+def ofReadouts
+    (term : ThermoTerm)
+    (V E : Type)
+    (graph : DirectedThermoGraph V E)
+    (hlinear : ThermoTerm.IsLinear term)
+    (hprob : ∀ v : V, 0 ≤ graph.probability v) :
+    ThermodynamicGraphLambdaPacket where
+  term := term
+  Vertex := V
+  Edge := E
+  graph := graph
+  semanticInterpretation := DirectedThermoGraph.thermodynamicSemantics_holds graph
+  linearResourceDiscipline := hlinear
+  probabilisticSemantics := hprob
+  circuitSemantics := DirectedThermoGraph.circuitSemantics_holds graph
+  wilsonLoopSemantics := DirectedThermoGraph.wilsonLoopSemantics_holds graph
+  semanticInterpretation_cert := DirectedThermoGraph.thermodynamicSemantics_holds graph
+  linearResourceDiscipline_cert := hlinear
+  probabilisticSemantics_cert := hprob
+  circuitSemantics_cert := DirectedThermoGraph.circuitSemantics_holds graph
+  wilsonLoopSemantics_cert := DirectedThermoGraph.wilsonLoopSemantics_holds graph
 
 end ThermodynamicGraphLambdaPacket
 
@@ -969,34 +1083,6 @@ exactly once.  Nonlinear operations must be explicitly marked as
 thermodynamic operations with associated entropy cost. -/
 
 namespace ThermoTerm
-
-/-- Count free-variable occurrences of de Bruijn index `k` in a term. -/
-def freeVarCount (k : Nat) : ThermoTerm → Nat
-  | db n => if n = k then 1 else 0
-  | lam body => body.freeVarCount (k + 1)
-  | app fn arg => fn.freeVarCount k + arg.freeVarCount k
-  | nu body => body.freeVarCount (k + 1)
-  | edge _ _ _ _ => 0
-  | tensor l r => l.freeVarCount k + r.freeVarCount k
-  | trace body => body.freeVarCount k
-
-/-- A term satisfies the linear resource discipline if every free variable
-is used exactly once.  This is checked at de Bruijn depth `d`. -/
-def IsLinearAt (d : Nat) : ThermoTerm → Prop
-  | db n => n < d
-  | lam body => body.IsLinearAt (d + 1) ∧ body.freeVarCount d ≤ 1
-  | app fn arg =>
-      fn.IsLinearAt d ∧ arg.IsLinearAt d ∧
-      ∀ k, k < d → fn.freeVarCount k + arg.freeVarCount k ≤ 1
-  | nu body => body.IsLinearAt (d + 1) ∧ body.freeVarCount d ≤ 1
-  | edge _ _ _ _ => ∀ k, k < d → (0 : Nat) ≤ 1
-  | tensor l r =>
-      l.IsLinearAt d ∧ r.IsLinearAt d ∧
-      ∀ k, k < d → l.freeVarCount k + r.freeVarCount k ≤ 1
-  | trace body => body.IsLinearAt d
-
-/-- Top-level linear resource discipline. -/
-def IsLinear (t : ThermoTerm) : Prop := t.IsLinearAt 0
 
 /-- Thermodynamic cost of a nonlinear operation (erasure or duplication).
 Measured in units of `kT`. -/

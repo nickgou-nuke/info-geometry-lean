@@ -212,32 +212,21 @@ theorem modularGeneratorScalePart_mem_phaseAxis_odd
     (modularGeneratorScalePart_isPhaseAntilinear (E := E) hMod)
 
 /--
-Concrete Cartan forcing data for the modular scale source against the clock
-axis.  This certifies the source as odd and the clock as even; it does not claim
-the source commutator vanishes.
--/
-@[rep_depth transport]
-noncomputable def scaleClockCartanForcingData
-    (hMod : EndH) :
-    InfoGeometry.Core.SymmetricLieAlgebra.CartanPhaseAxisForcingData EndH where
-  S := phaseAxisSymmetricLieAlgebra (E := E)
-  K := modularGeneratorScalePart (E := E) hMod
-  I := Kop
-  hK_odd := modularGeneratorScalePart_mem_phaseAxis_odd (E := E) hMod
-  hI_even := clockAxis_mem_phaseAxis_even (E := E)
-
-/--
-The scale-clock commutator lies in the odd sector by the concrete phase-axis
-Cartan forcing data.
+The scale-clock commutator lies in the odd sector by the phase-axis Cartan
+grading.
 -/
 @[rep_depth transport]
 theorem scaleClock_commutator_mem_phaseAxis_odd
     (hMod : EndH) :
     ⁅modularGeneratorScalePart (E := E) hMod, Kop⁆
       ∈ (phaseAxisSymmetricLieAlgebra (E := E)).oddSubmodule := by
-  simpa [scaleClockCartanForcingData] using
+  exact
     InfoGeometry.Core.SymmetricLieAlgebra.commutator_KI_mem_odd
-      (D := scaleClockCartanForcingData (E := E) hMod)
+      (phaseAxisSymmetricLieAlgebra (E := E))
+      (modularGeneratorScalePart (E := E) hMod)
+      Kop
+      (modularGeneratorScalePart_mem_phaseAxis_odd (E := E) hMod)
+      (clockAxis_mem_phaseAxis_even (E := E))
 
 /--
 The gauge-clock commutator stays in the even sector.  This is the concrete

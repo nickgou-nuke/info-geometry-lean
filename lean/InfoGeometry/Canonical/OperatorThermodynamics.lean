@@ -55,22 +55,6 @@ structure OperatorFirstThermodynamicsPacket
   /-- Partition function positivity at the chosen parameter. -/
   partitionFunction_pos : 0 < family.partitionFunction referenceParam
 
-  /-- Relative-entropy readout on operator states. -/
-  relativeEntropyReadout : Op → ℝ
-
-  /-- Supervolume readout on operator states. -/
-  supervolumeReadout : Op → ℝ
-
-  /-- Relative entropy is read from the normalized operator state. -/
-  relativeEntropy_eq_readout :
-    relativeEntropyReadout (family.normalizedState referenceParam) =
-      - Real.log (family.partitionFunction referenceParam)
-
-  /-- Supervolume is read from the same operator state. -/
-  supervolume_eq_readout :
-    supervolumeReadout (family.normalizedState referenceParam) =
-      - Real.log (family.partitionFunction referenceParam)
-
 namespace OperatorFirstThermodynamicsPacket
 
 variable {Param Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
@@ -91,13 +75,19 @@ def massieuPotential (P : OperatorFirstThermodynamicsPacket Param Op) : ℝ :=
 def freeEnergy (P : OperatorFirstThermodynamicsPacket Param Op) : ℝ :=
   - Real.log (P.family.partitionFunction P.referenceParam)
 
-/-- Relative entropy as an operator-state readout, not a primitive scalar field. -/
-def relativeEntropy (P : OperatorFirstThermodynamicsPacket Param Op) : ℝ :=
-  P.relativeEntropyReadout (P.family.normalizedState P.referenceParam)
+/--
+Historical relative-entropy shadow.
 
-/-- Supervolume as an operator-state readout, not a primitive scalar field. -/
+This is only the packet's negative-log-partition sign convention.  It is not
+an Araki or Umegaki relative entropy, which requires two states and a genuine
+relative modular owner.
+-/
+def negativeMassieuPotential (P : OperatorFirstThermodynamicsPacket Param Op) : ℝ :=
+  - Real.log (P.family.partitionFunction P.referenceParam)
+
+/-- Supervolume potential derived from the same partition potential. -/
 def supervolumePotential (P : OperatorFirstThermodynamicsPacket Param Op) : ℝ :=
-  P.supervolumeReadout (P.family.normalizedState P.referenceParam)
+  - Real.log (P.family.partitionFunction P.referenceParam)
 
 @[simp]
 theorem modularHamiltonian_eq_negativeLogModularOperator
@@ -118,16 +108,16 @@ theorem freeEnergy_eq_neg_log_partition
   rfl
 
 @[simp]
-theorem relativeEntropy_eq_neg_massieu
+theorem negativeMassieuPotential_eq_neg_massieu
     (P : OperatorFirstThermodynamicsPacket Param Op) :
-    P.relativeEntropy = - P.massieuPotential := by
-  rw [relativeEntropy, P.relativeEntropy_eq_readout, massieuPotential]
+    P.negativeMassieuPotential = - P.massieuPotential :=
+  rfl
 
 @[simp]
 theorem supervolumePotential_eq_freeEnergy
     (P : OperatorFirstThermodynamicsPacket Param Op) :
-    P.supervolumePotential = P.freeEnergy := by
-  rw [supervolumePotential, P.supervolume_eq_readout, freeEnergy]
+    P.supervolumePotential = P.freeEnergy :=
+  rfl
 
 end OperatorFirstThermodynamicsPacket
 
@@ -141,44 +131,25 @@ The new language is:
 - relative entropy = surprisal / log-density readout;
 - supervolume potential = negative log supervolume readout.
 -/
-structure OperatorThermodynamicsPacket
-    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] where
-  /-- Modular Hamiltonian / negative-log operator owner. -/
-  modular : ModularHamiltonianSurprisalContext (H := Op)
-
-  /-- Partition function readout. -/
-  partitionFunction : ℝ
-
-  /-- The partition function is positive where logarithms are read. -/
-  partitionFunction_pos : 0 < partitionFunction
-
-  /-- Massieu/log-partition potential. -/
-  massieuPotential : ℝ
-
-  /-- Helmholtz free-energy readout. -/
-  freeEnergy : ℝ
-
-  /-- Relative entropy / surprisal readout. -/
-  relativeEntropy : ℝ
-
-  /-- Supervolume potential, aligned with the split-supergeometry shadow. -/
-  supervolumePotential : ℝ
-
-  /-- Massieu potential is the logarithm of the partition function. -/
-  massieuPotential_eq_log_partition : massieuPotential = Real.log partitionFunction
-
-  /-- Free energy is the negative logarithm of the partition function. -/
-  freeEnergy_eq_neg_log_partition : freeEnergy = - Real.log partitionFunction
-
-  /-- Relative entropy is the negative Massieu potential in this sign convention. -/
-  relativeEntropy_eq_neg_massieu : relativeEntropy = - massieuPotential
-
-  /-- The supervolume potential is the same scalar shadow as the free energy. -/
-  supervolumePotential_eq_freeEnergy : supervolumePotential = freeEnergy
+abbrev OperatorThermodynamicsPacket
+    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] :=
+  ModularHamiltonianSurprisalContext (H := Op) ×
+    { Z : ℝ // 0 < Z }
 
 namespace OperatorThermodynamicsPacket
 
 variable {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+
+abbrev modular (P : OperatorThermodynamicsPacket Op) :
+    ModularHamiltonianSurprisalContext (H := Op) :=
+  P.1
+
+abbrev partitionFunction (P : OperatorThermodynamicsPacket Op) : ℝ :=
+  P.2.1
+
+abbrev partitionFunction_pos (P : OperatorThermodynamicsPacket Op) :
+    0 < P.partitionFunction :=
+  P.2.2
 
 /-- The modular Hamiltonian readout. -/
 def modularHamiltonian (P : OperatorThermodynamicsPacket Op) : Op →L[ℝ] Op :=
@@ -187,6 +158,22 @@ def modularHamiltonian (P : OperatorThermodynamicsPacket Op) : Op →L[ℝ] Op :
 /-- The negative-log modular operator readout. -/
 def negativeLogModularOperator (P : OperatorThermodynamicsPacket Op) : Op →L[ℝ] Op :=
   P.modular.negativeLogModularOperator
+
+/-- Massieu/log-partition potential, derived from the partition function. -/
+def massieuPotential (P : OperatorThermodynamicsPacket Op) : ℝ :=
+  Real.log P.partitionFunction
+
+/-- Helmholtz free-energy shadow in the packet's unit-temperature convention. -/
+def freeEnergy (P : OperatorThermodynamicsPacket Op) : ℝ :=
+  -Real.log P.partitionFunction
+
+/-- Relative-entropy scalar shadow in the packet's sign convention. -/
+def negativeMassieuPotential (P : OperatorThermodynamicsPacket Op) : ℝ :=
+  -P.massieuPotential
+
+/-- Supervolume scalar shadow, definitionally the free-energy shadow. -/
+def supervolumePotential (P : OperatorThermodynamicsPacket Op) : ℝ :=
+  P.freeEnergy
 
 @[simp]
 theorem modularHamiltonian_eq_negativeLogModularOperator
@@ -198,25 +185,38 @@ theorem modularHamiltonian_eq_negativeLogModularOperator
 theorem massieuPotential_eq_log_partition'
     (P : OperatorThermodynamicsPacket Op) :
     P.massieuPotential = Real.log P.partitionFunction :=
-  P.massieuPotential_eq_log_partition
+  rfl
 
 @[simp]
 theorem freeEnergy_eq_neg_log_partition'
     (P : OperatorThermodynamicsPacket Op) :
     P.freeEnergy = - Real.log P.partitionFunction :=
-  P.freeEnergy_eq_neg_log_partition
+  rfl
+
+@[simp]
+theorem negativeMassieuPotential_eq_neg_massieu'
+    (P : OperatorThermodynamicsPacket Op) :
+    P.negativeMassieuPotential = - P.massieuPotential :=
+  rfl
+
+/-! Historical API compatibility: the former `relativeEntropy` readout was
+renamed to `negativeMassieuPotential` so it is not confused with a genuine
+relative entropy between two states.  Keep the old theorem name as an alias
+to the same owner equation. -/
+abbrev relativeEntropy (P : OperatorThermodynamicsPacket Op) : ℝ :=
+  P.negativeMassieuPotential
 
 @[simp]
 theorem relativeEntropy_eq_neg_massieu'
     (P : OperatorThermodynamicsPacket Op) :
     P.relativeEntropy = - P.massieuPotential :=
-  P.relativeEntropy_eq_neg_massieu
+  P.negativeMassieuPotential_eq_neg_massieu'
 
 @[simp]
 theorem supervolumePotential_eq_freeEnergy'
     (P : OperatorThermodynamicsPacket Op) :
     P.supervolumePotential = P.freeEnergy :=
-  P.supervolumePotential_eq_freeEnergy
+  rfl
 
 /-- The negative-log partition readout, in free-energy sign convention. -/
 def partitionPotential (P : OperatorThermodynamicsPacket Op) : ℝ :=
@@ -236,8 +236,7 @@ def supervolumeReadout (P : OperatorThermodynamicsPacket Op) : ℝ :=
 theorem supervolumePotential_eq_partitionPotential
     (P : OperatorThermodynamicsPacket Op) :
     supervolumeReadout P = P.partitionPotential := by
-  rw [supervolumeReadout, partitionPotential]
-  rw [P.supervolumePotential_eq_freeEnergy, P.freeEnergy_eq_neg_log_partition]
+  rfl
 
 end OperatorThermodynamicsPacket
 
@@ -250,18 +249,9 @@ Compatibility projection into the older scalar-shadow packet.
 -/
 def toShadowPacket
     (P : OperatorFirstThermodynamicsPacket Param Op) :
-    OperatorThermodynamicsPacket Op where
-  modular := P.modular
-  partitionFunction := P.family.partitionFunction P.referenceParam
-  partitionFunction_pos := P.partitionFunction_pos
-  massieuPotential := P.massieuPotential
-  freeEnergy := P.freeEnergy
-  relativeEntropy := P.relativeEntropy
-  supervolumePotential := P.supervolumePotential
-  massieuPotential_eq_log_partition := P.massieuPotential_eq_log_partition
-  freeEnergy_eq_neg_log_partition := P.freeEnergy_eq_neg_log_partition
-  relativeEntropy_eq_neg_massieu := P.relativeEntropy_eq_neg_massieu
-  supervolumePotential_eq_freeEnergy := P.supervolumePotential_eq_freeEnergy
+    OperatorThermodynamicsPacket Op :=
+  ⟨P.modular,
+    ⟨P.family.partitionFunction P.referenceParam, P.partitionFunction_pos⟩⟩
 
 @[simp]
 theorem toShadowPacket_partitionFunction
@@ -276,9 +266,9 @@ theorem toShadowPacket_freeEnergy
   rfl
 
 @[simp]
-theorem toShadowPacket_relativeEntropy
+theorem toShadowPacket_negativeMassieuPotential
     (P : OperatorFirstThermodynamicsPacket Param Op) :
-    P.toShadowPacket.relativeEntropy = P.relativeEntropy :=
+    P.toShadowPacket.negativeMassieuPotential = P.negativeMassieuPotential :=
   rfl
 
 end OperatorFirstThermodynamicsPacket
@@ -290,12 +280,20 @@ This is a packaging theorem only: the modular operator, Massieu potential,
 free energy, and supervolume readout are different names for the same scalar
 potential chain.
 -/
-structure FirstQuantizationLaw (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] where
-  packet : OperatorThermodynamicsPacket Op
+abbrev FirstQuantizationLaw
+    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] :=
+  OperatorThermodynamicsPacket Op
 
 namespace FirstQuantizationLaw
 
 variable {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+
+/--
+Compatibility projection for the former one-field wrapper.  A first-
+quantization law is now definitionally its genuine thermodynamic owner.
+-/
+abbrev packet (L : FirstQuantizationLaw Op) : OperatorThermodynamicsPacket Op :=
+  L
 
 def modularHamiltonian (L : FirstQuantizationLaw Op) : Op →L[ℝ] Op :=
   L.packet.modularHamiltonian
@@ -303,8 +301,8 @@ def modularHamiltonian (L : FirstQuantizationLaw Op) : Op →L[ℝ] Op :=
 def freeEnergy (L : FirstQuantizationLaw Op) : ℝ :=
   L.packet.freeEnergy
 
-def relativeEntropy (L : FirstQuantizationLaw Op) : ℝ :=
-  L.packet.relativeEntropy
+def negativeMassieuPotential (L : FirstQuantizationLaw Op) : ℝ :=
+  L.packet.negativeMassieuPotential
 
 def supervolumePotential (L : FirstQuantizationLaw Op) : ℝ :=
   L.packet.supervolumePotential

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Topology.UniformSpace.LocallyUniformConvergence
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Analysis.CliffordWaveletTransform
 
@@ -70,20 +71,32 @@ structure PrimeCliffordWaveletRealization
   partial_eq_renormZ :
     ∀ N z, waveletPartial N z = A.renormZ N z
 
-  /-- Compact-uniform tail control on the Cayley chart.
+  /-- Each finite wavelet partial is complex differentiable. -/
+  holomorphicPartials :
+    ∀ N, Differentiable ℂ (waveletPartial N)
 
-  This is the precise replacement for vague convergence.
-  It should later be made into a locally-uniform convergence theorem.
-  -/
-  compactUniformTailControl : Prop
+  /-- The finite partials are uniformly bounded on compact subsets. -/
+  locallyUniformBounded :
+    ∀ K : Set ℂ, IsCompact K →
+      ∃ C : ℝ, ∀ N z, z ∈ K → ‖waveletPartial N z‖ ≤ C
+
+  /-- The partials are Cauchy uniformly on every compact subset. -/
+  compactUniformTailControl :
+    ∀ K : Set ℂ, IsCompact K → ∀ ε : ℝ, 0 < ε →
+      ∃ N₀, ∀ m n, N₀ ≤ m → N₀ ≤ n →
+        ∀ z, z ∈ K → ‖waveletPartial m z - waveletPartial n z‖ < ε
+
+  /-- The candidate locally uniform limit. -/
+  waveletLimit : ℂ → ℂ
 
   /-- Identification of the full wavelet reconstruction with completed `xi`. -/
   reconstruction_eq_xi_cayley :
     ∀ z : ℂ,
-      ∃ N : ℕ, waveletPartial N z = Xi.xi (cayleyInv z)
+      waveletLimit z = Xi.xi (cayleyInv z)
 
   /-- The analytic conclusion needed by the Hurwitz bridge. -/
-  locallyUniformRenormalizedLimit : Prop
+  locallyUniformRenormalizedLimit :
+    TendstoLocallyUniformly waveletPartial waveletLimit Filter.atTop
 
 /-- Extract the Hurwitz-ready convergence witness from the Clifford wavelet
 realization. -/
@@ -93,7 +106,7 @@ def locallyUniformLimit_of_cliffordWaveletRealization
     (A : PrimeLeeYangApproximants)
     (Xi : CompletedXiFunction)
     (R : PrimeCliffordWaveletRealization W A Xi) :
-    Prop :=
+    TendstoLocallyUniformly R.waveletPartial R.waveletLimit Filter.atTop :=
   R.locallyUniformRenormalizedLimit
 
 end InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit

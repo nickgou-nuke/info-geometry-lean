@@ -38,16 +38,18 @@ local notation "Obs" => AlgebraEnd H
 /--
 Operator-valued 2-cocycle correction for a Souriau moment map.
 
-`closed` is intentionally a proposition field: different concrete categories
-will spell the cocycle differential differently.  This bridge only uses the
-correction and the antisymmetry/equivariance-defect witnesses.
+The symmetry carrier is a Mathlib `LieRing`.  Closure is the
+Chevalley--Eilenberg cyclic identity for an operator-valued 2-cocycle with
+trivial coefficient action.
 -/
 @[rep_depth operator]
-structure SouriauMomentTwoCocycle (Symmetry : Type v) where
+structure SouriauMomentTwoCocycle (Symmetry : Type v) [LieRing Symmetry] where
   cocycle : Symmetry → Symmetry → Obs
   centralCorrection : Symmetry → Obs
   antisymmetric : ∀ X Y : Symmetry, cocycle X Y = -cocycle Y X
-  closed : Prop
+  closed :
+    ∀ X Y Z : Symmetry,
+      cocycle ⁅X, Y⁆ Z + cocycle ⁅Y, Z⁆ X + cocycle ⁅Z, X⁆ Y = 0
   moment_defect :
     ∀ X Y : Symmetry, centralCorrection X * centralCorrection Y
       - centralCorrection Y * centralCorrection X = cocycle X Y
@@ -58,6 +60,7 @@ Moment map corrected by the central/non-equivariant cocycle lane.
 @[rep_depth operator]
 noncomputable def correctedMomentOperator
     {Symmetry : Type v}
+    [LieRing Symmetry]
     (J : OperatorSouriauMoment (H := H) Symmetry)
     (κ : SouriauMomentTwoCocycle (H := H) Symmetry)
     (X : Symmetry) : Obs :=
@@ -67,6 +70,7 @@ noncomputable def correctedMomentOperator
 @[rep_depth operator]
 theorem correctedMomentOperator_eq_moment_of_zero_correction
     {Symmetry : Type v}
+    [LieRing Symmetry]
     (J : OperatorSouriauMoment (H := H) Symmetry)
     (κ : SouriauMomentTwoCocycle (H := H) Symmetry)
     (X : Symmetry)
@@ -80,6 +84,7 @@ The non-equivariance defect is exactly the supplied operator 2-cocycle.
 @[rep_depth operator]
 theorem centralCorrection_commutator_eq_cocycle
     {Symmetry : Type v}
+    [LieRing Symmetry]
     (κ : SouriauMomentTwoCocycle (H := H) Symmetry)
     (X Y : Symmetry) :
     κ.centralCorrection X * κ.centralCorrection Y
@@ -90,10 +95,21 @@ theorem centralCorrection_commutator_eq_cocycle
 @[rep_depth operator]
 theorem cocycle_antisymmetric
     {Symmetry : Type v}
+    [LieRing Symmetry]
     (κ : SouriauMomentTwoCocycle (H := H) Symmetry)
     (X Y : Symmetry) :
     κ.cocycle X Y = -κ.cocycle Y X :=
   κ.antisymmetric X Y
+
+/-- The operator-valued Chevalley--Eilenberg 2-cocycle identity. -/
+@[rep_depth operator]
+theorem cocycle_closed
+    {Symmetry : Type v}
+    [LieRing Symmetry]
+    (κ : SouriauMomentTwoCocycle (H := H) Symmetry)
+    (X Y Z : Symmetry) :
+    κ.cocycle ⁅X, Y⁆ Z + κ.cocycle ⁅Y, Z⁆ X + κ.cocycle ⁅Z, X⁆ Y = 0 :=
+  κ.closed X Y Z
 
 end OperatorCocycle
 

@@ -45,7 +45,7 @@ readout.
 structure DIIIZ2DivisionEntropyBridge
     (M : RealMajoranaDatum (S := S))
     (P0 : KPolarization (S := S) M)
-    (Op State : Type*) where
+    (Op State : Type*) [Add Op] [Mul Op] where
   /-- Local open-chain operator channel. -/
   localOp : KitaevCell -> EndS
   /-- Finite Kitaev chain. -/
@@ -78,7 +78,7 @@ namespace DIIIZ2DivisionEntropyBridge
 
 variable {M : RealMajoranaDatum (S := S)}
 variable {P0 : KPolarization (S := S) M}
-variable {Op State : Type*}
+variable {Op State : Type*} [Add Op] [Mul Op]
 variable (B : DIIIZ2DivisionEntropyBridge (S := S) M P0 Op State)
 
 /--
@@ -123,7 +123,7 @@ The DIII division-fiber calibration makes the sector entropy nonnegative.
 theorem entropy_nonneg_of_DIII_Z2_sector
     (hvalid : B.divisionEntropy.calibration.functional.readout.valid B.stateOfChain) :
     0 ≤ B.divisionEntropy.calibration.functional.entropy B.stateOfChain :=
-  B.divisionEntropy.entropy_nonneg_of_division_identity
+  MoorePenroseDivisionIdentityLaw.entropy_nonneg_of_division_identity B.divisionEntropy
     B.stateOfChain
     hvalid
     B.divisionFiber_of_topologicalSector
@@ -140,7 +140,7 @@ theorem entropy_eq_log_mp_trace_of_DIII_Z2_sector
         Real.log
           (B.divisionEntropy.calibration.trace
             (B.divisionEntropy.calibration.mpProjector B.stateOfChain)) :=
-  B.divisionEntropy.calibration.entropy_eq_log_mp_trace
+  MoorePenroseVolumeCalibration.entropy_eq_log_mp_trace B.divisionEntropy.calibration
     B.stateOfChain
     hvalid
 
@@ -158,7 +158,7 @@ theorem DIII_Z2_boundary_zero_mode_and_entropy_nonneg
       (globalChainOperatorFromOpenChain (S := S) B.localOp B.chain)
       ∧
     0 ≤ B.divisionEntropy.calibration.functional.entropy B.stateOfChain :=
-  ⟨B.hasSurfaceZeroMode, B.entropy_nonneg_of_DIII_Z2_sector hvalid⟩
+  ⟨hasSurfaceZeroMode B, entropy_nonneg_of_DIII_Z2_sector B hvalid⟩
 
 end DIIIZ2DivisionEntropyBridge
 

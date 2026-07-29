@@ -54,9 +54,14 @@ structure HodgeStarSelfDualSplit where
   selfDualSector : SD
   antiSelfDualSector : ASD
   twistorIncidence : IncidenceObj
-  selfDualCondition : Prop
-  antiSelfDualCondition : Prop
-  incidenceCompatible : Prop
+  selfDualLocus : Set SD
+  antiSelfDualLocus : Set ASD
+  incidenceCompatibleLocus : Set (SD × ASD × IncidenceObj)
+  selfDualCondition : selfDualSector ∈ selfDualLocus
+  antiSelfDualCondition : antiSelfDualSector ∈ antiSelfDualLocus
+  incidenceCompatible :
+    (selfDualSector, antiSelfDualSector, twistorIncidence) ∈
+      incidenceCompatibleLocus
 
 /--
 Palatial-twistor operator interface.
@@ -68,10 +73,15 @@ separate from the Hodge-star split.
 @[rep_depth krein]
 structure PalatialTwistorOperatorAlgebra where
   twistorOperator : OperatorObj
-  operatorialIncidence : Prop
   holonomyReadout : HolonomyObj
-  differentialOperatorCompatible : Prop
-  incidenceHolonomyCompatible : Prop
+  operatorialIncidenceLocus : Set OperatorObj
+  differentialOperatorCompatibleLocus : Set OperatorObj
+  incidenceHolonomyCompatibleLocus : Set (OperatorObj × HolonomyObj)
+  operatorialIncidence : twistorOperator ∈ operatorialIncidenceLocus
+  differentialOperatorCompatible :
+    twistorOperator ∈ differentialOperatorCompatibleLocus
+  incidenceHolonomyCompatible :
+    (twistorOperator, holonomyReadout) ∈ incidenceHolonomyCompatibleLocus
 
 /--
 Explicit bridge context between the Hodge SD/ASD side and the palatial operator
@@ -87,43 +97,46 @@ structure TwistorHodgePalatialBridgeContext where
     (SD := SD) (ASD := ASD) (IncidenceObj := IncidenceObj)
   palatialOps : PalatialTwistorOperatorAlgebra
     (OperatorObj := OperatorObj) (HolonomyObj := HolonomyObj)
-  incidenceTransportCompatible : Prop
-  hodgeHolonomyCompatible : Prop
-  operatorHodgeCompatible : Prop
+  incidenceTransportLocus : Set (HodgeStarSelfDualSplit ×
+    PalatialTwistorOperatorAlgebra)
+  hodgeHolonomyLocus : Set (HodgeStarSelfDualSplit ×
+    PalatialTwistorOperatorAlgebra)
+  operatorHodgeLocus : Set (HodgeStarSelfDualSplit ×
+    PalatialTwistorOperatorAlgebra)
+  incidenceTransportCompatible :
+    (hodgeSplit, palatialOps) ∈ incidenceTransportLocus
+  hodgeHolonomyCompatible :
+    (hodgeSplit, palatialOps) ∈ hodgeHolonomyLocus
+  operatorHodgeCompatible :
+    (hodgeSplit, palatialOps) ∈ operatorHodgeLocus
 
 @[rep_depth transport]
 theorem TwistorHodgePalatialBridgeContext.has_hodge_split
     (C : TwistorHodgePalatialBridgeContext
       (SD := SD) (ASD := ASD) (IncidenceObj := IncidenceObj)
       (OperatorObj := OperatorObj) (HolonomyObj := HolonomyObj)) :
-    C.hodgeSplit.selfDualCondition
-      →
-    C.hodgeSplit.antiSelfDualCondition
-      →
-    C.hodgeSplit.incidenceCompatible
-      →
-    C.hodgeSplit.selfDualCondition
-        ∧ C.hodgeSplit.antiSelfDualCondition
-        ∧ C.hodgeSplit.incidenceCompatible := by
-  intro hSD hASD hInc
-  exact ⟨hSD, hASD, hInc⟩
+    C.hodgeSplit.selfDualSector ∈ C.hodgeSplit.selfDualLocus
+      ∧ C.hodgeSplit.antiSelfDualSector ∈ C.hodgeSplit.antiSelfDualLocus
+      ∧ (C.hodgeSplit.selfDualSector, C.hodgeSplit.antiSelfDualSector,
+          C.hodgeSplit.twistorIncidence) ∈
+        C.hodgeSplit.incidenceCompatibleLocus := by
+  exact ⟨C.hodgeSplit.selfDualCondition,
+    C.hodgeSplit.antiSelfDualCondition,
+    C.hodgeSplit.incidenceCompatible⟩
 
 @[rep_depth krein]
 theorem TwistorHodgePalatialBridgeContext.has_palatial_operator_data
     (C : TwistorHodgePalatialBridgeContext
       (SD := SD) (ASD := ASD) (IncidenceObj := IncidenceObj)
       (OperatorObj := OperatorObj) (HolonomyObj := HolonomyObj)) :
-    C.palatialOps.operatorialIncidence
-      →
-    C.palatialOps.differentialOperatorCompatible
-      →
-    C.palatialOps.incidenceHolonomyCompatible
-      →
-    C.palatialOps.operatorialIncidence
-        ∧ C.palatialOps.differentialOperatorCompatible
-        ∧ C.palatialOps.incidenceHolonomyCompatible := by
-  intro hInc hDiff hHol
-  exact ⟨hInc, hDiff, hHol⟩
+    C.palatialOps.twistorOperator ∈ C.palatialOps.operatorialIncidenceLocus
+      ∧ C.palatialOps.twistorOperator ∈
+          C.palatialOps.differentialOperatorCompatibleLocus
+      ∧ (C.palatialOps.twistorOperator, C.palatialOps.holonomyReadout) ∈
+          C.palatialOps.incidenceHolonomyCompatibleLocus := by
+  exact ⟨C.palatialOps.operatorialIncidence,
+    C.palatialOps.differentialOperatorCompatible,
+    C.palatialOps.incidenceHolonomyCompatible⟩
 
 /--
 Only an explicit bridge context licenses a combined Hodge/palatial conclusion.
@@ -135,17 +148,11 @@ theorem TwistorHodgePalatialBridgeContext.combined_compatibility
     (C : TwistorHodgePalatialBridgeContext
       (SD := SD) (ASD := ASD) (IncidenceObj := IncidenceObj)
       (OperatorObj := OperatorObj) (HolonomyObj := HolonomyObj)) :
-    C.incidenceTransportCompatible
-      →
-    C.hodgeHolonomyCompatible
-      →
-    C.operatorHodgeCompatible
-      →
-    C.incidenceTransportCompatible
-        ∧ C.hodgeHolonomyCompatible
-        ∧ C.operatorHodgeCompatible := by
-  intro hTransport hHodge hOperator
-  exact ⟨hTransport, hHodge, hOperator⟩
+    (C.hodgeSplit, C.palatialOps) ∈ C.incidenceTransportLocus
+      ∧ (C.hodgeSplit, C.palatialOps) ∈ C.hodgeHolonomyLocus
+      ∧ (C.hodgeSplit, C.palatialOps) ∈ C.operatorHodgeLocus := by
+  exact ⟨C.incidenceTransportCompatible,
+    C.hodgeHolonomyCompatible, C.operatorHodgeCompatible⟩
 
 end AbstractInterfaces
 
@@ -165,31 +172,54 @@ incidence predicate; no new palatial theorem is asserted.
 -/
 @[rep_depth krein]
 noncomputable def palatialOperatorAlgebraOfCertifiedConformalInference
-    (CCI : CertifiedConformalInference E) :
+    (CCI : CertifiedConformalInference E)
+    (hCCI : CCI.operatorialIncidence) :
     PalatialTwistorOperatorAlgebra
-      (OperatorObj := EndH) (HolonomyObj := ℝ) where
+      (OperatorObj := EndH) (HolonomyObj := E →L[ℝ] E) where
   twistorOperator := CCI.liftedProjectorObstructionOperator
-  operatorialIncidence := CCI.operatorialIncidence
-  holonomyReadout := CCI.toConformalInference.chiralScale
-  differentialOperatorCompatible := CCI.operatorialIncidence
-  incidenceHolonomyCompatible :=
-    CCI.liftedProjectorObstructionOperator = 0
-      ↔ CCI.chiralAnomalyOperator = 0
+  holonomyReadout := CCI.chiralAnomalyOperator
+  operatorialIncidenceLocus := {T | T = 0}
+  differentialOperatorCompatibleLocus := {T | T = 0}
+  incidenceHolonomyCompatibleLocus := {p | p.1 = 0 ↔ p.2 = 0}
+  operatorialIncidence :=
+    by
+      change CCI.liftedProjectorObstructionOperator = 0
+      exact hCCI
+  differentialOperatorCompatible :=
+    by
+      change CCI.liftedProjectorObstructionOperator = 0
+      exact hCCI
+  incidenceHolonomyCompatible := by
+    change CCI.liftedProjectorObstructionOperator = 0 ↔
+      CCI.chiralAnomalyOperator = 0
+    exact
+      (CertifiedConformalInference.operatorialIncidence_iff_chiralAnomalyOperator_zero
+        (CCI := CCI))
 
 @[rep_depth krein]
 theorem palatialOperatorAlgebraOfCertifiedConformalInference_operatorialIncidence
-    (CCI : CertifiedConformalInference E) :
+    (CCI : CertifiedConformalInference E)
+    (hCCI : CCI.operatorialIncidence) :
     (palatialOperatorAlgebraOfCertifiedConformalInference
-      (E := E) CCI).operatorialIncidence
-      =
-    CCI.operatorialIncidence := by
+      (E := E) CCI hCCI).twistorOperator ∈
+        (palatialOperatorAlgebraOfCertifiedConformalInference
+      (E := E) CCI hCCI).operatorialIncidenceLocus ↔
+      CCI.operatorialIncidence := by
+  change CCI.liftedProjectorObstructionOperator = 0 ↔
+    CCI.operatorialIncidence
   rfl
 
 @[rep_depth krein]
 theorem palatialOperatorAlgebraOfCertifiedConformalInference_incidenceHolonomyCompatible
-    (CCI : CertifiedConformalInference E) :
+    (CCI : CertifiedConformalInference E)
+    (hCCI : CCI.operatorialIncidence) :
     (palatialOperatorAlgebraOfCertifiedConformalInference
-      (E := E) CCI).incidenceHolonomyCompatible := by
+      (E := E) CCI hCCI).twistorOperator ∈
+        (palatialOperatorAlgebraOfCertifiedConformalInference
+          (E := E) CCI hCCI).operatorialIncidenceLocus ↔
+      (palatialOperatorAlgebraOfCertifiedConformalInference
+        (E := E) CCI hCCI).holonomyReadout ∈
+        {T | T = 0} := by
   exact
     (CertifiedConformalInference.operatorialIncidence_iff_chiralAnomalyOperator_zero
       (CCI := CCI))
@@ -205,7 +235,9 @@ separate interface from palatial operator algebra.
 -/
 @[rep_depth projective]
 def hodgeStarSelfDualSplitOfIncidentNullSeparation
-    (Z : Twistor) (X Y : InfoGeometry.Clifford.Soldering.Vec22) :
+    (Z : Twistor) (X Y : InfoGeometry.Clifford.Soldering.Vec22)
+    (hX : Incident Z X) (hY : Incident Z Y)
+    (hNull : InfoGeometry.Clifford.Soldering.q22 (X - Y) = 0) :
     HodgeStarSelfDualSplit
       (SD := InfoGeometry.Clifford.Soldering.Vec22)
       (ASD := InfoGeometry.Clifford.Soldering.Vec22)
@@ -213,16 +245,21 @@ def hodgeStarSelfDualSplitOfIncidentNullSeparation
   selfDualSector := X
   antiSelfDualSector := Y
   twistorIncidence := Incident Z X ∧ Incident Z Y
-  selfDualCondition := Incident Z X
-  antiSelfDualCondition := Incident Z Y
-  incidenceCompatible := InfoGeometry.Clifford.Soldering.q22 (X - Y) = 0
+  selfDualLocus := {V | Incident Z V}
+  antiSelfDualLocus := {V | Incident Z V}
+  incidenceCompatibleLocus :=
+    {p | InfoGeometry.Clifford.Soldering.q22 (p.1 - p.2.1) = 0}
+  selfDualCondition := hX
+  antiSelfDualCondition := hY
+  incidenceCompatible := hNull
 
 @[rep_depth projective]
 theorem hodgeStarSelfDualSplitOfIncidentNullSeparation_incidenceCompatible
     (Z : Twistor) (X Y : InfoGeometry.Clifford.Soldering.Vec22)
     (hX : Incident Z X) (hY : Incident Z Y) (hπ : Z.2 ≠ 0) :
-    (hodgeStarSelfDualSplitOfIncidentNullSeparation
-      Z X Y).incidenceCompatible := by
+    (X, Y, Incident Z X ∧ Incident Z Y) ∈
+      (hodgeStarSelfDualSplitOfIncidentNullSeparation
+        Z X Y hX hY (incident_points_null_separated Z X Y hX hY hπ)).incidenceCompatibleLocus := by
   exact incident_points_null_separated Z X Y hX hY hπ
 
 end ClassicalIncidence

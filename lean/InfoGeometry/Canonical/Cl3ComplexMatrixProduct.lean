@@ -1,4 +1,7 @@
 import Mathlib.Tactic
+import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import Mathlib.LinearAlgebra.CliffordAlgebra.Fold
+import Mathlib.LinearAlgebra.QuadraticForm.Prod
 
 /-!
 # Complex `Cl(3,0)` matrix-product classification

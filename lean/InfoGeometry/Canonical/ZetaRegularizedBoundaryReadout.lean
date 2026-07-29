@@ -22,13 +22,13 @@ Spectral zeta regularization witness.
 chosen spectral model, typically a regular-sector compression.
 -/
 structure ZetaRegularizable
-    (SpecOp : Type*) where
+    (_SpecOp : Type*) where
   /-- Spectral zeta function or its meromorphic continuation. -/
   zeta : ℂ → ℂ
-  /-- Witness that the zeta function is continued/controlled near zero. -/
-  meromorphic_or_holomorphic_near_zero : Prop
   /-- Derivative of the zeta function at zero. -/
   zetaDerivAtZero : ℂ
+  /-- The supplied derivative is the actual derivative at zero. -/
+  zeta_hasDerivAt_zero : HasDerivAt zeta zetaDerivAtZero 0
   /-- Zeta-regularized determinant. -/
   detZeta : ℂ
   /-- Ray--Singer style determinant definition. -/
@@ -42,6 +42,14 @@ theorem det_zeta_eq_exp_neg_zeta_derivative
     (Z : ZetaRegularizable SpecOp) :
     Z.detZeta = Complex.exp (-Z.zetaDerivAtZero) :=
   Z.detZeta_def
+
+/- The derivative witness is exposed directly instead of through a semantic
+label for analytic continuation. -/
+theorem zeta_has_derivative_at_zero
+    {SpecOp : Type*}
+    (Z : ZetaRegularizable SpecOp) :
+    HasDerivAt Z.zeta Z.zetaDerivAtZero 0 :=
+  Z.zeta_hasDerivAt_zero
 
 /--
 A Drazin-regular spectral readout.
@@ -57,10 +65,6 @@ structure DrazinRegularZetaReadout
   spectralOperator : SpecOp
   /-- Zeta data attached to the regular-sector model. -/
   zetaData : ZetaRegularizable SpecOp
-  /-- Witness that this is the regular-sector model attached to the Drazin split. -/
-  regular_sector_model : Prop
-  /-- Guardrail: this is not a Type III trace determinant. -/
-  not_typeIII_trace_determinant : Prop
 
 /--
 Calibration connecting `ζ(0)` or the zeta determinant to a topological boundary
@@ -73,8 +77,6 @@ structure ZetaTopologicalCalibration
   topologicalIndex : ℂ
   /-- Calibration equating the index with `ζ(0)`. -/
   index_eq_zetaAtZero : topologicalIndex = Z.zetaAtZero
-  /-- Interpretation witness for the chosen model. -/
-  interpretation : Prop
 
 /-- Under a calibration witness, the topological index equals `ζ(0)`. -/
 theorem calibrated_topological_index_eq_zeta_zero
@@ -93,8 +95,10 @@ structure BoundaryOrbitVolume
   orbitWeight : Orbit → ℂ
   /-- Total boundary volume/readout. -/
   volume : ℂ
-  /-- Witness that the volume is the intended weighted orbit sum/readout. -/
-  volume_eq_sum : Prop
+  /-- The volume is the actual orbit-weight sum. -/
+  volume_eq_sum : volume = ∑' x, orbitWeight x
+  /-- The orbit-weight series is summable. -/
+  summable_orbitWeight : Summable orbitWeight
 
 /--
 Zeta-regularized Drazin--Krein boundary geometry package.
@@ -147,4 +151,3 @@ theorem packet_topological_index_eq_zeta_zero
     G.topologicalCalibration
 
 end InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout
-

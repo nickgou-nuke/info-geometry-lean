@@ -64,7 +64,7 @@ theorem bayesUpdate_previous_eq_next_bridge
 /-- Alias for the Bayesian/JKO Pythagorean projection identity. -/
 theorem bayesian_projection_identity_bridge
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    {State LieGroup LieAlgebra LieDual Observable : Type*}
+    {State LieGroup LieAlgebra LieDual Observable : Type*} [Ring Observable]
     (B : MajoranaJKOErgoBridge (E := E) State LieGroup LieAlgebra LieDual Observable)
     (ρ : Density State)
     (hρ : B.feasibleAlternative ρ) :

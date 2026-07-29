@@ -42,14 +42,15 @@ This is deliberately just a carrier. Topology, measure, norm, Hilbert
 structure, and spectral-triple structure are later witnesses.
 -/
 @[rep_depth krein]
-structure BoundaryFunctionSpace
-    (Value : Type*) where
-  /-- Function on the infinite symbolic boundary. -/
-  function : BoundaryFunction Value
+abbrev BoundaryFunctionSpace (Value : Type*) :=
+  BoundaryFunction Value
 
 namespace BoundaryFunctionSpace
 
 variable {Value : Type*}
+
+def function (F : BoundaryFunctionSpace Value) : BoundaryFunction Value :=
+  F
 
 /-- Extensional equality for bundled boundary functions. -/
 @[ext, rep_depth krein]
@@ -57,10 +58,7 @@ theorem ext
     {F G : BoundaryFunctionSpace Value}
     (h : ∀ ξ : ChiralBoundary, F.function ξ = G.function ξ) :
     F = G := by
-  cases F
-  cases G
-  simp only at h
-  simp [funext h]
+  exact funext h
 
 end BoundaryFunctionSpace
 

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Algebra.Quaternion
 
 /-!
 # InfoGeometry.Canonical.QuaternionChiralCone

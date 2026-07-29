@@ -147,13 +147,21 @@ instance : Inhabited FierzBilinears := ⟨⟨0, 0, fun _ => 0, fun _ => 0, defau
 Minimal Fierz--Pauli--Kofink constraints needed to generate chiral null rays.
 -/
 @[rep_depth operator]
-structure FPKIdentities (F : FierzBilinears) : Prop where
-  J_sq :
-    minkowskiDot F.J F.J = F.sigma ^ 2 + F.omega ^ 2
-  K_sq :
-    minkowskiDot F.K F.K = -minkowskiDot F.J F.J
-  J_dot_K :
+def FPKIdentities (F : FierzBilinears) : Prop :=
+  minkowskiDot F.J F.J = F.sigma ^ 2 + F.omega ^ 2 ∧
+    minkowskiDot F.K F.K = -minkowskiDot F.J F.J ∧
     minkowskiDot F.J F.K = 0
+
+namespace FPKIdentities
+
+variable {F : FierzBilinears} (h : FPKIdentities F)
+include h
+
+theorem J_sq : minkowskiDot F.J F.J = F.sigma ^ 2 + F.omega ^ 2 := h.1
+theorem K_sq : minkowskiDot F.K F.K = -minkowskiDot F.J F.J := h.2.1
+theorem J_dot_K : minkowskiDot F.J F.K = 0 := h.2.2
+
+end FPKIdentities
 
 def trivialFierzBilinears : FierzBilinears where
   sigma := 0
@@ -163,7 +171,7 @@ def trivialFierzBilinears : FierzBilinears where
   S := default
 
 theorem trivialFierzBilinears_fpk : FPKIdentities trivialFierzBilinears := by
-  constructor
+  refine ⟨?_, ?_, ?_⟩
   · unfold trivialFierzBilinears minkowskiDot; ring
   · unfold trivialFierzBilinears minkowskiDot; ring
   · unfold trivialFierzBilinears minkowskiDot; ring
@@ -223,7 +231,7 @@ theorem rightChiralRay_null
     minkowskiDot (rightChiralRay F) (rightChiralRay F) = 0 := by
   unfold rightChiralRay
   rw [minkowskiDot_vadd_self]
-  rw [h.K_sq, h.J_dot_K]
+  rw [FPKIdentities.K_sq h, FPKIdentities.J_dot_K h]
   ring
 
 /-- The left chiral ray `L = J - K` is null under the FPK constraints. -/
@@ -234,7 +242,7 @@ theorem leftChiralRay_null
     minkowskiDot (leftChiralRay F) (leftChiralRay F) = 0 := by
   unfold leftChiralRay
   rw [minkowskiDot_vsub_self]
-  rw [h.K_sq, h.J_dot_K]
+  rw [FPKIdentities.K_sq h, FPKIdentities.J_dot_K h]
   ring
 
 /-! ## 4. Normalized scalar-phase Fierz coordinates -/

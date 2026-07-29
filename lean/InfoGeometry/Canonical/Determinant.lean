@@ -31,12 +31,13 @@ noncomputable def linearEquivLogGenerator : LogGenerator (V ≃ₗ[ℝ] V) ℝ :
 
 /-- The determinant log-generator is exactly the canonical log-volume potential. -/
 @[simp] theorem linearEquivLogGenerator_eq_logAbsVolume (g : V ≃ₗ[ℝ] V) :
-    linearEquivLogGenerator.logGen g = LogAbsVolume g := rfl
+    LogGenerator.apply linearEquivLogGenerator g = LogAbsVolume g := rfl
 
 /-- Determinant/log-volume obeys the additive law upstairs on automorphisms. -/
 theorem linearEquivLogGenerator_mul (f g : V ≃ₗ[ℝ] V) :
-    linearEquivLogGenerator.logGen (f * g) =
-      linearEquivLogGenerator.logGen f + linearEquivLogGenerator.logGen g :=
+    LogGenerator.apply linearEquivLogGenerator (f * g) =
+      LogGenerator.apply linearEquivLogGenerator f +
+        LogGenerator.apply linearEquivLogGenerator g :=
   ExactDescentLogGenerator.map_mul (ExactDescentLogGenerator.ofBridge linearEquivExactBridge) f g
 
 end InfoGeometry.Canonical.Determinant

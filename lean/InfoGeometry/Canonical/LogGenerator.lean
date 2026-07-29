@@ -18,12 +18,10 @@ small wrapper structures around the more detailed bridge objects.
 -/
 
 /-- Relative multiplicative datum attached to a pair of states/objects. -/
-structure RelativeWeight (X W : Type*) where
-  weight : X → X → W
+abbrev RelativeWeight (X W : Type*) := X → X → W
 
 /-- Additive logarithmic generator extracted from a relative weight. -/
-structure LogGenerator (W G : Type*) where
-  logGen : W → G
+abbrev LogGenerator (W G : Type*) := W → G
 
 attribute [spine_object] RelativeWeight LogGenerator
 
@@ -33,7 +31,7 @@ variable {W G : Type*}
 
 /-- Evaluate the additive generator. -/
 def apply (L : LogGenerator W G) (w : W) : G :=
-  L.logGen w
+  L w
 
 end LogGenerator
 
@@ -49,9 +47,9 @@ noncomputable def logAbsUnitsLinearization : AdditiveLinearization ℝˣ ℝ whe
 Exact descent branch: a multiplicative source descends to a commutative
 invariant and then linearizes additively.
 -/
-structure ExactDescentLogGenerator (M S A : Type*)
-    [Monoid M] [CommMonoid S] [AddCommMonoid A] where
-  toBridge : ExactMultiplicativeToAdditiveBridge M S A
+abbrev ExactDescentLogGenerator (M S A : Type*)
+    [Monoid M] [CommMonoid S] [AddCommMonoid A] :=
+  ExactMultiplicativeToAdditiveBridge M S A
 
 namespace ExactDescentLogGenerator
 
@@ -59,21 +57,20 @@ variable {M S A : Type*} [Monoid M] [CommMonoid S] [AddCommMonoid A]
 
 /-- Promote an exact bridge to the high-level exact log-generator layer. -/
 def ofBridge (B : ExactMultiplicativeToAdditiveBridge M S A) :
-    ExactDescentLogGenerator M S A :=
-  ⟨B⟩
+    ExactDescentLogGenerator M S A := B
 
 /-- The additive generator induced on the source type. -/
-def additiveInvariant (L : ExactDescentLogGenerator M S A) : M → A :=
-  L.toBridge.additiveInvariant
+abbrev additiveInvariant (L : ExactDescentLogGenerator M S A) : M → A :=
+  ExactMultiplicativeToAdditiveBridge.additiveInvariant L
 
 /-- Forget the exact branch to the common log-generator interface. -/
-def toLogGenerator (L : ExactDescentLogGenerator M S A) : LogGenerator M A where
-  logGen := L.additiveInvariant
+def toLogGenerator (L : ExactDescentLogGenerator M S A) : LogGenerator M A :=
+  ExactMultiplicativeToAdditiveBridge.additiveInvariant L
 
 /-- Exact descent yields an additive law on the source. -/
 theorem map_mul (L : ExactDescentLogGenerator M S A) (x y : M) :
     L.additiveInvariant (x * y) = L.additiveInvariant x + L.additiveInvariant y :=
-  ExactMultiplicativeToAdditiveBridge.additiveInvariant_mul L.toBridge x y
+  ExactMultiplicativeToAdditiveBridge.additiveInvariant_mul L x y
 
 attribute [spine_morphism, spine_functor, spine_functor_constructor]
   ExactDescentLogGenerator.toLogGenerator
@@ -84,9 +81,9 @@ end ExactDescentLogGenerator
 Defective descent branch: multiplicative descent carries an anomaly term that
 survives as an additive defect after linearization.
 -/
-structure DefectiveDescentLogGenerator (M S A : Type*)
-    [Monoid M] [CommMonoid S] [AddCommMonoid A] where
-  toBridge : DefectiveMultiplicativeToAdditiveBridge M S A
+abbrev DefectiveDescentLogGenerator (M S A : Type*)
+    [Monoid M] [CommMonoid S] [AddCommMonoid A] :=
+  DefectiveMultiplicativeToAdditiveBridge M S A
 
 namespace DefectiveDescentLogGenerator
 
@@ -94,26 +91,25 @@ variable {M S A : Type*} [Monoid M] [CommMonoid S] [AddCommMonoid A]
 
 /-- Promote a defective bridge to the high-level defective log-generator layer. -/
 def ofBridge (B : DefectiveMultiplicativeToAdditiveBridge M S A) :
-    DefectiveDescentLogGenerator M S A :=
-  ⟨B⟩
+    DefectiveDescentLogGenerator M S A := B
 
 /-- The additive generator induced on the source type. -/
-def additiveInvariant (L : DefectiveDescentLogGenerator M S A) : M → A :=
-  L.toBridge.additiveInvariant
+abbrev additiveInvariant (L : DefectiveDescentLogGenerator M S A) : M → A :=
+  DefectiveMultiplicativeToAdditiveBridge.additiveInvariant L
 
 /-- The additive anomaly term induced by defective descent. -/
-def additiveDefect (L : DefectiveDescentLogGenerator M S A) : M → M → A :=
-  L.toBridge.additiveDefect
+abbrev additiveDefect (L : DefectiveDescentLogGenerator M S A) : M → M → A :=
+  DefectiveMultiplicativeToAdditiveBridge.additiveDefect L
 
 /-- Forget the defective branch to the common log-generator interface. -/
-def toLogGenerator (L : DefectiveDescentLogGenerator M S A) : LogGenerator M A where
-  logGen := L.additiveInvariant
+def toLogGenerator (L : DefectiveDescentLogGenerator M S A) : LogGenerator M A :=
+  DefectiveMultiplicativeToAdditiveBridge.additiveInvariant L
 
 /-- Defective descent yields an additive law with an anomaly term. -/
 theorem map_mul_defect (L : DefectiveDescentLogGenerator M S A) (x y : M) :
     L.additiveInvariant (x * y) =
       L.additiveDefect x y + (L.additiveInvariant x + L.additiveInvariant y) :=
-  DefectiveMultiplicativeToAdditiveBridge.additiveInvariant_mul L.toBridge x y
+  DefectiveMultiplicativeToAdditiveBridge.additiveInvariant_mul L x y
 
 attribute [spine_morphism, spine_functor, spine_functor_constructor]
   DefectiveDescentLogGenerator.toLogGenerator
@@ -124,9 +120,9 @@ end DefectiveDescentLogGenerator
 Operator-level branch: functional-calculus linearization happens before full
 commutative descent.
 -/
-structure OperatorLogGenerator (O A : Type*)
-    [Monoid O] [AddCommMonoid A] where
-  toLinearization : FunctionalCalculusLinearization O A
+abbrev OperatorLogGenerator (O A : Type*)
+    [Monoid O] [AddCommMonoid A] :=
+  FunctionalCalculusLinearization O A
 
 namespace OperatorLogGenerator
 
@@ -134,22 +130,21 @@ variable {O A : Type*} [Monoid O] [AddCommMonoid A]
 
 /-- Promote a functional-calculus linearization to the operator log-generator layer. -/
 def ofLinearization (L : FunctionalCalculusLinearization O A) :
-    OperatorLogGenerator O A :=
-  ⟨L⟩
+    OperatorLogGenerator O A := L
 
 /-- The operator-level logarithmic generator. -/
-def linearize (L : OperatorLogGenerator O A) : O → A :=
-  L.toLinearization.linearize
+abbrev linearize (L : OperatorLogGenerator O A) : O → A :=
+  FunctionalCalculusLinearization.linearize L
 
 /-- Forget the operator branch to the common log-generator interface. -/
-def toLogGenerator (L : OperatorLogGenerator O A) : LogGenerator O A where
-  logGen := L.linearize
+def toLogGenerator (L : OperatorLogGenerator O A) : LogGenerator O A :=
+  FunctionalCalculusLinearization.linearize L
 
 /-- Functional-calculus linearization is additive on commuting products. -/
 theorem map_mul_of_commute (L : OperatorLogGenerator O A) {x y : O}
     (hxy : Commute x y) :
     L.linearize (x * y) = L.linearize x + L.linearize y :=
-  FunctionalCalculusLinearization.map_mul_of_commute_apply L.toLinearization hxy
+  FunctionalCalculusLinearization.map_mul_of_commute_apply L hxy
 
 attribute [spine_morphism, spine_functor, spine_functor_constructor]
   OperatorLogGenerator.toLogGenerator

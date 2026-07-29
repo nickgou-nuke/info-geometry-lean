@@ -24,6 +24,7 @@ open InfoGeometry.GromovWittenErlangen
 variable {State LieGroup LieAlgebra LieDual Observable : Type*}
 variable {n : ℕ} [Nonempty (Fin n)]
 variable {LG T Target Coeff : Type*}
+variable [Ring Observable]
 
 /--
 Calibration connecting Souriau thermal dynamics, GW projective count rays, and
@@ -34,7 +35,8 @@ is a state-level readout, while `FreeEnergyFunctional.expectationTerm` is a
 readout on densities `State → ℝ`.
 -/
 @[rep_depth thermo]
-structure SouriauGWCountOTCalibration where
+structure SouriauGWCountOTCalibration
+    [Ring Observable] where
   /-- Souriau Lie-thermodynamic moment/temperature/pairing data. -/
   souriau : SouriauLieThermoData State LieGroup LieAlgebra LieDual
 

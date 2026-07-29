@@ -75,11 +75,9 @@ This is intentionally a commutation-only interface. It does not identify the
 spectral Drazin split with any geometric sector by definition.
 -/
 @[rep_depth operator]
-structure IsCartanCompatible (η T : Op) : Prop where
-  eta_comm : η.comp T = T.comp η
-  epsilon_comm :
-    (spectral_epsilon (E := E)).comp T = T.comp (spectral_epsilon (E := E))
-  modularJ_comm :
+abbrev IsCartanCompatible (η T : Op) : Prop :=
+  η.comp T = T.comp η ∧
+    (spectral_epsilon (E := E)).comp T = T.comp (spectral_epsilon (E := E)) ∧
     (modular_j (E := E)).comp T = T.comp (modular_j (E := E))
 
 /--
@@ -110,9 +108,7 @@ def isCartanCompatible_T_of_compat
     (T TD : Op) (k : ℕ)
     (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k) :
     IsCartanCompatible (E := E) hCompat.η T :=
-  { eta_comm := hCompat.η_comm_T
-    epsilon_comm := hCompat.ε_comm_T
-    modularJ_comm := hCompat.J_comm_T }
+  ⟨hCompat.η_comm_T, hCompat.ε_comm_T, hCompat.J_comm_T⟩
 
 /-- The Drazin witness operator is Cartan-compatible under a graded package. -/
 @[rep_depth operator]
@@ -120,9 +116,7 @@ def isCartanCompatible_TD_of_compat
     (T TD : Op) (k : ℕ)
     (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k) :
     IsCartanCompatible (E := E) hCompat.η TD :=
-  { eta_comm := hCompat.η_comm_TD
-    epsilon_comm := hCompat.ε_comm_TD
-    modularJ_comm := hCompat.J_comm_TD }
+  ⟨hCompat.η_comm_TD, hCompat.ε_comm_TD, hCompat.J_comm_TD⟩
 
 end CartanTransport
 
@@ -526,20 +520,18 @@ theorem complex_i_preserves_drazinCore_split
 theorem isCartanCompatible_Preg
     (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k) :
     IsCartanCompatible (E := E) hCompat.η (Preg T TD) := by
-  exact
-    { eta_comm := eta_comm_Preg (E := E) (T := T) (TD := TD) (k := k) hCompat
-      epsilon_comm := epsilon_comm_Preg (E := E) (T := T) (TD := TD) (k := k) hCompat
-      modularJ_comm := modularJ_comm_Preg (E := E) (T := T) (TD := TD) (k := k) hCompat }
+  exact ⟨eta_comm_Preg (E := E) (T := T) (TD := TD) (k := k) hCompat,
+    epsilon_comm_Preg (E := E) (T := T) (TD := TD) (k := k) hCompat,
+    modularJ_comm_Preg (E := E) (T := T) (TD := TD) (k := k) hCompat⟩
 
 /-- The defect Drazin projector inherits Cartan compatibility. -/
 @[rep_depth operator]
 theorem isCartanCompatible_Pzero
     (hCompat : KreinGradedDrazinCompatibility (E := E) T TD k) :
     IsCartanCompatible (E := E) hCompat.η (Pzero T TD) := by
-  exact
-    { eta_comm := eta_comm_Pzero (E := E) (T := T) (TD := TD) (k := k) hCompat
-      epsilon_comm := epsilon_comm_Pzero (E := E) (T := T) (TD := TD) (k := k) hCompat
-      modularJ_comm := modularJ_comm_Pzero (E := E) (T := T) (TD := TD) (k := k) hCompat }
+  exact ⟨eta_comm_Pzero (E := E) (T := T) (TD := TD) (k := k) hCompat,
+    epsilon_comm_Pzero (E := E) (T := T) (TD := TD) (k := k) hCompat,
+    modularJ_comm_Pzero (E := E) (T := T) (TD := TD) (k := k) hCompat⟩
 
 end Algebra
 

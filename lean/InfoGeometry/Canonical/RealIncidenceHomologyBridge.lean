@@ -231,10 +231,8 @@ Only with this witness should quotient-style chiral homology
 `ker D± / im D∓` be interpreted as an actual chain-complex homology lane.
 -/
 @[rep_depth krein]
-structure ChiralNilpotentComplexWitness where
-  plus_after_minus_zero :
-    (rootDiracPlus (E := E)).comp (rootDiracMinus (E := E)) = 0
-  minus_after_plus_zero :
+abbrev ChiralNilpotentComplexWitness : Prop :=
+  (rootDiracPlus (E := E)).comp (rootDiracMinus (E := E)) = 0 ∧
     (rootDiracMinus (E := E)).comp (rootDiracPlus (E := E)) = 0
 
 namespace ChiralNilpotentComplexWitness
@@ -250,7 +248,7 @@ theorem plus_boundary_is_cycle
   rcases hu with ⟨v, rfl⟩
   unfold IsPlusChiralCycle
   simpa [ContinuousLinearMap.comp_apply] using
-    congrArg (fun F : EndH => F v) (ChiralNilpotentComplexWitness.plus_after_minus_zero W)
+    congrArg (fun F : EndH => F v) W.1
 
 /-- With a nilpotent-complex witness, minus boundaries are minus cycles. -/
 @[rep_depth krein]
@@ -261,7 +259,7 @@ theorem minus_boundary_is_cycle
   rcases hu with ⟨v, rfl⟩
   unfold IsMinusChiralCycle
   simpa [ContinuousLinearMap.comp_apply] using
-    congrArg (fun F : EndH => F v) (ChiralNilpotentComplexWitness.minus_after_plus_zero W)
+    congrArg (fun F : EndH => F v) W.2
 
 end ChiralNilpotentComplexWitness
 

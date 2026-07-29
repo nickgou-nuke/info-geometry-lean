@@ -1,3 +1,5 @@
+import InfoGeometry.Canonical.MicrostateBoltzmannEntropy
+import Mathlib.Algebra.Algebra.Operations
 import Mathlib.Tactic
 
 set_option linter.unusedSectionVars false
@@ -28,15 +30,19 @@ This module formalizes in native Lean 4 / Mathlib:
 
 namespace InfoGeometry.Canonical.MicrocanonicalBoltzmannOperator
 
-/-- Microcanonical energy shell spectrum data: energy level $E$ and microstate multiplicity $W(E) \ge 1$. -/
-structure MicrocanonicalEnergyShell (E_Index : Type*) where
-  multiplicity : E_Index → ℕ
-  multiplicity_pos : ∀ i, 1 ≤ multiplicity i
+open InfoGeometry.Canonical.MicrostateBoltzmannEntropy
+
+/--
+Microcanonical energy-shell data is the positive-multiplicity owner already
+used for statewise Boltzmann entropy.
+-/
+abbrev MicrocanonicalEnergyShell :=
+  MicrostateCellPartition
 
 /-- The pure Microcanonical State-Counting Operator $\hat W(E) = W(E) \cdot I$. -/
 def microcanonicalStateCountOperator
     {E_Index : Type*} (shell : MicrocanonicalEnergyShell E_Index) (i : E_Index) : ℝ :=
-  (shell.multiplicity i : ℝ)
+  (shell.phaseVolume i : ℝ)
 
 /--
 **The Pure Microcanonical Boltzmann Operator Entropy**:
@@ -45,7 +51,7 @@ Defined purely as the operator log-multiplicity without Gibbs, Shannon, or von N
 -/
 noncomputable def microcanonicalBoltzmannOperatorEntropy
     {E_Index : Type*} (shell : MicrocanonicalEnergyShell E_Index) (i : E_Index) : ℝ :=
-  Real.log (shell.multiplicity i : ℝ)
+  microstateBoltzmannEntropy shell i
 
 /--
 **Main Theorem 1: Boltzmann Operator Exponentiation**
@@ -57,7 +63,7 @@ theorem boltzmann_operator_exp_recovery
     Real.exp (microcanonicalBoltzmannOperatorEntropy shell i) = microcanonicalStateCountOperator shell i := by
   unfold microcanonicalBoltzmannOperatorEntropy microcanonicalStateCountOperator
   have h_pos : 0 < (shell.multiplicity i : ℝ) := by
-    have h1 := shell.multiplicity_pos i
+    have h1 := shell.phaseVolume_pos i
     exact_mod_cast Nat.succ_le_iff.mp h1
   exact Real.exp_log h_pos
 
@@ -68,14 +74,113 @@ $S(E) = \ln W(E)$ of the accessible microcanonical energy shells.
 -/
 theorem boltzmann_operator_eigenvalue
     {E_Index : Type*} (shell : MicrocanonicalEnergyShell E_Index) (i : E_Index) :
-    microcanonicalBoltzmannOperatorEntropy shell i = Real.log (shell.multiplicity i : ℝ) := rfl
+    microcanonicalBoltzmannOperatorEntropy shell i =
+      Real.log (shell.phaseVolume i : ℝ) :=
+  rfl
 
-/-- Matrix representation of the Microcanonical Boltzmann Operator on a diagonalized Hilbert basis. -/
-structure MatrixMicrocanonicalBoltzmann (n : Type*) [Fintype n] [DecidableEq n] (R : Type*) [CommRing R] where
-  stateCountMatrix : Matrix n n R
-  boltzmannEntropyMatrix : Matrix n n R
-  hamiltonianMatrix : Matrix n n R
-  commutes_hamiltonian : boltzmannEntropyMatrix * hamiltonianMatrix = hamiltonianMatrix * boltzmannEntropyMatrix
+/--
+Microcanonical state-count operator in an arbitrary real algebra, assembled
+from the genuine macrosector projectors.  No matrix basis or diagonal
+presentation is selected.
+-/
+noncomputable def microcanonicalStateCountElement
+    {E_Index A : Type*} [Fintype E_Index]
+    [Ring A] [Algebra ℝ A]
+    (shell : MicrocanonicalEnergyShell E_Index)
+    (P : E_Index → A) : A :=
+  ∑ i : E_Index, (shell.phaseVolume i : ℝ) • P i
+
+/--
+Dimensionless (`k_B = 1`) Boltzmann macroentropy operator in an arbitrary
+noncommutative real algebra.
+-/
+noncomputable def microcanonicalBoltzmannEntropyElement
+    {E_Index A : Type*} [Fintype E_Index]
+    [Ring A] [Algebra ℝ A]
+    (shell : MicrocanonicalEnergyShell E_Index)
+    (P : E_Index → A) : A :=
+  ∑ i : E_Index, Real.log (shell.phaseVolume i : ℝ) • P i
+
+/--
+Orthogonal macrosector projectors extract the corresponding Boltzmann
+eigenvalue intrinsically inside the ambient algebra.
+-/
+theorem microcanonicalBoltzmannEntropyElement_mul_projector
+    {E_Index A : Type*} [Fintype E_Index] [DecidableEq E_Index]
+    [Ring A] [Algebra ℝ A]
+    (shell : MicrocanonicalEnergyShell E_Index)
+    (P : E_Index → A) (i : E_Index)
+    (hOrthogonal :
+      ∀ j : E_Index, P j * P i = if j = i then P i else 0) :
+    microcanonicalBoltzmannEntropyElement shell P * P i =
+      Real.log (shell.phaseVolume i : ℝ) • P i := by
+  rw [microcanonicalBoltzmannEntropyElement, Finset.sum_mul]
+  simp [smul_mul_assoc, hOrthogonal]
+
+/--
+A Hamiltonian commuting with every macrosector projector commutes with the
+noncommutative Boltzmann macroentropy operator.
+-/
+theorem microcanonicalBoltzmannEntropyElement_commutes
+    {E_Index A : Type*} [Fintype E_Index]
+    [Ring A] [Algebra ℝ A]
+    (shell : MicrocanonicalEnergyShell E_Index)
+    (P : E_Index → A) (H : A)
+    (hH : ∀ i : E_Index, Commute (P i) H) :
+    Commute (microcanonicalBoltzmannEntropyElement shell P) H := by
+  show microcanonicalBoltzmannEntropyElement shell P * H =
+    H * microcanonicalBoltzmannEntropyElement shell P
+  rw [microcanonicalBoltzmannEntropyElement, Finset.sum_mul, Finset.mul_sum]
+  apply Finset.sum_congr rfl
+  intro i _
+  rw [smul_mul_assoc, mul_smul_comm, (hH i).eq]
+
+/-- The corresponding noncommutative operator commutator vanishes. -/
+theorem microcanonicalBoltzmannEntropyElement_commutator_zero
+    {E_Index A : Type*} [Fintype E_Index]
+    [Ring A] [Algebra ℝ A]
+    (shell : MicrocanonicalEnergyShell E_Index)
+    (P : E_Index → A) (H : A)
+    (hH : ∀ i : E_Index, Commute (P i) H) :
+    microcanonicalBoltzmannEntropyElement shell P * H -
+        H * microcanonicalBoltzmannEntropyElement shell P = 0 := by
+  rw [(microcanonicalBoltzmannEntropyElement_commutes shell P H hH).eq,
+    sub_self]
+
+/-- Multiplication operator generated by the microcanonical energy function. -/
+def microcanonicalHamiltonian
+    {E_Index : Type*} (energy : E_Index → ℝ) :
+    (E_Index → ℝ) →ₗ[ℝ] (E_Index → ℝ) where
+  toFun ψ i := energy i * ψ i
+  map_add' ψ φ := by
+    funext i
+    exact mul_add _ _ _
+  map_smul' c ψ := by
+    funext i
+    simp [mul_assoc, mul_left_comm, mul_comm]
+
+/--
+Historical packet name, now reduced to its genuine data: a positive
+microcanonical shell and an energy function.  No commutation evidence is
+stored.
+-/
+abbrev MatrixMicrocanonicalBoltzmann
+    (n : Type*) [Fintype n] [DecidableEq n]
+    (_R : Type*) [CommRing _R] :=
+  MicrocanonicalEnergyShell n × (n → ℝ)
+
+/-- Multiplication by entropy commutes with multiplication by energy. -/
+theorem microcanonicalBoltzmannOperator_commutes_hamiltonian
+    {E_Index : Type*}
+    (shell : MicrocanonicalEnergyShell E_Index)
+    (energy : E_Index → ℝ) :
+    (microstateBoltzmannOperator shell).comp
+        (microcanonicalHamiltonian energy) =
+      (microcanonicalHamiltonian energy).comp
+        (microstateBoltzmannOperator shell) := by
+  ext ψ i
+  simp [microstateBoltzmannOperator, microcanonicalHamiltonian]
+  ring
 
 /--
 **Main Theorem 3: Operator Conservation of Boltzmann Entropy**
@@ -86,8 +191,11 @@ ensuring that the microcanonical Boltzmann operator entropy is conserved under t
 theorem boltzmann_operator_hamiltonian_commutator_zero
     {n : Type*} [Fintype n] [DecidableEq n] {R : Type*} [CommRing R]
     (M : MatrixMicrocanonicalBoltzmann n R) :
-    M.boltzmannEntropyMatrix * M.hamiltonianMatrix - M.hamiltonianMatrix * M.boltzmannEntropyMatrix = 0 := by
-  rw [M.commutes_hamiltonian, sub_self]
+    (microstateBoltzmannOperator M.1).comp
+          (microcanonicalHamiltonian M.2) -
+        (microcanonicalHamiltonian M.2).comp
+          (microstateBoltzmannOperator M.1) = 0 := by
+  rw [microcanonicalBoltzmannOperator_commutes_hamiltonian, sub_self]
 
 /--
 **Main Theorem 4: Pure Microcanonical Boltzmann Duality**
@@ -100,7 +208,10 @@ theorem pure_microcanonical_boltzmann_operator_duality
     {n : Type*} [Fintype n] [DecidableEq n] {R : Type*} [CommRing R]
     (M : MatrixMicrocanonicalBoltzmann n R) :
     (Real.exp (microcanonicalBoltzmannOperatorEntropy shell i) = microcanonicalStateCountOperator shell i) ∧
-    (M.boltzmannEntropyMatrix * M.hamiltonianMatrix - M.hamiltonianMatrix * M.boltzmannEntropyMatrix = 0) := ⟨
+    ((microstateBoltzmannOperator M.1).comp
+          (microcanonicalHamiltonian M.2) -
+        (microcanonicalHamiltonian M.2).comp
+          (microstateBoltzmannOperator M.1) = 0) := ⟨
   boltzmann_operator_exp_recovery shell i,
   boltzmann_operator_hamiltonian_commutator_zero M
 ⟩

@@ -84,8 +84,9 @@ structure SmithMoorePenroseRetrocirculantCertificate
   penroseC : AlgebraicMoorePenrosePair C Cplus
   penroseA : AlgebraicMoorePenrosePair A Aplus
   formula : Aplus = Cplus * Matrix.transpose P
-  Aplus_is_retrocirculant : Prop
-  theorem1_readout : Aplus = Cplus * Matrix.transpose P → Aplus_is_retrocirculant
+  /-- Smith closure as actual retrocirculant factorization data for `A⁺`. -/
+  Aplus_retro :
+    RetrocirculantData K Aplus (Matrix.transpose P) Cplus
 
 namespace SmithMoorePenroseRetrocirculantCertificate
 
@@ -94,34 +95,60 @@ variable {A Aplus P C Cplus : Matrix (Fin n) (Fin n) K}
 /-- Smith's Moore--Penrose inverse formula. -/
 theorem moorePenrose_formula (S : SmithMoorePenroseRetrocirculantCertificate K A Aplus P C Cplus) : Aplus = Cplus * Matrix.transpose P := by
   cases S with
-  | mk retro penroseC penroseA formula Aplus_is_retrocirculant theorem1_readout =>
+  | mk retro penroseC penroseA formula Aplus_retro =>
       exact formula
 
+/-- Historical predicate name, now the actual existence of the stored
+retrocirculant factorization. -/
+abbrev Aplus_is_retrocirculant
+    (S : SmithMoorePenroseRetrocirculantCertificate K A Aplus P C Cplus) : Prop :=
+  Nonempty (RetrocirculantData K Aplus (Matrix.transpose P) Cplus)
+
 /-- Smith's retrocirculant closure readout for the Moore--Penrose inverse. -/
-theorem plus_is_retrocirculant (S : SmithMoorePenroseRetrocirculantCertificate K A Aplus P C Cplus) : S.Aplus_is_retrocirculant := by
-  cases S with
-  | mk retro penroseC penroseA formula Aplus_is_retrocirculant theorem1_readout =>
-      exact theorem1_readout formula
+theorem plus_is_retrocirculant
+    (S : SmithMoorePenroseRetrocirculantCertificate K A Aplus P C Cplus) :
+    S.Aplus_is_retrocirculant :=
+  ⟨S.Aplus_retro⟩
 
 end SmithMoorePenroseRetrocirculantCertificate
 
 /-- Block diagonal similarity/eigenvalue certificate from Smith Lemma 4 and
 Theorem 3. -/
 structure RetrocirculantSpectralBlockCertificate
-    (K : Type u) [Field K] {n : ℕ}
+    (K : Type u) [Field K] [StarRing K] {n : ℕ}
     (A : Matrix (Fin n) (Fin n) K) where
-  blockModel : Type u
-  unitarilySimilarToBlocks : Prop
+  /-- Concrete block normal form and its change of basis. -/
+  blockMatrix : Matrix (Fin n) (Fin n) K
+  unitary : Matrix (Fin n) (Fin n) K
+  unitary_star_mul : star unitary * unitary = 1
+  unitary_mul_star : unitary * star unitary = 1
+  similarity :
+    A = unitary * blockMatrix * star unitary
   eigenvalueReadout : K → Prop
   reciprocalEigenvalueReadout : K → Prop
-  theorem3_readout : unitarilySimilarToBlocks → eigenvalueReadout 0 ∨ ∃ μ, eigenvalueReadout μ
+  theorem3_readout : eigenvalueReadout 0 ∨ ∃ μ, eigenvalueReadout μ
   corollary2_readout : ∀ μ, μ ≠ 0 → eigenvalueReadout μ → reciprocalEigenvalueReadout μ⁻¹
 
 namespace RetrocirculantSpectralBlockCertificate
 
-variable {K : Type u} [Field K] {n : ℕ}
+variable {K : Type u} [Field K] [StarRing K] {n : ℕ}
 variable {A : Matrix (Fin n) (Fin n) K}
 variable (S : RetrocirculantSpectralBlockCertificate K A)
+
+/-- Historical similarity name, now the explicit unitary conjugation
+equality carried by the certificate. -/
+abbrev unitarilySimilarToBlocks : Prop :=
+  A = S.unitary * S.blockMatrix * star S.unitary
+
+/-- The stored block model is genuinely unitarily similar to `A`. -/
+theorem unitarilySimilarToBlocks_proof :
+    S.unitarilySimilarToBlocks :=
+  S.similarity
+
+/-- Smith's spectral alternative read directly from the block theorem. -/
+theorem eigenvalue_alternative :
+    S.eigenvalueReadout 0 ∨ ∃ μ, S.eigenvalueReadout μ :=
+  S.theorem3_readout
 
 /-- Nonzero eigenvalues of the Moore--Penrose inverse are supplied reciprocals. -/
 theorem reciprocal_nonzero_readout {μ : K} (hμ : μ ≠ 0) (h : S.eigenvalueReadout μ) :

@@ -1,4 +1,5 @@
 import Mathlib.Analysis.Normed.Lp.PiLp
+import Mathlib.Analysis.Normed.Lp.lpSpace
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Meta.Architecture

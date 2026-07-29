@@ -329,16 +329,17 @@ future concrete supermanifold/stress-variation construction can instantiate
 this structure.
 -/
 @[rep_depth transport]
-structure WeylSupertraceFreeStressContext (Stress : Type u) where
+structure WeylSupertraceFreeStressContext (Stress : Type u) (Symmetry : Type v) where
   stress : Stress
   superTrace : Stress → ℝ
-  weylInvariant : Prop
+  weylReadout : Symmetry → Stress
   stress_supertrace_free : superTrace stress = 0
-  weyl_invariant : weylInvariant
+  weyl_invariant : ∀ g : Symmetry, weylReadout g = stress
 
 namespace WeylSupertraceFreeStressContext
 
-variable {Stress : Type u} (C : WeylSupertraceFreeStressContext Stress)
+variable {Stress : Type u} {Symmetry : Type v}
+variable (C : WeylSupertraceFreeStressContext Stress Symmetry)
 
 /-- The conformal/supertrace-free stress statement as a projection theorem. -/
 @[rep_depth transport]
@@ -349,7 +350,7 @@ theorem superTrace_stress_eq_zero :
 /-- The Weyl invariance statement carried by this context. -/
 @[rep_depth transport]
 theorem is_weyl_invariant :
-    C.weylInvariant :=
+    ∀ g : Symmetry, C.weylReadout g = C.stress :=
   C.weyl_invariant
 
 end WeylSupertraceFreeStressContext
@@ -397,7 +398,7 @@ def WeylSupertraceFreeStressContext.ofIdentityBalanced
       InfoGeometry.Canonical.SouriauLieThermoKKTBridge.SuperParity)
     (stressTensorProjection : Gdual → ℝ)
     (x : Orbit) :
-    WeylSupertraceFreeStressContext BalancedScalarStress := by
+    WeylSupertraceFreeStressContext BalancedScalarStress G := by
   let J :=
     InfoGeometry.Canonical.SouriauLieThermoKKTBridge.SuperCoadjointMomentMapData.identityBalanced
       (G := G) (Gdual := Gdual) (Orbit := Orbit)
@@ -407,7 +408,9 @@ def WeylSupertraceFreeStressContext.ofIdentityBalanced
         ⟨J.stressTensorProjection (J.moment x),
           J.supercurrentProjection (J.moment x)⟩
       superTrace := BalancedScalarStress.superTrace
-      weylInvariant := ∀ g : G, J.coadjointAction g (J.moment x) = J.moment x
+      weylReadout := fun g =>
+        ⟨J.stressTensorProjection (J.coadjointAction g (J.moment x)),
+          J.supercurrentProjection (J.coadjointAction g (J.moment x))⟩
       stress_supertrace_free := ?_
       weyl_invariant := ?_ }
   · change J.stressTensorProjection (J.moment x) + J.supercurrentProjection (J.moment x) = 0
@@ -416,10 +419,12 @@ def WeylSupertraceFreeStressContext.ofIdentityBalanced
         (G := G) (Gdual := Gdual) (Orbit := Orbit)
         moment geometricTemperature pairing parityOfGenerator stressTensorProjection x
   · intro g
-    simpa using
-      InfoGeometry.Canonical.SouriauLieThermoKKTBridge.SuperCoadjointMomentMapData.identityBalanced_coadjointAction
-        (G := G) (Gdual := Gdual) (Orbit := Orbit)
-        moment geometricTemperature pairing parityOfGenerator stressTensorProjection g (J.moment x)
+    have hAction : J.coadjointAction g (J.moment x) = J.moment x := by
+      simpa using
+        InfoGeometry.Canonical.SouriauLieThermoKKTBridge.SuperCoadjointMomentMapData.identityBalanced_coadjointAction
+          (G := G) (Gdual := Gdual) (Orbit := Orbit)
+          moment geometricTemperature pairing parityOfGenerator stressTensorProjection g (J.moment x)
+    rw [hAction]
 
 /-- The constructive identity-balanced packet is supertrace-free by evaluation. -/
 @[rep_depth thermo]
@@ -472,7 +477,7 @@ Build the broader stress context definitionally from the identity-balanced seed.
 -/
 @[rep_depth thermo]
 def toContext (S : IdentityBalancedStressSeed G Gdual Orbit) :
-    WeylSupertraceFreeStressContext BalancedScalarStress :=
+    WeylSupertraceFreeStressContext BalancedScalarStress G :=
   WeylSupertraceFreeStressContext.ofIdentityBalanced
     (G := G) (Gdual := Gdual) (Orbit := Orbit)
     S.moment S.geometricTemperature S.pairing S.parityOfGenerator
@@ -495,7 +500,7 @@ The seed-backed context is Weyl-invariant by the identity-action owner route.
 -/
 @[rep_depth thermo]
 theorem toContext_is_weyl_invariant (S : IdentityBalancedStressSeed G Gdual Orbit) :
-    S.toContext.weylInvariant := by
+    ∀ g : G, S.toContext.weylReadout g = S.toContext.stress := by
   simpa [IdentityBalancedStressSeed.toContext] using
     (WeylSupertraceFreeStressContext.ofIdentityBalanced
       (G := G) (Gdual := Gdual) (Orbit := Orbit)
@@ -513,7 +518,8 @@ identity-balanced branch: both required fields are derived from the seed.
 @[rep_depth thermo]
 theorem toContext_superTrace_eq_zero_and_is_weyl_invariant
     (S : IdentityBalancedStressSeed G Gdual Orbit) :
-    S.toContext.superTrace S.toContext.stress = 0 ∧ S.toContext.weylInvariant := by
+    S.toContext.superTrace S.toContext.stress = 0 ∧
+      (∀ g : G, S.toContext.weylReadout g = S.toContext.stress) := by
   exact ⟨S.toContext_superTrace_eq_zero, S.toContext_is_weyl_invariant⟩
 
 end IdentityBalancedStressSeed

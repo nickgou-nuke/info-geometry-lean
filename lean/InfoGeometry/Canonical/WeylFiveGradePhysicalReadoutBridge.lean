@@ -150,12 +150,15 @@ This avoids manufacturing a CCR witness when the available concrete Fock owner
 surface only supplies the split-`Cl(1,1)` CAR pair.
 -/
 @[rep_depth krein]
-structure WeylCARPhysicalReadoutCarrier where
-  car : ScaledCARPair E
+abbrev WeylCARPhysicalReadoutCarrier : Type _ :=
+  ScaledCARPair E
 
 namespace WeylCARPhysicalReadoutCarrier
 
 variable (C : WeylCARPhysicalReadoutCarrier (E := E))
+
+def car : ScaledCARPair E :=
+  C
 
 @[rep_depth krein]
 theorem normalizedCAR_grade_zero :
@@ -173,8 +176,8 @@ end WeylCARPhysicalReadoutCarrier
 /-- Concrete split-`Cl(1,1)` CAR readout at grade zero. -/
 @[rep_depth krein]
 noncomputable def concreteCl11WeylCARPhysicalReadoutCarrier :
-    WeylCARPhysicalReadoutCarrier (E := E) where
-  car := concreteCl11ScaledCARPair (E := E)
+    WeylCARPhysicalReadoutCarrier (E := E) :=
+  concreteCl11ScaledCARPair (E := E)
 
 /-- The concrete split-`Cl(1,1)` CAR readout is normalized. -/
 @[rep_depth krein]

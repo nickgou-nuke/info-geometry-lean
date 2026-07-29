@@ -109,7 +109,7 @@ end Triality
 
 section DrazinInformation
 
-variable {Op State : Type*}
+variable {Op State : Type*} [Add Op] [Mul Op]
 variable (P : InfoGeometry.OperatorAlgebra.DrazinInformationExtraction Op State)
 
 /--
@@ -118,9 +118,9 @@ In the split-octonion interpretation, this is the stable associative/tamed
 readout side.
 -/
 theorem stableInformation_eq_regularPart_on_state
-    (s : State) (h_state : P.readout.valid s) :
+  (s : State) (h_state : P.readout.valid s) :
     P.stableInformation s = P.readout.regularPart s :=
-  P.stableInformation_eq_regularPart s h_state
+  P.stableInformation_eq_regularPart_readback s h_state
 
 /--
 The singular-residue readout is the Drazin nilpotent residue on admissible
@@ -128,9 +128,9 @@ states. In the split-octonion interpretation, this is where null/nilpotent
 defect data are retained.
 -/
 theorem singularResidue_eq_nilpotentResidue_on_state
-    (s : State) (h_state : P.readout.valid s) :
+  (s : State) (h_state : P.readout.valid s) :
     P.singularResidue s = P.readout.nilpotentResidue s :=
-  P.singularResidue_eq_nilpotentResidue s h_state
+  P.singularResidue_eq_nilpotentResidue_readback s h_state
 
 end DrazinInformation
 

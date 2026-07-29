@@ -471,8 +471,12 @@ structure InfiniteCoadjointOrbitHessianContext
   massieuPotential : LieAlg → ℝ
   /-- Thermodynamic moment readout `Q(β)`. -/
   thermodynamicMoment : LieAlg → LieCoalg
+  /-- Explicit first-variation readout of the Massieu potential. -/
+  massieuGradient : LieAlg → LieCoalg
   /-- Fisher/Hessian bilinear readout on admissible temperature variations. -/
   fisherHessian : LieAlg → Tangent → Tangent → ℝ
+  /-- Explicit second-variation readout of the Massieu potential. -/
+  massieuHessian : LieAlg → Tangent → Tangent → ℝ
   /-- Covariance readout of the moment map on admissible variations. -/
   momentCovariance : LieAlg → Tangent → Tangent → ℝ
   /-- Predicate selecting nonzero/admissibly nondegenerate tangent variations. -/
@@ -481,6 +485,10 @@ structure InfiniteCoadjointOrbitHessianContext
   souriauEntropy : LieCoalg → ℝ
   /-- Inverse coordinate map `Q ↦ β`. -/
   betaOfMoment : LieCoalg → LieAlg
+  /-- Pairing used by the Fenchel-Legendre contact law. -/
+  thermodynamicPairing : LieAlg → LieCoalg → ℝ
+  /-- Explicit entropy-gradient readout on the dual lane. -/
+  entropyGradient : LieCoalg → LieAlg
   /-- Entropy Hessian on admissible dual-side variations. -/
   entropyHessian : LieCoalg → DualTangent → DualTangent → ℝ
   /-- Inverse Fisher readout transported to the dual-side variations. -/
@@ -490,9 +498,9 @@ structure InfiniteCoadjointOrbitHessianContext
   massieu_eq_log_partition :
     ∀ β : LieAlg, massieuPotential β = Real.log (partitionFunction β)
   /-- First variation of Massieu gives the thermodynamic moment. -/
-  first_variation_eq_moment : Prop
+  first_variation_eq_moment_proof : massieuGradient = thermodynamicMoment
   /-- Second variation of Massieu gives the Fisher/Hessian readout. -/
-  second_variation_eq_fisher : Prop
+  second_variation_eq_fisher_proof : massieuHessian = fisherHessian
   /-- Fisher/Hessian readout agrees with the coadjoint moment covariance. -/
 -- theorem-class: bridge
   fisher_eq_covariance :
@@ -511,9 +519,13 @@ structure InfiniteCoadjointOrbitHessianContext
   fisher_positive_of_nonzero :
     ∀ (β : LieAlg) (X : Tangent), nonzeroTangent X → 0 < fisherHessian β X X
   /-- Fenchel-Legendre contact equation for entropy and Massieu. -/
-  fenchel_legendre_contact : Prop
+  fenchel_legendre_contact_proof :
+    ∀ Q : LieCoalg,
+      souriauEntropy Q =
+        thermodynamicPairing (betaOfMoment Q) Q +
+          massieuPotential (betaOfMoment Q)
   /-- Entropy gradient recovers the geometric-temperature coordinate. -/
-  entropy_gradient_eq_beta : Prop
+  entropy_gradient_eq_beta_proof : entropyGradient = betaOfMoment
   /-- Entropy Hessian is the inverse Fisher metric on the coadjoint dual lane. -/
 -- theorem-class: bridge
   entropy_hessian_eq_inverse_fisher :
@@ -524,6 +536,56 @@ namespace InfiniteCoadjointOrbitHessianContext
 
 variable {Orbit : Type u} {LieAlg : Type v} {LieCoalg : Type w}
 variable {Tangent DualTangent : Type*}
+
+/-- The first-variation law exposed as a proposition from its proof owner. -/
+def first_variation_eq_moment
+    (C : InfiniteCoadjointOrbitHessianContext
+      Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
+  C.massieuGradient = C.thermodynamicMoment
+
+/-- The second-variation/Fisher law exposed as a proposition from its proof owner. -/
+def second_variation_eq_fisher
+    (C : InfiniteCoadjointOrbitHessianContext
+      Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
+  C.massieuHessian = C.fisherHessian
+
+/-- The Fenchel-Legendre contact law exposed from its proof owner. -/
+def fenchel_legendre_contact
+    (C : InfiniteCoadjointOrbitHessianContext
+      Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
+  ∀ Q : LieCoalg,
+    C.souriauEntropy Q =
+      C.thermodynamicPairing (C.betaOfMoment Q) Q +
+        C.massieuPotential (C.betaOfMoment Q)
+
+/-- The entropy-gradient law exposed as a proposition from its proof owner. -/
+def entropy_gradient_eq_beta
+    (C : InfiniteCoadjointOrbitHessianContext
+      Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
+  C.entropyGradient = C.betaOfMoment
+
+def first_variation_law
+    (C : InfiniteCoadjointOrbitHessianContext
+      Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
+  C.massieuGradient = C.thermodynamicMoment
+
+def second_variation_law
+    (C : InfiniteCoadjointOrbitHessianContext
+      Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
+  C.massieuHessian = C.fisherHessian
+
+def fenchel_legendre_law
+    (C : InfiniteCoadjointOrbitHessianContext
+      Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
+  ∀ Q : LieCoalg,
+    C.souriauEntropy Q =
+      C.thermodynamicPairing (C.betaOfMoment Q) Q +
+        C.massieuPotential (C.betaOfMoment Q)
+
+def entropy_gradient_law
+    (C : InfiniteCoadjointOrbitHessianContext
+      Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
+  C.entropyGradient = C.betaOfMoment
 
 /--
 Canonical dimension-agnostic Hessian constructor where the Massieu potential is
@@ -540,14 +602,18 @@ noncomputable def ofLogPartitionAndFisherCovariance
     (moment : Orbit → LieCoalg)
     (partitionFunction : LieAlg → ℝ)
     (thermodynamicMoment : LieAlg → LieCoalg)
+    (massieuGradient : LieAlg → LieCoalg)
     (fisherHessian : LieAlg → Tangent → Tangent → ℝ)
+    (massieuHessian : LieAlg → Tangent → Tangent → ℝ)
     (nonzeroTangent : Tangent → Prop)
     (souriauEntropy : LieCoalg → ℝ)
     (betaOfMoment : LieCoalg → LieAlg)
+    (thermodynamicPairing : LieAlg → LieCoalg → ℝ)
+    (entropyGradient : LieCoalg → LieAlg)
     (entropyHessian inverseFisherHessian :
       LieCoalg → DualTangent → DualTangent → ℝ)
-    (first_variation_eq_moment : Prop)
-    (second_variation_eq_fisher : Prop)
+    (first_variation_eq_moment : massieuGradient = thermodynamicMoment)
+    (second_variation_eq_fisher : massieuHessian = fisherHessian)
     (fisher_symmetric :
       ∀ (β : LieAlg) (X Y : Tangent),
         fisherHessian β X Y = fisherHessian β Y X)
@@ -556,8 +622,12 @@ noncomputable def ofLogPartitionAndFisherCovariance
     (fisher_positive_of_nonzero :
       ∀ (β : LieAlg) (X : Tangent),
         nonzeroTangent X → 0 < fisherHessian β X X)
-    (fenchel_legendre_contact : Prop)
-    (entropy_gradient_eq_beta : Prop)
+    (fenchel_legendre_contact :
+      ∀ Q : LieCoalg,
+        souriauEntropy Q =
+          thermodynamicPairing (betaOfMoment Q) Q +
+            Real.log (partitionFunction (betaOfMoment Q)))
+    (entropy_gradient_eq_beta : entropyGradient = betaOfMoment)
     (entropy_hessian_eq_inverse_fisher :
       ∀ (Q : LieCoalg), entropyHessian Q = inverseFisherHessian Q) :
     InfiniteCoadjointOrbitHessianContext
@@ -566,26 +636,31 @@ noncomputable def ofLogPartitionAndFisherCovariance
   partitionFunction := partitionFunction
   massieuPotential := fun β => Real.log (partitionFunction β)
   thermodynamicMoment := thermodynamicMoment
+  massieuGradient := massieuGradient
   fisherHessian := fisherHessian
+  massieuHessian := massieuHessian
   momentCovariance := fisherHessian
   nonzeroTangent := nonzeroTangent
   souriauEntropy := souriauEntropy
   betaOfMoment := betaOfMoment
+  thermodynamicPairing := thermodynamicPairing
+  entropyGradient := entropyGradient
   entropyHessian := entropyHessian
   inverseFisherHessian := inverseFisherHessian
   massieu_eq_log_partition := by
     intro β
     rfl
-  first_variation_eq_moment := first_variation_eq_moment
-  second_variation_eq_fisher := second_variation_eq_fisher
+  first_variation_eq_moment_proof := first_variation_eq_moment
+  second_variation_eq_fisher_proof := second_variation_eq_fisher
   fisher_eq_covariance := by
     intro β
     rfl
   fisher_symmetric := fisher_symmetric
   fisher_nonnegative := fisher_nonnegative
   fisher_positive_of_nonzero := fisher_positive_of_nonzero
-  fenchel_legendre_contact := fenchel_legendre_contact
-  entropy_gradient_eq_beta := entropy_gradient_eq_beta
+  fenchel_legendre_contact_proof := by
+    simpa using fenchel_legendre_contact
+  entropy_gradient_eq_beta_proof := entropy_gradient_eq_beta
   entropy_hessian_eq_inverse_fisher := entropy_hessian_eq_inverse_fisher
 
 /--
@@ -606,14 +681,23 @@ noncomputable def ofLogPartitionGramFisher
     (partitionFunction : LieAlg → ℝ)
     (thermodynamicMoment : LieAlg → LieCoalg)
     (feature : LieAlg → Tangent → Feature)
+    (massieuGradient : LieAlg → LieCoalg)
+    (massieuHessian : LieAlg → Tangent → Tangent → ℝ)
+    (thermodynamicPairing : LieAlg → LieCoalg → ℝ)
+    (entropyGradient : LieCoalg → LieAlg)
     (souriauEntropy : LieCoalg → ℝ)
     (betaOfMoment : LieCoalg → LieAlg)
     (entropyHessian inverseFisherHessian :
       LieCoalg → DualTangent → DualTangent → ℝ)
-    (first_variation_eq_moment : Prop)
-    (second_variation_eq_fisher : Prop)
-    (fenchel_legendre_contact : Prop)
-    (entropy_gradient_eq_beta : Prop)
+    (first_variation_eq_moment : massieuGradient = thermodynamicMoment)
+    (second_variation_eq_fisher : massieuHessian =
+      fun β X Y => inner ℝ (feature β X) (feature β Y))
+    (fenchel_legendre_contact :
+      ∀ Q : LieCoalg,
+        souriauEntropy Q =
+          thermodynamicPairing (betaOfMoment Q) Q +
+            Real.log (partitionFunction (betaOfMoment Q)))
+    (entropy_gradient_eq_beta : entropyGradient = betaOfMoment)
     (entropy_hessian_eq_inverse_fisher :
       ∀ (Q : LieCoalg), entropyHessian Q = inverseFisherHessian Q) :
     InfiniteCoadjointOrbitHessianContext
@@ -622,10 +706,14 @@ noncomputable def ofLogPartitionGramFisher
     (moment := moment)
     (partitionFunction := partitionFunction)
     (thermodynamicMoment := thermodynamicMoment)
+    (massieuGradient := massieuGradient)
+    (massieuHessian := massieuHessian)
     (fisherHessian := fun β X Y => inner ℝ (feature β X) (feature β Y))
     (nonzeroTangent := fun X => ∀ β : LieAlg, feature β X ≠ 0)
     (souriauEntropy := souriauEntropy)
     (betaOfMoment := betaOfMoment)
+    (thermodynamicPairing := thermodynamicPairing)
+    (entropyGradient := entropyGradient)
     (entropyHessian := entropyHessian)
     (inverseFisherHessian := inverseFisherHessian)
     (first_variation_eq_moment := first_variation_eq_moment)
@@ -654,30 +742,49 @@ theorem full_gram_fisher_constructive_theorem
     (partitionFunction : LieAlg → ℝ)
     (thermodynamicMoment : LieAlg → LieCoalg)
     (feature : LieAlg → Tangent → Feature)
+    (massieuGradient : LieAlg → LieCoalg)
+    (massieuHessian : LieAlg → Tangent → Tangent → ℝ)
+    (thermodynamicPairing : LieAlg → LieCoalg → ℝ)
+    (entropyGradient : LieCoalg → LieAlg)
     (souriauEntropy : LieCoalg → ℝ)
     (betaOfMoment : LieCoalg → LieAlg)
     (entropyHessian inverseFisherHessian :
       LieCoalg → DualTangent → DualTangent → ℝ)
-    (first_variation_eq_moment : Prop)
-    (second_variation_eq_fisher : Prop)
-    (fenchel_legendre_contact : Prop)
-    (entropy_gradient_eq_beta : Prop)
+    (first_variation_eq_moment : massieuGradient = thermodynamicMoment)
+    (second_variation_eq_fisher : massieuHessian =
+      fun β X Y => inner ℝ (feature β X) (feature β Y))
+    (fenchel_legendre_contact :
+      ∀ Q : LieCoalg,
+        souriauEntropy Q =
+          thermodynamicPairing (betaOfMoment Q) Q +
+            Real.log (partitionFunction (betaOfMoment Q)))
+    (entropy_gradient_eq_beta : entropyGradient = betaOfMoment)
     (entropy_hessian_eq_inverse_fisher :
       ∀ (Q : LieCoalg), entropyHessian Q = inverseFisherHessian Q)
     (β : LieAlg) (X Y : Tangent)
     (hX : ∀ β : LieAlg, feature β X ≠ 0) :
     let Cgram :=
       ofLogPartitionGramFisher
-        (Orbit := Orbit) (LieAlg := LieAlg) (LieCoalg := LieCoalg)
-        (Tangent := Tangent) (DualTangent := DualTangent)
-        (Feature := Feature)
-        moment partitionFunction thermodynamicMoment feature souriauEntropy
-        betaOfMoment entropyHessian inverseFisherHessian
-        first_variation_eq_moment
-        second_variation_eq_fisher
-        fenchel_legendre_contact
-        entropy_gradient_eq_beta
-        entropy_hessian_eq_inverse_fisher
+      (Orbit := Orbit) (LieAlg := LieAlg) (LieCoalg := LieCoalg)
+      (Tangent := Tangent) (DualTangent := DualTangent)
+      (Feature := Feature)
+        (moment := moment)
+        (partitionFunction := partitionFunction)
+        (thermodynamicMoment := thermodynamicMoment)
+        (feature := feature)
+        (massieuGradient := massieuGradient)
+        (massieuHessian := massieuHessian)
+        (thermodynamicPairing := thermodynamicPairing)
+        (entropyGradient := entropyGradient)
+        (souriauEntropy := souriauEntropy)
+        (betaOfMoment := betaOfMoment)
+        (entropyHessian := entropyHessian)
+        (inverseFisherHessian := inverseFisherHessian)
+        (first_variation_eq_moment := first_variation_eq_moment)
+        (second_variation_eq_fisher := second_variation_eq_fisher)
+        (fenchel_legendre_contact := fenchel_legendre_contact)
+        (entropy_gradient_eq_beta := entropy_gradient_eq_beta)
+        (entropy_hessian_eq_inverse_fisher := entropy_hessian_eq_inverse_fisher)
     Cgram.fisherHessian β X Y = inner ℝ (feature β X) (feature β Y)
       ∧ Cgram.fisherHessian β X Y = Cgram.fisherHessian β Y X
       ∧ 0 ≤ Cgram.fisherHessian β X X
@@ -842,6 +949,14 @@ noncomputable def ofSmoothLegendreReadout
     (nonzeroTangent : Θ → Prop)
     (souriauEntropy : MomentCoord Θ → ℝ)
     (legendre : LegendreHessianInverseContext Θ)
+    (thermodynamicMoment_eq_gradient :
+      thermodynamicMoment = fun _ => dualCoord legendre.massieu legendre.beta)
+    (thermodynamicPairing : Θ → MomentCoord Θ → ℝ)
+    (fenchel_legendre_contact :
+      ∀ Q : MomentCoord Θ,
+        souriauEntropy Q =
+          thermodynamicPairing (legendre.entropyGradient Q) Q +
+            Real.log (partitionFunction (legendre.entropyGradient Q)))
     (fisher_symmetric :
       ∀ (_β : Θ) (X Y : Θ),
         legendre.fisherHessian X Y = legendre.fisherHessian Y X)
@@ -856,23 +971,27 @@ noncomputable def ofSmoothLegendreReadout
     (moment := moment)
     (partitionFunction := partitionFunction)
     (thermodynamicMoment := thermodynamicMoment)
+    (massieuGradient := fun _ => dualCoord legendre.massieu legendre.beta)
+    (massieuHessian := fun _ X Y => legendre.fisherHessian X Y)
     (fisherHessian := fun _ X Y => legendre.fisherHessian X Y)
     (nonzeroTangent := nonzeroTangent)
     (souriauEntropy := souriauEntropy)
     (betaOfMoment := legendre.entropyGradient)
+    (thermodynamicPairing := thermodynamicPairing)
+    (entropyGradient := legendre.entropyGradient)
     (entropyHessian := fun _ U V => V (legendre.entropyHessian U))
     (inverseFisherHessian := fun _ U V => V (legendre.entropyHessian U))
     (first_variation_eq_moment :=
-      legendre.moment = dualCoord legendre.massieu legendre.beta)
+      by simpa using thermodynamicMoment_eq_gradient.symm)
     (second_variation_eq_fisher :=
-      legendre.fisherHessian = hessian legendre.massieu legendre.beta)
+      rfl)
     (fisher_symmetric := fisher_symmetric)
     (fisher_nonnegative := fisher_nonnegative)
     (fisher_positive_of_nonzero := fisher_positive_of_nonzero)
     (fenchel_legendre_contact :=
-      legendre.entropyGradient legendre.moment = legendre.beta)
+      by simpa using fenchel_legendre_contact)
     (entropy_gradient_eq_beta :=
-      legendre.entropyGradient legendre.moment = legendre.beta)
+      rfl)
     (entropy_hessian_eq_inverse_fisher := by
       intro Q
       rfl)
@@ -891,6 +1010,14 @@ theorem full_smooth_legendre_constructive_theorem
     (nonzeroTangent : Θ → Prop)
     (souriauEntropy : MomentCoord Θ → ℝ)
     (legendre : LegendreHessianInverseContext Θ)
+    (thermodynamicMoment_eq_gradient :
+      thermodynamicMoment = fun _ => dualCoord legendre.massieu legendre.beta)
+    (thermodynamicPairing : Θ → MomentCoord Θ → ℝ)
+    (fenchel_legendre_contact :
+      ∀ Q : MomentCoord Θ,
+        souriauEntropy Q =
+          thermodynamicPairing (legendre.entropyGradient Q) Q +
+            Real.log (partitionFunction (legendre.entropyGradient Q)))
     (fisher_symmetric :
       ∀ (_β : Θ) (X Y : Θ),
         legendre.fisherHessian X Y = legendre.fisherHessian Y X)
@@ -904,7 +1031,9 @@ theorem full_smooth_legendre_constructive_theorem
       ofSmoothLegendreReadout
         (Orbit := Orbit)
         moment partitionFunction thermodynamicMoment nonzeroTangent
-        souriauEntropy legendre fisher_symmetric fisher_nonnegative
+        souriauEntropy legendre thermodynamicMoment_eq_gradient
+        thermodynamicPairing fenchel_legendre_contact
+        fisher_symmetric fisher_nonnegative
         fisher_positive_of_nonzero
     Cleg.massieuPotential β = Real.log (Cleg.partitionFunction β)
       ∧ Cleg.first_variation_eq_moment
@@ -918,13 +1047,13 @@ theorem full_smooth_legendre_constructive_theorem
   dsimp [ofLogPartitionGramFisher, ofLogPartitionAndFisherCovariance]
   exact
     ⟨rfl,
-      legendre.moment_eq_gradient,
-      legendre.fisherHessian_eq_hessianMassieu,
+      by simpa using thermodynamicMoment_eq_gradient.symm,
+      rfl,
       rfl,
       fisher_symmetric β X Y,
       fisher_nonnegative β X,
-      legendre.entropyGradient_contact,
-      legendre.entropyGradient_contact,
+      fenchel_legendre_contact,
+      rfl,
       rfl⟩
 
 attribute [terminal] full_smooth_legendre_constructive_theorem
@@ -949,6 +1078,14 @@ noncomputable def ofSmoothLegendreGramReadout
     (thermodynamicMoment : Θ → MomentCoord Θ)
     (souriauEntropy : MomentCoord Θ → ℝ)
     (legendre : LegendreHessianInverseContext Θ)
+    (thermodynamicMoment_eq_gradient :
+      thermodynamicMoment = fun _ => dualCoord legendre.massieu legendre.beta)
+    (thermodynamicPairing : Θ → MomentCoord Θ → ℝ)
+    (fenchel_legendre_contact :
+      ∀ Q : MomentCoord Θ,
+        souriauEntropy Q =
+          thermodynamicPairing (legendre.entropyGradient Q) Q +
+            Real.log (partitionFunction (legendre.entropyGradient Q)))
     (feature : Θ → Feature)
     (fisherHessian_eq_gram :
       ∀ X Y : Θ, legendre.fisherHessian X Y = inner ℝ (feature X) (feature Y)) :
@@ -962,6 +1099,9 @@ noncomputable def ofSmoothLegendreGramReadout
     (nonzeroTangent := fun X => feature X ≠ 0)
     (souriauEntropy := souriauEntropy)
     (legendre := legendre)
+    (thermodynamicMoment_eq_gradient := thermodynamicMoment_eq_gradient)
+    (thermodynamicPairing := thermodynamicPairing)
+    (fenchel_legendre_contact := fenchel_legendre_contact)
     (fisher_symmetric := by
       intro β X Y
       rw [fisherHessian_eq_gram X Y, fisherHessian_eq_gram Y X]
@@ -991,6 +1131,14 @@ theorem full_smooth_legendre_gram_constructive_theorem
     (thermodynamicMoment : Θ → MomentCoord Θ)
     (souriauEntropy : MomentCoord Θ → ℝ)
     (legendre : LegendreHessianInverseContext Θ)
+    (thermodynamicMoment_eq_gradient :
+      thermodynamicMoment = fun _ => dualCoord legendre.massieu legendre.beta)
+    (thermodynamicPairing : Θ → MomentCoord Θ → ℝ)
+    (fenchel_legendre_contact :
+      ∀ Q : MomentCoord Θ,
+        souriauEntropy Q =
+          thermodynamicPairing (legendre.entropyGradient Q) Q +
+            Real.log (partitionFunction (legendre.entropyGradient Q)))
     (feature : Θ → Feature)
     (fisherHessian_eq_gram :
       ∀ X Y : Θ, legendre.fisherHessian X Y = inner ℝ (feature X) (feature Y))
@@ -1000,7 +1148,8 @@ theorem full_smooth_legendre_gram_constructive_theorem
       ofSmoothLegendreGramReadout
         (Orbit := Orbit)
         moment partitionFunction thermodynamicMoment souriauEntropy
-        legendre feature fisherHessian_eq_gram
+        legendre thermodynamicMoment_eq_gradient thermodynamicPairing
+        fenchel_legendre_contact feature fisherHessian_eq_gram
     Cgram.massieuPotential β = Real.log (Cgram.partitionFunction β)
       ∧ Cgram.first_variation_eq_moment
       ∧ Cgram.second_variation_eq_fisher
@@ -1016,8 +1165,8 @@ theorem full_smooth_legendre_gram_constructive_theorem
     ofLogPartitionAndFisherCovariance]
   exact
     ⟨rfl,
-      legendre.moment_eq_gradient,
-      legendre.fisherHessian_eq_hessianMassieu,
+      by simpa using thermodynamicMoment_eq_gradient.symm,
+      rfl,
       rfl,
       fisherHessian_eq_gram X Y,
       by
@@ -1029,8 +1178,8 @@ theorem full_smooth_legendre_gram_constructive_theorem
       by
         rw [fisherHessian_eq_gram X X]
         exact (real_inner_self_pos).2 hX,
-      legendre.entropyGradient_contact,
-      legendre.entropyGradient_contact,
+      fenchel_legendre_contact,
+      rfl,
       rfl⟩
 
 attribute [terminal] full_smooth_legendre_gram_constructive_theorem
@@ -1056,13 +1205,22 @@ noncomputable def toInfiniteCoadjointOrbitHessianContext
     (moment : Orbit → MomentCoord Θ)
     (partitionFunction : Θ → ℝ)
     (thermodynamicMoment : Θ → MomentCoord Θ)
-    (souriauEntropy : MomentCoord Θ → ℝ) :
+    (souriauEntropy : MomentCoord Θ → ℝ)
+    (thermodynamicMoment_eq_gradient :
+      thermodynamicMoment = fun _ => dualCoord O.legendre.massieu O.legendre.beta)
+    (thermodynamicPairing : Θ → MomentCoord Θ → ℝ)
+    (fenchel_legendre_contact :
+      ∀ Q : MomentCoord Θ,
+        souriauEntropy Q =
+          thermodynamicPairing (O.legendre.entropyGradient Q) Q +
+            Real.log (partitionFunction (O.legendre.entropyGradient Q))) :
     InfiniteCoadjointOrbitHessianContext
       Orbit Θ (MomentCoord Θ) Θ (MomentCoord Θ) :=
   ofSmoothLegendreGramReadout
     (Orbit := Orbit)
     moment partitionFunction thermodynamicMoment souriauEntropy
-    O.legendre O.feature O.fisher_eq_gram
+    O.legendre thermodynamicMoment_eq_gradient thermodynamicPairing
+    fenchel_legendre_contact O.feature O.fisher_eq_gram
 
 @[rep_depth thermo]
 theorem constructive_packet
@@ -1413,6 +1571,14 @@ noncomputable def ofSmoothLegendreSquareDissipation
     (nonzeroTangent : Θ → Prop)
     (souriauEntropy : MomentCoord Θ → ℝ)
     (legendre : LegendreHessianInverseContext Θ)
+    (thermodynamicMoment_eq_gradient :
+      thermodynamicMoment = fun _ => dualCoord legendre.massieu legendre.beta)
+    (thermodynamicPairing : Θ → MomentCoord Θ → ℝ)
+    (fenchel_legendre_contact :
+      ∀ Q : MomentCoord Θ,
+        souriauEntropy Q =
+          thermodynamicPairing (legendre.entropyGradient Q) Q +
+            Real.log (partitionFunction (legendre.entropyGradient Q)))
     (fisher_symmetric :
       ∀ (_β : Θ) (X Y : Θ),
         legendre.fisherHessian X Y = legendre.fisherHessian Y X)
@@ -1427,7 +1593,9 @@ noncomputable def ofSmoothLegendreSquareDissipation
     InfiniteCoadjointOrbitHessianContext.ofSmoothLegendreReadout
       (Orbit := Orbit)
       moment partitionFunction thermodynamicMoment nonzeroTangent
-      souriauEntropy legendre fisher_symmetric fisher_nonnegative
+      souriauEntropy legendre thermodynamicMoment_eq_gradient
+      thermodynamicPairing fenchel_legendre_contact
+      fisher_symmetric fisher_nonnegative
       fisher_positive_of_nonzero
   metriplectic :=
     InfiniteCoadjointOrbitMetriplecticContext.ofMomentImageSquareDissipation
@@ -1457,6 +1625,14 @@ noncomputable def ofSmoothLegendreGramSquareDissipation
     (thermodynamicMoment : Θ → MomentCoord Θ)
     (souriauEntropy : MomentCoord Θ → ℝ)
     (legendre : LegendreHessianInverseContext Θ)
+    (thermodynamicMoment_eq_gradient :
+      thermodynamicMoment = fun _ => dualCoord legendre.massieu legendre.beta)
+    (thermodynamicPairing : Θ → MomentCoord Θ → ℝ)
+    (fenchel_legendre_contact :
+      ∀ Q : MomentCoord Θ,
+        souriauEntropy Q =
+          thermodynamicPairing (legendre.entropyGradient Q) Q +
+            Real.log (partitionFunction (legendre.entropyGradient Q)))
     (feature : Θ → Feature)
     (fisherHessian_eq_gram :
       ∀ X Y : Θ, legendre.fisherHessian X Y = inner ℝ (feature X) (feature Y)) :
@@ -1466,7 +1642,8 @@ noncomputable def ofSmoothLegendreGramSquareDissipation
     InfiniteCoadjointOrbitHessianContext.ofSmoothLegendreGramReadout
       (Orbit := Orbit)
       moment partitionFunction thermodynamicMoment souriauEntropy
-      legendre feature fisherHessian_eq_gram
+      legendre thermodynamicMoment_eq_gradient thermodynamicPairing
+      fenchel_legendre_contact feature fisherHessian_eq_gram
   metriplectic :=
     InfiniteCoadjointOrbitMetriplecticContext.ofMomentImageSquareDissipation
       (Orbit := Orbit) (LieAlg := Θ) (LieCoalg := MomentCoord Θ)
@@ -1494,6 +1671,18 @@ noncomputable def ofContinuousLinearEquivLegendreGramSquareDissipation
     (thermodynamicMoment : Θ → MomentCoord Θ)
     (souriauEntropy : MomentCoord Θ → ℝ)
     (legendreData : LegendreContinuousLinearEquivInverseData Θ)
+    (thermodynamicMoment_eq_gradient :
+      thermodynamicMoment = fun _ =>
+        dualCoord legendreData.toLegendreHessianInverseContext.massieu
+          legendreData.toLegendreHessianInverseContext.beta)
+    (thermodynamicPairing : Θ → MomentCoord Θ → ℝ)
+    (fenchel_legendre_contact :
+      ∀ Q : MomentCoord Θ,
+        souriauEntropy Q =
+          thermodynamicPairing
+              (legendreData.toLegendreHessianInverseContext.entropyGradient Q) Q +
+            Real.log (partitionFunction
+              (legendreData.toLegendreHessianInverseContext.entropyGradient Q)))
     (feature : Θ → Feature)
     (fisherHessian_eq_gram :
       ∀ X Y : Θ,
@@ -1506,7 +1695,8 @@ noncomputable def ofContinuousLinearEquivLegendreGramSquareDissipation
     moment geometricTemperature reversibleVectorField metricVectorField
     entropy dissipationAmplitude partitionFunction thermodynamicMoment
     souriauEntropy legendreData.toLegendreHessianInverseContext
-    feature fisherHessian_eq_gram
+    thermodynamicMoment_eq_gradient thermodynamicPairing
+    fenchel_legendre_contact feature fisherHessian_eq_gram
 
 namespace InfiniteCoadjointOrbitHessianMetriplecticContext
 
@@ -1628,6 +1818,14 @@ theorem full_smooth_legendre_square_dissipation_constructive_theorem
     (nonzeroTangent : Θ → Prop)
     (souriauEntropy : MomentCoord Θ → ℝ)
     (legendre : LegendreHessianInverseContext Θ)
+    (thermodynamicMoment_eq_gradient :
+      thermodynamicMoment = fun _ => dualCoord legendre.massieu legendre.beta)
+    (thermodynamicPairing : Θ → MomentCoord Θ → ℝ)
+    (fenchel_legendre_contact :
+      ∀ Q : MomentCoord Θ,
+        souriauEntropy Q =
+          thermodynamicPairing (legendre.entropyGradient Q) Q +
+            Real.log (partitionFunction (legendre.entropyGradient Q)))
     (fisher_symmetric :
       ∀ (_β : Θ) (X Y : Θ),
         legendre.fisherHessian X Y = legendre.fisherHessian Y X)
@@ -1641,7 +1839,8 @@ theorem full_smooth_legendre_square_dissipation_constructive_theorem
       ofSmoothLegendreSquareDissipation
         moment geometricTemperature reversibleVectorField metricVectorField
         entropy dissipationAmplitude partitionFunction thermodynamicMoment
-        nonzeroTangent souriauEntropy legendre fisher_symmetric
+        nonzeroTangent souriauEntropy legendre thermodynamicMoment_eq_gradient
+        thermodynamicPairing fenchel_legendre_contact fisher_symmetric
         fisher_nonnegative fisher_positive_of_nonzero
     C.hessian.massieuPotential β =
         Real.log (C.hessian.partitionFunction β)
@@ -1662,13 +1861,14 @@ theorem full_smooth_legendre_square_dissipation_constructive_theorem
         ofSmoothLegendreSquareDissipation
           moment geometricTemperature reversibleVectorField metricVectorField
           entropy dissipationAmplitude partitionFunction thermodynamicMoment
-          nonzeroTangent souriauEntropy legendre fisher_symmetric
+          nonzeroTangent souriauEntropy legendre thermodynamicMoment_eq_gradient
+          thermodynamicPairing fenchel_legendre_contact fisher_symmetric
           fisher_nonnegative fisher_positive_of_nonzero)
       β Q X Y x
-      legendre.moment_eq_gradient
-      legendre.fisherHessian_eq_hessianMassieu
-      legendre.entropyGradient_contact
-      legendre.entropyGradient_contact
+      (by simpa using thermodynamicMoment_eq_gradient.symm)
+      rfl
+      fenchel_legendre_contact
+      rfl
 
 attribute [terminal] full_smooth_legendre_square_dissipation_constructive_theorem
 
@@ -1694,6 +1894,14 @@ theorem full_smooth_legendre_gram_square_dissipation_constructive_theorem
     (thermodynamicMoment : Θ → MomentCoord Θ)
     (souriauEntropy : MomentCoord Θ → ℝ)
     (legendre : LegendreHessianInverseContext Θ)
+    (thermodynamicMoment_eq_gradient :
+      thermodynamicMoment = fun _ => dualCoord legendre.massieu legendre.beta)
+    (thermodynamicPairing : Θ → MomentCoord Θ → ℝ)
+    (fenchel_legendre_contact :
+      ∀ Q : MomentCoord Θ,
+        souriauEntropy Q =
+          thermodynamicPairing (legendre.entropyGradient Q) Q +
+            Real.log (partitionFunction (legendre.entropyGradient Q)))
     (feature : Θ → Feature)
     (fisherHessian_eq_gram :
       ∀ X Y : Θ, legendre.fisherHessian X Y = inner ℝ (feature X) (feature Y))
@@ -1703,7 +1911,9 @@ theorem full_smooth_legendre_gram_square_dissipation_constructive_theorem
       ofSmoothLegendreGramSquareDissipation
         moment geometricTemperature reversibleVectorField metricVectorField
         entropy dissipationAmplitude partitionFunction thermodynamicMoment
-        souriauEntropy legendre feature fisherHessian_eq_gram
+        souriauEntropy legendre thermodynamicMoment_eq_gradient
+        thermodynamicPairing fenchel_legendre_contact feature
+        fisherHessian_eq_gram
     C.hessian.massieuPotential β =
         Real.log (C.hessian.partitionFunction β)
       ∧ C.hessian.first_variation_eq_moment
@@ -1727,8 +1937,8 @@ theorem full_smooth_legendre_gram_square_dissipation_constructive_theorem
     InfiniteCoadjointOrbitMetriplecticContext.ofMomentImage]
   exact
     ⟨rfl,
-      legendre.moment_eq_gradient,
-      legendre.fisherHessian_eq_hessianMassieu,
+      by simpa using thermodynamicMoment_eq_gradient.symm,
+      rfl,
       rfl,
       fisherHessian_eq_gram X Y,
       by
@@ -1740,8 +1950,8 @@ theorem full_smooth_legendre_gram_square_dissipation_constructive_theorem
       by
         rw [fisherHessian_eq_gram X X]
         exact (real_inner_self_pos).2 hX,
-      legendre.entropyGradient_contact,
-      legendre.entropyGradient_contact,
+      fenchel_legendre_contact,
+      rfl,
       rfl,
       sq_nonneg (dissipationAmplitude x)⟩
 
@@ -1771,6 +1981,14 @@ theorem full_smooth_legendre_gram_square_dissipation_inverse_laws_theorem
     (thermodynamicMoment : Θ → MomentCoord Θ)
     (souriauEntropy : MomentCoord Θ → ℝ)
     (legendre : LegendreHessianInverseContext Θ)
+    (thermodynamicMoment_eq_gradient :
+      thermodynamicMoment = fun _ => dualCoord legendre.massieu legendre.beta)
+    (thermodynamicPairing : Θ → MomentCoord Θ → ℝ)
+    (fenchel_legendre_contact :
+      ∀ Q : MomentCoord Θ,
+        souriauEntropy Q =
+          thermodynamicPairing (legendre.entropyGradient Q) Q +
+            Real.log (partitionFunction (legendre.entropyGradient Q)))
     (feature : Θ → Feature)
     (fisherHessian_eq_gram :
       ∀ X Y : Θ, legendre.fisherHessian X Y = inner ℝ (feature X) (feature Y))
@@ -1780,7 +1998,9 @@ theorem full_smooth_legendre_gram_square_dissipation_inverse_laws_theorem
       ofSmoothLegendreGramSquareDissipation
         moment geometricTemperature reversibleVectorField metricVectorField
         entropy dissipationAmplitude partitionFunction thermodynamicMoment
-        souriauEntropy legendre feature fisherHessian_eq_gram
+        souriauEntropy legendre thermodynamicMoment_eq_gradient
+        thermodynamicPairing fenchel_legendre_contact feature
+        fisherHessian_eq_gram
     C.hessian.massieuPotential β =
         Real.log (C.hessian.partitionFunction β)
       ∧ C.hessian.first_variation_eq_moment
@@ -1809,8 +2029,8 @@ theorem full_smooth_legendre_gram_square_dissipation_inverse_laws_theorem
     InfiniteCoadjointOrbitMetriplecticContext.ofMomentImage]
   exact
     ⟨rfl,
-      legendre.moment_eq_gradient,
-      legendre.fisherHessian_eq_hessianMassieu,
+      by simpa using thermodynamicMoment_eq_gradient.symm,
+      rfl,
       rfl,
       fisherHessian_eq_gram X Y,
       by
@@ -1822,8 +2042,8 @@ theorem full_smooth_legendre_gram_square_dissipation_inverse_laws_theorem
       by
         rw [fisherHessian_eq_gram X X]
         exact (real_inner_self_pos).2 hX,
-      legendre.entropyGradient_contact,
-      legendre.entropyGradient_contact,
+      fenchel_legendre_contact,
+      rfl,
       rfl,
       sq_nonneg (dissipationAmplitude x),
       legendre.entropyHessian_eq_derivEntropyGradient,
@@ -1855,6 +2075,18 @@ theorem full_cle_legendre_gram_square_dissipation_constructive_theorem
     (thermodynamicMoment : Θ → MomentCoord Θ)
     (souriauEntropy : MomentCoord Θ → ℝ)
     (legendreData : LegendreContinuousLinearEquivInverseData Θ)
+    (thermodynamicMoment_eq_gradient :
+      thermodynamicMoment = fun _ =>
+        dualCoord legendreData.toLegendreHessianInverseContext.massieu
+          legendreData.toLegendreHessianInverseContext.beta)
+    (thermodynamicPairing : Θ → MomentCoord Θ → ℝ)
+    (fenchel_legendre_contact :
+      ∀ Q : MomentCoord Θ,
+        souriauEntropy Q =
+          thermodynamicPairing
+              (legendreData.toLegendreHessianInverseContext.entropyGradient Q) Q +
+            Real.log (partitionFunction
+              (legendreData.toLegendreHessianInverseContext.entropyGradient Q)))
     (feature : Θ → Feature)
     (fisherHessian_eq_gram :
       ∀ X Y : Θ,
@@ -1866,7 +2098,9 @@ theorem full_cle_legendre_gram_square_dissipation_constructive_theorem
       ofContinuousLinearEquivLegendreGramSquareDissipation
         moment geometricTemperature reversibleVectorField metricVectorField
         entropy dissipationAmplitude partitionFunction thermodynamicMoment
-        souriauEntropy legendreData feature fisherHessian_eq_gram
+        souriauEntropy legendreData thermodynamicMoment_eq_gradient
+        thermodynamicPairing fenchel_legendre_contact feature
+        fisherHessian_eq_gram
     C.hessian.massieuPotential β =
         Real.log (C.hessian.partitionFunction β)
       ∧ C.hessian.first_variation_eq_moment
@@ -1898,7 +2132,8 @@ theorem full_cle_legendre_gram_square_dissipation_constructive_theorem
       moment geometricTemperature reversibleVectorField metricVectorField
       entropy dissipationAmplitude partitionFunction thermodynamicMoment
       souriauEntropy legendreData.toLegendreHessianInverseContext
-      feature fisherHessian_eq_gram β X Y Q x hX
+      thermodynamicMoment_eq_gradient thermodynamicPairing
+      fenchel_legendre_contact feature fisherHessian_eq_gram β X Y Q x hX
 
 attribute [terminal] full_cle_legendre_gram_square_dissipation_constructive_theorem
 
@@ -1932,6 +2167,18 @@ theorem fisher_onsager_metriplectic_constructive_proof_packet
     (thermodynamicMoment : Θ → MomentCoord Θ)
     (souriauEntropy : MomentCoord Θ → ℝ)
     (legendreData : LegendreContinuousLinearEquivInverseData Θ)
+    (thermodynamicMoment_eq_gradient :
+      thermodynamicMoment = fun _ =>
+        dualCoord legendreData.toLegendreHessianInverseContext.massieu
+          legendreData.toLegendreHessianInverseContext.beta)
+    (thermodynamicPairing : Θ → MomentCoord Θ → ℝ)
+    (fenchel_legendre_contact :
+      ∀ Q : MomentCoord Θ,
+        souriauEntropy Q =
+          thermodynamicPairing
+              (legendreData.toLegendreHessianInverseContext.entropyGradient Q) Q +
+            Real.log (partitionFunction
+              (legendreData.toLegendreHessianInverseContext.entropyGradient Q)))
     (feature : Θ → Feature)
     (fisherHessian_eq_gram :
       ∀ X Y : Θ,
@@ -1943,7 +2190,9 @@ theorem fisher_onsager_metriplectic_constructive_proof_packet
       ofContinuousLinearEquivLegendreGramSquareDissipation
         moment geometricTemperature reversibleVectorField metricVectorField
         entropy dissipationAmplitude partitionFunction thermodynamicMoment
-        souriauEntropy legendreData feature fisherHessian_eq_gram
+        souriauEntropy legendreData thermodynamicMoment_eq_gradient
+        thermodynamicPairing fenchel_legendre_contact feature
+        fisherHessian_eq_gram
     C.hessian.massieuPotential β =
         Real.log (C.hessian.partitionFunction β)
       ∧ C.hessian.fisherHessian β X Y = inner ℝ (feature X) (feature Y)
@@ -2015,6 +2264,18 @@ theorem gibbs_souriau_integral_covariance_to_metriplectic_packet
     (reversibleVectorField metricVectorField : Orbit → Orbit)
     (entropy : Orbit → ℝ)
     (dissipationAmplitude : Orbit → ℝ)
+    (thermodynamicMoment_eq_gradient :
+      W.thermodynamicMoment = fun _ =>
+        dualCoord W.toLegendreContinuousLinearEquivInverseData.toLegendreHessianInverseContext.massieu
+          W.toLegendreContinuousLinearEquivInverseData.toLegendreHessianInverseContext.beta)
+    (thermodynamicPairing : Θ → MomentCoord Θ → ℝ)
+    (fenchel_legendre_contact :
+      ∀ Q : MomentCoord Θ,
+        W.souriauEntropy Q =
+          thermodynamicPairing
+              (W.toLegendreContinuousLinearEquivInverseData.toLegendreHessianInverseContext.entropyGradient Q) Q +
+            Real.log (W.partitionFunction
+              (W.toLegendreContinuousLinearEquivInverseData.toLegendreHessianInverseContext.entropyGradient Q)))
     (β X Y : Θ) (Q : MomentCoord Θ) (x : Orbit)
     (hX : W.feature X ≠ 0) :
     W.partitionFunction W.beta = W.integralFunctional (W.gibbsWeight W.beta)
@@ -2033,7 +2294,8 @@ theorem gibbs_souriau_integral_covariance_to_metriplectic_packet
             W.moment geometricTemperature reversibleVectorField metricVectorField
             entropy dissipationAmplitude W.partitionFunction W.thermodynamicMoment
             W.souriauEntropy W.toLegendreContinuousLinearEquivInverseData
-            W.feature W.fisherEquiv_eq_gram
+            thermodynamicMoment_eq_gradient thermodynamicPairing
+            fenchel_legendre_contact W.feature W.fisherEquiv_eq_gram
         C.hessian.massieuPotential β =
             Real.log (C.hessian.partitionFunction β)
           ∧ C.hessian.fisherHessian β X Y =
@@ -2071,7 +2333,8 @@ theorem gibbs_souriau_integral_covariance_to_metriplectic_packet
       W.moment geometricTemperature reversibleVectorField metricVectorField
       entropy dissipationAmplitude W.partitionFunction W.thermodynamicMoment
       W.souriauEntropy W.toLegendreContinuousLinearEquivInverseData
-      W.feature W.fisherEquiv_eq_gram β X Y Q x hX
+      thermodynamicMoment_eq_gradient thermodynamicPairing
+      fenchel_legendre_contact W.feature W.fisherEquiv_eq_gram β X Y Q x hX
 
 attribute [terminal] gibbs_souriau_integral_covariance_to_metriplectic_packet
 

@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
 /-!
 # Explicit witness obligations
@@ -13,13 +14,13 @@ namespace InfoGeometry.Canonical.ExplicitWitnessObligations
 
 open scoped BigOperators
 
-/-- Finite bounded commutator obligation: an explicit bounded commutator witness. -/
+/-- The supplied bounded commutator is the operator difference itself. -/
 theorem bounded_commutator_witness
     {H : Type*} [NormedAddCommGroup H] [NormedSpace ℂ H]
     (D A C : H →L[ℂ] H)
     (hC : C = D.comp A - A.comp D) :
-    ∃ C' : H →L[ℂ] H, C' = D.comp A - A.comp D := by
-  exact ⟨C, hC⟩
+    D.comp A - A.comp D = C := by
+  exact hC.symm
 
 /-- Finite diagonal Hamiltonian eigenvector obligation. -/
 theorem diagonal_operator_eigenvector
@@ -93,11 +94,13 @@ theorem finite_boolean_gibbs_trace_factorization
   rw [← Finset.sum_prod_piFinset]
   rw [Fintype.piFinset_univ]
 
-/-- Explicit finite Souriau beta projection premise and conclusion. -/
+/-- Souriau's beta potential is the pairing of the moment map with beta. -/
 theorem souriau_beta_projection_obligation
-    {ι : Type*} (pair : (Fin 4 → ℝ) → (Fin 4 → ℝ) → ℝ)
-    (β : Fin 4 → ℝ) (p : ι → Fin 4 → ℝ) :
-    (fun i => pair β (p i)) = (fun i => pair β (p i)) := by
-  rfl
+    {State LieAlgebra LieDual : Type*}
+    (D : InfoGeometry.Canonical.SouriauOperatorialLogPotential.SouriauLieThermoData
+      State LieAlgebra LieDual)
+    (x : State) :
+    D.K_beta x = D.pairing (D.momentMap x) D.beta :=
+  D.K_beta_eq_pairing x
 
 end InfoGeometry.Canonical.ExplicitWitnessObligations

@@ -155,10 +155,9 @@ end TriFacet
 section Drazin
 
 /-- Prop representing the three defining conditions of a Drazin inverse in a ring. -/
-structure IsDrazinInverse {R : Type*} [Ring R] (X X_D : R) (k : ℕ) : Prop where
-  cond1 : X_D * X * X_D = X_D
-  cond2 : X * X_D = X_D * X
-  cond3 : X ^ (k + 1) * X_D = X ^ k
+abbrev IsDrazinInverse {R : Type*} [Ring R] (X X_D : R) (k : ℕ) : Prop :=
+  X_D * X * X_D = X_D ∧
+    X * X_D = X_D * X ∧ X ^ (k + 1) * X_D = X ^ k
 
 variable {R : Type*} [Ring R] {X X_D : R} {k : ℕ}
 
@@ -174,7 +173,7 @@ theorem drazin_comm_pow (h : IsDrazinInverse X X_D k) (n : ℕ) :
         _ = (X_D * X ^ n) * X := by rw [mul_assoc]
         _ = (X ^ n * X_D) * X := by rw [ih]
         _ = X ^ n * (X_D * X) := by rw [← mul_assoc]
-        _ = X ^ n * (X * X_D) := by rw [h.cond2.symm]
+        _ = X ^ n * (X * X_D) := by rw [h.2.1.symm]
         _ = (X ^ n * X) * X_D := by rw [mul_assoc]
         _ = X ^ (n + 1) * X_D := by rw [pow_succ]
 
@@ -190,7 +189,7 @@ theorem P_core_idem (h : IsDrazinInverse X X_D k) :
   dsimp [P_core]
   calc
     (X * X_D) * (X * X_D) = X * (X_D * X * X_D) := by noncomm_ring
-    _ = X * X_D := by rw [h.cond1]
+    _ = X * X_D := by rw [h.1]
 
 /-- The Nilpotent Boundary projection is idempotent. -/
 theorem P_nil_idem (h : IsDrazinInverse X X_D k) :
@@ -199,7 +198,7 @@ theorem P_nil_idem (h : IsDrazinInverse X X_D k) :
   have h_core : (X * X_D) * (X * X_D) = X * X_D := by
     calc
       (X * X_D) * (X * X_D) = X * (X_D * X * X_D) := by noncomm_ring
-      _ = X * X_D := by rw [h.cond1]
+      _ = X * X_D := by rw [h.1]
   calc
     (1 - X * X_D) * (1 - X * X_D)
         = 1 - 2 * (X * X_D) + (X * X_D) * (X * X_D) := by noncomm_ring
@@ -213,7 +212,7 @@ theorem P_core_nil_orth (h : IsDrazinInverse X X_D k) :
   have h_core : (X * X_D) * (X * X_D) = X * X_D := by
     calc
       (X * X_D) * (X * X_D) = X * (X_D * X * X_D) := by noncomm_ring
-      _ = X * X_D := by rw [h.cond1]
+      _ = X * X_D := by rw [h.1]
   calc
     (X * X_D) * (1 - X * X_D) = (X * X_D) - (X * X_D) * (X * X_D) := by
       noncomm_ring
@@ -227,7 +226,7 @@ theorem P_nil_core_orth (h : IsDrazinInverse X X_D k) :
   have h_core : (X * X_D) * (X * X_D) = X * X_D := by
     calc
       (X * X_D) * (X * X_D) = X * (X_D * X * X_D) := by noncomm_ring
-      _ = X * X_D := by rw [h.cond1]
+      _ = X * X_D := by rw [h.1]
   calc
     (1 - X * X_D) * (X * X_D) = (X * X_D) - (X * X_D) * (X * X_D) := by
       noncomm_ring

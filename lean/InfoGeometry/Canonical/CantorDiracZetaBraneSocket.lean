@@ -105,24 +105,21 @@ structure TotalCantorSYZZetaDiracPacket where
   total_selfAdjoint_iff_cantor :
     ∀ s : ℂ, TotalSelfAdjoint s ↔ cantor.SelfAdjoint s
 
-/--
-Conjectural zeta-period central-charge packet.
-
-`zetaPeriod_eq_completedZeta` is intentionally a proposition field rather than
-a theorem: it is the proposed arithmetic mirror-period identification.
--/
+/-! The zeta-period central charge is the function itself. -/
 @[rep_depth operator]
-structure ZetaPeriodCentralChargePacket where
-  zetaPeriod : ℂ → ℂ
-  completedZeta : ℂ → ℂ
-  zetaPeriod_eq_completedZeta : Prop
+abbrev ZetaPeriodCentralChargePacket := ℂ → ℂ
+
+/-- Typed agreement of a zeta period with a specified completed function. -/
+def ZetaPeriodCentralChargePacket.AgreesWith
+    (P : ZetaPeriodCentralChargePacket)
+    (completed : ℂ → ℂ) : Prop :=
+    P = completed
 
 /--
 The full Cantor--Dirac SYZ--Zeta brane conjectural socket.
 
-The key missing theorem is `vanishing_period_implies_total_selfAdjoint`.
-If supplied, together with the self-adjointness calibration, it yields the
-RH-shaped reduction target for the chosen `completedZeta` function.
+The vanishing-to-self-adjointness implication is not stored as evidence. It is
+an explicit hypothesis of the reduction theorem below.
 -/
 @[socket_debt_tag, rep_depth operator]
 structure CantorDiracSYZZetaBraneConjectureSocket where
@@ -131,17 +128,6 @@ structure CantorDiracSYZZetaBraneConjectureSocket where
   totalDirac : TotalCantorSYZZetaDiracPacket
   centralCharge : ZetaPeriodCentralChargePacket
 
-  /-- Missing theorem: vanishing zeta period forces the self-adjoint sector. -/
-  vanishing_period_implies_total_selfAdjoint :
-    Prop
-
-  /-- The missing theorem has the intended logical shape. -/
-  vanishing_period_shape :
-    vanishing_period_implies_total_selfAdjoint =
-      (∀ s : ℂ,
-        centralCharge.zetaPeriod s = 0 →
-          totalDirac.TotalSelfAdjoint s)
-
 /--
 If a concrete socket supplies the missing vanishing-to-self-adjointness theorem,
 then its zeta-period zeros lie on the critical line.
@@ -149,16 +135,14 @@ then its zeta-period zeros lie on the critical line.
 @[rep_depth operator]
 theorem zetaPeriod_zero_implies_criticalLine
     (S : CantorDiracSYZZetaBraneConjectureSocket)
-    (hVanish : S.vanishing_period_implies_total_selfAdjoint)
-    (s : ℂ)
-    (hz : S.centralCharge.zetaPeriod s = 0) :
-    CriticalLine s := by
-  have hShape :
+    (hVanish :
       ∀ s : ℂ,
-        S.centralCharge.zetaPeriod s = 0 →
-          S.totalDirac.TotalSelfAdjoint s := by
-    simpa [S.vanishing_period_shape] using hVanish
-  have hTotal : S.totalDirac.TotalSelfAdjoint s := hShape s hz
+        S.centralCharge s = 0 →
+          S.totalDirac.TotalSelfAdjoint s)
+    (s : ℂ)
+    (hz : S.centralCharge s = 0) :
+    CriticalLine s := by
+  have hTotal : S.totalDirac.TotalSelfAdjoint s := hVanish s hz
   have hCantor : S.totalDirac.cantor.SelfAdjoint s :=
     (S.totalDirac.total_selfAdjoint_iff_cantor s).mp hTotal
   exact (S.totalDirac.cantor.selfAdjoint_iff_criticalLine s).mp hCantor

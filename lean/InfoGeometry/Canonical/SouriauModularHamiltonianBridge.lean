@@ -96,8 +96,8 @@ theorem Ksur_eq_freeEnergy_of_origin {BetaSource : Type*}
 Calibration packet connecting the bounded Drazin/supercharge surrogate to the
 operatorial Souriau modular Hamiltonian law.
 
-The operator laws are explicit because `QuantumOperatorialSouriauFamily` keeps
-`opAdd`, `opScale`, and `opIdentity` abstract witness fields.
+The operator laws use the native additive, real-module, and unital structure of
+the bounded operator algebra.
 -/
 @[rep_depth operator]
 structure Bridge where
@@ -110,15 +110,6 @@ structure Bridge where
   /-- Calibration socket: the Souriau bare source is the bounded surrogate. -/
   Khat_beta_eq_Ksur : family.Khat_beta = superBridge.Ksur
 
-  /-- Concrete readback of Souriau addition as ambient operator addition. -/
-  opAdd_eq_add : ∀ A B : EndH, family.opAdd A B = A + B
-
-  /-- Concrete readback of Souriau scalar scaling as ambient scalar action. -/
-  opScale_eq_smul : ∀ r : ℝ, ∀ A : EndH, family.opScale r A = r • A
-
-  /-- Concrete readback of the Souriau identity as the ambient operator unit. -/
-  opIdentity_eq_one : family.opIdentity = (1 : EndH)
-
 namespace Bridge
 
 variable (B : Bridge (E := E) (LieAlgebra := LieAlgebra))
@@ -128,6 +119,24 @@ variable (B : Bridge (E := E) (LieAlgebra := LieAlgebra))
 theorem Khat_beta_eq_Ksur_theorem :
     B.family.Khat_beta = B.superBridge.Ksur :=
   B.Khat_beta_eq_Ksur
+
+/-- Souriau addition is the native bounded-operator addition. -/
+@[rep_depth operator]
+theorem opAdd_eq_add (A C : EndH) :
+    B.family.opAdd A C = A + C :=
+  B.family.opAdd_eq_add A C
+
+/-- Souriau scaling is the native real scalar action on bounded operators. -/
+@[rep_depth operator]
+theorem opScale_eq_smul (r : ℝ) (A : EndH) :
+    B.family.opScale r A = r • A :=
+  B.family.opScale_eq_smul r A
+
+/-- Souriau's identity is the native bounded-operator unit. -/
+@[rep_depth operator]
+theorem opIdentity_eq_one :
+    B.family.opIdentity = (1 : EndH) :=
+  B.family.opIdentity_eq_one
 
 /--
 The Souriau bare source is the calibrated Drazin super-Hamiltonian surrogate.
@@ -153,23 +162,8 @@ plus the Massieu/free-energy scalar times the identity.
 theorem modularHamiltonian_eq_Ksur_add_partitionPotential_one :
     B.family.modularHamiltonian =
       B.superBridge.Ksur + B.family.partitionPotential • (1 : EndH) := by
-  calc
-    B.family.modularHamiltonian
-        = B.family.opAdd B.family.Khat_beta
-            (B.family.opScale B.family.partitionPotential B.family.opIdentity) := by
-            exact B.family.modularHamiltonian_eq
-    _ = B.family.opAdd B.superBridge.Ksur
-            (B.family.opScale B.family.partitionPotential B.family.opIdentity) := by
-            rw [B.Khat_beta_eq_Ksur]
-    _ = B.superBridge.Ksur
-            + B.family.opScale B.family.partitionPotential B.family.opIdentity := by
-            rw [B.opAdd_eq_add B.superBridge.Ksur
-              (B.family.opScale B.family.partitionPotential B.family.opIdentity)]
-    _ = B.superBridge.Ksur
-            + B.family.partitionPotential • B.family.opIdentity := by
-            rw [B.opScale_eq_smul B.family.partitionPotential B.family.opIdentity]
-    _ = B.superBridge.Ksur + B.family.partitionPotential • (1 : EndH) := by
-            rw [B.opIdentity_eq_one]
+  rw [QuantumOperatorialSouriauFamily.modularHamiltonian,
+    B.Khat_beta_eq_Ksur]
 
 /--
 The normalized Souriau modular Hamiltonian is the calibrated regular compressed

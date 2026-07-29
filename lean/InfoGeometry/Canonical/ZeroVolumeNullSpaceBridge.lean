@@ -36,7 +36,7 @@ set_option linter.dupNamespace false
 section Core
 
 variable {M Core : Type*}
-variable [AddCommMonoid M] [Ring M] [Star M]
+variable [AddCommMonoid M] [Ring M] [Star M] [Mul Core]
 
 /--
 The zero-volume null-space bridge.

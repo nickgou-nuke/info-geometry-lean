@@ -31,9 +31,14 @@ abbrev FiniteProfile (ι : Type*) :=
   ι → ℝ
 
 /-- A finite reference weight family.  Positivity/normalization remain explicit hypotheses. -/
-structure FiniteReferenceState (ι : Type*) where
-  /-- Reference weight at each finite atom. -/
-  weight : FiniteProfile ι
+abbrev FiniteReferenceState (ι : Type*) := FiniteProfile ι
+
+namespace FiniteReferenceState
+
+/-- Compatibility projection for the former named reference weight field. -/
+abbrev weight {ι : Type*} (R : FiniteReferenceState ι) : ι → ℝ := R
+
+end FiniteReferenceState
 
 /-- A finite Jaynes pair: observation data with equal total mass to the reference. -/
 structure FiniteJaynesPair (ι : Type*) [Fintype ι] where
@@ -42,7 +47,7 @@ structure FiniteJaynesPair (ι : Type*) [Fintype ι] where
   /-- Observed finite density/profile on the same atoms. -/
   observation : FiniteProfile ι
   /-- Jaynes-compatible finite normalization: observed and reference masses agree. -/
-  equal_mass : ∑ i : ι, observation i = ∑ i : ι, reference.weight i
+  equal_mass : ∑ i : ι, observation i = ∑ i : ι, reference i
 
 namespace FiniteReferenceStateOps
 
@@ -50,11 +55,11 @@ variable {ι : Type*} [Fintype ι]
 
 /-- Positivity predicate for a finite reference state. -/
 def IsPositive (R : FiniteReferenceState ι) : Prop :=
-  ∀ i : ι, 0 < R.weight i
+  ∀ i : ι, 0 < R i
 
 /-- Normalization predicate for a finite reference state. -/
 def IsNormalized (R : FiniteReferenceState ι) : Prop :=
-  ∑ i : ι, R.weight i = 1
+  ∑ i : ι, R i = 1
 
 /-- Total mass of an observation family. -/
 def observationMass (_R : FiniteReferenceState ι) (obs : ι → ℝ) : ℝ :=
@@ -62,15 +67,15 @@ def observationMass (_R : FiniteReferenceState ι) (obs : ι → ℝ) : ℝ :=
 
 /-- Total reference mass. -/
 def referenceMass (R : FiniteReferenceState ι) : ℝ :=
-  ∑ i : ι, R.weight i
+  ∑ i : ι, R i
 
 /-- Additive centered score: subtract the reference background. -/
 def centeredScore (R : FiniteReferenceState ι) (obs : ι → ℝ) (i : ι) : ℝ :=
-  obs i - R.weight i
+  obs i - R i
 
 /-- Relative density against the finite reference. -/
 noncomputable def densityRatio (R : FiniteReferenceState ι) (obs : ι → ℝ) (i : ι) : ℝ :=
-  obs i / R.weight i
+  obs i / R i
 
 /-- Multiplicative centered score `obsᵢ / refᵢ - 1`. -/
 noncomputable def relativeCenteredScore
@@ -81,14 +86,14 @@ omit [Fintype ι] in
 /-- The reference observation has zero additive centered score. -/
 @[simp]
 theorem centeredScore_ref_zero (R : FiniteReferenceState ι) :
-    FiniteReferenceStateOps.centeredScore R R.weight = 0 := by
+    FiniteReferenceStateOps.centeredScore R R = 0 := by
   funext i
   simp [FiniteReferenceStateOps.centeredScore]
 
 omit [Fintype ι] in
 /-- Pointwise readback for additive centering. -/
 theorem centeredScore_eq_sub (R : FiniteReferenceState ι) (obs : ι → ℝ) (i : ι) :
-    FiniteReferenceStateOps.centeredScore R obs i = obs i - R.weight i :=
+    FiniteReferenceStateOps.centeredScore R obs i = obs i - R i :=
   rfl
 
 /-- The total additive centered score is the mass difference. -/
@@ -121,15 +126,15 @@ omit [Fintype ι] in
 /-- Positivity implies every reference weight is nonzero. -/
 theorem weight_ne_zero_of_positive
     (R : FiniteReferenceState ι) (hR : IsPositive R) (i : ι) :
-    R.weight i ≠ 0 :=
+    R i ≠ 0 :=
   ne_of_gt (hR i)
 
 omit [Fintype ι] in
 /-- Relative centering clears denominators to the additive centered score. -/
 theorem weight_mul_relativeCenteredScore_eq_centeredScore
     (R : FiniteReferenceState ι) (obs : ι → ℝ) {i : ι}
-    (href : R.weight i ≠ 0) :
-    R.weight i * FiniteReferenceStateOps.relativeCenteredScore R obs i =
+    (href : R i ≠ 0) :
+    R i * FiniteReferenceStateOps.relativeCenteredScore R obs i =
       FiniteReferenceStateOps.centeredScore R obs i := by
   unfold FiniteReferenceStateOps.relativeCenteredScore
   unfold FiniteReferenceStateOps.densityRatio FiniteReferenceStateOps.centeredScore
@@ -139,9 +144,9 @@ omit [Fintype ι] in
 /-- Relative centering equals additive centering divided by the reference weight. -/
 theorem relativeCenteredScore_eq_centeredScore_div
     (R : FiniteReferenceState ι) (obs : ι → ℝ) {i : ι}
-    (href : R.weight i ≠ 0) :
+    (href : R i ≠ 0) :
     FiniteReferenceStateOps.relativeCenteredScore R obs i =
-      FiniteReferenceStateOps.centeredScore R obs i / R.weight i := by
+      FiniteReferenceStateOps.centeredScore R obs i / R i := by
   unfold FiniteReferenceStateOps.relativeCenteredScore
   unfold FiniteReferenceStateOps.densityRatio FiniteReferenceStateOps.centeredScore
   field_simp [href]
@@ -150,7 +155,7 @@ omit [Fintype ι] in
 /-- Positive references permit the denominator-cleared centered-score readback. -/
 theorem weight_mul_relativeCenteredScore_eq_centeredScore_of_positive
     (R : FiniteReferenceState ι) (hR : IsPositive R) (obs : ι → ℝ) (i : ι) :
-    R.weight i * FiniteReferenceStateOps.relativeCenteredScore R obs i =
+    R i * FiniteReferenceStateOps.relativeCenteredScore R obs i =
       FiniteReferenceStateOps.centeredScore R obs i :=
   FiniteReferenceStateOps.weight_mul_relativeCenteredScore_eq_centeredScore
     R obs (FiniteReferenceStateOps.weight_ne_zero_of_positive R hR i)
@@ -158,7 +163,7 @@ theorem weight_mul_relativeCenteredScore_eq_centeredScore_of_positive
 /-- Convert this finite bridge datum to the LDDS-centering datum from `JaynesLDDSCentering`. -/
 def toFiniteLDDSDatum (R : FiniteReferenceState ι) (obs : ι → ℝ) : FiniteLDDSDatum ι where
   density := obs
-  reference := R.weight
+  reference := R
 
 omit [Fintype ι] in
 /-- The LDDS centered score agrees with the relative centered score here. -/
@@ -173,7 +178,7 @@ omit [Fintype ι] in
 theorem ldds_weightedCenteredScore_eq
     (R : FiniteReferenceState ι) (obs : ι → ℝ) (i : ι) :
     (toFiniteLDDSDatum R obs).weightedCenteredScore i =
-      R.weight i * FiniteReferenceStateOps.relativeCenteredScore R obs i :=
+      R i * FiniteReferenceStateOps.relativeCenteredScore R obs i :=
   rfl
 
 end FiniteReferenceStateOps
@@ -196,10 +201,10 @@ omit [Fintype ι] in
 /-- The reference profile has zero centered relative density where the reference is nonzero. -/
 @[simp]
 theorem centeredRelativeDensity_self
-    (R : FiniteReferenceState ι) (href : ∀ i : ι, R.weight i ≠ 0) :
-    centeredRelativeDensity R R.weight = 0 := by
+    (R : FiniteReferenceState ι) (href : ∀ i : ι, R i ≠ 0) :
+    centeredRelativeDensity R R = 0 := by
   funext i
-  change R.weight i / R.weight i - 1 = 0
+  change R i / R i - 1 = 0
   rw [div_self (href i)]
   ring
 
@@ -218,12 +223,12 @@ reference mass, assuming all reference denominators are nonzero.
 -/
 theorem ref_weighted_centeredRelativeDensity_eq_mass_sub
     (R : FiniteReferenceState ι) (obs : FiniteProfile ι)
-    (href : ∀ i : ι, R.weight i ≠ 0) :
-    (∑ i : ι, R.weight i * centeredRelativeDensity R obs i) =
+    (href : ∀ i : ι, R i ≠ 0) :
+    (∑ i : ι, R i * centeredRelativeDensity R obs i) =
       FiniteReferenceStateOps.observationMass R obs -
         FiniteReferenceStateOps.referenceMass R := by
   calc
-    (∑ i : ι, R.weight i * centeredRelativeDensity R obs i) =
+    (∑ i : ι, R i * centeredRelativeDensity R obs i) =
         ∑ i : ι, FiniteReferenceStateOps.centeredScore R obs i := by
       refine Finset.sum_congr rfl ?_
       intro i _hi
@@ -237,17 +242,17 @@ theorem ref_weighted_centeredRelativeDensity_eq_mass_sub
 /-- Equal finite mass gives zero reference-weighted centered relative density. -/
 theorem ref_weighted_centeredRelativeDensity_eq_zero_of_equal_mass
     (R : FiniteReferenceState ι) (obs : FiniteProfile ι)
-    (href : ∀ i : ι, R.weight i ≠ 0)
+    (href : ∀ i : ι, R i ≠ 0)
     (hmass : FiniteReferenceStateOps.observationMass R obs =
       FiniteReferenceStateOps.referenceMass R) :
-    (∑ i : ι, R.weight i * centeredRelativeDensity R obs i) = 0 := by
+    (∑ i : ι, R i * centeredRelativeDensity R obs i) = 0 := by
   rw [ref_weighted_centeredRelativeDensity_eq_mass_sub R obs href, hmass]
   ring
 
 /-- A normalized finite Jaynes pair has zero reference-weighted centered score. -/
 theorem FiniteJaynesPair.ref_weighted_centeredRelativeDensity_eq_zero
-    (P : FiniteJaynesPair ι) (href : ∀ i : ι, P.reference.weight i ≠ 0) :
-    (∑ i : ι, P.reference.weight i *
+    (P : FiniteJaynesPair ι) (href : ∀ i : ι, P.reference i ≠ 0) :
+    (∑ i : ι, P.reference i *
       centeredRelativeDensity P.reference P.observation i) = 0 := by
   exact ref_weighted_centeredRelativeDensity_eq_zero_of_equal_mass
     P.reference P.observation href P.equal_mass

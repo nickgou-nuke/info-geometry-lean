@@ -1,4 +1,4 @@
-import Mathlib.Tactic
+import Mathlib
 
 /-!
 # Lean 4 / mathlib4 surface for semilinear-map paper snippets

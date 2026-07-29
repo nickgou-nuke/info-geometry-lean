@@ -406,12 +406,35 @@ theorem alternating_projection_strong_limit
 
 /-! ## 6. Expectation-correlation Birkhoff socket -/
 
-/-- Centered stochastic channel variable. -/
+/-- A stochastic channel observable sampled along discrete time. -/
 @[rep_depth projective]
-structure CenteredChannel where
-  value : ℕ → ℝ
-  meanZero : Prop
-  normalizedVariance : Prop
+abbrev CenteredChannel :=
+  ℕ → ℝ
+
+/-- Cesàro mean of a channel observable through time `N`. -/
+@[rep_depth projective]
+noncomputable def channelCesaroMean
+    (X : CenteredChannel)
+    (N : ℕ) : ℝ :=
+  (N : ℝ)⁻¹ * ∑ n ∈ Finset.range N, X n
+
+/-- Cesàro second moment of a channel observable through time `N`. -/
+@[rep_depth projective]
+noncomputable def channelCesaroSecondMoment
+    (X : CenteredChannel)
+    (N : ℕ) : ℝ :=
+  (N : ℝ)⁻¹ * ∑ n ∈ Finset.range N, (X n) ^ 2
+
+/-- A channel is centered when its Cesàro mean converges to zero. -/
+@[rep_depth projective]
+def IsCesaroMeanZero (X : CenteredChannel) : Prop :=
+  Filter.Tendsto (channelCesaroMean X) Filter.atTop (nhds 0)
+
+/-- A centered channel has normalized variance when its Cesàro second moment
+converges to one. -/
+@[rep_depth projective]
+def HasNormalizedCesaroVariance (X : CenteredChannel) : Prop :=
+  Filter.Tendsto (channelCesaroSecondMoment X) Filter.atTop (nhds 1)
 
 /--
 Expectation-based nonnegative correlation energy.

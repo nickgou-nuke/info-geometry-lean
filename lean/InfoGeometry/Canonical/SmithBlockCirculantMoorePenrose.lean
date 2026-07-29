@@ -61,11 +61,14 @@ unit-modulus hypothesis on `k`, and a Moore-Penrose operation.
 -/
 structure BlockKCirculantMPCertificate (α : Type*) [Ring α] [StarRing α] where
   isBlockKCirculant : α → Prop
-  unitModulusK : Prop
+  /-- The actual Smith twist parameter. -/
+  k : α
+  /-- Native star-unitarity, the algebraic form of `|k| = 1`. -/
+  k_unitary : star k * k = 1 ∧ k * star k = 1
   mp : α → α
-  mp_law : ∀ A : α, isBlockKCirculant A → unitModulusK →
+  mp_law : ∀ A : α, isBlockKCirculant A →
     MoorePenrose.IsMoorePenroseInverse A (mp A)
-  mp_preserves : ∀ A : α, isBlockKCirculant A → unitModulusK →
+  mp_preserves : ∀ A : α, isBlockKCirculant A →
     isBlockKCirculant (mp A)
 
 namespace BlockKCirculantMPCertificate
@@ -73,15 +76,24 @@ namespace BlockKCirculantMPCertificate
 variable {α : Type*} [Ring α] [StarRing α]
 variable (C : BlockKCirculantMPCertificate α)
 
+/-- Historical unit-modulus name, now the native star-unitarity predicate on
+the certificate's actual twist parameter. -/
+abbrev unitModulusK : Prop :=
+  star C.k * C.k = 1 ∧ C.k * star C.k = 1
+
+/-- The Smith twist is unitary by construction. -/
+theorem unitModulusK_proof : C.unitModulusK :=
+  C.k_unitary
+
 /-- Smith preservation readout: the Moore-Penrose inverse stays block `k`-circulant. -/
-theorem mp_isBlockKCirculant {A : α} (hA : C.isBlockKCirculant A) (hk : C.unitModulusK) :
+theorem mp_isBlockKCirculant {A : α} (hA : C.isBlockKCirculant A) :
     C.isBlockKCirculant (C.mp A) :=
-  C.mp_preserves A hA hk
+  C.mp_preserves A hA
 
 /-- Smith Penrose readout: the supplied inverse satisfies the four MP laws. -/
-theorem mp_isMoorePenrose {A : α} (hA : C.isBlockKCirculant A) (hk : C.unitModulusK) :
+theorem mp_isMoorePenrose {A : α} (hA : C.isBlockKCirculant A) :
     MoorePenrose.IsMoorePenroseInverse A (C.mp A) :=
-  C.mp_law A hA hk
+  C.mp_law A hA
 
 end BlockKCirculantMPCertificate
 

@@ -138,29 +138,62 @@ own a global unbounded functional calculus theorem for `-log Δ` on a Type III
 factor. Concrete Tomita/KMS models should instantiate this context.
 -/
 @[rep_depth operator]
-structure ModularHamiltonianSurprisalContext where
-  modularOperator : H →L[ℝ] H
-  negativeLogModularOperator : H →L[ℝ] H
-  modularHamiltonian : H →L[ℝ] H
-  modularHamiltonian_eq_negativeLog :
-    modularHamiltonian = negativeLogModularOperator
+abbrev ModularHamiltonianSurprisalContext
+    (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] :=
+  (H →L[ℝ] H) × (H →L[ℝ] H)
 
 namespace ModularHamiltonianSurprisalContext
 
 variable (C : ModularHamiltonianSurprisalContext (H := H))
 
+/-- Supplied modular operator. -/
+def modularOperator : H →L[ℝ] H :=
+  C.1
+
 /--
-The Boltzmann-entropy / surprisal operator readout attached to the modular
-operator. In this finite/bounded owner surface it is exactly the supplied
-negative-log modular operator.
+Supplied negative-log operator.  Its functional-calculus relation to
+`modularOperator` remains an explicit analytic obligation of concrete models.
+-/
+def negativeLogModularOperator : H →L[ℝ] H :=
+  C.2
+
+/--
+Historical modular-Hamiltonian name for the operator-valued negative logarithm.
+The negative-log operator is the unique stored owner.
 -/
 @[rep_depth operator]
-def boltzmannEntropyOperator : H →L[ℝ] H :=
+abbrev modularHamiltonian : H →L[ℝ] H :=
   C.negativeLogModularOperator
 
+/-- State-surprisal operator attached to the supplied modular operator. -/
+@[rep_depth operator]
+def stateSurprisalOperator : H →L[ℝ] H :=
+  C.negativeLogModularOperator
+
+/-!
+Historical compatibility names.  They denote the supplied
+state-surprisal/modular-log operator, not the macrostate multiplicity
+operator owned by `FiniteBoltzmannMacroentropy`.
+-/
+@[deprecated stateSurprisalOperator (since := "2026-07-27")]
+abbrev boltzmannEntropyOperator : H →L[ℝ] H :=
+  C.stateSurprisalOperator
+
 @[simp]
+theorem stateSurprisalOperator_eq_negativeLogModularOperator :
+    C.stateSurprisalOperator = C.negativeLogModularOperator :=
+  rfl
+
+@[deprecated stateSurprisalOperator_eq_negativeLogModularOperator
+    (since := "2026-07-27")]
 theorem boltzmannEntropyOperator_eq_negativeLogModularOperator :
     C.boltzmannEntropyOperator = C.negativeLogModularOperator :=
+  C.stateSurprisalOperator_eq_negativeLogModularOperator
+
+/-- The historical modular-Hamiltonian alias is definitionally the negative log. -/
+@[simp, rep_depth operator]
+theorem modularHamiltonian_eq_negativeLog :
+    C.modularHamiltonian = C.negativeLogModularOperator :=
   rfl
 
 /-- The modular Hamiltonian is the supplied negative-log modular operator. -/
@@ -169,12 +202,18 @@ theorem modularHamiltonian_eq_supplied_negativeLog :
     C.modularHamiltonian = C.negativeLogModularOperator :=
   C.modularHamiltonian_eq_negativeLog
 
-/-- The historical modular-Hamiltonian name is exactly the Boltzmann-entropy operator. -/
+/-- The historical modular-Hamiltonian name is exactly the state-surprisal operator. -/
 @[rep_depth operator]
-theorem modularHamiltonian_eq_boltzmannEntropyOperator :
-    C.modularHamiltonian = C.boltzmannEntropyOperator := by
-  rw [boltzmannEntropyOperator_eq_negativeLogModularOperator,
+theorem modularHamiltonian_eq_stateSurprisalOperator :
+    C.modularHamiltonian = C.stateSurprisalOperator := by
+  rw [stateSurprisalOperator_eq_negativeLogModularOperator,
     modularHamiltonian_eq_supplied_negativeLog]
+
+@[deprecated modularHamiltonian_eq_stateSurprisalOperator
+    (since := "2026-07-27")]
+theorem modularHamiltonian_eq_boltzmannEntropyOperator :
+    C.modularHamiltonian = C.boltzmannEntropyOperator :=
+  C.modularHamiltonian_eq_stateSurprisalOperator
 
 end ModularHamiltonianSurprisalContext
 

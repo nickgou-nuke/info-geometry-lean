@@ -13,6 +13,8 @@ namespace InfoGeometry.Canonical.AsanoRuelleSymmetricEndpoint
 
 open Set Filter Topology
 open InfoGeometry.Canonical.AsanoRuelleTopologicalEndpoint
+open InfoGeometry.Analysis.AsanoMobiusPole
+open InfoGeometry.Canonical.LeeYangAsanoNativeCore
 
 /--
 Right-pole inclusion from boundedness of `K₁` (symmetric to left-pole theorem).
@@ -26,80 +28,34 @@ theorem asano_right_pole_in_K2
     (h_zerofree : ∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → A + B * z1 + C * z2 + D * z1 * z2 ≠ 0) :
     (-B / D) ∈ K2 := by
   by_contra h_notin
-
-  rcases Metric.isBounded_iff_subset_ball 0 |>.mp hK1_bdd with ⟨M, hM_ball⟩
   let p := -B / D
-
-  have hp_nhds : K2ᶜ ∈ 𝓝 p := (isOpen_compl_iff.mpr hK2_closed).mem_nhds h_notin
-  have hp_punctured : K2ᶜ ∈ 𝓝[≠] p := nhdsWithin_le_nhds hp_nhds
-
-  have h_ineq : ∀ᶠ z in 𝓝[≠] p, ‖A + C * z‖ ≤ M * ‖B + D * z‖ := by
+  have hp_nhds : K2ᶜ ∈ nhds p := (isOpen_compl_iff.mpr hK2_closed).mem_nhds h_notin
+  have hp_punctured : K2ᶜ ∈ nhdsWithin p {p}ᶜ :=
+    mem_nhdsWithin_of_mem_nhds hp_nhds
+  have hroot_mem :
+      ∀ᶠ z in nhdsWithin p {p}ᶜ, asanoRootMap A C B D z ∈ K1 := by
     filter_upwards [hp_punctured, self_mem_nhdsWithin] with z hz_notin hz_neq
     have h_denom : B + D * z ≠ 0 := by
-      intro h_eq
-      have hzval : D * z = -B := by
-        exact eq_neg_of_add_eq_zero_left (by simpa [add_comm] using h_eq)
-      have : z = p := by
-        calc
-          z = (D * z) / D := by field_simp [hD]
-          _ = -B / D := by rw [hzval]
-      exact hz_neq this
-
-    let w := -(A + C * z) / (B + D * z)
-
-    have hw_in : w ∈ K1 := by
-      by_contra hw_notin
-      have h_root : A + B * w + C * z + D * w * z = 0 := by
-        calc
-          A + B * w + C * z + D * w * z
-              = A + C * z + w * (B + D * z) := by ring
-          _ = A + C * z + (-(A + C * z)) := by rw [div_mul_cancel₀ _ h_denom]
-          _ = 0 := by ring
-      exact h_zerofree w z hw_notin hz_notin h_root
-
-    have hw_bdd : ‖w‖ ≤ M := by
-      have hw_dist_lt : dist w 0 < M := hM_ball hw_in
-      have hw_dist : dist w 0 ≤ M := le_of_lt hw_dist_lt
-      rwa [dist_zero_right] at hw_dist
-
-    have h_num : ‖A + C * z‖ = ‖w‖ * ‖B + D * z‖ := by
-      have h1 : w * (B + D * z) = -(A + C * z) :=
-        div_mul_cancel₀ (-(A + C * z)) h_denom
-      have h2 : ‖w * (B + D * z)‖ = ‖-(A + C * z)‖ := congrArg norm h1
-      rw [norm_mul, norm_neg] at h2
-      exact h2.symm
-
-    rw [h_num]
-    exact mul_le_mul_of_nonneg_right hw_bdd (norm_nonneg _)
-
-  have t_LHS : Tendsto (fun z => ‖A + C * z‖) (𝓝[≠] p) (𝓝 ‖A + C * p‖) :=
-    Tendsto.mono_left ((tendsto_const_nhds.add (tendsto_const_nhds.mul tendsto_id)).norm)
-      nhdsWithin_le_nhds
-
-  have t_RHS : Tendsto (fun z => M * ‖B + D * z‖) (𝓝[≠] p) (𝓝 (M * ‖B + D * p‖)) :=
-    Tendsto.mono_left (tendsto_const_nhds.mul
-      (tendsto_const_nhds.add (tendsto_const_nhds.mul tendsto_id)).norm) nhdsWithin_le_nhds
-
-  have h_le : ‖A + C * p‖ ≤ M * ‖B + D * p‖ := le_of_tendsto_of_tendsto t_LHS t_RHS h_ineq
-
-  have hp_eval : B + D * p = 0 := by
+      exact denominator_ne_zero_off_pole hD (by simpa [p, neg_div] using hz_neq)
+    by_contra hroot_notin
+    apply h_zerofree (asanoRootMap A C B D z) z hroot_notin hz_notin
+    have hzero :
+        asanoPhi A C B D z (asanoRootMap A C B D z) = 0 :=
+      asanoPhi_rootMap_zero h_denom
     calc
-      B + D * (-B / D) = B - (B / D) * D := by ring
-      _ = B - B := by rw [div_mul_cancel₀ B hD]
-      _ = 0 := by ring
-
-  rw [hp_eval, norm_zero, mul_zero] at h_le
-
-  have h_num_zero : A + C * p = 0 := norm_eq_zero.mp (le_antisymm h_le (norm_nonneg _))
-
-  have h_det : (A + C * p) * D = A * D - B * C := by
-    calc
-      (A + C * (-B / D)) * D = A * D - C * ((B / D) * D) := by ring
-      _ = A * D - C * B := by rw [div_mul_cancel₀ B hD]
-      _ = A * D - B * C := by ring
-
-  rw [h_num_zero, zero_mul] at h_det
-  exact hNondeg h_det.symm
+      A + B * asanoRootMap A C B D z + C * z +
+          D * asanoRootMap A C B D z * z =
+          asanoPhi A C B D z (asanoRootMap A C B D z) := by
+            unfold asanoPhi
+            ring
+      _ = 0 := hzero
+  have hNondeg_swapped : A * D - C * B ≠ 0 := by
+    simpa [mul_comm] using hNondeg
+  apply
+    (asanoRootMap_not_eventually_mem_bounded
+      (A := A) (B := C) (C := B) (D := D) (K := K1)
+      hD hNondeg_swapped hK1_bdd)
+  simpa [p, neg_div] using hroot_mem
 
 /--
 If `-B/D ∈ K₂` and `0 ∉ K₂`, then `B ≠ 0`.

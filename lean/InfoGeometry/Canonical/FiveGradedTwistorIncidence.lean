@@ -51,35 +51,27 @@ structure FiveGradedTwistorIncidencePacket where
   /-- The phase axis squares to minus the identity. -/
   phaseAxis_sq : phaseAxis.comp phaseAxis = - (ContinuousLinearMap.id ℝ Spin)
 
-  /-- Classical twistor incidence equation, stored as an explicit witness. -/
-  incidenceEquation : Prop
-  incidenceEquation_eq :
-    incidenceEquation ↔
-      twistor.1 = InfoGeometry.Twistor.Incidence.pointAction point twistor.2
-
-  /-- Majorana boundary reality condition, stored as an explicit witness. -/
-  majoranaEquation : Prop
-  majoranaEquation_eq :
-    majoranaEquation ↔ (phaseAxis twistor.1, phaseAxis twistor.2) = twistor
-
-  /-- Boundary sector projector, stored as explicit witness data. -/
+  /-- Majorana boundary reality condition. -/
   boundaryProjector : Spin →L[ℝ] Spin
   boundaryProjector_idem : boundaryProjector.comp boundaryProjector = boundaryProjector
-
-  /-- Projection-selected boundary equation. -/
-  boundaryProjection : Prop
-  boundaryProjection_eq :
-    boundaryProjection ↔
-      boundaryProjector twistor.1 = twistor.1 ∧ boundaryProjector twistor.2 = twistor.2
-
-  /-- Boundary zero-mode operator, stored as explicit witness data. -/
   boundaryOperator : Spin →L[ℝ] Spin
 
-  /-- Boundary zero-mode equation. -/
-  boundaryZeroMode : Prop
-  boundaryZeroMode_eq :
-    boundaryZeroMode ↔
-      boundaryOperator twistor.1 = 0 ∧ boundaryOperator twistor.2 = 0
+namespace FiveGradedTwistorIncidencePacket
+
+def incidenceEquation (P : FiveGradedTwistorIncidencePacket) : Prop :=
+  P.twistor.1 = InfoGeometry.Twistor.Incidence.pointAction P.point P.twistor.2
+
+def majoranaEquation (P : FiveGradedTwistorIncidencePacket) : Prop :=
+  (P.phaseAxis P.twistor.1, P.phaseAxis P.twistor.2) = P.twistor
+
+def boundaryProjection (P : FiveGradedTwistorIncidencePacket) : Prop :=
+  P.boundaryProjector P.twistor.1 = P.twistor.1 ∧
+    P.boundaryProjector P.twistor.2 = P.twistor.2
+
+def boundaryZeroMode (P : FiveGradedTwistorIncidencePacket) : Prop :=
+  P.boundaryOperator P.twistor.1 = 0 ∧ P.boundaryOperator P.twistor.2 = 0
+
+end FiveGradedTwistorIncidencePacket
 
 namespace FiveGradedTwistorIncidencePacket
 
@@ -89,25 +81,25 @@ variable {P : FiveGradedTwistorIncidencePacket}
 theorem incidenceEquation_iff :
     P.incidenceEquation ↔
       P.twistor.1 = InfoGeometry.Twistor.Incidence.pointAction P.point P.twistor.2 :=
-  P.incidenceEquation_eq
+  Iff.rfl
 
 @[simp]
 theorem majoranaEquation_iff :
     P.majoranaEquation ↔ (P.phaseAxis P.twistor.1, P.phaseAxis P.twistor.2) = P.twistor :=
-  P.majoranaEquation_eq
+  Iff.rfl
 
 @[simp]
 theorem boundaryProjection_iff :
     P.boundaryProjection ↔
       P.boundaryProjector P.twistor.1 = P.twistor.1 ∧
         P.boundaryProjector P.twistor.2 = P.twistor.2 :=
-  P.boundaryProjection_eq
+  Iff.rfl
 
 @[simp]
 theorem boundaryZeroMode_iff :
     P.boundaryZeroMode ↔
       P.boundaryOperator P.twistor.1 = 0 ∧ P.boundaryOperator P.twistor.2 = 0 :=
-  P.boundaryZeroMode_eq
+  Iff.rfl
 
 /-- The twistor incidence predicate is the classical point-action equation. -/
 theorem incident_iff_twistorEquation :
@@ -118,7 +110,7 @@ theorem incident_iff_twistorEquation :
 /-- The packet’s incidence witness recovers the classical incident predicate. -/
 theorem incident_of_incidenceEquation (h : P.incidenceEquation) :
     InfoGeometry.Twistor.Incidence.Incident P.twistor P.point := by
-  simpa [InfoGeometry.Twistor.Incidence.Incident] using (P.incidenceEquation_eq.mp h)
+  simpa [InfoGeometry.Twistor.Incidence.Incident] using h
 
 /-- The five-grade inversion swaps source and sink sectors. -/
 theorem source_iff_sink (x : Vec22) :

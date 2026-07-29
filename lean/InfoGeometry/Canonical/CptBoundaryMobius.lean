@@ -14,8 +14,15 @@ infinity-future boundary without introducing divergent trace anomalies.
 -/
 
 /-- Define the CPT Conjugation structure as a matrix involution over the local 2-dimensional space. -/
-structure CptInvolution (CPT : Matrix (Fin 2) (Fin 2) ℤ) : Prop where
-  (is_involution : CPT * CPT = 1)
+def CptInvolution (CPT : Matrix (Fin 2) (Fin 2) ℤ) : Prop :=
+  CPT * CPT = 1
+
+namespace CptInvolution
+
+theorem is_involution {CPT : Matrix (Fin 2) (Fin 2) ℤ}
+    (h : CptInvolution CPT) : CPT * CPT = 1 := h
+
+end CptInvolution
 
 /-- CPT operator: C * T in the 2D local basis.
     C = [0, 1; -1, 0], T = [1, 0; 0, -1], so C*T = [0, -1; -1, 0].
@@ -38,9 +45,10 @@ def L_spectator : Matrix (Fin 2) (Fin 2) ℤ :=
     Wait, CPT * CPT = [1, 0; 0, 1]. So it is exactly an involution! -/
 theorem CPT_local_is_involution :
     CptInvolution CPT_local := by
-  constructor
-  dsimp [CPT_local]
-  decide
+  unfold CptInvolution
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [CPT_local, Matrix.mul_apply, Fin.sum_univ_succ]
 
 /-- The core boundary mapping theorem:
     The intersection of the Particle-Hole operator with the Möbius twist 

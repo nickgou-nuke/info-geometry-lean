@@ -2,6 +2,9 @@ import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Algebra.CuntzTensorQuotient
 import InfoGeometry.Arithmetic.GenuineBounds
+import InfoGeometry.OperatorAlgebra.CliffordCAR
+import InfoGeometry.Topology.CliffordFractalWaveletBridge
+import InfoGeometry.OperatorAlgebra.WeylWeightBalance
 
 /-!
 # InfoGeometry.Canonical.ItFromBit
@@ -27,6 +30,10 @@ namespace InfoGeometry.Canonical.ItFromBit
 
 open scoped BigOperators
 open InfoGeometry.Algebra.CuntzTensorQuotient
+open InfoGeometry.OperatorAlgebra.CliffordCAR
+open InfoGeometry.Topology.CliffordFractalWaveletBridge
+open InfoGeometry.Topology.FractalCantorFockWitness
+open InfoGeometry.OperatorAlgebra.WeylWeightBalance
 
 /-! ## 1. Binary substrate -/
 
@@ -57,31 +64,34 @@ The target algebra is deliberately abstract: it may be a Boolean algebra,
 projection lattice, C*-algebra, or matrix algebra in downstream files.
 -/
 @[rep_depth transport]
-structure BitProjectionPacket where
-  n : ℕ
+structure BitProjectionPacket (n : ℕ) (ProjectionAlgebra : Type*) [Mul ProjectionAlgebra] where
   word : BinaryWord n
-  ProjectionAlgebra : Type
   projection : ProjectionAlgebra
-  CylinderProjectionHolds : Prop
-  cylinder_projection_witness : CylinderProjectionHolds
+  projection_idem : projection * projection = projection
 
 namespace BitProjectionPacket
 
-/-- GENUINE LEMMA: The projection law is a tautology - the witness IS the proof. -/
+/-- The projection law is the native idempotence relation of the carried algebra. -/
 @[rep_depth transport]
-theorem cylinder_projection_law (P : BitProjectionPacket) :
-    P.CylinderProjectionHolds :=
-  P.cylinder_projection_witness
+theorem cylinder_projection_law
+    {n : ℕ} {ProjectionAlgebra : Type*} [Mul ProjectionAlgebra]
+    (P : BitProjectionPacket n ProjectionAlgebra) :
+    P.projection * P.projection = P.projection :=
+  P.projection_idem
 
 /-- The binary address carried by the projection packet is explicit. -/
-theorem word_readout (P : BitProjectionPacket) :
+theorem word_readout
+    {n : ℕ} {ProjectionAlgebra : Type*} [Mul ProjectionAlgebra]
+    (P : BitProjectionPacket n ProjectionAlgebra) :
     P.word = P.word :=
   rfl
 
 /-- The ambient algebra carried by the projection packet is explicit. -/
-theorem projection_algebra_readout (P : BitProjectionPacket) :
-    P.ProjectionAlgebra = P.ProjectionAlgebra :=
-  rfl
+theorem projection_idempotent
+    {n : ℕ} {ProjectionAlgebra : Type*} [Mul ProjectionAlgebra]
+    (P : BitProjectionPacket n ProjectionAlgebra) :
+    P.projection * P.projection = P.projection :=
+  P.projection_idem
 
 end BitProjectionPacket
 
@@ -93,34 +103,60 @@ Finite Clifford/Fock interpretation of a binary word.
 A binary word is interpreted as an occupation vector.
 -/
 @[rep_depth operator]
-structure BitFockPacket where
-  n : ℕ
+structure BitFockPacket (n : ℕ) (OperatorAlgebra : Type*) [Ring OperatorAlgebra] where
 
   Basis : Type
   basisEquiv : Basis ≃ BinaryWord n
 
-  OperatorAlgebra : Type
   creation : Fin n → OperatorAlgebra
   annihilation : Fin n → OperatorAlgebra
-  CarCliffordHolds : Prop
-  car_clifford_witness : CarCliffordHolds
+  annihilation_square_zero :
+    ∀ i : Fin n, annihilation i * annihilation i = 0
+  creation_square_zero :
+    ∀ i : Fin n, creation i * creation i = 0
+  annihilation_anticomm :
+    ∀ i j : Fin n,
+      annihilation i * annihilation j + annihilation j * annihilation i = 0
+  creation_anticomm :
+    ∀ i j : Fin n,
+      creation i * creation j + creation j * creation i = 0
+  car_anticomm :
+    ∀ i j : Fin n,
+      annihilation i * creation j + creation j * annihilation i =
+        (if i = j then (1 : OperatorAlgebra) else 0)
 
 namespace BitFockPacket
 
 /-- GENUINE LEMMA: The CAR/Clifford law is exactly the provided witness. -/
 @[rep_depth operator]
-theorem car_clifford_law (F : BitFockPacket) :
-    F.CarCliffordHolds :=
-  F.car_clifford_witness
+theorem car_clifford_law
+    {n : ℕ} {OperatorAlgebra : Type*} [Ring OperatorAlgebra]
+    (F : BitFockPacket n OperatorAlgebra) :
+    (∀ i : Fin n, F.annihilation i * F.annihilation i = 0) ∧
+    (∀ i : Fin n, F.creation i * F.creation i = 0) ∧
+    (∀ i j : Fin n,
+      F.annihilation i * F.annihilation j +
+        F.annihilation j * F.annihilation i = 0) ∧
+    (∀ i j : Fin n,
+      F.creation i * F.creation j + F.creation j * F.creation i = 0) ∧
+    (∀ i j : Fin n,
+      F.annihilation i * F.creation j + F.creation j * F.annihilation i =
+        (if i = j then (1 : OperatorAlgebra) else 0)) :=
+  ⟨F.annihilation_square_zero, F.creation_square_zero,
+    F.annihilation_anticomm, F.creation_anticomm, F.car_anticomm⟩
 
 /-- The basis readout on the finite Fock packet is explicit. -/
-theorem basisEquiv_readout (F : BitFockPacket) :
+theorem basisEquiv_readout
+    {n : ℕ} {OperatorAlgebra : Type*} [Ring OperatorAlgebra]
+    (F : BitFockPacket n OperatorAlgebra) :
     F.basisEquiv = F.basisEquiv :=
   rfl
 
 /-- The operator algebra readout on the finite Fock packet is explicit. -/
-theorem operatorAlgebra_readout (F : BitFockPacket) :
-    F.OperatorAlgebra = F.OperatorAlgebra :=
+theorem operatorAlgebra_readout
+    {n : ℕ} {OperatorAlgebra : Type*} [Ring OperatorAlgebra]
+    (_F : BitFockPacket n OperatorAlgebra) :
+    OperatorAlgebra = OperatorAlgebra :=
   rfl
 
 end BitFockPacket
@@ -238,21 +274,19 @@ stabilization and invariant readout are supplied.
 **All witnesses replaced with genuine lemmas.**
 -/
 @[rep_depth operator]
-structure BitToItStabilizationPacket where
-  n : ℕ
+structure BitToItStabilizationPacket (n : ℕ) where
   walk : BitRandomWalk n
 
   cliffordWalk : IsCliffordBitWalk walk
-  FilteredReadoutHolds : Prop
-  filtered_readout_witness : FilteredReadoutHolds
+  filteredReadout : CliffordFractalWaveletFierzKleinLaw (Clnn n)
 
-  drazinHodgeFilter : Type
-  kmsWeylWeight : Type
-  invariantReadout : Type
+  drazinHodgeFilter : DrazinGreenHarmonic (Clnn n)
+  kmsWeylWeight : WeylGradedCarrier (Clnn n)
+  invariantReadout : FierzReadout (Clnn n)
 
 namespace BitToItStabilizationPacket
 
-variable (S : BitToItStabilizationPacket)
+variable {n : ℕ} (S : BitToItStabilizationPacket n)
 
 /-- The random walk is supported on the Clifford bit-transition graph. -/
 @[rep_depth transport]
@@ -262,27 +296,28 @@ theorem clifford_walk :
 
 /-- GENUINE LEMMA: The final readout is evaluated after filtering. -/
 @[rep_depth operator]
-theorem filtered_readout_law (S : BitToItStabilizationPacket) :
-    S.FilteredReadoutHolds :=
-  S.filtered_readout_witness
+theorem filtered_readout_law (S : BitToItStabilizationPacket n) :
+    S.filteredReadout.residual S.filteredReadout.coords = 0 :=
+  S.filteredReadout.quadric_zero
 
 /-- The walk component of the stabilization packet is explicit. -/
-theorem walk_readout (S : BitToItStabilizationPacket) :
+theorem walk_readout (S : BitToItStabilizationPacket n) :
     S.walk = S.walk :=
   rfl
 
-/-- The Drazin/Hodge filter component is explicit. -/
-theorem drazinHodgeFilter_readout (S : BitToItStabilizationPacket) :
-    S.drazinHodgeFilter = S.drazinHodgeFilter :=
-  rfl
+/-- The Drazin/Hodge filter obeys its Green-projector defining law. -/
+theorem drazinHodgeFilter_readout (S : BitToItStabilizationPacket n) :
+    S.drazinHodgeFilter.H =
+      1 - S.drazinHodgeFilter.L * S.drazinHodgeFilter.LD :=
+  S.drazinHodgeFilter.H_def
 
 /-- The KMS/Weyl weight component is explicit. -/
-theorem kmsWeylWeight_readout (S : BitToItStabilizationPacket) :
+theorem kmsWeylWeight_readout (S : BitToItStabilizationPacket n) :
     S.kmsWeylWeight = S.kmsWeylWeight :=
   rfl
 
 /-- The invariant readout component is explicit. -/
-theorem invariantReadout_readout (S : BitToItStabilizationPacket) :
+theorem invariantReadout_readout (S : BitToItStabilizationPacket n) :
     S.invariantReadout = S.invariantReadout :=
   rfl
 
@@ -302,14 +337,12 @@ structure ItFromBitPacket where
 
   word : BinaryWord n
   cantorCylinder : CantorCylinder n
-  projection : BitProjectionPacket
-  fock : BitFockPacket
+  projection : BitProjectionPacket n (CuntzAlg n)
+  fock : BitFockPacket n (Clnn n)
   walk : BitRandomWalk n
-  stabilization : BitToItStabilizationPacket
-  SameAddressHolds : Prop
-  ItInvariantHolds : Prop
-  same_address_witness : SameAddressHolds
-  it_invariant_witness : ItInvariantHolds
+  stabilization : BitToItStabilizationPacket n
+  sameAddress : word = cantorCylinder.word
+  itInvariant : stabilization.walk = walk
 
 namespace ItFromBitPacket
 
@@ -318,14 +351,14 @@ variable (P : ItFromBitPacket)
 /-- GENUINE LEMMA: All layers use the same binary address data. -/
 @[rep_depth transport]
 theorem same_address (P : ItFromBitPacket) :
-    P.SameAddressHolds :=
-  P.same_address_witness
+    P.word = P.cantorCylinder.word :=
+  P.sameAddress
 
 /-- GENUINE LEMMA: The final object is an invariant of the stabilized bit process. -/
 @[rep_depth operator]
 theorem it_invariant (P : ItFromBitPacket) :
-    P.ItInvariantHolds :=
-  P.it_invariant_witness
+    P.stabilization.walk = P.walk :=
+  P.itInvariant
 
 /-- The finite word readout is explicit. -/
 theorem word_readout (P : ItFromBitPacket) :

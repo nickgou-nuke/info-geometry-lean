@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.BiquaternionKANnilpotent
+import Mathlib.Topology.Basic
 
 /-!
 # Nilpotent Itakura--Saito bridge
@@ -15,6 +16,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.NilpotentItakuraSaito
 
 open Matrix
+open Topology
 open BiquaternionKANnilpotent
 
 abbrev M2C := BiquaternionKANnilpotent.M2C
@@ -49,16 +51,40 @@ theorem scaled_nilItakuraSaito_zero (eps : ℂ) (K : M2C) :
 
 /-- Socket for the analytic coefficient limit in the closed biquaternion formula. -/
 structure NilpotentCoefficientLimitSocket where
-  identityCoeffLimitZero : Prop
-  generatorCoeffLimitZero : Prop
+  identityCoeff : ℂ → ℂ
+  generatorCoeff : ℂ → ℂ
+  identityCoeffLimitZero :
+    Filter.Tendsto identityCoeff
+      (nhdsWithin (0 : ℂ) {z : ℂ | z ≠ 0}) (𝓝 0)
+  generatorCoeffLimitZero :
+    Filter.Tendsto generatorCoeff
+      (nhdsWithin (0 : ℂ) {z : ℂ | z ≠ 0}) (𝓝 0)
 
 /-- Socket for the boundary parafermion information-geometry interpretation. -/
 structure NilpotentBoundaryInfoSocket where
   K : M2C
   nilpotent : K * K = 0
-  nonInvertibleBoundaryMode : Prop
-  masslessLightconeMode : Prop
-  parafermionDefect : Prop
+  /-- Masslessness is the vanishing of the finite matrix trace. -/
+  masslessLightconeMode : Matrix.trace K = 0
+  /-- The parafermion boundary defect is a nonzero nilpotent mode. -/
+  parafermionDefect : K ≠ 0
+
+theorem nonzero_nilpotent_not_isUnit
+    (K : M2C) (hKsq : K * K = 0) :
+    ¬ IsUnit K := by
+  intro hKunit
+  have hzeroUnit : IsUnit (K * K) := hKunit.mul hKunit
+  rw [hKsq] at hzeroUnit
+  exact not_isUnit_zero hzeroUnit
+
+namespace NilpotentBoundaryInfoSocket
+
+theorem nonInvertibleBoundaryMode
+    (S : NilpotentBoundaryInfoSocket) :
+    ¬ IsUnit S.K :=
+  nonzero_nilpotent_not_isUnit S.K S.nilpotent
+
+end NilpotentBoundaryInfoSocket
 
 /-- Nilpotency kills the Fisher/Bures quadratic term `K²`. -/
 theorem fisher_quadratic_zero (S : NilpotentBoundaryInfoSocket) : S.K * S.K = 0 :=
@@ -67,18 +93,21 @@ theorem fisher_quadratic_zero (S : NilpotentBoundaryInfoSocket) : S.K * S.K = 0 
 /-- Main synthesis theorem. -/
 theorem nilpotent_itakura_saito_synthesis
     (C : NilpotentCoefficientLimitSocket) (S : NilpotentBoundaryInfoSocket)
-    (hI : C.identityCoeffLimitZero) (hK : C.generatorCoeffLimitZero)
-    (hNonInv : S.nonInvertibleBoundaryMode) (hMassless : S.masslessLightconeMode)
-    (hPara : S.parafermionDefect) :
+    (hMassless : Matrix.trace S.K = 0)
+    (hPara : S.K ≠ 0) :
     KNil * KNil = 0 ∧
     nilItakuraSaito KNil = 0 ∧
     (∀ eps : ℂ, nilItakuraSaito (eps • S.K) = 0) ∧
     S.K * S.K = 0 ∧
-    C.identityCoeffLimitZero ∧ C.generatorCoeffLimitZero ∧
-    S.nonInvertibleBoundaryMode ∧ S.masslessLightconeMode ∧ S.parafermionDefect := by
+    Filter.Tendsto C.identityCoeff
+        (nhdsWithin (0 : ℂ) {z : ℂ | z ≠ 0}) (𝓝 0) ∧
+    Filter.Tendsto C.generatorCoeff
+        (nhdsWithin (0 : ℂ) {z : ℂ | z ≠ 0}) (𝓝 0) ∧
+    (¬ IsUnit S.K) ∧ Matrix.trace S.K = 0 ∧ S.K ≠ 0 := by
   exact ⟨KNil_sq_zero, KNil_itakura_zero,
     fun eps => scaled_nilItakuraSaito_zero eps S.K,
-    S.nilpotent, hI, hK, hNonInv, hMassless, hPara⟩
+    S.nilpotent, C.identityCoeffLimitZero, C.generatorCoeffLimitZero,
+    S.nonInvertibleBoundaryMode, hMassless, hPara⟩
 
 end InfoGeometry.Canonical.NilpotentItakuraSaito
 

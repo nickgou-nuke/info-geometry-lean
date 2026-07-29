@@ -32,11 +32,11 @@ def flowOf (Φ : GeneratedFlow G F) : G → F :=
 
 /-- Push a log-generator through a generated flow. -/
 def along (Φ : GeneratedFlow G F) (L : LogGenerator W G) : W → F :=
-  fun w => Φ (L.logGen w)
+  fun w => Φ (LogGenerator.apply L w)
 
 /-- Pointwise expansion of `GeneratedFlow.along`. -/
 @[simp] theorem along_apply (Φ : GeneratedFlow G F) (L : LogGenerator W G) (w : W) :
-    along Φ L w = flowOf Φ (L.logGen w) := by
+    along Φ L w = flowOf Φ (LogGenerator.apply L w) := by
   rfl
 
 end GeneratedFlow
@@ -67,20 +67,21 @@ def along (resp : GeometricResponse F R) (Φ : GeneratedFlow G F) : G → R :=
 /-- Full relative-geometry pipeline from log-generator to geometric response. -/
 def fromLogGenerator (resp : GeometricResponse F R) (Φ : GeneratedFlow G F)
     (L : LogGenerator W G) : W → R :=
-  fun w => resp (Φ (L.logGen w))
+  fun w => resp (Φ (LogGenerator.apply L w))
 
 /-- Pointwise expansion of `fromLogGenerator`. -/
 @[simp] theorem fromLogGenerator_apply
     (resp : GeometricResponse F R) (Φ : GeneratedFlow G F) (L : LogGenerator W G) (w : W) :
     GeometricResponse.fromLogGenerator resp Φ L w =
-      GeometricResponse.responseOf resp (GeneratedFlow.flowOf Φ (L.logGen w)) := by
+      GeometricResponse.responseOf resp
+        (GeneratedFlow.flowOf Φ (LogGenerator.apply L w)) := by
   rfl
 
 /-- `fromLogGenerator` factors through `along` after applying the log-generator. -/
 @[simp] theorem fromLogGenerator_eq_along_comp
     (resp : GeometricResponse F R) (Φ : GeneratedFlow G F) (L : LogGenerator W G) :
     GeometricResponse.fromLogGenerator resp Φ L =
-      GeometricResponse.along resp Φ ∘ L.logGen := by
+      GeometricResponse.along resp Φ ∘ LogGenerator.apply L := by
   funext w
   rfl
 
@@ -101,7 +102,8 @@ def generate (L : LogGenerator W G) (Φ : GeneratedFlow G F) : W → F :=
 
 /-- Pointwise expansion of `generate`. -/
 @[simp] theorem generate_apply (L : LogGenerator W G) (Φ : GeneratedFlow G F) (w : W) :
-    LogGenerator.generate L Φ w = GeneratedFlow.flowOf Φ (L.logGen w) := by
+    LogGenerator.generate L Φ w =
+      GeneratedFlow.flowOf Φ (LogGenerator.apply L w) := by
   rfl
 
 /-- Read geometric response from a logarithmic generator through a flow. -/

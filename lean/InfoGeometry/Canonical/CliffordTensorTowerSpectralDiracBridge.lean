@@ -14,7 +14,9 @@ This module formalizes in native Lean 4 / Mathlib with 100% genuine constructive
    Models the $n$-th Clifford tensor stage $V_n = \mathcal{Cl}(1,1)^{\otimes n}$ of dimension $2^n \times 2^n$.
 
 2. **Majorana Generators & Anticommutation**:
-   Generators $Q_i = e_{i, +} + e_{i, -}$ obeying self-adjointness $Q_i^* = Q_i$.
+   Generators $Q_i = e_{i, +} + e_{i, -}$ are represented by the imported
+   Clifford owner; Hilbert-space self-adjointness is not asserted by this
+   algebraic tower interface.
 
 3. **Stage Dirac Operator**:
    $$D_n = \sum_{i=1}^n Q_i = \sum_{i=1}^n (e_{i, +} + e_{i, -})$$
@@ -49,10 +51,9 @@ theorem cliffordStageDim_strictMono :
 structure CliffordTensorState (n : ℕ) where
   vec : Fin (2 ^ n) → ℂ
 
-/-- Finite-stage Clifford Dirac operator data structure. -/
-structure CliffordDiracData (V : Type*) [AddCommGroup V] [Module ℝ V] where
-  diracOp : V →ₗ[ℝ] V
-  is_self_adjoint : ∀ v w : V, diracOp v = v → diracOp w = w → True
+/-- The Clifford tower uses the common finite-stage Dirac owner. -/
+abbrev CliffordDiracData (V : Type*) [AddCommGroup V] [Module ℝ V] :=
+  FiniteDiracData V
 
 /-- Injective Clifford stage embedding $\iota_{n, n+1} : V_n \hookrightarrow V_{n+1}$. -/
 def cliffordStageInclusion {V W : Type*} [AddCommGroup V] [Module ℝ V] [AddCommGroup W] [Module ℝ W]

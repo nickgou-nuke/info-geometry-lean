@@ -39,6 +39,7 @@ structure SingularTransportSystem (E : Type*)
   gradedTerm : ℝ
   survivorKind : ReducedVolumeKind
   survivorValue : ℝ
+  schurReducedVolume : ℝ
   logDivergence_split :
     logDivergence =
       radialTerm + projectiveTerm + nilpotentTerm + anomalyTerm + gradedTerm
@@ -47,8 +48,8 @@ structure SingularTransportSystem (E : Type*)
   regular_radial_transport_closes_of_anomalyTerm_eq_zero :
     anomalyTerm = 0 →
       radialTerm = logDivergence - projectiveTerm - nilpotentTerm - gradedTerm
-  survivor_interprets_gradedTerm : Prop
-  schur_elimination_realizes_survivor : Prop
+  survivor_interprets_gradedTerm : gradedTerm = survivorValue
+  schur_elimination_realizes_survivor : survivorValue = schurReducedVolume
 
 namespace SingularTransportSystem
 
@@ -95,7 +96,8 @@ theorem dilation_commutator_decomposes_boundaryGenerator :
 Interface witness that the boundary generator exponentiates the appropriate
 Krein-side infinitesimal transport.
 -/
-abbrev boundaryGenerator_skew_adjoints_to_krein_isometry : Prop :=
+theorem boundaryGenerator_skew_adjoints_to_krein_isometry :
+    star S.boundary.boundaryGenerator = -S.boundary.boundaryGenerator :=
   S.boundary.boundaryGenerator_skew_adjoints_to_krein_isometry
 
 /-- The logarithmic transport observable splits into its sector contributions. -/
@@ -125,6 +127,16 @@ theorem regular_radial_transport_closes_of_boundaryScale_eq_zero
       S.logDivergence - S.projectiveTerm - S.nilpotentTerm - S.gradedTerm := by
   apply S.regular_radial_transport_closes_of_anomalyTerm_eq_zero
   rw [S.anomalyTerm_eq_projector_commutator_norm, h0]
+
+/-- The surviving graded transport coefficient is the selected survivor readout. -/
+theorem gradedTerm_eq_survivorValue :
+    S.gradedTerm = S.survivorValue :=
+  S.survivor_interprets_gradedTerm
+
+/-- The Schur elimination readout agrees with the selected reduced volume. -/
+theorem survivorValue_eq_schurReducedVolume :
+    S.survivorValue = S.schurReducedVolume :=
+  S.schur_elimination_realizes_survivor
 
 end SingularTransportSystem
 

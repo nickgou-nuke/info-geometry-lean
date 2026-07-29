@@ -697,13 +697,16 @@ theorem IB_monotone_descent_finite_supportFaithful
       (IBNextEncoder q_n β D hInt) hKL_next
       ≤
     IBGlobalFreeEnergy pX q_n β D p_old hKL_old
-  exact IB_monotone_descent_from_witness
+  exact IB_monotone_descent
     (pX := pX) (q_n := q_n) (β := β) (D := D)
     (hInt := hInt) (h_meas := h_meas) (hKL_encoder := hKL_encoder)
-    (p_old := p_old)
-    (hstep := ibDescentWitness_finite_supportFaithful
+    (p_old := p_old) (hKL_old := hKL_old) (hKL_next := hKL_next)
+    (h_encoder := encoderDescent_finite_supportFaithful
       (pX := pX) (q_n := q_n) (β := β) (D := D)
-      (hInt := hInt) (h_meas := h_meas) (p_old := p_old) (hp_old := hp_old))
+      (hInt := hInt) (p_old := p_old) (hp_old := hp_old))
+    (h_marginal := ibMarginalDescentWitness_finite_supportFaithful
+      (pX := pX) (q_n := q_n) (β := β) (D := D)
+      (hInt := hInt) (h_meas := h_meas))
 
 theorem encoderDescent_finite_fullSupport
     (pX : ProbabilityMeasure X)

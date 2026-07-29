@@ -19,7 +19,7 @@ open InfoGeometry.Canonical.SouriauCasimirInvariant
 open InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
 
 abbrev SL2Dual : Type := Matrix (Fin 2) (Fin 2) ℝ
-abbrev G0 : Type := PUnit
+abbrev G0 : Type := Matrix.SpecialLinearGroup (Fin 2) ℝ
 
 /-- Trivial coadjoint action. -/
 def coAd0 : G0 → SL2Dual →ₗ[ℝ] SL2Dual := fun _ => LinearMap.id

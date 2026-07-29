@@ -9,20 +9,24 @@ set_option linter.unusedVariables false
 /-!
 # Hestenes-Krein & Filtered Inductive Colimit Analyticity Master Bridge
 
-This module replaces classical $\epsilon$-$\delta$ real analysis and unproved analytic continuations
-with the rigorous categorical **Filtered Inductive Colimit ($\varinjlim$) & Hestenes-Krein Algebra Framework**:
+This module gives native Lean proofs for elementary algebraic facts that
+support a filtered Hestenes--Krein colimit interface:
 
-1. **Hestenes-Krein Fundamental Symmetry Compatibility**:
-   Proves natively that for a Krein fundamental symmetry $J$ ($J^2 = I$) and a nilpotent Jordan shear $N$ ($N^2 = 0$), the Krein-Hestenes nilpotency invariant $N^2 = 0$ is preserved under fundamental symmetry transformations $J N J$.
+1. **Hestenes-Krein Fundamental Symmetry Nilpotency Preservation**:
+   if `J^2 = 1` and `N^2 = 0`, then `(J * N * J)^2 = 0`.
+2. **Hestenes Clifford 2x2 Geometric Involution**:
+   the Pauli matrix `e_1 = [[0, 1], [1, 0]]` satisfies `e_1^2 = 1`.
+3. **Filtered Direct Limit Intertwining Kernel Survival**:
+   if `ι ∘ Dₙ = Dₙ₊₁ ∘ ι`, `ι` is injective, and `Dₙ v = 0` with `v ≠ 0`,
+   then `ι v ≠ 0` and `Dₙ₊₁ (ι v) = 0`.
+4. **Algebraic insufficiency of injectivity alone**:
+   injectivity without intertwining does not guarantee kernel survival.
+5. **Grand Hestenes-Krein Algebraic Master Theorem**:
+   combines the algebraic facts above with the antiunitary
+   fixed-locus characterization `s = 1 - star s ↔ s.re = 1/2`.
 
-2. **Hestenes Geometric Clifford Cauchy-Riemann Compatibility**:
-   Proves natively that the 2x2 complex Clifford generator $e_1 = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}$ satisfies $e_1^2 = I$, inducing the real-linear Clifford involution $J_0(z) = - \bar{z}$ with fixed locus $\operatorname{Re}(z) = 0$.
-
-3. **Filtered Inductive Colimit Invariant Survival**:
-   Proves natively that for any direct system of algebras $(\mathcal{A}_n, \iota_{n,n+1})$, the Hestenes-Krein nilpotency law $N_n^2 = 0$ and the fixed-locus rigidity $s = 1 - \bar{s} \iff \operatorname{Re}(s) = 1/2$ are preserved across all filtered colimit stages.
-
-4. **Grand Hestenes-Krein Filtered Colimit Master Theorem**:
-   Unifies Hestenes-Krein symmetry, Clifford Cauchy-Riemann compatibility, direct limit kernel survival, and fixed locus antiunitary rigidity into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
+These are kernel-checked algebraic lemmas. They do not prove analytic
+continuation, meromorphic continuation, or the Riemann hypothesis.
 -/
 
 noncomputable section
@@ -67,10 +71,9 @@ theorem filtered_colimit_hestenes_kernel_survival
   refine ⟨fun h_eq => hv_ne (h_inj (h_eq.trans h_iota_zero.symm)), ?_⟩
   rw [← h_intertwine, h_ker, h_iota_zero]
 
-/--
-**Main Theorem 4: Grand Hestenes-Krein Filtered Colimit Master Duality Theorem**
-Unifies Hestenes-Krein symmetry preservation, Clifford $e_1^2 = I$ geometry, filtered direct limit kernel survival, and fixed locus antiunitary rigidity into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
--/
+/-- **Main Theorem 4/5: Grand Hestenes-Krein Algebraic Master Theorem**.
+Bundles the symmetry, Clifford, and kernel-survival results with the
+antiunitary fixed-locus characterization. -/
 theorem grand_hestenes_krein_filtered_colimit_master_duality
     {R : Type*} [MonoidWithZero R] (J N : R) (hJ : J * J = 1) (hN : N * N = 0)
     {V W : Type*} [AddCommGroup V] [AddCommGroup W]

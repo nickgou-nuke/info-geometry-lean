@@ -97,19 +97,33 @@ private theorem scalarAction_isEven (x : ℝ) :
       _ = x • (1 : EndH₂) := by rw [h1]
   simpa [KreinGradedModule.IsEven] using hEq
 
-structure DrazinFredholmProofBundle (CIK : CertifiedInverseKernel H₂) (cl11 : InfoGeometry.Quantum.RealSplitCl11Action H₂) where
-  hGrade : CIK.GammaS = KreinGradedModule.gradeCLM (H := H₂)
-  hPiEven (x : ℝ) : KreinGradedModule.IsEven (H := H₂) (((Algebra.ofId ℝ EndH₂).comp (Algebra.ofId ℝ ℝ)) x) :=
-    scalarAction_isEven (E := E) x
-  hRhoEven (x : ℝ) : KreinGradedModule.IsEven (H := H₂) (((Algebra.ofId ℝ EndH₂).comp (Algebra.ofId ℝ ℝ)) x) :=
-    scalarAction_isEven (E := E) x
-  hOdd : KreinGradedModule.IsOdd (H := H₂) (CertifiedInverseKernel.supercharge CIK)
-  hSkewAdj : KreinSpace.IsKreinSkewAdjoint (CertifiedInverseKernel.supercharge CIK)
-  hSqOneCompact : IsCompactEnd H₂ (CertifiedInverseKernel.supercharge CIK * CertifiedInverseKernel.supercharge CIK - 1)
-  hCommScalar (x : ℝ) : 
-    IsCompactEnd H₂ (CertifiedInverseKernel.supercharge CIK * (x • 1) - (x • 1) * CertifiedInverseKernel.supercharge CIK)
-  hSuperCommEps : IsCompactEnd H₂ (KreinGradedModule.superComm (H := H₂) (CertifiedInverseKernel.supercharge CIK) cl11.eps)
-  hSuperCommJ : IsCompactEnd H₂ (KreinGradedModule.superComm (H := H₂) (CertifiedInverseKernel.supercharge CIK) cl11.J)
+def DrazinFredholmProofBundle
+    (CIK : CertifiedInverseKernel H₂)
+    (cl11 : InfoGeometry.Quantum.RealSplitCl11Action H₂) : Prop :=
+  CIK.GammaS = KreinGradedModule.gradeCLM (H := H₂) ∧
+    (∀ x : ℝ,
+      KreinGradedModule.IsEven (H := H₂)
+        (((Algebra.ofId ℝ EndH₂).comp (Algebra.ofId ℝ ℝ)) x)) ∧
+    (∀ x : ℝ,
+      KreinGradedModule.IsEven (H := H₂)
+        (((Algebra.ofId ℝ EndH₂).comp (Algebra.ofId ℝ ℝ)) x)) ∧
+    KreinGradedModule.IsOdd (H := H₂)
+      (CertifiedInverseKernel.supercharge CIK) ∧
+    KreinSpace.IsKreinSkewAdjoint
+      (CertifiedInverseKernel.supercharge CIK) ∧
+    IsCompactEnd H₂
+      (CertifiedInverseKernel.supercharge CIK *
+        CertifiedInverseKernel.supercharge CIK - 1) ∧
+    (∀ x : ℝ,
+      IsCompactEnd H₂
+        (CertifiedInverseKernel.supercharge CIK * (x • 1) -
+          (x • 1) * CertifiedInverseKernel.supercharge CIK)) ∧
+    IsCompactEnd H₂
+      (KreinGradedModule.superComm (H := H₂)
+        (CertifiedInverseKernel.supercharge CIK) cl11.eps) ∧
+    IsCompactEnd H₂
+      (KreinGradedModule.superComm (H := H₂)
+        (CertifiedInverseKernel.supercharge CIK) cl11.J)
 
 /--
 CONSTRUCTIVE FREDHOLM MODULE.
@@ -122,15 +136,15 @@ def drazinFredholmModule (CIK : CertifiedInverseKernel H₂)
   cl11 := cl11
   π := (Algebra.ofId ℝ EndH₂).comp (Algebra.ofId ℝ ℝ)
   ρ := (Algebra.ofId ℝ EndH₂).comp (Algebra.ofId ℝ ℝ)
-  π_even := W.hPiEven
-  ρ_even := W.hRhoEven
+  π_even := W.2.1
+  ρ_even := W.2.2.1
   F := CertifiedInverseKernel.supercharge CIK
-  F_odd := W.hOdd
-  F_skewAdj := W.hSkewAdj
-  F_sq_one_compact := W.hSqOneCompact
-  comm_compact x := W.hCommScalar x
-  superComm_eps_compact := W.hSuperCommEps
-  superComm_J_compact := W.hSuperCommJ
+  F_odd := W.2.2.2.1
+  F_skewAdj := W.2.2.2.2.1
+  F_sq_one_compact := W.2.2.2.2.2.1
+  comm_compact x := W.2.2.2.2.2.2.1 x
+  superComm_eps_compact := W.2.2.2.2.2.2.2.1
+  superComm_J_compact := W.2.2.2.2.2.2.2.2
 
 /--
 The topological central charge of a certified kernel is the analytical index

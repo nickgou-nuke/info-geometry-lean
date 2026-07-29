@@ -64,8 +64,7 @@ def torsionFromCommutator
   κ * (C rho μ ν - C rho ν μ)
 
 @[rep_depth thermo]
-structure SelfConsistencyPacket where
-  Q : QuaternionMatrix
+abbrev SelfConsistencyPacket := QuaternionMatrix
 
 @[rep_depth operator]
 theorem qi_sq : qi * qi = -(1 : QuaternionMatrix) := by

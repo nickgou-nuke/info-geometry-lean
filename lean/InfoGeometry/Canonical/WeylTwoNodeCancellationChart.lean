@@ -43,8 +43,8 @@ def nodes : Fin 2 → ℝ
 
 /-- The finite Vandermonde witness for the two-node chart. -/
 @[rep_depth thermo]
-def denominatorWitness : FiniteVandermondeExclusionWitness (R := ℝ) (n := 2) where
-  nodes := C.nodes
+def denominatorWitness : FiniteVandermondeExclusionWitness (R := ℝ) (n := 2) :=
+  C.nodes
 
 /-- The denominator determinant is the 2x2 Vandermonde determinant. -/
 @[rep_depth thermo]

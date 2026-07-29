@@ -7,6 +7,7 @@ import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
 import InfoGeometry.Convex.HessianGeometry
 import InfoGeometry.Krein.DoubledSpace
 import Mathlib.Tactic
+import Mathlib.Analysis.Normed.Operator.Compact
 
 /-!
 # InfoGeometry.Canonical.HamiltonianFlowBridge
@@ -51,25 +52,17 @@ with the operator norm of the modular Hamiltonian.
 -/
 @[rep_depth transport, capstone]
 structure GrandCanonicalHamiltonianFlowBridge where
-  /-- The Grand Canonical Ensemble (Zeta potential). -/
-  engine : GrandCanonicalPartitionFunction
-  
   /-- The Bogoliubov modular reduction (Regular lane). -/
   modular : CertifiedModularReduction (E := H₂)
   
   /-- The thermodynamic gradient field (Wasserstein force) defined on the carrier H₂. -/
   forceField : LogPartitionGradientField H₂
 
-  /-- Mapping from state space to the analytical scale (s). -/
-  stateToScale : H₂ → ℝ
-  
   /-- Identification: The log-partition derivative is the generator mass. -/
   hGeneratorIdentification : 
-    ∀ s : ℝ, engine.logPartitionDerivative s = ‖modular.Kambient‖
-  
-  /-- Proof that the force field is consistent with the partition derivative. -/
-  hForceConsistency :
-    ∀ x : H₂, forceField.thermodynamicForce x = engine.logPartitionDerivative (stateToScale x)
+    ∀ s : ℝ,
+      forceField.grandCanonical.logPartitionDerivative s =
+        ‖modular.Kambient‖
 
 /--
 Continuum Emergence from RG Stationary Flow.
@@ -136,15 +129,25 @@ PROOF:
 theorem riemann_weil_wasserstein_identification
     (F : GrandCanonicalHamiltonianFlowBridge (E := E))
     (Ex : ExplicitFormulaVectorField H₂)
-    (hEquiv : F.engine.logPartitionDerivative = Ex.logEulerDerivative)
-    (hExplicitConsistency : 
-      ∀ x : H₂, Ex.wassersteinField x = Ex.explicitFormula (F.stateToScale x)) :
+    (hEquiv :
+      F.forceField.grandCanonical.logPartitionDerivative =
+        Ex.logEulerDerivative)
+    (hCoordinate : Ex.coordinate = F.forceField.coordinate) :
     ∀ x : H₂, F.forceField.thermodynamicForce x = Ex.wassersteinField x := by
   intro x
-  rw [F.hForceConsistency]
-  rw [hEquiv]
-  rw [← Ex.explicitFormula_eq_logEulerDerivative]
-  rw [hExplicitConsistency]
+  calc
+    F.forceField.thermodynamicForce x =
+        F.forceField.grandCanonical.logPartitionDerivative
+          (F.forceField.coordinate x) :=
+      F.forceField.thermodynamicForce_eq_logPartitionDerivative x
+    _ = Ex.logEulerDerivative (F.forceField.coordinate x) :=
+      congrFun hEquiv _
+    _ = Ex.explicitFormula (F.forceField.coordinate x) :=
+      (Ex.explicitFormula_eq_logEulerDerivative _).symm
+    _ = Ex.explicitFormula (Ex.coordinate x) := by
+      rw [hCoordinate]
+    _ = Ex.wassersteinField x :=
+      (Ex.wasserstein_from_explicit x).symm
 
 /--
 Direct identification of the Majorana Dirac seed with the quasilattice Dirac

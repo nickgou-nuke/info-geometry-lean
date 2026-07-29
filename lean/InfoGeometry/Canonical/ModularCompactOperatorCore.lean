@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Analysis.InnerProductSpace.Adjoint
 
 /-!
 # InfoGeometry.Canonical.ModularCompactOperatorCore

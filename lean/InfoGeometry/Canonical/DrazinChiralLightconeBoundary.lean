@@ -1,3 +1,4 @@
+import Mathlib.LinearAlgebra.QuadraticForm.Basic
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.FiniteInvariantTransport
 

@@ -44,7 +44,8 @@ The key data are:
 * a dual-flat orthogonality law for feasible alternatives.
 -/
 structure MajoranaJKOErgoBridge
-    (State LieGroup LieAlgebra LieDual Observable : Type*) where
+    (State LieGroup LieAlgebra LieDual Observable : Type*)
+    [Ring Observable] where
   /-- Doubled real Majorana/Hestenes carrier. -/
   majorana :
     ProjectivePolarizedBigradedBogoliubovDatum (E := E)
@@ -110,6 +111,7 @@ namespace MajoranaJKOErgoBridge
 
 variable
     {State LieGroup LieAlgebra LieDual Observable : Type*}
+variable [Ring Observable]
 
 variable
     (B : MajoranaJKOErgoBridge
@@ -659,7 +661,7 @@ Bayesian/Bregman projection, and the installed Bayes/JKO compatibility law.
 def MajoranaJKOErgoBridgeOwnerTarget : Prop :=
   ∀ (E : Type)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],
-  ∀ (State LieGroup LieAlgebra LieDual Observable : Type*),
+  ∀ (State LieGroup LieAlgebra LieDual Observable : Type*) [Ring Observable],
     ∀ (B : MajoranaJKOErgoBridge
       (E := E) State LieGroup LieAlgebra LieDual Observable),
       ∀ (ρ alt : Density State),
@@ -676,7 +678,7 @@ def MajoranaJKOErgoBridgeOwnerTarget : Prop :=
 theorem majoranaJKOErgoBridgeOwnerTarget :
     ∀ (E : Type)
       [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],
-    ∀ (State LieGroup LieAlgebra LieDual Observable : Type*),
+    ∀ (State LieGroup LieAlgebra LieDual Observable : Type*) [Ring Observable],
       ∀ (B : MajoranaJKOErgoBridge
         (E := E) State LieGroup LieAlgebra LieDual Observable),
         ∀ (ρ alt : Density State),
@@ -688,7 +690,7 @@ theorem majoranaJKOErgoBridgeOwnerTarget :
                 B.encodedDivergence B.jko.next B.jko.previous
               ∧
             B.bayesUpdate B.jko.previous = B.jko.next := by
-  intro E _ _ _ State LieGroup LieAlgebra LieDual Observable B ρ alt halt
+  intro E _ _ _ State LieGroup LieAlgebra LieDual Observable _ B ρ alt halt
   exact
     ⟨B.jko_minimizing ρ,
       B.bayesian_projection_identity alt halt,

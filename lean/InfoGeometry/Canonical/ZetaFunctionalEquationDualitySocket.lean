@@ -1,270 +1,196 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.CantorDiracZetaBraneSocket
+import InfoGeometry.Canonical.ZetaFunctionalEquationLayer
 
 /-!
-# InfoGeometry.Canonical.ZetaFunctionalEquationDualitySocket
+# Native zeta functional-equation duality
 
-Functional-equation / theta-duality socket for the Cantor--Dirac zeta brane.
-
-This file records the global duality layer
-
-  `ξ(s) = ξ(1 - s)`
-
-as a formal packet and connects it to the existing
-`CantorDiracZetaBraneSocket`.
-
-It does not prove the analytic functional equation of the Riemann zeta
-function, does not construct the completed zeta function, and does not prove
-RH. It is a proof-architecture socket:
-
-* completed zeta symmetry is carried as witness data;
-* Cayley compactification `w = (s - 1) / s` and `w ↦ w⁻¹` are carried as
-  witness data where analytic side-conditions matter;
-* prime-holonomy inversion is carried as witness data;
-* zero reflection of the completed period is proved from the supplied
-  functional-equation witness.
+This module re-exports the concrete completed-xi, Cayley, and prime-holonomy
+objects from `ZetaFunctionalEquationLayer`.  It contains no socket, packet, or
+evidence structure.
 -/
 
 noncomputable section
 
 namespace InfoGeometry.Canonical.ZetaFunctionalEquationDualitySocket
 
-open InfoGeometry.Canonical.CantorDiracZetaBraneSocket
+open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+open InfoGeometry.Canonical.ZetaFunctionalEquationLayer
 
-/-- Alias for the existing critical-line predicate. -/
-@[rep_depth operator]
+/-- Canonical critical-line predicate. -/
 abbrev CriticalLine : ℂ → Prop :=
-  InfoGeometry.Canonical.CantorDiracZetaBraneSocket.CriticalLine
+  OnCriticalLine
 
-/-- Alias for the existing Cayley coordinate `w = (s - 1) / s`. -/
-@[rep_depth operator]
+/-- Canonical Cayley fugacity coordinate. -/
 abbrev cayleyZetaCoordinate : ℂ → ℂ :=
-  InfoGeometry.Canonical.CantorDiracZetaBraneSocket.cayleyZetaCoordinate
+  cayleyToFugacity
 
-/--
-Completed-zeta functional-equation packet.
+/-- The completed zeta period is the native completed Riemann xi function. -/
+abbrev completedZeta : ℂ → ℂ :=
+  completedRiemannXi
 
-The intended analytic model is
+/-- The compactified completed period in the Cayley coordinate. -/
+abbrev cayleyXi : ℂ → ℂ :=
+  cayleyCompletedXi
 
-`ξ(s) = 1/2 * s * (s - 1) * π^(-s/2) * Γ(s/2) * ζ(s)`
+/-- The normalized prime holonomy. -/
+abbrev normalizedPrimeHolonomy : ℕ → ℂ → ℂ :=
+  primeHolonomy
 
-with symmetry `ξ(s) = ξ(1 - s)`. The analytic construction is not performed
-here; the symmetry is a witness field.
--/
-@[socket_debt_tag, rep_depth operator]
-structure CompletedZetaFunctionalEquation where
-  completedZeta : ℂ → ℂ
-
-  /-- Functional equation / mirror involution. -/
-  functional_equation :
-    ∀ s : ℂ, completedZeta s = completedZeta (1 - s)
-
-namespace CompletedZetaFunctionalEquation
-
-variable (F : CompletedZetaFunctionalEquation)
-
-/-- Zeros of the completed object reflect under `s ↦ 1 - s`. -/
+/-- Zeros of completed xi reflect under `s ↦ 1-s`. -/
 @[rep_depth operator]
-theorem zero_reflects {s : ℂ}
-    (hz : F.completedZeta s = 0) :
-    F.completedZeta (1 - s) = 0 := by
-  rw [← F.functional_equation s]
-  exact hz
+theorem completedZeta_zero_reflects
+    {s : ℂ}
+    (hz : completedZeta s = 0) :
+    completedZeta (1 - s) = 0 := by
+  unfold completedZeta at hz ⊢
+  calc
+    completedRiemannXi (1 - s) = completedRiemannXi s := by
+      symm
+      simpa [riemannReflection] using completedRiemannXi_reflection s
+    _ = 0 := hz
 
-/-- The duality is involutive at the level of the supplied completed object. -/
+/-- The compactified completed period is invariant under Cayley inversion. -/
 @[rep_depth operator]
-theorem functional_equation_symm (s : ℂ) :
-    F.completedZeta (1 - s) = F.completedZeta s := by
-  exact (F.functional_equation s).symm
+theorem cayleyXi_inversion
+    {w : ℂ}
+    (hw : w ≠ 0)
+    (h1w : 1 - w ≠ 0) :
+    cayleyXi w = cayleyXi w⁻¹ :=
+  cayleyCompletedXi_inversion hw h1w
 
-end CompletedZetaFunctionalEquation
-
-/--
-Cayley compactified functional-equation packet.
-
-Under `w = (s - 1) / s`, the involution `s ↦ 1 - s` is represented by
-`w ↦ w⁻¹`, subject to the usual domain side-conditions. We keep that
-as witness data instead of forcing a fragile field-simp proof here.
--/
-@[socket_debt_tag, rep_depth operator]
-structure CayleyFunctionalEquationPacket where
-  completed : CompletedZetaFunctionalEquation
-
-  /-- Compactified completed period `Xi(w) = ξ(1/(1-w))` in the intended model. -/
-  Xi : ℂ → ℂ
-
-  /-- Link between the Cayley compactified period and the completed object. -/
-  Xi_eq_completed :
-    ∀ w : ℂ, Xi w = completed.completedZeta (1 / (1 - w))
-
-  /-- Functional equation in Cayley form: `Xi(w) = Xi(w⁻¹)`. -/
-  cayley_inversion_duality :
-    ∀ w : ℂ, w ≠ 0 → Xi w = Xi (w⁻¹)
-
-  /-- Critical line is the unit boundary in the Cayley coordinate. -/
-  criticalLine_iff_cayleyCircle :
-    ∀ s : ℂ, s ≠ 0 →
-      CriticalLine s ↔ ‖cayleyZetaCoordinate s‖ = 1
-
-namespace CayleyFunctionalEquationPacket
-
-/-- Re-export of Cayley inversion duality. -/
+/-- Critical-line membership is equivalent to unit norm in the Cayley chart. -/
 @[rep_depth operator]
-theorem Xi_inversion_duality (C : CayleyFunctionalEquationPacket) {w : ℂ}
-    (hw : w ≠ 0) :
-    C.Xi w = C.Xi (w⁻¹) :=
-  C.cayley_inversion_duality w hw
-
-/-- Re-export of critical-line / Cayley-circle calibration. -/
-@[rep_depth operator]
-theorem criticalLine_iff_circle (C : CayleyFunctionalEquationPacket) {s : ℂ}
-    : s ≠ 0 → CriticalLine s ↔ ‖cayleyZetaCoordinate s‖ = 1 :=
-  CayleyFunctionalEquationPacket.criticalLine_iff_cayleyCircle C s
-
-end CayleyFunctionalEquationPacket
-
-/--
-Prime holonomy duality packet.
-
-The intended normalized prime holonomy is
-
-`h_p(s) = p^(1/2 - s)`,
-
-so the functional involution sends `h_p(s)` to its inverse.
-On the critical line this inverse is the Hilbert-space adjoint/conjugate.
--/
-@[socket_debt_tag, rep_depth operator]
-structure PrimeHolonomyFunctionalEquationPacket where
-  holonomy : ℕ → ℂ → ℂ
-
-  /-- Functional duality acts by holonomy inversion. -/
-  holonomy_duality :
-    ∀ p : ℕ, ∀ s : ℂ,
-      holonomy p (1 - s) = (holonomy p s)⁻¹
-
-  /-- On the critical line, holonomy inversion agrees with adjoint/conjugation. -/
-  inversion_eq_adjoint_on_critical :
-    ∀ p : ℕ, ∀ s : ℂ,
-      CriticalLine s →
-        (holonomy p s)⁻¹ = star (holonomy p s)
-
-namespace PrimeHolonomyFunctionalEquationPacket
-
-/-- Re-export of prime-holonomy inversion under `s ↦ 1 - s`. -/
-@[rep_depth operator]
-theorem holonomy_inverts (H : PrimeHolonomyFunctionalEquationPacket) (p : ℕ)
+theorem criticalLine_iff_cayleyCircle
     (s : ℂ) :
-    H.holonomy p (1 - s) = (H.holonomy p s)⁻¹ :=
-  H.holonomy_duality p s
+    CriticalLine s ↔ ‖cayleyZetaCoordinate s‖ = 1 := by
+  change OnCriticalLine s ↔ ‖cayleyToFugacity s‖ = 1
+  rw [criticalLine_iff_cayley_unitCircle]
+  unfold OnLeeYangCircle
+  rw [Complex.normSq_eq_norm_sq]
+  constructor
+  · intro hsq
+    nlinarith [norm_nonneg (cayleyToFugacity s)]
+  · intro hnorm
+    rw [hnorm]
+    norm_num
 
-/-- Re-export of the critical-line unitary-adjoint condition. -/
+/-- Prime holonomy is inverted by the Riemann reflection. -/
 @[rep_depth operator]
-theorem inverse_eq_adjoint (H : PrimeHolonomyFunctionalEquationPacket) {p : ℕ}
-    {s : ℂ} (hs : CriticalLine s) :
-    (H.holonomy p s)⁻¹ = star (H.holonomy p s) :=
-  H.inversion_eq_adjoint_on_critical p s hs
+theorem prime_holonomy_inverts
+    (p : ℕ)
+    (s : ℂ) :
+    normalizedPrimeHolonomy p (1 - s) =
+      (normalizedPrimeHolonomy p s)⁻¹ := by
+  simpa [riemannReflection] using
+    primeHolonomy_reflection_eq_inv p s
 
-end PrimeHolonomyFunctionalEquationPacket
-
-/--
-Functional-equation enhancement of the existing Cantor--Dirac zeta-brane socket.
-
-This adds the global completed-zeta duality, Cayley inversion, and prime
-holonomy inversion packets to the already-socketed Cantor/SYZ/Zeta brane
-architecture.
--/
-@[socket_debt_tag, rep_depth operator]
-structure FunctionalEquationZetaBraneSocket where
-  brane :
-    InfoGeometry.Canonical.CantorDiracZetaBraneSocket.CantorDiracSYZZetaBraneConjectureSocket
-
-  completedFE : CompletedZetaFunctionalEquation
-
-  /--
-  The brane central charge / zeta period is the completed object.
-  This is the formal version of `Z_ζ(s) = ξ(s)`.
-  -/
-  zetaPeriod_eq_completed :
-    ∀ s : ℂ,
-      brane.centralCharge.zetaPeriod s = completedFE.completedZeta s
-
-  cayley : CayleyFunctionalEquationPacket
-  primeHolonomy : PrimeHolonomyFunctionalEquationPacket
-
-  /-- The Cayley packet uses the same completed object. -/
-  cayley_completed_agrees :
-    cayley.completed = completedFE
-
-namespace FunctionalEquationZetaBraneSocket
-
-/--
-Zeros of the brane zeta-period reflect under the functional equation.
--/
-@[rep_depth operator]
-theorem zetaPeriod_zero_reflects (S : FunctionalEquationZetaBraneSocket) {s : ℂ}
-    (hz : S.brane.centralCharge.zetaPeriod s = 0) :
-    S.brane.centralCharge.zetaPeriod (1 - s) = 0 := by
-  have hzCompleted : S.completedFE.completedZeta s = 0 := by
-    simpa [S.zetaPeriod_eq_completed s] using hz
-  have hzDual :
-      S.completedFE.completedZeta (1 - s) = 0 :=
-    S.completedFE.zero_reflects hzCompleted
-  simpa [S.zetaPeriod_eq_completed (1 - s)] using hzDual
-
-/--
-The existing Cantor--Dirac capstone still applies after adding the
-functional-equation layer.
-
-If the missing zeta-period-vanishing-to-self-adjointness implication is
-supplied, then any zero of the zeta period lies on the critical line.
--/
-@[rep_depth operator]
-theorem zetaPeriod_zero_implies_criticalLine
-    (S : FunctionalEquationZetaBraneSocket)
-    (hVanish : S.brane.vanishing_period_implies_total_selfAdjoint)
-    (s : ℂ)
-    (hz : S.brane.centralCharge.zetaPeriod s = 0) :
-    CriticalLine s :=
-  InfoGeometry.Canonical.CantorDiracZetaBraneSocket.zetaPeriod_zero_implies_criticalLine
-    S.brane hVanish s hz
-
-/--
-Functional-equation + capstone readout:
-the reflected zero is also on the critical line, provided the same missing
-self-adjointness implication is supplied.
--/
-@[rep_depth operator]
-theorem reflected_zetaPeriod_zero_implies_criticalLine
-    (S : FunctionalEquationZetaBraneSocket)
-    (hVanish : S.brane.vanishing_period_implies_total_selfAdjoint)
-    (s : ℂ)
-    (hz : S.brane.centralCharge.zetaPeriod s = 0) :
-    CriticalLine (1 - s) := by
-  exact
-    S.zetaPeriod_zero_implies_criticalLine hVanish (1 - s)
-      (S.zetaPeriod_zero_reflects hz)
-
-/-- Prime holonomy inversion readout from the functional equation packet. -/
-@[rep_depth operator]
-theorem prime_holonomy_inverts (S : FunctionalEquationZetaBraneSocket)
-    (p : ℕ) (s : ℂ) :
-    S.primeHolonomy.holonomy p (1 - s) =
-      (S.primeHolonomy.holonomy p s)⁻¹ :=
-  S.primeHolonomy.holonomy_inverts p s
-
-/--
-On the critical line, prime-holonomy inversion is adjoint/conjugation.
--/
+/-- On the critical line, prime-holonomy inversion is conjugation. -/
 @[rep_depth operator]
 theorem prime_holonomy_inverse_eq_adjoint
-    (S : FunctionalEquationZetaBraneSocket)
-    {p : ℕ} {s : ℂ} (hs : CriticalLine s) :
-    (S.primeHolonomy.holonomy p s)⁻¹ =
-      star (S.primeHolonomy.holonomy p s) :=
-  S.primeHolonomy.inverse_eq_adjoint hs
+    (p : ℕ)
+    (hp : 1 < p)
+    {s : ℂ}
+    (hs : CriticalLine s) :
+    (normalizedPrimeHolonomy p s)⁻¹ =
+      star (normalizedPrimeHolonomy p s) := by
+  simpa using
+    primeHolonomy_inv_eq_conj_of_criticalLine p hp s hs
 
-end FunctionalEquationZetaBraneSocket
+/--
+Exact identification required of any proposed brane zeta-period readout.
+This definition carries no proof or additional data.
+-/
+def ZetaPeriodAgreesWithCompletedXi
+    (zetaPeriod : ℂ → ℂ) : Prop :=
+  zetaPeriod = completedZeta
+
+/-- Zero-location target for a concrete zeta-period function. -/
+def ZetaPeriodZerosOnCriticalLine
+    (zetaPeriod : ℂ → ℂ) : Prop :=
+  ∀ s : ℂ, zetaPeriod s = 0 → CriticalLine s
+
+/-- Agreement with completed xi transports reflected zeros. -/
+@[rep_depth operator]
+theorem zetaPeriod_zero_reflects_of_agrees
+    {zetaPeriod : ℂ → ℂ}
+    (hagrees : ZetaPeriodAgreesWithCompletedXi zetaPeriod)
+    {s : ℂ}
+    (hz : zetaPeriod s = 0) :
+    zetaPeriod (1 - s) = 0 := by
+  unfold ZetaPeriodAgreesWithCompletedXi at hagrees
+  rw [hagrees] at hz ⊢
+  exact completedZeta_zero_reflects hz
+
+/-! ## Cantor--Dirac brane readback
+
+The former socket stored the functional equation, Cayley duality, and prime
+holonomy laws in additional evidence records.  Those laws now belong to
+`ZetaFunctionalEquationLayer`.  The nontrivial surviving bridge is the
+identification of a concrete brane period with the canonical completed xi
+function.
+-/
+
+open InfoGeometry.Canonical.CantorDiracZetaBraneSocket
+
+/--
+A Cantor--Dirac brane period identified with completed xi inherits reflection
+of its zero set.  The identification is explicit theorem input, not a field in
+an additional wrapper packet.
+-/
+@[rep_depth operator]
+theorem braneZetaPeriod_zero_reflects
+    (S : CantorDiracSYZZetaBraneConjectureSocket)
+    (hagrees :
+      ∀ z : ℂ, S.centralCharge z = completedZeta z)
+    {s : ℂ}
+    (hz : S.centralCharge s = 0) :
+    S.centralCharge (1 - s) = 0 := by
+  apply zetaPeriod_zero_reflects_of_agrees
+    (zetaPeriod := S.centralCharge)
+    (hagrees := funext hagrees)
+    hz
+
+/--
+The existing Cantor--Dirac self-adjointness owner still puts a brane-period
+zero on the critical line.  This theorem only reconciles the two canonical
+critical-line predicates.
+-/
+@[rep_depth operator]
+theorem braneZetaPeriod_zero_implies_criticalLine
+    (S : CantorDiracSYZZetaBraneConjectureSocket)
+    (hVanish :
+      ∀ z : ℂ,
+        S.centralCharge z = 0 →
+          S.totalDirac.TotalSelfAdjoint z)
+    (s : ℂ)
+    (hz : S.centralCharge s = 0) :
+    CriticalLine s := by
+  simpa [CriticalLine,
+    InfoGeometry.Canonical.CantorDiracZetaBraneSocket.CriticalLine,
+    OnCriticalLine] using
+    InfoGeometry.Canonical.CantorDiracZetaBraneSocket.zetaPeriod_zero_implies_criticalLine
+      S hVanish s hz
+
+/--
+Combining completed-xi reflection with the Cantor--Dirac owner places the
+reflected brane-period zero on the critical line.
+-/
+@[rep_depth operator]
+theorem reflected_braneZetaPeriod_zero_implies_criticalLine
+    (S : CantorDiracSYZZetaBraneConjectureSocket)
+    (hagrees :
+      ∀ z : ℂ, S.centralCharge z = completedZeta z)
+    (hVanish :
+      ∀ z : ℂ,
+        S.centralCharge z = 0 →
+          S.totalDirac.TotalSelfAdjoint z)
+    (s : ℂ)
+    (hz : S.centralCharge s = 0) :
+    CriticalLine (1 - s) :=
+  braneZetaPeriod_zero_implies_criticalLine
+    S hVanish (1 - s)
+      (braneZetaPeriod_zero_reflects S hagrees hz)
 
 end InfoGeometry.Canonical.ZetaFunctionalEquationDualitySocket

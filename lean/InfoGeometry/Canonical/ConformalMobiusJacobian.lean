@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ConformalInversionCore
+import Mathlib.Geometry.Euclidean.Inversion.Calculus
 
 /-!
 # InfoGeometry.Canonical.ConformalMobiusJacobian

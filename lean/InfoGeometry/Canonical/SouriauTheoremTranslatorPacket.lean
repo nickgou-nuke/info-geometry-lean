@@ -597,7 +597,7 @@ instantiations of the owner contexts.
 @[rep_depth thermo, capstone]
 theorem claimF_superSouriauFermionGas_packet
  {State : Type u} {EvenMoment : Type v} {OddMoment : Type w}
- {Stress : Type u}
+ {Stress : Type u} {Symmetry : Type u}
  (J :
  SuperSouriauFermionGasBridge.SuperMomentMapData
  State EvenMoment OddMoment)
@@ -611,7 +611,8 @@ theorem claimF_superSouriauFermionGas_packet
  (F :
  SuperSouriauFermionGasBridge.FermionicCAROperatorPair (E := H))
  (W :
- SuperSouriauFermionGasBridge.WeylSupertraceFreeStressContext Stress) :
+ SuperSouriauFermionGasBridge.WeylSupertraceFreeStressContext
+   Stress Symmetry) :
  J.stressTensor x = J.stressTensorReadout (J.evenMoment x)
  ∧ J.supercurrent x = J.supercurrentReadout (J.oddMoment x)
  ∧ P.action x =
@@ -637,7 +638,7 @@ theorem claimF_superSouriauFermionGas_packet
  (E := H) F.annihilation F.creation =
  ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace H)
  ∧ W.superTrace W.stress = 0
- ∧ W.weylInvariant :=
+ ∧ ∀ g : Symmetry, W.weylReadout g = W.stress :=
  ⟨J.stressTensor_eq_even_readout x,
  J.supercurrent_eq_odd_readout x,
  P.action_eq_even_add_odd x,
@@ -699,7 +700,7 @@ theorem translatorPacket_of_seed
  (E := H) F.annihilation F.creation =
  ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace H) ∧
  (S.toContext).superTrace (S.toContext).stress = 0 ∧
- (S.toContext).weylInvariant :=
+ ∀ g : G, (S.toContext).weylReadout g = (S.toContext).stress :=
  by
  let W := S.toContext
  exact
@@ -718,7 +719,8 @@ theorem translatorPacket_of_seed
 
 def claimF_W {State : Type u} {EvenMoment : Type v} {OddMoment : Type w}
  (J : SuperSouriauFermionGasBridge.SuperMomentMapData State EvenMoment OddMoment) (x : State) :
- SuperSouriauFermionGasBridge.WeylSupertraceFreeStressContext SuperSouriauFermionGasBridge.BalancedScalarStress :=
+ SuperSouriauFermionGasBridge.WeylSupertraceFreeStressContext
+   SuperSouriauFermionGasBridge.BalancedScalarStress Unit :=
  SuperSouriauFermionGasBridge.WeylSupertraceFreeStressContext.ofIdentityBalanced
  (G := Unit) (Gdual := EvenMoment) (Orbit := State)
  J.evenMoment () (fun _ _ => 0) (fun _ => SuperParity.even) J.stressTensorReadout x
@@ -769,7 +771,8 @@ theorem claimF_superSouriauFermionGas_packet_ofIdentityBalancedStress
   (E := H) F.annihilation F.creation =
   ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace H)
   ∧ (claimF_W J x).superTrace (claimF_W J x).stress = 0
-  ∧ (claimF_W J x).weylInvariant := by
+  ∧ ∀ g : Unit,
+      (claimF_W J x).weylReadout g = (claimF_W J x).stress := by
   let W := claimF_W J x
   exact
   ⟨J.stressTensor_eq_even_readout x,

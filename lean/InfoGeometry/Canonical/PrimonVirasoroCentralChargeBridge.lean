@@ -146,8 +146,6 @@ structure PrimonVirasoroCentralChargeBridge
   virasoroCentralCharge_eq :
     virasoroCentralCharge = primeVirasoro.affineVirasoro.centralCharge
 
-  /-- Bridge-law guardrail: this packet is not a zero-location theorem. -/
-  no_unconditional_zero_claim_guard : Type
 
 namespace Bridge
 

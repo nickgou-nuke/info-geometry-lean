@@ -132,11 +132,42 @@ namespace TensorLimitStateSpace
 variable {bond : ∀ n : ℕ, A n →ₐ[R] A (n + 1)}
 variable (L : TensorInductiveLimit bond)
 
+/-- Algebraic positivity of a functional on the square cone of a semiring. -/
+def IsSquarePositiveFunctional
+    (φ : L.LimitFunctional) : Prop :=
+  ∀ x : L.AInf, ∃ r : R, φ (x * x) = r * r
+
 /-- A normalized state-functional on the supplied tensor colimit. -/
 structure LimitState where
   functional : L.LimitFunctional
   normalized : functional 1 = 1
-  positivityCondition : Prop
+  positivityCondition : IsSquarePositiveFunctional L functional
+
+/-- Entrywise matrix amplification of a linear endomorphism. -/
+def matrixAmplification
+    (T : L.AInf →ₗ[R] L.AInf) (n : ℕ) :
+    Matrix (Fin n) (Fin n) L.AInf →ₗ[R]
+      Matrix (Fin n) (Fin n) L.AInf where
+  toFun X i j := T (X i j)
+  map_add' X Y := by
+    ext i j
+    exact T.map_add (X i j) (Y i j)
+  map_smul' r X := by
+    ext i j
+    exact T.map_smul r (X i j)
+
+/--
+Algebraic complete positivity: every matrix amplification preserves the
+transpose-square cone.  This is the strongest positivity notion available
+from the present semiring data without pretending that a C*-star/order has
+already been installed.
+-/
+def IsAlgebraicallyCompletelyPositive
+    (T : L.AInf →ₗ[R] L.AInf) : Prop :=
+  ∀ (n : ℕ) (X Y : Matrix (Fin n) (Fin n) L.AInf),
+    X = Y.transpose * Y →
+      ∃ Z : Matrix (Fin n) (Fin n) L.AInf,
+        matrixAmplification L T n X = Z.transpose * Z
 
 /--
 A Markov superoperator on observables together with its dual action on supplied
@@ -151,12 +182,20 @@ structure MarkovDualOperator where
   unital : T 1 = 1
   duality : ∀ (s : LimitState L) (x : L.AInf),
     (Tstar s).functional x = s.functional (T x)
-  completelyPositiveCondition : Prop
+  completelyPositiveCondition : IsAlgebraicallyCompletelyPositive L T
 
 namespace MarkovDualOperator
 
 variable {L}
 variable (M : MarkovDualOperator L)
+
+/-- Every full matrix amplification preserves the transpose-square cone. -/
+theorem matrixAmplification_preserves_transposeSquare
+    (n : ℕ) (X Y : Matrix (Fin n) (Fin n) L.AInf)
+    (hX : X = Y.transpose * Y) :
+    ∃ Z : Matrix (Fin n) (Fin n) L.AInf,
+      matrixAmplification L M.T n X = Z.transpose * Z :=
+  M.completelyPositiveCondition n X Y hX
 
 /-- Readback: the dual state update preserves normalization. -/
 theorem preserves_normalization (s : LimitState L) :
@@ -195,18 +234,31 @@ theorem iterateState_fixed
 end MarkovDualOperator
 
 /--
-KMS stationarity packet for a supplied Markov dual operator.
+KMS stationarity data for a supplied Markov dual operator.
 
-The KMS property, detailed balance, and uniqueness are propositions supplied by
-an owner module.  This file exposes only the readbacks that follow from the
-stored fixed-point equation.
+The three former free proposition fields are replaced by their algebraic
+relations:
+
+* `kmsCondition` is the imaginary-time twisted-trace identity;
+* `detailedBalance` is symmetry of the Markov operator for the bilinear
+  pairing `(x,y) ↦ ω(xy)`;
+* `uniqueInvariant` says every fixed normalized state is the installed state.
+
+The twist is stored as an algebra endomorphism because the KMS boundary
+operation must preserve the observable algebra structure.
 -/
 structure KMSStationarityPacket where
   markov : MarkovDualOperator L
   kmsState : LimitState L
-  isKMS : Prop
-  detailedBalance : Prop
-  uniqueInvariant : Prop
+  kmsTwist : L.AInf →ₐ[R] L.AInf
+  kmsCondition : ∀ x y : L.AInf,
+    kmsState.functional (x * y) =
+      kmsState.functional (y * kmsTwist x)
+  detailedBalance : ∀ x y : L.AInf,
+    kmsState.functional (x * markov.T y) =
+      kmsState.functional (markov.T x * y)
+  uniqueInvariant : ∀ s : LimitState L,
+    markov.Tstar s = s → s = kmsState
   stationary : markov.Tstar kmsState = kmsState
 
 namespace KMSStationarityPacket
@@ -228,25 +280,30 @@ theorem kms_iterate_stationary (n : ℕ) :
     K.markov.iterateState n K.kmsState = K.kmsState :=
   K.markov.iterateState_fixed K.stationary n
 
-/-- Readback of a supplied KMS proof. -/
-theorem kms_holds (h : K.isKMS) : K.isKMS :=
-  h
+/-- Readback of the installed algebraic KMS boundary relation. -/
+theorem kms_holds (x y : L.AInf) :
+    K.kmsState.functional (x * y) =
+      K.kmsState.functional (y * K.kmsTwist x) :=
+  K.kmsCondition x y
 
-/-- Readback of a supplied detailed-balance proof. -/
-theorem detailed_balance_holds (h : K.detailedBalance) : K.detailedBalance :=
-  h
+/-- Readback of detailed balance for the state-weighted observable pairing. -/
+theorem detailed_balance_holds (x y : L.AInf) :
+    K.kmsState.functional (x * K.markov.T y) =
+      K.kmsState.functional (K.markov.T x * y) :=
+  K.detailedBalance x y
 
-/-- Readback of a supplied uniqueness proof. -/
-theorem unique_invariant_holds (h : K.uniqueInvariant) : K.uniqueInvariant :=
-  h
+/-- Every invariant normalized state is the installed KMS state. -/
+theorem unique_invariant_holds
+    (s : LimitState L) (hs : K.markov.Tstar s = s) :
+    s = K.kmsState :=
+  K.uniqueInvariant s hs
 
-/-- If uniqueness is given as an explicit eliminator, every fixed state is the KMS state. -/
+/-- The installed uniqueness law identifies every fixed state with the KMS state. -/
 theorem fixed_state_eq_kms_of_unique
-    (uniqueFixed : ∀ s : LimitState L, K.markov.Tstar s = s → s = K.kmsState)
     (s : LimitState L)
     (hs : K.markov.Tstar s = s) :
     s = K.kmsState :=
-  uniqueFixed s hs
+  K.uniqueInvariant s hs
 
 end KMSStationarityPacket
 

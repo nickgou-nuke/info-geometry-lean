@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Topology.UniformSpace.LocallyUniformConvergence
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 import InfoGeometry.Analysis.LaplaceMellinScaleShapeTransform
@@ -71,19 +72,31 @@ structure PrimeHurwitzWaveletXiRealization
     ∀ N z, waveletPartial N z = A.renormZ N z
 
   /-- Holomorphicity of the finite partial reconstructions on the Cayley chart. -/
-  holomorphicPartials : Prop
+  holomorphicPartials :
+    ∀ N, Differentiable ℂ (waveletPartial N)
 
   /-- Local boundedness needed for Montel/normal-family arguments. -/
-  locallyUniformBounded : Prop
+  locallyUniformBounded :
+    ∀ K : Set ℂ, IsCompact K →
+      ∃ C : ℝ, ∀ N z, z ∈ K → ‖waveletPartial N z‖ ≤ C
 
   /-- Compact-uniform tail control on every compact subset. -/
-  compactUniformTailControl : Prop
+  compactUniformTailControl :
+    ∀ K : Set ℂ, IsCompact K → ∀ ε : ℝ, 0 < ε →
+      ∃ N₀, ∀ m n, N₀ ≤ m → N₀ ≤ n →
+        ∀ z, z ∈ K → ‖waveletPartial m z - waveletPartial n z‖ < ε
+
+  /-- The candidate locally uniform limit. -/
+  waveletLimit : ℂ → ℂ
 
   /-- Full reconstruction equals the Cayley pullback of completed xi. -/
-  reconstruction_eq_xi_cayley : Prop
+  reconstruction_eq_xi_cayley :
+    ∀ z : ℂ,
+      waveletLimit z = Ξ.xi (cayleyInv z)
 
   /-- Final Hurwitz-ready convergence statement to be proved by a concrete model. -/
-  locallyUniformRenormalizedLimit : Prop
+  locallyUniformRenormalizedLimit :
+    TendstoLocallyUniformly waveletPartial waveletLimit Filter.atTop
 
 /--
 Bridge from the Laplace--Mellin realization to the discrete Hurwitz--Clifford
@@ -101,6 +114,7 @@ def toPrimeHurwitzCliffordCascadeRealization
   holomorphicPartials := R.holomorphicPartials
   locallyUniformBounded := R.locallyUniformBounded
   compactUniformTailControl := R.compactUniformTailControl
+  cascadeLimit := R.waveletLimit
   reconstruction_eq_xi_cayley := R.reconstruction_eq_xi_cayley
   locallyUniformRenormalizedLimit := R.locallyUniformRenormalizedLimit
 

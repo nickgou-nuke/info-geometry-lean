@@ -70,28 +70,42 @@ theorem doubledRealComplexAxis_sq :
       -(ContinuousLinearMap.id ℝ H₂) :=
   clockAxis_sq (E := E)
 
-/-- Canonical Majorana/Hestenes packet backing the doubled-real translation. -/
-@[rep_depth krein]
-noncomputable def doubledRealMajoranaPacket :
-    InfoGeometry.Core.MajoranaLiftPacket (E := E) :=
-  InfoGeometry.Core.canonicalMajoranaLiftPacket (E := E)
-
-/-- The doubled-real packet uses the repo-owned modular swap `J`. -/
+/-- Historical packet readback: the canonical doubled-real Majorana
+conjugation is the repo-owned modular swap `J`. -/
 @[rep_depth krein, simp]
 theorem doubledRealMajoranaPacket_J_eq_modular_j :
-    (doubledRealMajoranaPacket (E := E)).J = modular_j (E := E) := rfl
+    InfoGeometry.Core.canonicalMajoranaJ (E := E) = modular_j (E := E) :=
+  rfl
 
-/-- The doubled-real packet uses the repo-owned spectral sign `ε`. -/
+/-- Historical packet readback: the canonical doubled-real Majorana grading
+is the repo-owned spectral sign `ε`. -/
 @[rep_depth krein, simp]
 theorem doubledRealMajoranaPacket_eps_eq_spectral_epsilon :
-    (doubledRealMajoranaPacket (E := E)).eps = spectral_epsilon (E := E) := rfl
+    InfoGeometry.Core.canonicalMajoranaEps (E := E) =
+      spectral_epsilon (E := E) :=
+  rfl
 
-/-- The doubled-real packet uses `K = J ∘ ε = clockAxis` as its phase axis. -/
+/-- Historical packet readback: the canonical doubled-real Majorana phase
+axis is `K = J ∘ ε = clockAxis`. -/
 @[rep_depth krein, simp]
 theorem doubledRealMajoranaPacket_K_eq_clockAxis :
-    (doubledRealMajoranaPacket (E := E)).K = Kop := by
-  unfold clockAxis
+    InfoGeometry.Core.canonicalMajoranaK (E := E) = Kop :=
   rfl
+
+/-- Canonical doubled-real Majorana root laws backing the Mellin translation. -/
+@[rep_depth krein]
+theorem doubledRealMajorana_root_laws :
+    (modular_j (E := E)).comp (modular_j (E := E)) =
+        ContinuousLinearMap.id ℝ H₂
+      ∧
+    (spectral_epsilon (E := E)).comp (spectral_epsilon (E := E)) =
+        ContinuousLinearMap.id ℝ H₂
+      ∧
+    (complex_i (E := E)).comp (complex_i (E := E)) =
+        -(ContinuousLinearMap.id ℝ H₂) :=
+  ⟨modular_j_involution (E := E),
+    spectral_epsilon_involution (E := E),
+    complex_i_sq (E := E)⟩
 
 /--
 Mellin shift operator on the doubled-real Type `III_λ` lattice.

@@ -167,8 +167,14 @@ theorem commutator_antisymm (p q : H4) :
   ext <;> simp [commutator, add, neg, mul]
 
 /-- Quaternion condensate components over a finite spacetime carrier. -/
-structure Condensate (SpaceTime : Type*) where
-  phi : SpaceTime → H4
+abbrev Condensate (SpaceTime : Type*) := SpaceTime → H4
+
+namespace Condensate
+
+/-- Projection-compatible name for the direct quaternion field. -/
+abbrev phi (Φ : Condensate SpaceTime) : SpaceTime → H4 := Φ
+
+end Condensate
 
 /-- Nonvanishing predicate for the condensate, kept out of structure fields. -/
 def IsNonVanishing {SpaceTime : Type*} (Φ : Condensate SpaceTime) : Prop :=
@@ -182,7 +188,7 @@ def metricReadout {SpaceTime : Type*} (Φ : Condensate SpaceTime) (x : SpaceTime
 theorem metricReadout_phase_invariant
     {SpaceTime : Type*} {c s : ℝ} (hunit : c ^ 2 + s ^ 2 = 1)
     (Φ : Condensate SpaceTime) (x : SpaceTime) :
-    metricReadout ⟨fun y => phaseRotate c s (Φ.phi y)⟩ x =
+    metricReadout (fun y => phaseRotate c s (Φ.phi y)) x =
       metricReadout Φ x := by
   exact normSq_phaseRotate_of_unit hunit (Φ.phi x)
 

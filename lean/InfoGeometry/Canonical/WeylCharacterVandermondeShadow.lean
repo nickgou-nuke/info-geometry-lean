@@ -82,7 +82,7 @@ structure D4CharacterVandermondePacket where
     ∨ numerator = diracSpinorCharacter β
   denominatorWitness : DenominatorShadow ℝ 4
   denominatorWitness_nodes :
-    denominatorWitness.nodes = denominatorNodes
+    denominatorWitness = denominatorNodes
 
 namespace D4CharacterVandermondePacket
 

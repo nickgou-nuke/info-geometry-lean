@@ -42,8 +42,11 @@ Cartan element used by finite character shadows.  Operator ownership remains in
 the representation and thermodynamic generator corridors.
 -/
 @[rep_depth thermo]
-structure CartanSubalgebra (LieAlgebra : Type*) where
-  cartanCarrier : Type*
+structure CartanSubalgebra (LieAlgebra : Type*)
+    [AddCommGroup LieAlgebra] [Module ℝ LieAlgebra] where
+  /-- The Cartan carrier is an actual Mathlib submodule of the Lie algebra. -/
+  cartanCarrier : Submodule ℝ LieAlgebra
+  /-- Thermal elements are bundled points of the Cartan submodule. -/
   thermalElement : LieAlgebra → cartanCarrier
 
 /--
@@ -125,11 +128,17 @@ noncomputable def classicalGibbsWeight
     (x : Phase) : ℝ :=
   Real.exp (-(classicalThermalHamiltonian M T x))
 
-/-- Quantum representation layer with trace existence kept as witness data. -/
+/--
+Quantum representation layer.
+
+The thermal generator is the owner datum.  Existence of a finite thermal
+trace is not stored as an unrelated proposition: when the state carrier is
+finite, `quantumPartitionFunction` below constructs that trace as the native
+finite sum.
+-/
 @[rep_depth thermo]
 structure QuantumRepresentationLayer (State LieAlgebra : Type*) where
   thermalGenerator : GeneralizedSouriauTemperature LieAlgebra → State → ℝ
-  traceExists : Prop
 
 @[rep_depth thermo]
 noncomputable def quantumThermalGenerator
@@ -147,12 +156,21 @@ noncomputable def quantumPartitionFunction
     (T : GeneralizedSouriauTemperature LieAlgebra) : ℝ :=
   ∑ x, Real.exp (-(quantumThermalGenerator R T x))
 
-/-- Witness that a quantum trace decomposes into weight spaces before being read as a character. -/
+/--
+Finite weight decomposition whose thermal trace is represented by a character.
+
+Unlike the former `traceExists : Prop` marker, this structure carries the
+actual character and the quantified equality identifying it with the native
+finite thermal trace.
+-/
 @[rep_depth thermo]
-structure WeightDecompositionWitness (State LieAlgebra : Type*) where
+structure WeightDecompositionWitness
+    (State LieAlgebra : Type*) [Fintype State] where
   representation : QuantumRepresentationLayer State LieAlgebra
   weightSpace : State → Prop
-  traceExists : representation.traceExists
+  character : GeneralizedSouriauTemperature LieAlgebra → ℝ
+  character_eq_partitionFunction :
+    ∀ T, character T = quantumPartitionFunction representation T
 
 @[rep_depth thermo]
 noncomputable def quantumCharacterIfWeighted
@@ -160,7 +178,18 @@ noncomputable def quantumCharacterIfWeighted
     [Fintype State]
     (W : WeightDecompositionWitness State LieAlgebra)
     (T : GeneralizedSouriauTemperature LieAlgebra) : ℝ :=
-  quantumPartitionFunction W.representation T
+  W.character T
+
+/-- The weight-space character is exactly the native finite thermal trace. -/
+@[rep_depth thermo]
+theorem quantumCharacterIfWeighted_eq_partitionFunction
+    {State LieAlgebra : Type*}
+    [Fintype State]
+    (W : WeightDecompositionWitness State LieAlgebra)
+    (T : GeneralizedSouriauTemperature LieAlgebra) :
+    quantumCharacterIfWeighted W T =
+      quantumPartitionFunction W.representation T :=
+  W.character_eq_partitionFunction T
 
 /--
 Finite moment-map shadow: the two owner observables used by the

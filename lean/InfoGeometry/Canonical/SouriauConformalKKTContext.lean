@@ -817,10 +817,9 @@ surface on the positive-partition lane: downstream routes can consume a witness
 object instead of a bare `hCone : C.IsConeAdmissible` argument.
 -/
 @[rep_depth transport]
-structure ConformalConeAdmissibilityWitness
-    (C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)) where
--- theorem-class: bridge
-  hCone : C.IsConeAdmissible
+abbrev ConformalConeAdmissibilityWitness
+    (C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)) : Prop :=
+  C.IsConeAdmissible
 
 namespace ConformalConeAdmissibilityWitness
 
@@ -831,7 +830,7 @@ variable {C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)}
 theorem coneAdmissible
     (W : ConformalConeAdmissibilityWitness (α := α) (H := H) C) :
     C.IsConeAdmissible :=
-  W.hCone
+  W
 
 end ConformalConeAdmissibilityWitness
 
@@ -906,7 +905,7 @@ theorem tkkMasterRelation
 theorem coneAdmissible
     (W : ConformalTKKConeWitness (α := α) (H := H) C) :
     C.IsConeAdmissible :=
-  W.coneWitness.hCone
+  W.coneWitness
 
 end ConformalTKKConeWitness
 
@@ -955,7 +954,7 @@ theorem operatorAdmissible_of_coneWitness
     (W : ConformalPositivePartitionWitness C)
     (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C) :
     C.IsOperatorAdmissible :=
-  W.operatorAdmissible hCone.hCone
+  W.operatorAdmissible hCone
 
 /--
 Build the stable operator-admissibility witness directly from a positive-partition
@@ -996,7 +995,7 @@ noncomputable def toOperatorAdmissibilityWitnessOfConeWitness
     weylGauge := weylGauge
     tkkParameter := tkkParameter
     hTKK := hTKK
-    hCone := hCone.hCone
+    hCone := hCone
     partitionWitness := W
     X := X
     Y := Y }
@@ -1040,7 +1039,7 @@ noncomputable def toOperatorAdmissibilityWitnessOfTKKConeWitness
   weylGauge := weylGauge
   tkkParameter := hTKK.tkkParameter
   hTKK := hTKK.hTKK
-  hCone := hCone.hCone
+  hCone := hCone
   partitionWitness := W
   X := X
   Y := Y
@@ -1213,7 +1212,7 @@ noncomputable def toOperatorAdmissibilityWitnessOfConeWitness
     weylGauge := weylGauge
     tkkParameter := tkkParameter
     hTKK := hTKK
-    hCone := hCone.hCone
+    hCone := hCone
     partitionWitness := W.toPositivePartitionWitness
     X := X
     Y := Y }
@@ -1257,7 +1256,7 @@ noncomputable def toOperatorAdmissibilityWitnessOfTKKConeWitness
   weylGauge := weylGauge
   tkkParameter := hTKK.tkkParameter
   hTKK := hTKK.hTKK
-  hCone := hCone.hCone
+  hCone := hCone
   partitionWitness := W.toPositivePartitionWitness
   X := X
   Y := Y

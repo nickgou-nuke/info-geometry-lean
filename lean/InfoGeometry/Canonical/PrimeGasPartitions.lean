@@ -1,109 +1,216 @@
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.FormalPrimeRootSystem
-import InfoGeometry.Algebraic.SplitSuperGeometry
+import InfoGeometry.Arithmetic.PrimeSuperalgebra
 
 /-!
-# InfoGeometry.Canonical.PrimeGasPartitions
+# Prime-gas partition functions
 
-The corrected prime-gas partition layer keeps three traces distinct:
-
-* bosonic trace: reciprocal product, the finite precursor of `ζ(β)`;
-* ordinary fermionic trace: positive square-free product, the finite precursor
-  of `ζ(β)/ζ(2β)`;
-* parity supertrace: alternating product, the finite Weyl-denominator analogue
-  and finite precursor of `1/ζ(β)`.
-
-Infinite Euler products are exposed only through explicit convergence/witness
-packets.
+Finite traces are explicit products.  Infinite traces are actual complex
+functions tied to Mathlib's Riemann-zeta Euler product; no arbitrary values or
+equality fields are stored in witness structures.
 -/
+
+noncomputable section
 
 namespace InfoGeometry.Canonical.PrimeGasPartitions
 
 open scoped BigOperators
 open FormalPrimeRootSystem
+open InfoGeometry.Arithmetic.PrimeSuperalgebra
 
-/-- Infinite Euler-product convergence witness with explicit zeta/parity channels. -/
-@[rep_depth thermo]
-structure InfiniteEulerProductConvergenceWitness where
-  beta : ℝ
-  halfPlane_Re_gt_one : Prop
-  zeta : ℝ
-  zeta_two_beta : ℝ
-  inverseZeta : ℝ
-  bosonTrace : ℝ
-  fermionTrace : ℝ
-  parityTrace : ℝ
-  boson_eq_zeta : bosonTrace = zeta
-  fermion_eq_zeta_div_zeta_two_beta : fermionTrace = zeta / zeta_two_beta
-  parity_eq_inverse_zeta : parityTrace = inverseZeta
+/-! ## Finite prime traces -/
 
-/-- Finite bosonic prime trace `∏_{p∈P}(1-p^{-β})^{-1}`. -/
+/-- Finite bosonic prime trace `∏ (1-xₚ)⁻¹`. -/
 @[rep_depth thermo]
-noncomputable def finiteBosonTrace (L : FormalPrimeRootLattice) (p_neg_beta : ℕ → ℝ) : ℝ :=
-  ∏ p ∈ L.primes, (1 - p_neg_beta p)⁻¹
+def finiteBosonTrace
+    (L : FormalPrimeRootLattice)
+    (x : ℕ → ℝ) : ℝ :=
+  ∏ p ∈ L.primes, (1 - x p)⁻¹
 
-/-- Finite ordinary fermion trace `∏_{p∈P}(1+p^{-β})`. -/
+/-- Finite positive fermion trace `∏ (1+xₚ)`. -/
 @[rep_depth thermo]
-def finiteFermionTrace (L : FormalPrimeRootLattice) (p_neg_beta : ℕ → ℝ) : ℝ :=
-  ∏ p ∈ L.primes, (1 + p_neg_beta p)
+def finiteFermionTrace
+    (L : FormalPrimeRootLattice)
+    (x : ℕ → ℝ) : ℝ :=
+  ∏ p ∈ L.primes, (1 + x p)
 
-/-- Finite fermionic parity supertrace `∏_{p∈P}(1-p^{-β})`. -/
+/-- Finite parity supertrace `∏ (1-xₚ)`. -/
 @[rep_depth thermo]
-def finiteParityTrace (L : FormalPrimeRootLattice) (p_neg_beta : ℕ → ℝ) : ℝ :=
-  ∏ p ∈ L.primes, (1 - p_neg_beta p)
+def finiteParityTrace
+    (L : FormalPrimeRootLattice)
+    (x : ℕ → ℝ) : ℝ :=
+  ∏ p ∈ L.primes, (1 - x p)
+
+/-- The finite boson and parity traces cancel when no denominator vanishes. -/
+@[rep_depth thermo]
+theorem finiteBosonTrace_mul_finiteParityTrace
+    (L : FormalPrimeRootLattice)
+    (x : ℕ → ℝ)
+    (hx : ∀ p ∈ L.primes, 1 - x p ≠ 0) :
+    finiteBosonTrace L x * finiteParityTrace L x = 1 := by
+  classical
+  unfold finiteBosonTrace finiteParityTrace
+  rw [← Finset.prod_mul_distrib]
+  apply Finset.prod_eq_one
+  intro p hp
+  simp [hx p hp]
 
 /--
-Analytic/infinite Euler-product witness.  This is intentionally separate from
-finite products: convergence in the usual half-plane must be supplied here.
+Positive fermion times parity equals the product with squared prime weights.
 -/
 @[rep_depth thermo]
-structure InfiniteEulerProductWitness where
-  beta : ℝ
-  halfPlane_Re_gt_one : Prop
-  zeta : ℝ
-  zeta_two_beta : ℝ
-  inverseZeta : ℝ
-  bosonTrace : ℝ
-  fermionTrace : ℝ
-  parityTrace : ℝ
-  boson_eq_zeta : bosonTrace = zeta
-  fermion_eq_zeta_div_zeta_two_beta : fermionTrace = zeta / zeta_two_beta
-  parity_eq_inverse_zeta : parityTrace = inverseZeta
+theorem finiteFermionTrace_mul_finiteParityTrace
+    (L : FormalPrimeRootLattice)
+    (x : ℕ → ℝ) :
+    finiteFermionTrace L x * finiteParityTrace L x =
+      ∏ p ∈ L.primes, (1 - (x p) ^ 2) := by
+  classical
+  unfold finiteFermionTrace finiteParityTrace
+  rw [← Finset.prod_mul_distrib]
+  apply Finset.prod_congr rfl
+  intro p _hp
+  ring
+
+/-! ## Infinite complex traces -/
+
+/-- Infinite bosonic prime trace. -/
+def infiniteBosonTrace (s : ℂ) : ℂ :=
+  infiniteComplexBosonicEulerProduct s
+
+/-- Infinite positive-fermion zeta-ratio channel. -/
+def infiniteFermionTrace (s : ℂ) : ℂ :=
+  infiniteComplexPositiveFermionZetaRatio s
+
+/-- Infinite parity channel, defined as the reciprocal bosonic product. -/
+def infiniteParityTrace (s : ℂ) : ℂ :=
+  (infiniteBosonTrace s)⁻¹
+
+/--
+Proof-carrying half-plane context for the genuine infinite Euler products.
+-/
+@[rep_depth thermo]
+abbrev InfiniteEulerProductConvergenceWitness :=
+  {s : ℂ // 1 < s.re}
+
+namespace InfiniteEulerProductConvergenceWitness
+
+abbrev s (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
+  W.1
+
+theorem halfPlane_Re_gt_one (W : InfiniteEulerProductConvergenceWitness) :
+    1 < W.s.re :=
+  W.2
+
+def zeta (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
+  riemannZeta W.s
+
+def zeta_two_beta (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
+  riemannZeta ((2 : ℂ) * W.s)
+
+def inverseZeta (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
+  (riemannZeta W.s)⁻¹
+
+def bosonTrace (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
+  infiniteBosonTrace W.s
+
+def fermionTrace (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
+  infiniteFermionTrace W.s
+
+def parityTrace (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
+  infiniteParityTrace W.s
+
+end InfiniteEulerProductConvergenceWitness
+
+/-- Restored public witness name for the native infinite-product context. -/
+abbrev InfiniteEulerProductWitness :=
+  InfiniteEulerProductConvergenceWitness
+
+/-- The bosonic trace is Riemann zeta on `Re(s)>1`. -/
+@[rep_depth thermo]
+theorem infiniteBosonTrace_eq_riemannZeta
+    {s : ℂ}
+    (hs : 1 < s.re) :
+    infiniteBosonTrace s = riemannZeta s :=
+  infiniteComplexBosonicEulerProduct_eq_riemannZeta hs
+
+/-- The parity trace is inverse Riemann zeta on `Re(s)>1`. -/
+@[rep_depth thermo]
+theorem infiniteParityTrace_eq_inverse_riemannZeta
+    {s : ℂ}
+    (hs : 1 < s.re) :
+    infiniteParityTrace s = (riemannZeta s)⁻¹ := by
+  unfold infiniteParityTrace infiniteBosonTrace
+  exact inverse_infiniteComplexBosonicEulerProduct_eq_inverse_riemannZeta hs
+
+/-- The positive fermion trace is `ζ(s)/ζ(2s)` on `Re(s)>1`. -/
+@[rep_depth thermo]
+theorem infiniteFermionTrace_eq_zeta_div_zeta_two
+    {s : ℂ}
+    (hs : 1 < s.re) :
+    infiniteFermionTrace s =
+      riemannZeta s / riemannZeta ((2 : ℂ) * s) := by
+  unfold infiniteFermionTrace
+  apply infiniteComplexPositiveFermionZetaRatio_eq_zeta_div_zeta_two hs
+  have htwo : (((2 : ℂ) * s).re) = 2 * s.re := by
+    norm_num [Complex.mul_re]
+  rw [htwo]
+  linarith
 
 @[rep_depth thermo]
 theorem bosonTrace_eq_zeta (W : InfiniteEulerProductWitness) :
     W.bosonTrace = W.zeta :=
-  W.boson_eq_zeta
+  infiniteBosonTrace_eq_riemannZeta W.halfPlane_Re_gt_one
 
 @[rep_depth thermo]
-theorem fermionTrace_eq_zeta_div_zeta_two_beta (W : InfiniteEulerProductWitness) :
+theorem fermionTrace_eq_zeta_div_zeta_two_beta
+    (W : InfiniteEulerProductWitness) :
     W.fermionTrace = W.zeta / W.zeta_two_beta :=
-  W.fermion_eq_zeta_div_zeta_two_beta
+  infiniteFermionTrace_eq_zeta_div_zeta_two W.halfPlane_Re_gt_one
 
 @[rep_depth thermo]
-theorem parityTrace_eq_inverse_zeta (W : InfiniteEulerProductWitness) :
+theorem parityTrace_eq_inverse_zeta
+    (W : InfiniteEulerProductWitness) :
     W.parityTrace = W.inverseZeta :=
-  W.parity_eq_inverse_zeta
+  infiniteParityTrace_eq_inverse_riemannZeta W.halfPlane_Re_gt_one
+
+/-! The native equality relation identifying parity and supertrace readouts.
+
+The certified prime cutoff underlying a formal Boolean prime-root lattice.
+
+This is the concrete carrier conversion needed to compare the Weyl parity
+product with the exterior-prime-algebra supertrace.  Both owners retain their
+own semantic types; only their common finite prime register is identified.
+-/
+def primeCutoffOfRootLattice (L : FormalPrimeRootLattice) : PrimeCutoff where
+  val := L.primes
+  property := L.prime_mem
 
 /--
-Compatibility shadow for the prime-side parity supertrace.
+The finite parity product is the genuine exterior-prime-algebra supertrace.
 
-This keeps the old finite/infinite prime-gas vocabulary intact while exposing
-the new supergeometry naming.
+This replaces the former equality-witness packet by a theorem between the
+actual owners: the Boolean prime-root lattice on the left and the finite
+exterior prime superalgebra on the right.
 -/
-structure SplitPrimeSupertraceShadow where
-  parityTrace : ℝ
-  supertraceReadout : ℝ
-  parityTrace_eq_supertraceReadout : parityTrace = supertraceReadout
+@[rep_depth thermo]
+theorem finiteParityTrace_eq_finitePrimeSupertrace
+    (L : FormalPrimeRootLattice) (β : ℝ) :
+    finiteParityTrace L (primeWeight β) =
+      finitePrimeSupertrace (primeCutoffOfRootLattice L) β := by
+  rw [finitePrimeSupertrace_eq_denominator]
+  simp [finiteParityTrace, finitePrimeDenominator, primeCutoffOfRootLattice]
 
-namespace SplitPrimeSupertraceShadow
+/--
+Compatibility spelling for the recovered split parity/supertrace theorem.
 
-@[simp]
+Unlike the historical record field, this statement has no freely supplied
+readouts: both sides are computed from the same certified prime modes.
+-/
+@[rep_depth thermo]
 theorem parityTrace_eq_supertrace
-    (S : SplitPrimeSupertraceShadow) :
-    S.parityTrace = S.supertraceReadout :=
-  S.parityTrace_eq_supertraceReadout
-
-end SplitPrimeSupertraceShadow
+    (L : FormalPrimeRootLattice) (β : ℝ) :
+    finiteParityTrace L (primeWeight β) =
+      finitePrimeSupertrace (primeCutoffOfRootLattice L) β :=
+  finiteParityTrace_eq_finitePrimeSupertrace L β
 
 end InfoGeometry.Canonical.PrimeGasPartitions

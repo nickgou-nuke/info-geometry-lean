@@ -11,8 +11,8 @@ The Non-commutative Algebra of Belief Updates.
 In its simplest form, the algebra is represented by linear operators on the state space.
 For a twisted inference system, updates do not commute.
 -/
-structure BeliefSystem (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
-  Twisted : TwistedInference E
+abbrev BeliefSystem (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] := TwistedInference E
 
 namespace BeliefSystem
 
@@ -25,10 +25,10 @@ belief updates whose composition depends on the order of evidence.
 [Update u, Update v] ≠ 0.
 -/
 theorem non_commutative_updates :
-    ∃ (u v : E), B.Twisted.dual.nabla u v ≠ B.Twisted.dual.nabla v u := by
+    ∃ (u v : E), B.dual.nabla u v ≠ B.dual.nabla v u := by
   by_contra h_comm
   push_neg at h_comm
-  have h_torsion := B.Twisted.has_torsion
+  have h_torsion := B.has_torsion
   apply h_torsion
   funext u v
   unfold informationTorsion

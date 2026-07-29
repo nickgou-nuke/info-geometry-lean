@@ -24,6 +24,7 @@ open InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift
 abbrev NoncommutativeModularOperatorLift
     (A Weight Deriv Ham Phase Core : Type*)
     [Ring A]
+    [Mul Core]
     [One Deriv] [Mul Deriv]
     [Zero Ham]
     [One Phase] [Mul Phase] : Type _ :=
@@ -44,6 +45,7 @@ abbrev BogoliubovKANShadowPacket
 abbrev NoncommutativeModularToBogoliubovKANPacket
     (A Weight Deriv Ham Phase Core E Bog Korth Asplit Nshear CartanDiag : Type*)
     [Ring A]
+    [Mul Core]
     [One Deriv] [Mul Deriv]
     [Zero Ham]
     [One Phase] [Mul Phase]
@@ -58,54 +60,33 @@ abbrev NoncommutativeModularToBogoliubovKANPacket
 namespace NoncommutativeModularOperatorLift
 
 variable {A Weight Deriv Ham Phase Core : Type*}
-  [Ring A] [One Deriv] [Mul Deriv] [Zero Ham] [One Phase] [Mul Phase]
+  [Ring A] [Mul Core] [One Deriv] [Mul Deriv] [Zero Ham] [One Phase] [Mul Phase]
 
 variable (P : NoncommutativeModularOperatorLift
   (A := A) (Weight := Weight) (Deriv := Deriv)
   (Ham := Ham) (Phase := Phase) (Core := Core))
 
-theorem connesCocycle_same_weight
-    (φ : Weight)
-    (t : ℝ) :
-    P.connesCocycle.cocycle φ φ t = 1 := by
-  exact P.connesCocycle.same_weight_apply φ t
+alias connesCocycle_same_weight :=
+  InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.NoncommutativeModularOperatorLift.connesCocycle_same_weight
 
-theorem connesCocycle_chain_rule
-    (φ ψ η : Weight)
-    (t : ℝ) :
-    P.connesCocycle.cocycle φ ψ t * P.connesCocycle.cocycle ψ η t =
-      P.connesCocycle.cocycle φ η t :=
-  P.connesCocycle.chain_rule_apply φ ψ η t
+alias connesCocycle_chain_rule :=
+  InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.NoncommutativeModularOperatorLift.connesCocycle_chain_rule
 
-theorem spatialDerivative_same_weight
-    (φ : Weight) :
-    P.spatialDerivative.spatialDerivative φ φ = 1 := by
-  exact P.spatialDerivative.same_weight_apply φ
+alias spatialDerivative_same_weight :=
+  InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.NoncommutativeModularOperatorLift.spatialDerivative_same_weight
 
-theorem spatialDerivative_chain
-    (φ ψ η : Weight) :
-    P.spatialDerivative.spatialDerivative φ ψ * P.spatialDerivative.spatialDerivative ψ η =
-      P.spatialDerivative.spatialDerivative φ η := by
-  exact P.spatialDerivative.chain_rule_apply φ ψ η
+alias spatialDerivative_chain :=
+  InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.NoncommutativeModularOperatorLift.spatialDerivative_chain
 
-theorem modularFlow_one
-    (t : ℝ) :
-    P.modularFlow.flow t (1 : A) = 1 := by
-  exact P.modularFlow.flow_one_apply t
+alias modularFlow_one :=
+  InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.NoncommutativeModularOperatorLift.modularFlow_one
 
-theorem modularFlow_mul
-    (t : ℝ) (x y : A) :
-    P.modularFlow.flow t (x * y) =
-      P.modularFlow.flow t x * P.modularFlow.flow t y := by
-  exact P.modularFlow.flow_mul_apply t x y
+alias modularFlow_mul :=
+  InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.NoncommutativeModularOperatorLift.modularFlow_mul
 
 /-- The canonical operator-owner packet carries an explicit noncommuting pair. -/
-theorem exists_noncommuting_pair
-    (P : NoncommutativeModularOperatorLift
-      (A := A) (Weight := Weight) (Deriv := Deriv)
-      (Ham := Ham) (Phase := Phase) (Core := Core)) :
-    ∃ a b : A, a * b ≠ b * a :=
-  NoncommutativeModularOperatorLift.noncommutativeWitness P
+alias exists_noncommuting_pair :=
+  InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.NoncommutativeModularOperatorLift.exists_noncommuting_pair
 
 /-- Type-III base integration is routed through the backend modular weight. -/
 theorem typeIII_baseIntegral_eq_modularWeight_integral

@@ -16,12 +16,14 @@ Canonical coarse-graining interfaces:
 -/
 
 /-- Finite coarse-graining map from microscopic states to retained macrostates. -/
-structure FiniteCoarseGraining (X Y : Type*) where
-  project : X → Y
+abbrev FiniteCoarseGraining (X Y : Type*) := X → Y
 
 namespace FiniteCoarseGraining
 
 variable {X Y R : Type*} [Fintype X] [Fintype Y] [DecidableEq Y] [AddCommMonoid R]
+
+/-- Projection-compatible name for the direct coarse-graining map. -/
+abbrev project (G : FiniteCoarseGraining X Y) : X → Y := G
 
 /-- Weight retained on a coarse fiber. -/
 def fiberWeight (G : FiniteCoarseGraining X Y) (w : X → R) (y : Y) : R :=
@@ -38,8 +40,8 @@ theorem totalWeight_eq_sum_fiberWeight
   simpa [totalWeight, fiberWeight] using (Fintype.sum_fiberwise G.project w).symm
 
 /-- Singleton coarse graining retaining only one macrostate. -/
-def singleton (X : Type*) : FiniteCoarseGraining X PUnit where
-  project := fun _ => PUnit.unit
+def singleton (X : Type*) : FiniteCoarseGraining X PUnit :=
+  fun _ => PUnit.unit
 
 /-- Singleton coarse graining keeps the full total weight in its unique fiber. -/
 theorem fiberWeight_singleton_eq_totalWeight

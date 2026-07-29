@@ -89,7 +89,7 @@ theorem grand_holographic_complexity_susskind_duality
     (S : CausalSplit V) (volData : CausalBulkVolumeData S) (actionData : KreinActionData V)
     (h_vol : volData.bulkVolume = ((lambdaToCausalNet t).vertices : ℝ))
     (h_act : actionData.kreinAction = volData.bulkVolume) :
-    ((lambdaToCausalNet t).is_dag = true) ∧
+    ((lambdaToCausalNet t).IsDAG) ∧
     (volData.bulkVolume = ((lambdaToCausalNet t).vertices : ℝ)) ∧
     (actionData.kreinAction = volData.bulkVolume) ∧
     (actionData.kreinAction = ((lambdaToCausalNet t).vertices : ℝ)) := ⟨

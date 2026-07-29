@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.NumberTheory.LSeries.RiemannZeta
 import InfoGeometry.Arithmetic.BostConnesSystem
 
 /-!
@@ -217,8 +218,10 @@ theorem bostConnesPartition_eq_riemannZeta_re (β : ℝ) (hβ : 1 < β) :
 /-- The partition function is strictly positive for `1 < β`. -/
 theorem bostConnesPartition_pos (β : ℝ) (hβ : 1 < β) :
     0 < bostConnesPartition β := by
-  rw [bostConnesPartition_eq_riemannZeta_re β hβ]
-  exact riemannZeta_re_pos_of_one_lt hβ
+  rw [bostConnesPartition]
+  exact (summable_bostConnesWeight β hβ).tsum_pos
+    (fun n => Real.rpow_nonneg (Nat.cast_nonneg n) (-β))
+    1 (by norm_num)
 
 /-- The canonically normalized positive-integer Boltzmann weight. -/
 def normalizedBostConnesWeight (β : ℝ) (n : ℕ+) : ℝ :=

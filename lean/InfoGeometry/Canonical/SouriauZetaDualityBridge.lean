@@ -47,8 +47,6 @@ structure SouriauZetaDualityHypotheses where
       ∀ (S : Finset ℕ) (_hS : ∀ p ∈ S, 1 < p) (σ : ℝ),
         primeSpectralBarrier S s.re ≤ primeSpectralBarrier S σ
 
-  /-- Guardrail: this packet is categorical/conditional, not an unconditional RH proof. -/
-  no_unconditional_RH_claim_guard : Type*
 
 namespace SouriauZetaDualityHypotheses
 
@@ -75,7 +73,6 @@ def toVariationalRHTarget : VariationalRHTarget where
   approx_primes := fun _ _ h => by simp at h
   zeros_are_barrier_critical := fun s₀ hz S hS σ =>
     D.zeros_are_barrier_critical s₀ hz S hS σ
-  no_unconditional_RH_claim_guard := D.no_unconditional_RH_claim_guard
 
 /--
 Debt lemma: if the supplied duality hypotheses hold for `D`, then any zero of the supplied `xi` lies on the critical line.

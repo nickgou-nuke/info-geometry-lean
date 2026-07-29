@@ -62,13 +62,6 @@ structure HessianCollapseEvent
   /-- Rank-defect / loss-of-invertibility certificate. -/
   rank_defect : ¬ Function.Injective (response state)
 
-/--
-A scalar shear readout.
-
-Concrete models may instantiate this by a Bregman divergence, Hessian
-condition number, modular acceleration, absorption coefficient, or curvature
-readout.
--/
 /-!
 A scalar shear readout is directly a state-indexed real observable.  No
 additional law is attached to this carrier, so a structure would only wrap

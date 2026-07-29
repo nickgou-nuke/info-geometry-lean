@@ -69,7 +69,14 @@ theorem representedRangeCompletionEquiv_map_mul
         representedRangeCompletionEquiv Stage sys ω y := by
   induction x, y using UniformSpace.Completion.induction_on₂ with
   | hp =>
-    exact isClosed_eq (by fun_prop) (by fun_prop)
+    exact isClosed_eq
+      ((representedRangeCompletionEquiv
+        Stage sys ω).continuous.comp
+          (continuous_fst.mul continuous_snd))
+      (((representedRangeCompletionEquiv
+          Stage sys ω).continuous.comp continuous_fst).mul
+        ((representedRangeCompletionEquiv
+          Stage sys ω).continuous.comp continuous_snd))
   | ih x y =>
     rw [← UniformSpace.Completion.coe_mul,
       representedRangeCompletionEquiv_coe,
@@ -114,28 +121,37 @@ instance representedAlgebraicRangeCompletionInvolutiveStar :
       (representedAlgebraicRangeCompletion Stage sys ω) where
   star_involutive x := by
     apply (representedRangeCompletionAlgEquiv Stage sys ω).injective
-    simp
+    rw [representedRangeCompletionAlgEquiv_map_star,
+      representedRangeCompletionAlgEquiv_map_star,
+      star_star]
 
-instance representedAlgebraicRangeCompletionStarAddMonoid :
-    StarAddMonoid
+instance representedAlgebraicRangeCompletionStarRing :
+    StarRing
       (representedAlgebraicRangeCompletion Stage sys ω) where
   star_add x y := by
     apply (representedRangeCompletionAlgEquiv Stage sys ω).injective
-    simp
-
-instance representedAlgebraicRangeCompletionStarMul :
-    StarMul
-      (representedAlgebraicRangeCompletion Stage sys ω) where
+    rw [representedRangeCompletionAlgEquiv_map_star,
+      map_add,
+      representedRangeCompletionAlgEquiv_map_star,
+      representedRangeCompletionAlgEquiv_map_star,
+      star_add]
   star_mul x y := by
     apply (representedRangeCompletionAlgEquiv Stage sys ω).injective
-    simp
+    rw [representedRangeCompletionAlgEquiv_map_star,
+      map_mul,
+      representedRangeCompletionAlgEquiv_map_star,
+      representedRangeCompletionAlgEquiv_map_star,
+      star_mul]
 
 instance representedAlgebraicRangeCompletionStarModule :
     StarModule ℂ
       (representedAlgebraicRangeCompletion Stage sys ω) where
   star_smul c x := by
     apply (representedRangeCompletionAlgEquiv Stage sys ω).injective
-    simp
+    rw [representedRangeCompletionAlgEquiv_map_star,
+      map_smul,
+      representedRangeCompletionAlgEquiv_map_star,
+      star_smul]
 
 /-- The transported involution is continuous in the operator-norm completion
 topology. -/
@@ -164,10 +180,11 @@ involution on the dense represented algebraic range. -/
       ((star x : representedAlgebraicRange Stage sys ω) :
         representedAlgebraicRangeCompletion Stage sys ω) := by
   apply (representedRangeCompletionAlgEquiv Stage sys ω).injective
-  rw [representedRangeCompletionAlgEquiv_map_star]
-  change
-    star (representedAlgebraicRangeInclusion Stage sys ω x) =
-      representedAlgebraicRangeInclusion Stage sys ω (star x)
+  rw [representedRangeCompletionAlgEquiv_map_star,
+    representedRangeCompletionAlgEquiv_apply,
+    representedRangeCompletionAlgEquiv_apply,
+    representedRangeCompletionEquiv_coe,
+    representedRangeCompletionEquiv_coe]
   exact
     (representedAlgebraicRangeInclusion_star
       Stage sys ω x).symm
@@ -207,8 +224,9 @@ def representedRangeCompletionStarAlgEquiv :
     (representedRangeCompletionAlgEquiv Stage sys ω).map_add
   map_mul' :=
     (representedRangeCompletionAlgEquiv Stage sys ω).map_mul
-  map_smul' :=
-    (representedRangeCompletionAlgEquiv Stage sys ω).map_smul
+  map_smul' := fun c x =>
+    map_smul
+      (representedRangeCompletionAlgEquiv Stage sys ω) c x
   map_star' :=
     representedRangeCompletionAlgEquiv_map_star Stage sys ω
 

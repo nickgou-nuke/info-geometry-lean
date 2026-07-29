@@ -45,18 +45,22 @@ Eigen-response of the susceptibility/Hessian in the `s/p` polarization basis.
 This is a state-indexed calibration socket: a concrete material/interface
 model supplies the laws saying these are the local eigenchannel readouts.
 -/
-structure StatePolarizationEigenResponse
-    (State : Type*) where
-  /-- Geometric/material response in the `s` channel. -/
-  responseS : State → ℂ
-
-  /-- Geometric/material response in the `p` channel. -/
-  responseP : State → ℂ
+def StatePolarizationEigenResponse (State : Type*) :=
+  State → ℂ × ℂ
 
 namespace StatePolarizationEigenResponse
 
 variable {State : Type*}
-variable (E : StatePolarizationEigenResponse State)
+
+def responseS (E : StatePolarizationEigenResponse State) : State → ℂ :=
+  fun U => (E U).1
+
+def responseP (E : StatePolarizationEigenResponse State) : State → ℂ :=
+  fun U => (E U).2
+
+def mk
+    (responseS responseP : State → ℂ) : StatePolarizationEigenResponse State :=
+  fun U => (responseS U, responseP U)
 
 end StatePolarizationEigenResponse
 

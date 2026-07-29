@@ -88,13 +88,20 @@ structure ClassificationCertificate (cp : ZornCompositionDatum R) where
     ZornMatrix.detZ cp.toCrossProduct3 (act g X) = ZornMatrix.detZ cp.toCrossProduct3 X
   /-- The actual group-classification equivalence, supplied as certificate data. -/
   autEquivG2 : Aut ≃* G2
-  /-- Evidence/invariant ledger attached to the model. -/
-  evidence : G2EvidenceInvariants
 
 namespace ClassificationCertificate
 
 variable {cp : ZornCompositionDatum R}
 variable (C : ClassificationCertificate (R := R) (Aut := Aut) (G2 := G2) cp)
+
+/-!
+The finite/root-system ledger is an external numerical readout, not an
+additional premise of the automorphism classification.  Keep the historical
+`C.evidence` access path as a derived definition so callers cannot manufacture
+an otherwise valid classification certificate by supplying unrelated numbers.
+-/
+def evidence : G2EvidenceInvariants :=
+  computationalEvidenceInvariants
 
 /-- Read back the supplied classification as a multiplicative equivalence. -/
 def aut_equiv_g2
@@ -136,8 +143,9 @@ theorem act_preserves_anticolorPart_of_canonical_zMul
   exact (C.toG2TwoCandidate g).preserves_anticolorPart_of_canonical_zMul hcp X
 
 /-- Full certificate readback packet with the actual equivalence as data. -/
-abbrev ClassificationReadbackPacket : Type _ :=
-  Σ' e : Aut ≃* G2,
+abbrev ClassificationReadbackPacket : Prop :=
+  ∃ e : Aut ≃* G2,
+    e = C.autEquivG2 ∧
     (∀ g : Aut, ∀ X Y : ZornMatrix R,
       C.act g (cp.mulZ X Y) = cp.mulZ (C.act g X) (C.act g Y)) ∧
     (∀ g : Aut, ∀ X : ZornMatrix R,
@@ -152,7 +160,7 @@ abbrev ClassificationReadbackPacket : Type _ :=
 def classification_certificate_packet
     (hcp : cp.mulZ = zMul (R := R)) :
     ClassificationReadbackPacket C := by
-  refine ⟨aut_equiv_g2 C, C.act_mulZ, C.act_detZ, ?_, ?_⟩
+  refine ⟨aut_equiv_g2 C, rfl, C.act_mulZ, C.act_detZ, ?_, ?_⟩
   · intro g X
     exact C.act_preserves_colorPart_of_canonical_zMul hcp g X
   · intro g X

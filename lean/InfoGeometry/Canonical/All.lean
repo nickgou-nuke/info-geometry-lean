@@ -345,6 +345,7 @@ import InfoGeometry.Canonical.FilteredGNSRepresentedRangeCompletion
 import InfoGeometry.Canonical.FilteredGNSRepresentedAlgebraCompletion
 import InfoGeometry.Canonical.StarAlgEquivPullback
 import InfoGeometry.Canonical.FilteredGNSRepresentedCStarCompletion
+import InfoGeometry.Canonical.FilteredGNSRepresentedCStarTopology
 import InfoGeometry.Canonical.HilbertSchmidtMatrixPairing
 import InfoGeometry.Canonical.KuboMoriBogoliubovMetric
 import InfoGeometry.Canonical.FullOperatorBKMQuantumFisher
@@ -414,6 +415,7 @@ import InfoGeometry.Canonical.FQHEChiralEdgeCFTBridge
 import InfoGeometry.Canonical.CuntzKriegerMarkovBridge
 import InfoGeometry.Canonical.MajoranaBraidingCliffordBridge
 import InfoGeometry.Canonical.ChiralCuntzSuperchargeBridge
+import InfoGeometry.Canonical.TemperleyLiebJonesBridge
 import InfoGeometry.Canonical.NoncommutativeStarDirectLimit
 import InfoGeometry.Canonical.AndreevReflectionKreinHorizonBridge
 import InfoGeometry.Canonical.E8LeechBridge

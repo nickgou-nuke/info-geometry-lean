@@ -40,13 +40,19 @@ A semiring shadow of the Fibonacci fusion rule.
 Concrete categorical data are owned by `FibonacciFusionCategoryData`; this
 structure is the abstract fiber-content interface used by the fibration roof.
 -/
-structure FibonacciFusionShadow (R : Type r) [CommSemiring R] where
-  tau : R
-  tau_sq : tau ^ 2 = 1 + tau
+def FibonacciFusionShadow (R : Type r) [CommSemiring R] :=
+  {tau : R // tau ^ 2 = 1 + tau}
 
 namespace FibonacciFusionShadow
 
 variable {R : Type r} [CommSemiring R]
+
+def tau (F : FibonacciFusionShadow R) : R := F.1
+
+theorem tau_sq (F : FibonacciFusionShadow R) : F.tau ^ 2 = 1 + F.tau := F.2
+
+def mk (tau : R) (tau_sq : tau ^ 2 = 1 + tau) : FibonacciFusionShadow R :=
+  ⟨tau, tau_sq⟩
 
 /-- The Fibonacci recursion one step above `tau^2 = 1 + tau`. -/
 theorem tau_cube (F : FibonacciFusionShadow R) :

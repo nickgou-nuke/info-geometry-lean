@@ -36,8 +36,8 @@ open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 /-- Modular KMS state evaluation structure on a colimit space. -/
 structure ColimitKMSStateData (A : Type*) [AddCommGroup A] [Module ℝ A] where
-  eval : A → ℝ
-  antiunitaryReflection : A → A
+  eval : A →ₗ[ℝ] ℝ
+  antiunitaryReflection : A ≃ₗ[ℝ] A
   reflection_invariance : ∀ a : A, eval (antiunitaryReflection a) = eval a
 
 /--

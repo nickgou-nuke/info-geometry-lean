@@ -46,10 +46,12 @@ theorem pauliMajoranaWitness_selfAdjoint :
   constructor
   · ext i j
     fin_cases i <;> fin_cases j <;>
-    simp [pauliMajoranaWitness, gammaLVal, σ1, Matrix.conjTranspose]
+    simp [pauliMajoranaWitness, gammaLVal, involutiveUnit, σ1,
+      Matrix.conjTranspose]
   · ext i j
     fin_cases i <;> fin_cases j <;>
-    simp [pauliMajoranaWitness, gammaRVal, σ3, Matrix.conjTranspose]
+    simp [pauliMajoranaWitness, gammaRVal, involutiveUnit, σ3,
+      Matrix.conjTranspose]
 
 theorem pauliMajoranaWitness_majoranasSelfAdjoint :
     MajoranasSelfAdjoint pauliMajoranaWitness := by
@@ -84,7 +86,7 @@ theorem pauli_number_operator_eq_one_add_sigma2 :
     norm_num [pow_two, ← Complex.ofReal_mul,
       Real.mul_self_sqrt (by norm_num : (0 : ℝ) ≤ 2)]
   unfold pauliNumberOperator cooperPairConjugate cooperPairCondensate
-    pauliMajoranaWitness
+    pauliMajoranaWitness gammaLVal gammaRVal involutiveUnit
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [σ1, σ2, σ3, Matrix.conjTranspose, Matrix.mul_apply,

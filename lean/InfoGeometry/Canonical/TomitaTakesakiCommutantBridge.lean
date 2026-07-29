@@ -47,7 +47,7 @@ theorem cl11_pseudoscalar_sq : (e1 * e2) * (e1 * e2) = 1 := by
 structure TomitaTakesakiModularPairing where
   sys : Fin 2 → ℝ       -- System operator state v ∈ M
   comm : Fin 2 → ℝ      -- Commutant operator state w ∈ M'
-  J : (Fin 2 → ℝ) → (Fin 2 → ℝ) -- Modular conjugation operator J
+  J : (Fin 2 → ℝ) ≃ₗ[ℝ] (Fin 2 → ℝ) -- Modular conjugation operator J
   h_anti_unitary : ∀ x y, ∑ i, J x i * J y i = ∑ i, y i * x i -- Modular conjugation isometry
 
 /-- 🏆 THEOREM 5: Tomita-Takesaki Commutant Heat Dumping Conservation:

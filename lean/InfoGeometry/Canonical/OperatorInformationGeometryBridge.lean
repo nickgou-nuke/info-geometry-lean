@@ -1,5 +1,6 @@
 import InfoGeometry.Dynamics.ModularThermalState
 import InfoGeometry.OperatorAlgebra.NoncommutativeRenyi
+import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.Meta.Architecture
 
 /-!
@@ -15,14 +16,19 @@ namespace InfoGeometry.Canonical.OperatorInformationGeometryBridge
 
 open scoped ComplexOrder
 
-/-- A one-parameter action on an operator algebra. -/
-abbrev OperatorFlow (Alg : Type*) :=
-  ℝ → Alg → Alg
+/-- The canonical one-parameter operator action is owned by the operator
+thermodynamics module; this namespace only re-exports that carrier. -/
+abbrev OperatorFlow (Alg : Type*) [Mul Alg] :=
+  InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow Alg
 
 /-- Group law for a one-parameter operator flow. -/
-def IsOperatorFlow {Alg : Type*} (σ : OperatorFlow Alg) : Prop :=
-  (∀ A, σ 0 A = A) ∧
-    ∀ s t A, σ (s + t) A = σ s (σ t A)
+def IsOperatorFlow {Alg : Type*} [Mul Alg] (σ : OperatorFlow Alg) : Prop :=
+  (∀ A, σ.flow 0 A = A) ∧
+    ∀ s t A, σ.flow (s + t) A = σ.flow s (σ.flow t A)
+
+theorem isOperatorFlow_native {Alg : Type*} [Mul Alg]
+    (σ : OperatorFlow Alg) : IsOperatorFlow σ :=
+  ⟨σ.flow_zero, σ.flow_add⟩
 
 /-- A conditional-expectation candidate is idempotent when applying it twice
 does not change the result. -/
@@ -32,9 +38,10 @@ def IsIdempotentExpectation {Alg : Type*} (E : Alg → Alg) : Prop :=
 /-- Compatibility of a conditional expectation with modular time. -/
 def IsModularEquivariant
     {Alg : Type*}
+    [Mul Alg]
     (σ : OperatorFlow Alg)
     (E : Alg → Alg) : Prop :=
-  ∀ t A, E (σ t A) = σ t (E A)
+  ∀ t A, E (σ.flow t A) = σ.flow t (E A)
 
 /-- The invariant sector of an expectation map. -/
 def ExpectationFixedPoint
@@ -56,28 +63,30 @@ theorem expectation_fixedPoint_of_mem_range
 observable along the modular flow. -/
 theorem expectationFixedPoint_modularFlow
     {Alg : Type*}
+    [Mul Alg]
     {σ : OperatorFlow Alg}
     {E : Alg → Alg}
     (hEquivariant : IsModularEquivariant σ E)
     {A : Alg}
     (hA : ExpectationFixedPoint E A)
     (t : ℝ) :
-    ExpectationFixedPoint E (σ t A) := by
+    ExpectationFixedPoint E (σ.flow t A) := by
   rw [ExpectationFixedPoint, hEquivariant, hA]
 
 /-- Modular evolution preserves the range of a modular-equivariant
 expectation. -/
 theorem modularFlow_mem_range_of_mem_range
     {Alg : Type*}
+    [Mul Alg]
     {σ : OperatorFlow Alg}
     {E : Alg → Alg}
     (hEquivariant : IsModularEquivariant σ E)
     {A : Alg}
     (hA : A ∈ Set.range E)
     (t : ℝ) :
-    σ t A ∈ Set.range E := by
+    σ.flow t A ∈ Set.range E := by
   obtain ⟨B, rfl⟩ := hA
-  exact ⟨σ t B, hEquivariant t B⟩
+  exact ⟨σ.flow t B, hEquivariant t B⟩
 
 section NoncommutativeRelativeEntropy
 

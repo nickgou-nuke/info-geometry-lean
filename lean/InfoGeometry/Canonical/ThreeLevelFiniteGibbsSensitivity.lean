@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.ThreeLevelFiniteGibbsVariational
+import InfoGeometry.Inference.FisherVariance
 import InfoGeometry.Inference.FisherInverse
 
 namespace InfoGeometry.Canonical
@@ -26,6 +27,10 @@ noncomputable def localCovariance (C : OuterSensitivityContract) :
     Matrix (Fin 2) (Fin 2) ℝ :=
   InfoGeometry.Inference.localCovariance C.fisherInverse C.contract
 
+/-- The local variance readout of a three-level Gibbs sensitivity vector. -/
+noncomputable def outerLocalVariance (C : OuterSensitivityContract) (v : Fin 2 → ℝ) : ℝ :=
+  InfoGeometry.Inference.localVariance C.fisherInverse C.contract v
+
 /-- The Fisher matrix times its local covariance is the identity. -/
 theorem fisher_mul_localCovariance (C : OuterSensitivityContract) :
     C.fisherInverse * C.localCovariance = 1 := by
@@ -37,6 +42,18 @@ theorem localCovariance_mul_fisher (C : OuterSensitivityContract) :
     C.localCovariance * C.fisherInverse = 1 := by
   simpa [localCovariance] using
     InfoGeometry.Inference.localCovariance_mul_fisher C.fisherInverse C.contract
+
+/-- The local variance is nonnegative. -/
+theorem outerLocalVariance_nonneg (C : OuterSensitivityContract) (v : Fin 2 → ℝ) :
+    0 ≤ outerLocalVariance C v := by
+  simpa [outerLocalVariance] using
+    InfoGeometry.Inference.localVariance_nonneg C.fisherInverse C.contract v
+
+/-- The zero direction has zero local variance. -/
+theorem outerLocalVariance_zero (C : OuterSensitivityContract) :
+    outerLocalVariance C 0 = 0 := by
+  simpa [outerLocalVariance] using
+    InfoGeometry.Inference.localVariance_zero_direction C.fisherInverse C.contract
 
 end OuterSensitivityContract
 

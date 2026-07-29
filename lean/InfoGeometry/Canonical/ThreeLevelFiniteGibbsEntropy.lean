@@ -98,7 +98,7 @@ theorem sum_conditionalWeight_eq_one
   unfold conditionalWeight
   simp_rw [div_eq_mul_inv]
   rw [← Finset.sum_mul]
-    exact mul_inv_cancel₀ (ne_of_gt (canonicalPartition_pos State energy β s))
+  exact mul_inv_cancel₀ (ne_of_gt (canonicalPartition_pos State energy β s))
 
 /-- The product-form three-level joint weight normalizes. -/
 theorem sum_layeredJointWeight_eq_one

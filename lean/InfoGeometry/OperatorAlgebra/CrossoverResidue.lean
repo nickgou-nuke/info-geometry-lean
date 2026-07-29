@@ -362,18 +362,24 @@ This is the formal version of the admissible claim:
 
 It does not assert Navier-Stokes regularity.
 -/
-structure ChiralVorticityReadout
-    (NewState : Type*) where
-  orientation : NewState → Chirality
-  vorticitySign : NewState → ℤ
-  vorticitySign_eq_orientation :
-    ∀ s : NewState,
-      vorticitySign s = Chirality.sign (orientation s)
+abbrev ChiralVorticityReadout (NewState : Type*) :=
+  NewState → Chirality
 
 namespace ChiralVorticityReadout
 
 variable {NewState : Type*}
 variable (Vort : ChiralVorticityReadout NewState)
+
+abbrev orientation : NewState → Chirality :=
+  Vort
+
+def vorticitySign : NewState → ℤ :=
+  fun s => Chirality.sign (Vort s)
+
+theorem vorticitySign_eq_orientation
+    (s : NewState) :
+    Vort.vorticitySign s = Chirality.sign (Vort.orientation s) :=
+  rfl
 
 /-- Vorticity sign is fixed by orientation. -/
 theorem sign_eq

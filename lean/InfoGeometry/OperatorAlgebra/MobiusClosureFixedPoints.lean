@@ -456,19 +456,30 @@ end FiveGradeDisjointness
 /--
 A readout that survives the Möbius/Tomita inversion.
 -/
-structure InvariantReadout
+def InvariantReadout
     (X Charge : Type*)
-    (Θ : ClosureInvolution X) where
-  read : X → Charge
-
-  invariant :
-    ∀ x : X, read (Θ.theta x) = read x
+    (Θ : ClosureInvolution X) :=
+  {read : X → Charge //
+    ∀ x : X, read (Θ.theta x) = read x}
 
 namespace InvariantReadout
 
 variable {X Charge : Type*}
 variable {Θ : ClosureInvolution X}
 variable (R : InvariantReadout X Charge Θ)
+
+abbrev read : X → Charge := R.1
+
+theorem invariant
+    (x : X) :
+    R.read (Θ.theta x) = R.read x :=
+  R.2 x
+
+def mk
+    (read : X → Charge)
+    (invariant : ∀ x : X, read (Θ.theta x) = read x) :
+    InvariantReadout X Charge Θ :=
+  ⟨read, invariant⟩
 
 /--
 The readout is constant on closure-pairs.

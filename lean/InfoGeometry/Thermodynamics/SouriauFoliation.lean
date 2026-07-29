@@ -125,23 +125,37 @@ end OnLeafModularFlow
 
 This is the sidecar form of an invariant Itakura-Saito / shape-core readout.
 It is deliberately weaker than a global metric theorem. -/
-structure LeafInvariantReadout
+def LeafInvariantReadout
     {State : Type*}
-    (L : SymplecticLeaf State) where
-  /-- Leaf-level shape/core readout. -/
-  readout : State → ℝ
-
-  /-- The readout is constant along the leaf. -/
-  invariant_on_leaf :
+    (L : SymplecticLeaf State) :=
+  {readout : State → ℝ //
     ∀ ⦃x y : State⦄,
       x ∈ L.carrier → y ∈ L.carrier →
-        readout x = readout y
+        readout x = readout y}
 
 namespace LeafInvariantReadout
 
 variable {State : Type*}
 variable {L : SymplecticLeaf State}
 variable (R : LeafInvariantReadout L)
+
+abbrev readout : State → ℝ := R.1
+
+theorem invariant_on_leaf
+    {x y : State}
+    (hx : x ∈ L.carrier)
+    (hy : y ∈ L.carrier) :
+    R.readout x = R.readout y :=
+  R.2 hx hy
+
+def mk
+    (readout : State → ℝ)
+    (invariant_on_leaf :
+      ∀ ⦃x y : State⦄,
+        x ∈ L.carrier → y ∈ L.carrier →
+          readout x = readout y) :
+    LeafInvariantReadout L :=
+  ⟨readout, invariant_on_leaf⟩
 
 /-- The leaf-invariant readout is preserved by any supplied on-leaf flow. -/
 theorem readout_preserved_by_onLeafFlow

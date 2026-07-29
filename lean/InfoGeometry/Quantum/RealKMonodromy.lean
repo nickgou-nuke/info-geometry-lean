@@ -34,9 +34,10 @@ noncomputable def rotor (X : RealKVect) (θ : ℝ) : X ⟶ X :=
       simp [L, LinearMap.comp_apply, LinearMap.add_apply, LinearMap.smul_apply,
         LinearMap.id_apply, hKsq_x] }
 
-/-- A `RealKVect` endomorphism with square zero. -/
-structure NilpotentHom (X : RealKVect) extends RealKVect.Hom X X where
-  nilpotent : toHom.hom.comp toHom.hom = 0
+/-!
+`RealKCategory` already owns `RealKVect.NilpotentHom` and its nilpotence
+lemmas.  This monodromy module reuses that carrier rather than redeclaring it.
+-/
 
 /-- The affine nilpotent factor `I + aN` as a `RealKVect` endomorphism. -/
 noncomputable def nilpotentAffine (X : RealKVect) (a : ℝ) (N : NilpotentHom X) : X ⟶ X :=

@@ -93,10 +93,20 @@ Static ring-constraint packet for a doubled real operator.
 
 This is the minimal algebraic surface needed for the hyperbolic/chiral lane.
 -/
-structure PrimonOperatorConstraintPacket where
-  op : EndH (E := E)
-  offBlockDiagonal : IsOffBlockDiagonal (E := E) op
-  kreinSelfAdjoint : IsKreinSelfAdjoint (E := E) op
+abbrev PrimonOperatorConstraintPacket : Type _ :=
+  Σ' op : EndH (E := E),
+    IsOffBlockDiagonal (E := E) op ∧
+      IsKreinSelfAdjoint (E := E) op
+
+namespace PrimonOperatorConstraintPacket
+
+variable (packet : PrimonOperatorConstraintPacket (E := E))
+
+abbrev op : EndH (E := E) := packet.1
+abbrev offBlockDiagonal : IsOffBlockDiagonal (E := E) packet.1 := packet.2.1
+abbrev kreinSelfAdjoint : IsKreinSelfAdjoint (E := E) packet.1 := packet.2.2
+
+end PrimonOperatorConstraintPacket
 
 /--
 One-parameter doubled flow with explicit Krein-invariance law.

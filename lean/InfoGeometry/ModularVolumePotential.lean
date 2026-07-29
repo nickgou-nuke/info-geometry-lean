@@ -135,16 +135,12 @@ structure ModularFlowPacket (Algebra : Type*) [Ring Algebra] where
 /--
 Supervolume layer (graded/signed trace skeleton).
 -/
-structure SupervolumePacket (Algebra : Type*) [Ring Algebra] where
-  /-- Actual graded/supertrace owner for the operator algebra. -/
-  supertraceOwner : InfoGeometry.OperatorAlgebra.SuperTraceDatum Algebra
-  /-- Even-trace contribution. -/
-  evenTrace : Algebra → ℝ
-  /-- Odd-trace contribution. -/
-  oddTrace : Algebra → ℝ
-  /-- Supertrace as graded difference: `Str = Tr_even - Tr_odd`. -/
-  supertrace_eq : ∀ x : Algebra,
-    supertraceOwner.supertrace x = evenTrace x - oddTrace x
+abbrev SupervolumePacket (Algebra : Type*) [Ring Algebra] : Type _ :=
+  Σ' supertraceOwner : InfoGeometry.OperatorAlgebra.SuperTraceDatum Algebra,
+    Σ' evenTrace : Algebra → ℝ,
+      Σ' oddTrace : Algebra → ℝ,
+        ∀ x : Algebra,
+          supertraceOwner.supertrace x = evenTrace x - oddTrace x
 
 /--
 Dissipative KMS-compatible flow skeleton (GKSL-style container).
@@ -464,6 +460,21 @@ theorem boltzmannFactor_eq_exp_neg_beta_energy
 end SpectralBoltzmannPacket
 
 namespace SupervolumePacket
+
+abbrev supertraceOwner {Algebra : Type*} [Ring Algebra]
+    (P : SupervolumePacket Algebra) :
+    InfoGeometry.OperatorAlgebra.SuperTraceDatum Algebra := P.1
+
+abbrev evenTrace {Algebra : Type*} [Ring Algebra]
+    (P : SupervolumePacket Algebra) : Algebra → ℝ := P.2.1
+
+abbrev oddTrace {Algebra : Type*} [Ring Algebra]
+    (P : SupervolumePacket Algebra) : Algebra → ℝ := P.2.2.1
+
+abbrev supertrace_eq {Algebra : Type*} [Ring Algebra]
+    (P : SupervolumePacket Algebra) :
+    ∀ x : Algebra,
+      P.1.supertrace x = P.2.1 x - P.2.2.1 x := P.2.2.2
 
 def supertrace {Algebra : Type*} [Ring Algebra]
     (P : SupervolumePacket Algebra) : Algebra → ℝ :=

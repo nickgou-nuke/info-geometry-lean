@@ -77,10 +77,13 @@ The instance of `ZornBraidKMSState` over `concreteZornSequence`.
 noncomputable def concreteZornBraidKMSState {Op : Type*} [Ring Op] [StarRing Op]
     (C : BostConnesCuntzSystem Op)
     (bcKMS : KMSProjectionState C) :
-    ZornBraidKMSState C concreteZornSequence where
-  bcKMS := bcKMS
-  zornState := zornState
-  stageIndex := stageIndex
-  continuumStar := continuumStar
+    ZornBraidKMSState C concreteZornSequence :=
+  let result := Prod.mk bcKMS (Prod.mk zornState (Prod.mk stageIndex continuumStar))
+  show KMSProjectionState C ×
+      ((↑(zornContinuumModule ℚ concreteZornSequence) → ℝ) ×
+        ((ℕ → ℕ+) ×
+          (↑(zornContinuumModule ℚ concreteZornSequence) →
+            ↑(zornContinuumModule ℚ concreteZornSequence))))
+    from result
 
 end InfoGeometry.Categorical.ConcreteZornKMS

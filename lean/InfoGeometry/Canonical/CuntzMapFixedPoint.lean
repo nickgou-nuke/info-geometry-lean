@@ -45,16 +45,24 @@ theorem cuntzMap_unital (S_left S_right : Op) (h_range : S_left * star S_left + 
 
 /-! ### 2. KMS Symmetric State — the Jaynes Maxent Point -/
 
-structure KMSSymmetricState (S_left S_right : Op) where
-  φ : Op → ℝ
-  φ_add : ∀ X Y, φ (X + Y) = φ X + φ Y
-  φ_one : φ 1 = 1
-  half_L : ∀ X, φ (S_left * X * star S_left) = (1/2 : ℝ) * φ X
-  half_R : ∀ X, φ (S_right * X * star S_right) = (1/2 : ℝ) * φ X
+abbrev KMSSymmetricState (S_left S_right : Op) : Type _ :=
+  Σ' φ : Op → ℝ,
+    (∀ X Y, φ (X + Y) = φ X + φ Y) ∧
+      φ 1 = 1 ∧
+        (∀ X, φ (S_left * X * star S_left) = (1/2 : ℝ) * φ X) ∧
+          ∀ X, φ (S_right * X * star S_right) = (1/2 : ℝ) * φ X
 
 namespace KMSSymmetricState
 
 variable {S_left S_right : Op} (state : KMSSymmetricState S_left S_right)
+
+abbrev φ : Op → ℝ := state.1
+abbrev φ_add : ∀ X Y, φ state (X + Y) = φ state X + φ state Y := state.2.1
+abbrev φ_one : φ state 1 = 1 := state.2.2.1
+abbrev half_L : ∀ X, φ state (S_left * X * star S_left) = (1/2 : ℝ) * φ state X :=
+  state.2.2.2.1
+abbrev half_R : ∀ X, φ state (S_right * X * star S_right) = (1/2 : ℝ) * φ state X :=
+  state.2.2.2.2
 
 /-- φ(Φ(X)) = φ(X) — the KMS state is the Cuntz map fixed point. -/
 theorem cuntzMap_fixed_point (X : Op) : state.φ (cuntzMap S_left S_right X) = state.φ X := by

@@ -212,10 +212,27 @@ Model-specific map extracting normalized Fierz coordinates from the stable
 Böttcher--Spitkovsky data.
 -/
 @[rep_depth operator]
-structure DrazinFierzReadout
-    (NormalizedFierzCoordinates : Type*) where
-  readout :
-    BSExpectationPhi → Measure ℝ → Set ℝ → NormalizedFierzCoordinates
+def DrazinFierzReadout
+    (NormalizedFierzCoordinates : Type*) : Type _ :=
+  BSExpectationPhi → Measure ℝ → Set ℝ → NormalizedFierzCoordinates
+
+namespace DrazinFierzReadout
+
+/-- The normalized-coordinate map carried by the direct readout owner. -/
+abbrev readout
+    {NormalizedFierzCoordinates : Type*}
+    (R : DrazinFierzReadout NormalizedFierzCoordinates) :
+    BSExpectationPhi → Measure ℝ → Set ℝ → NormalizedFierzCoordinates :=
+  R
+
+/-- Construct a normalized-coordinate readout. -/
+def mk
+    {NormalizedFierzCoordinates : Type*}
+    (R : BSExpectationPhi → Measure ℝ → Set ℝ → NormalizedFierzCoordinates) :
+    DrazinFierzReadout NormalizedFierzCoordinates :=
+  R
+
+end DrazinFierzReadout
 
 /--
 Readback: any supplied readout produces a coordinate value on Drazin-stable
@@ -249,20 +266,49 @@ inductive FierzChannel where
 
 /-- Family of expectation states indexed by Fierz channel. -/
 @[rep_depth operator]
-structure ExpectationFierzReadout
+def ExpectationFierzReadout
     (Obs : Type*)
     [One Obs]
     [Mul Obs]
     [Star Obs]
     [AddCommMonoid Obs]
-    [SMul ℂ Obs] where
-  state : FierzChannel → ExpectationState Obs
+    [SMul ℂ Obs] : Type _ :=
+  FierzChannel → ExpectationState Obs
+
+namespace ExpectationFierzReadout
+
+/-- The channel-indexed expectation state family. -/
+abbrev state
+    {Obs : Type*}
+    [One Obs] [Mul Obs] [Star Obs] [AddCommMonoid Obs] [SMul ℂ Obs]
+    (R : ExpectationFierzReadout Obs) : FierzChannel → ExpectationState Obs :=
+  R
+
+/-- Construct an expectation Fierz readout. -/
+def mk
+    {Obs : Type*}
+    [One Obs] [Mul Obs] [Star Obs] [AddCommMonoid Obs] [SMul ℂ Obs]
+    (R : FierzChannel → ExpectationState Obs) : ExpectationFierzReadout Obs :=
+  R
+
+end ExpectationFierzReadout
 
 /-- A Drazin-filtered observable, represented by its Drazin inverse/filter output. -/
 @[rep_depth operator]
-structure DrazinFilteredObservable
-    (Obs : Type*) where
-  AD : Obs
+def DrazinFilteredObservable (Obs : Type*) : Type _ :=
+  Obs
+
+namespace DrazinFilteredObservable
+
+/-- The filtered observable carried by the direct owner. -/
+abbrev AD {Obs : Type*} (X : DrazinFilteredObservable Obs) : Obs :=
+  X
+
+/-- Construct a filtered observable. -/
+def mk {Obs : Type*} (X : Obs) : DrazinFilteredObservable Obs :=
+  X
+
+end DrazinFilteredObservable
 
 /-- Physical Fierz coordinate `φ_ch(Aᴰ)`. -/
 @[rep_depth operator]
@@ -286,9 +332,20 @@ Channel map extracting the observable assigned to a Fierz channel.
 The coordinate is obtained only after applying an expectation state.
 -/
 @[rep_depth operator]
-structure FierzChannelMap
-    (Obs : Type*) where
-  channel : FierzChannel → Obs → Obs
+def FierzChannelMap (Obs : Type*) : Type _ :=
+  FierzChannel → Obs → Obs
+
+namespace FierzChannelMap
+
+/-- The channel action carried by the direct map owner. -/
+abbrev channel {Obs : Type*} (C : FierzChannelMap Obs) : FierzChannel → Obs → Obs :=
+  C
+
+/-- Construct a Fierz channel map. -/
+def mk {Obs : Type*} (C : FierzChannel → Obs → Obs) : FierzChannelMap Obs :=
+  C
+
+end FierzChannelMap
 
 /--
 The physical Fierz coordinate `φ(C_ch(Aᴰ))`.

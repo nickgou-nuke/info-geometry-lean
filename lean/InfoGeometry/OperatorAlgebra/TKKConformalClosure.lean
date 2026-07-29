@@ -502,18 +502,10 @@ end TKKClosureDefect
 /--
 A curvature readout reconstructed from operator/conformal state data.
 -/
-structure CurvatureReadout
+def CurvatureReadout
     (State Geometry : Type*) [AddCommGroup State] [Module ℝ State]
-    [AddCommGroup Geometry] [Module ℝ Geometry] where
-  /-- Effective curvature/geometric readout. -/
-  curvature : State → Geometry
-
-  /-- The curvature readout is a linear map. -/
-  curvature_linear : State →ₗ[ℝ] Geometry
-
-  /-- The curvature function agrees with the linear map. -/
-  curvature_eq_linear :
-    ∀ s : State, curvature s = curvature_linear s
+    [AddCommGroup Geometry] [Module ℝ Geometry] : Type _ :=
+  State →ₗ[ℝ] Geometry
 
 namespace CurvatureReadout
 
@@ -523,11 +515,28 @@ variable
 
 variable (C : CurvatureReadout State Geometry)
 
+/-- The function-level curvature readout is the canonical linear map. -/
+def curvature (C : CurvatureReadout State Geometry) : State → Geometry :=
+  fun s => C.toFun s
+
+/-- The linear owner of the curvature readout. -/
+def curvature_linear (C : CurvatureReadout State Geometry) :
+    State →ₗ[ℝ] Geometry :=
+  C
+
+/-- Construct the canonical curvature owner from a compatible function and map. -/
+def mk
+    (_curvature : State → Geometry)
+    (curvature_linear : State →ₗ[ℝ] Geometry)
+    (_h : ∀ s : State, _curvature s = curvature_linear s) :
+    CurvatureReadout State Geometry :=
+  curvature_linear
+
 /-- The curvature readout agrees with its linear witness. -/
 theorem curvature_eq
     (s : State) :
     C.curvature s = C.curvature_linear s :=
-  C.curvature_eq_linear s
+  Eq.refl _
 
 end CurvatureReadout
 

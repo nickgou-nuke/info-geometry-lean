@@ -38,11 +38,6 @@ noncomputable def tcsTemperatureCertificate
         (fun i => poissonWeight
           (tcsPoissonModel observed x liveTime hobs) p ε i)
         liveTime x) :=
-  { epsilon := ε
-    goodVolume := goodVolume
-    minimumGoodVolume := minimumGoodVolume
-    epsilon_pos := hε
-    goodVolume_lower_bound := hgood
-    fisher := hF }
+  GibbsTemperatureCertificate.mk ε goodVolume minimumGoodVolume hε hgood hF
 
 end InfoGeometry.Inference

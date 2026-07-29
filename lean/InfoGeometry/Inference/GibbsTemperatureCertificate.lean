@@ -18,31 +18,57 @@ good-fit volume, and a nonsingular positive-definite Fisher matrix.
 
 namespace InfoGeometry.Inference
 
-structure GibbsTemperatureCertificate
-    (I : Matrix (Fin 2) (Fin 2) ℝ) where
-  epsilon : ℝ
-  goodVolume : ℝ
-  minimumGoodVolume : ℝ
-  epsilon_pos : 0 < epsilon
-  goodVolume_lower_bound : minimumGoodVolume ≤ goodVolume
-  fisher : FisherInverseContract I
+abbrev GibbsTemperatureParameters :=
+  ℝ × ℝ × ℝ
+
+def GibbsTemperatureCertificate
+    (I : Matrix (Fin 2) (Fin 2) ℝ) : Type _ :=
+  {p : GibbsTemperatureParameters //
+    0 < p.1 ∧ p.2.2 ≤ p.2.1 ∧ FisherInverseContract I}
+
+namespace GibbsTemperatureCertificate
+
+variable {I : Matrix (Fin 2) (Fin 2) ℝ}
+
+def epsilon (c : GibbsTemperatureCertificate I) : ℝ :=
+  c.1.1
+
+def goodVolume (c : GibbsTemperatureCertificate I) : ℝ :=
+  c.1.2.1
+
+def minimumGoodVolume (c : GibbsTemperatureCertificate I) : ℝ :=
+  c.1.2.2
+
+def fisher (c : GibbsTemperatureCertificate I) : FisherInverseContract I :=
+  c.2.2.2
+
+def mk
+    (epsilon goodVolume minimumGoodVolume : ℝ)
+    (epsilon_pos : 0 < epsilon)
+    (goodVolume_lower_bound : minimumGoodVolume ≤ goodVolume)
+    (fisher : FisherInverseContract I) : GibbsTemperatureCertificate I :=
+  ⟨(epsilon, goodVolume, minimumGoodVolume),
+    ⟨epsilon_pos, goodVolume_lower_bound, fisher⟩⟩
+
+end GibbsTemperatureCertificate
 
 theorem GibbsTemperatureCertificate.temperature_positive
     {I : Matrix (Fin 2) (Fin 2) ℝ}
     (c : GibbsTemperatureCertificate I) :
-    0 < c.epsilon :=
-  c.epsilon_pos
+    0 < c.epsilon := by
+  simpa [GibbsTemperatureCertificate.epsilon] using c.2.1
 
 theorem GibbsTemperatureCertificate.good_volume_admissible
     {I : Matrix (Fin 2) (Fin 2) ℝ}
     (c : GibbsTemperatureCertificate I) :
-    c.minimumGoodVolume ≤ c.goodVolume :=
-  c.goodVolume_lower_bound
+    c.minimumGoodVolume ≤ c.goodVolume := by
+  simpa [GibbsTemperatureCertificate.minimumGoodVolume,
+    GibbsTemperatureCertificate.goodVolume] using c.2.2.1
 
 theorem GibbsTemperatureCertificate.fisher_nonsingular
     {I : Matrix (Fin 2) (Fin 2) ℝ}
     (c : GibbsTemperatureCertificate I) :
     IsUnit I.det :=
-  c.fisher.determinant_isUnit
+  (GibbsTemperatureCertificate.fisher c).determinant_isUnit
 
 end InfoGeometry.Inference

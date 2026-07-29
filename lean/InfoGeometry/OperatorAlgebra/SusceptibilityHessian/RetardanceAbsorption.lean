@@ -16,18 +16,22 @@ Retardance/ellipticity readout from Jones coefficients.
 The branch of argument/phase convention is supplied by the concrete optics
 model.
 -/
-structure RetardanceReadout
-    (State : Type*) where
-  /-- Phase retardance readout. -/
-  retardance : State → ℝ
-
-  /-- Ellipticity readout. -/
-  ellipticity : State → ℝ
+def RetardanceReadout (State : Type*) :=
+  State → ℝ × ℝ
 
 namespace RetardanceReadout
 
 variable {State : Type*}
-variable (R : RetardanceReadout State)
+
+def retardance (R : RetardanceReadout State) : State → ℝ :=
+  fun U => (R U).1
+
+def ellipticity (R : RetardanceReadout State) : State → ℝ :=
+  fun U => (R U).2
+
+def mk
+    (retardance ellipticity : State → ℝ) : RetardanceReadout State :=
+  fun U => (retardance U, ellipticity U)
 
 end RetardanceReadout
 

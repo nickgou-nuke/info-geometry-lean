@@ -426,17 +426,45 @@ An Erlanger invariant is a readout unchanged by admissible phase conjugation.
 The readout is defined on the phase centralizer because the first geometry is
 the category of phase-linear operators.
 -/
-structure ErlangerInvariant
+def ErlangerInvariant
     {H : Type*}
     [NormedAddCommGroup H] [NormedSpace ℝ H]
     (K : EndR H)
-    (α : Type*) where
-  read : PhaseCentralizer K → α
-
-  invariant_under_phase_conjugation :
+    (α : Type*) : Type _ :=
+  {read : PhaseCentralizer K → α //
     ∀ (Φ : PhaseIsomorphism K K)
       (T : PhaseCentralizer K),
-      read (PhaseIsomorphism.conjugateCentralizer Φ T) = read T
+      read (PhaseIsomorphism.conjugateCentralizer Φ T) = read T}
+
+namespace ErlangerInvariant
+
+variable
+    {H : Type*}
+    [NormedAddCommGroup H] [NormedSpace ℝ H]
+    {K : EndR H} {α : Type*}
+
+/-- The readout carried by an Erlanger invariant. -/
+abbrev read (E : ErlangerInvariant K α) : PhaseCentralizer K → α :=
+  E.1
+
+/-- The phase-conjugation invariance law carried by an Erlanger invariant. -/
+theorem invariant_under_phase_conjugation
+    (E : ErlangerInvariant K α)
+    (Φ : PhaseIsomorphism K K)
+    (T : PhaseCentralizer K) :
+    read E (PhaseIsomorphism.conjugateCentralizer Φ T) = read E T :=
+  E.2 Φ T
+
+/-- Construct an Erlanger invariant from a readout and its invariance proof. -/
+def mk
+    (readout : PhaseCentralizer K → α)
+    (h : ∀ (Φ : PhaseIsomorphism K K)
+      (T : PhaseCentralizer K),
+      readout (PhaseIsomorphism.conjugateCentralizer Φ T) = readout T) :
+    ErlangerInvariant K α :=
+  ⟨readout, h⟩
+
+end ErlangerInvariant
 
 /-! ## 6. Owner target -/
 

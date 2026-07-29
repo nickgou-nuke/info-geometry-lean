@@ -57,14 +57,12 @@ end ArithmeticDivergenceReadout
 Witness that a divergence readout is invariant under global Weyl rescaling of
 both arithmetic profiles.
 -/
-structure GaugeInvariantDivergence
-    (D : ArithmeticDivergenceReadout) where
-  /-- Simultaneous nonzero scale changes do not change the readout. -/
-  invariant_under_scale :
-    ∀ (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u c : ℝ),
-      c ≠ 0 →
-        D (fun n => c * counts₁ n) (fun n => c * counts₂ n) support u =
-          D counts₁ counts₂ support u
+def GaugeInvariantDivergence
+    (D : ArithmeticDivergenceReadout) : Prop :=
+  ∀ (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u c : ℝ),
+    c ≠ 0 →
+      D (fun n => c * counts₁ n) (fun n => c * counts₂ n) support u =
+        D counts₁ counts₂ support u
 
 namespace GaugeInvariantDivergence
 
@@ -78,7 +76,7 @@ theorem readout_scale_invariant
     (hc : c ≠ 0) :
     D (fun n => c * counts₁ n) (fun n => c * counts₂ n) support u =
       D counts₁ counts₂ support u :=
-  GaugeInvariantDivergence.invariant_under_scale G counts₁ counts₂ support u c hc
+  G counts₁ counts₂ support u c hc
 
 end GaugeInvariantDivergence
 
@@ -118,13 +116,11 @@ end GaugeCovariantTemperatureDivergence
 Witness that a divergence readout is invariant under projective temperature
 inversion `u ↦ u⁻¹`.
 -/
-structure InversionInvariantDivergence
-    (D : ArithmeticDivergenceReadout) where
-  /-- Projective inversion invariance. -/
-  inversion_invariant :
-    ∀ (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ),
-      D counts₁ counts₂ support (betaInvert u) =
-        D counts₁ counts₂ support u
+def InversionInvariantDivergence
+    (D : ArithmeticDivergenceReadout) : Prop :=
+  ∀ (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ),
+    D counts₁ counts₂ support (betaInvert u) =
+      D counts₁ counts₂ support u
 
 namespace InversionInvariantDivergence
 
@@ -137,7 +133,7 @@ theorem readout_betaInvert_eq
     (counts₁ counts₂ : CountProfile) (support : Finset ℕ) (u : ℝ) :
     D counts₁ counts₂ support (betaInvert u) =
       D counts₁ counts₂ support u :=
-  InversionInvariantDivergence.inversion_invariant G counts₁ counts₂ support u
+  G counts₁ counts₂ support u
 
 /-- Applying inversion twice returns the original readout. -/
 theorem readout_betaInvert_betaInvert_eq

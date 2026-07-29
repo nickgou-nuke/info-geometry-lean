@@ -150,6 +150,13 @@ def stageToDirectLimitLinearIsometry
       stageToDirectLimitLinearMap E sys i x :=
   rfl
 
+/-- The algebraic stage inclusions satisfy the defining colimit relation. -/
+theorem stageToDirectLimitLinearMap_transition
+    {i j : I} (hij : i ≤ j) (x : E i) :
+    stageToDirectLimitLinearMap E sys j (sys.map hij x) =
+      stageToDirectLimitLinearMap E sys i x := by
+  exact Module.DirectLimit.of_f
+
 /-- Hilbert completion of the algebraic filtered isometric colimit. -/
 abbrev HilbertDirectLimit : Type u :=
   UniformSpace.Completion D∞
@@ -222,6 +229,18 @@ def stageToHilbertDirectLimit
       directLimitToCompletion E sys
         (stageToDirectLimitLinearMap E sys i x) :=
   rfl
+
+/-- The completed stage embeddings retain the exact colimit transition
+relation. -/
+theorem stageToHilbertDirectLimit_transition
+    {i j : I} (hij : i ≤ j) (x : E i) :
+    stageToHilbertDirectLimit E sys j (sys.map hij x) =
+      stageToHilbertDirectLimit E sys i x := by
+  rw [stageToHilbertDirectLimit_apply,
+    stageToHilbertDirectLimit_apply]
+  exact congrArg
+    (directLimitToCompletion E sys)
+    (stageToDirectLimitLinearMap_transition E sys hij x)
 
 /-- The union of the stage images is dense in the completed filtered Hilbert
 colimit.  Thus the completion introduces no extra finite-stage generators. -/

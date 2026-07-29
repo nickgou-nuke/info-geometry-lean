@@ -141,10 +141,8 @@ def canonicalCountRayBridge : GWCanonicalCountRayBridge 3 G T Target Coeff where
 
 /-- Probability/operator bridge for the concrete count-ray target. -/
 def projectiveProbabilityBridge :
-    GWProjectiveCountProbabilityBridge 3 G T Target Coeff :=
-  by
-    change GWCanonicalCountRayBridge 3 G T Target Coeff
-    exact canonicalCountRayBridge
+    GWProjectiveCountProbabilityBridge 3 G T Target Coeff where
+  canonical := canonicalCountRayBridge
 
 /-- The probability gauge of the bulk sector is the normalized count value. -/
 theorem stateFinProb_bulk_toReal :
@@ -170,9 +168,7 @@ theorem entropy_eq_surprisal_expectation :
       InfoGeometry.Canonical.RelativeSurprisalOperatorLift.diagonalExpectation
         projectiveProbabilityBridge.stateFinProb
         projectiveProbabilityBridge.stateSurprisalOperator :=
-  GWProjectiveCountProbabilityBridge.entropy_eq_diagonalExpectation_stateSurprisalOperator
-    (n := 3) (G := G) (T := T) (Target := Target) (Coeff := Coeff)
-    projectiveProbabilityBridge
+  projectiveProbabilityBridge.entropy_eq_diagonalExpectation_stateSurprisalOperator
 
 /-- The Drazin residue in the edge sector is square-zero. -/
 theorem drazin_residue_square_zero :

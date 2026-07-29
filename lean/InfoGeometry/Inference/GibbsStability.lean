@@ -35,4 +35,32 @@ theorem scalar_stability_implies_stiffness_gt_fluctuation
   unfold exactScalarHessian at h_stable
   linarith
 
+/--
+The exact scalar Hessian is stiffness minus the temperature-scaled pairwise
+disagreement energy.  This is the explicit finite stability form used by the
+thermodynamic regression diagnostics.
+-/
+theorem exactScalarHessian_eq_stiffness_sub_pairwise
+    (w h₂ f : Data → ℝ) (ε : ℝ) (hε : 0 < ε)
+    (hw : ∑ i : Data, w i = 1) :
+    exactScalarHessian w h₂ f ε =
+      fisherStiffness w h₂ -
+        (1 / (2 * ε) : ℝ) * ∑ i : Data, ∑ j : Data,
+          w i * w j * (f i - f j) ^ 2 := by
+  unfold exactScalarHessian
+  rw [fluctuationPressure_eq_half_pairwise w f ε hε hw]
+
+/--
+At positive temperature, strict scalar resolvability is equivalent to the
+pairwise disagreement pressure remaining below Fisher stiffness.
+-/
+theorem exactScalarHessian_pos_iff_pairwise
+    (w h₂ f : Data → ℝ) (ε : ℝ) (hε : 0 < ε)
+    (hw : ∑ i : Data, w i = 1) :
+    0 < exactScalarHessian w h₂ f ε ↔
+      (1 / (2 * ε) : ℝ) * ∑ i : Data, ∑ j : Data,
+        w i * w j * (f i - f j) ^ 2 < fisherStiffness w h₂ := by
+  rw [exactScalarHessian_eq_stiffness_sub_pairwise w h₂ f ε hε hw]
+  exact sub_pos
+
 end InfoGeometry.Inference

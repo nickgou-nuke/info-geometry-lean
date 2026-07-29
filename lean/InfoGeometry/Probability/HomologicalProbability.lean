@@ -1488,7 +1488,7 @@ Packages the full Klein-Gromov Synthesis:
 
 This is the §23 owner target for the Klein-Gromov Erlangen-GW program.
 -/
-structure KleinGromovOwnerWitness
+abbrev KleinGromovOwnerWitness
     (G T P X WeylGroup CoRootLat Vertex GWClass : Type*)
     (mulG        : G → G → G)
     (oneG        : G)
@@ -1496,16 +1496,49 @@ structure KleinGromovOwnerWitness
     (Edge        : Vertex → Vertex → Type*)
     (TorusOrbits : Vertex → Vertex → Type*)
     (gwInvariant : CoRootLat → GWClass)
-    (locShadow   : WeylGraphLocalizationData WeylGroup CoRootLat Vertex Edge → GWClass) where
-  /-- The Erlangen homogeneous target `G/P`. -/
-  target      : HomogeneousTarget G P X mulG oneG embed
-  /-- Rational curves are coroot-labeled torus-orbit closures. -/
-  orbitCurves : LieOrbitCurveWitness G T Vertex CoRootLat TorusOrbits
-  /-- Virtual localization reduces to Weyl-graph combinatorics. -/
-  weylGraph   : WeylGraphLocalizationData WeylGroup CoRootLat Vertex Edge
-  /-- GW invariants factor through the Weyl-graph localization shadow. -/
-  alignment   : KleinGromovAlignmentStatement WeylGroup CoRootLat Vertex GWClass
-    Edge gwInvariant locShadow
+    (locShadow   : WeylGraphLocalizationData WeylGroup CoRootLat Vertex Edge → GWClass) : Type _ :=
+  HomogeneousTarget G P X mulG oneG embed ×
+    (LieOrbitCurveWitness G T Vertex CoRootLat TorusOrbits ×
+      (Σ' weylGraph : WeylGraphLocalizationData WeylGroup CoRootLat Vertex Edge,
+        KleinGromovAlignmentStatement WeylGroup CoRootLat Vertex GWClass
+          Edge gwInvariant locShadow))
+
+namespace KleinGromovOwnerWitness
+
+abbrev target
+    {G T P X WeylGroup CoRootLat Vertex GWClass : Type*}
+    (mulG : G → G → G) (oneG : G) (embed : P → G)
+    (Edge : Vertex → Vertex → Type*) (TorusOrbits : Vertex → Vertex → Type*)
+    (gwInvariant : CoRootLat → GWClass)
+    (locShadow : WeylGraphLocalizationData WeylGroup CoRootLat Vertex Edge → GWClass)
+    (W : KleinGromovOwnerWitness G T P X WeylGroup CoRootLat Vertex GWClass
+      mulG oneG embed Edge TorusOrbits gwInvariant locShadow) := W.1
+abbrev orbitCurves
+    {G T P X WeylGroup CoRootLat Vertex GWClass : Type*}
+    (mulG : G → G → G) (oneG : G) (embed : P → G)
+    (Edge : Vertex → Vertex → Type*) (TorusOrbits : Vertex → Vertex → Type*)
+    (gwInvariant : CoRootLat → GWClass)
+    (locShadow : WeylGraphLocalizationData WeylGroup CoRootLat Vertex Edge → GWClass)
+    (W : KleinGromovOwnerWitness G T P X WeylGroup CoRootLat Vertex GWClass
+      mulG oneG embed Edge TorusOrbits gwInvariant locShadow) := W.2.1
+abbrev weylGraph
+    {G T P X WeylGroup CoRootLat Vertex GWClass : Type*}
+    (mulG : G → G → G) (oneG : G) (embed : P → G)
+    (Edge : Vertex → Vertex → Type*) (TorusOrbits : Vertex → Vertex → Type*)
+    (gwInvariant : CoRootLat → GWClass)
+    (locShadow : WeylGraphLocalizationData WeylGroup CoRootLat Vertex Edge → GWClass)
+    (W : KleinGromovOwnerWitness G T P X WeylGroup CoRootLat Vertex GWClass
+      mulG oneG embed Edge TorusOrbits gwInvariant locShadow) := W.2.2.1
+abbrev alignment
+    {G T P X WeylGroup CoRootLat Vertex GWClass : Type*}
+    (mulG : G → G → G) (oneG : G) (embed : P → G)
+    (Edge : Vertex → Vertex → Type*) (TorusOrbits : Vertex → Vertex → Type*)
+    (gwInvariant : CoRootLat → GWClass)
+    (locShadow : WeylGraphLocalizationData WeylGroup CoRootLat Vertex Edge → GWClass)
+    (W : KleinGromovOwnerWitness G T P X WeylGroup CoRootLat Vertex GWClass
+      mulG oneG embed Edge TorusOrbits gwInvariant locShadow) := W.2.2.2
+
+end KleinGromovOwnerWitness
 
 /--
 **Theorem 23.6 — Klein-Gromov pipeline aligns Volume I and Volume II.**

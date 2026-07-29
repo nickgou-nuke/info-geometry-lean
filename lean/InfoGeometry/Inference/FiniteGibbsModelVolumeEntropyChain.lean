@@ -323,4 +323,68 @@ theorem jointModelDataEntropy_eq_log_card_data_iff_conditional_entropy_zero
     rw [hsum]
     ring
 
+/-- Positive-temperature Gibbs responsibilities have positive entropy for a
+nontrivial finite model family. -/
+theorem responsibilityEntropy_pos_of_one_lt_model_card
+    (hcard : 1 < Fintype.card ModelId)
+    (F : ModelFamily (ModelId := ModelId) (Data := Data)) (ε : ℝ) (i : Data) :
+    0 < responsibilityEntropy F ε i := by
+  have hq_pos : ∀ m : ModelId, 0 < responsibility F ε m i :=
+    fun m => responsibility_pos F ε m i
+  have hq_sum : ∑ m : ModelId, responsibility F ε m i = 1 :=
+    responsibilities_sum_one F ε i
+  have hq_le_one : ∀ m : ModelId, responsibility F ε m i ≤ 1 := by
+    intro m
+    have hsingle : responsibility F ε m i ≤
+        ∑ n : ModelId, responsibility F ε n i := by
+      exact Finset.single_le_sum (fun n hn => (hq_pos n).le)
+        (Finset.mem_univ m)
+    simpa [hq_sum] using hsingle
+  have hterm_nonneg : ∀ m : ModelId,
+      0 ≤ -(responsibility F ε m i *
+        Real.log (responsibility F ε m i)) := by
+    intro m
+    have hlog := Real.log_le_sub_one_of_pos (hq_pos m)
+    have hmul := mul_le_mul_of_nonneg_left hlog (hq_pos m).le
+    have hquad : responsibility F ε m i *
+        (responsibility F ε m i - 1) ≤ 0 :=
+      mul_nonpos_of_nonneg_of_nonpos (hq_pos m).le
+        (sub_nonpos.mpr (hq_le_one m))
+    linarith
+  obtain ⟨m₀⟩ := ‹Nonempty ModelId›
+  obtain ⟨m₁, hm₁⟩ := Fintype.exists_ne_of_one_lt_card hcard m₀
+  have hstrict : responsibility F ε m₀ i < 1 := by
+    have hlt := Finset.single_lt_sum
+      (s := (Finset.univ : Finset ModelId)) hm₁
+      (Finset.mem_univ m₀) (Finset.mem_univ m₁) (hq_pos m₁)
+      (fun m hm hne => (hq_pos m).le)
+    simpa [hq_sum] using hlt
+  have hlog_strict : Real.log (responsibility F ε m₀ i) < 0 :=
+    Real.log_neg (hq_pos m₀) hstrict
+  have hterm_strict : 0 < -(responsibility F ε m₀ i *
+      Real.log (responsibility F ε m₀ i)) := by
+    exact neg_pos.mpr (mul_neg_of_pos_of_neg (hq_pos m₀) hlog_strict)
+  unfold responsibilityEntropy
+  rw [← Finset.sum_neg_distrib]
+  exact Finset.sum_pos' (fun m hm => hterm_nonneg m)
+    ⟨m₀, Finset.mem_univ m₀, hterm_strict⟩
+
+/-- A nontrivial finite-temperature model family contributes strictly positive
+conditional volume to the joint entropy. -/
+theorem jointModelDataEntropy_gt_log_card_data_of_one_lt_model_card
+    (hcard : 1 < Fintype.card ModelId)
+    (F : ModelFamily (ModelId := ModelId) (Data := Data)) (ε : ℝ) :
+    Real.log (Fintype.card Data) < jointModelDataEntropy F ε := by
+  rw [jointModelDataEntropy_eq_log_card_add_average_responsibilityEntropy]
+  have hsum : 0 < ∑ i : Data, responsibilityEntropy F ε i := by
+    exact Finset.sum_pos (fun i hi =>
+      responsibilityEntropy_pos_of_one_lt_model_card hcard F ε i)
+      Finset.univ_nonempty
+  have hfactor : 0 < (1 / Fintype.card Data : ℝ) := by
+    positivity
+  have havg : 0 < (1 / Fintype.card Data : ℝ) *
+      ∑ i : Data, responsibilityEntropy F ε i :=
+    mul_pos hfactor hsum
+  linarith
+
 end InfoGeometry.Inference.FiniteGibbs

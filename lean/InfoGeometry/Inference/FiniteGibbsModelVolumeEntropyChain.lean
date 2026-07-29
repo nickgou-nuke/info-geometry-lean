@@ -289,4 +289,38 @@ theorem jointModelDataEntropy_eq_log_card_add_log_card_iff_uniform
     rw [Finset.sum_const, Finset.card_univ]
     simp [nsmul_eq_mul]
 
+/-- The lower entropy bound is attained exactly when every conditional entropy vanishes. -/
+theorem jointModelDataEntropy_eq_log_card_data_iff_conditional_entropy_zero
+    (F : ModelFamily (ModelId := ModelId) (Data := Data)) (ε : ℝ) :
+    jointModelDataEntropy F ε = Real.log (Fintype.card Data) ↔
+      ∀ i : Data, responsibilityEntropy F ε i = 0 := by
+  have hcond : ∀ i : Data, 0 ≤ responsibilityEntropy F ε i := by
+    intro i
+    unfold responsibilityEntropy
+    exact entropyOf_nonneg (Data := ModelId)
+      (fun m => responsibility F ε m i)
+      (fun m => responsibility_pos F ε m i)
+      (responsibilities_sum_one F ε i)
+  constructor
+  · intro h
+    have hchain :=
+      jointModelDataEntropy_eq_log_card_add_average_responsibilityEntropy F ε
+    have havg : (1 / Fintype.card Data : ℝ) *
+        ∑ i : Data, responsibilityEntropy F ε i = 0 := by
+      rw [h] at hchain
+      linarith
+    have hsum : ∑ i : Data, responsibilityEntropy F ε i = 0 := by
+      exact (mul_eq_zero.mp havg).resolve_left (by positivity)
+    intro i
+    have hall := (Finset.sum_eq_zero_iff_of_nonneg
+      (fun j hj => hcond j)).mp hsum
+    exact hall i (Finset.mem_univ i)
+  · intro hz
+    rw [jointModelDataEntropy_eq_log_card_add_average_responsibilityEntropy]
+    have hsum : ∑ i : Data, responsibilityEntropy F ε i = 0 := by
+      simp_rw [hz]
+      simp
+    rw [hsum]
+    ring
+
 end InfoGeometry.Inference.FiniteGibbs

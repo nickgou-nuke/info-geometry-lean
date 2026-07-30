@@ -46,22 +46,6 @@ variable (sys : ContinuousStarInductiveSystem Stage)
 variable
   (ω : ContinuousStarInductiveSystem.CompatibleStateFamily Stage sys)
 
-/-! A star algebra homomorphism between C*-algebras is contractive.  Turning
-that native norm inequality into `IsBoundedLinearMap` supplies the missing
-topological readout without adding a separate continuity axiom. -/
-theorem continuous_starAlgHom
-    {A B : Type*} [CStarAlgebra A] [CStarAlgebra B]
-    (π : A →⋆ₐ[ℂ] B) : Continuous π := by
-  have hlin : IsLinearMap ℂ π :=
-    IsLinearMap.mk (fun x y => map_add π x y) (fun c x => map_smul π c x)
-  have hb : IsBoundedLinearMap ℂ π := hlin.with_bound 1 (by
-    intro x
-    have h := NonUnitalStarAlgHom.nnnorm_apply_le π x
-    have h' : (‖π x‖₊ : ℝ) ≤ (‖x‖₊ : ℝ) :=
-      NNReal.coe_le_coe.mpr h
-    simpa using h')
-  exact hb.continuous
-
 def upperIndexInclusion (i₀ : I) : UpperIndex i₀ ⥤ I where
   obj j := j.1
   map f := homOfLE (leOfHom f)
@@ -198,30 +182,6 @@ def globalStageRepresentationTopCatHom
       globalStageRepresentationStarAlgHom Stage sys ω i₀ a x :=
   rfl
 
-/-- The bundled global `StarAlgHom` itself is exposed as a continuous
-operator-valued readout. -/
-def globalStageRepresentationContinuousMap
-    {i₀ : I} :
-    ContinuousMap (Stage i₀)
-      (GNSHilbertColimit Stage sys ω →L[ℂ]
-        GNSHilbertColimit Stage sys ω) :=
-  { toFun := globalStageRepresentationStarAlgHom Stage sys ω i₀
-    continuous_toFun := by
-      have hcont : Continuous
-          (globalStageRepresentationStarAlgHom Stage sys ω i₀) :=
-        continuous_starAlgHom
-          (A := Stage i₀)
-          (B := GNSHilbertColimit Stage sys ω →L[ℂ]
-            GNSHilbertColimit Stage sys ω)
-          (globalStageRepresentationStarAlgHom Stage sys ω i₀)
-      exact hcont }
-
-@[simp] theorem globalStageRepresentationContinuousMap_apply
-    {i₀ : I} (a : Stage i₀) :
-    globalStageRepresentationContinuousMap Stage sys ω a =
-      globalStageRepresentationStarAlgHom Stage sys ω i₀ a := by
-  simp only [globalStageRepresentationContinuousMap, ContinuousMap.coe_mk]
-
 /-- The tail/global representation intertwining law as an equality of
 continuous `TopCat` maps. -/
 theorem globalStageRepresentationTopCatHom_intertwines
@@ -341,36 +301,6 @@ theorem globalStageRepresentationStarAlgHom_map_star
   rw [tailCompletedRepresentationTopCatHom_apply,
     tailCompletedRepresentation_star]
 
-def tailCompletedRepresentationContinuousMap
-    {i₀ : I} :
-    ContinuousMap (Stage i₀)
-      (HilbertDirectLimit
-          (TailGNSStage Stage sys ω i₀)
-          (tailGNSIsometricDirectSystem Stage sys ω i₀) →L[ℂ]
-        HilbertDirectLimit
-          (TailGNSStage Stage sys ω i₀)
-          (tailGNSIsometricDirectSystem Stage sys ω i₀)) :=
-  { toFun := tailCompletedRepresentationStarAlgHom Stage sys ω i₀
-    continuous_toFun := by
-      have hcont : Continuous
-          (tailCompletedRepresentationStarAlgHom Stage sys ω i₀) :=
-        continuous_starAlgHom
-          (A := Stage i₀)
-          (B := HilbertDirectLimit
-            (TailGNSStage Stage sys ω i₀)
-            (tailGNSIsometricDirectSystem Stage sys ω i₀) →L[ℂ]
-            HilbertDirectLimit
-              (TailGNSStage Stage sys ω i₀)
-              (tailGNSIsometricDirectSystem Stage sys ω i₀))
-          (tailCompletedRepresentationStarAlgHom Stage sys ω i₀)
-      exact hcont }
-
-@[simp] theorem tailCompletedRepresentationContinuousMap_apply
-    {i₀ : I} (a : Stage i₀) :
-    tailCompletedRepresentationContinuousMap Stage sys ω a =
-      tailCompletedRepresentationStarAlgHom Stage sys ω i₀ a := by
-  simp only [tailCompletedRepresentationContinuousMap, ContinuousMap.coe_mk]
-
 /-- Unitary operator conjugation is a topological homeomorphism and preserves
 the operator involution because it is induced by a `StarAlgEquiv`. -/
 @[simp] theorem globalStageOperatorConjugationHomeomorph_star
@@ -387,5 +317,26 @@ the operator involution because it is induced by a `StarAlgEquiv`. -/
     globalStageOperatorConjugationHomeomorph_apply]
   exact StarHomClass.map_star
     ((tailHilbertGlobalEquiv Stage sys ω i₀).conjStarAlgEquiv) T
+
+@[simp] theorem globalStageOperatorConjugationHomeomorph_symm_star
+    {i₀ : I}
+    (T : GNSHilbertColimit Stage sys ω →L[ℂ]
+      GNSHilbertColimit Stage sys ω) :
+    (globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm
+        (star T) =
+      star ((globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm T) := by
+  calc
+    (globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm
+          (star T) =
+        (globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm
+          (star ((globalStageOperatorConjugationHomeomorph Stage sys ω i₀)
+            ((globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm T))) := by
+          rw [(globalStageOperatorConjugationHomeomorph Stage sys ω i₀).apply_symm_apply]
+    _ = (globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm
+          ((globalStageOperatorConjugationHomeomorph Stage sys ω i₀)
+            (star ((globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm T))) := by
+          rw [globalStageOperatorConjugationHomeomorph_star]
+    _ = star ((globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm T) := by
+          rw [(globalStageOperatorConjugationHomeomorph Stage sys ω i₀).symm_apply_apply]
 
 end CStarStateColimit.Native.FilteredGNSCofinalTailTopological

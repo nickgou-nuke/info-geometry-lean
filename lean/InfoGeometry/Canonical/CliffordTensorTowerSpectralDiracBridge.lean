@@ -72,6 +72,20 @@ theorem clifford_stage_inclusion_ker_bot
   rw [LinearMap.ker_eq_bot]
   exact h_inj
 
+theorem clifford_zero_mode_tensor_data
+    {V W : Type*} [AddCommGroup V] [Module ℝ V] [AddCommGroup W] [Module ℝ W]
+    (DV : FiniteDiracData V) (DW : FiniteDiracData W)
+    (f : V →ₗ[ℝ] W) (h_inj : Function.Injective f)
+    (h_comm : DW.diracOp.comp f = f.comp DV.diracOp)
+    (v : V) (hv_ker : v ∈ diracKernel DV) (hv_ne : v ≠ 0) :
+    f v ≠ 0 ∧ f v ∈ diracKernel DW := by
+  constructor
+  · intro hzero
+    apply hv_ne
+    apply h_inj
+    simpa using hzero
+  · exact colimit_kernel_step_preservation DV DW f h_comm v hv_ker
+
 /--
 **Main Theorem 3: Clifford Zero-Mode Survival Across Tensor Towers**
 Proves natively that a non-zero zero-mode $v \in \ker(D_n) \setminus \{0\}$ survives into stage $n+1$ along the Clifford tensor tower:
@@ -84,7 +98,7 @@ theorem clifford_zero_mode_tensor_survival
     (h_comm : DW.diracOp.comp f = f.comp DV.diracOp)
     (v : V) (hv_ker : v ∈ diracKernel DV) (hv_ne : v ≠ 0) :
     f v ≠ 0 :=
-  (grand_filtered_colimit_dirac_index_master_duality DV DW f h_inj h_comm v hv_ker hv_ne).2.1
+  (clifford_zero_mode_tensor_data DV DW f h_inj h_comm v hv_ker hv_ne).1
 
 /--
 **Main Theorem 4: Grand Clifford Tensor Tower Spectral Dirac Master Duality**
@@ -102,8 +116,8 @@ theorem grand_clifford_tensor_tower_spectral_dirac_master_duality
     (f v ∈ diracKernel DW) := ⟨
   cliffordStageDim_strictMono hnm,
   clifford_stage_inclusion_ker_bot f h_inj,
-  (grand_filtered_colimit_dirac_index_master_duality DV DW f h_inj h_comm v hv_ker hv_ne).2.1,
-  (grand_filtered_colimit_dirac_index_master_duality DV DW f h_inj h_comm v hv_ker hv_ne).2.2
+  (clifford_zero_mode_tensor_data DV DW f h_inj h_comm v hv_ker hv_ne).1,
+  (clifford_zero_mode_tensor_data DV DW f h_inj h_comm v hv_ker hv_ne).2
 ⟩
 
 end InfoGeometry.Canonical.CliffordTensorTowerSpectralDiracBridge

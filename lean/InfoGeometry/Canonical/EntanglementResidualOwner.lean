@@ -247,7 +247,6 @@ theorem drazinNullSector_physicalWitness
       (W.nullProjector * a * W.nullProjector = 0) :=
   W.physicalWitness
 
-@[rep_depth transport]
 /-- Entanglement witness assembled from one of the concrete witness lanes. -/
 @[rep_depth transport]
 inductive EntanglementWitness (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] where

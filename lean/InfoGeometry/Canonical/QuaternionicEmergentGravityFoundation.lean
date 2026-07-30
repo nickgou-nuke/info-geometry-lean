@@ -63,7 +63,6 @@ def torsionFromCommutator
     (rho μ ν : SpacetimeIndex) : ℝ :=
   κ * (C rho μ ν - C rho ν μ)
 
-@[rep_depth thermo]
 @[rep_depth operator]
 theorem qi_sq : qi * qi = -(1 : QuaternionMatrix) := by
   ext i j

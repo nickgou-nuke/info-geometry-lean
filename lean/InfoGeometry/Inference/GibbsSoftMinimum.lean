@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.FiniteGibbsInference
+import InfoGeometry.GrandCanonical.Core
 import Mathlib.Topology.MetricSpace.Pseudo.Lemmas
 import Mathlib.Topology.Order
 
@@ -147,6 +148,22 @@ noncomputable def massieuPotential
 theorem freeEnergy_eq_neg_temperature_mul_massieu
     (M : Model (Data := Data) (Theta := Theta)) (θ : Theta) (ε : ℝ) :
     freeEnergy M θ ε = -ε * massieuPotential M θ ε := rfl
+
+/-- The finite Massieu potential is the grand-canonical log-partition
+potential after the inverse-temperature change of variables `β = 1 / ε`. -/
+theorem massieuPotential_eq_grandCanonical_potential_of_nonzero
+    {Theta : Type*} (M : Model (Data := Data) (Theta := Theta)) (θ : Theta)
+    {ε : ℝ} (hε : ε ≠ 0) :
+    massieuPotential M θ ε =
+      InfoGeometry.GrandCanonical.potential
+        { energy := fun i : Data => M.energy i θ } (1 / ε) := by
+  unfold massieuPotential InfoGeometry.GrandCanonical.potential
+    InfoGeometry.GrandCanonical.partition partitionFunction
+  congr 1
+  apply Finset.sum_congr rfl
+  intro i hi
+  congr 1
+  field_simp [hε]
 
 /-- The scaled Massieu potential converges to the negative hard minimum at
 positive-temperature zero. -/

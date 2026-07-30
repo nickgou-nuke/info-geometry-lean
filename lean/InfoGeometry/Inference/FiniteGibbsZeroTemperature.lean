@@ -68,4 +68,30 @@ theorem tendsto_responsibility_ratio_zero_of_energy_gap
     rw [show R = F.prior m / F.prior m₀ by rfl]
     convert hratio using 1 <;> field_simp
 
+/-- The model-volume assigned to an energy-separated model collapses to zero
+in the inverse-temperature limit. -/
+theorem tendsto_modelVolume_zero_of_energy_gap
+    (F : ModelFamily (ModelId := ModelId) (Data := Data))
+    {δ : ℝ} (hδ : 0 < δ) (m m₀ : ModelId)
+    (hgap : ∀ i : Data, F.energy m₀ i + δ ≤ F.energy m i) :
+    Tendsto (fun β : ℝ => modelVolume F (1 / β) m) atTop (𝓝 0) := by
+  let R : ℝ := F.prior m / F.prior m₀
+  have hR_nonneg : 0 ≤ R := by
+    dsimp [R]
+    exact div_nonneg (F.prior_pos m).le (F.prior_pos m₀).le
+  have hbound_tendsto :
+      Tendsto (fun β : ℝ => R * Real.exp (-δ * β)) atTop (𝓝 0) := by
+    have hexp := tendsto_exp_neg_gap_mul_atTop hδ
+    simpa using tendsto_const_nhds.mul hexp
+  refine squeeze_zero' ?_ ?_ hbound_tendsto
+  · filter_upwards [eventually_gt_atTop (0 : ℝ)] with β hβ
+    exact (modelVolume_pos F (1 / β) m).le
+  · filter_upwards [eventually_gt_atTop (0 : ℝ)] with β hβ
+    have hε : 0 < (1 / β : ℝ) := one_div_pos.mpr hβ
+    have hvolume := modelVolume_le_prior_ratio_mul_exp_neg_gap
+      F hε hδ m m₀ hgap
+    change modelVolume F (1 / β) m ≤ R * Real.exp (-δ * β)
+    rw [show R = F.prior m / F.prior m₀ by rfl]
+    convert hvolume using 1 <;> field_simp
+
 end InfoGeometry.Inference.FiniteGibbs

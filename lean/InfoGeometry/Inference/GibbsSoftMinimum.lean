@@ -122,4 +122,21 @@ theorem tendsto_softMinimum_nhdsWithin_zero_of_min
   · filter_upwards [self_mem_nhdsWithin] with ε hε
     exact (softMinimum_le_energy E hε i)
 
+/-- The generic soft minimum is definitionally the finite Gibbs free energy
+of the corresponding observation-energy model. -/
+theorem softMinimum_eq_freeEnergy
+    (M : Model (Data := Data) (Theta := Theta)) (θ : Theta) (ε : ℝ) :
+    softMinimum (fun i : Data => M.energy i θ) ε = freeEnergy M θ ε := rfl
+
+/-- The finite Gibbs free energy converges to a minimizing observation energy
+along positive temperatures. -/
+theorem tendsto_freeEnergy_nhdsWithin_zero_of_min
+    {Theta : Type*} (M : Model (Data := Data) (Theta := Theta)) (θ : Theta)
+    (i : Data) (hmin : ∀ j : Data, M.energy i θ ≤ M.energy j θ) :
+    Tendsto (fun ε : ℝ => freeEnergy M θ ε)
+      (𝓝[>] (0 : ℝ)) (𝓝 (M.energy i θ)) := by
+  simpa [freeEnergy, softMinimum] using
+    (tendsto_softMinimum_nhdsWithin_zero_of_min
+      (fun j : Data => M.energy j θ) i hmin)
+
 end InfoGeometry.Inference.FiniteGibbs

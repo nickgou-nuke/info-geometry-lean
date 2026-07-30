@@ -139,4 +139,28 @@ theorem tendsto_freeEnergy_nhdsWithin_zero_of_min
     (tendsto_softMinimum_nhdsWithin_zero_of_min
       (fun j : Data => M.energy j θ) i hmin)
 
+/-- The finite Massieu potential is the logarithm of the partition function. -/
+noncomputable def massieuPotential
+    (M : Model (Data := Data) (Theta := Theta)) (θ : Theta) (ε : ℝ) : ℝ :=
+  Real.log (partitionFunction M θ ε)
+
+theorem freeEnergy_eq_neg_temperature_mul_massieu
+    (M : Model (Data := Data) (Theta := Theta)) (θ : Theta) (ε : ℝ) :
+    freeEnergy M θ ε = -ε * massieuPotential M θ ε := rfl
+
+/-- The scaled Massieu potential converges to the negative hard minimum at
+positive-temperature zero. -/
+theorem tendsto_temperature_mul_massieu_nhdsWithin_zero_of_min
+    {Theta : Type*} (M : Model (Data := Data) (Theta := Theta)) (θ : Theta)
+    (i : Data) (hmin : ∀ j : Data, M.energy i θ ≤ M.energy j θ) :
+    Tendsto (fun ε : ℝ => ε * massieuPotential M θ ε)
+      (𝓝[>] (0 : ℝ)) (𝓝 (-M.energy i θ)) := by
+  have hfree := tendsto_freeEnergy_nhdsWithin_zero_of_min M θ i hmin
+  have hneg : Tendsto (fun ε : ℝ => -freeEnergy M θ ε)
+      (𝓝[>] (0 : ℝ)) (𝓝 (-M.energy i θ)) := hfree.neg
+  apply hneg.congr'
+  filter_upwards [] with ε
+  dsimp [freeEnergy, massieuPotential]
+  ring
+
 end InfoGeometry.Inference.FiniteGibbs

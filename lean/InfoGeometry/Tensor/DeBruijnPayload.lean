@@ -101,10 +101,6 @@ def PortCompatible (p : DeBruijnPayload) : Prop :=
 def Conductive (p : DeBruijnPayload) : Prop :=
   p.toEdge.ContractionSound
 
-/-- Backwards-compatible name for candidate selection; this is not a package. -/
-abbrev Promotable (p : DeBruijnPayload) : Prop :=
-  p.Conductive
-
 /-- Payload conductivity is exactly the conjunction required by the lower kernel. -/
 theorem conductive_iff (p : DeBruijnPayload) :
     p.Conductive ↔ p.InScope ∧ p.PortCompatible :=
@@ -112,7 +108,7 @@ theorem conductive_iff (p : DeBruijnPayload) :
 
 /-- Backwards-compatible spelling for candidate selection. -/
 theorem promotable_iff (p : DeBruijnPayload) :
-    p.Promotable ↔ p.InScope ∧ p.PortCompatible :=
+    p.Conductive ↔ p.InScope ∧ p.PortCompatible :=
   p.conductive_iff
 
 /-- Read back the source-port bound from a payload-level scope proof. -/
@@ -170,10 +166,6 @@ def role (_ : CandidateContractionRecord) : String :=
 def Conductive (r : CandidateContractionRecord) : Prop :=
   r.payload.Conductive
 
-/-- Backwards-compatible name for candidate selection; this is not a package. -/
-abbrev Promotable (r : CandidateContractionRecord) : Prop :=
-  r.Conductive
-
 /-- Candidate-record conductivity is Lean kernel contraction soundness after
 payload readback. -/
 theorem conductive_iff (r : CandidateContractionRecord) :
@@ -182,7 +174,7 @@ theorem conductive_iff (r : CandidateContractionRecord) :
 
 /-- Backwards-compatible spelling for candidate selection. -/
 theorem promotable_iff (r : CandidateContractionRecord) :
-    r.Promotable ↔ r.payload.toEdge.ContractionSound :=
+    r.Conductive ↔ r.payload.toEdge.ContractionSound :=
   r.conductive_iff
 
 /-- Read back source-port boundedness from direct lower-kernel conductivity. -/

@@ -1,1 +1,0 @@
-import InfoGeometry.Arithmetic.LFunctionRepresentationBridge

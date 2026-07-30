@@ -317,6 +317,20 @@ def qCcrParameterZeroFiberToParameterNatTrans :
     intro p
     rfl
 
+theorem qCcrParameterZeroFiberToParameterNatTrans_app_isClosedEmbedding
+    (i : I) :
+    Topology.IsClosedEmbedding
+      ((qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i) := by
+  simpa [qCcrParameterZeroFiberToParameterNatTrans] using
+    (qCcrParameterZeroLocus_closed (A := Stage i)).isClosedEmbedding_subtypeVal
+
+theorem qCcrParameterZeroFiberToParameterNatTrans_app_closed_range
+    (i : I) :
+    IsClosed (Set.range
+      ((qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i)) := by
+  exact (qCcrParameterZeroFiberToParameterNatTrans_app_isClosedEmbedding
+    Stage sys i).isClosed_range
+
 abbrev qCcrParameterZeroFiberTopologicalColimit : TopCat :=
   FilteredColimit.Native.Topological.topologicalDirectColimit
     (qCcrParameterZeroFiberTopologicalDiagram Stage sys)

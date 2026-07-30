@@ -38,17 +38,11 @@ theorem range_le_ker_brst {V : Type*} [AddCommGroup V] [Module ℝ V] (f : Bound
   have h_comp := LinearMap.congr_fun (brst_operator_nilpotent f) y
   exact h_comp
 
-/-! `BoundaryMajorana` is already the operator carrier.  The former packet
-repeated its nilpotence and range-kernel consequences as fields; these are
-owned by `brst_operator_nilpotent` and `range_le_ker_brst`. -/
-abbrev BRSTCohomologyPacket (V : Type*) [AddCommGroup V] [Module ℝ V] :=
-  BoundaryMajorana V
-
-/-- An explicit BRST boundary mode yields a cohomology packet. -/
+/-- An explicit BRST boundary mode yields a nonempty carrier. -/
 theorem brst_cohomology_packet_exists
     {V : Type*} [AddCommGroup V] [Module ℝ V]
     (f : BoundaryMajorana V) :
-    Nonempty (BRSTCohomologyPacket V) :=
+    Nonempty (BoundaryMajorana V) :=
   ⟨f⟩
 
 end InfoGeometry.Quantum.BRSTBoundaryCohomology

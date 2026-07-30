@@ -46,18 +46,14 @@ def ChebotarevStatisticalConvergenceData.sqrtGapRate
     (h : ChebotarevStatisticalConvergenceData) : Prop :=
   ∀ n : ℕ, |h.sqrtGapDistance n| ≤ h.sqrtGapConstant * h.lambda ^ n
 
-/-- Witness obstruction carried by the nonzero projected coefficient in the dominant channel. -/
-def ChebotarevStatisticalConvergenceData.witnessObstruction
-    (h : ChebotarevStatisticalConvergenceData) : Prop :=
-  chebotarevNonzeroWitnessCoefficient h.witnessCoeff ∧
-    chebotarevOscillationLowerBound h.witnessCoeff
-
 /-- Paper-facing wrapper assembling the TV, chi-square, KL, square-root-gap, and witness
 obstruction claims for the primitive Chebotarev statistical-convergence regime.
     thm:kernel-chebotarev-statistical-convergence -/
 theorem paper_kernel_chebotarev_statistical_convergence
     (h : ChebotarevStatisticalConvergenceData) :
-    h.tvBound ∧ h.chiSqBound ∧ h.klBound ∧ h.sqrtGapRate ∧ h.witnessObstruction := by
+    h.tvBound ∧ h.chiSqBound ∧ h.klBound ∧ h.sqrtGapRate ∧
+      spectralProjection h.witnessCoeff ≠ 0 ∧
+      chebotarevOscillationLowerBound h.witnessCoeff := by
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · simpa [ChebotarevStatisticalConvergenceData.tvBound] using h.tvBound_h
   · simpa [ChebotarevStatisticalConvergenceData.chiSqBound] using h.chiSqBound_h

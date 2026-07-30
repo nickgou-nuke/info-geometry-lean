@@ -19,9 +19,6 @@ def kernelWitnessTerm (c : ℝ) (n : ℕ) : ℝ := spectralProjection c * phaseS
 def chebotarevSecondMainTermExpansion (c : ℝ) : Prop :=
   ∀ n : ℕ, kernelWitnessTerm c n = spectralProjection c * phaseSelector n
 
-/-- The witness coefficient is nonzero. -/
-def chebotarevNonzeroWitnessCoefficient (c : ℝ) : Prop := spectralProjection c ≠ 0
-
 /-- Even and odd subsequences both retain the full witness magnitude. -/
 def chebotarevOscillationLowerBound (c : ℝ) : Prop :=
   ∀ n : ℕ,
@@ -31,13 +28,13 @@ def chebotarevOscillationLowerBound (c : ℝ) : Prop :=
 /-- Paper-facing wrapper for the dominant hidden-channel second main term.
     thm:kernel-chebotarev-second-main-term-witness -/
 theorem paper_kernel_chebotarev_second_main_term_witness (c : ℝ) (hc : c ≠ 0) :
-    chebotarevSecondMainTermExpansion c ∧
-      chebotarevNonzeroWitnessCoefficient c ∧
+  chebotarevSecondMainTermExpansion c ∧
+      spectralProjection c ≠ 0 ∧
       chebotarevOscillationLowerBound c := by
   refine ⟨?_, ?_, ?_⟩
   · intro n
     rfl
-  · simpa [chebotarevNonzeroWitnessCoefficient, spectralProjection] using hc
+  · simpa [spectralProjection] using hc
   · intro n
     constructor
     · simp [kernelWitnessTerm, spectralProjection, phaseSelector]

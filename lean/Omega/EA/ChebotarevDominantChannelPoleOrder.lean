@@ -33,15 +33,12 @@ def artinDominantPoleOrderConclusion : Prop :=
 /-- A fixed nonzero witness coefficient used to invoke the second-main-term oscillation theorem. -/
 def artinDominantWitnessCoeff : ℝ := 3
 
-/-- The witness clause imported from the dominant-channel second-main-term theorem. -/
-def artinDominantWitnessOscillationConclusion : Prop :=
-  chebotarevNonzeroWitnessCoefficient artinDominantWitnessCoeff ∧
-    chebotarevOscillationLowerBound artinDominantWitnessCoeff
-
 /-- Paper-facing wrapper for the dominant Artin-channel pole order and witness oscillation.
     thm:kernel-artin-dominant-channel-pole-order -/
 theorem paper_kernel_artin_dominant_channel_pole_order :
-    artinDominantPoleOrderConclusion ∧ artinDominantWitnessOscillationConclusion := by
+    artinDominantPoleOrderConclusion ∧
+      spectralProjection artinDominantWitnessCoeff ≠ 0 ∧
+      chebotarevOscillationLowerBound artinDominantWitnessCoeff := by
   refine ⟨?_, ?_⟩
   · refine ⟨?_, ?_, ?_, rfl⟩
     · norm_num [artinDominantSimplePoleFactor, artinDominantPoleLocation]

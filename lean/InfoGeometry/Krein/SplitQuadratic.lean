@@ -45,14 +45,6 @@ def IsKreinNegative (u : SplitKreinSpace (E := E)) : Prop :=
 def IsJPositive (u : SplitKreinSpace (E := E)) : Prop :=
   0 < jForm (E := E) u
 
-/-- Alias for the sign sector of the indefinite quadratic form. -/
-abbrev IsPositive (u : SplitKreinSpace (E := E)) : Prop :=
-  IsKreinPositive (E := E) u
-
-/-- Alias for the negative sign sector of the indefinite quadratic form. -/
-abbrev IsNegative (u : SplitKreinSpace (E := E)) : Prop :=
-  IsKreinNegative (E := E) u
-
 @[simp] theorem qform_neg (u : SplitKreinSpace (E := E)) :
     qform (E := E) (-u) = qform (E := E) u := by
   unfold qform

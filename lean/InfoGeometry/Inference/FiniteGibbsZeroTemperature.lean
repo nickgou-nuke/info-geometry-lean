@@ -7,6 +7,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.FiniteGibbsModelConcentration
+import Mathlib.Analysis.Normed.Module.FiniteDimension
 import Mathlib.Topology.MetricSpace.Pseudo.Lemmas
 
 /-!
@@ -93,5 +94,52 @@ theorem tendsto_modelVolume_zero_of_energy_gap
     change modelVolume F (1 / β) m ≤ R * Real.exp (-δ * β)
     rw [show R = F.prior m / F.prior m₀ by rfl]
     convert hvolume using 1 <;> field_simp
+
+/-- Under a uniform gap from a unique reference model, the reference model
+captures all model volume in the zero-temperature limit. -/
+theorem tendsto_modelVolume_one_of_unique_energy_gap
+    (F : ModelFamily (ModelId := ModelId) (Data := Data))
+    {δ : ℝ} (hδ : 0 < δ) (m₀ : ModelId)
+    (hgap : ∀ i : Data, ∀ m : ModelId, m ≠ m₀ →
+      F.energy m₀ i + δ ≤ F.energy m i) :
+    Tendsto (fun β : ℝ => modelVolume F (1 / β) m₀) atTop (𝓝 1) := by
+  classical
+  let s : Finset ModelId := Finset.univ.erase m₀
+  have hother : Tendsto
+      (fun β : ℝ => ∑ m ∈ s, modelVolume F (1 / β) m)
+      atTop (𝓝 0) := by
+    have hsum : Tendsto
+        (fun β : ℝ => ∑ m ∈ s, modelVolume F (1 / β) m)
+        atTop (𝓝 (∑ m ∈ s, (0 : ℝ))) := by
+      apply tendsto_finset_sum s
+      intro m hm
+      simpa using (tendsto_modelVolume_zero_of_energy_gap F hδ m m₀
+        (fun i => hgap i m (Finset.mem_erase.mp hm).1))
+    simpa using hsum
+  have hnorm : ∀ β : ℝ,
+      modelVolume F (1 / β) m₀ +
+          ∑ m ∈ s, modelVolume F (1 / β) m = 1 := by
+    intro β
+    have hsum := modelVolumes_sum_one F (1 / β)
+    have hsplit := Finset.sum_erase_add
+      (s := (Finset.univ : Finset ModelId))
+      (f := fun m : ModelId => modelVolume F (1 / β) m)
+      (Finset.mem_univ m₀)
+    dsimp [s]
+    linarith
+  have hlimit : Tendsto
+      (fun β : ℝ => 1 - ∑ m ∈ s, modelVolume F (1 / β) m)
+      atTop (𝓝 (1 - 0)) := by
+    exact tendsto_const_nhds.sub hother
+  have hcongr : ∀ β : ℝ,
+      modelVolume F (1 / β) m₀ =
+        1 - ∑ m ∈ s, modelVolume F (1 / β) m := by
+    intro β
+    linarith [hnorm β]
+  have hlimit' : Tendsto
+      (fun β : ℝ => 1 - ∑ m ∈ s, modelVolume F (1 / β) m)
+      atTop (𝓝 1) := by
+    simpa using hlimit
+  exact hlimit'.congr' (Eventually.of_forall (fun β => (hcongr β).symm))
 
 end InfoGeometry.Inference.FiniteGibbs

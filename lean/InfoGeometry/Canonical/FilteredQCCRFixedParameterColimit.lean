@@ -114,6 +114,32 @@ def qCcrZeroLocusSpecializationTopCatHom
     qCcrParameterZeroLocusFiberInclusionTopCatHom (Stage := Stage) i
       (qdata.q i)
 
+theorem qCcrZeroLocusSpecializationTopCatHom_injective
+    (qdata : CompatibleQParameter Stage sys) (i : I) :
+    Function.Injective (qCcrZeroLocusSpecializationTopCatHom Stage sys qdata i) := by
+  intro p₁ p₂ h
+  apply qCcrSpecializationZeroLocusMap_injective (A := Stage i) (qdata.q i)
+  apply Subtype.ext
+  exact congrArg Subtype.val h
+
+theorem qCcrZeroLocusSpecializationTopCatHom_isEmbedding
+    (qdata : CompatibleQParameter Stage sys) (i : I) :
+    IsEmbedding (qCcrZeroLocusSpecializationTopCatHom Stage sys qdata i) := by
+  have hspecial :
+      IsEmbedding
+        (qCcrSpecializationZeroLocusMap (A := Stage i) (qdata.q i)) :=
+    (qCcrSpecializationZeroLocusMap_leftInverse (A := Stage i) (qdata.q i)).isEmbedding
+      (continuous_qCcrSpecializationZeroLocusMap (A := Stage i) (qdata.q i))
+      (continuous_qCcrSpecializationZeroLocusFiberMap (A := Stage i) (qdata.q i))
+  have hinclusion :
+      IsEmbedding
+        (fun p : qCcrParameterZeroLocusFiberType (A := Stage i) (qdata.q i) =>
+          (⟨p.1, p.2.1⟩ :
+            {p : QCCRParameterSpace (Stage i) //
+              p ∈ qCcrParameterZeroLocus (A := Stage i)})) := by
+    exact IsEmbedding.inclusion (fun _ hp => hp.1)
+  exact hinclusion.comp hspecial
+
 theorem qCcrZeroLocusSpecialization_natural
     (qdata : CompatibleQParameter Stage sys)
     {i j : I} (hij : i ≤ j) :
@@ -197,7 +223,6 @@ def qCcrZeroLocusSpecializationCocone
                         (qCcrZeroLocusSpecializationTopCatHom Stage sys qdata j ≫
                           qCcrParameterZeroFiberTopologicalInjection Stage sys j) = _
                     rw [← Category.assoc, ← hspec]
-                    simp [Category.assoc]
           _ = qCcrZeroLocusSpecializationTopCatHom Stage sys qdata i ≫
                 qCcrParameterZeroFiberTopologicalInjection Stage sys i := by
                     rw [Category.assoc, hinc] }
@@ -219,6 +244,17 @@ theorem qCcrZeroLocusSpecializationColimitMap_eq_coconeMap
     (qCcrZeroLocusSpecializationCocone Stage sys qdata)
   intro i
   exact qCcrZeroLocusSpecializationColimitMap_stage Stage sys qdata i
+
+theorem qCcrZeroLocusSpecializationCoconeMap_stage
+    (qdata : CompatibleQParameter Stage sys) (i : I)
+    (p : {p : Stage i × Stage i //
+      p ∈ qCcrZeroLocus (A := Stage i) (qdata.q i)}) :
+    qCcrZeroLocusSpecializationCoconeMap Stage sys qdata
+        (qCcrZeroLocusTopologicalInjection Stage sys qdata i p) =
+      qCcrParameterZeroFiberTopologicalColimitInjection Stage sys i
+        ((qCcrZeroLocusSpecializationTopCatHom Stage sys qdata i) p) := by
+  rw [← qCcrZeroLocusSpecializationColimitMap_eq_coconeMap Stage sys qdata]
+  exact qCcrZeroLocusSpecializationColimitMap_stage Stage sys qdata i p
 
 noncomputable def qCcrZeroLocusParameterColimitMap
     (qdata : CompatibleQParameter Stage sys) :

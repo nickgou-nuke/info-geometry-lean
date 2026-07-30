@@ -51,31 +51,6 @@ def window6CommutatorSeedIsSkew : Prop :=
 def window6GeneratorSeedIsTraceless : Prop :=
   Matrix.trace window6GeneratorSeed = 0
 
-/-- Orthogonal-envelope part of the upgraded window-`6` certificate. -/
-def window6CommutatorEnvelopeIsOrthogonal : Prop :=
-  window6CommutatorSeedIsSkew ∧
-    window6PushEnvelopeCertificate.commutatorTarget = .orthogonal ∧
-    window6PushEnvelopeCertificate.ambientDimension = 21 ∧
-    window6PushEnvelopeCertificate.orthogonalDimension =
-      window6PushEnvelopeCertificate.ambientDimension *
-        (window6PushEnvelopeCertificate.ambientDimension - 1) / 2
-
-/-- Special-linear full-envelope part of the upgraded window-`6` certificate. -/
-def window6FullEnvelopeIsSpecialLinear : Prop :=
-  window6GeneratorSeedIsTraceless ∧
-    window6PushEnvelopeCertificate.fullTarget = .specialLinear ∧
-    window6PushEnvelopeCertificate.fullDimension =
-      window6PushEnvelopeCertificate.ambientDimension ^
-        2 - 1
-
-/-- Numeric dimension certificates exported alongside the envelope audit. -/
-def window6DimensionCertificates : Prop :=
-  window6PushEnvelopeCertificate.orthogonalDimension = 210 ∧
-    window6PushEnvelopeCertificate.fullDimension = 440 ∧
-    window6PushEnvelopeCertificate.derivedDimension = 440 ∧
-    window6PushEnvelopeCertificate.killingFormRank = 440 ∧
-    window6PushEnvelopeCertificate.adjointCommutantDimension = 1
-
 private theorem window6_commutator_seed_is_skew :
     window6CommutatorSeedIsSkew := by
   ext i j <;> fin_cases i <;> fin_cases j <;> simp [window6CommutatorSeed]
@@ -90,9 +65,21 @@ the commutator audit lands in the orthogonal envelope, the full push envelope la
 special-linear envelope, and the dimensions match the exported `so(21)`/`sl(21)` invariants.
     thm:window6-push-envelope-certificate-upgrade -/
 theorem paper_window6_push_envelope_certificate_upgrade :
-    window6CommutatorEnvelopeIsOrthogonal ∧
-      window6FullEnvelopeIsSpecialLinear ∧
-      window6DimensionCertificates := by
+    (window6CommutatorSeedIsSkew ∧
+      window6PushEnvelopeCertificate.commutatorTarget = .orthogonal ∧
+      window6PushEnvelopeCertificate.ambientDimension = 21 ∧
+      window6PushEnvelopeCertificate.orthogonalDimension =
+        window6PushEnvelopeCertificate.ambientDimension *
+          (window6PushEnvelopeCertificate.ambientDimension - 1) / 2) ∧
+    (window6GeneratorSeedIsTraceless ∧
+      window6PushEnvelopeCertificate.fullTarget = .specialLinear ∧
+      window6PushEnvelopeCertificate.fullDimension =
+        window6PushEnvelopeCertificate.ambientDimension ^ 2 - 1) ∧
+    (window6PushEnvelopeCertificate.orthogonalDimension = 210 ∧
+      window6PushEnvelopeCertificate.fullDimension = 440 ∧
+      window6PushEnvelopeCertificate.derivedDimension = 440 ∧
+      window6PushEnvelopeCertificate.killingFormRank = 440 ∧
+      window6PushEnvelopeCertificate.adjointCommutantDimension = 1) := by
   refine ⟨?_, ?_, ?_⟩
   · refine ⟨window6_commutator_seed_is_skew, rfl, rfl, ?_⟩
     norm_num [window6PushEnvelopeCertificate]

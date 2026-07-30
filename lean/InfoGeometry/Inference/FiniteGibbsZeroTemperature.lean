@@ -271,6 +271,55 @@ theorem responsibility_eq_prior_fraction_of_minimizer_set
   field_simp [ne_of_gt (modelPartition_pos F ε i₀),
     ne_of_gt hprior_pos, ne_of_gt hresp_pos]
 
+/-- Each tied minimizer receives its prior-normalized fraction of the limiting
+responsibility mass. -/
+theorem tendsto_responsibility_prior_fraction_of_minimizer_set
+    (F : ModelFamily (ModelId := ModelId) (Data := Data))
+    {δ : ℝ} (hδ : 0 < δ) (m₀ : ModelId) (i₀ : Data) (m : ModelId)
+    (hm : F.energy m i₀ = F.energy m₀ i₀)
+    (hgap : ∀ n : ModelId,
+      F.energy n i₀ ≠ F.energy m₀ i₀ →
+        F.energy m₀ i₀ + δ ≤ F.energy n i₀) :
+    Tendsto (fun β : ℝ => responsibility F (1 / β) m i₀) atTop
+      (𝓝 (F.prior m /
+        (∑ n ∈ Finset.univ.filter (fun n =>
+          F.energy n i₀ = F.energy m₀ i₀), F.prior n))) := by
+  classical
+  let S : Finset ModelId := Finset.univ.filter (fun n =>
+    F.energy n i₀ = F.energy m₀ i₀)
+  have hm₀S : m₀ ∈ S := by
+    exact Finset.mem_filter.mpr ⟨Finset.mem_univ m₀, rfl⟩
+  have hprior_pos : 0 < ∑ n ∈ S, F.prior n := by
+    exact Finset.sum_pos (fun n hn => F.prior_pos n) ⟨m₀, hm₀S⟩
+  have hmass := tendsto_responsibility_minimizer_mass_one_of_energy_gap
+    F hδ m₀ i₀ hgap
+  have hsum_pos : ∀ β : ℝ,
+      0 < ∑ n ∈ S, responsibility F (1 / β) n i₀ := by
+    intro β
+    exact Finset.sum_pos
+      (fun n hn => responsibility_pos F (1 / β) n i₀) ⟨m₀, hm₀S⟩
+  have hidentity : ∀ β : ℝ,
+      responsibility F (1 / β) m i₀ =
+        (F.prior m / (∑ n ∈ S, F.prior n)) *
+          (∑ n ∈ S, responsibility F (1 / β) n i₀) := by
+    intro β
+    have hcond := responsibility_eq_prior_fraction_of_minimizer_set
+      F (1 / β) m₀ i₀ m hm
+    dsimp [S] at hcond hprior_pos
+    exact (div_eq_iff (ne_of_gt (hsum_pos β))).mp hcond
+  have hlimit : Tendsto
+      (fun β : ℝ =>
+        (F.prior m / (∑ n ∈ S, F.prior n)) *
+          (∑ n ∈ S, responsibility F (1 / β) n i₀))
+      atTop (𝓝 ((F.prior m / (∑ n ∈ S, F.prior n)) * 1)) := by
+    simpa using tendsto_const_nhds.mul hmass
+  have hlimit' : Tendsto
+      (fun β : ℝ => responsibility F (1 / β) m i₀)
+      atTop (𝓝 ((F.prior m / (∑ n ∈ S, F.prior n)) * 1)) := by
+    exact hlimit.congr' (Eventually.of_forall
+      (fun β => (hidentity β).symm))
+  simpa [S] using hlimit'
+
 /-- The total volume of any finite collection of uniformly separated models
 vanishes in the zero-temperature limit. -/
 theorem tendsto_modelVolume_sum_zero_of_energy_gap

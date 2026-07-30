@@ -14,26 +14,19 @@ namespace InfoGeometry.ConvexDuality
 def fenchelGap (f fStar : ℝ → ℝ) (θ η : ℝ) : ℝ :=
   f θ + fStar η - η * θ
 
-/-- Bregman divergence in the parameter convention `(θ, θ')`. -/
-noncomputable abbrev bregman (f : ℝ → ℝ) (θ θ' : ℝ) : ℝ :=
-  InfoGeometry.bregmanDiv f θ θ'
-
-@[simp] lemma bregman_def (f : ℝ → ℝ) (θ θ' : ℝ) :
-    bregman f θ θ' = InfoGeometry.bregmanDiv f θ θ' := rfl
-
 /-- Parameterized KL in exponential-family sign convention. -/
 noncomputable def KL_param (A : ℝ → ℝ) (θ θ' : ℝ) : ℝ :=
-  bregman A θ' θ
+  InfoGeometry.bregmanDiv A θ' θ
 
 lemma KL_param_eq_bregman_swap (A : ℝ → ℝ) (θ θ' : ℝ) :
-    KL_param A θ θ' = bregman A θ' θ := by
+    KL_param A θ θ' = InfoGeometry.bregmanDiv A θ' θ := by
   rfl
 
 lemma KL_param_expanded (A : ℝ → ℝ) (θ θ' : ℝ) :
     KL_param A θ θ'
       =
     A θ' - A θ - deriv A θ * (θ' - θ) := by
-  unfold KL_param bregman InfoGeometry.bregmanDiv
+  unfold KL_param InfoGeometry.bregmanDiv
   ring
 
 /-- Nonnegativity of Bregman divergence from convexity and differentiability at the basepoint. -/
@@ -42,8 +35,8 @@ lemma bregman_nonneg_of_convex_at
     (hconv : ConvexOn ℝ Set.univ f)
     (θ θ' : ℝ)
     (hfd' : DifferentiableAt ℝ f θ') :
-    0 ≤ bregman f θ θ' := by
-  unfold bregman InfoGeometry.bregmanDiv
+    0 ≤ InfoGeometry.bregmanDiv f θ θ' := by
+  unfold InfoGeometry.bregmanDiv
   by_cases hlt : θ' < θ
   · have hslope : deriv f θ' ≤ slope f θ' θ := by
       exact hconv.deriv_le_slope (by simp) (by simp) hlt hfd'
@@ -84,7 +77,7 @@ lemma bregman_nonneg_of_convex
     (hconv : ConvexOn ℝ Set.univ f)
     (hfd : Differentiable ℝ f)
     (θ θ' : ℝ) :
-    0 ≤ bregman f θ θ' :=
+    0 ≤ InfoGeometry.bregmanDiv f θ θ' :=
   bregman_nonneg_of_convex_at (hconv := hconv) θ θ' (hfd θ')
 
 /-- Nonnegativity of parameter-space KL in Bregman form, assuming differentiability at `θ`. -/

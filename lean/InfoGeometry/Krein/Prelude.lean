@@ -189,17 +189,14 @@ noncomputable abbrev complexStructureOperator : DoubledSpace E →L[ℝ] Doubled
     complexStructureOperator (E := E) = complex_i (E := E) := by
   exact _root_.complexStructureOperator_eq_complex_i (E := E)
 
-abbrev isComplexStructureOp (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
-  _root_.isComplexStructureOp (E := E) A
-
 theorem complex_i_sq_neg_id :
     (complex_i (E := E)).comp (complex_i (E := E))
       = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
   simpa using (_root_.complex_i_sq_neg_id (E := E))
 
 theorem complex_i_isComplexStructureOp :
-    isComplexStructureOp (E := E) (complex_i (E := E)) := by
-  simpa [isComplexStructureOp] using (_root_.complex_i_isComplexStructureOp (E := E))
+    _root_.isComplexStructureOp (E := E) (complex_i (E := E)) := by
+  exact _root_.complex_i_isComplexStructureOp (E := E)
 
 noncomputable abbrev chiralityProjPlus : DoubledSpace E →L[ℝ] DoubledSpace E :=
   _root_.chiralityProjPlus (E := E)

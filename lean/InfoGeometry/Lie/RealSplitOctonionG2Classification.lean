@@ -31,7 +31,8 @@ theorem split_octonion_derivation_bracket_closed
   bracket_closed hD1 hD2
 
 theorem canonical_split_octonion_derivation_finrank :
-    Module.finrank ℝ CanonicalDerivations = 14 :=
+    Module.finrank ℝ
+      InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations = 14 :=
   canonicalDerivations_finrank
 
 theorem standard_split_octonion_derivations_span :

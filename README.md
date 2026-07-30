@@ -47,6 +47,9 @@ $$ \mathfrak{g} = \mathfrak{g}_{-2} \oplus \mathfrak{g}_{-1} \oplus \mathfrak{g}
 ### C. The Holographic Golay Code & Leech Lattice
 The $3 \times 8 = 24$-dimensional transverse space is error-corrected by the Extended Binary Golay Code $\mathcal{G}_{24}$, woven from three octonionic sheets under Triality. By taking the inductive colimit ($A_\infty$) over the Cantor shift algebra $O_2$, finite block codes are extended into a fault-tolerant fractal tree at infinity.
 
+### D. The Cuntz-SUSY-AQFT Spacetime Architecture
+For the complete mathematical physics blueprint of our Cuntz algebra representation of SUSY QM, Haag-Kastler AQFT inductive colimits, 4D Minkowski Clifford embeddings ($P_\mu = \sum \gamma_\mu^{ij} (S_i S_j^* + S_j S_i^*)$), and Bosonization duality ($\Gamma Q_+ \Gamma^{-1} = -Q_+$), see [`docs/ARCHITECTURE_CUNTZ_SUSY_AQFT.md`](file:///docs/ARCHITECTURE_CUNTZ_SUSY_AQFT.md).
+
 ---
 
 ## 2. Fully Proved & Verified Sectors (0 sorry, 0 axiom)

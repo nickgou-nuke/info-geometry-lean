@@ -45,30 +45,6 @@ inductive FresnelChannel where
   | p
 deriving DecidableEq, Repr
 
-/-- Canonical Klein-four parity/time orientation label. -/
-abbrev V4Label :=
-  InfoGeometry.Geometry.KleinFourTag.Tag
-
-namespace V4Label
-
-/-- Identity component. -/
-def identity : V4Label :=
-  InfoGeometry.Geometry.KleinFourTag.id
-
-/-- Parity flip. -/
-def P : V4Label :=
-  InfoGeometry.Geometry.KleinFourTag.P
-
-/-- Time flip. -/
-def T : V4Label :=
-  InfoGeometry.Geometry.KleinFourTag.T
-
-/-- PT flip. -/
-def PT : V4Label :=
-  InfoGeometry.Geometry.KleinFourTag.PT
-
-end V4Label
-
 /-! ## 2. Polarization projector pair -/
 
 /--
@@ -236,30 +212,6 @@ abbrev abstract : OpticalSurfaceKind :=
 
 end OpticalSurfaceKind
 
-/-- Backwards-compatible V₄ tag name for finite Jones events. -/
-abbrev V4Tag :=
-  V4Label
-
-namespace V4Tag
-
-/-- Identity component. -/
-def id : V4Tag :=
-  V4Label.identity
-
-/-- Parity flip. -/
-def P : V4Tag :=
-  V4Label.P
-
-/-- Time flip. -/
-def T : V4Tag :=
-  V4Label.T
-
-/-- PT flip. -/
-def PT : V4Tag :=
-  V4Label.PT
-
-end V4Tag
-
 /--
 Finite Jones optical event.
 
@@ -271,7 +223,7 @@ structure JonesOpticalEvent where
   kind : OpticalSurfaceKind
   coeff0 : ℂ
   coeff1 : ℂ
-  tag : V4Tag
+  tag : InfoGeometry.Geometry.KleinFourTag.Tag
 
 namespace JonesOpticalEvent
 
@@ -719,7 +671,7 @@ structure V4JonesCalibration
     (Op : Type*) [Ring Op] [Algebra ℂ Op]
     (P : SPProjectorPair Op) where
   /-- V₄ label assigned to each Fresnel channel. -/
-  labelOfChannel : FresnelChannel → V4Label
+  labelOfChannel : FresnelChannel → InfoGeometry.Geometry.KleinFourTag.Tag
 
   /--
   Operator representative of a V₄ label.
@@ -728,7 +680,7 @@ structure V4JonesCalibration
   projector. It is a model-specific calibration saying which operator
   represents the label in this optical model.
   -/
-  operatorOfLabel : V4Label → Op
+  operatorOfLabel : InfoGeometry.Geometry.KleinFourTag.Tag → Op
 
   /-- The `s` channel is represented by the calibrated `s` projector. -/
   s_channel_calibrated :

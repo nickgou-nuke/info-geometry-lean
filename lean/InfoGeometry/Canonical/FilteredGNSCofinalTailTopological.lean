@@ -216,6 +216,18 @@ noncomputable def upperTailRepresentationColimitMap
       upperGnsTopologicalColimit Stage sys ω i₀ :=
   colim.map (upperTailRepresentationNatTrans Stage sys ω a)
 
+theorem tailGNSOperator_star
+    {i₀ : I} (a : Stage i₀) (j : UpperIndex i₀) :
+    tailGNSOperator Stage sys ω (star a) j =
+      star (tailGNSOperator Stage sys ω a j) := by
+  apply ContinuousLinearMap.ext
+  intro w
+  apply ext_inner_right ℂ
+  intro z
+  rw [ContinuousLinearMap.star_eq_adjoint,
+    ContinuousLinearMap.adjoint_inner_left]
+  exact tailGNSOperator_star_inner Stage sys ω a j z w
+
 theorem upperTailRepresentationColimitMap_stage
     {i₀ : I} (a : Stage i₀) (j : UpperIndex i₀) :
     topologicalDirectInjection
@@ -225,6 +237,29 @@ theorem upperTailRepresentationColimitMap_stage
         topologicalDirectInjection
           (upperGnsTopologicalDiagram Stage sys ω i₀) j := by
   exact colimit.ι_map (upperTailRepresentationNatTrans Stage sys ω a) j
+
+@[simp] theorem upperTailRepresentationColimitMap_star_stage
+    {i₀ : I} (a : Stage i₀) (j : UpperIndex i₀)
+    (x : TailGNSStage Stage sys ω i₀ j) :
+    upperTailRepresentationColimitMap Stage sys ω (star a)
+        (topologicalDirectInjection
+          (upperGnsTopologicalDiagram Stage sys ω i₀) j x) =
+      topologicalDirectInjection
+        (upperGnsTopologicalDiagram Stage sys ω i₀) j
+        (star (tailGNSOperator Stage sys ω a j) x) := by
+  have h := congrArg (fun f => f x)
+    (upperTailRepresentationColimitMap_stage Stage sys ω (star a) j)
+  have h' :
+      upperTailRepresentationColimitMap Stage sys ω (star a)
+          (topologicalDirectInjection
+            (upperGnsTopologicalDiagram Stage sys ω i₀) j x) =
+        topologicalDirectInjection
+          (upperGnsTopologicalDiagram Stage sys ω i₀) j
+          (tailGNSOperator Stage sys ω (star a) j x) := by
+    simpa only [TopCat.comp_app, tailGNSOperatorTopCatHom_apply,
+      upperTailRepresentationNatTrans] using h
+  rw [tailGNSOperator_star] at h'
+  exact h'
 
 theorem upperTailRepresentation_stage_global_intertwines
     {i₀ : I} (a : Stage i₀) (j : UpperIndex i₀) :

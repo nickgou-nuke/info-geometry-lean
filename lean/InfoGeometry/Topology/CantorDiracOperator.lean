@@ -20,13 +20,9 @@ noncomputable section
 
 namespace InfoGeometry.Topology.CantorDiracOperator
 
-/-- Binary words at depth `n`. -/
-abbrev BinaryWord (n : ℕ) : Type :=
-  InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n
-
 /-- Finite complex wavelet space at depth `n`. -/
 abbrev FiniteWaveletSpace (n : ℕ) : Type :=
-  BinaryWord n → ℂ
+  InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n → ℂ
 
 /-- Difference of consecutive filtration projections. -/
 def filtrationDifferenceProjection
@@ -55,7 +51,7 @@ theorem finiteCantorDirac_apply
     (weight : ℕ → ℝ)
     (n : ℕ)
     (ψ : FiniteWaveletSpace n)
-    (w : BinaryWord n) :
+    (w : InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n) :
     finiteCantorDirac weight n ψ w = ((weight n : ℝ) : ℂ) * ψ w := by
   simp [finiteCantorDirac]
 
@@ -117,9 +113,12 @@ structure CantorDiracOperatorSocket
   cycle : InfoGeometry.KK.RealSplitKreinUnboundedCycle A B H
   scale : CantorDiracScale
   waveletMode :
-    ∀ n : ℕ, BinaryWord n → {x : H // x ∈ cycle.domain}
+    ∀ n : ℕ,
+      InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n →
+        {x : H // x ∈ cycle.domain}
   dirac_wavelet :
-    ∀ (n : ℕ) (w : BinaryWord n),
+    ∀ (n : ℕ)
+      (w : InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n),
       cycle.D (waveletMode n w) =
         scale n • (waveletMode n w).1
 
@@ -135,13 +134,17 @@ variable
     (S : CantorDiracOperatorSocket A B H)
 
 /-- The Cantor wavelet mode belongs to the native unbounded domain. -/
-theorem waveletMode_mem_domain (n : ℕ) (w : BinaryWord n) :
+theorem waveletMode_mem_domain
+    (n : ℕ)
+    (w : InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n) :
     (S.waveletMode n w).1 ∈ S.cycle.domain :=
   (S.waveletMode n w).2
 
 /-- Native unbounded Dirac eigenmode equation. -/
 @[rep_depth operator]
-theorem dirac_wavelet_holds (n : ℕ) (w : BinaryWord n) :
+theorem dirac_wavelet_holds
+    (n : ℕ)
+    (w : InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n) :
     S.cycle.D (S.waveletMode n w) =
       S.scale n • (S.waveletMode n w).1 :=
   S.dirac_wavelet n w
@@ -197,7 +200,9 @@ theorem phase_compact :
   R.boundedTransform.phase_compact
 
 /-- Wavelet eigenmodes remain equations of the unbounded owner. -/
-theorem triple_dirac_wavelet (n : ℕ) (w : BinaryWord n) :
+theorem triple_dirac_wavelet
+    (n : ℕ)
+    (w : InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n) :
     R.cantorDirac.cycle.D (R.cantorDirac.waveletMode n w) =
       R.cantorDirac.scale n •
         (R.cantorDirac.waveletMode n w).1 :=
@@ -218,15 +223,17 @@ theorem bounded_realization_transfers_eigenmode
     (triple : InfoGeometry.Topology.CuntzCantorSpectralTriple Op H)
     (inclusion dirac : Domain →ₗ[ℂ] H)
     (weight : ℕ → ℝ)
-    (waveletMode : ∀ n : ℕ, BinaryWord n → Domain)
+    (waveletMode : ∀ n : ℕ,
+      InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n → Domain)
     (dirac_agrees_on_domain :
       ∀ ξ : Domain, triple.dirac (inclusion ξ) = dirac ξ)
     (dirac_wavelet :
-      ∀ (n : ℕ) (w : BinaryWord n),
+      ∀ (n : ℕ)
+        (w : InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n),
         dirac (waveletMode n w) =
           ((weight n : ℝ) : ℂ) • inclusion (waveletMode n w))
     (n : ℕ)
-    (w : BinaryWord n) :
+    (w : InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n) :
     triple.dirac (inclusion (waveletMode n w)) =
       ((weight n : ℝ) : ℂ) • inclusion (waveletMode n w) := by
   rw [dirac_agrees_on_domain]
@@ -318,7 +325,7 @@ end CantorDiracKMSThermalVacuum
 
 /-- Lower KMS boundary identity, directly from genuine strip data. -/
 theorem kms_lower_boundary
-    {Observable : Type*} [Mul Observable]
+    {Observable : Type*} [Monoid Observable]
     (strip : HestenesKreinKMSStripData Observable)
     (t : ℝ) (a b : Observable) :
     strip.omega_eval a
@@ -329,7 +336,7 @@ theorem kms_lower_boundary
 
 /-- Upper KMS boundary identity, directly from genuine strip data. -/
 theorem kms_upper_boundary
-    {Observable : Type*} [Mul Observable]
+    {Observable : Type*} [Monoid Observable]
     (strip : HestenesKreinKMSStripData Observable)
     (t : ℝ) (a b : Observable) :
     strip.omega_eval a
@@ -341,7 +348,7 @@ theorem kms_upper_boundary
 
 /-- Constructive KMS boundary law of an actual modular thermal state. -/
 theorem modularThermalState_kms_boundary
-    {Observable : Type*} [Mul Observable]
+    {Observable : Type*} [Monoid Observable]
     (thermalState : ModularThermalState Observable)
     (t : ℝ) (a b : Observable) :
     thermalState.kms.omega_eval a

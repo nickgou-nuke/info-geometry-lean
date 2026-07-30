@@ -134,4 +134,15 @@ theorem kawamuraCAR_nilpotent (C : CuntzO2Carrier Op) (n : ℕ) :
     rw [ih]
     exact kawamuraRho_zero C
 
+/-- Self-anticommutation for the creation operator: aₙ* aₙ* + aₙ* aₙ* = 0 -/
+theorem kawamuraCAR_creation_self_anticomm (C : CuntzO2Carrier Op) (n : ℕ) :
+    let a := kawamuraCARSequence C n
+    star a * star a + star a * star a = 0 := by
+  intro a
+  have h := kawamuraCAR_nilpotent C n
+  change a * a + a * a = 0 at h
+  have hstar := congrArg star h
+  simp only [star_add, star_mul, star_zero] at hstar
+  exact hstar
+
 end InfoGeometry.Algebra

@@ -74,22 +74,25 @@ Supplies a Clifford-valued operator candidate for a future spectral-triple reali
 
 ---
 
-## 4. Internal Parity & Oddness Implementation
+## 4. Internal Parity & Kawamura Recursive Fermion System (RFS)
 
-### Machine-certified statement
-In [`lean/InfoGeometry/Algebra/CuntzChiralSuperchargeRepresentation.lean`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra/CuntzChiralSuperchargeRepresentation.lean#L113-L135):
-```lean
-theorem parity_qplus_anticommute (g : CuntzO2Generators R) :
-    ParityGrading g * QPlus g + QPlus g * ParityGrading g = 0
-```
+### Machine-certified classification status
+
+| Component | Status | Formal Proof Term in Lean 4 |
+| :--- | :--- | :--- |
+| **Kawamura sequence in $\mathcal{O}_2$** | **DEFINED** | `kawamuraCARSequence (C : CuntzO2Carrier Op) : ℕ → Op` |
+| **Diagonal mixed CAR $\{a_n, a_n^*\} = 1$** | **SEALED** | `kawamuraCAR_anticomm` ([`Algebra.lean:111`](file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Algebra.lean#L111)) |
+| **Self-anticommutation $\{a_n, a_n\} = 0$ & $\{a_n^*, a_n^*\} = 0$** | **SEALED** | `kawamuraCAR_nilpotent` & `kawamuraCAR_creation_self_anticomm` |
+| **Literal nilpotency $a_n^2 = 0$** | **CONDITIONAL** | Holds in scalar settings without 2-torsion ($2 a_n^2 = 0$) |
+| **Cross-mode annihilation CAR $\{a_m, a_n\} = 0$** | **PENDING** | Program for further formalization via recursive $\zeta$-system |
+| **Cross-mode mixed CAR $\{a_m, a_n^*\} = \delta_{mn} \mathbf{1}$** | **PENDING** | Program for further formalization via recursive $\zeta$-system |
 
 ### Mathematical interpretation
-With $\Gamma^2 = \mathbf{1}$ proved in `parity_grading_square`, internal conjugation satisfies $\Gamma Q_+ \Gamma^{-1} = -Q_+$, establishing that $Q_+$ is odd under the internal $\mathbb{Z}_2$-grading $\Gamma = P_1 - P_2$.
+For every mode $n \in \mathbb{N}$, the recursive Kawamura operator $a_n \in \mathcal{O}_2$ satisfies $\{a_n, a_n^*\} = \mathbf{1}$, $\{a_n, a_n\} = 0$, and $\{a_n^*, a_n^*\} = 0$. Literal nilpotency $a_n^2 = 0$ follows in rings without 2-torsion.
 
 ### Physical research interpretation
-Demonstrates an internal Cuntz implementation of oddness and parity grading matching Clifford involution structure.
+Establishes single-mode CAR fermion generators embedded directly inside the Cuntz algebra $\mathcal{O}_2$.
 
 ### Unformalized obligations (Open Debt)
-- Canonical Anticommutation Relations (CAR): $\{a_i, a_j^\dagger\} = \delta_{ij} \mathbf{1}$, $\{a_i, a_j\} = 0$. (Cuntz orthogonality $S_i^* S_j = \delta_{ij} \mathbf{1}$ is distinct).
-- Full intertwining theorem between boson and fermion representations (full bosonization).
-- Derivation of the Pauli exclusion principle purely from state positivity.
+- Cross-mode CAR theorems $\{a_m, a_n\} = 0$ and $\{a_m, a_n^*\} = \delta_{mn} \mathbf{1}$ for $m \neq n$, derived internally from the recursive Kawamura $\zeta$-system.
+- Full Hilbert-space Fock space representation intertwiner.

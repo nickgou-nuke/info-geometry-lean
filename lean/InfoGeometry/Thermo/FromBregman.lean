@@ -184,7 +184,7 @@ end ProbabilisticLemmas
 lemma KL_param_eq_bregman_energy
     (L : LegendrePotential) (θ θ' : ℝ) :
     InfoGeometry.ConvexDuality.KL_param L.f θ θ' = L.bregman θ' θ := by
-  simp [InfoGeometry.ConvexDuality.KL_param, InfoGeometry.ConvexDuality.bregman,
+  simp [InfoGeometry.ConvexDuality.KL_param,
     InfoGeometry.bregmanDiv, InfoGeometry.Convex.LegendrePotential.bregman]
 
 /-- OT/convex bridge: parameterized KL cost is exactly the Bregman transport gap. -/

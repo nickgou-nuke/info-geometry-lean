@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CStarCuntzCARCCRParameterTopCat
+import Mathlib.Topology.Maps.Basic
 
 /-!
 # Separation of the CAR and CCR parameter fibres
@@ -12,6 +13,7 @@ topological readout of the CAR/CCR distinction.
 namespace InfoGeometry.Canonical.CARCCRParameterFiberSeparation
 
 open InfoGeometry.Canonical.CStarCuntzCARCCRParameterTopCat
+open InfoGeometry.OperatorAlgebra.QCCRResidual
 
 variable {A : Type*} [CStarAlgebra A]
 
@@ -63,5 +65,28 @@ theorem qCcrParameterZeroLocusFiber_closed
   exact (qCcrParameterZeroLocus_closed (A := A)).inter
     (isClosed_singleton.preimage
       (continuous_snd.comp continuous_snd))
+
+theorem qCcrParameterZeroLocusFiber_isClosedEmbedding
+    [TopologicalSpace A] [T1Space A] [ContinuousMul A] [ContinuousSub A]
+    (q : A) :
+    Topology.IsClosedEmbedding
+      (fun p : qCcrParameterZeroLocusFiberType (A := A) q => p.1) := by
+  exact (qCcrParameterZeroLocusFiber_closed (A := A) q).isClosedEmbedding_subtypeVal
+
+theorem qCcrSpecializationZeroLocusMap_isClosedEmbedding
+    [TopologicalSpace A] [T1Space A] [ContinuousMul A] [ContinuousSub A]
+    (q : A) :
+    Topology.IsClosedEmbedding
+      (qCcrSpecializationZeroLocusMap (A := A) q) := by
+  let e :
+      {p : A × A // p ∈ qCcrZeroLocus (A := A) q} ≃ₜ
+        qCcrParameterZeroLocusFiberType (A := A) q :=
+    { toFun := qCcrSpecializationZeroLocusMap (A := A) q
+      invFun := qCcrSpecializationZeroLocusFiberMap (A := A) q
+      left_inv := qCcrSpecializationZeroLocusMap_leftInverse (A := A) q
+      right_inv := qCcrSpecializationZeroLocusMap_rightInverse (A := A) q
+      continuous_toFun := continuous_qCcrSpecializationZeroLocusMap (A := A) q
+      continuous_invFun := continuous_qCcrSpecializationZeroLocusFiberMap (A := A) q }
+  exact e.isClosedEmbedding
 
 end InfoGeometry.Canonical.CARCCRParameterFiberSeparation

@@ -9,7 +9,7 @@ equivalences recorded by the certificate loop.
     thm:window6-leyang-p6-unitary-toeplitz -/
 theorem paper_window6_leyang_p6_unitary_toeplitz
     (D : Window6P6ToeplitzCertificateChainData) :
-    window6P6Selfadjoint D ∧
+    (D.commutantWitness.transpose = D.commutantWitness) ∧
       window6P6FiniteCommutant D ∧
       window6P6UnitCircleRoot D ∧
       (D.certificateLoop.rh ↔ D.certificateLoop.jensenDefectZeroLimit) ∧

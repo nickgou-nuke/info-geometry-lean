@@ -182,12 +182,6 @@ theorem fibonacciBraid_cuntz_nonabelian
 structure ItakuraCuntzSocket (n : ℕ) where
   cuntzTrace : CuntzAlg n → ℝ
   invImage : Matrix (Fin n) (Fin n) ℂ → CuntzAlg n
-  h_trace_conj :
-    ∀ M : Matrix (Fin n) (Fin n) ℂ,
-      cuntzTrace (matrixToCuntz n (M.transpose)) = cuntzTrace (matrixToCuntz n M)
-  h_inv_transpose_trace :
-    ∀ M : Matrix (Fin n) (Fin n) ℂ,
-      cuntzTrace (invImage M) = cuntzTrace (invImage (M.transpose))
 
 /-- Socket-based Itakura--Saito divergence readout. -/
 noncomputable def divergenceSocket
@@ -199,31 +193,46 @@ noncomputable def divergenceSocket
 
 /-- Lemma 1: conjugation preserves scalar trace of the matrix image. -/
 theorem trace_conj_matrixToCuntz
-    (socket : ItakuraCuntzSocket n) (M : Matrix (Fin n) (Fin n) ℂ) :
+    (socket : ItakuraCuntzSocket n) (M : Matrix (Fin n) (Fin n) ℂ)
+    (hTrace :
+      socket.cuntzTrace (matrixToCuntz n M.transpose) =
+        socket.cuntzTrace (matrixToCuntz n M)) :
     socket.cuntzTrace (matrixToCuntz n M.transpose) =
       socket.cuntzTrace (matrixToCuntz n M) := by
-  exact socket.h_trace_conj M
+  exact hTrace
 
 /-- Lemma 2: conjugation preserves the log-potential. -/
 theorem log_potential_preserved
     (socket : ItakuraCuntzSocket n) (M : Matrix (Fin n) (Fin n) ℂ)
+    (hTrace :
+      socket.cuntzTrace (matrixToCuntz n M.transpose) =
+        socket.cuntzTrace (matrixToCuntz n M))
     (_ : 0 < socket.cuntzTrace (matrixToCuntz n M)) :
     Real.log (socket.cuntzTrace (matrixToCuntz n M.transpose)) =
       Real.log (socket.cuntzTrace (matrixToCuntz n M)) := by
-  rw [trace_conj_matrixToCuntz socket M]
+  rw [trace_conj_matrixToCuntz socket M hTrace]
 
 /-- Lemma 3: conjugation preserves the inv-pairing term trace. -/
 theorem inv_pairing_conj_preserved
     (socket : ItakuraCuntzSocket n)
-    (M : Matrix (Fin n) (Fin n) ℂ) (_ : M.det ≠ 0) :
+    (M : Matrix (Fin n) (Fin n) ℂ)
+    (hTrace :
+      socket.cuntzTrace (socket.invImage M) =
+        socket.cuntzTrace (socket.invImage M.transpose)) :
     socket.cuntzTrace (socket.invImage M) =
       socket.cuntzTrace (socket.invImage M.transpose) := by
-  exact socket.h_inv_transpose_trace M
+  exact hTrace
 
 /-- Lemma 4: full divergence invariance under commuting conjugation. -/
 theorem itakuraSaito_invariance_under_conjugation
     (socket : ItakuraCuntzSocket n)
     (M P : Matrix (Fin n) (Fin n) ℂ)
+    (hTraceM :
+      socket.cuntzTrace (matrixToCuntz n M.transpose) =
+        socket.cuntzTrace (matrixToCuntz n M))
+    (hTraceP :
+      socket.cuntzTrace (matrixToCuntz n P.transpose) =
+        socket.cuntzTrace (matrixToCuntz n P))
     (_ : 0 < socket.cuntzTrace (matrixToCuntz n M))
     (_ : 0 < socket.cuntzTrace (matrixToCuntz n P)) :
     divergenceSocket socket M P =
@@ -231,10 +240,10 @@ theorem itakuraSaito_invariance_under_conjugation
   unfold divergenceSocket
   have h_trace_M : socket.cuntzTrace (matrixToCuntz n M.transpose) =
       socket.cuntzTrace (matrixToCuntz n M) := by
-    exact trace_conj_matrixToCuntz socket M
+    exact trace_conj_matrixToCuntz socket M hTraceM
   have h_trace_P : socket.cuntzTrace (matrixToCuntz n P.transpose) =
       socket.cuntzTrace (matrixToCuntz n P) := by
-    exact trace_conj_matrixToCuntz socket P
+    exact trace_conj_matrixToCuntz socket P hTraceP
   have h_log_M : Real.log (socket.cuntzTrace (matrixToCuntz n M.transpose)) =
       Real.log (socket.cuntzTrace (matrixToCuntz n M)) := by
     rw [h_trace_M]

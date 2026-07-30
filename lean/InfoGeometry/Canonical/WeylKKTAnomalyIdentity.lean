@@ -102,9 +102,6 @@ This packages the paired projector identities into one constructive witness so
 downstream collapse routes need not carry the raw `hProj`/`hLeft` pair.
 -/
 @[rep_depth transport]
-abbrev StructuredProjectorHypothesesWitness : Prop :=
-  CI.P_MP_right = CI.P_MP ∧ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D
-
 /--
 Proof-carrying RN/Kähler witness for the conformal zero-scale lane.
 
@@ -113,11 +110,6 @@ unit-relative-volume bit, so downstream zero-collapse routes need not carry the
 raw `(hScaleFromKahler, bit)` pair.
 -/
 @[rep_depth transport]
-abbrev UnitRelativeVolumeScaleWitness
-    {n : Nat} (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n) : Prop :=
-  CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M ∧
-    InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M
-
 /--
 Structured dilation-source closure:
 the Weyl dilation commutator is exactly `-1/2` times the obstruction operator.
@@ -137,7 +129,7 @@ Witness-routed version of the structured dilation-source closure theorem.
 -/
 @[rep_depth transport]
 theorem dilationCommutator_eq_neg_half_projectorObstruction_of_structuredProjectorWitness
-    (W : StructuredProjectorHypothesesWitness (CI := CI)) :
+    (W : (CI.P_MP_right = CI.P_MP ∧ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D)) :
     CI.P_D * CI.D - CI.D * CI.P_D
       = -((2 : ℝ)⁻¹) • CI.projectorObstruction := by
   exact
@@ -216,7 +208,7 @@ projector witness.
 -/
 @[rep_depth transport]
 theorem semanticCollapsePacket_of_structuredProjectorWitness_of_chiralScale_eq_zero
-    (W : StructuredProjectorHypothesesWitness (CI := CI))
+    (W : (CI.P_MP_right = CI.P_MP ∧ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D))
     (hScaleZero : CI.chiralScale = 0) :
     CI.chiralScale = 0
       ∧ CI.epsilon = 0
@@ -270,7 +262,7 @@ theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelat
     (hScaleFromKahler :
       CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M)
     (bit : InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M)
-    (W : StructuredProjectorHypothesesWitness (CI := CI)) :
+    (W : (CI.P_MP_right = CI.P_MP ∧ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D)) :
     CI.projectorObstruction = 0
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
   exact
@@ -289,8 +281,8 @@ surface when the caller already owns the proof-carrying
 theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelativeVolumeScaleWitness_of_structuredProjectorWitness
     {n : Nat}
     {M : InfoGeometry.Canonical.MoE.SinkhornMatrix n}
-    (WV : UnitRelativeVolumeScaleWitness (CI := CI) M)
-    (W : StructuredProjectorHypothesesWitness (CI := CI)) :
+    (WV : (CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M ∧ InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M))
+    (W : (CI.P_MP_right = CI.P_MP ∧ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D)) :
     CI.projectorObstruction = 0
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
   exact
@@ -319,13 +311,6 @@ hypothesis
 `IsThermodynamicReadoutStationary ... → CI.chiralScale = 0`.
 -/
 @[rep_depth transport]
-abbrev StationaryScaleZeroWitness
-    (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
-    (ψ : InfoGeometry.Krein.DoubledSpace E)
-    (A : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E) : Prop :=
-  InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
-      (E := E) P ψ A → CI.chiralScale = 0
-
 /--
 Recover the stationarity-to-zero-scale bridge from the proof-carrying witness.
 -/
@@ -334,7 +319,8 @@ theorem stationaryScaleZero_of_witness
     {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
     {ψ : InfoGeometry.Krein.DoubledSpace E}
     {A : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E}
-    (W : StationaryScaleZeroWitness (E := E) CI P ψ A) :
+    (W : InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
+      (E := E) P ψ A → CI.chiralScale = 0) :
     InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
         (E := E) P ψ A → CI.chiralScale = 0 :=
   W
@@ -356,7 +342,7 @@ theorem semanticCollapsePacket_of_equilibriumSeed_of_stationaryScaleZeroWitness_
     (hEq :
       InfoGeometry.Canonical.SouriauPlanckVector.GibbsSouriauEquilibriumSeed
         (E := E) P ψ A)
-    (W : StationaryScaleZeroWitness (E := E) CI P ψ A)
+    (W : (InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary (E := E) P ψ A → CI.chiralScale = 0))
     (hProj : CI.P_MP_right = CI.P_MP)
     (hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D) :
     CI.chiralScale = 0
@@ -388,8 +374,8 @@ theorem semanticCollapsePacket_of_equilibriumSeed_of_stationaryScaleZeroWitness_
     (hEq :
       InfoGeometry.Canonical.SouriauPlanckVector.GibbsSouriauEquilibriumSeed
         (E := E) P ψ A)
-    (WScale : StationaryScaleZeroWitness (E := E) CI P ψ A)
-    (WProj : StructuredProjectorHypothesesWitness (CI := CI)) :
+    (WScale : (InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary (E := E) P ψ A → CI.chiralScale = 0))
+    (WProj : (CI.P_MP_right = CI.P_MP ∧ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D)) :
     CI.chiralScale = 0
       ∧ CI.epsilon = 0
       ∧ CI.projectorObstruction = 0
@@ -472,7 +458,7 @@ theorem semanticCollapsePacket_of_unitRelativeVolumeBit_of_structuredProjectorWi
     (hScaleFromKahler :
       CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M)
     (bit : InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M)
-    (W : StructuredProjectorHypothesesWitness (CI := CI)) :
+    (W : (CI.P_MP_right = CI.P_MP ∧ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D)) :
     CI.chiralScale = 0
       ∧ CI.epsilon = 0
       ∧ CI.projectorObstruction = 0
@@ -493,8 +479,8 @@ surface when the caller already owns the proof-carrying
 theorem semanticCollapsePacket_of_unitRelativeVolumeScaleWitness_of_structuredProjectorWitness
     {n : Nat}
     {M : InfoGeometry.Canonical.MoE.SinkhornMatrix n}
-    (WV : UnitRelativeVolumeScaleWitness (CI := CI) M)
-    (W : StructuredProjectorHypothesesWitness (CI := CI)) :
+    (WV : (CI.chiralScale = InfoGeometry.Canonical.MoE.kahlerPotentialRN n M ∧ InfoGeometry.Canonical.IncompressibleBitBridge.UnitRelativeVolumeBit n M))
+    (W : (CI.P_MP_right = CI.P_MP ∧ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D)) :
     CI.chiralScale = 0
       ∧ CI.epsilon = 0
       ∧ CI.projectorObstruction = 0
@@ -517,7 +503,7 @@ theorem semanticCollapsePacket_of_firstVariation_eq_zero_of_probeFaithful_of_sta
     (hFaithful : InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P)
     (hFirst :
       InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P ψ A = 0)
-    (W : StationaryScaleZeroWitness (E := E) CI P ψ A)
+    (W : (InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary (E := E) P ψ A → CI.chiralScale = 0))
     (hProj : CI.P_MP_right = CI.P_MP)
     (hLeft : CI.P_D * CI.P_MP = CI.P_MP * CI.P_D) :
     CI.chiralScale = 0

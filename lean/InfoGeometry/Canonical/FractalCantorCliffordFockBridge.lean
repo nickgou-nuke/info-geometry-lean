@@ -215,22 +215,35 @@ theorem boundary_finite_reconstruction
 /-- Boundary crossing witness with explicit prefix/tail fields. -/
 @[rep_depth operator]
 structure BoundaryCrossingWitness (n : ℕ) (ξ : InfiniteBinaryWordSpace) where
-  pre : List Bool
-  suf : InfiniteBinaryWordSpace
-  reconstruction : ξ = boundaryConsList pre suf
-  pre_eq : pre = boundaryPrefix n ξ
-  suf_eq : suf = boundaryIterateTail n ξ
+  reconstruction :
+    ξ = boundaryConsList (boundaryPrefix n ξ) (boundaryIterateTail n ξ)
+
+namespace BoundaryCrossingWitness
+
+def pre {n : ℕ} {ξ : InfiniteBinaryWordSpace}
+    (_ : BoundaryCrossingWitness n ξ) : List Bool :=
+  boundaryPrefix n ξ
+
+def suf {n : ℕ} {ξ : InfiniteBinaryWordSpace}
+    (_ : BoundaryCrossingWitness n ξ) : InfiniteBinaryWordSpace :=
+  boundaryIterateTail n ξ
+
+@[simp] theorem pre_eq {n : ℕ} {ξ : InfiniteBinaryWordSpace}
+    (W : BoundaryCrossingWitness n ξ) :
+    W.pre = boundaryPrefix n ξ := rfl
+
+@[simp] theorem suf_eq {n : ℕ} {ξ : InfiniteBinaryWordSpace}
+    (W : BoundaryCrossingWitness n ξ) :
+    W.suf = boundaryIterateTail n ξ := rfl
+
+end BoundaryCrossingWitness
 
 /-- Canonical boundary crossing witness at depth `n`. -/
 @[rep_depth operator]
 def boundaryCrossingWitness
     (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
     BoundaryCrossingWitness n ξ where
-  pre := boundaryPrefix n ξ
-  suf := boundaryIterateTail n ξ
   reconstruction := boundary_finite_reconstruction n ξ
-  pre_eq := rfl
-  suf_eq := rfl
 
 /-- Boundary crossing readout: the canonical witness is exactly prefix/tail reconstruction. -/
 @[rep_depth operator]

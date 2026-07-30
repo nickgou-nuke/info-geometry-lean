@@ -675,7 +675,17 @@ structure CouplingPacket where
     ∀ (ε : ℝ), |ε| ≤ 1 →
       Real.sqrt (2 * ((Real.cos ε - 1) ^ 2 + (Real.sin ε - ε) ^ 2)) ≤
         (2 * Real.sqrt 2) * ε ^ 2
-  kernelNotice : String := "Zero global operator constants in this file"
+
+namespace CouplingPacket
+
+/-- Metadata readout; it is not a mathematical field of the packet. -/
+def kernelNotice (_P : CouplingPacket) : String :=
+  "Zero global operator constants in this file"
+
+@[simp] theorem kernelNotice_eq (P : CouplingPacket) :
+    P.kernelNotice = "Zero global operator constants in this file" := rfl
+
+end CouplingPacket
 
 /-- The assembled coupling record. -/
 def coupling : CouplingPacket where

@@ -362,33 +362,33 @@ theorem it_invariant (P : ItFromBitPacket) :
 
 /-- The finite word readout is explicit. -/
 theorem word_readout (P : ItFromBitPacket) :
-    P.word = P.word :=
-  rfl
+    P.word = P.cantorCylinder.word :=
+  P.sameAddress
 
 /-- The Cantor cylinder readout is explicit. -/
 theorem cantorCylinder_readout (P : ItFromBitPacket) :
-    P.cantorCylinder = P.cantorCylinder :=
-  rfl
+    P.cantorCylinder.word = P.word :=
+  P.sameAddress.symm
 
 /-- The projection readout is explicit. -/
 theorem projection_readout (P : ItFromBitPacket) :
-    P.projection = P.projection :=
-  rfl
+    P.projection.projection * P.projection.projection = P.projection.projection :=
+  P.projection.projection_idem
 
 /-- The finite Fock readout is explicit. -/
-theorem fock_readout (P : ItFromBitPacket) :
-    P.fock = P.fock :=
-  rfl
+theorem fock_readout (P : ItFromBitPacket) (i : Fin P.n) :
+    P.fock.annihilation i * P.fock.annihilation i = 0 :=
+  P.fock.annihilation_square_zero i
 
 /-- The random-walk readout is explicit. -/
-theorem walk_readout (P : ItFromBitPacket) :
-    P.walk = P.walk :=
-  rfl
+theorem walk_readout (P : ItFromBitPacket) (w v : BinaryWord P.n) :
+    0 ≤ P.walk.P w v :=
+  P.walk.nonnegative w v
 
 /-- The stabilization packet readout is explicit. -/
 theorem stabilization_readout (P : ItFromBitPacket) :
-    P.stabilization = P.stabilization :=
-  rfl
+    P.stabilization.walk = P.walk :=
+  P.itInvariant
 
 end ItFromBitPacket
 

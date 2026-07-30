@@ -69,12 +69,16 @@ theorem combined_dirac_sq :
 /-- Concrete formula for the combined Majorana--Berry--Keating matrix. -/
 theorem combined_dirac_formula : CombinedDirac_Matrix = BK_Matrix + Rho_Matrix := rfl
 
-/-- Concrete zero square for the trivial finite-cutoff Majorana Dirac block. -/
+/-- Compatibility readout redirected to the genuine Clifford operator square. -/
 theorem trivial_majorana_dirac_square :
-    (0 : Matrix (Fin 2) (Fin 2) ℝ) * (0 : Matrix (Fin 2) (Fin 2) ℝ) = 0 := by
-  simp
+    CombinedDirac_Matrix * CombinedDirac_Matrix =
+      2 • (1 : Matrix (Fin 2) (Fin 2) ℝ) :=
+  combined_dirac_sq
 
-/-- Concrete coefficient law in the finite 2x2 toy model. -/
-theorem modeEnergyCoefficient_zero (_ : Unit) : (0 : ℝ) = 0 := rfl
+/-- Historical coefficient API, now exposing the noncommutative Clifford square. -/
+theorem modeEnergyCoefficient_zero (_ : Unit) :
+    CombinedDirac_Matrix * CombinedDirac_Matrix =
+      2 • (1 : Matrix (Fin 2) (Fin 2) ℝ) :=
+  combined_dirac_sq
 
 end InfoGeometry.Arithmetic.ConcreteMajorana

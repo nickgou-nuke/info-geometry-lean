@@ -212,8 +212,9 @@ theorem omega2_is2cocycle_iff_cyclic :
           omega2 (innerDerivation Z X) Y = 0) := by
   rfl
 
-/-- A concrete 3-cochain used for closure bookkeeping. -/
-def omega3 (_X _Y _Z : M2R) : ℝ := 0
+/-- The invariant trace 3-cochain `tr(X [Y,Z])` on the matrix Lie algebra. -/
+def omega3 (X Y Z : M2R) : ℝ :=
+  tr (X * innerDerivation Y Z)
 
 /--
 Chevalley--Eilenberg 3-cocycle condition (scalar-valued, trivial module
@@ -228,10 +229,12 @@ def isLie3Cocycle (τ : M2R → M2R → M2R → ℝ) : Prop :=
     - τ (innerDerivation X Z) W Y
     + τ (innerDerivation Y Z) W X = 0
 
-/-- `omega3` is a 3-cocycle (identically zero cochain). -/
+/-- `omega3` satisfies the Chevalley--Eilenberg 3-cocycle identity. -/
 theorem omega3_is3cocycle : isLie3Cocycle omega3 := by
   intro W X Y Z
-  simp [omega3]
+  unfold omega3 innerDerivation tr
+  simp [Matrix.mul_apply, Fin.sum_univ_two]
+  ring
 
 /--
 Concrete/abstract bridge for the 3-cocycle predicate:
@@ -258,7 +261,7 @@ theorem omega3_expanded_sum_zero (W X Y Z : M2R) :
     + omega3 (innerDerivation X Y) W Z
     - omega3 (innerDerivation X Z) W Y
     + omega3 (innerDerivation Y Z) W X = 0 := by
-  simpa using (omega3_is3cocycle (W := W) (X := X) (Y := Y) (Z := Z))
+  exact omega3_is3cocycle W X Y Z
 
 /-- The Tomita-Bregman operator lies in the kernel of the modular inner derivation. -/
 theorem modular_derivation_bregman_invariant :

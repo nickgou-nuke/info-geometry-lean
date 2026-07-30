@@ -225,9 +225,15 @@ structure ProjectiveCountFierzKleinData
   readout : FierzFromProjectiveCounts Γ
   residual : FierzKleinResidual
 
-  coords : FierzChannel → ℝ :=
-    fun ch =>
-      readout ch
-        (fun γ => projectiveOrbitCoordinate Ω φ γ)
+namespace ProjectiveCountFierzKleinData
+
+/-- Projective Fierz coordinates derived from the supplied readout and orbit data. -/
+def coords {Γ : Type*} [Fintype Γ]
+    (D : ProjectiveCountFierzKleinData Γ) : FierzChannel → ℝ :=
+  fun ch =>
+    D.readout ch
+      (fun γ => projectiveOrbitCoordinate D.Ω D.φ γ)
+
+end ProjectiveCountFierzKleinData
 
 end InfoGeometry.Canonical.WeylKMSGromovWittenCounts

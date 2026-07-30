@@ -94,19 +94,16 @@ theorem massieu_centered_second_difference (β : ℚ) :
   simp [massieu]
   ring
 
-abbrev FiniteSouriauCasimirCertificate (F X Y Z : M2Q) : Prop :=
-  commutator X Y = - commutator Y X ∧
-    (commutator X (commutator Y Z) +
-      commutator Y (commutator Z X) +
-      commutator Z (commutator X Y) = 0) ∧
-    kksForm F X X = 0 ∧
-    (souriauTheta F X (commutator Y Z) +
-      souriauTheta F Y (commutator Z X) +
-      souriauTheta F Z (commutator X Y) = 0) ∧
-    (massieu (0 + 1) - 2 * massieu 0 + massieu (0 - 1) = 1)
-
 theorem certificate (F X Y Z : M2Q) :
-    FiniteSouriauCasimirCertificate F X Y Z := by
+    commutator X Y = - commutator Y X ∧
+      (commutator X (commutator Y Z) +
+        commutator Y (commutator Z X) +
+        commutator Z (commutator X Y) = 0) ∧
+      kksForm F X X = 0 ∧
+      (souriauTheta F X (commutator Y Z) +
+        souriauTheta F Y (commutator Z X) +
+        souriauTheta F Z (commutator X Y) = 0) ∧
+      (massieu (0 + 1) - 2 * massieu 0 + massieu (0 - 1) = 1) := by
   exact ⟨commutator_skew X Y,
     commutator_jacobi X Y Z,
     kks_alternating F X,

@@ -287,7 +287,9 @@ theorem lightconeSugawara_centralCharge_calibrated
     S.sugawara.bridge.centralCharge =
       S.sugawara.bridge.level * S.sugawara.bridge.finiteDimension /
         (S.sugawara.bridge.level + S.sugawara.bridge.dualCoxeterNumber) :=
-  S.sugawara_centralCharge_calibrated hcc
+  by
+    rw [S.uses_lightcone_affine_bridge] at hcc ⊢
+    exact S.kanAffine.affineLightCone.centralCharge_calibrated hcc
 
 /--
 The theorem-only canonical chain:

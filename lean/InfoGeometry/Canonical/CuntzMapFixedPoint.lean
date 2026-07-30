@@ -45,31 +45,25 @@ theorem cuntzMap_unital (S_left S_right : Op) (h_range : S_left * star S_left + 
 
 /-! ### 2. KMS Symmetric State — the Jaynes Maxent Point -/
 
-abbrev KMSSymmetricState (S_left S_right : Op) : Type _ :=
-  Σ' φ : Op → ℝ,
-    (∀ X Y, φ (X + Y) = φ X + φ Y) ∧
-      φ 1 = 1 ∧
-        (∀ X, φ (S_left * X * star S_left) = (1/2 : ℝ) * φ X) ∧
-          ∀ X, φ (S_right * X * star S_right) = (1/2 : ℝ) * φ X
+structure KMSSymmetricState (S_left S_right : Op) where
+  φ : Op →+ ℝ
+  φ_one : φ 1 = 1
+  half_L : ∀ X, φ (S_left * X * star S_left) = (1/2 : ℝ) * φ X
+  half_R : ∀ X, φ (S_right * X * star S_right) = (1/2 : ℝ) * φ X
 
 namespace KMSSymmetricState
 
 variable {S_left S_right : Op} (state : KMSSymmetricState S_left S_right)
 
-abbrev φ : Op → ℝ := state.1
-abbrev φ_add : ∀ X Y, φ state (X + Y) = φ state X + φ state Y := state.2.1
-abbrev φ_one : φ state 1 = 1 := state.2.2.1
-abbrev half_L : ∀ X, φ state (S_left * X * star S_left) = (1/2 : ℝ) * φ state X :=
-  state.2.2.2.1
-abbrev half_R : ∀ X, φ state (S_right * X * star S_right) = (1/2 : ℝ) * φ state X :=
-  state.2.2.2.2
+abbrev φ_add : ∀ X Y, state.φ (X + Y) = state.φ X + state.φ Y :=
+  state.φ.map_add
 
 /-- φ(Φ(X)) = φ(X) — the KMS state is the Cuntz map fixed point. -/
 theorem cuntzMap_fixed_point (X : Op) : state.φ (cuntzMap S_left S_right X) = state.φ X := by
-  dsimp [cuntzMap, CuntzMapKreinBridge.cuntzMapTwo]
-  rw [state.φ_add (S_left * X * star S_left) (S_right * X * star S_right)]
-  rw [state.half_L X, state.half_R X]
-  ring
+  simpa [cuntzMap] using
+    CuntzMapKreinBridge.real_additive_readout_fixed_of_half_branch_scaling
+      (φ := state.φ) (S_left := S_left) (S_right := S_right) (X := X)
+      (state.half_L X) (state.half_R X)
 
 /-- φ(Φ^n(X)) = φ(X) — the full RG flow preserves expectations. -/
 theorem cuntzMap_iterate_fixed_point (X : Op) (n : ℕ) :
@@ -89,10 +83,7 @@ theorem cuntzMap_sum_iterate_fixed_point (X : Op) (N : ℕ) :
     (N : ℝ) * state.φ X := by
   induction' N with n ih
   · have hφ0 : state.φ 0 = 0 := by
-      have h := state.φ_add 0 0
-      -- h : φ(0+0) = φ(0) + φ(0), but 0+0 = 0
-      rw [add_zero] at h
-      linarith
+      exact state.φ.map_zero
     simp [hφ0]
   · rw [Finset.sum_range_succ,
       state.φ_add (Finset.sum (Finset.range n) _) (Nat.iterate (cuntzMap S_left S_right) n X),

@@ -622,9 +622,8 @@ theorem heightTranslation_preserves_u (a : ℝ) (x : ZetaCenteredChart) :
 
 /-- Height translations preserve the critical-line predicate `u = 0`. -/
 theorem heightTranslation_preserves_criticalLine (a : ℝ) (x : ZetaCenteredChart) :
-    x.u = 0 → (heightTranslation a x).u = 0 := by
-  intro h
-  exact h
+    (heightTranslation a x).u = 0 ↔ x.u = 0 := by
+  rw [heightTranslation_preserves_u]
 
 /-- The critical mirror commutes with height translations. -/
 theorem criticalMirror_commutes_heightTranslation (a : ℝ) (x : ZetaCenteredChart) :

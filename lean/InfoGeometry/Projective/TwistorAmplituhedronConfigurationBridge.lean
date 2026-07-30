@@ -122,9 +122,10 @@ abbrev ArnoldBCFWInterface :=
 
 /-- Read back the installed equality of Arnold/cooperad and BCFW operators. -/
 theorem bcfw_of_arnold
-    (A : ArnoldBCFWInterface) :
+    (A : ArnoldBCFWInterface)
+    (hComparison : A.cooperadReadout = A.bcfwReadout) :
     A.cooperadReadout = A.bcfwReadout :=
-  A.bcfw_readout
+  A.bcfw_readout hComparison
 
 /-! ## Rank-32 budget interface -/
 

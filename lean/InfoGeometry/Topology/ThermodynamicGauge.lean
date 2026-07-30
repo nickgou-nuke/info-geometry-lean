@@ -175,44 +175,4 @@ theorem finite_wilson_loop_singleton (step : Op) :
     finite_wilson_loop [step] = 1 + step := by
   simp [finite_wilson_loop]
 
-/-- Read back a supplied finite Wilson-word trace premise. -/
-theorem wilson_word_trace_computes_zeta_of_trace_eval
-    [Algebra ℝ Op]
-    (path : List Op)
-    (trace : Op →ₗ[ℝ] ℝ)
-    (partitionZeta : ℝ)
-    (htrace : trace (nonabelian_wilson_word path) = partitionZeta) :
-    trace (nonabelian_wilson_word path) = partitionZeta :=
-  htrace
-
-/-- Read back a supplied finite non-abelian Wilson-loop trace premise. -/
-theorem finite_wilson_loop_trace_computes_zeta_of_trace_eval
-    [Algebra ℝ Op]
-    (path : List Op)
-    (trace : Op →ₗ[ℝ] ℝ)
-    (partitionZeta : ℝ)
-    (htrace : trace (finite_wilson_loop path) = partitionZeta) :
-    trace (finite_wilson_loop path) = partitionZeta :=
-  htrace
-
-/-- Read back a supplied finite curvature trace premise. -/
-theorem curvature_trace_computes_zeta_of_trace_eval
-    [Algebra ℝ Op]
-    (flow : CausalNonequilibriumFlow Op)
-    (trace : Op →ₗ[ℝ] ℝ)
-    (partitionZeta : ℝ)
-    (htrace : trace (thermodynamic_curvature flow) = partitionZeta) :
-    trace (thermodynamic_curvature flow) = partitionZeta :=
-  htrace
-
-/-- Trace-readout schema for a supplied partition comparison hypothesis. -/
-theorem wilson_loop_computes_zeta_of_trace_eval
-    [Algebra ℝ Op]
-    (flow : CausalNonequilibriumFlow Op)
-    (trace : Op →ₗ[ℝ] ℝ)
-    (partitionZeta : ℝ)
-    (htrace : trace (wilson_loop_holonomy flow) = partitionZeta) :
-    trace (wilson_loop_holonomy flow) = partitionZeta :=
-  htrace
-
 end InfoGeometry.Topology.ThermodynamicGauge

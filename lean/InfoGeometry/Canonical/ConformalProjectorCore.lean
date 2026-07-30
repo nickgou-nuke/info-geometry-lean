@@ -123,19 +123,11 @@ abbrev leftChiralAnomaly : E →L[ℝ] E := CCI.chiralAnomaly
 /-- Explicit certified left-projector anomaly operator alias. -/
 abbrev leftChiralAnomalyOperator : E →L[ℝ] E := CCI.leftChiralAnomaly
 
-/--
-Canonical certified obstruction operator alias.
-
-This is the operator-first obstruction surface used in downstream transport/QGT
-bridges.
--/
-abbrev projectorObstructionOperator : E →L[ℝ] E := CCI.leftChiralAnomalyOperator
-
 @[simp] theorem projectorObstructionOperator_eq_leftChiralAnomalyOperator :
-    CCI.projectorObstructionOperator = CCI.leftChiralAnomalyOperator := rfl
+    CCI.chiralAnomalyOperator = CCI.leftChiralAnomalyOperator := rfl
 
 @[simp] theorem projectorObstructionOperator_eq_chiralAnomalyOperator :
-    CCI.projectorObstructionOperator = CCI.chiralAnomalyOperator := rfl
+    CCI.leftChiralAnomalyOperator = CCI.chiralAnomalyOperator := rfl
 
 /-- Certified right-projector anomaly commutator. -/
 def rightChiralAnomaly : E →L[ℝ] E :=

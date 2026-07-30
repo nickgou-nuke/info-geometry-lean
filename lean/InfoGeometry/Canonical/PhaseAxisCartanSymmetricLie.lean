@@ -126,9 +126,13 @@ lemma phaseAxisCartanMap_lie
 /-- The phase-axis Cartan involution as a bare involutive automorphism. -/
 @[rep_depth transport]
 noncomputable def phaseAxisCartanInvolution :
-    InfoGeometry.Core.InvolutiveAutomorphism EndH where
-  toFun := phaseAxisCartanMap (E := E)
-  involutive := phaseAxisCartanMap_involutive (E := E)
+    InfoGeometry.Core.InvolutiveAutomorphism EndH :=
+  InfoGeometry.Core.InvolutiveAutomorphism.mk
+    (phaseAxisCartanMap (E := E))
+    (phaseAxisCartanMap_involutive (E := E))
+
+@[simp] lemma phaseAxisCartanInvolution_apply (A : EndH) :
+    phaseAxisCartanInvolution (E := E) A = phaseAxisCartanMap (E := E) A := rfl
 
 instance phaseAxisCartanInvolution_preservesLinear :
     InfoGeometry.Core.PreservesLinear EndH (phaseAxisCartanInvolution (E := E)) where
@@ -136,12 +140,16 @@ instance phaseAxisCartanInvolution_preservesLinear :
     intro A B
     apply ContinuousLinearMap.ext
     intro x
+    change phaseAxisCartanMap (E := E) (A + B) x =
+      phaseAxisCartanMap (E := E) A x + phaseAxisCartanMap (E := E) B x
     apply DoubledSpace.ext <;>
       simp [phaseAxisCartanInvolution, phaseAxisCartanMap, phaseConjugate] <;> abel
   map_smul := by
     intro a A
     apply ContinuousLinearMap.ext
     intro x
+    change phaseAxisCartanMap (E := E) (a • A) x =
+      a • phaseAxisCartanMap (E := E) A x
     apply DoubledSpace.ext <;>
       simp [phaseAxisCartanInvolution, phaseAxisCartanMap, phaseConjugate]
 
@@ -162,6 +170,7 @@ lemma phaseLinear_mem_phaseAxis_even
     (hA : IsPhaseLinear (E := E) A) :
     A ∈ (phaseAxisSymmetricLieAlgebra (E := E)).evenLieSubalgebra := by
   exact ((phaseAxisSymmetricLieAlgebra (E := E)).mem_even_iff).2 (by
+    change phaseAxisCartanMap (E := E) A = A
     simp [phaseAxisSymmetricLieAlgebra, phaseAxisCartanInvolution, phaseAxisCartanMap,
       phaseConjugate_eq_neg_of_IsPhaseLinear (E := E) A hA])
 
@@ -170,6 +179,7 @@ lemma phaseAntilinear_mem_phaseAxis_odd
     (hA : IsPhaseAntilinear (E := E) A) :
     A ∈ (phaseAxisSymmetricLieAlgebra (E := E)).oddSubmodule := by
   exact ((phaseAxisSymmetricLieAlgebra (E := E)).mem_oddSubmodule_iff).2 (by
+    change phaseAxisCartanMap (E := E) A = -A
     simp [phaseAxisSymmetricLieAlgebra, phaseAxisCartanInvolution, phaseAxisCartanMap,
       phaseConjugate_eq_self_of_IsPhaseAntilinear (E := E) A hA])
 
@@ -181,6 +191,8 @@ lemma clockAxis_mem_phaseAxis_even :
   exact ((phaseAxisSymmetricLieAlgebra (E := E)).mem_even_iff).2 (by
     apply ContinuousLinearMap.ext
     intro x
+    change phaseAxisCartanMap (E := E) complex_i x =
+      -WithLp.toLp 2 (WithLp.snd x, -WithLp.fst x)
     exact
       calc
         ((phaseAxisSymmetricLieAlgebra (E := E)).θ Kop) x

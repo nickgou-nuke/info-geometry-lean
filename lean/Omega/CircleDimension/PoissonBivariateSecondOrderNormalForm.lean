@@ -33,7 +33,7 @@ theorem paper_cdim_poisson_bivariate_second_order_normal_form
       poissonBivariateShiftedQuadraticTerm t varGamma varDelta covGammaDelta +
         poissonBivariateShiftedRemainder t remainderCoeff := by
   have hcancel := paper_cdim_poisson_bivariate_second_order_cancellation_realizable
-  have _hrealizable : poissonBivariateRealizableWitness := hcancel.2.2
+  have _hrealizable : ∃ z : Fin 3, z = z := hcancel.2.2
   subst meanGamma meanDelta dtt dxx
   unfold poissonBivariateShiftedLinearTerm poissonBivariateShiftedQuadraticTerm
     poissonBivariateShiftedRemainder

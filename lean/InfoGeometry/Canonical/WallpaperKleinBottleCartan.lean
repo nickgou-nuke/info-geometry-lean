@@ -119,24 +119,26 @@ theorem wallpaperD4_reflections_anticommute (i : Fin 4) :
 /-- A finite classification certificate: an owner can identify any wallpaper
 point symmetry satisfying the Klein compatibility predicates with one of the
 eight displayed `D₄` elements. -/
-abbrev WallpaperKleinClassificationCertificate : Type :=
-  Σ' candidate : Mat2Q → Prop,
-    (∀ S, candidate S → IsKleinCompatibleWallpaper S) ∧
-      ∀ S, candidate S → ∃ i : Fin 8, S = wallpaperD4 i
+structure WallpaperKleinClassificationCertificate where
+  candidate : Mat2Q → Prop
+  candidate_compatible :
+    ∀ S, candidate S → IsKleinCompatibleWallpaper S
+  candidate_classified :
+    ∀ S, candidate S → ∃ i : Fin 8, S = wallpaperD4 i
 
 namespace WallpaperKleinClassificationCertificate
 
 variable (C : WallpaperKleinClassificationCertificate)
 
 /-- Read out the explicit eight-element classification from the certificate. -/
-theorem classified_as_D4 {S : Mat2Q} (hS : C.1 S) :
+theorem classified_as_D4 {S : Mat2Q} (hS : C.candidate S) :
     ∃ i : Fin 8, S = wallpaperD4 i :=
-  C.2.2 S hS
+  C.candidate_classified S hS
 
 /-- Any classified candidate is compatible with the Klein-bottle cell. -/
-theorem classified_is_compatible {S : Mat2Q} (hS : C.1 S) :
+theorem classified_is_compatible {S : Mat2Q} (hS : C.candidate S) :
     IsKleinCompatibleWallpaper S :=
-  C.2.1 S hS
+  C.candidate_compatible S hS
 
 end WallpaperKleinClassificationCertificate
 

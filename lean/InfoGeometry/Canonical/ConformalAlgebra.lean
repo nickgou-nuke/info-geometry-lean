@@ -24,22 +24,22 @@ structure ConformalBeliefAlgebra (E : Type*) [NormedAddCommGroup E] [InnerProduc
   CI : ConformalInference E
   /-- Chosen Cartan/volume-preserving generator. -/
   M : E →L[ℝ] E
-  /-- Canonical dilation generator inherited from `CI`. -/
-  D : E →L[ℝ] E := CI.D
-  /-- `D` is definitionally tied to the conformal-inference dilation operator. -/
-  D_def : D = CI.D := by rfl
   /-- Positive anomaly obstructs the flat conformal weight equations. -/
   anomaly_breaks_weights :
       CI.chiralScale > 0 →
-        ¬ ((D * CI.P - CI.P * D = CI.P) ∧ (D * CI.K - CI.K * D = - CI.K))
+        ¬ ((CI.D * CI.P - CI.P * CI.D = CI.P) ∧
+          (CI.D * CI.K - CI.K * CI.D = - CI.K))
 
 namespace ConformalBeliefAlgebra
 
 variable (CBA : ConformalBeliefAlgebra E)
 
+/-- The dilation generator is inherited directly from the conformal inference owner. -/
+noncomputable def D : E →L[ℝ] E := CBA.CI.D
+
 /-- The dilation field is canonically inherited from the underlying conformal inference. -/
 theorem D_eq_CI_D : CBA.D = CBA.CI.D :=
-  CBA.D_def
+  rfl
 
 /-! ### 1. Fundamental Commutation Relations -/
 

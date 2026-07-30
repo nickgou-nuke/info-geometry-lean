@@ -248,9 +248,7 @@ transports the positive polarization sector to the negative sector.
 This is not a scalar complex multiplication statement; it follows from the
 real operator anticommutation law `P K = -K P`.
 -/
-theorem hestenesK_maps_plus_to_minus (x : S) (hx : x ∈ P0.plus) :
-    M.K x ∈ P0.minus :=
-  P0.K_maps_plus_to_minus x hx
+alias hestenesK_maps_plus_to_minus := KPolarization.K_maps_plus_to_minus
 
 /--
 Hestenes owner-language alias: the real square-minus-one axis `K = Jε`
@@ -259,9 +257,7 @@ transports the negative polarization sector to the positive sector.
 This is not a finite diagonal shadow; it is the real Majorana polarization
 mechanism.
 -/
-theorem hestenesK_maps_minus_to_plus (x : S) (hx : x ∈ P0.minus) :
-    M.K x ∈ P0.plus :=
-  P0.K_maps_minus_to_plus x hx
+alias hestenesK_maps_minus_to_plus := KPolarization.K_maps_minus_to_plus
 
 end KPolarization
 

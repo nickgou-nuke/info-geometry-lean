@@ -108,7 +108,7 @@ theorem finite_commutant_moebius_fenchel_mirror_o55_window
   · exact
       InfoGeometry.Canonical.HestenesCommutantGeometry.CommutesWithHestenesK.mul
         (E := E) hA hB
-  · exact M.moebius_phaseAxis_fixed mobius
+  · exact M.operatorAction_phaseAxis_fixed mobius
   · exact
       InfoGeometry.LogPotential.LegendreModel.fenchelGap_invariant_of_preserves_potentials_and_pairing
         L actθ actη hψ hφ hpair fenchelSym θ η

@@ -45,7 +45,8 @@ The finite algebraic Cuntz quotient is a tensor-algebra quotient satisfying
 theorem finite_cuntz_tensor_quotient_relations (n : ℕ) :
     (∀ i j : Fin n, cuntzSdag n i * cuntzS n j = if i = j then 1 else 0) ∧
     (∑ i : Fin n, cuntzS n i * cuntzSdag n i) = 1 :=
-  finite_cuntz_tensor_quotient_packet n
+  ⟨CuntzTensorQuotient.cuntz_orthogonality n,
+    CuntzTensorQuotient.cuntz_ranges_sum_one n⟩
 
 /-- Each generator in the finite Cuntz tensor quotient is an isometry. -/
 theorem finite_cuntz_isometry (n : ℕ) (i : Fin n) :

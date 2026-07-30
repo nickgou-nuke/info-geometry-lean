@@ -130,10 +130,6 @@ def sector (r : LaneRouting) : ZornSector := laneSector r.lane
 
 def grade (r : LaneRouting) : TKKGrade := sectorGrade r.sector
 
-theorem h_lane_sector (r : LaneRouting) : r.sector = laneSector r.lane := rfl
-
-theorem h_sector_grade (r : LaneRouting) : r.grade = sectorGrade r.sector := rfl
-
 end LaneRouting
 
 /-- A canonical routing record for the four named generators. -/

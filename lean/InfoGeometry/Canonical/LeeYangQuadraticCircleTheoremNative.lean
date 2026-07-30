@@ -1,6 +1,5 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -29,7 +28,6 @@ namespace InfoGeometry.Canonical.LeeYangQuadraticCircleTheoremNative
 
 open Complex
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 /--
 **Main Theorem 1: Explicit Complex Norm-Squared Identity for Quadratic Lee-Yang Roots**
@@ -86,25 +84,5 @@ theorem quadratic_leeyang_cayley_to_criticalLine
     OnCriticalLine (cayleyToTemperature z) := by
   have h_circle : OnLeeYangCircle z := quadratic_partition_polynomial_root_on_circle a ha_le z h_root h_re
   exact cayleyToTemperature_mem_criticalLine_of_unitCircle z h_circle hpole
-
-/--
-**Main Theorem 4: Grand Quadratic Lee-Yang Master Duality Theorem**
-Unifies explicit root norm identity, partition polynomial unit circle theorem, Cayley critical line mapping, and fixed locus antiunitary rigidity into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
--/
-theorem grand_quadratic_leeyang_master_duality
-    (a : ℝ) (ha_le : a ^ 2 ≤ 1) (z : ℂ)
-    (h_root : z ^ 2 + 2 * (a : ℂ) * z + 1 = 0)
-    (h_re : z.re = -a)
-    (hpole : z.re ≠ -1)
-    (s_anti : ℂ) (h_anti : s_anti = 1 - star s_anti) :
-    (Complex.normSq (⟨-a, Real.sqrt (1 - a ^ 2)⟩ : ℂ) = 1) ∧
-    (OnLeeYangCircle z) ∧
-    (OnCriticalLine (cayleyToTemperature z)) ∧
-    (s_anti.re = 1 / 2) := ⟨
-  quadratic_leeyang_root_normSq_eq_one a ha_le,
-  quadratic_partition_polynomial_root_on_circle a ha_le z h_root h_re,
-  quadratic_leeyang_cayley_to_criticalLine a ha_le z h_root h_re hpole,
-  (critical_line_fixed_locus_iff s_anti).1 h_anti
-⟩
 
 end InfoGeometry.Canonical.LeeYangQuadraticCircleTheoremNative

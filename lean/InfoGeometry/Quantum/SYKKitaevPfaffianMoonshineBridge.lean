@@ -38,19 +38,10 @@ theorem pfaffian_syk_moonshine_unification :
     sykMajoranaCouplingDim 24 = 10626 := by
   refine ⟨rfl, mckay_observation_weight_1, by decide⟩
 
-/--
-Exact finite numerical content of the SYK/Pfaffian/Moonshine comparison.
-
-This proposition does not package freely chosen numbers with equality evidence;
-each conjunct is owned by the corresponding native theorem above.
--/
-def SYKKitaevMoonshinePacket : Prop :=
+theorem syk_kitaev_moonshine_bridge_exists :
   (PfaffianParity.topological).toReal = -1 ∧
   sykMajoranaCouplingDim 24 = 10626 ∧
-  fourier_j_1 = monster_chi_1 + monster_chi_2
-
-theorem syk_kitaev_moonshine_bridge_exists :
-    SYKKitaevMoonshinePacket := by
+  fourier_j_1 = monster_chi_1 + monster_chi_2 := by
   exact ⟨topological_pfaffian_parity_neg, syk_24_coupling_count,
     mckay_observation_weight_1⟩
 

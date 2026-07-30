@@ -2,10 +2,11 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
 /-!
-# Explicit witness obligations
+# Noncommutative orthogonal-projector calculus
 
-Kernel-checked finite lemmas for replacing vague socket debt by explicit
-mathematical hypotheses and conclusions.
+This module contains the reusable algebraic lemma that remains after the
+former evidence packet was audited.  Tautological witness projections and
+finite diagonal/scalar readouts are intentionally not exported here.
 -/
 
 noncomputable section
@@ -13,26 +14,6 @@ noncomputable section
 namespace InfoGeometry.Canonical.ExplicitWitnessObligations
 
 open scoped BigOperators
-
-/-- The supplied bounded commutator is the operator difference itself. -/
-theorem bounded_commutator_witness
-    {H : Type*} [NormedAddCommGroup H] [NormedSpace ℂ H]
-    (D A C : H →L[ℂ] H)
-    (hC : C = D.comp A - A.comp D) :
-    D.comp A - A.comp D = C := by
-  exact hC.symm
-
-/-- Finite diagonal Hamiltonian eigenvector obligation. -/
-theorem diagonal_operator_eigenvector
-    {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (ε : ι → ℂ) (i : ι) :
-    (fun j : ι => (if j = i then ε j else 0)) =
-      ε i • (fun j : ι => (if j = i then (1 : ℂ) else 0)) := by
-  funext j
-  by_cases h : j = i
-  · subst j
-    simp
-  · simp [h]
 
 /-- Orthogonal finite projector spectral-power obligation. -/
 theorem orthogonal_projector_power
@@ -66,41 +47,5 @@ theorem orthogonal_projector_power
         simp
       rw [hmul, smul_smul, pow_succ]
 
-/-- Finite Gibbs trace factorization for Boolean occupation states. -/
-theorem finite_boolean_gibbs_trace_factorization
-    {ι : Type*} [Fintype ι] [DecidableEq ι] (ε : ι → ℝ) (β : ℝ) :
-    (∑ occ : ι → Bool,
-        Real.exp (-β * (∑ i, if occ i then ε i else 0))) =
-      ∏ i, (1 + Real.exp (-β * ε i)) := by
-  classical
-  have hfactor : ∀ occ : ι → Bool,
-      Real.exp (-β * (∑ i, if occ i then ε i else 0)) =
-        ∏ i, if occ i then Real.exp (-β * ε i) else 1 := by
-    intro occ
-    rw [show -β * (∑ i, if occ i then ε i else 0) =
-        ∑ i, (-β) * (if occ i then ε i else 0) by rw [Finset.mul_sum]]
-    rw [Real.exp_sum]
-    refine Finset.prod_congr rfl ?_
-    intro i _
-    by_cases h : occ i <;> simp [h]
-  simp_rw [hfactor]
-  have hlocal : ∀ i : ι,
-      ((∑ b : Bool, if b then Real.exp (-β * ε i) else 1) : ℝ) =
-        1 + Real.exp (-β * ε i) := by
-    intro i
-    simp
-    ring
-  rw [← Finset.prod_congr rfl (fun i _ => hlocal i)]
-  rw [← Finset.sum_prod_piFinset]
-  rw [Fintype.piFinset_univ]
-
-/-- Souriau's beta potential is the pairing of the moment map with beta. -/
-theorem souriau_beta_projection_obligation
-    {State LieAlgebra LieDual : Type*}
-    (D : InfoGeometry.Canonical.SouriauOperatorialLogPotential.SouriauLieThermoData
-      State LieAlgebra LieDual)
-    (x : State) :
-    D.K_beta x = D.pairing (D.momentMap x) D.beta :=
-  D.K_beta_eq_pairing x
 
 end InfoGeometry.Canonical.ExplicitWitnessObligations

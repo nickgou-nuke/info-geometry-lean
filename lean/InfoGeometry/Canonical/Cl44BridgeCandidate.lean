@@ -54,10 +54,10 @@ structure Candidate where
       Nonempty (SimilarityTransport P P')
   dilationData :
     ∃ (R : Type) (_ : Ring R),
-      Nonempty (DilationKKTBridge.DilationWitness R)
+      Nonempty (DilationKKTBridge.DilationFromProjectorObstruction (R := R))
   chiralKMS :
     ∃ (R : Type) (_ : Ring R),
-      ChiralKMSOwner.ChiralKMSFlowWitness (R := R)
+      (∃ K : R, ∃ Γ : ChiralKMSOwner.ChiralGrading (R := R), ChiralKMSOwner.KMSPreservesChirality K Γ ∨ ChiralKMSOwner.ChiralKMSObstruction K Γ ≠ 0)
   weylSupertrace : WeylSupertraceOwner.FiniteWeylSupertraceOwner
   conformalEquivariance :
     ∃ (E : Type) (_ : NormedAddCommGroup E) (_ : InnerProductSpace ℝ E) (_ : CompleteSpace E)
@@ -66,7 +66,7 @@ structure Candidate where
   cl44Readout :
     ∃ (E : Type) (_ : NormedAddCommGroup E) (_ : InnerProductSpace ℝ E) (_ : CompleteSpace E)
       (CI : ConformalInference E),
-      ConformalInference.ObstructionScalarReadout (CI := CI)
+      (‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧ CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧ CI.chiralScale = CI.obstructionScale ∧ CI.epsilon = CI.obstructionScale ∧ CI.unitOfAction = CI.obstructionScale ∧ CI.unitOfAction = ‖CI.projectorObstruction‖₊)
   realCliffordRepresentation :
     InfoGeometry.OperatorAlgebra.RealGWClifford.RealCliffordHilbertModulePacket.{uGenerator, uHilbert}
   splitSignature :
@@ -104,16 +104,16 @@ theorem candidate_requires_concrete_data
       (∃ (R : Type) (_ : Ring R) (P P' : ProjectorPair R),
         Nonempty (SimilarityTransport P P')) ∧
       (∃ (R : Type) (_ : Ring R),
-        Nonempty (DilationKKTBridge.DilationWitness R)) ∧
+        Nonempty (DilationKKTBridge.DilationFromProjectorObstruction (R := R))) ∧
       (∃ (R : Type) (_ : Ring R),
-        ChiralKMSOwner.ChiralKMSFlowWitness (R := R)) ∧
+        (∃ K : R, ∃ Γ : ChiralKMSOwner.ChiralGrading (R := R), ChiralKMSOwner.KMSPreservesChirality K Γ ∨ ChiralKMSOwner.ChiralKMSObstruction K Γ ≠ 0)) ∧
       Nonempty WeylSupertraceOwner.FiniteWeylSupertraceOwner ∧
       (∃ (E : Type) (_ : NormedAddCommGroup E) (_ : InnerProductSpace ℝ E) (_ : CompleteSpace E)
         (CI : ConformalInference E) (X : InfoGeometry.Quantum.RealSplitCl11Action E),
         Nonempty (ConformalCanopyPackage (E := E) CI X)) ∧
       (∃ (E : Type) (_ : NormedAddCommGroup E) (_ : InnerProductSpace ℝ E) (_ : CompleteSpace E)
         (CI : ConformalInference E),
-        ConformalInference.ObstructionScalarReadout (CI := CI)) ∧
+        (‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧ CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧ CI.chiralScale = CI.obstructionScale ∧ CI.epsilon = CI.obstructionScale ∧ CI.unitOfAction = CI.obstructionScale ∧ CI.unitOfAction = ‖CI.projectorObstruction‖₊)) ∧
       Nonempty (InfoGeometry.OperatorAlgebra.RealGWClifford.RealCliffordHilbertModulePacket.{uGenerator, uHilbert}) ∧
       Nonempty (InfoGeometry.OperatorAlgebra.RealGWClifford.RealGWToSplitKreinBridgePacket.{uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}) ∧
       Nonempty InfoGeometry.Canonical.Spin44CharacterShadow.Cartan4 ∧
@@ -208,7 +208,7 @@ theorem candidate_conformal_scalar_readout
     (C : Candidate.{uGenerator, uHilbert, uKreinGenerator, uKreinHilbert, uKreinOuter, uKreinAux, uSplit}) :
     ∃ (E : Type) (_ : NormedAddCommGroup E) (_ : InnerProductSpace ℝ E) (_ : CompleteSpace E)
       (CI : ConformalInference E),
-      ConformalInference.ObstructionScalarReadout (CI := CI) := by
+      (‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧ CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧ CI.chiralScale = CI.obstructionScale ∧ CI.epsilon = CI.obstructionScale ∧ CI.unitOfAction = CI.obstructionScale ∧ CI.unitOfAction = ‖CI.projectorObstruction‖₊) := by
   rcases C.conformalEquivariance with ⟨E, instAdd, instInner, instComp, CI, X, hP⟩
   letI := instAdd
   letI := instInner
@@ -224,7 +224,7 @@ theorem candidate_conformal_branch_closure
     ∃ (E : Type) (_ : NormedAddCommGroup E) (_ : InnerProductSpace ℝ E) (_ : CompleteSpace E)
       (CI : ConformalInference E) (X : InfoGeometry.Quantum.RealSplitCl11Action E),
       ConformalInference.ObstructionOperatorOwner (CI := CI) X ∧
-      ConformalInference.ObstructionScalarReadout (CI := CI) := by
+      (‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧ CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧ CI.chiralScale = CI.obstructionScale ∧ CI.epsilon = CI.obstructionScale ∧ CI.unitOfAction = CI.obstructionScale ∧ CI.unitOfAction = ‖CI.projectorObstruction‖₊) := by
   rcases C.conformalEquivariance with ⟨E, instAdd, instInner, instComp, CI, X, hP⟩
   letI := instAdd
   letI := instInner

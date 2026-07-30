@@ -1,27 +1,9 @@
-import InfoGeometry.OperatorAlgebra.QCCRSupergrading
-import Mathlib.Tactic
-
-noncomputable section
-
-namespace InfoGeometry.OperatorAlgebra.QCCRCarBridge
-
-open InfoGeometry.OperatorAlgebra.QCCRCore
-open InfoGeometry.OperatorAlgebra.QCCRSupergrading
+import InfoGeometry.OperatorAlgebra.QCCRCore
 
 /-!
-# QCCR-CAR bridge
+# Compatibility imports for the q-CCR/CAR owner
 
-Connects the q-CCR algebra to the CAR (Clifford) algebra at q = -1.
+The q = -1 CAR specialization is owned directly by
+`QCCRAlgebra.q_neg_one_is_car` in `QCCRCore`.  This module intentionally adds
+no forwarding theorem or duplicate bridge namespace.
 -/
-
-/--
-At q = -1, the q-superbracket is the anticommutator and the algebra
-satisfies the CAR (canonical anticommutation relations) of the Clifford
-algebra Cl(0, N).
--/
-theorem q_neg_one_is_clifford_car {N : ℕ} {Op : Type*} [Ring Op] [StarRing Op] [Algebra ℝ Op]
-    (A : QCCRAlgebra N Op) (hq_neg1 : A.q = -1) (i j : Fin N) :
-    star (A.a i) * (A.a j) + (A.a j) * star (A.a i) = if i = j then (1 : Op) else 0 :=
-  QCCRAlgebra.q_neg_one_is_car N Op A hq_neg1 i j
-
-end InfoGeometry.OperatorAlgebra.QCCRCarBridge

@@ -33,12 +33,19 @@ theorem flux_eigenvalues_pm_one :
   | inl h1 => left; linarith
   | inr h2 => right; linarith
 
-/-- **Theorem**: Plaquette Flux Conserved Commutator [W_p, H] = 0. -/
-def fluxHamiltonianCommutator (val : ℝ) : ℝ := 0
+/-! The scalar plaquette eigenvalue above is only the sector readout.  The
+    conservation statement itself belongs to the operator algebra. -/
 
-/-- **Theorem**: Exact Conservation of Z₂ Gauge Flux: [W_p, H] = 0. -/
-theorem flux_conservation_exact (val : ℝ) :
-    fluxHamiltonianCommutator val = 0 := rfl
+/-- Commutator of a plaquette flux operator with a Hamiltonian. -/
+def fluxHamiltonianCommutator {A : Type*} [Ring A] (W H : A) : A :=
+  W * H - H * W
+
+/-- Exact flux conservation from the operator commutation law. -/
+theorem flux_conservation_exact {A : Type*} [Ring A]
+    (W H : A) (hcomm : W * H = H * W) :
+    fluxHamiltonianCommutator W H = 0 := by
+  unfold fluxHamiltonianCommutator
+  rw [hcomm, sub_self]
 
 /-- Kitaev Non-Abelian Anyon Phase Gap Inequality J_z < J_x + J_y. -/
 def isNonAbelianPhase (Jx Jy Jz : ℝ) : Prop :=

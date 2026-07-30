@@ -107,22 +107,6 @@ can route through a single constructive packet rather than two separate bare
 hypotheses.
 -/
 @[rep_depth transport]
-abbrev StructuredProjectorWitness (CI : ConformalInference E) : Prop :=
-  CI.P_MP_right = CI.P_MP ∧ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D
-
-namespace StructuredProjectorWitness
-
-variable {CI : ConformalInference E}
-
-/-- Recover the original structured projector hypothesis surface from the witness. -/
-@[rep_depth transport]
-theorem hypotheses
-    (W : StructuredProjectorWitness CI) :
-    CI.P_MP_right = CI.P_MP ∧ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D :=
-  W
-
-end StructuredProjectorWitness
-
 /--
 Incompressibility kills the conformal anomaly scale when the anomaly readout is
 the negative Cramer-Rao log-volume mode.
@@ -316,7 +300,7 @@ new theorem surface while preserving the compatibility theorem above.
 theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_incompressible_of_projectorWitness
     (R : CramerRaoNegLogVolumeAnomalyReadout CI H)
     (hIncomp : IncompressibleMongeAmpere H) (x : E)
-    (W : StructuredProjectorWitness CI) :
+    (W : CI.P_MP_right = CI.P_MP ∧ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D) :
     CI.projectorObstruction = 0
       ∧ CI.P_D * CI.D - CI.D * CI.P_D = 0 := by
   exact
@@ -334,7 +318,7 @@ route while preserving the older compatibility theorem surface.
 theorem semanticCollapsePacket_of_incompressible_of_projectorWitness
     (R : CramerRaoNegLogVolumeAnomalyReadout CI H)
     (hIncomp : IncompressibleMongeAmpere H) (x : E)
-    (W : StructuredProjectorWitness CI) :
+    (W : CI.P_MP_right = CI.P_MP ∧ CI.P_D * CI.P_MP = CI.P_MP * CI.P_D) :
     (CI.chiralScale = CI.epsilon
       ∧ CI.epsilon = ‖CI.projectorObstruction‖₊
       ∧ CI.P_D * CI.D - CI.D * CI.P_D

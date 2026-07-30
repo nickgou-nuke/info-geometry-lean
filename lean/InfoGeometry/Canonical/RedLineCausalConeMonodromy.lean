@@ -33,11 +33,6 @@ open InfoGeometry.Projective.KleinQuadric.DeRhamMonodromy
 noncomputable def redLineOmegaPotential (detJ : ℝ → ℝ) (x : ℝ) : ℝ :=
   - Real.log (detJ x)
 
-/-- The red-line Ω-potential is definitionally negative logarithm of the Jacobian determinant. -/
-theorem redLineOmegaPotential_eq_neg_log (detJ : ℝ → ℝ) (x : ℝ) :
-    redLineOmegaPotential detJ x = -Real.log (detJ x) := by
-  rfl
-
 /-- Differential identity for the red-line potential: `dΦ = -(detJ'/detJ)`. -/
 theorem redLineOmegaPotential_derivAt (detJ : ℝ → ℝ) (x : ℝ)
     (hdet : HasDerivAt detJ (detJ' : ℝ) x) (hpos : 0 < detJ x) :
@@ -68,28 +63,6 @@ theorem redLine_potential_exp_recovery
   rw [h, neg_neg]
   exact Real.exp_log (data.pos_det φ)
 
-/-- De Rham logarithmic form evaluation on a complex loop parameter $z \neq 0$. -/
-noncomputable def deRhamLogForm (z : ℂ) : ℂ :=
-  1 / z
-
-/-- De Rham logarithmic form is the inverse pole form `dz / z`. -/
-theorem deRhamLogForm_is_dlog (z : ℂ) :
-    deRhamLogForm z = 1 / z := by
-  rfl
-
-/-- The red-line monodromy bridge exports the canonical support module as a `K_neg_log_PregDelta` package. -/
-theorem modularSupportPackage_from_redLine (V : Type 0)
-    [NormedAddCommGroup V] [InnerProductSpace ℝ V] [CompleteSpace V]
-    (c : InfoGeometry.Canonical.CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace V)) :
-    let KambientCanonical :=
-      compress (CertifiedModularReduction.Preg c)
-        (InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge.K_neg_log_PregDelta (V := V) c)
-    (CertifiedModularReduction.Preg c * KambientCanonical = KambientCanonical) ∧
-    (KambientCanonical * CertifiedModularReduction.Preg c = KambientCanonical) ∧
-    (CertifiedModularReduction.Pzero c * KambientCanonical = 0) ∧
-    (KambientCanonical * CertifiedModularReduction.Pzero c = 0) :=
-  InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge.K_neg_log_PregDelta_support_package (c := c)
-
 /--
 **Main Theorem 2: Lightcone Determinant Apex Singularity**
 The chiral matrix determinant vanishes if and only if the spacetime vector $X$
@@ -118,23 +91,5 @@ $$\operatorname{Im}\left(\frac{w_n}{i}\right) = 2\pi n.$$
 theorem discrete_quantized_time_loop (R : ℝ) (hR : 0 < R) (n : ℤ) :
     poleWinding R hR n / (2 * Real.pi * Complex.I : ℂ) = (n : ℂ) := by
   exact poleWinding_index_is_integer R hR n
-
-/--
-**Main Theorem 5: The Grand Red Line Monodromy Duality**
-Combines the Red Line $\Omega$-potential, the de Rham logarithmic form,
-the lightcone apex singularity $Q = 0$, and discrete quantized time loops into a single unified theorem.
--/
-theorem grand_redline_monodromy_duality
-    (data : SpinorialFlowJacobianData Map) (φ : Map)
-    (X : Chiral3) (R : ℝ) (hR : 0 < R) (n : ℤ) :
-    (Real.exp (- data.redLinePotential φ) = data.jacobianDet φ) ∧
-    (Matrix.det (chiralMatrix X) = 0 ↔ lightconePotential X = 0) ∧
-    (poleWinding R hR n = logarithmicPhase n) ∧
-    (poleWinding R hR n / (2 * Real.pi * Complex.I : ℂ) = (n : ℂ)) := ⟨
-  redLine_potential_exp_recovery data φ,
-  chiral_matrix_det_zero_iff_lightcone_apex X,
-  causal_cone_apex_winding_monodromy R hR n,
-  discrete_quantized_time_loop R hR n
-⟩
 
 end InfoGeometry.Canonical.RedLineCausalConeMonodromy

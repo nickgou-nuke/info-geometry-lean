@@ -177,22 +177,4 @@ theorem mirror_crystalCoboundary (w : CrystalWord) :
       [mirror (lowerRight w), mirror (lowerLeft w)] := by
   simp [crystalCoboundary]
 
-/--
-Consolidated finite theorem: the symbolic Kashiwara-Cuntz operators are
-integrable on finite binary words in the precise sense that lowering is
-sectioned by matching partial raising, the root word is raising-annihilated,
-and the mirror involution swaps left/right branches.
--/
-theorem finite_kashiwara_cuntz_cohomology_packet (w : CrystalWord) :
-    raiseLeft (lowerLeft w) = some w ∧
-    raiseRight (lowerRight w) = some w ∧
-    raiseLeft [] = none ∧
-    raiseRight [] = none ∧
-    mirror (mirror w) = w ∧
-    mirror (lowerLeft w) = lowerRight (mirror w) ∧
-    mirror (lowerRight w) = lowerLeft (mirror w) ∧
-    raiseRight (mirror (lowerLeft w)) = some (mirror w) ∧
-    raiseLeft (mirror (lowerRight w)) = some (mirror w) := by
-  simp [raiseLeft, raiseRight, mirror_involutive]
-
 end InfoGeometry.Canonical.KashiwaraCuntzCohomology

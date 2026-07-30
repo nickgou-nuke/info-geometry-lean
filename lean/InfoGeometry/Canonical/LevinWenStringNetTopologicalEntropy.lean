@@ -21,53 +21,60 @@ variable {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
 structure StringNetOperators (n : ℕ) [Fintype (Fin n)] [DecidableEq (Fin n)] where
   Q_v : {Q : Matrix (Fin n) (Fin n) ℂ // IsIdempotentElem Q}
   B_p : {B : Matrix (Fin n) (Fin n) ℂ // IsIdempotentElem B}
-  h_comm :
-    (Q_v : Matrix (Fin n) (Fin n) ℂ) * B_p =
-      (B_p : Matrix (Fin n) (Fin n) ℂ) * Q_v
 
 namespace StringNetOperators
 
 variable (ops : StringNetOperators n)
 
-def QVal : Matrix (Fin n) (Fin n) ℂ := ops.Q_v
+theorem h_Q_proj :
+    (ops.Q_v : Matrix (Fin n) (Fin n) ℂ) * ops.Q_v = ops.Q_v := by
+  simpa only [IsIdempotentElem] using ops.Q_v.2
 
-def BVal : Matrix (Fin n) (Fin n) ℂ := ops.B_p
-
-theorem h_Q_proj : QVal ops * QVal ops = QVal ops := by
-  simpa only [QVal, IsIdempotentElem] using ops.Q_v.2
-
-theorem h_B_proj : BVal ops * BVal ops = BVal ops := by
-  simpa only [BVal, IsIdempotentElem] using ops.B_p.2
+theorem h_B_proj :
+    (ops.B_p : Matrix (Fin n) (Fin n) ℂ) * ops.B_p = ops.B_p := by
+  simpa only [IsIdempotentElem] using ops.B_p.2
 
 /-- Total String-Net Ground State Code Projector P_s = Q_v * B_p. -/
 def groundStateProjector : Matrix (Fin n) (Fin n) ℂ :=
-  QVal ops * BVal ops
+  (ops.Q_v : Matrix (Fin n) (Fin n) ℂ) * ops.B_p
 
 /-- **Theorem**: Plaquette-Vertex Commutator Zero: Q_v B_p - B_p Q_v = 0. -/
-theorem vertex_plaquette_commute_zero :
-    QVal ops * BVal ops - BVal ops * QVal ops = 0 := by
-  change (ops.Q_v : Matrix (Fin n) (Fin n) ℂ) * ops.B_p -
-      (ops.B_p : Matrix (Fin n) (Fin n) ℂ) * ops.Q_v = 0
-  rw [ops.h_comm, sub_self]
+theorem vertex_plaquette_commute_zero
+    (h_comm :
+      (ops.Q_v : Matrix (Fin n) (Fin n) ℂ) * ops.B_p =
+        (ops.B_p : Matrix (Fin n) (Fin n) ℂ) * ops.Q_v) :
+    (ops.Q_v : Matrix (Fin n) (Fin n) ℂ) * ops.B_p -
+        ops.B_p * ops.Q_v = 0 := by
+  rw [h_comm, sub_self]
 
 /-- **Theorem**: String-Net Ground State Projector Idempotency: P_s² = P_s. -/
-theorem ground_state_projector_idempotent :
+theorem ground_state_projector_idempotent
+    (h_comm :
+      (ops.Q_v : Matrix (Fin n) (Fin n) ℂ) * ops.B_p =
+        (ops.B_p : Matrix (Fin n) (Fin n) ℂ) * ops.Q_v) :
     ops.groundStateProjector * ops.groundStateProjector = ops.groundStateProjector := by
   dsimp [groundStateProjector]
-  calc (QVal ops * BVal ops) * (QVal ops * BVal ops)
-    _ = QVal ops * (BVal ops * QVal ops) * BVal ops := by noncomm_ring
-    _ = QVal ops * (QVal ops * BVal ops) * BVal ops := by
-      have hcomm : BVal ops * QVal ops = QVal ops * BVal ops := by
-        simpa only [BVal, QVal] using ops.h_comm.symm
-      rw [hcomm]
-    _ = (QVal ops * QVal ops) * (BVal ops * BVal ops) := by noncomm_ring
-    _ = QVal ops * BVal ops := by rw [h_Q_proj ops, h_B_proj ops]
+  calc
+    ((ops.Q_v : Matrix (Fin n) (Fin n) ℂ) * ops.B_p) *
+        ((ops.Q_v : Matrix (Fin n) (Fin n) ℂ) * ops.B_p) =
+        (ops.Q_v : Matrix (Fin n) (Fin n) ℂ) *
+          (ops.B_p * ops.Q_v) * ops.B_p := by noncomm_ring
+    _ = (ops.Q_v : Matrix (Fin n) (Fin n) ℂ) *
+          (ops.Q_v * ops.B_p) * ops.B_p := by
+      rw [show ops.B_p * (ops.Q_v : Matrix (Fin n) (Fin n) ℂ) =
+          (ops.Q_v : Matrix (Fin n) (Fin n) ℂ) * ops.B_p from h_comm.symm]
+    _ = ((ops.Q_v : Matrix (Fin n) (Fin n) ℂ) * ops.Q_v) *
+          (ops.B_p * ops.B_p) := by noncomm_ring
+    _ = (ops.Q_v : Matrix (Fin n) (Fin n) ℂ) * ops.B_p := by
+      rw [h_Q_proj ops, h_B_proj ops]
 
 /-- **Theorem**: String-Net Ground State Projector Trace Commutativity: Tr(P_s) = Tr(B_p Q_v). -/
 theorem ground_state_projector_trace_comm :
-    trace ops.groundStateProjector = trace (BVal ops * QVal ops) := by
+    trace ops.groundStateProjector =
+      trace ((ops.B_p : Matrix (Fin n) (Fin n) ℂ) *
+        (ops.Q_v : Matrix (Fin n) (Fin n) ℂ)) := by
   dsimp [groundStateProjector]
-  exact trace_mul_comm (QVal ops) (BVal ops)
+  exact trace_mul_comm (ops.Q_v : Matrix (Fin n) (Fin n) ℂ) ops.B_p
 
 /-- Topological Entanglement Entropy Function S(L, α, γ) = α L - γ. -/
 def topologicalEntanglementEntropy (L alpha gamma : ℝ) : ℝ :=

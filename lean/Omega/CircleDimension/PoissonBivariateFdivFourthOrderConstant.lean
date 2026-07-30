@@ -51,7 +51,7 @@ theorem paper_cdim_poisson_bivariate_fdiv_fourth_order_constant
     (fpp1 sigmaGamma2 sigmaDelta2 sigmaGammaDelta : ℝ) :
     PoissonBivariateFdivFourthOrderConstant fpp1 sigmaGamma2 sigmaDelta2 sigmaGammaDelta := by
   have hCancel := paper_cdim_poisson_bivariate_second_order_cancellation_realizable
-  have _hrealizable : poissonBivariateRealizableWitness := hCancel.2.2
+  have _hrealizable : ∃ z : Fin 3, z = z := hCancel.2.2
   have hEnergy : poissonKernelSecondEnergy 1 = 1 := by
     simpa using (paper_cdim_poisson_kernel_derivative_l1_energy 1 zero_lt_one).2.2.2
   unfold PoissonBivariateFdivFourthOrderConstant poissonBivariateFourthOrderEnergyExpansion

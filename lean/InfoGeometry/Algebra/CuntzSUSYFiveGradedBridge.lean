@@ -24,16 +24,4 @@ namespace InfoGeometry.Algebra.CuntzSUSYFiveGradedBridge
 open InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 open InfoGeometry.Algebra.SupergradedSUSY
 
-/--
-The finite theorem-backed routing packet available in this file: two odd
-Cuntz-Cantor one-bit steps compose to even parity, and the finite SUSY matrix
-shadow has `{Q,Q}=2P_x`.
--/
-theorem word_parity_matches_superbracket_routing (a b : Bool) :
-    wordParityZ2 (oddStep a) = 1 ∧
-      wordParityZ2 (oddStep b) = 1 ∧
-        wordParityZ2 (oddStep a ++ oddStep b) = 0 ∧
-          superAnticommutator Q Q = P_x + P_x := by
-  exact cuntz_odd_odd_generates_even_translation_packet a b
-
 end InfoGeometry.Algebra.CuntzSUSYFiveGradedBridge

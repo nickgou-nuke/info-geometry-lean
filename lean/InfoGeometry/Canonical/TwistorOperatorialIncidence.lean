@@ -45,19 +45,12 @@ obstruction operator.
 -/
 theorem operatorialIncidence_iff_projectorObstructionOperator_zero
     (CCI : CertifiedConformalInference E) :
-    CCI.operatorialIncidence ↔ CCI.projectorObstructionOperator = 0 := by
+    CCI.operatorialIncidence ↔ CCI.chiralAnomalyOperator = 0 := by
   constructor
   · intro hInc
-    have hZero :
-        CCI.chiralAnomalyOperator = 0 :=
-      (operatorialIncidence_iff_chiralAnomalyOperator_zero (CCI := CCI)).1 hInc
-    change CCI.chiralAnomalyOperator = 0
-    exact hZero
+    exact (operatorialIncidence_iff_chiralAnomalyOperator_zero (CCI := CCI)).1 hInc
   · intro hZero
-    have hZero' : CCI.chiralAnomalyOperator = 0 := by
-      change CCI.chiralAnomalyOperator = 0
-      exact hZero
-    exact (operatorialIncidence_iff_chiralAnomalyOperator_zero (CCI := CCI)).2 hZero'
+    exact (operatorialIncidence_iff_chiralAnomalyOperator_zero (CCI := CCI)).2 hZero
 
 end CertifiedConformalInference
 

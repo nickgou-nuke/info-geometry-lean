@@ -22,6 +22,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.JaynesInductiveLimitBridge
 
 open InfoGeometry.Canonical.AFRecursiveLimitBridge
+open InfoGeometry.Canonical.CategoricalRecursiveClosureBridge
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 
 universe u
@@ -49,7 +50,7 @@ structure JaynesInductivePacket where
   entropy : ∀ n : Nat, Stage n →+* Limit
   /-- Compatibility of the entropy readout with the stage bonds. -/
   hEntropy :
-    InfoGeometry.Canonical.AFRecursiveLimitBridge.CompatibleCone
+    InfoGeometry.Canonical.CategoricalRecursiveClosureBridge.ConeCompatible
       (Stage := Stage) (Limit := Limit) tower.bond entropy
 
 namespace JaynesInductivePacket
@@ -61,28 +62,24 @@ theorem entropy_factorization_unique
     (g : DirectLimitSuperClosure P.tower.bond →+* Limit)
     (hg : ∀ n : Nat, g.comp (directLimitOf P.tower.bond n) = P.entropy n) :
     g = directLimitLift P.tower.bond P.entropy P.hEntropy :=
-  InfoGeometry.Canonical.AFRecursiveLimitBridge.factorization_unique
+  directLimit_factorization_unique
     (Stage := Stage) (Limit := Limit)
-    (bond := P.tower.bond) (toLimit := P.entropy) (hcone := P.hEntropy) (g := g) (hg := hg)
+    P.tower.bond P.entropy P.hEntropy g hg
 
 /-- The canonical readback of a finite Jaynes stage. -/
 theorem entropy_readback (n : Nat) (x : Stage n) :
     directLimitLift P.tower.bond P.entropy P.hEntropy
         (directLimitOf P.tower.bond n x) =
       P.entropy n x :=
-  InfoGeometry.Canonical.AFRecursiveLimitBridge.readback
-    (Stage := Stage) (Limit := Limit)
-    (bond := P.tower.bond) (toLimit := P.entropy) (hcone := P.hEntropy) n x
+  directLimit_readback P.tower.bond P.entropy P.hEntropy n x
 
 /-- The entropy readout is constant along a compatible finite tower. -/
 theorem entropy_stage_constant
     (F : ∀ n : Nat, Stage n)
     (hF : ∀ n : Nat, P.tower.bond n (F n) = F (n + 1)) :
     ∀ n : Nat, P.entropy n (F n) = P.entropy 0 (F 0) :=
-  InfoGeometry.Canonical.AFRecursiveLimitBridge.stageImage_constant
-    (Stage := Stage) (Limit := Limit)
-    (bond := P.tower.bond) (toLimit := P.entropy) (hcone := P.hEntropy)
-    F hF
+  cone_stageImage_constant (Stage := Stage) (Limit := Limit)
+    P.tower.bond P.entropy P.hEntropy F hF
 
 end JaynesInductivePacket
 

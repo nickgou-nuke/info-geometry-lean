@@ -49,32 +49,6 @@ variable {K : Type*} [Field K] {n : ℕ}
 variable {A drazin : Matrix (Fin n) (Fin n) K}
 variable (C : RoseDrazinPolynomialComputation K A drazin)
 
-/-- The exponent parameter of the Rose computation is explicit. -/
-theorem ell_readout : C.ell = C.ell :=
-  rfl
-
-/-- The coefficient polynomial of the Rose computation is explicit. -/
-theorem p_readout : C.p = C.p :=
-  rfl
-
-/-- The characteristic polynomial stored in the Rose computation is explicit. -/
-theorem characteristicPolynomial_readout :
-    C.characteristicPolynomial = C.characteristicPolynomial :=
-  rfl
-
-/-- The nonzero spectral part stored in the Rose computation is explicit. -/
-theorem nonzeroCharacteristicPart_readout :
-    C.nonzeroCharacteristicPart = C.nonzeroCharacteristicPart :=
-  rfl
-
-/-- The degree bound stored in the Rose computation is explicit. -/
-theorem degreeBound_readout : C.degreeBound = C.degreeBound :=
-  rfl
-
-/-- The constructed Rose polynomial itself is explicit. -/
-theorem rosePolynomial_readout : C.rosePolynomial = C.rosePolynomial :=
-  rfl
-
 /-- Rose's computed polynomial equals the supplied Drazin inverse. -/
 theorem drazin_polynomial_readout :
     drazin = A ^ C.ell * C.p.eval₂ (algebraMap K (Matrix (Fin n) (Fin n) K)) A :=
@@ -113,31 +87,6 @@ namespace SouriauFrameDrazinIndexComputation
 variable {K : Type*} [Field K] {n : ℕ}
 variable {A : Matrix (Fin n) (Fin n) K}
 variable (C : SouriauFrameDrazinIndexComputation K A)
-
-/-- The `B`-tower itself is explicit. -/
-theorem B_readout : C.B = C.B :=
-  rfl
-
-/-- The coefficient sequence itself is explicit. -/
-theorem p_readout : C.p = C.p :=
-  rfl
-
-/-- The `rIndex` parameter is explicit. -/
-theorem rIndex_readout : C.rIndex = C.rIndex :=
-  rfl
-
-/-- The `sIndex` parameter is explicit. -/
-theorem sIndex_readout : C.sIndex = C.sIndex :=
-  rfl
-
-/-- The annihilating polynomial stored in the Souriau--Frame computation is explicit. -/
-theorem annihilatingPolynomial_readout :
-    C.annihilatingPolynomial = C.annihilatingPolynomial :=
-  rfl
-
-/-- The Drazin index value itself is explicit. -/
-theorem drazinIndex_readout : C.drazinIndex = C.drazinIndex :=
-  rfl
 
 /-- Read out the Drazin index produced by the Souriau--Frame computation. -/
 theorem index_readout : C.drazinIndex = C.rIndex - C.sIndex :=
@@ -201,10 +150,8 @@ theorem example2_inverse_power_identity (x : ℚ)
 structure BinomialNilpotentInversePower
     (K : Type*) [Field K] {n : ℕ}
     (A : Matrix (Fin n) (Fin n) K) where
-  nilpotentPart : Matrix (Fin n) (Fin n) K := A - 1
-  nilpotentPart_eq_formula : nilpotentPart = A - 1
   exponent : ℕ
-  nilpotent : nilpotentPart ^ exponent = 0
+  nilpotent : (A - 1) ^ exponent = 0
   truncatedBinomialInverse : Matrix (Fin n) (Fin n) K
   inversePower_eq : A ^ exponent * truncatedBinomialInverse = 1
 
@@ -214,27 +161,21 @@ variable {K : Type*} [Field K] {n : ℕ}
 variable {A : Matrix (Fin n) (Fin n) K}
 variable (C : BinomialNilpotentInversePower K A)
 
+/-- The nilpotent part is the canonical shifted matrix `A - 1`. -/
+def nilpotentPart : Matrix (Fin n) (Fin n) K := A - 1
+
 /-- Read out the supplied truncated-binomial inverse-power equation. -/
 theorem inverse_power_readout : A ^ C.exponent * C.truncatedBinomialInverse = 1 :=
   C.inversePower_eq
 
 /-- The stored nilpotent part is explicitly `A - 1`. -/
 theorem nilpotent_part_formula :
-    C.nilpotentPart = A - 1 :=
-  C.nilpotentPart_eq_formula
-
-/-- The stored exponent is explicitly exposed. -/
-theorem exponent_readout : C.exponent = C.exponent :=
+    nilpotentPart (A := A) = A - 1 :=
   rfl
 
 /-- The stored nilpotence equation is explicitly exposed. -/
-theorem nilpotent_readout : C.nilpotentPart ^ C.exponent = 0 :=
-  C.nilpotent
-
-/-- The stored inverse-power matrix is explicitly exposed. -/
-theorem truncated_binomial_inverse_readout :
-    C.truncatedBinomialInverse = C.truncatedBinomialInverse :=
-  rfl
+theorem nilpotent_readout : nilpotentPart (A := A) ^ C.exponent = 0 :=
+  by simpa [nilpotentPart] using C.nilpotent
 
 end BinomialNilpotentInversePower
 

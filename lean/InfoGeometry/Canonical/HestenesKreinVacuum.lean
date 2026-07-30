@@ -59,13 +59,13 @@ theorem krein_adjoint_annihilation :
     kreinAdjoint a = -aDag := by
   unfold kreinAdjoint
   rw [a_eq_N, aDag_eq_N_transpose]
-  simpa [W_eq_K] using (weyl_conj_N_transpose : W * Nᵀ * W = -Nᵀ)
+  simpa [W] using (weyl_conj_N_transpose : W * Nᵀ * W = -Nᵀ)
 
 /-- Under `K`, creation Krein-adjoint is `-a`. -/
 theorem krein_adjoint_creation :
     kreinAdjoint aDag = -a := by
   unfold kreinAdjoint
   rw [aDag_eq_N_transpose, Matrix.transpose_transpose, a_eq_N]
-  simpa [W_eq_K] using (weyl_conj_N : W * N * W = -N)
+  simpa [W] using (weyl_conj_N : W * N * W = -N)
 
 end InfoGeometry.Canonical.HestenesKreinVacuum

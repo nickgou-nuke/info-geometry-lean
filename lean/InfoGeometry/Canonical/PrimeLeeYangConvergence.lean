@@ -148,7 +148,10 @@ theorem limitF_zero_on_unitCircle
 @[bridge_target_tag, rep_depth operator]
 theorem RH_of_convergence_socket
     (S : PrimeLeeYangConvergenceSocket Ξ A)
-    (C : CayleyCriticalWitness) :
+    (C : (∀ s : ℂ, s ≠ 1 → cayleyInv (cayley s) = s) ∧
+      (∀ s : ℂ, s ≠ 1 → OnCriticalLine s → OnUnitCircle (cayley s)) ∧
+        (∀ s : ℂ, s ≠ 1 → OnUnitCircle (cayley s) → OnCriticalLine s) ∧
+          (∀ s : ℂ, s ≠ 0 → s ≠ 1 → cayley (1 - s) = (cayley s)⁻¹)) :
     RiemannHypothesis Ξ :=
   RH_from_Correct_Hurwitz_LeeYang
     Ξ C _ (toCorrectHurwitzZeroTransferWitness S)

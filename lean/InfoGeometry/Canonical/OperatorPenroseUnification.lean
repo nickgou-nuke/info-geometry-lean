@@ -234,35 +234,14 @@ theorem unificationDependencies_of_capstone
     spinorModularIdentification_of_capstone S Φ hBoundary hGenerator⟩
 
 /--
-Single capstone witness shape for bounded/regularized unification.
-
-This is the near-term closure target before full unbounded Type III layering.
--/
-@[rep_depth krein]
-abbrev CapstoneWitness (S : UnifiedCompactificationSystem) : Prop :=
-  ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
-    ReadoutPreservation Φ ∧ GeneratorPreservation Φ ∧
-      BoundaryPreservation Φ ∧ CoherentClosure Φ
-
-/--
-Closed bounded capstone package:
-the capstone intertwiner contracts plus the finite support witness required by
-junction 3.
--/
-@[rep_depth krein]
-abbrev ClosedCapstoneWitness (S : UnifiedCompactificationSystem) : Prop :=
-  ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
-    ReadoutPreservation Φ ∧ GeneratorPreservation Φ ∧
-      BoundaryPreservation Φ ∧ CoherentClosure Φ ∧
-        TwistedFiniteDimensionalWitness S
-
-/--
 Capstone witness wrapper for constructive dependency discharge.
 -/
 @[rep_depth krein]
 theorem unificationDependencies_of_capstoneWitness
     (S : UnifiedCompactificationSystem)
-    (cap : CapstoneWitness S)
+    (cap : ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
+      ReadoutPreservation Φ ∧ GeneratorPreservation Φ ∧
+        BoundaryPreservation Φ ∧ CoherentClosure Φ)
     (hFinite : TwistedFiniteDimensionalWitness S) :
     UnificationDependencies S := by
   rcases cap with ⟨Φ, hReadout, hGenerator, hBoundary, _hCoherent⟩
@@ -275,7 +254,10 @@ Fully bundled bounded dependency discharge from a closed capstone witness.
 @[rep_depth krein]
 theorem unificationDependencies_of_closedCapstoneWitness
     (S : UnifiedCompactificationSystem)
-    (cap : ClosedCapstoneWitness S) :
+    (cap : ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
+      ReadoutPreservation Φ ∧ GeneratorPreservation Φ ∧
+        BoundaryPreservation Φ ∧ CoherentClosure Φ ∧
+          TwistedFiniteDimensionalWitness S) :
     UnificationDependencies S := by
   rcases cap with ⟨Φ, hReadout, hGenerator, hBoundary, _hCoherent, hFinite⟩
   exact unificationDependencies_of_capstone
@@ -289,7 +271,9 @@ Bounded lane capstone theorem shape:
 theorem operator_penrose_unification
     (S : UnifiedCompactificationSystem)
     (_deps : UnificationDependencies S)
-    (cap : CapstoneWitness S) :
+    (cap : ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
+      ReadoutPreservation Φ ∧ GeneratorPreservation Φ ∧
+        BoundaryPreservation Φ ∧ CoherentClosure Φ) :
     ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
       ReadoutPreservation Φ ∧
       GeneratorPreservation Φ ∧
@@ -305,7 +289,9 @@ record once a concrete finite witness is provided.
 @[rep_depth krein]
 theorem operator_penrose_unification_of_capstone
     (S : UnifiedCompactificationSystem)
-    (cap : CapstoneWitness S)
+    (cap : ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
+      ReadoutPreservation Φ ∧ GeneratorPreservation Φ ∧
+        BoundaryPreservation Φ ∧ CoherentClosure Φ)
     (_hFinite : TwistedFiniteDimensionalWitness S) :
     ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
       ReadoutPreservation Φ ∧
@@ -321,7 +307,10 @@ dependencies are internal to one witness package.
 @[rep_depth krein]
 theorem operator_penrose_unification_closed
     (S : UnifiedCompactificationSystem)
-    (cap : ClosedCapstoneWitness S) :
+    (cap : ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
+      ReadoutPreservation Φ ∧ GeneratorPreservation Φ ∧
+        BoundaryPreservation Φ ∧ CoherentClosure Φ ∧
+          TwistedFiniteDimensionalWitness S) :
     ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
       ReadoutPreservation Φ ∧
       GeneratorPreservation Φ ∧
@@ -357,7 +346,9 @@ A bounded capstone witness seeds the unbounded program at the contract level.
 @[rep_depth krein]
 theorem boundedCapstone_seeds_unbounded_translation
     (S : UnifiedCompactificationSystem)
-    (cap : CapstoneWitness S) :
+    (cap : ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
+      ReadoutPreservation Φ ∧ GeneratorPreservation Φ ∧
+        BoundaryPreservation Φ ∧ CoherentClosure Φ) :
     ∃ Φ : Intertwiner S.operatorLane S.causalCompactifiedLane,
       BoundaryPreservation Φ ∧ GeneratorPreservation Φ := by
   rcases cap with ⟨Φ, _hReadout, hGenerator, hBoundary, _hCoherent⟩

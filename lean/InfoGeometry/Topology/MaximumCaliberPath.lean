@@ -102,77 +102,72 @@ variable {Path : Type u} (M : MaximumCaliberOptimizer Path)
 end MaximumCaliberOptimizer
 
 /-- A MaxCal transition-asymmetry socket over an existing thermodynamic gauge flow. -/
-structure MaximumCaliberThermodynamicBridge (flow : CausalNonequilibriumFlow Op) where
-  pathConstraint : Op
-  pathConstraint_eq_dlnQ : pathConstraint = flow.d_ln_Q
-  commutator_eq_constraint :
-    flow.P_forward * flow.P_backward - flow.P_backward * flow.P_forward = pathConstraint
+theorem commutator_eq_pathConstraint
+    (flow : CausalNonequilibriumFlow Op) (pathConstraint : Op)
+    (hconstraint :
+      flow.P_forward * flow.P_backward -
+          flow.P_backward * flow.P_forward = pathConstraint) :
+    flow.P_forward * flow.P_backward -
+        flow.P_backward * flow.P_forward = pathConstraint :=
+  hconstraint
 
-namespace MaximumCaliberThermodynamicBridge
-
-variable {flow : CausalNonequilibriumFlow Op}
-variable (B : MaximumCaliberThermodynamicBridge flow)
-
-/-- The transition commutator is the supplied MaxCal path constraint. -/
-theorem commutator_eq_pathConstraint :
-    flow.P_forward * flow.P_backward - flow.P_backward * flow.P_forward = B.pathConstraint :=
-  B.commutator_eq_constraint
-
-/-- Entropy production is the supplied MaxCal path constraint. -/
-theorem entropy_production_eq_pathConstraint :
-    entropy_production flow = B.pathConstraint := by
+theorem entropy_production_eq_pathConstraint
+    (flow : CausalNonequilibriumFlow Op) (pathConstraint : Op)
+    (hconstraint :
+      flow.P_forward * flow.P_backward -
+          flow.P_backward * flow.P_forward = pathConstraint) :
+    entropy_production flow = pathConstraint := by
   rw [entropy_production_eq_commutator]
-  exact B.commutator_eq_constraint
+  exact hconstraint
 
-/-- Entropy production is the de Rham/log-partition current `d_ln_Q`. -/
 theorem entropy_production_eq_dlnQ
-    (B : MaximumCaliberThermodynamicBridge flow) :
-    entropy_production flow = flow.d_ln_Q := by
-  exact de_rham_potential_equals_entropy_production_of_commutator flow
-    (Eq.trans B.commutator_eq_constraint B.pathConstraint_eq_dlnQ)
+    (flow : CausalNonequilibriumFlow Op)
+    (hcomm :
+      flow.P_forward * flow.P_backward -
+          flow.P_backward * flow.P_forward = flow.d_ln_Q) :
+    entropy_production flow = flow.d_ln_Q :=
+  de_rham_potential_equals_entropy_production_of_commutator flow hcomm
 
-end MaximumCaliberThermodynamicBridge
-
-/--
-Collapse socket from MaxCal path weights to MaxEnt/KMS state weights on a
-model-selected exact path sector.
--/
-structure MaximumCaliberToMaxEntropyCollapse (Path State : Type u) where
-  endpoint : Path → State
-  pathWeight : Path → ℝ
-  stateWeight : State → ℝ
-  IsExactPath : Path → Prop
-  collapse :
-    ∀ γ : Path, IsExactPath γ → pathWeight γ = stateWeight (endpoint γ)
-
+/-! Collapse laws from MaxCal path weights to MaxEnt/KMS state weights on a
+model-selected exact path sector. -/
 namespace MaximumCaliberToMaxEntropyCollapse
 
-variable {Path State : Type u} (C : MaximumCaliberToMaxEntropyCollapse Path State)
+variable {Path State : Type u}
 
 /-- The exact sector is the subtype of paths on which the collapse law applies. -/
-def exactSector :=
-  { γ : Path // C.IsExactPath γ }
+def exactSector (IsExactPath : Path → Prop) :=
+  { γ : Path // IsExactPath γ }
 
 /-- Package a path together with its proof of membership in the exact sector. -/
-def exactWitness (γ : Path) (hγ : C.IsExactPath γ) : C.exactSector :=
+def exactWitness (IsExactPath : Path → Prop)
+    (γ : Path) (hγ : IsExactPath γ) : exactSector IsExactPath :=
   ⟨γ, hγ⟩
 
 @[simp]
-theorem exactWitness_val (γ : Path) (hγ : C.IsExactPath γ) :
-    (C.exactWitness γ hγ).1 = γ :=
+theorem exactWitness_val (IsExactPath : Path → Prop)
+    (γ : Path) (hγ : IsExactPath γ) :
+    (exactWitness IsExactPath γ hγ).1 = γ :=
   rfl
 
 /-- In the supplied exact sector, MaxCal path weights reduce to MaxEnt state weights. -/
 theorem pathWeight_eq_stateWeight
-    (γ : Path) (hγ : C.IsExactPath γ) :
-    C.pathWeight γ = C.stateWeight (C.endpoint γ) :=
-  C.collapse γ hγ
+    (endpoint : Path → State) (pathWeight : Path → ℝ)
+    (stateWeight : State → ℝ) (IsExactPath : Path → Prop)
+    (collapse : ∀ γ : Path, IsExactPath γ →
+      pathWeight γ = stateWeight (endpoint γ))
+    (γ : Path) (hγ : IsExactPath γ) :
+    pathWeight γ = stateWeight (endpoint γ) :=
+  collapse γ hγ
 
 /-- The MaxCal-to-MaxEnt collapse law restricted to the genuine exact sector. -/
 theorem pathWeight_eq_stateWeight_on_exactSector
-    (γ : C.exactSector) :
-    C.pathWeight γ.1 = C.stateWeight (C.endpoint γ.1) :=
-  C.collapse γ.1 γ.2
+    (endpoint : Path → State) (pathWeight : Path → ℝ)
+    (stateWeight : State → ℝ) (IsExactPath : Path → Prop)
+    (collapse : ∀ γ : Path, IsExactPath γ →
+      pathWeight γ = stateWeight (endpoint γ))
+    (γ : exactSector IsExactPath) :
+    pathWeight γ.1 = stateWeight (endpoint γ.1) :=
+  collapse γ.1 γ.2
 
 end MaximumCaliberToMaxEntropyCollapse
 

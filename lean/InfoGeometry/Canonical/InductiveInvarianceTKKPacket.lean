@@ -3,6 +3,7 @@ import InfoGeometry.OperatorAlgebra.TKKClosure
 import InfoGeometry.OperatorAlgebra.RecursiveSupercharge
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.SocketTarget
+import InfoGeometry.Canonical.ErlangenInductiveClosure
 
 /-!
 # InfoGeometry.Canonical.InductiveInvarianceTKKPacket
@@ -320,7 +321,7 @@ theorem inductive_invariance_packet
     C.projector_exists_along_chain n
   ⟩
 
-/-! ## 5. Colimit socket (explicit closure debt) -/
+/-! ## 5. Concrete algebraic colimit realization -/
 
 /--
 Colimit invariance socket for the TKK inductive chain.
@@ -335,62 +336,72 @@ predicates, norm closure of the invariant lanes).
 -/
 @[socket_debt_tag]
 structure ColimitInvarianceSocket where
-  /-- The completed algebra carrier type. -/
-  Colimit : Type*
-  /-- Ring structure on the completed algebra. -/
-  colimitRing : Ring Colimit
-  /-- The finite chain whose colimit we take. -/
   chain : TKKInductiveChain
-  /-- Embedding of each finite stage into the colimit. -/
-  embed : ∀ n, chain.Stage n → Colimit
-  /-- The colimit carries supergraded invariant data. -/
-  colimitInvariant : @SupergradedInvariantAt Colimit colimitRing
-  embed_compatible_law : ∀ n x, embed (n + 1) ((chain.Bonding n).bonding.map x) = embed n x
-  embed_preserves_odd_law : ∀ n x, (chain.Grading n).invariant.is_odd x → colimitInvariant.is_odd (embed n x)
-  embed_preserves_even_law : ∀ n x, (chain.Grading n).invariant.is_even x → colimitInvariant.is_even (embed n x)
-  embed_preserves_central_law : ∀ n x, (chain.Grading n).invariant.is_central x → colimitInvariant.is_central (embed n x)
-  finite_stage_cover_law : ∀ z, ∃ n x, embed n x = z
 
 namespace ColimitInvarianceSocket
 
-attribute [instance] ColimitInvarianceSocket.colimitRing
-
 variable (S : ColimitInvarianceSocket)
 
-instance : Ring S.Colimit := S.colimitRing
+abbrev Colimit :=
+  InfoGeometry.Canonical.ErlangenInductiveClosure.ColimitInheritsInvariants.ColimitStage
+    (fun n => S.chain.Stage n)
+    (fun n => (S.chain.Grading n).invariant)
+    (fun n => (S.chain.Bonding n).bonding)
+
+abbrev embed (n : ℕ) : S.chain.Stage n →+* S.Colimit :=
+  InfoGeometry.Canonical.ErlangenInductiveClosure.ColimitInheritsInvariants.stageImage
+    (fun n => S.chain.Stage n)
+    (fun n => (S.chain.Grading n).invariant)
+    (fun n => (S.chain.Bonding n).bonding) n
+
+noncomputable def realization :
+    InfoGeometry.Canonical.ErlangenInductiveClosure.ColimitInheritsInvariants
+      (fun n => S.chain.Stage n)
+      (fun n => (S.chain.Grading n).invariant)
+      (fun n => (S.chain.Bonding n).bonding) :=
+  InfoGeometry.Canonical.ErlangenInductiveClosure.ColimitInheritsInvariants.fromStages
+    (fun n => S.chain.Stage n)
+    (fun n => (S.chain.Grading n).invariant)
+    (fun n => (S.chain.Bonding n).bonding)
+
+abbrev colimitInvariant : @SupergradedInvariantAt S.Colimit inferInstance :=
+  (S.realization).LimitInvariants
 
 /-- Embedding compatibility with the one-step TKK bonding map. -/
 theorem embed_compatible
     (n : ℕ) (x : S.chain.Stage n) :
     S.embed (n + 1) ((S.chain.Bonding n).bonding.map x) = S.embed n x :=
-    S.embed_compatible_law n x
+    InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf_bond
+      (fun n => (S.chain.Bonding n).bonding.map) n x
 
 /-- Embedded finite-stage odd elements remain odd in the colimit invariant. -/
 theorem embed_preserves_odd
     (n : ℕ) (x : S.chain.Stage n)
     (hx : (S.chain.Grading n).invariant.is_odd x) :
     S.colimitInvariant.is_odd (S.embed n x) :=
-    S.embed_preserves_odd_law n x hx
+  by exact ⟨n, x, rfl, hx⟩
 
 /-- Embedded finite-stage even elements remain even in the colimit invariant. -/
 theorem embed_preserves_even
     (n : ℕ) (x : S.chain.Stage n)
     (hx : (S.chain.Grading n).invariant.is_even x) :
     S.colimitInvariant.is_even (S.embed n x) :=
-    S.embed_preserves_even_law n x hx
+  by exact ⟨n, x, rfl, hx⟩
 
 /-- Embedded finite-stage central elements remain central in the colimit invariant. -/
 theorem embed_preserves_central
     (n : ℕ) (x : S.chain.Stage n)
     (hx : (S.chain.Grading n).invariant.is_central x) :
     S.colimitInvariant.is_central (S.embed n x) :=
-    S.embed_preserves_central_law n x hx
+  by exact ⟨n, x, rfl, hx⟩
 
 /-- Every algebraic colimit point is represented by a finite stage. -/
 theorem finite_stage_cover
     (z : S.Colimit) :
     ∃ (n : ℕ) (x : S.chain.Stage n), S.embed n x = z :=
-    S.finite_stage_cover_law z
+  Quotient.inductionOn z (fun zx => by
+    rcases zx with ⟨n, x⟩
+    exact ⟨n, x, rfl⟩)
 
 end ColimitInvarianceSocket
 

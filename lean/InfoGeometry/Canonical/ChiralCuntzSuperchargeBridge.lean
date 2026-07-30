@@ -1,70 +1,57 @@
-import Mathlib.Algebra.Star.Basic
-import Mathlib.Algebra.Ring.Basic
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.NoncommRing
-
-set_option linter.unusedSectionVars false
-set_option linter.unnecessarySeqFocus false
-set_option linter.unusedVariables false
-set_option linter.dupNamespace false
-
-noncomputable section
+import InfoGeometry.Canonical.Cuntz2Isometries
 
 namespace ChiralCuntzSuperchargeBridge
 
-/-- Two-Channel Cuntz Algebra 𝒪₂ Generator System in a Ring R. -/
-structure Cuntz2System (R : Type*) [Ring R] where
-  S_plus : R
-  S_minus : R
-  S_plus_star : R
-  S_minus_star : R
-  left_inv_plus : S_plus_star * S_plus = 1
-  left_inv_minus : S_minus_star * S_minus = 1
-  ortho_pm : S_plus_star * S_minus = 0
-  ortho_mp : S_minus_star * S_plus = 0
-  completeness : S_plus * S_plus_star + S_minus * S_minus_star = 1
+open CuntzAlgebra
 
-variable {R : Type*} [Ring R] (sys : Cuntz2System R)
+/-- The chiral bridge uses the canonical noncommutative Cuntz `O₂` owner. -/
+abbrev Cuntz2System (R : Type*) [Ring R] [StarRing R] :=
+  _root_.CuntzAlgebra.Cuntz2Isometries R
 
-/-- Right-moving Chiral Supercharge Q₊ = S₊ S₋*. -/
-def Q_plus : R := sys.S_plus * sys.S_minus_star
+variable {R : Type*} [Ring R] [StarRing R] (sys : Cuntz2System R)
 
-/-- Left-moving Chiral Supercharge Q₋ = S₋ S₊*. -/
-def Q_minus : R := sys.S_minus * sys.S_plus_star
+/-- Right-moving chiral supercharge `Q₊ = S₁ S₂*`. -/
+def Q_plus : R := _root_.CuntzAlgebra.S1 sys * star (_root_.CuntzAlgebra.S2 sys)
 
-/-- **Theorem**: Right-moving Chiral Nilpotency: Q₊² = 0. -/
+/-- Left-moving chiral supercharge `Q₋ = S₂ S₁*`. -/
+def Q_minus : R := _root_.CuntzAlgebra.S2 sys * star (_root_.CuntzAlgebra.S1 sys)
+
 theorem Q_plus_sq_zero : Q_plus sys * Q_plus sys = 0 := by
   dsimp [Q_plus]
-  have h_ortho := sys.ortho_mp
-  calc sys.S_plus * sys.S_minus_star * (sys.S_plus * sys.S_minus_star)
-    _ = sys.S_plus * (sys.S_minus_star * sys.S_plus) * sys.S_minus_star := by noncomm_ring
-    _ = sys.S_plus * 0 * sys.S_minus_star := by rw [h_ortho]
-    _ = 0 := by noncomm_ring
+  have h : star (S2 sys) * S1 sys = 0 := by
+    have h' := CuntzAlgebra.isometries_ortho sys
+    have h'' := congrArg star h'
+    simpa [S1, S2] using h''
+  calc
+    (S1 sys * star (S2 sys)) * (S1 sys * star (S2 sys)) =
+        S1 sys * (star (S2 sys) * S1 sys) * star (S2 sys) := by
+          simp [mul_assoc]
+    _ = 0 := by rw [h, mul_zero, zero_mul]
 
-/-- **Theorem**: Left-moving Chiral Nilpotency: Q₋² = 0. -/
 theorem Q_minus_sq_zero : Q_minus sys * Q_minus sys = 0 := by
   dsimp [Q_minus]
-  have h_ortho := sys.ortho_pm
-  calc sys.S_minus * sys.S_plus_star * (sys.S_minus * sys.S_plus_star)
-    _ = sys.S_minus * (sys.S_plus_star * sys.S_minus) * sys.S_plus_star := by noncomm_ring
-    _ = sys.S_minus * 0 * sys.S_plus_star := by rw [h_ortho]
-    _ = 0 := by noncomm_ring
+  have h : star (S1 sys) * S2 sys = 0 := CuntzAlgebra.isometries_ortho sys
+  calc
+    (S2 sys * star (S1 sys)) * (S2 sys * star (S1 sys)) =
+        S2 sys * (star (S1 sys) * S2 sys) * star (S1 sys) := by
+          simp [mul_assoc]
+    _ = 0 := by rw [h, mul_zero, zero_mul]
 
-/-- **Theorem**: Cuntz-SUSY Energy Completeness Identity: {Q₊, Q₋} = 𝟙.
-    Machine-certifies that the anticommutator {Q₊, Q₋} = Q₊ Q₋ + Q₋ Q₊ of the right and left
-    chiral lightcone supercharges equals the Cuntz completeness projection sum S₊ S₊* + S₋ S₋* = 𝟙. -/
 theorem chiral_susy_anticommutator_eq_one :
     Q_plus sys * Q_minus sys + Q_minus sys * Q_plus sys = 1 := by
   dsimp [Q_plus, Q_minus]
-  have h1 : sys.S_minus_star * sys.S_minus = 1 := sys.left_inv_minus
-  have h2 : sys.S_plus_star * sys.S_plus = 1 := sys.left_inv_plus
-  have h_comp : sys.S_plus * sys.S_plus_star + sys.S_minus * sys.S_minus_star = 1 := sys.completeness
-  calc sys.S_plus * sys.S_minus_star * (sys.S_minus * sys.S_plus_star) +
-       sys.S_minus * sys.S_plus_star * (sys.S_plus * sys.S_minus_star)
-    _ = sys.S_plus * (sys.S_minus_star * sys.S_minus) * sys.S_plus_star +
-        sys.S_minus * (sys.S_plus_star * sys.S_plus) * sys.S_minus_star := by noncomm_ring
-    _ = sys.S_plus * 1 * sys.S_plus_star + sys.S_minus * 1 * sys.S_minus_star := by rw [h1, h2]
-    _ = sys.S_plus * sys.S_plus_star + sys.S_minus * sys.S_minus_star := by noncomm_ring
-    _ = 1 := h_comp
+  calc
+    (S1 sys * star (S2 sys)) * (S2 sys * star (S1 sys)) +
+        (S2 sys * star (S1 sys)) * (S1 sys * star (S2 sys)) =
+        S1 sys * (star (S2 sys) * S2 sys) * star (S1 sys) +
+          S2 sys * (star (S1 sys) * S1 sys) * star (S2 sys) := by
+            simp [mul_assoc]
+    _ = S1 sys * star (S1 sys) + S2 sys * star (S2 sys) := by
+      have h1 : star (S1 sys) * S1 sys = 1 := CuntzAlgebra.h_isometry1 sys
+      have h2 : star (S2 sys) * S2 sys = 1 := CuntzAlgebra.h_isometry2 sys
+      rw [h2, h1]
+      simp
+    _ = 1 := by
+      exact CuntzAlgebra.h_range_sum sys
 
 end ChiralCuntzSuperchargeBridge

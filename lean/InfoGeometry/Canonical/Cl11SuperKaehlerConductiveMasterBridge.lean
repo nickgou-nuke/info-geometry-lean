@@ -70,23 +70,4 @@ theorem super_kaehler_involutive_law {V : Type*} [AddCommGroup V] [Module ℝ V]
     _ = - (- LinearMap.id) := by rw [hJ_sq]
     _ = LinearMap.id := by simp
 
-/--
-**Main Theorem: Grand Cl(1,1) Super-Kähler Conductive Master Duality**
-Unifies real split Cl(1,1) bivector law K² = -id, super-Kähler involutive law J ∘ (-J) = id, and fixed locus antiunitary rigidity Re(s) = 1/2 into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
--/
-theorem grand_cl11_super_kaehler_master_duality {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (J eps : V →ₗ[ℝ] V)
-    (hJ : J.comp J = LinearMap.id)
-    (heps : eps.comp eps = LinearMap.id)
-    (hanti : J.comp eps + eps.comp J = 0)
-    (J_k : V →ₗ[ℝ] V) (hJ_k : J_k.comp J_k = -LinearMap.id)
-    (s_anti : ℂ) (h_anti : s_anti = 1 - star s_anti) :
-    ((J.comp eps).comp (J.comp eps) = -LinearMap.id) ∧
-    (J_k.comp (-J_k) = LinearMap.id) ∧
-    (s_anti.re = 1 / 2) := ⟨
-  cl11_action_bivector_sq J eps hJ heps hanti,
-  super_kaehler_involutive_law J_k hJ_k,
-  (critical_line_fixed_locus_iff s_anti).1 h_anti
-⟩
-
 end InfoGeometry.Canonical.Cl11SuperKaehlerConductiveMasterBridge

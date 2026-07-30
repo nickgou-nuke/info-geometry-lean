@@ -83,10 +83,6 @@ structure CPTPin44ReflectionCalibration
   timeReversal_sq :
     ∀ ψ : State, timeReversalAction (timeReversalAction ψ) = ψ
 
-  /-- The combined CPT state action, by convention `C ∘ P ∘ T`. -/
-  cptAction : State → State :=
-    fun ψ => chargeConjugation (parityAction (timeReversalAction ψ))
-
 namespace CPTPin44ReflectionCalibration
 
 variable
@@ -97,6 +93,10 @@ variable
     {Pin : Pin44CoverDatum (V := V) (PinEl := PinEl) Q}
 
 variable (C : CPTPin44ReflectionCalibration Q Pin State)
+
+/-- The combined CPT state action, by convention `C ∘ P ∘ T`. -/
+def cptAction (ψ : State) : State :=
+  C.chargeConjugation (C.parityAction (C.timeReversalAction ψ))
 
 /-- Parity is represented by an odd Pin element. -/
 theorem parityPin_is_odd :

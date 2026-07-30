@@ -106,22 +106,6 @@ namespace FierzRecombinationChannel
 variable {Frame BasisIndex : Type*}
 variable (F : FierzRecombinationChannel Frame BasisIndex)
 
-@[rep_depth operator]
-theorem bilinearA_apply :
-    F.bilinearA = F.bilinearA := rfl
-
-@[rep_depth operator]
-theorem bilinearB_apply :
-    F.bilinearB = F.bilinearB := rfl
-
-@[rep_depth operator]
-theorem coefficient_apply (i : BasisIndex) :
-    F.recombinationCoefficients i = F.recombinationCoefficients i := rfl
-
-@[rep_depth operator]
-theorem basis_apply (i : BasisIndex) :
-    F.recombinationBasis i = F.recombinationBasis i := rfl
-
 end FierzRecombinationChannel
 
 /--
@@ -159,14 +143,6 @@ namespace OperatorNoetherCharge
 
 variable {Frame Readout : Type*}
 variable (Q : OperatorNoetherCharge Frame Readout)
-
-@[rep_depth operator]
-theorem chargeObservable_apply :
-    Q.chargeObservable = Q.chargeObservable := rfl
-
-@[rep_depth operator]
-theorem readout_apply (A : Frame) :
-    Q.readoutMap A = Q.readoutMap A := rfl
 
 end OperatorNoetherCharge
 
@@ -221,22 +197,6 @@ namespace ModularNoetherErlangenCarrier
 
 variable {Alg Frame Sym Symbol Label Readout : Type*}
 variable (C : ModularNoetherErlangenCarrier Alg Frame Sym Symbol Label Readout)
-
-@[rep_depth operator]
-theorem net_apply :
-    C.net = C.net := rfl
-
-@[rep_depth operator]
-theorem modularFlow_apply :
-    C.modularFlow = C.modularFlow := rfl
-
-@[rep_depth operator]
-theorem killingField_apply :
-    C.killingField = C.killingField := rfl
-
-@[rep_depth operator]
-theorem charge_apply :
-    C.charge = C.charge := rfl
 
 end ModularNoetherErlangenCarrier
 

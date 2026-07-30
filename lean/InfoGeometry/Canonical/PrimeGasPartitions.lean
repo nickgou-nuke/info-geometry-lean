@@ -89,17 +89,11 @@ def infiniteParityTrace (s : ℂ) : ℂ :=
 Proof-carrying half-plane context for the genuine infinite Euler products.
 -/
 @[rep_depth thermo]
-abbrev InfiniteEulerProductConvergenceWitness :=
-  {s : ℂ // 1 < s.re}
+structure InfiniteEulerProductConvergenceWitness where
+  s : ℂ
+  halfPlane_Re_gt_one : 1 < s.re
 
 namespace InfiniteEulerProductConvergenceWitness
-
-abbrev s (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
-  W.1
-
-theorem halfPlane_Re_gt_one (W : InfiniteEulerProductConvergenceWitness) :
-    1 < W.s.re :=
-  W.2
 
 def zeta (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
   riemannZeta W.s
@@ -120,10 +114,6 @@ def parityTrace (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
   infiniteParityTrace W.s
 
 end InfiniteEulerProductConvergenceWitness
-
-/-- Restored public witness name for the native infinite-product context. -/
-abbrev InfiniteEulerProductWitness :=
-  InfiniteEulerProductConvergenceWitness
 
 /-- The bosonic trace is Riemann zeta on `Re(s)>1`. -/
 @[rep_depth thermo]
@@ -157,19 +147,19 @@ theorem infiniteFermionTrace_eq_zeta_div_zeta_two
   linarith
 
 @[rep_depth thermo]
-theorem bosonTrace_eq_zeta (W : InfiniteEulerProductWitness) :
+theorem bosonTrace_eq_zeta (W : InfiniteEulerProductConvergenceWitness) :
     W.bosonTrace = W.zeta :=
   infiniteBosonTrace_eq_riemannZeta W.halfPlane_Re_gt_one
 
 @[rep_depth thermo]
 theorem fermionTrace_eq_zeta_div_zeta_two_beta
-    (W : InfiniteEulerProductWitness) :
+    (W : InfiniteEulerProductConvergenceWitness) :
     W.fermionTrace = W.zeta / W.zeta_two_beta :=
   infiniteFermionTrace_eq_zeta_div_zeta_two W.halfPlane_Re_gt_one
 
 @[rep_depth thermo]
 theorem parityTrace_eq_inverse_zeta
-    (W : InfiniteEulerProductWitness) :
+    (W : InfiniteEulerProductConvergenceWitness) :
     W.parityTrace = W.inverseZeta :=
   infiniteParityTrace_eq_inverse_riemannZeta W.halfPlane_Re_gt_one
 

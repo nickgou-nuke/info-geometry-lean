@@ -83,9 +83,7 @@ structure HeckeSugawaraIntertwining
   -/
   hecke_preserves_cuspidal_kernel :
     ∀ (i : HeckeIndex) ⦃F : Bulk⦄,
-      W.siegel F = 0 → W.siegel ((intertwining i).bulkOp F) = 0 := by
-    intro i F hF
-    exact (intertwining i).maps_ker_siegel_to_ker_siegel hF
+      W.siegel F = 0 → W.siegel ((intertwining i).bulkOp F) = 0
 
   /--
   Resonance match: the zero-value of a completed L-function matches the

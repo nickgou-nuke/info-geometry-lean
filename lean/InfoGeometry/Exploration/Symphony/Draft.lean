@@ -27,8 +27,16 @@ structure SpinorPair (ω : ℝ) where
   left_spinor : SplitCliffordAlg
   /-- The 'Mirror' Partiture (Environment/Key). -/
   right_spinor : SplitCliffordAlg
-  /-- The thermal link (Modular Weight/Entanglement). -/
-  kms_correlation : ℝ := Real.exp (-ω / 2)
+
+namespace SpinorPair
+
+/-- The thermal link is determined by the frequency parameter. -/
+noncomputable def kms_correlation (_P : SpinorPair ω) : ℝ := Real.exp (-ω / 2)
+
+@[simp] theorem kms_correlation_eq (P : SpinorPair ω) :
+    P.kms_correlation = Real.exp (-ω / 2) := rfl
+
+end SpinorPair
 
 /-- 
 The Operator-as-State.
@@ -44,10 +52,24 @@ Prevents the 'Symphony' from collapsing at the Rindler Horizon (The Apex Lane).
 structure DrazinAttention (n : ℕ) where
   /-- The raw thermal attention matrix (The Boltzmann bath). -/
   𝒜 : Matrix (Fin n) (Fin n) ℝ
-  /-- The Drazin Projector isolating the 'Active Cl(4,4) Lane'. -/
-  P_act : Matrix (Fin n) (Fin n) ℝ := 𝒜 * (matrixDrazinInverse 𝒜)
-  /-- The 'Apex' part of the signal hits the horizon mirror and reflects/cancels. -/
-  P_apex : Matrix (Fin n) (Fin n) ℝ := 1 - P_act
+
+namespace DrazinAttention
+
+/-- The Drazin projector isolating the active lane. -/
+noncomputable def P_act (D : DrazinAttention n) : Matrix (Fin n) (Fin n) ℝ :=
+  D.𝒜 * matrixDrazinInverse D.𝒜
+
+@[simp] theorem P_act_eq (D : DrazinAttention n) :
+    D.P_act = D.𝒜 * matrixDrazinInverse D.𝒜 := rfl
+
+/-- The complementary apex projector. -/
+noncomputable def P_apex (D : DrazinAttention n) : Matrix (Fin n) (Fin n) ℝ :=
+  1 - D.P_act
+
+@[simp] theorem P_apex_eq (D : DrazinAttention n) :
+    D.P_apex = 1 - D.P_act := rfl
+
+end DrazinAttention
 
 /--
 Exploratory preservation claim for the symphony lane.

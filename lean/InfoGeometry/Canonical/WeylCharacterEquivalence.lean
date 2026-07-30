@@ -103,33 +103,16 @@ end WeylDenominatorEulerProductBridge
 
 /-- Weyl signature equals the supplied Möbius coefficient on square-free integers. -/
 @[rep_depth thermo]
-abbrev ParityTraceWitness : Type _ :=
-  Σ' WeylGroup : Type _,
-    Σ' signature : WeylGroup → ℤ,
-      Σ' squareFree : ℕ → Prop,
-        Σ' squareFreeToWeyl : ∀ n, squareFree n → WeylGroup,
-          ∀ n (h : squareFree n),
-            signature (squareFreeToWeyl n h) = mobiusCoefficient n
+structure ParityTraceWitness where
+  WeylGroup : Type _
+  signature : WeylGroup → ℤ
+  squareFree : ℕ → Prop
+  squareFreeToWeyl : ∀ n, squareFree n → WeylGroup
+  signature_eq_mobius :
+    ∀ n (h : squareFree n),
+      signature (squareFreeToWeyl n h) = mobiusCoefficient n
 
 namespace ParityTraceWitness
-
-abbrev WeylGroup (P : ParityTraceWitness) : Type _ :=
-  P.1
-
-abbrev signature (P : ParityTraceWitness) : P.WeylGroup → ℤ :=
-  P.2.1
-
-abbrev squareFree (P : ParityTraceWitness) : ℕ → Prop :=
-  P.2.2.1
-
-abbrev squareFreeToWeyl (P : ParityTraceWitness) :
-    ∀ n, P.squareFree n → P.WeylGroup :=
-  P.2.2.2.1
-
-abbrev signature_eq_mobius (P : ParityTraceWitness) :
-    ∀ n (h : P.squareFree n),
-      P.signature (P.squareFreeToWeyl n h) = mobiusCoefficient n :=
-  P.2.2.2.2
 
 variable (P : ParityTraceWitness)
 

@@ -65,8 +65,17 @@ structure CrystallisedState where
   boundaryWord : ℕ → Fin 2
   /-- Fibonacci fusion label attached to the boundary site. -/
   label : FibObject
-  /-- Combinatorial Dirac-sea vacuum profile. -/
-  diracSeaVacuumState : DiracSeaBoundary := diracSeaVacuum
+
+namespace CrystallisedState
+
+/-- The finite/local boundary carrier uses the canonical Dirac-sea vacuum. -/
+def diracSeaVacuumState (_γ : CrystallisedState) : DiracSeaBoundary :=
+  diracSeaVacuum
+
+@[simp] theorem diracSeaVacuumState_eq (γ : CrystallisedState) :
+    γ.diracSeaVacuumState = diracSeaVacuum := rfl
+
+end CrystallisedState
 
 /-- Pack a finite bulk state together with a chosen finite/local boundary readout. -/
 @[rep_depth thermo, capstone]
@@ -90,7 +99,6 @@ def BulkState.thermalRootVariable (bulk : BulkState) (p : ℕ) : ℝ :=
 def canonicalCrystallisedReadout : CrystallisedState where
   boundaryWord := fun _ : ℕ => 0
   label := FibObject.unit
-  diracSeaVacuumState := diracSeaVacuum
 
 /-- Construct the finite/local transition data packet from a finite bulk state. -/
 @[rep_depth thermo, capstone]

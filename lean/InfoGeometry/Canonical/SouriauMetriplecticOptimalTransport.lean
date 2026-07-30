@@ -171,9 +171,6 @@ There is no second evidence wrapper: consistency is exactly the quantified
 algebraic content of `MetriplecticSystem`.
 -/
 @[rep_depth thermo]
-abbrev MetriplecticConsistencyWitness
-    (Observable : Type*) [Ring Observable] :=
-  MetriplecticData Observable
 
 /--
 Optimal-transport metric and mobility data.
@@ -420,7 +417,7 @@ structure SouriauMetriplecticOTFlow
     [Ring Observable] where
   souriau : SouriauLieThermoData State LieGroup LieAlgebra LieDual
   transport : SouriauTransportFlow State LieGroup LieAlgebra LieDual
-  metriplectic : MetriplecticConsistencyWitness Observable
+  metriplectic : MetriplecticSystem Observable
   gradientFlow : WassersteinGradientFlow State
   reversibleFlow : Density State → Density State
 

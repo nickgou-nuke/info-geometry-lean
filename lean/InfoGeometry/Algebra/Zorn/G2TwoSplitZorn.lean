@@ -1,6 +1,6 @@
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 import InfoGeometry.OperatorAlgebra.SplitOctonionG2TypeGenerators
-import InfoGeometry.Algebra.Zorn.SplitOctonionG2ClassificationCertificate
+import InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
 
 /-!
 # Canonical finite split-Zorn `G₂(2)` ledger
@@ -31,7 +31,6 @@ open InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 open InfoGeometry.OperatorAlgebra.SplitOctonions.CyclicAutomorphism
 open InfoGeometry.OperatorAlgebra.SplitOctonions.G2TypeGenerators
-open InfoGeometry.Algebra.Zorn.SplitOctonionG2ClassificationCertificate
 
 /-- Exact finite-order packet for the split Zorn `G₂(2)` lane. -/
 theorem finite_g2two_order_packet :
@@ -66,13 +65,5 @@ theorem finite_aut_card_eq_g2two_from_enumeration
     (h_enum : Fintype.card SplitOctF2Aut = 12096) :
     Fintype.card SplitOctF2Aut = g2twoOrder :=
   aut_splitOctF2_card_eq_g2twoOrder_from_enumeration h_enum
-
-/-- Computational evidence values recorded in the certificate owner. -/
-theorem certificate_evidence_packet :
-    computationalEvidenceInvariants.rootCount = 12 ∧
-      computationalEvidenceInvariants.weylOrder = 12 ∧
-      computationalEvidenceInvariants.derivationDimension = 14 ∧
-      computationalEvidenceInvariants.atlasG2TwoOrder = 12096 :=
-  computationalEvidenceInvariants_packet
 
 end InfoGeometry.Algebra.Zorn.G2TwoSplitZorn

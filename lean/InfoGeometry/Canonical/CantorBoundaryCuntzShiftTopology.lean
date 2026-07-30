@@ -42,17 +42,13 @@ theorem left_right_branch_images_disjoint
   have hzero := congrFun h 0
   simp [prefixBit] at hzero
 
-theorem continuous_leftShift : Continuous (leftShift) := by
-  exact continuous_prefixBit false
+alias continuous_leftShift := continuous_prefixBit
 
-theorem continuous_rightShift : Continuous (rightShift) := by
-  exact continuous_prefixBit true
+alias continuous_rightShift := continuous_prefixBit
 
-theorem leftShift_injective : Function.Injective (leftShift) := by
-  exact injective_prefixBit false
+alias leftShift_injective := injective_prefixBit
 
-theorem rightShift_injective : Function.Injective (rightShift) := by
-  exact injective_prefixBit true
+alias rightShift_injective := injective_prefixBit
 
 theorem realBinaryReadout_prefixBit
     (b : Bool) (x : CantorBoundary) :

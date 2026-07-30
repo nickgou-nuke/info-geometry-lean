@@ -88,32 +88,6 @@ theorem eval_re_eq_vacuumRealState
     _ = B.vacuum.vacuumRealState A :=
             B.realState_eq_vacuumRealState A
 
-/-- The vacuum vector lies in the Hestenes/Krein natural cone. -/
-@[rep_depth krein]
-theorem vacuum_mem_naturalCone :
-    B.vacuum.omega ∈ B.boundedHestenes.hestenes.HestenesNaturalCone :=
-  B.vacuum.vacuum_mem_naturalCone
-
-/-- The vacuum state is normalized on the identity observable. -/
-@[rep_depth krein]
-theorem vacuumRealState_id :
-    B.vacuum.vacuumRealState (1 : EndH) = 1 :=
-  B.vacuum.vacuumRealState_id
-
-/-- The bounded real state shadow is normalized on the identity observable. -/
-@[rep_depth krein]
-theorem realState_id :
-    B.boundedHestenes.realState (1 : EndH) = 1 := by
-  rw [B.realState_eq_vacuumRealState_apply (1 : EndH)]
-  exact B.vacuumRealState_id
-
-/-- The Hestenes/Krein vacuum expectation is invariant under the real modular flow. -/
-@[rep_depth krein]
-theorem vacuumRealState_flow_invariant
-    (t : ℝ) (A : EndH) :
-    B.vacuum.vacuumRealState (B.boundedHestenes.hestenes.modularFlow.flow t A) =
-      B.vacuum.vacuumRealState A :=
-  B.vacuum.vacuumRealState_flow_invariant t A
 
 /-- The bounded real state shadow is invariant under the Hestenes modular flow. -/
 @[rep_depth krein]
@@ -129,7 +103,7 @@ theorem realState_flow_invariant
             (B.boundedHestenes.hestenes.modularFlow.flow t A) := by
               rw [B.realState_eq_vacuumRealState_apply]
     _ = B.vacuum.vacuumRealState A :=
-              B.vacuumRealState_flow_invariant t A
+              B.vacuum.vacuumRealState_flow_invariant t A
     _ = B.boundedHestenes.realState A := by
               rw [B.realState_eq_vacuumRealState_apply A]
 

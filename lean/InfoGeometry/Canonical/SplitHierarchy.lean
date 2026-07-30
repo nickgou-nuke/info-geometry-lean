@@ -77,55 +77,43 @@ repo's conformal corridor.
 structure SplitHierarchyPacket (n : ℕ) where
   tier : SplitHierarchyTier
   geometry : SplitSuperGeometry n
-  parity : ParityInvolution (Cl_nn n)
-  parity_eq : parity = geometry.parity
-  signature : Nat × Nat
-  signature_eq : signature = tierSignature tier
 
 namespace SplitHierarchyPacket
 
 variable {n : ℕ}
 
+def parity (P : SplitHierarchyPacket n) : ParityInvolution (Cl_nn n) :=
+  P.geometry.parity
+
+def signature (P : SplitHierarchyPacket n) : Nat × Nat :=
+  tierSignature P.tier
+
 /-- The parity involution attached to the packet is the underlying carrier parity. -/
 @[simp] theorem parity_eq_geometry_parity
     (P : SplitHierarchyPacket n) :
-    P.parity = P.geometry.parity :=
-  P.parity_eq
+    P.parity = P.geometry.parity := rfl
 
 /-- The packet signature is exactly the tier readout. -/
 @[simp] theorem signature_eq_tierSignature
     (P : SplitHierarchyPacket n) :
-    P.signature = tierSignature P.tier :=
-  P.signature_eq
+    P.signature = tierSignature P.tier := rfl
 
 end SplitHierarchyPacket
 
 /-- Canonical local doubled-real split seed at tier `splitComplex`. -/
 def canonicalSplitComplexPacket : SplitHierarchyPacket 1 where
-  tier := .splitComplex
-  geometry := SplitSuperGeometry.canonical 1
-  parity := splitCliffordParityInvolution 1
-  parity_eq := rfl
-  signature := tierSignature .splitComplex
-  signature_eq := rfl
+    tier := .splitComplex
+    geometry := SplitSuperGeometry.canonical 1
 
 /-- Canonical hyperbolic intermediate tier at `Cl(2,2)`. -/
 def canonicalSplitQuaternionPacket : SplitHierarchyPacket 2 where
-  tier := .splitQuaternion
-  geometry := SplitSuperGeometry.canonical 2
-  parity := splitCliffordParityInvolution 2
-  parity_eq := rfl
-  signature := tierSignature .splitQuaternion
-  signature_eq := rfl
+    tier := .splitQuaternion
+    geometry := SplitSuperGeometry.canonical 2
 
 /-- Canonical triality readout tier at `Cl(4,4)`. -/
 def canonicalSplitOctonionPacket : SplitHierarchyPacket 4 where
-  tier := .splitOctonion
-  geometry := SplitSuperGeometry.canonical 4
-  parity := splitCliffordParityInvolution 4
-  parity_eq := rfl
-  signature := tierSignature .splitOctonion
-  signature_eq := rfl
+    tier := .splitOctonion
+    geometry := SplitSuperGeometry.canonical 4
 
 /--
 Diagnostic split-hierarchy corridor.

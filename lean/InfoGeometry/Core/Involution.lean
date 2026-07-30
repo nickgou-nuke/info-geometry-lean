@@ -12,9 +12,21 @@ Cartan, Clifford, and Krein layers.
 namespace InfoGeometry.Core
 
 /-- A bare involutive endomorphism on `M`. -/
-structure InvolutiveAutomorphism (M : Type*) where
-  toFun : M → M
-  involutive : Function.Involutive toFun
+abbrev InvolutiveAutomorphism (M : Type*) :=
+  {f : M → M // Function.Involutive f}
+
+namespace InvolutiveAutomorphism
+
+abbrev toFun (θ : InvolutiveAutomorphism M) : M → M := θ.1
+
+abbrev involutive (θ : InvolutiveAutomorphism M) :
+    Function.Involutive θ.toFun := θ.2
+
+def mk (toFun : M → M) (involutive : Function.Involutive toFun) :
+    InvolutiveAutomorphism M :=
+  ⟨toFun, involutive⟩
+
+end InvolutiveAutomorphism
 
 attribute [simp] InvolutiveAutomorphism.involutive
 

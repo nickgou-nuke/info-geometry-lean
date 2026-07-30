@@ -34,31 +34,18 @@ section FiniteShadow
 
 variable {R : Type*} [CommRing R] {n : ℕ}
 
-/--
-Finite denominator shadow attached to a family of scalar nodes.
-
-This is the precise Lean replacement for prose claims that a Weyl denominator
-behaves like a Vandermonde exclusion factor.
--/
-@[rep_depth thermo]
-abbrev DenominatorShadow (R : Type*) [CommRing R] (n : ℕ) :=
-  FiniteVandermondeExclusionWitness (R := R) (n := n)
-
-namespace DenominatorShadow
-
-variable (D : DenominatorShadow R n)
+variable (D : Fin n → R)
 
 /-- The denominator shadow is exactly the finite Vandermonde determinant. -/
 @[rep_depth thermo]
-def value : R :=
-  D.determinant
+def DenominatorShadow.value : R :=
+  VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant D
 
 /-- The denominator shadow unfolds to the Vandermonde determinant. -/
 @[rep_depth thermo]
-theorem value_eq_determinant :
-    D.value = D.determinant := rfl
-
-end DenominatorShadow
+theorem DenominatorShadow.value_eq_determinant :
+    value D =
+      VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant D := rfl
 
 end FiniteShadow
 
@@ -80,7 +67,7 @@ structure D4CharacterVandermondePacket where
     ∨ numerator = spinorEvenCharacter β
     ∨ numerator = spinorOddCharacter β
     ∨ numerator = diracSpinorCharacter β
-  denominatorWitness : DenominatorShadow ℝ 4
+  denominatorWitness : Fin 4 → ℝ
   denominatorWitness_nodes :
     denominatorWitness = denominatorNodes
 
@@ -91,27 +78,34 @@ variable (P : D4CharacterVandermondePacket)
 /-- The packaged denominator value is the Vandermonde determinant of the nodes. -/
 @[rep_depth thermo]
 theorem denominator_eq_vandermonde :
-    P.denominatorWitness.determinant =
+    VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
+        P.denominatorWitness =
       Matrix.det (Matrix.vandermonde P.denominatorNodes) := by
   unfold VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
-  unfold VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.matrix
+    VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.matrix
   rw [P.denominatorWitness_nodes]
 
 /-- The denominator zero-locus is exactly collision of two distinct nodes. -/
 @[rep_depth thermo]
 theorem denominator_eq_zero_iff_collision :
-    P.denominatorWitness.determinant = 0 ↔
+    VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
+        P.denominatorWitness = 0 ↔
       ∃ i j : Fin 4,
         P.denominatorNodes i = P.denominatorNodes j ∧ i ≠ j := by
   rw [← P.denominatorWitness_nodes]
-  exact P.denominatorWitness.determinant_eq_zero_iff_collision
+  exact
+    VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant_eq_zero_iff_collision
+      P.denominatorWitness
 
 /-- Nonzero denominator is equivalent to injectivity of the denominator nodes. -/
 @[rep_depth thermo]
 theorem denominator_ne_zero_iff_injective :
-    P.denominatorWitness.determinant ≠ 0 ↔ Function.Injective P.denominatorNodes := by
+    VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
+        P.denominatorWitness ≠ 0 ↔ Function.Injective P.denominatorNodes := by
   rw [← P.denominatorWitness_nodes]
-  exact P.denominatorWitness.determinant_ne_zero_iff_injective
+  exact
+    VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant_ne_zero_iff_injective
+      P.denominatorWitness
 
 /--
 Finite shadow packet:
@@ -125,11 +119,13 @@ theorem finite_character_denominator_packet :
       ∨ P.numerator = spinorOddCharacter P.β
       ∨ P.numerator = diracSpinorCharacter P.β)
     ∧
-    (P.denominatorWitness.determinant = 0 ↔
+    (VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
+        P.denominatorWitness = 0 ↔
       ∃ i j : Fin 4,
         P.denominatorNodes i = P.denominatorNodes j ∧ i ≠ j)
     ∧
-    (P.denominatorWitness.determinant ≠ 0 ↔ Function.Injective P.denominatorNodes) := by
+    (VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
+        P.denominatorWitness ≠ 0 ↔ Function.Injective P.denominatorNodes) := by
   exact
     ⟨P.numerator_eq_vector,
       P.denominator_eq_zero_iff_collision,

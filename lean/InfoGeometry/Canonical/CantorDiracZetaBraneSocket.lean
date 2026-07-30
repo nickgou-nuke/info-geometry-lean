@@ -105,13 +105,9 @@ structure TotalCantorSYZZetaDiracPacket where
   total_selfAdjoint_iff_cantor :
     ∀ s : ℂ, TotalSelfAdjoint s ↔ cantor.SelfAdjoint s
 
-/-! The zeta-period central charge is the function itself. -/
-@[rep_depth operator]
-abbrev ZetaPeriodCentralChargePacket := ℂ → ℂ
-
 /-- Typed agreement of a zeta period with a specified completed function. -/
-def ZetaPeriodCentralChargePacket.AgreesWith
-    (P : ZetaPeriodCentralChargePacket)
+def zetaPeriodCentralChargeAgreesWith
+    (P : ℂ → ℂ)
     (completed : ℂ → ℂ) : Prop :=
     P = completed
 
@@ -126,7 +122,7 @@ structure CantorDiracSYZZetaBraneConjectureSocket where
   cantorFock : CantorMobiusFockReadout
   cayley : CayleyCriticalCirclePacket
   totalDirac : TotalCantorSYZZetaDiracPacket
-  centralCharge : ZetaPeriodCentralChargePacket
+  centralCharge : ℂ → ℂ
 
 /--
 If a concrete socket supplies the missing vanishing-to-self-adjointness theorem,

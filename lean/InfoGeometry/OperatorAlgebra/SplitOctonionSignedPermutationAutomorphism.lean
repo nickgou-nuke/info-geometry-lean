@@ -92,22 +92,4 @@ theorem sigmaAfterTau_detZ (X : SplitOct) : detZ (sigmaAfterTau X) = detZ X := b
   unfold sigmaAfterTau
   rw [sigma_detZ, tau_detZ]
 
-/-- Closed packet for signed-permutation `G₂(2)`-type automorphism witnesses. -/
-theorem splitOctonion_signedPermutationAutomorphism_packet :
-    (∀ X Y : SplitOct, rho (mulZ X Y) = mulZ (rho X) (rho Y)) ∧
-      (∀ X Y : SplitOct, tau (mulZ X Y) = mulZ (tau X) (tau Y)) ∧
-      (∀ X Y : SplitOct, sigma (mulZ X Y) = mulZ (sigma X) (sigma Y)) ∧
-      (∀ X : SplitOct, rho (rho (rho X)) = X) ∧
-      (∀ X : SplitOct, tau (tau X) = X) ∧
-      (∀ X : SplitOct, sigma (sigma X) = X) ∧
-      (∀ X : SplitOct, detZ (rho X) = detZ X) ∧
-      (∀ X : SplitOct, detZ (tau X) = detZ X) ∧
-      (∀ X : SplitOct, detZ (sigma X) = detZ X) ∧
-      (∀ X Y : SplitOct, rhoAfterSigma (mulZ X Y) = mulZ (rhoAfterSigma X) (rhoAfterSigma Y)) ∧
-      (∀ X Y : SplitOct, sigmaAfterTau (mulZ X Y) = mulZ (sigmaAfterTau X) (sigmaAfterTau Y)) := by
-  exact ⟨rho_mulZ, tau_mulZ, sigma_mulZ,
-    rho_order_three, tau_order_two, sigma_order_two,
-    rho_detZ, tau_detZ, sigma_detZ,
-    rhoAfterSigma_mulZ, sigmaAfterTau_mulZ⟩
-
 end InfoGeometry.OperatorAlgebra.SplitOctonions.SignedPermutationAutomorphism

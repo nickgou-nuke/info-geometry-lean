@@ -230,24 +230,39 @@ noncomputable def weylBoundarySpinorPair_of_simplifiedBoundaryModel
       SimplifiedBoundaryModel (M := M) (P0 := M.chiralityPolarization) localOp chain) :
     WeylBoundarySpinorPair
       (S := S) M (globalChainOperatorFromOpenChain (S := S) localOp chain) := by
+  classical
   let hPair :=
     boundaryLocalizedZeroModeWitness_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
       (M := M) (P0 := M.chiralityPolarization) localOp chain hTopo hSimple
+  let ψplus := Classical.choose hPair
+  let hPair1 := Classical.choose_spec hPair
+  let ψminus := Classical.choose hPair1
+  let hPair2 := Classical.choose_spec hPair1
+  have hψplusNe : ψplus ≠ 0 := hPair2.1
+  have hψminusNe : ψminus ≠ 0 := hPair2.2.1
+  have hψplusMem : ψplus ∈ M.chiralityPolarization.plus := hPair2.2.2.1
+  have hψminusMem : ψminus ∈ M.chiralityPolarization.minus := hPair2.2.2.2.1
+  have hψplusZero :
+      (globalChainOperatorFromOpenChain (S := S) localOp chain) ψplus = 0 :=
+    hPair2.2.2.2.2.1
+  have hψminusZero :
+      (globalChainOperatorFromOpenChain (S := S) localOp chain) ψminus = 0 :=
+    hPair2.2.2.2.2.2
   have hPlusWeyl :
-      M.J hPair.psiPlus = hPair.psiPlus := by
-    simpa using (M.mem_weylPlus_iff hPair.psiPlus).mp hPair.psiPlus_mem
+      M.J ψplus = ψplus := by
+    simpa using (M.mem_weylPlus_iff ψplus).mp hψplusMem
   have hMinusWeyl :
-      M.J hPair.psiMinus = -hPair.psiMinus := by
-    simpa using (M.mem_weylMinus_iff hPair.psiMinus).mp hPair.psiMinus_mem
+      M.J ψminus = -ψminus := by
+    simpa using (M.mem_weylMinus_iff ψminus).mp hψminusMem
   exact
-    { psiPlus := hPair.psiPlus
-      psiMinus := hPair.psiMinus
-      psiPlus_ne_zero := hPair.psiPlus_ne_zero
-      psiMinus_ne_zero := hPair.psiMinus_ne_zero
+    { psiPlus := ψplus
+      psiMinus := ψminus
+      psiPlus_ne_zero := hψplusNe
+      psiMinus_ne_zero := hψminusNe
       psiPlus_weyl := hPlusWeyl
       psiMinus_weyl := hMinusWeyl
-      psiPlus_zeroMode := hPair.psiPlus_zeroMode
-      psiMinus_zeroMode := hPair.psiMinus_zeroMode }
+      psiPlus_zeroMode := hψplusZero
+      psiMinus_zeroMode := hψminusZero }
 
 omit [FiniteDimensional ℝ S] in
 /--
@@ -275,28 +290,31 @@ theorem exists_weyl_boundary_spinor_pair_of_simplifiedBoundaryModel
   let hPair :=
     boundaryLocalizedZeroModeWitness_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
       (M := M) (P0 := M.chiralityPolarization) localOp chain hTopo hSimple
+  rcases hPair with
+    ⟨ψplus, ψminus, hψplusNe, hψminusNe, hψplusMem, hψminusMem,
+      hψplusZero, hψminusZero⟩
   have hPlusWeyl :
-      M.J hPair.psiPlus = hPair.psiPlus := by
-    simpa using (M.mem_weylPlus_iff hPair.psiPlus).mp hPair.psiPlus_mem
+      M.J ψplus = ψplus := by
+    simpa using (M.mem_weylPlus_iff ψplus).mp hψplusMem
   have hMinusWeyl :
-      M.J hPair.psiMinus = -hPair.psiMinus := by
-    simpa using (M.mem_weylMinus_iff hPair.psiMinus).mp hPair.psiMinus_mem
+      M.J ψminus = -ψminus := by
+    simpa using (M.mem_weylMinus_iff ψminus).mp hψminusMem
   let spinors :
       WeylBoundarySpinorPair
         (S := S) M (globalChainOperatorFromOpenChain (S := S) localOp chain) :=
-    { psiPlus := hPair.psiPlus
-      psiMinus := hPair.psiMinus
-      psiPlus_ne_zero := hPair.psiPlus_ne_zero
-      psiMinus_ne_zero := hPair.psiMinus_ne_zero
+    { psiPlus := ψplus
+      psiMinus := ψminus
+      psiPlus_ne_zero := hψplusNe
+      psiMinus_ne_zero := hψminusNe
       psiPlus_weyl := hPlusWeyl
       psiMinus_weyl := hMinusWeyl
-      psiPlus_zeroMode := hPair.psiPlus_zeroMode
-      psiMinus_zeroMode := hPair.psiMinus_zeroMode }
+      psiPlus_zeroMode := hψplusZero
+      psiMinus_zeroMode := hψminusZero }
   exact
     ⟨spinors,
-      hPair.psiPlus_ne_zero, hPair.psiMinus_ne_zero,
+      hψplusNe, hψminusNe,
       hPlusWeyl, hMinusWeyl,
-      hPair.psiPlus_zeroMode, hPair.psiMinus_zeroMode⟩
+      hψplusZero, hψminusZero⟩
 
 /--
 The same topological/simplified-boundary hypotheses yield a genuinely

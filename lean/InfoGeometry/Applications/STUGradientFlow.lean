@@ -111,11 +111,9 @@ structure DiagonalDrazinSurgery where
   Mathematically isolates the non-zero (y, z) block. 
   Physically maps the dead 3-qubit GHZ state into a live 2-qubit Bell state.
   -/
-  drazin_projector : DiagonalSTUState → DiagonalSTUState :=
-    fun s => ⟨0, s.y, s.z⟩
+  drazin_projector : DiagonalSTUState → DiagonalSTUState
 
   /-- The post-surgery potential ignores the amputated axis -/
-  post_surgery_potential : DiagonalSTUState → ℝ :=
-    fun s => - Real.log |s.y| - Real.log |s.z|
+  post_surgery_potential : DiagonalSTUState → ℝ
 
 end InfoGeometry.Applications.STUGradientFlow

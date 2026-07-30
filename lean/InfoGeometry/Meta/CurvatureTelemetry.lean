@@ -19,8 +19,8 @@ structure CurvatureStats where
   missingConstCount : Nat
   bestSharedConstCount : Nat
   bestSharedContextWeight : Nat
-  exactSyntacticMatch : Bool := false
-  bestContextName? : Option String := none
+  exactSyntacticMatch : Bool
+  bestContextName? : Option String
   deriving Repr, Inhabited
 
 instance : ToJson CurvatureStats where

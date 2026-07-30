@@ -752,23 +752,4 @@ theorem moufang_identity (X Y Z : SplitOct) :
     mulZ (mulZ X Y) (mulZ Z X) = mulZ X (mulZ (mulZ Y Z) X) := by
   ext <;> simp [mulZ] <;> ring_nf
 
-/-- Closed kernel packet for the true split-octonion basis multiplication surface. -/
-theorem splitOctonion_multiplication_packet :
-    mulZ ePlus ePlus = ePlus ∧
-      mulZ eMinus eMinus = eMinus ∧
-      mulZ ePlus eMinus = zeroZ ∧
-      mulZ eMinus ePlus = zeroZ ∧
-      (∀ i : Fin 3, mulZ (up i) (up i) = zeroZ) ∧
-      (∀ i : Fin 3, mulZ (down i) (down i) = zeroZ) ∧
-      (∀ i : Fin 3, mulZ (up i) (down i) = ePlus) ∧
-      (∀ i : Fin 3, mulZ (down i) (up i) = eMinus) ∧
-      mulZ up0 up1 = down2 ∧
-      mulZ down0 down1 = negZ up2 ∧
-      associator up0 up1 down1 = up0 ∧
-      associator up0 up1 down1 ≠ zeroZ := by
-  exact ⟨ePlus_idempotent, eMinus_idempotent, ePlus_mul_eMinus, eMinus_mul_ePlus,
-    up_sq_zero, down_sq_zero, up_mul_down_same, down_mul_up_same,
-    up0_mul_up1, down0_mul_down1, associator_up0_up1_down1,
-    associator_up0_up1_down1_ne_zero⟩
-
 end InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication

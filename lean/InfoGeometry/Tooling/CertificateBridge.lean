@@ -54,15 +54,8 @@ def Galgebra_Certificate (witness : String) : ExternalCertificate :=
     witness_data := witness,
     exactRationalWitness := none }
 
-/-!
-External certificates are provenance metadata only.  They cannot inhabit a
-mathematical proposition.  Promotion therefore requires an explicit native
-Lean proof.
--/
-def CertificateGatedProposition (P : Prop) : Prop := P
-
 theorem native_proof_clears_debt {P : Prop} (native_proof : P) :
-    CertificateGatedProposition P :=
+    P :=
   native_proof
 
 end InfoGeometry.Tooling

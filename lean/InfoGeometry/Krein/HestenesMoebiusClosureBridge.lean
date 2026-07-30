@@ -65,15 +65,6 @@ structure MoebiusParameter where
   d : ℝ
   det_one : a * d - b * c = 1
 
-namespace MoebiusParameter
-
-/-- Readback of the determinant-one condition. -/
-@[rep_depth projective]
-theorem determinant_one (g : MoebiusParameter) :
-    g.a * g.d - g.b * g.c = 1 :=
-  g.det_one
-
-end MoebiusParameter
 
 /-- Hestenes--Krein null cone associated to the Wilson/KMS carrier. -/
 @[rep_depth krein]
@@ -142,11 +133,6 @@ variable {Word : Type*}
 variable [Fintype Word] [DecidableEq Word]
 variable (M : Bridge (E := E) Word)
 
-/-- Vacuum vector fixedness under the supplied Möbius action. -/
-@[rep_depth krein]
-theorem moebius_vacuum_vector_fixed (g : MoebiusParameter) :
-    M.vectorAction g M.wilson.vacuum.omega = M.wilson.vacuum.omega :=
-  M.vectorAction_fixes_omega g
 
 /-- Möbius transformations preserve the Hestenes natural cone shadow. -/
 @[rep_depth krein]
@@ -193,11 +179,6 @@ theorem moebius_vacuum_closure_invariant (g : MoebiusParameter) :
   rw [M.vectorAction_fixes_omega]
   exact M.wilson.vacuum.omega_normalized
 
-/-- The Möbius operator action fixes the Hestenes phase axis. -/
-@[rep_depth krein]
-theorem moebius_phaseAxis_fixed (g : MoebiusParameter) :
-    M.operatorAction g (clockAxis (E := E)) = clockAxis (E := E) :=
-  M.operatorAction_phaseAxis_fixed g
 
 /-- The Möbius operator action preserves Hestenes analytic/K-linear operators. -/
 @[rep_depth krein]
@@ -222,13 +203,6 @@ theorem moebius_preserves_hestenesAnalyticSymmetry
           rw [(M.operatorAction g).map_mul]
     _ = K * (M.operatorAction g A) := by rw [hK]
 
-/-- Ω-volume state invariance under Möbius operator action. -/
-@[rep_depth krein]
-theorem volumeState_moebius_invariant
-    (g : MoebiusParameter) (A : EndH) :
-    M.wilson.volume.volumeState (M.operatorAction g A) =
-      M.wilson.volume.volumeState A :=
-  M.volumeState_operatorAction_invariant g A
 
 /-- Vacuum real state invariance under Möbius operator action. -/
 @[rep_depth krein]
@@ -241,7 +215,7 @@ theorem vacuumRealState_moebius_invariant
         = M.wilson.volume.volumeState (M.operatorAction g A) := by
             exact (M.wilson.volumeState_eq_vacuumRealState (M.operatorAction g A)).symm
     _ = M.wilson.volume.volumeState A :=
-            M.volumeState_moebius_invariant g A
+            M.volumeState_operatorAction_invariant g A
     _ = M.wilson.vacuum.vacuumRealState A :=
             M.wilson.volumeState_eq_vacuumRealState A
 
@@ -256,13 +230,6 @@ theorem moebius_unit_vacuum_expectation (g : MoebiusParameter) :
     _ = 1 := by
           simpa using M.wilson.vacuum.vacuumRealState_id
 
-/-- Möbius invariance of atom weights. -/
-@[rep_depth projective]
-theorem atomExpectation_moebius_invariant
-    (g : MoebiusParameter) (w : Word) :
-    M.wilson.volume.atomExpectation ((M.wordAction g) w) =
-      M.wilson.volume.atomExpectation w :=
-  M.atomExpectation_wordAction_invariant g w
 
 /-- The finite total atom volume is invariant under Möbius reindexing. -/
 @[rep_depth projective]
@@ -275,16 +242,9 @@ theorem total_atom_volume_moebius_invariant (g : MoebiusParameter) :
         = ∑ w : Word, M.wilson.volume.atomExpectation w := by
             apply Finset.sum_congr rfl
             intro w _hw
-            exact M.atomExpectation_moebius_invariant g w
+            exact M.atomExpectation_wordAction_invariant g w
     _ = 1 := M.wilson.volume.total_expectation_is_unity
 
-/-- Connes--Wilson holonomy is blind to Möbius reparameterization of faces. -/
-@[rep_depth projective]
-theorem connes_wilson_loop_moebius_invariant
-    (g : MoebiusParameter) (parent child : Word) :
-    M.wilson.wilsonHolonomy ((M.wordAction g) parent) ((M.wordAction g) child) =
-      M.wilson.wilsonHolonomy parent child :=
-  M.wilsonHolonomy_wordAction_invariant g parent child
 
 /-- Radon--Nikodym log increments are Möbius invariant. -/
 @[rep_depth projective]
@@ -298,7 +258,7 @@ theorem radonNikodymLog_moebius_invariant
             (M.wilson.wilsonHolonomy_eq_radonNikodymLog
               ((M.wordAction g) parent) ((M.wordAction g) child)).symm
     _ = M.wilson.wilsonHolonomy parent child :=
-            M.connes_wilson_loop_moebius_invariant g parent child
+            M.wilsonHolonomy_wordAction_invariant g parent child
     _ = M.wilson.radonNikodymLog parent child :=
             M.wilson.wilsonHolonomy_eq_radonNikodymLog parent child
 

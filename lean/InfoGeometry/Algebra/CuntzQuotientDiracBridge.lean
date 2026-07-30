@@ -40,12 +40,6 @@ theorem quotient_hodgeDirac_eq_sum_majorana (n : ℕ) :
   simp [InfoGeometry.Algebra.Cuntz.hodgeDirac, InfoGeometry.Algebra.Cuntz.finiteDirac,
     quotientCuntzNAlgebra, cuntzMajoranaSupercharge, star_cuntzS]
 
-/-- The quotient Hodge-Dirac is self-adjoint. -/
-theorem quotient_hodgeDirac_self_adjoint (n : ℕ) :
-    star (InfoGeometry.Algebra.Cuntz.hodgeDirac (quotientCuntzNAlgebra n)) =
-      InfoGeometry.Algebra.Cuntz.hodgeDirac (quotientCuntzNAlgebra n) := by
-  exact InfoGeometry.Algebra.Cuntz.hodge_dirac_self_adjoint (O := quotientCuntzNAlgebra n)
-
 /-- Abstract range projectors are exactly the quotient Cuntz primon projectors. -/
 theorem quotient_range_projector_eq_primon_P (n : ℕ) (i : Fin n) :
     (quotientCuntzNAlgebra n).S i * star ((quotientCuntzNAlgebra n).S i) =
@@ -57,20 +51,6 @@ theorem quotient_primon_projector_idempotent_via_CuntzN (n : ℕ) (i : Fin n) :
     P n i * P n i = P n i := by
   simpa [quotient_range_projector_eq_primon_P n i] using
     InfoGeometry.Algebra.Cuntz.range_projection_idempotent (O := quotientCuntzNAlgebra n) i
-
-/-- Packet: quotient CuntzN, Hodge-Dirac Majorana sum, self-adjointness, and projector law. -/
-theorem finite_quotient_cuntzN_dirac_packet (n : ℕ) (i : Fin n) :
-    InfoGeometry.Algebra.Cuntz.hodgeDirac (quotientCuntzNAlgebra n) =
-        ∑ j : Fin n, cuntzMajoranaSupercharge n j ∧
-    star (InfoGeometry.Algebra.Cuntz.hodgeDirac (quotientCuntzNAlgebra n)) =
-        InfoGeometry.Algebra.Cuntz.hodgeDirac (quotientCuntzNAlgebra n) ∧
-    (quotientCuntzNAlgebra n).S i * star ((quotientCuntzNAlgebra n).S i) =
-        P n i ∧
-    P n i * P n i = P n i := by
-  exact ⟨quotient_hodgeDirac_eq_sum_majorana n,
-    quotient_hodgeDirac_self_adjoint n,
-    quotient_range_projector_eq_primon_P n i,
-    quotient_primon_projector_idempotent_via_CuntzN n i⟩
 
 end InfoGeometry.Algebra.CuntzQuotientDiracBridge
 

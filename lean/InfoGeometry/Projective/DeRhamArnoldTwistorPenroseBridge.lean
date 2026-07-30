@@ -28,14 +28,7 @@ open InfoGeometry.Projective.TwistorAmplituhedronBoundary
 open InfoGeometry.Projective.PenroseSpinTiling
 open InfoGeometry.Geometry.PauliParavectorBridge
 
-/--
-Finite bridge packet for the de Rham / Arnold / twistor / Penrose lane.
-
-Each field is an existing owner theorem or a direct restatement of one.
-Nothing here claims the full global cohomology, amplituhedron, or scattering
-interpretation.
--/
-def FiniteBridgePacket : Prop :=
+theorem finite_bridge_packet :
   (∀ (R : ℝ) (hR : 0 < R),
     (∮ z in C((0 : ℂ), R), grothendieck_dlog z) =
       (2 * Real.pi * Complex.I : ℂ)) ∧
@@ -59,10 +52,7 @@ def FiniteBridgePacket : Prop :=
         InfoGeometry.Twistor.Incidence.Incident Z X₃ ∧
         InfoGeometry.Twistor.Incidence.Incident Z X₁ ∧ Z.2 ≠ 0)) ∧
   (∀ v : Minkowski4,
-    Matrix.det (pauliMatrix v) = ((v.q : ℝ) : ℂ))
-
-/-- The finite bridge packet is inhabited by the already-proved owner theorems. -/
-theorem finite_bridge_packet : FiniteBridgePacket := by
+    Matrix.det (pauliMatrix v) = ((v.q : ℝ) : ℂ)) := by
   refine ⟨?residue, ?winding, ?arnold, ?twistor, ?determinantCarrier⟩
   · intro R hR
     exact circleIntegral_grothendieck_dlog R hR

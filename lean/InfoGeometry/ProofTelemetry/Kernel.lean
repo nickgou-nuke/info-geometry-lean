@@ -23,13 +23,13 @@ namespace InfoGeometry.ProofTelemetry
 
 /-- A pretty-printed proof goal. -/
 structure ProofGoal where
-  id : String := ""
+  id : String
   text : String
 deriving Repr, DecidableEq, Inhabited
 
 /-- A pretty-printed local hypothesis. -/
 structure ProofHypothesis where
-  id : String := ""
+  id : String
   name : String
   type : String
 deriving Repr, DecidableEq, Inhabited
@@ -38,19 +38,19 @@ deriving Repr, DecidableEq, Inhabited
 structure ProofStep where
   index : Nat
   tactic : String
-  goalsBefore : Array ProofGoal := #[]
-  goalsAfter : Array ProofGoal := #[]
-  hypothesesBefore : Array ProofHypothesis := #[]
-  hypothesesAfter : Array ProofHypothesis := #[]
-  references : Array String := #[]
+  goalsBefore : Array ProofGoal
+  goalsAfter : Array ProofGoal
+  hypothesesBefore : Array ProofHypothesis
+  hypothesesAfter : Array ProofHypothesis
+  references : Array String
 deriving Repr, DecidableEq, Inhabited
 
 /-- A proof trace attached to one theorem or source file. -/
 structure PaperproofTrace where
   id : String
-  theoremName : String := ""
-  sourceFile : String := ""
-  steps : Array ProofStep := #[]
+  theoremName : String
+  sourceFile : String
+  steps : Array ProofStep
 deriving Repr, DecidableEq
 
 /-- Coarse tactic-effect labels used as training/control metadata. -/
@@ -227,8 +227,8 @@ deriving Repr, DecidableEq
 structure ProofNode where
   id : String
   kind : ProofNodeKind
-  text : String := ""
-  stepIndex : Nat := 0
+  text : String
+  stepIndex : Nat
 deriving Repr, DecidableEq
 
 structure ProofEdge where
@@ -262,7 +262,7 @@ private def pushUniqueNode (nodes : Array ProofNode) (node : ProofNode) : Array 
 def proofForest (trace : PaperproofTrace) : ProofForest :=
   Id.run do
     let rootId := s!"proof:{trace.id}"
-    let mut nodes := #[{ id := rootId, kind := .proof, text := trace.theoremName }]
+    let mut nodes := #[{ id := rootId, kind := .proof, text := trace.theoremName, stepIndex := 0 }]
     let mut edges : Array ProofEdge := #[]
     for step in trace.steps do
       let tacticId := s!"tactic:{trace.id}:{step.index}:{step.tactic}"

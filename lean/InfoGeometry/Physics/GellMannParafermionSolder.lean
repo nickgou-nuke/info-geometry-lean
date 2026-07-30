@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
 
 /-!
 # Gell-Mann parafermion solder — theorem-honest carrier
@@ -17,7 +18,8 @@ namespace InfoGeometry.Physics.GellMannParafermionSolder
 abbrev M3C := Matrix (Fin 3) (Fin 3) ℂ
 
 /-- A color spinor with three color components and one singlet component. -/
-abbrev ColorSpinor4 (V : Type*) := (Fin 3 → V) × V
+abbrev ColorSpinor4 (V : Type*) :=
+  InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain.ColorSpinor4 V
 
 /-- Minimal realization data: three color components and a singlet component in
 an arbitrary target carrier. -/
@@ -69,29 +71,29 @@ def colorLieAction4_commutator_statement {V : Type*} [AddCommGroup V] [Module �
       colorLieAction4 B (colorLieAction4 A ψ)
 
 /-- Minimal inertial-frame record used by downstream statement surfaces. -/
-structure BogoliubovInertialFrame where
-  β : ℝ
-  μ : ℝ
-  Q : ℝ
+abbrev BogoliubovInertialFrame :=
+  InfoGeometry.Physics.BogoliubovWeylChemicalPotential.BogoliubovInertialFrame
 
-/-- Placeholder scalar rapidity readout. -/
-def qRapidity (r : ℝ) : ℝ := r
+abbrev qRapidity : ℝ → ℂ := InfoGeometry.Physics.SupergradedCuntzBdG.qRapidity
 
-/-- Identity braid readout; nontrivial braiding belongs in a dedicated owner. -/
-def qBraid4 {V : Type*} (_r : ℝ) (ψ : ColorSpinor4 V) : ColorSpinor4 V := ψ
+/-- Compatibility name forwarded to the genuine scalar q-braid owner. -/
+def qBraid4 {V : Type*} [SMul ℂ V] (q : ℂ) (ψ : ColorSpinor4 V) : ColorSpinor4 V :=
+  InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain.qBraid4 q ψ
 
-/-- Frame braid readout, kept as identity in this carrier surface. -/
-def frameSolderedBraid {V : Type*} (_F : BogoliubovInertialFrame)
-    (ψ : ColorSpinor4 V) : ColorSpinor4 V := ψ
+/-- Compatibility name forwarded to the genuine Bogoliubov frame braid owner. -/
+def frameSolderedBraid {V : Type*} [SMul ℂ V]
+    (F : BogoliubovInertialFrame) (ψ : ColorSpinor4 V) : ColorSpinor4 V :=
+  InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain.frameBraid4 F ψ
 
 /-- The identity braid readout is invariant under changing the scalar frame
 parameter. -/
-theorem frameSolderedBraid_mu_shift {V : Type*}
+theorem frameSolderedBraid_mu_shift {V : Type*} [AddCommMonoid V] [Module ℂ V]
     (R : ParafermionRealization V) (F : BogoliubovInertialFrame) (δμ : ℝ) :
     frameSolderedBraid { F with μ := F.μ + δμ } (realizedParafermionColorSpinor4 R) =
       qBraid4 (qRapidity (F.β * δμ * F.Q))
         (frameSolderedBraid F (realizedParafermionColorSpinor4 R)) := by
-  rfl
+  exact InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain.frameBraid4_mu_shift
+    F δμ (realizedParafermionColorSpinor4 R)
 
 end InfoGeometry.Physics.GellMannParafermionSolder
 

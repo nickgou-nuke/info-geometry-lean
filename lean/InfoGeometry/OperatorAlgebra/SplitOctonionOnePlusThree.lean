@@ -117,33 +117,4 @@ theorem lower_reversed_slot_table :
       mulZ (lowerSlot 0) (lowerSlot 2) = upperSlot 1 := by
   exact ⟨down1_mul_down0, down2_mul_down1, down0_mul_down2⟩
 
-/-- Closed finite theorem packet for the split-octonion `1 + 3` basis-slot layer. -/
-theorem splitOctonion_onePlusThree_packet :
-    (mulZ scalarPlus scalarPlus = scalarPlus ∧
-      mulZ scalarMinus scalarMinus = scalarMinus ∧
-      mulZ scalarPlus scalarMinus = zeroZ ∧
-      mulZ scalarMinus scalarPlus = zeroZ) ∧
-    (∀ i : ColorSlot,
-      mulZ scalarPlus (upperSlot i) = upperSlot i ∧
-        mulZ scalarMinus (lowerSlot i) = lowerSlot i ∧
-        mulZ (upperSlot i) (lowerSlot i) = scalarPlus ∧
-        mulZ (lowerSlot i) (upperSlot i) = scalarMinus ∧
-        mulZ (upperSlot i) (upperSlot i) = zeroZ ∧
-        mulZ (lowerSlot i) (lowerSlot i) = zeroZ ∧
-        detZ (upperSlot i) = 0 ∧
-        detZ (lowerSlot i) = 0) ∧
-    (mulZ (upperSlot 0) (upperSlot 1) = lowerSlot 2 ∧
-      mulZ (upperSlot 1) (upperSlot 2) = lowerSlot 0 ∧
-      mulZ (upperSlot 2) (upperSlot 0) = lowerSlot 1) ∧
-    (mulZ (lowerSlot 0) (lowerSlot 1) = negZ (upperSlot 2) ∧
-      mulZ (lowerSlot 1) (lowerSlot 2) = negZ (upperSlot 0) ∧
-      mulZ (lowerSlot 2) (lowerSlot 0) = negZ (upperSlot 1)) := by
-  refine ⟨scalar_slots_orthogonal_idempotents, ?_, upper_cyclic_slot_table,
-    lower_cyclic_slot_table⟩
-  intro i
-  exact ⟨(scalarPlus_left_action i).1, (scalarMinus_left_action i).1,
-    upper_lower_same_reads_scalarPlus i, lower_upper_same_reads_scalarMinus i,
-    (vector_slots_nil_and_null i).1, (vector_slots_nil_and_null i).2.1,
-    (vector_slots_nil_and_null i).2.2.1, (vector_slots_nil_and_null i).2.2.2⟩
-
 end InfoGeometry.OperatorAlgebra.SplitOctonions.OnePlusThree

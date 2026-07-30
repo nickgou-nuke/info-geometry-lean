@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Algebra.QCCRSupergradingBridge
 import InfoGeometry.Canonical.CuntzThermalQBridge
 import InfoGeometry.Krein.Thermal
 import InfoGeometry.Canonical.BogoliubovTransport
@@ -28,7 +27,6 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.QCCRThermalKMSCertificate
 
-open InfoGeometry.Algebra.QCCRSupergradingBridge
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Dynamics

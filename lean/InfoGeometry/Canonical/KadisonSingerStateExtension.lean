@@ -18,13 +18,22 @@ namespace KadisonSingerState
 variable {n : ℕ} [DecidableEq (Fin n)]
 
 /-- C*-Algebra Density State Functional ω(A) = Tr(ρ * A) with Tr(ρ) = 1. -/
-structure CStarState (n : ℕ) [DecidableEq (Fin n)] where
-  rho : selfAdjoint (Matrix (Fin n) (Fin n) ℂ)
-  h_rho_normalized : trace (rho : Matrix (Fin n) (Fin n) ℂ) = 1
+abbrev CStarState (n : ℕ) [DecidableEq (Fin n)] :=
+  {rho : selfAdjoint (Matrix (Fin n) (Fin n) ℂ) //
+    trace (rho : Matrix (Fin n) (Fin n) ℂ) = 1}
 
 namespace CStarState
 
 variable (state : CStarState n)
+
+abbrev rho : selfAdjoint (Matrix (Fin n) (Fin n) ℂ) := state.1
+
+abbrev h_rho_normalized : trace (state.rho : Matrix (Fin n) (Fin n) ℂ) = 1 := state.2
+
+def mk (rho : selfAdjoint (Matrix (Fin n) (Fin n) ℂ))
+    (h_rho_normalized : trace (rho : Matrix (Fin n) (Fin n) ℂ) = 1) :
+    CStarState n :=
+  ⟨rho, h_rho_normalized⟩
 
 def rhoVal : Matrix (Fin n) (Fin n) ℂ := state.rho
 
@@ -53,21 +62,20 @@ theorem state_smul (c : ℂ) (A : Matrix (Fin n) (Fin n) ℂ) :
   rw [Matrix.mul_smul, trace_smul, smul_eq_mul]
 
 /-- Tracial State Structure where ρ = (1/n) • 1. -/
-def tracialState (h_n : (n : ℂ) ≠ 0) : CStarState n where
-  rho := ⟨(1 / (n : ℂ)) • (1 : Matrix (Fin n) (Fin n) ℂ), by
+def tracialState (h_n : (n : ℂ) ≠ 0) : CStarState n :=
+  CStarState.mk ⟨(1 / (n : ℂ)) • (1 : Matrix (Fin n) (Fin n) ℂ), by
     change ((1 / (n : ℂ)) • (1 : Matrix (Fin n) (Fin n) ℂ)).conjTranspose =
       (1 / (n : ℂ)) • (1 : Matrix (Fin n) (Fin n) ℂ)
     rw [conjTranspose_smul, conjTranspose_one]
-    simp⟩
-  h_rho_normalized := by
+    simp⟩ (by
     rw [trace_smul, trace_one, Fintype.card_fin]
     dsimp [nsmul_eq_mul]
-    rw [div_mul_cancel₀ 1 h_n]
+    rw [div_mul_cancel₀ 1 h_n])
 
 /-- **Theorem**: Tracial State Commutativity ω([A, B]) = 0 for ρ = (1/n) • 1. -/
 theorem tracial_state_commutator_zero (h_n : (n : ℂ) ≠ 0) (A B : Matrix (Fin n) (Fin n) ℂ) :
     (tracialState h_n).apply (A * B - B * A) = 0 := by
-  dsimp [tracialState, rhoVal, apply]
+  dsimp [tracialState, CStarState.mk, rhoVal, apply]
   have h_smul : ((1 / (n : ℂ)) • (1 : Matrix (Fin n) (Fin n) ℂ)) * (A * B - B * A) = (1 / (n : ℂ)) • (A * B - B * A) := by
     rw [Matrix.smul_mul, one_mul]
   rw [h_smul, trace_smul, trace_sub]

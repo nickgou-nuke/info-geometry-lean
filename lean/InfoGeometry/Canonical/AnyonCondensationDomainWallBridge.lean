@@ -19,9 +19,18 @@ namespace AnyonCondensationDomainWallBridge
 /-- Condensable Boson in a Parent MTC 𝒞:
     A condensable anyon A ∈ 𝒞 must be a self-dual boson (topological spin θ_A = 1) 
     with quantum dimension d_A ≥ 1. -/
-structure CondensedBoson where
-  quantumDimA : ℝ
-  h_dim_ge_one : quantumDimA ≥ 1
+abbrev CondensedBoson := {q : ℝ // 1 ≤ q}
+
+namespace CondensedBoson
+
+abbrev quantumDimA (b : CondensedBoson) : ℝ := b.1
+
+abbrev h_dim_ge_one (b : CondensedBoson) : b.quantumDimA ≥ 1 := b.2
+
+def mk (quantumDimA : ℝ) (h_dim_ge_one : quantumDimA ≥ 1) : CondensedBoson :=
+  ⟨quantumDimA, h_dim_ge_one⟩
+
+end CondensedBoson
 
 /-- Condensed Phase Total Quantum Dimension 𝒟_cond = 𝒟_parent / d_A. -/
 def condensedTotalDim (b : CondensedBoson) (D_parent : ℝ) : ℝ :=
@@ -34,14 +43,13 @@ theorem condensed_quantum_dim_factorization (b : CondensedBoson) (D_parent : ℝ
   exact div_mul_cancel₀ D_parent hA
 
 /-- Toric Code e-Boson Condensation (D(ℤ₂) → Trivial Phase). -/
-def toricCodeElectricBoson : CondensedBoson where
-  quantumDimA := 1
-  h_dim_ge_one := by norm_num
+def toricCodeElectricBoson : CondensedBoson :=
+  CondensedBoson.mk 1 (by norm_num)
 
 /-- **Theorem**: Toric Code e-Condensation Dimension Match: 𝒟_cond = 2 / 1 = 2. -/
 theorem toric_code_e_condensation_dim :
     condensedTotalDim toricCodeElectricBoson 2 = 2 := by
-  dsimp [condensedTotalDim, toricCodeElectricBoson]
+  change (2 : ℝ) / 1 = 2
   norm_num
 
 namespace DomainWall

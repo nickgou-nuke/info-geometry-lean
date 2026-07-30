@@ -12,7 +12,7 @@ Finite Sugawara/CFT readout for the prime Boolean cube.
 This file stays in the finite algebraic lane:
 
 * the canonical Boolean cube is imported from `PrimeBooleanCube`;
-* a trivial affine/Virasoro bridge is installed over the real carrier;
+* the finite Sugawara datum is installed over the vertex carrier;
 * the Sugawara normalization is chosen so that the central charge readout is
   exactly the vertex cardinality `|S|`.
 
@@ -35,18 +35,18 @@ The packet carries the Boolean-cube vertex together with the explicit finite
 Sugawara hypotheses:
 
 * `level = 1`
-* `finiteDimension = |S|`
-* `dualCoxeterNumber = 0`
+* `dimG = |S|`
+* `hDual = 0`
 
 Those hypotheses are not inferred from the analytic side; they are stored
 directly in the finite packet.
 -/
 structure PrimeBooleanCubeSugawaraPacket (P : PrimeRegister) where
   vertex : Vertex P
-  bridge : AffineVirasoroBridgeDatum ℝ ℝ
+  bridge : SugawaraDatum
   level_eq_one : bridge.level = 1
-  finiteDimension_eq_card : bridge.finiteDimension = (vertex.val.card : ℝ)
-  dualCoxeterNumber_eq_zero : bridge.dualCoxeterNumber = 0
+  finiteDimension_eq_card : bridge.dimG = (vertex.val.card : ℝ)
+  dualCoxeterNumber_eq_zero : bridge.hDual = 0
   centralCharge_eq_card : bridge.centralCharge = (vertex.val.card : ℝ)
 
 namespace PrimeBooleanCubeSugawaraPacket
@@ -60,60 +60,21 @@ theorem centralCharge_eq_card_theorem (B : PrimeBooleanCubeSugawaraPacket P) :
 
 end PrimeBooleanCubeSugawaraPacket
 
-/-- Zero affine-current datum used by the finite Boolean-cube readout. -/
-def trivialAffineCurrentDatum : AffineCurrentDatum ℝ ℝ where
-  Current := fun _ _ => 0
-  kCentral := 0
-  killingForm := fun _ _ => 0
+/-- Canonical finite Sugawara packet for a Boolean-cube vertex.
 
-/-- Zero Virasoro datum used by the finite Boolean-cube readout. -/
-def trivialVirasoroDatum : VirasoroDatum ℝ where
-  Lmode := fun _ => 0
-  central := 0
-
-@[simp]
-theorem trivialAffineCurrentDatum_Current (n : ℤ) (x : ℝ) :
-    trivialAffineCurrentDatum.Current n x = 0 :=
-  rfl
-
-@[simp]
-theorem trivialAffineCurrentDatum_kCentral :
-    trivialAffineCurrentDatum.kCentral = 0 :=
-  rfl
-
-@[simp]
-theorem trivialAffineCurrentDatum_killingForm (x y : ℝ) :
-    trivialAffineCurrentDatum.killingForm x y = 0 :=
-  rfl
-
-@[simp]
-theorem trivialVirasoroDatum_Lmode (n : ℤ) :
-    trivialVirasoroDatum.Lmode n = 0 :=
-  rfl
-
-@[simp]
-theorem trivialVirasoroDatum_central :
-    trivialVirasoroDatum.central = 0 :=
-  rfl
-
-/--
-Canonical finite Sugawara packet for a Boolean-cube vertex.
-
-The carrier is deliberately trivial on the affine/Virasoro side; the
-Sugawara calibration is used only as a finite readout that returns the
-vertex cardinality.
+Only the finite Sugawara datum is asserted here.  An affine-current or
+Virasoro realization requires a separately proved representation and is not
+manufactured by this finite cardinality readout.
 -/
 def booleanCubeSugawaraPacket
     (P : PrimeRegister) (v : Vertex P) :
     PrimeBooleanCubeSugawaraPacket P where
   vertex := v
   bridge :=
-    { affine := trivialAffineCurrentDatum
-      virasoro := trivialVirasoroDatum
-      centralCharge := v.val.card
+    { centralCharge := v.val.card
       level := 1
-      finiteDimension := v.val.card
-      dualCoxeterNumber := 0 }
+      dimG := v.val.card
+      hDual := 0 }
   level_eq_one := rfl
   finiteDimension_eq_card := rfl
   dualCoxeterNumber_eq_zero := rfl
@@ -130,9 +91,9 @@ theorem booleanCubeSugawaraPacket_centralCharge_eq_sugawara
     (P : PrimeRegister) (v : Vertex P) :
     (booleanCubeSugawaraPacket P v).bridge.centralCharge =
       (booleanCubeSugawaraPacket P v).bridge.level *
-        (booleanCubeSugawaraPacket P v).bridge.finiteDimension /
+        (booleanCubeSugawaraPacket P v).bridge.dimG /
           ((booleanCubeSugawaraPacket P v).bridge.level +
-            (booleanCubeSugawaraPacket P v).bridge.dualCoxeterNumber) := by
+            (booleanCubeSugawaraPacket P v).bridge.hDual) := by
   simp [booleanCubeSugawaraPacket]
 
 end InfoGeometry.Canonical.PrimeBooleanCubeSugawara

@@ -61,51 +61,18 @@ def toCanonical :
     exact hω
   eval_eq_vector_readout := by
     intro ω B _hω
-    exact A.eval_eq_krein_vector_readout ω B
+    exact A.eval_eq_krein_vector_readout_law ω B
   J_fixes_cone := by
     intro ξ hξ
-    exact A.J_fixes_cone ξ hξ
+    exact A.J_fixes_cone_law ξ hξ
 
-/-- Readback: the induced canonical cone is the supplied Hestenes/Krein cone. -/
-@[rep_depth krein]
-theorem toCanonical_cone :
-    (A.toCanonical).cone = A.naturalCone :=
-  rfl
-
-/-- Readback: the induced canonical reflection is `KreinSpace.jCLM`. -/
-@[rep_depth krein]
-theorem toCanonical_J
-    (ξ : H) :
-    (A.toCanonical).J ξ = KreinSpace.jCLM (H := H) ξ :=
-  rfl
-
-/-- Readback: the induced canonical inner readout is `KreinSpace.kreinInner`. -/
-@[rep_depth krein]
-theorem toCanonical_innerReadout
-    (ξ η : H) :
-    (A.toCanonical).innerReadout ξ η = KreinSpace.kreinInner (H := H) ξ η :=
-  rfl
-
-/-- Readback: canonical evaluation is the Hestenes/Krein evaluation. -/
-@[rep_depth krein]
-theorem toCanonical_eval
-    (ω : NormalPositive) (B : Op) :
-    (A.toCanonical).eval ω B = A.eval ω B :=
-  rfl
-
-/-- Readback: canonical cone vectors are the Hestenes/Krein cone vectors. -/
-@[rep_depth krein]
-theorem toCanonical_coneVector
-    (ω : NormalPositive) :
-    (A.toCanonical).coneVector ω = A.coneVector ω :=
-  rfl
 
 /-- Readback: every supplied Hestenes/Krein readout is normal-positive in the adapter. -/
 @[rep_depth krein]
 theorem toCanonical_isNormalPositive
     (ω : NormalPositive) :
     (A.toCanonical).isNormalPositive ω :=
-  A.coneVector_mem ω
+  A.coneVector_mem_law ω
 
 /--
 Readback: the canonical standard-form vector expectation is the Krein vector
@@ -118,7 +85,7 @@ theorem toCanonical_eval_eq_krein_readout
       KreinSpace.kreinInner (H := H)
         (A.act B (A.coneVector ω))
         (A.coneVector ω) :=
-  A.eval_eq_krein_vector_readout ω B
+  A.eval_eq_krein_vector_readout_law ω B
 
 /-- Readback: canonical cone vectors are fixed by `KreinSpace.jCLM`. -/
 @[rep_depth krein]
@@ -192,7 +159,7 @@ theorem eval_eq_krein_readout
     S.eval ω A =
       KreinSpace.kreinInner (H := H) (B.act A (B.coneVector ω)) (B.coneVector ω) := by
   rw [CanonicalRealizedByHestenesKrein.eval_eq R ω A]
-  exact B.eval_eq_krein_vector_readout ω A
+  exact B.eval_eq_krein_vector_readout_law ω A
 
 /-- Readback: canonical cone membership matches Hestenes/Krein cone membership. -/
 @[rep_depth krein]

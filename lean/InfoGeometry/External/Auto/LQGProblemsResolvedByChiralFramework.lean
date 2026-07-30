@@ -339,21 +339,11 @@ theorem pentagon_diagram_is_jacobi :
 
 /-- The four LQG problems and their chiral resolutions, in a single record. -/
 structure LQGResolution where
-  problem_1_intertwiner : String :=
-    "Static intertwiner → Dynamic Fierz soldering S₊S₋ = N₊ with modular heartbeat Δ^{it}"
-  problem_2_6j_symbols : String :=
-    "Explosive 6j-symbols → Tractable Kantor triple {x,y,z} = x·y†·z + z·y†·x"
-  problem_3_volume : String :=
-    "Ambiguous volume operator → Unique GUE eigenvalue spacing S = 2r, ⟨S²⟩ = 3π/8"
-  problem_4_pentagon : String :=
-    "Imposed Pentagon identity → Derived Jacobi identity of 5-graded TKK algebra"
-  master_statement : String :=
-    "Spin networks awakened to their own thermodynamics.
-     LQG is the T → 0 limit of the chiral framework.
-     The chiral framework IS LQG at finite temperature."
-  empirical_foundation : String :=
-    "All four resolutions are empirically calibrated by triaxial nuclear
-     γ-ray spectra (AFRODITE: ¹³⁵Nd, ³¹S) exhibiting Wigner-Dyson GUE
-     statistics with KS < 0.05. The volume operator is measured, not defined."
+  problem_1_intertwiner : String
+  problem_2_6j_symbols : String
+  problem_3_volume : String
+  problem_4_pentagon : String
+  master_statement : String
+  empirical_foundation : String
 
 end

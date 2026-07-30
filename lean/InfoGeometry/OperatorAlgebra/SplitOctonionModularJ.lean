@@ -23,22 +23,22 @@ def modularJ (X : SplitOct) : SplitOct := conjZ X
 
 /-- `J^2=\mathrm{id}`. -/
 theorem modularJ_involutive (X : SplitOct) : modularJ (modularJ X) = X := by
-  exact conjZ_conjZ X
+  simpa [modularJ] using conjZ_conjZ X
 
 /-- `J(XY)=J(Y)J(X)`. -/
 theorem modularJ_anti_automorphism (X Y : SplitOct) :
     modularJ (mulZ X Y) = mulZ (modularJ Y) (modularJ X) := by
-  exact conjZ_mulZ X Y
+  simpa [modularJ] using conjZ_mulZ X Y
 
 /-- `\detZ(JX)=\detZ(X)`. -/
 theorem detZ_modularJ_invariant (X : SplitOct) :
     detZ (modularJ X) = detZ X := by
-  exact detZ_conjZ X
+  simpa [modularJ] using detZ_conjZ X
 
 /-- `XJX=\detZ(X)\cdot 1`. -/
 theorem mul_modularJ_eq_scalar_detZ (X : SplitOct) :
     mulZ X (modularJ X) = scalarZ (detZ X) := by
-  exact mul_conjZ_eq_scalar_detZ X
+  simpa [modularJ] using mul_conjZ_eq_scalar_detZ X
 
 /-- `J^2=\mathrm{id}\wedge J(XY)=J(Y)J(X)\wedge \detZ(JX)=\detZ(X)\wedge XJX=\detZ(X)\cdot 1`. -/
 theorem modularJ_structure_packet :

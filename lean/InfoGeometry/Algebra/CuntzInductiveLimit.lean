@@ -19,60 +19,13 @@ namespace InfoGeometry.Algebra.CuntzInductiveLimit
 
 open InfoGeometry.Algebra.CuntzTensorQuotient
 
-/-- The finite Cuntz--Toeplitz stage used by an inductive system. -/
-abbrev ToeplitzStage (n : ℕ) :=
-  CuntzToeplitzAlg n
-
-/-- The finite Cuntz quotient stage used by an inductive system. -/
-abbrev CuntzStage (n : ℕ) :=
-  CuntzAlg n
-
-/-- Stage generator `Sᵢ` in the Toeplitz quotient. -/
-def stageToeplitzS (n : ℕ) (i : Fin n) : ToeplitzStage n :=
-  toeplitzS n i
-
-/-- Stage adjoint generator `Sᵢ†` in the Toeplitz quotient. -/
-def stageToeplitzSdag (n : ℕ) (i : Fin n) : ToeplitzStage n :=
-  toeplitzSdag n i
-
-/-- Stage generator `Sᵢ` in the finite Cuntz quotient. -/
-def stageCuntzS (n : ℕ) (i : Fin n) : CuntzStage n :=
-  cuntzS n i
-
-/-- Stage adjoint generator `Sᵢ†` in the finite Cuntz quotient. -/
-def stageCuntzSdag (n : ℕ) (i : Fin n) : CuntzStage n :=
-  cuntzSdag n i
-
-/-- The Toeplitz stage satisfies `Sᵢ† Sⱼ = δᵢⱼ`. -/
-theorem stageToeplitz_orthogonality (n : ℕ) (i j : Fin n) :
-    stageToeplitzSdag n i * stageToeplitzS n j = if i = j then 1 else 0 := by
-  exact toeplitz_orthogonality n i j
-
-/-- The finite Cuntz stage satisfies `Sᵢ† Sⱼ = δᵢⱼ`. -/
-theorem stageCuntz_orthogonality (n : ℕ) (i j : Fin n) :
-    stageCuntzSdag n i * stageCuntzS n j = if i = j then 1 else 0 := by
-  exact cuntz_orthogonality n i j
-
-/-- The finite Cuntz stage satisfies the range-completeness relation. -/
-theorem stageCuntz_ranges_sum_one (n : ℕ) :
-    (∑ i : Fin n, stageCuntzS n i * stageCuntzSdag n i) = 1 := by
-  exact cuntz_ranges_sum_one n
-
-/-- Each finite Cuntz generator is an algebraic isometry. -/
-theorem stageCuntz_isometry (n : ℕ) (i : Fin n) :
-    stageCuntzSdag n i * stageCuntzS n i = 1 := by
-  exact cuntz_isometry n i
-
-/-- Distinct finite Cuntz generators have orthogonal initial spaces. -/
-theorem stageCuntz_distinct_orthogonal (n : ℕ) {i j : Fin n} (hij : i ≠ j) :
-    stageCuntzSdag n i * stageCuntzS n j = 0 := by
-  exact cuntz_distinct_orthogonal n hij
-
-/-- The finite Cuntz stage packages exactly the algebraic Cuntz relations. -/
-theorem finiteStageCuntzPacket (n : ℕ) :
-    (∀ i j : Fin n, stageCuntzSdag n i * stageCuntzS n j = if i = j then 1 else 0) ∧
-      (∑ i : Fin n, stageCuntzS n i * stageCuntzSdag n i) = 1 := by
-  exact ⟨stageCuntz_orthogonality n, stageCuntz_ranges_sum_one n⟩
+/-!
+The finite Cuntz and Toeplitz generators and their quotient relations are
+owned directly by `CuntzTensorQuotient`.  This module therefore does not
+duplicate stage aliases or forwarding packets; later colimit constructions
+use `cuntzS`, `cuntzSdag`, `toeplitzS`, `toeplitzSdag`, and the native quotient
+lemmas directly.
+-/
 
 /-- The fermionic partition function for the first `n` indexed prime modes. -/
 def fermionicPartitionTruncated (n : ℕ) (primes : ℕ → ℕ) (β : ℝ) : ℝ :=

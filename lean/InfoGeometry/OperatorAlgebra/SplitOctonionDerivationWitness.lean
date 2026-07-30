@@ -58,11 +58,4 @@ theorem rot01_kills_diagonal_unit : rot01Derivation (addZ ePlus eMinus) = zeroZ 
 theorem rot01_nonzero_on_up0 : rot01Derivation up0 = negZ up1 := by
   simp [rot01Derivation, up0, up1, negZ]
 
-/-- Closed finite packet for the native derivation witness layer. -/
-theorem splitOctonion_derivationWitness_packet :
-    IsDerivation rot01Derivation ∧
-      rot01Derivation (addZ ePlus eMinus) = zeroZ ∧
-      rot01Derivation up0 = negZ up1 := by
-  exact ⟨rot01_is_derivation, rot01_kills_diagonal_unit, rot01_nonzero_on_up0⟩
-
 end InfoGeometry.OperatorAlgebra.SplitOctonions.DerivationWitness

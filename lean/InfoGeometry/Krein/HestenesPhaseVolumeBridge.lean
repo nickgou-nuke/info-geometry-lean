@@ -64,26 +64,6 @@ variable {P : HestenesKreinKMSPacket (E := E)}
 variable {V : HestenesKreinVacuum P}
 variable (B : Bridge P V)
 
-/-- Direct readback of the supplied Hestenes/Krein log-det formula. -/
-@[rep_depth krein]
-theorem log_det_eq_vacuumExpectation_apply
-    (U : Units EndH) :
-    Real.log ((B.detUnits U : ℝˣ) : ℝ) =
-      V.vacuumRealState (B.opLog (U : EndH)) :=
-  B.log_det_eq_vacuumExpectation U
-
-/-- The determinant/phase-volume channel is multiplicative on invertible operators. -/
-@[rep_depth krein]
-theorem detUnits_mul
-    (U W : Units EndH) :
-    B.detUnits (U * W) = B.detUnits U * B.detUnits W :=
-  map_mul B.detUnits U W
-
-/-- The determinant/phase-volume channel sends the identity unit to one. -/
-@[rep_depth krein]
-theorem detUnits_one :
-    B.detUnits (1 : Units EndH) = 1 :=
-  map_one B.detUnits
 
 /--
 Logarithmic product law for the multiplicative determinant/phase-volume channel.
@@ -98,7 +78,7 @@ theorem log_det_product_eq_sum_log_det
         Real.log ((B.detUnits W : ℝˣ) : ℝ) := by
   have hU : ((B.detUnits U : ℝˣ) : ℝ) ≠ 0 := Units.ne_zero _
   have hW : ((B.detUnits W : ℝˣ) : ℝ) ≠ 0 := Units.ne_zero _
-  rw [B.detUnits_mul U W]
+  rw [map_mul B.detUnits U W]
   simpa using Real.log_mul hU hW
 
 /--
@@ -123,8 +103,8 @@ theorem log_det_product_eq_sum_expectation
     _ =
       V.vacuumRealState (B.opLog (U : EndH)) +
         V.vacuumRealState (B.opLog (W : EndH)) := by
-          rw [B.log_det_eq_vacuumExpectation_apply U,
-            B.log_det_eq_vacuumExpectation_apply W]
+          rw [B.log_det_eq_vacuumExpectation U,
+            B.log_det_eq_vacuumExpectation W]
 
 /--
 Finite additivity of Hestenes/Krein vacuum expectation over a list of atom

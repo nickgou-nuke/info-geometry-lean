@@ -23,7 +23,6 @@ variable {n m : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)] [Fintype (Fin m)] [
 /-- Kraus Representation Quantum Channel Operator Φ(ρ) = K * ρ * K† with K† * K = 1. -/
 structure KrausQuantumChannel (n m : ℕ) [Fintype (Fin n)] [DecidableEq (Fin n)] [Fintype (Fin m)] [DecidableEq (Fin m)] where
   K_val : Matrix (Fin m) (Fin n) ℂ
-  h_kraus_isometry : K_val.conjTranspose * K_val = 1
 
 namespace KrausQuantumChannel
 
@@ -36,7 +35,8 @@ def linearMap : EuclideanSpace ℂ (Fin n) →ₗ[ℂ] EuclideanSpace ℂ (Fin m
 
 /-- The Kraus isometry law preserves the complex inner product, not merely
 the norm of individual vectors. -/
-theorem inner_map_map (x y : EuclideanSpace ℂ (Fin n)) :
+theorem inner_map_map (x y : EuclideanSpace ℂ (Fin n))
+    (h_kraus_isometry : channel.K_val.conjTranspose * channel.K_val = 1) :
     ⟪linearMap channel x, linearMap channel y⟫_ℂ = ⟪x, y⟫_ℂ := by
   rw [EuclideanSpace.inner_eq_star_dotProduct, EuclideanSpace.inner_eq_star_dotProduct]
   change (Matrix.toEuclideanLin channel.K_val y).ofLp ⬝ᵥ
@@ -47,26 +47,29 @@ theorem inner_map_map (x y : EuclideanSpace ℂ (Fin n)) :
   rw [dotProduct_comm]
   rw [← dotProduct_mulVec]
   rw [Matrix.mulVec_mulVec]
-  rw [channel.h_kraus_isometry]
+  rw [h_kraus_isometry]
   simp only [one_mulVec]
   exact dotProduct_comm _ _
 
 /-- Native Mathlib `LinearIsometry` owner for a rectangular Kraus operator. -/
-noncomputable def linearIsometry :
+noncomputable def linearIsometry
+    (h_kraus_isometry : channel.K_val.conjTranspose * channel.K_val = 1) :
     EuclideanSpace ℂ (Fin n) →ₗᵢ[ℂ] EuclideanSpace ℂ (Fin m) :=
-  (linearMap channel).isometryOfInner (fun x y => inner_map_map channel x y)
+  (linearMap channel).isometryOfInner (fun x y =>
+    inner_map_map channel x y h_kraus_isometry)
 
 /-- Quantum Channel Action Φ(ρ) = K * ρ * K†. -/
 def apply (rho : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin m) (Fin m) ℂ :=
   channel.K_val * rho * channel.K_val.conjTranspose
 
 /-- **Theorem**: Quantum Channel Trace Preservation: Tr(Φ(ρ)) = Tr(ρ). -/
-theorem trace_preserving (rho : Matrix (Fin n) (Fin n) ℂ) :
+theorem trace_preserving (rho : Matrix (Fin n) (Fin n) ℂ)
+    (h_kraus_isometry : channel.K_val.conjTranspose * channel.K_val = 1) :
     trace (channel.apply rho) = trace rho := by
   dsimp [apply]
   have h_comm : trace (channel.K_val * rho * channel.K_val.conjTranspose) = trace (channel.K_val.conjTranspose * (channel.K_val * rho)) := by
     rw [trace_mul_comm]
-  rw [h_comm, ← Matrix.mul_assoc, channel.h_kraus_isometry, one_mul]
+  rw [h_comm, ← Matrix.mul_assoc, h_kraus_isometry, one_mul]
 
 /-- **Theorem**: Quantum Channel Hermiticity Preservation: (Φ(ρ))† = Φ(ρ†). -/
 theorem hermiticity_preserving (rho : Matrix (Fin n) (Fin n) ℂ) :

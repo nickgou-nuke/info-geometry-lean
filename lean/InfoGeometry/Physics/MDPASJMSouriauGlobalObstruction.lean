@@ -33,18 +33,24 @@ open InfoGeometry.Topology.ThermodynamicGauge
 abbrev C0 := Fin 1 → ℚ
 abbrev C1 := Fin 0 → ℚ
 abbrev C2 := Fin 1 → ℚ
+abbrev C3 := Fin 0 → ℚ
 
 /-- The cellular differential `C¹ → C²`; zero because the model has no 1-cells. -/
 def d1 (_α : C1) : C2 := 0
 
+/-! The next cellular differential is zero because the minimal `S²` model has
+no 3-cells. -/
+def d2 (_ω : C2) : C3 := 0
+
 /-- The normalized area 2-cochain. -/
 def sphereArea : C2 := fun _ => 1
 
-def Closed2 (ω : C2) : Prop := ω = ω
+def Closed2 (ω : C2) : Prop := d2 ω = 0
 
 def Exact2 (ω : C2) : Prop := ∃ α : C1, d1 α = ω
 
-theorem sphereArea_closed : Closed2 sphereArea := rfl
+theorem sphereArea_closed : Closed2 sphereArea := by
+  simp [Closed2, d2]
 
 /-- The area class on the cellular `S²` model is not exact. -/
 theorem sphereArea_not_exact : ¬ Exact2 sphereArea := by

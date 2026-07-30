@@ -267,13 +267,17 @@ structure ProjectivePfaffianKleinLaw
   readout : ProjectiveDeterminantReadout Γ
   residual : KleinResidual
 
-  coords : ProjectiveCountChannel → ℝ :=
-    fun ch =>
-      readout ch
-        (fun γ => projectiveDeterminantCoordinate Ω φ γ)
-
   klein_residual_eq_zero :
-    residual coords = 0
+    residual
+      (fun ch =>
+        readout ch
+          (fun γ => projectiveDeterminantCoordinate Ω φ γ)) = 0
+
+/-- The projective count coordinates are derived from the path weight and state. -/
+def ProjectivePfaffianKleinLaw.coords
+    {Γ : Type*} [Fintype Γ]
+    (K : ProjectivePfaffianKleinLaw Γ) : ProjectiveCountChannel → ℝ :=
+  fun ch => K.readout ch (fun γ => projectiveDeterminantCoordinate K.Ω K.φ γ)
 
 /-- Read back the witness-gated (Native Closure Mandated: Closure Debt) Klein residual law. -/
 theorem projective_pfaffian_counts_lie_on_klein

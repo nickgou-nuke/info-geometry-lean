@@ -29,9 +29,6 @@ projector-obstruction datum itself; unconstrained ambient maps are not evidence
 of a dilation theorem.
 -/
 @[rep_depth transport]
-abbrev DilationWitness (R : Type*) [Ring R] :=
-  DilationFromProjectorObstruction (R := R)
-
 /-- Allowed theorem: no obstruction source implies the sourced dilation vanishes. -/
 theorem dilation_vanishes_when_source_absent
     (D : DilationFromProjectorObstruction (R := R))

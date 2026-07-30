@@ -22,33 +22,30 @@ spectral or model-completeness theorem.
 -/
 structure HomologicalBraidStability where
   unpairedLeak : ℂ
-  h_witten_zero : witten_index_trace = 0
-  h_unpaired_eq_witten : unpairedLeak = witten_index_trace
 
 namespace HomologicalBraidStability
 
 variable (stable : HomologicalBraidStability)
 
 /-- Vanishing Witten index is part of the recorded stability gate. -/
-theorem witten_zero (stable : HomologicalBraidStability) : witten_index_trace = 0 :=
-  HomologicalBraidStability.h_witten_zero stable
+theorem witten_zero : witten_index_trace = 0 :=
+  witten_index_trace_vanishes
 
 /-- The recorded unpaired-leak scalar vanishes through the finite Witten gate. -/
-theorem no_unpaired_leak : stable.unpairedLeak = 0 := by
-  rw [HomologicalBraidStability.h_unpaired_eq_witten stable,
-    HomologicalBraidStability.h_witten_zero stable]
+theorem no_unpaired_leak
+    (h_unpaired_eq_witten : stable.unpairedLeak = witten_index_trace) :
+    stable.unpairedLeak = 0 := by
+  rw [h_unpaired_eq_witten, witten_index_trace_vanishes]
 
 end HomologicalBraidStability
 
 /-- Canonical finite stability gate for the two-state SUSY block. -/
 def canonicalHomologicalBraidStability : HomologicalBraidStability where
   unpairedLeak := witten_index_trace
-  h_witten_zero := witten_index_trace_vanishes
-  h_unpaired_eq_witten := rfl
 
 /-- The canonical finite braid-stability gate has no unpaired leakage. -/
 theorem canonical_no_unpaired_leak : canonicalHomologicalBraidStability.unpairedLeak = 0 :=
-  canonicalHomologicalBraidStability.no_unpaired_leak
+  canonicalHomologicalBraidStability.no_unpaired_leak rfl
 
 end InfoGeometry.Algebra.AnyonFiniteSpinBraid
 

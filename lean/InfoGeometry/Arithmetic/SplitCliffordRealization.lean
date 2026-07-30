@@ -381,32 +381,59 @@ def eulerAsChirality (atom : Cl11Atom K) : ChiralityOperator atom where
 
 structure SplitCliffordRealizationPacket (K : Type*) [Ring K] [Algebra ℝ K] (n : ℕ) where
   cl11 : Cl11Atom K
-  euler_sq_one : EulerOperator cl11 * EulerOperator cl11 = 1 := by
-    exact euler_operator_sq_one cl11
-  euler_anticomm_r0 :
-      EulerOperator cl11 * cl11.r0 = -(cl11.r0 * EulerOperator cl11) := by
-    exact euler_anticommutes_r0 cl11
-  euler_anticomm_r5 :
-      EulerOperator cl11 * cl11.r5 = -(cl11.r5 * EulerOperator cl11) := by
-    exact euler_anticommutes_r5 cl11
-  chiral_orthogonal :
-      chiralProjectorPlus cl11 * chiralProjectorMinus cl11 = 0 := by
-    exact chiral_sheets_orthogonal cl11
-  chiral_partition : chiralProjectorPlus cl11 + chiralProjectorMinus cl11 = 1 := by
-    exact chiral_sheets_partition_unity cl11
-  even_odd_orthogonal : evenProjector cl11 * oddProjector cl11 = 0 := by
-    exact even_odd_orthogonal cl11
-  even_odd_partition : evenProjector cl11 + oddProjector cl11 = 1 := by
-    exact even_odd_partition_unity cl11
-  euler_fixes_even : EulerOperator cl11 * evenProjector cl11 = evenProjector cl11 := by
-    exact euler_fixes_even cl11
-  euler_flips_odd : EulerOperator cl11 * oddProjector cl11 = -(oddProjector cl11) := by
-    exact euler_flips_odd cl11
-  car_nilpotence : ∀ i : Fin n, ann n i * ann n i = 0 := ann_sq_zero n
-  car_anticomm : ∀ i j : Fin n, ann n i * ann n j + ann n j * ann n i = 0 :=
-    ann_ann_anticomm n
-  car_identity : ∀ i j, ann n i * cre n j + cre n j * ann n i =
-    (if i = j then (1 : Clnn n) else 0) := car_identity n
+
+namespace SplitCliffordRealizationPacket
+
+theorem euler_sq_one (P : SplitCliffordRealizationPacket K n) :
+    EulerOperator P.cl11 * EulerOperator P.cl11 = 1 :=
+  euler_operator_sq_one P.cl11
+
+theorem euler_anticomm_r0 (P : SplitCliffordRealizationPacket K n) :
+    EulerOperator P.cl11 * P.cl11.r0 = -(P.cl11.r0 * EulerOperator P.cl11) :=
+  euler_anticommutes_r0 P.cl11
+
+theorem euler_anticomm_r5 (P : SplitCliffordRealizationPacket K n) :
+    EulerOperator P.cl11 * P.cl11.r5 = -(P.cl11.r5 * EulerOperator P.cl11) :=
+  euler_anticommutes_r5 P.cl11
+
+theorem chiral_orthogonal (P : SplitCliffordRealizationPacket K n) :
+    chiralProjectorPlus P.cl11 * chiralProjectorMinus P.cl11 = 0 :=
+  chiral_sheets_orthogonal P.cl11
+
+theorem chiral_partition (P : SplitCliffordRealizationPacket K n) :
+    chiralProjectorPlus P.cl11 + chiralProjectorMinus P.cl11 = 1 :=
+  chiral_sheets_partition_unity P.cl11
+
+theorem even_odd_orthogonal (P : SplitCliffordRealizationPacket K n) :
+    evenProjector P.cl11 * oddProjector P.cl11 = 0 :=
+  _root_.InfoGeometry.Arithmetic.SplitCliffordRealization.even_odd_orthogonal P.cl11
+
+theorem even_odd_partition (P : SplitCliffordRealizationPacket K n) :
+    evenProjector P.cl11 + oddProjector P.cl11 = 1 :=
+  even_odd_partition_unity P.cl11
+
+theorem euler_fixes_even (P : SplitCliffordRealizationPacket K n) :
+    EulerOperator P.cl11 * evenProjector P.cl11 = evenProjector P.cl11 :=
+  _root_.InfoGeometry.Arithmetic.SplitCliffordRealization.euler_fixes_even P.cl11
+
+theorem euler_flips_odd (P : SplitCliffordRealizationPacket K n) :
+    EulerOperator P.cl11 * oddProjector P.cl11 = -(oddProjector P.cl11) :=
+  _root_.InfoGeometry.Arithmetic.SplitCliffordRealization.euler_flips_odd P.cl11
+
+theorem car_nilpotence (_P : SplitCliffordRealizationPacket K n) :
+    ∀ i : Fin n, ann n i * ann n i = 0 :=
+  ann_sq_zero n
+
+theorem car_anticomm (_P : SplitCliffordRealizationPacket K n) :
+    ∀ i j : Fin n, ann n i * ann n j + ann n j * ann n i = 0 :=
+  ann_ann_anticomm n
+
+theorem car_identity (_P : SplitCliffordRealizationPacket K n) :
+    ∀ i j, ann n i * cre n j + cre n j * ann n i =
+      (if i = j then (1 : Clnn n) else 0) :=
+  _root_.InfoGeometry.OperatorAlgebra.CliffordCAR.car_identity n
+
+end SplitCliffordRealizationPacket
 
 def mkRealization (cl11 : Cl11Atom K) (n : ℕ) : SplitCliffordRealizationPacket K n where
   cl11 := cl11

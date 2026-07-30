@@ -53,23 +53,4 @@ theorem relative_entropy_equal_weights_nonneg (p : ℝ) (hp : 0 < p) :
     0 ≤ p * Real.log (p / p) := by
   rw [div_self (ne_of_gt hp), Real.log_one, mul_zero]
 
-/--
-**Main Theorem: Grand Regular Support Second Law Master Duality**
-Unifies zero entropy leakage conservation, KMS phase unitary invariance, relative entropy nonnegativity, and fixed locus antiunitary rigidity into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
--/
-theorem grand_regular_support_second_law_master_duality
-    (c1 c2 : ℝ) (h_eq : c1 = c2)
-    (theta : ℝ)
-    (p : ℝ) (hp : 0 < p)
-    (s_anti : ℂ) (h_anti : s_anti = 1 - star s_anti) :
-    (c1 - c2 = 0) ∧
-    (‖Complex.exp (I * theta)‖ = 1) ∧
-    (0 ≤ p * Real.log (p / p)) ∧
-    (s_anti.re = 1 / 2) := ⟨
-  no_entropy_leakage_conservation c1 c2 h_eq,
-  modular_fixed_point_norm theta,
-  relative_entropy_equal_weights_nonneg p hp,
-  (critical_line_fixed_locus_iff s_anti).1 h_anti
-⟩
-
 end InfoGeometry.Canonical.RegularSupportSecondLawNativeBridge

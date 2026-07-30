@@ -38,20 +38,41 @@ def cl55MatrixDim : ℕ := cl55MatrixSide^2
 
 structure SYKMajoranaSystem where
   n : ℕ
-  N : ℕ
-  N_eq : N = majoranaCount n
-  dla_dim : ℕ := dlaDimSYK n
-  pool_size : ℕ := poolSizeSYK n
+
+namespace SYKMajoranaSystem
+
+def N (S : SYKMajoranaSystem) : ℕ := majoranaCount S.n
+
+@[simp] theorem N_eq (S : SYKMajoranaSystem) :
+    S.N = majoranaCount S.n := rfl
+
+def dla_dim (S : SYKMajoranaSystem) : ℕ := dlaDimSYK S.n
+
+def pool_size (S : SYKMajoranaSystem) : ℕ := poolSizeSYK S.n
+
+end SYKMajoranaSystem
 
 structure SKSpinChain where
   L : ℕ
-  dla_dim : ℕ := dlaDimSK L
-  pool_size : ℕ := poolSizeSK L
+
+namespace SKSpinChain
+
+def dla_dim (S : SKSpinChain) : ℕ := dlaDimSK S.L
+
+def pool_size (S : SKSpinChain) : ℕ := poolSizeSK S.L
+
+end SKSpinChain
 
 structure PauliPairPool where
   L : ℕ
-  zy_terms : ℕ := L * (L - 1) / 2
-  yz_terms : ℕ := L * (L - 1) / 2
+
+namespace PauliPairPool
+
+def zy_terms (P : PauliPairPool) : ℕ := P.L * (P.L - 1) / 2
+
+def yz_terms (P : PauliPairPool) : ℕ := P.L * (P.L - 1) / 2
+
+end PauliPairPool
 
 def pauliPoolTotal (P : PauliPairPool) : ℕ :=
   P.zy_terms + P.yz_terms

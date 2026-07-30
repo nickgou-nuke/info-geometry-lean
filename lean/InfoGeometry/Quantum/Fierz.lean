@@ -33,6 +33,11 @@ noncomputable def infoSymplectic (ψ : DoubledSpace E) : ℝ :=
 noncomputable def infoHilbert (ψ : DoubledSpace E) : ℝ :=
   inner ℝ (WithLp.fst ψ) (WithLp.fst ψ) + inner ℝ (WithLp.snd ψ) (WithLp.snd ψ)
 
+theorem infoHilbert_nonneg (ψ : DoubledSpace E) :
+    0 ≤ infoHilbert ψ := by
+  unfold infoHilbert
+  exact add_nonneg real_inner_self_nonneg real_inner_self_nonneg
+
 /-- **Information Area (Uncertainty)**: The squared area spanned by the data and model components.
 Identified with the Gram determinant of the state components. -/
 noncomputable def infoArea (ψ : DoubledSpace E) : ℝ :=

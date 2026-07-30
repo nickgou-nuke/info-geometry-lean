@@ -68,23 +68,4 @@ theorem euler_factor_lower_bound
   have h_inv : (1 + x) * (1 - x) * (1 - x)⁻¹ < 1 * (1 - x)⁻¹ := mul_lt_mul_of_pos_right h_lt (inv_pos.mpr h_sub)
   rwa [mul_assoc, mul_inv_cancel₀ (ne_of_gt h_sub), mul_one, one_mul] at h_inv
 
-/--
-**Main Theorem: Grand Euler Product Master Duality**
-Unifies Euler factor domination, term multiplicativity, linear lower bounds, and fixed locus antiunitary rigidity into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
--/
-theorem grand_euler_product_master_duality
-    (p : ℝ) (hp : 1 < p) (s : ℝ) (hs : 0 < s)
-    (m n : ℝ) (hm : 0 < m) (hn : 0 < n)
-    (x : ℝ) (hx0 : 0 < x) (hx1 : x < 1)
-    (s_anti : ℂ) (h_anti : s_anti = 1 - star s_anti) :
-    (1 < (1 - p ^ (-s))⁻¹) ∧
-    (m ^ (-s) * n ^ (-s) = (m * n) ^ (-s)) ∧
-    (1 + x < (1 - x)⁻¹) ∧
-    (s_anti.re = 1 / 2) := ⟨
-  euler_factor_gt_one p hp s hs,
-  euler_product_term_mul m n hm hn s,
-  euler_factor_lower_bound x hx0 hx1,
-  (critical_line_fixed_locus_iff s_anti).1 h_anti
-⟩
-
 end InfoGeometry.Canonical.EulerProductFactorizationNativeBridge

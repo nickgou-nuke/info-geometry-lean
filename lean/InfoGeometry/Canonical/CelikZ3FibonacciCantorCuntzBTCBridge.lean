@@ -353,21 +353,6 @@ theorem null_boundary_orbit_eq_seed (G : CelikZ3FibonacciCantorCuntzBridge A Op)
         G.crystal.basis G.crystal.nullBoundary = G.crystal.basis.seed :=
   CantorCuntzNullBoundaryCrystal.orbit_null_eq_seed G.crystal
 
-/--
-Consolidated finite packet:
-Fibonacci self-fusion, transported Yang--Baxter, and null-boundary Cuntz seed
-readback.
--/
-theorem bridge_packet (G : CelikZ3FibonacciCantorCuntzBridge A Op) :
-    FibonacciCharge.fusion FibonacciCharge.eps FibonacciCharge.eps =
-        {FibonacciCharge.one, FibonacciCharge.eps}
-      ∧ G.btc.fibonacci.R * G.btc.fibonacci.B * G.btc.fibonacci.R =
-          G.btc.fibonacci.B * G.btc.fibonacci.R * G.btc.fibonacci.B
-      ∧ InfoGeometry.Canonical.CantorCuntzBasis.CantorCuntzBasisPacket.orbit
-          G.crystal.basis G.crystal.nullBoundary = G.crystal.basis.seed := by
-  exact ⟨G.btc.fibonacci.fusion_rule, fibonacci_yang_baxter G,
-    null_boundary_orbit_eq_seed G⟩
-
 end CelikZ3FibonacciCantorCuntzBridge
 
 end InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge

@@ -116,20 +116,40 @@ structure DrazinMPProjectorData (R : Type*) [Ring R] where
   A : R
   AD : R
   AMP : R
-  PD0 : R := 1 - A * AD
-  PDtimes : R := A * AD
-  PMP0 : R := 1 - AMP * A
-  PMPtimes : R := A * AMP
-  PD0_idempotent : PD0 * PD0 = PD0
-  PMP0_idempotent : PMP0 * PMP0 = PMP0
+  PD0_idempotent : (1 - A * AD) * (1 - A * AD) = 1 - A * AD
+  PMP0_idempotent : (1 - AMP * A) * (1 - AMP * A) = 1 - AMP * A
 
 namespace DrazinMPProjectorData
+
+/-- Drazin spectral projector readout. -/
+def PD0 (D : DrazinMPProjectorData R) : R := 1 - D.A * D.AD
+
+@[simp] theorem PD0_eq (D : DrazinMPProjectorData R) :
+    D.PD0 = 1 - D.A * D.AD := rfl
+
+/-- Drazin active projector readout. -/
+def PDtimes (D : DrazinMPProjectorData R) : R := D.A * D.AD
+
+@[simp] theorem PDtimes_eq (D : DrazinMPProjectorData R) :
+    D.PDtimes = D.A * D.AD := rfl
+
+/-- Moore--Penrose complementary projector readout. -/
+def PMP0 (D : DrazinMPProjectorData R) : R := 1 - D.AMP * D.A
+
+@[simp] theorem PMP0_eq (D : DrazinMPProjectorData R) :
+    D.PMP0 = 1 - D.AMP * D.A := rfl
+
+/-- Moore--Penrose active projector readout. -/
+def PMPtimes (D : DrazinMPProjectorData R) : R := D.A * D.AMP
+
+@[simp] theorem PMPtimes_eq (D : DrazinMPProjectorData R) :
+    D.PMPtimes = D.A * D.AMP := rfl
 
 def toProjectorPair (D : DrazinMPProjectorData R) : ProjectorPair R where
   PD := D.PD0
   PMP := D.PMP0
-  PD_idempotent := D.PD0_idempotent
-  PMP_idempotent := D.PMP0_idempotent
+  PD_idempotent := by simpa [PD0] using D.PD0_idempotent
+  PMP_idempotent := by simpa [PMP0] using D.PMP0_idempotent
 
 end DrazinMPProjectorData
 

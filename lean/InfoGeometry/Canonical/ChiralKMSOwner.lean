@@ -77,10 +77,4 @@ theorem thermalShift_preserves_chirality
     KMSPreservesChirality (thermalShift K W) Γ := by
   simpa [thermalShift] using KMSPreservesChirality_mul (R := R) hK hW
 
-/-! A flow witness is the direct existential proposition it expresses; no
-record is needed merely to store the two carriers and their disjunction. -/
-def ChiralKMSFlowWitness : Prop :=
-  ∃ K : R, ∃ Γ : ChiralGrading (R := R),
-    KMSPreservesChirality K Γ ∨ ChiralKMSObstruction K Γ ≠ 0
-
 end InfoGeometry.Canonical.ChiralKMSOwner

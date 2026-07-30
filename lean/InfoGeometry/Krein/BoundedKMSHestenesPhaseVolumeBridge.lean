@@ -99,25 +99,6 @@ variable [Fintype Word] [DecidableEq Word]
 variable (B : BoundedKMSHestenesPhaseVolumeBridge
   (E := E) (LieAlgebra := LieAlgebra) Word)
 
-/-- Multiplicativity is only asserted on units. -/
-@[rep_depth operator]
-theorem detUnits_mul
-    (U V : Units EndH) :
-    B.detUnits (U * V) = B.detUnits U * B.detUnits V :=
-  map_mul B.detUnits U V
-
-/-- The determinant channel sends the unit operator to unit scalar volume. -/
-@[rep_depth operator]
-theorem detUnits_one :
-    B.detUnits (1 : Units EndH) = 1 :=
-  map_one B.detUnits
-
-/-- On invertible operators, phase-volume reads back through `detUnits`. -/
-@[rep_depth operator]
-theorem phaseVolume_unit_readback
-    (U : Units EndH) :
-    B.phaseVolume (U : EndH) = (B.detUnits U : ℝ) :=
-  B.phaseVolume_eq_detUnits_on_units U
 
 /-- Multiplicative phase-volume readback on invertible products. -/
 @[rep_depth operator]
@@ -142,30 +123,6 @@ theorem phaseVolume_unit_one :
             B.phaseVolume_eq_detUnits_on_units 1
     _ = 1 := by simp
 
-/-- Modular/Hestenes flow preserves the calibrated phase-volume readout. -/
-@[rep_depth thermo]
-theorem phaseVolume_modularFlow_invariant_apply
-    (t : ℝ) (A : EndH) :
-    B.phaseVolume
-        (B.boundedMoebius.boundedWilson.boundedVacuum.boundedHestenes.hestenes.modularFlow.flow t A) =
-      B.phaseVolume A :=
-  B.phaseVolume_modularFlow_invariant t A
-
-/-- Möbius reparameterization preserves the calibrated phase-volume readout. -/
-@[rep_depth projective]
-theorem phaseVolume_moebius_invariant_apply
-    (g : MoebiusParameter) (A : EndH) :
-    B.phaseVolume (B.boundedMoebius.operatorAction g A) =
-      B.phaseVolume A :=
-  B.phaseVolume_moebius_invariant g A
-
-/-- The phase-volume channel is calibrated to the existing Ω-volume state. -/
-@[rep_depth krein]
-theorem phaseVolume_eq_volumeState_apply
-    (A : EndH) :
-    B.phaseVolume A =
-      B.boundedMoebius.boundedWilson.toHestenesConnesWilsonBridge.volume.volumeState A :=
-  B.phaseVolume_eq_volumeState A
 
 /-- Wigner--Jones atom phase-volume equals the installed atom expectation. -/
 @[rep_depth projective]
@@ -177,7 +134,7 @@ theorem phaseVolume_wignerJonesAtom
       NaturalConeVolumeBridge.atomExpectation
         B.boundedMoebius.boundedWilson.toHestenesConnesWilsonBridge.volume w := by
   unfold NaturalConeVolumeBridge.atomExpectation
-  rw [B.phaseVolume_eq_volumeState_apply]
+  rw [B.phaseVolume_eq_volumeState]
 
 /--
 Wilson holonomy as the negative logarithmic ratio of calibrated phase-volumes
@@ -212,8 +169,8 @@ theorem wilsonHolonomy_eq_neg_log_phaseVolume_ratio
             (NaturalConeVolumeBridge.wignerJonesAtom
               B.boundedMoebius.boundedWilson.toHestenesConnesWilsonBridge.volume parent)) := by
         unfold NaturalConeVolumeBridge.atomExpectation
-        rw [B.phaseVolume_eq_volumeState_apply,
-          B.phaseVolume_eq_volumeState_apply]
+        rw [B.phaseVolume_eq_volumeState,
+          B.phaseVolume_eq_volumeState]
 
 end BoundedKMSHestenesPhaseVolumeBridge
 

@@ -408,6 +408,17 @@ theorem prefixLimitCylinderSet_mem_partition (n : ℕ)
     ∃ w : BitWord n, x ∈ prefixLimitCylinderSet n w := by
   refine ⟨(limit.π prefixDiagram (Opposite.op n)).hom x, ?_⟩
   rw [prefixLimitCylinderSet_eq_projection_fiber]
+  rfl
+
+theorem prefixLimitCylinderSet_iUnion_eq_univ (n : ℕ) :
+    (⋃ w : BitWord n, prefixLimitCylinderSet n w) = Set.univ := by
+  ext x
+  constructor
+  · intro hx
+    trivial
+  · intro hx
+    obtain ⟨w, hw⟩ := prefixLimitCylinderSet_mem_partition n x
+    exact Set.mem_iUnion.2 ⟨w, hw⟩
 
 theorem prefixLimitCylinderSet_nonempty (n : ℕ) (w : BitWord n) :
     (prefixLimitCylinderSet n w).Nonempty := by

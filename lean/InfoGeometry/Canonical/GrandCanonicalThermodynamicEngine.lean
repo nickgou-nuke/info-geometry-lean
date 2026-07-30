@@ -53,35 +53,6 @@ structure GrandCanonicalEngine
   /-- The conservative grand-canonical thermodynamic bridge on the Hilbert carrier. -/
   thermodynamicBridge : GrandCanonicalThermodynamicBridge H
 
-  /-- 
-  The Grand Canonical Potential (Massieu-Planck potential):
-  Φ(s) = log Z(s)
-  -/
-  massieuPlanckPotential : ℂ → ℂ :=
-    fun s => (thermodynamicBridge.grandCanonical.logPartition s.re : ℂ)
-
-  /-- The Massieu-Planck potential is the logarithm of the partition function. -/
-  potential_eq_log_partition :
-    ∀ s, massieuPlanckPotential s =
-      (thermodynamicBridge.grandCanonical.logPartition s.re : ℂ) := by
-    intro s
-    rfl
-
-  /--
-  The thermodynamic force selected for the engine.
-  -/
-  thermodynamicForce : H → ℝ :=
-    fun x => thermodynamicBridge.logForce.thermodynamicForce x
-
-  /--
-  The engine force is the same field used by the thermodynamic bridge.
-  -/
-  thermodynamicForce_eq_logForce :
-    ∀ x : H, thermodynamicForce x = thermodynamicBridge.logForce.thermodynamicForce x
-    := by
-    intro x
-    rfl
-
 /--
 Native constructor for `GrandCanonicalEngine`.
 The owner API is explicit: callers provide the required bridge fields, so the
@@ -113,21 +84,38 @@ variable
 
 variable (Engine : GrandCanonicalEngine Orbit E Op H Finite Alg Symmetry)
 
+def massieuPlanckPotential
+    (Engine : GrandCanonicalEngine Orbit E Op H Finite Alg Symmetry) (s : ℂ) : ℂ :=
+  (Engine.thermodynamicBridge.grandCanonical.logPartition s.re : ℂ)
+
+def thermodynamicForce
+    (Engine : GrandCanonicalEngine Orbit E Op H Finite Alg Symmetry) (x : H) : ℝ :=
+  Engine.thermodynamicBridge.logForce.thermodynamicForce x
+
+@[simp] theorem potential_eq_log_partition
+    (Engine : GrandCanonicalEngine Orbit E Op H Finite Alg Symmetry) (s : ℂ) :
+    Engine.massieuPlanckPotential s =
+      (Engine.thermodynamicBridge.grandCanonical.logPartition s.re : ℂ) := rfl
+
+@[simp] theorem thermodynamicForce_eq_logForce
+    (Engine : GrandCanonicalEngine Orbit E Op H Finite Alg Symmetry) (x : H) :
+    Engine.thermodynamicForce x = Engine.thermodynamicBridge.logForce.thermodynamicForce x := rfl
+
 @[rep_depth transport]
 theorem massieuPlanckPotential_eq_log_partition (s : ℂ) :
     Engine.massieuPlanckPotential s =
       (Engine.thermodynamicBridge.grandCanonical.logPartition s.re : ℂ) :=
-  Engine.potential_eq_log_partition s
+  potential_eq_log_partition Engine s
 
 @[rep_depth transport]
 theorem thermodynamicForce_eq_bridge_logForce (x : H) :
     Engine.thermodynamicForce x = Engine.thermodynamicBridge.logForce.thermodynamicForce x :=
-  Engine.thermodynamicForce_eq_logForce x
+  thermodynamicForce_eq_logForce Engine x
 
 /-- Helper lemma breaking down the explicit formula property. -/
 lemma thermodynamicForce_eq_explicitFormula_step1 (x : H) :
     Engine.thermodynamicForce x = Engine.thermodynamicBridge.logForce.thermodynamicForce x :=
-  Engine.thermodynamicForce_eq_logForce x
+  thermodynamicForce_eq_logForce Engine x
 
 /-- Helper lemma breaking down the explicit formula property. -/
 lemma thermodynamicForce_eq_explicitFormula_step2 (x : H) :

@@ -14,8 +14,6 @@ namespace MetriplecticCausality
 
 variable {M : Type u}
 
-def Flow (x y : M) : Prop := x = y
-
 def PositiveKernelValue (r : ℝ) : Prop := r > 0
 
 def Timelike (model : MetriplecticCausality M) (x y : M) : Prop :=
@@ -23,6 +21,11 @@ def Timelike (model : MetriplecticCausality M) (x y : M) : Prop :=
 
 def Null (model : MetriplecticCausality M) (x y : M) : Prop :=
   model.B x y = 0
+
+/-- Causal reachability is the union of the timelike and null sectors of the
+bilinear causal kernel.  It is not the equality relation on the carrier. -/
+def Flow (model : MetriplecticCausality M) (x y : M) : Prop :=
+  Timelike model x y ∨ Null model x y
 
 theorem flow_timelike
     (model : MetriplecticCausality M) (x y : M)

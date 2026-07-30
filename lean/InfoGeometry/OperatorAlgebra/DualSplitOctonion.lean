@@ -192,23 +192,4 @@ theorem finite_g2_outerC2_fixed_count_not_fano_line_count :
   exact ⟨rfl, rfl,
     InfoGeometry.OperatorAlgebra.G2TwoFixedPointIncidence.fixedInternalLineCount_ne_fanoPlaneLineCount⟩
 
-/-- Closed finite algebra packet for the theorem-safe dual split-octonion extension. -/
-theorem dualSplitOctonion_safe_packet :
-    coordinateCount = 16 ∧
-      (∀ X Y : SplitOct, mulD (baseLift X) (baseLift Y) = baseLift (mulZ X Y)) ∧
-      (∀ X Y : SplitOct, mulD (epsLift X) (epsLift Y) = zeroD) ∧
-      (∀ X Y : SplitOct, mulD (baseLift X) (epsLift Y) = epsLift (mulZ X Y)) ∧
-      (∀ X Y : SplitOct, mulD (epsLift X) (baseLift Y) = epsLift (mulZ X Y)) ∧
-      mulD dualEpsilon dualEpsilon = zeroD ∧
-      (∀ X Y : DualSplitOct, (mulD X Y).primal = mulZ X.primal Y.primal) ∧
-      associatorD (baseLift up0) (baseLift up1) (baseLift down1) ≠ zeroD ∧
-      AutCandidate.IsDualSplitOctonionAutCandidate AutCandidate.idCandidate ∧
-      InfoGeometry.OperatorAlgebra.G2TwoFixedPointIncidence.fixedInternalLineCount = 3 ∧
-      InfoGeometry.OperatorAlgebra.G2TwoFixedPointIncidence.fixedInternalLineCount ≠
-        InfoGeometry.OperatorAlgebra.G2TwoFixedPointIncidence.fanoPlaneLineCount := by
-  exact ⟨coordinate_count, baseLift_mul, epsLift_mul_epsLift_zero,
-    baseLift_mul_epsLift, epsLift_mul_baseLift, dualEpsilon_sq_zero,
-    primal_projection_mul, lifted_associator_base_ne_zero, AutCandidate.id_is_candidate,
-    rfl, InfoGeometry.OperatorAlgebra.G2TwoFixedPointIncidence.fixedInternalLineCount_ne_fanoPlaneLineCount⟩
-
 end InfoGeometry.OperatorAlgebra.DualSplitOctonion

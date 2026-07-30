@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.PrimeCantorTiltFockRepresentation
 import InfoGeometry.OperatorAlgebra.SupergradedClosure
+import InfoGeometry.Canonical.ErlangenInductiveClosure
 
 namespace InfoGeometry.OperatorAlgebra.RecursiveSupercharge
 open InfoGeometry.OperatorAlgebra.SupergradedClosure
@@ -361,26 +362,19 @@ theorem invariant_pair_along_chain
 
 end IndexedInductiveChain
 
-/-- Invariant packet at one finite stage of an inductive operator chain. -/
-structure SupergradedInvariantAt (A : Type*) [Ring A] where
-  is_odd : A → Prop
-  is_even : A → Prop
-  is_central : A → Prop
-  odd_nilpotency : ∀ x, is_odd x → x * x = 0
-  odd_odd_closure : ∀ x y, is_odd x → is_odd y → is_even (x * y + y * x)
-  central_lane : ∀ c x, is_central c → c * x = x * c
-  projector_identity : ∃ P, is_even P ∧ P * P = P
-
-/--
-Bonding intertwiner between two stages; transports the grading/central lanes.
+/-!
+The finite invariant packet and its transition map are owned by the
+Erlangen inductive-closure module. These aliases preserve the historical
+RecursiveSupercharge API while ensuring both subsystems use the same native
+structure and proof fields.
 -/
-structure BondingIntertwiner
+abbrev SupergradedInvariantAt (A : Type*) [Ring A] :=
+  InfoGeometry.Canonical.ErlangenInductiveClosure.SupergradedClosureAt A
+
+abbrev BondingIntertwiner
     {A B : Type*} [Ring A] [Ring B]
-    (invA : SupergradedInvariantAt A) (invB : SupergradedInvariantAt B) where
-  map : A →+* B
-  preserves_odd : ∀ x, invA.is_odd x → invB.is_odd (map x)
-  preserves_even : ∀ x, invA.is_even x → invB.is_even (map x)
-  preserves_central : ∀ c, invA.is_central c → invB.is_central (map c)
+    (invA : SupergradedInvariantAt A) (invB : SupergradedInvariantAt B) :=
+  InfoGeometry.Canonical.ErlangenInductiveClosure.BondingIntertwiner invA invB
 
 /--
 Core transport lemma: odd nilpotency is stable under a valid bonding intertwiner.

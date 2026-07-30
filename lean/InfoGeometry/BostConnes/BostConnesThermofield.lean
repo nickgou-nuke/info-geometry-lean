@@ -39,9 +39,18 @@ Bost-Connes algebra generators.
 μₙ: isometry for sector n, satisfying μₙ*μₙ = 1
 e(r): additive group element for r ∈ ℚ/ℤ
 -/
-structure BostConnesGenerator where
-  mu_n : ℕ  -- sector index
-  sector_pos : 0 < mu_n
+abbrev BostConnesGenerator := {n : ℕ // 0 < n}
+
+namespace BostConnesGenerator
+
+abbrev mu_n (g : BostConnesGenerator) : ℕ := g.1
+
+abbrev sector_pos (g : BostConnesGenerator) : 0 < g.mu_n := g.2
+
+def mk (mu_n : ℕ) (sector_pos : 0 < mu_n) : BostConnesGenerator :=
+  ⟨mu_n, sector_pos⟩
+
+end BostConnesGenerator
 
 namespace BostConnesGenerator
 

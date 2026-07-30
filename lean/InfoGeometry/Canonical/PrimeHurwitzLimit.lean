@@ -91,38 +91,15 @@ intended model is `XiZero s := ξ(s) = 0`, where `ξ` is the completed Riemann x
 function.
 -/
 @[rep_depth operator]
-abbrev CompletedXiZeroPredicate : Type :=
-  Σ' XiZero : ℂ → Prop,
-    ∀ s : ℂ, XiZero s → s ≠ 1
-
-namespace CompletedXiZeroPredicate
-
-def XiZero (Ξ : CompletedXiZeroPredicate) : ℂ → Prop :=
-  Ξ.1
-
-def zero_ne_one (Ξ : CompletedXiZeroPredicate) :
-    ∀ s : ℂ, XiZero Ξ s → s ≠ 1 :=
-  Ξ.2
-
-end CompletedXiZeroPredicate
+structure CompletedXiZeroPredicate where
+  XiZero : ℂ → Prop
+  zero_ne_one : ∀ s : ℂ, XiZero s → s ≠ 1
 
 /-- RH stated relative to a completed-`xi` zero predicate. -/
 @[rep_depth operator]
 def RiemannHypothesis
     (Ξ : CompletedXiZeroPredicate) : Prop :=
   ∀ s : ℂ, Ξ.XiZero s → OnCriticalLine s
-
-/--
-Cayley geometry witness.
-
-The facts are elementary complex algebra, but are stored as a witness so this
-file remains focused on the Hurwitz/Lee--Yang proof interface.
--/
-abbrev CayleyCriticalWitness : Prop :=
-  (∀ s : ℂ, s ≠ 1 → cayleyInv (cayley s) = s) ∧
-    (∀ s : ℂ, s ≠ 1 → OnCriticalLine s → OnUnitCircle (cayley s)) ∧
-      (∀ s : ℂ, s ≠ 1 → OnUnitCircle (cayley s) → OnCriticalLine s) ∧
-        (∀ s : ℂ, s ≠ 0 → s ≠ 1 → cayley (1 - s) = (cayley s)⁻¹)
 
 namespace CayleyCriticalWitness
 
@@ -198,7 +175,11 @@ theorem cayley_reflection_to_inversion
 
 /-- Native proof-carrying Cayley geometry witness. -/
 @[rep_depth operator]
-def canonicalCayleyCriticalWitness : CayleyCriticalWitness :=
+theorem canonicalCayleyCriticalWitness :
+    (∀ s : ℂ, s ≠ 1 → cayleyInv (cayley s) = s) ∧
+      (∀ s : ℂ, s ≠ 1 → OnCriticalLine s → OnUnitCircle (cayley s)) ∧
+        (∀ s : ℂ, s ≠ 1 → OnUnitCircle (cayley s) → OnCriticalLine s) ∧
+          (∀ s : ℂ, s ≠ 0 → s ≠ 1 → cayley (1 - s) = (cayley s)⁻¹) :=
   ⟨cayleyInv_cayley_eq,
     cayley_unit_of_critical,
       cayley_critical_of_unit,
@@ -355,7 +336,10 @@ theorem hurwitz_xiZeros_map_to_unit_circle
 @[bridge_target_tag, rep_depth operator]
 theorem RH_of_Hurwitz_LeeYang_limit
     (Ξ : CompletedXiZeroPredicate)
-    (C : CayleyCriticalWitness)
+    (C : (∀ s : ℂ, s ≠ 1 → cayleyInv (cayley s) = s) ∧
+      (∀ s : ℂ, s ≠ 1 → OnCriticalLine s → OnUnitCircle (cayley s)) ∧
+        (∀ s : ℂ, s ≠ 1 → OnUnitCircle (cayley s) → OnCriticalLine s) ∧
+          (∀ s : ℂ, s ≠ 0 → s ≠ 1 → cayley (1 - s) = (cayley s)⁻¹))
     (A : LeeYangApproximants)
     (H : HurwitzZeroTransferWitness Ξ A) :
     RiemannHypothesis Ξ := by
@@ -427,7 +411,10 @@ Hurwitz/Lee--Yang package.
 @[bridge_target_tag, rep_depth operator]
 theorem RH_from_Correct_Hurwitz_LeeYang
     (Ξ : CompletedXiZeroPredicate)
-    (C : CayleyCriticalWitness)
+    (C : (∀ s : ℂ, s ≠ 1 → cayleyInv (cayley s) = s) ∧
+      (∀ s : ℂ, s ≠ 1 → OnCriticalLine s → OnUnitCircle (cayley s)) ∧
+        (∀ s : ℂ, s ≠ 1 → OnUnitCircle (cayley s) → OnCriticalLine s) ∧
+          (∀ s : ℂ, s ≠ 0 → s ≠ 1 → cayley (1 - s) = (cayley s)⁻¹))
     (A : LeeYangApproximants)
     (H : CorrectHurwitzZeroTransferWitness Ξ A) :
     RiemannHypothesis Ξ := by

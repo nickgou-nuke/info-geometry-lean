@@ -104,11 +104,17 @@ theorem functionalEquation_maps_zero (Z : ZetaFunctionalEquation) {s : ℂ}
     _ = 0 := by rw [h, mul_zero]
 
 structure MobiusStrip where
-  strip : Set ℂ := {s | CriticalStrip s}
-  involution : ℂ → ℂ := zetaInvolution
-  h_involutive : ∀ s, involution (involution s) = s
-  h_preserves_strip : ∀ s, s ∈ strip → involution s ∈ strip
-  h_fixed_re : ∀ s, CriticalLine s ↔ (involution s).re = s.re
+  h_involutive : ∀ s, zetaInvolution (zetaInvolution s) = s
+  h_preserves_strip : ∀ s, CriticalStrip s → CriticalStrip (zetaInvolution s)
+  h_fixed_re : ∀ s, CriticalLine s ↔ (zetaInvolution s).re = s.re
+
+namespace MobiusStrip
+
+def strip (_ : MobiusStrip) : Set ℂ := {s | CriticalStrip s}
+
+def involution (_ : MobiusStrip) : ℂ → ℂ := zetaInvolution
+
+end MobiusStrip
 
 def spectralMobiusStrip : MobiusStrip where
   h_involutive := zetaInvolution_involutive
@@ -118,15 +124,23 @@ def spectralMobiusStrip : MobiusStrip where
 structure KleinBottleZeta (Z : ZetaFunctionalEquation) where
   mobius : MobiusStrip
   glued : MobiusStrip
-  throat : Set ℂ := {s | CriticalLine s}
-  h_throat : throat = {s | CriticalLine s}
-  h_zeros_on_throat : ∀ zero : ZetaZero Z, zero.ρ ∈ throat
+  h_zeros_on_throat : ∀ zero : ZetaZero Z, zero.ρ ∈ {s | CriticalLine s}
+
+namespace KleinBottleZeta
+
+def throat {Z : ZetaFunctionalEquation} (_ : KleinBottleZeta Z) : Set ℂ :=
+  {s | CriticalLine s}
+
+@[simp] theorem h_throat {Z : ZetaFunctionalEquation}
+    (K : KleinBottleZeta Z) :
+    K.throat = {s | CriticalLine s} := rfl
+
+end KleinBottleZeta
 
 def kleinBottleFromCriticalZeros (Z : ZetaFunctionalEquation) :
     KleinBottleZeta Z where
   mobius := spectralMobiusStrip
   glued := spectralMobiusStrip
-  h_throat := rfl
   h_zeros_on_throat := by
     intro zero
     exact zero.h_critical
@@ -136,8 +150,15 @@ axis: `Z(β)` is the real partition function matching the chosen zeta model. -/
 structure BostConnesThermo (Zeta : ZetaFunctionalEquation) where
   Z : ℝ → ℂ
   h_Z_eq : ∀ β, Z β = Zeta.zeta (β : ℂ)
-  freeEnergy : ℝ → ℂ := fun β => -Complex.log (Z β) / (β : ℂ)
   entropy : ℝ → ℝ
+
+namespace BostConnesThermo
+
+noncomputable def freeEnergy {Zeta : ZetaFunctionalEquation}
+    (B : BostConnesThermo Zeta) (β : ℝ) : ℂ :=
+  -Complex.log (B.Z β) / (β : ℂ)
+
+end BostConnesThermo
 
 theorem bostConnes_partition_eq (Zeta : ZetaFunctionalEquation)
     (B : BostConnesThermo Zeta) (β : ℝ) :

@@ -1,6 +1,5 @@
 import Mathlib.Tactic
 import Mathlib.NumberTheory.LSeries.RiemannZeta
-import InfoGeometry.Arithmetic.RiemannZetaEquivalences
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -69,15 +68,6 @@ theorem centered_xi_evenness_iff_functional_equation
     exact h
 
 /--
-**Main Theorem 3: Dirichlet Eta Quotient Relation**
-Proves natively that $(1 - 2^{1-s}) \cdot \zeta(s)$ matches the alternating series $\eta(s)$:
-$$\eta(s) = (1 - 2^{1-s}) \zeta(s).$$
--/
-theorem dirichlet_eta_zeta_factor_relation (s : ℂ) (hs : 1 < s.re) :
-    (1 - (2 : ℂ) ^ (1 - s)) * riemannZeta s = (1 - (2 : ℂ) ^ (1 - s)) * riemannZeta s :=
-  rfl
-
-/--
 **Main Theorem 4: Hestenes-Krein Spectral Reflection Symmetry**
 Proves that eigenvalue reflection $z \mapsto -z$ on the spectral axis corresponds to critical line reflection:
 $$\left(\frac{1}{2} + z\right) + \left(\frac{1}{2} - z\right) = 1.$$
@@ -85,19 +75,5 @@ $$\left(\frac{1}{2} + z\right) + \left(\frac{1}{2} - z\right) = 1.$$
 theorem spectral_reflection_sum_identity (z : ℂ) :
     ((1 / 2 : ℂ) + z) + ((1 / 2 : ℂ) - z) = 1 := by
   ring
-
-/--
-**Main Theorem 5: Grand Native Zeta Functional Symmetry Duality**
-Unifies critical line reflection, centered Xi evenness, Dirichlet Eta relations, and spectral reflection into a single kernel-checked theorem.
--/
-theorem grand_native_zeta_functional_symmetry_duality
-    (data : CompletedXiData) (z : ℂ) (t : ℝ) (s : ℂ) (hs : 1 < s.re) :
-    (1 - ((1 / 2 : ℂ) + I * (t : ℂ)) = star ((1 / 2 : ℂ) + I * (t : ℂ))) ∧
-    (data.xi z = data.xi (-z) ↔ data.lambda (1 / 2 + z) = data.lambda (1 / 2 - z)) ∧
-    (((1 / 2 : ℂ) + z) + ((1 / 2 : ℂ) - z) = 1) := ⟨
-  critical_line_reflection_eq_conj t,
-  centered_xi_evenness_iff_functional_equation data z,
-  spectral_reflection_sum_identity z
-⟩
 
 end InfoGeometry.Canonical.ZetaFunctionalSymmetryNativeBridge

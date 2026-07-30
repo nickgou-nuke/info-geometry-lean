@@ -92,17 +92,4 @@ theorem reduce_anticomm_up_down (i : Fin 3) :
     reduceZToF2 (intAntiCommZ (intUp i) (intDown i)) = f2One := by
   fin_cases i <;> decide
 
-/-- Consolidated finite coordinate bridge packet. -/
-theorem splitOctonion_peirce_g2_bridge_packet :
-    reduceZToF2 intOneZ = f2One ∧
-      reduceZToF2 intH = f2One ∧
-      reduceZToF2 intEPlus = f2EPlus ∧
-      reduceZToF2 intEMinus = f2EMinus ∧
-      (∀ i : Fin 3, reduceZToF2 (intUp i) = f2Up i) ∧
-      (∀ i : Fin 3, reduceZToF2 (intDown i) = f2Down i) ∧
-      (∀ i : Fin 3, reduceZToF2 (intCommZ (intUp i) (intDown i)) = f2One) ∧
-      (∀ i : Fin 3, reduceZToF2 (intAntiCommZ (intUp i) (intDown i)) = f2One) := by
-  exact ⟨reduce_oneZ, reduce_H, reduce_ePlus, reduce_eMinus, reduce_up, reduce_down,
-    reduce_comm_up_down, reduce_anticomm_up_down⟩
-
 end InfoGeometry.OperatorAlgebra.SplitOctonionPeirceG2Bridge

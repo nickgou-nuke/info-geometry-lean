@@ -1,10 +1,5 @@
 import Mathlib.Tactic
-import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-import InfoGeometry.Canonical.PrimeLeeYangRHBridge
-import InfoGeometry.Canonical.MetriplecticSpinorFreeEnergyBridge
-import InfoGeometry.Canonical.DiracBerryKeatingFredholmBridge
-import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
-import InfoGeometry.Canonical.LeeYangBostConnesPhaseTransitionBridge
+import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -36,12 +31,6 @@ noncomputable section
 namespace InfoGeometry.Canonical.PrimonFermionBosonVonMangoldtMasterBridge
 
 open Complex
-open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-open InfoGeometry.Canonical.PrimeLeeYangRHBridge
-open InfoGeometry.Canonical.MetriplecticSpinorFreeEnergyBridge
-open InfoGeometry.Canonical.DiracBerryKeatingFredholmBridge
-open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
-open InfoGeometry.Canonical.LeeYangBostConnesPhaseTransitionBridge
 
 /-- Single prime Bosonic partition factor $P_{\text{boson}}(X) = (1 - X)^{-1}$. -/
 noncomputable def BosonicPrimonFactor (X : ℂ) : ℂ :=
@@ -70,25 +59,5 @@ Proves natively that the von Mangoldt function $\Lambda(n) \ge 0$ for all $n \in
 theorem von_mangoldt_nonneg_law (n : ℕ) :
     0 ≤ ArithmeticFunction.vonMangoldt n :=
   ArithmeticFunction.vonMangoldt_nonneg
-
-/--
-**Main Theorem 3: Grand Primon-Fermion-Boson-von-Mangoldt Master Duality**
-Unifies Bosonic/Fermionic primon factors, Möbius convolution laws, Cayley conformal transform, topological winding quantization, and antiunitary fixed locus rigidity into a single 100% kernel-checked theorem in Lean 4.
--/
-theorem grand_primon_fermion_boson_von_mangoldt_master_duality
-    (X : ℂ)
-    (z0 : ℂ) (hz0 : OnLeeYangCircle z0) (hpole : z0.re ≠ -1)
-    (n : ℤ) (hn : n ≠ 0) (s_anti : ℂ) (h_anti : s_anti = 1 - star s_anti) :
-    (BosonicPrimonFactor X * (FermionicPrimonFactor X)⁻¹ = BosonicPrimonFactor (X ^ 2)) ∧
-    (OnCriticalLine (cayleyToTemperature z0)) ∧
-    (TopologicalWindingCharge n ≠ 0) ∧
-    (s_anti.re = 1 / 2) ∧
-    (s_anti = 1 - star s_anti) := ⟨
-  supersymmetric_primon_ratio_identity X,
-  cayleyToTemperature_mem_criticalLine_of_unitCircle z0 hz0 hpole,
-  quantized_time_step_ne_zero hn,
-  (critical_line_fixed_locus_iff s_anti).1 h_anti,
-  h_anti
-⟩
 
 end InfoGeometry.Canonical.PrimonFermionBosonVonMangoldtMasterBridge

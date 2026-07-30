@@ -64,8 +64,7 @@ theorem matrix_trace_invariant_under_transport
     (A : Matrix n n R)
     (U : InvertibleTransport (Matrix n n R)) :
     Matrix.trace (U.conjugate A) = Matrix.trace A := by
-  dsimp [InvertibleTransport.conjugate]
-  exact matrix_trace_conjugation_invariant A U.val U.inv U.val_inv U.inv_val
+  simpa [InvertibleTransport.conjugate] using Matrix.trace_units_conj U A
 
 /-! ## 2. Verified trace readout -/
 

@@ -24,7 +24,13 @@ def chronologicalProduct {d : ℕ} (Ms : List (Matrix (Fin d) (Fin d) ℚ)) :
 /-- A flip word records the generator list, dimension, and total points. -/
 structure FlipWord (n : ℕ) where
   matrices : List (Matrix (Fin (2 * n + 1)) (Fin (2 * n + 1)) ℚ)
-  dim : ℕ := 2 * n + 1
+
+namespace FlipWord
+
+/-- The word dimension is determined by the typed matrix carrier. -/
+def dim {n : ℕ} (_ : FlipWord n) : ℕ := 2 * n + 1
+
+end FlipWord
 
 /-- Evaluate a flip word to its matrix product. -/
 def eval (w : FlipWord n) : Matrix (Fin (2 * n + 1)) (Fin (2 * n + 1)) ℚ :=

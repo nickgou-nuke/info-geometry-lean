@@ -114,26 +114,6 @@ namespace WeylBKMDriftMassCarrier
 variable {State : Type*}
 variable (B : WeylBKMDriftMassCarrier State)
 
-@[rep_depth operator]
-theorem driftIntensity_apply (s : State) :
-    B.driftIntensity s = B.driftIntensity s := rfl
-
-@[rep_depth operator]
-theorem gaugeScale_apply (s : State) :
-    B.gaugeScale s = B.gaugeScale s := rfl
-
-@[rep_depth operator]
-theorem modularMassUnit_apply (s : State) :
-    B.modularMassUnit s = B.modularMassUnit s := rfl
-
-@[rep_depth operator]
-theorem weylParameter_apply (s : State) :
-    B.weylParameter s = B.weylParameter s := rfl
-
-@[rep_depth operator]
-theorem physicalMass_apply (s : State) :
-    B.physicalMass s = B.physicalMass s := rfl
-
 /--
 Projective invariance of Weyl-gauge-fixed BKM drift mass.
 
@@ -190,14 +170,6 @@ namespace BKMDriftMetricMassFusion
 
 variable {State : Type*}
 variable (F : BKMDriftMetricMassFusion State)
-
-@[rep_depth operator]
-theorem metric_apply :
-    F.metric = F.metric := rfl
-
-@[rep_depth operator]
-theorem mass_apply :
-    F.mass = F.mass := rfl
 
 /-- Inherited drift intensity calibration. -/
 @[rep_depth operator]

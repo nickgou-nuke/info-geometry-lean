@@ -57,21 +57,10 @@ variable
 variable (V : VirasoroAlgebraDatum L)
 
 /-- The central charge is central. -/
-theorem central_commutes
-    (X : L) :
-    ⁅V.centralCharge, X⁆ = 0 :=
-  V.central_commutes_hyp X
+alias central_commutes := VirasoroAlgebraDatum.central_commutes_hyp
 
 /-- Read back the supplied Virasoro bracket formula. -/
-theorem bracket_genL
-    (m n : ℤ) :
-    ⁅V.genL m, V.genL n⁆ =
-      (((m - n : ℤ) : ℝ) • V.genL (m + n)) +
-        (if m + n = 0 then
-          ((((m ^ 3 - m : ℤ) : ℝ) / 12) • V.centralCharge)
-        else
-          0) :=
-  V.virasoro_bracket m n
+alias bracket_genL := VirasoroAlgebraDatum.virasoro_bracket
 
 end VirasoroAlgebraDatum
 
@@ -138,12 +127,7 @@ variable
 variable (S : SuperVirasoroAlgebraDatum L)
 
 /-- Read back the supplied odd/odd supercharge bracket formula. -/
-theorem bracket_genG
-    (r s : ℚ) :
-    ⁅S.genG r, S.genG s⁆ =
-      (2 : ℝ) • S.bosonic.genL (S.superModeSum r s) +
-        S.superCentralCoefficient r s • S.bosonic.centralCharge :=
-  S.super_bracket r s
+alias bracket_genG := SuperVirasoroAlgebraDatum.super_bracket
 
 end SuperVirasoroAlgebraDatum
 
@@ -189,11 +173,8 @@ variable
     (B : VirasoroCentralChargeBridge L State Defect)
 
 /-- The macroscopic defect equals the central charge readout. -/
-theorem defect_eq_central_charge_readout
-    (s : State) :
-    B.macroscopicDefect s =
-      B.centralChargeReadout B.virasoro.centralCharge s :=
-  B.defect_is_central_charge s
+alias defect_eq_central_charge_readout :=
+  VirasoroCentralChargeBridge.defect_is_central_charge
 
 end VirasoroCentralChargeBridge
 

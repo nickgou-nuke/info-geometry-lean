@@ -41,25 +41,33 @@ not a lint engine; it is the canonical textual mandate for the repo.
 -/
 structure HonestyPolicy where
   /-- Explicit `sorry` is acceptable only as visible debt. -/
-  explicitSorryVisible : Bool := true
+  explicitSorryVisible : Bool
   /-- Fake witnesses and empty closure shells are forbidden. -/
-  fakeWitnessesForbidden : Bool := true
+  fakeWitnessesForbidden : Bool
   /-- Banner text must not claim certified readback when `sorry` remains. -/
-  bannerClaimsMustMatchBody : Bool := true
+  bannerClaimsMustMatchBody : Bool
   /-- Explicit zero-datum objects are allowed when they are declared as such. -/
-  explicitZeroDatumAllowed : Bool := true
+  explicitZeroDatumAllowed : Bool
   /-- Zero-datum surfaces must be named and documented as debt, not proof. -/
-  explicitZeroDatumMustBeNamed : Bool := true
+  explicitZeroDatumMustBeNamed : Bool
   /-- Socket-level debt must be machine-visible. -/
-  socketDebtMustBeTagged : Bool := true
+  socketDebtMustBeTagged : Bool
   /-- Owner-target debt must be machine-visible. -/
-  ownerDebtMustBeMachineVisible : Bool := true
+  ownerDebtMustBeMachineVisible : Bool
   /-- Textual mandate for future maintainers. -/
-  mandateText : String :=
-    "If a Mathlib-rooted derivation chain is missing, expose the gap explicitly as sorry or an explicit zero-datum. Do not hide debt behind fake witnesses, empty shells, or misleading certification banners."
+  mandateText : String
 
 /-- The repository-default honesty policy. -/
-def defaultHonestyPolicy : HonestyPolicy := {}
+def defaultHonestyPolicy : HonestyPolicy :=
+  { explicitSorryVisible := true
+    fakeWitnessesForbidden := true
+    bannerClaimsMustMatchBody := true
+    explicitZeroDatumAllowed := true
+    explicitZeroDatumMustBeNamed := true
+    socketDebtMustBeTagged := true
+    ownerDebtMustBeMachineVisible := true
+    mandateText :=
+      "If a Mathlib-rooted derivation chain is missing, expose the gap explicitly as sorry or an explicit zero-datum. Do not hide debt behind fake witnesses, empty shells, or misleading certification banners." }
 
 /--
 Human-readable summary of the repository honesty policy.
@@ -70,4 +78,3 @@ def honestyPolicySummary : String :=
   defaultHonestyPolicy.mandateText
 
 end InfoGeometry.Meta
-

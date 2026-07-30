@@ -407,7 +407,7 @@ theorem hurwitzRoot_expectation_moebius_invariant
     (g : MoebiusParameter) (i : Fin 24) :
     B.moebius.wilson.volume.atomExpectation ((B.moebius.wordAction g) i) =
       B.moebius.wilson.volume.atomExpectation i :=
-  B.moebius.atomExpectation_moebius_invariant g i
+  B.moebius.atomExpectation_wordAction_invariant g i
 
 /-- Positive affine null-root socket readback to `uPlus`. -/
 @[rep_depth operator]

@@ -120,8 +120,6 @@ namespace ModularHamiltonianData
   @[rep_depth operator]
   def modularHamiltonian (M : ModularHamiltonianData Op) : Op := M.negativeLogDensity
 
-  @[rep_depth operator]
-  theorem modularHamiltonian_eq_negativeLogDensity_theorem (M : ModularHamiltonianData Op) : M.modularHamiltonian = M.negativeLogDensity := rfl
 end ModularHamiltonianData
 
 def instModularHamiltonianData : ModularHamiltonianData Unit :=
@@ -463,8 +461,6 @@ namespace SouriauNegativeLogRNDerivative
   theorem souriauEntropy_eq_Phi_add_pairing_Q_beta (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : D.entropy = D.souriau.partitionPotential + D.souriau.pairing D.Q D.souriau.beta := by
     simpa [entropy, modularPotential] using D.entropy_eq_Phi_add_pairing_Q_beta
 
-  @[rep_depth thermo]
-  theorem entropy_is_expectation_of_modularPotential (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) : D.entropy = D.expectationBeta D.modularPotential := D.entropy_eq_expectation_modularPotential
 end SouriauNegativeLogRNDerivative
 
 def instSouriauNegativeLogRNDerivative : SouriauNegativeLogRNDerivative Unit Unit Unit where
@@ -545,32 +541,15 @@ def instMomentMapGeneratingPotential :
   (instSouriauLieThermoData, (), fun _ _ => 0)
 
 @[rep_depth thermo]
-abbrev SouriauKLBregmanWitness
-    (State LieAlgebra LieDual : Type*) :=
-  MomentMapGeneratingPotential State LieAlgebra LieDual ×
-    LieAlgebra × ℝ × LieAlgebra
-
-abbrev KLAsBregmanDivergence := SouriauKLBregmanWitness
+structure SouriauKLBregmanWitness
+    (State LieAlgebra LieDual : Type*) where
+  generator : MomentMapGeneratingPotential State LieAlgebra LieDual
+  alpha : LieAlgebra
+  alphaPartitionPotential : ℝ
+  alphaMinusBeta : LieAlgebra
 
 namespace SouriauKLBregmanWitness
   variable {State LieAlgebra LieDual : Type*}
-
-  def generator
-      (B : SouriauKLBregmanWitness State LieAlgebra LieDual) :
-      MomentMapGeneratingPotential State LieAlgebra LieDual :=
-    B.1
-
-  def alpha
-      (B : SouriauKLBregmanWitness State LieAlgebra LieDual) : LieAlgebra :=
-    B.2.1
-
-  def alphaPartitionPotential
-      (B : SouriauKLBregmanWitness State LieAlgebra LieDual) : ℝ :=
-    B.2.2.1
-
-  def alphaMinusBeta
-      (B : SouriauKLBregmanWitness State LieAlgebra LieDual) : LieAlgebra :=
-    B.2.2.2
 
   @[rep_depth thermo]
   noncomputable def klValue (B : SouriauKLBregmanWitness State LieAlgebra LieDual) : ℝ := B.alphaPartitionPotential - B.generator.souriau.partitionPotential - B.generator.dPhi B.alphaMinusBeta
@@ -582,13 +561,12 @@ namespace SouriauKLBregmanWitness
   theorem relativeEntropy_eq_expectation_difference (B : SouriauKLBregmanWitness State LieAlgebra LieDual) : B.klValue = B.alphaPartitionPotential - B.generator.souriau.partitionPotential - B.generator.dPhi B.alphaMinusBeta := B.KL_eq_souriau_Bregman
 end SouriauKLBregmanWitness
 
-theorem supportHypothesesClaim {State LieAlgebra LieDual : Type*} (B : SouriauKLBregmanWitness State LieAlgebra LieDual) :
-  B.klValue = B.alphaPartitionPotential - B.generator.souriau.partitionPotential - B.generator.dPhi B.alphaMinusBeta :=
-  B.KL_eq_souriau_Bregman
-
 def instSouriauKLBregmanWitness :
     SouriauKLBregmanWitness Unit Unit Unit :=
-  (instMomentMapGeneratingPotential, (), 0, ())
+  { generator := instMomentMapGeneratingPotential
+    alpha := ()
+    alphaPartitionPotential := 0
+    alphaMinusBeta := () }
 
 @[rep_depth operator]
 abbrev QuantumOperatorialSouriauFamily (LieAlgebra Obs : Type*) :=
@@ -769,9 +747,6 @@ namespace RenyiMellinSouriauReadout
     rw [Real.log_rpow R.souriauPartitionAtBeta_pos]
 
   @[rep_depth thermo]
-  theorem renyiEntropy_eq_logGenerator_div_one_sub_gamma_compat (R : RenyiMellinSouriauReadout State) : R.renyiEntropy = R.renyiLogGenerator / (1 - R.gamma) := rfl
-
-  @[rep_depth thermo]
   theorem renyiPartition_pos (R : RenyiMellinSouriauReadout State) : 0 < R.renyiPartition := by
     rw [R.renyiMellin_eq_temperature_rescaling]
     refine div_pos R.souriauPartitionAtGammaBeta_pos ?_
@@ -825,10 +800,6 @@ structure SouriauMetriplecticOnsager (State Observable : Type*) where
   freeEnergyDerivative : Density State → ℝ
   freeEnergyDerivative_nonpos : ∀ ρ, freeEnergyDerivative ρ ≤ 0
   hamiltonianPartPreservesFreeEnergy : ∀ ρ, relativeFreeEnergy (reversibleFlow ρ) = relativeFreeEnergy ρ
-  dissipativePartDissipatesFreeEnergy : ∀ ρ, freeEnergyDerivative ρ ≤ 0
-
-theorem onsagerPositiveSemidefiniteClaim {State Observable : Type*} (O : SouriauMetriplecticOnsager State Observable) (ρ : Density State) :
-  O.freeEnergyDerivative ρ ≤ 0 := O.freeEnergyDerivative_nonpos ρ
 
 namespace SouriauMetriplecticOnsager
   variable {State Observable : Type*}
@@ -838,14 +809,12 @@ namespace SouriauMetriplecticOnsager
   @[rep_depth thermo]
   def dissipativeFlow (O : SouriauMetriplecticOnsager State Observable) : Density State → Density State := fun ρ => -O.onsagerOperator (O.force ρ)
 
-  @[rep_depth thermo]
-  theorem force_eq_variation_of_relativeFreeEnergy (O : SouriauMetriplecticOnsager State Observable) (ρ : Density State) : O.force ρ = O.variationOfRelativeFreeEnergy ρ := rfl
+  /-- The dissipative free-energy law is the owner's derivative inequality. -/
+  theorem dissipativePartDissipatesFreeEnergy
+      (O : SouriauMetriplecticOnsager State Observable) (ρ : Density State) :
+      O.freeEnergyDerivative ρ ≤ 0 :=
+    O.freeEnergyDerivative_nonpos ρ
 
-  @[rep_depth thermo]
-  theorem dissipativeFlow_eq_onsager_force (O : SouriauMetriplecticOnsager State Observable) (ρ : Density State) : O.dissipativeFlow ρ = -O.onsagerOperator (O.force ρ) := rfl
-
-  @[rep_depth thermo]
-  theorem freeEnergyDerivative_nonpos_theorem (O : SouriauMetriplecticOnsager State Observable) (ρ : Density State) : O.freeEnergyDerivative ρ ≤ 0 := O.freeEnergyDerivative_nonpos ρ
 end SouriauMetriplecticOnsager
 
 def instSouriauMetriplecticOnsager : SouriauMetriplecticOnsager Unit Unit where
@@ -856,7 +825,6 @@ def instSouriauMetriplecticOnsager : SouriauMetriplecticOnsager Unit Unit where
   freeEnergyDerivative _ := 0
   freeEnergyDerivative_nonpos _ := le_rfl
   hamiltonianPartPreservesFreeEnergy _ := rfl
-  dissipativePartDissipatesFreeEnergy _ := le_rfl
 
 @[rep_depth thermo]
 structure OptimalTransportWitness (State : Type*) where

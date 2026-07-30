@@ -16,13 +16,14 @@ def kksForm (mu : L →ₗ[R] R) (X Y : L) : R :=
 structure CoadjointIsotropyData where
   mu : L →ₗ[R] R
   isotropySubmodule : Submodule R L
-  h_coad_null : ∀ X : L, X ∈ isotropySubmodule → ∀ Y : L, kksForm mu X Y = 0
 
 /-- 🏆 THEOREM 1: Skew-Symmetry of Isotropy Action Nullity -/
 theorem isotropy_coad_null_skew (data : CoadjointIsotropyData (R := R) (L := L))
-    (X Y : L) (hX : X ∈ data.isotropySubmodule) :
+    (X Y : L) (hX : X ∈ data.isotropySubmodule)
+    (h_coad_null : ∀ Z : L, Z ∈ data.isotropySubmodule →
+      ∀ W : L, kksForm data.mu Z W = 0) :
     kksForm data.mu Y X = 0 := by
-  have h := data.h_coad_null X hX Y
+  have h := h_coad_null X hX Y
   have hskew : ⁅Y, X⁆ = -⁅X, Y⁆ := by
     have h' := congrArg Neg.neg (lie_skew X Y)
     simpa using h'
@@ -39,11 +40,13 @@ def reducedKKSForm (data : CoadjointIsotropyData (R := R) (L := L)) (X Y : L) : 
 /-- 🏆 THEOREM 2: Well-Definedness of Reduced Form under Gauge Transformations (Addition of Isotropy Elements) -/
 theorem reducedKKSForm_well_defined
     (data : CoadjointIsotropyData (R := R) (L := L)) (X Y Z : L)
-    (hZ : Z ∈ data.isotropySubmodule) :
+    (hZ : Z ∈ data.isotropySubmodule)
+    (h_coad_null : ∀ W : L, W ∈ data.isotropySubmodule →
+      ∀ V : L, kksForm data.mu W V = 0) :
     reducedKKSForm data (X + Z) Y = reducedKKSForm data X Y := by
   change data.mu ⁅X + Z, Y⁆ = data.mu ⁅X, Y⁆
   rw [LieRing.add_lie, map_add]
-  have h := data.h_coad_null Z hZ Y
+  have h := h_coad_null Z hZ Y
   have h' : data.mu ⁅Z, Y⁆ = 0 := by
     simpa [kksForm] using h
   rw [h', add_zero]

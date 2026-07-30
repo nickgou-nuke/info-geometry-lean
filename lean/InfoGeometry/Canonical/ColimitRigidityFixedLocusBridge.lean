@@ -91,18 +91,4 @@ theorem truncated_euler_product_pos (S : Finset ℕ) (σ : ℝ) (hσ : 1 < σ)
   have h_sub : 0 < 1 - (p : ℝ) ^ (-σ) := sub_pos.mpr h_inv
   exact inv_pos.mpr h_sub
 
-/--
-**Main Theorem 5: Grand Colimit Rigidity Master Duality**
-Unifies fixed locus uniqueness $\operatorname{Re}(s) = 1/2$, antiunitary reflection identity, stage injectivity survival, and truncated Euler product positivity into a single kernel-checked theorem.
--/
-theorem grand_colimit_rigidity_master_duality
-    (s : ℂ) (t : ℝ) (S : Finset ℕ) (σ : ℝ) (hσ : 1 < σ) (h_prime : ∀ p ∈ S, Nat.Prime p) :
-    (s = 1 - star s ↔ s.re = 1 / 2) ∧
-    (1 - ((1 / 2 : ℂ) + I * (t : ℂ)) = star ((1 / 2 : ℂ) + I * (t : ℂ))) ∧
-    (0 < ∏ p ∈ S, (1 - (p : ℝ) ^ (-σ))⁻¹) := ⟨
-  critical_line_fixed_locus_iff s,
-  critical_line_antiunitary_identity t,
-  truncated_euler_product_pos S σ hσ h_prime
-⟩
-
 end InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge

@@ -81,11 +81,6 @@ structure DrazinInfiniteWeylCompatibility (T : EndH) where
     assumptions.classical_riesz.D.comp (spectral_epsilon (E := E))
       = (spectral_epsilon (E := E)).comp assumptions.classical_riesz.D
 
-/-! Compatibility name for the existing operator owner; no duplicate witness
-structure is introduced. -/
-abbrev DrazinInfiniteWeylWitness (T : EndH) :=
-  DrazinInfiniteWeylCompatibility (E := E) T
-
 /--
 Proof-carrying infinite Drazin compatibility replacing direct classical-candidate
 commutation by local Weyl symmetry of the classical Riesz lane.
@@ -736,7 +731,7 @@ theorem exists_isDrazinInverse_isWeylCompatible_of_drazinInfiniteWeylCompatibili
 /-- Legacy witness-compatible bridge constructor. -/
 def constructiveRieszWeylData_of_drazinInfiniteWeylWitness
     {T : EndH}
-    (W : DrazinInfiniteWeylWitness (E := E) T) :
+    (W : DrazinInfiniteWeylCompatibility (E := E) T) :
     ConstructiveRieszWeylData (E := E) T :=
   constructiveRieszWeylData_of_drazinInfiniteWeylCompatibility
     (E := E)
@@ -746,7 +741,7 @@ def constructiveRieszWeylData_of_drazinInfiniteWeylWitness
 /-- Legacy witness wrapper for the same existence theorem. -/
 theorem exists_isDrazinInverse_isWeylCompatible_of_drazinInfiniteWeylWitness
     {T : EndH}
-    (W : DrazinInfiniteWeylWitness (E := E) T) :
+    (W : DrazinInfiniteWeylCompatibility (E := E) T) :
     ∃ k TD,
       Drazin.IsDrazinInverse T TD k ∧ IsWeylCompatible (E := E) TD := by
   exact

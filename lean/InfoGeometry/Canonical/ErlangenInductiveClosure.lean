@@ -1,6 +1,9 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.SocketTarget
+import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
+
+noncomputable section
 
 namespace InfoGeometry.Canonical.ErlangenInductiveClosure
 
@@ -89,17 +92,151 @@ theorem invariant_transport_central_stable
     _ = f.map x * f.map c := by simp
 
 -- 4. Langlands-Style Operator View (The Limit Hook)
-/-- 
-A placeholder for the colimit extraction. The topological completion 
-(A_infty) inherits the invariant packet purely from the chain's stability.
+/--
+The colimit extraction is implemented by the algebraic direct limit of the
+actual bonding homomorphisms. Its invariant predicates are finite-stage image
+predicates, so closure is proved by moving finitely many representatives to a
+common stage.
 -/
 @[socket_debt_tag]
 structure ColimitInheritsInvariants 
     (Chain : ℕ → Type*) [∀ n, Ring (Chain n)]
     (Invariants : ∀ n, SupergradedClosureAt (Chain n))
     (Bonding : ∀ n, BondingIntertwiner (Invariants n) (Invariants (n+1))) where
-  ColimitStage : Type*
-  colimitRing : Ring ColimitStage
-  LimitInvariants : @SupergradedClosureAt ColimitStage colimitRing
+  LimitInvariants :
+    @SupergradedClosureAt
+      (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.DirectLimitSuperClosure
+        (fun n => (Bonding n).map))
+      inferInstance
+
+namespace ColimitInheritsInvariants
+
+abbrev ColimitStage
+    (Chain : ℕ → Type*) [∀ n, Ring (Chain n)]
+    (Invariants : ∀ n, SupergradedClosureAt (Chain n))
+    (Bonding : ∀ n, BondingIntertwiner (Invariants n) (Invariants (n+1))) :=
+  InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.DirectLimitSuperClosure
+    (fun n => (Bonding n).map)
+
+abbrev colimitRing
+    (Chain : ℕ → Type*) [∀ n, Ring (Chain n)]
+    (Invariants : ∀ n, SupergradedClosureAt (Chain n))
+    (Bonding : ∀ n, BondingIntertwiner (Invariants n) (Invariants (n+1))) :
+    Ring (ColimitStage Chain Invariants Bonding) := inferInstance
+
+def stageImage
+    (Chain : ℕ → Type*) [∀ n, Ring (Chain n)]
+    (Invariants : ∀ n, SupergradedClosureAt (Chain n))
+    (Bonding : ∀ n, BondingIntertwiner (Invariants n) (Invariants (n+1)))
+    (n : ℕ) : Chain n →+* ColimitStage Chain Invariants Bonding :=
+  InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf
+    (fun n => (Bonding n).map) n
+
+def isOdd
+    (Chain : ℕ → Type*) [∀ n, Ring (Chain n)]
+    (Invariants : ∀ n, SupergradedClosureAt (Chain n))
+    (Bonding : ∀ n, BondingIntertwiner (Invariants n) (Invariants (n+1)))
+    (x : ColimitStage Chain Invariants Bonding) : Prop :=
+  ∃ n a, stageImage Chain Invariants Bonding n a = x ∧ (Invariants n).is_odd a
+
+def isEven
+    (Chain : ℕ → Type*) [∀ n, Ring (Chain n)]
+    (Invariants : ∀ n, SupergradedClosureAt (Chain n))
+    (Bonding : ∀ n, BondingIntertwiner (Invariants n) (Invariants (n+1)))
+    (x : ColimitStage Chain Invariants Bonding) : Prop :=
+  ∃ n a, stageImage Chain Invariants Bonding n a = x ∧ (Invariants n).is_even a
+
+def isCentral
+    (Chain : ℕ → Type*) [∀ n, Ring (Chain n)]
+    (Invariants : ∀ n, SupergradedClosureAt (Chain n))
+    (Bonding : ∀ n, BondingIntertwiner (Invariants n) (Invariants (n+1)))
+    (x : ColimitStage Chain Invariants Bonding) : Prop :=
+  ∃ n a, stageImage Chain Invariants Bonding n a = x ∧ (Invariants n).is_central a
+
+theorem stageImage_preserves
+    (Chain : ℕ → Type*) [∀ n, Ring (Chain n)]
+    (Invariants : ∀ n, SupergradedClosureAt (Chain n))
+    (Bonding : ∀ n, BondingIntertwiner (Invariants n) (Invariants (n+1)))
+    (which : ∀ n, Chain n → Prop)
+    (preserves : ∀ n x, which n x → which (n + 1) ((Bonding n).map x))
+    {n m : ℕ} (h : n ≤ m) {a : Chain n} (ha : which n a) :
+    which m
+      (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap
+        (fun n => (Bonding n).map) n m h a) := by
+  induction h with
+  | refl => simpa using ha
+  | @step m h ih =>
+      rw [InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap_succ
+        (fun n => (Bonding n).map) n m h]
+      exact preserves m _ ih
+
+def fromStages
+    (Chain : ℕ → Type*) [∀ n, Ring (Chain n)]
+    (Invariants : ∀ n, SupergradedClosureAt (Chain n))
+    (Bonding : ∀ n, BondingIntertwiner (Invariants n) (Invariants (n+1))) :
+    ColimitInheritsInvariants Chain Invariants Bonding := by
+  let bond := fun n => (Bonding n).map
+  let image := stageImage Chain Invariants Bonding
+  let odd := isOdd Chain Invariants Bonding
+  let even := isEven Chain Invariants Bonding
+  let central := isCentral Chain Invariants Bonding
+  have odd_preserves : ∀ n x, (Invariants n).is_odd x →
+      (Invariants (n + 1)).is_odd ((Bonding n).map x) :=
+    fun n x hx => (Bonding n).preserves_odd x hx
+  have even_preserves : ∀ n x, (Invariants n).is_even x →
+      (Invariants (n + 1)).is_even ((Bonding n).map x) :=
+    fun n x hx => (Bonding n).preserves_even x hx
+  have central_preserves : ∀ n x, (Invariants n).is_central x →
+      (Invariants (n + 1)).is_central ((Bonding n).map x) :=
+    fun n x hx => (Bonding n).preserves_central x hx
+  refine { LimitInvariants := ?_ }
+  refine { is_odd := odd, is_even := even, is_central := central, odd_nilpotency := ?_, odd_odd_closure := ?_, central_lane := ?_, projector_identity := ?_ }
+  · intro x hx
+    obtain ⟨n, a, rfl, ha⟩ := hx
+    simpa only [map_mul, map_zero] using congrArg (image n) ((Invariants n).odd_nilpotency a ha)
+  · intro x y hx hy
+    obtain ⟨n, a, rfl, ha⟩ := hx
+    obtain ⟨m, b, rfl, hb⟩ := hy
+    let k := max n m
+    let hnk : n ≤ k := le_max_left _ _
+    let hmk : m ≤ k := le_max_right _ _
+    let a' := InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap bond n k hnk a
+    let b' := InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap bond m k hmk b
+    refine ⟨k, a' * b' + b' * a', ?_, ?_⟩
+    · change InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond k
+          (a' * b' + b' * a') =
+        InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond n a *
+            InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond m b +
+          InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond m b *
+            InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond n a
+      rw [← InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf_bondMap bond n k hnk a]
+      rw [← InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf_bondMap bond m k hmk b]
+      simpa only [map_add, map_mul, a', b']
+    · exact (Invariants k).odd_odd_closure a' b'
+        (stageImage_preserves Chain Invariants Bonding _ odd_preserves hnk ha)
+        (stageImage_preserves Chain Invariants Bonding _ odd_preserves hmk hb)
+  · intro c x hc
+    obtain ⟨n, a, rfl, ha⟩ := hc
+    refine Quotient.inductionOn x ?_
+    intro xb
+    rcases xb with ⟨m, b⟩
+    let k := max n m
+    let hnk : n ≤ k := le_max_left _ _
+    let hmk : m ≤ k := le_max_right _ _
+    let a' := InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap bond n k hnk a
+    let b' := InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.bondMap bond m k hmk b
+    change InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond n a *
+        InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond m b =
+      InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond m b *
+        InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf bond n a
+    rw [← InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf_bondMap bond n k hnk a]
+    rw [← InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf_bondMap bond m k hmk b]
+    simpa only [map_mul] using congrArg (stageImage Chain Invariants Bonding k)
+      ((Invariants k).central_lane a' b'
+        (stageImage_preserves Chain Invariants Bonding _ central_preserves hnk ha))
+  · obtain ⟨p, hp, hpp⟩ := (Invariants 0).projector_identity
+    exact ⟨image 0 p, ⟨0, p, rfl, hp⟩, by simpa using congrArg (image 0) hpp⟩
+
+end ColimitInheritsInvariants
 
 end InfoGeometry.Canonical.ErlangenInductiveClosure

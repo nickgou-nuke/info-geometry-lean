@@ -370,9 +370,21 @@ structure AffineWeylThermoEnsemble (A : Type*) [Semiring A] [Algebra ℂ A] wher
   rapidity : ℝ
   acceleration : ℝ
   energy : A
-  bracket : Z2Parity → Z2Parity → A → A → A := affineSuperBracket beta
   q_is_exp_rapidity : beta = qRapidity rapidity
-  unruh_scale : ℝ := unruhTemperature acceleration
+
+namespace AffineWeylThermoEnsemble
+
+/-- The affine superbracket derived from the ensemble's thermodynamic parameter. -/
+@[simp] def bracket {A : Type*} [Semiring A] [Algebra ℂ A]
+    (E : AffineWeylThermoEnsemble A) : Z2Parity → Z2Parity → A → A → A :=
+  affineSuperBracket E.beta
+
+/-- The Unruh scale derived from the ensemble's supplied acceleration. -/
+def unruh_scale {A : Type*} [Semiring A] [Algebra ℂ A]
+    (E : AffineWeylThermoEnsemble A) : ℝ :=
+  unruhTemperature E.acceleration
+
+end AffineWeylThermoEnsemble
 
 /-- The canonical affine ensemble attached to a finite Cuntz--BdG stage. -/
 def cuntzBdGAffineEnsemble (n : ℕ) (ρ : ℝ) (gauge : ℂ) (acceleration : ℝ) :
@@ -382,7 +394,6 @@ def cuntzBdGAffineEnsemble (n : ℕ) (ρ : ℝ) (gauge : ℂ) (acceleration : �
   rapidity := ρ
   acceleration := acceleration
   energy := 1
-  bracket := affineSuperBracket (qRapidity ρ)
   q_is_exp_rapidity := rfl
 
 /-- At zero affine parameter the canonical ensemble bracket is the Lie bracket. -/
@@ -413,7 +424,6 @@ def complexStarCuntzBdGAffineEnsemble (n : ℕ) (ρ : ℝ) (gauge : ℂ) (accele
   rapidity := ρ
   acceleration := acceleration
   energy := 1
-  bracket := affineSuperBracket (qRapidity ρ)
   q_is_exp_rapidity := rfl
 
 /-- The genuine complex-star ensemble has conjugate-semilinear source star. -/
@@ -641,6 +651,44 @@ def CAR {A : Type*} [Semiring A] [Algebra ℂ A] (b bdag : A) : Prop :=
 /-- CCR relation as an even--even superbracket/commutator. -/
 def CCR {A : Type*} [Semiring A] [Algebra ℂ A] (a adag : A) : Prop :=
   superBracket Z2Parity.even Z2Parity.even a adag = 1
+
+/-- Right chiral Cuntz supercharge in the two-channel quotient. -/
+def cuntzSuperchargeR : CuntzAlg ℂ (Fin 2) :=
+  S (R := ℂ) 0 * T (R := ℂ) 1
+
+/-- Left chiral Cuntz supercharge in the two-channel quotient. -/
+def cuntzSuperchargeL : CuntzAlg ℂ (Fin 2) :=
+  S (R := ℂ) 1 * T (R := ℂ) 0
+
+@[simp]
+theorem cuntzSuperchargeR_sq : cuntzSuperchargeR * cuntzSuperchargeR = 0 := by
+  change (S (R := ℂ) 0 * T (R := ℂ) 1) *
+      (S (R := ℂ) 0 * T (R := ℂ) 1) = 0
+  rw [mul_assoc, ← mul_assoc (T (R := ℂ) 1) (S (R := ℂ) 0)
+    (T (R := ℂ) 1), T_mul_S]
+  simp
+
+@[simp]
+theorem cuntzSuperchargeL_sq : cuntzSuperchargeL * cuntzSuperchargeL = 0 := by
+  change (S (R := ℂ) 1 * T (R := ℂ) 0) *
+      (S (R := ℂ) 1 * T (R := ℂ) 0) = 0
+  rw [mul_assoc, ← mul_assoc (T (R := ℂ) 0) (S (R := ℂ) 1)
+    (T (R := ℂ) 0), T_mul_S]
+  simp
+
+/-- The two chiral Cuntz supercharges obey the CAR anticommutator law. -/
+theorem cuntzSuperchargeR_L_anticommutator :
+    cuntzSuperchargeR * cuntzSuperchargeL +
+        cuntzSuperchargeL * cuntzSuperchargeR = 1 := by
+  change (S (R := ℂ) 0 * T (R := ℂ) 1) *
+      (S (R := ℂ) 1 * T (R := ℂ) 0) +
+      (S (R := ℂ) 1 * T (R := ℂ) 0) *
+        (S (R := ℂ) 0 * T (R := ℂ) 1) = 1
+  rw [mul_assoc, ← mul_assoc (T (R := ℂ) 1) (S (R := ℂ) 1)
+    (T (R := ℂ) 0), T_mul_S]
+  rw [mul_assoc, ← mul_assoc (T (R := ℂ) 0) (S (R := ℂ) 0)
+      (T (R := ℂ) 1), T_mul_S]
+  simpa using (partition_one (R := ℂ) (ι := Fin 2))
 
 @[simp] theorem CAR_iff {A : Type*} [Semiring A] [Algebra ℂ A] (b bdag : A) :
     CAR b bdag ↔ b * bdag + bdag * b = 1 := by

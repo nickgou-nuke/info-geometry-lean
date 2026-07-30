@@ -22,12 +22,7 @@ premises.
 * `thermal_cayley_absolute_zero_limit`: the repository-owned real thermal
   Cayley coordinate tends to the boundary point `1`.
 
-#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-
-* `absolute_zero_attractor_limits_from`: the zeta/partition limit is usable once
-  supplied as a named analytic premise.
-
-#### BUCKET 3: OPEN CLOSURE DEBT
+#### OPEN CLOSURE DEBT
 
 * Prove the real zeta limit `ζ(β) -> 1` from the Dirichlet-series estimate.
 * Prove the strict sign of the zeta logarithmic derivative in the desired
@@ -137,7 +132,7 @@ theorem golden_ratio_order_parameter :
     exact Real.sq_sqrt (by norm_num)
   nlinarith
 
-/-! ## 4. Explicitly conditional analytic limit hooks -/
+/-! ## 4. Genuine Cayley limit owner; zeta limits remain open -/
 
 /--
 The real thermal-ray Cayley coordinate reaches the boundary point `1` at
@@ -146,15 +141,5 @@ absolute zero.  This delegates to the existing Cayley owner.
 theorem thermal_cayley_absolute_zero_limit :
     Filter.Tendsto Cayley.thermalCayley Filter.atTop (𝓝 (1 : ℝ)) :=
   Cayley.thermalCayley_tendsto_atTop_one
-
-/--
-Conditional zeta/partition limit hook.  The analytic proof of this premise is
-the remaining Dirichlet-series estimate, not a fact proved in this file.
--/
-theorem absolute_zero_attractor_limits_from
-    (partition : ℝ → ℝ)
-    (hlimit : Filter.Tendsto partition Filter.atTop (𝓝 (1 : ℝ))) :
-    Filter.Tendsto partition Filter.atTop (𝓝 (1 : ℝ)) :=
-  hlimit
 
 end InfoGeometry.Dynamics.SouriauBostConnesFlow

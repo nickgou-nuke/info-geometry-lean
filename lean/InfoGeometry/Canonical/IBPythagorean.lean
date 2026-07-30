@@ -224,48 +224,6 @@ structure IBMarginalDescentWitness
       ≤
     IBGlobalFreeEnergy pX q_old β D encoder hKL_old
 
-/-- Specialized exact Pythagorean witness for the BA-updated encoder/marginal pair. -/
-abbrev IBNextMarginalPythagoreanWitness
-    (pX : ProbabilityMeasure X)
-    (q_n : ProbabilityMeasure T)
-    (β : ℝ) (D : X → T → ℝ)
-    (hInt : ∀ x, Integrable (fun t => Real.exp (-β * D x t)) (q_n : Measure T))
-    (h_meas : Measurable (fun x => (IBNextEncoder q_n β D hInt x : Measure T)))
-    (hKL_current : FiniteKLFamily (q_n : Measure T) (IBNextEncoder q_n β D hInt))
-    (hKL_next :
-      FiniteKLFamily
-        ((IBNextMarginal pX q_n β D hInt h_meas : ProbabilityMeasure T) : Measure T)
-        (IBNextEncoder q_n β D hInt)) : Prop :=
-  IBMarginalPythagoreanWitness
-    pX
-    q_n
-    (IBNextMarginal pX q_n β D hInt h_meas)
-    β D
-    (IBNextEncoder q_n β D hInt)
-    hKL_current
-    hKL_next
-
-/-- Specialized marginal-descent witness for the BA-updated encoder/marginal pair. -/
-abbrev IBNextMarginalDescentWitness
-    (pX : ProbabilityMeasure X)
-    (q_n : ProbabilityMeasure T)
-    (β : ℝ) (D : X → T → ℝ)
-    (hInt : ∀ x, Integrable (fun t => Real.exp (-β * D x t)) (q_n : Measure T))
-    (h_meas : Measurable (fun x => (IBNextEncoder q_n β D hInt x : Measure T)))
-    (hKL_current : FiniteKLFamily (q_n : Measure T) (IBNextEncoder q_n β D hInt))
-    (hKL_next :
-      FiniteKLFamily
-        ((IBNextMarginal pX q_n β D hInt h_meas : ProbabilityMeasure T) : Measure T)
-        (IBNextEncoder q_n β D hInt)) : Prop :=
-  IBMarginalDescentWitness
-    pX
-    q_n
-    (IBNextMarginal pX q_n β D hInt h_meas)
-    β D
-    (IBNextEncoder q_n β D hInt)
-    hKL_current
-    hKL_next
-
 omit [Nonempty T] in
 theorem ibMarginalPythagorean_identity_of_marginalization
     (pX : ProbabilityMeasure X)
@@ -472,8 +430,9 @@ theorem ibNextMarginalPythagoreanWitness_of_marginalization
             (IBNextEncoder q_n β D hInt x)
             (hKL_next x))
         (pX : Measure X)) :
-    IBNextMarginalPythagoreanWitness
-      pX q_n β D hInt h_meas hKL_current hKL_next := by
+    IBMarginalPythagoreanWitness
+      pX q_n (IBNextMarginal pX q_n β D hInt h_meas)
+      β D (IBNextEncoder q_n β D hInt) hKL_current hKL_next := by
   simpa [IBNextEncoder, IBNextMarginal] using
     (ibMarginalPythagoreanWitness_of_marginalization
       (pX := pX)
@@ -548,7 +507,10 @@ theorem IB_next_marginal_descent_from_witness
       FiniteKLFamily
         ((IBNextMarginal pX q_n β D hInt h_meas : ProbabilityMeasure T) : Measure T)
         (IBNextEncoder q_n β D hInt))
-    (h : IBNextMarginalDescentWitness pX q_n β D hInt h_meas hKL_current hKL_next) :
+    (h :
+      IBMarginalDescentWitness
+        pX q_n (IBNextMarginal pX q_n β D hInt h_meas)
+        β D (IBNextEncoder q_n β D hInt) hKL_current hKL_next) :
     IBGlobalFreeEnergy pX (IBNextMarginal pX q_n β D hInt h_meas) β D
       (IBNextEncoder q_n β D hInt) hKL_next
       ≤
@@ -568,7 +530,7 @@ theorem IB_next_marginal_descent_of_pythagorean
         ((IBNextMarginal pX q_n β D hInt h_meas : ProbabilityMeasure T) : Measure T)
         (IBNextEncoder q_n β D hInt))
     (h :
-      IBNextMarginalPythagoreanWitness pX q_n β D hInt h_meas hKL_current hKL_next) :
+      IBMarginalPythagoreanWitness pX q_n (IBNextMarginal pX q_n β D hInt h_meas) β D (IBNextEncoder q_n β D hInt) hKL_current hKL_next) :
     IBGlobalFreeEnergy pX (IBNextMarginal pX q_n β D hInt h_meas) β D
       (IBNextEncoder q_n β D hInt) hKL_next
       ≤

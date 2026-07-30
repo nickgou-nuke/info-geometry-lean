@@ -21,10 +21,6 @@ variable {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
 structure MetriplecticBracket (n : ℕ) [Fintype (Fin n)] [DecidableEq (Fin n)] where
   poisson : Matrix (Fin n) (Fin n) ℂ → Matrix (Fin n) (Fin n) ℂ → Matrix (Fin n) (Fin n) ℂ
   metric : Matrix (Fin n) (Fin n) ℂ → Matrix (Fin n) (Fin n) ℂ → Matrix (Fin n) (Fin n) ℂ
-  h_poisson_skew : ∀ F G, poisson F G = - poisson G F
-  h_metric_symm : ∀ F G, metric F G = metric G F
-  h_poisson_self : ∀ F, poisson F F = 0
-  h_metric_energy_null : ∀ F H, metric F H = 0
 
 namespace MetriplecticBracket
 
@@ -35,21 +31,28 @@ def metriplectic (F G : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ
   sys.poisson F G + sys.metric F G
 
 /-- **Theorem**: Energy Conservation dH/dt = <<H, H>> = 0. -/
-theorem energy_conservation (H : Matrix (Fin n) (Fin n) ℂ) :
+theorem energy_conservation (H : Matrix (Fin n) (Fin n) ℂ)
+    (h_poisson_self : ∀ F, sys.poisson F F = 0)
+    (h_metric_energy_null : ∀ F H,
+      sys.metric F H = 0) :
     sys.metriplectic H H = 0 := by
   dsimp [metriplectic]
-  rw [sys.h_poisson_self H, sys.h_metric_energy_null H H, add_zero]
+  rw [h_poisson_self H, h_metric_energy_null H H, add_zero]
 
 /-- **Theorem**: Metriplectic Trace Energy Conservation: Tr(<<H, H>>) = 0. -/
-theorem trace_energy_conservation (H : Matrix (Fin n) (Fin n) ℂ) :
+theorem trace_energy_conservation (H : Matrix (Fin n) (Fin n) ℂ)
+    (h_poisson_self : ∀ F, sys.poisson F F = 0)
+    (h_metric_energy_null : ∀ F H,
+      sys.metric F H = 0) :
     trace (sys.metriplectic H H) = 0 := by
-  rw [sys.energy_conservation H, trace_zero]
+  rw [sys.energy_conservation H h_poisson_self h_metric_energy_null, trace_zero]
 
 /-- **Theorem**: Pure Dissipative Metric Flow for Entropy S: <<S, S>> = metric(S, S). -/
-theorem entropy_pure_dissipative (S : Matrix (Fin n) (Fin n) ℂ) :
+theorem entropy_pure_dissipative (S : Matrix (Fin n) (Fin n) ℂ)
+    (h_poisson_self : ∀ F, sys.poisson F F = 0) :
     sys.metriplectic S S = sys.metric S S := by
   dsimp [metriplectic]
-  rw [sys.h_poisson_self S, zero_add]
+  rw [h_poisson_self S, zero_add]
 
 end MetriplecticBracket
 

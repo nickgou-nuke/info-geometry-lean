@@ -66,32 +66,4 @@ theorem hurwitz_unit_circle_limit_closed
   rw [h_eq] at h_norm_lim
   exact tendsto_nhds_unique h_norm_lim h_const
 
-/--
-**Main Theorem 3: Unconditional Cayley Coordinate Involution Identity**
-Proves natively that for $z \neq -1$, $s = \text{cayleyToTemperature}(z) \implies \operatorname{Re}(s) = 1/2 \iff |z| = 1$.
--/
-theorem cayley_to_temperature_re_eq_half_iff (z : ℂ) (hz : OnLeeYangCircle z) (hpole : z.re ≠ -1) :
-    OnCriticalLine (cayleyToTemperature z) :=
-  cayleyToTemperature_mem_criticalLine_of_unitCircle z hz hpole
-
-/--
-**Main Theorem 4: Grand Hurwitz Convergence Master Duality Theorem**
-Unifies bosonic geometric mode expansion, Hurwitz limit root conservation, Cayley critical line mapping, and fixed locus antiunitary rigidity into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
--/
-theorem grand_hurwitz_convergence_master_duality
-    {x : ℝ} (hx0 : 0 < x) (hx1 : x < 1)
-    (z_seq : ℕ → ℂ) (z0 : ℂ) (h_circle : ∀ N, ‖z_seq N‖ = 1)
-    (h_lim : Filter.Tendsto z_seq Filter.atTop (nhds z0))
-    (z : ℂ) (hz : OnLeeYangCircle z) (hpole : z.re ≠ -1)
-    (s_anti : ℂ) (h_anti : s_anti = 1 - star s_anti) :
-    ((1 - x)⁻¹ > x) ∧
-    (‖z0‖ = 1) ∧
-    (OnCriticalLine (cayleyToTemperature z)) ∧
-    (s_anti.re = 1 / 2) := ⟨
-  bosonic_euler_factor_gt_prime_term hx0 hx1,
-  hurwitz_unit_circle_limit_closed z_seq z0 h_circle h_lim,
-  cayley_to_temperature_re_eq_half_iff z hz hpole,
-  (critical_line_fixed_locus_iff s_anti).1 h_anti
-⟩
-
 end InfoGeometry.Canonical.TheoremHonestHurwitzConvergenceBridge

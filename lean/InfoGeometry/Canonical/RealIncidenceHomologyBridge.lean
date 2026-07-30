@@ -230,19 +230,13 @@ A nilpotent chiral complex witness.
 Only with this witness should quotient-style chiral homology
 `ker D± / im D∓` be interpreted as an actual chain-complex homology lane.
 -/
-@[rep_depth krein]
-abbrev ChiralNilpotentComplexWitness : Prop :=
-  (rootDiracPlus (E := E)).comp (rootDiracMinus (E := E)) = 0 ∧
-    (rootDiracMinus (E := E)).comp (rootDiracPlus (E := E)) = 0
-
 namespace ChiralNilpotentComplexWitness
-
-variable (W : ChiralNilpotentComplexWitness (E := E))
 
 /-- With a nilpotent-complex witness, plus boundaries are plus cycles. -/
 @[rep_depth krein]
 theorem plus_boundary_is_cycle
-    (W : ChiralNilpotentComplexWitness (E := E))
+    (W : (rootDiracPlus (E := E)).comp (rootDiracMinus (E := E)) = 0 ∧
+      (rootDiracMinus (E := E)).comp (rootDiracPlus (E := E)) = 0)
     {u : H₂} (hu : IsPlusChiralBoundary (E := E) u) :
     IsPlusChiralCycle (E := E) u := by
   rcases hu with ⟨v, rfl⟩
@@ -253,7 +247,8 @@ theorem plus_boundary_is_cycle
 /-- With a nilpotent-complex witness, minus boundaries are minus cycles. -/
 @[rep_depth krein]
 theorem minus_boundary_is_cycle
-    (W : ChiralNilpotentComplexWitness (E := E))
+    (W : (rootDiracPlus (E := E)).comp (rootDiracMinus (E := E)) = 0 ∧
+      (rootDiracMinus (E := E)).comp (rootDiracPlus (E := E)) = 0)
     {u : H₂} (hu : IsMinusChiralBoundary (E := E) u) :
     IsMinusChiralCycle (E := E) u := by
   rcases hu with ⟨v, rfl⟩

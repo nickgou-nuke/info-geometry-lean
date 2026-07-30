@@ -22,7 +22,6 @@ or a collider-scale SUSY model.  It proves the finite algebraic pattern:
 
 `susy_anticommutator_generates_spacetime`,
 `susy_anticommutator_generates_two_smul_momentum`,
-`wallpaper_generates_SUSY`,
 `supercharge_commutes_with_momentum_matrix`, and
 `supercharge_commutator_with_momentum_zero`.
 
@@ -76,10 +75,6 @@ theorem susy_anticommutator_generates_two_smul_momentum :
   simp
   ring
 
-/-- Compatibility name for the finite wallpaper-generated SUSY-shaped identity. -/
-theorem wallpaper_generates_SUSY :
-    superAnticommutator Q Q = (2 : ℝ) • P_x :=
-  susy_anticommutator_generates_two_smul_momentum
 
 /-- The odd glide generator commutes with the even translation matrix. -/
 theorem supercharge_commutes_with_momentum_matrix :
@@ -97,12 +92,6 @@ theorem supercharge_commutator_with_momentum_zero :
   rw [supercharge_commutes_with_momentum_matrix]
   simp
 
-/--
-Backwards-compatible theorem name for the finite commutation statement.
--/
-theorem supercharge_commutes_with_momentum :
-    Q * P_x - P_x * Q = 0 := by
-  simpa [commutator] using supercharge_commutator_with_momentum_zero
 
 /-! ## Cuntz quotient supercharge algebra -/
 
@@ -139,53 +128,14 @@ Explicit super-Poincare-style socket.
 This stores the Lorentz/Poincare carriers and actions as hypotheses; the
 proved algebraic content is the supercharge-generated momentum and centrality.
 -/
-structure SuperPoincareSuperchargeSocket (A : Type*) [Ring A] where
-  LorentzGroup : Type
-  PoincareGroup : Type
-  lorentzGroup : Group LorentzGroup
-  poincareGroup : Group PoincareGroup
-  lorentzAction : LorentzGroup → A → A
-  poincareAction : PoincareGroup → A → A
-  grade : A → ZMod 2
-  supercharge : A
-  momentum : A
-  centralCharge : A
-  poincareTranslation : A
-  supercharge_odd : grade supercharge = 1
-  momentum_even : grade momentum = 0
-  centralCharge_even : grade centralCharge = 0
-  momentum_eq_supercharge_square : momentum = superMomentum supercharge
-  poincareTranslation_eq_momentum : poincareTranslation = momentum
-  centralCharge_central : IsCentralElement centralCharge
 
-namespace SuperPoincareSuperchargeSocket
-
-variable {A : Type*} [Ring A]
-variable (S : SuperPoincareSuperchargeSocket A)
-
-/-- In any socket, momentum is defined by the supercharge square. -/
-theorem momentum_defined_by_supercharge :
-    S.momentum = superMomentum S.supercharge :=
-  S.momentum_eq_supercharge_square
-
-/-- In any socket, the distinguished Poincare translation is the supercharge momentum. -/
-theorem poincare_translation_defined_by_supercharge :
-    S.poincareTranslation = superMomentum S.supercharge := by
-  rw [S.poincareTranslation_eq_momentum, S.momentum_eq_supercharge_square]
-
-/-- In any socket, the central charge commutes with every algebra element. -/
-theorem centralCharge_commutes (X : A) :
-    S.centralCharge * X = X * S.centralCharge :=
-  S.centralCharge_central X
-
-/-- In any socket, `{Q,Q}=2P` with natural scalar multiplication. -/
-theorem anticommutator_generates_momentum :
-    algebraicAnticommutator S.supercharge S.supercharge =
-      (2 : ℕ) • S.momentum := by
-  rw [S.momentum_eq_supercharge_square]
-  exact algebraicAnticommutator_self_eq_two_nsmul_momentum S.supercharge
-
-end SuperPoincareSuperchargeSocket
+theorem anticommutator_generates_momentum
+    {A : Type*} [Ring A] (momentum supercharge : A)
+    (hmomentum : momentum = superMomentum supercharge) :
+    algebraicAnticommutator supercharge supercharge =
+      (2 : ℕ) • momentum := by
+  rw [hmomentum]
+  exact algebraicAnticommutator_self_eq_two_nsmul_momentum supercharge
 
 /-- Cuntz Majorana-type supercharge `Qᵢ = Sᵢ + Sᵢ†`. -/
 def cuntzMajoranaSupercharge (n : ℕ) (i : Fin n) : CuntzAlg n :=
@@ -236,99 +186,6 @@ theorem cuntz_anticommutator_generates_momentum (n : ℕ) (i : Fin n) :
 theorem odd_add_odd_grade_even :
     (1 : ZMod 2) + (1 : ZMod 2) = 0 := by
   native_decide
-
-/-- Concrete finite Cuntz super-Poincare packet with explicit grade labels. -/
-structure CuntzSuperPoincarePacket (n : ℕ) where
-  mode : Fin n
-  supercharge : CuntzAlg n
-  momentum : CuntzAlg n
-  centralCharge : CuntzAlg n
-  poincareTranslation : CuntzAlg n
-  superchargeGrade : ZMod 2
-  momentumGrade : ZMod 2
-  centralChargeGrade : ZMod 2
-  supercharge_eq : supercharge = cuntzMajoranaSupercharge n mode
-  momentum_eq : momentum = superMomentum supercharge
-  centralCharge_eq : centralCharge = cuntzCentralCharge n
-  poincareTranslation_eq_momentum : poincareTranslation = momentum
-  supercharge_odd : superchargeGrade = 1
-  momentum_even : momentumGrade = 0
-  centralCharge_even : centralChargeGrade = 0
-  odd_odd_grade_even : superchargeGrade + superchargeGrade = momentumGrade
-  centralCharge_central : IsCentralElement centralCharge
-
-namespace CuntzSuperPoincarePacket
-
-variable {n : ℕ}
-variable (P : CuntzSuperPoincarePacket n)
-
-/-- The packet momentum is exactly the supercharge square. -/
-theorem momentum_defined_by_supercharge :
-    P.momentum = superMomentum P.supercharge :=
-  P.momentum_eq
-
-/-- The packet Poincare translation is exactly the supercharge momentum. -/
-theorem poincare_translation_defined_by_supercharge :
-    P.poincareTranslation = superMomentum P.supercharge := by
-  rw [P.poincareTranslation_eq_momentum, P.momentum_eq]
-
-/-- The packet central charge commutes with every Cuntz observable. -/
-theorem centralCharge_commutes (X : CuntzAlg n) :
-    P.centralCharge * X = X * P.centralCharge :=
-  P.centralCharge_central X
-
-/-- The packet supercharge anticommutator generates its momentum. -/
-theorem anticommutator_generates_momentum :
-    algebraicAnticommutator P.supercharge P.supercharge = (2 : ℂ) • P.momentum := by
-  rw [P.momentum_eq]
-  exact algebraicAnticommutator_self_eq_two_smul_momentum P.supercharge
-
-end CuntzSuperPoincarePacket
-
-/-- Canonical finite Cuntz packet at one mode. -/
-def canonicalCuntzSuperPoincarePacket (n : ℕ) (i : Fin n) :
-    CuntzSuperPoincarePacket n where
-  mode := i
-  supercharge := cuntzMajoranaSupercharge n i
-  momentum := cuntzSuperMomentum n i
-  centralCharge := cuntzCentralCharge n
-  poincareTranslation := cuntzSuperMomentum n i
-  superchargeGrade := 1
-  momentumGrade := 0
-  centralChargeGrade := 0
-  supercharge_eq := rfl
-  momentum_eq := rfl
-  centralCharge_eq := rfl
-  poincareTranslation_eq_momentum := rfl
-  supercharge_odd := rfl
-  momentum_even := rfl
-  centralCharge_even := rfl
-  odd_odd_grade_even := odd_add_odd_grade_even
-  centralCharge_central := cuntzCentralCharge_central n
-
-/-- Closed finite Cuntz supercharge/momentum/central-charge packet. -/
-theorem canonicalCuntzSuperPoincarePacket_closure (n : ℕ) (i : Fin n) :
-    let P := canonicalCuntzSuperPoincarePacket n i
-    star P.supercharge = P.supercharge ∧
-      algebraicAnticommutator P.supercharge P.supercharge = (2 : ℂ) • P.momentum ∧
-        P.poincareTranslation = superMomentum P.supercharge ∧
-          IsCentralElement P.centralCharge ∧
-            P.superchargeGrade + P.superchargeGrade = P.momentumGrade ∧
-              parity n P.supercharge = -P.supercharge ∧
-                parity n P.momentum = P.momentum ∧
-                  parity n P.centralCharge = P.centralCharge := by
-  simp only
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact star_cuntzMajoranaSupercharge n i
-  · exact CuntzSuperPoincarePacket.anticommutator_generates_momentum
-      (canonicalCuntzSuperPoincarePacket n i)
-  · exact CuntzSuperPoincarePacket.poincare_translation_defined_by_supercharge
-      (canonicalCuntzSuperPoincarePacket n i)
-  · exact (canonicalCuntzSuperPoincarePacket n i).centralCharge_central
-  · exact (canonicalCuntzSuperPoincarePacket n i).odd_odd_grade_even
-  · exact parity_cuntzMajoranaSupercharge n i
-  · exact parity_cuntzSuperMomentum n i
-  · exact parity_cuntzCentralCharge n
 
 end InfoGeometry.Algebra.SupergradedSUSY
 

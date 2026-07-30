@@ -102,11 +102,12 @@ end CyclicAlgebraicState
 /-- Identity modular flow on the observable algebra. -/
 @[rep_depth operator]
 def identityAdditiveModularFlow : AdditiveModularFlow (H := H) where
-  toFun := fun _ => 1
-  map_zero' := rfl
-  map_add' := by
-    intro s t
-    simp
+  toFun :=
+    { toFun := fun _ => 1
+      map_one' := by simp
+      map_mul' := by
+        intro s t
+        simp }
 
 /--
 KMS state relative to an additive modular automorphism flow.

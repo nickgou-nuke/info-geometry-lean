@@ -156,7 +156,7 @@ Modular/Tomita socket for Type III or non-tracial versions.
 No trace, density matrix, determinant, or partition function is assumed here.
 -/
 @[socket_debt_tag]
-structure TypeIIIModularPrimonSocket (A : Type*) [Mul A] where
+structure TypeIIIModularPrimonSocket (A : Type*) [Monoid A] where
   modularState : InfoGeometry.Dynamics.ModularThermalState A
   standardFormData : Type*
   naturalConeData : Type*
@@ -258,7 +258,7 @@ end WitnessGatedZetaZeroSocket
 Full bridge packet keeping the Hilbert/TFD, Type III modular, and Krein/Möbius
 layers separate but compatible.
 -/
-structure PrimonTFDKreinMobiusBridge (A : Type*) [Mul A] where
+structure PrimonTFDKreinMobiusBridge (A : Type*) [Monoid A] where
   bosonicTFD : BosonicPrimonTFDModel
   squarefreeKrein : SquarefreeMobiusKreinSector
   doubledKrein : DoubledKreinTFDSector

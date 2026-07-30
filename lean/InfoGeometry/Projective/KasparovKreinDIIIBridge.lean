@@ -151,9 +151,10 @@ split-Krein Kasparov cycle splits into `g₁ ⊕ g₋₁`.
 -/
 theorem krein_kasparov_grade_split_from_witness
     (X : RealSplitKreinKasparovCycle A B H)
-    (w : GradeEpsWitness X) :
+    (hGrade : InfoGeometry.Krein.KreinGradedModule.gradeCLM (H := H) =
+      X.cl11.eps) :
     X.F = gOnePart X.cl11 X.F + gNegOnePart X.cl11 X.F :=
-  F_eq_gOnePart_add_gNegOnePart_of_witness (X := X) w
+  F_eq_gOnePart_add_gNegOnePart_of_gradeCLM_eq_eps (X := X) hGrade
 
 /--
 The mixed `g₁/g₋₁` commutator of the odd phase closes in grade zero.

@@ -45,6 +45,9 @@ structure CPTDirectLimitGNSPacket where
   star_mul : ∀ x y : CPTGNSCarrier, carrierStar (x * y) = carrierStar y * carrierStar x
   /-- Additivity of the carrier involution. -/
   star_add : ∀ x y : CPTGNSCarrier, carrierStar (x + y) = carrierStar x + carrierStar y
+  /-- Compatibility of the carrier involution with the real scalar action. -/
+  star_smul : ∀ (r : ℝ) (x : CPTGNSCarrier),
+    carrierStar (r • x) = r • carrierStar x
   /-- The direct-limit state functional on the carrier. -/
   state : CPTGNSCarrier →ₗ[ℝ] ℝ
   /-- Normalization of the state. -/

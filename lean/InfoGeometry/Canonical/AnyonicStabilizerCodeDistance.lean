@@ -26,51 +26,66 @@ namespace AnyonStabilizerGenerator
 
 variable (g : AnyonStabilizerGenerator n)
 
-def g_val : Matrix (Fin n) (Fin n) ℂ := (g : Matrix (Fin n) (Fin n) ℂ)
-
-def g_dagger : Matrix (Fin n) (Fin n) ℂ := (g_val g).conjTranspose
-
-theorem h_unitary : g_val g * g_dagger g = 1 := by
-  change (g : Matrix (Fin n) (Fin n) ℂ) *
-      (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose = 1
+theorem h_unitary :
+    (g : Matrix (Fin n) (Fin n) ℂ) *
+        (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose = 1 := by
   exact Matrix.mem_unitaryGroup_iff.mp g.2
 
-theorem h_unitary_rev : g_dagger g * g_val g = 1 := by
-  change (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose *
-      (g : Matrix (Fin n) (Fin n) ℂ) = 1
+theorem h_unitary_rev :
+    (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose *
+        (g : Matrix (Fin n) (Fin n) ℂ) = 1 := by
   exact Matrix.mem_unitaryGroup_iff'.mp g.2
 
 /-- **Theorem**: Anyon Stabilizer Generator Unitarity g * g† = 1. -/
-theorem anyon_stabilizer_unitary : g_val g * g_dagger g = 1 :=
-  h_unitary g
+theorem anyon_stabilizer_unitary :
+    (g : Matrix (Fin n) (Fin n) ℂ) *
+        (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose = 1 :=
+    h_unitary g
 
 /-- Logical Operator L commuting with all stabilizer generators [g, L] = 0. -/
 structure LogicalOperator (g : AnyonStabilizerGenerator n) where
   L_val : Matrix (Fin n) (Fin n) ℂ
-  h_comm : g_val g * L_val = L_val * g_val g
 
 namespace LogicalOperator
 
 variable {g : AnyonStabilizerGenerator n} (L : LogicalOperator g)
 
 /-- **Theorem**: Logical Operator Commutator Identity [g, L] = 0. -/
-theorem logical_operator_commute : g_val g * L.L_val - L.L_val * g_val g = 0 := by
-  have h := L.h_comm
+theorem logical_operator_commute
+    (h_comm :
+      (g : Matrix (Fin n) (Fin n) ℂ) * L.L_val =
+        L.L_val * (g : Matrix (Fin n) (Fin n) ℂ)) :
+    (g : Matrix (Fin n) (Fin n) ℂ) * L.L_val -
+        L.L_val * (g : Matrix (Fin n) (Fin n) ℂ) = 0 := by
+  have h := h_comm
   rw [h, sub_self]
 
 /-- **Theorem**: Logical Operator Conjugation Invariance g * L * g† = L. -/
-theorem logical_operator_conjugation_invariant :
-    g_val g * L.L_val * g_dagger g = L.L_val := by
-  calc g_val g * L.L_val * g_dagger g
-    _ = L.L_val * g_val g * g_dagger g := by rw [L.h_comm]
-    _ = L.L_val * (g_val g * g_dagger g) := by noncomm_ring
+theorem logical_operator_conjugation_invariant
+    (h_comm :
+      (g : Matrix (Fin n) (Fin n) ℂ) * L.L_val =
+        L.L_val * (g : Matrix (Fin n) (Fin n) ℂ)) :
+    (g : Matrix (Fin n) (Fin n) ℂ) * L.L_val *
+        (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose = L.L_val := by
+  calc
+    (g : Matrix (Fin n) (Fin n) ℂ) * L.L_val *
+        (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose =
+        L.L_val * (g : Matrix (Fin n) (Fin n) ℂ) *
+          (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose := by
+            rw [h_comm]
+    _ = L.L_val * ((g : Matrix (Fin n) (Fin n) ℂ) *
+          (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose) := by noncomm_ring
     _ = L.L_val * 1 := by rw [h_unitary g]
     _ = L.L_val := by noncomm_ring
 
 /-- **Theorem**: Logical Operator Trace Protection Invariance: Tr(g * L * g†) = Tr(L). -/
-theorem logical_operator_trace_protected :
-    trace (g_val g * L.L_val * g_dagger g) = trace L.L_val := by
-  rw [L.logical_operator_conjugation_invariant]
+theorem logical_operator_trace_protected
+    (h_comm :
+      (g : Matrix (Fin n) (Fin n) ℂ) * L.L_val =
+        L.L_val * (g : Matrix (Fin n) (Fin n) ℂ)) :
+    trace ((g : Matrix (Fin n) (Fin n) ℂ) * L.L_val *
+      (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose) = trace L.L_val := by
+  rw [L.logical_operator_conjugation_invariant h_comm]
 
 end LogicalOperator
 

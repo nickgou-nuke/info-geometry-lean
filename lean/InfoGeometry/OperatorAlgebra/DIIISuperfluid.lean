@@ -281,9 +281,7 @@ def signDatum : DIIISignDatum (EndR H) where
   Theta_Xi_anticomm := D.Theta_Xi_anticomm
 
 /-- The DIII chiral grading is phase-linear. -/
-theorem chi_commutes_phase :
-    D.chi.comp D.K = D.K.comp D.chi :=
-  D.chi_phase_linear
+alias chi_commutes_phase := DIIISuperfluidDatum.chi_phase_linear
 
 /-- The DIII chiral grading square is derived from the DIII sign skeleton. -/
 theorem chi_sq_derived :
@@ -304,9 +302,7 @@ theorem Xi_flips_chi :
     (D.signDatum.Xi_flips_chi)
 
 /-- The DIII BdG generator is chiral-odd. -/
-theorem chiral_odd_BdG :
-    D.chi.comp D.BdG = -(D.BdG.comp D.chi) :=
-  D.chi_BdG
+alias chiral_odd_BdG := DIIISuperfluidDatum.chi_BdG
 
 end DIIISuperfluidDatum
 
@@ -371,16 +367,10 @@ variable
     (D : MomentumDIIISuperfluidDatum Kpt H)
 
 /-- Momentum reversal is an involution. -/
-theorem invK_invK
-    (k : Kpt) :
-    D.invK (D.invK k) = k :=
-  D.invK_involutive k
+alias invK_invK := MomentumDIIISuperfluidDatum.invK_involutive
 
 /-- Re-export the chiral oddness law. -/
-theorem chiral_odd
-    (k : Kpt) :
-    D.chi.comp (D.BdG k) = -((D.BdG k).comp D.chi) :=
-  D.chiral k
+alias chiral_odd := MomentumDIIISuperfluidDatum.chiral
 
 end MomentumDIIISuperfluidDatum
 

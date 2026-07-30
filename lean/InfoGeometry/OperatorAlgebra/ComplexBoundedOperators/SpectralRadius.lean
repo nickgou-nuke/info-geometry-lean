@@ -113,48 +113,37 @@ def spectralRadius {ι : Type*} [Fintype ι] [DecidableEq ι]
 Finite-spectrum/cardinality packet corresponding to AFP
 `card_finite_spectrum`.
 -/
-abbrev SpectrumCardPacket (n : Nat) (A : Matrix (Fin n) (Fin n) ℂ) : Prop :=
-  (matrixSpectrum A).Finite ∧ (matrixSpectrum A).ncard ≤ n
-
-/-- Native constructor for the spectrum-cardinality packet. -/
-def SpectrumCardPacket.ofMatrix (A : Matrix (Fin n) (Fin n) ℂ) : SpectrumCardPacket n A :=
+theorem SpectrumCardPacket.ofMatrix (A : Matrix (Fin n) (Fin n) ℂ) :
+    (matrixSpectrum A).Finite ∧ (matrixSpectrum A).ncard ≤ n :=
   ⟨matrixSpectrum_finite A, matrixSpectrum_ncard_le A⟩
 
 namespace SpectrumCardPacket
 
 theorem finite {n : Nat} {A : Matrix (Fin n) (Fin n) ℂ}
-    (P : SpectrumCardPacket n A) :
+    (P : (matrixSpectrum A).Finite ∧ (matrixSpectrum A).ncard ≤ n) :
     (matrixSpectrum A).Finite :=
   P.1
 
 theorem card_finite_spectrum {n : Nat} {A : Matrix (Fin n) (Fin n) ℂ}
-    (P : SpectrumCardPacket n A) :
+    (P : (matrixSpectrum A).Finite ∧ (matrixSpectrum A).ncard ≤ n) :
     (matrixSpectrum A).Finite ∧ (matrixSpectrum A).ncard ≤ n :=
   P
 
 end SpectrumCardPacket
 
-/-- Nonempty-spectrum packet corresponding to AFP `spectrum_non_empty`. -/
-abbrev SpectrumNonemptyPacket (n : Nat) (A : Matrix (Fin n) (Fin n) ℂ) : Prop :=
-  0 < n ∧ (matrixSpectrum A).Nonempty
-
 /-- Native constructor for the nonempty-spectrum packet. -/
-def SpectrumNonemptyPacket.ofMatrix {n : Nat}
-    (A : Matrix (Fin n) (Fin n) ℂ) (hn : 0 < n) : SpectrumNonemptyPacket n A :=
+theorem SpectrumNonemptyPacket.ofMatrix {n : Nat}
+    (A : Matrix (Fin n) (Fin n) ℂ) (hn : 0 < n) :
+    0 < n ∧ (matrixSpectrum A).Nonempty :=
   ⟨hn, matrixSpectrum_nonempty_of_pos hn A⟩
-
-/-- Maximum-attainment proposition for the spectral radius. -/
-abbrev SpectralRadiusMaxPacket {ι : Type*} [Fintype ι] [DecidableEq ι]
-    (A : Matrix ι ι ℂ) : Prop :=
-  ∃ eigenvalue : ℂ,
-    eigenvalue ∈ matrixSpectrum A ∧
-      ‖eigenvalue‖ = spectralRadius A ∧
-        ∀ z ∈ matrixSpectrum A, ‖z‖ ≤ spectralRadius A
 
 /-- Native existence theorem for the spectral-radius maximum packet. -/
 theorem exists_spectralRadiusMaxPacket_ofNonempty {ι : Type*} [Fintype ι] [DecidableEq ι]
     (A : Matrix ι ι ℂ) (h : (matrixSpectrum A).Nonempty) :
-    SpectralRadiusMaxPacket A := by
+    (∃ eigenvalue : ℂ,
+      eigenvalue ∈ matrixSpectrum A ∧
+        ‖eigenvalue‖ = spectralRadius A ∧
+          ∀ z ∈ matrixSpectrum A, ‖z‖ ≤ spectralRadius A) := by
   let S : Set ℝ := (fun z : ℂ => ‖z‖) '' matrixSpectrum A
   have hS : S.Finite := by
     simpa [S] using (matrixSpectrum_finite (A := A)).image (fun z : ℂ => ‖z‖)
@@ -183,7 +172,11 @@ theorem spectralRadius_mem_max {ι : Type*} [Fintype ι] [DecidableEq ι]
   simpa [spectralRadius, S] using (Set.Nonempty.csSup_mem hSn hS)
 
 theorem le_spectralRadius {ι : Type*} [Fintype ι] [DecidableEq ι]
-    {A : Matrix ι ι ℂ} (P : SpectralRadiusMaxPacket A)
+    {A : Matrix ι ι ℂ}
+    (P : ∃ eigenvalue : ℂ,
+      eigenvalue ∈ matrixSpectrum A ∧
+        ‖eigenvalue‖ = spectralRadius A ∧
+          ∀ z ∈ matrixSpectrum A, ‖z‖ ≤ spectralRadius A)
     {a : ℝ} (ha : a ∈ (fun z : ℂ => ‖z‖) '' matrixSpectrum A) :
     a ≤ spectralRadius A := by
   rcases P with ⟨_, _, _, hle⟩
@@ -197,28 +190,11 @@ def NormBound {ι : Type*} [Fintype ι] [DecidableEq ι]
     (A : Matrix ι ι ℂ) (c : ℝ) : Prop :=
   ∀ i j : ι, ‖A i j‖ ≤ c
 
-/--
-Witness-gated polynomial growth statement for `spectralRadius A ≤ 1`, matching
-AFP `spectral_radius_jnf_norm_bound_le_1`.
--/
-abbrev PolynomialGrowthPacket (n : Nat)
-    (A : Matrix (Fin n) (Fin n) ℂ) : Prop :=
-  spectralRadius A ≤ 1 ∧
-    ∃ c1 c2 : ℝ,
-      ∀ k : Nat, NormBound (A ^ k) (c1 + c2 * (k : ℝ) ^ (n - 1))
-
-/--
-Witness-gated constant growth statement for `spectralRadius A < 1`, matching
-AFP `spectral_radius_jnf_norm_bound_less_1`.
--/
-abbrev ConstantGrowthPacket (n : Nat)
-    (A : Matrix (Fin n) (Fin n) ℂ) : Prop :=
-  spectralRadius A < 1 ∧
-    ∃ c : ℝ, ∀ k : Nat, NormBound (A ^ k) c
-
 theorem spectralRadius_jnf_norm_bound_le_one {n : Nat}
     {A : Matrix (Fin n) (Fin n) ℂ}
-    (P : PolynomialGrowthPacket n A) :
+    (P : spectralRadius A ≤ 1 ∧
+      ∃ c1 c2 : ℝ,
+        ∀ k : Nat, NormBound (A ^ k) (c1 + c2 * (k : ℝ) ^ (n - 1))) :
     ∃ c1 c2 : ℝ, ∀ k : Nat,
       NormBound (A ^ k) (c1 + c2 * (k : ℝ) ^ (n - 1)) := by
   rcases P with ⟨_, c1, c2, hbound⟩
@@ -226,7 +202,8 @@ theorem spectralRadius_jnf_norm_bound_le_one {n : Nat}
 
 theorem spectralRadius_jnf_norm_bound_less_one {n : Nat}
     {A : Matrix (Fin n) (Fin n) ℂ}
-    (P : ConstantGrowthPacket n A) :
+    (P : spectralRadius A < 1 ∧
+      ∃ c : ℝ, ∀ k : Nat, NormBound (A ^ k) c) :
     ∃ c : ℝ, ∀ k : Nat, NormBound (A ^ k) c := by
   rcases P with ⟨_, c, hbound⟩
   exact ⟨c, hbound⟩

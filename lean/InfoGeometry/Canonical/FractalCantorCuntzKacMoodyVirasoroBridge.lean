@@ -156,7 +156,8 @@ structure FractalCantorCuntzKacMoodyVirasoroBridge
 
   /-- Real Bogoliubov transformation shadow data. -/
   bogoljubov :
-    BogoliubovKANShadowPacket E Op Op Op Op Op
+    InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket
+      E Op Op Op Op Op
 
   /--
   The supplied Sugawara mode-sum construction.

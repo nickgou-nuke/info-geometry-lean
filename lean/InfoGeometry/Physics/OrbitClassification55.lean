@@ -82,12 +82,6 @@ theorem orbit_classification (X : JordanMatrix10D) : OrbitType X := by
     · exact OrbitType.isNull hzero hdet
     · exact OrbitType.isGeneric hdet
 
-/-! ## 4. Trivial readbacks -/
-
-/-- A tautological determinant self-readback.  No group action is constructed here. -/
-theorem determinant_self_eq (X : JordanMatrix10D) :
-    X.det = X.det := rfl
-
 /--
 The trichotomy `X = 0 ∨ X.det = 0 ∨ X.det ≠ 0` is a pure case split.
 It does not encode group invariance.

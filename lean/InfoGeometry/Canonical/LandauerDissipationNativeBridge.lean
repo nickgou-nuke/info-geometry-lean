@@ -73,14 +73,4 @@ theorem environment_entropy_increase_pos (data : LandauerErasureData) :
     linarith
   exact mul_pos h_diff h_log2
 
-/--
-**Main Theorem 3: Grand Landauer Erasure Master Duality**
-Unifies heat dissipation positivity $\Delta Q > 0$ and environment entropy growth $\Delta S > 0$ into a single kernel-checked theorem.
--/
-theorem grand_landauer_erasure_master_duality (data : LandauerErasureData) :
-    (0 < landauerHeat data) ∧ (0 < environmentEntropyIncrease data) := ⟨
-  landauer_heat_positivity data,
-  environment_entropy_increase_pos data
-⟩
-
 end InfoGeometry.Canonical.LandauerDissipationNativeBridge

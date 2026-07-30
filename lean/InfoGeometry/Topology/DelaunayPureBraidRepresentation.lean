@@ -60,43 +60,46 @@ theorem exists_pureBraidMatrixRepresentation_of_relators (moving : ℕ)
   exact ⟨pureBraidMatrixRepresentationOfRelators moving gen hrel,
     pureBraidMatrixRepresentationOfRelators_of moving gen hrel⟩
 
-/-- The trivial matrix-unit assignment sends every pure-braid generator to `1`. -/
-def trivialPureBraidGenerator (moving : ℕ) :
-    PureBraidGenerator (rohozhkinTotalPoints moving) → RohozhkinMatrixUnits moving :=
-  fun _ => 1
+/-
+The historical identity assignment was only a vacuous compatibility witness.
+Retain the names as a migration surface, but route them directly through the
+generic native descent theorem with an explicit generator assignment and
+relator proof.
+-/
+def trivialPureBraidGenerator (moving : ℕ)
+    (gen : PureBraidGenerator (rohozhkinTotalPoints moving) →
+      RohozhkinMatrixUnits moving) := gen
 
-/-- The trivial assignment satisfies all pure-braid relators. -/
-theorem trivialPureBraidGenerator_respects (moving : ℕ) :
-    respectsPureBraidRelations (trivialPureBraidGenerator moving) := by
-  intro r hr
-  rcases hr with
-    (⟨i, j, k, l, hij, hkl, hshape, rfl⟩ | ⟨i, j, k, hij, hjk, rfl⟩ |
-      ⟨i, j, k, hij, hjk, rfl⟩ | ⟨i, j, k, l, hij, hjk, hkl, rfl⟩)
-  · simp [trivialPureBraidGenerator, farCommRelator, relatorEq, b]
-  · simp [trivialPureBraidGenerator, tripleRelatorLeft, relatorEq, b]
-  · simp [trivialPureBraidGenerator, tripleRelatorRight, relatorEq, b]
-  · simp [trivialPureBraidGenerator, quadrupleRelator, relatorEq, b]
+theorem trivialPureBraidGenerator_respects (moving : ℕ)
+    (gen : PureBraidGenerator (rohozhkinTotalPoints moving) →
+      RohozhkinMatrixUnits moving)
+    (hrel : respectsPureBraidRelations gen) :
+    respectsPureBraidRelations (trivialPureBraidGenerator moving gen) := hrel
 
-/-- The trivial pure-braid representation descends to a group homomorphism. -/
-noncomputable def trivialPureBraidRepresentation (moving : ℕ) :
+noncomputable def trivialPureBraidRepresentation (moving : ℕ)
+    (gen : PureBraidGenerator (rohozhkinTotalPoints moving) →
+      RohozhkinMatrixUnits moving)
+    (hrel : respectsPureBraidRelations gen) :
     RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving :=
-  pureBraidMatrixRepresentationOfRelators moving (trivialPureBraidGenerator moving)
-    (trivialPureBraidGenerator_respects moving)
+  pureBraidMatrixRepresentationOfRelators moving gen hrel
 
-/-- Generator readout for the trivial descended representation. -/
 @[simp]
 theorem trivialPureBraidRepresentation_of (moving : ℕ)
+    (gen : PureBraidGenerator (rohozhkinTotalPoints moving) →
+      RohozhkinMatrixUnits moving)
+    (hrel : respectsPureBraidRelations gen)
     (g : PureBraidGenerator (rohozhkinTotalPoints moving)) :
-    trivialPureBraidRepresentation moving (of g) = 1 := by
-  simp [trivialPureBraidRepresentation, trivialPureBraidGenerator]
+    trivialPureBraidRepresentation moving gen hrel (of g) = gen g := by
+  exact pureBraidMatrixRepresentationOfRelators_of moving gen hrel g
 
-/-- Concrete descent packet for the trivial pure-braid representation. -/
-theorem trivial_pureBraid_descent_packet (moving : ℕ) :
-    respectsPureBraidRelations (trivialPureBraidGenerator moving) ∧
+theorem trivial_pureBraid_descent_packet (moving : ℕ)
+    (gen : PureBraidGenerator (rohozhkinTotalPoints moving) →
+      RohozhkinMatrixUnits moving)
+    (hrel : respectsPureBraidRelations gen) :
+    respectsPureBraidRelations (trivialPureBraidGenerator moving gen) ∧
     ∃ ρ : RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving,
-      ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving), ρ (of g) = 1 := by
-  exact ⟨trivialPureBraidGenerator_respects moving,
-    ⟨trivialPureBraidRepresentation moving,
-      trivialPureBraidRepresentation_of moving⟩⟩
+      ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving), ρ (of g) = gen g := by
+  exact ⟨hrel, ⟨trivialPureBraidRepresentation moving gen hrel,
+    trivialPureBraidRepresentation_of moving gen hrel⟩⟩
 
 end InfoGeometry.Topology.RohozhkinBoundary

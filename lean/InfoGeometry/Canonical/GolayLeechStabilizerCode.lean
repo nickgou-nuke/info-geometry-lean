@@ -152,35 +152,41 @@ that supplied the three conventional numbers explicitly; it is not the code
 construction and must not be used as evidence for it.
 -/
 @[deprecated golay_code_dimension (since := "2026-07-27")]
-structure GolayCodeParameters where
-  length : ℕ := 24
-  dimension : ℕ := 12
-  minDistance : ℕ := 8
-  length_eq : length = 24
-  dim_eq : dimension = 12
-  dist_eq : minDistance = 8
+abbrev GolayCodeParameters := PUnit
+
+namespace GolayCodeParameters
+
+def length (_ : GolayCodeParameters) : ℕ := 24
+def dimension (_ : GolayCodeParameters) : ℕ := 12
+def minDistance (_ : GolayCodeParameters) : ℕ := 8
+
+@[deprecated golay_code_dimension (since := "2026-07-27")]
+theorem length_eq (P : GolayCodeParameters) : length P = 24 := rfl
+
+@[deprecated golay_code_dimension (since := "2026-07-27")]
+theorem dim_eq (P : GolayCodeParameters) : dimension P = 12 := rfl
+
+@[deprecated golay_error_correction_capacity (since := "2026-07-27")]
+theorem dist_eq (P : GolayCodeParameters) : minDistance P = 8 := rfl
+
+end GolayCodeParameters
 
 @[deprecated GolayCodeParameters (since := "2026-07-27")]
 def golayCodeParameters : GolayCodeParameters :=
-  { length := 24
-    dimension := 12
-    minDistance := 8
-    length_eq := rfl
-    dim_eq := rfl
-    dist_eq := rfl }
+  PUnit.unit
 
 @[deprecated golay_code_self_duality (since := "2026-07-27")]
 theorem golay_code_parameter_self_duality
     (P : GolayCodeParameters) :
     2 * P.dimension = P.length := by
-  rw [P.dim_eq, P.length_eq]
+  rw [GolayCodeParameters.dim_eq P, GolayCodeParameters.length_eq P]
   norm_num
 
 @[deprecated golay_error_correction_capacity (since := "2026-07-27")]
 theorem golay_error_correction_capacity_of_parameters
     (P : GolayCodeParameters) :
     (P.minDistance - 1) / 2 = 3 := by
-  rw [P.dist_eq]
+  rw [GolayCodeParameters.dist_eq P]
   norm_num
 
 end InfoGeometry.Canonical.GolayLeechStabilizerCode

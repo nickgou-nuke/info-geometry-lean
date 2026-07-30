@@ -23,27 +23,27 @@ structure AdmissionReason where
 
 /-- Crisp hard blockers collected before any soft heuristics are considered. -/
 structure HardEvidence where
-  hasSorryAx : Bool := false
-  forbiddenAxioms : List Name := []
-  unsafeLeakage : Bool := false
-  missingRequiredAttrs : List Name := []
-  repDepthViolation : Bool := false
-  forbiddenRegionKind : Bool := false
+  hasSorryAx : Bool
+  forbiddenAxioms : List Name
+  unsafeLeakage : Bool
+  missingRequiredAttrs : List Name
+  repDepthViolation : Bool
+  forbiddenRegionKind : Bool
   deriving Repr, Inhabited
 
 /-- Non-blocking architectural or linter hints attached to a declaration. -/
 structure SoftEvidence where
-  vacuityHints : List String := []
-  graphRoleHints : List String := []
-  plannerHints : List String := []
+  vacuityHints : List String
+  graphRoleHints : List String
+  plannerHints : List String
   deriving Repr, Inhabited
 
 /-- Snapshot of the repository-level region policy. -/
 structure PolicySnapshot where
-  protectedNamespaces : List Name := []
-  bridgeNamespaces : List Name := []
-  workbenchNamespaces : List Name := []
-  requiredAttrsByRegion : List (String × List Name) := []
+  protectedNamespaces : List Name
+  bridgeNamespaces : List Name
+  workbenchNamespaces : List Name
+  requiredAttrsByRegion : List (String × List Name)
   deriving Repr, Inhabited
 
 /-- Stable version label for machine-readable admission reports. -/
@@ -57,7 +57,7 @@ structure AdmissionReport where
   hard : HardEvidence
   soft : SoftEvidence
   reasons : Array AdmissionReason
-  policyVersion : String := admissionPolicyVersion
+  policyVersion : String
   deriving Repr, Inhabited
 
 def AdmissionDecision.asString : AdmissionDecision → String

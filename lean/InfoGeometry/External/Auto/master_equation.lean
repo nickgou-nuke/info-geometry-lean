@@ -61,9 +61,19 @@ theorem arakiUmegakiGen_unnormalized_correction
     exp(itK) acts as the unitary flow generator. -/
 structure ConnesFlow where
   K : ℂ                                           -- relative modular Hamiltonian
-  cocycle : ℝ → ℂ := λ t => exp (Complex.I * t • K)  -- Connes cocycle
-  cost : ℂ := masterOp K                          -- operator Itakura-Saito distance
-  cocycle_zero : cocycle 0 = 1
+
+namespace ConnesFlow
+
+noncomputable def cocycle (F : ConnesFlow) (t : ℝ) : ℂ :=
+  exp (Complex.I * t • F.K)
+
+noncomputable def cost (F : ConnesFlow) : ℂ :=
+  masterOp F.K
+
+theorem cocycle_zero (F : ConnesFlow) : F.cocycle 0 = 1 := by
+  simp [cocycle]
+
+end ConnesFlow
 
 -- LAYER 5: THE GRADIENT FLOW — JKO SCHEME
 

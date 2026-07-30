@@ -37,13 +37,7 @@ open InfoGeometry.Canonical.DrazinFierzBridge
 open InfoGeometry.Canonical.DrazinModularPersistence
 open InfoGeometry.OperatorAlgebra.Thermodynamics
 
-/-! ## 1. Horizon zero-mode socket -/
-
-/-- Canonical name for the final Drazin centralizer sanctuary. -/
-@[rep_depth operator]
-abbrev HorizonZeroModeSocket
-    (Obs : Type*) [Ring Obs] [Star Obs] [SMul ℂ Obs] :=
-  DrazinCentralizerSanctuary Obs
+/-! ## 1. Horizon zero-mode sanctuary -/
 
 /--
 Zero mode on the Drazin horizon:
@@ -52,7 +46,7 @@ the observable is Drazin-corner localized and modular fixed.
 @[rep_depth operator]
 def IsHorizonZeroMode
     {Obs : Type*} [Ring Obs] [Star Obs] [SMul ℂ Obs]
-    (S : HorizonZeroModeSocket Obs)
+    (S : DrazinCentralizerSanctuary Obs)
     (x : Obs) : Prop :=
   PhysicalAlgebraCondition S x
 
@@ -62,7 +56,7 @@ Leakage operator from a frozen Drazin horizon.
 @[rep_depth operator]
 def leakageOperator
     {Obs : Type*} [Ring Obs] [Star Obs] [SMul ℂ Obs]
-    (S : HorizonZeroModeSocket Obs)
+    (S : DrazinCentralizerSanctuary Obs)
     (q : Obs)
     (t : ℝ) : Obs :=
   modularLeakageOperator S.flow S.horizon q t
@@ -74,7 +68,7 @@ no leakage.
 @[rep_depth operator]
 theorem no_leakage_of_fixed_horizon
     {Obs : Type*} [Ring Obs] [Star Obs] [SMul ℂ Obs]
-    (S : HorizonZeroModeSocket Obs)
+    (S : DrazinCentralizerSanctuary Obs)
     (q : Obs)
     (hOrth : q * S.horizon.p = 0) :
     ∀ t : ℝ,
@@ -86,7 +80,7 @@ theorem no_leakage_of_fixed_horizon
 @[rep_depth operator]
 theorem horizon_zero_mode_iff_compressed_centralizer
     {Obs : Type*} [Ring Obs] [Star Obs] [SMul ℂ Obs]
-    (S : HorizonZeroModeSocket Obs)
+    (S : DrazinCentralizerSanctuary Obs)
     (x : Obs) :
     IsHorizonZeroMode S x ↔
       InDrazinCompressedCentralizer S.flow S.horizon x :=
@@ -104,7 +98,7 @@ flow.
 @[rep_depth operator]
 def ChannelsAreHorizonZeroModes
     {Obs : Type*} [Ring Obs] [Star Obs] [SMul ℂ Obs]
-    (S : HorizonZeroModeSocket Obs)
+    (S : DrazinCentralizerSanctuary Obs)
     (C : InfoGeometry.Canonical.DrazinFierzBridge.FierzChannelMap Obs) : Prop :=
   ∀ ch : InfoGeometry.Canonical.DrazinFierzBridge.FierzChannel,
     IsHorizonZeroMode S (C.channel ch S.horizon.AD)
@@ -122,7 +116,7 @@ lower definitions.
 structure HorizonZeroModeFierzLaw
     (Obs : Type*) [Ring Obs] [Star Obs] [SMul ℂ Obs] where
   sanctuary :
-    HorizonZeroModeSocket Obs
+    DrazinCentralizerSanctuary Obs
   channels :
     InfoGeometry.Canonical.DrazinFierzBridge.FierzChannelMap Obs
   residual :

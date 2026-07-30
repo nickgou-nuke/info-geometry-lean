@@ -131,21 +131,6 @@ def toHestenesMoebiusClosureBridge :
   atomExpectation_wordAction_invariant := B.atomExpectation_wordAction_invariant
   wilsonHolonomy_wordAction_invariant := B.wilsonHolonomy_wordAction_invariant
 
-/-- Readback: the induced Möbius owner uses the bounded Connes--Wilson owner. -/
-@[rep_depth krein]
-theorem moebius_wilson_eq :
-    B.toHestenesMoebiusClosureBridge.wilson =
-      B.boundedWilson.toHestenesConnesWilsonBridge :=
-  rfl
-
-/-- The bounded KMS Möbius vector action fixes the vacuum apex. -/
-@[rep_depth krein]
-theorem moebius_vacuum_vector_fixed
-    (g : MoebiusParameter) :
-    B.vectorAction g
-        B.boundedWilson.toHestenesConnesWilsonBridge.vacuum.omega =
-      B.boundedWilson.toHestenesConnesWilsonBridge.vacuum.omega :=
-  B.vectorAction_fixes_omega g
 
 /-- The bounded KMS Möbius action preserves the Hestenes natural cone shadow. -/
 @[rep_depth krein]
@@ -170,23 +155,6 @@ theorem moebius_preserves_nullCone
         B.boundedWilson.toHestenesConnesWilsonBridge.kmsPacket :=
   B.toHestenesMoebiusClosureBridge.moebius_preserves_nullCone g hξ
 
-/-- The bounded KMS Ω-volume state is invariant under the supplied Möbius action. -/
-@[rep_depth krein]
-theorem volumeState_moebius_invariant
-    (g : MoebiusParameter) (A : EndH) :
-    B.boundedWilson.toHestenesConnesWilsonBridge.volume.volumeState
-        (B.operatorAction g A) =
-      B.boundedWilson.toHestenesConnesWilsonBridge.volume.volumeState A :=
-  B.volumeState_operatorAction_invariant g A
-
-/-- Wilson holonomy is invariant under the supplied Möbius word action. -/
-@[rep_depth projective]
-theorem wilsonHolonomy_wordAction_invariant_apply
-    (g : MoebiusParameter) (parent child : Word) :
-    B.boundedWilson.toHestenesConnesWilsonBridge.wilsonHolonomy
-        ((B.wordAction g) parent) ((B.wordAction g) child) =
-      B.boundedWilson.toHestenesConnesWilsonBridge.wilsonHolonomy parent child :=
-  B.wilsonHolonomy_wordAction_invariant g parent child
 
 end BoundedKMSHestenesMoebiusClosureBridge
 

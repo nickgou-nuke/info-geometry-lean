@@ -22,16 +22,19 @@ inductive ChiralChannel
   | E_plus
   | E_minus
   | Parabolic
+  | NonParabolic
 deriving DecidableEq, Repr
 
 /--
 Local channel classifier:
-if `Ω² = 0`, classify as `Parabolic`; otherwise keep an `E_plus` placeholder.
+if `Ω² = 0`, classify as `Parabolic`; otherwise retain only the honest
+non-parabolic classification.  A plus/elliptic refinement requires a separate
+owner theorem and is not inferred here.
 -/
 noncomputable def channelOfOmega (Ω : ParOp) : ChiralChannel :=
   by
     classical
-    exact if mul Ω Ω = zero then ChiralChannel.Parabolic else ChiralChannel.E_plus
+    exact if mul Ω Ω = zero then ChiralChannel.Parabolic else ChiralChannel.NonParabolic
 
 /-- Nilpotent collapse theorem: `Ω² = 0` forces the parabolic channel. -/
 theorem chiral_collapse_to_parabolic

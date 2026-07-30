@@ -63,8 +63,8 @@ structure NakajimaQuiverVariety (r : ℕ) where
   ζ : Fin r → ℝ
   /-- Complex dimension
     2(∑_{i→i+1} v_i v_{i+1} + ∑_i v_i w_i - ∑_i v_i²).
-  -/
-  dimℂ : ℕ := quiverDim r v w
+    -/
+  dimℂ : ℕ
 
 /-- Construct A_r quiver variety from vectors. -/
 def mkQuiver (r : ℕ) (v : DimVec r)
@@ -154,13 +154,19 @@ structure QQSystem (r : ℕ) where
   q : ℂ
   /-- q is not a root of unity. -/
   q_not_root : ∀ n : ℕ, 0 < n → q ^ n ≠ 1
-  /-- Degree of Q_i equals v_i. -/
-  deg_Q : ∀ i, (Q i).natDegree = 0 ∨
-    0 < (Q i).natDegree
-  /-- Polynomial degrees encode the dimension
-  vector of the corresponding quiver variety. -/
-  dim_vec : Fin r → ℕ := fun i =>
-    (Q i).natDegree
+
+namespace QQSystem
+
+/-- Polynomial degrees encode the dimension vector of the quiver system. -/
+def dim_vec {r : ℕ} (S : QQSystem r) : Fin r → ℕ := fun i =>
+  (S.Q i).natDegree
+
+/-- Every polynomial degree is zero or strictly positive. -/
+theorem deg_Q {r : ℕ} (S : QQSystem r) (i : Fin r) :
+    (S.Q i).natDegree = 0 ∨ 0 < (S.Q i).natDegree := by
+  exact Nat.eq_zero_or_pos (S.Q i).natDegree
+
+end QQSystem
 
 /-- The QQ-system functional equation at vertex i:
   Q_i(qz)·Q̃_i(z) - Q_i(z)·Q̃_i(qz)
@@ -183,8 +189,6 @@ For G = GL_N, this is an ℏ-difference connection
 where each A_i is upper-triangular with prescribed
 singularities determined by Z (the "twist"). -/
 structure MiuraHbarOper (N : ℕ) where
-  /-- Rank of the group G = GL_N. -/
-  rank : ℕ := N
   /-- ℏ-parameter (q-shift for difference
   connection). -/
   hbar : ℂ
@@ -194,8 +198,16 @@ structure MiuraHbarOper (N : ℕ) where
   factors). -/
   connection :
     ℂ → Matrix (Fin N) (Fin N) ℂ
-  /-- The finite socket at least carries a stable connection readout. -/
-  is_miura : connection = connection
+
+namespace MiuraHbarOper
+
+/-- The defining representation rank is the index of the Miura oper. -/
+def rank {N : ℕ} (_ : MiuraHbarOper N) : ℕ := N
+
+/-- Every stored connection is equal to itself by reflexivity. -/
+theorem is_miura {N : ℕ} (M : MiuraHbarOper N) : M.connection = M.connection := rfl
+
+end MiuraHbarOper
 
 /-- Space of Z-twisted Miura ℏ-opers for G = GL_N
 with given singularity data. Denoted OpG,ℏ^Z
@@ -214,9 +226,9 @@ the QQ-system biject with Z-twisted Miura
 theorem qLanglands_QQ_to_opers (r N : ℕ)
     (adj : Fin r → Fin r → Prop)
     (S : QQSystem r) (hS : QQRelation S adj) :
-    ∃ op : MiuraHbarOper N,
+  ∃ op : MiuraHbarOper N,
       op.hbar = S.q := by
-  exact ⟨ { rank := N, hbar := S.q, Z := fun _ => 0, connection := fun _ => 0, is_miura := rfl }, rfl ⟩
+  exact ⟨ { hbar := S.q, Z := fun _ => 0, connection := fun _ => 0 }, rfl ⟩
 
 /-! ## §6. XXZ Bethe Ansatz equations -/
 
@@ -356,8 +368,6 @@ Lax matrix L(z) ∈ Mat_{N×N}(ℂ(z)).
 The eigenvalues of L(z) generate quantum
 integrals of motion for the tRS system. -/
 structure TRSLaxMatrix (N : ℕ) where
-  /-- Rank (number of particles). -/
-  rank : ℕ := N
   /-- Spectral parameter. -/
   z : ℂ
   /-- Particle positions. -/
@@ -365,9 +375,16 @@ structure TRSLaxMatrix (N : ℕ) where
   /-- Coupling constant q = e^{β γ}. -/
   q : ℂ
   /-- Elliptic nome p (p = 0 for trig case). -/
-  p : ℂ := 0
+  p : ℂ
   /-- The Lax matrix. -/
   L : Matrix (Fin N) (Fin N) ℂ
+
+namespace TRSLaxMatrix
+
+/-- The particle rank is the matrix index of the Lax datum. -/
+def rank {N : ℕ} (_ : TRSLaxMatrix N) : ℕ := N
+
+end TRSLaxMatrix
 
 /-- Build the trigonometric (p = 0) Lax matrix.
 In the trigonometric limit the theta function
@@ -384,6 +401,7 @@ def trsLaxMatrix (N : ℕ) (z : ℂ)
     { z := z
       a := a
       q := q
+      p := 0
       L := Matrix.of fun i j =>
         if i = j then
           ∏ k ∈ Finset.univ.filter (· ≠ j), (1 - q * a i / a k) / (1 - a i / a k)

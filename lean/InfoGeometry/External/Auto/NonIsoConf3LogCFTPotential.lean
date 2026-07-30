@@ -114,10 +114,22 @@ def entropyGapValue (entropyPotentialProduct entropyPotentialOS : ℝ) : ℝ :=
 structure EntropicBranchChoice where
   entropyPotentialProduct : ℝ
   entropyPotentialOS : ℝ
-  entropyGap : ℝ := entropyGapValue entropyPotentialProduct entropyPotentialOS
-  entropyGapEq : entropyGap = entropyGapValue entropyPotentialProduct entropyPotentialOS := by rfl
-  chosen : ModelChoice := logPotentialBranchChoice entropyPotentialProduct entropyPotentialOS
-  chosen_eq : chosen = logPotentialBranchChoice entropyPotentialProduct entropyPotentialOS := by rfl
+
+namespace EntropicBranchChoice
+
+def entropyGap (d : EntropicBranchChoice) : ℝ :=
+  entropyGapValue d.entropyPotentialProduct d.entropyPotentialOS
+
+@[simp] theorem entropyGapEq (d : EntropicBranchChoice) :
+    d.entropyGap = entropyGapValue d.entropyPotentialProduct d.entropyPotentialOS := rfl
+
+def chosen (d : EntropicBranchChoice) : ModelChoice :=
+  logPotentialBranchChoice d.entropyPotentialProduct d.entropyPotentialOS
+
+@[simp] theorem chosen_eq (d : EntropicBranchChoice) :
+    d.chosen = logPotentialBranchChoice d.entropyPotentialProduct d.entropyPotentialOS := rfl
+
+end EntropicBranchChoice
 
 /-- Compatibility alias for existing call sites. -/
 abbrev LogPotentialBranchDiagnostic := EntropicBranchChoice
@@ -134,16 +146,17 @@ theorem entropicChoiceFromGap (d : EntropicBranchChoice)
     (h : d.entropyGap > 0) :
     d.chosen = ModelChoice.productLeray := by
   have hEq : d.entropyGap = d.entropyPotentialProduct - d.entropyPotentialOS := by
-    simpa [entropyGapValue] using d.entropyGapEq
+    rfl
   have hgap : d.entropyPotentialProduct - d.entropyPotentialOS > 0 := by
-    simpa [hEq] using h
+    rw [← hEq]
+    exact h
   exact liftDiagnosticToChoice d (by linarith [hgap])
 
 theorem entropicChoiceFromNotGap (d : EntropicBranchChoice)
     (h : ¬ d.entropyGap > 0) :
     d.chosen = ModelChoice.osAlpha := by
   have hEq : d.entropyGap = d.entropyPotentialProduct - d.entropyPotentialOS := by
-    simpa [entropyGapValue] using d.entropyGapEq
+    rfl
   have hgap : ¬ d.entropyPotentialProduct > d.entropyPotentialOS := by
     linarith [h, hEq]
   rw [d.chosen_eq]

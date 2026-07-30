@@ -32,7 +32,7 @@ A horizon zero mode in the canonical sanctuary is fixed by the modular flow.
 @[rep_depth operator]
 theorem horizon_zero_mode_commutes_with_modular_flow
     {Obs : Type*} [Ring Obs] [Star Obs] [SMul ℂ Obs]
-    (S : HorizonZeroModeSocket Obs)
+    (S : DrazinCentralizerSanctuary Obs)
     (x : Obs)
     (hx : IsHorizonZeroMode S x) :
     ∀ t : ℝ, S.flow.flow t x = x := by

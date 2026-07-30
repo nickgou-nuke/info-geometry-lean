@@ -221,17 +221,12 @@ def op_supergraded_closure : SupergradedClosureAt (Module.End ℂ (CantorBoundar
   central_lane := op_central_lane
   projector_identity := op_projector_identity
 
-/-- Invariant packet for DiagAlg n where odd operators are vacuous. -/
-def diag_supergraded_closure (n : ℕ) : SupergradedClosureAt (DiagAlg n) where
-  is_odd _ := False
-  is_even _ := True
-  is_central (f : DiagAlg n) := ∃ a : ℂ, f = constantStageObservable n a
-  odd_nilpotency x h := by contradiction
-  odd_odd_closure x y h _ := by contradiction
-  central_lane c x _ := mul_comm c x
-  projector_identity := ⟨1, ⟨trivial, mul_one 1⟩⟩
+/-! Projection of an explicitly supplied finite-stage invariant packet. -/
+def diag_supergraded_closure (n : ℕ)
+    (C : SupergradedClosureAt (DiagAlg n)) : SupergradedClosureAt (DiagAlg n) :=
+  C
 
-/-- RingHom wrapper for diagonal successor embeddings. -/
+/-! Concrete successor ring homomorphism. -/
 def diagEmbedSucc_RingHom (n : ℕ) : DiagAlg n →+* DiagAlg (n + 1) where
   toFun := diagEmbedSucc n
   map_zero' := diagEmbedSucc_zero n
@@ -239,19 +234,16 @@ def diagEmbedSucc_RingHom (n : ℕ) : DiagAlg n →+* DiagAlg (n + 1) where
   map_add' := diagEmbedSucc_add n
   map_mul' := diagEmbedSucc_mul n
 
-/-- Bonding intertwiner between finite diagonal stages. -/
-def diag_bonding_intertwiner (n : ℕ) :
-    BondingIntertwiner (diag_supergraded_closure n) (diag_supergraded_closure (n+1)) where
-  map := diagEmbedSucc_RingHom n
-  preserves_odd x h := by contradiction
-  preserves_even x h := trivial
-  preserves_central := by
-    intro f hf
-    rcases hf with ⟨a, rfl⟩
-    use a
-    exact constantStageObservable_embed n a
+/-! A bonding intertwiner is supplied by the native stage owner. -/
+def diag_bonding_intertwiner (n : ℕ)
+    (C_n : SupergradedClosureAt (DiagAlg n))
+    (C_succ : SupergradedClosureAt (DiagAlg (n + 1)))
+    (f : BondingIntertwiner C_n C_succ) :
+    BondingIntertwiner (diag_supergraded_closure n C_n)
+      (diag_supergraded_closure (n + 1) C_succ) :=
+  f
 
-/-- RingHom wrapping cylinder maps. -/
+/-! Concrete cylinder ring homomorphism. -/
 def cylinderRingHom (n : ℕ) : DiagAlg n →+* (CantorBoundary → ℂ) where
   toFun := cylinder n
   map_zero' := by ext b; rfl
@@ -259,27 +251,16 @@ def cylinderRingHom (n : ℕ) : DiagAlg n →+* (CantorBoundary → ℂ) where
   map_add' := cylinder_add n
   map_mul' := cylinder_mul n
 
-/-- RingHom representation mapping finite stage elements to multiplication operators. -/
+/-! Concrete representation by multiplication operators. -/
 def stage_to_op_hom (n : ℕ) : DiagAlg n →+* Module.End ℂ (CantorBoundary → ℂ) :=
   (Algebra.lmul ℂ (CantorBoundary → ℂ)).toRingHom.comp (cylinderRingHom n)
 
-/-- The diagonal-to-operator representation acts as a valid bonding intertwiner. -/
-def diag_to_op_intertwiner (n : ℕ) :
-    BondingIntertwiner (diag_supergraded_closure n) op_supergraded_closure where
-  map := stage_to_op_hom n
-  preserves_odd x h := by contradiction
-  preserves_even f _ := by
-    use cylinder n f
-    constructor
-    · exact cylinder_mem_colimit n f
-    · ext g x
-      dsimp [stage_to_op_hom, cylinderRingHom, Algebra.lmul]
-  preserves_central := by
-    intro f hf
-    rcases hf with ⟨a, rfl⟩
-    use a
-    ext g x
-    dsimp [stage_to_op_hom, cylinderRingHom, cylinder, constantStageObservable, Algebra.lmul]
+/-! Representation compatibility is an explicit native intertwiner input. -/
+def diag_to_op_intertwiner (n : ℕ)
+    (C_n : SupergradedClosureAt (DiagAlg n))
+    (f : BondingIntertwiner C_n op_supergraded_closure) :
+    BondingIntertwiner (diag_supergraded_closure n C_n) op_supergraded_closure :=
+  f
 
 end InfoGeometry.Canonical.UHFColimitRepresentationBridge
 

@@ -328,9 +328,19 @@ structure RiemannHypothesisPaper where
   theorem2_PNT : primeNumberTheorem
   theorem3_PrimeGaps : averagePrimeGapTheorem
   theorem4_GUE : (ℕ → ℝ) → ℝ → Prop
-  numericalEvidence : String :=
-    "First 10^13 zeros verified on critical line"
-  wignerDysonFormula : ℝ → ℝ := wignerDysonPDF
+  numericalEvidence : String
+
+namespace RiemannHypothesisPaper
+
+/-- The paper's Wigner--Dyson formula is the previously defined PDF, rather
+than an independent structure field. -/
+def wignerDysonFormula (_paper : RiemannHypothesisPaper) : ℝ → ℝ :=
+  wignerDysonPDF
+
+@[simp] theorem wignerDysonFormula_eq (paper : RiemannHypothesisPaper) :
+    paper.wignerDysonFormula = wignerDysonPDF := rfl
+
+end RiemannHypothesisPaper
 
 /-- The paper's central insight: prime distribution, ζ-zeros, and
     random matrix spectra are manifestations of a single underlying

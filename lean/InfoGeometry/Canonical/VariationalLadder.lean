@@ -7,12 +7,10 @@ open scoped InnerProductSpace
 /-!
 # InfoGeometry.Canonical.VariationalLadder
 
-Expository variational naming surface over owned first- and second-variation
-data.
+Direct readout carrier over the owned first- and second-variation data.
 
-This file is a compatibility shell. It keeps ladder/current vocabulary readable
-without claiming new owner mathematics beyond the already maintained
-relational, Hessian, and Onsager surfaces.
+The ladder is represented by a product of its three actual readouts; no
+additional proof or compatibility field is introduced here.
 -/
 
 namespace InfoGeometry.Canonical.VariationalLadder
@@ -31,14 +29,37 @@ noncomputable def informationalCurrent
     (X : PerturbationChannel E) : ℝ :=
   R.firstVariation R.comparisonState X
 
-/--
-Compatibility bundle collecting the current/fisher/vortex ladder.
--/
+/-! The three readouts are carried directly as a product. -/
 @[rep_depth transport]
-structure Ladder (R : RelationalInformationDatum (E := E)) where
-  current : PerturbationChannel E → ℝ := informationalCurrent R
-  fisher : LinearMap.BilinForm ℝ (PerturbationChannel E) := fisherPart R
-  vortex : LinearMap.BilinForm ℝ (PerturbationChannel E) := vortexPart R
+abbrev Ladder (R : RelationalInformationDatum (E := E)) :=
+  (PerturbationChannel E → ℝ) ×
+    LinearMap.BilinForm ℝ (PerturbationChannel E) ×
+      LinearMap.BilinForm ℝ (PerturbationChannel E)
+
+namespace Ladder
+
+variable {R : RelationalInformationDatum (E := E)}
+
+@[rep_depth transport]
+abbrev current (L : Ladder R) : PerturbationChannel E → ℝ := L.1
+
+@[rep_depth transport]
+abbrev fisher (L : Ladder R) : LinearMap.BilinForm ℝ (PerturbationChannel E) := L.2.1
+
+@[rep_depth transport]
+abbrev vortex (L : Ladder R) : LinearMap.BilinForm ℝ (PerturbationChannel E) := L.2.2
+
+@[rep_depth transport]
+def mk
+    (current : PerturbationChannel E → ℝ)
+    (fisher vortex : LinearMap.BilinForm ℝ (PerturbationChannel E)) : Ladder R :=
+  (current, fisher, vortex)
+
+@[rep_depth transport]
+noncomputable def canonical (R : RelationalInformationDatum (E := E)) : Ladder R :=
+  mk (R := R) (informationalCurrent R) (fisherPart R) (vortexPart R)
+
+end Ladder
 
 /--
 Compatibility predicate for vanishing first variation.

@@ -52,43 +52,41 @@ Deprecated compatibility record for clients of the former `[n,k,d]` marker.
 The constructed stabilizer carrier remains `golayStabilizerCode`; this record
 only preserves the old numerical entry point and is not a code construction.
 -/
-structure QuantumStabilizerCode (n k d : ℕ) where
+structure QuantumStabilizerCode where
   carrier : Finset BinaryPauli24
   carrier_nonempty : carrier.Nonempty
   symplectic_commutation :
     ∀ u ∈ carrier, ∀ v ∈ carrier,
       symplecticInnerProduct u v = 0
-  n_eq : n = 24
-  k_eq : k = 12
-  d_eq : d = 8
 
 namespace QuantumStabilizerCode
 
-variable {n k d : ℕ} (C : QuantumStabilizerCode n k d)
+variable (C : QuantumStabilizerCode)
 
-@[deprecated n_eq (since := "2026-07-27")]
-theorem length_eq : n = 24 := C.n_eq
+def length (_ : QuantumStabilizerCode) : ℕ := 24
+def dimension (_ : QuantumStabilizerCode) : ℕ := 12
+def distance (_ : QuantumStabilizerCode) : ℕ := 8
 
-@[deprecated k_eq (since := "2026-07-27")]
-theorem dim_eq : k = 12 := C.k_eq
+@[deprecated golay_code_dimension (since := "2026-07-27")]
+theorem length_eq : C.length = 24 := rfl
 
-@[deprecated d_eq (since := "2026-07-27")]
-theorem distance_eq : d = 8 := C.d_eq
+@[deprecated golay_code_dimension (since := "2026-07-27")]
+theorem dim_eq : C.dimension = 12 := rfl
 
-theorem is_self_dual : k * 2 = n := by
-  omega
+@[deprecated golay_error_correction_capacity (since := "2026-07-27")]
+theorem distance_eq : C.distance = 8 := rfl
 
-theorem distance_pos : 0 < d := by
-  omega
+theorem is_self_dual : C.dimension * 2 = C.length := by
+  norm_num [dimension, length]
+
+theorem distance_pos : 0 < C.distance := by
+  norm_num [distance]
 
 end QuantumStabilizerCode
 
-def golayStabilizerCodeParameters : QuantumStabilizerCode 24 12 8 where
+def golayStabilizerCodeParameters : QuantumStabilizerCode where
   carrier := golayStabilizerCode
   carrier_nonempty := golay_stabilizer_code_nonempty
   symplectic_commutation := golay_stabilizer_commutes
-  n_eq := rfl
-  k_eq := rfl
-  d_eq := rfl
 
 end InfoGeometry.Quantum.GolayLeechStabilizerCode

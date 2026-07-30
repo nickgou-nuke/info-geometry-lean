@@ -1,4 +1,5 @@
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Tactic.Ring
 
 set_option autoImplicit false
@@ -29,11 +30,12 @@ class ModularTimeFlow (R : Type*) [CommRing R] where
   sinh : R → R
   hyperbolic_identity : ∀ η : R, cosh η * cosh η - sinh η * sinh η = 1
 
-/-- Concrete instantiation of ModularTimeFlow (trivial flow). -/
-instance trivialModularTimeFlow {R : Type*} [CommRing R] : ModularTimeFlow R where
-  cosh _ := 1
-  sinh _ := 0
-  hyperbolic_identity _ := by ring
+/-- Genuine real modular flow from Mathlib's hyperbolic functions. -/
+noncomputable instance realModularTimeFlow : ModularTimeFlow ℝ where
+  cosh := Real.cosh
+  sinh := Real.sinh
+  hyperbolic_identity η := by
+    simpa [pow_two] using Real.cosh_sq_sub_sinh_sq η
 
 /-- Tomita-Takesaki modular time flow (`t-z` boost) on the chiral cone. -/
 def rindler_boost {R : Type*} [CommRing R] [ModularTimeFlow R]
@@ -106,10 +108,15 @@ class OuterAutomorphismEquivalence
     ∀ (X : ChiralState R) (η : R),
       Embedding (rindler_boost X η) = Δ η * Embedding X * Δ (-η)
 
-/-- Concrete instantiation of OuterAutomorphismEquivalence (trivial equivalence). -/
-instance trivialOuterAutomorphismEquivalence {R : Type*} [CommRing R] [ModularTimeFlow R] :
-    OuterAutomorphismEquivalence (R := R) (A := R) (Embedding := fun _ => 0) (Δ := fun _ => 0) where
-  generator_commutes X η := by ring
+/-- Construct an outer-automorphism equivalence from its actual intertwining law. -/
+def outerAutomorphismEquivalenceOf
+    {R : Type*} [CommRing R] [ModularTimeFlow R]
+    {A : Type*} [Ring A]
+    (Embedding : ChiralState R → A) (Δ : R → A)
+    (h : ∀ (X : ChiralState R) (η : R),
+      Embedding (rindler_boost X η) = Δ η * Embedding X * Δ (-η)) :
+    OuterAutomorphismEquivalence A Embedding Δ :=
+  ⟨h⟩
 
 /-- Conditional interval preservation under the explicit outer-automorphism witness. -/
 theorem automorphism_preserves_interval

@@ -254,47 +254,4 @@ theorem zero_dual_defect_klein_boundary_charge_even :
     InfoGeometry.Topology.BrillouinKlein.klein_bottle_boundary ℤ 0 0 = 2 * (0 : ℤ) := by
   rfl
 
-/-- Closed finite algebra packet for the dual split-octonion extension. -/
-theorem dualSplitOct_algebra_packet :
-    dualSplitOctCoordinateCount = 16 ∧
-      (∀ X Y : SplitOct, mulD (baseLift X) (baseLift Y) = baseLift (mulZ X Y)) ∧
-      (∀ X Y : SplitOct, mulD (epsLift X) (epsLift Y) = zeroD) ∧
-      (∀ X Y : SplitOct, mulD (baseLift X) (epsLift Y) = epsLift (mulZ X Y)) ∧
-      (∀ X Y : SplitOct, mulD (epsLift X) (baseLift Y) = epsLift (mulZ X Y)) ∧
-      mulD dualEpsilon dualEpsilon = zeroD ∧
-      InfoGeometry.Algebra.SupergradedBracket.superBracket true true dualEpsilon dualEpsilon = zeroD ∧
-      (∀ X Y : DualSplitOct, (mulD X Y).primal = mulZ X.primal Y.primal) ∧
-      (∀ _n : Nat, mulD dualEpsilon dualEpsilon = zeroD) ∧
-      InfoGeometry.Topology.BrillouinKleinGauge.klein_bottle_z2_invariant 0 0 = 0 ∧
-      InfoGeometry.Topology.BrillouinKlein.klein_bottle_boundary ℤ 0 0 = 2 * (0 : ℤ) ∧
-      associatorD (baseLift up0) (baseLift up1) (baseLift down1) ≠ zeroD := by
-  exact ⟨dual_coordinate_count, baseLift_mul, epsLift_mul_epsLift_zero,
-    baseLift_mul_epsLift, epsLift_mul_baseLift, dualEpsilon_sq_zero,
-    dualEpsilon_odd_odd_superBracket_zero, primal_projection_mul,
-    dualEpsilon_sq_zero_at_every_stage, zero_dual_defect_klein_bottle_z2_invariant,
-    zero_dual_defect_klein_boundary_charge_even, lifted_associator_base_ne_zero⟩
-
-/-- Closed finite multi-system arithmetic packet mirrored from the runtime verifier. -/
-theorem dualSplitOct_multisystem_backbone_packet :
-    gapG2TwoDerivedOrder * gapG2TwoDerivedIndex = gapG2TwoOrder ∧
-      gapAutG2TwoOrder = gapG2TwoOrder ∧
-      sageG2RootCount = 12 ∧
-      sageG2WeylOrder = 12 ∧
-      sageD4RootCount = 24 ∧
-      sageD4WeylOrder = 192 ∧
-      sageD5RootCount = 40 ∧
-      sageD5WeylOrder = 1920 ∧
-      sageD5LieDimension = 45 ∧
-      cl44Dimension = 2 ^ 8 ∧
-      cl55Dimension = 2 ^ 10 ∧
-      o55FiveGradeNegTwoDim + o55FiveGradeNegOneDim + o55FiveGradeZeroDim +
-          o55FiveGradePosOneDim + o55FiveGradePosTwoDim =
-        sageD5LieDimension := by
-  exact ⟨gap_g2two_order_index_ledger.1, gap_g2two_order_index_ledger.2,
-    sage_g2_root_weyl_ledger.1, sage_g2_root_weyl_ledger.2,
-    sage_d4_d5_root_weyl_ledger.1, sage_d4_d5_root_weyl_ledger.2.1,
-    sage_d4_d5_root_weyl_ledger.2.2.1, sage_d4_d5_root_weyl_ledger.2.2.2.1,
-    sage_d4_d5_root_weyl_ledger.2.2.2.2, clifford_split_dimension_ledger.1,
-    clifford_split_dimension_ledger.2, o55_five_grade_dimension_sum⟩
-
 end InfoGeometry.OperatorAlgebra.DualSplitOctonionAlgebra

@@ -2,7 +2,8 @@ import Mathlib
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Krein.Thermal
 import InfoGeometry.Dynamics.UnruhKMS
-import InfoGeometry.Algebra.QCCRSupergradingBridge
+import InfoGeometry.OperatorAlgebra.QCCRCore
+import InfoGeometry.OperatorAlgebra.QCCRSupergrading
 
 /-!
 # InfoGeometry.Canonical.ThermalBogoliubov
@@ -76,7 +77,8 @@ open Real
 open Set
 open InfoGeometry.Krein
 open InfoGeometry.Dynamics
-open InfoGeometry.Algebra.QCCRSupergradingBridge
+open InfoGeometry.OperatorAlgebra.QCCRCore
+open InfoGeometry.OperatorAlgebra.QCCRSupergrading
 
 /-! ## 1. The thermal polarization structure -/
 

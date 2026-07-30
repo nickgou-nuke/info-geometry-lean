@@ -109,15 +109,6 @@ theorem prime_density_le_primitive_density_iff_gap_nonneg
       0 ≤ projectiveDensityGap A u :=
   (projectiveDensityGap_nonneg_iff A u).symm
 
-/-- Pointwise nonnegativity of the canonical projective density gap.
-
-This restores the historical witness name as the mathematical proposition
-itself, rather than as a record containing an arbitrary readout and two
-evidence fields.
--/
-abbrev RelativeEntropyWitness (A : Finset ℕ) : Prop :=
-  ∀ u : ℝ, u ∈ Set.Ioo (0 : ℝ) 1 → 0 ≤ projectiveDensityGap A u
-
 namespace RelativeEntropyWitness
 
 /-- Direct theorem for the canonical density-gap readout. -/
@@ -145,16 +136,18 @@ theorem canonical_prime_density_le_primitive_density
   (projectiveDensityGap_nonneg_iff A u).1 h
 
 variable {A : Finset ℕ}
-variable (W : RelativeEntropyWitness A)
+variable (W : ∀ u : ℝ, u ∈ Set.Ioo (0 : ℝ) 1 → 0 ≤ projectiveDensityGap A u)
 
 /-- Canonical readout attached to the gap-nonnegativity proposition. -/
-def relativeReadout (W : RelativeEntropyWitness A) (u : ℝ) : ℝ :=
+def relativeReadout
+    (W : ∀ u : ℝ, u ∈ Set.Ioo (0 : ℝ) 1 → 0 ≤ projectiveDensityGap A u)
+    (u : ℝ) : ℝ :=
   projectiveDensityGap A u
 
 /-- The canonical readout is the primitive-minus-prime density difference. -/
 theorem readout_eq_density_difference
     {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
-    W.relativeReadout u =
+    relativeReadout W u =
       primitiveInvertedPartitionDensity A u -
         arithmeticPrimeInvertedPartitionDensity A u :=
   projectiveDensityGap_eq A u
@@ -162,7 +155,7 @@ theorem readout_eq_density_difference
 /-- Readback of the gap-nonnegativity proposition. -/
 theorem readout_nonneg
     {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
-    0 ≤ W.relativeReadout u :=
+    0 ≤ relativeReadout W u :=
   W u hu
 
 /-!
@@ -176,25 +169,25 @@ projections, with the canonical owner as their proof source.
 @[deprecated readout_eq_density_difference (since := "2026-07-27")]
 theorem relative_eq_density_difference
     {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
-    W.relativeReadout u =
+    relativeReadout W u =
       primitiveInvertedPartitionDensity A u -
         arithmeticPrimeInvertedPartitionDensity A u :=
-  W.readout_eq_density_difference hu
+  readout_eq_density_difference W hu
 
 @[deprecated readout_nonneg (since := "2026-07-27")]
 theorem relative_nonneg
     {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
-    0 ≤ W.relativeReadout u :=
-  W.readout_nonneg hu
+    0 ≤ relativeReadout W u :=
+  readout_nonneg W hu
 
 /-- A calibrated nonnegative readout orders the two projective densities. -/
 theorem prime_density_le_primitive_density
-    (W : RelativeEntropyWitness A)
+    (W : ∀ u : ℝ, u ∈ Set.Ioo (0 : ℝ) 1 → 0 ≤ projectiveDensityGap A u)
     {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
     arithmeticPrimeInvertedPartitionDensity A u ≤
       primitiveInvertedPartitionDensity A u := by
   exact le_of_readout_eq_sub_of_nonneg
-    (W.readout_eq_density_difference hu) (W.readout_nonneg hu)
+    (readout_eq_density_difference W hu) (readout_nonneg W hu)
 
 end RelativeEntropyWitness
 

@@ -1,54 +1,10 @@
 import Mathlib.Tactic
+import InfoGeometry.Canonical.ChiralCausalConeFlow
+import InfoGeometry.Algebra.NilpotentModularAutomorphism
 
 set_option autoImplicit false
 
 open Finset
-
-section NilpotentAutomorphism
-
-theorem nilpotent_automorphism_expansion_general_time
-    {A : Type*} [Ring A]
-    (N X t : A)
-    (ht_center : ∀ Y : A, Commute t Y)
-    (_hN : N * N = 0) :
-    (1 + t * N) * X * (1 - t * N)
-      = X + t * (N * X - X * N) - (t * t) * (N * X * N) := by
-  have htN : t * N = N * t := (ht_center N).eq
-  have htX : t * X = X * t := (ht_center X).eq
-  have h1 : X * (t * N) = t * (X * N) := by
-    calc
-      X * (t * N) = X * t * N := by simp [mul_assoc]
-      _ = t * X * N := by rw [htX]
-      _ = t * (X * N) := by simp [mul_assoc]
-  have h2 : t * N * X * (t * N) = (t * t) * (N * X * N) := by
-    calc
-      t * N * X * (t * N) = t * (N * (X * t * N)) := by simp [mul_assoc]
-      _ = t * (N * (t * X * N)) := by rw [← htX]
-      _ = t * (N * t * X * N) := by simp [mul_assoc]
-      _ = t * (t * N * X * N) := by rw [htN]
-      _ = (t * t) * (N * X * N) := by simp [mul_assoc]
-  have h3 :
-      (1 + t * N) * X * (1 - t * N)
-        = X - t * (X * N) + (t * (N * X) - (t * t) * (N * X * N)) := by
-    calc
-      (1 + t * N) * X * (1 - t * N)
-          = (X + t * N * X) * (1 - t * N) := by rw [add_mul, one_mul]
-      _ = X * (1 - t * N) + (t * N * X) * (1 - t * N) := by rw [add_mul]
-      _ = X * 1 - X * (t * N) + ((t * N * X) * 1 - (t * N * X) * (t * N)) := by
-            rw [mul_sub, mul_sub]
-      _ = X - X * (t * N) + (t * (N * X) - t * N * X * (t * N)) := by
-            simp [mul_assoc]
-      _ = X - t * (X * N) + (t * (N * X) - t * N * X * (t * N)) := by rw [h1]
-      _ = X - t * (X * N) + (t * (N * X) - (t * t) * (N * X * N)) := by rw [h2]
-  rw [h3]
-  have h4 :
-      X + t * (N * X - X * N) - (t * t) * (N * X * N)
-        = X + (t * (N * X) - t * (X * N)) - (t * t) * (N * X * N) := by
-    rw [mul_sub]
-  rw [h4]
-  abel
-
-end NilpotentAutomorphism
 
 section LieTKK
 
@@ -113,45 +69,13 @@ end ThermofieldDouble
 
 section RindlerWeyl
 
-structure ChiralState (R : Type*) [CommRing R] where
-  t : R
-  x : R
-  y : R
-  z : R
-
-def weyl_trace {R : Type*} [CommRing R] (X : ChiralState R) : R := X.t
-def causal_interval {R : Type*} [CommRing R] (X : ChiralState R) : R := X.t * X.t - X.x * X.x - X.y * X.y - X.z * X.z
-
-class ModularTimeFlow (R : Type*) [CommRing R] where
-  cosh : R → R
-  sinh : R → R
-  hyperbolic_identity : ∀ η : R, cosh η * cosh η - sinh η * sinh η = 1
-
-def rindler_boost {R : Type*} [CommRing R] [ModularTimeFlow R] (X : ChiralState R) (η : R) : ChiralState R :=
-  ⟨X.t * ModularTimeFlow.cosh η + X.z * ModularTimeFlow.sinh η, X.x, X.y,
-   X.z * ModularTimeFlow.cosh η + X.t * ModularTimeFlow.sinh η⟩
-
-def weyl_gauge_scale {R : Type*} [CommRing R] (X : ChiralState R) (Λ : R) : ChiralState R :=
-  ⟨Λ * X.t, Λ * X.x, Λ * X.y, Λ * X.z⟩
-
-theorem rindler_flow_isometry {R : Type*} [CommRing R] [ModularTimeFlow R] (X : ChiralState R) (η : R) :
-    causal_interval (rindler_boost X η) = causal_interval X := by
-  unfold causal_interval rindler_boost
-  have h := ModularTimeFlow.hyperbolic_identity (R := R) η
-  calc
-    (X.t * ModularTimeFlow.cosh η + X.z * ModularTimeFlow.sinh η) *
-        (X.t * ModularTimeFlow.cosh η + X.z * ModularTimeFlow.sinh η) -
-      X.x * X.x - X.y * X.y -
-      (X.z * ModularTimeFlow.cosh η + X.t * ModularTimeFlow.sinh η) *
-        (X.z * ModularTimeFlow.cosh η + X.t * ModularTimeFlow.sinh η)
-      = X.t * X.t * (ModularTimeFlow.cosh η * ModularTimeFlow.cosh η - ModularTimeFlow.sinh η * ModularTimeFlow.sinh η) -
-        X.z * X.z * (ModularTimeFlow.cosh η * ModularTimeFlow.cosh η - ModularTimeFlow.sinh η * ModularTimeFlow.sinh η) -
-        X.x * X.x - X.y * X.y := by ring
-    _ = X.t * X.t * 1 - X.z * X.z * 1 - X.x * X.x - X.y * X.y := by rw [h]
-    _ = X.t * X.t - X.x * X.x - X.y * X.y - X.z * X.z := by ring
-
-theorem weyl_trace_scaling {R : Type*} [CommRing R] (X : ChiralState R) (Λ : R) :
-    weyl_trace (weyl_gauge_scale X Λ) = Λ * weyl_trace X := rfl
+/- The chiral/Rindler owner is `ChiralCausalConeFlow`.  Exporting its
+   declarations preserves this packet's historical unqualified interface
+   without introducing a second definition or a second proof owner. -/
+open InfoGeometry.Canonical.ChiralCausalConeFlow
+export InfoGeometry.Canonical.ChiralCausalConeFlow
+  (ChiralState weyl_trace causal_interval ModularTimeFlow rindler_boost
+    weyl_gauge_scale rindler_flow_isometry weyl_trace_scaling)
 
 structure SymmState2x2 (R : Type*) [CommRing R] where
   t : R

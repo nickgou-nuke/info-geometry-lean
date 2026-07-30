@@ -26,9 +26,6 @@ open FiniteMajoranaBraiding
 open BoundaryLoopSuperClosure
 open CayleyMobiusBoundaryBraidClosure
 
-/-- A finite boundary algebraic-closure packet is just a boundary-loop packet. -/
-abbrev FiniteBoundaryAlgebraicClosurePacket := BoundaryLoopClosurePacket
-
 /-- Boundary loop actions are closed under append in the finite algebraic layer. -/
 theorem boundaryLoopAction_append_closed (u v : BoundaryLoopWord)
     (p : AlgebraicCompactification ℕ) :
@@ -72,14 +69,9 @@ theorem compactifiedInversion_commutes_boundaryLoopAction_closed
       boundaryLoopAction w (C.compactifiedInversion p) :=
   compactifiedInversion_commutes_boundaryLoopAction C w hcomm p
 
-/-! The finite closure owner is the boundary-loop packet itself. There is no
-additional finite compatibility datum here, so a second one-field structure
-would only obscure the existing owner. -/
-abbrev FiniteBoundaryAlgebraicClosure := BoundaryLoopClosurePacket
-
 namespace FiniteBoundaryAlgebraicClosure
 
-variable (B : FiniteBoundaryAlgebraicClosure)
+variable (B : BoundaryLoopClosurePacket)
 
 /-- Boundary preservation readback for the finite closure packet. -/
 theorem preserves_boundary

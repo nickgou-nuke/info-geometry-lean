@@ -284,7 +284,7 @@ structure MeanMomentMap where
 @[rep_depth thermo]
 structure PrimonGas where
   register : PrimeRegister
-  statistics : Statistics := .fermion
+  statistics : Statistics
 
 /-- Sector thermodynamics on one chiral branch. -/
 @[rep_depth thermo]

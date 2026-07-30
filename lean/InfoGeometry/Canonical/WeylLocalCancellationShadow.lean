@@ -47,7 +47,8 @@ variable (P : LocalCancellationShadowPacket σ)
 /-- The finite denominator value. -/
 @[rep_depth thermo]
 def denominator : ℝ :=
-  P.data.denominatorPacket.denominatorWitness.determinant
+  VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
+    P.data.denominatorPacket.denominatorWitness
 
 /-- The finite numerator value. -/
 @[rep_depth thermo]

@@ -5,6 +5,7 @@ import InfoGeometry.OperatorAlgebra.SpectralTriple
 import InfoGeometry.Canonical.BilingualRealHestenesDictionary
 import InfoGeometry.Canonical.HestenesRealStructures
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Algebra.CuntzN
 
 open scoped InnerProductSpace
 
@@ -59,29 +60,40 @@ theorem prefixBoundary_succ
     prefixBoundary s x (n + 1) = x n :=
   rfl
 
-/-- Abstract Cuntz `O_2` carrier in a star ring. -/
-@[rep_depth operator]
-structure CuntzO2Carrier
-    (Op : Type*) [Ring Op] [StarRing Op] where
-  S_left : Op
-  S_right : Op
-
-  left_isometry :
-    star S_left * S_left = 1
-
-  right_isometry :
-    star S_right * S_right = 1
-
-  orthogonal_ranges :
-    star S_left * S_right = 0 ∧ star S_right * S_left = 0
-
-  range_sum :
-    S_left * star S_left + S_right * star S_right = 1
+/-! The Cuntz `O₂` carrier is the `N := 2` instance of the generic owner. -/
+abbrev CuntzO2Carrier
+    (Op : Type*) [Ring Op] [StarRing Op] :=
+  InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op
 
 namespace CuntzO2Carrier
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
 variable (C : CuntzO2Carrier Op)
+
+/-- The left branch is the canonical zero-indexed Cuntz generator. -/
+@[rep_depth operator]
+def S_left : Op := C.S 0
+
+/-- The right branch is the canonical one-indexed Cuntz generator. -/
+@[rep_depth operator]
+def S_right : Op := C.S 1
+
+theorem left_isometry : star C.S_left * C.S_left = 1 := by
+  simpa [S_left] using C.isometry 0 0
+
+theorem right_isometry : star C.S_right * C.S_right = 1 := by
+  simpa [S_right] using C.isometry 1 1
+
+theorem orthogonal_ranges :
+    star C.S_left * C.S_right = 0 ∧ star C.S_right * C.S_left = 0 := by
+  constructor
+  · simpa [S_left, S_right] using C.isometry 0 1
+  · simpa [S_left, S_right] using C.isometry 1 0
+
+theorem range_sum :
+    C.S_left * star C.S_left + C.S_right * star C.S_right = 1 := by
+  simpa [S_left, S_right] using
+    InfoGeometry.Algebra.Cuntz.CuntzNAlgebra.range_sum C
 
 /-- Left range projection `S_1 S_1*`. -/
 @[rep_depth operator]
@@ -97,7 +109,7 @@ def rightRangeProjection : Op :=
 @[rep_depth operator]
 theorem rangeProjection_sum_one :
     C.leftRangeProjection + C.rightRangeProjection = 1 := by
-  exact C.range_sum
+  exact range_sum C
 
 section ProjectionSubequiv
 

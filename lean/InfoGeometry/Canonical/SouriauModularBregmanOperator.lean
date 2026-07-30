@@ -44,18 +44,14 @@ The product supplies the algebraic composition channel. The readout turns that
 product into the scalar pairing required by convex duality.
 -/
 @[socket_debt_tag, rep_depth operator]
-abbrev OperatorPrimalDualSocket (Op : Type*) [AddGroup Op] : Type _ :=
-  Σ' product : Op → Op → Op,
-    Σ' readout : Op → ℝ,
-      ∀ X : Op, readout (product X 0) = 0
+structure OperatorPrimalDualSocket (Op : Type*) [AddGroup Op] where
+  product : Op → Op → Op
+  readout : Op → ℝ
+  product_zero_right_readout : ∀ X : Op, readout (product X 0) = 0
 
 namespace OperatorPrimalDualSocket
 
 variable (S : OperatorPrimalDualSocket Op)
-
-abbrev product : Op → Op → Op := S.1
-abbrev readout : Op → ℝ := S.2.1
-abbrev product_zero_right_readout : ∀ X : Op, S.readout (S.product X 0) = 0 := S.2.2
 
 /-- Scalar pairing induced by product plus readout. -/
 @[rep_depth operator]

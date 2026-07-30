@@ -67,27 +67,6 @@ theorem uses_lightcone_affine_bridge :
     S.sugawara.bridge = S.kanAffine.affineLightCone.bridge := by
   rfl
 
-/-- Legacy theorem name for the definitional bridge readback. -/
-theorem UsesLightConeAffineBridge :
-    S.sugawara.bridge = S.kanAffine.affineLightCone.bridge :=
-  S.uses_lightcone_affine_bridge
-
-/-- Legacy theorem name retained without a proof-packet wrapper. -/
-@[rep_depth operator]
-theorem UsesLightConeAffineBridgeWitness :
-    S.sugawara.bridge = S.kanAffine.affineLightCone.bridge :=
-  S.uses_lightcone_affine_bridge
-
-/-- Legacy law holds definitionally for every calibration. -/
-theorem usesLightConeAffineBridge_holds :
-    S.sugawara.bridge = S.kanAffine.affineLightCone.bridge :=
-  S.uses_lightcone_affine_bridge
-
-/-- Legacy readback theorem retained without a witness argument. -/
-@[rep_depth operator]
-theorem usesLightConeAffineBridge_of_witness :
-    S.sugawara.bridge = S.kanAffine.affineLightCone.bridge :=
-  S.uses_lightcone_affine_bridge
 
 /-- Sugawara rescaling factor inherited from the supplied mode-sum datum. -/
 @[rep_depth operator]
@@ -146,34 +125,6 @@ theorem virasoro_bracket_modes_normalized
         (virasoroCentralCoefficient m n : ℝ) • S.sugawara.bridge.virasoro.central :=
   S.sugawara.bridge.virasoro.bracket_modes_normalized hvir m n
 
-/-- Sugawara central charge calibration inherited from the supplied affine/Virasoro datum. -/
-@[rep_depth operator]
-theorem sugawara_centralCharge_calibrated :
-    (hcc : S.sugawara.bridge.centralCharge =
-      S.sugawara.bridge.level * S.sugawara.bridge.finiteDimension /
-        (S.sugawara.bridge.level + S.sugawara.bridge.dualCoxeterNumber)) →
-    S.sugawara.bridge.centralCharge =
-      S.sugawara.bridge.level * S.sugawara.bridge.finiteDimension /
-        (S.sugawara.bridge.level + S.sugawara.bridge.dualCoxeterNumber) :=
-  S.sugawara.bridge.centralCharge_calibrated
-
-/--
-Lightcone central charge calibration inherited from the KAN/lightcone affine
-socket.
--/
-@[rep_depth operator]
-theorem lightcone_centralCharge_calibrated :
-    (hcc : S.kanAffine.affineLightCone.bridge.centralCharge =
-      S.kanAffine.affineLightCone.bridge.level *
-        S.kanAffine.affineLightCone.bridge.finiteDimension /
-          (S.kanAffine.affineLightCone.bridge.level +
-            S.kanAffine.affineLightCone.bridge.dualCoxeterNumber)) →
-    S.kanAffine.affineLightCone.bridge.centralCharge =
-      S.kanAffine.affineLightCone.bridge.level *
-        S.kanAffine.affineLightCone.bridge.finiteDimension /
-          (S.kanAffine.affineLightCone.bridge.level +
-            S.kanAffine.affineLightCone.bridge.dualCoxeterNumber) :=
-  S.kanAffine.centralCharge_calibrated
 
 /-- The Virasoro central coefficient is zero away from the balanced mode sector. -/
 @[rep_depth operator]
@@ -226,19 +177,6 @@ theorem sugawara_virasoro_acts_on_uPlusCurrent
   rw [S.uses_lightcone_affine_bridge, hVir]
   exact S.kanAffine.virasoro_acts_on_uPlusCurrent m n hact
 
-/-- Legacy theorem name for the direct positive-current action theorem. -/
-@[rep_depth operator]
-theorem sugawara_virasoro_acts_on_uPlusCurrent_of_witness
-    (m n : ℤ) :
-    (hact :
-      ∀ (m n : ℤ) (X : Finite),
-        ⁅S.kanAffine.affineLightCone.bridge.virasoro.Lmode m,
-          S.kanAffine.affineLightCone.bridge.affine.Current n X⁆ =
-          (-(n : ℝ)) • S.kanAffine.affineLightCone.bridge.affine.Current (m + n) X) →
-    ⁅S.sugawara.bridge.virasoro.Lmode m, S.kanAffine.uPlusCurrent n⁆ =
-      (-(n : ℝ)) • S.kanAffine.uPlusCurrent (m + n) := by
-  intro hact
-  exact S.sugawara_virasoro_acts_on_uPlusCurrent m n hact
 
 /--
 The supplied Sugawara Virasoro modes act on negative lightcone currents by the

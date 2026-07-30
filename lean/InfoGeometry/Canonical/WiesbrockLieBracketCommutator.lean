@@ -13,6 +13,8 @@ noncomputable section
 
 open Matrix Complex Real
 
+namespace LieBracketCommutator
+
 namespace SuperWiesbrock
 
 variable {n : ℕ}
@@ -54,3 +56,5 @@ theorem wiesbrock_lie_bracket_commutator (sc : ModularSupercharges n)
   rw [neg_smul, neg_neg, smul_comm]
 
 end SuperWiesbrock
+
+end LieBracketCommutator

@@ -226,21 +226,6 @@ def StationaryTemperature
     (T : PositiveSouriauTemperature) : Prop :=
   I.closure.IsFixed T
 
-/-- Stationarity is exactly fixedness under the supplied temperature closure. -/
-theorem stationary_iff_closure_fixed
-    (I : ProjectiveTemperatureInversion)
-    (T : PositiveSouriauTemperature) :
-    StationaryTemperature I T ↔ I.closure.IsFixed T :=
-  Iff.rfl
-
-/-- A stationary temperature is unchanged by the projective inversion. -/
-theorem theta_eq_self_of_stationary
-    {I : ProjectiveTemperatureInversion}
-    {T : PositiveSouriauTemperature}
-    (hT : StationaryTemperature I T) :
-    (I.closure).theta T = T :=
-  hT
-
 /-- Equivalently, the supplied `SL2R` element fixes a stationary temperature. -/
 theorem smul_eq_self_of_stationary
     {I : ProjectiveTemperatureInversion}
@@ -266,7 +251,7 @@ theorem read_eq_of_stationary
     {T : PositiveSouriauTemperature}
     (hT : StationaryTemperature I T) :
     read ((I.closure).theta T) = read T := by
-  rw [theta_eq_self_of_stationary hT]
+  rw [hT]
 
 end ProjectiveTemperatureInversion
 
@@ -342,21 +327,6 @@ def StationaryTemperature
     (T : PositiveSouriauTemperature) : Prop :=
   I.closure.IsFixed T
 
-/-- Stationarity is exactly fixedness under the supplied lift-level closure. -/
-theorem stationary_iff_closure_fixed
-    (I : ProjectiveLiftTemperatureInversion)
-    (T : PositiveSouriauTemperature) :
-    StationaryTemperature I T ↔ I.closure.IsFixed T :=
-  Iff.rfl
-
-/-- A stationary temperature is fixed by the projective lift closure. -/
-theorem theta_eq_self_of_stationary
-    {I : ProjectiveLiftTemperatureInversion}
-    {T : PositiveSouriauTemperature}
-    (hT : StationaryTemperature I T) :
-    (I.closure).theta T = T :=
-  hT
-
 /-- A stationary temperature is fixed by the projective lift action. -/
 theorem smul_eq_self_of_stationary
     {I : ProjectiveLiftTemperatureInversion}
@@ -382,7 +352,7 @@ theorem read_eq_of_stationary
     {T : PositiveSouriauTemperature}
     (hT : StationaryTemperature I T) :
     read ((I.closure).theta T) = read T := by
-  rw [theta_eq_self_of_stationary hT]
+  rw [hT]
 
 end ProjectiveLiftTemperatureInversion
 
@@ -485,14 +455,6 @@ def StationaryTemperature
     (I : ProjectivePSLTemperatureInversion)
     (T : PositiveSouriauTemperature) : Prop :=
   I.closure.IsFixed T
-
-/-- A stationary temperature is fixed by the projective closure. -/
-theorem theta_eq_self_of_stationary
-    {I : ProjectivePSLTemperatureInversion}
-    {T : PositiveSouriauTemperature}
-    (hT : StationaryTemperature I T) :
-    (I.closure).theta T = T :=
-  hT
 
 /-- A stationary temperature is fixed by the chosen lift action. -/
 theorem smul_eq_self_of_stationary

@@ -81,24 +81,6 @@ theorem central_generator_hole_to_particle :
     sigmaB6 ⟨2, by decide⟩ 3 = 2 := by
   simp [sigmaB6]
 
-/-! ## Abstract Cuntz-6 projection owner readbacks -/
-
-/--
-The exact `O₆` projection facts are delegated to the abstract `CuntzNAlgebra`
-owner.  This avoids pretending that the Cuntz algebra has a faithful finite
-matrix representation.
--/
-theorem cuntz6_projection_packet
-    {Op : Type*} [Ring Op] [StarRing Op]
-    (O : CuntzNAlgebra (N := 6) Op) :
-    (∀ i : Fin 6,
-      (O.S i * star (O.S i)) * (O.S i * star (O.S i)) = O.S i * star (O.S i)) ∧
-    (∀ i j : Fin 6, i ≠ j →
-      (O.S i * star (O.S i)) * (O.S j * star (O.S j)) = 0) ∧
-    (∑ i : Fin 6, O.S i * star (O.S i)) = 1 := by
-  exact ⟨range_projection_idempotent O, range_projection_orthogonal O,
-    range_projections_sum_one O⟩
-
 /-! ## Nambu particle/hole superparity -/
 
 /-- The two Nambu sectors for the split `3 ⊕ 3*` carrier. -/
@@ -183,58 +165,11 @@ theorem weights_sum_one (g : TwoExpertGate) :
 
 end TwoExpertGate
 
-/-- Concrete quotient `O₆` projection packet, no abstract witness parameter. -/
-theorem cuntz6_quotient_projection_packet :
-    (∀ i : Fin 6,
-      (cuntzS 6 i * star (cuntzS 6 i)) * (cuntzS 6 i * star (cuntzS 6 i)) =
-        cuntzS 6 i * star (cuntzS 6 i)) ∧
-    (∀ i j : Fin 6, i ≠ j →
-      (cuntzS 6 i * star (cuntzS 6 i)) * (cuntzS 6 j * star (cuntzS 6 j)) = 0) ∧
-    (∑ i : Fin 6, cuntzS 6 i * star (cuntzS 6 i)) = 1 := by
-  exact ⟨
-    (by
-      intro i
-      simpa [star_cuntzS] using (cuntz_complete_projector_system 6).1 i),
-    (by
-      intro i j hij
-      simpa [star_cuntzS] using (cuntz_complete_projector_system 6).2.1 i j hij),
-    (by
-      simpa [star_cuntzS] using (cuntz_complete_projector_system 6).2.2.2.2)⟩
-
 /-- The quotient `O₆` Hodge-Dirac is the sum of Cuntz Majorana supercharges. -/
 theorem cuntz6_quotient_hodgeDirac_majorana_sum :
     InfoGeometry.Algebra.Cuntz.hodgeDirac (quotientCuntzNAlgebra 6) =
       ∑ i : Fin 6, InfoGeometry.Algebra.SupergradedSUSY.cuntzMajoranaSupercharge 6 i := by
   exact quotient_hodgeDirac_eq_sum_majorana 6
-
-/-- Concrete quotient Cuntz-6 braid/MoE packet. -/
-theorem concrete_cuntz6_super_braid_moe_packet :
-    (∀ i : Fin 6,
-      (cuntzS 6 i * star (cuntzS 6 i)) * (cuntzS 6 i * star (cuntzS 6 i)) =
-        cuntzS 6 i * star (cuntzS 6 i)) ∧
-    (∑ i : Fin 6, cuntzS 6 i * star (cuntzS 6 i)) = 1 ∧
-    InfoGeometry.Algebra.Cuntz.hodgeDirac (quotientCuntzNAlgebra 6) =
-      ∑ i : Fin 6, InfoGeometry.Algebra.SupergradedSUSY.cuntzMajoranaSupercharge 6 i := by
-  exact ⟨cuntz6_quotient_projection_packet.1,
-    cuntz6_quotient_projection_packet.2.2,
-    cuntz6_quotient_hodgeDirac_majorana_sum⟩
-
-/-- Closed finite packet for the Cuntz-super-braid/MoE bridge. -/
-theorem finite_cuntz_super_braid_moe_packet :
-    sigmaB6 ⟨2, by decide⟩ 2 = 3 ∧
-    sigmaB6 ⟨2, by decide⟩ 3 = 2 ∧
-    (∀ i j : B6Gen, i.val ≤ 1 → 3 ≤ j.val →
-      sigmaB6 i * sigmaB6 j = sigmaB6 j * sigmaB6 i) ∧
-    (∀ s : NambuSector, NambuSector.parity s * NambuSector.parity s = 1) ∧
-    (∀ k : Fin 3,
-      NambuSector.parity (strandSector (particleStrand k)) *
-        NambuSector.parity (strandSector (holeStrand k)) = -1) ∧
-    (∀ forward backward : ℝ,
-      dissipativeResidual forward backward = 0 ↔ forward = backward) ∧
-    (∀ g : TwoExpertGate, g.particleWeight + g.holeWeight = 1) := by
-  exact ⟨central_generator_particle_to_hole, central_generator_hole_to_particle,
-    particle_hole_sector_commute, NambuSector.parity_sq, isotropic_pair_cross_parity_odd,
-    dissipativeResidual_eq_zero_iff, TwoExpertGate.weights_sum_one⟩
 
 end InfoGeometry.Canonical.CuntzSuperBraidMoEBridge
 

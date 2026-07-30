@@ -58,18 +58,6 @@ abbrev flow : Time → Alg → Alg := M.1
 abbrev readout : Alg → Readout := M.2.1
 abbrev charge : Alg := M.2.2
 
-@[rep_depth operator]
-theorem flow_apply (t : Time) (A : Alg) :
-    M.flow t A = M.flow t A := rfl
-
-@[rep_depth operator]
-theorem readout_apply (A : Alg) :
-    M.readout A = M.readout A := rfl
-
-@[rep_depth operator]
-theorem charge_apply :
-    M.charge = M.charge := rfl
-
 end ModularNoetherReadout
 
 /-- A modular-Noether charge is fixed by its modular/readout flow. -/

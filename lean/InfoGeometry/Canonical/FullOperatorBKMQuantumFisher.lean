@@ -18,7 +18,7 @@ namespace FullOperatorBKM
 
 variable {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
 
-/-- Non-Commutative Density Matrix ρ over ℂ with invertible inverse ρ_inv. -/
+/-- Invertible Matrix State Parameter ρ over ℂ with inverse ρ_inv (Algebraic Density Data Carrier). -/
 abbrev NonCommutativeDensityOperator (n : ℕ) [Fintype (Fin n)] [DecidableEq (Fin n)] :=
   Matrix.GeneralLinearGroup (Fin n) ℂ
 
@@ -37,7 +37,7 @@ theorem h_inv_left : rho_inv D * rho D = 1 := by
 theorem h_inv_right : rho D * rho_inv D = 1 := by
   simp [rho, rho_inv]
 
-/-- Tomita-Takesaki Modular Automorphism Operator Δ_ρ(X) = ρ * X * ρ⁻¹ on non-commutative matrix space. -/
+/-- Finite Matrix Inner Automorphism Super-Operator Δ_ρ(X) = ρ * X * ρ⁻¹ (Matrix Modular Conjugation Superoperator). -/
 def modularOperator (X : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ :=
   rho D * X * rho_inv D
 
@@ -63,13 +63,22 @@ theorem modular_operator_mul (X Y : Matrix (Fin n) (Fin n) ℂ) :
     _ = rho D * X * (rho_inv D * rho D) * Y * rho_inv D := by rw [h_mid]
     _ = (rho D * X * rho_inv D) * (rho D * Y * rho_inv D) := by noncomm_ring
 
-/-- Full Non-Commutative Symmetrized BKM Operator Super-Operator J_ρ(X) = (1/2) * (ρ * X + X * ρ). -/
-def bkmSymmetrizedSuperOperator (X : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ :=
+/-- Full Non-Commutative SLD / Jordan Symmetrized Super-Operator J_ρ(X) = (1/2) * (ρ * X + X * ρ).
+    (Note: This is the arithmetic Jordan mean / SLD superoperator, distinct from the BKM integral mean). -/
+def sldSymmetrizedSuperOperator (X : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ :=
   (1 / 2 : ℂ) • (rho D * X + X * rho D)
 
-/-- Full Non-Commutative BKM Quantum Fisher Inner Product <A, B>_BKM = Tr(Aᴴ * J_ρ(B)). -/
+/-- Legacy Alias for Symmetrized Super-Operator. -/
+def bkmSymmetrizedSuperOperator (X : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ :=
+  sldSymmetrizedSuperOperator D X
+
+/-- Full Non-Commutative SLD Quantum Fisher Candidate Inner Product <A, B>_SLD = Tr(Aᴴ * J_ρ(B)). -/
+def fullSLDInnerProduct (A B : Matrix (Fin n) (Fin n) ℂ) : ℂ :=
+  trace (A.conjTranspose * D.sldSymmetrizedSuperOperator B)
+
+/-- Legacy Alias for Quantum Fisher Candidate Inner Product. -/
 def fullBKMInnerProduct (A B : Matrix (Fin n) (Fin n) ℂ) : ℂ :=
-  trace (A.conjTranspose * D.bkmSymmetrizedSuperOperator B)
+  fullSLDInnerProduct D A B
 
 /-- **Theorem**: Vanishing Modular Commutator Trace: Tr([ρ, X]) = 0 for any non-commutative operator X. -/
 theorem modular_commutator_trace_zero (X : Matrix (Fin n) (Fin n) ℂ) :

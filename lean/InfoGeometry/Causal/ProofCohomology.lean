@@ -19,7 +19,14 @@ structure Triangle {α : Type u} (G : ProofDAG α) where
   c : α
   ab : G.le a b
   bc : G.le b c
-  ac : G.le a c := G.trans ab bc
+
+namespace Triangle
+
+/-- The long edge is derived from the two composable dependency proofs. -/
+def ac {α : Type u} {G : ProofDAG α} (t : Triangle G) : G.le t.a t.c :=
+  G.trans t.ab t.bc
+
+end Triangle
 
 def C0 (α : Type u) : Type u := α → ℝ
 def C1 {α : Type u} (G : ProofDAG α) : Type u := Edge G → ℝ
@@ -68,7 +75,7 @@ theorem H1_vanishes {α : Type u} {G : ProofDAG α}
   · rw [dif_pos hsrc]
     by_cases htgt : G.le a0 e.target
     · rw [dif_pos htgt]
-      let ht : Triangle G := ⟨a0, e.source, e.target, hsrc, e.dep, htgt⟩
+      let ht : Triangle G := ⟨a0, e.source, e.target, hsrc, e.dep⟩
       have hc : omega ⟨a0, e.source, hsrc⟩ + omega e - omega ⟨a0, e.target, htgt⟩ = 0 := by
         calc
           omega ⟨a0, e.source, hsrc⟩ + omega e - omega ⟨a0, e.target, htgt⟩
@@ -90,7 +97,7 @@ theorem H1_vanishes {α : Type u} {G : ProofDAG α}
     rw [dif_neg hsrc]
     by_cases htgt : G.le a0 e.target
     · rw [dif_pos htgt]
-      let ht : Triangle G := ⟨e.source, a0, e.target, hsrc', htgt, e.dep⟩
+      let ht : Triangle G := ⟨e.source, a0, e.target, hsrc', htgt⟩
       have hc : omega ⟨e.source, a0, hsrc'⟩ + omega ⟨a0, e.target, htgt⟩ - omega e = 0 := by
         calc
           omega ⟨e.source, a0, hsrc'⟩ + omega ⟨a0, e.target, htgt⟩ - omega e
@@ -107,7 +114,7 @@ theorem H1_vanishes {α : Type u} {G : ProofDAG α}
         _ = omega ⟨a0, e.target, htgt⟩ - (-omega ⟨e.source, a0, hsrc'⟩) := by ring
     · have htgt' : G.le e.target a0 := (h_connected a0 e.target).resolve_left htgt
       rw [dif_neg htgt]
-      let ht : Triangle G := ⟨e.source, e.target, a0, e.dep, htgt', hsrc'⟩
+      let ht : Triangle G := ⟨e.source, e.target, a0, e.dep, htgt'⟩
       have hc : omega e + omega ⟨e.target, a0, htgt'⟩ - omega ⟨e.source, a0, hsrc'⟩ = 0 := by
         calc
           omega e + omega ⟨e.target, a0, htgt'⟩ - omega ⟨e.source, a0, hsrc'⟩

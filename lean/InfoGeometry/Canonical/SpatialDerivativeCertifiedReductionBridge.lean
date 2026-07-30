@@ -44,7 +44,7 @@ local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
 variable
   {modularCore :
-    NoncommutativeModularOperatorLift
+    InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.NoncommutativeModularOperatorLift
       A Weight Deriv
         (DoubledSpace E →L[ℝ] DoubledSpace E)
         Phase Core}

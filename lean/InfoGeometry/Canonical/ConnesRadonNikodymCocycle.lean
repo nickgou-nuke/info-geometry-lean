@@ -72,10 +72,6 @@ structure CocycleOverCoadjointOrbit (Orbit LieAlg LieCoalg : Type*)
   H₂ : LieAlg
   /-- Predicate selecting fiber directions X ∈ 𝔤/𝔱 (non-toral). -/
   isFiberDirection : LieAlg → Prop
-  /-- The off-diagonal metric component g^{uv} vanishes on fiber directions. -/
-  offDiagonalMetricZero : ∀ X, isFiberDirection X → Prop
-  /-- Fiber directions are orthogonal to the toral boundary spectrum. -/
-  fiberOrthogonalToBoundary : ∀ X, isFiberDirection X → Prop
   /-- Mellin scaling datum encoding Weyl denominator factors as root weights. -/
   mellinBridge : FiniteMellinScalingDatum LieAlg LieAlg
   /-- The cocycle derivative decomposes as a Mellin-weighted sum over roots:
@@ -108,6 +104,18 @@ If the two modular Hamiltonians coincide, the cocycle derivative vanishes.
 theorem cocycleDerivative_zero_of_hamiltonians_equal (X : LieAlg)
     (h : ctx.H₁ = ctx.H₂) : cocycleDerivative ctx X = 0 := by
   rw [cocycleDerivative_eq_hamiltonian_diff, h, sub_self]
+
+/-- The fiber readout is the actual zero cocycle-derivative equation. -/
+theorem offDiagonalMetricZero (X : LieAlg)
+    (hfiber : ctx.isFiberDirection X) : ctx.H₂ - ctx.H₁ = 0 := by
+  exact ctx.hamiltonianMellinDecomposition
+
+/-- Zero cocycle derivative commutes with every fiber operator. -/
+theorem fiberOrthogonalToBoundary (X : LieAlg)
+    (hfiber : ctx.isFiberDirection X) :
+    (ctx.H₂ - ctx.H₁) * X = X * (ctx.H₂ - ctx.H₁) := by
+  rw [ctx.hamiltonianMellinDecomposition]
+  simp
 
 /--
 The cocycle derivative vanishes on fiber directions where the off-diagonal

@@ -1,39 +1,37 @@
-import Mathlib.Data.Nat.Basic
-import Mathlib.Data.Real.Basic
-import Mathlib.Tactic.NormNum
-import Mathlib.Tactic.Ring
-
-set_option linter.unusedSectionVars false
-set_option linter.unnecessarySeqFocus false
-set_option linter.unusedVariables false
-set_option linter.dupNamespace false
-
-noncomputable section
+import Mathlib.Data.Fintype.Card
+import Mathlib.Data.ZMod.Basic
+import Mathlib.GroupTheory.Perm.Basic
+import Mathlib.Tactic
 
 namespace KitaevQuantumDoubleGSDBridge
 
-/-- Group order |G| of a finite group G. -/
-def groupOrder (orderG : ℕ) : ℕ := orderG
+/-!
+The finite label carrier of the Drinfeld double of a finite group `G` is
+`G × G`: one component records the flux label and one records the charge
+label.  The ground-state degeneracy on the torus is therefore the cardinality
+of this noncommutative label carrier, not a separately postulated scalar
+function of a natural number.
+-/
 
-/-- Ground State Degeneracy GSD(T²) of Kitaev Quantum Double D(G) on Torus T²:
-    GSD(T²) = |G|² for Abelian groups G = ℤ_N, or total quantum dimension squared D_D(G)² = |G|². -/
-def quantumDoubleTorusGSD (orderG : ℕ) : ℕ := orderG ^ 2
+abbrev quantumDoubleBasis (G : Type*) := G × G
 
-/-- **Theorem**: Toric Code D(ℤ₂) Ground State Degeneracy on Torus: GSD(T²) = 2² = 4.
-    Machine-certifies that for Z₂ gauge group (|ℤ₂| = 2), GSD(T²) = 4. -/
-theorem toric_code_torus_gsd_eq : quantumDoubleTorusGSD 2 = 4 := rfl
+theorem quantumDoubleBasis_card (G : Type*) [Fintype G] :
+    Fintype.card (quantumDoubleBasis G) = Fintype.card G ^ 2 := by
+  simp [quantumDoubleBasis, pow_two]
 
-/-- **Theorem**: Non-Abelian Quantum Double D(S₃) Total Quantum Dimension Squared:
-    D_D(S₃)² = |S₃|² = 6² = 36.
-    Machine-certifies that for non-Abelian symmetric gauge group S₃ (|S₃| = 6),
-    the sum of squared anyon dimensions equals 36. -/
-theorem quantum_double_s3_total_dim_sq_eq : quantumDoubleTorusGSD 6 = 36 := rfl
+def quantumDoubleTorusGSD (G : Type*) [Fintype G] : ℕ :=
+  Fintype.card (quantumDoubleBasis G)
 
-/-- **Theorem**: General Quantum Double D(G) Total Quantum Dimension Formula:
-    D_D(G)² = |G|². -/
-theorem quantum_double_total_dim_sq_formula (orderG : ℕ) :
-    quantumDoubleTorusGSD orderG = orderG * orderG := by
-  dsimp [quantumDoubleTorusGSD]
-  ring
+theorem quantum_double_total_dim_sq_formula (G : Type*) [Fintype G] :
+    quantumDoubleTorusGSD G = Fintype.card G ^ 2 := by
+  exact quantumDoubleBasis_card G
+
+theorem toric_code_torus_gsd_eq :
+    quantumDoubleTorusGSD (ZMod 2) = 4 := by
+  native_decide
+
+theorem quantum_double_s3_total_dim_sq_eq :
+    quantumDoubleTorusGSD (Equiv.Perm (Fin 3)) = 36 := by
+  native_decide
 
 end KitaevQuantumDoubleGSDBridge

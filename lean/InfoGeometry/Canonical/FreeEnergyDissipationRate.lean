@@ -17,9 +17,6 @@ structure MetriplecticDissipativeSystem (n : Type*) [Fintype n] [DecidableEq n] 
   H   : Matrix n n ℂ                        -- Reversible Hamiltonian
   grad_F : Matrix n n ℂ                   -- Free Energy Gradient
   Onsager : Matrix n n ℂ →ₗ[ℂ] Matrix n n ℂ -- Onsager Mobility
-  h_onsager_pos : ∀ A : Matrix n n ℂ, 0 ≤ (trace (star A * Onsager A)).re
-  -- Metriplectic Degeneracy Condition: Unitary flow preserves Free Energy
-  h_unitary_F_inv : (trace (star grad_F * (- Complex.I • (H * rho - rho * H)))).re = 0
 
 /-- Commutator operator [A, B] = A * B - B * A -/
 noncomputable def commutator (A B : Matrix n n ℂ) : Matrix n n ℂ :=
@@ -40,14 +37,19 @@ noncomputable def freeEnergyRate (sys : MetriplecticDissipativeSystem n) : ℝ :
 /-- 🏆 THEOREM: Non-Positive Rate of Free Energy Change (dℱ/dt ≤ 0)
     Under positive-semidefinite Onsager mobility and unitary free-energy conservation,
     the rate of change of free energy is strictly non-positive (dℱ/dt ≤ 0). -/
-theorem freeEnergy_rate_nonpos (sys : MetriplecticDissipativeSystem n) :
+theorem freeEnergy_rate_nonpos (sys : MetriplecticDissipativeSystem n)
+    (h_onsager_pos : ∀ A : Matrix n n ℂ,
+      0 ≤ (trace (star A * sys.Onsager A)).re)
+    (h_unitary_F_inv :
+      (trace (star sys.grad_F *
+        (- Complex.I • (sys.H * sys.rho - sys.rho * sys.H)))).re = 0) :
     freeEnergyRate sys ≤ 0 := by
   dsimp [freeEnergyRate, stateEvolution, unitaryFlow, commutator]
   rw [mul_sub, trace_sub, Complex.sub_re]
   have h_un : (trace (star sys.grad_F * (-Complex.I • (sys.H * sys.rho - sys.rho * sys.H)))).re = 0 :=
-    sys.h_unitary_F_inv
+    h_unitary_F_inv
   rw [h_un, zero_sub]
-  have h_pos := sys.h_onsager_pos sys.grad_F
+  have h_pos := h_onsager_pos sys.grad_F
   linarith
 
 end MetriplecticDissipation

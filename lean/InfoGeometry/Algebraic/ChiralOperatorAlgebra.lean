@@ -32,21 +32,25 @@ structure ChiralOperatorAlgebra (n : ℕ) where
   /-- Clifford grade involution, the parity operator. -/
   parity : ParityInvolution (Cl_nn n)
 
-  /-- Modular boost as the underlying linear parity action. -/
-  modularBoost : Module.End ℝ (Cl_nn n) := parity.toLinearMap
-
-  /-- Left chiral sector, i.e. the `+1` eigenspace. -/
-  leftChiralCharge : Submodule ℝ (Cl_nn n) := parity.evenPart
-
-  /-- Right chiral sector, i.e. the `-1` eigenspace. -/
-  rightChiralCharge : Submodule ℝ (Cl_nn n) := parity.oddPart
-
-  /-- Modular Hamiltonian readout, identified with the modular boost. -/
-  modularHamiltonian : Module.End ℝ (Cl_nn n) := modularBoost
-
 namespace ChiralOperatorAlgebra
 
 variable {n : ℕ}
+
+/-- Modular boost derived from the Clifford grade involution. -/
+def modularBoost (C : ChiralOperatorAlgebra n) : Module.End ℝ (Cl_nn n) :=
+  C.parity.toLinearMap
+
+/-- Left chiral sector, derived as the `+1` eigenspace of parity. -/
+def leftChiralCharge (C : ChiralOperatorAlgebra n) : Submodule ℝ (Cl_nn n) :=
+  C.parity.evenPart
+
+/-- Right chiral sector, derived as the `-1` eigenspace of parity. -/
+def rightChiralCharge (C : ChiralOperatorAlgebra n) : Submodule ℝ (Cl_nn n) :=
+  C.parity.oddPart
+
+/-- Modular Hamiltonian derived from the modular boost. -/
+def modularHamiltonian (C : ChiralOperatorAlgebra n) : Module.End ℝ (Cl_nn n) :=
+  C.modularBoost
 
 /-- The Clifford grade involution read out as the chiral parity. -/
 def chiralParity (C : ChiralOperatorAlgebra n) : ParityInvolution (Cl_nn n) :=
@@ -81,29 +85,29 @@ theorem canonical_chiralParity
 @[simp]
 theorem canonical_modularBoost
     (n : ℕ) :
-    (canonical n).modularBoost =
+    modularBoost (canonical n) =
       (splitCliffordParityInvolution n).toLinearMap :=
   rfl
 
 @[simp]
 theorem canonical_leftChiralCharge
     (n : ℕ) :
-    (canonical n).leftChiralCharge =
+    leftChiralCharge (canonical n) =
       (splitCliffordParityInvolution n).evenPart :=
   rfl
 
 @[simp]
 theorem canonical_rightChiralCharge
     (n : ℕ) :
-    (canonical n).rightChiralCharge =
+    rightChiralCharge (canonical n) =
       (splitCliffordParityInvolution n).oddPart :=
   rfl
 
 @[simp]
 theorem canonical_modularHamiltonian
     (n : ℕ) :
-    (canonical n).modularHamiltonian =
-      (canonical n).modularBoost :=
+    modularHamiltonian (canonical n) =
+      modularBoost (canonical n) :=
   rfl
 
 /-- The old carrier name now points at the native Clifford chiral algebra. -/

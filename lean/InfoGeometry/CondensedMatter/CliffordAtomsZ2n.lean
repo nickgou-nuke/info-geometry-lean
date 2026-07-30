@@ -288,15 +288,15 @@ namespace LocalToGlobalAnomalyDatum
 
 variable (D : LocalToGlobalAnomalyDatum)
 
-/-- The local Clifford charge is a four-bit address. -/
+/-- Compatibility readout of the local four-bit address in the global index. -/
 theorem local_charge_is_four_bit :
-    D.localCharge = D.localCharge :=
-  rfl
+    D.indexMap D.localCharge = D.globalClass.index :=
+  D.indexMap_localCharge
 
 /-- The local-to-global bridge evaluates the supplied index map to the global index. -/
 theorem indexMap_localCharge_eq :
     D.indexMap D.localCharge = D.globalClass.index :=
-  D.indexMap_localCharge
+  D.local_charge_is_four_bit
 
 end LocalToGlobalAnomalyDatum
 

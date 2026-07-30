@@ -18,15 +18,15 @@ open scoped ComplexOrder
 
 /-- The canonical one-parameter operator action is owned by the operator
 thermodynamics module; this namespace only re-exports that carrier. -/
-abbrev OperatorFlow (Alg : Type*) [Mul Alg] :=
+abbrev OperatorFlow (Alg : Type*) [Monoid Alg] :=
   InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow Alg
 
 /-- Group law for a one-parameter operator flow. -/
-def IsOperatorFlow {Alg : Type*} [Mul Alg] (σ : OperatorFlow Alg) : Prop :=
+def IsOperatorFlow {Alg : Type*} [Monoid Alg] (σ : OperatorFlow Alg) : Prop :=
   (∀ A, σ.flow 0 A = A) ∧
     ∀ s t A, σ.flow (s + t) A = σ.flow s (σ.flow t A)
 
-theorem isOperatorFlow_native {Alg : Type*} [Mul Alg]
+theorem isOperatorFlow_native {Alg : Type*} [Monoid Alg]
     (σ : OperatorFlow Alg) : IsOperatorFlow σ :=
   ⟨σ.flow_zero, σ.flow_add⟩
 
@@ -38,7 +38,7 @@ def IsIdempotentExpectation {Alg : Type*} (E : Alg → Alg) : Prop :=
 /-- Compatibility of a conditional expectation with modular time. -/
 def IsModularEquivariant
     {Alg : Type*}
-    [Mul Alg]
+    [Monoid Alg]
     (σ : OperatorFlow Alg)
     (E : Alg → Alg) : Prop :=
   ∀ t A, E (σ.flow t A) = σ.flow t (E A)
@@ -63,7 +63,7 @@ theorem expectation_fixedPoint_of_mem_range
 observable along the modular flow. -/
 theorem expectationFixedPoint_modularFlow
     {Alg : Type*}
-    [Mul Alg]
+    [Monoid Alg]
     {σ : OperatorFlow Alg}
     {E : Alg → Alg}
     (hEquivariant : IsModularEquivariant σ E)
@@ -71,13 +71,14 @@ theorem expectationFixedPoint_modularFlow
     (hA : ExpectationFixedPoint E A)
     (t : ℝ) :
     ExpectationFixedPoint E (σ.flow t A) := by
-  rw [ExpectationFixedPoint, hEquivariant, hA]
+  unfold ExpectationFixedPoint
+  rw [hEquivariant t A, hA]
 
 /-- Modular evolution preserves the range of a modular-equivariant
 expectation. -/
 theorem modularFlow_mem_range_of_mem_range
     {Alg : Type*}
-    [Mul Alg]
+    [Monoid Alg]
     {σ : OperatorFlow Alg}
     {E : Alg → Alg}
     (hEquivariant : IsModularEquivariant σ E)

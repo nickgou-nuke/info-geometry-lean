@@ -131,25 +131,15 @@ The new language is:
 - relative entropy = surprisal / log-density readout;
 - supervolume potential = negative log supervolume readout.
 -/
-abbrev OperatorThermodynamicsPacket
-    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] :=
-  ModularHamiltonianSurprisalContext (H := Op) ×
-    { Z : ℝ // 0 < Z }
+structure OperatorThermodynamicsPacket
+    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] where
+  modular : ModularHamiltonianSurprisalContext (H := Op)
+  partitionFunction : ℝ
+  partitionFunction_pos : 0 < partitionFunction
 
 namespace OperatorThermodynamicsPacket
 
 variable {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
-
-abbrev modular (P : OperatorThermodynamicsPacket Op) :
-    ModularHamiltonianSurprisalContext (H := Op) :=
-  P.1
-
-abbrev partitionFunction (P : OperatorThermodynamicsPacket Op) : ℝ :=
-  P.2.1
-
-abbrev partitionFunction_pos (P : OperatorThermodynamicsPacket Op) :
-    0 < P.partitionFunction :=
-  P.2.2
 
 /-- The modular Hamiltonian readout. -/
 def modularHamiltonian (P : OperatorThermodynamicsPacket Op) : Op →L[ℝ] Op :=
@@ -250,8 +240,7 @@ Compatibility projection into the older scalar-shadow packet.
 def toShadowPacket
     (P : OperatorFirstThermodynamicsPacket Param Op) :
     OperatorThermodynamicsPacket Op :=
-  ⟨P.modular,
-    ⟨P.family.partitionFunction P.referenceParam, P.partitionFunction_pos⟩⟩
+  ⟨P.modular, P.family.partitionFunction P.referenceParam, P.partitionFunction_pos⟩
 
 @[simp]
 theorem toShadowPacket_partitionFunction

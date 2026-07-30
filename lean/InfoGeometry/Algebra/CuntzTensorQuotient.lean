@@ -211,12 +211,6 @@ theorem cuntz_distinct_orthogonal (n : ℕ) {i j : Fin n} (hij : i ≠ j) :
     cuntzSdag n i * cuntzS n j = 0 := by
   simpa [hij] using cuntz_orthogonality n i j
 
-/-- The quotient construction packages exactly the finite algebraic Cuntz relations. -/
-theorem finite_cuntz_tensor_quotient_packet (n : ℕ) :
-    (∀ i j : Fin n, cuntzSdag n i * cuntzS n j = if i = j then 1 else 0) ∧
-    (∑ i : Fin n, cuntzS n i * cuntzSdag n i) = 1 := by
-  exact ⟨cuntz_orthogonality n, cuntz_ranges_sum_one n⟩
-
 /-! ## Dagger descends through the Cuntz relations -/
 
 theorem dagger_CuntzRel {n : ℕ} : ∀ {x y : CuntzTensor n},

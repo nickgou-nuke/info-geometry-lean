@@ -54,26 +54,26 @@ determined by the number of connected components of each region.
 - Region AC is disconnected (consisting of two components A and C), so it has coefficient 2.
 -/
 structure TopologicalCorrection (γ : ℝ) where
-  coeffA : ℝ := 1
-  coeffB : ℝ := 1
-  coeffC : ℝ := 1
-  coeffAB : ℝ := 1
-  coeffBC : ℝ := 1
-  coeffAC : ℝ := 1
-  coeffABC : ℝ := 1
+  coeffA : ℝ
+  coeffB : ℝ
+  coeffC : ℝ
+  coeffAB : ℝ
+  coeffBC : ℝ
+  coeffAC : ℝ
+  coeffABC : ℝ
 
 /--
 A Tripartite Entropy Profile maps each region combination to its total von Neumann entropy,
 governed by the area law and the topological correction.
 -/
 structure TripartiteEntropyProfile (γ : ℝ) (α : ℝ) (area : TripartiteBoundaryArea) (corr : TopologicalCorrection γ) where
-  S_A : ℝ := α * area.lenA - corr.coeffA * γ
-  S_B : ℝ := α * area.lenB - corr.coeffB * γ
-  S_C : ℝ := α * area.lenC - corr.coeffC * γ
-  S_AB : ℝ := α * area.lenAB - corr.coeffAB * γ
-  S_BC : ℝ := α * area.lenBC - corr.coeffBC * γ
-  S_AC : ℝ := α * area.lenAC - corr.coeffAC * γ
-  S_ABC : ℝ := α * area.lenABC - corr.coeffABC * γ
+  S_A : ℝ
+  S_B : ℝ
+  S_C : ℝ
+  S_AB : ℝ
+  S_BC : ℝ
+  S_AC : ℝ
+  S_ABC : ℝ
 
 /-- The topological mutual information (alternating entropy sum). -/
 def topologicalMutualInformation {γ : ℝ} {α : ℝ} {area : TripartiteBoundaryArea} {corr : TopologicalCorrection γ}
@@ -85,7 +85,8 @@ Theorem: The topological mutual information exactly cancels the area-law terms
 and isolates the topological entanglement entropy as `-γ`.
 -/
 theorem topological_mutual_information_eq_neg_gamma {γ : ℝ} {α : ℝ} (area : TripartiteBoundaryArea)
-    (profile : TripartiteEntropyProfile γ α area {})
+    (corr : TopologicalCorrection γ)
+    (profile : TripartiteEntropyProfile γ α area corr)
     (hA : profile.S_A = α * area.lenA - 1 * γ)
     (hB : profile.S_B = α * area.lenB - 1 * γ)
     (hC : profile.S_C = α * area.lenC - 1 * γ)

@@ -624,10 +624,12 @@ theorem exists_network_fixed_transportWeylPlus_nonzero_ker_of_experts_fix_of_sim
   let hWeyl :=
     InfoGeometry.Quantum.BulkBoundary.weylZeroModeWitnessUnderBogoliubov_of_negativePhase_of_simplifiedBoundaryModel
       (M := M) (T := T) (hpres := hpres) (localOp := localOp) (chain := chain) hNeg hSimple
-  refine ⟨hWeyl.psiPlus, ?_, hWeyl.psiPlus_mem_weyl, hWeyl.psiPlus_zeroMode, hWeyl.psiPlus_ne_zero⟩
+  rcases hWeyl with
+    ⟨ψplus, ψminus, hψplusNe, hψminusNe, hPlus, hMinus, hKerPlus, hKerMinus⟩
+  refine ⟨ψplus, ?_, hPlus, hKerPlus, hψplusNe⟩
   exact arnoldNetworkOutput_eq_of_experts_fix
-    (n := n) (net := net) (β := β) (x := fun _ : Unit => hWeyl.psiPlus) (i := ())
-    (hfix := fun e => hfix e hWeyl.psiPlus hWeyl.psiPlus_mem_weyl hWeyl.psiPlus_zeroMode)
+    (n := n) (net := net) (β := β) (x := fun _ : Unit => ψplus) (i := ())
+    (hfix := fun e => hfix e ψplus hPlus hKerPlus)
 
 /--
 Turn a simplified-boundary-model negative phase into a concrete fixed nonzero
@@ -665,9 +667,11 @@ theorem exists_network_fixed_transportWeylMinus_nonzero_ker_of_experts_fix_of_si
   let hWeyl :=
     InfoGeometry.Quantum.BulkBoundary.weylZeroModeWitnessUnderBogoliubov_of_negativePhase_of_simplifiedBoundaryModel
       (M := M) (T := T) (hpres := hpres) (localOp := localOp) (chain := chain) hNeg hSimple
-  refine ⟨hWeyl.psiMinus, ?_, hWeyl.psiMinus_mem_weyl, hWeyl.psiMinus_zeroMode, hWeyl.psiMinus_ne_zero⟩
+  rcases hWeyl with
+    ⟨ψplus, ψminus, hψplusNe, hψminusNe, hPlus, hMinus, hKerPlus, hKerMinus⟩
+  refine ⟨ψminus, ?_, hMinus, hKerMinus, hψminusNe⟩
   exact arnoldNetworkOutput_eq_of_experts_fix
-    (n := n) (net := net) (β := β) (x := fun _ : Unit => hWeyl.psiMinus) (i := ())
-    (hfix := fun e => hfix e hWeyl.psiMinus hWeyl.psiMinus_mem_weyl hWeyl.psiMinus_zeroMode)
+    (n := n) (net := net) (β := β) (x := fun _ : Unit => ψminus) (i := ())
+    (hfix := fun e => hfix e ψminus hMinus hKerMinus)
 
 end InfoGeometry.Canonical.MoE

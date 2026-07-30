@@ -29,18 +29,12 @@ open InfoGeometry.Topology.BrillouinKlein
 open InfoGeometry.Canonical.WallpaperAffineWeylD5Bridge
 open InfoGeometry.Canonical.WallpaperPin55RootCrossSection
 
-/--
-Finite Brillouin/Klein bridge packet.
-
-The fields are exactly the owner-file facts already present in the repo:
-
-* the `pg` glide relation;
-* the `Z₂` orientation-reversal cancellation;
-* the even boundary charge readout on the Klein boundary;
-* the gauge-stable `Z₂` readout under adding two crossings;
-* the exact affine `D₅` coordinate bridge.
+/-
+Finite Brillouin/Klein bridge theorem. Its conclusion is the conjunction of
+the existing owner-file laws, stated directly rather than through a
+proposition alias.
 -/
-abbrev BrillouinKleinWallpaperWeylPacket : Prop :=
+theorem brillouin_klein_wallpaper_weyl_packet :
   (∀ p : Lattice2D,
     concretePG.G (concretePG.T_y p) = concretePG.T_y.symm (concretePG.G p)) ∧
     (∀ theta : ℤ, klein_bottle_z2_invariant theta (-theta) = 0) ∧
@@ -53,10 +47,7 @@ abbrev BrillouinKleinWallpaperWeylPacket : Prop :=
             (latticeEmbed t 0 + latticeEmbed t 1 + latticeEmbed t 2 +
                 latticeEmbed t 3 + latticeEmbed t 4 = 0) ∧
               matVec5 sigmaXMatrix (latticeEmbed t) = latticeEmbed (sigmaX t) ∧
-              matVec5 sigmaDMatrix (latticeEmbed t) = latticeEmbed (sigmaD t))
-
-/-- Construct the finite Brillouin/Klein bridge packet from the owner theorems. -/
-def brillouin_klein_wallpaper_weyl_packet : BrillouinKleinWallpaperWeylPacket := by
+              matVec5 sigmaDMatrix (latticeEmbed t) = latticeEmbed (sigmaD t)) := by
   exact ⟨concrete_pg_generates_klein_bottle_relation,
     (fun theta => by simp [klein_bottle_z2_invariant]),
     (fun a b int_charge => fermion_doubling_violation a b int_charge),

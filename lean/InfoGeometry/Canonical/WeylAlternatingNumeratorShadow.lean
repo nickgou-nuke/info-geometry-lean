@@ -115,7 +115,8 @@ theorem numerator_is_alternating_gibbs :
 /-- The denominator side is governed by finite Vandermonde exclusion. -/
 @[rep_depth thermo]
 theorem denominator_zero_iff_collision :
-    P.denominatorPacket.denominatorWitness.determinant = 0 ↔
+    VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
+        P.denominatorPacket.denominatorWitness = 0 ↔
       ∃ i j : Fin 4,
         P.denominatorPacket.denominatorNodes i =
           P.denominatorPacket.denominatorNodes j ∧ i ≠ j :=
@@ -128,7 +129,8 @@ theorem numerator_denominator_shadow_packet :
       ∑ w : σ,
         signBit (P.numeratorData.sign w) * Real.exp (P.numeratorData.exponent w))
     ∧
-    (P.denominatorPacket.denominatorWitness.determinant = 0 ↔
+    (VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant
+        P.denominatorPacket.denominatorWitness = 0 ↔
       ∃ i j : Fin 4,
         P.denominatorPacket.denominatorNodes i =
           P.denominatorPacket.denominatorNodes j ∧ i ≠ j) := by

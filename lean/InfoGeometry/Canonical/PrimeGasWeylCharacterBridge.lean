@@ -23,10 +23,6 @@ structure PrimeGasWeylData where
   entropyReadout : ℝ
   characterReadout : ℝ
 
-/-! The bridge consumes the prime-gas owner directly. The former packet had
-no field beyond `PrimeGasWeylData`, so it was only a compatibility wrapper. -/
-abbrev PrimeGasWeylPacket := PrimeGasWeylData
-
 /-- Minimal Souriau thermodynamic readout packet. -/
 @[rep_depth operator]
 structure SouriauThermodynamicPacket where
@@ -41,7 +37,7 @@ thermodynamic readout explicitly.
 -/
 @[rep_depth operator]
 structure PrimeGasWeylCharacterBridge where
-  primeGas : PrimeGasWeylPacket
+  primeGas : PrimeGasWeylData
   souriau : SouriauThermodynamicPacket
   beta_eq :
     souriau.beta = primeGas.beta

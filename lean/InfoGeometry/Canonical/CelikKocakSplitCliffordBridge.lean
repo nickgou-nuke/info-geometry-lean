@@ -187,10 +187,10 @@ Cantor/Fock socket and read back through the socket API.
 -/
 @[rep_depth operator]
 structure SplitCliffordInfiniteSocketComplement
-    (Op E : Type*) [Ring Op] [NormedAddCommGroup E] [InnerProductSpace ℂ E]
+    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℂ E]
     [CompleteSpace E] where
   boundaryComplement : SplitCliffordInfiniteBoundaryComplement E
-  infiniteSocket : InfiniteCantorCliffordFockSocket Op E
+  infiniteSocket : InfiniteCantorCliffordFockSocket E
   carrier_readout_eq :
     carrierData_readout (S := infiniteSocket) = boundaryComplement.cantorFock
 
@@ -209,7 +209,7 @@ noncomputable def splitCliffordInfinity_boundary_complement
 noncomputable def splitCliffordInfinity_socket_complement
     (z : SplitCliffordInfinity)
     (D : CelikKocakInfiniteFockCarrierData E) :
-    SplitCliffordInfiniteSocketComplement ℝ E := by
+    SplitCliffordInfiniteSocketComplement E := by
   refine { boundaryComplement := { splitInfinity := z, cantorFock := D, expanding_representatives := ?_ },
            infiniteSocket := { carrierData := D },
            carrier_readout_eq := rfl }

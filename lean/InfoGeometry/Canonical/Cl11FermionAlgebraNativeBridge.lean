@@ -87,22 +87,4 @@ theorem J11_sq : J11 * J11 = 1 := by
   rw [h_expand, e1_sq, e2_sq]
   simp
 
-/--
-**Main Theorem: Grand Cl(1,1) Master Duality**
-Unifies generator square laws e₁² = 1, e₂² = -1, anticommutativity e₁e₂ + e₂e₁ = 0, bivector law J² = 1, and antiunitary fixed locus rigidity Re(s) = 1/2 into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
--/
-theorem grand_cl11_master_duality
-    (s_anti : ℂ) (h_anti : s_anti = 1 - star s_anti) :
-    (e1 * e1 = 1) ∧
-    (e2 * e2 = -1) ∧
-    (e1 * e2 + e2 * e1 = 0) ∧
-    (J11 * J11 = 1) ∧
-    (s_anti.re = 1 / 2) := ⟨
-  e1_sq,
-  e2_sq,
-  e1_e2_anticomm,
-  J11_sq,
-  (critical_line_fixed_locus_iff s_anti).1 h_anti
-⟩
-
 end InfoGeometry.Canonical.Cl11FermionAlgebraNativeBridge

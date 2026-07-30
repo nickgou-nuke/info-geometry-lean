@@ -44,10 +44,8 @@ def resolveColimitInheritsInvariants_of_ambient
     (GlobalInvariants : SupergradedClosureAt A_infty)
     -- Embeddings from the finite stages into the global algebra
     (global_embed : ∀ n, BondingIntertwiner (Invariants n) GlobalInvariants) :
-    ColimitInheritsInvariants Chain Invariants Bonding where
-  ColimitStage := A_infty
-  colimitRing := inferInstance
-  LimitInvariants := GlobalInvariants
+    ColimitInheritsInvariants Chain Invariants Bonding :=
+  ColimitInheritsInvariants.fromStages Chain Invariants Bonding
 
 /-- Causal limit stabilization: The global embeddings into the ambient
     limit algebra are monotone with respect to the causal preorders. -/

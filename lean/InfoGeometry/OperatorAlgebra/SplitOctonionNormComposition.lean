@@ -36,15 +36,4 @@ theorem upper_lower_norm_composition_zero (i : Fin 3) :
       detZ (mulZ (down i) (up i)) = detZ (down i) * detZ (up i) := by
   exact ⟨detZ_mulZ (up i) (down i), detZ_mulZ (down i) (up i)⟩
 
-/-- Closed packet for the split-octonion norm-composition layer. -/
-theorem splitOctonion_normComposition_packet :
-    (∀ X Y : SplitOct, detZ (mulZ X Y) = detZ X * detZ Y) ∧
-      detZ ePlus = 0 ∧
-      detZ eMinus = 0 ∧
-      (∀ i : Fin 3, detZ (mulZ (up i) (down i)) = detZ (up i) * detZ (down i)) ∧
-      (∀ i : Fin 3, detZ (mulZ (down i) (up i)) = detZ (down i) * detZ (up i)) := by
-  exact ⟨detZ_mulZ, diagonal_idempotents_split_null.1, diagonal_idempotents_split_null.2,
-    (fun i => detZ_mulZ (up i) (down i)),
-    (fun i => detZ_mulZ (down i) (up i))⟩
-
 end InfoGeometry.OperatorAlgebra.SplitOctonions.NormComposition

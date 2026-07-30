@@ -66,7 +66,7 @@ structure MathfulnessMetric where
   containsVacuousSockets : Bool
   unfoldedLocalWrapperCount : Nat
   hitUnfoldLimit : Bool
-  containsSorry : Bool := false
+  containsSorry : Bool
 deriving Repr
 
 def MathfulnessMetric.isGenuine (m : MathfulnessMetric) : Bool :=

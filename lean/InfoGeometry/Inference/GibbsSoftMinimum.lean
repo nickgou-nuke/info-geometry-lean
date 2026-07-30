@@ -200,6 +200,24 @@ theorem deriv_massieuPotential_inv_eq_neg_mean
   rw [hfun]
   exact InfoGeometry.GrandCanonical.potential_deriv_eq_neg_mean params β
 
+/-- The second inverse-temperature derivative of the finite Massieu curve is
+the Gibbs energy variance. -/
+theorem deriv2_massieuPotential_inv_eq_variance
+    {Theta : Type*} (M : Model (Data := Data) (Theta := Theta)) (θ : Theta)
+    (β : ℝ) :
+    deriv (fun t : ℝ =>
+      deriv (fun s : ℝ => massieuPotential M θ s⁻¹) t) β =
+      InfoGeometry.GrandCanonical.variance
+        { energy := fun i : Data => M.energy i θ } β := by
+  let params : InfoGeometry.GrandCanonical.GrandCanonicalParams Data :=
+    { energy := fun i : Data => M.energy i θ }
+  have hfun : (fun t : ℝ => massieuPotential M θ t⁻¹) =
+      InfoGeometry.GrandCanonical.potential params := by
+    funext t
+    exact massieuPotential_inv_eq_grandCanonical_potential M θ t
+  rw [hfun]
+  exact InfoGeometry.GrandCanonical.potential_second_derivative_eq_variance params β
+
 /-- The scaled Massieu potential converges to the negative hard minimum at
 positive-temperature zero. -/
 theorem tendsto_temperature_mul_massieu_nhdsWithin_zero_of_min

@@ -9,9 +9,7 @@ namespace Omega.GU
 def terminalFoldbin6BinaryWitness (n : Nat) : Nat :=
   if 8 ∈ Nat.zeckendorf n then 1 else 0
 
-/-- Paper-facing binary witness statement extracted from the window-6 strong-lumpability
-counterexample. -/
-def TerminalFoldbin6StrongLumpabilityBinaryWitnessStatement : Prop :=
+theorem paper_terminal_foldbin6_strong_lumpability_binary_witness :
   cBinFold 6 0 = cBinFold 6 21 ∧
   21 = Nat.fib 8 ∧
   Nat.zeckendorf 0 = [] ∧
@@ -21,12 +19,7 @@ def TerminalFoldbin6StrongLumpabilityBinaryWitnessStatement : Prop :=
   terminalFoldbin6BinaryWitness 0 ≠ terminalFoldbin6BinaryWitness 21 ∧
   ∃ y : X 6,
     ((Finset.range 6).filter (fun k => cBinFold 6 (0 ^^^ (2 ^ k)) = y)).card ≠
-      ((Finset.range 6).filter (fun k => cBinFold 6 (21 ^^^ (2 ^ k)) = y)).card
-
-/-- The strong-lumpability counterexample at window 6 is separated by the Zeckendorf `F₈` tail
-bit: `0` has witness `0`, while `21 = F₈` has witness `1`. -/
-theorem paper_terminal_foldbin6_strong_lumpability_binary_witness :
-    TerminalFoldbin6StrongLumpabilityBinaryWitnessStatement := by
+      ((Finset.range 6).filter (fun k => cBinFold 6 (21 ^^^ (2 ^ k)) = y)).card := by
   rcases paper_terminal_foldbin6_strong_lumpability_fails with ⟨hfold, hy⟩
   have h0 : terminalFoldbin6BinaryWitness 0 = 0 := by native_decide
   have h21 : terminalFoldbin6BinaryWitness 21 = 1 := by native_decide

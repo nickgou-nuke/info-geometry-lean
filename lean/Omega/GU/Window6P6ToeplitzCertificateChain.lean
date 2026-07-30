@@ -36,10 +36,6 @@ structure Window6P6ToeplitzCertificateChainData where
   completedCharpoly_phaseRoot :
     completedCharpoly.eval (Complex.exp (spectralPhase * Complex.I)) = 0
 
-/-- The chosen finite-field witness is symmetric, hence selfadjoint. -/
-def window6P6Selfadjoint (D : Window6P6ToeplitzCertificateChainData) : Prop :=
-  D.commutantWitness.transpose = D.commutantWitness
-
 /-- Finite-dimensionality of the ambient audited `21 × 21` matrix packet. -/
 def window6P6FiniteDimensional : Prop :=
   FiniteDimensional (ZMod 2) (Fin 21 → ZMod 2)
@@ -47,10 +43,6 @@ def window6P6FiniteDimensional : Prop :=
 /-- The finite commutant packet used as the concrete compactness target. -/
 def window6P6FiniteCommutant (D : Window6P6ToeplitzCertificateChainData) : Prop :=
   Finite {A : Matrix (Fin 21) (Fin 21) (ZMod 2) // A * D.commutantWitness = D.commutantWitness * A}
-
-/-- The recorded phase lies in the certified spectral interval. -/
-def window6P6PhaseInSpectralInterval (D : Window6P6ToeplitzCertificateChainData) : Prop :=
-  D.spectralPhase ∈ Set.Icc D.spectralLeft D.spectralRight
 
 /-- The completed characteristic polynomial has a unit-circle root produced from the certified
 phase. -/
@@ -65,7 +57,7 @@ interval.
     thm:window6-p6-toeplitz-certificate-chain -/
 def Window6P6ToeplitzCertificateChain (D : Window6P6ToeplitzCertificateChainData) : Prop :=
   window6P6PushforwardMarkovLaw ∧
-    window6P6Selfadjoint D ∧
+    (D.commutantWitness.transpose = D.commutantWitness) ∧
     window6P6FiniteCommutant D ∧
     (D.certificateLoop.rh ↔ D.certificateLoop.jensenDefectZeroLimit) ∧
     (D.certificateLoop.jensenDefectZeroLimit ↔ D.certificateLoop.repulsionRadiusTendsToOne) ∧
@@ -76,15 +68,16 @@ def Window6P6ToeplitzCertificateChain (D : Window6P6ToeplitzCertificateChainData
     terminalFoldbin6TailOffset ⟨false, false, true⟩ = Nat.fib 10 ∧
     cBinFiberHist 6 1 = 0 ∧
     cBinFiberHist 6 2 + cBinFiberHist 6 3 + cBinFiberHist 6 4 = 21 ∧
-    window6P6PhaseInSpectralInterval D ∧
+    (D.spectralPhase ∈ Set.Icc D.spectralLeft D.spectralRight) ∧
     window6P6UnitCircleRoot D
 
 theorem paper_window6_p6_toeplitz_certificate_chain
     (D : Window6P6ToeplitzCertificateChainData) : Window6P6ToeplitzCertificateChain D := by
   have hCompactness :
-      window6P6Selfadjoint D ∧ window6P6FiniteCommutant D := by
+      (D.commutantWitness.transpose = D.commutantWitness) ∧
+        window6P6FiniteCommutant D := by
     refine paper_window6_p6_compactness_principle
-      (selfadjoint := window6P6Selfadjoint D)
+      (selfadjoint := D.commutantWitness.transpose = D.commutantWitness)
       (finiteDim := window6P6FiniteDimensional)
       (commutantStarAlg := window6P6FiniteCommutant D)
       (unitaryCompact := window6P6FiniteCommutant D)

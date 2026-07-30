@@ -165,14 +165,6 @@ def totalRate (D : MetriplecticData Observable) (F : Observable) : Observable :=
 end MetriplecticData
 
 /--
-Historical compatibility name for the genuine operator-valued owner.
-
-There is no second evidence wrapper: consistency is exactly the quantified
-algebraic content of `MetriplecticSystem`.
--/
-@[rep_depth thermo]
-
-/--
 Optimal-transport metric and mobility data.
 
 Metric laws are owned by Mathlib's `PseudoMetricSpace`; mobility is a genuine

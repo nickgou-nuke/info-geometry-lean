@@ -32,6 +32,7 @@ open CStarStateColimit.Native.FilteredGNSGlobalRepresentationCompatibility
 open CStarStateColimit.Native.FilteredGNSTailStarRepresentation
 open CStarStateColimit.Native.FilteredGNSTailRepresentation
 open CStarStateColimit.Native.FilteredGNSTailRepresentationTopology
+open InfoGeometry.Canonical.FilteredStarAlgebraTopologicalColimit
 open CategoryTheory CategoryTheory.Limits
 open FilteredColimit.Native.Topological
 open InfoGeometry.Canonical.FilteredIsometricHilbertCompletion
@@ -345,6 +346,92 @@ theorem globalStageRepresentation_transition
   exact
     (_root_.CStarStateColimit.Native.FilteredGNSGlobalRepresentationCompatibility.globalStageRepresentation_transition
       Stage sys ω hij a).symm
+
+/-- The same stage-independence law, exposed as an equality in `TopCat`.
+This is the topological readout of the canonical star-representation
+compatibility; it introduces no new representation or completion. -/
+theorem globalStageRepresentationTopCatHom_transition
+    {i j : I} (hij : i ≤ j) (a : Stage i) :
+    globalStageRepresentationTopCatHom Stage sys ω a =
+      globalStageRepresentationTopCatHom Stage sys ω (sys.map hij a) := by
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro x
+  rw [globalStageRepresentationTopCatHom_apply,
+    globalStageRepresentationTopCatHom_apply]
+  exact congrArg (fun T => T x)
+    (globalStageRepresentation_transition Stage sys ω hij a)
+
+/-! ### Topological realization of the stage-representation cocone
+
+The operator carrier has its normed topology, but this file does not assume a
+`CStarAlgebra` instance on it.  Continuity in the observable variable is
+therefore supplied explicitly, exactly as for a general topological
+realization of a star-inductive system. -/
+
+structure GlobalStageRepresentationTopologicalData where
+  continuous_stage : ∀ i : I,
+    Continuous (globalStageRepresentationStarAlgHom Stage sys ω i)
+
+abbrev globalStageRepresentationOperatorSpace :=
+  GNSHilbertColimit Stage sys ω →L[ℂ] GNSHilbertColimit Stage sys ω
+
+def globalStageRepresentationTopCatCocone
+    (R : GlobalStageRepresentationTopologicalData Stage sys ω) :
+    Cocone (topologicalDiagram Stage sys) where
+  pt := TopCat.of (globalStageRepresentationOperatorSpace Stage sys ω)
+  ι := {
+    app := fun i =>
+      TopCat.ofHom {
+        toFun := globalStageRepresentationStarAlgHom Stage sys ω i
+        continuous_toFun := R.continuous_stage i }
+    naturality := by
+      intro i j f
+      apply TopCat.hom_ext
+      apply ContinuousMap.ext
+      intro a
+      change globalStageRepresentationStarAlgHom Stage sys ω j
+          (sys.map (leOfHom f) a) =
+        globalStageRepresentationStarAlgHom Stage sys ω i a
+      exact (globalStageRepresentation_transition Stage sys ω
+        (leOfHom f) a).symm }
+
+noncomputable def globalStageRepresentationTopologicalColimitMap
+    (R : GlobalStageRepresentationTopologicalData Stage sys ω) :
+    topologicalColimit Stage sys ⟶
+      TopCat.of (globalStageRepresentationOperatorSpace Stage sys ω) :=
+  topologicalDirectDescend (topologicalDiagram Stage sys)
+    (globalStageRepresentationTopCatCocone Stage sys ω R)
+
+@[simp] theorem globalStageRepresentationTopologicalColimitMap_stage
+    (R : GlobalStageRepresentationTopologicalData Stage sys ω)
+    (i : I) (a : Stage i) :
+    globalStageRepresentationTopologicalColimitMap Stage sys ω R
+        (topologicalInjection Stage sys i a) =
+      globalStageRepresentationStarAlgHom Stage sys ω i a := by
+  have h := topologicalDirectDescend_stage
+    (topologicalDiagram Stage sys)
+    (globalStageRepresentationTopCatCocone Stage sys ω R) i
+  exact congrArg (fun f => f a) h
+
+theorem globalStageRepresentationTopologicalColimitMap_unique
+    (R : GlobalStageRepresentationTopologicalData Stage sys ω)
+    (f : topologicalColimit Stage sys ⟶
+      TopCat.of (globalStageRepresentationOperatorSpace Stage sys ω))
+    (h : ∀ (i : I) (a : Stage i),
+      f (topologicalInjection Stage sys i a) =
+        globalStageRepresentationStarAlgHom Stage sys ω i a) :
+    f = globalStageRepresentationTopologicalColimitMap Stage sys ω R := by
+  apply topologicalDirectDescend_unique
+    (topologicalDiagram Stage sys)
+    (globalStageRepresentationTopCatCocone Stage sys ω R) f
+  intro i
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro a
+  change f (topologicalInjection Stage sys i a) =
+    globalStageRepresentationStarAlgHom Stage sys ω i a
+  exact h i a
 
 @[simp] theorem tailCompletedRepresentationTopCatHom_star_apply
     {i₀ : I} (a : Stage i₀)

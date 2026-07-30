@@ -193,9 +193,9 @@ repository-owned `KANColimitTower`.
 @[rep_depth operator]
 theorem KAN_colimit_parabolic_nilpotent_readout
     (T : InfoGeometry.Canonical.KANColimitBridge.KANColimitTower)
-    {n : ℕ} {x : T.system.Stage n}
+    {n : ℕ} {x : T.Stage n}
     (hx : (T.stage n).nilpotentN x) :
-    T.limit.nilpotentNInf (T.system.toLimit n x) :=
+    T.limit.nilpotentNInf (T.toLimit n x) :=
   T.nilpotent_colimit hx
 
 /-! ## Bounded doubled-carrier specialization -/

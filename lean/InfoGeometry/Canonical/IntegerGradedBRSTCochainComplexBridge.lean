@@ -20,15 +20,16 @@ open InfoGeometry.Canonical.GhostNumberGradedBRSTCohomologyBridge
 open InfoGeometry.Canonical.GradedBRSTOperatorSequenceBridge
 open InfoGeometry.Canonical.GradedBRSTCochainComplexBridge
 
-variable {R H : Type*} [CommRing R] [AddCommGroup H] [Module R H]
+variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
 /-- **Definition**: Integer-Indexed Ghost Eigenspace E^g for Integer Ghost Numbers g : ℤ. -/
-def integerGhostEigenspace (g_op : Module.End R H) (g : ℤ) :=
+def integerGhostEigenspace
+    (g_op : Module.End R (ExteriorAlgebra R V)) (g : ℤ) :=
   ghostEigenspace g_op (g : R)
 
 /-- **Definition**: Integer-Indexed Restricted BRST Map Q_g : E^g → E^{g+1}. -/
 def integerGradedBRSTMap
-    (q g_op : Module.End R H)
+    (q g_op : Module.End R (ExteriorAlgebra R V))
     (h_comm : g_op.comp q - q.comp g_op = q)
     (g : ℤ) : integerGhostEigenspace g_op g →ₗ[R] integerGhostEigenspace g_op (g + 1) := by
   have h_map := gradedBRSTMap q g_op h_comm (g : R)
@@ -41,7 +42,7 @@ def integerGradedBRSTMap
 
 /-- **Theorem**: Integer-Indexed BRST Composition Nilpotency Q_{g+1} ∘ Q_g = 0. -/
 theorem integer_graded_brst_composition_zero
-    (q g_op : Module.End R H)
+    (q g_op : Module.End R (ExteriorAlgebra R V))
     (hq2 : q.comp q = 0)
     (h_comm : g_op.comp q - q.comp g_op = q)
     (g : ℤ) :
@@ -55,7 +56,7 @@ theorem integer_graded_brst_composition_zero
 
 /-- **Definition**: Integer-Graded BRST Cohomology Module H^{g+1}_Q = Ker(Q_{g+1}) / Im(Q_g). -/
 def integerGradedBRSTCohomologyDegree
-    (q g_op : Module.End R H)
+    (q g_op : Module.End R (ExteriorAlgebra R V))
     (hq2 : q.comp q = 0)
     (h_comm : g_op.comp q - q.comp g_op = q)
     (g : ℤ) :=
@@ -65,7 +66,7 @@ def integerGradedBRSTCohomologyDegree
 
 /-- **Theorem**: Range-Kernel Inclusion Im(Q_g) ⊆ Ker(Q_{g+1}) for Integer Ghost Numbers g : ℤ. -/
 theorem integer_graded_brst_range_le_ker
-    (q g_op : Module.End R H)
+    (q g_op : Module.End R (ExteriorAlgebra R V))
     (hq2 : q.comp q = 0)
     (h_comm : g_op.comp q - q.comp g_op = q)
     (g : ℤ)
@@ -77,7 +78,7 @@ theorem integer_graded_brst_range_le_ker
 
 /-- **Theorem**: Integer-Graded Exact State Class Zero [Q_g χ_g] = 0 ∈ H^{g+1}_Q. -/
 theorem integer_graded_brst_exact_state_class_zero
-    (q g_op : Module.End R H)
+    (q g_op : Module.End R (ExteriorAlgebra R V))
     (hq2 : q.comp q = 0)
     (h_comm : g_op.comp q - q.comp g_op = q)
     (g : ℤ)
@@ -98,7 +99,7 @@ theorem integer_graded_brst_exact_state_class_zero
     3. Integer-graded BRST cohomology module H^{g+1}_Q = Ker(Q_{g+1}) / Im(Q_g) definition.
     4. Integer-graded exact state zero class [Q_g χ_g] = 0 ∈ H^{g+1}_Q proof closure. -/
 theorem master_integer_graded_brst_cochain_complex_synthesis
-    (q g_op : Module.End R H)
+    (q g_op : Module.End R (ExteriorAlgebra R V))
     (hq2 : q.comp q = 0)
     (h_comm : g_op.comp q - q.comp g_op = q)
     (g : ℤ)

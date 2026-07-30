@@ -191,14 +191,12 @@ lemma clockAxis_mem_phaseAxis_even :
   exact ((phaseAxisSymmetricLieAlgebra (E := E)).mem_even_iff).2 (by
     apply ContinuousLinearMap.ext
     intro x
-    change phaseAxisCartanMap (E := E) complex_i x =
-      -WithLp.toLp 2 (WithLp.snd x, -WithLp.fst x)
+    change phaseAxisCartanMap (E := E) Kop x = Kop x
     exact
       calc
-        ((phaseAxisSymmetricLieAlgebra (E := E)).θ Kop) x
+        phaseAxisCartanMap (E := E) Kop x
             = -(Kop (Kop (Kop x))) := by
-                simp [phaseAxisSymmetricLieAlgebra, phaseAxisCartanInvolution,
-                  phaseAxisCartanMap, phaseConjugate]
+                simp [phaseAxisCartanMap, phaseConjugate]
         _ = -(-(Kop x)) := by rw [hK2 (Kop x)]
         _ = Kop x := by simp
   )

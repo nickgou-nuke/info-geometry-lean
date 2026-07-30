@@ -8,6 +8,7 @@ import InfoGeometry.Canonical.GhostGradedBRSTPhysicalSectorBridge
 import InfoGeometry.Canonical.GhostNumberGradedBRSTCohomologyBridge
 import InfoGeometry.Canonical.GradedBRSTOperatorSequenceBridge
 import InfoGeometry.Canonical.GradedBRSTCochainComplexBridge
+import InfoGeometry.Canonical.IntegerGradedBRSTCochainComplexBridge
 import Mathlib.Tactic.NoncommRing
 
 noncomputable section
@@ -19,48 +20,47 @@ open InfoGeometry.Canonical.GhostGradedBRSTPhysicalSectorBridge
 open InfoGeometry.Canonical.GhostNumberGradedBRSTCohomologyBridge
 open InfoGeometry.Canonical.GradedBRSTOperatorSequenceBridge
 open InfoGeometry.Canonical.GradedBRSTCochainComplexBridge
+open InfoGeometry.Canonical.IntegerGradedBRSTCochainComplexBridge
 
-variable {R H : Type*} [CommRing R] [AddCommGroup H] [Module R H]
+variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
 /-- **Definition**: Physical Ghost-Zero BRST Cohomology Module H^0_Q = Ker(Q_0) / Im(Q_{-1}). -/
 def physicalGhostZeroCohomologyModule
-    (q g_op : Module.End R H)
+    (q g_op : Module.End R (ExteriorAlgebra R V))
     (hq2 : q.comp q = 0)
     (h_comm : g_op.comp q - q.comp g_op = q) :=
-  gradedBRSTCohomologyDegree q g_op hq2 h_comm (-1 : R)
+  integerGradedBRSTCohomologyDegree q g_op hq2 h_comm (-1 : ℤ)
 
 /-- **Theorem**: Physical Ghost-Zero Operator Composition Nilpotency Q_0 ∘ Q_{-1} = 0. -/
 theorem physical_ghost_zero_composition_zero
-    (q g_op : Module.End R H)
+    (q g_op : Module.End R (ExteriorAlgebra R V))
     (hq2 : q.comp q = 0)
     (h_comm : g_op.comp q - q.comp g_op = q) :
-    (gradedBRSTMap q g_op h_comm (0 : R)).comp (gradedBRSTMap q g_op h_comm (-1 : R)) = 0 := by
-  have h_comp := graded_brst_composition_zero q g_op hq2 h_comm (-1 : R)
-  have h_add : (-1 : R) + 1 = 0 := by ring
-  rw [h_add] at h_comp
-  exact h_comp
+    (integerGradedBRSTMap q g_op h_comm (0 : ℤ)).comp
+        (integerGradedBRSTMap q g_op h_comm (-1 : ℤ)) = 0 := by
+  simpa using integer_graded_brst_composition_zero q g_op hq2 h_comm (-1 : ℤ)
 
 /-- **Theorem**: Range-Kernel Inclusion Im(Q_{-1}) ⊆ Ker(Q_0) for Ghost Sector Degree 0. -/
 theorem physical_ghost_zero_range_le_ker
-    (q g_op : Module.End R H)
+    (q g_op : Module.End R (ExteriorAlgebra R V))
     (hq2 : q.comp q = 0)
     (h_comm : g_op.comp q - q.comp g_op = q)
-    (chi : ghostEigenspace g_op (-1 : R)) :
-    gradedBRSTMap q g_op h_comm (-1 : R) chi ∈ LinearMap.ker (gradedBRSTMap q g_op h_comm (0 : R)) := by
-  have h_range := graded_brst_range_le_ker q g_op hq2 h_comm (-1 : R) chi
-  have h_add : (-1 : R) + 1 = 0 := by ring
-  rw [h_add] at h_range
-  exact h_range
+    (chi : integerGhostEigenspace g_op (-1 : ℤ)) :
+    integerGradedBRSTMap q g_op h_comm (-1 : ℤ) chi ∈
+      LinearMap.ker (integerGradedBRSTMap q g_op h_comm (0 : ℤ)) := by
+  simpa using integer_graded_brst_range_le_ker q g_op hq2 h_comm (-1 : ℤ) chi
 
 /-- **Theorem**: Exact Physical Ghost-Zero Class Zero [Q_{-1} χ_{-1}] = 0 ∈ H^0_Q. -/
 theorem physical_ghost_zero_exact_class_zero
-    (q g_op : Module.End R H)
+    (q g_op : Module.End R (ExteriorAlgebra R V))
     (hq2 : q.comp q = 0)
     (h_comm : g_op.comp q - q.comp g_op = q)
-    (chi : ghostEigenspace g_op (-1 : R)) :
-    Submodule.Quotient.mk ⟨gradedBRSTMap q g_op h_comm (-1 : R) chi, physical_ghost_zero_range_le_ker q g_op hq2 h_comm chi⟩ =
+    (chi : integerGhostEigenspace g_op (-1 : ℤ)) :
+    Submodule.Quotient.mk ⟨integerGradedBRSTMap q g_op h_comm (-1 : ℤ) chi,
+        physical_ghost_zero_range_le_ker q g_op hq2 h_comm chi⟩ =
       (Submodule.Quotient.mk 0 : physicalGhostZeroCohomologyModule q g_op hq2 h_comm) := by
-  exact graded_brst_exact_state_class_zero_degree q g_op hq2 h_comm (-1 : R) chi
+  simpa [physicalGhostZeroCohomologyModule] using
+    integer_graded_brst_exact_state_class_zero q g_op hq2 h_comm (-1 : ℤ) chi
 
 /-- **Theorem**: Master Physical Ghost-Zero BRST Cochain Sector Synthesis H^0_Q.
     Unifies:
@@ -71,9 +71,11 @@ theorem master_physical_ghost_zero_cochain_sector_synthesis
     (q g_op : Module.End R H)
     (hq2 : q.comp q = 0)
     (h_comm : g_op.comp q - q.comp g_op = q)
-    (chi : ghostEigenspace g_op (-1 : R)) :
-    ((gradedBRSTMap q g_op h_comm (0 : R)).comp (gradedBRSTMap q g_op h_comm (-1 : R)) = 0) ∧
-    (Submodule.Quotient.mk ⟨gradedBRSTMap q g_op h_comm (-1 : R) chi, physical_ghost_zero_range_le_ker q g_op hq2 h_comm chi⟩ =
+    (chi : integerGhostEigenspace g_op (-1 : ℤ)) :
+    ((integerGradedBRSTMap q g_op h_comm (0 : ℤ)).comp
+        (integerGradedBRSTMap q g_op h_comm (-1 : ℤ)) = 0) ∧
+    (Submodule.Quotient.mk ⟨integerGradedBRSTMap q g_op h_comm (-1 : ℤ) chi,
+        physical_ghost_zero_range_le_ker q g_op hq2 h_comm chi⟩ =
       (Submodule.Quotient.mk 0 : physicalGhostZeroCohomologyModule q g_op hq2 h_comm)) := ⟨
   physical_ghost_zero_composition_zero q g_op hq2 h_comm,
   physical_ghost_zero_exact_class_zero q g_op hq2 h_comm chi

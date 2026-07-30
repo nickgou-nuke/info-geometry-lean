@@ -36,9 +36,6 @@ noncomputable abbrev variance (params : GrandCanonicalParams α) (β : ℝ) : �
 noncomputable abbrev hessian (params : GrandCanonicalParams α) (β : ℝ) : ℝ :=
   InfoGeometry.GrandCanonical.hessian params β
 
-abbrev Spinodal (params : GrandCanonicalParams α) (β : ℝ) : Prop :=
-  InfoGeometry.GrandCanonical.Spinodal params β
-
 lemma gc_partition_pos (params : GrandCanonicalParams α) (β : ℝ) :
     0 < partition params β :=
   partition_pos params β
@@ -67,7 +64,7 @@ lemma gc_hessian_nonneg (params : GrandCanonicalParams α) (β : ℝ) :
 
 lemma gc_spinodal_iff_variance_eq_zero
     (params : GrandCanonicalParams α) (β : ℝ) :
-    Spinodal params β ↔ variance params β = 0 :=
+    InfoGeometry.GrandCanonical.Spinodal params β ↔ variance params β = 0 :=
   spinodal_iff_variance_eq_zero params β
 
 end FiniteModel
@@ -175,12 +172,6 @@ abbrev Spinodal2D
     (params : GrandCanonicalTwoParam α) (β μ : ℝ) : Prop :=
   InfoGeometry.GrandCanonical.Spinodal2D params β μ
 
-abbrev ResponseSymmetric (M : ResponseMatrix2) : Prop :=
-  InfoGeometry.GrandCanonical.ResponseMatrix2.Symmetric M
-
-abbrev ResponsePositiveSemidefinite (M : ResponseMatrix2) : Prop :=
-  InfoGeometry.GrandCanonical.ResponseMatrix2.PositiveSemidefinite M
-
 lemma gc2_betaResponse_eq_neg_meanShift
     (params : GrandCanonicalTwoParam α) (β μ : ℝ) :
     betaResponse params β μ = -meanShift params β μ :=
@@ -195,7 +186,7 @@ omit [Nonempty α] in
 lemma gc2_responseMatrix_symmetric
     (params : GrandCanonicalTwoParam α) (β μ : ℝ)
     (hMixed : betaMuHessian params β μ = muBetaHessian params β μ) :
-    ResponseSymmetric (responseMatrix params β μ) :=
+    InfoGeometry.GrandCanonical.ResponseMatrix2.Symmetric (responseMatrix params β μ) :=
   InfoGeometry.GrandCanonical.responseMatrix_symmetric params β μ hMixed
 
 omit [Nonempty α] in
@@ -204,7 +195,8 @@ lemma gc2_responseMatrix_positiveSemidefinite
     (hββ : 0 ≤ betaHessian params β μ)
     (hμμ : 0 ≤ muHessian params β μ)
     (hdet : 0 ≤ (responseMatrix params β μ).det) :
-    ResponsePositiveSemidefinite (responseMatrix params β μ) :=
+    InfoGeometry.GrandCanonical.ResponseMatrix2.PositiveSemidefinite
+      (responseMatrix params β μ) :=
   InfoGeometry.GrandCanonical.responseMatrix_positiveSemidefinite params β μ hββ hμμ hdet
 
 omit [Nonempty α] in

@@ -50,8 +50,8 @@ export InfoGeometry.Topology.CuntzMap
   (map_unital
    map_star
    map_real_fixed_point_of_half_branch_scaling
-   DiscreteModularFlowWitness.apply_eq_map
-   DiscreteModularFlowWitness.real_fixed_point_of_half_branch_scaling)
+   discrete_modular_flow_apply_eq_map
+   discrete_modular_flow_real_fixed_point_of_half_branch_scaling)
 
 export InfoGeometry.Capstone.ErlangenLanglandsConnesCapstone
   (erlangen_o55_invariants)

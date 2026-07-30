@@ -63,13 +63,9 @@ theorem bracket_closed {D₁ D₂ : DerivSpace} (hD1 : IsDeriv D₁) (hD2 : IsDe
       hD2_mul (D₁ X) Y, hD2_mul X (D₁ Y)]
     ext <;> simp [addZ, subZ, mulZ] <;> ring
 
-/-- The canonical split-octonion derivation algebra. -/
-abbrev CanonicalDerivations :=
-  InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations
-
 /-- Native finrank of the canonical split-octonion derivation algebra. -/
 theorem canonicalDerivations_finrank :
-    Module.finrank ℝ CanonicalDerivations = 14 :=
+    Module.finrank ℝ InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations = 14 :=
   InfoGeometry.Lie.CanonicalZornDerivationDimension.finrank_canonicalZornDerivations
 
 /-- Baez standard derivations generate every canonical split-octonion derivation. -/

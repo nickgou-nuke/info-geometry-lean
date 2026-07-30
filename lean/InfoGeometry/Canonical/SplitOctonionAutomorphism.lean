@@ -188,7 +188,8 @@ theorem realSplitOctonionLiePacket_readback :
           (InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.mulZ X Y) =
         InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.normZ X *
           InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.normZ Y) ∧
-      Module.finrank ℝ InfoGeometry.Lie.G2FromSplitOctonions.CanonicalDerivations = 14 ∧
+      Module.finrank ℝ
+        InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations = 14 ∧
       InfoGeometry.Lie.SplitOctonionStandardDerivation.standardDerivationSpan = ⊤ ∧
       InfoGeometry.Lie.RealSplitOctonionG2Classification.currentRealClassificationStatus =
         InfoGeometry.Lie.RealSplitOctonionG2Classification.RealClassificationStatus.exactNativeLieAlgebra := by

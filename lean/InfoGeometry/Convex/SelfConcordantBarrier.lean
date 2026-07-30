@@ -16,9 +16,6 @@ No global axioms are introduced.
 
 namespace InfoGeometry.Convex
 
-abbrev MatrixEnd (n : ℕ) :=
-  InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n
-
 /-! ## Dikin radius readouts -/
 
 /-- Lower Dikin readout `ω(t) = t - log(1 + t)`. -/
@@ -54,14 +51,14 @@ A self-concordant barrier on the noncommutative matrix algebra `Mₙ(ℂ)`.
 
 The local fields are parameters because the analytic work depends on the
 chosen cone, trace pairing, and Hessian model.  The carrier is nevertheless
-matrix-native: both points and tangent directions are `MatrixEnd n`.
+matrix-native: both points and tangent directions are `InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n`.
 -/
 structure NoncommutativeSelfConcordantBarrier (n : ℕ) (ν : ℝ) where
   hν_pos : ν > 0
-  potential : MatrixEnd n → ℝ
-  gradient : MatrixEnd n → MatrixEnd n
-  bregmanDiv : MatrixEnd n → MatrixEnd n → ℝ
-  localRadiusSq : MatrixEnd n → MatrixEnd n → ℝ
+  potential : InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n → ℝ
+  gradient : InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n → InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n
+  bregmanDiv : InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n → InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n → ℝ
+  localRadiusSq : InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n → InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n → ℝ
   localRadiusSq_nonneg : ∀ x h, 0 ≤ localRadiusSq x h
   selfConcordantEstimate :
     ∀ x h,
@@ -76,13 +73,13 @@ variable {n : ℕ} {ν : ℝ}
 variable (ψ : NoncommutativeSelfConcordantBarrier n ν)
 
 /-- Lower half of the matrix self-concordant Dikin sandwich. -/
-theorem dikin_lower (x h : MatrixEnd n) :
+theorem dikin_lower (x h : InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n) :
     omegaLow (Real.sqrt (ψ.localRadiusSq x h)) ≤
       ψ.bregmanDiv (x + h) x :=
   (ψ.selfConcordantEstimate x h).1
 
 /-- Upper half of the matrix self-concordant Dikin sandwich. -/
-theorem dikin_upper (x h : MatrixEnd n)
+theorem dikin_upper (x h : InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n)
     (hsmall : Real.sqrt (ψ.localRadiusSq x h) < 1) :
     ψ.bregmanDiv (x + h) x ≤
       omegaHigh (Real.sqrt (ψ.localRadiusSq x h)) :=
@@ -93,14 +90,14 @@ end NoncommutativeSelfConcordantBarrier
 /-- Dikin lower bound on a matrix tangent step. -/
 structure MatrixDikinLowerBound (n : ℕ)
     (ψ : NoncommutativeSelfConcordantBarrier n 1)
-    (x h : MatrixEnd n) where
+    (x h : InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n) where
   radius_small : ψ.localRadiusSq x h < 1
   conclusion : omegaLow (Real.sqrt (ψ.localRadiusSq x h)) ≤ ψ.bregmanDiv (x + h) x
 
 /-- Dikin upper bound on a matrix tangent step. -/
 structure MatrixDikinUpperBound (n : ℕ)
     (ψ : NoncommutativeSelfConcordantBarrier n 1)
-    (x h : MatrixEnd n) where
+    (x h : InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n) where
   radius_small : Real.sqrt (ψ.localRadiusSq x h) < 1
   conclusion :
     ψ.bregmanDiv (x + h) x ≤ omegaHigh (Real.sqrt (ψ.localRadiusSq x h))

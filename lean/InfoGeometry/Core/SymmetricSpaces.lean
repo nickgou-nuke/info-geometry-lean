@@ -14,10 +14,6 @@ This file is intentionally group-level:
 
 namespace InfoGeometry.Core
 
-/-- Core alias for Cartan-Loos symmetric spaces from the architecture layer. -/
-abbrev CartanLoosSymmetricSpace (M : Type _) :=
-  InfoGeometry.Architecture.SymmetricSpace M
-
 /-- Core alias for group-level Cartan involutions. -/
 abbrev CartanInvolution (G : Type _) [Group G] :=
   InfoGeometry.Architecture.CartanInvolution G
@@ -35,7 +31,7 @@ section SpaceModel
 variable {M : Type _}
 
 /-- Core alias for point symmetry in a symmetric space. -/
-abbrev symmetry (S : CartanLoosSymmetricSpace M) (x y : M) : M :=
+abbrev symmetry (S : InfoGeometry.Architecture.SymmetricSpace M) (x y : M) : M :=
   S.symmetry x y
 
 export InfoGeometry.Architecture
@@ -43,12 +39,12 @@ export InfoGeometry.Architecture
    symmetry_self)
 
 lemma symmetry_involutive
-    (S : CartanLoosSymmetricSpace M) (x y : M) :
+    (S : InfoGeometry.Architecture.SymmetricSpace M) (x y : M) :
     symmetry S x (symmetry S x y) = y :=
   symmetry_symmetry S x y
 
 lemma symmetry_fixpoint
-    (S : CartanLoosSymmetricSpace M) (x : M) :
+    (S : InfoGeometry.Architecture.SymmetricSpace M) (x : M) :
     symmetry S x x = x :=
   symmetry_self S x
 
@@ -104,12 +100,12 @@ abbrev symmetricPairOfCartan
 
 /-- Canonical symmetric space induced by a Cartan involution. -/
 abbrev symmetricSpaceOfCartan
-    (θ : CartanInvolution G) : CartanLoosSymmetricSpace G :=
+    (θ : CartanInvolution G) : InfoGeometry.Architecture.SymmetricSpace G :=
   InfoGeometry.Architecture.symmetricSpaceOfCartan θ
 
 /-- Canonical symmetric space induced by an involutive `MulAut` subtype. -/
 abbrev symmetricSpaceOfInvolutiveMulAut
-    (θ : InvolutiveMulAut G) : CartanLoosSymmetricSpace G :=
+    (θ : InvolutiveMulAut G) : InfoGeometry.Architecture.SymmetricSpace G :=
   InfoGeometry.Architecture.symmetricSpaceOfInvolutiveMulAut θ
 
 export InfoGeometry.Architecture

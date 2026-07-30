@@ -142,4 +142,89 @@ theorem tendsto_modelVolume_one_of_unique_energy_gap
     simpa using hlimit
   exact hlimit'.congr' (Eventually.of_forall (fun β => (hcongr β).symm))
 
+/-- Under a pointwise gap from a unique reference model, its responsibility for
+one datum converges to one in the zero-temperature limit. -/
+theorem tendsto_responsibility_one_of_unique_energy_gap
+    (F : ModelFamily (ModelId := ModelId) (Data := Data))
+    {δ : ℝ} (hδ : 0 < δ) (m₀ : ModelId) (i₀ : Data)
+    (hgap : ∀ m : ModelId, m ≠ m₀ →
+      F.energy m₀ i₀ + δ ≤ F.energy m i₀) :
+    Tendsto (fun β : ℝ => responsibility F (1 / β) m₀ i₀) atTop (𝓝 1) := by
+  classical
+  let s : Finset ModelId := Finset.univ.erase m₀
+  have hother : Tendsto
+      (fun β : ℝ => ∑ m ∈ s, responsibility F (1 / β) m i₀)
+      atTop (𝓝 0) := by
+    have hsum : Tendsto
+        (fun β : ℝ => ∑ m ∈ s, responsibility F (1 / β) m i₀)
+        atTop (𝓝 (∑ m ∈ s, (0 : ℝ))) := by
+      apply tendsto_finset_sum s
+      intro m hm
+      have hmne : m ≠ m₀ := (Finset.mem_erase.mp hm).1
+      have hratio := tendsto_responsibility_ratio_zero_of_energy_gap
+        F hδ m m₀ i₀ (hgap m hmne)
+      have hbound : ∀ᶠ β : ℝ in atTop,
+          responsibility F (1 / β) m i₀ ≤
+            (F.prior m / F.prior m₀) * Real.exp (-δ * β) := by
+        filter_upwards [eventually_gt_atTop (0 : ℝ)] with β hβ
+        have hε : 0 < (1 / β : ℝ) := one_div_pos.mpr hβ
+        have hpoint := responsibility_ratio_le_prior_ratio_mul_exp_neg_gap
+          F hε m m₀ i₀ (hgap m hmne)
+        have hresp : responsibility F (1 / β) m₀ i₀ ≤ 1 := by
+          have hsingle : responsibility F (1 / β) m₀ i₀ ≤
+              ∑ n : ModelId, responsibility F (1 / β) n i₀ := by
+            exact Finset.single_le_sum
+              (fun n hn => responsibility_nonneg F (1 / β) n i₀)
+              (Finset.mem_univ m₀)
+          simpa [responsibilities_sum_one] using hsingle
+        have hmul := (div_le_iff₀ (responsibility_pos F (1 / β) m₀ i₀)).mp
+          hpoint
+        have hfactor_nonneg : 0 ≤
+            (F.prior m / F.prior m₀) * Real.exp (-δ / (1 / β)) := by
+          exact mul_nonneg
+            (div_nonneg (F.prior_pos m).le (F.prior_pos m₀).le)
+            (Real.exp_pos _).le
+        have hupper := mul_le_mul_of_nonneg_left hresp hfactor_nonneg
+        have hupper' :
+            (F.prior m / F.prior m₀) * Real.exp (-δ / (1 / β)) *
+                responsibility F (1 / β) m₀ i₀ ≤
+              (F.prior m / F.prior m₀) * Real.exp (-δ / (1 / β)) := by
+          simpa using hupper
+        have hresult := hmul.trans hupper'
+        convert hresult using 1 <;> field_simp
+      have hzero : Tendsto
+          (fun β : ℝ => responsibility F (1 / β) m i₀) atTop (𝓝 0) := by
+        refine squeeze_zero' ?_ hbound ?_
+        · filter_upwards [eventually_gt_atTop (0 : ℝ)] with β hβ
+          exact (responsibility_pos F (1 / β) m i₀).le
+        · have hexp := tendsto_exp_neg_gap_mul_atTop hδ
+          simpa using tendsto_const_nhds.mul hexp
+      exact hzero
+    simpa using hsum
+  have hnorm : ∀ β : ℝ,
+      responsibility F (1 / β) m₀ i₀ +
+          ∑ m ∈ s, responsibility F (1 / β) m i₀ = 1 := by
+    intro β
+    have hsum := responsibilities_sum_one F (1 / β) i₀
+    have hsplit := Finset.sum_erase_add
+      (s := (Finset.univ : Finset ModelId))
+      (f := fun m : ModelId => responsibility F (1 / β) m i₀)
+      (Finset.mem_univ m₀)
+    dsimp [s]
+    linarith
+  have hlimit : Tendsto
+      (fun β : ℝ => 1 - ∑ m ∈ s, responsibility F (1 / β) m i₀)
+      atTop (𝓝 (1 - 0)) := by
+    exact tendsto_const_nhds.sub hother
+  have hcongr : ∀ β : ℝ,
+      responsibility F (1 / β) m₀ i₀ =
+        1 - ∑ m ∈ s, responsibility F (1 / β) m i₀ := by
+    intro β
+    linarith [hnorm β]
+  have hlimit' : Tendsto
+      (fun β : ℝ => 1 - ∑ m ∈ s, responsibility F (1 / β) m i₀)
+      atTop (𝓝 1) := by
+    simpa using hlimit
+  exact hlimit'.congr' (Eventually.of_forall (fun β => (hcongr β).symm))
+
 end InfoGeometry.Inference.FiniteGibbs

@@ -1,1 +1,0 @@
-import InfoGeometry.Thermodynamics.SouriauTemperature

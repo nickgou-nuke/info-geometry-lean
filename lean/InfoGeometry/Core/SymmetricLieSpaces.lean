@@ -178,14 +178,6 @@ abbrev curvature (x y z : S.p) : S.p :=
 abbrev ad_k_on_p (x : S.k) : S.p →ₗ[R] S.p :=
   InfoGeometry.Core.Generic.SymmetricLieAlgebra.ad_k_on_p S x
 
-/-- Core alias for isotropy irreducibility. -/
-abbrev IsotropyIrreducible : Prop :=
-  InfoGeometry.Core.Generic.SymmetricLieAlgebra.IsotropyIrreducible S
-
-/-- Core alias for `𝔨`-invariant bilinear forms on `𝔭`. -/
-abbrev IsKInvariant (Φ : LinearMap.BilinForm R S.p) : Prop :=
-  InfoGeometry.Core.Generic.SymmetricLieAlgebra.IsKInvariant S Φ
-
 end SymmetricLieAlgebra
 
 end Symmetric

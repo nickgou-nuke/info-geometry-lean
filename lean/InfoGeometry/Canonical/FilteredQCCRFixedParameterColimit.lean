@@ -148,35 +148,15 @@ theorem qCcrZeroLocusSpecializationTopCatHom_isClosedEmbedding
     (qdata : CompatibleQParameter Stage sys) (i : I) :
     Topology.IsClosedEmbedding
       (qCcrZeroLocusSpecializationTopCatHom Stage sys qdata i) := by
-  let hs : Set (QCCRParameterSpace (Stage i)) :=
-    qCcrParameterZeroLocusFiber (A := Stage i) (qdata.q i)
-  let ht : Set (QCCRParameterSpace (Stage i)) :=
-    qCcrParameterZeroLocus (A := Stage i)
-  have hst : hs ⊆ ht := by
-    intro p hp
-    exact hp.1
-  have hclosed : IsClosed hs := by
-    simpa [hs] using
-      (qCcrParameterZeroLocusFiber_closed (A := Stage i) (qdata.q i))
+  have hst : qCcrParameterZeroLocusFiber (A := Stage i) (qdata.q i) ⊆
+      qCcrParameterZeroLocus (A := Stage i) := fun _ hp => hp.1
   have hinclusion :
       Topology.IsClosedEmbedding (Set.inclusion hst) :=
-    Topology.IsClosedEmbedding.inclusion hst
-      (hclosed.preimage continuous_subtype_val)
-  let e :
-      {p : (Stage i) × (Stage i) //
-        p ∈ qCcrZeroLocus (A := Stage i) (qdata.q i)} ≃ₜ
-        qCcrParameterZeroLocusFiberType (A := Stage i) (qdata.q i) :=
-    { toFun := qCcrSpecializationZeroLocusMap (A := Stage i) (qdata.q i)
-      invFun := qCcrSpecializationZeroLocusFiberMap (A := Stage i) (qdata.q i)
-      left_inv := qCcrSpecializationZeroLocusMap_leftInverse
-        (A := Stage i) (qdata.q i)
-      right_inv := qCcrSpecializationZeroLocusMap_rightInverse
-        (A := Stage i) (qdata.q i)
-      continuous_toFun := continuous_qCcrSpecializationZeroLocusMap
-        (A := Stage i) (qdata.q i)
-      continuous_invFun := continuous_qCcrSpecializationZeroLocusFiberMap
-        (A := Stage i) (qdata.q i) }
-  have hspecial : Topology.IsClosedEmbedding e := e.isClosedEmbedding
+    qCcrParameterZeroLocusFiber_inclusion_isClosedEmbedding
+      (A := Stage i) (qdata.q i)
+  have hspecial : Topology.IsClosedEmbedding
+      (qCcrSpecializationZeroLocusMap (A := Stage i) (qdata.q i)) :=
+    qCcrSpecializationZeroLocusMap_isClosedEmbedding (A := Stage i) (qdata.q i)
   change Topology.IsClosedEmbedding
     ((Set.inclusion hst) ∘
       qCcrSpecializationZeroLocusMap (A := Stage i) (qdata.q i))
@@ -210,6 +190,20 @@ def qCcrZeroLocusSpecializationNatTrans
     intro i j f
     simpa [qCcrZeroLocusTopologicalDiagram] using
       (qCcrZeroLocusSpecialization_natural Stage sys qdata (leOfHom f)).symm
+
+theorem qCcrZeroLocusSpecializationNatTrans_app_isClosedEmbedding
+    (qdata : CompatibleQParameter Stage sys) (i : I) :
+    Topology.IsClosedEmbedding
+      ((qCcrZeroLocusSpecializationNatTrans Stage sys qdata).app i) := by
+  simpa [qCcrZeroLocusSpecializationNatTrans] using
+    qCcrZeroLocusSpecializationTopCatHom_isClosedEmbedding Stage sys qdata i
+
+theorem qCcrZeroLocusSpecializationNatTrans_app_closed_range
+    (qdata : CompatibleQParameter Stage sys) (i : I) :
+    IsClosed (Set.range
+      ((qCcrZeroLocusSpecializationNatTrans Stage sys qdata).app i)) := by
+  exact (qCcrZeroLocusSpecializationNatTrans_app_isClosedEmbedding
+    Stage sys qdata i).isClosed_range
 
 noncomputable def qCcrZeroLocusSpecializationColimitMap
     (qdata : CompatibleQParameter Stage sys) :

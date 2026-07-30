@@ -148,24 +148,13 @@ theorem finite_electron_hole_imbalance_anti_fixed :
 /-! ## 3. Boundary closure witness -/
 
 /--
-Constructive witness that a boundary process satisfies the Andreev swap.
-
-This packages the swap certificates as first-class data.
--/
-abbrev AndreevSwapWitness
-    {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (closure : LinearClosureInvolution V)
-    (electron hole : V) : Prop :=
-  closure.theta electron = hole ∧ closure.theta hole = electron
-
-/--
 The Andreev diagonal is fixed by electron/hole closure, given a swap witness.
 -/
 theorem electron_hole_diagonal_fixed_of_swap_witness
     {V : Type*} [AddCommGroup V] [Module ℝ V]
     (closure : LinearClosureInvolution V)
     (electron hole : V)
-    (w : AndreevSwapWitness closure electron hole) :
+    (w : closure.theta electron = hole ∧ closure.theta hole = electron) :
     electron + hole ∈ closure.Fixed :=
   closure.diagonal_fixed_of_swap w.1 w.2
 
@@ -307,22 +296,12 @@ theorem finiteAndreevBoundary_imbalance_anti_fixed :
           finiteAndreevBoundaryDatum.hole) :=
   finiteAndreevBoundaryDatum.electron_hole_imbalance_anti_fixed
 
-/--
-Constructive packet for Andreev boundary closure claims.
-
-This packages the boundary datum together with first-class witnesses for
-(1) diagonal fixedness and (2) imbalance anti-fixedness.
--/
-abbrev BoundaryClosureWitness
-    (V : Type*) [AddCommGroup V] [Module ℝ V] :=
-  AndreevBoundaryDatum V
-
 namespace BoundaryClosureWitness
 
 variable
     {V : Type*} [AddCommGroup V] [Module ℝ V]
 
-variable (W : BoundaryClosureWitness V)
+variable (W : AndreevBoundaryDatum V)
 
 /-- Read back closure-fixed diagonal from the constructive packet. -/
 theorem diagonal_fixed :
@@ -337,7 +316,7 @@ theorem imbalance_anti_fixed :
 
 /-- Canonical constructor from any Andreev boundary datum. -/
 def ofBoundary
-    (A : AndreevBoundaryDatum V) : BoundaryClosureWitness V :=
+    (A : AndreevBoundaryDatum V) : AndreevBoundaryDatum V :=
   A
 
 end BoundaryClosureWitness
@@ -378,15 +357,6 @@ structure AndreevChargeLedger
     chargeOf boundary.electron =
       chargeOf boundary.hole + condensateTransfer
 
-/--
-Constructive witness for the explicit charge balance law of an Andreev process.
--/
-abbrev ChargeBalanceWitness
-    {V Charge : Type*} [AddCommGroup V] [Module ℝ V] [AddCommGroup Charge]
-    (L : AndreevChargeLedger V Charge) : Prop :=
-  L.chargeOf L.boundary.electron =
-    L.chargeOf L.boundary.hole + L.condensateTransfer
-
 namespace AndreevChargeLedger
 
 variable
@@ -406,7 +376,8 @@ theorem charge_balance_holds :
 The charge-balance equation is valid, given a witness.
 -/
 theorem charge_balance_valid_of_witness
-    (w : ChargeBalanceWitness L) :
+    (w : L.chargeOf L.boundary.electron =
+      L.chargeOf L.boundary.hole + L.condensateTransfer) :
     L.chargeOf L.boundary.electron =
       L.chargeOf L.boundary.hole + L.condensateTransfer :=
   w
@@ -420,7 +391,7 @@ theorem diagonal_fixed :
 Witness-only surface for closure-fixed diagonal readout.
 -/
 theorem diagonal_fixed_of_boundary_witness
-    (W : BoundaryClosureWitness V)
+    (W : AndreevBoundaryDatum V)
     (hboundary : W = L.boundary) :
     L.boundary.electron + L.boundary.hole ∈ L.boundary.closure.Fixed := by
   rw [← hboundary]

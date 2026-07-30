@@ -40,15 +40,6 @@ theorem twistorNorm_apply (Z W : TwistorSpace) :
 noncomputable def helicity (Z : TwistorSpace) : ℝ :=
   InfoGeometry.Twistor.PenroseTwistor.helicity Z
 
-abbrev IsPositiveTwistor (Z : TwistorSpace) : Prop :=
-  InfoGeometry.Twistor.PenroseTwistor.IsPositiveTwistor Z
-
-abbrev IsNegativeTwistor (Z : TwistorSpace) : Prop :=
-  InfoGeometry.Twistor.PenroseTwistor.IsNegativeTwistor Z
-
-abbrev IsNullTwistor (Z : TwistorSpace) : Prop :=
-  InfoGeometry.Twistor.PenroseTwistor.IsNullTwistor Z
-
 theorem twistorNorm_smul_right (c : ℂ) (Z W : TwistorSpace) :
     twistorNorm Z (c • W) = c • twistorNorm Z W := by
   simpa [twistorNorm] using InfoGeometry.Twistor.PenroseTwistor.twistorHermitian_smul_right c Z W
@@ -58,10 +49,13 @@ theorem twistorNorm_smul_self (c : ℂ) (Z : TwistorSpace) :
   simpa [twistorNorm] using InfoGeometry.Twistor.PenroseTwistor.twistorHermitian_smul_self c Z
 
 theorem twistor_classification_disjoint (Z : TwistorSpace) :
-    ¬ (_root_.IsPositiveTwistor Z ∧ _root_.IsNegativeTwistor Z) ∧
-    ¬ (_root_.IsPositiveTwistor Z ∧ _root_.IsNullTwistor Z) ∧
-    ¬ (_root_.IsNegativeTwistor Z ∧ _root_.IsNullTwistor Z) := by
-  simpa [_root_.IsPositiveTwistor, _root_.IsNegativeTwistor, _root_.IsNullTwistor] using
+    ¬ (InfoGeometry.Twistor.PenroseTwistor.IsPositiveTwistor Z ∧
+      InfoGeometry.Twistor.PenroseTwistor.IsNegativeTwistor Z) ∧
+    ¬ (InfoGeometry.Twistor.PenroseTwistor.IsPositiveTwistor Z ∧
+      InfoGeometry.Twistor.PenroseTwistor.IsNullTwistor Z) ∧
+    ¬ (InfoGeometry.Twistor.PenroseTwistor.IsNegativeTwistor Z ∧
+      InfoGeometry.Twistor.PenroseTwistor.IsNullTwistor Z) := by
+  simpa using
     InfoGeometry.Twistor.PenroseTwistor.twistor_classification_disjoint Z
 
 abbrev ProjectiveTwistorSpace : Type _ :=

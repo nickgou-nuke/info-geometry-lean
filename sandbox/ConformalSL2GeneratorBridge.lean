@@ -1,1 +1,0 @@
-import InfoGeometry.Canonical.ConformalSL2GeneratorBridge

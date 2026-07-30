@@ -1,3 +1,0 @@
-/-- SU(3) automorphisms strictly preserve the isolated color vectors. -/
-theorem su3_preserves_color_grading ...
-    f (extract_color_vector cp X) = extract_color_vector cp (f X)

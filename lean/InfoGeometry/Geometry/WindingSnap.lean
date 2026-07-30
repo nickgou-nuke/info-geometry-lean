@@ -184,15 +184,10 @@ def mk
     StateResidueReadout I N ω W F :=
   ⟨stateRegion, winding_eq_regionWinding⟩
 
-/-- Nonzero residue proposition for a state-readout region. -/
-abbrev BoundaryIntegralNonzeroWitness
-    (x : State) : Prop :=
-  I.boundaryIntegral (R.stateRegion x) ω ≠ 0
-
 /-- Recover the nonzero residue hypothesis from the witness packet. -/
 theorem boundaryIntegral_ne_zero_of_witness
     {x : State}
-    (Wz : R.BoundaryIntegralNonzeroWitness x) :
+    (Wz : I.boundaryIntegral (R.stateRegion x) ω ≠ 0) :
     I.boundaryIntegral (R.stateRegion x) ω ≠ 0 :=
   Wz
 
@@ -215,7 +210,7 @@ theorem nonzero_boundaryIntegral_cannot_flow_to_flat
 /-- Witness-routed residue obstruction theorem. -/
 theorem nonzero_boundaryIntegral_cannot_flow_to_flat_of_witness
     {x : State}
-    (Wz : R.BoundaryIntegralNonzeroWitness x)
+    (Wz : I.boundaryIntegral (R.stateRegion x) ω ≠ 0)
     (t : ℝ) :
   F.flow t x ∉ F.Flat :=
   R.nonzero_boundaryIntegral_cannot_flow_to_flat

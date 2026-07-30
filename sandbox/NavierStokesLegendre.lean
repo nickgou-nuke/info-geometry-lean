@@ -1,1 +1,0 @@
-import InfoGeometry.Capstone.NavierStokesLegendre

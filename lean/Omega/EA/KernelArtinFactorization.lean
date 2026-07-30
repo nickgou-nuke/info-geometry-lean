@@ -48,16 +48,12 @@ def kernelArtinScalarZeta (t u : ℚ) : ℚ :=
 def kernelArtinVectorZeta (t v : ℚ) : ℚ :=
   (kernelArtinVectorDet t v)⁻¹
 
-/-- The Peter--Weyl block witness imported from the AF-stage wrapper. -/
-def kernelArtinPeterWeylWitness (m : ℕ) : Prop :=
-  (∑ x : foldGroupoidAFStage m, (Omega.X.fiberMultiplicity x) ^ 2 = Omega.momentSum 2 m) ∧
-    (∑ x : foldGroupoidAFStage m, Omega.X.fiberMultiplicity x = 2 ^ m) ∧
-    foldGroupoidHolographicTrace m ∈ tracialSimplex (ι := foldGroupoidAFStage m)
-
 /-- Determinant form of the finite Artin factorization: the Peter--Weyl block witness is retained,
 and the regular determinant splits as the product of the scalar and two-dimensional channels. -/
 def kernelArtinDetFactorization (m : ℕ) (t u v : ℚ) : Prop :=
-  kernelArtinPeterWeylWitness m ∧
+  ((∑ x : foldGroupoidAFStage m, (Omega.X.fiberMultiplicity x) ^ 2 = Omega.momentSum 2 m) ∧
+    (∑ x : foldGroupoidAFStage m, Omega.X.fiberMultiplicity x = 2 ^ m) ∧
+    foldGroupoidHolographicTrace m ∈ tracialSimplex (ι := foldGroupoidAFStage m)) ∧
     kernelArtinRegularDet t u v = kernelArtinScalarDet t u * kernelArtinVectorDet t v
 
 /-- Zeta form of the same factorization, valid once the three determinants are invertible. -/
@@ -87,7 +83,7 @@ corollary.
     prop:kernel-artin-factorization -/
 theorem paper_kernel_artin_factorization (m : ℕ) (t u v : ℚ) :
     kernelArtinDetFactorization m t u v ∧ kernelArtinZetaFactorization t u v := by
-  have hPW : kernelArtinPeterWeylWitness m := paper_kernel_peter_weyl_block_diagonalization m
+  have hPW := paper_kernel_peter_weyl_block_diagonalization m
   exact ⟨⟨hPW, kernelArtin_det_identity t u v⟩, kernelArtin_zeta_identity t u v⟩
 
 end Omega.EA

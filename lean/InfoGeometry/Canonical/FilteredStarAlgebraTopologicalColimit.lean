@@ -64,12 +64,20 @@ def topologicalInjection (i : I) :
     (topologicalDiagram Stage sys).obj i ⟶ topologicalColimit Stage sys :=
   topologicalDirectInjection (topologicalDiagram Stage sys) i
 
+/-! The next lemma records the cocone equation at the morphism level.  Keeping
+this equation bundled is useful for later `TopCat` colimit constructions: no
+choice of points or coordinates is involved. -/
+theorem topologicalInjection_transition_hom
+    {i j : I} (hij : i ≤ j) :
+    (topologicalDiagram Stage sys).map (homOfLE hij) ≫
+        topologicalInjection Stage sys j = topologicalInjection Stage sys i := by
+  exact (colimit.cocone (topologicalDiagram Stage sys)).w (homOfLE hij)
+
 theorem topologicalInjection_transition
     {i j : I} (hij : i ≤ j) (a : Stage i) :
     topologicalInjection Stage sys j (sys.map hij a) =
       topologicalInjection Stage sys i a := by
-  have h := (colimit.cocone (topologicalDiagram Stage sys)).w (homOfLE hij)
-  simpa [topologicalInjection, topologicalDiagram,
-    transitionContinuousMap] using congrArg (fun f => f a) h
+  have h := topologicalInjection_transition_hom Stage sys hij
+  exact congrArg (fun f => f a) h
 
 end InfoGeometry.Canonical.FilteredStarAlgebraTopologicalColimit

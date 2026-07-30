@@ -39,10 +39,6 @@ def OrthogonalForRay {A : Type*} [Semiring A] (src tgt : Diamond A) : Prop :=
 
 end Diamond
 
-/-- Unqualified alias for the directional lightray orthogonality predicate. -/
-abbrev OrthogonalForRay {A : Type*} [Semiring A] (src tgt : Diamond A) : Prop :=
-  Diamond.OrthogonalForRay src tgt
-
 /--
 A lightray from `src` to `tgt`.
 
@@ -68,7 +64,7 @@ sector, support laws, and that those sectors are orthogonal.
 structure SupportedLightray (A : Type*) [Semiring A]
     (src tgt : Diamond A) extends IncidentLightray A src tgt where
   /-- Orthogonality of the source and target sectors. -/
-  orthogonal : OrthogonalForRay src tgt
+  orthogonal : Diamond.OrthogonalForRay src tgt
 
 /--
 If the source and target idempotents are orthogonal, then every supported
@@ -98,7 +94,7 @@ theorem IncidentLightray.square_zero_of_orthogonal
     {A : Type*} [Semiring A]
     {src tgt : Diamond A}
     (L : IncidentLightray A src tgt)
-    (h_orthogonal : OrthogonalForRay src tgt) :
+    (h_orthogonal : Diamond.OrthogonalForRay src tgt) :
     L.N * L.N = 0 :=
   incident_lightray_square_zero h_orthogonal L.left_support L.right_support
 

@@ -1,1 +1,0 @@
-theorem idProp (P : Prop) (h : P) : P := h

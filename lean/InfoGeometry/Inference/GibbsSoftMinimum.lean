@@ -7,6 +7,8 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import InfoGeometry.Inference.FiniteGibbsInference
+import Mathlib.Topology.MetricSpace.Pseudo.Lemmas
+import Mathlib.Topology.Order
 
 /-!
 # Finite Gibbs soft minimum
@@ -17,6 +19,8 @@ made.
 -/
 
 open scoped BigOperators
+open Filter
+open scoped Topology
 
 namespace InfoGeometry.Inference.FiniteGibbs
 
@@ -88,5 +92,34 @@ theorem energy_sub_temperature_mul_log_card_le_softMinimum_of_min
           field_simp [ne_of_gt hε]
           ring
     _ ≤ -ε * Real.log (∑ j : Data, Real.exp (-E j / ε)) := hmul
+
+/-- The finite Gibbs soft minimum converges to the hard minimum along positive
+temperatures. -/
+theorem tendsto_softMinimum_nhdsWithin_zero_of_min
+    (E : Data → ℝ) (i : Data)
+    (hmin : ∀ j : Data, E i ≤ E j) :
+    Tendsto (fun ε : ℝ => softMinimum E ε)
+      (𝓝[>] (0 : ℝ)) (𝓝 (E i)) := by
+  have hid : Tendsto (fun ε : ℝ => ε)
+      (𝓝[>] (0 : ℝ)) (𝓝 0) := by
+    simpa only [id_eq] using
+      (tendsto_nhdsWithin_of_tendsto_nhds
+        (Filter.tendsto_id (x := 𝓝 (0 : ℝ))))
+  have hcard : Tendsto
+      (fun ε : ℝ => ε * Real.log (Fintype.card Data))
+      (𝓝[>] (0 : ℝ)) (𝓝 0) := by
+    simpa using hid.mul tendsto_const_nhds
+  have hlower : Tendsto
+      (fun ε : ℝ => E i - ε * Real.log (Fintype.card Data))
+      (𝓝[>] (0 : ℝ)) (𝓝 (E i)) := by
+    simpa using tendsto_const_nhds.sub hcard
+  have hupper : Tendsto (fun _ε : ℝ => E i)
+      (𝓝[>] (0 : ℝ)) (𝓝 (E i)) := tendsto_const_nhds
+  apply tendsto_of_tendsto_of_tendsto_of_le_of_le' hlower hupper
+  · filter_upwards [self_mem_nhdsWithin] with ε hε
+    exact (energy_sub_temperature_mul_log_card_le_softMinimum_of_min
+      E hε i hmin)
+  · filter_upwards [self_mem_nhdsWithin] with ε hε
+    exact (softMinimum_le_energy E hε i)
 
 end InfoGeometry.Inference.FiniteGibbs

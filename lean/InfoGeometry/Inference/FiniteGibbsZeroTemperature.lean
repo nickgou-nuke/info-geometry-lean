@@ -95,6 +95,26 @@ theorem tendsto_modelVolume_zero_of_energy_gap
     rw [show R = F.prior m / F.prior m₀ by rfl]
     convert hvolume using 1 <;> field_simp
 
+/-- The total volume of any finite collection of uniformly separated models
+vanishes in the zero-temperature limit. -/
+theorem tendsto_modelVolume_sum_zero_of_energy_gap
+    (F : ModelFamily (ModelId := ModelId) (Data := Data))
+    (s : Finset ModelId) {δ : ℝ} (hδ : 0 < δ) (m₀ : ModelId)
+    (hgap : ∀ m ∈ s, ∀ i : Data,
+      F.energy m₀ i + δ ≤ F.energy m i) :
+    Tendsto
+      (fun β : ℝ => ∑ m ∈ s, modelVolume F (1 / β) m)
+      atTop (𝓝 0) := by
+  classical
+  have hsum : Tendsto
+      (fun β : ℝ => ∑ m ∈ s, modelVolume F (1 / β) m)
+      atTop (𝓝 (∑ m ∈ s, (0 : ℝ))) := by
+    apply tendsto_finset_sum s
+    intro m hm
+    exact tendsto_modelVolume_zero_of_energy_gap F hδ m m₀
+      (hgap m hm)
+  simpa using hsum
+
 /-- Under a uniform gap from a unique reference model, the reference model
 captures all model volume in the zero-temperature limit. -/
 theorem tendsto_modelVolume_one_of_unique_energy_gap

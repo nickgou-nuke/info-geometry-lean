@@ -29,13 +29,10 @@ open InfoGeometry.OperatorAlgebra.FresnelJonesReflection
 
 /-! ## 1. Two-channel Jones carrier -/
 
-/-- Two-component Jones vector in the Fresnel `s/p` basis. -/
-abbrev JonesVector :=
-  InfoGeometry.OperatorAlgebra.FresnelJonesReflection.JonesVector
-
 /-- Jones operators on the finite two-channel carrier. -/
 abbrev JonesOperator :=
-  JonesVector →ₗ[ℂ] JonesVector
+  InfoGeometry.OperatorAlgebra.FresnelJonesReflection.JonesVector →ₗ[ℂ]
+    InfoGeometry.OperatorAlgebra.FresnelJonesReflection.JonesVector
 
 namespace Polarization
 
@@ -165,13 +162,15 @@ theorem diagonalJones_p_zero
 /-- A pure `p`-polarized input is killed at Brewster collapse. -/
 theorem brewster_kills_p_input
     (r_s : ℂ)
-    (v : JonesVector)
+    (v : InfoGeometry.OperatorAlgebra.FresnelJonesReflection.JonesVector)
     (hpure : Ps v = 0) :
     diagonalJones r_s 0 v = 0 := by
   ext i
   fin_cases i
   · have hs : v s = 0 := by
-      have h := congrArg (fun f : JonesVector => f s) hpure
+      have h := congrArg
+        (fun f : InfoGeometry.OperatorAlgebra.FresnelJonesReflection.JonesVector => f s)
+        hpure
       simpa [Ps, s, sIndex,
         InfoGeometry.OperatorAlgebra.FresnelJonesReflection.sProjector,
         InfoGeometry.OperatorAlgebra.FresnelJonesReflection.diagonalJones] using h
@@ -185,7 +184,7 @@ theorem brewster_kills_p_input
 /-- A pure `s`-polarized input survives as scalar multiplication by `r_s`. -/
 theorem brewster_scales_s_input
     (r_s : ℂ)
-    (v : JonesVector)
+    (v : InfoGeometry.OperatorAlgebra.FresnelJonesReflection.JonesVector)
     (hpure : Pp v = 0) :
     diagonalJones r_s 0 v = r_s • v := by
   ext i
@@ -193,7 +192,9 @@ theorem brewster_scales_s_input
   · simp [diagonalJones, sIndex, pIndex,
       InfoGeometry.OperatorAlgebra.FresnelJonesReflection.diagonalJones]
   · have hp : v p = 0 := by
-      have h := congrArg (fun f : JonesVector => f p) hpure
+      have h := congrArg
+        (fun f : InfoGeometry.OperatorAlgebra.FresnelJonesReflection.JonesVector => f p)
+        hpure
       simpa [Pp, p, pIndex, sIndex,
         InfoGeometry.OperatorAlgebra.FresnelJonesReflection.pProjector,
         InfoGeometry.OperatorAlgebra.FresnelJonesReflection.diagonalJones] using h

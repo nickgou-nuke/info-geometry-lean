@@ -16,31 +16,11 @@ noncomputable section
 
 namespace InfoGeometry.Geometry.OpticalJonesV4
 
-/-! ## 1. V4 orientation tags -/
+/-! ## 1. V4 orientation tags
 
-/-- Canonical Klein-four parity/time orientation tag. -/
-abbrev V4Tag :=
-  InfoGeometry.Geometry.KleinFourTag.Tag
-
-namespace V4Tag
-
-/-- Identity sector. -/
-def id : V4Tag :=
-  InfoGeometry.Geometry.KleinFourTag.id
-
-/-- Parity/spatial reflection sector. -/
-def P : V4Tag :=
-  InfoGeometry.Geometry.KleinFourTag.P
-
-/-- Time/propagation-reversal sector. -/
-def T : V4Tag :=
-  InfoGeometry.Geometry.KleinFourTag.T
-
-/-- Combined PT sector. -/
-def PT : V4Tag :=
-  InfoGeometry.Geometry.KleinFourTag.PT
-
-end V4Tag
+The canonical tag type and its four sectors are owned by
+`InfoGeometry.Geometry.KleinFourTag` and are used directly below.
+-/
 
 /-! ## 2. Jones matrices -/
 
@@ -86,7 +66,7 @@ structure FresnelReflection where
   rp : ℂ
 
   /-- Discrete V4 orientation tag. -/
-  tag : V4Tag
+  tag : InfoGeometry.Geometry.KleinFourTag.Tag
 
 namespace FresnelReflection
 
@@ -158,7 +138,7 @@ structure CircularTransport where
   rCoeff : ℂ
 
   /-- Discrete V4 orientation tag. -/
-  tag : V4Tag
+  tag : InfoGeometry.Geometry.KleinFourTag.Tag
 
 namespace CircularTransport
 
@@ -207,7 +187,7 @@ structure JonesTransport where
   matrix : JonesMat
 
   /-- Discrete orientation/PT/parity bookkeeping. -/
-  tag : V4Tag
+  tag : InfoGeometry.Geometry.KleinFourTag.Tag
 
   /-- Optical event type. -/
   kind : OpticalEventKind
@@ -248,7 +228,7 @@ regime unless a concrete model supplies a coherence certificate.
 -/
 def depolarizingSurfaceTransport
     (M : JonesMat)
-    (tag : V4Tag) : JonesTransport where
+    (tag : InfoGeometry.Geometry.KleinFourTag.Tag) : JonesTransport where
   matrix := M
   tag := tag
   kind := OpticalEventKind.roughDepolarizingSurface

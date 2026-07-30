@@ -2,6 +2,7 @@ import InfoGeometry.Canonical.FilteredGNSCofinalTail
 import InfoGeometry.Canonical.FilteredGNSHilbertColimitTopology
 import InfoGeometry.Canonical.FilteredGNSCofinalTailTopCatEquivalence
 import InfoGeometry.Canonical.FilteredGNSGlobalStageRepresentationTransport
+import InfoGeometry.Canonical.FilteredGNSGlobalRepresentationCompatibility
 import InfoGeometry.Canonical.FilteredGNSTailRepresentationTopology
 
 /-!
@@ -27,6 +28,7 @@ open CStarStateColimit.Native.FilteredGNSCofinalTailTopology
 open CStarStateColimit.Native.FilteredGNSCofinalTailTopCatEquivalence
 open CStarStateColimit.Native.FilteredGNSGlobalStageRepresentation
 open CStarStateColimit.Native.FilteredGNSGlobalStageRepresentationTransport
+open CStarStateColimit.Native.FilteredGNSGlobalRepresentationCompatibility
 open CStarStateColimit.Native.FilteredGNSTailStarRepresentation
 open CStarStateColimit.Native.FilteredGNSTailRepresentation
 open CStarStateColimit.Native.FilteredGNSTailRepresentationTopology
@@ -325,6 +327,24 @@ theorem globalStageRepresentationStarAlgHom_map_star
       star (globalStageRepresentationStarAlgHom Stage sys ω i₀ a) x := by
   rw [globalStageRepresentationTopCatHom_apply,
     globalStageRepresentationStarAlgHom_map_star]
+
+@[simp] theorem globalStageRepresentationTopCatHom_star_stage
+    {i₀ : I} (a : Stage i₀) (j : UpperIndex i₀)
+    (x : TailGNSStage Stage sys ω i₀ j) :
+    globalStageRepresentationTopCatHom Stage sys ω (star a)
+        (gnsStageToHilbertColimit Stage sys ω j.1 x) =
+      gnsStageToHilbertColimit Stage sys ω j.1
+        (star (tailGNSOperator Stage sys ω a j) x) := by
+  rw [globalStageRepresentationTopCatHom_apply,
+    globalStageRepresentation_stage, tailGNSOperator_star]
+
+theorem globalStageRepresentation_transition
+    {i j : I} (hij : i ≤ j) (a : Stage i) :
+    globalStageRepresentationStarAlgHom Stage sys ω i a =
+      globalStageRepresentationStarAlgHom Stage sys ω j (sys.map hij a) := by
+  exact
+    (_root_.CStarStateColimit.Native.FilteredGNSGlobalRepresentationCompatibility.globalStageRepresentation_transition
+      Stage sys ω hij a).symm
 
 @[simp] theorem tailCompletedRepresentationTopCatHom_star_apply
     {i₀ : I} (a : Stage i₀)

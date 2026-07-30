@@ -165,6 +165,41 @@ theorem massieuPotential_eq_grandCanonical_potential_of_nonzero
   congr 1
   field_simp [hε]
 
+/-- The inverse-temperature Massieu identity also holds at `β = 0`, where
+both finite expressions use the same zero-exponent convention. -/
+theorem massieuPotential_inv_eq_grandCanonical_potential
+    {Theta : Type*} (M : Model (Data := Data) (Theta := Theta)) (θ : Theta)
+    (β : ℝ) :
+    massieuPotential M θ β⁻¹ =
+      InfoGeometry.GrandCanonical.potential
+        { energy := fun i : Data => M.energy i θ } β := by
+  unfold massieuPotential InfoGeometry.GrandCanonical.potential
+    InfoGeometry.GrandCanonical.partition partitionFunction
+  congr 1
+  apply Finset.sum_congr rfl
+  intro i hi
+  by_cases hβ : β = 0
+  · simp [hβ]
+  · congr 1
+    field_simp [hβ]
+
+/-- The derivative of the inverse-temperature Massieu curve is the negative
+Gibbs mean energy. -/
+theorem deriv_massieuPotential_inv_eq_neg_mean
+    {Theta : Type*} (M : Model (Data := Data) (Theta := Theta)) (θ : Theta)
+    (β : ℝ) :
+    deriv (fun t : ℝ => massieuPotential M θ t⁻¹) β =
+      -InfoGeometry.GrandCanonical.mean
+        { energy := fun i : Data => M.energy i θ } β := by
+  let params : InfoGeometry.GrandCanonical.GrandCanonicalParams Data :=
+    { energy := fun i : Data => M.energy i θ }
+  have hfun : (fun t : ℝ => massieuPotential M θ t⁻¹) =
+      InfoGeometry.GrandCanonical.potential params := by
+    funext t
+    exact massieuPotential_inv_eq_grandCanonical_potential M θ t
+  rw [hfun]
+  exact InfoGeometry.GrandCanonical.potential_deriv_eq_neg_mean params β
+
 /-- The scaled Massieu potential converges to the negative hard minimum at
 positive-temperature zero. -/
 theorem tendsto_temperature_mul_massieu_nhdsWithin_zero_of_min

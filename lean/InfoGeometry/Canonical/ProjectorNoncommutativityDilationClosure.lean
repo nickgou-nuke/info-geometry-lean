@@ -90,7 +90,7 @@ structure ProjectorToCl44BridgeCandidate (P : ProjectorPair R) where
   CI : ConformalInference H
   X : InfoGeometry.Quantum.RealSplitCl11Action H
   conformalClosure : ConformalCanopyPackage (E := H) CI X
-  cl44Readout : ConformalInference.ObstructionScalarReadout (CI := CI)
+  cl44Readout : (‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧ CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧ CI.chiralScale = CI.obstructionScale ∧ CI.epsilon = CI.obstructionScale ∧ CI.unitOfAction = CI.obstructionScale ∧ CI.unitOfAction = ‖CI.projectorObstruction‖₊)
 
 namespace ProjectorToCl44BridgeCandidate
 
@@ -112,14 +112,14 @@ def conformalClosure_data
 theorem conformal_owner_and_scalar
     (B : ProjectorToCl44BridgeCandidate (R := R) (H := H) P) :
     ConformalInference.ObstructionOperatorOwner (CI := B.CI) B.X ∧
-      ConformalInference.ObstructionScalarReadout (CI := B.CI) := by
+      (‖B.CI.projectorObstruction‖₊ = B.CI.obstructionScale ∧ B.CI.obstructionScale = ‖B.CI.projectorObstruction‖₊ ∧ B.CI.chiralScale = B.CI.obstructionScale ∧ B.CI.epsilon = B.CI.obstructionScale ∧ B.CI.unitOfAction = B.CI.obstructionScale ∧ B.CI.unitOfAction = ‖B.CI.projectorObstruction‖₊) := by
   exact ConformalUnification.canopy_operator_and_scalar
     (E := H) (CI := B.CI) (X := B.X) B.conformalClosure
 
 /-- The candidate carries a scalar readout. -/
 theorem cl44Readout_data
     (B : ProjectorToCl44BridgeCandidate (R := R) (H := H) P) :
-    ConformalInference.ObstructionScalarReadout (CI := B.CI) :=
+    (‖B.CI.projectorObstruction‖₊ = B.CI.obstructionScale ∧ B.CI.obstructionScale = ‖B.CI.projectorObstruction‖₊ ∧ B.CI.chiralScale = B.CI.obstructionScale ∧ B.CI.epsilon = B.CI.obstructionScale ∧ B.CI.unitOfAction = B.CI.obstructionScale ∧ B.CI.unitOfAction = ‖B.CI.projectorObstruction‖₊) :=
   B.cl44Readout
 
 end ProjectorToCl44BridgeCandidate
@@ -186,7 +186,7 @@ theorem closure_satisfiesKKT_TKK_Weyl_JordanLieClosure
     {X : InfoGeometry.Quantum.RealSplitCl11Action H}
     (CW : ConformalCanopyPackage CI X) :
     ConformalInference.ObstructionOperatorOwner (CI := CI) X ∧
-      ConformalInference.ObstructionScalarReadout (CI := CI) := by
+      (‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧ CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧ CI.chiralScale = CI.obstructionScale ∧ CI.epsilon = CI.obstructionScale ∧ CI.unitOfAction = CI.obstructionScale ∧ CI.unitOfAction = ‖CI.projectorObstruction‖₊) := by
   exact Canonical.ConformalUnification.canopy_operator_and_scalar
     (E := H) (CI := CI) (X := X) CW
 

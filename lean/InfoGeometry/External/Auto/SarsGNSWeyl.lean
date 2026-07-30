@@ -94,7 +94,7 @@ structure RegularWeylGNS (V A H : Type*)
   R : V → H →L[ℂ] H
   exp_generator_matches_weyl :
     ∀ u : V, NormedSpace.exp (R u) = pi (𝓦.W u)
-  identity_trace_status : String := "not_trace_class_in_infinite_GNS"
+  identity_trace_status : String
 
 @[simp] theorem gns_vacuum_expectation
     {V A H : Type*}

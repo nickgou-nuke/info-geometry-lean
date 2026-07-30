@@ -184,18 +184,17 @@ no Leech lattice or Conway/Monster embedding is constructed.
 theorem leech_lattice_monster :
   (let leech_min_vectors := 196560
    let leech_dim := 24
-   leech_min_vectors = leech_dim * 8232 + 48 ∧
-   leech_min_vectors = 196560) →
-  (let leech_min_vectors := 196560
-   let leech_dim := 24
-   leech_min_vectors = leech_dim * 8232 + 48 ∧
+   leech_min_vectors = leech_dim * 8190 ∧
    leech_min_vectors = 196560) := by
-  intro h
-  exact h
+  norm_num
 
-/-- The finite count difference is definitionally constant in an unused parameter. -/
+/-- The finite Witten-style readout is the signed difference of the two
+sample-class counts.  The parameter is retained for the historical thermal
+API; no thermal conservation theorem is claimed here. -/
 theorem witten_index_monster_constant_in_parameter :
-  ∀ β > 0, witten_index_monster = witten_index_monster := by
+  ∀ β > 0,
+    witten_index_monster =
+      (count_bosonic_monster : ℤ) - (count_fermionic_monster : ℤ) := by
   intro β Hβ
   rfl
 

@@ -85,19 +85,4 @@ theorem kolmogorov_microcanonical_cardinality_bound
     exact Real.rpow_pos_of_pos (by norm_num) _
   · exact hS
 
-/--
-**Main Theorem 4: Grand Algorithmic Information Duality**
-Unifies Kraft-McMillan bounds, Levin-Solomonoff identity, and statewise Boltzmann entropy $S_{\text{micro}}(x)$.
--/
-theorem grand_kolmogorov_boltzmann_duality
-    {X : Type*} [Fintype X] (P : MicrostateCellPartition X) (x : X)
-    (K : KolmogorovComplexityData X) (S : Finset X) :
-    ((∑ x ∈ S, (2 : ℝ) ^ (- (K.kolmogorovLength x : ℝ))) ≤ 1) ∧
-    ((2 : ℝ) ^ (microstateBoltzmannEntropy P x / Real.log 2) = (P.phaseVolume x : ℝ)) ∧
-    (microstateBoltzmannEntropy P x = Real.log (P.phaseVolume x : ℝ)) := ⟨
-  kraft_mcmillan_inequality K S,
-  levin_solomonoff_boltzmann_identity P x,
-  rfl
-⟩
-
 end InfoGeometry.Canonical.AlgorithmicBoltzmannKolmogorovBridge

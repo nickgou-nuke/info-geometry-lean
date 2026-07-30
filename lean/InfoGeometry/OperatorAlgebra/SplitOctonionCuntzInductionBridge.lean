@@ -152,29 +152,4 @@ theorem peirceCuntzTransition_anticomm_up_down (i : Fin 3) :
   rw [up_down_anticomm_eq_oneZ]
   exact peirceCuntzTransition_oneZ
 
-/-- Closed finite-dimensional Cuntz-induction bridge packet. -/
-theorem splitOctonion_cuntz_induction_bridge_packet :
-    mulZ ePlus ePlus = ePlus ∧
-      mulZ eMinus eMinus = eMinus ∧
-      mulZ ePlus eMinus = zeroZ ∧
-      mulZ eMinus ePlus = zeroZ ∧
-      addZ ePlus eMinus = oneZ ∧
-      (∀ i : Fin 3, mulZ (up i) (down i) = ePlus) ∧
-      (∀ i : Fin 3, mulZ (down i) (up i) = eMinus) ∧
-      peirceCuntzTransition oneZ = oneZ ∧
-      peirceCuntzTransition ePlus = ePlus ∧
-      peirceCuntzTransition eMinus = eMinus ∧
-      peirceCuntzTransition H = H ∧
-      (∀ i : Fin 3, peirceCuntzTransition (up i) = zeroZ) ∧
-      (∀ i : Fin 3, peirceCuntzTransition (down i) = zeroZ) ∧
-      (∀ i : Fin 3, peirceCuntzTransition (commZ (up i) (down i)) = H) ∧
-      (∀ i : Fin 3, peirceCuntzTransition (antiCommZ (up i) (down i)) = oneZ) := by
-  exact ⟨peirce_left_projection_idempotent, peirce_right_projection_idempotent,
-    peirce_left_right_projection_zero, peirce_right_left_projection_zero,
-    peirce_projection_partition, witt_up_down_projection, witt_down_up_projection,
-    peirceCuntzTransition_oneZ, peirceCuntzTransition_ePlus,
-    peirceCuntzTransition_eMinus, peirceCuntzTransition_H,
-    peirceCuntzTransition_up_zero, peirceCuntzTransition_down_zero,
-    peirceCuntzTransition_comm_up_down, peirceCuntzTransition_anticomm_up_down⟩
-
 end InfoGeometry.OperatorAlgebra.SplitOctonions.CuntzInductionBridge

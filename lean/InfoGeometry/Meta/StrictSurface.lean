@@ -40,8 +40,8 @@ structure TelemetryRow where
   reasons : Array AdmissionReason
   proofHead : ProofHeadShape
   statementShape : StatementShape
-  thinSurface? : Option ThinSurfaceKind := none
-  policyVersion : String := admissionPolicyVersion
+  thinSurface? : Option ThinSurfaceKind
+  policyVersion : String
   deriving Repr, Inhabited
 
 instance : ToJson TelemetryRow where
@@ -76,19 +76,33 @@ private def declKindLabel : DeclRole → String
 private def lowerShapeToSoftEvidence (role : DeclRole) (shape : ProofShapeReport) : SoftEvidence :=
   match role, shape.thinSurface? with
   | .owner, some thin =>
-      { vacuityHints := [s!"owner_thin_surface:{thin.asString}"] }
+      { vacuityHints := [s!"owner_thin_surface:{thin.asString}"]
+        graphRoleHints := []
+        plannerHints := [] }
   | .constructor, some thin =>
-      { vacuityHints := [s!"constructor_thin_surface:{thin.asString}"] }
+      { vacuityHints := [s!"constructor_thin_surface:{thin.asString}"]
+        graphRoleHints := []
+        plannerHints := [] }
   | .bridge, some thin =>
-      { graphRoleHints := [s!"bridge_thin_surface:{thin.asString}"] }
+      { vacuityHints := []
+        graphRoleHints := [s!"bridge_thin_surface:{thin.asString}"]
+        plannerHints := [] }
   | .translator, some thin =>
-      { graphRoleHints := [s!"translator_thin_surface:{thin.asString}"] }
+      { vacuityHints := []
+        graphRoleHints := [s!"translator_thin_surface:{thin.asString}"]
+        plannerHints := [] }
   | .coherence, some thin =>
-      { vacuityHints := [s!"coherence_thin_surface:{thin.asString}"] }
+      { vacuityHints := [s!"coherence_thin_surface:{thin.asString}"]
+        graphRoleHints := []
+        plannerHints := [] }
   | .capstone, some thin =>
-      { graphRoleHints := [s!"capstone_thin_surface:{thin.asString}"] }
+      { vacuityHints := []
+        graphRoleHints := [s!"capstone_thin_surface:{thin.asString}"]
+        plannerHints := [] }
   | _, none =>
-      {}
+      { vacuityHints := []
+        graphRoleHints := []
+        plannerHints := [] }
 
 private def extraBlockingReasons
     (env : Environment)
@@ -184,6 +198,7 @@ def processStrictDecl
       proofHead := shape.proofHead
       statementShape := shape.statementShape
       thinSurface? := shape.thinSurface?
+      policyVersion := admissionPolicyVersion
     }
   let telemetryJson := (toJson telemetry).compress
   match decision with

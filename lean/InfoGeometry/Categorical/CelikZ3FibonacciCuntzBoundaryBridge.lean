@@ -76,27 +76,7 @@ source lane.
 def HasSalihCelikZ3CartanYBE (R12 R23 : A) : Prop :=
   R12 * R23 * R12 = R23 * R12 * R23
 
-/-- The supplied source-side Salih Çelik `Z3` Artin/Yang--Baxter premise. -/
-theorem salih_celik_z3_yang_baxter_of_premise
-    (R12 R23 : A)
-    (hYB : HasSalihCelikZ3CartanYBE R12 R23) :
-    R12 * R23 * R12 = R23 * R12 * R23 :=
-  hYB
-
 variable [Zero A] [Add A]
-
-/-- The cubic differential law exposed from an explicit `Z3` calculus. -/
-theorem salih_celik_z3_d3_zero
-    (D : Z3DifferentialCalculus A) (x : A) :
-    D.d (D.d (D.d x)) = 0 :=
-  D.d3_zero x
-
-/-- The graded Leibniz law exposed from an explicit `Z3` calculus. -/
-theorem salih_celik_z3_graded_leibniz
-    (D : Z3DifferentialCalculus A) (x y : A) :
-    D.d (x * y) =
-      D.d x * y + D.omegaPow (D.degree x) * (x * D.d y) :=
-  D.graded_leibniz x y
 
 /-! ## Finite Fibonacci matrix side -/
 
@@ -243,7 +223,7 @@ theorem explicit_celik_fibonacci_cuntz_boundary_bridge
       wordParityZ2 (oddStep b) = 1 ∧
         wordParityZ2 (oddStep a ++ oddStep b) = 0) := by
   exact ⟨
-    salih_celik_z3_yang_baxter_of_premise R12 R23 hYB,
+    hYB,
     matched_source_satisfies_fibonacci_z3_artin sourceR sourceB hMatch,
     finite_complex_fibonacci_matrix_artin,
     fibonacci_tau_tensor_tau_channels,

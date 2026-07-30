@@ -36,8 +36,15 @@ Bridge object packaging the repo-owned Drazin odd-odd closure packet as a
 `SuperMetriplectic.SuperchargeClosure`.
 -/
 @[rep_depth transport]
-structure DrazinSuperchargeClosureBridge where
-  U : UnifiedSuperchargePackage (E := E)
+abbrev DrazinSuperchargeClosureBridge :=
+  UnifiedSuperchargePackage (E := E)
+
+namespace DrazinSuperchargeClosureBridge
+
+abbrev U (B : DrazinSuperchargeClosureBridge (E := E)) :
+    UnifiedSuperchargePackage (E := E) := B
+
+end DrazinSuperchargeClosureBridge
 
 namespace DrazinSuperchargeClosureBridge
 

@@ -157,11 +157,30 @@ namespace SplitParitySupertraceTranslation
 open InfoGeometry.Algebraic.SplitSignature
 
 /-- The operator-level parity/supertrace shadow on `Cl(n,n)`. -/
-structure SplitParitySupertraceShadow (n : ℕ) where
-  parity : SplitCliffordEnd n := parityOp n
-  supertraceReadout : SplitCliffordEnd n → ℝ := cliffordSupertrace n
-  superBerezinianReadout : SplitCliffordEnd n → ℝ := superBerezinian n
-  supervolumePotential : SplitCliffordEnd n → ℝ := superEffectiveAction n
+abbrev SplitParitySupertraceShadow (n : ℕ) := SplitCliffordEnd n
+
+namespace SplitParitySupertraceShadow
+
+/-- The canonical parity involution on the split-Clifford carrier. -/
+noncomputable def parity {n : ℕ} (_ : SplitParitySupertraceShadow n) : SplitCliffordEnd n :=
+  parityOp n
+
+/-- The supertrace readout is the canonical parity-weighted Clifford trace. -/
+noncomputable def supertraceReadout
+    {n : ℕ} (_ : SplitParitySupertraceShadow n) : SplitCliffordEnd n → ℝ :=
+  cliffordSupertrace n
+
+/-- The super-Berezinian readout is the canonical Clifford Berezinian. -/
+noncomputable def superBerezinianReadout
+    {n : ℕ} (_ : SplitParitySupertraceShadow n) : SplitCliffordEnd n → ℝ :=
+  superBerezinian n
+
+/-- The supervolume potential is the canonical effective-action readout. -/
+noncomputable def supervolumePotential
+    {n : ℕ} (_ : SplitParitySupertraceShadow n) : SplitCliffordEnd n → ℝ :=
+  superEffectiveAction n
+
+end SplitParitySupertraceShadow
 
 @[simp]
 theorem parity_comp_self (n : ℕ) (x : Cl_nn n) :

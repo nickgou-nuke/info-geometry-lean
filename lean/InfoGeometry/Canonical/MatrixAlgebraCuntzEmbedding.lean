@@ -67,13 +67,15 @@ theorem word_reduction_ne_of_length (c : CuntzIsometries n A) :
         dsimp [wordSStar, wordS]
         calc (wordSStar c v1 * star (c.S i)) * (c.S i * wordS c v2)
           _ = wordSStar c v1 * (star (c.S i) * c.S i) * wordS c v2 := by simp [mul_assoc]
-          _ = wordSStar c v1 * 1 * wordS c v2 := by rw [c.h_isometry i]
+          _ = wordSStar c v1 * 1 * wordS c v2 := by simp [isometry_delta]
           _ = wordSStar c v1 * wordS c v2 := by rw [mul_one]
           _ = 0 := ih v2 hlen_v hne_v
       · dsimp [wordSStar, wordS]
         calc (wordSStar c v1 * star (c.S i)) * (c.S j * wordS c v2)
           _ = wordSStar c v1 * (star (c.S i) * c.S j) * wordS c v2 := by simp [mul_assoc]
-          _ = wordSStar c v1 * 0 * wordS c v2 := by rw [c.h_ortho i j hij]
+          _ = wordSStar c v1 * 0 * wordS c v2 := by
+            rw [show star (c.S i) * c.S j = 0 by
+              simpa [hij] using isometry_delta c i j]
           _ = 0 := by rw [mul_zero, zero_mul]
 
 /-- 🏆 THEOREM 2: Canonical Matrix Unit Algebra Law

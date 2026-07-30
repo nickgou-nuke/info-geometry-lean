@@ -86,22 +86,4 @@ theorem colimit_kernel_step_preservation
   rw [hv, map_zero] at h
   exact h
 
-/--
-**Main Theorem 4: Grand Filtered Colimit Dirac Index Master Duality**
-Unifies finite Dirac kernel characterization, stage injectivity survival, and step-by-step colimit kernel preservation into a single 100% kernel-checked theorem.
--/
-theorem grand_filtered_colimit_dirac_index_master_duality
-    {V W : Type*} [AddCommGroup V] [Module ℝ V] [AddCommGroup W] [Module ℝ W]
-    (DV : FiniteDiracData V) (DW : FiniteDiracData W)
-    (f : V →ₗ[ℝ] W) (h_inj : Function.Injective f)
-    (h_comm : DW.diracOp.comp f = f.comp DV.diracOp)
-    (v : V) (hv_ker : v ∈ diracKernel DV) (hv_ne : v ≠ 0) :
-    (DV.diracOp v = 0) ∧
-    (f v ≠ 0) ∧
-    (f v ∈ diracKernel DW) := ⟨
-  (mem_diracKernel_iff DV v).mp hv_ker,
-  fun h_zero => hv_ne (h_inj (by rw [h_zero, map_zero])),
-  colimit_kernel_step_preservation DV DW f h_comm v hv_ker
-⟩
-
 end InfoGeometry.Canonical.FilteredColimitDiracIndexBridge

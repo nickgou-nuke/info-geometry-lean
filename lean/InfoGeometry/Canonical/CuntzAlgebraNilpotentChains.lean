@@ -41,37 +41,11 @@ theorem cuntz_chiral_bracket_antisymm {R : Type*} [Ring R] (A B : R) :
   rw [neg_sub]
 
 /--
-**Lemma 3: Jordan Shear 2x2 Matrix Nilpotency**
-Proves natively that the Jordan shear matrix $N = \begin{pmatrix} 0 & 1 \\ 0 & 0 \end{pmatrix}$ satisfies $N^2 = 0$.
--/
-theorem cuntz_chiral_jordan_matrix_sq :
-    !![(0 : ℂ), (1 : ℂ); (0 : ℂ), (0 : ℂ)] * !![(0 : ℂ), (1 : ℂ); (0 : ℂ), (0 : ℂ)] = (0 : Matrix (Fin 2) (Fin 2) ℂ) := by
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
-
-/--
-**Lemma 4: Antiunitary Trace Fixed Locus Rigidity**
+**Lemma 3: Antiunitary Trace Fixed Locus Rigidity**
 Proves natively that if $s = 1 - \bar{s}$, then $\operatorname{Re}(s) = 1/2$.
 -/
 theorem cuntz_antiunitary_trace_re_half (s : ℂ) (hs : s = 1 - star s) :
     s.re = 1 / 2 :=
   (critical_line_fixed_locus_iff s).1 hs
-
-/--
-**Lemma 5: Grand Modular Lemma Chain Duality**
-Unifies power nilpotency, bracket anti-symmetry, Jordan matrix shear, and trace fixed locus rigidity into a single 100% kernel-checked master theorem in Lean 4 with 0 sorries and 0 custom axioms.
--/
-theorem grand_cuntz_lemma_chain_duality
-    {R : Type*} [Ring R] (S A B : R) (hS : S ^ 2 = 0)
-    (s : ℂ) (hs : s = 1 - star s) :
-    (S ^ 3 = 0) ∧
-    (A * B - B * A = - (B * A - A * B)) ∧
-    (!![(0 : ℂ), (1 : ℂ); (0 : ℂ), (0 : ℂ)] * !![(0 : ℂ), (1 : ℂ); (0 : ℂ), (0 : ℂ)] = (0 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
-    (s.re = 1 / 2) := ⟨
-  cuntz_chiral_pow_three_nilpotent S hS,
-  cuntz_chiral_bracket_antisymm A B,
-  cuntz_chiral_jordan_matrix_sq,
-  cuntz_antiunitary_trace_re_half s hs
-⟩
 
 end InfoGeometry.Canonical.CuntzAlgebraNilpotentChains

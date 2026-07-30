@@ -234,7 +234,8 @@ theorem modularHamiltonianAction_eq_generatedFlow
     (K A : AlgebraEnd H) (t : ℝ) :
     modularHamiltonianAction (H := H) K A t =
       additiveModularFlowOfGenerator (H := H) K t A := by
-  simp [modularHamiltonianAction, expTransport, additiveModularFlowOfGenerator_apply,
-    InfoGeometry.Krein.modular_shift, InfoGeometry.Krein.krein_modular_shift, smul_neg]
+  change expTransport K A t =
+    InfoGeometry.Krein.modular_shift (E := H) K t A
+  simp [expTransport, InfoGeometry.Krein.krein_modular_shift, smul_neg]
 
 end InfoGeometry.Volume.ConnesInfinitesimal

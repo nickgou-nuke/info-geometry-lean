@@ -34,22 +34,24 @@ The socket is intentionally thin: it pins the paper citation and stores the
 theorem-backed Cantor/Fock carrier data as the owner lane.
 -/
 @[socket_debt_tag]
+def citationAuthors : String := "Derya Çelik and Şahin Koçak"
+
+def citationTitle : String :=
+  "A Fractal Representation of the Complex Clifford Algebra Equivalent to the Fock Representation"
+
+def citationVenue : String := "Advances in Applied Clifford Algebras"
+
+def citationYear : Nat := 2011
+
 structure InfiniteCantorCliffordFockSocket
-    (Op E : Type*) [Ring Op]
-    [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] where
-  citationAuthors : String := "Derya Çelik and Şahin Koçak"
-  citationTitle :
-    String :=
-    "A Fractal Representation of the Complex Clifford Algebra Equivalent to the Fock Representation"
-  citationVenue : String := "Advances in Applied Clifford Algebras"
-  citationYear : Nat := 2011
+    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] where
   carrierData : CelikKocakInfiniteFockCarrierData E
 
 /-- The socket exposes the underlying carrier data. -/
 @[rep_depth operator]
-def carrierData_readout {Op E : Type*} [Ring Op]
+def carrierData_readout {E : Type*}
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-    (S : InfiniteCantorCliffordFockSocket Op E) :
+    (S : InfiniteCantorCliffordFockSocket E) :
     CelikKocakInfiniteFockCarrierData E :=
   S.carrierData
 

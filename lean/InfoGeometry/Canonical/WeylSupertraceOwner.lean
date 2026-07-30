@@ -112,9 +112,17 @@ This keeps the prime/Weyl surface compatible with the new parity/supervolume
 language without collapsing the prime lattice into the split Clifford carrier.
 -/
 structure SplitWeylSupertraceShadow (n : ℕ) where
-  operator : SplitCliffordEnd n := parityOp n
-  supertraceReadout : ℝ := cliffordSupertrace n operator
-  superBerezinianReadout : ℝ := superBerezinian n operator
+  operator : SplitCliffordEnd n
+
+/-- The supertrace readout is derived from the supplied Clifford operator. -/
+noncomputable def SplitWeylSupertraceShadow.supertraceReadout
+    {n : ℕ} (S : SplitWeylSupertraceShadow n) : ℝ :=
+  cliffordSupertrace n S.operator
+
+/-- The super-Berezinian readout is derived from the supplied Clifford operator. -/
+noncomputable def SplitWeylSupertraceShadow.superBerezinianReadout
+    {n : ℕ} (S : SplitWeylSupertraceShadow n) : ℝ :=
+  superBerezinian n S.operator
 
 
 

@@ -144,18 +144,6 @@ namespace CartanWeylCasimirLabel
 variable {CartanWeight WeylShape CasimirReadout : Type*}
 variable (L : CartanWeylCasimirLabel CartanWeight WeylShape CasimirReadout)
 
-@[rep_depth operator]
-theorem cartan_apply :
-    L.cartan = L.cartan := rfl
-
-@[rep_depth operator]
-theorem weylShape_apply :
-    L.weylShape = L.weylShape := rfl
-
-@[rep_depth operator]
-theorem casimir_apply :
-    L.casimir = L.casimir := rfl
-
 end CartanWeylCasimirLabel
 
 /--

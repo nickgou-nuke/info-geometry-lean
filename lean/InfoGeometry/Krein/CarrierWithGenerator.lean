@@ -10,15 +10,34 @@ and its transport flow.
 namespace InfoGeometry.Krein
 
 /-- A carrier equipped with a static operatorial generator. -/
-structure CarrierWithGenerator (X : InvolutiveSelfDualCarrier) where
-  generator : X.H →L[ℝ] X.H
+abbrev CarrierWithGenerator (X : InvolutiveSelfDualCarrier) :=
+  X.H →L[ℝ] X.H
+
+namespace CarrierWithGenerator
+
+abbrev generator (G : CarrierWithGenerator X) : X.H →L[ℝ] X.H := G
+
+def mk (generator : X.H →L[ℝ] X.H) : CarrierWithGenerator X :=
+  generator
+
+end CarrierWithGenerator
 
 /-- A transport flow equipped with its infinitesimal generator. -/
-structure CarrierTransportWithGenerator
+abbrev CarrierTransportWithGenerator
     (X : InvolutiveSelfDualCarrier)
-    (T : CarrierTransport X) where
-  infinitesimalGenerator : X.H →L[ℝ] X.H
-  -- Later: hasDerivAt_transport_zero_eq_generator ...
+    (T : CarrierTransport X) :=
+  X.H →L[ℝ] X.H
+
+namespace CarrierTransportWithGenerator
+
+abbrev infinitesimalGenerator
+    (G : CarrierTransportWithGenerator X T) : X.H →L[ℝ] X.H := G
+
+def mk (infinitesimalGenerator : X.H →L[ℝ] X.H) :
+    CarrierTransportWithGenerator X T :=
+  infinitesimalGenerator
+
+end CarrierTransportWithGenerator
 
 namespace CarrierWithGenerator
 

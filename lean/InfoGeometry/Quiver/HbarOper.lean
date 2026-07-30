@@ -58,8 +58,6 @@ transformations
 The ℏ-action on P^1 is z ↦ ℏz.
 -/
 structure HbarConnection where
-  /-- Rank: for SL(r+1) -/
-  rank : ℕ := r + 1
   /-- The connection matrix A(z) -/
   connection : ℂ → Matrix (Fin (r+1)) (Fin (r+1)) ℂ
   /-- ℏ parameter -/
@@ -67,6 +65,13 @@ structure HbarConnection where
   /-- Determinant = 1 (SL condition) -/
   det_one : ∀ z : ℂ,
     det (connection z) = 1
+
+namespace HbarConnection
+
+/-- The defining representation rank is determined by the indexed fiber. -/
+def rank (_ : HbarConnection r) : ℕ := r + 1
+
+end HbarConnection
 
 /--
 Oper condition: A(z) has the form

@@ -46,8 +46,15 @@ local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
 /-- Bundle the repo-owned Drazin odd-odd lane as a supermetriplectic closure bridge. -/
 @[rep_depth transport]
-structure UnifiedDrazinSuperchargeClosureBridge where
-  U : UnifiedSuperchargePackage (E := E)
+abbrev UnifiedDrazinSuperchargeClosureBridge :=
+  UnifiedSuperchargePackage (E := E)
+
+namespace UnifiedDrazinSuperchargeClosureBridge
+
+abbrev U (B : UnifiedDrazinSuperchargeClosureBridge (E := E)) :
+    UnifiedSuperchargePackage (E := E) := B
+
+end UnifiedDrazinSuperchargeClosureBridge
 
 namespace UnifiedDrazinSuperchargeClosureBridge
 

@@ -219,9 +219,11 @@ theorem positive_roots_E8_add_seven_eq_127 :
 
 /-- The finite count difference is definitionally constant in an unused parameter. -/
 theorem witten_index_e8_constant_in_parameter :
-  ∀ β > 0, witten_index_e8 = witten_index_e8 := by
+  ∀ β > 0,
+    witten_index_e8 =
+      (count_bosonic_e8 : ℤ) - (count_fermionic_e8 : ℤ) := by
   intro β Hβ
-  rfl  -- Witten index is constant
+  rfl
 
 /-- Trivial existential readback of the finite count difference under a supplied
 `gauge_group = Unit` hypothesis.  This is not a Standard Model embedding. -/

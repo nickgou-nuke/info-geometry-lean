@@ -15,20 +15,6 @@ namespace ConformalInference
 
 variable (CI : ConformalInference E)
 
-/--
-Proof-carrying KKT wing witness for the conformal projector-obstruction lane.
-
-This packages the three grading hypotheses that drive the grade-zero descent of
-the anomaly/projector obstruction, so downstream callers can route through a
-single constructive witness instead of threading a bare `(hA, hAMP, hAD)`
-triple.
--/
-abbrev KKTWingWitness
-    (X : InfoGeometry.Quantum.RealSplitCl11Action E) : Prop :=
-  InfoGeometry.Canonical.KKTCore.IsGOne X CI.A ∧
-    InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_MP ∧
-      InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_D
-
 /-- Canonical obstruction operator: the spectral/metric projector commutator. -/
 noncomputable abbrev projectorObstruction : E →L[ℝ] E :=
   CI.chiralAnomalyOperator
@@ -63,7 +49,7 @@ witness, without threading the explicit `(hA, hAMP, hAD)` hypothesis triple.
 -/
 theorem projectorObstruction_isGZero_of_kktWingWitness
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
-    (W : CI.KKTWingWitness X) :
+    (W : InfoGeometry.Canonical.KKTCore.IsGOne X CI.A ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_MP ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_D) :
     InfoGeometry.Canonical.KKTCore.IsGZero X CI.projectorObstruction := by
   exact
     CI.projectorObstruction_isGZero_of_kkt_wings X W.1 W.2.1 W.2.2
@@ -85,7 +71,7 @@ triple.
 -/
 theorem projectorObstruction_gOnePart_eq_zero_of_kktWingWitness
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
-    (W : CI.KKTWingWitness X) :
+    (W : InfoGeometry.Canonical.KKTCore.IsGOne X CI.A ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_MP ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_D) :
     InfoGeometry.Canonical.KKTCore.gOnePart X CI.projectorObstruction = 0 := by
   exact
     CI.projectorObstruction_gOnePart_eq_zero_of_kkt_wings X W.1 W.2.1 W.2.2
@@ -107,7 +93,7 @@ triple.
 -/
 theorem projectorObstruction_gNegOnePart_eq_zero_of_kktWingWitness
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
-    (W : CI.KKTWingWitness X) :
+    (W : InfoGeometry.Canonical.KKTCore.IsGOne X CI.A ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_MP ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_D) :
     InfoGeometry.Canonical.KKTCore.gNegOnePart X CI.projectorObstruction = 0 := by
   exact
     CI.projectorObstruction_gNegOnePart_eq_zero_of_kkt_wings X W.1 W.2.1 W.2.2
@@ -133,7 +119,7 @@ proof-carrying KKT wing witness, without threading the explicit
 -/
 theorem projectorObstruction_eq_diagonal_blocks_of_kktWingWitness
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
-    (W : CI.KKTWingWitness X) :
+    (W : InfoGeometry.Canonical.KKTCore.IsGOne X CI.A ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_MP ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_D) :
     CI.projectorObstruction
       = InfoGeometry.Canonical.KKTCore.plusProjector X * CI.projectorObstruction
           * InfoGeometry.Canonical.KKTCore.plusProjector X
@@ -677,7 +663,7 @@ proof-carrying KKT wing witness, without threading the explicit
 -/
 theorem squashedProjectorObstruction_isGZero_of_kktWingWitness
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
-    (W : CI.KKTWingWitness X) :
+    (W : InfoGeometry.Canonical.KKTCore.IsGOne X CI.A ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_MP ∧ InfoGeometry.Canonical.KKTCore.IsGNegOne X CI.A_D) :
     InfoGeometry.Canonical.KKTCore.IsGZero X CI.squashedProjectorObstruction := by
   exact
     CI.squashedProjectorObstruction_isGZero_of_kkt_wings X W.1 W.2.1 W.2.2

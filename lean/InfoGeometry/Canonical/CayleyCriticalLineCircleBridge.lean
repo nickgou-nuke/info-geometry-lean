@@ -198,28 +198,11 @@ system must prove admissibility, the determinant identification with completed
 `xi`, and the zero-location law outside this data structure.
 -/
 @[socket_debt_tag]
-abbrev LeeYangCayleyRiemannWitness
-    (PartitionFunction CompletedXiReadout ZeroReadout : Type*) : Type _ :=
-  PartitionFunction × (CompletedXiReadout × ZeroReadout)
-
-namespace LeeYangCayleyRiemannWitness
-
-def partitionFunction
-    (W : LeeYangCayleyRiemannWitness PartitionFunction CompletedXiReadout ZeroReadout) :
-    PartitionFunction :=
-  W.1
-
-def completedXiReadout
-    (W : LeeYangCayleyRiemannWitness PartitionFunction CompletedXiReadout ZeroReadout) :
-    CompletedXiReadout :=
-  W.2.1
-
-def zeroReadout
-    (W : LeeYangCayleyRiemannWitness PartitionFunction CompletedXiReadout ZeroReadout) :
-    ZeroReadout :=
-  W.2.2
-
-end LeeYangCayleyRiemannWitness
+structure LeeYangCayleyRiemannWitness
+    (PartitionFunction CompletedXiReadout ZeroReadout : Type*) where
+  partitionFunction : PartitionFunction
+  completedXiReadout : CompletedXiReadout
+  zeroReadout : ZeroReadout
 
 /-! ## Prime-gas Lee--Yang approximation socket -/
 

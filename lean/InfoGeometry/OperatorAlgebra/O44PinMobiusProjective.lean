@@ -947,39 +947,4 @@ def toPinMobiusProjective44 :
 
 end O44PinMobiusProjectiveConstructionData
 
-/-- Compatibility predicate for constructing the O/Pin/Möbius projective stack. -/
-def O44PinMobiusProjectiveCompatibility
-    (V W PinBase PinConf : Type*)
-    [AddCommGroup V] [Module ℝ V]
-    [AddCommGroup W] [Module ℝ W]
-    [Monoid PinBase] [Monoid PinConf] : Prop :=
-  ∀ D : O44PinMobiusProjectiveConstructionData V W PinBase PinConf,
-    D.toPinMobiusProjective44.basePin_lifts_to_conformalPin =
-        D.basePin_lifts_to_conformalPin ∧
-      D.toPinMobiusProjective44.acts_on_projective_null_rays =
-        D.acts_on_projective_null_rays
-
-/-- Construct the full reflection-sensitive projective conformal stack. -/
-theorem o44PinMobiusProjectiveOwnerTarget :
-  ∀ (V W PinBase PinConf : Type*)
-    [AddCommGroup V] [Module ℝ V]
-    [AddCommGroup W] [Module ℝ W]
-    [Monoid PinBase] [Monoid PinConf],
-    O44PinMobiusProjectiveCompatibility V W PinBase PinConf := by
-  intro V W PinBase PinConf _ _ _ _ _ _ D
-  exact ⟨rfl, rfl⟩
-
-/-- Packet readout from explicit O(4,4)/Pin/Möbius construction data. -/
-theorem o44PinMobiusProjective_packet
-    (V W PinBase PinConf : Type*)
-    [AddCommGroup V] [Module ℝ V]
-    [AddCommGroup W] [Module ℝ W]
-    [Monoid PinBase] [Monoid PinConf]
-    (D : O44PinMobiusProjectiveConstructionData V W PinBase PinConf) :
-    D.toPinMobiusProjective44.basePin_lifts_to_conformalPin =
-        D.basePin_lifts_to_conformalPin ∧
-      D.toPinMobiusProjective44.acts_on_projective_null_rays =
-        D.acts_on_projective_null_rays :=
-  ⟨rfl, rfl⟩
-
 end InfoGeometry.OperatorAlgebra

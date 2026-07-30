@@ -37,7 +37,7 @@ theorem word_reduction_head_match (c : CuntzIsometries n A) (i : Fin n) (w1 w2 :
   dsimp [wordSStar, wordS]
   calc (wordSStar c w1 * star (c.S i)) * (c.S i * wordS c w2)
     _ = wordSStar c w1 * (star (c.S i) * c.S i) * wordS c w2 := by simp [mul_assoc]
-    _ = wordSStar c w1 * 1 * wordS c w2 := by rw [c.h_isometry i]
+    _ = wordSStar c w1 * 1 * wordS c w2 := by simp [isometry_delta]
     _ = wordSStar c w1 * wordS c w2 := by rw [mul_one]
 
 /-- 🏆 THEOREM 2: Divergent Head Index Mismatch (i ≠ j ⟹ S_(i::w1)* S_(j::w2) = 0) -/
@@ -47,7 +47,8 @@ theorem word_reduction_head_mismatch (c : CuntzIsometries n A) {i j : Fin n} (h 
   dsimp [wordSStar, wordS]
   calc (wordSStar c w1 * star (c.S i)) * (c.S j * wordS c w2)
     _ = wordSStar c w1 * (star (c.S i) * c.S j) * wordS c w2 := by simp [mul_assoc]
-    _ = wordSStar c w1 * 0 * wordS c w2 := by rw [c.h_ortho i j h]
+    _ = wordSStar c w1 * 0 * wordS c w2 := by
+      rw [show star (c.S i) * c.S j = 0 by simpa [h] using isometry_delta c i j]
     _ = 0 := by rw [mul_zero, zero_mul]
 
 /-- 🏆 THEOREM 3: Right Prefix Reduction (S_w* S_(w ++ v) = S_v) -/

@@ -79,15 +79,9 @@ def bregman (θ' θ : Θ) : ℝ :=
 theorem bregman_self (θ : Θ) : M.bregman θ θ = 0 := by
   simp [bregman, M.diff_self θ, M.pair_zero_right]
 
-/-- The dual coordinate is definitionally the gradient of the log-partition potential. -/
-theorem dualCoord_eq_grad (θ : Θ) : M.dualCoord θ = M.gradΨ θ := rfl
-
 /-- The Hessian/Fisher metric readout is the supplied Hessian of `Ψ`. -/
 def fisherMetric (θ : Θ) (u v : V) : ℝ :=
   M.hessianMetric θ u v
-
-@[simp] theorem fisherMetric_eq_hessian (θ : Θ) (u v : V) :
-    M.fisherMetric θ u v = M.hessianMetric θ u v := rfl
 
 end DuallyFlatLogPartition
 
@@ -125,16 +119,6 @@ theorem bregman_eq_logQ_expression (θ' θ : Θ) :
       Real.log (B.Q θ') - Real.log (B.Q θ)
         - B.info.pair (B.info.gradΨ θ) (B.info.diff θ' θ) := by
   rw [DuallyFlatLogPartition.bregman, B.log_partition_eq θ', B.log_partition_eq θ]
-
-/-- The expectation coordinate remains definitionally the gradient of `log Q`. -/
-theorem dualCoord_eq_grad_logQ (θ : Θ) :
-    B.info.dualCoord θ = B.info.gradΨ θ :=
-  B.info.dualCoord_eq_grad θ
-
-/-- The Fisher/Hessian metric remains the supplied Hessian after rewriting `Ψ = log Q`. -/
-theorem fisherMetric_eq_hessian_logQ (θ : Θ) (u v : V) :
-    B.info.fisherMetric θ u v = B.info.hessianMetric θ u v :=
-  B.info.fisherMetric_eq_hessian θ u v
 
 end LogPartitionPotentialBridge
 

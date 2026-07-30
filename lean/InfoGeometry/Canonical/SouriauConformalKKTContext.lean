@@ -810,31 +810,6 @@ structure ConformalOperatorAdmissibilityWitness where
   Y : EndH₂
 
 /--
-Proof-carrying witness for the operatorial conformal cone-admissibility socket.
-
-This is the smallest constructive narrowing of the remaining broad proposition
-surface on the positive-partition lane: downstream routes can consume a witness
-object instead of a bare `hCone : C.IsConeAdmissible` argument.
--/
-@[rep_depth transport]
-abbrev ConformalConeAdmissibilityWitness
-    (C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)) : Prop :=
-  C.IsConeAdmissible
-
-namespace ConformalConeAdmissibilityWitness
-
-variable {C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)}
-
-/-- Recover the cone-admissibility proposition from the proof-carrying witness. -/
-@[rep_depth transport]
-theorem coneAdmissible
-    (W : ConformalConeAdmissibilityWitness (α := α) (H := H) C) :
-    C.IsConeAdmissible :=
-  W
-
-end ConformalConeAdmissibilityWitness
-
-/--
 Proof-carrying witness for the operatorial conformal TKK socket.
 
 This narrows the remaining broad TKK hypothesis surface on the positive-partition
@@ -873,7 +848,7 @@ This is the smallest constructive package that removes the remaining paired
 structure ConformalTKKConeWitness
     (C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)) where
   tkkWitness : ConformalTKKWitness (α := α) (H := H) C
-  coneWitness : ConformalConeAdmissibilityWitness (α := α) (H := H) C
+  coneWitness : C.IsConeAdmissible
 
 namespace ConformalTKKConeWitness
 
@@ -890,7 +865,7 @@ def toTKKWitness
 @[rep_depth transport]
 def toConeWitness
     (W : ConformalTKKConeWitness (α := α) (H := H) C) :
-    ConformalConeAdmissibilityWitness (α := α) (H := H) C :=
+    C.IsConeAdmissible :=
   W.coneWitness
 
 /-- Recover the TKK master relation from the bundled socket. -/
@@ -952,7 +927,7 @@ admissibility through the proof-carrying cone witness socket, without a bare
 @[rep_depth transport]
 theorem operatorAdmissible_of_coneWitness
     (W : ConformalPositivePartitionWitness C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C) :
+    (hCone : C.IsConeAdmissible) :
     C.IsOperatorAdmissible :=
   W.operatorAdmissible hCone
 
@@ -988,7 +963,7 @@ noncomputable def toOperatorAdmissibilityWitnessOfConeWitness
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (tkkParameter : ℝ)
     (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂) :
     ConformalOperatorAdmissibilityWitness (α := α) (H := H) :=
   { gibbs := C
@@ -1032,7 +1007,7 @@ noncomputable def toOperatorAdmissibilityWitnessOfTKKConeWitness
     (W : ConformalPositivePartitionWitness C)
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂) :
     ConformalOperatorAdmissibilityWitness (α := α) (H := H) where
   gibbs := C
@@ -1069,7 +1044,7 @@ noncomputable def toClosureContextOfConeWitness
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (tkkParameter : ℝ)
     (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂) :
     ConformalWeylTKKKKTJordanLieContext (α := α) (H := H) :=
   (W.toOperatorAdmissibilityWitnessOfConeWitness weylGauge tkkParameter hTKK hCone X Y).toClosureContext
@@ -1099,7 +1074,7 @@ noncomputable def toClosureContextOfTKKConeWitness
     (W : ConformalPositivePartitionWitness C)
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂) :
     ConformalWeylTKKKKTJordanLieContext (α := α) (H := H) :=
   (W.toOperatorAdmissibilityWitnessOfTKKConeWitness weylGauge hTKK hCone X Y).toClosureContext
@@ -1163,7 +1138,7 @@ without a bare `hCone` theorem argument.
 @[rep_depth transport]
 theorem operatorAdmissible_of_cartanOddConeWitness
     (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
-    (hCone : ConformalConeAdmissibilityWitness C) :
+    (hCone : C.IsConeAdmissible) :
     C.IsOperatorAdmissible := by
   simpa using
     ConformalPositivePartitionWitness.operatorAdmissible_of_coneWitness
@@ -1205,7 +1180,7 @@ noncomputable def toOperatorAdmissibilityWitnessOfConeWitness
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (tkkParameter : ℝ)
     (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂) :
     ConformalOperatorAdmissibilityWitness (α := α) (H := H) :=
   { gibbs := C
@@ -1249,7 +1224,7 @@ noncomputable def toOperatorAdmissibilityWitnessOfTKKConeWitness
     (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂) :
     ConformalOperatorAdmissibilityWitness (α := α) (H := H) where
   gibbs := C
@@ -1317,7 +1292,7 @@ noncomputable def toClosureContextOfConeWitness
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (tkkParameter : ℝ)
     (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂) :
     ConformalWeylTKKKKTJordanLieContext (α := α) (H := H) :=
   (W.toOperatorAdmissibilityWitnessOfConeWitness weylGauge tkkParameter hTKK hCone X Y).toClosureContext
@@ -1347,7 +1322,7 @@ noncomputable def toClosureContextOfTKKConeWitness
     (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂) :
     ConformalWeylTKKKKTJordanLieContext (α := α) (H := H) :=
   (W.toOperatorAdmissibilityWitnessOfConeWitness weylGauge hTKK.tkkParameter hTKK.hTKK hCone X Y).toClosureContext
@@ -1624,7 +1599,7 @@ theorem satisfiesKKT_TKK_Weyl_JordanLieClosure_of_TKKConeWitness
     (W : ConformalPositivePartitionWitness C)
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂) :
     (W.toClosureContextOfTKKConeWitness weylGauge hTKK hCone X Y).SatisfiesKKT_TKK_Weyl_JordanLieClosure := by
   exact
@@ -1663,7 +1638,7 @@ theorem satisfiesKKT_TKK_Weyl_JordanLieClosure_of_TKKConeWitness
     (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂) :
     (W.toClosureContextOfTKKConeWitness weylGauge hTKK hCone X Y).SatisfiesKKT_TKK_Weyl_JordanLieClosure := by
   exact
@@ -2107,7 +2082,7 @@ noncomputable def toConstructiveSquarePositiveContextOfWitnessOfConeWitness
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (tkkParameter : ℝ)
     (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     ConstructiveConformalSquareFisherOnsagerPositiveContext (α := α) (H := H) where
@@ -2127,7 +2102,7 @@ noncomputable def toPositiveContextOfWitnessOfConeWitness
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (tkkParameter : ℝ)
     (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     ConformalFisherOnsagerPositiveContext (α := α) (H := H) :=
@@ -2198,7 +2173,7 @@ noncomputable def toConstructiveSquarePositiveContextOfWitnessOfTKKConeWitness
     (W : ConformalPositivePartitionWitness C)
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     ConstructiveConformalSquareFisherOnsagerPositiveContext (α := α) (H := H) where
@@ -2217,7 +2192,7 @@ noncomputable def toPositiveContextOfWitnessOfTKKConeWitness
     (W : ConformalPositivePartitionWitness C)
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     ConformalFisherOnsagerPositiveContext (α := α) (H := H) :=
@@ -2330,7 +2305,7 @@ theorem selfResponse_nonneg_of_squareWitness_of_ConeWitness
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (tkkParameter : ℝ)
     (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     0 ≤ C.operatorConformalResponse X X := by
@@ -2367,7 +2342,7 @@ theorem selfResponse_nonneg_of_squareWitness_of_TKKConeWitness
     (W : ConformalPositivePartitionWitness C)
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     0 ≤ C.operatorConformalResponse X X := by
@@ -2426,7 +2401,7 @@ theorem selfResponse_nonneg_of_squareResponse_of_ConeWitness
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (tkkParameter : ℝ)
     (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (amplitude : ℝ)
     (selfResponse_eq_square :
@@ -2470,7 +2445,7 @@ theorem selfResponse_nonneg_of_squareResponse_of_TKKConeWitness
     (W : ConformalPositivePartitionWitness C)
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (amplitude : ℝ)
     (selfResponse_eq_square :
@@ -2535,7 +2510,7 @@ theorem fisherOnsagerProduction_nonneg_of_squareWitness_of_ConeWitness
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (tkkParameter : ℝ)
     (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     0 ≤
@@ -2577,7 +2552,7 @@ theorem fisherOnsagerProduction_nonneg_of_squareWitness_of_TKKConeWitness
     (W : ConformalPositivePartitionWitness C)
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     0 ≤
@@ -2643,7 +2618,7 @@ theorem fisherOnsagerProduction_nonneg_of_squareResponse_of_ConeWitness
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (tkkParameter : ℝ)
     (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (amplitude : ℝ)
     (selfResponse_eq_square :
@@ -2693,7 +2668,7 @@ theorem fisherOnsagerProduction_nonneg_of_squareResponse_of_TKKConeWitness
     (W : ConformalPositivePartitionWitness C)
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (amplitude : ℝ)
     (selfResponse_eq_square :
@@ -2762,7 +2737,7 @@ theorem fisherOnsagerProduction_eq_square_of_squareWitness_of_ConeWitness
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (tkkParameter : ℝ)
     (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     (W.toPositiveContextOfWitnessOfConeWitness weylGauge tkkParameter hTKK hCone X Y
@@ -2782,7 +2757,7 @@ theorem fisherOnsagerProduction_eq_square_of_squareWitness_of_TKKConeWitness
     (W : ConformalPositivePartitionWitness C)
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     (ConformalOperatorAdmissibilityWitness.toPositiveContextOfWitness
@@ -2847,7 +2822,7 @@ theorem fisherOnsagerProduction_eq_square_of_squareResponse_of_ConeWitness
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (tkkParameter : ℝ)
     (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (amplitude : ℝ)
     (selfResponse_eq_square :
@@ -2895,7 +2870,7 @@ theorem fisherOnsagerProduction_eq_square_of_squareResponse_of_TKKConeWitness
     (W : ConformalPositivePartitionWitness C)
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (amplitude : ℝ)
     (selfResponse_eq_square :
@@ -2968,7 +2943,7 @@ noncomputable def toConstructiveSquarePositiveContextOfWitnessOfTKKConeWitness
     (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     ConstructiveConformalSquareFisherOnsagerPositiveContext (α := α) (H := H) where
@@ -3024,7 +2999,7 @@ noncomputable def toPositiveContextOfWitnessOfTKKConeWitness
     (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     ConformalFisherOnsagerPositiveContext (α := α) (H := H) :=
@@ -3040,7 +3015,7 @@ theorem toPositiveContextOfWitnessOfTKKConeWitness_fisherOnsagerProduction_eq_sq
     (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     (W.toPositiveContextOfWitnessOfTKKConeWitness weylGauge hTKK hCone X Y
@@ -3132,7 +3107,7 @@ theorem selfResponse_nonneg_of_squareWitness_of_ConeWitness
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (tkkParameter : ℝ)
     (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     0 ≤ C.operatorConformalResponse X X := by
@@ -3170,7 +3145,7 @@ theorem selfResponse_nonneg_of_squareWitness_of_TKKConeWitness
     (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     0 ≤ C.operatorConformalResponse X X := by
@@ -3229,7 +3204,7 @@ theorem selfResponse_nonneg_of_squareResponse_of_ConeWitness
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (tkkParameter : ℝ)
     (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (amplitude : ℝ)
     (selfResponse_eq_square :
@@ -3272,7 +3247,7 @@ theorem selfResponse_nonneg_of_squareResponse_of_TKKConeWitness
     (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (amplitude : ℝ)
     (selfResponse_eq_square :
@@ -3316,7 +3291,7 @@ theorem fisherOnsagerProduction_nonneg_of_squareWitness_of_ConeWitness
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (tkkParameter : ℝ)
     (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     0 ≤
@@ -3360,7 +3335,7 @@ theorem fisherOnsagerProduction_nonneg_of_squareWitness_of_TKKConeWitness
     (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     0 ≤
@@ -3432,7 +3407,7 @@ theorem fisherOnsagerProduction_nonneg_of_squareResponse_of_TKKConeWitness
     (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (amplitude : ℝ)
     (selfResponse_eq_square :
@@ -3499,7 +3474,7 @@ theorem fisherOnsagerProduction_eq_square_of_squareWitness_of_TKKConeWitness
     (W : ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L))
     (weylGauge : WeylGaugeField EndH₂ EndH₂)
     (hTKK : ConformalTKKWitness (α := α) (H := H) C)
-    (hCone : ConformalConeAdmissibilityWitness (α := α) (H := H) C)
+    (hCone : C.IsConeAdmissible)
     (X Y : EndH₂)
     (hSquare : ConformalSquareResponseWitness C X) :
     (ConformalOperatorAdmissibilityWitness.toPositiveContextOfWitness

@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -27,7 +26,6 @@ noncomputable section
 namespace InfoGeometry.Canonical.PrimonThermalDiracHeatKernelNativeBridge
 
 open Complex
-open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 /--
 **Lemma 1: Bosonic Heat Kernel Exponent Strict Upper Bound**
@@ -61,23 +59,5 @@ theorem primon_thermal_readouts_separate
   have h_sep := dirac_heat_kernel_readouts_separate (beta1 * E) (beta2 * E) h_prod_ne
   rw [neg_mul, neg_mul]
   exact h_sep
-
-/--
-**Main Theorem: Grand Primon Heat Kernel Master Duality**
-Unifies bosonic heat kernel bound, Dirac heat kernel separation, Primon thermal readout separation, and fixed locus antiunitary rigidity into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
--/
-theorem grand_primon_heat_kernel_master_duality
-    (x1 x2 : ℝ) (hx1 : 0 < x1) (h_ne : x1 ≠ x2)
-    (beta1 beta2 E : ℝ) (hE : 0 < E) (h_beta_ne : beta1 ≠ beta2)
-    (s_anti : ℂ) (h_anti : s_anti = 1 - star s_anti) :
-    (Real.exp (-x1) < 1) ∧
-    (Real.exp (-x1) ≠ Real.exp (-x2)) ∧
-    (Real.exp (-beta1 * E) ≠ Real.exp (-beta2 * E)) ∧
-    (s_anti.re = 1 / 2) := ⟨
-  bosonic_heat_kernel_factor_lt_one x1 hx1,
-  dirac_heat_kernel_readouts_separate x1 x2 h_ne,
-  primon_thermal_readouts_separate beta1 beta2 E hE h_beta_ne,
-  (critical_line_fixed_locus_iff s_anti).1 h_anti
-⟩
 
 end InfoGeometry.Canonical.PrimonThermalDiracHeatKernelNativeBridge

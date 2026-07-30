@@ -83,19 +83,4 @@ theorem spinor_fixed_locus_equilibrium_alignment (v : ℝ × ℝ) (h_eq : realAn
     v.1 = 1 / 2 :=
   (realAntiunitaryReflection_fixed_locus v).mp h_eq
 
-/--
-**Main Theorem 4: Grand Metriplectic Spinor Free Energy Master Duality**
-Unifies free energy dissipation non-positivity $\frac{\mathrm{d}F}{\mathrm{d}t} \le 0$, equilibrium quadratic vanishing, and spinor antiunitary fixed locus alignment into a single 100% kernel-checked theorem in Lean 4.
--/
-theorem grand_metriplectic_spinor_free_energy_master_duality
-    {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (data : MetriplecticFreeEnergyData V) (v : ℝ × ℝ) (h_eq : realAntiunitaryReflection v = v) :
-    (freeEnergyDissipationRate data ≤ 0) ∧
-    (freeEnergyDissipationRate data = 0 ↔ data.onsagerData.quadratic (freeEnergyForce data) = 0) ∧
-    (v.1 = 1 / 2) := ⟨
-  free_energy_dissipation_nonpos data,
-  free_energy_equilibrium_iff_zero_quadratic data,
-  spinor_fixed_locus_equilibrium_alignment v h_eq
-⟩
-
 end InfoGeometry.Canonical.MetriplecticSpinorFreeEnergyBridge

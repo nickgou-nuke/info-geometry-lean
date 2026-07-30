@@ -7,6 +7,7 @@ import InfoGeometry.Canonical.KKTClosureSymmetry
 import InfoGeometry.Canonical.KramersSuperchargeBridge
 import InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 import InfoGeometry.Meta.Architecture
+import InfoGeometry.Canonical.ErlangenInductiveClosure
 
 open scoped InnerProductSpace
 
@@ -1306,33 +1307,17 @@ theorem duality_equiv_transports_n2_supercharge_split
   let _ := duality_inverse_laws Dual DualInv hLeftInv hRightInv
   exact duality_transports_n2_supercharge_split Dual hAdd hMul hsplit hH hZ
 
-/--
-Finite-stage invariant packet in symmetry-adapted local coordinates.
-
-This captures the algebraic closure lanes used in the finite inductive corridor.
+/-!
+The finite closure packet and bonding intertwiner are owned by the Erlangen
+inductive-closure module. These aliases retain the UnifiedSupercharge API
+while preventing a second structurally identical proof packet.
 -/
-@[rep_depth thermo]
-structure SupergradedClosureAt (A : Type*) [Ring A] where
-  is_odd : A → Prop
-  is_even : A → Prop
-  is_central : A → Prop
-  odd_nilpotency : ∀ x, is_odd x → x * x = 0
-  odd_odd_closure : ∀ x y, is_odd x → is_odd y → is_even (x * y + y * x)
-  central_lane : ∀ c x, is_central c → c * x = x * c
-  projector_identity : ∃ P, is_even P ∧ P * P = P
+abbrev SupergradedClosureAt (A : Type*) [Ring A] :=
+  InfoGeometry.Canonical.ErlangenInductiveClosure.SupergradedClosureAt A
 
-/--
-Bonding intertwiner between two finite stages.
-
-The map is a ring homomorphism and explicitly transports grading lanes.
--/
-@[rep_depth thermo]
-structure BondingIntertwiner {A B : Type*} [Ring A] [Ring B]
-    (invA : SupergradedClosureAt A) (invB : SupergradedClosureAt B) where
-  map : A →+* B
-  preserves_odd : ∀ x, invA.is_odd x → invB.is_odd (map x)
-  preserves_even : ∀ x, invA.is_even x → invB.is_even (map x)
-  preserves_central : ∀ c, invA.is_central c → invB.is_central (map c)
+abbrev BondingIntertwiner {A B : Type*} [Ring A] [Ring B]
+    (invA : SupergradedClosureAt A) (invB : SupergradedClosureAt B) :=
+  InfoGeometry.Canonical.ErlangenInductiveClosure.BondingIntertwiner invA invB
 
 /--
 Odd nilpotency transports along a valid bonding intertwiner.

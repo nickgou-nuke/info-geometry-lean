@@ -46,11 +46,13 @@ def pad1to2 (u : RPhaseSpace 1) : RPhaseSpace 2 :=
   norm_num
 
 structure TwoStageWeylState where
-  omega1 : RPhaseSpace 1 → ℂ := fockState
-  omega2 : RPhaseSpace 2 → ℂ := fockState
+  omega1 : RPhaseSpace 1 → ℂ
+  omega2 : RPhaseSpace 2 → ℂ
   compatible : ∀ u : RPhaseSpace 1, omega2 (pad1to2 u) = omega1 u
 
 def fockTwoStageState : TwoStageWeylState where
+  omega1 := fockState
+  omega2 := fockState
   compatible := fock_state_compatible
 
 @[simp] theorem two_stage_fock_compatible (u : RPhaseSpace 1) :

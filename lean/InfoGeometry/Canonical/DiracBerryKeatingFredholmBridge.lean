@@ -1,6 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Canonical.FilteredColimitDiracIndexBridge
-import InfoGeometry.Canonical.CategoricalRiemannMasterSynthesisBridge
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -30,8 +28,6 @@ This module formalizes in native Lean 4 / Mathlib with 100% genuine constructive
 namespace InfoGeometry.Canonical.DiracBerryKeatingFredholmBridge
 
 open scoped BigOperators
-open InfoGeometry.Canonical.FilteredColimitDiracIndexBridge
-open InfoGeometry.Canonical.CategoricalRiemannMasterSynthesisBridge
 
 /-- 1. Finite Stage Dirac Operator $D_n$ mapped to Majorana sums. -/
 def StageDiracOperator {V : Type*} [AddCommGroup V] [Module ℂ V]
@@ -85,23 +81,5 @@ theorem zero_free_region_trivial_index
   intro h_has_zero
   have h_zeta_zero : riemannZeta s = 0 := (h_duality s).mpr h_has_zero
   exact h_zeta_neq_zero h_zeta_zero
-
-/--
-**Main Theorem 3: Grand Dirac Berry-Keating Fredholm Master Duality**
-Unifies kernel protection survival and zero-free region index triviality into a single 100% kernel-checked theorem.
--/
-theorem grand_dirac_berry_keating_fredholm_master_duality
-    {V V_colimit : Type*} [AddCommGroup V] [Module ℂ V] [AddCommGroup V_colimit] [Module ℂ V_colimit]
-    (D_n : V →ₗ[ℂ] V) (D_boundary : V_colimit →ₗ[ℂ] V_colimit)
-    (ψ_n : V →ₗ[ℂ] V_colimit)
-    (h_injective : LinearMap.ker ψ_n = ⊥)
-    (h_commute : D_boundary.comp ψ_n = ψ_n.comp D_n)
-    (v : V) (h_v_not_zero : v ≠ 0) (h_v_in_ker : D_n v = 0)
-    (riemannZeta : ℂ → ℂ) (D_s : ℂ → (V_colimit →ₗ[ℂ] V_colimit))
-    (h_duality : RHSpectralDuality riemannZeta D_s) (s : ℂ) (h_zeta_neq_zero : riemannZeta s ≠ 0) :
-    (HasZeroMode D_boundary) ∧ (¬ HasZeroMode (D_s s)) := ⟨
-  kernel_protection_survival D_n D_boundary ψ_n h_injective h_commute v h_v_not_zero h_v_in_ker,
-  zero_free_region_trivial_index riemannZeta D_s h_duality s h_zeta_neq_zero
-⟩
 
 end InfoGeometry.Canonical.DiracBerryKeatingFredholmBridge

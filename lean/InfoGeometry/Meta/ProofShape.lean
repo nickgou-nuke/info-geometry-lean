@@ -34,7 +34,7 @@ inductive ThinSurfaceKind where
 structure ProofShapeReport where
   proofHead : ProofHeadShape
   statementShape : StatementShape
-  thinSurface? : Option ThinSurfaceKind := none
+  thinSurface? : Option ThinSurfaceKind
   deriving Repr, Inhabited
 
 def ProofHeadShape.asString : ProofHeadShape → String

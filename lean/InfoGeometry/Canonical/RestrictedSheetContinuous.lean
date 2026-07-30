@@ -349,12 +349,16 @@ end GaugeBalancedEquiv
 
 end NamedRestrictions
 
-/-- Trivial restriction for early integration/testing. -/
+/-- Compatibility name for the genuine gauge-balanced sheet restriction. -/
 def trivialSheetRestriction (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     SheetRestriction E where
-  Holds := fun g => g = g
-  one_mem := rfl
-  mul_mem := by intro _ _ _ _; rfl
-  inv_mem := by intro _ _; rfl
+  Holds := RestrictedSheetContinuousEquiv.IsGaugeBalanced
+  one_mem := RestrictedSheetContinuousEquiv.isGaugeBalanced_one
+  mul_mem := by
+    intro g h hg hh
+    exact RestrictedSheetContinuousEquiv.IsGaugeBalanced.mul hg hh
+  inv_mem := by
+    intro g hg
+    exact RestrictedSheetContinuousEquiv.IsGaugeBalanced.inv hg
 
 end InfoGeometry.Canonical.RestrictedSheetContinuous

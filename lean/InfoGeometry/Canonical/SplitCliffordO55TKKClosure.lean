@@ -43,7 +43,17 @@ which universally forces the fermionic modes to zero, thus trivializing
 the superconformal anomaly natively reflecting Tr(Γ₁₁) = 0. -/
 class O55ChiralParityZero (J ψ : ℤ → Module.End 𝕜 V) : Prop where
   fermionic_sector_projected_out : ψ = fun _ => 0
-  trace_gamma_11_zero : ψ 0 = 0
+
+namespace O55ChiralParityZero
+
+/-- The gamma-11 trace readout follows from the projected-out fermionic sector. -/
+theorem trace_gamma_11_zero
+    {J ψ : ℤ → Module.End 𝕜 V}
+  (h : O55ChiralParityZero J ψ) :
+    ψ 0 = 0 := by
+  rw [h.fermionic_sector_projected_out]
+
+end O55ChiralParityZero
 
 /-- The Weyl Group order for D_5 is 2^(5-1) * 5! = 1920 -/
 lemma weyl_group_D5_order : 2^4 * Nat.factorial 5 = 1920 := by rfl
@@ -68,7 +78,6 @@ theorem on_shell_factorization_klein_quadric
 (Klein bottle replacing the torus). It incorporates orientation-reversing glide reflections. -/
 class Pin55Symmetry (P : Module.End 𝕜 V) : Prop where
   is_glide_reflection : P * P = 1
-  reverses_orientation : P * P = 1
 
 /-- The Klein Bottle boundary intrinsically relies on Pin(5,5) glide reflections. -/
 theorem klein_bottle_requires_pin55 (P : Module.End 𝕜 V) [h : Pin55Symmetry P] :
@@ -78,7 +87,7 @@ theorem klein_bottle_requires_pin55 (P : Module.End 𝕜 V) [h : Pin55Symmetry P
 /-- The orientation-reversal readout is the same involutive glide law carried by the Pin packet. -/
 theorem pin55_orientation_reversal_readout (P : Module.End 𝕜 V) [h : Pin55Symmetry P] :
     P * P = 1 :=
-  h.reverses_orientation
+  h.is_glide_reflection
 
 end O55Representation
 

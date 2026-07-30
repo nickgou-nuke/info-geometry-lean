@@ -9,25 +9,16 @@ namespace ConformalInference
 
 variable (CI : ConformalInference E)
 
-/--
-Functorial scalar readout package from the operator owner layer.
-
-These are representation maps from the noncommutative obstruction operator into
-scalar image lanes (`‖·‖₊` and derived scalars), not independent sources.
--/
-@[rep_depth thermo] def ObstructionScalarReadout : Prop :=
-  ‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧
-  CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧
-  CI.chiralScale = CI.obstructionScale ∧
-  CI.epsilon = CI.obstructionScale ∧
-  CI.unitOfAction = CI.obstructionScale ∧
-  CI.unitOfAction = ‖CI.projectorObstruction‖₊
-
 section
 
 /-- Canonical scalar readout map from the obstruction operator layer. -/
 @[rep_depth thermo] theorem obstructionScalarReadout :
-    ObstructionScalarReadout (CI := CI) := by
+    ‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧
+      CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧
+      CI.chiralScale = CI.obstructionScale ∧
+      CI.epsilon = CI.obstructionScale ∧
+      CI.unitOfAction = CI.obstructionScale ∧
+      CI.unitOfAction = ‖CI.projectorObstruction‖₊ := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
   · exact CI.projectorObstruction_nnnorm_eq_obstructionScale
   · exact CI.obstructionScale_eq_projectorObstruction_nnnorm

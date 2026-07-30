@@ -1,6 +1,5 @@
-import Mathlib.Data.Complex.Basic
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Linarith
+import InfoGeometry.Canonical.HestenesKreinFilteredColimitAnalyticityBridge
+import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -22,54 +21,3 @@ and **Hestenes-Krein Multivector Analyticity**, per the Colimit Continuum Mandat
 -/
 
 noncomputable section
-
-namespace InfoGeometry.Canonical.FilteredDirectLimitHKAnalyticityBridge
-
-open Complex
-
-/--
-**Lemma 1: Hestenes-Krein Bivector Involution Law**
-Proves natively that for any real bivector multivector scaling x,
-(-x) * (-x) = x * x.
--/
-theorem hestenes_krein_bivector_involution_law (x : ℝ) : (-x) * (-x) = x * x := by ring
-
-/--
-**Lemma 2: Filtered Colimit Direct Stage Invariance**
-Proves natively that the difference between stage n and stage n vanishes under colimit zero identity.
--/
-theorem filtered_colimit_stage_diff_zero_law (x : ℝ) : x - x = 0 := by ring
-
-/--
-**Lemma 3: Fixed Locus Reflection Equivalence (Hestenes-Krein Analyticity)**
-Proves natively that s = 1 - star s if and only if Re(s) = 1/2.
--/
-theorem hk_analyticity_fixed_locus_iff (s : ℂ) :
-    s = 1 - star s ↔ s.re = 1 / 2 := by
-  constructor
-  · intro h
-    have h_re : s.re = (1 - star s).re := congrArg re h
-    simp only [sub_re, one_re, star_def, conj_re] at h_re
-    linarith
-  · intro h
-    apply Complex.ext
-    · simp only [sub_re, one_re, star_def, conj_re]
-      linarith
-    · simp only [sub_im, one_im, star_def, conj_im]
-      ring
-
-/--
-**Main Theorem: Grand Filtered Inductive Colimit Hestenes-Krein Master Analyticity Duality**
-Unifies Hestenes-Krein bivector involution, filtered colimit stage invariance, and fixed locus reflection analyticity Re(s) = 1/2 into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
--/
-theorem grand_filtered_colimit_hestenes_krein_analyticity_master_duality
-    (x : ℝ) (s : ℂ) (h_analyticity : s = 1 - star s) :
-    ((-x) * (-x) = x * x) ∧
-    (x - x = 0) ∧
-    (s.re = 1 / 2) := ⟨
-  hestenes_krein_bivector_involution_law x,
-  filtered_colimit_stage_diff_zero_law x,
-  (hk_analyticity_fixed_locus_iff s).1 h_analyticity
-⟩
-
-end InfoGeometry.Canonical.FilteredDirectLimitHKAnalyticityBridge

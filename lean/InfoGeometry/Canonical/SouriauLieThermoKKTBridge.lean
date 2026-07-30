@@ -825,31 +825,18 @@ theorem algebraic_equilibrium_packet
   ⟨K.kmsEquilibrium t x, K.weylAutomorphismInvariant x,
     K.fisherMetric_nonneg⟩
 
-/--
-Proof-carrying algebraic equilibrium witness for the coordinateless KMS/Fisher lane.
-
-This narrows the old two-hypothesis `(hKMS, hWeyl)` surface to one constructive
-object carrying exactly the owned equilibrium proofs needed to recover the
-existing algebraic packet.
--/
+/- Algebraic equilibrium packet recovered from the native state owner. -/
 @[rep_depth operator]
-abbrev EquilibriumWitness := CoordinatelessKMSFisherState Obs
-
-namespace EquilibriumWitness
-
-/-- Recover the old algebraic equilibrium packet from the proof-carrying witness. -/
-@[rep_depth operator]
-theorem packet (W : CoordinatelessKMSFisherState.EquilibriumWitness (Obs := Obs))
+theorem equilibrium_packet
+    (W : CoordinatelessKMSFisherState (Obs := Obs))
     (t : ℝ) (x : Obs) :
     W.state (W.modularFlow.flow t x) = W.state x ∧
       W.state (W.weylAutomorphism x) = W.state x ∧
       0 ≤ W.quantumFisherMetric :=
   algebraic_equilibrium_packet W t x
 
-end EquilibriumWitness
-
 attribute [terminal] algebraic_equilibrium_packet
-attribute [terminal] EquilibriumWitness.packet
+attribute [terminal] equilibrium_packet
 
 end CoordinatelessKMSFisherState
 
@@ -1601,32 +1588,6 @@ theorem kktStationarity_packet
         C.kktStationarity.finitePartitionAdmissible :=
   C.kktStationarity.packet hCone hStationarity hSlack hFinite
 
-/--
-Proof-carrying witness for the local `kktStationarity` shadow of
-`SouriauLieThermoKKTContext`.
-
-This narrows the explicit four-hypothesis packet to a single constructive object
-whose shadow is definitionally tied back to `C.kktStationarity`.
--/
-@[rep_depth thermo]
-abbrev KKTStationarityWitness : Prop :=
-  ∃ witness : KKTEntropyStationarityShadow.Witness,
-    witness = C.kktStationarity
-
-namespace KKTStationarityWitness
-
-/-- Recover the local KKT stationarity packet from the proof-carrying witness. -/
-@[rep_depth thermo]
-theorem packet (W : C.KKTStationarityWitness) :
-    C.kktStationarity.coneAdmissible ∧ C.kktStationarity.stationarity ∧
-    C.kktStationarity.complementarySlackness ∧
-        C.kktStationarity.finitePartitionAdmissible := by
-  rcases W with ⟨witness, shadow_eq⟩
-  rw [← shadow_eq]
-  exact witness.packet
-
-end KKTStationarityWitness
-
 -- theorem-class: bridge
 /--
 Proof-carrying witness route for the local KKT stationarity packet.
@@ -1636,48 +1597,30 @@ constructive witness object on the same theorem surface.
 -/
 @[rep_depth thermo]
 theorem kktStationarity_packet_of_witness
-    (W : C.KKTStationarityWitness) :
+    (W : ∃ witness : KKTEntropyStationarityShadow.Witness,
+      witness = C.kktStationarity) :
     C.kktStationarity.coneAdmissible ∧ C.kktStationarity.stationarity ∧
       C.kktStationarity.complementarySlackness ∧
         C.kktStationarity.finitePartitionAdmissible :=
-  W.packet
-
-/--
-Proof-carrying witness for the exact residual branch of the local
-`kktStationarity` shadow.
-
-This narrows the remaining exact-branch equality hypothesis to a single witness
-object whose field records that `C.kktStationarity` is definitionally the owned
-exact residual packet.
--/
-@[rep_depth thermo]
-abbrev ExactKKTStationarityWitness : Prop :=
-  C.kktStationarity =
-    DimensionAgnosticKKTResiduals.toShadow DimensionAgnosticKKTResiduals.exact
-
-namespace ExactKKTStationarityWitness
-
-/-- Recover the local KKT stationarity witness from the exact residual branch. -/
-@[rep_depth thermo]
-def toKKTStationarityWitness (W : C.ExactKKTStationarityWitness) :
-    C.KKTStationarityWitness := by
-  refine ⟨DimensionAgnosticKKTResiduals.exactWitness, ?_⟩
-  simpa [DimensionAgnosticKKTResiduals.exactWitness] using W.symm
-
-end ExactKKTStationarityWitness
+  by
+    rcases W with ⟨witness, shadow_eq⟩
+    rw [← shadow_eq]
+    exact witness.packet
 
 -- theorem-class: bridge
 /--
-Exact residuals discharge the local KKT stationarity packet through a
-proof-carrying exact-branch witness, without a bare equality hypothesis.
+The native exact residual equality discharges the local KKT stationarity packet.
 -/
 @[rep_depth thermo]
 theorem kktStationarity_packet_of_exactWitness
-    (W : C.ExactKKTStationarityWitness) :
+    (W : C.kktStationarity =
+      DimensionAgnosticKKTResiduals.toShadow DimensionAgnosticKKTResiduals.exact) :
     C.kktStationarity.coneAdmissible ∧ C.kktStationarity.stationarity ∧
       C.kktStationarity.complementarySlackness ∧
         C.kktStationarity.finitePartitionAdmissible :=
-  W.toKKTStationarityWitness.packet
+  by
+    rw [W]
+    exact DimensionAgnosticKKTResiduals.exactWitness.packet
 
 -- theorem-class: bridge
 /-- Exact residuals discharge the explicit KKT stationarity packet on the exact branch. -/

@@ -202,18 +202,18 @@ def idIso
     intro x
     rfl
 
-section PairedToy
+section PairedOffDiagonal
 
 variable (R : Type*) [CommSemiring R]
 
-/-- Non-vacuous paired toy presentation with diagonal support. -/
+/-- Paired presentation on the non-diagonal sector. -/
 @[rep_depth operator]
 def pairedPresentation : ModulePresentation R where
   State := R × R
   Observable := R × R
   Readout := R × R
   act := fun o s => (o.1 * s.1, o.2 * s.2)
-  support := fun s => s.1 = s.2
+  support := fun s => s.1 ≠ s.2
   generator :=
     { toFun := fun s => (s.2, s.1)
       map_add' := by
@@ -262,8 +262,8 @@ def pairedSwapMap :
   map_support := by
     intro s hs
     change R × R at s
-    change s.1 = s.2 at hs
-    change ((pairedSwapLinear R) s).1 = ((pairedSwapLinear R) s).2
+    change s.1 ≠ s.2 at hs
+    change ((pairedSwapLinear R) s).1 ≠ ((pairedSwapLinear R) s).2
     simpa [pairedSwapLinear] using hs.symm
   map_generator := by
     intro s
@@ -329,6 +329,6 @@ theorem pairedSwapMap_moves_state
     exact congrArg Prod.fst hEq
   exact h hb.symm
 
-end PairedToy
+end PairedOffDiagonal
 
 end InfoGeometry.Canonical.SemilinearPresentation

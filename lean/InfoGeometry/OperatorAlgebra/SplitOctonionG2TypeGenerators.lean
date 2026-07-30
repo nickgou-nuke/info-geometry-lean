@@ -77,18 +77,4 @@ theorem rhoAfterTau_detZ (X : SplitOct) : detZ (rhoAfterTau X) = detZ X := by
   unfold rhoAfterTau
   rw [rho_detZ, tau_detZ]
 
-/-- Closed packet for the finite `G₂(2)`-type split-octonion automorphism generator surface. -/
-theorem splitOctonion_G2Type_generators_packet :
-    (∀ X Y : SplitOct, rho (mulZ X Y) = mulZ (rho X) (rho Y)) ∧
-      (∀ X : SplitOct, rho (rho (rho X)) = X) ∧
-      (∀ X : SplitOct, detZ (rho X) = detZ X) ∧
-      (∀ X Y : SplitOct, tau (mulZ X Y) = mulZ (tau X) (tau Y)) ∧
-      (∀ X : SplitOct, tau (tau X) = X) ∧
-      (∀ X : SplitOct, detZ (tau X) = detZ X) ∧
-      (∀ X Y : SplitOct, rhoAfterTau (mulZ X Y) = mulZ (rhoAfterTau X) (rhoAfterTau Y)) ∧
-      (∀ X : SplitOct, detZ (rhoAfterTau X) = detZ X) := by
-  exact ⟨rho_mulZ, rho_order_three, rho_detZ,
-    tau_mulZ, tau_order_two, tau_detZ,
-    rhoAfterTau_mulZ, rhoAfterTau_detZ⟩
-
 end InfoGeometry.OperatorAlgebra.SplitOctonions.G2TypeGenerators

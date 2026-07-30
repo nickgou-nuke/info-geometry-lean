@@ -121,18 +121,18 @@ theorem finite_dyson_vandermonde_potential
 /-- Finite Vandermonde noncollision theorem. -/
 theorem finite_vandermonde_nonzero_iff_injective
     {R : Type*} [CommRing R] [IsDomain R] {n : ℕ}
-    (W : InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness
-      (R := R) (n := n)) :
-    W.determinant ≠ 0 ↔ Function.Injective W :=
-  W.determinant_ne_zero_iff_injective
+    (W : Fin n → R) :
+    InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant W ≠ 0 ↔
+      Function.Injective W :=
+  InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant_ne_zero_iff_injective W
 
 /-- Finite node collision is exactly the zero locus of the Vandermonde determinant. -/
 theorem finite_vandermonde_zero_iff_collision
     {R : Type*} [CommRing R] [IsDomain R] {n : ℕ}
-    (W : InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness
-      (R := R) (n := n)) :
-    W.determinant = 0 ↔ ∃ i j : Fin n, W i = W j ∧ i ≠ j :=
-  W.determinant_eq_zero_iff_collision
+    (W : Fin n → R) :
+    InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant W = 0 ↔
+      ∃ i j : Fin n, W i = W j ∧ i ≠ j :=
+  InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant_eq_zero_iff_collision W
 
 /-- A small closed readback saying that this module is grounded in repo theorem
 surfaces rather than external prose: the unit has zero von-Mangoldt weight while

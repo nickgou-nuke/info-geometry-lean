@@ -106,30 +106,15 @@ Proof-carrying barrier-lift witness.
 This packages the scalar cocycle bridge together with the exact barrier-lift
 identity needed for the smallest constructive barrier route.
 -/
-abbrev BarrierLiftWitness
+structure BarrierLiftWitness
   (σ : AdditiveModularFlow (H := H))
     (u : ℝ → AlgebraEnd H)
-    (T : SinkhornTrajectory n) : Type _ :=
-  Σ' hBridge : ScalarCocycleBridge (H := H) σ,
+    (T : SinkhornTrajectory n) where
+  hBridge : ScalarCocycleBridge (H := H) σ
+  hBarrierLift :
     ∀ k : Nat, trajectoryRNBarrier n T k =
       |CocycleEntropyPotential σ u hBridge (k + 1) -
         CocycleEntropyPotential σ u hBridge k|
-
-namespace BarrierLiftWitness
-
-def hBridge
-    (W : BarrierLiftWitness (n := n) (H := H) σ u T) :
-    ScalarCocycleBridge (H := H) σ :=
-  W.1
-
-def hBarrierLift
-    (W : BarrierLiftWitness (n := n) (H := H) σ u T) :
-    ∀ k : Nat, trajectoryRNBarrier n T k =
-      |CocycleEntropyPotential σ u W.hBridge (k + 1) -
-        CocycleEntropyPotential σ u W.hBridge k| :=
-  W.2
-
-end BarrierLiftWitness
 
 /--
 Constructive barrier-lift witness route to the topological Bekenstein bound.
@@ -155,26 +140,12 @@ This is the smallest compatibility packet for the cocycle-to-bound lane: it
 retains the named `IsConnesCocycle` witness for legacy callers while bundling
 the exact barrier-lift route into one constructive object.
 -/
-abbrev ConnesCocycleBarrierLiftWitness
+structure ConnesCocycleBarrierLiftWitness
   (σ : AdditiveModularFlow (H := H))
     (u : ℝ → AlgebraEnd H)
-    (T : SinkhornTrajectory n) : Type _ :=
-  Σ' hCocycle : IsConnesCocycle σ u,
-    BarrierLiftWitness (n := n) (H := H) σ u T
-
-namespace ConnesCocycleBarrierLiftWitness
-
-def hCocycle
-    (W : ConnesCocycleBarrierLiftWitness (n := n) (H := H) σ u T) :
-    IsConnesCocycle σ u :=
-  W.1
-
-def barrierLift
-    (W : ConnesCocycleBarrierLiftWitness (n := n) (H := H) σ u T) :
-    BarrierLiftWitness (n := n) (H := H) σ u T :=
-  W.2
-
-end ConnesCocycleBarrierLiftWitness
+    (T : SinkhornTrajectory n) where
+  hCocycle : IsConnesCocycle σ u
+  barrierLift : BarrierLiftWitness (n := n) (H := H) σ u T
 
 /--
 Constructive Connes-cocycle route to the topological Bekenstein bound.
@@ -318,27 +289,14 @@ This bundles the two explicit hypotheses needed for integer-time matching on the
 cocycle lane: the concrete generator-lift relation and the zero-time
 normalization of the selected entropy potential.
 -/
-abbrev CocycleLiftZeroWitness
+structure CocycleLiftZeroWitness
   (σ : AdditiveModularFlow (H := H))
     (u : ℝ → AlgebraEnd H)
     (hBridge : ScalarCocycleBridge (H := H) σ)
-    (T : SinkhornTrajectory n) : Prop :=
-  CocycleGeneratorLift n T (CocycleEntropyPotential (H := H) σ u hBridge) ∧
-    CocycleEntropyPotential (H := H) σ u hBridge 0 = 0
-
-namespace CocycleLiftZeroWitness
-
-def hLift
-    (W : CocycleLiftZeroWitness (n := n) (H := H) σ u hBridge T) :
-    CocycleGeneratorLift n T (CocycleEntropyPotential (H := H) σ u hBridge) :=
-  W.1
-
-def hZero
-    (W : CocycleLiftZeroWitness (n := n) (H := H) σ u hBridge T) :
-    CocycleEntropyPotential (H := H) σ u hBridge 0 = 0 :=
-  W.2
-
-end CocycleLiftZeroWitness
+    (T : SinkhornTrajectory n) where
+  hLift : CocycleGeneratorLift n T
+    (CocycleEntropyPotential (H := H) σ u hBridge)
+  hZero : CocycleEntropyPotential (H := H) σ u hBridge 0 = 0
 
 /--
 Zero-anchored uniqueness on integer times:
@@ -861,30 +819,15 @@ This bundles the selected scalar cocycle bridge together with the integer-time
 identification of the cocycle entropy potential and the canonical trajectory
 RN-generator potential.
 -/
-abbrev CocycleNatMatchWitness
+structure CocycleNatMatchWitness
   (σ : AdditiveModularFlow (H := H))
     (u : ℝ → AlgebraEnd H)
-    (T : SinkhornTrajectory n) : Type _ :=
-  Σ' hBridge : ScalarCocycleBridge (H := H) σ,
+    (T : SinkhornTrajectory n) where
+  hBridge : ScalarCocycleBridge (H := H) σ
+  hMatch :
     ∀ k : Nat,
       CocycleEntropyPotential (H := H) σ u hBridge k
         = trajectoryRNGeneratorPotential (n := n) T k
-
-namespace CocycleNatMatchWitness
-
-def hBridge
-    (W : CocycleNatMatchWitness (n := n) (H := H) σ u T) :
-    ScalarCocycleBridge (H := H) σ :=
-  W.1
-
-def hMatch
-    (W : CocycleNatMatchWitness (n := n) (H := H) σ u T) :
-    ∀ k : Nat,
-      CocycleEntropyPotential (H := H) σ u W.hBridge k
-        = trajectoryRNGeneratorPotential (n := n) T k :=
-  W.2
-
-end CocycleNatMatchWitness
 
 /--
 Constructive nat-match witness route to the cocycle generator lift.
@@ -948,26 +891,12 @@ This keeps the legacy `IsConnesCocycle` witness for compatibility-sensitive
 callers while bundling the concrete bridge and integer-time nat-match route into
 one constructive object.
 -/
-abbrev ConnesCocycleNatMatchWitness
+structure ConnesCocycleNatMatchWitness
   (σ : AdditiveModularFlow (H := H))
     (u : ℝ → AlgebraEnd H)
-    (T : SinkhornTrajectory n) : Type _ :=
-  Σ' hCocycle : IsConnesCocycle σ u,
-    CocycleNatMatchWitness (n := n) (H := H) σ u T
-
-namespace ConnesCocycleNatMatchWitness
-
-def hCocycle
-    (W : ConnesCocycleNatMatchWitness (n := n) (H := H) σ u T) :
-    IsConnesCocycle σ u :=
-  W.1
-
-def natMatch
-    (W : ConnesCocycleNatMatchWitness (n := n) (H := H) σ u T) :
-    CocycleNatMatchWitness (n := n) (H := H) σ u T :=
-  W.2
-
-end ConnesCocycleNatMatchWitness
+    (T : SinkhornTrajectory n) where
+  hCocycle : IsConnesCocycle σ u
+  natMatch : CocycleNatMatchWitness (n := n) (H := H) σ u T
 
 /--
 Constructive Connes-cocycle nat-match route to the cocycle generator lift.

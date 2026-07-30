@@ -86,7 +86,14 @@ private def forbiddenRegionKind
 def collectHardEvidence (policy : PolicySnapshot) (declName : Name) : CoreM HardEvidence := do
   let env ← getEnv
   let some info := env.find? declName
-    | return {}
+    | return {
+        hasSorryAx := false
+        forbiddenAxioms := []
+        unsafeLeakage := false
+        missingRequiredAttrs := []
+        repDepthViolation := false
+        forbiddenRegionKind := false
+      }
   let axioms ← Lean.collectAxioms declName
   let region := regionOfDecl policy declName
   let forbidden :=

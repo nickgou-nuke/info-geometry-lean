@@ -38,14 +38,14 @@ This operator measures the non-normality of the underlying dynamics.
 def projectorMismatchAnomaly (PD PMP : EndE) : EndE :=
   PD * PMP - PMP * PD
 
-/-
-Theorem commented out by hollow theorem detector: proof is trivial or conclusion is already known.
--- theorem anomaly_vanishes_of_commute {PD PMP : EndE} (h : Commute PD PMP) :
---     projectorMismatchAnomaly PD PMP = 0 := by
---   unfold projectorMismatchAnomaly
---   rw [h.eq]
---   simp
--/
+/-/ The anomaly vanishes exactly in the commuting projector regime. -/
+omit [CompleteSpace E] in
+theorem anomaly_vanishes_of_commute {PD PMP : EndE} (h : Commute PD PMP) :
+    projectorMismatchAnomaly PD PMP = 0 := by
+  unfold projectorMismatchAnomaly
+  rw [h.eq]
+  simp
+
 /--
 The Conformal Dilation Generator.
 The mismatch anomaly Ω acts as the infinitesimal generator of a scale 

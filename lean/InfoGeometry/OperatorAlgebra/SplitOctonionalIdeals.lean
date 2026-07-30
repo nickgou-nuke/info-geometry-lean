@@ -110,22 +110,3 @@ theorem horizonUp_upperLeft_zero : horizonUp * upperLeft = 0 := by
 theorem horizonDown_lowerRight_zero : horizonDown * lowerRight = 0 := by
   unfold horizonDown lowerRight
   decide
-
-/-- Finite kernel-checked packet for the split-octonional ideal projector surface. -/
-theorem splitOctonional_ideal_packet :
-    IsIdealProjector upperLeft ∧
-      IsIdealProjector lowerRight ∧
-      (∀ R : Spin32Matrix, (R * upperLeft) * upperLeft = R * upperLeft) ∧
-      (∀ R : Spin32Matrix, upperLeft * (upperLeft * R) = upperLeft * R) ∧
-      (∀ R : Spin32Matrix, (R * lowerRight) * lowerRight = R * lowerRight) ∧
-      (∀ R : Spin32Matrix, lowerRight * (lowerRight * R) = lowerRight * R) ∧
-      upperLeft * horizonUp = horizonUp ∧
-      horizonUp * lowerRight = horizonUp ∧
-      lowerRight * horizonDown = horizonDown ∧
-      horizonDown * upperLeft = horizonDown := by
-  exact ⟨upperLeft_isIdealProjector, lowerRight_isIdealProjector,
-    upperLeft_right_absorption, upperLeft_left_absorption, lowerRight_right_absorption,
-    lowerRight_left_absorption, upperLeft_horizonUp, horizonUp_lowerRight,
-    lowerRight_horizonDown, horizonDown_upperLeft⟩
-
-end InfoGeometry.OperatorAlgebra.SplitOctonions

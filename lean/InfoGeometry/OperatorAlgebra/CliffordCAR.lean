@@ -287,13 +287,4 @@ theorem cre_cre_anticomm (n : ℕ) (i j : Fin n) : cre n i * cre n j + cre n j *
   by_cases h : i = j; · subst j; simp [cre_sq_zero]
   · rw [cre, cre, ι_mul_ι_add_swap, polar_cre_cre n i j]; simp
 
-/-- Complete CAR packet for n fermionic modes from Cl(n,n). -/
-theorem car_packet (n : ℕ) :
-    (∀ i : Fin n, ann n i * ann n i = 0) ∧
-    (∀ i : Fin n, cre n i * cre n i = 0) ∧
-    (∀ i j : Fin n, ann n i * ann n j + ann n j * ann n i = 0) ∧
-    (∀ i j : Fin n, cre n i * cre n j + cre n j * cre n i = 0) ∧
-    (∀ i j, ann n i * cre n j + cre n j * ann n i = if i = j then (1 : Clnn n) else 0) := by
-  exact ⟨ann_sq_zero n, cre_sq_zero n, ann_ann_anticomm n, cre_cre_anticomm n, car_identity n⟩
-
 end InfoGeometry.OperatorAlgebra.CliffordCAR

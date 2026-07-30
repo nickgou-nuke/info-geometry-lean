@@ -114,14 +114,6 @@ variable {State EdgeLabel Edge Weight Obj : Type*}
 variable (D : WeylWeightedHorizonStringDiagram State EdgeLabel Edge Weight Obj)
 
 @[rep_depth operator]
-theorem diagram_apply :
-    D.diagram = D.diagram := rfl
-
-@[rep_depth operator]
-theorem homogeneousReadout_apply :
-    D.homogeneousReadout = D.homogeneousReadout := rfl
-
-@[rep_depth operator]
 theorem homogeneous_readout_scale (c : ℝ) (x : Obj) :
     D.homogeneousReadout.readout (D.homogeneousReadout.scale c x)
       =
@@ -147,14 +139,6 @@ namespace HorizonStringFlowCarrier
 
 variable {State EdgeLabel Edge Weight FlowGenerator : Type*}
 variable (C : HorizonStringFlowCarrier State EdgeLabel Edge Weight FlowGenerator)
-
-@[rep_depth operator]
-theorem diagram_apply :
-    C.diagram = C.diagram := rfl
-
-@[rep_depth operator]
-theorem flowGenerator_apply :
-    C.flowGenerator = C.flowGenerator := rfl
 
 end HorizonStringFlowCarrier
 

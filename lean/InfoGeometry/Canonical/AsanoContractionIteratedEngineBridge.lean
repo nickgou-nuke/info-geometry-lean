@@ -55,20 +55,4 @@ theorem negProductSet_nonempty {K1 K2 : Set ℂ} (h1 : K1.Nonempty) (h2 : K2.Non
   rcases h2 with ⟨w2, hw2⟩
   exact ⟨- w1 * w2, negProductSet_mem K1 K2 hw1 hw2⟩
 
-/--
-**Main Theorem 3: Grand Iterated Asano Contraction Engine Master Duality**
-Unifies contracted region inclusion, non-emptiness, Asano root localization, and direct limit kernel survival into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
--/
-theorem grand_iterated_asano_engine_master_duality
-    {K1 K2 : Set ℂ} (h1 : K1.Nonempty) (h2 : K2.Nonempty)
-    {w1 w2 : ℂ} (hw1 : w1 ∈ K1) (hw2 : w2 ∈ K2)
-    (a b c d z : ℂ) (h_det : a * d - b * c ≠ 0) (h_root : a * z + d = 0) (ha : a ≠ 0) :
-    (- w1 * w2 ∈ negProductSet K1 K2) ∧
-    ((negProductSet K1 K2).Nonempty) ∧
-    (z = - d / a) := ⟨
-  negProductSet_mem K1 K2 hw1 hw2,
-  negProductSet_nonempty h1 h2,
-  asano_contraction_quadratic_preserved a b c d z h_det h_root ha
-⟩
-
 end InfoGeometry.Canonical.AsanoContractionIteratedEngineBridge

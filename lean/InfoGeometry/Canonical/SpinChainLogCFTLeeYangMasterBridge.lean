@@ -1,9 +1,6 @@
 import Mathlib.Tactic
-import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import InfoGeometry.Clifford.LogCftMonodromy
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-import InfoGeometry.Canonical.ModuleCatDirectLimitKernelSurvivalBridge
-import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -34,12 +31,8 @@ noncomputable section
 namespace InfoGeometry.Canonical.SpinChainLogCFTLeeYangMasterBridge
 
 open Complex
-open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
-open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain
 open InfoGeometry.Clifford.LogCftMonodromy
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
-open InfoGeometry.Canonical.ModuleCatDirectLimitKernelSurvivalBridge
-open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 /--
 **Theorem 1: Prime Spin Chain Coupling Symmetry and Positivity**
@@ -72,25 +65,5 @@ Proves natively that any fugacity zero $z \in \mathbb{C}$ on the Lee-Yang unit c
 theorem cayley_leeyang_circle_to_critical_line {z : ℂ} (hz : OnLeeYangCircle z) (hpole : z.re ≠ -1) :
     OnCriticalLine (cayleyToTemperature z) :=
   cayleyToTemperature_mem_criticalLine_of_unitCircle z hz hpole
-
-/--
-**Theorem 4: Grand Unified Spin Chain LogCFT Lee-Yang Master Duality**
-Unifies spin chain coupling positivity, LogCFT Virasoro shear nilpotency, Cayley conformal map geometry, and antiunitary reflection fixed locus rigidity into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
--/
-theorem grand_spin_chain_logcft_leeyang_master_duality
-    (pi pj : ℕ) (hpi : 1 ≤ pi) (hpj : 1 ≤ pj) (kappa : ℝ) (hkappa : 0 ≤ kappa)
-    (z0 : ℂ) (hz0 : OnLeeYangCircle z0) (hpole : z0.re ≠ -1)
-    (s_anti : ℂ) (h_anti : s_anti = 1 - star s_anti) :
-    (let J := fun i j => kappa * Real.log (i : ℝ) * Real.log (j : ℝ); J pi pj = J pj pi ∧ 0 ≤ J pi pj) ∧
-    ((jordanNilpotent : Matrix (Fin 2) (Fin 2) ℂ) * jordanNilpotent = 0) ∧
-    (OnCriticalLine (cayleyToTemperature z0)) ∧
-    (s_anti.re = 1 / 2) ∧
-    (s_anti = 1 - star s_anti) := ⟨
-  prime_spin_chain_coupling_properties pi pj hpi hpj kappa hkappa,
-  logcft_jordan_nilpotent_sq_law,
-  cayleyToTemperature_mem_criticalLine_of_unitCircle z0 hz0 hpole,
-  (critical_line_fixed_locus_iff s_anti).1 h_anti,
-  h_anti
-⟩
 
 end InfoGeometry.Canonical.SpinChainLogCFTLeeYangMasterBridge

@@ -233,7 +233,14 @@ structure pauliMagneticCoupling (A : Type u) where
   electromagneticBivector : A
   spinBivector : A
   pairing : A → A → ℝ
-  coupling : ℝ := pairing electromagneticBivector spinBivector
+
+namespace pauliMagneticCoupling
+
+/-- Electromagnetic/spin coupling derived from the supplied pairing owner. -/
+def coupling {A : Type u} (P : pauliMagneticCoupling A) : ℝ :=
+  P.pairing P.electromagneticBivector P.spinBivector
+
+end pauliMagneticCoupling
 
 /--
 Owner packet for conservation and spin-plane transport.  This is deliberately
@@ -289,14 +296,24 @@ structure RealFourByFourBiquaternionSlice (M4 : Type u) [Mul M4] [One M4] [Neg M
   commutes_with_J : spacetimeMatrix * complexStructureJ = complexStructureJ * spacetimeMatrix
   /-- Hermitian biquaternions become real symmetric `4 × 4` matrices. -/
   symmetric : transpose spacetimeMatrix = spacetimeMatrix
-  /-- Pfaffian input `S J`, real and skew in concrete models. -/
-  pfaffianSJ : ℝ := pfaffian (spacetimeMatrix * complexStructureJ)
   /-- Realification squares the complex determinant: `det_R S = interval²`. -/
   det_realification_eq_interval_sq : determinant spacetimeMatrix = minkowskiInterval * minkowskiInterval
   /-- Unsquared Minkowski interval from the real Pfaffian: `interval = -Pf(SJ)`. -/
-  interval_eq_neg_pfaffianSJ : minkowskiInterval = -pfaffianSJ
+  interval_eq_neg_pfaffianSJ :
+    minkowskiInterval = -pfaffian (spacetimeMatrix * complexStructureJ)
   /-- Null cone as the real Pfaffian zero locus. -/
-  null_cone_iff_pfaffian_zero : minkowskiInterval = 0 ↔ pfaffianSJ = 0
+  null_cone_iff_pfaffian_zero :
+    minkowskiInterval = 0 ↔ pfaffian (spacetimeMatrix * complexStructureJ) = 0
+
+namespace RealFourByFourBiquaternionSlice
+
+variable {M4 : Type u} [Mul M4] [One M4] [Neg M4]
+
+/-- Pfaffian readout of the spacetime matrix against the complex structure. -/
+def pfaffianSJ (S : RealFourByFourBiquaternionSlice M4) : ℝ :=
+  S.pfaffian (S.spacetimeMatrix * S.complexStructureJ)
+
+end RealFourByFourBiquaternionSlice
 
 namespace RealFourByFourBiquaternionSlice
 

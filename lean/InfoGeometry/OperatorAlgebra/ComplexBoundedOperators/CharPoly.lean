@@ -367,23 +367,6 @@ theorem trace_free_eigenvalue_inv_eq_neg
     x * (-x) = -(x^2) := by ring
     _ = 1 := by rw [hsq]; norm_num
 
-/-- witness-gated (Native Closure Mandated: Closure Debt) characteristic-polynomial invariance under similarity. -/
-structure SimilarCharPolyPacket {K ι : Type*}
-    [CommRing K] [Fintype ι] [DecidableEq ι]
-    (A B : Matrix ι ι K) where
-  /-- Explicit similarity witness. -/
-  witness : SimilarMatrixWitness A B
-  /-- Characteristic-polynomial invariance carried by the packet. -/
-  charpoly_eq : charPoly A = charPoly B
-
-/-- Projection for characteristic-polynomial invariance under similarity. -/
-theorem charPoly_similar {K ι : Type*}
-    [CommRing K] [Fintype ι] [DecidableEq ι]
-    {A B : Matrix ι ι K}
-    (P : SimilarCharPolyPacket A B) :
-    charPoly A = charPoly B :=
-  P.charpoly_eq
-
 /-- Lemma 1: rewrite the left characteristic polynomial using the explicit factorization. -/
 theorem charPoly_eq_charPoly_factorization {K ι : Type*}
     [CommRing K] [Fintype ι] [DecidableEq ι]
@@ -437,25 +420,6 @@ theorem charPoly_eq_of_similarWitness {K ι : Type*}
     _ = charPoly (B * (W.Q * W.P)) := charPoly_factorization_assoc_right W
     _ = charPoly B := charPoly_factorization_collapse_inverse W
 
-/--
-Factorized characteristic polynomial packet.
-
-This is the Lean owner surface for AFP `char_poly_factorized`; mathlib supplies
-the algebraically closed splitting infrastructure, while the packet records the
-linear-factor list used by downstream JNF code.
--/
-structure CharPolyFactorizationPacket (n : Nat) where
-  /-- Input complex matrix. -/
-  A : Matrix (Fin n) (Fin n) ℂ
-  /-- Linear-factor roots. -/
-  roots : List ℂ
-  /-- Product of linear factors equals the characteristic polynomial. -/
-  factorization : charPoly A = roots.foldr (fun a p => (X - C a) * p) 1
-  /-- The root list has matrix dimension length. -/
-  length_eq : roots.length = n
-
-namespace CharPolyFactorizationPacket
-
 /-- Native factorization of the characteristic polynomial over `ℂ`. -/
 theorem charPoly_factorized_native (A : Matrix (Fin n) (Fin n) ℂ) :
     ∃ roots : List ℂ,
@@ -474,27 +438,5 @@ theorem charPoly_factorized_native (A : Matrix (Fin n) (Fin n) ℂ) :
       rw [← h1, Matrix.charpoly_natDegree_eq_dim]
       simp
     simpa [r, hcard] using (Multiset.length_toList r)
-
-/-- Native existence theorem for the factorization packet. -/
-theorem exists_factorizationPacket_ofMatrix (A : Matrix (Fin n) (Fin n) ℂ) :
-    ∃ P : CharPolyFactorizationPacket n,
-      P.A = A ∧
-      charPoly P.A = P.roots.foldr (fun a p => (X - C a) * p) 1 ∧
-      P.roots.length = n := by
-  rcases charPoly_factorized_native (n := n) A with ⟨roots, hfactor, hlen⟩
-  exact
-    ⟨{ A := A
-       roots := roots
-       factorization := hfactor
-       length_eq := hlen },
-      rfl, hfactor, hlen⟩
-
-/-- Projection corresponding to AFP `char_poly_factorized`. -/
-theorem charPoly_factorized {n : Nat} (P : CharPolyFactorizationPacket n) :
-    ∃ roots : List ℂ,
-      charPoly P.A = roots.foldr (fun a p => (X - C a) * p) 1 ∧ roots.length = n :=
-  ⟨P.roots, P.factorization, P.length_eq⟩
-
-end CharPolyFactorizationPacket
 
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CharPoly

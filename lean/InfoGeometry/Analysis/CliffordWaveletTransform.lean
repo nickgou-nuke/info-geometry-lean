@@ -81,27 +81,12 @@ abbrev A (W : CliffordWaveletModel) : Type :=
 instance instRing (W : CliffordWaveletModel) : Ring W.A :=
   inferInstance
 
-/-- Distinguished Clifford blade inherited from the unique blade owner. -/
-abbrev blade (W : CliffordWaveletModel) : W.A :=
-  cliffordBlade
-
-/-- The inherited blade squares to `-1`. -/
-theorem blade_sq_neg_one (W : CliffordWaveletModel) :
-    W.blade * W.blade = -1 :=
-  cliffordBlade_sq_neg_one
-
 /--
 Admissibility is the native left-inverse relation between reconstruction and
 the wavelet transform, rather than an unrelated proposition marker.
 -/
 def admissible (W : CliffordWaveletModel) : Prop :=
   Function.LeftInverse W.reconstruction W.waveletTransform
-
-/-- Compatibility name for the native reconstruction left-inverse law. -/
-theorem reconstruction_left_inverse
-    (W : CliffordWaveletModel) (hAdm : W.admissible) :
-    Function.LeftInverse W.reconstruction W.waveletTransform :=
-  hAdm
 
 /-- Admissible signals are exactly reconstructed by the wavelet transform. -/
 theorem reconstruction_waveletTransform

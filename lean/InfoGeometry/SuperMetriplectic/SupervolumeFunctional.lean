@@ -243,10 +243,22 @@ namespace SplitSupervolumeTranslation
 
 /-- Operator-level supervolume shadow on the split Clifford carrier. -/
 structure SplitSupervolumeShadow (n : ℕ) where
-  operator : SplitCliffordEnd n := parityOp n
-  supertraceReadout : ℝ := cliffordSupertrace n operator
-  superBerezinianReadout : ℝ := superBerezinian n operator
-  supervolumePotential : ℝ := superEffectiveAction n operator
+  operator : SplitCliffordEnd n
+
+/-- The supertrace readout is derived from the split-Clifford operator. -/
+noncomputable def SplitSupervolumeShadow.supertraceReadout
+    {n : ℕ} (S : SplitSupervolumeShadow n) : ℝ :=
+  cliffordSupertrace n S.operator
+
+/-- The super-Berezinian readout is derived from the split-Clifford operator. -/
+noncomputable def SplitSupervolumeShadow.superBerezinianReadout
+    {n : ℕ} (S : SplitSupervolumeShadow n) : ℝ :=
+  superBerezinian n S.operator
+
+/-- The supervolume potential is derived from the split-Clifford operator. -/
+noncomputable def SplitSupervolumeShadow.supervolumePotential
+    {n : ℕ} (S : SplitSupervolumeShadow n) : ℝ :=
+  superEffectiveAction n S.operator
 
 @[simp]
 theorem supervolumePotential_eq_neg_log_superBerezinian

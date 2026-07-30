@@ -149,10 +149,8 @@ structure ColimitBridge where
           (∑ ω' : (finiteSide.stages n).sampleSpace,
             Real.exp (- β * (finiteSide.stages n).finiteIntegralOfMotion ω')) =
         Real.exp (- β * (finiteSide.stages n).finiteIntegralOfMotion x)
-  bridgeSlogan : String :=
-    "The continuum is not the domain of integration; it is what survives all finite refinements compatibly."
-  mechanismSlogan : String :=
-    "succ is the microscopic mechanism; colimit is the bookkeeping; Jaynes is the finite-information rule."
+  bridgeSlogan : String
+  mechanismSlogan : String
 
 /-- The finite-to-colimit lifting law exposed as a proposition from its owner. -/
 def ColimitBridge.finitePropertiesLift (B : ColimitBridge) : Prop :=
@@ -170,14 +168,17 @@ theorem bridge_lifting (B : ColimitBridge) : B.finitePropertiesLift := B.finiteP
 
 /-- The three-lineage slogan as explicit data. -/
 structure ThreeLineagesConverge where
-  leanKernelLine : String := "infinity is controlled by inductive closure / successor"
-  categoryLine : String := "infinity is represented by directed colimit bookkeeping"
-  jaynesLine : String := "continuum probability is the stable limit of finite-set calculations"
-  commonPrinciple : String :=
-    "finite generation + compatible refinement + universal colimit completion"
+  leanKernelLine : String
+  categoryLine : String
+  jaynesLine : String
+  commonPrinciple : String
 
 /-- A canonical inhabitant of the slogan package. -/
-def threeLineagesConverge : ThreeLineagesConverge := {}
+def threeLineagesConverge : ThreeLineagesConverge :=
+  { leanKernelLine := "infinity is controlled by inductive closure / successor"
+    categoryLine := "infinity is represented by directed colimit bookkeeping"
+    jaynesLine := "continuum probability is the stable limit of finite-set calculations"
+    commonPrinciple := "finite generation + compatible refinement + universal colimit completion" }
 
 /-- Synthesis: the file closes the finite packaging and exposes the continuum as
 explicit colimit data. -/

@@ -146,36 +146,12 @@ This is intentionally a witness-gated interface for downstream affine/Sugawara
 calibration. No central-charge theorem is asserted in this Hodge/Dirac bridge.
 -/
 @[rep_depth operator]
-abbrev CentralReadoutWitness
+structure CentralReadoutWitness
     {Op : Type*} [Ring Op]
-    (C : HodgeDiracLaplacianCarrier Op) : Type _ :=
-  Σ' centralReadout : Op,
-    centralReadout = C.centralReadout ∧
-      ∀ A : Op, Commute centralReadout A
-
-namespace CentralReadoutWitness
-
-abbrev centralReadout
-    {Op : Type*} [Ring Op]
-    {C : HodgeDiracLaplacianCarrier Op}
-    (W : CentralReadoutWitness C) : Op :=
-  W.1
-
-abbrev centralReadout_eq_carrier
-    {Op : Type*} [Ring Op]
-    {C : HodgeDiracLaplacianCarrier Op}
-    (W : CentralReadoutWitness C) :
-    W.centralReadout = C.centralReadout :=
-  W.2.1
-
-abbrev centrality
-    {Op : Type*} [Ring Op]
-    {C : HodgeDiracLaplacianCarrier Op}
-    (W : CentralReadoutWitness C) :
-    ∀ A : Op, Commute W.centralReadout A :=
-  W.2.2
-
-end CentralReadoutWitness
+    (C : HodgeDiracLaplacianCarrier Op) where
+  centralReadout : Op
+  centralReadout_eq_carrier : centralReadout = C.centralReadout
+  centrality : ∀ A : Op, Commute centralReadout A
 
 /--
 Owner-facing central-readout gate: the bridge exports only a supplied witness

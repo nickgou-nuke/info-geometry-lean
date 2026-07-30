@@ -215,41 +215,53 @@ theorem bosonized_G2_self_anticommutator (S : OperatorSurface (V := V)) :
     InfoGeometry.Algebra.BosonizedOSpCoproduct.bosonizedOdd_self_anticommutator
       (R := ℝ) S.Γ S.G2 (-S.Em) S.hΓ S.G2_odd S.G2_sq
 
-/-- Concrete instantiation of the `OperatorSurface` to prove it is not vacuous.
-We use the trivial representation where all elements are zero, and `Γ` is `1`. -/
-def trivialOperatorSurface (V : Type*) [AddCommGroup V] [Module ℝ V] : OperatorSurface (V := V) where
-  Γ := 1
-  hΓ := mul_one 1
-  H := 0
-  Ep := 0
-  Em := 0
-  G1 := 0
-  G2 := 0
-  H_even := by simp
-  Ep_even := by simp
-  Em_even := by simp
-  G1_odd := by simp
-  G2_odd := by simp
-  H_Ep := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
-    InfoGeometry.Algebra.SupergradedBracket.commutator]
-  H_Em := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
-    InfoGeometry.Algebra.SupergradedBracket.commutator]
-  Ep_Em := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
-    InfoGeometry.Algebra.SupergradedBracket.commutator]
-  H_G1 := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
-    InfoGeometry.Algebra.SupergradedBracket.commutator]
-  H_G2 := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
-    InfoGeometry.Algebra.SupergradedBracket.commutator]
-  Ep_G2 := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
-    InfoGeometry.Algebra.SupergradedBracket.commutator]
-  Em_G1 := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
-    InfoGeometry.Algebra.SupergradedBracket.commutator]
-  G1_G1 := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
-    InfoGeometry.Algebra.SupergradedBracket.anticommutator]
-  G2_G2 := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
-    InfoGeometry.Algebra.SupergradedBracket.anticommutator]
-  G1_G2 := by simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
-    InfoGeometry.Algebra.SupergradedBracket.anticommutator]
+/-
+The old `trivialOperatorSurface` supplied zero operators as a purported
+realization.  That was not an OSp(1|2) representation.  Keep the public name
+for source compatibility, but make it an explicit constructor: every
+operator and every closure proof must now be supplied by a genuine owner.
+-/
+def trivialOperatorSurface
+    (Γ H Ep Em G1 G2 : Op V)
+    (hΓ : Γ * Γ = 1)
+    (H_even : Γ * H = H * Γ)
+    (Ep_even : Γ * Ep = Ep * Γ)
+    (Em_even : Γ * Em = Em * Γ)
+    (G1_odd : Γ * G1 = -G1 * Γ)
+    (G2_odd : Γ * G2 = -G2 * Γ)
+    (H_Ep : InfoGeometry.Algebra.SupergradedBracket.superBracket false false H Ep = (2 : ℝ) • Ep)
+    (H_Em : InfoGeometry.Algebra.SupergradedBracket.superBracket false false H Em = (-2 : ℝ) • Em)
+    (Ep_Em : InfoGeometry.Algebra.SupergradedBracket.superBracket false false Ep Em = H)
+    (H_G1 : InfoGeometry.Algebra.SupergradedBracket.superBracket false true H G1 = (1 : ℝ) • G1)
+    (H_G2 : InfoGeometry.Algebra.SupergradedBracket.superBracket false true H G2 = (-1 : ℝ) • G2)
+    (Ep_G2 : InfoGeometry.Algebra.SupergradedBracket.superBracket false true Ep G2 = G1)
+    (Em_G1 : InfoGeometry.Algebra.SupergradedBracket.superBracket false true Em G1 = G2)
+    (G1_G1 : InfoGeometry.Algebra.SupergradedBracket.superBracket true true G1 G1 = (2 : ℝ) • Ep)
+    (G2_G2 : InfoGeometry.Algebra.SupergradedBracket.superBracket true true G2 G2 = (-2 : ℝ) • Em)
+    (G1_G2 : InfoGeometry.Algebra.SupergradedBracket.superBracket true true G1 G2 = -H) :
+    OperatorSurface (V := V) :=
+  { Γ := Γ
+    hΓ := hΓ
+    H := H
+    Ep := Ep
+    Em := Em
+    G1 := G1
+    G2 := G2
+    H_even := H_even
+    Ep_even := Ep_even
+    Em_even := Em_even
+    G1_odd := G1_odd
+    G2_odd := G2_odd
+    H_Ep := H_Ep
+    H_Em := H_Em
+    Ep_Em := Ep_Em
+    H_G1 := H_G1
+    H_G2 := H_G2
+    Ep_G2 := Ep_G2
+    Em_G1 := Em_G1
+    G1_G1 := G1_G1
+    G2_G2 := G2_G2
+    G1_G2 := G1_G2 }
 
 end OperatorSurface
 

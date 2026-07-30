@@ -132,7 +132,7 @@ def pairedFunctionPresentation (α : Type) : Presentation where
   State := α × α
   Observable := α → α
   act := fun o s => (o s.1, o s.2)
-  support := fun s => s.1 = s.1
+  support := fun s => s.1 ≠ s.2
   generator := fun s => (s.2, s.1)
   metricReadout := fun _ => 0
   phaseReadout := fun _ => 0
@@ -168,7 +168,7 @@ def pairedSwapIntertwiner (α : Type) :
     rfl
   map_support := by
     intro s hs
-    trivial
+    exact hs.symm
   map_generator := by
     intro s
     cases s

@@ -130,10 +130,6 @@ namespace FiveGradedWeylBalanceFusion
 variable {L : Type*} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
 variable (F : FiveGradedWeylBalanceFusion L)
 
-@[rep_depth operator]
-theorem grading_apply :
-    F.grading = F.grading := rfl
-
 /-- Existing owner theorem: `g₋₁` with `g₊₁` brackets into `g₀`. -/
 @[rep_depth operator]
 theorem negOne_posOne_mem_zero

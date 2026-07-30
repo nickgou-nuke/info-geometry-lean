@@ -79,18 +79,4 @@ theorem rho_transports_lower_cycle :
       rho (mulZ down2 down0) = mulZ (rho down2) (rho down0) := by
   exact ⟨rho_mulZ down0 down1, rho_mulZ down1 down2, rho_mulZ down2 down0⟩
 
-/-- Closed packet for the concrete cyclic split-octonion automorphism witness. -/
-theorem splitOctonion_cyclicAutomorphism_packet :
-    rho ePlus = ePlus ∧
-      rho eMinus = eMinus ∧
-      rho up0 = up1 ∧ rho up1 = up2 ∧ rho up2 = up0 ∧
-      rho down0 = down1 ∧ rho down1 = down2 ∧ rho down2 = down0 ∧
-      (∀ X : SplitOct, rho (rho (rho X)) = X) ∧
-      (∀ X : SplitOct, detZ (rho X) = detZ X) ∧
-      (∀ X Y : SplitOct, rho (mulZ X Y) = mulZ (rho X) (rho Y)) := by
-  exact ⟨rho_ePlus, rho_eMinus,
-    rho_upper_slots.1, rho_upper_slots.2.1, rho_upper_slots.2.2,
-    rho_lower_slots.1, rho_lower_slots.2.1, rho_lower_slots.2.2,
-    rho_order_three, rho_detZ, rho_mulZ⟩
-
 end InfoGeometry.OperatorAlgebra.SplitOctonions.CyclicAutomorphism

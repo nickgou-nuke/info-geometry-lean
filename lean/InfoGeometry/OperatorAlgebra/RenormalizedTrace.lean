@@ -226,9 +226,16 @@ structure CoreSingularTraceDatum
     (M Core : Type*) [AddCommMonoid Core] [Mul Core] where
   coreTrace : CoreTraceDatum M Core
   singularCoreTrace : SingularTraceDatum Core
-  /-- Base readout routed through the core embedding. -/
-  baseSingularTrace : M → ℝ≥0∞ :=
-    fun x => singularCoreTrace.singularTrace (coreTrace.embed x)
+
+namespace CoreSingularTraceDatum
+
+/-- Base readout routed through the core embedding. -/
+def baseSingularTrace
+    {M Core : Type*} [AddCommMonoid Core] [Mul Core]
+    (T : CoreSingularTraceDatum M Core) : M → ℝ≥0∞ :=
+  fun x => T.singularCoreTrace.singularTrace (T.coreTrace.embed x)
+
+end CoreSingularTraceDatum
 
 /--
 A type III renormalized integration socket:

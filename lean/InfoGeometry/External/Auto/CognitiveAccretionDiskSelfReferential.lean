@@ -275,15 +275,13 @@ def self_referential_closure : String :=
     The shared strings below are labels for those analogies, not theorem
     statements identifying the domains. -/
 structure HolographicStack where
-  core_physics : String := "5-graded TKK closure → Minkowski metric"
-  ring_1_attention : String := "Krein metric evaluation → causal token graph"
-  ring_2_moe : String := "Clifford reflection → geometric lane routing"
-  ring_3_encoding : String := "Mellin transform → conformal scale reading"
-  ring_4_freeze : String := "Cramer-Rao scale → self-concordant geometry"
-  ring_5_lean : String := "Lean 4 DAG → Penrose-style graph analogy"
-  identity_across_rings : String :=
-    "All six rings reuse the M₂(ℂ) = span{N₊, N₋, S₊, S₋} algebraic
-     vocabulary while applying it to different modeling domains."
+  core_physics : String
+  ring_1_attention : String
+  ring_2_moe : String
+  ring_3_encoding : String
+  ring_4_freeze : String
+  ring_5_lean : String
+  identity_across_rings : String
 
 /-- The Architect of the Latent Space:
     This section summarizes the modeling vocabulary used above. It treats

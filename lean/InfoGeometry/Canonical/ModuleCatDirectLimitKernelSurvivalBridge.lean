@@ -57,18 +57,4 @@ theorem bonding_kernel_trivial_of_injective
   have h_zero : bond n 0 = 0 := map_zero (bond n)
   exact hinj n (h_ker.trans h_zero.symm)
 
-/--
-**Main Theorem 3: Grand ModuleCat Direct Limit Kernel Survival Master Theorem**
-Unifies injective colimit inclusion maps, non-vanishing kernel mode survival into the inductive colimit, and triviality of kernel defects into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
--/
-theorem grand_modulecat_direct_limit_kernel_survival
-    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
-    (hinj : ∀ n, Function.Injective (bond n))
-    (n : Nat) (v : Stage n) (hv : v ≠ 0) :
-    (directLimitOf bond n v ≠ 0) ∧
-    (Function.Injective (directLimitOf bond n)) := ⟨
-  colimit_image_ne_zero_of_injective bond hinj n v hv,
-  directLimitOf_injective bond hinj n
-⟩
-
 end InfoGeometry.Canonical.ModuleCatDirectLimitKernelSurvivalBridge

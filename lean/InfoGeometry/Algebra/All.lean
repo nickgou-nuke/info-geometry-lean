@@ -28,6 +28,9 @@ import InfoGeometry.Algebra.HypercomplexTriad
 import InfoGeometry.Algebra.HypercomplexTriadMatrix
 import InfoGeometry.Algebra.TensorAlgebraCanonical
 import InfoGeometry.Algebra.CuntzTensorQuotient
+import InfoGeometry.Algebra.CuntzChiralSuperchargeRepresentation
+import InfoGeometry.Algebra.CuntzO3TriSupersymmetry
+import InfoGeometry.Algebra.CuntzToeplitzPhaseTransition
 import InfoGeometry.Algebra.CuntzContractionLemmas
 import InfoGeometry.Algebra.CuntzMatrixUnits
 import InfoGeometry.Algebra.CuntzPrimonHamiltonian
@@ -59,7 +62,10 @@ import InfoGeometry.Algebra.PeirceLadderOperators
 import InfoGeometry.Algebra.CubicJordanFreudenthal
 import InfoGeometry.Algebra.FreudenthalComplete
 import InfoGeometry.Algebra.CuntzSupergradedSUSY
+import InfoGeometry.Algebra.CuntzSupergradedSUSYTopological
+import InfoGeometry.Algebra.CuntzSupergradedSUSYParityTopCatIso
 import InfoGeometry.Algebra.CuntzLorentzPoincarePresentation
+import InfoGeometry.Algebra.CuntzLorentzPoincarePresentationTopological
 import InfoGeometry.Algebra.CPTComplexStructure
 import InfoGeometry.Algebra.Cl11OSp12
 import InfoGeometry.Algebra.CuntzCantorSupergradedBridge

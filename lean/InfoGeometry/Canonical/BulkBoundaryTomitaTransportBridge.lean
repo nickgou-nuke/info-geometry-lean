@@ -94,13 +94,11 @@ noncomputable def transportedOperator (t : ℝ) : EndH :=
 theorem owner_boundaryPair :
     BoundaryLocalizedZeroModePair
       (M := B.majorana) (P0 := B.majorana.chiralityPolarization) B.localOp B.chain := by
-  refine ⟨B.owner.boundaryWitness.psiPlus, B.owner.boundaryWitness.psiMinus, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact B.owner.boundaryWitness.psiPlus_ne_zero
-  · exact B.owner.boundaryWitness.psiMinus_ne_zero
-  · exact B.owner.boundaryWitness.psiPlus_mem
-  · exact B.owner.boundaryWitness.psiMinus_mem
-  · exact B.owner.boundaryWitness.psiPlus_zeroMode
-  · exact B.owner.boundaryWitness.psiMinus_zeroMode
+  rcases B.owner.boundaryWitness with
+    ⟨ψplus, ψminus, hψplusNe, hψminusNe, hψplusMem, hψminusMem,
+      hψplusZero, hψminusZero⟩
+  exact ⟨ψplus, ψminus, hψplusNe, hψminusNe, hψplusMem, hψminusMem,
+    hψplusZero, hψminusZero⟩
 
 /-- The untransported owner already certifies a genuine operator zero mode. -/
 @[rep_depth operator]

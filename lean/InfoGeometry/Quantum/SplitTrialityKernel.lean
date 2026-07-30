@@ -87,10 +87,7 @@ theorem informationalDiracSquare_eq_id
           exact T.polarization.sum_id
 
 @[rep_depth krein, simp]
-theorem trialitySupercharge_sq_eq_id
-    (T : SplitTrialityKernel) :
-    T.trialitySupercharge.comp T.trialitySupercharge = LinearMap.id :=
-  T.informationalDiracSquare_eq_id
+alias trialitySupercharge_sq_eq_id := informationalDiracSquare_eq_id
 
 /-- The square of the triality supercharge is the even anticommutator seed of the two chiral transfer maps. -/
 @[rep_depth krein]

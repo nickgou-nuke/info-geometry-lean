@@ -1,108 +1,14 @@
-import Mathlib.Tactic
-import Mathlib.NumberTheory.LSeries.RiemannZeta
-import InfoGeometry.Canonical.ZetaFunctionalSymmetryNativeBridge
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
-
-set_option linter.unusedSectionVars false
-set_option linter.unusedVariables false
-
-/-!
-# Complete Colimit Rigidity Proof Chain Bridge
-
-This module formalizes in native Lean 4 / Mathlib with 100% genuine constructive proofs:
-
-1. **Antiunitary Reflection Fixed Locus Rigidity**:
-   Proves natively that any complex number $s \in \mathbb{C}$ invariant under antiunitary reflection $s = 1 - \bar{s}$ lies strictly on the critical line:
-   $$s = 1 - \overline{s} \implies \operatorname{Re}(s) = \frac{1}{2}.$$
-
-2. **KMS State Invariance on the Colimit Fixed Locus**:
-   Proves that modular antiunitary reflection preserves KMS state evaluations on the direct inductive colimit space.
-
-3. **Stage Injectivity Threshold & Non-Kernel Survival**:
-   Proves that along an injective sequence of vector space stages $\phi_n : V_n \hookrightarrow V_{n+1}$, non-zero elements never fall into the kernel at any downstream stage $m \ge n$.
-
-4. **Finite Complex Euler Factor Product Non-Zero Property**:
-   Proves that for any finite prime cutoff set $S \subset \mathbb{P}$ where $p^{-s} \neq 1$, the finite Euler product $P_S(s) \neq 0$.
-
-5. **Grand Colimit Rigidity Master Proof Chain Duality Theorem**:
-   Unifies antiunitary fixed locus rigidity, KMS modular invariance, stage injectivity survival, and finite Euler non-vanishing into a single kernel-checked theorem.
--/
 
 namespace InfoGeometry.Canonical.ColimitRigidityProofChainBridge
 
-open Complex
-open InfoGeometry.Canonical.ZetaFunctionalSymmetryNativeBridge
 open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
-/-- Modular KMS state evaluation structure on a colimit space. -/
-structure ColimitKMSStateData (A : Type*) [AddCommGroup A] [Module ℝ A] where
-  eval : A →ₗ[ℝ] ℝ
-  antiunitaryReflection : A ≃ₗ[ℝ] A
-  reflection_invariance : ∀ a : A, eval (antiunitaryReflection a) = eval a
-
-/--
-**Main Theorem 1: Antiunitary Fixed Locus Rigidity**
-Proves natively that any complex number $s$ satisfying $s = 1 - \bar{s}$ must have $\operatorname{Re}(s) = 1/2$:
-$$s = 1 - \overline{s} \implies \operatorname{Re}(s) = \frac{1}{2}.$$
--/
-theorem antiunitary_fixed_locus_rigidity {s : ℂ} (h : s = 1 - star s) :
-    s.re = 1 / 2 :=
-  (critical_line_fixed_locus_iff s).mp h
-
-/--
-**Main Theorem 2: KMS State Evaluation Invariance**
-Proves that the KMS state evaluation is invariant under modular antiunitary reflection on the colimit space:
-$$\operatorname{eval}(\mathcal{J}_{\text{anti}}(a)) = \operatorname{eval}(a).$$
--/
-theorem colimit_kms_reflection_invariance
-    {A : Type*} [AddCommGroup A] [Module ℝ A] (state : ColimitKMSStateData A) (a : A) :
-    state.eval (state.antiunitaryReflection a) = state.eval a :=
-  state.reflection_invariance a
-
-/--
-**Main Theorem 3: Stage Injectivity Non-Kernel Survival**
-Proves that if step-by-step embeddings along a tower are injective, non-zero elements never fall into the kernel at any stage:
-$$v \neq 0 \implies \phi_n(v) \neq 0.$$
--/
 theorem tower_stage_injectivity_survival
     {V : ℕ → Type*} [∀ n, AddCommGroup (V n)] [∀ n, Module ℝ (V n)]
     (f : ∀ n, V n →ₗ[ℝ] V (n + 1)) (h_inj : ∀ n, Function.Injective (f n))
     {n : ℕ} (v : V n) (hv : v ≠ 0) :
     f n v ≠ 0 :=
   stage_injectivity_survival f h_inj v hv
-
-/--
-**Main Theorem 4: Finite Complex Euler Product Non-Zero Property**
-Proves that for any finite prime set $S$ where $(p : ℂ)^{-s} \neq 1$, the finite Euler factor product $P_S(s) \neq 0$:
-$$\prod_{p \in S} (1 - p^{-s})^{-1} \neq 0.$$
--/
-theorem finite_complex_euler_product_ne_zero
-    (S : Finset ℕ) (s : ℂ) (h_non_one : ∀ p ∈ S, (p : ℂ) ^ (-s) ≠ 1) :
-    (∏ p ∈ S, (1 - (p : ℂ) ^ (-s))⁻¹) ≠ 0 := by
-  rw [Finset.prod_ne_zero_iff]
-  intro p hp
-  apply inv_ne_zero
-  intro h_sub
-  have h_cpow : (p : ℂ) ^ (-s) = 1 := by
-    calc (p : ℂ) ^ (-s) = 1 - (1 - (p : ℂ) ^ (-s)) := by ring
-    _ = 1 - 0 := by rw [h_sub]
-    _ = 1 := by ring
-  exact h_non_one p hp h_cpow
-
-/--
-**Main Theorem 5: Grand Colimit Rigidity Proof Chain Master Duality**
-Unifies antiunitary fixed locus rigidity $\operatorname{Re}(s) = 1/2$, KMS state evaluation invariance, stage injectivity survival, and finite complex Euler non-vanishing into a single 100% kernel-checked theorem.
--/
-theorem grand_colimit_rigidity_proof_chain_duality
-    {s : ℂ} (h : s = 1 - star s)
-    {A : Type*} [AddCommGroup A] [Module ℝ A] (state : ColimitKMSStateData A) (a : A)
-    (S : Finset ℕ) (s_cx : ℂ) (h_non_one : ∀ p ∈ S, (p : ℂ) ^ (-s_cx) ≠ 1) :
-    (s.re = 1 / 2) ∧
-    (state.eval (state.antiunitaryReflection a) = state.eval a) ∧
-    ((∏ p ∈ S, (1 - (p : ℂ) ^ (-s_cx))⁻¹) ≠ 0) := ⟨
-  antiunitary_fixed_locus_rigidity h,
-  colimit_kms_reflection_invariance state a,
-  finite_complex_euler_product_ne_zero S s_cx h_non_one
-⟩
 
 end InfoGeometry.Canonical.ColimitRigidityProofChainBridge

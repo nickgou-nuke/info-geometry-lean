@@ -1,58 +1,86 @@
-import Mathlib.Analysis.Complex.Basic
-import Mathlib.Data.Fintype.Basic
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Linarith
+import InfoGeometry.Canonical.ConnesCyclicCohomology
+import Mathlib.Algebra.Ring.Basic
 
-set_option linter.unusedSectionVars false
-set_option linter.unnecessarySeqFocus false
-set_option linter.unusedVariables false
+/-!
+# Connes--Loday cyclic complex bridge
 
-noncomputable section
+The cyclic boundary is owned by `ConnesCyclic.CyclicBoundaryOperator`.  This
+module keeps the historical Loday names as generic algebraic operations and
+forwards the boundary laws to that owner; it does not model a differential as
+a real scalar or prove nilpotency by defining the operator to be zero.
+-/
 
 namespace ConnesLoday
 
-/-- Non-Commutative Differential 1-Form da on algebra A. -/
-@[ext]
-structure DiffOneForm (A : Type*) where
-  coeff : ℝ                     -- Coefficient of differential form
+universe u
+
+section Differential
+
+variable {A : Type u} [NonUnitalNonAssocSemiring A]
+
+/-- A noncommutative differential one-form with coefficients in `A`. -/
+structure DiffOneForm (A : Type u) where
+  coeff : A
 
 namespace DiffOneForm
 
-variable (A : Type*)
+/-- Universal differential operator at a chosen coefficient. -/
+def d (_val deriv : A) : DiffOneForm A :=
+  ⟨deriv⟩
 
-/-- Universal Differential Operator d : A → Ω¹(A) taking element value and derivative -/
-def d (val deriv : ℝ) : DiffOneForm A where
-  coeff := deriv
+/-- Right multiplication of a one-form coefficient. -/
+def mulRight (df : DiffOneForm A) (b : A) : DiffOneForm A :=
+  ⟨df.coeff * b⟩
 
-/-- Product of 1-forms (d a) * b -/
-def mulRight (df : DiffOneForm A) (b : ℝ) : DiffOneForm A where
-  coeff := df.coeff * b
+/-- Left multiplication of a one-form coefficient. -/
+def mulLeft (a : A) (df : DiffOneForm A) : DiffOneForm A :=
+  ⟨a * df.coeff⟩
 
-/-- Product of 1-forms a * (d b) -/
-def mulLeft (a : ℝ) (df : DiffOneForm A) : DiffOneForm A where
-  coeff := a * df.coeff
+/-- Addition of one-form coefficients. -/
+def add (df1 df2 : DiffOneForm A) : DiffOneForm A :=
+  ⟨df1.coeff + df2.coeff⟩
 
-/-- Addition of 1-forms -/
-def add (df1 df2 : DiffOneForm A) : DiffOneForm A where
-  coeff := df1.coeff + df2.coeff
+/-- Leibniz rule for the universal algebraic differential interface. -/
+theorem leibniz_rule (a a' b b' : A) :
+    d (a * b) (a' * b + a * b') =
+      add (mulRight (d a a') b) (mulLeft a (d b b')) := by
+  rfl
 
-/-- **Theorem**: Leibniz Rule for Universal Differential Operator: d(ab) = (da)b + a(db). -/
-theorem leibniz_rule (a a' b b' : ℝ) :
-    d A (a * b) (a' * b + a * b') = add A (mulRight A (d A a a') b) (mulLeft A a (d A b b')) := by
-  dsimp [d, add, mulRight, mulLeft]
-
-/-- **Theorem**: Linearity of Universal Differential Operator: d(a + b) = da + db. -/
-theorem differential_linear (a a' b b' : ℝ) :
-    d A (a + b) (a' + b') = add A (d A a a') (d A b b') := by
-  dsimp [d, add]
-
-/-- Nilpotent Boundary Operator b with b² = 0 -/
-def cyclicBoundary (val : ℝ) : ℝ := 0
-
-/-- **Theorem**: Cyclic Complex Nilpotency: b(b(x)) = 0. -/
-theorem cyclic_boundary_nilpotent (x : ℝ) :
-    cyclicBoundary (cyclicBoundary x) = 0 := rfl
+/-- Additivity of the universal algebraic differential interface. -/
+theorem differential_linear (a a' b b' : A) :
+    d (a + b) (a' + b') = add (d a a') (d b b') := by
+  rfl
 
 end DiffOneForm
+
+end Differential
+
+section CyclicBoundary
+
+variable {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
+
+/-- The genuine noncommutative cyclic boundary owner. -/
+abbrev CyclicBoundaryOperator (n : ℕ) [Fintype (Fin n)] [DecidableEq (Fin n)] : Type _ :=
+  ConnesCyclic.CyclicBoundaryOperator n
+
+/-- Read the owned cyclic boundary map. -/
+abbrev cyclicBoundary (boundary : CyclicBoundaryOperator n) :
+    Matrix (Fin n) (Fin n) ℂ → Matrix (Fin n) (Fin n) ℂ :=
+  boundary.1
+
+/-- Nilpotency is forwarded from the owner boundary law. -/
+theorem cyclic_boundary_nilpotent
+    (boundary : CyclicBoundaryOperator n)
+    (X : Matrix (Fin n) (Fin n) ℂ) :
+    cyclicBoundary boundary (cyclicBoundary boundary X) = 0 :=
+  ConnesCyclic.CyclicBoundaryOperator.boundary_nilpotent_sq boundary X
+
+/-- The owned boundary vanishes at zero by additivity. -/
+theorem cyclic_boundary_zero
+    (boundary : CyclicBoundaryOperator n) :
+    cyclicBoundary boundary 0 = 0 :=
+  ConnesCyclic.CyclicBoundaryOperator.boundary_zero boundary
+
+end CyclicBoundary
 
 end ConnesLoday

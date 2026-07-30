@@ -29,63 +29,29 @@ open InfoGeometry.Algebra.KleinSpinorOrbit
 open InfoGeometry.Algebra.KleinSpinorOrbitSocketClosure
 
 /-- Proof-carrying finite packet parallel to the weak socket structure. -/
-abbrev CertifiedOrbitPacket : Type :=
-  Σ' epsilon : Cs.Cs,
-    Cs.mul epsilon epsilon = Cs.add epsilon epsilon ∧
-      (∀ M : CsMatrix2,
-        Stabilizes M genericRep ↔ M.aa = Cs.one ∧ M.ba = Cs.zero) ∧
-        (∀ M : CsMatrix2,
-          Stabilizes M nullRep ↔
-            Cs.mul M.aa Cs.E = Cs.E ∧ Cs.mul M.ba Cs.E = Cs.zero) ∧
-          (∀ M : CsMatrix2,
-            Stabilizes M diagonalNullRep ↔
-              Cs.add (Cs.mul M.aa Cs.E) (Cs.mul M.ab Cs.E) = Cs.E ∧
-                Cs.add (Cs.mul M.ba Cs.E) (Cs.mul M.bb Cs.E) = Cs.E) ∧
-            (∀ b : Cs.Cs,
-              CsMatrix2.DetOne (CsMatrix2.genericUnipotent b) ∧
-                Stabilizes (CsMatrix2.genericUnipotent b) genericRep) ∧
-              (∀ t : ℚ,
-                CsMatrix2.DetOne (CsMatrix2.nullEbarFamily t) ∧
-                  Stabilizes (CsMatrix2.nullEbarFamily t) nullRep)
-
-namespace CertifiedOrbitPacket
-
-abbrev epsilon (P : CertifiedOrbitPacket) : Cs.Cs := P.1
-
-abbrev epsilon_square_two_add (P : CertifiedOrbitPacket) :
-    Cs.mul P.epsilon P.epsilon = Cs.add P.epsilon P.epsilon :=
-  P.2.1
-
-abbrev generic_representative_complete (P : CertifiedOrbitPacket) :
+structure CertifiedOrbitPacket where
+  epsilon : Cs.Cs
+  epsilon_square_two_add :
+    Cs.mul epsilon epsilon = Cs.add epsilon epsilon
+  generic_representative_complete :
     ∀ M : CsMatrix2,
-      Stabilizes M genericRep ↔ M.aa = Cs.one ∧ M.ba = Cs.zero :=
-  P.2.2.1
-
-abbrev null_representative_complete (P : CertifiedOrbitPacket) :
+      Stabilizes M genericRep ↔ M.aa = Cs.one ∧ M.ba = Cs.zero
+  null_representative_complete :
     ∀ M : CsMatrix2,
-      Stabilizes M nullRep ↔ Cs.mul M.aa Cs.E = Cs.E ∧ Cs.mul M.ba Cs.E = Cs.zero :=
-  P.2.2.2.1
-
-abbrev diagonal_null_representative_complete (P : CertifiedOrbitPacket) :
+      Stabilizes M nullRep ↔ Cs.mul M.aa Cs.E = Cs.E ∧ Cs.mul M.ba Cs.E = Cs.zero
+  diagonal_null_representative_complete :
     ∀ M : CsMatrix2,
       Stabilizes M diagonalNullRep ↔
         Cs.add (Cs.mul M.aa Cs.E) (Cs.mul M.ab Cs.E) = Cs.E ∧
-          Cs.add (Cs.mul M.ba Cs.E) (Cs.mul M.bb Cs.E) = Cs.E :=
-  P.2.2.2.2.1
-
-abbrev generic_stabilizer_description (P : CertifiedOrbitPacket) :
+          Cs.add (Cs.mul M.ba Cs.E) (Cs.mul M.bb Cs.E) = Cs.E
+  generic_stabilizer_description :
     ∀ b : Cs.Cs,
       CsMatrix2.DetOne (CsMatrix2.genericUnipotent b) ∧
-        Stabilizes (CsMatrix2.genericUnipotent b) genericRep :=
-  P.2.2.2.2.2.1
-
-abbrev null_stabilizer_description (P : CertifiedOrbitPacket) :
+        Stabilizes (CsMatrix2.genericUnipotent b) genericRep
+  null_stabilizer_description :
     ∀ t : ℚ,
       CsMatrix2.DetOne (CsMatrix2.nullEbarFamily t) ∧
-        Stabilizes (CsMatrix2.nullEbarFamily t) nullRep :=
-  P.2.2.2.2.2.2
-
-end CertifiedOrbitPacket
+        Stabilizes (CsMatrix2.nullEbarFamily t) nullRep
 
 /-- Certified finite orbit packet over the split-complex lightlike generator `E`. -/
 def splitComplexPacket : CertifiedOrbitPacket :=

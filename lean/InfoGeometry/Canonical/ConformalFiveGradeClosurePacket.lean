@@ -24,131 +24,105 @@ open InfoGeometry.Canonical.ConformalFiveGradeInversion
 open InfoGeometry.Canonical.ConformalFiveGradeInversion.FiveGradedConformalInversion
 open InfoGeometry.Canonical.NormalOrderedCurrent
 
-/--
-Direct canonical closure packet for the conformal engine.
-
-The packet stores the current boundary packet once, and all current/readout and
-sector-separation data are read off from that single owner surface.
--/
-structure FiveGradeClosurePacket
-    (L : Type*) (ι : Type*) (R : Type*)
-    [Fintype ι] [DecidableEq ι] [Ring R] where
-  packet : FiveGradeBoundaryCurrentPacket L ι R
-  separation : FiveGradeSectorSeparationPacket L ι R
-  separation_packet_eq : separation.packet = packet
-
 namespace FiveGradeClosurePacket
 
 variable {L ι R : Type*}
 variable [Fintype ι] [DecidableEq ι] [Ring R]
 
+/-- Compatibility readouts for the direct canonical closure carrier. -/
+def separation (P : FiveGradeBoundaryCurrentPacket L ι R) :
+    FiveGradeBoundaryCurrentPacket L ι R :=
+  P
+
 /-- The commutator table readout of the closure packet. -/
 theorem matrixUnitWick_readout
-    (P : FiveGradeClosurePacket L ι R)
+    (P : FiveGradeBoundaryCurrentPacket L ι R)
     (a b c d : ι) :
     algebraCommutator
-        (normalOrderedMatrixUnit (R := R) P.packet.occ a b)
-        (normalOrderedMatrixUnit (R := R) P.packet.occ c d)
+        (normalOrderedMatrixUnit (R := R) P.occ a b)
+        (normalOrderedMatrixUnit (R := R) P.occ c d)
       =
-      (if b = c then normalOrderedMatrixUnit (R := R) P.packet.occ a d else 0)
-        - (if a = d then normalOrderedMatrixUnit (R := R) P.packet.occ c b else 0)
-        + wickCorrection (R := R) P.packet.occ a b c d :=
-  P.packet.matrixUnitWick_readout a b c d
+      (if b = c then normalOrderedMatrixUnit (R := R) P.occ a d else 0)
+        - (if a = d then normalOrderedMatrixUnit (R := R) P.occ c b else 0)
+        + wickCorrection (R := R) P.occ a b c d :=
+  FiveGradeBoundaryCurrentPacket.matrixUnitWick_readout P a b c d
 
 /-- The source sector is carried to the sink sector. -/
 theorem source_to_sink
-    (P : FiveGradeClosurePacket L ι R) (x : L) :
-    x ∈ P.packet.sourceSet ↔ P.packet.inversion.theta x ∈ P.packet.sinkSet :=
-  P.packet.source_to_sink x
+    (P : FiveGradeBoundaryCurrentPacket L ι R) (x : L) :
+    x ∈ P.sourceSet ↔ P.inversion.theta x ∈ P.sinkSet :=
+  FiveGradeBoundaryCurrentPacket.source_to_sink P x
 
 /-- The incoming sector is carried to the outgoing sector. -/
 theorem incoming_to_outgoing
-    (P : FiveGradeClosurePacket L ι R) (x : L) :
-    x ∈ P.packet.inversion.incomingSet ↔
-      P.packet.inversion.theta x ∈ P.packet.inversion.outgoingSet :=
-  P.packet.incoming_to_outgoing x
+    (P : FiveGradeBoundaryCurrentPacket L ι R) (x : L) :
+    x ∈ P.inversion.incomingSet ↔
+      P.inversion.theta x ∈ P.inversion.outgoingSet :=
+  FiveGradeBoundaryCurrentPacket.incoming_to_outgoing P x
 
 /-- The modular center remains stable under inversion. -/
 theorem center_stable
-    (P : FiveGradeClosurePacket L ι R) (x : L) :
-    x ∈ P.packet.centerSet ↔ P.packet.inversion.theta x ∈ P.packet.centerSet :=
-  P.packet.center_stable x
+    (P : FiveGradeBoundaryCurrentPacket L ι R) (x : L) :
+    x ∈ P.centerSet ↔ P.inversion.theta x ∈ P.centerSet :=
+  FiveGradeBoundaryCurrentPacket.center_stable P x
 
 /-- The `+2` and `-2` sectors are disjoint. -/
 theorem source_sink_disjoint
-    (P : FiveGradeClosurePacket L ι R) :
-    ∀ x : L, x ∈ P.packet.sourceSet → x ∈ P.packet.sinkSet → False :=
-  by
-    simpa [P.separation_packet_eq] using
-      (FiveGradeSectorSeparationPacket.source_sink_disjoint P.separation)
+    (P : FiveGradeBoundaryCurrentPacket L ι R) :
+    ∀ x : L, x ∈ P.sourceSet → x ∈ P.sinkSet → False :=
+  FiveGradeSectorSeparationPacket.source_sink_disjoint P
 
 /-- The `+1` and `-1` sectors are disjoint. -/
 theorem outgoing_incoming_disjoint
-    (P : FiveGradeClosurePacket L ι R) :
-    ∀ x : L, x ∈ P.packet.inversion.outgoingSet →
-      x ∈ P.packet.inversion.incomingSet → False :=
-  by
-    simpa [P.separation_packet_eq] using
-      (FiveGradeSectorSeparationPacket.outgoing_incoming_disjoint P.separation)
+    (P : FiveGradeBoundaryCurrentPacket L ι R) :
+    ∀ x : L, x ∈ P.inversion.outgoingSet →
+      x ∈ P.inversion.incomingSet → False :=
+  FiveGradeSectorSeparationPacket.outgoing_incoming_disjoint P
 
 /-- The source sector is disjoint from the modular center. -/
 theorem source_center_disjoint
-    (P : FiveGradeClosurePacket L ι R) :
-    ∀ x : L, x ∈ P.packet.sourceSet → x ∈ P.packet.centerSet → False :=
-  by
-    simpa [P.separation_packet_eq] using
-      (FiveGradeSectorSeparationPacket.source_center_disjoint P.separation)
+    (P : FiveGradeBoundaryCurrentPacket L ι R) :
+    ∀ x : L, x ∈ P.sourceSet → x ∈ P.centerSet → False :=
+  FiveGradeSectorSeparationPacket.source_center_disjoint P
 
 /-- The sink sector is disjoint from the modular center. -/
 theorem sink_center_disjoint
-    (P : FiveGradeClosurePacket L ι R) :
-    ∀ x : L, x ∈ P.packet.sinkSet → x ∈ P.packet.centerSet → False :=
-  by
-    simpa [P.separation_packet_eq] using
-      (FiveGradeSectorSeparationPacket.sink_center_disjoint P.separation)
+    (P : FiveGradeBoundaryCurrentPacket L ι R) :
+    ∀ x : L, x ∈ P.sinkSet → x ∈ P.centerSet → False :=
+  FiveGradeSectorSeparationPacket.sink_center_disjoint P
 
 /-- The source sector is disjoint from the outgoing boundary sector. -/
 theorem source_outgoing_disjoint
-    (P : FiveGradeClosurePacket L ι R) :
-    ∀ x : L, x ∈ P.packet.sourceSet →
-      x ∈ P.packet.inversion.outgoingSet → False :=
-  by
-    simpa [P.separation_packet_eq] using
-      (FiveGradeSectorSeparationPacket.source_outgoing_disjoint P.separation)
+    (P : FiveGradeBoundaryCurrentPacket L ι R) :
+    ∀ x : L, x ∈ P.sourceSet →
+      x ∈ P.inversion.outgoingSet → False :=
+  FiveGradeSectorSeparationPacket.source_outgoing_disjoint P
 
 /-- The sink sector is disjoint from the incoming boundary sector. -/
 theorem sink_incoming_disjoint
-    (P : FiveGradeClosurePacket L ι R) :
-    ∀ x : L, x ∈ P.packet.sinkSet →
-      x ∈ P.packet.inversion.incomingSet → False :=
-  by
-    simpa [P.separation_packet_eq] using
-      (FiveGradeSectorSeparationPacket.sink_incoming_disjoint P.separation)
+    (P : FiveGradeBoundaryCurrentPacket L ι R) :
+    ∀ x : L, x ∈ P.sinkSet →
+      x ∈ P.inversion.incomingSet → False :=
+  FiveGradeSectorSeparationPacket.sink_incoming_disjoint P
 
 /-- The source sector is disjoint from the incoming boundary sector. -/
 theorem source_incoming_disjoint
-    (P : FiveGradeClosurePacket L ι R) :
-    ∀ x : L, x ∈ P.packet.sourceSet →
-      x ∈ P.packet.inversion.incomingSet → False :=
-  by
-    simpa [P.separation_packet_eq] using
-      (FiveGradeSectorSeparationPacket.source_incoming_disjoint P.separation)
+    (P : FiveGradeBoundaryCurrentPacket L ι R) :
+    ∀ x : L, x ∈ P.sourceSet →
+      x ∈ P.inversion.incomingSet → False :=
+  FiveGradeSectorSeparationPacket.source_incoming_disjoint P
 
 /-- The sink sector is disjoint from the outgoing boundary sector. -/
 theorem sink_outgoing_disjoint
-    (P : FiveGradeClosurePacket L ι R) :
-    ∀ x : L, x ∈ P.packet.sinkSet →
-      x ∈ P.packet.inversion.outgoingSet → False :=
-  by
-    simpa [P.separation_packet_eq] using
-      (FiveGradeSectorSeparationPacket.sink_outgoing_disjoint P.separation)
+    (P : FiveGradeBoundaryCurrentPacket L ι R) :
+    ∀ x : L, x ∈ P.sinkSet →
+      x ∈ P.inversion.outgoingSet → False :=
+  FiveGradeSectorSeparationPacket.sink_outgoing_disjoint P
 
 /-- A closure packet obtained directly from the current packet. -/
 def ofCurrentPacket (P : FiveGradeBoundaryCurrentPacket L ι R) :
-    FiveGradeClosurePacket L ι R where
-  packet := P
-  separation := FiveGradeSectorSeparationPacket.ofPacket P
-  separation_packet_eq := rfl
+    FiveGradeBoundaryCurrentPacket L ι R :=
+  P
 
 end FiveGradeClosurePacket
 

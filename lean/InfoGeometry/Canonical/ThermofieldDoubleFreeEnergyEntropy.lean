@@ -14,6 +14,8 @@ noncomputable section
 
 open Real Finset
 
+namespace ThermofieldDoubleFreeEnergyEntropy
+
 /-- A quantum system with finite energy spectrum E_i and inverse temperature β. -/
 structure QuantumSystem (n : Type*) [Fintype n] [DecidableEq n] where
   E : n → ℝ
@@ -105,3 +107,5 @@ theorem freeEnergy_eq_avgEnergy_sub_temperature_mul_entropy :
   ring
 
 end QuantumSystem
+
+end ThermofieldDoubleFreeEnergyEntropy

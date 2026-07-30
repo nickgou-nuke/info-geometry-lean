@@ -146,8 +146,15 @@ structure TKKHamiltonian_INC (V : Type*) [AddCommGroup V] [Module ℂ V] where
   omega : ℂ
   coeff_A : ℂ
   delta_trip : ℂ
-  H_TKK_INC : End ℂ V :=
-    omega • H_osc + coeff_A • H_rot + delta_trip • H_triality + H_Coulomb + H_CSB + H_CIB
+
+namespace TKKHamiltonian_INC
+
+def H_TKK_INC (V : Type*) [AddCommGroup V] [Module ℂ V]
+    (H : TKKHamiltonian_INC V) : End ℂ V :=
+  H.omega • H.H_osc + H.coeff_A • H.H_rot + H.delta_trip • H.H_triality +
+    H.H_Coulomb + H.H_CSB + H.H_CIB
+
+end TKKHamiltonian_INC
 
 def isoscalarAdmixture {V : Type*} [AddCommGroup V] [Module ℂ V]
     (H_inc : TKKHamiltonian_INC V) : ℂ :=
@@ -204,8 +211,14 @@ structure TKKHamiltonian_ExtremeISB (V : Type*) [AddCommGroup V] [Module ℂ V] 
   beta2 : ℝ
   pairing_gap : ℝ
   S_p : ℝ
-  H_TKK_Extreme : End ℂ V :=
-    H_base.H_TKK_INC + H_continuum + H_deformation + H_pauli_def
+
+namespace TKKHamiltonian_ExtremeISB
+
+def H_TKK_Extreme (V : Type*) [AddCommGroup V] [Module ℂ V]
+    (H : TKKHamiltonian_ExtremeISB V) : End ℂ V :=
+  H.H_base.H_TKK_INC + H.H_continuum + H.H_deformation + H.H_pauli_def
+
+end TKKHamiltonian_ExtremeISB
 
 def hasGroundStateInversion {V : Type*} [AddCommGroup V] [Module ℂ V]
     (H_ext : TKKHamiltonian_ExtremeISB V) (J1 J2 : SpinParity) : Prop :=

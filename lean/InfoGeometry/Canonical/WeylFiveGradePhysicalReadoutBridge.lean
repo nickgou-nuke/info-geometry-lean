@@ -93,14 +93,6 @@ theorem volume_grade_zero :
 theorem bkmMass_grade_zero :
     PhysicalReadoutKind.grade .bkmMass = WeylFiveGrade.zero := rfl
 
-@[rep_depth operator]
-theorem physicalVolume_apply (s : VolumeState) :
-    C.volume.physicalVolume s = C.volume.physicalVolume s := rfl
-
-@[rep_depth operator]
-theorem physicalMass_apply (s : MassState) :
-    C.bkmMass.physicalMass s = C.bkmMass.physicalMass s := rfl
-
 end WeylScalarPhysicalReadoutCarrier
 
 /-! ## CAR/CCR normalized readouts -/
@@ -143,22 +135,9 @@ theorem ccr_is_normalized :
 
 end WeylFockPhysicalReadoutCarrier
 
-/--
-Carrier for a single Weyl-normalized CAR readout.
-
-This avoids manufacturing a CCR witness when the available concrete Fock owner
-surface only supplies the split-`Cl(1,1)` CAR pair.
--/
-@[rep_depth krein]
-abbrev WeylCARPhysicalReadoutCarrier : Type _ :=
-  ScaledCARPair E
-
 namespace WeylCARPhysicalReadoutCarrier
 
-variable (C : WeylCARPhysicalReadoutCarrier (E := E))
-
-def car : ScaledCARPair E :=
-  C
+variable (C : ScaledCARPair E)
 
 @[rep_depth krein]
 theorem normalizedCAR_grade_zero :
@@ -168,15 +147,15 @@ theorem normalizedCAR_grade_zero :
 @[rep_depth krein]
 theorem car_is_normalized :
     InfoGeometry.Canonical.BogoliubovFockSuper.IsCARPair
-      (E := E) C.car.normalizedAnnihilation C.car.normalizedCreation :=
-  C.car.normalized_isCARPair
+      (E := E) C.normalizedAnnihilation C.normalizedCreation :=
+  C.normalized_isCARPair
 
 end WeylCARPhysicalReadoutCarrier
 
 /-- Concrete split-`Cl(1,1)` CAR readout at grade zero. -/
 @[rep_depth krein]
 noncomputable def concreteCl11WeylCARPhysicalReadoutCarrier :
-    WeylCARPhysicalReadoutCarrier (E := E) :=
+    ScaledCARPair E :=
   concreteCl11ScaledCARPair (E := E)
 
 /-- The concrete split-`Cl(1,1)` CAR readout is normalized. -/
@@ -184,9 +163,9 @@ noncomputable def concreteCl11WeylCARPhysicalReadoutCarrier :
 theorem concreteCl11WeylCAR_is_normalized :
     InfoGeometry.Canonical.BogoliubovFockSuper.IsCARPair
       (E := E)
-      (concreteCl11WeylCARPhysicalReadoutCarrier (E := E)).car.normalizedAnnihilation
-      (concreteCl11WeylCARPhysicalReadoutCarrier (E := E)).car.normalizedCreation :=
-  (concreteCl11WeylCARPhysicalReadoutCarrier (E := E)).car_is_normalized
+      (concreteCl11WeylCARPhysicalReadoutCarrier (E := E)).normalizedAnnihilation
+      (concreteCl11WeylCARPhysicalReadoutCarrier (E := E)).normalizedCreation :=
+  (concreteCl11WeylCARPhysicalReadoutCarrier (E := E)).normalized_isCARPair
 
 end Fock
 
@@ -211,10 +190,6 @@ variable (C : WeylModularHamiltonianPhysicalReadoutCarrier E)
 @[rep_depth operator]
 theorem modularHamiltonianSurrogate_grade_zero :
     PhysicalReadoutKind.grade .modularHamiltonianSurrogate = WeylFiveGrade.zero := rfl
-
-@[rep_depth operator]
-theorem Ksur_apply :
-    C.bridge.Ksur = C.bridge.Ksur := rfl
 
 /-- The calibrated `Ksur` law is inherited from `SuperchargeModularHamiltonianBridge`. -/
 @[rep_depth operator]

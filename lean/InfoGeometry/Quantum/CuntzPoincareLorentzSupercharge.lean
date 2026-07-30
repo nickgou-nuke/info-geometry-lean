@@ -56,30 +56,6 @@ theorem exactBoostTransport_comp_self_pauli_minkowski (P : PauliParavector) :
   rw [exactBoostTransport_comp_self_preserves_pauli_det]
   exact PauliParavector.det_pauliMatrix_eq_minkowskiNormSq P
 
-/-- Cuntz packet plus Pauli supercharge determinant law. -/
-theorem cuntz_packet_pauli_supercharge_det {n : ℕ} (i : Fin n) (P : PauliParavector) :
-    let C := canonicalCuntzSuperPoincarePacket n i
-    algebraicAnticommutator C.supercharge C.supercharge = (2 : ℂ) • C.poincareTranslation ∧
-      Matrix.det P.superPoincareAnticommutatorMatrix = ((4 * P.minkowskiNormSq : ℝ) : ℂ) := by
-  exact ⟨canonical_cuntz_packet_anticommutator_translation i,
-    pauli_supercharge_anticommutator_det_eq_four_casimir P⟩
-
-/-- Full finite Cuntz/Poincare/Lorentz packet with trace readout and determinant invariance. -/
-theorem finite_cuntz_poincare_lorentz_supercharge_packet
-    {n : ℕ} (i : Fin n) (P : PauliParavector) (a : Fin 4) :
-    let C := canonicalCuntzSuperPoincarePacket n i
-    algebraicAnticommutator C.supercharge C.supercharge = (2 : ℂ) • C.poincareTranslation ∧
-    PauliParavector.superchargeMomentumReadout a P =
-      (match a with
-      | 0 => (P.energy : ℂ)
-      | 1 => (P.px : ℂ)
-      | 2 => (P.py : ℂ)
-      | 3 => (P.pz : ℂ)) ∧
-    Matrix.det (exactBoostTransport (exactBoostTransport P.pauliMatrix)) = (P.minkowskiNormSq : ℂ) := by
-  exact ⟨canonical_cuntz_packet_anticommutator_translation i,
-    pauli_supercharge_trace_recovers_four_momentum P a,
-    exactBoostTransport_comp_self_pauli_minkowski P⟩
-
 end InfoGeometry.Quantum.CuntzPoincareLorentzSupercharge
 
 end noncomputable section

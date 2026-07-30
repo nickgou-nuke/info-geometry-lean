@@ -60,23 +60,6 @@ namespace DrazinStableReadout
 
 variable {Op State : Type*} [Add Op] [Mul Op]
 
-/-- The supplied decomposition proof is available on valid states. -/
-theorem decomposition_holds_readback
-    (D : DrazinStableReadout Op State)
-    (s : State) (hs : D.valid s) :
-    D.elementOf s = D.regularPart s + D.nilpotentResidue s :=
-  D.decompositionLaw s hs
-
-/-- The supplied Drazin proof is available on valid states. -/
-theorem drazin_holds_readback
-    (D : DrazinStableReadout Op State)
-    (s : State) (hs : D.valid s) :
-    (D.drazinInverse s * D.elementOf s =
-        D.elementOf s * D.drazinInverse s) ∧
-      (D.drazinInverse s * D.elementOf s * D.drazinInverse s =
-        D.drazinInverse s) :=
-  D.drazinLaw s hs
-
 /-- The stable Drazin volume is nonzero on valid states. -/
 theorem stableVolume_ne_zero
     (D : DrazinStableReadout Op State)
@@ -297,18 +280,6 @@ namespace DrazinInformationExtraction
 
 variable {Op State : Type*} [Add Op] [Mul Op]
 variable (P : DrazinInformationExtraction Op State)
-
-/-- Stable information is the regular Drazin readout on valid states. -/
-theorem stableInformation_eq_regularPart_readback
-    (s : State) (hs : P.readout.valid s) :
-    P.stableInformation s = P.readout.regularPart s :=
-  P.stableInformation_eq_regularPart s hs
-
-/-- Singular residue is the nilpotent Drazin readout on valid states. -/
-theorem singularResidue_eq_nilpotentResidue_readback
-    (s : State) (hs : P.readout.valid s) :
-    P.singularResidue s = P.readout.nilpotentResidue s :=
-  P.singularResidue_eq_nilpotentResidue s hs
 
 end DrazinInformationExtraction
 

@@ -26,27 +26,29 @@ structure SouriauThermodynamicAction (G V : Type*)
   cocycle : G → LieDual V
   Psi : V → ℝ
   heatVector : V → LieDual V
-  h_Psi_cov : ∀ (g : G) (β : V),
-    Psi (action.Ad g β) = Psi β - cocycle g (action.Ad g β)
-  h_heat_cov : ∀ (g : G) (β : V),
-    heatVector (action.Ad g β) =
-      coadjoint (action.Ad g) (heatVector β) + cocycle g
 
 /-- 🏆 THEOREM 1: Linear Ad-Invariance of Characteristic Function when Cocycle θ = 0 -/
 theorem Psi_linear_invariance
     (sys : SouriauThermodynamicAction G V)
-    (g : G) (h_zero_cocycle : sys.cocycle g = 0) (β : V) :
+    (g : G)
+    (h_Psi_cov : ∀ (g : G) (β : V),
+      sys.Psi (sys.action.Ad g β) = sys.Psi β - sys.cocycle g (sys.action.Ad g β))
+    (h_zero_cocycle : sys.cocycle g = 0) (β : V) :
     sys.Psi (sys.action.Ad g β) = sys.Psi β := by
-  rw [sys.h_Psi_cov g β, h_zero_cocycle]
+  rw [h_Psi_cov g β, h_zero_cocycle]
   simp
 
 /-- 🏆 THEOREM 2: Linear Coadjoint Covariance of Heat Vector Q(Ad_g β) = Ad*_g (Q(β)) when θ = 0 -/
 theorem heatVector_linear_covariance
     (sys : SouriauThermodynamicAction G V)
-    (g : G) (h_zero_cocycle : sys.cocycle g = 0) (β : V) :
+    (g : G)
+    (h_heat_cov : ∀ (g : G) (β : V),
+      sys.heatVector (sys.action.Ad g β) =
+        coadjoint (sys.action.Ad g) (sys.heatVector β) + sys.cocycle g)
+    (h_zero_cocycle : sys.cocycle g = 0) (β : V) :
     sys.heatVector (sys.action.Ad g β) =
       coadjoint (sys.action.Ad g) (sys.heatVector β) := by
-  rw [sys.h_heat_cov g β, h_zero_cocycle, add_zero]
+  rw [h_heat_cov g β, h_zero_cocycle, add_zero]
 
 /-- 🏆 THEOREM 3: Dual Pairing Invariance under Coadjoint and Adjoint Actions
     ⟨Ad*_g μ, Ad_g β⟩ = ⟨μ, β⟩ -/
@@ -94,11 +96,17 @@ theorem isClosed_transformed_souriauEntropy_level_set
     S(Ad_g β) = S(β) -/
 theorem souriau_entropy_linear_invariance
     (sys : SouriauThermodynamicAction G V)
-    (g : G) (h_zero_cocycle : sys.cocycle g = 0) (β : V) :
+    (g : G)
+    (h_Psi_cov : ∀ (g : G) (β : V),
+      sys.Psi (sys.action.Ad g β) = sys.Psi β - sys.cocycle g (sys.action.Ad g β))
+    (h_heat_cov : ∀ (g : G) (β : V),
+      sys.heatVector (sys.action.Ad g β) =
+        coadjoint (sys.action.Ad g) (sys.heatVector β) + sys.cocycle g)
+    (h_zero_cocycle : sys.cocycle g = 0) (β : V) :
     souriauEntropy sys (sys.action.Ad g β) = souriauEntropy sys β := by
   dsimp [souriauEntropy]
-  rw [heatVector_linear_covariance sys g h_zero_cocycle β]
-  rw [Psi_linear_invariance sys g h_zero_cocycle β]
+  rw [heatVector_linear_covariance sys g h_heat_cov h_zero_cocycle β]
+  rw [Psi_linear_invariance sys g h_Psi_cov h_zero_cocycle β]
   rw [dual_pairing_invariance sys.action g (sys.heatVector β) β]
 
 /- The finite-dimensional linear action maps are continuous in the product
@@ -135,10 +143,13 @@ theorem continuous_Psi_covariance_residual
     (continuous_ad_cocycle_pairing sys g)
 
 theorem Psi_covariance_residual_zero
-    (sys : SouriauThermodynamicAction G V) (g : G) (β : V) :
+    (sys : SouriauThermodynamicAction G V) (g : G)
+    (h_Psi_cov : ∀ (g : G) (β : V),
+      sys.Psi (sys.action.Ad g β) = sys.Psi β - sys.cocycle g (sys.action.Ad g β))
+    (β : V) :
     sys.Psi (sys.action.Ad g β) - sys.Psi β +
         sys.cocycle g (sys.action.Ad g β) = 0 := by
-  rw [sys.h_Psi_cov g β]
+  rw [h_Psi_cov g β]
   ring
 
 theorem isClosed_Psi_covariance_residual_zero
@@ -162,10 +173,14 @@ theorem continuous_heatVector_covariance_residual
       continuous_const
 
 theorem heatVector_covariance_residual_zero
-    (sys : SouriauThermodynamicAction G V) (g : G) (β : V) :
+    (sys : SouriauThermodynamicAction G V) (g : G)
+    (h_heat_cov : ∀ (g : G) (β : V),
+      sys.heatVector (sys.action.Ad g β) =
+        coadjoint (sys.action.Ad g) (sys.heatVector β) + sys.cocycle g)
+    (β : V) :
     sys.heatVector (sys.action.Ad g β) -
         coadjoint (sys.action.Ad g) (sys.heatVector β) - sys.cocycle g = 0 := by
-  rw [sys.h_heat_cov g β]
+  rw [h_heat_cov g β]
   simp
 
 theorem isClosed_heatVector_covariance_residual_zero

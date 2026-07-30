@@ -30,6 +30,7 @@ structure FierzChannelReadout where
   symplectic : State → ℝ
   hilbert : State → ℝ
   area : State → ℝ
+  hilbert_nonneg : ∀ ψ, 0 ≤ hilbert ψ
   fierzIdentity :
     ∀ ψ, (hilbert ψ)^2 = (scalar ψ)^2 + (symplectic ψ)^2 + 4 * (area ψ)
 
@@ -79,7 +80,7 @@ Default support lane used by lightweight translator consumers.
 -/
 @[rep_depth operator]
 def defaultSupport (R : FierzChannelReadout) : R.State → Prop :=
-  fun ψ => ψ = ψ
+  fun ψ => 0 ≤ R.hilbert ψ
 
 /--
 Default generator lane used by lightweight translator consumers.
@@ -149,6 +150,7 @@ noncomputable def doubledFierzReadout : FierzChannelReadout where
   symplectic := infoSymplectic (E := E)
   hilbert := infoHilbert (E := E)
   area := infoArea (E := E)
+  hilbert_nonneg := InfoGeometry.Quantum.Fierz.infoHilbert_nonneg (E := E)
   fierzIdentity := information_fierz_identity (E := E)
 
 /-- Tagged presentation witness for the doubled/Krein Fierz lane. -/

@@ -13,11 +13,23 @@ structure Primon where
   p : ℕ
   hp : Nat.Prime p
   k : ℕ
-  energy : ℝ := (k : ℝ) * Real.log (p : ℝ)
+
+namespace Primon
+
+noncomputable def energy (P : Primon) : ℝ :=
+  (P.k : ℝ) * Real.log (P.p : ℝ)
+
+end Primon
 
 structure PrimonGas where
   primons : List Primon
-  totalEnergy : ℝ := (primons.map Primon.energy).sum
+
+namespace PrimonGas
+
+noncomputable def totalEnergy (G : PrimonGas) : ℝ :=
+  (G.primons.map Primon.energy).sum
+
+end PrimonGas
 
 noncomputable def zetaPartition (β : ℝ) (N : ℕ) : ℝ :=
   (Finset.range N).sum λ n => ((n : ℝ) + 1) ^ (-β)

@@ -57,10 +57,10 @@ bookkeeping explicit.
 structure FiveGradeBracketPacket
     (L : Type*) (ι : Type*) (R : Type*)
     [Fintype ι] [DecidableEq ι] [Ring R] where
-  closure : FiveGradeClosurePacket L ι R
+  closure : FiveGradeBoundaryCurrentPacket L ι R
   gradeCarrier : WeylGradedCarrier L
   gradeCompat : ∀ x : L,
-    gradeCarrier.gradeOf x = toWeylGrade (closure.packet.inversion.grade x)
+    gradeCarrier.gradeOf x = toWeylGrade (closure.inversion.grade x)
   bracket : L → L → L
   bracket_additive :
     IsAdditiveWeightForBracket gradeCarrier gradeCarrier bracket
@@ -74,10 +74,10 @@ variable [Fintype ι] [DecidableEq ι] [Ring R]
 theorem source_weight
     (P : FiveGradeBracketPacket L ι R)
     {x : L}
-    (hx : x ∈ P.closure.packet.sourceSet) :
+    (hx : x ∈ P.closure.sourceSet) :
     FiveGrade.weight (P.gradeCarrier.gradeOf x) = 2 := by
   have hxgrade :
-      P.closure.packet.inversion.grade x = ConformalGrade.posTwo := by
+      P.closure.inversion.grade x = ConformalGrade.posTwo := by
     simpa [FiveGradeBoundaryCurrentPacket.sourceSet] using hx
   rw [P.gradeCompat x, hxgrade]
   simp [toWeylGrade, FiveGrade.weight]
@@ -86,10 +86,10 @@ theorem source_weight
 theorem sink_weight
     (P : FiveGradeBracketPacket L ι R)
     {x : L}
-    (hx : x ∈ P.closure.packet.sinkSet) :
+    (hx : x ∈ P.closure.sinkSet) :
     FiveGrade.weight (P.gradeCarrier.gradeOf x) = -2 := by
   have hxgrade :
-      P.closure.packet.inversion.grade x = ConformalGrade.negTwo := by
+      P.closure.inversion.grade x = ConformalGrade.negTwo := by
     simpa [FiveGradeBoundaryCurrentPacket.sinkSet] using hx
   rw [P.gradeCompat x, hxgrade]
   simp [toWeylGrade, FiveGrade.weight]
@@ -98,10 +98,10 @@ theorem sink_weight
 theorem incoming_weight
     (P : FiveGradeBracketPacket L ι R)
     {x : L}
-    (hx : x ∈ P.closure.packet.inversion.incomingSet) :
+    (hx : x ∈ P.closure.inversion.incomingSet) :
     FiveGrade.weight (P.gradeCarrier.gradeOf x) = -1 := by
   have hxgrade :
-      P.closure.packet.inversion.grade x = ConformalGrade.negOne := by
+      P.closure.inversion.grade x = ConformalGrade.negOne := by
     simpa [FiveGradedConformalInversion.incomingSet] using hx
   rw [P.gradeCompat x, hxgrade]
   simp [toWeylGrade, FiveGrade.weight]
@@ -110,10 +110,10 @@ theorem incoming_weight
 theorem outgoing_weight
     (P : FiveGradeBracketPacket L ι R)
     {x : L}
-    (hx : x ∈ P.closure.packet.inversion.outgoingSet) :
+    (hx : x ∈ P.closure.inversion.outgoingSet) :
     FiveGrade.weight (P.gradeCarrier.gradeOf x) = 1 := by
   have hxgrade :
-      P.closure.packet.inversion.grade x = ConformalGrade.posOne := by
+      P.closure.inversion.grade x = ConformalGrade.posOne := by
     simpa [FiveGradedConformalInversion.outgoingSet] using hx
   rw [P.gradeCompat x, hxgrade]
   simp [toWeylGrade, FiveGrade.weight]
@@ -122,10 +122,10 @@ theorem outgoing_weight
 theorem center_weight
     (P : FiveGradeBracketPacket L ι R)
     {x : L}
-    (hx : x ∈ P.closure.packet.centerSet) :
+    (hx : x ∈ P.closure.centerSet) :
     FiveGrade.weight (P.gradeCarrier.gradeOf x) = 0 := by
   have hxgrade :
-      P.closure.packet.inversion.grade x = ConformalGrade.zero := by
+      P.closure.inversion.grade x = ConformalGrade.zero := by
     simpa [FiveGradeBoundaryCurrentPacket.centerSet] using hx
   rw [P.gradeCompat x, hxgrade]
   simp [toWeylGrade, FiveGrade.weight]
@@ -134,8 +134,8 @@ theorem center_weight
 theorem source_sink_balanced
     (P : FiveGradeBracketPacket L ι R)
     {x y : L}
-    (hx : x ∈ P.closure.packet.sourceSet)
-    (hy : y ∈ P.closure.packet.sinkSet) :
+    (hx : x ∈ P.closure.sourceSet)
+    (hy : y ∈ P.closure.sinkSet) :
     IsWeylBalanced P.gradeCarrier x y := by
   unfold IsWeylBalanced
   rw [P.source_weight hx, P.sink_weight hy]
@@ -145,8 +145,8 @@ theorem source_sink_balanced
 theorem incoming_outgoing_balanced
     (P : FiveGradeBracketPacket L ι R)
     {x y : L}
-    (hx : x ∈ P.closure.packet.inversion.incomingSet)
-    (hy : y ∈ P.closure.packet.inversion.outgoingSet) :
+    (hx : x ∈ P.closure.inversion.incomingSet)
+    (hy : y ∈ P.closure.inversion.outgoingSet) :
     IsWeylBalanced P.gradeCarrier x y := by
   unfold IsWeylBalanced
   rw [P.incoming_weight hx, P.outgoing_weight hy]
@@ -156,8 +156,8 @@ theorem incoming_outgoing_balanced
 theorem center_center_balanced
     (P : FiveGradeBracketPacket L ι R)
     {x y : L}
-    (hx : x ∈ P.closure.packet.centerSet)
-    (hy : y ∈ P.closure.packet.centerSet) :
+    (hx : x ∈ P.closure.centerSet)
+    (hy : y ∈ P.closure.centerSet) :
     IsWeylBalanced P.gradeCarrier x y := by
   unfold IsWeylBalanced
   rw [P.center_weight hx, P.center_weight hy]
@@ -170,8 +170,8 @@ readout.
 theorem source_sink_bracket_grade_zero
     (P : FiveGradeBracketPacket L ι R)
     {x y : L}
-    (hx : x ∈ P.closure.packet.sourceSet)
-    (hy : y ∈ P.closure.packet.sinkSet) :
+    (hx : x ∈ P.closure.sourceSet)
+    (hy : y ∈ P.closure.sinkSet) :
     IsPhysicalGradeZero P.gradeCarrier (P.bracket x y) :=
   bracket_is_physical_of_balanced P.gradeCarrier P.gradeCarrier P.bracket
     P.bracket_additive (P.source_sink_balanced hx hy)
@@ -183,8 +183,8 @@ bracket readout.
 theorem incoming_outgoing_bracket_grade_zero
     (P : FiveGradeBracketPacket L ι R)
     {x y : L}
-    (hx : x ∈ P.closure.packet.inversion.incomingSet)
-    (hy : y ∈ P.closure.packet.inversion.outgoingSet) :
+    (hx : x ∈ P.closure.inversion.incomingSet)
+    (hy : y ∈ P.closure.inversion.outgoingSet) :
     IsPhysicalGradeZero P.gradeCarrier (P.bracket x y) :=
   bracket_is_physical_of_balanced P.gradeCarrier P.gradeCarrier P.bracket
     P.bracket_additive (P.incoming_outgoing_balanced hx hy)
@@ -196,18 +196,18 @@ readout.
 theorem center_center_bracket_grade_zero
     (P : FiveGradeBracketPacket L ι R)
     {x y : L}
-    (hx : x ∈ P.closure.packet.centerSet)
-    (hy : y ∈ P.closure.packet.centerSet) :
+    (hx : x ∈ P.closure.centerSet)
+    (hy : y ∈ P.closure.centerSet) :
     IsPhysicalGradeZero P.gradeCarrier (P.bracket x y) :=
   bracket_is_physical_of_balanced P.gradeCarrier P.gradeCarrier P.bracket
     P.bracket_additive (P.center_center_balanced hx hy)
 
 /-- A bracket packet obtained directly from a closure packet and bracket data. -/
 def ofClosurePacket
-    (P : FiveGradeClosurePacket L ι R)
+    (P : FiveGradeBoundaryCurrentPacket L ι R)
     (gradeCarrier : WeylGradedCarrier L)
     (gradeCompat : ∀ x : L,
-      gradeCarrier.gradeOf x = toWeylGrade (P.packet.inversion.grade x))
+      gradeCarrier.gradeOf x = toWeylGrade (P.inversion.grade x))
     (bracket : L → L → L)
     (bracket_additive :
       IsAdditiveWeightForBracket gradeCarrier gradeCarrier bracket) :

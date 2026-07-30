@@ -81,8 +81,9 @@ Compatibility theorem asserting that the split completion supports the current m
 This matches the downstream owner-surface usage style while maintaining the honest 
 algebraic boundary limits of the repository.
 -/
-theorem splitCompletion_to_current_morphism :
+theorem splitCompletion_to_current_morphism
+    (M : SplitCliffordCurrentMorphism) :
     Nonempty SplitCliffordCurrentMorphism :=
-  ⟨trivialSplitCliffordCurrentMorphism⟩
+  ⟨M⟩
 
 end InfoGeometry.Canonical.SplitCliffordHeisenbergAdapter

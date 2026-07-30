@@ -180,7 +180,7 @@ The value `beta = 2π / a` is not a consequence of an abstract modular flow
 alone; it comes from the geometric normalization of the boost parameter.
 -/
 structure ModularBoostTemperatureCalibration
-    (Op : Type*) [Mul Op]
+    (Op : Type*) [Monoid Op]
     (σ : OperatorFlow Op)
     (beta : ℝ) where
   /-- Proper acceleration of the observer. -/
@@ -196,7 +196,7 @@ structure ModularBoostTemperatureCalibration
 
 namespace ModularBoostTemperatureCalibration
 
-variable {Op : Type*} [Mul Op]
+variable {Op : Type*} [Monoid Op]
 variable {σ : OperatorFlow Op}
 variable {beta : ℝ}
 variable (C : ModularBoostTemperatureCalibration Op σ beta)

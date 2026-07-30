@@ -64,47 +64,28 @@ theorem primon_casimir_eigenvalues
 The Pauli trace formula recovers the four-momentum components from the
 super-Poincare anticommutator matrix `2 σ^μ P_μ`.
 -/
-theorem pauli_supercharge_trace_recovers_four_momentum
-    (P : PauliParavector) (a : Fin 4) :
-    PauliParavector.superchargeMomentumReadout a P =
-      match a with
-      | 0 => (P.energy : ℂ)
-      | 1 => (P.px : ℂ)
-      | 2 => (P.py : ℂ)
-      | 3 => (P.pz : ℂ) :=
-  PauliParavector.superchargeMomentumReadout_eq_components P a
+alias pauli_supercharge_trace_recovers_four_momentum :=
+  PauliParavector.superchargeMomentumReadout_eq_components
 
 /--
 The lowered Pauli trace formula recovers the metric-lowered four-momentum
 components from the same super-Poincare anticommutator matrix.
 -/
-theorem pauli_supercharge_trace_recovers_lowered_four_momentum
-    (P : PauliParavector) (a : Fin 4) :
-    PauliParavector.loweredSuperchargeMomentumReadout a P =
-      match a with
-      | 0 => (P.energy : ℂ)
-      | 1 => (-(P.px) : ℂ)
-      | 2 => (-(P.py) : ℂ)
-      | 3 => (-(P.pz) : ℂ) :=
-  PauliParavector.loweredSuperchargeMomentumReadout_eq_components P a
+alias pauli_supercharge_trace_recovers_lowered_four_momentum :=
+  PauliParavector.loweredSuperchargeMomentumReadout_eq_components
 
 /--
 The determinant of `{Q,Qbar} = 2 σ·P` is four times the finite Pauli/Minkowski
 Casimir.
 -/
-theorem pauli_supercharge_anticommutator_det_eq_four_casimir
-    (P : PauliParavector) :
-    Matrix.det P.superPoincareAnticommutatorMatrix =
-      ((4 * P.minkowskiNormSq : ℝ) : ℂ) :=
-  PauliParavector.det_superPoincareAnticommutatorMatrix_eq_four_minkowskiNormSq P
+alias pauli_supercharge_anticommutator_det_eq_four_casimir :=
+  PauliParavector.det_superPoincareAnticommutatorMatrix_eq_four_minkowskiNormSq
 
 /--
 The total trace of `{Q,Qbar} = 2 σ·P` is four times the energy component.
 -/
-theorem pauli_supercharge_anticommutator_trace_eq_four_energy
-    (P : PauliParavector) :
-    Matrix.trace P.superPoincareAnticommutatorMatrix = ((4 * P.energy : ℝ) : ℂ) :=
-  PauliParavector.trace_superPoincareAnticommutatorMatrix_eq_four_energy P
+alias pauli_supercharge_anticommutator_trace_eq_four_energy :=
+  PauliParavector.trace_superPoincareAnticommutatorMatrix_eq_four_energy
 
 /--
 The supercharge anticommutator matrix is determinant-singular exactly on the
@@ -119,20 +100,14 @@ theorem pauli_supercharge_anticommutator_singular_iff_null
 Timelike finite Pauli momenta have positive determinant for the supercharge
 anticommutator matrix.
 -/
-theorem pauli_supercharge_anticommutator_det_pos_of_timelike
-    {P : PauliParavector}
-    (hP : P.IsTimelike) :
-    0 < (Matrix.det P.superPoincareAnticommutatorMatrix).re :=
-  PauliParavector.det_superPoincareAnticommutatorMatrix_pos_of_timelike hP
+alias pauli_supercharge_anticommutator_det_pos_of_timelike :=
+  PauliParavector.det_superPoincareAnticommutatorMatrix_pos_of_timelike
 
 /--
 Spacelike finite Pauli momenta have negative determinant real part for the
 supercharge anticommutator matrix.
 -/
-theorem pauli_supercharge_anticommutator_det_neg_of_spacelike
-    {P : PauliParavector}
-    (hP : P.IsSpacelike) :
-    (Matrix.det P.superPoincareAnticommutatorMatrix).re < 0 :=
-  PauliParavector.det_superPoincareAnticommutatorMatrix_neg_of_spacelike hP
+alias pauli_supercharge_anticommutator_det_neg_of_spacelike :=
+  PauliParavector.det_superPoincareAnticommutatorMatrix_neg_of_spacelike
 
 end InfoGeometry.Quantum.PoincareSupercharge

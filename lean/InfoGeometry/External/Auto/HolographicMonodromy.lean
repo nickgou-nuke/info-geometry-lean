@@ -17,9 +17,5 @@ theorem conformal_flow_eq_monodromy (g : MajoranaGenerator) :
   ConformalFlowPhase g = BraidGroupMonodromy g := by rfl
 
 theorem linking_lambda_F (val1 val2 : Real) (h1 : Re_lambda val1) (h2 : F_wedge_F_zero val2) : 
-  Re_lambda val1 ↔ F_wedge_F_zero val2 := by
-  constructor
-  · intro _
-    exact h2
-  · intro _
-    exact h1
+  Re_lambda val1 ∧ F_wedge_F_zero val2 :=
+  ⟨h1, h2⟩

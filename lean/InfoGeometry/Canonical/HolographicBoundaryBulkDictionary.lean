@@ -39,10 +39,6 @@ A direct boundary-to-bulk coordinate map used by this local algebraic model.
 def holographic_map (M : Monomial) : SymmState2x2 ℝ :=
   ⟨M.coeff, M.exp, 0⟩
 
-/-! The dictionary carrier is the map itself. The former witness structure
-contained no compatibility law beyond `toBulk`. -/
-abbrev HolographicDictionaryWitness (Boundary Bulk : Type*) := Boundary → Bulk
-
 /-- The map reads the boundary coefficient as the doubled bulk trace. -/
 theorem holographic_trace_isomorphism (M : Monomial) :
     trace_2x2 (holographic_map M) = 2 * M.coeff := by

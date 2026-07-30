@@ -106,24 +106,6 @@ theorem exists_split [PerfectField K] :
   exact ⟨B, hss, hnil, hscomm_n, hs, hn, by simpa [B, add_comm] using hsum⟩
 
 omit [FiniteDimensional K V] in
-/-- Readback: the nilpotent part is nilpotent. -/
-theorem nilpotentLaw_readback (B : JordanChevalleySplit (f := f)) :
-    IsNilpotentEnd B.nilpotent := by
-  exact B.nilpotentLaw
-
-omit [FiniteDimensional K V] in
-/-- Readback: the semisimple part is semisimple. -/
-theorem semisimpleLaw_readback (B : JordanChevalleySplit (f := f)) :
-    IsSemisimpleEnd B.semisimple := by
-  exact B.semisimpleLaw
-
-omit [FiniteDimensional K V] in
-/-- Readback: the split components commute. -/
-theorem commute_readback (B : JordanChevalleySplit (f := f)) :
-    Commute B.semisimple B.nilpotent := by
-  exact B.commute
-
-omit [FiniteDimensional K V] in
 /-- Readback: the semisimple and nilpotent parts commute with any symmetry commuting with `f`. -/
 theorem parts_commute_with_of_commute [PerfectField K] {g : Module.End K V} (hfg : Commute f g)
     (B : JordanChevalleySplit (f := f)) :

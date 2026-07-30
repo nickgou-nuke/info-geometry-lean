@@ -120,14 +120,4 @@ theorem aDag_aDag_anticomm (i j : Fin 4) : aDag i * aDag j + aDag j * aDag i = 0
   · subst j; simp [aDag_sq_zero]
   · dsimp [aDag]; rw [ι_mul_ι_add_swap, polar_aDag_aDag_polar]; simp
 
-/-- Complete CAR packet for 4 fermionic modes from Cl(4,4). -/
-theorem car_packet :
-    (∀ i : Fin 4, a i * a i = 0) ∧
-    (∀ i : Fin 4, aDag i * aDag i = 0) ∧
-    (∀ i j : Fin 4, a i * a j + a j * a i = 0) ∧
-    (∀ i j : Fin 4, aDag i * aDag j + aDag j * aDag i = 0) ∧
-    (∀ i j : Fin 4,
-      a i * aDag j + aDag j * a i = if i = j then (1 : Cl44) else 0) := by
-  exact ⟨a_sq_zero, aDag_sq_zero, a_a_anticomm, aDag_aDag_anticomm, car_identity⟩
-
 end InfoGeometry.OperatorAlgebra.CliffordSplitOctonionCAR

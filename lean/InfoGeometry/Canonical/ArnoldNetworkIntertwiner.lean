@@ -45,8 +45,10 @@ noncomputable def arnoldToDoubledKreinIntertwiner_of_expertsFix
     intro o s
     rfl
   map_support := by
-    intro _ _
-    trivial
+    intro s _
+    simpa [FierzChannelReadout.toQuantumPresentation,
+      toQuantumPresentationWith, defaultSupport, doubledFierzReadout] using
+      (InfoGeometry.Quantum.Fierz.infoHilbert_nonneg s)
   map_generator := by
     intro s
     change arnoldGenerator (E := E) n net β s = s

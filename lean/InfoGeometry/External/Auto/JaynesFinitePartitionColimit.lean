@@ -182,9 +182,6 @@ structure JaynesFinitePartitionSynthesis where
     relativeEntropy p p = 0
 
   -- Textual summary of the finite statements carried by this record.
-  slogan : String :=
-    "Finite partitions carry normalized distributions; " ++
-    "uniform entropy is log n; " ++
-    "self-relative entropy is zero."
+  slogan : String
 
 end

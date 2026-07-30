@@ -27,9 +27,6 @@ abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
 /-- Reflection operator chosen compatibly with existing basis (`W = E = K`). -/
 noncomputable def W : M2R := K
 
-@[simp] theorem W_eq_K : W = K := rfl
-@[simp] theorem W_eq_E : W = E := by rfl
-
 /-- Weyl involution (`W² = 1`). -/
 theorem weyl_involution : W * W = (1 : M2R) := by
   simp [W, K]

@@ -1,66 +1,54 @@
-import Mathlib.Algebra.Star.Basic
-import Mathlib.Algebra.Ring.Basic
+import InfoGeometry.Algebra.CuntzN
 
 namespace CuntzAlgebra
 
 variable {A : Type*} [Ring A] [StarRing A]
 
-/-- The pair of generators S₁, S₂ for the Cuntz algebra 𝒪₂.
-    They are isometries (Sᵢ* Sᵢ = 1) whose range projections sum to 1. -/
-structure Cuntz2Isometries (A : Type*) [Ring A] [StarRing A] where
-  S1 : A
-  S2 : A
-  h_isometry1 : star S1 * S1 = 1
-  h_isometry2 : star S2 * S2 = 1
-  h_range_sum : S1 * star S1 + S2 * star S2 = 1
+/-- The two-generator instance of the generic Cuntz owner. -/
+abbrev Cuntz2Isometries (A : Type*) [Ring A] [StarRing A] :=
+  InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) A
 
-/-- Range projection P₁ = S₁ S₁* -/
+/-- The first generator, exposed only as a named index of the generic owner. -/
+def S1 (c : Cuntz2Isometries A) : A := c.S 0
+
+/-- The second generator, exposed only as a named index of the generic owner. -/
+def S2 (c : Cuntz2Isometries A) : A := c.S 1
+
+theorem h_isometry1 (c : Cuntz2Isometries A) :
+    star (S1 c) * S1 c = 1 := by
+  simpa [S1] using c.isometry 0 0
+
+theorem h_isometry2 (c : Cuntz2Isometries A) :
+    star (S2 c) * S2 c = 1 := by
+  simpa [S2] using c.isometry 1 1
+
+theorem h_range_sum (c : Cuntz2Isometries A) :
+    S1 c * star (S1 c) + S2 c * star (S2 c) = 1 := by
+  simpa [S1, S2] using c.range_sum
+
 def rangeProj1 (c : Cuntz2Isometries A) : A :=
-  c.S1 * star c.S1
+  S1 c * star (S1 c)
 
-/-- Range projection P₂ = S₂ S₂* -/
 def rangeProj2 (c : Cuntz2Isometries A) : A :=
-  c.S2 * star c.S2
+  S2 c * star (S2 c)
 
-/-- 🏆 THEOREM 1: Range projection P₁ is idempotent (P₁² = P₁) -/
 theorem rangeProj1_idem (c : Cuntz2Isometries A) :
     rangeProj1 c * rangeProj1 c = rangeProj1 c := by
-  dsimp [rangeProj1]
-  rw [mul_assoc c.S1 (star c.S1) (c.S1 * star c.S1)]
-  rw [← mul_assoc (star c.S1) c.S1 (star c.S1)]
-  rw [c.h_isometry1, one_mul]
+  simpa [rangeProj1, S1] using
+    InfoGeometry.Algebra.Cuntz.range_projection_idempotent c 0
 
-/-- 🏆 THEOREM 2: Range projection P₂ is idempotent (P₂² = P₂) -/
 theorem rangeProj2_idem (c : Cuntz2Isometries A) :
     rangeProj2 c * rangeProj2 c = rangeProj2 c := by
-  dsimp [rangeProj2]
-  rw [mul_assoc c.S2 (star c.S2) (c.S2 * star c.S2)]
-  rw [← mul_assoc (star c.S2) c.S2 (star c.S2)]
-  rw [c.h_isometry2, one_mul]
+  simpa [rangeProj2, S2] using
+    InfoGeometry.Algebra.Cuntz.range_projection_idempotent c 1
 
-/-- 🏆 THEOREM 3: Orthogonality of Isometries S₁* S₂ = 0 -/
 theorem isometries_ortho (c : Cuntz2Isometries A) :
-    star c.S1 * c.S2 = 0 := by
-  have h : star c.S1 * c.S2 = star c.S1 * c.S2 + star c.S1 * c.S2 := by
-    calc star c.S1 * c.S2
-      _ = star c.S1 * (1 * c.S2) := by rw [one_mul]
-      _ = star c.S1 * ((c.S1 * star c.S1 + c.S2 * star c.S2) * c.S2) := by rw [c.h_range_sum]
-      _ = star c.S1 * (c.S1 * star c.S1 * c.S2 + c.S2 * star c.S2 * c.S2) := by rw [add_mul]
-      _ = star c.S1 * (c.S1 * star c.S1 * c.S2) + star c.S1 * (c.S2 * star c.S2 * c.S2) := by rw [mul_add]
-      _ = (star c.S1 * c.S1) * (star c.S1 * c.S2) + (star c.S1 * c.S2) * (star c.S2 * c.S2) := by simp [mul_assoc]
-      _ = 1 * (star c.S1 * c.S2) + (star c.S1 * c.S2) * 1 := by rw [c.h_isometry1, c.h_isometry2]
-      _ = star c.S1 * c.S2 + star c.S1 * c.S2 := by rw [one_mul, mul_one]
-  have h2 : star c.S1 * c.S2 + 0 = star c.S1 * c.S2 + star c.S1 * c.S2 := by
-    rw [add_zero]
-    exact h
-  exact (add_left_cancel h2).symm
+    star (S1 c) * S2 c = 0 := by
+  simpa [S1, S2] using c.isometry 0 1
 
-/-- 🏆 THEOREM 4: Orthogonality of Range Projections P₁ P₂ = 0 -/
 theorem rangeProjs_ortho (c : Cuntz2Isometries A) :
     rangeProj1 c * rangeProj2 c = 0 := by
-  dsimp [rangeProj1, rangeProj2]
-  rw [mul_assoc c.S1 (star c.S1) (c.S2 * star c.S2)]
-  rw [← mul_assoc (star c.S1) c.S2 (star c.S2)]
-  rw [isometries_ortho c, zero_mul, mul_zero]
+  simpa [rangeProj1, rangeProj2, S1, S2] using
+    InfoGeometry.Algebra.Cuntz.range_projection_orthogonal c 0 1 (by decide)
 
 end CuntzAlgebra

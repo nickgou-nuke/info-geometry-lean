@@ -157,7 +157,9 @@ structure CoexactMaxCalCurrentReadout where
   current : Fin n1 → ℝ
   currentCoexact : IsCoexactOneForm d1 current
   flow : CausalNonequilibriumFlow ℝ
-  maxCal : MaximumCaliberThermodynamicBridge flow
+  maxCal_commutator :
+    flow.P_forward * flow.P_backward -
+        flow.P_backward * flow.P_forward = flow.d_ln_Q
   currentReadout : (Fin n1 → ℝ) → ℝ
   readout_eq_entropy : currentReadout current = entropy_production flow
 
@@ -180,7 +182,8 @@ theorem currentReadout_eq_dlnQ
     (B : CoexactMaxCalCurrentReadout (n0 := n0) (n1 := n1) (n2 := n2)) :
     B.currentReadout B.current = B.flow.d_ln_Q := by
   rw [B.readout_eq_entropy]
-  exact MaximumCaliberThermodynamicBridge.entropy_production_eq_dlnQ B.maxCal
+  exact InfoGeometry.Topology.MaximumCaliberPath.entropy_production_eq_dlnQ
+    B.flow B.maxCal_commutator
 
 end CoexactMaxCalCurrentReadout
 

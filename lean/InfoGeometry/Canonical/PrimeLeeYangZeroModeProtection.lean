@@ -21,30 +21,10 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection
 
-/-! The defect-free limit carrier is the supplied completed-xi readout itself;
-the former packet added no field or law. -/
 @[socket_debt_tag]
-abbrev DefectFreeLimitPacket (CompletedXiReadout : Type) := CompletedXiReadout
-
-@[socket_debt_tag]
-abbrev ZeroModeProtectionPacket
-    (CompletedXiReadout ProtectionReadout : Type) :=
-  DefectFreeLimitPacket CompletedXiReadout × ProtectionReadout
-
-namespace ZeroModeProtectionPacket
-
-variable {CompletedXiReadout ProtectionReadout : Type}
-variable
-  (P : ZeroModeProtectionPacket
-    CompletedXiReadout ProtectionReadout)
-
-abbrev defectFreeLimit :
-    DefectFreeLimitPacket CompletedXiReadout :=
-  P.1
-
-abbrev protectionReadout : ProtectionReadout :=
-  P.2
-
-end ZeroModeProtectionPacket
+structure ZeroModeProtectionPacket
+    (CompletedXiReadout ProtectionReadout : Type) where
+  defectFreeLimit : CompletedXiReadout
+  protectionReadout : ProtectionReadout
 
 end InfoGeometry.Canonical.PrimeLeeYangZeroModeProtection

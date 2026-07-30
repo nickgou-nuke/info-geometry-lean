@@ -30,21 +30,6 @@ def metriplecticBracket (D : Data Obs) (a h : Obs) : ℝ :=
 def metriplecticEvolution (D : Data Obs) (dH dS dA : Obs) : ℝ :=
   D.poisson dA dH + D.metric dA dS
 
-theorem bracket_energy_zero (D : Data Obs) :
-    bracket D D.H D.H = 0 := by
-  exact InfoGeometry.Geometry.MetriplecticStructure.energy_conservation
-    (Obs := Obs) (R := ℝ) D
-
-theorem energy_conservation (D : Data Obs) :
-    metriplecticEvolution D D.H D.S D.H = 0 := by
-  exact InfoGeometry.Geometry.MetriplecticStructure.energy_conservation
-    (Obs := Obs) (R := ℝ) D
-
-theorem entropy_production_nonneg (D : Data Obs) :
-    0 ≤ metriplecticEvolution D D.H D.S D.S := by
-  exact InfoGeometry.Geometry.MetriplecticStructure.entropy_total_evolution_nonnegative
-    (Obs := Obs) (R := ℝ) D
-
 theorem bracket_energy_observable_zero (D : Data Obs) (h : Obs) :
     D.poisson D.H h + D.metric D.H D.S = D.poisson D.H h := by
   rw [D.metric_H_casimir, add_zero]

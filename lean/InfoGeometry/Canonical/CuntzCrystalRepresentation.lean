@@ -58,14 +58,4 @@ theorem projections_disjoint (w : CrystalWord) :
       · left
         rfl
 
-/-- Combined Cuntz-Kashiwara representation theorem. -/
-theorem cuntz_crystal_representation_packet (w : CrystalWord) :
-    raiseLeft (lowerLeft w) = some w ∧
-    raiseRight (lowerRight w) = some w ∧
-    raiseLeft (lowerRight w) = none ∧
-    raiseRight (lowerLeft w) = none ∧
-    (w ≠ [] → leftProjection w = some w ∨ rightProjection w = some w) := by
-  refine ⟨raiseLeft_lowerLeft w, raiseRight_lowerRight w, raiseLeft_lowerRight w,
-          raiseRight_lowerLeft w, cuntz_projection_reconstruction w⟩
-
 end InfoGeometry.Canonical.KashiwaraCuntzCohomology

@@ -116,10 +116,6 @@ namespace AutomorphicScaleBridge
 variable {State : Type*}
 variable (G : AutomorphicScaleBridge State)
 
-@[rep_depth projective]
-theorem gaugeScale_apply (s : State) :
-    G.gaugeScale s = G.gaugeScale s := rfl
-
 end AutomorphicScaleBridge
 
 /--
@@ -164,10 +160,6 @@ namespace WeylGWVolumeCarrier
 
 variable {State : Type*}
 variable (V : WeylGWVolumeCarrier State)
-
-@[rep_depth projective]
-theorem physicalVolume_apply (s : State) :
-    V.physicalVolume s = V.physicalVolume s := rfl
 
 /--
 Gauge-fixed physical volume is invariant under nonzero Weyl scaling.

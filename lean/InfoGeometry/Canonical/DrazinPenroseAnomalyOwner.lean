@@ -36,20 +36,9 @@ theorem noncommutingSplit_implies_spectralMetricMismatch (P : ProjectorPair (R :
   intro hComm
   exact ProjectorPair.commutator_ne_zero_implies_mismatch_ne_zero (P := P) hComm
 
-/--
-Historical physical-anomaly name, now restricted to the actual algebraic
-projector anomaly.  A separate physical model may interpret this obstruction,
-but no unconstrained interpretation proposition is stored here.
--/
-@[rep_depth transport]
-abbrev PhysicalAnomalyRealizationWitness
-    (P : ProjectorPair (R := R)) : Prop :=
-  P.HasProjectorAnomaly
-
-/-- The historical realization name projects to the native anomaly owner. -/
-theorem PhysicalAnomalyRealizationWitness.projectorAnomaly
+theorem projectorAnomaly
     {P : ProjectorPair (R := R)}
-    (h : PhysicalAnomalyRealizationWitness P) :
+    (h : P.HasProjectorAnomaly) :
     P.HasProjectorAnomaly :=
   h
 

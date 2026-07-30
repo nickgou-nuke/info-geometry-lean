@@ -38,18 +38,18 @@ theorem finite_dyson_vandermonde_potential
 /-- Finite Vandermonde noncollision criterion re-exported from the quasicrystal packet. -/
 theorem finite_vandermonde_nonzero_iff_injective
     {R : Type*} [CommRing R] [IsDomain R] {n : ℕ}
-    (W : InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness
-      (R := R) (n := n)) :
-    W.determinant ≠ 0 ↔ Function.Injective W :=
-  W.determinant_ne_zero_iff_injective
+    (W : Fin n → R) :
+    InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant W ≠ 0 ↔
+      Function.Injective W :=
+  InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant_ne_zero_iff_injective W
 
 /-- Finite Vandermonde collision locus re-exported from the quasicrystal packet. -/
 theorem finite_vandermonde_zero_iff_collision
     {R : Type*} [CommRing R] [IsDomain R] {n : ℕ}
-    (W : InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness
-      (R := R) (n := n)) :
-    W.determinant = 0 ↔ ∃ i j : Fin n, W i = W j ∧ i ≠ j :=
-  W.determinant_eq_zero_iff_collision
+    (W : Fin n → R) :
+    InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant W = 0 ↔
+      ∃ i j : Fin n, W i = W j ∧ i ≠ j :=
+  InfoGeometry.Canonical.VandermondeExclusionBridge.FiniteVandermondeExclusionWitness.determinant_eq_zero_iff_collision W
 
 /-- Finite prime-lattice entropy maximizer re-exported from the lattice gas packet. -/
 theorem finite_prime_lattice_entropy_maximizer

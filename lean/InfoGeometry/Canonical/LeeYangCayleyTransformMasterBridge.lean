@@ -62,17 +62,4 @@ theorem cayley_temperature_re_half (s : ℂ) (h_anti : s = 1 - star s) :
   rw [sub_re, one_re, star_def, conj_re] at h_re
   linarith
 
-/--
-**Main Theorem: Grand Lee-Yang Cayley Transform Master Duality**
-Unifies Cayley unit circle anticommutative sum law and Cayley temperature fixed locus real part law into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms under toolchain v4.28.1.
--/
-theorem grand_lee_yang_cayley_transform_master_duality
-    (z : ℂ) (h_norm : star z * z = 1) (h_den : 1 - z ≠ 0)
-    (s : ℂ) (h_anti : s = 1 - star s) :
-    ((1 + z) / (1 - z) + star ((1 + z) / (1 - z)) = 0) ∧
-    (s.re = 1 / 2) := ⟨
-  cayley_unit_circle_anticomm_sum z h_norm h_den,
-  cayley_temperature_re_half s h_anti
-⟩
-
 end InfoGeometry.Canonical.LeeYangCayleyTransformMasterBridge

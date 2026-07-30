@@ -136,14 +136,22 @@ def sigmaX : Mat2 :=
 def sigmaYReal : Mat2 :=
   !![(0 : ℝ), -1; 1, 0]
 
-/-- A finite quadratic Casimir readout for the pair `(sigmaX, sigmaYReal)`. -/
-def toyCasimir2 (A B : Mat2) : Mat2 :=
+/-- Noncommutative quadratic Casimir expression for a pair of generators. -/
+def quadraticCasimir2 (A B : Mat2) : Mat2 :=
   A * A + B * B
 
-theorem toyCasimir2_sigmaX_sigmaYReal :
-    toyCasimir2 sigmaX sigmaYReal = 0 := by
+theorem quadraticCasimir2_sigmaX_sigmaYReal :
+    quadraticCasimir2 sigmaX sigmaYReal = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [toyCasimir2, sigmaX, sigmaYReal]
+    simp [quadraticCasimir2, sigmaX, sigmaYReal]
+
+/-! Historical names retained as compatibility aliases for the genuine
+    noncommutative quadratic Casimir owner. -/
+abbrev toyCasimir2 := quadraticCasimir2
+
+theorem toyCasimir2_sigmaX_sigmaYReal :
+    toyCasimir2 sigmaX sigmaYReal = 0 :=
+  quadraticCasimir2_sigmaX_sigmaYReal
 
 end InfoGeometry.Canonical.BiQuaternionKahlerFinite

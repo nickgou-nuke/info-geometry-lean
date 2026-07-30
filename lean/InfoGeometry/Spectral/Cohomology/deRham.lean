@@ -273,13 +273,19 @@ structure MayerVietorisSequence (M : Type*) [TopologicalSpace M] [SmoothManifold
 structure LocalityPrinciple (V : Type u) [AddCommGroup V] [Module ℝ V]
     [SmoothManifold ℂ] [DifferentialForms ℂ V]
     (C : deRhamComplex ℂ V) where
-  criticalStrip : Set ℂ := {s : ℂ | 0 < s.re ∧ s.re < 1}
   localToGlobal : ∀ s : {s : ℂ | 0 < s.re ∧ s.re < 1},
     ∃ (U : Set ℂ) (_hU : IsOpen U) (_hs : (s : ℂ) ∈ U)
       (_smoothU : SmoothManifold U) (_formsU : DifferentialForms U V)
       (CU : deRhamComplex U V),
       ∀ k, Nonempty (deRhamComplex.deRhamCohomology C k ≃+
         deRhamComplex.deRhamCohomology CU k)
+
+namespace LocalityPrinciple
+
+/-- The fixed open critical strip used by the locality principle. -/
+def criticalStrip : Set ℂ := {s : ℂ | 0 < s.re ∧ s.re < 1}
+
+end LocalityPrinciple
 
 /-- The Locality Principle for de Rham cohomology on the critical strip -/
 def localToGlobal {V : Type u} [AddCommGroup V] [Module ℝ V]

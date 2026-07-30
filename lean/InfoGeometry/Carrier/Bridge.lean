@@ -48,27 +48,9 @@ theorem triple_nilpotent_grade_one {A : Type*} [Ring A]
     SupergradedHopping.grade T.N = 1 := by
   exact SupergradedHopping.nilpotent_is_odd T.is_nilpotent
 
-/--
-If a square-zero element is declared nonzero, it is still grade one in the
-`TripleAlgebra` sense.  The nonzero hypothesis is retained for compatibility
-with callers that use the stronger mathematical phrase "nonzero nilpotent";
-the current `SupergradedHopping` law only needs square-zero nilpotence.
--/
-theorem triple_nilpotent_is_odd {A : Type*} [Ring A]
-    (T : TripleAlgebra A) [SupergradedHopping A]
-    (hN : T.N ≠ 0) :
-    SupergradedHopping.grade T.N = 1 := by
-  have _nonzero_witness : T.N ≠ 0 := hN
-  exact triple_nilpotent_grade_one T
-
 /-- The `TripleAlgebra` null-channel pairing is zero by the structure law. -/
 theorem triple_pairing_null {A : Type*} [Ring A]
     (T : TripleAlgebra A) : T.pairing T.L T.L = 0 := by
   exact T.pairing_null_L
-
-/-- Compatibility alias for the old placeholder-flavored name. -/
-theorem triple_pairing_null_alias {A : Type*} [Ring A]
-    (T : TripleAlgebra A) : T.pairing T.L T.L = 0 := by
-  exact triple_pairing_null T
 
 end InfoGeometry.Carrier

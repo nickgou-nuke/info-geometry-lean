@@ -23,6 +23,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.JaynesLDDSBridge
 
 open InfoGeometry.Canonical.AFRecursiveLimitBridge
+open InfoGeometry.Canonical.CategoricalRecursiveClosureBridge
 open InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 
 universe u
@@ -74,8 +75,8 @@ theorem centeredScore_readback (n : Nat) :
           (directLimitOf P.tower.bond n (1 : Stage n)) := by
             simp [centeredScore, map_sub]
     _ = P.tower.toLimit n (P.density n) - 1 := by
-          rw [P.tower.readback (Limit := Limit) n (P.density n)]
-          rw [P.tower.readback (Limit := Limit) n (1 : Stage n)]
+          rw [directLimit_readback P.tower.bond P.tower.toLimit P.tower.hcone n (P.density n)]
+          rw [directLimit_readback P.tower.bond P.tower.toLimit P.tower.hcone n (1 : Stage n)]
           simp
 
 /-- The tower image of the density is constant along compatible stages. -/
@@ -83,14 +84,15 @@ theorem density_stage_constant
     (F : ∀ n : Nat, Stage n)
     (hF : ∀ n : Nat, P.tower.bond n (F n) = F (n + 1)) :
     ∀ n : Nat, P.tower.toLimit n (F n) = P.tower.toLimit 0 (F 0) :=
-  P.tower.stageImage_constant (Limit := Limit) F hF
+  cone_stageImage_constant (Stage := Stage) (Limit := Limit)
+    P.tower.bond P.tower.toLimit P.tower.hcone F hF
 
 /-- The density tower readback is the same at every compatible stage. -/
 theorem density_readback (n : Nat) :
     directLimitLift P.tower.bond P.tower.toLimit P.tower.hcone
         (directLimitOf P.tower.bond n (P.density n)) =
       P.tower.toLimit n (P.density n) :=
-  P.tower.readback (Limit := Limit) n (P.density n)
+  directLimit_readback P.tower.bond P.tower.toLimit P.tower.hcone n (P.density n)
 
 /-- The centered score is compatible with the identity reference state. -/
 theorem centeredScore_compatibility (n : Nat) :

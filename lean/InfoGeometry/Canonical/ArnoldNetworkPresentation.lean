@@ -59,7 +59,7 @@ noncomputable def toQuantumPresentation
   State := ArnoldMajoranaCarrier E
   Observable := ArnoldMajoranaCarrier E → ArnoldMajoranaCarrier E
   act := fun A ψ => A ψ
-  support := fun ψ => ψ = ψ
+  support := fun ψ => 0 ≤ arnoldMetricReadout ψ
   generator := arnoldGenerator n net β
   metricReadout := arnoldMetricReadout
   phaseReadout := arnoldPhaseReadout

@@ -54,9 +54,9 @@ theorem amplituhedron_on_shell_factorization {R : Type*} [CommRing R] {ι : Type
   exact on_shell_factorization_klein_quadric_plus i
 
 /-- Cuntz super-Poincare translation relation. -/
-theorem Cuntz_poincare_translation_relation (n : ℕ) (P : CuntzSuperPoincarePacket n) :
-    P.poincareTranslation = superMomentum P.supercharge := by
-  exact P.poincare_translation_defined_by_supercharge
+theorem Cuntz_poincare_translation_relation (n : ℕ) (i : Fin n) :
+    cuntzSuperMomentum n i = superMomentum (cuntzMajoranaSupercharge n i) := by
+  rfl
 
 /-- Bost colimit trace commutativity. -/
 theorem bost_colimit_trace_commutativity

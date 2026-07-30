@@ -85,9 +85,9 @@ structure Bridge where
   state_eq_weylState :
     state =
       weylGauge.stateOfProfiles
-        projectiveGW.countState.counts
+        projectiveGW.counts
         referenceCounts
-        projectiveGW.countState.support
+        projectiveGW.support
 
   /-- Projective scaling action on model states. -/
   scaleState :
@@ -148,9 +148,9 @@ theorem J_fixes_coneVector :
 theorem normalizedShape_scale_counts
     (β c : ℝ) (hc : c ≠ 0) :
     finiteArithmeticNormalizedRay
-        (fun n => c * B.projectiveGW.countState.counts n)
-        B.projectiveGW.countState.support β =
-      B.projectiveGW.countState.normalizedShape β :=
+        (fun n => c * B.projectiveGW.counts n)
+        B.projectiveGW.support β =
+      B.projectiveGW.normalizedShape β :=
   B.projectiveGW.normalizedShape_scale_counts β c hc
 
 /-- Weyl calibration readback: total equals scale times shape. -/
@@ -162,9 +162,9 @@ theorem weyl_total_eq_scale_mul_shape
         B.weylGauge.shapeCoreReadout B.state u := by
   rw [B.state_eq_weylState]
   exact B.weylGauge.total_eq_scale_mul_shape
-    B.projectiveGW.countState.counts
+    B.projectiveGW.counts
     B.referenceCounts
-    B.projectiveGW.countState.support
+    B.projectiveGW.support
     u
 
 /--

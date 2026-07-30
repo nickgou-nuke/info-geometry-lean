@@ -234,15 +234,13 @@ end LorentzLinearPresentation
 
 /--
 An algebraic presentation operator for a group action on the finite Cuntz quotient.
-The fields are explicit: each group element acts by a complex algebra homomorphism,
-the action laws hold, and the action commutes with the chosen grading operator.
+The carrier stores the complex algebra homomorphism for each group element;
+action laws and grading compatibility are supplied explicitly to theorems that
+need them.
 -/
 structure CuntzPresentationOperator
     (n : ℕ) (D : CuntzGradingDeformation n) (G : Type*) [Group G] where
   op : G → CuntzAlg n →ₐ[ℂ] CuntzAlg n
-  op_one : ∀ x, op 1 x = x
-  op_mul : ∀ g h x, op (g * h) x = op g (op h x)
-  commutes_grading : ∀ g x, D.gradingOperator (op g x) = op g (D.gradingOperator x)
 
 namespace CuntzPresentationOperator
 
@@ -263,15 +261,19 @@ theorem preserves_superMomentum_of_preserves_supercharge
     T.op g (superMomentum Q) = superMomentum Q := by
   rw [map_superMomentum, hQ]
 
-theorem preserves_odd (g : G) {x : CuntzAlg n} (hx : D.IsOdd x) :
+theorem preserves_odd (g : G) {x : CuntzAlg n} (hx : D.IsOdd x)
+    (h_commutes_grading : ∀ y : CuntzAlg n,
+      D.gradingOperator (T.op g y) = T.op g (D.gradingOperator y)) :
     D.IsOdd (T.op g x) := by
   unfold CuntzGradingDeformation.IsOdd at hx ⊢
-  rw [T.commutes_grading, hx, map_neg]
+  rw [h_commutes_grading, hx, map_neg]
 
-theorem preserves_even (g : G) {x : CuntzAlg n} (hx : D.IsEven x) :
+theorem preserves_even (g : G) {x : CuntzAlg n} (hx : D.IsEven x)
+    (h_commutes_grading : ∀ y : CuntzAlg n,
+      D.gradingOperator (T.op g y) = T.op g (D.gradingOperator y)) :
     D.IsEven (T.op g x) := by
   unfold CuntzGradingDeformation.IsEven at hx ⊢
-  rw [T.commutes_grading, hx]
+  rw [h_commutes_grading, hx]
 
 end CuntzPresentationOperator
 
@@ -289,10 +291,6 @@ structure CuntzLorentzPoincareOperatorPresentation (n : ℕ) where
   [poincareGroup : Group PoincareGroup]
   lorentz : CuntzPresentationOperator n deformation LorentzGroup
   poincare : CuntzPresentationOperator n deformation PoincareGroup
-  lorentz_preserves_supercharge :
-    ∀ Λ, lorentz.op Λ (cuntzMajoranaSupercharge n mode) = cuntzMajoranaSupercharge n mode
-  poincare_preserves_supercharge :
-    ∀ a, poincare.op a (cuntzMajoranaSupercharge n mode) = cuntzMajoranaSupercharge n mode
 
 namespace CuntzLorentzPoincareOperatorPresentation
 
@@ -309,46 +307,60 @@ def supercharge : CuntzAlg n :=
 def momentum : CuntzAlg n :=
   superMomentum P.supercharge
 
-theorem lorentz_preserves_momentum (Λ : P.LorentzGroup) :
+theorem lorentz_preserves_momentum (Λ : P.LorentzGroup)
+    (hQ : P.lorentz.op Λ (cuntzMajoranaSupercharge n P.mode) =
+      cuntzMajoranaSupercharge n P.mode) :
     P.lorentz.op Λ P.momentum = P.momentum := by
   unfold momentum supercharge
   exact P.lorentz.preserves_superMomentum_of_preserves_supercharge Λ
-    (cuntzMajoranaSupercharge n P.mode) (P.lorentz_preserves_supercharge Λ)
+    (cuntzMajoranaSupercharge n P.mode) hQ
 
-theorem poincare_preserves_momentum (a : P.PoincareGroup) :
+theorem poincare_preserves_momentum (a : P.PoincareGroup)
+    (hQ : P.poincare.op a (cuntzMajoranaSupercharge n P.mode) =
+      cuntzMajoranaSupercharge n P.mode) :
     P.poincare.op a P.momentum = P.momentum := by
   unfold momentum supercharge
   exact P.poincare.preserves_superMomentum_of_preserves_supercharge a
-    (cuntzMajoranaSupercharge n P.mode) (P.poincare_preserves_supercharge a)
+    (cuntzMajoranaSupercharge n P.mode) hQ
 
-theorem lorentz_preserves_self_anticommutator (Λ : P.LorentzGroup) :
+theorem lorentz_preserves_self_anticommutator (Λ : P.LorentzGroup)
+    (hQ : P.lorentz.op Λ (cuntzMajoranaSupercharge n P.mode) =
+      cuntzMajoranaSupercharge n P.mode) :
     P.lorentz.op Λ (algebraicAnticommutator P.supercharge P.supercharge) =
       algebraicAnticommutator P.supercharge P.supercharge := by
   rw [P.lorentz.map_anticommutator]
-  simp [supercharge, P.lorentz_preserves_supercharge Λ]
+  simp [supercharge, hQ]
 
-theorem poincare_preserves_self_anticommutator (a : P.PoincareGroup) :
+theorem poincare_preserves_self_anticommutator (a : P.PoincareGroup)
+    (hQ : P.poincare.op a (cuntzMajoranaSupercharge n P.mode) =
+      cuntzMajoranaSupercharge n P.mode) :
     P.poincare.op a (algebraicAnticommutator P.supercharge P.supercharge) =
       algebraicAnticommutator P.supercharge P.supercharge := by
   rw [P.poincare.map_anticommutator]
-  simp [supercharge, P.poincare_preserves_supercharge a]
+  simp [supercharge, hQ]
 
 theorem supercharge_anticommutator_presents_momentum :
     algebraicAnticommutator P.supercharge P.supercharge = (2 : ℂ) • P.momentum := by
   unfold momentum
   exact algebraicAnticommutator_self_eq_two_smul_momentum P.supercharge
 
-theorem lorentz_operator_packet (Λ : P.LorentzGroup) :
+theorem lorentz_operator_packet (Λ : P.LorentzGroup)
+    (hQ : P.lorentz.op Λ (cuntzMajoranaSupercharge n P.mode) =
+      cuntzMajoranaSupercharge n P.mode) :
     P.lorentz.op Λ P.momentum = P.momentum ∧
       P.lorentz.op Λ (algebraicAnticommutator P.supercharge P.supercharge) =
         algebraicAnticommutator P.supercharge P.supercharge :=
-  ⟨P.lorentz_preserves_momentum Λ, P.lorentz_preserves_self_anticommutator Λ⟩
+  ⟨P.lorentz_preserves_momentum Λ hQ,
+    P.lorentz_preserves_self_anticommutator Λ hQ⟩
 
-theorem poincare_operator_packet (a : P.PoincareGroup) :
+theorem poincare_operator_packet (a : P.PoincareGroup)
+    (hQ : P.poincare.op a (cuntzMajoranaSupercharge n P.mode) =
+      cuntzMajoranaSupercharge n P.mode) :
     P.poincare.op a P.momentum = P.momentum ∧
       P.poincare.op a (algebraicAnticommutator P.supercharge P.supercharge) =
         algebraicAnticommutator P.supercharge P.supercharge :=
-  ⟨P.poincare_preserves_momentum a, P.poincare_preserves_self_anticommutator a⟩
+  ⟨P.poincare_preserves_momentum a hQ,
+    P.poincare_preserves_self_anticommutator a hQ⟩
 
 end CuntzLorentzPoincareOperatorPresentation
 
@@ -373,32 +385,6 @@ theorem exactBoostTransport_comp_self_preserves_spacetime_det (t x y z : ℂ) :
       t * t - (x * x + y * y + z * z) := by
   rw [exactBoostTransport_comp_self_det]
   exact hermitianSpacetimePoint_det t x y z
-
-/-- The canonical Cuntz packet has odd supercharge and even generated translation. -/
-theorem canonical_cuntz_packet_supergrading {n : ℕ} (i : Fin n) :
-    let P := canonicalCuntzSuperPoincarePacket n i
-    P.superchargeGrade = 1 ∧ P.momentumGrade = 0 ∧
-      P.poincareTranslation = superMomentum P.supercharge := by
-  exact ⟨rfl, rfl, rfl⟩
-
-/-- The canonical Cuntz packet anticommutator presents the translation generator. -/
-theorem canonical_cuntz_packet_anticommutator_translation {n : ℕ} (i : Fin n) :
-    let P := canonicalCuntzSuperPoincarePacket n i
-    algebraicAnticommutator P.supercharge P.supercharge = (2 : ℂ) • P.poincareTranslation := by
-  simp [canonicalCuntzSuperPoincarePacket, cuntzSuperMomentum]
-  exact algebraicAnticommutator_self_eq_two_smul_momentum (cuntzMajoranaSupercharge n i)
-
-/-- Combined finite Cuntz-super/Poincare-Lorentz presentation packet. -/
-theorem finite_cuntz_super_poincare_lorentz_packet {n : ℕ} (i : Fin n) (t x y z : ℂ) :
-    let P := canonicalCuntzSuperPoincarePacket n i
-    P.superchargeGrade = 1 ∧
-    P.momentumGrade = 0 ∧
-    algebraicAnticommutator P.supercharge P.supercharge = (2 : ℂ) • P.poincareTranslation ∧
-    Matrix.det (exactBoostTransport (exactBoostTransport (hermitianSpacetimePoint t x y z))) =
-      t * t - (x * x + y * y + z * z) := by
-  simp only
-  exact ⟨rfl, rfl, canonical_cuntz_packet_anticommutator_translation i,
-    exactBoostTransport_comp_self_preserves_spacetime_det t x y z⟩
 
 end InfoGeometry.Algebra.CuntzLorentzPoincarePresentation
 

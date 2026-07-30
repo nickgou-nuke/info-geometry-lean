@@ -153,10 +153,12 @@ theorem rankBudgetPreserved {moving : ℕ}
 
 /-- The native Arnold/cooperad and BCFW operators agree in the base packet. -/
 theorem bcfwComparisonPreserved {moving : ℕ}
-    (D : QDeformedTwistorAmplituhedronDatum moving) :
+    (D : QDeformedTwistorAmplituhedronDatum moving)
+    (hComparison : D.base.arnoldBCFW.cooperadReadout =
+      D.base.arnoldBCFW.bcfwReadout) :
     D.base.arnoldBCFW.cooperadReadout =
       D.base.arnoldBCFW.bcfwReadout :=
-  bcfw_of_arnold D.base.arnoldBCFW
+  bcfw_of_arnold D.base.arnoldBCFW hComparison
 
 end QDeformedTwistorAmplituhedronDatum
 
@@ -167,6 +169,8 @@ the undeformed twistor/amplituhedron packet remains available.
 -/
 theorem q_deformed_twistor_amplituhedron_packet {moving : ℕ}
     (D : QDeformedTwistorAmplituhedronDatum moving)
+    (hComparison : D.base.arnoldBCFW.cooperadReadout =
+      D.base.arnoldBCFW.bcfwReadout)
     (i : Fin 3) :
     InKuzminOpenWindow D.qStable.q ∧
       Nonempty (D.qStable.qCarrier ≃ D.qStable.toeplitzCarrier) ∧
@@ -180,7 +184,7 @@ theorem q_deformed_twistor_amplituhedron_packet {moving : ℕ}
   have hbase := twistor_amplituhedron_bridge_packet D.base i
   exact ⟨D.qStable.inWindow,
     ⟨D.qStable.stableEquiv⟩,
-    D.bcfwComparisonPreserved,
+    D.bcfwComparisonPreserved hComparison,
     hbase.1,
     hbase.2.1,
     hbase.2.2⟩

@@ -182,8 +182,8 @@ def drazinFilteredObservable
     [Ring Obs]
     [Star Obs]
     (D : DrazinSupportData Obs) :
-    InfoGeometry.Canonical.DrazinFierzBridge.DrazinFilteredObservable Obs where
-  AD := D.AD
+    InfoGeometry.Canonical.DrazinFierzBridge.DrazinFilteredObservable Obs :=
+  D.AD
 
 /--
 Expectation-only Fierz coordinate of a Drazin horizon packet.

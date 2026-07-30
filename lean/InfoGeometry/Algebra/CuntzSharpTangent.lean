@@ -22,11 +22,8 @@ structure InvolutiveDerivation where
 instance : CoeFun (InvolutiveDerivation (A := A) sharp) (fun _ => A → A) :=
   ⟨fun D => D.toAddHom⟩
 
-structure SharpCuntzFamily where
+structure SharpCuntzFamily (sharp : A → A) where
   S : Fin N → A
-  isometry : ∀ i j,
-    sharp (S i) * S j = if i = j then 1 else 0
-  range_sum : ∑ i : Fin N, S i * sharp (S i) = 1
 
 structure SharpCuntzTangent (O : SharpCuntzFamily (N := N) sharp) where
   X : Fin N → A
@@ -50,7 +47,10 @@ lemma InvolutiveDerivation.map_one
 
 noncomputable def InvolutiveDerivation.cuntzTangent
     (D : InvolutiveDerivation (A := A) sharp)
-    (O : SharpCuntzFamily (N := N) sharp) :
+    (O : SharpCuntzFamily (N := N) sharp)
+    (h_isometry : ∀ i j,
+      sharp (O.S i) * O.S j = if i = j then 1 else 0)
+    (h_range_sum : ∑ i : Fin N, O.S i * sharp (O.S i) = 1) :
     SharpCuntzTangent sharp O := by
   let X : Fin N → A := fun i => D (O.S i)
   have hD1 : D (1 : A) = 0 := D.map_one
@@ -68,13 +68,13 @@ noncomputable def InvolutiveDerivation.cuntzTangent
     rw [D.leibniz', D.sharp']
   refine { X := X, tangent_isometry := ?_, tangent_complete := ?_ }
   · intro i j
-    have hrel := congrArg D (O.isometry i j)
+    have hrel := congrArg D (h_isometry i j)
     rw [hisometry] at hrel
     by_cases hij : i = j
     · subst j
       simpa [hD1] using hrel
     · simpa [hij, D.map_zero] using hrel
-  · have hrel := congrArg D O.range_sum
+  · have hrel := congrArg D h_range_sum
     rw [hsum] at hrel
     simpa [hD1] using hrel
 

@@ -74,22 +74,6 @@ theorem odd_odd_concat_even (a b : Bool) :
   change (2 : ZMod 2) = 0
   native_decide
 
-/--
-Finite Cuntz-Cantor supergraded packet.
-
-The word-level odd--odd composition is even, and the matrix-level odd glide
-generator has self-anticommutator equal to twice the even translation.
--/
-theorem cuntz_odd_odd_generates_even_translation_packet (a b : Bool) :
-    wordParityZ2 (oddStep a) = 1 ∧
-      wordParityZ2 (oddStep b) = 1 ∧
-        wordParityZ2 (oddStep a ++ oddStep b) = 0 ∧
-          superAnticommutator Q Q = P_x + P_x := by
-  exact ⟨oddStep_parity a,
-    oddStep_parity b,
-    odd_odd_concat_even a b,
-    susy_anticommutator_generates_spacetime⟩
-
 end InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 
 end noncomputable section

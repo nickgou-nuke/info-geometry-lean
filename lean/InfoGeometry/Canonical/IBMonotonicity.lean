@@ -11,27 +11,6 @@ open IBPythagorean
 variable {X T : Type*} [MeasurableSpace X] [MeasurableSpace T] [Nonempty T]
 
 /--
-Analytic obligations for one explicit BA descent step:
-encoder descent at fixed `q_n`, then marginal descent at fixed encoder.
--/
-abbrev IBDescentWitness
-    (pX : ProbabilityMeasure X)
-    (q_n : ProbabilityMeasure T)
-    (β : ℝ) (D : X → T → ℝ)
-    (hInt : ∀ x, Integrable (fun t => Real.exp (-β * D x t)) (q_n : Measure T))
-    (h_meas : Measurable (fun x => (IBNextEncoder q_n β D hInt x : Measure T)))
-    (hKL_encoder : FiniteKLFamily (q_n : Measure T) (IBNextEncoder q_n β D hInt))
-    (p_old : X → ProbabilityMeasure T) : Prop :=
-  ∃ hKL_old : FiniteKLFamily (q_n : Measure T) p_old,
-    ∃ hKL_next :
-      FiniteKLFamily
-        ((IBNextMarginal pX q_n β D hInt h_meas : ProbabilityMeasure T) : Measure T)
-        (IBNextEncoder q_n β D hInt),
-      IBGlobalFreeEnergy pX q_n β D (IBNextEncoder q_n β D hInt) hKL_encoder
-        ≤ IBGlobalFreeEnergy pX q_n β D p_old hKL_old ∧
-      IBNextMarginalDescentWitness pX q_n β D hInt h_meas hKL_encoder hKL_next
-
-/--
 One full BA step decreases the global free energy whenever the two analytic
 descent obligations have been discharged.
 -/
@@ -43,7 +22,17 @@ theorem IB_monotone_descent_from_witness
     (h_meas : Measurable (fun x => (IBNextEncoder q_n β D hInt x : Measure T)))
     (hKL_encoder : FiniteKLFamily (q_n : Measure T) (IBNextEncoder q_n β D hInt))
     (p_old : X → ProbabilityMeasure T)
-    (hstep : IBDescentWitness pX q_n β D hInt h_meas hKL_encoder p_old) :
+    (hstep :
+      ∃ hKL_old : FiniteKLFamily (q_n : Measure T) p_old,
+        ∃ hKL_next :
+          FiniteKLFamily
+            ((IBNextMarginal pX q_n β D hInt h_meas : ProbabilityMeasure T) : Measure T)
+            (IBNextEncoder q_n β D hInt),
+          IBGlobalFreeEnergy pX q_n β D (IBNextEncoder q_n β D hInt) hKL_encoder
+              ≤ IBGlobalFreeEnergy pX q_n β D p_old hKL_old ∧
+            IBMarginalDescentWitness
+              pX q_n (IBNextMarginal pX q_n β D hInt h_meas)
+              β D (IBNextEncoder q_n β D hInt) hKL_encoder hKL_next) :
     IBGlobalFreeEnergy pX (IBNextMarginal pX q_n β D hInt h_meas) β D
       (IBNextEncoder q_n β D hInt) hstep.2.choose
       ≤
@@ -71,7 +60,7 @@ theorem IB_monotone_descent
     (h_encoder :
       IBGlobalFreeEnergy pX q_n β D (IBNextEncoder q_n β D hInt) hKL_encoder
         ≤ IBGlobalFreeEnergy pX q_n β D p_old hKL_old)
-    (h_marginal : IBNextMarginalDescentWitness pX q_n β D hInt h_meas hKL_encoder hKL_next) :
+    (h_marginal : IBMarginalDescentWitness pX q_n (IBNextMarginal pX q_n β D hInt h_meas) β D (IBNextEncoder q_n β D hInt) hKL_encoder hKL_next) :
     IBGlobalFreeEnergy pX (IBNextMarginal pX q_n β D hInt h_meas) β D
       (IBNextEncoder q_n β D hInt) hKL_next
       ≤

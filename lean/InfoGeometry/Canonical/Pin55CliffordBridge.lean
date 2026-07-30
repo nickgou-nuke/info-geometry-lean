@@ -209,7 +209,26 @@ theorem spinorJ_sq : spinorJ * spinorJ = -(1 :
   rw [spinorJ, ← map_mul, InfoGeometry.Clifford.ConformalLieAlgebra55.J_sq]
   simp
 
-def JordanCliffordPolarizationEvidence55 : Prop :=
+theorem jordanDet :
+    ∀ X : InfoGeometry.Algebra.JordanCayleyInversionOsQ.Herm2x2OsQ,
+      X.det = InfoGeometry.Physics.Pin55Formal.q55
+        (InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q X) := by
+  intro X
+  exact InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.det_eq_q55_toVec55Q X
+
+theorem jordanNullSwap :
+    ∀ X : InfoGeometry.Algebra.JordanCayleyInversionOsQ.Herm2x2OsQ,
+      InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q
+          (InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.nullSwap X) =
+        InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.nullSwap55Vec
+          (InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q X) := by
+  intro X
+  exact InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q_nullSwap X
+
+theorem polarization : PolarizationReadback55 :=
+  polarizationReadback55Installed
+
+theorem jordanCliffordPolarizationEvidence55Installed :
   (∀ X : InfoGeometry.Algebra.JordanCayleyInversionOsQ.Herm2x2OsQ,
       X.det = InfoGeometry.Physics.Pin55Formal.q55
         (InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q X)) ∧
@@ -218,32 +237,7 @@ def JordanCliffordPolarizationEvidence55 : Prop :=
           (InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.nullSwap X) =
         InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.nullSwap55Vec
           (InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q X)) ∧
-    PolarizationReadback55
-
-namespace JordanCliffordPolarizationEvidence55
-
-variable (h : JordanCliffordPolarizationEvidence55)
-
-theorem jordanDet (h : JordanCliffordPolarizationEvidence55) :
-    ∀ X : InfoGeometry.Algebra.JordanCayleyInversionOsQ.Herm2x2OsQ,
-      X.det = InfoGeometry.Physics.Pin55Formal.q55
-        (InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q X) := h.1
-theorem jordanNullSwap (h : JordanCliffordPolarizationEvidence55) :
-    ∀ X : InfoGeometry.Algebra.JordanCayleyInversionOsQ.Herm2x2OsQ,
-      InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q
-          (InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.nullSwap X) =
-        InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.nullSwap55Vec
-          (InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q X) := h.2.1
-theorem polarization (h : JordanCliffordPolarizationEvidence55) : PolarizationReadback55 := h.2.2
-
-end JordanCliffordPolarizationEvidence55
-
-theorem jordanCliffordPolarizationEvidence55Installed :
-    JordanCliffordPolarizationEvidence55 := by
-  refine ⟨?_, ?_, polarizationReadback55Installed⟩
-  · intro X
-    exact InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.det_eq_q55_toVec55Q X
-  · intro X
-    exact InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q_nullSwap X
+    PolarizationReadback55 := by
+  exact ⟨jordanDet, jordanNullSwap, polarization⟩
 
 end InfoGeometry.Canonical.Pin55CliffordBridge

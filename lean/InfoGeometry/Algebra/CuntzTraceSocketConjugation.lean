@@ -25,36 +25,14 @@ variable {n : ℕ}
 
 /-- `CuntzTraceSocket n` couples the scalar trace with the finite-matrix
 inverse-on-image map and asserts cyclicity on the faithful image. -/
-abbrev CuntzTraceSocket (n : ℕ) : Type :=
-  Σ' socket_trace : CuntzAlg n → ℝ,
-    Σ' socket_inv_of_image : Matrix (Fin n) (Fin n) ℂ → CuntzAlg n,
-      (∀ {A B : Matrix (Fin n) (Fin n) ℂ},
-        socket_trace (socket_inv_of_image (A * B)) =
-          socket_trace (socket_inv_of_image (B * A))) ∧
-        (∀ X Y : CuntzAlg n, socket_trace (X * Y) = socket_trace (Y * X))
-
-namespace CuntzTraceSocket
-
-abbrev socket_trace {n : ℕ} (S : CuntzTraceSocket n) : CuntzAlg n → ℝ :=
-  S.1
-
-abbrev socket_inv_of_image {n : ℕ} (S : CuntzTraceSocket n) :
-    Matrix (Fin n) (Fin n) ℂ → CuntzAlg n :=
-  S.2.1
-
-abbrev trace_cycle {n : ℕ} (S : CuntzTraceSocket n) :
-    ∀ {A B : Matrix (Fin n) (Fin n) ℂ},
-      S.socket_trace (S.socket_inv_of_image (A * B)) =
-        S.socket_trace (S.socket_inv_of_image (B * A)) :=
-  S.2.2.1
-
-abbrev trace_cycle_cuntz {n : ℕ} (S : CuntzTraceSocket n) :
-    ∀ X Y : CuntzAlg n, S.socket_trace (X * Y) = S.socket_trace (Y * X) :=
-  S.2.2.2
-
-end CuntzTraceSocket
-
-open CuntzTraceSocket (socket_trace socket_inv_of_image)
+structure CuntzTraceSocket (n : ℕ) where
+  cuntz_trace : CuntzAlg n → ℝ
+  cuntz_inv_of_image : Matrix (Fin n) (Fin n) ℂ → CuntzAlg n
+  trace_cycle : ∀ {A B : Matrix (Fin n) (Fin n) ℂ},
+    cuntz_trace (cuntz_inv_of_image (A * B)) =
+      cuntz_trace (cuntz_inv_of_image (B * A))
+  trace_cycle_cuntz : ∀ X Y : CuntzAlg n,
+    cuntz_trace (X * Y) = cuntz_trace (Y * X)
 
 open scoped Real BigOperators Matrix
 
@@ -69,11 +47,11 @@ noncomputable def conjug (P : Matrix (Fin n) (Fin n) ℂ) [Invertible P]
 
 /-- Log-potential of a finite-matrix socket image. -/
 def logPotentialSocket (M : Matrix (Fin n) (Fin n) ℂ) : ℝ :=
-  Real.log (socket.socket_trace (socket.socket_inv_of_image M))
+  Real.log (socket.cuntz_trace (socket.cuntz_inv_of_image M))
 
 /-- Inv-pairing socket trace. -/
 def invPairingSocket (S T : Matrix (Fin n) (Fin n) ℂ) : ℝ :=
-  socket.socket_trace (socket.socket_inv_of_image (S⁻¹ * T))
+  socket.cuntz_trace (socket.cuntz_inv_of_image (S⁻¹ * T))
 
 /-- Full IS divergence through the traced socket for finite matrices. -/
 noncomputable def isDivergenceSocket (S T : Matrix (Fin n) (Fin n) ℂ) : ℝ :=
@@ -116,30 +94,30 @@ theorem invOf_eq_inv_matrix (A : Matrix (Fin n) (Fin n) ℂ) [Invertible A] :
 /-- Lemma 1: conjugation preserves the socket trace. -/
 theorem socket_trace_conjug (socket : CuntzTraceSocket n)
     (P M : Matrix (Fin n) (Fin n) ℂ) [Invertible P] :
-    socket.socket_trace (socket.socket_inv_of_image (conjug P M))
-      = socket.socket_trace (socket.socket_inv_of_image M) := by
+    socket.cuntz_trace (socket.cuntz_inv_of_image (conjug P M))
+      = socket.cuntz_trace (socket.cuntz_inv_of_image M) := by
   unfold conjug
   have h_cycle :
-    socket.socket_trace
-        (socket.socket_inv_of_image (Invertible.invOf P * (M * P)))
-      = socket.socket_trace
-        (socket.socket_inv_of_image ((M * P) * Invertible.invOf P)) := by
+    socket.cuntz_trace
+        (socket.cuntz_inv_of_image (Invertible.invOf P * (M * P)))
+      = socket.cuntz_trace
+        (socket.cuntz_inv_of_image ((M * P) * Invertible.invOf P)) := by
     exact socket.trace_cycle (A := ⅟P) (B := M * P)
   have h_lhs_norm :
-    socket.socket_trace
-        (socket.socket_inv_of_image ((Invertible.invOf P) * M * P))
-      = socket.socket_trace
-        (socket.socket_inv_of_image (Invertible.invOf P * (M * P))) := by
+    socket.cuntz_trace
+        (socket.cuntz_inv_of_image ((Invertible.invOf P) * M * P))
+      = socket.cuntz_trace
+        (socket.cuntz_inv_of_image (Invertible.invOf P * (M * P))) := by
     have h_eq :
         Invertible.invOf P * M * P =
         Invertible.invOf P * (M * P) :=
       Matrix.mul_assoc _ _ _
-    exact congrArg (socket.socket_trace ∘ socket.socket_inv_of_image) h_eq
+    exact congrArg (socket.cuntz_trace ∘ socket.cuntz_inv_of_image) h_eq
   have h_rhs_norm :
-    socket.socket_trace
-        (socket.socket_inv_of_image ((M * P) * Invertible.invOf P))
-      = socket.socket_trace
-        (socket.socket_inv_of_image M) := by
+    socket.cuntz_trace
+        (socket.cuntz_inv_of_image ((M * P) * Invertible.invOf P))
+      = socket.cuntz_trace
+        (socket.cuntz_inv_of_image M) := by
     have h_one : P * ⅟P = 1 := Invertible.mul_invOf_self
     have h_rearr : (M * P) * Invertible.invOf P = M * (P * Invertible.invOf P) :=
       Matrix.mul_assoc _ _ _
@@ -147,15 +125,15 @@ theorem socket_trace_conjug (socket : CuntzTraceSocket n)
       rw [h_one, Matrix.mul_one]
     have h_raw : (M * P) * Invertible.invOf P = M := by
       rw [h_rearr, h_step]
-    have h_sock := congrArg socket.socket_inv_of_image h_raw
+    have h_sock := congrArg socket.cuntz_inv_of_image h_raw
     rw [← h_sock]
   exact (h_lhs_norm.trans h_cycle).trans h_rhs_norm
 
 /-- Lemma 2: log-potential invariance. -/
 theorem conj_preserves_log (socket : CuntzTraceSocket n)
     (P M : Matrix (Fin n) (Fin n) ℂ) [Invertible P] [Invertible M] :
-    Real.log (socket.socket_trace (socket.socket_inv_of_image (M⁻¹)))
-      = Real.log (socket.socket_trace (socket.socket_inv_of_image ((conjug P M)⁻¹))) := by
+    Real.log (socket.cuntz_trace (socket.cuntz_inv_of_image (M⁻¹)))
+      = Real.log (socket.cuntz_trace (socket.cuntz_inv_of_image ((conjug P M)⁻¹))) := by
   have h_eq : (conjug P M)⁻¹ = conjug P (M⁻¹) := by
     rw [← invOf_eq_inv_matrix (conjug P M)]
     rw [invOf_conjug_eq P M]
@@ -166,9 +144,9 @@ theorem conj_preserves_log (socket : CuntzTraceSocket n)
 /-- Lemma 3: inv-pairing invariance. -/
 theorem conj_preserves_inv_pair (socket : CuntzTraceSocket n)
     (P S T : Matrix (Fin n) (Fin n) ℂ) [Invertible P] [Invertible S] [Invertible T] :
-    socket.socket_trace (socket.socket_inv_of_image (S⁻¹ * T))
-      = socket.socket_trace
-        (socket.socket_inv_of_image ((conjug P S)⁻¹ * conjug P T)) := by
+    socket.cuntz_trace (socket.cuntz_inv_of_image (S⁻¹ * T))
+      = socket.cuntz_trace
+        (socket.cuntz_inv_of_image ((conjug P S)⁻¹ * conjug P T)) := by
   have h_prod : (conjug P S)⁻¹ * conjug P T = conjug P (S⁻¹ * T) := by
     have h_lhs : (conjug P S)⁻¹ = ⅟P * ⅟S * P := by
       rw [← invOf_eq_inv_matrix (conjug P S)]
@@ -223,13 +201,13 @@ for any finite-matrix socket image. -/
 theorem opConj_socket_trace_conserved (socket : CuntzTraceSocket n)
     (ι : CuntzAlg n) [Invertible ι]
     (M : Matrix (Fin n) (Fin n) ℂ) :
-    socket.socket_trace (opConj ι (socket.socket_inv_of_image M))
-      = socket.socket_trace (socket.socket_inv_of_image M) := by
+    socket.cuntz_trace (opConj ι (socket.cuntz_inv_of_image M))
+      = socket.cuntz_trace (socket.cuntz_inv_of_image M) := by
   unfold opConj
-  have h1 : socket.socket_trace (⅟ι * socket.socket_inv_of_image M * ι) =
-            socket.socket_trace (ι * (⅟ι * socket.socket_inv_of_image M)) := by
+  have h1 : socket.cuntz_trace (⅟ι * socket.cuntz_inv_of_image M * ι) =
+            socket.cuntz_trace (ι * (⅟ι * socket.cuntz_inv_of_image M)) := by
     rw [socket.trace_cycle_cuntz]
-  have h2 : ι * (⅟ι * socket.socket_inv_of_image M) = socket.socket_inv_of_image M := by
+  have h2 : ι * (⅟ι * socket.cuntz_inv_of_image M) = socket.cuntz_inv_of_image M := by
     rw [← mul_assoc, mul_invOf_self, one_mul]
   rw [h1, h2]
 
@@ -238,16 +216,16 @@ theorem opConj_logPotential_invariant (socket : CuntzTraceSocket n)
     (ι : CuntzAlg n) [Invertible ι]
     (M : Matrix (Fin n) (Fin n) ℂ) :
     logPotentialSocket socket M
-      = Real.log (socket.socket_trace (opConj ι (socket.socket_inv_of_image M))) := by
+      = Real.log (socket.cuntz_trace (opConj ι (socket.cuntz_inv_of_image M))) := by
   unfold logPotentialSocket
   rw [opConj_socket_trace_conserved socket ι M]
 
 /-- **Lifted IS divergence invariance** at the operator level. -/
 theorem liftedISDivergenceInvariance (socket : CuntzTraceSocket n)
-    (ι : CuntzAlg n) [Invertible ι]
-    (S T : Matrix (Fin n) (Fin n) ℂ) :
-    isDivergenceSocket socket S T
-      = isDivergenceSocket socket S T := by rfl
+    (P S T : Matrix (Fin n) (Fin n) ℂ) [Invertible P] [Invertible S] [Invertible T] :
+    isDivergenceSocket socket (conjug P S) (conjug P T)
+      = isDivergenceSocket socket S T := by
+  exact isDivergence_conj_socket socket P S T
 
 end OperatorLevelLift
 

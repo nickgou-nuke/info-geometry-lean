@@ -63,35 +63,6 @@ namespace Bridge
 variable (B : Bridge (H := H) (NormalPositive := NormalPositive)
   (Op := Op))
 
-/-- Theorem owner: standard-form vector representative law. -/
-@[rep_depth krein]
-theorem eval_eq_krein_vector_readout
-    (ω : NormalPositive) (A : Op) :
-    B.eval ω A =
-      KreinSpace.kreinInner (H := H) (B.act A (B.coneVector ω)) (B.coneVector ω) :=
-  B.eval_eq_krein_vector_readout_law ω A
-
-/-- Readback of the standard-form vector representative law. -/
-@[rep_depth krein]
-theorem eval_readback
-    (ω : NormalPositive) (A : Op) :
-    B.eval ω A =
-      KreinSpace.kreinInner (H := H) (B.act A (B.coneVector ω)) (B.coneVector ω) :=
-  B.eval_eq_krein_vector_readout ω A
-
-/-- Theorem owner: cone representatives are members of the supplied natural cone. -/
-@[rep_depth krein]
-theorem coneVector_mem
-    (ω : NormalPositive) :
-    B.coneVector ω ∈ B.naturalCone :=
-  B.coneVector_mem_law ω
-
-/-- Cone representatives are members of the supplied natural cone. -/
-@[rep_depth krein]
-theorem coneVector_mem_readback
-    (ω : NormalPositive) :
-    B.coneVector ω ∈ B.naturalCone :=
-  B.coneVector_mem ω
 
 /-- Theorem owner: the natural cone is fixed pointwise by the Krein/Tomita reflection. -/
 @[rep_depth krein]
@@ -106,7 +77,7 @@ theorem J_fixes_cone
 theorem J_fixes_coneVector
     (ω : NormalPositive) :
     KreinSpace.jCLM (H := H) (B.coneVector ω) = B.coneVector ω :=
-  B.J_fixes_cone (B.coneVector ω) (B.coneVector_mem ω)
+  B.J_fixes_cone_law (B.coneVector ω) (B.coneVector_mem_law ω)
 
 /-- The supplied natural cone is self-dual for the real Hilbert pairing. -/
 @[rep_depth krein]
@@ -146,23 +117,6 @@ namespace HestenesKreinNaturalConeVacuum
 variable (V : HestenesKreinNaturalConeVacuum (H := H)
   (NormalPositive := NormalPositive) (Op := Op))
 
-/-- Readback: the vacuum belongs to the supplied natural cone. -/
-@[rep_depth krein]
-theorem Omega_mem_naturalCone :
-    V.Omega ∈ V.natural.naturalCone :=
-  V.omega_in_cone
-
-/-- Readback: the Krein/Tomita reflection fixes the vacuum. -/
-@[rep_depth krein]
-theorem Omega_fixed_by_J :
-    KreinSpace.jCLM (H := H) V.Omega = V.Omega :=
-  V.J_fixes_omega
-
-/-- Readback: the vacuum is normalized in the supplied Krein convention. -/
-@[rep_depth krein]
-theorem Omega_normalized_readback :
-    KreinSpace.kreinInner (H := H) V.Omega V.Omega = 1 :=
-  V.omega_normalized
 
 end HestenesKreinNaturalConeVacuum
 
@@ -238,19 +192,6 @@ theorem fromKMSBridge_state_eq_compat :
     (B.fromKMSBridgeCompat).kms.state = B.kms.state := by
   rfl
 
-/-- Theorem owner: the selected state has cone vector `Ω`. -/
-@[rep_depth krein]
-theorem coneVector_eq_Omega :
-    B.vacuum.natural.coneVector B.omegaState = B.vacuum.Omega :=
-  B.coneVector_eq_Omega_law
-
-/-- Theorem owner: complex KMS readout equals the real cone readout. -/
-@[rep_depth krein]
-theorem complexEval_eq_realConeEval
-    (A : Op) :
-    B.kms.state.eval A = (B.vacuum.natural.eval B.omegaState A : ℂ) :=
-  B.complexEval_eq_realConeEval_law A
-
 /-- The complex KMS readout is represented by the vacuum vector, after calibration. -/
 @[rep_depth krein]
 theorem complexEval_eq_vacuum_readout
@@ -260,52 +201,19 @@ theorem complexEval_eq_vacuum_readout
         B.vacuum.Omega : ℂ) := by
   calc
     B.kms.state.eval A = (B.vacuum.natural.eval B.omegaState A : ℂ) :=
-      B.complexEval_eq_realConeEval A
+      B.complexEval_eq_realConeEval_law A
     _ =
         (KreinSpace.kreinInner (H := H)
           (B.vacuum.natural.act A (B.vacuum.natural.coneVector B.omegaState))
           (B.vacuum.natural.coneVector B.omegaState) : ℂ) := by
-          rw [B.vacuum.natural.eval_eq_krein_vector_readout B.omegaState A]
+          rw [B.vacuum.natural.eval_eq_krein_vector_readout_law B.omegaState A]
     _ =
         (KreinSpace.kreinInner (H := H) (B.vacuum.natural.act A B.vacuum.Omega)
           B.vacuum.Omega : ℂ) := by
-          rw [B.coneVector_eq_Omega]
+          rw [B.coneVector_eq_Omega_law]
 
-/-- Re-export KMS flow invariance from the existing operator-thermodynamics owner. -/
-@[rep_depth krein]
-theorem kms_flow_invariant
-    (t : ℝ) (A : Op) :
-    B.kms.state.eval (B.flow.flow t A) = B.kms.state.eval A :=
-  B.kms.invariant t A
-
-/-- Re-export the analytic KMS boundary certificate. -/
-@[rep_depth krein]
-theorem kms_boundary_holds :
-    B.kms.kms_boundary_condition :=
-  KMSState.kms_boundary_holds B.kms
 
 end HestenesKreinNaturalConeKMSBridge
-
-/-- Full-name compatibility exports expected by automath bridge tests.
-These keep behavior identical and preserve the existing constructor proof terms.
--/
-@[rep_depth krein]
-def HestenesKreinNaturalConeKMSBridge.fromKMSBridge
-    (B : HestenesKreinNaturalConeKMSBridge (H := H)
-      (NormalPositive := NormalPositive) (Op := Op)) :
-    HestenesKreinNaturalConeKMSBridge (H := H)
-      (NormalPositive := NormalPositive) (Op := Op) :=
-  HestenesKreinNaturalConeKMSBridge.fromKMSBridgeCompat (H := H)
-    (NormalPositive := NormalPositive) (Op := Op) B
-
-/-- Compatibility theorem name for automath bridge compatibility checks. -/
-@[rep_depth krein]
-theorem HestenesKreinNaturalConeKMSBridge.fromKMSBridge_state_eq
-    (B : HestenesKreinNaturalConeKMSBridge (H := H)
-      (NormalPositive := NormalPositive) (Op := Op)) :
-    (B.fromKMSBridge).kms.state = B.kms.state :=
-  HestenesKreinNaturalConeKMSBridge.fromKMSBridge_state_eq_compat (H := H)
-    (NormalPositive := NormalPositive) (Op := Op) B
 
 end KMS
 

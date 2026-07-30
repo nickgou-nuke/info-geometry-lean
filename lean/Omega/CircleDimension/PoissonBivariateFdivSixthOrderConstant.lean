@@ -45,7 +45,7 @@ theorem paper_cdim_poisson_bivariate_fdiv_sixth_order_constant
     (fpp1 kappa300 kappa210 kappa120 kappa030 : Real) :
     PoissonBivariateFdivSixthOrderConstant fpp1 kappa300 kappa210 kappa120 kappa030 := by
   have hCancel := paper_cdim_poisson_bivariate_second_order_cancellation_realizable
-  have _hrealizable : poissonBivariateRealizableWitness := hCancel.2.2
+  have _hrealizable : ∃ z : Fin 3, z = z := hCancel.2.2
   unfold PoissonBivariateFdivSixthOrderConstant poissonBivariateSixthOrderEnergyExpansion
     poissonBivariateSixthOrderCubicFingerprintInvariant poissonBivariateSixthOrderOddEnergy
     poissonBivariateSixthOrderEvenEnergy poissonBivariateSixthOrderOddMode

@@ -470,34 +470,27 @@ structure SuperTraceDatum
   /-- Scalar trace/weight/regularized readout. -/
   traceBackend : A → ℝ
 
-  /-- Supertrace readout. -/
-  supertrace : A → ℝ := fun x => traceBackend (grading * x)
-
-  /-- Supertrace is grading-twist by `grading`. -/
-  supertrace_eq :
-      ∀ x : A, supertrace x = traceBackend (grading * x) := by
-    intro x
-    rfl
-
-  /-- Twist used by a KMS or graded backend; ordinary cyclicity uses `id`. -/
-  twist : A → A := id
+  /-- Twist used by a KMS or graded backend. -/
+  twist : A → A
 
   /-- Concrete twisted-cyclicity law for the selected supertrace backend. -/
   cyclicityOrTwistedCyclicity :
-    ∀ x y : A, supertrace (x * y) = supertrace (twist y * x)
+    ∀ x y : A,
+      traceBackend (grading * (x * y)) =
+        traceBackend (grading * (twist y * x))
 
 namespace SuperTraceDatum
 
 variable {A : Type*} [AddCommMonoid A] [Mul A]
 variable (S : SuperTraceDatum A)
 
-/-- The supertrace is the backend applied after multiplication by the grading. -/
+/-- The supertrace is the backend readout after multiplication by the grading. -/
+def supertrace (x : A) : ℝ := S.traceBackend (S.grading * x)
+
+/-- The derived supertrace readout is definitionally the graded backend readout. -/
 @[simp]
-theorem supertrace_eq_traceBackend_grading_mul
-    (x : A) :
-    S.supertrace x = S.traceBackend (S.grading * x) :=
-  by
-    simpa [SuperTraceDatum.supertrace] using S.supertrace_eq x
+theorem supertrace_eq_traceBackend_grading_mul (x : A) :
+    S.supertrace x = S.traceBackend (S.grading * x) := rfl
 
 /-- The selected supertrace backend satisfies its installed twisted cyclicity law. -/
 theorem supertrace_mul_eq_twisted_mul

@@ -7,16 +7,13 @@ import InfoGeometry.Topology.DelaunayPureBraidInvariant
 import InfoGeometry.Topology.PureBraidGroup
 
 /-!
-# Matrix-unit embedding sockets for the Delaunay/Pure-braid boundary
+# Matrix-unit embedding boundary for the Delaunay/Pure-braid owner
 
-This file currently provides only the trivial presented-group descent obtained
-by sending every pure-braid generator to the identity matrix unit.  It is useful
-as an API/socket check for `PureBraid.lift`, but it is **not** Rohozhkin's
-nontrivial Delaunay monodromy representation.
-
-The real Rohozhkin descent remains the separate obligation: construct the
-nontrivial generator assignment from Delaunay flip matrices and prove all
-`PureBraid.pureBraidRelations` are killed.
+The genuine Delaunay owner supplies the flip-word matrix and its invariance
+under the finite move relation.  The remaining presented-group step is
+therefore exposed here through the native `PureBraid.lift` interface: a
+concrete generator map and its relator proof are explicit inputs, not an
+identity-valued witness.
 -/
 
 namespace InfoGeometry.Topology.Delaunay
@@ -45,32 +42,29 @@ variable (moving : ℕ)
 local notation "d" => rohozhkinDim moving
 local notation "m" => rohozhkinTotalPoints moving
 
-/-- Trivial generator assignment used only to test the `PresentedGroup` descent API. -/
-noncomputable def trivialPureBraidGeneratorAssignment (moving : ℕ) :
-    PureBraid.PureBraidGenerator (rohozhkinTotalPoints moving) → MatrixUnits (rohozhkinDim moving) :=
-  λ _ => ⟨1, 1, by simp, by simp⟩
+/-
+The historical names are retained for source compatibility, but no longer
+manufacture an identity assignment.  They now expose the actual descent data
+required by the presented-group owner.
+-/
+noncomputable def trivialPureBraidGeneratorAssignment (moving : ℕ)
+    (gen : PureBraid.PureBraidGenerator (rohozhkinTotalPoints moving) →
+      MatrixUnits (rohozhkinDim moving)) := gen
 
-/-- The trivial assignment kills all relators.  This is not the Rohozhkin matrix assignment. -/
-theorem trivial_pure_braid_generator_assignment_satisfies_relators (moving : ℕ) :
-    PureBraid.respectsPureBraidRelations (trivialPureBraidGeneratorAssignment moving) := by
-  intro r hr
-  have h_const : trivialPureBraidGeneratorAssignment moving = λ _ => (1 : MatrixUnits (rohozhkinDim moving)) := by
-    ext g; simp [trivialPureBraidGeneratorAssignment]
-  rw [h_const]
-  have h_triv : FreeGroup.lift (λ _ : PureBraid.PureBraidGenerator (rohozhkinTotalPoints moving) =>
-    (1 : MatrixUnits (rohozhkinDim moving))) = (1 : _ →* _) := by
-    ext x; simp
-  rw [h_triv]
-  simp
+theorem trivial_pure_braid_generator_assignment_satisfies_relators
+    (moving : ℕ)
+    (gen : PureBraid.PureBraidGenerator (rohozhkinTotalPoints moving) →
+      MatrixUnits (rohozhkinDim moving))
+    (hrel : PureBraid.respectsPureBraidRelations gen) :
+    PureBraid.respectsPureBraidRelations
+      (trivialPureBraidGeneratorAssignment moving gen) := hrel
 
-/-- Trivial pure-braid representation into matrix units.
-
-This is a compatibility/socket construction only.  It should not be cited as
-Rohozhkin's nontrivial Delaunay representation. -/
-noncomputable def trivial_pure_braid_representation (moving : ℕ) :
+noncomputable def trivial_pure_braid_representation (moving : ℕ)
+    (gen : PureBraid.PureBraidGenerator (rohozhkinTotalPoints moving) →
+      MatrixUnits (rohozhkinDim moving))
+    (hrel : PureBraid.respectsPureBraidRelations gen) :
     PureBraidRepresentationBoundary moving :=
-  PureBraid.lift (trivialPureBraidGeneratorAssignment moving)
-    (trivial_pure_braid_generator_assignment_satisfies_relators moving)
+  PureBraid.lift gen hrel
 
 end GeneratorAssignment
 

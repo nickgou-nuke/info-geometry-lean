@@ -247,38 +247,7 @@ theorem drazinNullSector_physicalWitness
       (W.nullProjector * a * W.nullProjector = 0) :=
   W.physicalWitness
 
-/-! The concrete normalized CAR/CCR readout is already the owner carrier. -/
 @[rep_depth transport]
-abbrev GaussianBosonicWitness
-    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
-  WeylFiveGradePhysicalReadoutBridge.WeylFockPhysicalReadoutCarrier (E := E)
-
-namespace GaussianBosonicWitness
-
-abbrev readout
-    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (W : GaussianBosonicWitness E) :
-    WeylFiveGradePhysicalReadoutBridge.WeylFockPhysicalReadoutCarrier (E := E) :=
-  W
-
-end GaussianBosonicWitness
-
-/-! The concrete normalized CAR readout is already the owner carrier. -/
-@[rep_depth transport]
-abbrev GaussianFermionicWitness
-    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
-  WeylFiveGradePhysicalReadoutBridge.WeylCARPhysicalReadoutCarrier (E := E)
-
-namespace GaussianFermionicWitness
-
-abbrev readout
-    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (W : GaussianFermionicWitness E) :
-    WeylFiveGradePhysicalReadoutBridge.WeylCARPhysicalReadoutCarrier (E := E) :=
-  W
-
-end GaussianFermionicWitness
-
 /-- Entanglement witness assembled from one of the concrete witness lanes. -/
 @[rep_depth transport]
 inductive EntanglementWitness (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] where
@@ -286,18 +255,12 @@ inductive EntanglementWitness (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] 
   | negativity : NegativityWitness A → EntanglementWitness A
   | gaussianBosonic
       {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-      GaussianBosonicWitness E → EntanglementWitness A
+      WeylFiveGradePhysicalReadoutBridge.WeylFockPhysicalReadoutCarrier (E := E) →
+        EntanglementWitness A
   | gaussianFermionic
       {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-      GaussianFermionicWitness E → EntanglementWitness A
-
-/-!
-An explicit entanglement criterion is already represented by the inductive
-`EntanglementWitness` owner. Keep the compatibility name as a type alias
-instead of introducing a one-field wrapper.
--/
-abbrev EntanglementCriterionWitness (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] :=
-  EntanglementWitness A
+      InfoGeometry.Canonical.ScaledCARPair E →
+        EntanglementWitness A
 
 /-- Entanglement is represented by the existence of an explicit witness. -/
 def IsEntangled (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] : Prop :=
@@ -334,7 +297,7 @@ theorem isEntangled_of_negativity
 theorem isEntangled_of_gaussianBosonic
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (W : GaussianBosonicWitness E) :
+    (W : WeylFiveGradePhysicalReadoutBridge.WeylFockPhysicalReadoutCarrier (E := E)) :
     IsEntangled A := by
   exact ⟨EntanglementWitness.gaussianBosonic W⟩
 
@@ -342,25 +305,25 @@ theorem isEntangled_of_gaussianBosonic
 theorem gaussianBosonicWitness_car_is_normalized
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (W : GaussianBosonicWitness E) :
+    (W : WeylFiveGradePhysicalReadoutBridge.WeylFockPhysicalReadoutCarrier (E := E)) :
     InfoGeometry.Canonical.BogoliubovFockSuper.IsCARPair
-      (E := E) W.readout.car.normalizedAnnihilation W.readout.car.normalizedCreation :=
-  W.readout.car_is_normalized
+      (E := E) W.car.normalizedAnnihilation W.car.normalizedCreation :=
+  W.car_is_normalized
 
 /-- The bosonic Gaussian witness also exposes the normalized CCR pair. -/
 theorem gaussianBosonicWitness_ccr_is_normalized
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (W : GaussianBosonicWitness E) :
+    (W : WeylFiveGradePhysicalReadoutBridge.WeylFockPhysicalReadoutCarrier (E := E)) :
     InfoGeometry.Canonical.IsCCRPair
-      (E := E) W.readout.ccr.normalizedAnnihilation W.readout.ccr.normalizedCreation :=
-  W.readout.ccr_is_normalized
+      (E := E) W.ccr.normalizedAnnihilation W.ccr.normalizedCreation :=
+  W.ccr_is_normalized
 
 /-- Lemma 4: an explicit Gaussian fermionic witness proves entanglement. -/
 theorem isEntangled_of_gaussianFermionic
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (W : GaussianFermionicWitness E) :
+    (W : InfoGeometry.Canonical.ScaledCARPair E) :
     IsEntangled A := by
   exact ⟨EntanglementWitness.gaussianFermionic W⟩
 
@@ -368,10 +331,10 @@ theorem isEntangled_of_gaussianFermionic
 theorem gaussianFermionicWitness_car_is_normalized
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (W : GaussianFermionicWitness E) :
+    (W : InfoGeometry.Canonical.ScaledCARPair E) :
     InfoGeometry.Canonical.BogoliubovFockSuper.IsCARPair
-      (E := E) W.readout.car.normalizedAnnihilation W.readout.car.normalizedCreation :=
-  W.readout.car_is_normalized
+      (E := E) W.normalizedAnnihilation W.normalizedCreation :=
+  W.normalized_isCARPair
 
 /-- Lemma 5: any witness inhabits the entangled predicate. -/
 theorem isEntangled_of_entanglementWitness
@@ -383,7 +346,7 @@ theorem isEntangled_of_entanglementWitness
 /-- Theorem: any one explicit criterion proves entanglement. -/
 theorem isEntangled_of_any_explicit_criterion
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
-    (W : EntanglementCriterionWitness A) :
+    (W : EntanglementWitness A) :
     IsEntangled A :=
   entanglementWitness_implies_entangled W
 

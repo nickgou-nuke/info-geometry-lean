@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import InfoGeometry.Algebra.QCCRSupergradingBridge
+import InfoGeometry.OperatorAlgebra.QCCRSupergrading
 
 /-!
 # Cuntz thermal q-bridge
@@ -11,7 +11,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.CuntzThermalQBridge
 
-open InfoGeometry.Algebra.QCCRSupergradingBridge
+open InfoGeometry.OperatorAlgebra.QCCRSupergrading
 
 /--
 At q = tanh θ, the q-superbracket rewrites in terms of hyperbolic

@@ -85,18 +85,6 @@ namespace BKMDriftMetricCarrier
 variable {State : Type*}
 variable (M : BKMDriftMetricCarrier State)
 
-@[rep_depth operator]
-theorem driftIntensity_apply (s : State) :
-    M.driftIntensity s = M.driftIntensity s := rfl
-
-@[rep_depth operator]
-theorem gaugeScale_apply (s : State) :
-    M.gaugeScale s = M.gaugeScale s := rfl
-
-@[rep_depth operator]
-theorem physicalMass_apply (s : State) :
-    M.physicalMass s = M.physicalMass s := rfl
-
 /--
 Gauge-fixed BKM mass/stiffness is invariant under nonzero Weyl scaling.
 -/
@@ -164,14 +152,6 @@ variable {Weight Tangent State : Type*}
 variable [AddCommGroup Tangent] [Module ℝ Tangent]
 variable (F : ConnesBKMDriftFusion Weight Tangent State)
 
-@[rep_depth operator]
-theorem bkm_apply :
-    F.bkm = F.bkm := rfl
-
-@[rep_depth operator]
-theorem metric_apply :
-    F.metric = F.metric := rfl
-
 /--
 The calibrated BKM drift intensity is nonnegative by the imported BKM metric
 owner theorem.
@@ -228,14 +208,6 @@ namespace OperatorBKMDriftFusion
 
 variable {Op State : Type*}
 variable (F : OperatorBKMDriftFusion Op State)
-
-@[rep_depth operator]
-theorem bkmHessian_apply :
-    F.bkmHessian = F.bkmHessian := rfl
-
-@[rep_depth operator]
-theorem metric_apply :
-    F.metric = F.metric := rfl
 
 /--
 The calibrated operator BKM drift intensity is nonnegative by the imported

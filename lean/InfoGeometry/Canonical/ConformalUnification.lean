@@ -47,7 +47,7 @@ theorem canopy_obstructionScalarReadout
     {CI : ConformalInference E}
     {X : InfoGeometry.Quantum.RealSplitCl11Action E}
     (P : ConformalCanopyPackage (E := E) CI X) :
-    ConformalInference.ObstructionScalarReadout (CI := CI) := by
+    (‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧ CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧ CI.chiralScale = CI.obstructionScale ∧ CI.epsilon = CI.obstructionScale ∧ CI.unitOfAction = CI.obstructionScale ∧ CI.unitOfAction = ‖CI.projectorObstruction‖₊) := by
   have _ := canopy_obstructionOperatorOwner (E := E) (CI := CI) (X := X) P
   exact CI.obstructionScalarReadout
 
@@ -60,7 +60,7 @@ theorem canopy_operator_and_scalar
     {X : InfoGeometry.Quantum.RealSplitCl11Action E}
     (P : ConformalCanopyPackage (E := E) CI X) :
     ConformalInference.ObstructionOperatorOwner (CI := CI) X ∧
-      ConformalInference.ObstructionScalarReadout (CI := CI) := by
+      (‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧ CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧ CI.chiralScale = CI.obstructionScale ∧ CI.epsilon = CI.obstructionScale ∧ CI.unitOfAction = CI.obstructionScale ∧ CI.unitOfAction = ‖CI.projectorObstruction‖₊) := by
   refine ⟨?_, ?_⟩
   · exact canopy_obstructionOperatorOwner (E := E) (CI := CI) (X := X) P
   · exact canopy_obstructionScalarReadout (E := E) (CI := CI) (X := X) P
@@ -75,7 +75,7 @@ theorem conformal_root_factorization
     {X : InfoGeometry.Quantum.RealSplitCl11Action E}
     (P : ConformalCanopyPackage (E := E) CI X) :
     ∃ _ : ConformalInference.ObstructionOperatorOwner (CI := CI) X,
-      ConformalInference.ObstructionScalarReadout (CI := CI) := by
+      (‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧ CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧ CI.chiralScale = CI.obstructionScale ∧ CI.epsilon = CI.obstructionScale ∧ CI.unitOfAction = CI.obstructionScale ∧ CI.unitOfAction = ‖CI.projectorObstruction‖₊) := by
   refine ⟨canopy_obstructionOperatorOwner (E := E) (CI := CI) (X := X) P, ?_⟩
   simpa using canopy_obstructionScalarReadout (E := E) (CI := CI) (X := X) P
 
@@ -87,9 +87,9 @@ theorem conformal_isomorphism_corridor
     {CI : ConformalInference E}
     {X : InfoGeometry.Quantum.RealSplitCl11Action E} :
     (ConformalInference.ObstructionOperatorOwner (CI := CI) X ∧
-      ConformalInference.ObstructionScalarReadout (CI := CI)) ↔
+      (‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧ CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧ CI.chiralScale = CI.obstructionScale ∧ CI.epsilon = CI.obstructionScale ∧ CI.unitOfAction = CI.obstructionScale ∧ CI.unitOfAction = ‖CI.projectorObstruction‖₊)) ↔
     (∃ _ : ConformalInference.ObstructionOperatorOwner (CI := CI) X,
-      ConformalInference.ObstructionScalarReadout (CI := CI)) := by
+      (‖CI.projectorObstruction‖₊ = CI.obstructionScale ∧ CI.obstructionScale = ‖CI.projectorObstruction‖₊ ∧ CI.chiralScale = CI.obstructionScale ∧ CI.epsilon = CI.obstructionScale ∧ CI.unitOfAction = CI.obstructionScale ∧ CI.unitOfAction = ‖CI.projectorObstruction‖₊)) := by
   constructor
   · intro h
     exact ⟨h.1, by simpa using h.2⟩

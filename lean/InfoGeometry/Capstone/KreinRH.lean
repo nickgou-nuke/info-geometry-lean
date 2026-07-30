@@ -148,9 +148,25 @@ structure KreinRHColimitZornClosure
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     (C : KreinSpectralChart H) where
-  orderSurfaces : TwinOrderStability := zorn_colimit_order_surfaces
   colimitSupport : KreinInductiveColimitSupportCertificate C
   zornSubsystem : KreinZornMaximalSubsystemCertificate C
+
+namespace KreinRHColimitZornClosure
+
+/-- The order-surface theorem is shared by every closure package. -/
+def orderSurfaces
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [KreinSpace H] {C : KreinSpectralChart H}
+    (_P : KreinRHColimitZornClosure C) : TwinOrderStability :=
+  zorn_colimit_order_surfaces
+
+@[simp] theorem orderSurfaces_eq
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    [KreinSpace H] {C : KreinSpectralChart H}
+    (P : KreinRHColimitZornClosure C) :
+    P.orderSurfaces = zorn_colimit_order_surfaces := rfl
+
+end KreinRHColimitZornClosure
 
 /--
 An explicit `J`-odd obstruction certificate proves the chart-local no-leakage

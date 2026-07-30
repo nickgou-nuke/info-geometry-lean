@@ -123,15 +123,11 @@ theorem zmod_three_no_square_minus_one (x : ZMod 3) : x * x ≠ -1 := by
 theorem three_mod_four_eq_three : 3 % 4 = 3 := by
   decide
 
-/-- A finite certificate packet for the `ZMod 3` quadratic-pair extension. -/
-abbrev LevQuadraticExtensionCertificate : Prop :=
+theorem zmodThreeQuadraticExtensionCertificate :
   Nat.Prime 3 ∧
     3 % 4 = 3 ∧
       (∀ x : ZMod 3, x * x ≠ -1) ∧
-        qmul (qI : QuadraticPair (ZMod 3)) qI = qneg (qone : QuadraticPair (ZMod 3))
-
-/-- The explicit `ZMod 3` finite complex-extension certificate. -/
-theorem zmodThreeQuadraticExtensionCertificate : LevQuadraticExtensionCertificate := by
+        qmul (qI : QuadraticPair (ZMod 3)) qI = qneg (qone : QuadraticPair (ZMod 3)) := by
   exact ⟨by decide, three_mod_four_eq_three,
     zmod_three_no_square_minus_one, qI_sq⟩
 

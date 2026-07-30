@@ -50,8 +50,8 @@ def SymmetricSpace.ofLegacy
     {M : Type _}
     (S : InfoGeometry.Architecture.SymmetricSpace M) : SymmetricSpace M where
   reflection x :=
-    { toFun := S.symmetry x
-      involutive := S.symm_involutive x }
+    InfoGeometry.Core.InvolutiveAutomorphism.mk
+      (S.symmetry x) (S.symm_involutive x)
   reflection_fix := S.symm_fixpoint
 
 /-- Bridge to the existing Cartan-Loos structure. -/
@@ -399,8 +399,8 @@ noncomputable def conjugationByInvolution
     LinearInvolutiveAutomorphism (V →L[ℝ] V) := by
   refine ⟨?_, ?_⟩
   · exact
-      { toFun := conjugationMap J
-        involutive := conjugationMap_involutive J hJ }
+      InfoGeometry.Core.InvolutiveAutomorphism.mk
+        (conjugationMap J) (conjugationMap_involutive J hJ)
   · refine
       { map_add := ?_
         map_smul := ?_ }
@@ -452,14 +452,14 @@ def mulInvolutiveOfCartan
     MulInvolutiveAutomorphism G := by
   refine ⟨?_, ?_⟩
   · exact
-      { toFun := θ.toMulAut
-        involutive := θ.involutive }
+      InfoGeometry.Core.InvolutiveAutomorphism.mk
+        θ.toMulAut θ.involutive
   · refine
       { map_mul := ?_
         map_one := ?_ }
     · intro x y
-      simp
-    · simp
+      exact θ.toMulAut.map_mul x y
+    · exact θ.toMulAut.map_one
 
 /-- Bridge to the existing group-level Cartan involution. -/
 def cartanOfMulInvolutive

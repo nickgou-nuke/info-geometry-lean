@@ -36,8 +36,8 @@ def horizonZitterFierzVector
     (φA : RealExpectationState Obs)
     (C : FierzChannelMap Obs)
     (Z : HorizonZitterMode Obs) :
-    FierzCoordinates where
-  coord := fun ch => φA.expect (C.channel ch Z.envelope)
+    FierzCoordinates :=
+  fun ch => φA.expect (C.channel ch Z.envelope)
 
 /--
 Compatibility assumption for horizon zitter Fierz geometry.

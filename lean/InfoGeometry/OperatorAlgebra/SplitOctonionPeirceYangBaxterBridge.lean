@@ -146,29 +146,4 @@ theorem peirceWitt_nonassociative_obstruction :
     associator up0 up1 down1 ≠ zeroZ :=
   associator_up0_up1_down1_ne_zero
 
-/-- Closed finite packet for the Peirce-payload/Yang--Baxter bridge. -/
-theorem splitOctonion_peirce_yangBaxter_bridge_packet
-    (Gate : Type*) (readout : Equiv.Perm ℕ → SplitOct → Gate) :
-    (∀ w : BraidWord,
-      peirceCompressedBraidReadout Gate readout oneZ w =
-        readout (evalBraidWord w) oneZ) ∧
-    (∀ w : BraidWord,
-      peirceCompressedBraidReadout Gate readout H w =
-        readout (evalBraidWord w) H) ∧
-    (∀ i : Fin 3, ∀ w : BraidWord,
-      peirceCompressedBraidReadout Gate readout (up i) w =
-        readout (evalBraidWord w) zeroZ) ∧
-    (∀ i : Fin 3, ∀ w : BraidWord,
-      peirceCompressedBraidReadout Gate readout (down i) w =
-        readout (evalBraidWord w) zeroZ) ∧
-    (∀ X : SplitOct, ∀ i : ℕ, ∀ left right : BraidWord,
-      peirceCompressedBraidReadout Gate readout X (left ++ [i, i + 1, i] ++ right) =
-        peirceCompressedBraidReadout Gate readout X
-          (left ++ [i + 1, i, i + 1] ++ right)) := by
-  exact ⟨peirceCompressedBraidReadout_oneZ Gate readout,
-    peirceCompressedBraidReadout_H Gate readout,
-    peirceCompressedBraidReadout_up_zero Gate readout,
-    peirceCompressedBraidReadout_down_zero Gate readout,
-    peirceCompressedBraidReadout_yangBaxter_rewrite Gate readout⟩
-
 end InfoGeometry.OperatorAlgebra.SplitOctonions.PeirceYangBaxterBridge

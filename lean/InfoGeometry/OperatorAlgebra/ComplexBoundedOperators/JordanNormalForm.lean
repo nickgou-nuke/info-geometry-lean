@@ -35,13 +35,6 @@ def IsSimilarTo
     (A J P Pinv : Matrix (Fin n) (Fin n) ℂ) : Prop :=
   Pinv * P = 1 ∧ P * Pinv = 1 ∧ A = P * J * Pinv
 
-/-- Read back the conjugation equality from an explicit similarity datum. -/
-theorem similarity_readback
-    {n : ℕ}
-    {A J P Pinv : Matrix (Fin n) (Fin n) ℂ}
-    (h : IsSimilarTo A J P Pinv) :
-    A = P * J * Pinv :=
-  h.2.2
 
 /-- Every finite complex matrix is similar to itself. -/
 theorem similarity_refl

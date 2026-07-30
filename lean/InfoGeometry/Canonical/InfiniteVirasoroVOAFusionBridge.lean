@@ -91,22 +91,4 @@ theorem voa_logarithmic_jordan_nilpotent {V : Type*} [AddCommGroup V] [Module �
     module
   rw [h1, h2]
 
-/--
-**Main Theorem 4: Grand Infinite Virasoro VOA Master Duality Theorem**
-Unifies Virasoro bracket anti-symmetry, zero-mode commutators, highest weight conditions, and LogCFT VOA logarithmic fusion nilpotency into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
--/
-theorem grand_infinite_virasoro_voa_master_duality
-    (m n : ℤ) (c : ℂ) (L_sum L0 : ℂ) (I : ℂ)
-    {V : Type*} [AddCommGroup V] [Module ℂ V]
-    (L0_op : V →ₗ[ℂ] V) (h : ℂ) (phi psi : V)
-    (h_phi : L0_op phi = h • phi + psi)
-    (h_psi : L0_op psi = h • psi) :
-    (virasoroBracket m n c L_sum I = - virasoroBracket n m c L_sum I) ∧
-    (virasoroBracket m (-m) c L0 I = 2 * (m : ℂ) * L0 + virasoroCocycle m c * I) ∧
-    (L0_op (L0_op phi - h • phi) - h • (L0_op phi - h • phi) = 0) := ⟨
-  virasoro_bracket_antisymm m n c L_sum I,
-  virasoro_opposite_mode_commutator m c L0 I,
-  voa_logarithmic_jordan_nilpotent L0_op h phi psi h_phi h_psi
-⟩
-
 end InfoGeometry.Canonical.InfiniteVirasoroVOAFusionBridge

@@ -217,6 +217,60 @@ theorem tendsto_responsibility_minimizer_mass_one_of_energy_gap
     exact hlimit_one.congr' (Eventually.of_forall (fun β => (hcongr β).symm))
   simpa [S] using hlimit'
 
+/-- On an equal-energy minimizer set, conditioning the Gibbs law on that set
+gives the prior-normalized law exactly, at every nonzero temperature. -/
+theorem responsibility_eq_prior_fraction_of_minimizer_set
+    (F : ModelFamily (ModelId := ModelId) (Data := Data))
+    (ε : ℝ) (m₀ : ModelId) (i₀ : Data) (m : ModelId)
+    (hm : F.energy m i₀ = F.energy m₀ i₀) :
+    responsibility F ε m i₀ /
+        (∑ n ∈ Finset.univ.filter (fun n =>
+          F.energy n i₀ = F.energy m₀ i₀),
+          responsibility F ε n i₀) =
+      F.prior m /
+        (∑ n ∈ Finset.univ.filter (fun n =>
+          F.energy n i₀ = F.energy m₀ i₀), F.prior n) := by
+  classical
+  let S : Finset ModelId := Finset.univ.filter (fun n =>
+    F.energy n i₀ = F.energy m₀ i₀)
+  have hmS : m ∈ S := by
+    exact Finset.mem_filter.mpr ⟨Finset.mem_univ m, hm⟩
+  have hm₀S : m₀ ∈ S := by
+    exact Finset.mem_filter.mpr ⟨Finset.mem_univ m₀, rfl⟩
+  have hprior_pos : 0 < ∑ n ∈ S, F.prior n := by
+    exact Finset.sum_pos (fun n hn => F.prior_pos n) ⟨m₀, hm₀S⟩
+  have hresp_pos : 0 < ∑ n ∈ S, responsibility F ε n i₀ := by
+    exact Finset.sum_pos (fun n hn => responsibility_pos F ε n i₀)
+      ⟨m₀, hm₀S⟩
+  have hsum :
+      (∑ n ∈ S, responsibility F ε n i₀) =
+        (∑ n ∈ S, F.prior n) *
+          Real.exp (-F.energy m₀ i₀ / ε) /
+            modelPartition F ε i₀ := by
+    unfold responsibility
+    calc
+      (∑ n ∈ S,
+          (F.prior n * Real.exp (-F.energy n i₀ / ε)) /
+            modelPartition F ε i₀) =
+          (∑ n ∈ S,
+            (F.prior n * Real.exp (-F.energy m₀ i₀ / ε)) /
+              modelPartition F ε i₀) := by
+            apply Finset.sum_congr rfl
+            intro n hn
+            rw [Finset.mem_filter.mp hn |>.2]
+      _ = (∑ n ∈ S, F.prior n) *
+          Real.exp (-F.energy m₀ i₀ / ε) /
+            modelPartition F ε i₀ := by
+            rw [← Finset.sum_div]
+            congr 1
+            rw [Finset.sum_mul]
+  dsimp [S] at hprior_pos hresp_pos hsum ⊢
+  rw [hsum]
+  unfold responsibility
+  rw [hm]
+  field_simp [ne_of_gt (modelPartition_pos F ε i₀),
+    ne_of_gt hprior_pos, ne_of_gt hresp_pos]
+
 /-- The total volume of any finite collection of uniformly separated models
 vanishes in the zero-temperature limit. -/
 theorem tendsto_modelVolume_sum_zero_of_energy_gap

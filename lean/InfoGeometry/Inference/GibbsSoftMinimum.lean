@@ -49,4 +49,44 @@ theorem softMinimum_le_energy
     _ = E i := by
       field_simp [ne_of_gt hε]
 
+/-- A minimizing energy bounds the finite soft minimum from below up to the
+finite-volume entropy correction `ε * log(card Data)`. -/
+theorem energy_sub_temperature_mul_log_card_le_softMinimum_of_min
+    (E : Data → ℝ) {ε : ℝ} (hε : 0 < ε) (i : Data)
+    (hmin : ∀ j : Data, E i ≤ E j) :
+    E i - ε * Real.log (Fintype.card Data) ≤ softMinimum E ε := by
+  unfold softMinimum
+  have hsum_pos : 0 < ∑ j : Data, Real.exp (-E j / ε) := by
+    exact Finset.sum_pos (fun j hj => Real.exp_pos _) Finset.univ_nonempty
+  have hpointwise : ∀ j : Data,
+      Real.exp (-E j / ε) ≤ Real.exp (-E i / ε) := by
+    intro j
+    apply Real.exp_le_exp.mpr
+    apply (div_le_div_iff_of_pos_right hε).2
+    linarith [hmin j]
+  have hsum_le :
+      (∑ j : Data, Real.exp (-E j / ε)) ≤
+        (Fintype.card Data : ℝ) * Real.exp (-E i / ε) := by
+    calc
+      ∑ j : Data, Real.exp (-E j / ε) ≤
+          ∑ _j : Data, Real.exp (-E i / ε) := by
+            exact Finset.sum_le_sum (fun j hj => hpointwise j)
+      _ = (Fintype.card Data : ℝ) * Real.exp (-E i / ε) := by
+        simp [nsmul_eq_mul]
+  have hcard_pos : 0 < (Fintype.card Data : ℝ) := by
+    exact_mod_cast Fintype.card_pos
+  have hlog :
+      Real.log (∑ j : Data, Real.exp (-E j / ε)) ≤
+        Real.log ((Fintype.card Data : ℝ) * Real.exp (-E i / ε)) := by
+    exact Real.strictMonoOn_log.monotoneOn hsum_pos
+      (mul_pos hcard_pos (Real.exp_pos _)) hsum_le
+  rw [Real.log_mul (ne_of_gt hcard_pos) (Real.exp_ne_zero _), Real.log_exp] at hlog
+  have hmul := mul_le_mul_of_nonpos_left hlog (neg_nonpos.mpr hε.le)
+  calc
+    E i - ε * Real.log (Fintype.card Data) =
+        -ε * (Real.log (Fintype.card Data) + -E i / ε) := by
+          field_simp [ne_of_gt hε]
+          ring
+    _ ≤ -ε * Real.log (∑ j : Data, Real.exp (-E j / ε)) := hmul
+
 end InfoGeometry.Inference.FiniteGibbs

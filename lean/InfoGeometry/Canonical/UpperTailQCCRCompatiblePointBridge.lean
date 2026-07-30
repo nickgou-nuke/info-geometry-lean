@@ -154,4 +154,49 @@ theorem upperTailCompatibleQCCRFullParameterColimitMap_eq_coconeMap
   exact upperTailCompatibleQCCRFullParameterColimitMap_stage_apply
     Stage T m family j u
 
+theorem upperTailCompatibleQCCRFullCoconeMap_stage_apply
+    (m : ℕ)
+    (family : CompatibleQCCRPointFamily
+      (upperTailContinuousStarSystem Stage T m))
+    (j : UpperNatIndex m) (u : PUnit) :
+    upperTailCompatibleQCCRFullCoconeMap Stage T m family
+        (topologicalDirectInjection
+          ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit)) j u) =
+      qCcrParameterTopologicalInjection Stage T.toContinuousStarInductiveSystem j.1
+        (family.point j).1 := by
+  rw [← upperTailCompatibleQCCRFullParameterColimitMap_eq_coconeMap
+    Stage T m family]
+  exact upperTailCompatibleQCCRFullParameterColimitMap_stage_apply
+    Stage T m family j u
+
+theorem upperTailCompatibleQCCRFullParameterColimitMap_congr
+    (m : ℕ)
+    (family₁ family₂ : CompatibleQCCRPointFamily
+      (upperTailContinuousStarSystem Stage T m))
+    (hfamily : ∀ j, family₁.point j = family₂.point j) :
+    upperTailCompatibleQCCRFullParameterColimitMap Stage T m family₁ =
+      upperTailCompatibleQCCRFullParameterColimitMap Stage T m family₂ := by
+  apply colimit.hom_ext
+  intro j
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro u
+  rw [upperTailCompatibleQCCRFullParameterColimitMap_stage_apply,
+    upperTailCompatibleQCCRFullParameterColimitMap_stage_apply]
+  exact congrArg Subtype.val (hfamily j)
+
+theorem upperTailCompatibleQCCRFullCoconeMap_congr
+    (m : ℕ)
+    (family₁ family₂ : CompatibleQCCRPointFamily
+      (upperTailContinuousStarSystem Stage T m))
+    (hfamily : ∀ j, family₁.point j = family₂.point j) :
+    upperTailCompatibleQCCRFullCoconeMap Stage T m family₁ =
+      upperTailCompatibleQCCRFullCoconeMap Stage T m family₂ := by
+  rw [← upperTailCompatibleQCCRFullParameterColimitMap_eq_coconeMap
+      Stage T m family₁,
+    ← upperTailCompatibleQCCRFullParameterColimitMap_eq_coconeMap
+      Stage T m family₂,
+    upperTailCompatibleQCCRFullParameterColimitMap_congr
+      Stage T m family₁ family₂ hfamily]
+
 end InfoGeometry.Canonical.UpperTailQCCRCompatiblePointBridge

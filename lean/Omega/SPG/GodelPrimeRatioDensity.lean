@@ -9,17 +9,10 @@ noncomputable section
 def spgGodelPrimeRatioExponent (x y n : Nat) : ℝ :=
   (n : ℝ) * (Real.log (x : ℝ) - Real.log (y : ℝ))
 
-/-- Concrete `n log n`-scale ratio certificate obtained by subtracting the two logarithmic
-asymptotic profiles. -/
-def spgGodelPrimeRatioDensityCertificate : Prop :=
+theorem paper_spg_godel_prime_ratio_density :
   (∀ x y n : Nat, 1 ≤ x → 1 ≤ y →
       Real.log (((x : ℝ) / y) ^ (n : ℝ)) = spgGodelPrimeRatioExponent x y n) ∧
-  (∀ x n : Nat, 1 ≤ x → spgGodelPrimeRatioExponent x x n = 0)
-
-/-- Paper label: `cor:spg-godel-prime-ratio-density`.
-    Applying the logarithmic density package to `x` and `y` separately and subtracting the
-    two formulas yields an exponential certificate for the ratio at the same scale. -/
-theorem paper_spg_godel_prime_ratio_density : spgGodelPrimeRatioDensityCertificate := by
+  (∀ x n : Nat, 1 ≤ x → spgGodelPrimeRatioExponent x x n = 0) := by
   refine ⟨?_, ?_⟩
   · intro x y n hx hy
     unfold spgGodelPrimeRatioExponent

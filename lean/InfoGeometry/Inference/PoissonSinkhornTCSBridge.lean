@@ -213,6 +213,46 @@ theorem componentTransportFisher_quadratic_nonneg
   intro i
   exact (poissonTransportAssignment_nonneg C ε i j)
 
+/-- Local `(C, K)` variance readout for one transport component. -/
+noncomputable def componentTransportLocalVariance
+    {x liveTime : Observation → ℝ}
+    (C : PoissonTransportCost (Observation := Observation)
+      (Component := Component))
+    (ε : ℝ) (j : Component)
+    (hI : FisherInverseContract
+      (componentTransportFisherInformation (x := x) (liveTime := liveTime)
+        C ε j))
+    (v : Fin 2 → ℝ) : ℝ :=
+  localVariance
+    (componentTransportFisherInformation (x := x) (liveTime := liveTime)
+      C ε j) hI v
+
+omit [Nonempty Component] in
+theorem componentTransportLocalVariance_nonneg
+    {x liveTime : Observation → ℝ}
+    (C : PoissonTransportCost (Observation := Observation)
+      (Component := Component))
+    (ε : ℝ) (j : Component)
+    (hI : FisherInverseContract
+      (componentTransportFisherInformation (x := x) (liveTime := liveTime)
+        C ε j))
+    (v : Fin 2 → ℝ) :
+    0 ≤ componentTransportLocalVariance C ε j hI v := by
+  exact localVariance_nonneg _ hI v
+
+omit [Nonempty Component] in
+theorem componentTransportLocalVariance_pos
+    {x liveTime : Observation → ℝ}
+    (C : PoissonTransportCost (Observation := Observation)
+      (Component := Component))
+    (ε : ℝ) (j : Component)
+    (hI : FisherInverseContract
+      (componentTransportFisherInformation (x := x) (liveTime := liveTime)
+        C ε j))
+    {v : Fin 2 → ℝ} (hv : v ≠ 0) :
+    0 < componentTransportLocalVariance C ε j hI v := by
+  exact localVariance_pos _ hI hv
+
 end TransportFisher
 
 end FinitePoissonTransport

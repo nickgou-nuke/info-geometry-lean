@@ -6,12 +6,6 @@ namespace Omega.OperatorAlgebra
 
 open scoped BigOperators
 
-/-- Concrete multiplicity data for the comparison between the fold-gauge abelianization and the
-fiberwise `K₀`-classes modulo `2`. -/
-structure FoldGaugeAbK0Mod2Data where
-  m : ℕ
-  multiplicity : Fin m → ℕ
-
 /-- The mod-`2` reduction of the unit class in `K₀(M_d(ℂ))` is nontrivial exactly on the
 nontrivial fibers `d ≥ 2`. -/
 def foldGaugeK0Mod2ComponentOrder (n : ℕ) : ℕ :=
@@ -32,18 +26,11 @@ lemma foldGaugeAbelianizationComponentOrder_eq_k0Mod2ComponentOrder (n : ℕ) :
 /-- The fold-gauge abelianization is the same coordinatewise `ℤ/2ℤ` package as the mod-`2`
 reduction of the fiberwise `K₀` unit classes.
     cor:op-algebra-fold-gauge-ab-k0-mod2 -/
-theorem paper_op_algebra_fold_gauge_ab_k0_mod2 (D : FoldGaugeAbK0Mod2Data) :
-    foldGaugeAbelianizationOrder D.multiplicity = foldGaugeK0Mod2Order D.multiplicity := by
-  have hStructure :
-      FoldGaugeGroupStructureData.groupStructurePackage
-        { m := D.m, multiplicity := D.multiplicity } := by
-    simpa using
-      paper_op_algebra_fold_gauge_group_structure { m := D.m, multiplicity := D.multiplicity }
-  rcases hStructure with ⟨_, _, _, hAb⟩
-  refine hAb.trans ?_
+theorem paper_op_algebra_fold_gauge_ab_k0_mod2 {m : ℕ} (multiplicity : Fin m → ℕ) :
+    foldGaugeAbelianizationOrder multiplicity = foldGaugeK0Mod2Order multiplicity := by
   unfold foldGaugeK0Mod2Order
   refine Finset.prod_congr rfl ?_
   intro d hd
-  exact foldGaugeAbelianizationComponentOrder_eq_k0Mod2ComponentOrder (D.multiplicity d)
+  exact foldGaugeAbelianizationComponentOrder_eq_k0Mod2ComponentOrder (multiplicity d)
 
 end Omega.OperatorAlgebra

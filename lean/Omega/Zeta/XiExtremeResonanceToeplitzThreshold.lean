@@ -46,17 +46,21 @@ of the appendix horizon Toeplitz detection threshold. -/
 theorem paper_xi_extreme_resonance_toeplitz_threshold
     (D : xi_extreme_resonance_toeplitz_threshold_data) :
     xi_extreme_resonance_toeplitz_threshold_statement D := by
-  let D0 : Omega.UnitCirclePhaseArithmetic.HorizonToeplitzDetectionData :=
-    { N := D.xi_extreme_resonance_toeplitz_threshold_N
-      C := D.xi_extreme_resonance_toeplitz_threshold_C
-      δ := D.xi_extreme_resonance_toeplitz_threshold_δ
-      Qrho := D.xi_extreme_resonance_toeplitz_threshold_Qrho
-      C_pos := D.xi_extreme_resonance_toeplitz_threshold_C_pos }
-  have hToeplitz : D0.toeplitzPsdUpToN := by
-    simpa [D0, Omega.UnitCirclePhaseArithmetic.HorizonToeplitzDetectionData.toeplitzPsdUpToN,
-      D.xi_extreme_resonance_toeplitz_threshold_Qrho_eq] using
+  have hToeplitz :
+      D.xi_extreme_resonance_toeplitz_threshold_Qrho *
+          Real.log
+            (1 + D.xi_extreme_resonance_toeplitz_threshold_δ *
+              D.xi_extreme_resonance_toeplitz_threshold_Qrho) ≤
+        D.xi_extreme_resonance_toeplitz_threshold_C *
+          D.xi_extreme_resonance_toeplitz_threshold_N := by
+    simpa [D.xi_extreme_resonance_toeplitz_threshold_Qrho_eq] using
       D.xi_extreme_resonance_toeplitz_threshold_auditedToeplitzBound
-  simpa [xi_extreme_resonance_toeplitz_threshold_statement, D0] using
-    Omega.UnitCirclePhaseArithmetic.paper_app_horizon_toeplitz_detection_threshold D0 hToeplitz
+  simpa [xi_extreme_resonance_toeplitz_threshold_statement] using
+    Omega.UnitCirclePhaseArithmetic.paper_app_horizon_toeplitz_detection_threshold
+      D.xi_extreme_resonance_toeplitz_threshold_N
+      D.xi_extreme_resonance_toeplitz_threshold_C
+      D.xi_extreme_resonance_toeplitz_threshold_δ
+      D.xi_extreme_resonance_toeplitz_threshold_Qrho
+      D.xi_extreme_resonance_toeplitz_threshold_C_pos hToeplitz
 
 end Omega.Zeta

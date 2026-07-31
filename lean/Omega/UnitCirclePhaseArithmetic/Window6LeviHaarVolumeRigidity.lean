@@ -7,15 +7,6 @@ namespace Omega.UnitCirclePhaseArithmetic
 
 noncomputable section
 
-open PhaseGateRank1VolumeRigidityData
-
-/-- Canonical rank-`1` phase-consistent normalization data used to read off the rigid Haar
-volumes. -/
-def window6_levi_haar_volume_rigidity_canonical_rank1_data : PhaseGateRank1VolumeRigidityData
-    where
-  su2Radius := 1
-  phaseConsistentRadius := by ring
-
 /-- Concrete wrapper combining the audited window-`6` Levi skeleton with the phase-gate
 normalization and its induced rank-`1` Haar volumes. -/
 def window6_levi_haar_volume_rigidity_statement : Prop :=
@@ -25,10 +16,8 @@ def window6_levi_haar_volume_rigidity_statement : Prop :=
     (∃! cU1 : ℝ, 0 < cU1 ∧ cU1 * (1 : ℝ) = 1) ∧
     (∃! cSU2 : ℝ, 0 < cSU2 ∧ cSU2 * (1 : ℝ) = 1) ∧
     (∃! cSU4 : ℝ, 0 < cSU4 ∧ cSU4 * (1 : ℝ) = 1) ∧
-    window6_levi_haar_volume_rigidity_canonical_rank1_data.volU1 = 2 * Real.pi ∧
-    window6_levi_haar_volume_rigidity_canonical_rank1_data.volSU2 = 2 * Real.pi ^ 2 ∧
-    window6_levi_haar_volume_rigidity_canonical_rank1_data.volSO3 = Real.pi ^ 2 ∧
-    window6_levi_haar_volume_rigidity_canonical_rank1_data.volRP1 = Real.pi
+    volU1 = 2 * Real.pi ∧ volSU2 1 = 2 * Real.pi ^ 2 ∧
+    volSO3 1 = Real.pi ^ 2 ∧ volRP1 = Real.pi
 
 /-- Paper label: `cor:window6-levi-haar-volume-rigidity`. The audited window-`6`
 `SU(4) × SU(2) × SU(2)` Levi skeleton combines with the phase-gate normalization to force the
@@ -44,8 +33,7 @@ theorem paper_window6_levi_haar_volume_rigidity :
     paper_phase_gate_u1_fixes_simple_scale 1 1 zero_lt_one zero_lt_one
   have hSU4 : ∃! cSU4 : ℝ, 0 < cSU4 ∧ cSU4 * (1 : ℝ) = 1 :=
     paper_phase_gate_u1_fixes_simple_scale 1 1 zero_lt_one zero_lt_one
-  rcases paper_phase_gate_rank1_volume_rigidity
-      window6_levi_haar_volume_rigidity_canonical_rank1_data with
+  rcases paper_phase_gate_rank1_volume_rigidity 1 (by ring) with
     ⟨hvolU1, hvolSU2, hvolSO3, hvolRP1⟩
   exact ⟨hglobal, hlight, hsm, hU1, hSU2, hSU4, hvolU1, hvolSU2, hvolSO3, hvolRP1⟩
 

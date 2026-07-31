@@ -178,11 +178,6 @@ structure CantorDyadicRenormalization (Op : Type*) [AddCommMonoid Op] where
       renorm (cylinder w) =
         cylinder (BinaryWord.child w false) + cylinder (BinaryWord.child w true)
 
-namespace CantorDyadicRenormalization
-
-variable (C : CantorDyadicRenormalization Op)
-
-end CantorDyadicRenormalization
 
 end Cantor
 

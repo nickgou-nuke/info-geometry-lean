@@ -27,12 +27,6 @@ structure SelfAdjointIdempotentPair (A : Type*) [Ring A] [StarRing A] where
   support_selfAdjoint : star support = support
   residue_selfAdjoint : star residue = residue
 
-namespace SelfAdjointIdempotentPair
-
-variable {A : Type*} [Ring A] [StarRing A]
-variable (P : SelfAdjointIdempotentPair A)
-
-end SelfAdjointIdempotentPair
 
 /-- Drazin inverse data for one algebra element. -/
 structure DrazinInverseData (A : Type*) [Ring A] where
@@ -283,11 +277,6 @@ structure DivisionResidueBlockPacket where
   residueProjection : Block → Type*
   carrier_divisionRing : ∀ b, DivisionRing (DivisionCarrier b)
 
-namespace DivisionResidueBlockPacket
-
-variable (P : DivisionResidueBlockPacket)
-
-end DivisionResidueBlockPacket
 
 /--
 A Frobenius functional whose multiplication pairing is nondegenerate.

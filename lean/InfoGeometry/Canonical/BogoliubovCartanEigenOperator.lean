@@ -505,12 +505,6 @@ structure CartanFrameEquiv
   conjugatesCartan :
     Htgt = U * Hsrc * Uinv
 
-namespace CartanFrameEquiv
-
-variable {Hsrc Htgt : EndH}
-variable (F : CartanFrameEquiv (E := E) Hsrc Htgt)
-
-end CartanFrameEquiv
 
 /--
 Structure form of a Bogoliubov-Cartan frame equivalence.
@@ -548,12 +542,6 @@ structure BogoliubovCartanFrameEquiv
   preservesKrein :
     Prop
 
-namespace BogoliubovCartanFrameEquiv
-
-variable {T TD Hsrc Htgt : EndH}
-variable (F : BogoliubovCartanFrameEquiv (E := E) T TD Hsrc Htgt)
-
-end BogoliubovCartanFrameEquiv
 
 end Core
 

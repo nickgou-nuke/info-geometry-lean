@@ -756,12 +756,6 @@ structure HestenesSpinorRotorDatum
   /-- Spin plane/bivector readout. -/
   spinBivector : Spinor → Bivector
 
-namespace HestenesSpinorRotorDatum
-
-variable {Spinor Rotor Bivector : Type*}
-variable (D : HestenesSpinorRotorDatum Spinor Rotor Bivector)
-
-end HestenesSpinorRotorDatum
 
 /-! ## 5. Spin-momentum coupling and helicity data -/
 
@@ -889,12 +883,6 @@ structure UncertaintyReadoutGuard
   /-- Chosen second observable. -/
   second : Observable
 
-namespace UncertaintyReadoutGuard
-
-variable {Observable : Type*}
-variable (U : UncertaintyReadoutGuard Observable)
-
-end UncertaintyReadoutGuard
 
 /--
 Pauli-Lubanski/helicity style spin-momentum coupling.
@@ -910,13 +898,6 @@ structure SpinMomentumCoupling
   /-- Pauli-Lubanski or analogous invariant readout. -/
   invariantReadout : Spinor → SpinInvariant
 
-namespace SpinMomentumCoupling
-
-variable {Spinor Rotor Bivector SpinInvariant : Type*}
-variable {D : HestenesSpinorRotorDatum Spinor Rotor Bivector}
-variable (C : SpinMomentumCoupling Spinor Rotor Bivector SpinInvariant D)
-
-end SpinMomentumCoupling
 
 /--
 Helicity calibration for a massless/null spinor branch.

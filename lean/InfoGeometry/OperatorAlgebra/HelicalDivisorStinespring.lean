@@ -285,11 +285,5 @@ structure SpectralFunctionDivisorCalibration
   /-- Associated divisor charge. -/
   divisorCharge : SpectralDivisorCharge
 
-namespace SpectralFunctionDivisorCalibration
-
-variable {State : Type*}
-variable (C : SpectralFunctionDivisorCalibration State)
-
-end SpectralFunctionDivisorCalibration
 
 end InfoGeometry.OperatorAlgebra.HelicalDivisorStinespring

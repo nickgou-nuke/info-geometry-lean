@@ -201,12 +201,6 @@ structure DielectricResponseDatum
   susceptibility_to_epsilon :
     ∀ U : Op, epsilon U = susceptibilityEpsilonReadout U
 
-namespace DielectricResponseDatum
-
-variable {Op : Type*}
-variable (D : DielectricResponseDatum Op)
-
-end DielectricResponseDatum
 
 /--
 Constructive dielectric calibration.
@@ -277,11 +271,6 @@ structure OpticalInterfaceGeometry where
   /-- Transmission/refraction angle, if applicable. -/
   theta_t : ℝ
 
-namespace OpticalInterfaceGeometry
-
-variable (G : OpticalInterfaceGeometry)
-
-end OpticalInterfaceGeometry
 
 /--
 Fresnel calibration datum.
@@ -300,12 +289,6 @@ structure FresnelFromSusceptibilityCalibration
   /-- Fresnel coefficients supplied to the Jones layer. -/
   coeffs : InfoGeometry.Optics.JonesCalibration.FresnelCoefficientDatum
 
-namespace FresnelFromSusceptibilityCalibration
-
-variable {Op : Type*}
-variable (F : FresnelFromSusceptibilityCalibration Op)
-
-end FresnelFromSusceptibilityCalibration
 
 /-! ## s/p eigenchannel response -/
 

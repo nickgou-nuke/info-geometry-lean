@@ -720,13 +720,6 @@ structure FractalCantorFockWitness
   cliffordToCAR : CliffordToCARCalibration Op
   drazinCalibration : DrazinArrowTiltSwitchCalibration Op
 
-namespace FractalCantorFockWitness
-
-variable {Op E : Type*} [Ring Op]
-variable [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-variable (W : FractalCantorFockWitness Op E)
-
-end FractalCantorFockWitness
 
 /-- Drazin support of a signal operator: `p = A Aᴰ`. -/
 @[rep_depth operator]

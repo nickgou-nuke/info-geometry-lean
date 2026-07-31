@@ -176,11 +176,6 @@ structure CartanEigenAdjointExponentialCalibration where
   exponential_adjoint_law :
     ∀ t : ℝ, expH t * X * expNegH t = Real.exp (t * weight) • X
 
-namespace CartanEigenAdjointExponentialCalibration
-
-variable (C : CartanEigenAdjointExponentialCalibration (R := R))
-
-end CartanEigenAdjointExponentialCalibration
 
 end InnerAdjoint
 

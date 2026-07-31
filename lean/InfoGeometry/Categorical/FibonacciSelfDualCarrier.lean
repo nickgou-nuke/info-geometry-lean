@@ -109,14 +109,14 @@ theorem limitRMatrix_mem_positiveCone
 theorem limitBMatrix_mem_positiveCone
     {Stage : Nat → Type*} [∀ n : Nat, CommRing (Stage n)]
     (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
-    (D : Carrier (E := E) (BraidLimit (Stage := Stage) bond))
+    (D : ActionModel (E := E) (BraidLimit (Stage := Stage) bond))
     (n : Nat) (q qInv τ sqrtτ : Stage n) {x : E}
     (hx : x ∈ (D.positiveCone.cone : Set E)) :
     D.limitObservableAction (limitBMatrix bond n q qInv τ sqrtτ) x ∈
       (D.positiveCone.cone : Set E) :=
   D.limitObservableAction_mem_positiveCone (limitBMatrix bond n q qInv τ sqrtτ) hx
 
-end Carrier
+end ActionModel
 
 /-! ## Proper-carrier staged self-dual extension -/
 

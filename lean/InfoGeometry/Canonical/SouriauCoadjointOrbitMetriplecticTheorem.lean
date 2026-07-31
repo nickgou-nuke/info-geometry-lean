@@ -564,29 +564,6 @@ def entropy_gradient_eq_beta
       Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
   C.entropyGradient = C.betaOfMoment
 
-def first_variation_law
-    (C : InfiniteCoadjointOrbitHessianContext
-      Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
-  C.massieuGradient = C.thermodynamicMoment
-
-def second_variation_law
-    (C : InfiniteCoadjointOrbitHessianContext
-      Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
-  C.massieuHessian = C.fisherHessian
-
-def fenchel_legendre_law
-    (C : InfiniteCoadjointOrbitHessianContext
-      Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
-  ∀ Q : LieCoalg,
-    C.souriauEntropy Q =
-      C.thermodynamicPairing (C.betaOfMoment Q) Q +
-        C.massieuPotential (C.betaOfMoment Q)
-
-def entropy_gradient_law
-    (C : InfiniteCoadjointOrbitHessianContext
-      Orbit LieAlg LieCoalg Tangent DualTangent) : Prop :=
-  C.entropyGradient = C.betaOfMoment
-
 /--
 Canonical dimension-agnostic Hessian constructor where the Massieu potential is
 defined as the log partition and the covariance readout is defined to be the

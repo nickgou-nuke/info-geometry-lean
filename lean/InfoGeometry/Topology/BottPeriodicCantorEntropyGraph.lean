@@ -205,12 +205,6 @@ structure BottPeriodicCantorEntropyPacket (kind : BottKind) where
 
   coupling : ℕ → BottStreamEntropyCoupling kind
 
-namespace BottPeriodicCantorEntropyPacket
-
-variable {kind : BottKind}
-variable (P : BottPeriodicCantorEntropyPacket kind)
-
-end BottPeriodicCantorEntropyPacket
 
 /-! ## 3. Bott-periodic Clifford and It-from-bit sockets -/
 
@@ -291,13 +285,6 @@ structure BottPeriodicItFromBitSocket
 
   xRaw : Op
 
-namespace BottPeriodicItFromBitSocket
-
-variable {Op : Type*} [Ring Op]
-variable (S : BottPeriodicItFromBitSocket Op)
-
-end BottPeriodicItFromBitSocket
-
 /--
 Fierz-Klein law for a Bott-periodic It-from-bit socket.
 
@@ -312,12 +299,5 @@ structure BottPeriodicFierzKleinLaw
   coords : FractalCantorFockWitness.FierzChannel → ℝ
   residual : (FractalCantorFockWitness.FierzChannel → ℝ) → ℝ
   quadric_zero_property : residual coords = 0
-
-namespace BottPeriodicFierzKleinLaw
-
-variable {Op : Type*} [Ring Op]
-variable (L : BottPeriodicFierzKleinLaw Op)
-
-end BottPeriodicFierzKleinLaw
 
 end InfoGeometry.Topology.BottPeriodicCantorEntropyGraph

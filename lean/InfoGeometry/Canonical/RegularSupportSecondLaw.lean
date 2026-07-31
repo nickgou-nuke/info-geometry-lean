@@ -34,8 +34,17 @@ fixedness theorem uses subtraction:
 @[rep_depth krein]
 structure ModularFlow (Op : Type*) [Ring Op] where
   sigma : ℝ → Op ≃+* Op
-  sigma_zero : sigma 0 = RingEquiv.refl Op
   sigma_add : ∀ s t : ℝ, sigma (s + t) = (sigma s).trans (sigma t)
+
+theorem ModularFlow.sigma_zero {Op : Type*} [Ring Op]
+    (flow : ModularFlow Op) :
+    flow.sigma 0 = RingEquiv.refl Op := by
+  apply RingEquiv.ext
+  intro x
+  have h := congrArg (fun e : Op ≃+* Op => e x) (flow.sigma_add 0 1)
+  have h' : flow.sigma 1 (flow.sigma 0 x) = flow.sigma 1 x := by
+    simpa using h.symm
+  exact (flow.sigma 1).injective h'
 
 /-- Expectation state, not assumed tracial. -/
 @[rep_depth krein]

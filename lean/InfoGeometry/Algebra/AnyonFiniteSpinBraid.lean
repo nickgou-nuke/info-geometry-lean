@@ -22,9 +22,5 @@ needed before a later model-specific braid representation is imported.
 
 noncomputable section
 
-namespace InfoGeometry.Algebra.AnyonFiniteSpinBraid
-
-
-end InfoGeometry.Algebra.AnyonFiniteSpinBraid
 
 end noncomputable section

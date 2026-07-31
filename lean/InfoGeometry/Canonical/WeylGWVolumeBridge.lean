@@ -111,12 +111,6 @@ def IsInverseWeightTwoGauge
     c ≠ 0 →
       G.gaugeScale (G.scale c s) = (c ^ 2)⁻¹ * G.gaugeScale s
 
-namespace AutomorphicScaleBridge
-
-variable {State : Type*}
-variable (G : AutomorphicScaleBridge State)
-
-end AutomorphicScaleBridge
 
 /--
 Physical Weyl/GW volume carrier.

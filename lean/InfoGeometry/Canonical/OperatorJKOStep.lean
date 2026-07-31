@@ -302,12 +302,6 @@ structure NoisyJKOUpdate
   noisyNext :
     Weight
 
-namespace NoisyJKOUpdate
-
-variable {Weight Noise : Type*}
-variable {P : OperatorJKOPotential Weight}
-
-end NoisyJKOUpdate
 
 /--
 Modular/continuous-flow limit calibration carrier.
@@ -327,11 +321,5 @@ structure JKOModularFlowLimitCalibration
   flowReadout :
     FlowReadout
 
-namespace JKOModularFlowLimitCalibration
-
-variable {Weight FlowReadout : Type*}
-variable {P : OperatorJKOPotential Weight}
-
-end JKOModularFlowLimitCalibration
 
 end InfoGeometry.Canonical.OperatorJKOStep

@@ -139,12 +139,6 @@ structure CartanWeylCasimirLabel
   weylShape : WeylShape
   casimir : CasimirReadout
 
-namespace CartanWeylCasimirLabel
-
-variable {CartanWeight WeylShape CasimirReadout : Type*}
-variable (L : CartanWeylCasimirLabel CartanWeight WeylShape CasimirReadout)
-
-end CartanWeylCasimirLabel
 
 /--
 Iterated observable sectorization carrier.

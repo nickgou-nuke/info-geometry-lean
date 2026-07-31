@@ -18,27 +18,33 @@ open InfoGeometry.Canonical.NonAbelianFusionTensorTopologicalColimit
 open FilteredColimit.Native.Topological
 
 structure TensorTopologicalFlowData where
-  flow : ℝ → (TopCat.of (FusionTensorCarrier ℂ) ⟶
+  flow : ℝ → (TopCat.of (FusionTensorCarrier ℂ) ≅
     TopCat.of (FusionTensorCarrier ℂ))
-  flow_zero : flow 0 = 𝟙 (TopCat.of (FusionTensorCarrier ℂ))
-  flow_add : ∀ t s, flow (t + s) = flow s ≫ flow t
+  flow_add : ∀ t s, (flow (t + s)).hom =
+    (flow s).hom ≫ (flow t).hom
 
 variable (D : TensorTopologicalFlowData)
+
+theorem flow_zero : D.flow 0 =
+    Iso.refl (TopCat.of (FusionTensorCarrier ℂ)) := by
+  apply Iso.ext
+  apply (cancel_mono (D.flow 1).hom).1
+  simpa using (D.flow_add 1 0).symm
 
 def flowColimitMap (t : ℝ) :
     topologicalDirectColimit
         (fusionTensorTopologicalDiagram (K := ℂ)) ⟶
       topologicalDirectColimit
         (fusionTensorTopologicalDiagram (K := ℂ)) :=
-  tensorActionColimitEndomorphism (K := ℂ) (D.flow t)
+  tensorActionColimitEndomorphism (K := ℂ) (D.flow t).hom
 
 theorem flowColimitMap_stage (t : ℝ) (n : ℕ) :
     topologicalDirectInjection
         (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
         flowColimitMap D t =
-      D.flow t ≫ topologicalDirectInjection
+      (D.flow t).hom ≫ topologicalDirectInjection
         (fusionTensorTopologicalDiagram (K := ℂ)) n := by
-  exact tensorActionColimitEndomorphism_stage (K := ℂ) (D.flow t) n
+  exact tensorActionColimitEndomorphism_stage (K := ℂ) (D.flow t).hom n
 
 theorem flowColimitMap_zero :
     flowColimitMap D 0 =
@@ -54,7 +60,7 @@ theorem flowColimitMap_zero :
         (fusionTensorTopologicalDiagram (K := ℂ)))
   rw [Category.comp_id]
   rw [flowColimitMap_stage]
-  rw [D.flow_zero]
+  rw [flow_zero D]
   simp
 
 theorem flowColimitMap_add (t s : ℝ) :
@@ -70,20 +76,20 @@ theorem flowColimitMap_add (t s : ℝ) :
       (flowColimitMap D s ≫ flowColimitMap D t)
   rw [flowColimitMap_stage]
   calc
-    D.flow (t + s) ≫ topologicalDirectInjection
+    (D.flow (t + s)).hom ≫ topologicalDirectInjection
         (fusionTensorTopologicalDiagram (K := ℂ)) n =
-      (D.flow s ≫ D.flow t) ≫ topologicalDirectInjection
+      ((D.flow s).hom ≫ (D.flow t).hom) ≫ topologicalDirectInjection
         (fusionTensorTopologicalDiagram (K := ℂ)) n := by rw [D.flow_add]
-    _ = D.flow s ≫
-        (D.flow t ≫ topologicalDirectInjection
+    _ = (D.flow s).hom ≫
+        ((D.flow t).hom ≫ topologicalDirectInjection
           (fusionTensorTopologicalDiagram (K := ℂ)) n) := by
           simp only [Category.assoc]
-    _ = D.flow s ≫
+    _ = (D.flow s).hom ≫
         (topologicalDirectInjection
           (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
           flowColimitMap D t) := by
           rw [flowColimitMap_stage]
-    _ = (D.flow s ≫ topologicalDirectInjection
+    _ = ((D.flow s).hom ≫ topologicalDirectInjection
           (fusionTensorTopologicalDiagram (K := ℂ)) n) ≫
           flowColimitMap D t := by
           simp only [Category.assoc]

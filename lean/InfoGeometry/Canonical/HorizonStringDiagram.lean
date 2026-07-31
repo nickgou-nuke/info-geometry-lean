@@ -135,11 +135,5 @@ structure HorizonStringFlowCarrier
   diagram : HorizonStringDiagram State EdgeLabel Edge Weight
   flowGenerator : FlowGenerator
 
-namespace HorizonStringFlowCarrier
-
-variable {State EdgeLabel Edge Weight FlowGenerator : Type*}
-variable (C : HorizonStringFlowCarrier State EdgeLabel Edge Weight FlowGenerator)
-
-end HorizonStringFlowCarrier
 
 end InfoGeometry.Canonical

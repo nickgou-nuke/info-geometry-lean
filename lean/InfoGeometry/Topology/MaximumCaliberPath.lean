@@ -95,11 +95,6 @@ structure MaximumCaliberOptimizer (Path : Type u) where
   feasible : constraint optimizer
   maximizes : ∀ μ : Path → ℝ, constraint μ → caliber μ ≤ caliber optimizer
 
-namespace MaximumCaliberOptimizer
-
-variable {Path : Type u} (M : MaximumCaliberOptimizer Path)
-
-end MaximumCaliberOptimizer
 
 /-- A MaxCal transition-asymmetry socket over an existing thermodynamic gauge flow. -/
 theorem entropy_production_eq_pathConstraint

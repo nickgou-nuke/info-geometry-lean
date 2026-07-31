@@ -65,10 +65,8 @@ class PreservesMul
     (G : Type*) [Group G]
     (θ : InvolutiveAutomorphism G) : Prop where
   map_mul : ∀ x y, θ (x * y) = θ x * θ y
-  map_one : θ 1 = 1
 
 attribute [simp] PreservesMul.map_mul
-attribute [simp] PreservesMul.map_one
 
 /-- Lie bracket preservation for an involution. -/
 class PreservesLieBracket
@@ -140,8 +138,10 @@ lemma map_mul (x y : G) :
   PreservesMul.map_mul (G := G) (θ := θ) x y
 
 lemma map_one :
-    θ (1 : G) = 1 :=
-  PreservesMul.map_one (G := G) (θ := θ)
+    θ (1 : G) = 1 := by
+  have h := PreservesMul.map_mul (G := G) (θ := θ) (1 : G) 1
+  apply mul_left_cancel (a := θ (1 : G))
+  simpa using h.symm
 
 @[simp] lemma map_inv (x : G) :
     θ x⁻¹ = (θ x)⁻¹ := by
@@ -231,8 +231,8 @@ lemma map_mul (x y : G) :
   PreservesMul.map_mul (G := G) (θ := θ.1) x y
 
 lemma map_one :
-    θ (1 : G) = 1 :=
-  PreservesMul.map_one (G := G) (θ := θ.1)
+    θ (1 : G) = 1 := by
+  exact InvolutiveAutomorphism.map_one (θ := θ.1)
 
 @[simp] lemma map_inv (x : G) :
     θ x⁻¹ = (θ x)⁻¹ := by

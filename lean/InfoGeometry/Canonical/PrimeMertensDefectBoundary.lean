@@ -194,11 +194,5 @@ structure MertensToDefectFreeBridge
     PrimeChainLargeDeviationWitness
 
 
-namespace MertensToDefectFreeBridge
-
-variable {CompletedXiReadout : Type}
-variable (B : MertensToDefectFreeBridge CompletedXiReadout)
-
-end MertensToDefectFreeBridge
 
 end InfoGeometry.Canonical.PrimeMertensDefectBoundary

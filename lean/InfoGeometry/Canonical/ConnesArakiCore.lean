@@ -86,7 +86,7 @@ private lemma abs_arakiRelativeEntropyDrop_le_trajectoryRNBarrier
   have hEq :
       arakiRelativeEntropyDrop D.relEnt k
         = phaseRNGeneratorBefore n (phaseAt k) (T.state k) := by
-    simpa [arakiRelativeEntropyDrop] using D.casini.relEnt_drop_eq_phaseRN k
+    simpa [arakiRelativeEntropyDrop] using D.casini.2.1 k
   rw [hEq]
   exact abs_trajectoryRNGenerator_le_trajectoryRNBarrier (n := n) T k
 
@@ -95,13 +95,12 @@ Quantitative restriction interface:
 the restricted Araki relative entropy is pointwise bounded by the ambient one,
 and one-step drops are controlled in absolute value.
 -/
-structure ArakiRelativeEntropyRestrictionDropMonotone
+def ArakiRelativeEntropyRestrictionDropMonotone
     (relEnt : ArakiRelativeEntropyProfile)
-    (relEntRestricted : ArakiRelativeEntropyProfile) : Prop where
-  drop_abs_le :
-    ∀ k : Nat,
-      |arakiRelativeEntropyDrop relEntRestricted k|
-        ≤ |arakiRelativeEntropyDrop relEnt k|
+    (relEntRestricted : ArakiRelativeEntropyProfile) : Prop :=
+  ∀ k : Nat,
+    |arakiRelativeEntropyDrop relEntRestricted k|
+      ≤ |arakiRelativeEntropyDrop relEnt k|
 
 /--
 Restricted-drop RN-barrier control:
@@ -116,7 +115,7 @@ private theorem abs_arakiRelativeEntropyDrop_restricted_le_trajectoryRNBarrier
     ∀ k : Nat,
       |arakiRelativeEntropyDrop relEntRestricted k| ≤ trajectoryRNBarrier n T k := by
   intro k
-  exact le_trans (hRestrDrop.drop_abs_le k)
+  exact le_trans (hRestrDrop k)
     (abs_arakiRelativeEntropyDrop_le_trajectoryRNBarrier
       (H := H) (σ := σ) (u := u) (T := T) D k)
 

@@ -172,23 +172,21 @@ store exactly the consequence needed:
 * no zeros when all local fugacities are outside the unit disk.
 -/
 @[rep_depth thermo]
-structure LeeYangPolydiscWitness where
-  inner_zero_free :
-    ∀ {N : ℕ}
-      (D : FinitePrimeChainData N)
-      (lam : ℝ),
-      0 < lam →
-      ∀ y : Fin N → ℂ,
-        (∀ i : Fin N, InUnitDisk (y i)) →
-        multiPartition D lam y ≠ 0
-  outer_zero_free :
-    ∀ {N : ℕ}
-      (D : FinitePrimeChainData N)
-      (lam : ℝ),
-      0 < lam →
-      ∀ y : Fin N → ℂ,
-        (∀ i : Fin N, OutsideUnitDisk (y i)) →
-        multiPartition D lam y ≠ 0
+def LeeYangPolydiscWitness : Prop :=
+  (∀ {N : ℕ}
+    (D : FinitePrimeChainData N)
+    (lam : ℝ),
+    0 < lam →
+    ∀ y : Fin N → ℂ,
+      (∀ i : Fin N, InUnitDisk (y i)) →
+      multiPartition D lam y ≠ 0) ∧
+  (∀ {N : ℕ}
+    (D : FinitePrimeChainData N)
+    (lam : ℝ),
+    0 < lam →
+    ∀ y : Fin N → ℂ,
+      (∀ i : Fin N, OutsideUnitDisk (y i)) →
+      multiPartition D lam y ≠ 0)
 
 /--
 Pullback from the Riemann/Mellin variable into local Lee--Yang fugacities.
@@ -247,17 +245,13 @@ theorem zero_implies_field_re_zero
     (hz : pulledPartition D lam F s = 0) :
     (F.field s).re = 0 := by
   by_cases hneg : (F.field s).re < 0
-  · have hzne : pulledPartition D lam F s ≠ 0 := by
-      unfold pulledPartition
-      exact LY.outer_zero_free D lam hLam (F.localFugacity s)
-        (F.re_neg_outer s hneg)
-    exact False.elim (hzne hz)
+  · have hzne : multiPartition D lam (F.localFugacity s) ≠ 0 :=
+      LY.2 D lam hLam (F.localFugacity s) (F.re_neg_outer s hneg)
+    exact False.elim (hzne (by simpa [pulledPartition] using hz))
   · by_cases hpos : 0 < (F.field s).re
-    · have hzne : pulledPartition D lam F s ≠ 0 := by
-        unfold pulledPartition
-        exact LY.inner_zero_free D lam hLam (F.localFugacity s)
-          (F.re_pos_inner s hpos)
-      exact False.elim (hzne hz)
+    · have hzne : multiPartition D lam (F.localFugacity s) ≠ 0 :=
+        LY.1 D lam hLam (F.localFugacity s) (F.re_pos_inner s hpos)
+      exact False.elim (hzne (by simpa [pulledPartition] using hz))
     · linarith
 
 /-- Under the supplied pullback chart, a zero of the finite pulled partition has
@@ -317,12 +311,11 @@ The ordinary polynomial Lee--Yang theorem is not proved here. A later
 Asano/Grace-style formalization can replace this witness.
 -/
 @[rep_depth thermo]
-structure LeeYangPolynomialWitness where
-  circle_theorem :
-    ∀ {N : ℕ} (D : FinitePrimeChainData N) {lam : ℝ},
-      0 ≤ lam →
-        ∀ z : ℂ, (partitionPolynomial D lam).IsRoot z →
-          OnUnitCircle z
+def LeeYangPolynomialWitness : Prop :=
+  ∀ {N : ℕ} (D : FinitePrimeChainData N) {lam : ℝ},
+    0 ≤ lam →
+      ∀ z : ℂ, (partitionPolynomial D lam).IsRoot z →
+        OnUnitCircle z
 
 namespace LeeYangPolynomialWitness
 
@@ -336,7 +329,7 @@ theorem roots_on_circle
     (z : ℂ)
     (hz : (partitionPolynomial D lam).IsRoot z) :
     OnUnitCircle z :=
-  LY.circle_theorem D hLam z hz
+  LY D hLam z hz
 
 end LeeYangPolynomialWitness
 
@@ -399,7 +392,7 @@ def toLeeYangApproximants
   R := F.R
   lee_yang := by
     intro N z hz
-    exact LY.roots_on_circle (F.D N) (F.lam_nonneg N) z
+    exact LeeYangPolynomialWitness.roots_on_circle LY (F.D N) (F.lam_nonneg N) z
       (F.isRoot_of_Z_eq_zero N z hz)
   renorm_nonzero :=
     F.R_nonzero

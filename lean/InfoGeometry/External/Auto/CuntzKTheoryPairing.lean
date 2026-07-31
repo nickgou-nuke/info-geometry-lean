@@ -36,15 +36,6 @@ the chosen K₀ carrier is propositionally trivial.
 abbrev O2K0Trivial (K0 : Type*) [AddCommGroup K0] : Prop :=
   Subsingleton K0
 
-namespace O2K0Trivial
-
-/-- The explicit `O₂` hypothesis is exactly Mathlib's native subsingleton law. -/
-theorem triviality {K0 : Type*} [AddCommGroup K0]
-    (h : O2K0Trivial K0) : Subsingleton K0 :=
-  h
-
-end O2K0Trivial
-
 /-- Under the explicit `O2K0Trivial` proof-carrying hypothesis, every pairing vanishes. -/
 theorem connesChernPairing_zero_of_O2K0Trivial
     {K0 K1 : Type*} [AddCommGroup K0] [AddCommGroup K1]

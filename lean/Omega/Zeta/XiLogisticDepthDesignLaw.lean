@@ -27,7 +27,7 @@ def xi_logistic_depth_design_law_equidistantConfig
 def xi_logistic_depth_design_law_fixedSpan
     (D : xi_logistic_depth_design_law_Data)
     (_x : xi_logistic_depth_design_law_configuration D) : Prop :=
-  True
+  _x = ()
 
 /-- The equidistant predicate in the collapsed fixed-span seed. -/
 def xi_logistic_depth_design_law_equidistant
@@ -74,7 +74,7 @@ def xi_logistic_depth_design_law_statement
 /-- Paper label: `cor:xi-logistic-depth-design-law`. -/
 theorem paper_xi_logistic_depth_design_law (D : xi_logistic_depth_design_law_Data) :
     xi_logistic_depth_design_law_statement D := by
-  refine ⟨trivial, ?_, ?_, ?_, ?_⟩
+  refine ⟨rfl, ?_, ?_, ?_, ?_⟩
   · intro x _hx
     cases x
     simp [xi_logistic_depth_design_law_error]

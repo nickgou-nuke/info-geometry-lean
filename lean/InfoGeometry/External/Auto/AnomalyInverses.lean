@@ -19,11 +19,11 @@ theorem n_is_nilpotent : N * N = 0 := by
 A matrix `X` is the Drazin inverse of `A` with index `k` if it satisfies
 the three defining conditions of Drazin inverses. 
 -/
-structure IsDrazinInverse {n : Type*} [Fintype n] [DecidableEq n] 
-    {R : Type*} [CommRing R] (A X : Matrix n n R) (k : ℕ) : Prop where
-  comm : A * X = X * A
-  weak_inv : X * A * X = X
-  nil_pow : A ^ (k + 1) * X = A ^ k
+def IsDrazinInverse {n : Type*} [Fintype n] [DecidableEq n]
+    {R : Type*} [CommRing R] (A X : Matrix n n R) (k : ℕ) : Prop :=
+  A * X = X * A ∧
+    X * A * X = X ∧
+      A ^ (k + 1) * X = A ^ k
 
 /-- 
 A mathematically rigorous formalization of the Drazin inverse for the anomaly generator N.
@@ -31,8 +31,8 @@ We prove through a genuine chain of lemmas that the Drazin inverse of N is uniqu
 derived purely from the algebraic constraints of `IsDrazinInverse`.
 -/
 theorem nilpotent_drazin_unique (X : Matrix (Fin 2) (Fin 2) ℂ) (h : IsDrazinInverse N X 2) : X = 0 := by
-  have h_comm : N * X = X * N := h.comm
-  have h_weak : X * N * X = X := h.weak_inv
+  have h_comm : N * X = X * N := h.1
+  have h_weak : X * N * X = X := h.2.1
   have h_xn : X * N = 0 := by
     have h_right : (X * N * X) * N = X * N := by
       exact congrArg (fun T => T * N) h_weak
@@ -57,11 +57,11 @@ This preserves the spectral properties (eigenvalues are all 0).
 def N_Drazin : Matrix (Fin 2) (Fin 2) ℂ := 0
 
 /-- Proof that `N_Drazin` satisfies the Drazin inverse conditions for `N` with index 2 -/
-theorem n_drazin_is_drazin : IsDrazinInverse N N_Drazin 2 where
-  comm := by simp [N_Drazin]
-  weak_inv := by simp [N_Drazin]
-  nil_pow := by 
-    simp [N_Drazin]
+theorem n_drazin_is_drazin : IsDrazinInverse N N_Drazin 2 := by
+  refine ⟨?_, ?_, ?_⟩
+  · simp [N_Drazin]
+  · simp [N_Drazin]
+  · simp [N_Drazin]
     rw [pow_two]
     exact n_is_nilpotent.symm
 

@@ -46,7 +46,8 @@ theorem paper_cdim_luders_update
       instFintype := inferInstance
       instDecidableEq := inferInstance
       prob := prob
-      orthogonal := fun _ _ => True
+      orthogonal := fun e₁ e₂ =>
+        Disjoint (eventSubspace e₁ : Submodule ℂ H) (eventSubspace e₂ : Submodule ℂ H)
       prob_nonneg := hprob_nonneg
       prob_le_one := hprob_le_one
       total_mass_univ := htotal }

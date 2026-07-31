@@ -420,15 +420,15 @@ theorem euler_flips_odd (P : SplitCliffordRealizationPacket K n) :
     EulerOperator P.cl11 * oddProjector P.cl11 = -(oddProjector P.cl11) :=
   _root_.InfoGeometry.Arithmetic.SplitCliffordRealization.euler_flips_odd P.cl11
 
-theorem car_nilpotence (_P : SplitCliffordRealizationPacket K n) :
+theorem car_nilpotence :
     ∀ i : Fin n, ann n i * ann n i = 0 :=
   ann_sq_zero n
 
-theorem car_anticomm (_P : SplitCliffordRealizationPacket K n) :
+theorem car_anticomm :
     ∀ i j : Fin n, ann n i * ann n j + ann n j * ann n i = 0 :=
   ann_ann_anticomm n
 
-theorem car_identity (_P : SplitCliffordRealizationPacket K n) :
+theorem car_identity :
     ∀ i j, ann n i * cre n j + cre n j * ann n i =
       (if i = j then (1 : Clnn n) else 0) :=
   _root_.InfoGeometry.OperatorAlgebra.CliffordCAR.car_identity n

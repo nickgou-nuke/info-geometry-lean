@@ -73,26 +73,6 @@ theorem primon_cuntz_casimir_matches_rest_pauli
   simpa [pow_two] using
     casimir_eigenvalue n (fun j => (ε j : ℂ)) i
 
-/-- Full finite rest-frame Cuntz/Poincare/Lorentz spectral packet. -/
-theorem finite_cuntz_primon_rest_poincare_lorentz_packet
-    {n : ℕ} (k : Fin n) (ε : Fin n → ℝ) (i : Fin n) (a : Fin 4) :
-    algebraicAnticommutator (cuntzMajoranaSupercharge n k)
-      (cuntzMajoranaSupercharge n k) = (2 : ℂ) • cuntzSuperMomentum n k ∧
-    (hamiltonian n (fun j => (ε j : ℂ)) * hamiltonian n (fun j => (ε j : ℂ))) * P n i =
-        (((ε i : ℂ) ^ 2) • P n i) ∧
-    PauliParavector.superchargeMomentumReadout a (restPauliParavector (ε i)) =
-      (match a with
-      | 0 => ((ε i) : ℂ)
-      | 1 => 0
-      | 2 => 0
-      | 3 => 0) ∧
-    Matrix.det (exactBoostTransport (exactBoostTransport (restPauliParavector (ε i)).pauliMatrix)) =
-      ((ε i) ^ 2 : ℂ) := by
-  exact ⟨cuntz_anticommutator_generates_momentum n k,
-    (primon_cuntz_casimir_matches_rest_pauli n ε i).1,
-    restPauli_supercharge_trace_readout (ε i) a,
-    restPauli_exactBoost_comp_self_det (ε i)⟩
-
 end InfoGeometry.Quantum.CuntzPrimonRestPoincare
 
 end noncomputable section

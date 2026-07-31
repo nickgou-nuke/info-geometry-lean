@@ -14,13 +14,6 @@ coupling theorem.
 namespace InfoGeometry.Canonical.CosmologicalCoupling
 
 /--
-Read back the supplied coupling relation `G = 4 * α / Z`.
--/
-theorem supplied_coupling_relation (G_M alpha Z_0 : ℝ)
-    (h_G : G_M = 4 * alpha / Z_0) :
-    G_M = 4 * alpha / Z_0 := h_G
-
-/--
 If `R * G = 1` and `G = 4 * α / Z`, then `R * (4 * α) = Z`.
 -/
 theorem reciprocal_coupling_relation (R_M G_M alpha Z_0 : ℝ)

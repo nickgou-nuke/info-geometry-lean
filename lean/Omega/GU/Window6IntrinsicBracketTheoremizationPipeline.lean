@@ -11,13 +11,15 @@ theorem paper_window6_intrinsic_bracket_theoremization_pipeline
     (D : Window6IntrinsicBracketFiniteIntegerReductionData)
     (M : Window6IntrinsicBracketModpLiftCriterionData)
     (C : Omega.TypedAddressBiaxialCompletion.TypedAddressCertificateLoopData)
+    (hUnitarySliceLocked : C.unitarySliceLocked)
     (R : TerminalGamma6RigidityData) :
     (D.intrinsicBracketExistsUnique ↔ D.finiteIntegerSystemHasUniqueSolution) ∧
       (M.uniqueIntegerSolution ∧ M.characteristicZeroExistenceUniqueness) ∧
       (C.repulsionRadiusTendsToOne ↔ C.toeplitzPsdAll) ∧
       (C.toeplitzPsdAll ↔ C.toeplitzPsdCofinal) ∧
       (R.graphConnected ∧ R.automorphismGroupTrivial) := by
-  have hMixed := paper_window6_bracket_uniqueness_mixed_certificate_reduction D C R
+  have hMixed :=
+    paper_window6_bracket_uniqueness_mixed_certificate_reduction D C hUnitarySliceLocked R
   have hModp := paper_window6_intrinsic_bracket_modp_lift_criterion M
   exact ⟨hMixed.1, hModp, hMixed.2.1, hMixed.2.2.1, hMixed.2.2.2⟩
 

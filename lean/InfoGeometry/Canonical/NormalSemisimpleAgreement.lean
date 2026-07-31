@@ -105,34 +105,12 @@ theorem inverseData_projectorAnomaly_implies_not_isEP
 
 namespace ConstructiveNormalSemisimpleAgreementWitness
 
-/-- Compatibility accessor for the historical field name.  The value is the
-native projector-agreement predicate itself, not an independent marker. -/
-theorem projectorAgreementOwner
-    (P : ProjectorPair (R := R))
-    (h : P.ProjectorAgreement) :
-    P.ProjectorAgreement :=
-  h
-
-/-- Historical conversion API, now stated directly on the owner predicate. -/
-theorem toNormalSemisimpleAgreementWitness
-    (P : ProjectorPair (R := R))
-    (h : P.ProjectorAgreement) :
-    P.ProjectorAgreement :=
-  h
-
 /-- Constructive route: owner zero-mismatch agreement implies projectors agree. -/
 theorem projectors_agree
     (P : ProjectorPair (R := R))
     (h : P.ProjectorAgreement) :
     P.PD = P.PMP :=
   (ProjectorPair.projectorAgreement_iff_eq (P := P)).1 h
-
-/-- Constructive route: owner zero-mismatch agreement implies no mismatch anomaly. -/
-theorem no_mismatch
-    (P : ProjectorPair (R := R))
-    (h : P.ProjectorAgreement) :
-    P.ProjectorAgreement :=
-  h
 
 /-- Constructive route: owner zero-mismatch agreement rules out every projector anomaly,
 including the noncommuting branch, because the owner mismatch surface already collapses. -/
@@ -154,20 +132,6 @@ theorem normalSemisimple_projectors_agree
     P.PD = P.PMP :=
   (ProjectorPair.projectorAgreement_iff_eq (P := P)).1 h
 
-/-- Compatibility theorem for the constructive predicate name. -/
-theorem normalSemisimple_projectors_agree_of_constructive
-    (P : ProjectorPair (R := R))
-    (h : P.ProjectorAgreement) :
-    P.PD = P.PMP :=
-  ConstructiveNormalSemisimpleAgreementWitness.projectors_agree P h
-
-/-- Agreement is exactly the absence of mismatch. -/
-theorem normalSemisimple_no_mismatch
-    (P : ProjectorPair (R := R))
-    (h : P.ProjectorAgreement) :
-    P.ProjectorAgreement :=
-  h
-
 /-- Agreement rules out every projector anomaly. -/
 theorem normalSemisimple_no_projector_anomaly
     (P : ProjectorPair (R := R))
@@ -177,13 +141,6 @@ theorem normalSemisimple_no_projector_anomaly
   have hMismatch : P.HasMismatchAnomaly :=
     (ProjectorPair.hasProjectorAnomaly_iff_hasMismatch (P := P)).1 hAnomaly
   exact hMismatch h
-
-/-- Constructive compatibility route for the owner predicate. -/
-theorem normalSemisimple_no_mismatch_of_constructive
-    (P : ProjectorPair (R := R))
-    (h : P.ProjectorAgreement) :
-    P.ProjectorAgreement :=
-  h
 
 /-- Constructive compatibility route for absence of projector anomalies. -/
 theorem normalSemisimple_no_projector_anomaly_of_constructive

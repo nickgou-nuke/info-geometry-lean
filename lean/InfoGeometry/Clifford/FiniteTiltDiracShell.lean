@@ -241,20 +241,18 @@ theorem finiteTiltDiracShellSpectralTarget_charpoly_eq (m : ℝ) :
   pkt.charpoly_eq m
 
 @[rep_depth operator]
-structure FiniteTiltDiracShellOwnerTarget where
-  shell_square :
-    ∀ m : ℝ, finiteTiltDiracShell m * finiteTiltDiracShell m =
-      (m ^ 2 : ℝ) • (1 : Mat2)
+def FiniteTiltDiracShellOwnerTarget : Prop :=
+  ∀ m : ℝ, finiteTiltDiracShell m * finiteTiltDiracShell m =
+    (m ^ 2 : ℝ) • (1 : Mat2)
 
 theorem finiteTiltDiracShellOwnerTarget :
     FiniteTiltDiracShellOwnerTarget := by
-  exact { shell_square := finiteTiltDiracShell_sq }
+  exact finiteTiltDiracShell_sq
 
 @[rep_depth operator]
 theorem finiteTiltDiracShellOwnerTarget_shell_square (m : ℝ) :
     finiteTiltDiracShell m * finiteTiltDiracShell m =
-      (m ^ 2 : ℝ) • (1 : Mat2) :=
-  let pkt := finiteTiltDiracShellOwnerTarget
-  pkt.shell_square m
+    (m ^ 2 : ℝ) • (1 : Mat2) :=
+  finiteTiltDiracShellOwnerTarget m
 
 end InfoGeometry.Clifford.FiniteTiltDiracShell

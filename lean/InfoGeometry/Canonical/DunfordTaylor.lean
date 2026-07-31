@@ -240,12 +240,10 @@ functional-calculus hypotheses. Until those are formalized, downstream code
 should depend on this proof-carrying structure rather than on unconditional
 roadmap theorems.
 -/
-structure AdmissibleRieszProjectionLaws
-    (A : EndH) (γ : ℝ → ℂ) (a b : ℝ) : Prop where
-  idempotent :
-    idempotentStatement A γ a b
-  rangeInvariant :
-    rangeInvariantStatement A γ a b
+def AdmissibleRieszProjectionLaws
+    (A : EndH) (γ : ℝ → ℂ) (a b : ℝ) : Prop :=
+  idempotentStatement A γ a b ∧
+  rangeInvariantStatement A γ a b
 
 omit [CompleteSpace E] in
 /-- Extract idempotence from admissible-contour laws. -/
@@ -253,7 +251,7 @@ theorem idempotent_of_admissible
     {A : EndH} {γ : ℝ → ℂ} {a b : ℝ}
     (hγ : AdmissibleRieszProjectionLaws A γ a b) :
     idempotentStatement A γ a b :=
-  hγ.idempotent
+  hγ.1
 
 omit [CompleteSpace E] in
 /-- Extract range invariance from admissible-contour laws. -/
@@ -261,7 +259,7 @@ theorem rangeInvariant_of_admissible
     {A : EndH} {γ : ℝ → ℂ} {a b : ℝ}
     (hγ : AdmissibleRieszProjectionLaws A γ a b) :
     rangeInvariantStatement A γ a b :=
-  hγ.rangeInvariant
+  hγ.2
 
 end RieszProjection
 

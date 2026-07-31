@@ -141,17 +141,18 @@ theorem forward_cone_is_convex_interior
 /- #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES -/
 -- [Theorems that compile conditionally based on explicitly named, valid premises or external verified witnesses. No hidden assumptions.]
 
-class NormalizedTrace (X : RealSpacetime4x4) (c : ℝ) where
-  is_normalized : c * trace X = 1
+def NormalizedTrace (X : RealSpacetime4x4) (c : ℝ) : Prop :=
+  c * trace X = 1
 
 def to_density (X : RealSpacetime4x4) (c : ℝ) : RealSpacetime4x4 :=
   smul c X
 
-theorem density_trace_one (X : RealSpacetime4x4) (c : ℝ) [nt : NormalizedTrace X c] :
+theorem density_trace_one (X : RealSpacetime4x4) (c : ℝ)
+    (h : NormalizedTrace X c) :
     trace (to_density X c) = 1 := by
   unfold to_density
   rw [trace_smul]
-  exact nt.is_normalized
+  exact h
 
 def purity_interval (X : RealSpacetime4x4) (c : ℝ) : ℝ :=
   interval (to_density X c)

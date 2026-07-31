@@ -299,28 +299,6 @@ explicit `GibbsSouriauEquilibriumSeed` packet when the raw owner witnesses
 `ProbeFaithful` and `firstVariation = 0` are already available.
 -/
 @[rep_depth transport]
-structure ProbeFaithfulFirstVariationZeroWitness
-    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH) where
-  hFaithful : ProbeFaithful (E := E) P
-  hFirst : firstVariation (E := E) P ψ A = 0
-
-/-!
-Proof-carrying witness route for the zero-weight density-lifted readout
-stationarity theorem.
--/
-@[rep_depth transport]
-theorem densityWeightLiftedReadout_zero_pair_eq_zero_of_probeFaithfulFirstVariationZeroWitness
-    {P : PotentialDatum (E := E)} {ψ : H₂} {A : EndH}
-    (W : ProbeFaithfulFirstVariationZeroWitness (E := E) P ψ A) :
-    ((densityWeightLiftedReadout (E := E) P ψ A 0).metric,
-      (densityWeightLiftedReadout (E := E) P ψ A 0).phase)
-      = (0, 0) := by
-  rw [densityWeightLiftedReadout_zero_pair_eq_comparisonReadout_pair (E := E) P ψ A]
-  exact
-    InfoGeometry.Canonical.ThermodynamicGenerator.comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
-      (E := E) P ψ A W.hFaithful W.hFirst
-
-@[rep_depth transport]
 theorem densityWeightLiftedReadout_zero_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
     {P : PotentialDatum (E := E)} {ψ : H₂} {A : EndH}
     (hFaithful : ProbeFaithful (E := E) P)
@@ -328,10 +306,10 @@ theorem densityWeightLiftedReadout_zero_pair_eq_zero_of_firstVariation_eq_zero_o
     ((densityWeightLiftedReadout (E := E) P ψ A 0).metric,
       (densityWeightLiftedReadout (E := E) P ψ A 0).phase)
       = (0, 0) := by
+  rw [densityWeightLiftedReadout_zero_pair_eq_comparisonReadout_pair (E := E) P ψ A]
   exact
-    densityWeightLiftedReadout_zero_pair_eq_zero_of_probeFaithfulFirstVariationZeroWitness
-      (E := E) ({ hFaithful := hFaithful, hFirst := hFirst } :
-        ProbeFaithfulFirstVariationZeroWitness (E := E) P ψ A)
+    InfoGeometry.Canonical.ThermodynamicGenerator.comparisonReadout_pair_eq_zero_of_firstVariation_eq_zero_of_probeFaithful
+      (E := E) P ψ A hFaithful hFirst
 
 end DoubledCarrier
 

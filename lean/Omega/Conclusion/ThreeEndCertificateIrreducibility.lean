@@ -52,21 +52,23 @@ theorem paper_conclusion_three_end_certificate_irreducibility
     (D.addrDefSoundComplete → False) ∧
       (D.addrLinSoundComplete → False) ∧
       (D.defLinSoundComplete → False) := by
-  rcases paper_conclusion_three_end_certificate_orthogonality D.core with ⟨_, hOrthogonal⟩
-  rcases hOrthogonal with
-    ⟨_, hBoundaryAddress, _, _, hBudgetRegister, _, hClosureFailure⟩
+  have hBoundaryAddress := D.core.boundary.address_non_substitutable
+  have hBudgetRegister := D.core.budget.register_failure_obstructs
+  have hClosureFailure := D.core.closure.failure_of_toeplitz
   refine ⟨?_, ?_⟩
   · intro hSC
     have hNoFailure := D.addrDefRejectsFailureWitness hSC
     have hFailure : D.core.closure.failureWitness :=
-      hClosureFailure (Or.inr (Or.inr (Or.inr D.missingLinearWitness)))
+      hClosureFailure D.missingLinearWitness
     exact hNoFailure hFailure
   · refine ⟨?_, ?_⟩
     · intro hSC
       have hLegal := D.addrLinRequiresLegalReadout hSC
-      exact (hBudgetRegister D.missingDefectWitness) hLegal
+      rcases D.missingDefectWitness with ⟨hVisible, hMode, hNotRegister⟩
+      exact (hBudgetRegister hVisible hMode hNotRegister) hLegal
     · intro hSC
       have hCert := D.defLinRequiresBoundaryCertificate hSC
-      exact (hBoundaryAddress D.missingAddressWitness) hCert
+      rcases D.missingAddressWitness with ⟨hRadius, hEndpoint, hNotAddress⟩
+      exact (hBoundaryAddress hRadius hEndpoint hNotAddress) hCert
 
 end Omega.Conclusion

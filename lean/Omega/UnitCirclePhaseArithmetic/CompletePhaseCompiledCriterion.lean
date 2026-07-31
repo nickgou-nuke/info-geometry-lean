@@ -11,7 +11,16 @@ def unit_circle_complete_phase_compiled_criterion_statement : Prop :=
   ∀ {Addr Cert Section Piece ι : Type}
     (read : Addr → Option Cert) (F : Addr → Set Cert)
     (restrict : ι → Section → Piece) (a : Addr) (locals : ι → Piece)
-    (hBudget : Omega.TypedAddressBiaxialCompletion.BudgetOrthogonalityData)
+    (legalReadout visibleBudgetPassed registerBudgetPassed modeBudgetPassed : Prop)
+    (visible_required : legalReadout → visibleBudgetPassed)
+    (register_required : legalReadout → registerBudgetPassed)
+    (mode_required : legalReadout → modeBudgetPassed)
+    (visible_failure_obstructs :
+      registerBudgetPassed → modeBudgetPassed → ¬ visibleBudgetPassed → ¬ legalReadout)
+    (register_failure_obstructs :
+      visibleBudgetPassed → modeBudgetPassed → ¬ registerBudgetPassed → ¬ legalReadout)
+    (mode_failure_obstructs :
+      visibleBudgetPassed → registerBudgetPassed → ¬ modeBudgetPassed → ¬ legalReadout)
     (offsliceAssertion explicitModeAxis nullFailureWitness noThirdPath : Prop)
     (D : Omega.TypedAddressBiaxialCompletion.ComputableCertificateTemplateData),
       (∀ a, (read a).isSome ↔ (F a).Nonempty) →
@@ -20,18 +29,10 @@ def unit_circle_complete_phase_compiled_criterion_statement : Prop :=
       (offsliceAssertion → explicitModeAxis ∨ nullFailureWitness) →
       (offsliceAssertion → noThirdPath) →
       ((read a ≠ none ↔ (F a).Nonempty) ∧ ∃! s : Section, ∀ i : ι, restrict i s = locals i) ∧
-        ((hBudget.legalReadout →
-            hBudget.visibleBudgetPassed ∧
-              hBudget.registerBudgetPassed ∧ hBudget.modeBudgetPassed) ∧
-          ((hBudget.registerBudgetPassed ∧ hBudget.modeBudgetPassed ∧
-              ¬ hBudget.visibleBudgetPassed) →
-            ¬ hBudget.legalReadout) ∧
-          ((hBudget.visibleBudgetPassed ∧ hBudget.modeBudgetPassed ∧
-              ¬ hBudget.registerBudgetPassed) →
-            ¬ hBudget.legalReadout) ∧
-          ((hBudget.visibleBudgetPassed ∧ hBudget.registerBudgetPassed ∧
-              ¬ hBudget.modeBudgetPassed) →
-            ¬ hBudget.legalReadout)) ∧
+        ((legalReadout → visibleBudgetPassed ∧ registerBudgetPassed ∧ modeBudgetPassed) ∧
+          ((registerBudgetPassed ∧ modeBudgetPassed ∧ ¬ visibleBudgetPassed) → ¬ legalReadout) ∧
+          ((visibleBudgetPassed ∧ modeBudgetPassed ∧ ¬ registerBudgetPassed) → ¬ legalReadout) ∧
+          ((visibleBudgetPassed ∧ registerBudgetPassed ∧ ¬ modeBudgetPassed) → ¬ legalReadout)) ∧
         (offsliceAssertion → (explicitModeAxis ∨ nullFailureWitness) ∧ noThirdPath) ∧
         D.compilesToOfflineVerifier
 
@@ -39,11 +40,16 @@ def unit_circle_complete_phase_compiled_criterion_statement : Prop :=
 orthogonality, and the finite offline-witness branch. -/
 theorem unit_circle_complete_phase_compiled_criterion_certified :
     unit_circle_complete_phase_compiled_criterion_statement := by
-  intro Addr Cert Section Piece ι read F restrict a locals hBudget offsliceAssertion
+  intro Addr Cert Section Piece ι read F restrict a locals legalReadout visibleBudgetPassed
+    registerBudgetPassed modeBudgetPassed visible_required register_required mode_required
+    visible_failure_obstructs register_failure_obstructs mode_failure_obstructs offsliceAssertion
     explicitModeAxis nullFailureWitness noThirdPath D hcompat hGlue hinj hSplit hNoThird
   refine ⟨?_, ?_, ?_, ?_⟩
   · exact paper_unit_circle_complete_phase_readable_iff_fiber read F restrict a locals hcompat hGlue hinj
-  · exact paper_unit_circle_complete_phase_budget_orthogonal hBudget
+  · exact paper_unit_circle_complete_phase_budget_orthogonal
+      legalReadout visibleBudgetPassed registerBudgetPassed modeBudgetPassed
+      visible_required register_required mode_required visible_failure_obstructs
+      register_failure_obstructs mode_failure_obstructs
   · exact
       Omega.TypedAddressBiaxialCompletion.paper_typed_address_biaxial_completion_visible_null_dichotomy
         offsliceAssertion explicitModeAxis nullFailureWitness noThirdPath hSplit hNoThird

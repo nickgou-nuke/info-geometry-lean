@@ -17,10 +17,10 @@ def PrimeExactLog (δ : ℕ → ℝ) (c : ℝ) : Prop :=
 
 /-- Local package of the three implications used in the multiplicative-tropical exactness triad.
     thm:conclusion-multiplicative-tropical-exactness-triad -/
-structure MultiplicativeTropicalLedger (δ : ℕ → ℝ) (c : ℝ) : Prop where
-  bounded_of_exact : ExactLog δ c → BoundedLogError δ c
-  primeExact_of_bounded : BoundedLogError δ c → PrimeExactLog δ c
-  exact_of_primeExact : PrimeExactLog δ c → ExactLog δ c
+def MultiplicativeTropicalLedger (δ : ℕ → ℝ) (c : ℝ) : Prop :=
+  (ExactLog δ c → BoundedLogError δ c) ∧
+    (BoundedLogError δ c → PrimeExactLog δ c) ∧
+      (PrimeExactLog δ c → ExactLog δ c)
 
 /-- Paper-facing exactness triad for multiplicative tropical ledgers.
     thm:conclusion-multiplicative-tropical-exactness-triad -/
@@ -28,11 +28,11 @@ theorem paper_conclusion_multiplicative_tropical_exactness_triad (δ : ℕ → �
     (hδ : MultiplicativeTropicalLedger δ c) :
     (ExactLog δ c ↔ BoundedLogError δ c) ∧ (BoundedLogError δ c ↔ PrimeExactLog δ c) := by
   refine ⟨?_, ?_⟩
-  · refine ⟨hδ.bounded_of_exact, ?_⟩
+  · refine ⟨hδ.1, ?_⟩
     intro hBounded
-    exact hδ.exact_of_primeExact (hδ.primeExact_of_bounded hBounded)
-  · refine ⟨hδ.primeExact_of_bounded, ?_⟩
+    exact hδ.2.2 (hδ.2.1 hBounded)
+  · refine ⟨hδ.2.1, ?_⟩
     intro hPrime
-    exact hδ.bounded_of_exact (hδ.exact_of_primeExact hPrime)
+    exact hδ.1 (hδ.2.2 hPrime)
 
 end Omega.Conclusion

@@ -43,7 +43,7 @@ action of algebraic direct-limit matrix observables on the same carrier.  Both
 cone-preservation laws are explicit fields until a concrete Majorana/O(5,5) or
 operator-algebra realization proves them.
 -/
-structure Carrier (A : Type*) [Semiring A] where
+structure ActionModel (A : Type*) [Semiring A] where
   /-- Hilbert self-dual positive cone. -/
   positiveCone : SelfDualCone E
   /-- Finite Fibonacci braid-word action on the carrier. -/
@@ -59,10 +59,10 @@ structure Carrier (A : Type*) [Semiring A] where
     ∀ M : Matrix (Fin 2) (Fin 2) A,
       Set.MapsTo (limitObservableAction M) (positiveCone.cone : Set E) positiveCone.cone
 
-namespace Carrier
+namespace ActionModel
 
 variable {A : Type*} [Semiring A]
-variable (C : Carrier (E := E) A)
+variable (C : ActionModel (E := E) A)
 
 /-- The carrier cone is equal to its Hilbert inner dual. -/
 theorem positiveCone_innerDual_eq :
@@ -99,7 +99,7 @@ theorem limitObservableAction_mem_positiveCone
 theorem limitRMatrix_mem_positiveCone
     {Stage : Nat → Type*} [∀ n : Nat, CommRing (Stage n)]
     (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
-    (D : Carrier (E := E) (BraidLimit (Stage := Stage) bond))
+    (D : ActionModel (E := E) (BraidLimit (Stage := Stage) bond))
     (n : Nat) (q qInv : Stage n) {x : E}
     (hx : x ∈ (D.positiveCone.cone : Set E)) :
     D.limitObservableAction (limitRMatrix bond n q qInv) x ∈ (D.positiveCone.cone : Set E) :=

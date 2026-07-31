@@ -118,7 +118,7 @@ level-one Heisenberg commutator.  What is still missing here is the
 Laurent/OPE realization that transports that owner current-current theorem into
 the symbolic `PrimeCurrentOPEPacket` interface.
 -/
-def CurrentCurrentLevelOneLaw (_P : PrimeCurrentOPEPacket PrimeLabel Field Coeff) : Prop :=
+def CurrentCurrentLevelOneLaw : Prop :=
   ∀ (𝕜 : Type*) [_root_.Field 𝕜] [CharZero 𝕜],
     ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1,
       InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1)⁆ =
@@ -127,7 +127,7 @@ def CurrentCurrentLevelOneLaw (_P : PrimeCurrentOPEPacket PrimeLabel Field Coeff
 /-- The packet exposes both canonical laws without storing duplicate evidence. -/
 @[rep_depth operator]
 theorem current_current_level_one_evidence
-    (P : PrimeCurrentOPEPacket PrimeLabel Field Coeff) :
+    :
     (∀ (𝕜 : Type*) [_root_.Field 𝕜] [CharZero 𝕜],
         ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1,
           InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1)⁆ =
@@ -141,8 +141,7 @@ theorem current_current_level_one_evidence
 /-- The packet exposes the imported owner-backed level-one current-current law. -/
 @[rep_depth operator]
 theorem currentCurrentLevelOneLaw_holds
-    (P : PrimeCurrentOPEPacket PrimeLabel Field Coeff) :
-    CurrentCurrentLevelOneLaw P :=
+    : CurrentCurrentLevelOneLaw :=
 by
   intro 𝕜 _ _
   exact CurrentCurrentLevelOneEvidence.owner_level_one 𝕜

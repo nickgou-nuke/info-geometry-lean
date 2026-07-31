@@ -155,25 +155,14 @@ theorem nonfactorizingCovariance_implies_drazinNullSupportedCorrelation
 
 /-- Entropy witness: the existing two-state RT owner theorem gives a concrete
 entropy readout. -/
-@[rep_depth transport]
-structure EntropyWitness where
-  entropyReadout : ℝ
-  entropy_eq_ln2 : entropyReadout = Real.log 2
+noncomputable def entropyReadout_of_twoStateRT : ℝ :=
+  InfoGeometry.Holography.RyuTakayanagiEmergence.vonNeumannEntropy (1 / 2 : ℝ)
 
-/-- A concrete entropy witness from the owner RT theorem. -/
-noncomputable def entropyWitness_of_twoStateRT : EntropyWitness := by
-  refine ⟨InfoGeometry.Holography.RyuTakayanagiEmergence.vonNeumannEntropy (1 / 2 : ℝ), ?_⟩
+/- The RT owner theorem pins the concrete readout to `log 2`. -/
+theorem entropyReadout_of_twoStateRT_eq_ln2 :
+    entropyReadout_of_twoStateRT = Real.log 2 := by
+  dsimp [entropyReadout_of_twoStateRT]
   simpa using InfoGeometry.Holography.RyuTakayanagiEmergence.maxEntropy_twoState
-
-/-- The entropy witness readout is pinned to `log 2`. -/
-theorem entropyWitness_readout_eq_ln2 (W : EntropyWitness) :
-    W.entropyReadout = Real.log 2 :=
-  W.entropy_eq_ln2
-
-/-- The two-state RT witness carries the `log 2` readout explicitly. -/
-theorem entropyWitness_of_twoStateRT_readout_eq_ln2 :
-    (entropyWitness_of_twoStateRT).entropyReadout = Real.log 2 :=
-  (entropyWitness_of_twoStateRT).entropy_eq_ln2
 
 /-- Negativity witness: a residual covariance packet plus a certified nonzero
 covariance readout. -/
@@ -250,7 +239,7 @@ theorem drazinNullSector_physicalWitness
 /-- Entanglement witness assembled from one of the concrete witness lanes. -/
 @[rep_depth transport]
 inductive EntanglementWitness (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] where
-  | entropy : EntropyWitness → EntanglementWitness A
+  | entropy : (entropyReadout : ℝ) → entropyReadout = Real.log 2 → EntanglementWitness A
   | negativity : NegativityWitness A → EntanglementWitness A
   | gaussianBosonic
       {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
@@ -275,15 +264,16 @@ theorem entanglementWitness_implies_entangled
 /-- Lemma 1: an explicit entropy witness proves entanglement. -/
 theorem isEntangled_of_entropy
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
-    (W : EntropyWitness) :
+    (entropyReadout : ℝ) (hEntropy : entropyReadout = Real.log 2) :
     IsEntangled A := by
-  exact ⟨EntanglementWitness.entropy W⟩
+  exact ⟨EntanglementWitness.entropy entropyReadout hEntropy⟩
 
 /-- The two-state RT entropy witness directly certifies entanglement. -/
 theorem isEntangled_of_twoStateRT
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A] :
     IsEntangled (A := A) := by
-  exact isEntangled_of_entropy (A := A) entropyWitness_of_twoStateRT
+  exact isEntangled_of_entropy (A := A) entropyReadout_of_twoStateRT
+    entropyReadout_of_twoStateRT_eq_ln2
 
 /-- Lemma 2: an explicit negativity witness proves entanglement. -/
 theorem isEntangled_of_negativity

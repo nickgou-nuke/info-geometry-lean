@@ -81,12 +81,6 @@ theorem paper_conclusion_prime_log_boundary_current (c : ℝ) (theta Psi : ℝ �
     (hcal : conclusion_prime_log_boundary_current_calibrated c theta Psi) :
     conclusion_prime_log_boundary_current_theta_asymptotic c theta ∧
       conclusion_prime_log_boundary_current_dirichlet_log_singularity c Psi := by
-  have hZeroLyap :=
-    paper_conclusion_prime_log_zero_lyapunov_calibration 0 (fun _ : ℕ => 0) (by omega)
-      (by intro j; rfl)
-  have hEulerRegular :=
-    paper_conclusion_prime_log_unweighted_euler_regular True True True True True.intro
-      (fun h => h) (fun h => h) (fun h => h)
   exact ⟨hcal.1, hcal.2⟩
 
 end Omega.Conclusion

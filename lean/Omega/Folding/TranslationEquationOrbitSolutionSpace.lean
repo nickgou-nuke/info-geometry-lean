@@ -16,8 +16,6 @@ structure TranslationEquationOrbitSolutionSpaceData where
   oddLengthUniqueSolution : Prop
   evenLengthAlternatingSumSolvability : Prop
   evenLengthAffineSeedParametrization : Prop
-  orbitDecomposition_h : orbitDecomposition
-  orbitRecurrence_h : orbitRecurrence
   deriveOddLengthUniqueSolution :
     orbitDecomposition → orbitRecurrence → orbitLength % 2 = 1 → oddLengthUniqueSolution
   deriveEvenLengthAlternatingSumSolvability :
@@ -38,7 +36,9 @@ alternating-sum compatibility condition is necessary and sufficient and each orb
 free seed parameter.
     thm:fold-translation-equation-orbit-solution-space -/
 theorem paper_fold_translation_equation_orbit_solution_space
-    (D : TranslationEquationOrbitSolutionSpaceData) :
+    (D : TranslationEquationOrbitSolutionSpaceData)
+    (hOrbitDecomposition : D.orbitDecomposition)
+    (hOrbitRecurrence : D.orbitRecurrence) :
     D.orbitDecomposition ∧
       D.orbitRecurrence ∧
       (D.orbitLength % 2 = 1 → D.oddLengthUniqueSolution) ∧
@@ -47,16 +47,16 @@ theorem paper_fold_translation_equation_orbit_solution_space
           D.evenLengthAffineSeedParametrization ∧
           D.kernelDimension = D.orbitCount ∧
           D.solutionSpaceDimension = D.orbitCount) := by
-  refine ⟨D.orbitDecomposition_h, D.orbitRecurrence_h, ?_, ?_⟩
+  refine ⟨hOrbitDecomposition, hOrbitRecurrence, ?_, ?_⟩
   · intro hOdd
-    exact D.deriveOddLengthUniqueSolution D.orbitDecomposition_h D.orbitRecurrence_h hOdd
+    exact D.deriveOddLengthUniqueSolution hOrbitDecomposition hOrbitRecurrence hOdd
   · intro hEven
     refine ⟨?_, ?_, D.kernelDimension_eq_orbitCount hEven, D.solutionSpaceDimension_eq_orbitCount hEven⟩
     · exact
         D.deriveEvenLengthAlternatingSumSolvability
-          D.orbitDecomposition_h D.orbitRecurrence_h hEven
+          hOrbitDecomposition hOrbitRecurrence hEven
     · exact
         D.deriveEvenLengthAffineSeedParametrization
-          D.orbitDecomposition_h D.orbitRecurrence_h hEven
+          hOrbitDecomposition hOrbitRecurrence hEven
 
 end Omega.Folding

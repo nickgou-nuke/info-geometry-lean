@@ -42,10 +42,11 @@ The proposition is a type parameter rather than an opaque structure field, so
 claim classification cannot erase the theorem being classified.
 -/
 @[rep_depth transport]
-structure TaggedClaim (statement : Prop) where
-  tier : ClaimTier
+def TaggedClaim (statement : Prop) := ClaimTier
 
 namespace TaggedClaim
+
+def tier {P : Prop} (C : TaggedClaim P) : ClaimTier := C
 
 /-- Proposition indexed by a tagged claim, retained under the historical name. -/
 @[rep_depth transport]
@@ -172,8 +173,8 @@ structure TFDLikePreparation where
 
 /-- Formalizable-next-target protocol claim constructor. -/
 @[rep_depth transport]
-def traversableProtocolTargetClaim : TaggedClaim S.traversableWindowOpen where
-  tier := ClaimTier.formalizableNextOwnerTarget
+def traversableProtocolTargetClaim : TaggedClaim S.traversableWindowOpen :=
+  ClaimTier.formalizableNextOwnerTarget
 
 /-- The formalizable target claim is explicitly non-repo by tier tag. -/
 @[rep_depth transport]
@@ -185,8 +186,8 @@ theorem traversableProtocolTargetClaim_not_repo :
 
 /-- External ER=EPR interpretation claim constructor (kept non-owner by type tag). -/
 @[rep_depth transport]
-def erEprInterpretationClaim : TaggedClaim S.traversableWindowOpen where
-  tier := ClaimTier.externalInterpretation
+def erEprInterpretationClaim : TaggedClaim S.traversableWindowOpen :=
+  ClaimTier.externalInterpretation
 
 /-- The ER=EPR interpretation constructor is never tagged as repo theorem. -/
 @[rep_depth transport]
@@ -208,8 +209,8 @@ structure TraversableProtocolWitness where
 /-- Repo-tier claim materialized from a closed finite protocol witness. -/
 @[rep_depth transport]
 def traversableProtocolRepoClaim (_w : TraversableProtocolWitness (S := S)) :
-    TaggedClaim S.traversableWindowOpen where
-  tier := ClaimTier.repoTheorem
+    TaggedClaim S.traversableWindowOpen :=
+  ClaimTier.repoTheorem
 
 /-- Witness-built repo claim is tagged in the repo theorem band. -/
 @[rep_depth transport]
@@ -252,8 +253,8 @@ def topologicalIndexZ2_append_owner_claim.{u} :
         macroscopicVolume chain₁ ≠ 0 →
         macroscopicVolume chain₂ ≠ 0 →
         topologicalIndexZ2 (chain₁ ++ chain₂)
-          = topologicalIndexZ2 chain₁ + topologicalIndexZ2 chain₂) where
-  tier := ClaimTier.repoTheorem
+          = topologicalIndexZ2 chain₁ + topologicalIndexZ2 chain₂) :=
+  ClaimTier.repoTheorem
 
 /-- The finite `ℤ₂` append owner claim is tagged as repo theorem. -/
 @[rep_depth transport]
@@ -294,8 +295,8 @@ def connesCocycle_state_chain_owner_claim :
         (u : ℝ → AlgebraEnd E),
         IsConnesCocycle σ u →
         ∀ (s t : ℝ),
-        u (s + t) = u s * σ s (u t)) where
-  tier := ClaimTier.repoTheorem
+        u (s + t) = u s * σ s (u t)) :=
+  ClaimTier.repoTheorem
 
 /-- The Connes cocycle owner claim is tagged as repo theorem. -/
 @[rep_depth transport]

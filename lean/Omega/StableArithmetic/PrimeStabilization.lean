@@ -23,24 +23,16 @@ def stable_audit_prime_stabilization_stable_mul_count (p : ℕ) : ℕ :=
   stable_audit_prime_stabilization_balanced_equation_indices.length +
     if p = 5 then stable_audit_prime_stabilization_p5_extra_equation_indices.length else 0
 
-/-- The exceptional `p = 5` multiplication equation `E_411`. -/
-def stable_audit_prime_stabilization_e411_p5_statement : Prop :=
-  ∀ x : ZMod 5, x = x * (x * (x * (x * x)))
-
-/-- Concrete finite-audit statement for prime stabilization and the `p = 5` exception. -/
-def stable_audit_prime_stabilization_statement : Prop :=
-  stable_audit_prime_stabilization_balanced_equation_indices.length = 32 ∧
-    stable_audit_prime_stabilization_p5_extra_equation_indices.length = 14 ∧
-    (∀ p : ℕ, Nat.Prime p → 5 ≤ p →
-      stable_audit_prime_stabilization_stable_add_count p = 32) ∧
-    (∀ p : ℕ, Nat.Prime p → 7 ≤ p →
-      stable_audit_prime_stabilization_stable_mul_count p = 32) ∧
-    stable_audit_prime_stabilization_stable_mul_count 5 = 46 ∧
-    stable_audit_prime_stabilization_e411_p5_statement
-
 /-- Paper label: `thm:stable-audit-prime-stabilization`. -/
 theorem paper_stable_audit_prime_stabilization :
-    stable_audit_prime_stabilization_statement := by
+    stable_audit_prime_stabilization_balanced_equation_indices.length = 32 ∧
+      stable_audit_prime_stabilization_p5_extra_equation_indices.length = 14 ∧
+      (∀ p : ℕ, Nat.Prime p → 5 ≤ p →
+        stable_audit_prime_stabilization_stable_add_count p = 32) ∧
+      (∀ p : ℕ, Nat.Prime p → 7 ≤ p →
+        stable_audit_prime_stabilization_stable_mul_count p = 32) ∧
+      stable_audit_prime_stabilization_stable_mul_count 5 = 46 ∧
+      (∀ x : ZMod 5, x = x * (x * (x * (x * x)))) := by
   refine ⟨by native_decide, by native_decide, ?_, ?_, by native_decide, ?_⟩
   · intro p _hp _hge
     unfold stable_audit_prime_stabilization_stable_add_count

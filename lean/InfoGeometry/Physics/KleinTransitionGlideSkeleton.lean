@@ -69,15 +69,6 @@ theorem induced_oddSheetBerryCurvature_owner_odd_cancellation
     (InfoGeometry.Topology.Weyl.induced_oddSheetBerryCurvature_owner_odd_cancellation
       gbz φ s k)
 
-abbrev projective_klein_formula_packet :=
-  InfoGeometry.Topology.ProjectiveKleinCompactification.projective_klein_formula_packet
-
-abbrev brillouin_klein_bottle_manifold_packet :=
-  InfoGeometry.Topology.BrillouinKleinBottleManifold.brillouin_klein_bottle_manifold_packet
-
-abbrev brillouin_klein_wallpaper_cross_section_packet :=
-  InfoGeometry.Topology.BrillouinKleinBottleManifold.brillouin_klein_wallpaper_cross_section_packet
-
 abbrev klein_bottle_cosmology_packet :=
   InfoGeometry.Physics.KleinBottleCosmology.klein_bottle_cosmology_packet
 

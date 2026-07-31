@@ -98,22 +98,6 @@ theorem isDrazinCartanEigenOperator_conjugate
   exact cartanEigenOperator_conjugate (E := E) Hsrc Htgt U Uinv A lam hAconj h.2
 
 /--
-Readback transport schema for Drazin projectors under a Bogoliubov frame.
-
-This theorem is intentionally hypothesis-driven: projector conjugation is supplied
-explicitly as a certified transport identity, then reused as the canonical
-readback bridge.
--/
-theorem drazinProjection_conjugate_readback
-    {U Uinv A B : EndH}
-    (hprojConj :
-      drazinProjection (E := E) ((U.comp A).comp Uinv) ((U.comp B).comp Uinv)
-        = (U.comp (drazinProjection (E := E) A B)).comp Uinv) :
-    drazinProjection (E := E) ((U.comp A).comp Uinv) ((U.comp B).comp Uinv)
-      = (U.comp (drazinProjection (E := E) A B)).comp Uinv :=
-  hprojConj
-
-/--
 Owner package: Drazin split + grading + real doubled Cl(1,1) atom data.
 
 This package treats projectors/subspaces/gradings as canonical, while concrete

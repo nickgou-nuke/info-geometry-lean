@@ -24,7 +24,8 @@ def pom_multiplicity_lambdaq_large_q_transseries_remainder_base : ℕ × ℕ :=
 
 /-- Integer-coefficient support for the displayed transseries prefix. -/
 def pom_multiplicity_lambdaq_large_q_transseries_has_integer_transseries : Prop :=
-  ∀ t ∈ pom_multiplicity_lambdaq_large_q_transseries_displayed_terms, True
+  ∀ t ∈ pom_multiplicity_lambdaq_large_q_transseries_displayed_terms,
+    ∃ c : ℤ, t.1 = c
 
 /-- Concrete finite-threshold statement for the displayed truncation: all retained bases have
 positive denominators and the declared remainder base is below `1`. -/
@@ -59,7 +60,7 @@ theorem paper_pom_multiplicity_lambdaq_large_q_transseries :
       pom_multiplicity_lambdaq_large_q_transseries_has_displayed_initial_terms := by
   constructor
   · intro t ht
-    trivial
+    exact ⟨t.1, rfl⟩
   · constructor
     · constructor
       · intro t ht

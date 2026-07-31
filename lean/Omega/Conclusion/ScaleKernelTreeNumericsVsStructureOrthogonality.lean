@@ -3,8 +3,7 @@ import Omega.Conclusion.ScalekernelTreeFourthOrderSynchronization
 namespace Omega.Conclusion
 
 /-- Concrete singleton data for the conclusion-level orthogonality wrapper. -/
-structure conclusion_scalekernel_tree_numerics_vs_structure_orthogonality_data where
-  marker : Unit := ()
+abbrev conclusion_scalekernel_tree_numerics_vs_structure_orthogonality_data := Unit
 
 /-- Numerical acceleration changes coefficients, windows, or costs, represented by the explicit
 scale-kernel formulas from the synchronization theorem. -/

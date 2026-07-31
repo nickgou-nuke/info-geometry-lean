@@ -102,15 +102,6 @@ variable {Path : Type u} (M : MaximumCaliberOptimizer Path)
 end MaximumCaliberOptimizer
 
 /-- A MaxCal transition-asymmetry socket over an existing thermodynamic gauge flow. -/
-theorem commutator_eq_pathConstraint
-    (flow : CausalNonequilibriumFlow Op) (pathConstraint : Op)
-    (hconstraint :
-      flow.P_forward * flow.P_backward -
-          flow.P_backward * flow.P_forward = pathConstraint) :
-    flow.P_forward * flow.P_backward -
-        flow.P_backward * flow.P_forward = pathConstraint :=
-  hconstraint
-
 theorem entropy_production_eq_pathConstraint
     (flow : CausalNonequilibriumFlow Op) (pathConstraint : Op)
     (hconstraint :
@@ -137,17 +128,6 @@ variable {Path State : Type u}
 /-- The exact sector is the subtype of paths on which the collapse law applies. -/
 def exactSector (IsExactPath : Path → Prop) :=
   { γ : Path // IsExactPath γ }
-
-/-- Package a path together with its proof of membership in the exact sector. -/
-def exactWitness (IsExactPath : Path → Prop)
-    (γ : Path) (hγ : IsExactPath γ) : exactSector IsExactPath :=
-  ⟨γ, hγ⟩
-
-@[simp]
-theorem exactWitness_val (IsExactPath : Path → Prop)
-    (γ : Path) (hγ : IsExactPath γ) :
-    (exactWitness IsExactPath γ hγ).1 = γ :=
-  rfl
 
 /-- In the supplied exact sector, MaxCal path weights reduce to MaxEnt state weights. -/
 theorem pathWeight_eq_stateWeight

@@ -52,12 +52,10 @@ all entropy change is transverse, with zero reversible contribution.
 def toCoadjointLeafEntropySplit
     (E : InfoGeometry.SuperMetriplectic.BodyEntropyProduction) :
     InfoGeometry.SuperMetriplectic.CoadjointLeafEntropySplit where
-  leafEntropyChange := 0
   transverseEntropyProduction := E.production
   totalEntropyChange := E.production
-  leafEntropyChange_eq_zero := rfl
   transverseEntropyProduction_nonnegative := E.production_nonneg
-  totalEntropyChange_eq_leaf_plus_transverse := by simp
+  totalEntropyChange_eq_transverse := rfl
 
 @[rep_depth transport]
 theorem toCoadjointLeafEntropySplit_totalEntropyChange_eq_entropyProduction

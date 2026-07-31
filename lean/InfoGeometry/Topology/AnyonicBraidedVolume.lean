@@ -136,17 +136,6 @@ theorem bulk_volume_far_commutes
     bulk.braid_rep i * bulk.braid_rep j = bulk.braid_rep j * bulk.braid_rep i := by
   exact bulk.is_braided.far_commute i j hsep
 
-/-- Read back both Artin braid laws from the representation carried by a bulk volume. -/
-theorem bulk_volume_braid_relation_packet
-    {V : Type _} [AddCommGroup V] [Module ℂ V]
-    (bulk : AnyonicBulkVolume V) :
-    (∀ i : ℕ,
-      bulk.braid_rep i * bulk.braid_rep (i + 1) * bulk.braid_rep i =
-        bulk.braid_rep (i + 1) * bulk.braid_rep i * bulk.braid_rep (i + 1)) ∧
-    (∀ i j : ℕ, i + 1 < j ∨ j + 1 < i →
-      bulk.braid_rep i * bulk.braid_rep j = bulk.braid_rep j * bulk.braid_rep i) := by
-  exact ⟨bulk_volume_satisfies_yang_baxter bulk, bulk_volume_far_commutes bulk⟩
-
 /-- Bulk braid-word readouts are invariant under adjacent Yang--Baxter rewrites. -/
 theorem bulk_volume_eval_yang_baxter_rewrite
     {V : Type _} [AddCommGroup V] [Module ℂ V]

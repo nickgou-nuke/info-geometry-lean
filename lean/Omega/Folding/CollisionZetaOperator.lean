@@ -215,8 +215,8 @@ theorem dfa_density_dichotomy_golden_mean :
 
 /-- Small primes have no short forbidden Zeckendorf pattern. -/
 theorem zeckendorf_primes_no_short_forbidden_pattern :
-    Nat.Prime 2 ∧ Nat.Prime 3 ∧ Nat.Prime 7 ∧ True := by
-  exact ⟨by native_decide, by native_decide, by native_decide, trivial⟩
+    Nat.Prime 2 ∧ Nat.Prime 3 ∧ Nat.Prime 7 := by
+  exact ⟨by native_decide, by native_decide, by native_decide⟩
 
 /-- Primes exist at each Fibonacci index: F(3)=2, F(4)=3, F(5)=5 are prime,
     7 is prime (between F(5) and F(6)), and F(7)=13 is prime. -/
@@ -288,9 +288,9 @@ theorem euler_product_dense_phases :
     Nat.Prime 11 ∧ Nat.Prime 13 ∧
     2 ≠ 3 ∧ 3 ≠ 5 ∧ 5 ≠ 7 ∧ 7 ≠ 11 ∧ 11 ≠ 13 := by native_decide
 
-/-- The Omega system is not regular: the growth rate is irrational (φ).
-    Full proof in Entropy.lean via `phi_irrational`. -/
-theorem omega_not_regular_structural : True := trivial
+/-- The Omega system is not regular: the growth rate is irrational (φ). -/
+theorem omega_not_regular_structural : Irrational Real.goldenRatio :=
+  Real.goldenRatio_irrational
 
 /-- Lumpability: distinct types are distinct (no self-loops in quotient). -/
 theorem lumpability_no_self_loops : (0 : Nat) ≠ 1 := by omega
@@ -335,8 +335,8 @@ theorem three_eigenvalue_regimes :
 /-! ### Round 55 -/
 
 theorem cycle_permutation_det_instances :
-    1 - 1 = (0 : ℤ) ∧ 1 - 1 ^ 2 = (0 : ℤ) ∧ 1 - (-1 : ℤ) ^ 2 = 0 ∧ True :=
-  ⟨by omega, by omega, by omega, trivial⟩
+    1 - 1 = (0 : ℤ) ∧ 1 - 1 ^ 2 = (0 : ℤ) ∧ 1 - (-1 : ℤ) ^ 2 = 0 :=
+  ⟨by omega, by omega, by omega⟩
 
 theorem euler_product_truncation_check :
     1 + 1 + 1 + 1 + 2 + 2 = 8 := by omega
@@ -451,7 +451,7 @@ theorem paper_ghost_prime_incompatibility :
 /-- Small primes have no short forbidden Zeckendorf pattern.
     prop:zeta-zeckendorf-primes-no-short-forbidden -/
 theorem paper_zeckendorf_primes_no_short_forbidden :
-    Nat.Prime 2 ∧ Nat.Prime 3 ∧ Nat.Prime 7 ∧ True :=
+    Nat.Prime 2 ∧ Nat.Prime 3 ∧ Nat.Prime 7 :=
   zeckendorf_primes_no_short_forbidden_pattern
 
 /-- The stable language is exponentially sparse: F(m+2) < 2^m for m >= 2.

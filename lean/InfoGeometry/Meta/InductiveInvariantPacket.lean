@@ -140,30 +140,6 @@ def ImageCentral (I : SupergradedClosureAt A) (φ : StarRingHom A B) : Prop :=
   ∀ X : A, φ I.C * φ X = φ X * φ I.C
 
 /--
-Named image-preservation packet for the central lane.
-
-This is deliberately weaker than global centrality in the target algebra: it only
-asserts centrality against elements that actually come from the source stage.
--/
-/-
-Image centrality is already a direct relation on the source image.  Keep it
-transparent instead of wrapping the same proposition in a one-field evidence
-structure.
--/
-def PreservesClosureImage (I : SupergradedClosureAt A) (φ : StarRingHom A B) : Prop :=
-  ∀ X : A, φ I.C * φ X = φ X * φ I.C
-
-namespace PreservesClosureImage
-
-/-- Read image centrality under the historical field name. -/
-theorem image_central
-    (h : PreservesClosureImage I φ) (X : A) :
-    (φ I.C : B) * (φ X : B) = (φ X : B) * (φ I.C : B) :=
-  h X
-
-end PreservesClosureImage
-
-/--
 The finite closure relations transported to the image of a bonding map.
 
 This is intentionally image-local: no global centrality in `B` is asserted.
@@ -173,7 +149,7 @@ def ImageClosure (I : SupergradedClosureAt A) (φ : StarRingHom A B) : Prop :=
   φ I.P * φ I.P = φ I.P ∧
   φ I.Q * star (φ I.Q) + star (φ I.Q) * φ I.Q = φ I.H ∧
   φ I.P * φ I.Q + φ I.Q * φ I.P = 0 ∧
-  PreservesClosureImage I φ
+  ImageCentral I φ
 
 /-- Square-zero odd lane transports under a star-preserving bonding map. -/
 theorem map_odd_sq_zero
@@ -224,12 +200,6 @@ theorem map_image_central
     _ = φ (X * I.C) := by rw [I.central_commutes X]
     _ = φ X * φ I.C := by simp
 
-/-- Named image-preservation packet induced by a bonding map. -/
-theorem map_preserves_closure_image
-    (I : SupergradedClosureAt A) (φ : StarRingHom A B) :
-    PreservesClosureImage I φ := by
-  exact map_image_central I φ
-
 /--
 Finite Erlangen transport theorem: all local closure identities hold on the
 image of a star-preserving bonding map.
@@ -242,7 +212,7 @@ theorem map_image_closure
       map_parity_idempotent I φ,
       map_odd_odd_closure I φ,
       map_parity_odd_anticomm I φ,
-      map_preserves_closure_image I φ⟩
+      map_image_central I φ⟩
 
 /--
 All local closure identities are preserved on the image of every finite

@@ -67,11 +67,6 @@ theorem toCoadjointLeafEntropySplit_totalEntropyChange_nonnegative :
   exact (toCoadjointLeafEntropySplit C).totalEntropyChange_nonnegative
 
 @[rep_depth transport]
-theorem toCoadjointLeafEntropySplit_leafEntropyChange_eq_zero :
-    (toCoadjointLeafEntropySplit C).leafEntropyChange = 0 := by
-  exact (toCoadjointLeafEntropySplit C).leaf_entropy_change_zero
-
-@[rep_depth transport]
 theorem toCoadjointLeafEntropySplit_transverseEntropyProduction_nonnegative :
     0 ≤ (toCoadjointLeafEntropySplit C).transverseEntropyProduction := by
   exact (toCoadjointLeafEntropySplit C).transverse_entropy_nonnegative
@@ -81,15 +76,12 @@ Combined capstone packet for the entropy side of the operator-to-body bridge.
 -/
 @[capstone, rep_depth transport]
 theorem ownerEntropyBridge_packet :
-    ((toCoadjointLeafEntropySplit C).leafEntropyChange = 0)
-      ∧
     (0 ≤ (toCoadjointLeafEntropySplit C).transverseEntropyProduction)
       ∧
     ((toCoadjointLeafEntropySplit C).totalEntropyChange = C.triad.entropy.production)
       ∧
     (0 ≤ (toCoadjointLeafEntropySplit C).totalEntropyChange) := by
-  refine ⟨toCoadjointLeafEntropySplit_leafEntropyChange_eq_zero (C := C), ?_, ?_, ?_⟩
-  · exact toCoadjointLeafEntropySplit_transverseEntropyProduction_nonnegative (C := C)
+  refine ⟨toCoadjointLeafEntropySplit_transverseEntropyProduction_nonnegative (C := C), ?_, ?_⟩
   · exact toCoadjointLeafEntropySplit_totalEntropyChange_eq_entropyProduction (C := C)
   · exact toCoadjointLeafEntropySplit_totalEntropyChange_nonnegative (C := C)
 

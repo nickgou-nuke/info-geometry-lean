@@ -61,20 +61,15 @@ theorem paper_conclusion_localized_anomaly_pairwise_skeleton_determines_spectrum
         localizedPairwiseUnionSkeleton S' (σ i) (σ j)) :
     relabelLocalizedPairwiseData σ (localizedPairwiseUnionSkeleton S) =
       localizedPairwiseUnionSkeleton S' ∧
-    relabelLocalizedPairwiseData σ (localizedPairwiseAnomalySpectrum S) =
+      relabelLocalizedPairwiseData σ (localizedPairwiseAnomalySpectrum S) =
       localizedPairwiseAnomalySpectrum S' := by
-  have hpack :=
-    paper_conclusion_localized_pairwise_union_wedge_bilinearization
-      (∅) (∅)
-      (∀ i j, localizedPairwiseUnionSkeleton S i j =
-        localizedPairwiseUnionSkeleton S' (σ i) (σ j))
-      True True hpair trivial trivial
   refine ⟨?_, ?_⟩
   · funext i j
-    simpa [relabelLocalizedPairwiseData] using hpack.1 (σ.symm i) (σ.symm j)
+    simpa [relabelLocalizedPairwiseData] using hpair (σ.symm i) (σ.symm j)
   · funext i j
     simp [localizedPairwiseAnomalySpectrum, relabelLocalizedPairwiseData]
-    simpa [relabelLocalizedPairwiseData] using congrArg Finset.card (hpack.1 (σ.symm i) (σ.symm j))
+    simpa [relabelLocalizedPairwiseData] using
+      congrArg Finset.card (hpair (σ.symm i) (σ.symm j))
 
 /-- Paper label: `cor:conclusion-localized-anomaly-pairwise-completeness`.
 The pairwise skeleton determines the concrete pairwise anomaly spectrum, and the anomaly phase

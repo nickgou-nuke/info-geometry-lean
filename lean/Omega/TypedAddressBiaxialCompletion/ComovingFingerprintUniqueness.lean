@@ -10,7 +10,6 @@ representation is packaged through the comoving Hankel factorization. -/
 structure ComovingFingerprintUniquenessData where
   fourierClosedData : ComovingFourierClosedData
   comovingHankelData : ComovingHankelData
-  generalPosition_h : comovingHankelData.generalPosition
   fingerprintIntegralRepresentation : Prop
   fingerprintInjective : Prop
   intervalFingerprintKernelEquivalence : Prop
@@ -31,13 +30,20 @@ injective, and the kernel/Hankel package identifies `ν`, `H_ν`, `F_ν`, and `K
 open interval.
     prop:unit-circle-comoving-fingerprint-uniqueness -/
 theorem paper_typed_address_biaxial_completion_comoving_fingerprint_uniqueness
-    (D : ComovingFingerprintUniquenessData) :
+    (D : ComovingFingerprintUniquenessData)
+    (hGeneralPosition : D.comovingHankelData.generalPosition)
+    (hLorentzProfileModel : D.fourierClosedData.lorentzProfileModel)
+    (hExplicitFourierFormulaInput : D.fourierClosedData.explicitFourierFormulaInput)
+    (hPositiveFrequencyRestriction : D.fourierClosedData.positiveFrequencyRestriction)
+    (hIntervalUniquenessPrinciple : D.fourierClosedData.intervalUniquenessPrinciple) :
     D.fingerprintIntegralRepresentation ∧ D.fingerprintInjective ∧
       D.intervalFingerprintKernelEquivalence := by
   have hFourier :
       D.fourierClosedData.fourierClosedForm ∧ D.fourierClosedData.finiteExponentialSpectrum ∧
         D.fourierClosedData.openIntervalInjective :=
     paper_typed_address_biaxial_completion_comoving_fourier_closed D.fourierClosedData
+      hLorentzProfileModel hExplicitFourierFormulaInput
+      hPositiveFrequencyRestriction hIntervalUniquenessPrinciple
   rcases hFourier with ⟨hClosed, hSpectrum, hOpenIntervalInjective⟩
   have hIntegral : D.fingerprintIntegralRepresentation :=
     D.deriveFingerprintIntegralRepresentation hClosed
@@ -46,7 +52,7 @@ theorem paper_typed_address_biaxial_completion_comoving_fingerprint_uniqueness
   have hHankel :
       D.comovingHankelData.hankelFactorization ∧ D.comovingHankelData.hankelRankCertificate :=
     paper_typed_address_biaxial_completion_comoving_hankel
-      D.comovingHankelData D.generalPosition_h
+      D.comovingHankelData hGeneralPosition
   rcases hHankel with ⟨hFactorization, hRank⟩
   exact ⟨hIntegral, hInjective,
     D.deriveIntervalFingerprintKernelEquivalence hIntegral hFactorization hRank⟩
@@ -54,9 +60,17 @@ theorem paper_typed_address_biaxial_completion_comoving_fingerprint_uniqueness
 /-- Unit-circle paper-label wrapper for the typed-address comoving fingerprint uniqueness package.
     prop:unit-circle-comoving-fingerprint-uniqueness -/
 theorem paper_unit_circle_comoving_fingerprint_uniqueness
-    (D : Omega.TypedAddressBiaxialCompletion.ComovingFingerprintUniquenessData) :
+    (D : Omega.TypedAddressBiaxialCompletion.ComovingFingerprintUniquenessData)
+    (hGeneralPosition : D.comovingHankelData.generalPosition)
+    (hLorentzProfileModel : D.fourierClosedData.lorentzProfileModel)
+    (hExplicitFourierFormulaInput : D.fourierClosedData.explicitFourierFormulaInput)
+    (hPositiveFrequencyRestriction : D.fourierClosedData.positiveFrequencyRestriction)
+    (hIntervalUniquenessPrinciple : D.fourierClosedData.intervalUniquenessPrinciple) :
     D.fingerprintIntegralRepresentation ∧ D.fingerprintInjective ∧
       D.intervalFingerprintKernelEquivalence := by
   exact paper_typed_address_biaxial_completion_comoving_fingerprint_uniqueness D
+    hGeneralPosition
+    hLorentzProfileModel hExplicitFourierFormulaInput
+    hPositiveFrequencyRestriction hIntervalUniquenessPrinciple
 
 end Omega.TypedAddressBiaxialCompletion

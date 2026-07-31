@@ -808,44 +808,6 @@ theorem modularTransportGenerator_commutes_clockAxis_of_scalePart_eq_zero
     (modularTransportGenerator_isPhaseLinear_of_scalePart_eq_zero
       (E := E) hMod hScaleZero)
 
-/--
-Proof-carrying witness for the vanishing scaling sector of a modular generator.
-This packages the exact owner datum needed to force the phase-linear /
-clock-commuting branch without threading a separate raw equality hypothesis.
--/
-@[rep_depth operator]
-structure ModularScaleZeroWitness where
-  hMod : EndH
-  scalePart_eq_zero : modularGeneratorScalePart (E := E) hMod = 0
-
-namespace ModularScaleZeroWitness
-
-omit [CompleteSpace E] in
-/--
-On the proof-carrying zero-scale branch, the modular transport generator is
-phase-linear.
--/
-theorem modularTransportGenerator_isPhaseLinear
-    (W : ModularScaleZeroWitness (E := E)) :
-    IsPhaseLinear (E := E) (modularTransportGenerator (E := E) W.hMod) := by
-  exact modularTransportGenerator_isPhaseLinear_of_scalePart_eq_zero
-    (E := E) W.hMod W.scalePart_eq_zero
-
-omit [CompleteSpace E] in
-/--
-On the proof-carrying zero-scale branch, the modular transport generator
-commutes with the canonical clock axis.
--/
-theorem modularTransportGenerator_commutes_clockAxis
-    (W : ModularScaleZeroWitness (E := E)) :
-    Commute
-      (modularTransportGenerator (E := E) W.hMod)
-      (InfoGeometry.Krein.clockAxis (E := E)) := by
-  exact modularTransportGenerator_commutes_clockAxis_of_scalePart_eq_zero
-    (E := E) W.hMod W.scalePart_eq_zero
-
-end ModularScaleZeroWitness
-
 omit [CompleteSpace E] in
 /--
 The modular derivation splits as the sum of its gauge-sector and scaling-sector
@@ -929,31 +891,30 @@ theorem modularDeriv_eq_modularGaugeDeriv_of_commute_scalePart
   simp [hZero, modularGaugeDeriv]
 
 omit [CompleteSpace E] in
-/--
-On the proof-carrying zero-scale branch, the full modular derivation reduces to
-its gauge channel without a separate scaling-commutation hypothesis.
--/
-theorem ModularScaleZeroWitness.modularDeriv_eq_modularGaugeDeriv
-    (W : ModularScaleZeroWitness (E := E))
-    (A : EndH) :
-    modularDeriv (E := E) W.hMod A = modularGaugeDeriv (E := E) W.hMod A := by
+/-- If the scaling part vanishes, the full modular derivation reduces to its
+gauge channel without a separate scaling-commutation hypothesis. -/
+theorem modularDeriv_eq_modularGaugeDeriv_of_scalePart_eq_zero
+    (hMod : EndH)
+    (A : EndH)
+    (hScaleZero : modularGeneratorScalePart (E := E) hMod = 0) :
+    modularDeriv (E := E) hMod A = modularGaugeDeriv (E := E) hMod A := by
   rw [modularDeriv_split]
   unfold modularScaleDeriv
-  rw [W.scalePart_eq_zero]
+  rw [hScaleZero]
   unfold transportCommutator
   simp [modularGaugeDeriv]
 
 omit [CompleteSpace E] in
-/--
-On the proof-carrying zero-scale branch, gauge commutation alone forces the full
-modular derivation to vanish.
--/
-theorem ModularScaleZeroWitness.modularDeriv_eq_zero_of_commute_gaugePart
-    (W : ModularScaleZeroWitness (E := E))
+/-- Vanishing of the scaling part together with gauge commutation forces the
+full modular derivation to vanish. -/
+theorem modularDeriv_eq_zero_of_scalePart_eq_zero_of_commute_gaugePart
+    (hMod : EndH)
     (A : EndH)
-    (hCommGauge : Commute A (modularGeneratorGaugePart (E := E) W.hMod)) :
-    modularDeriv (E := E) W.hMod A = 0 := by
-  rw [W.modularDeriv_eq_modularGaugeDeriv (E := E) (A := A)]
+    (hCommGauge : Commute A (modularGeneratorGaugePart (E := E) hMod))
+    (hScaleZero : modularGeneratorScalePart (E := E) hMod = 0) :
+    modularDeriv (E := E) hMod A = 0 := by
+  rw [modularDeriv_eq_modularGaugeDeriv_of_scalePart_eq_zero
+    (E := E) hMod A hScaleZero]
   unfold modularGaugeDeriv transportCommutator
   exact sub_eq_zero.mpr hCommGauge.eq.symm
 

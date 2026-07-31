@@ -63,10 +63,11 @@ variable {R : Type*} [CommRing R] [Algebra R Op]
 variable (n : ℕ)
 
 /-- Defining the structure of a matrix representation that honors the twisted action -/
-structure PreservesTwistedGauge (C : CuntzO2Carrier Op) (ω : Op)
-    (M : Op → Matrix (Fin n) (Fin n) R) : Prop where
-  map_zeta_hom : ∀ (x : Op),
+def PreservesTwistedGauge (C : CuntzO2Carrier Op) (ω : Op)
+    (M : Op → Matrix (Fin n) (Fin n) R) : Prop :=
+  ∀ (x : Op),
     M (parafermionZeta C ω x) =
-      M C.S_left * M x * M (star C.S_left) + M ω * (M C.S_right * M x * M (star C.S_right))
+      M C.S_left * M x * M (star C.S_left) + M ω *
+        (M C.S_right * M x * M (star C.S_right))
 
 end InfoGeometry.Algebra

@@ -108,8 +108,8 @@ def TransportedChiralKernelDimMismatch
     (X : RealSplitKreinDiracFredholmModule A B H₂)
     (t : ℝ)
     (hVX : QuasilatticeChiralFredholmSurface V X t) : Prop :=
-  letI := hVX.plusFinite
-  letI := hVX.minusFinite
+  letI := hVX.1
+  letI := hVX.2
   Module.finrank ℝ (quasilatticeChiralKernelSlicePlus V X t)
     ≠
   Module.finrank ℝ (quasilatticeChiralKernelSliceMinus V X t)
@@ -124,13 +124,12 @@ theorem transportedChiralKernelDimMismatch_of_quasilatticeAnalyticalIndex_ne_zer
     (hNonzero : quasilatticeAnalyticalIndex V X t hVX ≠ 0) :
     TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E) V X t hVX := by
   classical
+  rcases hVX with ⟨hPlus, hMinus⟩
+  letI := hPlus
+  letI := hMinus
   intro hEq
-  cases hVX with
-  | mk hPlus hMinus =>
-      letI := hPlus
-      letI := hMinus
-      apply hNonzero
-      simp [quasilatticeAnalyticalIndex, hEq]
+  apply hNonzero
+  simp [quasilatticeAnalyticalIndex, hEq]
 
 /--
 Nonzero operatorial central charge forces chiral-kernel dimension mismatch on

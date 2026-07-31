@@ -6,16 +6,14 @@ namespace Omega.Graph
 structure FlowWeightedMultigraph where
   weightedTreeSum : ℝ
   edgeWeightDet : ℝ
-  Connected : Prop
 
 /-- Chapter-local resistance-form Gram determinant of the flow lattice. -/
 noncomputable def flowLatticeGramDet (G : FlowWeightedMultigraph) : ℝ :=
   G.weightedTreeSum / G.edgeWeightDet
 
 /-- Paper label: `thm:xi-flow-lattice-gram-determinant-tree-weight`. -/
-theorem paper_xi_flow_lattice_gram_determinant_tree_weight (G : FlowWeightedMultigraph)
-    (hconn : G.Connected) : flowLatticeGramDet G = G.weightedTreeSum / G.edgeWeightDet := by
-  let _ := hconn
+theorem paper_xi_flow_lattice_gram_determinant_tree_weight (G : FlowWeightedMultigraph) :
+    flowLatticeGramDet G = G.weightedTreeSum / G.edgeWeightDet :=
   rfl
 
 end Omega.Graph

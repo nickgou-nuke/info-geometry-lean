@@ -173,8 +173,14 @@ theorem paper_block_foldsat_low_temperature_partition_function_additive_hardness
             block_foldsat_low_temperature_partition_function_additive_hardness_partition_function
               SatAssignment satEval beta φ| ≤
           1 / 8) :
+    Omega.SPG.PolynomialTimeMap
+        (block_foldsat_low_temperature_partition_function_additive_hardness_decide approx) →
+    (∀ decideL : SatInstance → Bool,
+      Omega.SPG.PolynomialTimeMap decideL →
+        Omega.SPG.PolynomialTimeMap (fun x => !(decideL x))) →
     Omega.SPG.PolytimeDecidable (fun φ => ∃ a : SatAssignment φ, satEval φ a = true) ∧
       Omega.SPG.PEqualsNP (fun φ => ∃ a : SatAssignment φ, satEval φ a = true) := by
+  intro hClassifier hComplement
   have hSpec :
       ∀ φ,
         block_foldsat_low_temperature_partition_function_additive_hardness_decide approx φ =
@@ -186,8 +192,8 @@ theorem paper_block_foldsat_low_temperature_partition_function_additive_hardness
       Omega.SPG.PolytimeDecidable (fun φ => ∃ a : SatAssignment φ, satEval φ a = true) := by
     refine ⟨
       block_foldsat_low_temperature_partition_function_additive_hardness_decide approx,
-      trivial,
+      hClassifier,
       hSpec⟩
-  exact ⟨hSat, ⟨Omega.SPG.complement_polytime_decidable hSat, hSat⟩⟩
+  exact ⟨hSat, ⟨Omega.SPG.complement_polytime_decidable hSat hComplement, hSat⟩⟩
 
 end Omega.Folding

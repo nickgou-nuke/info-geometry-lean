@@ -7,7 +7,7 @@ namespace Omega.Folding
 
 /-- Concrete seed used to expose the already verified two-state asymptotic package in the escort
 two-scale residual corollary. -/
-def foldBinEscortTwoScaleResidualSeed : FoldBinTwoStateAsymptoticData := {}
+def foldBinEscortTwoScaleResidualSeed : FoldBinTwoStateAsymptoticData := Unit.unit
 
 /-- The scaled residual only remembers the last bit: `0 ↦ 1` and `1 ↦ φ⁻¹`. -/
 noncomputable def foldBinEscortTwoScaleResidualAtom : Bool → ℝ

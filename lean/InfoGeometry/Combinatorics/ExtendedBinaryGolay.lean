@@ -9,6 +9,10 @@ import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 import InfoGeometry.Combinatorics.BinaryCyclicGolayPolynomial
 import InfoGeometry.Combinatorics.BinaryGolayCyclotomicCosets
 import InfoGeometry.Combinatorics.BinaryQuadraticResidueBound
+import InfoGeometry.Combinatorics.BinaryBCHMinimumDistance
+import InfoGeometry.Combinatorics.BinaryGolayRootField
+import InfoGeometry.Combinatorics.BinaryGolayFrobeniusQRBridge
+import InfoGeometry.Combinatorics.BinaryGolayPolynomialConvolution
 
 /-!
 # The extended binary Golay code
@@ -40,6 +44,18 @@ def generatorCoefficient (j : ℕ) : F₂ :=
   | 0 | 2 | 4 | 5 | 6 | 10 | 11 => 1
   | _ => 0
 
+theorem generatorCoefficient_add_23 (k : ℕ) :
+    generatorCoefficient (k + 23) = generatorCoefficient k := by
+  unfold generatorCoefficient
+  simp
+
+theorem generatorCoefficient_zero_of_range {k : ℕ}
+    (h12 : 12 ≤ k) (h23 : k < 23) :
+    generatorCoefficient k = 0 := by
+  dsimp [generatorCoefficient]
+  rw [Nat.mod_eq_of_lt h23]
+  interval_cases k <;> rfl
+
 theorem generatorCoefficient_eq_generator_coeff {k : ℕ} (hk : k < 23) :
     generatorCoefficient k =
       InfoGeometry.Combinatorics.BinaryCyclicGolayPolynomial.generator.coeff k := by
@@ -53,6 +69,106 @@ def cyclicGolayWord (m : Message) : Word23 :=
   fun j =>
     ∑ i : Fin 12,
       m i * generatorCoefficient (j.val + 23 - i.val)
+
+theorem cyclicGeneratorCoefficient_eq (j : Fin 23) (i : Fin 12) :
+    generatorCoefficient (j.val + 23 - i.val) =
+      if i.val ≤ j.val then
+        BinaryCyclicGolayPolynomial.generator.coeff (j.val - i.val)
+      else 0 := by
+  by_cases hij : i.val ≤ j.val
+  · have hsplit : j.val + 23 - i.val = (j.val - i.val) + 23 := by
+      omega
+    rw [hsplit, generatorCoefficient_add_23]
+    rw [generatorCoefficient_eq_generator_coeff]
+    · simp [hij]
+    · omega
+  · have h12 : 12 ≤ j.val + 23 - i.val := by
+      omega
+    have h23 : j.val + 23 - i.val < 23 := by
+      omega
+    rw [generatorCoefficient_zero_of_range h12 h23]
+    simp [hij]
+
+theorem cyclicGolayWord_coeff_mul_generator (m : Message) (j : Fin 23) :
+    cyclicGolayWord m j =
+      (BinaryGolayPolynomialConvolution.messagePolynomial m *
+        BinaryCyclicGolayPolynomial.generator).coeff j.val := by
+  calc
+    cyclicGolayWord m j =
+        ∑ i : Fin 12,
+          m i * generatorCoefficient (j.val + 23 - i.val) := rfl
+    _ = ∑ i : Fin 12,
+        if i.val ≤ j.val then
+          m i * BinaryCyclicGolayPolynomial.generator.coeff (j.val - i.val)
+        else 0 := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      rw [cyclicGeneratorCoefficient_eq j i]
+      by_cases hij : i.val ≤ j.val <;> simp [hij]
+    _ = (BinaryGolayPolynomialConvolution.messagePolynomial m *
+        BinaryCyclicGolayPolynomial.generator).coeff j.val := by
+      symm
+      exact BinaryGolayPolynomialConvolution.messagePolynomial_mul_coeff m
+        BinaryCyclicGolayPolynomial.generator j.val
+
+theorem generator_coeff_zero_of_ge {N : ℕ} (hN : 12 ≤ N) :
+    BinaryCyclicGolayPolynomial.generator.coeff N = 0 := by
+  simp [BinaryCyclicGolayPolynomial.generator, Polynomial.coeff_add,
+    Polynomial.coeff_one, Polynomial.coeff_X_pow,
+    show N ≠ 2 by omega, show N ≠ 4 by omega, show N ≠ 5 by omega,
+    show N ≠ 6 by omega, show N ≠ 10 by omega, show N ≠ 11 by omega,
+    show N ≠ 0 by omega]
+
+noncomputable def wordPolynomial (w : Word23) :
+    Polynomial F₂ :=
+  ∑ j : Fin 23, Polynomial.C (w j) * Polynomial.X ^ (j : ℕ)
+
+theorem wordPolynomial_coeff_of_lt (w : Word23) {N : ℕ} (hN : N < 23) :
+    (wordPolynomial w).coeff N = w ⟨N, hN⟩ := by
+  unfold wordPolynomial
+  simp [Polynomial.coeff_C_mul, Polynomial.coeff_X_pow]
+  rw [Finset.sum_eq_single ⟨N, hN⟩]
+  · simp
+  · intro b hb hne
+    have hbn : (b : ℕ) ≠ N := by
+      intro h
+      exact hne (Fin.ext h)
+    simp [Ne.symm hbn]
+  · simp
+
+theorem wordPolynomial_coeff_zero_of_ge (w : Word23) {N : ℕ}
+    (hN : 23 ≤ N) :
+    (wordPolynomial w).coeff N = 0 := by
+  unfold wordPolynomial
+  simp [Polynomial.coeff_C_mul, Polynomial.coeff_X_pow]
+  apply Finset.sum_eq_zero
+  intro j hj
+  have hne : N ≠ (j : ℕ) := by omega
+  simp [hne]
+
+theorem wordPolynomial_cyclicGolayWord_eq_message_mul_generator (m : Message) :
+    wordPolynomial (cyclicGolayWord m) =
+      BinaryGolayPolynomialConvolution.messagePolynomial m *
+        BinaryCyclicGolayPolynomial.generator := by
+  apply Polynomial.ext
+  intro N
+  by_cases hN : N < 23
+  · rw [wordPolynomial_coeff_of_lt _ hN,
+      cyclicGolayWord_coeff_mul_generator m ⟨N, hN⟩]
+  · have hN23 : 23 ≤ N := by omega
+    rw [wordPolynomial_coeff_zero_of_ge _ hN23]
+    rw [BinaryGolayPolynomialConvolution.messagePolynomial_mul_coeff]
+    symm
+    apply Finset.sum_eq_zero
+    intro i hi
+    have hiN : (i : ℕ) ≤ N := by omega
+    have hi_lt : (i : ℕ) < 12 := i.isLt
+    simp only [if_pos hiN]
+    have hadd : 12 + (i : ℕ) ≤ N := by omega
+    have hcoeff :
+        BinaryCyclicGolayPolynomial.generator.coeff (N - (i : ℕ)) = 0 :=
+      generator_coeff_zero_of_ge (Nat.le_sub_of_add_le hadd)
+    simp [hcoeff]
 
 /-- Parity bit appended to the cyclic length-23 word. -/
 def parityBit (w : Word23) : F₂ :=
@@ -179,13 +295,6 @@ theorem dotBilin_nondegenerate :
 
 private def prefixMatrix : Matrix (Fin 12) (Fin 12) F₂ :=
   fun j i => generatorCoefficient (j.val + 23 - i.val)
-
-private theorem generatorCoefficient_zero_of_range {k : ℕ}
-    (h12 : 12 ≤ k) (h23 : k < 23) :
-    generatorCoefficient k = 0 := by
-  dsimp [generatorCoefficient]
-  rw [Nat.mod_eq_of_lt h23]
-  interval_cases k <;> rfl
 
 private theorem prefixMatrix_lowerTriangular :
     Matrix.BlockTriangular prefixMatrix ⇑OrderDual.toDual := by
@@ -361,16 +470,80 @@ theorem self_orthogonal :
   rcases Finset.mem_image.mp hv with ⟨n, -, rfl⟩
   exact self_orthogonal_encode m n
 
-/-- Every nonzero constructed word has Hamming weight at least eight. -/
-private theorem minimumWeight_encode :
-    ∀ m : Message, encode m ≠ 0 → 8 ≤ hammingWeight (encode m) := by
-  native_decide
+/-- A nonzero binary word has positive Hamming weight. -/
+theorem hammingWeight_pos {n : ℕ} {w : Fin n → F₂} (hw : w ≠ 0) :
+    0 < hammingWeight w := by
+  by_contra hpos
+  have hcard : (Finset.univ.filter fun i => w i ≠ 0).card = 0 :=
+    Nat.eq_zero_of_not_pos hpos
+  have hempty : Finset.univ.filter (fun i => w i ≠ 0) = ∅ :=
+    Finset.card_eq_zero.mp hcard
+  apply hw
+  funext i
+  by_contra hwi
+  have hi : i ∈ Finset.univ.filter (fun j => w j ≠ 0) := by
+    simp only [Finset.mem_filter, Finset.mem_univ, true_and]
+    simpa using hwi
+  rw [hempty] at hi
+  simpa using hi
 
-theorem minimumWeight_eight_lower_bound :
+/-
+The arithmetic part of the minimum-distance argument is separated from the
+Golay-specific no-weight-four theorem.  It uses only four-divisibility and
+does not enumerate the message space.
+-/
+theorem minimumWeight_encode_of_four_dvd
+    (m : Message)
+    (h4 : 4 ∣ hammingWeight (encode m))
+    (hno4 : hammingWeight (encode m) ≠ 4)
+    (hm : encode m ≠ 0) :
+    8 ≤ hammingWeight (encode m) := by
+  rcases h4 with ⟨k, hk⟩
+  have hpos : 0 < hammingWeight (encode m) := hammingWeight_pos hm
+  by_contra h8
+  have hlt : hammingWeight (encode m) < 8 := Nat.lt_of_not_ge h8
+  have hwt4 : hammingWeight (encode m) = 4 := by omega
+  exact hno4 hwt4
+
+/- The binary quadratic-residue square-root bound excludes weight four:
+`23 ≤ d^2 - d + 1` is incompatible with `d = 4`. -/
+theorem no_weight_four_encode_of_qr_bound
+    (hqr : ∀ m : Message, encode m ≠ 0 →
+      23 ≤ hammingWeight (encode m) ^ 2 -
+        hammingWeight (encode m) + 1) :
+    ∀ m : Message, encode m ≠ 0 →
+      hammingWeight (encode m) ≠ 4 := by
+  intro m hm hweight
+  have hbound := hqr m hm
+  exact InfoGeometry.Combinatorics.BinaryQuadraticResidueBound.square_root_bound_23_excludes_four
+    hbound hweight
+
+/- The QR bound is consumed through its structural counting witness: the
+`23` cyclic positions inject into the admissible difference classes. -/
+theorem no_weight_four_encode_of_qr_injection
+  (hqr : ∀ m : Message, encode m ≠ 0 →
+      ∃ f : Fin 23 → Fin (hammingWeight (encode m) ^ 2 -
+        hammingWeight (encode m) + 1), Function.Injective f) :
+    ∀ m : Message, encode m ≠ 0 →
+      hammingWeight (encode m) ≠ 4 := by
+  intro m hm hweight
+  rcases hqr m hm with ⟨f, hf⟩
+  have hbound :=
+    InfoGeometry.Combinatorics.BinaryQuadraticResidueBound.square_root_bound_23_of_injective
+      f hf
+  exact InfoGeometry.Combinatorics.BinaryQuadraticResidueBound.square_root_bound_23_excludes_four
+    hbound hweight
+
+theorem minimumWeight_eight_lower_bound
+    (h4all : ∀ m : Message, 4 ∣ hammingWeight (encode m))
+    (hqr : ∀ m : Message, encode m ≠ 0 →
+      ∃ f : Fin 23 → Fin (hammingWeight (encode m) ^ 2 -
+        hammingWeight (encode m) + 1), Function.Injective f) :
     ∀ w ∈ code, w ≠ 0 → 8 ≤ hammingWeight w := by
   intro w hw hne
   rcases Finset.mem_image.mp hw with ⟨m, -, rfl⟩
-  exact minimumWeight_encode m hne
+  exact minimumWeight_encode_of_four_dvd m (h4all m)
+    (no_weight_four_encode_of_qr_injection hqr m hne) hne
 
 /-- Specific witness message producing a codeword of weight eight (first basis generator). -/
 def weightEightMessage : Message := basisMessage 0
@@ -387,10 +560,14 @@ theorem exists_weight_eight :
   exact ⟨encode m, Finset.mem_image.mpr ⟨m, Finset.mem_univ _, rfl⟩, hm⟩
 
 /-- The minimum nonzero Hamming weight of the constructed code is exactly 8. -/
-theorem minimumWeight_eq_eight :
+theorem minimumWeight_eq_eight
+    (h4all : ∀ m : Message, 4 ∣ hammingWeight (encode m))
+    (hqr : ∀ m : Message, encode m ≠ 0 →
+      ∃ f : Fin 23 → Fin (hammingWeight (encode m) ^ 2 -
+        hammingWeight (encode m) + 1), Function.Injective f) :
     (∀ w ∈ code, w ≠ 0 → 8 ≤ hammingWeight w) ∧
       (∃ w ∈ code, hammingWeight w = 8) :=
-  ⟨minimumWeight_eight_lower_bound, exists_weight_eight⟩
+  ⟨minimumWeight_eight_lower_bound h4all hqr, exists_weight_eight⟩
 
 /-- The code submodule is contained in its bilinear orthogonal complement. -/
 theorem codeSubmodule_le_orthogonal :
@@ -421,10 +598,145 @@ theorem codeSubmodule_selfDual :
   apply Submodule.eq_of_le_of_finrank_eq codeSubmodule_le_orthogonal
   rw [finrank_codeSubmodule, finrank_orthogonal_codeSubmodule]
 
-/-- Every extended Golay codeword has Hamming weight divisible by four. -/
-private theorem four_dvd_hammingWeight_encode :
-    ∀ m : Message, 4 ∣ hammingWeight (encode m) := by
+private def wordSupport (w : Word24) : Finset (Fin 24) :=
+  Finset.univ.filter fun i => w i ≠ 0
+
+private def wordOverlap (u v : Word24) : Finset (Fin 24) :=
+  Finset.univ.filter fun i => u i ≠ 0 ∧ v i ≠ 0
+
+private theorem F₂_eq_zero_or_one (x : F₂) : x = 0 ∨ x = 1 := by
+  have hx : x.val < 2 := x.isLt
+  have hcases : x.val = 0 ∨ x.val = 1 := by omega
+  rcases hcases with hzero | hone
+  · exact Or.inl ((ZMod.val_eq_zero x).mp hzero)
+  · exact Or.inr ((ZMod.val_eq_one (by decide) x).mp hone)
+
+private theorem wordSupport_card (w : Word24) :
+    (wordSupport w).card = hammingWeight w :=
+  rfl
+
+private theorem wordSupport_add (u v : Word24) :
+    wordSupport (u + v) =
+      (wordSupport u \ wordSupport v) ∪ (wordSupport v \ wordSupport u) := by
+  have hchar : (1 : F₂) + 1 = 0 := by
+    rw [← two_mul]
+    rw [show (2 : F₂) = 0 by exact CharP.cast_eq_zero F₂ 2, zero_mul]
+  ext i
+  rcases F₂_eq_zero_or_one (u i) with hu | hu <;>
+    rcases F₂_eq_zero_or_one (v i) with hv | hv <;>
+      simp [wordSupport, hu, hv, hchar]
+
+private theorem hammingWeight_add_formula (u v : Word24) :
+    hammingWeight (u + v) + 2 * (wordOverlap u v).card =
+      hammingWeight u + hammingWeight v := by
+  let su := wordSupport u
+  let sv := wordSupport v
+  let si := wordOverlap u v
+  have hsi : si = su ∩ sv := by
+    ext i
+    simp [si, su, sv, wordSupport, wordOverlap]
+  have hdis : Disjoint (su \ sv) (sv \ su) := by
+    rw [Finset.disjoint_left]
+    intro i hi hj
+    simp only [Finset.mem_sdiff] at hi hj
+    exact hj.2 hi.1
+  change (wordSupport (u + v)).card + 2 * si.card =
+    su.card + sv.card
+  have hleu : (sv ∩ su).card ≤ su.card :=
+    Finset.card_le_card Finset.inter_subset_right
+  have hlev : (sv ∩ su).card ≤ sv.card :=
+    Finset.card_le_card Finset.inter_subset_left
+  rw [wordSupport_add, Finset.card_union_of_disjoint hdis,
+    Finset.card_sdiff, Finset.card_sdiff, hsi]
+  rw [Finset.inter_comm su sv]
+  omega
+
+private theorem wordOverlap_even_of_dot_zero (u v : Word24)
+    (h : dot u v = 0) : Even (wordOverlap u v).card := by
+  have hsum : dot u v = (wordOverlap u v).card := by
+    calc
+      dot u v = ∑ i : Fin 24,
+          if u i ≠ 0 ∧ v i ≠ 0 then (1 : F₂) else 0 := by
+        apply Finset.sum_congr rfl
+        intro i _
+        rcases F₂_eq_zero_or_one (u i) with hu | hu <;>
+          rcases F₂_eq_zero_or_one (v i) with hv | hv <;>
+            simp [hu, hv]
+      _ = ∑ i ∈ wordOverlap u v, (1 : F₂) := by
+        simp [wordOverlap]
+      _ = (wordOverlap u v).card := by simp
+  have hcast : ((wordOverlap u v).card : F₂) = 0 := by
+    rw [← hsum]
+    exact h
+  have hzint : (2 : ℤ) ∣ (wordOverlap u v).card := by
+    apply (ZMod.intCast_zmod_eq_zero_iff_dvd
+      ((wordOverlap u v).card : ℤ) 2).mp
+    exact hcast
+  have hnat : (2 : ℕ) ∣ (wordOverlap u v).card :=
+    (Int.natCast_dvd_natCast).mp hzint
+  rcases hnat with ⟨c, hc⟩
+  exact ⟨c, by omega⟩
+
+private theorem four_dvd_hammingWeight_add (u v : Word24)
+    (hu : 4 ∣ hammingWeight u)
+    (hv : 4 ∣ hammingWeight v)
+    (horth : dot u v = 0) :
+    4 ∣ hammingWeight (u + v) := by
+  rcases hu with ⟨a, ha⟩
+  rcases hv with ⟨b, hb⟩
+  rcases wordOverlap_even_of_dot_zero u v horth with ⟨c, hc⟩
+  have hweight := hammingWeight_add_formula u v
+  have hle : c ≤ a + b := by
+    omega
+  refine ⟨a + b - c, ?_⟩
+  omega
+
+theorem basis_weight_eight : ∀ i : Fin 12, hammingWeight (basisWord i) = 8 := by
   native_decide
+
+private def messageSupport (m : Message) : Finset (Fin 12) :=
+  Finset.univ.filter fun i => m i ≠ 0
+
+private theorem four_dvd_basis_sum :
+    ∀ s : Finset (Fin 12),
+      4 ∣ hammingWeight (∑ i ∈ s, basisWord i) := by
+  intro s
+  induction s using Finset.cons_induction with
+  | empty =>
+      exact ⟨0, by simp [hammingWeight]⟩
+  | cons a s ha ih =>
+      rw [Finset.sum_cons]
+      apply four_dvd_hammingWeight_add
+      · rw [basis_weight_eight a]
+        exact ⟨2, by norm_num⟩
+      · exact ih
+      · rw [dot_sum_right]
+        apply Finset.sum_eq_zero
+        intro j hj
+        exact basis_dot_zero a j
+
+/-- Every extended Golay codeword has Hamming weight divisible by four. -/
+theorem four_dvd_hammingWeight_encode :
+    ∀ m : Message, 4 ∣ hammingWeight (encode m) := by
+  intro m
+  have hm : encode m = ∑ i ∈ messageSupport m, basisWord i := by
+    calc
+      encode m = ∑ i : Fin 12, encode (m i • basisMessage i) := by
+        conv_lhs => rw [message_decomp m]
+        rw [encode_sum]
+      _ = ∑ i : Fin 12,
+          if m i ≠ 0 then basisWord i else 0 := by
+        apply Finset.sum_congr rfl
+        intro i _
+        by_cases hi : m i = 0
+        · simp [hi, encode_zero]
+        · have hi_one : m i = 1 := by
+            rcases F₂_eq_zero_or_one (m i) with hmi | hmi <;> simp_all
+          simp [hi_one, basisWord]
+      _ = ∑ i ∈ messageSupport m, basisWord i := by
+        simp [messageSupport, Finset.sum_filter]
+  rw [hm]
+  exact four_dvd_basis_sum (messageSupport m)
 
 theorem four_dvd_hammingWeight :
     ∀ w ∈ code, 4 ∣ hammingWeight w := by
@@ -447,26 +759,24 @@ theorem even_hammingWeight :
   rcases Finset.mem_image.mp hw with ⟨m, -, rfl⟩
   exact even_hammingWeight_encode m
 
-/-- Every extended Golay generator basis codeword has Hamming weight 8 (12 basis vectors checked in O(1)). -/
-theorem basis_weight_eight : ∀ i : Fin 12, hammingWeight (basisWord i) = 8 := by
-  native_decide
-
-/-- The check polynomial message $h(X) = 1 + X + X^5 + X^6 + X^7 + X^9 + X^{11}$. -/
-def checkPolynomialMessage : Message :=
+/- The reciprocal-generator message
+`h(X) = 1 + X + X^5 + X^6 + X^7 + X^9 + X^{11}`. -/
+def reciprocalGeneratorMessage : Message :=
   fun i => match i.val with
   | 0 | 1 | 5 | 6 | 7 | 9 | 11 => 1
   | _ => 0
 
-/-- The check polynomial message $h(X)$ encodes to the all-ones codeword (literature theorem $h(X)g(X) = \sum_{j=0}^{22} X^j$). -/
-private theorem checkPolynomialMessage_encode_one :
-    encode checkPolynomialMessage = (1 : Word24) := by
+/- The reciprocal-generator message encodes to the all-ones word. -/
+private theorem reciprocalGeneratorMessage_encode_one :
+    encode reciprocalGeneratorMessage = (1 : Word24) := by
   decide
 
-/-- The constant one word belongs to the extended Golay code (explicit polynomial witness $h(X)$ checked in O(1)). -/
+/- The constant one word belongs to the Golay code via the explicit
+reciprocal-generator witness. -/
 private theorem one_encode_mem :
     ∃ m : Message, encode m = (1 : Word24) := by
-  use checkPolynomialMessage
-  exact checkPolynomialMessage_encode_one
+  use reciprocalGeneratorMessage
+  exact reciprocalGeneratorMessage_encode_one
 
 theorem one_mem_code :
     (1 : Word24) ∈ code := by

@@ -12,22 +12,16 @@ def foldOptimalDelinkingCurve (Gamma h : Real) : Real :=
 def foldSaturatingDelinkingLeakage (Gamma h : Real) : Real :=
   if h ≤ Gamma then Gamma - h else 0
 
-/-- Scalar-proxy formulation of the optimal delinking curve: any protocol whose leakage and
-randomness budget satisfy the chain-rule inequality must lie above the lower envelope, and the
-piecewise family realizes that envelope exactly. -/
-def FoldOptimalDelinkingCurveStatement (Gamma h : Real) : Prop :=
-  (∀ leakage randomness : Real,
-      0 ≤ leakage →
-      Gamma ≤ leakage + randomness →
-      randomness ≤ h →
-      foldOptimalDelinkingCurve Gamma h ≤ leakage) ∧
-    foldSaturatingDelinkingLeakage Gamma h = foldOptimalDelinkingCurve Gamma h
-
 /-- The chain-rule lower bound gives the optimal delinking curve `max (Gamma - h) 0`, and the
 piecewise family `foldSaturatingDelinkingLeakage` attains it exactly.
     thm:op-algebra-optimal-delinking-curve -/
 theorem paper_op_algebra_optimal_delinking_curve (Gamma h : Real) (hGamma : 0 <= Gamma) :
-    FoldOptimalDelinkingCurveStatement Gamma h := by
+    (∀ leakage randomness : Real,
+      0 ≤ leakage →
+      Gamma ≤ leakage + randomness →
+      randomness ≤ h →
+      foldOptimalDelinkingCurve Gamma h ≤ leakage) ∧
+    foldSaturatingDelinkingLeakage Gamma h = foldOptimalDelinkingCurve Gamma h := by
   have _ : 0 ≤ Gamma := hGamma
   refine ⟨?_, ?_⟩
   · intro leakage randomness hLeak hChain hBudget

@@ -46,22 +46,20 @@ an observer channel `X`, with strictly positive variance at the comparison
 state.
 -/
 @[rep_depth transport]
-structure MeasurableOperator
+def MeasurableOperator
     (CIK : CertifiedInverseKernel H₂)
     (R : EndH)
     (ψ comparison : H₂)
-    (X : PerturbationChannel E) : Prop where
-  admissible : StateFirstAdmissibleOperator (E := E) CIK R ψ
-  finiteVariance :
-    ∃ B : ℝ,
+    (X : PerturbationChannel E) : Prop :=
+  StateFirstAdmissibleOperator (E := E) CIK R ψ ∧
+    (∃ B : ℝ,
       0 ≤ B
         ∧
       InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
-        (E := E) comparison X X ≤ B
-  positiveVariance :
-    0 <
-      InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
-        (E := E) comparison X X
+        (E := E) comparison X X ≤ B) ∧
+  (0 <
+    InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
+      (E := E) comparison X X)
 
 /-- Constructor helper from explicit admissibility + bound witnesses. -/
 @[rep_depth transport]
@@ -99,10 +97,10 @@ theorem measurableOperator_projectorCompressed_stable
       ψ
       comparison
       X := by
-  refine ⟨?_, hM.finiteVariance, hM.positiveVariance⟩
+  refine ⟨?_, hM.2.1, hM.2.2⟩
   exact
     stateFirstAdmissibleOperator_projectorCompressed_stable
-      (E := E) (CIK := CIK) (R := R) (ψ := ψ) hM.admissible
+      (E := E) (CIK := CIK) (R := R) (ψ := ψ) hM.1
 
 /--
 Measurability is stable under modular-flow transport of the state.
@@ -117,10 +115,10 @@ theorem measurableOperator_modularFlow_state_stable
     (T : InfoGeometry.Canonical.RealTomitaCore.RealModularLogData (E := E))
     (t : ℝ) :
     MeasurableOperator (E := E) CIK R ((T.flow t) ψ) comparison X := by
-  refine ⟨?_, hM.finiteVariance, hM.positiveVariance⟩
+  refine ⟨?_, hM.2.1, hM.2.2⟩
   exact
     stateFirstAdmissibleOperator_modularFlow_state_stable
-      (E := E) (CIK := CIK) (R := R) (ψ := ψ) hM.admissible T t
+      (E := E) (CIK := CIK) (R := R) (ψ := ψ) hM.1 T t
 
 /--
 Bridge to the owned operatorial uncertainty surface:
@@ -148,7 +146,7 @@ theorem measurableOperator_uncertainty_bridge
       *
     InfoGeometry.Canonical.RelativeModularPotential.comparisonStateGeneratorMetric
         (E := E) comparison Y Y := by
-  refine ⟨hM.admissible.1, ?_⟩
+  refine ⟨hM.1.1, ?_⟩
   exact
     InfoGeometry.Canonical.OperatorialUncertainty.comparisonStateGeneratorMetric_sq_add_phase_sq_le_of_IsPhaseLinear
       (E := E) comparison X Y hX

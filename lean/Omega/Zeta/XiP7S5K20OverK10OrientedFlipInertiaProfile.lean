@@ -4,8 +4,7 @@ import Mathlib.Tactic
 namespace Omega.Zeta
 
 /-- Minimal concrete carrier for the finite `K₂₀/K₁₀` oriented-pair cover calculation. -/
-structure xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_data where
-  xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_witness : Unit := ()
+abbrev xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_data := Unit
 
 /-- The seven conjugacy-class representatives in `S₅`, encoded by row number. -/
 def xi_p7_s5_k20_over_k10_oriented_flip_inertia_profile_perm (c n : ℕ) : ℕ :=

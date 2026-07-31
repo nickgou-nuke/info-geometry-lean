@@ -40,10 +40,10 @@ theorem fiber_diff_spectrum_seed :
     This follows because tr([A,B]) = 0 for any A,B, and sl(V) is closed under
     commutators.
     lem:window6-li-traceless -/
-theorem commutator_trace_zero (n : ℕ) (a b : Fin n → Fin n → ℤ)
-    (_ha : (Finset.univ.sum fun i => a i i) = 0)
-    (_hb : (Finset.univ.sum fun i => b i i) = 0) :
-    True := trivial  -- tr([A,B]) = 0 is a general matrix identity; formalized as seed
+theorem commutator_trace_zero (n : ℕ) (a b : Matrix (Fin n) (Fin n) ℤ) :
+    Matrix.trace (a * b - b * a) = 0 := by
+  rw [Matrix.trace_sub, Matrix.trace_mul_comm]
+  simp
 
 /-- Paper: `lem:window6-li-traceless`.
     Window-6 toggle matrices L_i have zero diagonal (and hence zero trace)

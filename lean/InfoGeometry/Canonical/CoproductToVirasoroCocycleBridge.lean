@@ -318,16 +318,13 @@ theorem minimalCasiniIncrementBridge_of_splitChannelRelativeEntropy_match
           = phaseRNGeneratorBefore n (phaseAt k) (T.state k)) :
     MinimalCasiniIncrementBridge (n := n) (H := H) σ u hBridge T
       (splitChannelRelativeEntropyProfile (A := A) S p q) := by
-  refine {
-    cocycle_increment_eq_relEnt_drop := by
-      intro k
-      simpa [splitChannelRelativeEntropyProfile, splitChannelRelativeEntropyDrop] using
-        hCocycleIncrement_matches_split k,
-    relEnt_drop_eq_phaseRN := by
-      intro k
-      simpa [splitChannelRelativeEntropyProfile, splitChannelRelativeEntropyDrop] using
-        hSplitPhaseMatch k
-  }
+  refine ⟨?_, ?_⟩
+  · intro k
+    simpa [splitChannelRelativeEntropyProfile, splitChannelRelativeEntropyDrop] using
+      hCocycleIncrement_matches_split k
+  · intro k
+    simpa [splitChannelRelativeEntropyProfile, splitChannelRelativeEntropyDrop] using
+      hSplitPhaseMatch k
 
 /-- Cocycle generator-lift from split-channel relative-entropy matching.
 
@@ -467,7 +464,7 @@ def information_free_energy : M2R :=
   entropy_flux - log_modular
 
 /-- Local thermodynamic minimum at the symmetry point (`N² = 0` in this sector). -/
-@[simp] theorem information_free_energy_eq_zero (_hNilpotent : N * N = 0) :
+@[simp] theorem information_free_energy_eq_zero :
     information_free_energy = 0 := by
   unfold information_free_energy entropy_flux log_modular
   simp [modularDisplacement_eq]

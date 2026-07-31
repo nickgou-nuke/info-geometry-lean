@@ -721,7 +721,7 @@ theorem canonicalTomitaFlow_commutes_spectralComplementaryProjector_of_wedgeCali
     (canonicalTomitaLogData (E := E) CIK).flow τ * CIK.spectralComplementaryProjector
       =
     CIK.spectralComplementaryProjector * (canonicalTomitaLogData (E := E) CIK).flow τ := by
-  exact (C.flow_commutes_owned_P_D τ).eq
+  exact (C.2.1 τ).eq
 
 /--
 Wedge-calibrated closure (active lane):

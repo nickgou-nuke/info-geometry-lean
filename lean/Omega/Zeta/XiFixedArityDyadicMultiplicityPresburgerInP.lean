@@ -51,16 +51,18 @@ lemma decideLanguage_spec (D : FixedArityDyadicMultiplicityPresburgerData) (x : 
     D.decideLanguage x = true ↔ D.language x := by
   simpa [decideLanguage, dyadicMultiplicity] using D.language_spec x
 
-lemma language_polytimeDecidable (D : FixedArityDyadicMultiplicityPresburgerData) :
+lemma language_polytimeDecidable (D : FixedArityDyadicMultiplicityPresburgerData)
+    (hPoly : Omega.SPG.PolynomialTimeMap D.decideLanguage) :
     Omega.SPG.PolytimeDecidable D.language := by
-  refine ⟨D.decideLanguage, trivial, ?_⟩
+  refine ⟨D.decideLanguage, hPoly, ?_⟩
   intro x
   exact D.decideLanguage_spec x
 
-lemma satLanguage_polytimeDecidable (D : FixedArityDyadicMultiplicityPresburgerData) :
+lemma satLanguage_polytimeDecidable (D : FixedArityDyadicMultiplicityPresburgerData)
+    (hPoly : Omega.SPG.PolynomialTimeMap D.decideLanguage) :
     Omega.SPG.PolytimeDecidable D.satLanguage := by
-  rcases D.language_polytimeDecidable with ⟨decideL, hPoly, hSpec⟩
-  refine ⟨decideL, hPoly, ?_⟩
+  rcases D.language_polytimeDecidable hPoly with ⟨decideL, hDecidePoly, hSpec⟩
+  refine ⟨decideL, hDecidePoly, ?_⟩
   intro x
   constructor
   · intro hx
@@ -68,11 +70,16 @@ lemma satLanguage_polytimeDecidable (D : FixedArityDyadicMultiplicityPresburgerD
   · intro hx
     exact (hSpec x).2 ((D.sat_spec x).1 hx)
 
-lemma satLanguage_barrier (D : FixedArityDyadicMultiplicityPresburgerData) :
+lemma satLanguage_barrier (D : FixedArityDyadicMultiplicityPresburgerData)
+    (hPoly : Omega.SPG.PolynomialTimeMap D.decideLanguage)
+    (hComplement : ∀ decideL : D.Input → Bool,
+      Omega.SPG.PolynomialTimeMap decideL →
+        Omega.SPG.PolynomialTimeMap (fun x => !(decideL x))) :
     D.satManyOneReduction → Omega.SPG.PEqualsNP D.satLanguage := by
   intro _hReduction
-  have hSat : Omega.SPG.PolytimeDecidable D.satLanguage := D.satLanguage_polytimeDecidable
-  exact ⟨Omega.SPG.complement_polytime_decidable hSat, hSat⟩
+  have hSat : Omega.SPG.PolytimeDecidable D.satLanguage :=
+    D.satLanguage_polytimeDecidable hPoly
+  exact ⟨Omega.SPG.complement_polytime_decidable hSat hComplement, hSat⟩
 
 end FixedArityDyadicMultiplicityPresburgerData
 
@@ -83,8 +90,13 @@ resulting fixed Presburger predicate is therefore polynomial-time decidable. Any
 many-one reduction from `SAT` to that language triggers the chapter-local `P = NP` barrier. -/
 theorem paper_xi_fixed_arity_dyadic_multiplicity_presburger_in_p
     (D : FixedArityDyadicMultiplicityPresburgerData) :
+    Omega.SPG.PolynomialTimeMap D.decideLanguage →
+      (∀ decideL : D.Input → Bool, Omega.SPG.PolynomialTimeMap decideL →
+        Omega.SPG.PolynomialTimeMap (fun x => !(decideL x))) →
     Omega.SPG.PolytimeDecidable D.language ∧
       (D.satManyOneReduction → Omega.SPG.PEqualsNP D.satLanguage) := by
-  exact ⟨D.language_polytimeDecidable, D.satLanguage_barrier⟩
+  intro hPoly hComplement
+  exact ⟨D.language_polytimeDecidable hPoly,
+    D.satLanguage_barrier hPoly hComplement⟩
 
 end Omega.Zeta

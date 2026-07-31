@@ -116,13 +116,6 @@ def RoutesCommute
     (C : PenroseDelaunayKleinAmplituhedronCorridor.{u} moving) : Prop :=
   C.dagToAmplituhedronViaKlein = C.dagToAmplituhedronViaDelaunay
 
-/-- Read back a supplied commuting-diagram proof. -/
-theorem routes_commute_readout
-    (C : PenroseDelaunayKleinAmplituhedronCorridor.{u} moving)
-    (h : C.RoutesCommute) :
-    C.RoutesCommute :=
-  h
-
 /--
 The combined corridor packet.
 

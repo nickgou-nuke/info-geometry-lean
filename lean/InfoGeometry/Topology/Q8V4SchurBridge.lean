@@ -51,23 +51,10 @@ theorem q8ToV4_surjective : Function.Surjective q8ToV4 := by
 theorem q8ToV4_central_two : q8ToV4 (a (2 : ZMod 4)) = V4Group.I := by
   rfl
 
-/-- The quotient identifies the center classes `1` and `-1`. -/
-theorem q8ToV4_center_packet :
-    q8ToV4 (a 0) = V4Group.I ∧ q8ToV4 (a (2 : ZMod 4)) = V4Group.I := by
-  constructor <;> rfl
-
 /-- The concrete quaternion-spinor generators anticommute. -/
 theorem q8_spinor_generators_anticommute :
     Q8MonodromySpinorCover.M_i * Q8MonodromySpinorCover.M_j =
       -(Q8MonodromySpinorCover.M_j * Q8MonodromySpinorCover.M_i) :=
   Q8MonodromySpinorCover.M_i_M_j_anticommute
-
-/-- The finite Schur-cover packet: quotient, center kill, and projective shadow. -/
-theorem q8_v4_schur_packet :
-    Function.Surjective q8ToV4 ∧
-      q8ToV4 (a (2 : ZMod 4)) = V4Group.I ∧
-      Q8MonodromySpinorCover.M_i * Q8MonodromySpinorCover.M_j =
-        -(Q8MonodromySpinorCover.M_j * Q8MonodromySpinorCover.M_i) := by
-  exact ⟨q8ToV4_surjective, q8ToV4_central_two, q8_spinor_generators_anticommute⟩
 
 end InfoGeometry.Topology.Q8V4SchurBridge

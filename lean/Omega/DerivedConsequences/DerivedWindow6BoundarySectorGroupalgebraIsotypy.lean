@@ -5,8 +5,7 @@ namespace Omega.DerivedConsequences
 
 /-- Concrete bookkeeping for the eight boundary parity character sectors and the common interior
 group order singled out by the window-`6` boundary direct-factor refinement. -/
-structure derived_window6_boundary_sector_groupalgebra_isotypy_data where
-  witness : Unit := ()
+abbrev derived_window6_boundary_sector_groupalgebra_isotypy_data := Unit
 
 /-- The eight boundary parity character sectors. -/
 def derived_window6_boundary_sector_groupalgebra_isotypy_boundaryCharacterCount : ℕ :=

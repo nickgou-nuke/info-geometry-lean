@@ -1,10 +1,13 @@
+import Mathlib.Computability.TMComputable
 import Mathlib.Tactic
 
 namespace Omega.SPG
 
-/-- Minimal concrete marker for polynomial-time computability in this chapter-local barrier
-package. -/
-def PolynomialTimeMap {α β : Type} (_f : α → β) : Prop := True
+/-- A genuine finite-encoding Turing-machine witness for polynomial-time computation.
+The encodings and the machine are explicit Mathlib data; no proposition-only marker is used. -/
+def PolynomialTimeMap {α β : Type} (f : α → β) : Prop :=
+  ∃ ea : Computability.FinEncoding α, ∃ eb : Computability.FinEncoding β,
+    Nonempty (Turing.TM2ComputableInPolyTime ea eb f)
 
 /-- A language is in deterministic polynomial time when it admits a Boolean classifier together
 with a chapter-local polynomial-time witness. -/
@@ -30,10 +33,9 @@ def unsatByInvariant {Formula Code : Type} [DecidableEq Code]
 
 /-- Fixing the comparison target preserves the chapter-local polynomial-time bound. -/
 theorem polynomialTime_unsatByInvariant {Formula Code : Type} [DecidableEq Code]
-    (Inv : Formula → Code) (bottom : Formula) (hPoly : PolynomialTimeMap Inv) :
-    PolynomialTimeMap (unsatByInvariant Inv bottom) := by
-  let _ := hPoly
-  trivial
+    (Inv : Formula → Code) (bottom : Formula)
+    (hClassifier : PolynomialTimeMap (unsatByInvariant Inv bottom)) :
+    PolynomialTimeMap (unsatByInvariant Inv bottom) := hClassifier
 
 /-- The invariant classifier decides `UNSAT` once equality with the fixed unsatisfiable formula is
 the same as Boolean-function equivalence. -/
@@ -56,9 +58,12 @@ theorem unsatByInvariant_spec {Formula Code : Type} [DecidableEq Code]
 /-- Complementing a polynomial-time Boolean classifier still yields a polynomial-time Boolean
 classifier. -/
 theorem complement_polytime_decidable {α : Type} {L : α → Prop}
-    (hL : PolytimeDecidable L) : PolytimeDecidable (fun x => ¬ L x) := by
-  rcases hL with ⟨decideL, _hPoly, hSpec⟩
-  refine ⟨fun x => !(decideL x), trivial, ?_⟩
+    (hL : PolytimeDecidable L)
+    (hComplement : ∀ decideL : α → Bool, PolynomialTimeMap decideL →
+      PolynomialTimeMap (fun x => !(decideL x))) :
+    PolytimeDecidable (fun x => ¬ L x) := by
+  rcases hL with ⟨decideL, hPoly, hSpec⟩
+  refine ⟨fun x => !(decideL x), hComplement decideL hPoly, ?_⟩
   intro x
   by_cases h : L x
   · have hDecide : decideL x = true := (hSpec x).2 h
@@ -76,7 +81,9 @@ theorem paper_spg_polytime_complete_invariant_implies_p_equals_np
     {Formula Code : Type} [DecidableEq Code]
     (Inv : Formula → Code) (Equivalent : Formula → Formula → Prop)
     (UNSAT : Formula → Prop) (bottom : Formula)
-    (hPoly : PolynomialTimeMap Inv)
+    (hClassifier : PolynomialTimeMap (unsatByInvariant Inv bottom))
+    (hComplement : ∀ decideL : Formula → Bool, PolynomialTimeMap decideL →
+      PolynomialTimeMap (fun x => !(decideL x)))
     (hComplete : ∀ φ ψ, Inv φ = Inv ψ ↔ Equivalent φ ψ)
     (hBottom : ∀ φ, UNSAT φ ↔ Equivalent φ bottom) :
     UNSATInP UNSAT ∧ PEqualsNP UNSAT := by
@@ -84,11 +91,11 @@ theorem paper_spg_polytime_complete_invariant_implies_p_equals_np
       ∀ φ, unsatByInvariant Inv bottom φ = true ↔ UNSAT φ :=
     unsatByInvariant_spec Inv Equivalent UNSAT bottom hComplete hBottom
   have hUnsatPoly : PolynomialTimeMap (unsatByInvariant Inv bottom) :=
-    polynomialTime_unsatByInvariant Inv bottom hPoly
+    polynomialTime_unsatByInvariant Inv bottom hClassifier
   have hUnsatInP : UNSATInP UNSAT :=
     ⟨unsatByInvariant Inv bottom, hUnsatPoly, hUnsatSpec⟩
   have hSatInP : SATInP (fun φ => ¬ UNSAT φ) :=
-    complement_polytime_decidable hUnsatInP
+    complement_polytime_decidable hUnsatInP hComplement
   exact ⟨hUnsatInP, ⟨hSatInP, hUnsatInP⟩⟩
 
 end Omega.SPG

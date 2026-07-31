@@ -330,31 +330,10 @@ structure GWRealFormCriterion
   measurable_real_cocycle :
     Prop
 
-  /-- The three analytic splitting hypotheses are supplied. -/
-  splitting_hypotheses_hold :
-    measure_equivalent_under_complement ∧
-      multiplicity_symmetric ∧
-        measurable_real_cocycle
-
 namespace GWRealFormCriterion
 
 variable {X : Type*}
 variable (G : GWRealFormCriterion X)
-
-/-- Measure-equivalence witness is available. -/
-theorem measure_equivalence_holds :
-    G.measure_equivalent_under_complement :=
-  G.splitting_hypotheses_hold.1
-
-/-- Multiplicity-symmetry witness is available. -/
-theorem multiplicity_symmetry_holds :
-    G.multiplicity_symmetric :=
-  G.splitting_hypotheses_hold.2.1
-
-/-- Measurable real-cocycle witness is available. -/
-theorem measurable_real_cocycle_holds :
-    G.measurable_real_cocycle :=
-  G.splitting_hypotheses_hold.2.2
 
 /-- Complement is involutive. -/
 theorem complement_twice

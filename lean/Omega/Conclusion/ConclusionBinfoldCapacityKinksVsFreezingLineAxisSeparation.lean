@@ -14,8 +14,7 @@ theorem paper_conclusion_binfold_capacity_kinks_vs_freezing_line_axis_separation
     budgetAxis → momentAxis → capacityObject → pressureObject → axisSeparated := by
   have hcapacity :
       capacityKinks :=
-    paper_conclusion_binfold_critical_budget_double_kink_law capacityKinks True capacityKinks hk
-      trivial (fun hcapacityKinks _ => hcapacityKinks)
+    hk
   intro hbudget hmoment hcapacityObject hpressureObject
   exact hsep hcapacity hf hbudget hmoment hcapacityObject hpressureObject
 

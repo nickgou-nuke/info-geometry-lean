@@ -28,7 +28,7 @@ noncomputable def classDInvariantZ2 (mu t : ℝ) : ZMod 2 :=
 The $\mathbb{Z}_2$ invariant is non-trivial ($1$) if and only if the high-symmetry
 Pfaffian product $\text{Pf}(A(0)) \cdot \text{Pf}(A(\pi))$ is strictly negative.
 -/
-theorem classD_oneDimensional_classification (mu t : ℝ) (_ : mu^2 ≠ t^2) :
+theorem classD_oneDimensional_classification (mu t : ℝ) :
     classDInvariantZ2 mu t = 1 ↔ kitaevPfaffianProduct mu t < 0 := by
   unfold classDInvariantZ2
   constructor

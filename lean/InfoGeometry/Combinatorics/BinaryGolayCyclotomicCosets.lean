@@ -2,6 +2,8 @@ import Mathlib.Data.Finset.Basic
 import Mathlib.Data.Finset.Card
 import Mathlib.Data.Finset.Interval
 import Mathlib.Order.Interval.Finset.Nat
+import Mathlib.Tactic.FinCases
+import Mathlib.Tactic.IntervalCases
 import Mathlib.Tactic.NormNum
 
 namespace InfoGeometry.Combinatorics.BinaryGolayCyclotomicCosets
@@ -33,6 +35,27 @@ theorem cosets_cover_nonzero_mod_23 :
 theorem quadraticResidueCoset_double_closed :
     quadraticResidueCoset.image doubleMod23 = quadraticResidueCoset := by
   decide
+
+def quadraticResidueFrobeniusOrbit : Finset ℕ :=
+  Finset.image (fun k : Fin 11 => 2 ^ (k : ℕ) % 23)
+    (Finset.univ : Finset (Fin 11))
+
+theorem quadraticResidueCoset_eq_frobeniusOrbit :
+    quadraticResidueFrobeniusOrbit = quadraticResidueCoset := by
+  ext x
+  simp only [quadraticResidueFrobeniusOrbit, Finset.mem_image, Finset.mem_univ,
+    true_and, quadraticResidueCoset]
+  constructor
+  · rintro ⟨k, rfl⟩
+    fin_cases k <;> decide
+  · intro hx
+    have hxge : 1 ≤ x := by
+      simp only [Finset.mem_insert, Finset.mem_singleton] at hx
+      omega
+    have hxle : x ≤ 18 := by
+      simp only [Finset.mem_insert, Finset.mem_singleton] at hx
+      omega
+    interval_cases x <;> simp_all <;> decide
 
 theorem nonResidueCoset_double_closed :
     nonResidueCoset.image doubleMod23 = nonResidueCoset := by

@@ -114,6 +114,25 @@ theorem stateTopologicalColimitMap_inclusion
       (stateToTopCatCocone sys (cocone := cocone) ω) i
   exact congrArg (fun f => f a) h
 
+/-- The state readout is the unique TopCat morphism with the prescribed
+finite-stage evaluations. -/
+theorem stateTopologicalColimitMap_unique
+    (ω : State Ainf)
+    (f : topologicalColimit Stage sys ⟶ TopCat.of (ULift ℂ))
+    (hf : ∀ (i : I) (a : Stage i),
+      f (topologicalInjection Stage sys i a) =
+        ULift.up (ω.functional (cocone.ι i a))) :
+    f = stateTopologicalColimitMap sys cocone ω := by
+  apply colimit.hom_ext
+  intro i
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro a
+  change f (topologicalInjection Stage sys i a) =
+    stateTopologicalColimitMap sys cocone ω
+      (topologicalInjection Stage sys i a)
+  rw [hf, stateTopologicalColimitMap_inclusion]
+
 /-- The state readout on the topological colimit factors through the
 star-algebraic colimit realization.  This is the colimit-level form of the
 stage compatibility law, with the scalar codomain lifted to the ambient

@@ -172,15 +172,16 @@ are the existing abstract Cuntz `O₂` operators.
 structure BoundaryCuntzShiftPacket
     (Op : Type*) [Ring Op] [StarRing Op] where
   cuntz : CuntzO2Carrier Op
-  leftBoundary : CantorBoundary → CantorBoundary
-  rightBoundary : CantorBoundary → CantorBoundary
-  leftBoundary_eq : leftBoundary = leftShift
-  rightBoundary_eq : rightBoundary = rightShift
 
 namespace BoundaryCuntzShiftPacket
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
 variable (P : BoundaryCuntzShiftPacket Op)
+
+/-- The symbolic boundary maps are definitions, not independent packet data. -/
+def leftBoundary : CantorBoundary → CantorBoundary := leftShift
+
+def rightBoundary : CantorBoundary → CantorBoundary := rightShift
 
 /-- The left algebraic Cuntz branch operator. -/
 def leftOperator : Op :=
@@ -191,12 +192,12 @@ def rightOperator : Op :=
   P.cuntz.S_right
 
 theorem leftBoundary_apply (x : CantorBoundary) :
-    P.leftBoundary x = leftShift x := by
-  rw [P.leftBoundary_eq]
+    leftBoundary x = leftShift x := by
+  rfl
 
 theorem rightBoundary_apply (x : CantorBoundary) :
-    P.rightBoundary x = rightShift x := by
-  rw [P.rightBoundary_eq]
+    rightBoundary x = rightShift x := by
+  rfl
 
 theorem leftOperator_eq_cuntz :
     P.leftOperator = P.cuntz.S_left := by

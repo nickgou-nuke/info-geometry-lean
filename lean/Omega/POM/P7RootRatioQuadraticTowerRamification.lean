@@ -6,8 +6,7 @@ namespace Omega.POM
 
 The projections below record the quadratic presentation in the split `a + b * sqrt(5)` model and
 the supplied norm/ramification certificate used by the paper statement. -/
-structure pom_p7_root_ratio_quadratic_tower_ramification_data where
-  pom_p7_root_ratio_quadratic_tower_ramification_certificate : Unit := ()
+abbrev pom_p7_root_ratio_quadratic_tower_ramification_data := Unit
 
 namespace pom_p7_root_ratio_quadratic_tower_ramification_data
 

@@ -27,10 +27,6 @@ open InfoGeometry.Canonical.BayesianMarkovChain
 
 universe u
 
-/-- Canonical alias for the topology-owned curvature/path packet. -/
-abbrev TopologicalPacket :=
-  InfoGeometry.Topology.MaximumCaliberPath.MaximumCaliberPacket
-
 /-! ## Thermodynamic graph path readbacks -/
 
 section ThermodynamicGraph

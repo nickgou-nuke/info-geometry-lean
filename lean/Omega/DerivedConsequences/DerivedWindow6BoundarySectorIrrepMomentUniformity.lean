@@ -36,7 +36,7 @@ theorem paper_derived_window6_boundary_sector_irrep_moment_uniformity :
           1 / 8) := by
   have hIsotypy :=
     paper_derived_window6_boundary_sector_groupalgebra_isotypy
-      ({ witness := () } :
+      (Unit.unit :
         derived_window6_boundary_sector_groupalgebra_isotypy_data)
   have hUniform :
       derived_window6_boundary_sector_groupalgebra_isotypy_boundaryCharacterCount = 8 ∧

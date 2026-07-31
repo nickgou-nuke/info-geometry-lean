@@ -70,33 +70,25 @@ def op_algebra_fold_weak_hopf_z2x2_sector_closure_groupoid_statement (fold : Ω 
       op_algebra_fold_quantum_channel_weak_hopf_groupoid_basis_action fold x a b =
         op_algebra_fold_quantum_channel_weak_hopf_groupoid_channel_on_basis fold x a b
 
-/-- Concrete closure package for the weak-Hopf `Z₂ × Z₂` sector splitting. -/
-def op_algebra_fold_weak_hopf_z2x2_sector_closure_statement (fold : Ω → X) : Prop :=
-  op_algebra_fold_weak_hopf_z2x2_sector_closure_groupoid_statement fold ∧
-    (∀ σ : ChiSector, op_algebra_fold_weak_hopf_z2x2_sector_closure_sector_block fold σ) ∧
-    (∀ σ : ChiSector, chiSectorIdempotent σ * chiSectorIdempotent σ = chiSectorIdempotent σ) ∧
-    ((∑ σ : ChiSector, chiSectorIdempotent σ) = fun _ => (1 : ℝ)) ∧
-    (∀ σ τ : ChiSector,
-      ∃ υ : ChiSector, υ = op_algebra_fold_weak_hopf_z2x2_sector_closure_sector_mul σ τ) ∧
-    (∀ σ : ChiSector,
-      op_algebra_fold_weak_hopf_z2x2_sector_closure_sector_star σ = σ) ∧
-    (∀ σ : ChiSector,
-      let Δ := op_algebra_fold_weak_hopf_z2x2_sector_closure_sector_comultiplication σ
-      Δ.1 = σ ∧ Δ.2 = σ) ∧
-    (∀ σ : ChiSector,
-      op_algebra_fold_weak_hopf_z2x2_sector_closure_sector_antipode σ = σ) ∧
-    op_algebra_fold_weak_hopf_z2x2_sector_closure_sector_counit ChiSector.pp = 1
-
 end
 
-/-- Paper label: `thm:op-algebra-fold-weak-hopf-z2x2-sector-closure`. -/
-def paper_op_algebra_fold_weak_hopf_z2x2_sector_closure : Prop := by
-  exact
-    ∀ {Ω X : Type*} [Fintype Ω] [DecidableEq Ω] [Fintype X] [DecidableEq X] (fold : Ω → X),
-      op_algebra_fold_weak_hopf_z2x2_sector_closure_statement fold
-
 theorem op_algebra_fold_weak_hopf_z2x2_sector_closure_certified :
-    paper_op_algebra_fold_weak_hopf_z2x2_sector_closure := by
+    ∀ {Ω X : Type*} [Fintype Ω] [DecidableEq Ω] [Fintype X] [DecidableEq X] (fold : Ω → X),
+      op_algebra_fold_weak_hopf_z2x2_sector_closure_groupoid_statement fold ∧
+        (∀ σ : ChiSector, op_algebra_fold_weak_hopf_z2x2_sector_closure_sector_block fold σ) ∧
+        (∀ σ : ChiSector, chiSectorIdempotent σ * chiSectorIdempotent σ = chiSectorIdempotent σ) ∧
+        ((∑ σ : ChiSector, chiSectorIdempotent σ) = fun _ => (1 : ℝ)) ∧
+        (∀ σ τ : ChiSector,
+          ∃ υ : ChiSector, υ = op_algebra_fold_weak_hopf_z2x2_sector_closure_sector_mul σ τ) ∧
+        (∀ σ : ChiSector,
+          op_algebra_fold_weak_hopf_z2x2_sector_closure_sector_star σ = σ) ∧
+        (∀ σ : ChiSector,
+          let Δ := op_algebra_fold_weak_hopf_z2x2_sector_closure_sector_comultiplication σ
+          Δ.1 = σ ∧ Δ.2 = σ) ∧
+        (∀ σ : ChiSector,
+          op_algebra_fold_weak_hopf_z2x2_sector_closure_sector_antipode σ = σ) ∧
+    op_algebra_fold_weak_hopf_z2x2_sector_closure_sector_counit ChiSector.pp = 1 := by
+
   intro Ω X _ _ _ _ fold
   rcases paper_op_algebra_fkdet_chi_sector_factorization
       (w := fun _ : ChiSector => 0) (K := fun _ : ChiSector => 0) with

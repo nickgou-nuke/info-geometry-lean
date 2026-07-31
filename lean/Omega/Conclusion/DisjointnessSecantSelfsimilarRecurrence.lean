@@ -3,10 +3,6 @@ import Mathlib.Tactic
 
 namespace Omega.Conclusion
 
-/-- Regularity condition excluding no extra points in this concrete recurrence model. -/
-def conclusion_disjointness_secant_selfsimilar_recurrence_regular (_q : ℕ) (_lam : ℂ) : Prop :=
-  True
-
 /-- Left scaling branch, matching the `λ / φ` normalization from the paper statement. -/
 noncomputable def conclusion_disjointness_secant_selfsimilar_recurrence_scaleLeft (lam : ℂ) : ℂ :=
   lam / (((1 : ℝ) + Real.sqrt 5) / 2 : ℂ)
@@ -39,8 +35,7 @@ noncomputable def conclusion_disjointness_secant_selfsimilar_recurrence_F (q : �
 
 /-- Paper label: `prop:conclusion-disjointness-secant-selfsimilar-recurrence`. -/
 theorem paper_conclusion_disjointness_secant_selfsimilar_recurrence
-    (q : ℕ) {lam : ℂ}
-    (_hreg : conclusion_disjointness_secant_selfsimilar_recurrence_regular q lam) :
+    (q : ℕ) {lam : ℂ} :
     conclusion_disjointness_secant_selfsimilar_recurrence_F (q + 1) lam =
       conclusion_disjointness_secant_selfsimilar_recurrence_stepLeft *
         conclusion_disjointness_secant_selfsimilar_recurrence_F q

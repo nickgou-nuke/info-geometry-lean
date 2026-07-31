@@ -19,11 +19,8 @@ def unsatByCertificateSynthesis {Formula Certificate : Type}
 chapter-local polynomial-time wrapper. -/
 theorem polynomialTime_unsatByCertificateSynthesis {Formula Certificate : Type}
     (Synth : Formula → Certificate) (Ver : Certificate → AuditVerdict)
-    (hSynth : PolynomialTimeMap Synth) (hVer : PolynomialTimeMap Ver) :
-    PolynomialTimeMap (unsatByCertificateSynthesis Synth Ver) := by
-  let _ := hSynth
-  let _ := hVer
-  trivial
+    (hComposite : PolynomialTimeMap (unsatByCertificateSynthesis Synth Ver)) :
+    PolynomialTimeMap (unsatByCertificateSynthesis Synth Ver) := hComposite
 
 /-- The synthesized classifier decides `UNSAT` exactly when the offline verifier accepts the
 synthesized certificate. -/
@@ -42,19 +39,21 @@ barrier conclusion is `P = NP`.
     thm:spg-polytime-certificate-synthesis-implies-p-equals-np -/
 theorem paper_spg_polytime_certificate_synthesis_implies_p_equals_np
     {Formula Certificate : Type} (UNSAT : Formula → Prop) (Synth : Formula → Certificate)
-    (Ver : Certificate → AuditVerdict) (hSynth : PolynomialTimeMap Synth)
-    (hVer : PolynomialTimeMap Ver)
+    (Ver : Certificate → AuditVerdict)
+    (hComposite : PolynomialTimeMap (unsatByCertificateSynthesis Synth Ver))
+    (hComplement : ∀ decideL : Formula → Bool, PolynomialTimeMap decideL →
+      PolynomialTimeMap (fun x => !(decideL x)))
     (hCorrect : ∀ φ, Ver (Synth φ) = AuditVerdict.pass ↔ UNSAT φ) :
     UNSATInP UNSAT ∧ PEqualsNP UNSAT := by
   have hSpec :
       ∀ φ, unsatByCertificateSynthesis Synth Ver φ = true ↔ UNSAT φ :=
     unsatByCertificateSynthesis_spec UNSAT Synth Ver hCorrect
   have hPoly : PolynomialTimeMap (unsatByCertificateSynthesis Synth Ver) :=
-    polynomialTime_unsatByCertificateSynthesis Synth Ver hSynth hVer
+    polynomialTime_unsatByCertificateSynthesis Synth Ver hComposite
   have hUnsatInP : UNSATInP UNSAT :=
     ⟨unsatByCertificateSynthesis Synth Ver, hPoly, hSpec⟩
   have hSatInP : SATInP (fun φ => ¬ UNSAT φ) :=
-    complement_polytime_decidable hUnsatInP
+    complement_polytime_decidable hUnsatInP hComplement
   exact ⟨hUnsatInP, ⟨hSatInP, hUnsatInP⟩⟩
 
 end Omega.SPG

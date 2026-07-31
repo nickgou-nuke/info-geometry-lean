@@ -84,14 +84,6 @@ def IsSouriauModularHamiltonianOrigin {BetaSource : Type*}
     (C : SouriauModularHamiltonianCarrier (E := E) BetaSource) : Prop :=
   C.superchargeBridge.Ksur = C.freeEnergyOperator
 
-/-- Readback of the calibrated Souriau/free-energy origin predicate. -/
-@[rep_depth operator]
-theorem Ksur_eq_freeEnergy_of_origin {BetaSource : Type*}
-    (C : SouriauModularHamiltonianCarrier (E := E) BetaSource)
-    (h : IsSouriauModularHamiltonianOrigin C) :
-    C.superchargeBridge.Ksur = C.freeEnergyOperator :=
-  h
-
 /--
 Calibration packet connecting the bounded Drazin/supercharge surrogate to the
 operatorial Souriau modular Hamiltonian law.
@@ -330,14 +322,13 @@ This witness is required before identifying the bounded Drazin surrogate with a
 Souriau operator-valued free-energy representative.
 -/
 @[rep_depth operator]
-structure IsOperatorCalibratedBySouriau
+def IsOperatorCalibratedBySouriau
     {Source Obs : Type*}
     [One Obs] [Mul Obs] [Star Obs] [SMul ℝ Obs]
     (S : SouriauFreeEnergyOwner Source Obs)
     (K : BoundedModularHamiltonianSurrogate Obs)
-    (src : Source) : Prop where
-  K_sur_eq_freeEnergyObservable :
-    K.K_sur = S.freeEnergyObservable src
+    (src : Source) : Prop :=
+  K.K_sur = S.freeEnergyObservable src
 
 /--
 Expectation-level calibration.
@@ -346,14 +337,13 @@ This witness states that the compressed expectation of the Souriau operator
 representative is the scalar Souriau free energy.
 -/
 @[rep_depth operator]
-structure IsSouriauFreeEnergyReadoutCalibrated
+def IsSouriauFreeEnergyReadoutCalibrated
     {Source Obs : Type*}
     [One Obs] [Mul Obs] [Star Obs]
     (φA : RealExpectationState Obs)
     (S : SouriauFreeEnergyOwner Source Obs)
-    (src : Source) : Prop where
-  expect_freeEnergyObservable_eq_freeEnergy :
-    φA.expect (S.freeEnergyObservable src) = S.freeEnergy src
+    (src : Source) : Prop :=
+  φA.expect (S.freeEnergyObservable src) = S.freeEnergy src
 
 /--
 Operator-level calibrated equality.
@@ -369,7 +359,7 @@ theorem surrogate_eq_souriau_freeEnergyObservable
     (src : Source)
     (hOp : IsOperatorCalibratedBySouriau S K src) :
     K.K_sur = S.freeEnergyObservable src :=
-  hOp.K_sur_eq_freeEnergyObservable
+  hOp
 
 /--
 Main calibrated expectation bridge.
@@ -392,8 +382,8 @@ theorem surrogate_expectation_eq_souriau_free_energy
     (hOp : IsOperatorCalibratedBySouriau S K src)
     (hRead : IsSouriauFreeEnergyReadoutCalibrated φA S src) :
     φA.expect K.K_sur = S.freeEnergy src := by
-  rw [hOp.K_sur_eq_freeEnergyObservable]
-  exact hRead.expect_freeEnergyObservable_eq_freeEnergy
+  rw [hOp]
+  exact hRead
 
 end ExpectationCalibration
 

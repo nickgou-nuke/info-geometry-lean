@@ -245,21 +245,6 @@ def toRealChainComplex : RealChainComplex where
   boundary := K.boundary
   boundary_boundary := K.boundary_boundary
 
-/-- Readback: coefficient phase squares to `-1` in each degree. -/
-@[rep_depth krein]
-theorem phase_sq_neg_readback
-    (n : ℕ) :
-    (K.phase n).comp (K.phase n) = -(LinearMap.id : K.C n →ₗ[ℝ] K.C n) :=
-  K.phase_sq_neg n
-
-/-- Readback: the boundary is Hestenes phase-semilinear. -/
-@[rep_depth krein]
-theorem boundary_phase_readback
-    (n : ℕ) :
-    (K.boundary n).comp (K.phase (n + 1)) =
-      (K.twist n).sign • ((K.phase n).comp (K.boundary n)) :=
-  K.boundary_phase n
-
 end HestenesChainComplex
 
 end InfoGeometry.Canonical.RealIncidenceHomology

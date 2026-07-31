@@ -791,7 +791,7 @@ theorem nilpotent_comm_self (h : IsDrazinInverse a b k) :
 
 /-- Theorem `fitting_decomposition`. -/
 @[rep_depth krein]
-theorem fitting_decomposition (_h : IsDrazinInverse a b k) :
+theorem fitting_decomposition :
     a = (core a b) + (nilpotent a b) := by
   have hrhs : core a b + nilpotent a b = a := by
     unfold core nilpotent

@@ -193,15 +193,14 @@ Analytic witness for the KL/Pythagorean marginal-descent step at fixed encoder.
 This isolates the genuine measure-theoretic content away from the purely algebraic
 composition theorem in `IBMonotonicity`.
 -/
-structure IBMarginalPythagoreanWitness
+def IBMarginalPythagoreanWitness
     (pX : ProbabilityMeasure X)
     (q_old q_new : ProbabilityMeasure T)
     (β : ℝ) (D : X → T → ℝ)
     (encoder : X → ProbabilityMeasure T)
     (hKL_old : FiniteKLFamily (q_old : Measure T) encoder)
-    (hKL_new : FiniteKLFamily (q_new : Measure T) encoder) : Prop where
-  hKL_marginal : klDivENN (q_new : Measure T) (q_old : Measure T) ≠ ⊤
-  decomposition :
+    (hKL_new : FiniteKLFamily (q_new : Measure T) encoder) : Prop :=
+  ∃ hKL_marginal : klDivENN (q_new : Measure T) (q_old : Measure T) ≠ ⊤,
     IBGlobalFreeEnergy pX q_old β D encoder hKL_old
       =
     IBGlobalFreeEnergy pX q_new β D encoder hKL_new
@@ -212,17 +211,16 @@ Analytic witness for the KL/Pythagorean marginal-descent step at fixed encoder.
 
 This is the inequality-level corollary of the exact Pythagorean decomposition.
 -/
-structure IBMarginalDescentWitness
+def IBMarginalDescentWitness
     (pX : ProbabilityMeasure X)
     (q_old q_new : ProbabilityMeasure T)
     (β : ℝ) (D : X → T → ℝ)
     (encoder : X → ProbabilityMeasure T)
     (hKL_old : FiniteKLFamily (q_old : Measure T) encoder)
-    (hKL_new : FiniteKLFamily (q_new : Measure T) encoder) : Prop where
-  descent :
-    IBGlobalFreeEnergy pX q_new β D encoder hKL_new
-      ≤
-    IBGlobalFreeEnergy pX q_old β D encoder hKL_old
+    (hKL_new : FiniteKLFamily (q_new : Measure T) encoder) : Prop :=
+  IBGlobalFreeEnergy pX q_new β D encoder hKL_new
+    ≤
+  IBGlobalFreeEnergy pX q_old β D encoder hKL_old
 
 omit [Nonempty T] in
 theorem ibMarginalPythagorean_identity_of_marginalization
@@ -458,10 +456,13 @@ theorem IBMarginalDescentWitness.of_pythagorean
       IBMarginalPythagoreanWitness
         pX q_old q_new β D encoder hKL_old hKL_new) :
     IBMarginalDescentWitness pX q_old q_new β D encoder hKL_old hKL_new := by
-  refine ⟨?_⟩
-  rw [h.decomposition]
+  change
+    IBGlobalFreeEnergy pX q_new β D encoder hKL_new
+      ≤
+    IBGlobalFreeEnergy pX q_old β D encoder hKL_old
+  rw [h.2]
   exact le_add_of_nonneg_right
-    (klDiv_nonneg (q_new : Measure T) (q_old : Measure T) h.hKL_marginal)
+    (klDiv_nonneg (q_new : Measure T) (q_old : Measure T) h.1)
 
 omit [Nonempty T] in
 theorem IB_marginal_descent_from_witness
@@ -475,7 +476,7 @@ theorem IB_marginal_descent_from_witness
     IBGlobalFreeEnergy pX q_new β D encoder hKL_new
       ≤
     IBGlobalFreeEnergy pX q_old β D encoder hKL_old :=
-  h.descent
+  h
 
 omit [Nonempty T] in
 theorem IB_marginal_descent_of_pythagorean
@@ -491,10 +492,10 @@ theorem IB_marginal_descent_of_pythagorean
     IBGlobalFreeEnergy pX q_new β D encoder hKL_new
       ≤
     IBGlobalFreeEnergy pX q_old β D encoder hKL_old :=
-  (IBMarginalDescentWitness.of_pythagorean
+    (IBMarginalDescentWitness.of_pythagorean
     (pX := pX) (q_old := q_old) (q_new := q_new)
     (β := β) (D := D) (encoder := encoder)
-    (hKL_old := hKL_old) (hKL_new := hKL_new) h).descent
+    (hKL_old := hKL_old) (hKL_new := hKL_new) h)
 
 theorem IB_next_marginal_descent_from_witness
     (pX : ProbabilityMeasure X)
@@ -516,7 +517,7 @@ theorem IB_next_marginal_descent_from_witness
       ≤
     IBGlobalFreeEnergy pX q_n β D
       (IBNextEncoder q_n β D hInt) hKL_current :=
-  h.descent
+  h
 
 theorem IB_next_marginal_descent_of_pythagorean
     (pX : ProbabilityMeasure X)
@@ -542,6 +543,6 @@ theorem IB_next_marginal_descent_of_pythagorean
     (q_new := IBNextMarginal pX q_n β D hInt h_meas)
     (β := β) (D := D)
     (encoder := IBNextEncoder q_n β D hInt)
-    (hKL_old := hKL_current) (hKL_new := hKL_next) h).descent
+    (hKL_old := hKL_current) (hKL_new := hKL_next) h)
 
 end InfoGeometry.Canonical.IBPythagorean

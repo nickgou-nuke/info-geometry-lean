@@ -324,13 +324,13 @@ nontrivial positive-integer Cuntz shifts have zero left expectation against
 all observables.  This is a proof-carrying assumption, not an analytic
 classification of all KMS states.
 -/
-structure HeckeCuntzExtremeGroundState
+def HeckeCuntzExtremeGroundState
     {G₀ Qab : Type*} [Group G₀] [MulAction G₀ Qab]
     (χ : ℚ → Qab) (ιab : Qab → ℂ)
-    (g : G₀) (φ : Op → ℂ) : Prop where
-  map_one : φ 1 = 1
-  eval_phase : ∀ r : ℚ, φ (crossed.ι (e_rep.e r)) = ιab (g • χ r)
-  eval_shift : ∀ (n : ℕ+) (A : Op), n ≠ 1 → φ (BostConnesKMS.S cuntz n * A) = 0
+    (g : G₀) (φ : Op → ℂ) : Prop :=
+  φ 1 = 1 ∧
+    (∀ r : ℚ, φ (crossed.ι (e_rep.e r)) = ιab (g • χ r)) ∧
+      (∀ (n : ℕ+) (A : Op), n ≠ 1 → φ (BostConnesKMS.S cuntz n * A) = 0)
 
 namespace HeckeCuntzExtremeGroundState
 
@@ -346,7 +346,7 @@ theorem phase_readout
       χ ιab g φ)
     (r : ℚ) :
     φ (crossed.ι (e_rep.e r)) = ιab (g • χ r) :=
-  H.eval_phase r
+  H.2.1 r
 
 /-- Nontrivial Hecke--Cuntz shifts annihilate embedded phase observables. -/
 theorem nontrivial_shift_phase_zero
@@ -355,7 +355,7 @@ theorem nontrivial_shift_phase_zero
       χ ιab g φ)
     {n : ℕ+} (hn : n ≠ 1) (r : ℚ) :
     φ (BostConnesKMS.S cuntz n * crossed.ι (e_rep.e r)) = 0 :=
-  H.eval_shift n (crossed.ι (e_rep.e r)) hn
+  H.2.2 n (crossed.ι (e_rep.e r)) hn
 
 end HeckeCuntzExtremeGroundState
 
@@ -385,7 +385,7 @@ theorem heckeCuntz_extreme_ground_states_faithful
   algebraic_cyclotomic_ground_states_faithful
     (χ := χ) (ι := ιab) (phase := fun r : ℚ => crossed.ι (e_rep.e r))
     (φ₁ := φ₁) (φ₂ := φ₂) (g₁ := g₁) (g₂ := g₂)
-    h_state1.eval_phase h_state2.eval_phase h_embedding_inj h_chi_generating hne
+    h_state1.2.1 h_state2.2.1 h_embedding_inj h_chi_generating hne
 
 /-! ## 6. Inductive compactification, cocycle limit, and rational phase readout -/
 
@@ -428,7 +428,6 @@ cone bridge.  It combines:
 theorem normalCone_cocycle_limit_preserves_rational_phase_periodicity
     (n : ℕ)
     (A : InfoGeometry.Clifford.Cl11TensorTowerLimit.Stage n)
-    (hA : A ∈ StateSpace n)
     (s t : ℝ) (r : ℚ) :
     InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage n A =
         InfoGeometry.Clifford.Cl11TensorTowerLimit.ofStage (n + 1)
@@ -437,7 +436,7 @@ theorem normalCone_cocycle_limit_preserves_rational_phase_periodicity
         DAG.AnalyticBridge.uhfModularFlow s ∘ DAG.AnalyticBridge.uhfModularFlow t ∧
       e_rep.e (r + 1) = e_rep.e r ∧
       crossed.ι (e_rep.e (r + 1)) = crossed.ι (e_rep.e r) := by
-  refine ⟨cone_system_compatible n A hA,
+  refine ⟨cone_system_compatible n A,
     DAG.AnalyticBridge.connes_cocycle_at_limit s t, e_rep.e_periodic r, ?_⟩
   rw [e_rep.e_periodic r]
 

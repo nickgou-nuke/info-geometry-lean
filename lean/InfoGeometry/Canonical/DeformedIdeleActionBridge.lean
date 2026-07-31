@@ -9,9 +9,3 @@ no status field, external-evidence packet, or duplicate witness structure.
 Importing it preserves the historical bridge path while exposing the native
 Cuntz branch commutator, projection, and non-vanishing theorems directly.
 -/
-
-namespace InfoGeometry.Canonical.DeformedIdeleActionBridge
-
-open InfoGeometry.Canonical.DeformedIdeleAction
-
-end InfoGeometry.Canonical.DeformedIdeleActionBridge

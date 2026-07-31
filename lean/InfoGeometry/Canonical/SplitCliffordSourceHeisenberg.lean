@@ -93,40 +93,6 @@ theorem truncLift_of_splitCurrentLiftDatum
     ∀ v : V, ∀ᶠ l : Int in atTop, L.Jlift l v = 0 :=
   L.trunc
 
-/--
-If a split-source lifted current family satisfies the endomorphism-valued Wick
-commutator law, it packages into a split Heisenberg witness.
-
-This is the strict bridge step from source-side lift data to the existing
-`CurrentHeisenbergRep` interface.
--/
-theorem strictWitness_of_splitCurrentLiftDatum
-    {𝕜 V : Type u} [Field 𝕜] [CharZero 𝕜]
-    [AddCommGroup V] [Module 𝕜 V]
-    (L : SplitCliffordSourceCurrent.SplitCurrentLiftDatum (𝕜 := 𝕜) (V := V))
-    (hCommLift : SplitSourceEndWickLaw L.Jlift) :
-    (packagedHeisenbergWitness L.Jlift L.trunc hCommLift).J = L.Jlift ∧
-      (packagedHeisenbergWitness L.Jlift L.trunc hCommLift).trunc = L.trunc ∧
-      (packagedHeisenbergWitness L.Jlift L.trunc hCommLift).comm = hCommLift :=
-  ⟨rfl, rfl, rfl⟩
-
-/--
-The same source-side hypotheses already yield the existing repository
-`CurrentHeisenbergRep` package.
--/
-theorem currentRep_nonempty_of_splitCurrentLiftDatum
-    {𝕜 V : Type u} [Field 𝕜] [CharZero 𝕜]
-    [AddCommGroup V] [Module 𝕜 V]
-    (L : SplitCliffordSourceCurrent.SplitCurrentLiftDatum (𝕜 := 𝕜) (V := V))
-    (hCommLift : SplitSourceEndWickLaw L.Jlift) :
-    (packagedHeisenbergWitness L.Jlift L.trunc hCommLift).toCurrentHeisenbergRep.J =
-        L.Jlift ∧
-      (packagedHeisenbergWitness L.Jlift L.trunc hCommLift).toCurrentHeisenbergRep.trunc =
-        L.trunc ∧
-      (packagedHeisenbergWitness L.Jlift L.trunc hCommLift).toCurrentHeisenbergRep.comm =
-        hCommLift :=
-  ⟨rfl, rfl, rfl⟩
-
 /-! ## Explicit infinite-current consumer readouts -/
 
 /--

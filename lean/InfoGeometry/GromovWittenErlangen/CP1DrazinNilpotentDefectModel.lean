@@ -99,16 +99,6 @@ def defectEdgeDrazin : RelativeCoreNilpotentDecomposition Algebra where
     · norm_num
     · native_decide
 
-/-- The unique edge carries the product denominator `(1, 1)`. -/
-theorem edgeDrazinData_element_line :
-    defectEdgeDrazin.element = (1, 2) :=
-  rfl
-
-/-- The unique edge has a visibly nonzero localized Drazin residue. -/
-theorem edgeLocalizedDrazinResidue_line :
-    defectEdgeDrazin.localizedDrazinResidue = (0, 2) :=
-  rfl
-
 /-- The residue is a genuine square-zero nilpotent in the `ZMod 4` factor. -/
 theorem residue_square_zero :
     ((0, (2 : ZMod 4)) : Algebra) * ((0, (2 : ZMod 4)) : Algebra) = 0 := by

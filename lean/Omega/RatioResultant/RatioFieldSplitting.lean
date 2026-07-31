@@ -11,8 +11,7 @@ open Polynomial
 /-- Concrete seed data for the ratio-field splitting package. The statement proved below is
 independent of the payload; the structure exists only to match the paper-facing theorem signature
 required by the round. -/
-structure RatioFieldSplittingData (K : Type*) [Field K] where
-  dummy : Unit := ()
+abbrev RatioFieldSplittingData (K : Type*) [Field K] := Unit
 
 namespace RatioFieldSplittingData
 

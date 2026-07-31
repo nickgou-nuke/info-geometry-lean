@@ -110,9 +110,9 @@ end GroupAction
 /--
 Equivariance of an algebra homomorphism between two group actions.
 -/
-structure EquivariantHom {G : Type*} [Group G] {A B : Type*} [Ring A] [Algebra ℝ A] [Ring B] [Algebra ℝ B]
-    (actA : GroupAction G A) (actB : GroupAction G B) (φ : A →ₐ[ℝ] B) : Prop where
-  equivariance : ∀ (g : G) (x : A), φ (actA g x) = actB g (φ x)
+def EquivariantHom {G : Type*} [Group G] {A B : Type*} [Ring A] [Algebra ℝ A] [Ring B] [Algebra ℝ B]
+    (actA : GroupAction G A) (actB : GroupAction G B) (φ : A →ₐ[ℝ] B) : Prop :=
+  ∀ (g : G) (x : A), φ (actA g x) = actB g (φ x)
 
 namespace EquivariantHom
 
@@ -126,7 +126,7 @@ This is the pullback step of the fixed-point algebra along finite direct-limit s
 theorem fixedSubalgebra_pullback (h : EquivariantHom actA actB φ) (x : A) (hx : x ∈ actA.fixedSubalgebra) :
     φ x ∈ actB.fixedSubalgebra := by
   intro g
-  rw [← h.equivariance, hx g]
+  rw [← h g x, hx g]
 
 /--
 An equivariant homomorphism induces a canonical algebra homomorphism between the

@@ -75,53 +75,47 @@ theorem spatialAxial_closed_form (Psi : DiracSpinor) :
     Fin.sum_univ_succ]
   ring
 
-/-- Explicit witness with nonzero temporal axial channel. -/
-def temporalWitness : DiracSpinor :=
-  ![1, 0, 1, 0]
-
-/-- Explicit witness with nonzero spatial axial channel. -/
-def spatialWitness : DiracSpinor :=
-  ![1, 1, 0, 0]
-
-/-- Explicit witness with nonzero temporal vielbein channel. -/
-def gravityWitness : DiracSpinor :=
-  ![1, 0, 0, 0]
-
 /-- The temporal vielbein witness evaluates exactly to `1`. -/
 theorem temporalVielbein_gravityWitness_eval :
-    spinorBilinear gravityWitness gamma0 gravityWitness = 1 := by
+    spinorBilinear (![1, 0, 0, 0] : DiracSpinor) gamma0
+        (![1, 0, 0, 0] : DiracSpinor) = 1 := by
   rw [temporalVielbein_closed_form]
-  simp [gravityWitness]
+  simp
 
 /-- The temporal axial witness evaluates exactly to `-2`. -/
 theorem temporalAxial_temporalWitness_eval :
-    spinorBilinear temporalWitness (gamma5 * gamma0) temporalWitness = -2 := by
+    spinorBilinear (![1, 0, 1, 0] : DiracSpinor) (gamma5 * gamma0)
+        (![1, 0, 1, 0] : DiracSpinor) = -2 := by
   rw [temporalAxial_closed_form]
-  simp [temporalWitness]
+  simp
   ring_nf
 
 /-- The spatial axial witness evaluates exactly to `-2`. -/
 theorem spatialAxial_spatialWitness_eval :
-    spinorBilinear spatialWitness (gamma5 * gamma1) spatialWitness = -2 := by
+    spinorBilinear (![1, 1, 0, 0] : DiracSpinor) (gamma5 * gamma1)
+        (![1, 1, 0, 0] : DiracSpinor) = -2 := by
   rw [spatialAxial_closed_form]
-  simp [spatialWitness]
+  simp
   ring_nf
 
 /-- The temporal vielbein witness is genuinely nonzero. -/
 theorem temporalVielbein_gravityWitness_ne_zero :
-    spinorBilinear gravityWitness gamma0 gravityWitness ≠ 0 := by
+    spinorBilinear (![1, 0, 0, 0] : DiracSpinor) gamma0
+        (![1, 0, 0, 0] : DiracSpinor) ≠ 0 := by
   rw [temporalVielbein_gravityWitness_eval]
   norm_num
 
 /-- The temporal axial witness is genuinely nonzero. -/
 theorem temporalAxial_temporalWitness_ne_zero :
-    spinorBilinear temporalWitness (gamma5 * gamma0) temporalWitness ≠ 0 := by
+    spinorBilinear (![1, 0, 1, 0] : DiracSpinor) (gamma5 * gamma0)
+        (![1, 0, 1, 0] : DiracSpinor) ≠ 0 := by
   rw [temporalAxial_temporalWitness_eval]
   norm_num
 
 /-- The spatial axial witness is genuinely nonzero. -/
 theorem spatialAxial_spatialWitness_ne_zero :
-    spinorBilinear spatialWitness (gamma5 * gamma1) spatialWitness ≠ 0 := by
+    spinorBilinear (![1, 1, 0, 0] : DiracSpinor) (gamma5 * gamma1)
+        (![1, 1, 0, 0] : DiracSpinor) ≠ 0 := by
   rw [spatialAxial_spatialWitness_eval]
   norm_num
 

@@ -120,41 +120,4 @@ theorem selfDual_positiveCone (K : SelfDualCone E) :
     ProperCone.innerDual (K.cone : Set E) = K.cone :=
   SelfDualCone.innerDual_eq K
 
-/--
-Bundled theorem-only readout: braided Yang-Baxter, Zorn maximal support,
-finite tensor-tower cone compatibility, tri-facet partition/idempotence, and
-self-dual positive-cone equality all follow from the supplied owner hypotheses.
--/
-theorem braided_zorn_colimit_trifacet_selfDual_readout
-    (τ : C)
-    (family : Set (Set ℕ))
-    (chain_sUnion_mem : ∀ c ⊆ family, IsChain (· ⊆ ·) c → ⋃₀ c ∈ family)
-    (nonempty : family.Nonempty)
-    (iota : ∀ n, A n →ₗ[R] A (n + 1))
-    (psi : ∀ n, A n →ₗ[R] A_inf)
-    (psi_comm : ∀ n, (psi (n + 1)).comp (iota n) = psi n)
-    (T : R) (hT : T ^ 3 = T)
-    (K : SelfDualCone E) :
-    ((α_ τ τ τ).symm ≪≫ whiskerRightIso (β_ τ τ) τ ≪≫ α_ τ τ τ ≪≫
-        whiskerLeftIso τ (β_ τ τ) ≪≫ (α_ τ τ τ).symm ≪≫
-        whiskerRightIso (β_ τ τ) τ ≪≫ α_ τ τ τ =
-          whiskerLeftIso τ (β_ τ τ) ≪≫ (α_ τ τ τ).symm ≪≫
-            whiskerRightIso (β_ τ τ) τ ≪≫ α_ τ τ τ ≪≫
-              whiskerLeftIso τ (β_ τ τ)) ∧
-      (∃ M ∈ family, ∀ X ∈ family, M ⊆ X → X = M) ∧
-      (∀ n m, (psi (n + m)).comp (iota_seq A iota n m) = psi n) ∧
-      (P_hyp T + P_ell T + P_par T = 1) ∧
-      (P_hyp T * P_hyp T = P_hyp T) ∧
-      (P_ell T * P_ell T = P_ell T) ∧
-      (P_par T * P_par T = P_par T) ∧
-      (ProperCone.innerDual (K.cone : Set E) = K.cone) := by
-  exact ⟨fibonacci_yang_baxter_iso τ,
-    zorn_maximal_support family chain_sUnion_mem nonempty,
-    tower_psi_comp_iota_seq iota psi psi_comm,
-    triFacet_partition T,
-    triFacet_hyp_idempotent T hT,
-    triFacet_ell_idempotent T hT,
-    triFacet_par_idempotent T hT,
-    selfDual_positiveCone K⟩
-
 end InfoGeometry.Categorical.FibonacciBraidedTowerCone

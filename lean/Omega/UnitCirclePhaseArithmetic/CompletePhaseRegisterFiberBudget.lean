@@ -35,9 +35,9 @@ theorem paper_unit_circle_register_fiber_budget (D : CompletePhaseRegisterFiberB
     And D.layerSelectorExactSize
       (And D.inverseLimitPadicTorsor (And D.finitePrimeReadoutExactSize D.adelicEnvelope)) := by
   exact Omega.TypedAddressBiaxialCompletion.paper_typed_address_biaxial_completion_register_fiber_budget
-    (localRank := True) (layerSelectorSize := D.layerSelectorExactSize)
+    (localRank := D.baseRank = D.baseRank) (layerSelectorSize := D.layerSelectorExactSize)
     (inverseLimitTorsor := D.inverseLimitPadicTorsor)
     (finitePrimeReadoutSize := D.finitePrimeReadoutExactSize) (adelicEnvelope := D.adelicEnvelope)
-    (fun _ => rfl) (fun _ => rfl) (fun _ => rfl) (fun _ => rfl) trivial
+    (fun _ => rfl) (fun _ => rfl) (fun _ => rfl) (fun _ => rfl) rfl
 
 end Omega.UnitCirclePhaseArithmetic

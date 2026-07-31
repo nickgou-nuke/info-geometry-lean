@@ -13,8 +13,7 @@ inductive conclusion_foldbin_gauge_derived_fitting_composition_factor where
 open conclusion_foldbin_gauge_derived_fitting_composition_factor
 
 /-- Data object for the `m = 6` gauge product decomposition. -/
-structure conclusion_foldbin_gauge_derived_fitting_composition_data where
-  conclusion_foldbin_gauge_derived_fitting_composition_unit : Unit := ()
+abbrev conclusion_foldbin_gauge_derived_fitting_composition_data := Unit
 
 namespace conclusion_foldbin_gauge_derived_fitting_composition_data
 

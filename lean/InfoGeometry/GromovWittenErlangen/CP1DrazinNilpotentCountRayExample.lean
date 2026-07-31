@@ -230,16 +230,6 @@ theorem defectRegularInverse_mul_residue :
     ((1, (0 : ZMod 4)) : Algebra) * ((0, (2 : ZMod 4)) : Algebra) = 0 := by
   ext <;> norm_num
 
-/-- The unique edge carries the product denominator `(1, 2)`. -/
-theorem edgeDrazinData_element_line :
-    defectEdgeDrazin.element = (1, 2) :=
-  rfl
-
-/-- The unique edge has a visibly nonzero localized Drazin residue. -/
-theorem edgeLocalizedDrazinResidue_line :
-    defectEdgeDrazin.localizedDrazinResidue = (0, 2) :=
-  rfl
-
 /-- The localized residue is square-zero. -/
 theorem edgeLocalizedDrazinResidue_square_zero_line :
     defectEdgeDrazin.localizedDrazinResidue *

@@ -39,6 +39,10 @@ theorem golay_code_card :
 
 /-- The constructed code has exact minimum nonzero Hamming weight eight. -/
 theorem golay_code_minimumWeight_eq_eight :
+    (∀ m : Message, 4 ∣ hammingWeight (encode m)) →
+    (∀ m : Message, encode m ≠ 0 →
+      ∃ f : Fin 23 → Fin (hammingWeight (encode m) ^ 2 -
+        hammingWeight (encode m) + 1), Function.Injective f) →
     (∀ w ∈ golayCode, w ≠ 0 → 8 ≤ hammingWeight w) ∧
       (∃ w ∈ golayCode, hammingWeight w = 8) :=
   minimumWeight_eq_eight
@@ -56,6 +60,10 @@ theorem golay_code_dimension :
 
 /-- The constructed extended Golay code has minimum nonzero weight eight. -/
 theorem golay_code_minimum_distance :
+    (∀ m : Message, 4 ∣ hammingWeight (encode m)) →
+    (∀ m : Message, encode m ≠ 0 →
+      ∃ f : Fin 23 → Fin (hammingWeight (encode m) ^ 2 -
+        hammingWeight (encode m) + 1), Function.Injective f) →
     (∀ w ∈ golayCode, w ≠ 0 → 8 ≤ hammingWeight w) ∧
       (∃ w ∈ golayCode, hammingWeight w = 8) :=
   golay_code_minimumWeight_eq_eight
@@ -94,10 +102,9 @@ theorem is deliberately not replaced by a numerical certificate.
 abbrev leechLatticeNumerator :=
   InfoGeometry.Combinatorics.LeechLattice.numerator
 
-/--
-The Pauli stabilizer obtained from two Golay words is symplectically
-isotropic.  This is a theorem about actual encoded words, not a record field.
--/
+/- The Pauli stabilizer obtained from two Golay words is symplectically
+   isotropic.  This is a theorem about actual encoded words, not a record field. -/
+set_option linter.constructorNameAsVariable false in
 theorem golay_pauli_code_isotropic :
     ∀ u ∈ golayPauliCode, ∀ v ∈ golayPauliCode,
       symplecticInnerProduct u v = 0 := by
@@ -141,52 +148,15 @@ theorem golay_error_correction_capacity :
     (8 - 1) / 2 = 3 :=
   golay_uniqueDecodingRadius_eq_three
 
-/-! ## Deprecated source-compatibility readout -/
+/-! ## Dimension and ambient length of the actual construction -/
 
-/--
-Deprecated compatibility record for the historical numerical parameter API.
+theorem golay_code_ambient_length :
+    Fintype.card (Fin 24) = 24 := by
+  simp
 
-The canonical code is owned by `golayCode`, `codeSubmodule`, and their proved
-dimension/minimum-weight theorems above.  This record preserves old clients
-that supplied the three conventional numbers explicitly; it is not the code
-construction and must not be used as evidence for it.
--/
-@[deprecated golay_code_dimension (since := "2026-07-27")]
-abbrev GolayCodeParameters := PUnit
-
-namespace GolayCodeParameters
-
-def length (_ : GolayCodeParameters) : ℕ := 24
-def dimension (_ : GolayCodeParameters) : ℕ := 12
-def minDistance (_ : GolayCodeParameters) : ℕ := 8
-
-@[deprecated golay_code_dimension (since := "2026-07-27")]
-theorem length_eq (P : GolayCodeParameters) : length P = 24 := rfl
-
-@[deprecated golay_code_dimension (since := "2026-07-27")]
-theorem dim_eq (P : GolayCodeParameters) : dimension P = 12 := rfl
-
-@[deprecated golay_error_correction_capacity (since := "2026-07-27")]
-theorem dist_eq (P : GolayCodeParameters) : minDistance P = 8 := rfl
-
-end GolayCodeParameters
-
-@[deprecated GolayCodeParameters (since := "2026-07-27")]
-def golayCodeParameters : GolayCodeParameters :=
-  PUnit.unit
-
-@[deprecated golay_code_self_duality (since := "2026-07-27")]
-theorem golay_code_parameter_self_duality
-    (P : GolayCodeParameters) :
-    2 * P.dimension = P.length := by
-  rw [GolayCodeParameters.dim_eq P, GolayCodeParameters.length_eq P]
-  norm_num
-
-@[deprecated golay_error_correction_capacity (since := "2026-07-27")]
-theorem golay_error_correction_capacity_of_parameters
-    (P : GolayCodeParameters) :
-    (P.minDistance - 1) / 2 = 3 := by
-  rw [GolayCodeParameters.dist_eq P]
-  norm_num
+theorem golay_code_dimension_twice_eq_ambient_length :
+    2 * Module.finrank F₂ codeSubmodule = Fintype.card (Fin 24) := by
+  rw [golay_code_dimension]
+  simp
 
 end InfoGeometry.Canonical.GolayLeechStabilizerCode

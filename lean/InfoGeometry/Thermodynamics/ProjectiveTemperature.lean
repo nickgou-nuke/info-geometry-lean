@@ -159,23 +159,20 @@ finite primitive/Riemann-gas objective integral.
 This is a calibration socket, not a proof of a general measure-substitution
 theorem.
 -/
-structure PrimitiveTemperatureInversionCalibration
-    (A : Finset ℕ) where
-  /-- The supplied change-of-variables law for the restricted partition. -/
-  inversion_integral :
-    (∫ β : ℝ in Set.Ioi 1, primitiveRestrictedPartition A β)
-      =
-    ∫ u : ℝ in Set.Ioo 0 1, primitiveInvertedPartitionDensity A u
+def PrimitiveTemperatureInversionCalibration (A : Finset ℕ) : Prop :=
+  (∫ β : ℝ in Set.Ioi 1, primitiveRestrictedPartition A β)
+    =
+  ∫ u : ℝ in Set.Ioo 0 1, primitiveInvertedPartitionDensity A u
 
 /--
 The primitive weight objective can be read on the compact inverted temperature
 interval once the inversion calibration is supplied.
 -/
 theorem PrimitiveTemperatureInversionCalibration.primitiveWeightSum_eq_inverted_temperature_integral
-    {A : Finset ℕ} (C : PrimitiveTemperatureInversionCalibration A) :
+    {A : Finset ℕ} (hC : PrimitiveTemperatureInversionCalibration A) :
     primitiveWeightSum A =
       ∫ u : ℝ in Set.Ioo 0 1, primitiveInvertedPartitionDensity A u := by
   rw [primitiveWeightSum_eq_integral_mellinKernel A]
-  exact PrimitiveTemperatureInversionCalibration.inversion_integral C
+  exact hC
 
 end InfoGeometry.Thermodynamics.ProjectiveTemperature

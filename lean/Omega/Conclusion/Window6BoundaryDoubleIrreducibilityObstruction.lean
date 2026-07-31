@@ -12,7 +12,7 @@ def conclusion_window6_boundary_double_irreducibility_obstruction_boundary_data 
 
 def conclusion_window6_boundary_double_irreducibility_obstruction_split_data :
     conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_data :=
-  {}
+  Unit.unit
 
 def conclusion_window6_boundary_double_irreducibility_obstruction_center_data
     (D : Window6BoundaryDoubleIrreducibilityData) :

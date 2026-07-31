@@ -22,31 +22,16 @@ structure DefectMeasureRecursiveLayerPeelingData where
     leadingLayerRecovered → layerInversion → currentLayerRecovered
   recoverMeasure : currentLayerRecovered → fullMeasureRecovered
 
-/-- Convert the CircleDimension wrapper into the typed-address comoving layer-peeling package. -/
-def DefectMeasureRecursiveLayerPeelingData.toComovingLayerPeelingData
-    (D : DefectMeasureRecursiveLayerPeelingData) :
-    Omega.TypedAddressBiaxialCompletion.ComovingLayerPeelingData where
-  residualFourierTransform := D.residualFourierTransform
-  leadingDecayGapEstimate := D.decayGapEstimate
-  layerFourierInversion := D.layerInversion
-  residualFourierTransform_h := D.residualFourierTransform_h
-  leadingDecayGapEstimate_h := D.decayGapEstimate_h
-  layerFourierInversion_h := D.layerInversion_h
-  leadingDecayLayerIdentified := D.leadingLayerRecovered
-  layerFourierRecovered := D.currentLayerRecovered
-  fullMeasureRecovered := D.fullMeasureRecovered
-  identifyLeadingLayer := D.recoverLeadingLayer
-  recoverLayer := D.recoverCurrentLayer
-  recoverMeasure := D.recoverMeasure
-
 /-- Paper-facing recursive layer-peeling wrapper: after identifying the leading residual layer,
 the current layer is inverted and finite recursion recovers the full defect measure.
     thm:cdim-defect-measure-recursive-layer-peeling -/
 theorem paper_cdim_defect_measure_recursive_layer_peeling
     (D : DefectMeasureRecursiveLayerPeelingData) :
     D.leadingLayerRecovered ∧ D.currentLayerRecovered ∧ D.fullMeasureRecovered := by
-  simpa [DefectMeasureRecursiveLayerPeelingData.toComovingLayerPeelingData] using
-    Omega.TypedAddressBiaxialCompletion.paper_typed_address_biaxial_completion_comoving_layer_peeling
-      D.toComovingLayerPeelingData
+  exact Omega.TypedAddressBiaxialCompletion.paper_typed_address_biaxial_completion_comoving_layer_peeling
+    D.residualFourierTransform D.decayGapEstimate D.layerInversion
+    D.leadingLayerRecovered D.currentLayerRecovered D.fullMeasureRecovered
+    D.residualFourierTransform_h D.decayGapEstimate_h D.layerInversion_h
+    D.recoverLeadingLayer D.recoverCurrentLayer D.recoverMeasure
 
 end Omega.CircleDimension

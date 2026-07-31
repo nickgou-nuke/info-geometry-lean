@@ -40,14 +40,6 @@ def cartanAdjoint (H X : R) : R :=
 def IsCartanEigenOperator (H X : R) (lam : ℝ) : Prop :=
   cartanAdjoint H X = lam • X
 
-/-- Readback: the infinitesimal law is exactly `ad_H(X)=λX`. -/
-@[rep_depth operator]
-theorem cartanEigenOperator_readback
-    {H X : R} {lam : ℝ}
-    (hX : IsCartanEigenOperator H X lam) :
-    H * X - X * H = lam • X :=
-  hX
-
 /-- The generator commutes with itself, so it has weight zero under its own adjoint action. -/
 @[rep_depth operator]
 theorem cartanAdjoint_self_zero
@@ -187,28 +179,6 @@ structure CartanEigenAdjointExponentialCalibration where
 namespace CartanEigenAdjointExponentialCalibration
 
 variable (C : CartanEigenAdjointExponentialCalibration (R := R))
-
-/-- Readback of the infinitesimal law. -/
-@[rep_depth operator]
-theorem infinitesimal_readback :
-    cartanAdjoint C.H C.X = C.weight • C.X :=
-  C.infinitesimal_law
-
-/-- Readback of the supplied exponential-adjoint law. -/
-@[rep_depth operator]
-theorem exponential_adjoint_readback
-    (t : ℝ) :
-    C.expH t * C.X * C.expNegH t = Real.exp (t * C.weight) • C.X :=
-  C.exponential_adjoint_law t
-
-/-- At time zero, if the exponential carriers act as identities, the readout fixes `X`. -/
-@[rep_depth operator]
-theorem exponential_zero_readback
-    (hpos : C.expH 0 = 1)
-    (hneg : C.expNegH 0 = 1) :
-    C.expH 0 * C.X * C.expNegH 0 = C.X := by
-  rw [hpos, hneg]
-  simp
 
 end CartanEigenAdjointExponentialCalibration
 

@@ -30,7 +30,8 @@ theorem paper_derived_leyang_dyadic_dimension_two
   have hregular := paper_xi_terminal_zm_leyang_finite_branch_regular_4ary_address D
   have hlog :
       Real.log 4 = 2 * Real.log 2 := by
-    exact (paper_derived_leyang_profinite_rigidity True True (Real.log 4) rfl trivial trivial).2.2
+    rw [show (4 : ℝ) = 2 * 2 by norm_num, Real.log_mul (by positivity) (by positivity)]
+    ring
   refine ⟨hregular, ?_, ?_, ?_⟩
   · intro i n
     exact ⟨D.xi_terminal_zm_leyang_finite_branch_regular_4ary_address_finiteBranchEquiv i n⟩

@@ -132,11 +132,4 @@ def grassmannianGr24Packet : SymplecticDualityReadbackPacket (R := ℚ) where
   pointDuality_sq := by intro x; rfl
   charDuality_sq := by intro x; rfl
 
-/-- The six-point proxy readback is the identity. -/
-theorem grassmannianGr24_readback_identity
-    (input : grassmannianGr24Packet.Point → LocalizedIndex ℚ grassmannianGr24Packet.Character) :
-    grassmannianGr24Packet.readback input = input := by
-  funext p χ
-  rfl
-
 end InfoGeometry.Canonical.SymplecticDualityReadback

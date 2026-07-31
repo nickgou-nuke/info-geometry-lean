@@ -28,19 +28,15 @@ def stable_audit_integral_affine_closure_semanticCriterion : Prop :=
     (_i : Fin stable_audit_integral_affine_closure_dashboard_pair_count),
     a + b = b + a
 
-/-- Concrete integral affine dashboard closure statement. -/
-def stable_audit_integral_affine_closure_statement : Prop :=
-  stable_audit_integral_affine_closure_dashboard_pair_count = 498 ∧
-    (∀ i : Fin stable_audit_integral_affine_closure_dashboard_pair_count,
-      i.1 < stable_audit_integral_affine_closure_dashboard_pair_count) ∧
-    (∀ i : Fin stable_audit_integral_affine_closure_dashboard_pair_count,
-      stable_audit_integral_affine_closure_consequentGenerator i ∈
-        stable_audit_integral_affine_closure_antecedentIdeal i) ∧
-    stable_audit_integral_affine_closure_semanticCriterion
-
 /-- Paper label: `thm:stable-audit-integral-affine-closure`. -/
 theorem paper_stable_audit_integral_affine_closure :
-    stable_audit_integral_affine_closure_statement := by
+    stable_audit_integral_affine_closure_dashboard_pair_count = 498 ∧
+      (∀ i : Fin stable_audit_integral_affine_closure_dashboard_pair_count,
+        i.1 < stable_audit_integral_affine_closure_dashboard_pair_count) ∧
+      (∀ i : Fin stable_audit_integral_affine_closure_dashboard_pair_count,
+        stable_audit_integral_affine_closure_consequentGenerator i ∈
+          stable_audit_integral_affine_closure_antecedentIdeal i) ∧
+      stable_audit_integral_affine_closure_semanticCriterion := by
   refine ⟨rfl, ?_, ?_, ?_⟩
   · intro i
     exact i.2

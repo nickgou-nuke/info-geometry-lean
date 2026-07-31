@@ -117,7 +117,6 @@ structure TypedAddressCertificateLoopData where
   repulsionRadiusTendsToOne : Prop
   toeplitzPsdAll : Prop
   toeplitzPsdCofinal : Prop
-  unitarySliceLocked_h : unitarySliceLocked
   deriveRhIffJensenDefectZeroLimit :
     unitarySliceLocked → (rh ↔ jensenDefectZeroLimit)
   deriveJensenDefectZeroLimitIffRepulsionRadiusTendsToOne :
@@ -133,15 +132,16 @@ full Toeplitz positivity, and its cofinal restriction are the same offline certi
 different coordinate systems.
     thm:typed-address-biaxial-completion-certificate-loop -/
 theorem paper_typed_address_biaxial_completion_certificate_loop
-    (D : TypedAddressCertificateLoopData) :
+    (D : TypedAddressCertificateLoopData)
+    (hUnitarySliceLocked : D.unitarySliceLocked) :
     (D.rh ↔ D.jensenDefectZeroLimit) ∧
       (D.jensenDefectZeroLimit ↔ D.repulsionRadiusTendsToOne) ∧
       (D.repulsionRadiusTendsToOne ↔ D.toeplitzPsdAll) ∧
       (D.toeplitzPsdAll ↔ D.toeplitzPsdCofinal) := by
   refine ⟨?_, ?_, ?_, ?_⟩
-  · exact D.deriveRhIffJensenDefectZeroLimit D.unitarySliceLocked_h
-  · exact D.deriveJensenDefectZeroLimitIffRepulsionRadiusTendsToOne D.unitarySliceLocked_h
-  · exact D.deriveRepulsionRadiusTendsToOneIffToeplitzPsdAll D.unitarySliceLocked_h
+  · exact D.deriveRhIffJensenDefectZeroLimit hUnitarySliceLocked
+  · exact D.deriveJensenDefectZeroLimitIffRepulsionRadiusTendsToOne hUnitarySliceLocked
+  · exact D.deriveRepulsionRadiusTendsToOneIffToeplitzPsdAll hUnitarySliceLocked
   · exact D.deriveToeplitzPsdAllIffToeplitzPsdCofinal
 
 end Omega.TypedAddressBiaxialCompletion

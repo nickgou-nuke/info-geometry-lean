@@ -6,8 +6,7 @@ namespace Omega.SyncKernelRealInput
 noncomputable section
 
 /-- Concrete wrapper for the explicit collision-branch cubic package. -/
-structure real_input_40_collision_branch_radius_data where
-  real_input_40_collision_branch_radius_unit : Unit := ()
+abbrev real_input_40_collision_branch_radius_data := Unit
 
 /-- The chapter-local cubic used to model collision-pressure branch formation. -/
 def real_input_40_collision_branch_radius_cubic (u x : ℚ) : ℚ :=

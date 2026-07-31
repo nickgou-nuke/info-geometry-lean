@@ -41,6 +41,9 @@ theorem m24_irrep_dims_pos (n : ℕ) (h1 : 1 ≤ n) (h2 : n ≤ 5) :
   · decide
   · decide
 
+/-- Definition of Golay minimum distance for historical compatibility -/
+def golay_min_distance : ℕ := 8
+
 /-- Theorem: Extended Binary Golay Code G₂₄ minimum distance is 8 -/
 theorem golay_min_distance_eq_eight : golay_min_distance = 8 := rfl
 

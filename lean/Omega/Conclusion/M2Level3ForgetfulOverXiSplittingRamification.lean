@@ -3,8 +3,7 @@ import Mathlib.Tactic
 namespace Omega.Conclusion
 
 /-- Concrete wrapper for the forgetful-map splitting statement over `Ξ`. -/
-structure conclusion_m2_level3_forgetful_over_xi_splitting_ramification_data where
-  conclusion_m2_level3_forgetful_over_xi_splitting_ramification_witness : Unit := ()
+abbrev conclusion_m2_level3_forgetful_over_xi_splitting_ramification_data := Unit
 
 /-- The four lines in a fixed Siegel fiber over the bielliptic locus. -/
 inductive conclusion_m2_level3_forgetful_over_xi_splitting_ramification_line

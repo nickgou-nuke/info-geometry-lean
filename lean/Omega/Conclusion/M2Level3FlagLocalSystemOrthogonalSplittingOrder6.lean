@@ -6,8 +6,7 @@ import Omega.Conclusion.M2Level3XiInertiaHeckeEigensystemsCharpoly
 namespace Omega.Conclusion
 
 /-- Concrete wrapper datum for the audited order-`6` flag-local-system splitting package. -/
-structure conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_data where
-  conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_witness : Unit := ()
+abbrev conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_data := Unit
 
 /-- The common summand is the image `QQ ⊕ V24` of the incidence map. -/
 abbrev conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_common_block :=
@@ -79,7 +78,7 @@ theorem paper_conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6
     conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_statement D := by
   rcases paper_conclusion_m2_level3_incidence_24_identification_kill_minus4 with
     ⟨_, _, hker, hcoker, himage, hV24⟩
-  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys (D := ⟨()⟩) with
+  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys (D := PUnit.unit) with
     ⟨_, _, _, _, hV15KlChar, hV15SiChar, _, _, _⟩
   rcases paper_conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly with
     ⟨_, _, _, _, _, _, hminusKl, _, hminusSi, _, _, _⟩

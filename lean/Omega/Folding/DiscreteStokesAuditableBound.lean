@@ -198,9 +198,10 @@ theorem paper_fold_discrete_stokes_auditable_bound (D : FoldDiscreteStokesAudita
 set_option maxHeartbeats 400000 in
 /-- Publication-facing wrapper for the total-variation auditable bound in the fold-truncation
 paper. -/
-theorem paper_fold_truncation_discrete_stokes_auditable_bound :
-    ∃ (_D : Type) (_K : Nat → Type),
-      True :=
-  foldDiscreteStokesAuditableBound
+theorem paper_fold_truncation_discrete_stokes_auditable_bound
+    (D : FoldDiscreteStokesAuditableBoundData) :
+    D.expectedGap ≤ 2 * D.supNorm * D.globalDefectProb ∧
+      D.globalDefectProb ≤ D.layerwiseDefectProbSum :=
+  paper_fold_discrete_stokes_auditable_bound D
 
 end Omega.Folding

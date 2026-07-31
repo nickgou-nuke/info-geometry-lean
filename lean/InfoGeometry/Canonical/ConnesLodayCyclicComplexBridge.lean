@@ -61,19 +61,20 @@ variable {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
 
 /-- The genuine noncommutative cyclic boundary owner. -/
 abbrev CyclicBoundaryOperator (n : ℕ) [Fintype (Fin n)] [DecidableEq (Fin n)] : Type _ :=
-  ConnesCyclic.CyclicBoundaryOperator n
+  Matrix (Fin n) (Fin n) ℂ →+ Matrix (Fin n) (Fin n) ℂ
 
 /-- Read the owned cyclic boundary map. -/
 abbrev cyclicBoundary (boundary : CyclicBoundaryOperator n) :
     Matrix (Fin n) (Fin n) ℂ → Matrix (Fin n) (Fin n) ℂ :=
-  boundary.1
+  boundary
 
 /-- Nilpotency is forwarded from the owner boundary law. -/
 theorem cyclic_boundary_nilpotent
     (boundary : CyclicBoundaryOperator n)
+    (nilpotent : ∀ X, boundary (boundary X) = 0)
     (X : Matrix (Fin n) (Fin n) ℂ) :
     cyclicBoundary boundary (cyclicBoundary boundary X) = 0 :=
-  ConnesCyclic.CyclicBoundaryOperator.boundary_nilpotent_sq boundary X
+  ConnesCyclic.CyclicBoundaryOperator.boundary_nilpotent_sq boundary nilpotent X
 
 /-- The owned boundary vanishes at zero by additivity. -/
 theorem cyclic_boundary_zero

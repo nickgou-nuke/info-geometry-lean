@@ -4,8 +4,8 @@ namespace Omega.CircleDimension
 
 /-- A log-auditable phase-circle witness records that the audit exponent is realized exactly at
     `d`. -/
-structure LogAuditablePhaseCircleWitness (freeRank torsion d : Nat) : Prop where
-  audit_eq : auditExponent freeRank torsion = d
+def LogAuditablePhaseCircleWitness (freeRank torsion d : Nat) : Prop :=
+  auditExponent freeRank torsion = d
 
 /-- Any value strictly below the circle dimension is obstructed from being a log-auditable
     phase-circle count.
@@ -17,7 +17,7 @@ def LogAuditablePhaseCircleObstruction (freeRank torsion d : Nat) : Prop :=
     always realizable. -/
 theorem logAuditablePhaseCircleWitness_cdim (freeRank torsion fiber : Nat) :
     LogAuditablePhaseCircleWitness freeRank (torsion + fiber) (circleDim freeRank torsion) := by
-  refine ⟨?_⟩
+  dsimp [LogAuditablePhaseCircleWitness]
   calc
     auditExponent freeRank (torsion + fiber) = auditExponent freeRank torsion := by
       exact paper_cdim_finite_fiber_does_not_change_audit_exponent freeRank torsion fiber
@@ -29,7 +29,7 @@ theorem logAuditablePhaseCircleObstruction_not_witness {freeRank torsion d : Nat
     ¬ LogAuditablePhaseCircleWitness freeRank torsion d := by
   intro hw
   have hEq : circleDim freeRank torsion = d := by
-    simpa [auditExponent] using hw.audit_eq
+    simpa [auditExponent] using hw
   have : d < d := by
     simpa [LogAuditablePhaseCircleObstruction, hEq] using h
   exact (Nat.lt_irrefl d) this

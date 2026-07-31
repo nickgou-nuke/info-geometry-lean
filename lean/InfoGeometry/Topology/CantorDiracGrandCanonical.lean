@@ -52,11 +52,6 @@ instance (n : ℕ) : Nonempty (CantorState n) := by
 def occupancy {n : ℕ} (w : CantorState n) : ℝ :=
   ∑ i : Fin n, if w i then 1 else 0
 
-@[simp, rep_depth thermo]
-theorem occupancy_zero {n : ℕ} (w : CantorState n) :
-    occupancy w = ∑ i : Fin n, if w i then 1 else 0 := by
-  rfl
-
 /-! ## 2. Finite Cantor grand-canonical packet -/
 
 /--
@@ -148,123 +143,6 @@ def responseMatrix (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
 @[rep_depth thermo]
 def spinodal2D (B : CantorGrandCanonicalPacket) (β μ : ℝ) : Prop :=
   InfoGeometry.GrandCanonical.Spinodal2D (params B) β μ
-
-@[simp, rep_depth thermo]
-theorem params_energy (B : CantorGrandCanonicalPacket) (w : State B) :
-    (params B).energy w = B.scale B.cutoff * occupancy w := by
-  rfl
-
-@[simp, rep_depth thermo]
-theorem params_number (B : CantorGrandCanonicalPacket) (w : State B) :
-    (params B).number w = occupancy w := by
-  rfl
-
-@[simp, rep_depth thermo]
-theorem partition_eq (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
-    partition B β μ = InfoGeometry.GrandCanonical.partitionGC (params B) β μ := by
-  rfl
-
-@[simp, rep_depth thermo]
-theorem potential_eq (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
-    potential B β μ = InfoGeometry.GrandCanonical.potentialGC (params B) β μ := by
-  rfl
-
-@[simp, rep_depth thermo]
-theorem gibbsWeight_eq (B : CantorGrandCanonicalPacket) (β μ : ℝ) (w : State B) :
-    gibbsWeight B β μ w = InfoGeometry.GrandCanonical.gibbsWeightGC (params B) β μ w := by
-  rfl
-
-/-! ## 3. Grand-canonical theorem wrappers -/
-
-theorem partition_pos (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
-    0 < partition B β μ := by
-  simpa [CantorGrandCanonicalPacket.partition] using
-    InfoGeometry.GrandCanonical.partitionGC_pos (params B) β μ
-
-theorem gibbsWeight_sum_one (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
-    ∑ w, gibbsWeight B β μ w = 1 := by
-  simpa [CantorGrandCanonicalPacket.gibbsWeight] using
-    InfoGeometry.GrandCanonical.gibbsWeightGC_sum_one (params B) β μ
-
-theorem gibbsWeight_nonneg (B : CantorGrandCanonicalPacket) (β μ : ℝ) (w : State B) :
-    0 ≤ gibbsWeight B β μ w := by
-  simpa [CantorGrandCanonicalPacket.gibbsWeight] using
-    InfoGeometry.GrandCanonical.gibbsWeightGC_nonneg (params B) β μ w
-
-theorem gibbsWeight_le_one (B : CantorGrandCanonicalPacket) (β μ : ℝ) (w : State B) :
-    gibbsWeight B β μ w ≤ 1 := by
-  simpa [CantorGrandCanonicalPacket.gibbsWeight] using
-    InfoGeometry.GrandCanonical.gibbsWeightGC_le_one (params B) β μ w
-
-theorem potential_deriv_beta_eq_neg_meanShift (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
-    deriv (fun t => potential B t μ) β = -meanShift B β μ := by
-  simpa [CantorGrandCanonicalPacket.potential, CantorGrandCanonicalPacket.meanShift] using
-    InfoGeometry.GrandCanonical.potentialGC_deriv_beta_eq_neg_meanShift (params B) β μ
-
-theorem potential_deriv_mu_eq_beta_meanNumber (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
-    deriv (fun t => potential B β t) μ = β * meanNumber B β μ := by
-  simpa [CantorGrandCanonicalPacket.potential, CantorGrandCanonicalPacket.meanNumber] using
-    InfoGeometry.GrandCanonical.potentialGC_deriv_mu_eq_beta_meanNumber (params B) β μ
-
-theorem betaResponse_eq_neg_meanShift (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
-    betaResponse B β μ = -meanShift B β μ := by
-  simpa [CantorGrandCanonicalPacket.betaResponse, CantorGrandCanonicalPacket.meanShift] using
-    InfoGeometry.GrandCanonical.betaResponse_eq_neg_meanShift (params B) β μ
-
-theorem muResponse_eq_beta_meanNumber (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
-    muResponse B β μ = β * meanNumber B β μ := by
-  simpa [CantorGrandCanonicalPacket.muResponse, CantorGrandCanonicalPacket.meanNumber] using
-    InfoGeometry.GrandCanonical.muResponse_eq_beta_meanNumber (params B) β μ
-
-theorem betaHessian_eq_varianceShift (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
-    betaHessian B β μ = InfoGeometry.GrandCanonical.varianceShift (params B) β μ := by
-  simpa [CantorGrandCanonicalPacket.betaHessian] using
-    InfoGeometry.GrandCanonical.potentialGC_hessian_beta_beta (params B) β μ
-
-theorem muHessian_eq_beta_sq_varianceNumber (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
-    muHessian B β μ =
-      (β ^ (2 : ℕ)) * InfoGeometry.GrandCanonical.varianceNumber (params B) β μ := by
-  simpa [CantorGrandCanonicalPacket.muHessian] using
-    InfoGeometry.GrandCanonical.potentialGC_hessian_mu_mu (params B) β μ
-
-theorem betaMuHessian_eq_meanNumber_sub_beta_mul_covariance
-    (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
-    betaMuHessian B β μ =
-      InfoGeometry.GrandCanonical.meanNumber (params B) β μ
-        - β * InfoGeometry.GrandCanonical.covarianceShiftNumber (params B) β μ := by
-  simpa [CantorGrandCanonicalPacket.betaMuHessian] using
-    InfoGeometry.GrandCanonical.potentialGC_hessian_beta_mu (params B) β μ
-
-theorem muBetaHessian_eq_meanNumber_sub_beta_mul_covariance
-    (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
-    muBetaHessian B β μ =
-      InfoGeometry.GrandCanonical.meanNumber (params B) β μ
-        - β * InfoGeometry.GrandCanonical.covarianceShiftNumber (params B) β μ := by
-  simpa [CantorGrandCanonicalPacket.muBetaHessian] using
-    InfoGeometry.GrandCanonical.potentialGC_hessian_mu_beta (params B) β μ
-
-theorem betaMuHessian_eq_muBetaHessian (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
-    betaMuHessian B β μ = muBetaHessian B β μ := by
-  rw [betaMuHessian_eq_meanNumber_sub_beta_mul_covariance,
-    muBetaHessian_eq_meanNumber_sub_beta_mul_covariance]
-
-theorem responseMatrix_symmetric (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
-    InfoGeometry.GrandCanonical.ResponseMatrix2.Symmetric (responseMatrix B β μ) := by
-  simpa [CantorGrandCanonicalPacket.responseMatrix] using
-    InfoGeometry.GrandCanonical.responseMatrix_symmetric_of_hessian (params B) β μ
-
-theorem responseMatrix_positiveSemidefinite (B : CantorGrandCanonicalPacket) (β μ : ℝ)
-    (hββ : 0 ≤ betaHessian B β μ)
-    (hμμ : 0 ≤ muHessian B β μ)
-    (hdet : 0 ≤ (responseMatrix B β μ).det) :
-    InfoGeometry.GrandCanonical.ResponseMatrix2.PositiveSemidefinite (responseMatrix B β μ) := by
-  simpa [CantorGrandCanonicalPacket.responseMatrix] using
-    InfoGeometry.GrandCanonical.responseMatrix_positiveSemidefinite (params B) β μ hββ hμμ hdet
-
-theorem spinodal2D_iff_det_eq_zero (B : CantorGrandCanonicalPacket) (β μ : ℝ) :
-    spinodal2D B β μ ↔ (responseMatrix B β μ).det = 0 := by
-  simpa [CantorGrandCanonicalPacket.spinodal2D, CantorGrandCanonicalPacket.responseMatrix] using
-    InfoGeometry.GrandCanonical.spinodal2D_iff_det_eq_zero (params B) β μ
 
 end CantorGrandCanonicalPacket
 

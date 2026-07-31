@@ -54,17 +54,12 @@ def finite_field_linearization_coeff {n : Nat}
         (.finite_field_linearization_mul_a (finite_field_linearization_coeff u i))
         (.finite_field_linearization_mul_b (finite_field_linearization_coeff v i))
 
-/-- The coefficient polynomials of a linearized magma term have degree bounded by its size. -/
-def finite_field_linearization_statement
-    (n : Nat) (t : finite_field_linearization_term n) : Prop :=
-  ∀ i : Fin n,
-    finite_field_linearization_poly_degree (finite_field_linearization_coeff t i) ≤
-      finite_field_linearization_internal_nodes t
-
 /-- Paper label: `thm:finite-field-linearization`. -/
 theorem paper_finite_field_linearization
     (n : Nat) (t : finite_field_linearization_term n) :
-    finite_field_linearization_statement n t := by
+    ∀ i : Fin n,
+      finite_field_linearization_poly_degree (finite_field_linearization_coeff t i) ≤
+        finite_field_linearization_internal_nodes t := by
   intro i
   induction t with
   | finite_field_linearization_var j =>

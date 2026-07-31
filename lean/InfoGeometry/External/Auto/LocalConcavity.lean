@@ -17,7 +17,3 @@ def is_convex (p q r : Point) : Prop :=
 /-- Concavity (clockwise orientation) based on a negative determinant. --/
 def is_concave (p q r : Point) : Prop :=
   orientation_det p q r < 0
-
-/-- Collinearity implies the determinant is exactly zero. --/
-theorem collinear_implies_det_zero (p q r : Point) (h : is_collinear p q r) : orientation_det p q r = 0 :=
-  h

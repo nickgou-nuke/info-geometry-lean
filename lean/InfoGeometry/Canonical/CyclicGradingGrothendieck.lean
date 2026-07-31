@@ -6,6 +6,9 @@ colimit interpretation.
 -/
 
 import Mathlib.Data.ZMod.Basic
+import Mathlib.Algebra.Category.ModuleCat.Basic
+import Mathlib.Algebra.Category.ModuleCat.Colimits
+import Mathlib.CategoryTheory.Limits.Filtered
 import InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 
 noncomputable section
@@ -13,6 +16,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.CyclicGradingGrothendieck
 
 open InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
+open CategoryTheory CategoryTheory.Limits
 
 /-! ## 1. Cyclic groups as grading groups -/
 
@@ -21,25 +25,22 @@ A **cyclic grading group** of order `n` is an abelian group `G` with a
 surjective homomorphism `ℤ → G` whose kernel contains `nℤ`, so that
 `G ≅ ℤ / nℤ`.  This makes `ℤ/nℤ` the canonical cyclic grading group.
 -/
-structure CyclicGradingGroup (n : ℕ) where
-  carrier : Type
-  [instAddCommGroup : AddCommGroup carrier]
-  gen : ℤ → carrier
-  gen_surjective : Function.Surjective gen
-  gen_n_zero : gen (n : ℤ) = 0
+abbrev CyclicGradingGroup (n : ℕ) := ZMod n
 
 /--
 The cyclic group `ℤ/nℤ` is the canonical cyclic grading group of order `n`.
 -/
-def canonicalCyclicGradingGroup (n : ℕ) [NeZero n] : CyclicGradingGroup n where
-  carrier := ZMod n
-  instAddCommGroup := inferInstance
-  gen := fun (k : ℤ) => (k : ZMod n)
-  gen_surjective := by
-    intro x
-    refine ⟨(x.val : ℤ), ?_⟩
-    simp
-  gen_n_zero := by simp
+abbrev canonicalCyclicGradingGroup (n : ℕ) [NeZero n] : Type := ZMod n
+
+theorem canonicalCyclicGradingGroup_gen_surjective (n : ℕ) [NeZero n] :
+    Function.Surjective (fun k : ℤ => (k : CyclicGradingGroup n)) := by
+  intro x
+  refine ⟨(x.val : ℤ), ?_⟩
+  simp
+
+@[simp] theorem canonicalCyclicGradingGroup_gen_n_zero (n : ℕ) [NeZero n] :
+    ((n : ℤ) : CyclicGradingGroup n) = 0 := by
+  simp
 
 /-! ## 2. Grading-index embedding for the 5-grading -/
 
@@ -100,12 +101,106 @@ class GradedMonoidUnit (I : Type*) [AddMonoid I] (A : I → Type*)
 /--
 The **Grothendieck colimit** across an ℕ-indexed diagram with shift maps.
 -/
-structure GrothendieckColimit (A : ℕ → Type*) [∀ n, AddCommGroup (A n)]
-    (shiftMap : ∀ n : ℕ, A n → A (n + 1)) where
-  colimitGroup : Type
-  [colimitAddCommGroup : AddCommGroup colimitGroup]
-  ι : ∀ n : ℕ, A n → colimitGroup
-  commutativity : ∀ (n : ℕ) (x : A n), ι (n + 1) (shiftMap n x) = ι n x
+def grothendieckMap
+    (A : ℕ → Type*) [∀ n, AddCommGroup (A n)]
+    (shiftMap : ∀ n : ℕ, A n →+ A (n + 1))
+    {i j : ℕ} (hij : i ≤ j) : A i →+ A j :=
+  Nat.leRecOn hij
+    (fun {k} (f : A i →+ A k) => (shiftMap k).comp f)
+    (AddMonoidHom.id (A i))
+
+@[simp] theorem grothendieckMap_id
+    (A : ℕ → Type*) [∀ n, AddCommGroup (A n)]
+    (shiftMap : ∀ n : ℕ, A n →+ A (n + 1)) (i : ℕ) :
+    grothendieckMap A shiftMap (le_refl i) = AddMonoidHom.id (A i) := by
+  dsimp [grothendieckMap]
+  exact Nat.leRecOn_self (C := fun k => A i →+ A k) (AddMonoidHom.id (A i))
+
+theorem grothendieckMap_succ
+    (A : ℕ → Type*) [∀ n, AddCommGroup (A n)]
+    (shiftMap : ∀ n : ℕ, A n →+ A (n + 1))
+    {i j : ℕ} (hij : i ≤ j) :
+    grothendieckMap A shiftMap (Nat.le.step hij) =
+      (shiftMap j).comp (grothendieckMap A shiftMap hij) := by
+  dsimp [grothendieckMap]
+  exact Nat.leRecOn_succ (C := fun k => A i →+ A k) hij
+    (AddMonoidHom.id (A i))
+
+theorem grothendieckMap_comp
+    (A : ℕ → Type*) [∀ n, AddCommGroup (A n)]
+    (shiftMap : ∀ n : ℕ, A n →+ A (n + 1))
+    {i j k : ℕ} (hij : i ≤ j) (hjk : j ≤ k) :
+    (grothendieckMap A shiftMap hjk).comp
+        (grothendieckMap A shiftMap hij) =
+      grothendieckMap A shiftMap (le_trans hij hjk) := by
+  induction hjk with
+  | refl =>
+      rw [grothendieckMap_id]
+      simp
+  | step hjm ih =>
+      rw [grothendieckMap_succ A shiftMap hjm,
+        grothendieckMap_succ A shiftMap (le_trans hij hjm),
+        AddMonoidHom.comp_assoc, ih]
+
+def grothendieckDiagram
+    (A : ℕ → Type*) [∀ n, AddCommGroup (A n)]
+    (shiftMap : ∀ n : ℕ, A n →+ A (n + 1)) :
+    ℕ ⥤ ModuleCat ℤ where
+  obj n := ModuleCat.of ℤ (A n)
+  map f := ModuleCat.ofHom
+    (grothendieckMap A shiftMap (leOfHom f)).toIntLinearMap
+  map_id n := by
+    apply ModuleCat.hom_ext
+    change (grothendieckMap A shiftMap (le_refl n)).toIntLinearMap = LinearMap.id
+    rw [grothendieckMap_id]
+    rfl
+  map_comp f g := by
+    apply ModuleCat.hom_ext
+    change
+      (grothendieckMap A shiftMap (le_trans (leOfHom f) (leOfHom g))).toIntLinearMap =
+        (grothendieckMap A shiftMap (leOfHom g)).toIntLinearMap.comp
+          (grothendieckMap A shiftMap (leOfHom f)).toIntLinearMap
+    have h := congrArg AddMonoidHom.toIntLinearMap
+      (grothendieckMap_comp A shiftMap (leOfHom f) (leOfHom g)).symm
+    simpa [AddMonoidHom.comp_apply, LinearMap.comp_apply] using h
+
+abbrev GrothendieckColimit
+    (A : ℕ → Type*) [∀ n, AddCommGroup (A n)]
+    (shiftMap : ∀ n : ℕ, A n →+ A (n + 1)) : Type _ :=
+  (colimit (grothendieckDiagram A shiftMap) : ModuleCat ℤ)
+
+def grothendieckInjection
+    (A : ℕ → Type*) [∀ n, AddCommGroup (A n)]
+    (shiftMap : ∀ n : ℕ, A n →+ A (n + 1)) (n : ℕ) :
+    A n →+ GrothendieckColimit A shiftMap :=
+  (colimit.ι (grothendieckDiagram A shiftMap) n).hom.toAddMonoidHom
+
+theorem grothendieckInjection_naturality
+    (A : ℕ → Type*) [∀ n, AddCommGroup (A n)]
+    (shiftMap : ∀ n : ℕ, A n →+ A (n + 1))
+    (n : ℕ) (x : A n) :
+    grothendieckInjection A shiftMap (n + 1) (shiftMap n x) =
+      grothendieckInjection A shiftMap n x := by
+  change (colimit.ι (grothendieckDiagram A shiftMap) (n + 1)).hom
+      (shiftMap n x) = (colimit.ι (grothendieckDiagram A shiftMap) n).hom x
+  have hmap :
+      (grothendieckDiagram A shiftMap).map (homOfLE (Nat.le_succ n)) =
+        ModuleCat.ofHom (shiftMap n).toIntLinearMap := by
+    apply ModuleCat.hom_ext
+    change (grothendieckMap A shiftMap
+      (leOfHom (homOfLE (Nat.le_succ n)))).toIntLinearMap =
+      (shiftMap n).toIntLinearMap
+    have hle : leOfHom (homOfLE (Nat.le_succ n)) = Nat.le_succ n :=
+      Subsingleton.elim _ _
+    rw [hle]
+    rw [show Nat.le_succ n = Nat.le.step (le_refl n) from Subsingleton.elim _ _]
+    rw [grothendieckMap_succ A shiftMap (le_refl n)]
+    rw [grothendieckMap_id]
+    rfl
+  have h := (colimit.cocone (grothendieckDiagram A shiftMap)).w
+    (homOfLE (Nat.le_succ n))
+  rw [hmap] at h
+  exact congrArg (fun f => f x) h
 
 /-! ## 4. Five-grading as ℤ/5ℤ-grading -/
 
@@ -145,11 +240,15 @@ class CyclicFiveGradingBracket (L : Type*) [AddCommGroup L] [Module ℝ L]
 /-! ## 5. The cyclic tower ℤ/1ℤ → ⋯ → ℤ/5ℤ -/
 
 /--
-Natural inclusion `ZMod m → ZMod n` when `m ∣ n`.
+Canonical quotient morphism `ZMod n →+* ZMod m` when `m ∣ n`.
+
+The divisibility direction is essential: `ZMod.castHom` supplies the
+well-defined reduction map, whereas a map in the opposite direction is not
+canonical in general.
 -/
 noncomputable
-def zmodInclusion {m n : ℕ} (_h : m ∣ n) : ZMod m → ZMod n :=
-  fun x => (x.val : ZMod n)
+def zmodInclusion {m n : ℕ} (h : m ∣ n) : ZMod n →+* ZMod m :=
+  ZMod.castHom h (ZMod m)
 
 /--
 The tower `ℤ/1ℤ → ℤ/2ℤ → ℤ/3ℤ → ℤ/4ℤ → ℤ/5ℤ` as a `Fin 5`-indexed family.

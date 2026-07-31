@@ -74,11 +74,4 @@ theorem glide01_linear_part_preserves_splitNorm (x : Vec55) :
     splitNorm55 (reflect0 x) = splitNorm55 x :=
   reflect0_preserves_splitNorm x
 
-/-- Packet combining the mandatory reflection and glide identities. -/
-theorem pin55_reflection_and_glide_packet (x : Vec55) :
-    splitNorm55 (reflect0 x) = splitNorm55 x ∧
-      reflect0 (reflect0 x) = x ∧
-        glide01 (glide01 x) = translate1 1 x := by
-  exact ⟨reflect0_preserves_splitNorm x, reflect0_involutive x, glide01_squared_eq_translate1 x⟩
-
 end InfoGeometry.Topology.Pin55ReflectionGlide

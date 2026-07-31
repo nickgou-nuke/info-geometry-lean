@@ -14,11 +14,6 @@ structure NambuSpinor (α : Type*) where
 def isBogoliubovNormalized (u v : ℝ) : Prop :=
   u^2 + v^2 = 1
 
-/-- **Theorem**: Bogoliubov Quasiparticle Normalization Identity. -/
-theorem bogoliubov_unit_sphere (u v : ℝ) (h : u^2 + v^2 = 1) :
-    isBogoliubovNormalized u v :=
-  h
-
 /-- **Definition**: BdG Quasiparticle Excitation Energy E² = ξ² + Δ². -/
 def bdgEnergySq (xi delta : ℝ) : ℝ :=
   xi^2 + delta^2
@@ -39,7 +34,7 @@ theorem master_nambu_gorkov_bdg_synthesis
     (isBogoliubovNormalized u v) ∧
     (bdgEnergySq xi delta = xi^2 + delta^2) ∧
     (bdgEnergySq 0 0 = 0) := ⟨
-  bogoliubov_unit_sphere u v h_norm,
+  h_norm,
   rfl,
   bdg_energy_zero
 ⟩

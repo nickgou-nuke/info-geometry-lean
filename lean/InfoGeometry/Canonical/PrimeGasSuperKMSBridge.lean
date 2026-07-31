@@ -88,32 +88,6 @@ def PrimeGasSuperKMSBridge.superTemperature
     (B : PrimeGasSuperKMSBridge) : SuperGeometricTemperature :=
   toSuperGeometricTemperature B.kmsTarget
 
-/--
-Compatibility is reflexivity for the canonical KMS-owned temperature.
-
-The historical theorem name is retained for downstream compatibility; no
-witness packet is involved.
--/
-theorem superTemperature_eq_toSuperGeometricTemperature_of_witness
-    (K : PrimeGasKMSTargetBridge) :
-    toSuperGeometricTemperature K = K.superTemperature :=
-  toSuperGeometricTemperature_eq K
-
-/--
-Historical compatibility name, now exposing the canonical equality directly
-instead of constructing an evidence record.
--/
-theorem PrimeGasSuperKMSBridge.toSuperTemperatureCompatibilityWitness
-    (B : PrimeGasSuperKMSBridge) :
-    B.superTemperature = toSuperGeometricTemperature B.kmsTarget :=
-  rfl
-
-/-- Direct readback of the bridge temperature/KMS compatibility. -/
-theorem PrimeGasSuperKMSBridge.superTemperature_eq_toSuperGeometricTemperature_viaWitness
-    (B : PrimeGasSuperKMSBridge) :
-    B.superTemperature = toSuperGeometricTemperature B.kmsTarget :=
-  B.toSuperTemperatureCompatibilityWitness
-
 namespace PrimeGasSuperKMSBridge
 
 variable (B : PrimeGasSuperKMSBridge)

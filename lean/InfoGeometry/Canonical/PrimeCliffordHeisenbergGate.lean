@@ -34,29 +34,26 @@ structure CliffordMajoranaVacuum (D : MobiusMertensData) where
   zero_point_eq_half : zero_point_exponent = 1 / 2
 
 /-- Witness for saturation of the Heisenberg lower bound. -/
-class SaturatesHeisenbergBound
+def SaturatesHeisenbergBound
     {D : MobiusMertensData}
-    (V : CliffordMajoranaVacuum D) : Prop where
-  is_minimal_uncertainty :
-    ∀ N : ℕ,
-      V.dispersion_x N * V.dispersion_ω N = (1 / 4 : ℝ)
+    (V : CliffordMajoranaVacuum D) : Prop :=
+  ∀ N : ℕ,
+    V.dispersion_x N * V.dispersion_ω N = (1 / 4 : ℝ)
 
 /--
 Explicit bridge from vacuum dispersion to Mertens control.  This is the actual
 analytic obligation; it is supplied, not proved from saturation alone.
 -/
 @[rep_depth operator]
-structure CliffordLDPBridge
+def CliffordLDPBridge
     {D : MobiusMertensData}
-    (V : CliffordMajoranaVacuum D) where
-  mertens_bounded_by_dispersion :
-    ∀ N : ℕ, |(D.M N : ℝ)| ≤ V.dispersion_x N
-  dispersion_scaling :
-    ∀ ε : ℝ, 0 < ε →
-      ∃ C : ℝ, 0 < C ∧
-        ∃ N0 : ℕ,
-          ∀ N : ℕ, N0 ≤ N → 1 ≤ N →
-            V.dispersion_x N ≤ C * Real.rpow (N : ℝ) (1 / 2 + ε)
+    (V : CliffordMajoranaVacuum D) : Prop :=
+  (∀ N : ℕ, |(D.M N : ℝ)| ≤ V.dispersion_x N) ∧
+  (∀ ε : ℝ, 0 < ε →
+    ∃ C : ℝ, 0 < C ∧
+      ∃ N0 : ℕ,
+        ∀ N : ℕ, N0 ≤ N → 1 ≤ N →
+          V.dispersion_x N ≤ C * Real.rpow (N : ℝ) (1 / 2 + ε))
 
 /-- The gate object: all content is proof-carrying data, with no `True` target. -/
 @[rep_depth operator]
@@ -72,9 +69,9 @@ variable {D : MobiusMertensData}
 /-- The gate exposes the supplied dispersion-to-Mertens bound. -/
 @[rep_depth operator]
 theorem mertens_bounded_by_dispersion
-    (G : HeisenbergMertensGate D) (N : ℕ) :
+  (G : HeisenbergMertensGate D) (N : ℕ) :
     |(D.M N : ℝ)| ≤ G.vacuum.dispersion_x N :=
-  G.bridge.mertens_bounded_by_dispersion N
+  G.bridge.1 N
 
 /--
 The gate exposes the supplied RH-scale dispersion bound as an explicit
@@ -89,14 +86,14 @@ theorem dispersion_scaling
           ∀ N : ℕ, N0 ≤ N → 1 ≤ N →
             G.vacuum.dispersion_x N ≤
               C * Real.rpow (N : ℝ) (1 / 2 + ε) :=
-  G.bridge.dispersion_scaling
+  G.bridge.2
 
 /-- The gate exposes saturation of the Heisenberg lower bound. -/
 @[rep_depth operator]
 theorem saturated_uncertainty
     (G : HeisenbergMertensGate D) (N : ℕ) :
     G.vacuum.dispersion_x N * G.vacuum.dispersion_ω N = (1 / 4 : ℝ) :=
-  G.saturation.is_minimal_uncertainty N
+  G.saturation N
 
 /-- The zero-point exponent is the supplied half exponent. -/
 @[rep_depth operator]

@@ -41,8 +41,8 @@ def TKKGrading (i : ℤ) : Prop := i ∈ ({-2, -1, 0, 1, 2} : Set ℤ)
 We construct the witness by projecting onto the purely bosonic sector,
 which universally forces the fermionic modes to zero, thus trivializing
 the superconformal anomaly natively reflecting Tr(Γ₁₁) = 0. -/
-class O55ChiralParityZero (J ψ : ℤ → Module.End 𝕜 V) : Prop where
-  fermionic_sector_projected_out : ψ = fun _ => 0
+def O55ChiralParityZero (J ψ : ℤ → Module.End 𝕜 V) : Prop :=
+  ψ = fun _ => 0
 
 namespace O55ChiralParityZero
 
@@ -51,7 +51,7 @@ theorem trace_gamma_11_zero
     {J ψ : ℤ → Module.End 𝕜 V}
   (h : O55ChiralParityZero J ψ) :
     ψ 0 = 0 := by
-  rw [h.fermionic_sector_projected_out]
+  rw [h]
 
 end O55ChiralParityZero
 
@@ -62,32 +62,31 @@ lemma weyl_group_D5_order : 2^4 * Nat.factorial 5 = 1920 := by rfl
 The Klein Quadric boundary (Q = 0) represents the on-shell factorization
 replacing the standard torus. It is characterized by nilpotent 
 chiral generators S_plus^2 = 0 and S_minus^2 = 0. -/
-class KleinTubeBoundary (S_plus S_minus : Module.End 𝕜 V) : Prop where
-  nilpotent_plus : S_plus * S_plus = 0
-  nilpotent_minus : S_minus * S_minus = 0
+def KleinTubeBoundary (S_plus S_minus : Module.End 𝕜 V) : Prop :=
+  S_plus * S_plus = 0 ∧ S_minus * S_minus = 0
 
 /-- The topological constraint of the Klein Quadric Boundary replaces the standard torus. -/
 theorem on_shell_factorization_klein_quadric
-    (S_plus S_minus : Module.End 𝕜 V) [h : KleinTubeBoundary S_plus S_minus] :
+    (S_plus S_minus : Module.End 𝕜 V) (h : KleinTubeBoundary S_plus S_minus) :
     S_plus ^ 2 = 0 ∧ S_minus ^ 2 = 0 := by
   constructor
-  · exact h.nilpotent_plus
-  · exact h.nilpotent_minus
+  · exact h.1
+  · exact h.2
 
 /-- The Pin(5,5) symmetry double-covering O(5,5), necessary for unoriented string worldsheets 
 (Klein bottle replacing the torus). It incorporates orientation-reversing glide reflections. -/
-class Pin55Symmetry (P : Module.End 𝕜 V) : Prop where
-  is_glide_reflection : P * P = 1
+def Pin55Symmetry (P : Module.End 𝕜 V) : Prop :=
+  P * P = 1
 
 /-- The Klein Bottle boundary intrinsically relies on Pin(5,5) glide reflections. -/
-theorem klein_bottle_requires_pin55 (P : Module.End 𝕜 V) [h : Pin55Symmetry P] :
+theorem klein_bottle_requires_pin55 (P : Module.End 𝕜 V) (h : Pin55Symmetry P) :
   P ^ 2 = 1 := by
-  exact h.is_glide_reflection
+  exact h
 
 /-- The orientation-reversal readout is the same involutive glide law carried by the Pin packet. -/
-theorem pin55_orientation_reversal_readout (P : Module.End 𝕜 V) [h : Pin55Symmetry P] :
+theorem pin55_orientation_reversal_readout (P : Module.End 𝕜 V) (h : Pin55Symmetry P) :
     P * P = 1 :=
-  h.is_glide_reflection
+  h
 
 end O55Representation
 
@@ -96,19 +95,20 @@ open O55Representation
 /-- Under the zero chiral parity condition (anomaly cancellation), the boundary defect vanishes universally. -/
 theorem o55_tkk_anomaly_cancellation
     (m r : ℤ) (J ψ : ℤ → Module.End 𝕜 V)
-    [h : O55ChiralParityZero J ψ] :
+    (h : O55ChiralParityZero J ψ) :
     ∀ N > 5, boundaryDefect_LG (𝕜 := 𝕜) N m r J ψ = 0 := by
   intro N _
-  rw [h.fermionic_sector_projected_out]
+  rw [h]
   exact boundaryDefect_LG_eq_zero_of_psi_zero N m r J
 
 /-- The exact Super Bracket closure on the Virasoro modes for Cl(5,5) splits. -/
 theorem o55_superBracket_LG_exact
     (m r : ℤ) (J ψ : ℤ → Module.End 𝕜 V)
-    [O55ChiralParityZero J ψ] (N : ℤ) (hN : N > 5) :
+    (h : O55ChiralParityZero J ψ) (N : ℤ) (hN : N > 5) :
     L_trunc N m J ψ * G_trunc N r J ψ - G_trunc N r J ψ * L_trunc N m J ψ =
       (m / 2 - r : 𝕜) • G_trunc N (m + r) J ψ := by
-  have hdef : boundaryDefect_LG (𝕜 := 𝕜) N m r J ψ = 0 := o55_tkk_anomaly_cancellation m r J ψ N hN
+  have hdef : boundaryDefect_LG (𝕜 := 𝕜) N m r J ψ = 0 :=
+    o55_tkk_anomaly_cancellation m r J ψ h N hN
   have h_base := superBracket_LG_decompose (𝕜 := 𝕜) N m r J ψ
   rw [hdef] at h_base
   rw [add_zero] at h_base

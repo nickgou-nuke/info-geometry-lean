@@ -280,9 +280,6 @@ def signDatum : DIIISignDatum (EndR H) where
   Xi_sq := D.Xi_sq
   Theta_Xi_anticomm := D.Theta_Xi_anticomm
 
-/-- The DIII chiral grading is phase-linear. -/
-alias chi_commutes_phase := DIIISuperfluidDatum.chi_phase_linear
-
 /-- The DIII chiral grading square is derived from the DIII sign skeleton. -/
 theorem chi_sq_derived :
     D.chi.comp D.chi = ContinuousLinearMap.id ℝ H := by
@@ -300,9 +297,6 @@ theorem Xi_flips_chi :
     (D.Xi.comp D.chi).comp D.Xi = -D.chi := by
   simpa [signDatum, DIIISignDatum.chi, D.chi_eq] using
     (D.signDatum.Xi_flips_chi)
-
-/-- The DIII BdG generator is chiral-odd. -/
-alias chiral_odd_BdG := DIIISuperfluidDatum.chi_BdG
 
 end DIIISuperfluidDatum
 
@@ -403,14 +397,5 @@ theorem dIIISuperfluidOwnerTarget :
   exact ⟨D.K_sq, D.Theta_reverses_phase, D.Xi_reverses_phase,
     D.Theta_sq, D.Xi_sq, D.Theta_Xi_anticomm, D.chi_eq, D.chi_sq,
     D.chi_phase_linear, D.Xi_BdG, D.Theta_BdG, D.chi_BdG⟩
-
-/-- A supplied DIII datum exposes the chiral and BdG laws used downstream. -/
-theorem dIIISuperfluidDatum_packet
-    {H : Type uH} [NormedAddCommGroup H] [NormedSpace ℝ H]
-    (D : DIIISuperfluidDatum H) :
-    D.chi.comp D.chi = ContinuousLinearMap.id ℝ H ∧
-      D.chi.comp D.K = D.K.comp D.chi ∧
-      D.chi.comp D.BdG = -(D.BdG.comp D.chi) := by
-  exact ⟨D.chi_sq, D.chi_phase_linear, D.chi_BdG⟩
 
 end InfoGeometry.OperatorAlgebra.DIIISuperfluid

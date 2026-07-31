@@ -24,11 +24,10 @@ noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
 Compatibility between an abstract modular spectral wedge and owned operators.
 -/
 @[rep_depth transport]
-structure IsCompatibleWedge
+def IsCompatibleWedge
     (W : HasModularSpectralWedge E)
-    (owned_epsilon owned_P_D : EndH) : Prop where
-  epsilon_eq : W.wedgeSign = owned_epsilon
-  pzero_eq : W.PZero = owned_P_D
+    (owned_epsilon owned_P_D : EndH) : Prop :=
+  W.wedgeSign = owned_epsilon ∧ W.PZero = owned_P_D
 
 namespace IsCompatibleWedge
 
@@ -42,7 +41,7 @@ theorem owned_epsilon_sq
     (owned_epsilon owned_P_D : EndH)
     (comp : IsCompatibleWedge W owned_epsilon owned_P_D) :
     owned_epsilon * owned_epsilon = (1 : EndH) - owned_P_D := by
-  rw [← comp.epsilon_eq, ← comp.pzero_eq]
+  rw [← comp.1, ← comp.2]
   exact W.wedgeSign_sq
 
 /-- Right annihilation of the apex by the owned wedge sign. -/
@@ -51,7 +50,7 @@ theorem owned_epsilon_mul_P_D_eq_zero
     (owned_epsilon owned_P_D : EndH)
     (comp : IsCompatibleWedge W owned_epsilon owned_P_D) :
     owned_epsilon * owned_P_D = 0 := by
-  rw [← comp.epsilon_eq, ← comp.pzero_eq]
+  rw [← comp.1, ← comp.2]
   unfold HasModularSpectralWedge.wedgeSign
   calc
     (W.PiPlus - W.PiMinus) * W.PZero
@@ -66,7 +65,7 @@ theorem P_D_mul_owned_epsilon_eq_zero
     (owned_epsilon owned_P_D : EndH)
     (comp : IsCompatibleWedge W owned_epsilon owned_P_D) :
     owned_P_D * owned_epsilon = 0 := by
-  rw [← comp.epsilon_eq, ← comp.pzero_eq]
+  rw [← comp.1, ← comp.2]
   unfold HasModularSpectralWedge.wedgeSign
   calc
     W.PZero * (W.PiPlus - W.PiMinus)
@@ -87,13 +86,13 @@ This records exactly what is needed on the bounded lane:
 No global unbounded-generator identification is assumed here.
 -/
 @[rep_depth transport]
-structure WedgeCalibrated
+def WedgeCalibrated
     (T : RealModularLogData (E := E))
     (W : HasModularSpectralWedge E)
-    (owned_epsilon owned_P_D : EndH) : Prop where
-  compat : IsCompatibleWedge W owned_epsilon owned_P_D
-  flow_commutes_owned_P_D : ∀ τ : ℝ, Commute (T.flow τ) owned_P_D
-  flow_commutes_owned_epsilon : ∀ τ : ℝ, Commute (T.flow τ) owned_epsilon
+    (owned_epsilon owned_P_D : EndH) : Prop :=
+  IsCompatibleWedge W owned_epsilon owned_P_D ∧
+    (∀ τ : ℝ, Commute (T.flow τ) owned_P_D) ∧
+      (∀ τ : ℝ, Commute (T.flow τ) owned_epsilon)
 
 namespace WedgeCalibrated
 
@@ -107,7 +106,7 @@ theorem flow_commutes_wedgeSign
     (C : WedgeCalibrated (E := E) (T := T) (W := W) owned_epsilon owned_PD)
     (t : ℝ) :
     Commute (T.flow t) W.wedgeSign := by
-  simpa [C.compat.epsilon_eq] using C.flow_commutes_owned_epsilon t
+  simpa [C.1.1] using C.2.2 t
 
 /-- On a calibrated lane, modular flow commutes with the wedge kernel projector. -/
 @[rep_depth transport]
@@ -116,7 +115,7 @@ theorem flow_commutes_pzero
     (C : WedgeCalibrated (E := E) (T := T) (W := W) owned_epsilon owned_PD)
     (t : ℝ) :
     Commute (T.flow t) W.PZero := by
-  simpa [C.compat.pzero_eq] using C.flow_commutes_owned_P_D t
+  simpa [C.1.2] using C.2.1 t
 
 /--
 On a calibrated lane, modular flow commutes with the active projector
@@ -130,7 +129,7 @@ theorem flow_mul_activeProjector_eq_activeProjector_mul_flow
     (T.flow t) * ((1 : EndH) - owned_PD)
       = ((1 : EndH) - owned_PD) * (T.flow t) := by
   have hcomm : (T.flow t) * owned_PD = owned_PD * (T.flow t) :=
-    (C.flow_commutes_owned_P_D t).eq
+    (C.2.1 t).eq
   calc
     (T.flow t) * ((1 : EndH) - owned_PD)
         = (T.flow t) - (T.flow t) * owned_PD := by

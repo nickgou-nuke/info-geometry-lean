@@ -11,8 +11,7 @@ noncomputable section
 /-- Concrete wrapper for the precision-matrix mediation audit. The proposition itself is entirely
 driven by the fixed `3 × 3` covariance/precision data, so the record carries no extra parameters.
 -/
-structure real_input_40_precision_matrix_mediation_data where
-  unit : Unit := ()
+abbrev real_input_40_precision_matrix_mediation_data := Unit
 
 /-- The audited covariance matrix `Σ`, normalized to unit diagonal so the raw correlations are the
 off-diagonal entries themselves. The coordinates are ordered as `(e, -, 2)`. -/

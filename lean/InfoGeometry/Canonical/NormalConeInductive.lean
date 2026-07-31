@@ -78,7 +78,7 @@ family: the diagram commutes.
     ↓                       ↓
   LimitCone  ←────────────  same limit element
 -/
-theorem cone_system_compatible (n : ℕ) (A : Stage n) (_hA : A ∈ StateSpace n) :
+theorem cone_system_compatible (n : ℕ) (A : Stage n) :
     ofStage n A = ofStage (n + 1) (stageEmbed n A) := by
   symm
   apply ofStage_apply_bond n A

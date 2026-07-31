@@ -16,17 +16,13 @@ variable {Ω X : Type*} [Fintype Ω] [DecidableEq Ω] [Fintype X] [DecidableEq X
 def foldWatataniTracedIndexMoment (fold : Ω → X) (q : ℕ) : ℚ :=
   (∑ x, (foldWatataniIndexCoefficient fold x : ℚ) ^ (q + 1)) / Fintype.card Ω
 
-/-- Closed form for the traced Watatani index moments in the finite fold model. -/
-def FoldWatataniIndexMomentsFormula (fold : Ω → X) (m q : ℕ) : Prop :=
-  directsumMatrixDecomposition fold ∧
-    (∀ x, foldWatataniIndexCoefficient fold x = Fintype.card (foldFiber fold x)) ∧
-    foldWatataniTracedIndexMoment fold q =
-      (∑ x, (Fintype.card (foldFiber fold x) : ℚ) ^ (q + 1)) / 2 ^ m
-
 /-- Paper label: `cor:op-algebra-fold-watatani-index-moments`. -/
 theorem paper_op_algebra_fold_watatani_index_moments {Ω X : Type*} [Fintype Ω] [DecidableEq Ω]
     [Fintype X] [DecidableEq X] (fold : Ω → X) (m q : ℕ) (hcard : Fintype.card Ω = 2 ^ m) :
-    FoldWatataniIndexMomentsFormula fold m q := by
+    directsumMatrixDecomposition fold ∧
+      (∀ x, foldWatataniIndexCoefficient fold x = Fintype.card (foldFiber fold x)) ∧
+      foldWatataniTracedIndexMoment fold q =
+        (∑ x, (Fintype.card (foldFiber fold x) : ℚ) ^ (q + 1)) / 2 ^ m := by
   have hmult := paper_op_algebra_fold_watatani_index_equals_multiplicity_field fold
   refine ⟨hmult.1, ?_, ?_⟩
   · intro x

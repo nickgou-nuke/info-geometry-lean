@@ -23,12 +23,6 @@ theorem geodesic_length_additive (l1 l2 : ℝ) :
     geodesicLength (l1 + l2) = geodesicLength l1 + geodesicLength l2 :=
   rfl
 
-/-- 🏆 THEOREM 2: Non-negativity of Hyperbolic Geodesic Length:
-    l ≥ 0 ⇒ l(γ) ≥ 0 -/
-theorem geodesic_length_nonneg (l : ℝ) (h : 0 ≤ l) :
-    0 ≤ geodesicLength l :=
-  h
-
 /-- 🏆 THEOREM 3: Selberg Prime Geodesic Thermal Weight Multiplicativity:
     e^{-(l₁ + l₂)} = e^{-l₁} · e^{-l₂} -/
 theorem selberg_weight_multiplicative (l1 l2 : ℝ) :

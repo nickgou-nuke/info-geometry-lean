@@ -45,29 +45,29 @@ theorem cuntzMap_unital (S_left S_right : Op) (h_range : S_left * star S_left + 
 
 /-! ### 2. KMS Symmetric State — the Jaynes Maxent Point -/
 
-structure KMSSymmetricState (S_left S_right : Op) where
-  φ : Op →+ ℝ
-  φ_one : φ 1 = 1
-  half_L : ∀ X, φ (S_left * X * star S_left) = (1/2 : ℝ) * φ X
-  half_R : ∀ X, φ (S_right * X * star S_right) = (1/2 : ℝ) * φ X
-
 namespace KMSSymmetricState
 
-variable {S_left S_right : Op} (state : KMSSymmetricState S_left S_right)
-
-abbrev φ_add : ∀ X Y, state.φ (X + Y) = state.φ X + state.φ Y :=
-  state.φ.map_add
+variable {S_left S_right : Op}
 
 /-- φ(Φ(X)) = φ(X) — the KMS state is the Cuntz map fixed point. -/
-theorem cuntzMap_fixed_point (X : Op) : state.φ (cuntzMap S_left S_right X) = state.φ X := by
+theorem cuntzMap_fixed_point
+    (φ : Op →+ ℝ)
+    (half_L : ∀ X, φ (S_left * X * star S_left) = (1 / 2 : ℝ) * φ X)
+    (half_R : ∀ X, φ (S_right * X * star S_right) = (1 / 2 : ℝ) * φ X)
+    (X : Op) :
+    φ (cuntzMap S_left S_right X) = φ X := by
   simpa [cuntzMap] using
     CuntzMapKreinBridge.real_additive_readout_fixed_of_half_branch_scaling
-      (φ := state.φ) (S_left := S_left) (S_right := S_right) (X := X)
-      (state.half_L X) (state.half_R X)
+      (φ := φ) (S_left := S_left) (S_right := S_right) (X := X)
+      (half_L X) (half_R X)
 
 /-- φ(Φ^n(X)) = φ(X) — the full RG flow preserves expectations. -/
-theorem cuntzMap_iterate_fixed_point (X : Op) (n : ℕ) :
-    state.φ (Nat.iterate (cuntzMap S_left S_right) n X) = state.φ X := by
+theorem cuntzMap_iterate_fixed_point
+    (φ : Op →+ ℝ)
+    (half_L : ∀ X, φ (S_left * X * star S_left) = (1 / 2 : ℝ) * φ X)
+    (half_R : ∀ X, φ (S_right * X * star S_right) = (1 / 2 : ℝ) * φ X)
+    (X : Op) (n : ℕ) :
+    φ (Nat.iterate (cuntzMap S_left S_right) n X) = φ X := by
   revert X
   induction' n with k ih
   · intro X
@@ -75,20 +75,26 @@ theorem cuntzMap_iterate_fixed_point (X : Op) (n : ℕ) :
   · intro X
     rw [Function.iterate_succ_apply]
     rw [ih (cuntzMap S_left S_right X)]
-    exact cuntzMap_fixed_point state X
+    exact cuntzMap_fixed_point φ half_L half_R X
 
 /-- `φ(Σ_{k=0}^{N-1} Φ^k(X)) = N * φ(X)`: finite orbit-sum readout. -/
-theorem cuntzMap_sum_iterate_fixed_point (X : Op) (N : ℕ) :
-    state.φ (Finset.sum (Finset.range N) (fun k => Nat.iterate (cuntzMap S_left S_right) k X)) =
-    (N : ℝ) * state.φ X := by
+theorem cuntzMap_sum_iterate_fixed_point
+    (φ : Op →+ ℝ)
+    (half_L : ∀ X, φ (S_left * X * star S_left) = (1 / 2 : ℝ) * φ X)
+    (half_R : ∀ X, φ (S_right * X * star S_right) = (1 / 2 : ℝ) * φ X)
+    (X : Op) (N : ℕ) :
+    φ (Finset.sum (Finset.range N)
+      (fun k => Nat.iterate (cuntzMap S_left S_right) k X)) =
+    (N : ℝ) * φ X := by
   induction' N with n ih
-  · have hφ0 : state.φ 0 = 0 := by
-      exact state.φ.map_zero
+  · have hφ0 : φ 0 = 0 := by
+      exact φ.map_zero
     simp [hφ0]
   · rw [Finset.sum_range_succ,
-      state.φ_add (Finset.sum (Finset.range n) _) (Nat.iterate (cuntzMap S_left S_right) n X),
+      φ.map_add (Finset.sum (Finset.range n) _)
+        (Nat.iterate (cuntzMap S_left S_right) n X),
       ih,
-      cuntzMap_iterate_fixed_point state X n]
+      cuntzMap_iterate_fixed_point φ half_L half_R X n]
     push_cast; ring
 
 /--

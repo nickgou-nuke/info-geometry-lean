@@ -5,8 +5,7 @@ import Omega.CircleDimension.CdimS4V4KummerModelAndResolventRecovery
 namespace Omega.CircleDimension
 
 /-- Concrete wrapper for the audited resolvent-cubic branchpoint statement. -/
-structure cdim_resolvent_cubic_branchpoints_and_complementary_ramification_data where
-  cdim_resolvent_cubic_branchpoints_and_complementary_ramification_witness : Unit := ()
+abbrev cdim_resolvent_cubic_branchpoints_and_complementary_ramification_data := Unit
 
 /-- The six branch values are indexed by `Fin 6`. -/
 def cdim_resolvent_cubic_branchpoints_and_complementary_ramification_branch_values :

@@ -28,7 +28,7 @@ def fold_channel_kraus_rank_hardness_template_channel
 /-- The exact Kraus/Choi rank of the two-fiber SAT fold. -/
 def fold_channel_kraus_rank_hardness_template_kraus_rank
     (D : fold_channel_kraus_rank_hardness_template_data) : ℕ :=
-  (fold_channel_kraus_rank_hardness_template_channel D).minimalKrausRank
+  (fold_channel_kraus_rank_hardness_template_channel D).choiRank
 
 /-- The closed quadratic rank formula `s^2 + (N-s)^2`. -/
 def fold_channel_kraus_rank_hardness_template_rank_formula

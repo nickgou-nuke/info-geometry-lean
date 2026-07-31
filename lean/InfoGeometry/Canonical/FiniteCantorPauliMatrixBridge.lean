@@ -116,37 +116,4 @@ noncomputable def cl11PauliBridge_equivMat :
     CliffordAlgebra InfoGeometry.Clifford.Cl11Matrix.q11 ≃ₐ[ℝ] Mat2 :=
   InfoGeometry.Clifford.Cl11Matrix.cl11EquivMat
 
-/-- Any supplied finite Cantor-Pauli bridge exposes the Clifford square law directly. -/
-@[rep_depth operator]
-theorem finiteCantorPauliBridge_square_packet
-    {n : ℕ} {Mat : Type} [Ring Mat]
-    (B : FiniteCantorPauliBridge n Mat) :
-    ∀ i : Fin (2 * n), B.psiGamma i * B.psiGamma i = 1 :=
-  B.clifford_sq
-
-/-- Any supplied finite Cantor-Pauli bridge exposes the Clifford anticommutation law directly. -/
-@[rep_depth operator]
-theorem finiteCantorPauliBridge_anticomm_packet
-    {n : ℕ} {Mat : Type} [Ring Mat]
-    (B : FiniteCantorPauliBridge n Mat) :
-    ∀ ⦃i j : Fin (2 * n)⦄, i ≠ j →
-      B.psiGamma i * B.psiGamma j + B.psiGamma j * B.psiGamma i = 0 := by
-  intro i j hij
-  exact FiniteCantorPauliMatrixBridge.psiGamma_anticomm B hij
-
-/-- Concrete `Cl(1,1)` finite Cantor-Pauli matrix packet. -/
-@[rep_depth operator]
-theorem cl11PauliBridge_clifford_packet :
-    (∀ i : Fin 2, (cl11PauliBridge).psiGamma i * (cl11PauliBridge).psiGamma i = 1) ∧
-      (∀ ⦃i j : Fin 2⦄, i ≠ j →
-        (cl11PauliBridge).psiGamma i * (cl11PauliBridge).psiGamma j +
-            (cl11PauliBridge).psiGamma j * (cl11PauliBridge).psiGamma i = 0) ∧
-      (cl11PauliBridge).psiGamma ⟨0, by decide⟩ = Eplus ∧
-      (cl11PauliBridge).psiGamma ⟨1, by decide⟩ = J1 := by
-  exact ⟨
-    finiteCantorPauliBridge_square_packet cl11PauliBridge,
-    finiteCantorPauliBridge_anticomm_packet cl11PauliBridge,
-    cl11PauliBridge_psiGamma_zero,
-    cl11PauliBridge_psiGamma_one⟩
-
 end InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge

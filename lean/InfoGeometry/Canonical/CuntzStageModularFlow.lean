@@ -27,7 +27,6 @@ flow before or after a transition gives the same element in the later stage.
 -/
 structure CuntzStageModularFlowData where
   flow : ∀ n, ℝ → Stage n ≃⋆ₐ[ℂ] Stage n
-  flow_zero : ∀ n a, flow n 0 a = a
   flow_add : ∀ n t s a, flow n (t + s) a = flow n t (flow n s a)
   map_naturality :
     ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
@@ -37,9 +36,16 @@ namespace CuntzStageModularFlowLemmas
 
 variable (Φ : CuntzStageModularFlowData Stage T)
 
+theorem flow_zero (n : ℕ) (a : Stage n) :
+    Φ.flow n 0 a = a := by
+  have h := Φ.flow_add n (1 : ℝ) 0 a
+  have h' : Φ.flow n 1 a = Φ.flow n 1 (Φ.flow n 0 a) := by
+    simpa using h
+  exact (Φ.flow n 1).injective h'.symm
+
 @[simp] theorem flow_zero_apply (n : ℕ) (a : Stage n) :
     Φ.flow n 0 a = a :=
-  Φ.flow_zero n a
+  flow_zero (Stage := Stage) (T := T) Φ n a
 
 @[simp] theorem flow_add_apply (n : ℕ) (t s : ℝ) (a : Stage n) :
     Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a) :=
@@ -48,12 +54,12 @@ variable (Φ : CuntzStageModularFlowData Stage T)
 theorem flow_neg_right_inverse (n : ℕ) (t : ℝ) (a : Stage n) :
     Φ.flow n t (Φ.flow n (-t) a) = a := by
   rw [← Φ.flow_add n t (-t) a]
-  simpa using Φ.flow_zero n a
+  simpa using flow_zero (Stage := Stage) (T := T) Φ n a
 
 theorem flow_neg_left_inverse (n : ℕ) (t : ℝ) (a : Stage n) :
     Φ.flow n (-t) (Φ.flow n t a) = a := by
   rw [← Φ.flow_add n (-t) t a]
-  simpa using Φ.flow_zero n a
+  simpa using flow_zero (Stage := Stage) (T := T) Φ n a
 
 theorem map_flow_commutes
     {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m) :

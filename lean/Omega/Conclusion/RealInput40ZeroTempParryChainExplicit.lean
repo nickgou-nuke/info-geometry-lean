@@ -74,13 +74,21 @@ theorem paper_conclusion_realinput40_zero_temp_parry_chain_explicit
     (rho : ℝ)
     (hrho_poly : rho ^ 4 - 6 * rho ^ 3 + 9 * rho ^ 2 - rho - 1 = 0)
     (hrho_gt : 3 < rho) :
-    let denom := 3 * rho ^ 2 + rho - 6
-    True := by
-  have _ := conclusion_realinput40_zero_temp_parry_chain_explicit_row_sum rho hrho_gt
-  have _ :=
-    conclusion_realinput40_zero_temp_parry_chain_explicit_stationary_relation rho hrho_poly hrho_gt
-  have _ := conclusion_realinput40_zero_temp_parry_chain_explicit_pi_three_eq_pi_four rho
-  have _ := conclusion_realinput40_zero_temp_parry_chain_explicit_p_two_three rho
-  trivial
+    (∀ i : conclusion_realinput40_zero_temp_parry_chain_explicit_state,
+      ∑ j, conclusion_realinput40_zero_temp_parry_chain_explicit_transition rho i j = 1) ∧
+    (∀ j : conclusion_realinput40_zero_temp_parry_chain_explicit_state,
+      (∑ i,
+          conclusion_realinput40_zero_temp_parry_chain_explicit_stationary rho i *
+            conclusion_realinput40_zero_temp_parry_chain_explicit_transition rho i j) =
+        conclusion_realinput40_zero_temp_parry_chain_explicit_stationary rho j) ∧
+    conclusion_realinput40_zero_temp_parry_chain_explicit_stationary rho ⟨2, by norm_num⟩ =
+      conclusion_realinput40_zero_temp_parry_chain_explicit_stationary rho ⟨3, by norm_num⟩ ∧
+    conclusion_realinput40_zero_temp_parry_chain_explicit_transition rho ⟨1, by norm_num⟩
+        ⟨2, by norm_num⟩ = 1 := by
+  exact ⟨
+    conclusion_realinput40_zero_temp_parry_chain_explicit_row_sum rho hrho_gt,
+    conclusion_realinput40_zero_temp_parry_chain_explicit_stationary_relation rho hrho_poly hrho_gt,
+    conclusion_realinput40_zero_temp_parry_chain_explicit_pi_three_eq_pi_four rho,
+    conclusion_realinput40_zero_temp_parry_chain_explicit_p_two_three rho⟩
 
 end Omega.Conclusion

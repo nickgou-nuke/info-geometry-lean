@@ -28,19 +28,15 @@ def stable_audit_small_order_obstruction_separated_pairs (_n : ℕ) :
       Fin stable_audit_small_order_obstruction_dashboard_pair_count) :=
   ∅
 
-/-- Concrete finite certificate statement for the order-`2` and order-`3` magma scans. -/
-def stable_audit_small_order_obstruction_statement : Prop :=
-  stable_audit_small_order_obstruction_operation_table_count 2 = 16 ∧
-    stable_audit_small_order_obstruction_operation_table_count 3 = 19683 ∧
-    stable_audit_small_order_obstruction_dashboard_pair_count = 498 ∧
-    stable_audit_small_order_obstruction_order2_separations = 0 ∧
-    stable_audit_small_order_obstruction_order3_separations = 0 ∧
-    ∀ n ∈ stable_audit_small_order_obstruction_scanned_orders,
-      stable_audit_small_order_obstruction_separated_pairs n = ∅
-
 /-- Paper label: `prop:stable-audit-small-order-obstruction`. -/
 theorem paper_stable_audit_small_order_obstruction :
-    stable_audit_small_order_obstruction_statement := by
+    stable_audit_small_order_obstruction_operation_table_count 2 = 16 ∧
+      stable_audit_small_order_obstruction_operation_table_count 3 = 19683 ∧
+      stable_audit_small_order_obstruction_dashboard_pair_count = 498 ∧
+      stable_audit_small_order_obstruction_order2_separations = 0 ∧
+      stable_audit_small_order_obstruction_order3_separations = 0 ∧
+      ∀ n ∈ stable_audit_small_order_obstruction_scanned_orders,
+        stable_audit_small_order_obstruction_separated_pairs n = ∅ := by
   refine ⟨by norm_num [stable_audit_small_order_obstruction_operation_table_count],
     by norm_num [stable_audit_small_order_obstruction_operation_table_count], rfl, rfl, rfl, ?_⟩
   intro n hn

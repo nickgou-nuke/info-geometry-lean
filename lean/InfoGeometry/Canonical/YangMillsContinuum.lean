@@ -231,20 +231,16 @@ Formal Type III modular interface extracted from primitive RN data.
 This packages the operator dictionary (`Δ`, `K`) together with the additive
 flow law and infinitesimal commutator generator into a single canonical object.
 -/
-structure TypeIIIModularInterface
-    (M : ModularRadonNikodymData E) : Prop where
-  modularOperator_eq_rn :
-    M.modularOperator = M.rnDerivative • idEndH E
-  modularHamiltonian_eq_neg_log_rn :
-    M.modularHamiltonian = (-Real.log M.rnDerivative) • idEndH E
-  modularAutomorphismGroup_additive :
-    ∀ s t : ℝ, ∀ A : EndH E,
-      modularAutomorphismGroup M (s + t) A =
-        modularAutomorphismGroup M s (modularAutomorphismGroup M t A)
-  infinitesimal_generator_at_zero :
-    ∀ A : EndH E,
-      HasDerivAt (fun τ : ℝ => modularAutomorphismGroup M τ A)
-        (commutator M.modularHamiltonian A) 0
+def TypeIIIModularInterface
+    (M : ModularRadonNikodymData E) : Prop :=
+  M.modularOperator = M.rnDerivative • idEndH E ∧
+    M.modularHamiltonian = (-Real.log M.rnDerivative) • idEndH E ∧
+      (∀ s t : ℝ, ∀ A : EndH E,
+        modularAutomorphismGroup M (s + t) A =
+          modularAutomorphismGroup M s (modularAutomorphismGroup M t A)) ∧
+        (∀ A : EndH E,
+          HasDerivAt (fun τ : ℝ => modularAutomorphismGroup M τ A)
+            (commutator M.modularHamiltonian A) 0)
 
 /-- Canonical Type III modular interface, internalized from RN primitives. -/
 theorem typeIIIModularInterface

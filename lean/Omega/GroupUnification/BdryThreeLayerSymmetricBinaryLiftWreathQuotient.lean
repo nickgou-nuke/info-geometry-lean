@@ -14,9 +14,6 @@ def bdryThreeLayerParityProjection :
 theorem paper_bdry_three_layer_symmetric_binary_lift_wreath_quotient :
     ∃ φ : ((Fin 3 → ZMod 2) × Equiv.Perm (Fin 3)) → (ZMod 2 × Equiv.Perm (Fin 3)),
       Function.Surjective φ := by
-  let _ :=
-    paper_gu_equivariant_z2_layerlift_wreath_rigidity 3 (by omega) True True True trivial
-      (fun _ => trivial) (fun _ => trivial)
   refine ⟨bdryThreeLayerParityProjection, ?_⟩
   intro y
   refine ⟨((fun i => if i = 0 then y.1 else 0), y.2), ?_⟩

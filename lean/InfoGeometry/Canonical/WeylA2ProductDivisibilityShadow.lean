@@ -132,13 +132,6 @@ theorem exists_quotient :
   rcases P.denominator_dvd_numerator with ⟨q, hq⟩
   exact ⟨q, hq.symm⟩
 
-/-- Combined packet for the three-node product/divisibility shadow. -/
-@[rep_depth thermo]
-theorem product_divisibility_packet :
-    P.denominator ∣ P.numerator
-    ∧ (∃ q : R[X], P.denominator * q = P.numerator) := by
-  exact ⟨P.denominator_dvd_numerator, P.exists_quotient⟩
-
 end ThreeNodePolynomialShadow
 
 end InfoGeometry.Canonical.WeylA2ProductDivisibilityShadow

@@ -161,14 +161,13 @@ Analytic owner socket for Ramanujan's odd-zeta transformation.
 Instantiating this structure requires the actual analytic theorem.  This file
 only supplies the correctly typed target and theorem-safe consequences.
 -/
-structure RamanujanOddZetaAnalyticSocket where
-  identity :
-    ∀ (n : ℕ) (α β : ℝ),
-      0 < n →
-      0 < α →
-      0 < β →
-      α * β = Real.pi ^ 2 →
-      RamanujanOddZetaFormula n α β
+def RamanujanOddZetaAnalyticSocket : Prop :=
+  ∀ (n : ℕ) (α β : ℝ),
+    0 < n →
+    0 < α →
+    0 < β →
+    α * β = Real.pi ^ 2 →
+    RamanujanOddZetaFormula n α β
 
 /-- The socket yields the proposition-form Ramanujan identity. -/
 theorem ramanujan_odd_zeta
@@ -177,7 +176,7 @@ theorem ramanujan_odd_zeta
     (hα : 0 < α) (hβ : 0 < β)
     (hαβ : α * β = Real.pi ^ 2) :
     RamanujanOddZetaFormula n α β :=
-  R.identity n α β hn hα hβ hαβ
+  R n α β hn hα hβ hαβ
 
 /--
 Expanded theorem form: the analytic socket gives the exact corrected formula
@@ -194,6 +193,6 @@ theorem ramanujan_odd_zeta_expanded
           ((1 / 2 : ℝ) * oddZetaValue n + ∑' k : ℕ+, lambertTerm n β k) -
         (2 : ℝ) ^ (2 * n) *
           (Finset.range (n + 2)).sum (fun k => bernoulliAnomalyTerm n α β k) := by
-  exact R.identity n α β hn hα hβ hαβ
+  exact R n α β hn hα hβ hαβ
 
 end InfoGeometry.Arithmetic.RamanujanOddZeta

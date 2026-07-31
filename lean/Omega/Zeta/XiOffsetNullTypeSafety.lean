@@ -22,19 +22,6 @@ def xiOffsetPwClosureAddressable (L : ℝ) (s : ℂ) : Prop :=
 def xiOffsetPwClosureNull (L : ℝ) (s : ℂ) : Prop :=
   ¬ xiOffsetPwClosureAddressable L s
 
-private def xiOffsetUnitarySliceClosureData (L : ℝ) (s : ℂ) :
-    Omega.TypedAddressBiaxialCompletion.UnitarySliceAddressClosureData where
-  AddressSpace := Unit
-  ReadoutCodomain := Unit
-  unitarySliceAddress := fun _ => xiOffsetUnitarySlice L s
-  guardedReadout := fun _ _ => ()
-  guardedRule := True
-  readUSClosed := xiOffsetPwClosureAddressable L s → xiOffsetUnitarySlice L s
-  hasGuardedRule := trivial
-  guardedReadoutCloses := by
-    intro _ hAddressable
-    exact hAddressable
-
 private lemma xiOffsetUnitarySlice_iff_modulus_one (L : ℝ) (s : ℂ) :
     xiOffsetUnitarySlice L s ↔ xiOffsetUnitaryModulus L s = 1 := by
   rfl
@@ -61,24 +48,9 @@ theorem paper_xi_offset_null_type_safety {L : ℝ} {s : ℂ}
     xiOffsetUnitaryModulus L s = L ^ (2 * s.re - 1) ∧
       ¬ xiOffsetUnitarySlice L s ∧
       xiOffsetPwClosureNull L s := by
-  have hClosure :
-      xiOffsetPwClosureAddressable L s → xiOffsetUnitarySlice L s :=
-    Omega.TypedAddressBiaxialCompletion.paper_typed_address_biaxial_completion_unitary_slice_address_closure
-      (xiOffsetUnitarySliceClosureData L s)
   have hNotSlice : ¬ xiOffsetUnitarySlice L s := by
     rw [xiOffsetUnitarySlice_iff_modulus_one]
     exact xiOffsetUnitaryModulus_ne_one hL hs
-  have hPhaseNull :=
-    Omega.TypedAddressBiaxialCompletion.paper_typed_address_biaxial_completion_phase_null True
-      (xiOffsetPwClosureAddressable L s) True True (xiOffsetUnitarySlice L s)
-      (xiOffsetPwClosureNull L s) trivial
-      (by
-        intro h hAddressable
-        exact h.2 ⟨hAddressable, trivial, trivial, hClosure hAddressable⟩)
-  have hNull : xiOffsetPwClosureNull L s := by
-    refine hPhaseNull.2 ?_
-    intro hAll
-    exact hNotSlice hAll.2.2.2
-  exact ⟨rfl, hNotSlice, hNull⟩
+  exact ⟨rfl, hNotSlice, hNotSlice⟩
 
 end Omega.Zeta

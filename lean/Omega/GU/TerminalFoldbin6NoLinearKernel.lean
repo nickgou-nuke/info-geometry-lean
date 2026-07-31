@@ -5,16 +5,15 @@ namespace Omega.GU
 
 /-- A linear quotient model of the window-`6` terminal fold would force every nonempty fiber to
 have the same coset cardinality `2^(6-k)`. -/
-structure TerminalFoldbin6CosetModel (k : ℕ) : Prop where
-  uniformFiberCardinality :
-    ∃ c : ℕ, c = 2 ^ (6 - k) ∧ ∀ d : ℕ, cBinFiberHist 6 d ≠ 0 → c = d
+def TerminalFoldbin6CosetModel (k : ℕ) : Prop :=
+  ∃ c : ℕ, c = 2 ^ (6 - k) ∧ ∀ d : ℕ, cBinFiberHist 6 d ≠ 0 → c = d
 
 /-- The certified window-`6` histogram has fibers of sizes `2`, `3`, and `4`, so it cannot come
 from a linear-kernel coset partition with uniform power-of-two fiber size.
     cor:terminal-foldbin6-no-linear-kernel -/
 theorem paper_terminal_foldbin6_no_linear_kernel : ¬ ∃ k, TerminalFoldbin6CosetModel k := by
   rintro ⟨k, M⟩
-  rcases M.uniformFiberCardinality with ⟨c, _hcPow, hcUni⟩
+  rcases M with ⟨c, _hcPow, hcUni⟩
   have h2hist : cBinFiberHist 6 2 ≠ 0 := by simp [cBinFiberHist_6_2]
   have h3hist : cBinFiberHist 6 3 ≠ 0 := by simp [cBinFiberHist_6_3]
   have h4hist : cBinFiberHist 6 4 ≠ 0 := by simp [cBinFiberHist_6_4]

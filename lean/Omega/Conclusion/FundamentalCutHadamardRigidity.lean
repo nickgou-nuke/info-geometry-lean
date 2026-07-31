@@ -12,7 +12,6 @@ with the flow-lattice/tree-weight identity for the same weighted connected graph
 structure FundamentalCutHadamardData (treeRank : Nat) where
   capacityData : Omega.SPG.KirchhoffFundamentalCutCapacityData treeRank
   graph : Omega.Graph.FlowWeightedMultigraph
-  graphConnected : graph.Connected
   treeWeight : ℝ
   cutProduct : ℝ
   edgeWeightDet : ℝ
@@ -59,7 +58,7 @@ theorem paper_conclusion_fundamental_cut_hadamard_rigidity {treeRank : Nat}
   have hGraph :
       Omega.Graph.flowLatticeGramDet D.graph =
         D.graph.weightedTreeSum / D.graph.edgeWeightDet :=
-    Omega.Graph.paper_xi_flow_lattice_gram_determinant_tree_weight D.graph D.graphConnected
+    Omega.Graph.paper_xi_flow_lattice_gram_determinant_tree_weight D.graph
   have hFlowRatio :
       Omega.Graph.flowLatticeGramDet D.graph = D.treeWeight / D.edgeWeightDet := by
     calc

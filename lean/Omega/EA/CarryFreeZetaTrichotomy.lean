@@ -18,11 +18,16 @@ def TwoStepReachable {Q A : Type*} (edge : Q → A → Q → Prop) (q q' : Q) : 
 def TwoStepStronglyConnected {Q A : Type*} (edge : Q → A → Q → Prop) : Prop :=
   ∀ q q', TwoStepReachable edge q q'
 
-/-- The one-state carry-free skeleton with seven outgoing symbols. -/
-def sevenCarryFreeEdge (_ : Unit) (_ : Fin 7) (_ : Unit) : Prop := True
+/-- The one-state carry-free skeleton with seven outgoing symbols.
+
+Every label is an actual loop in the one-state graph; `a = a` records that
+the chosen label is available instead of hiding the edge relation behind
+`True`.
+-/
+def sevenCarryFreeEdge (_ : Unit) (a : Fin 7) (_ : Unit) : Prop := a = a
 
 /-- The one-state carry-free skeleton with three outgoing symbols. -/
-def threeCarryFreeEdge (_ : Unit) (_ : Fin 3) (_ : Unit) : Prop := True
+def threeCarryFreeEdge (_ : Unit) (a : Fin 3) (_ : Unit) : Prop := a = a
 
 /-- The one-state adjacency matrix of the `7`-shift. -/
 def sevenShiftAdjacency : Matrix (Fin 1) (Fin 1) ℤ :=

@@ -16,39 +16,30 @@ Operator-owner package for the conformal anomaly source:
 the noncommutative obstruction operator is primary; KKT structure records its
 grade-zero/block form.
 -/
-@[rep_depth krein] structure ObstructionOperatorOwner
-    (X : InfoGeometry.Quantum.RealSplitCl11Action E) : Prop where
-  obstruction_eq_commutator :
-    CI.projectorObstruction =
+@[rep_depth krein] def ObstructionOperatorOwner
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E) : Prop :=
+  CI.projectorObstruction =
       CI.spectralChiralProjector * CI.metricChiralProjector
-        - CI.metricChiralProjector * CI.spectralChiralProjector
-  obstruction_isGZero :
-    IsGZero X CI.projectorObstruction
-  obstruction_diagonal_blocks :
-    CI.projectorObstruction
+        - CI.metricChiralProjector * CI.spectralChiralProjector ∧
+  IsGZero X CI.projectorObstruction ∧
+  CI.projectorObstruction
       = plusProjector X * CI.projectorObstruction * plusProjector X
-        + minusProjector X * CI.projectorObstruction * minusProjector X
-  obstruction_plusProjector_mul_mul_minusProjector_eq_zero :
-    plusProjector X * CI.projectorObstruction * minusProjector X = 0
-  obstruction_minusProjector_mul_mul_plusProjector_eq_zero :
-    minusProjector X * CI.projectorObstruction * plusProjector X = 0
+        + minusProjector X * CI.projectorObstruction * minusProjector X ∧
+  plusProjector X * CI.projectorObstruction * minusProjector X = 0 ∧
+  minusProjector X * CI.projectorObstruction * plusProjector X = 0
 
 /--
 Operator-owner package for the bounded squashed obstruction readout:
 the operator remains grade-zero and block-diagonal in the same KKT split.
 -/
-@[rep_depth krein] structure SquashedObstructionOperatorOwner
-    (X : InfoGeometry.Quantum.RealSplitCl11Action E) : Prop where
-  squashedObstruction_isGZero :
-    IsGZero X CI.squashedProjectorObstruction
-  squashedObstruction_diagonal_blocks :
-    CI.squashedProjectorObstruction
+@[rep_depth krein] def SquashedObstructionOperatorOwner
+    (X : InfoGeometry.Quantum.RealSplitCl11Action E) : Prop :=
+  IsGZero X CI.squashedProjectorObstruction ∧
+  CI.squashedProjectorObstruction
       = plusProjector X * CI.squashedProjectorObstruction * plusProjector X
-        + minusProjector X * CI.squashedProjectorObstruction * minusProjector X
-  squashedObstruction_plusProjector_mul_mul_minusProjector_eq_zero :
-    plusProjector X * CI.squashedProjectorObstruction * minusProjector X = 0
-  squashedObstruction_minusProjector_mul_mul_plusProjector_eq_zero :
-    minusProjector X * CI.squashedProjectorObstruction * plusProjector X = 0
+        + minusProjector X * CI.squashedProjectorObstruction * minusProjector X ∧
+  plusProjector X * CI.squashedProjectorObstruction * minusProjector X = 0 ∧
+  minusProjector X * CI.squashedProjectorObstruction * plusProjector X = 0
 
 /--
 Canonical operator-owner constructor:

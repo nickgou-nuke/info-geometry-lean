@@ -46,12 +46,6 @@ def IsIntegrated {α : Type*} (S : ShadowCone α) : Prop :=
 def IsRejected {α : Type*} (S : ShadowCone α) : Prop :=
   Shadow.IsRejected S
 
-/-- Forwarded theorem showing integration status. -/
-theorem integrated_has_status_integrated {α : Type*} (S : ShadowCone α)
-    (h : IsIntegrated S) :
-    S.status = ShadowStatus.integrated := by
-  exact h
-
 end ShadowCone
 
 end InfoGeometry.SelfReference

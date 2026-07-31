@@ -1,23 +1,25 @@
 import Mathlib.Data.Fintype.Card
 import Omega.OperatorAlgebra.CircuitNoninjectiveNPComplete
+import Omega.OperatorAlgebra.IndexSupportSatNpHardIndexCoeffSharpP
 import Omega.OperatorAlgebra.NpWatataniIndexSupportCharacterization
 
 namespace Omega.OperatorAlgebra
 
 open FoldJonesBasicConstructionDirectsum
 
-/-- Paper label: `cor:index-support-sat-np-hard-index-coeff-sharpP`. The SAT verifier on a dummy
-input has a single projector whose Watatani-index coefficient is exactly the number of satisfying
-assignments, so support nonemptiness is satisfiability and coefficient extraction is `#SAT`. -/
-def paper_index_support_sat_np_hard_index_coeff_sharpp : Prop := by
-  exact
-    ∀ {n : ℕ} (φ : BitVec n → Bool),
-      let paper_index_support_sat_np_hard_index_coeff_sharpp_sat_verifier :
-          Unit → BitVec n → Bool := fun _ w => φ w
-      foldWatataniIndexElement
-          (verifierFold paper_index_support_sat_np_hard_index_coeff_sharpp_sat_verifier) () =
+/-- For a single dummy input, the imported verifier characterization gives the Watatani-index
+coefficient as the number of satisfying assignments and identifies support with satisfiability. -/
+theorem paper_index_support_sat_np_hard_index_coeff_sharpp
+    {n : ℕ} (φ : BitVec n → Bool) :
+    let V : Unit → BitVec n → Bool := fun _ w => φ w
+    foldWatataniIndexElement (verifierFold V) () =
         Fintype.card {w : BitVec n // φ w = true} ∧
-        (verifierProjectorInSupport paper_index_support_sat_np_hard_index_coeff_sharpp_sat_verifier
-            () ↔ satisfiable φ)
+      (verifierProjectorInSupport V () ↔ satisfiable φ) := by
+  dsimp
+  have h := index_support_sat_np_hard_index_coeff_sharpp_characterization
+    (fun _ : Unit => φ)
+  constructor
+  · simpa [verifierWitnessCount, verifierWitnesses] using h.2 ()
+  · simpa [satisfiable] using h.1 ()
 
 end Omega.OperatorAlgebra

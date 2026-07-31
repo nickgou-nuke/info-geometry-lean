@@ -34,9 +34,9 @@ abbrev conclusion_zg_full_local_dimension_spectrum_every_cylinder_point
 
 /-- A nonempty cylinder is one whose prefix is accepted by the finite cylinder ledger. -/
 def conclusion_zg_full_local_dimension_spectrum_every_cylinder_nonempty
-    (_D : conclusion_zg_full_local_dimension_spectrum_every_cylinder_data)
+    (D : conclusion_zg_full_local_dimension_spectrum_every_cylinder_data)
     (_C : List Bool) : Prop :=
-  True
+  _C.length ≤ D.conclusion_zg_full_local_dimension_spectrum_every_cylinder_prefix_budget
 
 /-- The image-membership predicate for the concrete prefixed witness model. -/
 def conclusion_zg_full_local_dimension_spectrum_every_cylinder_mem_image

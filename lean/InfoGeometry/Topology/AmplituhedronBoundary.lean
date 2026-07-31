@@ -54,18 +54,4 @@ structure AmplituhedronBoundaryPacket (Op : Type*) [Ring Op] where
   cooperadReadout : Op
   bcfwReadout : Op
 
-namespace AmplituhedronBoundaryPacket
-
-variable {Op : Type*} [Ring Op]
-
-/-- The installed cooperad/BCFW comparison is a genuine carrier equality. -/
-theorem bcfw_readout
-    (P : AmplituhedronBoundaryPacket Op)
-    (hComparison : P.cooperadReadout = P.bcfwReadout) :
-    P.cooperadReadout = P.bcfwReadout :=
-  InfoGeometry.Projective.TwistorAmplituhedronBridge.bcfw_readout_of_cooperad_comparison
-    (fun x : Op => x) P.cooperadReadout P.bcfwReadout hComparison
-
-end AmplituhedronBoundaryPacket
-
 end InfoGeometry.Topology.AmplituhedronBoundary

@@ -17,25 +17,21 @@ namespace ConnesCyclic
 
 variable {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
 
-/-- Cyclic Cochain Boundary Operator b: C^k → C^(k+1) satisfying b² = 0. -/
-structure CyclicBoundaryOperator (n : ℕ) [Fintype (Fin n)] [DecidableEq (Fin n)] where
-  b : Matrix (Fin n) (Fin n) ℂ →+ Matrix (Fin n) (Fin n) ℂ
-  nilpotent : ∀ X, b (b X) = 0
-
 namespace CyclicBoundaryOperator
 
-variable (boundary : CyclicBoundaryOperator n)
+variable (b : Matrix (Fin n) (Fin n) ℂ →+ Matrix (Fin n) (Fin n) ℂ)
 
-abbrev b_add : ∀ X Y, boundary.b (X + Y) = boundary.b X + boundary.b Y :=
-  boundary.b.map_add
+abbrev b_add : ∀ X Y, b (X + Y) = b X + b Y :=
+  b.map_add
 /-- **Theorem**: Connes Cyclic Boundary Nilpotency b(b(X)) = 0. -/
-theorem boundary_nilpotent_sq (X : Matrix (Fin n) (Fin n) ℂ) :
-    boundary.b (boundary.b X) = 0 :=
-  boundary.nilpotent X
+theorem boundary_nilpotent_sq
+    (nilpotent : ∀ X, b (b X) = 0)
+    (X : Matrix (Fin n) (Fin n) ℂ) :
+    b (b X) = 0 := nilpotent X
 
 /-- **Theorem**: Boundary Operator Value at Zero b(0) = 0. -/
-theorem boundary_zero : boundary.b 0 = 0 := by
-  exact boundary.b.map_zero
+theorem boundary_zero : b 0 = 0 := by
+  exact b.map_zero
 
 /-- Connes Cyclic 1-Cochain Pairing φ(a, b) = Tr(a * b). -/
 def cyclicOneCochainPairing (a b : Matrix (Fin n) (Fin n) ℂ) : ℂ :=

@@ -38,7 +38,7 @@ theorem IB_monotone_descent_from_witness
       ≤
     IBGlobalFreeEnergy pX q_n β D p_old hstep.choose := by
   rcases hstep with ⟨hKL_old, hKL_next, h_encoder, h_marginal⟩
-  exact le_trans h_marginal.descent h_encoder
+  exact le_trans h_marginal h_encoder
 
 /--
 Curried monotonicity form: the full BA descent follows from the separate
@@ -65,6 +65,6 @@ theorem IB_monotone_descent
       (IBNextEncoder q_n β D hInt) hKL_next
       ≤
     IBGlobalFreeEnergy pX q_n β D p_old hKL_old := by
-  exact le_trans h_marginal.descent h_encoder
+  exact le_trans h_marginal h_encoder
 
 end InfoGeometry.Canonical.IBMonotonicity

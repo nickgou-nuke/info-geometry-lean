@@ -126,22 +126,6 @@ namespace GrandUnificationReadout
 
 open InfoGeometry.Topology.GrandUnificationLinker
 
-omit [Algebra ℝ Op] in
-theorem dag_volume_preserved_with_q_data
-    (jewel : QuantumJewel Op) :
-    jewel.dag_edge * amplituhedron_volume_element jewel =
-      amplituhedron_volume_element jewel * jewel.dag_edge :=
-  global_isometry_preservation jewel
-
-omit [StarRing Op] [Algebra ℝ Op] in
-theorem entropy_alignment_transfers_to_q_packet
-    (flow : CausalNonequilibriumFlow Op)
-    (hcomm :
-      flow.P_forward * flow.P_backward -
-          flow.P_backward * flow.P_forward = flow.d_ln_Q) :
-    entropy_production flow = flow.d_ln_Q := by
-  exact de_rham_potential_equals_entropy_production_of_commutator flow hcomm
-
 end GrandUnificationReadout
 
 end InfoGeometry.Topology.SuperCuntzDilationCurvature

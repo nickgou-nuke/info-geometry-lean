@@ -18,7 +18,6 @@ structure CycleLatticeThetaPoissonDualityData where
   phase : GraphCycleLatticeLeyangPhasePackage
   determinant : GraphCycleLatticeDeterminantPrimeSupportData
   flowGraph : FlowWeightedMultigraph
-  graphConnected : flowGraph.Connected
   weightedTreeSum_eq :
     flowGraph.weightedTreeSum = reciprocalTreePolynomial phase.weighted
   edgeWeightDet_eq :
@@ -67,7 +66,7 @@ theorem paper_pom_cycle_lattice_theta_poisson_duality
     (D : CycleLatticeThetaPoissonDualityData) : CycleLatticeThetaPoissonDuality D := by
   have hWeight := paper_graph_cycle_lattice_weighted_discriminant D.phase.weighted
   have hPhase := paper_graph_cycle_lattice_leyang_phase_polynomial D.phase
-  have hFlow := paper_xi_flow_lattice_gram_determinant_tree_weight D.flowGraph D.graphConnected
+  have hFlow := paper_xi_flow_lattice_gram_determinant_tree_weight D.flowGraph
   have hPrime := paper_graph_cycle_lattice_determinant_prime_support D.determinant
   refine ⟨?_, hPhase.1, hPhase.2.1, hPhase.2.2, ?_, hPrime.1, hPrime.2⟩
   · simpa [thetaBulk, thetaDual] using congrArg (fun x : ℝ => D.poissonScale * x) hWeight

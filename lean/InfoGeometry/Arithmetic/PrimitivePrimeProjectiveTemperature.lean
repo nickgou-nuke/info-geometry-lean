@@ -121,23 +121,20 @@ Mangoldt partition integral from `(1, ∞)` to `(0, 1)`.
 This is a calibration socket, not a proof of a general measure-substitution
 theorem or an analytic statement about `ζ`.
 -/
-structure ArithmeticPrimeTemperatureInversionCalibration
-    (A : Finset ℕ) where
-  /-- Supplied compact-coordinate change-of-variables law. -/
-  inversion_integral_law :
-    (∫ β : ℝ in Set.Ioi 1, arithmeticPrimeRestrictedPartition A β)
-      =
-    ∫ u : ℝ in Set.Ioo 0 1, arithmeticPrimeInvertedPartitionDensity A u
+def ArithmeticPrimeTemperatureInversionCalibration (A : Finset ℕ) : Prop :=
+  (∫ β : ℝ in Set.Ioi 1, arithmeticPrimeRestrictedPartition A β)
+    =
+  ∫ u : ℝ in Set.Ioo 0 1, arithmeticPrimeInvertedPartitionDensity A u
 
 /--
 The integrated finite von Mangoldt partition can be read on the compact
 projective temperature interval once the inversion calibration is supplied.
 -/
 theorem ArithmeticPrimeTemperatureInversionCalibration.primePartitionIntegral_eq_inverted_temperature_integral
-    {A : Finset ℕ} (C : ArithmeticPrimeTemperatureInversionCalibration A) :
+    {A : Finset ℕ} (hC : ArithmeticPrimeTemperatureInversionCalibration A) :
     (∫ β : ℝ in Set.Ioi 1, arithmeticPrimeRestrictedPartition A β)
       =
     ∫ u : ℝ in Set.Ioo 0 1, arithmeticPrimeInvertedPartitionDensity A u :=
-  ArithmeticPrimeTemperatureInversionCalibration.inversion_integral_law C
+  hC
 
 end InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature

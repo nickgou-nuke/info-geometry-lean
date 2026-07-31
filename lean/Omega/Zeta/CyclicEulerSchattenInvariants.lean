@@ -63,15 +63,6 @@ theorem paper_cyclic_euler_schatten_invariants (p : ℝ) (atoms : List CyclicEul
       (cyclicEulerExpandedSchattenTerms p atoms).length =
         (atoms.map CyclicEulerNormalAtom.eigenvalueCount).sum :=
     cyclicEulerExpandedSchattenTerms_length p atoms
-  have hRigidity :=
-    paper_cyclic_euler_spectral_rigidity
-      ((cyclicEulerExpandedSchattenTerms p atoms).length =
-        (atoms.map CyclicEulerNormalAtom.eigenvalueCount).sum)
-      (0 ≤ (atoms.map CyclicEulerNormalAtom.eigenvalueCount).sum)
-      True
-      hLength
-      (fun _ => Nat.zero_le _)
-      (fun _ => trivial)
-  exact ⟨hRigidity.1, cyclicEulerExpandedSchattenTerms_sum p atoms⟩
+  exact ⟨hLength, cyclicEulerExpandedSchattenTerms_sum p atoms⟩
 
 end Omega.Zeta

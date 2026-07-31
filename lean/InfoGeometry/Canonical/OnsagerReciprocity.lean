@@ -478,53 +478,6 @@ theorem toRelationalInformationDatum_bohmMadelung_stationary_of_equilibriumSeed
     potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_of_equilibriumSeed
       (E := E) P comparison A hEq
 
-/--
-Proof-carrying witness for the probe-faithful first-variation-zero stationarity
-route on the operatorial Bohm-Madelung/Onsager lane.
--/
-@[rep_depth transport]
-structure ProbeFaithfulFirstVariationZeroWitness
-    (P : PotentialDatum (E := E)) (comparison : H₂) (A : EndH) where
-  hFaithful : InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P
-  hFirst : InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P comparison A = 0
-
-namespace ProbeFaithfulFirstVariationZeroWitness
-
-variable {P : PotentialDatum (E := E)} {comparison : H₂} {A : EndH}
-
-@[rep_depth transport]
-theorem probeFaithful
-    (comparison : H₂) (A : EndH)
-    (W : ProbeFaithfulFirstVariationZeroWitness (E := E) P comparison A) :
-    InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P :=
-  W.hFaithful
-
-@[rep_depth transport]
-theorem firstVariation_eq_zero
-    (comparison : H₂) (A : EndH)
-    (W : ProbeFaithfulFirstVariationZeroWitness (E := E) P comparison A) :
-    InfoGeometry.Canonical.RelativeModularPotential.firstVariation (E := E) P comparison A = 0 :=
-  W.hFirst
-
-end ProbeFaithfulFirstVariationZeroWitness
-
-@[rep_depth transport]
-theorem toRelationalInformationDatum_bohmMadelung_stationary_of_probeFaithfulFirstVariationZeroWitness
-    (P : PotentialDatum (E := E)) (reference comparison : H₂) (A : EndH)
-    (W : ProbeFaithfulFirstVariationZeroWitness (E := E) P comparison A) :
-    ( (InfoGeometry.Canonical.PolarizedMadelungBridge.StateGeneratorField.stateQGTReadout (E := E)
-          (constantStateGeneratorField (E := E) (P.modularData.modularSeed comparison))
-          comparison A).metric
-    , (InfoGeometry.Canonical.PolarizedMadelungBridge.StateGeneratorField.stateQGTReadout (E := E)
-          (constantStateGeneratorField (E := E) (P.modularData.modularSeed comparison))
-          comparison A).phase )
-      =
-    (0, 0) := by
-  let _ := reference
-  exact
-    potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_of_firstVariation_eq_zero_of_probeFaithful
-      (E := E) P comparison A W.hFaithful W.hFirst
-
 @[rep_depth transport]
 theorem toRelationalInformationDatum_bohmMadelung_stationary_of_firstVariation_eq_zero_of_probeFaithful
     (P : PotentialDatum (E := E)) (reference comparison : H₂) (A : EndH)
@@ -538,10 +491,10 @@ theorem toRelationalInformationDatum_bohmMadelung_stationary_of_firstVariation_e
           comparison A).phase )
       =
     (0, 0) := by
+  let _ := reference
   exact
-    toRelationalInformationDatum_bohmMadelung_stationary_of_probeFaithfulFirstVariationZeroWitness
-      (E := E) P reference comparison A
-      { hFaithful := hFaithful, hFirst := hFirst }
+    potentialDatum_constantStateGeneratorField_stateQGTReadout_stationary_of_firstVariation_eq_zero_of_probeFaithful
+      (E := E) P comparison A hFaithful hFirst
 
 end Core
 

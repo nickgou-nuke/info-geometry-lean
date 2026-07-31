@@ -149,14 +149,6 @@ def PenroseTwistorHasSplitCl44NullModel : Prop :=
       ∀ z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier,
         SplitCl44Quad (L z) = InfoGeometry.Twistor.PenroseTwistor.helicity z
 
-theorem penroseTwistor_has_splitCl44_null_model
-    (h : PenroseTwistorHasSplitCl44NullModel) :
-    ∃ L : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier →ₗ[ℝ] SplitCl44Carrier,
-      Function.Injective L ∧
-        ∀ z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier,
-          SplitCl44Quad (L z) = InfoGeometry.Twistor.PenroseTwistor.helicity z :=
-  h
-
 /--
 If the missing Penrose-to-split `Cl(4,4)` null model is supplied, any nonzero
 Penrose null representative yields a projective split-null boundary point.

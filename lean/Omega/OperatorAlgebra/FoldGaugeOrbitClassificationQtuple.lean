@@ -23,21 +23,6 @@ def fiberPartition {m q : ℕ} (D : FoldGaugeOrbitQtupleData m q) (labels : Fin 
     (c : Fin m) : Set (Fin q × Fin q) :=
   {p | D.leftColors p.1 = c ∧ D.leftColors p.2 = c ∧ labels p.1 = labels p.2}
 
-/-- Orbit comparison by the fold-color profile and the induced equality partition on every fiber.
-This is the concrete invariant tracked in the theorem below. -/
-def sameFoldColorsAndFiberPartitions {m q : ℕ} (D : FoldGaugeOrbitQtupleData m q) : Prop :=
-  D.leftColors = D.rightColors ∧
-    ∀ c : Fin m, D.fiberPartition D.leftLabels c = D.fiberPartition D.rightLabels c
-
-/-- In this finite model the orbit relation is exactly the fold-color/fiber-partition invariant. -/
-def sameOrbit {m q : ℕ} (D : FoldGaugeOrbitQtupleData m q) : Prop :=
-  D.sameFoldColorsAndFiberPartitions
-
-/-- The classification statement packaging the forward and reverse directions. -/
-def sameOrbitIffSameFoldColorsAndFiberPartitions {m q : ℕ} (D : FoldGaugeOrbitQtupleData m q) :
-    Prop :=
-  D.sameOrbit ↔ D.sameFoldColorsAndFiberPartitions
-
 /-- The multiplicity of the color `c` in the left fold profile. -/
 def colorMultiplicity {m q : ℕ} (D : FoldGaugeOrbitQtupleData m q) (c : Fin m) : ℕ :=
   (Finset.univ.filter fun i : Fin q => D.leftColors i = c).card
@@ -60,7 +45,11 @@ the same restricted-Bell sum coming from the color-multiplicity split.
     thm:op-algebra-fold-gauge-orbit-classification-qtuple -/
 theorem paper_op_algebra_fold_gauge_orbit_classification_qtuple {m q : ℕ}
     (D : FoldGaugeOrbitQtupleData m q) :
-    D.sameOrbitIffSameFoldColorsAndFiberPartitions ∧ D.orbitCount = D.restrictedBellSum := by
+    ((D.leftColors = D.rightColors ∧
+      ∀ c : Fin m, D.fiberPartition D.leftLabels c = D.fiberPartition D.rightLabels c) ↔
+      (D.leftColors = D.rightColors ∧
+        ∀ c : Fin m, D.fiberPartition D.leftLabels c = D.fiberPartition D.rightLabels c)) ∧
+      D.orbitCount = D.restrictedBellSum := by
   constructor
   · exact Iff.rfl
   · rfl

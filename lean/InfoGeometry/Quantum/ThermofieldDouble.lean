@@ -291,10 +291,9 @@ def isPrimitive (S : Set ℕ) : Prop :=
 /--
 Calibration bridge from finite-profile antichains to primitive integer families.
 -/
-structure PrimitiveAntichainCalibration (P : PrimeBitSpectrum) where
-  primitive_iff_antichain :
-    ∀ S : Set P.Profile,
-      isAntichain P S ↔ isPrimitive (P.bitInteger '' S)
+def PrimitiveAntichainCalibration (P : PrimeBitSpectrum) : Prop :=
+  ∀ S : Set P.Profile,
+    isAntichain P S ↔ isPrimitive (P.bitInteger '' S)
 
 /-- Arithmetic modular calibration for prime-bit state profiles. -/
 structure ArithmeticModularCalibration (P : PrimeBitSpectrum) where

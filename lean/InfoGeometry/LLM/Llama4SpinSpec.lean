@@ -79,16 +79,16 @@ omit [DecidableEq Expert]
 /--
 Assumptions asserting that each routed split component commutes with spin transport.
 -/
-structure IsSplitTransportEquivariant
-    (B : Llama4BlockSpec (S := S) (Pos := Pos) (Expert := Expert)) : Prop where
-  shared : ∀ t x,
-    B.moe.shared (B.spinPin.transport t x) = B.spinPin.transport t (B.moe.shared x)
-  active : ∀ t x,
+def IsSplitTransportEquivariant
+    (B : Llama4BlockSpec (S := S) (Pos := Pos) (Expert := Expert)) : Prop :=
+  (∀ t x,
+    B.moe.shared (B.spinPin.transport t x) = B.spinPin.transport t (B.moe.shared x)) ∧
+  (∀ t x,
     B.moe.routed.activeOutput (B.spinPin.transport t x) =
-      B.spinPin.transport t (B.moe.routed.activeOutput x)
-  defect : ∀ t x,
+      B.spinPin.transport t (B.moe.routed.activeOutput x)) ∧
+  (∀ t x,
     B.moe.routed.defectOutput (B.spinPin.transport t x) =
-      B.spinPin.transport t (B.moe.routed.defectOutput x)
+      B.spinPin.transport t (B.moe.routed.defectOutput x))
 
 /--
 Split-component transport equivariance implies transport equivariance of total routed output.
@@ -110,7 +110,7 @@ theorem routedUpdate_transport_commute_of_split
     B.moe.output (B.spinPin.transport t x)
         = B.moe.shared (B.spinPin.transport t x) + B.moe.routed.activeOutput (B.spinPin.transport t x) := hL
     _ = B.spinPin.transport t (B.moe.shared x) + B.spinPin.transport t (B.moe.routed.activeOutput x) := by
-          rw [hEq.shared t x, hEq.active t x]
+          rw [hEq.1 t x, hEq.2.1 t x]
     _ = B.spinPin.transport t (B.moe.shared x + B.moe.routed.activeOutput x) := by
           symm
           exact SpinPinTransformerLayer.transport_add (B := B.spinPin) (t := t)

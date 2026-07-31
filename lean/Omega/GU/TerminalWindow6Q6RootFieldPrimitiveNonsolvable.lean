@@ -43,11 +43,7 @@ window-`6` root field has no strict intermediate field in the `S₍20₎` certif
 ambient symmetric Galois group is not solvable. -/
 theorem paper_terminal_window6_q6_root_field_primitive_nonsolvable :
     TerminalWindow6Q6RootFieldPrimitiveNonsolvable := by
-  have hCharpoly :
-      True ∧ q6RootFieldDegree = 20 ∧ True ∧ True ∧ True :=
-    paper_terminal_window6_pushforward_charpoly_galois
-      True (q6RootFieldDegree = 20) True True True trivial rfl trivial trivial trivial
-  refine ⟨hCharpoly.2.1, ?_, q6_symmetricGroup_not_solvable⟩
+  refine ⟨rfl, ?_, q6_symmetricGroup_not_solvable⟩
   intro H hH
   exact q6_pointStabilizer_isCoatom.2 H hH
 

@@ -158,7 +158,7 @@ theorem bcfwComparisonPreserved {moving : ℕ}
       D.base.arnoldBCFW.bcfwReadout) :
     D.base.arnoldBCFW.cooperadReadout =
       D.base.arnoldBCFW.bcfwReadout :=
-  bcfw_of_arnold D.base.arnoldBCFW hComparison
+  hComparison
 
 end QDeformedTwistorAmplituhedronDatum
 

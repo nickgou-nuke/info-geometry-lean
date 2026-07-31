@@ -47,13 +47,9 @@ def absMobiusCoefficient (n : ℕ) : ℕ :=
 
 /-- Finite cutoff representation predicate for the Boolean prime-state layer. -/
 @[rep_depth thermo]
-structure BooleanPrimeStateArithmetic (L : FormalPrimeRootLattice) where
-  /-- Integer labels represented by subsets of the finite prime cutoff. -/
-  representedBySubset : ℕ → Prop
-
-  /-- A subset of the cutoff represents its squarefree prime product. -/
-  subset_represents :
-    ∀ S, S ⊆ L.primes → representedBySubset (squarefreeIntegerOfSubset S)
+def BooleanPrimeStateArithmetic (L : FormalPrimeRootLattice) : Type _ :=
+  {representedBySubset : ℕ → Prop //
+    ∀ S, S ⊆ L.primes → representedBySubset (squarefreeIntegerOfSubset S)}
 
 /-- Parity-supertrace coefficient; nonrepresented states have zero coefficient. -/
 @[rep_depth thermo]
@@ -95,11 +91,11 @@ theorem nonsquarefree_not_represented_by_boolean_prime_state
 
 /-- Subset products are represented by the Boolean prime-state layer. -/
 @[rep_depth thermo]
-theorem subset_represented_by_boolean_prime_state
+  theorem subset_represented_by_boolean_prime_state
     {L : FormalPrimeRootLattice}
     (A : BooleanPrimeStateArithmetic L) (S : Finset ℕ) (hS : S ⊆ L.primes) :
-    A.representedBySubset (squarefreeIntegerOfSubset S) :=
-  A.subset_represents S hS
+    A.1 (squarefreeIntegerOfSubset S) :=
+  A.2 S hS
 
 /-- Final parity coefficient theorem: the parity coefficient is the Möbius coefficient. -/
 @[rep_depth thermo]

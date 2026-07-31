@@ -300,28 +300,6 @@ namespace ConformalInference
 
 variable (CI : ConformalInference E)
 
-/-
-Proof-carrying witness that thermodynamic readout stationarity forces vanishing
-chiral scale for the current conformal inference packet.
-
-This is the smallest honest constructive replacement for the bare bridge
-hypothesis
-`IsThermodynamicReadoutStationary ... → CI.chiralScale = 0`.
--/
-/--
-Recover the stationarity-to-zero-scale bridge from the proof-carrying witness.
--/
-@[rep_depth transport]
-theorem stationaryScaleZero_of_witness
-    {P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E)}
-    {ψ : InfoGeometry.Krein.DoubledSpace E}
-    {A : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E}
-    (W : InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
-      (E := E) P ψ A → CI.chiralScale = 0) :
-    InfoGeometry.Canonical.ThermodynamicGenerator.IsThermodynamicReadoutStationary
-        (E := E) P ψ A → CI.chiralScale = 0 :=
-  W
-
 /--
 Souriau-to-Weyl zero-scale packet through an explicit stationarity readout.
 
@@ -354,7 +332,7 @@ theorem semanticCollapsePacket_of_equilibriumSeed_of_stationaryScaleZeroWitness_
   exact
     semanticCollapsePacket_of_structuredProjectorHypotheses_of_chiralScale_eq_zero
       (CI := CI) hProj hLeft
-      (stationaryScaleZero_of_witness (E := E) (CI := CI) W hStationary)
+      (W hStationary)
 
 /--
 Souriau-to-Weyl zero-scale packet through explicit stationarity and structured
@@ -515,7 +493,7 @@ theorem semanticCollapsePacket_of_firstVariation_eq_zero_of_probeFaithful_of_sta
   exact
     semanticCollapsePacket_of_structuredProjectorHypotheses_of_chiralScale_eq_zero
       (CI := CI) hProj hLeft
-      (stationaryScaleZero_of_witness (E := E) (CI := CI) W hStationary)
+      (W hStationary)
 
 /--
 Smaller constructive zero-scale packet from the proof-carrying stationarity to

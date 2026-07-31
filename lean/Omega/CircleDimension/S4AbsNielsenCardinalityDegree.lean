@@ -5,8 +5,7 @@ import Omega.CircleDimension.S4HurwitzConjugacySingleOrbit
 namespace Omega.CircleDimension
 
 /-- Concrete bookkeeping for the audited absolute `S₄` Nielsen-class cardinality package. -/
-structure cdim_s4_abs_nielsen_cardinality_degree_data where
-  witness : Unit := ()
+abbrev cdim_s4_abs_nielsen_cardinality_degree_data := Unit
 
 /-- The audited absolute Nielsen-cardinality of the `S₄` passport. -/
 def cdim_s4_abs_nielsen_cardinality_degree_absoluteCardinality : ℕ := 3840

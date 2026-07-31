@@ -1302,14 +1302,6 @@ theorem ofProofs (h1 : M.e1 * M.e1 = 1) (h2 : M.e2 * M.e2 = 1)
     (h3 : anticommutator M.e1 M.e2 = 0) : MajoranaCARWitness Op M :=
   ⟨h1, h2, h3⟩
 
-/-- The bundled conjunction is definitionally the CAR proposition. -/
-@[rep_depth operator]
-theorem ofBundle
-    (h : (M.e1 * M.e1 = 1) ∧ (M.e2 * M.e2 = 1) ∧
-      anticommutator M.e1 M.e2 = 0) :
-    MajoranaCARWitness Op M :=
-  h
-
 end MajoranaCARWitness
 
 /-- Canonical real doubled phase-axis readout for the Cuntz/Majorana lane. -/
@@ -1382,21 +1374,21 @@ local notation "EndH" => DoubledSpace E →L[ℝ] DoubledSpace E
 
 /-- The phase axis is derived from the canonical real doubled lane. -/
 @[rep_depth operator]
-noncomputable def realDoubledPhaseAxis (_M : RealDoubledCuntzMajoranaPacket (E := E)) : EndH :=
+noncomputable def realDoubledPhaseAxis : EndH :=
   canonicalRealDoubledPhaseAxis (E := E)
 
 /-- The phase axis readout is the canonical clock axis. -/
 @[rep_depth operator, simp]
 theorem realDoubledPhaseAxis_eq_clockAxis :
-    M.realDoubledPhaseAxis = clockAxis (E := E) := by
-  rw [RealDoubledCuntzMajoranaPacket.realDoubledPhaseAxis]
+    realDoubledPhaseAxis (E := E) = clockAxis (E := E) := by
+  rw [realDoubledPhaseAxis]
   exact canonicalRealDoubledPhaseAxis_eq_clockAxis (E := E)
 
 /-- The phase axis readout is the canonical real doubled complex structure. -/
 @[rep_depth operator, simp]
 theorem realDoubledPhaseAxis_eq_complex_i :
-    M.realDoubledPhaseAxis = complex_i (E := E) := by
-  rw [RealDoubledCuntzMajoranaPacket.realDoubledPhaseAxis]
+    realDoubledPhaseAxis (E := E) = complex_i (E := E) := by
+  rw [realDoubledPhaseAxis]
   exact canonicalRealDoubledPhaseAxis_eq_complex_i (E := E)
 
 /-- Convert the specialized packet to the generic Cuntz/Majorana candidate. -/

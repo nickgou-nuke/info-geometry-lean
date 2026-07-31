@@ -64,17 +64,12 @@ theorem clifford_8fold_morita_dim (p q : ℕ) :
   rw [h, pow_add]
   rfl
 
-/-- Full AZ Periodic Table Certified Packet -/
-structure AZFullPeriodicTablePacket where
-  classD_1D : TopologicalGroup
-  h_1D : classD_1D = TopologicalGroup.Z2
-  classD_2D : TopologicalGroup
-  h_2D : classD_2D = TopologicalGroup.Z
-  bottPeriodicity : ∀ (c : AZClass) (d : ℕ), azFullTable c (d + 8) = azFullTable c d
-  moritaDim : ∀ p q : ℕ, 2 ^ (p + 8 + q) = 2 ^ (p + q) * 256
-
 theorem az_full_periodic_table_exists :
-    Nonempty AZFullPeriodicTablePacket :=
-  ⟨⟨TopologicalGroup.Z2, rfl, TopologicalGroup.Z, rfl, az_full_table_8fold_periodicity, clifford_8fold_morita_dim⟩⟩
+    azFullTable AZClass.D 1 = TopologicalGroup.Z2 ∧
+      azFullTable AZClass.D 2 = TopologicalGroup.Z ∧
+        (∀ (c : AZClass) (d : ℕ), azFullTable c (d + 8) = azFullTable c d) ∧
+          ∀ p q : ℕ, 2 ^ (p + 8 + q) = 2 ^ (p + q) * 256 := by
+  exact ⟨class_D_1D_is_Z2, class_D_2D_is_Z,
+    az_full_table_8fold_periodicity, clifford_8fold_morita_dim⟩
 
 end InfoGeometry.Quantum.AZTenFoldFullPeriodicTable

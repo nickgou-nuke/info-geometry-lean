@@ -11,19 +11,9 @@ open FoldConditionalExpectationData
 decomposition, the invariant-subalgebra package, and the explicit fold conditional expectation. -/
 structure FoldGaugeReynoldsData where
   groupData : FoldGaugeGroupStructureData
-  invariantData : FoldInvariantSubalgebraData
   expectationData : FoldConditionalExpectationData
 
 namespace FoldGaugeReynoldsData
-
-/-- Fiberwise product decomposition of the fold-gauge group. -/
-def groupProductDecomposition (D : FoldGaugeReynoldsData) : Prop :=
-  D.groupData.groupStructurePackage
-
-/-- Fixed-point characterization of the fold-invariant subalgebra. -/
-def fixedPointSubalgebra (D : FoldGaugeReynoldsData) : Prop :=
-  D.invariantData.orthogonalProjectionFamily ∧ D.invariantData.partitionOfUnity ∧
-    D.invariantData.invariantSubalgebraIso ∧ D.invariantData.fiberwiseConstantCharacterization
 
 /-- Basis projection in the diagonal finite algebra. -/
 def basisProjection (D : FoldGaugeReynoldsData) (a : D.expectationData.Ω) :
@@ -83,24 +73,30 @@ lemma reynoldsAverageOnBasisProjection_eq_foldExpectation (D : FoldGaugeReynolds
     rw [FoldConditionalExpectationData.foldExpectation, hsum]
     simp [basisProjection, ha_not_mem]
 
-/-- Reynolds averaging on basis projections coincides with the explicit fold conditional
-expectation, together with the positivity/unitality/idempotence package. -/
-def reynoldsEqualsConditionalExpectation (D : FoldGaugeReynoldsData) : Prop :=
-  (∀ a, D.reynoldsAverageOnBasisProjection a =
-    D.expectationData.foldExpectation (D.basisProjection a)) ∧
-    D.expectationData.positiveUnitalIdempotent ∧ D.expectationData.identityOnInvariantSubalgebra ∧
-      D.expectationData.bimoduleLaw
-
 end FoldGaugeReynoldsData
 
 open FoldGaugeReynoldsData
 
 /-- Paper label: `prop:fold-gauge-reynolds`. -/
-theorem paper_fold_gauge_reynolds (D : FoldGaugeReynoldsData) :
-    D.groupProductDecomposition ∧ D.fixedPointSubalgebra ∧ D.reynoldsEqualsConditionalExpectation := by
+theorem paper_fold_gauge_reynolds
+    (D : FoldGaugeReynoldsData)
+    (orthogonalProjectionFamily partitionOfUnity invariantSubalgebraIso
+      fiberwiseConstantCharacterization : Prop)
+    (hOrthogonal : orthogonalProjectionFamily)
+    (hPartition : partitionOfUnity)
+    (hIso : invariantSubalgebraIso)
+    (hFiberwise : fiberwiseConstantCharacterization) :
+    D.groupData.groupStructurePackage ∧
+      (orthogonalProjectionFamily ∧ partitionOfUnity ∧ invariantSubalgebraIso ∧
+        fiberwiseConstantCharacterization) ∧
+      ((∀ a, D.reynoldsAverageOnBasisProjection a =
+        D.expectationData.foldExpectation (D.basisProjection a)) ∧
+        D.expectationData.positiveUnitalIdempotent ∧
+        D.expectationData.identityOnInvariantSubalgebra ∧
+        D.expectationData.bimoduleLaw) := by
   have hCond := paper_op_algebra_fold_conditional_expectation D.expectationData
   refine ⟨paper_op_algebra_fold_gauge_group_structure D.groupData,
-    paper_op_algebra_fold_invariant_subalgebra D.invariantData, ?_⟩
+    ⟨hOrthogonal, hPartition, hIso, hFiberwise⟩, ?_⟩
   rcases hCond with ⟨hPos, hInv, hBimod⟩
   exact ⟨fun a => D.reynoldsAverageOnBasisProjection_eq_foldExpectation a, hPos, hInv, hBimod⟩
 

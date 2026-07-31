@@ -58,7 +58,7 @@ orientifold evidence packet.
 abbrev NativeKleinBottleCarrier :=
   KleinBottleOrientifold.KleinBottleOrientifold
 
-def connect_to_orientifold (_Z2 : Z2GlideReflectionPacket) :
+def connect_to_orientifold :
     NativeKleinBottleCarrier :=
   KleinBottleOrientifold.canonicalKleinBottleOrientifold
 

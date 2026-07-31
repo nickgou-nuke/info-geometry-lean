@@ -38,11 +38,14 @@ theorem paper_conclusion_unified_offline_verifier_synthesis_barrier
     (D : UnifiedOfflineVerifierSynthesisBarrierData) :
     D.polytimeSynth →
       D.verifierAcceptsIffUnsat →
+        PolynomialTimeMap (unsatByCertificateSynthesis D.Synth D.Ver) →
+          (∀ decideL : D.Formula → Bool, PolynomialTimeMap decideL →
+            PolynomialTimeMap (fun x => !(decideL x))) →
         D.P_eq_NP := by
-  intro hPoly hCorrect
+  intro hPoly hCorrect hComposite hComplement
   rcases hPoly with ⟨hSynth, hVer⟩
   exact
     (paper_spg_polytime_certificate_synthesis_implies_p_equals_np
-      D.UNSAT D.Synth D.Ver hSynth hVer hCorrect).2
+      D.UNSAT D.Synth D.Ver hComposite hComplement hCorrect).2
 
 end Omega.Conclusion

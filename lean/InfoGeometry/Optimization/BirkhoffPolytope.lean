@@ -17,20 +17,20 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
   The space of all doubly stochastic matrices, representing the exact 
   thermodynamic bipartite matchings of the quantum vacuum.
 -/
-structure IsDoublyStochastic (W : Matrix n n ℝ) : Prop :=
-  (nonneg : ∀ i j, (0 : ℝ) ≤ W i j)
-  (row_sum : ∀ i, ∑ j, W i j = 1)
-  (col_sum : ∀ j, ∑ i, W i j = 1)
+def IsDoublyStochastic (W : Matrix n n ℝ) : Prop :=
+  (∀ i j, (0 : ℝ) ≤ W i j) ∧
+    (∀ i, ∑ j, W i j = 1) ∧
+      (∀ j, ∑ i, W i j = 1)
 
 /- 
   The Tangent Cone at a state W ∈ ℬ_n. 
   The set of all allowable irrotational metric flows (gradients) A that 
   preserve the thermodynamic probability boundaries.
 -/
-structure IsInTangentCone (W A : Matrix n n ℝ) : Prop :=
-  (row_sum_zero : ∀ i, ∑ j, A i j = 0)
-  (col_sum_zero : ∀ j, ∑ i, A i j = 0)
-  (boundary_push : ∀ i j, W i j = 0 → (0 : ℝ) ≤ A i j)
+def IsInTangentCone (W A : Matrix n n ℝ) : Prop :=
+  (∀ i, ∑ j, A i j = 0) ∧
+    (∀ j, ∑ i, A i j = 0) ∧
+      (∀ i j, W i j = 0 → (0 : ℝ) ≤ A i j)
 
 /- 
   The Dual Ascent Optimization Step.
@@ -54,7 +54,7 @@ theorem dual_ascent_preserves_sums (W A : Matrix n n ℝ) (η : ℝ)
         ∑ j, (W i j + η * A i j) = ∑ j, W i j := by
       rw [Finset.sum_add_distrib]
       have hscaled : ∑ j, η * A i j = 0 := by
-        rw [← Finset.mul_sum, h_tan.row_sum_zero i, mul_zero]
+        rw [← Finset.mul_sum, h_tan.1 i, mul_zero]
       rw [hscaled, add_zero]
     simp [BirkhoffDualAscentStep] at hi
     rw [hsum] at hi
@@ -64,7 +64,7 @@ theorem dual_ascent_preserves_sums (W A : Matrix n n ℝ) (η : ℝ)
         ∑ j, (W i j + η * A i j) = ∑ j, W i j := by
       rw [Finset.sum_add_distrib]
       have hscaled : ∑ j, η * A i j = 0 := by
-        rw [← Finset.mul_sum, h_tan.row_sum_zero i, mul_zero]
+        rw [← Finset.mul_sum, h_tan.1 i, mul_zero]
       rw [hscaled, add_zero]
     simp [BirkhoffDualAscentStep]
     rw [hsum, h i]

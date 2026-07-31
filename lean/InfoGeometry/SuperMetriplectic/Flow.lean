@@ -77,9 +77,6 @@ structure MetriplecticFlow
     metric.onsager energyForce = 0
   entropyProduction_eq_quadratic :
     entropyProduction = metric.pairing entropyForce dissipativeFlow
-  reversible_entropy_change : ℝ
-  reversible_entropy_change_eq_zero :
-    reversible_entropy_change = 0
 
 namespace MetriplecticFlow
 
@@ -110,12 +107,6 @@ theorem dissipative_energy_change_eq_zero
   rw [F.metric.metric_symmetric F.energyForce F.entropyForce]
   rw [F.energy_degeneracy]
   exact F.metric.pairing_zero_right F.entropyForce
-
-/-- The reversible entropy channel is explicitly zero in this packet. -/
-theorem reversible_entropy_change_zero
-    (F : MetriplecticFlow V) :
-    F.reversible_entropy_change = 0 :=
-  F.reversible_entropy_change_eq_zero
 
 /-- Dissipative equilibrium means the entropy force lies in the null space of `L`. -/
 def IsDissipativeEquilibrium (F : MetriplecticFlow V) : Prop :=
@@ -153,34 +144,19 @@ Scalar-body shadow of the coadjoint-leaf decomposition.
 while `transverseEntropyProduction` records the Onsager motion across leaves.
 -/
 structure CoadjointLeafEntropySplit where
-  leafEntropyChange : ℝ
   transverseEntropyProduction : ℝ
   totalEntropyChange : ℝ
-  leafEntropyChange_eq_zero :
-    leafEntropyChange = 0
   transverseEntropyProduction_nonnegative :
     0 ≤ transverseEntropyProduction
-  totalEntropyChange_eq_leaf_plus_transverse :
-    totalEntropyChange = leafEntropyChange + transverseEntropyProduction
+  totalEntropyChange_eq_transverse :
+    totalEntropyChange = transverseEntropyProduction
 
 namespace CoadjointLeafEntropySplit
-
-/-- Reversible motion along the coadjoint leaf carries no entropy production. -/
-theorem leaf_entropy_change_zero (S : CoadjointLeafEntropySplit) :
-    S.leafEntropyChange = 0 :=
-  S.leafEntropyChange_eq_zero
 
 /-- Transverse Onsager motion carries nonnegative entropy production. -/
 theorem transverse_entropy_nonnegative (S : CoadjointLeafEntropySplit) :
     0 ≤ S.transverseEntropyProduction :=
   S.transverseEntropyProduction_nonnegative
-
-/-- Total entropy change reduces to the transverse Onsager contribution. -/
-theorem totalEntropyChange_eq_transverse
-    (S : CoadjointLeafEntropySplit) :
-    S.totalEntropyChange = S.transverseEntropyProduction := by
-  rw [S.totalEntropyChange_eq_leaf_plus_transverse, S.leafEntropyChange_eq_zero]
-  simp
 
 /-- Total entropy change is nonnegative. -/
 theorem totalEntropyChange_nonnegative
@@ -237,12 +213,6 @@ theorem entropyProduction_nonnegative
     0 ≤ C.flow.entropyProduction :=
   C.flow.entropyProduction_nonnegative
 
-/-- The reversible entropy channel is zero in the capstone flow. -/
-theorem reversible_entropy_change_zero
-    (C : RelativisticConformalHydroCapstone V) :
-    C.flow.reversible_entropy_change = 0 :=
-  C.flow.reversible_entropy_change_zero
-
 /-- The dissipative flow preserves energy by Onsager degeneracy. -/
 theorem dissipative_energy_change_eq_zero
     (C : RelativisticConformalHydroCapstone V) :
@@ -261,13 +231,11 @@ theorem conformal_anomaly_zero_capstone
       ∧ C.cftGate.LPD = 0
       ∧ C.pkSplit.dissipativePK = 0
       ∧ C.flow.metric.pairing C.flow.energyForce C.flow.dissipativeFlow = 0
-      ∧ C.flow.reversible_entropy_change = 0
       ∧ 0 ≤ C.flow.entropyProduction := by
   rcases C.dissipative_conformal_blocks_vanish_of_anomaly_zero hAnomaly with
     ⟨hDD, hPD, hPK⟩
   exact ⟨hDD, hPD, hPK,
     C.dissipative_energy_change_eq_zero,
-    C.reversible_entropy_change_zero,
     C.entropyProduction_nonnegative⟩
 
 end RelativisticConformalHydroCapstone

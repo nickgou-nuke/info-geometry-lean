@@ -212,21 +212,4 @@ noncomputable def carrierMatrix
 
 end ArnoldProductRank32Realization
 
-/--
-Combined finite packet: the carrier is `32 = 16 + 16`, with the chiral/anti-
-chiral partition and cardinality readbacks proved above.
--/
-theorem rank32_boundary_realization_packet
-    {Op : Type*} [Ring Op] (_R : Rank32BoundaryRealization Op) :
-    Fintype.card BoundaryRank32State = 32 ∧
-      Fintype.card {s : BoundaryRank32State // IsChiralState s} = 16 ∧
-      Fintype.card {s : BoundaryRank32State // IsAntiChiralState s} = 16 ∧
-      (∀ s : BoundaryRank32State, IsChiralState s ∨ IsAntiChiralState s) ∧
-      (∀ s : BoundaryRank32State, ¬ (IsChiralState s ∧ IsAntiChiralState s)) := by
-  exact ⟨boundaryRank32State_card,
-    chiralState_card,
-    antiChiralState_card,
-    chiral_or_antiChiral_state,
-    not_chiral_and_antiChiral_state⟩
-
 end InfoGeometry.Topology.AmplituhedronBoundary

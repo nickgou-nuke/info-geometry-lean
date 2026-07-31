@@ -225,13 +225,4 @@ theorem witten_index_e8_constant_in_parameter :
   intro β Hβ
   rfl
 
-/-- Trivial existential readback of the finite count difference under a supplied
-`gauge_group = Unit` hypothesis.  This is not a Standard Model embedding. -/
-theorem finite_unit_group_index_readback :
-  ∀ gauge_group : Type,
-  gauge_group = Unit → -- SU(3) × SU(2) × U(1) embedded in E₈
-  ∀ β > 0, ∃ W : ℤ, witten_index_e8 = W := by
-  intro gauge_group Hgauge β Hβ
-  exact ⟨witten_index_e8, rfl⟩
-
 end E8Triality

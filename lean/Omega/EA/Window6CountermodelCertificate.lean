@@ -127,27 +127,21 @@ def window6_fin21_facts_certificate_e55_rhs : window6_fin21_facts_certificate_te
       (window6_fin21_facts_certificate_op window6_fin21_facts_certificate_y
         window6_fin21_facts_certificate_x))
 
-/-- The classifier-level form of `Facts G [10, 52, 55] [43, 46]` for the window-`6`,
-`Fin 21` rectangular-band model. -/
-def window6_fin21_facts_certificate_statement : Prop :=
-  window6_fin21_facts_certificate_equation_holds
-      window6_fin21_facts_certificate_e10_lhs window6_fin21_facts_certificate_e10_rhs ∧
-    window6_fin21_facts_certificate_equation_holds
-      window6_fin21_facts_certificate_e52_lhs window6_fin21_facts_certificate_e52_rhs ∧
-    window6_fin21_facts_certificate_equation_holds
-      window6_fin21_facts_certificate_e55_lhs window6_fin21_facts_certificate_e55_rhs ∧
-    ¬ window6_fin21_facts_certificate_equation_holds
-      window6_fin21_facts_certificate_e43_lhs window6_fin21_facts_certificate_e43_rhs ∧
-    ¬ window6_fin21_facts_certificate_equation_holds
-      window6_fin21_facts_certificate_e46_lhs window6_fin21_facts_certificate_e46_rhs
-
 /-- The window-`6` `Fin 21` certificate satisfies ETP indices `10`, `52`, and `55`, and
 refutes indices `43` and `46`.
     thm:window6-fin21-facts-certificate -/
 theorem paper_window6_fin21_facts_certificate :
-    window6_fin21_facts_certificate_statement := by
-  simp [window6_fin21_facts_certificate_statement,
-    window6_fin21_facts_certificate_equation_holds,
+    window6_fin21_facts_certificate_equation_holds
+        window6_fin21_facts_certificate_e10_lhs window6_fin21_facts_certificate_e10_rhs ∧
+      window6_fin21_facts_certificate_equation_holds
+        window6_fin21_facts_certificate_e52_lhs window6_fin21_facts_certificate_e52_rhs ∧
+      window6_fin21_facts_certificate_equation_holds
+        window6_fin21_facts_certificate_e55_lhs window6_fin21_facts_certificate_e55_rhs ∧
+      ¬ window6_fin21_facts_certificate_equation_holds
+        window6_fin21_facts_certificate_e43_lhs window6_fin21_facts_certificate_e43_rhs ∧
+      ¬ window6_fin21_facts_certificate_equation_holds
+        window6_fin21_facts_certificate_e46_lhs window6_fin21_facts_certificate_e46_rhs := by
+  simp [window6_fin21_facts_certificate_equation_holds,
     window6_fin21_facts_certificate_e10_lhs, window6_fin21_facts_certificate_e10_rhs,
     window6_fin21_facts_certificate_e43_lhs, window6_fin21_facts_certificate_e43_rhs,
     window6_fin21_facts_certificate_e46_lhs, window6_fin21_facts_certificate_e46_rhs,
@@ -170,23 +164,31 @@ def window6_equational_spectrum_total_count : Nat := 4694
 /-- Number of ordered satisfied/refuted implication pairs separated by the certificate. -/
 def window6_equational_spectrum_product_count : Nat := 1532373
 
-/-- The window-`6` finite certificate together with its audited equational spectrum counts. -/
-def window6_equational_spectrum_statement : Prop :=
-  window6_fin21_facts_certificate_statement ∧
-    window6_equational_spectrum_satisfied_count +
-      window6_equational_spectrum_refuted_count =
-        window6_equational_spectrum_total_count ∧
-    window6_equational_spectrum_satisfied_count *
-      window6_equational_spectrum_refuted_count =
-        window6_equational_spectrum_product_count
-
 /-- Paper label: `cor:window6-equational-spectrum`. -/
 theorem paper_window6_equational_spectrum :
-    window6_equational_spectrum_statement := by
-  refine ⟨paper_window6_fin21_facts_certificate, ?_, ?_⟩ <;>
-    norm_num [window6_equational_spectrum_satisfied_count,
-      window6_equational_spectrum_refuted_count, window6_equational_spectrum_total_count,
-      window6_equational_spectrum_product_count]
+    window6_fin21_facts_certificate_equation_holds
+        window6_fin21_facts_certificate_e10_lhs window6_fin21_facts_certificate_e10_rhs ∧
+      window6_fin21_facts_certificate_equation_holds
+        window6_fin21_facts_certificate_e52_lhs window6_fin21_facts_certificate_e52_rhs ∧
+      window6_fin21_facts_certificate_equation_holds
+        window6_fin21_facts_certificate_e55_lhs window6_fin21_facts_certificate_e55_rhs ∧
+      ¬ window6_fin21_facts_certificate_equation_holds
+        window6_fin21_facts_certificate_e43_lhs window6_fin21_facts_certificate_e43_rhs ∧
+      ¬ window6_fin21_facts_certificate_equation_holds
+        window6_fin21_facts_certificate_e46_lhs window6_fin21_facts_certificate_e46_rhs ∧
+      window6_equational_spectrum_satisfied_count +
+          window6_equational_spectrum_refuted_count =
+        window6_equational_spectrum_total_count ∧
+        window6_equational_spectrum_satisfied_count *
+          window6_equational_spectrum_refuted_count =
+        window6_equational_spectrum_product_count := by
+  rcases paper_window6_fin21_facts_certificate with
+    ⟨h10, h52, h55, h43, h46⟩
+  refine ⟨h10, h52, h55, h43, h46, ?_, ?_⟩
+  · norm_num [window6_equational_spectrum_satisfied_count,
+      window6_equational_spectrum_refuted_count, window6_equational_spectrum_total_count]
+  · norm_num [window6_equational_spectrum_satisfied_count,
+      window6_equational_spectrum_refuted_count, window6_equational_spectrum_product_count]
 
 /-- Paper label: `prop:window6-crt-rectangular-band`. -/
 theorem paper_window6_crt_rectangular_band :

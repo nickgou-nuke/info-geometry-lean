@@ -33,13 +33,6 @@ than a vacuous placeholder for the full Tomita--Takesaki theorem. -/
 def is_kms_state [CompleteSpace E] (ω : EndH → ℝ) (A B : EndH) (beta : ℝ) : Prop :=
   ω (A * B) = ω (B * (real_kms_shift (E := E) beta * A))
 
-/-- Read back the finite KMS equality carried by `is_kms_state`. -/
-theorem kms_state_readout [CompleteSpace E]
-    (ω : EndH → ℝ) (A B : EndH) (beta : ℝ)
-    (h : is_kms_state (E := E) ω A B beta) :
-    ω (A * B) = ω (B * (real_kms_shift (E := E) beta * A)) :=
-  h
-
 /-- At the Hagedorn temperature, the partition function diverges. 
 This is the boundary of the thermal cylinder. -/
 def is_hagedorn_temperature (T_H T : ℝ) : Prop :=

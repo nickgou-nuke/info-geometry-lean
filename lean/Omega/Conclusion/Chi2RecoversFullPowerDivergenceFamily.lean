@@ -9,8 +9,7 @@ noncomputable section
 
 /-- Concrete wrapper for recovering the golden constants and the full power-divergence family from
 the single `χ²` baseline constant. -/
-structure conclusion_chi2_recovers_full_power_divergence_family_data where
-  conclusion_chi2_recovers_full_power_divergence_family_witness : Unit := ()
+abbrev conclusion_chi2_recovers_full_power_divergence_family_data := Unit
 
 /-- The distinguished `χ²` baseline constant from the binary escort package. -/
 noncomputable def conclusion_chi2_recovers_full_power_divergence_family_chi2_constant : ℝ :=

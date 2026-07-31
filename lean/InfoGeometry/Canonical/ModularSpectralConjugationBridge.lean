@@ -80,7 +80,7 @@ theorem activeModularConjugation_mul_P_D_eq_zero
   rw [activeModularConjugation_eq_modular_j_mul_active
     (E := E) (W := W) owned_epsilon owned_P_D comp hActivePhase]
   have hIdem : owned_P_D * owned_P_D = owned_P_D := by
-    simpa [comp.pzero_eq] using W.PZero_idem
+    simpa [comp.2] using W.PZero_idem
   have hRight : ((1 : EndH) - owned_P_D) * owned_P_D = 0 := by
     calc
       ((1 : EndH) - owned_P_D) * owned_P_D
@@ -111,7 +111,7 @@ theorem P_D_mul_activeModularConjugation_eq_zero
   rw [activeModularConjugation_eq_modular_j_mul_active
     (E := E) (W := W) owned_epsilon owned_P_D comp hActivePhase]
   have hIdem : owned_P_D * owned_P_D = owned_P_D := by
-    simpa [comp.pzero_eq] using W.PZero_idem
+    simpa [comp.2] using W.PZero_idem
   have hLeft : owned_P_D * ((1 : EndH) - owned_P_D) = 0 := by
     calc
       owned_P_D * ((1 : EndH) - owned_P_D)

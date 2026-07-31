@@ -137,16 +137,6 @@ def frobenius : FrobeniusSelfDualPacket Algebra where
     have h1 := h 1
     simpa using h1
 
-/-- The unique edge carries the regular Drazin denominator `1`. -/
-theorem edgeDrazinData_element_line :
-    regularEdgeDrazin.element = 1 :=
-  rfl
-
-/-- The unique edge has zero localized Drazin residue. -/
-theorem edgeLocalizedDrazinResidue_line :
-    regularEdgeDrazin.localizedDrazinResidue = 0 :=
-  rfl
-
 end CP1DrazinModel
 end GromovWittenErlangen
 end InfoGeometry

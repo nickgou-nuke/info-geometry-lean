@@ -222,48 +222,4 @@ end IncidentPair
 
 end TwistorIncidenceReadout
 
-/-! ## Unified bridge packet -/
-
-/-- Reusable packet for the finite Jones/spinor/Poincaré/twistor bridge. -/
-structure JonesPoincareBridgePacket where
-  spinorEquiv : JonesVec ≃ₗ[ℂ] WeylSpinor
-  stokesLightcone : ∀ (J : JonesSpinor),
-    J.stokes1 ^ 2 + J.stokes2 ^ 2 + J.stokes3 ^ 2 = J.stokes0 ^ 2
-  poincareSphere : ∀ {J : JonesSpinor}, J.UnitIntensity →
-    J.stokes1 ^ 2 + J.stokes2 ^ 2 + J.stokes3 ^ 2 = 1
-  plusPole : JonesSpinor.stokes0 JonesSpinor.plusCircular = 1 ∧
-    JonesSpinor.stokes1 JonesSpinor.plusCircular = 1 ∧
-    JonesSpinor.stokes2 JonesSpinor.plusCircular = 0 ∧
-    JonesSpinor.stokes3 JonesSpinor.plusCircular = 0
-  minusPole : JonesSpinor.stokes0 JonesSpinor.minusCircular = 1 ∧
-    JonesSpinor.stokes1 JonesSpinor.minusCircular = -1 ∧
-    JonesSpinor.stokes2 JonesSpinor.minusCircular = 0 ∧
-    JonesSpinor.stokes3 JonesSpinor.minusCircular = 0
-  circularProjectors : JonesSpinor.circularPlusProjector *
-      JonesSpinor.circularPlusProjector = JonesSpinor.circularPlusProjector ∧
-    JonesSpinor.circularMinusProjector *
-      JonesSpinor.circularMinusProjector = JonesSpinor.circularMinusProjector ∧
-    JonesSpinor.circularPlusProjector * JonesSpinor.circularMinusProjector = 0 ∧
-    JonesSpinor.circularMinusProjector * JonesSpinor.circularPlusProjector = 0 ∧
-    JonesSpinor.circularPlusProjector + JonesSpinor.circularMinusProjector = 1
-  stokesPauliDetZero : ∀ (J : JonesSpinor),
-    Matrix.det (pauliMatrix (JonesSpinor.stokesMinkowski4 J)) = 0
-  nullSeparation : ∀ (P : TwistorIncidenceReadout.IncidentPair),
-    InfoGeometry.Clifford.Soldering.q22 (P.X - P.Y) = 0
-
-/-- Canonical packet bundling the finite Jones/Poincaré/twistor bridge. -/
-def jonesPoincareBridgePacket : JonesPoincareBridgePacket :=
-  { spinorEquiv := jonesSpinorEquiv
-    stokesLightcone := JonesSpinor.stokes_lightcone_identity
-    poincareSphere := @JonesSpinor.poincare_sphere_identity_of_unitIntensity
-    plusPole := JonesSpinor.plusCircular_stokes
-    minusPole := JonesSpinor.minusCircular_stokes
-    circularProjectors := by
-      refine ⟨JonesSpinor.circularPlusProjector_idem, JonesSpinor.circularMinusProjector_idem, ?_, ?_, JonesSpinor.circularProjectors_sum_one⟩
-      · exact JonesSpinor.circularProjectors_orthogonal_left
-      · exact JonesSpinor.circularProjectors_orthogonal_right
-    stokesPauliDetZero := JonesSpinor.stokesPauli_det_zero
-    nullSeparation := TwistorIncidenceReadout.IncidentPair.null_separation }
-
 end InfoGeometry.Optics.JonesPoincareSphere
-

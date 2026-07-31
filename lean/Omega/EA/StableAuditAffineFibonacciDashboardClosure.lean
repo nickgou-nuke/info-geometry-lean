@@ -36,21 +36,26 @@ def stable_audit_affine_fibonacci_dashboard_closure_sample_affine_data :
 def stable_audit_affine_fibonacci_dashboard_closure_zero_dashboard_certificate : Bool :=
   stable_audit_affine_fibonacci_dashboard_closure_dashboard_hit_counts.all (fun hits => hits == 0)
 
-/-- Concrete closure statement for the Fibonacci affine dashboard audit. -/
-def stable_audit_affine_fibonacci_dashboard_closure_statement : Prop :=
-  stable_audit_affine_fibonacci_dashboard_closure_parameter_pair_counts =
-      [4, 9, 25, 64, 169, 441, 1156, 3025, 7921, 20736] ∧
-    stable_audit_affine_fibonacci_dashboard_closure_parameter_pair_counts.sum = 33550 ∧
-    stable_audit_affine_fibonacci_dashboard_closure_dashboard_hit_counts.sum = 0 ∧
-    stable_audit_affine_fibonacci_dashboard_closure_zero_dashboard_certificate = true ∧
-    stable_audit_affine_fibonacci_dashboard_closure_unknown_ordered_pair_count = 498 ∧
-    stable_audit_affine_fibonacci_dashboard_closure_distinct_equation_index_count = 223 ∧
-    stable_audit_affine_coefficient_criterion_statement
-      stable_audit_affine_fibonacci_dashboard_closure_sample_affine_data
-
 /-- Paper label: `thm:stable-audit-affine-fibonacci-dashboard-closure`. -/
 theorem paper_stable_audit_affine_fibonacci_dashboard_closure :
-    stable_audit_affine_fibonacci_dashboard_closure_statement := by
+    stable_audit_affine_fibonacci_dashboard_closure_parameter_pair_counts =
+        [4, 9, 25, 64, 169, 441, 1156, 3025, 7921, 20736] ∧
+      stable_audit_affine_fibonacci_dashboard_closure_parameter_pair_counts.sum = 33550 ∧
+      stable_audit_affine_fibonacci_dashboard_closure_dashboard_hit_counts.sum = 0 ∧
+      stable_audit_affine_fibonacci_dashboard_closure_zero_dashboard_certificate = true ∧
+      stable_audit_affine_fibonacci_dashboard_closure_unknown_ordered_pair_count = 498 ∧
+      stable_audit_affine_fibonacci_dashboard_closure_distinct_equation_index_count = 223 ∧
+      (∀ s t : stable_audit_affine_coefficient_criterion_term,
+        (∀ ρ : Fin 6 → ZMod
+            stable_audit_affine_fibonacci_dashboard_closure_sample_affine_data.n,
+          stable_audit_affine_coefficient_criterion_data.stable_audit_affine_coefficient_criterion_eval
+              stable_audit_affine_fibonacci_dashboard_closure_sample_affine_data ρ s =
+            stable_audit_affine_coefficient_criterion_data.stable_audit_affine_coefficient_criterion_eval
+              stable_audit_affine_fibonacci_dashboard_closure_sample_affine_data ρ t) ↔
+          stable_audit_affine_coefficient_criterion_data.stable_audit_affine_coefficient_criterion_coeff
+              stable_audit_affine_fibonacci_dashboard_closure_sample_affine_data s =
+            stable_audit_affine_coefficient_criterion_data.stable_audit_affine_coefficient_criterion_coeff
+              stable_audit_affine_fibonacci_dashboard_closure_sample_affine_data t) := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · native_decide
   · native_decide

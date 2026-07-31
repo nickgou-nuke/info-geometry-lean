@@ -173,21 +173,6 @@ theorem canonical_K_isOdd :
     isOdd (E := E) (canonical (E := E)).K := by
   simpa [canonical] using InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_isOdd (E := E)
 
-/--
-Compact readback of the modular real atom:
-`J` is even, `ε` and `Jε` are odd, and the odd generators anticommute.
--/
-theorem canonical_block_grading_packet :
-    isEven (E := E) (canonical (E := E)).J ∧
-      isOdd (E := E) (canonical (E := E)).ε ∧
-      isOdd (E := E) (canonical (E := E)).K ∧
-      ((canonical (E := E)).J).comp ((canonical (E := E)).ε)
-        + ((canonical (E := E)).ε).comp ((canonical (E := E)).J) = 0 := by
-  exact ⟨canonical_J_isEven (E := E), canonical_eps_isOdd (E := E),
-    canonical_K_isOdd (E := E), by
-      simpa [canonical] using
-        InfoGeometry.Canonical.TomitaTakesaki.modularConjugationJ_anticommutator_modularSignEpsilon (E := E)⟩
-
 section SpinorObservables
 
 /-- 

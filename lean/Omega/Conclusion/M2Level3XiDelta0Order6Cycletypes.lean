@@ -3,8 +3,7 @@ import Mathlib.Tactic
 namespace Omega.Conclusion
 
 /-- Concrete wrapper for the audited order-`6` cycle-type statement. -/
-structure conclusion_m2_level3_xi_delta0_order6_cycletypes_data where
-  conclusion_m2_level3_xi_delta0_order6_cycletypes_witness : Unit := ()
+abbrev conclusion_m2_level3_xi_delta0_order6_cycletypes_data := Unit
 
 /-- Orbit-block model for the Klingen fiber: `1^5 2^4 3^1 6^4`. -/
 abbrev conclusion_m2_level3_xi_delta0_order6_cycletypes_klingen_fiber :=

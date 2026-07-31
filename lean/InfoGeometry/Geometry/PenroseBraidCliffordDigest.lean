@@ -94,12 +94,6 @@ theorem s3_s₂_involutive : s₂ * s₂ = 1 := by
 def HeckeQuadratic {R : Type*} [Ring R] (q σ : R) : Prop :=
   (σ - q) * (σ + 1) = 0
 
-/-- Transparent readout of the Hecke relation from an explicit premise. -/
-theorem hecke_quadratic_readout {R : Type*} [Ring R] {q σ : R}
-    (h : HeckeQuadratic q σ) :
-    (σ - q) * (σ + 1) = 0 :=
-  h
-
 /-! ## Concrete finite Clifford-style matrix sanity check -/
 
 /-- A real `2 × 2` generator with square `+1`. -/

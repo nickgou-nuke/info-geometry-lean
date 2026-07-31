@@ -7,8 +7,7 @@ open Polynomial
 noncomputable section
 
 /-- Minimal concrete datum for the terminal `Z_m` weight-tripling discriminant-index package. -/
-structure xi_terminal_zm_elliptic_weight_tripling_discriminant_index_data where
-  xi_terminal_zm_elliptic_weight_tripling_discriminant_index_witness : Unit := ()
+abbrev xi_terminal_zm_elliptic_weight_tripling_discriminant_index_data := Unit
 
 /-- Lee--Yang branch polynomial placeholder for the audited terminal `Z_m` tripling package. -/
 def xi_terminal_zm_elliptic_weight_tripling_discriminant_index_p_ly : Polynomial ℤ :=

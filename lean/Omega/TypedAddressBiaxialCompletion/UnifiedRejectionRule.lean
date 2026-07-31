@@ -86,14 +86,15 @@ open UnifiedRejectionWitness
 
 /-- Paper label: `prop:typed-address-biaxial-completion-unified-rejection-rule`. -/
 theorem paper_typed_address_biaxial_completion_unified_rejection_rule
-    (U : UnifiedRejectionWitness) :
+    (U : UnifiedRejectionWitness)
+    (hUnitarySliceLocked : U.defectCertificate.certificateLoop.unitarySliceLocked) :
     U.addressConsistency ∧ U.defectCompilation ∧ U.toeplitzPsdEndpointBranch := by
   have hAddr :=
     paper_typed_address_biaxial_completion_read_us_typed_precision
       U.address U.verifier U.certificate?
   have hDefect :=
     paper_typed_address_biaxial_completion_compiled_defect_certificate
-      U.defectCertificate U.offlineVerified
+      U.defectCertificate hUnitarySliceLocked U.offlineVerified
   have hPsd :=
     paper_typed_address_biaxial_completion_compiled_psd_certificate
       U.toeplitzCertificate U.radius_nonneg U.radius_lt_one
@@ -103,7 +104,9 @@ theorem paper_typed_address_biaxial_completion_unified_rejection_rule
   have hEndpoint :=
     paper_typed_address_biaxial_completion_boundary_endpoint_orthogonal
       U.boundaryVerifier U.endpointHeat
-  refine ⟨hAddr, hDefect, ?_⟩
+  have hDefectCompilation : U.defectCompilation := by
+    simpa [UnifiedRejectionWitness.defectCompilation] using hDefect
+  refine ⟨hAddr, hDefectCompilation, ?_⟩
   exact ⟨hPsd.1, hPsd.2.1, hPsd.2.2.1, hPsd.2.2.2, hJoint.1, hEndpoint.1, hEndpoint.2⟩
 
 end Omega.TypedAddressBiaxialCompletion

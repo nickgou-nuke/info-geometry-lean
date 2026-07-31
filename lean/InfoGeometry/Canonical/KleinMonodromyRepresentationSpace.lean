@@ -77,12 +77,4 @@ theorem finite_mobius_square_projective :
     ProjectivelyEqual (mobiusS * mobiusS) I2 :=
   mobius_square_projectively_identity
 
-/-- Direct finite formula synthesis from the native matrix owner. -/
-theorem finite_formula_packet (t : ℚ) :
-    ProjectivelyEqual I2 minusI2 ∧
-      twistA * parabolicB * twistA * parabolicB = I2 ∧
-      mobiusS.mulVec ![t, 1] = ![-1, t] ∧
-      ProjectivelyEqual (mobiusS * mobiusS) I2 :=
-  projective_klein_formula_packet t
-
 end InfoGeometry.Canonical.KleinMonodromyRepresentationSpace

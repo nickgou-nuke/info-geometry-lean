@@ -29,21 +29,18 @@ noncomputable def WalshHadamardSectorTraceData.sectorTrace
     (D : WalshHadamardSectorTraceData) (α β : Bool) : ℝ :=
   D.sectorProjector α β * D.T
 
-/-- The Walsh-Hadamard inversion formula for the four mixed trace moments. -/
-def WalshHadamardSectorTraceData.traceInversion (D : WalshHadamardSectorTraceData) : Prop :=
-  ∀ α β,
-    D.sectorTrace α β =
-      ((1 : ℝ) / 4) *
-        (D.mixedMoment false false
-          + walshSign α * D.mixedMoment true false
-          + walshSign β * D.mixedMoment false true
-          + walshSign α * walshSign β * D.mixedMoment true true)
-
 /-- Expanding the two commuting central involutions gives the four mixed moments with the
-Walsh-Hadamard coefficients.
+    Walsh-Hadamard coefficients.
     prop:op-algebra-z2x2-walsh-hadamard-sector-trace -/
 theorem paper_op_algebra_z2x2_walsh_hadamard_sector_trace
-    (D : WalshHadamardSectorTraceData) : D.traceInversion := by
+    (D : WalshHadamardSectorTraceData) :
+    ∀ α β,
+      D.sectorTrace α β =
+        ((1 : ℝ) / 4) *
+          (D.mixedMoment false false
+            + walshSign α * D.mixedMoment true false
+            + walshSign β * D.mixedMoment false true
+            + walshSign α * walshSign β * D.mixedMoment true true) := by
   intro α β
   cases α <;> cases β <;>
     simp [WalshHadamardSectorTraceData.sectorTrace,

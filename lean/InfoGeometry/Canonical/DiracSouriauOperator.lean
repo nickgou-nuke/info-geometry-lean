@@ -360,28 +360,15 @@ $C\ell(4,4)$ vacuum protecting topological memory (Core) from thermodynamic
 collapse (Shell).
 -/
 
-/-- Constructive witness for BPS protection of a Dirac-Souriau sector. -/
-@[rep_depth transport]
-structure BPSPProtectedWitness (S : DiracSouriauSector ℝ) where
-  /-- The critical stiffness threshold parameter. -/
-  κ_crit : ℝ
-  /-- Proof that the Berezinian is below the critical threshold. -/
-  hBelow : S.berezinian < κ_crit
-
-/-- BPS protection means the sector has an explicit stiffness witness. -/
+/-- BPS protection is the explicit Berezinian threshold inequality. -/
 @[rep_depth transport]
 def IsBPSProtected (S : DiracSouriauSector ℝ) (κ_crit : ℝ) : Prop :=
-  ∃ (w : BPSPProtectedWitness S), w.κ_crit = κ_crit
+  S.berezinian < κ_crit
 
-/-- The original `IsBPSProtected` predicate is equivalent to the existence of a witness. -/
+/-- The predicate unfolds to the threshold inequality. -/
 @[rep_depth transport]
 theorem IsBPSProtected_iff_exists (S : DiracSouriauSector ℝ) (κ_crit : ℝ) :
-    IsBPSProtected S κ_crit ↔ S.berezinian < κ_crit := by
-  constructor
-  · rintro ⟨w, rfl⟩
-    exact w.hBelow
-  · intro h
-    refine ⟨⟨κ_crit, h⟩, rfl⟩
+    IsBPSProtected S κ_crit ↔ S.berezinian < κ_crit := Iff.rfl
 
 /--
 Absolute Pfaffian proxy: unlike `pfaffian`, this has an unconditional square

@@ -56,8 +56,8 @@ variable {Cl55 : Type*} [Ring Cl55] [Algebra ℝ Cl55]
          (clifford_embed : Split10D →ₗ[ℝ] Cl55)
 
 /-- The fundamental Clifford identity v * v = Q(v) * 1. -/
-class IsClifford55 : Prop where
-  clifford_sq : ∀ v, clifford_embed v * clifford_embed v = algebraMap ℝ Cl55 (quadratic_form_5_5 v)
+def IsClifford55 : Prop :=
+  ∀ v, clifford_embed v * clifford_embed v = algebraMap ℝ Cl55 (quadratic_form_5_5 v)
 
 /-- 
 Pin(5,5) elements are constructed strictly from products of vectors 

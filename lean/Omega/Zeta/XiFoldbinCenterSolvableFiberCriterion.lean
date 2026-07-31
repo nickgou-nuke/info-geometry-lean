@@ -34,7 +34,7 @@ def xi_foldbin_center_solvable_fiber_criterion_derived_length_clause (d ell : â„
   | 2 => ell = 1
   | 3 => ell = 2
   | 4 => ell = 3
-  | _ => True
+  | _ => ell = 4
 
 /-- Center rank read from the audited window-`6` histogram `2:8, 3:4, 4:9`. -/
 def xi_foldbin_center_solvable_fiber_criterion_window6_center_rank : â„• :=

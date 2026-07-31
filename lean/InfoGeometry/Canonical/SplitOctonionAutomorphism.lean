@@ -201,10 +201,17 @@ theorem realSplitOctonionLiePacket_readback :
 
 /-- Canonical-chain readback into the native real derivation witness. -/
 theorem realSplitOctonionDerivationWitness_readback :
-    InfoGeometry.Lie.RealSplitOctonionG2Classification.currentRealClassificationStatus =
-        InfoGeometry.Lie.RealSplitOctonionG2Classification.currentRealClassificationStatus ∧
-      InfoGeometry.Lie.RealSplitOctonionDerivationWitness.rot01Real_deriv =
-        InfoGeometry.Lie.RealSplitOctonionDerivationWitness.rot01Real_deriv := by
+    (∀ X Y : InfoGeometry.Lie.RealSplitOctonionDerivationWitness.SplitOctReal,
+      InfoGeometry.Lie.RealSplitOctonionDerivationWitness.rot01Real (X + Y) =
+        InfoGeometry.Lie.RealSplitOctonionDerivationWitness.rot01Real X +
+          InfoGeometry.Lie.RealSplitOctonionDerivationWitness.rot01Real Y) ∧
+      (∀ X : InfoGeometry.Lie.RealSplitOctonionDerivationWitness.SplitOctReal,
+        InfoGeometry.Lie.RealSplitOctonionDerivationWitness.rot01Real (-X) =
+          -InfoGeometry.Lie.RealSplitOctonionDerivationWitness.rot01Real X) ∧
+        ∀ X Y : InfoGeometry.Lie.RealSplitOctonionDerivationWitness.SplitOctReal,
+          InfoGeometry.Lie.RealSplitOctonionDerivationWitness.rot01Real (X * Y) =
+            InfoGeometry.Lie.RealSplitOctonionDerivationWitness.rot01Real X * Y +
+              X * InfoGeometry.Lie.RealSplitOctonionDerivationWitness.rot01Real Y := by
   exact InfoGeometry.Lie.RealSplitOctonionDerivationWitness.realSplitOctonionDerivationPacket_packet
 
 end InfoGeometry.Canonical

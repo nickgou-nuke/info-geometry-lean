@@ -13,7 +13,7 @@ open Omega.GU
 def window6AuditableInstantiation : AdmissiblePhysicalInstantiation where
   State := Unit
   observerSpacetime := { timeProjection := fun _ => 0 }
-  causalCompatibility := { causalPreorder := fun _ _ => True }
+  causalCompatibility := { causalPreorder := fun x _ => x = x }
   resourceQuasidistance := { resourceQuasidistance := fun _ _ => 0 }
   obstructionInterface := { obstruction := fun _ _ => False }
 

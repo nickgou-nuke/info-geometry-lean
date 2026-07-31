@@ -126,12 +126,6 @@ theorem scope_sound {p : DeBruijnPayload} (h : p.InScope) :
     p.binderDepth ≤ p.scopeDepth :=
   DeBruijnEdge.scope_sound h
 
-/-- Read back local bond-dimension compatibility from a payload-level
-compatibility proof. -/
-theorem compatible_of_payload {p : DeBruijnPayload} (h : p.PortCompatible) :
-    p.sourceBondDim = p.targetBondDim :=
-  h
-
 /-- Direct lower-kernel soundness from payload evidence, without packaging. -/
 theorem conductive_of_inScope_compatible {p : DeBruijnPayload}
     (hscope : p.InScope) (hcompat : p.PortCompatible) : p.Conductive :=

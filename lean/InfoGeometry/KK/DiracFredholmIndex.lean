@@ -139,10 +139,10 @@ The ambient carrier `H` may be infinite-dimensional; the only finite-dimensional
 data demanded here are the plus/minus chiral kernel defect sectors.
 -/
 @[rep_depth krein]
-structure ChiralFredholmSurface
-    (X : RealSplitKreinDiracFredholmModule A B H) : Prop where
-  plusFinite : FiniteDimensional ℝ (X.chiralKernelSlicePlus)
-  minusFinite : FiniteDimensional ℝ (X.chiralKernelSliceMinus)
+def ChiralFredholmSurface
+    (X : RealSplitKreinDiracFredholmModule A B H) : Prop :=
+  FiniteDimensional ℝ (X.chiralKernelSlicePlus) ∧
+  FiniteDimensional ℝ (X.chiralKernelSliceMinus)
 
 /--
 The Fredholm/chiral analytical index of the bounded real split-Krein
@@ -167,9 +167,8 @@ noncomputable def analyticalIndex
 noncomputable def chiralFredholmSurfaceOfFiniteAmbient
     [FiniteDimensional ℝ H]
     (X : RealSplitKreinDiracFredholmModule A B H) :
-    ChiralFredholmSurface X where
-  plusFinite := by infer_instance
-  minusFinite := by infer_instance
+    ChiralFredholmSurface X := by
+  exact ⟨by infer_instance, by infer_instance⟩
 
 /-- On a finite-dimensional carrier, the operatorial Fredholm index reduces to the same kernel asymmetry formula. -/
 @[rep_depth krein, simp] theorem analyticalIndex_eq_finrank_chiralKernelDifference

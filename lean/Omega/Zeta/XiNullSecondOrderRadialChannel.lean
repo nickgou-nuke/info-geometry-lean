@@ -21,10 +21,7 @@ theorem paper_xi_null_second_order_radial_channel {γ δ L : ℝ} {s : ℂ}
           inDomain := fun _ => true
           inVisiblePhase := fun _ => false
           checkPasses := fun _ => true
-          obs := fun _ => ()
-          guarded_read := by
-            intro _
-            simp }
+          obs := fun _ => () }
       D.read () = none := by
   classical
   have hRadial := paper_xi_offcritical_quadratic_radial_compression γ δ hδ
@@ -36,13 +33,12 @@ theorem paper_xi_null_second_order_radial_channel {γ δ L : ℝ} {s : ℂ}
       inDomain := fun _ => true
       inVisiblePhase := fun _ => false
       checkPasses := fun _ => true
-      obs := fun _ => ()
-      guarded_read := by
-        intro ω
-        simp }
+      obs := fun _ => () }
   have hRead :=
     Omega.TypedAddressBiaxialCompletion.paper_typed_address_biaxial_completion_visible_read_partial
-      D ()
+      D (by
+        intro ω
+        simp [D])
   have hReadNone : D.read () = none := by
     simpa [D] using hRead
   exact ⟨hRadial.1.1, hRadial.1.2.2, hNull.2.1, hNull.2.2, hReadNone⟩

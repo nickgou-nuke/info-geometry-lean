@@ -21,40 +21,9 @@ def foldFiberSingleCoordinateStep (m k : ℕ) : ℕ :=
   Omega.Folding.sgMStep
     (foldFiberSingleCoordinateModulus m) (foldFiberSingleCoordinateShift k)
 
-/-- A concrete orbit-space certificate with the rigid cardinal data from the paper. The logical
-fields are instantiated trivially; the nontrivial numerical content comes from the wrapper theorem
-`paper_fold_translation_equation_orbit_solution_space`. -/
-private def foldFiberOrbitCertificate (m k : ℕ) : TranslationEquationOrbitSolutionSpaceData where
-  orbitCount := foldFiberSingleCoordinateAugmentationRank m k
-  orbitLength := foldFiberSingleCoordinateStep m k
-  kernelDimension := foldFiberSingleCoordinateAugmentationRank m k
-  solutionSpaceDimension := foldFiberSingleCoordinateAugmentationRank m k
-  orbitDecomposition := True
-  orbitRecurrence := True
-  oddLengthUniqueSolution := True
-  evenLengthAlternatingSumSolvability := True
-  evenLengthAffineSeedParametrization := True
-  orbitDecomposition_h := trivial
-  orbitRecurrence_h := trivial
-  deriveOddLengthUniqueSolution := by
-    intro _ _ _
-    trivial
-  deriveEvenLengthAlternatingSumSolvability := by
-    intro _ _ _
-    trivial
-  deriveEvenLengthAffineSeedParametrization := by
-    intro _ _ _
-    trivial
-  kernelDimension_eq_orbitCount := by
-    intro _
-    rfl
-  solutionSpaceDimension_eq_orbitCount := by
-    intro _
-    rfl
-
-/-- The affine solution-space dimension packaged by the orbit decomposition wrapper. -/
+/- The affine solution-space dimension in the concrete even-quotient model. -/
 def foldFiberOrbitSolutionDimension (m k : ℕ) : ℕ :=
-  (foldFiberOrbitCertificate m k).solutionSpaceDimension
+  foldFiberSingleCoordinateAugmentationRank m k
 
 /-- The number of orbit-seed coordinates used by the paper's seed parametrization. -/
 def foldFiberOrbitSeedCoordinateCount (m k : ℕ) : ℕ :=
@@ -92,12 +61,7 @@ theorem paper_fold_fiber_single_coordinate_minimal_augmentation (m k : ℕ) :
       foldFiberFourierKernelCoordinatesMinimalComplete m k := by
   have hMin : foldFiberSingleCoordinateMinimalIndependentScalars m k := by
     intro hEven
-    have hPkg :=
-      paper_fold_translation_equation_orbit_solution_space (foldFiberOrbitCertificate m k)
-    have hEvenMod : (foldFiberOrbitCertificate m k).orbitLength % 2 = 0 := by
-      simpa [foldFiberOrbitCertificate, foldFiberSingleCoordinateStep, Nat.even_iff] using hEven
-    simpa [foldFiberOrbitSolutionDimension, foldFiberOrbitCertificate,
-      foldFiberSingleCoordinateAugmentationRank] using (hPkg.2.2 hEvenMod).2.2.2
+    rfl
   have hOrbit : foldFiberOrbitSeedCoordinatesMinimalComplete m k := by
     intro hEven
     simpa [foldFiberOrbitSeedCoordinateCount] using (hMin hEven).symm

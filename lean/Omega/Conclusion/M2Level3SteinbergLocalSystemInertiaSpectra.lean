@@ -4,8 +4,7 @@ import Omega.Conclusion.M2Level3XiDelta0Order6Charpolys
 namespace Omega.Conclusion
 
 /-- Concrete wrapper for the Steinberg local-system inertia spectra package. -/
-structure conclusion_m2_level3_steinberg_local_system_inertia_spectra_data where
-  conclusion_m2_level3_steinberg_local_system_inertia_spectra_witness : Unit := ()
+abbrev conclusion_m2_level3_steinberg_local_system_inertia_spectra_data := Unit
 
 /-- Rank of the edge module in the audited incidence model. -/
 def conclusion_m2_level3_steinberg_local_system_inertia_spectra_edge_rank : ℕ :=
@@ -74,7 +73,8 @@ multiplicities determine the traces of `τ` and `σ`. -/
 theorem paper_conclusion_m2_level3_steinberg_local_system_inertia_spectra
     (D : conclusion_m2_level3_steinberg_local_system_inertia_spectra_data) :
     conclusion_m2_level3_steinberg_local_system_inertia_spectra_statement D := by
-  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys (D := ⟨()⟩) with
+  rcases paper_conclusion_m2_level3_xi_delta0_order6_charpolys
+      (D := (Unit.unit : ConclusionM2Level3XiDelta0Order6CharpolysData)) with
     ⟨hklingen, hsiegel, _, _, _, _, hSt, _, _⟩
   refine ⟨hklingen, hsiegel, rfl, rfl, rfl, ?_, ?_, ?_, ?_⟩
   · norm_num [conclusion_m2_level3_steinberg_local_system_inertia_spectra_steinberg_rank,

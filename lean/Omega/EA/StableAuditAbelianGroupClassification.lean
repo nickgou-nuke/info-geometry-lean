@@ -53,19 +53,14 @@ lemma stable_audit_abelian_group_classification_sum_basis
         (G := ℤ) m (fun j => if j = i then (1 : ℤ) else 0) = m i := by
   simp [stable_audit_abelian_group_classification_sum]
 
-/-- Paper-facing statement: two six-variable terms agree in every abelian group under
-`x ⋄ y = x + y` iff their variable multiplicity vectors are equal. -/
-def stable_audit_abelian_group_classification_statement : Prop :=
-  ∀ s t : stable_audit_affine_coefficient_criterion_term,
-    (∀ {G : Type} [AddCommGroup G] (ρ : Fin 6 → G),
-        stable_audit_abelian_group_classification_eval ρ s =
-          stable_audit_abelian_group_classification_eval ρ t) ↔
-      stable_audit_abelian_group_classification_multiplicity s =
-        stable_audit_abelian_group_classification_multiplicity t
-
 /-- Paper label: `thm:stable-audit-abelian-group-classification`. -/
 theorem paper_stable_audit_abelian_group_classification :
-    stable_audit_abelian_group_classification_statement := by
+    ∀ s t : stable_audit_affine_coefficient_criterion_term,
+      (∀ {G : Type} [AddCommGroup G] (ρ : Fin 6 → G),
+          stable_audit_abelian_group_classification_eval ρ s =
+            stable_audit_abelian_group_classification_eval ρ t) ↔
+        stable_audit_abelian_group_classification_multiplicity s =
+          stable_audit_abelian_group_classification_multiplicity t := by
   intro s t
   constructor
   · intro h

@@ -1,4 +1,6 @@
 import InfoGeometry.Combinatorics.GolayConstructionA
+import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Data.Real.Sqrt
 
 /-!
 # The Leech lattice numerator construction
@@ -169,11 +171,15 @@ theorem scaledRealization_normSq (a : IntegerWord24) :
     ∑ i, scaledRealization a i * scaledRealization a i =
       (normSqNumerator a : ℝ) / 8 := by
   simp only [scaledRealization, normSqNumerator, Int.cast_sum, Int.cast_mul]
-  rw [Finset.sum_div]
-  congr 1
-  · apply Finset.sum_congr rfl
-    intro i hi
-    rw [div_mul_div_comm, Real.sq_sqrt (by norm_num : (0 : ℝ) ≤ 8)]
-  · norm_num
+  calc
+    (∑ i, (a i : ℝ) / Real.sqrt 8 * ((a i : ℝ) / Real.sqrt 8)) =
+        ∑ i, ((a i : ℝ) * (a i : ℝ)) / 8 := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      rw [div_mul_div_comm]
+      rw [Real.mul_self_sqrt (by norm_num : (0 : ℝ) ≤ 8)]
+    _ = (∑ i, (a i : ℝ) * (a i : ℝ)) / 8 := by
+      simp only [div_eq_mul_inv]
+      rw [Finset.sum_mul]
 
 end InfoGeometry.Combinatorics.LeechLattice

@@ -28,11 +28,11 @@ noncomputable def legendre
   sSup (legendreSupport ψ η)
 
 /-- Well-posedness assumptions for the real-valued `sSup` Legendre transform. -/
-structure LegendreWellPosed
+def LegendreWellPosed
     (ψ : Θ → ℝ)
-    (η : Θ →L[ℝ] ℝ) : Prop where
-  nonempty : (legendreSupport ψ η).Nonempty
-  bddAbove : BddAbove (legendreSupport ψ η)
+    (η : Θ →L[ℝ] ℝ) : Prop :=
+  (legendreSupport ψ η).Nonempty ∧
+    BddAbove (legendreSupport ψ η)
 
 lemma le_legendre_of_bddAbove
     (ψ : Θ → ℝ)

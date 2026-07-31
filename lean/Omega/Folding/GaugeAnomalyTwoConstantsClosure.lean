@@ -7,35 +7,6 @@ import Omega.Folding.GaugeAnomalyPressureCumulants5
 
 namespace Omega.Folding
 
-/-- Concrete pressure witness used to instantiate the lightweight LDP wrapper. -/
-def fold_gauge_anomaly_two_constants_closure_pressure_data : GaugeAnomalyPressureData where
-  adjacencyCertificate := True
-  perronBranchQuarticCertificate := True
-  pressureIdentity := True
-  firstDerivativeClosed := True
-  secondDerivativeClosed := True
-  thirdDerivativeClosed := True
-  hasAdjacencyCertificate := trivial
-  derivePerronBranchQuarticCertificate := by
-    intro _
-    trivial
-  derivePressureIdentity := by
-    intro _
-    trivial
-  deriveFirstDerivativeClosed := by
-    intro _
-    trivial
-  deriveSecondDerivativeClosed := by
-    intro _
-    trivial
-  deriveThirdDerivativeClosed := by
-    intro _
-    trivial
-
-/-- Concrete LDP witness packaging the audited endpoint closed forms. -/
-def fold_gauge_anomaly_two_constants_closure_ldp_data : GaugeAnomalyLdpData where
-  pressureData := fold_gauge_anomaly_two_constants_closure_pressure_data
-
 /-- Explicit cumulant profile through order five. -/
 def fold_gauge_anomaly_two_constants_closure_kappa : ℕ → ℚ
   | 1 => 4 / 9
@@ -48,8 +19,6 @@ def fold_gauge_anomaly_two_constants_closure_kappa : ℕ → ℚ
 /-- Concrete cumulant witness used to read off the odd cubic Taylor truncation. -/
 def fold_gauge_anomaly_two_constants_closure_cumulant_data :
     GaugeAnomalyPressureCumulantsFiveData where
-  rationalTaylorCoefficients := True
-  hasRationalTaylorCoefficients := trivial
   kappa := fold_gauge_anomaly_two_constants_closure_kappa
   kappa_one := by
     simp [fold_gauge_anomaly_two_constants_closure_kappa]
@@ -90,17 +59,18 @@ def FoldGaugeAnomalyTwoConstantsClosure : Prop :=
         (-1 / 9 : ℚ) * θ - (1174 / 6561 : ℚ) * θ ^ 3
 
 /-- Paper label: `cor:fold-gauge-anomaly-two-constants-closure`. -/
-theorem paper_fold_gauge_anomaly_two_constants_closure : FoldGaugeAnomalyTwoConstantsClosure := by
+theorem paper_fold_gauge_anomaly_two_constants_closure
+    (pressureData : GaugeAnomalyPressureData) : FoldGaugeAnomalyTwoConstantsClosure := by
   rcases paper_fold_gauge_anomaly_gc_defect_sign with ⟨hOdd, hDeriv, _, _, _⟩
   rcases
       paper_fold_gauge_anomaly_gc_defect_farfield_expansion with ⟨_, _, hFarfieldAtPhi⟩
   rcases
-      paper_fold_gauge_anomaly_ldp fold_gauge_anomaly_two_constants_closure_ldp_data with
+      paper_fold_gauge_anomaly_ldp { pressureData := pressureData } with
     ⟨_, hEndpointZero, hEndpointOne⟩
   rcases
       paper_fold_gauge_anomaly_pressure_cumulants_up_to_5
         fold_gauge_anomaly_two_constants_closure_cumulant_data with
-    ⟨_, hKappaOne, _, hKappaThree, _, _⟩
+    ⟨hKappaOne, _, hKappaThree, _, _⟩
   refine ⟨hOdd, hDeriv, hFarfieldAtPhi, ?_, ?_, ?_⟩
   · simpa [GaugeAnomalyLdpData.endpointRateZeroClosed, GaugeAnomalyLdpData.endpointRateZero] using
       hEndpointZero

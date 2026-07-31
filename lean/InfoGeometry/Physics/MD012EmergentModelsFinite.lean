@@ -186,32 +186,6 @@ theorem contortionShadow_zero_of_torsion_zero
   intro a b c
   simp [contortionShadow, hT]
 
-/-- Repaired theorem-safe Chapter 12 finite model packet. -/
-theorem repaired_MD012_finite_model_packet
-    (beta tau kappa : ℝ) (ht : beta * tau ≠ 0) (hk : beta * kappa ≠ 0)
-    (D : DomainSeparatedStressDatum)
-    (hmetric : ∀ mu nu, D.metric mu nu = D.metric nu mu)
-    (hconn : ∀ mu nu, D.connectionVariation mu nu = D.connectionVariation nu mu)
-    (hzero : ∀ mu nu, D.connectionVariation mu nu = 0)
-    (kap : ℝ) (spin : ModelSpacetimeIndex → ModelSpacetimeIndex → ModelSpacetimeIndex → ℝ)
-    (hspin : ∀ a b c, spin a b c = 0) :
-    lorentzInverseCovariance8 beta tau kappa * lorentzCovariance8 beta tau kappa = 1 ∧
-    lorentzCovariance8 beta tau kappa * lorentzInverseCovariance8 beta tau kappa = 1 ∧
-    lorentzSignMetric4 beta tau kappa = (lorentzSignMetric4 beta tau kappa)ᵀ ∧
-    lorentzCovMetric4 beta tau kappa = (lorentzCovMetric4 beta tau kappa)ᵀ ∧
-    lorentzSignMetric4 beta tau kappa * lorentzCovMetric4 beta tau kappa = 1 ∧
-    (∀ mu nu, D.fullStress mu nu = D.fullStress nu mu) ∧
-    (∀ mu nu, D.fullStress mu nu = D.compactStress mu nu) ∧
-    (∀ a b c, torsionFromSpin kap spin a b c = 0) := by
-  exact ⟨lorentzInverseCovariance8_mul_covariance8 beta tau kappa ht hk,
-    lorentzCovariance8_mul_inverseCovariance8 beta tau kappa ht hk,
-    lorentzSignMetric4_symmetric beta tau kappa,
-    lorentzCovMetric4_symmetric beta tau kappa,
-    lorentzSignMetric4_mul_covMetric4 beta tau kappa ht hk,
-    (repaired_section38_stress_domain_packet D hmetric hconn hzero).1,
-    (repaired_section38_stress_domain_packet D hmetric hconn hzero).2,
-    torsionFromSpin_zero_of_spin_zero kap spin hspin⟩
-
 end InfoGeometry.Physics.MD012EmergentModelsFinite
 
 end noncomputable section

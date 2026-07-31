@@ -37,8 +37,4 @@ theorem cl44_witten_index_zero : ((8 : ℤ) - 8) = 0 := by
 theorem chiral_parity_compensation : ((16 : ℤ) - 16) = 0 := by
   norm_num
 
-theorem finite_parity_packet :
-    ((8 : ℤ) - 8) = 0 ∧ ((16 : ℤ) - 16) = 0 ∧ ((16 : ℤ) - 16) = 0 := by
-  refine ⟨cl44_witten_index_zero, by norm_num, by norm_num⟩
-
 end InfoGeometry.Physics.Cl55MoebiusCCC

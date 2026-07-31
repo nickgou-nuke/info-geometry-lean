@@ -50,12 +50,4 @@ def ae_tendsto_ratio_to_rnDeriv
     (ratio : ℕ → Ω → ℝ) (rnDeriv : Ω → ℝ) : Prop :=
   ∀ᵐ ω ∂μ, Tendsto (fun n : ℕ => ratio n ω) atTop (nhds (rnDeriv ω))
 
-/-- Introduction rule for `ae_tendsto_ratio_to_rnDeriv`. -/
-theorem ae_tendsto_ratio_to_rnDeriv_holds
-    {Ω : Type*} [MeasurableSpace Ω] {μ : Measure Ω}
-    (ratio : ℕ → Ω → ℝ) (rnDeriv : Ω → ℝ)
-    (h : ∀ᵐ ω ∂μ, Tendsto (fun n : ℕ => ratio n ω) atTop (nhds (rnDeriv ω))) :
-    ae_tendsto_ratio_to_rnDeriv μ ratio rnDeriv :=
-  h
-
 end InfoGeometry.Canonical.LLN

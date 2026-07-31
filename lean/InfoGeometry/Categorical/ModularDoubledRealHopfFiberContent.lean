@@ -86,7 +86,7 @@ structure FiberMonodromy
   act : Loop → F.Total → F.Total
   act_one : ∀ x : F.Total, act 1 x = x
   act_mul : ∀ (g h : Loop) (x : F.Total), act (g * h) x = act g (act h x)
-  projection_preserved : ∀ (g : Loop) (x : F.Total), F.projection (act g x) = F.projection x
+  projection_act : ∀ (g : Loop) (x : F.Total), F.projection (act g x) = F.projection x
 
 namespace FiberMonodromy
 
@@ -95,7 +95,7 @@ variable {F : ModularDoubledRealHopf.{u, v}} {Loop : Type m} [Monoid Loop]
 /-- Monodromy sends each point to the same fiber over the base. -/
 theorem sameFiber_act (M : FiberMonodromy F Loop) (g : Loop) (x : F.Total) :
     F.SameFiber (M.act g x) x := by
-  exact M.projection_preserved g x
+  exact M.projection_act g x
 
 end FiberMonodromy
 

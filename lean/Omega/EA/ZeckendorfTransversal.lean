@@ -8,14 +8,12 @@ open Omega.Rewrite
 
 /-- Paper-facing statement: every valuation fiber meets the stable Zeckendorf section
     `R_F(ℕ)` in the unique irreducible representative `R_F (valPr a)`. -/
-def paper_zeckendorf_transversal_stmt (a : Omega.Rewrite.DigitCfg) : Prop :=
-  PrimeRegisterOrbit a (R_F (valPr a)) ∧
-    Irreducible (R_F (valPr a)) ∧
-    R_F (valPr a) ∈ PrimeRegister ∧
-    ∀ b : Omega.Rewrite.DigitCfg, Irreducible b → valPr b = valPr a → b = R_F (valPr a)
-
 theorem paper_zeckendorf_transversal (a : Omega.Rewrite.DigitCfg) :
-    paper_zeckendorf_transversal_stmt a := by
+    PrimeRegisterOrbit a (R_F (valPr a)) ∧
+      Irreducible (R_F (valPr a)) ∧
+      R_F (valPr a) ∈ PrimeRegister ∧
+      ∀ b : Omega.Rewrite.DigitCfg, Irreducible b → valPr b = valPr a →
+        b = R_F (valPr a) := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · exact (paper_prime_register_orbit_fiber_coincidence a (R_F (valPr a))).2 (by
       show valPr (R_F (valPr a)) = valPr a

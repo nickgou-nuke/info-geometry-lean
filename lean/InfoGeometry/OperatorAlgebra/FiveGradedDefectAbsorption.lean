@@ -437,13 +437,6 @@ theorem centralNorm_le_mass
     B.centralNorm s ≤ B.mass s :=
   B.bps_bound s
 
-/-- A BPS state has mass equal to its central/grade-two charge norm. -/
-theorem mass_eq_centralNorm_of_BPS
-    {s : State}
-    (h : IsBPS B s) :
-    B.mass s = B.centralNorm s :=
-  h
-
 /-- A BPS state has nonnegative mass. -/
 theorem mass_nonneg_of_BPS
     {s : State}

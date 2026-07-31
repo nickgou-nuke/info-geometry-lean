@@ -15,9 +15,7 @@ structure FoldJonesCommutatorRank2SpectrumData where
   instFintypeX : Fintype X
   instInhabitedX : Inhabited X
   variance : X → ℝ
-  variance_nonneg : ∀ x, 0 ≤ variance x
   fiberSize : X → ℕ
-  fiberSize_pos : ∀ x, 0 < fiberSize x
 
 attribute [instance] FoldJonesCommutatorRank2SpectrumData.instDecEqX
 attribute [instance] FoldJonesCommutatorRank2SpectrumData.instFintypeX
@@ -46,30 +44,6 @@ def globalHSSquared (D : FoldJonesCommutatorRank2SpectrumData) : ℝ :=
 def indexWeightedHSSquared (D : FoldJonesCommutatorRank2SpectrumData) : ℝ :=
   ∑ x, (D.fiberSize x : ℝ) * D.fiberHSSquared x
 
-/-- Every fiber block is off-diagonal relative to the constants plus orthogonal complement. -/
-def fiberwiseBlockDecomposition (D : FoldJonesCommutatorRank2SpectrumData) : Prop :=
-  ∀ x,
-    D.fiberBlock x 0 0 = 0 ∧ D.fiberBlock x 1 1 = 0 ∧
-      D.fiberBlock x 0 1 = -(D.variance x) ∧ D.fiberBlock x 1 0 = D.variance x
-
-/-- The fiber block has equal singular-value square `σ(x)^2` on both basis vectors, and its
-Hilbert-Schmidt norm is `2 σ(x)^2`. -/
-def rankTwoSingularValueFormula (D : FoldJonesCommutatorRank2SpectrumData) : Prop :=
-  ∀ x,
-    Matrix.transpose (D.fiberBlock x) * D.fiberBlock x =
-        (D.variance x) ^ 2 • (1 : Matrix (Fin 2) (Fin 2) ℝ) ∧
-      D.fiberHSSquared x = 2 * D.variance x ^ 2
-
-/-- The operator norm is the maximum fiber variance and the global Hilbert-Schmidt norm is the
-sum of the block contributions. -/
-def globalNormFormula (D : FoldJonesCommutatorRank2SpectrumData) : Prop :=
-  D.globalOperatorNorm = Finset.sup' Finset.univ Finset.univ_nonempty D.variance ∧
-    D.globalHSSquared = 2 * ∑ x, D.variance x ^ 2
-
-/-- The Jones-index weighted Hilbert-Schmidt norm inserts the fiber multiplicities `d_x`. -/
-def indexWeightedHSFormula (D : FoldJonesCommutatorRank2SpectrumData) : Prop :=
-  D.indexWeightedHSSquared = 2 * ∑ x, (D.fiberSize x : ℝ) * D.variance x ^ 2
-
 lemma transpose_mul_fiberBlock (D : FoldJonesCommutatorRank2SpectrumData) (x : D.X) :
     Matrix.transpose (D.fiberBlock x) * D.fiberBlock x =
       (D.variance x) ^ 2 • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
@@ -90,8 +64,16 @@ open FoldJonesCommutatorRank2SpectrumData
     thm:op-algebra-fold-jones-commutator-rank2-spectrum -/
 theorem paper_op_algebra_fold_jones_commutator_rank2_spectrum
     (D : FoldJonesCommutatorRank2SpectrumData) :
-    D.fiberwiseBlockDecomposition ∧ D.rankTwoSingularValueFormula ∧ D.globalNormFormula ∧
-      D.indexWeightedHSFormula := by
+    (∀ x,
+      D.fiberBlock x 0 0 = 0 ∧ D.fiberBlock x 1 1 = 0 ∧
+        D.fiberBlock x 0 1 = -(D.variance x) ∧ D.fiberBlock x 1 0 = D.variance x) ∧
+    (∀ x,
+      Matrix.transpose (D.fiberBlock x) * D.fiberBlock x =
+          (D.variance x) ^ 2 • (1 : Matrix (Fin 2) (Fin 2) ℝ) ∧
+        D.fiberHSSquared x = 2 * D.variance x ^ 2) ∧
+    (D.globalOperatorNorm = Finset.sup' Finset.univ Finset.univ_nonempty D.variance ∧
+      D.globalHSSquared = 2 * ∑ x, D.variance x ^ 2) ∧
+    D.indexWeightedHSSquared = 2 * ∑ x, (D.fiberSize x : ℝ) * D.variance x ^ 2 := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro x
     simp [FoldJonesCommutatorRank2SpectrumData.fiberBlock]

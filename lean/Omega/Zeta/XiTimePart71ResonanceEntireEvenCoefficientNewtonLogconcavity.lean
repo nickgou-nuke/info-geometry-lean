@@ -3,8 +3,7 @@ import Mathlib.Tactic
 namespace Omega.Zeta
 
 /-- Concrete seed data for the resonance even-coefficient Newton package. -/
-structure xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_data where
-  witness : Unit := ()
+abbrev xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_data := Unit
 
 namespace xi_time_part71_resonance_entire_even_coefficient_newton_logconcavity_data
 

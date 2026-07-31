@@ -241,21 +241,24 @@ theorem paritySupertraceChannel_eq_paritySupertracePartition
 def mellinShift (β s : ℝ) : ℝ :=
   β + s
 
-/--
-Witness that Mellin shift rescales profile weights by `exp(-sE)`.
-
-This is a finite identity and can later be proved directly from `Real.exp_add`.
--/
-structure MellinShiftLaw
+/-! The finite Mellin shift law is a direct predicate. -/
+def MellinShiftLaw
     {k : ℕ}
     (P : FinitePrimeProfile k)
-    (β s : ℝ) where
-  /-- Shift law for each binary profile. -/
-  law :
-    ∀ ε : BinaryProfile k,
-      mellinKernel P (mellinShift β s) ε =
-        mellinKernel P β ε *
-          Real.exp (-s * profileEnergy P ε)
+    (β s : ℝ) : Prop :=
+  ∀ ε : BinaryProfile k,
+    mellinKernel P (mellinShift β s) ε =
+      mellinKernel P β ε *
+        Real.exp (-s * profileEnergy P ε)
+
+theorem mellinShiftLaw_proved
+    {k : ℕ} (P : FinitePrimeProfile k) (β s : ℝ) :
+    MellinShiftLaw P β s := by
+  intro ε
+  unfold mellinKernel mellinShift
+  rw [show -(β + s) * profileEnergy P ε =
+      (-β * profileEnergy P ε) + (-s * profileEnergy P ε) by ring]
+  rw [Real.exp_add]
 
 /-! ## 5. Analytic zeta and zero sockets -/
 
@@ -331,9 +334,6 @@ structure CantorCliffordMellinPrimeGasBridge where
   /-- Optional Mellin law tying profile energy to integer weights. -/
   mellinLaw :
     MellinProfileLaw primes β
-  /-- Optional modular shift law. -/
-  shiftLaw :
-    ∀ s : ℝ, MellinShiftLaw primes β s
   /-- Existing finite prime-bit Mellin packet. -/
   primeBitMellin :
     PrimeBitMellinPacket

@@ -7,8 +7,7 @@ namespace Omega.Zeta
 Morphisms are natural lengths, composition is addition, and the only basic reversible
 generator is the null move. This captures the quotient in which cycle contributions have
 been killed and only elapsed time remains. -/
-structure xi_time_only_conserved_quantity_system where
-  marker : Unit := ()
+abbrev xi_time_only_conserved_quantity_system := Unit
 
 namespace xi_time_only_conserved_quantity_system
 
@@ -18,10 +17,6 @@ abbrev Mor (_C : xi_time_only_conserved_quantity_system) : Type := ℕ
 /-- The null move is the reversible basic generator after quotienting cycles. -/
 def BasicReversible (_C : xi_time_only_conserved_quantity_system) (e : ℕ) : Prop :=
   e = 0
-
-/-- In the time quotient, every pair of elapsed-time morphisms composes. -/
-def Composable (_C : xi_time_only_conserved_quantity_system) (_u _v : ℕ) : Prop :=
-  True
 
 /-- Composition adds elapsed lengths. -/
 def comp (_C : xi_time_only_conserved_quantity_system) (u v : ℕ) : ℕ :=
@@ -39,7 +34,7 @@ elapsed length. -/
 theorem paper_xi_time_only_conserved_quantity
     (C : xi_time_only_conserved_quantity_system) (I : C.Mor -> ℝ)
     (hbasic : ∀ e, C.BasicReversible e -> I e = 0)
-    (hadd : ∀ {u v}, C.Composable u v -> I (C.comp u v) = I u + I v) :
+    (hadd : ∀ {u v}, I (C.comp u v) = I u + I v) :
     ∃ lambda : ℝ, ∀ w, I w = lambda * C.length w := by
   refine ⟨I 1, ?_⟩
   intro w
@@ -51,9 +46,8 @@ theorem paper_xi_time_only_conserved_quantity
       simp [hzero]
   | succ n ih =>
       have hstep : I (n + 1) = I n + I 1 := by
-        simpa [xi_time_only_conserved_quantity_system.comp,
-          xi_time_only_conserved_quantity_system.Composable] using
-          (hadd (u := n) (v := 1) trivial)
+        simpa [xi_time_only_conserved_quantity_system.comp] using
+          (hadd (u := n) (v := 1))
       calc
         I (Nat.succ n) = I (n + 1) := by rw [Nat.succ_eq_add_one]
         _ = I n + I 1 := hstep

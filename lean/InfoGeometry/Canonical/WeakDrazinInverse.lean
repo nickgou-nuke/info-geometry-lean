@@ -54,13 +54,6 @@ structure MinimalRankWeakDrazin {R : Type u} [Semiring R]
   rankAD : ℕ
   minimalRank : rankB = rankAD
 
-/-- The weak Drazin equation is exactly the `(d)` readout. -/
-theorem weakDrazin_readout {R : Type u} [Semiring R]
-    {A B : Matrix (Fin n) (Fin n) R} {k : ℕ}
-    (h : IsWeakDrazinAt A B k) :
-    B * A ^ (k + 1) = A ^ k :=
-  h
-
 namespace CommutingWeakDrazin
 
 variable {R : Type u} [Semiring R]

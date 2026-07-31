@@ -214,9 +214,8 @@ theorem boundary_finite_reconstruction
 
 /-- Boundary crossing witness with explicit prefix/tail fields. -/
 @[rep_depth operator]
-structure BoundaryCrossingWitness (n : ℕ) (ξ : InfiniteBinaryWordSpace) where
-  reconstruction :
-    ξ = boundaryConsList (boundaryPrefix n ξ) (boundaryIterateTail n ξ)
+def BoundaryCrossingWitness (n : ℕ) (ξ : InfiniteBinaryWordSpace) : Prop :=
+  ξ = boundaryConsList (boundaryPrefix n ξ) (boundaryIterateTail n ξ)
 
 namespace BoundaryCrossingWitness
 
@@ -242,8 +241,7 @@ end BoundaryCrossingWitness
 @[rep_depth operator]
 def boundaryCrossingWitness
     (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
-    BoundaryCrossingWitness n ξ where
-  reconstruction := boundary_finite_reconstruction n ξ
+    BoundaryCrossingWitness n ξ := boundary_finite_reconstruction n ξ
 
 /-- Boundary crossing readout: the canonical witness is exactly prefix/tail reconstruction. -/
 @[rep_depth operator]
@@ -256,7 +254,7 @@ theorem boundary_crossing
       ∧ (boundaryCrossingWitness n ξ).pre = boundaryPrefix n ξ
       ∧ (boundaryCrossingWitness n ξ).suf = boundaryIterateTail n ξ := by
   exact
-    ⟨(boundaryCrossingWitness n ξ).reconstruction,
+    ⟨boundaryCrossingWitness n ξ,
       (boundaryCrossingWitness n ξ).pre_eq,
       (boundaryCrossingWitness n ξ).suf_eq⟩
 

@@ -71,11 +71,11 @@ A theorem-backed Gibbs-Souriau equilibrium seed on the doubled carrier:
 faithful thermodynamic probing plus stationarity of the first variation.
 -/
 @[rep_depth transport]
-structure GibbsSouriauEquilibriumSeed
+def GibbsSouriauEquilibriumSeed
     (P : InfoGeometry.Canonical.RelativeModularPotential.PotentialDatum (E := E))
-    (ψ : H₂) (A : EndH) : Prop where
-  probe_faithful : InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P
-  stationary : A ∈ AdmissibleTemperatureCone (E := E) P ψ
+    (ψ : H₂) (A : EndH) : Prop :=
+  InfoGeometry.Canonical.ThermodynamicGenerator.ProbeFaithful (E := E) P ∧
+    A ∈ AdmissibleTemperatureCone (E := E) P ψ
 
 /--
 Faithful thermodynamic probing plus vanishing first variation construct the
@@ -105,7 +105,7 @@ theorem admissibleTemperature_of_equilibriumSeed
     InfoGeometry.Canonical.ThermodynamicGenerator.IsPotentialKillingOperator (E := E) P ψ A := by
   exact
     (InfoGeometry.Canonical.ThermodynamicGenerator.isPotentialKillingOperator_iff_firstVariation_eq_zero_of_probeFaithful
-      (E := E) (P := P) (ψ := ψ) (A := A) hEq.probe_faithful).2 hEq.stationary
+      (E := E) (P := P) (ψ := ψ) (A := A) hEq.1).2 hEq.2
 
 /--
 The Souriau equilibrium predicate itself follows constructively from the

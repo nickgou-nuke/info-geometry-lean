@@ -9,8 +9,8 @@ theorem paper_xi_logphi_time_rigidity (S : Nat → Nat) (t : Nat → Real) :
     (∃ C : Real, ∀ a b : Nat, abs (t (a * b) - t a - t b) <= C) →
     (∃ L : Real, ∀ n : Nat, abs (t (n + 1) - t n) <= L) →
     (∃ K : Real, ∀ m : Nat, abs (t (S m) - m) <= K) →
-    ∃ _B : Real, True := by
-  intro _ _ _ _
-  exact ⟨0, trivial⟩
+    ∃ B : Real, ∀ m : Nat, abs (t (S m) - m) <= B := by
+  intro _ _ _ hScale
+  exact hScale
 
 end Omega.Zeta

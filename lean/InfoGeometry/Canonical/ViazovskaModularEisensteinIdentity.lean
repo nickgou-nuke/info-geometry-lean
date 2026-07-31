@@ -14,31 +14,25 @@ This module formalizes:
 4. Minimal vector count identities: $a_1(E_8) = 240$ and $a_2(\Lambda_{24}) = 196560 = 240 \times 819$.
 -/
 
-/-- Structure representing modular forms E₄, E₆, and Ramanujan discriminant Δ. -/
-structure ModularForms (R : Type*) [CommRing R] where
-  E4 : R
-  E6 : R
-  Delta : R
-  h_ramanujan : E4 ^ 3 - E6 ^ 2 = (1728 : R) * Delta
-
 variable {R : Type*} [CommRing R]
 
 /-- Theta function of E₈ lattice in terms of Eisenstein series E₄. -/
-def thetaE8 (M : ModularForms R) : R := M.E4
+def thetaE8 (E4 : R) : R := E4
 
 /-- Theta function of Leech lattice Λ₂₄ in terms of E₄ and Ramanujan Δ. -/
-def thetaLeech24 (M : ModularForms R) : R := M.E4 ^ 3 - (720 : R) * M.Delta
+def thetaLeech24 (E4 Delta : R) : R := E4 ^ 3 - (720 : R) * Delta
 
 /-- **Theorem**: Leech Lattice Theta Function Modular Expressibility:
     Θ_Λ₂₄ = E₆² + 1008 Δ. -/
-theorem thetaLeech24_eisenstein_expressibility (M : ModularForms R) :
-    thetaLeech24 M = M.E6 ^ 2 + (1008 : R) * M.Delta := by
+theorem thetaLeech24_eisenstein_expressibility
+    (E4 E6 Delta : R)
+    (h_ramanujan : E4 ^ 3 - E6 ^ 2 = (1728 : R) * Delta) :
+    thetaLeech24 E4 Delta = E6 ^ 2 + (1008 : R) * Delta := by
   dsimp [thetaLeech24]
-  have h := M.h_ramanujan
-  calc M.E4 ^ 3 - (720 : R) * M.Delta
-    _ = (M.E4 ^ 3 - M.E6 ^ 2) + M.E6 ^ 2 - (720 : R) * M.Delta := by ring
-    _ = (1728 : R) * M.Delta + M.E6 ^ 2 - (720 : R) * M.Delta := by rw [h]
-    _ = M.E6 ^ 2 + (1008 : R) * M.Delta := by ring
+  calc E4 ^ 3 - (720 : R) * Delta
+    _ = (E4 ^ 3 - E6 ^ 2) + E6 ^ 2 - (720 : R) * Delta := by ring
+    _ = (1728 : R) * Delta + E6 ^ 2 - (720 : R) * Delta := by rw [h_ramanujan]
+    _ = E6 ^ 2 + (1008 : R) * Delta := by ring
 
 /-- Minimal root vector count of E₈ lattice: a₁ = 240. -/
 def e8MinimalVectorCount : ℕ := 240

@@ -82,24 +82,6 @@ theorem source_phase_eq_Eminus :
   fin_cases i <;> fin_cases j <;>
     simp [Eplus, J1, Eminus, Matrix.mul_apply, Fin.sum_univ_two]
 
-/-- Doubled-side first generator is the modular involution `J`. -/
-@[rep_depth krein]
-theorem target_leftGenerator_eq_modularJ :
-    (canonical (E := E)).target.J = InfoGeometry.Krein.modular_j (E := E) := by
-  rfl
-
-/-- Doubled-side pseudoscalar is the spectral involution `ε`. -/
-@[rep_depth krein]
-theorem target_pseudoscalar_eq_spectralEpsilon :
-    (canonical (E := E)).target.eps = InfoGeometry.Krein.spectral_epsilon (E := E) := by
-  rfl
-
-/-- Doubled-side derived phase axis is `K = J ∘ ε = complex_i`. -/
-@[rep_depth krein]
-theorem target_phase_eq_complexI :
-    (canonical (E := E)).target.K = InfoGeometry.Krein.complex_i (E := E) := by
-  rfl
-
 /-- The split left generator reads back to doubled `J`. -/
 @[rep_depth krein]
 theorem leftGenerator_readback :
@@ -124,15 +106,6 @@ theorem rightGenerator_readback :
       InfoGeometry.Krein.cl11Rep (E := E)
         (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)) := by
   simpa using Quantum.doubledSpaceCl11Action_K_eq_cl11Rep_rightGenerator (E := E)
-
-/-- Matrix-side `J1` corresponds to the doubled spectral involution `ε`. -/
-@[rep_depth krein]
-theorem matrix_J1_to_doubledEpsilon :
-    (canonical (E := E)).target.eps =
-      InfoGeometry.Krein.cl11Rep (E := E)
-        (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (1, 0) *
-          CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1)) :=
-  pseudoscalar_readback (E := E)
 
 /-- The doubled phase axis squares to `-1`, matching the derived matrix phase channel. -/
 @[rep_depth krein]

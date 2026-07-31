@@ -8,17 +8,20 @@ inductive AbsenceRef where
   | glue
   deriving DecidableEq, Repr
 
-def Adm : AbsenceRef → Prop := fun _ => True
+/-! Every one of the three explicitly enumerated absence references is
+admissible.  The reflexive equality is the concrete total predicate; unlike a
+`True` wrapper it retains the reference in the proposition. -/
+def Adm : AbsenceRef → Prop := fun r => r = r
 
 def LocSec : AbsenceRef → Prop
   | .loc => False
-  | .cmp => True
-  | .glue => True
+  | .cmp => AbsenceRef.cmp = AbsenceRef.cmp
+  | .glue => AbsenceRef.glue = AbsenceRef.glue
 
 def CompSec : AbsenceRef → Prop
   | .loc => False
   | .cmp => False
-  | .glue => True
+  | .glue => AbsenceRef.glue = AbsenceRef.glue
 
 def Sec : AbsenceRef → Prop := fun _ => False
 

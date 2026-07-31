@@ -34,12 +34,12 @@ wedge split:
 `P_R = PiPlus`, `P_L = PiMinus`, `P_0 = PZero`.
 -/
 @[rep_depth transport]
-structure IsCompatibleDPDWedge
+def IsCompatibleDPDWedge
     (CIK : InfoGeometry.Canonical.CertifiedInverseKernel (InfoGeometry.Krein.DoubledSpace E))
-    (W : HasModularSpectralWedge E) : Prop where
-  hPlus : CIK.mpRangeProjector = W.PiPlus
-  hMinus : CIK.metricProjector = W.PiMinus
-  hZero : CIK.spectralComplementaryProjector = W.PZero
+    (W : HasModularSpectralWedge E) : Prop :=
+  CIK.mpRangeProjector = W.PiPlus ∧
+    CIK.metricProjector = W.PiMinus ∧
+      CIK.spectralComplementaryProjector = W.PZero
 
 namespace IsCompatibleDPDWedge
 
@@ -55,7 +55,7 @@ projector `Q_D := 1 - P_D`.
 theorem kernelConventionLock_pzero_eq_spectralComplementaryProjector
     (comp : IsCompatibleDPDWedge CIK W) :
     W.PZero = CIK.spectralComplementaryProjector := by
-  simpa using comp.hZero.symm
+  simpa using comp.2.2.symm
 
 /--
 Active projector lock on the compatible lane:
@@ -70,7 +70,7 @@ theorem activeProjector_eq_one_sub_spectralComplementaryProjector
   calc
     W.PiPlus + W.PiMinus + CIK.spectralComplementaryProjector
         = W.PiPlus + W.PiMinus + W.PZero := by
-            simp [comp.hZero]
+            simp [comp.2.2]
     _ = (1 : EndH) := by
           simpa [add_assoc] using W.resolution
 
@@ -87,7 +87,7 @@ theorem wedgeSign_sq_eq_spectralProjector
     W.wedgeSign * W.wedgeSign
         = (1 : EndH) - W.PZero := W.wedgeSign_sq
     _ = (1 : EndH) - CIK.spectralComplementaryProjector := by
-          simp [comp.hZero]
+          simp [comp.2.2]
     _ = CIK.spectralProjector := by
           change (1 : EndH)
               - (1 - CIK.spectralProjector)
@@ -102,7 +102,7 @@ Kernel annihilation on the right:
 theorem wedgeSign_mul_spectralComplementaryProjector_eq_zero
     (comp : IsCompatibleDPDWedge CIK W) :
     W.wedgeSign * CIK.spectralComplementaryProjector = 0 := by
-  rw [comp.hZero]
+  rw [comp.2.2]
   unfold HasModularSpectralWedge.wedgeSign
   calc
     (W.PiPlus - W.PiMinus) * W.PZero
@@ -119,7 +119,7 @@ Kernel annihilation on the left:
 theorem spectralComplementaryProjector_mul_wedgeSign_eq_zero
     (comp : IsCompatibleDPDWedge CIK W) :
     CIK.spectralComplementaryProjector * W.wedgeSign = 0 := by
-  rw [comp.hZero]
+  rw [comp.2.2]
   unfold HasModularSpectralWedge.wedgeSign
   calc
     W.PZero * (W.PiPlus - W.PiMinus)
@@ -151,7 +151,7 @@ theorem two_smul_dilationGap_eq_wedgeSign
     (2 : ℝ) • CIK.dilationGap = CIK.mpRangeProjector - CIK.metricProjector := by
           symm
           exact CIK.mpRangeProjector_sub_metricProjector_eq_two_smul_dilationGap
-    _ = W.PiPlus - W.PiMinus := by simp [comp.hPlus, comp.hMinus]
+    _ = W.PiPlus - W.PiMinus := by simp [comp.1, comp.2.1]
     _ = W.wedgeSign := by
           simp [HasModularSpectralWedge.wedgeSign]
 
@@ -186,12 +186,7 @@ theorem wedgeCalibrated_of_compatibleDPDWedge
     InfoGeometry.Canonical.ModularSpectralWedgeBridge.WedgeCalibrated
       (E := E) (T := T) (W := W)
       ((2 : ℝ) • CIK.dilationGap) CIK.spectralComplementaryProjector := by
-  refine
-    { compat :=
-        { epsilon_eq := ?_
-          pzero_eq := comp.hZero.symm }
-      flow_commutes_owned_P_D := hFlowCommQd
-      flow_commutes_owned_epsilon := hFlowCommEps }
+  refine ⟨⟨?_, comp.2.2.symm⟩, hFlowCommQd, hFlowCommEps⟩
   simpa using (two_smul_dilationGap_eq_wedgeSign (CIK := CIK) (W := W) comp).symm
 
 /--

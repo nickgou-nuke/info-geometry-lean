@@ -43,6 +43,49 @@ structure BraidedProjectionData (A : Type*) [Ring A] [StarRing A] where
   H_comm_b1 : H * b1 = b1 * H
   H_comm_b2 : H * b2 = b2 * H
 
+/-!
+The following theorem is the owner-level statement.  It does not require a
+record of hypotheses: the projection, braid words, and their compatibility
+laws are explicit theorem arguments.  `BraidedProjectionData` below remains a
+convenience carrier for the unitary/group-representation API.
+-/
+theorem braided_cubic_compression_cube_of
+    {A : Type*} [Ring A]
+    (H b1 b2 Z : A)
+    (hH : H * H = H)
+    (hHb1 : H * b1 = b1 * H)
+    (hHb2 : H * b2 = b2 * H)
+    (hZ : (b2 * b1) * (b2 * b1) * (b2 * b1) = Z)
+    (hZH : Z * H = H * Z) :
+    (H * (b2 * b1) * H) * (H * (b2 * b1) * H) *
+        (H * (b2 * b1) * H) = Z * H := by
+  have hC : H * (b2 * b1) = (b2 * b1) * H := by
+    calc
+      H * (b2 * b1) = (H * b2) * b1 := by noncomm_ring
+      _ = (b2 * H) * b1 := by rw [hHb2]
+      _ = b2 * (H * b1) := by noncomm_ring
+      _ = b2 * (b1 * H) := by rw [hHb1]
+      _ = (b2 * b1) * H := by noncomm_ring
+  have hQ : H * (b2 * b1) * H = H * (b2 * b1) := by
+    calc
+      H * (b2 * b1) * H = (b2 * b1) * H * H := by rw [hC]
+      _ = (b2 * b1) * (H * H) := by noncomm_ring
+      _ = (b2 * b1) * H := by rw [hH]
+      _ = H * (b2 * b1) := hC.symm
+  rw [hQ]
+  have hComm : Commute H (b2 * b1) := hC
+  have hH3 : H ^ 3 = H := by
+    rw [pow_three, hH, hH]
+  have hC3 : (b2 * b1) ^ 3 = Z := by
+    rw [pow_three]
+    simpa only [mul_assoc] using hZ
+  calc
+    (H * (b2 * b1)) * (H * (b2 * b1)) * (H * (b2 * b1)) =
+        (H * (b2 * b1)) ^ 3 := by rw [pow_three]; noncomm_ring
+    _ = H ^ 3 * (b2 * b1) ^ 3 := hComm.mul_pow 3
+    _ = H * Z := by rw [hH3, hC3]
+    _ = Z * H := hZH.symm
+
 namespace BraidedProjectionData
 
 variable {A : Type*} [Ring A] [StarRing A]

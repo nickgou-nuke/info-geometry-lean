@@ -134,17 +134,14 @@ def MetricPreserving
 /--
 Second Erlanger layer: a morphism preserving both phase and metric structure.
 -/
-structure PhaseMetricPreserving
+def PhaseMetricPreserving
     {H₁ H₂ : Type*}
     [NormedAddCommGroup H₁] [InnerProductSpace ℝ H₁]
     [NormedAddCommGroup H₂] [InnerProductSpace ℝ H₂]
     (K₁ : H₁ →L[ℝ] H₁)
     (K₂ : H₂ →L[ℝ] H₂)
-    (F : H₁ →L[ℝ] H₂) : Prop where
-  phase :
-    PhasePreserving K₁ K₂ F
-  metric :
-    MetricPreserving F
+    (F : H₁ →L[ℝ] H₂) : Prop :=
+  PhasePreserving K₁ K₂ F ∧ MetricPreserving F
 
 /-! ## Erlanger invariants -/
 

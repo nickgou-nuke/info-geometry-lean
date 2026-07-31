@@ -80,16 +80,13 @@ theorem rot01Real_deriv :
         ∀ X Y : SplitOctReal, rot01Real (X * Y) = rot01Real X * Y + X * rot01Real Y := by
   exact ⟨rot01Real_add, rot01Real_neg, rot01Real_mul⟩
 
-/-- Direct readback of the native derivation and its classification status.
-
-The derivation is owned by `rot01Real_deriv`; the classification status is
-owned by `current_status_is_exactNativeLieAlgebra`.  No evidence packet is
-needed to carry either fact.
--/
+/-- Direct owner theorem for the native real derivation. -/
 theorem realSplitOctonionDerivationPacket_packet :
-    currentRealClassificationStatus = currentRealClassificationStatus ∧
-      rot01Real_deriv = rot01Real_deriv := by
-  exact ⟨rfl, rfl⟩
+    (∀ X Y : SplitOctReal, rot01Real (X + Y) = rot01Real X + rot01Real Y) ∧
+      (∀ X : SplitOctReal, rot01Real (-X) = -rot01Real X) ∧
+        ∀ X Y : SplitOctReal,
+          rot01Real (X * Y) = rot01Real X * Y + X * rot01Real Y := by
+  exact rot01Real_deriv
 
 /-- A concrete `up0` input for the real rotation witness. -/
 abbrev up0 : SplitOctReal := { a := 0, b := 0, x := ![1, 0, 0], y := 0 }

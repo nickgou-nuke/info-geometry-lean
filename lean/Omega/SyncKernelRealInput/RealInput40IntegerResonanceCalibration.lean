@@ -18,12 +18,11 @@ lemma real_input_40_integer_resonance_calibration_q_neg_one_root :
   nlinarith
 
 /-- Paper label: `cor:real-input-40-integer-resonance-calibration`. -/
-theorem paper_real_input_40_integer_resonance_calibration : True := by
-  have hone : -((4 : ℝ) * (4 - 4) * (4 - 1) * (4 + 1)) = 0 :=
-    real_input_40_integer_resonance_calibration_q_one_root
-  have hminus : ((-3 + Real.sqrt 11 : ℝ) ^ 2 + 6 * (-3 + Real.sqrt 11) - 2) = 0 :=
-    real_input_40_integer_resonance_calibration_q_neg_one_root
-  trivial
+theorem paper_real_input_40_integer_resonance_calibration :
+    (-((4 : ℝ) * (4 - 4) * (4 - 1) * (4 + 1)) = 0) ∧
+      ((-3 + Real.sqrt 11 : ℝ) ^ 2 + 6 * (-3 + Real.sqrt 11) - 2) = 0 := by
+  exact ⟨real_input_40_integer_resonance_calibration_q_one_root,
+    real_input_40_integer_resonance_calibration_q_neg_one_root⟩
 
 end
 

@@ -10,8 +10,7 @@ structure conclusion_elliptic_t5_full_chebotarev_splitting_table_row where
 deriving DecidableEq
 
 /-- Trivial carrier for the finite Chebotarev table certificate. -/
-structure conclusion_elliptic_t5_full_chebotarev_splitting_table_data where
-  conclusion_elliptic_t5_full_chebotarev_splitting_table_witness : Unit := ()
+abbrev conclusion_elliptic_t5_full_chebotarev_splitting_table_data := Unit
 
 /-- The 14 certified splitting rows for the `T₅` 24-point action. -/
 def conclusion_elliptic_t5_full_chebotarev_splitting_table_rows :

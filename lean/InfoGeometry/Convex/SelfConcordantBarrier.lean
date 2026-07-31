@@ -88,18 +88,17 @@ theorem dikin_upper (x h : InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd 
 end NoncommutativeSelfConcordantBarrier
 
 /-- Dikin lower bound on a matrix tangent step. -/
-structure MatrixDikinLowerBound (n : ℕ)
+def MatrixDikinLowerBound (n : ℕ)
     (ψ : NoncommutativeSelfConcordantBarrier n 1)
-    (x h : InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n) where
-  radius_small : ψ.localRadiusSq x h < 1
-  conclusion : omegaLow (Real.sqrt (ψ.localRadiusSq x h)) ≤ ψ.bregmanDiv (x + h) x
+    (x h : InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n) : Prop :=
+  ψ.localRadiusSq x h < 1 ∧
+    omegaLow (Real.sqrt (ψ.localRadiusSq x h)) ≤ ψ.bregmanDiv (x + h) x
 
 /-- Dikin upper bound on a matrix tangent step. -/
-structure MatrixDikinUpperBound (n : ℕ)
+def MatrixDikinUpperBound (n : ℕ)
     (ψ : NoncommutativeSelfConcordantBarrier n 1)
-    (x h : InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n) where
-  radius_small : Real.sqrt (ψ.localRadiusSq x h) < 1
-  conclusion :
+    (x h : InfoGeometry.Analysis.BregmanAnalyticBound.MatrixEnd n) : Prop :=
+  Real.sqrt (ψ.localRadiusSq x h) < 1 ∧
     ψ.bregmanDiv (x + h) x ≤ omegaHigh (Real.sqrt (ψ.localRadiusSq x h))
 
 /--
@@ -116,17 +115,15 @@ def toMatrixDikinEnvelope {n : ℕ}
           omegaHigh (Real.sqrt (ψ.localRadiusSq x h))) :
     InfoGeometry.Analysis.BregmanAnalyticBound.HasMatrixSelfConcordantDikinEnvelope
       (fun x y => ψ.bregmanDiv x y)
-      (fun x y => Real.sqrt (ψ.localRadiusSq y (x - y))) where
-  radius_nonneg := by
-    intro x y
+      (fun x y => Real.sqrt (ψ.localRadiusSq y (x - y))) := by
+  refine ⟨?_, ?_, ?_⟩
+  · intro x y
     exact Real.sqrt_nonneg _
-  lower := by
-    intro x y
+  · intro x y
     have hxy : y + (x - y) = x := by
       abel
     simpa [hxy] using hLower y (x - y)
-  upper := by
-    intro x y hsmall
+  · intro x y hsmall
     have hxy : y + (x - y) = x := by
       abel
     simpa [hxy] using hUpper y (x - y) hsmall

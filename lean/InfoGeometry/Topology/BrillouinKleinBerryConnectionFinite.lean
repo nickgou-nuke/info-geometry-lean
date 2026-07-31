@@ -126,20 +126,4 @@ theorem exceptional_dimension_ledger :
       g2LieDimension = 14 := by
   norm_num [e7LieDimension, su8Dimension, e7OverSu8ScalarDimension, g2LieDimension]
 
-/-- Closed finite packet for the KBZ Berry-connection shadow. -/
-theorem brillouinKleinBerryConnectionFinite_packet :
-    Function.Involutive crossCapIndex ∧
-      (∀ M A : Mat8, transformAx M A 0 = -M * A * M) ∧
-      (∀ M A : Mat8, transformAy M A 0 = M * A * M) ∧
-      (∀ theta : ℤ,
-        InfoGeometry.Topology.BrillouinKleinGauge.klein_bottle_z2_invariant theta (-theta) = 0) ∧
-      (∀ n : ℤ, phaseParity (n + 2) = phaseParity n) ∧
-      phaseParity 1 = 1 ∧
-      g2Cartan00 * g2Cartan11 - g2Cartan01 * g2Cartan10 = 1 ∧
-      e7LieDimension - su8Dimension = e7OverSu8ScalarDimension ∧
-      g2LieDimension = 14 := by
-  exact ⟨crossCapIndex_involutive, transformAx_zero_derivative, transformAy_zero_derivative,
-    klein_z2_orientation_reversal_cancel, phaseParity_add_two, phaseParity_one,
-    g2_cartan_det_ledger, exceptional_dimension_ledger.1, exceptional_dimension_ledger.2⟩
-
 end InfoGeometry.Topology.BrillouinKleinBerryConnectionFinite

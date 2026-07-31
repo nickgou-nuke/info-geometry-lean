@@ -4,8 +4,7 @@ import Mathlib.Tactic
 namespace Omega.Conclusion
 
 /-- Concrete seed data for the singular-ring node-splitting package. -/
-structure RealInput40SingularRingNodeSplittingData where
-  dummy : Unit := ()
+abbrev RealInput40SingularRingNodeSplittingData := Unit
 
 /-- The residual factor `Q(z,u)` from the audited real-input-40 spectral-collision certificate. -/
 def realInput40CollisionQ (z u : ℝ) : ℝ :=

@@ -95,29 +95,15 @@ def mkStrict
   hq := hq
   hstep := hstep
 
-/--
-Concrete strict certificate in the zero-residual lane (`η = 0`), with the
-explicit geometric step witness `C = 0`, `q = 0`.
--/
-def zeroResidualCertificate
-    (L : ℝ)
-    (_hLnonneg : 0 ≤ L) :
-    NKScalarCertificate := by
-  refine mkStrict L 0 0 0 ?_ ?_ ?_ ?_
-  · norm_num
-  · have : L * 0 < (1 / 2 : ℝ) := by
-      have hhalf : (0 : ℝ) < 1 / 2 := by norm_num
-      nlinarith
-    exact this
-  · norm_num
-  · intro n
-    exact hstep_zero_residual L 0 n
-
-/-- The shifted sequence is Cauchy for the concrete zero-residual certificate. -/
+/- The shifted sequence is Cauchy in the zero-residual lane directly from the
+   owner theorem, without constructing an intermediate evidence value. -/
 theorem zeroResidual_shifted_cauchy
-    (L : ℝ) (hLnonneg : 0 ≤ L) :
+    (L : ℝ) :
     CauchySeq (fun n => majorantSeq L 0 (n + 1)) := by
-  exact majorant_shifted_cauchy_of_law (zeroResidualCertificate L hLnonneg)
+  have h_half : L * 0 ≤ (1 / 2 : ℝ) := by norm_num
+  have hq : (0 : ℝ) < 1 := by norm_num
+  exact majorant_seq_cauchy_of_h_le_half L 0 0 0 h_half hq
+    (hstep_zero_residual L 0)
 
 end
 end InfoGeometry.Foundations.NewtonKantorovichJacobianCertificate

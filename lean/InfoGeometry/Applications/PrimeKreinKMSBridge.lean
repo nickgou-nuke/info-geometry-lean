@@ -78,31 +78,7 @@ def KMSCondition
     (G : PositivePrimonGibbsGate State Observable) : Prop :=
   G.kmsState.kms.boundaryCondition
 
-/-- The native analytic KMS certificate proves the derived condition. -/
-theorem KMS_condition
-    (G : PositivePrimonGibbsGate State Observable) :
-    G.KMSCondition :=
-  G.kmsState.kms.boundaryCondition_holds
-
 end PositivePrimonGibbsGate
-
-/-- The convergence half-plane is the positive normalization gate. -/
-theorem positivePrimon_beta_gt_one
-    {State Observable : Type*}
-    [Ring Observable]
-    (G : PositivePrimonGibbsGate State Observable) :
-    1 < G.beta :=
-  G.beta_gt_one
-
-/-- Re-export of the positive partition positivity. -/
-theorem positivePrimon_partition_pos
-    {State Observable : Type*}
-    [Ring Observable]
-    (G : PositivePrimonGibbsGate State Observable) :
-    0 < G.partition :=
-  G.partition_pos
-
-/-! ## 2. Thermofield / purification sector -/
 
 /--
 Thermofield purification gate.
@@ -150,16 +126,6 @@ theorem normalizable
   exact T.partition_pos
 
 end ThermofieldGNSGate
-
-/-- Re-export of the supplied thermofield normalizability certificate. -/
-theorem thermofield_normalizable
-    {ThermofieldVector Observable : Type*}
-    [NormedAddCommGroup ThermofieldVector]
-    (T : ThermofieldGNSGate ThermofieldVector Observable) :
-    T.Normalizable :=
-  T.normalizable
-
-/-! ## 3. Tomita modular data -/
 
 /--
 Tomita--Takesaki modular data.
@@ -279,15 +245,6 @@ theorem is_index_not_state
   rfl
 
 end MobiusKreinIndexGate
-
-/-- Re-export of the signed-trace / inverse-zeta calibration. -/
-theorem mobius_signedTrace_eq_inverseZeta
-    {FermionSpace Operator : Type*}
-    (M : MobiusKreinIndexGate FermionSpace Operator) :
-    M.signedTrace = M.inverseZetaReadout :=
-  M.signedTrace_eq_inverseZeta
-
-/-! ## 5. Doubled Krein Liouvillean sector -/
 
 /--
 Krein-self-adjoint Liouvillean gate.
@@ -498,54 +455,6 @@ variable
     [InfoGeometry.Krein.KreinSpace K]
     [NormedAddCommGroup ThermofieldVector]
     [Ring Observable] [Ring Algebra]
-
-/-- The positive Gibbs/KMS sector supplies the convergence gate. -/
-theorem beta_gt_one
-    (D : PrimeKreinKMSBridgeData
-      State Observable ThermofieldVector Algebra FermionSpace Operator K
-      LieAlgebra) :
-    1 < D.positiveGibbs.beta :=
-  D.positiveGibbs.beta_gt_one
-
-/-- The thermofield vector is normalizable by its supplied gate. -/
-theorem thermofield_normalizable
-    (D : PrimeKreinKMSBridgeData
-      State Observable ThermofieldVector Algebra FermionSpace Operator K
-      LieAlgebra) :
-    D.thermofield.Normalizable :=
-  ThermofieldGNSGate.normalizable D.thermofield
-
-/-- The Möbius/Krein signed trace equals the supplied inverse-zeta readout. -/
-theorem mobius_index_eq_inverseZeta
-    (D : PrimeKreinKMSBridgeData
-      State Observable ThermofieldVector Algebra FermionSpace Operator K
-      LieAlgebra) :
-    D.mobiusIndex.signedTrace = D.mobiusIndex.inverseZetaReadout :=
-  D.mobiusIndex.signedTrace_eq_inverseZeta
-
-/-- Readback of temperature consistency between the positive and thermofield lanes. -/
-theorem positive_beta_eq_thermofield_beta
-    (D : PrimeKreinKMSBridgeData
-      State Observable ThermofieldVector Algebra FermionSpace Operator K
-      LieAlgebra) :
-    D.positiveGibbs.beta = D.thermofield.beta :=
-  D.beta_consistency.1
-
-/-- Readback of temperature consistency between the positive and Möbius lanes. -/
-theorem positive_beta_eq_mobius_beta
-    (D : PrimeKreinKMSBridgeData
-      State Observable ThermofieldVector Algebra FermionSpace Operator K
-      LieAlgebra) :
-    D.positiveGibbs.beta = D.mobiusIndex.beta :=
-  D.beta_consistency.2.1
-
-/-- Readback of temperature consistency between the positive and modular lanes. -/
-theorem positive_beta_eq_modular_beta
-    (D : PrimeKreinKMSBridgeData
-      State Observable ThermofieldVector Algebra FermionSpace Operator K
-      LieAlgebra) :
-    D.positiveGibbs.beta = D.modularHamiltonian.beta :=
-  D.beta_consistency.2.2
 
 end PrimeKreinKMSBridgeData
 

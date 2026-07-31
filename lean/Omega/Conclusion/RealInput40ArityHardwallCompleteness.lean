@@ -15,7 +15,7 @@ def conclusion_realinput40_arity_hardwall_completeness_average_charge (b : Bool)
 applies uniformly for every `n ≥ 1`. -/
 def conclusion_realinput40_arity_hardwall_completeness_top_exponent : ℕ :=
   real_input_40_arity_charge_degree_bound_top_exponent
-    (α := Fin 1) (primitive := fun _ : Fin 1 => True) (fun _ : Fin 1 => 0)
+    (α := Fin 1) (primitive := fun γ : Fin 1 => γ = 0) (fun _ : Fin 1 => 0)
 
 /-- Paper-facing hard-wall completeness statement: the coboundary/non-Laurent package is present,
 the two endpoint charges `0` and `1/2` are realized, the zero-charge determinant witness holds,
@@ -60,7 +60,7 @@ theorem paper_conclusion_realinput40_arity_hardwall_completeness
   · intro n hn
     simpa [conclusion_realinput40_arity_hardwall_completeness_top_exponent] using
       (paper_real_input_40_arity_charge_degree_bound
-        (α := Fin 1) n hn (fun _ : Fin 1 => True) (fun _ : Fin 1 => 0)
+        (α := Fin 1) n hn (fun γ : Fin 1 => γ = 0) (fun _ : Fin 1 => 0)
         (by
           intro γ hγ
           exact Nat.zero_le (n / 2)))

@@ -36,10 +36,4 @@ theorem noncommutingSplit_implies_spectralMetricMismatch (P : ProjectorPair (R :
   intro hComm
   exact ProjectorPair.commutator_ne_zero_implies_mismatch_ne_zero (P := P) hComm
 
-theorem projectorAnomaly
-    {P : ProjectorPair (R := R)}
-    (h : P.HasProjectorAnomaly) :
-    P.HasProjectorAnomaly :=
-  h
-
 end InfoGeometry.Canonical.DrazinPenroseAnomalyOwner

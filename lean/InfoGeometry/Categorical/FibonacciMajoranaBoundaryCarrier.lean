@@ -55,21 +55,4 @@ theorem carrier_selfDualCone_and_boundary_zeroMode
         (globalChainOperatorFromOpenChain (S := S) localOp chain) :=
   ⟨C.positiveCone_innerDual_eq, owner_hasZeroMode O⟩
 
-/--
-Explicit witness form of the same bridge: the carrier cone is self-dual and
-the boundary owner produces a nonzero vector in the open-chain kernel.
--/
-theorem carrier_selfDualCone_and_exists_boundary_zeroMode
-    (C : Carrier (E := E) A)
-    {M : RealMajoranaDatum (S := S)}
-    {P0 : KPolarization (S := S) M}
-    {localOp : KitaevCell → EndS}
-    {chain : List KitaevCell}
-    (O : DimensionAgnosticBoundaryZeroModeOwner
-      (S := S) M P0 localOp chain) :
-    ProperCone.innerDual (C.positiveCone.cone : Set E) = C.positiveCone.cone ∧
-      ∃ v : S,
-        (globalChainOperatorFromOpenChain (S := S) localOp chain) v = 0 ∧ v ≠ 0 :=
-  ⟨C.positiveCone_innerDual_eq, owner_exists_zeroMode O⟩
-
 end InfoGeometry.Categorical.FibonacciMajoranaBoundaryCarrier

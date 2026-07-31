@@ -55,18 +55,6 @@ theorem adjacent_transposition_braid_relation (i : Fin 3) :
     tau12 (tau23 (tau12 i)) = tau23 (tau12 (tau23 i)) := by
   fin_cases i <;> simp [tau12, tau23]
 
-/--
-Finite pentagon-tiling/braid readout.
-
-This packages only the two already-proved finite facts:
-the five-label pentagrid reflection is involutive, and the adjacent
-transposition quotient satisfies the `B₃` braid relation.
--/
-theorem pentagon_tiling_braid_packet (j : FiveLabel) (i : Fin 3) :
-    pentagridReflect (pentagridReflect j) = j ∧
-      tau12 (tau23 (tau12 i)) = tau23 (tau12 (tau23 i)) := by
-  exact ⟨pentagridReflect_involutive j, adjacent_transposition_braid_relation i⟩
-
 abbrev Mat2Z := Matrix (Fin 2) (Fin 2) ℤ
 
 /-- Diagonal Hecke representative with eigenvalues `q` and `-1`. -/
@@ -108,12 +96,5 @@ theorem cl11Minus_sq : cl11Minus * cl11Minus = -(1 : Mat2Z) := by
 theorem cl11_anticomm : cl11Plus * cl11Minus + cl11Minus * cl11Plus = (0 : Mat2Z) := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [cl11Plus, cl11Minus, Matrix.mul_apply]
-
-/-- Summary theorem collecting exactly the finite matrix laws proved above. -/
-theorem finite_cl11_packet :
-    cl11Plus * cl11Plus = (1 : Mat2Z) ∧
-      cl11Minus * cl11Minus = -(1 : Mat2Z) ∧
-      cl11Plus * cl11Minus + cl11Minus * cl11Plus = (0 : Mat2Z) := by
-  exact ⟨cl11Plus_sq, cl11Minus_sq, cl11_anticomm⟩
 
 end InfoGeometry.Topology.PenroseBraidLorentzFinite

@@ -151,14 +151,6 @@ theorem eckmann_exact_orthogonal_coexact {n0 n1 n2 : ℕ}
   rcases hy with ⟨v, rfl⟩
   exact eckmann_coboundary_orthogonal_coexact d0 d1 hComplex u v
 
-/-- Exact cochains are explicit images. -/
-theorem exact_readout (d : EndCochain n) (x : Cochains n)
-    (h : IsExact d x) : ∃ y : Cochains n, d.mulVec y = x := h
-
-/-- Coexact cochains are explicit images. -/
-theorem coexact_readout (δ : EndCochain n) (x : Cochains n)
-    (h : IsCoexact δ x) : ∃ y : Cochains n, δ.mulVec y = x := h
-
 /-- The degree-one Eckmann Laplacian expands to `d₁ᵀ d₁ + d₀ d₀ᵀ`. -/
 theorem eckmann_degree_one_laplacian_readout {n0 n1 n2 : ℕ}
     (d0 : Matrix (Fin n1) (Fin n0) ℝ)

@@ -17,50 +17,13 @@ theorem paper_typed_address_biaxial_completion_orthogonal_budget
     (legalReadout visibleBudgetPassed registerBudgetPassed modeBudgetPassed : Prop)
     (hVisibleRequired : legalReadout → visibleBudgetPassed)
     (hRegisterRequired : legalReadout → registerBudgetPassed)
-    (hModeRequired : legalReadout → modeBudgetPassed)
-    (hVisibleFailure :
-      registerBudgetPassed → modeBudgetPassed → ¬ visibleBudgetPassed → ¬ legalReadout)
-    (hRegisterFailure :
-      visibleBudgetPassed → modeBudgetPassed → ¬ registerBudgetPassed → ¬ legalReadout)
-    (hModeFailure :
-      visibleBudgetPassed → registerBudgetPassed → ¬ modeBudgetPassed → ¬ legalReadout) :
+    (hModeRequired : legalReadout → modeBudgetPassed) :
     typedAddressBiaxialCompletionOrthogonalBudget legalReadout visibleBudgetPassed
       registerBudgetPassed modeBudgetPassed := by
-  let U : UnitarySliceAddressClosureData :=
-    { AddressSpace := Unit
-      ReadoutCodomain := Unit
-      unitarySliceAddress := fun _ => True
-      guardedReadout := fun _ _ => ()
-      guardedRule := True
-      readUSClosed := True
-      hasGuardedRule := trivial
-      guardedReadoutCloses := fun _ => trivial }
-  let B : BudgetOrthogonalityData :=
-    { legalReadout := legalReadout
-      visibleBudgetPassed := visibleBudgetPassed
-      registerBudgetPassed := registerBudgetPassed
-      modeBudgetPassed := modeBudgetPassed
-      visible_required := hVisibleRequired
-      register_required := hRegisterRequired
-      mode_required := hModeRequired
-      visible_failure_obstructs := hVisibleFailure
-      register_failure_obstructs := hRegisterFailure
-      mode_failure_obstructs := hModeFailure }
-  let N : TypedAddressNullTrichotomyData :=
-    { semanticNullCause := True
-      protocolNullCause := True
-      collisionNullCause := True
-      exhaustive := True
-      semanticFailuresRequireAddressChange := True
-      protocolFailuresNeedProtocolRepair := True
-      collisionFailuresNeedSupportAxisBudget := True
-      exhaustiveWitness := trivial
-      semanticRepairWitness := trivial
-      protocolRepairWitness := trivial
-      collisionRepairWitness := trivial }
-  have hSlice := paper_typed_address_biaxial_completion_orthogonal_slice U B N
   have hAllBudgets : legalReadout →
-      visibleBudgetPassed ∧ registerBudgetPassed ∧ modeBudgetPassed := hSlice.2.1
+      visibleBudgetPassed ∧ registerBudgetPassed ∧ modeBudgetPassed := by
+    intro hLegal
+    exact ⟨hVisibleRequired hLegal, hRegisterRequired hLegal, hModeRequired hLegal⟩
   refine ⟨?_, ?_, ?_⟩
   · rintro ⟨hRegister, hMode, hNotVisible⟩ hLegal
     exact hNotVisible (hAllBudgets hLegal).1

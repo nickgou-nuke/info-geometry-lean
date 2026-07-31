@@ -19,6 +19,14 @@ theorem paper_typed_address_biaxial_completion_jensen_defect_blindspot
     (B : Omega.CircleDimension.RadiusBlindspotJointBudgetData)
     (J : JensenDefectFiniteizationData) {rho : ℝ} (hrho : 0 < rho) (hrho_lt : rho < 1)
     (D : Omega.CircleDimension.ComovingHorizonScanFirstLayerExtractionData)
+    (hExplicitFourierDecomposition : D.explicitFourierDecomposition)
+    (hDepthGroupedSpectrum : D.depthGroupedSpectrum)
+    (hSmallestDepthExponentialFactored : D.smallestDepthExponentialFactored)
+    (hNextDepthGapTailBound : D.nextDepthGapTailBound)
+    (hLorentzProfileModel : D.fourierClosedData.lorentzProfileModel)
+    (hExplicitFourierFormulaInput : D.fourierClosedData.explicitFourierFormulaInput)
+    (hPositiveFrequencyRestriction : D.fourierClosedData.positiveFrequencyRestriction)
+    (hIntervalUniquenessPrinciple : D.fourierClosedData.intervalUniquenessPrinciple)
     (offsliceAssertion prefixRecoveryRoute nullBlindspotWitness noThirdPath : Prop)
     (hSplit : offsliceAssertion → prefixRecoveryRoute ∨ nullBlindspotWitness)
     (hNoThird : offsliceAssertion → noThirdPath)
@@ -46,6 +54,10 @@ theorem paper_typed_address_biaxial_completion_jensen_defect_blindspot
   have hRecovery :
       D.leadingAsymptoticSeparation ∧ D.leadingLayerRecovered :=
     Omega.CircleDimension.paper_cdim_comoving_horizon_scan_first_layer_extraction D
+      hExplicitFourierDecomposition hDepthGroupedSpectrum
+      hSmallestDepthExponentialFactored hNextDepthGapTailBound
+      hLorentzProfileModel hExplicitFourierFormulaInput
+      hPositiveFrequencyRestriction hIntervalUniquenessPrinciple
   rcases
       BoundaryAddressCollision.paper_typed_address_biaxial_completion_boundary_address_collision
         c T b addressOccupancy hNonneg hTotal with

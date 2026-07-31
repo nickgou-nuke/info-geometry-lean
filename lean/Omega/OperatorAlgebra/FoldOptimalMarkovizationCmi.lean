@@ -74,28 +74,22 @@ lemma foldMarkovizationRisk_decomposition {α : Type*} (s : Finset α) (hs : s.N
     _ = foldMarkovizationRisk s P (foldOptimalMarkovKernel s P) + (q - μ) ^ 2 := by
           simp [foldMarkovizationRisk, μ]
 
-/-- Finite proxy version of the barycenter minimization and CMI identity: the barycenter kernel
-minimizes the fiberwise risk, the minimum is the `foldConditionalMutualInformation`, and equality
-forces the candidate kernel to coincide with the barycenter. -/
-def foldOptimalMarkovizationCmiStatement : Prop :=
-  ∀ (n : ℕ) (_hn : 0 < n) (P : Fin n → ℝ),
-    (∀ q,
-      foldConditionalMutualInformation (Finset.univ : Finset (Fin n)) P ≤
-        foldMarkovizationRisk (Finset.univ : Finset (Fin n)) P q) ∧
-      foldMarkovizationRisk (Finset.univ : Finset (Fin n)) P
-          (foldOptimalMarkovKernel (Finset.univ : Finset (Fin n)) P) =
-        foldConditionalMutualInformation (Finset.univ : Finset (Fin n)) P ∧
-      (∀ q,
-        foldMarkovizationRisk (Finset.univ : Finset (Fin n)) P q =
-            foldConditionalMutualInformation (Finset.univ : Finset (Fin n)) P ↔
-          q = foldOptimalMarkovKernel (Finset.univ : Finset (Fin n)) P)
-
 /-- Paper-facing finite proxy for optimal one-step Markovization: the barycenter kernel is the
 unique minimizer of the averaged KL-risk proxy, and the minimized objective is the packaged
 conditional mutual information scalar.
     thm:op-algebra-fold-optimal-markovization-cmi -/
 theorem paper_op_algebra_fold_optimal_markovization_cmi_spec :
-    foldOptimalMarkovizationCmiStatement := by
+    ∀ (n : ℕ) (_hn : 0 < n) (P : Fin n → ℝ),
+      (∀ q,
+        foldConditionalMutualInformation (Finset.univ : Finset (Fin n)) P ≤
+          foldMarkovizationRisk (Finset.univ : Finset (Fin n)) P q) ∧
+        foldMarkovizationRisk (Finset.univ : Finset (Fin n)) P
+            (foldOptimalMarkovKernel (Finset.univ : Finset (Fin n)) P) =
+          foldConditionalMutualInformation (Finset.univ : Finset (Fin n)) P ∧
+        (∀ q,
+          foldMarkovizationRisk (Finset.univ : Finset (Fin n)) P q =
+              foldConditionalMutualInformation (Finset.univ : Finset (Fin n)) P ↔
+            q = foldOptimalMarkovKernel (Finset.univ : Finset (Fin n)) P) := by
   intro n hn P
   have hs : (Finset.univ : Finset (Fin n)).Nonempty := by
     classical
@@ -117,17 +111,6 @@ theorem paper_op_algebra_fold_optimal_markovization_cmi_spec :
       nlinarith
     · intro hq
       simp [hq]
-
-/-- Placeholder-signature wrapper requested for the round target.
-Lean does not allow a theorem whose type is itself `Prop`, so the round placeholder is realized as
-a definition and the verified statement is provided by
-`paper_op_algebra_fold_optimal_markovization_cmi_verified`. -/
-def paper_op_algebra_fold_optimal_markovization_cmi : Prop :=
-  foldOptimalMarkovizationCmiStatement
-
-theorem paper_op_algebra_fold_optimal_markovization_cmi_verified :
-    paper_op_algebra_fold_optimal_markovization_cmi := by
-  exact paper_op_algebra_fold_optimal_markovization_cmi_spec
 
 end
 

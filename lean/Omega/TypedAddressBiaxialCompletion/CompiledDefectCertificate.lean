@@ -44,10 +44,13 @@ repulsion radii to `1` is sufficient for both the certificate-loop RH clause and
 horizon-purity statement.
     prop:typed-address-biaxial-completion-compiled-defect-certificate -/
 theorem paper_typed_address_biaxial_completion_compiled_defect_certificate
-    (C : CompiledDefectCertificateData) :
+    (C : CompiledDefectCertificateData)
+    (hUnitarySliceLocked : C.certificateLoop.unitarySliceLocked) :
     C.offlineVerified → C.zeroFreeSubdisk ∧ (C.certifiedRadiusTendsToOne → C.rhSufficient) := by
   intro hOffline
-  have hLoop := paper_typed_address_biaxial_completion_certificate_loop C.certificateLoop
+  have hLoop :=
+    paper_typed_address_biaxial_completion_certificate_loop C.certificateLoop
+      hUnitarySliceLocked
   refine ⟨?_, ?_⟩
   · intro n
     exact repulsion_radius_zero_free_certificate (C.rho_pos n) (C.rho_le_one n) (hOffline n)

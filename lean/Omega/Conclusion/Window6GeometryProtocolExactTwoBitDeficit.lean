@@ -3,8 +3,7 @@ import Omega.Conclusion.Window6BoundaryParityZeroOneThreeLaw
 namespace Omega.Conclusion
 
 /-- Concrete package for the window-`6` geometric/protocol rank split. -/
-structure conclusion_window6_geometry_protocol_exact_two_bit_deficit_data where
-  conclusion_window6_geometry_protocol_exact_two_bit_deficit_certificate : Unit := ()
+abbrev conclusion_window6_geometry_protocol_exact_two_bit_deficit_data := Unit
 
 namespace conclusion_window6_geometry_protocol_exact_two_bit_deficit_data
 

@@ -51,18 +51,12 @@ theorem boundary_majorana_nilpotent :
   ext i j
   fin_cases i <;> fin_cases j <;> simp [boundaryNilpotentMajorana, Matrix.mul_apply, Fin.sum_univ_two]
 
-/-- Altland-Zirnbauer 10-Fold Classification Structure -/
-structure AZTenFoldClassificationPacket where
-  az1DClassifier : AZClass → TopologicalInvariant1D
-  h_class_D : az1DClassifier AZClass.D = TopologicalInvariant1D.Z2
-  h_class_BDI : az1DClassifier AZClass.BDI = TopologicalInvariant1D.Z
-  bottDim : ℕ → ℕ
-  h_bott : ∀ d, bottDim (d + 8) = bottDim d
-  boundaryNilpotent : Matrix (Fin 2) (Fin 2) ℝ
-  h_nilpotent : boundaryNilpotent * boundaryNilpotent = 0
-
 theorem az_tenfold_classification_exists :
-    Nonempty AZTenFoldClassificationPacket :=
-  ⟨⟨az1DTopologicalInvariant, rfl, rfl, bottPeriodicityDim, bott_periodicity_8fold_invariance, boundaryNilpotentMajorana, boundary_majorana_nilpotent⟩⟩
+    az1DTopologicalInvariant AZClass.D = TopologicalInvariant1D.Z2 ∧
+      az1DTopologicalInvariant AZClass.BDI = TopologicalInvariant1D.Z ∧
+        (∀ d, bottPeriodicityDim (d + 8) = bottPeriodicityDim d) ∧
+          boundaryNilpotentMajorana * boundaryNilpotentMajorana = 0 := by
+  exact ⟨class_D_is_Z2, class_BDI_is_Z,
+    bott_periodicity_8fold_invariance, boundary_majorana_nilpotent⟩
 
 end InfoGeometry.Quantum.AZTenFoldCompleteClassification

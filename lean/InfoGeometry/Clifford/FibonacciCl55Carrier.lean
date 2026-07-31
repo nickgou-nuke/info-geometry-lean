@@ -19,26 +19,23 @@ open InfoGeometry.Canonical.FibonacciFiveGradeBridge
 open InfoGeometry.Canonical.ConformalFiveGradeInversion
 open InfoGeometry.Canonical.FibonacciParafermionAtoms
 
-/-- An explicit conformal null-pair hypothesis gives isotropy of the first leg. -/
-theorem nullPair_u_square (u v : ConformalLift55.Cl55)
-    (h_u : u ^ 2 = 0) (_h_v : v ^ 2 = 0)
-    (_h_anticomm : u * v + v * u = 1) :
-    u ^ 2 = 0 :=
-  h_u
+/-- An explicit conformal null-pair exists in the split Cl(5,5) carrier. -/
+theorem nullPair_u_square :
+    ∃ u : ConformalLift55.Cl55, u ^ 2 = 0 := by
+  rcases ConformalLift55.conformalNullPair_exists with ⟨pair⟩
+  exact ⟨pair.u, pair.u_square⟩
 
-/-- An explicit conformal null-pair hypothesis gives isotropy of the second leg. -/
-theorem nullPair_v_square (u v : ConformalLift55.Cl55)
-    (_h_u : u ^ 2 = 0) (h_v : v ^ 2 = 0)
-    (_h_anticomm : u * v + v * u = 1) :
-    v ^ 2 = 0 :=
-  h_v
+/-- The second leg of the constructed conformal null-pair is isotropic. -/
+theorem nullPair_v_square :
+    ∃ v : ConformalLift55.Cl55, v ^ 2 = 0 := by
+  rcases ConformalLift55.conformalNullPair_exists with ⟨pair⟩
+  exact ⟨pair.v, pair.v_square⟩
 
-/-- An explicit conformal null-pair hypothesis gives the anticommutator relation. -/
-theorem nullPair_anticomm (u v : ConformalLift55.Cl55)
-    (_h_u : u ^ 2 = 0) (_h_v : v ^ 2 = 0)
-    (h_anticomm : u * v + v * u = 1) :
-    u * v + v * u = 1 :=
-  h_anticomm
+/-- The constructed conformal null-pair has normalized anticommutator one. -/
+theorem nullPair_anticomm :
+    ∃ u v : ConformalLift55.Cl55, u * v + v * u = 1 := by
+  rcases ConformalLift55.conformalNullPair_exists with ⟨pair⟩
+  exact ⟨pair.u, pair.v, pair.anticomm⟩
 
 /-- The finite Fibonacci matrix from explicit coefficients is involutive. -/
 theorem fusionMatrix_sq (a b : ℝ) (h : IsFibonacciRelation a b) :

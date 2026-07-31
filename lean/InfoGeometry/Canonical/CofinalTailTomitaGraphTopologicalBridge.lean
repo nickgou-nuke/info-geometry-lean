@@ -109,4 +109,23 @@ theorem upperGraphTopologicalColimitToGlobalPair_factorization
       graphStageToGlobalPair Stage sys ω j.1 p
   exact graphTopologicalColimitToGlobalPair_stage Stage sys ω j.1 p
 
+theorem upperGraphTopologicalColimitToGlobalPair_mem_globalTomitaGraphClosure
+    (i₀ : I) (x : upperGraphTopologicalColimit Stage sys ω i₀) :
+    upperGraphTopologicalColimitToGlobalPair Stage sys ω i₀ x ∈
+      globalTomitaGraphClosure Stage sys ω := by
+  apply subset_closure
+  refine ⟨upperGraphTopologicalColimitToGraph Stage sys ω i₀ x, ?_⟩
+  have h := congrArg (fun f => f x)
+    (upperGraphTopologicalColimitToGlobalPair_factorization
+      Stage sys ω i₀)
+  simpa only [TopCat.comp_app] using h.symm
+
+theorem upperGraphTopologicalColimitToGlobalPair_fst_mem_globalTomitaDomain
+    (i₀ : I) (x : upperGraphTopologicalColimit Stage sys ω i₀) :
+    (upperGraphTopologicalColimitToGlobalPair Stage sys ω i₀ x).1 ∈
+      globalTomitaDomain Stage sys ω := by
+  refine ⟨(upperGraphTopologicalColimitToGlobalPair Stage sys ω i₀ x).2, ?_⟩
+  exact upperGraphTopologicalColimitToGlobalPair_mem_globalTomitaGraphClosure
+    Stage sys ω i₀ x
+
 end CStarStateColimit.Native.CofinalTailTomitaGraphTopologicalBridge

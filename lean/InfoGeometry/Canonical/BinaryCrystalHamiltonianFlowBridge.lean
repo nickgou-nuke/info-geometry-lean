@@ -43,8 +43,7 @@ variable (B : BinaryCrystalHamiltonianFlowBridge 𝔤)
 
 /-- The binary crystal packet still supplies the binary-owner target. -/
 @[rep_depth transport]
-theorem crystal_ownerTarget (_B : BinaryCrystalHamiltonianFlowBridge
-    𝔤) :
+theorem crystal_ownerTarget :
     (∀ w : BinaryLattice,
       binaryUnitCell w =
         ({w} : Set BinaryLattice)

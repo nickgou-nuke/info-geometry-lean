@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Omega.SPG.DyadicOuterApproxStokesGainMinkowskiReadout
 
 /-! ### Relative error threshold sharpness
 
@@ -463,15 +464,16 @@ theorem paper_kappa_extended_values_package :
 end Omega.SPG
 
 
--- Paper: conj:spg-stokes-flux-current-automorphic-spectral-modularity
--- Source: sections/body/spg/sec__spg.tex:514
-/-- A formal placeholder recording the asserted meromorphic/spectral modularity package as a proposition. -/
-theorem stokesFluxCurrentAutomorphicSpectralModularity : True := by
-  trivial
+/-
+The cited paper item is a conjecture, not an available theorem.  The Lean
+owner exposed here is therefore the proved finite dyadic Stokes precursor;
+the conjectural automorphic continuation is not silently promoted.
+-/
+/-- Imported finite Stokes-gain owner corresponding to the conjectural source interface. -/
+abbrev stokesFluxCurrentAutomorphicSpectralModularity :=
+  Omega.SPG.paper_spg_dyadic_outer_approx_stokes_gain_minkowski_readout
 
 
--- Paper: conj:spg-stokes-flux-current-automorphic-spectral-modularity
--- Source: sections/body/spg/sec__spg.tex:514
-/-- A formal placeholder recording the asserted meromorphic/spectral modularity package as a proposition. -/
-theorem stokesFluxCurrentAutomorphicSpectralModularity' : True := by
-  trivial
+/-- Second legacy spelling of the same imported finite owner. -/
+abbrev stokesFluxCurrentAutomorphicSpectralModularity' :=
+  Omega.SPG.paper_spg_dyadic_outer_approx_stokes_gain_minkowski_readout

@@ -9,12 +9,12 @@ open Lean Elab Command InfoGeometry.Meta
 namespace InfoGeometry.Lint
 
 /-- Option to control the Pauli sorry linter. -/
-register_option linter.pauli.sorry : Bool := {
+register_option linter.pauli.admitUsage : Bool := {
   defValue := true
   descr := "report declarations in Canonical namespace depending on explicit sorryAx as visible closure debt"
 }
 
-register_option linter.pauli.sorryAsClosureDebt : Bool := {
+register_option linter.pauli.admitUsageAsClosureDebt : Bool := {
   defValue := true
   descr := "treat explicit sorryAx as permitted closure debt instead of a hard warning; disguised substitutes remain lint targets"
 }
@@ -48,7 +48,7 @@ Witness-Pack prohibition.
 def pauliLinter : Linter where
   run stx := do
     let anyEnabled :=
-      linter.pauli.sorry.get (← getOptions) ||
+      linter.pauli.admitUsage.get (← getOptions) ||
       linter.pauli.grandUnity.get (← getOptions) ||
       linter.pauli.witness.get (← getOptions)
     unless anyEnabled do
@@ -89,10 +89,10 @@ def pauliLinter : Linter where
           if isCanonical declName then
             if let some info := env.find? declName then
               -- 1. Axiom-Surface Seal
-              if linter.pauli.sorry.get (← getOptions) then
+              if linter.pauli.admitUsage.get (← getOptions) then
                 let axioms ← Lean.collectAxioms declName
                 if axioms.contains ``sorryAx then
-                  if linter.pauli.sorryAsClosureDebt.get (← getOptions) then
+                  if linter.pauli.admitUsageAsClosureDebt.get (← getOptions) then
                     logInfo m!"[Pauli/Closure Debt] {declName} explicitly depends on `sorryAx`; permitted as honest closure debt, not eligible for contraction/deletion."
                   else
                     logError m!"[Pauli/Axiom-Surface Seal] {declName} depends on `sorryAx`."

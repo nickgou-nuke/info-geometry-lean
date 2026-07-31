@@ -36,16 +36,6 @@ def mk (σ₁ σ₂ : G)
     B3BraidWitness G :=
   ⟨(σ₁, σ₂), hbraid⟩
 
-@[simp] theorem mk_σ1 (σ₁ σ₂ : G)
-    (hbraid : σ₁ * σ₂ * σ₁ = σ₂ * σ₁ * σ₂) :
-    (mk σ₁ σ₂ hbraid).σ1 = σ₁ :=
-  rfl
-
-@[simp] theorem mk_σ2 (σ₁ σ₂ : G)
-    (hbraid : σ₁ * σ₂ * σ₁ = σ₂ * σ₁ * σ₂) :
-    (mk σ₁ σ₂ hbraid).σ2 = σ₂ :=
-  rfl
-
 end B3BraidWitness
 
 /-- Historical name for a genuine multiplicative automorphism. -/
@@ -69,18 +59,6 @@ def B3BraidWitness.map
   B3BraidWitness.mk (ϕ w.σ1) (ϕ w.σ2)
     (gt_automorphism_preserves_b3 ϕ.toMonoidHom
       w.σ1 w.σ2 w.braid_relation)
-
-@[simp] theorem B3BraidWitness.map_σ1
-    {G H : Type*} [Monoid G] [Monoid H]
-    (ϕ : G ≃* H) (w : B3BraidWitness G) :
-    (B3BraidWitness.map ϕ w).σ1 = ϕ w.σ1 :=
-  rfl
-
-@[simp] theorem B3BraidWitness.map_σ2
-    {G H : Type*} [Monoid G] [Monoid H]
-    (ϕ : G ≃* H) (w : B3BraidWitness G) :
-    (B3BraidWitness.map ϕ w).σ2 = ϕ w.σ2 :=
-  rfl
 
 /-- The image braid generators are explicit witnesses of the transported
 `B₃` relation. -/

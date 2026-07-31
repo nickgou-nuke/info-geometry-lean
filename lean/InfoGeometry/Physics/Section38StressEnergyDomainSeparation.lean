@@ -43,11 +43,6 @@ abbrev QuantumOperator := Mat2
 def quantumTraceToClassical (A : QuantumOperator) : ClassicalScalar :=
   trace A
 
-/-- The trace readout of a product is exactly the component used in Section 34. -/
-theorem quantumTraceToClassical_mul (A B : QuantumOperator) :
-    quantumTraceToClassical (A * B) = trace (A * B) := by
-  rfl
-
 /-- Finite domain-separated stress datum. -/
 structure DomainSeparatedStressDatum where
   metric : SpacetimeIndex → SpacetimeIndex → ClassicalScalar
@@ -87,13 +82,6 @@ theorem fullStress_symmetric
     densityStressShadow_symmetric D.metric D.densityDerivative D.potential hmetric mu nu,
     hconn mu nu]
 
-/-- The compact stress is exactly Section 34's finite density stress shadow. -/
-theorem compactStress_eq_densityStressShadow (D : DomainSeparatedStressDatum)
-    (mu nu : SpacetimeIndex) :
-    D.compactStress mu nu =
-      densityStressShadow D.metric D.densityDerivative D.potential mu nu := by
-  rfl
-
 end DomainSeparatedStressDatum
 
 /-- Zero connection-variation table. -/
@@ -109,27 +97,6 @@ def compactStressDatum
   densityDerivative := densityDerivative
   potential := potential
   connectionVariation := zeroConnectionVariation
-
-/-- Compact stress datums reduce definitionally to the Section 34 compact stress. -/
-theorem compactStressDatum_fullStress_eq_densityStressShadow
-    (metric : SpacetimeIndex → SpacetimeIndex → ClassicalScalar)
-    (densityDerivative : SpacetimeIndex → QuantumOperator)
-    (potential : ClassicalScalar) (mu nu : SpacetimeIndex) :
-    (compactStressDatum metric densityDerivative potential).fullStress mu nu =
-      densityStressShadow metric densityDerivative potential mu nu := by
-  simp [compactStressDatum, DomainSeparatedStressDatum.fullStress,
-    DomainSeparatedStressDatum.compactStress, zeroConnectionVariation]
-
-/-- Repaired Section 38 finite packet. -/
-theorem repaired_section38_stress_domain_packet
-    (D : DomainSeparatedStressDatum)
-    (hmetric : ∀ mu nu, D.metric mu nu = D.metric nu mu)
-    (hconn : ∀ mu nu, D.connectionVariation mu nu = D.connectionVariation nu mu)
-    (hzero : ∀ mu nu, D.connectionVariation mu nu = 0) :
-    (∀ mu nu, D.fullStress mu nu = D.fullStress nu mu) ∧
-    (∀ mu nu, D.fullStress mu nu = D.compactStress mu nu) := by
-  exact ⟨fun mu nu => D.fullStress_symmetric hmetric hconn mu nu,
-    fun mu nu => D.fullStress_eq_compact_of_zero_connectionVariation hzero mu nu⟩
 
 end InfoGeometry.Physics.Section38StressEnergyDomainSeparation
 

@@ -29,9 +29,7 @@ structure MetriplecticStructure (R : Type*) [CommRing R] where
   H : R
   S : R
   metric_H_left_zero : ∀ f, metric H f = 0
-  metric_H_right_zero : ∀ f, metric f H = 0
   poisson_S_left_zero : ∀ f, poisson S f = 0
-  poisson_S_right_zero : ∀ f, poisson f S = 0
 
 /-- Total algebraic metriplectic evolution of an observable. -/
 def totalEvolution {R : Type*} [CommRing R] (M : MetriplecticStructure R) (f : R) : R :=
@@ -51,17 +49,18 @@ theorem entropy_evolution {R : Type*} [CommRing R] (M : MetriplecticStructure R)
 theorem metric_annihilates_H_right {R : Type*} [CommRing R]
     (M : MetriplecticStructure R) (f : R) :
     M.metric f M.H = 0 :=
-  M.metric_H_right_zero f
+  by rw [M.metric_symm]; exact M.metric_H_left_zero f
+
+/-- The right entropy Casimir law follows from Poisson antisymmetry. -/
+theorem poisson_annihilates_S_right {R : Type*} [CommRing R]
+    (M : MetriplecticStructure R) (f : R) :
+    M.poisson f M.S = 0 := by
+  rw [M.poisson_anti_symm, M.poisson_S_left_zero, neg_zero]
 
 /-- The entropy is also annihilated by the Poisson bracket on the left. -/
 theorem poisson_annihilates_S_left {R : Type*} [CommRing R]
     (M : MetriplecticStructure R) (f : R) :
     M.poisson M.S f = 0 :=
   M.poisson_S_left_zero f
-
-/-- A closed finite packet collecting the two readout laws. -/
-theorem metriplectic_packet {R : Type*} [CommRing R] (M : MetriplecticStructure R) :
-    totalEvolution M M.H = 0 ∧ totalEvolution M M.S = M.metric M.S M.S := by
-  exact ⟨energy_conservation M, entropy_evolution M⟩
 
 end InfoGeometry.Topology.Metriplectic

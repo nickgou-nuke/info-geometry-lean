@@ -1030,18 +1030,17 @@ theorem leeYangPolydiscSourceClaim_of_witness
     (LY : LeeYangPolydiscWitness) :
     ∀ N : ℕ, LeeYangPolydiscSourceClaim N := by
   intro N D lam hLam
-  exact ⟨LY.inner_zero_free D lam hLam, LY.outer_zero_free D lam hLam⟩
+  exact ⟨LY.1 D lam hLam, LY.2 D lam hLam⟩
 
 /-- Package the source claim into the standard Lee--Yang witness surface. -/
 @[bridge_target_tag, rep_depth thermo]
 def leeYangPolydiscWitness_of_sourceClaim
     (H : ∀ N : ℕ, LeeYangPolydiscSourceClaim N) :
-    LeeYangPolydiscWitness where
-  inner_zero_free := by
-    intro N D lam hLam y hy
+    LeeYangPolydiscWitness := by
+  constructor
+  · intro N D lam hLam y hy
     exact (H N D lam hLam).1 y hy
-  outer_zero_free := by
-    intro N D lam hLam y hy
+  · intro N D lam hLam y hy
     exact (H N D lam hLam).2 y hy
 
 namespace AsanoInduction

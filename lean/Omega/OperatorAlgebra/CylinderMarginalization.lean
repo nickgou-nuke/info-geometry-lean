@@ -12,36 +12,21 @@ showing that the parent cylinder splits as the sum of its two children. -/
 structure CylinderMarginalizationData where
   word : List Bool
   cylinderProbability : List Bool → ℝ
-  extendZero : List Bool → List Bool
-  extendOne : List Bool → List Bool
-  extendZero_spec : extendZero word = word ++ [false]
-  extendOne_spec : extendOne word = word ++ [true]
-  traceAdditivityWitness :
-    cylinderProbability word =
-      cylinderProbability (extendZero word) + cylinderProbability (extendOne word)
-  splitIdentity : Prop
-  marginalizationIdentity : Prop
-  kolmogorovConsistency : Prop
-  deriveSplitIdentity :
-    (cylinderProbability word =
-      cylinderProbability (extendZero word) + cylinderProbability (extendOne word)) →
-        splitIdentity
-  deriveMarginalizationIdentity :
-    splitIdentity → marginalizationIdentity
-  deriveKolmogorovConsistency :
-    marginalizationIdentity → kolmogorovConsistency
 
-/-- Paper-facing wrapper for cylinder-probability marginalization: the trace additivity of the two
-one-step extensions yields the split identity for a fixed cylinder, and Kolmogorov consistency is
-the immediate corollary.
+def extendZero (word : List Bool) : List Bool := word ++ [false]
+
+def extendOne (word : List Bool) : List Bool := word ++ [true]
+
+/-- The local cylinder split is exactly the finite additivity equation for the two canonical
+one-step extensions. No global consistency statement is inferred from a single-cylinder law.
     prop:op-algebra-cylinder-marginalization -/
-theorem paper_op_algebra_cylinder_marginalization (D : CylinderMarginalizationData) :
-    D.marginalizationIdentity ∧ D.kolmogorovConsistency := by
-  have hSplit : D.splitIdentity :=
-    D.deriveSplitIdentity D.traceAdditivityWitness
-  have hMarg : D.marginalizationIdentity :=
-    D.deriveMarginalizationIdentity hSplit
-  exact ⟨hMarg, D.deriveKolmogorovConsistency hMarg⟩
+theorem paper_op_algebra_cylinder_marginalization (D : CylinderMarginalizationData)
+    (hAdd : D.cylinderProbability D.word =
+      D.cylinderProbability (extendZero D.word) +
+        D.cylinderProbability (extendOne D.word)) :
+    D.cylinderProbability D.word =
+      D.cylinderProbability (extendZero D.word) +
+        D.cylinderProbability (extendOne D.word) := hAdd
 
 /-- Concrete finite data for pushforwarding a mass function along a fold map and reading the result
 on each visible coordinate as the sum of the source masses over the corresponding fiber. -/
@@ -98,11 +83,6 @@ structure CylinderNaturalityData where
   sliceProjector : symbol → ℝ
   transportedSliceProjector : symbol → ℝ
   trace : ℝ → ℝ
-  sliceNaturality :
-    ∀ a, transportedSliceProjector a = unitary * sliceProjector a * unitaryInv
-  unitaryInv_mul_unitary : unitaryInv * unitary = 1
-  unitary_mul_unitaryInv : unitary * unitaryInv = 1
-  traceInvariant : ∀ x, trace (unitary * x * unitaryInv) = trace x
 
 /-- Cylinder operator before conjugation. -/
 def CylinderNaturalityData.cylinderOperator (D : CylinderNaturalityData) (w : List D.symbol) : ℝ :=
@@ -131,39 +111,51 @@ def CylinderNaturalityData.cylinderOperatorNaturality (D : CylinderNaturalityDat
 def CylinderNaturalityData.cylinderProbabilityNaturality (D : CylinderNaturalityData) : Prop :=
   ∀ w, D.transportedCylinderProbability w = D.cylinderProbability w
 
-lemma cylinder_operator_naturality_aux (D : CylinderNaturalityData) :
+lemma cylinder_operator_naturality_aux (D : CylinderNaturalityData)
+    (sliceNaturality :
+      ∀ a, D.transportedSliceProjector a = D.unitary * D.sliceProjector a * D.unitaryInv)
+    (unitaryInv_mul_unitary : D.unitaryInv * D.unitary = 1)
+    (unitary_mul_unitaryInv : D.unitary * D.unitaryInv = 1) :
     ∀ w, D.transportedCylinderOperator w = D.unitary * D.cylinderOperator w * D.unitaryInv
   | [] => by
       simp [CylinderNaturalityData.transportedCylinderOperator, CylinderNaturalityData.cylinderOperator,
-        cylinderWordValue, D.unitary_mul_unitaryInv]
+        cylinderWordValue, unitary_mul_unitaryInv]
   | a :: w => by
-      have ih := cylinder_operator_naturality_aux D w
+      have ih := cylinder_operator_naturality_aux D sliceNaturality unitaryInv_mul_unitary
+        unitary_mul_unitaryInv w
       calc
         D.transportedCylinderOperator (a :: w)
             = (D.unitary * D.sliceProjector a * D.unitaryInv) *
                 D.transportedCylinderOperator w := by
                   simp [CylinderNaturalityData.transportedCylinderOperator, cylinderWordValue,
-                    D.sliceNaturality a]
+                    sliceNaturality a]
         _ = (D.unitary * D.sliceProjector a * D.unitaryInv) *
                 (D.unitary * D.cylinderOperator w * D.unitaryInv) := by rw [ih]
         _ = D.unitary * D.sliceProjector a * (D.unitaryInv * D.unitary) *
                 D.cylinderOperator w * D.unitaryInv := by ring
         _ = D.unitary * D.sliceProjector a * D.cylinderOperator w * D.unitaryInv := by
-          simp [D.unitaryInv_mul_unitary]
+          simp [unitaryInv_mul_unitary]
         _ = D.unitary * D.cylinderOperator (a :: w) * D.unitaryInv := by
           simp [CylinderNaturalityData.cylinderOperator, cylinderWordValue, mul_assoc]
 
 /-- Conjugation transports each time-slice projector, hence also the cylinder words built from
 them; trace invariance then gives equality of the associated cylinder probabilities.
     prop:op-algebra-cylinder-naturality -/
-theorem paper_op_algebra_cylinder_naturality (D : CylinderNaturalityData) :
+theorem paper_op_algebra_cylinder_naturality (D : CylinderNaturalityData)
+    (sliceNaturality :
+      ∀ a, D.transportedSliceProjector a = D.unitary * D.sliceProjector a * D.unitaryInv)
+    (unitaryInv_mul_unitary : D.unitaryInv * D.unitary = 1)
+    (unitary_mul_unitaryInv : D.unitary * D.unitaryInv = 1)
+    (traceInvariant : ∀ x, D.trace (D.unitary * x * D.unitaryInv) = D.trace x) :
     D.cylinderOperatorNaturality ∧ D.cylinderProbabilityNaturality := by
   constructor
   · intro w
-    exact cylinder_operator_naturality_aux D w
+    exact cylinder_operator_naturality_aux D sliceNaturality unitaryInv_mul_unitary
+      unitary_mul_unitaryInv w
   · intro w
     unfold CylinderNaturalityData.transportedCylinderProbability
       CylinderNaturalityData.cylinderProbability
-    rw [cylinder_operator_naturality_aux D w, D.traceInvariant]
+    rw [cylinder_operator_naturality_aux D sliceNaturality unitaryInv_mul_unitary
+      unitary_mul_unitaryInv w, traceInvariant]
 
 end Omega.OperatorAlgebra

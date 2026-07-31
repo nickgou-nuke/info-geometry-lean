@@ -143,32 +143,6 @@ theorem algHom_map_projector_sum_one
     f Pplus + f Pminus = 1 := by
   rw [← map_add, hSum, map_one]
 
-/--
-Full projector packet transport.
-
-If `P₊, P₋` are orthogonal complementary idempotents in the source stage, then
-their images are orthogonal complementary idempotents in the target stage.
--/
-theorem algHom_map_projector_packet
-    (f : A →ₐ[𝕜] B)
-    {Pplus Pminus : A}
-    (hPlus : Pplus * Pplus = Pplus)
-    (hMinus : Pminus * Pminus = Pminus)
-    (hOrth₁ : Pplus * Pminus = 0)
-    (hOrth₂ : Pminus * Pplus = 0)
-    (hSum : Pplus + Pminus = 1) :
-    f Pplus * f Pplus = f Pplus
-      ∧ f Pminus * f Pminus = f Pminus
-      ∧ f Pplus * f Pminus = 0
-      ∧ f Pminus * f Pplus = 0
-      ∧ f Pplus + f Pminus = 1 := by
-  exact
-    ⟨algHom_map_idempotent f hPlus,
-     algHom_map_idempotent f hMinus,
-     algHom_map_projector_orthogonal f hOrth₁,
-     algHom_map_projector_orthogonal f hOrth₂,
-     algHom_map_projector_sum_one f hSum⟩
-
 end RingStage
 
 section Reflection

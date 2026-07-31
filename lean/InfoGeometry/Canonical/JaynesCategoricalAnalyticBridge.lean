@@ -30,9 +30,8 @@ variable {ι : Type*} [Fintype ι]
 /--
 Finite positivity package for a Jaynes pair at a fixed stage.
 -/
-structure FiniteStagePositivity (P : FiniteJaynesPair ι) : Prop where
-  obs_pos : ∀ i : ι, 0 < P.observation i
-  ref_pos : IsPositive P.reference
+def FiniteStagePositivity (P : FiniteJaynesPair ι) : Prop :=
+  (∀ i : ι, 0 < P.observation i) ∧ IsPositive P.reference
 
 namespace FiniteStagePositivity
 
@@ -43,14 +42,14 @@ theorem cross_eq_entropy_add_kl (h : FiniteStagePositivity P) :
     finiteCrossEntropy P.reference P.observation =
       finiteShannonEntropy P.observation + finiteKLDivergence P.reference P.observation :=
   finiteCrossEntropy_eq_finiteShannonEntropy_add_KL
-    (R := P.reference) (obs := P.observation) h.obs_pos h.ref_pos
+    (R := P.reference) (obs := P.observation) h.1 h.2
 
 /-- Finite LDDS decomposition under stagewise positivity. -/
 theorem ldds_eq_entropy_sub_cross (h : FiniteStagePositivity P) :
     finiteLDDSEntropy P.reference P.observation =
       finiteShannonEntropy P.observation - finiteCrossEntropy P.reference P.observation :=
   finiteLDDSEntropy_eq_entropy_sub_cross_correction
-    (R := P.reference) (obs := P.observation) h.obs_pos h.ref_pos
+    (R := P.reference) (obs := P.observation) h.1 h.2
 
 end FiniteStagePositivity
 

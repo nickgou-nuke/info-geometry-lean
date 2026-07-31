@@ -22,15 +22,13 @@ variable {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
 Vectorwise NS-limit closure packet:
 eventual vanishing of finite truncation defects on a fixed vector `v`.
 -/
-structure NSVectorLimitClosure
+def NSVectorLimitClosure
     (m r s : ℤ)
     (J ψ : ℤ → Module.End 𝕜 V)
     (central_N : ℤ → ℤ → 𝕜)
-    (v : V) : Prop where
-  LG_defect_eventually_zero :
-    ∀ᶠ N : ℤ in atTop, defect_LG N m r J ψ v = 0
-  GG_defect_eventually_zero :
-    ∀ᶠ N : ℤ in atTop, defect_GG N r s J ψ central_N v = 0
+    (v : V) : Prop :=
+  (∀ᶠ N : ℤ in atTop, defect_LG N m r J ψ v = 0) ∧
+    (∀ᶠ N : ℤ in atTop, defect_GG N r s J ψ central_N v = 0)
 
 /--
 NS-limit closure theorem (vectorwise): from eventual defect-vanishing,
@@ -52,7 +50,7 @@ theorem ns_limit_superbrackets_eventually_exact_on_vector
         =
       (((((2 : 𝕜) • L_trunc N (r + s) J ψ) + (central_N r s) • (1 : Module.End 𝕜 V)) v))) := by
   constructor
-  · exact eventually_exact_LG_on_vector m r J ψ v h.LG_defect_eventually_zero
-  · exact eventually_exact_GG_on_vector r s J ψ central_N v h.GG_defect_eventually_zero
+  · exact eventually_exact_LG_on_vector m r J ψ v h.1
+  · exact eventually_exact_GG_on_vector r s J ψ central_N v h.2
 
 end InfoGeometry.Canonical.SuperVirasoro

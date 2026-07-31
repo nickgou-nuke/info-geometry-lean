@@ -50,22 +50,19 @@ Only the load-bearing implication is required: transported chiral-kernel
 mismatch forces noncommutation of the conformal spectral/metric projectors.
 -/
 @[rep_depth transport]
-structure SuperchargeProjectorCompatibility
+def SuperchargeProjectorCompatibility
     (CI : ConformalInference E)
     (V : BogoliubovVielbeinBundle (E := E))
     (X : RealSplitKreinDiracFredholmModule A B H₂)
     (t : ℝ)
     (hVX : QuasilatticeChiralFredholmSurface V X t)
-    (superchargeProj transportedProj : E →L[ℝ] E) : Prop where
-  spectralProj_eq_superchargeProj :
-    CI.spectralChiralProjector = superchargeProj
-  metricProj_eq_transportedProj :
-    CI.metricChiralProjector = transportedProj
-  mismatch_forces_projector_noncommute :
-    TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E) V X t hVX →
-      CI.spectralChiralProjector * CI.metricChiralProjector
-        ≠
-      CI.metricChiralProjector * CI.spectralChiralProjector
+    (superchargeProj transportedProj : E →L[ℝ] E) : Prop :=
+  CI.spectralChiralProjector = superchargeProj ∧
+    CI.metricChiralProjector = transportedProj ∧
+      (TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E) V X t hVX →
+        CI.spectralChiralProjector * CI.metricChiralProjector
+          ≠
+        CI.metricChiralProjector * CI.spectralChiralProjector)
 
 /--
 Under compatibility, transported chiral-kernel mismatch forces a nonzero
@@ -90,7 +87,7 @@ theorem projectorObstruction_ne_zero_of_compat_of_mismatch
   have hCommute :
       Commute CI.spectralChiralProjector CI.metricChiralProjector :=
     (CI.projectorObstruction_eq_zero_iff_commute).1 hObsZero
-  exact (hCompat.mismatch_forces_projector_noncommute hMismatch) hCommute.eq
+  exact (hCompat.2.2 hMismatch) hCommute.eq
 
 /--
 Under compatibility, transported chiral-kernel mismatch forces nonzero conformal
@@ -112,7 +109,7 @@ theorem chiralScale_ne_zero_of_compat_of_mismatch
       TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E) V X t hVX) :
     CI.chiralScale ≠ 0 := by
   exact CI.chiralScale_ne_zero_of_projectors_not_commute
-    (hCompat.mismatch_forces_projector_noncommute hMismatch)
+    (hCompat.2.2 hMismatch)
 
 /--
 Mismatch-to-source Einstein bridge:
@@ -735,23 +732,20 @@ Boundary-carrier compatibility witness between the transported defect lane and
 the conformal projector lane.
 -/
 @[rep_depth transport]
-structure SuperchargeBoundaryCarrierCompatibility
+def SuperchargeBoundaryCarrierCompatibility
     [FiniteDimensional ℝ E]
     (CI : ConformalInference H₂)
     (V : BogoliubovVielbeinBundle (E := E))
     (X : RealSplitKreinDiracFredholmModule A B H₂)
     (t : ℝ)
     (hVX : QuasilatticeChiralFredholmSurface V X t)
-    (superchargeProj transportedProj : H₂ →L[ℝ] H₂) : Prop where
-  spectralProj_eq_superchargeProj :
-    CI.spectralChiralProjector = superchargeProj
-  metricProj_eq_transportedProj :
-    CI.metricChiralProjector = transportedProj
-  mismatch_forces_projector_noncommute :
-    TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E) V X t hVX →
-      CI.spectralChiralProjector * CI.metricChiralProjector
-        ≠
-      CI.metricChiralProjector * CI.spectralChiralProjector
+    (superchargeProj transportedProj : H₂ →L[ℝ] H₂) : Prop :=
+  CI.spectralChiralProjector = superchargeProj ∧
+    CI.metricChiralProjector = transportedProj ∧
+      (TransportedChiralKernelDimMismatch (A := A) (B := B) (E := E) V X t hVX →
+        CI.spectralChiralProjector * CI.metricChiralProjector
+          ≠
+        CI.metricChiralProjector * CI.spectralChiralProjector)
 
 /--
 Boundary-carrier compatibility constructor on the identified

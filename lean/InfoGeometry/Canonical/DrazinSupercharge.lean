@@ -691,8 +691,7 @@ This is the KMS-owner formulation of `regularRestrictedSuperHamiltonian_commutes
 theorem regularRestrictedSuperHamiltonian_kmsPreservesChirality :
     ChiralKMSOwner.KMSPreservesChirality
       (regularRestrictedSuperHamiltonian CIK)
-      ({ Γ5 := CIK.GammaS, involutive := CIK.GammaS_sq_eq_one } :
-        ChiralKMSOwner.ChiralGrading (R := EndH)) :=
+      CIK.GammaS :=
   regularRestrictedSuperHamiltonian_commutes_GammaS (CIK := CIK)
 
 /--
@@ -707,12 +706,10 @@ theorem regularRestrictedSuperHamiltonian_thermalShift_preserves_chirality
     (W : EndH)
     (hW :
       ChiralKMSOwner.KMSPreservesChirality W
-        ({ Γ5 := CIK.GammaS, involutive := CIK.GammaS_sq_eq_one } :
-          ChiralKMSOwner.ChiralGrading (R := EndH))) :
+        CIK.GammaS) :
     ChiralKMSOwner.KMSPreservesChirality
       (ChiralKMSOwner.thermalShift (regularRestrictedSuperHamiltonian CIK) W)
-      ({ Γ5 := CIK.GammaS, involutive := CIK.GammaS_sq_eq_one } :
-        ChiralKMSOwner.ChiralGrading (R := EndH)) :=
+      CIK.GammaS :=
   ChiralKMSOwner.thermalShift_preserves_chirality
     (regularRestrictedSuperHamiltonian_kmsPreservesChirality (CIK := CIK)) hW
 

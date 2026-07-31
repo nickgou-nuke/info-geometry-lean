@@ -21,8 +21,8 @@ def independencePolynomialAtNegOne
 def wittenIndex (D : pom_fiber_witten_index_zx_minus_one_data) : ℤ :=
   -D.independencePolynomialAtNegOne
 
-def pathDisjointUnion (_D : pom_fiber_witten_index_zx_minus_one_data) : Prop :=
-  True
+def pathDisjointUnion (D : pom_fiber_witten_index_zx_minus_one_data) : Prop :=
+  D.pom_fiber_witten_index_zx_minus_one_componentLengths.Pairwise (· ≠ ·)
 
 def hasLengthOneModThreeComponent
     (D : pom_fiber_witten_index_zx_minus_one_data) : Prop :=

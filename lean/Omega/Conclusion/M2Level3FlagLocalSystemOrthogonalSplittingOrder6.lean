@@ -6,8 +6,7 @@ import Omega.Conclusion.M2Level3XiInertiaHeckeEigensystemsCharpoly
 namespace Omega.Conclusion
 
 /-- Concrete wrapper datum for the audited order-`6` flag-local-system splitting package. -/
-structure conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_data where
-  conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_witness : Unit := ()
+abbrev conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_data := Unit
 
 /-- The common summand is the image `QQ ⊕ V24` of the incidence map. -/
 abbrev conclusion_m2_level3_flag_local_system_orthogonal_splitting_order6_common_block :=

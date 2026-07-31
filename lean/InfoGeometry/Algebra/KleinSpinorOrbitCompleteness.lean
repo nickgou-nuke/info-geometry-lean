@@ -63,14 +63,4 @@ theorem nullRep_reachesRepresentative : ReachesRepresentative nullRep := by
   right
   exact ⟨CsSL2.identity, CsSL2.identity_action nullRep⟩
 
-/--
-Conditional completeness surface.  A future formalization of the
-`E/Ebar ≃ ℚ × ℚ` decomposition and `SL(2,ℚ)` transitivity can inhabit
-`OrbitCompletenessClaim`; this theorem deliberately packages only that explicit
-hypothesis and adds no global orbit-classification content.
--/
-theorem orbit_completeness_statement (h : OrbitCompletenessClaim) :
-    OrbitCompletenessClaim :=
-  h
-
 end InfoGeometry.Algebra.KleinSpinorOrbitCompleteness

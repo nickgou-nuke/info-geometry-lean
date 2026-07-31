@@ -13,10 +13,6 @@ structure ComovingHorizonScanFirstLayerExtractionData where
   depthGroupedSpectrum : Prop
   smallestDepthExponentialFactored : Prop
   nextDepthGapTailBound : Prop
-  explicitFourierDecomposition_h : explicitFourierDecomposition
-  depthGroupedSpectrum_h : depthGroupedSpectrum
-  smallestDepthExponentialFactored_h : smallestDepthExponentialFactored
-  nextDepthGapTailBound_h : nextDepthGapTailBound
   leadingAsymptoticSeparation : Prop
   leadingLayerRecovered : Prop
   deriveLeadingAsymptoticSeparation :
@@ -35,17 +31,27 @@ closed form is grouped by depth, the smallest depth is factored out, the tail is
 next depth gap, and finite exponential uniqueness recovers the leading layer.
     thm:cdim-comoving-horizon-scan-first-layer-extraction -/
 theorem paper_cdim_comoving_horizon_scan_first_layer_extraction
-    (D : ComovingHorizonScanFirstLayerExtractionData) :
+    (D : ComovingHorizonScanFirstLayerExtractionData)
+    (hExplicitFourierDecomposition : D.explicitFourierDecomposition)
+    (hDepthGroupedSpectrum : D.depthGroupedSpectrum)
+    (hSmallestDepthExponentialFactored : D.smallestDepthExponentialFactored)
+    (hNextDepthGapTailBound : D.nextDepthGapTailBound)
+    (hLorentzProfileModel : D.fourierClosedData.lorentzProfileModel)
+    (hExplicitFourierFormulaInput : D.fourierClosedData.explicitFourierFormulaInput)
+    (hPositiveFrequencyRestriction : D.fourierClosedData.positiveFrequencyRestriction)
+    (hIntervalUniquenessPrinciple : D.fourierClosedData.intervalUniquenessPrinciple) :
     D.leadingAsymptoticSeparation ∧ D.leadingLayerRecovered := by
   have hClosedPackage :
       D.fourierClosedData.fourierClosedForm ∧ D.fourierClosedData.finiteExponentialSpectrum ∧
         D.fourierClosedData.openIntervalInjective :=
     Omega.TypedAddressBiaxialCompletion.paper_typed_address_biaxial_completion_comoving_fourier_closed
       D.fourierClosedData
+      hLorentzProfileModel hExplicitFourierFormulaInput
+      hPositiveFrequencyRestriction hIntervalUniquenessPrinciple
   rcases hClosedPackage with ⟨hClosed, hSpectrum, hInjective⟩
   have hLead : D.leadingAsymptoticSeparation :=
-    D.deriveLeadingAsymptoticSeparation hClosed D.explicitFourierDecomposition_h
-      D.depthGroupedSpectrum_h D.smallestDepthExponentialFactored_h D.nextDepthGapTailBound_h
+    D.deriveLeadingAsymptoticSeparation hClosed hExplicitFourierDecomposition
+      hDepthGroupedSpectrum hSmallestDepthExponentialFactored hNextDepthGapTailBound
   exact ⟨hLead, D.recoverLeadingLayer hLead hSpectrum hInjective⟩
 
 end Omega.CircleDimension

@@ -172,15 +172,6 @@ theorem centralReadout_eq_carrier_of_witness
     W.centralReadout = C.centralReadout :=
   W.centralReadout_eq_carrier
 
-/-- Readback that the central/anomaly gate supplies a carrier-tied readout. -/
-@[rep_depth operator]
-theorem centralReadout_is_witness_gated
-    {Op : Type*} [Ring Op]
-    (C : HodgeDiracLaplacianCarrier Op)
-    (h : IsCentralReadoutFromLaplacianAnomaly C) :
-    IsCentralReadoutFromLaplacianAnomaly C :=
-  h
-
 /-- A genuine centrality witness transfers to the carrier readout. -/
 @[rep_depth operator]
 theorem centralReadout_isCentral_of_witness

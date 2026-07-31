@@ -78,12 +78,6 @@ theorem candidate_spin_tiled_rank_eq_boundary_card :
     _ = Fintype.card BoundaryRank32State := by
       exact boundaryRank32State_card.symm
 
-/-- The current candidate rank data packaged as an external rank certificate. -/
-def candidateExternalRank32BoundaryCertificate :
-    ExternalRank32BoundaryCertificate :=
-  ⟨candidateLocalBettiData, rfl, candidateLocalBettiData_consistent,
-    candidateLocalBettiData_totalRank⟩
-
 /--
 A rank-32 boundary realization with attached external rank evidence.
 
@@ -93,25 +87,5 @@ basis.
 structure ExternalRank32BoundaryRealization (Op : Type*) [Ring Op]
     extends Rank32BoundaryRealization Op where
   cert : ExternalRank32BoundaryCertificate
-
-/--
-Combined readback: the external spin-tiled rank matches the finite carrier, and
-the attached algebraic boundary packet still has the three nilpotent
-factorization laws.
--/
-theorem external_rank32_boundary_realization_packet
-    {Op : Type*} [Ring Op] (R : ExternalRank32BoundaryRealization Op) :
-    R.cert.data.totalRank * spinTilingMultiplicity =
-        Fintype.card BoundaryRank32State ∧
-      Fintype.card {s : BoundaryRank32State // IsChiralState s} = 16 ∧
-      Fintype.card {s : BoundaryRank32State // IsAntiChiralState s} = 16 ∧
-      R.boundary.edge1 * R.boundary.edge2 * R.boundary.edge3 =
-        R.boundary.edge1 * R.boundary.edge3 * R.boundary.edge2 +
-          R.boundary.edge2 * R.boundary.edge1 * R.boundary.edge3 +
-          R.boundary.edge3 * R.boundary.edge1 * R.boundary.edge2 := by
-  exact ⟨external_spin_tiled_rank_eq_boundary_card R.cert,
-    chiralState_card,
-    antiChiralState_card,
-    R.boundary.mixed_volume⟩
 
 end InfoGeometry.Topology.AmplituhedronBoundary

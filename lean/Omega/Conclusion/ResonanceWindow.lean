@@ -28,10 +28,9 @@ theorem resonance_window_five_terminal_types_distinct :
 /-- Resonance window terminal phase types.
     thm:conclusion-resonance-window-terminal-phase-ledger -/
 theorem paper_resonance_window_terminal_extended :
-    True ∧ True ∧ True ∧
     Nat.fib 8 = 21 ∧ Nat.fib 9 = 34 ∧
     34 > 21 := by
-  refine ⟨trivial, trivial, trivial, by native_decide, by native_decide, by omega⟩
+  exact ⟨by native_decide, by native_decide, by omega⟩
 
 /-- lcm(8,18) = 72.
     thm:conclusion-resonance-window-q13-q15-mod6-period72 -/

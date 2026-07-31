@@ -349,8 +349,8 @@ theorem anomaly_index_balance_from_D4_tripotent_packet
     (D4 : ClonedD4Algebra)
     (modulator : Cl11Modulator)
     (tripotent : M2TripotentDecomposition)
-    (graded : FiveGradedD4Cl11Algebra)
-    (h_anomaly : anomalyIndex 5 5 = 0) : anomalyIndex 5 5 = 0 := h_anomaly
+    (graded : FiveGradedD4Cl11Algebra) : anomalyIndex 5 5 = 0 := by
+  exact anomalyIndex_55_zero
 
 end InfoGeometry.Clifford.D4Cl11Tripotent
 

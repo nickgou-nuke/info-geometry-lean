@@ -1,12 +1,10 @@
 import InfoGeometry.Algebra.CuntzTensorQuotient
-import InfoGeometry.Categorical.FibonacciUniversalityColimit
 import InfoGeometry.Canonical.YangBaxterProof
 import InfoGeometry.Arithmetic.WeylArithmeticDivergence
 
 open Matrix
 open Complex
 open InfoGeometry.Algebra.CuntzTensorQuotient
-open InfoGeometry.Categorical.FibonacciUniversalityColimit
 open InfoGeometry.Canonical.YangBaxterProof
 open InfoGeometry.Arithmetic.WeylArithmeticDivergence
 

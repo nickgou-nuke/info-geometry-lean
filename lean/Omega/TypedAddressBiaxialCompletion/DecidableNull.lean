@@ -16,8 +16,6 @@ structure DecidableNullData where
   threeAxisData : TypedAddressThreeAxisData
   nullHasWitness : Prop
   nonNullHasCertificate : Prop
-  readable_h : compiledReadabilityData.readable
-  nonNullReadout_h : threeAxisData.nonNullReadout
   deriveNullWitness :
     unitarySliceData.readUSClosed →
       nullTrichotomyData.exhaustive →
@@ -41,7 +39,10 @@ structure DecidableNullData where
 readability/axis packages combine into a decidability package: either one extracts a `NULL`
 witness or one extracts a non-`NULL` certificate.
     prop:typed-address-biaxial-completion-decidable-null -/
-theorem paper_typed_address_biaxial_completion_decidable_null (D : DecidableNullData) :
+theorem paper_typed_address_biaxial_completion_decidable_null
+    (D : DecidableNullData)
+    (hReadableInput : D.compiledReadabilityData.readable)
+    (hNonNullReadout : D.threeAxisData.nonNullReadout) :
     D.nullHasWitness ∧ D.nonNullHasCertificate := by
   have hUnitary : D.unitarySliceData.readUSClosed :=
     paper_typed_address_biaxial_completion_unitary_slice_address_closure D.unitarySliceData
@@ -62,6 +63,6 @@ theorem paper_typed_address_biaxial_completion_decidable_null (D : DecidableNull
     paper_typed_address_biaxial_completion_nonnull_requires_three_axes D.threeAxisData
   exact
     ⟨D.deriveNullWitness hUnitary hNullExhaustive,
-      D.deriveNonNullCertificate hUnitary D.readable_h hReadable D.nonNullReadout_h hAxes⟩
+      D.deriveNonNullCertificate hUnitary hReadableInput hReadable hNonNullReadout hAxes⟩
 
 end Omega.TypedAddressBiaxialCompletion

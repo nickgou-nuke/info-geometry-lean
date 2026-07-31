@@ -93,22 +93,6 @@ theorem boundedTransform_commutes_with_resolvent_of_commute
     _ = R * (D * R) := by
       simp [mul_assoc]
 
-/-- Conditional phase readback from an explicitly supplied transform law. -/
-theorem phase_eq_of_bounded_transform_eq_phase_resolvent
-{A : Type*} [Mul A]
-(boundedTransform phase resolvent : A)
-(h : boundedTransform = phase * resolvent) :
-boundedTransform = phase * resolvent :=
-h
-
-/-- Conditional bounded-transform readback from an explicitly supplied phase-resolvent law. -/
-theorem boundedTransform_eq_of_phase_resolvent
-{A : Type*} [Mul A]
-(boundedTransform phase resolvent : A)
-(h : boundedTransform = phase * resolvent) :
-boundedTransform = phase * resolvent :=
-h
-
 /-- Left inverse readback for a Cayley transform from explicit hypotheses. -/
 theorem cayley_inverse_left_apply
 {A : Type*} [Monoid A]

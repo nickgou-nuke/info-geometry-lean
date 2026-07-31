@@ -23,12 +23,12 @@ universe u
 /-- Algebraic doubly-sided Penrose equations without conjugation.  This is the
 finite exact-rational form used by the CAS witnesses; the complex/unitary
 Moore--Penrose interpretation is supplied by owner certificates below. -/
-structure AlgebraicMoorePenrosePair {K : Type u} [Field K] {n : ℕ}
-    (A Aplus : Matrix (Fin n) (Fin n) K) : Prop where
-  aba : A * Aplus * A = A
-  bab : Aplus * A * Aplus = Aplus
-  ab_symm : Matrix.transpose (A * Aplus) = A * Aplus
-  ba_symm : Matrix.transpose (Aplus * A) = Aplus * A
+def AlgebraicMoorePenrosePair {K : Type u} [Field K] {n : ℕ}
+    (A Aplus : Matrix (Fin n) (Fin n) K) : Prop :=
+  A * Aplus * A = A ∧
+    Aplus * A * Aplus = Aplus ∧
+      Matrix.transpose (A * Aplus) = A * Aplus ∧
+        Matrix.transpose (Aplus * A) = Aplus * A
 
 /-- The `2 × 2` retrocirculant block `P * diag(a,b)`. -/
 def retro2 {K : Type u} [Zero K] (a b : K) : Matrix (Fin 2) (Fin 2) K :=
@@ -42,7 +42,7 @@ def retro2Plus {K : Type u} [DivisionSemiring K] (a b : K) : Matrix (Fin 2) (Fin
 theorem retro2_penrose {K : Type u} [Field K] {a b : K}
     (ha : a ≠ 0) (hb : b ≠ 0) :
     AlgebraicMoorePenrosePair (retro2 a b) (retro2Plus a b) := by
-  constructor
+  refine ⟨?_, ?_, ?_, ?_⟩
   · ext i j <;> fin_cases i <;> fin_cases j <;>
       simp [retro2, retro2Plus, Matrix.mul_apply, ha, hb]
   · ext i j <;> fin_cases i <;> fin_cases j <;>

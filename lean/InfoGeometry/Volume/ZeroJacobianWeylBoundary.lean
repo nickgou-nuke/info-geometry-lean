@@ -167,17 +167,6 @@ def IsNullPoint {Point : Type*} (Q : Point → ℝ) (x : Point) : Prop :=
   Iff.rfl
 
 /--
-If an explicit Jacobian map and an explicit quadratic readout have the same
-zero locus at `x`, then the zero-Jacobian boundary is exactly the null locus
-at `x`.
--/
-theorem zeroJacobianBoundary_iff_null_of_iff
-    {Point : Type*} (jacobian : Point → Matrix ι ι ℝ) (Q : Point → ℝ)
-    (x : Point) (h : (jacobian x).det = 0 ↔ Q x = 0) :
-    IsZeroJacobianPointBoundary (ι := ι) jacobian x ↔ IsNullPoint Q x :=
-  h
-
-/--
 Under an explicit zero-locus equality at `x`, the total transported density
 vanishes exactly on the null locus at `x`.
 -/

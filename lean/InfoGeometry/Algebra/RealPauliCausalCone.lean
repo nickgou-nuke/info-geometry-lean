@@ -61,15 +61,16 @@ lemma trace_affine_combo (A B : RealPauliOp) (p : ℝ) :
 def to_density (X : RealPauliOp) (c : ℝ) : RealPauliOp := smul c X
 
 /-- Explicit witness guaranteeing projection to Trace = 1. -/
-class NormalizedTrace (X : RealPauliOp) (c : ℝ) where
-  is_normalized : c * trace X = 1
+def NormalizedTrace (X : RealPauliOp) (c : ℝ) : Prop :=
+  c * trace X = 1
 
 /-- CONDITIONAL THEOREM 1: Density matrix trace maps strictly to the observer's conformal boundary. -/
-theorem density_trace_one (X : RealPauliOp) (c : ℝ) [nt : NormalizedTrace X c] :
+theorem density_trace_one (X : RealPauliOp) (c : ℝ)
+    (h : NormalizedTrace X c) :
   trace (to_density X c) = 1 := by
   unfold to_density
   rw [trace_smul]
-  exact nt.is_normalized
+  exact h
 
 /-- Purity metric mapping the determinant of the normalized state. -/
 def purity (X : RealPauliOp) (c : ℝ) : ℝ := det (to_density X c)

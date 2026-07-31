@@ -727,13 +727,16 @@ theorem foldCurvatureHilbertModularity_realizable :
 
 -- Paper: cor:fold-discrete-stokes-auditable-bound
 -- Source: sections/body/folding/subsec__folding-multiscale.tex:205
-/-- The difference of expectations of a bounded observable is controlled by twice its sup norm
-times the probability of the defect event; moreover, the defect event is contained in the
-union of local-curvature events, yielding the corresponding union-bound estimate. -/
-theorem foldDiscreteStokesAuditableBound :
-    ∃ (_D : Type) (_K : Nat → Type),
-      True := by
-  refine ⟨PUnit, fun _ => PUnit, trivial⟩
+/-- Vanishing local Fold defects force the global defect to vanish across the finite chain.
+This is the algebraic discrete-Stokes core; expectation bounds are proved by the concrete
+finite-sample owner in `DiscreteStokesAuditableBound.lean`. -/
+theorem foldDiscreteStokesAuditableBound (k : Nat) (ω : Omega.Word (m + k))
+    (h : ∀ j : Nat, (hj : j < k) →
+      Omega.localDefect
+          (Omega.restrictWord (Nat.add_le_add_left (Nat.succ_le_of_lt hj) m) ω) =
+        Omega.zeroWord (m + j)) :
+    Omega.globalDefect (Nat.le_add_right m k) ω = Omega.zeroWord m := by
+  exact Omega.globalDefect_zero_of_all_local_zero k ω h
 
 
 -- Paper: conj:fold-curvature-hilbert-modularity

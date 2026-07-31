@@ -17,38 +17,43 @@ structure TechnicalModule (Observer Time Region Certificate Address Value : Type
 
 def CoverSystem
     {Observer Time Region Certificate Address Value : Type}
-    (_T : TechnicalModule Observer Time Region Certificate Address Value) : Prop :=
-  True
+    (T : TechnicalModule Observer Time Region Certificate Address Value) : Prop :=
+  ∀ (U : Region) (s : Certificate), T.restrict U U s = s
 
 def PresheafCondition
     {Observer Time Region Certificate Address Value : Type}
-    (_T : TechnicalModule Observer Time Region Certificate Address Value) : Prop :=
-  True
+    (T : TechnicalModule Observer Time Region Certificate Address Value) : Prop :=
+  ∀ (U V W : Region) (s : Certificate),
+    T.restrict U V (T.restrict V W s) = T.restrict U W s
 
 def UniqueGluingCondition
     {Observer Time Region Certificate Address Value : Type}
-    (_T : TechnicalModule Observer Time Region Certificate Address Value) : Prop :=
-  True
+    (T : TechnicalModule Observer Time Region Certificate Address Value) : Prop :=
+  ∀ {s s' : Certificate},
+    (∀ U : Region, T.restrict U U s = T.restrict U U s') → s = s'
 
 def RestrictionCompatibilityCondition
     {Observer Time Region Certificate Address Value : Type}
-    (_T : TechnicalModule Observer Time Region Certificate Address Value) : Prop :=
-  True
+    (T : TechnicalModule Observer Time Region Certificate Address Value) : Prop :=
+  ∀ (U V : Region) {s s' : Certificate},
+    T.refine s s' → T.refine (T.restrict U V s) (T.restrict U V s')
 
 def UpdateCompatibilityCondition
     {Observer Time Region Certificate Address Value : Type}
-    (_T : TechnicalModule Observer Time Region Certificate Address Value) : Prop :=
-  True
+    (T : TechnicalModule Observer Time Region Certificate Address Value) : Prop :=
+  ∀ {t t' : Time} {s s' : Certificate},
+    T.update t t' s s' → T.refine s s'
 
 def LocalSupportCondition
     {Observer Time Region Certificate Address Value : Type}
-    (_T : TechnicalModule Observer Time Region Certificate Address Value) : Prop :=
-  True
+    (T : TechnicalModule Observer Time Region Certificate Address Value) : Prop :=
+  ∀ (U : Region) (s : Certificate) (a : Address) (x : Value),
+    T.read U s a x → T.read U (T.restrict U U s) a x
 
 def CommonRefinementCondition
     {Observer Time Region Certificate Address Value : Type}
-    (_T : TechnicalModule Observer Time Region Certificate Address Value) : Prop :=
-  True
+    (T : TechnicalModule Observer Time Region Certificate Address Value) : Prop :=
+  ∀ s s' : Certificate, ∃ u : Certificate, T.refine u s ∧ T.refine u s'
 
 /-- The eight paper hypotheses, recorded in the finite scaffold used by the Lean development. -/
 structure TechnicalModuleAxioms

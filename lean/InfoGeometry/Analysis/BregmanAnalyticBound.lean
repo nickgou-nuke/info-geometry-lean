@@ -149,13 +149,13 @@ This is the repo's conservative bridge for self-concordant barriers: the
 analytic self-concordance proof supplies these three fields, and downstream
 matrix/IPM files consume only the resulting bounds.
 -/
-structure HasMatrixSelfConcordantDikinEnvelope {n : ℕ}
+def HasMatrixSelfConcordantDikinEnvelope {n : ℕ}
     (D : MatrixEnd n → MatrixEnd n → ℝ)
-    (localRadius : MatrixEnd n → MatrixEnd n → ℝ) : Prop where
-  radius_nonneg : ∀ x y, 0 ≤ localRadius x y
-  lower : ∀ x y, dikinOmega (localRadius x y) ≤ D x y
-  upper : ∀ x y, localRadius x y < 1 →
-    D x y ≤ dikinOmegaStar (localRadius x y)
+    (localRadius : MatrixEnd n → MatrixEnd n → ℝ) : Prop :=
+  (∀ x y, 0 ≤ localRadius x y) ∧
+  (∀ x y, dikinOmega (localRadius x y) ≤ D x y) ∧
+  (∀ x y, localRadius x y < 1 →
+    D x y ≤ dikinOmegaStar (localRadius x y))
 
 /--
 A self-concordant Dikin envelope implies nonnegativity of the underlying
@@ -167,8 +167,8 @@ theorem matrix_bregman_nonneg_of_dikin_envelope {n : ℕ}
     (hsc : HasMatrixSelfConcordantDikinEnvelope D localRadius)
     (x y : MatrixEnd n) :
     0 ≤ D x y := by
-  exact (dikinOmega_nonneg_of_nonneg (hsc.radius_nonneg x y)).trans
-    (hsc.lower x y)
+  exact (dikinOmega_nonneg_of_nonneg (hsc.1 x y)).trans
+    (hsc.2.1 x y)
 
 /--
 The canonical self-concordant local sandwich:
@@ -182,7 +182,7 @@ theorem matrix_dikin_sandwich_of_selfConcordant_envelope {n : ℕ}
     (hsmall : localRadius x y < 1) :
     dikinOmega (localRadius x y) ≤ D x y ∧
       D x y ≤ dikinOmegaStar (localRadius x y) :=
-  ⟨hsc.lower x y, hsc.upper x y hsmall⟩
+  ⟨hsc.2.1 x y, hsc.2.2 x y hsmall⟩
 
 /--
 If the Dikin radius vanishes on the diagonal, the Dikin sandwich forces the
@@ -197,7 +197,7 @@ theorem matrix_bregman_zero_of_dikin_envelope_radius_zero {n : ℕ}
     D x x = 0 := by
   have hsmall : localRadius x x < 1 := by
     simp [hradius]
-  have hupper := hsc.upper x x hsmall
+  have hupper := hsc.2.2 x x hsmall
   have hle : D x x ≤ 0 := by
     simp [hradius] at hupper
     exact hupper

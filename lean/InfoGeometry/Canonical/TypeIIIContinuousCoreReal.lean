@@ -74,7 +74,7 @@ theorem modularFlow_zero (A : EndH) :
 theorem modularFlow_add (s t : ℝ) (A : EndH) :
     R.modularFlow (s + t) A = R.modularFlow s (R.modularFlow t A) := by
   simpa [modularFlow] using
-    (R.hTypeIII.modularAutomorphismGroup_additive s t A)
+    (R.hTypeIII.2.2.1 s t A)
 
 /-- The Type-III modular generator on the RN lane. -/
 @[rep_depth transport]
@@ -83,12 +83,12 @@ noncomputable def modularGenerator : EndH := R.rn.modularHamiltonian
 @[rep_depth transport]
 theorem modularOperator_eq_rn :
     R.rn.modularOperator = R.rn.rnDerivative • YangMillsContinuum.idEndH E :=
-  R.hTypeIII.modularOperator_eq_rn
+  R.hTypeIII.1
 
 @[rep_depth transport]
 theorem modularHamiltonian_eq_neg_log_rn :
     R.rn.modularHamiltonian = (-Real.log R.rn.rnDerivative) • YangMillsContinuum.idEndH E :=
-  R.hTypeIII.modularHamiltonian_eq_neg_log_rn
+  R.hTypeIII.2.1
 
 /--
 Bridge hook into the real Tomita `δ = log Δ` package.

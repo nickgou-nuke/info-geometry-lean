@@ -38,7 +38,7 @@ theorem row_projector_split_of_involution (J : Module.End ℝ V) (hJ : IsInvolut
     Pplus J * Pminus J = (0 : Module.End ℝ V) := by
   refine ⟨Projector.Pplus_idempotent (J := J) hJ,
     Projector.Pminus_idempotent (J := J) hJ,
-    Projector.Pplus_add_Pminus (J := J) hJ,
+    Projector.Pplus_add_Pminus (J := J),
     Projector.Pplus_comp_Pminus (J := J) hJ⟩
 
 /-- Combined operator-table statement as a product of the four row equivalences. -/

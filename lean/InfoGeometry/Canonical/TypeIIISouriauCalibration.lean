@@ -140,7 +140,7 @@ theorem modularGenerator_eq_neg_log_rn :
     C.typeIII.modularGenerator =
       (-Real.log C.typeIII.rn.rnDerivative) •
         InfoGeometry.Canonical.YangMillsContinuum.idEndH E :=
-  C.typeIII.modularHamiltonian_eq_neg_log_rn
+  C.typeIII.2.1
 
 end Calibration
 

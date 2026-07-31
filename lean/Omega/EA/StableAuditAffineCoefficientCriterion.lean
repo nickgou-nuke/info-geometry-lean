@@ -77,21 +77,15 @@ end stable_audit_affine_coefficient_criterion_data
 
 open stable_audit_affine_coefficient_criterion_data
 
-/-- The paper-facing affine coefficient criterion: two affine magma terms agree under every
-assignment over `ZMod n` iff their recursively computed coefficient vectors agree. -/
-def stable_audit_affine_coefficient_criterion_statement
-    (D : stable_audit_affine_coefficient_criterion_data) : Prop :=
-  ∀ s t : stable_audit_affine_coefficient_criterion_term,
-    (∀ ρ : Fin 6 → ZMod D.n,
-      D.stable_audit_affine_coefficient_criterion_eval ρ s =
-        D.stable_audit_affine_coefficient_criterion_eval ρ t) ↔
-      D.stable_audit_affine_coefficient_criterion_coeff s =
-        D.stable_audit_affine_coefficient_criterion_coeff t
-
 /-- Paper label: `lem:stable-audit-affine-coefficient-criterion`. -/
 theorem paper_stable_audit_affine_coefficient_criterion
     (D : stable_audit_affine_coefficient_criterion_data) :
-    stable_audit_affine_coefficient_criterion_statement D := by
+    ∀ s t : stable_audit_affine_coefficient_criterion_term,
+      (∀ ρ : Fin 6 → ZMod D.n,
+        D.stable_audit_affine_coefficient_criterion_eval ρ s =
+          D.stable_audit_affine_coefficient_criterion_eval ρ t) ↔
+        D.stable_audit_affine_coefficient_criterion_coeff s =
+          D.stable_audit_affine_coefficient_criterion_coeff t := by
   intro s t
   constructor
   · intro h

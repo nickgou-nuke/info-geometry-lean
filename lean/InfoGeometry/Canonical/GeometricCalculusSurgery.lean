@@ -171,17 +171,15 @@ Admissibility certificate for a geometric Stokes projector.
 Projection laws require analytic/topological hypotheses; they are not true for
 an arbitrary boundary and arbitrary resolvent family.
 -/
-structure IsAdmissibleFluxProjector
+def IsAdmissibleFluxProjector
     {E P : Type*}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup P] [NormedSpace ℝ P]
     (A : RealEnd E)
     (R : CliffordResolventFamily (P := P) A)
     (Ω : DirectedBoundary P)
-    (normalizationFactor : ℝ) : Prop where
-  idempotent :
-    IsIdempotentStatement A R Ω normalizationFactor
-  commutes :
+    (normalizationFactor : ℝ) : Prop :=
+  IsIdempotentStatement A R Ω normalizationFactor ∧
     CommutesStatement A R Ω normalizationFactor
 
 theorem idempotent_of_admissible
@@ -194,7 +192,7 @@ theorem idempotent_of_admissible
     {normalizationFactor : ℝ}
     (h : IsAdmissibleFluxProjector A R Ω normalizationFactor) :
     IsIdempotentStatement A R Ω normalizationFactor :=
-  h.idempotent
+  h.1
 
 theorem commutes_of_admissible
     {E P : Type*}
@@ -206,7 +204,7 @@ theorem commutes_of_admissible
     {normalizationFactor : ℝ}
     (h : IsAdmissibleFluxProjector A R Ω normalizationFactor) :
     CommutesStatement A R Ω normalizationFactor :=
-  h.commutes
+  h.2
 
 end GeometricCoreProjector
 

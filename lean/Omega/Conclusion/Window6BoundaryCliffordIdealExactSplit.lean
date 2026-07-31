@@ -5,8 +5,7 @@ import Omega.Conclusion.Window6Collision
 namespace Omega.Conclusion
 
 /-- Concrete wrapper for the window-`6` boundary-Clifford ideal split. -/
-structure conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_data where
-  conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_witness : Unit := ()
+abbrev conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_data := Unit
 
 /-- The three canonical boundary `M₂` summands singled out by the triple-spinor package. -/
 def conclusion_window6_boundary_clifford_ideal_exact_12_plus_200_splitting_boundary_data :

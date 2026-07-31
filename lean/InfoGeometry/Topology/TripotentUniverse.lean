@@ -24,10 +24,6 @@ def IsTripotent (op : R) : Prop :=
 
 namespace IsTripotent
 
-/-- Compatibility projection for the former one-field packet. -/
-theorem h_tripotent {op : R} (h : IsTripotent op) : op ^ 3 = op :=
-  h
-
 end IsTripotent
 
 /-- If `op^3 = op`, then `op^2` is idempotent. -/
@@ -35,7 +31,7 @@ theorem tripotent_square_is_idempotent (op : R) (h : IsTripotent op) :
     (op ^ 2) * (op ^ 2) = op ^ 2 := by
   calc
     (op ^ 2) * (op ^ 2) = (op ^ 3) * op := by noncomm_ring
-    _ = op * op := by rw [h.h_tripotent]
+    _ = op * op := by rw [h]
     _ = op ^ 2 := by rw [pow_two]
 
 /-- Compatibility name for the finite idempotent consequence. -/

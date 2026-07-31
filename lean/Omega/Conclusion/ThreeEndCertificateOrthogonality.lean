@@ -7,83 +7,71 @@ namespace Omega.Conclusion
 
 open Omega.TypedAddressBiaxialCompletion
 
-/-- Concrete bundle of the three certificate packages used in the conclusion-level orthogonality
-statement. -/
-structure ThreeEndCertificateOrthogonalityData where
-  boundary : BoundaryJointVerifierData
-  budget : BudgetOrthogonalityData
-  closure : ThreeEndBudgetData
-
-/-- The verifier factors through the product of the boundary certificate, the typed-address
-budget certificate, and the three-end closure certificate. -/
-def ThreeEndCertificateOrthogonalityData.factorsThroughProduct
-    (D : ThreeEndCertificateOrthogonalityData) : Prop :=
-  (D.boundary.axes.radiusBlindspotClosed ∧
-      D.boundary.axes.addressCollisionClosed ∧
-      D.boundary.axes.endpointHeatClosed ∧
-      D.boundary.toeplitzPsdPassed ∧
-      D.budget.legalReadout ∧
-      D.closure.radiusBudgetClosed ∧
-      D.closure.addressBudgetClosed ∧
-      D.closure.endpointBudgetClosed ∧
-      D.closure.toeplitzPsdClosed →
-    D.boundary.verifierResult = .certificate ∧
-      D.budget.visibleBudgetPassed ∧
-      D.budget.registerBudgetPassed ∧
-      D.budget.modeBudgetPassed ∧
-      D.closure.verifierAccepts)
-
-/-- Each certificate axis stays non-substitutable when the other two pass: the boundary package
-forces failure on any missing boundary axis, the typed-address budget forces failure on any missing
-budget axis, and the three-end closure package returns its standardized failure witness whenever an
-end budget is missing. -/
-def ThreeEndCertificateOrthogonalityData.failuresAreOrthogonal
-    (D : ThreeEndCertificateOrthogonalityData) : Prop :=
-  ((D.boundary.axes.addressCollisionClosed ∧ D.boundary.axes.endpointHeatClosed ∧
-      ¬ D.boundary.axes.radiusBlindspotClosed) →
-    D.boundary.verifierResult ≠ .certificate) ∧
-  ((D.boundary.axes.radiusBlindspotClosed ∧ D.boundary.axes.endpointHeatClosed ∧
-      ¬ D.boundary.axes.addressCollisionClosed) →
-    D.boundary.verifierResult ≠ .certificate) ∧
-  ((D.boundary.axes.radiusBlindspotClosed ∧ D.boundary.axes.addressCollisionClosed ∧
-      ¬ D.boundary.axes.endpointHeatClosed) →
-    D.boundary.verifierResult ≠ .certificate) ∧
-  ((D.budget.registerBudgetPassed ∧ D.budget.modeBudgetPassed ∧
-      ¬ D.budget.visibleBudgetPassed) →
-    ¬ D.budget.legalReadout) ∧
-  ((D.budget.visibleBudgetPassed ∧ D.budget.modeBudgetPassed ∧
-      ¬ D.budget.registerBudgetPassed) →
-    ¬ D.budget.legalReadout) ∧
-  ((D.budget.visibleBudgetPassed ∧ D.budget.registerBudgetPassed ∧
-      ¬ D.budget.modeBudgetPassed) →
-    ¬ D.budget.legalReadout) ∧
-  ((¬ D.closure.radiusBudgetClosed ∨ ¬ D.closure.addressBudgetClosed ∨
-      ¬ D.closure.endpointBudgetClosed ∨ ¬ D.closure.toeplitzPsdClosed) →
-    D.closure.failureWitness)
-
-/-- Conclusion-level package: the offline verifier factors through the product of the three
-certificate packages, and failures on each axis remain logically orthogonal. -/
 theorem paper_conclusion_three_end_certificate_orthogonality
-    (D : ThreeEndCertificateOrthogonalityData) :
-    D.factorsThroughProduct ∧ D.failuresAreOrthogonal := by
+    (boundary : BoundaryJointVerifierData)
+    (radiusBudgetClosed addressBudgetClosed endpointBudgetClosed toeplitzPsdClosed : Prop)
+    (verifierAccepts failureWitness : Prop)
+    (accepts_of_jointClosure :
+      radiusBudgetClosed -> addressBudgetClosed -> endpointBudgetClosed ->
+        toeplitzPsdClosed -> verifierAccepts)
+    (failure_of_radius : ¬ radiusBudgetClosed -> failureWitness)
+    (failure_of_address : ¬ addressBudgetClosed -> failureWitness)
+    (failure_of_endpoint : ¬ endpointBudgetClosed -> failureWitness)
+    (failure_of_toeplitz : ¬ toeplitzPsdClosed -> failureWitness)
+    (legalReadout visibleBudgetPassed registerBudgetPassed modeBudgetPassed : Prop)
+    (visible_required : legalReadout → visibleBudgetPassed)
+    (register_required : legalReadout → registerBudgetPassed)
+    (mode_required : legalReadout → modeBudgetPassed)
+    (visible_failure_obstructs :
+      registerBudgetPassed → modeBudgetPassed → ¬ visibleBudgetPassed → ¬ legalReadout)
+    (register_failure_obstructs :
+      visibleBudgetPassed → modeBudgetPassed → ¬ registerBudgetPassed → ¬ legalReadout)
+    (mode_failure_obstructs :
+      visibleBudgetPassed → registerBudgetPassed → ¬ modeBudgetPassed → ¬ legalReadout) :
+    ((boundary.axes.radiusBlindspotClosed ∧
+        boundary.axes.addressCollisionClosed ∧
+        boundary.axes.endpointHeatClosed ∧ boundary.toeplitzPsdPassed ∧
+        legalReadout ∧ radiusBudgetClosed ∧ addressBudgetClosed ∧
+        endpointBudgetClosed ∧ toeplitzPsdClosed) →
+      boundary.verifierResult = .certificate ∧
+        visibleBudgetPassed ∧ registerBudgetPassed ∧ modeBudgetPassed ∧ verifierAccepts) ∧
+    (((boundary.axes.addressCollisionClosed ∧ boundary.axes.endpointHeatClosed ∧
+        ¬ boundary.axes.radiusBlindspotClosed) → boundary.verifierResult ≠ .certificate) ∧
+      ((boundary.axes.radiusBlindspotClosed ∧ boundary.axes.endpointHeatClosed ∧
+        ¬ boundary.axes.addressCollisionClosed) → boundary.verifierResult ≠ .certificate) ∧
+      ((boundary.axes.radiusBlindspotClosed ∧ boundary.axes.addressCollisionClosed ∧
+        ¬ boundary.axes.endpointHeatClosed) → boundary.verifierResult ≠ .certificate) ∧
+      ((registerBudgetPassed ∧ modeBudgetPassed ∧ ¬ visibleBudgetPassed) →
+        ¬ legalReadout) ∧
+      ((visibleBudgetPassed ∧ modeBudgetPassed ∧ ¬ registerBudgetPassed) →
+        ¬ legalReadout) ∧
+      ((visibleBudgetPassed ∧ registerBudgetPassed ∧ ¬ modeBudgetPassed) →
+        ¬ legalReadout) ∧
+      ((¬ radiusBudgetClosed ∨ ¬ addressBudgetClosed ∨ ¬ endpointBudgetClosed ∨
+        ¬ toeplitzPsdClosed) → failureWitness)) := by
   have hBoundary :=
-    paper_typed_address_biaxial_completion_boundary_joint_sufficiency D.boundary
+    paper_typed_address_biaxial_completion_boundary_joint_sufficiency boundary
   have hBudget :=
-    paper_typed_address_biaxial_completion_budget_orthogonality D.budget
-  have hClosure :=
-    paper_typed_address_biaxial_completion_three_end_budget D.closure
-  rcases hBoundary with ⟨hBoundaryAccepts, _, hBoundaryRadius, hBoundaryAddress, hBoundaryEndpoint⟩
+    paper_typed_address_biaxial_completion_budget_orthogonality
+      legalReadout visibleBudgetPassed registerBudgetPassed modeBudgetPassed
+      visible_required register_required mode_required visible_failure_obstructs
+      register_failure_obstructs mode_failure_obstructs
+  have hClosure := paper_typed_address_biaxial_completion_three_end_budget
+    radiusBudgetClosed addressBudgetClosed endpointBudgetClosed toeplitzPsdClosed
+    verifierAccepts failureWitness accepts_of_jointClosure failure_of_radius failure_of_address
+    failure_of_endpoint failure_of_toeplitz
+  rcases hBoundary with ⟨hBoundaryAccepts, _, hBoundaryRadius, hBoundaryAddress,
+    hBoundaryEndpoint⟩
   rcases hBudget with ⟨hBudgetPasses, hBudgetVisible, hBudgetRegister, hBudgetMode⟩
   rcases hClosure with ⟨hClosureAccepts, hClosureFailure⟩
-  refine ⟨?_, ?_⟩
+  constructor
   · rintro ⟨hr, ha, he, hpsd, hlegal, hcr, hca, hce, hct⟩
-    have hBoundaryCert : D.boundary.verifierResult = .certificate :=
+    have hBoundaryCert : boundary.verifierResult = .certificate :=
       hBoundaryAccepts ⟨hr, ha, he, hpsd⟩
     have hBudgetAll :
-        D.budget.visibleBudgetPassed ∧ D.budget.registerBudgetPassed ∧ D.budget.modeBudgetPassed :=
+        visibleBudgetPassed ∧ registerBudgetPassed ∧ modeBudgetPassed :=
       hBudgetPasses hlegal
-    have hClosureCert : D.closure.verifierAccepts :=
-      hClosureAccepts ⟨hcr, hca, hce, hct⟩
+    have hClosureCert : verifierAccepts := hClosureAccepts ⟨hcr, hca, hce, hct⟩
     exact ⟨hBoundaryCert, hBudgetAll.1, hBudgetAll.2.1, hBudgetAll.2.2, hClosureCert⟩
   · exact ⟨hBoundaryRadius, hBoundaryAddress, hBoundaryEndpoint, hBudgetVisible,
       hBudgetRegister, hBudgetMode, hClosureFailure⟩

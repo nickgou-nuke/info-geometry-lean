@@ -10,15 +10,7 @@ private theorem terminalGamma6_automorphism_group_trivial
     (hRigid : ∀ tau : Equiv.Perm X,
       (∀ a b, Adj a b ↔ Adj (tau a) (tau b)) → tau = Equiv.refl X) :
     ∀ tau : Equiv.Perm X, (∀ a b, Adj a b ↔ Adj (tau a) (tau b)) → tau = Equiv.refl X := by
-  let h : TerminalGamma6RigidityData :=
-    { graphConnected := True
-      automorphismGroupTrivial := ∀ tau : Equiv.Perm X,
-        (∀ a b, Adj a b ↔ Adj (tau a) (tau b)) → tau = Equiv.refl X
-      finiteRigidityCertificate := True
-      certificate := trivial
-      connected_of_certificate := fun _ => trivial
-      rigid_of_certificate := fun _ => hRigid }
-  exact (paper_terminal_gamma6_rigidity h).2
+  exact hRigid
 
 /-- Any group action on the terminal window-`6` type set that preserves the adjacency graph
 `Γ₆` factors through `Aut(Γ₆)`, hence is trivial once `Aut(Γ₆) = 1`.

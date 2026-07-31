@@ -94,12 +94,6 @@ abbrev toCertifiedInverseKernel : InfoGeometry.Canonical.CertifiedInverseKernel 
     hDrazin := CCI.hDrazin
     hMoorePenrose := CCI.hMoorePenrose }
 
-@[simp] theorem toCertifiedConformalInference_toCertifiedInverseKernel
-    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel E) :
-    toCertifiedInverseKernel
-      (CertifiedInverseKernel.toCertifiedConformalInference (E := E) CIK) = CIK := by
-  rfl
-
 /-- The certified Drazin spectral projector. -/
 abbrev spectralProjector : E →L[ℝ] E := CCI.toCertifiedInverseKernel.spectralProjector
 
@@ -122,12 +116,6 @@ abbrev leftChiralAnomaly : E →L[ℝ] E := CCI.chiralAnomaly
 
 /-- Explicit certified left-projector anomaly operator alias. -/
 abbrev leftChiralAnomalyOperator : E →L[ℝ] E := CCI.leftChiralAnomaly
-
-@[simp] theorem projectorObstructionOperator_eq_leftChiralAnomalyOperator :
-    CCI.chiralAnomalyOperator = CCI.leftChiralAnomalyOperator := rfl
-
-@[simp] theorem projectorObstructionOperator_eq_chiralAnomalyOperator :
-    CCI.leftChiralAnomalyOperator = CCI.chiralAnomalyOperator := rfl
 
 /-- Certified right-projector anomaly commutator. -/
 def rightChiralAnomaly : E →L[ℝ] E :=

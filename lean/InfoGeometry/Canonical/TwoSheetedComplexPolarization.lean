@@ -80,13 +80,6 @@ theorem polarizationAxis_sq :
     (polarizationAxis (E := E)).comp (polarizationAxis (E := E)) = -IdH := by
   simpa [polarizationAxis] using clockAxis_sq (E := E)
 
-/-- The bilingual dictionary reads scalar `i` as the same real phase axis. -/
-@[rep_depth krein]
-theorem scalar_i_readback_eq_polarizationAxis :
-    InfoGeometry.Krein.complex_i (E := E) = polarizationAxis (E := E) := by
-  symm
-  exact realPhaseAxis_eq_complex_i (E := E)
-
 /-- Modular reflection conjugates the polarization axis to its negative. -/
 @[rep_depth krein]
 theorem sheetSwap_conjugates_polarizationAxis :

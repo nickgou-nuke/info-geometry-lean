@@ -8,8 +8,7 @@ open Polynomial
 noncomputable section
 
 /-- Minimal concrete datum for the `μ₃` covariance and discriminant-weight package. -/
-structure xi_terminal_zm_translation_t_branch_discriminant_c3_mu3_weight_data where
-  xi_terminal_zm_translation_t_branch_discriminant_c3_mu3_weight_witness : Unit := ()
+abbrev xi_terminal_zm_translation_t_branch_discriminant_c3_mu3_weight_data := Unit
 
 /-- A concrete branch-form surrogate with the same `μ₃` covariance monomials:
 `tu` and `u^3` are fixed by `(t,u) ↦ (ζ²t,ζu)` when `ζ³ = 1`. -/

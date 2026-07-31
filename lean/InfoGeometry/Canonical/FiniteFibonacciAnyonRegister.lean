@@ -401,15 +401,6 @@ def twoQubit_b4 (B00 B01 B10 B11 : ℂ) :
 def twoQubit_b5 (qNeg4 q3 : ℂ) : ComputationalAmplitude 2 → ComputationalAmplitude 2 :=
   computationalEndpointR qNeg4 q3 ⟨1, by omega⟩
 
-/-- The four two-qubit restricted generators target the expected tensor factors. -/
-theorem twoQubit_tensorProduct_readback
-    (qNeg4 q3 B00 B01 B10 B11 : ℂ) :
-    twoQubit_b1 qNeg4 q3 = computationalEndpointR qNeg4 q3 ⟨0, by omega⟩ ∧
-      twoQubit_b2 B00 B01 B10 B11 = computationalMiddleB B00 B01 B10 B11 ⟨0, by omega⟩ ∧
-      twoQubit_b4 B00 B01 B10 B11 = computationalMiddleB B00 B01 B10 B11 ⟨1, by omega⟩ ∧
-      twoQubit_b5 qNeg4 q3 = computationalEndpointR qNeg4 q3 ⟨1, by omega⟩ := by
-  simp [twoQubit_b1, twoQubit_b2, twoQubit_b4, twoQubit_b5]
-
 /-- Finite computational-sector shadow of `b₁ = R ⊗ I ⊗ I` for three qubits. -/
 def threeQubit_b1 (qNeg4 q3 : ℂ) : ComputationalAmplitude 3 → ComputationalAmplitude 3 :=
   computationalEndpointR qNeg4 q3 ⟨0, by omega⟩
@@ -432,16 +423,6 @@ def threeQubit_b6 (B00 B01 B10 B11 : ℂ) :
 /-- Finite computational-sector shadow of `b₇ = I ⊗ I ⊗ R` for three qubits. -/
 def threeQubit_b7 (qNeg4 q3 : ℂ) : ComputationalAmplitude 3 → ComputationalAmplitude 3 :=
   computationalEndpointR qNeg4 q3 ⟨2, by omega⟩
-
-/-- The five three-qubit restricted generators target the expected tensor factors. -/
-theorem threeQubit_tensorProduct_readback
-    (qNeg4 q3 B00 B01 B10 B11 : ℂ) :
-    threeQubit_b1 qNeg4 q3 = computationalEndpointR qNeg4 q3 ⟨0, by omega⟩ ∧
-      threeQubit_b2 B00 B01 B10 B11 = computationalMiddleB B00 B01 B10 B11 ⟨0, by omega⟩ ∧
-      threeQubit_b4 B00 B01 B10 B11 = computationalMiddleB B00 B01 B10 B11 ⟨1, by omega⟩ ∧
-      threeQubit_b6 B00 B01 B10 B11 = computationalMiddleB B00 B01 B10 B11 ⟨2, by omega⟩ ∧
-      threeQubit_b7 qNeg4 q3 = computationalEndpointR qNeg4 q3 ⟨2, by omega⟩ := by
-  simp [threeQubit_b1, threeQubit_b2, threeQubit_b4, threeQubit_b6, threeQubit_b7]
 
 /--
 Finite no-leakage readback for local tensor actions: applying a local matrix to

@@ -246,24 +246,15 @@ theorem partitionAdmissible_of_square :
 
 -- theorem-class: bridge
 /--
-Exact residuals construct a proof-carrying KKT witness without external KKT
-hypotheses.
--/
-@[rep_depth thermo]
-def exactWitness : KKTEntropyStationarityShadow.Witness :=
-  exact.toShadow
-
--- theorem-class: bridge
-/--
 Exact residuals construct the full KKT stationarity packet without external
 KKT hypotheses.
 -/
 @[rep_depth thermo]
 theorem exact_stationarity_packet :
-    let W := exactWitness
+    let W := exact.toShadow
     W.coneAdmissible ∧ W.stationarity ∧
       W.complementarySlackness ∧ W.finitePartitionAdmissible := by
-  simpa using exactWitness.packet
+  simpa using DimensionAgnosticKKTResiduals.ConstructiveWitness.packet exact
 
 attribute [terminal] exact_stationarity_packet
 
@@ -1620,7 +1611,8 @@ theorem kktStationarity_packet_of_exactWitness
         C.kktStationarity.finitePartitionAdmissible :=
   by
     rw [W]
-    exact DimensionAgnosticKKTResiduals.exactWitness.packet
+    exact DimensionAgnosticKKTResiduals.ConstructiveWitness.packet
+      DimensionAgnosticKKTResiduals.exact
 
 -- theorem-class: bridge
 /-- Exact residuals discharge the explicit KKT stationarity packet on the exact branch. -/

@@ -4,8 +4,7 @@ import Mathlib.Tactic
 namespace Omega.Conclusion
 
 /-- Concrete certificate package for the Fibonacci product collision. -/
-structure conclusion_fiber_multiplicity_product_noninjective_data where
-  conclusion_fiber_multiplicity_product_noninjective_certificate : Unit := ()
+abbrev conclusion_fiber_multiplicity_product_noninjective_data := Unit
 
 namespace conclusion_fiber_multiplicity_product_noninjective_data
 

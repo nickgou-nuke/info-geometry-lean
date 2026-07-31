@@ -57,8 +57,6 @@ theorem arithmetic_basis : ∀ n, ArithmeticFunction.moebius n = squarefreeProj 
 
 noncomputable def alpha_derived : ℝ := 1 / pellis_alpha_inv
 
-theorem alpha_value : alpha_derived = 1 / pellis_alpha_inv := rfl
-
 theorem alpha_bounds : 0.00729 < alpha_derived ∧ alpha_derived < 0.00730 := by
   have h₁ : alpha_derived = 1 / pellis_alpha_inv := rfl
   rw [h₁]

@@ -36,10 +36,6 @@ theorem paper_finite_part_cyclic_constant_determines_prime_orbits :
         finitePartRecoveredPrimitiveOrbit ρ n =
           Finset.sum n.divisors (fun m =>
             finitePartWittMobiusWeight m * finitePartRecoveredTrace ρ (n / m))) := by
-  have hMobius : True ∧ True :=
-    paper_etds_finite_part_cyclic_lift_mobius_inversion
-      (dirichletMultipleSum := True) (mobiusRecovery := True) True.intro (fun _ => True.intro)
-  have _ := hMobius
   exact ⟨fun _ => rfl, fun _ _ => rfl, fun _ _ => rfl⟩
 
 end Omega.Zeta

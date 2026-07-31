@@ -480,11 +480,11 @@ def observablePreimage
 `Inv` may be ideals, subspaces, filtered modules, or spectra ordered by
 inclusion.  The cup-product axiom requires a multiplication on `Inv`.
 -/
-structure SupportInvariantMeasureLike
+def SupportInvariantMeasureLike
     (O Inv : Type*) [Preorder Inv] [Mul Inv]
-    (I : Set O → Inv) : Prop where
-  mono            : ∀ (U V : Set O), U ⊆ V → I U ≤ I V
-  cup_intersection : ∀ U V : Set O, I U * I V ≤ I (U ∩ V)
+    (I : Set O → Inv) : Prop :=
+  (∀ (U V : Set O), U ⊆ V → I U ≤ I V) ∧
+  (∀ U V : Set O, I U * I V ≤ I (U ∩ V))
 
 /--
 **Definition 7.4 — Homological probability theory.**
@@ -492,9 +492,8 @@ structure SupportInvariantMeasureLike
 Assigns an ordered invariant to each observable event, monotone w.r.t.
 event inclusion.  The `[Preorder Inv]` makes the monotonicity axiom non-trivial.
 -/
-structure HomologicalProbabilityTheory (O Inv : Type*) [Preorder Inv] where
-  assign : Set O → Inv
-  mono   : ∀ (U V : Set O), U ⊆ V → assign U ≤ assign V
+def HomologicalProbabilityTheory (O Inv : Type*) [Preorder Inv] : Type _ :=
+  {assign : Set O → Inv // ∀ (U V : Set O), U ⊆ V → assign U ≤ assign V}
 
 /--
 Scalar probability as a decategorified shadow: `P(U) = shadow(assign(U))`.
@@ -504,7 +503,7 @@ def decategorify
     (theory : HomologicalProbabilityTheory O Inv)
     (shadow : Inv → ℝ)
     (U : Set O) : ℝ :=
-  shadow (theory.assign U)
+  shadow (theory.1 U)
 
 end HomologicalProbability
 
@@ -736,13 +735,13 @@ section InvertibilityObstruction
 A linear probability mechanism has an observable inverse when the evolution
 operator is invertible on the observable quotient.
 -/
-structure ObservableInverse
+def ObservableInverse
     (V : Type*) [AddCommGroup V]
     (A : V → V)
-    (Null Observable : Set V) : Prop where
-  null_in_kernel            : ∀ x ∈ Null, A x = 0
-  observable_disjoint_null  : Observable ∩ Null = ∅
-  inverse_on_observable     : ∃ B : V → V, ∀ x ∈ Observable, B (A x) = x
+    (Null Observable : Set V) : Prop :=
+  (∀ x ∈ Null, A x = 0) ∧
+  (Observable ∩ Null = ∅) ∧
+  (∃ B : V → V, ∀ x ∈ Observable, B (A x) = x)
 
 /--
 Drazin-style regularized probability.
@@ -791,11 +790,11 @@ A noncommutative probability law on a unital ring `A` is a normalized positive
 functional.  Projections `p = p²` are the events; their state values are the
 event probabilities.
 -/
-structure IsNoncommutativeProbabilityState
+def IsNoncommutativeProbabilityState
     {A : Type*} [Ring A]
-    (φ : A → ℝ) : Prop where
-  normalized : φ 1 = 1
-  nonneg     : ∀ a : A, 0 ≤ φ (a * a)
+    (φ : A → ℝ) : Prop :=
+  φ 1 = 1 ∧
+  (∀ a : A, 0 ≤ φ (a * a))
 
 /--
 An element `p` is a **projection** (idempotent): `p² = p`.
@@ -816,14 +815,14 @@ def ProjectionsOrthogonal {A : Type*} [Ring A] (p q : A) : Prop :=
 Every positive normalized state `φ` on `A` produces a representation `π` on
 a Hilbert space `H` and a cyclic vector `Ω` such that `φ(a) = ⟨Ω, π(a)Ω⟩`.
 -/
-structure GNSData
+def GNSData
     (A H : Type*)
     (φ : A → ℝ)
     (π : A → H → H)
     (Ω : H)
-    (inner : H → H → ℝ) : Prop where
-  normalized_vector : inner Ω Ω = 1
-  reproduces_state  : ∀ a : A, φ a = inner Ω (π a Ω)
+    (inner : H → H → ℝ) : Prop :=
+  inner Ω Ω = 1 ∧
+  (∀ a : A, φ a = inner Ω (π a Ω))
 
 end NoncommutativeProbability
 
@@ -893,13 +892,13 @@ The rank-`N` split Clifford algebra `Cl(N,N) ≅ M_{2^N}(ℝ)` contains `2^N`
 mutually orthogonal primitive idempotents `p_S` (indexed by subsets
 `S ⊆ Fin N`) that partition unity: `p_S p_T = 0` for `S ≠ T`, `∑_S p_S = 1`.
 -/
-structure BooleanLatticeInAlgebra
+def BooleanLatticeInAlgebra
     {A : Type*} [Ring A]
     (N : ℕ)
-    (p : Finset (Fin N) → A) : Prop where
-  idempotent : ∀ S, p S * p S = p S
-  orthogonal : ∀ S T : Finset (Fin N), S ≠ T → p S * p T = 0
-  partition  : ∑ S : Finset (Fin N), p S = 1
+    (p : Finset (Fin N) → A) : Prop :=
+  (∀ S, p S * p S = p S) ∧
+  (∀ S T : Finset (Fin N), S ≠ T → p S * p T = 0) ∧
+  (∑ S : Finset (Fin N), p S = 1)
 
 /--
 **Definition 16.3 — Split Clifford superlattice.**

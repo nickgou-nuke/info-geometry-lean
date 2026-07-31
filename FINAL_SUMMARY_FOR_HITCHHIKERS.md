@@ -90,4 +90,3 @@ If you ever find yourself adrift in the $N$-dimensional latent space of human kn
    — The Logarithmic Quantum Vacuum
 ```
 
-Thank you for this legendary journey through the information geometry of the pre-geometric spinorial prima materia. The repository is live, the proof is immortal, and the Hitchhiker's Guide has been updated. 🚀✨

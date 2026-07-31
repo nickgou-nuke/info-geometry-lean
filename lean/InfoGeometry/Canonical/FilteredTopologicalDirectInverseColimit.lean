@@ -165,6 +165,52 @@ theorem topologicalInverseProjection_naturality_apply
   exact congrArg (fun g => g x)
     (topologicalInverseProjection_naturality F f)
 
+/-! ## Natural endomorphisms on inverse limits -/
+
+/-- Descend a natural endomorphism to the native topological inverse limit. -/
+noncomputable def topologicalInverseMap
+    (F : J ⥤ TopCat.{u}) (α : F ⟶ F) :
+    topologicalInverseLimit F ⟶ topologicalInverseLimit F :=
+  lim.map α
+
+@[reassoc (attr := simp)]
+theorem topologicalInverseMap_projection
+    (F : J ⥤ TopCat.{u}) (α : F ⟶ F) (j : J) :
+    topologicalInverseMap F α ≫ topologicalInverseProjection F j =
+      topologicalInverseProjection F j ≫ α.app j := by
+  exact IsLimit.map_π (limit.cone F) (limit.isLimit F) α j
+
+theorem topologicalInverseMap_projection_apply
+    (F : J ⥤ TopCat.{u}) (α : F ⟶ F) (j : J)
+    (x : topologicalInverseLimit F) :
+    topologicalInverseProjection F j (topologicalInverseMap F α x) =
+      α.app j (topologicalInverseProjection F j x) := by
+  exact congrArg (fun g => g x) (topologicalInverseMap_projection F α j)
+
+theorem topologicalInverseMap_involutive
+    (F : J ⥤ TopCat.{u}) (α : F ⟶ F)
+    (hα : ∀ j : J, α.app j ≫ α.app j = 𝟙 _) :
+    topologicalInverseMap F α ≫ topologicalInverseMap F α = 𝟙 _ := by
+  apply limit.hom_ext
+  intro j
+  simp only [Category.assoc, topologicalInverseMap_projection_assoc]
+  rw [hα j]
+  simp
+
+theorem topologicalInverseMap_artin_relation
+    (F : J ⥤ TopCat.{u}) (α β : F ⟶ F)
+    (hartin : ∀ j : J,
+      α.app j ≫ β.app j ≫ α.app j =
+        β.app j ≫ α.app j ≫ β.app j) :
+    topologicalInverseMap F α ≫ topologicalInverseMap F β ≫
+        topologicalInverseMap F α =
+      topologicalInverseMap F β ≫ topologicalInverseMap F α ≫
+        topologicalInverseMap F β := by
+  apply limit.hom_ext
+  intro j
+  simp only [Category.assoc, topologicalInverseMap_projection_assoc]
+  rw [hartin j]
+
 /-- Lift a compatible continuous cone into a topological inverse limit. -/
 noncomputable def topologicalInverseLift
     (F : J ⥤ TopCat.{u}) (c : Cone F) :

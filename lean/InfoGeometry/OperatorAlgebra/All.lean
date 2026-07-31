@@ -220,6 +220,9 @@ import InfoGeometry.OperatorAlgebra.WallpaperKTheory
 import InfoGeometry.OperatorAlgebra.SplitOctonionalIdeals
 import InfoGeometry.OperatorAlgebra.SplitOctonionStandardModel
 import InfoGeometry.OperatorAlgebra.ColeFuryEmbedding
+import InfoGeometry.OperatorAlgebra.ColorConfinementBRSTBridge
+import InfoGeometry.OperatorAlgebra.DiracKahlerSpinorBridge
+import InfoGeometry.OperatorAlgebra.G2GaugeSymmetryBridge
 
 namespace InfoGeometry.OperatorAlgebra
 

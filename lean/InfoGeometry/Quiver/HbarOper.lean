@@ -207,8 +207,6 @@ structure QuantumKTheoryRing where
   generators : Fin r → ℂ[X]
   /-- Relations from the QQ-system -/
   relations : List ℂ[X]
-  /-- The finite presentation carries its own relation-list readout. -/
-  is_reduced : relations = relations
 
 /--
 The space of opers for quiver variety X.
@@ -219,7 +217,6 @@ noncomputable def operSpace
   generators := fun a =>
     Polynomial.X ^ (r + 1 - (a : ℕ))
   relations := []
-  is_reduced := rfl
 
 /--
 Quantum Bäcklund transformations:

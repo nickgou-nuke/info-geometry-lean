@@ -5,6 +5,7 @@ Bulgarian Academy of Sciences.
 -/
 
 import InfoGeometry.Inference.TCSPoissonModel
+import InfoGeometry.Canonical.SinkhornFoundation
 
 /-!
 # Poisson transport bridge for TCS mixtures
@@ -101,6 +102,56 @@ theorem tcsPoissonTransportAssignment_row_sum_one
         (tcsPoissonTransportCost hobs components) ε i j = 1 :=
   poissonTransportAssignment_row_sum_one
     (tcsPoissonTransportCost hobs components) ε i
+
+section BalancedCoupling
+
+variable {n : Nat} [Nonempty (Fin n)]
+
+/-!
+The square specialization is the interface to the existing finite Sinkhorn
+foundation.  Row normalization is automatic; column normalization is an
+additional certificate and must not be inferred from the row calculation.
+-/
+
+/-- Square Poisson transport assignment matrix. -/
+noncomputable def poissonTransportMatrix
+    (C : PoissonTransportCost (Observation := Fin n) (Component := Fin n))
+    (ε : ℝ) : Matrix (Fin n) (Fin n) ℝ :=
+  fun i j => poissonTransportAssignment C ε i j
+
+lemma poissonTransportMatrix_nonneg
+    (C : PoissonTransportCost (Observation := Fin n) (Component := Fin n))
+    (ε : ℝ) (i j : Fin n) :
+    0 ≤ poissonTransportMatrix C ε i j := by
+  exact poissonTransportAssignment_nonneg C ε i j
+
+lemma poissonTransportMatrix_row_sum_one
+    (C : PoissonTransportCost (Observation := Fin n) (Component := Fin n))
+    (ε : ℝ) (i : Fin n) :
+    ∑ j : Fin n, poissonTransportMatrix C ε i j = 1 := by
+  exact poissonTransportAssignment_row_sum_one C ε i
+
+/-- Column balance required to turn row Gibbs assignments into a balanced plan. -/
+def IsColumnBalancedPoissonTransport
+    (C : PoissonTransportCost (Observation := Fin n) (Component := Fin n))
+    (ε : ℝ) : Prop :=
+  ∀ j : Fin n, ∑ i : Fin n, poissonTransportMatrix C ε i j = 1
+
+theorem poissonTransportMatrix_mem_doublyStochastic
+    (C : PoissonTransportCost (Observation := Fin n) (Component := Fin n))
+    (ε : ℝ)
+    (hcol : IsColumnBalancedPoissonTransport C ε) :
+    poissonTransportMatrix C ε ∈ doublyStochastic ℝ (Fin n) := by
+  rw [mem_doublyStochastic_iff_sum]
+  refine ⟨?_, ?_, ?_⟩
+  · intro i j
+    exact poissonTransportMatrix_nonneg C ε i j
+  · intro i
+    exact poissonTransportMatrix_row_sum_one C ε i
+  · intro j
+    exact hcol j
+
+end BalancedCoupling
 
 end FinitePoissonTransport
 

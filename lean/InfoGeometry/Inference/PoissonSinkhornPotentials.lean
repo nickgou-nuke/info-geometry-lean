@@ -19,7 +19,7 @@ open scoped BigOperators
 
 namespace InfoGeometry.Inference
 
-variable {n : Nat} [Nonempty (Fin n)]
+variable {n : Nat}
 
 /-- Finite entropic dual functional for unit row and column marginals. -/
 noncomputable def poissonSinkhornDualObjective

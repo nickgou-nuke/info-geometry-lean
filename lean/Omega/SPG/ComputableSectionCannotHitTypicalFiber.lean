@@ -9,20 +9,29 @@ large fiber.
     prop:spg-computable-section-cannot-hit-typical-fiber -/
 theorem paper_spg_computable_section_cannot_hit_typical_fiber
     (holographicData : StokesGodelAlgorithmicHolographicCompletenessData)
+    {complexityPreserved volumeComputableFromCode : Prop}
+    (complexity_of_injective_dictionary :
+      Function.Injective (holographicData.toCode ∘ holographicData.toBoundary) →
+        complexityPreserved)
+    (volume_of_decoder :
+      (Set.range (holographicData.toCode ∘ holographicData.toBoundary) → holographicData.Bulk) →
+        volumeComputableFromCode)
     (computableSection fiberComplexityWitness sectionOutputComplexityUpperBound
       typicalFiberComplexityGain cannotHitTypicalFiber : Prop)
     (computableSection_h : computableSection)
     (fiberComplexityWitness_h : fiberComplexityWitness)
     (deriveSectionOutputComplexityUpperBound :
-      computableSection → holographicData.complexityPreserved → sectionOutputComplexityUpperBound)
+      computableSection → complexityPreserved → sectionOutputComplexityUpperBound)
     (deriveTypicalFiberComplexityGain :
       fiberComplexityWitness → typicalFiberComplexityGain)
     (deriveCannotHitTypicalFiber :
       sectionOutputComplexityUpperBound → typicalFiberComplexityGain → cannotHitTypicalFiber) :
     sectionOutputComplexityUpperBound ∧ typicalFiberComplexityGain ∧ cannotHitTypicalFiber := by
   have hComplexity :
-      holographicData.complexityPreserved :=
-    (paper_spg_stokes_godel_algorithmic_holographic_completeness holographicData).1
+      complexityPreserved :=
+    (paper_spg_stokes_godel_algorithmic_holographic_completeness holographicData
+      complexityPreserved volumeComputableFromCode complexity_of_injective_dictionary
+      volume_of_decoder).1
   have hUpper :
       sectionOutputComplexityUpperBound :=
     deriveSectionOutputComplexityUpperBound computableSection_h hComplexity

@@ -8,7 +8,7 @@ noncomputable def crossRatio (z z1 z2 z3 : ℂ) : ℂ :=
   ((z - z1) * (z2 - z3)) / ((z - z3) * (z2 - z1))
 
 /-- **Теорема 1**: Проекция на Първата Гранична Точка z₁ ↦ 0 (Изтрито Минало / Вакуум). -/
-theorem crossRatio_eval_z1 (z1 z2 z3 : ℂ) (h13 : z1 ≠ z3) (h21 : z2 ≠ z1) :
+theorem crossRatio_eval_z1 (z1 z2 z3 : ℂ) (_h13 : z1 ≠ z3) (_h21 : z2 ≠ z1) :
     crossRatio z1 z1 z2 z3 = 0 := by
   dsimp [crossRatio]
   ring_nf

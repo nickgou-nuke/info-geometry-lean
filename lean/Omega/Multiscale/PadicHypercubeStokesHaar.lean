@@ -9,27 +9,25 @@ structure PadicHypercubeStokesHaarData where
   cubeDimension : ℕ
   baseIntegral : ℝ
   translatedIntegral : Fin (cubeDimension + 1) → ℝ
-  alternatingCubeCancellation : Prop
-  haarDifferenceIntegralZero : Prop
-  translatedIntegral_eq_base :
-    ∀ i, translatedIntegral i = baseIntegral
-  deriveAlternatingCubeCancellation :
-    alternatingCubeCancellation
-  deriveHaarDifferenceIntegralZero :
-    (∀ i, translatedIntegral i = baseIntegral) →
-      alternatingCubeCancellation → haarDifferenceIntegralZero
 
 /-- Paper-facing wrapper for the `p`-adic hypercube Stokes cancellation: Haar invariance identifies
 all translated summand integrals, the alternating cube sum collapses by `(1 - 1)^k = 0`, and the
 integral of the full difference operator therefore vanishes.
     prop:app-padic-hypercube-stokes-haar -/
-theorem paper_app_padic_hypercube_stokes_haar (D : PadicHypercubeStokesHaarData) :
+theorem paper_app_padic_hypercube_stokes_haar
+    (D : PadicHypercubeStokesHaarData)
+    (alternatingCubeCancellation haarDifferenceIntegralZero : Prop)
+    (translatedIntegral_eq_base :
+      ∀ i, D.translatedIntegral i = D.baseIntegral)
+    (deriveHaarDifferenceIntegralZero :
+      (∀ i, D.translatedIntegral i = D.baseIntegral) →
+        alternatingCubeCancellation → haarDifferenceIntegralZero)
+    (hAlternatingCubeCancellation : alternatingCubeCancellation) :
     (∀ i, D.translatedIntegral i = D.baseIntegral) ∧
-      D.alternatingCubeCancellation ∧ D.haarDifferenceIntegralZero := by
+      alternatingCubeCancellation ∧ haarDifferenceIntegralZero := by
   have hInv : ∀ i, D.translatedIntegral i = D.baseIntegral :=
-    D.translatedIntegral_eq_base
-  have hCancel : D.alternatingCubeCancellation :=
-    D.deriveAlternatingCubeCancellation
-  exact ⟨hInv, hCancel, D.deriveHaarDifferenceIntegralZero hInv hCancel⟩
+    translatedIntegral_eq_base
+  exact ⟨hInv, hAlternatingCubeCancellation,
+    deriveHaarDifferenceIntegralZero hInv hAlternatingCubeCancellation⟩
 
 end Omega.Multiscale

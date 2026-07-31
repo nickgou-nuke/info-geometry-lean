@@ -123,4 +123,14 @@ theorem master_einstein_cartan_bianchi_synthesis
   exact ⟨first_bianchi_identity_torsion D omega e h_omega_1form h_e_1form h_d2_e h_leibniz_omega_e,
          second_bianchi_identity_curvature D omega h_omega_1form h_d2_omega h_leibniz_omega_omega⟩
 
+
+/-- 6. Действие на Айнщайн-Картан: S_EC = ∫ ε_{abcd} e^a ∧ e^b ∧ R^{cd}
+    Тук дефинираме 4-формата на лагранжиана (Lagrangian 4-form), 
+    интегрирането е имплицитно като проекция върху топ-формата. -/
+def einsteinCartanAction (D : ExteriorDifferentialData R V)
+    (e : TetradVector 4 R V)
+    (omega : SpinConnectionMatrix 4 R V) : ExteriorAlgebra R V :=
+  ∑ σ : Equiv.Perm (Fin 4),
+    (Equiv.Perm.sign σ : ℤ) • (e (σ 0) * e (σ 1) * riemannCurvatureForm D.d omega (σ 2) (σ 3))
+
 end InfoGeometry.Canonical

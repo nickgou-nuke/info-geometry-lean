@@ -1955,3 +1955,4 @@ modules in `lean/InfoGeometry/Canonical/`.
 
 end InfoGeometry
 import InfoGeometry.Canonical.MetriplecticPhaseMirrorErasureBridge
+import InfoGeometry.Canonical.BottPeriodicityVonNeumann32DBridge

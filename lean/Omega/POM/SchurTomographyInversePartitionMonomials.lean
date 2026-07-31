@@ -2,10 +2,6 @@ import Mathlib.Tactic
 
 namespace Omega.POM
 
-/-- Chapter-local certificate package for the inverse Schur-tomography formula.
-The fields record the forward Schur expansion, the weighted character summation,
-the symmetric-group column orthogonality input, and the resulting recovery of the
-target partition monomial. -/
 set_option maxHeartbeats 400000 in
 /-- Paper-facing wrapper for the strict inverse Schur tomography statement in the
 POM chapter.

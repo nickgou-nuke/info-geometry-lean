@@ -59,23 +59,6 @@ structure PrimeGasKMSTargetBridge where
   detailedBalance :
     absorption = spontaneousEmission + stimulatedEmission
 
-/-- Extract the super-geometric temperature from a KMS target packet. -/
-def toSuperGeometricTemperature
-    (K : PrimeGasKMSTargetBridge) : SuperGeometricTemperature :=
-  K.superTemperature
-
-@[simp]
-theorem toSuperGeometricTemperature_eq
-    (K : PrimeGasKMSTargetBridge) :
-    toSuperGeometricTemperature K = K.superTemperature :=
-  rfl
-
-@[simp]
-theorem toSuperGeometricTemperature_zero_odd
-    (K : PrimeGasKMSTargetBridge) :
-    (toSuperGeometricTemperature K).oddTemperature = 0 :=
-  K.zero_odd
-
 /-- Prime-gas/super-KMS bridge using the KMS target as temperature owner. -/
 @[rep_depth operator]
 structure PrimeGasSuperKMSBridge where
@@ -86,29 +69,17 @@ structure PrimeGasSuperKMSBridge where
 /-- The bridge temperature is canonically the temperature owned by its KMS target. -/
 def PrimeGasSuperKMSBridge.superTemperature
     (B : PrimeGasSuperKMSBridge) : SuperGeometricTemperature :=
-  toSuperGeometricTemperature B.kmsTarget
+  B.kmsTarget.superTemperature
 
 namespace PrimeGasSuperKMSBridge
 
 variable (B : PrimeGasSuperKMSBridge)
 
-/-- The bridge's stored super-temperature is exactly the KMS target temperature. -/
-@[simp]
-theorem superTemperature_eq_kmsTargetTemperature :
-    B.superTemperature = B.kmsTarget.superTemperature :=
-  rfl
-
-/-- The bridge's super-temperature is the same as the extracted KMS temperature. -/
-@[simp]
-theorem superTemperature_eq_toSuperGeometricTemperature :
-    B.superTemperature = toSuperGeometricTemperature B.kmsTarget :=
-  rfl
-
 /-- The odd super-temperature vanishes by the stored KMS witness. -/
 @[simp]
 theorem superTemperature_odd_eq_zero :
     B.superTemperature.oddTemperature = 0 :=
-  toSuperGeometricTemperature_zero_odd B.kmsTarget
+  B.kmsTarget.zero_odd
 
 /-- Detailed balance is exposed directly from the KMS target packet. -/
 theorem detailedBalance :

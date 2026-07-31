@@ -3,15 +3,8 @@ import InfoGeometry.Canonical.SouriauTheoremTranslatorPacket
 import InfoGeometry.Canonical.SouriauThermodynamics
 
 /-!
-# BulgarianThermodynamicGeometryPacket
+# Bulgarian thermodynamic geometry compatibility import
 
-This module is a legacy import path for the Bulgarian thermodynamic-geometry
-normalization notes. It intentionally exports no theorem-like proxy structures.
-
-Use the imported Souriau owner files for the actual definitions and checked
-theorems.
+The imported Souriau modules are the theorem owners.  This legacy entry point
+declares no duplicate proxy structures.
 -/
-
-namespace InfoGeometry.Canonical.BulgarianThermodynamicGeometryPacket
-
-end InfoGeometry.Canonical.BulgarianThermodynamicGeometryPacket

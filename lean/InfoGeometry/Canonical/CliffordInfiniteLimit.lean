@@ -1,15 +1,8 @@
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 
 /-!
-# Clifford Infinite Limit
+# Clifford infinite-limit compatibility import
 
-Import surface for the native split-Clifford direct-limit owner.
-
-The direct limit, transition maps, and representative theorems are implemented
-in `InfoGeometry.Canonical.SplitCliffordDirectLimit` using mathlib's
-`DirectLimit` API and the repo's native split `Cl(n,n)` tower.  This file
-declares no additional theorem names.
+The direct-limit owner is `InfoGeometry.Canonical.SplitCliffordDirectLimit`.
+This entry point declares no duplicate namespace or theorem wrappers.
 -/
-
-namespace InfoGeometry.Canonical.CliffordInfiniteLimit
-end InfoGeometry.Canonical.CliffordInfiniteLimit

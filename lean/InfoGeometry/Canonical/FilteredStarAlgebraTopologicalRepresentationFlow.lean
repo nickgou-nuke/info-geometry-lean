@@ -42,28 +42,35 @@ structure Data where
   sourceFlow : ∀ t : ℝ,
     topologicalColimit Stage sys ⟶ topologicalColimit Stage sys
   targetFlow : ∀ t : ℝ, TopCat.of B ⟶ TopCat.of B
-  stage_covariance : ∀ (t : ℝ) (i : I),
-    topologicalInjection Stage sys i ≫ sourceFlow t ≫
-        topologicalRepresentation Stage sys R =
-      topologicalInjection Stage sys i ≫
-        topologicalRepresentation Stage sys R ≫ targetFlow t
 
-variable (D : Data Stage sys R)
+variable (D : Data (Stage := Stage) (sys := sys) (B := B))
 
 /-- Stage covariance descends to the global representation intertwining law. -/
-theorem representation_intertwines_flow (t : ℝ) :
+theorem representation_intertwines_flow
+    (hcov : ∀ (t : ℝ) (i : I),
+      topologicalInjection Stage sys i ≫ D.sourceFlow t ≫
+          topologicalRepresentation Stage sys R =
+        topologicalInjection Stage sys i ≫
+          topologicalRepresentation Stage sys R ≫ D.targetFlow t)
+    (t : ℝ) :
     D.sourceFlow t ≫ topologicalRepresentation Stage sys R =
       topologicalRepresentation Stage sys R ≫ D.targetFlow t := by
   apply colimit.hom_ext
   intro i
-  exact D.stage_covariance t i
+  exact hcov t i
 
 @[reassoc]
-theorem representation_intertwines_flow_assoc (t : ℝ) :
+theorem representation_intertwines_flow_assoc
+    (hcov : ∀ (t : ℝ) (i : I),
+      topologicalInjection Stage sys i ≫ D.sourceFlow t ≫
+          topologicalRepresentation Stage sys R =
+        topologicalInjection Stage sys i ≫
+          topologicalRepresentation Stage sys R ≫ D.targetFlow t)
+    (t : ℝ) (i : I) :
     topologicalInjection Stage sys i ≫ D.sourceFlow t ≫
         topologicalRepresentation Stage sys R =
       topologicalInjection Stage sys i ≫
         topologicalRepresentation Stage sys R ≫ D.targetFlow t := by
-  rw [D.stage_covariance]
+  exact hcov t i
 
 end CStarStateColimit.Native.FilteredStarAlgebraTopologicalRepresentationFlow

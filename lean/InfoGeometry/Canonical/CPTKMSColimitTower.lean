@@ -57,7 +57,6 @@ theorem kms_functional_family_compat (n : ℕ) (f : DiagAlg n) :
     functional family over the diagonal algebra tower. -/
 def kmsCompatibleFunctionalFamily : CompatibleFunctionalFamily (A := DiagAlg) diagBondAlg where
   omega n := normalizedTraceLinear n
-  compatible n f := kms_functional_family_compat n f
 
 /-- The cylinder map as an algebra homomorphism over `ℂ`. -/
 noncomputable def cylinderAlg (n : ℕ) : DiagAlg n →ₐ[ℂ] (CantorBoundary → ℂ) where

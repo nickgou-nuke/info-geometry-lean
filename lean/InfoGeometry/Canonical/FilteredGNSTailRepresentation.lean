@@ -186,17 +186,8 @@ full GNS operators on its upper tail. -/
 def tailGNSCompatibleOperatorFamily
     {i₀ : I} (a : Stage i₀) :
     CompatibleOperatorFamily
-      (TailGNSStage Stage sys ω i₀)
-      (tailGNSIsometricDirectSystem
-        Stage sys ω i₀) where
+      (TailGNSStage Stage sys ω i₀) where
   op := tailGNSOperator Stage sys ω a
-  intertwines := by
-    intro j k hjk x
-    exact tailGNSOperator_intertwines
-      Stage sys ω a hjk x
-  bound := ‖a‖
-  norm_le := tailGNSOperator_norm_le
-    Stage sys ω a
 
 /-- The bounded operator induced by a stage observable on the Hilbert
 completion of its cofinal GNS tail. -/
@@ -215,6 +206,10 @@ def tailCompletedRepresentation
     (tailGNSIsometricDirectSystem Stage sys ω i₀)
     (tailGNSCompatibleOperatorFamily
       Stage sys ω a)
+    (fun hjk x => tailGNSOperator_intertwines
+      Stage sys ω a hjk x)
+    ‖a‖
+    (tailGNSOperator_norm_le Stage sys ω a)
 
 /-- On every stage image, the completed representation acts by the native
 GNS left representation of the transported observable. -/
@@ -236,6 +231,10 @@ GNS left representation of the transported observable. -/
     (TailGNSStage Stage sys ω i₀)
     (tailGNSIsometricDirectSystem Stage sys ω i₀)
     (tailGNSCompatibleOperatorFamily Stage sys ω a)
+    (fun hjk x => tailGNSOperator_intertwines
+      Stage sys ω a hjk x)
+    ‖a‖
+    (tailGNSOperator_norm_le Stage sys ω a)
     j x
 
 end CStarStateColimit.Native.FilteredGNSTailRepresentation

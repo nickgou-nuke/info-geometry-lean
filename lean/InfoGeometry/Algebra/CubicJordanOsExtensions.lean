@@ -66,6 +66,61 @@ def peirceProj31 (X : AlbertMatrix) : AlbertMatrix :=
 def peirceProj12 (X : AlbertMatrix) : AlbertMatrix :=
   { α₁ := 0, α₂ := 0, α₃ := 0, z₁ := zeroZ, z₂ := zeroZ, z₃ := X.z₃ }
 
+/-- The six coordinate components of the Peirce decomposition of `X`.
+
+The off-diagonal labels follow the Albert-matrix convention
+`J₂₃ = z₁`, `J₃₁ = z₂`, and `J₁₂ = z₃`. -/
+structure PeirceDecomposition (X : AlbertMatrix) where
+  diag₁ : ℝ
+  diag₂ : ℝ
+  diag₃ : ℝ
+  off₂₃ : SplitOct
+  off₃₁ : SplitOct
+  off₁₂ : SplitOct
+
+def peirceDecomposition (X : AlbertMatrix) : PeirceDecomposition X :=
+  { diag₁ := X.α₁
+    diag₂ := X.α₂
+    diag₃ := X.α₃
+    off₂₃ := X.z₁
+    off₃₁ := X.z₂
+    off₁₂ := X.z₃ }
+
+@[simp] theorem peirceDecomposition_diag₁ (X : AlbertMatrix) :
+    (peirceDecomposition X).diag₁ = X.α₁ := rfl
+
+@[simp] theorem peirceDecomposition_diag₂ (X : AlbertMatrix) :
+    (peirceDecomposition X).diag₂ = X.α₂ := rfl
+
+@[simp] theorem peirceDecomposition_diag₃ (X : AlbertMatrix) :
+    (peirceDecomposition X).diag₃ = X.α₃ := rfl
+
+@[simp] theorem peirceDecomposition_off₂₃ (X : AlbertMatrix) :
+    (peirceDecomposition X).off₂₃ = X.z₁ := rfl
+
+@[simp] theorem peirceDecomposition_off₃₁ (X : AlbertMatrix) :
+    (peirceDecomposition X).off₃₁ = X.z₂ := rfl
+
+@[simp] theorem peirceDecomposition_off₁₂ (X : AlbertMatrix) :
+    (peirceDecomposition X).off₁₂ = X.z₃ := rfl
+
+theorem peirce_diag_proj (X : AlbertMatrix) :
+    (peirceDecomposition X).diag₁ = traceBilin X e₁ ∧
+    (peirceDecomposition X).diag₂ = traceBilin X e₂ ∧
+    (peirceDecomposition X).diag₃ = traceBilin X e₃ := by
+  dsimp [peirceDecomposition, traceBilin, e₁, e₂, e₃, octTrace, zeroZ]
+  constructor
+  · ring
+  constructor
+  · ring
+  · ring
+
+theorem peirce_off_proj (X : AlbertMatrix) :
+    (peirceDecomposition X).off₁₂ = X.z₃ ∧
+    (peirceDecomposition X).off₂₃ = X.z₁ ∧
+    (peirceDecomposition X).off₃₁ = X.z₂ := by
+  exact ⟨rfl, rfl, rfl⟩
+
 @[simp] theorem peirceProj11_α₁ (X : AlbertMatrix) :
     (peirceProj11 X).α₁ = X.α₁ := rfl
 

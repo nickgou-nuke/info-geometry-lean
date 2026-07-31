@@ -103,4 +103,51 @@ theorem unbalancedTransportObjective_nonneg
     mul_nonneg hcolPenalty (unbalancedColPenalty_nonneg T)
   linarith
 
+/-- Entropic Poisson-Bregman regularizer relative to a positive reference plan. -/
+noncomputable def entropicTransportPenalty
+    (T : UnbalancedTransportCertificate (Row := Row) (Col := Col))
+    (reference : Row → Col → ℝ) : ℝ :=
+  ∑ i : Row, ∑ j : Col,
+    poissonBregman (T.coupling i j) (reference i j)
+
+omit [Nonempty Row] [Nonempty Col] in
+theorem entropicTransportPenalty_nonneg
+    (T : UnbalancedTransportCertificate (Row := Row) (Col := Col))
+    (reference : Row → Col → ℝ)
+    (href : ∀ i j, 0 < reference i j) :
+    0 ≤ entropicTransportPenalty T reference := by
+  unfold entropicTransportPenalty
+  refine Finset.sum_nonneg ?_
+  intro i hi
+  refine Finset.sum_nonneg ?_
+  intro j hj
+  exact poissonBregman_nonneg (T.coupling_nonneg i j) (href i j)
+
+/-- Full relaxed Sinkhorn objective, including the entropic regularizer. -/
+noncomputable def fullUnbalancedTransportObjective
+    (T : UnbalancedTransportCertificate (Row := Row) (Col := Col))
+    (cost reference : Row → Col → ℝ)
+    (epsilon rowPenalty colPenalty : ℝ) : ℝ :=
+  unbalancedTransportObjective T cost rowPenalty colPenalty
+    + epsilon * entropicTransportPenalty T reference
+
+omit [Nonempty Row] [Nonempty Col] in
+theorem fullUnbalancedTransportObjective_nonneg
+    (T : UnbalancedTransportCertificate (Row := Row) (Col := Col))
+    (cost reference : Row → Col → ℝ)
+    (hcost : ∀ i j, 0 ≤ cost i j)
+    (href : ∀ i j, 0 < reference i j)
+    {epsilon rowPenalty colPenalty : ℝ}
+    (hepsilon : 0 ≤ epsilon)
+    (hrowPenalty : 0 ≤ rowPenalty)
+    (hcolPenalty : 0 ≤ colPenalty) :
+    0 ≤ fullUnbalancedTransportObjective
+      T cost reference epsilon rowPenalty colPenalty := by
+  unfold fullUnbalancedTransportObjective
+  have hbase := unbalancedTransportObjective_nonneg
+    (T := T) (cost := cost) hcost hrowPenalty hcolPenalty
+  have hentropy : 0 ≤ epsilon * entropicTransportPenalty T reference :=
+    mul_nonneg hepsilon (entropicTransportPenalty_nonneg T reference href)
+  linarith
+
 end InfoGeometry.Inference

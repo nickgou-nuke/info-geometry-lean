@@ -6,11 +6,8 @@ namespace Omega.Multiscale
 
 open Filter Topology
 
-/-- Concrete data for completing the normalized Stokes trace from eventually compatible inverse
-towers. The normalized bulk, boundary, and defect sequences come with `ℓ¹` tail control as in the
-basic inverse-tower theorem; eventual compatibility is encoded by eventual constancy of the
-boundary sequence, and the extension is recorded by a trace functional that only depends on the
-eventual tail. -/
+/-- Concrete sequences, limits, tail budgets, and trace functional for normalized Stokes
+completion. The compatibility and trace laws are supplied to the owner theorem explicitly. -/
 structure NormalizedStokesTraceL1CompletionData where
   normalizedBulk : ℕ → ℝ
   normalizedBoundary : ℕ → ℝ
@@ -25,101 +22,63 @@ structure NormalizedStokesTraceL1CompletionData where
   stableValue : ℝ
   extensionValue : ℝ
   traceFunctional : (ℕ → ℝ) → ℝ
-  layerwiseStokes :
-    ∀ n, normalizedBulk n - normalizedBoundary n = normalizedDefect n
-  bulk_tail :
-    ∀ n, |bulkLimit - normalizedBulk n| ≤ bulkTailBound n
-  boundary_tail :
-    ∀ n, |boundaryLimit - normalizedBoundary n| ≤ boundaryTailBound n
-  defect_tail :
-    ∀ n, |defectLimit - normalizedDefect n| ≤ defectTailBound n
-  bulkTail_tendsto_zero :
-    Tendsto bulkTailBound atTop (𝓝 0)
-  boundaryTail_tendsto_zero :
-    Tendsto boundaryTailBound atTop (𝓝 0)
-  defectTail_tendsto_zero :
-    Tendsto defectTailBound atTop (𝓝 0)
-  boundary_eventually_stable :
-    ∀ n, stableIndex ≤ n → normalizedBoundary n = stableValue
-  trace_respects_tail :
-    ∀ u v : ℕ → ℝ, (∃ N, ∀ n, N ≤ n → u n = v n) → traceFunctional u = traceFunctional v
-  trace_on_constant :
-    ∀ c : ℝ, traceFunctional (fun _ => c) = c
-  trace_on_boundary :
-    traceFunctional normalizedBoundary = extensionValue
 
-namespace NormalizedStokesTraceL1CompletionData
+private theorem tendsto_of_abs_sub_le
+    {u : ℕ → ℝ} {L : ℝ} {b : ℕ → ℝ}
+    (hBound : ∀ n, |L - u n| ≤ b n)
+    (hTail : Tendsto b atTop (𝓝 0)) :
+    Tendsto u atTop (𝓝 L) := by
+  have hNorm :
+      Tendsto (fun n => ‖u n - L‖) atTop (𝓝 0) := by
+    have hAbs :
+        Tendsto (fun n => |L - u n|) atTop (𝓝 0) :=
+      squeeze_zero' (Eventually.of_forall fun _ => abs_nonneg _) (Eventually.of_forall hBound)
+        hTail
+    simpa [Real.norm_eq_abs, abs_sub_comm] using hAbs
+  exact tendsto_iff_norm_sub_tendsto_zero.2 hNorm
 
-def toNormalizedIntegrationData (D : NormalizedStokesTraceL1CompletionData) :
-    NormalizedIntegrationL1DefectInverseTowerData where
-  normalizedBulk := D.normalizedBulk
-  normalizedBoundary := D.normalizedBoundary
-  normalizedDefect := D.normalizedDefect
-  bulkLimit := D.bulkLimit
-  boundaryLimit := D.boundaryLimit
-  defectLimit := D.defectLimit
-  bulkTailBound := D.bulkTailBound
-  boundaryTailBound := D.boundaryTailBound
-  defectTailBound := D.defectTailBound
-  layerwiseStokes := D.layerwiseStokes
-  bulk_tail := D.bulk_tail
-  boundary_tail := D.boundary_tail
-  defect_tail := D.defect_tail
-  bulkTail_tendsto_zero := D.bulkTail_tendsto_zero
-  boundaryTail_tendsto_zero := D.boundaryTail_tendsto_zero
-  defectTail_tendsto_zero := D.defectTail_tendsto_zero
-
-/-- On eventually compatible towers, the limiting boundary value agrees with the stable tail
-value. -/
-def eventuallyCompatibleAgrees (D : NormalizedStokesTraceL1CompletionData) : Prop :=
-  D.boundaryLimit = D.stableValue
-
-/-- The normalized Stokes identity passes to the boundary limit. -/
-def boundaryStokesLimit (D : NormalizedStokesTraceL1CompletionData) : Prop :=
-  D.bulkLimit - D.boundaryLimit = D.defectLimit
-
-/-- The tail-invariant trace functional extends the eventually compatible tower by the same value
-as the limiting boundary trace. -/
-def uniqueContinuousExtension (D : NormalizedStokesTraceL1CompletionData) : Prop :=
-  D.extensionValue = D.boundaryLimit
-
-end NormalizedStokesTraceL1CompletionData
-
-open NormalizedStokesTraceL1CompletionData
-
-/-- The normalized Stokes trace admits the expected `L¹` completion: eventually compatible towers
-stabilize to the limiting boundary value, the normalized Stokes identity survives in the limit,
-and any tail-invariant extension agrees with that same value.
-    prop:app-normalized-stokes-trace-l1-completion -/
+/-- A tail-invariant trace completion yields the limiting Stokes law and agrees with the stable
+boundary value. -/
 theorem paper_app_normalized_stokes_trace_l1_completion
-    (D : NormalizedStokesTraceL1CompletionData) :
-    D.eventuallyCompatibleAgrees ∧ D.boundaryStokesLimit ∧ D.uniqueContinuousExtension := by
-  rcases paper_app_normalized_integration_l1_defect_inverse_tower D.toNormalizedIntegrationData with
+    (D : NormalizedStokesTraceL1CompletionData)
+    (layerwiseStokes :
+      ∀ n, D.normalizedBulk n - D.normalizedBoundary n = D.normalizedDefect n)
+    (bulk_tail : ∀ n, |D.bulkLimit - D.normalizedBulk n| ≤ D.bulkTailBound n)
+    (boundary_tail : ∀ n, |D.boundaryLimit - D.normalizedBoundary n| ≤ D.boundaryTailBound n)
+    (defect_tail : ∀ n, |D.defectLimit - D.normalizedDefect n| ≤ D.defectTailBound n)
+    (bulkTail_tendsto_zero : Tendsto D.bulkTailBound atTop (𝓝 0))
+    (boundaryTail_tendsto_zero : Tendsto D.boundaryTailBound atTop (𝓝 0))
+    (defectTail_tendsto_zero : Tendsto D.defectTailBound atTop (𝓝 0))
+    (boundary_eventually_stable :
+      ∀ n, D.stableIndex ≤ n → D.normalizedBoundary n = D.stableValue)
+    (trace_respects_tail :
+      ∀ u v : ℕ → ℝ, (∃ N, ∀ n, N ≤ n → u n = v n) → D.traceFunctional u = D.traceFunctional v)
+    (trace_on_constant : ∀ c : ℝ, D.traceFunctional (fun _ => c) = c)
+    (trace_on_boundary : D.traceFunctional D.normalizedBoundary = D.extensionValue) :
+    D.boundaryLimit = D.stableValue ∧
+      D.bulkLimit - D.boundaryLimit = D.defectLimit ∧
+        D.extensionValue = D.boundaryLimit := by
+  rcases paper_app_normalized_integration_l1_defect_inverse_tower
+      D.normalizedBulk D.normalizedBoundary D.normalizedDefect D.bulkLimit D.boundaryLimit
+      D.defectLimit D.bulkTailBound D.boundaryTailBound D.defectTailBound layerwiseStokes
+      bulk_tail boundary_tail defect_tail bulkTail_tendsto_zero boundaryTail_tendsto_zero
+      defectTail_tendsto_zero with
     ⟨_, _, hBoundary, hLimitStokes⟩
-  have hStable :
-      Tendsto D.normalizedBoundary atTop (𝓝 D.stableValue) :=
-    tendsto_atTop_of_eventually_const D.boundary_eventually_stable
-  have hAgree : D.eventuallyCompatibleAgrees := by
-    simpa [NormalizedStokesTraceL1CompletionData.eventuallyCompatibleAgrees] using
-      tendsto_nhds_unique hBoundary hStable
+  have hStable : Tendsto D.normalizedBoundary atTop (𝓝 D.stableValue) :=
+    tendsto_atTop_of_eventually_const boundary_eventually_stable
+  have hAgree : D.boundaryLimit = D.stableValue :=
+    tendsto_nhds_unique hBoundary hStable
   have hExtensionStable : D.extensionValue = D.stableValue := by
     have hTailEq :
         D.traceFunctional D.normalizedBoundary = D.traceFunctional (fun _ => D.stableValue) := by
-      refine D.trace_respects_tail D.normalizedBoundary (fun _ => D.stableValue) ?_
-      exact ⟨D.stableIndex, fun n hn => D.boundary_eventually_stable n hn⟩
+      refine trace_respects_tail D.normalizedBoundary (fun _ => D.stableValue) ?_
+      exact ⟨D.stableIndex, fun n hn => boundary_eventually_stable n hn⟩
     calc
       D.extensionValue = D.traceFunctional D.normalizedBoundary := by
         symm
-        exact D.trace_on_boundary
+        exact trace_on_boundary
       _ = D.traceFunctional (fun _ => D.stableValue) := hTailEq
-      _ = D.stableValue := D.trace_on_constant D.stableValue
-  have hBoundaryLimit : D.boundaryStokesLimit := by
-    simpa [NormalizedStokesTraceL1CompletionData.boundaryStokesLimit,
-      NormalizedStokesTraceL1CompletionData.toNormalizedIntegrationData,
-      NormalizedIntegrationL1DefectInverseTowerData.limitStokes] using hLimitStokes
-  have hUnique : D.uniqueContinuousExtension := by
-    unfold NormalizedStokesTraceL1CompletionData.uniqueContinuousExtension
-    rw [hExtensionStable, hAgree]
-  exact ⟨hAgree, hBoundaryLimit, hUnique⟩
+      _ = D.stableValue := trace_on_constant D.stableValue
+  exact ⟨hAgree, hLimitStokes, hExtensionStable.trans hAgree.symm⟩
 
 end Omega.Multiscale

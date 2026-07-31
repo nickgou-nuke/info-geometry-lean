@@ -138,3 +138,9 @@ available through the root project surface.  `InfoGeometry.All` is the explicit
 whole-project umbrella; `InfoGeometry.Library` is only a compatibility umbrella
 for the canonical subset.
 -/
+import InfoGeometry.OperatorAlgebra.TwoSheetedAlgebra
+import InfoGeometry.OperatorAlgebra.AffineOperatorExpFamily
+import InfoGeometry.OperatorAlgebra.SheetConnection
+import InfoGeometry.OperatorAlgebra.MariGeometryLift
+import InfoGeometry.OperatorAlgebra.CommutantIntertwine
+import InfoGeometry.OperatorAlgebra.BianchiOperatorLift

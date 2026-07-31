@@ -1,4 +1,7 @@
+import InfoGeometry.Canonical.EinsteinCartanBianchiBridge
 import InfoGeometry.Canonical.CliffordEquiv
+import InfoGeometry.Canonical.MetriplecticPhaseMirrorErasureBridge
+import InfoGeometry.Canonical.BottPeriodicityVonNeumann32DBridge
 import InfoGeometry.Canonical.AffineWeylD5WallpaperQuotient
 import InfoGeometry.Canonical.AmplituhedronIntegrationLimits
 import InfoGeometry.Canonical.AmplituhedronThermodynamicProjection
@@ -1954,5 +1957,3 @@ modules in `lean/InfoGeometry/Canonical/`.
 -/
 
 end InfoGeometry
-import InfoGeometry.Canonical.MetriplecticPhaseMirrorErasureBridge
-import InfoGeometry.Canonical.BottPeriodicityVonNeumann32DBridge

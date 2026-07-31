@@ -192,4 +192,73 @@ theorem colimit_artin_relation :
               colim.map D.braid1 ≫ colim.map D.braid2 = _
           exact colimitInjection_word (F := F) D.braid2 D.braid1 D.braid2 j
 
+/-! ## Full twist in the descended braid image -/
+
+/-- The positive Coxeter word on the colimit. -/
+def colimitCoxeter : colimit F ⟶ colimit F :=
+  colimitBraid2 F D ≫ colimitBraid1 F D
+
+/-- The full twist, defined as the cube of the positive Coxeter word. -/
+def colimitFullTwist : colimit F ⟶ colimit F :=
+  colimitCoxeter F D ≫ colimitCoxeter F D ≫ colimitCoxeter F D
+
+/-- The full twist is the square of the Garside word. -/
+theorem colimitFullTwist_eq_garside_sq :
+    colimitFullTwist F D =
+      (colimitBraid1 F D ≫ colimitBraid2 F D ≫ colimitBraid1 F D) ≫
+        (colimitBraid1 F D ≫ colimitBraid2 F D ≫ colimitBraid1 F D) := by
+  let x := colimitBraid1 F D
+  let y := colimitBraid2 F D
+  have h := colimit_artin_relation (F := F) D
+  change (y ≫ x) ≫ (y ≫ x) ≫ (y ≫ x) =
+    (x ≫ y ≫ x) ≫ (x ≫ y ≫ x)
+  simpa only [Category.assoc] using
+    congrArg (fun k => k ≫ x ≫ y ≫ x) h.symm
+
+/-- The full twist commutes with the first descended braid generator. -/
+theorem colimitFullTwist_commutes_braid1 :
+    colimitFullTwist F D ≫ colimitBraid1 F D =
+      colimitBraid1 F D ≫ colimitFullTwist F D := by
+  let x := colimitBraid1 F D
+  let y := colimitBraid2 F D
+  let Δ := x ≫ y ≫ x
+  have h := colimit_artin_relation (F := F) D
+  have hΔx : Δ ≫ x = y ≫ Δ := by
+    simpa only [Δ, Category.assoc] using
+      congrArg (fun k => k ≫ x) h
+  have hΔy : Δ ≫ y = x ≫ Δ := by
+    simpa only [Δ, Category.assoc] using
+      (congrArg (fun k => x ≫ k) h).symm
+  rw [colimitFullTwist_eq_garside_sq (F := F) (D := D)]
+  change (Δ ≫ Δ) ≫ x = x ≫ (Δ ≫ Δ)
+  calc
+    (Δ ≫ Δ) ≫ x = Δ ≫ (Δ ≫ x) := by simp only [Category.assoc]
+    _ = Δ ≫ (y ≫ Δ) := by rw [hΔx]
+    _ = (Δ ≫ y) ≫ Δ := by simp only [Category.assoc]
+    _ = (x ≫ Δ) ≫ Δ := by rw [hΔy]
+    _ = x ≫ (Δ ≫ Δ) := by simp only [Category.assoc]
+
+/-- The full twist commutes with the second descended braid generator. -/
+theorem colimitFullTwist_commutes_braid2 :
+    colimitFullTwist F D ≫ colimitBraid2 F D =
+      colimitBraid2 F D ≫ colimitFullTwist F D := by
+  let x := colimitBraid1 F D
+  let y := colimitBraid2 F D
+  let Δ := x ≫ y ≫ x
+  have h := colimit_artin_relation (F := F) D
+  have hΔx : Δ ≫ x = y ≫ Δ := by
+    simpa only [Δ, Category.assoc] using
+      congrArg (fun k => k ≫ x) h
+  have hΔy : Δ ≫ y = x ≫ Δ := by
+    simpa only [Δ, Category.assoc] using
+      (congrArg (fun k => x ≫ k) h).symm
+  rw [colimitFullTwist_eq_garside_sq (F := F) (D := D)]
+  change (Δ ≫ Δ) ≫ y = y ≫ (Δ ≫ Δ)
+  calc
+    (Δ ≫ Δ) ≫ y = Δ ≫ (Δ ≫ y) := by simp only [Category.assoc]
+    _ = Δ ≫ (x ≫ Δ) := by rw [hΔy]
+    _ = (Δ ≫ x) ≫ Δ := by simp only [Category.assoc]
+    _ = (y ≫ Δ) ≫ Δ := by rw [hΔx]
+    _ = y ≫ (Δ ≫ Δ) := by simp only [Category.assoc]
+
 end InfoGeometry.Canonical.TopologicalColimitBraidAction

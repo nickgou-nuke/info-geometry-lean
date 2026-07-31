@@ -7,7 +7,6 @@ namespace Omega.POM
 the square Hankel kernel on the same coefficient space, and the rank count is recorded through the
 truncated-multiple parameter count `m - d_q`. -/
 structure ResonanceHankelNullAllScalesData where
-  kernelEqualsMultiplesData : HankelSyndromeKernelEqualsMultiplesData
   m : ℕ
   L : ℕ
   d_q : ℕ
@@ -19,30 +18,13 @@ structure ResonanceHankelNullAllScalesData where
   nullity : ℕ
   multipleRank : ℕ
   nullMode_eq_squareKernel : nullModeKernel = squareKernel
-  squareKernel_subset_multipleModule :
-    kernelEqualsMultiplesData.kernelContainedInMultiples → squareKernel ⊆ multipleModule
-  multipleModule_subset_squareKernel :
-    kernelEqualsMultiplesData.multiplesContainedInKernel → multipleModule ⊆ squareKernel
+  squareKernel_subset_multipleModule : squareKernel ⊆ multipleModule
+  multipleModule_subset_squareKernel : multipleModule ⊆ squareKernel
   nullity_eq_multipleRank_of_eq :
     nullModeKernel = multipleModule → nullity = multipleRank
   multipleRank_eq_truncationCount : multipleRank = m - d_q
 
 namespace ResonanceHankelNullAllScalesData
-
-/-- Repackage the length-`m` comparison as the fixed-length principalization wrapper already used
-for the resonance window. -/
-def toIntegralPrincipalizationData (D : ResonanceHankelNullAllScalesData) :
-    ResonanceHankelNullIntegralPrincipalizationData where
-  kernelEqualsMultiplesData := D.kernelEqualsMultiplesData
-  n := D.m
-  L := D.L
-  hLn := D.hLm
-  nullModeKernel := D.nullModeKernel
-  squareKernel := D.squareKernel
-  multipleModule := D.multipleModule
-  nullMode_eq_squareKernel := D.nullMode_eq_squareKernel
-  squareKernel_subset_multipleModule := D.squareKernel_subset_multipleModule
-  multipleModule_subset_squareKernel := D.multipleModule_subset_squareKernel
 
 /-- Paper conclusion at truncation length `m`: the null modes equal the truncated multiples. -/
 def nullModesEqMultiplesAtAllScales (D : ResonanceHankelNullAllScalesData) : Prop :=
@@ -60,10 +42,10 @@ open ResonanceHankelNullAllScalesData
 theorem paper_pom_resonance_hankel_null_all_scales (D : ResonanceHankelNullAllScalesData) :
     D.nullModesEqMultiplesAtAllScales ∧ D.rankNullModesAtAllScales := by
   have hEq : D.nullModesEqMultiplesAtAllScales := by
-    simpa [ResonanceHankelNullAllScalesData.nullModesEqMultiplesAtAllScales,
-      ResonanceHankelNullIntegralPrincipalizationData.nullModesEqMultiples,
-      ResonanceHankelNullAllScalesData.toIntegralPrincipalizationData] using
-      paper_pom_resonance_hankel_null_integral_principalization D.toIntegralPrincipalizationData
+    simpa [ResonanceHankelNullAllScalesData.nullModesEqMultiplesAtAllScales] using
+      paper_pom_resonance_hankel_null_integral_principalization D.nullModeKernel
+        D.squareKernel D.multipleModule D.nullMode_eq_squareKernel
+        D.squareKernel_subset_multipleModule D.multipleModule_subset_squareKernel
   have hRank : D.rankNullModesAtAllScales := by
     rw [ResonanceHankelNullAllScalesData.rankNullModesAtAllScales]
     rw [D.nullity_eq_multipleRank_of_eq hEq, D.multipleRank_eq_truncationCount]

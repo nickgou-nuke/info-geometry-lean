@@ -142,6 +142,7 @@ theorem tensorActionColimitEndomorphism_comp_stage
         tensorActionColimitEndomorphism (K := K) action₁) ≫
         tensorActionColimitEndomorphism (K := K) action₂ := by
           simp only [Category.assoc]
+
     _ = (action₁ ≫ topologicalDirectInjection
         (fusionTensorTopologicalDiagram (K := K)) n) ≫
         tensorActionColimitEndomorphism (K := K) action₂ := by
@@ -157,6 +158,30 @@ theorem tensorActionColimitEndomorphism_comp_stage
         topologicalDirectInjection
           (fusionTensorTopologicalDiagram (K := K)) n := by
           simp only [Category.assoc]
+
+theorem tensorActionColimitEndomorphism_comp
+    (action₁ action₂ : TopCat.of (FusionTensorCarrier K) ⟶
+      TopCat.of (FusionTensorCarrier K)) :
+    tensorActionColimitEndomorphism (K := K) action₁ ≫
+        tensorActionColimitEndomorphism (K := K) action₂ =
+      tensorActionColimitEndomorphism (K := K) (action₁ ≫ action₂) := by
+  apply colimit.hom_ext
+  intro n
+  calc
+    topologicalDirectInjection
+          (fusionTensorTopologicalDiagram (K := K)) n ≫
+        (tensorActionColimitEndomorphism (K := K) action₁ ≫
+          tensorActionColimitEndomorphism (K := K) action₂) =
+      (action₁ ≫ action₂) ≫
+        topologicalDirectInjection
+          (fusionTensorTopologicalDiagram (K := K)) n :=
+      tensorActionColimitEndomorphism_comp_stage (K := K) action₁ action₂ n
+    _ = topologicalDirectInjection
+          (fusionTensorTopologicalDiagram (K := K)) n ≫
+        tensorActionColimitEndomorphism (K := K) (action₁ ≫ action₂) := by
+      symm
+      exact tensorActionColimitEndomorphism_stage (K := K)
+        (action₁ ≫ action₂) n
 
 def fusionCoxeterTensorColimitEndomorphism
     (a b q1 q2 : K) :
@@ -190,6 +215,25 @@ def fusionCoxeterTensorFullTwistColimitEndomorphism
   fusionCoxeterTensorColimitEndomorphism (K := K) a b q1 q2 ≫
     fusionCoxeterTensorColimitEndomorphism (K := K) a b q1 q2 ≫
     fusionCoxeterTensorColimitEndomorphism (K := K) a b q1 q2
+
+theorem fusionCoxeterTensorFullTwist_eq_tensorActionColimit
+    (a b q1 q2 : K) :
+    fusionCoxeterTensorFullTwistColimitEndomorphism
+        (K := K) a b q1 q2 =
+      tensorActionColimitEndomorphism (K := K)
+        (tensorLeftTopCatHom
+          (braidGen2 K a b q1 q2) (braidGen1 K q1 q2) ≫
+        tensorLeftTopCatHom
+          (braidGen2 K a b q1 q2) (braidGen1 K q1 q2) ≫
+        tensorLeftTopCatHom
+          (braidGen2 K a b q1 q2) (braidGen1 K q1 q2)) := by
+  let t := tensorLeftTopCatHom
+    (braidGen2 K a b q1 q2) (braidGen1 K q1 q2)
+  let e := tensorActionColimitEndomorphism (K := K) t
+  change e ≫ e ≫ e = tensorActionColimitEndomorphism (K := K) (t ≫ t ≫ t)
+  rw [← Category.assoc, tensorActionColimitEndomorphism_comp]
+  rw [tensorActionColimitEndomorphism_comp]
+  rw [Category.assoc]
 
 theorem fusionCoxeterTensorFullTwist_stage
     (a b q1 q2 : K) (n : ℕ) :

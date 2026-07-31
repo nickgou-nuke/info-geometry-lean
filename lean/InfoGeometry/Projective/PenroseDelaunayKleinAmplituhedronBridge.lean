@@ -1,5 +1,5 @@
 import InfoGeometry.Algebra.SplitQuaternionMatrices
-import InfoGeometry.Canonical.ProofDAGRepresentationBridge
+import InfoGeometry.Causal.ProofDAGRepresentation
 import InfoGeometry.Geometry.PenroseKleinTiling
 import InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge
 
@@ -39,13 +39,13 @@ open InfoGeometry.Topology.RohozhkinBoundary
 
 /-- The proof-DAG owner supplies antisymmetry/no-loop for represented causal edges. -/
 theorem proof_dag_no_loop_readout {α : Type*}
-    (G : InfoGeometry.Canonical.ProofDAGRepresentationBridge.ProofDAG α)
-    (R : InfoGeometry.Canonical.ProofDAGRepresentationBridge.CausalRepresentation G)
+    (G : InfoGeometry.Causal.ProofDAGRepresentation.ProofDAG α)
+    (R : InfoGeometry.Causal.ProofDAGRepresentation.CausalRepresentation G)
     {a b : α}
     (hab : G.le a b)
     (hba : G.le b a) :
     a = b :=
-  InfoGeometry.Canonical.ProofDAGRepresentationBridge.represented_no_loop
+  InfoGeometry.Causal.ProofDAGRepresentation.represented_no_loop
     G R hab hba
 
 /-- The split-quaternion matrix owner realizes the Klein `(2,2)` quadratic form. -/

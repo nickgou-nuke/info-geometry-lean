@@ -1,6 +1,5 @@
 import InfoGeometry.Canonical.DrazinHodgeResidueBridge
 import InfoGeometry.Canonical.FierzReadout
-import InfoGeometry.Canonical.OperatorialFierzBridge
 import InfoGeometry.Meta.Architecture
 
 open scoped InnerProductSpace
@@ -12,7 +11,6 @@ namespace InfoGeometry.Canonical
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.DrazinHodgeResidueBridge
 open InfoGeometry.Canonical.FierzReadout
-open InfoGeometry.Canonical.OperatorialFierzBridge
 
 /-!
 # Drazin/Hodge Fierz bridge

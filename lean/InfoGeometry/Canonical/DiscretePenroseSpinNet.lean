@@ -52,7 +52,7 @@ variable [AddCommGroup T] [Module 𝕜 T]
 variable [AddCommGroup D] [Module 𝕜 D]
 
 abbrev eventDAG (_S : SpinNet α 𝕜 T D) :
-    InfoGeometry.Canonical.ProofDAGRepresentationBridge.ProofDAG α :=
+    InfoGeometry.Causal.ProofDAGRepresentation.ProofDAG α :=
   proofDAGOfPartialOrder (α := α)
 
 abbrev forwardCone (S : SpinNet α 𝕜 T D) (a : α) : Set α :=

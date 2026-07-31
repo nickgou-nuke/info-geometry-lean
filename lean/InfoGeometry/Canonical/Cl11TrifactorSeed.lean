@@ -2,17 +2,9 @@ import InfoGeometry.Canonical.TrifactorDecomposition
 import InfoGeometry.Clifford.Cl11TrifactorPropagation
 
 /-!
-# Cl(1,1) Trifactor Seed
+# Cl(1,1) trifactor compatibility import
 
-Import surface for the genuine trifactor owners:
-
-* `InfoGeometry.Canonical.TrifactorDecomposition` owns the polynomial
-  tripotent-sector theorem.
-* `InfoGeometry.Clifford.Cl11TrifactorPropagation` owns the finite
-  `Cl(1,1)` matrix-stage propagation theorem.
-
-This file declares no additional theorem names.
+The theorem owners are `InfoGeometry.Canonical.TrifactorDecomposition` and
+`InfoGeometry.Clifford.Cl11TrifactorPropagation`.  This entry point declares
+no duplicate namespace or theorem wrappers.
 -/
-
-namespace InfoGeometry.Canonical.Cl11TrifactorSeed
-end InfoGeometry.Canonical.Cl11TrifactorSeed

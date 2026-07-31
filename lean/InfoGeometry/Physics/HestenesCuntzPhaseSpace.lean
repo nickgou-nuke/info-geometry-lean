@@ -105,17 +105,22 @@ theorem stage_weyl_relation (n : ℕ) :
 /-- Compatible families are a concrete direct-colimit candidate. -/
 structure PhaseColimitFamily where
   val : ∀ n : ℕ, PhaseStage n
-  compatible : ∀ n : ℕ, phaseEmbedSucc n (val n) = val (n + 1)
 
 /-- Coordinate family in the direct-colimit candidate. -/
 def coordinateFamily : PhaseColimitFamily where
   val := stageCoordinate
-  compatible := stageCoordinate_compatible
+
+theorem coordinateFamily_compatible (n : ℕ) :
+    phaseEmbedSucc n (coordinateFamily.val n) = coordinateFamily.val (n + 1) := by
+  exact stageCoordinate_compatible n
 
 /-- Momentum family in the direct-colimit candidate. -/
 def momentumFamily : PhaseColimitFamily where
   val := stageMomentum
-  compatible := stageMomentum_compatible
+
+theorem momentumFamily_compatible (n : ℕ) :
+    phaseEmbedSucc n (momentumFamily.val n) = momentumFamily.val (n + 1) := by
+  exact stageMomentum_compatible n
 
 /-- The direct-colimit coordinate and momentum families satisfy the Weyl relation
 pointwise at every finite stage. -/

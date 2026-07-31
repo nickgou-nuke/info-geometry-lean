@@ -41,6 +41,7 @@ noncomputable def upperTailCARFullParameterColimitMap
         ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit)) ⟶
       qCcrParameterTopologicalColimit Stage T.toContinuousStarInductiveSystem :=
   upperTailCompatibleQCCRFullParameterColimitMap Stage T m family.toQCCR
+    family.toQCCR_compatible
 
 theorem upperTailCARFullParameterColimitMap_stage_apply
     (m : ℕ)
@@ -53,7 +54,7 @@ theorem upperTailCARFullParameterColimitMap_stage_apply
       qCcrParameterTopologicalInjection Stage T.toContinuousStarInductiveSystem j.1
         (family.toQCCR.point j).1 := by
   exact upperTailCompatibleQCCRFullParameterColimitMap_stage_apply
-    Stage T m family.toQCCR j u
+    Stage T m family.toQCCR family.toQCCR_compatible j u
 
 noncomputable def upperTailCCRFullParameterColimitMap
     (m : ℕ)
@@ -63,6 +64,7 @@ noncomputable def upperTailCCRFullParameterColimitMap
         ((Functor.const (UpperNatIndex m)).obj (TopCat.of PUnit)) ⟶
       qCcrParameterTopologicalColimit Stage T.toContinuousStarInductiveSystem :=
   upperTailCompatibleQCCRFullParameterColimitMap Stage T m family.toQCCR
+    family.toQCCR_compatible
 
 theorem upperTailCCRFullParameterColimitMap_stage_apply
     (m : ℕ)
@@ -75,6 +77,6 @@ theorem upperTailCCRFullParameterColimitMap_stage_apply
       qCcrParameterTopologicalInjection Stage T.toContinuousStarInductiveSystem j.1
         (family.toQCCR.point j).1 := by
   exact upperTailCompatibleQCCRFullParameterColimitMap_stage_apply
-    Stage T m family.toQCCR j u
+    Stage T m family.toQCCR family.toQCCR_compatible j u
 
 end InfoGeometry.Canonical.UpperTailCARCCRPointBridge

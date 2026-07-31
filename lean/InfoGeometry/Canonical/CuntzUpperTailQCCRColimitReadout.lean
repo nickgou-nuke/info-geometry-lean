@@ -66,18 +66,28 @@ def upperTailCuntzPointFamily
     CompatibleQCCRPointFamily
       (sys := upperTailContinuousStarSystem Stage T m) where
   point := upperTailCuntzQCCRPoint Stage T m i
-  compatible := by
+
+theorem upperTailCuntzPointFamily_compatible
+    (m : ℕ) (i : Fin m) :
+    ∀ {j k : UpperNatIndex m} (hjk : j ≤ k),
+      qCcrParameterZeroFiberTransitionMap
+          (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) hjk
+          ((upperTailCuntzPointFamily Stage T m i).point j) =
+        (upperTailCuntzPointFamily Stage T m i).point k := by
     intro j k hjk
     apply Subtype.ext
     apply Prod.ext
-    · simp [qCcrParameterZeroFiberTransitionMap,
+    · simp [upperTailCuntzPointFamily,
+        qCcrParameterZeroFiberTransitionMap,
         qCcrParameterTransitionMap, upperTailCuntzQCCRPoint,
         upperTailContinuousStarSystem, T.map_generator, map_star]
     · apply Prod.ext
-      · simp [qCcrParameterZeroFiberTransitionMap,
+      · simp [upperTailCuntzPointFamily,
+          qCcrParameterZeroFiberTransitionMap,
           qCcrParameterTransitionMap, upperTailCuntzQCCRPoint,
           upperTailContinuousStarSystem, T.map_generator]
-      · simp [qCcrParameterZeroFiberTransitionMap,
+      · simp [upperTailCuntzPointFamily,
+          qCcrParameterZeroFiberTransitionMap,
           qCcrParameterTransitionMap, upperTailCuntzQCCRPoint,
           upperTailContinuousStarSystem]
 
@@ -90,6 +100,7 @@ noncomputable def upperTailCuntzQCCRColimitMap
   compatiblePointColimitMap
     (upperTailContinuousStarSystem Stage T m)
     (upperTailCuntzPointFamily Stage T m i)
+    (upperTailCuntzPointFamily_compatible Stage T m i)
 
 theorem upperTailCuntzQCCRColimitMap_stage
     (m : ℕ) (i : Fin m) (j : UpperNatIndex m) :
@@ -98,12 +109,14 @@ theorem upperTailCuntzQCCRColimitMap_stage
         upperTailCuntzQCCRColimitMap Stage T m i =
       (compatiblePointNatTrans
         (upperTailContinuousStarSystem Stage T m)
-        (upperTailCuntzPointFamily Stage T m i)).app j ≫
+        (upperTailCuntzPointFamily Stage T m i)
+        (upperTailCuntzPointFamily_compatible Stage T m i)).app j ≫
         qCcrParameterZeroFiberTopologicalInjection
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) j := by
   exact compatiblePointColimitMap_stage
     (upperTailContinuousStarSystem Stage T m)
-    (upperTailCuntzPointFamily Stage T m i) j
+    (upperTailCuntzPointFamily Stage T m i)
+    (upperTailCuntzPointFamily_compatible Stage T m i) j
 
 noncomputable def upperTailCuntzQCCRZeroFiberToParameterColimit
     (m : ℕ) :
@@ -145,7 +158,8 @@ theorem upperTailCuntzQCCRParameterColimitMap_stage_apply
         (upperTailCuntzQCCRPoint Stage T m i j).1 := by
   have hpoint := compatiblePointColimitMap_stage_apply
     (upperTailContinuousStarSystem Stage T m)
-    (upperTailCuntzPointFamily Stage T m i) j u
+    (upperTailCuntzPointFamily Stage T m i)
+    (upperTailCuntzPointFamily_compatible Stage T m i) j u
   have hincl := qCcrParameterZeroFiberToParameterColimit_stage
     (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) j
   have hincl' := congrArg

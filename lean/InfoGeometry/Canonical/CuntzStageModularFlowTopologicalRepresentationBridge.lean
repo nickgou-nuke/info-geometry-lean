@@ -55,16 +55,38 @@ def representationCocone :
       (sys := CuntzStageModularFlowTopologicalColimit.system Stage T)
       (B := B) where
   ι := R.realization.ι
-  ι_comm := R.realization.ι_comm
-  continuous_ι := R.realization.continuous_ι
 
 def flowRepresentationData :
     CStarStateColimit.Native.FilteredStarAlgebraTopologicalRepresentationFlow.Data
-      Stage (CuntzStageModularFlowTopologicalColimit.system Stage T)
-      (representationCocone (Stage := Stage) (T := T) (Φ := Φ) R) where
+      Stage (CuntzStageModularFlowTopologicalColimit.system Stage T) (B := B) where
   sourceFlow := modularFlowTopologicalColimitMap Stage T Φ hmap_naturality
   targetFlow := fun _ => 𝟙 (TopCat.of B)
-  stage_covariance := by
+
+def flowRepresentationStageCovariance
+    (hι_comm : ∀ {m n : ℕ} (hmn : m ≤ n),
+      (R.realization.ι n).comp
+          ((CuntzStageModularFlowTopologicalColimit.system Stage T).map hmn) =
+        R.realization.ι m)
+    (hcontinuous_ι : ∀ n : ℕ, Continuous (R.realization.ι n)) :
+    ∀ (t : ℝ) (n : ℕ),
+      topologicalInjection Stage
+          (CuntzStageModularFlowTopologicalColimit.system Stage T) n ≫
+          (flowRepresentationData (B := B) Stage T Φ hmap_naturality).sourceFlow t ≫
+          topologicalRepresentation
+            (Stage := Stage)
+            (sys := CuntzStageModularFlowTopologicalColimit.system Stage T)
+            (representationCocone (Stage := Stage) (T := T) (Φ := Φ) R)
+            hι_comm
+            hcontinuous_ι =
+        topologicalInjection Stage
+          (CuntzStageModularFlowTopologicalColimit.system Stage T) n ≫
+          topologicalRepresentation
+            (Stage := Stage)
+            (sys := CuntzStageModularFlowTopologicalColimit.system Stage T)
+            (representationCocone (Stage := Stage) (T := T) (Φ := Φ) R)
+            hι_comm
+            hcontinuous_ι ≫
+          (flowRepresentationData (B := B) Stage T Φ hmap_naturality).targetFlow t := by
     intro t n
     apply TopCat.hom_ext
     apply ContinuousMap.ext
@@ -74,6 +96,8 @@ def flowRepresentationData :
         (Stage := Stage)
         (sys := CuntzStageModularFlowTopologicalColimit.system Stage T)
         (representationCocone (Stage := Stage) (T := T) (Φ := Φ) R)
+        hι_comm
+        hcontinuous_ι
         (modularFlowTopologicalColimitMap Stage T Φ hmap_naturality t
           (topologicalInjection
             Stage (CuntzStageModularFlowTopologicalColimit.system Stage T)
@@ -82,6 +106,8 @@ def flowRepresentationData :
         (Stage := Stage)
         (sys := CuntzStageModularFlowTopologicalColimit.system Stage T)
         (representationCocone (Stage := Stage) (T := T) (Φ := Φ) R)
+        hι_comm
+        hcontinuous_ι
         (topologicalInjection
           Stage (CuntzStageModularFlowTopologicalColimit.system Stage T)
           n a)
@@ -90,20 +116,35 @@ def flowRepresentationData :
       topologicalRepresentation_of_stage]
     exact R.invariant n t a
 
-theorem modularFlow_intertwines_invariant_representation (t : ℝ) :
+theorem modularFlow_intertwines_invariant_representation
+    (hι_comm : ∀ {m n : ℕ} (hmn : m ≤ n),
+      (R.realization.ι n).comp
+          ((CuntzStageModularFlowTopologicalColimit.system Stage T).map hmn) =
+        R.realization.ι m)
+    (hcontinuous_ι : ∀ n : ℕ, Continuous (R.realization.ι n))
+    (t : ℝ) :
     modularFlowTopologicalColimitMap Stage T Φ hmap_naturality t ≫
         topologicalRepresentation
           (Stage := Stage)
           (sys := CuntzStageModularFlowTopologicalColimit.system Stage T)
-          (representationCocone (Stage := Stage) (T := T) (Φ := Φ) R) =
+          (representationCocone (Stage := Stage) (T := T) (Φ := Φ) R)
+          hι_comm
+          hcontinuous_ι =
       topologicalRepresentation
           (Stage := Stage)
           (sys := CuntzStageModularFlowTopologicalColimit.system Stage T)
-          (representationCocone (Stage := Stage) (T := T) (Φ := Φ) R) := by
+          (representationCocone (Stage := Stage) (T := T) (Φ := Φ) R)
+          hι_comm
+          hcontinuous_ι ≫
+        (flowRepresentationData (B := B) Stage T Φ hmap_naturality).targetFlow t := by
   have h := representation_intertwines_flow
     Stage (CuntzStageModularFlowTopologicalColimit.system Stage T)
     (representationCocone (Stage := Stage) (T := T) (Φ := Φ) R)
-    (flowRepresentationData Stage T Φ hmap_naturality R) t
+        (flowRepresentationData (B := B) Stage T Φ hmap_naturality)
+    hι_comm
+    hcontinuous_ι
+    (flowRepresentationStageCovariance (B := B) (Stage := Stage) (T := T) (Φ := Φ)
+      (hmap_naturality := hmap_naturality) (R := R) hι_comm hcontinuous_ι) t
   simpa using h
 
 end InfoGeometry.Canonical.CuntzStageModularFlowTopologicalRepresentationBridge

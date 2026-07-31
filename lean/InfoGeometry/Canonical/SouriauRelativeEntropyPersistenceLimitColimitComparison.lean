@@ -46,26 +46,31 @@ noncomputable def relativeEntropyBifiltrationLimitCutoffFamily
     (relativeEntropyPersistenceColimitStage ε 0).comp
       (relativeEntropyBifiltrationLimitProjection n
         (Opposite.op ε, 0))
-  compatible := by
-    intro ε₁ ε₂ hε x
-    let h :
-        (Opposite.op ε₂, (0 : ℝ)) ⟶
-          (Opposite.op ε₁, (0 : ℝ)) :=
-      ⟨(homOfLE hε).op, homOfLE (le_refl 0)⟩
-    change
+
+theorem relativeEntropyBifiltrationLimitCutoffFamily_compatible
+    (n : ℕ) :
+    ∀ {ε₁ ε₂ : ℝ} (hε : ε₁ ≤ ε₂)
+      (x : RelativeEntropyBifiltrationLimit n),
       relativeEntropyPersistenceCutoffColimitMap hε
-          (relativeEntropyPersistenceColimitStage ε₂ 0
-            (relativeEntropyBifiltrationLimitProjection n
-              (Opposite.op ε₂, 0) x)) =
-        relativeEntropyPersistenceColimitStage ε₁ 0
+          ((relativeEntropyBifiltrationLimitCutoffFamily n).map ε₂ x) =
+        (relativeEntropyBifiltrationLimitCutoffFamily n).map ε₁ x := by
+  intro ε₁ ε₂ hε x
+  let h :
+      (Opposite.op ε₂, (0 : ℝ)) ⟶
+        (Opposite.op ε₁, (0 : ℝ)) :=
+    ⟨(homOfLE hε).op, homOfLE (le_refl 0)⟩
+  change
+    relativeEntropyPersistenceCutoffColimitMap hε
+        (relativeEntropyPersistenceColimitStage ε₂ 0
           (relativeEntropyBifiltrationLimitProjection n
-            (Opposite.op ε₁, 0) x)
-    rw [relativeEntropyCutoffTime_to_colimit
-      hε (le_refl 0)]
-    exact congrArg
-      (relativeEntropyPersistenceColimitStage ε₁ 0)
-      (relativeEntropyBifiltrationLimitProjection_compat
-        n h x)
+            (Opposite.op ε₂, 0) x)) =
+      relativeEntropyPersistenceColimitStage ε₁ 0
+        (relativeEntropyBifiltrationLimitProjection n
+          (Opposite.op ε₁, 0) x)
+  rw [relativeEntropyCutoffTime_to_colimit hε (le_refl 0)]
+  exact congrArg
+    (relativeEntropyPersistenceColimitStage ε₁ 0)
+    (relativeEntropyBifiltrationLimitProjection_compat n h x)
 
 /-- The canonical comparison
 `lim_(ε,t) F(ε,t) → lim_ε colim_t F(ε,t)`. -/
@@ -74,6 +79,7 @@ noncomputable def relativeEntropyBifiltrationLimitToCutoffLimit
     C(RelativeEntropyBifiltrationLimit n,
       RelativeEntropyPersistenceCutoffLimit n) :=
   (relativeEntropyBifiltrationLimitCutoffFamily n).lift
+    (relativeEntropyBifiltrationLimitCutoffFamily_compatible n)
 
 /-- The mixed comparison is characterized at every cutoff by the finite
 time-zero stage followed by the corresponding bifiltration-limit projection. -/
@@ -87,7 +93,8 @@ theorem relativeEntropyBifiltrationLimitToCutoffLimit_projection
           (Opposite.op ε, 0) x) := by
   exact
     RelativeEntropyPersistenceCutoffCompatibleFamily.projection_lift
-      (relativeEntropyBifiltrationLimitCutoffFamily n) ε x
+      (relativeEntropyBifiltrationLimitCutoffFamily n)
+      (relativeEntropyBifiltrationLimitCutoffFamily_compatible n) ε x
 
 /-- The comparison map is the unique continuous map with the stated
 cutoffwise time-zero factorization. -/
@@ -105,6 +112,7 @@ theorem relativeEntropyBifiltrationLimitToCutoffLimit_unique
     g = relativeEntropyBifiltrationLimitToCutoffLimit n := by
   exact
     RelativeEntropyPersistenceCutoffCompatibleFamily.lift_unique
-      (relativeEntropyBifiltrationLimitCutoffFamily n) g hg
+      (relativeEntropyBifiltrationLimitCutoffFamily n)
+      (relativeEntropyBifiltrationLimitCutoffFamily_compatible n) g hg
 
 end SouriauRelativeEntropyPersistenceLimitColimitComparison

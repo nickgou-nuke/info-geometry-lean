@@ -16,13 +16,6 @@ structure RelativeEntropyPersistenceCompatibleFamily
   map :
     ∀ t : ℝ,
       C(RelativeEntropySublevelQuotient (n := n) ε 0 t, Y)
-  compatible :
-    ∀ {s t : ℝ} (hst : s ≤ t)
-      (x : RelativeEntropySublevelQuotient (n := n) ε 0 s),
-      map s x =
-        map t
-          (relativeEntropySublevelQuotientMap ε
-            (le_refl 0) hst x)
 
 namespace RelativeEntropyPersistenceCompatibleFamily
 
@@ -31,7 +24,13 @@ noncomputable def toCocone
     {ε : ℝ} {Y : Type} [TopologicalSpace Y]
     (family :
       RelativeEntropyPersistenceCompatibleFamily
-        (n := n) ε Y) :
+        (n := n) ε Y)
+    (hcompat : ∀ {s t : ℝ} (hst : s ≤ t)
+      (x : RelativeEntropySublevelQuotient (n := n) ε 0 s),
+      family.map s x =
+        family.map t
+          (relativeEntropySublevelQuotientMap ε
+            (le_refl 0) hst x)) :
     Cocone (relativeEntropyPersistenceRay (n := n) ε) where
   pt := TopCat.of Y
   ι :=
@@ -41,7 +40,7 @@ noncomputable def toCocone
         apply TopCat.hom_ext
         ext x
         exact
-          (family.compatible
+          (hcompat
             (InfoGeometry.Categorical.InductivePosetColimit.le_of_poset_hom
               hst) x).symm }
 
@@ -50,24 +49,36 @@ noncomputable def descend
     {ε : ℝ} {Y : Type} [TopologicalSpace Y]
     (family :
       RelativeEntropyPersistenceCompatibleFamily
-        (n := n) ε Y) :
+        (n := n) ε Y)
+    (hcompat : ∀ {s t : ℝ} (hst : s ≤ t)
+      (x : RelativeEntropySublevelQuotient (n := n) ε 0 s),
+      family.map s x =
+        family.map t
+          (relativeEntropySublevelQuotientMap ε
+            (le_refl 0) hst x)) :
     C(RelativeEntropyPersistenceColimit (n := n) ε, Y) :=
   (colimit.desc
     (relativeEntropyPersistenceRay (n := n) ε)
-    family.toCocone).hom
+    (family.toCocone hcompat)).hom
 
 @[simp] theorem descend_stage
     {ε : ℝ} {Y : Type} [TopologicalSpace Y]
     (family :
       RelativeEntropyPersistenceCompatibleFamily
         (n := n) ε Y)
+    (hcompat : ∀ {s t : ℝ} (hst : s ≤ t)
+      (x : RelativeEntropySublevelQuotient (n := n) ε 0 s),
+      family.map s x =
+        family.map t
+          (relativeEntropySublevelQuotientMap ε
+            (le_refl 0) hst x))
     (t : ℝ)
     (x : RelativeEntropySublevelQuotient (n := n) ε 0 t) :
-    family.descend
+    family.descend hcompat
         (relativeEntropyPersistenceColimitStage ε t x) =
       family.map t x := by
   have hfac :=
-    colimit.ι_desc family.toCocone t
+    colimit.ι_desc (family.toCocone hcompat) t
   exact congrArg
     (fun k :
       (relativeEntropyPersistenceRay (n := n) ε).obj t ⟶
@@ -79,40 +90,52 @@ theorem descend_unique
     (family :
       RelativeEntropyPersistenceCompatibleFamily
         (n := n) ε Y)
+    (hcompat : ∀ {s t : ℝ} (hst : s ≤ t)
+      (x : RelativeEntropySublevelQuotient (n := n) ε 0 s),
+      family.map s x =
+        family.map t
+          (relativeEntropySublevelQuotientMap ε
+            (le_refl 0) hst x))
     (g : C(RelativeEntropyPersistenceColimit (n := n) ε, Y))
     (hg :
       ∀ (t : ℝ)
         (x : RelativeEntropySublevelQuotient (n := n) ε 0 t),
         g (relativeEntropyPersistenceColimitStage ε t x) =
           family.map t x) :
-    g = family.descend := by
+    g = family.descend hcompat := by
   have hhom :
       TopCat.ofHom g =
         colimit.desc
           (relativeEntropyPersistenceRay (n := n) ε)
-          family.toCocone := by
+          (family.toCocone hcompat) := by
     apply colimit.hom_ext
     intro t
     apply TopCat.hom_ext
     ext x
-    exact (hg t x).trans (family.descend_stage t x).symm
+    exact (hg t x).trans (family.descend_stage hcompat t x).symm
   exact congrArg TopCat.Hom.hom hhom
 
 theorem existsUnique_descend
     {ε : ℝ} {Y : Type} [TopologicalSpace Y]
     (family :
       RelativeEntropyPersistenceCompatibleFamily
-        (n := n) ε Y) :
+        (n := n) ε Y)
+    (hcompat : ∀ {s t : ℝ} (hst : s ≤ t)
+      (x : RelativeEntropySublevelQuotient (n := n) ε 0 s),
+      family.map s x =
+        family.map t
+          (relativeEntropySublevelQuotientMap ε
+            (le_refl 0) hst x)) :
     ∃! g : C(RelativeEntropyPersistenceColimit (n := n) ε, Y),
       ∀ (t : ℝ)
         (x : RelativeEntropySublevelQuotient (n := n) ε 0 t),
         g (relativeEntropyPersistenceColimitStage ε t x) =
           family.map t x := by
-  refine ⟨family.descend, ?_, ?_⟩
+  refine ⟨family.descend hcompat, ?_, ?_⟩
   · intro t x
-    exact family.descend_stage t x
+    exact family.descend_stage hcompat t x
   · intro g hg
-    exact family.descend_unique g hg
+    exact descend_unique family hcompat g hg
 
 end RelativeEntropyPersistenceCompatibleFamily
 

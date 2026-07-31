@@ -119,4 +119,30 @@ theorem translationColimit_comp (a b : M) :
         translationColimit A (b * a) := by
           rw [translationColimit_stage (J := J) (X := X) A (b * a) j]
 
+/-! The descended translations assemble into an honest continuous left action
+    on the categorical direct colimit. -/
+def colimitAction :
+    ContinuousLeftAction M
+      (topologicalDirectColimit
+        (constantTopDiagram (J := J) (X := X))) where
+  smul a x := translationColimit (J := J) (X := X) A a x
+  one_smul := by
+    intro x
+    exact congrArg (fun f => f x) (translationColimit_one A)
+  mul_smul := by
+    intro a b x
+    exact congrArg (fun f => f x)
+      (translationColimit_comp (J := J) (X := X) A a b)
+  continuous_smul := by
+    intro a
+    exact (translationColimit (J := J) (X := X) A a).hom.continuous
+
+theorem colimitAction_apply_stage (a : M) (j : J) (x : X) :
+    colimitAction (J := J) (X := X) A a
+        (topologicalDirectInjection
+          (constantTopDiagram (J := J) (X := X)) j x) =
+      topologicalDirectInjection
+        (constantTopDiagram (J := J) (X := X)) j (A.smul a x) := by
+  exact translationColimit_apply_stage (J := J) (X := X) A a j x
+
 end InfoGeometry.Canonical.ContinuousLeftActionTopCatColimit

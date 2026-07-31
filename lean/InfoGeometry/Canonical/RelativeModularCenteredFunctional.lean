@@ -98,7 +98,6 @@ structure CompatibleLocalStateNet (A : ℕ → Type*) where
   algebra_A : ∀ n, Algebra ℝ (A n)
   state : ∀ n, A n →ₗ[ℝ] ℝ
   restrict : ∀ n, A (n + 1) →ₗ[ℝ] A n
-  compatible : ∀ n (a : A (n + 1)), state (n + 1) a = state n ((restrict n) a)
 
 /--
 Compatible centered modular local net extending a reference/ density/centered
@@ -109,18 +108,9 @@ structure CompatibleCenteredModularNet (A : ℕ → Type*) where
   algebra_A : ∀ n, Algebra ℝ (A n)
   state : ∀ n, A n →ₗ[ℝ] ℝ
   restrict : ∀ n, A (n + 1) →ₗ[ℝ] A n
-  compatible : ∀ n (a : A (n + 1)), state (n + 1) a = state n ((restrict n) a)
   ref : ∀ n, A n →ₗ[ℝ] ℝ
   density : ∀ n, A n
   centered : ∀ n, A n →ₗ[ℝ] ℝ
-  centered_eq : ∀ n a,
-    letI := ring_A n
-    letI := algebra_A n
-    centered n a = ref n (((density n) - 1) * a)
-  centered_one : ∀ n,
-    letI := ring_A n
-    letI := algebra_A n
-    centered n 1 = 0
 
 /--
 If two local functionals are compatible under the same restriction map, then their
@@ -389,20 +379,31 @@ def cantorPathCenteredNet (x : ℕ → Bool) :
     infer_instance
   state := fun n => cantorPointState (x := x) n
   restrict := cantorPathRestrictLinear (x := x)
-  compatible := cantorPathStateCompatibleLinear (x := x)
   ref := fun n => cantorRefFunctional (n := n)
   density := fun n => cantorPointDensity (x := x) n
   centered := fun n => centeredFunctional (A := BinaryWord n → ℝ) (cantorPathLocalDensityState (x := x) n)
-  centered_eq := by
-    intro n a
-    let S := cantorPathLocalDensityState (x := x) n
-    simpa [S, centeredDensity] using
-      (centeredFunctional_eq_delta_minus_one (A := BinaryWord n → ℝ) S a)
-  centered_one := by
-    intro n
-    let S := cantorPathLocalDensityState (x := x) n
-    simpa [S, centeredDensity] using
-      (centeredFunctional_one_eq_zero (A := BinaryWord n → ℝ) S)
+
+theorem cantorPathCenteredNet_compatible (x : ℕ → Bool) (n : ℕ)
+    (a : BinaryWord (n + 1) → ℝ) :
+    (cantorPathCenteredNet (x := x)).state (n + 1) a =
+      (cantorPathCenteredNet (x := x)).state n
+        ((cantorPathCenteredNet (x := x)).restrict n a) := by
+  exact cantorPathStateCompatibleLinear (x := x) n a
+
+theorem cantorPathCenteredNet_centered_eq (x : ℕ → Bool) (n : ℕ)
+    (a : BinaryWord n → ℝ) :
+    ((cantorPathCenteredNet (x := x)).centered n) a =
+      ((cantorPathCenteredNet (x := x)).ref n)
+        (((cantorPathCenteredNet (x := x)).density n - 1) * a) := by
+  let S := cantorPathLocalDensityState (x := x) n
+  simpa [cantorPathCenteredNet, S, centeredDensity] using
+    (centeredFunctional_eq_delta_minus_one (A := BinaryWord n → ℝ) S a)
+
+theorem cantorPathCenteredNet_centered_one (x : ℕ → Bool) (n : ℕ) :
+    ((cantorPathCenteredNet (x := x)).centered n) (1 : BinaryWord n → ℝ) = 0 := by
+  let S := cantorPathLocalDensityState (x := x) n
+  simpa [cantorPathCenteredNet, S, centeredDensity] using
+    (centeredFunctional_one_eq_zero (A := BinaryWord n → ℝ) S)
 
 /-- Signed local displacement at level `n` is exactly `state - reference`. -/
 theorem cantorPathCentered_eq_state_sub_ref
@@ -418,7 +419,7 @@ theorem cantorPathCentered_eq_state_sub_ref
 theorem cantorPathCentered_one
     (x : ℕ → Bool) (n : ℕ) :
     ((cantorPathCenteredNet (x := x)).centered n) (1 : BinaryWord n → ℝ) = 0 := by
-  simpa [cantorPathCenteredNet] using ((cantorPathCenteredNet (x := x)).centered_one n)
+  exact cantorPathCenteredNet_centered_one x n
 
 /-- Core displacement form: centered score equals the reference functional of `(Δ - 1) * a`. -/
 theorem cantorPathCentered_eq_ref_delta_sub_one
@@ -426,10 +427,7 @@ theorem cantorPathCentered_eq_ref_delta_sub_one
     ((cantorPathCenteredNet (x := x)).centered n) a =
       ((cantorPathCenteredNet (x := x)).ref n)
         (((cantorPathCenteredNet (x := x)).density n - 1) * a) := by
-  change centeredFunctional (A := BinaryWord n → ℝ) (cantorPathLocalDensityState (x := x) n) a =
-    cantorRefFunctional (n := n) ((cantorPointDensity (x := x) n - 1) * a)
-  rw [centeredFunctional_eq_delta_minus_one]
-  simp [cantorPathLocalDensityState, centeredDensity]
+  exact cantorPathCenteredNet_centered_eq x n a
 /-- Rewriting the centered functional as the preexisting finite Cantor score. -/
 theorem cantorPathCenteredNet_centered_eq_scoreLinear
     (x : ℕ → Bool) (n : ℕ) (a : BinaryWord n → ℝ) :

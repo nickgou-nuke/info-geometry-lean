@@ -57,16 +57,18 @@ noncomputable def algebraicToTopological :
 algebraic descent on every element of the algebraic direct limit. -/
 theorem topologicalColimitMap_comp_algebraicToTopological
     (R : TopologicalRealization (Stage := Stage) (sys := sys) (B := B))
+    (hι_comm : ∀ {i j : I} (hij : i ≤ j),
+      (R.ι j).comp (sys.map hij) = R.ι i)
     (x : AlgebraicStarDirectLimit Stage sys) :
-    topologicalColimitMap Stage sys R
+    topologicalColimitMap Stage sys R hι_comm
         (algebraicToTopological Stage sys x) =
-      algebraicDescend Stage sys R x := by
+      algebraicDescend Stage sys R hι_comm x := by
   induction x using _root_.DirectLimit.induction with
   | _ i a =>
-      change topologicalColimitMap Stage sys R
+      change topologicalColimitMap Stage sys R hι_comm
           (algebraicToTopological Stage sys
             (algebraicStarDirectLimitOf Stage sys i a)) =
-        algebraicDescend Stage sys R
+        algebraicDescend Stage sys R hι_comm
           (algebraicStarDirectLimitOf Stage sys i a)
       rw [algebraicToTopological_of_stage,
         topologicalColimitMap_inclusion,

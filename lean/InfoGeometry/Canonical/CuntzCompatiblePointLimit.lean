@@ -49,7 +49,8 @@ theorem cuntzCompatiblePointTopCatFamily_natural
   apply ContinuousMap.ext
   intro u
   apply Subtype.ext
-  exact congrArg Subtype.val (family.toQCCR.compatible hij)
+  exact congrArg Subtype.val
+    (CompatibleCuntzPointFamily.toQCCR_compatible sys family hij)
 
 noncomputable def cuntzCompatiblePointLimitMap
     (family : CompatibleCuntzPointFamily sys) :

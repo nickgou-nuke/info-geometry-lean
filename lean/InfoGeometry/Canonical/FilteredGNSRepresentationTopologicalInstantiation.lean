@@ -55,18 +55,27 @@ def representationCocone :
     ContinuousStarRepresentationCocone
       (Stage := Stage) (sys := sys) (B := GNSOperator Stage sys ω) where
   ι := fun i => globalStageRepresentationStarAlgHom Stage sys ω i
-  ι_comm := by
+
+def representationCocone_comm :
+    ∀ {i j : I} (hij : i ≤ j),
+      ((representationCocone Stage sys ω).ι j).comp (sys.map hij) =
+        (representationCocone Stage sys ω).ι i := by
     intro i j hij
     apply DFunLike.ext _ _
     intro a
     exact globalStageRepresentation_transition Stage sys ω hij a
-  continuous_ι := D.continuous_stage
+
+def representationCocone_continuous :
+    ∀ i : I, Continuous ((representationCocone Stage sys ω).ι i) :=
+  D.continuous_stage
 
 noncomputable def topologicalRepresentation :
     topologicalColimit Stage sys ⟶
       TopCat.of (GNSOperator Stage sys ω) :=
   CStarStateColimit.Native.FilteredStarAlgebraTopologicalRepresentationTransport.topologicalRepresentation
-    Stage sys (representationCocone Stage sys ω D)
+    Stage sys (representationCocone Stage sys ω)
+    (representationCocone_comm Stage sys ω)
+    (representationCocone_continuous Stage sys ω D)
 
 @[simp] theorem topologicalRepresentation_stage
     (i : I) (a : Stage i) :
@@ -74,7 +83,9 @@ noncomputable def topologicalRepresentation :
         (topologicalInjection Stage sys i a) =
       globalStageRepresentationStarAlgHom Stage sys ω i a := by
   exact CStarStateColimit.Native.FilteredStarAlgebraTopologicalRepresentationTransport.topologicalRepresentation_of_stage Stage sys
-    (representationCocone Stage sys ω D) i a
+    (representationCocone Stage sys ω)
+    (representationCocone_comm Stage sys ω)
+    (representationCocone_continuous Stage sys ω D) i a
 
 theorem topologicalRepresentation_factorization
     (x : AlgebraicStarDirectLimit Stage sys) :
@@ -83,6 +94,8 @@ theorem topologicalRepresentation_factorization
           Stage sys x) =
       algebraicColimitGNSRepresentation Stage sys ω x := by
   exact CStarStateColimit.Native.FilteredStarAlgebraTopologicalRepresentationTransport.topologicalRepresentation_comp_algebraicToTopological Stage sys
-    (representationCocone Stage sys ω D) x
+    (representationCocone Stage sys ω)
+    (representationCocone_comm Stage sys ω)
+    (representationCocone_continuous Stage sys ω D) x
 
 end CStarStateColimit.Native.FilteredGNSRepresentationTopologicalInstantiation

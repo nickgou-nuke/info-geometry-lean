@@ -53,6 +53,25 @@ def subZ (X Y : SplitOct) : SplitOct :=
 def detZ (X : SplitOct) : ℤ :=
   X.a * X.b - (X.x0 * X.y0 + X.x1 * X.y1 + X.x2 * X.y2)
 
+/-- Coordinate diagonalisation of the native integral split norm.
+
+This proves the `(4,4)` signature identity in coordinates.  It does not
+assert an `E₈` lattice identification or a maximal-order theorem.
+-/
+theorem detZ_split_signature (X : SplitOct) :
+    4 * detZ X =
+      (X.a + X.b) ^ 2 - (X.a - X.b) ^ 2
+        - (X.x0 + X.y0) ^ 2 + (X.x0 - X.y0) ^ 2
+        - (X.x1 + X.y1) ^ 2 + (X.x1 - X.y1) ^ 2
+        - (X.x2 + X.y2) ^ 2 + (X.x2 - X.y2) ^ 2 := by
+  simp [detZ]
+  ring
+
+/-- Coordinate expansion of the Zorn determinant. -/
+theorem detZ_coordinate_formula (X : SplitOct) :
+    detZ X = X.a * X.b -
+      (X.x0 * X.y0 + X.x1 * X.y1 + X.x2 * X.y2) := rfl
+
 /-- True Zorn split-octonion multiplication. -/
 def mulZ (X Y : SplitOct) : SplitOct :=
   ⟨ X.a * Y.a + (X.x0 * Y.y0 + X.x1 * Y.y1 + X.x2 * Y.y2),

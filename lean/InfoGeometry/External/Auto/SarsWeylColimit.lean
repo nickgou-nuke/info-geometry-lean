@@ -18,7 +18,6 @@ structure SymplecticEmbedding
     (V W : Type*) [AddCommGroup V] [AddCommGroup W]
     (S : SymplecticForm V) (T : SymplecticForm W) where
   f : V → W
-  map_zero : f 0 = 0
   map_add : ∀ u v : V, f (u + v) = f u + f v
   preserves_sigma : ∀ u v : V, T.sigma (f u) (f v) = S.sigma u v
 
@@ -95,7 +94,6 @@ def symplecticEmbedding1to2 :
     SymplecticEmbedding (RPhaseSpace 1) (RPhaseSpace 2)
       (canonicalSymplectic 1) (canonicalSymplectic 2) where
   f := pad1to2
-  map_zero := pad1to2_zero
   map_add := pad1to2_add
   preserves_sigma := pad1to2_preserves_sigma
 

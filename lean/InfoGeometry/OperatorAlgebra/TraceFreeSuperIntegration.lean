@@ -163,12 +163,6 @@ structure ModularWeightBackend
   flow_add :
     ∀ s t x, modularFlow (s + t) x = modularFlow s (modularFlow t x)
 
-namespace ModularWeightBackend
-
-variable {A : Type*}
-variable (B : ModularWeightBackend A)
-
-end ModularWeightBackend
 
 /--
 A modular superweight.
@@ -190,12 +184,6 @@ structure ModularSuperWeightDatum
   -/
   superWeight : A → ℂ
 
-namespace ModularSuperWeightDatum
-
-variable {A : Type*} [Ring A]
-variable (M : ModularSuperWeightDatum A)
-
-end ModularSuperWeightDatum
 
 /-! ## 5. Crossed-product core supertrace backend -/
 
@@ -281,12 +269,6 @@ structure ZetaSuperTraceDatum
   superResidue : A → ℂ → ℂ
   superFinitePart : A → ℂ → ℂ
 
-namespace ZetaSuperTraceDatum
-
-variable {A : Type*} [Ring A]
-variable (Z : ZetaSuperTraceDatum A)
-
-end ZetaSuperTraceDatum
 
 /--
 Cyclic-cocycle/JLO-style graded readout.
@@ -337,12 +319,6 @@ structure TypeIIISuperIntegrationDatum
   coreSuperTrace :
     Option (CoreSuperTraceDatum M Core Scalar)
 
-namespace TypeIIISuperIntegrationDatum
-
-variable {M Core Scalar : Type*} [Ring M] [Ring Core]
-variable (T : TypeIIISuperIntegrationDatum M Core Scalar)
-
-end TypeIIISuperIntegrationDatum
 
 /-! ## 8. Owner target -/
 

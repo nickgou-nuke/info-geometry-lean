@@ -217,6 +217,10 @@ import InfoGeometry.OperatorAlgebra.VortexPunctureRepair
 import InfoGeometry.OperatorAlgebra.CuntzTomitaTakesaki
 import InfoGeometry.OperatorAlgebra.WallpaperKTheory
 
+import InfoGeometry.OperatorAlgebra.SplitOctonionalIdeals
+import InfoGeometry.OperatorAlgebra.SplitOctonionStandardModel
+import InfoGeometry.OperatorAlgebra.ColeFuryEmbedding
+
 namespace InfoGeometry.OperatorAlgebra
 
 /-!

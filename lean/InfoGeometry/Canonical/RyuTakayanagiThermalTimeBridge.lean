@@ -49,9 +49,14 @@ explicit additive laws needed to make that readout behave like a genuine clock.
 -/
 structure BridgeData extends ThermalTimeMonodromyBridge.BridgeData (E := E) where
   depthOfWinding : ℤ → ℕ
-  depth_zero : depthOfWinding 0 = 0
   depth_add : ∀ m n : ℤ,
     depthOfWinding (m + n) = depthOfWinding m + depthOfWinding n
+
+theorem BridgeData.depth_zero (B : BridgeData (E := E)) :
+    B.depthOfWinding 0 = 0 := by
+  have h := B.depth_add 0 0
+  simp only [zero_add] at h
+  omega
 
 /-- RT entropy readout attached to a winding label. -/
 def entropyOfWinding (B : BridgeData (E := E)) (k : ℤ) : ℝ :=
@@ -209,7 +214,6 @@ def zeroDepthBridge
     (B : ThermalTimeMonodromyBridge.BridgeData (E := E)) : BridgeData (E := E) where
   toBridgeData := B
   depthOfWinding := fun _ => 0
-  depth_zero := rfl
   depth_add := by
     intro m n
     simp
@@ -247,8 +251,14 @@ readout.
 -/
 structure PositiveBranchBridgeData extends ThermalTimeMonodromyBridge.BridgeData (E := E) where
   depthOfStep : ℕ → ℕ
-  depth_zero : depthOfStep 0 = 0
   depth_add : ∀ m n : ℕ, depthOfStep (m + n) = depthOfStep m + depthOfStep n
+
+theorem PositiveBranchBridgeData.depth_zero
+    (B : PositiveBranchBridgeData (E := E)) :
+    B.depthOfStep 0 = 0 := by
+  have h := B.depth_add 0 0
+  simp only [zero_add] at h
+  omega
 
 /-- RT entropy readout on the positive winding branch. -/
 def entropyOfStep (B : PositiveBranchBridgeData (E := E)) (n : ℕ) : ℝ :=
@@ -310,7 +320,6 @@ def identityDepthPositiveBranchBridge
     (B : ThermalTimeMonodromyBridge.BridgeData (E := E)) : PositiveBranchBridgeData (E := E) where
   toBridgeData := B
   depthOfStep := fun n => n
-  depth_zero := rfl
   depth_add := by
     intro m n
     rfl

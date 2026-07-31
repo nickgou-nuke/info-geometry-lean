@@ -46,14 +46,6 @@ structure DimensionAgnosticBoundaryZeroModeOwner
   boundaryWitness :
     BoundaryLocalizedZeroModeWitness (M := M) (P0 := P0) localOp chain
 
-namespace DimensionAgnosticBoundaryZeroModeOwner
-
-variable {M : RealMajoranaDatum (S := S)}
-variable {P0 : KPolarization (S := S) M}
-variable {localOp : KitaevCell → EndS}
-variable {chain : List KitaevCell}
-
-end DimensionAgnosticBoundaryZeroModeOwner
 
 /-- Canonical kernel readout from the promoted owner packet. -/
 theorem owner_hasZeroMode

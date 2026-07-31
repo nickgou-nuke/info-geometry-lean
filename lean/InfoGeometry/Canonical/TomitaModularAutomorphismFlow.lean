@@ -22,9 +22,17 @@ variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 /-- One-parameter modular unitary group U(t) = Δ^(it) on Hilbert space H. -/
 structure ModularUnitaryGroup (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℂ H] where
   U : ℝ → (H ≃ₗᵢ[ℂ] H)
-  map_zero : U 0 = LinearIsometryEquiv.refl ℂ H
   map_add : ∀ t1 t2 : ℝ, U (t1 + t2) = (U t2).trans (U t1)
   inv_cancel : ∀ (t : ℝ) (y : H), U (-t) (U t y) = y
+
+theorem ModularUnitaryGroup.map_zero (MUG : ModularUnitaryGroup H) :
+    MUG.U 0 = LinearIsometryEquiv.refl ℂ H := by
+  apply LinearIsometryEquiv.ext
+  intro x
+  have h := congrArg (fun e : H ≃ₗᵢ[ℂ] H => e x) (MUG.map_add 1 0)
+  have h' : MUG.U 1 (MUG.U 0 x) = MUG.U 1 x := by
+    simpa using h.symm
+  exact (MUG.U 1).injective h'
 
 /-- Tomita-Takesaki modular automorphism flow σ_t(A) = U(t) A U(-t) on B(H). -/
 def modularFlow (MUG : ModularUnitaryGroup H) (t : ℝ) (A : H →L[ℂ] H) : H →L[ℂ] H :=

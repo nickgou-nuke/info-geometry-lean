@@ -36,10 +36,20 @@ structure TopologicalMajoranaShadow
     (X : RealMajoranaCore)
     [NormedAddCommGroup X] [NormedSpace ℝ X] where
   sigma : ℝ → X ≃L[ℝ] X
-  sigma_zero : sigma 0 = ContinuousLinearEquiv.refl ℝ X
   sigma_add : ∀ t s, sigma (t + s) = (sigma t).trans (sigma s)
   J_conj_sigma :
     ∀ t x, X.J ((sigma t) x) = (sigma (-t)) (X.J x)
+
+theorem TopologicalMajoranaShadow.sigma_zero
+    {X : RealMajoranaCore}
+    [NormedAddCommGroup X] [NormedSpace ℝ X]
+    (M : TopologicalMajoranaShadow X) :
+    M.sigma 0 = ContinuousLinearEquiv.refl ℝ X := by
+  ext x
+  have h := congrArg (fun e : X ≃L[ℝ] X => e x) (M.sigma_add 0 1)
+  have h' : M.sigma 1 (M.sigma 0 x) = M.sigma 1 x := by
+    simpa using h.symm
+  exact (M.sigma 1).injective h'
 
 namespace TopologicalMajoranaShadow
 
@@ -288,7 +298,6 @@ noncomputable def topologicalShadowOfExp
           (expFlow σGen (-t)) ((cl11DoubledCore E).J x)) :
     TopologicalMajoranaShadow Xc where
   sigma := expFlow σGen
-  sigma_zero := expFlow_zero σGen
   sigma_add := expFlow_add σGen
   J_conj_sigma := hJConj
 
@@ -412,7 +421,6 @@ modular sign involution `ε`.
 noncomputable def canonicalCl11TopologicalShadow :
     TopologicalMajoranaShadow Xc :=
   { sigma := expFlow (canonicalCl11Generator (E := E))
-    sigma_zero := expFlow_zero (canonicalCl11Generator (E := E))
     sigma_add := expFlow_add (canonicalCl11Generator (E := E))
     J_conj_sigma := canonicalCl11Generator_J_conj_expFlow (E := E) }
 

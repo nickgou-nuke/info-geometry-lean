@@ -53,11 +53,6 @@ structure JaynesInductivePacket where
     InfoGeometry.Canonical.CategoricalRecursiveClosureBridge.ConeCompatible
       (Stage := Stage) (Limit := Limit) tower.bond entropy
 
-namespace JaynesInductivePacket
-
-variable (P : JaynesInductivePacket (Stage := Stage) (Limit := Limit))
-
-end JaynesInductivePacket
 
 end Tower
 

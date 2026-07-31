@@ -276,11 +276,5 @@ structure DrazinInformationExtraction (Op State : Type*) [Add Op] [Mul Op] where
     ∀ s : State, readout.valid s ->
       singularResidue s = readout.nilpotentResidue s
 
-namespace DrazinInformationExtraction
-
-variable {Op State : Type*} [Add Op] [Mul Op]
-variable (P : DrazinInformationExtraction Op State)
-
-end DrazinInformationExtraction
 
 end InfoGeometry.OperatorAlgebra

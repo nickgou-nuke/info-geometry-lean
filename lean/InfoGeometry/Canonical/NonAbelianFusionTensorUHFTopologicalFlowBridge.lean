@@ -31,7 +31,7 @@ def StageFlowCompatible : Prop :=
   ∀ t : ℝ,
     fusionTensorStageTwoTopCatHom ≫ topologicalInclusion T 2 ≫
         targetFlow t =
-      D.flow t ≫ fusionTensorStageTwoTopCatHom ≫
+      (D.flow t).hom ≫ fusionTensorStageTwoTopCatHom ≫
         topologicalInclusion T 2
 
 theorem flow_intertwines_tensor_to_UHF
@@ -54,18 +54,18 @@ theorem flow_intertwines_tensor_to_UHF
     _ = (fusionTensorStageTwoTopCatHom ≫ topologicalInclusion T 2) ≫
         targetFlow t := by
           rw [fusionTensorToUHFTopologicalColimit_stage]
-    _ = (D.flow t ≫ fusionTensorStageTwoTopCatHom) ≫
+    _ = ((D.flow t).hom ≫ fusionTensorStageTwoTopCatHom) ≫
         topologicalInclusion T 2 := by
           simpa only [Category.assoc] using hcompat t
-    _ = D.flow t ≫
+    _ = (D.flow t).hom ≫
         (fusionTensorStageTwoTopCatHom ≫ topologicalInclusion T 2) := by
           simp only [Category.assoc]
-    _ = D.flow t ≫
+    _ = (D.flow t).hom ≫
         (topologicalDirectInjection
           (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
           fusionTensorToUHFTopologicalColimit T) := by
           rw [fusionTensorToUHFTopologicalColimit_stage]
-    _ = (D.flow t ≫ topologicalDirectInjection
+    _ = ((D.flow t).hom ≫ topologicalDirectInjection
         (fusionTensorTopologicalDiagram (K := ℂ)) n) ≫
         fusionTensorToUHFTopologicalColimit T := by
           simp only [Category.assoc]

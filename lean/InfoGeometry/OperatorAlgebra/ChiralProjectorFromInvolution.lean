@@ -222,9 +222,6 @@ structure ChiralInvolutionAction
   map_add :
     ∀ (g : G) (x y : Op), act g (x + y) = act g x + act g y
 
-  map_sub :
-    ∀ (g : G) (x y : Op), act g (x - y) = act g x - act g y
-
   map_mul :
     ∀ (g : G) (x y : Op), act g (x * y) = act g x * act g y
 
@@ -236,6 +233,27 @@ namespace ChiralInvolutionAction
 variable {G Op : Type*} [Group G] [Ring Op] [Algebra ℝ Op]
 variable (A : ChiralInvolutionAction G Op)
 variable (C : ChiralInvolution Op)
+
+theorem map_sub
+    (g : G) (x y : Op) :
+    A.act g (x - y) = A.act g x - A.act g y := by
+  have hzero : A.act g 0 = 0 := by
+    have h := A.map_add g (0 : Op) 0
+    apply add_left_cancel (a := A.act g 0)
+    simpa using h.symm
+  have hneg : A.act g (-y) = -A.act g y := by
+    have h := A.map_add g y (-y)
+    apply add_left_cancel (a := A.act g y)
+    calc
+      A.act g y + A.act g (-y) = A.act g (y + -y) := h.symm
+      _ = A.act g 0 := by rw [add_neg_cancel]
+      _ = 0 := hzero
+      _ = A.act g y + -A.act g y := by simp
+  calc
+    A.act g (x - y) = A.act g (x + -y) := by rw [sub_eq_add_neg]
+    _ = A.act g x + A.act g (-y) := A.map_add g x (-y)
+    _ = A.act g x + -A.act g y := by rw [hneg]
+    _ = A.act g x - A.act g y := by rw [sub_eq_add_neg]
 
 /-- If a symmetry fixes `chi`, it fixes the left projector derived from `chi`. -/
 theorem map_Pleft_of_chi_invariant
@@ -251,7 +269,7 @@ theorem map_Pright_of_chi_invariant
     (hchi : A.act g C.chi = C.chi) :
     A.act g C.Pright = C.Pright := by
   dsimp [ChiralInvolution.Pright]
-  rw [A.map_smul, A.map_sub, A.map_one, hchi]
+  rw [A.map_smul, map_sub A, A.map_one, hchi]
 
 /-- A left support/image condition for a projector. -/
 def leftImage

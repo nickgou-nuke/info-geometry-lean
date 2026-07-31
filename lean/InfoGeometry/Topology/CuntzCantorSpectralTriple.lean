@@ -1143,11 +1143,6 @@ end CompleteLatticeSectorCompletion
 class PhaseAxisCarrier (Op : Type*) where
   phaseAxis : Op
 
-namespace PhaseAxisCarrier
-
-variable {Op : Type*}
-
-end PhaseAxisCarrier
 
 /-- Canonical phase-axis instance for the doubled real operator carrier. -/
 instance doubledSpaceEndPhaseAxis

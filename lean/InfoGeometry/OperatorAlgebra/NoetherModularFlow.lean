@@ -101,12 +101,6 @@ structure FierzRecombinationChannel
   recombinationCoefficients : BasisIndex → ℝ
   recombinationBasis : BasisIndex → Frame
 
-namespace FierzRecombinationChannel
-
-variable {Frame BasisIndex : Type*}
-variable (F : FierzRecombinationChannel Frame BasisIndex)
-
-end FierzRecombinationChannel
 
 /--
 Formal finite recombination sum.
@@ -139,12 +133,6 @@ structure OperatorNoetherCharge
   chargeObservable : Frame
   readoutMap : Frame → Readout
 
-namespace OperatorNoetherCharge
-
-variable {Frame Readout : Type*}
-variable (Q : OperatorNoetherCharge Frame Readout)
-
-end OperatorNoetherCharge
 
 /--
 Standalone predicate: an operator is invariant under a Killing field.
@@ -193,11 +181,5 @@ structure ModularNoetherErlangenCarrier
   killingField : OperatorKillingField Frame
   charge : OperatorNoetherCharge Frame Readout
 
-namespace ModularNoetherErlangenCarrier
-
-variable {Alg Frame Sym Symbol Label Readout : Type*}
-variable (C : ModularNoetherErlangenCarrier Alg Frame Sym Symbol Label Readout)
-
-end ModularNoetherErlangenCarrier
 
 end InfoGeometry.OperatorAlgebra.NoetherModularFlow

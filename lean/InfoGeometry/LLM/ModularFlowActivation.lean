@@ -11,7 +11,17 @@ structure ModularFlowActivation (H : Type*) [NormedAddCommGroup H] [InnerProduct
   
   -- Group property of time evolution
   h_flow : ∀ t1 t2 : ℝ, activation (t1 + t2) = (activation t1).trans (activation t2)
-  h_zero : activation 0 = LinearIsometryEquiv.refl ℂ H
+
+theorem ModularFlowActivation.h_zero
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+    (ma : ModularFlowActivation H) :
+    ma.activation 0 = LinearIsometryEquiv.refl ℂ H := by
+  apply LinearIsometryEquiv.ext
+  intro x
+  have h := congrArg (fun e : H ≃ₗᵢ[ℂ] H => e x) (ma.h_flow 0 0)
+  have h' : ma.activation 0 x = ma.activation 0 (ma.activation 0 x) := by
+    simpa using h
+  exact ((ma.activation 0).injective h').symm
 
 variable (ma : ModularFlowActivation H)
 

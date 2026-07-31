@@ -173,12 +173,6 @@ structure CFCLogBridge (A : Type*) [NormedRing A] [CompleteSpace A] [Algebra ℝ
   /-- The spectrum of the element must be in the domain of the logarithm. -/
   spectrum_subset_log_domain : ∀ x : A, spectrum ℝ x ⊆ Set.Ioi (0 : ℝ)
 
-namespace CFCLogBridge
-
-variable {A : Type*} [NormedRing A] [CompleteSpace A] [Algebra ℝ A]
-variable (C : CFCLogBridge A)
-
-end CFCLogBridge
 
 /-! ## 6. BKM / transport metric data -/
 
@@ -236,11 +230,5 @@ structure SymmetricRelativeHamiltonianCalibration (A Modular SymHam : Type*) [Ze
   symmetricHamiltonian_comm :
     ∀ φ ψ, symmetricHamiltonian φ ψ = symmetricHamiltonian ψ φ
 
-namespace SymmetricRelativeHamiltonianCalibration
-
-variable {A Modular SymHam : Type*} [Zero A] [Zero Modular] [Mul Modular]
-variable (H : SymmetricRelativeHamiltonianCalibration A Modular SymHam)
-
-end SymmetricRelativeHamiltonianCalibration
 
 end InfoGeometry.OperatorAlgebra.UnnormalizedRelativeEntropy

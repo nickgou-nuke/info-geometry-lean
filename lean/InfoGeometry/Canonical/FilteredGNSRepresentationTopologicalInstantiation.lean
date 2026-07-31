@@ -41,6 +41,8 @@ abbrev GNSOperator : Type u :=
   GNSHilbertColimit Stage sys ω →L[ℂ]
     GNSHilbertColimit Stage sys ω
 
+variable [ContinuousStar (GNSOperator Stage sys ω)]
+
 /-- The only extra datum needed to place the GNS representation in `TopCat`:
 continuity of each stage representation as a map into bounded operators. -/
 structure Data where

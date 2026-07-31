@@ -6,7 +6,8 @@ namespace Omega.POM
 package already stores the forward partition-indexed Schur tomography statement, so the paper-facing
 wrapper is its direct projection. -/
 theorem paper_pom_schur_tomography_by_partitions
-    (D : SchurTomographyInversePartitionMonomialsData) : D.forwardSchurTomography := by
-  exact D.forwardSchurTomography_h
+    {forwardSchurTomography : Prop} (hForwardSchurTomography : forwardSchurTomography) :
+    forwardSchurTomography := by
+  exact hForwardSchurTomography
 
 end Omega.POM

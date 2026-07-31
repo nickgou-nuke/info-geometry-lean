@@ -23,6 +23,7 @@ variable {Observation Component : Type*}
   [Fintype Observation] [Nonempty Observation]
   [Fintype Component] [Nonempty Component]
 
+omit [Nonempty Observation] in
 theorem poissonSinkhornTCS_contract
     {x liveTime observed : Observation → ℝ}
     (hobs : ∀ i, 0 ≤ observed i)

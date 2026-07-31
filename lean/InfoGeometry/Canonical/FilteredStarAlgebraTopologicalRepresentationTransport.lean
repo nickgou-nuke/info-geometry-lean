@@ -34,9 +34,9 @@ variable [∀ i, PartialOrder (Stage i)]
 variable [∀ i, StarOrderedRing (Stage i)]
 variable (sys : ContinuousStarInductiveSystem Stage)
 variable {B : Type u} [Semiring B] [Algebra ℂ B] [Star B]
-variable [TopologicalSpace B] [ContinuousStar B]
+variable [TopologicalSpace B]
 
-def continuousStarTopCatHom : TopCat.of B ⟶ TopCat.of B :=
+def continuousStarTopCatHom [ContinuousStar B] : TopCat.of B ⟶ TopCat.of B :=
   TopCat.ofHom
     { toFun := star
       continuous_toFun := ContinuousStar.continuous_star }
@@ -95,7 +95,7 @@ noncomputable def topologicalRepresentation :
     (topologicalRepresentationCocone Stage sys R) i
   exact congrArg (fun f => f x) h
 
-theorem topologicalRepresentation_star_intertwines :
+theorem topologicalRepresentation_star_intertwines [ContinuousStar B] :
     topologicalStarReadout Stage sys ≫
         topologicalRepresentation Stage sys R =
       topologicalRepresentation Stage sys R ≫

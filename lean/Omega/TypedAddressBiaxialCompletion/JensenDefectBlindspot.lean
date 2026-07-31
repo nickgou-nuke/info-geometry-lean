@@ -16,7 +16,9 @@ recovery path, and any fixed-chart blindspot instance either enters that recover
 null witness while still forcing an address-collision budget witness.
     prop:typed-address-biaxial-completion-jensen-defect-blindspot -/
 theorem paper_typed_address_biaxial_completion_jensen_defect_blindspot
-    (B : Omega.CircleDimension.RadiusBlindspotJointBudgetData)
+    {radiusBlindspotNecessary addressLedgerNecessary : Prop}
+    (hRadiusBlindspot : radiusBlindspotNecessary)
+    (hAddressLedger : addressLedgerNecessary)
     (J : JensenDefectFiniteizationData) {rho : ℝ} (hrho : 0 < rho) (hrho_lt : rho < 1)
     (D : Omega.CircleDimension.ComovingHorizonScanFirstLayerExtractionData)
     (hExplicitFourierDecomposition : D.explicitFourierDecomposition)
@@ -37,7 +39,7 @@ theorem paper_typed_address_biaxial_completion_jensen_defect_blindspot
       (prefixRecoveryRoute ∨ nullBlindspotWitness) ∧
       noThirdPath ∧
       (0 ≤ J.defect rho ∧ (J.defect rho = 0 ↔ J.zeroFree rho)) ∧
-      (B.radiusBlindspotNecessary ∧ B.addressLedgerNecessary) ∧
+      (radiusBlindspotNecessary ∧ addressLedgerNecessary) ∧
       (D.leadingAsymptoticSeparation ∧ D.leadingLayerRecovered) ∧
       ∃ a : Fin (2 ^ b), c * T^2 * Real.log T / (2 : ℝ) ^ b ≤ addressOccupancy a := by
   intro hOffslice
@@ -49,8 +51,9 @@ theorem paper_typed_address_biaxial_completion_jensen_defect_blindspot
       0 ≤ J.defect rho ∧ (J.defect rho = 0 ↔ J.zeroFree rho) :=
     paper_typed_address_biaxial_completion_jensen_defect_finiteization J hrho hrho_lt
   have hBlindspot :
-      B.radiusBlindspotNecessary ∧ B.addressLedgerNecessary :=
-    Omega.CircleDimension.paper_cdim_radius_blindspot_and_joint_discrete_budget_orthogonal B
+      radiusBlindspotNecessary ∧ addressLedgerNecessary :=
+    Omega.CircleDimension.paper_cdim_radius_blindspot_and_joint_discrete_budget_orthogonal
+      hRadiusBlindspot hAddressLedger
   have hRecovery :
       D.leadingAsymptoticSeparation ∧ D.leadingLayerRecovered :=
     Omega.CircleDimension.paper_cdim_comoving_horizon_scan_first_layer_extraction D

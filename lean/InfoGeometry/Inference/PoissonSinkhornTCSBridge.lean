@@ -6,6 +6,7 @@ Bulgarian Academy of Sciences.
 
 import InfoGeometry.Inference.TCSPoissonModel
 import InfoGeometry.Canonical.SinkhornFoundation
+import InfoGeometry.Inference.FisherVariance
 
 /-!
 # Poisson transport bridge for TCS mixtures
@@ -179,6 +180,40 @@ theorem weightedPoissonTransportEnergy_nonneg
   exact mul_nonneg (hw i j) (C.cost_nonneg i j)
 
 end WeightedEnergy
+
+section TransportFisher
+
+variable [Fintype Observation]
+
+/-- Assignment weights received by one candidate TCS component. -/
+noncomputable def componentTransportWeights
+    (C : PoissonTransportCost (Observation := Observation)
+      (Component := Component))
+    (ε : ℝ) (j : Component) : Observation → ℝ :=
+  fun i => poissonTransportAssignment C ε i j
+
+/-- Fisher information reweighted by one transport component's assignments. -/
+noncomputable def componentTransportFisherInformation
+    {x liveTime : Observation → ℝ}
+    (C : PoissonTransportCost (Observation := Observation)
+      (Component := Component))
+    (ε : ℝ) (j : Component) : Matrix (Fin 2) (Fin 2) ℝ :=
+  tcsFisherInformation (componentTransportWeights C ε j) liveTime x
+
+theorem componentTransportFisher_quadratic_nonneg
+    {x liveTime : Observation → ℝ}
+    (C : PoissonTransportCost (Observation := Observation)
+      (Component := Component))
+    (ε : ℝ) (j : Component) (v : Fin 2 → ℝ) :
+    0 ≤ ∑ a : Fin 2, ∑ b : Fin 2,
+      v a * componentTransportFisherInformation (x := x) (liveTime := liveTime) C ε j a b * v b := by
+  apply fisherInformation_quadratic_nonneg
+    (w := componentTransportWeights C ε j)
+    (sensitivity := fun i => tcsSensitivity (liveTime i) (x i))
+  intro i
+  exact (poissonTransportAssignment_nonneg C ε i j)
+
+end TransportFisher
 
 end FinitePoissonTransport
 

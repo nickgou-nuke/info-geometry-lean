@@ -28,54 +28,76 @@ variable
 
 /-- Compatible finite Hestenes-Krein phases with `Jₙ² = -I`. -/
 structure FilteredKreinPhaseFamily
-    extends CompatibleOperatorFamily Stage f where
+    extends CompatibleOperatorFamily Stage where
   phase_sq : ∀ n x, op n (op n x) = -x
 
 namespace FilteredKreinPhaseFamily
 
-variable (J : FilteredKreinPhaseFamily Stage f)
+variable (J : FilteredKreinPhaseFamily Stage)
 
 /-- Native additive operator induced on Mathlib's direct limit. -/
-def directLimitPhase :
+def directLimitPhase
+    (hcommutes :
+      ∀ (m n : ℕ) (h : m ≤ n) (x : Stage m),
+        J.op n (f m n h x) = f m n h (J.op m x)) :
     AddCommGroup.DirectLimit Stage f →+
       AddCommGroup.DirectLimit Stage f :=
   CompatibleOperatorFamily.directLimitOperator
-    Stage f J.toCompatibleOperatorFamily
+    Stage f J.toCompatibleOperatorFamily hcommutes
 
 @[simp]
-theorem directLimitPhase_of (n : ℕ) (x : Stage n) :
-    directLimitPhase Stage f J (AddCommGroup.DirectLimit.of Stage f n x) =
+theorem directLimitPhase_of
+    (hcommutes :
+      ∀ (m n : ℕ) (h : m ≤ n) (x : Stage m),
+        J.op n (f m n h x) = f m n h (J.op m x))
+    (n : ℕ) (x : Stage n) :
+    directLimitPhase Stage f J hcommutes
+      (AddCommGroup.DirectLimit.of Stage f n x) =
       AddCommGroup.DirectLimit.of Stage f n (J.op n x) :=
   CompatibleOperatorFamily.directLimitOperator_of
-    Stage f J.toCompatibleOperatorFamily n x
+    Stage f J.toCompatibleOperatorFamily hcommutes n x
 
 /-- The finite phase-square law survives the filtered direct limit. -/
 theorem directLimitPhase_sq_apply
+    (hcommutes :
+      ∀ (m n : ℕ) (h : m ≤ n) (x : Stage m),
+        J.op n (f m n h x) = f m n h (J.op m x))
     (z : AddCommGroup.DirectLimit Stage f) :
-    directLimitPhase Stage f J (directLimitPhase Stage f J z) = -z := by
+    directLimitPhase Stage f J hcommutes
+      (directLimitPhase Stage f J hcommutes z) = -z := by
   refine AddCommGroup.DirectLimit.induction_on z ?_
   intro n x
-  rw [directLimitPhase_of, directLimitPhase_of, J.phase_sq]
+  rw [directLimitPhase_of Stage f J hcommutes n x]
+  rw [directLimitPhase_of Stage f J hcommutes n (J.op n x)]
+  rw [J.phase_sq]
   exact (AddCommGroup.DirectLimit.of Stage f n).map_neg x
 
 /-- The descended phase has trivial kernel. -/
 theorem directLimitPhase_eq_zero_iff
+    (hcommutes :
+      ∀ (m n : ℕ) (h : m ≤ n) (x : Stage m),
+        J.op n (f m n h x) = f m n h (J.op m x))
     (z : AddCommGroup.DirectLimit Stage f) :
-    directLimitPhase Stage f J z = 0 ↔ z = 0 := by
+    directLimitPhase Stage f J hcommutes z = 0 ↔ z = 0 := by
   constructor
   · intro hz
-    have h := congrArg (directLimitPhase Stage f J) hz
-    rw [directLimitPhase_sq_apply, map_zero] at h
+    have h := congrArg (directLimitPhase Stage f J hcommutes) hz
+    rw [directLimitPhase_sq_apply Stage f J hcommutes z, map_zero] at h
     exact neg_eq_zero.mp h
   · rintro rfl
-    exact map_zero (directLimitPhase Stage f J)
+    exact map_zero (directLimitPhase Stage f J hcommutes)
 
 /-- The native descended Hestenes-Krein phase is injective. -/
-theorem directLimitPhase_injective :
-    Function.Injective (directLimitPhase Stage f J) := by
+theorem directLimitPhase_injective
+    (hcommutes :
+      ∀ (m n : ℕ) (h : m ≤ n) (x : Stage m),
+        J.op n (f m n h x) = f m n h (J.op m x)) :
+    Function.Injective (directLimitPhase Stage f J hcommutes) := by
   intro x y hxy
-  have h := congrArg (directLimitPhase Stage f J) hxy
-  simpa only [directLimitPhase_sq_apply, neg_inj] using h
+  have h := congrArg (directLimitPhase Stage f J hcommutes) hxy
+  rw [directLimitPhase_sq_apply Stage f J hcommutes x,
+    directLimitPhase_sq_apply Stage f J hcommutes y] at h
+  exact neg_inj.mp h
 
 end FilteredKreinPhaseFamily
 

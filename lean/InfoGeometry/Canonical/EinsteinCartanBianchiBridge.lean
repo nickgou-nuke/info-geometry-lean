@@ -133,4 +133,44 @@ def einsteinCartanAction (D : ExteriorDifferentialData R V)
   ∑ σ : Equiv.Perm (Fin 4),
     (Equiv.Perm.sign σ : ℤ) • (e (σ 0) * e (σ 1) * riemannCurvatureForm D.d omega (σ 2) (σ 3))
 
+@[simp] theorem spinConnectionWedgeTetrad_zero
+    (e : TetradVector d_dim R V) :
+    spinConnectionWedgeTetrad
+        (fun _ : Fin d_dim => fun _ : Fin d_dim => (0 : ExteriorAlgebra R V)) e =
+      (fun _ : Fin d_dim => (0 : ExteriorAlgebra R V)) := by
+  funext a
+  simp [spinConnectionWedgeTetrad]
+
+@[simp] theorem matrixExteriorDerivative_zero
+    (diff : Module.End R (ExteriorAlgebra R V)) :
+    matrixExteriorDerivative diff
+        (fun _ : Fin d_dim => fun _ : Fin d_dim => (0 : ExteriorAlgebra R V)) =
+      (fun _ : Fin d_dim => fun _ : Fin d_dim => (0 : ExteriorAlgebra R V)) := by
+  ext i j
+  simp [matrixExteriorDerivative]
+
+@[simp] theorem riemannCurvatureForm_zero
+    (D : ExteriorDifferentialData R V) :
+    riemannCurvatureForm D.d
+        (fun _ : Fin d_dim => fun _ : Fin d_dim => (0 : ExteriorAlgebra R V)) =
+      (fun _ : Fin d_dim => fun _ : Fin d_dim => (0 : ExteriorAlgebra R V)) := by
+  funext i j
+  simp [riemannCurvatureForm, matrixExteriorDerivative]
+
+theorem einsteinCartanAction_zero_connection
+    (D : ExteriorDifferentialData R V)
+    (e : TetradVector 4 R V) :
+    einsteinCartanAction D e
+        (fun _ : Fin 4 => fun _ : Fin 4 => (0 : ExteriorAlgebra R V)) = 0 := by
+  simp [einsteinCartanAction, riemannCurvatureForm, matrixExteriorDerivative]
+
+theorem einsteinCartanAction_zero_tetrad
+    (D : ExteriorDifferentialData R V)
+    (e : TetradVector 4 R V)
+    (omega : SpinConnectionMatrix 4 R V)
+    (h_e : e = fun _ : Fin 4 => (0 : ExteriorAlgebra R V)) :
+    einsteinCartanAction D e omega = 0 := by
+  rw [h_e]
+  simp [einsteinCartanAction]
+
 end InfoGeometry.Canonical

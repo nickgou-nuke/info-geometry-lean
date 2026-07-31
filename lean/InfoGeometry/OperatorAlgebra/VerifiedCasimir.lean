@@ -30,34 +30,28 @@ A Casimir must be:
 1. Invariant under the symmetry action (Erlanger Invariant).
 2. Central in the operator algebra (Superselection Rule).
 -/
-structure VerifiedCasimir
+abbrev VerifiedCasimir
     {Op : Type*} [Ring Op]
     {G : Type*} [Group G]
-    (α : SymmetryAction G Op) where
-  /-- The Casimir element in the algebra. -/
-  C : Op
-
-  /-- The Casimir is fixed under the symmetry group action. -/
-  is_invariant : IsInvariant α C
-
-  /-- The Casimir commutes with all observables (centrality). -/
-  is_central : ∀ x : Op, C * x = x * C
+    (_α : SymmetryAction G Op) : Type _ := Op
 
 namespace VerifiedCasimir
 
 variable {Op : Type*} [Ring Op] {G : Type*} [Group G] {α : SymmetryAction G Op}
 
 /-- A Casimir belongs to the center of the operator algebra. -/
-theorem mem_center (V : VerifiedCasimir α) :
-    V.C ∈ Subring.center Op := by
+theorem mem_center (C : VerifiedCasimir α)
+    (hcentral : ∀ x : Op, C * x = x * C) :
+    C ∈ Subring.center Op := by
   rw [Subring.mem_center_iff]
   intro x
-  rw [V.is_central x]
+  rw [hcentral x]
 
 /-- A Casimir belongs to the invariant subring. -/
-theorem mem_invariantSubring (V : VerifiedCasimir α) :
-    V.C ∈ invariantSubring α :=
-  V.is_invariant
+theorem mem_invariantSubring (C : VerifiedCasimir α)
+    (hinvariant : IsInvariant α C) :
+    C ∈ invariantSubring α :=
+  hinvariant
 
 end VerifiedCasimir
 
@@ -81,4 +75,3 @@ abbrev VerifiedCasimirCompat
   IndividuatedCasimir.VerifiedCasimir α
 
 end InfoGeometry.OperatorAlgebra.LegacyVerifiedCasimir
-

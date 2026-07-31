@@ -240,19 +240,17 @@ theorem generalized_unipotent_inverse {R : Type*} [Ring R] {degree : ℕ}
   rw [this, ← sub_neg_eq_add, mul_neg_geom_sum (-X) degree]
   simp [h, neg_pow X]
 
-/-- A finite-dimensional `$N$`-nilpotent matrix operator of dimension `n`. -/
-structure NilpotentOperator (n degree : ℕ) where
-  X : Matrix (Fin n) (Fin n) ℂ
-  h_nilpotent : X ^ degree = 0
+-- Nilpotence is supplied directly to the generic inverse theorem below.
 
 /-- The blueprint's matrix-level unipotent inverse, written with the alternating
-summand `$(-op.X)^j$`.  By `neg_pow` this is exactly the blueprint's
+summand `$(-X)^j$`.  By `neg_pow` this is exactly the blueprint's
 `$\sum_{j<\deg} (-1 : \mathbb C)^j \bullet X^j$`, i.e. `generalized_unipotent_inverse`
 specialized to the operator algebra `Matrix (Fin n) (Fin n) ℂ`. -/
 theorem generalized_unipotent_inverse_matrix {degree : ℕ}
-    (op : NilpotentOperator n degree) :
-    (1 + op.X) * (∑ j ∈ Finset.range degree, (-op.X) ^ j) = 1 := by
-  simp only [neg_pow op.X]
-  exact generalized_unipotent_inverse op.X op.h_nilpotent
+    (X : Matrix (Fin n) (Fin n) ℂ)
+    (h : X ^ degree = 0) :
+    (1 + X) * (∑ j ∈ Finset.range degree, (-X) ^ j) = 1 := by
+  simp only [neg_pow X]
+  exact generalized_unipotent_inverse X h
 
 end InfoGeometry.OperatorAlgebra.GeneralizedNilpotentTripotent

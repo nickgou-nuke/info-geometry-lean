@@ -69,6 +69,21 @@ def tensorActionCocone
         change 𝟙 (TopCat.of (FusionTensorCarrier K)) ≫ action = action
         simp }
 
+/-- The repeated tensor action is a natural endomorphism of the constant
+    topological diagram.  This is the bridge to the generic `colim.map`
+    construction. -/
+def tensorActionNaturalTransformation
+    (action : TopCat.of (FusionTensorCarrier K) ⟶
+      TopCat.of (FusionTensorCarrier K)) :
+    fusionTensorTopologicalDiagram (K := K) ⟶
+      fusionTensorTopologicalDiagram (K := K) where
+  app := fun _ => action
+  naturality := by
+    intro i j f
+    change 𝟙 (TopCat.of (FusionTensorCarrier K)) ≫ action =
+      action ≫ 𝟙 (TopCat.of (FusionTensorCarrier K))
+    simp
+
 noncomputable def tensorActionColimitMap
     (action : TopCat.of (FusionTensorCarrier K) ⟶
       TopCat.of (FusionTensorCarrier K)) :
@@ -126,6 +141,25 @@ theorem tensorActionColimitEndomorphism_stage
     (fusionTensorTopologicalDiagram (K := K))
     (tensorActionColimitCocone (K := K) action) n
 
+theorem tensorActionColimitEndomorphism_eq_map
+    (action : TopCat.of (FusionTensorCarrier K) ⟶
+      TopCat.of (FusionTensorCarrier K)) :
+    tensorActionColimitEndomorphism (K := K) action =
+      topologicalDirectMapBetween
+        (tensorActionNaturalTransformation (K := K) action) := by
+  apply colimit.hom_ext
+  intro n
+  change topologicalDirectInjection
+      (fusionTensorTopologicalDiagram (K := K)) n ≫
+      tensorActionColimitEndomorphism (K := K) action =
+    topologicalDirectInjection
+      (fusionTensorTopologicalDiagram (K := K)) n ≫
+      topologicalDirectMapBetween
+        (tensorActionNaturalTransformation (K := K) action)
+  rw [tensorActionColimitEndomorphism_stage,
+    topologicalDirectMapBetween_injection]
+  rfl
+
 theorem tensorActionColimitEndomorphism_comp_stage
     (action₁ action₂ : TopCat.of (FusionTensorCarrier K) ⟶
       TopCat.of (FusionTensorCarrier K)) (n : ℕ) :
@@ -182,6 +216,22 @@ theorem tensorActionColimitEndomorphism_comp
       symm
       exact tensorActionColimitEndomorphism_stage (K := K)
         (action₁ ≫ action₂) n
+
+theorem tensorActionColimitEndomorphism_id :
+    tensorActionColimitEndomorphism (K := K)
+        (𝟙 (TopCat.of (FusionTensorCarrier K))) =
+      𝟙 _ := by
+  apply colimit.hom_ext
+  intro n
+  have h := tensorActionColimitEndomorphism_stage (K := K)
+    (𝟙 (TopCat.of (FusionTensorCarrier K))) n
+  change topologicalDirectInjection
+      (fusionTensorTopologicalDiagram (K := K)) n ≫
+      tensorActionColimitEndomorphism (K := K)
+        (𝟙 (TopCat.of (FusionTensorCarrier K))) =
+    topologicalDirectInjection
+      (fusionTensorTopologicalDiagram (K := K)) n ≫ 𝟙 _
+  simpa only [Category.id_comp, Category.comp_id] using h
 
 def fusionCoxeterTensorColimitEndomorphism
     (a b q1 q2 : K) :

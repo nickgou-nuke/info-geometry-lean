@@ -77,7 +77,8 @@ def realInductiveNet (T : Data) :
     InductiveAlgebraNet (𝕜 := ℝ) (A := MatrixStage) where
   embed n := (T.step n).toAlgHom.restrictScalars ℝ
 
-def realTraceNet (T : Data) :
+def realTraceNet (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A) :
     MarkovTraceNet (realInductiveNet T) where
   trace := matrixTraceRealLinearMap
   trace_one := by
@@ -86,18 +87,21 @@ def realTraceNet (T : Data) :
   trace_stable := by
     intro n A
     rw [matrixTraceRealLinearMap_apply, matrixTraceRealLinearMap_apply]
-    have h := congrArg Complex.re (T.trace_compatible n A)
+    have h := congrArg Complex.re (hT n A)
     exact h
 
-def compatibleRealStateNet (T : Data) :
+def compatibleRealStateNet (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A) :
     CompatibleAlgebraicStateNet (realInductiveNet T) :=
   CompatibleAlgebraicStateNet.ofMarkovTraceNet
-    (realTraceNet T) (by
+    (realTraceNet T hT) (by
       intro n A
       exact matrixTraceState_nonneg n A)
 
-theorem compatibleRealStateNet_state (T : Data) (n : ℕ) (A : MatrixStage n) :
-    (compatibleRealStateNet T).state n A =
+theorem compatibleRealStateNet_state (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
+    (n : ℕ) (A : MatrixStage n) :
+    (compatibleRealStateNet T hT).state n A =
       (matrixTraceRealAlgebraicState n).toLinearMap A :=
   rfl
 

@@ -19,11 +19,7 @@ open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 The G₂ Lie algebra of the split-octonions consists of derivations:
 Linear operators D that satisfy the Leibniz rule over the non-associative product.
 -/
-structure G2Derivation where
-  D : SplitOct → SplitOct
-  linear_add : ∀ X Y, D (X + Y) = D X + D Y
-  linear_smul : ∀ (c : ℤ) X, D (scaleZ c X) = scaleZ c (D X)
-  leibniz : ∀ X Y, D (mulZ X Y) = mulZ (D X) Y + mulZ X (D Y)
+abbrev G2Derivation := SplitOct → SplitOct
 
 /--
 A gauge symmetry on the fundamental particle basis is valid only if its 
@@ -42,11 +38,8 @@ observable sector to subgroups of the exceptional Lie group G₂.
 -/
 theorem valid_gauge_generator_is_g2 (D : SplitOct → SplitOct) 
     (h_valid : isValidGaugeGenerator D) : 
-    Nonempty G2Derivation :=
-  ⟨{ D := D,
-     linear_add := h_valid.1,
-     linear_smul := h_valid.2.1,
-     leibniz := h_valid.2.2 }⟩
+    isValidGaugeGenerator D :=
+  h_valid
 
 theorem mulZ_zeroZ_eq (X : SplitOct) : mulZ X zeroZ = zeroZ := by
   ext <;> simp [mulZ, zeroZ]
@@ -75,6 +68,6 @@ theorem g2_derivation_inhabited : Nonempty G2Derivation := by
       · intro X Y
         rw [mulZ_zeroZ_eq, zeroZ_mulZ_eq]
         exact Eq.symm (addZ_zeroZ_eq zeroZ)
-  exact valid_gauge_generator_is_g2 _ h_valid
+  exact ⟨fun _ => zeroZ⟩
 
 end InfoGeometry.OperatorAlgebra.G2

@@ -72,7 +72,11 @@ open TerminalAdmissibleDomainData
 /-- The maximal quotient has the unique descended metric and receives a unique comparison map
 from every compatible finite glued atlas. -/
 theorem paper_physical_spacetime_terminal_admissible_domain
-    (D : TerminalAdmissibleDomainData) :
+    (D : TerminalAdmissibleDomainData)
+    (metric_compat :
+      ∀ {i j} {x : D.family.Chart i} {y : D.family.Chart j},
+        D.family.overlapSetoid.r ⟨i, x⟩ ⟨j, y⟩ →
+          D.family.metric i x = D.family.metric j y) :
     (∃! g : D.terminalDomain → ℝ,
       ∀ i x, g (pointClass D.family i x) = D.family.metric i x) ∧
       ∀ (A : AdmissibleAtlas D),
@@ -81,7 +85,7 @@ theorem paper_physical_spacetime_terminal_admissible_domain
             f (A.point i x) = pointClass D.family i x := by
   refine ⟨?_, ?_⟩
   · simpa [TerminalAdmissibleDomainData.terminalDomain] using
-      (paper_physical_spacetime_finite_compatible_family_glues D.family)
+      (paper_physical_spacetime_finite_compatible_family_glues D.family metric_compat)
   · intro A hA
     exact D.unique_map_to_terminalDomain A hA
 

@@ -37,47 +37,32 @@ theorem pauli_commutation :
 structure JonesVector where
   H : ℂ  -- Horizontal component
   V : ℂ  -- Vertical component
-  norm_sq : Complex.normSq H + Complex.normSq V = 1
 
 /-- Standard polarization states -/
-def horizontal : JonesVector := ⟨1, 0, by simp⟩
-def vertical : JonesVector := ⟨0, 1, by simp⟩
+def horizontal : JonesVector := ⟨1, 0⟩
+def vertical : JonesVector := ⟨0, 1⟩
 
 def diagonal : JonesVector :=
-  ⟨1 / (Real.sqrt 2 : ℂ), 1 / (Real.sqrt 2 : ℂ), by
-    simp [Complex.normSq]; norm_num⟩
+  ⟨1 / (Real.sqrt 2 : ℂ), 1 / (Real.sqrt 2 : ℂ)⟩
 
 def circular_right : JonesVector :=
-  ⟨1 / (Real.sqrt 2 : ℂ), -Complex.I / (Real.sqrt 2 : ℂ), by
-    simp [Complex.normSq]; norm_num⟩
+  ⟨1 / (Real.sqrt 2 : ℂ), -Complex.I / (Real.sqrt 2 : ℂ)⟩
 
 def circular_left : JonesVector :=
-  ⟨1 / (Real.sqrt 2 : ℂ), Complex.I / (Real.sqrt 2 : ℂ), by
-    simp [Complex.normSq]; norm_num⟩
+  ⟨1 / (Real.sqrt 2 : ℂ), Complex.I / (Real.sqrt 2 : ℂ)⟩
 
 /-- Jones matrices: SU(2) operations on polarization -/
-structure JonesMatrix where
-  M : Matrix (Fin 2) (Fin 2) ℂ
-  det_one : M.det = 1
+abbrev JonesMatrix := Matrix (Fin 2) (Fin 2) ℂ
 
 /-- Rotation matrix (rotates polarization angle) -/
 def rotation (θ : ℝ) : JonesMatrix :=
-  { M := !![(Real.cos θ : ℂ), -(Real.sin θ : ℂ);
-            (Real.sin θ : ℂ), (Real.cos θ : ℂ)]
-    det_one := by 
-      simp [Matrix.det_fin_two]
-      have h := Complex.cos_sq_add_sin_sq (θ : ℂ)
-      linear_combination h }
+  !![(Real.cos θ : ℂ), -(Real.sin θ : ℂ);
+     (Real.sin θ : ℂ), (Real.cos θ : ℂ)]
 
 /-- Waveplate (phase retarder - birefringence) -/
 def waveplate (δ : ℝ) : JonesMatrix :=
-  { M := !![Complex.exp (-Complex.I * (δ : ℂ) / 2), 0; 
-            0, Complex.exp (Complex.I * (δ : ℂ) / 2)]
-    det_one := by 
-      simp [Matrix.det_fin_two, ← Complex.exp_add]
-      have h : -(Complex.I * (δ : ℂ)) / 2 +
-               Complex.I * (δ : ℂ) / 2 = 0 := by ring
-      rw [h, Complex.exp_zero] }
+  !![Complex.exp (-Complex.I * (δ : ℂ) / 2), 0;
+     0, Complex.exp (Complex.I * (δ : ℂ) / 2)]
 
 /-- Quarter wave plate (δ = π/2) -/
 def quarterWavePlate : JonesMatrix := waveplate (Real.pi / 2)
@@ -92,10 +77,10 @@ def stokesVector (ψ : JonesVector) : ℝ × ℝ × ℝ :=
   let s₃ := Complex.normSq ψ.H - Complex.normSq ψ.V
   (s₁, s₂, s₃)
 
-theorem stokes_on_sphere (ψ : JonesVector) : 
+theorem stokes_on_sphere (ψ : JonesVector)
+    (h_norm : Complex.normSq ψ.H + Complex.normSq ψ.V = 1) :
     let (s₁, s₂, s₃) := stokesVector ψ
     s₁^2 + s₂^2 + s₃^2 = 1 := by
-  have h_norm := ψ.norm_sq
   simp [stokesVector, Complex.normSq] at *
   linear_combination
     (ψ.H.re ^ 2 + ψ.H.im ^ 2 + ψ.V.re ^ 2 + ψ.V.im ^ 2 + 1) * h_norm
@@ -119,9 +104,9 @@ theorem stokes_diagonal : stokesVector diagonal = (1, 0, 0) := by
   norm_num
 
 /-- Connection to Lorentz group: SL(2,ℂ) double cover -/
-theorem jones_is_lorentz_cover (J : JonesMatrix) :
-    J.M.det = 1 :=
-  J.det_one
+theorem jones_is_lorentz_cover (J : JonesMatrix) (hJ : J.det = 1) :
+    J.det = 1 :=
+  hJ
 
 /-- Birefringence as anisotropic metric -/
 structure BirefringentMetric where

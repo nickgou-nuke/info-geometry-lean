@@ -14,16 +14,15 @@ namespace KitaevSpinLiquid
 /-- Plaquette Flux Operator W_p on hexagonal lattice with Z₂ eigenvalues ±1. -/
 structure PlaquetteFlux where
   fluxValue : ℝ
-  flux_sq : fluxValue ^ 2 = 1
 
 namespace PlaquetteFlux
 
 variable (W : PlaquetteFlux)
 
 /-- **Theorem**: Z₂ Plaquette Flux Eigenvalues are strictly ±1. -/
-theorem flux_eigenvalues_pm_one :
+theorem flux_eigenvalues_pm_one
+    (h_sq : W.fluxValue ^ 2 = 1) :
     W.fluxValue = 1 ∨ W.fluxValue = -1 := by
-  have h_sq := W.flux_sq
   have h_fact : (W.fluxValue - 1) * (W.fluxValue + 1) = 0 := by
     calc (W.fluxValue - 1) * (W.fluxValue + 1)
       _ = W.fluxValue ^ 2 - 1 := by ring

@@ -233,14 +233,16 @@ theorem coherentComplexificationColimit_star_readback
 theorem coherentComplexificationColimit_trace_factorization :
     Cl11MarkovJonesTopologicalColimit.traceTopologicalColimitMap =
       coherentComplexificationColimitMap ≫
-        CuntzMatrixTraceTopologicalColimit.traceTopologicalColimitMap concreteData ≫
+        CuntzMatrixTraceTopologicalColimit.traceTopologicalColimitMap concreteData
+          concrete_trace_compatible ≫
           complexTraceToRealTopCatHom := by
   symm
   apply FilteredColimit.Native.Topological.topologicalDirectDescend_unique
     Cl11MarkovJonesTopologicalColimit.topologicalDiagram
     Cl11MarkovJonesTopologicalColimit.traceTopologicalCocone
     (coherentComplexificationColimitMap ≫
-      CuntzMatrixTraceTopologicalColimit.traceTopologicalColimitMap concreteData ≫
+      CuntzMatrixTraceTopologicalColimit.traceTopologicalColimitMap concreteData
+        concrete_trace_compatible ≫
         complexTraceToRealTopCatHom)
   intro n
   apply TopCat.hom_ext
@@ -249,6 +251,7 @@ theorem coherentComplexificationColimit_trace_factorization :
   rw [TopCat.comp_app, TopCat.comp_app]
   change Complex.re
       (CuntzMatrixTraceTopologicalColimit.traceTopologicalColimitMap concreteData
+        concrete_trace_compatible
         (coherentComplexificationColimitMap
           (Cl11MarkovJonesTopologicalColimit.topologicalInclusion n A))) =
     normalizedTrace n A
@@ -261,12 +264,13 @@ theorem coherentComplexificationColimit_realTrace_factorization :
     Cl11MarkovJonesTopologicalColimit.traceTopologicalColimitMap =
       coherentComplexificationColimitMap ≫
         CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap
-          concreteData := by
+          concreteData concrete_trace_compatible := by
   rw [CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap_factorization]
   exact coherentComplexificationColimit_trace_factorization
 
 theorem coherentComplexificationColimit_realTrace_stage (n : ℕ) (A : ClStage n) :
-    CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap concreteData
+    CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap
+      concreteData concrete_trace_compatible
       (coherentComplexificationColimitMap
         (Cl11MarkovJonesTopologicalColimit.topologicalInclusion n A)) =
       normalizedTrace n A := by
@@ -283,11 +287,11 @@ no multiplication supplied by this comparison map. -/
 theorem coherentComplexificationColimit_realTrace_stage_cyclic
     (n : ℕ) (A B : ClStage n) :
     CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap
-        concreteData
+        concreteData concrete_trace_compatible
         (coherentComplexificationColimitMap
           (Cl11MarkovJonesTopologicalColimit.topologicalInclusion n (A * B))) =
       CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap
-        concreteData
+        concreteData concrete_trace_compatible
         (coherentComplexificationColimitMap
           (Cl11MarkovJonesTopologicalColimit.topologicalInclusion n (B * A))) := by
   rw [coherentComplexificationColimit_realTrace_stage,
@@ -298,7 +302,7 @@ theorem coherentComplexificationColimit_realTrace_stage_cyclic
 theorem coherentComplexificationColimit_realTrace_stage_commutator
     (n : ℕ) (A B : ClStage n) :
     CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap
-        concreteData
+        concreteData concrete_trace_compatible
         (coherentComplexificationColimitMap
           (Cl11MarkovJonesTopologicalColimit.topologicalInclusion n
             (A * B - B * A))) = 0 := by
@@ -312,7 +316,8 @@ theorem coherentComplexificationColimit_realTrace_unique
       f (Cl11MarkovJonesTopologicalColimit.topologicalInclusion n A) =
         normalizedTrace n A) :
     f = coherentComplexificationColimitMap ≫
-      CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap concreteData := by
+      CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap
+        concreteData concrete_trace_compatible := by
   rw [Cl11MarkovJonesTopologicalColimit.traceTopologicalColimitMap_unique f h,
     coherentComplexificationColimit_realTrace_factorization]
 

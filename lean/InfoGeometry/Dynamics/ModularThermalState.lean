@@ -38,20 +38,10 @@ structure KMSBoundaryData (A : Type*) [Monoid A] where
     omega_eval a (ModularAutomorphismFamily.sigma modular t b) = omega_eval (ModularAutomorphismFamily.sigma modular (t + beta) b) a
 
 /--
-Casimir anchor in the observable algebra: centrality + modular invariance.
--/
-structure VerifiedCasimir (A : Type*) [Monoid A] where
-  C : A
-  central : ∀ x : A, C * x = x * C
-  modular_invariant : ∀
-    (M : InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow A), ∀ t : ℝ,
-    ModularAutomorphismFamily.sigma M t C = C
-
-/--
-Thermal state packet anchored by a verified Casimir and a KMS boundary witness.
+Thermal state data anchored by an observable and a KMS boundary witness.
 -/
 structure ModularThermalState (A : Type*) [Monoid A] where
-  casimir : VerifiedCasimir A
+  casimir : A
   kms : KMSBoundaryData A
 
 /--
@@ -59,9 +49,13 @@ The Casimir remains fixed under the modular flow of a thermal state packet.
 -/
 theorem casimir_fixed_under_modular_flow
     {A : Type*} [Monoid A]
-    (T : ModularThermalState A) (t : ℝ) :
-    (ModularAutomorphismFamily.sigma T.kms.modular t T.casimir.C) = T.casimir.C := by
-  exact T.casimir.modular_invariant T.kms.modular t
+    (T : ModularThermalState A)
+    (modular_invariant : ∀
+      (M : InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow A), ∀ t : ℝ,
+      ModularAutomorphismFamily.sigma M t T.casimir = T.casimir)
+    (t : ℝ) :
+    ModularAutomorphismFamily.sigma T.kms.modular t T.casimir = T.casimir := by
+  exact modular_invariant T.kms.modular t
 
 /--
 Complexified modular-time point `t + iβ` used by KMS strip formulations,

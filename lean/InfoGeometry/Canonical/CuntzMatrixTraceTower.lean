@@ -91,8 +91,6 @@ lemma concreteStep_trace (n : ℕ) (A : MatrixStage n) :
 /-- Successor maps and preservation of the normalized matrix trace. -/
 structure Data where
   step : ∀ n, MatrixStage n →⋆ₐ[ℂ] MatrixStage (n + 1)
-  trace_compatible : ∀ n A,
-    matrixTraceState (n + 1) (step n A) = matrixTraceState n A
 
 /-! The abstract interface now has a concrete noncommutative matrix instance.
 The only scalar calculation here is normalization of the genuine matrix
@@ -101,12 +99,13 @@ above, not by an artificial order on matrices. -/
 
 def concreteData : Data where
   step := concreteStep
-  trace_compatible := by
-    intro n A
-    dsimp [matrixTraceState, matrixTraceFunctional]
-    rw [concreteStep_trace]
-    rw [pow_succ]
-    field_simp [show (2 : ℂ) ^ n ≠ 0 by norm_num]
+
+theorem concrete_trace_compatible (n : ℕ) (A : MatrixStage n) :
+    matrixTraceState (n + 1) (concreteData.step n A) = matrixTraceState n A := by
+  dsimp [concreteData, matrixTraceState, matrixTraceFunctional]
+  rw [concreteStep_trace]
+  rw [pow_succ]
+  field_simp [show (2 : ℂ) ^ n ≠ 0 by norm_num]
 
 /-- Iterate the supplied successor embedding along a proof `i ≤ j`. -/
 def map (T : Data) {i j : ℕ} (hij : i ≤ j) :
@@ -138,7 +137,9 @@ theorem map_comp (T : Data) {i j k : ℕ} (hij : i ≤ j) (hjk : j ≤ k) :
       rw [map_succ T hjm, map_succ T (le_trans hij hjm),
         StarAlgHom.comp_assoc, ih]
 
-theorem trace_compatible (T : Data) {i j : ℕ} (hij : i ≤ j) (A : MatrixStage i) :
+theorem trace_compatible (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
+    {i j : ℕ} (hij : i ≤ j) (A : MatrixStage i) :
     matrixTraceState j (map T hij A) = matrixTraceState i A := by
   induction hij with
   | refl =>
@@ -146,7 +147,7 @@ theorem trace_compatible (T : Data) {i j : ℕ} (hij : i ≤ j) (A : MatrixStage
   | step hjm ih =>
       rw [map_succ T hjm]
       change matrixTraceState _ (T.step _ (map T hjm A)) = _
-      rw [T.trace_compatible, ih]
+      rw [hT, ih]
 
 /-! The concrete tower is exposed directly as a filtered family of
 `StarAlgHom`s.  These are the actual categorical coherence laws used by a
@@ -166,7 +167,7 @@ theorem concreteMap_comp {i j k : ℕ} (hij : i ≤ j) (hjk : j ≤ k) :
 
 theorem concreteMap_trace {i j : ℕ} (hij : i ≤ j) (A : MatrixStage i) :
     matrixTraceState j (concreteMap hij A) = matrixTraceState i A := by
-  exact trace_compatible concreteData hij A
+  exact trace_compatible concreteData concrete_trace_compatible hij A
 
 /-! ### Categorical filtered colimit of the raw matrix tower
 
@@ -202,7 +203,9 @@ def traceColimitInclusion (T : Data) (n : ℕ) :
     MatrixStage n →ₗ[ℂ] traceColimit T :=
   (colimit.ι (moduleDiagram T) n).hom
 
-def traceCocone (T : Data) : Cocone (moduleDiagram T) where
+def traceCocone (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A) :
+    Cocone (moduleDiagram T) where
   pt := ModuleCat.of ℂ ℂ
   ι :=
     { app := fun n => ModuleCat.ofHom (matrixTraceFunctional n)
@@ -213,34 +216,39 @@ def traceCocone (T : Data) : Cocone (moduleDiagram T) where
         change matrixTraceFunctional n (map T (leOfHom f) A) =
           matrixTraceFunctional m A
         simpa [matrixTraceState] using
-          trace_compatible T (leOfHom f) A }
+          trace_compatible T hT (leOfHom f) A }
 
-def traceColimitFunctional (T : Data) : traceColimit T →ₗ[ℂ] ℂ :=
-  (colimit.desc (moduleDiagram T) (traceCocone T)).hom
+def traceColimitFunctional (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A) :
+    traceColimit T →ₗ[ℂ] ℂ :=
+  (colimit.desc (moduleDiagram T) (traceCocone T hT)).hom
 
-theorem traceColimitFunctional_inclusion (T : Data) (n : ℕ)
+theorem traceColimitFunctional_inclusion (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
+    (n : ℕ)
     (A : MatrixStage n) :
-    traceColimitFunctional T (traceColimitInclusion T n A) =
+    traceColimitFunctional T hT (traceColimitInclusion T n A) =
       matrixTraceFunctional n A := by
-  have h := colimit.ι_desc (traceCocone T) n
+  have h := colimit.ι_desc (traceCocone T hT) n
   exact congrArg (fun f => f A) h
 
 /-- The compatible normalized trace is the unique linear readout on the
 colimit with the prescribed finite-stage values. -/
 theorem traceColimitFunctional_unique (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
     (f : traceColimit T →ₗ[ℂ] ℂ)
     (hf : ∀ (n : ℕ) (A : MatrixStage n),
       f (traceColimitInclusion T n A) = matrixTraceFunctional n A) :
-    f = traceColimitFunctional T := by
+    f = traceColimitFunctional T hT := by
   have hhom :
-      ModuleCat.ofHom f = ModuleCat.ofHom (traceColimitFunctional T) := by
+      ModuleCat.ofHom f = ModuleCat.ofHom (traceColimitFunctional T hT) := by
     apply colimit.hom_ext
     intro n
     apply ModuleCat.hom_ext
     ext A
     change f (traceColimitInclusion T n A) =
-      traceColimitFunctional T (traceColimitInclusion T n A)
-    rw [hf n A, traceColimitFunctional_inclusion]
+      traceColimitFunctional T hT (traceColimitInclusion T n A)
+    rw [hf n A, traceColimitFunctional_inclusion T hT]
   exact congrArg
     (fun g : ModuleCat.of ℂ (traceColimit T) ⟶ ModuleCat.of ℂ ℂ => g.hom) hhom
 

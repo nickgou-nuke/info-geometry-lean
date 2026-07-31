@@ -54,27 +54,13 @@ theorem free_energy_decrease
     _ < 1 * ((1 / 2 : ℝ) * a * x ^ 2) := h_final
     _ = (1 / 2 : ℝ) * a * x ^ 2 := by ring
 
-/--
-A finite projected state represented by an unnormalized density and a positive
-partition function.
--/
-structure ProjectedState where
-  /-- Unnormalized state density. -/
-  density : ℝ
-  /-- Partition function / normalization constant. -/
-  partition : ℝ
-  /-- Positivity of the partition function. -/
-  h_partition_pos : 0 < partition
-
 /-- Positive Weyl scaling of both density and partition function. -/
-def weyl_scale (c : ℝ) (hc : 0 < c) (P : ProjectedState) : ProjectedState where
-  density := c * P.density
-  partition := c * P.partition
-  h_partition_pos := mul_pos hc P.h_partition_pos
+def weyl_scale (c : ℝ) (density partition : ℝ) : ℝ × ℝ :=
+  (c * density, c * partition)
 
 /-- Gromov projective normalization by the partition function. -/
-def gromov_projective_map (P : ProjectedState) : ℝ :=
-  P.density / P.partition
+def gromov_projective_map (density partition : ℝ) : ℝ :=
+  density / partition
 
 /--
 Closed finite Weyl invariance theorem for Gromov projective normalization.
@@ -83,10 +69,13 @@ Positive conformal scaling of density and partition function leaves the
 normalized projected state unchanged.
 -/
 theorem gromov_projective_weyl_invariance
-    (c : ℝ) (hc : 0 < c) (P : ProjectedState) :
-    gromov_projective_map (weyl_scale c hc P) = gromov_projective_map P := by
+    (c density partition : ℝ) (hc : 0 < c)
+    (hpartition : partition ≠ 0) :
+    gromov_projective_map (weyl_scale c density partition).1
+      (weyl_scale c density partition).2 =
+      gromov_projective_map density partition := by
   unfold gromov_projective_map weyl_scale
-  exact mul_div_mul_left P.density P.partition (ne_of_gt hc)
+  field_simp [ne_of_gt hc, hpartition]
 
 end
 

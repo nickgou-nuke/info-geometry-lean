@@ -77,6 +77,27 @@ instance : SMul ℝ AlbertMatrix where
 
 namespace AlbertMatrix
 
+/-- Primitive idempotents of J₃(𝕆_s) for the three generations. -/
+def e₁ : AlbertMatrix := { α₁ := 1, α₂ := 0, α₃ := 0, z₁ := zeroZ, z₂ := zeroZ, z₃ := zeroZ }
+def e₂ : AlbertMatrix := { α₁ := 0, α₂ := 1, α₃ := 0, z₁ := zeroZ, z₂ := zeroZ, z₃ := zeroZ }
+def e₃ : AlbertMatrix := { α₁ := 0, α₂ := 0, α₃ := 1, z₁ := zeroZ, z₂ := zeroZ, z₃ := zeroZ }
+
+/-- Peirce spaces J_{ij} = {X | e_i ∘ X = λ_i X, e_j ∘ X = λ_j X}
+    For i=j: J_{ii} = ℝ e_i (1D, diagonal)
+    For i≠j: J_{ij} ≅ 𝕆_s (8D, off-diagonal) -/
+structure PeirceDecomposition where
+  diag₁ : ℝ
+  diag₂ : ℝ
+  diag₃ : ℝ
+  off₁₂ : SplitOct
+  off₂₃ : SplitOct
+  off₃₁ : SplitOct
+
+/-- Peirce decomposition of an Albert matrix -/
+def peirce (X : AlbertMatrix) : PeirceDecomposition :=
+  { diag₁ := X.α₁, diag₂ := X.α₂, diag₃ := X.α₃,
+    off₁₂ := X.z₃, off₂₃ := X.z₁, off₃₁ := X.z₂ }
+
 def octTrace (Z : SplitOct) : ℝ := (Z.a : ℝ) + (Z.b : ℝ)
 
 def traceBilin (X Y : AlbertMatrix) : ℝ :=
@@ -87,6 +108,16 @@ def traceBilin (X Y : AlbertMatrix) : ℝ :=
 
 theorem trace_comm (X Y : AlbertMatrix) : traceBilin X Y = traceBilin Y X := by
   dsimp [traceBilin]; ring
+
+theorem peirce_diag_proj (X : AlbertMatrix) :
+    (peirce X).diag₁ = traceBilin X e₁ ∧ (peirce X).diag₂ = traceBilin X e₂ ∧ (peirce X).diag₃ = traceBilin X e₃ := by
+  dsimp [peirce, traceBilin, e₁, e₂, e₃, octTrace, zeroZ]
+  exact ⟨by ring, by ring, by ring⟩
+
+theorem peirce_off_proj (X : AlbertMatrix) :
+    (peirce X).off₁₂ = X.z₃ ∧ (peirce X).off₂₃ = X.z₁ ∧ (peirce X).off₃₁ = X.z₂ := by
+  dsimp [peirce]
+  exact ⟨rfl, rfl, rfl⟩
 
 def normCubic (X : AlbertMatrix) : ℝ :=
   X.α₁ * X.α₂ * X.α₃ +

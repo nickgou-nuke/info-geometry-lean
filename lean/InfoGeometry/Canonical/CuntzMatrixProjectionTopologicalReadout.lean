@@ -20,16 +20,20 @@ open InfoGeometry.Canonical.CuntzMatrixTraceTopologicalColimit
 open InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
 
 theorem realTrace_colimit_projection1
-    (T : InfoGeometry.Canonical.CuntzMatrixTraceTower.Data) :
-    realTraceTopologicalColimitMap T
+    (T : InfoGeometry.Canonical.CuntzMatrixTraceTower.Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) =
+      matrixTraceState n A) :
+    realTraceTopologicalColimitMap T hT
         (topologicalInclusion T 1 cuntzStage1_S1) = (1 / 2 : ℝ) := by
   rw [realTraceTopologicalColimitMap_inclusion]
   have h := congrArg Complex.re cuntzStage1_trace_S1
   simpa [matrixTraceState, matrixTraceFunctional_apply] using h
 
 theorem realTrace_colimit_projection2
-    (T : InfoGeometry.Canonical.CuntzMatrixTraceTower.Data) :
-    realTraceTopologicalColimitMap T
+    (T : InfoGeometry.Canonical.CuntzMatrixTraceTower.Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) =
+      matrixTraceState n A) :
+    realTraceTopologicalColimitMap T hT
         (topologicalInclusion T 1 cuntzStage1_S2) = (1 / 2 : ℝ) := by
   rw [realTraceTopologicalColimitMap_inclusion]
   have h := congrArg Complex.re cuntzStage1_trace_S2

@@ -69,69 +69,14 @@ theorem matrix_det_invariant_under_transport
   dsimp [InvertibleTransport.conjugate]
   exact matrix_det_conjugation_invariant A U.val U.inv U.val_inv
 
-/-! ## 2. Verified determinant readout -/
-
-set_option linter.dupNamespace false
-
-/-!
-A verified determinant readout is a scalar readout with proved conjugation
-invariance.  The subtype keeps the readout and its actual proof coupled.
--/
-def VerifiedDeterminant
-    (Op Scalar : Type*) [Monoid Op] :=
-  {det : Op → Scalar //
-    ∀ (A : Op) (U : InvertibleTransport Op),
-      det (U.conjugate A) = det A}
-
-namespace VerifiedDeterminant
-
-variable {Op Scalar : Type*} [Monoid Op]
-variable (D : VerifiedDeterminant Op Scalar)
-
-abbrev det : Op → Scalar := D.1
-
-theorem invariant
-    (A : Op) (U : InvertibleTransport Op) :
-    D.det (U.conjugate A) = D.det A :=
-  D.2 A U
-
-def mk
-    (det : Op → Scalar)
-    (invariant : ∀ (A : Op) (U : InvertibleTransport Op),
-      det (U.conjugate A) = det A) :
-    VerifiedDeterminant Op Scalar :=
-  ⟨det, invariant⟩
-
-/--
-Re-export determinant invariance.
--/
-theorem conjugation_invariant
-    (A : Op)
-    (U : InvertibleTransport Op) :
-    D.det (U.conjugate A) = D.det A :=
-  D.invariant A U
-
-end VerifiedDeterminant
-
-/--
-Verified determinant for finite matrix algebras over a commutative ring.
--/
-def matrixVerifiedDeterminant
-    (n R : Type*) [Fintype n] [DecidableEq n] [CommRing R] :
-    VerifiedDeterminant (Matrix n n R) R :=
-  ⟨Matrix.det, by
-    intro A U
-    exact matrix_det_invariant_under_transport A U⟩
-
-/-! ## 3. Real finite matrix specialization -/
+/-! ## 2. Real finite matrix specialization -/
 
 /--
 Verified real determinant on `Fin n` matrices.
 -/
-def realMatrixVerifiedDeterminant
-    (n : ℕ) :
-    VerifiedDeterminant (Matrix (Fin n) (Fin n) ℝ) ℝ :=
-  matrixVerifiedDeterminant (Fin n) ℝ
+def realMatrixDeterminant
+    (n : ℕ) : Matrix (Fin n) (Fin n) ℝ → ℝ :=
+  Matrix.det
 
 /--
 Real finite matrix determinant is invariant under invertible conjugation.

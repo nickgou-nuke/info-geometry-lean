@@ -30,7 +30,8 @@ def continuousRealTrace (n : ℕ) : ContinuousMap (MatrixStage n) ℝ :=
     continuousRealTrace n A = (matrixTraceFunctional n A).re :=
   rfl
 
-def realTraceTopologicalCocone (T : Data) :
+def realTraceTopologicalCocone (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A) :
     Cocone (topologicalDiagram T) where
   pt := TopCat.of ℝ
   ι :=
@@ -43,38 +44,42 @@ def realTraceTopologicalCocone (T : Data) :
         rw [TopCat.comp_app, TopCat.comp_app]
         change (matrixTraceFunctional n (map T (leOfHom f) A)).re =
           (matrixTraceFunctional m A).re
-        exact congrArg Complex.re (trace_compatible T (leOfHom f) A) }
+        exact congrArg Complex.re (trace_compatible T hT (leOfHom f) A) }
 
 def complexTraceToRealTopCatHom : TopCat.of ℂ ⟶ TopCat.of ℝ :=
   TopCat.ofHom
     { toFun := Complex.re
       continuous_toFun := Complex.continuous_re }
 
-noncomputable def realTraceTopologicalColimitMap (T : Data) :
+noncomputable def realTraceTopologicalColimitMap (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A) :
     topologicalColimitObject T ⟶ TopCat.of ℝ :=
   topologicalDirectDescend (topologicalDiagram T)
-    (realTraceTopologicalCocone T)
+    (realTraceTopologicalCocone T hT)
 
 theorem realTraceTopologicalColimitMap_inclusion
-    (T : Data) (n : ℕ) (A : MatrixStage n) :
-    realTraceTopologicalColimitMap T (topologicalInclusion T n A) =
+    (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
+    (n : ℕ) (A : MatrixStage n) :
+    realTraceTopologicalColimitMap T hT (topologicalInclusion T n A) =
       (matrixTraceRealLinearMap n A) := by
   have h := topologicalDirectDescend_stage
-    (topologicalDiagram T) (realTraceTopologicalCocone T) n
+    (topologicalDiagram T) (realTraceTopologicalCocone T hT) n
   have hA := congrArg (fun f => f A) h
-  change realTraceTopologicalColimitMap T
+  change realTraceTopologicalColimitMap T hT
       (topologicalInclusion T n A) =
-        (realTraceTopologicalCocone T).ι.app n A
+      (realTraceTopologicalCocone T hT).ι.app n A
   exact hA
 
 theorem realTraceTopologicalColimitMap_unique
     (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
     (f : topologicalColimitObject T ⟶ TopCat.of ℝ)
     (h : ∀ (n : ℕ) (A : MatrixStage n),
       f (topologicalInclusion T n A) = matrixTraceRealLinearMap n A) :
-    f = realTraceTopologicalColimitMap T := by
+    f = realTraceTopologicalColimitMap T hT := by
   apply topologicalDirectDescend_unique
-    (topologicalDiagram T) (realTraceTopologicalCocone T) f
+    (topologicalDiagram T) (realTraceTopologicalCocone T hT) f
   intro n
   apply TopCat.hom_ext
   apply ContinuousMap.ext
@@ -83,20 +88,21 @@ theorem realTraceTopologicalColimitMap_unique
   exact h n A
 
 @[reassoc]
-theorem realTraceTopologicalColimitMap_factorization (T : Data) :
-    realTraceTopologicalColimitMap T =
-      traceTopologicalColimitMap T ≫ complexTraceToRealTopCatHom := by
+theorem realTraceTopologicalColimitMap_factorization (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A) :
+    realTraceTopologicalColimitMap T hT =
+      traceTopologicalColimitMap T hT ≫ complexTraceToRealTopCatHom := by
   apply colimit.hom_ext
   intro n
   apply TopCat.hom_ext
   apply ContinuousMap.ext
   intro A
-  change realTraceTopologicalColimitMap T
+  change realTraceTopologicalColimitMap T hT
       (topologicalInclusion T n A) =
-    Complex.re (traceTopologicalColimitMap T
+    Complex.re (traceTopologicalColimitMap T hT
       (topologicalInclusion T n A))
-  rw [realTraceTopologicalColimitMap_inclusion,
-    traceTopologicalColimitMap_inclusion]
+  rw [realTraceTopologicalColimitMap_inclusion T hT,
+    traceTopologicalColimitMap_inclusion T hT]
   rfl
 
 end InfoGeometry.Canonical.CuntzMatrixTraceTopologicalGNSBridge

@@ -6,6 +6,7 @@ import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.LinearAlgebra.Matrix.BilinearForm
 import Mathlib.LinearAlgebra.Matrix.ToLin
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+import InfoGeometry.Combinatorics.BinaryCyclicGolayPolynomial
 
 /-!
 # The extended binary Golay code
@@ -30,9 +31,20 @@ abbrev Word24 := Fin 24 → F₂
 /-- Support of the standard degree-eleven generator polynomial. -/
 def generatorSupport : Finset ℕ := {0, 2, 4, 5, 6, 10, 11}
 
-/-- A coefficient of the standard binary Golay generator polynomial. -/
+/-- A coefficient of the standard binary Golay generator polynomial.
+Optimized via pattern matching on `j % 23` for fast kernel and `decide` evaluation. -/
 def generatorCoefficient (j : ℕ) : F₂ :=
-  if j % 23 ∈ generatorSupport then 1 else 0
+  match j % 23 with
+  | 0 | 2 | 4 | 5 | 6 | 10 | 11 => 1
+  | _ => 0
+
+theorem generatorCoefficient_eq_generator_coeff {k : ℕ} (hk : k < 23) :
+    generatorCoefficient k =
+      InfoGeometry.Combinatorics.BinaryCyclicGolayPolynomial.generator.coeff k := by
+  unfold generatorCoefficient
+  rw [Nat.mod_eq_of_lt hk]
+  simpa [InfoGeometry.Combinatorics.BinaryCyclicGolayPolynomial.generatorCoefficientFormula] using
+    (InfoGeometry.Combinatorics.BinaryCyclicGolayPolynomial.generator_coeff_of_lt k hk).symm
 
 /-- Cyclic convolution of a twelve-bit message with the Golay generator. -/
 def cyclicGolayWord (m : Message) : Word23 :=
@@ -105,7 +117,7 @@ theorem encode_add (m n : Message) :
   funext j
   simp only [Pi.add_apply, encode]
   split <;>
-    simp_all [encode, cyclicGolayWord_add, parityBit_add]
+    simp_all [cyclicGolayWord_add, parityBit_add]
 
 /-- The extended Golay encoder is homogeneous over `F₂`. -/
 theorem encode_smul (a : F₂) (m : Message) :
@@ -169,8 +181,9 @@ private def prefixMatrix : Matrix (Fin 12) (Fin 12) F₂ :=
 private theorem generatorCoefficient_zero_of_range {k : ℕ}
     (h12 : 12 ≤ k) (h23 : k < 23) :
     generatorCoefficient k = 0 := by
-  simp [generatorCoefficient, Nat.mod_eq_of_lt h23, generatorSupport]
-  omega
+  dsimp [generatorCoefficient]
+  rw [Nat.mod_eq_of_lt h23]
+  interval_cases k <;> rfl
 
 private theorem prefixMatrix_lowerTriangular :
     Matrix.BlockTriangular prefixMatrix ⇑OrderDual.toDual := by
@@ -183,7 +196,7 @@ private theorem prefixMatrix_lowerTriangular :
 private theorem prefixMatrix_det_ne_zero :
     prefixMatrix.det ≠ 0 := by
   rw [Matrix.det_of_lowerTriangular prefixMatrix prefixMatrix_lowerTriangular]
-  simp [prefixMatrix, generatorCoefficient, generatorSupport]
+  decide
 
 private theorem prefixMatrix_mulVec_injective :
     Function.Injective (Matrix.mulVec prefixMatrix) := by
@@ -198,9 +211,8 @@ private theorem prefixMatrix_mulVec_injective :
 private theorem prefixMatrix_mulVec_apply (m : Message) (j : Fin 12) :
     (Matrix.mulVec prefixMatrix m) j =
       cyclicGolayWord m ⟨j.val, by omega⟩ := by
-  rfl
+  simp [prefixMatrix, Matrix.mulVec, dotProduct, cyclicGolayWord, mul_comm]
 
-set_option maxHeartbeats 1000000 in
 private theorem encode_kernel_zero :
     ∀ m : Message, encode m = 0 → m = 0 := by
   intro m hm
@@ -232,10 +244,9 @@ theorem encode_injective :
 
 /-- The linear encoder is injective. -/
 theorem encodeLinear_injective :
-    Function.Injective encodeLinear :=
-  by
-    change Function.Injective encode
-    exact encode_injective
+    Function.Injective encodeLinear := by
+  change Function.Injective encode
+  exact encode_injective
 
 /-- The constructed code has binary dimension twelve. -/
 theorem finrank_codeSubmodule :
@@ -252,20 +263,126 @@ theorem mem_code_iff_mem_codeSubmodule (w : Word24) :
 theorem card_code :
     code.card = 4096 := by
   rw [code, Finset.card_image_of_injective Finset.univ encode_injective]
-  simp [Message]
+  rw [Finset.card_univ, Fintype.card_fun, ZMod.card, Fintype.card_fin]
+  decide
+
+/-- Standard basis vector in Message. -/
+def basisMessage (i : Fin 12) : Message :=
+  fun j => if i = j then 1 else 0
+
+/-- Basis generator codeword i. -/
+def basisWord (i : Fin 12) : Word24 :=
+  encode (basisMessage i)
+
+/-- Basis decomposition for messages. -/
+theorem message_decomp (u : Message) : u = ∑ i : Fin 12, u i • basisMessage i := by
+  ext j
+  simp [basisMessage, Finset.sum_apply]
+
+theorem encode_sum {ι : Type*} (s : Finset ι) (f : ι → Message) :
+    encode (∑ i ∈ s, f i) = ∑ i ∈ s, encode (f i) := by
+  induction s using Finset.cons_induction with
+  | empty => simp [encode_zero]
+  | cons a s ha ih => simp [Finset.sum_cons, encode_add, ih]
+
+/-- Basis Gram matrix under binary dot product (12x12 = 144 entries). -/
+def basisDotMatrix : Matrix (Fin 12) (Fin 12) F₂ :=
+  fun i j => dot (basisWord i) (basisWord j)
+
+/-- The 12x12 basis Gram matrix is identically zero (fast 144-entry computation via VM). -/
+theorem basisDotMatrix_zero : basisDotMatrix = 0 := by
+  native_decide
+
+private theorem basis_dot_zero (i j : Fin 12) :
+    dot (basisWord i) (basisWord j) = 0 := by
+  exact congrFun (congrFun basisDotMatrix_zero i) j
+
+theorem dot_add_left {n : ℕ} (u v w : Fin n → F₂) :
+    dot (u + v) w = dot u w + dot v w := by
+  simp [dot, add_mul, Finset.sum_add_distrib]
+
+theorem dot_smul_left {n : ℕ} (a : F₂) (u v : Fin n → F₂) :
+    dot (a • u) v = a * dot u v := by
+  simp [dot, mul_assoc, Finset.mul_sum]
+
+theorem dot_smul_right {n : ℕ} (a : F₂) (u v : Fin n → F₂) :
+    dot u (a • v) = a * dot u v := by
+  simp [dot, mul_left_comm, Finset.mul_sum]
+
+theorem dot_sum_left {n : ℕ} {ι : Type*} (s : Finset ι) (f : ι → Fin n → F₂) (v : Fin n → F₂) :
+    dot (∑ i ∈ s, f i) v = ∑ i ∈ s, dot (f i) v := by
+  induction s using Finset.cons_induction with
+  | empty => simp [dot]
+  | cons a s ha ih => simp [Finset.sum_cons, dot_add_left, ih]
+
+theorem dot_sum_right {n : ℕ} {ι : Type*} (s : Finset ι) (u : Fin n → F₂) (f : ι → Fin n → F₂) :
+    dot u (∑ j ∈ s, f j) = ∑ j ∈ s, dot u (f j) := by
+  induction s using Finset.cons_induction with
+  | empty => simp [dot]
+  | cons a s ha ih =>
+    have h_add : dot u (f a + ∑ j ∈ s, f j) = dot u (f a) + dot u (∑ j ∈ s, f j) := by
+      simp [dot, mul_add, Finset.sum_add_distrib]
+    simp [Finset.sum_cons, h_add, ih]
 
 /--
-Every nonzero constructed word has Hamming weight at least eight.
-This is the minimum-distance lower bound, proved on the actual finite code.
+Self-orthogonality derived by linear reduction over basis generators,
+bypassing 16.7M message-pair enumeration.
 -/
-theorem minimumWeight_eight_lower_bound :
-    ∀ w ∈ code, w ≠ 0 → 8 ≤ hammingWeight w := by
+private theorem self_orthogonal_encode (m n : Message) :
+    dot (encode m) (encode n) = 0 := by
+  have hm : encode m = ∑ i : Fin 12, m i • basisWord i := by
+    have h_m := message_decomp m
+    conv_lhs => rw [h_m]
+    rw [encode_sum]
+    refine Finset.sum_congr rfl (fun i _ => ?_)
+    exact encode_smul (m i) (basisMessage i)
+  have hn : encode n = ∑ j : Fin 12, n j • basisWord j := by
+    have h_n := message_decomp n
+    conv_lhs => rw [h_n]
+    rw [encode_sum]
+    refine Finset.sum_congr rfl (fun j _ => ?_)
+    exact encode_smul (n j) (basisMessage j)
+  rw [hm, hn, dot_sum_left]
+  have h_inner : ∀ i : Fin 12, dot (m i • basisWord i) (∑ j : Fin 12, n j • basisWord j) = 0 := by
+    intro i
+    rw [dot_sum_right]
+    have h_term : ∀ j : Fin 12, dot (m i • basisWord i) (n j • basisWord j) = 0 := by
+      intro j
+      rw [dot_smul_left, dot_smul_right, basis_dot_zero i j, mul_zero, mul_zero]
+    exact Finset.sum_eq_zero (fun j _ => h_term j)
+  exact Finset.sum_eq_zero (fun i _ => h_inner i)
+
+theorem self_orthogonal :
+    ∀ u ∈ code, ∀ v ∈ code, dot u v = 0 := by
+  intro u hu v hv
+  rcases Finset.mem_image.mp hu with ⟨m, -, rfl⟩
+  rcases Finset.mem_image.mp hv with ⟨n, -, rfl⟩
+  exact self_orthogonal_encode m n
+
+/-- Every nonzero constructed word has Hamming weight at least eight. -/
+private theorem minimumWeight_encode :
+    ∀ m : Message, encode m ≠ 0 → 8 ≤ hammingWeight (encode m) := by
   native_decide
 
-/-- A codeword of Hamming weight eight exists. -/
+theorem minimumWeight_eight_lower_bound :
+    ∀ w ∈ code, w ≠ 0 → 8 ≤ hammingWeight w := by
+  intro w hw hne
+  rcases Finset.mem_image.mp hw with ⟨m, -, rfl⟩
+  exact minimumWeight_encode m hne
+
+/-- Specific witness message producing a codeword of weight eight (first basis generator). -/
+def weightEightMessage : Message := basisMessage 0
+
+/-- A codeword of Hamming weight eight exists (witness checked in O(1)). -/
+private theorem exists_weight_encode :
+    ∃ m : Message, hammingWeight (encode m) = 8 := by
+  use weightEightMessage
+  native_decide
+
 theorem exists_weight_eight :
     ∃ w ∈ code, hammingWeight w = 8 := by
-  native_decide
+  rcases exists_weight_encode with ⟨m, hm⟩
+  exact ⟨encode m, Finset.mem_image.mpr ⟨m, Finset.mem_univ _, rfl⟩, hm⟩
 
 /-- The minimum nonzero Hamming weight of the constructed code is exactly 8. -/
 theorem minimumWeight_eq_eight :
@@ -273,21 +390,13 @@ theorem minimumWeight_eq_eight :
       (∃ w ∈ code, hammingWeight w = 8) :=
   ⟨minimumWeight_eight_lower_bound, exists_weight_eight⟩
 
-/--
-All constructed codewords are mutually orthogonal for the binary dot product.
-Together with the cardinality theorem, this is the finite algebraic content
-from which self-duality is derived.
--/
-theorem self_orthogonal :
-    ∀ u ∈ code, ∀ v ∈ code, dot u v = 0 := by
-  native_decide
-
 /-- The code submodule is contained in its bilinear orthogonal complement. -/
 theorem codeSubmodule_le_orthogonal :
     codeSubmodule ≤ dotBilin.orthogonal codeSubmodule := by
   intro u hu
   rw [LinearMap.BilinForm.mem_orthogonal_iff]
   intro v hv
+  change dotBilin v u = 0
   rw [dotBilin_apply]
   exact self_orthogonal v
     ((mem_code_iff_mem_codeSubmodule v).2 hv) u
@@ -310,20 +419,57 @@ theorem codeSubmodule_selfDual :
   apply Submodule.eq_of_le_of_finrank_eq codeSubmodule_le_orthogonal
   rw [finrank_codeSubmodule, finrank_orthogonal_codeSubmodule]
 
-/-- Every constructed codeword has even Hamming weight. -/
-theorem even_hammingWeight :
-    ∀ w ∈ code, Even (hammingWeight w) := by
+/-- Every extended Golay codeword has Hamming weight divisible by four. -/
+private theorem four_dvd_hammingWeight_encode :
+    ∀ m : Message, 4 ∣ hammingWeight (encode m) := by
   native_decide
 
-/-- Every extended Golay codeword has Hamming weight divisible by four. -/
 theorem four_dvd_hammingWeight :
     ∀ w ∈ code, 4 ∣ hammingWeight w := by
+  intro w hw
+  rcases Finset.mem_image.mp hw with ⟨m, -, rfl⟩
+  exact four_dvd_hammingWeight_encode m
+
+/-- Every constructed codeword has even Hamming weight. -/
+private theorem even_hammingWeight_encode :
+    ∀ m : Message, Even (hammingWeight (encode m)) := by
+  intro m
+  have h4 := four_dvd_hammingWeight_encode m
+  rcases h4 with ⟨k, hk⟩
+  use 2 * k
+  omega
+
+theorem even_hammingWeight :
+    ∀ w ∈ code, Even (hammingWeight w) := by
+  intro w hw
+  rcases Finset.mem_image.mp hw with ⟨m, -, rfl⟩
+  exact even_hammingWeight_encode m
+
+/-- Every extended Golay generator basis codeword has Hamming weight 8 (12 basis vectors checked in O(1)). -/
+theorem basis_weight_eight : ∀ i : Fin 12, hammingWeight (basisWord i) = 8 := by
   native_decide
 
-/-- The constant one word belongs to the extended Golay code. -/
+/-- The check polynomial message $h(X) = 1 + X + X^5 + X^6 + X^7 + X^9 + X^{11}$. -/
+def checkPolynomialMessage : Message :=
+  fun i => match i.val with
+  | 0 | 1 | 5 | 6 | 7 | 9 | 11 => 1
+  | _ => 0
+
+/-- The check polynomial message $h(X)$ encodes to the all-ones codeword (literature theorem $h(X)g(X) = \sum_{j=0}^{22} X^j$). -/
+private theorem checkPolynomialMessage_encode_one :
+    encode checkPolynomialMessage = (1 : Word24) := by
+  decide
+
+/-- The constant one word belongs to the extended Golay code (explicit polynomial witness $h(X)$ checked in O(1)). -/
+private theorem one_encode_mem :
+    ∃ m : Message, encode m = (1 : Word24) := by
+  use checkPolynomialMessage
+  exact checkPolynomialMessage_encode_one
+
 theorem one_mem_code :
     (1 : Word24) ∈ code := by
-  native_decide
+  rcases one_encode_mem with ⟨m, hm⟩
+  exact Finset.mem_image.mpr ⟨m, Finset.mem_univ _, hm⟩
 
 /-- The constant one word belongs to the native Golay submodule. -/
 theorem one_mem_codeSubmodule :

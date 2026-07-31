@@ -19,6 +19,7 @@ namespace InfoGeometry.Canonical.NonAbelianFusionTensorTopologicalColimit
 
 open CategoryTheory CategoryTheory.Limits
 open Matrix
+open scoped Kronecker
 open InfoGeometry.Canonical.NonAbelianFusionFRBridge
 open InfoGeometry.Canonical.NonAbelianFusionFRTopologicalBridge
 open FilteredColimit.Native.Topological
@@ -54,8 +55,7 @@ theorem tensorLeftTopCatHom_comp
   intro X
   change (M' ⊗ₖ N') * ((M ⊗ₖ N) * X) =
     ((M' * M) ⊗ₖ (N' * N)) * X
-  rw [← Matrix.mul_kronecker_mul]
-  simp only [Matrix.mul_assoc]
+  rw [← Matrix.mul_assoc, ← Matrix.mul_kronecker_mul]
 
 def tensorActionCocone
     (action : TopCat.of (FusionTensorCarrier K) ⟶
@@ -126,6 +126,38 @@ theorem tensorActionColimitEndomorphism_stage
     (fusionTensorTopologicalDiagram (K := K))
     (tensorActionColimitCocone (K := K) action) n
 
+theorem tensorActionColimitEndomorphism_comp_stage
+    (action₁ action₂ : TopCat.of (FusionTensorCarrier K) ⟶
+      TopCat.of (FusionTensorCarrier K)) (n : ℕ) :
+    topologicalDirectInjection
+        (fusionTensorTopologicalDiagram (K := K)) n ≫
+        (tensorActionColimitEndomorphism (K := K) action₁ ≫
+          tensorActionColimitEndomorphism (K := K) action₂) =
+      (action₁ ≫ action₂) ≫
+        topologicalDirectInjection
+          (fusionTensorTopologicalDiagram (K := K)) n := by
+  calc
+    _ = (topologicalDirectInjection
+        (fusionTensorTopologicalDiagram (K := K)) n ≫
+        tensorActionColimitEndomorphism (K := K) action₁) ≫
+        tensorActionColimitEndomorphism (K := K) action₂ := by
+          simp only [Category.assoc]
+    _ = (action₁ ≫ topologicalDirectInjection
+        (fusionTensorTopologicalDiagram (K := K)) n) ≫
+        tensorActionColimitEndomorphism (K := K) action₂ := by
+          rw [tensorActionColimitEndomorphism_stage (K := K) action₁ n]
+    _ = action₁ ≫ (topologicalDirectInjection
+        (fusionTensorTopologicalDiagram (K := K)) n ≫
+        tensorActionColimitEndomorphism (K := K) action₂) := by
+          simp only [Category.assoc]
+    _ = action₁ ≫ (action₂ ≫ topologicalDirectInjection
+        (fusionTensorTopologicalDiagram (K := K)) n) := by
+          rw [tensorActionColimitEndomorphism_stage (K := K) action₂ n]
+    _ = (action₁ ≫ action₂) ≫
+        topologicalDirectInjection
+          (fusionTensorTopologicalDiagram (K := K)) n := by
+          simp only [Category.assoc]
+
 def fusionCoxeterTensorColimitEndomorphism
     (a b q1 q2 : K) :
     topologicalDirectColimit
@@ -148,5 +180,76 @@ theorem fusionCoxeterTensorColimitEndomorphism_stage
   exact tensorActionColimitEndomorphism_stage (K := K)
     (tensorLeftTopCatHom
       (braidGen2 K a b q1 q2) (braidGen1 K q1 q2)) n
+
+def fusionCoxeterTensorFullTwistColimitEndomorphism
+    (a b q1 q2 : K) :
+    topologicalDirectColimit
+        (fusionTensorTopologicalDiagram (K := K)) ⟶
+      topologicalDirectColimit
+        (fusionTensorTopologicalDiagram (K := K)) :=
+  fusionCoxeterTensorColimitEndomorphism (K := K) a b q1 q2 ≫
+    fusionCoxeterTensorColimitEndomorphism (K := K) a b q1 q2 ≫
+    fusionCoxeterTensorColimitEndomorphism (K := K) a b q1 q2
+
+theorem fusionCoxeterTensorFullTwist_stage
+    (a b q1 q2 : K) (n : ℕ) :
+    topologicalDirectInjection
+        (fusionTensorTopologicalDiagram (K := K)) n ≫
+        fusionCoxeterTensorFullTwistColimitEndomorphism
+          (K := K) a b q1 q2 =
+      (tensorLeftTopCatHom
+          (braidGen2 K a b q1 q2) (braidGen1 K q1 q2) ≫
+        tensorLeftTopCatHom
+          (braidGen2 K a b q1 q2) (braidGen1 K q1 q2) ≫
+        tensorLeftTopCatHom
+          (braidGen2 K a b q1 q2) (braidGen1 K q1 q2)) ≫
+        topologicalDirectInjection
+          (fusionTensorTopologicalDiagram (K := K)) n := by
+  dsimp [fusionCoxeterTensorFullTwistColimitEndomorphism,
+    fusionCoxeterTensorColimitEndomorphism]
+  let e := tensorActionColimitEndomorphism (K := K)
+    (tensorLeftTopCatHom
+      (braidGen2 K a b q1 q2) (braidGen1 K q1 q2))
+  let t := tensorLeftTopCatHom
+    (braidGen2 K a b q1 q2) (braidGen1 K q1 q2)
+  change topologicalDirectInjection
+      (fusionTensorTopologicalDiagram (K := K)) n ≫ (e ≫ e ≫ e) =
+    (t ≫ t ≫ t) ≫ topologicalDirectInjection
+      (fusionTensorTopologicalDiagram (K := K)) n
+  calc
+    _ = (topologicalDirectInjection
+        (fusionTensorTopologicalDiagram (K := K)) n ≫ (e ≫ e)) ≫ e := by
+          simp only [Category.assoc]
+    _ = ((t ≫ t) ≫ topologicalDirectInjection
+        (fusionTensorTopologicalDiagram (K := K)) n) ≫ e := by
+          rw [tensorActionColimitEndomorphism_comp_stage]
+    _ = (t ≫ t) ≫
+        (topologicalDirectInjection
+          (fusionTensorTopologicalDiagram (K := K)) n ≫ e) := by
+          simp only [Category.assoc]
+    _ = (t ≫ t) ≫
+        (t ≫ topologicalDirectInjection
+          (fusionTensorTopologicalDiagram (K := K)) n) := by
+          rw [tensorActionColimitEndomorphism_stage]
+    _ = (t ≫ t ≫ t) ≫ topologicalDirectInjection
+        (fusionTensorTopologicalDiagram (K := K)) n := by
+          simp only [Category.assoc]
+
+theorem fusionCoxeterTensorFullTwist_stage_apply
+    (a b q1 q2 : K) (n : ℕ) (X : FusionTensorCarrier K) :
+    fusionCoxeterTensorFullTwistColimitEndomorphism
+        (K := K) a b q1 q2
+      (topologicalDirectInjection
+        (fusionTensorTopologicalDiagram (K := K)) n X) =
+      topologicalDirectInjection
+        (fusionTensorTopologicalDiagram (K := K)) n
+        (((braidGen2 K a b q1 q2 ⊗ₖ braidGen1 K q1 q2) *
+          (braidGen2 K a b q1 q2 ⊗ₖ braidGen1 K q1 q2) *
+          (braidGen2 K a b q1 q2 ⊗ₖ braidGen1 K q1 q2)) * X) := by
+  have h := fusionCoxeterTensorFullTwist_stage
+    (K := K) a b q1 q2 n
+  have hx := congrArg (fun f => f X) h
+  simpa only [Category.assoc, tensorLeftTopCatHom_apply,
+    Matrix.mul_assoc] using hx
 
 end InfoGeometry.Canonical.NonAbelianFusionTensorTopologicalColimit

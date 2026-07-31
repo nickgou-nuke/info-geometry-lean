@@ -83,6 +83,57 @@ theorem fibTensorObj_unit_right (X : FibCat) :
   ext s
   cases s <;> simp [fibTensorObj, fibTensorUnit]
 
+/-! ## Skeletal coherence isomorphisms
+
+The object-level fusion equalities above give canonical coherence
+isomorphisms in the explicit skeletal category.  These are identity
+transports; they do not claim that the nontrivial Fibonacci `F`-matrix has
+already been bundled as a monoidal associator.
+-/
+
+/-- Canonical associator obtained by transport across the fusion-object equality. -/
+noncomputable def fibAssociator (X Y Z : FibCat) :
+    fibTensorObj (fibTensorObj X Y) Z ≅
+      fibTensorObj X (fibTensorObj Y Z) :=
+  CategoryTheory.eqToIso (fibTensorObj_assoc X Y Z)
+
+/-- Canonical left unitor for the skeletal fusion object. -/
+noncomputable def fibLeftUnitor (X : FibCat) :
+    fibTensorObj fibTensorUnit X ≅ X :=
+  CategoryTheory.eqToIso (fibTensorObj_unit_left X)
+
+/-- Canonical right unitor for the skeletal fusion object. -/
+noncomputable def fibRightUnitor (X : FibCat) :
+    fibTensorObj X fibTensorUnit ≅ X :=
+  CategoryTheory.eqToIso (fibTensorObj_unit_right X)
+
+@[simp] theorem fibAssociator_hom (X Y Z : FibCat) :
+    (fibAssociator X Y Z).hom =
+      CategoryTheory.eqToHom (fibTensorObj_assoc X Y Z) :=
+  rfl
+
+@[simp] theorem fibLeftUnitor_hom (X : FibCat) :
+    (fibLeftUnitor X).hom =
+      CategoryTheory.eqToHom (fibTensorObj_unit_left X) :=
+  rfl
+
+@[simp] theorem fibRightUnitor_hom (X : FibCat) :
+    (fibRightUnitor X).hom =
+      CategoryTheory.eqToHom (fibTensorObj_unit_right X) :=
+  rfl
+
+theorem fibAssociator_hom_inv_id (X Y Z : FibCat) :
+    (fibAssociator X Y Z).hom ≫ (fibAssociator X Y Z).inv = 𝟙 _ := by
+  exact (fibAssociator X Y Z).hom_inv_id
+
+theorem fibLeftUnitor_hom_inv_id (X : FibCat) :
+    (fibLeftUnitor X).hom ≫ (fibLeftUnitor X).inv = 𝟙 _ := by
+  exact (fibLeftUnitor X).hom_inv_id
+
+theorem fibRightUnitor_hom_inv_id (X : FibCat) :
+    (fibRightUnitor X).hom ≫ (fibRightUnitor X).inv = 𝟙 _ := by
+  exact (fibRightUnitor X).hom_inv_id
+
 /-- 
 Open Debt: The MonoidalCategory instance.
 The tensor product of objects is defined via `fusionMultiplicity`.

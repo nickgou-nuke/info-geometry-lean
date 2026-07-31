@@ -21,7 +21,7 @@ theorem majorana_modular_invariant
     (gamma : R) (hM : MajoranaBoundaryOperator gamma) :
     modularMirrorReflection gamma gamma = gamma := by
   dsimp [modularMirrorReflection]
-  simp [hM.self_adjoint, mul_assoc, hM.sq_eq_one]
+  simp [hM.self_adjoint, hM.sq_eq_one]
 
 /-- **Теорема 2**: Инволютивност на Модуларното Огледало J(J(x)) = x (J² = I).
     Двукратното отражение връща оригиналното състояние от наблюдаемата алгебра M! -/
@@ -29,7 +29,9 @@ theorem modularMirrorReflection_involutive
     (gamma x : R) (hM : MajoranaBoundaryOperator gamma) :
     modularMirrorReflection gamma (modularMirrorReflection gamma x) = x := by
   dsimp [modularMirrorReflection]
-  simp [star_mul, hM.self_adjoint, mul_assoc, hM.sq_eq_one]
+  rw [star_mul, star_mul, hM.self_adjoint, star_star]
+  simp only [mul_assoc]
+  rw [hM.sq_eq_one, mul_one, ← mul_assoc, hM.sq_eq_one, one_mul]
 
 /-- **Master Synthesis**: Майоранова Конформна Сфера & Виртуален Комутант Synthesis. -/
 theorem master_majorana_conformal_commutant_synthesis

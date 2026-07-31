@@ -11,13 +11,23 @@ null-trichotomy wrapper supplies the three `NULL` failure modes.
     cor:xi-unitary-slice-decidable -/
 theorem paper_xi_unitary_slice_decidable :
     Omega.CircleDimension.UnitarySliceDecidable.paper_cdim_unitary_slice_decidable ∧
-      (∀ h : Omega.TypedAddressBiaxialCompletion.TypedAddressNullTrichotomyData,
-        h.exhaustive ∧ h.semanticFailuresRequireAddressChange ∧
-          h.protocolFailuresNeedProtocolRepair ∧ h.collisionFailuresNeedSupportAxisBudget) := by
+      (∀ (exhaustive semanticFailuresRequireAddressChange protocolFailuresNeedProtocolRepair
+          collisionFailuresNeedSupportAxisBudget : Prop)
+          (hExhaustive : exhaustive)
+          (hSemanticRepair : semanticFailuresRequireAddressChange)
+          (hProtocolRepair : protocolFailuresNeedProtocolRepair)
+          (hCollisionRepair : collisionFailuresNeedSupportAxisBudget),
+        exhaustive ∧ semanticFailuresRequireAddressChange ∧
+          protocolFailuresNeedProtocolRepair ∧ collisionFailuresNeedSupportAxisBudget) := by
   refine ⟨?_, ?_⟩
   · intro State Ref Value _ Adm Vis Γ hΓ p r _ _
     exact paper_cdim_unitary_slice_decidable_package Adm Vis Γ hΓ
-  · intro h
-    exact paper_xi_null_complete_trichotomy_offline h
+  · intro exhaustive semanticFailuresRequireAddressChange protocolFailuresNeedProtocolRepair
+      collisionFailuresNeedSupportAxisBudget hExhaustive hSemanticRepair hProtocolRepair
+      hCollisionRepair
+    exact paper_xi_null_complete_trichotomy_offline exhaustive
+      semanticFailuresRequireAddressChange protocolFailuresNeedProtocolRepair
+      collisionFailuresNeedSupportAxisBudget hExhaustive hSemanticRepair hProtocolRepair
+      hCollisionRepair
 
 end Omega.Zeta

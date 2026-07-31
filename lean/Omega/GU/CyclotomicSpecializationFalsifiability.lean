@@ -4,41 +4,58 @@ namespace Omega.GU
 
 universe u
 
-/-- Chapter-local package for the finite-falsifiability corollary.  The exceptional cyclotomic
-layers are those carrying the observed common slow mode after factoring out the rigid part; if
-there were infinitely many of them, the residual family would exhibit an extra gcd on infinitely
-many levels. -/
-structure CyclotomicSpecializationFalsifiabilityData extends CyclotomicGcdStabilityData where
-  Layer : Type u
-  decEqLayer : DecidableEq Layer
-  exceptionalLayer : Layer → Prop
-  exceptionalLayersForceExtraGcdAtInfinitelyManyLevels :
-    Set.Infinite {ℓ : Layer | exceptionalLayer ℓ} → extraGcdAtInfinitelyManyLevels
-
-attribute [instance] CyclotomicSpecializationFalsifiabilityData.decEqLayer
-
-/-- If the residual gcd is trivial, then the exceptional cyclotomic layers carrying the observed
-common slow mode form a finite witness set, so the specialization claim is finitely falsifiable.
-    cor:cyclotomic-specialization-falsifiability -/
+/-- Exceptional cyclotomic layers form a finite witness set under residual gcd triviality. -/
 theorem paper_gut_cyclotomic_specialization_falsifiability
-    (D : CyclotomicSpecializationFalsifiabilityData) :
-    D.residualGcdTrivial →
-      ∃ witnessSet : Finset D.Layer, ∀ ℓ, D.exceptionalLayer ℓ → ℓ ∈ witnessSet := by
+    (BivariatePolynomial : Type u)
+    (nontrivialCommonFactor : BivariatePolynomial → Prop)
+    (infinitelyManyCommonSlowModes residualGcdTrivial extraGcdAtInfinitelyManyLevels : Prop)
+    (Layer : Type u) [DecidableEq Layer]
+    (exceptionalLayer : Layer → Prop)
+    (specializationRigidity :
+      infinitelyManyCommonSlowModes → ∃ H : BivariatePolynomial, nontrivialCommonFactor H)
+    (extraGcdForcesInfinitelyManyCommonSlowModes :
+      extraGcdAtInfinitelyManyLevels → infinitelyManyCommonSlowModes)
+    (residualGcdExcludesNontrivialCommonFactor :
+      residualGcdTrivial → ¬ ∃ H : BivariatePolynomial, nontrivialCommonFactor H)
+    (exceptionalLayersForceExtraGcdAtInfinitelyManyLevels :
+      Set.Infinite {ℓ : Layer | exceptionalLayer ℓ} → extraGcdAtInfinitelyManyLevels) :
+    residualGcdTrivial →
+      ∃ witnessSet : Finset Layer, ∀ ℓ, exceptionalLayer ℓ → ℓ ∈ witnessSet := by
   intro hResidual
-  have hnotInfinite : ¬ Set.Infinite {ℓ : D.Layer | D.exceptionalLayer ℓ} := by
+  have hnotInfinite : ¬ Set.Infinite {ℓ : Layer | exceptionalLayer ℓ} := by
     intro hInfinite
-    exact (paper_gut_cyclotomic_gcd_stability D.toCyclotomicGcdStabilityData hResidual)
-      (D.exceptionalLayersForceExtraGcdAtInfinitelyManyLevels hInfinite)
-  have hfinite : Set.Finite {ℓ : D.Layer | D.exceptionalLayer ℓ} := Set.not_infinite.mp hnotInfinite
+    exact (paper_gut_cyclotomic_gcd_stability BivariatePolynomial
+      nontrivialCommonFactor infinitelyManyCommonSlowModes residualGcdTrivial
+      extraGcdAtInfinitelyManyLevels specializationRigidity
+      extraGcdForcesInfinitelyManyCommonSlowModes residualGcdExcludesNontrivialCommonFactor
+      hResidual)
+      (exceptionalLayersForceExtraGcdAtInfinitelyManyLevels hInfinite)
+  have hfinite : Set.Finite {ℓ : Layer | exceptionalLayer ℓ} := Set.not_infinite.mp hnotInfinite
   refine ⟨hfinite.toFinset, ?_⟩
   intro ℓ hℓ
   exact hfinite.mem_toFinset.mpr hℓ
 
-/-- Paper label: `cor:cyclotomic-specialization-falsifiability`. -/
+/-- Chapter-facing theorem for finite falsifiability of cyclotomic specializations. -/
 theorem paper_cyclotomic_specialization_falsifiability
-    (D : CyclotomicSpecializationFalsifiabilityData) :
-    D.residualGcdTrivial →
-      ∃ witnessSet : Finset D.Layer, ∀ l, D.exceptionalLayer l → l ∈ witnessSet := by
-  exact paper_gut_cyclotomic_specialization_falsifiability D
+    (BivariatePolynomial : Type u)
+    (nontrivialCommonFactor : BivariatePolynomial → Prop)
+    (infinitelyManyCommonSlowModes residualGcdTrivial extraGcdAtInfinitelyManyLevels : Prop)
+    (Layer : Type u) [DecidableEq Layer]
+    (exceptionalLayer : Layer → Prop)
+    (specializationRigidity :
+      infinitelyManyCommonSlowModes → ∃ H : BivariatePolynomial, nontrivialCommonFactor H)
+    (extraGcdForcesInfinitelyManyCommonSlowModes :
+      extraGcdAtInfinitelyManyLevels → infinitelyManyCommonSlowModes)
+    (residualGcdExcludesNontrivialCommonFactor :
+      residualGcdTrivial → ¬ ∃ H : BivariatePolynomial, nontrivialCommonFactor H)
+    (exceptionalLayersForceExtraGcdAtInfinitelyManyLevels :
+      Set.Infinite {ℓ : Layer | exceptionalLayer ℓ} → extraGcdAtInfinitelyManyLevels) :
+    residualGcdTrivial →
+      ∃ witnessSet : Finset Layer, ∀ ℓ, exceptionalLayer ℓ → ℓ ∈ witnessSet := by
+  exact paper_gut_cyclotomic_specialization_falsifiability BivariatePolynomial
+    nontrivialCommonFactor infinitelyManyCommonSlowModes residualGcdTrivial
+    extraGcdAtInfinitelyManyLevels Layer exceptionalLayer specializationRigidity
+    extraGcdForcesInfinitelyManyCommonSlowModes residualGcdExcludesNontrivialCommonFactor
+    exceptionalLayersForceExtraGcdAtInfinitelyManyLevels
 
 end Omega.GU

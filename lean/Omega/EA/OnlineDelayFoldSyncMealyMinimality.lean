@@ -18,21 +18,8 @@ an explicit separating suffix for each ordered state pair, and the finite Myhill
 turning pairwise residual separation into minimality. -/
 structure OnlineDelayFoldSyncMealyMinimalityData where
   residualOutput : OnlineDelayFoldSyncKernelState → List (Fin 3) → List Bool
-  realizesFold : Prop
-  realizesFold_h : realizesFold
   separatingSuffix :
     OnlineDelayFoldSyncKernelState → OnlineDelayFoldSyncKernelState → List (Fin 3)
-  separatesResiduals :
-    ∀ {q q' : OnlineDelayFoldSyncKernelState}, q ≠ q' →
-      residualOutput q (separatingSuffix q q') ≠
-        residualOutput q' (separatingSuffix q q')
-  pairwiseStateSeparated_of_residualSeparation :
-    (∀ {q q' : OnlineDelayFoldSyncKernelState}, q ≠ q' →
-      residualOutput q (separatingSuffix q q') ≠
-        residualOutput q' (separatingSuffix q q')) →
-      ∀ q q' : OnlineDelayFoldSyncKernelState, q ≠ q' →
-        residualOutput q (separatingSuffix q q') ≠
-          residualOutput q' (separatingSuffix q q')
 
 namespace OnlineDelayFoldSyncMealyMinimalityData
 
@@ -51,10 +38,14 @@ end OnlineDelayFoldSyncMealyMinimalityData
 /-- The explicit separating suffix table yields pairwise residual separation of the ten kernel
 states. -/
 theorem onlineDelayFoldSyncKernel_pairwiseStateSeparated
-    (D : OnlineDelayFoldSyncMealyMinimalityData) :
+    (D : OnlineDelayFoldSyncMealyMinimalityData)
+    (separatesResiduals :
+      ∀ {q q' : OnlineDelayFoldSyncKernelState}, q ≠ q' →
+        D.residualOutput q (D.separatingSuffix q q') ≠
+          D.residualOutput q' (D.separatingSuffix q q')) :
     OnlineDelayFoldSyncMealyMinimalityData.pairwiseStateSeparated D := by
   intro q q' hqq'
-  exact D.separatesResiduals hqq'
+  exact separatesResiduals hqq'
 
 /-- The finite Mealy/Myhill-Nerode argument upgrades pairwise residual separation to minimality. -/
 theorem onlineDelayFoldSyncKernel_minimalStateCount
@@ -69,11 +60,17 @@ an explicit suffix witness, and the finite residual-function separation certific
 minimal state count.
     thm:online-delay-fold-sync-mealy-minimality -/
 theorem paper_online_delay_fold_sync_mealy_minimality
-    (D : OnlineDelayFoldSyncMealyMinimalityData) :
-    D.realizesFold ∧
+    (D : OnlineDelayFoldSyncMealyMinimalityData)
+    (realizesFold : Prop)
+    (hRealizesFold : realizesFold)
+    (separatesResiduals :
+      ∀ {q q' : OnlineDelayFoldSyncKernelState}, q ≠ q' →
+        D.residualOutput q (D.separatingSuffix q q') ≠
+          D.residualOutput q' (D.separatingSuffix q q')) :
+    realizesFold ∧
       OnlineDelayFoldSyncMealyMinimalityData.pairwiseStateSeparated D ∧
       OnlineDelayFoldSyncMealyMinimalityData.minimalStateCount D := by
-  exact ⟨D.realizesFold_h, onlineDelayFoldSyncKernel_pairwiseStateSeparated D,
+  exact ⟨hRealizesFold, onlineDelayFoldSyncKernel_pairwiseStateSeparated D separatesResiduals,
     onlineDelayFoldSyncKernel_minimalStateCount D⟩
 
 end Omega.EA

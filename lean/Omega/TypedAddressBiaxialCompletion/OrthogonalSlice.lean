@@ -9,7 +9,8 @@ namespace Omega.TypedAddressBiaxialCompletion
 the unitary-slice readout stays closed, any legal readout must pass the visible/register/mode
 budgets simultaneously, and the `NULL` trichotomy is exhaustive. -/
 theorem paper_typed_address_biaxial_completion_orthogonal_slice
-    (U : UnitarySliceAddressClosureData) (N : TypedAddressNullTrichotomyData)
+    (U : UnitarySliceAddressClosureData)
+    (exhaustive : Prop) (hExhaustive : exhaustive)
     (legalReadout visibleBudgetPassed registerBudgetPassed modeBudgetPassed : Prop)
     (visible_required : legalReadout → visibleBudgetPassed)
     (register_required : legalReadout → registerBudgetPassed)
@@ -22,13 +23,13 @@ theorem paper_typed_address_biaxial_completion_orthogonal_slice
       visibleBudgetPassed → registerBudgetPassed → ¬ modeBudgetPassed → ¬ legalReadout) :
     U.readUSClosed ∧
       (legalReadout → visibleBudgetPassed ∧ registerBudgetPassed ∧ modeBudgetPassed) ∧
-      N.exhaustive := by
+      exhaustive := by
   refine ⟨?_, ?_, ?_⟩
   · exact paper_typed_address_biaxial_completion_unitary_slice_address_closure U
   · exact (paper_typed_address_biaxial_completion_budget_orthogonality
       legalReadout visibleBudgetPassed registerBudgetPassed modeBudgetPassed
       visible_required register_required mode_required visible_failure_obstructs
       register_failure_obstructs mode_failure_obstructs).1
-  · exact N.exhaustiveWitness
+  · exact hExhaustive
 
 end Omega.TypedAddressBiaxialCompletion

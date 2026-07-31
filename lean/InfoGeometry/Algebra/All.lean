@@ -174,6 +174,7 @@ import InfoGeometry.Algebra.BaezG2AlternativeDerivations
 import InfoGeometry.Algebra.CyclicTraceStokes
 import InfoGeometry.Algebra.HyperrotorKMSBridge
 import InfoGeometry.Algebra.InvPairHolomorphicity
+import InfoGeometry.Algebra.SplitOctonionColeFurySpinorBridge
 /-!
 # InfoGeometry.Algebra.All
 

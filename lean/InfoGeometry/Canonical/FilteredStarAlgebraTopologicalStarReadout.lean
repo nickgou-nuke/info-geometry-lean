@@ -75,6 +75,23 @@ theorem topologicalStarReadout_stage (i : I) (x : Stage i) :
   exact congrArg (fun f => f x) h
 
 omit [Nonempty I] [IsDirectedOrder I] in
+theorem topologicalStarReadout_unique
+    (f : topologicalColimit Stage sys ⟶ topologicalColimit Stage sys)
+    (hf : ∀ (i : I) (x : Stage i),
+      f (topologicalInjection Stage sys i x) =
+        topologicalInjection Stage sys i (stageStar Stage i x)) :
+    f = topologicalStarReadout Stage sys := by
+  apply topologicalDirectDescend_unique
+    (topologicalDiagram Stage sys) (topologicalStarCocone Stage sys) f
+  intro i
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro x
+  change f (topologicalInjection Stage sys i x) =
+    topologicalInjection Stage sys i (stageStar Stage i x)
+  exact hf i x
+
+omit [Nonempty I] [IsDirectedOrder I] in
 theorem topologicalStarReadout_involutive :
     topologicalStarReadout Stage sys ≫
         topologicalStarReadout Stage sys = 𝟙 _ := by

@@ -130,9 +130,43 @@ theorem colimit_readout_invariant
 theorem colimit_readout_invariant_apply
     (α : F ⟶ F) (c : Cocone F)
     (hα : ∀ j : J, α.app j ≫ c.ι.app j = c.ι.app j)
-    (x : colimit F) :
+    (x : (colimit F).carrier) :
     colimit.desc F c (colim.map α x) = colimit.desc F c x := by
   exact congrArg (fun f => f x) (colimit_readout_invariant (F := F) α c hα)
+
+theorem colimit_readout_cyclic
+    (α β : F ⟶ F) (c : Cocone F)
+    (hcyc : ∀ j : J,
+      α.app j ≫ β.app j ≫ c.ι.app j =
+        β.app j ≫ α.app j ≫ c.ι.app j) :
+    colim.map α ≫ colim.map β ≫ colimit.desc F c =
+      colim.map β ≫ colim.map α ≫ colimit.desc F c := by
+  apply colimit.hom_ext
+  intro j
+  calc
+    colimit.ι F j ≫ colim.map α ≫ colim.map β ≫ colimit.desc F c =
+        α.app j ≫ β.app j ≫ colimit.ι F j ≫ colimit.desc F c := by
+          simpa only [Category.assoc] using
+            congrArg (fun k => k ≫ colimit.desc F c)
+              (colimitInjection_pair (F := F) α β j)
+    _ = α.app j ≫ β.app j ≫ c.ι.app j := by
+          simpa only [Category.assoc] using
+            congrArg (fun k => α.app j ≫ β.app j ≫ k) (colimit.ι_desc c j)
+    _ = β.app j ≫ α.app j ≫ c.ι.app j := hcyc j
+    _ = colimit.ι F j ≫ colim.map β ≫ colim.map α ≫
+        colimit.desc F c := by
+          calc
+            β.app j ≫ α.app j ≫ c.ι.app j =
+                β.app j ≫ α.app j ≫ colimit.ι F j ≫
+                  colimit.desc F c := by
+                    simpa only [Category.assoc] using
+                      congrArg (fun k => β.app j ≫ α.app j ≫ k)
+                        (colimit.ι_desc c j).symm
+            _ = colimit.ι F j ≫ colim.map β ≫ colim.map α ≫
+                colimit.desc F c := by
+                  simpa only [Category.assoc] using
+                    congrArg (fun k => k ≫ colimit.desc F c)
+                      (colimitInjection_pair (F := F) β α j).symm
 
 theorem colimit_artin_relation :
     colimitBraid1 F D ≫ colimitBraid2 F D ≫ colimitBraid1 F D =

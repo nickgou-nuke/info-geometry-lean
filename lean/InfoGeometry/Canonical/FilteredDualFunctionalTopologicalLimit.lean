@@ -87,6 +87,35 @@ theorem dualTopologicalProjection_naturality_apply
   exact congrArg (fun f => f x)
     (dualTopologicalProjection_naturality Dual sys hij)
 
+/-- A natural endomorphism of the restriction diagram induces a continuous
+endomorphism of its native inverse limit. -/
+def dualTopologicalLimitMap
+    (α : dualTopologicalDiagram Dual sys ⟶
+      dualTopologicalDiagram Dual sys) :
+    dualTopologicalLimit Dual sys ⟶ dualTopologicalLimit Dual sys :=
+  (limit.isLimit (dualTopologicalDiagram Dual sys)).map
+    (limit.cone (dualTopologicalDiagram Dual sys)) α
+
+theorem dualTopologicalLimitMap_projection
+    (α : dualTopologicalDiagram Dual sys ⟶
+      dualTopologicalDiagram Dual sys) (i : I) :
+    dualTopologicalLimitMap Dual sys α ≫
+        dualTopologicalProjection Dual sys i =
+      dualTopologicalProjection Dual sys i ≫ α.app (Opposite.op i) := by
+  exact IsLimit.map_π (limit.cone (dualTopologicalDiagram Dual sys))
+    (limit.isLimit (dualTopologicalDiagram Dual sys)) α (Opposite.op i)
+
+theorem dualTopologicalLimitMap_projection_apply
+    (α : dualTopologicalDiagram Dual sys ⟶
+      dualTopologicalDiagram Dual sys) (i : I)
+    (x : dualTopologicalLimit Dual sys) :
+    dualTopologicalProjection Dual sys i
+        (dualTopologicalLimitMap Dual sys α x) =
+      α.app (Opposite.op i)
+        (dualTopologicalProjection Dual sys i x) := by
+  exact congrArg (fun f => f x)
+    (dualTopologicalLimitMap_projection Dual sys α i)
+
 /-! A compatible family of continuous coordinates gives a canonical point in
 the inverse limit through `limit.lift`. -/
 structure CompatibleDualFamily (X : TopCat.{u}) where
@@ -136,5 +165,33 @@ theorem compatibleDualFamilyLift_unique
     compatibleDualFamilyLift Dual sys c ≫
       dualTopologicalProjection Dual sys i.unop
   rw [h i.unop, compatibleDualFamilyLift_projection]
+
+theorem compatibleDualFamilyLift_map_fixed
+    (c : CompatibleDualFamily Dual sys X)
+    (α : dualTopologicalDiagram Dual sys ⟶
+      dualTopologicalDiagram Dual sys)
+    (hα : ∀ i : I,
+      c.coordinate i ≫ α.app (Opposite.op i) = c.coordinate i) :
+    compatibleDualFamilyLift Dual sys c ≫
+        dualTopologicalLimitMap Dual sys α =
+      compatibleDualFamilyLift Dual sys c := by
+  apply limit.hom_ext
+  intro i
+  calc
+    compatibleDualFamilyLift Dual sys c ≫
+        dualTopologicalLimitMap Dual sys α ≫
+          dualTopologicalProjection Dual sys i.unop =
+        compatibleDualFamilyLift Dual sys c ≫
+          dualTopologicalProjection Dual sys i.unop ≫
+            α.app (Opposite.op i.unop) := by
+              rw [dualTopologicalLimitMap_projection]
+    _ = c.coordinate i.unop ≫ α.app (Opposite.op i.unop) := by
+          simpa only [Category.assoc] using
+            congrArg (fun k => k ≫ α.app (Opposite.op i.unop))
+              (compatibleDualFamilyLift_projection Dual sys c i.unop)
+    _ = c.coordinate i.unop := hα i.unop
+    _ = compatibleDualFamilyLift Dual sys c ≫
+        dualTopologicalProjection Dual sys i.unop := by
+          exact (compatibleDualFamilyLift_projection Dual sys c i.unop).symm
 
 end FilteredColimit.Native.TopologicalDual

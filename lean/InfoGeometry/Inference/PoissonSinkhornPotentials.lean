@@ -168,4 +168,19 @@ theorem poissonSinkhornPrimalDual_gap_eq_bregmanGap
             intro j hj
             rw [← hpoint i j]
 
+theorem poissonSinkhornPrimalDual_gap_nonneg
+    (C : PoissonTransportCost (Observation := Fin n) (Component := Fin n))
+    (ε : ℝ) (hε : 0 < ε) (α β : Fin n → ℝ)
+    (Pi : Matrix (Fin n) (Fin n) ℝ)
+    (hPi_pos : ∀ i j, 0 < Pi i j)
+    (hrow : ∀ i, ∑ j : Fin n, Pi i j = 1)
+    (hcol : ∀ j, ∑ i : Fin n, Pi i j = 1) :
+    0 ≤ poissonSinkhornPrimalObjective C ε Pi -
+      poissonSinkhornDualObjective C ε α β := by
+  rw [poissonSinkhornPrimalDual_gap_eq_bregmanGap C ε hε α β Pi
+    hPi_pos hrow hcol]
+  apply poissonSinkhornBregmanGap_nonneg C ε hε.le α β Pi
+  intro i j
+  exact (hPi_pos i j).le
+
 end InfoGeometry.Inference

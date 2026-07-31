@@ -29,12 +29,9 @@ The parity test from the Fibonacci factors detects the bad `1 mod 3` path compon
 those component-level implications are supplied the classification package turns parity into the
 contractible-versus-sphere dichotomy. -/
 theorem paper_pom_fiber_parity_homotopy_equivalence
-    {pathCaseClassification badModThreeComponent allComponentsAvoidBadModThree
-        joinDecomposition contractibleCase sphereCase : Prop}
-    (hPathCaseClassification : pathCaseClassification)
+    {badModThreeComponent allComponentsAvoidBadModThree joinDecomposition
+        contractibleCase sphereCase : Prop}
     (hJoinDecomposition : joinDecomposition)
-    (classifyPathComponents :
-      pathCaseClassification → badModThreeComponent ∨ allComponentsAvoidBadModThree)
     (badModThreeComponentForcesContraction :
       badModThreeComponent → joinDecomposition → contractibleCase)
     (allGoodComponentsGiveSphere :

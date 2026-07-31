@@ -12,22 +12,34 @@ def killo_fold_fiber_homotopy_parity_equivalence_multiplicity_parity (L : List �
 implications come from the existing POM parity-to-homotopy theorem, while the converse
 implications are supplied by the path-component mod-`3` classification hypotheses. -/
 def killo_fold_fiber_homotopy_parity_equivalence_statement
-    (D : Omega.POM.FiberIndependenceComplexClassificationData) (L : List ℕ) : Prop :=
-  ((∃ ℓ ∈ L, ℓ % 3 = 1) → D.badModThreeComponent) →
-    ((∀ ℓ ∈ L, ℓ % 3 ≠ 1) → D.allComponentsAvoidBadModThree) →
-    (D.contractibleCase → ∃ ℓ ∈ L, ℓ % 3 = 1) →
-    (D.sphereCase → ∀ ℓ ∈ L, ℓ % 3 ≠ 1) →
-      (D.contractibleCase ↔
+    {badModThreeComponent allComponentsAvoidBadModThree contractibleCase sphereCase : Prop}
+    (L : List ℕ) : Prop :=
+  ((∃ ℓ ∈ L, ℓ % 3 = 1) → badModThreeComponent) →
+    ((∀ ℓ ∈ L, ℓ % 3 ≠ 1) → allComponentsAvoidBadModThree) →
+    (contractibleCase → ∃ ℓ ∈ L, ℓ % 3 = 1) →
+    (sphereCase → ∀ ℓ ∈ L, ℓ % 3 ≠ 1) →
+      (contractibleCase ↔
           killo_fold_fiber_homotopy_parity_equivalence_multiplicity_parity L = 0) ∧
-        (D.sphereCase ↔
+        (sphereCase ↔
           killo_fold_fiber_homotopy_parity_equivalence_multiplicity_parity L = 1)
 
 /-- Paper label: `thm:killo-fold-fiber-homotopy-parity-equivalence`. -/
 theorem paper_killo_fold_fiber_homotopy_parity_equivalence
-    (D : Omega.POM.FiberIndependenceComplexClassificationData) (L : List ℕ) :
-    killo_fold_fiber_homotopy_parity_equivalence_statement D L := by
+    {badModThreeComponent allComponentsAvoidBadModThree
+        joinDecomposition contractibleCase sphereCase : Prop}
+    (hJoinDecomposition : joinDecomposition)
+    (badModThreeComponentForcesContraction :
+      badModThreeComponent → joinDecomposition → contractibleCase)
+    (allGoodComponentsGiveSphere :
+      allComponentsAvoidBadModThree → joinDecomposition → sphereCase)
+    (L : List ℕ) :
+    killo_fold_fiber_homotopy_parity_equivalence_statement
+      (badModThreeComponent := badModThreeComponent)
+      (allComponentsAvoidBadModThree := allComponentsAvoidBadModThree)
+      (contractibleCase := contractibleCase) (sphereCase := sphereCase) L := by
   intro hBad hGood hContractible hSphere
-  rcases Omega.POM.paper_pom_fiber_parity_homotopy_equivalence D L hBad hGood with
+  rcases Omega.POM.paper_pom_fiber_parity_homotopy_equivalence hJoinDecomposition
+      badModThreeComponentForcesContraction allGoodComponentsGiveSphere L hBad hGood with
     ⟨hEven, hOdd⟩
   refine ⟨?_, ?_⟩
   · constructor

@@ -17,8 +17,8 @@ theorem paper_physical_spacetime_maximal_domain_uniqueness
     (∃! g : D.terminalDomain → ℝ, ∀ i x, g (pointClass D.family i x) = D.family.metric i x) ∧
       ∃! G : GlobalGeometricObjects D.family,
         ∀ i x, G.metric (pointClass D.family i x) = D.family.metric i x := by
-  have hTerminal := paper_physical_spacetime_terminal_admissible_domain D
+  have hTerminal := paper_physical_spacetime_finite_compatible_family_glues D.family
   have hObjects := paper_physical_spacetime_global_geometric_objects D.family
-  exact ⟨hTerminal.1, hObjects⟩
+  exact ⟨hTerminal, hObjects⟩
 
 end Omega.PhysicalSpacetimeSkeleton

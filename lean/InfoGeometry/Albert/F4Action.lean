@@ -31,11 +31,11 @@ noncomputable section
 
 namespace InfoGeometry.Albert.F4Action
 
-/-- The 27-dimensional exceptional Albert algebra carrier J₃(𝕆_s) over ℝ. -/
+/-- The 27-dimensional exceptional Albert algebra carrier J₃(O_s) over ℝ. -/
 abbrev AlbertMatrix := H3Zorn ℝ
 
 /-- The genuine commutative Jordan multiplication X ∘ Y = (1/2 : ℝ) • (X * Y + Y * X)
-    on the Albert algebra J₃(𝕆_s). -/
+    on the Albert algebra J₃(O_s). -/
 def jordanMul (X Y : AlbertMatrix) : AlbertMatrix :=
   (1 / 2 : ℝ) • (X * Y + Y * X)
 
@@ -52,7 +52,7 @@ theorem jordanMul_comm (X Y : AlbertMatrix) : jordanMul X Y = jordanMul Y X := b
   rw [jordanMul_eq_mul, jordanMul_eq_mul]
   exact mul_comm X Y
 
-/-- The 52-dimensional exceptional Lie algebra f₄ = Der(J₃(𝕆_s)) defined as the
+/-- The 52-dimensional exceptional Lie algebra f₄ = Der(J₃(O_s)) defined as the
     Mathlib LieSubalgebra of derivations of the Albert algebra. -/
 abbrev F4Derivation : LieSubalgebra ℝ (Module.End ℝ AlbertMatrix) :=
   H3ZornF4Derivations
@@ -97,16 +97,18 @@ def IsSimpleLieAlgebra (L : Type*) [AddCommGroup L] [Module ℝ L] [LieRing L] [
 set_option maxHeartbeats 800000 in
 theorem f4_non_abelian : ¬IsLieAbelian F4Derivation := by
   intro h
-  have h_ab : ⁅f4BasisVector 3, f4BasisVector 11⁆ = (0 : F4Derivation) := h.trivial _ _
-  have h_act : act ⁅f4BasisVector 3, f4BasisVector 11⁆ (X1 0) = 0 := by
+  have h_ab : ⁅f4BasisVector 3, f4BasisVector 4⁆ = (0 : F4Derivation) := h.trivial _ _
+  have h_act : act ⁅f4BasisVector 3, f4BasisVector 4⁆ (X1 1) = 0 := by
     rw [h_ab]
     rfl
-  have h_tmp := congrArg (fun (X : AlbertMatrix) => X.b.a) h_act
+  have h_tmp := congrArg (fun (X : AlbertMatrix) => X.a.a) h_act
   dsimp [act, f4BasisVector] at h_tmp
   simp_rw [h3ZornJordanInnerDerivation_apply] at h_tmp
-  dsimp [instHMul, h3ZornJordanMul, candidateJordanMul, H3Zorn.T, H3Zorn.U, traceBilin, H3Zorn.crossProduct, adjointQuad, E1, E2, X1, X2, zornBasis, ZornVectorMatrix.add, ZornVectorMatrix.sub, ZornVectorMatrix.mul, ZornVectorMatrix.smul, ZornVectorMatrix.norm, ZornVectorMatrix.conj, ZornVectorMatrix.trace, ZornVectorMatrix.zero, ZornVectorMatrix.one, ZornVectorMatrix.E11, ZornVectorMatrix.E22, ZornVec3.dot, ZornVec3.cross] at h_tmp
+  have h_mul (X Y : AlbertMatrix) : X * Y = candidateJordanMul X Y := (candidateJordanMul_eq_mul X Y).symm
+  simp_rw [h_mul, h_mul, h_mul, h_mul] at h_tmp
+  dsimp [candidateJordanMul, H3Zorn.T, H3Zorn.U, H3Zorn.add, traceBilin, H3Zorn.crossProduct, adjointQuad, E1, E2, E3, X1, zornBasis, ZornVectorMatrix.add, ZornVectorMatrix.sub, ZornVectorMatrix.mul, ZornVectorMatrix.smul, ZornVectorMatrix.norm, ZornVectorMatrix.conj, ZornVectorMatrix.trace, ZornVectorMatrix.zero, ZornVectorMatrix.one, ZornVectorMatrix.E11, ZornVectorMatrix.E22, ZornVec3.dot, ZornVec3.cross] at h_tmp
   norm_num at h_tmp
-  exact zero_ne_one h_tmp.symm
+  exact zero_ne_one h_tmp
 
 /-- Proof that F4Derivation is a simple Lie algebra over ℝ. -/
 theorem simple_F4Derivation_thm : IsSimpleLieAlgebra F4Derivation := by

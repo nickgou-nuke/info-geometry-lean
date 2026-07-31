@@ -93,22 +93,21 @@ theorem finrank_F4Derivation : Module.finrank ℝ (Fin 52 → ℝ) = 52 := by
 def IsSimpleLieAlgebra (L : Type*) [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] : Prop :=
   ¬IsLieAbelian L ∧ ∀ (I : LieIdeal ℝ L), I = ⊥ ∨ I = ⊤
 
+set_option maxHeartbeats 1500000
+
 /-- Non-abelian property of F4Derivation Lie algebra. -/
-set_option maxHeartbeats 800000 in
 theorem f4_non_abelian : ¬IsLieAbelian F4Derivation := by
   intro h
-  have h_ab : ⁅f4BasisVector 3, f4BasisVector 4⁆ = (0 : F4Derivation) := h.trivial _ _
-  have h_act : act ⁅f4BasisVector 3, f4BasisVector 4⁆ (X1 1) = 0 := by
+  have h_ab : ⁅f4BasisVector 3, f4BasisVector 11⁆ = (0 : F4Derivation) := h.trivial _ _
+  have h_act : act ⁅f4BasisVector 3, f4BasisVector 11⁆ E1 = 0 := by
     rw [h_ab]
     rfl
-  have h_tmp := congrArg (fun (X : AlbertMatrix) => X.a.a) h_act
+  have h_tmp := congrArg (fun (X : AlbertMatrix) => X.c.a) h_act
   dsimp [act, f4BasisVector] at h_tmp
   simp_rw [h3ZornJordanInnerDerivation_apply] at h_tmp
-  have h_mul (X Y : AlbertMatrix) : X * Y = candidateJordanMul X Y := (candidateJordanMul_eq_mul X Y).symm
-  simp_rw [h_mul, h_mul, h_mul, h_mul] at h_tmp
-  dsimp [candidateJordanMul, H3Zorn.T, H3Zorn.U, H3Zorn.add, traceBilin, H3Zorn.crossProduct, adjointQuad, E1, E2, E3, X1, zornBasis, ZornVectorMatrix.add, ZornVectorMatrix.sub, ZornVectorMatrix.mul, ZornVectorMatrix.smul, ZornVectorMatrix.norm, ZornVectorMatrix.conj, ZornVectorMatrix.trace, ZornVectorMatrix.zero, ZornVectorMatrix.one, ZornVectorMatrix.E11, ZornVectorMatrix.E22, ZornVec3.dot, ZornVec3.cross] at h_tmp
+  dsimp [instHMul, h3ZornJordanMul, candidateJordanMul, H3Zorn.T, H3Zorn.U, traceBilin, H3Zorn.crossProduct, adjointQuad, E1, E2, E3, X1, X2, zornBasis, ZornVectorMatrix.add, ZornVectorMatrix.sub, ZornVectorMatrix.mul, ZornVectorMatrix.smul, ZornVectorMatrix.norm, ZornVectorMatrix.conj, ZornVectorMatrix.trace, ZornVectorMatrix.zero, ZornVectorMatrix.one, ZornVectorMatrix.E11, ZornVectorMatrix.E22, ZornVec3.dot, ZornVec3.cross] at h_tmp
   norm_num at h_tmp
-  exact zero_ne_one h_tmp
+  exact zero_ne_one h_tmp.symm
 
 /-- Proof that F4Derivation is a simple Lie algebra over ℝ. -/
 theorem simple_F4Derivation_thm : IsSimpleLieAlgebra F4Derivation := by

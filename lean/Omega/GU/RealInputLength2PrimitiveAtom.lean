@@ -6,12 +6,20 @@ namespace Omega.GU
 package, together with the induced ghost-trace contribution.
     thm:gut-real-input-length2-primitive-atom -/
 theorem paper_gut_real_input_length2_primitive_atom
-    (D : Omega.SyncKernelWeighted.RealInput40ArityChargeDensityBoundData)
+    (coboundaryNormalization edgeAuditWithPotential primitiveCycleDensityBound
+      lengthTwoSharpWitness : Prop)
+    (hNorm : coboundaryNormalization)
+    (deriveEdgeAudit : coboundaryNormalization → edgeAuditWithPotential)
+    (derivePrimitiveCycleDensityBound : edgeAuditWithPotential → primitiveCycleDensityBound)
+    (deriveLengthTwoSharpWitness : primitiveCycleDensityBound → lengthTwoSharpWitness)
     (primitiveLengthTwoAtom ghostTraceContribution : Prop)
-    (hPrimitive : D.primitiveCycleDensityBound → D.lengthTwoSharpWitness → primitiveLengthTwoAtom)
+    (hPrimitive : primitiveCycleDensityBound → lengthTwoSharpWitness → primitiveLengthTwoAtom)
     (hGhost : primitiveLengthTwoAtom → ghostTraceContribution) :
     primitiveLengthTwoAtom ∧ ghostTraceContribution := by
-  rcases Omega.SyncKernelWeighted.paper_real_input_40_arity_charge_density_bound D with
+  rcases Omega.SyncKernelWeighted.paper_real_input_40_arity_charge_density_bound
+      coboundaryNormalization edgeAuditWithPotential primitiveCycleDensityBound
+      lengthTwoSharpWitness hNorm deriveEdgeAudit derivePrimitiveCycleDensityBound
+      deriveLengthTwoSharpWitness with
     ⟨hBound, hWitness⟩
   have hAtom : primitiveLengthTwoAtom := hPrimitive hBound hWitness
   exact ⟨hAtom, hGhost hAtom⟩

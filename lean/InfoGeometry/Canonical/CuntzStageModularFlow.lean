@@ -5,8 +5,9 @@ import InfoGeometry.Canonical.CuntzStarInductiveSystem
 
 The modular flow is recorded as a family of genuine star-algebra equivalences
 on the supplied C⋆ stages.  The group law and transition naturality are
-explicit fields, so a later categorical descent has exactly the hypotheses it
-needs.  This file does not manufacture a flow from scalar coordinates.
+explicit theorem hypotheses, so a later categorical descent has exactly the
+hypotheses it needs.  This file does not manufacture a flow from scalar
+coordinates.
 -/
 
 noncomputable section
@@ -27,44 +28,63 @@ flow before or after a transition gives the same element in the later stage.
 -/
 structure CuntzStageModularFlowData where
   flow : ∀ n, ℝ → Stage n ≃⋆ₐ[ℂ] Stage n
-  flow_add : ∀ n t s a, flow n (t + s) a = flow n t (flow n s a)
-  map_naturality :
-    ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-      T.map hmn (flow m t a) = flow n t (T.map hmn a)
 
 namespace CuntzStageModularFlowLemmas
 
-variable (Φ : CuntzStageModularFlowData Stage T)
+variable (Φ : CuntzStageModularFlowData Stage)
 
-theorem flow_zero (n : ℕ) (a : Stage n) :
+theorem flow_zero
+    (hflow_add :
+      ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
+        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
+    (n : ℕ) (a : Stage n) :
     Φ.flow n 0 a = a := by
-  have h := Φ.flow_add n (1 : ℝ) 0 a
+  have h := hflow_add n (1 : ℝ) 0 a
   have h' : Φ.flow n 1 a = Φ.flow n 1 (Φ.flow n 0 a) := by
     simpa using h
   exact (Φ.flow n 1).injective h'.symm
 
-@[simp] theorem flow_zero_apply (n : ℕ) (a : Stage n) :
+@[simp] theorem flow_zero_apply
+    (hflow_add :
+      ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
+        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
+    (n : ℕ) (a : Stage n) :
     Φ.flow n 0 a = a :=
-  flow_zero (Stage := Stage) (T := T) Φ n a
+  flow_zero (Stage := Stage) Φ hflow_add n a
 
-@[simp] theorem flow_add_apply (n : ℕ) (t s : ℝ) (a : Stage n) :
+@[simp] theorem flow_add_apply
+    (hflow_add :
+      ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
+        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
+    (n : ℕ) (t s : ℝ) (a : Stage n) :
     Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a) :=
-  Φ.flow_add n t s a
+  hflow_add n t s a
 
-theorem flow_neg_right_inverse (n : ℕ) (t : ℝ) (a : Stage n) :
+theorem flow_neg_right_inverse
+    (hflow_add :
+      ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
+        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
+    (n : ℕ) (t : ℝ) (a : Stage n) :
     Φ.flow n t (Φ.flow n (-t) a) = a := by
-  rw [← Φ.flow_add n t (-t) a]
-  simpa using flow_zero (Stage := Stage) (T := T) Φ n a
+  rw [← hflow_add n t (-t) a]
+  simpa using flow_zero (Stage := Stage) Φ hflow_add n a
 
-theorem flow_neg_left_inverse (n : ℕ) (t : ℝ) (a : Stage n) :
+theorem flow_neg_left_inverse
+    (hflow_add :
+      ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
+        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
+    (n : ℕ) (t : ℝ) (a : Stage n) :
     Φ.flow n (-t) (Φ.flow n t a) = a := by
-  rw [← Φ.flow_add n (-t) t a]
-  simpa using flow_zero (Stage := Stage) (T := T) Φ n a
+  rw [← hflow_add n (-t) t a]
+  simpa using flow_zero (Stage := Stage) Φ hflow_add n a
 
 theorem map_flow_commutes
+    (hmap_naturality :
+      ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
+        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
     {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m) :
     T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a) :=
-  Φ.map_naturality hmn t a
+  hmap_naturality hmn t a
 
 @[simp] theorem flow_map_star (n : ℕ) (t : ℝ) (a : Stage n) :
     Φ.flow n t (star a) = star (Φ.flow n t a) :=

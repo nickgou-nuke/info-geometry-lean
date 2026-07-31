@@ -12,16 +12,7 @@ def IsLorentzValue (g : ℝ) : Prop :=
 structure CompatibleLorentzFamily (ι : Type u) [Fintype ι] where
   Chart : ι → Type u
   metric : ∀ i, Chart i → ℝ
-  overlap : ∀ i j, Chart i → Chart j → Prop
-  overlap_refl : ∀ i x, overlap i i x x
-  overlap_symm :
-    ∀ {i j} {x : Chart i} {y : Chart j}, overlap i j x y → overlap j i y x
-  overlap_trans :
-    ∀ {i j k} {x : Chart i} {y : Chart j} {z : Chart k},
-      overlap i j x y → overlap j k y z → overlap i k x z
-  metric_compat :
-    ∀ {i j} {x : Chart i} {y : Chart j}, overlap i j x y → metric i x = metric j y
-  lorentz : ∀ i x, IsLorentzValue (metric i x)
+  overlapSetoid : Setoid (Σ i, Chart i)
 
 /-- The disjoint union of all local chart domains. -/
 abbrev ChartPoint {ι : Type u} [Fintype ι] (F : CompatibleLorentzFamily ι) :=
@@ -30,15 +21,8 @@ abbrev ChartPoint {ι : Type u} [Fintype ι] (F : CompatibleLorentzFamily ι) :=
 /-- Overlap equivalence relation on the disjoint union of chart points. -/
 def chartPointSetoid {ι : Type u} [Fintype ι] (F : CompatibleLorentzFamily ι) :
     Setoid (ChartPoint F) where
-  r p q := F.overlap p.1 q.1 p.2 q.2
-  iseqv := by
-    refine ⟨?_, ?_, ?_⟩
-    · intro p
-      exact F.overlap_refl p.1 p.2
-    · intro p q hpq
-      exact F.overlap_symm hpq
-    · intro p q r hpq hqr
-      exact F.overlap_trans hpq hqr
+  r := F.overlapSetoid.r
+  iseqv := F.overlapSetoid.iseqv
 
 /-- The maximal admissible quotient domain obtained from a finite compatible chart family. -/
 abbrev maximalAdmissibleDomain {ι : Type u} [Fintype ι] (F : CompatibleLorentzFamily ι) :=
@@ -50,22 +34,32 @@ def pointClass {ι : Type u} [Fintype ι] (F : CompatibleLorentzFamily ι)
   Quotient.mk (chartPointSetoid F) ⟨i, x⟩
 
 /-- The descended global metric on the maximal admissible quotient domain. -/
-def globalMetric {ι : Type u} [Fintype ι] (F : CompatibleLorentzFamily ι) :
+def globalMetric {ι : Type u} [Fintype ι] (F : CompatibleLorentzFamily ι)
+    (metric_compat :
+      ∀ {i j} {x : F.Chart i} {y : F.Chart j},
+        F.overlapSetoid.r ⟨i, x⟩ ⟨j, y⟩ → F.metric i x = F.metric j y) :
     maximalAdmissibleDomain F → ℝ :=
   Quotient.lift (fun p : ChartPoint F => F.metric p.1 p.2) <| by
     intro p q hpq
-    exact F.metric_compat hpq
+    exact metric_compat hpq
 
 /-- Local Lorentz metrics agree on every overlap by definition of compatibility. -/
 theorem local_metrics_agree_on_overlaps {ι : Type u} [Fintype ι] (F : CompatibleLorentzFamily ι)
-    {i j} {x : F.Chart i} {y : F.Chart j} (hxy : F.overlap i j x y) :
-    F.metric i x = F.metric j y :=
-  F.metric_compat hxy
+    (metric_compat :
+      ∀ {i j} {x : F.Chart i} {y : F.Chart j},
+        F.overlapSetoid.r ⟨i, x⟩ ⟨j, y⟩ → F.metric i x = F.metric j y)
+    {i j} {x : F.Chart i} {y : F.Chart j}
+    (hxy : F.overlapSetoid.r ⟨i, x⟩ ⟨j, y⟩) :
+    F.metric i x = F.metric j y := by
+  exact metric_compat hxy
 
 /-- A finite compatible family glues to a unique scalar metric on the quotient domain. -/
-theorem finite_compatible_family_glues {ι : Type u} [Fintype ι] (F : CompatibleLorentzFamily ι) :
+theorem finite_compatible_family_glues {ι : Type u} [Fintype ι] (F : CompatibleLorentzFamily ι)
+    (metric_compat :
+      ∀ {i j} {x : F.Chart i} {y : F.Chart j},
+        F.overlapSetoid.r ⟨i, x⟩ ⟨j, y⟩ → F.metric i x = F.metric j y) :
     ∃ g : maximalAdmissibleDomain F → ℝ, ∀ i x, g (pointClass F i x) = F.metric i x := by
-  refine ⟨globalMetric F, ?_⟩
+  refine ⟨globalMetric F metric_compat, ?_⟩
   intro i x
   rfl
 
@@ -73,10 +67,13 @@ theorem finite_compatible_family_glues {ι : Type u} [Fintype ι] (F : Compatibl
 glues to a unique scalar metric on the maximal admissible quotient domain.
     prop:physical-spacetime-finite-compatible-family-glues -/
 theorem paper_physical_spacetime_finite_compatible_family_glues :
-    ∀ {ι : Type u} [Fintype ι] (F : CompatibleLorentzFamily ι),
+    ∀ {ι : Type u} [Fintype ι] (F : CompatibleLorentzFamily ι)
+      (metric_compat :
+        ∀ {i j} {x : F.Chart i} {y : F.Chart j},
+          F.overlapSetoid.r ⟨i, x⟩ ⟨j, y⟩ → F.metric i x = F.metric j y),
       ∃! g : maximalAdmissibleDomain F → ℝ, ∀ i x, g (pointClass F i x) = F.metric i x := by
-  intro ι _ F
-  obtain ⟨g, hg⟩ := finite_compatible_family_glues F
+  intro ι _ F metric_compat
+  obtain ⟨g, hg⟩ := finite_compatible_family_glues F metric_compat
   refine ⟨g, hg, ?_⟩
   intro g' hg'
   funext q
@@ -94,12 +91,16 @@ glues, their local metrics agree on overlaps, and the glued metric descends to t
 admissible quotient domain.
     thm:physical-spacetime-global-lorentz-structure -/
 theorem paper_physical_spacetime_global_lorentz_structure :
-    ∀ {ι : Type u} [Fintype ι] (F : CompatibleLorentzFamily ι),
+    ∀ {ι : Type u} [Fintype ι] (F : CompatibleLorentzFamily ι)
+      (metric_compat :
+        ∀ {i j} {x : F.Chart i} {y : F.Chart j},
+          F.overlapSetoid.r ⟨i, x⟩ ⟨j, y⟩ → F.metric i x = F.metric j y)
+      (lorentz : ∀ i x, IsLorentzValue (F.metric i x)),
       ∃ g : maximalAdmissibleDomain F → ℝ,
         (∀ i x, g (pointClass F i x) = F.metric i x) ∧
         ∀ q, IsLorentzValue (g q) := by
-  intro ι _ F
-  obtain ⟨g, hg⟩ := finite_compatible_family_glues F
+  intro ι _ F metric_compat lorentz
+  obtain ⟨g, hg⟩ := finite_compatible_family_glues F metric_compat
   refine ⟨g, hg, ?_⟩
   intro q
   refine Quotient.inductionOn q ?_
@@ -108,6 +109,6 @@ theorem paper_physical_spacetime_global_lorentz_structure :
   have hMetric : g ⟦⟨i, x⟩⟧ = F.metric i x := by
     simpa [pointClass] using hg i x
   rw [hMetric]
-  exact F.lorentz i x
+  exact lorentz i x
 
 end Omega.PhysicalSpacetimeSkeleton.GlobalLorentzStructure

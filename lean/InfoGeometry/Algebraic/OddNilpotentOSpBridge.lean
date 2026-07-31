@@ -56,16 +56,9 @@ structure SuperDimension where
   /-- Odd dimension. -/
   oddDim : ℕ
 
-/-- Super Jordan block descriptor. -/
-structure SuperJordanBlock where
-  /-- Length of the alternating-parity Jordan chain. -/
-  size : ℕ
-  /-- Positivity witness. -/
-  size_pos : 0 < size
-
 /-- A super Jordan block is admissible for `osp(1|2)` iff its size is odd. -/
-def SuperJordanBlock.AdmissibleOdd (B : SuperJordanBlock) : Prop :=
-  B.size % 2 = 1
+def SuperJordanBlock.AdmissibleOdd (size : ℕ) : Prop :=
+  size % 2 = 1
 
 namespace SuperJordanBlock
 
@@ -75,23 +68,23 @@ Parity at a position in an alternating super Jordan block.
 This is only the finite parity bookkeeping.  It does not construct a Jordan
 normal form or a matrix representation.
 -/
-def parityAt (B : SuperJordanBlock) (start : SuperParity) (k : Fin B.size) :
+def parityAt (size : ℕ) (start : SuperParity) (k : Fin size) :
     SuperParity :=
   if k.1 % 2 = 0 then start else start.flip
 
 @[simp]
 theorem parityAt_zero
-    (B : SuperJordanBlock)
+    (size : ℕ)
     (start : SuperParity)
-    (hB : 0 < B.size) :
-    B.parityAt start ⟨0, hB⟩ = start := by
+    (hB : 0 < size) :
+    parityAt size start ⟨0, hB⟩ = start := by
   simp [parityAt]
 
 @[simp]
 theorem parityAt_zero_even
-    (B : SuperJordanBlock)
-    (hB : 0 < B.size) :
-    B.parityAt SuperParity.even ⟨0, hB⟩ = SuperParity.even := by
+    (size : ℕ)
+    (hB : 0 < size) :
+    parityAt size SuperParity.even ⟨0, hB⟩ = SuperParity.even := by
   simp
 
 /--
@@ -101,8 +94,8 @@ This readback keeps the paper's odd-block criterion as a finite arithmetic
 predicate, without deriving an `osp(1|2)` embedding by itself.
 -/
 theorem admissibleOdd_iff
-    (B : SuperJordanBlock) :
-    B.AdmissibleOdd ↔ B.size % 2 = 1 :=
+    (size : ℕ) :
+    SuperJordanBlock.AdmissibleOdd size ↔ size % 2 = 1 :=
   Iff.rfl
 
 end SuperJordanBlock

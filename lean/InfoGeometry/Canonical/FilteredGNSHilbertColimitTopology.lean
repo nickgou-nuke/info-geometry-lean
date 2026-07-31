@@ -145,6 +145,16 @@ theorem gnsTopologicalColimitToHilbert_stage
     (gnsTopologicalDiagram Stage sys ω)
     (gnsTopologicalCocone Stage sys ω) i
 
+theorem gnsTopologicalColimitToHilbert_stage_apply
+    (i : I) (x : (ω.state i).functional.GNS) :
+    gnsTopologicalColimitToHilbert Stage sys ω
+        (topologicalDirectInjection
+          (gnsTopologicalDiagram Stage sys ω) i x) =
+      gnsStageToHilbertColimitContinuousLinearMap Stage sys ω i x := by
+  have h := congrArg (fun f => f x)
+    (gnsTopologicalColimitToHilbert_stage Stage sys ω i)
+  simpa only [ConcreteCategory.comp_apply] using h
+
 theorem gnsTopologicalColimitToHilbert_unique
     (f : topologicalDirectColimit (gnsTopologicalDiagram Stage sys ω) ⟶
       (gnsTopologicalCocone Stage sys ω).pt)
@@ -157,5 +167,29 @@ theorem gnsTopologicalColimitToHilbert_unique
     (gnsTopologicalCocone Stage sys ω) f
   intro i
   exact h i
+
+/- The categorical TopCat colimit map has dense range because it contains the
+   dense union of the concrete completed-stage images. -/
+theorem gnsTopologicalColimitToHilbert_denseRange :
+    DenseRange (gnsTopologicalColimitToHilbert Stage sys ω) := by
+  apply Dense.mono
+    (s₁ := ⋃ i : I,
+      Set.range
+        (gnsStageToHilbertColimitContinuousLinearMap Stage sys ω i))
+    (s₂ := Set.range (gnsTopologicalColimitToHilbert Stage sys ω))
+  · intro y hy
+    rcases Set.mem_iUnion.mp hy with ⟨i, hy⟩
+    rcases hy with ⟨x, rfl⟩
+    refine ⟨topologicalDirectInjection
+        (gnsTopologicalDiagram Stage sys ω) i x, ?_⟩
+    change gnsTopologicalColimitToHilbert Stage sys ω
+        (topologicalDirectInjection
+          (gnsTopologicalDiagram Stage sys ω) i x) =
+      gnsStageToHilbertColimitContinuousLinearMap Stage sys ω i x
+    simpa only [ConcreteCategory.comp_apply] using
+      congrArg (fun f => f x)
+        (gnsTopologicalColimitToHilbert_stage Stage sys ω i)
+  · exact dense_iUnion_range_gnsStageToHilbertColimitContinuousLinearMap
+      Stage sys ω
 
 end CStarStateColimit.Native.FilteredGNSHilbertColimitTopology

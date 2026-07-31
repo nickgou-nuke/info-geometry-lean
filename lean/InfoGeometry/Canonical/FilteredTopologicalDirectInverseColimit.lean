@@ -47,6 +47,68 @@ theorem topologicalDirectInjection_naturality_apply
   exact congrArg (fun g => g x)
     (topologicalDirectInjection_naturality F f)
 
+/-! ## Natural transformations on direct limits -/
+
+/-- Descend a natural transformation between two diagrams to their direct colimits. -/
+noncomputable def topologicalDirectMapBetween
+    {F G : J ⥤ TopCat.{u}} (α : F ⟶ G) :
+    topologicalDirectColimit F ⟶ topologicalDirectColimit G :=
+  colim.map α
+
+@[reassoc (attr := simp)]
+theorem topologicalDirectMapBetween_injection
+    {F G : J ⥤ TopCat.{u}} (α : F ⟶ G) (j : J) :
+    topologicalDirectInjection F j ≫ topologicalDirectMapBetween α =
+      α.app j ≫ topologicalDirectInjection G j := by
+  exact colimit.ι_map α j
+
+theorem topologicalDirectMapBetween_injection_apply
+    {F G : J ⥤ TopCat.{u}} (α : F ⟶ G) (j : J)
+    (x : F.obj j) :
+    topologicalDirectMapBetween α (topologicalDirectInjection F j x) =
+      topologicalDirectInjection G j (α.app j x) := by
+  exact congrArg (fun g => g x) (topologicalDirectMapBetween_injection α j)
+
+theorem topologicalDirectMapBetween_id (F : J ⥤ TopCat.{u}) :
+    topologicalDirectMapBetween (𝟙 F) = 𝟙 _ := by
+  apply colimit.hom_ext
+  intro j
+  have hmap := topologicalDirectMapBetween_injection (𝟙 F) j
+  change topologicalDirectInjection F j ≫
+      topologicalDirectMapBetween (𝟙 F) =
+    topologicalDirectInjection F j ≫ 𝟙 _
+  change topologicalDirectInjection F j ≫
+      topologicalDirectMapBetween (𝟙 F) =
+    topologicalDirectInjection F j ≫ 𝟙 _ at hmap
+  exact hmap
+
+theorem topologicalDirectMapBetween_comp
+    {F G H : J ⥤ TopCat.{u}} (α : F ⟶ G) (β : G ⟶ H) :
+    topologicalDirectMapBetween α ≫ topologicalDirectMapBetween β =
+      topologicalDirectMapBetween (α ≫ β) := by
+  apply colimit.hom_ext
+  intro j
+  have hα := topologicalDirectMapBetween_injection α j
+  have hβ := topologicalDirectMapBetween_injection β j
+  have hαβ := topologicalDirectMapBetween_injection (α ≫ β) j
+  change topologicalDirectInjection F j ≫
+      topologicalDirectMapBetween α ≫ topologicalDirectMapBetween β =
+    topologicalDirectInjection F j ≫ topologicalDirectMapBetween (α ≫ β)
+  calc
+    topologicalDirectInjection F j ≫
+        topologicalDirectMapBetween α ≫ topologicalDirectMapBetween β =
+        α.app j ≫ topologicalDirectInjection G j ≫
+          topologicalDirectMapBetween β := by
+            simpa only [Category.assoc] using
+              congrArg (fun k => k ≫ topologicalDirectMapBetween β) hα
+    _ = α.app j ≫ β.app j ≫ topologicalDirectInjection H j := by
+          simpa only [Category.assoc] using
+            congrArg (fun k => α.app j ≫ k) hβ
+    _ = (α ≫ β).app j ≫ topologicalDirectInjection H j := by
+          simp only [NatTrans.comp_app, Category.assoc]
+    _ = topologicalDirectInjection F j ≫
+        topologicalDirectMapBetween (α ≫ β) := hαβ.symm
+
 /-- Descend a continuous cocone through the topological direct colimit. -/
 noncomputable def topologicalDirectDescend
     (F : J ⥤ TopCat.{u}) (c : Cocone F) :
@@ -66,6 +128,70 @@ theorem topologicalDirectDescend_stage_apply
     topologicalDirectDescend F c (topologicalDirectInjection F j x) =
       c.ι.app j x := by
   exact congrArg (fun g => g x) (topologicalDirectDescend_stage F c j)
+
+/- A dense family of cocone-stage images remains dense after the universal
+   map descends from the categorical direct colimit. -/
+theorem topologicalDirectDescend_denseRange
+    (F : J ⥤ TopCat.{u}) (c : Cocone F)
+    (h_dense :
+      let stageReadout : (Σ j : J, F.obj j) → c.pt :=
+        fun p => (c.ι.app p.1).hom p.2
+      Dense (Set.range stageReadout)) :
+    DenseRange (topologicalDirectDescend F c) := by
+  let stageReadout : (Σ j : J, F.obj j) → c.pt :=
+    fun p => (c.ι.app p.1).hom p.2
+  apply Dense.mono
+    (s₁ := Set.range stageReadout)
+    (s₂ := Set.range (topologicalDirectDescend F c))
+  · intro y hy
+    rcases hy with ⟨⟨j, x⟩, rfl⟩
+    refine ⟨topologicalDirectInjection F j x, ?_⟩
+    exact congrArg (fun g => g x)
+      (topologicalDirectDescend_stage F c j)
+  · exact h_dense
+
+/-! Naturality of the universal direct-colimit map with respect to cocone
+    descent.  The stage compatibility equation is the only hypothesis. -/
+theorem topologicalDirectMapBetween_comp_descend_eq
+    {F G : J ⥤ TopCat.{u}} (α : F ⟶ G)
+    (cF : Cocone F) (cG : Cocone G) (k : cF.pt ⟶ cG.pt)
+    (h : ∀ j : J,
+      α.app j ≫ cG.ι.app j = cF.ι.app j ≫ k) :
+    topologicalDirectMapBetween α ≫
+        topologicalDirectDescend G cG =
+      topologicalDirectDescend F cF ≫ k := by
+  apply colimit.hom_ext
+  intro j
+  have hmap := topologicalDirectMapBetween_injection α j
+  have hdescG :
+      topologicalDirectInjection G j ≫ topologicalDirectDescend G cG =
+        cG.ι.app j :=
+    by exact topologicalDirectDescend_stage G cG j
+  have hdescF :
+      topologicalDirectInjection F j ≫ topologicalDirectDescend F cF =
+        cF.ι.app j :=
+    by exact topologicalDirectDescend_stage F cF j
+  change topologicalDirectInjection F j ≫
+      topologicalDirectMapBetween α ≫
+        topologicalDirectDescend G cG =
+    topologicalDirectInjection F j ≫
+      topologicalDirectDescend F cF ≫ k
+  calc
+    topologicalDirectInjection F j ≫
+        topologicalDirectMapBetween α ≫
+          topologicalDirectDescend G cG =
+        α.app j ≫ topologicalDirectInjection G j ≫
+          topologicalDirectDescend G cG := by
+            simpa only [Category.assoc] using
+              congrArg (fun k => k ≫ topologicalDirectDescend G cG) hmap
+    _ = α.app j ≫ cG.ι.app j := by
+          simpa only [Category.assoc] using
+            congrArg (fun k => α.app j ≫ k) hdescG
+    _ = cF.ι.app j ≫ k := h j
+    _ = topologicalDirectInjection F j ≫
+        topologicalDirectDescend F cF ≫ k := by
+          simpa only [Category.assoc] using
+            congrArg (fun q => q ≫ k) (Eq.symm hdescF)
 
 theorem topologicalDirectDescend_unique
     (F : J ⥤ TopCat.{u}) (c : Cocone F)
@@ -119,6 +245,31 @@ theorem topologicalDirectColimitIso_inv_stage_apply
   exact congrArg (fun f => f x)
     (topologicalDirectColimitIso_inv_stage w j)
 
+/-- The natural-transformation map agrees with the canonical colimit
+    isomorphism when the transformation is the forward component of a
+    diagram isomorphism. -/
+theorem topologicalDirectMapBetween_iso_hom
+    {F G : J ⥤ TopCat.{u}} (w : F ≅ G) :
+    topologicalDirectMapBetween w.hom =
+      (topologicalDirectColimitIso w).hom := by
+  apply colimit.hom_ext
+  intro j
+  change topologicalDirectInjection F j ≫ topologicalDirectMapBetween w.hom =
+    topologicalDirectInjection F j ≫ (topologicalDirectColimitIso w).hom
+  rw [topologicalDirectMapBetween_injection,
+    topologicalDirectColimitIso_hom_stage]
+
+theorem topologicalDirectMapBetween_iso_inv
+    {F G : J ⥤ TopCat.{u}} (w : F ≅ G) :
+    topologicalDirectMapBetween w.inv =
+      (topologicalDirectColimitIso w).inv := by
+  apply colimit.hom_ext
+  intro j
+  change topologicalDirectInjection G j ≫ topologicalDirectMapBetween w.inv =
+    topologicalDirectInjection G j ≫ (topologicalDirectColimitIso w).inv
+  rw [topologicalDirectMapBetween_injection,
+    topologicalDirectColimitIso_inv_stage]
+
 /- Transport a pair of universal maps across a natural isomorphism of
 diagrams.  The stage equation is the exact hypothesis needed for the
 universal property of the source colimit. -/
@@ -167,6 +318,26 @@ theorem topologicalInverseProjection_naturality_apply
 
 /-! ## Natural endomorphisms on inverse limits -/
 
+/-- Descend a natural transformation between two diagrams to their inverse limits. -/
+noncomputable def topologicalInverseMapBetween
+    {F G : J ⥤ TopCat.{u}} (α : F ⟶ G) :
+    topologicalInverseLimit F ⟶ topologicalInverseLimit G :=
+  lim.map α
+
+@[reassoc (attr := simp)]
+theorem topologicalInverseMapBetween_projection
+    {F G : J ⥤ TopCat.{u}} (α : F ⟶ G) (j : J) :
+    topologicalInverseMapBetween α ≫ topologicalInverseProjection G j =
+      topologicalInverseProjection F j ≫ α.app j := by
+  exact IsLimit.map_π (limit.cone F) (limit.isLimit G) α j
+
+theorem topologicalInverseMapBetween_projection_apply
+    {F G : J ⥤ TopCat.{u}} (α : F ⟶ G) (j : J)
+    (x : topologicalInverseLimit F) :
+    topologicalInverseProjection G j (topologicalInverseMapBetween α x) =
+      α.app j (topologicalInverseProjection F j x) := by
+  exact congrArg (fun g => g x) (topologicalInverseMapBetween_projection α j)
+
 /-- Descend a natural endomorphism to the native topological inverse limit. -/
 noncomputable def topologicalInverseMap
     (F : J ⥤ TopCat.{u}) (α : F ⟶ F) :
@@ -186,6 +357,48 @@ theorem topologicalInverseMap_projection_apply
     topologicalInverseProjection F j (topologicalInverseMap F α x) =
       α.app j (topologicalInverseProjection F j x) := by
   exact congrArg (fun g => g x) (topologicalInverseMap_projection F α j)
+
+theorem topologicalInverseMap_id (F : J ⥤ TopCat.{u}) :
+    topologicalInverseMap F (𝟙 F) = 𝟙 _ := by
+  apply limit.hom_ext
+  intro j
+  have hmap := topologicalInverseMap_projection F (𝟙 F) j
+  change topologicalInverseMap F (𝟙 F) ≫ limit.π F j =
+      limit.π F j ≫ 𝟙 _ at hmap
+  change topologicalInverseMap F (𝟙 F) ≫ limit.π F j =
+      𝟙 _ ≫ limit.π F j
+  simpa only [Category.comp_id, Category.id_comp] using hmap
+
+theorem topologicalInverseMap_comp
+    (F : J ⥤ TopCat.{u}) (α β : F ⟶ F) :
+    topologicalInverseMap F α ≫ topologicalInverseMap F β =
+      topologicalInverseMap F (α ≫ β) := by
+  apply limit.hom_ext
+  intro j
+  have hα := topologicalInverseMap_projection F α j
+  have hβ := topologicalInverseMap_projection F β j
+  have hαβ := topologicalInverseMap_projection F (α ≫ β) j
+  change topologicalInverseMap F α ≫ limit.π F j =
+      limit.π F j ≫ α.app j at hα
+  change topologicalInverseMap F β ≫ limit.π F j =
+      limit.π F j ≫ β.app j at hβ
+  change topologicalInverseMap F (α ≫ β) ≫ limit.π F j =
+      limit.π F j ≫ (α ≫ β).app j at hαβ
+  change topologicalInverseMap F α ≫ topologicalInverseMap F β ≫
+      limit.π F j = topologicalInverseMap F (α ≫ β) ≫ limit.π F j
+  calc
+    topologicalInverseMap F α ≫ topologicalInverseMap F β ≫
+        limit.π F j =
+        topologicalInverseMap F α ≫
+          (limit.π F j ≫ β.app j) := by
+            simpa only [Category.assoc] using
+              congrArg (fun k => topologicalInverseMap F α ≫ k) hβ
+    _ = (topologicalInverseMap F α ≫ limit.π F j) ≫ β.app j := by
+          simp only [Category.assoc]
+    _ = (limit.π F j ≫ α.app j) ≫ β.app j := by rw [hα]
+    _ = limit.π F j ≫ (α ≫ β).app j := by
+          simp only [Category.assoc, NatTrans.comp_app]
+    _ = topologicalInverseMap F (α ≫ β) ≫ limit.π F j := hαβ.symm
 
 theorem topologicalInverseMap_involutive
     (F : J ⥤ TopCat.{u}) (α : F ⟶ F)
@@ -274,6 +487,44 @@ theorem topologicalInverseLift_projection_apply
   exact congrArg (fun g => g x)
     (topologicalInverseLift_projection F c j)
 
+/-! Dual naturality statement for a cone lift followed by the universal
+    inverse-limit map. -/
+theorem topologicalInverseLift_mapBetween_eq
+    {F G : J ⥤ TopCat.{u}} (α : F ⟶ G)
+    (cF : Cone F) (cG : Cone G) (k : cF.pt ⟶ cG.pt)
+    (h : ∀ j : J,
+      cF.π.app j ≫ α.app j = k ≫ cG.π.app j) :
+    topologicalInverseLift F cF ≫
+        topologicalInverseMapBetween α =
+      k ≫ topologicalInverseLift G cG := by
+  apply limit.hom_ext
+  intro j
+  have hmap := topologicalInverseMapBetween_projection α j
+  have hF := topologicalInverseLift_projection F cF j
+  have hG := topologicalInverseLift_projection G cG j
+  change (topologicalInverseLift F cF ≫
+      topologicalInverseMapBetween α) ≫
+      topologicalInverseProjection G j =
+    k ≫ topologicalInverseLift G cG ≫
+      topologicalInverseProjection G j
+  calc
+    (topologicalInverseLift F cF ≫
+        topologicalInverseMapBetween α) ≫
+        topologicalInverseProjection G j =
+      topologicalInverseLift F cF ≫
+        (topologicalInverseProjection F j ≫ α.app j) := by
+          simpa only [Category.assoc] using
+            congrArg (fun k => topologicalInverseLift F cF ≫ k) hmap
+    _ = (topologicalInverseLift F cF ≫
+        topologicalInverseProjection F j) ≫ α.app j := by
+          simp only [Category.assoc]
+    _ = cF.π.app j ≫ α.app j := by rw [hF]
+    _ = k ≫ cG.π.app j := h j
+    _ = k ≫ topologicalInverseLift G cG ≫
+        topologicalInverseProjection G j := by
+          simpa only [Category.assoc] using
+            congrArg (fun q => k ≫ q) hG.symm
+
 theorem topologicalInverseLift_unique
     (F : J ⥤ TopCat.{u}) (c : Cone F)
     (f : c.pt ⟶ topologicalInverseLimit F)
@@ -325,5 +576,79 @@ theorem topologicalInverseLimitIso_inv_projection_apply
       w.inv.app j (topologicalInverseProjection G j x) := by
   exact congrArg (fun f => f x)
     (topologicalInverseLimitIso_inv_projection w j)
+
+/- Transport universal maps into inverse limits across a natural
+   isomorphism of diagrams. -/
+theorem topologicalInverseLimitIso_hom_comp_eq
+    {F G : J ⥤ TopCat.{u}} (w : F ≅ G)
+    {X : TopCat.{u}} (fF : X ⟶ topologicalInverseLimit F)
+    (fG : X ⟶ topologicalInverseLimit G)
+    (h : ∀ j : J,
+      fG ≫ topologicalInverseProjection G j =
+        fF ≫ topologicalInverseProjection F j ≫ w.hom.app j) :
+    fF ≫ (topologicalInverseLimitIso w).hom = fG := by
+  apply limit.hom_ext
+  intro j
+  calc
+    (fF ≫ (topologicalInverseLimitIso w).hom) ≫
+        topologicalInverseProjection G j =
+        fF ≫ ((topologicalInverseLimitIso w).hom ≫
+          topologicalInverseProjection G j) := by
+            simp only [Category.assoc]
+    _ = fF ≫ (topologicalInverseProjection F j ≫ w.hom.app j) := by
+          rw [topologicalInverseLimitIso_hom_projection]
+    _ = fG ≫ topologicalInverseProjection G j := by
+          rw [← h j]
+    _ = fG ≫ topologicalInverseProjection G j := rfl
+
+theorem topologicalInverseLimitIso_inv_comp_eq
+    {F G : J ⥤ TopCat.{u}} (w : F ≅ G)
+    {X : TopCat.{u}} (fF : X ⟶ topologicalInverseLimit F)
+    (fG : X ⟶ topologicalInverseLimit G)
+    (h : ∀ j : J,
+      fF ≫ topologicalInverseProjection F j =
+        fG ≫ topologicalInverseProjection G j ≫ w.inv.app j) :
+    fG ≫ (topologicalInverseLimitIso w).inv = fF := by
+  apply limit.hom_ext
+  intro j
+  calc
+    (fG ≫ (topologicalInverseLimitIso w).inv) ≫
+        topologicalInverseProjection F j =
+        fG ≫ ((topologicalInverseLimitIso w).inv ≫
+          topologicalInverseProjection F j) := by
+            simp only [Category.assoc]
+    _ = fG ≫ (topologicalInverseProjection G j ≫ w.inv.app j) := by
+          rw [topologicalInverseLimitIso_inv_projection]
+    _ = fF ≫ topologicalInverseProjection F j := by
+          rw [← h j]
+    _ = fF ≫ topologicalInverseProjection F j := rfl
+
+/-- The inverse-limit map agrees with the canonical limit isomorphism for
+    either component of a diagram isomorphism. -/
+theorem topologicalInverseMapBetween_iso_hom
+    {F G : J ⥤ TopCat.{u}} (w : F ≅ G) :
+    topologicalInverseMapBetween w.hom =
+      (topologicalInverseLimitIso w).hom := by
+  apply limit.hom_ext
+  intro j
+  change topologicalInverseMapBetween w.hom ≫
+      topologicalInverseProjection G j =
+    (topologicalInverseLimitIso w).hom ≫
+      topologicalInverseProjection G j
+  rw [topologicalInverseMapBetween_projection,
+    topologicalInverseLimitIso_hom_projection]
+
+theorem topologicalInverseMapBetween_iso_inv
+    {F G : J ⥤ TopCat.{u}} (w : F ≅ G) :
+    topologicalInverseMapBetween w.inv =
+      (topologicalInverseLimitIso w).inv := by
+  apply limit.hom_ext
+  intro j
+  change topologicalInverseMapBetween w.inv ≫
+      topologicalInverseProjection F j =
+    (topologicalInverseLimitIso w).inv ≫
+      topologicalInverseProjection F j
+  rw [topologicalInverseMapBetween_projection,
+    topologicalInverseLimitIso_inv_projection]
 
 end FilteredColimit.Native.Topological

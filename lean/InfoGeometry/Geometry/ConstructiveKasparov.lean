@@ -32,13 +32,11 @@ open InfoGeometry.Geometry.SpectralDivisors
 structure VerifiedBoundedDirac (A : Type*) [Ring A] where
   F : A
   P : A
-  F_sq_add_P : F * F + P = 1
-  F_P_zero : F * P = 0
-  P_F_zero : P * F = 0
-  P_sq : P * P = P
 
 theorem F_cube_eq_F {A : Type*} [Ring A]
-    (D : VerifiedBoundedDirac A) :
+    (D : VerifiedBoundedDirac A)
+    (hF : D.F * D.F + D.P = 1)
+    (hPF : D.P * D.F = 0) :
     D.F * D.F * D.F = D.F := by
   have h1 : D.F * D.F = 1 - D.P := by
     calc
@@ -46,28 +44,28 @@ theorem F_cube_eq_F {A : Type*} [Ring A]
           = D.F * D.F + D.P - D.P := by
             rw [add_sub_cancel_right]
       _ = 1 - D.P := by
-            rw [D.F_sq_add_P]
+            rw [hF]
   calc
     D.F * D.F * D.F
         = (1 - D.P) * D.F := by
           rw [h1]
     _ = 1 * D.F - D.P * D.F := by
           rw [sub_mul]
-    _ = D.F - 0 := by
-          rw [one_mul, D.P_F_zero]
+    _ = D.F - 0 := by rw [one_mul, hPF]
     _ = D.F := by
           rw [sub_zero]
 
 structure KasparovIndexDatum
     (A Scalar : Type*) [Ring A] [AddCommGroup Scalar] where
   superReadout : A → Scalar
-  super_sub :
-    ∀ x y : A, superReadout (x - y) = superReadout x - superReadout y
 
 theorem mckean_singer_is_kasparov_defect
     {A Scalar : Type*} [Ring A] [AddCommGroup Scalar]
     (D : VerifiedBoundedDirac A)
-    (Idx : KasparovIndexDatum A Scalar) :
+    (hF : D.F * D.F + D.P = 1)
+    (Idx : KasparovIndexDatum A Scalar)
+    (hIdx : ∀ x y : A,
+      Idx.superReadout (x - y) = Idx.superReadout x - Idx.superReadout y) :
     Idx.superReadout D.P =
       Idx.superReadout 1 - Idx.superReadout (D.F * D.F) := by
   have hP : D.P = 1 - D.F * D.F := by
@@ -76,9 +74,9 @@ theorem mckean_singer_is_kasparov_defect
           = D.F * D.F + D.P - D.F * D.F := by
             rw [add_sub_cancel_left]
       _ = 1 - D.F * D.F := by
-            rw [D.F_sq_add_P]
+            rw [hF]
   rw [hP]
-  exact Idx.super_sub 1 (D.F * D.F)
+  exact hIdx 1 (D.F * D.F)
 
 /-! ## 1. Finite graded kernel index -/
 
@@ -338,11 +336,6 @@ structure ExactDefectStokesBridge
   /-- Volume defect density. -/
   defectDensity : Point → Value
 
-  /-- The defect density is exactly the geometric derivative of the boundary form. -/
-  geometricDerivative_eq_defectDensity :
-    ∀ p : Point,
-      I.geometricDerivative ω p = defectDensity p
-
 namespace ExactDefectStokesBridge
 
 variable
@@ -360,24 +353,28 @@ This is the formal boundary/volume equality. It is derived from the supplied
 Stokes backend and the explicit density equality.
 -/
 theorem boundaryIntegral_eq_volumeDefect
+    (hB : ∀ p : Point,
+      I.geometricDerivative ω p = B.defectDensity p)
     (Ω : Region) :
     I.boundaryIntegral Ω ω =
       I.volumeIntegral Ω B.defectDensity := by
   rw [I.stokes_eq Ω ω]
   exact
     congrArg (I.volumeIntegral Ω)
-      (funext B.geometricDerivative_eq_defectDensity)
+      (funext hB)
 
 /--
 If the boundary form is geometrically closed, the volume defect vanishes.
 -/
 theorem volumeDefect_eq_zero_of_closed
+    (hB : ∀ p : Point,
+      I.geometricDerivative ω p = B.defectDensity p)
     (Ω : Region)
     (hclosed : I.IsClosedGeometricForm ω) :
     I.volumeIntegral Ω B.defectDensity = 0 := by
   apply I.volumeIntegral_zero_of_pointwise_zero
   intro p
-  rw [← B.geometricDerivative_eq_defectDensity p]
+  rw [← hB p]
   exact hclosed p
 
 /--
@@ -409,30 +406,36 @@ variable (B : ExactDefectStokesBridge I ω)
 The volume defect is the winding times the phase period.
 -/
 theorem volumeDefect_eq_winding_period
+    (hB : ∀ p : Point,
+      I.geometricDerivative ω p = B.defectDensity p)
     (Ω : Region) :
     I.volumeIntegral Ω B.defectDensity =
       (W.winding Ω : ℝ) • N.phasePeriod := by
-  rw [← boundaryIntegral_eq_volumeDefect B Ω]
+  rw [← boundaryIntegral_eq_volumeDefect B hB Ω]
   exact W.boundaryIntegral_eq_winding_smul Ω
 
 /--
 The volume defect vanishes iff the winding vanishes.
 -/
 theorem volumeDefect_eq_zero_iff_winding_eq_zero
+    (hB : ∀ p : Point,
+      I.geometricDerivative ω p = B.defectDensity p)
     (Ω : Region) :
     I.volumeIntegral Ω B.defectDensity = 0
       ↔ W.winding Ω = 0 := by
-  rw [← boundaryIntegral_eq_volumeDefect B Ω]
+  rw [← boundaryIntegral_eq_volumeDefect B hB Ω]
   exact W.boundaryIntegral_eq_zero_iff
 
 /--
 The volume defect is nonzero iff the winding is nonzero.
 -/
 theorem volumeDefect_ne_zero_iff_winding_ne_zero
+    (hB : ∀ p : Point,
+      I.geometricDerivative ω p = B.defectDensity p)
     (Ω : Region) :
     I.volumeIntegral Ω B.defectDensity ≠ 0
       ↔ W.winding Ω ≠ 0 := by
-  rw [← boundaryIntegral_eq_volumeDefect B Ω]
+  rw [← boundaryIntegral_eq_volumeDefect B hB Ω]
   exact W.boundaryIntegral_ne_zero_iff
 
 end ExactDefectStokesBridge
@@ -535,6 +538,8 @@ Volume defect equals the finite projected-kernel index times the phase period.
 -/
 theorem volumeDefect_eq_finiteKernelIndex_period
     (B : ExactDefectStokesBridge I ω)
+    (hB : ∀ p : Point,
+      I.geometricDerivative ω p = B.defectDensity p)
     (regionOf : State → Region)
     (hindex_winding :
       ∀ x : State,
@@ -542,7 +547,7 @@ theorem volumeDefect_eq_finiteKernelIndex_period
     (x : State) :
     I.volumeIntegral (regionOf x) B.defectDensity =
       (K.index x : ℝ) • N.phasePeriod := by
-  rw [← ExactDefectStokesBridge.boundaryIntegral_eq_volumeDefect B (regionOf x)]
+  rw [← ExactDefectStokesBridge.boundaryIntegral_eq_volumeDefect B hB (regionOf x)]
   exact K.boundaryIntegral_eq_finiteKernelIndex_period
     regionOf hindex_winding x
 
@@ -551,6 +556,8 @@ Volume defect is nonzero iff the finite projected-kernel index is nonzero.
 -/
 theorem volumeDefect_ne_zero_iff_finiteKernelIndex_ne_zero
     (B : ExactDefectStokesBridge I ω)
+    (hB : ∀ p : Point,
+      I.geometricDerivative ω p = B.defectDensity p)
     (regionOf : State → Region)
     (hindex_winding :
       ∀ x : State,
@@ -558,7 +565,7 @@ theorem volumeDefect_ne_zero_iff_finiteKernelIndex_ne_zero
     (x : State) :
     I.volumeIntegral (regionOf x) B.defectDensity ≠ 0
       ↔ K.index x ≠ 0 := by
-  rw [← ExactDefectStokesBridge.boundaryIntegral_eq_volumeDefect B (regionOf x)]
+  rw [← ExactDefectStokesBridge.boundaryIntegral_eq_volumeDefect B hB (regionOf x)]
   exact
     K.boundaryIntegral_ne_zero_iff_finiteKernelIndex_ne_zero
       regionOf hindex_winding x
@@ -693,6 +700,8 @@ Nonzero volume defect obstructs relaxation into the flat sector.
 -/
 theorem nonzero_volumeDefect_cannot_flow_to_flat
     (B : ExactDefectStokesBridge I ω)
+    (hB : ∀ p : Point,
+      I.geometricDerivative ω p = B.defectDensity p)
     (F : ConstructiveKasparovFlow K)
     {x : State}
     (hx :
@@ -703,7 +712,7 @@ theorem nonzero_volumeDefect_cannot_flow_to_flat
   intro hBoundary
   exact hx
     (by
-      rw [← ExactDefectStokesBridge.boundaryIntegral_eq_volumeDefect B (R.regionOf x)]
+      rw [← ExactDefectStokesBridge.boundaryIntegral_eq_volumeDefect B hB (R.regionOf x)]
       exact hBoundary)
 
 /--

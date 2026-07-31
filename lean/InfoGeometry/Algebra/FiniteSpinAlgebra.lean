@@ -44,28 +44,29 @@ structure SpinHalfBasis (n : ℕ) where
   J_zero : Matrix (Fin n) (Fin n) ℂ
   J_plus : Matrix (Fin n) (Fin n) ℂ
   J_minus : Matrix (Fin n) (Fin n) ℂ
-  h_commutator_z_plus : J_zero * J_plus - J_plus * J_zero = J_plus
-  h_commutator_z_minus : J_zero * J_minus - J_minus * J_zero = -J_minus
-  h_commutator_plus_minus : J_plus * J_minus - J_minus * J_plus = (2 : ℂ) • J_zero
 
 namespace SpinHalfBasis
 
 variable {n : ℕ} (basis : SpinHalfBasis n)
 
 /-- The `J₀,J₊` commutation relation read from a finite spin-half basis. -/
-theorem spin_z_plus_commutation :
+theorem spin_z_plus_commutation
+    (h : basis.J_zero * basis.J_plus - basis.J_plus * basis.J_zero = basis.J_plus) :
     basis.J_zero * basis.J_plus - basis.J_plus * basis.J_zero = basis.J_plus :=
-  basis.h_commutator_z_plus
+  h
 
 /-- The `J₀,J₋` commutation relation read from a finite spin-half basis. -/
-theorem spin_z_minus_commutation :
+theorem spin_z_minus_commutation
+    (h : basis.J_zero * basis.J_minus - basis.J_minus * basis.J_zero = -basis.J_minus) :
     basis.J_zero * basis.J_minus - basis.J_minus * basis.J_zero = -basis.J_minus :=
-  basis.h_commutator_z_minus
+  h
 
 /-- The `J₊,J₋` commutation relation read from a finite spin-half basis. -/
-theorem spin_plus_minus_commutation :
+theorem spin_plus_minus_commutation
+    (h : basis.J_plus * basis.J_minus - basis.J_minus * basis.J_plus =
+      (2 : ℂ) • basis.J_zero) :
     basis.J_plus * basis.J_minus - basis.J_minus * basis.J_plus = (2 : ℂ) • basis.J_zero :=
-  basis.h_commutator_plus_minus
+  h
 
 end SpinHalfBasis
 
@@ -95,9 +96,6 @@ def canonicalSpinHalfBasis : SpinHalfBasis 2 where
   J_zero := J_zero
   J_plus := J_plus
   J_minus := J_minus
-  h_commutator_z_plus := comm_J_zero_J_plus
-  h_commutator_z_minus := comm_J_zero_J_minus
-  h_commutator_plus_minus := comm_J_plus_J_minus
 
 /-- Consolidated finite spin algebra packet. -/
 theorem finite_spin_half_packet :

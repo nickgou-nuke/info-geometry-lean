@@ -24,13 +24,7 @@ open InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
 
 def pauliMajoranaWitness : NullBoundaryMajoranas 2 :=
   { gamma_L := involutiveUnit σ1 pauli_sigma1_sq
-    gamma_R := involutiveUnit σ3 pauli_sigma3_sq
-    h_anticomm := by
-      exact pauli_sigma1_anti_sigma3
-    h_L_sq := by
-      exact pauli_sigma1_sq
-    h_R_sq := by
-      exact pauli_sigma3_sq }
+    gamma_R := involutiveUnit σ3 pauli_sigma3_sq }
 
 theorem pauliMajoranaWitness_exists :
     ∃ m : NullBoundaryMajoranas 2,
@@ -67,6 +61,7 @@ theorem pauli_cooper_pair_is_nilpotent :
     cooperPairCondensate pauliMajoranaWitness *
         cooperPairCondensate pauliMajoranaWitness = 0 := by
   exact cooper_pair_is_nilpotent_cap pauliMajoranaWitness
+    pauli_sigma1_anti_sigma3 pauli_sigma1_sq pauli_sigma3_sq
 
 theorem pauli_cooper_pair_car :
     cooperPairCondensate pauliMajoranaWitness *
@@ -74,7 +69,7 @@ theorem pauli_cooper_pair_car :
         cooperPairConjugate pauliMajoranaWitness *
           cooperPairCondensate pauliMajoranaWitness =
       (2 : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
-  exact majorana_car pauliMajoranaWitness
+  exact majorana_car pauliMajoranaWitness pauli_sigma1_sq pauli_sigma3_sq
 
 noncomputable def pauliNumberOperator : M2C :=
   cooperPairConjugate pauliMajoranaWitness *

@@ -280,25 +280,27 @@ downstream modules usually need:
 -/
 abbrev IndividuatedCasimir
     (A : Type*) [Ring A] :=
-  InfoGeometry.OperatorAlgebra.IndividuatedCasimir.VerifiedCasimir A
+  A
 
 namespace IndividuatedCasimir
 
 variable {A : Type*} [Ring A]
 
 /-- Historical centrality readout, derived from the canonical commutation law. -/
-theorem isCentral (C : IndividuatedCasimir A) :
-    IsCentral C.element := by
+theorem isCentral (C : IndividuatedCasimir A)
+    (hC : ∀ X : A, C * X = X * C) :
+    IsCentral C := by
   intro X
-  simp [assocCommutator, C.central X]
+  exact sub_eq_zero.mpr (hC X).symm
 
 /--
 Historical invariance readout.  Unit-conjugation invariance is derived from
 centrality rather than stored as a second evidence field.
 -/
-theorem isInvariant (C : IndividuatedCasimir A) :
-    IsUnitConjugationInvariant C.element :=
-  unitConjugationInvariant_of_central C.isCentral
+theorem isInvariant (C : IndividuatedCasimir A)
+    (hC : ∀ X : A, C * X = X * C) :
+    IsUnitConjugationInvariant C :=
+  unitConjugationInvariant_of_central (isCentral C hC)
 
 end IndividuatedCasimir
 
@@ -308,9 +310,8 @@ Build an individuated Casimir from a verified quadratic Casimir datum.
 def VerifiedQuadraticCasimir.toIndividuatedCasimir
     {A ι : Type*} [Ring A] [Fintype ι]
     (C : VerifiedQuadraticCasimir A ι) :
-    IndividuatedCasimir A where
-  element := C.element
-  central := fun X => (C.commutes_with X).symm
+    IndividuatedCasimir A :=
+  C.element
 
 /-! ## 7. Owner target -/
 

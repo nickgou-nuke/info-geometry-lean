@@ -71,14 +71,11 @@ theorem matrix_trace_invariant_under_transport
 set_option linter.dupNamespace false
 
 /-!
-A verified trace is an operator-to-scalar map with a proved conjugation
-invariance law.  The subtype is the native proof-carrying carrier.
+The trace carrier is the operator-to-scalar map itself. Conjugation
+invariance is exposed as a theorem with its proof supplied at the call site.
 -/
-def VerifiedTrace
-    (Op Scalar : Type*) [Monoid Op] :=
-  {tr : Op → Scalar //
-    ∀ (A : Op) (U : InvertibleTransport Op),
-      tr (U.conjugate A) = tr A}
+abbrev VerifiedTrace
+    (Op Scalar : Type*) [Monoid Op] := Op → Scalar
 
 namespace VerifiedTrace
 
@@ -86,21 +83,25 @@ variable {Op Scalar : Type*} [Monoid Op]
 variable (T : VerifiedTrace Op Scalar)
 
 abbrev tr : Op → Scalar :=
-  T.1
+  T
 
 theorem invariant
+    (hT : ∀ (A : Op) (U : InvertibleTransport Op),
+      T (U.conjugate A) = T A)
     (A : Op) (U : InvertibleTransport Op) :
-    T.tr (U.conjugate A) = T.tr A :=
-  T.2 A U
+    T (U.conjugate A) = T A :=
+  hT A U
 
 /--
 Re-export trace invariance.
 -/
 theorem conjugation_invariant
+    (hT : ∀ (A : Op) (U : InvertibleTransport Op),
+      T (U.conjugate A) = T A)
     (A : Op)
     (U : InvertibleTransport Op) :
-    T.tr (U.conjugate A) = T.tr A :=
-  T.invariant A U
+    T (U.conjugate A) = T A :=
+  T.invariant hT A U
 
 end VerifiedTrace
 
@@ -110,10 +111,8 @@ ring.
 -/
 def matrixVerifiedTrace
     (n R : Type*) [Fintype n] [DecidableEq n] [CommRing R] :
-    VerifiedTrace (Matrix n n R) R :=
-  ⟨Matrix.trace, by
-    intro A U
-    exact matrix_trace_invariant_under_transport A U⟩
+  VerifiedTrace (Matrix n n R) R :=
+  Matrix.trace
 
 /-! ## 3. Real finite matrix specialization -/
 

@@ -12,7 +12,11 @@ theorem paper_physical_spacetime_no_localized_matter_source_package
     (metric residualLagrangian stressEnergy tracelessPart : ℝ)
     (stressEnergy_eq : stressEnergy = residualLagrangian * metric)
     (tracelessPart_eq : tracelessPart = stressEnergy - residualLagrangian * metric)
-    (E : AdmissibleEinsteinClosure) (hAdm : E.admissible)
+    (E : AdmissibleEinsteinClosure) (admissible : Prop) (hAdm : admissible)
+    (eulerLagrange_identity :
+      admissible →
+        E.einsteinTensor + E.cosmologicalConstant * E.metric =
+          E.couplingConstant * E.stressEnergy)
     (hMetric : E.metric = metric) (hResidual : E.residualLagrangian = residualLagrangian)
     (hStress : E.stressEnergy = stressEnergy)
     (Delta : (Fin 3 → Real) →ₗ[Real] Real) (phi q : Fin 3 → Real) (sigma L : Real)
@@ -27,7 +31,9 @@ theorem paper_physical_spacetime_no_localized_matter_source_package
   rcases hPureD with ⟨hPureStress, hTraceZero⟩
   have hPureE : E.stressEnergy = E.residualLagrangian * E.metric := by
     rw [hStress, hPureStress, hResidual, hMetric]
-  refine ⟨hTraceZero, paper_physical_spacetime_effective_cosmological_closure E hAdm hPureE, ?_⟩
+  refine ⟨hTraceZero,
+    paper_physical_spacetime_effective_cosmological_closure E admissible hAdm
+      eulerLagrange_identity hPureE, ?_⟩
   exact paper_physical_spacetime_weak_field_quadratic_harmonic_normal_form Delta phi q sigma L hq
     hphi
 
@@ -38,7 +44,11 @@ def paper_physical_spacetime_no_localized_matter_source : Prop := by
     ∀ (metric residualLagrangian stressEnergy tracelessPart : Real)
       (_stressEnergy_eq : stressEnergy = residualLagrangian * metric)
       (_tracelessPart_eq : tracelessPart = stressEnergy - residualLagrangian * metric)
-      (E : AdmissibleEinsteinClosure) (_hAdm : E.admissible)
+      (E : AdmissibleEinsteinClosure) (_admissible : Prop) (_hAdm : _admissible)
+      (_eulerLagrange_identity :
+        _admissible →
+          E.einsteinTensor + E.cosmologicalConstant * E.metric =
+            E.couplingConstant * E.stressEnergy)
       (_hMetric : E.metric = metric) (_hResidual : E.residualLagrangian = residualLagrangian)
       (_hStress : E.stressEnergy = stressEnergy) (Delta : (Fin 3 → Real) →ₗ[Real] Real)
       (phi q : Fin 3 → Real) (sigma L : Real), Delta q = sigma * L →
@@ -52,9 +62,9 @@ def paper_physical_spacetime_no_localized_matter_source : Prop := by
 theorem paper_physical_spacetime_no_localized_matter_source_verified :
     paper_physical_spacetime_no_localized_matter_source := by
   intro metric residualLagrangian stressEnergy tracelessPart stressEnergy_eq tracelessPart_eq
-    E hAdm hMetric hResidual hStress Delta phi q sigma L hq hphi
+    E admissible hAdm hEuler hMetric hResidual hStress Delta phi q sigma L hq hphi
   exact paper_physical_spacetime_no_localized_matter_source_package
     metric residualLagrangian stressEnergy tracelessPart stressEnergy_eq tracelessPart_eq
-    E hAdm hMetric hResidual hStress Delta phi q sigma L hq hphi
+    E admissible hAdm hEuler hMetric hResidual hStress Delta phi q sigma L hq hphi
 
 end Omega.PhysicalSpacetimeSkeleton

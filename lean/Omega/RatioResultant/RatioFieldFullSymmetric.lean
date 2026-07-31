@@ -12,19 +12,20 @@ least `4`. -/
 structure RatioFieldFullSymmetricData (K : Type*) [Field K] where
   splittingData : RatioFieldSplittingData K
   resultantData : RatioResultantData K
-  hrootCount : 4 ≤ resultantData.rootCount
 
 namespace RatioFieldFullSymmetricData
 
 /-- Distinguished first root index. -/
-def baseZero {K : Type*} [Field K] (D : RatioFieldFullSymmetricData K) :
+def baseZero {K : Type*} [Field K] (D : RatioFieldFullSymmetricData K)
+    (hrootCount : 4 ≤ D.resultantData.rootCount) :
     Fin D.resultantData.rootCount :=
-  ⟨0, lt_of_lt_of_le (by decide) D.hrootCount⟩
+  ⟨0, lt_of_lt_of_le (by decide) hrootCount⟩
 
 /-- Distinguished second root index. -/
-def baseOne {K : Type*} [Field K] (D : RatioFieldFullSymmetricData K) :
+def baseOne {K : Type*} [Field K] (D : RatioFieldFullSymmetricData K)
+    (hrootCount : 4 ≤ D.resultantData.rootCount) :
     Fin D.resultantData.rootCount :=
-  ⟨1, lt_of_lt_of_le (by decide : 1 < 4) D.hrootCount⟩
+  ⟨1, lt_of_lt_of_le (by decide : 1 < 4) hrootCount⟩
 
 /-- The cyclic normal kernel modeled by the trivial cyclic subgroup of the full symmetric group. -/
 def kernelSubgroup {K : Type*} [Field K] (D : RatioFieldFullSymmetricData K) :
@@ -33,18 +34,21 @@ def kernelSubgroup {K : Type*} [Field K] (D : RatioFieldFullSymmetricData K) :
 
 /-- Ordered-pair irreducibility: any ordered pair of distinct indices lies in the orbit of the
 base pair `(0,1)` under the full symmetric action. -/
-def orderedPairIrreducible {K : Type*} [Field K] (D : RatioFieldFullSymmetricData K) : Prop :=
+def orderedPairIrreducible {K : Type*} [Field K] (D : RatioFieldFullSymmetricData K)
+    (hrootCount : 4 ≤ D.resultantData.rootCount) : Prop :=
   ∀ i j : Fin D.resultantData.rootCount, i ≠ j →
-    ∃ σ : Equiv.Perm (Fin D.resultantData.rootCount), σ D.baseZero = i ∧ σ D.baseOne = j
+    ∃ σ : Equiv.Perm (Fin D.resultantData.rootCount),
+      σ (D.baseZero hrootCount) = i ∧ σ (D.baseOne hrootCount) = j
 
 /-- Full-symmetric completeness bundles the cyclic-normal kernel reduction, the ratio-resultant
 discriminant rigidity, and the ordered-pair orbit statement. -/
-def fullSymmetricCompleteness {K : Type*} [Field K] (D : RatioFieldFullSymmetricData K) : Prop :=
+def fullSymmetricCompleteness {K : Type*} [Field K] (D : RatioFieldFullSymmetricData K)
+    (hrootCount : 4 ≤ D.resultantData.rootCount) : Prop :=
   IsCyclic D.kernelSubgroup ∧
     D.kernelSubgroup.Normal ∧
     D.kernelSubgroup = ⊥ ∧
     D.resultantData.discriminantQuadraticRigidity ∧
-    D.orderedPairIrreducible
+    D.orderedPairIrreducible hrootCount
 
 end RatioFieldFullSymmetricData
 
@@ -102,8 +106,11 @@ lemma kernelSubgroup_eq_bot {K : Type*} [Field K] (D : RatioFieldFullSymmetricDa
 kernel template, the discriminant-rigidity theorem collapses the quadratic character to sign, and
 the symmetric group acts transitively on ordered pairs of distinct roots.
     cor:ratio-field-full-symmetric -/
-theorem paper_ratio_field_full_symmetric {K : Type*} [Field K] (D : RatioFieldFullSymmetricData K) :
-    D.fullSymmetricCompleteness := by
+theorem paper_ratio_field_full_symmetric {K : Type*} [Field K]
+    (D : RatioFieldFullSymmetricData K)
+    (hrootCount : 4 ≤ D.resultantData.rootCount)
+    (ratioCharacter_nontrivial : D.resultantData.ratioCharacter ≠ 1) :
+    D.fullSymmetricCompleteness hrootCount := by
   have hSplit := paper_ratio_field_splitting D.splittingData
   have hUnitKernel :
       ∃ H : Subgroup Kˣ, H = Subgroup.zpowers (1 : Kˣ) ∧ Nat.card H ∣ 1 ∧ IsCyclic H := by
@@ -118,10 +125,11 @@ theorem paper_ratio_field_full_symmetric {K : Type*} [Field K] (D : RatioFieldFu
     infer_instance
   have hRigidity : D.resultantData.discriminantQuadraticRigidity :=
     paper_ratio_resultant_disc_rigidity D.resultantData
-  have hPairs : D.orderedPairIrreducible := by
+      (le_trans (by decide : 3 ≤ 4) hrootCount) ratioCharacter_nontrivial
+  have hPairs : D.orderedPairIrreducible hrootCount := by
     intro i j hij
     exact exists_perm_send_ordered_pair
-      (le_trans (by decide : 2 ≤ 4) D.hrootCount) i j hij
+      (le_trans (by decide : 2 ≤ 4) hrootCount) i j hij
   exact ⟨hCyclic, hNormal, hKernel, hRigidity, hPairs⟩
 
 end Omega.RatioResultant

@@ -142,13 +142,8 @@ theorem F_mul_F_add_P :
     norm_num [F, P, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- A concrete finite bounded Dirac/Kasparov datum. -/
-def boundedDirac : VerifiedBoundedDirac Mat2 where
-  F := F
-  P := P
-  F_sq_add_P := F_mul_F_add_P
-  F_P_zero := F_mul_P
-  P_F_zero := P_mul_F
-  P_sq := P_mul_P
+def boundedDirac : VerifiedBoundedDirac Mat2 :=
+  ⟨F, P⟩
 
 /--
 The finite Stokes backend with defect current `P`.

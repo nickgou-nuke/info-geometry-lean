@@ -20,21 +20,21 @@ structure StokesGodelAlgorithmicHolographicCompletenessData where
   code_injective : Function.Injective toCode
   decode : Set.range (toCode ∘ toBoundary) → Bulk
   decode_spec : ∀ u, decode ⟨(toCode ∘ toBoundary) u, ⟨u, rfl⟩⟩ = u
-  complexityPreserved : Prop
-  volumeComputableFromCode : Prop
-  complexity_of_injective_dictionary :
-    Function.Injective (toCode ∘ toBoundary) → complexityPreserved
-  volume_of_decoder : (Set.range (toCode ∘ toBoundary) → Bulk) → volumeComputableFromCode
 
 /-- If the top-dimensional dyadic boundary map is injective and the boundary Gödelization is
 injective, then the composite Stokes--Gödel code is an injective dictionary. A decoder on the
 image therefore yields constant-overhead recoverability and a code-computable volume readout.
     thm:spg-stokes-godel-algorithmic-holographic-completeness -/
 theorem paper_spg_stokes_godel_algorithmic_holographic_completeness
-    (D : StokesGodelAlgorithmicHolographicCompletenessData) :
-    D.complexityPreserved ∧
+    (D : StokesGodelAlgorithmicHolographicCompletenessData)
+    (complexityPreserved volumeComputableFromCode : Prop)
+    (complexity_of_injective_dictionary :
+      Function.Injective (D.toCode ∘ D.toBoundary) → complexityPreserved)
+    (volume_of_decoder :
+      (Set.range (D.toCode ∘ D.toBoundary) → D.Bulk) → volumeComputableFromCode) :
+    complexityPreserved ∧
       (∀ u, D.decode ⟨(D.toCode ∘ D.toBoundary) u, ⟨u, rfl⟩⟩ = u) ∧
-      D.volumeComputableFromCode := by
+      volumeComputableFromCode := by
   let _ : AddGroup D.Bulk := D.bulkAddGroup
   let _ : AddGroup D.Boundary := D.boundaryAddGroup
   have hBoundary : Function.Injective D.toBoundary :=
@@ -43,8 +43,8 @@ theorem paper_spg_stokes_godel_algorithmic_holographic_completeness
   have hDictionary : Function.Injective (D.toCode ∘ D.toBoundary) :=
     paper_spg_boundary_godelization_holographic_dictionary
       D.toBoundary D.toCode hBoundary D.code_injective
-  exact ⟨D.complexity_of_injective_dictionary hDictionary,
+  exact ⟨complexity_of_injective_dictionary hDictionary,
     D.decode_spec,
-    D.volume_of_decoder D.decode⟩
+    volume_of_decoder D.decode⟩
 
 end Omega.SPG

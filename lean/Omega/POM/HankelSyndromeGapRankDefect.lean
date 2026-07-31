@@ -9,12 +9,13 @@ module inside it, and monic division by the residual factor gives unique remaind
 representatives. Hence the quotient is free abelian and its rank equals the degree defect.
     thm:pom-hankel-syndrome-gap-rank-defect -/
 theorem paper_pom_hankel_syndrome_gap_rank_defect
-    (kernelEqualsMultiplesData : HankelSyndromeKernelEqualsMultiplesData)
+    {kernelContainedInMultiples multiplesContainedInKernel : Prop}
+    (hKernelContainedInMultiples : kernelContainedInMultiples)
+    (hMultiplesContainedInKernel : multiplesContainedInKernel)
     (minimalKernelIdentified divisibilityReversalEmbedding quotientByMonicFactor
       remainderNormalForm quotientFreeAbelian rankEqDefect : Prop)
     (deriveMinimalKernelIdentified :
-      kernelEqualsMultiplesData.kernelContainedInMultiples →
-        kernelEqualsMultiplesData.multiplesContainedInKernel → minimalKernelIdentified)
+      kernelContainedInMultiples → multiplesContainedInKernel → minimalKernelIdentified)
     (deriveDivisibilityReversalEmbedding :
       minimalKernelIdentified → divisibilityReversalEmbedding)
     (deriveQuotientByMonicFactor :
@@ -25,9 +26,6 @@ theorem paper_pom_hankel_syndrome_gap_rank_defect
     (deriveRankEqDefect :
       quotientByMonicFactor → remainderNormalForm → rankEqDefect) :
     quotientFreeAbelian ∧ rankEqDefect := by
-  rcases
-      paper_pom_hankel_syndrome_module_kernel_equals_multiples kernelEqualsMultiplesData with
-    ⟨hKernelContainedInMultiples, hMultiplesContainedInKernel⟩
   have hMinimalKernelIdentified : minimalKernelIdentified :=
     deriveMinimalKernelIdentified hKernelContainedInMultiples hMultiplesContainedInKernel
   have hDivisibilityReversalEmbedding : divisibilityReversalEmbedding :=

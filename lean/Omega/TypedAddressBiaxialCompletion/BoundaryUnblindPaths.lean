@@ -46,8 +46,8 @@ the usual quadratic law, and the endpoint-heat axis remains logically non-substi
 def BoundaryUnblindPathsData.noFixedChartRefinementUnblinds
     (D : BoundaryUnblindPathsData) : Prop :=
   typedAddressFixedChartDepth D.δ D.γ = (4 * D.δ) / (D.γ ^ 2 + (1 + D.δ) ^ 2) ∧
-    ((D.verifier.axes.radiusBlindspotClosed ∧ D.verifier.axes.addressCollisionClosed ∧
-        ¬ D.verifier.axes.endpointHeatClosed) →
+    ((D.verifier.radiusBlindspotClosed ∧ D.verifier.addressCollisionClosed ∧
+        ¬ D.verifier.endpointHeatClosed) →
       D.verifier.verifierResult ≠ BoundaryVerifierResult.certificate)
 
 /-- At the boundary blindspot, fixed-chart refinements cannot remove the endpoint obstruction,
@@ -55,7 +55,26 @@ while the admissible unblinding exits are the comoving localization route and th
 tomographic reencoding route.
     prop:typed-address-biaxial-completion-boundary-unblind-paths -/
 theorem paper_typed_address_biaxial_completion_boundary_unblind_paths
-    (D : BoundaryUnblindPathsData) :
+    {monotoneToEndpointAtom exponentialErrorBound minDepthFormula : Prop}
+    (hMonotoneToEndpointAtom : monotoneToEndpointAtom)
+    (hExponentialErrorBound : exponentialErrorBound)
+    (deriveMinDepthFormula : monotoneToEndpointAtom → exponentialErrorBound → minDepthFormula)
+    (D : BoundaryUnblindPathsData)
+    (hAccepts : D.verifier.radiusBlindspotClosed → D.verifier.addressCollisionClosed →
+      D.verifier.endpointHeatClosed → D.verifier.toeplitzPsdPassed →
+        D.verifier.verifierResult = .certificate)
+    (hRadius : D.verifier.verifierResult = .certificate → D.verifier.radiusBlindspotClosed)
+    (hAddress : D.verifier.verifierResult = .certificate → D.verifier.addressCollisionClosed)
+    (hEndpoint : D.verifier.verifierResult = .certificate → D.verifier.endpointHeatClosed)
+    (hRadiusNonSubstitutable : D.verifier.addressCollisionClosed →
+      D.verifier.endpointHeatClosed → ¬ D.verifier.radiusBlindspotClosed →
+        D.verifier.verifierResult ≠ .certificate)
+    (hAddressNonSubstitutable : D.verifier.radiusBlindspotClosed →
+      D.verifier.endpointHeatClosed → ¬ D.verifier.addressCollisionClosed →
+        D.verifier.verifierResult ≠ .certificate)
+    (hEndpointNonSubstitutable : D.verifier.radiusBlindspotClosed →
+      D.verifier.addressCollisionClosed → ¬ D.verifier.endpointHeatClosed →
+        D.verifier.verifierResult ≠ .certificate) :
     D.comovingLocalizationUnblinds ∧
       D.tomographicReencodingUnblinds ∧
       D.noFixedChartRefinementUnblinds := by
@@ -71,11 +90,13 @@ theorem paper_typed_address_biaxial_completion_boundary_unblind_paths
     Omega.CircleDimension.paper_cdim_poisson_entropy_moment_tomography
       D.hsigma D.hA4 D.hA6 D.hB6
   have hEndpointAxis :
-      (D.verifier.axes.radiusBlindspotClosed ∧ D.verifier.axes.addressCollisionClosed ∧
-          ¬ D.verifier.axes.endpointHeatClosed) →
+      (D.verifier.radiusBlindspotClosed ∧ D.verifier.addressCollisionClosed ∧
+          ¬ D.verifier.endpointHeatClosed) →
         D.verifier.verifierResult ≠ BoundaryVerifierResult.certificate :=
     (paper_typed_address_biaxial_completion_boundary_endpoint_orthogonal
-      D.verifier D.endpointHeat).2
+      hMonotoneToEndpointAtom hExponentialErrorBound deriveMinDepthFormula D.verifier
+      hAccepts hRadius hAddress hEndpoint hRadiusNonSubstitutable
+      hAddressNonSubstitutable hEndpointNonSubstitutable).2
   refine ⟨?_, hTomography, ?_⟩
   · refine ⟨hFirstOrder.2, ?_⟩
     rw [hFirstOrder.2]

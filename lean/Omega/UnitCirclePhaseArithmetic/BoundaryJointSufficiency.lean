@@ -4,10 +4,6 @@ namespace Omega.UnitCirclePhaseArithmetic
 
 open Omega.TypedAddressBiaxialCompletion
 
-/-- Re-export of the chapter-local boundary-budget axes used by the unit-circle phase arithmetic
-interface. -/
-abbrev UnitCircleBoundaryBudgetAxes := BoundaryBudgetAxes
-
 /-- Re-export of the chapter-local verifier output type. -/
 abbrev UnitCircleBoundaryVerifierResult := BoundaryVerifierResult
 
@@ -19,20 +15,33 @@ abbrev UnitCircleBoundaryJointVerifierData := BoundaryJointVerifierData
 for the boundary verifier to emit a certificate, and each axis remains logically non-substitutable
 when the other two pass.
     thm:unit-circle-boundary-joint-sufficiency -/
-theorem paper_unit_circle_boundary_joint_sufficiency (D : UnitCircleBoundaryJointVerifierData) :
-    (D.axes.radiusBlindspotClosed ∧ D.axes.addressCollisionClosed ∧
-        D.axes.endpointHeatClosed ∧ D.toeplitzPsdPassed →
+theorem paper_unit_circle_boundary_joint_sufficiency (D : UnitCircleBoundaryJointVerifierData)
+    (hAccepts : D.radiusBlindspotClosed → D.addressCollisionClosed →
+      D.endpointHeatClosed → D.toeplitzPsdPassed → D.verifierResult = .certificate)
+    (hRadius : D.verifierResult = .certificate → D.radiusBlindspotClosed)
+    (hAddress : D.verifierResult = .certificate → D.addressCollisionClosed)
+    (hEndpoint : D.verifierResult = .certificate → D.endpointHeatClosed)
+    (hRadiusNonSubstitutable : D.addressCollisionClosed → D.endpointHeatClosed →
+      ¬ D.radiusBlindspotClosed → D.verifierResult ≠ .certificate)
+    (hAddressNonSubstitutable : D.radiusBlindspotClosed → D.endpointHeatClosed →
+      ¬ D.addressCollisionClosed → D.verifierResult ≠ .certificate)
+    (hEndpointNonSubstitutable : D.radiusBlindspotClosed → D.addressCollisionClosed →
+      ¬ D.endpointHeatClosed → D.verifierResult ≠ .certificate) :
+    (D.radiusBlindspotClosed ∧ D.addressCollisionClosed ∧
+        D.endpointHeatClosed ∧ D.toeplitzPsdPassed →
       D.verifierResult = .certificate) ∧
-    ((D.axes.addressCollisionClosed ∧ D.axes.endpointHeatClosed ∧
-        ¬ D.axes.radiusBlindspotClosed) →
+    ((D.addressCollisionClosed ∧ D.endpointHeatClosed ∧
+        ¬ D.radiusBlindspotClosed) →
       D.verifierResult ≠ .certificate) ∧
-    ((D.axes.radiusBlindspotClosed ∧ D.axes.endpointHeatClosed ∧
-        ¬ D.axes.addressCollisionClosed) →
+    ((D.radiusBlindspotClosed ∧ D.endpointHeatClosed ∧
+        ¬ D.addressCollisionClosed) →
       D.verifierResult ≠ .certificate) ∧
-    ((D.axes.radiusBlindspotClosed ∧ D.axes.addressCollisionClosed ∧
-        ¬ D.axes.endpointHeatClosed) →
+    ((D.radiusBlindspotClosed ∧ D.addressCollisionClosed ∧
+        ¬ D.endpointHeatClosed) →
       D.verifierResult ≠ .certificate) := by
-  rcases paper_typed_address_biaxial_completion_boundary_joint_sufficiency D with
+  rcases paper_typed_address_biaxial_completion_boundary_joint_sufficiency D
+      hAccepts hRadius hAddress hEndpoint hRadiusNonSubstitutable
+      hAddressNonSubstitutable hEndpointNonSubstitutable with
     ⟨hsufficient, _, hradius, haddress, hendpoint⟩
   exact ⟨hsufficient, hradius, haddress, hendpoint⟩
 

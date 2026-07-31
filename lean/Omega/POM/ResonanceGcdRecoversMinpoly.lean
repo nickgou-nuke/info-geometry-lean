@@ -7,13 +7,11 @@ open scoped BigOperators
 
 /-- Paper label: `cor:pom-resonance-gcd-recovers-minpoly`. -/
 theorem paper_pom_resonance_gcd_recovers_minpoly
-    {n : ℕ} (kernelEqualsMultiplesData : HankelSyndromeKernelEqualsMultiplesData)
+    {n : ℕ}
     (nullModeKernel squareKernel multipleModule : Set (Fin n → ℤ))
     (nullMode_eq_squareKernel : nullModeKernel = squareKernel)
-    (squareKernel_subset_multipleModule :
-      kernelEqualsMultiplesData.kernelContainedInMultiples → squareKernel ⊆ multipleModule)
-    (multipleModule_subset_squareKernel :
-      kernelEqualsMultiplesData.multiplesContainedInKernel → multipleModule ⊆ squareKernel)
+    (squareKernel_subset_multipleModule : squareKernel ⊆ multipleModule)
+    (multipleModule_subset_squareKernel : multipleModule ⊆ squareKernel)
     (basisRank : ℕ) (basisVector : Fin basisRank → Fin n → ℤ)
     (annihilator : Fin basisRank → Polynomial ℤ)
     (minpoly commonDivisor : Polynomial ℤ)
@@ -31,8 +29,8 @@ theorem paper_pom_resonance_gcd_recovers_minpoly
     commonDivisor = minpoly ∨ commonDivisor = -minpoly := by
   have hPrincipal : nullModeKernel = multipleModule :=
     paper_pom_resonance_hankel_null_integral_principalization
-      kernelEqualsMultiplesData nullModeKernel squareKernel multipleModule
-      nullMode_eq_squareKernel squareKernel_subset_multipleModule
+      nullModeKernel squareKernel multipleModule nullMode_eq_squareKernel
+      squareKernel_subset_multipleModule
       multipleModule_subset_squareKernel
   have hMinpolyDvdAnnihilator : ∀ j, minpoly ∣ annihilator j := by
     intro j

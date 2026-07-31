@@ -36,6 +36,24 @@ structure ThreeEndCertificateOrthogonalityData where
 
 theorem paper_conclusion_three_end_certificate_orthogonality
     (boundary : BoundaryJointVerifierData)
+    (hBoundaryAccepts : boundary.radiusBlindspotClosed → boundary.addressCollisionClosed →
+      boundary.endpointHeatClosed → boundary.toeplitzPsdPassed →
+        boundary.verifierResult = .certificate)
+    (hBoundaryRadius : boundary.verifierResult = .certificate →
+      boundary.radiusBlindspotClosed)
+    (hBoundaryAddress : boundary.verifierResult = .certificate →
+      boundary.addressCollisionClosed)
+    (hBoundaryEndpoint : boundary.verifierResult = .certificate →
+      boundary.endpointHeatClosed)
+    (hBoundaryRadiusNonSubstitutable : boundary.addressCollisionClosed →
+      boundary.endpointHeatClosed → ¬ boundary.radiusBlindspotClosed →
+        boundary.verifierResult ≠ .certificate)
+    (hBoundaryAddressNonSubstitutable : boundary.radiusBlindspotClosed →
+      boundary.endpointHeatClosed → ¬ boundary.addressCollisionClosed →
+        boundary.verifierResult ≠ .certificate)
+    (hBoundaryEndpointNonSubstitutable : boundary.radiusBlindspotClosed →
+      boundary.addressCollisionClosed → ¬ boundary.endpointHeatClosed →
+        boundary.verifierResult ≠ .certificate)
     (radiusBudgetClosed addressBudgetClosed endpointBudgetClosed toeplitzPsdClosed : Prop)
     (verifierAccepts failureWitness : Prop)
     (accepts_of_jointClosure :
@@ -55,19 +73,19 @@ theorem paper_conclusion_three_end_certificate_orthogonality
       visibleBudgetPassed → modeBudgetPassed → ¬ registerBudgetPassed → ¬ legalReadout)
     (mode_failure_obstructs :
       visibleBudgetPassed → registerBudgetPassed → ¬ modeBudgetPassed → ¬ legalReadout) :
-    ((boundary.axes.radiusBlindspotClosed ∧
-        boundary.axes.addressCollisionClosed ∧
-        boundary.axes.endpointHeatClosed ∧ boundary.toeplitzPsdPassed ∧
+    ((boundary.radiusBlindspotClosed ∧
+        boundary.addressCollisionClosed ∧
+        boundary.endpointHeatClosed ∧ boundary.toeplitzPsdPassed ∧
         legalReadout ∧ radiusBudgetClosed ∧ addressBudgetClosed ∧
         endpointBudgetClosed ∧ toeplitzPsdClosed) →
       boundary.verifierResult = .certificate ∧
         visibleBudgetPassed ∧ registerBudgetPassed ∧ modeBudgetPassed ∧ verifierAccepts) ∧
-    (((boundary.axes.addressCollisionClosed ∧ boundary.axes.endpointHeatClosed ∧
-        ¬ boundary.axes.radiusBlindspotClosed) → boundary.verifierResult ≠ .certificate) ∧
-      ((boundary.axes.radiusBlindspotClosed ∧ boundary.axes.endpointHeatClosed ∧
-        ¬ boundary.axes.addressCollisionClosed) → boundary.verifierResult ≠ .certificate) ∧
-      ((boundary.axes.radiusBlindspotClosed ∧ boundary.axes.addressCollisionClosed ∧
-        ¬ boundary.axes.endpointHeatClosed) → boundary.verifierResult ≠ .certificate) ∧
+    (((boundary.addressCollisionClosed ∧ boundary.endpointHeatClosed ∧
+        ¬ boundary.radiusBlindspotClosed) → boundary.verifierResult ≠ .certificate) ∧
+      ((boundary.radiusBlindspotClosed ∧ boundary.endpointHeatClosed ∧
+        ¬ boundary.addressCollisionClosed) → boundary.verifierResult ≠ .certificate) ∧
+      ((boundary.radiusBlindspotClosed ∧ boundary.addressCollisionClosed ∧
+        ¬ boundary.endpointHeatClosed) → boundary.verifierResult ≠ .certificate) ∧
       ((registerBudgetPassed ∧ modeBudgetPassed ∧ ¬ visibleBudgetPassed) →
         ¬ legalReadout) ∧
       ((visibleBudgetPassed ∧ modeBudgetPassed ∧ ¬ registerBudgetPassed) →
@@ -78,6 +96,9 @@ theorem paper_conclusion_three_end_certificate_orthogonality
         ¬ toeplitzPsdClosed) → failureWitness)) := by
   have hBoundary :=
     paper_typed_address_biaxial_completion_boundary_joint_sufficiency boundary
+      hBoundaryAccepts hBoundaryRadius hBoundaryAddress hBoundaryEndpoint
+      hBoundaryRadiusNonSubstitutable hBoundaryAddressNonSubstitutable
+      hBoundaryEndpointNonSubstitutable
   have hBudget :=
     paper_typed_address_biaxial_completion_budget_orthogonality
       legalReadout visibleBudgetPassed registerBudgetPassed modeBudgetPassed

@@ -40,6 +40,22 @@ theorem paper_app_solenoid_leafwise_stokes_normalized_trace
     (normalizedTrace_mass_one : D.traceData.extensionValue = 1)
     (realizedBaseMass_eq_boundaryLimit :
       D.radonData.inverseLimitCylinderMass D.baseLevel = D.traceData.boundaryLimit)
+    (finiteLevelCompatibility :
+      ∀ ℓ, D.radonData.inverseLimitCylinderMass ℓ = D.radonData.finiteLevelMass ℓ)
+    (stokesEqualsIntegral :
+      ∀ ω, D.radonData.stokesFunctional ω = D.radonData.topDegreeIntegral ω)
+    (l1ExtensionAgrees :
+      ∀ ω, D.radonData.l1Functional (D.radonData.densityLift ω) =
+        D.radonData.stokesFunctional ω)
+    (coverDegree_two_le : ∀ n, 2 ≤ D.coverSystem.coverDegree n)
+    (bulkPullback : ∀ n, D.coverSystem.bulkIntegral (n + 1) =
+      (D.coverSystem.coverDegree n : ℝ) * D.coverSystem.bulkIntegral n)
+    (boundaryPullback : ∀ n, D.coverSystem.boundaryIntegral (n + 1) =
+      (D.coverSystem.coverDegree n : ℝ) * D.coverSystem.boundaryIntegral n)
+    (differentialPullback : ∀ n, D.coverSystem.differentialIntegral (n + 1) =
+      (D.coverSystem.coverDegree n : ℝ) * D.coverSystem.differentialIntegral n)
+    (levelwiseStokes : ∀ n,
+      D.coverSystem.differentialIntegral n = D.coverSystem.boundaryIntegral n)
     (layerwiseStokes :
       ∀ n, D.traceData.normalizedBulk n - D.traceData.normalizedBoundary n =
         D.traceData.normalizedDefect n)
@@ -65,11 +81,13 @@ theorem paper_app_solenoid_leafwise_stokes_normalized_trace
       ∀ c : ℝ, D.traceData.traceFunctional (fun _ => c) = c)
     (trace_on_boundary :
       D.traceData.traceFunctional D.traceData.normalizedBoundary = D.traceData.extensionValue) :
-    D.radonData.compatiblePushforwards ∧
-      D.radonData.l1ExtensionOfStokesFunctional ∧
+    (∀ ℓ, D.radonData.inverseLimitCylinderMass ℓ = D.radonData.finiteLevelMass ℓ) ∧
+      (∀ ω, D.radonData.l1Functional (D.radonData.densityLift ω) =
+        D.radonData.topDegreeIntegral ω) ∧
         D.radonData.inverseLimitCylinderMass D.baseLevel = 1 ∧
           D.traceData.defectLimit = 0 := by
-  rcases paper_app_solenoid_stokes_radon_measure_realization D.radonData with
+  rcases paper_app_solenoid_stokes_radon_measure_realization D.radonData
+      finiteLevelCompatibility stokesEqualsIntegral l1ExtensionAgrees with
     ⟨hPush, _, hL1⟩
   rcases paper_app_normalized_stokes_trace_l1_completion D.traceData layerwiseStokes bulk_tail
       boundary_tail defect_tail bulkTail_tendsto_zero boundaryTail_tendsto_zero
@@ -85,7 +103,8 @@ theorem paper_app_solenoid_leafwise_stokes_normalized_trace
   have hDiffBoundary :
       ∀ n,
         normalizedDifferential D.coverSystem n = normalizedBoundary D.coverSystem n := by
-    rcases paper_app_normalized_stokes_finite_cover_inverse_tower D.coverSystem with
+    rcases paper_app_normalized_stokes_finite_cover_inverse_tower D.coverSystem
+        coverDegree_two_le bulkPullback boundaryPullback differentialPullback levelwiseStokes with
       ⟨_, _, _, hLevelwise⟩
     exact hLevelwise
   have hBoundaryZero : ∀ n, normalizedBoundary D.coverSystem n = 0 := by

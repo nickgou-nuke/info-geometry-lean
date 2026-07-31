@@ -7,11 +7,11 @@ namespace Omega.POM
 /-- Contractible fibers are exactly the vanishing-Walsh branch, while sphere fibers recover the
 sphere parity from the parity-corrected Walsh readout. -/
 theorem paper_pom_fiber_contractibility_sphere_parity_by_walsh
-    (D : FiberIndependenceComplexClassificationData) (E : POMFiberStokesEulerBoundaryObservabilityData)
-    (tau : ℕ) (hContractibleEuler : D.contractibleCase → E.reducedEulerCharacteristic = 0)
-    (hSphereEuler : D.sphereCase → E.reducedEulerCharacteristic = (-1 : ℤ) ^ (tau - 1)) :
-    (D.contractibleCase → E.walshReadout = 0) ∧
-      (D.sphereCase → (-1 : ℤ) ^ (tau - 1) = -((-1 : ℤ) ^ E.parity) * E.walshReadout) := by
+    {contractibleCase sphereCase : Prop} (E : POMFiberStokesEulerBoundaryObservabilityData)
+    (tau : ℕ) (hContractibleEuler : contractibleCase → E.reducedEulerCharacteristic = 0)
+    (hSphereEuler : sphereCase → E.reducedEulerCharacteristic = (-1 : ℤ) ^ (tau - 1)) :
+    (contractibleCase → E.walshReadout = 0) ∧
+      (sphereCase → (-1 : ℤ) ^ (tau - 1) = -((-1 : ℤ) ^ E.parity) * E.walshReadout) := by
   have hObservable := paper_pom_fiber_stokes_euler_characteristic_boundary_observable E
   dsimp [POMFiberStokesEulerBoundaryObservabilityData.eulerCharacteristicBoundaryObservable] at hObservable
   refine ⟨?_, ?_⟩

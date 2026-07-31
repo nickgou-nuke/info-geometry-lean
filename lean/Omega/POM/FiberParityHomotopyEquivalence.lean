@@ -29,11 +29,21 @@ The parity test from the Fibonacci factors detects the bad `1 mod 3` path compon
 those component-level implications are supplied the classification package turns parity into the
 contractible-versus-sphere dichotomy. -/
 theorem paper_pom_fiber_parity_homotopy_equivalence
-    (D : FiberIndependenceComplexClassificationData) (L : List ℕ)
-    (hBad : (∃ ℓ ∈ L, ℓ % 3 = 1) → D.badModThreeComponent)
-    (hGood : (∀ ℓ ∈ L, ℓ % 3 ≠ 1) → D.allComponentsAvoidBadModThree) :
-    (((L.map (fun ℓ => Nat.fib (ℓ + 2))).prod % 2 = 0) → D.contractibleCase) ∧
-      (((L.map (fun ℓ => Nat.fib (ℓ + 2))).prod % 2 = 1) → D.sphereCase) := by
+    {pathCaseClassification badModThreeComponent allComponentsAvoidBadModThree
+        joinDecomposition contractibleCase sphereCase : Prop}
+    (hPathCaseClassification : pathCaseClassification)
+    (hJoinDecomposition : joinDecomposition)
+    (classifyPathComponents :
+      pathCaseClassification → badModThreeComponent ∨ allComponentsAvoidBadModThree)
+    (badModThreeComponentForcesContraction :
+      badModThreeComponent → joinDecomposition → contractibleCase)
+    (allGoodComponentsGiveSphere :
+      allComponentsAvoidBadModThree → joinDecomposition → sphereCase)
+    (L : List ℕ)
+    (hBad : (∃ ℓ ∈ L, ℓ % 3 = 1) → badModThreeComponent)
+    (hGood : (∀ ℓ ∈ L, ℓ % 3 ≠ 1) → allComponentsAvoidBadModThree) :
+    (((L.map (fun ℓ => Nat.fib (ℓ + 2))).prod % 2 = 0) → contractibleCase) ∧
+      (((L.map (fun ℓ => Nat.fib (ℓ + 2))).prod % 2 = 1) → sphereCase) := by
   refine ⟨?_, ?_⟩
   · intro hEven
     have hNotAllGood : ¬ ∀ ℓ ∈ L, ℓ % 3 ≠ 1 := by
@@ -42,10 +52,10 @@ theorem paper_pom_fiber_parity_homotopy_equivalence
         (paper_pom_fiber_parity_mod3 L).2 hAllGood
       omega
     rcases exists_bad_mod_three_component L hNotAllGood with ⟨ℓ, hℓ, hBadℓ⟩
-    exact D.badModThreeComponentForcesContraction
-      (hBad ⟨ℓ, hℓ, hBadℓ⟩) D.hasJoinDecomposition
+    exact badModThreeComponentForcesContraction
+      (hBad ⟨ℓ, hℓ, hBadℓ⟩) hJoinDecomposition
   · intro hOdd
     have hAllGood : ∀ ℓ ∈ L, ℓ % 3 ≠ 1 := (paper_pom_fiber_parity_mod3 L).1 hOdd
-    exact D.allGoodComponentsGiveSphere (hGood hAllGood) D.hasJoinDecomposition
+    exact allGoodComponentsGiveSphere (hGood hAllGood) hJoinDecomposition
 
 end Omega.POM

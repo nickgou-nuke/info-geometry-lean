@@ -1131,7 +1131,7 @@ def stageTrajectory
 theorem stageTrajectory_image_constant
     (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
     (toLimit : ∀ n : Nat, Stage n →+* Limit)
-    (hcone : CompatibleCone bond toLimit)
+    (hcone : InfoGeometry.Algebra.InfiniteSuperClosureLemmas.CompatibleCone bond toLimit)
     (x0 : Stage 0) :
     ∀ n : Nat,
       toLimit n (stageTrajectory bond x0 n) = toLimit 0 x0 :=

@@ -44,7 +44,7 @@ def diagonalEvent
     (basis : PolarizationBasis)
     (kind : OpticalSurfaceKind)
     (a b : ℂ)
-    (tag : V4Tag) :
+    (tag : InfoGeometry.Geometry.KleinFourTag.Tag) :
     JonesOpticalEvent where
   basis := basis
   kind := kind
@@ -56,7 +56,7 @@ def diagonalEvent
 def diagonalSPEvent
     (kind : OpticalSurfaceKind)
     (rs rp : ℂ)
-    (tag : V4Tag) :
+    (tag : InfoGeometry.Geometry.KleinFourTag.Tag) :
     JonesOpticalEvent :=
   diagonalEvent PolarizationBasis.sp kind rs rp tag
 
@@ -64,7 +64,7 @@ def diagonalSPEvent
 def diagonalCircularEvent
     (kind : OpticalSurfaceKind)
     (rL rR : ℂ)
-    (tag : V4Tag) :
+    (tag : InfoGeometry.Geometry.KleinFourTag.Tag) :
     JonesOpticalEvent :=
   diagonalEvent PolarizationBasis.circular kind rL rR tag
 
@@ -75,7 +75,7 @@ theorem basis
     (basis : PolarizationBasis)
     (kind : OpticalSurfaceKind)
     (a b : ℂ)
-    (tag : V4Tag) :
+    (tag : InfoGeometry.Geometry.KleinFourTag.Tag) :
     (diagonalEvent basis kind a b tag).basis = basis :=
   rfl
 
@@ -84,7 +84,7 @@ theorem coeff0
     (basis : PolarizationBasis)
     (kind : OpticalSurfaceKind)
     (a b : ℂ)
-    (tag : V4Tag) :
+    (tag : InfoGeometry.Geometry.KleinFourTag.Tag) :
     (diagonalEvent basis kind a b tag).coeff0 = a :=
   rfl
 
@@ -93,7 +93,7 @@ theorem coeff1
     (basis : PolarizationBasis)
     (kind : OpticalSurfaceKind)
     (a b : ℂ)
-    (tag : V4Tag) :
+    (tag : InfoGeometry.Geometry.KleinFourTag.Tag) :
     (diagonalEvent basis kind a b tag).coeff1 = b :=
   rfl
 
@@ -127,7 +127,7 @@ theorem det2_diagonalEvent_jones
     (basis : PolarizationBasis)
     (kind : OpticalSurfaceKind)
     (a b : ℂ)
-    (tag : V4Tag) :
+    (tag : InfoGeometry.Geometry.KleinFourTag.Tag) :
     det2 (diagonalEvent basis kind a b tag).jones = a * b := by
   unfold diagonalEvent JonesOpticalEvent.jones
   exact det2_diagJones a b
@@ -143,7 +143,7 @@ def brewsterEvent
     (rs : ℂ)
     (_hrs : rs ≠ 0) :
     JonesOpticalEvent :=
-  diagonalSPEvent OpticalSurfaceKind.brewsterProjection rs 0 V4Tag.P
+  diagonalSPEvent OpticalSurfaceKind.brewsterProjection rs 0 InfoGeometry.Geometry.KleinFourTag.P
 
 /-- The Brewster event satisfies the abstract `IsBrewsterEvent` predicate. -/
 theorem brewsterEvent_isBrewster
@@ -193,7 +193,7 @@ def losslessSPRetarderEvent
     (_hrs : ‖rs‖ = 1)
     (_hrp : ‖rp‖ = 1) :
     JonesOpticalEvent :=
-  diagonalSPEvent OpticalSurfaceKind.totalInternalReflection rs rp V4Tag.id
+  diagonalSPEvent OpticalSurfaceKind.totalInternalReflection rs rp InfoGeometry.Geometry.KleinFourTag.id
 
 /-- The lossless retarder satisfies the abstract `IsLosslessRetarder` predicate. -/
 theorem losslessSPRetarderEvent_isLossless
@@ -217,7 +217,7 @@ theorem det2_losslessSPRetarderEvent_jones
   exact det2_diagonalEvent_jones
     PolarizationBasis.sp
     OpticalSurfaceKind.totalInternalReflection
-    rs rp V4Tag.id
+    rs rp InfoGeometry.Geometry.KleinFourTag.id
 
 /-! ## 5. Metal mirror as lossy complex retarder / diattenuator -/
 
@@ -229,14 +229,14 @@ retardance, and ellipticity are calibrated downstream.
 -/
 def metalMirrorEvent
     (rs rp : ℂ)
-    (tag : V4Tag) :
+    (tag : InfoGeometry.Geometry.KleinFourTag.Tag) :
     JonesOpticalEvent :=
   diagonalSPEvent OpticalSurfaceKind.metalMirror rs rp tag
 
 /-- A metal mirror event is diattenuating whenever the channel magnitudes differ. -/
 theorem metalMirrorEvent_isDiattenuating
     (rs rp : ℂ)
-    (tag : V4Tag)
+    (tag : InfoGeometry.Geometry.KleinFourTag.Tag)
     (h : ‖rs‖ ≠ ‖rp‖) :
     IsDiattenuating (metalMirrorEvent rs rp tag) := by
   unfold IsDiattenuating metalMirrorEvent diagonalSPEvent diagonalEvent
@@ -248,7 +248,7 @@ complex reflection amplitudes.
 -/
 theorem det2_metalMirrorEvent_jones
     (rs rp : ℂ)
-    (tag : V4Tag) :
+    (tag : InfoGeometry.Geometry.KleinFourTag.Tag) :
     det2 (metalMirrorEvent rs rp tag).jones = rs * rp := by
   unfold metalMirrorEvent diagonalSPEvent diagonalEvent
   exact det2_diagonalEvent_jones
@@ -261,14 +261,14 @@ theorem det2_metalMirrorEvent_jones
 /-- A diagonal chiral-medium event in the circular `L/R` basis. -/
 def chiralMediumEvent
     (rL rR : ℂ)
-    (tag : V4Tag) :
+    (tag : InfoGeometry.Geometry.KleinFourTag.Tag) :
     JonesOpticalEvent :=
   diagonalCircularEvent OpticalSurfaceKind.chiralMedium rL rR tag
 
 /-- A circular-birefringent event has unit magnitude in both circular channels. -/
 theorem chiralMediumEvent_isCircularBirefringent
     (rL rR : ℂ)
-    (tag : V4Tag)
+    (tag : InfoGeometry.Geometry.KleinFourTag.Tag)
     (hL : ‖rL‖ = 1)
     (hR : ‖rR‖ = 1) :
     IsCircularBirefringent (chiralMediumEvent rL rR tag) := by
@@ -278,7 +278,7 @@ theorem chiralMediumEvent_isCircularBirefringent
 /-- A circular-dichroic event has different left/right channel magnitudes. -/
 theorem chiralMediumEvent_isCircularDichroic
     (rL rR : ℂ)
-    (tag : V4Tag)
+    (tag : InfoGeometry.Geometry.KleinFourTag.Tag)
     (h : ‖rL‖ ≠ ‖rR‖) :
     IsCircularDichroic (chiralMediumEvent rL rR tag) := by
   unfold IsCircularDichroic chiralMediumEvent diagonalCircularEvent diagonalEvent
@@ -290,7 +290,7 @@ left and right circular coefficients.
 -/
 theorem det2_chiralMediumEvent_jones
     (rL rR : ℂ)
-    (tag : V4Tag) :
+    (tag : InfoGeometry.Geometry.KleinFourTag.Tag) :
     det2 (chiralMediumEvent rL rR tag).jones = rL * rR := by
   unfold chiralMediumEvent diagonalCircularEvent diagonalEvent
   exact det2_diagonalEvent_jones

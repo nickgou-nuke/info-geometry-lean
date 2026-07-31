@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.CuntzStageModularFlow
 import InfoGeometry.Canonical.FilteredStarAlgebraTopologicalColimit
+import InfoGeometry.Canonical.FilteredStarInductiveCoconeTopCat
 
 /-!
 # Topological descent of a stagewise Cuntz modular flow
@@ -29,6 +30,8 @@ variable [∀ n, PartialOrder (Stage n)]
 variable [∀ n, StarOrderedRing (Stage n)]
 variable (T : CuntzStarTower Stage)
 variable (Φ : CuntzStageModularFlowData Stage T)
+variable {Ainf : Type}
+variable [CStarAlgebra Ainf] [PartialOrder Ainf] [StarOrderedRing Ainf]
 
 abbrev system : ContinuousStarInductiveSystem Stage :=
   T.toContinuousStarInductiveSystem
@@ -72,6 +75,40 @@ noncomputable def modularFlowTopologicalColimitMap (t : ℝ) :
       topologicalInjection Stage (system Stage T) n (Φ.flow n t a) := by
   have hι := colimit.ι_map (modularFlowTopCatNatTrans Stage T Φ t) n
   exact congrArg (fun f => f a) hι
+
+@[reassoc]
+theorem modularFlowTopologicalColimitMap_comp_stateTopologicalColimitMap
+    (cocone :
+      CStarStateColimit.Native.ContinuousStarInductiveSystem.StarInductiveCocone
+        (Ainf := Ainf) Stage (system Stage T))
+    (ω : CStarStateColimit.Native.State Ainf)
+    (h_invariant :
+      ∀ (n : ℕ) (t : ℝ) (a : Stage n),
+        ω.functional (cocone.ι n (Φ.flow n t a)) =
+          ω.functional (cocone.ι n a))
+    (t : ℝ) :
+    modularFlowTopologicalColimitMap Stage T Φ t ≫
+        CStarStateColimit.Native.ContinuousStarInductiveSystem.StarInductiveCocone.stateTopologicalColimitMap
+          (Stage := Stage) (sys := system Stage T) cocone ω =
+      CStarStateColimit.Native.ContinuousStarInductiveSystem.StarInductiveCocone.stateTopologicalColimitMap
+        (Stage := Stage) (sys := system Stage T) cocone ω := by
+  apply colimit.hom_ext
+  intro n
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro a
+  rw [TopCat.comp_app]
+  change CStarStateColimit.Native.ContinuousStarInductiveSystem.StarInductiveCocone.stateTopologicalColimitMap
+      (Stage := Stage) (sys := system Stage T) cocone ω
+      (modularFlowTopologicalColimitMap Stage T Φ t
+        (topologicalInjection Stage (system Stage T) n a)) =
+    CStarStateColimit.Native.ContinuousStarInductiveSystem.StarInductiveCocone.stateTopologicalColimitMap
+      (Stage := Stage) (sys := system Stage T) cocone ω
+      (topologicalInjection Stage (system Stage T) n a)
+  rw [modularFlowTopologicalColimitMap_inclusion,
+    CStarStateColimit.Native.ContinuousStarInductiveSystem.StarInductiveCocone.stateTopologicalColimitMap_inclusion,
+    CStarStateColimit.Native.ContinuousStarInductiveSystem.StarInductiveCocone.stateTopologicalColimitMap_inclusion]
+  exact congrArg ULift.up (h_invariant n t a)
 
 theorem modularFlowTopologicalColimitMap_zero :
     modularFlowTopologicalColimitMap Stage T Φ 0 =
@@ -121,5 +158,27 @@ theorem modularFlowTopologicalColimitMap_left_inverse (t : ℝ) :
       𝟙 (topologicalColimit Stage (system Stage T)) := by
   rw [← modularFlowTopologicalColimitMap_add Stage T Φ t (-t)]
   simpa using modularFlowTopologicalColimitMap_zero Stage T Φ
+
+/-- The descended modular flow is a genuine `TopCat` isomorphism at every
+    time.  Its inverse is the descended flow at the opposite time. -/
+def modularFlowTopologicalColimitIso (t : ℝ) :
+    topologicalColimit Stage (system Stage T) ≅
+      topologicalColimit Stage (system Stage T) where
+  hom := modularFlowTopologicalColimitMap Stage T Φ t
+  inv := modularFlowTopologicalColimitMap Stage T Φ (-t)
+  hom_inv_id := modularFlowTopologicalColimitMap_right_inverse Stage T Φ t
+  inv_hom_id := modularFlowTopologicalColimitMap_left_inverse Stage T Φ t
+
+@[simp]
+theorem modularFlowTopologicalColimitIso_hom (t : ℝ) :
+    (modularFlowTopologicalColimitIso Stage T Φ t).hom =
+      modularFlowTopologicalColimitMap Stage T Φ t :=
+  rfl
+
+@[simp]
+theorem modularFlowTopologicalColimitIso_inv (t : ℝ) :
+    (modularFlowTopologicalColimitIso Stage T Φ t).inv =
+      modularFlowTopologicalColimitMap Stage T Φ (-t) :=
+  rfl
 
 end InfoGeometry.Canonical.CuntzStageModularFlowTopologicalColimit

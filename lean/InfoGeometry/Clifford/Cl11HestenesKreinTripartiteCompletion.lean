@@ -91,19 +91,20 @@ theorem tripartite_unipotent_flow_left_inverse :
 
 /-- Real-axis readout of a supplied Hestenes--Krein analytic-continuation datum. -/
 theorem hestenesKrein_sigmaC_real_axis
-    {A : Type*} [Mul A]
+    {A : Type*} [Monoid A]
     (H : InfoGeometry.Dynamics.HestenesKreinAnalyticContinuationData A)
     (t : ℝ) (a : A) :
-    H.sigmaC (t : ℂ) a = H.modular.sigma t a :=
+    H.sigmaC (t : ℂ) a =
+      InfoGeometry.Dynamics.ModularAutomorphismFamily.sigma H.modular t a :=
   InfoGeometry.Dynamics.sigmaC_real_axis_eq_sigma H t a
 
 /-- Top-strip readout of a supplied Hestenes--Krein analytic-continuation datum. -/
 theorem hestenesKrein_sigmaC_top_strip
-    {A : Type*} [Mul A]
+    {A : Type*} [Monoid A]
     (H : InfoGeometry.Dynamics.HestenesKreinAnalyticContinuationData A)
     (t : ℝ) (a : A) :
     H.sigmaC (InfoGeometry.Dynamics.complexClockPoint t H.beta) a =
-      H.modular.sigma (t + H.beta) a :=
+      InfoGeometry.Dynamics.ModularAutomorphismFamily.sigma H.modular (t + H.beta) a :=
   InfoGeometry.Dynamics.sigmaC_top_strip_eq_sigma_shift H t a
 
 /--

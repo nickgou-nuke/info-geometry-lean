@@ -123,7 +123,7 @@ def spJonesEventOfFresnel
   kind := OpticalSurfaceKind.abstract
   coeff0 := F.rs U
   coeff1 := F.rp U
-  tag := V4Tag.id
+  tag := InfoGeometry.Geometry.KleinFourTag.id
 
 @[simp] theorem spJonesEventOfFresnel_basis
     {State : Type*}

@@ -64,6 +64,15 @@ def zeroBoundaryFunctionTopCatHom :
     { toFun := fun _ => 0
       continuous_toFun := continuous_const }
 
+def cuntzPartitionTopCatHom :
+    TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
+  TopCat.ofHom
+    { toFun := fun f =>
+        S_L_op (star_S_L_op f) + S_R_op (star_S_R_op f)
+      continuous_toFun := by
+        exact (continuous_S_L_op.comp continuous_star_S_L_op).add
+          (continuous_S_R_op.comp continuous_star_S_R_op) }
+
 theorem star_S_L_topCatHom_S_L (f : BoundaryFunction) :
     (S_L_topCatHom ≫ star_S_L_topCatHom) f = f := by
   rw [TopCat.comp_app]
@@ -94,8 +103,28 @@ theorem UHF_boundary_topCatHom_sq_zero (f : BoundaryFunction) :
   change UHF_boundary_op (UHF_boundary_op f) = 0
   exact UHF_boundary_op_sq_zero f
 
+theorem UHF_boundary_topCatHom_comp_eq_zero :
+    UHF_boundary_topCatHom ≫ UHF_boundary_topCatHom =
+      zeroBoundaryFunctionTopCatHom := by
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro f
+  rw [TopCat.comp_app]
+  change UHF_boundary_op (UHF_boundary_op f) = 0
+  exact UHF_boundary_op_sq_zero f
+
 theorem star_UHF_boundary_topCatHom_sq_zero (f : BoundaryFunction) :
     (star_UHF_boundary_topCatHom ≫ star_UHF_boundary_topCatHom) f = 0 := by
+  rw [TopCat.comp_app]
+  change star_UHF_boundary_op (star_UHF_boundary_op f) = 0
+  exact star_UHF_boundary_op_sq_zero f
+
+theorem star_UHF_boundary_topCatHom_comp_eq_zero :
+    star_UHF_boundary_topCatHom ≫ star_UHF_boundary_topCatHom =
+      zeroBoundaryFunctionTopCatHom := by
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro f
   rw [TopCat.comp_app]
   change star_UHF_boundary_op (star_UHF_boundary_op f) = 0
   exact star_UHF_boundary_op_sq_zero f
@@ -128,6 +157,15 @@ theorem UHF_laplacian_topCatHom_eq_id :
   intro f
   rw [TopCat.id_app]
   exact UHF_laplacian_topCatHom_apply f
+
+theorem cuntzPartition_topCatHom_eq_id :
+    cuntzPartitionTopCatHom = 𝟙 _ := by
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro f
+  rw [TopCat.id_app]
+  change S_L_op (star_S_L_op f) + S_R_op (star_S_R_op f) = f
+  exact cuntz_partition_op f
 
 theorem S_R_topCatHom_star_S_L_comp_eq_zero :
     S_R_topCatHom ≫ star_S_L_topCatHom = zeroBoundaryFunctionTopCatHom := by

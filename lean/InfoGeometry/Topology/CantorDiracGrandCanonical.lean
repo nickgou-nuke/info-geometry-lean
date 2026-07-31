@@ -36,7 +36,8 @@ open InfoGeometry.Topology.CantorDiracOperator
 /-! ## 1. Finite Cantor occupancy carrier -/
 
 /-- Binary words at a finite Cantor level. -/
-abbrev CantorState (n : ℕ) := BinaryWord n
+abbrev CantorState (n : ℕ) :=
+  InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n
 
 instance (n : ℕ) : Fintype (CantorState n) := by
   dsimp [CantorState]

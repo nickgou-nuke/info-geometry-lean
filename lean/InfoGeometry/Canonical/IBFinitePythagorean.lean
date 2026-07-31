@@ -768,7 +768,37 @@ theorem finiteWeightedKL_bind_marginal_decomposition_fullSupport
   exact finiteWeightedKL_bind_marginal_decomposition
     (pX := pX) (encoder := encoder) (q := q)
     (hq := fun x t _ => hq t)
-    (hnext := fun x t _ => hnext t)
+      (hnext := fun x t _ => hnext t)
+
+abbrev IBNextMarginalPythagoreanWitness
+    (pX : ProbabilityMeasure X)
+    (q_n : ProbabilityMeasure T)
+    (β : ℝ)
+    (D : X → T → ℝ)
+    (hInt : ∀ x, Integrable (fun t => Real.exp (-β * D x t)) (q_n : Measure T))
+    (h_meas : Measurable (fun x => (IBNextEncoder q_n β D hInt x : Measure T)))
+    (hKL_current : FiniteKLFamily (q_n : Measure T) (IBNextEncoder q_n β D hInt))
+    (hKL_next : FiniteKLFamily
+      (IBNextMarginal pX q_n β D hInt h_meas : Measure T)
+      (IBNextEncoder q_n β D hInt)) : Prop :=
+  IBMarginalPythagoreanWitness
+    pX q_n (IBNextMarginal pX q_n β D hInt h_meas) β D
+    (IBNextEncoder q_n β D hInt) hKL_current hKL_next
+
+abbrev IBNextMarginalDescentWitness
+    (pX : ProbabilityMeasure X)
+    (q_n : ProbabilityMeasure T)
+    (β : ℝ)
+    (D : X → T → ℝ)
+    (hInt : ∀ x, Integrable (fun t => Real.exp (-β * D x t)) (q_n : Measure T))
+    (h_meas : Measurable (fun x => (IBNextEncoder q_n β D hInt x : Measure T)))
+    (hKL_current : FiniteKLFamily (q_n : Measure T) (IBNextEncoder q_n β D hInt))
+    (hKL_next : FiniteKLFamily
+      (IBNextMarginal pX q_n β D hInt h_meas : Measure T)
+      (IBNextEncoder q_n β D hInt)) : Prop :=
+  IBMarginalDescentWitness
+    pX q_n (IBNextMarginal pX q_n β D hInt h_meas) β D
+    (IBNextEncoder q_n β D hInt) hKL_current hKL_next
 
 theorem ibMarginalPythagoreanWitness_finite_supportFaithful
     (pX : ProbabilityMeasure X)

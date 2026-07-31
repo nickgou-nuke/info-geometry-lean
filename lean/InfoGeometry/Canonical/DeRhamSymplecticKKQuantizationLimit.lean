@@ -145,8 +145,8 @@ theorem compatibleProofFamily_to_inductiveLimit
     (S : SequentialColimitSystem)
     (F : CompatibleProofFamily S)
     {Pinf : S.Limit → Prop}
-    (hread : S.LimitReadout F.P Pinf)
-    (n : ℕ) (x : S.Stage n) (hx : F.P n x) :
+    (hread : S.LimitReadout F.1 Pinf)
+    (n : ℕ) (x : S.Stage n) (hx : F.1 n x) :
     Pinf (S.toLimit n x) :=
   F.to_limit hread n x hx
 
@@ -158,8 +158,8 @@ theorem compatibleProofFamily_transported_to_inductiveLimit
     (S : SequentialColimitSystem)
     (F : CompatibleProofFamily S)
     {Pinf : S.Limit → Prop}
-    (hread : S.LimitReadout F.P Pinf)
-    (n m : ℕ) (x : S.Stage n) (hx : F.P n x) :
+    (hread : S.LimitReadout F.1 Pinf)
+    (n m : ℕ) (x : S.Stage n) (hx : F.1 n x) :
     Pinf (S.toLimit (n + m) (S.bondSeq n m x)) :=
   hread (n + m) (S.bondSeq n m x) (F.transport n m x hx)
 

@@ -52,7 +52,7 @@ def FiniteLatticeCurrentHierarchyPacket
       ∀ m q : ℤ,
         (heiOper m).commutator (heiOper q) =
           if m + q = 0 then (m : ℝ) • (1 : DoubledSpace E →ₗ[ℝ] DoubledSpace E) else 0) :
-    : Prop :=
+    Prop :=
   (∀ T : Set (FiniteProjectionCompletion n), IsLUB T (sSup T) ∧ IsGLB T (sInf T)) ∧
   GaloisConnection (@refineProjectionAssignment n) (@coarseProjectionAssignment n) ∧
   ((concreteCARCreation (E := E)).comp (concreteCARCreation (E := E)) = 0
@@ -142,8 +142,9 @@ theorem finite_lattice_current_hierarchy_packet
           if m + q = 0 then (m : ℝ) • (1 : DoubledSpace E →ₗ[ℝ] DoubledSpace E) else 0) :
     FiniteLatticeCurrentHierarchyPacket n heiOper heiTrunc hComm := by
   refine ⟨?_, projectionAssignment_galoisConnection n, ?_, hComm, ?_⟩
-  · exact ⟨finiteProjectionCompletion_sSup_isLUB n,
-      finiteProjectionCompletion_sInf_isGLB n⟩
+  · intro T
+    exact ⟨finiteProjectionCompletion_sSup_isLUB n T,
+      finiteProjectionCompletion_sInf_isGLB n T⟩
   · exact ⟨concrete_creation_square_zero (E := E),
       concrete_annihilation_square_zero (E := E),
       concrete_creation_comp_annihilation_eq_spectralPlusProj (E := E),

@@ -218,13 +218,12 @@ theorem minus_hodge_loop_eq_projector :
   rootChiralLaplacianMinus_eq_spectralChiralMinusProjector (E := E)
 
 /-- Readback: `D²` is the sum of the two chiral Hodge loops. -/
-@[rep_depth krein]
 theorem rootDirac_sq_eq_hodge_loop_sum :
     (rootDiracOddLane (E := E)).comp (rootDiracOddLane (E := E))
       = rootChiralLaplacianPlus (E := E) + rootChiralLaplacianMinus (E := E) :=
   rootDiracOddLane_sq_eq_chiralLaplacian_sum (E := E)
 
-/--
+/-!
 A nilpotent chiral complex witness.
 
 Only with this witness should quotient-style chiral homology

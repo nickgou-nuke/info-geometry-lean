@@ -6,6 +6,7 @@ import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
 import Mathlib.Tactic.Positivity
+import Mathlib.Topology.Category.TopCat.Basic
 import InfoGeometry.Canonical.FilteredDirectInverseColimit
 
 set_option linter.unusedSectionVars false
@@ -93,6 +94,7 @@ No commutativity or diagonalization hypothesis is imposed.
 namespace CStarStateColimit.Native
 
 open scoped ComplexOrder
+open CategoryTheory
 open FilteredColimit
 
 universe u
@@ -173,10 +175,12 @@ def toContinuousLinearMap
     { toLinearMap := ω.functional.toLinearMap
       cont := ContinuousMapClass.map_continuous ω.functional }
 
+
 @[simp] theorem toContinuousLinearMap_apply
     (ω : State A) (a : A) :
     ω.toContinuousLinearMap a = ω.functional a :=
   rfl
+
 
 /-- Contravariant restriction of a state along a star algebra homomorphism. -/
 def restrict
@@ -196,6 +200,13 @@ def restrict
     (ω : State B) (a : A) :
     (ω.restrict f).functional a =
       ω.functional (f a) :=
+  rfl
+
+theorem restrict_toContinuousLinearMap
+    (f : A →⋆ₐ[ℂ] B) (ω : State B) :
+    (ω.restrict f).toContinuousLinearMap =
+      ω.toContinuousLinearMap.comp (starAlgHomToContinuousLinearMap f) := by
+  ext a
   rfl
 
 @[simp] theorem restrict_id
@@ -291,6 +302,27 @@ theorem eval_transition
     (ω.compatible hij)
   exact h
 
+theorem continuousLinearMap_transition
+    {i j : I} (hij : i ≤ j) :
+    (ω.state j).toContinuousLinearMap.comp
+        (sys.transitionCLM Stage hij) =
+      (ω.state i).toContinuousLinearMap := by
+  ext a
+  exact eval_transition Stage sys ω hij a
+
+theorem continuousLinearMap_transition_trans
+    {i j k : I} (hij : i ≤ j) (hjk : j ≤ k) :
+    ((ω.state k).toContinuousLinearMap.comp
+        (sys.transitionCLM Stage hjk)).comp
+        (sys.transitionCLM Stage hij) =
+      (ω.state i).toContinuousLinearMap := by
+  ext a
+  change (ω.state k).functional
+      (sys.map hjk (sys.map hij a)) =
+    (ω.state i).functional a
+  rw [eval_transition Stage sys ω hjk (sys.map hij a)]
+  exact eval_transition Stage sys ω hij a
+
 /-- Compatibility after two transitions follows from the inverse-system
 composition law and the direct-system composition law. -/
 theorem compatible_trans
@@ -342,6 +374,26 @@ def restrictStateFamily
     intro i j hij
     rw [State.restrict_comp]
     rw [cocone.ι_comm hij]
+
+theorem state_readout_continuousLinearMap
+    (ω : State Ainf) (i : I) :
+    ω.toContinuousLinearMap.comp
+        (starAlgHomToContinuousLinearMap (cocone.ι i)) =
+      ((restrictStateFamily (Stage := Stage) (sys := sys) cocone ω).state i).toContinuousLinearMap := by
+  ext a
+  rfl
+
+/-- The topological-category cocone leg associated to a star-algebraic leg. -/
+def ιTopCatHom (i : I) :
+    TopCat.of (Stage i) ⟶ TopCat.of Ainf :=
+  TopCat.ofHom
+    { toFun := starAlgHomToContinuousLinearMap (cocone.ι i)
+      continuous_toFun :=
+        (starAlgHomToContinuousLinearMap (cocone.ι i)).continuous }
+
+@[simp] theorem ιTopCatHom_apply (i : I) (a : Stage i) :
+    ιTopCatHom (Stage := Stage) (sys := sys) cocone i a = cocone.ι i a :=
+  rfl
 
 /-- The readout of a colimit state is independent of the chosen later-stage
 representative. -/

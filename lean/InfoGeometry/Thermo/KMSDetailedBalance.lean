@@ -63,26 +63,26 @@ theorem standardKMSRegion_upperBoundary
 
 /-- The lower KMS two-point correlation form at real time `t`. -/
 def lowerKMSCorrelation
-    {A : Type*} [Mul A]
+    {A : Type*} [Monoid A]
     (K : KMSBoundaryData A)
     (t : ℝ)
     (a b : A) : ℝ :=
-  K.omega_eval a (K.modular.sigma t b)
+  K.omega_eval a (ModularAutomorphismFamily.sigma K.modular t b)
 
 /-- The upper KMS two-point correlation form at shifted modular time `t + β`. -/
 def upperKMSCorrelation
-    {A : Type*} [Mul A]
+    {A : Type*} [Monoid A]
     (K : KMSBoundaryData A)
     (t : ℝ)
     (a b : A) : ℝ :=
-  K.omega_eval (K.modular.sigma (t + K.beta) b) a
+  K.omega_eval (ModularAutomorphismFamily.sigma K.modular (t + K.beta) b) a
 
 /--
 The KMS boundary identity is the algebraic detailed-balance identity between
 the lower and upper strip correlations.
 -/
 theorem lowerKMSCorrelation_eq_upper
-    {A : Type*} [Mul A]
+    {A : Type*} [Monoid A]
     (K : KMSBoundaryData A)
     (t : ℝ)
     (a b : A) :
@@ -98,15 +98,15 @@ This is only the modular-flow transport readout; no path-ordered exponential is
 asserted at this abstract layer.
 -/
 def thermalWilsonHolonomyAt
-    {A : Type*} [Mul A]
+    {A : Type*} [Monoid A]
     (K : KMSBoundaryData A)
     (t : ℝ) :
     A → A :=
-  fun x => K.modular.sigma (t + K.beta) x
+  fun x => ModularAutomorphismFamily.sigma K.modular (t + K.beta) x
 
 /-- KMS detailed balance expressed through the thermal Wilson transport. -/
 theorem lowerKMSCorrelation_eq_wilsonHolonomy
-    {A : Type*} [Mul A]
+    {A : Type*} [Monoid A]
     (K : KMSBoundaryData A)
     (t : ℝ)
     (a b : A) :
@@ -171,7 +171,7 @@ thermal correlation readout should add typed equations in their own owner file.
 -/
 structure KMSDetailedBalance
     (A Region Point Tangent Value : Type*)
-    [Mul A]
+    [Monoid A]
     [AddCommGroup Value] [Module ℝ Value]
     (I : GeometricIntegralBackend Region Point Tangent Value) where
   /-- Algebraic KMS boundary data. -/
@@ -189,7 +189,7 @@ data and the geometric form.
 -/
 structure KMSDetailedBalanceCore
     (A Region Point Tangent Value : Type*)
-    [Mul A]
+    [Monoid A]
     [AddCommGroup Value] [Module ℝ Value]
     (I : GeometricIntegralBackend Region Point Tangent Value) where
   kms : KMSBoundaryData A
@@ -198,7 +198,7 @@ structure KMSDetailedBalanceCore
 /-- Construct a `KMSDetailedBalanceCore` from a full `KMSDetailedBalance` packet. -/
 @[simp] def KMSDetailedBalance.toCore
     {A Region Point Tangent Value : Type*}
-    [Mul A] [AddCommGroup Value] [Module ℝ Value]
+    [Monoid A] [AddCommGroup Value] [Module ℝ Value]
     {I : GeometricIntegralBackend Region Point Tangent Value}
     (D : KMSDetailedBalance A Region Point Tangent Value I) :
     KMSDetailedBalanceCore A Region Point Tangent Value I :=
@@ -206,7 +206,7 @@ structure KMSDetailedBalanceCore
     form := D.form }
 variable
     {A Region Point Tangent Value : Type*}
-    [Mul A]
+    [Monoid A]
     [AddCommGroup Value] [Module ℝ Value]
     {I : GeometricIntegralBackend Region Point Tangent Value}
 
@@ -245,7 +245,7 @@ the model-specific calibration proposition as theorem force.
 -/
 def KMSDetailedBalanceOwnerTarget
     (A Region Point Tangent Value : Type*)
-    [Mul A]
+    [Monoid A]
     [AddCommGroup Value] [Module ℝ Value]
     (I : GeometricIntegralBackend Region Point Tangent Value) : Prop :=
   ∀ (D : KMSDetailedBalance A Region Point Tangent Value I)
@@ -261,7 +261,7 @@ thermal Wilson, and Stokes vanishing laws proved in this file.
 -/
 theorem kmsDetailedBalanceOwnerTarget
     (A Region Point Tangent Value : Type*)
-    [Mul A]
+    [Monoid A]
     [AddCommGroup Value] [Module ℝ Value]
     (I : GeometricIntegralBackend Region Point Tangent Value) :
     ∀ (D : KMSDetailedBalance A Region Point Tangent Value I)

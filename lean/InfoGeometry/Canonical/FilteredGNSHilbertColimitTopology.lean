@@ -145,4 +145,17 @@ theorem gnsTopologicalColimitToHilbert_stage
     (gnsTopologicalDiagram Stage sys ω)
     (gnsTopologicalCocone Stage sys ω) i
 
+theorem gnsTopologicalColimitToHilbert_unique
+    (f : topologicalDirectColimit (gnsTopologicalDiagram Stage sys ω) ⟶
+      (gnsTopologicalCocone Stage sys ω).pt)
+    (h : ∀ i : I,
+      topologicalDirectInjection (gnsTopologicalDiagram Stage sys ω) i ≫ f =
+        (gnsTopologicalCocone Stage sys ω).ι.app i) :
+    f = gnsTopologicalColimitToHilbert Stage sys ω := by
+  apply topologicalDirectDescend_unique
+    (gnsTopologicalDiagram Stage sys ω)
+    (gnsTopologicalCocone Stage sys ω) f
+  intro i
+  exact h i
+
 end CStarStateColimit.Native.FilteredGNSHilbertColimitTopology

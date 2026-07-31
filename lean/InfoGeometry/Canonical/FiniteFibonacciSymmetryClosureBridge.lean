@@ -85,7 +85,7 @@ theorem moebius_phase_axis_fixed
     (g : MoebiusParameter) :
     M.operatorAction g (InfoGeometry.Krein.clockAxis (E := E)) =
       InfoGeometry.Krein.clockAxis (E := E) :=
-  M.moebius_phaseAxis_fixed g
+  M.operatorAction_phaseAxis_fixed g
 
 /-- Möbius reparameterization preserves the Hestenes analytic symmetry class. -/
 theorem moebius_preserves_hestenes_symmetry

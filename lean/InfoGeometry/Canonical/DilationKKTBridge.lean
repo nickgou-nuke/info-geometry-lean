@@ -28,8 +28,7 @@ Compatibility name for the former dilation witness.  The owner is the
 projector-obstruction datum itself; unconstrained ambient maps are not evidence
 of a dilation theorem.
 -/
-@[rep_depth transport]
-/-- Allowed theorem: no obstruction source implies the sourced dilation vanishes. -/
+/-! Allowed theorem: no obstruction source implies the sourced dilation vanishes. -/
 theorem dilation_vanishes_when_source_absent
     (D : DilationFromProjectorObstruction (R := R))
     (h : ¬ ProjectorPair.HasProjectorAnomaly D.pair) :

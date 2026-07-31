@@ -331,7 +331,7 @@ theorem kms_lower_boundary
     strip.omega_eval a
       (strip.analytic.sigmaC (t : ℂ) b) =
     strip.omega_eval a
-      (strip.analytic.modular.sigma t b) :=
+      (InfoGeometry.Dynamics.ModularAutomorphismFamily.sigma strip.analytic.modular t b) :=
   strip.boundary_lower t a b
 
 /-- Upper KMS boundary identity, directly from genuine strip data. -/
@@ -343,7 +343,8 @@ theorem kms_upper_boundary
       (strip.analytic.sigmaC
         (complexClockPoint t strip.analytic.beta) b) =
     strip.omega_eval
-      (strip.analytic.modular.sigma (t + strip.analytic.beta) b) a :=
+      (InfoGeometry.Dynamics.ModularAutomorphismFamily.sigma strip.analytic.modular
+        (t + strip.analytic.beta) b) a :=
   strip.boundary_upper t a b
 
 /-- Constructive KMS boundary law of an actual modular thermal state. -/
@@ -352,9 +353,10 @@ theorem modularThermalState_kms_boundary
     (thermalState : ModularThermalState Observable)
     (t : ℝ) (a b : Observable) :
     thermalState.kms.omega_eval a
-      (thermalState.kms.modular.sigma t b) =
+      (InfoGeometry.Dynamics.ModularAutomorphismFamily.sigma thermalState.kms.modular t b) =
     thermalState.kms.omega_eval
-      (thermalState.kms.modular.sigma (t + thermalState.kms.beta) b) a :=
+      (InfoGeometry.Dynamics.ModularAutomorphismFamily.sigma thermalState.kms.modular
+        (t + thermalState.kms.beta) b) a :=
   thermalState.kms.kms_boundary t a b
 
 end InfoGeometry.Topology.CantorDiracOperator

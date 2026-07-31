@@ -539,6 +539,7 @@ import InfoGeometry.Canonical.AtiyahSingerChiralIndex
 import InfoGeometry.Canonical.ConnesCyclicCohomology
 import InfoGeometry.Canonical.FilteredDirectInverseColimit
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
+import InfoGeometry.Canonical.FilteredDualFunctionalTopologicalLimit
 import InfoGeometry.Canonical.AnyonicStabilizerCodeDistance
 import InfoGeometry.Canonical.CStarAlgebraDirectSumBlock
 import InfoGeometry.Canonical.QuantumChannelContractivity
@@ -750,6 +751,7 @@ import InfoGeometry.Canonical.ItFromBit
 import InfoGeometry.Canonical.ExplicitWitnessObligations
 import InfoGeometry.Canonical.ChiralSuperPoincareSouriauBridge
 import InfoGeometry.Canonical.CantorCuntzCliffordBridge
+import InfoGeometry.Canonical.EinsteinCartanBianchiBridge
 import InfoGeometry.Canonical.ChiralAmariOperatorGeometryBridge
 import InfoGeometry.Canonical.CantorDiracSeaHopping
 import InfoGeometry.Canonical.CantorBoundaryFinitePrecision

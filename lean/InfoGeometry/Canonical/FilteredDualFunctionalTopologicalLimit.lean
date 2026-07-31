@@ -36,28 +36,29 @@ variable (sys : DualRestrictionSystem Dual)
 /-- The arrow in the order-dual category corresponding to an original
 order relation. -/
 def dualHom {i j : I} (hij : i ≤ j) :
-    (j : Iᵒᵈ) ⟶ (i : Iᵒᵈ) :=
-  homOfLE (show (j : Iᵒᵈ) ≤ (i : Iᵒᵈ) from hij)
+    (Opposite.op j) ⟶ (Opposite.op i) :=
+  (homOfLE hij).op
 
 /-- The inverse-direction `TopCat` diagram, indexed by the order dual. -/
-def dualTopologicalDiagram : Iᵒᵈ ⥤ TopCat.{u} where
-  obj i := TopCat.of (Dual i)
+def dualTopologicalDiagram : Iᵒᵖ ⥤ TopCat.{u} where
+  obj i := TopCat.of (Dual i.unop)
   map f :=
     TopCat.ofHom
-      (sys.restriction (leOfHom f))
+      (sys.restriction (leOfHom f.unop))
   map_id i := by
     apply TopCat.hom_ext
     apply ContinuousMap.ext
     intro x
-    exact congrArg (fun g => g x) (sys.restriction_id i)
+    exact congrArg (fun g => g x) (sys.restriction_id i.unop)
   map_comp f g := by
     apply TopCat.hom_ext
     apply ContinuousMap.ext
     intro x
-    change sys.restriction (leOfHom g)
-        (sys.restriction (leOfHom f) x) =
-      sys.restriction (leOfHom (f ≫ g)) x
-    exact (sys.restriction_comp (leOfHom g) (leOfHom f) x).symm
+    rw [TopCat.comp_app]
+    change sys.restriction (leOfHom (f ≫ g).unop) x =
+      sys.restriction (leOfHom g.unop)
+        (sys.restriction (leOfHom f.unop) x)
+    exact Eq.symm (sys.restriction_comp (leOfHom g.unop) (leOfHom f.unop) x)
 
 /-- The native categorical inverse limit of the dual-functional stages. -/
 abbrev dualTopologicalLimit : TopCat.{u} :=
@@ -66,7 +67,7 @@ abbrev dualTopologicalLimit : TopCat.{u} :=
 /-- Projection from the dual-functional limit to stage `i`. -/
 def dualTopologicalProjection (i : I) :
     dualTopologicalLimit Dual sys ⟶ TopCat.of (Dual i) :=
-  limit.π (dualTopologicalDiagram Dual sys) (i : Iᵒᵈ)
+  limit.π (dualTopologicalDiagram Dual sys) (Opposite.op i)
 
 theorem dualTopologicalProjection_naturality
     {i j : I} (hij : i ≤ j) :
@@ -103,10 +104,12 @@ def compatibleDualFamilyCone
     Cone (dualTopologicalDiagram Dual sys) where
   pt := X
   π :=
-    { app := fun i => c.coordinate i
+    { app := fun i => c.coordinate i.unop
       naturality := by
         intro i j f
-        exact c.compatible (leOfHom f) }
+        dsimp
+        rw [Category.id_comp]
+        exact Eq.symm (c.compatible (leOfHom f.unop)) }
 
 /-- Lift a compatible dual-functional family into the native inverse limit. -/
 def compatibleDualFamilyLift
@@ -120,7 +123,7 @@ theorem compatibleDualFamilyLift_projection
     compatibleDualFamilyLift Dual sys c ≫
         dualTopologicalProjection Dual sys i = c.coordinate i := by
   exact limit.lift_π
-    (compatibleDualFamilyCone Dual sys c) i
+    (compatibleDualFamilyCone Dual sys c) (Opposite.op i)
 
 theorem compatibleDualFamilyLift_unique
     (c : CompatibleDualFamily Dual sys X)
@@ -129,9 +132,9 @@ theorem compatibleDualFamilyLift_unique
     f = compatibleDualFamilyLift Dual sys c := by
   apply limit.hom_ext
   intro i
-  change f ≫ dualTopologicalProjection Dual sys (i : I) =
+  change f ≫ dualTopologicalProjection Dual sys i.unop =
     compatibleDualFamilyLift Dual sys c ≫
-      dualTopologicalProjection Dual sys (i : I)
-  rw [h (i : I), compatibleDualFamilyLift_projection]
+      dualTopologicalProjection Dual sys i.unop
+  rw [h i.unop, compatibleDualFamilyLift_projection]
 
 end FilteredColimit.Native.TopologicalDual

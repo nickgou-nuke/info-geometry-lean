@@ -6,12 +6,9 @@ namespace Omega.POM
 the already formalized alternating-Witten parity package.
     cor:derived-fiber-independence-polynomial-minus-one-trichotomy -/
 theorem paper_derived_fiber_independence_polynomial_minus_one_trichotomy
-    {pathCaseClassification badModThreeComponent allComponentsAvoidBadModThree
-        joinDecomposition contractibleCase sphereCase : Prop}
-    (hPathCaseClassification : pathCaseClassification)
+    {badModThreeComponent allComponentsAvoidBadModThree joinDecomposition
+        contractibleCase sphereCase : Prop}
     (hJoinDecomposition : joinDecomposition)
-    (classifyPathComponents :
-      pathCaseClassification → badModThreeComponent ∨ allComponentsAvoidBadModThree)
     (badModThreeComponentForcesContraction :
       badModThreeComponent → joinDecomposition → contractibleCase)
     (allGoodComponentsGiveSphere :
@@ -26,8 +23,8 @@ theorem paper_derived_fiber_independence_polynomial_minus_one_trichotomy
     (((L.map (fun ℓ => Nat.fib (ℓ + 2))).prod % 2 = 0) → E.zAtMinusOne = 0) ∧
       (((L.map (fun ℓ => Nat.fib (ℓ + 2))).prod % 2 = 1) → E.zAtMinusOne = (-1 : ℤ) ^ tau) := by
   exact
-    paper_derived_fiber_indcomplex_alternating_witten_parity hPathCaseClassification
-      hJoinDecomposition classifyPathComponents badModThreeComponentForcesContraction
-      allGoodComponentsGiveSphere L tau E hBad hGood hContractibleEuler hSphereEuler hTauPos
+    paper_derived_fiber_indcomplex_alternating_witten_parity hJoinDecomposition
+      badModThreeComponentForcesContraction allGoodComponentsGiveSphere L tau E hBad hGood
+      hContractibleEuler hSphereEuler hTauPos
 
 end Omega.POM

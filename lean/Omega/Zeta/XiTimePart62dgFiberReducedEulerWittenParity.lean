@@ -6,12 +6,9 @@ namespace Omega.Zeta
 
 /-- Paper label: `thm:xi-time-part62dg-fiber-reduced-euler-witten-parity`. -/
 theorem paper_xi_time_part62dg_fiber_reduced_euler_witten_parity
-    {pathCaseClassification badModThreeComponent allComponentsAvoidBadModThree
-        joinDecomposition contractibleCase sphereCase : Prop}
-    (hPathCaseClassification : pathCaseClassification)
+    {badModThreeComponent allComponentsAvoidBadModThree joinDecomposition
+        contractibleCase sphereCase : Prop}
     (hJoinDecomposition : joinDecomposition)
-    (classifyPathComponents :
-      pathCaseClassification → badModThreeComponent ∨ allComponentsAvoidBadModThree)
     (badModThreeComponentForcesContraction :
       badModThreeComponent → joinDecomposition → contractibleCase)
     (allGoodComponentsGiveSphere :
@@ -26,9 +23,8 @@ theorem paper_xi_time_part62dg_fiber_reduced_euler_witten_parity
         E.reducedEulerCharacteristic = 0) ∧
       (((L.map (fun ℓ => Nat.fib (ℓ + 2))).prod % 2 = 1) →
         E.reducedEulerCharacteristic = (-1 : ℤ) ^ (tau - 1)) := by
-  rcases Omega.POM.paper_pom_fiber_parity_homotopy_equivalence hPathCaseClassification
-      hJoinDecomposition classifyPathComponents badModThreeComponentForcesContraction
-      allGoodComponentsGiveSphere L hBad hGood with
+  rcases Omega.POM.paper_pom_fiber_parity_homotopy_equivalence hJoinDecomposition
+      badModThreeComponentForcesContraction allGoodComponentsGiveSphere L hBad hGood with
     ⟨hEven, hOdd⟩
   exact ⟨fun hParity => hContractibleEuler (hEven hParity),
     fun hParity => hSphereEuler (hOdd hParity)⟩

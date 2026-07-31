@@ -11,12 +11,9 @@ namespace Omega.DerivedConsequences
 sign, while the noncontractible branch keeps the same exponential growth rate as the optimal one.
 -/
 def derived_optimal_spherical_fiber_sign_compression_statement : Prop :=
-  (∀ (pathCaseClassification badModThreeComponent allComponentsAvoidBadModThree
+  (∀ (badModThreeComponent allComponentsAvoidBadModThree
         joinDecomposition contractibleCase sphereCase : Prop)
-      (_hPathCaseClassification : pathCaseClassification)
       (_hJoinDecomposition : joinDecomposition)
-      (_classifyPathComponents :
-        pathCaseClassification → badModThreeComponent ∨ allComponentsAvoidBadModThree)
       (_badModThreeComponentForcesContraction :
         badModThreeComponent → joinDecomposition → contractibleCase)
       (_allGoodComponentsGiveSphere :
@@ -52,21 +49,18 @@ theorem paper_derived_optimal_spherical_fiber_sign_compression :
   rcases paper_derived_max_noncontractible_fiber_no_exponential_penalty with
     ⟨c, C, hc, hcC, heven, hodd, hlog⟩
   refine ⟨?_, ?_, hlog⟩
-  · intro pathCaseClassification badModThreeComponent allComponentsAvoidBadModThree
-      joinDecomposition contractibleCase sphereCase hPathCaseClassification hJoinDecomposition
-      classifyPathComponents badModThreeComponentForcesContraction allGoodComponentsGiveSphere
+  · intro badModThreeComponent allComponentsAvoidBadModThree joinDecomposition contractibleCase
+      sphereCase hJoinDecomposition badModThreeComponentForcesContraction allGoodComponentsGiveSphere
       L tau E hBad hGood hContractibleEuler hSphereEuler hTauPos hodd
     have hsphere :
         sphereCase :=
-      (Omega.POM.paper_pom_fiber_parity_homotopy_equivalence hPathCaseClassification
-        hJoinDecomposition classifyPathComponents badModThreeComponentForcesContraction
-        allGoodComponentsGiveSphere L hBad hGood).2 hodd
+      (Omega.POM.paper_pom_fiber_parity_homotopy_equivalence hJoinDecomposition
+        badModThreeComponentForcesContraction allGoodComponentsGiveSphere L hBad hGood).2 hodd
     have hsign :
         E.zAtMinusOne = (-1 : ℤ) ^ tau :=
       (Omega.POM.paper_derived_fiber_independence_polynomial_minus_one_trichotomy
-        hPathCaseClassification hJoinDecomposition classifyPathComponents
-        badModThreeComponentForcesContraction allGoodComponentsGiveSphere L tau E hBad hGood
-        hContractibleEuler hSphereEuler hTauPos).2 hodd
+        hJoinDecomposition badModThreeComponentForcesContraction allGoodComponentsGiveSphere
+        L tau E hBad hGood hContractibleEuler hSphereEuler hTauPos).2 hodd
     exact ⟨hsphere, hsign⟩
   · exact ⟨c, C, hc, hcC, heven, hodd⟩
 

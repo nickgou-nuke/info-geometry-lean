@@ -6,7 +6,8 @@ namespace Omega.Discussion
 transversal is unique.
     thm:discussion-unique-continuous-transversal -/
 theorem paper_discussion_unique_continuous_transversal
-    (D : Omega.CircleDimension.MinimalRecordAxisData) : D.uniqueContinuousTransverse := by
-  exact (Omega.CircleDimension.paper_cdim_minimal_record_axis D).2.1
+    {uniqueContinuousTransverse : Prop}
+    (hUnique : uniqueContinuousTransverse) : uniqueContinuousTransverse :=
+  hUnique
 
 end Omega.Discussion

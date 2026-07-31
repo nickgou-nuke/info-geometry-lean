@@ -126,48 +126,43 @@ lemma deterministicLocalStep_intro {σ α β : Type*} (update : σ → α → σ
   intro result hresult
   exact hresult
 
-/-- Chapter-local package of the three advertised single-flow states together with the current
-input symbol. -/
-structure KernelStateSpecFlowData where
-  input : Bool
-  state9 : SingleFlow9State
-  state13 : SingleFlow13State
-  state21 : SingleFlow21State
-
 /-- The 9-local advertised state variables determine the local update/output rule, and the delay
 is `1`. -/
-def KernelStateSpecFlowData.spec9 (D : KernelStateSpecFlowData) : Prop :=
-  flow9Update D.state9 D.input = flow9UpdateFromAdvertised D.state9.advertisedVars D.input ∧
-    flow9Output D.state9 D.input = flow9OutputFromAdvertised D.state9.advertisedVars D.input ∧
-    deterministicLocalStep flow9Update flow9Output D.state9 D.input ∧
+def spec9 (input : Bool) (state9 : SingleFlow9State) : Prop :=
+  flow9Update state9 input = flow9UpdateFromAdvertised state9.advertisedVars input ∧
+    flow9Output state9 input = flow9OutputFromAdvertised state9.advertisedVars input ∧
+    deterministicLocalStep flow9Update flow9Output state9 input ∧
     flow9Delay = 1
 
 /-- The 13-local advertised state variables determine the local update/output rule, and the delay
 is `3`. -/
-def KernelStateSpecFlowData.spec13 (D : KernelStateSpecFlowData) : Prop :=
-  flow13Update D.state13 D.input = flow13UpdateFromAdvertised D.state13.advertisedVars D.input ∧
-    flow13Output D.state13 D.input = flow13OutputFromAdvertised D.state13.advertisedVars D.input ∧
-    deterministicLocalStep flow13Update flow13Output D.state13 D.input ∧
+def spec13 (input : Bool) (state13 : SingleFlow13State) : Prop :=
+  flow13Update state13 input = flow13UpdateFromAdvertised state13.advertisedVars input ∧
+    flow13Output state13 input = flow13OutputFromAdvertised state13.advertisedVars input ∧
+    deterministicLocalStep flow13Update flow13Output state13 input ∧
     flow13Delay = 3
 
 /-- The 21-local advertised state variables determine the local update/output rule, and the delay
 is `5`. -/
-def KernelStateSpecFlowData.spec21 (D : KernelStateSpecFlowData) : Prop :=
-  flow21Update D.state21 D.input = flow21UpdateFromAdvertised D.state21.advertisedVars D.input ∧
-    flow21Output D.state21 D.input = flow21OutputFromAdvertised D.state21.advertisedVars D.input ∧
-    deterministicLocalStep flow21Update flow21Output D.state21 D.input ∧
+def spec21 (input : Bool) (state21 : SingleFlow21State) : Prop :=
+  flow21Update state21 input = flow21UpdateFromAdvertised state21.advertisedVars input ∧
+    flow21Output state21 input = flow21OutputFromAdvertised state21.advertisedVars input ∧
+    deterministicLocalStep flow21Update flow21Output state21 input ∧
     flow21Delay = 5
 
 /-- Explicit state records for the 9-local, 13-local, and 21-local single-flow transducers give
 deterministic local update/output rules from the advertised state variables, with delays `1`,
 `3`, and `5` respectively.
     prop:min-state-spec-flow -/
-theorem paper_min_state_spec_flow (D : KernelStateSpecFlowData) : D.spec9 ∧ D.spec13 ∧ D.spec21 := by
+theorem paper_min_state_spec_flow
+    (input : Bool) (state9 : SingleFlow9State) (state13 : SingleFlow13State)
+    (state21 : SingleFlow21State) :
+    spec9 input state9 ∧ spec13 input state13 ∧ spec21 input state21 := by
   refine ⟨?_, ?_, ?_⟩
-  · exact ⟨rfl, rfl, deterministicLocalStep_intro flow9Update flow9Output D.state9 D.input, rfl⟩
+  · exact ⟨rfl, rfl, deterministicLocalStep_intro flow9Update flow9Output state9 input, rfl⟩
   · exact
-      ⟨rfl, rfl, deterministicLocalStep_intro flow13Update flow13Output D.state13 D.input, rfl⟩
+      ⟨rfl, rfl, deterministicLocalStep_intro flow13Update flow13Output state13 input, rfl⟩
   · exact
-      ⟨rfl, rfl, deterministicLocalStep_intro flow21Update flow21Output D.state21 D.input, rfl⟩
+      ⟨rfl, rfl, deterministicLocalStep_intro flow21Update flow21Output state21 input, rfl⟩
 
 end Omega.EA

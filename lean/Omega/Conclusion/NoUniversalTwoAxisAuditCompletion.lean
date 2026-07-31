@@ -28,10 +28,12 @@ transverse direction, while the audit-completion data contributes the three indi
 axes.
     thm:conclusion-unique-continuous-transverse-and-witness-product-core -/
 theorem paper_conclusion_unique_continuous_transverse_and_witness_product_core
-    (A : Omega.CircleDimension.MinimalRecordAxisData) (D : TwoAxisAuditCompletionData) :
-    A.uniqueContinuousTransverse ∧ D.collisionWitnessAxis ∧ D.windingWitnessAxis ∧
+    {uniqueContinuousTransverse : Prop}
+    (hUnique : uniqueContinuousTransverse)
+    (D : TwoAxisAuditCompletionData) :
+    uniqueContinuousTransverse ∧ D.collisionWitnessAxis ∧ D.windingWitnessAxis ∧
       D.endpointWitnessAxis := by
-  refine ⟨(Omega.CircleDimension.paper_cdim_minimal_record_axis A).2.1, ?_, ?_, ?_⟩
+  refine ⟨hUnique, ?_, ?_, ?_⟩
   · exact D.witnessAxesIndispensable.1
   · exact D.witnessAxesIndispensable.2.1
   · exact D.witnessAxesIndispensable.2.2

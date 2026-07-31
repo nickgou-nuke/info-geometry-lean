@@ -7,26 +7,19 @@ namespace Omega.TypedAddressBiaxialCompletion
 
 open scoped BigOperators
 
-/-- Chapter-local notation for the typed-address comoving Hankel package: general position
-forces the Vandermonde/Hankel factorization, which in turn yields the rank certificate. -/
-structure ComovingHankelData where
-  kappa : ℕ
-  generalPosition : Prop
-  hankelFactorization : Prop
-  hankelRankCertificate : Prop
-  factorization_of_generalPosition : generalPosition → hankelFactorization
-  rank_of_factorization : hankelFactorization → hankelRankCertificate
-
 /-- Paper-facing typed-address restatement of the CircleDimension atomic-defect
 Hankel--Prony wrapper.
     prop:typed-address-biaxial-completion-comoving-hankel -/
 theorem paper_typed_address_biaxial_completion_comoving_hankel
-    (D : ComovingHankelData) (hgp : D.generalPosition) :
-    D.hankelFactorization ∧ D.hankelRankCertificate := by
+    {generalPosition hankelFactorization hankelRankCertificate : Prop}
+    (hgp : generalPosition)
+    (factorization_of_generalPosition : generalPosition → hankelFactorization)
+    (rank_of_factorization : hankelFactorization → hankelRankCertificate) :
+    hankelFactorization ∧ hankelRankCertificate := by
   exact Omega.CircleDimension.paper_cdim_atomic_defect_hankel_prony
-    D.generalPosition D.hankelFactorization D.hankelRankCertificate
-    (D.hankelFactorization ∧ D.hankelRankCertificate) hgp
-    D.factorization_of_generalPosition D.rank_of_factorization
+    generalPosition hankelFactorization hankelRankCertificate
+    (hankelFactorization ∧ hankelRankCertificate) hgp
+    factorization_of_generalPosition rank_of_factorization
     (fun hFactor hRank => ⟨hFactor, hRank⟩)
 
 /-- The discrete Hankel block built from the moments `u₀, …, u_{2κ-2}`. -/
@@ -130,16 +123,9 @@ theorem paper_unit_circle_comoving_hankel_factorization :
   intro κ u A z hApos hzinj hu
   have hgp :=
     unit_circle_comoving_hankel_factorization_general_position κ A z hApos hzinj
-  let D : ComovingHankelData :=
-    { kappa := κ
-      generalPosition := Function.Injective z ∧ ∀ j : Fin κ, 0 < A j
-      hankelFactorization := unit_circle_comoving_hankel_factorization_factorization_certificate κ
-      hankelRankCertificate := unit_circle_comoving_hankel_factorization_rank_certificate κ
-      factorization_of_generalPosition :=
-        fun _ => unit_circle_comoving_hankel_factorization_factorization_certificate_proof κ
-      rank_of_factorization :=
-        fun _ => unit_circle_comoving_hankel_factorization_rank_certificate_proof κ }
   refine ⟨unit_circle_comoving_hankel_factorization_entrywise κ u A z hu, ?_⟩
-  simpa [D] using paper_typed_address_biaxial_completion_comoving_hankel D hgp
+  exact paper_typed_address_biaxial_completion_comoving_hankel hgp
+    (fun _ => unit_circle_comoving_hankel_factorization_factorization_certificate_proof κ)
+    (fun _ => unit_circle_comoving_hankel_factorization_rank_certificate_proof κ)
 
 end Omega.TypedAddressBiaxialCompletion

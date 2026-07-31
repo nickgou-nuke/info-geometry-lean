@@ -8,33 +8,24 @@ namespace Omega.Discussion
 noncomputable def binaryEntropy (ε : ℝ) : ℝ :=
   -(ε * Real.log ε + (1 - ε) * Real.log (1 - ε))
 
-/-- Numerical carrier for the HSZK/Holevo comparison. -/
-structure HSZKHolevoData where
-  epsilon : ℝ
-  delta : ℝ
-  verifierDim : ℕ
-  holevoInformation : ℝ
-  traceDistance : ℕ → ℕ → ℝ
-  referenceState : ℕ
-
 /-- A common simulator bound and a pairwise Pinsker estimate yield the Holevo, reverse-Pinsker,
 and reference-state HSZK readouts. -/
 theorem paper_discussion_hszk_holevo
-    (D : HSZKHolevoData)
+    (epsilon delta : ℝ) (verifierDim : ℕ) (holevoInformation : ℝ)
+    (traceDistance : ℕ → ℕ → ℝ) (referenceState : ℕ)
     (commonSimulatorBound :
-      D.holevoInformation ≤
-        2 * D.epsilon * Real.log (D.verifierDim : ℝ) +
-          2 * binaryEntropy D.epsilon)
+      holevoInformation ≤
+        2 * epsilon * Real.log (verifierDim : ℝ) + 2 * binaryEntropy epsilon)
     (twoPointPinsker :
       ∀ ω ω' : ℕ,
-        D.traceDistance ω ω' ≤ Real.sqrt (8 * Real.log 2 * D.delta)) :
-    (D.holevoInformation ≤
-      2 * D.epsilon * Real.log (D.verifierDim : ℝ) +
-        2 * binaryEntropy D.epsilon) ∧
+        traceDistance ω ω' ≤ Real.sqrt (8 * Real.log 2 * delta)) :
+    (holevoInformation ≤
+      2 * epsilon * Real.log (verifierDim : ℝ) + 2 * binaryEntropy epsilon) ∧
       (∀ ω ω' : ℕ,
-        D.traceDistance ω ω' ≤ Real.sqrt (8 * Real.log 2 * D.delta)) ∧
+        traceDistance ω ω' ≤ Real.sqrt (8 * Real.log 2 * delta)) ∧
       (∀ ω : ℕ,
-        D.traceDistance ω D.referenceState ≤ Real.sqrt (8 * Real.log 2 * D.delta)) := by
-  exact ⟨commonSimulatorBound, twoPointPinsker, fun ω => twoPointPinsker ω D.referenceState⟩
+        traceDistance ω referenceState ≤ Real.sqrt (8 * Real.log 2 * delta)) := by
+  exact ⟨commonSimulatorBound, twoPointPinsker,
+    fun ω => twoPointPinsker ω referenceState⟩
 
 end Omega.Discussion

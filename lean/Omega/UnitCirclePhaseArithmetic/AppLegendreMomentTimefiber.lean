@@ -36,8 +36,7 @@ time-fiber coordinate takes the stated form, and the moment profile is exactly t
 spherical-function seed. -/
 def EndpointLegendreMomentStatement (ρ : ℝ) (ν : ℂ) : Prop :=
   let a := endpointLegendreRadius ρ
-  let D : EndpointArcsineDualityData := ⟨ρ⟩
-  D.zDensityClosedForm ∧
+  zDensityClosedForm ∧
     0 < a ∧
     endpointLegendreLeftEndpoint ρ = Real.exp (-a) ∧
     endpointLegendreRightEndpoint ρ = Real.exp a ∧
@@ -70,7 +69,7 @@ theorem paper_app_legendre_moment_timefiber (ρ : ℝ) (hρ0 : 0 < ρ) (hρ1 : �
   dsimp [EndpointLegendreMomentStatement]
   refine ⟨?_, endpointLegendreRadius_pos ρ hρ0 hρ1,
     endpointLegendreLeftEndpoint_eq_exp_neg ρ, endpointLegendreRightEndpoint_eq_exp ρ, ?_, rfl⟩
-  · exact (paper_app_endpoint_arcsine_duality ⟨ρ⟩).2.1
+  · exact (paper_app_endpoint_arcsine_duality ρ).2.1
   · intro φ
     rfl
 

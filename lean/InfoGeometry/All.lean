@@ -3581,7 +3581,6 @@ import InfoGeometry.OperatorAlgebra.EntanglementGeometryLedger
 import InfoGeometry.OperatorAlgebra.ErlangenConformalInvariant
 import InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov
 import InfoGeometry.OperatorAlgebra.ErlangenNet
-import InfoGeometry.OperatorAlgebra.ErlangenOperator2
 import InfoGeometry.OperatorAlgebra.ErlangerPhase
 import InfoGeometry.OperatorAlgebra.ExceptionalVirasoroBridge
 import InfoGeometry.OperatorAlgebra.FibonacciCantorCuntzBoundary
@@ -3636,7 +3635,6 @@ import InfoGeometry.OperatorAlgebra.MobiusClosureFixedPoints
 import InfoGeometry.OperatorAlgebra.ModularChiralMirror
 import InfoGeometry.OperatorAlgebra.ModularMirrorBoundary
 import InfoGeometry.OperatorAlgebra.ModularSignCPT
-import InfoGeometry.OperatorAlgebra.ModularThermalState
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.OperatorAlgebra.MoorePenroseDivisionRank
 import InfoGeometry.OperatorAlgebra.NoetherModularFlow

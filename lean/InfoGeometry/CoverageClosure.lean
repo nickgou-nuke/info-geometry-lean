@@ -489,7 +489,6 @@ import InfoGeometry.OperatorAlgebra.DualSplitQuaternionBackbone
 import InfoGeometry.OperatorAlgebra.EEIntertwinerFiniteLaws
 import InfoGeometry.OperatorAlgebra.ErlangenConformalInvariant
 import InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov
-import InfoGeometry.OperatorAlgebra.ErlangenOperator2
 import InfoGeometry.OperatorAlgebra.FiniteJkoJaynesContinuumBridge
 import InfoGeometry.OperatorAlgebra.FullO55MatrixLaws
 import InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws

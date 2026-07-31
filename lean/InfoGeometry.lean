@@ -128,16 +128,7 @@ import InfoGeometry.Complex.BergmanKernelLocalization
 import InfoGeometry.Information.BergmanBregman
 import InfoGeometry.Information.DeRhamScore
 
-/-!
-# InfoGeometry
 
-Root entrypoint for the `InfoGeometry` Lean 4 library.
-
-The repository intent is that all repo-owned Lean modules build and are
-available through the root project surface.  `InfoGeometry.All` is the explicit
-whole-project umbrella; `InfoGeometry.Library` is only a compatibility umbrella
-for the canonical subset.
--/
 import InfoGeometry.OperatorAlgebra.TwoSheetedAlgebra
 import InfoGeometry.OperatorAlgebra.AffineOperatorExpFamily
 import InfoGeometry.OperatorAlgebra.SheetConnection

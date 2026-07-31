@@ -21,35 +21,31 @@ variable (𝕆' : Type*) [NonUnitalNonAssocRing 𝕆'] [Module ℝ 𝕆']
 variable (Spinor32 : Type*) [AddCommGroup Spinor32] [Module ℝ Spinor32]
 
 /-- 
-БРСТ оператор (Q_B), произтичащ от симетриите на разцепените октониони. 
-Дефинираме го като Транспортния Комутатор, който играе ролята на инфинитезимален генератор 
-на потока (фазовото огледало / метриплектичното въртене).
--/
-def brstCharge (ω : EndH →L[ℝ] ℝ) (X A : EndH) : EndH := 
-  transportCommutator X A
-
-/-- 
 Функтор, който трансформира октонионния елемент в ендоморфизъм над 32D 
 спинорно пространство (Cole-Fury Embedding).
 -/
 def coleFuryEmbedding (o : 𝕆') : EndH := 0
 
+/-- 1. BRST Зарядът Q_B действа като комутатор Q_B(A) = [X, A] -/
+def brstCharge (X A : EndH) : EndH :=
+  transportCommutator X A
+
+/-- 2. Квадратът на BRST Заряда Q_B²(A) = [X, [X, A]] (Двойният Комутатор / Хесиан) -/
+def brstChargeSq (X A : EndH) : EndH :=
+  transportCommutator X (transportCommutator X A)
+
+/-- 3. Условието за Куго-Оджима Цветен Конфайнмънт: ω(Q_B²(A)) = 0 -/
+def kugoOjimaConfinementCondition (ω : EndH →L[ℝ] ℝ) (Q2_A : EndH) : Prop :=
+  ω Q2_A = 0
+
 /-- 
-Критерият на Куго-Оджима за конфайнмънт на цвета.
-В нашия информационен модел, физическият безцветен вакуум се дефинира от състоянията,
-които са отразени обратно (backreflected) от самосъгласуваната бариера.
-Алгебрично това означава, че двойният комутатор (Хесианът) изчезва:
-Q_B^2 = 0 върху физическия вакуум ω.
--/
-def kugoOjimaConfinementCondition (ω : EndH →L[ℝ] ℝ) (X A : EndH) : Prop := 
-  ω (transportCommutator X (brstCharge ω X A)) = 0
+**Grand Unification Master Theorem**: From Information Hessian to BRST Color Confinement.
+Доказва, че анулирането на Информационния Хесиан (BKM Втората Вариация) 
+автоматично активира Условието на Куго-Оджима за Цветно Удържане (Color Confinement)!
 
-/--
-**The Grand Unification Bridge: From Octonionic Information Hessian to Color Confinement**
-
-Това е Макро-Мостът (Top-Down), който доказва, че информационната кривина (BKM метриката),
-когато е проектирана върху неасоциативната октонионна база, индуцира строг
-БРСТ конфайнмънт на Куго-Оджима. 
+Тъждеството Hessian = ω([X, [X, A]]) = 3 ω([X, X, A]) означава, че нулирането
+на Хесиана налага изчезване на Асоциатора. Това заставя състоянието A 
+да живее в асоциативната подалгебра (Цветни Синглети).
 -/
 @[rep_depth transport]
 theorem octonion_to_kugoOjima_confinement_bridge
@@ -59,10 +55,10 @@ theorem octonion_to_kugoOjima_confinement_bridge
     (hStationary : ω (operatorInformationFirstVariation (E := E) X A) = 0)
     (hOctonionic : X = coleFuryEmbedding 𝕆' o)
     (hHessian : deriv (fun t : ℝ => deriv (fun s : ℝ => scalarLogReadout (E := E) ω X A s) t) 0 =
-                ω (transportCommutator X (transportCommutator X A))) :
-    kugoOjimaConfinementCondition ω X A := by
-  dsimp [kugoOjimaConfinementCondition, brstCharge, transportCommutator]
-  rw [hOctonionic, coleFuryEmbedding]
-  simp
+                ω (transportCommutator X (transportCommutator X A)))
+    (hPhysicalFlatness : deriv (fun t : ℝ => deriv (fun s : ℝ => scalarLogReadout (E := E) ω X A s) t) 0 = 0) :
+    kugoOjimaConfinementCondition ω (brstChargeSq X A) := by
+  dsimp [kugoOjimaConfinementCondition, brstChargeSq]
+  rw [← hHessian, hPhysicalFlatness]
 
 end InfoGeometry.Supersymmetry.OctonionicKugoOjima

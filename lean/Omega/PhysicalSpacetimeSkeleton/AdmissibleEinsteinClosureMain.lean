@@ -9,6 +9,16 @@ universe u
 admissible global Einstein equation. -/
 theorem paper_physical_spacetime_admissible_einstein_closure_main :
     ∀ (I : Omega.PhysicalSpacetimeSkeleton.InstantiationCriterion.AcceptableInstantiation)
+      (localGlobalTrivial :
+        ∀ {a : I.Addr}, (I.Fiber a).Nonempty → ¬ I.Obstructed a)
+      (localGlobalNull :
+        ∀ {a : I.Addr}, I.Fiber a = (∅ : Set I.Obj) → I.NullReadout a)
+      (witnessObstructed : I.Obstructed I.witness)
+      (hinv : ∀ {x x' y y'}, I.R.r x x' → I.R.r y y' → I.K x y = I.K x' y')
+      (hpsd : ∀ {ι : Type} [Fintype ι] (ψ : ι → I.Visible) (a : ι → ℝ),
+        0 ≤ Omega.PhysicalSpacetimeSkeleton.KernelizationTemplate.quadraticEnergy I.K ψ a)
+      (continuumLimit : Prop)
+      (continuumWitness : continuumLimit)
       {ClockC : Type*} [AddGroup ClockC]
       (delta : ClockC → ClockC) (ThetaU dDeltaTau dA OmegaU : ClockC)
       (hTheta : delta ThetaU = dDeltaTau - dA)
@@ -35,13 +45,17 @@ theorem paper_physical_spacetime_admissible_einstein_closure_main :
                       chain.gravitationalEinsteinClosure ∧
                         D.einsteinTensor + D.cosmologicalConstant * D.metric =
                           D.couplingConstant * D.stressEnergy := by
-  intro I ClockC _ delta ThetaU dDeltaTau dA OmegaU hTheta hDeltaTau hOmega hFlat hExact U N A B
+  intro I localGlobalTrivial localGlobalNull witnessObstructed hinv hpsd continuumLimit
+    continuumWitness ClockC _ delta ThetaU dDeltaTau dA OmegaU hTheta hDeltaTau hOmega hFlat hExact U N A B
     deltaT nuA nuB hNA hNB hT hA hB v hv ι _ F D hAdm
   have hAdm' : D.toMinimalSecondOrderCovariantClosure.admissible := hAdm
   obtain ⟨chain, _hInst, hClock, hPotential, hRedshift, hRank, hQuad, hMetric, hValue,
       _hAffine, hEinstein⟩ :=
     paper_physical_spacetime_procedural_grand_chain
       (I := I) (delta := delta) (ThetaU := ThetaU) (dDeltaTau := dDeltaTau) (dA := dA)
+      (localGlobalTrivial := localGlobalTrivial) (localGlobalNull := localGlobalNull)
+      (witnessObstructed := witnessObstructed) (hinv := hinv) (hpsd := hpsd)
+      (continuumLimit := continuumLimit) (continuumWitness := continuumWitness)
       (OmegaU := OmegaU) (hTheta := hTheta) (hDeltaTau := hDeltaTau) (hOmega := hOmega)
       (hFlat := hFlat) (hExact := hExact) (N := N) (A := A) (B := B) (deltaT := deltaT)
       (nuA := nuA) (nuB := nuB) (hNA := hNA) (hNB := hNB) (hT := hT) (hA := hA) (hB := hB)

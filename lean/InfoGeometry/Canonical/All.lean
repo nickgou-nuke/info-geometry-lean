@@ -545,6 +545,7 @@ import InfoGeometry.Canonical.ToeplitzCuntzThreeContinuousActionTopCat
 import InfoGeometry.Canonical.ToeplitzCuntzThreeAnyonBraidCentralChargeTopological
 import InfoGeometry.Canonical.FibonacciFusionBraidTopologicalBridge
 import InfoGeometry.Canonical.TopologicalColimitBraidAction
+import InfoGeometry.Canonical.Cl11MarkovJonesTopologicalCyclicTransport
 import InfoGeometry.Canonical.AnyonicStabilizerCodeDistance
 import InfoGeometry.Canonical.CStarAlgebraDirectSumBlock
 import InfoGeometry.Canonical.QuantumChannelContractivity
@@ -762,6 +763,8 @@ import InfoGeometry.Canonical.AlbertCuntzDiracBridge
 import InfoGeometry.Canonical.ToeplitzCuntzCartanFlowBridge
 import InfoGeometry.Canonical.SouriauUnruhHyperbolicBoostBridge
 import InfoGeometry.Canonical.RadonNikodymFisherMetricBridge
+import InfoGeometry.Canonical.DiracKahlerPalatiniBridge
+
 import InfoGeometry.Canonical.EinsteinCartanFullBianchiBridge
 import InfoGeometry.Canonical.ChiralAmariOperatorGeometryBridge
 import InfoGeometry.Canonical.CantorDiracSeaHopping
@@ -1951,3 +1954,4 @@ modules in `lean/InfoGeometry/Canonical/`.
 -/
 
 end InfoGeometry
+import InfoGeometry.Canonical.MetriplecticPhaseMirrorErasureBridge

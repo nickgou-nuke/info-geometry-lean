@@ -1,9 +1,11 @@
 import Mathlib.Data.ZMod.Basic
+import Mathlib.Algebra.Field.ZMod
 import Mathlib.LinearAlgebra.BilinearForm.Orthogonal
 import Mathlib.LinearAlgebra.Dimension.Finrank
 import Mathlib.LinearAlgebra.FiniteDimensional.Basic
 import Mathlib.LinearAlgebra.Matrix.BilinearForm
 import Mathlib.LinearAlgebra.Matrix.ToLin
+import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 
 /-!
 # The extended binary Golay code
@@ -101,7 +103,9 @@ theorem parityBit_smul (a : F₂) (u : Word23) :
 theorem encode_add (m n : Message) :
     encode (m + n) = encode m + encode n := by
   funext j
-  simp [encode, cyclicGolayWord_add, parityBit_add]
+  simp only [Pi.add_apply, encode]
+  split <;>
+    simp_all [encode, cyclicGolayWord_add, parityBit_add]
 
 /-- The extended Golay encoder is homogeneous over `F₂`. -/
 theorem encode_smul (a : F₂) (m : Message) :
@@ -149,22 +153,89 @@ Gram matrix is the identity, whose determinant is one.
 -/
 theorem dotBilin_nondegenerate :
     dotBilin.Nondegenerate := by
-  apply LinearMap.BilinForm.nondegenerate_of_det_ne_zero
-    dotBilin (Pi.basisFun F₂ (Fin 24))
-  simp [dotBilin]
+  constructor
+  · intro u hu
+    funext i
+    have hi := hu (Pi.single i (1 : F₂))
+    simpa [dotBilin, dot] using hi
+  · intro v hv
+    funext i
+    have hi := hv (Pi.single i (1 : F₂))
+    simpa [dotBilin, dot, mul_comm] using hi
+
+private def prefixMatrix : Matrix (Fin 12) (Fin 12) F₂ :=
+  fun j i => generatorCoefficient (j.val + 23 - i.val)
+
+private theorem generatorCoefficient_zero_of_range {k : ℕ}
+    (h12 : 12 ≤ k) (h23 : k < 23) :
+    generatorCoefficient k = 0 := by
+  simp [generatorCoefficient, Nat.mod_eq_of_lt h23, generatorSupport]
+  omega
+
+private theorem prefixMatrix_lowerTriangular :
+    Matrix.BlockTriangular prefixMatrix ⇑OrderDual.toDual := by
+  intro i j hij
+  change i < j at hij
+  apply generatorCoefficient_zero_of_range
+  · omega
+  · omega
+
+private theorem prefixMatrix_det_ne_zero :
+    prefixMatrix.det ≠ 0 := by
+  rw [Matrix.det_of_lowerTriangular prefixMatrix prefixMatrix_lowerTriangular]
+  simp [prefixMatrix, generatorCoefficient, generatorSupport]
+
+private theorem prefixMatrix_mulVec_injective :
+    Function.Injective (Matrix.mulVec prefixMatrix) := by
+  let hdet : IsUnit prefixMatrix.det :=
+    isUnit_iff_ne_zero.mpr prefixMatrix_det_ne_zero
+  intro u v huv
+  have h := congrArg (Matrix.mulVec prefixMatrix⁻¹) huv
+  rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec,
+    Matrix.nonsing_inv_mul prefixMatrix hdet, Matrix.one_mulVec] at h
+  simpa only [Matrix.one_mulVec] using h
+
+private theorem prefixMatrix_mulVec_apply (m : Message) (j : Fin 12) :
+    (Matrix.mulVec prefixMatrix m) j =
+      cyclicGolayWord m ⟨j.val, by omega⟩ := by
+  rfl
+
+set_option maxHeartbeats 1000000 in
+private theorem encode_kernel_zero :
+    ∀ m : Message, encode m = 0 → m = 0 := by
+  intro m hm
+  change encode m = 0 at hm
+  have hprefix : Matrix.mulVec prefixMatrix m = 0 := by
+    funext j
+    have h23 : j.val < 23 := by omega
+    have h := congrFun hm ⟨j.val, by omega⟩
+    have hzero : cyclicGolayWord m ⟨j.val, h23⟩ = 0 := by
+      simpa only [encode, dif_pos h23] using h
+    rw [prefixMatrix_mulVec_apply]
+    simpa using hzero
+  apply prefixMatrix_mulVec_injective
+  simpa using hprefix
 
 /--
 The explicit encoder is injective.  Hence the construction has dimension
-twelve over `F₂`.
+twelve over `F₂`.  The proof checks only the kernel of the linear encoder;
+it does not enumerate pairs of messages.
 -/
 theorem encode_injective :
     Function.Injective encode := by
-  native_decide
+  change Function.Injective encodeLinear
+  apply (LinearMap.ker_eq_bot).mp
+  rw [Submodule.eq_bot_iff]
+  intro m hm
+  apply encode_kernel_zero m
+  exact LinearMap.mem_ker.mp hm
 
 /-- The linear encoder is injective. -/
 theorem encodeLinear_injective :
     Function.Injective encodeLinear :=
-  encode_injective
+  by
+    change Function.Injective encode
+    exact encode_injective
 
 /-- The constructed code has binary dimension twelve. -/
 theorem finrank_codeSubmodule :
@@ -180,7 +251,8 @@ theorem mem_code_iff_mem_codeSubmodule (w : Word24) :
 /-- The constructed code contains exactly `2^12 = 4096` words. -/
 theorem card_code :
     code.card = 4096 := by
-  native_decide
+  rw [code, Finset.card_image_of_injective Finset.univ encode_injective]
+  simp [Message]
 
 /--
 Every nonzero constructed word has Hamming weight at least eight.

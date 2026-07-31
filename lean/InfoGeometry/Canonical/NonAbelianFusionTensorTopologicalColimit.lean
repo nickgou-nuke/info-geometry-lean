@@ -1,0 +1,152 @@
+import Mathlib.LinearAlgebra.Matrix.Kronecker
+import Mathlib.Topology.Category.TopCat.Limits.Basic
+import InfoGeometry.Canonical.NonAbelianFusionFRTopologicalBridge
+import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
+
+/-!
+# Kronecker tensor actions through a topological direct colimit
+
+This owner supplies the missing topological tensor wire for the finite fusion
+carrier.  The tensor carrier is the genuine matrix carrier indexed by
+`Fin 2 × Fin 2`; its actions are left multiplication by a Kronecker product.
+The resulting continuous maps descend through the native `TopCat` direct
+colimit.  No completion or coordinate approximation is introduced.
+-/
+
+noncomputable section
+
+namespace InfoGeometry.Canonical.NonAbelianFusionTensorTopologicalColimit
+
+open CategoryTheory CategoryTheory.Limits
+open Matrix
+open InfoGeometry.Canonical.NonAbelianFusionFRBridge
+open InfoGeometry.Canonical.NonAbelianFusionFRTopologicalBridge
+open FilteredColimit.Native.Topological
+
+variable {K : Type} [CommRing K]
+variable [TopologicalSpace K] [ContinuousAdd K] [ContinuousMul K]
+
+abbrev FusionCarrier (K : Type) := Matrix (Fin 2) (Fin 2) K
+abbrev FusionTensorCarrier (K : Type) :=
+  Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) K
+
+def fusionTensorTopologicalDiagram : ℕ ⥤ TopCat :=
+  (Functor.const ℕ).obj (TopCat.of (FusionTensorCarrier K))
+
+/-- Continuous left multiplication by a Kronecker product. -/
+def tensorLeftTopCatHom (M N : FusionCarrier K) :
+    TopCat.of (FusionTensorCarrier K) ⟶ TopCat.of (FusionTensorCarrier K) :=
+  TopCat.ofHom
+    { toFun := fun X => (M ⊗ₖ N) * X
+      continuous_toFun := continuous_const.mul continuous_id }
+
+@[simp]
+theorem tensorLeftTopCatHom_apply (M N : FusionCarrier K)
+    (X : FusionTensorCarrier K) :
+    tensorLeftTopCatHom M N X = (M ⊗ₖ N) * X := rfl
+
+theorem tensorLeftTopCatHom_comp
+    (M N M' N' : FusionCarrier K) :
+    tensorLeftTopCatHom M N ≫ tensorLeftTopCatHom M' N' =
+      tensorLeftTopCatHom (M' * M) (N' * N) := by
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro X
+  change (M' ⊗ₖ N') * ((M ⊗ₖ N) * X) =
+    ((M' * M) ⊗ₖ (N' * N)) * X
+  rw [← Matrix.mul_kronecker_mul]
+  simp only [Matrix.mul_assoc]
+
+def tensorActionCocone
+    (action : TopCat.of (FusionTensorCarrier K) ⟶
+      TopCat.of (FusionTensorCarrier K)) :
+    Cocone (fusionTensorTopologicalDiagram (K := K)) where
+  pt := TopCat.of (FusionTensorCarrier K)
+  ι :=
+    { app := fun _ => action
+      naturality := by
+        intro i j f
+        change 𝟙 (TopCat.of (FusionTensorCarrier K)) ≫ action = action
+        simp }
+
+noncomputable def tensorActionColimitMap
+    (action : TopCat.of (FusionTensorCarrier K) ⟶
+      TopCat.of (FusionTensorCarrier K)) :
+    topologicalDirectColimit (fusionTensorTopologicalDiagram (K := K)) ⟶
+      TopCat.of (FusionTensorCarrier K) :=
+  topologicalDirectDescend (fusionTensorTopologicalDiagram (K := K))
+    (tensorActionCocone (K := K) action)
+
+theorem tensorActionColimitMap_stage
+    (action : TopCat.of (FusionTensorCarrier K) ⟶
+      TopCat.of (FusionTensorCarrier K)) (n : ℕ)
+    (X : FusionTensorCarrier K) :
+    tensorActionColimitMap (K := K) action
+        (topologicalDirectInjection
+          (fusionTensorTopologicalDiagram (K := K)) n X) = action X := by
+  have h := topologicalDirectDescend_stage
+    (fusionTensorTopologicalDiagram (K := K))
+    (tensorActionCocone (K := K) action) n
+  exact congrArg (fun f => f X) h
+
+def tensorActionColimitCocone
+    (action : TopCat.of (FusionTensorCarrier K) ⟶
+      TopCat.of (FusionTensorCarrier K)) :
+    Cocone (fusionTensorTopologicalDiagram (K := K)) where
+  pt := topologicalDirectColimit (fusionTensorTopologicalDiagram (K := K))
+  ι :=
+    { app := fun n => action ≫
+        topologicalDirectInjection
+          (fusionTensorTopologicalDiagram (K := K)) n
+      naturality := by
+        intro i j f
+        have h := topologicalDirectInjection_naturality
+          (fusionTensorTopologicalDiagram (K := K)) f
+        simpa only [fusionTensorTopologicalDiagram, Category.id_comp,
+          Category.comp_id, Category.assoc] using
+          congrArg (fun q => action ≫ q) h }
+
+noncomputable def tensorActionColimitEndomorphism
+    (action : TopCat.of (FusionTensorCarrier K) ⟶
+      TopCat.of (FusionTensorCarrier K)) :
+    topologicalDirectColimit (fusionTensorTopologicalDiagram (K := K)) ⟶
+      topologicalDirectColimit (fusionTensorTopologicalDiagram (K := K)) :=
+  topologicalDirectDescend (fusionTensorTopologicalDiagram (K := K))
+    (tensorActionColimitCocone (K := K) action)
+
+theorem tensorActionColimitEndomorphism_stage
+    (action : TopCat.of (FusionTensorCarrier K) ⟶
+      TopCat.of (FusionTensorCarrier K)) (n : ℕ) :
+    topologicalDirectInjection
+        (fusionTensorTopologicalDiagram (K := K)) n ≫
+        tensorActionColimitEndomorphism (K := K) action =
+      action ≫ topologicalDirectInjection
+        (fusionTensorTopologicalDiagram (K := K)) n := by
+  exact topologicalDirectDescend_stage
+    (fusionTensorTopologicalDiagram (K := K))
+    (tensorActionColimitCocone (K := K) action) n
+
+def fusionCoxeterTensorColimitEndomorphism
+    (a b q1 q2 : K) :
+    topologicalDirectColimit
+        (fusionTensorTopologicalDiagram (K := K)) ⟶
+      topologicalDirectColimit
+        (fusionTensorTopologicalDiagram (K := K)) :=
+  tensorActionColimitEndomorphism (K := K)
+    (tensorLeftTopCatHom
+      (braidGen2 K a b q1 q2) (braidGen1 K q1 q2))
+
+theorem fusionCoxeterTensorColimitEndomorphism_stage
+    (a b q1 q2 : K) (n : ℕ) :
+    topologicalDirectInjection
+        (fusionTensorTopologicalDiagram (K := K)) n ≫
+        fusionCoxeterTensorColimitEndomorphism (K := K) a b q1 q2 =
+      tensorLeftTopCatHom
+          (braidGen2 K a b q1 q2) (braidGen1 K q1 q2) ≫
+        topologicalDirectInjection
+          (fusionTensorTopologicalDiagram (K := K)) n := by
+  exact tensorActionColimitEndomorphism_stage (K := K)
+    (tensorLeftTopCatHom
+      (braidGen2 K a b q1 q2) (braidGen1 K q1 q2)) n
+
+end InfoGeometry.Canonical.NonAbelianFusionTensorTopologicalColimit

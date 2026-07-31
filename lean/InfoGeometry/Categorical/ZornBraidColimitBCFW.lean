@@ -33,6 +33,26 @@ def SatisfiesContinuumArnoldCohen (W12 W23 W31 : ↑(zornContinuumModule R ZornS
   M.colimitMul (M.colimitMul W31 W12) W23 = 0
 
 /--
+Native colimit form of the mixed Arnold--Cohen relation.  The theorem type
+contains the actual descended multiplication and injections; the named
+predicate definitions above remain only as compatibility exports.
+-/
+theorem continuum_bcfw_arnold_cohen_native
+    (j : J) (w12 w23 w31 : ZornSequence.obj j)
+    (h_arnold :
+      M.stageMul j (M.stageMul j w12 w23) w31 +
+        M.stageMul j (M.stageMul j w23 w31) w12 +
+        M.stageMul j (M.stageMul j w31 w12) w23 = 0) :
+    M.colimitMul (M.colimitMul ((colimit.ι ZornSequence j) w12)
+        ((colimit.ι ZornSequence j) w23)) ((colimit.ι ZornSequence j) w31) +
+      M.colimitMul (M.colimitMul ((colimit.ι ZornSequence j) w23)
+        ((colimit.ι ZornSequence j) w31)) ((colimit.ι ZornSequence j) w12) +
+      M.colimitMul (M.colimitMul ((colimit.ι ZornSequence j) w31)
+        ((colimit.ι ZornSequence j) w12)) ((colimit.ι ZornSequence j) w23) = 0 := by
+  repeat rw [CompatibleBilinearMultiplication.mul_colimit_ι_ι]
+  rw [← map_add, ← map_add, h_arnold, map_zero]
+
+/--
 The structural proof of Continuum BCFW:
 If the Arnold-Cohen mixed relation holds for finite edges at some stage `j`,
 it strictly maps to the continuous boundary.
@@ -43,7 +63,4 @@ theorem continuum_bcfw_arnold_cohen (j : J) (w12 w23 w31 : ZornSequence.obj j)
       ((colimit.ι ZornSequence j) w12) 
       ((colimit.ι ZornSequence j) w23) 
       ((colimit.ι ZornSequence j) w31) := by
-  dsimp [SatisfiesContinuumArnoldCohen, SatisfiesFiniteArnoldCohen] at *
-  repeat rw [CompatibleBilinearMultiplication.mul_colimit_ι_ι]
-  rw [← map_add, ← map_add, h_arnold, map_zero]
-
+  exact continuum_bcfw_arnold_cohen_native R ZornSequence M j w12 w23 w31 h_arnold

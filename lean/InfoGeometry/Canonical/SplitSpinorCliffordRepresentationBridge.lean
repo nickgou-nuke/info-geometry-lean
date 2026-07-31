@@ -2,6 +2,15 @@ import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.Tactic.NoncommRing
 
+/-!
+# InfoGeometry.Canonical.SplitSpinorCliffordRepresentationBridge
+
+Canonical Split Quadratic Evaluation Pairing Formalized.
+
+This module proves the scalar pairing evaluation formula `Q(u, α) = α(u)`
+for the doubled vector space `E = U × Dual(U)` and its scalar multiplication identity.
+-/
+
 noncomputable section
 
 namespace InfoGeometry.Canonical.SplitSpinorCliffordRepresentationBridge
@@ -16,23 +25,26 @@ def SplitPairedSpace (R U : Type*) [CommRing R] [AddCommGroup U] [Module R U] :=
 def splitQuadraticForm (x : SplitPairedSpace R U) : R :=
   x.2 x.1
 
-/-- **Theorem**: CAR Anti-Commutation Law for Creation/Annihilation Operators in Split Spinor Representation.
-    For any pairing (u, α) ∈ U × U*, the sum of creation and annihilation operators squared equals α(u) • 1. -/
-theorem split_car_anticommutator_identity (u : U) (alpha : U →ₗ[R] R) (r : R) :
+/-- **Theorem**: Canonical split quadratic evaluation identity `Q(u, α) = α(u)`. -/
+theorem splitQuadraticForm_apply (u : U) (alpha : U →ₗ[R] R) :
+    splitQuadraticForm (u, alpha) = alpha u :=
+  rfl
+
+/-- **Theorem**: Scalar multiplication consequence of split quadratic evaluation. -/
+theorem splitQuadraticForm_apply_mul (u : U) (alpha : U →ₗ[R] R) (r : R) :
     alpha u * r = (splitQuadraticForm (u, alpha)) * r :=
   rfl
 
-/-- **Theorem**: Master Split Spinor Representation & CAR Clifford Synthesis.
-    Unifies:
-    1. Canonical split pairing Q(u, α) = α(u) on E = U ⊕ U*.
-    2. CAR anti-commutation identity ι_u ε_α + ε_α ι_u = α(u) id.
-    3. Split Clifford algebra representation Cl(5,5) → End(⋀ U*) for doubled geometry. -/
-theorem master_split_spinor_clifford_representation_synthesis
+/-- **Master Synthesis**: Canonical Split Quadratic Evaluation Pairing.
+    Certifies:
+    1. Pointwise split pairing evaluation Q(u, α) = α(u).
+    2. Scalar-multiplication congruence. -/
+theorem master_split_quadratic_pairing_synthesis
     (u : U) (alpha : U →ₗ[R] R) (r : R) :
     (splitQuadraticForm (u, alpha) = alpha u) ∧
     (alpha u * r = (splitQuadraticForm (u, alpha)) * r) := ⟨
-  rfl,
-  rfl
+  splitQuadraticForm_apply u alpha,
+  splitQuadraticForm_apply_mul u alpha r
 ⟩
 
 end InfoGeometry.Canonical.SplitSpinorCliffordRepresentationBridge

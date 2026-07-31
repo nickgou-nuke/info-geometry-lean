@@ -36,7 +36,7 @@ def spinDiracKahlerOp
     (spinEq : SpinorExteriorEquiv (R:=R) (V_base:=V_base))
     (d dstar : Module.End R (ExteriorAlgebra R V_base)) : 
     Module.End R (Fin 32 → R) :=
-  LinearEquiv.conj spinEq.equiv (diracKahlerOp d dstar)
+  spinEq.equiv.symm.conj (diracKahlerOp d dstar)
 
 /--
 The Hodge-de Rham Laplacian acting on the 32-dimensional spinors.
@@ -45,7 +45,7 @@ def spinLaplacianOp
     (spinEq : SpinorExteriorEquiv (R:=R) (V_base:=V_base))
     (d dstar : Module.End R (ExteriorAlgebra R V_base)) : 
     Module.End R (Fin 32 → R) :=
-  LinearEquiv.conj spinEq.equiv (hodgeDeRhamLaplacian d dstar)
+  spinEq.equiv.symm.conj (hodgeDeRhamLaplacian d dstar)
 
 /--
 The fundamental property that D² = Δ holds exactly on the 32-dimensional spinor space.
@@ -56,9 +56,12 @@ theorem spin_dirac_kahler_sq_eq_laplacian
     (hd2 : d.comp d = 0) (hdstar2 : dstar.comp dstar = 0) :
     (spinDiracKahlerOp spinEq d dstar).comp (spinDiracKahlerOp spinEq d dstar) = 
     spinLaplacianOp spinEq d dstar := by
-  dsimp [spinDiracKahlerOp, spinLaplacianOp]
-  rw [← LinearEquiv.conj_comp]
+  apply LinearMap.ext
+  intro v
+  dsimp [spinDiracKahlerOp, spinLaplacianOp, LinearEquiv.conj]
+  simp only [LinearEquiv.apply_symm_apply]
   have h_base := master_dirac_kahler_laplacian_synthesis d dstar hd2 hdstar2
-  rw [h_base]
+  have h_eval := LinearMap.congr_fun h_base (spinEq.equiv v)
+  exact congr_arg spinEq.equiv.symm h_eval
 
 end InfoGeometry.OperatorAlgebra.DiracKahler

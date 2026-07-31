@@ -7,18 +7,10 @@ solenoidal inverse limit. The package keeps the normalized-degree and one-step p
 from the earlier wrapper while also recording explicit `n`-layer and `(n + 1)`-layer formulas for
 bulk and boundary representatives. -/
 structure SolenoidShiftInvarianceData where
-  normalizedDegreeFormula : Prop
-  oneStepPullback : Prop
-  boundaryOneStepPullback : Prop
   bulkIntegral : ℕ → ℝ
   bulkShiftedIntegral : ℕ → ℝ
   boundaryIntegral : ℕ → ℝ
   boundaryShiftedIntegral : ℕ → ℝ
-  shiftInvariantIntegral : Prop
-  boundaryShiftInvariantIntegral : Prop
-  normalizedDegreeFormula_h : normalizedDegreeFormula
-  oneStepPullback_h : oneStepPullback
-  boundaryOneStepPullback_h : boundaryOneStepPullback
   bulkLayerFormula :
     ∀ n, bulkIntegral n = bulkShiftedIntegral n
   bulkNextLayerFormula :
@@ -27,16 +19,16 @@ structure SolenoidShiftInvarianceData where
     ∀ n, boundaryIntegral n = boundaryShiftedIntegral n
   boundaryNextLayerFormula :
     ∀ n, boundaryShiftedIntegral n = boundaryIntegral (n + 1)
-  deriveShiftInvariantIntegral :
-    normalizedDegreeFormula →
-      oneStepPullback →
-      (∀ n, bulkIntegral n = bulkIntegral (n + 1)) →
-      shiftInvariantIntegral
-  deriveBoundaryShiftInvariantIntegral :
-    normalizedDegreeFormula →
-      boundaryOneStepPullback →
-      (∀ n, boundaryIntegral n = boundaryIntegral (n + 1)) →
-      boundaryShiftInvariantIntegral
+
+/-- Interior shift invariance is the concrete equality of consecutive layer integrals. -/
+def SolenoidShiftInvarianceData.shiftInvariantIntegral
+    (D : SolenoidShiftInvarianceData) : Prop :=
+  ∀ n, D.bulkIntegral n = D.bulkIntegral (n + 1)
+
+/-- Boundary shift invariance is the concrete equality of consecutive boundary integrals. -/
+def SolenoidShiftInvarianceData.boundaryShiftInvariantIntegral
+    (D : SolenoidShiftInvarianceData) : Prop :=
+  ∀ n, D.boundaryIntegral n = D.boundaryIntegral (n + 1)
 
 /-- Compatibility alias for the earlier wrapper naming. -/
 def SolenoidShiftInvarianceData.interiorShiftInvariant (D : SolenoidShiftInvarianceData) : Prop :=
@@ -58,9 +50,7 @@ theorem paper_app_solenoid_shift_invariance (D : SolenoidShiftInvarianceData) :
     (D.bulkLayerFormula n).trans (D.bulkNextLayerFormula n)
   have hBoundary : ∀ n, D.boundaryIntegral n = D.boundaryIntegral (n + 1) := fun n =>
     (D.boundaryLayerFormula n).trans (D.boundaryNextLayerFormula n)
-  exact ⟨D.deriveShiftInvariantIntegral D.normalizedDegreeFormula_h D.oneStepPullback_h hBulk,
-    D.deriveBoundaryShiftInvariantIntegral
-      D.normalizedDegreeFormula_h D.boundaryOneStepPullback_h hBoundary⟩
+  exact ⟨hBulk, hBoundary⟩
 
 /-- Compatibility wrapper for the earlier conclusion names. -/
 theorem paper_app_solenoid_shift_invariance_legacy (D : SolenoidShiftInvarianceData) :

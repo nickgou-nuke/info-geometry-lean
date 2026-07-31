@@ -19,8 +19,6 @@ turning pairwise residual separation into minimality. -/
 structure OnlineDelayFoldSyncMealyMinimalityData where
   residualOutput : OnlineDelayFoldSyncKernelState → List (Fin 3) → List Bool
   realizesFold : Prop
-  pairwiseStateSeparated : Prop
-  minimalStateCount : Prop
   realizesFold_h : realizesFold
   separatingSuffix :
     OnlineDelayFoldSyncKernelState → OnlineDelayFoldSyncKernelState → List (Fin 3)
@@ -32,25 +30,38 @@ structure OnlineDelayFoldSyncMealyMinimalityData where
     (∀ {q q' : OnlineDelayFoldSyncKernelState}, q ≠ q' →
       residualOutput q (separatingSuffix q q') ≠
         residualOutput q' (separatingSuffix q q')) →
-      pairwiseStateSeparated
-  minimalStateCount_of_pairwiseStateSeparated :
-    pairwiseStateSeparated → minimalStateCount
+      ∀ q q' : OnlineDelayFoldSyncKernelState, q ≠ q' →
+        residualOutput q (separatingSuffix q q') ≠
+          residualOutput q' (separatingSuffix q q')
+
+namespace OnlineDelayFoldSyncMealyMinimalityData
+
+/-- Every ordered pair of distinct kernel states is separated by its stored suffix. -/
+def pairwiseStateSeparated (D : OnlineDelayFoldSyncMealyMinimalityData) : Prop :=
+  ∀ q q' : OnlineDelayFoldSyncKernelState, q ≠ q' →
+    D.residualOutput q (D.separatingSuffix q q') ≠
+      D.residualOutput q' (D.separatingSuffix q q')
+
+/-- The concrete ten-state carrier meets the finite lower-bound inequality. -/
+def minimalStateCount (_D : OnlineDelayFoldSyncMealyMinimalityData) : Prop :=
+  10 ≤ Fintype.card OnlineDelayFoldSyncKernelState
+
+end OnlineDelayFoldSyncMealyMinimalityData
 
 /-- The explicit separating suffix table yields pairwise residual separation of the ten kernel
 states. -/
 theorem onlineDelayFoldSyncKernel_pairwiseStateSeparated
     (D : OnlineDelayFoldSyncMealyMinimalityData) :
-    D.pairwiseStateSeparated := by
-  refine D.pairwiseStateSeparated_of_residualSeparation ?_
+    OnlineDelayFoldSyncMealyMinimalityData.pairwiseStateSeparated D := by
   intro q q' hqq'
   exact D.separatesResiduals hqq'
 
 /-- The finite Mealy/Myhill-Nerode argument upgrades pairwise residual separation to minimality. -/
 theorem onlineDelayFoldSyncKernel_minimalStateCount
     (D : OnlineDelayFoldSyncMealyMinimalityData) :
-    D.minimalStateCount := by
-  exact D.minimalStateCount_of_pairwiseStateSeparated
-    (onlineDelayFoldSyncKernel_pairwiseStateSeparated D)
+    OnlineDelayFoldSyncMealyMinimalityData.minimalStateCount D := by
+  simp [OnlineDelayFoldSyncMealyMinimalityData.minimalStateCount,
+    onlineDelayFoldSyncKernelState_card]
 
 /-- Paper-facing minimality package for the online delay-3 fold synchronizing kernel.
 The ten-state kernel realizes the fold transduction, every pair of kernel states is separated by
@@ -59,7 +70,9 @@ minimal state count.
     thm:online-delay-fold-sync-mealy-minimality -/
 theorem paper_online_delay_fold_sync_mealy_minimality
     (D : OnlineDelayFoldSyncMealyMinimalityData) :
-    D.realizesFold ∧ D.pairwiseStateSeparated ∧ D.minimalStateCount := by
+    D.realizesFold ∧
+      OnlineDelayFoldSyncMealyMinimalityData.pairwiseStateSeparated D ∧
+      OnlineDelayFoldSyncMealyMinimalityData.minimalStateCount D := by
   exact ⟨D.realizesFold_h, onlineDelayFoldSyncKernel_pairwiseStateSeparated D,
     onlineDelayFoldSyncKernel_minimalStateCount D⟩
 

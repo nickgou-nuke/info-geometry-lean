@@ -13,23 +13,14 @@ structure ChebotarevVisibleHiddenCharacterEnergyData where
   visibleEnergy : ℝ
   hiddenEnergy : ℝ
   totalEnergy_split : totalEnergy = visibleEnergy + hiddenEnergy
-  totalFourierIdentity : Prop
-  visibleFourierIdentity : Prop
-  hiddenSpectrumIdentity : Prop
-  totalFourierIdentity_h : totalFourierIdentity
-  visibleFourierIdentity_h : visibleFourierIdentity
-  hiddenSpectrumIdentity_h : hiddenSpectrumIdentity
 
 /-- Paper-facing wrapper for the visible/hidden `L²` energy decomposition: orthogonality gives the
-exact scalar split, and the Fourier identities for the full, visible, and hidden pieces are
-returned from the chapter-local data package.
+exact scalar split is exposed directly.  The finite-character Fourier/Parseval theorem is owned by
+`ChebotarevPlancherelEnergy` and is not duplicated as an untyped proposition here.
     thm:kernel-chebotarev-visible-hidden-character-energy -/
 theorem paper_kernel_chebotarev_visible_hidden_character_energy
     (h : ChebotarevVisibleHiddenCharacterEnergyData) :
-    h.totalEnergy = h.visibleEnergy + h.hiddenEnergy ∧
-      h.totalFourierIdentity ∧ h.visibleFourierIdentity ∧ h.hiddenSpectrumIdentity := by
-  exact
-    ⟨h.totalEnergy_split, h.totalFourierIdentity_h, h.visibleFourierIdentity_h,
-      h.hiddenSpectrumIdentity_h⟩
+    h.totalEnergy = h.visibleEnergy + h.hiddenEnergy :=
+  h.totalEnergy_split
 
 end Omega.EA

@@ -750,6 +750,7 @@ import InfoGeometry.Canonical.ItFromBit
 import InfoGeometry.Canonical.ExplicitWitnessObligations
 import InfoGeometry.Canonical.ChiralSuperPoincareSouriauBridge
 import InfoGeometry.Canonical.CantorCuntzCliffordBridge
+import InfoGeometry.Canonical.ChiralAmariOperatorGeometryBridge
 import InfoGeometry.Canonical.CantorDiracSeaHopping
 import InfoGeometry.Canonical.CantorBoundaryFinitePrecision
 import InfoGeometry.Canonical.CantorBoundaryFiniteReadout

@@ -21,12 +21,9 @@ structure StokesGodelAlgorithmicHolographicCompletenessData where
   decode : Set.range (toCode ∘ toBoundary) → Bulk
   decode_spec : ∀ u, decode ⟨(toCode ∘ toBoundary) u, ⟨u, rfl⟩⟩ = u
   complexityPreserved : Prop
-  bulkRecoverableFromCode : Prop
   volumeComputableFromCode : Prop
   complexity_of_injective_dictionary :
     Function.Injective (toCode ∘ toBoundary) → complexityPreserved
-  recoverability_of_decoder :
-    (∀ u, decode ⟨(toCode ∘ toBoundary) u, ⟨u, rfl⟩⟩ = u) → bulkRecoverableFromCode
   volume_of_decoder : (Set.range (toCode ∘ toBoundary) → Bulk) → volumeComputableFromCode
 
 /-- If the top-dimensional dyadic boundary map is injective and the boundary Gödelization is
@@ -35,7 +32,9 @@ image therefore yields constant-overhead recoverability and a code-computable vo
     thm:spg-stokes-godel-algorithmic-holographic-completeness -/
 theorem paper_spg_stokes_godel_algorithmic_holographic_completeness
     (D : StokesGodelAlgorithmicHolographicCompletenessData) :
-    D.complexityPreserved ∧ D.bulkRecoverableFromCode ∧ D.volumeComputableFromCode := by
+    D.complexityPreserved ∧
+      (∀ u, D.decode ⟨(D.toCode ∘ D.toBoundary) u, ⟨u, rfl⟩⟩ = u) ∧
+      D.volumeComputableFromCode := by
   let _ : AddGroup D.Bulk := D.bulkAddGroup
   let _ : AddGroup D.Boundary := D.boundaryAddGroup
   have hBoundary : Function.Injective D.toBoundary :=
@@ -45,7 +44,7 @@ theorem paper_spg_stokes_godel_algorithmic_holographic_completeness
     paper_spg_boundary_godelization_holographic_dictionary
       D.toBoundary D.toCode hBoundary D.code_injective
   exact ⟨D.complexity_of_injective_dictionary hDictionary,
-    D.recoverability_of_decoder D.decode_spec,
+    D.decode_spec,
     D.volume_of_decoder D.decode⟩
 
 end Omega.SPG

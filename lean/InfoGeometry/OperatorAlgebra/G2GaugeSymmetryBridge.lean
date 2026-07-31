@@ -49,13 +49,16 @@ theorem valid_gauge_generator_is_g2 (D : SplitOct → SplitOct)
      leibniz := h_valid.2.2 }⟩
 
 theorem mulZ_zeroZ_eq (X : SplitOct) : mulZ X zeroZ = zeroZ := by
-  cases X; rfl
+  ext <;> simp [mulZ, zeroZ]
 
 theorem zeroZ_mulZ_eq (X : SplitOct) : mulZ zeroZ X = zeroZ := by
-  cases X; rfl
+  ext <;> simp [mulZ, zeroZ]
 
 theorem addZ_zeroZ_eq (X : SplitOct) : X + zeroZ = X := by
-  cases X; rfl
+  ext <;> simp [zeroZ]
+
+theorem scaleZ_zeroZ_eq (c : ℤ) : scaleZ c zeroZ = zeroZ := by
+  ext <;> simp [scaleZ, zeroZ]
 
 /--
 Theorem: The zero operator is a trivial G₂ derivation, proving 𝔤₂ is inhabited.
@@ -64,11 +67,14 @@ theorem g2_derivation_inhabited : Nonempty G2Derivation := by
   have h_valid : isValidGaugeGenerator (fun _ => zeroZ) := by
     unfold isValidGaugeGenerator
     constructor
-    · intro X Y; rfl
+    · intro X Y
+      exact Eq.symm (addZ_zeroZ_eq zeroZ)
     · constructor
-      · intro c X; rfl
+      · intro c X
+        exact Eq.symm (scaleZ_zeroZ_eq c)
       · intro X Y
-        rw [mulZ_zeroZ_eq, zeroZ_mulZ_eq, addZ_zeroZ_eq]
+        rw [mulZ_zeroZ_eq, zeroZ_mulZ_eq]
+        exact Eq.symm (addZ_zeroZ_eq zeroZ)
   exact valid_gauge_generator_is_g2 _ h_valid
 
 end InfoGeometry.OperatorAlgebra.G2

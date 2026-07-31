@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.FilteredStarAlgebraAlgebraicToTopologicalColimit
 import InfoGeometry.Canonical.FilteredTopologicalDirectInverseColimit
+import InfoGeometry.Canonical.FilteredStarAlgebraTopologicalStarReadout
 
 /-!
 # Topological transport of filtered star-algebra representations
@@ -19,6 +20,7 @@ open CategoryTheory CategoryTheory.Limits
 open CStarStateColimit.Native
 open CStarStateColimit.Native.FilteredStarAlgebraDirectLimit
 open CStarStateColimit.Native.FilteredStarAlgebraAlgebraicToTopologicalColimit
+open CStarStateColimit.Native.FilteredStarAlgebraTopologicalStarReadout
 open InfoGeometry.Canonical.FilteredStarAlgebraTopologicalColimit
 open FilteredColimit.Native.Topological
 
@@ -32,7 +34,12 @@ variable [∀ i, PartialOrder (Stage i)]
 variable [∀ i, StarOrderedRing (Stage i)]
 variable (sys : ContinuousStarInductiveSystem Stage)
 variable {B : Type u} [Semiring B] [Algebra ℂ B] [Star B]
-variable [TopologicalSpace B]
+variable [TopologicalSpace B] [ContinuousStar B]
+
+def continuousStarTopCatHom : TopCat.of B ⟶ TopCat.of B :=
+  TopCat.ofHom
+    { toFun := star
+      continuous_toFun := ContinuousStar.continuous_star }
 
 /-- A compatible star-algebra representation cocone whose individual maps
 are known to be continuous in the chosen target topology. -/
@@ -87,6 +94,27 @@ noncomputable def topologicalRepresentation :
     (topologicalDiagram Stage sys)
     (topologicalRepresentationCocone Stage sys R) i
   exact congrArg (fun f => f x) h
+
+theorem topologicalRepresentation_star_intertwines :
+    topologicalStarReadout Stage sys ≫
+        topologicalRepresentation Stage sys R =
+      topologicalRepresentation Stage sys R ≫
+        continuousStarTopCatHom (B := B) := by
+  apply colimit.hom_ext
+  intro i
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro x
+  change topologicalRepresentation Stage sys R
+      (topologicalStarReadout Stage sys
+        (topologicalInjection Stage sys i x)) =
+    star (topologicalRepresentation Stage sys R
+      (topologicalInjection Stage sys i x))
+  rw [topologicalStarReadout_stage]
+  rw [topologicalRepresentation_of_stage]
+  rw [topologicalRepresentation_of_stage]
+  change R.ι i (star x) = star (R.ι i x)
+  exact map_star (R.ι i) x
 
 theorem topologicalRepresentation_comp_algebraicToTopological
     (x : AlgebraicStarDirectLimit Stage sys) :

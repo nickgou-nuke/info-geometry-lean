@@ -2,49 +2,36 @@ import Mathlib.Tactic
 
 namespace Omega.POM
 
-/-- Concrete threshold/step parameter package for the symmetric double-threshold PGF closed form.
-The threshold `T` is finite and the generating parameter `z` is rational, so the two advertised
-closed forms can be compared by explicit denominator algebra. -/
-structure SymmetricDoubleThresholdPGFChebyshevData where
-  T : ℕ
-  z : ℚ
-
-namespace SymmetricDoubleThresholdPGFChebyshevData
-
 /-- The denominator obtained from the finite-interval Chebyshev recurrence normalization. -/
-def chebyshevDenominator (D : SymmetricDoubleThresholdPGFChebyshevData) : ℚ :=
-  (D.T + 1 : ℚ) - D.T * D.z
+def chebyshevDenominator (T : ℕ) (z : ℚ) : ℚ :=
+  (T + 1 : ℚ) - T * z
 
 /-- The same denominator written through the characteristic-root normalization. -/
-def rootDenominator (D : SymmetricDoubleThresholdPGFChebyshevData) : ℚ :=
-  1 + D.T * (1 - D.z)
+def rootDenominator (T : ℕ) (z : ℚ) : ℚ :=
+  1 + T * (1 - z)
 
-lemma rootDenominator_eq_chebyshevDenominator (D : SymmetricDoubleThresholdPGFChebyshevData) :
-    D.rootDenominator = D.chebyshevDenominator := by
+lemma rootDenominator_eq_chebyshevDenominator (T : ℕ) (z : ℚ) :
+    rootDenominator T z = chebyshevDenominator T z := by
   unfold rootDenominator chebyshevDenominator
   ring
 
 /-- Closed form obtained by imposing the `±T` boundary data on the Chebyshev normalization. -/
-def chebyshevClosedForm (D : SymmetricDoubleThresholdPGFChebyshevData) : ℚ :=
-  D.z / D.chebyshevDenominator
+def chebyshevClosedForm (T : ℕ) (z : ℚ) : ℚ :=
+  z / chebyshevDenominator T z
 
 /-- The same closed form written through the characteristic roots. -/
-def rootClosedForm (D : SymmetricDoubleThresholdPGFChebyshevData) : ℚ :=
-  D.z / D.rootDenominator
+def rootClosedForm (T : ℕ) (z : ℚ) : ℚ :=
+  z / rootDenominator T z
 
 /-- The threshold-hitting PGF evaluated at the origin state. -/
-def pgfAtZero (D : SymmetricDoubleThresholdPGFChebyshevData) : ℚ :=
-  D.z / D.chebyshevDenominator
-
-end SymmetricDoubleThresholdPGFChebyshevData
+def pgfAtZero (T : ℕ) (z : ℚ) : ℚ :=
+  z / chebyshevDenominator T z
 
 /-- Paper label: `thm:pom-symmetric-double-threshold-pgf-chebyshev`. -/
 theorem paper_pom_symmetric_double_threshold_pgf_chebyshev
-    (D : SymmetricDoubleThresholdPGFChebyshevData) :
-    D.pgfAtZero = D.chebyshevClosedForm ∧ D.pgfAtZero = D.rootClosedForm := by
+    (T : ℕ) (z : ℚ) :
+    pgfAtZero T z = chebyshevClosedForm T z ∧ pgfAtZero T z = rootClosedForm T z := by
   refine ⟨rfl, ?_⟩
-  simp [SymmetricDoubleThresholdPGFChebyshevData.pgfAtZero,
-    SymmetricDoubleThresholdPGFChebyshevData.rootClosedForm,
-    SymmetricDoubleThresholdPGFChebyshevData.rootDenominator_eq_chebyshevDenominator]
+  simp [pgfAtZero, rootClosedForm, rootDenominator_eq_chebyshevDenominator]
 
 end Omega.POM

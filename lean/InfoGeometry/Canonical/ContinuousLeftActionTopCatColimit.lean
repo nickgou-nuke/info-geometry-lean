@@ -74,8 +74,9 @@ theorem translationColimit_one :
   simp
 
 theorem translationColimit_comp (a b : M) :
-    translationColimit A a ≫ translationColimit A b =
-      translationColimit A (b * a) := by
+    translationColimit (J := J) (X := X) A a ≫
+        translationColimit (J := J) (X := X) A b =
+      translationColimit (J := J) (X := X) A (b * a) := by
   apply colimit.hom_ext
   intro j
   change topologicalDirectInjection

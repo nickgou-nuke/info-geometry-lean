@@ -80,6 +80,7 @@ noncomputable def unbalancedTransportObjective
     + rowPenalty * unbalancedRowPenalty T
     + colPenalty * unbalancedColPenalty T
 
+omit [Nonempty Row] [Nonempty Col] in
 theorem unbalancedTransportObjective_nonneg
     (T : UnbalancedTransportCertificate (Row := Row) (Col := Col))
     (cost : Row → Col → ℝ)

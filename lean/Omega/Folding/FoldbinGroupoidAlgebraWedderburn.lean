@@ -5,8 +5,7 @@ import Omega.Folding.BinFold
 namespace Omega.Folding
 
 /-- Concrete bookkeeping for the audited window-`6` bin-fold groupoid-algebra blocks. -/
-structure fold_bin_groupoid_algebra_wedderburn_data where
-  witness : Unit := ()
+abbrev fold_bin_groupoid_algebra_wedderburn_data := Unit
 
 namespace fold_bin_groupoid_algebra_wedderburn_data
 

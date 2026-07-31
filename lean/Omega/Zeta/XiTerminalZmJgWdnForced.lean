@@ -4,8 +4,7 @@ import Omega.Zeta.XiTerminalZmJgSignedPermutationRepresentation
 namespace Omega.Zeta
 
 /-- Concrete wrapper datum for the `W(D_n)` forcing corollary. -/
-structure xi_terminal_zm_jg_wdn_forced_data where
-  xi_terminal_zm_jg_wdn_forced_witness : Unit := ()
+abbrev xi_terminal_zm_jg_wdn_forced_data := Unit
 
 /-- The even-sign subgroup singled out by the parity law. -/
 abbrev xi_terminal_zm_jg_wdn_forced_even_signed_subgroup :=

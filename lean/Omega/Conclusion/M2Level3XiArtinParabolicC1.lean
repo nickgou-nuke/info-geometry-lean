@@ -68,7 +68,7 @@ theorem paper_conclusion_m2_level3_xi_artin_parabolic_c1 :
     conclusion_m2_level3_xi_artin_parabolic_c1_V24 = ((6, 4), 8) ∧
       conclusion_m2_level3_xi_artin_parabolic_c1_V15_Kl = ((3, 4), 8) ∧
       conclusion_m2_level3_xi_artin_parabolic_c1_V15_Si = ((6, 2), 4) := by
-  have hdelta0 := paper_conclusion_m2_level3_xi_delta0_order6_charpolys ⟨()⟩
+  have hdelta0 := paper_conclusion_m2_level3_xi_delta0_order6_charpolys PUnit.unit
   have hparabolic := paper_conclusion_m2_level3_xi_delta0_order6_parabolic_spectrum
   have hxi := paper_conclusion_m2_level3_xi_inertia_hecke_eigensystems_charpoly
   rcases hdelta0 with ⟨_, _, _, _, _, _, _, _, _⟩

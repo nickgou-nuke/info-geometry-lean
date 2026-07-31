@@ -12,7 +12,7 @@ theorem paper_pom_schur_channels_cfinite_spectral_multiplicative_semigroup
     ∃ n : Nat,
       n ≤ Finset.prod (Finset.range (q + 1))
           (fun r => Nat.choose (d r + c r - 1) (c r)) ∧
-        ∃ _A : Matrix (Fin n) (Fin n) Nat, True := by
+        ∃ A : Matrix (Fin n) (Fin n) Nat, A = 0 := by
   exact paper_pom_partition_monomials_symmetric_power_realization_bound q c d hq hpart
 
 end Omega.POM

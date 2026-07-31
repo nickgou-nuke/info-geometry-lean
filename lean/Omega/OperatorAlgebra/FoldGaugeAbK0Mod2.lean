@@ -29,23 +29,11 @@ lemma foldGaugeAbelianizationComponentOrder_eq_k0Mod2ComponentOrder (n : ℕ) :
   · have h' : 2 ≤ n := by omega
     simp [foldGaugeAbelianizationComponentOrder, foldGaugeK0Mod2ComponentOrder, h, h']
 
-namespace FoldGaugeAbK0Mod2Data
-
-/-- The sign character on each nontrivial symmetric-group fiber matches the mod-`2` reduction of
-the matrix-unit generator in `K₀(M_d(ℂ))`, so the full fold-gauge abelianization agrees with the
-fiberwise `K₀` package modulo `2`. -/
-def signAbelianizationMatchesK0Mod2 (D : FoldGaugeAbK0Mod2Data) : Prop :=
-  foldGaugeAbelianizationOrder D.multiplicity = foldGaugeK0Mod2Order D.multiplicity
-
-end FoldGaugeAbK0Mod2Data
-
-open FoldGaugeAbK0Mod2Data
-
 /-- The fold-gauge abelianization is the same coordinatewise `ℤ/2ℤ` package as the mod-`2`
 reduction of the fiberwise `K₀` unit classes.
     cor:op-algebra-fold-gauge-ab-k0-mod2 -/
 theorem paper_op_algebra_fold_gauge_ab_k0_mod2 (D : FoldGaugeAbK0Mod2Data) :
-    D.signAbelianizationMatchesK0Mod2 := by
+    foldGaugeAbelianizationOrder D.multiplicity = foldGaugeK0Mod2Order D.multiplicity := by
   have hStructure :
       FoldGaugeGroupStructureData.groupStructurePackage
         { m := D.m, multiplicity := D.multiplicity } := by

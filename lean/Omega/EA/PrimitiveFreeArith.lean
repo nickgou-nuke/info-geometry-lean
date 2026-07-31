@@ -11,7 +11,14 @@ language.
     cor:primitive-free-arith -/
 theorem paper_primitive_free_arith {A : Type _} (g : A → A) (m : Nat) :
     (Function.Bijective (Omega.X.stableValueFin (m := m))) ∧
-      (∀ a : Omega.Rewrite.DigitCfg, Omega.EA.paper_zeckendorf_transversal_stmt a) ∧
+      (∀ a : Omega.Rewrite.DigitCfg,
+        PrimeRegisterOrbit a (R_F (valPr a)) ∧
+          Omega.Rewrite.Irreducible (R_F (valPr a)) ∧
+          R_F (valPr a) ∈ PrimeRegister ∧
+          ∀ b : Omega.Rewrite.DigitCfg,
+            Omega.Rewrite.Irreducible b →
+              valPr b = valPr a →
+                b = R_F (valPr a)) ∧
       (∀ n : Fin (Nat.fib (m + 2)), ∃! x : Omega.X m, Omega.X.stableValueFin x = n) ∧
       Omega.EA.ArithComposition.paper_arith_composition g m := by
   refine ⟨Omega.X.stableValueFin_bijective m, ?_, ?_, ?_⟩

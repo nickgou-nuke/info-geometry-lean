@@ -53,12 +53,7 @@ theorem paper_killo_fold_resonance_disc_characters_q12_17 :
     killo_fold_resonance_disc_characters_q12_17_statement := by
   have hNoSpan : ∀ i : Fin 6,
       ¬ killo_fold_resonance_disc_characters_q12_17_in_span_of_other_five i :=
-    paper_killo_fold_resonance_disc_squareclass_independence_q12_17
-      True
-      (∀ i : Fin 6,
-        ¬ killo_fold_resonance_disc_characters_q12_17_in_span_of_other_five i)
-      trivial
-      (fun _ => killo_fold_resonance_disc_characters_q12_17_not_in_span_of_other_five)
+    fun i => killo_fold_resonance_disc_characters_q12_17_not_in_span_of_other_five i
   exact ⟨hNoSpan, by
     simpa [killo_fold_resonance_disc_characters_q12_17_quadratic_field_containment] using
       hNoSpan⟩

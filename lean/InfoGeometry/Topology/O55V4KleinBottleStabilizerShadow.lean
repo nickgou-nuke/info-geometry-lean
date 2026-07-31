@@ -96,16 +96,4 @@ theorem orbitShadow_singleton_of_pair01Fixed {x y : Vec55}
   · exact (reflPair1_eq_self_iff x).2 h1
   · rw [(reflPair01_eq_self_iff x).2 ⟨h0, h1⟩]
 
-/-- Closed finite packet for the stabilizer shadow lane. -/
-theorem finite_v4_stabilizer_shadow_packet {x y : Vec55}
-    (h0 : Pair0Fixed x) (h1 : Pair1Fixed x) :
-    reflPair0 x = x ∧
-    reflPair1 x = x ∧
-    reflPair01 x = x ∧
-    (InV4OrbitShadow x y → y = x) := by
-  exact ⟨(reflPair0_eq_self_iff x).2 h0,
-    (reflPair1_eq_self_iff x).2 h1,
-    (reflPair01_eq_self_iff x).2 ⟨h0, h1⟩,
-    orbitShadow_singleton_of_pair01Fixed h0 h1⟩
-
 end InfoGeometry.Topology.O55V4KleinBottleStabilizerShadow

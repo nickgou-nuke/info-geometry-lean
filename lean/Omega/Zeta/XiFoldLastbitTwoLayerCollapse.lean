@@ -9,7 +9,7 @@ open Omega.Folding
 noncomputable section
 
 /-- Concrete seed for the two-layer last-bit collapse package. -/
-def xi_fold_lastbit_two_layer_collapse_seed : FoldBinTwoStateAsymptoticData := {}
+def xi_fold_lastbit_two_layer_collapse_seed : FoldBinTwoStateAsymptoticData := Unit.unit
 
 /-- The two terminal-bit layers carry equal normalized mass in the collapsed proxy. -/
 def xi_fold_lastbit_two_layer_collapse_layerMass (b : Bool) : ℝ :=

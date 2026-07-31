@@ -84,7 +84,7 @@ theorem tickMatrixIter_eq_of_stabilized {A : Type*} [Semiring A]
 
 /-- Every ticked matrix observable preserves the installed self-dual cone. -/
 theorem tickedObservable_mem_positiveCone {A : Type*} [Semiring A]
-    (C : Carrier (E := E) A)
+    (C : ActionModel (E := E) A)
     (σ : CoefficientTick A)
     (n : Nat) (M : Matrix (Fin 2) (Fin 2) A) {x : E}
     (hx : x ∈ (C.positiveCone.cone : Set E)) :
@@ -97,7 +97,7 @@ If the parabolic/monodromy clock observable is stabilized by one tick, then
 the carrier action is pointwise unchanged by all discrete ticks.
 -/
 theorem stabilizedClock_action_eq {A : Type*} [Semiring A]
-    (C : Carrier (E := E) A)
+    (C : ActionModel (E := E) A)
     (σ : CoefficientTick A)
     {M : Matrix (Fin 2) (Fin 2) A}
     (hM : StabilizedClock σ M)
@@ -111,7 +111,7 @@ Stabilized clocks preserve the cone after any number of monodromy ticks, read
 as the original stabilized observable.
 -/
 theorem stabilizedClock_action_mem_positiveCone {A : Type*} [Semiring A]
-    (C : Carrier (E := E) A)
+    (C : ActionModel (E := E) A)
     (σ : CoefficientTick A)
     {M : Matrix (Fin 2) (Fin 2) A}
     (hM : StabilizedClock σ M)

@@ -79,15 +79,4 @@ theorem rotation2_symplectic {a b : ℝ} (h : a * a + b * b = 1) :
     simp [rotation2, symplecticJ, Matrix.mul_apply, Fin.sum_univ_two] <;>
     nlinarith [h]
 
-/--
-Bundled finite Katz--Sarnak symmetry witness: the same normalized phase gives
-unitary, orthogonal, and symplectic finite readouts.
--/
-theorem finite_classical_symmetry_packet {a b : ℝ} (h : a * a + b * b = 1) :
-    Complex.normSq (complexPhase a b) = 1 ∧
-      (rotation2 a b)ᵀ * rotation2 a b = (1 : M2R) ∧
-      (rotation2 a b)ᵀ * symplecticJ * rotation2 a b = symplecticJ :=
-  ⟨complexPhase_normSq h, rotation2_orthogonal h, rotation2_symplectic h⟩
-
 end InfoGeometry.Canonical.KatzSarnakFiniteSymmetryBridge
-

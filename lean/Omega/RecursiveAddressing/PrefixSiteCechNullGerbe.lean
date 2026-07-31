@@ -16,11 +16,12 @@ structure PrefixSiteGerbe (ι : Type*) (A : Type*) where
 /-- The gerbe twisted by `α`: its neutrality is exactly the coboundary-killing condition for the
     multiplier class. -/
 def twistedGerbe {ι A : Type*} [AddCommGroup A] (G : PrefixSiteCechGroupoid ι)
-    (α : ι → ι → ι → A) : PrefixSiteGerbe ι A where
+    (α : ι → ι → ι → A)
+    (locallyNonempty locallyConnected banded : Prop) : PrefixSiteGerbe ι A where
   groupoid := G
-  locallyNonempty := True
-  locallyConnected := True
-  banded := True
+  locallyNonempty := locallyNonempty
+  locallyConnected := locallyConnected
+  banded := banded
   neutral := MultiplierKilledByCoboundary G α
   cechClass := α
 
@@ -28,15 +29,19 @@ def twistedGerbe {ι A : Type*} [AddCommGroup A] (G : PrefixSiteCechGroupoid ι)
     locally nonempty, locally connected, banded gerbe whose neutrality is equivalent to the
     multiplier being killed by a coboundary. -/
 theorem paper_recursive_addressing_prefix_site_cech_null_gerbe
-    {ι A : Type*} [AddCommGroup A] (G : PrefixSiteCechGroupoid ι) (α : ι → ι → ι → A) :
+    {ι A : Type*} [AddCommGroup A] (G : PrefixSiteCechGroupoid ι) (α : ι → ι → ι → A)
+    (locallyNonempty locallyConnected banded : Prop)
+    (hLocallyNonempty : locallyNonempty)
+    (hLocallyConnected : locallyConnected)
+    (hBanded : banded) :
     ∃ Gα : PrefixSiteGerbe ι A,
       Gα.locallyNonempty ∧
       Gα.locallyConnected ∧
       Gα.banded ∧
       (Gα.neutral ↔ MultiplierKilledByCoboundary G α) ∧
       Gα.cechClass = α := by
-  refine ⟨twistedGerbe G α, ?_⟩
-  simp [twistedGerbe]
+  refine ⟨twistedGerbe G α locallyNonempty locallyConnected banded, ?_⟩
+  simp [twistedGerbe, hLocallyNonempty, hLocallyConnected, hBanded]
 
 /-- Paper label: `thm:prefix-site-cech-null-gerbe`. Abstract packaging of the functorial gerbe
 construction: the gerbe built from a cover and cocycle is banded, its neutral objects are exactly

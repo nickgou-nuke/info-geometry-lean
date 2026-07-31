@@ -68,17 +68,16 @@ theorem parity_trace_jordanCell (t Delta : ℝ) :
   rw [expJordanCell_explicit]
   simp [parity, Matrix.trace, Fin.sum_univ_two]
 
-/-- Certified Logarithmic Jordan-Krein Apex Packet -/
-structure LogJordanKreinPacket where
-  nilpotent_sq : N * N = 0
-  nilpotent_nz : N ≠ 0
-  krein_self_adjoint : ∀ Delta, (L0 Delta).transpose * kreinG = kreinG * L0 Delta
-  trace_val : ∀ t Delta, Matrix.trace (expJordanCell t Delta) = 2 * Real.exp (t * Delta)
-  detector_val : ∀ t Delta, Matrix.trace (N.transpose * expJordanCell t Delta) = t * Real.exp (t * Delta)
-  parity_val : ∀ t Delta, Matrix.trace (parity * expJordanCell t Delta) = 0
-
-theorem log_jordan_krein_apex_exists : Nonempty LogJordanKreinPacket :=
-  ⟨⟨jordanNilpotent_sq, jordanNilpotent_ne_zero, jordanCell_krein_selfAdjoint,
-    trace_exp_jordanCell, detector_trace_jordanCell, parity_trace_jordanCell⟩⟩
+/-- Direct apex theorem collecting the native Jordan-Krein identities. -/
+theorem log_jordan_krein_apex :
+    N * N = 0 ∧
+      N ≠ 0 ∧
+        (∀ Delta, (L0 Delta).transpose * kreinG = kreinG * L0 Delta) ∧
+          (∀ t Delta, Matrix.trace (expJordanCell t Delta) = 2 * Real.exp (t * Delta)) ∧
+            (∀ t Delta,
+              Matrix.trace (N.transpose * expJordanCell t Delta) = t * Real.exp (t * Delta)) ∧
+              ∀ t Delta, Matrix.trace (parity * expJordanCell t Delta) = 0 := by
+  exact ⟨jordanNilpotent_sq, jordanNilpotent_ne_zero, jordanCell_krein_selfAdjoint,
+    trace_exp_jordanCell, detector_trace_jordanCell, parity_trace_jordanCell⟩
 
 end InfoGeometry.Quantum.LogJordanKreinCore

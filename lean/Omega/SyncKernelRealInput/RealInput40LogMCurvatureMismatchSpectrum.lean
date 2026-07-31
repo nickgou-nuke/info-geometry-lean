@@ -7,8 +7,7 @@ namespace Omega.SyncKernelRealInput
 open Matrix
 
 /-- Concrete wrapper for the audited `3 × 3` Fisher/Hessian saddle model. -/
-structure real_input_40_logm_curvature_mismatch_spectrum_data where
-  real_input_40_logm_curvature_mismatch_spectrum_unit : Unit := ()
+abbrev real_input_40_logm_curvature_mismatch_spectrum_data := Unit
 
 /-- The audited Fisher metric, normalized to the identity. -/
 def real_input_40_logm_curvature_mismatch_spectrum_fisher : Matrix (Fin 3) (Fin 3) ℚ :=

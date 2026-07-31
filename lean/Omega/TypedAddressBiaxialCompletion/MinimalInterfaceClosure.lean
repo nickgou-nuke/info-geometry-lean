@@ -11,12 +11,17 @@ re-proving an arbitrary proposition from no evidence. -/
 theorem paper_typed_address_biaxial_completion_minimal_interface_closure
     (U : Omega.TypedAddressBiaxialCompletion.UnifiedRejectionWitness)
     (C : Omega.TypedAddressBiaxialCompletion.TypedAddressCertificateLoopData)
+    (hUnifiedUnitarySliceLocked :
+      U.defectCertificate.certificateLoop.unitarySliceLocked)
+    (hUnitarySliceLocked : C.unitarySliceLocked)
     (standardizedFailureWitness : Prop) [Fact standardizedFailureWitness] :
     U.addressConsistency ∧ U.defectCompilation ∧ U.toeplitzPsdEndpointBranch ∧
       (C.repulsionRadiusTendsToOne ↔ C.toeplitzPsdAll) ∧
       (C.toeplitzPsdAll ↔ C.toeplitzPsdCofinal) ∧ standardizedFailureWitness := by
-  have hUnified := paper_typed_address_biaxial_completion_unified_rejection_rule U
-  have hLoop := paper_typed_address_biaxial_completion_certificate_loop C
+  have hUnified :=
+    paper_typed_address_biaxial_completion_unified_rejection_rule U
+      hUnifiedUnitarySliceLocked
+  have hLoop := paper_typed_address_biaxial_completion_certificate_loop C hUnitarySliceLocked
   exact ⟨hUnified.1, hUnified.2.1, hUnified.2.2, hLoop.2.2.1, hLoop.2.2.2, Fact.out⟩
 
 end Omega.TypedAddressBiaxialCompletion

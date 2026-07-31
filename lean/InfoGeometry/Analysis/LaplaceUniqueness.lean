@@ -345,17 +345,16 @@ This is the proof surface the independent contour theorem will eventually need:
 half-plane convergence, the damped vertical-line integral, its Fourier-side
 integrability, and continuity of the underlying function.
 -/
-structure BromwichContourAdmissible {E : Type*} [NormedAddCommGroup E]
-    [NormedSpace ℂ E] (f : ℝ → E) (σ : ℝ) : Prop where
-  halfPlaneConvergent :
-    InfoGeometry.Analysis.LaplaceFourierComparison.LaplaceConvergentOnHalfPlane
-      (E := E) σ f
-  dampedIntegrable : MeasureTheory.Integrable (fun t : ℝ =>
-    Complex.exp (-(σ * (t : ℂ))) • f t)
-  fourierAxisIntegrable : MeasureTheory.Integrable
+def BromwichContourAdmissible {E : Type*} [NormedAddCommGroup E]
+    [NormedSpace ℂ E] (f : ℝ → E) (σ : ℝ) : Prop :=
+  InfoGeometry.Analysis.LaplaceFourierComparison.LaplaceConvergentOnHalfPlane
+      (E := E) σ f ∧
+  MeasureTheory.Integrable (fun t : ℝ =>
+    Complex.exp (-(σ * (t : ℂ))) • f t) ∧
+  MeasureTheory.Integrable
     (FourierTransform.fourier (fun t : ℝ =>
-      Complex.exp (-(σ * (t : ℂ))) • f t))
-  continuous : Continuous f
+      Complex.exp (-(σ * (t : ℂ))) • f t)) ∧
+  Continuous f
 
 /--
 The direct Bromwich contour package.
@@ -363,19 +362,17 @@ The direct Bromwich contour package.
 This packages the vertical-line contour transform, the contour-shift law, and
 the inversion statement under a single proof-carrying interface.
 -/
-structure BromwichContourPackage {E : Type*} [NormedAddCommGroup E]
-    [NormedSpace ℂ E] (f : ℝ → E) (σ : ℝ) : Prop where
-  admissible : BromwichContourAdmissible f σ
-  contourShift :
-    ∀ τ : ℝ,
-      bromwichVerticalLineTransform (E := E) σ f =
-        bromwichVerticalLineTransform (E := E) τ
-          (fun t : ℝ => Complex.exp (-((σ - τ : ℂ) * (t : ℂ))) • f t)
-  inversion :
-    (fun t : ℝ =>
-      Complex.exp ((σ * (t : ℂ))) •
-        FourierTransformInv.fourierInv
-          (bromwichVerticalLineTransform (E := E) σ f) t) = f
+def BromwichContourPackage {E : Type*} [NormedAddCommGroup E]
+    [NormedSpace ℂ E] (f : ℝ → E) (σ : ℝ) : Prop :=
+  BromwichContourAdmissible f σ ∧
+  (∀ τ : ℝ,
+    bromwichVerticalLineTransform (E := E) σ f =
+      bromwichVerticalLineTransform (E := E) τ
+        (fun t : ℝ => Complex.exp (-((σ - τ : ℂ) * (t : ℂ))) • f t)) ∧
+  ((fun t : ℝ =>
+    Complex.exp ((σ * (t : ℂ))) •
+      FourierTransformInv.fourierInv
+        (bromwichVerticalLineTransform (E := E) σ f) t) = f)
 
 /--
 Package constructor from the currently available theorem-safe Bromwich
@@ -386,14 +383,11 @@ theorem bromwichContourPackage_of_hypotheses
     (f : ℝ → E) (σ : ℝ)
     (hA : BromwichContourAdmissible f σ) :
     BromwichContourPackage f σ := by
-  refine
-    { admissible := hA
-      contourShift := ?_
-      inversion := ?_ }
+  refine ⟨hA, ?_, ?_⟩
   · intro τ
     exact bromwich_contour_shift (E := E) (f := f) (σ := σ) (τ := τ)
-  · exact bromwich_inversion_on_vertical_line (f := f) (σ := σ) hA.dampedIntegrable
-      hA.fourierAxisIntegrable hA.continuous
+  · exact bromwich_inversion_on_vertical_line (f := f) (σ := σ) hA.2.1
+      hA.2.2.1 hA.2.2.2
 
 end FourierAxis
 

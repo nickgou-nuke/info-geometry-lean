@@ -49,12 +49,4 @@ theorem colorAct_is_stabilizer (g : ColorStabilizerElement R) :
   intro X
   exact longitudinal_invariant g X
 
-/--
-Furthermore, the `colorAct` strongly preserves the split norm of the state,
-matching the requirement for SU(3) to preserve invariant mass/norm in the Zorn algebra.
--/
-theorem colorAct_preserves_splitNorm (g : ColorStabilizerElement R) (X : BektasMatrix R) :
-    splitNorm (colorAct g X) = splitNorm X := by
-  exact splitNorm_invariant g X
-
 end InfoGeometry.Projective.SplitOctonions.G2TrifactorColorBridge

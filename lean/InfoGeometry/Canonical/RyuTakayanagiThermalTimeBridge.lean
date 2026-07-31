@@ -342,17 +342,14 @@ Promoted physical lane: forward time is modeled by the positive winding branch.
 This package records the synchronized modular/de Rham/RT readout at a
 nonnegative step `n`.
 -/
-structure PositiveBranchClockPacket
-    (B : PositiveBranchBridgeData (E := E)) (n : ℕ) (A : EndH E) : Prop where
-  modular_readout :
-    modularAutomorphismGroup B.modularData (B.calibration.timeOfWinding (n : ℤ)) A =
-      B.modularData.toAdditiveModularFlow (B.calibration.timeOfWinding (n : ℤ)) A
-  deRham_readout :
-    ((n : ℤ) : ℂ) * (∮ z in C((0 : ℂ), B.radius), poleForm z) = logarithmicPhase (n : ℤ)
-  holonomy_readout :
-    Complex.exp (((n : ℤ) : ℂ) * (∮ z in C((0 : ℂ), B.radius), poleForm z)) = (1 : ℂ)
-  rt_readout :
-    entropyOfStep B n = areaOfStep B n / (4 * effectiveNewtonConstant)
+def PositiveBranchClockPacket
+    (B : PositiveBranchBridgeData (E := E)) (n : ℕ) (A : EndH E) : Prop :=
+  (modularAutomorphismGroup B.modularData (B.calibration.timeOfWinding (n : ℤ)) A =
+      B.modularData.toAdditiveModularFlow (B.calibration.timeOfWinding (n : ℤ)) A) ∧
+  (((n : ℤ) : ℂ) * (∮ z in C((0 : ℂ), B.radius), poleForm z) =
+      logarithmicPhase (n : ℤ)) ∧
+  (Complex.exp (((n : ℤ) : ℂ) * (∮ z in C((0 : ℂ), B.radius), poleForm z)) = (1 : ℂ)) ∧
+  (entropyOfStep B n = areaOfStep B n / (4 * effectiveNewtonConstant))
 
 /-- Canonical packet constructor for the positive branch. -/
 theorem positiveBranchClockPacket_of

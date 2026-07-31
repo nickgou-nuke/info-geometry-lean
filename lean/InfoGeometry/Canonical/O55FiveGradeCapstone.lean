@@ -45,58 +45,6 @@ open InfoGeometry.Clifford.ConformalLieAlgebra55
 open InfoGeometry.Algebra.FiveGradedTKK
 open InfoGeometry.Canonical.ConformalFiveGradeInversion
 
--- The primitive null-generator packet (already proved).
-theorem null_generator_packet :
-    u5 * u5 = 0 ∧
-    v5 * v5 = 0 ∧
-    u4 * u4 = 0 ∧
-    v4 * v4 = 0 ∧
-    u5 * v5 + v5 * u5 = 1 ∧
-    u4 * v4 + v4 * u4 = 1 := by
-  exact ⟨u5_sq, v5_sq, u4_sq, v4_sq, u5_v5_add_v5_u5, u4_v4_add_v4_u4⟩
-
--- The commutator-adjoined dilation generators.
-theorem dilation_generator_def_packet :
-    D5 = (1 / 2 : ℝ) • (u5 * v5 - v5 * u5) ∧
-    D4 = (1 / 2 : ℝ) • (u4 * v4 - v4 * u4) ∧
-    D = D5 + D4 := by
-  exact ⟨rfl, rfl, rfl⟩
-
--- The reflection/complex-structure generator packet.
-theorem J_generator_def_packet :
-    J5 = u5 - v5 ∧
-    J4 = u4 - v4 ∧
-    J = J5 * J4 := by
-  exact ⟨rfl, rfl, rfl⟩
-
--- Proved adjoint actions on the primitive generators.
-theorem adjoint_action_u_packet :
-    D * u5 - u5 * D = u5 ∧
-    D * u4 - u4 * D = u4 := by
-  exact ⟨adD_u5, adD_u4⟩
-
-theorem adjoint_action_v_packet :
-    D * v5 - v5 * D = -v5 ∧
-    D * v4 - v4 * D = -v4 := by
-  exact ⟨adD_v5, adD_v4⟩
-
--- Theta reflection packet (already proved).
-theorem theta_reflection_packet :
-    thetaOp u5 = v5 ∧
-    thetaOp v5 = u5 ∧
-    thetaOp u4 = v4 ∧
-    thetaOp v4 = u4 ∧
-    thetaOp D = -D := by
-  exact ⟨theta_u5, theta_v5, theta_u4, theta_v4, theta_D⟩
-
--- Weight readout from the proved adjoint actions.
-theorem weight_deduction_from_adjoint_actions :
-    (D * u5 - u5 * D = u5)
-      ∧ (D * u4 - u4 * D = u4)
-      ∧ (D * v5 - v5 * D = -v5)
-      ∧ (D * v4 - v4 * D = -v4) := by
-  exact ⟨adD_u5, adD_u4, adD_v5, adD_v4⟩
-
 -- The five-grade decomposition packet.
 theorem five_grade_decomposition_packet :
     (Weight5.toInt Weight5.neg_two = -2
@@ -127,12 +75,12 @@ theorem five_grade_decomposition_packet :
       ∧ thetaOp D = -D) := by
   exact ⟨
     ⟨rfl, rfl, rfl, rfl, rfl⟩,
-    null_generator_packet,
-    dilation_generator_def_packet,
-    J_generator_def_packet,
-    adjoint_action_u_packet,
-    adjoint_action_v_packet,
-    theta_reflection_packet
+    ⟨u5_sq, v5_sq, u4_sq, v4_sq, u5_v5_add_v5_u5, u4_v4_add_v4_u4⟩,
+    ⟨rfl, rfl, rfl⟩,
+    ⟨rfl, rfl, rfl⟩,
+    ⟨adD_u5, adD_u4⟩,
+    ⟨adD_v5, adD_v4⟩,
+    ⟨theta_u5, theta_v5, theta_u4, theta_v4, theta_D⟩
   ⟩
 
 end InfoGeometry.Canonical.O55FiveGradeCapstone

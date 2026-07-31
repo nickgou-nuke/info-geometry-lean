@@ -4,8 +4,7 @@ import Mathlib.Tactic
 namespace Omega.Folding
 
 /-- Concrete seed data for the two-state bin-fold asymptotic package. -/
-structure FoldBinTwoStateAsymptoticData where
-  dummy : Unit := ()
+abbrev FoldBinTwoStateAsymptoticData := Unit
 
 /-- Terminal-state main term in the two-state model. -/
 noncomputable def foldBinTwoStateWeight (b : Bool) : ℝ :=

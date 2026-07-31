@@ -81,12 +81,12 @@ private def witnessNameOf (statementName : String) : String :=
 -- § Pair detection
 -- ============================================================
 
-/-- A single detected witness-pack pair inside a structure. -/
-structure WitnessPackPair where
+/-- A single detected vacuous pair inside a structure. -/
+structure VacuityPair where
   /-- Name of the generic statement field. -/
   statementField : Name
-  /-- Name of the companion `_sorry` field, if present. -/
-  witnessField?  : Option Name
+  /-- Name of the companion field, if present. -/
+  companionField?  : Option Name
   deriving Repr, Inhabited
 
 /--
@@ -103,10 +103,10 @@ are reported directly.
 Returns an array of detected pairs (with or without companion).
 -/
 def detectWitnessPackPairs (env : Environment) (structName : Name) :
-    Array WitnessPackPair := Id.run do
+    Array VacuityPair := Id.run do
   let fields := getStructureFields env structName
   if fields.isEmpty then return #[]
-  let mut pairs : Array WitnessPackPair := #[]
+  let mut pairs : Array VacuityPair := #[]
   for fieldName in fields do
     -- Check that the projected type is bare Prop.
     -- The projection function `structName.fieldName` has type
@@ -119,7 +119,7 @@ def detectWitnessPackPairs (env : Environment) (structName : Name) :
         let body := stripForalls projType
         unless isBarePropSort body do continue
         -- Every bare Prop field is a witness violation: report it directly as a cheat.
-        pairs := pairs.push { statementField := fieldName, witnessField? := some fieldName }
+        pairs := pairs.push { statementField := fieldName, companionField? := some fieldName }
     | none => continue
   return pairs
 
@@ -132,8 +132,8 @@ def hasWitnessPackPairs (env : Environment) (structName : Name) : Bool :=
 -- ============================================================
 
 /-- Render a witness-pack diagnostic message for a single pair. -/
-def renderWitnessPackDiag (structName : Name) (pair : WitnessPackPair) : MessageData :=
-  match pair.witnessField? with
+def renderWitnessPackDiag (structName : Name) (pair : VacuityPair) : MessageData :=
+  match pair.companionField? with
   | some wf =>
       if wf == pair.statementField then
         m!"[Pauli/Witness-Pack] `{structName}` has a generic bare `Prop` field \
@@ -150,7 +150,7 @@ def renderWitnessPackDiag (structName : Name) (pair : WitnessPackPair) : Message
          Replace with a concrete mathematical statement or remove."
 
 /-- Render all witness-pack diagnostics for a structure. -/
-def renderAllWitnessPackDiags (structName : Name) (pairs : Array WitnessPackPair) :
+def renderAllWitnessPackDiags (structName : Name) (pairs : Array VacuityPair) :
     Array MessageData :=
   pairs.map (renderWitnessPackDiag structName)
 

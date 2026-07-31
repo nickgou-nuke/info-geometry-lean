@@ -6,8 +6,7 @@ import Omega.DerivedConsequences.DerivedWindow6RepresentationZetaBoundaryExtensi
 namespace Omega.Conclusion
 
 /-- Concrete data for the conductor-`2` boundary Plancherel uniformity calculation. -/
-structure conclusion_window6_boundary_conductor_two_plancherel_uniformity_Data where
-  witness : Unit := ()
+abbrev conclusion_window6_boundary_conductor_two_plancherel_uniformity_Data := Unit
 
 namespace conclusion_window6_boundary_conductor_two_plancherel_uniformity_Data
 

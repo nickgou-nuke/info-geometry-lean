@@ -45,7 +45,7 @@ lemma conclusion_polynomial_compression_vs_sqrt_stability_orthogonal_partition_p
 
 lemma conclusion_polynomial_compression_vs_sqrt_stability_orthogonal_polynomial_bound
     (q₂ : ℕ) (hq₂ : 2 ≤ q₂) :
-    ∃ n : Nat, n ≤ Nat.choose q₂ 0 ∧ ∃ _ : Matrix (Fin n) (Fin n) Nat, True := by
+    ∃ n : Nat, n ≤ Nat.choose q₂ 0 ∧ ∃ A : Matrix (Fin n) (Fin n) Nat, A = 0 := by
   rcases Omega.POM.paper_pom_partition_monomials_symmetric_power_realization_bound
       q₂
       (conclusion_polynomial_compression_vs_sqrt_stability_orthogonal_partition_count q₂)
@@ -86,8 +86,8 @@ noncomputable def conclusion_polynomial_compression_vs_sqrt_stability_orthogonal
 /-- Concrete orthogonality statement: polynomial realization bounds can hold while selector-free
 sympower stability still fails eventually. -/
 def conclusion_polynomial_compression_vs_sqrt_stability_orthogonal_statement : Prop :=
-  (∀ q₂ : ℕ, 2 ≤ q₂ →
-    ∃ n : Nat, n ≤ Nat.choose q₂ 0 ∧ ∃ _ : Matrix (Fin n) (Fin n) Nat, True) ∧
+    (∀ q₂ : ℕ, 2 ≤ q₂ →
+    ∃ n : Nat, n ≤ Nat.choose q₂ 0 ∧ ∃ A : Matrix (Fin n) (Fin n) Nat, A = 0) ∧
     let D : SublinearExcitationFilterData :=
       conclusion_polynomial_compression_vs_sqrt_stability_orthogonal_selector_free_data
     SublinearExcitationFilterData.sublinearFiltersFailEventually D

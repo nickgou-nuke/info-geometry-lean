@@ -136,8 +136,6 @@ noncomputable def metriplecticFlow :
   totalFlow_eq_reversible_add_dissipative := rfl
   energy_degeneracy := B.energy_degeneracy
   entropyProduction_eq_quadratic := rfl
-  reversible_entropy_change := 0
-  reversible_entropy_change_eq_zero := rfl
 
 /-- The operator probed by the Onsager context is the regular BdG generator. -/
 @[rep_depth transport]

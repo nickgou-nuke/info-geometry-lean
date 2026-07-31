@@ -10,10 +10,6 @@ structure ComovingFourierClosedData where
   explicitFourierFormulaInput : Prop
   positiveFrequencyRestriction : Prop
   intervalUniquenessPrinciple : Prop
-  lorentzProfileModel_h : lorentzProfileModel
-  explicitFourierFormulaInput_h : explicitFourierFormulaInput
-  positiveFrequencyRestriction_h : positiveFrequencyRestriction
-  intervalUniquenessPrinciple_h : intervalUniquenessPrinciple
   fourierClosedForm : Prop
   finiteExponentialSpectrum : Prop
   openIntervalInjective : Prop
@@ -29,13 +25,17 @@ model and explicit transform formula give a finite exponential spectrum, and int
 uniqueness recovers injectivity from any nonempty open interval.
     thm:typed-address-biaxial-completion-comoving-fourier-closed -/
 theorem paper_typed_address_biaxial_completion_comoving_fourier_closed
-    (D : ComovingFourierClosedData) :
+    (D : ComovingFourierClosedData)
+    (hLorentzProfileModel : D.lorentzProfileModel)
+    (hExplicitFourierFormulaInput : D.explicitFourierFormulaInput)
+    (hPositiveFrequencyRestriction : D.positiveFrequencyRestriction)
+    (hIntervalUniquenessPrinciple : D.intervalUniquenessPrinciple) :
     D.fourierClosedForm ∧ D.finiteExponentialSpectrum ∧ D.openIntervalInjective := by
   have hClosed : D.fourierClosedForm :=
-    D.deriveFourierClosedForm D.lorentzProfileModel_h D.explicitFourierFormulaInput_h
+    D.deriveFourierClosedForm hLorentzProfileModel hExplicitFourierFormulaInput
   have hSpectrum : D.finiteExponentialSpectrum :=
-    D.deriveFiniteExponentialSpectrum hClosed D.positiveFrequencyRestriction_h
+    D.deriveFiniteExponentialSpectrum hClosed hPositiveFrequencyRestriction
   exact ⟨hClosed, hSpectrum, D.deriveOpenIntervalInjective hSpectrum
-    D.intervalUniquenessPrinciple_h⟩
+    hIntervalUniquenessPrinciple⟩
 
 end Omega.TypedAddressBiaxialCompletion

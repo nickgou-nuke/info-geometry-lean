@@ -548,10 +548,6 @@ structure BogoliubovCartanFrameEquiv
   preservesKrein :
     Prop
 
-  /-- Evidence for the Krein-preservation witness. -/
-  preservesKrein_holds :
-    preservesKrein
-
 namespace BogoliubovCartanFrameEquiv
 
 variable {T TD Hsrc Htgt : EndH}

@@ -15,11 +15,8 @@ lemma xi_abelian_global_stability_threshold_max_channel_below_max
       exact False.elim (not_le_of_gt hn hmax)
 
 /-- Paper label: `thm:xi-abelian-global-stability-threshold-max-channel`. -/
-theorem paper_xi_abelian_global_stability_threshold_max_channel : True := by
-  have hmodel :
-      ∀ n n₁ n₂ : ℕ, n < max n₁ n₂ → n < n₁ ∨ n < n₂ :=
-    xi_abelian_global_stability_threshold_max_channel_below_max
-  have : 0 < 1 ∨ 0 < 2 := hmodel 0 1 2 (by simp)
-  trivial
+theorem paper_xi_abelian_global_stability_threshold_max_channel :
+    ∀ n n₁ n₂ : ℕ, n < max n₁ n₂ → n < n₁ ∨ n < n₂ :=
+  xi_abelian_global_stability_threshold_max_channel_below_max
 
 end Omega.Zeta

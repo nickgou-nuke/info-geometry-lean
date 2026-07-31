@@ -123,7 +123,8 @@ theorem modularFlowTopologicalColimitMap_zero :
       (topologicalInjection Stage (system Stage T) n a) = _
   rw [modularFlowTopologicalColimitMap_inclusion]
   exact congrArg (topologicalInjection Stage (system Stage T) n)
-    (Φ.flow_zero n a)
+    (CuntzStageModularFlowLemmas.flow_zero
+      (Stage := Stage) (T := T) Φ n a)
 
 theorem modularFlowTopologicalColimitMap_add (t s : ℝ) :
     modularFlowTopologicalColimitMap Stage T Φ (t + s) =

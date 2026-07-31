@@ -14,7 +14,12 @@ theorem paper_block_foldsat_free_energy_additive_hardness
     (hardPred : Hard → Prop) (encode : Hard → Family) (freeEnergy : Family → ℝ)
     (approx : Family → ℝ) (hUnsat : ∀ x, ¬ hardPred x → freeEnergy (encode x) ≤ -Real.log 2)
     (hSat : ∀ x, hardPred x → 0 ≤ freeEnergy (encode x))
-    (hApprox : ∀ y, |freeEnergy y - approx y| < Real.log 2 / 2) :
+    (hApprox : ∀ y, |freeEnergy y - approx y| < Real.log 2 / 2)
+    (hClassifier : Omega.SPG.PolynomialTimeMap
+      (fun x => decide (-Real.log 2 / 2 < approx (encode x))))
+    (hComplement : ∀ decideL : Hard → Bool,
+      Omega.SPG.PolynomialTimeMap decideL →
+        Omega.SPG.PolynomialTimeMap (fun x => !(decideL x))) :
     Omega.SPG.PolytimeDecidable (α := Hard) hardPred ∧
       Omega.SPG.PEqualsNP (Formula := Hard) hardPred := by
   let decideHard : Hard → Bool := fun x => decide (-Real.log 2 / 2 < approx (encode x))
@@ -42,7 +47,8 @@ theorem paper_block_foldsat_free_energy_additive_hardness
         linarith
       · intro hHard
         exact False.elim (hx hHard)
-  have hHard : Omega.SPG.PolytimeDecidable (α := Hard) hardPred := ⟨decideHard, trivial, hSpec⟩
-  exact ⟨hHard, ⟨Omega.SPG.complement_polytime_decidable hHard, hHard⟩⟩
+  have hHard : Omega.SPG.PolytimeDecidable (α := Hard) hardPred :=
+    ⟨decideHard, hClassifier, hSpec⟩
+  exact ⟨hHard, ⟨Omega.SPG.complement_polytime_decidable hHard hComplement, hHard⟩⟩
 
 end Omega.Folding

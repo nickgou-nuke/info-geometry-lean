@@ -97,21 +97,6 @@ private theorem realInput40RotChiSet_eq_shear_image_direct :
     · rcases q with ⟨e, nu, xi⟩
       norm_num [realInput40Lift, realInput40RotationShearQ, rotationPolytopeShear]
 
-private def realInput40RotationPolytopeShearData : RealInput40RotationPolytopeShearData where
-  rot_chi := realInput40RotChiSet
-  shear_image_rot_e := rotationPolytopeShear '' realInput40RotESet
-  support_function_pullback := True
-  averageVectorShearRelation := True
-  supportFunctionDotRewrite := True
-  averageVectorShearRelation_h := trivial
-  supportFunctionDotRewrite_h := trivial
-  deriveRotationSetEquality := by
-    intro _
-    exact realInput40RotChiSet_eq_shear_image_direct
-  deriveSupportFunctionPullback := by
-    intro _ _
-    trivial
-
 /-- The explicit six rational vertices of the real-input 40-state rotation polytope, the seven
 facet inequalities in both coordinate systems, the shear identification from `(e, ν, ξ)` to
 `(χ, ν, ξ)`, and the zero-temperature support formula.
@@ -134,7 +119,7 @@ def realInput40RotationPolytope6V : Prop :=
 theorem paper_real_input_40_rotation_polytope_6v : realInput40RotationPolytope6V := by
   refine ⟨realInput40RotationVerticesChi_eq_image, realInput40RotationVerticesE_facets,
     realInput40RotationVerticesChi_facets,
-    (paper_real_input_40_rotation_polytope_shear realInput40RotationPolytopeShearData).1, ?_⟩
+    realInput40RotChiSet_eq_shear_image_direct, ?_⟩
   intro thetaE thetaNu thetaXi
   rfl
 

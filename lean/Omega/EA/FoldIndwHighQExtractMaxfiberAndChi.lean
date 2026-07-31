@@ -18,16 +18,6 @@ def fold_indw_high_q_extract_maxfiber_and_chi_maxfiber
     (D : fold_indw_high_q_extract_maxfiber_and_chi_data) : Nat :=
   Finset.univ.sup D.d
 
-/-- The signed-moment reconstruction recovers every sector size, and one chi-sector attains the
-maximal fiber. -/
-def fold_indw_high_q_extract_maxfiber_and_chi_statement
-    (D : fold_indw_high_q_extract_maxfiber_and_chi_data) : Prop :=
-  (∀ chi : Z2x2Character, recoverSectorBlockSizeFromSignedMoments D.m D.d chi = (D.d chi : ℚ)) ∧
-    (∀ chi : Z2x2Character, recoverSectorPowerSumFromSignedMoments D.m D.d chi 1 = (D.d chi : ℚ)) ∧
-    (∃ chiMax : Z2x2Character,
-      D.d chiMax = fold_indw_high_q_extract_maxfiber_and_chi_maxfiber D) ∧
-    ∀ chi : Z2x2Character, D.d chi ≤ fold_indw_high_q_extract_maxfiber_and_chi_maxfiber D
-
 private theorem fold_indw_high_q_extract_maxfiber_and_chi_recover_sector_block_size_eq
     (D : fold_indw_high_q_extract_maxfiber_and_chi_data) (chi : Z2x2Character) :
     recoverSectorBlockSizeFromSignedMoments D.m D.d chi = sectorPowerSumFromBlockSizes D.d chi 1 := by
@@ -45,7 +35,14 @@ private theorem fold_indw_high_q_extract_maxfiber_and_chi_recover_sector_block_s
 /-- Paper label: `cor:fold-indw-high-q-extract-maxfiber-and-chi`. -/
 theorem paper_fold_indw_high_q_extract_maxfiber_and_chi
     (D : fold_indw_high_q_extract_maxfiber_and_chi_data) :
-    fold_indw_high_q_extract_maxfiber_and_chi_statement D := by
+    (∀ chi : Z2x2Character,
+        recoverSectorBlockSizeFromSignedMoments D.m D.d chi = (D.d chi : ℚ)) ∧
+      (∀ chi : Z2x2Character,
+        recoverSectorPowerSumFromSignedMoments D.m D.d chi 1 = (D.d chi : ℚ)) ∧
+      (∃ chiMax : Z2x2Character,
+        D.d chiMax = fold_indw_high_q_extract_maxfiber_and_chi_maxfiber D) ∧
+      ∀ chi : Z2x2Character,
+        D.d chi ≤ fold_indw_high_q_extract_maxfiber_and_chi_maxfiber D := by
   classical
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro chi

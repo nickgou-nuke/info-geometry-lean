@@ -76,7 +76,7 @@ theorem highTemperatureLeeYangSourceClaim
     (LY : LeeYangPolydiscWitness) :
     HighTemperatureLeeYangSourceClaim N := by
   intro D lam hLam
-  exact ⟨LY.inner_zero_free D lam hLam, LY.outer_zero_free D lam hLam⟩
+  exact ⟨LY.1 D lam hLam, LY.2 D lam hLam⟩
 
 /--
 The source claim and the standard Lee--Yang witness carry the same finite
@@ -90,15 +90,15 @@ theorem leeYangPolydiscWitness_iff_sourceClaim :
     (∀ N : ℕ, HighTemperatureLeeYangSourceClaim N) ↔ LeeYangPolydiscWitness := by
   constructor
   · intro H
-    exact
-      { inner_zero_free := by
-          intro N D lam hLam y hy
-          exact (H N D lam hLam).1 y hy
-        outer_zero_free := by
-          intro N D lam hLam y hy
-          exact (H N D lam hLam).2 y hy }
+    exact ⟨
+      (by
+        intro N D lam hLam y hy
+        exact (H N D lam hLam).1 y hy),
+      (by
+        intro N D lam hLam y hy
+        exact (H N D lam hLam).2 y hy)⟩
   · intro H
     intro N D lam hLam
-    exact ⟨H.inner_zero_free D lam hLam, H.outer_zero_free D lam hLam⟩
+    exact ⟨H.1 D lam hLam, H.2 D lam hLam⟩
 
 end InfoGeometry.Canonical.LeeYangStabilityPacket

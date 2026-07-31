@@ -137,14 +137,6 @@ S.status = ShadowStatus.integrated
 def IsRejected (S : ShadowCone α) : Prop :=
 S.status = ShadowStatus.rejected
 
-/-! ### Lifecycle theorems -/
-
-theorem integrated_has_status_integrated
-(S : ShadowCone α)
-(h : IsIntegrated S) :
-S.status = ShadowStatus.integrated :=
-h
-
 /-- A roaming shadow has no past incidence. -/
 theorem roaming_has_no_past
 (S : ShadowCone α)

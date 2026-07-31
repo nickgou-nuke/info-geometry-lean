@@ -41,17 +41,10 @@ theorem ramanujan_mock_c3_val : ramanujan_mock_c3 = 8 := rfl
 theorem ramanujan_mock_c5_val : ramanujan_mock_c5 = 16 := rfl
 theorem ramanujan_mock_c7_val : ramanujan_mock_c7 = 28 := rfl
 
-/-- Certified Mathieu M₂₄ Moonshine Mock Theta Packet -/
-structure M24MoonshineMockThetaPacket where
-  A1 : ℕ
-  h_A1 : A1 = 276
-  c1 : ℤ
-  h_c1 : c1 = 4
-  m24_irreps_sum : ℕ
-  h_sum : m24_irreps_sum = 45 + 231
-
 theorem m24_moonshine_mock_theta_packet_exists :
-    Nonempty M24MoonshineMockThetaPacket :=
-  ⟨⟨276, rfl, 4, rfl, 276, rfl⟩⟩
+    moonshine_A1 = 276 ∧
+      ramanujan_mock_c1 = 4 ∧
+        m24_dim_45 + m24_dim_231 = 276 := by
+  norm_num [moonshine_A1, ramanujan_mock_c1, m24_dim_45, m24_dim_231]
 
 end InfoGeometry.Quantum.MathieuMoonshineMockTheta

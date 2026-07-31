@@ -81,10 +81,6 @@ theorem bregman_accumulated_generator (δ : ℂ) (n : ℕ) :
     ((bregmanProxStep δ) ^ n) 0 1 = (n : ℂ) * δ := by
   exact majorana_accumulated_shear δ n
 
-/-- Agreement with the Wasserstein-proximal bridge naming. -/
-theorem bregmanProxStep_eq_jkoEntropyStep (δ : ℂ) :
-    bregmanProxStep δ = jkoEntropyStep δ := rfl
-
 /--
 LCFT monodromy is the same Bregman natural-parameter optimizer envelope at
 step `logShearBase`, up to its global conformal phase.

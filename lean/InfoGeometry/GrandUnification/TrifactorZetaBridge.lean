@@ -41,14 +41,6 @@ variable (J : H → H)
 def JSymmetricMode (ρ : H) : Prop :=
   J ρ = ρ
 
-namespace JSymmetricMode
-
-/-- Read the fixed-point relation under its historical field name. -/
-theorem j_symmetric (ρ : H) (h : JSymmetricMode J ρ) : J ρ = ρ :=
-  h
-
-end JSymmetricMode
-
 /-- 
 If the active `P_plus + P_minus` channels annihilate a state, the partition of
 unity for the tripotent projectors forces the state to lie in the `P_zero`

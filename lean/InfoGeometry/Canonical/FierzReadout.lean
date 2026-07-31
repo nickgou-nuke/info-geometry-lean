@@ -96,42 +96,6 @@ Default translator map preserving scalar readout channels.
 def toQuantumPresentation (R : FierzChannelReadout) : Presentation :=
   toQuantumPresentationWith R (defaultSupport R) (defaultGenerator R)
 
-@[rep_depth operator]
-theorem toQuantumPresentation_metricReadout
-    (R : FierzChannelReadout) (ψ : R.State) :
-    (R.toQuantumPresentation.metricReadout ψ) = R.hilbert ψ := by
-  rfl
-
-@[rep_depth operator]
-theorem toQuantumPresentation_phaseReadout
-    (R : FierzChannelReadout) (ψ : R.State) :
-    (R.toQuantumPresentation.phaseReadout ψ) = R.symplectic ψ := by
-  rfl
-
-/--
-Metric readout is preserved for any explicit support/generator lane choice.
--/
-@[rep_depth operator]
-theorem toQuantumPresentationWith_metricReadout
-    (R : FierzChannelReadout)
-    (support : R.State → Prop)
-    (generator : R.State → R.State)
-    (ψ : R.State) :
-    (toQuantumPresentationWith R support generator).metricReadout ψ = R.hilbert ψ := by
-  rfl
-
-/--
-Phase readout is preserved for any explicit support/generator lane choice.
--/
-@[rep_depth operator]
-theorem toQuantumPresentationWith_phaseReadout
-    (R : FierzChannelReadout)
-    (support : R.State → Prop)
-    (generator : R.State → R.State)
-    (ψ : R.State) :
-    (toQuantumPresentationWith R support generator).phaseReadout ψ = R.symplectic ψ := by
-  rfl
-
 end FierzChannelReadout
 
 section DoubledCarrier

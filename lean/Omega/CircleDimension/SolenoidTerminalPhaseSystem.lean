@@ -69,6 +69,8 @@ structure SSolenoidTerminalObjectData where
   dualLocalizationMap : ℤ → ℤ
   factorMap : sourceCompact → terminalSolenoid
   dualLocalization_eq : ∀ n, dualLocalizationMap n = n
+  denominatorsInvertible : Prop
+  denominatorsInvertible_h : denominatorsInvertible
   factor_commutes : ∀ n, factorMap (sourceMap n) = terminalProjection n
   factor_unique :
     ∀ g : sourceCompact → terminalSolenoid,
@@ -110,7 +112,7 @@ theorem paper_cdim_s_solenoid_terminal_object (D : SSolenoidTerminalObjectData) 
     simpa using
       (paper_cdim_localization_universal_property
         { mapOnLocalizedFractions := ∀ n, D.dualLocalizationMap n = n
-          denominatorsInvertible := True
+          denominatorsInvertible := D.denominatorsInvertible
           wellDefinedByClearingDenominators :=
             ∀ n, D.factorMap (D.sourceMap n) = D.terminalProjection n
           agreesWithIntegerMap :=
@@ -122,7 +124,7 @@ theorem paper_cdim_s_solenoid_terminal_object (D : SSolenoidTerminalObjectData) 
             ∀ g : D.sourceCompact → D.terminalSolenoid,
               (∀ n, g (D.sourceMap n) = D.terminalProjection n) → g = D.factorMap
           mapOnLocalizedFractions_h := D.dualLocalization_eq
-          denominatorsInvertible_h := trivial
+          denominatorsInvertible_h := D.denominatorsInvertible_h
           wellDefinedByClearingDenominators_h := D.factor_commutes
           agreesWithIntegerMap_h := D.factor_commutes
           uniquenessByGenerators_h := D.factor_unique

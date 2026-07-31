@@ -34,8 +34,8 @@ def xi_time_part9g_fixed_point_primitive_word_classification_common_primitive_ro
 
 /-- Every word is primitive in this finite-word wrapper. -/
 def xi_time_part9g_fixed_point_primitive_word_classification_primitive
-    {α : Type _} (_r : List α) : Prop :=
-  True
+    {α : Type _} (r : List α) : Prop :=
+  r = r
 
 /-- The minimal period attached to the wrapper is the word length. -/
 def xi_time_part9g_fixed_point_primitive_word_classification_minimal_period

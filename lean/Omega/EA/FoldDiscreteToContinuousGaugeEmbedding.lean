@@ -61,20 +61,14 @@ def foldDiscreteToContinuousGaugeEmbedding {m : ℕ} (d : Fin m → ℕ) :
     apply (foldDiscreteGaugeEquivFiberwise d).injective
     exact fiberwiseBlockPermutation_injective d h
 
-/-- Paper-facing proposition: the discrete fold gauge group is identified with the product of the
-fiberwise symmetric groups, and it embeds faithfully into the blockwise continuous automorphism
-proxy. -/
-def FoldDiscreteToContinuousGaugeEmbeddingStatement (m : ℕ) : Prop :=
-  let d := foldGroupoidMultiplicityProfile m
-  Nonempty (FoldDiscreteGaugeGroup d ≃ HiddenFiberAutomorphisms d) ∧
-    Nonempty (FoldDiscreteGaugeGroup d ↪ FoldContinuousGaugeProxy d)
-
 /-- Paper label: `prop:fold-discrete-to-continuous-gauge-embedding`. The fold-groupoid
 multiplicity profile packages the discrete gauge group as the kernel of the visible normalizer
 projection, hence as a product of fiberwise symmetric groups, and the resulting block action on
 the disjoint union of all fibers is faithful. -/
 theorem paper_fold_discrete_to_continuous_gauge_embedding (m : ℕ) :
-    FoldDiscreteToContinuousGaugeEmbeddingStatement m := by
+    let d := foldGroupoidMultiplicityProfile m
+    Nonempty (FoldDiscreteGaugeGroup d ≃ HiddenFiberAutomorphisms d) ∧
+      Nonempty (FoldDiscreteGaugeGroup d ↪ FoldContinuousGaugeProxy d) := by
   refine ⟨⟨foldDiscreteGaugeEquivFiberwise (foldGroupoidMultiplicityProfile m)⟩,
     ⟨foldDiscreteToContinuousGaugeEmbedding (foldGroupoidMultiplicityProfile m)⟩⟩
 

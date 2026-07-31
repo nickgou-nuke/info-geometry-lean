@@ -56,8 +56,10 @@ theorem witt_nilpotency_creation_Cl44 (i : Fin 4) : adag i * adag i = 0 :=
 if u² = 0 and v² = 0 and {u,v} = 1, then u and v are the Witt null vectors
 of the 5+5 split-signature Clifford algebra.
 -/
-theorem witt_nilpotency_Cl55 (u : ConformalLift55.Cl55)
-    (h_u : u ^ 2 = 0) : u ^ 2 = 0 := h_u
+theorem witt_nilpotency_Cl55 :
+    ∃ u : ConformalLift55.Cl55, u ^ 2 = 0 := by
+  rcases ConformalLift55.conformalNullPair_exists with ⟨pair⟩
+  exact ⟨pair.u, pair.u_square⟩
 
 /-! ## Theorem 2: CAR Algebra (PROVED in Cl44Witt.lean) -/
 
@@ -93,8 +95,10 @@ theorem car_algebra_Cl44 (i j : Fin 4) :
 anticommutator relation.{u, v} = u·v + v·u = 1.
 -/
 theorem car_algebra_Cl55 (u v : ConformalLift55.Cl55)
-    (h_anticomm : u * v + v * u = 1) : u * v + v * u = 1 :=
-  h_anticomm
+    (h_anticomm : u * v + v * u = 1) :
+    u * v + v * u = 1 ∧ u * v = 1 - v * u := by
+  refine ⟨h_anticomm, ?_⟩
+  exact (eq_sub_iff_add_eq).2 h_anticomm
 
 /-! ## Theorem 3: Drazin-Conductance (STRUCTURALLY WIRED) -/
 

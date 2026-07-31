@@ -144,29 +144,6 @@ def QuadraticPositive (φ : (H → H) → ℝ) : Prop :=
 
 namespace CuntzKMSState
 
-@[simp]
-theorem phi_one_readback (Φ : CuntzKMSState) (h : NormalizedState Φ.phi) :
-    Φ.phi id = 1 :=
-  h
-
-theorem phi_kms_L_readback (Φ : CuntzKMSState) (h : LeftKMSScaling Φ.phi) (A : H → H) :
-    Φ.phi (S_left ∘ A ∘ star_S_left) = (1 / 2 : ℝ) * Φ.phi A :=
-  h A
-
-theorem phi_kms_R_readback (Φ : CuntzKMSState) (h : RightKMSScaling Φ.phi) (A : H → H) :
-    Φ.phi (S_right ∘ A ∘ star_S_right) = (1 / 2 : ℝ) * Φ.phi A :=
-  h A
-
-theorem phi_kms_cross_LR_readback
-    (Φ : CuntzKMSState) (h : CrossKMSLeftRightZero Φ.phi) (A : H → H) :
-    Φ.phi (S_left ∘ A ∘ star_S_right) = 0 :=
-  h A
-
-theorem phi_kms_cross_RL_readback
-    (Φ : CuntzKMSState) (h : CrossKMSRightLeftZero Φ.phi) (A : H → H) :
-    Φ.phi (S_right ∘ A ∘ star_S_left) = 0 :=
-  h A
-
 /-! ## 2. The GNS inner product -/
 
 /--

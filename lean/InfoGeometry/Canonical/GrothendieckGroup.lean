@@ -13,11 +13,3 @@ definitions `Grothendieck`, `grothendieckMap`, `grothendieckLift`, and
 Keeping the duplicate construction here caused import-order collisions whenever
 the algebra owner and this canonical module appeared in the same environment.
 -/
-
-namespace InfoGeometry.Canonical.GrothendieckGroup
-
-/-- Compatibility alias for the owner theorem `Grothendieck ℕ ≃+ ℤ`. -/
-noncomputable def grothendieckEquivInt : _root_.Grothendieck ℕ ≃+ ℤ :=
-  _root_.grothendieckEquivInt
-
-end InfoGeometry.Canonical.GrothendieckGroup

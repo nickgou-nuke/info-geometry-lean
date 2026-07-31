@@ -85,7 +85,8 @@ theorem modularFlowColimitMap_zero :
     (colimit.ι (stageModuleDiagram Stage T) n).hom a
   rw [modularFlowColimitMap_inclusion]
   exact congrArg (fun f => (colimit.ι (stageModuleDiagram Stage T) n).hom f)
-    (Φ.flow_zero n a)
+    (CuntzStageModularFlowLemmas.flow_zero
+      (Stage := Stage) (T := T) Φ n a)
 
 theorem modularFlowColimitMap_add (t s : ℝ) :
     modularFlowColimitMap Stage T Φ (t + s) =

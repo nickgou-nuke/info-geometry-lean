@@ -13,7 +13,6 @@ theorem paper_window6_p6_compactness_principle
     (hComm : selfadjoint → finiteDim → commutantStarAlg)
     (hCompact : commutantStarAlg → unitaryCompact) :
     selfadjoint ∧ unitaryCompact := by
-  let _ := paper_terminal_foldbin6_pushforward_markov
   have hCommutant : commutantStarAlg := hComm hSelfadjoint hFinite
   exact ⟨hSelfadjoint, hCompact hCommutant⟩
 

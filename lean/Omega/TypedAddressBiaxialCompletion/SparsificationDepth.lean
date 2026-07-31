@@ -28,9 +28,7 @@ structure SparsificationDepthData where
   hγ : |γ| ≤ T
   hres : (2 : ℝ) ^ (-p) ≤ typedAddressWorstCaseDepth T δ
   compiledReadabilityData : CompiledReadabilityData
-  readable_h : compiledReadabilityData.readable
   threeAxisData : TypedAddressThreeAxisData
-  nonNullReadout_h : threeAxisData.nonNullReadout
 
 namespace SparsificationDepthData
 
@@ -66,12 +64,17 @@ discharges the truncation/oracle-collapse package, and the bit-budget plus non-`
 the hard depth resource statement.
     prop:typed-address-biaxial-completion-sparsification-depth -/
 theorem paper_typed_address_biaxial_completion_sparsification_depth
-    (D : SparsificationDepthData) :
+    (D : SparsificationDepthData)
+    (hUnitarySliceLocked : D.certificateLoop.unitarySliceLocked)
+    (hReadableInput : D.compiledReadabilityData.readable)
+    (hNonNullReadout : D.threeAxisData.nonNullReadout) :
     D.toeplitzPsdCofinalSparsification ∧ D.finiteQuantifierElimination ∧ D.depthHardResource := by
   have hSparseRh : D.jensenCriterion.rh :=
     (paper_app_jensen_countable_criterion D.jensenCriterion).2 D.criterionCofinalWitness
   have hLoopRh : D.certificateLoop.rh := D.criterionRhToLoopRh hSparseRh
-  have hLoop := paper_typed_address_biaxial_completion_certificate_loop D.certificateLoop
+  have hLoop :=
+    paper_typed_address_biaxial_completion_certificate_loop D.certificateLoop
+      hUnitarySliceLocked
   have hLoopJensen : D.certificateLoop.jensenDefectZeroLimit := (hLoop.1).mp hLoopRh
   have hLoopRep : D.certificateLoop.repulsionRadiusTendsToOne := (hLoop.2.1).mp hLoopJensen
   have hLoopToeplitzAll : D.certificateLoop.toeplitzPsdAll := (hLoop.2.2.1).mp hLoopRep
@@ -98,13 +101,13 @@ theorem paper_typed_address_biaxial_completion_sparsification_depth
             D.compiledReadabilityData.certificateFiberNonempty :=
     paper_typed_address_biaxial_completion_compiled_readability_readable D.compiledReadabilityData
   have hFiber : D.compiledReadabilityData.certificateFiberNonempty :=
-    (hReadable.mp D.readable_h).2.2.2
+    (hReadable.mp hReadableInput).2.2.2
   have hAxes :
       D.threeAxisData.visibleAxisPassed ∧
         D.threeAxisData.residueAxisPassed ∧
         D.threeAxisData.modeAxisPassed :=
     paper_typed_address_biaxial_completion_nonnull_requires_three_axes
-      D.threeAxisData D.nonNullReadout_h
+      D.threeAxisData hNonNullReadout
   refine ⟨hLoopToeplitzCofinal, hFinite, ?_⟩
   exact ⟨hDepthBudget.2.1, hFiber, hAxes.1, hAxes.2.1, hAxes.2.2⟩
 

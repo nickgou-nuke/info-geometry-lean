@@ -8,7 +8,7 @@ def FullGenerationConjecture : Prop :=
 
 /-- The defect process should admit a uniform spectral gap. -/
 def UniformGapConjecture : Prop :=
-  ∃ _ : UniformGap, True
+  Nonempty UniformGap
 
 /-- Coarse defect budgets should hold uniformly across finite resolutions. -/
 def GlobalDefectBudgetConjecture : Prop :=
@@ -29,7 +29,7 @@ the paper label and the missing prerequisite. -/
     Requires: Measure-theoretic Poincare recurrence on X_∞.
     Infrastructure needed: `MeasureTheory.measure_preserving` + ergodic decomposition. -/
 def FrontierSPGPoincare : Prop :=
-  ∃ C : ℝ, C > 0 ∧ ∀ m : ℕ, m ≥ 1 → True
+  ∃ C : ℝ, C > 0 ∧ ∀ m : ℕ, m ≥ 1 → FullGeneration m
 
 /-- Paper label: `prop:cdim-poisson-Lp-bound`
     Requires: Poisson kernel on the unit disk + L^p norm estimates.

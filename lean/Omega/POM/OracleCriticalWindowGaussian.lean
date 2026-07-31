@@ -32,18 +32,13 @@ def successLaplaceDecomposition (D : pom_oracle_critical_window_gaussian_data) :
         Filter.Tendsto (fun m : ℕ => D.successProbability t m) Filter.atTop
           (nhds (D.successLimit t))
 
-/-- The selected bit budget is inside the critical `sqrt m` window with offset `t`. -/
-def criticalBudgetWindow (_D : pom_oracle_critical_window_gaussian_data) (_t : ℝ) : Prop :=
-  True
-
 end pom_oracle_critical_window_gaussian_data
 
 /-- Paper label: `thm:pom-oracle-critical-window-gaussian`. -/
 theorem paper_pom_oracle_critical_window_gaussian
     (D : pom_oracle_critical_window_gaussian_data) (t : ℝ) (hclt : D.centeredCLT)
-    (hlaplace : D.successLaplaceDecomposition) (hwindow : D.criticalBudgetWindow t) :
+    (hlaplace : D.successLaplaceDecomposition) :
     D.successLimit t = D.normalCDF (t / D.sigma) := by
-  have _hwindow_used : D.criticalBudgetWindow t := hwindow
   rcases hlaplace t with ⟨htail, hdecomp, hsuccess⟩
   have hthreshold : Filter.Tendsto (fun m : ℕ => D.thresholdProbability t m) Filter.atTop
       (nhds (D.normalCDF (t / D.sigma))) :=

@@ -59,16 +59,9 @@ theorem brst_im_subset_ker {V : Type*} [AddCommGroup V] [Module ℝ V]
     Q.charge (Q.charge v) = 0 :=
   brst_charge_sq_zero Q v
 
-/-! The BRST carrier already owns its nilpotence law.  The combined carrier
-therefore keeps the BRST operator together with the independently owned
-nilpotent Nambu--Gor'kov matrix as a direct product, without duplicating the
-operator proof as another structure field. -/
-abbrev BRSTNambuGorkovPacket : Type :=
-  BRSTOperator NambuSpace ×
-    { M : Matrix (Fin 2) (Fin 2) ℝ // M * M = 0 }
-
 theorem brst_nambu_gorkov_bridge_exists :
-    Nonempty BRSTNambuGorkovPacket :=
-  ⟨boundaryBRSTOperator, ⟨boundaryNilpotentMajorana, boundary_majorana_nilpotent⟩⟩
+    boundaryBRSTCharge.comp boundaryBRSTCharge = 0 ∧
+      boundaryNilpotentMajorana * boundaryNilpotentMajorana = 0 := by
+  exact ⟨boundary_brst_nilpotent, boundary_majorana_nilpotent⟩
 
 end InfoGeometry.Quantum.BRSTNambuGorkovNilpotentBridge

@@ -7,8 +7,7 @@ namespace Omega.Folding
 noncomputable section
 
 /-- Concrete container for the scaled tail/capacity kink package. -/
-structure FoldBinDegeneracyTailCapacityKinksData where
-  dummy : Unit := ()
+abbrev FoldBinDegeneracyTailCapacityKinksData := Unit
 
 /-- The scaled tail observable for the two-level bin-fold degeneracy model. -/
 noncomputable def foldBinDegeneracyScaledTail (m : ℕ) (s : ℝ) : ℝ :=

@@ -261,18 +261,13 @@ The algorithmic field pins `output` to `gramSchmidt input`; the remaining fields
 are explicit witnesses for the AFP theorem surface: same span, conjugate
 orthogonality, preserved length, and distinct output.
 -/
-structure GramSchmidtResult {ι : Type*} [Fintype ι]
-    (input output : List (ι → ℂ)) : Prop where
-  /-- The output is the executable Gram-Schmidt output. -/
-  output_eq : output = gramSchmidt input
-  /-- The output spans the same subspace as the input. -/
-  span_eq : listSpan input = listSpan output
-  /-- Output vectors are conjugate-orthogonal. -/
-  corthogonal : Corthogonal output
-  /-- Output length agrees with input length. -/
-  length_eq : output.length = input.length
-  /-- The output list has no repeated vectors. -/
-  nodup : output.Nodup
+def GramSchmidtResult {ι : Type*} [Fintype ι]
+    (input output : List (ι → ℂ)) : Prop :=
+  output = gramSchmidt input ∧
+  listSpan input = listSpan output ∧
+  Corthogonal output ∧
+  output.length = input.length ∧
+  output.Nodup
 
 /-- A bundled version of `GramSchmidtResult`. -/
 structure GramSchmidtPacket {ι : Type*} [Fintype ι]
@@ -289,23 +284,23 @@ variable {input output : List (ι → ℂ)}
 
 theorem algorithm (R : GramSchmidtResult input output) :
     output = gramSchmidt input :=
-  R.output_eq
+  R.1
 
 theorem span (R : GramSchmidtResult input output) :
     listSpan input = listSpan output :=
-  R.span_eq
+  R.2.1
 
 theorem orthogonal (R : GramSchmidtResult input output) :
     Corthogonal output :=
-  R.corthogonal
+  R.2.2.1
 
 theorem length (R : GramSchmidtResult input output) :
     output.length = input.length :=
-  R.length_eq
+  R.2.2.2.1
 
 theorem distinct (R : GramSchmidtResult input output) :
     output.Nodup :=
-  R.nodup
+  R.2.2.2.2
 
 end GramSchmidtResult
 
@@ -320,6 +315,6 @@ theorem gramSchmidt_result {ι : Type*} [Fintype ι]
       Corthogonal P.output ∧
       P.output.length = input.length ∧
       P.output.Nodup := by
-  exact ⟨P.result.span_eq, P.result.corthogonal, P.result.length_eq, P.result.nodup⟩
+  exact ⟨P.result.2.1, P.result.2.2.1, P.result.2.2.2.1, P.result.2.2.2.2⟩
 
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GramSchmidt

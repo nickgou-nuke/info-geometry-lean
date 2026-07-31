@@ -67,16 +67,4 @@ theorem s3ArtinGenerator_braid_relation :
         s3ArtinGenerator ⟨1, by decide⟩ := by
   simpa [s3ArtinGenerator_zero, s3ArtinGenerator_one] using s3_adjacent_artin_relation
 
-/-- The concrete `B₃` permutation shadow packet. -/
-theorem s3_artin_quotient_packet :
-    s3ArtinGenerator ⟨0, by decide⟩ = Equiv.swap 0 1 ∧
-    s3ArtinGenerator ⟨1, by decide⟩ = Equiv.swap 1 2 ∧
-    sigma1 * sigma1 = 1 ∧
-    sigma2 * sigma2 = 1 ∧
-    s3ArtinGenerator ⟨0, by decide⟩ * s3ArtinGenerator ⟨1, by decide⟩ *
-        s3ArtinGenerator ⟨0, by decide⟩ =
-      s3ArtinGenerator ⟨1, by decide⟩ * s3ArtinGenerator ⟨0, by decide⟩ *
-        s3ArtinGenerator ⟨1, by decide⟩ := by
-  exact ⟨rfl, rfl, sigma1_sq, sigma2_sq, s3ArtinGenerator_braid_relation⟩
-
 end InfoGeometry.Topology.ArtinBraidS3Quotient

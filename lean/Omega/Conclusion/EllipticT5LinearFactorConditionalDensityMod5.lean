@@ -10,8 +10,7 @@ structure conclusion_elliptic_t5_linear_factor_conditional_density_mod5_row wher
 deriving DecidableEq
 
 /-- Trivial carrier for the determinant-fiber fixed-point certificate. -/
-structure conclusion_elliptic_t5_linear_factor_conditional_density_mod5_data where
-  conclusion_elliptic_t5_linear_factor_conditional_density_mod5_witness : Unit := ()
+abbrev conclusion_elliptic_t5_linear_factor_conditional_density_mod5_data := Unit
 
 /-- Certified determinant-fiber counts for the `GL₂(F₅)` action on `F₅² \ {0}`. -/
 def conclusion_elliptic_t5_linear_factor_conditional_density_mod5_rows :

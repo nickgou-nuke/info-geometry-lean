@@ -110,27 +110,20 @@ The concrete packet tying together the available holographic and triality
 owners.  This is intentionally a finite, proof-carrying interface rather than
 a claim of a full analytic RT/von-Neumann/`Spin(4,4)` theorem.
 -/
-structure HolographicEntanglementTrialityPacket
+def HolographicEntanglementTrialityPacket
     (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-    (s : TrialitySector) (n N : ℕ) : Prop where
-  rt_at_sector :
+    (s : TrialitySector) (n N : ℕ) : Prop :=
     sectorSubtreeEntropy s n =
-      sectorMinimalSurfaceArea s n / (4 * effectiveNewtonConstant)
-  entropy_triality_invariant :
+      sectorMinimalSurfaceArea s n / (4 * effectiveNewtonConstant) ∧
     sectorSubtreeEntropy (trialityCycle s) n = sectorSubtreeEntropy s n
-  area_triality_invariant :
-    sectorMinimalSurfaceArea (trialityCycle s) n = sectorMinimalSurfaceArea s n
-  sector_cycle3 :
-    (trialityCycle ^ 3) s = s
-  supercharge_square :
+    ∧ sectorMinimalSurfaceArea (trialityCycle s) n = sectorMinimalSurfaceArea s n
+    ∧ (trialityCycle ^ 3) s = s
+    ∧
     (canonicalSplitTrialityKernel (E := E)).trialitySupercharge.comp
         (canonicalSplitTrialityKernel (E := E)).trialitySupercharge =
-      LinearMap.id
-  even_half_spinor_card :
-    (Finset.univ.filter fun ε : Fin 4 → Bool => EvenMinus ε).card = 8
-  odd_half_spinor_card :
-    (Finset.univ.filter fun ε : Fin 4 → Bool => OddMinus ε).card = 8
-  braid_entropy_readout :
+      LinearMap.id ∧
+    (Finset.univ.filter fun ε : Fin 4 → Bool => EvenMinus ε).card = 8 ∧
+    (Finset.univ.filter fun ε : Fin 4 → Bool => OddMinus ε).card = 8 ∧
     cumulativeBraidEntropy N = (N : ℝ) * braidEntanglementPerStep
 
 /-- Canonical construction of the holographic entanglement/triality packet. -/
@@ -153,30 +146,22 @@ Capstone forward-time packet: holography/triality consumes the promoted
 physical forward-time bridge directly, together with the existing finite RT and
 split-triality kernel owners.
 -/
-structure ForwardTimeHolographicTrialityPacket
+def ForwardTimeHolographicTrialityPacket
     (B : ThermalTimeMonodromyBridge.BridgeData (E := E))
-    (s : TrialitySector) (n N : ℕ) (A : EndH) : Prop where
-  forward_clock_packet :
-    PositiveBranchClockPacket (E := E)
-      (PhysicalForwardTimeBridge (E := E) B) n A
-  rt_at_sector :
+    (s : TrialitySector) (n N : ℕ) (A : EndH) : Prop :=
+  PositiveBranchClockPacket (E := E)
+      (PhysicalForwardTimeBridge (E := E) B) n A ∧
     sectorSubtreeEntropy s n =
-      sectorMinimalSurfaceArea s n / (4 * effectiveNewtonConstant)
-  entropy_triality_invariant :
+      sectorMinimalSurfaceArea s n / (4 * effectiveNewtonConstant) ∧
     sectorSubtreeEntropy (trialityCycle s) n = sectorSubtreeEntropy s n
-  area_triality_invariant :
-    sectorMinimalSurfaceArea (trialityCycle s) n = sectorMinimalSurfaceArea s n
-  sector_cycle3 :
-    (trialityCycle ^ 3) s = s
-  supercharge_square :
+    ∧ sectorMinimalSurfaceArea (trialityCycle s) n = sectorMinimalSurfaceArea s n
+    ∧ (trialityCycle ^ 3) s = s
+    ∧
     (canonicalSplitTrialityKernel (E := E)).trialitySupercharge.comp
         (canonicalSplitTrialityKernel (E := E)).trialitySupercharge =
-      LinearMap.id
-  even_half_spinor_card :
-    (Finset.univ.filter fun ε : Fin 4 → Bool => EvenMinus ε).card = 8
-  odd_half_spinor_card :
-    (Finset.univ.filter fun ε : Fin 4 → Bool => OddMinus ε).card = 8
-  braid_entropy_readout :
+      LinearMap.id ∧
+    (Finset.univ.filter fun ε : Fin 4 → Bool => EvenMinus ε).card = 8 ∧
+    (Finset.univ.filter fun ε : Fin 4 → Bool => OddMinus ε).card = 8 ∧
     cumulativeBraidEntropy N = (N : ℝ) * braidEntanglementPerStep
 
 /--
@@ -211,11 +196,11 @@ theorem forward_time_equals_positive_winding_readout
       Complex.exp (((n : ℤ) : ℂ) * (∮ z in C((0 : ℂ), B.radius), poleForm z)) = (1 : ℂ) ∧
       subtreeEntropy n = minimalSurfaceArea n / (4 * effectiveNewtonConstant) := by
   exact ⟨
-    P.forward_clock_packet.modular_readout,
-    P.forward_clock_packet.deRham_readout,
-    P.forward_clock_packet.holonomy_readout,
+    P.1.1,
+    P.1.2.1,
+    P.1.2.2.1,
     by simpa [PhysicalForwardTimeBridge, identityDepthPositiveBranchBridge] using
-      P.forward_clock_packet.rt_readout
+      P.1.2.2.2
   ⟩
 
 /--
@@ -230,7 +215,7 @@ theorem sector_forward_time_triality_readout
         sectorMinimalSurfaceArea s n / (4 * effectiveNewtonConstant) ∧
       sectorSubtreeEntropy (trialityCycle s) n = sectorSubtreeEntropy s n ∧
       sectorMinimalSurfaceArea (trialityCycle s) n = sectorMinimalSurfaceArea s n := by
-  exact ⟨P.rt_at_sector, P.entropy_triality_invariant, P.area_triality_invariant⟩
+  exact ⟨P.2.1, P.2.2.1, P.2.2.2.1⟩
 
 /--
 Positive-branch time clock theorem: on the promoted forward-time lane, the

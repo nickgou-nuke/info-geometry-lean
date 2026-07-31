@@ -57,7 +57,7 @@ structure Candidate where
       Nonempty (DilationKKTBridge.DilationFromProjectorObstruction (R := R))
   chiralKMS :
     ∃ (R : Type) (_ : Ring R),
-      (∃ K : R, ∃ Γ : ChiralKMSOwner.ChiralGrading (R := R), ChiralKMSOwner.KMSPreservesChirality K Γ ∨ ChiralKMSOwner.ChiralKMSObstruction K Γ ≠ 0)
+      (∃ K Γ : R, ChiralKMSOwner.KMSPreservesChirality K Γ ∨ ChiralKMSOwner.ChiralKMSObstruction K Γ ≠ 0)
   weylSupertrace : WeylSupertraceOwner.FiniteWeylSupertraceOwner
   conformalEquivariance :
     ∃ (E : Type) (_ : NormedAddCommGroup E) (_ : InnerProductSpace ℝ E) (_ : CompleteSpace E)
@@ -106,7 +106,7 @@ theorem candidate_requires_concrete_data
       (∃ (R : Type) (_ : Ring R),
         Nonempty (DilationKKTBridge.DilationFromProjectorObstruction (R := R))) ∧
       (∃ (R : Type) (_ : Ring R),
-        (∃ K : R, ∃ Γ : ChiralKMSOwner.ChiralGrading (R := R), ChiralKMSOwner.KMSPreservesChirality K Γ ∨ ChiralKMSOwner.ChiralKMSObstruction K Γ ≠ 0)) ∧
+        (∃ K Γ : R, ChiralKMSOwner.KMSPreservesChirality K Γ ∨ ChiralKMSOwner.ChiralKMSObstruction K Γ ≠ 0)) ∧
       Nonempty WeylSupertraceOwner.FiniteWeylSupertraceOwner ∧
       (∃ (E : Type) (_ : NormedAddCommGroup E) (_ : InnerProductSpace ℝ E) (_ : CompleteSpace E)
         (CI : ConformalInference E) (X : InfoGeometry.Quantum.RealSplitCl11Action E),

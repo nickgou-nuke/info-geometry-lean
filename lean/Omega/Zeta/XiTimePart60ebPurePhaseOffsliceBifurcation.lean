@@ -34,8 +34,7 @@ def xi_time_part60eb_pure_phase_offslice_bifurcation_statement : Prop :=
         form = xi_time_part60eb_pure_phase_offslice_bifurcation_null_failure_witness_form) ∧
     (¬ ∃ form : xi_time_part60eb_pure_phase_offslice_bifurcation_offslice_form,
       form ≠ xi_time_part60eb_pure_phase_offslice_bifurcation_external_axis_form ∧
-        form ≠ xi_time_part60eb_pure_phase_offslice_bifurcation_null_failure_witness_form ∧
-          True) ∧
+        form ≠ xi_time_part60eb_pure_phase_offslice_bifurcation_null_failure_witness_form) ∧
     xi_time_part60eb_pure_phase_offslice_bifurcation_busy_beaver_obstruction
 
 /-- Paper label: `thm:xi-time-part60eb-pure-phase-offslice-bifurcation`. -/
@@ -44,7 +43,7 @@ theorem paper_xi_time_part60eb_pure_phase_offslice_bifurcation :
   refine ⟨?_, ?_, ?_⟩
   · intro form
     cases form <;> simp
-  · rintro ⟨form, hnot_external, hnot_null, -⟩
+  · rintro ⟨form, hnot_external, hnot_null⟩
     cases form
     · exact hnot_external rfl
     · exact hnot_null rfl

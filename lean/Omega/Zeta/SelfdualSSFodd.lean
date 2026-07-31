@@ -6,8 +6,7 @@ namespace Omega.Zeta
 noncomputable section
 
 /-- Concrete normalized self-dual scattering phase package. -/
-structure selfdual_ssf_odd_data where
-  normalization : Unit := ()
+abbrev selfdual_ssf_odd_data := Unit
 
 namespace selfdual_ssf_odd_data
 

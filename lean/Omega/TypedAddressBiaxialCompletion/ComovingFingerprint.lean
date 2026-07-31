@@ -111,6 +111,12 @@ injectivity of `ν ↦ F_ν`, and the Hankel package identifies `ν`, `H_ν|_I`,
     prop:typed-address-biaxial-completion-comoving-fingerprint -/
 theorem paper_typed_address_biaxial_completion_comoving_fingerprint
     (κ : ℕ) (I : Set ℝ) (hOpen : ComovingOpenIntervalInjective κ I)
+    (hLorentzProfileModel : Prop)
+    (hLorentzProfileModel_h : hLorentzProfileModel)
+    (hExplicitFourierFormulaInput : Prop)
+    (hExplicitFourierFormulaInput_h : hExplicitFourierFormulaInput)
+    (hPositiveFrequencyRestriction : Prop)
+    (hPositiveFrequencyRestriction_h : hPositiveFrequencyRestriction)
     (hGeneralPosition : ComovingGeneralPosition κ)
     (hHankelFactorization : ComovingHankelFactorization κ)
     (hHankelRank : ComovingHankelRankCertificate κ)
@@ -123,14 +129,10 @@ theorem paper_typed_address_biaxial_completion_comoving_fingerprint
       ComovingFingerprintFamilyInjective κ ∧
       ComovingMutualDetermination κ I := by
   let fourierData : ComovingFourierClosedData := {
-    lorentzProfileModel := True
-    explicitFourierFormulaInput := True
-    positiveFrequencyRestriction := True
+    lorentzProfileModel := hLorentzProfileModel
+    explicitFourierFormulaInput := hExplicitFourierFormulaInput
+    positiveFrequencyRestriction := hPositiveFrequencyRestriction
     intervalUniquenessPrinciple := ComovingOpenIntervalInjective κ I
-    lorentzProfileModel_h := trivial
-    explicitFourierFormulaInput_h := trivial
-    positiveFrequencyRestriction_h := trivial
-    intervalUniquenessPrinciple_h := hOpen
     fourierClosedForm := ComovingFingerprintIntegralRepresentation κ
     finiteExponentialSpectrum := ComovingFiniteExponentialSpectrum κ
     openIntervalInjective := ComovingOpenIntervalInjective κ I
@@ -147,7 +149,6 @@ theorem paper_typed_address_biaxial_completion_comoving_fingerprint
   let uniquenessData : ComovingFingerprintUniquenessData := {
     fourierClosedData := fourierData
     comovingHankelData := hankelData
-    generalPosition_h := hGeneralPosition
     fingerprintIntegralRepresentation := ComovingFingerprintIntegralRepresentation κ
     fingerprintInjective := ComovingFingerprintFamilyInjective κ
     intervalFingerprintKernelEquivalence := ComovingMutualDetermination κ I
@@ -157,7 +158,9 @@ theorem paper_typed_address_biaxial_completion_comoving_fingerprint
     deriveIntervalFingerprintKernelEquivalence := fun _ _ _ =>
       ⟨hBoundaryRecover, comovingFingerprintFamilyInjective_of_interval hOpen, hKernelRecover⟩ }
   simpa [uniquenessData] using
-    paper_typed_address_biaxial_completion_comoving_fingerprint_uniqueness uniquenessData
+    paper_typed_address_biaxial_completion_comoving_fingerprint_uniqueness
+      uniquenessData hGeneralPosition hLorentzProfileModel_h
+        hExplicitFourierFormulaInput_h hPositiveFrequencyRestriction_h hOpen
 
 end
 

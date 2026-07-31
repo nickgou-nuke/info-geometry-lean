@@ -32,12 +32,18 @@ abbrev stageModuleDiagram : ℕ ⥤ ModuleCat ℂ :=
 /-- A natural stagewise star flow compatible with the fixed-index tower. -/
 structure FlowData where
   flow : ∀ n, ℝ → Stage n ≃⋆ₐ[ℂ] Stage n
-  flow_zero : ∀ n a, flow n 0 a = a
   flow_add : ∀ n t s a, flow n (t + s) a = flow n t (flow n s a)
   map_naturality : ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
     T.map hmn (flow m t a) = flow n t (T.map hmn a)
 
 variable (Φ : FlowData Stage T)
+
+theorem flow_zero (n : ℕ) (a : Stage n) :
+    Φ.flow n 0 a = a := by
+  have h := Φ.flow_add n (1 : ℝ) 0 a
+  have h' : Φ.flow n 1 a = Φ.flow n 1 (Φ.flow n 0 a) := by
+    simpa using h
+  exact (Φ.flow n 1).injective h'.symm
 
 def flowNatTrans (t : ℝ) :
     stageModuleDiagram Stage T ⟶ stageModuleDiagram Stage T where
@@ -73,7 +79,7 @@ theorem flowColimitMap_zero :
     (colimit.ι (stageModuleDiagram Stage T) n).hom a
   rw [flowColimitMap_inclusion]
   exact congrArg (fun f => (colimit.ι (stageModuleDiagram Stage T) n).hom f)
-    (Φ.flow_zero n a)
+    (flow_zero (Stage := Stage) (T := T) Φ n a)
 
 theorem flowColimitMap_add (t s : ℝ) :
     flowColimitMap Stage T Φ (t + s) =

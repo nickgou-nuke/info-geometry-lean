@@ -16,6 +16,14 @@ structure DefectMeasureFourierLaplaceData where
   κ : ℕ
   interval : Set ℝ
   hInterval : ComovingOpenIntervalInjective κ interval
+  lorentzProfileModel : Prop
+  explicitFourierFormulaInput : Prop
+  positiveFrequencyRestriction : Prop
+  integrableAnalyticProfile : Prop
+  lorentzProfileModel_h : lorentzProfileModel
+  explicitFourierFormulaInput_h : explicitFourierFormulaInput
+  positiveFrequencyRestriction_h : positiveFrequencyRestriction
+  integrableAnalyticProfile_h : integrableAnalyticProfile
 
 /-- A bundled two-parameter Fourier-Laplace fingerprint attached to a finite atomic family. -/
 structure TensorizedFingerprint (κ : ℕ) where
@@ -46,14 +54,10 @@ injectivity of the Fourier-Laplace transform on this finite-measure class.
 theorem paper_cdim_defect_measure_fourier_laplace_holographic
     (D : DefectMeasureFourierLaplaceData) : D.tensorizedFingerprint ∧ D.fingerprintInjective := by
   let fourierData : Omega.TypedAddressBiaxialCompletion.ComovingFourierClosedData := {
-    lorentzProfileModel := True
-    explicitFourierFormulaInput := True
-    positiveFrequencyRestriction := True
+    lorentzProfileModel := D.lorentzProfileModel
+    explicitFourierFormulaInput := D.explicitFourierFormulaInput
+    positiveFrequencyRestriction := D.positiveFrequencyRestriction
     intervalUniquenessPrinciple := ComovingOpenIntervalInjective D.κ D.interval
-    lorentzProfileModel_h := trivial
-    explicitFourierFormulaInput_h := trivial
-    positiveFrequencyRestriction_h := trivial
-    intervalUniquenessPrinciple_h := D.hInterval
     fourierClosedForm := ComovingFingerprintIntegralRepresentation D.κ
     finiteExponentialSpectrum := ComovingFiniteExponentialSpectrum D.κ
     openIntervalInjective := ComovingOpenIntervalInjective D.κ D.interval
@@ -62,8 +66,7 @@ theorem paper_cdim_defect_measure_fourier_laplace_holographic
     deriveOpenIntervalInjective := fun _ hI => hI }
   let scanData : ComovingHorizonScanFourierInversionData := {
     fourierClosedData := fourierData
-    integrableAnalyticProfile := True
-    integrableAnalyticProfile_h := trivial
+    integrableAnalyticProfile := D.integrableAnalyticProfile
     explicitFourierSpectrumFormula := ComovingFiniteExponentialSpectrum D.κ
     finiteMultisetInjectivity := ComovingOpenIntervalInjective D.κ D.interval
     deriveExplicitFourierSpectrumFormula := fun _ => comovingFingerprint_finite_exponential_spectrum D.κ
@@ -71,7 +74,9 @@ theorem paper_cdim_defect_measure_fourier_laplace_holographic
   have hScan :
       scanData.integrableAnalyticProfile ∧ scanData.explicitFourierSpectrumFormula ∧
         scanData.finiteMultisetInjectivity :=
-    paper_cdim_comoving_horizon_scan_fourier_inversion scanData
+    paper_cdim_comoving_horizon_scan_fourier_inversion
+      scanData D.integrableAnalyticProfile_h D.lorentzProfileModel_h
+        D.explicitFourierFormulaInput_h D.positiveFrequencyRestriction_h D.hInterval
   have hSpectrum : ComovingFiniteExponentialSpectrum D.κ := hScan.2.1
   refine ⟨?_, ?_⟩
   · intro ν s

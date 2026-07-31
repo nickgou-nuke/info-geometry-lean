@@ -71,7 +71,7 @@ theorem Pminus_idempotent (hJ : IsInvolution J) : IsProjector (Pminus J) := by
   simpa [Pminus, IsProjector, IsInvolution] using
     (InfoGeometry.Cartan.Pminus_idempotent (θ := J) (hθ := hJ))
 
-theorem Pplus_add_Pminus (_hJ : IsInvolution J) :
+theorem Pplus_add_Pminus :
     Pplus J + Pminus J = (1 : Module.End ℝ W) := by
   simpa [Pplus, Pminus] using (InfoGeometry.Cartan.Pplus_add_Pminus_eq_id (θ := J))
 

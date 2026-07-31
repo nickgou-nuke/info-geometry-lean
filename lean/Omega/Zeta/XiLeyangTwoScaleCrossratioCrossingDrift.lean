@@ -104,27 +104,8 @@ theorem paper_xi_leyang_two_scale_crossratio_crossing_drift
     unfold xi_leyang_two_scale_crossratio_crossing_drift_crossingDrift
     field_simp [D.hslope, hLlog, hsLlog]
     ring
-  · have hwrapped :=
-      paper_xi_leyang_two_scale_crossratio_invariant
-        (crossratioConstruction :=
-          xiLeyangTwoScaleCrossratio D.y₀
-              (D.xi_leyang_two_scale_crossratio_crossing_drift_crossingValue D.L) =
-            D.xi_leyang_two_scale_crossratio_crossing_drift_crossingValue D.L / D.y₀)
-        (scalingLaw :=
-          xiLeyangTwoScaleCrossratio (D.c * D.y₀)
-              (D.c * D.xi_leyang_two_scale_crossratio_crossing_drift_crossingValue D.L) =
-            xiLeyangTwoScaleCrossratio D.y₀
-              (D.xi_leyang_two_scale_crossratio_crossing_drift_crossingValue D.L))
-        (criticalSpecialization := True)
-        (mixingInvariance := True)
-        (hScaling := fun _ =>
-          xiLeyangTwoScaleCrossratio_scale_invariant D.c D.y₀
-            (D.xi_leyang_two_scale_crossratio_crossing_drift_crossingValue D.L) D.hc D.hy₀)
-        (hCritical := fun _ => trivial)
-        (hInvariant := fun _ => trivial) (by
-          unfold xiLeyangTwoScaleCrossratio
-          rfl)
-    exact hwrapped.1
+  · exact xiLeyangTwoScaleCrossratio_scale_invariant D.c D.y₀
+      (D.xi_leyang_two_scale_crossratio_crossing_drift_crossingValue D.L) D.hc D.hy₀
 
 end
 

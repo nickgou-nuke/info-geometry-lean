@@ -39,18 +39,14 @@ def stable_audit_prime_field_redundancy_legacy_scope_in_baseline : Prop :=
     stable_audit_prime_field_redundancy_legacy_prime_bound ≤
       stable_audit_prime_field_redundancy_baseline_prime_bound
 
-/-- Paper-facing redundancy statement for the legacy prime-field audit. -/
-def stable_audit_prime_field_redundancy_statement : Prop :=
-  stable_audit_prime_field_redundancy_legacy_equation_count = 810 ∧
-    stable_audit_prime_field_redundancy_cumulative 13 = 608948 ∧
-    (∀ p ∈ stable_audit_prime_field_redundancy_later_primes,
-      stable_audit_prime_field_redundancy_cumulative p = 608948) ∧
-    stable_audit_prime_field_redundancy_legacy_scope_in_baseline
-
 /-- Paper label: `prop:stable-audit-prime-field-redundancy`. -/
 theorem paper_stable_audit_prime_field_redundancy :
-    stable_audit_prime_field_redundancy_statement := by
-  simp [stable_audit_prime_field_redundancy_statement,
+    stable_audit_prime_field_redundancy_legacy_equation_count = 810 ∧
+      stable_audit_prime_field_redundancy_cumulative 13 = 608948 ∧
+      (∀ p ∈ stable_audit_prime_field_redundancy_later_primes,
+        stable_audit_prime_field_redundancy_cumulative p = 608948) ∧
+      stable_audit_prime_field_redundancy_legacy_scope_in_baseline := by
+  simp [
     stable_audit_prime_field_redundancy_legacy_scope_in_baseline,
     stable_audit_prime_field_redundancy_legacy_equation_count,
     stable_audit_prime_field_redundancy_baseline_equation_count,

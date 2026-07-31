@@ -10,7 +10,6 @@ $H^*_{\text{BRST}} = \ker(Q) / \text{im}(Q)$ on Fock space representations.
 ## Main Theorems
 * `brst_operator_nilpotent`: $Q_{\text{BRST}}^2 = 0$.
 * `range_le_ker_brst`: $\text{im}(Q_{\text{BRST}}) \subseteq \ker(Q_{\text{BRST}})$.
-* `brst_cohomology_packet_exists`: Constructive existence of BRST cohomology structure packets.
 -/
 
 namespace InfoGeometry.Quantum.BRSTBoundaryCohomology
@@ -37,12 +36,5 @@ theorem range_le_ker_brst {V : Type*} [AddCommGroup V] [Module ℝ V] (f : Bound
   rw [LinearMap.mem_ker]
   have h_comp := LinearMap.congr_fun (brst_operator_nilpotent f) y
   exact h_comp
-
-/-- An explicit BRST boundary mode yields a nonempty carrier. -/
-theorem brst_cohomology_packet_exists
-    {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (f : BoundaryMajorana V) :
-    Nonempty (BoundaryMajorana V) :=
-  ⟨f⟩
 
 end InfoGeometry.Quantum.BRSTBoundaryCohomology

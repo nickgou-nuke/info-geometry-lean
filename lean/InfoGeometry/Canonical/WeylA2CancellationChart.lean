@@ -107,24 +107,6 @@ theorem denominator_zero_forces_numerator_zero
 theorem quotient_eq_ratio (h : C.NoncollisionDomain) :
     C.quotient h = C.numerator / C.denominator := rfl
 
-/-- Combined concrete `A₂` cancellation packet. -/
-@[rep_depth thermo]
-theorem concrete_a2_cancellation_packet :
-    (C.denominator = 0 ↔
-      ∃ i j : Fin 3, C.nodes i = C.nodes j ∧ i ≠ j)
-    ∧
-    (C.numerator = 0 ↔
-      ∃ i j : Fin 3, C.expNodes i = C.expNodes j ∧ i ≠ j)
-    ∧
-    ((C.denominator = 0) → C.numerator = 0)
-    ∧
-    (C.NoncollisionDomain ↔ C.denominator ≠ 0) := by
-  exact
-    ⟨C.denominator_eq_zero_iff_collision,
-      C.numerator_eq_zero_iff_expCollision,
-      C.denominator_zero_forces_numerator_zero,
-      Iff.rfl⟩
-
 end A2Chart
 
 end InfoGeometry.Canonical.WeylA2CancellationChart

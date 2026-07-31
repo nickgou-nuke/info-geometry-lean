@@ -20,23 +20,14 @@ namespace xi_time_part60eb_finite_horizon_rh_audit_trilemma_certificate
 def reliable (C : xi_time_part60eb_finite_horizon_rh_audit_trilemma_certificate) : Prop :=
   ∃ recover : C.Visible → Prop, ∀ L : C.Ledger, recover (C.visible L) ↔ C.truth L
 
-/-- Completeness flag for the finite-horizon audit certificate. -/
-def complete (_C : xi_time_part60eb_finite_horizon_rh_audit_trilemma_certificate) : Prop :=
-  True
-
-/-- Computability flag for the finite-horizon audit certificate. -/
-def computable (_C : xi_time_part60eb_finite_horizon_rh_audit_trilemma_certificate) : Prop :=
-  True
-
 end xi_time_part60eb_finite_horizon_rh_audit_trilemma_certificate
 
 /-- Paper label: `cor:xi-time-part60eb-finite-horizon-rh-audit-trilemma`. -/
 theorem paper_xi_time_part60eb_finite_horizon_rh_audit_trilemma
     (C : xi_time_part60eb_finite_horizon_rh_audit_trilemma_certificate) :
-    ¬ (C.reliable ∧ C.complete ∧ C.computable) := by
-  intro h
-  exact
+    ¬ C.reliable := by
+  simpa [xi_time_part60eb_finite_horizon_rh_audit_trilemma_certificate.reliable] using
     (paper_xi_time_part60eb_horizon_ledger_separation_principle C.visible C.truth
-      C.finiteVisibleSurrogateObstruction) h.1
+      C.finiteVisibleSurrogateObstruction)
 
 end Omega.Zeta

@@ -183,7 +183,14 @@ theorem paper_universal_compilable_collision_kernel_implies_p_np
     (steps : ℕ → ℕ)
     (hCompile :
       universal_compilable_collision_kernel_implies_p_np_compilation_hypothesis
-        compileDim compileMatrix compileLeft compileRight steps) :
+        compileDim compileMatrix compileLeft compileRight steps)
+    (hClassifier : Omega.SPG.PolynomialTimeMap
+      (universal_compilable_collision_kernel_implies_p_np_decide_unsat
+        compileDim compileMatrix compileLeft compileRight steps))
+    (hComplement : ∀ decideL :
+      universal_compilable_collision_kernel_implies_p_np_formula → Bool,
+      Omega.SPG.PolynomialTimeMap decideL →
+        Omega.SPG.PolynomialTimeMap (fun x => !(decideL x))) :
     Omega.SPG.UNSATInP universal_compilable_collision_kernel_implies_p_np_unsat ∧
       Omega.SPG.PEqualsNP universal_compilable_collision_kernel_implies_p_np_unsat := by
   have hSpec :
@@ -198,12 +205,12 @@ theorem paper_universal_compilable_collision_kernel_implies_p_np
     refine ⟨
       universal_compilable_collision_kernel_implies_p_np_decide_unsat
         compileDim compileMatrix compileLeft compileRight steps,
-      trivial,
+      hClassifier,
       hSpec⟩
   have hSat :
       Omega.SPG.SATInP
         (fun F => ¬ universal_compilable_collision_kernel_implies_p_np_unsat F) :=
-    Omega.SPG.complement_polytime_decidable hUnsat
+    Omega.SPG.complement_polytime_decidable hUnsat hComplement
   exact ⟨hUnsat, ⟨hSat, hUnsat⟩⟩
 
 end Omega.OperatorAlgebra

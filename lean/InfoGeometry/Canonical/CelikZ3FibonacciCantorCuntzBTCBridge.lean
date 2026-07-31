@@ -67,33 +67,6 @@ namespace CelikZ3CartanYangBaxterCalculus
 
 variable {A : Type*} [Ring A]
 
-/-- Read back the Cartan formula carried by the socket. -/
-theorem cartan_formula_apply (C : CelikZ3CartanYangBaxterCalculus A) (x : A) :
-    C.lieDerivative x = C.calculus.d (C.contraction x) + C.contraction (C.calculus.d x) :=
-  C.cartan_formula x
-
-/-- Read back the `Z3` quantum-plane packet. -/
-theorem quantum_plane_packet (C : CelikZ3CartanYangBaxterCalculus A) :
-    C.plane.omega ^ 3 = 1
-      ∧ C.plane.theta1 ^ 3 = 0
-      ∧ C.plane.theta2 ^ 3 = 0
-      ∧ C.plane.theta1 * C.plane.theta2 =
-          C.plane.omega * (C.plane.theta2 * C.plane.theta1) := by
-  exact z3_quantum_plane_packet C.plane
-
-/-- Read back the cubic differential and graded Leibniz packet. -/
-theorem differential_calculus_packet
-    (C : CelikZ3CartanYangBaxterCalculus A) (x y : A) :
-    C.calculus.d (C.calculus.d (C.calculus.d x)) = 0
-      ∧ C.calculus.d (x * y) =
-          C.calculus.d x * y + C.calculus.omegaPow (C.calculus.degree x) * (x * C.calculus.d y) := by
-  exact z3_differential_calculus_packet C.calculus x y
-
-/-- Read back the local two-channel Yang--Baxter relation. -/
-theorem local_yang_baxter_readback (C : CelikZ3CartanYangBaxterCalculus A) :
-    C.localR * C.localB * C.localR = C.localB * C.localR * C.localB :=
-  C.local_yang_baxter
-
 /--
 Concrete `Z3` matrix owner socket.
 

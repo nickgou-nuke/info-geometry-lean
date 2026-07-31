@@ -116,18 +116,6 @@ theorem mobius_square_projectively_identity :
   right
   ext i j; fin_cases i <;> fin_cases j <;> norm_num [mobiusS, I2]
 
-/--
-Compact finite packet: the formula-level Klein projective data reduce to the
-central sign quotient, the glide relation, and the Mobius refocusing readout.
--/
-theorem projective_klein_formula_packet (t : ℚ) :
-    ProjectivelyEqual I2 minusI2 ∧
-      twistA * parabolicB * twistA * parabolicB = I2 ∧
-      mobiusS.mulVec ![t, 1] = ![-1, t] ∧
-      ProjectivelyEqual (mobiusS * mobiusS) I2 := by
-  exact ⟨projective_identifies_central_sign, klein_bottle_relation,
-    mobius_refocus_vector t, mobius_square_projectively_identity⟩
-
 end InfoGeometry.Topology.ProjectiveKleinCompactification
 
 end noncomputable section

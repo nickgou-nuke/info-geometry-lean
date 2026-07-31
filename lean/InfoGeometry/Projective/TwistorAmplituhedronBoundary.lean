@@ -97,16 +97,6 @@ def boundary_of_common_twistor
   S.boundaryOfNullPair X Y
     (common_twistor_incidence_forces_null Z X Y hX hY hπ)
 
-/-- Read back the installed BCFW comparison map. -/
-def bcfwComparison_readback (S : AmplituhedronBoundarySpec) :
-    S.Boundary → S.BCFWBoundary :=
-  S.bcfwComparison
-
-/-- Read back the installed Rohozhkin/plabic comparison map. -/
-def rohozhkinComparison_readback (S : AmplituhedronBoundarySpec) :
-    S.Boundary → S.RohozhkinBoundary :=
-  S.rohozhkinComparison
-
 end AmplituhedronBoundarySpec
 
 /--
@@ -129,24 +119,5 @@ theorem conf3_spin_tiled_rank32_of_external_data
     (hRank : data.totalRank = 8) :
     data.totalRank * spinTilingMultiplicity = 32 :=
   spin_tiled_rank_from_external_data data hAmbient hConsistent hRank
-
-/--
-Combined theorem-safe packet for the current twistor/amplituhedron boundary
-lane.
--/
-theorem twistor_amplituhedron_boundary_packet
-    (S : AmplituhedronBoundarySpec)
-    (X₁ X₂ X₃ : Vec22)
-    (hTriple : TripleNonNull X₁ X₂ X₃) :
-    ((¬ ∃ Z : Twistor, Incident Z X₁ ∧ Incident Z X₂ ∧ Z.2 ≠ 0) ∧
-      (¬ ∃ Z : Twistor, Incident Z X₂ ∧ Incident Z X₃ ∧ Z.2 ≠ 0) ∧
-      (¬ ∃ Z : Twistor, Incident Z X₃ ∧ Incident Z X₁ ∧ Z.2 ≠ 0)) ∧
-      candidateLocalBettiData.totalRank * spinTilingMultiplicity = 32 ∧
-      Nonempty (S.Boundary → S.BCFWBoundary) ∧
-      Nonempty (S.Boundary → S.RohozhkinBoundary) := by
-  exact ⟨triple_nonnull_excludes_pairwise_common_twistors X₁ X₂ X₃ hTriple,
-    candidate_conf3_spin_tiled_rank32,
-    ⟨S.bcfwComparison⟩,
-    ⟨S.rohozhkinComparison⟩⟩
 
 end InfoGeometry.Projective.TwistorAmplituhedronBoundary

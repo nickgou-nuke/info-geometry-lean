@@ -23,17 +23,13 @@ def conclusion_leyang_prym3_finitefield_principalization_frequency_density :
 
 /-- A linear factor is present exactly in the `(1,1,1)` and `(1,2)` cases. -/
 def conclusion_leyang_prym3_finitefield_principalization_frequency_has_linear_factor :
-    conclusion_leyang_prym3_finitefield_principalization_frequency_split_type → Prop
-  | one_one_one => True
-  | one_two => True
-  | three => False
+    conclusion_leyang_prym3_finitefield_principalization_frequency_split_type → Prop :=
+  fun s => s ≠ three
 
 /-- Principalization over the finite field occurs exactly when one component is rational. -/
 def conclusion_leyang_prym3_finitefield_principalization_frequency_has_principalization :
-    conclusion_leyang_prym3_finitefield_principalization_frequency_split_type → Prop
-  | one_one_one => True
-  | one_two => True
-  | three => False
+    conclusion_leyang_prym3_finitefield_principalization_frequency_split_type → Prop :=
+  fun s => s ≠ three
 
 /-- Total density of splitting types with a linear factor. -/
 def conclusion_leyang_prym3_finitefield_principalization_frequency_linear_density : ℚ :=

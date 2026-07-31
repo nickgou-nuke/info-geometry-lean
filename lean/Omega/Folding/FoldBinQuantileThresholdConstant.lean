@@ -15,7 +15,7 @@ noncomputable def foldBinQuantileThresholdConstant (ε : ℝ) : ℝ :=
 theorem paper_fold_bin_quantile_threshold_constant (ε : ℝ) (hε0 : 0 < ε) (hε1 : ε < 1) :
     foldBinQuantileThresholdConstant ε =
       if ε < Real.goldenRatio / Real.sqrt 5 then 1 else Real.goldenRatio⁻¹ := by
-  let D : FoldBinTwoStateAsymptoticData := {}
+  let D : FoldBinTwoStateAsymptoticData := Unit.unit
   let _ := hε0
   let _ := hε1
   have htwo := paper_fold_bin_two_point_limit_law D

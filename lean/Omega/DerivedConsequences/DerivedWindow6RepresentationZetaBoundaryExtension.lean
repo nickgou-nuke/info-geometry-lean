@@ -7,8 +7,7 @@ namespace Omega.DerivedConsequences
 
 /-- Concrete bookkeeping for the window-`6` representation zeta specialization and the boundary
 extension count. -/
-structure derived_window6_representation_zeta_boundary_extension_data where
-  derived_window6_representation_zeta_boundary_extension_witness : Unit := ()
+abbrev derived_window6_representation_zeta_boundary_extension_data := Unit
 
 namespace derived_window6_representation_zeta_boundary_extension_data
 

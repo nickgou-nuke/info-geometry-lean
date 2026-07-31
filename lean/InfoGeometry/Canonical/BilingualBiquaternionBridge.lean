@@ -72,11 +72,4 @@ noncomputable def bilingualSoldering (q : StandardBiquaternion E) : Biquaternion
   , is_biquaternionic := by use A, B
   }
 
-/--
-The readback theorem proving that the translated Biquaternion algebraically matches
-the complex scalar insertion, rigorously applying the Bilingual dictionary.
--/
-theorem bilingual_readback_bridge (q : StandardBiquaternion E) :
-    (bilingualSoldering q).op = q.realPart + (complex_i (E := E)).comp q.imagPart := by rfl
-
 end InfoGeometry.Canonical.BilingualBiquaternionBridge

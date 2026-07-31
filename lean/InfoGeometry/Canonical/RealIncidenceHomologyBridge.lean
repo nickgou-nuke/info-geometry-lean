@@ -58,13 +58,6 @@ def IsCycleAtSucc (n : ℕ) (x : K.C (n + 1)) : Prop :=
 def IsBoundary (n : ℕ) (x : K.C n) : Prop :=
   ∃ y : K.C (n + 1), K.boundary n y = x
 
-/-- Readback of the supplied nilpotence law `∂ ∂ = 0`. -/
-@[rep_depth transport]
-theorem boundary_boundary_zero_readback
-    (n : ℕ) (x : K.C (n + 2)) :
-    K.boundary n (K.boundary (n + 1) x) = K.zero n :=
-  K.boundary_boundary_zero n x
-
 /-- Every boundary of a higher chain is a cycle, by `∂ ∂ = 0`. -/
 @[rep_depth transport]
 theorem boundary_is_cycle
@@ -102,13 +95,6 @@ def IsCocycle (n : ℕ) (α : K.C n → K.V) : Prop :=
 @[rep_depth transport]
 def IsCoboundaryAtSucc (n : ℕ) (α : K.C (n + 1) → K.V) : Prop :=
   ∃ β : K.C n → K.V, K.coboundary n β = α
-
-/-- Readback of the supplied cochain nilpotence law `d d = 0`. -/
-@[rep_depth transport]
-theorem coboundary_coboundary_zero_readback
-    (n : ℕ) (α : K.C n → K.V) :
-    K.coboundary (n + 1) (K.coboundary n α) = fun _ => K.zeroV :=
-  K.coboundary_coboundary_zero n α
 
 /-- Every coboundary is a cocycle, by `d d = 0`. -/
 @[rep_depth transport]

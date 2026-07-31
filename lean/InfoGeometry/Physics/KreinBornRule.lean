@@ -28,11 +28,9 @@ A split Krein symmetry on a `2n`-dimensional complex matrix carrier.
 This stores only the finite-dimensional matrix conditions used by the local
 Krein-Born trace surface: involutivity, Hermitian symmetry, and trace zero.
 -/
-structure SplitKreinSymmetry
-    (J : Matrix (Fin (2 * n)) (Fin (2 * n)) ℂ) : Prop where
-  involutive : J * J = 1
-  hermitian : IsHermitian J
-  trace_zero : Matrix.trace J = 0
+def SplitKreinSymmetry
+    (J : Matrix (Fin (2 * n)) (Fin (2 * n)) ℂ) : Prop :=
+  J * J = 1 ∧ IsHermitian J ∧ Matrix.trace J = 0
 
 /--
 A finite-dimensional state compatible with a fixed Krein symmetry `J`.
@@ -40,11 +38,10 @@ A finite-dimensional state compatible with a fixed Krein symmetry `J`.
 The positivity stored here is exactly the positivity needed for the identity
 observable in the Krein-Born readback theorem below.
 -/
-structure KreinState
-    (ρ J : Matrix (Fin (2 * n)) (Fin (2 * n)) ℂ) : Prop where
-  hermitian : IsHermitian ρ
-  trace_one : Matrix.trace ρ = 1
-  j_positive : 0 ≤ (Matrix.trace (ρ * J)).re
+def KreinState
+    (ρ J : Matrix (Fin (2 * n)) (Fin (2 * n)) ℂ) : Prop :=
+  IsHermitian ρ ∧ Matrix.trace ρ = 1 ∧
+    0 ≤ (Matrix.trace (ρ * J)).re
 
 /--
 The finite-dimensional Krein-Born probability readout.
@@ -74,7 +71,7 @@ theorem modifiedBornProbability_one_nonneg
     {ρ J : Matrix (Fin (2 * n)) (Fin (2 * n)) ℂ}
     (hρ : KreinState ρ J) :
     0 ≤ modifiedBornProbability ρ 1 J := by
-  simpa [modifiedBornProbability_one] using hρ.j_positive
+  simpa [modifiedBornProbability_one] using hρ.2.2
 
 /--
 The split Krein symmetry readback exposes the trace-zero condition as a theorem.
@@ -83,8 +80,7 @@ theorem SplitKreinSymmetry.trace_eq_zero
     {J : Matrix (Fin (2 * n)) (Fin (2 * n)) ℂ}
     (hJ : SplitKreinSymmetry J) :
     Matrix.trace J = 0 := by
-  rcases hJ with ⟨_, _, htrace_zero⟩
-  exact htrace_zero
+  exact hJ.2.2
 
 /--
 The Krein state readback exposes the unit-trace condition as a theorem.
@@ -93,8 +89,7 @@ theorem KreinState.trace_eq_one
     {ρ J : Matrix (Fin (2 * n)) (Fin (2 * n)) ℂ}
     (hρ : KreinState ρ J) :
     Matrix.trace ρ = 1 := by
-  rcases hρ with ⟨_, htrace_one, _⟩
-  exact htrace_one
+  exact hρ.2.1
 
 end FiniteDimensional
 

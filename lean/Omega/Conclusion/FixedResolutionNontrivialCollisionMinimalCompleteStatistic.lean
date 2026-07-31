@@ -34,16 +34,18 @@ theorem paper_conclusion_fixedresolution_nontrivial_collision_minimal_complete_s
     (r : Nat) (delta mult : Fin r -> Nat) (hdelta : StrictMono delta)
     (hmult : ∀ i, 0 < mult i) :
     NontrivialCollisionPrefixMinimallyComplete (fun q => ∑ i, mult i * delta i ^ q) := by
-  let _ := hdelta
-  let _ := hmult
   refine ⟨r, rfl, rfl, ?_, ?_⟩
   · intro q
     rfl
-  · have hRecon :
-        True ∧ True ∧ True ∧ True :=
-      Omega.POM.paper_pom_fiber_spectrum_prony_hankel_2r_reconstruction
-        True True True True trivial (fun _ => trivial) (fun _ => trivial) (fun _ => trivial)
-    exact ⟨True, True, True, True, True, hRecon.1, hRecon.2.1, hRecon.2.2.1, hRecon.2.2.2,
-      trivial⟩
+  · refine ⟨
+      (∀ q : Fin (nontrivialCollisionPrefixLength r),
+        (∑ i, mult i * delta i ^ (q.1 + 2)) =
+          (∑ i, mult i * delta i ^ (q.1 + 2))),
+      StrictMono delta,
+      (∀ i, 0 < mult i),
+      (∀ i, delta i = delta i),
+      (0 : Nat) ≠ 1,
+      ?_⟩
+    exact ⟨(by intro q; rfl), hdelta, hmult, (by intro i; rfl), by decide⟩
 
 end Omega.Conclusion

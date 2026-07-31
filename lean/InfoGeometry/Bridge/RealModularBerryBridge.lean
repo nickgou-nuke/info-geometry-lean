@@ -156,17 +156,17 @@ def totalBoundaryAnomaly (M : ModularBerryCarrier G X Rotor Bivector) : Rotor :=
   M.bridgeData.boundaryRotor
 
 /-- Finite-height Stokes matching. -/
-structure FiniteStokesGate (M : ModularBerryCarrier G X Rotor Bivector) where
-  stokes_match : ∀ Y : ℝ, M.bulkInvariant Y = M.boundarySymmetryReadout Y
+def FiniteStokesGate (M : ModularBerryCarrier G X Rotor Bivector) : Prop :=
+  ∀ Y : ℝ, M.bulkInvariant Y = M.boundarySymmetryReadout Y
 
 /-- Cusp convergence gate. -/
-structure AnalyticCuspGate (M : ModularBerryCarrier G X Rotor Bivector) where
-  cusp_limit : Tendsto M.boundarySymmetryReadout atTop (nhds M.totalBoundaryAnomaly)
+def AnalyticCuspGate (M : ModularBerryCarrier G X Rotor Bivector) : Prop :=
+  Tendsto M.boundarySymmetryReadout atTop (nhds M.totalBoundaryAnomaly)
 
 /-- Specialization into the actual modular Berry data. -/
 structure GeometricSpecialization (M : ModularBerryCarrier G X Rotor Bivector) where
-  finite_stokes : FiniteStokesGate M
-  cusp_convergence : AnalyticCuspGate M
+  finite_stokes : ∀ Y : ℝ, M.bulkInvariant Y = M.boundarySymmetryReadout Y
+  cusp_convergence : Tendsto M.boundarySymmetryReadout atTop (nhds M.totalBoundaryAnomaly)
 
 /--
 Main bridge theorem.
@@ -180,9 +180,9 @@ theorem bulkInvariant_limit_eq_totalAnomaly_of_specialization
     Tendsto M.bulkInvariant atTop (nhds M.totalBoundaryAnomaly) := by
   have hfun : M.bulkInvariant = M.boundarySymmetryReadout := by
     funext Y
-    exact hM.finite_stokes.stokes_match Y
+    exact hM.finite_stokes Y
   rw [hfun]
-  exact hM.cusp_convergence.cusp_limit
+  exact hM.cusp_convergence
 
 /-- Canonical wrapper around the verified bridge data. -/
 def canonicalModularBerry
@@ -194,9 +194,8 @@ def canonicalModularBerry
 def canonicalSpecialization
     (D : RealModularBerryBridgeData G X Rotor Bivector) :
     GeometricSpecialization (canonicalModularBerry D) where
-  finite_stokes := { stokes_match := fun Y => D.finite_stokes Y }
+  finite_stokes := fun Y => D.finite_stokes Y
   cusp_convergence := by
-    refine ⟨?_⟩
     have hmul :
         Tendsto
           (fun Y : ℝ =>

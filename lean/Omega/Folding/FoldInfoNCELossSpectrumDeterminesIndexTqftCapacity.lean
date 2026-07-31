@@ -25,7 +25,14 @@ theorem paper_fold_infonce_loss_spectrum_determines_index_tqft_capacity
       spectrumPowerSum q = ∑ x : X, (Fintype.card {ω : Ω // fold ω = x} : ℝ) ^ q) :
     (∀ q, 2 ≤ q → q ≤ N →
       lossPowerSum q = ∑ x : X, (Fintype.card {ω : Ω // fold ω = x} : ℝ) ^ q) ∧
-      Omega.OperatorAlgebra.FoldWatataniIndexMomentsFormula fold m 1 ∧
+      (Omega.OperatorAlgebra.FoldJonesBasicConstructionDirectsum.directsumMatrixDecomposition fold ∧
+        (∀ x, Omega.OperatorAlgebra.foldWatataniIndexCoefficient fold x =
+          Fintype.card (Omega.OperatorAlgebra.FoldJonesBasicConstructionDirectsum.foldFiber fold x)) ∧
+        Omega.OperatorAlgebra.foldWatataniTracedIndexMoment fold 1 =
+          (∑ x, (Fintype.card
+            (Omega.OperatorAlgebra.FoldJonesBasicConstructionDirectsum.foldFiber fold x) : ℚ) ^
+              (1 + 1)) /
+            2 ^ m) ∧
       fold_oracle_watatani_index_trace_formula_statement fold 1 ∧
       Omega.POM.oracle_capacity_stieltjes_mellin_package fold ∧
       (∑ x : Omega.X m, (Omega.X.fiberMultiplicity x) ^ 2 = Omega.momentSum 2 m) ∧

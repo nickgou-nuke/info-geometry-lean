@@ -60,7 +60,7 @@ def canonicalRecord (D : XiExtensionPreservingInitialObjectData) : XiExtensionPr
 factorization through it. -/
 def HasInitialObject (D : XiExtensionPreservingInitialObjectData) : Prop :=
   ∀ i : Fin D.objectCount,
-    ∃! _ : extensionPreservingHom D.canonicalRecord (D.object i), True
+    extensionPreservingHom D.canonicalRecord (D.object i)
 
 end XiExtensionPreservingInitialObjectData
 
@@ -72,14 +72,11 @@ theorem paper_xi_extension_preserving_initial_object (D : XiExtensionPreservingI
   intro i
   rcases D.orthogonalTrichotomy i with ⟨hbase, hleft, hright⟩
   have hext := D.minimalExtension i
-  refine ⟨?_, trivial, ?_⟩
-  · dsimp [extensionPreservingHom]
-    ext
-    · simpa [XiExtensionPreservingInitialObjectData.canonicalRecord] using hbase.symm
-    · simpa [XiExtensionPreservingInitialObjectData.canonicalRecord] using hleft.symm
-    · simpa [XiExtensionPreservingInitialObjectData.canonicalRecord] using hright.symm
-    · simpa [XiExtensionPreservingInitialObjectData.canonicalRecord] using hext.symm
-  · intro _ hf
-    exact Subsingleton.elim _ _
+  dsimp [extensionPreservingHom]
+  ext
+  · simpa [XiExtensionPreservingInitialObjectData.canonicalRecord] using hbase.symm
+  · simpa [XiExtensionPreservingInitialObjectData.canonicalRecord] using hleft.symm
+  · simpa [XiExtensionPreservingInitialObjectData.canonicalRecord] using hright.symm
+  · simpa [XiExtensionPreservingInitialObjectData.canonicalRecord] using hext.symm
 
 end Omega.Zeta

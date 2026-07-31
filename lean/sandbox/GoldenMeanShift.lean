@@ -239,7 +239,17 @@ theorem psi_eq_neg_phi_inv : ψ = -φ⁻¹ := by
   rw [h5]
   ring
 
-/-- From X² = X + 1, multiply by X⁻¹: X = 1 + X⁻¹, so X⁻¹ = X - 1 -/
-theorem X_inv_omega : True := by trivial
+/-- The conjugate golden-ratio root satisfies the inverse identity forced by its
+quadratic equation: `ψ⁻¹ = ψ - 1`. -/
+theorem X_inv_omega : ψ⁻¹ = ψ - 1 := by
+  have hψ : ψ ≠ 0 := by
+    intro h
+    have hsq := psi_sq
+    have hfalse : (0 : ℝ) = 1 := by
+      rw [h] at hsq
+      simpa using hsq.symm
+    norm_num at hfalse
+  field_simp [hψ]
+  nlinarith [psi_sq]
 
 end InfoGeometry.Algebra.GoldenMeanShift

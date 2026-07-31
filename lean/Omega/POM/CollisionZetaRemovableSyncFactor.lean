@@ -7,8 +7,7 @@ open Polynomial
 noncomputable section
 
 /-- Minimal concrete datum for the synchronized/unsynchronized collision-zeta split. -/
-structure pom_collision_zeta_removable_sync_factor_data where
-  pom_collision_zeta_removable_sync_factor_witness : Unit := ()
+abbrev pom_collision_zeta_removable_sync_factor_data := Unit
 
 /-- The reordered two-state model: synchronized states form the first invariant block. -/
 def pom_collision_zeta_removable_sync_factor_reordered_matrix : Matrix (Fin 2) (Fin 2) ℤ :=

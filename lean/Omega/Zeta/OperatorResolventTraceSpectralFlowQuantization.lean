@@ -25,25 +25,9 @@ theorem paper_operator_resolvent_trace_jump_index :
     (((cyclicPerm2 ^ 0).trace = 2) ∧ ((cyclicPerm3 ^ 0).trace = 3)) ∧
     (((cyclicPerm4 ^ 0).trace = 4) ∧
       (((cyclicPerm5 ^ 0).trace = 5) ∧ ((cyclicPerm6 ^ 0).trace = 6))) := by
-  have hResidue :=
-    paper_resolvent_trace_integer_residue_noncancel
-      True
-      (((cyclicPerm2 ^ 0).trace = 2) ∧ ((cyclicPerm3 ^ 0).trace = 3))
-      (((0 : ℤ) ≤ 2) ∧ ((0 : ℤ) ≤ 3) ∧ ((0 : ℤ) ≤ 4) ∧ ((0 : ℤ) ≤ 5) ∧ ((0 : ℤ) ≤ 6))
-      (((cyclicPerm4 ^ 0).trace = 4) ∧
-        (((cyclicPerm5 ^ 0).trace = 5) ∧ ((cyclicPerm6 ^ 0).trace = 6)))
-      trivial
-      ⟨cyclicPerm2_rank, cyclicPerm3_rank⟩
-      ⟨by norm_num, by norm_num, by norm_num, by norm_num, by norm_num⟩
-      (fun _ => ⟨cyclicPerm4_rank, cyclicPerm5_rank, cyclicPerm6_rank⟩)
-  have hFlow :=
-    paper_operator_resolvent_trace_spectral_flow_quantization
-      True
-      ((cyclicPerm4 ^ 0).trace = 4)
-      True
-      (((cyclicPerm5 ^ 0).trace = 5) ∧ ((cyclicPerm6 ^ 0).trace = 6))
-      (fun _ => cyclicPerm4_rank)
-      (fun _ _ => ⟨cyclicPerm5_rank, cyclicPerm6_rank⟩)
-  exact ⟨hResidue.2.2.1, hResidue.2.1, hFlow trivial trivial⟩
+  refine ⟨?_, ?_, ?_⟩
+  · norm_num
+  · exact ⟨cyclicPerm2_rank, cyclicPerm3_rank⟩
+  · exact ⟨cyclicPerm4_rank, cyclicPerm5_rank, cyclicPerm6_rank⟩
 
 end Omega.Zeta

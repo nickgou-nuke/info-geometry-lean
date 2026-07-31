@@ -41,22 +41,18 @@ Compatibility data needed to descend the operatorial transport Lichnerowicz lane
 to the Bott `LichnerowiczBalancedCl11` witness.
 -/
 @[rep_depth transport]
-structure InformationalLichnerowiczBottCompatibility
+def InformationalLichnerowiczBottCompatibility
     (V : BogoliubovVielbeinBundle (E := E))
-    (IST : InfoSpectralTriple H₂) : Prop where
-  /-- Dirac square in the spectral-triple lane matches the transported second derivative. -/
-  diracSq_eq_transportSecond :
-    IST.D.comp IST.D
+    (IST : InfoSpectralTriple H₂) : Prop :=
+  IST.D.comp IST.D
       =
-    deriv (fun t => deriv (fun s => quasilatticeDirac V IST.D s) t) 0
-  /-- The transported metric part closes to the Bott normalization `-Id`. -/
-  transportMetricPart_eq_neg_id :
-    operatorInformationMetricPart
-        V.connectionGenerator
-        V.connectionGenerator
-        IST.D
-      =
-    -(ContinuousLinearMap.id ℝ H₂)
+    deriv (fun t => deriv (fun s => quasilatticeDirac V IST.D s) t) 0 ∧
+  operatorInformationMetricPart
+      V.connectionGenerator
+      V.connectionGenerator
+      IST.D
+    =
+  -(ContinuousLinearMap.id ℝ H₂)
 
 /--
 Under transport compatibility, the spectral Dirac square closes to `-Id`.
@@ -73,7 +69,7 @@ theorem spectralDirac_sq_eq_neg_id_of_operatorialTransport
     IST.D.comp IST.D
       =
     deriv (fun t => deriv (fun s => quasilatticeDirac V IST.D s) t) 0 :=
-      hCompat.diracSq_eq_transportSecond
+      hCompat.1
     _ =
     operatorInformationMetricPart
         V.connectionGenerator
@@ -83,7 +79,7 @@ theorem spectralDirac_sq_eq_neg_id_of_operatorialTransport
             (deriv2_quasilatticeDirac_at_zero_eq_operatorInformationMetricPart
               (V := V) (D := IST.D))
     _ = -(ContinuousLinearMap.id ℝ H₂) :=
-      hCompat.transportMetricPart_eq_neg_id
+      hCompat.2
 
 /--
 Bott-balanced closure derived from the operatorial transport Lichnerowicz lane.

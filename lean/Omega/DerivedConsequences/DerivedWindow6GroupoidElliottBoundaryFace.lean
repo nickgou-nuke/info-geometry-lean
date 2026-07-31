@@ -4,8 +4,7 @@ import Omega.DerivedConsequences.DerivedWindow6BoundarySectorIrrepMomentUniformi
 namespace Omega.DerivedConsequences
 
 /-- Concrete finite bookkeeping for the window-`6` boundary-face Elliott invariant package. -/
-structure derived_window6_groupoid_elliott_boundary_face_data where
-  witness : Unit := ()
+abbrev derived_window6_groupoid_elliott_boundary_face_data := Unit
 
 /-- The Wedderburn multiplicities coming from the rigid `2:8, 3:4, 4:9` histogram. -/
 def derived_window6_groupoid_elliott_boundary_face_m2BlockCount : ℕ := 8
@@ -82,7 +81,7 @@ theorem paper_derived_window6_groupoid_elliott_boundary_face
     D.wedderburn_decomposition ∧ D.k0_package ∧ D.trace_simplex_split := by
   have hIsotypy :=
     paper_derived_window6_boundary_sector_groupalgebra_isotypy
-      ({ witness := () } : derived_window6_boundary_sector_groupalgebra_isotypy_data)
+      (Unit.unit : derived_window6_boundary_sector_groupalgebra_isotypy_data)
   have hMoment :=
     paper_derived_window6_boundary_sector_irrep_moment_uniformity
   have hBoundaryCount :

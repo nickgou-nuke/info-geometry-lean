@@ -35,10 +35,4 @@ theorem grand_unification_symmetry (vac : UnifiedVacuum) :
   rw [vac.h_order_two, vac.vortex.h_fractional_winding]
   ring
 
-/-- The finite braid relation is available alongside the order packet. -/
-theorem order_packet_with_burau_braid (vac : UnifiedVacuum) (t : ℂ) :
-    (vac.orderTwoPhase ^ 2) * (vac.vortex.phase ^ 3) = 1 ∧
-      sigma_1 t * sigma_2 t * sigma_1 t = sigma_2 t * sigma_1 t * sigma_2 t := by
-  exact ⟨grand_unification_symmetry vac, su3_parafermion_braiding t⟩
-
 end InfoGeometry.Topology.GrandUnification

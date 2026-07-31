@@ -47,9 +47,9 @@ and any time-register realization needs at least that many states.
     thm:xi-time-min-delay-min-states -/
 theorem paper_xi_time_min_delay_min_states (m : ℕ) :
     let delay := m - 1
-    let stateCount := 2 ^ delay
+      let stateCount := 2 ^ delay
     delay = m - 1 ∧
-      (∃ _ : Fin stateCount ≃ xi_time_min_delay_min_states_suffix_state m, True) ∧
+      Nonempty (Fin stateCount ≃ xi_time_min_delay_min_states_suffix_state m) ∧
       XiTimeRegisterRealization (xi_time_min_delay_min_states_suffix_fold m) stateCount ∧
       ∀ T : ℕ,
         XiTimeRegisterRealization (xi_time_min_delay_min_states_suffix_fold m) T →
@@ -67,12 +67,10 @@ theorem paper_xi_time_min_delay_min_states (m : ℕ) :
       ∃ x, Nat.card (LayerFiber (xi_time_min_delay_min_states_suffix_fold m) x) = 2 ^ (m - 1) := by
     refine ⟨(), ?_⟩
     rw [xi_time_min_delay_min_states_suffix_fiber_cardinality]
-  refine ⟨rfl, ?_, ?_, ?_⟩
-  · refine ⟨?_, trivial⟩
-    have hequiv :
-        xi_time_min_delay_min_states_suffix_state m ≃ Fin (2 ^ (m - 1)) := by
-      simpa [hcard] using Fintype.equivFin (xi_time_min_delay_min_states_suffix_state m)
-    exact hequiv.symm
+  have hequiv :
+      xi_time_min_delay_min_states_suffix_state m ≃ Fin (2 ^ (m - 1)) := by
+    simpa [hcard] using Fintype.equivFin (xi_time_min_delay_min_states_suffix_state m)
+  refine ⟨rfl, ⟨hequiv.symm⟩, ?_, ?_⟩
   · exact
       (paper_xi_time_fiber_minimal_dimension
         (xi_time_min_delay_min_states_suffix_fold m) (2 ^ (m - 1)) (2 ^ (m - 1)) hmax hwit).2

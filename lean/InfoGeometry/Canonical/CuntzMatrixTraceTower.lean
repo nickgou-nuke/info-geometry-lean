@@ -225,6 +225,25 @@ theorem traceColimitFunctional_inclusion (T : Data) (n : ℕ)
   have h := colimit.ι_desc (traceCocone T) n
   exact congrArg (fun f => f A) h
 
+/-- The compatible normalized trace is the unique linear readout on the
+colimit with the prescribed finite-stage values. -/
+theorem traceColimitFunctional_unique (T : Data)
+    (f : traceColimit T →ₗ[ℂ] ℂ)
+    (hf : ∀ (n : ℕ) (A : MatrixStage n),
+      f (traceColimitInclusion T n A) = matrixTraceFunctional n A) :
+    f = traceColimitFunctional T := by
+  have hhom :
+      ModuleCat.ofHom f = ModuleCat.ofHom (traceColimitFunctional T) := by
+    apply colimit.hom_ext
+    intro n
+    apply ModuleCat.hom_ext
+    ext A
+    change f (traceColimitInclusion T n A) =
+      traceColimitFunctional T (traceColimitInclusion T n A)
+    rw [hf n A, traceColimitFunctional_inclusion]
+  exact congrArg
+    (fun g : ModuleCat.of ℂ (traceColimit T) ⟶ ModuleCat.of ℂ ℂ => g.hom) hhom
+
 theorem traceColimitInclusion_transition
     (T : Data) {m n : ℕ} (hmn : m ≤ n) (A : MatrixStage m) :
     traceColimitInclusion T n (map T hmn A) =

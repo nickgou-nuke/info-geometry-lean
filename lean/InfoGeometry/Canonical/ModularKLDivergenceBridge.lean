@@ -189,7 +189,7 @@ theorem relativeModularScaleShapeSplit_eq_drazinActiveKernelSplit
     W.activeProjector = (1 : EndH) - CIK.spectralComplementaryProjector
       ∧
     CIK.spectralComplementaryProjector = W.PZero := by
-  refine ⟨?_, ?_, comp.hZero⟩
+  refine ⟨?_, ?_, comp.2.2⟩
   · simpa [generalizedKL_activeShapeTerm, generalizedKL_kernelMassTerm] using
       generalizedKL_scale_shape_split (α := α) μ ν
   · unfold HasModularSpectralWedge.activeProjector
@@ -197,7 +197,7 @@ theorem relativeModularScaleShapeSplit_eq_drazinActiveKernelSplit
     calc
       W.PiPlus + W.PiMinus + CIK.spectralComplementaryProjector
           = W.PiPlus + W.PiMinus + W.PZero := by
-              simp [comp.hZero]
+              simp [comp.2.2]
       _ = (1 : EndH) := by
             simpa [add_assoc] using W.resolution
 

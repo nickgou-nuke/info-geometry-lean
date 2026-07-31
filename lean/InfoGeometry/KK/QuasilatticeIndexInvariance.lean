@@ -80,11 +80,11 @@ noncomputable def quasilatticeChiralKernelSliceMinus
 
 /-- Operatorial Fredholm surface for the transported quasilattice Dirac family. -/
 @[rep_depth transport]
-structure QuasilatticeChiralFredholmSurface
+def QuasilatticeChiralFredholmSurface
     (V : BogoliubovVielbeinBundle (E := E))
-    (X : RealSplitKreinDiracFredholmModule A B H₂) (t : ℝ) : Prop where
-  plusFinite : FiniteDimensional ℝ (quasilatticeChiralKernelSlicePlus V X t)
-  minusFinite : FiniteDimensional ℝ (quasilatticeChiralKernelSliceMinus V X t)
+    (X : RealSplitKreinDiracFredholmModule A B H₂) (t : ℝ) : Prop :=
+  FiniteDimensional ℝ (quasilatticeChiralKernelSlicePlus V X t) ∧
+  FiniteDimensional ℝ (quasilatticeChiralKernelSliceMinus V X t)
 
 /-- Operatorial analytical index of the transported quasilattice Dirac family. -/
 @[rep_depth transport]
@@ -516,14 +516,15 @@ noncomputable def quasilatticeChiralFredholmSurfaceOf
     (hX : ChiralFredholmSurface X)
     (hEven : KreinGradedModule.IsEven (H := H₂) V.connectionGenerator)
     (t : ℝ) :
-    QuasilatticeChiralFredholmSurface V X t where
-  plusFinite := by
+    QuasilatticeChiralFredholmSurface V X t := by
+  refine ⟨?_, ?_⟩
+  ·
     rcases hX with ⟨hPlus, hMinus⟩
     letI := hPlus
     exact FiniteDimensional.of_injective
       (quasilatticeChiralKernelSlicePlusEquiv (E := E) V X hEven t).toLinearMap
       (quasilatticeChiralKernelSlicePlusEquiv (E := E) V X hEven t).injective
-  minusFinite := by
+  ·
     rcases hX with ⟨hPlus, hMinus⟩
     letI := hMinus
     exact FiniteDimensional.of_injective

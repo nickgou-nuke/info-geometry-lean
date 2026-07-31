@@ -72,7 +72,9 @@ def Window6P6ToeplitzCertificateChain (D : Window6P6ToeplitzCertificateChainData
     window6P6UnitCircleRoot D
 
 theorem paper_window6_p6_toeplitz_certificate_chain
-    (D : Window6P6ToeplitzCertificateChainData) : Window6P6ToeplitzCertificateChain D := by
+    (D : Window6P6ToeplitzCertificateChainData)
+    (hUnitarySliceLocked : D.certificateLoop.unitarySliceLocked) :
+    Window6P6ToeplitzCertificateChain D := by
   have hCompactness :
       (D.commutantWitness.transpose = D.commutantWitness) ∧
         window6P6FiniteCommutant D := by
@@ -90,7 +92,9 @@ theorem paper_window6_p6_toeplitz_certificate_chain
         dsimp [window6P6FiniteCommutant]
         infer_instance)
       (by intro h; exact h)
-  have hLoop := paper_typed_address_biaxial_completion_certificate_loop D.certificateLoop
+  have hLoop :=
+    paper_typed_address_biaxial_completion_certificate_loop D.certificateLoop
+      hUnitarySliceLocked
   have hZeckendorf := paper_terminal_foldbin6_three_offset_rigidity
   have hUnitRoot : window6P6UnitCircleRoot D := by
     refine ⟨Complex.exp (D.spectralPhase * Complex.I), D.completedCharpoly_phaseRoot, ?_⟩

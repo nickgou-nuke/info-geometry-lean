@@ -110,17 +110,4 @@ theorem s4_distant_commutes (x : Fin 4) :
     sigma1 (sigma3 x) = sigma3 (sigma1 x) := by
   fin_cases x <;> rfl
 
-/-- Summary theorem for the finite, theorem-safe three-stack packet. -/
-theorem finite_three_stack_packet :
-    boost.transpose * eta * boost = eta ∧
-      boost * (1 : Mat2Q) * boostInv = 1 ∧
-      boost * (-(1 : Mat2Q)) * boostInv = -1 ∧
-      J.transpose = -J ∧
-      J * J = -(1 : Mat2Q) ∧
-      G.transpose = G ∧
-      (∀ x : Fin 4, sigma1 (sigma2 (sigma1 x)) = sigma2 (sigma1 (sigma2 x))) ∧
-      (∀ x : Fin 4, sigma1 (sigma3 x) = sigma3 (sigma1 x)) := by
-  exact ⟨boost_preserves_eta, boost_conj_one, boost_conj_neg_one, J_skew, J_sq,
-    G_symmetric, s4_adjacent_artin, s4_distant_commutes⟩
-
 end InfoGeometry.Topology.ThreeStackBraidLorentzMetriplectic

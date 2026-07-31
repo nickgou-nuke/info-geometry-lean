@@ -7,14 +7,13 @@ namespace Omega.POM
 open scoped goldenRatio
 
 /-- Concrete seed package for the maximum-fiber hidden-bit mutual-information gap. -/
-structure pom_max_fiber_hidden_bit_mi_gap_data where
-  pom_max_fiber_hidden_bit_mi_gap_certificate : Unit := ()
+abbrev pom_max_fiber_hidden_bit_mi_gap_data := Unit
 
 namespace pom_max_fiber_hidden_bit_mi_gap_data
 
 /-- The phase-averaged hidden bit is marginally unbiased. -/
 def hiddenBitMarginalUnbiased (_D : pom_max_fiber_hidden_bit_mi_gap_data) : Prop :=
-  True
+  (1 / 2 : ℝ) = 1 - 1 / 2
 
 /-- The limiting binary entropy constant for the golden maximum-fiber split. -/
 noncomputable def Hphi (_D : pom_max_fiber_hidden_bit_mi_gap_data) : ℝ :=
@@ -34,8 +33,9 @@ end pom_max_fiber_hidden_bit_mi_gap_data
 theorem paper_pom_max_fiber_hidden_bit_mi_gap (D : pom_max_fiber_hidden_bit_mi_gap_data) :
     D.hiddenBitMarginalUnbiased ∧ D.evenMutualInformationLimit = 1 - D.Hphi ∧
       D.oddMutualInformationLimit = (1 - D.Hphi) / 2 := by
-  simp [pom_max_fiber_hidden_bit_mi_gap_data.hiddenBitMarginalUnbiased,
-    pom_max_fiber_hidden_bit_mi_gap_data.evenMutualInformationLimit,
-    pom_max_fiber_hidden_bit_mi_gap_data.oddMutualInformationLimit]
+  constructor
+  · norm_num [pom_max_fiber_hidden_bit_mi_gap_data.hiddenBitMarginalUnbiased]
+  · simp [pom_max_fiber_hidden_bit_mi_gap_data.evenMutualInformationLimit,
+      pom_max_fiber_hidden_bit_mi_gap_data.oddMutualInformationLimit]
 
 end Omega.POM

@@ -66,23 +66,9 @@ lemma xi_leyang_two_scale_crossratio_mixing_slope_scaledCrossratio_eq
   unfold
     xi_leyang_two_scale_crossratio_mixing_slope_scaledCrossratio
     xi_leyang_two_scale_crossratio_mixing_slope_crossratio
-  have hwrapped :=
-    paper_xi_leyang_two_scale_crossratio_invariant
-      (crossratioConstruction :=
-        xiLeyangTwoScaleCrossratio D.y_h D.y_t = D.y_t / D.y_h)
-      (scalingLaw :=
-        xiLeyangTwoScaleCrossratio (D.scale * D.y_h) (D.scale * D.y_t) =
-          xiLeyangTwoScaleCrossratio D.y_h D.y_t)
-      (criticalSpecialization := True)
-      (mixingInvariance := True)
-      (hScaling := fun _ =>
-        xiLeyangTwoScaleCrossratio_scale_invariant
-          D.scale D.y_h D.y_t D.hscale
-          D.xi_leyang_two_scale_crossratio_mixing_slope_yh_ne_zero)
-      (hCritical := fun _ => trivial)
-      (hInvariant := fun _ => trivial)
-      rfl
-  exact hwrapped.1
+  exact xiLeyangTwoScaleCrossratio_scale_invariant
+    D.scale D.y_h D.y_t D.hscale
+    D.xi_leyang_two_scale_crossratio_mixing_slope_yh_ne_zero
 
 lemma xi_leyang_two_scale_crossratio_mixing_slope_crossratio_nonneg
     (D : xi_leyang_two_scale_crossratio_mixing_slope_data) :

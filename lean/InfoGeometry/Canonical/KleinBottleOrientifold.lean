@@ -53,23 +53,6 @@ theorem canonicalKleinBottleOrientifold_value :
       InfoGeometry.Topology.V4RootSystem.V4Group.W12 :=
   rfl
 
-@[simp]
-theorem canonicalKleinBottleOrientifold_projective_klein_mobius (t : ℚ) :
-    ProjectiveKleinCompactification.ProjectivelyEqual
-        ProjectiveKleinCompactification.I2
-        ProjectiveKleinCompactification.minusI2 ∧
-      ProjectiveKleinCompactification.twistA *
-          ProjectiveKleinCompactification.parabolicB *
-          ProjectiveKleinCompactification.twistA *
-          ProjectiveKleinCompactification.parabolicB =
-        ProjectiveKleinCompactification.I2 ∧
-      ProjectiveKleinCompactification.mobiusS.mulVec ![t, 1] = ![-1, t] ∧
-      ProjectiveKleinCompactification.ProjectivelyEqual
-        (ProjectiveKleinCompactification.mobiusS *
-          ProjectiveKleinCompactification.mobiusS)
-        ProjectiveKleinCompactification.I2 :=
-  ProjectiveKleinCompactification.projective_klein_formula_packet t
-
 /--
 Bridge packet tying the prime-gas MaxEnt data to the Klein bottle orientifold
 hypotheses.

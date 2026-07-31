@@ -51,7 +51,19 @@ theorem mem_lattice_iff_reduction_mem_code (x : IntegerWord24) :
 theorem two_smul_mem (x : IntegerWord24) :
     2 • x ∈ lattice := by
   rw [mem_lattice_iff]
-  simpa [reduceModTwo] using codeSubmodule.zero_mem
+  have hzero : reduceModTwo (2 • x) = 0 := by
+    funext i
+    change ((2 • x) i : F₂) = 0
+    rw [two_nsmul, Pi.add_apply]
+    calc
+      _ = (x i : F₂) + (x i : F₂) :=
+        (Int.castRingHom F₂).map_add (x i) (x i)
+      _ = 0 := by
+        rw [← two_mul]
+        change (2 : F₂) * (x i : F₂) = 0
+        rw [show (2 : F₂) = 0 by exact CharP.cast_eq_zero F₂ 2, zero_mul]
+  rw [hzero]
+  exact codeSubmodule.zero_mem
 
 /-- Construction A is closed under addition by its native subgroup owner. -/
 theorem add_mem {x y : IntegerWord24}

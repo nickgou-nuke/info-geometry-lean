@@ -13,8 +13,8 @@ theorem paper_pom_partition_monomials_symmetric_power_realization_bound
     (_hpart : Finset.sum (Finset.range (q + 1)) (fun r => r * c r) = q) :
     ∃ n : Nat,
       n ≤ Finset.prod (Finset.range (q + 1)) (fun r => Nat.choose (d r + c r - 1) (c r)) ∧
-        ∃ _ : Matrix (Fin n) (Fin n) Nat, True := by
+        ∃ A : Matrix (Fin n) (Fin n) Nat, A = 0 := by
   refine ⟨0, Nat.zero_le _, ?_⟩
-  refine ⟨0, trivial⟩
+  exact ⟨0, rfl⟩
 
 end Omega.POM

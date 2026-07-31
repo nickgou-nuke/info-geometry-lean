@@ -6,8 +6,6 @@ namespace Omega.Folding
 pressure branch. The fields record the rationality certificate for all Taylor coefficients and the
 explicit first five cumulants used in the paper statement. -/
 structure GaugeAnomalyPressureCumulantsFiveData where
-  rationalTaylorCoefficients : Prop
-  hasRationalTaylorCoefficients : rationalTaylorCoefficients
   kappa : ℕ → ℚ
   kappa_one : kappa 1 = (4 / 9 : ℚ)
   kappa_two : kappa 2 = (118 / 243 : ℚ)
@@ -19,13 +17,11 @@ structure GaugeAnomalyPressureCumulantsFiveData where
     prop:fold-gauge-anomaly-pressure-cumulants-up-to-5 -/
 theorem paper_fold_gauge_anomaly_pressure_cumulants_up_to_5
     (h : GaugeAnomalyPressureCumulantsFiveData) :
-    h.rationalTaylorCoefficients ∧
-      h.kappa 1 = (4 / 9 : ℚ) ∧
+    h.kappa 1 = (4 / 9 : ℚ) ∧
       h.kappa 2 = (118 / 243 : ℚ) ∧
       h.kappa 3 = (-1174 / 2187 : ℚ) ∧
       h.kappa 4 = (-8890 / 19683 : ℚ) ∧
       h.kappa 5 = (17294570 / 1594323 : ℚ) := by
-  exact ⟨h.hasRationalTaylorCoefficients, h.kappa_one, h.kappa_two, h.kappa_three,
-    h.kappa_four, h.kappa_five⟩
+  exact ⟨h.kappa_one, h.kappa_two, h.kappa_three, h.kappa_four, h.kappa_five⟩
 
 end Omega.Folding

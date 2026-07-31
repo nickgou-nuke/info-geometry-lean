@@ -239,10 +239,17 @@ structure IndependentCenteredSpinorCalibration
     (S : SpinorSocket) where
   centered : Fin 4 → ℕ → ℝ
   covariance : Fin 4 → Fin 4 → ℝ
-  centered_eq :
-    ∀ i n, centered i n = centeredBit (covariance i i) (S i) n
-  covariance_eq_delta :
-    ∀ i j, covariance i j = deltaFin4 i j
+
+@[bridge_target_tag, rep_depth projective]
+theorem centered_calibration_eq
+    (S : SpinorSocket)
+    (C : IndependentCenteredSpinorCalibration S)
+    (hcentered :
+      ∀ i n, C.centered i n =
+        centeredBit (C.covariance i i) (S i) n)
+    (i : Fin 4) (n : ℕ) :
+    C.centered i n = centeredBit (C.covariance i i) (S i) n :=
+  hcentered i n
 
 /--
 Readback: an independent centered spinor calibration has diagonal covariance.
@@ -253,9 +260,11 @@ This is a calibration-field readout, not a probabilistic limit theorem.
 theorem covariance_eq_clifford_delta
     (S : SpinorSocket)
     (C : IndependentCenteredSpinorCalibration S)
+    (hcovariance :
+      ∀ i j, C.covariance i j = deltaFin4 i j)
     (i j : Fin 4) :
     C.covariance i j = deltaFin4 i j :=
-  C.covariance_eq_delta i j
+  hcovariance i j
 
 /-- Owner target for radioactive spinor sockets. -/
 @[rep_depth projective]

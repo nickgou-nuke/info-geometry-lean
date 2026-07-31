@@ -47,30 +47,36 @@ variable (D : Data (Stage := Stage) (sys := sys) (B := B))
 
 /-- Stage covariance descends to the global representation intertwining law. -/
 theorem representation_intertwines_flow
+    (hι_comm : ∀ {i j : I} (hij : i ≤ j),
+      (R.ι j).comp (sys.map hij) = R.ι i)
+    (hcontinuous_ι : ∀ i, Continuous (R.ι i))
     (hcov : ∀ (t : ℝ) (i : I),
       topologicalInjection Stage sys i ≫ D.sourceFlow t ≫
-          topologicalRepresentation Stage sys R =
+          topologicalRepresentation Stage sys R hι_comm hcontinuous_ι =
         topologicalInjection Stage sys i ≫
-          topologicalRepresentation Stage sys R ≫ D.targetFlow t)
+          topologicalRepresentation Stage sys R hι_comm hcontinuous_ι ≫ D.targetFlow t)
     (t : ℝ) :
-    D.sourceFlow t ≫ topologicalRepresentation Stage sys R =
-      topologicalRepresentation Stage sys R ≫ D.targetFlow t := by
+    D.sourceFlow t ≫ topologicalRepresentation Stage sys R hι_comm hcontinuous_ι =
+      topologicalRepresentation Stage sys R hι_comm hcontinuous_ι ≫ D.targetFlow t := by
   apply colimit.hom_ext
   intro i
   exact hcov t i
 
 @[reassoc]
 theorem representation_intertwines_flow_assoc
+    (hι_comm : ∀ {i j : I} (hij : i ≤ j),
+      (R.ι j).comp (sys.map hij) = R.ι i)
+    (hcontinuous_ι : ∀ i, Continuous (R.ι i))
     (hcov : ∀ (t : ℝ) (i : I),
       topologicalInjection Stage sys i ≫ D.sourceFlow t ≫
-          topologicalRepresentation Stage sys R =
+          topologicalRepresentation Stage sys R hι_comm hcontinuous_ι =
         topologicalInjection Stage sys i ≫
-          topologicalRepresentation Stage sys R ≫ D.targetFlow t)
+          topologicalRepresentation Stage sys R hι_comm hcontinuous_ι ≫ D.targetFlow t)
     (t : ℝ) (i : I) :
     topologicalInjection Stage sys i ≫ D.sourceFlow t ≫
-        topologicalRepresentation Stage sys R =
+        topologicalRepresentation Stage sys R hι_comm hcontinuous_ι =
       topologicalInjection Stage sys i ≫
-        topologicalRepresentation Stage sys R ≫ D.targetFlow t := by
+        topologicalRepresentation Stage sys R hι_comm hcontinuous_ι ≫ D.targetFlow t := by
   exact hcov t i
 
 end CStarStateColimit.Native.FilteredStarAlgebraTopologicalRepresentationFlow

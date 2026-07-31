@@ -51,7 +51,7 @@ theorem upperTailCuntzQCCRPointTopCatFamily_natural
   intro u
   apply Subtype.ext
   exact congrArg Subtype.val
-    ((upperTailCuntzPointFamily Stage T m i).compatible hjk)
+    (upperTailCuntzPointFamily_compatible Stage T m i hjk)
 
 noncomputable def upperTailCuntzQCCRLimitMap
     (m : ℕ) (i : Fin m) :

@@ -37,10 +37,6 @@ variable (sys : StarAlgebraDirectedSystem (I := I) (A := A))
 /-- Stagewise Star-Algebra Homomorphism Family into a Target Star-Algebra B. -/
 structure CompatibleStarHomFamily (B : Type v) [Ring B] [StarRing B] [Algebra ℂ B] [StarModule ℂ B] where
   hom : ∀ i, A i →ₐ[ℂ] B
-  intertwines : ∀ {i j : I} (hij : i ≤ j) (x : A i),
-    hom j (sys.map hij x) = hom i x
-  hom_star : ∀ (i : I) (x : A i),
-    hom i (star x) = star (hom i x)
 
 namespace UniversalProperty
 
@@ -49,17 +45,23 @@ namespace UniversalProperty
     the representation of an evolved element matches the initial stage representation. -/
 theorem compatible_hom_intertwine
     {B : Type v} [Ring B] [StarRing B] [Algebra ℂ B] [StarModule ℂ B]
-    (F : CompatibleStarHomFamily sys B) {i j : I} (hij : i ≤ j) (x : A i) :
+    (F : CompatibleStarHomFamily (A := A) B)
+    (hintertwines : ∀ {i j : I} (hij : i ≤ j) (x : A i),
+      F.hom j (sys.map hij x) = F.hom i x)
+    {i j : I} (hij : i ≤ j) (x : A i) :
     F.hom j (sys.map hij x) = F.hom i x :=
-  F.intertwines hij x
+  hintertwines hij x
 
 /-- **Theorem**: Star-Involution Intertwining:
     The target representation preserves the star-involution at every stage. -/
 theorem compatible_hom_star
     {B : Type v} [Ring B] [StarRing B] [Algebra ℂ B] [StarModule ℂ B]
-    (F : CompatibleStarHomFamily sys B) (i : I) (x : A i) :
+    (F : CompatibleStarHomFamily (A := A) B)
+    (hhom_star : ∀ (i : I) (x : A i),
+      F.hom i (star x) = star (F.hom i x))
+    (i : I) (x : A i) :
     F.hom i (star x) = star (F.hom i x) :=
-  F.hom_star i x
+  hhom_star i x
 
 end UniversalProperty
 

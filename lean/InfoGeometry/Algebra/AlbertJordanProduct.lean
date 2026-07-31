@@ -28,8 +28,10 @@ theorem jordanProduct_comm (X Y : RealAlbertMatrix) :
 /-- The Jordan product has zero as an annihilator. -/
 theorem jordanProduct_zero_left (X : RealAlbertMatrix) :
     jordanProduct 0 X = 0 := by
-  unfold jordanProduct
-  rfl
+  ext <;>
+    simp [jordanProduct, RealAlbertMatrix.mul, RealSplitOct.mul,
+      RealSplitOct.conj, RealSplitOct.smul, RealSplitOct.zero] <;>
+    ring
 
 /-- The same zero law on the right, obtained from commutativity. -/
 theorem jordanProduct_zero_right (X : RealAlbertMatrix) :

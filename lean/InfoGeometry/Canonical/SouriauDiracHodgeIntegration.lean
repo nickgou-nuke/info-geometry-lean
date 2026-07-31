@@ -178,9 +178,6 @@ structure GaloisKMSKreinTransport
   ι : C_comm →ₐ[ℂ] Op
   /-- Galois implementers on the Hestenes--Krein carrier. -/
   U : G → H →L[ℝ] H
-  /-- Intertwining of the Galois action with the represented boundary algebra. -/
-  intertwines : ∀ (g : G) (A : C_comm),
-    U g * ρ (ι A) = ρ (ι (galoisAut.galoisAut g A)) * U g
 
 namespace GaloisKMSKreinTransport
 
@@ -194,13 +191,25 @@ variable {e_rep : GroupElementRepresentation C_comm}
 variable {galoisAut : GaloisAlgebraAutomorphism C_comm e_rep (G := G)}
 variable (T : GaloisKMSKreinTransport H C_comm Op G e_rep galoisAut)
 
+theorem galois_transport_intertwines
+    (hintertwines : ∀ (g : G) (A : C_comm),
+      T.U g * T.ρ (T.ι A) =
+        T.ρ (T.ι (galoisAut.galoisAut g A)) * T.U g)
+    (g : G) (A : C_comm) :
+    T.U g * T.ρ (T.ι A) =
+      T.ρ (T.ι (galoisAut.galoisAut g A)) * T.U g :=
+  hintertwines g A
+
 /-- Transport of the Galois action on cyclotomic generators to the Krein carrier. -/
 theorem galois_transport_on_cyclotomic_generator
+    (hintertwines : ∀ (g : G) (A : C_comm),
+      T.U g * T.ρ (T.ι A) =
+        T.ρ (T.ι (galoisAut.galoisAut g A)) * T.U g)
     (g : G) (r : ℚ) :
     T.U g * T.ρ (T.ι (e_rep.e r)) =
       T.ρ (T.ι (e_rep.e (GaloisActionData.actOnQ g r))) * T.U g := by
   rw [← galoisAut.galoisAut_on_generator g r]
-  exact T.intertwines g (e_rep.e r)
+  exact hintertwines g (e_rep.e r)
 
 end GaloisKMSKreinTransport
 

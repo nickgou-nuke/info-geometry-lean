@@ -48,7 +48,11 @@ def CompatibleCCRPointFamily.toQCCR
           (ccrParameterPoint (family.c i) (family.cstar i)) = 0
       simpa [qCcrParameterResidualContinuousMap, ccrParameterPoint] using
         ccr_is_plus_one_qccr (family.c i) (family.cstar i) (family.relation i)⟩
-  compatible := by
+theorem CompatibleCCRPointFamily.toQCCR_compatible
+    (family : CompatibleCCRPointFamily sys) :
+    ∀ {i j : I} (hij : i ≤ j),
+      qCcrParameterZeroFiberTransitionMap Stage sys hij
+          (family.toQCCR.point i) = family.toQCCR.point j := by
     intro i j hij
     apply Subtype.ext
     change qCcrParameterTransitionMap Stage sys hij
@@ -62,6 +66,7 @@ noncomputable def ccrCompatiblePointColimitMap
     topologicalDirectColimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
       qCcrParameterZeroFiberTopologicalColimit Stage sys :=
   compatiblePointColimitMap sys family.toQCCR
+    family.toQCCR_compatible
 
 theorem ccrCompatiblePointColimitMap_stage_apply
     (family : CompatibleCCRPointFamily sys) (i : I) (u : PUnit.{u + 1}) :
@@ -69,7 +74,8 @@ theorem ccrCompatiblePointColimitMap_stage_apply
         (topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i u) =
       qCcrParameterZeroFiberTopologicalInjection Stage sys i
         (family.toQCCR.point i) := by
-  exact compatiblePointColimitMap_stage_apply sys family.toQCCR i u
+  exact compatiblePointColimitMap_stage_apply sys family.toQCCR
+    family.toQCCR_compatible i u
 
 noncomputable def ccrCompatiblePointParameterColimitMap
     (family : CompatibleCCRPointFamily sys) :
@@ -84,7 +90,8 @@ theorem ccrCompatiblePointParameterColimitMap_stage_apply
         (topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i u) =
       qCcrParameterTopologicalInjection Stage sys i
         (family.toQCCR.point i).1 := by
-  have hpoint := compatiblePointColimitMap_stage_apply sys family.toQCCR i u
+  have hpoint := compatiblePointColimitMap_stage_apply sys family.toQCCR
+    family.toQCCR_compatible i u
   have hincl := qCcrParameterZeroFiberToParameterColimit_stage Stage sys i
   have hincl' := congrArg (fun f => f (family.toQCCR.point i)) hincl
   have hincl'' :

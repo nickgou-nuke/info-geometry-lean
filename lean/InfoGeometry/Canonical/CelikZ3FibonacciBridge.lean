@@ -22,9 +22,15 @@ structure Z3ParafermionToFibonacciBridge where
   braidZ3 : (n : ℕ) → ArtinBraid n → (z3Carrier n → z3Carrier n)
   braidFib : (n : ℕ) → ArtinBraid n → (fibCarrier n → fibCarrier n)
 
-  intertwines :
-    ∀ n β,
-      project n ∘ braidZ3 n β =
-      braidFib n β ∘ project n
+theorem project_intertwines
+    (B : Z3ParafermionToFibonacciBridge)
+    (hintertwines :
+      ∀ n β,
+        B.project n ∘ B.braidZ3 n β =
+          B.braidFib n β ∘ B.project n)
+    (n : ℕ) (β : ArtinBraid n) :
+    B.project n ∘ B.braidZ3 n β =
+      B.braidFib n β ∘ B.project n :=
+  hintertwines n β
 
 end InfoGeometry.Canonical.CelikZ3FibonacciBridge

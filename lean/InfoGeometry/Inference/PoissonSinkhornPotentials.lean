@@ -27,7 +27,7 @@ noncomputable def poissonSinkhornDualObjective
     (ε : ℝ) (α β : Fin n → ℝ) : ℝ :=
   (∑ i : Fin n, α i) + (∑ j : Fin n, β j) -
     ε * ∑ i : Fin n, ∑ j : Fin n,
-      Real.exp ((α i + β j - C.cost i j) / ε)
+      Real.exp ((α i + β j - C.cost i j) / ε) + ε * (n : ℝ)
 
 /-- The dual objective is invariant under the additive Weyl gauge
 `α ↦ α + t`, `β ↦ β - t`. -/
@@ -55,5 +55,28 @@ theorem poissonSinkhornDualObjective_gauge_invariant
     congr 1
     ring
   rw [hmass, hkernel]
+
+/-- Poisson-Bregman gap associated with a coupling and dual potentials. -/
+noncomputable def poissonSinkhornBregmanGap
+    (C : PoissonTransportCost (Observation := Fin n) (Component := Fin n))
+    (ε : ℝ) (α β : Fin n → ℝ)
+    (Pi : Matrix (Fin n) (Fin n) ℝ) : ℝ :=
+  ε * ∑ i : Fin n, ∑ j : Fin n,
+    poissonBregman (Pi i j)
+      (Real.exp ((α i + β j - C.cost i j) / ε))
+
+theorem poissonSinkhornBregmanGap_nonneg
+    (C : PoissonTransportCost (Observation := Fin n) (Component := Fin n))
+    (ε : ℝ) (hε : 0 ≤ ε) (α β : Fin n → ℝ)
+    (Pi : Matrix (Fin n) (Fin n) ℝ)
+    (hPi : ∀ i j, 0 ≤ Pi i j) :
+    0 ≤ poissonSinkhornBregmanGap C ε α β Pi := by
+  unfold poissonSinkhornBregmanGap
+  apply mul_nonneg hε
+  apply Finset.sum_nonneg
+  intro i hi
+  apply Finset.sum_nonneg
+  intro j hj
+  exact poissonBregman_nonneg (hPi i j) (Real.exp_pos _)
 
 end InfoGeometry.Inference

@@ -193,9 +193,18 @@ theorem topologicalInverseMap_involutive
     topologicalInverseMap F α ≫ topologicalInverseMap F α = 𝟙 _ := by
   apply limit.hom_ext
   intro j
-  simp only [Category.assoc, topologicalInverseMap_projection_assoc]
-  rw [hα j]
-  simp
+  let m := topologicalInverseMap F α
+  let p := topologicalInverseProjection F j
+  have hp : m ≫ p = p ≫ α.app j :=
+    topologicalInverseMap_projection F α j
+  change m ≫ m ≫ p = 𝟙 _ ≫ p
+  calc
+    m ≫ m ≫ p = m ≫ (p ≫ α.app j) := by
+      simpa only [Category.assoc] using
+        congrArg (fun k => m ≫ k) hp
+    _ = (m ≫ p) ≫ α.app j := by simp only [Category.assoc]
+    _ = (p ≫ α.app j) ≫ α.app j := by rw [hp]
+    _ = p := by simp only [Category.assoc, hα j, Category.comp_id]
 
 theorem topologicalInverseMap_artin_relation
     (F : J ⥤ TopCat.{u}) (α β : F ⟶ F)
@@ -208,8 +217,40 @@ theorem topologicalInverseMap_artin_relation
         topologicalInverseMap F β := by
   apply limit.hom_ext
   intro j
-  simp only [Category.assoc, topologicalInverseMap_projection_assoc]
-  rw [hartin j]
+  let mα := topologicalInverseMap F α
+  let mβ := topologicalInverseMap F β
+  let p := topologicalInverseProjection F j
+  have hαj : mα ≫ p = p ≫ α.app j :=
+    topologicalInverseMap_projection F α j
+  have hβj : mβ ≫ p = p ≫ β.app j :=
+    topologicalInverseMap_projection F β j
+  change mα ≫ mβ ≫ mα ≫ p = mβ ≫ mα ≫ mβ ≫ p
+  calc
+    mα ≫ mβ ≫ mα ≫ p = mα ≫ mβ ≫ (p ≫ α.app j) := by
+      simpa only [Category.assoc] using
+        congrArg (fun k => mα ≫ mβ ≫ k) hαj
+    _ = mα ≫ (p ≫ β.app j) ≫ α.app j := by
+      simpa only [Category.assoc] using
+        congrArg (fun k => mα ≫ k ≫ α.app j) hβj
+    _ = (p ≫ α.app j) ≫ β.app j ≫ α.app j := by
+      simpa only [Category.assoc] using
+        congrArg (fun k => k ≫ β.app j ≫ α.app j) hαj
+    _ = p ≫ α.app j ≫ β.app j ≫ α.app j := by
+      simp only [Category.assoc]
+    _ = p ≫ β.app j ≫ α.app j ≫ β.app j := by
+      rw [hartin j]
+    _ = (p ≫ β.app j) ≫ α.app j ≫ β.app j := by
+      simp only [Category.assoc]
+    _ = (mβ ≫ p) ≫ α.app j ≫ β.app j := by
+      rw [hβj]
+    _ = mβ ≫ (p ≫ α.app j) ≫ β.app j := by
+      simp only [Category.assoc]
+    _ = mβ ≫ mα ≫ (p ≫ β.app j) := by
+      simpa only [Category.assoc] using
+        congrArg (fun k => mβ ≫ k ≫ β.app j) hαj.symm
+    _ = mβ ≫ mα ≫ mβ ≫ p := by
+      simpa only [Category.assoc] using
+        congrArg (fun k => mβ ≫ mα ≫ k) hβj.symm
 
 /-- Lift a compatible continuous cone into a topological inverse limit. -/
 noncomputable def topologicalInverseLift

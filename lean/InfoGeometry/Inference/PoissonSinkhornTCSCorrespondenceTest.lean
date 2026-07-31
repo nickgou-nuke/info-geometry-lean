@@ -36,7 +36,7 @@ example (ε : ℝ) :
   intro i j
   exact poissonTransportAssignment_nonneg smokeCost ε i j
 
-example (ε : ℝ) (i : Fin 2) :
+example (i : Fin 2) :
     0 ≤ (tcsPoissonTransportCost (x := smokeX)
       (liveTime := smokeLiveTime) (observed := smokeObserved)
       (by intro k; simp [smokeObserved]; split <;> norm_num)

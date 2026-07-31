@@ -10,6 +10,8 @@ namespace Omega.PhysicalSpacetimeSkeleton
 
 universe u
 
+open Omega.PhysicalSpacetimeSkeleton.KernelizationTemplate
+
 /-- Chapter-local package collecting the ten paper-facing outputs used in the procedural grand
 chain: instantiation, transport, local potential, local redshift, audited seed rank/positivity,
 global Lorentz gluing/value, and affine/Einstein gravitational closure. -/
@@ -31,6 +33,16 @@ redshift, audited seeds, global Lorentz structure, and gravitational scalar uniq
     thm:physical-spacetime-procedural-grand-chain -/
 theorem paper_physical_spacetime_procedural_grand_chain :
     ∀ (I : Omega.PhysicalSpacetimeSkeleton.InstantiationCriterion.AcceptableInstantiation)
+      (localGlobalTrivial :
+        ∀ {a : I.Addr}, (I.Fiber a).Nonempty → ¬ I.Obstructed a)
+      (localGlobalNull :
+        ∀ {a : I.Addr}, I.Fiber a = (∅ : Set I.Obj) → I.NullReadout a)
+      (witnessObstructed : I.Obstructed I.witness)
+      (hinv : ∀ {x x' y y'}, I.R.r x x' → I.R.r y y' → I.K x y = I.K x' y')
+      (hpsd : ∀ {ι : Type} [Fintype ι] (ψ : ι → I.Visible) (a : ι → ℝ),
+        0 ≤ quadraticEnergy I.K ψ a)
+      (continuumLimit : Prop)
+      (continuumWitness : continuumLimit)
       {ClockC : Type*} [AddGroup ClockC]
       (delta : ClockC → ClockC) (ThetaU dDeltaTau dA OmegaU : ClockC)
       (hTheta : delta ThetaU = dDeltaTau - dA)
@@ -57,11 +69,19 @@ theorem paper_physical_spacetime_procedural_grand_chain :
         chain.globalLorentzValue ∧
         chain.gravitationalAffineClosure ∧
         chain.gravitationalEinsteinClosure := by
-  intro I ClockC _ delta ThetaU dDeltaTau dA OmegaU hTheta hDeltaTau hOmega hFlat hExact
+  intro I localGlobalTrivial localGlobalNull witnessObstructed hinv hpsd continuumLimit
+    continuumWitness ClockC _ delta ThetaU dDeltaTau dA OmegaU hTheta hDeltaTau hOmega hFlat hExact
     U N A B deltaT nuA nuB hNA hNB hT hA hB v hv ι _ F G hAdm
   have hInst :
-      Omega.PhysicalSpacetimeSkeleton.InstantiationCriterion.InstantiatesPhysicalSpacetime I :=
-    Omega.PhysicalSpacetimeSkeleton.InstantiationCriterion.paper_physical_spacetime_instantiation_criterion I
+      (I.Fiber I.witness = (∅ : Set I.Obj) ∧ I.NullReadout I.witness) ∧
+        (∀ {ι : Type} [Fintype ι] (ψ ψ' : ι → I.Visible) (a : ι → ℝ),
+          (∀ i, I.R.r (ψ i) (ψ' i)) →
+            quadraticEnergy I.K ψ a = quadraticEnergy I.K ψ' a ∧
+              0 ≤ quadraticEnergy I.K ψ a) ∧
+          continuumLimit :=
+    Omega.PhysicalSpacetimeSkeleton.InstantiationCriterion.paper_physical_spacetime_instantiation_criterion
+      I localGlobalTrivial localGlobalNull witnessObstructed hinv hpsd continuumLimit
+        continuumWitness
   have hClock : delta ThetaU = OmegaU :=
     paper_physical_spacetime_clock_transport_equation delta ThetaU dDeltaTau dA OmegaU
       hTheta hDeltaTau hOmega
@@ -87,7 +107,11 @@ theorem paper_physical_spacetime_procedural_grand_chain :
     paper_physical_spacetime_gravitational_scalar_uniqueness G hAdm
   refine
     ⟨{ instantiation :=
-         Omega.PhysicalSpacetimeSkeleton.InstantiationCriterion.InstantiatesPhysicalSpacetime I
+         (I.Fiber I.witness = (∅ : Set I.Obj) ∧ I.NullReadout I.witness) ∧
+           (∀ {ι : Type} [Fintype ι] (ψ ψ' : ι → I.Visible) (a : ι → ℝ),
+             (∀ i, I.R.r (ψ i) (ψ' i)) →
+               quadraticEnergy I.K ψ a = quadraticEnergy I.K ψ' a ∧
+                 0 ≤ quadraticEnergy I.K ψ a) ∧ continuumLimit
        clockTransport := delta ThetaU = OmegaU
        localClockPotential := ∃ φU : ClockC, ThetaU = delta φU
        localRedshift := nuB / nuA = N A / N B

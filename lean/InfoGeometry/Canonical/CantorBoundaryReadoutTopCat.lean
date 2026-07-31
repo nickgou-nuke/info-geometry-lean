@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBoundaryCuntzShiftTopCat
+import InfoGeometry.Canonical.CantorBoundaryReadoutRefinement
 import Mathlib.Topology.Category.TopCat.Basic
 
 /-!
@@ -17,6 +18,8 @@ open CategoryTheory CategoryTheory.Limits
 open InfoGeometry.Canonical.CantorBoundaryCuntzShift
 open InfoGeometry.Canonical.CantorBoundaryFiniteReadout
 open InfoGeometry.Canonical.CantorBoundaryReadoutBounds
+open InfoGeometry.Canonical.CantorBoundaryReadoutRefinement
+open InfoGeometry.Canonical.CantorCylinderTopology
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 
 def readoutTopCatHom :
@@ -37,6 +40,19 @@ def branchAffineTopCatHom (b : Bool) :
     { toFun := fun x => (if b then (1 / 2 : ℝ) else 0) + (1 / 2 : ℝ) * x
       continuous_toFun := by fun_prop }
 
+def prefixExtendTopCatHom {n : ℕ} (w : BitWord n) :
+    TopCat.of CantorBoundary ⟶ TopCat.of CantorBoundary :=
+  TopCat.ofHom
+    { toFun := prefixExtend w
+      continuous_toFun := continuous_prefixExtend w }
+
+def finitePrefixAffineTopCatHom (n : ℕ) (w : BitWord n) :
+    TopCat.of ℝ ⟶ TopCat.of ℝ :=
+  TopCat.ofHom
+    { toFun := fun x =>
+        finitePrefixReadout (List.ofFn w) + (1 / 2 : ℝ) ^ n * x
+      continuous_toFun := by fun_prop }
+
 @[simp] theorem readoutTopCatHom_apply (x : CantorBoundary) :
     readoutTopCatHom x = realBinaryReadout x :=
   rfl
@@ -49,6 +65,39 @@ def branchAffineTopCatHom (b : Bool) :
     branchAffineTopCatHom b x =
       (if b then (1 / 2 : ℝ) else 0) + (1 / 2 : ℝ) * x :=
   rfl
+
+@[simp] theorem prefixExtendTopCatHom_apply {n : ℕ} (w : BitWord n)
+    (x : CantorBoundary) :
+    prefixExtendTopCatHom w x = prefixExtend w x :=
+  rfl
+
+@[simp] theorem finitePrefixAffineTopCatHom_apply (n : ℕ) (w : BitWord n)
+    (x : ℝ) :
+    finitePrefixAffineTopCatHom n w x =
+      finitePrefixReadout (List.ofFn w) + (1 / 2 : ℝ) ^ n * x :=
+  rfl
+
+theorem prefixExtendTopCatHom_extendSucc {n : ℕ} (w : BitWord n) (b : Bool) :
+    prefixExtendTopCatHom (extendSucc n w b) =
+      prefixTopCatHom b ≫ prefixExtendTopCatHom w := by
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro x
+  change prefixExtend (extendSucc n w b) x =
+    prefixExtend w (prefixBit b x)
+  exact prefixExtend_extendSucc_eq_prefixBit n w b x
+
+theorem prefixExtend_readoutTopCat_square {n : ℕ} (w : BitWord n) :
+    prefixExtendTopCatHom w ≫ readoutTopCatHom =
+      readoutTopCatHom ≫ finitePrefixAffineTopCatHom n w := by
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro x
+  rw [TopCat.comp_app]
+  change realBinaryReadout (prefixExtend w x) =
+    finitePrefixReadout (List.ofFn w) + (1 / 2 : ℝ) ^ n *
+      realBinaryReadout x
+  exact realBinaryReadout_prefixExtend n w x
 
 theorem readout_prefixTopCat_square (b : Bool) :
     prefixTopCatHom b ≫ readoutTopCatHom =

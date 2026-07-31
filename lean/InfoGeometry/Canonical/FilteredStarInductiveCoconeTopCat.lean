@@ -114,4 +114,33 @@ theorem stateTopologicalColimitMap_inclusion
       (stateToTopCatCocone sys (cocone := cocone) ω) i
   exact congrArg (fun f => f a) h
 
+/-- The state readout on the topological colimit factors through the
+star-algebraic colimit realization.  This is the colimit-level form of the
+stage compatibility law, with the scalar codomain lifted to the ambient
+`TopCat` universe. -/
+def stateOnAinfContinuousMap (ω : State Ainf) :
+    ContinuousMap Ainf (ULift ℂ) :=
+  { toFun := fun a => ULift.up (ω.functional a)
+    continuous_toFun :=
+      continuous_uliftUp.comp ω.toContinuousLinearMap.continuous }
+
+@[reassoc]
+theorem stateTopologicalColimitMap_factorization
+    (ω : State Ainf) :
+    stateTopologicalColimitMap sys cocone ω =
+      toTopologicalColimitMap sys cocone ≫
+        TopCat.ofHom (stateOnAinfContinuousMap ω) := by
+  apply colimit.hom_ext
+  intro i
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro a
+  change stateTopologicalColimitMap sys cocone ω
+      (topologicalInjection Stage sys i a) =
+    ULift.up (ω.functional
+      (toTopologicalColimitMap sys cocone
+        (topologicalInjection Stage sys i a)))
+  rw [stateTopologicalColimitMap_inclusion,
+    toTopologicalColimitMap_inclusion]
+
 end CStarStateColimit.Native.ContinuousStarInductiveSystem.StarInductiveCocone

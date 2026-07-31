@@ -40,6 +40,12 @@ def complexBranchAffineTopCatHom (b : Bool) :
       continuous_toFun := by
         cases b <;> fun_prop }
 
+def complexOfRealTopCatHom :
+    TopCat.of ℝ ⟶ TopCat.of ℂ :=
+  TopCat.ofHom
+    { toFun := Complex.ofReal
+      continuous_toFun := Complex.continuous_ofReal }
+
 @[simp] theorem complexBinaryReadoutTopCatHom_apply
     (w : InfiniteBinaryWordSpace) :
     complexBinaryReadoutTopCatHom w = binaryReadout w := rfl
@@ -48,6 +54,16 @@ def complexBranchAffineTopCatHom (b : Bool) :
     (b : Bool) (z : ℂ) :
     complexBranchAffineTopCatHom b z =
       (if b then (1 / 2 : ℂ) else 0) + (1 / 2 : ℂ) * z := rfl
+
+theorem complexBinaryReadoutTopCatHom_factorization :
+    complexBinaryReadoutTopCatHom =
+      readoutTopCatHom ≫ complexOfRealTopCatHom := by
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro w
+  rw [TopCat.comp_app]
+  change binaryReadout w = Complex.ofReal (realBinaryReadout w)
+  exact complex_binaryReadout_eq_ofReal w
 
 theorem complexBinaryReadout_prefixTopCat_square (b : Bool) :
     prefixTopCatHom b ≫ complexBinaryReadoutTopCatHom =

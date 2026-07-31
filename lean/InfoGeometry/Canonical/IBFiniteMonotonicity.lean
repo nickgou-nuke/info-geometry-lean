@@ -25,6 +25,29 @@ variable [MeasurableSpace X] [MeasurableSpace T]
 variable [MeasurableSingletonClass X] [MeasurableSingletonClass T]
 variable [Nonempty T]
 
+/-- A complete finite Blahut-Arimoto descent witness at one marginal step. -/
+structure IBDescentWitness
+    (pX : ProbabilityMeasure X)
+    (q_n : ProbabilityMeasure T)
+    (β : ℝ)
+    (D : X → T → ℝ)
+    (hInt : ∀ x, Integrable (fun t => Real.exp (-β * D x t)) (q_n : Measure T))
+    (h_meas : Measurable (fun x => (IBNextEncoder q_n β D hInt x : Measure T)))
+    (hKL_encoder : FiniteKLFamily (q_n : Measure T) (IBNextEncoder q_n β D hInt))
+    (p_old : X → ProbabilityMeasure T) : Prop where
+  hKL_old : FiniteKLFamily (q_n : Measure T) p_old
+  hKL_next :
+    FiniteKLFamily
+      ((IBNextMarginal pX q_n β D hInt h_meas : ProbabilityMeasure T) : Measure T)
+      (IBNextEncoder q_n β D hInt)
+  h_encoder :
+    IBGlobalFreeEnergy pX q_n β D (IBNextEncoder q_n β D hInt) hKL_encoder
+      ≤ IBGlobalFreeEnergy pX q_n β D p_old hKL_old
+  h_marginal :
+    IBMarginalDescentWitness
+      pX q_n (IBNextMarginal pX q_n β D hInt h_meas) β D
+      (IBNextEncoder q_n β D hInt) hKL_encoder hKL_next
+
 /-- Single-slice finite Jaynes problem induced by the current target marginal `q_n`. -/
 noncomputable def finiteSliceJaynes
     (q_n : ProbabilityMeasure T)

@@ -82,8 +82,8 @@ theorem grand_leeyang_bost_connes_phase_transition_master_duality
     (s = 1 - star s) := ⟨
   cayleyToTemperature_mem_criticalLine_of_unitCircle z0 hz0 hpole,
   quantized_time_step_ne_zero hn,
-  antiunitary_fixed_locus_rigidity h_anti,
-  (critical_line_fixed_locus_iff s).2 (antiunitary_fixed_locus_rigidity h_anti)
+  (critical_line_fixed_locus_iff s).1 h_anti,
+  h_anti
 ⟩
 
 end InfoGeometry.Canonical.LeeYangBostConnesPhaseTransitionBridge

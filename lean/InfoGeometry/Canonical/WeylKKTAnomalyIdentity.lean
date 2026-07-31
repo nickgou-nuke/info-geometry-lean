@@ -94,22 +94,20 @@ theorem epsilon_eq_projectorObstruction_nnnorm :
     CI.epsilon = CI.obstructionScale := CI.epsilon_eq_obstructionScale
     _ = ‖CI.projectorObstruction‖₊ := CI.obstructionScale_eq_projectorObstruction_nnnorm
 
-/--
+/-
 Proof-carrying witness for the structured projector hypotheses on the Weyl/KKT
 anomaly lane.
 
 This packages the paired projector identities into one constructive witness so
 downstream collapse routes need not carry the raw `hProj`/`hLeft` pair.
 -/
-@[rep_depth transport]
-/--
+/-
 Proof-carrying RN/Kähler witness for the conformal zero-scale lane.
 
 This bundles the Kähler readback identification together with the owned
 unit-relative-volume bit, so downstream zero-collapse routes need not carry the
 raw `(hScaleFromKahler, bit)` pair.
 -/
-@[rep_depth transport]
 /--
 Structured dilation-source closure:
 the Weyl dilation commutator is exactly `-1/2` times the obstruction operator.
@@ -302,7 +300,7 @@ namespace ConformalInference
 
 variable (CI : ConformalInference E)
 
-/--
+/-
 Proof-carrying witness that thermodynamic readout stationarity forces vanishing
 chiral scale for the current conformal inference packet.
 
@@ -310,7 +308,6 @@ This is the smallest honest constructive replacement for the bare bridge
 hypothesis
 `IsThermodynamicReadoutStationary ... → CI.chiralScale = 0`.
 -/
-@[rep_depth transport]
 /--
 Recover the stationarity-to-zero-scale bridge from the proof-carrying witness.
 -/

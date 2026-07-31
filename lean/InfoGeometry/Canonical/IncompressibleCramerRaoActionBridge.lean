@@ -99,15 +99,6 @@ abbrev chiralScale_eq_metricVolumePotential
     ∀ x : E, CI.chiralScale = souriauFisherMetricVolumePotential H x := R
 
 /--
-Proof-carrying witness for the structured projector hypotheses used by the
-Weyl/KKT anomaly-collapse lane.
-
-This bundles the two projector-compatibility equalities so downstream callers
-can route through a single constructive packet rather than two separate bare
-hypotheses.
--/
-@[rep_depth transport]
-/--
 Incompressibility kills the conformal anomaly scale when the anomaly readout is
 the negative Cramer-Rao log-volume mode.
 -/

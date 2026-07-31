@@ -81,8 +81,12 @@ theorem map_equal_mass
     (hmass : observationMass R obs = referenceMass R) :
     observationMass S obs' = referenceMass S := by
   unfold observationMass referenceMass
-  rw [← hobs, ← href, hmassΦ obs, hmassΦ R.weight]
-  exact hmass
+  calc
+    ∑ j : κ, obs' j = ∑ j : κ, (Φ obs) j := by rw [hobs]
+    _ = ∑ i : ι, obs i := hmassΦ obs
+    _ = ∑ i : ι, R.weight i := hmass
+    _ = ∑ j : κ, (Φ R.weight) j := by rw [hmassΦ R.weight]
+    _ = ∑ j : κ, S.weight j := by rw [href]
 
 /-- Build the next finite Jaynes pair from a compatible mass-preserving transport. -/
 def transportJaynesPair

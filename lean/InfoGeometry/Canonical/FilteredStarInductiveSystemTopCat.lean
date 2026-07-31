@@ -21,6 +21,7 @@ universe u
 variable {I : Type u} [Preorder I]
 variable {Stage : I → Type u}
 variable [∀ i, CStarAlgebra (Stage i)]
+variable {Ainf : Type u} [CStarAlgebra Ainf]
 
 def transitionTopCatHom
     (sys : ContinuousStarInductiveSystem Stage)
@@ -66,5 +67,23 @@ theorem transitionTopCatHom_comp
   change (sys.map hjk) ((sys.map hij) a) = (sys.map (le_trans hij hjk)) a
   exact congrArg (fun f : Stage i →⋆ₐ[ℂ] Stage k => f a)
     (sys.map_comp hij hjk)
+
+theorem transitionTopCatHom_comp_cocone_ιTopCatHom
+    (sys : ContinuousStarInductiveSystem Stage)
+    (cocone :
+      CStarStateColimit.Native.ContinuousStarInductiveSystem.StarInductiveCocone
+        (Ainf := Ainf) Stage sys)
+    {i j : I} (hij : i ≤ j) :
+    sys.transitionTopCatHom hij ≫
+        CStarStateColimit.Native.ContinuousStarInductiveSystem.StarInductiveCocone.ιTopCatHom
+          (Stage := Stage) (sys := sys) cocone j =
+      CStarStateColimit.Native.ContinuousStarInductiveSystem.StarInductiveCocone.ιTopCatHom
+        (Stage := Stage) (sys := sys) cocone i := by
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro a
+  rw [TopCat.comp_app]
+  exact congrArg (fun f : Stage i →⋆ₐ[ℂ] Ainf => f a)
+    (cocone.ι_comm hij)
 
 end CStarStateColimit.Native.ContinuousStarInductiveSystem

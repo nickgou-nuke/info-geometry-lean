@@ -121,4 +121,26 @@ theorem flowTopologicalColimitMap_left_inverse (t : ℝ) :
   rw [← flowTopologicalColimitMap_add Stage T Φ t (-t)]
   simpa using flowTopologicalColimitMap_zero Stage T Φ
 
+/-- The fixed-index descended flow is a `TopCat` isomorphism, with inverse
+    given by the opposite-time map. -/
+def flowTopologicalColimitIso (t : ℝ) :
+    topologicalColimit Stage (system Stage T) ≅
+      topologicalColimit Stage (system Stage T) where
+  hom := flowTopologicalColimitMap Stage T Φ t
+  inv := flowTopologicalColimitMap Stage T Φ (-t)
+  hom_inv_id := flowTopologicalColimitMap_right_inverse Stage T Φ t
+  inv_hom_id := flowTopologicalColimitMap_left_inverse Stage T Φ t
+
+@[simp]
+theorem flowTopologicalColimitIso_hom (t : ℝ) :
+    (flowTopologicalColimitIso Stage T Φ t).hom =
+      flowTopologicalColimitMap Stage T Φ t :=
+  rfl
+
+@[simp]
+theorem flowTopologicalColimitIso_inv (t : ℝ) :
+    (flowTopologicalColimitIso Stage T Φ t).inv =
+      flowTopologicalColimitMap Stage T Φ (-t) :=
+  rfl
+
 end InfoGeometry.Canonical.FixedIndexCuntzModularFlowTopologicalColimit

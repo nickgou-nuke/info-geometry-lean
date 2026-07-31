@@ -84,6 +84,20 @@ theorem traceTopologicalColimitMap_inclusion (T : Data) (n : ℕ)
     (topologicalDiagram T) (traceTopologicalCocone T) n
   exact congrArg (fun f => f A) h
 
+theorem traceTopologicalColimitMap_unique (T : Data)
+    (f : topologicalColimitObject T ⟶ TopCat.of ℂ)
+    (h : ∀ (n : ℕ) (A : MatrixStage n),
+      f (topologicalInclusion T n A) = matrixTraceFunctional n A) :
+    f = traceTopologicalColimitMap T := by
+  apply topologicalDirectDescend_unique
+    (topologicalDiagram T) (traceTopologicalCocone T) f
+  intro n
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro A
+  change f (topologicalInclusion T n A) = matrixTraceFunctional n A
+  exact h n A
+
 theorem topologicalInclusion_transition
     (T : Data) {m n : ℕ} (hmn : m ≤ n) (A : MatrixStage m) :
     topologicalInclusion T n (map T hmn A) =

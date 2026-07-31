@@ -7,22 +7,29 @@ index families `Instance`, `Theta`, and `Mode` describe the bounded audit table 
 `Bad` records the local failure predicate; and the remaining fields abstract the complexity
 consequences proved from full-table verification, bad-witness extraction, and deterministic
 enumeration. -/
+def fullTableCertified {Instance Theta Mode : Type}
+    (Bad : Instance → Theta → Mode → Prop) : Prop :=
+  ∀ i θ m, ¬ Bad i θ m
+
+def badWitnessCertified {Instance Theta Mode : Type}
+    (Bad : Instance → Theta → Mode → Prop) : Prop :=
+  ∃ i θ m, Bad i θ m
+
 structure FiniteAuditBidirectionalCertificateData (Instance Theta Mode : Type) where
   finiteInstance : Finite Instance
   finiteTheta : Finite Theta
   finiteMode : Finite Mode
   Bad : Instance → Theta → Mode → Prop
-  fullTableCertified : Prop
-  badWitnessCertified : Prop
   enumerableInPolyTime : Prop
   inNP : Prop
   inCoNP : Prop
   inP : Prop
-  fullTableCertificate : fullTableCertified
-  badWitnessCertificate : badWitnessCertified
-  np_of_fullTable : fullTableCertified → inNP
-  conp_of_badWitness : badWitnessCertified → inCoNP
-  p_of_enumeration : fullTableCertified → badWitnessCertified → enumerableInPolyTime → inP
+  fullTableCertificate : fullTableCertified Bad
+  badWitnessCertificate : badWitnessCertified Bad
+  np_of_fullTable : fullTableCertified Bad → inNP
+  conp_of_badWitness : badWitnessCertified Bad → inCoNP
+  p_of_enumeration : fullTableCertified Bad → badWitnessCertified Bad →
+    enumerableInPolyTime → inP
 
 /-- Finite bidirectional audit certificates: validating the whole bounded audit table gives the
 `NP` side, extracting one bad witness gives the `coNP` side, and deterministic polynomial-time

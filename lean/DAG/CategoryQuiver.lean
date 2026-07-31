@@ -16,10 +16,10 @@ structure CategoryQuiverMorphism where
   domOK : entry.domHead = dom.head
   codOK : entry.codHead = cod.head
 
-abbrev Hom (A B : HeadObj) := { m : CategoryQuiverMorphism // m.dom = A ∧ m.cod = B }
+abbrev Hom (A B : HeadObj) := Quiver.Hom A B
 
 def mkHom (m : CategoryQuiverMorphism) : Hom m.dom m.cod :=
-  ⟨m, rfl, rfl⟩
+  ⟨m.entry, by simpa using m.domOK, by simpa using m.codOK⟩
 
 def idMorphism? (obj : HeadObj) (morphs : Array MorphismEntry) : MetaM (Option (Hom obj obj)) := do
   for m in morphs do
@@ -41,49 +41,23 @@ def composeMorphism?
   for h in morphs do
     if hdom : h.domHead = A.head then
       if hcod : h.codHead = C.head then
-        let isComp ← isCompositionExact f.1.entry g.1.entry h
+        let isComp ← isCompositionExact f.1 g.1 h
         if isComp then
           let qm : CategoryQuiverMorphism :=
             { entry := h, dom := A, cod := C, domOK := hdom, codOK := hcod }
           return some (mkHom qm)
   return none
 
-structure VerifiedCategoryData where
-  id : ∀ A : HeadObj, Hom A A
-  comp : ∀ {A B C : HeadObj}, Hom A B → Hom B C → Hom A C
-  id_comp : ∀ {A B : HeadObj} (f : Hom A B), comp (id A) f = f
-  comp_id : ∀ {A B : HeadObj} (f : Hom A B), comp f (id B) = f
-  assoc :
-    ∀ {A B C D : HeadObj} (f : Hom A B) (g : Hom B C) (h : Hom C D),
-      comp (comp f g) h = comp f (comp g h)
+abbrev VerifiedCategoryData := Category HeadObj
 
-noncomputable def ofVerifiedData (D : VerifiedCategoryData) : Category HeadObj where
-  Hom A B := Hom A B
-  id := D.id
-  comp := fun f g => D.comp f g
-  id_comp := D.id_comp
-  comp_id := D.comp_id
-  assoc := D.assoc
+noncomputable def ofVerifiedData (D : VerifiedCategoryData) : Category HeadObj := D
 
 structure HarvestWitnesses where
   morphs : Array MorphismEntry
-  idWitness : ∀ A : HeadObj, Hom A A
-  compWitness : ∀ {A B C : HeadObj}, Hom A B → Hom B C → Hom A C
-  id_comp_witness : ∀ {A B : HeadObj} (f : Hom A B), compWitness (idWitness A) f = f
-  comp_id_witness : ∀ {A B : HeadObj} (f : Hom A B), compWitness f (idWitness B) = f
-  assoc_witness :
-    ∀ {A B C D : HeadObj} (f : Hom A B) (g : Hom B C) (h : Hom C D),
-      compWitness (compWitness f g) h = compWitness f (compWitness g h)
-
-noncomputable def HarvestWitnesses.toVerifiedCategoryData (W : HarvestWitnesses) : VerifiedCategoryData where
-  id := W.idWitness
-  comp := fun f g => W.compWitness f g
-  id_comp := W.id_comp_witness
-  comp_id := W.comp_id_witness
-  assoc := W.assoc_witness
+  category : Category HeadObj
 
 noncomputable def HarvestWitnesses.toCategory (W : HarvestWitnesses) : Category HeadObj :=
-  ofVerifiedData W.toVerifiedCategoryData
+  W.category
 
 def hasVerifiedIdentity (obj : HeadObj) (morphs : Array MorphismEntry) : MetaM Bool := do
   return (← idMorphism? obj morphs).isSome
@@ -121,7 +95,9 @@ def countVerifiedCompositions (morphs : Array MorphismEntry) : MetaM ℕ := do
       if let some gCandidates := byDom.get? f0.cod.head then
         for g0 in gCandidates do
           if hfg : f0.cod = g0.dom then
-            let g : Hom f0.cod g0.cod := ⟨g0, hfg.symm, rfl⟩
+            let g : Hom f0.cod g0.cod :=
+              ⟨g0.entry, by simpa [g0.domOK] using congrArg HeadObj.head hfg.symm,
+                by simpa using g0.codOK⟩
             if ← hasVerifiedComposition f g morphs then
               count := count + 1
   return count

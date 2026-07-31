@@ -455,11 +455,9 @@ def mulInvolutiveOfCartan
       InfoGeometry.Core.InvolutiveAutomorphism.mk
         θ.toMulAut θ.involutive
   · refine
-      { map_mul := ?_
-        map_one := ?_ }
+      { map_mul := ?_ }
     · intro x y
       exact θ.toMulAut.map_mul x y
-    · exact θ.toMulAut.map_one
 
 /-- Bridge to the existing group-level Cartan involution. -/
 def cartanOfMulInvolutive

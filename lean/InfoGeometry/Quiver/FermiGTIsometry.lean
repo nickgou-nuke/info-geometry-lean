@@ -80,7 +80,6 @@ theorem trialityVector_mem_GT {𝔤 : D4LieAlgebra} (grading : TKKGrading 𝔤) 
 structure TKKPotential (State : Type*) where
   potential : State → ℝ
   metric : State → State → ℝ
-  kahlerCertificate : potential = potential
 
 def informationMetric {State : Type*} (Φ : TKKPotential State) : State → State → ℝ :=
   Φ.metric

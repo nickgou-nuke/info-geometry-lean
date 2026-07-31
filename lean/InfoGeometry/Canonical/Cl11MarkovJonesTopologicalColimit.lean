@@ -144,4 +144,28 @@ theorem traceTopologicalColimitMap_unique
   change f (topologicalInclusion n A) = normalizedTrace n A
   exact h n A
 
+/-! The colimit carrier is exposed only as a topological object here, so
+cyclicity is stated on each algebraic stage and transported through the
+canonical colimit readout.  No multiplication on the quotient carrier is
+introduced by this bridge. -/
+
+theorem traceTopologicalColimitMap_stage_cyclic
+    (n : ℕ) (A B : MatStage n) :
+    traceTopologicalColimitMap
+        (topologicalInclusion n (A * B)) =
+      traceTopologicalColimitMap
+        (topologicalInclusion n (B * A)) := by
+  rw [traceTopologicalColimitMap_inclusion,
+    traceTopologicalColimitMap_inclusion]
+  unfold normalizedTrace
+  rw [Matrix.trace_mul_comm]
+
+theorem traceTopologicalColimitMap_stage_commutator
+    (n : ℕ) (A B : MatStage n) :
+    traceTopologicalColimitMap
+        (topologicalInclusion n (A * B - B * A)) = 0 := by
+  rw [traceTopologicalColimitMap_inclusion]
+  unfold normalizedTrace
+  rw [Matrix.trace_sub, Matrix.trace_mul_comm, sub_self, zero_div]
+
 end InfoGeometry.Canonical.Cl11MarkovJonesTopologicalColimit

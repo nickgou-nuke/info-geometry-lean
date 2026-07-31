@@ -15,6 +15,7 @@ namespace InfoGeometry.Canonical.EinsteinCartanQuarkBasis
 
 open InfoGeometry.Canonical
 open InfoGeometry.Canonical.GunaydinGursey
+open InfoGeometry.Algebra
 open InfoGeometry.Algebra.ZornVectorMatrix
 
 variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
@@ -52,11 +53,5 @@ def tetrad (Q : QuarkTetradMap (R := R) (V := V)) :
 @[simp] theorem tetrad_apply
     (Q : QuarkTetradMap (R := R) (V := V)) (q : Fin 8) :
     tetrad Q q = ExteriorAlgebra.ι R (Q.toVector (quarkBasis q)) := rfl
-
-theorem tetrad_is_typed_readout
-    (Q : QuarkTetradMap (R := R) (V := V)) :
-    ∀ q : Fin 8, tetrad Q q ∈ ExteriorAlgebra R V := by
-  intro q
-  exact Set.mem_univ _
 
 end InfoGeometry.Canonical.EinsteinCartanQuarkBasis

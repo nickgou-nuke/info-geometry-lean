@@ -93,7 +93,10 @@ theorem translationColimit_comp (a b : M) :
         topologicalDirectInjection
           (constantTopDiagram (J := J) (X := X)) j) ≫
         translationColimit A b := by
-          rw [translationColimit_stage A a j]
+          simpa only [Category.assoc] using
+            congrArg
+              (fun k => k ≫ translationColimit (J := J) (X := X) A b)
+              (translationColimit_stage (J := J) (X := X) A a j)
     _ = translation A a ≫
         (topologicalDirectInjection
           (constantTopDiagram (J := J) (X := X)) j ≫
@@ -103,14 +106,17 @@ theorem translationColimit_comp (a b : M) :
         (translation A b ≫
           topologicalDirectInjection
             (constantTopDiagram (J := J) (X := X)) j) := by
-          rw [translationColimit_stage A b j]
+          rw [translationColimit_stage (J := J) (X := X) A b j]
     _ = translation A (b * a) ≫
         topologicalDirectInjection
           (constantTopDiagram (J := J) (X := X)) j := by
           rw [← translation_comp A a b]
+          exact (Category.assoc (translation A a) (translation A b)
+            (topologicalDirectInjection
+              (constantTopDiagram (J := J) (X := X)) j)).symm
     _ = topologicalDirectInjection
         (constantTopDiagram (J := J) (X := X)) j ≫
         translationColimit A (b * a) := by
-          rw [translationColimit_stage A (b * a) j]
+          rw [translationColimit_stage (J := J) (X := X) A (b * a) j]
 
 end InfoGeometry.Canonical.ContinuousLeftActionTopCatColimit

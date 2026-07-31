@@ -276,6 +276,36 @@ theorem coherentComplexificationColimit_realTrace_stage (n : ℕ) (A : ClStage n
     coherentComplexifyClStage_normalizedTrace]
   rfl
 
+/-! The coherent complexification preserves the finite cyclic Markov readout.
+The statement remains stagewise because the target `TopCat` colimit carries
+no multiplication supplied by this comparison map. -/
+
+theorem coherentComplexificationColimit_realTrace_stage_cyclic
+    (n : ℕ) (A B : ClStage n) :
+    CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap
+        concreteData
+        (coherentComplexificationColimitMap
+          (Cl11MarkovJonesTopologicalColimit.topologicalInclusion n (A * B))) =
+      CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap
+        concreteData
+        (coherentComplexificationColimitMap
+          (Cl11MarkovJonesTopologicalColimit.topologicalInclusion n (B * A))) := by
+  rw [coherentComplexificationColimit_realTrace_stage,
+    coherentComplexificationColimit_realTrace_stage]
+  unfold normalizedTrace
+  rw [Matrix.trace_mul_comm]
+
+theorem coherentComplexificationColimit_realTrace_stage_commutator
+    (n : ℕ) (A B : ClStage n) :
+    CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap
+        concreteData
+        (coherentComplexificationColimitMap
+          (Cl11MarkovJonesTopologicalColimit.topologicalInclusion n
+            (A * B - B * A))) = 0 := by
+  rw [coherentComplexificationColimit_realTrace_stage]
+  unfold normalizedTrace
+  rw [Matrix.trace_sub, Matrix.trace_mul_comm, sub_self, zero_div]
+
 theorem coherentComplexificationColimit_realTrace_unique
     (f : Cl11MarkovJonesTopologicalColimit.topologicalColimitObject ⟶ TopCat.of ℝ)
     (h : ∀ (n : ℕ) (A : ClStage n),

@@ -22,7 +22,9 @@ structure conclusion_godel_noise_threshold_no_uniform_linear_reconstruction_data
 noise exceeds the sharp `2^{-m/2}` threshold. -/
 def conclusion_godel_noise_threshold_no_uniform_linear_reconstruction_data.obstruction
     (D : conclusion_godel_noise_threshold_no_uniform_linear_reconstruction_data) : Prop :=
-  (D.algData.complexityPreserved ∧ D.algData.bulkRecoverableFromCode ∧
+  (D.algData.complexityPreserved ∧
+      (∀ u, D.algData.decode
+        ⟨(D.algData.toCode ∘ D.algData.toBoundary) u, ⟨u, rfl⟩⟩ = u) ∧
       D.algData.volumeComputableFromCode) ∧
     ¬ (((1 / Real.sqrt (2 * D.n : ℝ)) * (2 : ℝ) ^ (D.m / 2 : ℝ)) * D.ε ≤ D.δ)
 

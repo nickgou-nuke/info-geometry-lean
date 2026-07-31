@@ -153,6 +153,33 @@ theorem poissonTransportMatrix_mem_doublyStochastic
 
 end BalancedCoupling
 
+section WeightedEnergy
+
+variable [Fintype Observation]
+
+/-- Weighted Poisson transport energy used by one component M-step. -/
+noncomputable def weightedPoissonTransportEnergy
+    (C : PoissonTransportCost (Observation := Observation)
+      (Component := Component))
+    (w : Observation → Component → ℝ) : ℝ :=
+  ∑ i : Observation, ∑ j : Component, w i j * C.cost i j
+
+omit [Nonempty Component] in
+theorem weightedPoissonTransportEnergy_nonneg
+    (C : PoissonTransportCost (Observation := Observation)
+      (Component := Component))
+    (w : Observation → Component → ℝ)
+    (hw : ∀ i j, 0 ≤ w i j) :
+    0 ≤ weightedPoissonTransportEnergy C w := by
+  unfold weightedPoissonTransportEnergy
+  refine Finset.sum_nonneg ?_
+  intro i hi
+  refine Finset.sum_nonneg ?_
+  intro j hj
+  exact mul_nonneg (hw i j) (C.cost_nonneg i j)
+
+end WeightedEnergy
+
 end FinitePoissonTransport
 
 end InfoGeometry.Inference

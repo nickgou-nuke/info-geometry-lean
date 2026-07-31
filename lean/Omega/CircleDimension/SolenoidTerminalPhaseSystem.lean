@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import Omega.CircleDimension.LocalizationUniversalProperty
 
 namespace Omega.CircleDimension
 
@@ -69,8 +68,6 @@ structure SSolenoidTerminalObjectData where
   dualLocalizationMap : ℤ → ℤ
   factorMap : sourceCompact → terminalSolenoid
   dualLocalization_eq : ∀ n, dualLocalizationMap n = n
-  denominatorsInvertible : Prop
-  denominatorsInvertible_h : denominatorsInvertible
   factor_commutes : ∀ n, factorMap (sourceMap n) = terminalProjection n
   factor_unique :
     ∀ g : sourceCompact → terminalSolenoid,
@@ -103,40 +100,11 @@ factor map `Σ → Σ_S`; the defining square commutes and the factorization is 
 theorem paper_cdim_s_solenoid_terminal_object (D : SSolenoidTerminalObjectData) :
     D.dualFactorization ∧ D.continuousFactorization ∧ D.compatibilityEquation ∧
       D.uniquenessWitness := by
-  have hloc :
-      (∀ n, D.dualLocalizationMap n = n) ∧
-        (∀ n, D.factorMap (D.sourceMap n) = D.terminalProjection n) ∧
-        (∀ n, D.factorMap (D.sourceMap n) = D.terminalProjection n) ∧
-        (∀ g : D.sourceCompact → D.terminalSolenoid,
-            (∀ n, g (D.sourceMap n) = D.terminalProjection n) → g = D.factorMap) := by
-    simpa using
-      (paper_cdim_localization_universal_property
-        { mapOnLocalizedFractions := ∀ n, D.dualLocalizationMap n = n
-          denominatorsInvertible := D.denominatorsInvertible
-          wellDefinedByClearingDenominators :=
-            ∀ n, D.factorMap (D.sourceMap n) = D.terminalProjection n
-          agreesWithIntegerMap :=
-            ∀ n, D.factorMap (D.sourceMap n) = D.terminalProjection n
-          uniquenessByGenerators :=
-            ∀ g : D.sourceCompact → D.terminalSolenoid,
-              (∀ n, g (D.sourceMap n) = D.terminalProjection n) → g = D.factorMap
-          universalProperty :=
-            ∀ g : D.sourceCompact → D.terminalSolenoid,
-              (∀ n, g (D.sourceMap n) = D.terminalProjection n) → g = D.factorMap
-          mapOnLocalizedFractions_h := D.dualLocalization_eq
-          denominatorsInvertible_h := D.denominatorsInvertible_h
-          wellDefinedByClearingDenominators_h := D.factor_commutes
-          agreesWithIntegerMap_h := D.factor_commutes
-          uniquenessByGenerators_h := D.factor_unique
-          deriveUniversalProperty := by
-            intro _ _ _ _ huniq
-            exact huniq })
-  refine ⟨?_, ?_, ?_, ?_⟩
+  refine ⟨?_, ⟨D.factorMap, rfl⟩, ?_, D.factor_unique⟩
   · intro n
-    exact congrArg D.terminalProjection (hloc.1 n)
-  · exact ⟨D.factorMap, rfl⟩
+    rw [D.dualLocalization_eq n]
   · intro n
-    simpa [hloc.1 n] using hloc.2.1 n
-  · exact hloc.2.2.2
+    rw [D.dualLocalization_eq n]
+    exact D.factor_commutes n
 
 end Omega.CircleDimension

@@ -10,16 +10,14 @@ structure StokesPeriodModuleCovectorNormalizationData where
   PeriodVector : Type
   stokesPeriodModule : Set PeriodVector
   covectorUnion : Set PeriodVector
-  successiveTransitionIntegral : Prop
   stokesPeriodModule_eq_covectorUnion : stokesPeriodModule = covectorUnion
-  successiveTransitionIntegral_h : successiveTransitionIntegral
 
 /-- Paper-facing wrapper for the covector normalization of the Stokes period
 module.
     cor:app-stokes-period-module-covector-normalization -/
 theorem paper_app_stokes_period_module_covector_normalization
     (D : StokesPeriodModuleCovectorNormalizationData) :
-    D.stokesPeriodModule = D.covectorUnion ∧ D.successiveTransitionIntegral := by
-  exact ⟨D.stokesPeriodModule_eq_covectorUnion, D.successiveTransitionIntegral_h⟩
+    D.stokesPeriodModule = D.covectorUnion :=
+  D.stokesPeriodModule_eq_covectorUnion
 
 end Omega.Multiscale

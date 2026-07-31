@@ -223,6 +223,7 @@ import InfoGeometry.OperatorAlgebra.ColeFuryEmbedding
 import InfoGeometry.OperatorAlgebra.ColorConfinementBRSTBridge
 import InfoGeometry.OperatorAlgebra.DiracKahlerSpinorBridge
 import InfoGeometry.OperatorAlgebra.G2GaugeSymmetryBridge
+import InfoGeometry.OperatorAlgebra.OctonionicColorBRSTBridge
 
 namespace InfoGeometry.OperatorAlgebra
 

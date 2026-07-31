@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Singular.Drazin
 
 /-!
 # Drazin Projection Localization
@@ -53,7 +54,33 @@ theorem inverse_mul_element_mul_inverse :
     D.drazinInverse * D.element * D.drazinInverse = D.drazinInverse :=
   D.inverse_element_inverse
 
+/-- Native Drazin witness obtained from the local support package. -/
+theorem toIsDrazinInverse
+    (k : ℕ)
+    (hpow : D.element ^ k =
+      D.element ^ (k + 1) * D.drazinInverse) :
+    InfoGeometry.Singular.Drazin.IsDrazinInverse
+      D.element D.drazinInverse k :=
+  InfoGeometry.Singular.Drazin.IsDrazinInverse.mk
+    D.inverse_element_inverse D.commutes hpow
+
 end DrazinInverseData
+
+/-- Local support data reconstructed from a native Drazin witness. -/
+def DrazinInverseData.fromIsDrazinInverse
+    {A : Type*} [Ring A]
+    {element drazinInverse : A} {k : ℕ}
+    (h : InfoGeometry.Singular.Drazin.IsDrazinInverse
+      element drazinInverse k) :
+    DrazinInverseData A where
+  element := element
+  drazinInverse := drazinInverse
+  support := element * drazinInverse
+  element_mul_inverse_eq_support := rfl
+  inverse_mul_element_eq_support := by
+    rw [h.comm]
+  commutes := h.comm
+  inverse_element_inverse := h.dad_eq_d
 
 /-! ## Finite fiber-product Drazin assembly -/
 

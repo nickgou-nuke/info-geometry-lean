@@ -16,6 +16,9 @@ noncomputable def generator : R :=
 noncomputable def checkPolynomial : R :=
   1 + X + X ^ 5 + X ^ 6 + X ^ 7 + X ^ 9 + X ^ 11
 
+noncomputable def parityCheckPolynomial : R :=
+  (X + 1) * checkPolynomial
+
 theorem generator_factorization :
     (X + 1) * generator * checkPolynomial = X ^ 23 + 1 := by
   simp only [generator, checkPolynomial]
@@ -38,6 +41,11 @@ theorem checkPolynomial_dvd_x23_add_one :
     checkPolynomial ∣ X ^ 23 + 1 := by
   refine ⟨(X + 1) * generator, ?_⟩
   simpa [mul_assoc, mul_left_comm, mul_comm] using generator_factorization.symm
+
+theorem generator_mul_parityCheckPolynomial :
+    generator * parityCheckPolynomial = X ^ 23 + 1 := by
+  unfold parityCheckPolynomial
+  simpa [mul_assoc, mul_left_comm, mul_comm] using generator_factorization
 
 def generatorCoefficientFormula (k : ℕ) : F₂ :=
   match k with

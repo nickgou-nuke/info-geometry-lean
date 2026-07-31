@@ -7,6 +7,8 @@ import Mathlib.LinearAlgebra.Matrix.BilinearForm
 import Mathlib.LinearAlgebra.Matrix.ToLin
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 import InfoGeometry.Combinatorics.BinaryCyclicGolayPolynomial
+import InfoGeometry.Combinatorics.BinaryGolayCyclotomicCosets
+import InfoGeometry.Combinatorics.BinaryQuadraticResidueBound
 
 /-!
 # The extended binary Golay code

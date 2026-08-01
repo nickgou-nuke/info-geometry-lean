@@ -159,7 +159,7 @@ theorem cantor_cuntz_boundary_shift_closed :
       ∀ f : InfoGeometry.Canonical.UHFInductiveColimitBoundary.DiagAlg (n + 1),
       InfoGeometry.Canonical.UHFInductiveColimitBoundary.cylinder n (branchPullback n b f) ∈
         InfoGeometry.Canonical.UHFInductiveColimitBoundary.CylinderColimit) :=
-  finite_cuntz_cantor_shift_synthesis
+  InfoGeometry.Canonical.CuntzCantorBoundaryShift.finite_cuntz_cantor_shift_synthesis
 
 /-- Binary Cantor--Cuntz branch-word parity, read in `ZMod 2`. -/
 def wordParityZ2 (w : List Bool) : ZMod 2 :=
@@ -222,12 +222,12 @@ theorem explicit_celik_fibonacci_cuntz_boundary_bridge
     (wordParityZ2 (oddStep a) = 1 ∧
       wordParityZ2 (oddStep b) = 1 ∧
         wordParityZ2 (oddStep a ++ oddStep b) = 0) := by
-  exact ⟨
-    hYB,
-    matched_source_satisfies_fibonacci_z3_artin sourceR sourceB hMatch,
-    finite_complex_fibonacci_matrix_artin,
-    fibonacci_tau_tensor_tau_channels,
-    cantor_cuntz_odd_odd_boundary_even a b⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact hYB
+  · exact matched_source_satisfies_fibonacci_z3_artin sourceR sourceB hMatch
+  · exact finite_complex_fibonacci_matrix_artin
+  · exact fibonacci_tau_tensor_tau_channels
+  · exact cantor_cuntz_odd_odd_boundary_even a b
 
 end InfoGeometry.Categorical.CelikZ3FibonacciCuntzBoundaryBridge
 

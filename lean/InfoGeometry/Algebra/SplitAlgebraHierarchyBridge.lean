@@ -101,11 +101,11 @@ theorem master_split_algebra_hierarchy_synthesis
     (SplitComplex.add (SplitComplex.ePlus (R := R)) (SplitComplex.eMinus (R := R)) = ⟨1, 0⟩) ∧
     (SplitComplex.mul (SplitComplex.ePlus (R := R)) (SplitComplex.eMinus (R := R)) = ⟨0, 0⟩) ∧
     (SplitComplex.normSq (SplitComplex.mul z1 z2) = SplitComplex.normSq z1 * SplitComplex.normSq z2) ∧
-    (SplitQuaternion.normSq (SplitQuaternion.mul q1 q2) = SplitQuaternion.normSq q1 * SplitQuaternion.normSq q2) := ⟨
-  SplitComplex.e_plus_add_e_minus,
-  SplitComplex.e_plus_mul_e_minus,
-  SplitComplex.normSq_mul z1 z2,
-  SplitQuaternion.normSq_mul q1 q2
-⟩
+    (SplitQuaternion.normSq (SplitQuaternion.mul q1 q2) = SplitQuaternion.normSq q1 * SplitQuaternion.normSq q2) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact SplitComplex.e_plus_add_e_minus
+  · exact SplitComplex.e_plus_mul_e_minus
+  · exact SplitComplex.normSq_mul z1 z2
+  · exact SplitQuaternion.normSq_mul q1 q2
 
 end InfoGeometry.Algebra.SplitAlgebraHierarchyBridge

@@ -105,10 +105,10 @@ theorem q_ccr_master_interpolation
       (g_boson.a2star * g_boson.a1) = 0) :
     (g_fermion.a1 * g_fermion.a1star + g_fermion.a1star * g_fermion.a1 = 1) ∧
     (g_cuntz.a1 * g_cuntz.a1star = 1) ∧
-    (g_boson.a1 * g_boson.a1star - g_boson.a1star * g_boson.a1 = 1) := ⟨
-  (fermionic_car_specialization g_fermion hf11 hf22 hf12).1,
-  (cuntz_o2_specialization g_cuntz hc11 hc22 hc12).1,
-  (bosonic_ccr_specialization g_boson hb11 hb22 hb12).1
-⟩
+    (g_boson.a1 * g_boson.a1star - g_boson.a1star * g_boson.a1 = 1) := by
+  refine ⟨?_, ?_, ?_⟩
+  · exact (fermionic_car_specialization g_fermion hf11 hf22 hf12).1
+  · exact (cuntz_o2_specialization g_cuntz hc11 hc22 hc12).1
+  · exact (bosonic_ccr_specialization g_boson hb11 hb22 hb12).1
 
 end InfoGeometry.Algebra.QCCRInterpolatingAlgebra

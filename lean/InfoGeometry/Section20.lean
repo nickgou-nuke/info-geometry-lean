@@ -57,12 +57,13 @@ theorem coordinate_cartan_readouts_reconcile
     Section12.torsionTwoFormCoeff Section12.zeroConnection
         (Section12.coordinateConnectionForm Gamma) Section12.coordinateFrame a b c =
       Section12.torsionTensor Gamma a b c ∧
-    Section12Formalized.torsionTwoFormCoeff Section12Formalized.zeroConnection
+        Section12Formalized.torsionTwoFormCoeff Section12Formalized.zeroConnection
         Gamma Section12Formalized.coordinateFrame a c b =
       Section12Formalized.torsionTensor Gamma a b c := by
-  exact ⟨Section12.torsionTwoFormCoeff_coordinate_eq_torsionTensor Gamma a b c,
-    Section12Formalized.coordinate_basis_torsionTwoFormCoeff_swap_eq_torsionTensor
-      Gamma a b c⟩
+  refine ⟨?_, ?_⟩
+  · exact Section12.torsionTwoFormCoeff_coordinate_eq_torsionTensor Gamma a b c
+  · exact Section12Formalized.coordinate_basis_torsionTwoFormCoeff_swap_eq_torsionTensor
+      Gamma a b c
 
 /-- Both torsion modules use the same quaternion commutator covariant derivative. -/
 theorem quaternion_torsion_definitions_agree (dq Omega q : Quat) :
@@ -101,9 +102,12 @@ theorem section20_capstone :
     (∀ dq Omega q : Quat,
       Section12.quaternionTorsion dq Omega q =
         Section12Formalized.quaternionTorsion dq Omega q) ∧
-    Section12Formalized.macroscopicCuntzTorsion
+        Section12Formalized.macroscopicCuntzTorsion
         Section12.finiteShiftL Section12.finiteShiftR ≠ (0 : ShiftMat) := by
-  exact ⟨torsion_coefficient_definitions_agree, coordinate_cartan_readouts_reconcile,
-    quaternion_torsion_definitions_agree, finite_shift_generic_readout_ne_zero⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact torsion_coefficient_definitions_agree
+  · exact coordinate_cartan_readouts_reconcile
+  · exact quaternion_torsion_definitions_agree
+  · exact finite_shift_generic_readout_ne_zero
 
 end Section20

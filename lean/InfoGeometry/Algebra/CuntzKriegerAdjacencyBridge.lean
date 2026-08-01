@@ -44,10 +44,10 @@ theorem master_cuntz_krieger_adjacency_synthesis
     {n : ℕ} {R : Type*} [Ring R] (g : CuntzKriegerGenerators n R) (i j : Fin n) (h : i ≠ j) (hA : g.A i j = 0) :
     (g.Sstar i * g.S i = (Finset.univ : Finset (Fin n)).sum (fun k => g.A i k * g.proj k)) ∧
     (g.Sstar i * g.S j = 0) ∧
-    (g.A i j * g.proj j = 0) := ⟨
-  g.partial_isometry_eq i,
-  g.ortho i j h,
-  g.forbidden_transition_annihilation i j hA
-⟩
+    (g.A i j * g.proj j = 0) := by
+  refine ⟨?_, ?_, ?_⟩
+  · exact g.partial_isometry_eq i
+  · exact g.ortho i j h
+  · exact g.forbidden_transition_annihilation i j hA
 
 end InfoGeometry.Algebra.CuntzKriegerAdjacencyBridge

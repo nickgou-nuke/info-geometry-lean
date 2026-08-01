@@ -16,6 +16,12 @@ def isO55Isometric (R : Type*) [CommRing R]
     (G : Matrix (Sum (Fin 5) (Fin 5)) (Sum (Fin 5) (Fin 5)) R) : Prop :=
   G * (splitMetric10D R) * G.transpose = splitMetric10D R
 
+/-- **Теорема 1a (Единица)**: Идентитетната матрица е в O(5,5). -/
+theorem id_is_o55_isometric (R : Type*) [CommRing R] :
+    isO55Isometric R 1 := by
+  dsimp [isO55Isometric]
+  rw [Matrix.transpose_one, mul_one, one_mul]
+
 /-- **Теорема 1 (Не-тривиална Единица)**: Скаларната матрица -I₁₀ е в O(5,5) (-I ≠ I). -/
 theorem neg_one_is_o55_isometric (R : Type*) [CommRing R] :
     isO55Isometric R (-1) := by
@@ -33,10 +39,12 @@ theorem o55_group_multiplication_closure (R : Type*) [CommRing R]
     isO55Isometric R (G1 * G2) := by
   dsimp [isO55Isometric] at *
   rw [Matrix.transpose_mul]
-  calc (G1 * G2) * splitMetric10D R * (G2.transpose * G1.transpose)
-      = G1 * (G2 * splitMetric10D R * G2.transpose) * G1.transpose := by noncomm_ring
-    _ = G1 * splitMetric10D R * G1.transpose := by rw [h2]
-    _ = splitMetric10D R := h1
+  have h2conj :
+      G1 * (G2 * splitMetric10D R * G2.transpose) * G1.transpose =
+        G1 * splitMetric10D R * G1.transpose := by
+    simpa [Matrix.mul_assoc] using congrArg (fun M => G1 * M * G1.transpose) h2
+  have hfinal : G1 * splitMetric10D R * G1.transpose = splitMetric10D R := h1
+  simpa [Matrix.mul_assoc] using h2conj.trans hfinal
 
 /-- **Master Synthesis**: Не-тривиално O(5,5) Групово Затваряне Synthesis. -/
 theorem master_split_gauge_group_synthesis (R : Type*) [CommRing R]

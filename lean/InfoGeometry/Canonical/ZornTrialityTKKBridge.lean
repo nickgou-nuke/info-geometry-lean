@@ -103,18 +103,6 @@ theorem laneGrade_mirror_associator :
     laneGrade (laneMirror SplitOctonionLane.associatorWitness) = p2 := by
   rfl
 
-/-- Summary theorem: the canonical split-octonion lanes land in the expected TKK grades. -/
-theorem canonical_lane_grade_synthesis :
-    laneGrade SplitOctonionLane.diagonalProjector = z0 ∧
-    laneGrade SplitOctonionLane.upperNilpotent = p1 ∧
-    laneGrade SplitOctonionLane.lowerNilpotent = m1 ∧
-    laneGrade SplitOctonionLane.associatorWitness = p2 ∧
-    laneMirror (laneMirror SplitOctonionLane.upperNilpotent) =
-      SplitOctonionLane.upperNilpotent := by
-  exact ⟨laneGrade_diagonalProjector, laneGrade_upperNilpotent,
-    laneGrade_lowerNilpotent, laneGrade_associatorWitness,
-    laneMirror_involutive _⟩
-
 /-!
 The routing record carried no independent data: both its sector and grade were
 definitionally determined by its lane.  Use the canonical lane carrier and

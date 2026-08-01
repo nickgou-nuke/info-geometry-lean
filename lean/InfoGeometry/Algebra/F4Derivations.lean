@@ -347,7 +347,7 @@ theorem S3OnH3ZornLinearEquiv_comp (σ τ : S3Perm) :
 @[simp] theorem S3OnH3Zorn_s31_involutive (X : H3Zorn ℝ) :
     S3OnH3Zorn S3Perm.s31 (S3OnH3Zorn S3Perm.s31 X) = X := by
   unfold S3OnH3Zorn
-  simp [Inv.inv, S3Perm.inverse, S3Perm.comp, S3OnH3Zorn, S3OnH3ZornPeirce, h3zornPeirce, h3zornFromPeirce, ZornVectorMatrix.conj_conj, ZornVectorMatrix.conj_add, ZornVectorMatrix.conj_smul]
+  simp [S3OnH3ZornPeirce, h3zornPeirce, h3zornFromPeirce, ZornVectorMatrix.conj_conj]
 
 /-- The Lie subalgebra of Jordan derivations of H₃(𝕆_s). -/
 def H3ZornDerivationLieSubalgebra : LieSubalgebra ℝ (Module.End ℝ (H3Zorn ℝ)) :=

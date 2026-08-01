@@ -42,7 +42,7 @@ instance : CoeFun (AdditiveModularFlow (H := H))
     (σ : AdditiveModularFlow (H := H)) : σ 0 = 1 :=
   by
     change σ.toFun (Multiplicative.toAdd.symm 0) = 1
-    simpa using σ.toFun.map_one
+    exact σ.toFun.map_one
 
 @[simp] theorem AdditiveModularFlow.map_add
     (σ : AdditiveModularFlow (H := H)) (s t : ℝ) :

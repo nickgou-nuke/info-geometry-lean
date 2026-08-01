@@ -1,5 +1,6 @@
 import Mathlib.Topology.Algebra.Module.Basic
 import Mathlib.Topology.Constructions
+import Mathlib.Topology.Category.TopCat.Basic
 import InfoGeometry.Canonical.BRSTQuotientInnerProductLiftBridge
 
 /-!
@@ -15,6 +16,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.BRSTQuotientTopologicalBridge
 
+open CategoryTheory
 open InfoGeometry.Canonical.BRSTQuotientInnerProductLiftBridge
 
 variable {R H Y : Type*} [CommRing R] [AddCommGroup H] [Module R H]
@@ -35,6 +37,20 @@ theorem continuous_brstQuotientMk
   change Continuous (Submodule.Quotient.mk : LinearMap.ker q →
     LinearMap.ker q ⧸ BRSTSubmodule q)
   exact continuous_quotient_mk'
+
+/-- The BRST quotient as an object of `TopCat`, with its native quotient
+topology. -/
+def brstQuotientTopCat
+    [TopologicalSpace H] (q : Module.End R H) : TopCat :=
+  TopCat.of (LinearMap.ker q ⧸ BRSTSubmodule q)
+
+/-- The canonical quotient projection as a morphism in `TopCat`. -/
+def brstQuotientMkTopCat
+    [TopologicalSpace H] (q : Module.End R H) :
+    TopCat.of (LinearMap.ker q) ⟶ brstQuotientTopCat q :=
+  TopCat.ofHom
+    { toFun := brstQuotientMk q
+      continuous_toFun := continuous_brstQuotientMk q }
 
 /-- A continuous map on closed states descends through the BRST quotient when
 it is invariant under the quotient relation. -/

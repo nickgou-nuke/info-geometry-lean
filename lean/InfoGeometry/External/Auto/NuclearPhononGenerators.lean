@@ -34,10 +34,21 @@ theorem u6_dimension_eq_36 : u6Dimension = 36 := by
 theorem sp6R_dimension_eq_21 : sp6RDimension = 21 := by
   norm_num [sp6RDimension, spRealDimensionFromHalfRank]
 
-structure PhononRaisingOperator (V : Type*) [AddCommGroup V] [Module ℝ V] where
-  Qform : V → V → ℝ
-  Kform : V → V → ℝ
-  Tform : V → V → ℝ
+abbrev PhononRaisingOperator (V : Type*) [AddCommGroup V] [Module ℝ V] :=
+  (V → V → ℝ) × (V → V → ℝ) × (V → V → ℝ)
+
+namespace PhononRaisingOperator
+
+abbrev Qform {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (op : PhononRaisingOperator V) : V → V → ℝ := op.1
+
+abbrev Kform {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (op : PhononRaisingOperator V) : V → V → ℝ := op.2.1
+
+abbrev Tform {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (op : PhononRaisingOperator V) : V → V → ℝ := op.2.2
+
+end PhononRaisingOperator
 
 noncomputable def raisingPhonon {V : Type*} [AddCommGroup V] [Module ℝ V]
     (op : PhononRaisingOperator V) (u v : V) : ℂ :=

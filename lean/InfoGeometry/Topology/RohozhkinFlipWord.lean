@@ -22,10 +22,13 @@ def chronologicalProduct {d : ℕ} (Ms : List (Matrix (Fin d) (Fin d) ℚ)) :
   (Ms.reverse).prod
 
 /-- A flip word records the generator list, dimension, and total points. -/
-structure FlipWord (n : ℕ) where
-  matrices : List (Matrix (Fin (2 * n + 1)) (Fin (2 * n + 1)) ℚ)
+abbrev FlipWord (n : ℕ) :=
+  List (Matrix (Fin (2 * n + 1)) (Fin (2 * n + 1)) ℚ)
 
 namespace FlipWord
+
+abbrev matrices {n : ℕ} (w : FlipWord n) :
+    List (Matrix (Fin (2 * n + 1)) (Fin (2 * n + 1)) ℚ) := w
 
 /-- The word dimension is determined by the typed matrix carrier. -/
 def dim {n : ℕ} (_ : FlipWord n) : ℕ := 2 * n + 1

@@ -89,19 +89,17 @@ lemma concreteStep_trace (n : ℕ) (A : MatrixStage n) :
   ring
 
 /-- Successor maps and preservation of the normalized matrix trace. -/
-structure Data where
-  step : ∀ n, MatrixStage n →⋆ₐ[ℂ] MatrixStage (n + 1)
+abbrev Data := ∀ n, MatrixStage n →⋆ₐ[ℂ] MatrixStage (n + 1)
 
 /-! The abstract interface now has a concrete noncommutative matrix instance.
 The only scalar calculation here is normalization of the genuine matrix
 trace; positivity and the algebra map are supplied by the matrix owners
 above, not by an artificial order on matrices. -/
 
-def concreteData : Data where
-  step := concreteStep
+def concreteData : Data := concreteStep
 
 theorem concrete_trace_compatible (n : ℕ) (A : MatrixStage n) :
-    matrixTraceState (n + 1) (concreteData.step n A) = matrixTraceState n A := by
+    matrixTraceState (n + 1) (concreteData n A) = matrixTraceState n A := by
   dsimp [concreteData, matrixTraceState, matrixTraceFunctional]
   rw [concreteStep_trace]
   rw [pow_succ]
@@ -112,7 +110,7 @@ def map (T : Data) {i j : ℕ} (hij : i ≤ j) :
     MatrixStage i →⋆ₐ[ℂ] MatrixStage j :=
   Nat.leRecOn hij
     (fun {k} (f : MatrixStage i →⋆ₐ[ℂ] MatrixStage k) =>
-      (T.step k).comp f)
+      (T k).comp f)
     (StarAlgHom.id ℂ (MatrixStage i))
 
 @[simp] theorem map_id (T : Data) (i : ℕ) :
@@ -122,7 +120,7 @@ def map (T : Data) {i j : ℕ} (hij : i ≤ j) :
     (StarAlgHom.id ℂ (MatrixStage i))
 
 theorem map_succ (T : Data) {i j : ℕ} (hij : i ≤ j) :
-    map T (Nat.le.step hij) = (T.step j).comp (map T hij) := by
+    map T (Nat.le.step hij) = (T j).comp (map T hij) := by
   dsimp [map]
   exact Nat.leRecOn_succ (C := fun k => MatrixStage i →⋆ₐ[ℂ] MatrixStage k)
     hij (StarAlgHom.id ℂ (MatrixStage i))
@@ -138,7 +136,7 @@ theorem map_comp (T : Data) {i j k : ℕ} (hij : i ≤ j) (hjk : j ≤ k) :
         StarAlgHom.comp_assoc, ih]
 
 theorem trace_compatible (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
     {i j : ℕ} (hij : i ≤ j) (A : MatrixStage i) :
     matrixTraceState j (map T hij A) = matrixTraceState i A := by
   induction hij with
@@ -146,7 +144,7 @@ theorem trace_compatible (T : Data)
       simp
   | step hjm ih =>
       rw [map_succ T hjm]
-      change matrixTraceState _ (T.step _ (map T hjm A)) = _
+      change matrixTraceState _ (T _ (map T hjm A)) = _
       rw [hT, ih]
 
 /-! The concrete tower is exposed directly as a filtered family of
@@ -204,7 +202,7 @@ def traceColimitInclusion (T : Data) (n : ℕ) :
   (colimit.ι (moduleDiagram T) n).hom
 
 def traceCocone (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A) :
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :
     Cocone (moduleDiagram T) where
   pt := ModuleCat.of ℂ ℂ
   ι :=
@@ -219,12 +217,12 @@ def traceCocone (T : Data)
           trace_compatible T hT (leOfHom f) A }
 
 def traceColimitFunctional (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A) :
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :
     traceColimit T →ₗ[ℂ] ℂ :=
   (colimit.desc (moduleDiagram T) (traceCocone T hT)).hom
 
 theorem traceColimitFunctional_inclusion (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
     (n : ℕ)
     (A : MatrixStage n) :
     traceColimitFunctional T hT (traceColimitInclusion T n A) =
@@ -235,7 +233,7 @@ theorem traceColimitFunctional_inclusion (T : Data)
 /-- The compatible normalized trace is the unique linear readout on the
 colimit with the prescribed finite-stage values. -/
 theorem traceColimitFunctional_unique (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
     (f : traceColimit T →ₗ[ℂ] ℂ)
     (hf : ∀ (n : ℕ) (A : MatrixStage n),
       f (traceColimitInclusion T n A) = matrixTraceFunctional n A) :

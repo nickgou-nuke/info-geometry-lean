@@ -28,7 +28,7 @@ variable {α : Type*} [Fintype α] [Nonempty α]
 noncomputable def finiteGibbsModel
     (params : GrandCanonicalTwoParam α) (μ : ℝ) :
     FiniteGibbs.Model (Data := α) (Theta := Unit) :=
-  ⟨fun x _ => shiftedEnergy params μ x⟩
+  fun x _ => shiftedEnergy params μ x
 
 theorem partitionGC_eq_finiteGibbs_partition
     (params : GrandCanonicalTwoParam α) {β μ : ℝ} (hβ : 0 < β) :

@@ -59,10 +59,11 @@ theorem arakiUmegakiGen_unnormalized_correction
     This is the parallel transport between KMS states.
     The master operator F(K) gives the cost of the transport.
     exp(itK) acts as the unitary flow generator. -/
-structure ConnesFlow where
-  K : ℂ                                           -- relative modular Hamiltonian
+abbrev ConnesFlow := ℂ
 
 namespace ConnesFlow
+
+abbrev K (F : ConnesFlow) : ℂ := F
 
 noncomputable def cocycle (F : ConnesFlow) (t : ℝ) : ℂ :=
   exp (Complex.I * t • F.K)

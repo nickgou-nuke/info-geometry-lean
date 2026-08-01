@@ -20,14 +20,14 @@ with the finite-stage operator family on canonical classes. -/
 theorem directLimitOperator_unique
     (hcommutes :
       ∀ (m n : ℕ) (h : m ≤ n) (x : Stage m),
-        F.op n (f m n h x) = f m n h (F.op m x))
+        F n (f m n h x) = f m n h (F m x))
     (T :
       AddCommGroup.DirectLimit Stage f →+
         AddCommGroup.DirectLimit Stage f)
     (hT :
       ∀ n x,
         T (AddCommGroup.DirectLimit.of Stage f n x) =
-          AddCommGroup.DirectLimit.of Stage f n (F.op n x)) :
+          AddCommGroup.DirectLimit.of Stage f n (F n x)) :
     T = directLimitOperator Stage f F hcommutes := by
   apply AddMonoidHom.ext
   intro z
@@ -42,18 +42,18 @@ agree with the same finite-stage operator family. -/
 theorem directLimitDescent_ext
     (hcommutes :
       ∀ (m n : ℕ) (h : m ≤ n) (x : Stage m),
-        F.op n (f m n h x) = f m n h (F.op m x))
+        F n (f m n h x) = f m n h (F m x))
     (T U :
       AddCommGroup.DirectLimit Stage f →+
         AddCommGroup.DirectLimit Stage f)
     (hT :
       ∀ n x,
         T (AddCommGroup.DirectLimit.of Stage f n x) =
-          AddCommGroup.DirectLimit.of Stage f n (F.op n x))
+          AddCommGroup.DirectLimit.of Stage f n (F n x))
     (hU :
       ∀ n x,
         U (AddCommGroup.DirectLimit.of Stage f n x) =
-          AddCommGroup.DirectLimit.of Stage f n (F.op n x)) :
+          AddCommGroup.DirectLimit.of Stage f n (F n x)) :
     T = U := by
   rw [F.directLimitOperator_unique Stage f hcommutes T hT]
   symm
@@ -64,13 +64,13 @@ with its finite-stage evaluation law. -/
 theorem existsUnique_directLimitOperator :
     (hcommutes :
       ∀ (m n : ℕ) (h : m ≤ n) (x : Stage m),
-        F.op n (f m n h x) = f m n h (F.op m x)) →
+        F n (f m n h x) = f m n h (F m x)) →
     ∃! T :
       AddCommGroup.DirectLimit Stage f →+
         AddCommGroup.DirectLimit Stage f,
       ∀ n x,
         T (AddCommGroup.DirectLimit.of Stage f n x) =
-          AddCommGroup.DirectLimit.of Stage f n (F.op n x) := by
+          AddCommGroup.DirectLimit.of Stage f n (F n x) := by
   intro hcommutes
   refine ⟨directLimitOperator Stage f F hcommutes, ?_, ?_⟩
   · intro n x

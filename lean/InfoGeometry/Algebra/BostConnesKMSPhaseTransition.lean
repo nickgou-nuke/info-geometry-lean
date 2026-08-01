@@ -34,6 +34,19 @@ theorem thermalKMSWeight_mul (β : ℝ) (m n : ℕ+) :
   rw [Nat.cast_mul]
   exact Real.mul_rpow h_m h_n
 
+/-- The thermal weight varies continuously with inverse temperature.
+
+This is the topological parameter statement actually supported by the
+`Real.rpow` definition; it does not assert a pole, KMS classification, or
+phase-transition theorem at `β = 1`.
+-/
+theorem continuous_thermalKMSWeight (n : ℕ+) :
+    Continuous (fun β : ℝ => thermalKMSWeight β n) := by
+  unfold thermalKMSWeight
+  exact
+    (Real.continuous_const_rpow
+      (show (n : ℝ) ≠ 0 by exact_mod_cast n.ne_zero)).comp continuous_neg
+
 /-- **Theorem**: Projection Mode Projection Operator Identity.
     In the Bost-Connes system, the element p_n = x_n x_n^* is a self-adjoint projection
     (idempotent: p_n^2 = p_n) representing the range of the mode isometry x_n. -/

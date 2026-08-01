@@ -22,31 +22,21 @@ noncomputable section
 namespace SUNLoopBraidCuntzBoundary
 
 /-- `N` color lanes plus one singlet lane. -/
-structure ColorSpinorN (N : ℕ) (V : Type*) where
-  color : Fin N → V
-  singlet : V
+abbrev ColorSpinorN (N : ℕ) (V : Type*) := (Fin N → V) × V
 
 namespace ColorSpinorN
 
-instance {N : ℕ} {V : Type*} [Zero V] : Zero (ColorSpinorN N V) where
-  zero := ⟨fun _ => 0, 0⟩
+abbrev color {N : ℕ} {V : Type*} (ψ : ColorSpinorN N V) : Fin N → V := ψ.1
 
-instance {N : ℕ} {V : Type*} [Add V] : Add (ColorSpinorN N V) where
-  add ψ φ := ⟨fun i => ψ.color i + φ.color i, ψ.singlet + φ.singlet⟩
-
-instance {N : ℕ} {V : Type*} [SMul ℂ V] : SMul ℂ (ColorSpinorN N V) where
-  smul q ψ := ⟨fun i => q • ψ.color i, q • ψ.singlet⟩
+abbrev singlet {N : ℕ} {V : Type*} (ψ : ColorSpinorN N V) : V := ψ.2
 
 @[ext] theorem ext {N : ℕ} {V : Type*} {ψ φ : ColorSpinorN N V}
     (hcolor : ∀ i, ψ.color i = φ.color i) (hsinglet : ψ.singlet = φ.singlet) :
     ψ = φ := by
-  cases ψ
-  cases φ
-  simp only at hcolor hsinglet ⊢
-  cases hsinglet
-  congr
-  funext i
-  exact hcolor i
+  apply Prod.ext
+  · funext i
+    exact hcolor i
+  · exact hsinglet
 
 end ColorSpinorN
 
@@ -80,31 +70,40 @@ theorem qAdjacentColorBraidN_artin {N : ℕ} {V : Type*}
         (qAdjacentColorBraidN B q (i + 1) (qAdjacentColorBraidN B q i ψ)) =
       qAdjacentColorBraidN B q (i + 1)
         (qAdjacentColorBraidN B q i (qAdjacentColorBraidN B q (i + 1) ψ)) := by
-  ext j
-  · have hperm := congrArg (fun f : Equiv.Perm (Fin N) => f j) (B.artin i)
+  apply ColorSpinorN.ext
+  · intro j
+    change
+      q • (q • (q • ψ.color
+        ((B.sigma i) ((B.sigma (i + 1)) ((B.sigma i) j))))) =
+      q • (q • (q • ψ.color
+        ((B.sigma (i + 1)) ((B.sigma i) ((B.sigma (i + 1)) j)))))
+    have hperm := congrArg (fun f : Equiv.Perm (Fin N) => f j) (B.artin i)
     simpa [qAdjacentColorBraidN, qColorBraidN, permuteColorSpinorN, smul_smul,
       Equiv.Perm.mul_apply] using congrArg (fun k => (q * (q * q)) • ψ.color k) hperm
-  · simp [qAdjacentColorBraidN, qColorBraidN, smul_smul]
+  · simp [qAdjacentColorBraidN, qColorBraidN]
 
 /-- Matrix loop mode `A z^m`. -/
-structure SUNLoopMode (N : ℕ) where
-  mode : ℤ
-  coeff : Matrix (Fin N) (Fin N) ℂ
+abbrev SUNLoopMode (N : ℕ) := ℤ × Matrix (Fin N) (Fin N) ℂ
+
+namespace SUNLoopMode
+
+abbrev mode {N : ℕ} (X : SUNLoopMode N) : ℤ := X.1
+
+abbrev coeff {N : ℕ} (X : SUNLoopMode N) : Matrix (Fin N) (Fin N) ℂ := X.2
+
+end SUNLoopMode
 
 /-- Current-algebra bracket without central extension. -/
-def loopBracket {N : ℕ} (X Y : SUNLoopMode N) : SUNLoopMode N where
-  mode := X.mode + Y.mode
-  coeff := X.coeff * Y.coeff - Y.coeff * X.coeff
+def loopBracket {N : ℕ} (X Y : SUNLoopMode N) : SUNLoopMode N :=
+  (X.mode + Y.mode, X.coeff * Y.coeff - Y.coeff * X.coeff)
 
 /-- Insert a finite matrix as a loop mode. -/
-def matrixLoopMode {N : ℕ} (m : ℤ) (A : Matrix (Fin N) (Fin N) ℂ) : SUNLoopMode N where
-  mode := m
-  coeff := A
+def matrixLoopMode {N : ℕ} (m : ℤ) (A : Matrix (Fin N) (Fin N) ℂ) : SUNLoopMode N :=
+  (m, A)
 
 /-- Scalar multiplication of loop modes. -/
-def loopSmul {N : ℕ} (c : ℂ) (X : SUNLoopMode N) : SUNLoopMode N where
-  mode := X.mode
-  coeff := c • X.coeff
+def loopSmul {N : ℕ} (c : ℂ) (X : SUNLoopMode N) : SUNLoopMode N :=
+  (X.mode, c • X.coeff)
 
 /-- The loop bracket is exactly mode addition plus matrix commutator. -/
 theorem loopBracket_matrixLoopMode {N : ℕ}

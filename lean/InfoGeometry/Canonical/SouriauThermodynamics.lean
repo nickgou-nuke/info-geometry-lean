@@ -938,10 +938,10 @@ single-observable slice.
 theorem souriau_canonical_hessian_eq_variance
     [Fintype α] [Nonempty α]
     (energy : α → ℝ) (β : ℝ) :
-    hessian ({ energy := energy } : GrandCanonicalParams α) β =
-      variance ({ energy := energy } : GrandCanonicalParams α) β := by
+    hessian (energy : GrandCanonicalParams α) β =
+      variance (energy : GrandCanonicalParams α) β := by
   exact potential_second_derivative_eq_variance
-    ({ energy := energy } : GrandCanonicalParams α) β
+    (energy : GrandCanonicalParams α) β
 
 /--
 Souriau-Cartan temperature shadow.

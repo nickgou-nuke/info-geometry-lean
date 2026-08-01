@@ -49,16 +49,12 @@ theorem timelike_dominance
   
   unfold gibbsWeight
   
-  -- Compare fractions: exp_i / Z > exp_j / Z
-  rw [gt_iff_lt, div_lt_div_iff_of_pos_right hZpos]
+  have hscore : splitB11 q (ctx.keys j) < splitB11 q (ctx.keys i) := by
+    linarith
+  apply (div_lt_div_iff_of_pos_right hZpos).2
   apply Real.exp_lt_exp.mpr
-  
-  -- Compare energies: -β * energy_i > -β * energy_j
-  dsimp [params, lorentzianAttentionParams, InfoGeometry.Canonical.Attention.attentionParams, InfoGeometry.Canonical.Attention.interactionEnergy, splitB11, splitB11_expand]
-  
-  -- Now we have: β * (q.1 * (ctx.keys i).1 - q.2 * (ctx.keys i).2) > β * (q.1 * (ctx.keys j).1 - q.2 * (ctx.keys j).2)
-  -- Which matches the definitions of hi and hj via splitB11_expand.
-  rw [splitB11_expand] at hi hj
-  nlinarith
+  change (-β * (-(splitB11 q (ctx.keys j)))) <
+    (-β * (-(splitB11 q (ctx.keys i))))
+  nlinarith [hscore, hβ]
 
 end InfoGeometry.Canonical.Attention

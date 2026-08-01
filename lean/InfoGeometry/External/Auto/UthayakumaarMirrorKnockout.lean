@@ -4,10 +4,17 @@ noncomputable section
 
 namespace UthayakumaarMirrorKnockout
 
-structure Nucleus where
-  A : ℕ
-  Z : ℕ
-  N : ℕ
+abbrev Nucleus := ℕ × ℕ × ℕ
+
+namespace Nucleus
+
+def A (X : Nucleus) : ℕ := X.1
+
+def Z (X : Nucleus) : ℕ := X.2.1
+
+def N (X : Nucleus) : ℕ := X.2.2
+
+end Nucleus
 
 def twoTz (X : Nucleus) : ℤ :=
   (X.N : ℤ) - (X.Z : ℤ)
@@ -23,28 +30,28 @@ theorem twoTz_eq_neg_of_isMirrorPair {X Y : Nucleus}
   dsimp [twoTz]
   omega
 
-def Mn47 : Nucleus where A := 47; Z := 25; N := 22
-def Ti47 : Nucleus where A := 47; Z := 22; N := 25
-def Cr45 : Nucleus where A := 45; Z := 24; N := 21
-def Sc45 : Nucleus where A := 45; Z := 21; N := 24
+def Mn47 : Nucleus := (47, 25, 22)
+def Ti47 : Nucleus := (47, 22, 25)
+def Cr45 : Nucleus := (45, 24, 21)
+def Sc45 : Nucleus := (45, 21, 24)
 
 theorem Mn47_Ti47_mirror : isMirrorPair Mn47 Ti47 := by
-  norm_num [isMirrorPair, Mn47, Ti47]
+  norm_num [isMirrorPair, Nucleus.A, Nucleus.Z, Nucleus.N, Mn47, Ti47]
 
 theorem Cr45_Sc45_mirror : isMirrorPair Cr45 Sc45 := by
-  norm_num [isMirrorPair, Cr45, Sc45]
+  norm_num [isMirrorPair, Nucleus.A, Nucleus.Z, Nucleus.N, Cr45, Sc45]
 
 theorem twoTz_Mn47 : twoTz Mn47 = -3 := by
-  norm_num [twoTz, Mn47]
+  norm_num [twoTz, Nucleus.N, Nucleus.Z, Mn47]
 
 theorem twoTz_Ti47 : twoTz Ti47 = 3 := by
-  norm_num [twoTz, Ti47]
+  norm_num [twoTz, Nucleus.N, Nucleus.Z, Ti47]
 
 theorem twoTz_Cr45 : twoTz Cr45 = -3 := by
-  norm_num [twoTz, Cr45]
+  norm_num [twoTz, Nucleus.N, Nucleus.Z, Cr45]
 
 theorem twoTz_Sc45 : twoTz Sc45 = 3 := by
-  norm_num [twoTz, Sc45]
+  norm_num [twoTz, Nucleus.N, Nucleus.Z, Sc45]
 
 theorem mirror_twoTz_cancel_A47 :
     twoTz Mn47 + twoTz Ti47 = 0 := by

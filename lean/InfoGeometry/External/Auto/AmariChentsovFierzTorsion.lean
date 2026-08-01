@@ -22,9 +22,15 @@ abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
 /-- A finite two-coefficient jet through cubic order.
 `dikinMetric` is the quadratic coefficient and `amariCubic` is the cubic
 Amari--Chentsov/skewness coefficient. -/
-structure ModularBregmanJet where
-  dikinMetric : ℝ
-  amariCubic : ℝ
+abbrev ModularBregmanJet := ℝ × ℝ
+
+namespace ModularBregmanJet
+
+abbrev dikinMetric (J : ModularBregmanJet) : ℝ := J.1
+
+abbrev amariCubic (J : ModularBregmanJet) : ℝ := J.2
+
+end ModularBregmanJet
 
 /-- Cubic polynomial through third order:
 `ψ(ε)=g ε²/2 + C ε³/6`. -/
@@ -59,9 +65,15 @@ theorem thirdJet_eq_amari (J : ModularBregmanJet) :
     thirdJetAtZero J = J.amariCubic := rfl
 
 /-- A pair of finite cubic jets. -/
-structure ChiralCubicLift where
-  left : ModularBregmanJet
-  right : ModularBregmanJet
+abbrev ChiralCubicLift := ModularBregmanJet × ModularBregmanJet
+
+namespace ChiralCubicLift
+
+abbrev left (L : ChiralCubicLift) : ModularBregmanJet := L.1
+
+abbrev right (L : ChiralCubicLift) : ModularBregmanJet := L.2
+
+end ChiralCubicLift
 
 /-- Difference between the right and left cubic coefficients. -/
 def cubicTorsion (L : ChiralCubicLift) : ℝ :=

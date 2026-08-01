@@ -56,12 +56,19 @@ def FibonacciMicroEntropyNat (N : ℕ) : ℝ :=
   (N : ℝ) * penroseBeta
 
 /-- The STU model charge space with 4 real charges. -/
-@[ext]
-structure STUCharge where
-  q0 : ℝ
-  q1 : ℝ
-  q2 : ℝ
-  q3 : ℝ
+abbrev STUCharge := ℝ × ℝ × ℝ × ℝ
+
+namespace STUCharge
+
+def q0 (q : STUCharge) : ℝ := q.1
+
+def q1 (q : STUCharge) : ℝ := q.2.1
+
+def q2 (q : STUCharge) : ℝ := q.2.2.1
+
+def q3 (q : STUCharge) : ℝ := q.2.2.2
+
+end STUCharge
 
 /-- The Cartan quartic invariant in the STU model. -/
 def STUJ4 (q : STUCharge) : ℝ :=

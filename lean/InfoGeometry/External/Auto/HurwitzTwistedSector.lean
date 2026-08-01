@@ -37,24 +37,29 @@ Real-coordinate quaternion used for the Hurwitz/lattice layer.
 The genuine Hurwitz order condition is recorded separately by predicates below:
 the algebraic norm identities only need the ambient quaternion coordinates.
 -/
-structure HurwitzQuaternion where
-  a0 : ℝ
-  a1 : ℝ
-  a2 : ℝ
-  a3 : ℝ
+abbrev HurwitzQuaternion := ℝ × ℝ × ℝ × ℝ
 
 namespace HurwitzQuaternion
 
+abbrev a0 (q : HurwitzQuaternion) : ℝ := q.1
+
+abbrev a1 (q : HurwitzQuaternion) : ℝ := q.2.1
+
+abbrev a2 (q : HurwitzQuaternion) : ℝ := q.2.2.1
+
+abbrev a3 (q : HurwitzQuaternion) : ℝ := q.2.2.2
+
+
 /-- Quaternion conjugation. -/
 def conj (q : HurwitzQuaternion) : HurwitzQuaternion :=
-  { a0 := q.a0, a1 := -q.a1, a2 := -q.a2, a3 := -q.a3 }
+  (q.a0, -q.a1, -q.a2, -q.a3)
 
 /-- Hamilton quaternion multiplication in real coordinates. -/
 def mul (p q : HurwitzQuaternion) : HurwitzQuaternion :=
-  { a0 := p.a0 * q.a0 - p.a1 * q.a1 - p.a2 * q.a2 - p.a3 * q.a3
-  , a1 := p.a0 * q.a1 + p.a1 * q.a0 + p.a2 * q.a3 - p.a3 * q.a2
-  , a2 := p.a0 * q.a2 - p.a1 * q.a3 + p.a2 * q.a0 + p.a3 * q.a1
-  , a3 := p.a0 * q.a3 + p.a1 * q.a2 - p.a2 * q.a1 + p.a3 * q.a0 }
+  (p.a0 * q.a0 - p.a1 * q.a1 - p.a2 * q.a2 - p.a3 * q.a3,
+   p.a0 * q.a1 + p.a1 * q.a0 + p.a2 * q.a3 - p.a3 * q.a2,
+   p.a0 * q.a2 - p.a1 * q.a3 + p.a2 * q.a0 + p.a3 * q.a1,
+   p.a0 * q.a3 + p.a1 * q.a2 - p.a2 * q.a1 + p.a3 * q.a0)
 
 instance : Mul HurwitzQuaternion where
   mul := mul

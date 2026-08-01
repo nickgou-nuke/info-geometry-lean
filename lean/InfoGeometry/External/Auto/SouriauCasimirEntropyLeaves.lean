@@ -4,8 +4,13 @@ noncomputable section
 
 namespace SouriauCasimirEntropyLeaves
 
-structure GroupAction (G X : Type*) where
-  act : G → X → X
+abbrev GroupAction (G X : Type*) := G → X → X
+
+namespace GroupAction
+
+abbrev act {G X : Type*} (A : GroupAction G X) : G → X → X := A
+
+end GroupAction
 
 def invariant {G X R : Type*} (A : GroupAction G X) (f : X → R) : Prop :=
   ∀ g x, f (A.act g x) = f x

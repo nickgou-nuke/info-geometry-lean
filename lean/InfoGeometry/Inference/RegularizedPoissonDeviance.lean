@@ -40,7 +40,7 @@ noncomputable def PoissonModel.devianceEnergy
 noncomputable def PoissonModel.devianceGibbsModel
     (M : PoissonModel (Data := Data) (Theta := Theta)) :
     FiniteGibbs.Model (Data := Data) (Theta := Theta) :=
-  ⟨M.devianceEnergy⟩
+  M.devianceEnergy
 
 noncomputable def regularizedPoissonWeight
     (M : PoissonModel (Data := Data) (Theta := Theta))

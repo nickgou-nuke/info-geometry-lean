@@ -34,8 +34,13 @@ open InfoGeometry.Canonical.ConformalFiveGradeInversion
 open InfoGeometry.Canonical.Globality
 
 /-- An object in the Delaunay flip groupoid boundary is a witnessed flip word. -/
-structure DelaunayFlipObject (n : ℕ) where
-  word : DelaunayFlipWord n
+abbrev DelaunayFlipObject (n : ℕ) := DelaunayFlipWord n
+
+namespace DelaunayFlipObject
+
+abbrev word {n : ℕ} (X : DelaunayFlipObject n) : DelaunayFlipWord n := X
+
+end DelaunayFlipObject
 
 /--
 Finite local compensation data carried alongside a Delaunay object.

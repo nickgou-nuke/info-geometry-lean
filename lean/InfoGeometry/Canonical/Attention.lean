@@ -43,8 +43,8 @@ noncomputable def attentionParams
     (q : S_plus)
     (ctx : ContextWindow n S_minus V)
     (matchForm : S_plus →ₗ[ℝ] S_minus →ₗ[ℝ] ℝ) :
-    GrandCanonicalParams (Fin n) where
-  energy := fun i => interactionEnergy q (ctx.keys i) matchForm
+    GrandCanonicalParams (Fin n) :=
+  fun i => interactionEnergy q (ctx.keys i) matchForm
 
 /-- The Attention Weights are exactly the Gibbs distribution.
 The inverse temperature β corresponds to `1 / √d`. -/

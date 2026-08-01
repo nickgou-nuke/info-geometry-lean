@@ -47,16 +47,16 @@ theorem vertexOfState_card_eq
   rw [vertexOfState]
   exact card_natSetOfState S
 
-/--
-Finite bridge packet from the exterior Möbius lane to the Sugawara readout.
+/-- The finite bridge carrier is already the square-free exterior state.
 
-It stores a square-free exterior state together with the corresponding Boolean
-vertex and the two finite readouts on that shared carrier.
--/
-structure PrimeExteriorSugawaraPacket (P : PrimeCutoff) where
-  state : SquareFreeState P
+The former packet added no proof or additional data beyond this field, so the
+native carrier is `SquareFreeState P` itself. -/
+abbrev PrimeExteriorSugawaraPacket (P : PrimeCutoff) := SquareFreeState P
 
 namespace PrimeExteriorSugawaraPacket
+
+/-- Compatibility readout for the former packet field. -/
+abbrev state {P : PrimeCutoff} (B : PrimeExteriorSugawaraPacket P) : SquareFreeState P := B
 
 /-- The Boolean vertex canonically attached to the square-free state. -/
 abbrev vertex {P : PrimeCutoff}
@@ -109,8 +109,8 @@ theorem primeExteriorSugawaraOwnerTarget :
   intro P S
   constructor
   · exact PrimeExteriorSugawaraPacket.mobius_eq_Gamma
-      (⟨S⟩ : PrimeExteriorSugawaraPacket P)
+      (S : PrimeExteriorSugawaraPacket P)
   · exact PrimeExteriorSugawaraPacket.centralCharge_eq_card
-      (⟨S⟩ : PrimeExteriorSugawaraPacket P)
+      (S : PrimeExteriorSugawaraPacket P)
 
 end InfoGeometry.Canonical.PrimeExteriorSugawaraBridge

@@ -12,13 +12,15 @@ namespace InfoGeometry.GrandCanonical
 
 open scoped BigOperators
 
-/--
-Canonical-specialization data: an energy observable on a finite state space.
+/-! `GrandCanonicalParams` carries no data beyond its energy function.  Use the
+native function type rather than a one-field wrapper. -/
+abbrev GrandCanonicalParams (α : Type _) := α → ℝ
 
-This is the `μ = 0`/single-observable slice of the full grand-canonical model.
--/
-structure GrandCanonicalParams (α : Type _) where
-  energy : α → ℝ
+namespace GrandCanonicalParams
+
+abbrev energy {α : Type _} (params : GrandCanonicalParams α) : α → ℝ := params
+
+end GrandCanonicalParams
 
 section FiniteModel
 

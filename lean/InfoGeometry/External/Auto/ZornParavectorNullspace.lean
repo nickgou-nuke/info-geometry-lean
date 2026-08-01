@@ -28,46 +28,49 @@ def cross3 (u v : Vec3) : Vec3
   | 2 => u 0 * v 1 - u 1 * v 0
 
 /-- Zorn coordinates in order `(a,b,u,v)` for `[[a,u],[v,b]]`. -/
-structure Zorn where
-  a : ℂ
-  b : ℂ
-  u : Vec3
-  v : Vec3
+abbrev Zorn := ℂ × ℂ × Vec3 × Vec3
+
+namespace Zorn
+
+abbrev a (X : Zorn) : ℂ := X.1
+
+abbrev b (X : Zorn) : ℂ := X.2.1
+
+abbrev u (X : Zorn) : Vec3 := X.2.2.1
+
+abbrev v (X : Zorn) : Vec3 := X.2.2.2
+
+end Zorn
 
 /-- Extensionality for Zorn coordinates. -/
 theorem zorn_ext {X Y : Zorn}
     (ha : X.a = Y.a) (hb : X.b = Y.b) (hu : X.u = Y.u) (hv : X.v = Y.v) : X = Y := by
-  cases X
-  cases Y
-  simp_all
+  apply Prod.ext
+  · exact ha
+  · apply Prod.ext
+    · exact hb
+    · apply Prod.ext
+      · exact hu
+      · exact hv
 
 /-- Zorn multiplication. -/
-def zornMul (X Y : Zorn) : Zorn where
-  a := X.a * Y.a + dot3 X.u Y.v
-  b := X.b * Y.b + dot3 X.v Y.u
-  u := fun i => X.a * Y.u i + Y.b * X.u i - cross3 X.v Y.v i
-  v := fun i => Y.a * X.v i + X.b * Y.v i + cross3 X.u Y.u i
+def zornMul (X Y : Zorn) : Zorn :=
+  (X.a * Y.a + dot3 X.u Y.v,
+    X.b * Y.b + dot3 X.v Y.u,
+    fun i => X.a * Y.u i + Y.b * X.u i - cross3 X.v Y.v i,
+    fun i => Y.a * X.v i + X.b * Y.v i + cross3 X.u Y.u i)
 
 /-- Split/Zorn norm. -/
 def zornNorm (X : Zorn) : ℂ := X.a * X.b - dot3 X.u X.v
 
 /-- Zero Zorn element. -/
-def zero : Zorn where
-  a := 0; b := 0; u := fun _ => 0; v := fun _ => 0
+def zero : Zorn := (0, 0, fun _ => 0, fun _ => 0)
 
 /-- Diagonal Zorn coordinate `[[E,p],[p,E]]`. -/
-def paravector (E : ℂ) (p : Vec3) : Zorn where
-  a := E
-  b := E
-  u := p
-  v := p
+def paravector (E : ℂ) (p : Vec3) : Zorn := (E, E, p, p)
 
 /-- Lower off-diagonal Zorn coordinate `[[0,0],[p,0]]`. -/
-def collapsedLower (p : Vec3) : Zorn where
-  a := 0
-  b := 0
-  u := fun _ => 0
-  v := p
+def collapsedLower (p : Vec3) : Zorn := (0, 0, fun _ => 0, p)
 
 /-- The diagonal-coordinate norm is exactly the quadratic `E²-p·p`. -/
 theorem paravector_norm_mass_shell (E : ℂ) (p : Vec3) :
@@ -78,7 +81,7 @@ theorem paravector_norm_mass_shell (E : ℂ) (p : Vec3) :
 /-- The lower off-diagonal coordinate has zero norm. -/
 theorem collapsed_state_norm_zero (p : Vec3) :
     zornNorm (collapsedLower p) = 0 := by
-  simp [zornNorm, collapsedLower, dot3]
+  simp [zornNorm, Zorn.a, Zorn.b, Zorn.u, Zorn.v, collapsedLower, dot3]
 
 /-- Cross product of a vector with itself vanishes. -/
 theorem cross_self_zero (p : Vec3) : cross3 p p = fun _ => 0 := by
@@ -89,11 +92,14 @@ theorem cross_self_zero (p : Vec3) : cross3 p p = fun _ => 0 := by
 theorem collapsed_state_nilpotent (p : Vec3) :
     zornMul (collapsedLower p) (collapsedLower p) = zero := by
   apply zorn_ext
-  · simp [zornMul, collapsedLower, zero, dot3]
-  · simp [zornMul, collapsedLower, zero, dot3]
+  · simp [zornMul, Zorn.a, Zorn.b, Zorn.u, Zorn.v, collapsedLower, zero, dot3]
+  · simp [zornMul, Zorn.a, Zorn.b, Zorn.u, Zorn.v, collapsedLower, zero, dot3]
   · funext i
-    fin_cases i <;> simp [zornMul, collapsedLower, zero, cross3] <;> ring
+    fin_cases i <;>
+      simp [zornMul, Zorn.a, Zorn.b, Zorn.u, Zorn.v, collapsedLower, zero, cross3] <;>
+      ring
   · funext i
-    fin_cases i <;> simp [zornMul, collapsedLower, zero, cross3]
+    fin_cases i <;>
+      simp [zornMul, Zorn.a, Zorn.b, Zorn.u, Zorn.v, collapsedLower, zero, cross3]
 
 end ZornParavectorNullspace

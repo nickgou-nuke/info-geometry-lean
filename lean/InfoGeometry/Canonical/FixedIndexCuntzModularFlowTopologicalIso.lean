@@ -24,10 +24,10 @@ variable (T : FixedIndexCuntzStarTower.Data (ι := ι) Stage)
 variable (Φ : FlowData Stage)
 variable (hflow_add :
   ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
-    Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
+    Φ n (t + s) a = Φ n t (Φ n s a))
 variable (hmap_naturality :
   ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-    T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
+    T.map hmn (Φ m t a) = Φ n t (T.map hmn a))
 
 def flowTopologicalColimitIso (t : ℝ) :
     topologicalColimit Stage (system Stage T) ≅
@@ -55,7 +55,7 @@ theorem flowTopologicalColimitIso_hom_stage
     (t : ℝ) (n : ℕ) (a : Stage n) :
     (flowTopologicalColimitIso Stage T Φ hflow_add hmap_naturality t).hom
         (topologicalInjection Stage (system Stage T) n a) =
-      topologicalInjection Stage (system Stage T) n (Φ.flow n t a) := by
+      topologicalInjection Stage (system Stage T) n (Φ n t a) := by
   exact flowTopologicalColimitMap_inclusion
     Stage T Φ hmap_naturality t n a
 

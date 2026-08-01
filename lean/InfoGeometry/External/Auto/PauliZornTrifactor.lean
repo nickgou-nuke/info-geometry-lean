@@ -93,11 +93,19 @@ def dot3 (p q : Fin 3 → ℝ) : ℝ :=
   ∑ i : Fin 3, p i * q i
 
 /-- Real Zorn vector matrix container for determinant bridge. -/
-structure RZorn where
-  alpha : ℝ
-  p : Fin 3 → ℝ
-  q : Fin 3 → ℝ
-  beta : ℝ
+abbrev RZorn := ℝ × (Fin 3 → ℝ) × (Fin 3 → ℝ) × ℝ
+
+namespace RZorn
+
+abbrev alpha (Z : RZorn) : ℝ := Z.1
+
+abbrev p (Z : RZorn) : Fin 3 → ℝ := Z.2.1
+
+abbrev q (Z : RZorn) : Fin 3 → ℝ := Z.2.2.1
+
+abbrev beta (Z : RZorn) : ℝ := Z.2.2.2
+
+end RZorn
 
 /-- Zorn determinant/norm form. -/
 def zornDet (Z : RZorn) : ℝ :=
@@ -120,7 +128,8 @@ theorem dot3_spatial (x y z : ℝ) :
 
 theorem zornDet_pauliToZorn (t x y z : ℝ) :
     zornDet (pauliToZorn t x y z) = minkowskiNorm t x y z := by
-  simp [zornDet, pauliToZorn, dot3_spatial, minkowskiNorm]
+  simp [zornDet, RZorn.alpha, RZorn.beta, RZorn.p, RZorn.q,
+    pauliToZorn, dot3_spatial, minkowskiNorm]
   ring
 
 /-- Null Pauli vectors map to determinant-null Zorn paravectors. -/
@@ -139,11 +148,11 @@ def pureLower (q : Fin 3 → ℝ) : RZorn :=
 
 theorem zornDet_pureUpper (p : Fin 3 → ℝ) :
     zornDet (pureUpper p) = 0 := by
-  simp [zornDet, pureUpper, dot3]
+  simp [zornDet, RZorn.alpha, RZorn.beta, RZorn.p, RZorn.q, pureUpper, dot3]
 
 theorem zornDet_pureLower (q : Fin 3 → ℝ) :
     zornDet (pureLower q) = 0 := by
-  simp [zornDet, pureLower, dot3]
+  simp [zornDet, RZorn.alpha, RZorn.beta, RZorn.p, RZorn.q, pureLower, dot3]
 
 end PauliZornTrifactor
 

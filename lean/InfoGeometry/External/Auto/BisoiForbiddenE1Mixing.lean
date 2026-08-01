@@ -4,22 +4,33 @@ noncomputable section
 
 namespace BisoiForbiddenE1Mixing
 
-structure SelfConjugateNucleus where
-  A : ℕ
-  Z : ℕ
-  N : ℕ
+abbrev SelfConjugateNucleus := ℕ × ℕ × ℕ
 
-def P30 : SelfConjugateNucleus where A := 30; Z := 15; N := 15
-def S32 : SelfConjugateNucleus where A := 32; Z := 16; N := 16
-def Cl34 : SelfConjugateNucleus where A := 34; Z := 17; N := 17
-def Ar36 : SelfConjugateNucleus where A := 36; Z := 18; N := 18
+namespace SelfConjugateNucleus
+
+def A (X : SelfConjugateNucleus) : ℕ := X.1
+
+def Z (X : SelfConjugateNucleus) : ℕ := X.2.1
+
+def N (X : SelfConjugateNucleus) : ℕ := X.2.2
+
+end SelfConjugateNucleus
+
+def P30 : SelfConjugateNucleus := (30, 15, 15)
+def S32 : SelfConjugateNucleus := (32, 16, 16)
+def Cl34 : SelfConjugateNucleus := (34, 17, 17)
+def Ar36 : SelfConjugateNucleus := (36, 18, 18)
 
 def selfConjugate (X : SelfConjugateNucleus) : Prop := X.Z = X.N
 
-theorem P30_self : selfConjugate P30 := by norm_num [selfConjugate, P30]
-theorem S32_self : selfConjugate S32 := by norm_num [selfConjugate, S32]
-theorem Cl34_self : selfConjugate Cl34 := by norm_num [selfConjugate, Cl34]
-theorem Ar36_self : selfConjugate Ar36 := by norm_num [selfConjugate, Ar36]
+theorem P30_self : selfConjugate P30 := by
+  norm_num [selfConjugate, SelfConjugateNucleus.Z, SelfConjugateNucleus.N, P30]
+theorem S32_self : selfConjugate S32 := by
+  norm_num [selfConjugate, SelfConjugateNucleus.Z, SelfConjugateNucleus.N, S32]
+theorem Cl34_self : selfConjugate Cl34 := by
+  norm_num [selfConjugate, SelfConjugateNucleus.Z, SelfConjugateNucleus.N, Cl34]
+theorem Ar36_self : selfConjugate Ar36 := by
+  norm_num [selfConjugate, SelfConjugateNucleus.Z, SelfConjugateNucleus.N, Ar36]
 
 def forbiddenE1Amplitude (bi bf M01 M10 : ℚ) : ℚ :=
   -(bi * M01 + bf * M10)

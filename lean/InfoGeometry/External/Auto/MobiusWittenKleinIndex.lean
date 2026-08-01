@@ -17,9 +17,15 @@ namespace MobiusWittenKleinIndex
 /-! ## Twisted Witten index cancellation -/
 
 /-- One positive-energy supersymmetric boson/fermion doublet with the same glide eigenvalue. -/
-structure SUSYPair where
-  weight : ℂ
-  glideEigenvalue : ℂ
+abbrev SUSYPair := ℂ × ℂ
+
+namespace SUSYPair
+
+abbrev weight (P : SUSYPair) : ℂ := P.1
+
+abbrev glideEigenvalue (P : SUSYPair) : ℂ := P.2
+
+end SUSYPair
 
 /-- Contribution of one paired doublet to `Tr G(-1)^F e^{-βH}`. -/
 def pairContribution (P : SUSYPair) : ℂ :=

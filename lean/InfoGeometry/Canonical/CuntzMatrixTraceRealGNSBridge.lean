@@ -75,10 +75,10 @@ theorem matrixTraceRealAlgebraicState_positive (n : ℕ) (A : MatrixStage n) :
 
 def realInductiveNet (T : Data) :
     InductiveAlgebraNet (𝕜 := ℝ) (A := MatrixStage) where
-  embed n := (T.step n).toAlgHom.restrictScalars ℝ
+  embed n := (T n).toAlgHom.restrictScalars ℝ
 
 def realTraceNet (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A) :
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :
     MarkovTraceNet (realInductiveNet T) where
   trace := matrixTraceRealLinearMap
   trace_one := by
@@ -91,7 +91,7 @@ def realTraceNet (T : Data)
     exact h
 
 def compatibleRealStateNet (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A) :
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :
     CompatibleAlgebraicStateNet (realInductiveNet T) :=
   CompatibleAlgebraicStateNet.ofMarkovTraceNet
     (realTraceNet T hT) (by
@@ -99,7 +99,7 @@ def compatibleRealStateNet (T : Data)
       exact matrixTraceState_nonneg n A)
 
 theorem compatibleRealStateNet_state (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
     (n : ℕ) (A : MatrixStage n) :
     (compatibleRealStateNet T hT).state n A =
       (matrixTraceRealAlgebraicState n).toLinearMap A :=

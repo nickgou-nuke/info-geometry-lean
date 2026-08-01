@@ -74,12 +74,14 @@ theorem detSign_clI : detSign clI = DetSign.positive := by
   simp [detSign, det_clI]
 
 /-- Finite-level dimension theorem data for the UHF tower. -/
-structure MatrixTowerLevel where
-  n : ℕ
+abbrev MatrixTowerLevel := ℕ
+
 namespace MatrixTowerLevel
 
+abbrev n (L : MatrixTowerLevel) : ℕ := L
+
 /-- The matrix level dimension determined by its level index. -/
-abbrev dim (L : MatrixTowerLevel) : ℕ := 2 ^ L.n
+abbrev dim (L : MatrixTowerLevel) : ℕ := 2 ^ L
 
 /-- The level dimension is its canonical power-of-two dimension. -/
 theorem dim_eq (L : MatrixTowerLevel) : L.dim = 2 ^ L.n := by
@@ -88,7 +90,7 @@ theorem dim_eq (L : MatrixTowerLevel) : L.dim = 2 ^ L.n := by
 end MatrixTowerLevel
 
 def towerLevel (n : ℕ) : MatrixTowerLevel :=
-  ⟨n⟩
+  n
 
 theorem towerLevel_succ_dim (n : ℕ) :
     (towerLevel (n + 1)).dim = (towerLevel n).dim * 2 := by

@@ -21,10 +21,11 @@ noncomputable def energy (P : Primon) : ℝ :=
 
 end Primon
 
-structure PrimonGas where
-  primons : List Primon
+abbrev PrimonGas := List Primon
 
 namespace PrimonGas
+
+abbrev primons (G : PrimonGas) : List Primon := G
 
 noncomputable def totalEnergy (G : PrimonGas) : ℝ :=
   (G.primons.map Primon.energy).sum
@@ -127,4 +128,3 @@ theorem zetaPartition_succ (β : ℝ) (N : ℕ) :
   simp [zetaPartition, Finset.sum_range_succ]
 
 -- SYNTHESIS
-

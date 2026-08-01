@@ -1,59 +1,42 @@
-import InfoGeometry.Canonical.BostConnesGibbsState
-import InfoGeometry.Canonical.PauliBostConnesModularFlow
+import InfoGeometry.Canonical.BostConnesPhaseTransition
 import InfoGeometry.Canonical.PauliWorldClockSynchronicity
 
 /-!
-# Bost-Connes zeta-phase carrier and Phase Transition
+# Bost-Connes zeta-phase readout and Pauli synchronicity
 
-This module packages the finite Bost-Connes Gibbs regime together with a
-carrier-level modular-flow readout. It defines the algebraic phase transition 
-at the Riemann Zeta pole (β = 1), and demonstrates the synthesis of synchronicity
-in the symmetry-broken (low temperature) regime.
+This module packages the finite low-temperature Bost-Connes readout together
+with the proved Pauli world-clock synchronicity invariant. It does not claim a
+global KMS classification or any zeta-pole phase transition theorem beyond the
+imported finite results.
 -/
 
 namespace InfoGeometry.Canonical.BostConnesZetaPhase
 
-open InfoGeometry.Canonical.BostConnesGibbsState
+/-- A finite zeta-phase carrier recording the low-temperature Gibbs readout and
+the Pauli synchronicity invariant. -/
+structure ZetaPhaseCarrier (R : Type*) [CommRing R] (clock : PauliWorldClock R)
+    (β : ℝ) where
+  hβ : 1 < β
+  partition_eq : InfoGeometry.Canonical.BostConnesKMS.bostConnesPartition β =
+      (riemannZeta (β : ℂ)).re
+  mass_one : (∑' n : ℕ+,
+      InfoGeometry.Canonical.BostConnesKMS.normalizedBostConnesWeight β n) = 1
+  positivity : ∀ n : ℕ+,
+      0 < InfoGeometry.Canonical.BostConnesKMS.normalizedBostConnesWeight β n
+  synchronicity :
+      clock.red_wheel.e * clock.red_wheel.u =
+        clock.green_wheel.e * clock.green_wheel.u ∧
+      clock.green_wheel.e * clock.green_wheel.u =
+        clock.blue_wheel.e * clock.blue_wheel.u
 
-/-- 
-KMS State (Kubo-Martin-Schwinger Condition)
-A state ω : R → ℝ is a KMS state at inverse temperature β if the modular flow σ_t 
-satisfies the thermodynamic condition for analytic continuation.
--/
-structure KMSState (R : Type*) [CommRing R] (β : ℝ) where
-  ω : R → ℝ
-  flow : ModularFlow R
-  is_kms : True -- Abstract algebraic placeholder for the analytic continuation KMS condition
-
-/--
-Thermodynamic Phases of the Riemann-Bost-Connes System
-Separated by the critical pole at β = 1 (the Hagedorn temperature).
--/
-inductive ThermodynamicPhase
-| Symmetric -- β ≤ 1: High temperature, Chaos, Unique KMS state
-| Broken    -- β > 1: Low temperature, Confinement, Multiple extremal KMS states
-
-/-- 
-The Bost-Connes Phase Transition map driven by the Riemann Zeta pole at β = 1.
--/
-noncomputable def bostConnesPhase (β : ℝ) : ThermodynamicPhase :=
-  if β ≤ 1 then ThermodynamicPhase.Symmetric
-  else ThermodynamicPhase.Broken
-
-/--
-**Rosetta Stone Synthesis Theorem**
-Under the phase transition (β > 1), the acausal synchronicity invariance holds 
-globally for *any* extremal KMS state selected by the network (spontaneous symmetry breaking).
-The time flow preserves the invariant unconditionally.
--/
-theorem synthesis_synchronicity_invariance (R : Type*) [CommRing R] (β : ℝ) 
-    (h_broken : bostConnesPhase β = ThermodynamicPhase.Broken)
-    (sys : PauliBostConnesClock R)
-    (state : KMSState R β)
-    (t : ℝ) :
-    sys.time_flow.flow t (sys.red_wheel.e * sys.red_wheel.u) = 
-    sys.time_flow.flow t (sys.green_wheel.e * sys.green_wheel.u) := by
-  -- The invariant is universal and generator-driven, regardless of the chosen KMS state
-  exact synchronicity_flow_invariance sys t
+/-- The finite low-temperature Bost-Connes readout together with the proved
+Pauli synchronicity invariant. -/
+theorem zetaPhaseCarrier_exists
+    (R : Type*) [CommRing R] (clock : PauliWorldClock R) (β : ℝ) (hβ : 1 < β) :
+    ZetaPhaseCarrier R clock β := by
+  rcases InfoGeometry.Canonical.bostConnes_pauli_synchronicity_package clock β hβ with
+    ⟨hLow, hPart, hMass, hPos, hSync⟩
+  exact
+    ⟨hLow, hPart, hMass, hPos, hSync⟩
 
 end InfoGeometry.Canonical.BostConnesZetaPhase

@@ -17,9 +17,15 @@ noncomputable section
 open Complex
 
 /-- Real two-vector carrying inverse temperature and modular phase. -/
-structure BetaVector where
-  beta : ℝ
-  tau : ℝ
+abbrev BetaVector := ℝ × ℝ
+
+namespace BetaVector
+
+abbrev beta (v : BetaVector) : ℝ := v.1
+
+abbrev tau (v : BetaVector) : ℝ := v.2
+
+end BetaVector
 
 /-- Complex Souriau temperature `eps = beta + i tau`. -/
 def complexTemperature (v : BetaVector) : ℂ :=
@@ -38,47 +44,41 @@ noncomputable def complexMasterDensity (eps : ℂ) (K : ℝ) : ℂ :=
   souriauModularExp eps K - 1 - eps * (K : ℂ)
 
 /-- Real beta direction: ordinary thermal scaling. -/
-def betaDirection : BetaVector where
-  beta := 1
-  tau := 0
+def betaDirection : BetaVector := (1, 0)
 
 /-- Imaginary beta direction: modular phase/rotation. -/
-def phaseDirection : BetaVector where
-  beta := 0
-  tau := 1
+def phaseDirection : BetaVector := (0, 1)
 
-def addBetaVector (u v : BetaVector) : BetaVector where
-  beta := u.beta + v.beta
-  tau := u.tau + v.tau
+def addBetaVector (u v : BetaVector) : BetaVector :=
+  (u.beta + v.beta, u.tau + v.tau)
 
-def smulBetaVector (a : ℝ) (v : BetaVector) : BetaVector where
-  beta := a * v.beta
-  tau := a * v.tau
+def smulBetaVector (a : ℝ) (v : BetaVector) : BetaVector :=
+  (a * v.beta, a * v.tau)
 
 theorem complexTemperature_eq (β τ : ℝ) :
     complexTemperature ⟨β, τ⟩ = (β : ℂ) + Complex.I * (τ : ℂ) := rfl
 
 theorem complexTemperature_betaDirection :
     complexTemperature betaDirection = 1 := by
-  simp [complexTemperature, betaDirection]
+  simp [complexTemperature, BetaVector.beta, BetaVector.tau, betaDirection]
 
 theorem complexTemperature_phaseDirection :
     complexTemperature phaseDirection = Complex.I := by
-  simp [complexTemperature, phaseDirection]
+  simp [complexTemperature, BetaVector.beta, BetaVector.tau, phaseDirection]
 
 theorem complexTemperature_add (u v : BetaVector) :
     complexTemperature (addBetaVector u v) =
       complexTemperature u + complexTemperature v := by
   cases u
   cases v
-  simp [complexTemperature, addBetaVector]
+  simp [complexTemperature, BetaVector.beta, BetaVector.tau, addBetaVector]
   ring
 
 theorem complexTemperature_smul (a : ℝ) (v : BetaVector) :
     complexTemperature (smulBetaVector a v) =
       (a : ℂ) * complexTemperature v := by
   cases v
-  simp [complexTemperature, smulBetaVector]
+  simp [complexTemperature, BetaVector.beta, BetaVector.tau, smulBetaVector]
   ring
 
 theorem riemannSphereChart_some (v : BetaVector) :
@@ -115,14 +115,14 @@ theorem souriauModularExp_real_beta (β K : ℝ) :
       Complex.exp ((β * K : ℝ) : ℂ) := by
   unfold souriauModularExp complexTemperature
   congr 1
-  simp
+  simp [BetaVector.beta, BetaVector.tau]
 
 theorem souriauModularExp_phase_beta (τ K : ℝ) :
     souriauModularExp (complexTemperature ⟨0, τ⟩) K =
       Complex.exp (Complex.I * ((τ * K : ℝ) : ℂ)) := by
   unfold souriauModularExp complexTemperature
   congr 1
-  simp
+  simp [BetaVector.beta, BetaVector.tau]
   ring
 
 theorem complexMasterDensity_zero (K : ℝ) :

@@ -31,7 +31,7 @@ def continuousRealTrace (n : ℕ) : ContinuousMap (MatrixStage n) ℝ :=
   rfl
 
 def realTraceTopologicalCocone (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A) :
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :
     Cocone (topologicalDiagram T) where
   pt := TopCat.of ℝ
   ι :=
@@ -52,14 +52,14 @@ def complexTraceToRealTopCatHom : TopCat.of ℂ ⟶ TopCat.of ℝ :=
       continuous_toFun := Complex.continuous_re }
 
 noncomputable def realTraceTopologicalColimitMap (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A) :
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :
     topologicalColimitObject T ⟶ TopCat.of ℝ :=
   topologicalDirectDescend (topologicalDiagram T)
     (realTraceTopologicalCocone T hT)
 
 theorem realTraceTopologicalColimitMap_inclusion
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
     (n : ℕ) (A : MatrixStage n) :
     realTraceTopologicalColimitMap T hT (topologicalInclusion T n A) =
       (matrixTraceRealLinearMap n A) := by
@@ -73,7 +73,7 @@ theorem realTraceTopologicalColimitMap_inclusion
 
 theorem realTraceTopologicalColimitMap_unique
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
     (f : topologicalColimitObject T ⟶ TopCat.of ℝ)
     (h : ∀ (n : ℕ) (A : MatrixStage n),
       f (topologicalInclusion T n A) = matrixTraceRealLinearMap n A) :
@@ -89,7 +89,7 @@ theorem realTraceTopologicalColimitMap_unique
 
 @[reassoc]
 theorem realTraceTopologicalColimitMap_factorization (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A) :
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :
     realTraceTopologicalColimitMap T hT =
       traceTopologicalColimitMap T hT ≫ complexTraceToRealTopCatHom := by
   apply colimit.hom_ext

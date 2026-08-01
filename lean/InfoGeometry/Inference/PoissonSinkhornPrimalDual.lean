@@ -28,8 +28,8 @@ noncomputable def poissonTransportRowModel
     (C : PoissonTransportCost (Observation := Observation)
       (Component := Component))
     (i : Observation) :
-    FiniteGibbs.Model (Data := Component) (Theta := Unit) where
-  energy := fun j _ => C.cost i j
+    FiniteGibbs.Model (Data := Component) (Theta := Unit) :=
+  fun j _ => C.cost i j
 
 omit [Nonempty Component] in
 theorem poissonTransportRowModel_weight_eq_assignment

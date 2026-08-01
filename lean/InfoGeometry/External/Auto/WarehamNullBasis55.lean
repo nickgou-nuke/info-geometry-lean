@@ -2,10 +2,15 @@ import Mathlib.Tactic
 
 namespace WarehamNullBasis55
 
-structure SplitPair where
-  p : Rat
-  m : Rat
-  deriving Repr, DecidableEq
+abbrev SplitPair := Rat × Rat
+
+namespace SplitPair
+
+abbrev p (x : SplitPair) : Rat := x.1
+
+abbrev m (x : SplitPair) : Rat := x.2
+
+end SplitPair
 
 structure V55 where
   x0 : SplitPair
@@ -19,29 +24,29 @@ def q11 (x : SplitPair) : Rat := x.p * x.p - x.m * x.m
 
 def Q55 (x : V55) : Rat := q11 x.x0 + q11 x.x1 + q11 x.x2 + q11 x.x3 + q11 x.x4
 
-def e : SplitPair := { p := 1, m := 0 }
-def ebar : SplitPair := { p := 0, m := 1 }
-def n : SplitPair := { p := 1, m := 1 }
-def nbar : SplitPair := { p := 1, m := -1 }
+def e : SplitPair := (1, 0)
+def ebar : SplitPair := (0, 1)
+def n : SplitPair := (1, 1)
+def nbar : SplitPair := (1, -1)
 
-def pairAdd (a b : SplitPair) : SplitPair := { p := a.p + b.p, m := a.m + b.m }
-def pairNeg (a : SplitPair) : SplitPair := { p := -a.p, m := -a.m }
+def pairAdd (a b : SplitPair) : SplitPair := (a.p + b.p, a.m + b.m)
+def pairNeg (a : SplitPair) : SplitPair := (-a.p, -a.m)
 def pairSub (a b : SplitPair) : SplitPair := pairAdd a (pairNeg b)
 def bil11 (a b : SplitPair) : Rat := a.p * b.p - a.m * b.m
 
-def reflectE (x : SplitPair) : SplitPair := { p := -x.p, m := x.m }
+def reflectE (x : SplitPair) : SplitPair := (-x.p, x.m)
 
-def nAt0 : V55 := { x0 := n, x1 := {p:=0,m:=0}, x2 := {p:=0,m:=0}, x3 := {p:=0,m:=0}, x4 := {p:=0,m:=0} }
-def nAt1 : V55 := { x0 := {p:=0,m:=0}, x1 := n, x2 := {p:=0,m:=0}, x3 := {p:=0,m:=0}, x4 := {p:=0,m:=0} }
-def nAt2 : V55 := { x0 := {p:=0,m:=0}, x1 := {p:=0,m:=0}, x2 := n, x3 := {p:=0,m:=0}, x4 := {p:=0,m:=0} }
-def nAt3 : V55 := { x0 := {p:=0,m:=0}, x1 := {p:=0,m:=0}, x2 := {p:=0,m:=0}, x3 := n, x4 := {p:=0,m:=0} }
-def nAt4 : V55 := { x0 := {p:=0,m:=0}, x1 := {p:=0,m:=0}, x2 := {p:=0,m:=0}, x3 := {p:=0,m:=0}, x4 := n }
+def nAt0 : V55 := { x0 := n, x1 := (0, 0), x2 := (0, 0), x3 := (0, 0), x4 := (0, 0) }
+def nAt1 : V55 := { x0 := (0, 0), x1 := n, x2 := (0, 0), x3 := (0, 0), x4 := (0, 0) }
+def nAt2 : V55 := { x0 := (0, 0), x1 := (0, 0), x2 := n, x3 := (0, 0), x4 := (0, 0) }
+def nAt3 : V55 := { x0 := (0, 0), x1 := (0, 0), x2 := (0, 0), x3 := n, x4 := (0, 0) }
+def nAt4 : V55 := { x0 := (0, 0), x1 := (0, 0), x2 := (0, 0), x3 := (0, 0), x4 := n }
 
-def nbarAt0 : V55 := { x0 := nbar, x1 := {p:=0,m:=0}, x2 := {p:=0,m:=0}, x3 := {p:=0,m:=0}, x4 := {p:=0,m:=0} }
-def nbarAt1 : V55 := { x0 := {p:=0,m:=0}, x1 := nbar, x2 := {p:=0,m:=0}, x3 := {p:=0,m:=0}, x4 := {p:=0,m:=0} }
-def nbarAt2 : V55 := { x0 := {p:=0,m:=0}, x1 := {p:=0,m:=0}, x2 := nbar, x3 := {p:=0,m:=0}, x4 := {p:=0,m:=0} }
-def nbarAt3 : V55 := { x0 := {p:=0,m:=0}, x1 := {p:=0,m:=0}, x2 := {p:=0,m:=0}, x3 := nbar, x4 := {p:=0,m:=0} }
-def nbarAt4 : V55 := { x0 := {p:=0,m:=0}, x1 := {p:=0,m:=0}, x2 := {p:=0,m:=0}, x3 := {p:=0,m:=0}, x4 := nbar }
+def nbarAt0 : V55 := { x0 := nbar, x1 := (0, 0), x2 := (0, 0), x3 := (0, 0), x4 := (0, 0) }
+def nbarAt1 : V55 := { x0 := (0, 0), x1 := nbar, x2 := (0, 0), x3 := (0, 0), x4 := (0, 0) }
+def nbarAt2 : V55 := { x0 := (0, 0), x1 := (0, 0), x2 := nbar, x3 := (0, 0), x4 := (0, 0) }
+def nbarAt3 : V55 := { x0 := (0, 0), x1 := (0, 0), x2 := (0, 0), x3 := nbar, x4 := (0, 0) }
+def nbarAt4 : V55 := { x0 := (0, 0), x1 := (0, 0), x2 := (0, 0), x3 := (0, 0), x4 := nbar }
 
 def nColl : V55 := { x0 := n, x1 := n, x2 := n, x3 := n, x4 := n }
 def nbarColl : V55 := { x0 := nbar, x1 := nbar, x2 := nbar, x3 := nbar, x4 := nbar }

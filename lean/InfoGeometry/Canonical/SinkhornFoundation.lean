@@ -19,8 +19,8 @@ variable (n : Nat) [Nonempty (Fin n)]
 Token-local grand-canonical parameters induced by router energy over the expert index.
 -/
 noncomputable def routerParams (x : Fin n → V) (i : Fin n) :
-    GrandCanonicalParams (ExpertIdx n) where
-  energy := routerEnergy n x i
+    GrandCanonicalParams (ExpertIdx n) :=
+  routerEnergy n x i
 
 omit [NormedSpace ℝ V] [Nonempty (Fin n)] in
 @[simp] lemma gc_partition_eq_routerPartition (β : ℝ) (x : Fin n → V) (i : Fin n) :

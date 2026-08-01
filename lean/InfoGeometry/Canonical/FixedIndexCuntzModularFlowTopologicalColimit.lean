@@ -30,30 +30,30 @@ variable (Φ : FlowData Stage)
 
 variable (hmap_naturality :
   ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-    T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
+    T.map hmn (Φ m t a) = Φ n t (T.map hmn a))
 
 abbrev system : ContinuousStarInductiveSystem Stage :=
   FixedIndexCuntzStarTower.Data.toContinuousStarInductiveSystem
     (Stage := Stage) T
 
 def flowStarAlgHom (n : ℕ) (t : ℝ) : Stage n →⋆ₐ[ℂ] Stage n :=
-  { toAlgHom := (Φ.flow n t).toAlgEquiv
-    map_star' := fun a => map_star (Φ.flow n t) a }
+  { toAlgHom := (Φ n t).toAlgEquiv
+    map_star' := fun a => map_star (Φ n t) a }
 
 def flowContinuousMap (n : ℕ) (t : ℝ) :
     ContinuousMap (Stage n) (Stage n) :=
-  { toFun := Φ.flow n t
+  { toFun := Φ n t
     continuous_toFun :=
       (starAlgHomToContinuousLinearMap (flowStarAlgHom Stage Φ n t)).continuous }
 
 @[simp] theorem flowContinuousMap_apply (n : ℕ) (t : ℝ) (a : Stage n) :
-    flowContinuousMap Stage Φ n t a = Φ.flow n t a :=
+    flowContinuousMap Stage Φ n t a = Φ n t a :=
   rfl
 
 def flowTopCatNatTrans
     (hmap_naturality :
       ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
+        T.map hmn (Φ m t a) = Φ n t (T.map hmn a))
     (t : ℝ) :
     topologicalDiagram Stage (system Stage T) ⟶
       topologicalDiagram Stage (system Stage T) where
@@ -63,14 +63,14 @@ def flowTopCatNatTrans
     apply TopCat.hom_ext
     apply ContinuousMap.ext
     intro a
-    change Φ.flow n t (T.map (leOfHom f) a) =
-      T.map (leOfHom f) (Φ.flow m t a)
+    change Φ n t (T.map (leOfHom f) a) =
+      T.map (leOfHom f) (Φ m t a)
     exact (hmap_naturality (leOfHom f) t a).symm
 
 noncomputable def flowTopologicalColimitMap
     (hmap_naturality :
       ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
+        T.map hmn (Φ m t a) = Φ n t (T.map hmn a))
     (t : ℝ) :
     topologicalColimit Stage (system Stage T) ⟶
       topologicalColimit Stage (system Stage T) :=
@@ -79,21 +79,21 @@ noncomputable def flowTopologicalColimitMap
 @[simp] theorem flowTopologicalColimitMap_inclusion
     (hmap_naturality :
       ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
+        T.map hmn (Φ m t a) = Φ n t (T.map hmn a))
     (t : ℝ) (n : ℕ) (a : Stage n) :
     flowTopologicalColimitMap Stage T Φ hmap_naturality t
         (topologicalInjection Stage (system Stage T) n a) =
-      topologicalInjection Stage (system Stage T) n (Φ.flow n t a) := by
+      topologicalInjection Stage (system Stage T) n (Φ n t a) := by
   have hι := colimit.ι_map (flowTopCatNatTrans Stage T Φ hmap_naturality t) n
   exact congrArg (fun f => f a) hι
 
 theorem flowTopologicalColimitMap_zero
     (hflow_add :
       ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
-        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
+        Φ n (t + s) a = Φ n t (Φ n s a))
     (hmap_naturality :
       ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a)) :
+        T.map hmn (Φ m t a) = Φ n t (T.map hmn a)) :
     flowTopologicalColimitMap Stage T Φ hmap_naturality 0 =
       𝟙 (topologicalColimit Stage (system Stage T)) := by
   apply colimit.hom_ext
@@ -112,10 +112,10 @@ theorem flowTopologicalColimitMap_zero
 theorem flowTopologicalColimitMap_add
     (hflow_add :
       ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
-        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
+        Φ n (t + s) a = Φ n t (Φ n s a))
     (hmap_naturality :
       ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
+        T.map hmn (Φ m t a) = Φ n t (T.map hmn a))
     (t s : ℝ) :
     flowTopologicalColimitMap Stage T Φ hmap_naturality (t + s) =
       flowTopologicalColimitMap Stage T Φ hmap_naturality s ≫
@@ -139,10 +139,10 @@ theorem flowTopologicalColimitMap_add
 theorem flowTopologicalColimitMap_right_inverse
     (hflow_add :
       ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
-        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
+        Φ n (t + s) a = Φ n t (Φ n s a))
     (hmap_naturality :
       ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
+        T.map hmn (Φ m t a) = Φ n t (T.map hmn a))
     (t : ℝ) :
     flowTopologicalColimitMap Stage T Φ hmap_naturality t ≫
         flowTopologicalColimitMap Stage T Φ hmap_naturality (-t) =
@@ -153,10 +153,10 @@ theorem flowTopologicalColimitMap_right_inverse
 theorem flowTopologicalColimitMap_left_inverse
     (hflow_add :
       ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
-        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
+        Φ n (t + s) a = Φ n t (Φ n s a))
     (hmap_naturality :
       ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
+        T.map hmn (Φ m t a) = Φ n t (T.map hmn a))
     (t : ℝ) :
     flowTopologicalColimitMap Stage T Φ hmap_naturality (-t) ≫
         flowTopologicalColimitMap Stage T Φ hmap_naturality t =
@@ -168,10 +168,10 @@ theorem flowTopologicalColimitMap_left_inverse
 def flowTopologicalColimitIso
     (hflow_add :
       ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
-        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
+        Φ n (t + s) a = Φ n t (Φ n s a))
     (hmap_naturality :
       ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
+        T.map hmn (Φ m t a) = Φ n t (T.map hmn a))
     (t : ℝ) :
     topologicalColimit Stage (system Stage T) ≅
       topologicalColimit Stage (system Stage T) where

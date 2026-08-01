@@ -31,7 +31,7 @@ noncomputable def partitionFunction (β : ℂ) : ℂ :=
 noncomputable def kmsState (β : ℂ) : ℂ :=
   partitionFunction β
 
-/-- The critical inverse temperature where the phase transition occurs. -/
+/-- Reference inverse temperature used by the readout. -/
 def criticalBeta : ℂ := 1
 
 /-- Definitional readout of the chosen value at `β = 1`. -/
@@ -39,7 +39,7 @@ theorem kmsState_critical : kmsState criticalBeta = riemannZeta 1 := rfl
 
 /-- A cyclic representation has a preimage observable for every state vector,
 by the `cyclic` field. -/
-theorem kms_yields_cyclic_vacuum_representation
+theorem cyclic_vacuum_representation_exists
     (A H : Type*) [Ring A] [Algebra ℂ A] [AddCommGroup H] [Module ℂ H]
     (rep : GNSRepresentation A H) (state_vector : H) :
     ∃ (observable : A), rep.pi observable rep.vacuum = state_vector := by

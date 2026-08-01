@@ -17,7 +17,7 @@ theorem colimit_intertwiner_diff_zero_law
     (F : CompatibleOperatorFamily Stage)
     (hcommutes :
       ∀ (m n : ℕ) (h : m ≤ n) (x : Stage m),
-        F.op n (f m n h x) = f m n h (F.op m x))
+        F n (f m n h x) = f m n h (F m x))
     (m n : ℕ) (h : m ≤ n) (x : Stage m) :
     F.operatedOf Stage f n (f m n h x) = F.operatedOf Stage f m x := by
   exact CompatibleOperatorFamily.operatedOf_compatible

@@ -556,9 +556,13 @@ Ricci/Bregman flux readout.
 This is intentionally abstract. Concrete geometry modules can instantiate it
 from a Hessian, curvature operator, Ricci tensor, or TKK flux bridge.
 -/
-structure RicciFluxReadout
-    (Op : Type*) where
-  flux : Op → ℝ
+abbrev RicciFluxReadout (Op : Type*) := Op → ℝ
+
+namespace RicciFluxReadout
+
+abbrev flux {Op : Type*} (R : RicciFluxReadout Op) : Op → ℝ := R
+
+end RicciFluxReadout
 
 /--
 Bridge saying that the metal-mirror Bregman heat equals the Ricci flux readout.
@@ -658,7 +662,7 @@ theorem metalMirrorRicciFluxBridge_of_admissible
     (h : MetalMirrorRicciFluxAdmissible Op) :
     MetalMirrorHeatRicciFluxBridge
       Op h.readout.bregman h.readout.channel
-        { flux := h.ricciFlux } := by
+        h.ricciFlux := by
   refine {
     heat_eq_flux := ?_
   }

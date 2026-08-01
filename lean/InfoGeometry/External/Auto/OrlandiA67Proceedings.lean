@@ -4,15 +4,20 @@ noncomputable section
 
 namespace OrlandiA67Proceedings
 
-structure MirrorPair where
-  A : ℕ
-  protonRich : String
-  neutronRich : String
+abbrev MirrorPair := ℕ × String × String
 
-def As67Se67 : MirrorPair where
-  A := 67
-  protonRich := "67As"
-  neutronRich := "67Se"
+namespace MirrorPair
+
+abbrev A (P : MirrorPair) : ℕ := P.1
+
+abbrev protonRich (P : MirrorPair) : String := P.2.1
+
+abbrev neutronRich (P : MirrorPair) : String := P.2.2
+
+end MirrorPair
+
+def As67Se67 : MirrorPair :=
+  (67, "67As", "67Se")
 
 def channelCalibration_ns_per_channel : ℚ := 56 / 100
 

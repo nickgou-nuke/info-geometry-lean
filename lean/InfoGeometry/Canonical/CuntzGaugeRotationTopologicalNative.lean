@@ -11,6 +11,43 @@ variable [TopologicalSpace R] [ContinuousAdd R] [ContinuousMul R] [ContinuousNeg
 def nativeRotationParameterSet : Set (R × R) :=
   {p | star p.1 = p.1 ∧ star p.2 = p.2 ∧ p.1 * p.1 + p.2 * p.2 = 1}
 
+theorem nativeRotationParameterSet_isClosed
+    [ContinuousStar R] [T2Space R] :
+    IsClosed (nativeRotationParameterSet (R := R)) := by
+  have h₁ : IsClosed {p : R × R | star p.1 = p.1} := by
+    exact isClosed_eq (continuous_star.comp continuous_fst) continuous_fst
+  have h₂ : IsClosed {p : R × R | star p.2 = p.2} := by
+    exact isClosed_eq (continuous_star.comp continuous_snd) continuous_snd
+  have h₃ : IsClosed {p : R × R | p.1 * p.1 + p.2 * p.2 = 1} := by
+    exact isClosed_eq
+      ((continuous_fst.mul continuous_fst).add
+        (continuous_snd.mul continuous_snd)) continuous_const
+  simpa [nativeRotationParameterSet] using h₁.inter (h₂.inter h₃)
+
+theorem realNativeRotationParameterSet_isCompact :
+    IsCompact (nativeRotationParameterSet (R := ℝ)) := by
+  have hrect :
+      IsCompact ((Set.Icc (-1 : ℝ) 1) ×ˢ (Set.Icc (-1 : ℝ) 1)) :=
+    isCompact_Icc.prod isCompact_Icc
+  apply hrect.of_isClosed_subset
+    (nativeRotationParameterSet_isClosed (R := ℝ))
+  intro p hp
+  have hnorm : p.1 * p.1 + p.2 * p.2 = 1 := hp.2.2
+  have h₁ : p.1 * p.1 ≤ 1 := by
+    nlinarith [sq_nonneg p.2]
+  have h₂ : p.2 * p.2 ≤ 1 := by
+    nlinarith [sq_nonneg p.1]
+  refine ⟨⟨?_, ?_⟩, ⟨?_, ?_⟩⟩
+  · nlinarith [sq_nonneg (p.1 + 1)]
+  · nlinarith [sq_nonneg (p.1 - 1)]
+  · nlinarith [sq_nonneg (p.2 + 1)]
+  · nlinarith [sq_nonneg (p.2 - 1)]
+
+theorem isCompact_nativeRotationParameterSpace :
+    CompactSpace (NativeRotationParameter (R := ℝ)) := by
+  exact isCompact_iff_compactSpace.mp
+    (realNativeRotationParameterSet_isCompact (R := ℝ))
+
 abbrev NativeRotationParameter :=
   {p : R × R // p ∈ nativeRotationParameterSet (R := R)}
 
@@ -66,6 +103,13 @@ theorem continuous_nativeRotationReadout
     Continuous (nativeRotationReadout (R := R) g) := by
   exact (continuous_nativeRotationV1Readout (R := R) g).prodMk
     (continuous_nativeRotationV2Readout (R := R) g)
+
+theorem isCompact_realNativeRotationReadout_range
+    (g : ToeplitzCuntzGenerators ℝ) :
+    IsCompact (Set.range (nativeRotationReadout (R := ℝ) g)) := by
+  letI : CompactSpace (NativeRotationParameter (R := ℝ)) :=
+    isCompact_nativeRotationParameterSpace (R := ℝ)
+  exact isCompact_range (continuous_nativeRotationReadout (R := ℝ) g)
 
 theorem nativeRotationV1Readout_isometry
     (g : ToeplitzCuntzGenerators R) (p : NativeRotationParameter (R := R)) :

@@ -5,12 +5,26 @@ open Matrix
 
 namespace InfoGeometry.Topology.FibonacciFR
 
-/-- The exact root of unity limits and constants for the Fibonacci anyon field -/
-structure FibonacciData where
-  z : ℂ
-  s : ℂ
-  z_eq : z^4 - z^3 + z^2 - z + 1 = 0
-  s_sq : s^2 = z - z^4 - 1
+/- The exact root of unity limits and constants for the Fibonacci anyon field. -/
+def FibonacciData : Type :=
+  {p : ℂ × ℂ //
+    p.1 ^ 4 - p.1 ^ 3 + p.1 ^ 2 - p.1 + 1 = 0 ∧
+      p.2 ^ 2 = p.1 - p.1 ^ 4 - 1}
+
+namespace FibonacciData
+
+def z (D : FibonacciData) : ℂ := D.1.1
+def s (D : FibonacciData) : ℂ := D.1.2
+
+theorem z_eq (D : FibonacciData) :
+    D.z ^ 4 - D.z ^ 3 + D.z ^ 2 - D.z + 1 = 0 :=
+  D.2.1
+
+theorem s_sq (D : FibonacciData) :
+    D.s ^ 2 = D.z - D.z ^ 4 - 1 :=
+  D.2.2
+
+end FibonacciData
 
 /-- Inverse golden ratio `phi_inv` -/
 def FibonacciData.phi_inv (D : FibonacciData) : ℂ := D.z - D.z^4 - 1

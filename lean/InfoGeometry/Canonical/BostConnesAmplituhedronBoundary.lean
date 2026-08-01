@@ -94,12 +94,14 @@ The record below stores an explicit comparison hypothesis for a given volume
 readout and a given partition readout.
 -/
 
-/-- 
-The amplituhedron/zeta comparison carrier.
--/
-structure AmplituhedronZetaEquivalence (R : Type u) [CommRing R] where
+/-- The amplituhedron/zeta comparison carrier. -/
+structure AmplituhedronZetaComparison (R : Type u) [CommRing R] where
   Z : BostConnesPartitionData R
   Vol : AmplituhedronVolumeData R
   comparison : ∀ (β : R) (L : ℕ), Z β = Vol L
+
+/-- Backwards-compatible alias for the amplituhedron/zeta comparison carrier. -/
+abbrev AmplituhedronZetaEquivalence (R : Type u) [CommRing R] :=
+  AmplituhedronZetaComparison R
 
 end InfoGeometry.Canonical.BostConnesAmplituhedronBoundary

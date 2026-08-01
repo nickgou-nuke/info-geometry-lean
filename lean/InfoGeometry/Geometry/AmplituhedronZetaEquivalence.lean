@@ -18,12 +18,17 @@ structure CanonicalVolumeForm (k n : ℕ) where
   logPoleBoundary : Set (Fin (k * n) → ℝ)
   has_log_poles : logPoleResidue logPoleBoundary ≠ 0
 
-/-- The zeta-volume comparison predicate -/
-def AmplituhedronZetaEquivalence {k n : ℕ} 
+/-- The zeta-volume comparison predicate. -/
+def AmplituhedronZetaComparison {k n : ℕ}
     (Ω : CanonicalVolumeForm k n) (Z : ℝ → ℝ) (β_critical : ℝ) : Prop :=
   -- Explicit comparison hypothesis between a geometric volume readout and a
   -- partition readout at the chosen inverse temperature.
   Ω.omega Set.univ = Z β_critical
+
+/-- Backwards-compatible alias for the zeta-volume comparison predicate. -/
+abbrev AmplituhedronZetaEquivalence {k n : ℕ}
+    (Ω : CanonicalVolumeForm k n) (Z : ℝ → ℝ) (β_critical : ℝ) : Prop :=
+  AmplituhedronZetaComparison Ω Z β_critical
 
 variable {M : Type*} [TopologicalSpace M] [ChartedSpace (ℝ × ℝ) M]
 
@@ -59,12 +64,17 @@ theorem isClosedGaugeConnection_constant (c : ℝ) :
   intro x
   exact thermodynamicGaugeConnection_constant (M := M) c x
 
-/-- The geometric-thermodynamic comparison carrier -/
-def AmplituhedronGaugeEquivalence {k n : ℕ} (Ω : CanonicalVolumeForm k n)
+/-- The geometric-thermodynamic comparison carrier. -/
+def AmplituhedronGaugeComparison {k n : ℕ} (Ω : CanonicalVolumeForm k n)
     (Potential : ThermodynamicPotential M) (β_critical : ℝ) : Prop :=
   -- Explicit comparison hypothesis between the volume readout and the gauge
   -- readout at the chosen inverse temperature.
   IsClosedGaugeConnection Potential ∧ Ω.omega Set.univ = β_critical
+
+/-- Backwards-compatible alias for the geometric-thermodynamic comparison carrier. -/
+abbrev AmplituhedronGaugeEquivalence {k n : ℕ} (Ω : CanonicalVolumeForm k n)
+    (Potential : ThermodynamicPotential M) (β_critical : ℝ) : Prop :=
+  AmplituhedronGaugeComparison Ω Potential β_critical
 
 /-- Closed gauge readout from an explicit zero-connection proof. -/
 theorem isClosedGaugeConnection_of_thermodynamicPotential
@@ -74,12 +84,12 @@ theorem isClosedGaugeConnection_of_thermodynamicPotential
   hClosed
 
 /-- Gauge equivalence combines an explicit closed-connection proof and volume calibration. -/
-theorem amplituhedronGaugeEquivalence_readout
+theorem amplituhedronGaugeComparison_readout
     {k n : ℕ} (Ω : CanonicalVolumeForm k n)
     (Potential : ThermodynamicPotential M) (β_critical : ℝ)
     (hClosed : IsClosedGaugeConnection Potential)
     (hVol : Ω.omega Set.univ = β_critical) :
-    AmplituhedronGaugeEquivalence Ω Potential β_critical :=
+    AmplituhedronGaugeComparison Ω Potential β_critical :=
   ⟨hClosed, hVol⟩
 
 end InfoGeometry.Geometry

@@ -2033,6 +2033,7 @@ import InfoGeometry.Canonical.BCFWOnShellShift
 import InfoGeometry.Canonical.BCFWMeromorphicResidueRecursion
 import InfoGeometry.Canonical.YangianGeneratorKernel
 import InfoGeometry.Canonical.ChiralConeSpinFrameBridge
+import InfoGeometry.Canonical.ChiralCliffordSplitQuaternionBridge
 import InfoGeometry.Canonical.SplitOctonionSupertwistorBridge
 import InfoGeometry.Canonical.YangianCoproductTensorAction
 import InfoGeometry.Canonical.YangianLevelZeroRepresentation

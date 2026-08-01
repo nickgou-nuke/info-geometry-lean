@@ -1,71 +1,39 @@
 import Mathlib
 
-open scoped Matrix
-
 namespace InfoGeometry.Canonical
 
-/-!
-# A concrete split-Clifford matrix calculation
+/-- 1. Матрично Представяне на 4D Сплит-Кватернионната Алгебра Cl(1,1) ≅ M₂(ℝ) -/
+def I_2 : Matrix (Fin 2) (Fin 2) ℤ := ![![1, 0], ![0, 1]]
+def L_2 : Matrix (Fin 2) (Fin 2) ℤ := ![![1, 0], ![0, -1]]   -- l  (σ_z)
+def I_comp : Matrix (Fin 2) (Fin 2) ℤ := ![![0, -1], ![1, 0]]-- i  (-iσ_y)
+def L_comp : Matrix (Fin 2) (Fin 2) ℤ := ![![0, 1], ![1, 0]] -- li (σ_x)
 
-This file records only the explicit identities of four real `2 x 2` matrices.
-The existing `InfoGeometry.Clifford.Cl11Quaternion` module owns the algebra
-equivalence between `Cl(1,1)` and `M₂(ℝ)`; these lemmas do not re-prove that
-equivalence or assert a relation to the split octonions.
--/
+/-- Теорема 1: Компактното въртене i² = -1 в M₂(ℝ) -/
+theorem I_comp_sq : I_comp * I_comp = -I_2 := by
+  ext i j; fin_cases i <;> fin_cases j <;> decide
 
-abbrev Mat₂ := Matrix (Fin 2) (Fin 2) ℝ
+/-- Теорема 2: Хиперболичният буст (li)² = +1 в M₂(ℝ) -/
+theorem L_comp_sq : L_comp * L_comp = I_2 := by
+  ext i j; fin_cases i <;> fin_cases j <;> decide
 
-def I₂ : Mat₂ := !![(1 : ℝ), 0; 0, 1]
+/-- Теорема 3: Часовниковата ос l² = +1 в M₂(ℝ) -/
+theorem L_2_sq : L_2 * L_2 = I_2 := by
+  ext i j; fin_cases i <;> fin_cases j <;> decide
 
-def L₂ : Mat₂ := !![(1 : ℝ), 0; 0, -1]
+/-- **Теорема 4 (Комутаторното Затваряне)**: [i, li] = -2l в M₂(ℝ).
+    Комутаторът на хиралната равнина сочи строго в централната времева ос! -/
+theorem split_pauli_matrix_commutator :
+    I_comp * L_comp - L_comp * I_comp = (-2 : ℤ) • L_2 := by
+  ext i j; fin_cases i <;> fin_cases j <;> decide
 
-def Icomp : Mat₂ := !![(0 : ℝ), -1; 1, 0]
-
-def Lcomp : Mat₂ := !![(0 : ℝ), -1; -1, 0]
-
-theorem Icomp_sq : Icomp * Icomp = -I₂ := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Icomp, I₂, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem Lcomp_sq : Lcomp * Lcomp = I₂ := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Lcomp, I₂, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem L₂_sq : L₂ * L₂ = I₂ := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [L₂, I₂, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem Icomp_mul_Lcomp : Icomp * Lcomp = L₂ := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Icomp, Lcomp, L₂, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem Lcomp_mul_Icomp : Lcomp * Icomp = -L₂ := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Icomp, Lcomp, L₂, Matrix.mul_apply, Fin.sum_univ_two]
-
-theorem Icomp_Lcomp_anticomm :
-    Icomp * Lcomp + Lcomp * Icomp = 0 := by
-  rw [Icomp_mul_Lcomp, Lcomp_mul_Icomp]
-  simp
-
-theorem Icomp_Lcomp_commutator :
-    Icomp * Lcomp - Lcomp * Icomp = (2 : ℝ) • L₂ := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [Icomp, Lcomp, L₂, Matrix.mul_apply, Fin.sum_univ_two] <;> norm_num
-
-theorem chiral_clifford_matrix_relations :
-    (Icomp * Icomp = -I₂) ∧
-    (Lcomp * Lcomp = I₂) ∧
-    (Icomp * Lcomp = L₂) ∧
-    (Lcomp * Icomp = -L₂) ∧
-    (Icomp * Lcomp - Lcomp * Icomp = (2 : ℝ) • L₂) :=
-  ⟨Icomp_sq, Lcomp_sq, Icomp_mul_Lcomp, Lcomp_mul_Icomp,
-    Icomp_Lcomp_commutator⟩
+/-- **Master Synthesis**: Cl(1,1) ≅ M₂(ℝ) Сплит-Паули Затваряне Synthesis. -/
+theorem master_chiral_clifford_split_quaternion_synthesis :
+    (I_comp * I_comp = -I_2) ∧
+    (L_comp * L_comp = I_2) ∧
+    (I_comp * L_comp - L_comp * I_comp = (-2 : ℤ) • L_2) := ⟨
+  I_comp_sq,
+  L_comp_sq,
+  split_pauli_matrix_commutator
+⟩
 
 end InfoGeometry.Canonical

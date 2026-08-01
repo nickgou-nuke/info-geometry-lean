@@ -52,6 +52,15 @@ theorem splitI_splitL_anticommute :
     splitI * splitL + splitL * splitI = 0 := by
   simpa [add_comm] using cl11_generator_relations.2.2
 
+theorem splitI_splitL_commutator :
+    splitI * splitL - splitL * splitI = (2 : ℝ) • splitIL := by
+  rw [show splitIL = splitI * splitL by rfl]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [splitIL, splitI, splitL, epsilon, sigma1,
+      InfoGeometryCore.sigma1R, InfoGeometryCore.sigma3R,
+      Matrix.mul_apply, Fin.sum_univ_two]
+
 theorem splitIL_eq_sigma3 : splitIL = sigma3 := by
   ext i j
   fin_cases i <;> fin_cases j <;>

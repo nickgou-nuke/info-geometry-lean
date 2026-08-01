@@ -18,12 +18,16 @@ conducts only when its payload reads back to the lower `DeBruijnEdge` predicates
 
 These endpoints model storage/navigation identity such as Arango `_from` and
 `_to`.  They are not De Bruijn coordinates and carry no proof authority. -/
-structure GraphEndpoints where
-  source : String
-  target : String
-  deriving Repr, DecidableEq
+abbrev GraphEndpoints : Type :=
+  String × String
 
 namespace GraphEndpoints
+
+@[simp] def source (e : GraphEndpoints) : String :=
+  e.1
+
+@[simp] def target (e : GraphEndpoints) : String :=
+  e.2
 
 end GraphEndpoints
 
@@ -141,12 +145,16 @@ end DeBruijnPayload
 /-- Candidate graph record for a De Bruijn contraction.
 
 The candidate role is data only.  It does not certify the payload. -/
-structure CandidateContractionRecord where
-  endpoints : GraphEndpoints
-  payload : DeBruijnPayload
-  deriving Repr, DecidableEq
+abbrev CandidateContractionRecord : Type :=
+  GraphEndpoints × DeBruijnPayload
 
 namespace CandidateContractionRecord
+
+@[simp] def endpoints (r : CandidateContractionRecord) : GraphEndpoints :=
+  r.1
+
+@[simp] def payload (r : CandidateContractionRecord) : DeBruijnPayload :=
+  r.2
 
 /-- The conventional external role string for candidate records. -/
 def role (_ : CandidateContractionRecord) : String :=

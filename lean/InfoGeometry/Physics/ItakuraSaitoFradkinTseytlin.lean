@@ -57,21 +57,34 @@ theorem scaling_eq (P : FourthOrderScalePacket) :
 end FourthOrderScalePacket
 
 /-- A finite count packet with explicit balance equations. -/
-structure ScaleInvariantCocycles where
-  (gauge_bosons : ℕ)
-  (weyl_spinors : ℕ)
-  (ft_scalars : ℕ)
-  (susy_balance : weyl_spinors = 4 * gauge_bosons)
-  (scalar_balance : ft_scalars = 3 * gauge_bosons)
+def ScaleInvariantCocycles : Type :=
+  {p : (ℕ × ℕ) × ℕ //
+    p.1.2 = 4 * p.1.1 ∧ p.2 = 3 * p.1.1}
+
+namespace ScaleInvariantCocycles
+
+def gauge_bosons (P : ScaleInvariantCocycles) : ℕ :=
+  P.1.1.1
+
+def weyl_spinors (P : ScaleInvariantCocycles) : ℕ :=
+  P.1.1.2
+
+def ft_scalars (P : ScaleInvariantCocycles) : ℕ :=
+  P.1.2
+
+def susy_balance (P : ScaleInvariantCocycles) :
+    P.weyl_spinors = 4 * P.gauge_bosons :=
+  P.2.1
+
+def scalar_balance (P : ScaleInvariantCocycles) :
+    P.ft_scalars = 3 * P.gauge_bosons :=
+  P.2.2
+
+end ScaleInvariantCocycles
 
 /-- A concrete finite count packet with values `12`, `48`, and `36`. -/
-def exampleCocycles : ScaleInvariantCocycles := {
-  gauge_bosons := 12
-  weyl_spinors := 48
-  ft_scalars := 36
-  susy_balance := by rfl
-  scalar_balance := by rfl
-}
+def exampleCocycles : ScaleInvariantCocycles :=
+  ⟨((12, 48), 36), by norm_num⟩
 
 theorem exampleCocycles_ft_scalars_eq :
   exampleCocycles.ft_scalars = 36 := rfl

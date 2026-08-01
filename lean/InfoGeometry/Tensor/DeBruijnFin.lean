@@ -18,10 +18,8 @@ def toFin (p : TensorPort) : Fin p.arity :=
   ⟨p.index, p.inBounds⟩
 
 /-- Build a tensor port directly from a Mathlib finite index. -/
-def ofFin {arity : ℕ} (i : Fin arity) : TensorPort where
-  arity := arity
-  index := i.val
-  inBounds := i.isLt
+def ofFin {arity : ℕ} (i : Fin arity) : TensorPort :=
+  ⟨(arity, i.val), i.isLt⟩
 
 @[simp] theorem toFin_val (p : TensorPort) : p.toFin.val = p.index :=
   rfl

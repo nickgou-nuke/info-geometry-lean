@@ -39,4 +39,15 @@ theorem exists_global_minimum_on_kanModuli
   intro q'
   exact hmin (Set.mem_univ q')
 
+theorem exists_global_maximum_on_kanModuli
+    [CompactSpace V] [Nonempty V]
+    (f : KANModuliSpace V K → ℝ) (hf : Continuous f) :
+    ∃ q, ∀ q', f q' ≤ f q := by
+  rcases exists_global_minimum_on_kanModuli (fun q => -f q) hf.neg with
+    ⟨q, hq⟩
+  refine ⟨q, ?_⟩
+  intro q'
+  have h := hq q'
+  linarith
+
 end InfoGeometry.Canonical.KANModuli

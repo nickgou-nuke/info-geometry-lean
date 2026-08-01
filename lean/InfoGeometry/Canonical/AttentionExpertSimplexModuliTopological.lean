@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.AttentionExpertModuliTopological
 import Mathlib.Analysis.Convex.StdSimplex
+import InfoGeometry.Inference.FiniteGibbsThermodynamicIdentity
 
 open scoped BigOperators
 
@@ -143,5 +144,120 @@ theorem expertSoftmaxConcentrationOnModuli_sublevel_isClosed (c : ℝ) :
     ((expertSoftmaxConcentrationOnModuli (V := V) (K := K)) ⁻¹' (Set.Iic c))
   exact isClosed_Iic.preimage
     (continuous_expertSoftmaxConcentrationOnModuli (V := V) (K := K))
+
+/-! ### Entropy observable
+
+The concentration above is a polynomial symmetric readout.  The next
+observable is the ordinary Shannon entropy of the strictly positive softmax
+vector.  Positivity is used explicitly, so the logarithm is never extended
+to a boundary value by convention.
+-/
+
+noncomputable def expertSoftmaxEntropy
+    (p : ExpertAttentionVector V K) : ℝ :=
+  -∑ i : Fin K,
+      (softmax (fun j => (p j).1) i) *
+        Real.log (softmax (fun j => (p j).1) i)
+
+theorem expertSoftmaxEntropy_smul
+    (σ : Equiv.Perm (Fin K)) (p : ExpertAttentionVector V K) :
+    expertSoftmaxEntropy (σ • p) = expertSoftmaxEntropy p := by
+  change
+    -∑ i : Fin K,
+        (softmax (fun j => (p (σ.symm j)).1) i) *
+          Real.log (softmax (fun j => (p (σ.symm j)).1) i) =
+      -∑ i : Fin K,
+        (softmax (fun j => (p j).1) i) *
+          Real.log (softmax (fun j => (p j).1) i)
+  congr 1
+  calc
+    (∑ i : Fin K,
+        (softmax (fun j => (p (σ.symm j)).1) i) *
+          Real.log (softmax (fun j => (p (σ.symm j)).1) i)) =
+        ∑ i : Fin K,
+          (softmax (fun j => (p j).1) (σ.symm i)) *
+            Real.log (softmax (fun j => (p j).1) (σ.symm i)) := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      rw [softmax_reindex σ (fun j => (p j).1) i]
+    _ = ∑ i : Fin K,
+          (softmax (fun j => (p j).1) i) *
+            Real.log (softmax (fun j => (p j).1) i) := by
+      simpa using
+        (Fintype.sum_equiv σ.symm
+          (fun i : Fin K =>
+            (softmax (fun j => (p j).1) (σ.symm i)) *
+              Real.log (softmax (fun j => (p j).1) (σ.symm i)))
+          (fun i : Fin K =>
+            (softmax (fun j => (p j).1) i) *
+              Real.log (softmax (fun j => (p j).1) i))
+          (fun _ => rfl))
+
+theorem continuous_expertSoftmaxEntropy :
+    Continuous (expertSoftmaxEntropy (V := V) (K := K)) := by
+  letI : Nonempty (Fin K) := ⟨⟨0, Fact.out⟩⟩
+  unfold expertSoftmaxEntropy
+  apply Continuous.neg
+  apply continuous_finset_sum
+  intro i hi
+  have hlogits : ∀ j : Fin K,
+      Continuous (fun p : ExpertAttentionVector V K => (p j).1) := by
+    intro j
+    exact continuous_fst.comp (continuous_apply j)
+  have hweight : Continuous (fun p : ExpertAttentionVector V K =>
+      softmax (fun j => (p j).1) i) :=
+    InfoGeometry.Topology.continuous_latentSoftmax_coordinate
+      (fun p : ExpertAttentionVector V K => fun j => (p j).1) hlogits i
+  have hweight_ne : ∀ p : ExpertAttentionVector V K,
+      softmax (fun j => (p j).1) i ≠ 0 := by
+    intro p
+    unfold softmax
+    exact (div_pos (Real.exp_pos _) (sumExp_pos _)).ne'
+  exact hweight.mul (hweight.log hweight_ne)
+
+noncomputable def expertSoftmaxEntropyOnModuli :
+    KANModuliSpace (ℝ × V) K → ℝ :=
+  invariantLift expertSoftmaxEntropy expertSoftmaxEntropy_smul
+
+theorem continuous_expertSoftmaxEntropyOnModuli :
+    Continuous (expertSoftmaxEntropyOnModuli (V := V) (K := K)) := by
+  exact continuous_invariantLift expertSoftmaxEntropy
+    continuous_expertSoftmaxEntropy expertSoftmaxEntropy_smul
+
+theorem expertSoftmaxEntropyOnModuli_levelSet_isClosed (c : ℝ) :
+    IsClosed {q : KANModuliSpace (ℝ × V) K |
+      expertSoftmaxEntropyOnModuli (V := V) (K := K) q = c} := by
+  change IsClosed
+    ((expertSoftmaxEntropyOnModuli (V := V) (K := K)) ⁻¹' ({c} : Set ℝ))
+  exact isClosed_singleton.preimage
+    (continuous_expertSoftmaxEntropyOnModuli (V := V) (K := K))
+
+theorem expertSoftmaxEntropyOnModuli_superlevel_isClosed (c : ℝ) :
+    IsClosed {q : KANModuliSpace (ℝ × V) K |
+      c ≤ expertSoftmaxEntropyOnModuli (V := V) (K := K) q} := by
+  change IsClosed
+    ((expertSoftmaxEntropyOnModuli (V := V) (K := K)) ⁻¹' (Set.Ici c))
+  exact isClosed_Ici.preimage
+    (continuous_expertSoftmaxEntropyOnModuli (V := V) (K := K))
+
+theorem expertSoftmaxEntropy_bounds
+    (p : ExpertAttentionVector V K) :
+    0 ≤ expertSoftmaxEntropy p ∧
+      expertSoftmaxEntropy p ≤ Real.log (Fintype.card (Fin K)) := by
+  letI : Nonempty (Fin K) := ⟨⟨0, Fact.out⟩⟩
+  let q : Fin K → ℝ := expertSoftmaxVector p
+  have hq_pos : ∀ i : Fin K, 0 < q i := by
+    intro i
+    dsimp [q, expertSoftmaxVector]
+    unfold softmax
+    exact div_pos (Real.exp_pos _) (sumExp_pos _)
+  have hq_sum : ∑ i : Fin K, q i = 1 := by
+    exact sum_softmax_eq_one _
+  have hnonneg := InfoGeometry.Inference.FiniteGibbs.entropyOf_nonneg q hq_pos hq_sum
+  have hupper := InfoGeometry.Inference.FiniteGibbs.entropyOf_le_log_card q hq_pos hq_sum
+  exact ⟨by simpa [q, expertSoftmaxEntropy, expertSoftmaxVector,
+      InfoGeometry.Inference.FiniteGibbs.entropyOf] using hnonneg,
+    by simpa [q, expertSoftmaxEntropy, expertSoftmaxVector,
+      InfoGeometry.Inference.FiniteGibbs.entropyOf] using hupper⟩
 
 end InfoGeometry.Canonical.KANModuli

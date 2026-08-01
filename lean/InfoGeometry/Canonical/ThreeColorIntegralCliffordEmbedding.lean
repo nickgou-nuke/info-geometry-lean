@@ -1,311 +1,352 @@
-import Mathlib
+import Mathlib.Tactic
 import InfoGeometry.Canonical.IntegralChiralCliffordOrder
 
+/- Coordinate-only eight-slot carrier and three linear embeddings for the
+integral three-color corridor.  This file does not introduce a multiplication
+table; the product structure is handled by the separate Zorn multiplication
+owner. -/
 namespace InfoGeometry.Canonical
-
-/-!
-# Three coordinate chiral sectors
-
-This file formalizes the convention-independent linear layer.  The carrier is
-the named integral coordinate module; its split-octonion multiplication is
-intentionally deferred to a separate owner.  The identification of this
-coordinate module with the previously defined parity order is also a separate
-strengthening theorem.
--/
 
 inductive IntegralSplitBasis
   | one | l | i | il | j | jl | k | kl
-  deriving DecidableEq, Fintype
+deriving DecidableEq, Fintype
 
 abbrev StandardIntegralSplitOctonion := IntegralSplitBasis → ℤ
 
-def splitBasisVector (b : IntegralSplitBasis) :
-    StandardIntegralSplitOctonion := Pi.single b 1
+def splitBasisVector (b : IntegralSplitBasis) : StandardIntegralSplitOctonion :=
+  Pi.single b 1
 
 def oneOct := splitBasisVector .one
-def lOct := splitBasisVector .l
-def iOct := splitBasisVector .i
-def ilOct := splitBasisVector .il
-def jOct := splitBasisVector .j
-def jlOct := splitBasisVector .jl
-def kOct := splitBasisVector .k
-def klOct := splitBasisVector .kl
+def lOct   := splitBasisVector .l
+def iOct   := splitBasisVector .i
+def ilOct  := splitBasisVector .il
+def jOct   := splitBasisVector .j
+def jlOct  := splitBasisVector .jl
+def kOct   := splitBasisVector .k
+def klOct  := splitBasisVector .kl
 
 abbrev ChiralOrderCoordinates := Fin 4 → ℤ
 
-def redCoordinateEmbedding :
-    ChiralOrderCoordinates →ₗ[ℤ] StandardIntegralSplitOctonion where
-  toFun x := fun b => match b with
-    | .one => x 0
-    | .l => x 1
-    | .i => x 2
-    | .il => x 3
-    | .j | .jl | .k | .kl => 0
-  map_add' := by
-    intro x y
-    funext b
-    cases b <;> simp [Pi.add_apply]
-  map_smul' := by
-    intro a x
-    funext b
-    cases b <;> simp [Pi.smul_apply]
+def coordinatesToOrder : ChiralOrderCoordinates →ₗ[ℤ] integerChiralOrder where
+  toFun c := ⟨c 0 • chiralI + c 1 • chiralL + c 2 • chiralJ + c 3 • chiralX, by
+    apply Submodule.add_mem
+    · apply Submodule.add_mem
+      · apply Submodule.add_mem
+        · apply Submodule.smul_mem; apply Submodule.subset_span; simp
+        · apply Submodule.smul_mem; apply Submodule.subset_span; simp
+      · apply Submodule.smul_mem; apply Submodule.subset_span; simp
+    · apply Submodule.smul_mem; apply Submodule.subset_span; simp⟩
+  map_add' x y := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> { dsimp [chiralI, chiralL, chiralJ, chiralX]; ring }
+  map_smul' r x := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> { dsimp [chiralI, chiralL, chiralJ, chiralX]; ring }
 
-def greenCoordinateEmbedding :
-    ChiralOrderCoordinates →ₗ[ℤ] StandardIntegralSplitOctonion where
-  toFun x := fun b => match b with
-    | .one => x 0
-    | .l => x 1
-    | .j => x 2
-    | .jl => x 3
-    | .i | .il | .k | .kl => 0
-  map_add' := by
-    intro x y
-    funext b
-    cases b <;> simp [Pi.add_apply]
-  map_smul' := by
-    intro a x
-    funext b
-    cases b <;> simp [Pi.smul_apply]
+lemma parity_diff_even {a b : ℤ} (h : Int.ModEq 2 a b) : ∃ k : ℤ, a - b = 2 * k := by
+  use (a - b) / 2
+  have h1 : 2 ∣ (a - b) := Int.modEq_iff_dvd.mp h.symm
+  simpa [mul_comm] using (Int.ediv_mul_cancel h1).symm
 
-def blueCoordinateEmbedding :
-    ChiralOrderCoordinates →ₗ[ℤ] StandardIntegralSplitOctonion where
-  toFun x := fun b => match b with
-    | .one => x 0
-    | .l => x 1
-    | .k => x 2
-    | .kl => x 3
-    | .i | .il | .j | .jl => 0
-  map_add' := by
-    intro x y
-    funext b
-    cases b <;> simp [Pi.add_apply]
-  map_smul' := by
-    intro a x
-    funext b
-    cases b <;> simp [Pi.smul_apply]
-
-theorem redCoordinateEmbedding_injective :
-    Function.Injective redCoordinateEmbedding := by
-  intro x y h
-  funext n
-  fin_cases n
-  · simpa [redCoordinateEmbedding] using congrFun h .one
-  · simpa [redCoordinateEmbedding] using congrFun h .l
-  · simpa [redCoordinateEmbedding] using congrFun h .i
-  · simpa [redCoordinateEmbedding] using congrFun h .il
-
-theorem greenCoordinateEmbedding_injective :
-    Function.Injective greenCoordinateEmbedding := by
-  intro x y h
-  funext n
-  fin_cases n
-  · simpa [greenCoordinateEmbedding] using congrFun h .one
-  · simpa [greenCoordinateEmbedding] using congrFun h .l
-  · simpa [greenCoordinateEmbedding] using congrFun h .j
-  · simpa [greenCoordinateEmbedding] using congrFun h .jl
-
-theorem blueCoordinateEmbedding_injective :
-    Function.Injective blueCoordinateEmbedding := by
-  intro x y h
-  funext n
-  fin_cases n
-  · simpa [blueCoordinateEmbedding] using congrFun h .one
-  · simpa [blueCoordinateEmbedding] using congrFun h .l
-  · simpa [blueCoordinateEmbedding] using congrFun h .k
-  · simpa [blueCoordinateEmbedding] using congrFun h .kl
-
-def redIntegralSector :
-    Submodule ℤ StandardIntegralSplitOctonion where
-  carrier := {x |
-    x .j = 0 ∧ x .jl = 0 ∧ x .k = 0 ∧ x .kl = 0}
-  zero_mem' := by
-    change (0 : StandardIntegralSplitOctonion) .j = 0 ∧
-      (0 : StandardIntegralSplitOctonion) .jl = 0 ∧
-      (0 : StandardIntegralSplitOctonion) .k = 0 ∧
-      (0 : StandardIntegralSplitOctonion) .kl = 0
-    exact ⟨rfl, rfl, rfl, rfl⟩
-  add_mem' := by
-    intro x y hx hy
-    change x .j + y .j = 0 ∧ x .jl + y .jl = 0 ∧
-      x .k + y .k = 0 ∧ x .kl + y .kl = 0
-    exact ⟨by rw [hx.1, hy.1, add_zero], by rw [hx.2.1, hy.2.1, add_zero],
-      by rw [hx.2.2.1, hy.2.2.1, add_zero],
-      by rw [hx.2.2.2, hy.2.2.2, add_zero]⟩
-  smul_mem' := by
-    intro a x hx
-    change a • x .j = 0 ∧ a • x .jl = 0 ∧
-      a • x .k = 0 ∧ a • x .kl = 0
-    exact ⟨by rw [hx.1, smul_zero], by rw [hx.2.1, smul_zero],
-      by rw [hx.2.2.1, smul_zero], by rw [hx.2.2.2, smul_zero]⟩
-
-def greenIntegralSector :
-    Submodule ℤ StandardIntegralSplitOctonion where
-  carrier := {x |
-    x .i = 0 ∧ x .il = 0 ∧ x .k = 0 ∧ x .kl = 0}
-  zero_mem' := by
-    change (0 : StandardIntegralSplitOctonion) .i = 0 ∧
-      (0 : StandardIntegralSplitOctonion) .il = 0 ∧
-      (0 : StandardIntegralSplitOctonion) .k = 0 ∧
-      (0 : StandardIntegralSplitOctonion) .kl = 0
-    exact ⟨rfl, rfl, rfl, rfl⟩
-  add_mem' := by
-    intro x y hx hy
-    change x .i + y .i = 0 ∧ x .il + y .il = 0 ∧
-      x .k + y .k = 0 ∧ x .kl + y .kl = 0
-    exact ⟨by rw [hx.1, hy.1, add_zero], by rw [hx.2.1, hy.2.1, add_zero],
-      by rw [hx.2.2.1, hy.2.2.1, add_zero],
-      by rw [hx.2.2.2, hy.2.2.2, add_zero]⟩
-  smul_mem' := by
-    intro a x hx
-    change a • x .i = 0 ∧ a • x .il = 0 ∧
-      a • x .k = 0 ∧ a • x .kl = 0
-    exact ⟨by rw [hx.1, smul_zero], by rw [hx.2.1, smul_zero],
-      by rw [hx.2.2.1, smul_zero], by rw [hx.2.2.2, smul_zero]⟩
-
-def blueIntegralSector :
-    Submodule ℤ StandardIntegralSplitOctonion where
-  carrier := {x |
-    x .i = 0 ∧ x .il = 0 ∧ x .j = 0 ∧ x .jl = 0}
-  zero_mem' := by
-    change (0 : StandardIntegralSplitOctonion) .i = 0 ∧
-      (0 : StandardIntegralSplitOctonion) .il = 0 ∧
-      (0 : StandardIntegralSplitOctonion) .j = 0 ∧
-      (0 : StandardIntegralSplitOctonion) .jl = 0
-    exact ⟨rfl, rfl, rfl, rfl⟩
-  add_mem' := by
-    intro x y hx hy
-    change x .i + y .i = 0 ∧ x .il + y .il = 0 ∧
-      x .j + y .j = 0 ∧ x .jl + y .jl = 0
-    exact ⟨by rw [hx.1, hy.1, add_zero], by rw [hx.2.1, hy.2.1, add_zero],
-      by rw [hx.2.2.1, hy.2.2.1, add_zero],
-      by rw [hx.2.2.2, hy.2.2.2, add_zero]⟩
-  smul_mem' := by
-    intro a x hx
-    change a • x .i = 0 ∧ a • x .il = 0 ∧
-      a • x .j = 0 ∧ a • x .jl = 0
-    exact ⟨by rw [hx.1, smul_zero], by rw [hx.2.1, smul_zero],
-      by rw [hx.2.2.1, smul_zero], by rw [hx.2.2.2, smul_zero]⟩
-
-def sharedIntegralHyperbolicAxis :
-    Submodule ℤ StandardIntegralSplitOctonion where
-  carrier := {x |
-    x .i = 0 ∧ x .il = 0 ∧ x .j = 0 ∧ x .jl = 0 ∧
-      x .k = 0 ∧ x .kl = 0}
-  zero_mem' := by
-    change (0 : StandardIntegralSplitOctonion) .i = 0 ∧
-      (0 : StandardIntegralSplitOctonion) .il = 0 ∧
-      (0 : StandardIntegralSplitOctonion) .j = 0 ∧
-      (0 : StandardIntegralSplitOctonion) .jl = 0 ∧
-      (0 : StandardIntegralSplitOctonion) .k = 0 ∧
-      (0 : StandardIntegralSplitOctonion) .kl = 0
-    exact ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
-  add_mem' := by
-    intro x y hx hy
-    change x .i + y .i = 0 ∧ x .il + y .il = 0 ∧
-      x .j + y .j = 0 ∧ x .jl + y .jl = 0 ∧
-      x .k + y .k = 0 ∧ x .kl + y .kl = 0
-    rcases hx with ⟨hxi, hxil, hxj, hxjl, hxk, hxkl⟩
-    rcases hy with ⟨hyi, hyil, hyj, hyjl, hyk, hykl⟩
-    exact ⟨by rw [hxi, hyi, add_zero], by rw [hxil, hyil, add_zero],
-      by rw [hxj, hyj, add_zero], by rw [hxjl, hyjl, add_zero],
-      by rw [hxk, hyk, add_zero], by rw [hxkl, hykl, add_zero]⟩
-  smul_mem' := by
-    intro a x hx
-    change a • x .i = 0 ∧ a • x .il = 0 ∧
-      a • x .j = 0 ∧ a • x .jl = 0 ∧
-      a • x .k = 0 ∧ a • x .kl = 0
-    rcases hx with ⟨hxi, hxil, hxj, hxjl, hxk, hxkl⟩
-    exact ⟨by rw [hxi, smul_zero], by rw [hxil, smul_zero],
-      by rw [hxj, smul_zero], by rw [hxjl, smul_zero],
-      by rw [hxk, smul_zero], by rw [hxkl, smul_zero]⟩
-
-theorem range_redCoordinateEmbedding :
-    LinearMap.range redCoordinateEmbedding = redIntegralSector := by
-  ext x
+theorem coordinatesToOrder_bijective : Function.Bijective coordinatesToOrder := by
   constructor
-  · rintro ⟨c, rfl⟩
-    exact ⟨rfl, rfl, rfl, rfl⟩
-  · intro hx
-    refine ⟨fun n => match n with
-      | 0 => x .one
-      | 1 => x .l
-      | 2 => x .i
-      | 3 => x .il, ?_⟩
-    funext b
-    cases b <;> simp [redCoordinateEmbedding, hx.1, hx.2.1, hx.2.2.1, hx.2.2.2]
+  · intro x y h
+    have h1 : (coordinatesToOrder x : M2Z) = (coordinatesToOrder y : M2Z) := congrArg Subtype.val h
+    have h00 : x 0 + x 1 = y 0 + y 1 := by
+      simpa [coordinatesToOrder, chiralI, chiralL, chiralJ, chiralX] using
+        congrArg (fun M => M 0 0) h1
+    have h11 : x 0 - x 1 = y 0 - y 1 := by
+      simpa [coordinatesToOrder, chiralI, chiralL, chiralJ, chiralX] using
+        congrArg (fun M => M 1 1) h1
+    have h01 : -x 2 + x 3 = -y 2 + y 3 := by
+      simpa [coordinatesToOrder, chiralI, chiralL, chiralJ, chiralX] using
+        congrArg (fun M => M 0 1) h1
+    have h10 : x 2 + x 3 = y 2 + y 3 := by
+      simpa [coordinatesToOrder, chiralI, chiralL, chiralJ, chiralX] using
+        congrArg (fun M => M 1 0) h1
+    funext k
+    fin_cases k
+    · change x 0 = y 0
+      omega
+    · change x 1 = y 1
+      omega
+    · change x 2 = y 2
+      omega
+    · change x 3 = y 3
+      omega
+  · rintro ⟨A, hA⟩
+    have hH : (integerChiralOrder : Set M2Z) = paritySubring := integerChiralOrder_eq_paritySubring
+    have hA_subring : A ∈ paritySubring := by
+      change A ∈ (integerChiralOrder : Set M2Z) at hA
+      rw [hH] at hA
+      exact hA
+    have hA1 : Int.ModEq 2 (A 0 0) (A 1 1) := hA_subring.1
+    have hA2 : Int.ModEq 2 (A 0 1) (A 1 0) := hA_subring.2
+    rcases parity_diff_even hA1 with ⟨k, hk⟩
+    rcases parity_diff_even hA2 with ⟨m, hm⟩
+    let c0 := A 1 1 + k
+    let c1 := k
+    let c2 := -m
+    let c3 := A 1 0 + m
+    use fun i => if i = 0 then c0 else if i = 1 then c1 else if i = 2 then c2 else c3
+    ext i j
+    have hk2 : A 0 0 = A 1 1 + 2 * k := by omega
+    have hm2 : A 0 1 = A 1 0 + 2 * m := by omega
+    fin_cases i <;> fin_cases j <;> {
+      dsimp [coordinatesToOrder, chiralI, chiralL, chiralJ, chiralX]
+      ring_nf
+      try omega
+    }
 
-theorem range_greenCoordinateEmbedding :
-    LinearMap.range greenCoordinateEmbedding = greenIntegralSector := by
-  ext x
-  constructor
-  · rintro ⟨c, rfl⟩
-    exact ⟨rfl, rfl, rfl, rfl⟩
-  · intro hx
-    refine ⟨fun n => match n with
-      | 0 => x .one
-      | 1 => x .l
-      | 2 => x .j
-      | 3 => x .jl, ?_⟩
-    funext b
-    cases b <;> simp [greenCoordinateEmbedding, hx.1, hx.2.1, hx.2.2.1, hx.2.2.2]
+noncomputable def chiralOrderCoordinateEquiv : ChiralOrderCoordinates ≃ₗ[ℤ] integerChiralOrder :=
+  LinearEquiv.ofBijective coordinatesToOrder coordinatesToOrder_bijective
 
-theorem range_blueCoordinateEmbedding :
-    LinearMap.range blueCoordinateEmbedding = blueIntegralSector := by
-  ext x
-  constructor
-  · rintro ⟨c, rfl⟩
-    exact ⟨rfl, rfl, rfl, rfl⟩
-  · intro hx
-    refine ⟨fun n => match n with
-      | 0 => x .one
-      | 1 => x .l
-      | 2 => x .k
-      | 3 => x .kl, ?_⟩
-    funext b
-    cases b <;> simp [blueCoordinateEmbedding, hx.1, hx.2.1, hx.2.2.1, hx.2.2.2]
+def redCoordinateEmbedding : ChiralOrderCoordinates →ₗ[ℤ] StandardIntegralSplitOctonion where
+  toFun c := c 0 • oneOct + c 1 • lOct + c 2 • iOct + c 3 • ilOct
+  map_add' x y := by ext idx; fin_cases idx <;> { dsimp [oneOct, lOct, iOct, ilOct, splitBasisVector]; ring }
+  map_smul' r x := by ext idx; fin_cases idx <;> { dsimp [oneOct, lOct, iOct, ilOct, splitBasisVector]; ring }
+
+def greenCoordinateEmbedding : ChiralOrderCoordinates →ₗ[ℤ] StandardIntegralSplitOctonion where
+  toFun c := c 0 • oneOct + c 1 • lOct + c 2 • jOct + c 3 • jlOct
+  map_add' x y := by ext idx; fin_cases idx <;> { dsimp [oneOct, lOct, jOct, jlOct, splitBasisVector]; ring }
+  map_smul' r x := by ext idx; fin_cases idx <;> { dsimp [oneOct, lOct, jOct, jlOct, splitBasisVector]; ring }
+
+def blueCoordinateEmbedding : ChiralOrderCoordinates →ₗ[ℤ] StandardIntegralSplitOctonion where
+  toFun c := c 0 • oneOct + c 1 • lOct + c 2 • kOct + c 3 • klOct
+  map_add' x y := by ext idx; fin_cases idx <;> { dsimp [oneOct, lOct, kOct, klOct, splitBasisVector]; ring }
+  map_smul' r x := by ext idx; fin_cases idx <;> { dsimp [oneOct, lOct, kOct, klOct, splitBasisVector]; ring }
+
+noncomputable def redEmbedding : integerChiralOrder →ₗ[ℤ] StandardIntegralSplitOctonion :=
+  redCoordinateEmbedding.comp chiralOrderCoordinateEquiv.symm.toLinearMap
+
+noncomputable def greenEmbedding : integerChiralOrder →ₗ[ℤ] StandardIntegralSplitOctonion :=
+  greenCoordinateEmbedding.comp chiralOrderCoordinateEquiv.symm.toLinearMap
+
+noncomputable def blueEmbedding : integerChiralOrder →ₗ[ℤ] StandardIntegralSplitOctonion :=
+  blueCoordinateEmbedding.comp chiralOrderCoordinateEquiv.symm.toLinearMap
+
+theorem redEmbedding_injective : Function.Injective redEmbedding := by
+  intro x y h
+  apply chiralOrderCoordinateEquiv.symm.injective
+  have h1 : redCoordinateEmbedding (chiralOrderCoordinateEquiv.symm x) = redCoordinateEmbedding (chiralOrderCoordinateEquiv.symm y) := h
+  ext idx
+  fin_cases idx
+  · have hk := congrArg (fun f => f IntegralSplitBasis.one) h1
+    dsimp [redCoordinateEmbedding, oneOct, lOct, iOct, ilOct, splitBasisVector] at hk
+    simp at hk
+    exact hk
+  · have hk := congrArg (fun f => f IntegralSplitBasis.l) h1
+    dsimp [redCoordinateEmbedding, oneOct, lOct, iOct, ilOct, splitBasisVector] at hk
+    simp at hk
+    exact hk
+  · have hk := congrArg (fun f => f IntegralSplitBasis.i) h1
+    dsimp [redCoordinateEmbedding, oneOct, lOct, iOct, ilOct, splitBasisVector] at hk
+    simp at hk
+    exact hk
+  · have hk := congrArg (fun f => f IntegralSplitBasis.il) h1
+    dsimp [redCoordinateEmbedding, oneOct, lOct, iOct, ilOct, splitBasisVector] at hk
+    simp at hk
+    exact hk
+
+theorem greenEmbedding_injective : Function.Injective greenEmbedding := by
+  intro x y h
+  apply chiralOrderCoordinateEquiv.symm.injective
+  have h1 : greenCoordinateEmbedding (chiralOrderCoordinateEquiv.symm x) = greenCoordinateEmbedding (chiralOrderCoordinateEquiv.symm y) := h
+  ext idx
+  fin_cases idx
+  · have hk := congrArg (fun f => f IntegralSplitBasis.one) h1
+    dsimp [greenCoordinateEmbedding, oneOct, lOct, jOct, jlOct, splitBasisVector] at hk
+    simp at hk
+    exact hk
+  · have hk := congrArg (fun f => f IntegralSplitBasis.l) h1
+    dsimp [greenCoordinateEmbedding, oneOct, lOct, jOct, jlOct, splitBasisVector] at hk
+    simp at hk
+    exact hk
+  · have hk := congrArg (fun f => f IntegralSplitBasis.j) h1
+    dsimp [greenCoordinateEmbedding, oneOct, lOct, jOct, jlOct, splitBasisVector] at hk
+    simp at hk
+    exact hk
+  · have hk := congrArg (fun f => f IntegralSplitBasis.jl) h1
+    dsimp [greenCoordinateEmbedding, oneOct, lOct, jOct, jlOct, splitBasisVector] at hk
+    simp at hk
+    exact hk
+
+theorem blueEmbedding_injective : Function.Injective blueEmbedding := by
+  intro x y h
+  apply chiralOrderCoordinateEquiv.symm.injective
+  have h1 : blueCoordinateEmbedding (chiralOrderCoordinateEquiv.symm x) = blueCoordinateEmbedding (chiralOrderCoordinateEquiv.symm y) := h
+  ext idx
+  fin_cases idx
+  · have hk := congrArg (fun f => f IntegralSplitBasis.one) h1
+    dsimp [blueCoordinateEmbedding, oneOct, lOct, kOct, klOct, splitBasisVector] at hk
+    simp at hk
+    exact hk
+  · have hk := congrArg (fun f => f IntegralSplitBasis.l) h1
+    dsimp [blueCoordinateEmbedding, oneOct, lOct, kOct, klOct, splitBasisVector] at hk
+    simp at hk
+    exact hk
+  · have hk := congrArg (fun f => f IntegralSplitBasis.k) h1
+    dsimp [blueCoordinateEmbedding, oneOct, lOct, kOct, klOct, splitBasisVector] at hk
+    simp at hk
+    exact hk
+  · have hk := congrArg (fun f => f IntegralSplitBasis.kl) h1
+    dsimp [blueCoordinateEmbedding, oneOct, lOct, kOct, klOct, splitBasisVector] at hk
+    simp at hk
+    exact hk
+
+def redIntegralSector : Submodule ℤ StandardIntegralSplitOctonion where
+  carrier := {x | x .j = 0 ∧ x .jl = 0 ∧ x .k = 0 ∧ x .kl = 0}
+  zero_mem' := by simp
+  add_mem' := by intro x y hx hy; simp_all
+  smul_mem' := by intro a x hx; simp_all
+
+def greenIntegralSector : Submodule ℤ StandardIntegralSplitOctonion where
+  carrier := {x | x .i = 0 ∧ x .il = 0 ∧ x .k = 0 ∧ x .kl = 0}
+  zero_mem' := by simp
+  add_mem' := by intro x y hx hy; simp_all
+  smul_mem' := by intro a x hx; simp_all
+
+def blueIntegralSector : Submodule ℤ StandardIntegralSplitOctonion where
+  carrier := {x | x .i = 0 ∧ x .il = 0 ∧ x .j = 0 ∧ x .jl = 0}
+  zero_mem' := by simp
+  add_mem' := by intro x y hx hy; simp_all
+  smul_mem' := by intro a x hx; simp_all
+
+theorem range_redEmbedding : LinearMap.range redEmbedding = redIntegralSector := by
+  apply le_antisymm
+  · rintro x ⟨c, rfl⟩
+    dsimp [redEmbedding, redCoordinateEmbedding, redIntegralSector, splitBasisVector, oneOct, lOct, iOct, ilOct]
+    simp
+  · intro x hx
+    dsimp [redIntegralSector] at hx
+    rcases hx with ⟨hj, hjl, hk, hkl⟩
+    let c : ChiralOrderCoordinates := fun i => if i = 0 then x .one else if i = 1 then x .l else if i = 2 then x .i else x .il
+    use chiralOrderCoordinateEquiv c
+    dsimp [redEmbedding]
+    rw [LinearEquiv.symm_apply_apply]
+    ext idx
+    fin_cases idx <;> {
+      dsimp [redCoordinateEmbedding, c, oneOct, lOct, iOct, ilOct, splitBasisVector]
+      simp
+      try { exact hj.symm }
+      try { exact hjl.symm }
+      try { exact hk.symm }
+      try { exact hkl.symm }
+    }
+
+theorem range_greenEmbedding : LinearMap.range greenEmbedding = greenIntegralSector := by
+  apply le_antisymm
+  · rintro x ⟨c, rfl⟩
+    dsimp [greenEmbedding, greenCoordinateEmbedding, greenIntegralSector, splitBasisVector, oneOct, lOct, jOct, jlOct]
+    simp
+  · intro x hx
+    dsimp [greenIntegralSector] at hx
+    rcases hx with ⟨hi, hil, hk, hkl⟩
+    let c : ChiralOrderCoordinates := fun i => if i = 0 then x .one else if i = 1 then x .l else if i = 2 then x .j else x .jl
+    use chiralOrderCoordinateEquiv c
+    dsimp [greenEmbedding]
+    rw [LinearEquiv.symm_apply_apply]
+    ext idx
+    fin_cases idx <;> {
+      dsimp [greenCoordinateEmbedding, c, oneOct, lOct, jOct, jlOct, splitBasisVector]
+      simp
+      try { exact hi.symm }
+      try { exact hil.symm }
+      try { exact hk.symm }
+      try { exact hkl.symm }
+    }
+
+theorem range_blueEmbedding : LinearMap.range blueEmbedding = blueIntegralSector := by
+  apply le_antisymm
+  · rintro x ⟨c, rfl⟩
+    dsimp [blueEmbedding, blueCoordinateEmbedding, blueIntegralSector, splitBasisVector, oneOct, lOct, kOct, klOct]
+    simp
+  · intro x hx
+    dsimp [blueIntegralSector] at hx
+    rcases hx with ⟨hi, hil, hj, hjl⟩
+    let c : ChiralOrderCoordinates := fun i => if i = 0 then x .one else if i = 1 then x .l else if i = 2 then x .k else x .kl
+    use chiralOrderCoordinateEquiv c
+    dsimp [blueEmbedding]
+    rw [LinearEquiv.symm_apply_apply]
+    ext idx
+    fin_cases idx <;> {
+      dsimp [blueCoordinateEmbedding, c, oneOct, lOct, kOct, klOct, splitBasisVector]
+      simp
+      try { exact hi.symm }
+      try { exact hil.symm }
+      try { exact hj.symm }
+      try { exact hjl.symm }
+    }
+
+def sharedIntegralHyperbolicAxis : Submodule ℤ StandardIntegralSplitOctonion where
+  carrier := {x | x .i = 0 ∧ x .il = 0 ∧ x .j = 0 ∧ x .jl = 0 ∧ x .k = 0 ∧ x .kl = 0}
+  zero_mem' := by simp
+  add_mem' := by intro x y hx hy; simp_all
+  smul_mem' := by intro a x hx; simp_all
+
+theorem sharedIntegralHyperbolicAxis_eq_span :
+    sharedIntegralHyperbolicAxis = Submodule.span ℤ {oneOct, lOct} := by
+  apply le_antisymm
+  · intro x hx
+    dsimp [sharedIntegralHyperbolicAxis] at hx
+    rcases hx with ⟨hi, hil, hj, hjl, hk, hkl⟩
+    let c0 := x .one
+    let c1 := x .l
+    have hx_decomp : x = c0 • oneOct + c1 • lOct := by
+      ext idx
+      fin_cases idx <;> {
+        dsimp [c0, c1, oneOct, lOct, splitBasisVector]
+        simp
+        try { exact hi }
+        try { exact hil }
+        try { exact hj }
+        try { exact hjl }
+        try { exact hk }
+        try { exact hkl }
+      }
+    rw [hx_decomp]
+    apply Submodule.add_mem
+    · apply Submodule.smul_mem; apply Submodule.subset_span; simp
+    · apply Submodule.smul_mem; apply Submodule.subset_span; simp
+  · rw [Submodule.span_le]
+    rintro x hx
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at hx
+    rcases hx with rfl | rfl
+    · dsimp [sharedIntegralHyperbolicAxis, oneOct, splitBasisVector]
+      simp
+    · dsimp [sharedIntegralHyperbolicAxis, lOct, splitBasisVector]
+      simp
 
 theorem red_green_intersection_eq_sharedAxis :
-    redIntegralSector ⊓ greenIntegralSector = sharedIntegralHyperbolicAxis := by
+    LinearMap.range redEmbedding ⊓ LinearMap.range greenEmbedding = sharedIntegralHyperbolicAxis := by
+  rw [range_redEmbedding, range_greenEmbedding]
   ext x
-  constructor
-  · rintro ⟨hr, hg⟩
-    exact ⟨hg.1, hg.2.1, hr.1, hr.2.1, hr.2.2.1, hr.2.2.2⟩
-  · intro hx
-    rcases hx with ⟨hxi, hxil, hxj, hxjl, hxk, hxkl⟩
-    exact ⟨⟨hxj, hxjl, hxk, hxkl⟩, ⟨hxi, hxil, hxk, hxkl⟩⟩
+  dsimp [redIntegralSector, greenIntegralSector, sharedIntegralHyperbolicAxis]
+  simp
+  aesop
 
 theorem green_blue_intersection_eq_sharedAxis :
-    greenIntegralSector ⊓ blueIntegralSector = sharedIntegralHyperbolicAxis := by
+    LinearMap.range greenEmbedding ⊓ LinearMap.range blueEmbedding = sharedIntegralHyperbolicAxis := by
+  rw [range_greenEmbedding, range_blueEmbedding]
   ext x
-  constructor
-  · rintro ⟨hg, hb⟩
-    exact ⟨hg.1, hg.2.1, hb.2.2.1, hb.2.2.2, hg.2.2.1, hg.2.2.2⟩
-  · intro hx
-    rcases hx with ⟨hxi, hxil, hxj, hxjl, hxk, hxkl⟩
-    exact ⟨⟨hxi, hxil, hxk, hxkl⟩, ⟨hxi, hxil, hxj, hxjl⟩⟩
+  dsimp [greenIntegralSector, blueIntegralSector, sharedIntegralHyperbolicAxis]
+  simp
+  aesop
 
 theorem blue_red_intersection_eq_sharedAxis :
-    blueIntegralSector ⊓ redIntegralSector = sharedIntegralHyperbolicAxis := by
+    LinearMap.range blueEmbedding ⊓ LinearMap.range redEmbedding = sharedIntegralHyperbolicAxis := by
+  rw [range_blueEmbedding, range_redEmbedding]
   ext x
-  constructor
-  · rintro ⟨hb, hr⟩
-    rcases hb with ⟨hbi, hbil, hbj, hbjl⟩
-    rcases hr with ⟨hrj, hrjl, hrk, hrkl⟩
-    exact ⟨hbi, hbil, hbj, hbjl, hrk, hrkl⟩
-  · intro hx
-    rcases hx with ⟨hxi, hxil, hxj, hxjl, hxk, hxkl⟩
-    exact ⟨⟨hxi, hxil, hxj, hxjl⟩, ⟨hxj, hxjl, hxk, hxkl⟩⟩
+  dsimp [blueIntegralSector, redIntegralSector, sharedIntegralHyperbolicAxis]
+  simp
+  aesop
 
 theorem threeColor_intersection_eq_sharedAxis :
-    redIntegralSector ⊓ greenIntegralSector ⊓ blueIntegralSector =
-      sharedIntegralHyperbolicAxis := by
-  rw [red_green_intersection_eq_sharedAxis]
+    LinearMap.range redEmbedding ⊓ LinearMap.range greenEmbedding ⊓ LinearMap.range blueEmbedding = sharedIntegralHyperbolicAxis := by
+  rw [range_redEmbedding, range_greenEmbedding, range_blueEmbedding]
   ext x
-  constructor
-  · rintro ⟨hs, hb⟩
-    exact hs
-  · intro hx
-    rcases hx with ⟨hxi, hxil, hxj, hxjl, hxk, hxkl⟩
-    exact ⟨⟨hxi, hxil, hxj, hxjl, hxk, hxkl⟩, ⟨hxi, hxil, hxj, hxjl⟩⟩
+  dsimp [redIntegralSector, greenIntegralSector, blueIntegralSector, sharedIntegralHyperbolicAxis]
+  simp
+  aesop
 
 end InfoGeometry.Canonical

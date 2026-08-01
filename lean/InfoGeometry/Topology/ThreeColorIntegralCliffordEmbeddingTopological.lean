@@ -1,29 +1,39 @@
 import InfoGeometry.Canonical.ThreeColorIntegralCliffordEmbedding
-import InfoGeometry.Canonical.CubicJordanOsTopologicalReadout
 
 namespace InfoGeometry.Topology
 
 open InfoGeometry.Canonical
-open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
-/-! The native coordinate topology is discrete.  Consequently the typed
-    colour placements and their finite-coordinate readouts are continuous,
-    while the shared axis is closed. -/
+/-! The coordinate carrier has its native discrete topology.  The statements in
+this file are deliberately limited to continuity and closedness; no octonion
+multiplication is used by the linear intersection layer. -/
 
-theorem continuous_redEmbedding :
-    Continuous (redEmbedding : ChiralCoefficients → SplitOct) := by
+theorem continuous_redCoordinateEmbedding :
+    Continuous redCoordinateEmbedding := by
   exact continuous_of_discreteTopology
 
-theorem continuous_greenEmbedding :
-    Continuous (greenEmbedding : ChiralCoefficients → SplitOct) := by
+theorem continuous_greenCoordinateEmbedding :
+    Continuous greenCoordinateEmbedding := by
   exact continuous_of_discreteTopology
 
-theorem continuous_blueEmbedding :
-    Continuous (blueEmbedding : ChiralCoefficients → SplitOct) := by
+theorem continuous_blueCoordinateEmbedding :
+    Continuous blueCoordinateEmbedding := by
   exact continuous_of_discreteTopology
 
 theorem isClosed_sharedIntegralHyperbolicAxis :
-    IsClosed (sharedIntegralHyperbolicAxis : Set SplitOct) := by
+    IsClosed (sharedIntegralHyperbolicAxis : Set StandardIntegralSplitOctonion) := by
+  exact isClosed_discrete _
+
+theorem isClosed_redIntegralSector :
+    IsClosed (redIntegralSector : Set StandardIntegralSplitOctonion) := by
+  exact isClosed_discrete _
+
+theorem isClosed_greenIntegralSector :
+    IsClosed (greenIntegralSector : Set StandardIntegralSplitOctonion) := by
+  exact isClosed_discrete _
+
+theorem isClosed_blueIntegralSector :
+    IsClosed (blueIntegralSector : Set StandardIntegralSplitOctonion) := by
   exact isClosed_discrete _
 
 end InfoGeometry.Topology

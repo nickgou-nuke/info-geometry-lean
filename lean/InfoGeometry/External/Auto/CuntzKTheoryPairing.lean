@@ -60,26 +60,23 @@ instance : Subsingleton TrivialK0Model := by
   simpa [TrivialK0Model] using (inferInstance : Subsingleton (ZMod 1))
 instance : O2K0Trivial TrivialK0Model := inferInstance
 
-/-- Compatibility alias used by the existing external auto proof corridor. -/
-abbrev O2_K0 : Type := TrivialK0Model
-
 /-- Canonical zero pairing for the O₂ model.
 This models `⟨[C], [e]⟩ = 0` under the trivial K₀ assumption.
 -/
-def O2ConnesChernPairing (K1 : Type*) [AddCommGroup K1] : O2_K0 → K1 → ℂ :=
+def O2ConnesChernPairing (K1 : Type*) [AddCommGroup K1] : TrivialK0Model → K1 → ℂ :=
   fun _ _ => 0
 
-instance (K1 : Type*) [AddCommGroup K1] : ConnesChernPairing O2_K0 K1 where
+instance (K1 : Type*) [AddCommGroup K1] : ConnesChernPairing TrivialK0Model K1 where
   pair := O2ConnesChernPairing K1
   zero_left := by intro x; rfl
 
 /-- Connes–Chern pairing over `K₀(𝒪₂)` is identically zero. -/
 theorem connesChernPairing_zero_on_O2
-    {K1 : Type*} [AddCommGroup K1] (k : O2_K0) (x : K1) :
-    (inferInstance : ConnesChernPairing O2_K0 K1).pair k x = 0 := by
+    {K1 : Type*} [AddCommGroup K1] (k : TrivialK0Model) (x : K1) :
+    (inferInstance : ConnesChernPairing TrivialK0Model K1).pair k x = 0 := by
   simpa [O2ConnesChernPairing] using
-    (connesChernPairing_zero_of_O2K0Trivial (K0 := O2_K0) (K1 := K1)
-      (inferInstance : O2K0Trivial O2_K0) k x)
+    (connesChernPairing_zero_of_O2K0Trivial (K0 := TrivialK0Model) (K1 := K1)
+      (inferInstance : O2K0Trivial TrivialK0Model) k x)
 
 /-- If an anomaly index is identified with a pairing over a proof-trivial K₀ carrier, it is zero. -/
 theorem anomalousIndex_from_trivial_K0_pairing_zero
@@ -98,13 +95,13 @@ theorem anomalousIndex_from_O2_pairing_zero (H : Type*)
     [AddCommGroup H] [Module ℂ H]
     (C : AnomalousKMSFlow.ModularAnomalyContext H)
     {K1 : Type*} [AddCommGroup K1]
-    (k : O2_K0) (x : K1)
+    (k : TrivialK0Model) (x : K1)
     (hPair :
       AnomalousKMSFlow.anomalousIndex H C =
-      (inferInstance : ConnesChernPairing O2_K0 K1).pair k x) :
+      (inferInstance : ConnesChernPairing TrivialK0Model K1).pair k x) :
     AnomalousKMSFlow.anomalousIndex H C = 0 := by
   exact anomalousIndex_from_trivial_K0_pairing_zero (H := H) C
-    (inferInstance : O2K0Trivial O2_K0) k x hPair
+    (inferInstance : O2K0Trivial TrivialK0Model) k x hPair
 
 /-- Bonus: if the trace is faithful and the index is matched to a trivial O₂ pairing,
 then the anomaly operator itself vanishes. -/
@@ -113,10 +110,10 @@ theorem O2_pairing_vanishes_implies_anomaly_zero
     (C : AnomalousKMSFlow.ModularAnomalyContext H)
     (hFaith : AnomalousKMSFlow.TraceFaithful H C.tr)
     {K1 : Type*} [AddCommGroup K1]
-    (k : O2_K0) (x : K1)
+    (k : TrivialK0Model) (x : K1)
     (hPair :
       AnomalousKMSFlow.anomalousIndex H C =
-      (inferInstance : ConnesChernPairing O2_K0 K1).pair k x) :
+      (inferInstance : ConnesChernPairing TrivialK0Model K1).pair k x) :
     C.δK = 0 := by
   have hIndex : AnomalousKMSFlow.anomalousIndex H C = 0 :=
     anomalousIndex_from_O2_pairing_zero (H := H) C k x hPair
@@ -142,10 +139,10 @@ theorem O2_pairing_vanishes_implies_action_minimum
     (hFaith : AnomalousKMSFlow.TraceFaithful H C.tr)
     (S0 c : ℝ) (hc : 0 ≤ c)
     {K1 : Type*} [AddCommGroup K1]
-    (k : O2_K0) (x : K1)
+    (k : TrivialK0Model) (x : K1)
     (hPair :
       AnomalousKMSFlow.anomalousIndex H C =
-      (inferInstance : ConnesChernPairing O2_K0 K1).pair k x) :
+      (inferInstance : ConnesChernPairing TrivialK0Model K1).pair k x) :
     (∀ δ : Module.End ℂ H,
         ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c ≤
           ConnesSpectralAction.connesSpectralAction (H := H) C δ S0 c) ∧
@@ -169,10 +166,10 @@ theorem O2_pairing_vanishes_implies_unique_spectral_minimizer
     (hFaith : AnomalousKMSFlow.TraceFaithful H C.tr)
     (S0 c : ℝ) (hc : 0 < c)
     {K1 : Type*} [AddCommGroup K1]
-    (k : O2_K0) (x : K1)
+    (k : TrivialK0Model) (x : K1)
     (hPair :
       AnomalousKMSFlow.anomalousIndex H C =
-      (inferInstance : ConnesChernPairing O2_K0 K1).pair k x) :
+      (inferInstance : ConnesChernPairing TrivialK0Model K1).pair k x) :
     (∀ δ : Module.End ℂ H,
       ConnesSpectralAction.connesSpectralAction (H := H) C δ S0 c =
         ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c ↔ δ = C.δK) := by
@@ -196,10 +193,10 @@ theorem O2_pairing_vanishes_implies_no_leakage
     (H : Type*) [AddCommGroup H] [Module ℂ H]
     (C : AnomalousKMSFlow.ModularAnomalyContext H)
     {K1 : Type*} [AddCommGroup K1]
-    (k : O2_K0) (x : K1)
+    (k : TrivialK0Model) (x : K1)
     (hPair :
       AnomalousKMSFlow.anomalousIndex H C =
-      (inferInstance : ConnesChernPairing O2_K0 K1).pair k x) :
+      (inferInstance : ConnesChernPairing TrivialK0Model K1).pair k x) :
     ∀ s, AnomalousKMSFlow.anomalousLineLeak (AnomalousKMSFlow.anomalousIndexLeakProfile H C) s = 0 := by
   have hIndex : AnomalousKMSFlow.anomalousIndex H C = 0 :=
     anomalousIndex_from_O2_pairing_zero (H := H) C k x hPair
@@ -214,10 +211,10 @@ theorem O2_pairing_triviality_yields_full_anomaly_collapse
     (hFaith : AnomalousKMSFlow.TraceFaithful H C.tr)
     (S0 c : ℝ) (hc : 0 < c)
     {K1 : Type*} [AddCommGroup K1]
-    (k : O2_K0) (x : K1)
+    (k : TrivialK0Model) (x : K1)
     (hPair :
       AnomalousKMSFlow.anomalousIndex H C =
-      (inferInstance : ConnesChernPairing O2_K0 K1).pair k x) :
+      (inferInstance : ConnesChernPairing TrivialK0Model K1).pair k x) :
     C.δK = 0 ∧
       (∀ δ : Module.End ℂ H,
         ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c ≤
@@ -257,10 +254,10 @@ theorem connes_chern_holographic_index_pairing_zero
     (hFaith : AnomalousKMSFlow.TraceFaithful H C.tr)
     (_S0 c : ℝ) (_hc : 0 < c)
     {K1 : Type*} [AddCommGroup K1]
-    (k : O2_K0) (x : K1)
+    (k : TrivialK0Model) (x : K1)
     (hPair :
       AnomalousKMSFlow.anomalousIndex H C =
-      (inferInstance : ConnesChernPairing O2_K0 K1).pair k x) :
+      (inferInstance : ConnesChernPairing TrivialK0Model K1).pair k x) :
     C.δK = 0 ∧
     AnomalousKMSFlow.anomalousIndex H C = 0 ∧
     C.tr C.K = 0 := by

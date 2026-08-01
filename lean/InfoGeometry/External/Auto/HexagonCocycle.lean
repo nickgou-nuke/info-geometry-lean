@@ -136,13 +136,20 @@ The unified cocycle diagram connects all structures:
 
 Reference: KB entry "Unified Cocycle Diagram"
 -/
+inductive CocycleNode
+  | hexagon
+  | yangBaxter
+  | quadraticLegendre
+  | gaussianFisher
+  deriving DecidableEq
+
 structure CocycleLink where
-  source : String
-  target : String
+  source : CocycleNode
+  target : CocycleNode
 
 def unified_cocycle_diagram : List CocycleLink :=
-  [ { source := "hexagon", target := "Yang-Baxter" },
-    { source := "quadratic Legendre", target := "Gaussian Fisher" } ]
+  [ { source := .hexagon, target := .yangBaxter },
+    { source := .quadraticLegendre, target := .gaussianFisher } ]
 
 theorem unified_cocycle_diagram_length :
     unified_cocycle_diagram.length = 2 := by

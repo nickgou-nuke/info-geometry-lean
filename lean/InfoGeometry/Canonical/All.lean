@@ -3,6 +3,15 @@ import InfoGeometry.Canonical.PeirceChiralConeSpinFrameBridge
 import InfoGeometry.Canonical.IntegralChiralCliffordOrder
 import InfoGeometry.Canonical.AlbertPeirceChiralFrameEmbedding
 import InfoGeometry.Canonical.ThreeColorIntegralCliffordEmbedding
+import InfoGeometry.Canonical.StandardIntegralSplitOctonionMultiplication
+import InfoGeometry.Canonical.PeirceNullConeKinematicEmbedding
+import InfoGeometry.Canonical.PeirceBCFWKinematicBridge
+import InfoGeometry.Canonical.PeirceBCFWShiftSpecialization
+import InfoGeometry.Canonical.PeirceBCFWResidueSpecialization
+import InfoGeometry.Canonical.PeirceBCFWResidueFactorization
+import InfoGeometry.Canonical.PeircePositiveCell
+import InfoGeometry.Canonical.PeircePositiveCellImage
+import InfoGeometry.Canonical.PeircePositiveBoundary
 import InfoGeometry.Canonical.H3ZornCubicJordanTopologicalReadout
 import InfoGeometry.Canonical.ChiralConeOctonionicBridge
 import InfoGeometry.Canonical.OctonionicCuntzIsomorphism
@@ -2044,6 +2053,7 @@ import InfoGeometry.Canonical.YangianLevelZeroRepresentation
 import InfoGeometry.Canonical.YangianLevelOneBilocalGenerator
 import InfoGeometry.Canonical.PositiveGrassmannianBCFWCells
 import InfoGeometry.Canonical.CanonicalFormBoundaryResidue
+import InfoGeometry.Canonical.PeirceCanonicalBoundaryResidueSocket
 import InfoGeometry.Canonical.PositiveGrassmannianAmplituhedron
 import InfoGeometry.Canonical.SupertwistorThreeCliffordBridge
 import InfoGeometry.Canonical.GenerationalCKMMixingBridge
@@ -2073,4 +2083,3 @@ modules in `lean/InfoGeometry/Canonical/`.
 -/
 
 end InfoGeometry
-import InfoGeometry.Canonical.AlbertPeirceChiralFrameEmbedding

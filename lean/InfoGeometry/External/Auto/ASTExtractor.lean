@@ -79,5 +79,3 @@ elab "#extract_graph " prefixName:ident : command => do
   let path : System.FilePath := ⟨"ast_graph.json"⟩
   IO.FS.writeFile path jsonStr
   logInfo s!"Graph extracted! Nodes: {nodes.size}, Edges: {edges.size}. Saved to ast_graph.json"
-
-#extract_graph ExtractBraid

@@ -4,21 +4,6 @@ noncomputable section
 
 namespace OrlandiA67Proceedings
 
-abbrev MirrorPair := ℕ × String × String
-
-namespace MirrorPair
-
-abbrev A (P : MirrorPair) : ℕ := P.1
-
-abbrev protonRich (P : MirrorPair) : String := P.2.1
-
-abbrev neutronRich (P : MirrorPair) : String := P.2.2
-
-end MirrorPair
-
-def As67Se67 : MirrorPair :=
-  (67, "67As", "67Se")
-
 def channelCalibration_ns_per_channel : ℚ := 56 / 100
 
 def centroidShiftTime (cForward cReverse : ℚ) : ℚ :=

@@ -30,10 +30,10 @@ theorem unified_architecture_of_anomaly_proof
     (hFaith : AnomalousKMSFlow.TraceFaithful H C.tr)
     (S0 c : ℝ) (hc : 0 < c)
     {K1 : Type*} [AddCommGroup K1]
-    (k : CuntzKTheoryPairing.O2_K0) (x : K1)
+    (k : CuntzKTheoryPairing.TrivialK0Model) (x : K1)
     (hPair :
       AnomalousKMSFlow.anomalousIndex H C =
-      (inferInstance : CuntzKTheoryPairing.ConnesChernPairing CuntzKTheoryPairing.O2_K0 K1).pair k x)
+      (inferInstance : CuntzKTheoryPairing.ConnesChernPairing CuntzKTheoryPairing.TrivialK0Model K1).pair k x)
     (β : ℝ) (S : Finset ℕ)
     (hβ : 0 < β) (hS : ∀ p ∈ S, 1 < p) :
     C.δK = 0 ∧

@@ -1,5 +1,4 @@
-import Mathlib.Data.Nat.Basic
-import Mathlib.Data.Int.Basic
+import Mathlib
 
 namespace InfoGeometry.Canonical
 
@@ -20,33 +19,57 @@ structure MersenneMode where
   mersenne_value : ℕ
 deriving DecidableEq, Repr
 
+inductive ZornSlotType
+  | scalarA | vectorX | vectorY | scalarB
+  deriving DecidableEq, Repr
+
+inductive Representation
+  | singlet | fundamental3 | antifundamental3
+  deriving DecidableEq, Repr
+
+inductive SymmetryName
+  | su3 | g2 | u1
+  deriving DecidableEq, Repr
+
+inductive PhysicalSector
+  | quark | antiquark | vacuum
+  deriving DecidableEq, Repr
+
+inductive ComplexGenerator
+  | e1 | e12 | J
+  deriving DecidableEq, Repr
+
+inductive CliffordAlgebraName
+  | cl11 | cl20 | hestenes
+  deriving DecidableEq, Repr
+
 structure CouplingConstant where
   value : ℕ
   v2_norm : ℕ
-  decomposition : String
+  decomposition : List ℕ
 deriving DecidableEq, Repr
 
 structure ZornSlot where
-  slot_type : String  -- "scalar_a", "vector_x", "vector_y", "scalar_b"
+  slot_type : ZornSlotType
   dimension : ℕ
-  representation : String  -- "singlet", "fundamental_3", "antifundamental_3bar"
+  representation : Representation
 deriving DecidableEq, Repr
 
 structure SymmetryGroup where
-  group_name : String  -- "SU(3)", "G2", "U(1)"
+  group_name : SymmetryName
   dimension : ℕ
-  lies_in : String
+  lies_in : SymmetryName
 deriving DecidableEq, Repr
 
 structure ModularEigenvalue where
-  eigenvalue : ℤ  -- +1, -1, 0
-  physical_interpretation : String  -- "quark", "antiquark", "vacuum"
+  eigenvalue : ℤ
+  physical_interpretation : PhysicalSector
 deriving DecidableEq, Repr
 
 structure ComplexStructure where
-  generator : String  -- "e1", "e12", "J"
-  squares_to : ℤ  -- always -1
-  algebra : String  -- "Cl(1,1)", "Cl(2,0)", "Hestenes"
+  generator : ComplexGenerator
+  squares_to : ℤ
+  algebra : CliffordAlgebraName
 deriving DecidableEq, Repr
 
 -- ============================================================================
@@ -74,7 +97,7 @@ def m7 : MersenneMode := {
 def alpha_inv : CouplingConstant := {
   value := 137,
   v2_norm := 1,
-  decomposition := "3 + 7 + 127"
+  decomposition := [3, 7, 127]
 }
 
 -- ============================================================================
@@ -82,42 +105,42 @@ def alpha_inv : CouplingConstant := {
 -- ============================================================================
 
 def color_vector_x : ZornSlot := {
-  slot_type := "vector_x",
+  slot_type := .vectorX,
   dimension := 3,
-  representation := "fundamental_3"
+  representation := .fundamental3
 }
 
 def color_vector_y : ZornSlot := {
-  slot_type := "vector_y",
+  slot_type := .vectorY,
   dimension := 3,
-  representation := "antifundamental_3bar"
+  representation := .antifundamental3
 }
 
 def complex_J : ComplexStructure := {
-  generator := "J",
+  generator := .J,
   squares_to := -1,
-  algebra := "Cl(1,1)"
+  algebra := .cl11
 }
 
 def eig_plus : ModularEigenvalue := {
   eigenvalue := 1,
-  physical_interpretation := "quark"
+  physical_interpretation := .quark
 }
 
 def eig_minus : ModularEigenvalue := {
   eigenvalue := -1,
-  physical_interpretation := "antiquark"
+  physical_interpretation := .antiquark
 }
 
 def eig_zero : ModularEigenvalue := {
   eigenvalue := 0,
-  physical_interpretation := "vacuum"
+  physical_interpretation := .vacuum
 }
 
 def su3_color : SymmetryGroup := {
-  group_name := "SU(3)",
+  group_name := .su3,
   dimension := 8,
-  lies_in := "G2"
+  lies_in := .g2
 }
 
 -- ============================================================================
@@ -128,7 +151,7 @@ theorem functorial_bridge_correct :
     (color_vector_x.dimension = m2.dimension) ∧
     (complex_J.squares_to = -1) ∧
     (eig_plus.eigenvalue = 1 ∧ eig_minus.eigenvalue = -1 ∧ eig_zero.eigenvalue = 0) ∧
-    (su3_color.group_name = "SU(3)" ∧ su3_color.dimension = 8) := by
+    (su3_color.group_name = .su3 ∧ su3_color.dimension = 8) := by
   decide
 
 end InfoGeometry.Canonical

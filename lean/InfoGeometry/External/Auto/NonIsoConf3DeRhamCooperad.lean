@@ -177,20 +177,19 @@ inductive BetaEdge where
   | b12 | b13 | b23
   deriving DecidableEq, Fintype, Repr
 
-/-- Named Arnold triangle relation in degree two. -/
-abbrev ArnoldRelation := String × ℕ
+/-- The finite named relation used by the arity-three alpha skeleton. -/
+inductive ArnoldRelationKind where
+  | alphaTriangle
+  deriving DecidableEq, Repr
 
-namespace ArnoldRelation
-
-abbrev name (R : ArnoldRelation) : String := R.1
-
-abbrev degree (R : ArnoldRelation) : ℕ := R.2
-
-end ArnoldRelation
+/-- A typed finite relation descriptor; its degree is mathematical data. -/
+structure ArnoldRelation where
+  kind : ArnoldRelationKind
+  degree : ℕ
 
 /-- The alpha Arnold relation in degree two. -/
 def alphaArnold : ArnoldRelation :=
-  ("alpha12*alpha23 - alpha12*alpha13 + alpha23*alpha13 = 0", 2)
+  { kind := ArnoldRelationKind.alphaTriangle, degree := 2 }
 
 @[simp] theorem alphaArnold_degree : alphaArnold.degree = 2 := rfl
 

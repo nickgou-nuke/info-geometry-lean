@@ -2,10 +2,23 @@ import InfoGeometry.Canonical.TomitaTakesakiRealification
 
 namespace InfoGeometry.Canonical.TomitaTakesakiRealification
 
+inductive ClosureDebt
+  | standardSubspace
+  | spatialTomitaDataReadback
+  | realVonNeumannAlgebraWeakClosure
+  | realTomitaAlgebraicData
+  | spatialAlgebraicRealificationBridge
+  | hestenesGeometricComplexData
+  | causalConeProjectorRegularization
+  | fiveGradedConformalClosureSocket
+  | mobiusLogScaleReflectionSocket
+  | compactifiedNullConeSocket
+  deriving DecidableEq
+
 structure ThreeBucketAudit where
   bucket1ClosedFiniteTheorems : List Lean.Name
   bucket2ConditionalTheoremsFromExplicitWitnesses : List Lean.Name
-  bucket3OpenClosureDebt : List String
+  bucket3OpenClosureDebt : List ClosureDebt
 
 /-
 #### BUCKET 1: CLOSED FINITE THEOREMS
@@ -29,17 +42,17 @@ def bucket2ConditionalTheoremsFromExplicitWitnesses : List Lean.Name :=
 #### BUCKET 3: OPEN CLOSURE DEBT
 [Identified gaps, missing structural steps, or unverified steps. This defines the exact remaining debt line. No overclaims permitted.]
 -/
-def bucket3OpenClosureDebt : List String :=
-  [ "StandardSubspace.isStandard: prove standardness from a native standard-subspace construction"
-  , "SpatialTomitaData.*_readback: construct Tomita polar data rather than projecting laws from fields"
-  , "RealVonNeumannAlgebraData.weakly_closed: prove weak closure from a native operator-algebra carrier"
-  , "RealTomitaAlgebraicData.*: prove cyclic, separating, modular automorphism, and J0 transport laws"
-  , "SpatialAlgebraicRealificationBridge.*: prove realification transport from the spatial/algebraic construction"
-  , "HestenesGeometricComplexData.* and KreinAdjointSocket.kreinAdjoint_involutive: construct Clifford reversion/Krein symmetry"
-  , "CausalConeProjectorRegularization.*: prove Drazin/Moore-Penrose idempotence and splitting laws"
-  , "FiveGradedConformalClosureSocket.*: prove five-grade support, bracket, and Levi/parabolic laws"
-  , "MobiusLogScaleReflectionSocket.*: prove inversion, radial, log-scale, and unit-boundary laws"
-  , "CompactifiedNullConeSocket.*: prove null-pairing, embedding, and origin/infinity swap laws"
+def bucket3OpenClosureDebt : List ClosureDebt :=
+  [ .standardSubspace
+  , .spatialTomitaDataReadback
+  , .realVonNeumannAlgebraWeakClosure
+  , .realTomitaAlgebraicData
+  , .spatialAlgebraicRealificationBridge
+  , .hestenesGeometricComplexData
+  , .causalConeProjectorRegularization
+  , .fiveGradedConformalClosureSocket
+  , .mobiusLogScaleReflectionSocket
+  , .compactifiedNullConeSocket
   ]
 
 def tomitaThreeBucketAudit : ThreeBucketAudit where

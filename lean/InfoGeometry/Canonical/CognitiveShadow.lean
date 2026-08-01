@@ -12,13 +12,54 @@ quarantining. It does not prove anything on its own.
 
 namespace InfoGeometry.Canonical.CognitiveShadow
 
+inductive ShadowKind
+  | honestSorryTriage
+  | obfuscationSuspicion
+  | orphanGenuineReview
+  | axiomaticFrontierReview
+  | alignmentCandidateReview
+  | educationalAliasProtection
+  deriving DecidableEq
+
+inductive ShadowPolicy
+  | proofHoleTriage
+  | quarantineExplicitBridge
+  | preserveAndExpose
+  | quarantineAndBridge
+  | kernelObligation
+  | blockDestructiveSurgery
+  deriving DecidableEq
+
+inductive ShadowStatus
+  | recognized
+  deriving DecidableEq
+
+def ShadowKind.label : ShadowKind → String
+  | .honestSorryTriage => "HonestSorryTriage"
+  | .obfuscationSuspicion => "ObfuscationSuspicion"
+  | .orphanGenuineReview => "OrphanGenuineReview"
+  | .axiomaticFrontierReview => "AxiomaticFrontierReview"
+  | .alignmentCandidateReview => "AlignmentCandidateReview"
+  | .educationalAliasProtection => "EducationalAliasProtection"
+
+def ShadowPolicy.label : ShadowPolicy → String
+  | .proofHoleTriage => "route to proof-hole triage"
+  | .quarantineExplicitBridge => "quarantine or require explicit bridge obligation"
+  | .preserveAndExpose => "preserve and bridge/expose"
+  | .quarantineAndBridge => "quarantine or bridge; do not vacuum"
+  | .kernelObligation => "route through kernel obligation"
+  | .blockDestructiveSurgery => "block destructive surgery"
+
+def ShadowStatus.label : ShadowStatus → String
+  | .recognized => "recognized"
+
 /-- Shadow modes recognized by the LeanTrail critic lane. -/
 structure ShadowTemplate where
-  name : String
+  name : ShadowKind
   triggerTerms : Array String
-  criticKind : String
-  policyEffect : String
-  status : String
+  criticKind : ShadowKind
+  policyEffect : ShadowPolicy
+  status : ShadowStatus
 
 namespace ShadowTemplate
 
@@ -44,41 +85,41 @@ end DetectedShadow
 /-- Known shadow modes from the critic-lane taxonomy. -/
 def knownShadows : Array ShadowTemplate :=
   #[
-    { name := "HonestSorryTriage"
+    { name := .honestSorryTriage
       triggerTerms := #["sorry", "proof debt", "hole"]
-      criticKind := "honest_sorry_triage"
-      policyEffect := "route to proof-hole triage"
-      status := "recognized" },
-    { name := "ObfuscationSuspicion"
+      criticKind := .honestSorryTriage
+      policyEffect := .proofHoleTriage
+      status := .recognized },
+    { name := .obfuscationSuspicion
       triggerTerms := #["axiom", "opaque", "certificate", "socket", "witness"]
-      criticKind := "obfuscation_suspicion"
-      policyEffect := "quarantine or require explicit bridge obligation"
-      status := "recognized" },
-    { name := "OrphanGenuineReview"
+      criticKind := .obfuscationSuspicion
+      policyEffect := .quarantineExplicitBridge
+      status := .recognized },
+    { name := .orphanGenuineReview
       triggerTerms := #["orphan", "genuine", "dense", "valid mathematics"]
-      criticKind := "orphan_genuine_review"
-      policyEffect := "preserve and bridge/expose"
-      status := "recognized" },
-    { name := "AxiomaticFrontierReview"
+      criticKind := .orphanGenuineReview
+      policyEffect := .preserveAndExpose
+      status := .recognized },
+    { name := .axiomaticFrontierReview
       triggerTerms := #["axiomatic frontier", "axiom", "opaque boundary"]
-      criticKind := "axiomatic_frontier_review"
-      policyEffect := "quarantine or bridge; do not vacuum"
-      status := "recognized" },
-    { name := "AlignmentCandidateReview"
+      criticKind := .axiomaticFrontierReview
+      policyEffect := .quarantineAndBridge
+      status := .recognized },
+    { name := .alignmentCandidateReview
       triggerTerms := #["Hodge", "de Bruijn", "structural overlap", "bridge candidate"]
-      criticKind := "alignment_candidate_review"
-      policyEffect := "route through kernel obligation"
-      status := "recognized" },
-    { name := "EducationalAliasProtection"
+      criticKind := .alignmentCandidateReview
+      policyEffect := .kernelObligation
+      status := .recognized },
+    { name := .educationalAliasProtection
       triggerTerms := #["pedagogical", "wrapper", "alias", "educational"]
-      criticKind := "educational_alias_protection"
-      policyEffect := "block destructive surgery"
-      status := "recognized" }
+      criticKind := .educationalAliasProtection
+      policyEffect := .blockDestructiveSurgery
+      status := .recognized }
   ]
 
 /-- Return the names of shadow templates detected by the observed terms. -/
 def detectShadows (observedTerms : Array String) : Array String :=
-  knownShadows.filter (fun T => T.detects observedTerms) |>.map (fun T => T.name)
+  knownShadows.filter (fun T => T.detects observedTerms) |>.map (fun T => T.name.label)
 
 /-- Return all detected shadow patterns with their observed terms. -/
 def detectedShadows (observedTerms : Array String) : Array DetectedShadow :=

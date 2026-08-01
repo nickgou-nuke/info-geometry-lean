@@ -91,11 +91,6 @@ class TemperleyLieb (d_val : F) (e : ℕ → A_alg) : Prop where
 
 variable [TemperleyLieb (d A) e]
 
--- Wrappers to bypass typeclass inference quirks
-lemma TL_e_sq {F : Type*} [Field F] (A : F) {A_alg : Type*} [Ring A_alg] [Algebra F A_alg] (e : ℕ → A_alg) [TemperleyLieb (d A) e] (i : ℕ) : e i * e i = (d A) • e i := @TemperleyLieb.e_sq F _ A_alg _ _ (d A) e _ i
-lemma TL_e_comm {F : Type*} [Field F] (A : F) {A_alg : Type*} [Ring A_alg] [Algebra F A_alg] (e : ℕ → A_alg) [TemperleyLieb (d A) e] (i j : ℕ) (h : i + 1 < j ∨ j + 1 < i) : e i * e j = e j * e i := @TemperleyLieb.e_comm F _ A_alg _ _ (d A) e _ i j h
-lemma TL_e_adj {F : Type*} [Field F] (A : F) {A_alg : Type*} [Ring A_alg] [Algebra F A_alg] (e : ℕ → A_alg) [TemperleyLieb (d A) e] (i j : ℕ) (h : i = j + 1 ∨ j = i + 1) : e i * e j * e i = e i := @TemperleyLieb.e_adj F _ A_alg _ _ (d A) e _ i j h
-
 /-- The Jones representation of the Braid Group generators -/
 def σ (i : ℕ) : A_alg := (A:F) • (1:A_alg) + (A⁻¹:F) • e i
 
@@ -131,7 +126,7 @@ lemma sigma_mul_sigma_inv (i : ℕ) (hA : A ≠ 0) : σ A e i * σ_inv A e i = 1
         have h4 : A⁻¹ * A⁻¹ = (A⁻¹)^2 := by ring
         rw [h1, h2, h3, h4]
     _ = (1:A_alg) + (A^2:F) • e i + (((A⁻¹)^2:F) • e i + (d A) • e i) := by
-        have h_sq : e i * e i = (d A) • e i := TL_e_sq A e i
+        have h_sq : e i * e i = (d A) • e i := @TemperleyLieb.e_sq F _ A_alg _ _ (d A) e _ i
         rw [h_sq]
         simp only [one_smul]
     _ = (1:A_alg) + (A^2:F) • e i + (((A⁻¹)^2:F) • e i + ((- A^2 - (A⁻¹)^2):F) • e i) := by
@@ -149,7 +144,7 @@ lemma braid_comm (i j : ℕ) (h : i + 1 < j ∨ j + 1 < i) : σ A e i * σ A e j
     ((A:F) • (1:A_alg) + (A⁻¹:F) • e i) * ((A:F) • (1:A_alg) + (A⁻¹:F) • e j)
       = ((A * A):F) • (1:A_alg) + ((A * A⁻¹):F) • e j + (((A⁻¹ * A):F) • e i + ((A⁻¹ * A⁻¹):F) • (e i * e j)) := by tl_expand; abel_simp
     _ = ((A * A):F) • (1:A_alg) + ((A * A⁻¹):F) • e j + (((A⁻¹ * A):F) • e i + ((A⁻¹ * A⁻¹):F) • (e j * e i)) := by
-        have h_comm : e i * e j = e j * e i := TL_e_comm A e i j h
+        have h_comm : e i * e j = e j * e i := @TemperleyLieb.e_comm F _ A_alg _ _ (d A) e _ i j h
         rw [h_comm]
     _ = ((A * A):F) • (1:A_alg) + ((A⁻¹ * A):F) • e j + (((A * A⁻¹):F) • e i + ((A⁻¹ * A⁻¹):F) • (e j * e i)) := by
         have hc1 : A * A⁻¹ = A⁻¹ * A := by ring
@@ -213,8 +208,8 @@ lemma braid_adj (i j : ℕ) (h : i = j + 1 ∨ j = i + 1) (hA : A ≠ 0) :
           rw [hc1 A, hc2 A hA, hc3 A hA, hc4 A hA, hc5 A hA, hc6 A hA, hc7 A hA, hc8 A]
       _ = (A^3:F) • (1:A_alg) + (A:F) • e i + ((A:F) • e j + (((A⁻¹):F) • (e j * e i) + 
           ((A:F) • e i + (((A⁻¹):F) • ((d A) • e i) + (((A⁻¹):F) • (e i * e j) + ((A⁻¹^3):F) • e i))))) := by
-          have h_sq : e i * e i = (d A) • e i := TL_e_sq A e i
-          have h_adj : e i * e j * e i = e i := TL_e_adj A e i j h
+          have h_sq : e i * e i = (d A) • e i := @TemperleyLieb.e_sq F _ A_alg _ _ (d A) e _ i
+          have h_adj : e i * e j * e i = e i := @TemperleyLieb.e_adj F _ A_alg _ _ (d A) e _ i j h
           rw [h_sq, h_adj]
       _ = (A^3:F) • (1:A_alg) + (A:F) • e i + ((A:F) • e j + (((A⁻¹):F) • (e j * e i) + 
           ((A:F) • e i + (((A⁻¹ * d A):F) • e i + (((A⁻¹):F) • (e i * e j) + ((A⁻¹^3):F) • e i))))) := by rw [smul_smul]
@@ -240,8 +235,8 @@ lemma braid_adj (i j : ℕ) (h : i = j + 1 ∨ j = i + 1) (hA : A ≠ 0) :
           rw [hc1 A, hc2 A hA, hc3 A hA, hc4 A hA, hc5 A hA, hc6 A hA, hc7 A hA, hc8 A]
       _ = (A^3:F) • (1:A_alg) + (A:F) • e j + ((A:F) • e i + (((A⁻¹):F) • (e i * e j) + 
           ((A:F) • e j + (((A⁻¹):F) • ((d A) • e j) + (((A⁻¹):F) • (e j * e i) + ((A⁻¹^3):F) • e j))))) := by
-          have h_sq : e j * e j = (d A) • e j := TL_e_sq A e j
-          have h_adj : e j * e i * e j = e j := TL_e_adj A e j i (Or.symm h)
+          have h_sq : e j * e j = (d A) • e j := @TemperleyLieb.e_sq F _ A_alg _ _ (d A) e _ j
+          have h_adj : e j * e i * e j = e j := @TemperleyLieb.e_adj F _ A_alg _ _ (d A) e _ j i (Or.symm h)
           rw [h_sq, h_adj]
       _ = (A^3:F) • (1:A_alg) + (A:F) • e j + ((A:F) • e i + (((A⁻¹):F) • (e i * e j) + 
           ((A:F) • e j + (((A⁻¹ * d A):F) • e j + (((A⁻¹):F) • (e j * e i) + ((A⁻¹^3):F) • e j))))) := by rw [smul_smul]

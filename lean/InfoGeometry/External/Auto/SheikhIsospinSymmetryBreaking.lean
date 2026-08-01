@@ -96,31 +96,28 @@ theorem IMME_mirror_sum (a b c t : ℚ) :
   unfold IMME
   ring
 
-abbrev IsodoubletMassSplit := String × String × ℚ × ℚ
-
-namespace IsodoubletMassSplit
-
-def neutronRich (p : IsodoubletMassSplit) : String := p.1
-def protonRich (p : IsodoubletMassSplit) : String := p.2.1
-def neutronRichMass (p : IsodoubletMassSplit) : ℚ := p.2.2.1
-def protonRichMass (p : IsodoubletMassSplit) : ℚ := p.2.2.2
-
-end IsodoubletMassSplit
+structure IsodoubletMassSplit where
+  neutronRichMass : ℚ
+  protonRichMass : ℚ
 
 def massSplitting (p : IsodoubletMassSplit) : ℚ :=
   IsodoubletMassSplit.neutronRichMass p - IsodoubletMassSplit.protonRichMass p
 
 def neutronProtonSplit : IsodoubletMassSplit :=
-  ("n", "p", 93957 / 100, 93828 / 100)
+  { neutronRichMass := 93957 / 100
+    protonRichMass := 93828 / 100 }
 
 def H3He3Split : IsodoubletMassSplit :=
-  ("3H", "3He", 280894 / 100, 280842 / 100)
+  { neutronRichMass := 280894 / 100
+    protonRichMass := 280842 / 100 }
 
 def He5Li5Split : IsodoubletMassSplit :=
-  ("5He", "5Li", 466787 / 100, 466766 / 100)
+  { neutronRichMass := 466787 / 100
+    protonRichMass := 466766 / 100 }
 
 def Li7Be7Split : IsodoubletMassSplit :=
-  ("7Li", "7Be", 653389 / 100, 653424 / 100)
+  { neutronRichMass := 653389 / 100
+    protonRichMass := 653424 / 100 }
 
 theorem neutron_proton_mass_split_exact :
     massSplitting neutronProtonSplit = 129 / 100 := by

@@ -11,14 +11,18 @@ function theorem, or prove any Riemann-hypothesis statement.
 
 namespace InfoGeometry.Topology.PrimonGas
 
-/-- The structure defining a generic Primon Gas state. -/
-structure PrimonGasState where
-  /-- The base energy scaling factor. -/
-  E_0 : ℝ
-  /-- The temperature of the system. -/
-  T : ℝ
-  /-- Supplied strict parameter inequality. -/
-  below_hagedorn : E_0 > T
+/- The finite state is a pair of real parameters satisfying the Hagedorn bound. -/
+def PrimonGasState := {p : ℝ × ℝ // p.1 > p.2}
+
+namespace PrimonGasState
+
+def E_0 (state : PrimonGasState) : ℝ := state.1.1
+def T (state : PrimonGasState) : ℝ := state.1.2
+
+theorem below_hagedorn (state : PrimonGasState) : state.E_0 > state.T :=
+  state.2
+
+end PrimonGasState
 
 /-- The local validity predicate used by this finite packet. -/
 def primonGasParameterValid (state : PrimonGasState) : Prop :=

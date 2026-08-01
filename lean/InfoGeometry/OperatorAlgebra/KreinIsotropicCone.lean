@@ -443,26 +443,33 @@ The identities are:
 
 The index is a witness, not asserted here to be minimal.
 -/
-structure HasDrazinInverse
+def HasDrazinInverse
     {A : Type*} [Ring A]
-    (a : A) where
-  /-- Drazin inverse candidate. -/
-  x : A
+    (a : A) : Type _ :=
+  {p : A × ℕ //
+    a * p.1 = p.1 * a ∧
+      p.1 * a * p.1 = p.1 ∧
+        a ^ (p.2 + 1) * p.1 = a ^ p.2}
 
-  /-- Drazin index witness. Not asserted minimal. -/
-  index : ℕ
+namespace HasDrazinInverse
 
-  /-- Commutation with the original element. -/
-  commute :
-    a * x = x * a
+def x {A : Type*} [Ring A] {a : A} (h : HasDrazinInverse a) : A := h.1.1
 
-  /-- Generalized inverse identity. -/
-  inverse_identity :
-    x * a * x = x
+def index {A : Type*} [Ring A] {a : A} (h : HasDrazinInverse a) : ℕ := h.1.2
 
-  /-- Drazin power identity. -/
-  power_identity :
-    a ^ (index + 1) * x = a ^ index
+theorem commute {A : Type*} [Ring A] {a : A} (h : HasDrazinInverse a) :
+    a * h.x = h.x * a :=
+  h.2.1
+
+theorem inverse_identity {A : Type*} [Ring A] {a : A} (h : HasDrazinInverse a) :
+    h.x * a * h.x = h.x :=
+  h.2.2.1
+
+theorem power_identity {A : Type*} [Ring A] {a : A} (h : HasDrazinInverse a) :
+    a ^ (h.index + 1) * h.x = a ^ h.index :=
+  h.2.2.2
+
+end HasDrazinInverse
 
 /--
 Drazin-nilpotent support.

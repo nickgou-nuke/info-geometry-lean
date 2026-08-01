@@ -16,7 +16,7 @@ theorem continuous_lightconeMinus :
   unfold lightconeMinus
   fun_prop
 
-theorem realHyperbolicInvolutionLocus_isClosed :
+theorem realHyperbolicInvolutionLocus_closed :
     IsClosed (realHyperbolicInvolutionLocus) := by
   change IsClosed ((fun u : ℝ => u * u) ⁻¹' ({1} : Set ℝ))
   exact isClosed_singleton.preimage (continuous_id.mul continuous_id)

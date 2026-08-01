@@ -15,15 +15,20 @@ This file is intentionally chart-free:
 - no upper-half-plane point is singled out as `i∞`;
 - cusp behavior is recorded only as a `Tendsto` fact.
 -/
-structure CuspLimitData (X Y : Type*) [TopologicalSpace X] [TopologicalSpace Y] where
-  cuspFilter : Filter X
-  cuspOrbit : X → Y
-  cuspValue : Y
-  orbit_tendsto : Tendsto cuspOrbit cuspFilter (𝓝 cuspValue)
+def CuspLimitData (X Y : Type*) [TopologicalSpace X] [TopologicalSpace Y] :=
+  {p : Filter X × (X → Y) × Y // Tendsto p.2.1 p.1 (𝓝 p.2.2)}
 
 namespace CuspLimitData
 
 variable {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
+
+def cuspFilter (D : CuspLimitData X Y) : Filter X := D.1.1
+def cuspOrbit (D : CuspLimitData X Y) : X → Y := D.1.2.1
+def cuspValue (D : CuspLimitData X Y) : Y := D.1.2.2
+
+theorem orbit_tendsto (D : CuspLimitData X Y) :
+    Tendsto D.cuspOrbit D.cuspFilter (𝓝 D.cuspValue) :=
+  D.2
 
 /-- The cusp limit is recorded purely as a `Tendsto` fact. -/
 theorem tendsto_cuspOrbit (D : CuspLimitData X Y) :

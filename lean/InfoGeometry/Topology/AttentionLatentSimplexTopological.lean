@@ -1,4 +1,5 @@
 import Mathlib.Topology.Basic
+import Mathlib.Analysis.Convex.StdSimplex
 import InfoGeometry.Convex.LogSumExp
 
 open scoped BigOperators
@@ -44,6 +45,56 @@ theorem latentSoftmax_nonneg
     (logits : X → n → ℝ) (x : X) (i : n) :
     0 ≤ latentSoftmax logits x i := by
   exact softmax_nonneg (logits x) i
+
+omit [TopologicalSpace X] in
+theorem latentSoftmax_coordinate_pos
+    (logits : X → n → ℝ) (x : X) (i : n) :
+    0 < latentSoftmax logits x i := by
+  unfold latentSoftmax
+  exact div_pos (Real.exp_pos _) (sumExp_pos (logits x))
+
+omit [TopologicalSpace X] in
+theorem latentSoftmax_mem_stdSimplex
+    (logits : X → n → ℝ) (x : X) :
+    latentSoftmax logits x ∈ stdSimplex ℝ n := by
+  rw [stdSimplex_eq_inter]
+  simp only [Set.mem_inter_iff, Set.mem_iInter, Set.mem_setOf_eq]
+  constructor
+  · exact fun i => latentSoftmax_nonneg logits x i
+  · exact latentSoftmax_sum_one logits x
+
+/-- The symbolic latent representation, with normalization carried by the
+standard-simplex subtype itself. -/
+noncomputable def latentSimplexMap
+    (logits : X → n → ℝ) : X → stdSimplex ℝ n :=
+  fun x => ⟨latentSoftmax logits x, latentSoftmax_mem_stdSimplex logits x⟩
+
+theorem continuous_latentSimplexMap
+    (logits : X → n → ℝ)
+    (hlogits : ∀ i, Continuous (fun x => logits x i)) :
+    Continuous (latentSimplexMap logits) := by
+  exact (continuous_latentSoftmax logits hlogits).subtype_mk
+    (fun x => latentSoftmax_mem_stdSimplex logits x)
+
+theorem isCompact_range_latentSimplexMap
+    [CompactSpace X]
+    (logits : X → n → ℝ)
+    (hlogits : ∀ i, Continuous (fun x => logits x i)) :
+    IsCompact (Set.range (latentSimplexMap logits)) :=
+  isCompact_range (continuous_latentSimplexMap logits hlogits)
+
+theorem isClosed_range_latentSimplexMap
+    [CompactSpace X]
+    (logits : X → n → ℝ)
+    (hlogits : ∀ i, Continuous (fun x => logits x i)) :
+    IsClosed (Set.range (latentSimplexMap logits)) :=
+  (isCompact_range_latentSimplexMap logits hlogits).isClosed
+
+omit [TopologicalSpace X] in
+theorem latentSimplexMap_coordinate_pos
+    (logits : X → n → ℝ) (x : X) (i : n) :
+    0 < (latentSimplexMap logits x : n → ℝ) i :=
+  latentSoftmax_coordinate_pos logits x i
 
 theorem latentSoftmax_coordinate_fiber_isClosed
     (logits : X → n → ℝ)

@@ -17,16 +17,21 @@ def A73Pair : MirrorPair where
   mirror_cond_N := by rfl
 
 /-- Nuclear state properties including spin. -/
-structure A73State where
-  energy : ℝ
-  spin : ℚ
-  parity : ℤ
+abbrev A73State := ℝ × (ℚ × ℤ)
+
+namespace A73State
+
+abbrev energy (s : A73State) : ℝ := s.1
+
+abbrev spin (s : A73State) : ℚ := s.2.1
+
+abbrev parity (s : A73State) : ℤ := s.2.2
+
+end A73State
 
 /-- The ground state of a given nucleus. -/
 noncomputable def ground_state (nuc : Nucleus) : A73State :=
-  { energy := 0.0,
-    spin := if nuc.Z = 38 then 5 / 2 else 1 / 2,
-    parity := 1 }
+  (0.0, (if nuc.Z = 38 then 5 / 2 else 1 / 2, 1))
 
 /-- Structure representing the A=73 Mirror Symmetry Violation.
     The ground state spin of Sr-73 is 5/2 while the ground state spin of Br-73 is 1/2. -/

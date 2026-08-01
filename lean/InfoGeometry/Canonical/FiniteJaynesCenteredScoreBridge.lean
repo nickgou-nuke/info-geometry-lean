@@ -161,9 +161,8 @@ theorem weight_mul_relativeCenteredScore_eq_centeredScore_of_positive
     R obs (FiniteReferenceStateOps.weight_ne_zero_of_positive R hR i)
 
 /-- Convert this finite bridge datum to the LDDS-centering datum from `JaynesLDDSCentering`. -/
-def toFiniteLDDSDatum (R : FiniteReferenceState ι) (obs : ι → ℝ) : FiniteLDDSDatum ι where
-  density := obs
-  reference := R
+def toFiniteLDDSDatum (R : FiniteReferenceState ι) (obs : ι → ℝ) : FiniteLDDSDatum ι :=
+  (obs, R)
 
 omit [Fintype ι] in
 /-- The LDDS centered score agrees with the relative centered score here. -/

@@ -24,9 +24,15 @@ namespace PrimonFockTraceBridge
 open scoped BigOperators
 
 /-- Abstract finite spectral data after diagonalizing a finite primon Hamiltonian. -/
-structure FiniteSpectralData (N : ℕ) where
-  energy : Fin N → ℝ
-  projectorTrace : Fin N → ℝ
+abbrev FiniteSpectralData (N : ℕ) :=
+  (Fin N → ℝ) × (Fin N → ℝ)
+
+namespace FiniteSpectralData
+
+def energy {N : ℕ} (D : FiniteSpectralData N) : Fin N → ℝ := D.1
+def projectorTrace {N : ℕ} (D : FiniteSpectralData N) : Fin N → ℝ := D.2
+
+end FiniteSpectralData
 
 /-- Functional-calculus heat trace of a finite diagonal/projector Hamiltonian. -/
 def spectralHeatTrace {N : ℕ} (D : FiniteSpectralData N) (β : ℝ) : ℝ :=
@@ -41,9 +47,8 @@ def primonEnergy {N : ℕ} (i : Fin N) : ℝ :=
   Real.log ((i.val + 1 : ℕ) : ℝ)
 
 /-- Finite arithmetic spectral data with unit trace on each spectral projector. -/
-def primonSpectralData (N : ℕ) : FiniteSpectralData N where
-  energy := primonEnergy
-  projectorTrace := fun _ => 1
+def primonSpectralData (N : ℕ) : FiniteSpectralData N :=
+  (primonEnergy, fun _ => 1)
 
 @[simp] theorem primonSpectralData_traceNormalized (N : ℕ) :
     traceNormalized (primonSpectralData N) := by
@@ -79,7 +84,8 @@ theorem spectralHeatTrace_traceNormalized {N : ℕ} (D : FiniteSpectralData N)
 /-- The finite primon Fock trace is the finite zeta partial sum. -/
 theorem finitePrimonFockTrace_eq_zeta_partial (β : ℝ) (N : ℕ) :
     finitePrimonFockTrace β N = finiteZetaPartial β N := by
-  unfold finitePrimonFockTrace spectralHeatTrace primonSpectralData primonEnergy finiteZetaPartial
+  unfold finitePrimonFockTrace spectralHeatTrace primonSpectralData primonEnergy
+    FiniteSpectralData.energy FiniteSpectralData.projectorTrace finiteZetaPartial
   rw [Finset.sum_fin_eq_sum_range]
   apply Finset.sum_congr rfl
   intro k hk

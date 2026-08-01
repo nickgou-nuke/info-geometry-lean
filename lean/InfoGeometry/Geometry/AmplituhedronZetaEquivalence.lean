@@ -83,7 +83,7 @@ theorem isClosedGaugeConnection_of_thermodynamicPotential
     IsClosedGaugeConnection Potential :=
   hClosed
 
-/-- Gauge equivalence combines an explicit closed-connection proof and volume calibration. -/
+/-- Gauge comparison combines an explicit closed-connection proof and volume calibration. -/
 theorem amplituhedronGaugeComparison_readout
     {k n : ℕ} (Ω : CanonicalVolumeForm k n)
     (Potential : ThermodynamicPotential M) (β_critical : ℝ)

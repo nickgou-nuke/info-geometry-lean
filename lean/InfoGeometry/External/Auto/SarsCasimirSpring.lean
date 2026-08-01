@@ -58,12 +58,14 @@ theorem restoring_force_hooke (m lam : ℝ) : restoringForceMass m lam = - massS
 
 theorem dilation_changes_casimir (C : ℝ) : dilationCasimirBracket C = 2 * C := rfl
 
-structure CasimirLeaf (State : Type*) where
-  casimir : State → ℝ
-  entropy : State → ℝ
-  base : State
+abbrev CasimirLeaf (State : Type*) :=
+  (State → ℝ) × (State → ℝ) × State
 
 namespace CasimirLeaf
+
+def casimir (L : CasimirLeaf State) : State → ℝ := L.1
+def entropy (L : CasimirLeaf State) : State → ℝ := L.2.1
+def base (L : CasimirLeaf State) : State := L.2.2
 
 def on_leaf (L : CasimirLeaf State) (q : State) : Prop :=
   L.casimir q = L.casimir L.base ∧ L.entropy q = L.entropy L.base

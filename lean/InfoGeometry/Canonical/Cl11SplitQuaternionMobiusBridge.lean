@@ -61,6 +61,22 @@ theorem splitI_splitL_commutator :
       InfoGeometryCore.sigma1R, InfoGeometryCore.sigma3R,
       Matrix.mul_apply, Fin.sum_univ_two]
 
+theorem splitL_splitIL_commutator :
+    splitL * splitIL - splitIL * splitL = (-2 : ℝ) • splitI := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [splitIL, splitI, splitL, epsilon, sigma1,
+      InfoGeometryCore.sigma1R, InfoGeometryCore.sigma3R,
+      Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem splitIL_splitI_commutator :
+    splitIL * splitI - splitI * splitIL = (2 : ℝ) • splitL := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [splitIL, splitI, splitL, epsilon, sigma1,
+      InfoGeometryCore.sigma1R, InfoGeometryCore.sigma3R,
+      Matrix.mul_apply, Fin.sum_univ_two]
+
 theorem splitIL_eq_sigma3 : splitIL = sigma3 := by
   ext i j
   fin_cases i <;> fin_cases j <;>

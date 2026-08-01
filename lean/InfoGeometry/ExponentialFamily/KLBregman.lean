@@ -35,8 +35,8 @@ noncomputable abbrev entropicTransportObjective
 
 /-- Exponential-family log-partition viewed as a `LogPotential`. -/
 noncomputable def logPotential
-    (F : FiniteExponentialFamilyData α) : InfoGeometry.LogPotential ℝ where
-  ψ := familyLogPartition F
+    (F : FiniteExponentialFamilyData α) : InfoGeometry.LogPotential ℝ :=
+  fun θ => familyLogPartition F θ
 
 /-- OT naming alias for the convex potential gap driving the same objective. -/
 noncomputable abbrev entropicTransportPotentialGap
@@ -113,6 +113,7 @@ lemma KLParam_eq_LogPotential_bregman_of_statMean_eq_deriv
   rw [hmean]
   unfold InfoGeometry.LogPotential.bregman logPotential
   unfold InfoGeometry.bregmanDiv
+  simp only [InfoGeometry.LogPotential.ψ]
   ring
 
 lemma KLParam_eq_bregman_if_deriv_mean

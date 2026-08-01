@@ -8,8 +8,8 @@ namespace InfoGeometry.Physics
 
 /-- The A=39 mirror pair (Ca-39 and K-39). -/
 def A39Pair : MirrorPair where
-  nuc1 := { Z := 20, N := 19 }
-  nuc2 := { Z := 19, N := 20 }
+  nuc1 := (20, 19)
+  nuc2 := (19, 20)
   mirror_cond_Z := rfl
   mirror_cond_N := rfl
 
@@ -34,17 +34,8 @@ noncomputable def CED (state : A39State) : ℝ :=
   let k : ℝ := 50.0
   base_CED - k * state.spatial_overlap
 
-/-- The CED downsloping trend for the A=39 mirror pair.
-For negative parity states from p1_h2 cross-shell excitations,
-as excitation energy increases, spatial overlap increases (expansion),
-which directly reduces the Coulomb energy (Thomas-Ehrman shift analog)
-and generates a negative CED slope. -/
+/-- The CED decreases when the overlap parameter increases. -/
 theorem downsloping_CED_A39 (s1 s2 : A39State)
-    (_h_exc1 : s1.excitation = ExcitationsA39.p1_h2)
-    (_h_exc2 : s2.excitation = ExcitationsA39.p1_h2)
-    (_h_parity1 : s1.parity = -1)
-    (_h_parity2 : s2.parity = -1)
-    (_h_energy_inc : s1.excitation_energy < s2.excitation_energy)
     (h_overlap_inc : s2.spatial_overlap > s1.spatial_overlap) :
     s2.spatial_overlap > s1.spatial_overlap ∧ CED s2 < CED s1 := by
   refine ⟨h_overlap_inc, ?_⟩

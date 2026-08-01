@@ -28,12 +28,14 @@ variable {n : ℕ}
 /-- Finite operator algebra on `ℝ^n` (matrix model). -/
 abbrev Op (n : ℕ) := Matrix (Fin n) (Fin n) ℝ
 
-/-- Finite-dimensional determinant-volume model with Hamiltonian `H` and inverse temperature `β`. -/
-structure ThermalModel (n : ℕ) where
-  H : Op n
-  β : ℝ
+/-- Finite-dimensional determinant-volume model with Hamiltonian `H` and inverse
+temperature `β`, represented natively as a product. -/
+abbrev ThermalModel (n : ℕ) := Op n × ℝ
 
 namespace ThermalModel
+
+@[simp] def H (M : ThermalModel n) : Op n := M.1
+@[simp] def β (M : ThermalModel n) : ℝ := M.2
 
 /-- Unnormalized log-density (the Gibbs exponent). -/
 noncomputable def logUnnormalizedDensity (M : ThermalModel n) : Op n :=

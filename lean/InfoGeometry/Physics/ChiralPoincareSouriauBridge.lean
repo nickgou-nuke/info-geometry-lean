@@ -37,12 +37,18 @@ def σ2 : M2C := !![0, -Complex.I; Complex.I, 0]
 /-- Pauli σ₃. -/
 def σ3 : M2C := !![1, 0; 0, -1]
 
-/-- A complexified momentum four-vector. -/
-structure FourMomentum where
-  E : ℂ
-  px : ℂ
-  py : ℂ
-  pz : ℂ
+/-- A complexified momentum four-vector, represented natively as a product of
+four complex coordinates. -/
+abbrev FourMomentum := ℂ × (ℂ × (ℂ × ℂ))
+
+namespace FourMomentum
+
+@[simp] def E (P : FourMomentum) : ℂ := P.1
+@[simp] def px (P : FourMomentum) : ℂ := P.2.1
+@[simp] def py (P : FourMomentum) : ℂ := P.2.2.1
+@[simp] def pz (P : FourMomentum) : ℂ := P.2.2.2
+
+end FourMomentum
 
 /-- Minkowski quadratic/Casimir with mostly-minus convention. -/
 def minkowskiSq (P : FourMomentum) : ℂ :=
@@ -56,12 +62,11 @@ def pauliMomentum (P : FourMomentum) : M2C :=
 /-- Explicit determinant of the Pauli-soldered momentum matrix: the mass Casimir. -/
 theorem det_pauliMomentum (P : FourMomentum) :
     (pauliMomentum P).det = minkowskiSq P := by
-  cases P with
-  | mk E px py pz =>
-    simp [pauliMomentum, minkowskiSq]
-    ring_nf
-    simp [Complex.I_mul_I]
-    ring
+  rcases P with ⟨E, px, py, pz⟩
+  simp [pauliMomentum, minkowskiSq]
+  ring_nf
+  simp [Complex.I_mul_I]
+  ring
 
 /-- Chiral super-Poincaré relation: the odd anticommutator matrix is `2P`. -/
 structure ChiralSUSYMomentum where
@@ -94,32 +99,28 @@ def recoverPz (A : M2C) : ℂ := (1 / 2 : ℂ) * Matrix.trace (A * σ3)
 
 @[simp] theorem recoverE_pauliMomentum (P : FourMomentum) :
     recoverE (pauliMomentum P) = P.E := by
-  cases P with
-  | mk E px py pz =>
-    simp [recoverE, pauliMomentum, Matrix.trace, Fin.sum_univ_two]
-    ring
+  rcases P with ⟨E, px, py, pz⟩
+  simp [recoverE, pauliMomentum, Matrix.trace, Fin.sum_univ_two]
+  ring
 
 @[simp] theorem recoverPx_pauliMomentum (P : FourMomentum) :
     recoverPx (pauliMomentum P) = P.px := by
-  cases P with
-  | mk E px py pz =>
-    simp [recoverPx, pauliMomentum, σ1, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]
-    ring
+  rcases P with ⟨E, px, py, pz⟩
+  simp [recoverPx, pauliMomentum, σ1, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]
+  ring
 
 @[simp] theorem recoverPy_pauliMomentum (P : FourMomentum) :
     recoverPy (pauliMomentum P) = P.py := by
-  cases P with
-  | mk E px py pz =>
-    simp [recoverPy, pauliMomentum, σ2, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]
-    ring_nf
-    simp [Complex.I_mul_I]
+  rcases P with ⟨E, px, py, pz⟩
+  simp [recoverPy, pauliMomentum, σ2, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]
+  ring_nf
+  simp [Complex.I_mul_I]
 
 @[simp] theorem recoverPz_pauliMomentum (P : FourMomentum) :
     recoverPz (pauliMomentum P) = P.pz := by
-  cases P with
-  | mk E px py pz =>
-    simp [recoverPz, pauliMomentum, σ3, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]
-    ring
+  rcases P with ⟨E, px, py, pz⟩
+  simp [recoverPz, pauliMomentum, σ3, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]
+  ring
 
 /-- The inverse Pauli transform recovers all four components from `{Q,Q̄}/2`. -/
 theorem supercharge_pauli_inverse (S : ChiralSUSYMomentum) :
@@ -143,12 +144,18 @@ theorem det_spinorOuter_zero (lam mu : Fin 2 → ℂ) :
 
 /-! ## Souriau beta vector -/
 
-/-- Complexified Souriau inverse-temperature four-vector. -/
-structure BetaVector where
-  b0 : ℂ
-  bx : ℂ
-  bY : ℂ
-  bz : ℂ
+/-- Complexified Souriau inverse-temperature four-vector, represented natively
+as a product of four complex coordinates. -/
+abbrev BetaVector := ℂ × (ℂ × (ℂ × ℂ))
+
+namespace BetaVector
+
+@[simp] def b0 (β : BetaVector) : ℂ := β.1
+@[simp] def bx (β : BetaVector) : ℂ := β.2.1
+@[simp] def bY (β : BetaVector) : ℂ := β.2.2.1
+@[simp] def bz (β : BetaVector) : ℂ := β.2.2.2
+
+end BetaVector
 
 /-- Mostly-minus pairing `β·P`. -/
 def betaPair (β : BetaVector) (P : FourMomentum) : ℂ :=
@@ -156,20 +163,20 @@ def betaPair (β : BetaVector) (P : FourMomentum) : ℂ :=
 
 /-- The beta vector is soldered by the same Pauli map. -/
 def pauliBeta (β : BetaVector) : M2C :=
-  pauliMomentum ⟨β.b0, β.bx, β.bY, β.bz⟩
+  pauliMomentum (β.b0, (β.bx, (β.bY, β.bz)))
 
 /-- `det(β_μ σ^μ)=β²`, the thermal/Souriau norm. -/
 theorem det_pauliBeta (β : BetaVector) :
     (pauliBeta β).det = β.b0 ^ 2 - β.bx ^ 2 - β.bY ^ 2 - β.bz ^ 2 := by
   simpa [pauliBeta, minkowskiSq] using
-    det_pauliMomentum ⟨β.b0, β.bx, β.bY, β.bz⟩
+    det_pauliMomentum (β.b0, (β.bx, (β.bY, β.bz)))
 
 /-- If `β^μ = γ/T (1,vx,vy,vz)` and `γ²(1-v²)=1`, then `β²=1/T²`. -/
 theorem souriau_beta_norm
     (T γ vx vy vz : ℂ)
     (hγ : γ ^ 2 * (1 - vx ^ 2 - vy ^ 2 - vz ^ 2) = 1) :
     let β : BetaVector :=
-      ⟨γ / T, γ * vx / T, γ * vy / T, γ * vz / T⟩
+      (γ / T, (γ * vx / T, (γ * vy / T, γ * vz / T)))
     β.b0 ^ 2 - β.bx ^ 2 - β.bY ^ 2 - β.bz ^ 2 = (T ^ 2)⁻¹ := by
   dsimp
   calc

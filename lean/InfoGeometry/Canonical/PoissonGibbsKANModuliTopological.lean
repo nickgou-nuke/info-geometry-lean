@@ -113,4 +113,69 @@ theorem exists_global_minimum_expertPoissonFreeEnergyOnModuli {K : ℕ}
   intro q'
   exact hmin (Set.mem_univ q')
 
+theorem expertPoissonFreeEnergyOnModuli_superlevel_isClosed {K : ℕ}
+    (M : PoissonModel (Data := Data) (Theta := Theta))
+    (hmean : ∀ i, Continuous (fun θ => M.mean i θ))
+    (ε : NonzeroTemperature) (c : ℝ) :
+    IsClosed {q : KANModuliSpace Theta K |
+      c ≤ expertPoissonFreeEnergyOnModuli (K := K) M ε q} := by
+  change IsClosed
+    ((expertPoissonFreeEnergyOnModuli (K := K) M ε) ⁻¹' Set.Ici c)
+  exact isClosed_Ici.preimage
+    (continuous_expertPoissonFreeEnergyOnModuli (K := K) M hmean ε)
+
+theorem expertPoissonFreeEnergyOnModuli_levelSet_isClosed {K : ℕ}
+    (M : PoissonModel (Data := Data) (Theta := Theta))
+    (hmean : ∀ i, Continuous (fun θ => M.mean i θ))
+    (ε : NonzeroTemperature) (c : ℝ) :
+    IsClosed {q : KANModuliSpace Theta K |
+      expertPoissonFreeEnergyOnModuli (K := K) M ε q = c} := by
+  change IsClosed
+    ((expertPoissonFreeEnergyOnModuli (K := K) M ε) ⁻¹' ({c} : Set ℝ))
+  exact isClosed_singleton.preimage
+    (continuous_expertPoissonFreeEnergyOnModuli (K := K) M hmean ε)
+
+theorem expertPoissonFreeEnergyOnModuli_sublevel_isCompact {K : ℕ}
+    [CompactSpace Theta]
+    (M : PoissonModel (Data := Data) (Theta := Theta))
+    (hmean : ∀ i, Continuous (fun θ : Theta => M.mean i θ))
+    (ε : NonzeroTemperature) (c : ℝ) :
+    IsCompact {q : KANModuliSpace Theta K |
+      expertPoissonFreeEnergyOnModuli (K := K) M ε q ≤ c} := by
+  exact IsClosed.isCompact
+    (expertPoissonFreeEnergyOnModuli_sublevel_isClosed (K := K) M hmean ε c)
+
+theorem expertPoissonFreeEnergyOnModuli_superlevel_isCompact {K : ℕ}
+    [CompactSpace Theta]
+    (M : PoissonModel (Data := Data) (Theta := Theta))
+    (hmean : ∀ i, Continuous (fun θ : Theta => M.mean i θ))
+    (ε : NonzeroTemperature) (c : ℝ) :
+    IsCompact {q : KANModuliSpace Theta K |
+      c ≤ expertPoissonFreeEnergyOnModuli (K := K) M ε q} := by
+  exact IsClosed.isCompact
+    (expertPoissonFreeEnergyOnModuli_superlevel_isClosed (K := K) M hmean ε c)
+
+theorem expertPoissonFreeEnergyOnModuli_levelSet_isCompact {K : ℕ}
+    [CompactSpace Theta]
+    (M : PoissonModel (Data := Data) (Theta := Theta))
+    (hmean : ∀ i, Continuous (fun θ : Theta => M.mean i θ))
+    (ε : NonzeroTemperature) (c : ℝ) :
+    IsCompact {q : KANModuliSpace Theta K |
+      expertPoissonFreeEnergyOnModuli (K := K) M ε q = c} := by
+  exact isCompact_levelSet_on_kanModuli
+    (expertPoissonFreeEnergyOnModuli (K := K) M ε)
+    (continuous_expertPoissonFreeEnergyOnModuli (K := K) M hmean ε) c
+
+theorem exists_global_maximum_expertPoissonFreeEnergyOnModuli {K : ℕ}
+    [CompactSpace Theta] [Nonempty Theta]
+    (M : PoissonModel (Data := Data) (Theta := Theta))
+    (hmean : ∀ i, Continuous (fun θ => M.mean i θ))
+    (ε : NonzeroTemperature) :
+    ∃ q : KANModuliSpace Theta K, ∀ q',
+      expertPoissonFreeEnergyOnModuli (K := K) M ε q' ≤
+        expertPoissonFreeEnergyOnModuli (K := K) M ε q := by
+  exact exists_global_maximum_on_kanModuli
+    (expertPoissonFreeEnergyOnModuli (K := K) M ε)
+    (continuous_expertPoissonFreeEnergyOnModuli (K := K) M hmean ε)
+
 end InfoGeometry.Canonical.KANModuli

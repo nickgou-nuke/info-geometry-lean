@@ -5,10 +5,10 @@ import InfoGeometry.Physics.IsospinMirrorDynamics
 namespace InfoGeometry.Physics
 
 /-- The Sr-75 Nucleus (Z=38, N=37) -/
-def Sr75 : Nucleus := { Z := 38, N := 37 }
+def Sr75 : Nucleus := (38, 37)
 
 /-- The Rb-75 Nucleus (Z=37, N=38) -/
-def Rb75 : Nucleus := { Z := 37, N := 38 }
+def Rb75 : Nucleus := (37, 38)
 
 /-- The A=75 Mirror Pair (Sr-75 and Rb-75). -/
 def A75Pair : MirrorPair where

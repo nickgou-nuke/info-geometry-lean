@@ -9,34 +9,11 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.MobiusKitaevTopologicalIndexBridge
 
-/-!
-# Unified Möbius Parity & Kitaev Pfaffian Topological Index Bridge
-
-This module formalizes the exact mathematical unification between the **arithmetic Möbius parity $\mu(n)$**
-and the **Kitaev superconductor chain $Z_2$ topological invariant $\nu(\text{Pf}(A_4))$** under a single,
-universal ternary topological index function `topologicalIndex` taking values in `{-1, 0, 1}`.
-
-Ternary Topological Mapping:
-1. **+1 (Trivial Sector / Even Parity)**:
-   - Kitaev chain strong trivial phase $\operatorname{Pf}(A_4) > 0 \implies \nu = +1$.
-   - Square-free integer with even number of prime factors $\mu(n) = +1 \implies \nu = +1$.
-2. **-1 (Nontrivial Sector / Odd Parity)**:
-   - Kitaev chain topological superconducting phase $\operatorname{Pf}(A_4) < 0 \implies \nu = -1$.
-   - Square-free integer with odd number of prime factors $\mu(n) = -1 \implies \nu = -1$.
-3. **0 (Phase Boundary / Pauli Exclusion)**:
-   - Kitaev sweet-spot Majorana zero mode boundary $\operatorname{Pf}(A_4) = 0 \implies \nu = 0$.
-   - Non-squarefree integer violating Pauli exclusion $\mu(n) = 0 \implies \nu = 0$.
--/
-
 /-- Real-valued Möbius Parity function μ(n) cast to ℝ. -/
 def realMoebiusParity (n : ℕ) : ℝ :=
   (moebiusParity n : ℝ)
 
-/--
-**Theorem 1**: Topological Index Idempotency on Möbius Parity.
-Since μ(n) ∈ {-1, 0, 1}, passing μ(n) through `topologicalIndex` returns μ(n) identically:
-`topologicalIndex (realMoebiusParity n) = realMoebiusParity n`.
--/
+/-- The topological index readback agrees with the real-valued Möbius parity. -/
 theorem topologicalIndex_realMoebiusParity (n : ℕ) :
     topologicalIndex (realMoebiusParity n) = realMoebiusParity n := by
   dsimp [realMoebiusParity, moebiusParity]
@@ -53,14 +30,7 @@ theorem topologicalIndex_realMoebiusParity (n : ℕ) :
     dsimp [topologicalIndex]
     norm_num
 
-/--
-**Theorem 2**: Master Topological Index Unification Theorem.
-Connects the Kitaev Majorana Pfaffian Z₂ invariant ν(Pf(A₄)) and the arithmetic Möbius parity μ(n)
-under the same ternary topological readout function `topologicalIndex`:
-1. Even Primon Parity / Trivial Kitaev Phase ↦ +1
-2. Odd Primon Parity / Nontrivial Topological Phase ↦ -1
-3. Phase Transition Boundary / Non-Squarefree Pauli Exclusion ↦ 0
--/
+/-- Zero-locus package combining the Kitaev sweet spot with non-squarefree Möbius vanishing. -/
 theorem master_topological_index_unification
     (t : ℝ) (n : ℕ) (hn_sq : ¬ Squarefree n) :
     (topologicalIndex (pfaffian4 (kitaevMajoranaMatrix4 0 t t)) = 0) ∧

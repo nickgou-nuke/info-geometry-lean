@@ -15,10 +15,8 @@ open InfoGeometry.Physics.ChiralPoincareSouriauBridge
 
 /-- Shift the energy coordinate of a Pauli-soldered four-momentum. -/
 def chemicalShiftMomentum (P : FourMomentum) (δμ : ℂ) : FourMomentum where
-  E := P.E - δμ
-  px := P.px
-  py := P.py
-  pz := P.pz
+  fst := P.E - δμ
+  snd := P.2
 
 /-- The energy-coordinate shift changes the determinant/Minkowski quadratic form
 by an explicit quadratic deformation term. -/
@@ -27,10 +25,9 @@ theorem det_pauliMomentum_chemicalShiftMomentum
     (pauliMomentum (chemicalShiftMomentum P δμ)).det =
       minkowskiSq P + (δμ ^ 2 - 2 * δμ * P.E) := by
   rw [det_pauliMomentum]
-  cases P with
-  | mk E px py pz =>
-    simp [chemicalShiftMomentum, minkowskiSq]
-    ring
+  rcases P with ⟨E, px, py, pz⟩
+  simp [chemicalShiftMomentum, minkowskiSq]
+  ring
 
 end ChemicalPotentialMetricBridge
 

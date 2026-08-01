@@ -10,8 +10,14 @@ It governs the phase acquired under rotations (single-valuedness condition).
 We represent `S` as a rational number to classify fields into
 bosons, fermions, and parafermions.
 -/
-structure ConformalSpin where
-  S : ℚ
+abbrev ConformalSpin := ℚ
+
+namespace ConformalSpin
+
+/-- Compatibility accessor for the native rational carrier. -/
+abbrev S (spin : ConformalSpin) : ℚ := spin
+
+end ConformalSpin
 
 /--
 A field is bosonic if its conformal spin is an integer.

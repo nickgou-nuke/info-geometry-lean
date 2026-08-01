@@ -4,12 +4,17 @@ noncomputable section
 
 namespace InfoGeometry.Physics.LorentzBoostMinkowski
 
-/-- Four-vector with components `(t,x,y,z)`. -/
-structure FourVector where
-  t : ℝ
-  x : ℝ
-  y : ℝ
-  z : ℝ
+/-- Four-vector with components `(t,x,y,z)`, represented natively as a product. -/
+abbrev FourVector := ℝ × (ℝ × (ℝ × ℝ))
+
+namespace FourVector
+
+@[simp] def t (p : FourVector) : ℝ := p.1
+@[simp] def x (p : FourVector) : ℝ := p.2.1
+@[simp] def y (p : FourVector) : ℝ := p.2.2.1
+@[simp] def z (p : FourVector) : ℝ := p.2.2.2
+
+end FourVector
 
 /-- Minkowski bilinear form with signature `(+---)`. -/
 def minkowskiPair (a b : FourVector) : ℝ :=
@@ -20,10 +25,10 @@ def minkowskiSq (p : FourVector) : ℝ := minkowskiPair p p
 
 /-- Standard boost in the x-direction with rapidity `φ`. -/
 def boostX (φ : ℝ) (p : FourVector) : FourVector where
-  t := Real.cosh φ * p.t + Real.sinh φ * p.x
-  x := Real.sinh φ * p.t + Real.cosh φ * p.x
-  y := p.y
-  z := p.z
+  fst := Real.cosh φ * p.t + Real.sinh φ * p.x
+  snd :=
+    (Real.sinh φ * p.t + Real.cosh φ * p.x,
+      (p.y, p.z))
 
 @[simp] theorem minkowskiPair_symmetric (a b : FourVector) :
     minkowskiPair a b = minkowskiPair b a := by

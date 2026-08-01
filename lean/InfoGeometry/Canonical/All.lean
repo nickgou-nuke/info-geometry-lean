@@ -3,6 +3,7 @@ import InfoGeometry.Canonical.ChiralConeOctonionicBridge
 import InfoGeometry.Canonical.OctonionicCuntzIsomorphism
 import InfoGeometry.Canonical.PauliWorldClockSynchronicity
 import InfoGeometry.Canonical.PauliBostConnesModularFlow
+import InfoGeometry.Canonical.PauliArithmeticModularFlowBridge
 import InfoGeometry.Canonical.RiemannZetaPhaseTransition
 import InfoGeometry.Canonical.BostConnesZetaPhase
 import InfoGeometry.Canonical.ChiralConeOctonionicTopological

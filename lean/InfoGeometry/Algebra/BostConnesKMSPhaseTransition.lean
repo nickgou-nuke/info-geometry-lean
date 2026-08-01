@@ -44,43 +44,31 @@ theorem projection_mode_idempotent {R : Type*} [CommRing R] (g : BostConnesSyste
     _ = g.x n * 1 * g.x_star n := by rw [g.x_star_x n]
     _ = g.x n * g.x_star n := by ring
 
-/-- **Definition**: Phase Transition Characterization.
-    The Bost-Connes system exhibits a Phase Transition at critical temperature β_c = 1:
-    - High Temperature Phase (0 < β ≤ 1): Unique KMS_β state (Symmetry Restored).
-    - Low Temperature Phase (β > 1): Spontaneous Symmetry Breaking with Galois Orbit Gal(ℚ^ab/ℚ) ≅ Z_hat^*. -/
+/-!
+The phase predicates below only record the temperature split used by the file.
+They do not by themselves prove uniqueness of KMS states or any Galois-orbit
+classification.
+-/
 def isHighTemperaturePhase (β : ℝ) : Prop := 0 < β ∧ β ≤ 1
 def isLowTemperaturePhase (β : ℝ) : Prop := 1 < β
 
-/-- **Theorem**: Disjoint Phase Stratification.
-    No inverse temperature β can be simultaneously in the high-temperature (unique KMS)
-    and low-temperature (spontaneous symmetry broken) phases. -/
+/-- The two temperature predicates are disjoint. -/
 theorem phase_stratification_disjoint (β : ℝ) :
     ¬ (isHighTemperaturePhase β ∧ isLowTemperaturePhase β) := by
   dsimp [isHighTemperaturePhase, isLowTemperaturePhase]
   rintro ⟨⟨_, h_le⟩, h_gt⟩
   linarith
 
-/-- **Theorem**: Critical Point Phase Boundary (β_c = 1).
-    The critical point β_c = 1 is the supremum boundary of the high-temperature phase
-    and infimum boundary of the low-temperature phase. -/
+/-- The low-temperature predicate implies `1 < β`. -/
 theorem critical_temperature_boundary (β : ℝ) (h_low : isLowTemperaturePhase β) :
     1 < β := h_low
 
-/-- **Theorem**: KMS Thermal State Expectation on Range Projection.
-    For a KMS_β thermal state φ_β on the Bost-Connes C*-algebra, the expectation value
-    of the mode projection p_n = x_n x_n^* is precisely the Boltzmann weight n^(-β):
-    φ_β(x_n x_n^*) = n^(-β) φ_β(x_n^* x_n) = n^(-β). -/
+/-- The thermal weight is normalized by the unit factor. -/
 theorem kms_projection_expectation (β : ℝ) (n : ℕ+) :
     thermalKMSWeight β n * 1 = thermalKMSWeight β n := by
   ring
 
-/-- **Theorem**: Master Bost-Connes KMS Phase Transition Synthesis.
-    Unifies:
-    1. Isometry relations x_n^* x_n = 1 and periodic group algebra relations e(r+s) = e(r)e(s).
-    2. Range projection idempotency p_n^2 = p_n (where p_n = x_n x_n^*).
-    3. KMS thermal weight multiplicativity w_β(mn) = w_β(m) w_β(n).
-    4. Disjoint phase stratification between High-T (0 < β ≤ 1) and Low-T (β > 1).
-    5. Critical phase boundary at β_c = 1. -/
+/-- The phase package records the proved arithmetic relations and the temperature split. -/
 theorem master_bost_connes_kms_synthesis
     {R : Type*} [CommRing R] (g : BostConnesSystem R) (m n : ℕ+) (β : ℝ) (h_low : isLowTemperaturePhase β) :
     (g.x_star n * g.x n = 1) ∧

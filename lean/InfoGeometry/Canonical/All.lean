@@ -2041,6 +2041,7 @@ import InfoGeometry.Canonical.YangianLevelOneBilocalGenerator
 import InfoGeometry.Canonical.PositiveGrassmannianBCFWCells
 import InfoGeometry.Canonical.CanonicalFormBoundaryResidue
 import InfoGeometry.Canonical.PositiveGrassmannianAmplituhedron
+import InfoGeometry.Canonical.SupertwistorThreeCliffordBridge
 
 namespace InfoGeometry
 

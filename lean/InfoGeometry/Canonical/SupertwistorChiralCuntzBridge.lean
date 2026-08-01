@@ -48,11 +48,10 @@ theorem master_supertwistor_chiral_cuntz_synthesis
     (nullHelicity (SupertwistorVector.mk (0 : V) 0 0)) ∧
     (d.ePlus x + d.eMinus x = x) ∧
     (d.ePlus (d.ePlus x) = d.ePlus x) ∧
-    (d.eMinus (d.eMinus x) = d.eMinus x) := ⟨
-  supertwistor_zero_null_helicity,
-  d.sheet_completeness x,
-  d.ePlus_idempotent x,
-  d.eMinus_idempotent x
-⟩
+    (d.eMinus (d.eMinus x) = d.eMinus x) := by
+  exact ⟨supertwistor_zero_null_helicity,
+    d.sheet_completeness x,
+    d.ePlus_idempotent x,
+    d.eMinus_idempotent x⟩
 
 end InfoGeometry.Canonical.SupertwistorChiralCuntzBridge

@@ -94,14 +94,13 @@ theorem master_toeplitz_cuntz_fusion_braid_tensor_synthesis (b1 b2 : A)
     have h_c := braidedCubicSupercharge_cube D
     rw [fullTwist_val D] at h_c
     exact h_c
-  exact ⟨
-    fullTwist_comm_b1 D,
-    fullTwist_comm_b2 D,
-    h_cube,
-    braidedCubicSupercharge_star_mul_self D,
-    braidedCubicSupercharge_mul_star D,
-    braidedCubicSupercharge_mul_defect D,
-    defect_mul_braidedCubicSupercharge D
-  ⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact fullTwist_comm_b1 D
+  · exact fullTwist_comm_b2 D
+  · exact h_cube
+  · exact braidedCubicSupercharge_star_mul_self D
+  · exact braidedCubicSupercharge_mul_star D
+  · exact braidedCubicSupercharge_mul_defect D
+  · exact defect_mul_braidedCubicSupercharge D
 
 end InfoGeometry.Canonical.ToeplitzCuntzThreeFusionBraidTensorBridge

@@ -65,7 +65,7 @@ analytic Fredholm/Euler/Dirichlet identity here.
 theorem master_euler_product_eq_riemannZeta
     {β : ℂ} (hRe : 1 < β.re) :
     InfoGeometry.Arithmetic.PrimeSuperalgebra.infiniteComplexBosonicEulerProduct β =
-      riemannZeta β :=
-  InfoGeometry.Arithmetic.PrimeSuperalgebra.infiniteComplexBosonicEulerProduct_eq_riemannZeta hRe
+      riemannZeta β := by
+  exact InfoGeometry.Arithmetic.PrimeSuperalgebra.infiniteComplexBosonicEulerProduct_eq_riemannZeta hRe
 
 end InfoGeometry.Arithmetic.UnifiedCapstone

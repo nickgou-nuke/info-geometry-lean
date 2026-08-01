@@ -113,11 +113,10 @@ theorem grand_clifford_tensor_tower_spectral_dirac_master_duality
     (cliffordStageDim n < cliffordStageDim m) ∧
     (LinearMap.ker f = ⊥) ∧
     (f v ≠ 0) ∧
-    (f v ∈ diracKernel DW) := ⟨
-  cliffordStageDim_strictMono hnm,
-  clifford_stage_inclusion_ker_bot f h_inj,
-  (clifford_zero_mode_tensor_data DV DW f h_inj h_comm v hv_ker hv_ne).1,
-  (clifford_zero_mode_tensor_data DV DW f h_inj h_comm v hv_ker hv_ne).2
-⟩
+    (f v ∈ diracKernel DW) := by
+  refine ⟨cliffordStageDim_strictMono hnm,
+    clifford_stage_inclusion_ker_bot f h_inj, ?_, ?_⟩
+  · exact (clifford_zero_mode_tensor_data DV DW f h_inj h_comm v hv_ker hv_ne).1
+  · exact (clifford_zero_mode_tensor_data DV DW f h_inj h_comm v hv_ker hv_ne).2
 
 end InfoGeometry.Canonical.CliffordTensorTowerSpectralDiracBridge

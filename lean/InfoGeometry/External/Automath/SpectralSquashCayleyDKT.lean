@@ -180,8 +180,10 @@ theorem spectral_squash_cayley_dkt_synthesis (lam : ℝ) :
     cayleyStage lam * dktAdjoint (cayleyStage lam) = 1 ∧
     (∀ X : M2C, dktAdjoint (dktAdjoint X) = X) ∧
     (∀ X Y : M2C, dktAdjoint (X * Y) = dktAdjoint Y * dktAdjoint X) := by
-  exact ⟨eta_eq_projection_difference, eta_sq, squashCoord_bounded lam, cayleyStage_unitary lam,
-    dktAdjoint_stageOperator lam, dktAdjoint_cayleyStage_eq_star lam, cayleyStage_dkt_unitary lam,
-    dktAdjoint_involutive, dktAdjoint_mul⟩
+  refine ⟨eta_eq_projection_difference, eta_sq, squashCoord_bounded lam,
+    cayleyStage_unitary lam, dktAdjoint_stageOperator lam,
+    dktAdjoint_cayleyStage_eq_star lam, cayleyStage_dkt_unitary lam, ?_, ?_⟩
+  · exact dktAdjoint_involutive
+  · exact dktAdjoint_mul
 
 end SpectralSquashCayleyDKT

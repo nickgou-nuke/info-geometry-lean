@@ -117,9 +117,9 @@ theorem master_physical_ghost_zero_cochain_sector_synthesis
       Qzero.comp Qnegone = 0)) ∧
     (Submodule.Quotient.mk (p := LinearMap.range (physicalGhostZeroMap q g_op h_comm (-1 : ℤ)))
       (physicalGhostZeroMap q g_op h_comm (-1 : ℤ) chi) =
-      (Submodule.Quotient.mk 0 : physicalGhostZeroCohomologyModule q g_op hq2 h_comm)) := ⟨
-  physical_ghost_zero_composition_zero q g_op hq2 h_comm,
-  physical_ghost_zero_exact_class_zero q g_op hq2 h_comm chi
-⟩
+      (Submodule.Quotient.mk 0 : physicalGhostZeroCohomologyModule q g_op hq2 h_comm)) := by
+  constructor
+  · exact physical_ghost_zero_composition_zero q g_op hq2 h_comm
+  · exact physical_ghost_zero_exact_class_zero q g_op hq2 h_comm chi
 
 end InfoGeometry.Canonical.PhysicalGhostZeroCochainSectorBridge

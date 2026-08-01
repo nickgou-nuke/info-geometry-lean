@@ -33,10 +33,11 @@ theorem master_moebius_andreev_commutant_synthesis
     (u v : ℂ) (h_andreev : u^2 + v^2 = 1) :
     (crossRatio z1 z1 z2 z3 = 0) ∧
     (crossRatio z2 z1 z2 z3 = 1) ∧
-    (u^2 + v^2 = 1) := ⟨
-  crossRatio_eval_z1 z1 z2 z3 h13 h21,
-  crossRatio_eval_z2 z1 z2 z3 h23 h21,
-  h_andreev
-⟩
+    (u^2 + v^2 = 1) := by
+  constructor
+  · exact crossRatio_eval_z1 z1 z2 z3 h13 h21
+  constructor
+  · exact crossRatio_eval_z2 z1 z2 z3 h23 h21
+  · exact h_andreev
 
 end InfoGeometry.Canonical

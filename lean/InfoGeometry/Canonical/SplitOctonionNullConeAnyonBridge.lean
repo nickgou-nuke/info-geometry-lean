@@ -46,9 +46,9 @@ theorem master_split_octonion_null_cone_anyon_synthesis
     (a b : ℝ) (v w : Fin 3 → ℝ)
     (h_null : isTracelessNull a b v w) :
     (a^2 + (v 0 * w 0 + v 1 * w 1 + v 2 * w 2) = 0) ∧
-    (fibonacciGoldenRatio^2 = fibonacciGoldenRatio + 1) := ⟨
-  traceless_null_zorn_equation a b v w h_null,
-  fibonacci_golden_ratio_sq
-⟩
+    (fibonacciGoldenRatio^2 = fibonacciGoldenRatio + 1) := by
+  constructor
+  · exact traceless_null_zorn_equation a b v w h_null
+  · exact fibonacci_golden_ratio_sq
 
 end InfoGeometry.Canonical

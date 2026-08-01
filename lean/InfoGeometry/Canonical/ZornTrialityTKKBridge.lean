@@ -120,6 +120,17 @@ def grade (r : LaneRouting) : TKKGrade := sectorGrade r.sector
 
 end LaneRouting
 
+theorem canonical_lane_grade_synthesis :
+    laneGrade SplitOctonionLane.diagonalProjector = z0 ∧
+    laneGrade SplitOctonionLane.upperNilpotent = p1 ∧
+    laneGrade SplitOctonionLane.lowerNilpotent = m1 ∧
+    laneGrade SplitOctonionLane.associatorWitness = p2 ∧
+    laneMirror (laneMirror SplitOctonionLane.upperNilpotent) =
+      SplitOctonionLane.upperNilpotent := by
+  exact ⟨laneGrade_diagonalProjector, laneGrade_upperNilpotent,
+    laneGrade_lowerNilpotent, laneGrade_associatorWitness,
+    laneMirror_involutive _⟩
+
 /-- A canonical routing record for the four named generators. -/
 def canonicalRouting : SplitOctonionLane → LaneRouting := id
 

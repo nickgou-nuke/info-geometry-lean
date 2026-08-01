@@ -67,7 +67,7 @@ variable [TopologicalSpace R] [ContinuousAdd R] [ContinuousMul R]
 
 def hyperbolicInvolutionLocus : Set R := {u | u * u = 1}
 
-theorem hyperbolicInvolutionLocus_isClosed [T1Space R] :
+theorem generic_hyperbolicInvolutionLocus_isClosed [T1Space R] :
     IsClosed (hyperbolicInvolutionLocus (R := R)) := by
   change IsClosed ((fun u : R => u * u) ⁻¹' ({1} : Set R))
   exact isClosed_singleton.preimage (continuous_id.mul continuous_id)

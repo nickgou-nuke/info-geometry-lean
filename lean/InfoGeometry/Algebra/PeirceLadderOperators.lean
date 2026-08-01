@@ -107,18 +107,40 @@ theorem alpha_core_cross_terms_vanish
 /-! ## 4. Color triplet construction -/
 
 /-- The 6 quark ladder operators as a structured packet. -/
-structure QuarkLadderPacket where
-  alpha : Fin 3 → CliffordAlgebra q11
-  alphaDag : Fin 3 → CliffordAlgebra q11
-  beta : Fin 3 → CliffordAlgebra q11
-  betaDag : Fin 3 → CliffordAlgebra q11
+def QuarkLadderPacket :=
+  (Fin 3 → CliffordAlgebra q11) ×
+    ((Fin 3 → CliffordAlgebra q11) ×
+      ((Fin 3 → CliffordAlgebra q11) × (Fin 3 → CliffordAlgebra q11)))
+
+namespace QuarkLadderPacket
+
+def alpha (packet : QuarkLadderPacket) : Fin 3 → CliffordAlgebra q11 := packet.1
+
+def alphaDag (packet : QuarkLadderPacket) : Fin 3 → CliffordAlgebra q11 := packet.2.1
+
+def beta (packet : QuarkLadderPacket) : Fin 3 → CliffordAlgebra q11 := packet.2.2.1
+
+def betaDag (packet : QuarkLadderPacket) : Fin 3 → CliffordAlgebra q11 := packet.2.2.2
+
+end QuarkLadderPacket
 
 /-- The lepton ladder operator (uses the idempotent ePlus direction). -/
-structure LeptonLadderPacket where
-  nu : CliffordAlgebra q11
-  nuDag : CliffordAlgebra q11
-  electron : CliffordAlgebra q11
-  electronDag : CliffordAlgebra q11
+def LeptonLadderPacket :=
+  CliffordAlgebra q11 ×
+    (CliffordAlgebra q11 ×
+      (CliffordAlgebra q11 × CliffordAlgebra q11))
+
+namespace LeptonLadderPacket
+
+def nu (packet : LeptonLadderPacket) : CliffordAlgebra q11 := packet.1
+
+def nuDag (packet : LeptonLadderPacket) : CliffordAlgebra q11 := packet.2.1
+
+def electron (packet : LeptonLadderPacket) : CliffordAlgebra q11 := packet.2.2.1
+
+def electronDag (packet : LeptonLadderPacket) : CliffordAlgebra q11 := packet.2.2.2
+
+end LeptonLadderPacket
 
 /-! ## 5. Arithmetic count readout -/
 

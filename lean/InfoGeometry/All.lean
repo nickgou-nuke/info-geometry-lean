@@ -4598,6 +4598,8 @@ import InfoGeometry.Canonical.MajoranaConformalSphereCommutantBridge
 import InfoGeometry.Canonical.ArnoldCohenRelation
 import InfoGeometry.Canonical.KANModuliTopology
 import InfoGeometry.Canonical.AttentionExpertModuliTopological
+import InfoGeometry.Canonical.ChiralConeOctonionicBridge
+import InfoGeometry.Canonical.ChiralConeOctonionicTopological
 import InfoGeometry.Inference.PoissonSinkhornTCSTopological
 import InfoGeometry.Inference.PoissonBregmanTopological
 import InfoGeometry.Inference.PoissonGibbsTopological

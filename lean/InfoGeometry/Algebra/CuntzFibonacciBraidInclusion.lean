@@ -177,9 +177,17 @@ theorem fibonacciBraid_cuntz_nonabelian
 /-! ## Itakura--Saito socket and conjugation invariance -/
 
 /-- Socket for explicit Itakura--Saito data on the Cuntz-algebra image. -/
-structure ItakuraCuntzSocket (n : ℕ) where
-  cuntzTrace : CuntzAlg n → ℝ
-  invImage : Matrix (Fin n) (Fin n) ℂ → CuntzAlg n
+def ItakuraCuntzSocket (n : ℕ) :=
+  (CuntzAlg n → ℝ) × (Matrix (Fin n) (Fin n) ℂ → CuntzAlg n)
+
+namespace ItakuraCuntzSocket
+
+def cuntzTrace (socket : ItakuraCuntzSocket n) : CuntzAlg n → ℝ := socket.1
+
+def invImage (socket : ItakuraCuntzSocket n) :
+    Matrix (Fin n) (Fin n) ℂ → CuntzAlg n := socket.2
+
+end ItakuraCuntzSocket
 
 /-- Socket-based Itakura--Saito divergence readout. -/
 noncomputable def divergenceSocket

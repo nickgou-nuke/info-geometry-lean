@@ -31,7 +31,7 @@ def bost_connes_zeta : BostConnesPartitionData ℂ :=
   fun _ => riemannZeta (2 : ℂ)
 
 /-- Trivial readback of the supplied comparison premise. -/
-theorem zeta_volume_exact_comparison (β : ℂ) (L : ℕ)
+theorem zeta_volume_comparison_readback (β : ℂ) (L : ℕ)
     (Vol : AmplituhedronVolumeData ℂ)
     (hComparison : bost_connes_zeta β = Vol L) :
     bost_connes_zeta β = Vol L :=
@@ -103,7 +103,7 @@ def bost_connes_amplituhedron_synthesis
   comparison β L := hComparison β L
 
 /-- Read back the family equality using the explicit comparison. -/
-theorem bost_connes_comparison_verified (Vol : AmplituhedronVolumeData ℂ)
+theorem bost_connes_comparison_readback (Vol : AmplituhedronVolumeData ℂ)
     (hComparison : ∀ (β : ℂ) (L : ℕ), bost_connes_zeta β = Vol L) :
     ∀ (β : ℂ) (L : ℕ),
       (bost_connes_amplituhedron_synthesis Vol hComparison).Z β =

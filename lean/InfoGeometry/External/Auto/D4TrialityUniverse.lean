@@ -93,14 +93,21 @@ theorem triality_order_3 (r : TrialityRep) :
   cases r <;> rfl
 
 /-- A particle carries a triality label, four Cartan charges, and a mass square. -/
-structure Particle where
-  rep : TrialityRep
-  charge : Fin 4 → ℂ
-  mass_sq : ℂ
+abbrev Particle := TrialityRep × (Fin 4 → ℂ) × ℂ
+
+namespace Particle
+
+def rep (p : Particle) : TrialityRep := p.1
+def charge (p : Particle) : Fin 4 → ℂ := p.2.1
+def mass_sq (p : Particle) : ℂ := p.2.2
+def withRep (p : Particle) (r : TrialityRep) : Particle :=
+  (r, charge p, mass_sq p)
+
+end Particle
 
 /-- Triality partners have the same mass in the symmetric model. -/
 theorem triality_mass_degeneracy (p : Particle) :
-    let p' := { p with rep := triality_map p.rep }
+    let p' := Particle.withRep p (triality_map p.rep)
     p'.mass_sq = p.mass_sq := by
   rfl
 
@@ -138,16 +145,19 @@ private theorem eps_ne_neg_eps {ε : ℂ} (hε : ε ≠ 0) : ε ≠ -ε := by
 
 /-- In the broken model, every triality step changes the perturbed mass. -/
 theorem triality_breaking_splitting (p : Particle) (hε : ε ≠ 0) :
-    broken_mass_sq p ε ≠ broken_mass_sq { p with rep := triality_map p.rep } ε := by
-  cases p with
-  | mk rep charge mass_sq =>
-      cases rep
-      · simpa [broken_mass_sq, brokenShift, triality_map] using
-          add_ne_add_of_ne (a := mass_sq) (eps_ne_neg_eps hε)
-      · simpa [broken_mass_sq, brokenShift, triality_map] using
-          add_ne_add_of_ne (a := mass_sq) (neg_ne_zero.mpr hε)
-      · simpa [broken_mass_sq, brokenShift, triality_map] using
-          add_ne_add_of_ne (a := mass_sq) hε.symm
+    broken_mass_sq p ε ≠
+      broken_mass_sq (Particle.withRep p (triality_map p.rep)) ε := by
+  rcases p with ⟨rep, charge, mass_sq⟩
+  cases rep
+  · simpa [broken_mass_sq, brokenShift, triality_map, Particle.withRep,
+      Particle.rep, Particle.charge, Particle.mass_sq] using
+        add_ne_add_of_ne (a := mass_sq) (eps_ne_neg_eps hε)
+  · simpa [broken_mass_sq, brokenShift, triality_map, Particle.withRep,
+      Particle.rep, Particle.charge, Particle.mass_sq] using
+        add_ne_add_of_ne (a := mass_sq) (neg_ne_zero.mpr hε)
+  · simpa [broken_mass_sq, brokenShift, triality_map, Particle.withRep,
+      Particle.rep, Particle.charge, Particle.mass_sq] using
+        add_ne_add_of_ne (a := mass_sq) hε.symm
 
 -- ============================================================================
 -- The Algebra of Observables

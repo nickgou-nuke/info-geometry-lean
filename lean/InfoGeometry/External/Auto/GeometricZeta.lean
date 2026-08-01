@@ -28,14 +28,18 @@ def geometricReciprocalSingularity (Z : ℂ → ℂ) (s : ℂ) : Prop :=
   Z s = 0
 
 /-- Minimal split-signature paravector coordinate model (Hestenes/Krein spirit). -/
-structure SplitParavector where
-  scalar : ℝ
-  bivector : ℝ
-  deriving DecidableEq
+abbrev SplitParavector := ℝ × ℝ
+
+namespace SplitParavector
+
+def scalar (v : SplitParavector) : ℝ := v.1
+def bivector (v : SplitParavector) : ℝ := v.2
+
+end SplitParavector
 
 /-- Split determinant/paravector norm. -/
 def SplitParavector.det (v : SplitParavector) : ℝ :=
-  v.scalar ^ 2 - v.bivector ^ 2
+  SplitParavector.scalar v ^ 2 - SplitParavector.bivector v ^ 2
 
 /-- Parabolic boundary of the split model. -/
 def SplitParavector.parabolic (v : SplitParavector) : Prop :=
@@ -43,7 +47,7 @@ def SplitParavector.parabolic (v : SplitParavector) : Prop :=
 
 /-- Split paravector temperature from complex inverse-temperature coordinates. -/
 def paravector_temperature (σ γ : ℝ) : SplitParavector :=
-  { scalar := σ, bivector := γ }
+  (σ, γ)
 
 /-- Backward-compatible camel-case alias used elsewhere. -/
 def paravectorTemperature (σ γ : ℝ) : SplitParavector :=
@@ -70,7 +74,8 @@ theorem geometric_paravector_det (σ γ : ℝ) :
 /-- Parabolic criterion in coordinates. -/
 theorem geometric_lightcone_iff_det_zero (σ γ : ℝ) :
     (paravector_temperature σ γ).parabolic ↔ σ ^ 2 = γ ^ 2 := by
-  simp [SplitParavector.parabolic, SplitParavector.det, paravector_temperature]
+  simp [SplitParavector.parabolic, SplitParavector.det,
+    SplitParavector.scalar, SplitParavector.bivector, paravector_temperature]
   constructor <;> intro h <;> nlinarith
 
 /-- Layer-12 bridge schema: graded-index poles sit on parabolic boundary. -/

@@ -307,19 +307,23 @@ theorem souriau_stage_boson_graded_cancellation (n : ℕ) (v : SouriauFockStage 
 /-- Split-signature paravector for the geometric/lightcone bookkeeping.
     Determinant is `σ² - γ²`; lightcone is `det = 0`.
 -/
-structure SplitParavector where
-  scalar : ℝ
-  bivector : ℝ
-deriving DecidableEq
+abbrev SplitParavector := ℝ × ℝ
+
+namespace SplitParavector
+
+def scalar (v : SplitParavector) : ℝ := v.1
+def bivector (v : SplitParavector) : ℝ := v.2
+
+end SplitParavector
 
 def SplitParavector.det (v : SplitParavector) : ℝ :=
-  v.scalar ^ 2 - v.bivector ^ 2
+  SplitParavector.scalar v ^ 2 - SplitParavector.bivector v ^ 2
 
 def SplitParavector.parabolic (v : SplitParavector) : Prop :=
   v.det = 0
 
 def paravectorTemperature (σ γ : ℝ) : SplitParavector :=
-  { scalar := σ, bivector := γ }
+  (σ, γ)
 
 theorem paravectorTemperature_det (σ γ : ℝ) :
     (paravectorTemperature σ γ).det = σ ^ 2 - γ ^ 2 := by

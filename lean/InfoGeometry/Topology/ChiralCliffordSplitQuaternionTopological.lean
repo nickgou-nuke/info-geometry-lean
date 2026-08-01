@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.ChiralCliffordSplitQuaternionBridge
+import InfoGeometry.Canonical.SplitPauliMatrixRelations
 
 /-!
 # Topology of the finite chiral split-quaternion matrix readout
@@ -13,24 +13,28 @@ namespace InfoGeometry.Topology
 
 open InfoGeometry.Canonical
 
-/-- The commutator readout on the real `2 × 2` matrix chart. -/
-def chiralCommutatorResidual (A B : Mat₂) : Mat₂ :=
+/-- The finite integer matrix chart used by the split-Pauli owner. -/
+abbrev SplitPauliMat₂ := Matrix (Fin 2) (Fin 2) ℤ
+
+/-- The commutator readout on the finite integer `2 × 2` matrix chart. -/
+def chiralCommutatorResidual (A B : SplitPauliMat₂) : SplitPauliMat₂ :=
   A * B - B * A
 
 theorem continuous_chiralCommutatorResidual :
-    Continuous (fun p : Mat₂ × Mat₂ =>
+    Continuous (fun p : SplitPauliMat₂ × SplitPauliMat₂ =>
       chiralCommutatorResidual p.1 p.2) := by
   unfold chiralCommutatorResidual
   fun_prop
 
 /-- The level set of a prescribed commutator value. -/
-def chiralCommutatorLevelSet (C : Mat₂) : Set (Mat₂ × Mat₂) :=
+def chiralCommutatorLevelSet (C : SplitPauliMat₂) :
+    Set (SplitPauliMat₂ × SplitPauliMat₂) :=
   {p | chiralCommutatorResidual p.1 p.2 = C}
 
-theorem isClosed_chiralCommutatorLevelSet (C : Mat₂) :
+theorem isClosed_chiralCommutatorLevelSet (C : SplitPauliMat₂) :
     IsClosed (chiralCommutatorLevelSet C) := by
-  change IsClosed ((fun p : Mat₂ × Mat₂ =>
-    chiralCommutatorResidual p.1 p.2) ⁻¹' ({C} : Set Mat₂))
+  change IsClosed ((fun p : SplitPauliMat₂ × SplitPauliMat₂ =>
+    chiralCommutatorResidual p.1 p.2) ⁻¹' ({C} : Set SplitPauliMat₂))
   exact isClosed_singleton.preimage continuous_chiralCommutatorResidual
 
 end InfoGeometry.Topology

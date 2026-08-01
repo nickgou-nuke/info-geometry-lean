@@ -1,88 +1,86 @@
+import Mathlib.Algebra.Module.Basic
+import Mathlib.Algebra.Module.LinearMap.Basic
 import InfoGeometry.Canonical.ThreeColorIntegralCliffordEmbedding
-import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
 
 namespace InfoGeometry.Canonical
 
-open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
+/-- Tensor of structural constants of the Split Octonions over ℤ -/
+def basisMulCoeff : IntegralSplitBasis → IntegralSplitBasis → IntegralSplitBasis → ℤ
+  | .one, .one, .one => 1
+  | .one, .l, .l => 1
+  | .one, .i, .i => 1
+  | .one, .il, .il => 1
+  | .one, .j, .j => 1
+  | .one, .jl, .jl => 1
+  | .one, .k, .k => 1
+  | .one, .kl, .kl => 1
+  | .l, .one, .l => 1
+  | .l, .l, .one => 1
+  | .l, .i, .il => -1
+  | .l, .il, .i => -1
+  | .l, .j, .jl => -1
+  | .l, .jl, .j => -1
+  | .l, .k, .kl => -1
+  | .l, .kl, .k => -1
+  | .i, .one, .i => 1
+  | .i, .l, .il => 1
+  | .i, .i, .one => -1
+  | .i, .il, .l => -1
+  | .i, .j, .k => 1
+  | .i, .jl, .kl => -1
+  | .i, .k, .j => -1
+  | .i, .kl, .jl => 1
+  | .il, .one, .il => 1
+  | .il, .l, .i => 1
+  | .il, .i, .l => 1
+  | .il, .il, .one => 1
+  | .il, .j, .kl => -1
+  | .il, .jl, .k => 1
+  | .il, .k, .jl => 1
+  | .il, .kl, .j => -1
+  | .j, .one, .j => 1
+  | .j, .l, .jl => 1
+  | .j, .i, .k => -1
+  | .j, .il, .kl => 1
+  | .j, .j, .one => -1
+  | .j, .jl, .l => -1
+  | .j, .k, .i => 1
+  | .j, .kl, .il => -1
+  | .jl, .one, .jl => 1
+  | .jl, .l, .j => 1
+  | .jl, .i, .kl => 1
+  | .jl, .il, .k => -1
+  | .jl, .j, .l => 1
+  | .jl, .jl, .one => 1
+  | .jl, .k, .il => -1
+  | .jl, .kl, .i => 1
+  | .k, .one, .k => 1
+  | .k, .l, .kl => 1
+  | .k, .i, .j => 1
+  | .k, .il, .jl => -1
+  | .k, .j, .i => -1
+  | .k, .jl, .il => 1
+  | .k, .k, .one => -1
+  | .k, .kl, .l => -1
+  | .kl, .one, .kl => 1
+  | .kl, .l, .k => 1
+  | .kl, .i, .jl => -1
+  | .kl, .il, .j => 1
+  | .kl, .j, .il => 1
+  | .kl, .jl, .i => -1
+  | .kl, .k, .l => 1
+  | .kl, .kl, .one => 1
+  | _, _, _ => 0
 
-/-! Bridge the named coordinate carrier to the already existing integral Zorn
-split-octonion multiplication owner.  No second multiplication table is
-introduced here. -/
+open Finset
 
-def zornCoordinateMap (x : StandardIntegralSplitOctonion) : SplitOct :=
-  ⟨x .one + x .l, x .one - x .l,
-    x .i - x .il, x .j - x .jl, x .k - x .kl,
-    -x .i - x .il, -x .j - x .jl, -x .k - x .kl⟩
+/-- Bilinear Multiplication of Integral Split Octonions -/
+def splitOctonionMul (x y : StandardIntegralSplitOctonion) : StandardIntegralSplitOctonion :=
+  fun r => ∑ p : IntegralSplitBasis, ∑ q : IntegralSplitBasis, x p * y q * basisMulCoeff p q r
 
-theorem zornCoordinateMap_injective :
-    Function.Injective zornCoordinateMap := by
-  intro x y h
-  have ha : x .one + x .l = y .one + y .l := by
-    exact congrArg SplitOct.a h
-  have hb : x .one - x .l = y .one - y .l := by
-    exact congrArg SplitOct.b h
-  have hi : x .i - x .il = y .i - y .il := by
-    exact congrArg SplitOct.x0 h
-  have hil : -x .i - x .il = -y .i - y .il := by
-    exact congrArg SplitOct.y0 h
-  have hj : x .j - x .jl = y .j - y .jl := by
-    exact congrArg SplitOct.x1 h
-  have hjl : -x .j - x .jl = -y .j - y .jl := by
-    exact congrArg SplitOct.y1 h
-  have hk : x .k - x .kl = y .k - y .kl := by
-    exact congrArg SplitOct.x2 h
-  have hkl : -x .k - x .kl = -y .k - y .kl := by
-    exact congrArg SplitOct.y2 h
-  funext b
-  cases b
-  · linarith
-  · linarith
-  · linarith
-  · linarith
-  · linarith
-  · linarith
-  · linarith
-  · linarith
-
-/-! The named basis is mapped to the standard Zorn coordinates.  These are
-coordinate facts only; signs of products remain owned by `mulZ`. -/
-
-theorem zornCoordinateMap_one :
-    zornCoordinateMap oneOct = scalarZ 1 := by
-  ext <;> simp [zornCoordinateMap, oneOct, splitBasisVector, scalarZ]
-
-theorem zornCoordinateMap_l :
-    zornCoordinateMap lOct = subZ ePlus eMinus := by
-  ext <;> simp [zornCoordinateMap, lOct, splitBasisVector, ePlus, eMinus, subZ]
-
-theorem zornCoordinateMap_i :
-    zornCoordinateMap iOct = subZ up0 down0 := by
-  ext <;> simp [zornCoordinateMap, iOct, splitBasisVector, up0, down0, subZ]
-
-theorem zornCoordinateMap_j :
-    zornCoordinateMap jOct = subZ up1 down1 := by
-  ext <;> simp [zornCoordinateMap, jOct, splitBasisVector, up1, down1, subZ]
-
-theorem zornCoordinateMap_k :
-    zornCoordinateMap kOct = subZ up2 down2 := by
-  ext <;> simp [zornCoordinateMap, kOct, splitBasisVector, up2, down2, subZ]
-
-theorem zornCoordinateMap_il :
-    zornCoordinateMap ilOct = negZ (up0 + down0) := by
-  ext <;> simp [zornCoordinateMap, ilOct, splitBasisVector, up0, down0, negZ]
-
-theorem zornCoordinateMap_jl :
-    zornCoordinateMap jlOct = negZ (up1 + down1) := by
-  ext <;> simp [zornCoordinateMap, jlOct, splitBasisVector, up1, down1, negZ]
-
-theorem zornCoordinateMap_kl :
-    zornCoordinateMap klOct = negZ (up2 + down2) := by
-  ext <;> simp [zornCoordinateMap, klOct, splitBasisVector, up2, down2, negZ]
-
-theorem zornCoordinateMap_i_sq :
-    mulZ (zornCoordinateMap iOct) (zornCoordinateMap iOct) =
-      negZ (scalarZ 1) := by
-  rw [zornCoordinateMap_i]
-  ext <;> simp [subZ, negZ, scalarZ, up0, down0, mulZ]
+theorem red_mul_green_eq_blue :
+    splitOctonionMul (Pi.single .i 1) (Pi.single .j 1) = Pi.single .k 1 := by
+  ext r
+  fin_cases r <;> rfl
 
 end InfoGeometry.Canonical

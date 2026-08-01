@@ -1,7 +1,11 @@
 import Mathlib.Order.Basic
 import Mathlib.Data.Nat.Basic
+import Mathlib.Data.Finset.Card
 
 namespace InfoGeometry.Topology
+
+/-- A Plücker coordinate is indexed by a `k`-element subset of `Fin n`. -/
+abbrev PluckerIndex (k n : ℕ) := {I : Finset (Fin n) // I.card = k}
 
 /-- 
   The Positroid Cell representation for Gr_{k,n}.
@@ -11,7 +15,7 @@ namespace InfoGeometry.Topology
 structure PositroidCell (k n : ℕ) where
   index : ℕ
   dimension : ℕ
-  requirements : Set String -- The active Plücker coordinate non-zero conditions
+  requirements : Set (PluckerIndex k n) -- Active non-zero Plücker coordinates
 
 /-- 
   The Face Containment Relation (Preorder).

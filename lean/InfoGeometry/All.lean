@@ -3977,7 +3977,7 @@ import InfoGeometry.Projective.BlackHoleUnitarityBridge
 import InfoGeometry.Projective.BostConnesAmplituhedronSynthesis
 import InfoGeometry.Projective.BostConnesKleinPluckerBridge
 import InfoGeometry.Projective.BostConnesZeta
-import InfoGeometry.Projective.BostConnesZetaIdentity
+import InfoGeometry.Projective.BostConnesZetaComparison
 import InfoGeometry.Projective.Bridge
 import InfoGeometry.Projective.BuresMetricStabilization
 import InfoGeometry.Projective.Cl44QuaternionSplit

@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.ChiralCliffordSplitQuaternionBridge
 import InfoGeometry.Canonical.H3ZornCubicJordanTopologicalReadout
 import InfoGeometry.Canonical.ChiralConeOctonionicBridge
 import InfoGeometry.Canonical.OctonionicCuntzIsomorphism
@@ -2031,6 +2032,7 @@ import InfoGeometry.Canonical.DeWittPeirceCommutingProjectors
 import InfoGeometry.Canonical.BCFWOnShellShift
 import InfoGeometry.Canonical.BCFWMeromorphicResidueRecursion
 import InfoGeometry.Canonical.YangianGeneratorKernel
+import InfoGeometry.Canonical.ChiralConeSpinFrameBridge
 import InfoGeometry.Canonical.SplitOctonionSupertwistorBridge
 import InfoGeometry.Canonical.YangianCoproductTensorAction
 import InfoGeometry.Canonical.YangianLevelZeroRepresentation

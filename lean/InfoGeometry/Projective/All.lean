@@ -31,7 +31,7 @@ import InfoGeometry.Projective.LogSum
 import InfoGeometry.Projective.MTC_PentagonTriangle
 import InfoGeometry.Projective.ArnoldRelations
 import InfoGeometry.Projective.BostConnesZeta
-import InfoGeometry.Projective.BostConnesZetaIdentity
+import InfoGeometry.Projective.BostConnesZetaComparison
 import InfoGeometry.Projective.KreinAttention
 import InfoGeometry.Projective.KreinHodgeBridge
 import InfoGeometry.Topology.RohozhkinDelaunayBraiding

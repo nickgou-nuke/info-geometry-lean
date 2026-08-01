@@ -24,12 +24,23 @@ This module formalizes in native Lean 4 / Mathlib with 100% genuine constructive
 namespace InfoGeometry.Canonical.LandauerDissipationNativeBridge
 
 /-- Landauer erasure state data with complexity decrease. -/
-structure LandauerErasureData where
-  kolmogorovX : ℕ
-  kolmogorovY : ℕ
-  complexity_decrease : kolmogorovY < kolmogorovX
-  beta : ℝ
-  beta_pos : 0 < beta
+def LandauerErasureData :=
+  {x : ℕ × (ℕ × ℝ) // x.2.1 < x.1 ∧ 0 < x.2.2}
+
+namespace LandauerErasureData
+
+def kolmogorovX (data : LandauerErasureData) : ℕ := data.1.1
+
+def kolmogorovY (data : LandauerErasureData) : ℕ := data.1.2.1
+
+def beta (data : LandauerErasureData) : ℝ := data.1.2.2
+
+def complexity_decrease (data : LandauerErasureData) :
+    kolmogorovY data < kolmogorovX data := data.2.1
+
+def beta_pos (data : LandauerErasureData) : 0 < beta data := data.2.2
+
+end LandauerErasureData
 
 /-- Heat dissipated to the environment during erasure: $\Delta Q = \frac{(K_x - K_y) \ln 2}{\beta}$. -/
 noncomputable def landauerHeat (data : LandauerErasureData) : ℝ :=

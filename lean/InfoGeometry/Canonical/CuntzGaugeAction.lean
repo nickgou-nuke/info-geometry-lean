@@ -8,10 +8,9 @@ variable {R : Type*} [CommRing R] [StarRing R]
 
 /-- The identity gauge action on a Cuntz generator pair.
 
-This owner deliberately records only the scalar-free action that is justified by
-the existing `ToeplitzCuntzGenerators` interface.  A genuine `U(2)` action
-requires an ambient algebra with a specified scalar action and star-compatible
-coefficients, which is a separate extension. -/
+Nontrivial normalized rotations are owned by
+`CuntzGaugeRotationNative`; this compatibility owner records the identity
+case without duplicating the rotation algebra. -/
 def identityGauge (g : ToeplitzCuntzGenerators R) : ToeplitzCuntzGenerators R := g
 
 theorem identityGauge_isometry_relations (g : ToeplitzCuntzGenerators R) :

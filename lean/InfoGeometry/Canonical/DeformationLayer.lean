@@ -55,11 +55,22 @@ end DeformationParameterWitness
 
 /-- Packet for a deformed character layer, gated by a deformation witness. -/
 @[rep_depth thermo]
-structure DeformedCharacterWitness where
-  undeformedCharacter : ℝ
-  deformedCharacter : ℝ
-  deformation : DeformationParameterWitness
-  deformationLaw : deformedCharacter = undeformedCharacter
+def DeformedCharacterWitness :=
+  {x : ℝ × (ℝ × DeformationParameterWitness) // x.1 = x.2.1}
+
+namespace DeformedCharacterWitness
+
+def undeformedCharacter (W : DeformedCharacterWitness) : ℝ := W.1.1
+
+def deformedCharacter (W : DeformedCharacterWitness) : ℝ := W.1.2.1
+
+def deformation (W : DeformedCharacterWitness) : DeformationParameterWitness :=
+  W.1.2.2
+
+def deformationLaw (W : DeformedCharacterWitness) :
+    deformedCharacter W = undeformedCharacter W := W.2.symm
+
+end DeformedCharacterWitness
 
 @[rep_depth thermo]
 abbrev ThermalEvaluationMap : Type := ℝ

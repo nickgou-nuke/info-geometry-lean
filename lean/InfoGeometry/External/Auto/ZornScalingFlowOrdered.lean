@@ -26,39 +26,37 @@ def cross3 (u v : Vec3) : Vec3
   | 2 => u 0 * v 1 - u 1 * v 0
 
 /-- Zorn coordinates in order `(a,b,u,v)`. -/
-structure Zorn where
-  a : ℂ
-  b : ℂ
-  u : Vec3
-  v : Vec3
+abbrev Zorn := ℂ × ℂ × Vec3 × Vec3
+
+namespace Zorn
+
+def a (X : Zorn) : ℂ := X.1
+def b (X : Zorn) : ℂ := X.2.1
+def u (X : Zorn) : Vec3 := X.2.2.1
+def v (X : Zorn) : Vec3 := X.2.2.2
+
+end Zorn
 
 /-- Extensionality for Zorn coordinates. -/
 theorem zorn_ext {X Y : Zorn}
     (ha : X.a = Y.a) (hb : X.b = Y.b) (hu : X.u = Y.u) (hv : X.v = Y.v) : X = Y := by
-  cases X
-  cases Y
+  rcases X with ⟨aX, bX, uX, vX⟩
+  rcases Y with ⟨aY, bY, uY, vY⟩
+  simp only [Zorn.a, Zorn.b, Zorn.u, Zorn.v] at ha hb hu hv
   simp_all
 
 /-- Zorn multiplication in `(a,b,u,v)` order. -/
-def zornMul (X Y : Zorn) : Zorn where
-  a := X.a * Y.a + dot3 X.u Y.v
-  b := X.b * Y.b + dot3 X.v Y.u
-  u := fun i => X.a * Y.u i + Y.b * X.u i - cross3 X.v Y.v i
-  v := fun i => Y.a * X.v i + X.b * Y.v i + cross3 X.u Y.u i
+def zornMul (X Y : Zorn) : Zorn :=
+  (X.a * Y.a + dot3 X.u Y.v,
+    X.b * Y.b + dot3 X.v Y.u,
+    fun i => X.a * Y.u i + Y.b * X.u i - cross3 X.v Y.v i,
+    fun i => Y.a * X.v i + X.b * Y.v i + cross3 X.u Y.u i)
 
 /-- Diagonal boost element `(p,p⁻¹,0,0)`. -/
-def E (p : ℂ) : Zorn where
-  a := p
-  b := p⁻¹
-  u := fun _ => 0
-  v := fun _ => 0
+def E (p : ℂ) : Zorn := (p, p⁻¹, fun _ => 0, fun _ => 0)
 
 /-- Inverse diagonal boost `(p⁻¹,p,0,0)`. -/
-def Einv (p : ℂ) : Zorn where
-  a := p⁻¹
-  b := p
-  u := fun _ => 0
-  v := fun _ => 0
+def Einv (p : ℂ) : Zorn := (p⁻¹, p, fun _ => 0, fun _ => 0)
 
 /-- Zorn conjugation by the diagonal boost. -/
 def flow (p : ℂ) (X : Zorn) : Zorn := zornMul (zornMul (E p) X) (Einv p)
@@ -66,10 +64,9 @@ def flow (p : ℂ) (X : Zorn) : Zorn := zornMul (zornMul (E p) X) (Einv p)
 /-- The user's scaling formula: `a,b` fixed, `u ↦ p²u`, `v ↦ p⁻²v`. -/
 theorem flow_formula {p : ℂ} (hp : p ≠ 0) (X : Zorn) :
     flow p X =
-      { a := X.a,
-        b := X.b,
-        u := fun i => p^2 * X.u i,
-        v := fun i => (p⁻¹)^2 * X.v i } := by
+      (X.a, X.b,
+        fun i => p^2 * X.u i,
+        fun i => (p⁻¹)^2 * X.v i) := by
   apply zorn_ext
   · simp [flow, zornMul, E, Einv, dot3]
     field_simp [hp]
@@ -81,16 +78,13 @@ theorem flow_formula {p : ℂ} (hp : p ≠ 0) (X : Zorn) :
     fin_cases i <;> simp [flow, zornMul, E, Einv, cross3] <;> field_simp [hp]
 
 /-- Pure upper nilpotent. -/
-def upperNil (u : Vec3) : Zorn where
-  a := 0; b := 0; u := u; v := fun _ => 0
+def upperNil (u : Vec3) : Zorn := (0, 0, u, fun _ => 0)
 
 /-- Pure lower nilpotent. -/
-def lowerNil (v : Vec3) : Zorn where
-  a := 0; b := 0; u := fun _ => 0; v := v
+def lowerNil (v : Vec3) : Zorn := (0, 0, fun _ => 0, v)
 
 /-- Zero element. -/
-def zero : Zorn where
-  a := 0; b := 0; u := fun _ => 0; v := fun _ => 0
+def zero : Zorn := (0, 0, fun _ => 0, fun _ => 0)
 
 /-- Upper nilpotents square to zero. -/
 theorem upperNil_sq_zero (u : Vec3) : zornMul (upperNil u) (upperNil u) = zero := by

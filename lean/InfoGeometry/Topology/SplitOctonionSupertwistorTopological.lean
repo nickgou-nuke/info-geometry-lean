@@ -1,42 +1,55 @@
 import InfoGeometry.Canonical.SplitOctonionSupertwistorBridge
 
 /-!
-# Topology of the finite split-octonion supertwistor carrier
+# Topology of the finite Günaydin--Gürsey coordinate chart
 
-The canonical owner supplies the finite `Finsupp` carrier and its level-zero
-action.  This file records only coordinate-level topology: every basis
-readout is continuous and each prescribed coordinate value is a closed
-condition.  It does not identify this carrier with projective or super
-twistor geometry.
+The current canonical owner is an eight-coordinate structure over an
+`ExteriorAlgebra`.  This file supplies the topology only after a topology on
+that coefficient carrier is explicitly provided.  The topology on the
+eight-coordinate structure is induced by its coordinate map; no projective or
+supergeometric identification is inferred.
 -/
 
 namespace InfoGeometry.Topology
 
 open InfoGeometry.Canonical
 
-/- The finite carrier is given the topology induced by its coordinate map. -/
-instance : TopologicalSpace (SupertwistorSpace ℝ) :=
-  TopologicalSpace.induced
-    (fun Z : SupertwistorSpace ℝ => (Z : SplitOctonionBasis → ℝ)) inferInstance
+variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
-/-- Coordinate readout on the finite split-octonion supertwistor carrier. -/
-def supertwistorCoordinate (b : SplitOctonionBasis)
-    (Z : SupertwistorSpace ℝ) : ℝ := Z b
+/-- The eight coordinate readout of a Günaydin--Gürsey split basis. -/
+def gunaydinGurseyCoordinates
+    (Z : GunaydinGurseySplitBasis R V) :
+    Fin 8 → ExteriorAlgebra R V :=
+  ![Z.u0, Z.u1, Z.u2, Z.u3, Z.u0s, Z.u1s, Z.u2s, Z.u3s]
 
-theorem continuous_supertwistorCoordinate (b : SplitOctonionBasis) :
-    Continuous (supertwistorCoordinate b) := by
-  unfold supertwistorCoordinate
-  exact (continuous_apply b).comp continuous_induced_dom
+section Topological
 
-/-- A coordinate level set in the finite supertwistor chart. -/
-def supertwistorCoordinateLevelSet (b : SplitOctonionBasis) (a : ℝ) :
-    Set (SupertwistorSpace ℝ) :=
-  {Z | supertwistorCoordinate b Z = a}
+variable [TopologicalSpace (ExteriorAlgebra R V)]
 
-theorem isClosed_supertwistorCoordinateLevelSet
-    (b : SplitOctonionBasis) (a : ℝ) :
-    IsClosed (supertwistorCoordinateLevelSet b a) := by
-  change IsClosed ((supertwistorCoordinate b) ⁻¹' ({a} : Set ℝ))
-  exact isClosed_singleton.preimage (continuous_supertwistorCoordinate b)
+/-- The chart topology induced by all eight coefficient coordinates. -/
+instance : TopologicalSpace (GunaydinGurseySplitBasis R V) :=
+  TopologicalSpace.induced gunaydinGurseyCoordinates inferInstance
+
+theorem continuous_gunaydinGurseyCoordinate (i : Fin 8) :
+    Continuous (fun Z : GunaydinGurseySplitBasis R V =>
+      gunaydinGurseyCoordinates Z i) := by
+  exact (continuous_apply i).comp continuous_induced_dom
+
+variable [T1Space (ExteriorAlgebra R V)]
+
+/-- A prescribed coordinate value is a closed subset of the induced chart. -/
+def gunaydinGurseyCoordinateLevelSet
+    (i : Fin 8) (a : ExteriorAlgebra R V) :
+    Set (GunaydinGurseySplitBasis R V) :=
+  {Z | gunaydinGurseyCoordinates Z i = a}
+
+theorem isClosed_gunaydinGurseyCoordinateLevelSet
+    (i : Fin 8) (a : ExteriorAlgebra R V) :
+    IsClosed (gunaydinGurseyCoordinateLevelSet (R := R) (V := V) i a) := by
+  change IsClosed ((fun Z : GunaydinGurseySplitBasis R V =>
+    gunaydinGurseyCoordinates Z i) ⁻¹' ({a} : Set (ExteriorAlgebra R V)))
+  exact isClosed_singleton.preimage (continuous_gunaydinGurseyCoordinate i)
+
+end Topological
 
 end InfoGeometry.Topology

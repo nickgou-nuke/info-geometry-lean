@@ -440,13 +440,21 @@ theorem goutev_tonev_master_theorem :
     (∀ x y z : ℝ, Matrix.trace (densityMatrix x y z) = 1) ∧
     (∀ x y z : ℝ, Matrix.conjTranspose (densityMatrix x y z) = densityMatrix x y z) ∧
     (∀ x y z : ℝ, isPureState x y z ↔ Matrix.det (densityMatrix x y z) = 0) := by
-  exact ⟨trace_densityMatrix, densityMatrix_hermitian, pureState_iff_det_zero⟩
+  constructor
+  · exact trace_densityMatrix
+  constructor
+  · exact densityMatrix_hermitian
+  · exact pureState_iff_det_zero
 
 theorem physical_models :
     Matrix.trace I2 = 2 ∧
     (∀ A B : Matrix (Fin 2) (Fin 2) ℂ, Matrix.trace (A + B) = Matrix.trace A + Matrix.trace B) ∧
     (∀ A B : Matrix (Fin 2) (Fin 2) ℂ, Matrix.trace (A * B) = Matrix.trace (B * A)) := by
-  exact ⟨tomita_takesaki_modular_flow, fierz_identity_is_trace_formula, node_engine⟩
+  constructor
+  · exact tomita_takesaki_modular_flow
+  constructor
+  · exact fierz_identity_is_trace_formula
+  · exact node_engine
 
 ---------------------------------------------------------------
 -- Part 8:  The Final Rosetta Stone

@@ -79,11 +79,13 @@ theorem grand_leeyang_bost_connes_phase_transition_master_duality
     (OnCriticalLine (cayleyToTemperature z0)) ∧
     (TopologicalWindingCharge n ≠ 0) ∧
     (s.re = 1 / 2) ∧
-    (s = 1 - star s) := ⟨
-  cayleyToTemperature_mem_criticalLine_of_unitCircle z0 hz0 hpole,
-  quantized_time_step_ne_zero hn,
-  (critical_line_fixed_locus_iff s).1 h_anti,
-  h_anti
-⟩
+    (s = 1 - star s) := by
+  constructor
+  · exact cayleyToTemperature_mem_criticalLine_of_unitCircle z0 hz0 hpole
+  constructor
+  · exact quantized_time_step_ne_zero hn
+  constructor
+  · exact (critical_line_fixed_locus_iff s).1 h_anti
+  · exact h_anti
 
 end InfoGeometry.Canonical.LeeYangBostConnesPhaseTransitionBridge

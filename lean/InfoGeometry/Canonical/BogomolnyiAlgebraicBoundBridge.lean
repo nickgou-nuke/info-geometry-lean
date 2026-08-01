@@ -158,13 +158,17 @@ theorem master_bogomolnyi_algebraic_bound_synthesis
     (|topologicalPairing D F| ≤ yangMillsEnergy D F) ∧
     (yangMillsEnergy D F = topologicalPairing D F ↔ D.star F = F) ∧
     (yangMillsEnergy D F = -topologicalPairing D F ↔ D.star F = -F) ∧
-    (yangMillsEnergy D F = |topologicalPairing D F| ↔ D.star F = F ∨ D.star F = -F) := ⟨
-  norm_sub_star_sq D F,
-  norm_add_star_sq D F,
-  bogomolnyi_bound D F,
-  energy_eq_topologicalPairing_iff_selfDual D h_def F,
-  energy_eq_neg_topologicalPairing_iff_antiSelfDual D h_def F,
-  bogomolnyi_equality_iff_dual D h_def F
-⟩
+    (yangMillsEnergy D F = |topologicalPairing D F| ↔ D.star F = F ∨ D.star F = -F) := by
+  constructor
+  · exact norm_sub_star_sq D F
+  constructor
+  · exact norm_add_star_sq D F
+  constructor
+  · exact bogomolnyi_bound D F
+  constructor
+  · exact energy_eq_topologicalPairing_iff_selfDual D h_def F
+  constructor
+  · exact energy_eq_neg_topologicalPairing_iff_antiSelfDual D h_def F
+  · exact bogomolnyi_equality_iff_dual D h_def F
 
 end InfoGeometry.Canonical.BogomolnyiAlgebraicBoundBridge

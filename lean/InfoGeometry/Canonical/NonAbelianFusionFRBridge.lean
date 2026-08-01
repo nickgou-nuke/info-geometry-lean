@@ -192,10 +192,9 @@ theorem master_non_abelian_fusion_fr_synthesis (K : Type*) [CommRing K] (a b q1 
     fMatrix K a b * fMatrix K a b = 1 ∧
     (fMatrix K a b)ᵀ = fMatrix K a b ∧
     braidGen1 K q1 q2 * braidGen2 K a b q1 q2 * braidGen1 K q1 q2 =
-      braidGen2 K a b q1 q2 * braidGen1 K q1 q2 * braidGen2 K a b q1 q2 := ⟨
-  fMatrix_sq K a b h_norm,
-  fMatrix_transpose K a b,
-  nonAbelian_artin_braid_relation K a b q1 q2 h_norm h_braid
-⟩
+      braidGen2 K a b q1 q2 * braidGen1 K q1 q2 * braidGen2 K a b q1 q2 := by
+  exact ⟨fMatrix_sq K a b h_norm,
+    fMatrix_transpose K a b,
+    nonAbelian_artin_braid_relation K a b q1 q2 h_norm h_braid⟩
 
 end InfoGeometry.Canonical.NonAbelianFusionFRBridge

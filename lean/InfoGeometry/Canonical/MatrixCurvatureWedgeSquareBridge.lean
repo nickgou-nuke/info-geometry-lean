@@ -45,9 +45,9 @@ theorem master_matrix_curvature_wedge_square_synthesis
     (h_closed : matrixExteriorDerivative d (matrixCurvatureWedgeSquare F) = 0) :
     (matrixCurvatureWedgeSquare F = F * F) ∧
     (tracedChernWeilCohomologyClass d (matrixCurvatureWedgeSquare F) h_closed =
-      Submodule.Quotient.mk ⟨matrixTraceForm (F * F), matrix_traced_curvature_square_closed d (F * F) h_closed⟩) := ⟨
-  rfl,
-  rfl
-⟩
+      Submodule.Quotient.mk ⟨matrixTraceForm (F * F), matrix_traced_curvature_square_closed d (F * F) h_closed⟩) := by
+  constructor
+  · rfl
+  · rfl
 
 end InfoGeometry.Canonical.MatrixCurvatureWedgeSquareBridge

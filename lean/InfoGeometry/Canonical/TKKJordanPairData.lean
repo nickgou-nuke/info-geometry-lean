@@ -158,6 +158,8 @@ theorem tkk_jordan_pair_data_synthesis :
     gradeAdd z0 p1 = some p1 ∧
     gradeAdd m1 p1 = some z0 ∧
     gradeAdd p2 p1 = none := by
-  exact ⟨rfl, rfl, rfl⟩
+  constructor
+  · rfl
+  constructor <;> rfl
 
 end TKKJordanPairData

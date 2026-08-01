@@ -1,3 +1,4 @@
+import InfoGeometry.Canonical.H3ZornCubicJordanTopologicalReadout
 import InfoGeometry.Canonical.MoebiusUnruhBoostDiscriminantBridge
 import InfoGeometry.Algebra.F4S3JordanObstruction
 import InfoGeometry.Canonical.EinsteinCartanBianchiBridge
@@ -780,6 +781,7 @@ import InfoGeometry.Canonical.H3ZornF4BasisTopologicalReadout
 import InfoGeometry.Canonical.H3ZornInnerDerivationTopologicalReadout
 import InfoGeometry.Canonical.H3ZornS3JordanTopologicalReadout
 import InfoGeometry.Canonical.ZornVectorMatrixRationalTopCatReadout
+import InfoGeometry.Canonical.ZornDualLatticeTopologicalReadout
 import InfoGeometry.Canonical.F4MixingTopologicalReadout
 import InfoGeometry.Canonical.AlbertCuntzDiracBridge
 import InfoGeometry.Canonical.ToeplitzCuntzCartanFlowBridge

@@ -94,10 +94,11 @@ theorem concrete_mangoldt_moebius_extraction :
 theorem master_primon_gas_duality :
     (moebiusArithmeticFunction * zetaArithmeticFunction = 1) ∧
     (vonMangoldtArithmeticFunction * zetaArithmeticFunction = logArithmeticFunction) ∧
-    (vonMangoldtArithmeticFunction = logArithmeticFunction * moebiusArithmeticFunction) := ⟨
-  concrete_moebius_inversion,
-  concrete_mangoldt_total_energy,
-  concrete_mangoldt_moebius_extraction
-⟩
+    (vonMangoldtArithmeticFunction = logArithmeticFunction * moebiusArithmeticFunction) := by
+  constructor
+  · exact concrete_moebius_inversion
+  constructor
+  · exact concrete_mangoldt_total_energy
+  · exact concrete_mangoldt_moebius_extraction
 
 end InfoGeometry.Arithmetic.PrimonGasDirichletAlgebraBridge

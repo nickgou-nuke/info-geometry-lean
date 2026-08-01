@@ -50,9 +50,9 @@ theorem master_ghost_graded_brst_physical_sector_synthesis
     (chi : ExteriorAlgebra R V)
     (h_ghost : g_op chi = g_num • chi) :
     (q.comp q = 0) ∧
-    (g_op (q chi) = (g_num + 1) • q chi) := ⟨
-  hq2,
-  ghost_number_raising q g_op h_comm g_num chi h_ghost
-⟩
+    (g_op (q chi) = (g_num + 1) • q chi) := by
+  constructor
+  · exact hq2
+  · exact ghost_number_raising q g_op h_comm g_num chi h_ghost
 
 end InfoGeometry.Canonical.GhostGradedBRSTPhysicalSectorBridge

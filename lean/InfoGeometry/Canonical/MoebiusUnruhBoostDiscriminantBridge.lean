@@ -28,6 +28,6 @@ theorem moebius_discriminant_unruh_boost (eta : ℝ) :
 /-- **Master Synthesis**: Мебиусова Дискриминанта & Унру Буст Synthesis -/
 theorem master_moebius_unruh_boost_synthesis (eta : ℝ) :
     moebiusDiscriminant (Real.exp (eta / 2) : ℂ) (Real.exp (-eta / 2) : ℂ) = (4 * (Real.sinh (eta / 2))^2 : ℂ) :=
-  moebius_discriminant_unruh_boost eta
+  by exact moebius_discriminant_unruh_boost eta
 
 end InfoGeometry.Canonical

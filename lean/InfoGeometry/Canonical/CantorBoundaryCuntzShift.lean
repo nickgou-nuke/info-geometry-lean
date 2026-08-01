@@ -169,13 +169,15 @@ Proof-carrying boundary/Cuntz branch packet.
 The symbolic branch maps are front-prefix maps.  The algebraic branch operators
 are the existing abstract Cuntz `O₂` operators.
 -/
-structure BoundaryCuntzShiftPacket
-    (Op : Type*) [Ring Op] [StarRing Op] where
-  cuntz : CuntzO2Carrier Op
+abbrev BoundaryCuntzShiftPacket
+    (Op : Type*) [Ring Op] [StarRing Op] := CuntzO2Carrier Op
 
 namespace BoundaryCuntzShiftPacket
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
+
+abbrev cuntz (P : BoundaryCuntzShiftPacket Op) : CuntzO2Carrier Op := P
+
 variable (P : BoundaryCuntzShiftPacket Op)
 
 /-- The symbolic boundary maps are definitions, not independent packet data. -/

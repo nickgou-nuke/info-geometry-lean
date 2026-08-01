@@ -137,11 +137,12 @@ theorem split_cartan_hop_witt_car_bridge (n : ℕ) :
     gammaHeadNullPlus n * gammaHeadNullPlus n = 0 ∧
     gammaHeadNullMinus n * gammaHeadNullPlus n +
       gammaHeadNullPlus n * gammaHeadNullMinus n = 1 := by
-  exact ⟨headCartanHop_headNullMinus n,
-    headCartanHop_headNullPlus n,
-    gammaHeadNullMinus_sq n,
-    gammaHeadNullPlus_sq n,
-    gammaHeadNullMinus_mul_gammaHeadNullPlus_add_swap_from_hyperbolic_pairing n⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact headCartanHop_headNullMinus n
+  · exact headCartanHop_headNullPlus n
+  · exact gammaHeadNullMinus_sq n
+  · exact gammaHeadNullPlus_sq n
+  · exact gammaHeadNullMinus_mul_gammaHeadNullPlus_add_swap_from_hyperbolic_pairing n
 
 /--
 Finite `Cl(5,5)`/`so(5,5)` head-mode specialization.

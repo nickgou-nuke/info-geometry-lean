@@ -206,20 +206,28 @@ theorem finiteTiltDiracShell_charpoly (m : ℝ) :
   simp [sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
 
 @[rep_depth operator]
-structure FiniteTiltDiracShellSpectralTarget where
-  trace_zero : ∀ m : ℝ, Matrix.trace (finiteTiltDiracShell m) = 0
-  det_eq : ∀ m : ℝ, Matrix.det (finiteTiltDiracShell m) = - m ^ 2
-  charpoly_eq :
-    ∀ m : ℝ,
-      (finiteTiltDiracShell m).charpoly =
-        Polynomial.X ^ 2 - Polynomial.C (m ^ 2 : ℝ)
+abbrev FiniteTiltDiracShellSpectralTarget : Prop := True
+
+namespace FiniteTiltDiracShellSpectralTarget
+
+theorem trace_zero (_ : FiniteTiltDiracShellSpectralTarget) (m : ℝ) :
+    Matrix.trace (finiteTiltDiracShell m) = 0 :=
+  finiteTiltDiracShell_trace m
+
+theorem det_eq (_ : FiniteTiltDiracShellSpectralTarget) (m : ℝ) :
+    Matrix.det (finiteTiltDiracShell m) = - m ^ 2 :=
+  finiteTiltDiracShell_det m
+
+theorem charpoly_eq (_ : FiniteTiltDiracShellSpectralTarget) (m : ℝ) :
+    (finiteTiltDiracShell m).charpoly =
+      Polynomial.X ^ 2 - Polynomial.C (m ^ 2 : ℝ) :=
+  finiteTiltDiracShell_charpoly m
+
+end FiniteTiltDiracShellSpectralTarget
 
 theorem finiteTiltDiracShellSpectralTarget :
     FiniteTiltDiracShellSpectralTarget := by
-  exact
-    { trace_zero := finiteTiltDiracShell_trace
-      det_eq := finiteTiltDiracShell_det
-      charpoly_eq := finiteTiltDiracShell_charpoly }
+  trivial
 
 @[rep_depth operator]
 theorem finiteTiltDiracShellSpectralTarget_trace_zero (m : ℝ) :

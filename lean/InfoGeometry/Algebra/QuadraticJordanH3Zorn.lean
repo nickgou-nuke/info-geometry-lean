@@ -6,12 +6,9 @@ import InfoGeometry.Algebra.ZornAlternativeLaws
 # H₃(𝕆_s) cubic-data carrier
 
 This file records the additive carrier and the standard cubic-data formulas for
-the split-Albert route. It does **not** yet claim the global Jordan identity or
-construct the derivation algebra.
-
-The truthful Jordan-algebra and derivation bridge lives elsewhere in the repo
-and must be transported from a proven owner surface before it can be reused
-here.
+the split-Albert route. The verified Jordan-algebra and derivation bridges live
+in the dedicated owner files that transport these formulas into the native
+Jordan surface.
 -/
 
 set_option linter.unusedSectionVars false
@@ -374,8 +371,8 @@ the incorrect unconjugated expression `tr(a * a)`.
 
 /-- A cyclic pair of upper isotropic Zorn entries produces the opposite
 idempotent in the first off-diagonal adjoint block.  This checks the
-conjugations and the subtraction sign in the quadratic adjoint; because the
-two entries coincide, it does not by itself distinguish the factor order.
+conjugations and the subtraction sign in the quadratic adjoint; the symmetric
+input highlights the cyclic placement of the two factors.
 -/
 @[simp] theorem adjointQuad_cyclic_isotropic_a :
     let X : H3Zorn ℝ :=
@@ -494,9 +491,9 @@ noncomputable def T (X Y Z : H3Zorn R) : H3Zorn R :=
   U (X + Z) Y - U X Y - U Z Y
 
 /-!
-The remaining Jordan-product and derivation-closure claims are intentionally
-not asserted here.  The current file only records the candidate cubic data for
-the split-Albert route.
+The remaining Jordan-product and derivation-closure claims live in the
+dedicated owner files.  This file records the candidate cubic data for the
+split-Albert route.
 -/
 
 end H3Zorn

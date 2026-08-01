@@ -36,13 +36,27 @@ def smulVec3 (r : ℝ) (v : Vec3 ℝ) : Vec3 ℝ :=
   unfold Vec3.dot cross
   ring
 
-/-- A point of `S² × S³` written in Sagerschnig's coordinates. -/
-structure S2xS3Point where
-  x : Vec3 ℝ
-  alpha : ℝ
-  y : Vec3 ℝ
-  hx : Vec3.dot x x = 1
-  hy : alpha ^ 2 + Vec3.dot y y = 1
+/-- The raw Sagerschnig coordinate carrier for `S² × S³`. -/
+abbrev S2xS3Coordinates := Vec3 ℝ × (ℝ × Vec3 ℝ)
+
+/-- The defining equations for a point of `S² × S³`. -/
+def S2xS3PointPredicate (p : S2xS3Coordinates) : Prop :=
+  Vec3.dot p.1 p.1 = 1 ∧ p.2.1 ^ 2 + Vec3.dot p.2.2 p.2.2 = 1
+
+/-- A point of `S² × S³`, natively represented as a subtype of coordinates. -/
+abbrev S2xS3Point := {p : S2xS3Coordinates // S2xS3PointPredicate p}
+
+namespace S2xS3Point
+
+abbrev x (p : S2xS3Point) : Vec3 ℝ := p.1.1
+abbrev alpha (p : S2xS3Point) : ℝ := p.1.2.1
+abbrev y (p : S2xS3Point) : Vec3 ℝ := p.1.2.2
+
+theorem hx (p : S2xS3Point) : Vec3.dot p.x p.x = 1 := p.2.1
+
+theorem hy (p : S2xS3Point) : p.alpha ^ 2 + Vec3.dot p.y p.y = 1 := p.2.2
+
+end S2xS3Point
 
 /-- Tangent vectors in coordinates `(v, (β, w))`. -/
 abbrev S2xS3Tangent := Vec3 ℝ × (ℝ × Vec3 ℝ)

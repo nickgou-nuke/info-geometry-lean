@@ -185,11 +185,13 @@ theorem chiral_poincare_souriau_bridge_synthesis (S : ChiralSUSYMomentum) :
     recoverPx (momentumSpinorFromSupercharges S) = S.P.px ∧
     recoverPy (momentumSpinorFromSupercharges S) = S.P.py ∧
     recoverPz (momentumSpinorFromSupercharges S) = S.P.pz := by
-  exact ⟨momentum_from_supercharges S, det_pauliMomentum S.P,
-    (supercharge_pauli_inverse S).1,
-    (supercharge_pauli_inverse S).2.1,
-    (supercharge_pauli_inverse S).2.2.1,
-    (supercharge_pauli_inverse S).2.2.2⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact momentum_from_supercharges S
+  · exact det_pauliMomentum S.P
+  · exact (supercharge_pauli_inverse S).1
+  · exact (supercharge_pauli_inverse S).2.1
+  · exact (supercharge_pauli_inverse S).2.2.1
+  · exact (supercharge_pauli_inverse S).2.2.2
 
 #check det_pauliMomentum
 #check momentum_from_supercharges

@@ -225,18 +225,19 @@ theorem section01_finite_basis_packet (M : Mat2C) :
       coeffT (pauliExpand (coeffT M) (coeffX M) (coeffY M) (coeffZ M)) = coeffT M ∧
         coeffX (pauliExpand (coeffT M) (coeffX M) (coeffY M) (coeffZ M)) = coeffX M ∧
           coeffY (pauliExpand (coeffT M) (coeffX M) (coeffY M) (coeffZ M)) = coeffY M ∧
-            coeffZ (pauliExpand (coeffT M) (coeffX M) (coeffY M) (coeffZ M)) = coeffZ M := by
-  exact ⟨pauli_square_packet.1,
-    pauli_square_packet.2.1,
-    pauli_square_packet.2.2,
-    pauli_trace_packet.1,
-    pauli_trace_packet.2.1,
-    pauli_trace_packet.2.2,
-    pauliExpansion_reconstruct M,
-    coeffT_pauliExpand (coeffT M) (coeffX M) (coeffY M) (coeffZ M),
-    coeffX_pauliExpand (coeffT M) (coeffX M) (coeffY M) (coeffZ M),
-    coeffY_pauliExpand (coeffT M) (coeffX M) (coeffY M) (coeffZ M),
-    coeffZ_pauliExpand (coeffT M) (coeffX M) (coeffY M) (coeffZ M)⟩
+                coeffZ (pauliExpand (coeffT M) (coeffX M) (coeffY M) (coeffZ M)) = coeffZ M := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact pauli_square_packet.1
+  · exact pauli_square_packet.2.1
+  · exact pauli_square_packet.2.2
+  · exact pauli_trace_packet.1
+  · exact pauli_trace_packet.2.1
+  · exact pauli_trace_packet.2.2
+  · exact pauliExpansion_reconstruct M
+  · exact coeffT_pauliExpand (coeffT M) (coeffX M) (coeffY M) (coeffZ M)
+  · exact coeffX_pauliExpand (coeffT M) (coeffX M) (coeffY M) (coeffZ M)
+  · exact coeffY_pauliExpand (coeffT M) (coeffX M) (coeffY M) (coeffZ M)
+  · exact coeffZ_pauliExpand (coeffT M) (coeffX M) (coeffY M) (coeffZ M)
 
 /--
 Repaired finite Section01 introduction packet: the same Pauli basis supports the
@@ -250,9 +251,10 @@ theorem section01_intro_matrix_quantum_packet
       (blochMatrix nx ny nz).trace = 1 ∧
         (blochMatrix nx ny nz).det =
           ((1 : ℂ) - (nx : ℂ)^2 - (ny : ℂ)^2 - (nz : ℂ)^2) / 4 := by
-  exact ⟨normalized_spacetime_det_readout v,
-    bloch_density_trace nx ny nz,
-    bloch_density_det nx ny nz⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact normalized_spacetime_det_readout v
+  · exact bloch_density_trace nx ny nz
+  · exact bloch_density_det nx ny nz
 
 end InfoGeometry.Physics.Section01MatrixBasisIntroduction
 

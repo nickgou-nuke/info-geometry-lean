@@ -230,9 +230,7 @@ structure FiniteMDPASJMStageData
   rn : SouriauNegativeLogRNDerivative State LieAlgebra LieDual
   moment : MomentMapGeneratingPotential State LieAlgebra LieDual
   bregman : SouriauKLBregmanWitness State LieAlgebra LieDual
-  flow : CausalNonequilibriumFlow Op
   pathPacket : MaximumCaliberPacket Op
-  pathPacket_flow_eq : pathPacket.flow = flow
   prequantum : PrequantumData
 
 namespace FiniteMDPASJMStageData
@@ -240,6 +238,17 @@ namespace FiniteMDPASJMStageData
 variable {ι : Type*} [Fintype ι] [Nonempty ι]
 variable {Op : Type*} [Ring Op] [Algebra ℝ Op]
 variable {State LieAlgebra LieDual : Type*}
+
+/-- The stage flow is the flow carried by its maximum-caliber path packet. -/
+abbrev flow
+    (D : FiniteMDPASJMStageData ι Op State LieAlgebra LieDual) :=
+  D.pathPacket.flow
+
+/-- The stage flow agrees definitionally with the path-packet flow. -/
+theorem pathPacket_flow_eq
+    (D : FiniteMDPASJMStageData ι Op State LieAlgebra LieDual) :
+    D.pathPacket.flow = D.flow := by
+  rfl
 
 @[rep_depth thermo]
 theorem entropy_eq_expectation_modularPotential

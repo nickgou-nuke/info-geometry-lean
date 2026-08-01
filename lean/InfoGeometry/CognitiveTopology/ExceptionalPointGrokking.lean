@@ -79,7 +79,9 @@ their carriers or claiming a physical/cognitive theorem.
 theorem exceptionalPoint_and_KAN_share_square_zero_socket (A N : H →L[ℂ] H)
     (h_ep : IsExceptionalPoint A N) :
     (N ∘L N = 0) ∧ (n * n = 0) := by
-  exact ⟨h_ep.2, translation_is_nilpotent_horizon⟩
+  refine ⟨?_, ?_⟩
+  · exact h_ep.2
+  · exact translation_is_nilpotent_horizon
 
 end InfoGeometry.CognitiveTopology.Grokking
 

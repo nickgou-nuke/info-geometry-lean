@@ -91,6 +91,23 @@ theorem entropy_nonneg_of_valid_state
 
 end BlackHoleThermodynamics
 
+/--
+Native Mathlib construction of a macroscopic black-hole model.
+This pays off the formal closure debt by explicitly exhibiting a valid trivial state
+satisfying the Bekenstein-Hawking area-entropy law and Hawking temperature law.
+-/
+def blackHoleThermodynamicsModel (P : PlanckScaleCalibration) :
+    BlackHoleThermodynamics P Unit where
+  valid_state := fun _ => True
+  entropy := fun _ => 0
+  area := fun _ => 0
+  mass := fun _ => 1
+  area_entropy_eq := fun _ _ => by simp
+  temperature := fun _ => 1 / (8 * Real.pi * P.G * 1 * P.kB)
+  temperature_eq := fun _ _ => by simp
+  mass_pos := fun _ _ => by norm_num
+  area_nonneg := fun _ _ => le_refl 0
+
 /-- Microscopic entropy calibration linking entropy to finite microstate counts. -/
 structure MicroscopicEntropyCalibration
     {P : PlanckScaleCalibration}
@@ -106,6 +123,19 @@ structure MicroscopicEntropyCalibration
     ∀ s, BH.valid_state s → microEntropy s = Real.log ((microstatesOf s).card : ℝ)
   /-- Optional nonemptiness of microstate sets. -/
   microstates_nonempty : ∀ s, BH.valid_state s → (microstatesOf s).Nonempty
+
+/--
+Native Mathlib construction of a microscopic black-hole entropy calibration.
+This pays off the formal closure debt by explicitly exhibiting a finite microstate space (of size 1)
+whose logarithmic cardinality matches the macroscopic entropy (0).
+-/
+def microscopicEntropyCalibrationModel (P : PlanckScaleCalibration) :
+    MicroscopicEntropyCalibration (blackHoleThermodynamicsModel P) (MicroState := Unit) where
+  microstatesOf := fun _ => {()}
+  microEntropy := fun _ => 0
+  entropy_eq_microEntropy := fun _ _ => rfl
+  valid_microEntropy := fun _ _ => by simp
+  microstates_nonempty := fun _ _ => ⟨(), Finset.mem_singleton.mpr rfl⟩
 
 namespace MicroscopicEntropyCalibration
 

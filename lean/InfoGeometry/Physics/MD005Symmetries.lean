@@ -168,12 +168,13 @@ theorem repaired_MD005_symmetry_packet
     scalarCongruenceAction (-1) X = X ∧
     dot4 (ICircleRotate α β u) (ICircleRotate α β v) = dot4 u v ∧
     translate ξ (translate η x) = translate η (translate ξ x) := by
-  exact ⟨det_congruence_of_det_one A X hA,
-    congruenceAction_comp A B X,
-    scalarCongruenceAction_one X,
-    scalarCongruenceAction_neg_one X,
-    ICircleRotate_preserves_dot4 α β hunit u v,
-    translate_comm ξ η x⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact det_congruence_of_det_one A X hA
+  · exact congruenceAction_comp A B X
+  · exact scalarCongruenceAction_one X
+  · exact scalarCongruenceAction_neg_one X
+  · exact ICircleRotate_preserves_dot4 α β hunit u v
+  · exact translate_comm ξ η x
 
 end InfoGeometry.Physics.MD005Symmetries
 

@@ -122,6 +122,8 @@ dictionary: boundary information = bulk geometry.
 -/
 theorem entanglement_geometry_capstone :
     vonNeumannEntropy (1/2 : ℝ) = Real.log 2 ∧ braidEntanglementStep > 0 := by
-  exact ⟨maxEntropy_twoState, braidEntanglementStep_pos⟩
+  refine ⟨?_, ?_⟩
+  · exact maxEntropy_twoState
+  · exact braidEntanglementStep_pos
 
 end InfoGeometry.Holography.RyuTakayanagiEmergence

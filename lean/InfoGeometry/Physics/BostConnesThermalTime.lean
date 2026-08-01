@@ -336,27 +336,29 @@ theorem mersenneSymmetryConjecture :
 ## 6. Einstein Causality and Modular Flow
 -/
 
-/--
-Einstein causality in the Bost-Connes context:
-Spacelike separated observables commute.
+/-- Raw coordinates for the three causal directions. -/
+abbrev CausalCoordinates := Cl11 × (Cl11 × Cl11)
 
-For the split signature Cl(1,1), this corresponds to:
-- Timelike direction: e₁ (positive norm)
-- Spacelike direction: e₂ (negative norm)
-- Causal structure from light cone: v² = 0
+/-- The causal sign conditions on the three directions. -/
+def CausalPredicate (p : CausalCoordinates) : Prop :=
+  (p.1 * p.1).1 > 0 ∧
+    (p.2.1 * p.2.1).1 < 0 ∧
+      (p.2.2 * p.2.2).1 = 0
 
-Modular flow preserves this causal structure.
--/
-structure CausalStructure where
-  timelike : Cl11
-  spacelike : Cl11
-  lightlike : Cl11
-  /-- Norm squared > 0 for timelike -/
-  normSqTimelike : (timelike * timelike).1 > 0
-  /-- Norm squared < 0 for spacelike -/
-  normSqSpacelike : (spacelike * spacelike).1 < 0
-  /-- Norm squared = 0 for lightlike -/
-  normSqLightlike : (lightlike * lightlike).1 = 0
+/-- Einstein causal data, natively represented as a subtype of coordinates. -/
+abbrev CausalStructure := {p : CausalCoordinates // CausalPredicate p}
+
+namespace CausalStructure
+
+abbrev timelike (σ : CausalStructure) : Cl11 := σ.1.1
+abbrev spacelike (σ : CausalStructure) : Cl11 := σ.1.2.1
+abbrev lightlike (σ : CausalStructure) : Cl11 := σ.1.2.2
+
+lemma normSqTimelike (σ : CausalStructure) : (σ.timelike * σ.timelike).1 > 0 := σ.2.1
+lemma normSqSpacelike (σ : CausalStructure) : (σ.spacelike * σ.spacelike).1 < 0 := σ.2.2.1
+lemma normSqLightlike (σ : CausalStructure) : (σ.lightlike * σ.lightlike).1 = 0 := σ.2.2.2
+
+end CausalStructure
 
 theorem causalStructure_timelike_positive (σ : CausalStructure) :
     (σ.timelike * σ.timelike).1 > 0 :=

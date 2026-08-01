@@ -65,10 +65,26 @@ theorem finiteRiemannProbability_sum_eq_one
 Finite prime-state packet.  Membership in the prime lane is the concrete
 Mathlib primality law on every supported natural number.
 -/
-structure FiniteRiemannStatePacket where
-  support : Finset Nat.Primes
-  weight : Nat.Primes → ℝ
-  normSq_nonzero : finiteRiemannNormSq support weight ≠ 0
+def FiniteRiemannStatePacket : Type _ :=
+  {p : Finset Nat.Primes × (Nat.Primes → ℝ) //
+    finiteRiemannNormSq p.1 p.2 ≠ 0}
+
+namespace FiniteRiemannStatePacket
+
+/-- Native product projection for the finite prime support. -/
+abbrev support (P : FiniteRiemannStatePacket) : Finset Nat.Primes :=
+  P.1.1
+
+/-- Native product projection for the register weight. -/
+abbrev weight (P : FiniteRiemannStatePacket) : Nat.Primes → ℝ :=
+  P.1.2
+
+/-- Native subtype proof of nonzero finite norm. -/
+theorem normSq_nonzero (P : FiniteRiemannStatePacket) :
+    finiteRiemannNormSq P.support P.weight ≠ 0 :=
+  P.2
+
+end FiniteRiemannStatePacket
 
 namespace FiniteRiemannStatePacket
 

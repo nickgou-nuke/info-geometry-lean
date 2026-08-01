@@ -121,10 +121,15 @@ theorem matrix_unit_cartan_weight_packet :
     rightMul UnifiedMatrixBasis.σ₃ E21 = E21 ∧
     leftMul UnifiedMatrixBasis.σ₃ E22 = -E22 ∧
     rightMul UnifiedMatrixBasis.σ₃ E22 = -E22 := by
-  exact ⟨sigma3_E11_joint_eigen.1, sigma3_E11_joint_eigen.2,
-    sigma3_E12_joint_eigen.1, sigma3_E12_joint_eigen.2,
-    sigma3_E21_joint_eigen.1, sigma3_E21_joint_eigen.2,
-    sigma3_E22_joint_eigen.1, sigma3_E22_joint_eigen.2⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact sigma3_E11_joint_eigen.1
+  · exact sigma3_E11_joint_eigen.2
+  · exact sigma3_E12_joint_eigen.1
+  · exact sigma3_E12_joint_eigen.2
+  · exact sigma3_E21_joint_eigen.1
+  · exact sigma3_E21_joint_eigen.2
+  · exact sigma3_E22_joint_eigen.1
+  · exact sigma3_E22_joint_eigen.2
 
 /-- All four `M₂(ℂ)` matrix-unit weights are odd/odd in the finite parity quotient. -/
 theorem matrix_unit_weight_charges :
@@ -142,13 +147,14 @@ theorem repaired_MD008_representation_charge_packet (w : Weight) (a b : ℤ) :
     charge weightE12 = (1, 1) ∧
     leftMul UnifiedMatrixBasis.σ₃ E12 = E12 ∧
     rightMul UnifiedMatrixBasis.σ₃ E12 = -E12 := by
-  exact ⟨by simp [charge, alphaLPlus],
-    by simp [charge, alphaRPlus],
-    charge_add_rootShift w a b,
-    charge_four_representatives w,
-    matrix_unit_weight_charges.2.1,
-    sigma3_E12_joint_eigen.1,
-    sigma3_E12_joint_eigen.2⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simp [charge, alphaLPlus]
+  · simp [charge, alphaRPlus]
+  · exact charge_add_rootShift w a b
+  · exact charge_four_representatives w
+  · exact matrix_unit_weight_charges.2.1
+  · exact sigma3_E12_joint_eigen.1
+  · exact sigma3_E12_joint_eigen.2
 
 end InfoGeometry.Physics.MD008RepresentationCharge
 

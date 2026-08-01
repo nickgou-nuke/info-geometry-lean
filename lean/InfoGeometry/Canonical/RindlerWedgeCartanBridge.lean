@@ -153,8 +153,9 @@ theorem cartan_split_packet
     (hY : IsInChiralOperatorCone C.CIK Y) :
     C.CIK.IsSpectralCompact (X * Y)
       ∧ C.CIK.IsSpectralCompact (CertifiedInverseKernel.spectralCommutator X Y) := by
-  exact ⟨C.chiral_mul_mem_spectralCompact hX hY,
-    C.chiral_commutator_mem_spectralCompact hX hY⟩
+  refine ⟨?_, ?_⟩
+  · exact C.chiral_mul_mem_spectralCompact hX hY
+  · exact C.chiral_commutator_mem_spectralCompact hX hY
 
 end ChiralCartanSplit
 

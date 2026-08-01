@@ -21,7 +21,9 @@ def IsInCorner {A : Type*} [Semiring A] (D : Diamond A) (x : A) : Prop :=
 theorem Diamond.idempotent_mem_corner
     {A : Type*} [Semiring A] (D : Diamond A) :
     IsInCorner D D.P := by
-  exact ⟨D.idem, D.idem⟩
+  refine ⟨?_, ?_⟩
+  · exact D.idem
+  · exact D.idem
 
 /-- Corner membership is stable under addition. -/
 theorem IsInCorner.add

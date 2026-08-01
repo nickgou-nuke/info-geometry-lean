@@ -84,17 +84,17 @@ noncomputable def imaginaryAut
 
 @[simp] theorem imaginaryAut_preserves_norm
     (φ : realZornCompositionAut) (X : Imaginary) :
-    ZornMatrix.detZ realCrossProduct3 (imaginaryAut φ X).1 =
-      ZornMatrix.detZ realCrossProduct3 X.1 :=
+    ZornMatrix.detZ (imaginaryAut φ X).1 =
+      ZornMatrix.detZ X.1 :=
   realZornCompositionAut_preserves_det φ X.1
 
 /-- The norm level set inside the seven-dimensional imaginary split-octonion
 space. No transitivity claim is built into this definition. -/
 def NormLevel (c : ℝ) : Set Imaginary :=
-  {X | ZornMatrix.detZ realCrossProduct3 X.1 = c}
+  {X | ZornMatrix.detZ X.1 = c}
 
 @[simp] theorem mem_normLevel_iff (c : ℝ) (X : Imaginary) :
-    X ∈ NormLevel c ↔ ZornMatrix.detZ realCrossProduct3 X.1 = c := Iff.rfl
+    X ∈ NormLevel c ↔ ZornMatrix.detZ X.1 = c := Iff.rfl
 
 /-- Every imaginary norm level is invariant under every split-octonion
 multiplication automorphism. -/
@@ -150,9 +150,9 @@ noncomputable def Annihilator (X : Imaginary) : Submodule ℝ Imaginary :=
 /-- Polarization of the canonical Zorn determinant on the imaginary
 hyperplane. -/
 def imaginaryPolar (X Y : Imaginary) : ℝ :=
-  ZornMatrix.detZ realCrossProduct3 (X.1 + Y.1) -
-    ZornMatrix.detZ realCrossProduct3 X.1 -
-      ZornMatrix.detZ realCrossProduct3 Y.1
+    ZornMatrix.detZ (X.1 + Y.1) -
+    ZornMatrix.detZ X.1 -
+      ZornMatrix.detZ Y.1
 
 /-- Polarized left alternativity transported from the native Zorn owner. -/
 theorem canonical_left_linearized (X Y Z : CanonicalZorn) :
@@ -182,14 +182,14 @@ theorem imaginary_anticommutator_eq (X Y : Imaginary) :
   rw [htraceX, zero_smul] at hx
   rw [htraceY, zero_smul] at hy
   change (X.1 + Y.1) * (X.1 + Y.1) +
-    ZornMatrix.detZ realCrossProduct3 (X.1 + Y.1) • (1 : CanonicalZorn) = 0 at hsum
+    ZornMatrix.detZ (X.1 + Y.1) • (1 : CanonicalZorn) = 0 at hsum
   rw [InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.mul_add,
     InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.add_mul,
     InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.add_mul] at hsum
   change X.1 * X.1 +
-    ZornMatrix.detZ realCrossProduct3 X.1 • (1 : CanonicalZorn) = 0 at hx
+    ZornMatrix.detZ X.1 • (1 : CanonicalZorn) = 0 at hx
   change Y.1 * Y.1 +
-    ZornMatrix.detZ realCrossProduct3 Y.1 • (1 : CanonicalZorn) = 0 at hy
+    ZornMatrix.detZ Y.1 • (1 : CanonicalZorn) = 0 at hy
   change X.1 * Y.1 + Y.1 * X.1 =
     -(imaginaryPolar X Y) • (1 : CanonicalZorn)
   unfold imaginaryPolar
@@ -524,11 +524,11 @@ def Orbit (X : Imaginary) : Set Imaginary :=
 /-- Every automorphism orbit is contained in the norm level through its base
 point. This deliberately does not assert the converse transitivity claim. -/
 theorem orbit_subset_normLevel (X : Imaginary) :
-    Orbit X ⊆ NormLevel (ZornMatrix.detZ realCrossProduct3 X.1) := by
+    Orbit X ⊆ NormLevel (ZornMatrix.detZ X.1) := by
   intro Y hY
   rcases hY with ⟨φ, rfl⟩
-  change ZornMatrix.detZ realCrossProduct3 (imaginaryAut φ X).1 =
-    ZornMatrix.detZ realCrossProduct3 X.1
+  change ZornMatrix.detZ (imaginaryAut φ X).1 =
+    ZornMatrix.detZ X.1
   exact imaginaryAut_preserves_norm φ X
 
 /-- Concrete imaginary split-octonion examples for the nonmultiplicativity obstruction. -/

@@ -48,6 +48,8 @@ theorem parabolicFlow_sub_one_sq_eq_zero (t : R) :
 /-- The parabolic flow is explicitly classified by determinant `1` and trace `2`. -/
 theorem parabolic_classification (t : R) :
     (parabolicFlow t).det = 1 ∧ Matrix.trace (parabolicFlow t) = 2 := by
-  exact ⟨parabolic_det_one t, parabolic_trace_two t⟩
+  refine ⟨?_, ?_⟩
+  · exact parabolic_det_one t
+  · exact parabolic_trace_two t
 
 end InfoGeometry.Physics

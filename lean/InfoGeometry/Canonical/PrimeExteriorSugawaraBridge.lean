@@ -55,10 +55,18 @@ vertex and the two finite readouts on that shared carrier.
 -/
 structure PrimeExteriorSugawaraPacket (P : PrimeCutoff) where
   state : SquareFreeState P
-  vertex : Vertex P
-  vertex_eq : vertex = vertexOfState state
 
 namespace PrimeExteriorSugawaraPacket
+
+/-- The Boolean vertex canonically attached to the square-free state. -/
+abbrev vertex {P : PrimeCutoff}
+    (B : PrimeExteriorSugawaraPacket P) : Vertex P :=
+  vertexOfState B.state
+
+@[simp] theorem vertex_eq {P : PrimeCutoff}
+    (B : PrimeExteriorSugawaraPacket P) :
+    B.vertex = vertexOfState B.state :=
+  rfl
 
 variable {P : PrimeCutoff}
 
@@ -101,8 +109,8 @@ theorem primeExteriorSugawaraOwnerTarget :
   intro P S
   constructor
   · exact PrimeExteriorSugawaraPacket.mobius_eq_Gamma
-      (⟨S, vertexOfState S, rfl⟩ : PrimeExteriorSugawaraPacket P)
+      (⟨S⟩ : PrimeExteriorSugawaraPacket P)
   · exact PrimeExteriorSugawaraPacket.centralCharge_eq_card
-      (⟨S, vertexOfState S, rfl⟩ : PrimeExteriorSugawaraPacket P)
+      (⟨S⟩ : PrimeExteriorSugawaraPacket P)
 
 end InfoGeometry.Canonical.PrimeExteriorSugawaraBridge

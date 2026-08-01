@@ -45,6 +45,8 @@ fact.  This does not identify the noise with hallucination or Hawking radiation.
 theorem exceptionalPoint_with_positive_temperature (A N : H →L[ℂ] H)
     (h_ep : IsExceptionalPoint A N) (h_T_pos : T > 0) :
     (N ∘L N = 0) ∧ T > 0 := by
-  exact ⟨exceptionalPoint_nilpotent_part_square_zero A N h_ep, h_T_pos⟩
+  refine ⟨?_, ?_⟩
+  · exact exceptionalPoint_nilpotent_part_square_zero A N h_ep
+  · exact h_T_pos
 
 end InfoGeometry.CognitiveTopology.Thermodynamics

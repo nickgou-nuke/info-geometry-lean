@@ -118,16 +118,24 @@ theorem yang_baxter_parameters :
 
 /-- Fibonacci golden-ratio identities. Proved in `FibonacciFusion`. -/
 theorem golden_ratio_identities :
-    0 < phi ∧ 1 < phi ∧ 0 < phiInv ∧ phi ^ 2 = phi + 1 ∧ phiInv ^ 2 + phiInv = 1 :=
-  ⟨phi_pos, phi_gt_one, phiInv_pos, phi_sq, phiInv_sq_add_phiInv⟩
+    0 < phi ∧ 1 < phi ∧ 0 < phiInv ∧ phi ^ 2 = phi + 1 ∧ phiInv ^ 2 + phiInv = 1 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact phi_pos
+  · exact phi_gt_one
+  · exact phiInv_pos
+  · exact phi_sq
+  · exact phiInv_sq_add_phiInv
 
 /-- Fibonacci R-matrix phases are unitary and have the expected product.
 Proved in `FibonacciFusion`. -/
 theorem rmatrix_unitarity :
     ‖R1_phase‖ = 1 ∧ ‖Rtau_phase‖ = 1 ∧
-      R1_phase * Rtau_phase = Complex.exp (Complex.I * (2 * Real.pi / 5)) := by
+    R1_phase * Rtau_phase = Complex.exp (Complex.I * (2 * Real.pi / 5)) := by
   rcases R_phases_unitary with ⟨hR1, hRτ⟩
-  exact ⟨hR1, hRτ, R_product⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact hR1
+  · exact hRτ
+  · exact R_product
 
 /-- Quantum dimension of the τ anyon equals the golden ratio φ.
 Proved in `FibonacciFusion`. -/

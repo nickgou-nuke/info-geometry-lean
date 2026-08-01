@@ -210,9 +210,14 @@ theorem local_cayley_klein_atom :
     Pminus * Pminus = Pminus ∧
     Pplus * Pminus = (0 : Mat2) ∧
     Pplus + Pminus = (1 : Mat2) := by
-  exact ⟨I_sq, E_sq, N_sq,
-    Pplus_idempotent, Pminus_idempotent,
-    Pplus_mul_Pminus, Pplus_add_Pminus⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact I_sq
+  · exact E_sq
+  · exact N_sq
+  · exact Pplus_idempotent
+  · exact Pminus_idempotent
+  · exact Pplus_mul_Pminus
+  · exact Pplus_add_Pminus
 
 /-! ## Moore--Penrose inverse of the parabolic nilpotent -/
 
@@ -324,7 +329,12 @@ theorem hypercomplex_chiral_closure_packet :
     Pminus * N = (0 : Mat2) ∧
     N * Pplus = (0 : Mat2) := by
   rcases chiral_nilpotent_isolation_left_right with ⟨hL, hR⟩
-  exact ⟨I_sq, E_sq, N_sq, hL, hR⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact I_sq
+  · exact E_sq
+  · exact N_sq
+  · exact hL
+  · exact hR
 
 /--
 First Moore--Penrose equation:
@@ -355,7 +365,9 @@ Third Moore--Penrose equation in concrete real form:
 -/
 theorem N_moore_penrose_range_projector :
     N * Nmp = NRangeProj ∧ NRangeProj * NRangeProj = NRangeProj := by
-  exact ⟨N_mul_Nmp, NRangeProj_idempotent⟩
+  refine ⟨?_, ?_⟩
+  · exact N_mul_Nmp
+  · exact NRangeProj_idempotent
 
 /--
 Fourth Moore--Penrose equation in concrete real form:
@@ -364,7 +376,9 @@ Fourth Moore--Penrose equation in concrete real form:
 -/
 theorem N_moore_penrose_source_projector :
     Nmp * N = NSourceProj ∧ NSourceProj * NSourceProj = NSourceProj := by
-  exact ⟨Nmp_mul_N, NSourceProj_idempotent⟩
+  refine ⟨?_, ?_⟩
+  · exact Nmp_mul_N
+  · exact NSourceProj_idempotent
 
 /--
 The Moore--Penrose inverse is not a two-sided inverse.
@@ -398,14 +412,14 @@ theorem N_moore_penrose_profile :
     NSourceProj * NSourceProj = NSourceProj ∧
     NRangeProj * NSourceProj = 0 ∧
     NSourceProj * NRangeProj = 0 := by
-  exact
-    ⟨N_sq,
-     N_moore_penrose_1,
-     N_moore_penrose_2,
-     NRangeProj_idempotent,
-     NSourceProj_idempotent,
-     NRangeProj_mul_NSourceProj,
-     NSourceProj_mul_NRangeProj⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact N_sq
+  · exact N_moore_penrose_1
+  · exact N_moore_penrose_2
+  · exact NRangeProj_idempotent
+  · exact NSourceProj_idempotent
+  · exact NRangeProj_mul_NSourceProj
+  · exact NSourceProj_mul_NRangeProj
 
 /--
 The concrete triad status:
@@ -416,6 +430,11 @@ The concrete triad status:
 -/
 theorem concrete_hypercomplex_triad :
     IsUnit I ∧ IsUnit E ∧ N ≠ 0 ∧ N * N = 0 ∧ ¬ IsUnit N := by
-  exact ⟨⟨I_unit, rfl⟩, ⟨E_unit, rfl⟩, N_ne_zero, N_sq, N_not_isUnit⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact ⟨I_unit, rfl⟩
+  · exact ⟨E_unit, rfl⟩
+  · exact N_ne_zero
+  · exact N_sq
+  · exact N_not_isUnit
 
 end InfoGeometry.Algebra.HypercomplexTriad

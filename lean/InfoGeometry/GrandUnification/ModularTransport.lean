@@ -84,7 +84,9 @@ theorem tomitaGromovBridgeTarget :
                   _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
                     φ ψ t j) i) ∧
       AlgebraicSouriauTomitaTarget := by
-  exact ⟨modularTransportBridgeTarget, constructAlgebraicSouriauTomitaTarget⟩
+  refine ⟨?_, ?_⟩
+  · exact modularTransportBridgeTarget
+  · exact constructAlgebraicSouriauTomitaTarget
 
 /-- Constructor for the narrowed Tomita--Gromov endpoint from proved owner theorems. -/
 theorem constructTomitaGromovBridgeTarget :

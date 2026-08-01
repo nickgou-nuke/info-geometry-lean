@@ -118,8 +118,13 @@ theorem section15_capstone :
       Section8.Quat.normSq (q1 * Section8.Quat.conj q2) =
         Section8.Quat.normSq q1 * Section8.Quat.normSq q2) ∧
     (∀ q1 q2 : Quat, IsS7Pair q1 q2 → hopfImageNormSq q1 q2 = 1) := by
-  exact ⟨Quat.mul_assoc, Quat.conj_conj, Quat.conj_mul,
-    (fun q h => ⟨Quat.mul_inverseCandidate q h, Quat.inverseCandidate_mul q h⟩),
-    Quat.normSq_mul_conj, hopfImageNormSq_eq_one_of_s7_pair⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact Quat.mul_assoc
+  · exact Quat.conj_conj
+  · exact Quat.conj_mul
+  · intro q h
+    exact ⟨Quat.mul_inverseCandidate q h, Quat.inverseCandidate_mul q h⟩
+  · exact Quat.normSq_mul_conj
+  · exact hopfImageNormSq_eq_one_of_s7_pair
 
 end Section15

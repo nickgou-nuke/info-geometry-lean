@@ -557,7 +557,9 @@ theorem modularDisplacement_is_squareZero_coordinate (X : M2R)
     (hFlow : modularFlowOperator 1 = (1 : M2R) + (1 : ℝ) • X) :
     X = modularDisplacement ∧ X * X = (0 : M2R) := by
   have hX : X = modularDisplacement := (modularDisplacement_iff_flow_linear_at_one X).1 hFlow
-  exact ⟨hX, by simpa [hX] using modularDisplacement_sq_zero⟩
+  refine ⟨?_, ?_⟩
+  · exact hX
+  · simpa [hX] using modularDisplacement_sq_zero
 
 /-- Vacuum expectation of the local information free-energy is exactly zero. -/
 theorem vacuumExpectation_informationFreeEnergy_vac (StateSpace : Type*) [AddCommGroup StateSpace]

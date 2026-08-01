@@ -68,7 +68,10 @@ def canonicalE8SplitForm : E8SplitForm where
 /-- The canonical finite witness has the declared E₈ dimension and rank. -/
 theorem canonicalE8SplitForm_isCanonical :
     canonicalE8SplitForm.IsCanonical := by
-  exact ⟨rfl, rfl, rfl⟩
+  refine ⟨?_, ?_, ?_⟩
+  · rfl
+  · rfl
+  · rfl
 
 /--
 Historical finite split-lane readback, recovered from the strengthened
@@ -81,8 +84,10 @@ group `E₈(8)`.
 theorem canonicalE8SplitForm_is_split :
     canonicalE8SplitForm.dimension = dim_E8 ∧
       canonicalE8SplitForm.rank = rank_E8 :=
-  ⟨canonicalE8SplitForm_isCanonical.1,
-    canonicalE8SplitForm_isCanonical.2.1⟩
+  by
+    refine ⟨?_, ?_⟩
+    · exact canonicalE8SplitForm_isCanonical.1
+    · exact canonicalE8SplitForm_isCanonical.2.1
 
 namespace E8SplitForm
 

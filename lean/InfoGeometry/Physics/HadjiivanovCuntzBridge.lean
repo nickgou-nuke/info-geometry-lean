@@ -18,9 +18,15 @@ namespace InfoGeometry.Physics.Hadjiivanov
 
 open Matrix
 
-/-- Finite packaged logarithmic block with an explicit matrix carrier. -/
-structure LogBlock (R : Type*) [Zero R] [One R] where
-  matrix : Matrix (Fin 2) (Fin 2) R
+/-- Finite logarithmic block, natively represented by its matrix carrier. -/
+abbrev LogBlock (R : Type*) [Zero R] [One R] := Matrix (Fin 2) (Fin 2) R
+
+namespace LogBlock
+
+abbrev matrix {R : Type*} [Zero R] [One R] (B : LogBlock R) :
+    Matrix (Fin 2) (Fin 2) R := B
+
+end LogBlock
 
 /-- The square-zero upper Jordan shear `[[0,1],[0,0]]`. -/
 def jordanNilpotent (R : Type*) [Zero R] [One R] : Matrix (Fin 2) (Fin 2) R :=
@@ -30,8 +36,8 @@ def jordanNilpotent (R : Type*) [Zero R] [One R] : Matrix (Fin 2) (Fin 2) R :=
 The standard Hadjiivanov logarithmic block is the square-zero upper Jordan shear
 `[[0,1],[0,0]]`.
 -/
-def standardLogBlock (R : Type*) [Zero R] [One R] : LogBlock R where
-  matrix := jordanNilpotent R
+def standardLogBlock (R : Type*) [Zero R] [One R] : LogBlock R :=
+  jordanNilpotent R
 
 @[simp] theorem standardLogBlock_matrix (R : Type*) [Zero R] [One R] :
     (standardLogBlock R).matrix = jordanNilpotent R := rfl

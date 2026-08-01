@@ -30,9 +30,13 @@ This is exactly the owner theorem from
 -/
 theorem bitword_partitionFunction_eq_weighted_sum
     (n : ℕ)
-    (W : WeylCharacterGibbsPacket (BitWord n)) :
-    W.partitionFunction = ∑ w : BitWord n, W.degeneracy w * W.gibbsFactor w :=
-  W.partitionFunction_eq_weighted_sum
+    (partitionFunction character : ℝ)
+    (degeneracy gibbsFactor : BitWord n → ℝ)
+    (h1 : partitionFunction = character)
+    (h2 : character = ∑ w : BitWord n, degeneracy w * gibbsFactor w) :
+    partitionFunction = ∑ w : BitWord n, degeneracy w * gibbsFactor w :=
+  InfoGeometry.SuperMetriplectic.partitionFunction_eq_weighted_sum
+    partitionFunction character degeneracy gibbsFactor h1 h2
 
 /--
 The Cantor boundary atom at the finite prefix evaluates to one.
@@ -52,11 +56,16 @@ words, and the boundary prefix selects its cylinder atom.
 -/
 theorem bitword_weyl_partition_and_boundary_atom
     (n : ℕ)
-    (W : WeylCharacterGibbsPacket (BitWord n))
+    (partitionFunction character : ℝ)
+    (degeneracy gibbsFactor : BitWord n → ℝ)
+    (h1 : partitionFunction = character)
+    (h2 : character = ∑ w : BitWord n, degeneracy w * gibbsFactor w)
     (x : CantorBoundary) :
-    W.partitionFunction = ∑ w : BitWord n, W.degeneracy w * W.gibbsFactor w ∧
+    partitionFunction = ∑ w : BitWord n, degeneracy w * gibbsFactor w ∧
       cylinder n (atomProjection n (boundaryPrefix n x)) x = 1 :=
-  ⟨bitword_partitionFunction_eq_weighted_sum n W, boundary_prefix_atom_eval_one n x⟩
+  ⟨bitword_partitionFunction_eq_weighted_sum n partitionFunction character
+      degeneracy gibbsFactor h1 h2,
+    boundary_prefix_atom_eval_one n x⟩
 
 end InfoGeometry.GrandUnification.WeylCharacterCantorBridge
 

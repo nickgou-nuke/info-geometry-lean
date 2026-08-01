@@ -48,8 +48,23 @@ theorem redLineOmegaPotential_derivAt (detJ : ℝ → ℝ) (x : ℝ)
 structure SpinorialFlowJacobianData (Map : Type*) where
   jacobianDet : Map → ℝ
   pos_det : ∀ φ, 0 < jacobianDet φ
-  redLinePotential : Map → ℝ
-  redLinePotential_eq : ∀ φ, redLinePotential φ = - Real.log (jacobianDet φ)
+
+namespace SpinorialFlowJacobianData
+
+/-- The Red Line potential determined by the positive Jacobian determinant. -/
+noncomputable abbrev redLinePotential
+    {Map : Type*}
+    (data : SpinorialFlowJacobianData Map) : Map → ℝ :=
+  fun φ => - Real.log (data.jacobianDet φ)
+
+/-- The Red Line potential is its defining negative logarithm. -/
+theorem redLinePotential_eq
+    {Map : Type*}
+    (data : SpinorialFlowJacobianData Map) (φ : Map) :
+    data.redLinePotential φ = - Real.log (data.jacobianDet φ) := by
+  rfl
+
+end SpinorialFlowJacobianData
 
 /--
 **Main Theorem 1: Red Line Potential Exponentiation**

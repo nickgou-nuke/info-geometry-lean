@@ -182,7 +182,8 @@ omit [One A] in
 /-- Derivations are closed under commutator whenever multiplication is
 additively bilinear in the subtraction form needed for the calculation.  This is
 the kernel-checked Lie-algebra calculation behind the slogan
-`Lie(G₂) = Der(𝕆)`, with the classification statement kept out of scope. -/
+`Lie(G₂) = Der(𝕆)`, with the classification statement carried by separate
+owners. -/
 theorem IsNonAssocDerivation.commutator
     {D E : Module.End R A} (hD : IsNonAssocDerivation (R := R) (A := A) D)
     (hE : IsNonAssocDerivation (R := R) (A := A) E)

@@ -33,8 +33,22 @@ open InfoGeometry.Canonical.CategoricalRiemannRigidity
 /-- Finite-stage Dirac operator data structure on a real vector space. -/
 structure FiniteDiracData (V : Type*) [AddCommGroup V] [Module ℝ V] where
   diracOp : V →ₗ[ℝ] V
-  diracSquare : V →ₗ[ℝ] V
-  diracSquare_eq : diracSquare = diracOp.comp diracOp
+
+namespace FiniteDiracData
+
+/-- The finite-stage square is derived from the canonical Dirac operator. -/
+abbrev diracSquare
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (data : FiniteDiracData V) : V →ₗ[ℝ] V :=
+  data.diracOp.comp data.diracOp
+
+@[simp] theorem diracSquare_eq
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (data : FiniteDiracData V) :
+    data.diracSquare = data.diracOp.comp data.diracOp :=
+  rfl
+
+end FiniteDiracData
 
 /-- Applying the stored Dirac square is the same as applying the Dirac operator twice. -/
 @[simp] theorem diracSquare_apply

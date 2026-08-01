@@ -80,9 +80,12 @@ theorem cayley_boundary_contraction_core :
     (∀ β, β ≠ -1 / 2 → thermalCayley β = 1 - 1 / (β + (1 / 2 : ℝ))) ∧
       (∀ β, β > 1 / 2 → 1 / ((β + (1 / 2 : ℝ)) ^ 2) ≤ 4 / (β ^ 2)) ∧
         (∀ β, β > -1 / 2 → 1 / ((β + (1 / 2 : ℝ)) ^ 2) > 0) := by
-  exact ⟨thermalCayley_eq_one_sub_inv,
-    fun β hβ => thermalCayley_jacobian_bound hβ,
-    fun β hβ => thermalCayley_jacobian_pos hβ⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact thermalCayley_eq_one_sub_inv
+  · intro β hβ
+    exact thermalCayley_jacobian_bound hβ
+  · intro β hβ
+    exact thermalCayley_jacobian_pos hβ
 
 /--
 Exact real derivative of the thermal Cayley transform.

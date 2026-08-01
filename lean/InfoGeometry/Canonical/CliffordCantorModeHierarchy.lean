@@ -247,9 +247,10 @@ theorem local_split_quaternion_seed_laws :
       ∧ nullPlus * nullMinus - nullMinus * nullPlus = epsGen
       ∧ epsMinusProjector * epsMinusProjector = epsMinusProjector
       ∧ epsPlusProjector * epsPlusProjector = epsPlusProjector := by
-  exact ⟨jGen_sq, kGen_sq, epsGen_sq, nullPlus_sq, nullMinus_sq,
-    nullMinus_mul_nullPlus_add_swap, splitNull_commutator_eq_eps,
-    epsMinusProjector_idempotent, epsPlusProjector_idempotent⟩
+  refine ⟨jGen_sq, kGen_sq, epsGen_sq, nullPlus_sq, nullMinus_sq, ?_⟩
+  refine ⟨nullMinus_mul_nullPlus_add_swap, splitNull_commutator_eq_eps, ?_⟩
+  refine ⟨epsMinusProjector_idempotent, ?_⟩
+  exact epsPlusProjector_idempotent
 
 /-- Null products and the `p± = (1 ± ε) / 2` projector formulas. -/
 theorem local_null_projector_formula_laws :
@@ -259,10 +260,9 @@ theorem local_null_projector_formula_laws :
       ∧ epsMinusProjector = (1 / 2 : ℝ) • ((1 : Alg) - epsGen)
       ∧ nullPlus * nullMinus + nullMinus * nullPlus = (1 : Alg)
       ∧ nullPlus * nullMinus - nullMinus * nullPlus = epsGen := by
-  exact ⟨rfl, rfl,
-    epsPlusProjector_eq_half_one_add_eps,
-    epsMinusProjector_eq_half_one_sub_eps,
-    by simpa [add_comm] using nullMinus_mul_nullPlus_add_swap,
-    splitNull_commutator_eq_eps⟩
+  refine ⟨rfl, rfl, epsPlusProjector_eq_half_one_add_eps,
+    epsMinusProjector_eq_half_one_sub_eps, ?_⟩
+  refine ⟨?_, splitNull_commutator_eq_eps⟩
+  simpa [add_comm] using nullMinus_mul_nullPlus_add_swap
 
 end CliffordCantorModeHierarchy

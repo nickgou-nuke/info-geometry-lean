@@ -157,28 +157,40 @@ theorem moebius_hurwitz_duality (a b : ℂ) (h : Complex.normSq a + Complex.norm
 structure MoebiusHurwitzCorrespondence where
   /-- Discrete arithmetic packet. -/
   mersenne_decomposition : ℕ × ℕ × ℕ
-  /-- Companion numeric readout. -/
-  su3_representation_dim : ℕ
-  zorn_slot_dimension : ℕ × ℕ × ℕ
-  /-- The `M₂` readback equality. -/
-  m2_color_eq : mersenne_decomposition.1 = su3_representation_dim
-  /-- The `M₃` readback equality. -/
-  m3_octonion_eq : mersenne_decomposition.2.1 = zorn_slot_dimension.1
-  /-- The `M₇` readback equality. -/
-  m7_coupling_eq : mersenne_decomposition.2.2 = zorn_slot_dimension.2.1
   /-- The total numeric equality. -/
-  total_eq : su3_representation_dim + zorn_slot_dimension.1 + zorn_slot_dimension.2.1 = 137
+  total_eq :
+    mersenne_decomposition.1 + mersenne_decomposition.2.1 +
+      mersenne_decomposition.2.2 = 137
+
+namespace MoebiusHurwitzCorrespondence
+
+/-- The `M₂` dimension is the first component of the Mersenne decomposition. -/
+abbrev su3_representation_dim (C : MoebiusHurwitzCorrespondence) : ℕ :=
+  C.mersenne_decomposition.1
+
+@[simp] theorem m2_color_eq (C : MoebiusHurwitzCorrespondence) :
+    C.mersenne_decomposition.1 = C.su3_representation_dim :=
+  rfl
+
+/-- The octonionic and coupling dimensions are the remaining components. -/
+abbrev zorn_slot_dimension (C : MoebiusHurwitzCorrespondence) : ℕ × ℕ :=
+  (C.mersenne_decomposition.2.1, C.mersenne_decomposition.2.2)
+
+@[simp] theorem m3_octonion_eq (C : MoebiusHurwitzCorrespondence) :
+    C.mersenne_decomposition.2.1 = C.zorn_slot_dimension.1 :=
+  rfl
+
+@[simp] theorem m7_coupling_eq (C : MoebiusHurwitzCorrespondence) :
+    C.mersenne_decomposition.2.2 = C.zorn_slot_dimension.2 :=
+  rfl
+
+end MoebiusHurwitzCorrespondence
 
 /-- 
   Construct the canonical finite correspondence packet.
 -/
 def canonicalCorrespondence : MoebiusHurwitzCorrespondence :=
   { mersenne_decomposition := (3, 7, 127)
-    su3_representation_dim := 3
-    zorn_slot_dimension := (7, 127)
-    m2_color_eq := by simp
-    m3_octonion_eq := by simp
-    m7_coupling_eq := by simp
     total_eq := by norm_num }
 
 end InfoGeometry.MoebiusHurwitz

@@ -124,11 +124,13 @@ theorem repaired_MD20250430070955_finite_partition_packet
     (finiteCovariance w O P = finiteCovariance w P O) ∧
     (finiteCovariance w (fun _ => c) P = 0) ∧
     (∀ i, Section33PauliBiquaternionCompletion.pauliRecompose (q i) = q i) := by
-  exact ⟨normalizedWeight_sum_one w hZ,
-    finitePartition_product w v,
-    finiteCovariance_symmetric w O P,
-    finiteCovariance_zero_left_of_constant w hZ c P,
-    fun i => MD20250430071017MatrixStatistics.localMatrix_recompose (q i)⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact normalizedWeight_sum_one w hZ
+  · exact finitePartition_product w v
+  · exact finiteCovariance_symmetric w O P
+  · exact finiteCovariance_zero_left_of_constant w hZ c P
+  · intro i
+    exact MD20250430071017MatrixStatistics.localMatrix_recompose (q i)
 
 end InfoGeometry.Physics.MD20250430070955FinitePartition
 

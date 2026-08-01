@@ -91,12 +91,30 @@ Interface for reading Klein line incidence as an amplituhedron boundary.
 The implication is supplied data. This file does not construct the
 amplituhedron or prove the geometric comparison theorem.
 -/
-structure AmplituhedronBoundaryInterface
-    (C : Plucker6.KleinLineConfig3) where
-  boundary : Fin 3 → Fin 3 → Prop
-  incidence_to_boundary :
+def AmplituhedronBoundaryInterface
+    (C : Plucker6.KleinLineConfig3) : Type _ :=
+  {boundary : Fin 3 → Fin 3 → Prop //
     ∀ {i j : Fin 3}, i ≠ j →
-      C.OnIncidenceBoundary i j → boundary i j
+      C.OnIncidenceBoundary i j → boundary i j}
+
+namespace AmplituhedronBoundaryInterface
+
+/-- Native subtype projection for the boundary predicate. -/
+abbrev boundary
+    {C : Plucker6.KleinLineConfig3}
+    (A : AmplituhedronBoundaryInterface C) : Fin 3 → Fin 3 → Prop :=
+  A.1
+
+/-- Native subtype proof of incidence-to-boundary containment. -/
+theorem incidence_to_boundary
+    {C : Plucker6.KleinLineConfig3}
+    (A : AmplituhedronBoundaryInterface C)
+    {i j : Fin 3} (hij : i ≠ j)
+    (hinc : C.OnIncidenceBoundary i j) :
+    A.boundary i j :=
+  A.2 hij hinc
+
+end AmplituhedronBoundaryInterface
 
 /-- Read back a supplied incidence-to-boundary comparison. -/
 theorem boundary_of_incidence

@@ -65,22 +65,49 @@ structure PositiveCompressionWitness (A : Type*) [Semiring A] [Star A] [Algebra 
   projector_selfAdj_G : IsSelfAdjoint projector
   state : A → ℝ
   denom_pos : 0 < state projector
-  compressedState : A → ℝ
-  compression_eq : ∀ a, compressedState a = state (projector * a * projector) / state projector
+
+namespace PositiveCompressionWitness
+
+/-- The compressed state is the normalized state restricted to the projector corner. -/
+noncomputable abbrev compressedState
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
+    (W : PositiveCompressionWitness A) : A → ℝ :=
+  fun a => W.state (W.projector * a * W.projector) / W.state W.projector
+
+@[simp] theorem compression_eq
+    {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
+    (W : PositiveCompressionWitness A) (a : A) :
+    W.compressedState a =
+      W.state (W.projector * a * W.projector) / W.state W.projector :=
+  rfl
+
+end PositiveCompressionWitness
 
 /-- Algebraic Drazin-null sector witness. Physical support needs a separate compression witness. -/
 @[rep_depth transport]
 structure DrazinNullSector (R : Type*) [Ring R] where
   pair : ProjectorPair R
-  nullProjector : R
-  nullProjector_eq : nullProjector = pair.PD
   /-- The null projector annihilates every observable after compression. -/
-  algebraicNull : ∀ a : R, nullProjector * a * nullProjector = 0
+  algebraicNull : ∀ a : R, pair.PD * a * pair.PD = 0
   /-- The physical null sector is represented by left annihilation. -/
-  physicalNull : ∀ a : R, nullProjector * a = 0
+  physicalNull : ∀ a : R, pair.PD * a = 0
   /-- Left annihilation implies the compressed algebraic null law. -/
-  physicalWitness : ∀ a : R, (nullProjector * a = 0) →
-    (nullProjector * a * nullProjector = 0)
+  physicalWitness : ∀ a : R, (pair.PD * a = 0) →
+    (pair.PD * a * pair.PD = 0)
+
+namespace DrazinNullSector
+
+/-- The null projector is the canonical projector supplied by the pair. -/
+abbrev nullProjector {R : Type*} [Ring R]
+    (W : DrazinNullSector R) : R :=
+  W.pair.PD
+
+@[simp] theorem nullProjector_eq
+    {R : Type*} [Ring R] (W : DrazinNullSector R) :
+    W.nullProjector = W.pair.PD :=
+  rfl
+
+end DrazinNullSector
 
 theorem DrazinNullSector.nullProjector_idempotent
     {R : Type*} [Ring R] (W : DrazinNullSector R) :

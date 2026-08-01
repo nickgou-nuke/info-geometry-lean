@@ -18,10 +18,18 @@ variable (k n m : ℕ)
 def MatrixEntrywiseNonnegative (C : Matrix (Fin k) (Fin n) ℝ) : Prop :=
   ∀ i j, 0 ≤ C i j
 
-/-- The Positive Grassmannian C. -/
-structure PositiveGrassmannian where
-  C_matrix : Matrix (Fin k) (Fin n) ℝ
-  is_positive : MatrixEntrywiseNonnegative k n C_matrix
+/-- The Positive Grassmannian carrier, natively as a subtype of matrices. -/
+abbrev PositiveGrassmannian :=
+  {C : Matrix (Fin k) (Fin n) ℝ // MatrixEntrywiseNonnegative k n C}
+
+namespace PositiveGrassmannian
+
+abbrev C_matrix (C : PositiveGrassmannian k n) : Matrix (Fin k) (Fin n) ℝ := C.1
+
+abbrev is_positive (C : PositiveGrassmannian k n) :
+    MatrixEntrywiseNonnegative k n C.C_matrix := C.2
+
+end PositiveGrassmannian
 
 /-- Every positive-Grassmannian packet exposes nonnegative entries. -/
 theorem positiveGrassmannian_entries_nonnegative
@@ -29,24 +37,35 @@ theorem positiveGrassmannian_entries_nonnegative
     MatrixEntrywiseNonnegative k n C.C_matrix :=
   C.is_positive
 
-/-- The External Momentum Twistors Z. -/
-structure MomentumTwistors where
-  Z_matrix : Matrix (Fin n) (Fin (k + m)) ℝ
+/-- External momentum twistors, natively represented by their matrix. -/
+abbrev MomentumTwistors := Matrix (Fin n) (Fin (k + m)) ℝ
+
+namespace MomentumTwistors
+
+abbrev Z_matrix (Z : MomentumTwistors k n m) : Matrix (Fin n) (Fin (k + m)) ℝ := Z
+
+end MomentumTwistors
 
 /-- The Amplituhedron space Y = C * Z. -/
 def amplituhedron_space (C : PositiveGrassmannian k n) (Z : MomentumTwistors k n m) :
     Matrix (Fin k) (Fin (k + m)) ℝ :=
   C.C_matrix * Z.Z_matrix
 
-/-- 
-  THE PENROSE DUALITY AXIOM
-  The dynamic scattering evolution in Real Space maps to the 
-  static topological volume d(log Q) of the Amplituhedron in Dual Space.
--/
-structure PenroseTransform (C : PositiveGrassmannian k n) (Z : MomentumTwistors k n m) where
-  real_space_dynamics : ℝ
-  dual_space_volume : ℝ
-  -- The core correspondence: The scattering amplitude is the volume form
-  amplitude_is_volume : real_space_dynamics = dual_space_volume
+variable {k n m : ℕ}
+
+/-- The Penrose correspondence as a native equality subtype. -/
+def PenroseTransform (C : PositiveGrassmannian k n) (Z : MomentumTwistors k n m) :=
+  {p : ℝ × ℝ // p.1 = p.2}
+
+namespace PenroseTransform
+
+def real_space_dynamics {C : PositiveGrassmannian k n} {Z : MomentumTwistors k n m}
+    (P : PenroseTransform C Z) : ℝ := P.1.1
+def dual_space_volume {C : PositiveGrassmannian k n} {Z : MomentumTwistors k n m}
+    (P : PenroseTransform C Z) : ℝ := P.1.2
+def amplitude_is_volume {C : PositiveGrassmannian k n} {Z : MomentumTwistors k n m}
+    (P : PenroseTransform C Z) : P.real_space_dynamics = P.dual_space_volume := P.2
+
+end PenroseTransform
 
 end Amplituhedron

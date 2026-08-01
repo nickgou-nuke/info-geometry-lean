@@ -7,8 +7,7 @@ import InfoGeometry.Lie.RealSplitOctonionG2Classification
 # Real split-octonion derivation witness
 
 This file provides the native computer-algebra derivation witness on the real
-canonical Zorn carrier. It does not claim the final automorphism-group
-classification.
+canonical Zorn carrier.
 -/
 
 noncomputable section

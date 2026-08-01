@@ -107,7 +107,10 @@ theorem section24_capstone :
       ∀ lam mu nu : Fin 4,
         torsionCommutatorShadow kappa B lam nu mu =
           -torsionCommutatorShadow kappa B lam mu nu) := by
-  exact ⟨quaternion_norm_scalar, hamilton_basis_with_triple,
-    quaternion_metric_symmetric, torsionCommutatorShadow_antisymmetric⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact quaternion_norm_scalar
+  · exact hamilton_basis_with_triple
+  · exact quaternion_metric_symmetric
+  · exact torsionCommutatorShadow_antisymmetric
 
 end Section24

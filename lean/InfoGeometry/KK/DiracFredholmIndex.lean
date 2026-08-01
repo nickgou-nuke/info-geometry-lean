@@ -168,7 +168,9 @@ noncomputable def chiralFredholmSurfaceOfFiniteAmbient
     [FiniteDimensional ℝ H]
     (X : RealSplitKreinDiracFredholmModule A B H) :
     ChiralFredholmSurface X := by
-  exact ⟨by infer_instance, by infer_instance⟩
+  refine ⟨?_, ?_⟩
+  · infer_instance
+  · infer_instance
 
 /-- On a finite-dimensional carrier, the operatorial Fredholm index reduces to the same kernel asymmetry formula. -/
 @[rep_depth krein, simp] theorem analyticalIndex_eq_finrank_chiralKernelDifference

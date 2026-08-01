@@ -372,4 +372,159 @@ theorem isClosed_integralLattice :
   exact isClosed_rationalIntegralZornBaseSet.inter
     isClosed_rationalIntegralZornBilinearSet
 
+theorem isClosedEmbedding_integralLattice :
+    Topology.IsClosedEmbedding
+      (Subtype.val : ZornIntegralLatticePoint → ZornVectorMatrix ℚ) :=
+  isClosed_integralLattice.isClosedEmbedding_subtypeVal
+
+theorem continuous_zornDualLattice_polar_right
+    (X : ZornVectorMatrix ℚ) :
+    Continuous (fun Y : ZornVectorMatrix ℚ => polar X Y) := by
+  exact continuous_zornVectorMatrix_rational_polar.comp
+    (continuous_const.prodMk continuous_id)
+
+def polarBilinearContinuousLinearMap (X : ZornVectorMatrix ℚ) :
+    ZornVectorMatrix ℚ →L[ℚ] ℚ :=
+  ContinuousLinearMap.mk
+    (polarBilinear X)
+    (continuous_zornDualLattice_polar_right X)
+
+@[simp] theorem polarBilinearContinuousLinearMap_apply
+    (X Y : ZornVectorMatrix ℚ) :
+    polarBilinearContinuousLinearMap X Y = polar X Y :=
+  rfl
+
+def polarBilinearLeftLinearMap (Y : ZornVectorMatrix ℚ) :
+    ZornVectorMatrix ℚ →ₗ[ℚ] ℚ where
+  toFun := fun X => polar X Y
+  map_add' := fun X X' => polar_add_left X X' Y
+  map_smul' := fun r X => by
+    simpa [smul_eq_mul] using polar_smul_left r X Y
+
+def polarBilinearLeftContinuousLinearMap (Y : ZornVectorMatrix ℚ) :
+    ZornVectorMatrix ℚ →L[ℚ] ℚ :=
+  ContinuousLinearMap.mk
+    (polarBilinearLeftLinearMap Y)
+    (continuous_zornDualLattice_polar_left Y)
+
+@[simp] theorem polarBilinearLeftContinuousLinearMap_apply
+    (X Y : ZornVectorMatrix ℚ) :
+    polarBilinearLeftContinuousLinearMap Y X = polar X Y :=
+  rfl
+
+theorem polarBilinearContinuousLinearMap_symm
+    (X Y : ZornVectorMatrix ℚ) :
+    polarBilinearContinuousLinearMap X Y =
+      polarBilinearLeftContinuousLinearMap X Y := by
+  simpa [polarBilinearContinuousLinearMap_apply,
+    polarBilinearLeftContinuousLinearMap_apply] using polar_symm X Y
+
+def cartanChargeContinuousLinearMap :
+    ZornVectorMatrix ℚ →L[ℚ] ℚ :=
+  ContinuousLinearMap.mk
+    { toFun := ZornVectorMatrix.cartanChargeFn
+      map_add' := by intro X Y; rfl
+      map_smul' := by intro r X; rfl }
+    continuous_zornVectorMatrix_rational_a
+
+@[simp] theorem cartanChargeContinuousLinearMap_apply
+    (X : ZornVectorMatrix ℚ) :
+    cartanChargeContinuousLinearMap X = ZornVectorMatrix.cartanChargeFn X :=
+  rfl
+
+def cartanChargeTopCat :
+    TopCat.of (ZornVectorMatrix ℚ) ⟶ TopCat.of ℚ :=
+  TopCat.ofHom
+    { toFun := ZornVectorMatrix.cartanChargeFn
+      continuous_toFun := continuous_zornVectorMatrix_rational_a }
+
+@[simp] theorem cartanChargeTopCat_apply (X : ZornVectorMatrix ℚ) :
+    cartanChargeTopCat X = ZornVectorMatrix.cartanChargeFn X :=
+  rfl
+
+def zornIntegralLatticeCartanChargeTopCat :
+    TopCat.of ZornIntegralLatticePoint ⟶ TopCat.of ℚ :=
+  zornIntegralLatticeInclusionTopCat ≫ cartanChargeTopCat
+
+@[simp] theorem zornIntegralLatticeCartanChargeTopCat_apply
+    (X : ZornIntegralLatticePoint) :
+    zornIntegralLatticeCartanChargeTopCat X =
+      ZornVectorMatrix.cartanChargeFn X.1 :=
+  rfl
+
+theorem zornIntegralLatticeCartanCharge_halfInteger
+    (X : ZornIntegralLatticePoint) :
+    ∃ n : ℤ,
+      zornIntegralLatticeCartanChargeTopCat X = (n : ℚ) / 2 := by
+  rcases X.property with ⟨⟨za, zb, zv, zw, ha, hb, hv, hw⟩, _, _, _⟩
+  exact ⟨za, by simpa using ha⟩
+
+def zornIntegralLatticeIntegerChargeLocus :
+    Set ZornIntegralLatticePoint :=
+  (zornIntegralLatticeCartanChargeTopCat ⁻¹'
+    rationalIntegerSet)
+
+theorem isClosed_zornIntegralLatticeIntegerChargeLocus :
+    IsClosed zornIntegralLatticeIntegerChargeLocus := by
+  exact isClosed_rationalIntegerSet.preimage
+    (continuous_zornVectorMatrix_rational_a.comp continuous_subtype_val)
+
+def zornChargeStateTopCat :
+    TopCat.of (Fin 6) ⟶ TopCat.of (ZornVectorMatrix ℚ) :=
+  TopCat.ofHom
+    { toFun := ZornVectorMatrix.chargeState
+      continuous_toFun := continuous_of_discreteTopology }
+
+@[simp] theorem zornChargeStateTopCat_apply (i : Fin 6) :
+    zornChargeStateTopCat i = ZornVectorMatrix.chargeState i :=
+  rfl
+
+def zornChargeSpectrumTopCat :
+    TopCat.of (Fin 6) ⟶ TopCat.of ℚ :=
+  zornChargeStateTopCat ≫ cartanChargeTopCat
+
+@[simp] theorem zornChargeSpectrumTopCat_apply (i : Fin 6) :
+    zornChargeSpectrumTopCat i =
+      ZornVectorMatrix.cartanCharge (ZornVectorMatrix.chargeState i) := by
+  rfl
+
+theorem zornChargeSpectrumTopCat_range :
+    Set.range (fun i : Fin 6 => zornChargeSpectrumTopCat i) =
+      ({0, -1, 1 / 3, -(1 / 3), 2 / 3, -(2 / 3)} : Set ℚ) := by
+  change Set.range (fun i : Fin 6 =>
+    ZornVectorMatrix.cartanCharge (ZornVectorMatrix.chargeState i)) = _
+  exact ZornVectorMatrix.charge_image
+
+def zornChargeSpectrum : Set ℚ :=
+  Set.range (fun i : Fin 6 => zornChargeSpectrumTopCat i)
+
+theorem zornChargeSpectrum_eq :
+    zornChargeSpectrum =
+      ({0, -1, 1 / 3, -(1 / 3), 2 / 3, -(2 / 3)} : Set ℚ) :=
+  zornChargeSpectrumTopCat_range
+
+theorem isClosed_zornChargeSpectrum : IsClosed zornChargeSpectrum := by
+  rw [zornChargeSpectrum_eq]
+  exact Set.Finite.isClosed (by simp)
+
+theorem isCompact_zornChargeSpectrum : IsCompact zornChargeSpectrum := by
+  rw [zornChargeSpectrum_eq]
+  exact Set.Finite.isCompact (by simp)
+
+def zornRationalNullCone : Set (ZornVectorMatrix ℚ) :=
+  {X | ZornVectorMatrix.norm X = 0}
+
+theorem isClosed_zornRationalNullCone :
+    IsClosed zornRationalNullCone := by
+  exact isClosed_singleton.preimage continuous_zornVectorMatrix_rational_norm
+
+def zornRationalTracelessNullCone : Set (ZornVectorMatrix ℚ) :=
+  {X | ZornVectorMatrix.trace X = 0 ∧ ZornVectorMatrix.norm X = 0}
+
+theorem isClosed_zornRationalTracelessNullCone :
+    IsClosed zornRationalTracelessNullCone := by
+  exact (isClosed_singleton.preimage
+    continuous_zornVectorMatrix_rational_trace).inter
+      (isClosed_singleton.preimage continuous_zornVectorMatrix_rational_norm)
+
 end InfoGeometry.Canonical

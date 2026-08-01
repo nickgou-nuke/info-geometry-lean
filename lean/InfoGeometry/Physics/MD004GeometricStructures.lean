@@ -237,14 +237,24 @@ theorem repaired_MD004_geometric_structures_packet (a b : Coord4) (u v : Coord8)
     dot8 (J0 u) (J0 v) = dot8 u v ∧
     omega0 v u = - omega0 u v ∧
     (∀ x : Coord8, (∀ y : Coord8, omega0 x y = 0) → x = zero8) := by
-  exact ⟨I4_sq a, J4_sq a, K4_sq a, I4_mul_J4 a,
-    I4_preserves_dot4 a b, J4_preserves_dot4 a b, K4_preserves_dot4 a b,
-    omegaI_skew a b, omegaJ_skew a b, omegaK_skew a b,
-    fun x h => omegaI_nondegenerate x h,
-    fun x h => omegaJ_nondegenerate x h,
-    fun x h => omegaK_nondegenerate x h,
-    J0_sq u, J0_preserves_dot8 u v, omega0_skew u v,
-    fun x h => omega0_nondegenerate x h⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact I4_sq a
+  · exact J4_sq a
+  · exact K4_sq a
+  · exact I4_mul_J4 a
+  · exact I4_preserves_dot4 a b
+  · exact J4_preserves_dot4 a b
+  · exact K4_preserves_dot4 a b
+  · exact omegaI_skew a b
+  · exact omegaJ_skew a b
+  · exact omegaK_skew a b
+  · intro x h; exact omegaI_nondegenerate x h
+  · intro x h; exact omegaJ_nondegenerate x h
+  · intro x h; exact omegaK_nondegenerate x h
+  · exact J0_sq u
+  · exact J0_preserves_dot8 u v
+  · exact omega0_skew u v
+  · intro x h; exact omega0_nondegenerate x h
 
 end InfoGeometry.Physics.MD004GeometricStructures
 

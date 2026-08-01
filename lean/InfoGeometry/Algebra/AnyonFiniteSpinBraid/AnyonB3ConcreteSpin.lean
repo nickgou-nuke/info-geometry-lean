@@ -77,7 +77,10 @@ theorem b3SpinArtinBraidOperators_packet :
       b3SpinArtinBraidOperators.generatorOperator ⟨1, by decide⟩ ∘
         b3SpinArtinBraidOperators.generatorOperator ⟨0, by decide⟩ ∘
         b3SpinArtinBraidOperators.generatorOperator ⟨1, by decide⟩ := by
-  exact ⟨rfl, rfl, b3SpinSwap_braid_relation⟩
+  refine ⟨?_, ?_, ?_⟩
+  · rfl
+  · rfl
+  · exact b3SpinSwap_braid_relation
 
 end InfoGeometry.Algebra.AnyonFiniteSpinBraid
 

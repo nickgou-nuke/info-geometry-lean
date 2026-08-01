@@ -143,13 +143,15 @@ theorem finite_lattice_current_hierarchy_packet
     FiniteLatticeCurrentHierarchyPacket n heiOper heiTrunc hComm := by
   refine ⟨?_, projectionAssignment_galoisConnection n, ?_, hComm, ?_⟩
   · intro T
-    exact ⟨finiteProjectionCompletion_sSup_isLUB n T,
-      finiteProjectionCompletion_sInf_isGLB n T⟩
-  · exact ⟨concrete_creation_square_zero (E := E),
-      concrete_annihilation_square_zero (E := E),
-      concrete_creation_comp_annihilation_eq_spectralPlusProj (E := E),
-      concrete_annihilation_comp_creation_eq_spectralMinusProj (E := E),
-      concrete_car_creation_annihilation_ccrBracket_eq_spectral_epsilon (E := E)⟩
+    refine ⟨?_, ?_⟩
+    · exact finiteProjectionCompletion_sSup_isLUB n T
+    · exact finiteProjectionCompletion_sInf_isGLB n T
+  · refine ⟨?_, ?_, ?_, ?_, ?_⟩
+    · exact concrete_creation_square_zero (E := E)
+    · exact concrete_annihilation_square_zero (E := E)
+    · exact concrete_creation_comp_annihilation_eq_spectralPlusProj (E := E)
+    · exact concrete_annihilation_comp_creation_eq_spectralMinusProj (E := E)
+    · exact concrete_car_creation_annihilation_ccrBracket_eq_spectral_epsilon (E := E)
   · exact VirasoroProject.sugawaraRepresentation_cgen (heiOper := heiOper) heiTrunc hComm
 
 /--

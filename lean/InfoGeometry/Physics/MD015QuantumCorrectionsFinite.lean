@@ -142,13 +142,14 @@ theorem repaired_MD015_quantum_corrections_packet
     quadraticFluctuationAction S0 L H delta - S0 = (1 / 2 : ℝ) * H * delta ^ 2 ∧
     frgScalarRHS inverseKernel (dR + dS) = frgScalarRHS inverseKernel dR + frgScalarRHS inverseKernel dS ∧
     Section8.Quat.normSq (Q0 + q) =
-      Section8.Quat.normSq Q0 + 2 * quatDot Q0 q + Section8.Quat.normSq q := by
-  exact ⟨effectiveActionThreeLoop_eq_twoLoop_add_cubic D hbar,
-    effectiveActionThreeLoop_sub_classical D hbar,
-    oneLoopTraceLogShadow_add T U,
-    quadraticFluctuationAction_sub_background_of_stationary S0 L H delta hL,
-    frgScalarRHS_add_cutoffDerivative inverseKernel dR dS,
-    quaternionFluctuation_normSq_add Q0 q⟩
+    Section8.Quat.normSq Q0 + 2 * quatDot Q0 q + Section8.Quat.normSq q := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact effectiveActionThreeLoop_eq_twoLoop_add_cubic D hbar
+  · exact effectiveActionThreeLoop_sub_classical D hbar
+  · exact oneLoopTraceLogShadow_add T U
+  · exact quadraticFluctuationAction_sub_background_of_stationary S0 L H delta hL
+  · exact frgScalarRHS_add_cutoffDerivative inverseKernel dR dS
+  · exact quaternionFluctuation_normSq_add Q0 q
 
 end InfoGeometry.Physics.MD015QuantumCorrectionsFinite
 

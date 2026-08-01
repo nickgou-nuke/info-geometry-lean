@@ -101,7 +101,11 @@ theorem tl3_chain_synthesis :
     (e1 * e1 = (2 : ℂ) • e1) ∧
     (e0 * e1 * e0 = e0) ∧
     (e1 * e0 * e1 = e1) := by
-  exact ⟨e0_sq, e1_sq, e0_mul_e1_mul_e0, e1_mul_e0_mul_e1⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact e0_sq
+  · exact e1_sq
+  · exact e0_mul_e1_mul_e0
+  · exact e1_mul_e0_mul_e1
 
 #check e4_sq
 #check e0_sq

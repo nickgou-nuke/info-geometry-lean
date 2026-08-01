@@ -49,7 +49,10 @@ def cl11LocalCompensation : LocalCompensationData :=
 /-- The concrete local Cl(1,1) compensation packet is honest finite data. -/
 theorem cl11_local_compensation_identities :
     b * b = 0 ∧ bdag * bdag = 0 ∧ (b * bdag + bdag * b = 1) := by
-  exact ⟨b_sq, bdag_sq, anticomm_bbdag⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact b_sq
+  · exact bdag_sq
+  · exact anticomm_bbdag
 
 /-! ## 2. Refined orbit tags available from the 5-graded socket -/
 

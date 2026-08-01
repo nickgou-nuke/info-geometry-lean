@@ -142,7 +142,11 @@ theorem majorana_braid_group_identities :
     braid12 * braid23 * braid12 = braid23 * braid12 * braid23 ∧
     (braid12 * braid12InvNumerator = (2 : ℤ) • (1 : M8Z) ∧
       braid23 * braid23InvNumerator = (2 : ℤ) • (1 : M8Z)) := by
-  exact ⟨majorana_squares, majorana_anticommutators, majorana_bivector_squares,
-    majorana_adjacent_artin, majorana_projective_inverses⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact majorana_squares
+  · exact majorana_anticommutators
+  · exact majorana_bivector_squares
+  · exact majorana_adjacent_artin
+  · exact majorana_projective_inverses
 
 end InfoGeometry.GrandUnification.MajoranaBraidGroup

@@ -240,7 +240,10 @@ theorem even_subalgebra_unital (n : ℕ) :
     parity n (1 : CuntzAlg n) = 1 ∧
     (∀ (x y : CuntzAlg n), parity n x = x → parity n y = y →
       parity n (x * y) = x * y) := by
-  exact ⟨one_is_even n, λ x y hx hy => even_subalgebra_mul_closed n hx hy⟩
+  refine ⟨?_, ?_⟩
+  · exact one_is_even n
+  · intro x y hx hy
+    exact even_subalgebra_mul_closed n hx hy
 
 /-- {Q, Qdag} is in the even subalgebra. -/
 theorem anticommutator_in_even_subalgebra (n : ℕ) :

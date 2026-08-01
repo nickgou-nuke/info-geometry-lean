@@ -302,22 +302,27 @@ structure Transport where
   kind : TransportKind
   source : BaseChart
   target : BaseChart
-  sign : ℤ
-  sign_eq : sign = orientationSign kind
+
+namespace Transport
+
+/-- The orientation sign determined by the transport kind. -/
+abbrev sign (T : Transport) : ℤ := orientationSign T.kind
+
+/-- The transport sign is its canonical orientation sign. -/
+theorem sign_eq (T : Transport) : T.sign = orientationSign T.kind := by
+  rfl
+
+end Transport
 
 def glideTransport : Transport where
   kind := TransportKind.glideMonodromy
   source := BaseChart.S4
   target := BaseChart.kleinOrbifold
-  sign := -1
-  sign_eq := rfl
 
 def chiralTransport : Transport where
   kind := TransportKind.pentagonChiralBraid
   source := BaseChart.CP2
   target := BaseChart.CP2
-  sign := 1
-  sign_eq := rfl
 
 /-- Chiral twisted fibration theorem: base charts and fiber sectors remain typed
     separately, while glide monodromy reverses orientation and chiral transport

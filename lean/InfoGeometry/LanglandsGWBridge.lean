@@ -360,15 +360,19 @@ theorem connesBoundaryCocycleDerivative_eq_zero_of_eq
   simp [connesBoundaryCocycleDerivative]
 
 /-- Minimal carrier for the Klein-bottle sheet flip used by non-orientable boundary maps. -/
-structure KleinBottleSheet (Carrier : Type*) where
-  carrier : Carrier
-  chirality : Chirality
+abbrev KleinBottleSheet (Carrier : Type*) := Carrier × Chirality
+
+namespace KleinBottleSheet
+
+abbrev carrier {Carrier : Type*} (A : KleinBottleSheet Carrier) : Carrier := A.1
+
+abbrev chirality {Carrier : Type*} (A : KleinBottleSheet Carrier) : Chirality := A.2
+
+end KleinBottleSheet
 
 /-- Orientation-reversing sheet transition: it preserves the carrier and flips chirality. -/
 def kleinSheetFlip {Carrier : Type*} (A : KleinBottleSheet Carrier) :
-    KleinBottleSheet Carrier where
-  carrier := A.carrier
-  chirality := A.chirality.flip
+    KleinBottleSheet Carrier := (A.carrier, A.chirality.flip)
 
 @[simp] theorem kleinSheetFlip_carrier {Carrier : Type*} (A : KleinBottleSheet Carrier) :
     (kleinSheetFlip A).carrier = A.carrier :=
@@ -381,8 +385,9 @@ def kleinSheetFlip {Carrier : Type*} (A : KleinBottleSheet Carrier) :
 /-- The Klein sheet transition is a genuine `Z₂` involution. -/
 @[simp] theorem kleinSheetFlip_involutive {Carrier : Type*} (A : KleinBottleSheet Carrier) :
     kleinSheetFlip (kleinSheetFlip A) = A := by
-  cases A
-  simp [kleinSheetFlip]
+  rcases A with ⟨carrier, chirality⟩
+  change (carrier, chirality.flip.flip) = (carrier, chirality)
+  simp
 
 /-- Inner derivation/commutator with the convention `δ_H(X) = XH - HX`. -/
 def boundaryInnerDerivation {A : Type*} [NonUnitalNonAssocRing A] (H X : A) : A :=

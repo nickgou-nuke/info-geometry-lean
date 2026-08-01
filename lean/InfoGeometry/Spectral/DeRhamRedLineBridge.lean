@@ -50,8 +50,19 @@ structure RedLineWindingData where
   winding : ℤ
   radius : ℝ
   radius_pos : 0 < radius
-  phase : ℂ
-  phase_eq : phase = (winding : ℂ) * (2 * Real.pi * Complex.I)
+
+namespace RedLineWindingData
+
+/-- The winding phase determined by the integer winding number. -/
+noncomputable abbrev phase (D : RedLineWindingData) : ℂ :=
+  (D.winding : ℂ) * (2 * Real.pi * Complex.I)
+
+/-- The phase is the canonical complex representative of the winding. -/
+theorem phase_eq (D : RedLineWindingData) :
+    D.phase = (D.winding : ℂ) * (2 * Real.pi * Complex.I) := by
+  rfl
+
+end RedLineWindingData
 
 /-- Bridge theorem: The de Rham exact couple computes the causal cone winding. -/
 theorem deRhamRedLineBridge (R : ℝ) (hR : 0 < R) (n : ℤ) :

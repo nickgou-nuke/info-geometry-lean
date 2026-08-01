@@ -185,9 +185,10 @@ theorem finite_glide_orbit_charge_cancellation_packet (q : ℤ) :
     (∑ i : Fin 2, orientedWeylCharge q i) = 0 ∧
       (∑ i : Fin 2, nonOrientableWeylCharge i) = 0 ∧
         ((q : ZMod 2) + (q : ZMod 2)) = 0 := by
-  exact ⟨oriented_pair_charge_cancels q,
-    nonorientable_mod_two_charge_cancels,
-    same_integer_charge_mod_two_cancels q⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact oriented_pair_charge_cancels q
+  · exact nonorientable_mod_two_charge_cancels
+  · exact same_integer_charge_mod_two_cancels q
 
 /-- Reversing the local orientation at every site leaves the finite packet unchanged mod two. -/
 theorem totalChargeModTwo_pointwise_orientation_invariant

@@ -62,7 +62,10 @@ theorem splitCl44_three_generation_model
     ColorInvariant D ∧
     ChargeInvariant D ∧
     LinearlyIndependentFamilies D := by
-  exact ⟨D.preserves_semiSpinors, D.color_invariant,
-    D.charge_invariant, D.linearly_independent_families⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact D.preserves_semiSpinors
+  · exact D.color_invariant
+  · exact D.charge_invariant
+  · exact D.linearly_independent_families
 
 end InfoGeometry.Clifford.Cl44S3Family

@@ -62,51 +62,46 @@ Derived by polarizing the split norm (Zorn determinant):
 
 `g(X, Y) = detZ(X + Y) - detZ(X) - detZ(Y)`.
 -/
-def TKKFisherInformationMetric (cp : CrossProduct3 R)
-    (X Y : ZornMatrix R) : R :=
-  InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp (X + Y) -
-  InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp X -
-  InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp Y
+def TKKFisherInformationMetric (X Y : ZornMatrix R) : R :=
+  InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (X + Y) -
+  InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X -
+  InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Y
 
 /--
 The associated `2 × 2` Fisher information matrix on the span of two Zorn states.
 Its entries are the Fisher pairings of `X` and `Y`.
 -/
-def ZornFisherInformationMatrix (cp : CrossProduct3 R)
-    (X Y : ZornMatrix R) : Matrix (Fin 2) (Fin 2) R :=
-  !![TKKFisherInformationMetric cp X X, TKKFisherInformationMetric cp X Y;
-    TKKFisherInformationMetric cp Y X, TKKFisherInformationMetric cp Y Y]
+def ZornFisherInformationMatrix (X Y : ZornMatrix R) : Matrix (Fin 2) (Fin 2) R :=
+  !![TKKFisherInformationMetric X X, TKKFisherInformationMetric X Y;
+    TKKFisherInformationMetric Y X, TKKFisherInformationMetric Y Y]
 
 /-- The Fisher pairing is exactly the polarization of the split-norm determinant. -/
-theorem TKKFisherInformationMetric_eq_detZ_polar (cp : CrossProduct3 R)
-    (X Y : ZornMatrix R) :
-    TKKFisherInformationMetric cp X Y =
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp (X + Y) -
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp X -
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp Y := by
+theorem TKKFisherInformationMetric_eq_detZ_polar (X Y : ZornMatrix R) :
+    TKKFisherInformationMetric X Y =
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (X + Y) -
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X -
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Y := by
   rfl
 
 /-- The Fisher pairing on Zorn states is symmetric. -/
-theorem TKKFisherInformationMetric_symm (cp : CrossProduct3 R)
-    (X Y : ZornMatrix R) :
-    TKKFisherInformationMetric cp X Y = TKKFisherInformationMetric cp Y X := by
+theorem TKKFisherInformationMetric_symm (X Y : ZornMatrix R) :
+    TKKFisherInformationMetric X Y = TKKFisherInformationMetric Y X := by
   simp [TKKFisherInformationMetric, add_comm, sub_eq_add_neg]
   ring
 
 /-- The Fisher information matrix packages the determinant polarization entries. -/
-theorem ZornFisherInformationMatrix_apply (cp : CrossProduct3 R)
-    (X Y : ZornMatrix R) :
-    ZornFisherInformationMatrix cp X Y =
-      !![InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp (X + X) -
-          2 * InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp X,
-        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp (X + Y) -
-          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp X -
-          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp Y;
-        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp (Y + X) -
-          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp Y -
-          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp X,
-        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp (Y + Y) -
-          2 * InfoGeometry.Algebra.Zorn.ZornMatrix.detZ cp Y] := by
+theorem ZornFisherInformationMatrix_apply (X Y : ZornMatrix R) :
+    ZornFisherInformationMatrix X Y =
+      !![InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (X + X) -
+          2 * InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X,
+        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (X + Y) -
+          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X -
+          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Y;
+        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (Y + X) -
+          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Y -
+          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ X,
+        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ (Y + Y) -
+          2 * InfoGeometry.Algebra.Zorn.ZornMatrix.detZ Y] := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [ZornFisherInformationMatrix, TKKFisherInformationMetric, two_mul, add_comm, add_left_comm, add_assoc, sub_eq_add_neg]
 
@@ -120,7 +115,7 @@ For g₀ ∈ g₀, the action is the adjoint action: X ↦ [g₀, X].
 Since g₀ preserves the grading, this acts as a conformal isometry
 on the projective closure.
 -/
-def fermi_operator (cp : CrossProduct3 R) (g0 : ZornMatrix R)
+def fermi_operator (g0 : ZornMatrix R)
     (X : ZornMatrix R) : ZornMatrix R :=
   zMul g0 X - zMul X g0
 
@@ -154,8 +149,7 @@ theorem triality_projector_eq_zero {X : ZornMatrix R}
 The Gamow-Teller operator applies the triality projector.
 This breaks the 5-grading because it mixes grades.
 -/
-def gamow_teller_operator (cp : CrossProduct3 R)
-    (X : ZornMatrix R) : ZornMatrix R :=
+def gamow_teller_operator (X : ZornMatrix R) : ZornMatrix R :=
   triality_projector X
 
 -- ============================================================================
@@ -168,14 +162,13 @@ structure ProjectiveZornState (R : Type*) [CommRing R] where
 
 namespace ProjectiveZornState
 
-def applyFermi (cp : CrossProduct3 R) (g0 : ZornMatrix R)
+def applyFermi (g0 : ZornMatrix R)
     (ψ : ProjectiveZornState R)
-    (h_nonzero : fermi_operator cp g0 ψ.vector ≠ 0) : ProjectiveZornState R :=
-  ⟨fermi_operator cp g0 ψ.vector, h_nonzero⟩
+    (h_nonzero : fermi_operator g0 ψ.vector ≠ 0) : ProjectiveZornState R :=
+  ⟨fermi_operator g0 ψ.vector, h_nonzero⟩
 
-def applyGT (cp : CrossProduct3 R)
-    (ψ : ProjectiveZornState R) : ProjectiveZornState R :=
-  ⟨gamow_teller_operator cp ψ.vector, by
+def applyGT (ψ : ProjectiveZornState R) : ProjectiveZornState R :=
+  ⟨gamow_teller_operator ψ.vector, by
     intro h
     apply ψ.non_zero
     exact triality_projector_eq_zero (by simpa [gamow_teller_operator] using h)⟩

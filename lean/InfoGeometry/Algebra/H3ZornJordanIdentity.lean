@@ -10,8 +10,8 @@ import Mathlib.Algebra.Jordan.Basic
 This file defines the product induced by the cubic-data `T`-operator and proves
 its Jordan identity from the McCrimmon quadratic-representation chain.  The
 corresponding Mathlib `IsCommJordan` instance is installed separately in
-`H3ZornJordanInstance` so that importing the cubic-data layer alone does not
-change multiplication typeclass search.
+`H3ZornJordanInstance`, which keeps the carrier and the installed instance in
+distinct owner files.
 -/
 
 namespace InfoGeometry.Algebra
@@ -186,8 +186,8 @@ theorem H3ZornJordanProductLaw_iff_TJordanCommutation :
   · intro h x y
     exact (H3ZornJordanProductLawAt_iff_TJordanCommutation x y).2 (h x y)
 
-/-- Paper-facing closure target.  It is intentionally a proposition, not an
-installed instance. -/
+/-- Paper-facing closure target.  It is packaged as a proposition so the
+installed instance can live in the companion owner file. -/
 def H3ZornJordanIdentityTarget : Prop :=
   H3ZornJordanProductLaw
 
@@ -246,7 +246,8 @@ theorem H3ZornJordanIdentityTarget_proof : H3ZornJordanIdentityTarget :=
 /--
 A theorem that the cubic norm axioms of a `CubicJordanDatum` imply that the
 induced multiplication satisfies the commutative Jordan ring axioms (`IsCommJordan`).
-This represents the structural open debt of the cubic-to-Jordan algebra translation.
+This records the cubic-to-Jordan algebra translation as an explicit theorem
+surface.
 -/
 theorem isCommJordan_of_cubicJordanDatum [CommMagma (H3Zorn ℝ)]
     (_D : CubicJordanDatum (H3Zorn ℝ))

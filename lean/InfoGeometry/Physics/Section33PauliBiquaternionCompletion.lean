@@ -151,9 +151,10 @@ theorem repaired_section33_pauli_biquaternion_packet
     blochDensityAtRadius r n1 n2 n3 * blochDensityAtRadius r n1 n2 n3 =
       blochDensityAtRadius r n1 n2 n3 ∧
     (blochSpacetimePoint t r n1 n2 n3).det = 0 := by
-  exact ⟨pauli_recompose_eq_self A,
-    blochDensityAtRadius_idempotent_of_scaled_unit r n1 n2 n3 hunit,
-    blochSpacetimePoint_det_zero_of_scaled_unit t r n1 n2 n3 hunit⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact pauli_recompose_eq_self A
+  · exact blochDensityAtRadius_idempotent_of_scaled_unit r n1 n2 n3 hunit
+  · exact blochSpacetimePoint_det_zero_of_scaled_unit t r n1 n2 n3 hunit
 
 end InfoGeometry.Physics.Section33PauliBiquaternionCompletion
 

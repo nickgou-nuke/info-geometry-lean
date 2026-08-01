@@ -154,44 +154,32 @@ theorem finiteSupertrace_eq_squarefree_filter
 
 end MobiusCoefficient
 
-/-- `\langle Z_B,Z_{\mathrm{sf}},\mathrm{Str}\rangle`. -/
-structure FinitePrimonThermalPacket where
-  support : Finset ℕ
-  beta : ℝ
-  mobius : MobiusCoefficient
-
-namespace FinitePrimonThermalPacket
-
-variable (P : FinitePrimonThermalPacket)
-
 /-- `Z_B`. -/
-def bosonicPartition : ℝ :=
-  finiteBosonicPartition P.support P.beta
+def bosonicPartition (support : Finset ℕ) (beta : ℝ) : ℝ :=
+  finiteBosonicPartition support beta
 
 /-- `Z_{\mathrm{sf}}`. -/
-def squarefreePartition : ℝ :=
-  finiteSquarefreePartition P.support P.beta
+def squarefreePartition (support : Finset ℕ) (beta : ℝ) : ℝ :=
+  finiteSquarefreePartition support beta
 
-lemma bosonicPartition_nonneg :
-    0 ≤ P.bosonicPartition := by
-  exact finiteBosonicPartition_nonneg P.support P.beta
+lemma bosonicPartition_nonneg (support : Finset ℕ) (beta : ℝ) :
+    0 ≤ bosonicPartition support beta := by
+  exact finiteBosonicPartition_nonneg support beta
 
-lemma squarefreePartition_nonneg :
-    0 ≤ P.squarefreePartition := by
-  exact finiteSquarefreePartition_nonneg P.support P.beta
+lemma squarefreePartition_nonneg (support : Finset ℕ) (beta : ℝ) :
+    0 ≤ squarefreePartition support beta := by
+  exact finiteSquarefreePartition_nonneg support beta
 
 /-- `\mathrm{Str}`. -/
-def supertrace : ℝ :=
-  P.mobius.finiteSupertrace P.support P.beta
+def supertrace (mobius : MobiusCoefficient) (support : Finset ℕ) (beta : ℝ) : ℝ :=
+  mobius.finiteSupertrace support beta
 
 /-- `\mathrm{Str}(A,\beta)=\sum_{A\cap\mathrm{SqFree}} \mu(n)w_\beta(n)`. -/
-theorem supertrace_eq_squarefree_filter :
-    P.supertrace =
-      ∑ n ∈ P.support.filter IsSquarefreeState,
-        P.mobius.coeff n * primonBoltzmannWeight P.beta n := by
+theorem supertrace_eq_squarefree_filter (mobius : MobiusCoefficient) (support : Finset ℕ) (beta : ℝ) :
+    supertrace mobius support beta =
+      ∑ n ∈ support.filter IsSquarefreeState,
+        mobius.coeff n * primonBoltzmannWeight beta n := by
   classical
-  exact P.mobius.finiteSupertrace_eq_squarefree_filter P.support P.beta
-
-end FinitePrimonThermalPacket
+  exact mobius.finiteSupertrace_eq_squarefree_filter support beta
 
 end InfoGeometry.Arithmetic.PrimonGasSupertrace

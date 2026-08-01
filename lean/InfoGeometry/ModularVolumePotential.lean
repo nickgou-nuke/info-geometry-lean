@@ -240,11 +240,24 @@ end SpectralBoltzmannPacket
 structure FiniteSpectralBoltzmannPartition (S : Type*) [Fintype S] where
   /-- Spectral tilt data for the model. -/
   spectrum : SpectralBoltzmannPacket S
-  /-- Partition value (`Z_β`) for the supplied finite spectrum. -/
-  partition : ℝ
-  /-- Core partition identity, expressed as finite spectral sum. -/
-  partition_eq :
-    partition = ∑ s : S, spectrum.boltzmannFactor s * spectrum.spectralVolume s
+
+namespace FiniteSpectralBoltzmannPartition
+
+/-- The finite partition value determined by the supplied spectral data. -/
+noncomputable abbrev partition
+    {S : Type*} [Fintype S]
+    (Z : FiniteSpectralBoltzmannPartition S) : ℝ :=
+  ∑ s : S, Z.spectrum.boltzmannFactor s * Z.spectrum.spectralVolume s
+
+/-- The partition value is exactly its defining finite spectral sum. -/
+theorem partition_eq
+    {S : Type*} [Fintype S]
+    (Z : FiniteSpectralBoltzmannPartition S) :
+    Z.partition =
+      ∑ s : S, Z.spectrum.boltzmannFactor s * Z.spectrum.spectralVolume s := by
+  rfl
+
+end FiniteSpectralBoltzmannPartition
 
 /--
 Partition normalization identity in the explicit tilt form.

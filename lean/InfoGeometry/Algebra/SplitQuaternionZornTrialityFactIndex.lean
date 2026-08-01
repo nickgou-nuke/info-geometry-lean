@@ -89,26 +89,26 @@ theorem peirce_opposing_channels_to_00
   peirce01_mul_peirce10 hp x y
 
 /-- Zorn upper Peirce projector is null. -/
-theorem zorn_pPlus_null {R : Type*} [CommRing R] (cp : CrossProduct3 R) :
-    ZornMatrix.IsNull cp (pPlus : ZornMatrix R) :=
-  pPlus_isNull cp
+theorem zorn_pPlus_null {R : Type*} [CommRing R] :
+    ZornMatrix.IsNull (pPlus : ZornMatrix R) :=
+  pPlus_isNull
 
 /-- Zorn lower Peirce projector is null. -/
-theorem zorn_pMinus_null {R : Type*} [CommRing R] (cp : CrossProduct3 R) :
-    ZornMatrix.IsNull cp (pMinus : ZornMatrix R) :=
-  pMinus_isNull cp
+theorem zorn_pMinus_null {R : Type*} [CommRing R] :
+    ZornMatrix.IsNull (pMinus : ZornMatrix R) :=
+  pMinus_isNull
 
 /-- Every upper off-diagonal Zorn lightray is null. -/
 theorem zorn_upper_lightray_null {R : Type*} [CommRing R]
-    (cp : CrossProduct3 R) (v : Fin 3 → R) :
-    ZornMatrix.IsNull cp (upperLightray v) :=
-  upperLightray_isNull cp v
+    (v : Fin 3 → R) :
+    ZornMatrix.IsNull (upperLightray v) :=
+  upperLightray_isNull v
 
 /-- Every lower off-diagonal Zorn lightray is null. -/
 theorem zorn_lower_lightray_null {R : Type*} [CommRing R]
-    (cp : CrossProduct3 R) (w : Fin 3 → R) :
-    ZornMatrix.IsNull cp (lowerLightray w) :=
-  lowerLightray_isNull cp w
+    (w : Fin 3 → R) :
+    ZornMatrix.IsNull (lowerLightray w) :=
+  lowerLightray_isNull w
 
 /-- The `Cl(1,1)` chiral projectors are orthogonal. -/
 theorem cl11_chiral_sheets_orthogonal

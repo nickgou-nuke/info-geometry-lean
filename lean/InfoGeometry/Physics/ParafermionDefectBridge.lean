@@ -29,13 +29,19 @@ namespace InfoGeometry.Physics
 
 open InfoGeometry.Categorical.Z3Parafermion
 
-/-- 
-We define a local topological defect operator acting on an algebra A.
-It must satisfy the Z₃ Parafermion condition $O^3 = O$.
--/
-structure TopologicalDefectOperator (A : Type*) [Ring A] [Algebra ℝ A] where
-  op : A
-  is_parafermionic : op ^ 3 = op
+/-- A local parafermionic operator is natively the subtype cut out by `O³ = O`. -/
+abbrev TopologicalDefectOperator (A : Type*) [Ring A] [Algebra ℝ A] :=
+  {op : A // op ^ 3 = op}
+
+namespace TopologicalDefectOperator
+
+abbrev op {A : Type*} [Ring A] [Algebra ℝ A]
+    (O : TopologicalDefectOperator A) : A := O.1
+
+lemma is_parafermionic {A : Type*} [Ring A] [Algebra ℝ A]
+    (O : TopologicalDefectOperator A) : O.op ^ 3 = O.op := O.2
+
+end TopologicalDefectOperator
 
 /-- 
 The sum of the topological charges of the network. 

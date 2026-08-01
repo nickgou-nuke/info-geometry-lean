@@ -35,9 +35,18 @@ Parameterized by the complex temperature vector `s`.
 structure DualAffineFlatFamily where
   /-- The relative volume (partition function) of the prime lattice. -/
   volume : ℂ → ℂ
-  /-- The generating potential: Φ(s) = log Z(s) -/
-  logGenerator : ℂ → ℂ
-  logGenerator_eq : ∀ s, logGenerator s = Complex.log (volume s)
+
+namespace DualAffineFlatFamily
+
+/-- The generating potential `Φ(s) = log Z(s)` determined by the volume. -/
+noncomputable abbrev logGenerator (F : DualAffineFlatFamily) : ℂ → ℂ :=
+  fun s => Complex.log (F.volume s)
+
+@[simp] theorem logGenerator_eq (F : DualAffineFlatFamily) (s : ℂ) :
+    F.logGenerator s = Complex.log (F.volume s) :=
+  rfl
+
+end DualAffineFlatFamily
 
 /--
 The Super-Kähler Moduli Space of the Prime Crystal.

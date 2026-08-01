@@ -886,25 +886,9 @@ theorem S3OnH3ZornHomeomorph_comp_closure (σ τ : S3Perm) :
 def S3Orbit (X : H3Zorn ℝ) : Set (H3Zorn ℝ) :=
   Set.range (fun σ : S3Perm => S3OnH3Zorn σ X)
 
-instance s3PermGroup : Group S3Perm where
-  mul := S3Perm.comp
-  one := S3Perm.id
-  inv := S3Perm.inverse
-  mul_assoc := by
-    intro a b c
-    rcases a <;> rcases b <;> rcases c <;> rfl
-  one_mul := by
-    intro a
-    rcases a <;> rfl
-  mul_one := by
-    intro a
-    rcases a <;> rfl
-  inv_mul_cancel := by
-    intro a
-    rcases a <;> rfl
-
 @[simp] theorem s3Perm_mul_eq_comp (σ τ : S3Perm) :
-    σ * τ = S3Perm.comp σ τ := rfl
+    σ * τ = S3Perm.comp σ τ := by
+  rfl
 
 @[simp] theorem s3Perm_inv_eq_inverse (σ : S3Perm) :
     σ⁻¹ = S3Perm.inverse σ := rfl

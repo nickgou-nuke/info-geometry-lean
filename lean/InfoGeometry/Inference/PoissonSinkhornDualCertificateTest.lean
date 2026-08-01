@@ -17,9 +17,8 @@ def certificateSmokeCoupling : Matrix (Fin 2) (Fin 2) ℝ :=
   fun i j => if i = j then 1 else 0
 
 def certificateSmoke :
-    PoissonSinkhornBalancedCertificate certificateSmokeCost 1 where
-  coupling := certificateSmokeCoupling
-  balanced := by
+    PoissonSinkhornBalancedCertificate certificateSmokeCost 1 :=
+  ⟨certificateSmokeCoupling, by
     rw [mem_doublyStochastic_iff_sum]
     refine ⟨?_, ?_, ?_⟩
     · intro i j
@@ -28,6 +27,7 @@ def certificateSmoke :
       fin_cases i <;> norm_num [certificateSmokeCoupling]
     · intro j
       fin_cases j <;> norm_num [certificateSmokeCoupling]
+  ⟩
 
 example :
     HasMarginals 2 certificateSmoke.coupling (fun _ => 1) (fun _ => 1) :=

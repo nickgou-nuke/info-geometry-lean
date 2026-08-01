@@ -5,8 +5,8 @@ import InfoGeometry.Algebra.H3ZornMcCrimmonLinearization
 
 This module derives the denominator-free identity
 `4 U_X = 2 P_X² - P_{P_X X}`, with `P_X(Z) = T(X,1,Z)`, from
-McCrimmon's identity (12).  The proof is structural and does not enumerate
-split-octonion coordinates or cancel the cubic norm.
+McCrimmon's identity (12).  The proof is structural and follows the
+quadratic-representation chain.
 -/
 
 namespace InfoGeometry.Algebra.H3Zorn

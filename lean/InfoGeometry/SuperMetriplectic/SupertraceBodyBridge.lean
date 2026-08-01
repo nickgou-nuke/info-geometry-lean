@@ -108,6 +108,21 @@ theorem supertrace_nonnegative_of_odd_dominated
 end SupertraceFisherShadow
 
 /--
+Finite scalar body data for a Zorn even/odd entropy split.
+
+This is deliberately a readout packet: it does not assert a concrete Zorn
+matrix model or identify the three scalars with an operator trace.  The only
+structural law recorded here is the displayed body bookkeeping identity.
+-/
+structure ZornEvenOddEntropySplit where
+  evenBodyEntropy : ℝ
+  oddBodyEntropy : ℝ
+  cancellationReadout : ℝ
+  totalBodyEntropy : ℝ
+  totalBodyEntropy_eq :
+    totalBodyEntropy = evenBodyEntropy + oddBodyEntropy - cancellationReadout
+
+/--
 Bridge from a Zorn even/odd entropy split to the supertrace Fisher shadow.
 
 The field `zornTotal_eq_bodyFisher` states that the Zorn body total is the same

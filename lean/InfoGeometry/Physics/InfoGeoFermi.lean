@@ -9,10 +9,18 @@ variable {R : Type*} [CommRing R]
 variable {L : Type*} [AddCommGroup L] [Module R L] [LieRing L] [LieAlgebra R L]
     [TKKAlgebra R L]
 
-/-- A projective nuclear state is a nonzero vector in the ambient TKK Lie algebra. -/
-structure TKKNuclearState (L : Type*) [Zero L] where
-  state_vector : L
-  is_projective_ray : state_vector ≠ 0
+/-- A projective nuclear state is canonically a nonzero vector in the ambient
+TKK Lie algebra.  The subtype is the native proof-bearing carrier; no custom
+record is needed for the value plus its nonvanishing proposition. -/
+abbrev TKKNuclearState (L : Type*) [Zero L] := {x : L // x ≠ 0}
+
+namespace TKKNuclearState
+
+abbrev state_vector (ψ : TKKNuclearState L) : L := ψ.1
+
+abbrev is_projective_ray (ψ : TKKNuclearState L) : ψ.state_vector ≠ 0 := ψ.2
+
+end TKKNuclearState
 
 /-- The abstract Fisher metric in this file is the zero baseline.  Nontrivial
 metric deformation is owned by the concrete Zorn lane in `TKKZorn.lean`. -/

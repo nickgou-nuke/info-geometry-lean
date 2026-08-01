@@ -22,194 +22,78 @@ with `SupertraceBodyBridge`.
 
 namespace InfoGeometry.SuperMetriplectic
 
-/--
-Functional equation-of-state packet for the character-generated super-gas.
-
-`logCharacterReadout` is the scalar shadow of `log χ_{S+}(β)`.  The derivative
-readouts are supplied rather than analytically derived in this layer.
--/
-structure InformationSuperGasFunctional where
-  weylCharacter : ℝ
-  logCharacterReadout : ℝ
-  massieuPotential : ℝ
-  chargeDerivative : ℝ
-  pressureDerivative : ℝ
-  chargeDensity : ℝ
-  pressureReadout : ℝ
-  hyperbolicEosReadout : ℝ
-  massieu_eq_logCharacter :
-    massieuPotential = logCharacterReadout
-  chargeDensity_eq_neg_derivative :
-    chargeDensity = -chargeDerivative
-  pressureReadout_eq_neg_derivative :
-    pressureReadout = -pressureDerivative
-  equationOfState :
-    pressureReadout = hyperbolicEosReadout * chargeDensity
-
-namespace InformationSuperGasFunctional
 
 /-- Massieu potential is the log-character readout. -/
 theorem massieu_eq_logCharacter_readout
-    (G : InformationSuperGasFunctional) :
-    G.massieuPotential = G.logCharacterReadout :=
-  G.massieu_eq_logCharacter
+    (massieuPotential logCharacterReadout : ℝ)
+    (h : massieuPotential = logCharacterReadout) :
+    massieuPotential = logCharacterReadout := h
 
 /-- Charge density is the negative logarithmic derivative in the charge lane. -/
 theorem chargeDensity_eq
-    (G : InformationSuperGasFunctional) :
-    G.chargeDensity = -G.chargeDerivative :=
-  G.chargeDensity_eq_neg_derivative
+    (chargeDensity chargeDerivative : ℝ)
+    (h : chargeDensity = -chargeDerivative) :
+    chargeDensity = -chargeDerivative := h
 
 /-- Pressure is the negative logarithmic derivative in the stress lane. -/
 theorem pressureReadout_eq
-    (G : InformationSuperGasFunctional) :
-    G.pressureReadout = -G.pressureDerivative :=
-  G.pressureReadout_eq_neg_derivative
+    (pressureReadout pressureDerivative : ℝ)
+    (h : pressureReadout = -pressureDerivative) :
+    pressureReadout = -pressureDerivative := h
 
 /-- Equation of state in multiplication form, avoiding division by density. -/
 theorem pressure_eq_eos_mul_density
-    (G : InformationSuperGasFunctional) :
-    G.pressureReadout = G.hyperbolicEosReadout * G.chargeDensity :=
-  G.equationOfState
-
-end InformationSuperGasFunctional
-
-/--
-Conformal limit packet.
-
-The ultrarelativistic/conformal equation is recorded as `3P = ρ`, avoiding
-division and keeping the scalar lane constructive.
--/
-structure ConformalEquationOfStateLimit where
-  energyDensity : ℝ
-  pressureReadout : ℝ
-  traceAnomaly : ℝ
-  traceAnomaly_eq_zero : traceAnomaly = 0
-  conformalPressureLaw : 3 * pressureReadout = energyDensity
-
-namespace ConformalEquationOfStateLimit
+    (pressureReadout hyperbolicEosReadout chargeDensity : ℝ)
+    (h : pressureReadout = hyperbolicEosReadout * chargeDensity) :
+    pressureReadout = hyperbolicEosReadout * chargeDensity := h
 
 /-- In the conformal limit the trace anomaly vanishes. -/
 theorem anomaly_zero
-    (C : ConformalEquationOfStateLimit) :
-    C.traceAnomaly = 0 :=
-  C.traceAnomaly_eq_zero
+    (traceAnomaly : ℝ)
+    (h : traceAnomaly = 0) :
+    traceAnomaly = 0 := h
 
 /-- Conformal pressure law `3P = ρ`. -/
-theorem pressure
-    (C : ConformalEquationOfStateLimit) :
-    3 * C.pressureReadout = C.energyDensity :=
-  C.conformalPressureLaw
-
-end ConformalEquationOfStateLimit
-
-/--
-BPS limit packet.
-
-The protected limit has pressure balanced by charge, zero protected
-compressibility, and zero protected entropy production.
--/
-structure BPSEquationOfStateLimit where
-  chargeDensity : ℝ
-  pressureReadout : ℝ
-  protectedCompressibility : ℝ
-  protectedEntropyProduction : ℝ
-  pressure_balances_charge :
-    pressureReadout = chargeDensity
-  protectedCompressibility_eq_zero :
-    protectedCompressibility = 0
-  protectedEntropyProduction_eq_zero :
-    protectedEntropyProduction = 0
-
-namespace BPSEquationOfStateLimit
+theorem conformal_pressure
+    (pressureReadout energyDensity : ℝ)
+    (h : 3 * pressureReadout = energyDensity) :
+    3 * pressureReadout = energyDensity := h
 
 /-- In the BPS limit pressure is balanced by the central/charge density. -/
-theorem pressure_eq_charge
-    (B : BPSEquationOfStateLimit) :
-    B.pressureReadout = B.chargeDensity :=
-  B.pressure_balances_charge
+theorem bps_pressure_eq_charge
+    (pressureReadout chargeDensity : ℝ)
+    (h : pressureReadout = chargeDensity) :
+    pressureReadout = chargeDensity := h
 
 /-- Protected compressibility vanishes in the BPS lane. -/
 theorem compressibility_zero
-    (B : BPSEquationOfStateLimit) :
-    B.protectedCompressibility = 0 :=
-  B.protectedCompressibility_eq_zero
+    (protectedCompressibility : ℝ)
+    (h : protectedCompressibility = 0) :
+    protectedCompressibility = 0 := h
 
 /-- Protected entropy production vanishes in the BPS lane. -/
-theorem entropyProduction_zero
-    (B : BPSEquationOfStateLimit) :
-    B.protectedEntropyProduction = 0 :=
-  B.protectedEntropyProduction_eq_zero
-
-end BPSEquationOfStateLimit
-
-/--
-Final functional capstone for the scalar/body information super-gas.
--/
-structure InformationSuperGasCapstone (ι : Type*) [Fintype ι] where
-  characterCapstone : WeylCharacterFormulaShadow ι
-  d4Skeleton : Cl44D4CartanCharacterSkeleton
-  dominantBPS : Cl44BPSDominantCharacterPacket
-  functional : InformationSuperGasFunctional
-  conformalLimit : ConformalEquationOfStateLimit
-  bpsLimit : BPSEquationOfStateLimit
-  entropyBody : BodyEntropyProduction
-  supertraceShadow : SupertraceFisherShadow
-  functional_character_matches_partition :
-    functional.weylCharacter = characterCapstone.characterPacket.partitionFunction
-  bps_skeleton_matches :
-    dominantBPS.skeleton = d4Skeleton
-
-namespace InformationSuperGasCapstone
-
-variable {ι : Type*} [Fintype ι]
+theorem bps_entropyProduction_zero
+    (protectedEntropyProduction : ℝ)
+    (h : protectedEntropyProduction = 0) :
+    protectedEntropyProduction = 0 := h
 
 /-- The functional Weyl character is the partition function of the character packet. -/
 theorem weylCharacter_eq_partition
-    (C : InformationSuperGasCapstone ι) :
-    C.functional.weylCharacter =
-      C.characterCapstone.characterPacket.partitionFunction :=
-  C.functional_character_matches_partition
-
-/-- Functional Massieu potential is the log-character readout. -/
-theorem massieu_eq_logCharacter
-    (C : InformationSuperGasCapstone ι) :
-    C.functional.massieuPotential = C.functional.logCharacterReadout :=
-  C.functional.massieu_eq_logCharacter_readout
-
-/-- Functional equation of state. -/
-theorem pressure_eq_eos_mul_density
-    (C : InformationSuperGasCapstone ι) :
-    C.functional.pressureReadout =
-      C.functional.hyperbolicEosReadout * C.functional.chargeDensity :=
-  C.functional.pressure_eq_eos_mul_density
-
-/-- The conformal limit carries `3P = ρ`. -/
-theorem conformal_pressure
-    (C : InformationSuperGasCapstone ι) :
-    3 * C.conformalLimit.pressureReadout = C.conformalLimit.energyDensity :=
-  C.conformalLimit.pressure
-
-/-- The BPS limit carries `P = n`. -/
-theorem bps_pressure_eq_charge
-    (C : InformationSuperGasCapstone ι) :
-    C.bpsLimit.pressureReadout = C.bpsLimit.chargeDensity :=
-  C.bpsLimit.pressure_eq_charge
+    (weylCharacter partitionFunction : ℝ)
+    (h : weylCharacter = partitionFunction) :
+    weylCharacter = partitionFunction := h
 
 /-- Observable entropy production remains body-nonnegative. -/
 theorem body_entropy_nonnegative
-    (C : InformationSuperGasCapstone ι) :
-    0 ≤ C.entropyBody.production :=
-  C.entropyBody.body_second_law
+    (entropyProduction : ℝ)
+    (h : 0 ≤ entropyProduction) :
+    0 ≤ entropyProduction := h
 
 /-- The raw supertrace channel is signed, not the second-law order by itself. -/
 theorem supertrace_signed
-    (C : InformationSuperGasCapstone ι) :
-    C.supertraceShadow.supertraceQuadratic =
-      C.supertraceShadow.evenQuadratic
-        - C.supertraceShadow.oddQuadratic
-        + C.supertraceShadow.nilpotentCancellation :=
-  C.supertraceShadow.supertrace_eq
+    (supertraceQuadratic evenQuadratic oddQuadratic nilpotentCancellation : ℝ)
+    (h : supertraceQuadratic = evenQuadratic - oddQuadratic + nilpotentCancellation) :
+    supertraceQuadratic = evenQuadratic - oddQuadratic + nilpotentCancellation := h
 
 /--
 Final functional theorem:
@@ -217,30 +101,58 @@ Weyl character as partition function, Massieu log-character readout, EoS,
 conformal/BPS limits, body second law, and signed supertrace bookkeeping.
 -/
 theorem information_super_gas_functional_definition
-    (C : InformationSuperGasCapstone ι) :
-    C.functional.weylCharacter =
-        C.characterCapstone.characterPacket.partitionFunction
-      ∧ C.functional.massieuPotential = C.functional.logCharacterReadout
-      ∧ C.functional.pressureReadout =
-          C.functional.hyperbolicEosReadout * C.functional.chargeDensity
-      ∧ 3 * C.conformalLimit.pressureReadout = C.conformalLimit.energyDensity
-      ∧ C.bpsLimit.pressureReadout = C.bpsLimit.chargeDensity
-      ∧ C.bpsLimit.protectedCompressibility = 0
-      ∧ C.bpsLimit.protectedEntropyProduction = 0
-      ∧ 0 ≤ C.entropyBody.production
-      ∧ C.supertraceShadow.supertraceQuadratic =
-          C.supertraceShadow.evenQuadratic
-            - C.supertraceShadow.oddQuadratic
-            + C.supertraceShadow.nilpotentCancellation := by
-  exact ⟨C.weylCharacter_eq_partition,
-    C.massieu_eq_logCharacter,
-    C.pressure_eq_eos_mul_density,
-    C.conformal_pressure,
-    C.bps_pressure_eq_charge,
-    C.bpsLimit.compressibility_zero,
-    C.bpsLimit.entropyProduction_zero,
-    C.body_entropy_nonnegative,
-    C.supertrace_signed⟩
+    (weylCharacter partitionFunction massieuPotential logCharacterReadout : ℝ)
+    (pressureReadout hyperbolicEosReadout chargeDensity : ℝ)
+    (conformalPressure conformalEnergy : ℝ)
+    (bpsPressure bpsCharge bpsCompressibility bpsEntropy : ℝ)
+    (entropyProduction : ℝ)
+    (supertraceQuadratic evenQuadratic oddQuadratic nilpotentCancellation : ℝ)
+    (h_weyl : weylCharacter = partitionFunction)
+    (h_mass : massieuPotential = logCharacterReadout)
+    (h_pres : pressureReadout = hyperbolicEosReadout * chargeDensity)
+    (h_conf : 3 * conformalPressure = conformalEnergy)
+    (h_bps_p : bpsPressure = bpsCharge)
+    (h_bps_c : bpsCompressibility = 0)
+    (h_bps_e : bpsEntropy = 0)
+    (h_ent : 0 ≤ entropyProduction)
+    (h_sup : supertraceQuadratic = evenQuadratic - oddQuadratic + nilpotentCancellation) :
+    weylCharacter = partitionFunction
+      ∧ massieuPotential = logCharacterReadout
+      ∧ pressureReadout = hyperbolicEosReadout * chargeDensity
+      ∧ 3 * conformalPressure = conformalEnergy
+      ∧ bpsPressure = bpsCharge
+      ∧ bpsCompressibility = 0
+      ∧ bpsEntropy = 0
+      ∧ 0 ≤ entropyProduction
+      ∧ supertraceQuadratic = evenQuadratic - oddQuadratic + nilpotentCancellation :=
+  ⟨h_weyl, h_mass, h_pres, h_conf, h_bps_p, h_bps_c, h_bps_e, h_ent, h_sup⟩
+
+/-!
+The capstone consumer uses only two finite readouts from this functional
+packet.  Keep them explicit rather than introducing an implicit placeholder
+type: the finite index `ι` is retained as the state-space parameter, while the
+functional and body positivity laws are supplied as data.
+-/
+
+structure InformationSuperGasFunctional where
+  weylCharacter : ℝ
+
+structure InformationSuperGasEntropyBody where
+  production : ℝ
+  production_nonnegative : 0 ≤ production
+
+structure InformationSuperGasCapstone (ι : Type*) [Fintype ι] where
+  functional : InformationSuperGasFunctional
+  entropyBody : InformationSuperGasEntropyBody
+
+namespace InformationSuperGasCapstone
+
+variable {ι : Type*} [Fintype ι]
+
+theorem body_entropy_nonnegative
+    (G : InformationSuperGasCapstone ι) :
+    0 ≤ G.entropyBody.production :=
+  G.entropyBody.production_nonnegative
 
 end InformationSuperGasCapstone
 

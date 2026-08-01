@@ -138,16 +138,26 @@ structure PrimeBitMellinPacket where
   lattice : FinitePrimeBitLattice
   /-- Selected binary prime occupation profile. -/
   profile : lattice.Profile
-  /-- Arithmetic integer readout. -/
-  integerReadout : ℕ
-  /-- Logarithmic energy readout. -/
-  energyReadout : ℝ
-  /-- Integer readout agrees with the finite profile product. -/
-  integerReadout_eq :
-    integerReadout = lattice.bitInteger profile
-  /-- Energy readout agrees with the finite profile energy. -/
-  energyReadout_eq :
-    energyReadout = lattice.bitEnergy profile
+
+namespace PrimeBitMellinPacket
+
+/-- Arithmetic integer readout of the selected finite prime-bit profile. -/
+abbrev integerReadout (B : PrimeBitMellinPacket) : ℕ :=
+  B.lattice.bitInteger B.profile
+
+@[simp] theorem integerReadout_eq (B : PrimeBitMellinPacket) :
+    B.integerReadout = B.lattice.bitInteger B.profile :=
+  rfl
+
+/-- Logarithmic energy readout of the selected finite prime-bit profile. -/
+abbrev energyReadout (B : PrimeBitMellinPacket) : ℝ :=
+  B.lattice.bitEnergy B.profile
+
+@[simp] theorem energyReadout_eq (B : PrimeBitMellinPacket) :
+    B.energyReadout = B.lattice.bitEnergy B.profile :=
+  rfl
+
+end PrimeBitMellinPacket
 
 /-! ## 3. Finite prime-gas partition channels -/
 

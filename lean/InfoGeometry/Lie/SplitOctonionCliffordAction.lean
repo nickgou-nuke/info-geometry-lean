@@ -81,12 +81,12 @@ the imaginary hyperplane.  This fixes the sign convention of the resulting
 split Clifford representation. -/
 @[simp] theorem leftCliffordQuadratic_eq_neg_det (X : Imaginary) :
     leftCliffordQuadratic X =
-      -ZornMatrix.detZ realCrossProduct3 X.1 := by
+      -ZornMatrix.detZ X.1 := by
   have hquad := realZorn_quadratic X.1
   have htrace : realZornTrace X.1 = 0 := (mem_imaginary_iff X.1).mp X.2
   rw [htrace, zero_smul] at hquad
   change X.1 * X.1 +
-    ZornMatrix.detZ realCrossProduct3 X.1 • (1 : CanonicalZorn) = 0 at hquad
+    ZornMatrix.detZ X.1 • (1 : CanonicalZorn) = 0 at hquad
   rw [imaginary_sq_eq_leftCliffordQuadratic] at hquad
   rw [← add_smul] at hquad
   have hone : (1 : CanonicalZorn) ≠ 0 := by
@@ -98,7 +98,7 @@ split Clifford representation. -/
     rw [h1a, h0a] at ha
     norm_num at ha
   have hscalar : leftCliffordQuadratic X +
-      ZornMatrix.detZ realCrossProduct3 X.1 = 0 := by
+      ZornMatrix.detZ X.1 = 0 := by
     exact (smul_eq_zero.mp hquad).resolve_right hone
   linarith
 

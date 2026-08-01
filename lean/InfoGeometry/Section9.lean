@@ -176,7 +176,12 @@ theorem section9_capstone :
     riemannCurvature 0 0 0 0 0 0 = 0 ∧
     (∀ A B : Matrix (Fin 2) (Fin 2) ℂ, (∑ i : Fin 2, commutator A B i i) = 0) ∧
     quaternionCurvatureFromSpin (spinCurvatureFromRiemann 0) = 0 := by
-  exact ⟨sigma_ab_traceless, quaternionCurvature_flat, spinCurvature_flat,
-    riemannCurvature_flat, commutator_traceless, quaternion_spin_riemann_flat_chain⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact sigma_ab_traceless
+  · exact quaternionCurvature_flat
+  · exact spinCurvature_flat
+  · exact riemannCurvature_flat
+  · exact commutator_traceless
+  · exact quaternion_spin_riemann_flat_chain
 
 end Section9

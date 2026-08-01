@@ -132,20 +132,30 @@ theorem spinTiledDeRhamRank_eq_assumedTotalDeRhamRank :
 /-- Explicit rank-configuration record used by downstream capstone modules. -/
 structure SpinTilingRankConfig where
   bettiNumbers : List ℕ
-  localRank : ℕ
   multiplicity : ℕ
-  totalRank : ℕ
-  localRank_eq : bettiNumbers.sum = localRank
-  totalRank_eq : multiplicity * localRank = totalRank
+
+namespace SpinTilingRankConfig
+
+/-- The local rank determined by the stored Betti signature. -/
+abbrev localRank (C : SpinTilingRankConfig) : ℕ := C.bettiNumbers.sum
+
+/-- The total rank determined by multiplicity and local rank. -/
+abbrev totalRank (C : SpinTilingRankConfig) : ℕ := C.multiplicity * C.localRank
+
+theorem localRank_eq (C : SpinTilingRankConfig) :
+    C.bettiNumbers.sum = C.localRank := by
+  rfl
+
+theorem totalRank_eq (C : SpinTilingRankConfig) :
+    C.multiplicity * C.localRank = C.totalRank := by
+  rfl
+
+end SpinTilingRankConfig
 
 /-- The canonical rank-32 Penrose spin-tiling configuration. -/
 def rank32Config : SpinTilingRankConfig where
   bettiNumbers := verifiedBettiNumbers
-  localRank := localBettiRank
   multiplicity := spinTilingMultiplicity
-  totalRank := assumedTotalDeRhamRank
-  localRank_eq := rfl
-  totalRank_eq := spinTiledDeRhamRank_eq_assumedTotalDeRhamRank
 
 /-- The canonical configuration records total rank `32`. -/
 theorem rank32Config_totalRank : rank32Config.totalRank = 32 := by

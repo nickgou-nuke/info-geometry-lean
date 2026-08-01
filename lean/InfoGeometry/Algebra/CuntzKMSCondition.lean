@@ -246,29 +246,35 @@ lemma sigmaComplex_imag_Sdag (n : ℕ) (primes : Fin n → ℕ) (hprimes : ∀ j
 
     KMS: φ_β(A σ_{iβ}(B)) = φ_β(BA). On the diagonal, σ_{iβ} acts as identity,
     so the condition reduces to φ_β(AB) = φ_β(BA) which holds by commutativity. -/
-structure KMSWeightDiagonal (n : ℕ) (primes : Fin n → ℕ) (β : ℝ) where
-  /-- Unnormalized KMS weight: φ_β(P_i) = p_i^{-β}. -/
-  weightOnProjector (i : Fin n) : ℂ
-  weight_eq : weightOnProjector = λ i => (primes i : ℂ) ^ (-β : ℂ)
-  /-- The KMS weight evaluated on a diagonal element Σ c_i P_i. -/
-  eval (c : Fin n → ℂ) : ℂ
-  eval_eq : eval = λ c => ∑ i : Fin n, c i * weightOnProjector i
-  /-- The partition function Z_n(β) = Σ_i p_i^{-β}. -/
-  partition : ℂ
-  partition_eq : partition = ∑ i : Fin n, (primes i : ℂ) ^ (-β : ℂ)
+abbrev KMSWeightDiagonal (n : ℕ) (primes : Fin n → ℕ) (β : ℝ) := PUnit
 
 namespace KMSWeightDiagonal
 
 variable {n : ℕ} {primes : Fin n → ℕ} {β : ℝ} (φ : KMSWeightDiagonal n primes β)
 
+/-- Unnormalized KMS weight: `φ_β(P_i) = p_i^{-β}`. -/
+def weightOnProjector (φ : KMSWeightDiagonal n primes β) (i : Fin n) : ℂ :=
+  (primes i : ℂ) ^ (-β : ℂ)
+
+theorem weight_eq : φ.weightOnProjector = λ i => (primes i : ℂ) ^ (-β : ℂ) := by
+  rfl
+
+/-- The KMS weight evaluated on a diagonal element `Σ c_i P_i`. -/
+def eval (φ : KMSWeightDiagonal n primes β) (c : Fin n → ℂ) : ℂ :=
+  ∑ i : Fin n, c i * weightOnProjector φ i
+
+theorem eval_eq : φ.eval = λ c => ∑ i : Fin n, c i * φ.weightOnProjector i := by
+  rfl
+
+/-- The partition function `Z_n(β) = Σ_i p_i^{-β}`. -/
+def partition (φ : KMSWeightDiagonal n primes β) : ℂ :=
+  ∑ i : Fin n, (primes i : ℂ) ^ (-β : ℂ)
+
+theorem partition_eq : φ.partition = ∑ i : Fin n, (primes i : ℂ) ^ (-β : ℂ) := by
+  rfl
+
 /-- The canonical KMS weight: φ_β(P_i) = p_i^{-β} with Z_n(β) = Σ p_i^{-β}. -/
-def canonical (n : ℕ) (primes : Fin n → ℕ) (β : ℝ) : KMSWeightDiagonal n primes β where
-  weightOnProjector i := (primes i : ℂ) ^ (-β : ℂ)
-  weight_eq := rfl
-  eval c := ∑ i : Fin n, c i * ((primes i : ℂ) ^ (-β : ℂ))
-  eval_eq := rfl
-  partition := ∑ i : Fin n, (primes i : ℂ) ^ (-β : ℂ)
-  partition_eq := rfl
+def canonical (n : ℕ) (primes : Fin n → ℕ) (β : ℝ) : KMSWeightDiagonal n primes β := PUnit.unit
 
 /-- On the diagonal subalgebra, σ_{iβ} acts as the identity (projectors are fixed).
     Therefore the KMS condition φ_β(A σ_{iβ}(B)) = φ_β(BA) reduces to

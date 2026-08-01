@@ -123,21 +123,30 @@ This does not require nilpotence. Instead, it carries the Laplace/Hodge loops:
 structure ChiralHodgeDiracSocket (Cplus Cminus : Type*) [Zero Cplus] [Zero Cminus] where
   Dplus : Cplus → Cminus
   Dminus : Cminus → Cplus
-  LapPlus : Cplus → Cplus
-  LapMinus : Cminus → Cminus
-
-  /-- Positive-sector Hodge loop `Δ₊ = D⁻D⁺`. -/
-  LapPlus_eq :
-    ∀ x : Cplus, LapPlus x = Dminus (Dplus x)
-
-  /-- Negative-sector Hodge loop `Δ₋ = D⁺D⁻`. -/
-  LapMinus_eq :
-    ∀ y : Cminus, LapMinus y = Dplus (Dminus y)
 
 namespace ChiralHodgeDiracSocket
 
 variable {Cplus Cminus : Type*}
 variable [Zero Cplus] [Zero Cminus]
+
+/-- Positive-sector Hodge loop `Δ₊ = D⁻D⁺`. -/
+abbrev LapPlus (H : ChiralHodgeDiracSocket Cplus Cminus) : Cplus → Cplus :=
+  fun x => H.Dminus (H.Dplus x)
+
+@[simp] theorem LapPlus_eq
+    (H : ChiralHodgeDiracSocket Cplus Cminus) (x : Cplus) :
+    H.LapPlus x = H.Dminus (H.Dplus x) :=
+  rfl
+
+/-- Negative-sector Hodge loop `Δ₋ = D⁺D⁻`. -/
+abbrev LapMinus (H : ChiralHodgeDiracSocket Cplus Cminus) : Cminus → Cminus :=
+  fun y => H.Dplus (H.Dminus y)
+
+@[simp] theorem LapMinus_eq
+    (H : ChiralHodgeDiracSocket Cplus Cminus) (y : Cminus) :
+    H.LapMinus y = H.Dplus (H.Dminus y) :=
+  rfl
+
 variable (H : ChiralHodgeDiracSocket Cplus Cminus)
 
 /-- Harmonic plus-sector states: kernel of the plus Laplacian. -/

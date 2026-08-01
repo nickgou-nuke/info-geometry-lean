@@ -7,9 +7,20 @@ namespace InfoGeometry.Probability
 abbrev ThermodynamicBase :=
   InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.ThermodynamicBase
 
-structure ZornStatisticalVariety where
-  carrier : InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.SplitOct
-  det_pos : 0 < InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.detZ carrier
+/-- The positive-determinant Zorn locus, represented natively as a subtype. -/
+abbrev ZornStatisticalVariety :=
+  {carrier : InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.SplitOct //
+    0 < InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.detZ carrier}
+
+namespace ZornStatisticalVariety
+
+abbrev carrier (M : ZornStatisticalVariety) :
+    InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.SplitOct := M.1
+
+abbrev det_pos (M : ZornStatisticalVariety) :
+    0 < InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.detZ M.carrier := M.2
+
+end ZornStatisticalVariety
 
 abbrev base (M : ZornStatisticalVariety) : ThermodynamicBase :=
   InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.projectToBase M.carrier

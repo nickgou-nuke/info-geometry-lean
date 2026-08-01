@@ -13,18 +13,20 @@ Riemann-zero localization theorem.
 
 namespace InfoGeometry.GrandUnification.UVSymmetry
 
-/-- The centered holomorphic coordinate chart at s = 1/2. -/
-structure UVChart where
-  u : ℝ
-  v : ℝ
+/-- The centered holomorphic coordinate chart at s = 1/2.
+
+The chart has no coherence fields: it is natively just its two real
+coordinates.  Keeping the product carrier avoids introducing a record wrapper
+for plain data while preserving the namespaced readout API below. -/
+abbrev UVChart := ℝ × ℝ
 
 /-- Map the centered (u, v) coordinates back to the classical complex plane `s = 1/2 + u + iv`. -/
 noncomputable def UVChart.toComplex (z : UVChart) : ℂ :=
-  ⟨(1 / 2 : ℝ) + z.u, z.v⟩
+  ⟨(1 / 2 : ℝ) + z.1, z.2⟩
 
 /-- The geometric central inversion (Parity + Time reversal). -/
 def central_inversion (z : UVChart) : UVChart :=
-  ⟨-z.u, -z.v⟩
+  (-z.1, -z.2)
 
 /-- The affine coordinate reflection `s ↦ 1 - s` is central inversion in
 centered `(u, v)` coordinates. -/

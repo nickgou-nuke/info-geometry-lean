@@ -17,10 +17,17 @@ namespace InfoGeometry.Canonical.PrimeGasSuperKMS
 
 /-- Minimal owner-level prime-gas max-entropy packet. -/
 @[rep_depth operator]
-structure PrimeGasMaxEntPacket where
-  partitionFunction : ℝ
-  entropyReadout : ℝ
-  freeEnergyReadout : ℝ
+abbrev PrimeGasMaxEntPacket := ℝ × (ℝ × ℝ)
+
+namespace PrimeGasMaxEntPacket
+
+abbrev partitionFunction (P : PrimeGasMaxEntPacket) : ℝ := P.1
+
+abbrev entropyReadout (P : PrimeGasMaxEntPacket) : ℝ := P.2.1
+
+abbrev freeEnergyReadout (P : PrimeGasMaxEntPacket) : ℝ := P.2.2
+
+end PrimeGasMaxEntPacket
 
 /-- Native equality relation between the Jaynes and RN entropy readouts. -/
 @[rep_depth operator]
@@ -43,9 +50,15 @@ end PrimeGasJaynesRNBridge
 
 /-- Super-geometric temperature split into even and odd readouts. -/
 @[rep_depth operator]
-structure SuperGeometricTemperature where
-  evenTemperature : ℝ
-  oddTemperature : ℝ
+abbrev SuperGeometricTemperature := ℝ × ℝ
+
+namespace SuperGeometricTemperature
+
+abbrev evenTemperature (T : SuperGeometricTemperature) : ℝ := T.1
+
+abbrev oddTemperature (T : SuperGeometricTemperature) : ℝ := T.2
+
+end SuperGeometricTemperature
 
 /-- KMS target packet for the prime-gas bridge. -/
 @[rep_depth operator]

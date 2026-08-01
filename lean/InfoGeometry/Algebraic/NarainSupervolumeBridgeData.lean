@@ -41,12 +41,6 @@ structure NarainSupervolumeBridgeData (n : ℕ) where
   /-- Discrete Narain charge carried by each state. -/
   charge : State → NarainCharge n
 
-  /-- Realified split charge used by the geometric readout. -/
-  realifiedCharge : State → SplitModule n
-
-  /-- Compatibility of the realified charge with the Narain realification map. -/
-  realifiedCharge_eq : ∀ s : State, realifiedCharge s = narainRealification (charge s)
-
   /-- Parity on the finite state space. -/
   parity : State → ℤ
 
@@ -75,6 +69,17 @@ structure NarainSupervolumeBridgeData (n : ℕ) where
 namespace NarainSupervolumeBridgeData
 
 variable {n : ℕ}
+
+/-- The split charge readout determined by the Narain charge assignment. -/
+abbrev realifiedCharge
+    (D : NarainSupervolumeBridgeData n) : D.State → SplitModule n :=
+  fun s => narainRealification (D.charge s)
+
+/-- The realified charge is the Narain realification of the stored charge. -/
+theorem realifiedCharge_eq
+    (D : NarainSupervolumeBridgeData n) (s : D.State) :
+    D.realifiedCharge s = narainRealification (D.charge s) := by
+  rfl
 
 /-- The readout used for the lattice sum. -/
 def latticeSum (D : NarainSupervolumeBridgeData n) : ℝ :=

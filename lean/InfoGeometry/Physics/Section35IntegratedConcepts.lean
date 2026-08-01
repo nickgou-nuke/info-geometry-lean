@@ -123,12 +123,13 @@ theorem repaired_section35_integrated_concepts_packet
     dualConj (dualConj q) = q ∧
     pairQuadraticTrace (dualConj q) = pairQuadraticTrace q ∧
     chiralAsymmetryTrace (dualConj q) = -chiralAsymmetryTrace q := by
-  exact ⟨spinSpacetimeOperator_eq_two_density r n1 n2 n3,
-    blochDensityAtRadius_det_eq_residual r n1 n2 n3,
-    blochSpacetimePoint_det_eq_t_sq_residual t r n1 n2 n3,
-    dualConj_involutive q,
-    pairQuadraticTrace_dualConj q,
-    chiralAsymmetryTrace_dualConj q⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact spinSpacetimeOperator_eq_two_density r n1 n2 n3
+  · exact blochDensityAtRadius_det_eq_residual r n1 n2 n3
+  · exact blochSpacetimePoint_det_eq_t_sq_residual t r n1 n2 n3
+  · exact dualConj_involutive q
+  · exact pairQuadraticTrace_dualConj q
+  · exact chiralAsymmetryTrace_dualConj q
 
 end InfoGeometry.Physics.Section35IntegratedConcepts
 

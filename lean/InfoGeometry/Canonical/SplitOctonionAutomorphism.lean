@@ -155,18 +155,14 @@ theorem preservesDetZ_one :
 @[simp] theorem RealSplitOctonionAut.preserves_null
     (φ : RealSplitOctonionAut) (x : SplitOctonionReal) :
     InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull
-      (InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3)
       ((φ : SplitOctonionAutCandidate ℝ) x) ↔
-      InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull
-        (InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3) x := by
+      InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull x := by
   unfold InfoGeometry.Algebra.Zorn.ZornMatrix.IsNull
   constructor
   · intro h
     calc
-      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
-          InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 x =
+      InfoGeometry.Algebra.Zorn.ZornMatrix.detZ x =
           InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
-            InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
             ((φ : SplitOctonionAutCandidate ℝ) x) := by
         symm
         exact RealSplitOctonionAut.preserves_detZ φ x
@@ -174,10 +170,8 @@ theorem preservesDetZ_one :
   · intro h
     calc
       InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
-          InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
           ((φ : SplitOctonionAutCandidate ℝ) x) =
-          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ
-            InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3 x := by
+          InfoGeometry.Algebra.Zorn.ZornMatrix.detZ x := by
         exact RealSplitOctonionAut.preserves_detZ φ x
       _ = 0 := h
 

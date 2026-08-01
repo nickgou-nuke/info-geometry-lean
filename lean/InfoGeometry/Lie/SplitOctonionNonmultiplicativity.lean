@@ -119,10 +119,10 @@ Proves natively that the chiral action of any Zorn matrix Z squares to the scala
 value given by the negative determinant.
 -/
 theorem zornBiAction_sq (Z : CanonicalZorn) (pq : BiSplitOctonions) :
-    zornBiAction Z (zornBiAction Z pq) = - ZornMatrix.detZ realCrossProduct3 Z • pq := by
+    zornBiAction Z (zornBiAction Z pq) = - ZornMatrix.detZ Z • pq := by
   rcases Z with ⟨Za, Zb, Zx, Zy⟩
   rcases pq with ⟨⟨pa, pb, px, py⟩, ⟨qa, qb, qx, qy⟩⟩
-  dsimp [zornBiAction, zornConj, ZornMatrix.detZ, realCrossProduct3, mul, dot, cross]
+  dsimp [zornBiAction, zornConj, ZornMatrix.detZ, mul, dot, cross]
   refine Prod.ext ?_ ?_
   · ext1
     · simp [Equiv.smul_def, coordEquiv]; ring
@@ -212,8 +212,8 @@ Global compatibility showing that the pullback of the hyperbolic signature (4,4)
 coincides with the negative determinant form on all of `CanonicalZorn`.
 -/
 theorem splitCl44Quad_compat_global (Z : CanonicalZorn) :
-    SplitCl44Quad (e Z) = -ZornMatrix.detZ realCrossProduct3 Z := by
-  dsimp [e, SplitCl44Quad, InfoGeometry.Clifford.ClNNBilinear.hyperbolicQuadratic, ZornMatrix.detZ, realCrossProduct3, dot]
+    SplitCl44Quad (e Z) = -ZornMatrix.detZ Z := by
+  dsimp [e, SplitCl44Quad, InfoGeometry.Clifford.ClNNBilinear.hyperbolicQuadratic, ZornMatrix.detZ, dot]
   rw [Qsplit_succ_apply 3, Qsplit_succ_apply 2, Qsplit_succ_apply 1, Qsplit_succ_apply 0, Qsplit_zero_apply]
   rw [CliffordTower.Q11_apply, CliffordTower.Q11_apply, CliffordTower.Q11_apply, CliffordTower.Q11_apply]
   ring

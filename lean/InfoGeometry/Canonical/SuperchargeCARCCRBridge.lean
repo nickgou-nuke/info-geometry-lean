@@ -425,7 +425,8 @@ theorem harmonic_oscillator_spine :
   refine ⟨parity_modular_supercharge_ccrBracket_eq_two_cpt (E := E), ?_⟩
   refine ⟨cptSuperchargeOp_sq (E := E), ?_⟩
   refine ⟨hminusNil, ?_⟩
-  exact ⟨hplusNil, concrete_car_minus_plus (E := E)⟩
+  refine ⟨hplusNil, ?_⟩
+  exact concrete_car_minus_plus (E := E)
 
 end Core
 

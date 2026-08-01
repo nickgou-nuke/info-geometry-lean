@@ -118,8 +118,12 @@ theorem section26_capstone :
       ∧ Section8.Quat.qk * Section8.Quat.qi = Section8.Quat.qj
       ∧ (Section8.Quat.qi * Section8.Quat.qj) * Section8.Quat.qk =
         -(1 : Quat)) := by
-  exact ⟨quarticPotential_complete_square, quarticPotential_critical_value,
-    electromagneticFieldShadow_antisymmetric, electromagneticFieldShadow_diagonal_zero,
-    physical_scalarRealityReadout_im_zero, physical_hamilton_basis_with_triple⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact quarticPotential_complete_square
+  · exact quarticPotential_critical_value
+  · exact electromagneticFieldShadow_antisymmetric
+  · exact electromagneticFieldShadow_diagonal_zero
+  · exact physical_scalarRealityReadout_im_zero
+  · exact physical_hamilton_basis_with_triple
 
 end Section26

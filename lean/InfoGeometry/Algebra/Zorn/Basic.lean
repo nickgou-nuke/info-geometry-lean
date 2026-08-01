@@ -21,23 +21,6 @@ namespace InfoGeometry.Algebra.Zorn
 /-- Use the canonical Zorn matrix carrier. -/
 abbrev ZornMatrix (R : Type*) [CommRing R] := InfoGeometry.Canonical.ZornMatrix R
 
-/--
-A minimal dot/cross interface on `R^3`.
--/
-structure CrossProduct3 (R : Type*) [CommRing R] where
-  dot : (Fin 3 → R) → (Fin 3 → R) → R
-  cross : (Fin 3 → R) → (Fin 3 → R) → (Fin 3 → R)
-
-  dot_zero_left :
-    ∀ v : Fin 3 → R, dot 0 v = 0
-  dot_zero_right :
-    ∀ v : Fin 3 → R, dot v 0 = 0
-
-  cross_zero_left :
-    ∀ v : Fin 3 → R, cross 0 v = 0
-  cross_zero_right :
-    ∀ v : Fin 3 → R, cross v 0 = 0
-
 namespace ZornMatrix
 
 variable {R : Type*} [CommRing R]
@@ -52,15 +35,16 @@ For
 
 the determinant is
 
-  detZ X = a b - v · w.
+  detZ X = a b - x · y.
 -/
-def detZ (cp : CrossProduct3 R) (X : ZornMatrix R) : R :=
-  X.a * X.b - cp.dot X.x X.y
+def detZ (X : ZornMatrix R) : R :=
+  X.a * X.b - InfoGeometry.Canonical.ZornMatrix.dot X.x X.y
 
 /-- Quadratic/projective nullness. -/
-def IsNull (cp : CrossProduct3 R) (X : ZornMatrix R) : Prop :=
-  detZ cp X = 0
+def IsNull (X : ZornMatrix R) : Prop :=
+  detZ X = 0
 
 end ZornMatrix
 
 end InfoGeometry.Algebra.Zorn
+

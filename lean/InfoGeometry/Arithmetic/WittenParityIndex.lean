@@ -100,7 +100,10 @@ theorem ramanujan_defect_layers_follow_witten_sequence :
       DefectParityTarget 2 (ramanujanBernoulliSide zetaFiveBernoulliReadout 2) ∧
       DefectParityTarget 3 (ramanujanBernoulliSide zetaSevenBernoulliReadout 3) ∧
       DefectParityTarget 4 (ramanujanBernoulliSide zetaNineBernoulliReadout 4) := by
-  exact ⟨zeta3_defect_parity, zeta5_defect_parity,
-    zeta7_defect_parity, zeta9_defect_parity⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact zeta3_defect_parity
+  · exact zeta5_defect_parity
+  · exact zeta7_defect_parity
+  · exact zeta9_defect_parity
 
 end InfoGeometry.Arithmetic.WittenParityIndex

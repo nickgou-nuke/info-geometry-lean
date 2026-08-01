@@ -64,8 +64,18 @@ upper-half-plane point and the denominator inverse used to construct it.
 structure CayleyDiskPoint where
   source : BilingualUpperHalfPlane D
   denominator : CayleyDenominator source
-  U : EndH
-  cayley_eq : U = operatorCayleyTransform source denominator
+
+namespace CayleyDiskPoint
+
+/-- The Cayley operator determined by the source and its invertible denominator. -/
+abbrev U (X : CayleyDiskPoint (D := D)) : EndH :=
+  operatorCayleyTransform X.source X.denominator
+
+@[simp] theorem cayley_eq (X : CayleyDiskPoint (D := D)) :
+    X.U = operatorCayleyTransform X.source X.denominator :=
+  rfl
+
+end CayleyDiskPoint
 
 /--
 A boson/fermion sector split on the doubled carrier.

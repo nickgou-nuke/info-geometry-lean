@@ -188,16 +188,17 @@ theorem repaired_MD010_gauge_ssb_packet
     trace2 (diagFluctuation v h * diagFluctuation v h) = (v + h) * (v + h) ∧
     (InfoGeometry.Canonical.QuaternionCondensate.H4.phaseRotate cphase sphase q).normSq = q.normSq ∧
     InfoGeometry.Physics.Section34StrengthenedFormalism.covariantDensityDerivative dRho 0 rho = dRho := by
-  exact ⟨adjointCovDeriv_gauge_covariant U V A Φ hVU,
-    gaugeConj_product_transport U V F G hVU,
-    trace2_gaugeConj_product_invariant U V F G hVU,
-    finiteCurvature_trace_square_gauge_invariant U V A Φ hVU,
-    scalarPotential_complete_square mu lam s hlam,
-    scalarPotential_stationary_radius mu lam hlam,
-    diagVEV_trace_square v,
-    diagFluctuation_trace_square v h,
-    quaternion_phase_metric_invariant hunit q,
-    density_covariantDerivative_zero_connection dRho rho⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact adjointCovDeriv_gauge_covariant U V A Φ hVU
+  · exact gaugeConj_product_transport U V F G hVU
+  · exact trace2_gaugeConj_product_invariant U V F G hVU
+  · exact finiteCurvature_trace_square_gauge_invariant U V A Φ hVU
+  · exact scalarPotential_complete_square mu lam s hlam
+  · exact scalarPotential_stationary_radius mu lam hlam
+  · exact diagVEV_trace_square v
+  · exact diagFluctuation_trace_square v h
+  · exact quaternion_phase_metric_invariant hunit q
+  · exact density_covariantDerivative_zero_connection dRho rho
 
 end InfoGeometry.Physics.MD010GaugeSSB
 

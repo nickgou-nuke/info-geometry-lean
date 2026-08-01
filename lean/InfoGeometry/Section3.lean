@@ -121,8 +121,14 @@ theorem repaired_section3_soldering_packet :
             Section7.soldering a nu A Bp * Section7.spinConnection mu Bp Ap) = 0) ∧
     (∀ mu nu a, (0 : ℝ) - 0 + Section8.Quat.spinConnectionFlat mu a nu = 0) ∧
     (∀ E : Section12.SpinMat, Section12.cliffordSolderingDerivative 0 0 E = 0) := by
-  exact ⟨trace_ortho, vec_recover, completeness, flat_tetrad_metric_owner,
-    flat_spin_connection_owner, flat_soldering_covariant_constancy_owner,
-    flat_tetrad_postulate_owner, flat_clifford_soldering_derivative_owner⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact trace_ortho
+  · exact vec_recover
+  · exact completeness
+  · exact flat_tetrad_metric_owner
+  · exact flat_spin_connection_owner
+  · exact flat_soldering_covariant_constancy_owner
+  · exact flat_tetrad_postulate_owner
+  · exact flat_clifford_soldering_derivative_owner
 
 end Section3

@@ -4599,6 +4599,7 @@ import InfoGeometry.Canonical.ArnoldCohenRelation
 import InfoGeometry.Canonical.KANModuliTopology
 import InfoGeometry.Canonical.AttentionExpertModuliTopological
 import InfoGeometry.Canonical.AttentionExpertSimplexModuliTopological
+import InfoGeometry.Canonical.BoundedAttentionLatentModuliTopological
 import InfoGeometry.Canonical.ChiralConeOctonionicBridge
 import InfoGeometry.Canonical.OctonionicCuntzIsomorphism
 import InfoGeometry.Canonical.ChiralConeOctonionicTopological

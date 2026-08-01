@@ -31,12 +31,19 @@ noncomputable def bohmMadelungQuantumPotential (_ρ : ℝ) (grad2LogRho : ℝ) (
   - (grad2LogRho + (1/2) * gradLogRhoSq)
 
 /-- Independent positive-scale and quantum-gradient data. -/
-structure FourthOrderScalePacket where
-  (spectral_base : ℝ)
-  (is_positive : spectral_base > 0)
-  (quantum_potential_gradient : ℝ)
+def FourthOrderScalePacket : Type :=
+  {p : ℝ × ℝ // p.1 > 0}
 
 namespace FourthOrderScalePacket
+
+def spectral_base (P : FourthOrderScalePacket) : ℝ :=
+  P.1.1
+
+def is_positive (P : FourthOrderScalePacket) : P.spectral_base > 0 :=
+  P.2
+
+def quantum_potential_gradient (P : FourthOrderScalePacket) : ℝ :=
+  P.1.2
 
 /-- The fourth-order scalar term is canonically the gradient square. -/
 def four_derivative_term (P : FourthOrderScalePacket) : ℝ :=

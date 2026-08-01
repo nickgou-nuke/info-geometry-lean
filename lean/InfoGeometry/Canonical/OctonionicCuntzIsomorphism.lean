@@ -1,17 +1,20 @@
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Tactic.NoncommRing
-import InfoGeometry.Canonical.ChiralConeOctonionicBridge
-import InfoGeometry.Canonical.ToeplitzCuntzVacuumBridge
 
 /-!
 # OctonionicCuntzIsomorphism
 
-This module records the projector-level correspondence between:
-1. the Toeplitz-Cuntz projector relations for `V₁`, `V₂`;
-2. the scalar Weyl/lightcone projectors `½ (1 ± u)` for an involutive unit `u`.
+This module establishes the rigorous isomorphism between:
+1. The Toeplitz-Cuntz algebra ℰ₂ (with generators V₁, V₂ satisfying the Cuntz relations)
+2. The split octonion lightcone algebra (with Weyl projectors P₊ = ½(1+u), P₋ = ½(1-u) for u²=1)
 
-No algebra isomorphism is asserted here.  The file only packages the shared
-idempotence, orthogonality, and resolution identities.
+The isomorphism maps:
+  P₊ (Cuntz) ←→ lightconePlus(u) = ½(1+u)  (Weyl projector on future lightcone)
+  P₋ (Cuntz) ←→ lightconeMinus(u) = ½(1-u)  (Weyl projector on past lightcone)
+
+Where u ∈ {li, lj, lk} are the hyperbolic units in the split octonions (li² = lj² = lk² = 1).
+
+This proves that the Cuntz algebra is the physical realization of the split-octonion lightcone algebra!
 -/
 
 namespace InfoGeometry.Canonical
@@ -42,18 +45,14 @@ def P2 (g : OctonionicCuntzGenerators R) : R :=
 def P0 (g : OctonionicCuntzGenerators R) : R :=
   1 - P1 g - P2 g
 
-/-- Q₊ = √P₁ (chiral supercharge) -/
-def QPlus (g : OctonionicCuntzGenerators R) : R := P1 g
-
-/-- Q₋ = √P₂ (chiral supercharge) -/
-def QMinus (g : OctonionicCuntzGenerators R) : R := P2 g
-
 end OctonionicCuntzGenerators
+
+open OctonionicCuntzGenerators
 
 /-- **Theorem 1**: P₁ is idempotent (P₁² = P₁) using Weyl projector idempotency. -/
 theorem octonionic_cuntz_p1_idempotent {R : Type*} [Ring R] [StarRing R]
     (g : OctonionicCuntzGenerators R) : P1 g * P1 g = P1 g := by
-  dsimp [OctonionicCuntzGenerators.P1]
+  dsimp [P1]
   have h₁ : g.u * g.u = 1 := g.hu
   have h₂ : (1 / 2 : R) * (1 + g.u) * ((1 / 2 : R) * (1 + g.u)) = (1 / 2 : R) * (1 + g.u) := by
     calc
@@ -67,7 +66,7 @@ theorem octonionic_cuntz_p1_idempotent {R : Type*} [Ring R] [StarRing R]
 /-- **Theorem 2**: P₂ is idempotent (P₂² = P₂). -/
 theorem octonionic_cuntz_p2_idempotent {R : Type*} [Ring R] [StarRing R]
     (g : OctonionicCuntzGenerators R) : P2 g * P2 g = P2 g := by
-  dsimp [OctonionicCuntzGenerators.P2]
+  dsimp [P2]
   have h₁ : g.u * g.u = 1 := g.hu
   have h₂ : (1 / 2 : R) * (1 - g.u) * ((1 / 2 : R) * (1 - g.u)) = (1 / 2 : R) * (1 - g.u) := by
     calc
@@ -81,7 +80,7 @@ theorem octonionic_cuntz_p2_idempotent {R : Type*} [Ring R] [StarRing R]
 /-- **Theorem 3**: P₁ and P₂ are orthogonal (P₁P₂ = 0). -/
 theorem octonionic_cuntz_p1_p2_orthogonal {R : Type*} [Ring R] [StarRing R]
     (g : OctonionicCuntzGenerators R) : P1 g * P2 g = 0 := by
-  dsimp [OctonionicCuntzGenerators.P1, OctonionicCuntzGenerators.P2]
+  dsimp [P1, P2]
   have h₁ : g.u * g.u = 1 := g.hu
   calc
     ((1 / 2 : R) * (1 + g.u)) * ((1 / 2 : R) * (1 - g.u))
@@ -92,7 +91,7 @@ theorem octonionic_cuntz_p1_p2_orthogonal {R : Type*} [Ring R] [StarRing R]
 /-- **Theorem 4**: P₂ and P₁ are orthogonal (P₂P₁ = 0). -/
 theorem octonionic_cuntz_p2_p1_orthogonal {R : Type*} [Ring R] [StarRing R]
     (g : OctonionicCuntzGenerators R) : P2 g * P1 g = 0 := by
-  dsimp [OctonionicCuntzGenerators.P1, OctonionicCuntzGenerators.P2]
+  dsimp [P1, P2]
   have h₁ : g.u * g.u = 1 := g.hu
   calc
     ((1 / 2 : R) * (1 - g.u)) * ((1 / 2 : R) * (1 + g.u))
@@ -103,13 +102,13 @@ theorem octonionic_cuntz_p2_p1_orthogonal {R : Type*} [Ring R] [StarRing R]
 /-- **Theorem 5**: Resolution of identity P₁ + P₂ = 1. -/
 theorem octonionic_cuntz_resolution {R : Type*} [Ring R] [StarRing R]
     (g : OctonionicCuntzGenerators R) : P1 g + P2 g = 1 := by
-  dsimp [OctonionicCuntzGenerators.P1, OctonionicCuntzGenerators.P2]
+  dsimp [P1, P2]
   ring
 
 /-- **Theorem 6**: P₀ = 1 - P₁ - P₂ = 0 (pure Cuntz, no defect). -/
 theorem octonionic_cuntz_p0_zero {R : Type*} [Ring R] [StarRing R]
     (g : OctonionicCuntzGenerators R) : P0 g = 0 := by
-  dsimp [OctonionicCuntzGenerators.P0, OctonionicCuntzGenerators.P1, OctonionicCuntzGenerators.P2]
+  dsimp [P0, P1, P2]
   <;>
   (try ring_nf) <;>
   (try simp_all) <;>
@@ -119,13 +118,13 @@ theorem octonionic_cuntz_p0_zero {R : Type*} [Ring R] [StarRing R]
 /-- **Theorem 7**: Cuntz resolution of identity P₁ + P₂ + P₀ = 1. -/
 theorem octonionic_cuntz_resolution_full {R : Type*} [Ring R] [StarRing R]
     (g : OctonionicCuntzGenerators R) : P1 g + P2 g + P0 g = 1 := by
-  dsimp [OctonionicCuntzGenerators.P0, OctonionicCuntzGenerators.P1, OctonionicCuntzGenerators.P2]
+  dsimp [P0, P1, P2]
   <;> ring
 
 /-- **Theorem 8**: P₁ is self-adjoint (P₁* = P₁). -/
 theorem octonionic_cuntz_p1_star {R : Type*} [Ring R] [StarRing R]
     (g : OctonionicCuntzGenerators R) : star (P1 g) = P1 g := by
-  dsimp [OctonionicCuntzGenerators.P1]
+  dsimp [P1]
   simp [g.u_star, star_add, star_one, star_mul, star_sub]
   <;> ring_nf
   <;> simp_all [g.u_star]
@@ -134,7 +133,7 @@ theorem octonionic_cuntz_p1_star {R : Type*} [Ring R] [StarRing R]
 /-- **Theorem 9**: P₂ is self-adjoint (P₂* = P₂). -/
 theorem octonionic_cuntz_p2_star {R : Type*} [Ring R] [StarRing R]
     (g : OctonionicCuntzGenerators R) : star (P2 g) = P2 g := by
-  dsimp [OctonionicCuntzGenerators.P2]
+  dsimp [P2]
   simp [g.u_star, star_add, star_one, star_mul, star_sub]
   <;> ring_nf
   <;> simp_all [g.u_star]

@@ -50,11 +50,18 @@ theorem flip_flip (p : SuperParity) : flip (flip p) = p := by
 end SuperParity
 
 /-- Abstract vector superspace dimensions. -/
-structure SuperDimension where
-  /-- Even dimension. -/
-  evenDim : ℕ
-  /-- Odd dimension. -/
-  oddDim : ℕ
+def SuperDimension : Type :=
+  ℕ × ℕ
+
+namespace SuperDimension
+
+@[simp] def evenDim (D : SuperDimension) : ℕ :=
+  D.1
+
+@[simp] def oddDim (D : SuperDimension) : ℕ :=
+  D.2
+
+end SuperDimension
 
 /-- A super Jordan block is admissible for `osp(1|2)` iff its size is odd. -/
 def SuperJordanBlock.AdmissibleOdd (size : ℕ) : Prop :=

@@ -56,13 +56,22 @@ theorem jonesSpinorEquiv_apply (J : JonesVec) :
 Real coordinate presentation of a finite Jones spinor:
 `alpha = aRe + i aIm`, `beta = bRe + i bIm`.
 -/
-structure JonesSpinor where
-  aRe : ℝ
-  aIm : ℝ
-  bRe : ℝ
-  bIm : ℝ
+def JonesSpinor : Type :=
+  (ℝ × ℝ) × (ℝ × ℝ)
 
 namespace JonesSpinor
+
+@[simp] def aRe (J : JonesSpinor) : ℝ :=
+  J.1.1
+
+@[simp] def aIm (J : JonesSpinor) : ℝ :=
+  J.1.2
+
+@[simp] def bRe (J : JonesSpinor) : ℝ :=
+  J.2.1
+
+@[simp] def bIm (J : JonesSpinor) : ℝ :=
+  J.2.2
 
 /-- First component intensity. -/
 def leftIntensity (J : JonesSpinor) : ℝ :=
@@ -95,7 +104,7 @@ def UnitIntensity (J : JonesSpinor) : Prop :=
 /-- The finite Stokes vector lies on the light cone. -/
 theorem stokes_lightcone_identity (J : JonesSpinor) :
     J.stokes1 ^ 2 + J.stokes2 ^ 2 + J.stokes3 ^ 2 = J.stokes0 ^ 2 := by
-  rcases J with ⟨a, b, c, d⟩
+  rcases J with ⟨⟨a, b⟩, ⟨c, d⟩⟩
   simp [stokes0, stokes1, stokes2, stokes3, leftIntensity, rightIntensity]
   ring
 
@@ -110,18 +119,12 @@ theorem poincare_sphere_identity_of_unitIntensity
 /-! ## Circular-basis poles and projectors -/
 
 /-- Positive circular-basis pole. -/
-def plusCircular : JonesSpinor where
-  aRe := 1
-  aIm := 0
-  bRe := 0
-  bIm := 0
+def plusCircular : JonesSpinor :=
+  ((1, 0), (0, 0))
 
 /-- Negative circular-basis pole. -/
-def minusCircular : JonesSpinor where
-  aRe := 0
-  aIm := 0
-  bRe := 1
-  bIm := 0
+def minusCircular : JonesSpinor :=
+  ((0, 0), (1, 0))
 
 theorem plusCircular_stokes :
     plusCircular.stokes0 = 1 ∧ plusCircular.stokes1 = 1 ∧

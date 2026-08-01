@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.OctonionicCuntzIsomorphism
 import InfoGeometry.Canonical.PauliWorldClockSynchronicity
 import InfoGeometry.Canonical.PauliBostConnesModularFlow
 import InfoGeometry.Canonical.RiemannZetaPhaseTransition
+import InfoGeometry.Canonical.BostConnesZetaPhase
 import InfoGeometry.Canonical.ChiralConeOctonionicTopological
 import InfoGeometry.Canonical.BostConnesPhaseTransition
 import InfoGeometry.Canonical.CuntzIsometryIntertwinerBridge
@@ -312,6 +313,7 @@ import InfoGeometry.Canonical.BeliefAlgebra
 import InfoGeometry.Canonical.BostConnesKMS
 import InfoGeometry.Canonical.BostConnesGibbsState
 import InfoGeometry.Canonical.BostConnesConformalBoundary
+import InfoGeometry.Canonical.BostConnesZetaPhase
 import InfoGeometry.Canonical.GradedTraceBridge
 import InfoGeometry.Canonical.GradedTraceColimitBridge
 import InfoGeometry.Canonical.PrimeHeisenbergOscillators
@@ -694,6 +696,7 @@ import InfoGeometry.Canonical.FixedIndexCuntzModularFlowTopologicalIso
 import InfoGeometry.Canonical.FixedIndexCuntzGNSHilbertTopologicalColimit
 import InfoGeometry.Canonical.FilteredGNSHilbertTopologicalColimitDenseRange
 import InfoGeometry.Canonical.BostConnesPartitionFunction
+import InfoGeometry.Canonical.BostConnesRiemannZetaPhaseTransitionBridge
 import InfoGeometry.Canonical.CuntzConnesSpectralDistance
 import InfoGeometry.Canonical.ArakiWoodsModularSpectrum
 import InfoGeometry.Canonical.TomitaModularAutomorphismFlow

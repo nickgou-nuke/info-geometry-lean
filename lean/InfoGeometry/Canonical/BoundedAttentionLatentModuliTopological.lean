@@ -145,4 +145,59 @@ theorem boundedExpertSoftmaxConcentration_global_minimum
     (boundedExpertSoftmaxConcentrationOnModuli (B := B) (V := V) (K := K))
     (continuous_boundedExpertSoftmaxConcentrationOnModuli (B := B) (V := V) (K := K))
 
+noncomputable def boundedExpertForget
+    (p : BoundedExpertAttentionVector B V K) : ExpertAttentionVector V K :=
+  fun j => (((p j).1 : ℝ), (p j).2)
+
+theorem boundedExpertForget_smul
+    (σ : Equiv.Perm (Fin K))
+    (p : BoundedExpertAttentionVector B V K) :
+    boundedExpertForget (σ • p) = σ • boundedExpertForget p := by
+  ext j
+  rfl
+
+theorem continuous_boundedExpertForget :
+    Continuous (boundedExpertForget (B := B) (V := V) (K := K)) := by
+  apply continuous_pi
+  intro j
+  exact (continuous_subtype_val.prod_mk continuous_snd).comp
+    (continuous_apply j)
+
+noncomputable def boundedExpertSoftmaxEntropy
+    (p : BoundedExpertAttentionVector B V K) : ℝ :=
+  expertSoftmaxEntropy (boundedExpertForget p)
+
+theorem boundedExpertSoftmaxEntropy_smul
+    (σ : Equiv.Perm (Fin K))
+    (p : BoundedExpertAttentionVector B V K) :
+    boundedExpertSoftmaxEntropy (σ • p) = boundedExpertSoftmaxEntropy p := by
+  unfold boundedExpertSoftmaxEntropy
+  rw [boundedExpertForget_smul]
+  exact expertSoftmaxEntropy_smul σ (boundedExpertForget p)
+
+theorem continuous_boundedExpertSoftmaxEntropy :
+    Continuous (boundedExpertSoftmaxEntropy (B := B) (V := V) (K := K)) := by
+  exact continuous_expertSoftmaxEntropy.comp continuous_boundedExpertForget
+
+noncomputable def boundedExpertSoftmaxEntropyOnModuli :
+    KANModuliSpace (Set.Icc (-B) B × V) K → ℝ :=
+  invariantLift boundedExpertSoftmaxEntropy boundedExpertSoftmaxEntropy_smul
+
+theorem continuous_boundedExpertSoftmaxEntropyOnModuli :
+    Continuous (boundedExpertSoftmaxEntropyOnModuli
+      (B := B) (V := V) (K := K)) := by
+  exact continuous_invariantLift boundedExpertSoftmaxEntropy
+    continuous_boundedExpertSoftmaxEntropy boundedExpertSoftmaxEntropy_smul
+
+theorem boundedExpertSoftmaxEntropy_global_maximum
+    [CompactSpace V] [Nonempty V] (hB : 0 ≤ B) :
+    ∃ q, ∀ q',
+      boundedExpertSoftmaxEntropyOnModuli (B := B) (V := V) (K := K) q' ≤
+        boundedExpertSoftmaxEntropyOnModuli (B := B) (V := V) (K := K) q := by
+  letI : Nonempty (Set.Icc (-B) B) :=
+    ⟨⟨0, by constructor <;> linarith⟩⟩
+  exact exists_global_maximum_on_kanModuli
+    (boundedExpertSoftmaxEntropyOnModuli (B := B) (V := V) (K := K))
+    (continuous_boundedExpertSoftmaxEntropyOnModuli (B := B) (V := V) (K := K))
+
 end InfoGeometry.Canonical.KANModuli

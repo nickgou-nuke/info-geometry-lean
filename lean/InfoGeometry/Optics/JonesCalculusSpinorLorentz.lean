@@ -55,17 +55,29 @@ theorem stokes_on_sphere (ψ : JonesVector) :
   ring
 
 /-- Birefringence as a finite anisotropy packet. -/
-structure BirefringentMedium where
-  ordinary_index : ℝ
-  extraordinary_index : ℝ
-  optic_axis : Fin 3 → ℝ
+def BirefringentMedium : Type :=
+  ℝ × (ℝ × (Fin 3 → ℝ))
+
+namespace BirefringentMedium
+
+@[simp] def ordinary_index (B : BirefringentMedium) : ℝ :=
+  B.1
+
+@[simp] def extraordinary_index (B : BirefringentMedium) : ℝ :=
+  B.2.1
+
+@[simp] def optic_axis (B : BirefringentMedium) : Fin 3 → ℝ :=
+  B.2.2
+
+end BirefringentMedium
 
 def birefringentAnisotropy (B : BirefringentMedium) : ℝ :=
   B.extraordinary_index - B.ordinary_index
 
 theorem birefringent_index_split (B : BirefringentMedium) :
     B.ordinary_index + birefringentAnisotropy B = B.extraordinary_index := by
-  simp [birefringentAnisotropy]
+  simp [birefringentAnisotropy, BirefringentMedium.ordinary_index,
+    BirefringentMedium.extraordinary_index]
 
 /-- Jones matrix for a diagonal birefringent plate with retardance `δ`. -/
 def waveplate (δ : ℝ) (_axis : Fin 3 → ℝ) : JonesMatrix :=

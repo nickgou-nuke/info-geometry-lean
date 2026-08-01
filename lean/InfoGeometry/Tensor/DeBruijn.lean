@@ -20,13 +20,19 @@ namespace Tensor
 `arity` is the number of exposed slots/ports and `index` is the selected slot.
 The proof field is direct Lean evidence that the payload coordinate is in
 bounds. -/
-structure TensorPort where
-  arity : ℕ
-  index : ℕ
-  inBounds : index < arity
-  deriving Repr
+abbrev TensorPort : Type :=
+  {p : ℕ × ℕ // p.2 < p.1}
 
 namespace TensorPort
+
+@[simp] def arity (p : TensorPort) : ℕ :=
+  p.1.1
+
+@[simp] def index (p : TensorPort) : ℕ :=
+  p.1.2
+
+@[simp] def inBounds (p : TensorPort) : p.index < p.arity :=
+  p.2
 
 @[simp] theorem index_lt_arity (p : TensorPort) : p.index < p.arity :=
   p.inBounds

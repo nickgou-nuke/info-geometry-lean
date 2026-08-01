@@ -3,14 +3,10 @@ import Mathlib.LinearAlgebra.Matrix.Trace
 import InfoGeometry.Krein.DoubledSpace
 
 /-!
-# Jones Calculus = Spinorial Lorentz Group
-# Poincaré Sphere = Bloch Sphere for Photon Polarization
+# Jones calculus and polarization coordinates
 
-INSIGHT: Jones matrix formalism IS the chiral representation of SO(1,3)
-
-  SL(2,ℂ) / ℤ₂ ≅ SO⁺(1,3)
-
-Jones matrices act on polarization spinors, exactly like our doubled Krein space!
+This file records standard Pauli-matrix identities, Jones-vector coordinates,
+and a finite polarization readout for the Poincaré sphere.
 -/
 
 open Matrix
@@ -34,9 +30,17 @@ theorem pauli_commutation :
 
 
 /-- Jones vectors: polarization spinors -/
-structure JonesVector where
-  H : ℂ  -- Horizontal component
-  V : ℂ  -- Vertical component
+def JonesVector : Type := ℂ × ℂ
+
+namespace JonesVector
+
+@[simp] def H (ψ : JonesVector) : ℂ :=
+  ψ.1
+
+@[simp] def V (ψ : JonesVector) : ℂ :=
+  ψ.2
+
+end JonesVector
 
 /-- Standard polarization states -/
 def horizontal : JonesVector := ⟨1, 0⟩
@@ -81,19 +85,19 @@ theorem stokes_on_sphere (ψ : JonesVector)
     (h_norm : Complex.normSq ψ.H + Complex.normSq ψ.V = 1) :
     let (s₁, s₂, s₃) := stokesVector ψ
     s₁^2 + s₂^2 + s₃^2 = 1 := by
-  simp [stokesVector, Complex.normSq] at *
+  simp [stokesVector, Complex.normSq, JonesVector.H, JonesVector.V] at *
   linear_combination
-    (ψ.H.re ^ 2 + ψ.H.im ^ 2 + ψ.V.re ^ 2 + ψ.V.im ^ 2 + 1) * h_norm
+    (ψ.1.re ^ 2 + ψ.1.im ^ 2 + ψ.2.re ^ 2 + ψ.2.im ^ 2 + 1) * h_norm
 
 /-- Poincaré sphere coordinates for standard states -/
 theorem stokes_horizontal : stokesVector horizontal = (0, 0, 1) := by
-  simp [stokesVector, horizontal]
+  simp [stokesVector, horizontal, JonesVector.H, JonesVector.V]
 
 theorem stokes_vertical : stokesVector vertical = (0, 0, -1) := by
-  simp [stokesVector, vertical]
+  simp [stokesVector, vertical, JonesVector.H, JonesVector.V]
 
 theorem stokes_diagonal : stokesVector diagonal = (1, 0, 0) := by
-  simp [stokesVector, diagonal, Complex.normSq]
+  simp [stokesVector, diagonal, Complex.normSq, JonesVector.H, JonesVector.V]
   have hsqrt : Real.sqrt 2 * Real.sqrt 2 = 2 := Real.mul_self_sqrt (by norm_num)
   have h_prod : Real.sqrt 2 / 2 * (Real.sqrt 2 / 2) = 1 / 2 := by
     calc Real.sqrt 2 / 2 * (Real.sqrt 2 / 2)
@@ -103,16 +107,27 @@ theorem stokes_diagonal : stokesVector diagonal = (1, 0, 0) := by
   rw [h_prod]
   norm_num
 
-/-- Connection to Lorentz group: SL(2,ℂ) double cover -/
-theorem jones_is_lorentz_cover (J : JonesMatrix) (hJ : J.det = 1) :
+/-- A determinant-one Jones matrix remains determinant-one. -/
+theorem jones_det_one_self (J : JonesMatrix) (hJ : J.det = 1) :
     J.det = 1 :=
   hJ
 
 /-- Birefringence as anisotropic metric -/
-structure BirefringentMetric where
-  n_o : ℝ  -- Ordinary refractive index
-  n_e : ℝ  -- Extraordinary refractive index
-  optic_axis : Fin 3 → ℝ  -- Direction of optic axis
+def BirefringentMetric : Type :=
+  ℝ × (ℝ × (Fin 3 → ℝ))
+
+namespace BirefringentMetric
+
+@[simp] def n_o (g : BirefringentMetric) : ℝ :=
+  g.1
+
+@[simp] def n_e (g : BirefringentMetric) : ℝ :=
+  g.2.1
+
+@[simp] def optic_axis (g : BirefringentMetric) : Fin 3 → ℝ :=
+  g.2.2
+
+end BirefringentMetric
 
 def birefringentAnisotropy (g : BirefringentMetric) : ℝ :=
   g.n_e - g.n_o
@@ -120,7 +135,7 @@ def birefringentAnisotropy (g : BirefringentMetric) : ℝ :=
 /-- Light propagation = null geodesics in birefringent spacetime -/
 theorem light_follows_null_geodesics (g : BirefringentMetric) :
     g.n_o + birefringentAnisotropy g = g.n_e := by
-  simp [birefringentAnisotropy]
+  simp [birefringentAnisotropy, BirefringentMetric.n_o, BirefringentMetric.n_e]
 
 /-- Connection to our formalization -/
 theorem jones_is_our_chiral_rep :

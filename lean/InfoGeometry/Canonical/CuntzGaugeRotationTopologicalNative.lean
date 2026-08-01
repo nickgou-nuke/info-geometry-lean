@@ -43,13 +43,17 @@ theorem realNativeRotationParameterSet_isCompact :
   · nlinarith [sq_nonneg (p.2 + 1)]
   · nlinarith [sq_nonneg (p.2 - 1)]
 
-theorem isCompact_nativeRotationParameterSpace :
-    CompactSpace (NativeRotationParameter (R := ℝ)) := by
-  exact isCompact_iff_compactSpace.mp
-    (realNativeRotationParameterSet_isCompact (R := ℝ))
-
 abbrev NativeRotationParameter :=
   {p : R × R // p ∈ nativeRotationParameterSet (R := R)}
+
+theorem isCompact_nativeRotationParameterSpace :
+    CompactSpace (NativeRotationParameter (R := ℝ)) := by
+  exact isCompact_iff_compactSpace.mp realNativeRotationParameterSet_isCompact
+
+theorem realNativeRotationParameterSpace_nonempty :
+    Nonempty (NativeRotationParameter (R := ℝ)) := by
+  refine ⟨⟨(1, 0), ?_⟩⟩
+  norm_num [nativeRotationParameterSet]
 
 def nativeRotationParameterCoefficients
     (p : NativeRotationParameter (R := R)) :
@@ -85,6 +89,34 @@ theorem continuous_nativeRotationV1Readout
     continuous_const
   exact (ha.mul hc1).add (hb.mul hc2)
 
+theorem exists_max_realNativeRotationV1Readout
+    (g : ToeplitzCuntzGenerators ℝ) :
+    ∃ p : NativeRotationParameter (R := ℝ),
+      IsMaxOn (nativeRotationV1Readout (R := ℝ) g) Set.univ p := by
+  letI : CompactSpace (NativeRotationParameter (R := ℝ)) :=
+    isCompact_nativeRotationParameterSpace
+  have hnonempty : (Set.univ : Set (NativeRotationParameter (R := ℝ))).Nonempty := by
+    refine ⟨⟨(1, 0), ?_⟩, Set.mem_univ _⟩
+    norm_num [nativeRotationParameterSet]
+  obtain ⟨p, _, hp⟩ := isCompact_univ.exists_isMaxOn
+    hnonempty
+    (continuous_nativeRotationV1Readout (R := ℝ) g).continuousOn
+  exact ⟨p, hp⟩
+
+theorem exists_min_realNativeRotationV1Readout
+    (g : ToeplitzCuntzGenerators ℝ) :
+    ∃ p : NativeRotationParameter (R := ℝ),
+      IsMinOn (nativeRotationV1Readout (R := ℝ) g) Set.univ p := by
+  letI : CompactSpace (NativeRotationParameter (R := ℝ)) :=
+    isCompact_nativeRotationParameterSpace
+  have hnonempty : (Set.univ : Set (NativeRotationParameter (R := ℝ))).Nonempty := by
+    refine ⟨⟨(1, 0), ?_⟩, Set.mem_univ _⟩
+    norm_num [nativeRotationParameterSet]
+  obtain ⟨p, _, hp⟩ := isCompact_univ.exists_isMinOn
+    hnonempty
+    (continuous_nativeRotationV1Readout (R := ℝ) g).continuousOn
+  exact ⟨p, hp⟩
+
 theorem continuous_nativeRotationV2Readout
     (g : ToeplitzCuntzGenerators R) :
     Continuous (nativeRotationV2Readout (R := R) g) := by
@@ -98,6 +130,34 @@ theorem continuous_nativeRotationV2Readout
     continuous_const
   exact (hb.mul hc1).neg.add (ha.mul hc2)
 
+theorem exists_max_realNativeRotationV2Readout
+    (g : ToeplitzCuntzGenerators ℝ) :
+    ∃ p : NativeRotationParameter (R := ℝ),
+      IsMaxOn (nativeRotationV2Readout (R := ℝ) g) Set.univ p := by
+  letI : CompactSpace (NativeRotationParameter (R := ℝ)) :=
+    isCompact_nativeRotationParameterSpace
+  have hnonempty : (Set.univ : Set (NativeRotationParameter (R := ℝ))).Nonempty := by
+    refine ⟨⟨(1, 0), ?_⟩, Set.mem_univ _⟩
+    norm_num [nativeRotationParameterSet]
+  obtain ⟨p, _, hp⟩ := isCompact_univ.exists_isMaxOn
+    hnonempty
+    (continuous_nativeRotationV2Readout (R := ℝ) g).continuousOn
+  exact ⟨p, hp⟩
+
+theorem exists_min_realNativeRotationV2Readout
+    (g : ToeplitzCuntzGenerators ℝ) :
+    ∃ p : NativeRotationParameter (R := ℝ),
+      IsMinOn (nativeRotationV2Readout (R := ℝ) g) Set.univ p := by
+  letI : CompactSpace (NativeRotationParameter (R := ℝ)) :=
+    isCompact_nativeRotationParameterSpace
+  have hnonempty : (Set.univ : Set (NativeRotationParameter (R := ℝ))).Nonempty := by
+    refine ⟨⟨(1, 0), ?_⟩, Set.mem_univ _⟩
+    norm_num [nativeRotationParameterSet]
+  obtain ⟨p, _, hp⟩ := isCompact_univ.exists_isMinOn
+    hnonempty
+    (continuous_nativeRotationV2Readout (R := ℝ) g).continuousOn
+  exact ⟨p, hp⟩
+
 theorem continuous_nativeRotationReadout
     (g : ToeplitzCuntzGenerators R) :
     Continuous (nativeRotationReadout (R := R) g) := by
@@ -108,7 +168,7 @@ theorem isCompact_realNativeRotationReadout_range
     (g : ToeplitzCuntzGenerators ℝ) :
     IsCompact (Set.range (nativeRotationReadout (R := ℝ) g)) := by
   letI : CompactSpace (NativeRotationParameter (R := ℝ)) :=
-    isCompact_nativeRotationParameterSpace (R := ℝ)
+    isCompact_nativeRotationParameterSpace
   exact isCompact_range (continuous_nativeRotationReadout (R := ℝ) g)
 
 theorem nativeRotationV1Readout_isometry

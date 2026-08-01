@@ -26,14 +26,14 @@ namespace InfoGeometry.Analysis.FiniteSpectralMellinTaylor
 
 open Finset
 
-/-- Finite spectral data: spectral values and algebraic weights. -/
-structure FiniteSpectralData (ι R : Type*) where
-  /-- Spectral value attached to a finite index. -/
-  spectralValue : ι → R
-  /-- Algebraic spectral weight attached to a finite index. -/
-  weight : ι → R
+/- Finite spectral data: spectral values and algebraic weights. -/
+def FiniteSpectralData (ι R : Type*) := (ι → R) × (ι → R)
 
 namespace FiniteSpectralData
+
+def spectralValue {ι R : Type*} (D : FiniteSpectralData ι R) : ι → R := D.1
+
+def weight {ι R : Type*} (D : FiniteSpectralData ι R) : ι → R := D.2
 
 variable {ι R : Type*} [Fintype ι] [CommSemiring R]
 

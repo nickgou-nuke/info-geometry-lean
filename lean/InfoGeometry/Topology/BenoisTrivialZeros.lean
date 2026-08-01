@@ -10,10 +10,15 @@ theorem on trivial zeros of p-adic L-functions at near central points.
 
 namespace InfoGeometry.Topology.BenoisTrivialZeros
 
-/-- Abstract representation of a modular newform. -/
-structure Newform (K : Type*) where
-  weight : ℕ
-  char_val : K → K
+/- Abstract representation of a modular newform. -/
+def Newform (K : Type*) := ℕ × (K → K)
+
+namespace Newform
+
+def weight {K : Type*} (f : Newform K) : ℕ := f.1
+def char_val {K : Type*} (f : Newform K) : K → K := f.2
+
+end Newform
 
 /-- 
 The generalized Benois l-invariant and the associated p-adic L-function data.

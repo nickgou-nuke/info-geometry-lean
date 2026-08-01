@@ -98,9 +98,15 @@ theorem tkk_bracket_zero_of_outside
   exact G.bracket_zero hx hy hgrade
 
 /-- The resulting macroscopic spacetime geometry. -/
-structure SpacetimeGeometryData where
-  tangent : Type*
-  metric : tangent -> tangent -> Real
+abbrev SpacetimeGeometryData :=
+  Σ tangent : Type, tangent → tangent → Real
+
+namespace SpacetimeGeometryData
+
+def tangent (data : SpacetimeGeometryData) : Type := data.1
+def metric (data : SpacetimeGeometryData) : tangent data → tangent data → Real := data.2
+
+end SpacetimeGeometryData
 
 /-- The finite compilation target: a Jordan pair, a five-graded TKK datum, and
 the resulting spacetime geometry datum. -/

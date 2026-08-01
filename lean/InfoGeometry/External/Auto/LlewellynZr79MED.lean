@@ -24,50 +24,33 @@ def levelFromTransition (lower gamma : ℚ) : ℚ :=
 def withinError (central reported error : ℚ) : Prop :=
   |central - reported| ≤ error
 
-structure MirrorBandState where
-  twoJ : ℕ
-  Ezr_keV : ℚ
-  Ey_keV : ℚ
-  Eth_zr_keV : ℚ
-  Eth_y_keV : ℚ
-  med_keV : ℚ
-  med_error_keV : ℚ
+abbrev MirrorBandState := ℕ × ℚ × ℚ × ℚ × ℚ × ℚ × ℚ
 
-def state7_2 : MirrorBandState where
-  twoJ := 7
-  Ezr_keV := 184
-  Ey_keV := 183
-  Eth_zr_keV := 228
-  Eth_y_keV := 226
-  med_keV := 1
-  med_error_keV := 1
+namespace MirrorBandState
 
-def state9_2 : MirrorBandState where
-  twoJ := 9
-  Ezr_keV := 416
-  Ey_keV := 411
-  Eth_zr_keV := 522
-  Eth_y_keV := 515
-  med_keV := 5
-  med_error_keV := 2
+abbrev twoJ (s : MirrorBandState) : ℕ := s.1
 
-def state11_2 : MirrorBandState where
-  twoJ := 11
-  Ezr_keV := 715
-  Ey_keV := 726
-  Eth_zr_keV := 886
-  Eth_y_keV := 875
-  med_keV := -11
-  med_error_keV := 4
+abbrev Ezr_keV (s : MirrorBandState) : ℚ := s.2.1
 
-def state13_2 : MirrorBandState where
-  twoJ := 13
-  Ezr_keV := 1042
-  Ey_keV := 1042
-  Eth_zr_keV := 1291
-  Eth_y_keV := 1291
-  med_keV := 0
-  med_error_keV := 1
+abbrev Ey_keV (s : MirrorBandState) : ℚ := s.2.2.1
+
+abbrev Eth_zr_keV (s : MirrorBandState) : ℚ := s.2.2.2.1
+
+abbrev Eth_y_keV (s : MirrorBandState) : ℚ := s.2.2.2.2.1
+
+abbrev med_keV (s : MirrorBandState) : ℚ := s.2.2.2.2.2.1
+
+abbrev med_error_keV (s : MirrorBandState) : ℚ := s.2.2.2.2.2.2
+
+end MirrorBandState
+
+def state7_2 : MirrorBandState := (7, 184, 183, 228, 226, 1, 1)
+
+def state9_2 : MirrorBandState := (9, 416, 411, 522, 515, 5, 2)
+
+def state11_2 : MirrorBandState := (11, 715, 726, 886, 875, -11, 4)
+
+def state13_2 : MirrorBandState := (13, 1042, 1042, 1291, 1291, 0, 1)
 
 def centralMED (s : MirrorBandState) : ℚ :=
   MED s.Ezr_keV s.Ey_keV

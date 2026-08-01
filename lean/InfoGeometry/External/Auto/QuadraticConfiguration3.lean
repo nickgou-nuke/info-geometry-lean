@@ -155,10 +155,15 @@ inductive GenKind where
   deriving DecidableEq, Repr
 
 /-- Edge-labelled generator. -/
-structure EdgeGen where
-  edge : Edge3
-  kind : GenKind
-  deriving DecidableEq, Repr
+abbrev EdgeGen := Edge3 × GenKind
+
+namespace EdgeGen
+
+abbrev edge (g : EdgeGen) : Edge3 := g.1
+
+abbrev kind (g : EdgeGen) : GenKind := g.2
+
+end EdgeGen
 
 /-- The degree of an edge generator for ambient dimension `D`. -/
 def genDegree (D : ℕ) (g : EdgeGen) : ℕ :=

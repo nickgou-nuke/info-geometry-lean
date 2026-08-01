@@ -29,15 +29,15 @@ variable {Data : Type*} [Fintype Data] [Nonempty Data]
 /-- Grand-canonical variance is the generic Gibbs weighted variance. -/
 theorem grandCanonicalVariance_eq_weightedVariance
     (E : Data → ℝ) (β : ℝ) :
-    variance { energy := E } β =
-      weightedVariance (gibbsWeight { energy := E } β) E := by
+    variance E β =
+      weightedVariance (gibbsWeight E β) E := by
   rfl
 
 /-- Temperature susceptibility is the same pairwise Gibbs dispersion. -/
 theorem temperatureSusceptibility_eq_weightedVariance
     (E : Data → ℝ) (ε : ℝ) :
     temperatureSusceptibility E ε =
-      weightedVariance (gibbsWeight { energy := E } ε⁻¹) E := by
+      weightedVariance (gibbsWeight E ε⁻¹) E := by
   unfold temperatureSusceptibility
   exact grandCanonicalVariance_eq_weightedVariance E ε⁻¹
 
@@ -47,9 +47,9 @@ theorem temperatureSusceptibility_eq_zero_iff_pairwise
     temperatureSusceptibility E ε = 0 ↔ ∀ i j, E i = E j := by
   rw [temperatureSusceptibility_eq_weightedVariance]
   exact weightedVariance_eq_zero_iff_of_pos
-    (gibbsWeight { energy := E } ε⁻¹) E
-    (gibbsWeight_sum_one { energy := E } ε⁻¹)
-    (fun i => gibbsWeight_pos { energy := E } ε⁻¹ i)
+    (gibbsWeight E ε⁻¹) E
+    (gibbsWeight_sum_one E ε⁻¹)
+    (fun i => gibbsWeight_pos E ε⁻¹ i)
 
 /--
 The temperature derivative of the finite Gibbs mean is susceptibility divided

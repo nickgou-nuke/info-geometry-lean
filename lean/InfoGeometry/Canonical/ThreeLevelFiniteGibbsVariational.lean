@@ -25,7 +25,7 @@ noncomputable def superModel
     (superNumber : SuperSector → ℝ)
     (β μ ν : ℝ) :
     FiniteGibbs.Model (Data := SuperSector) (Theta := Unit) :=
-  ⟨fun g _ => effectiveSuperPotential State super energy particleNumber superNumber β μ ν g⟩
+  fun g _ => effectiveSuperPotential State super energy particleNumber superNumber β μ ν g
 
 /-- The super-model partition at temperature `1 / β` is the grand partition. -/
 theorem superModel_partition_eq_grandPartition

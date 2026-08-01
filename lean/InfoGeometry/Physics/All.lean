@@ -62,6 +62,7 @@ import InfoGeometry.Physics.MDPASJMSouriauExternalAudit
 import InfoGeometry.Physics.SouriauEntropyFoliation
 import InfoGeometry.Physics.ChiralUncertaintyCaliber
 import InfoGeometry.Physics.AmplituhedronPenroseTransform
+import InfoGeometry.Physics.AmplituhedronPositiveGrassmannianMap
 import InfoGeometry.Physics.MDPASJMSouriau
 import InfoGeometry.Physics.MDPASJMSouriauCantorColimit
 import InfoGeometry.Physics.BayesianTuringCantor

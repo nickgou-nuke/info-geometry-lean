@@ -156,7 +156,7 @@ theorem massieuPotential_eq_grandCanonical_potential_of_nonzero
     {ε : ℝ} (hε : ε ≠ 0) :
     massieuPotential M θ ε =
       InfoGeometry.GrandCanonical.potential
-        { energy := fun i : Data => M.energy i θ } (1 / ε) := by
+        (fun i : Data => M.energy i θ) (1 / ε) := by
   unfold massieuPotential InfoGeometry.GrandCanonical.potential
     InfoGeometry.GrandCanonical.partition partitionFunction
   congr 1
@@ -172,7 +172,7 @@ theorem massieuPotential_inv_eq_grandCanonical_potential
     (β : ℝ) :
     massieuPotential M θ β⁻¹ =
       InfoGeometry.GrandCanonical.potential
-        { energy := fun i : Data => M.energy i θ } β := by
+        (fun i : Data => M.energy i θ) β := by
   unfold massieuPotential InfoGeometry.GrandCanonical.potential
     InfoGeometry.GrandCanonical.partition partitionFunction
   congr 1
@@ -190,9 +190,9 @@ theorem deriv_massieuPotential_inv_eq_neg_mean
     (β : ℝ) :
     deriv (fun t : ℝ => massieuPotential M θ t⁻¹) β =
       -InfoGeometry.GrandCanonical.mean
-        { energy := fun i : Data => M.energy i θ } β := by
+        (fun i : Data => M.energy i θ) β := by
   let params : InfoGeometry.GrandCanonical.GrandCanonicalParams Data :=
-    { energy := fun i : Data => M.energy i θ }
+    fun i : Data => M.energy i θ
   have hfun : (fun t : ℝ => massieuPotential M θ t⁻¹) =
       InfoGeometry.GrandCanonical.potential params := by
     funext t
@@ -208,9 +208,9 @@ theorem deriv2_massieuPotential_inv_eq_variance
     deriv (fun t : ℝ =>
       deriv (fun s : ℝ => massieuPotential M θ s⁻¹) t) β =
       InfoGeometry.GrandCanonical.variance
-        { energy := fun i : Data => M.energy i θ } β := by
+        (fun i : Data => M.energy i θ) β := by
   let params : InfoGeometry.GrandCanonical.GrandCanonicalParams Data :=
-    { energy := fun i : Data => M.energy i θ }
+    fun i : Data => M.energy i θ
   have hfun : (fun t : ℝ => massieuPotential M θ t⁻¹) =
       InfoGeometry.GrandCanonical.potential params := by
     funext t

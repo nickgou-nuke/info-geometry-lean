@@ -13,10 +13,15 @@ noncomputable section
 namespace NuclearChartSquareCalibration
 
 /-- A chart point with proton coordinate `Z` and neutron coordinate `N`. -/
-structure NucleusPoint where
-  Z : ℕ
-  N : ℕ
-  deriving DecidableEq, Repr
+abbrev NucleusPoint := ℕ × ℕ
+
+namespace NucleusPoint
+
+abbrev Z (x : NucleusPoint) : ℕ := x.1
+
+abbrev N (x : NucleusPoint) : ℕ := x.2
+
+end NucleusPoint
 
 /-- The sum of the two chart coordinates. -/
 def massNumber (x : NucleusPoint) : ℕ := x.Z + x.N
@@ -24,10 +29,10 @@ def massNumber (x : NucleusPoint) : ℕ := x.Z + x.N
 /-- The square with `Z,N ∈ {15,16}`. -/
 def p31s31Square :
     NucleusPoint × NucleusPoint × NucleusPoint × NucleusPoint :=
-  ({ Z := 15, N := 15 },
-   { Z := 16, N := 15 },
-   { Z := 15, N := 16 },
-   { Z := 16, N := 16 })
+  ((15, 15),
+   (16, 15),
+   (15, 16),
+   (16, 16))
 
 /-- The four coordinate sums on the explicit square are `30,31,31,32`. -/
 theorem p31s31Square_mass_numbers :

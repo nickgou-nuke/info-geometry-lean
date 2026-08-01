@@ -16,14 +16,24 @@ theorem klein_bottle_is_two_mobius :
   KleinBottleDefinition = Surface.KleinBottle := rfl
 
 -- 2. Define the "throat" of the Klein bottle as the geometric UV cut-off.
-structure UV_Cutoff where
-  value : Nat
+abbrev UV_Cutoff := Nat
 
-structure Throat where
-  cutoff : UV_Cutoff
+namespace UV_Cutoff
+
+abbrev value (cutoff : UV_Cutoff) : Nat := cutoff
+
+end UV_Cutoff
+
+abbrev Throat := UV_Cutoff
+
+namespace Throat
+
+abbrev cutoff (throat : Throat) : UV_Cutoff := throat
+
+end Throat
 
 def KleinBottleThroat : Throat :=
-  { cutoff := { value := 0 } }
+  0
 
 -- 3. Construct the explicit cobordism map from the Pin(5,5) worldsheet geometry through this throat.
 inductive Geometry

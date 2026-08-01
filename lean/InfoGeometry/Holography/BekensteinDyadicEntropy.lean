@@ -17,10 +17,11 @@ noncomputable def bekenstein_hawking_entropy (A : AbelianHorizonFactor) (G : ℝ
 The Kubo-Martin-Schwinger (KMS) state at critical inverse temperature β = ln 2.
 Models the Shannon-von Neumann entropy of the dyadic rationals.
 -/
-structure KmsDyadicState where
-  branch_depth : ℕ
+abbrev KmsDyadicState := ℕ
 
 namespace KmsDyadicState
+
+abbrev branch_depth (state : KmsDyadicState) : ℕ := state
 
 /-- The dyadic KMS inverse temperature is canonically `log 2`. -/
 noncomputable def beta (_state : KmsDyadicState) : ℝ :=

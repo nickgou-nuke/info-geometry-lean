@@ -15,9 +15,13 @@ def tripotentPolynomial (d : ℤ) : ℤ := d ^ 3 - d
 
 def mobiusInv (k : ℤ) : ℤ := -k
 
-structure BrillouinMode where
-  k : ℤ
-  deriving DecidableEq, Repr
+abbrev BrillouinMode := ℤ
+
+namespace BrillouinMode
+
+abbrev k (m : BrillouinMode) : ℤ := m
+
+end BrillouinMode
 
 def kleinQuotient (m₁ m₂ : BrillouinMode) : Prop :=
   m₁.k = m₂.k ∨ m₁.k = mobiusInv m₂.k

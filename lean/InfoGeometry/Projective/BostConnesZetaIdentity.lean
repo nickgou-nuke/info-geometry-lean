@@ -7,14 +7,14 @@ import InfoGeometry.Canonical.BostConnesKMS
 import InfoGeometry.Clifford.LogCftMonodromy
 
 /-!
-# Bost-Connes Zeta-Volume Identity
+# Bost-Connes Zeta-Volume Comparison
 
-This module packages a theorem-safe Zeta-Volume identity interface by
+This module packages a theorem-safe zeta-volume comparison interface by
 instantiating `AmplituhedronZetaEquivalence` from an explicit comparison
 premise. It provides the Bost--Connes zeta readout, local summand bridges to
 Bost--Connes KMS projection weights, and a readback theorem for supplied
-volume comparisons. It does not prove the missing global analytic equality
-between the zeta partition function and an all-loop amplituhedron volume.
+volume comparisons. It does not assert a global analytic equality between the
+zeta partition function and an all-loop amplituhedron volume.
 -/
 
 open InfoGeometry.Canonical.BostConnesAmplituhedronBoundary
@@ -25,8 +25,8 @@ open InfoGeometry.Clifford.LogCftMonodromy
 
 noncomputable section
 
-/-- The exact Riemann Zeta partition function evaluated at the critical KMS state β = 2.
-    We fix this value across the manifold to satisfy the global equivalence invariant. -/
+/-- The Riemann zeta partition function evaluated at β = 2.
+    We fix this value across the manifold as a readout used by the comparison carrier. -/
 def bost_connes_zeta : BostConnesPartitionData ℂ :=
   fun _ => riemannZeta (2 : ℂ)
 
@@ -50,8 +50,8 @@ theorem zeta_volume_exact_comparison (β : ℂ) (L : ℕ)
 Termwise bridge between the normalized Hadjiivanov/amplituhedron trace summand
 and the unnormalized diagonal Bost--Connes KMS projection readout.
 
-This is a local summand identity with `ζβ = 1`; it is not a global zeta-volume
-or all-loop amplituhedron theorem.
+This is a local summand equality; it is not a global zeta-volume or all-loop
+amplituhedron theorem.
 -/
 theorem amplituhedron_volume_summand_eq_kms_readout (β : ℝ) (n : ℕ) :
     let n_pnat : ℕ+ := ⟨n + 1, Nat.succ_pos n⟩
@@ -75,7 +75,7 @@ theorem amplituhedron_volume_summand_eq_kms_readout (β : ℝ) (n : ℕ) :
 
 /--
 Termwise bridge from the normalized amplituhedron/Hadjiivanov trace summand to
-the diagonal Bost--Connes KMS readout, again with `ζβ = 1`.
+the diagonal Bost--Connes KMS readout.
 -/
 theorem normalized_trace_summand_eq_kms_readout (β : ℝ) (n : ℕ) :
     let n_pnat : ℕ+ := ⟨n + 1, Nat.succ_pos n⟩
@@ -102,31 +102,22 @@ theorem normalized_trace_summand_eq_kms_readout (β : ℝ) (n : ℕ) :
   congr 1
   ring
 
-/--
-THE ZETA-VOLUME IDENTITY
-We formally construct the equivalence between the thermodynamic partition
-function of the Bost-Connes quantum statistical mechanical system and the
-scattering Amplituhedron volume from an explicit comparison premise.
--/
+/-- The zeta-volume comparison carrier built from an explicit comparison premise. -/
 def bost_connes_amplituhedron_synthesis
     (Vol : AmplituhedronVolumeData ℂ)
     (hComparison : ∀ (β : ℂ) (L : ℕ), bost_connes_zeta β = Vol L) :
-    AmplituhedronZetaEquivalence ℂ where
+    InfoGeometry.Canonical.BostConnesAmplituhedronBoundary.AmplituhedronZetaEquivalence ℂ where
   Z := bost_connes_zeta
   Vol := Vol
-  equivalence β L := hComparison β L
+  comparison β L := hComparison β L
 
-/--
-We read back the family equality using the explicit comparison.
-The comparison premise is explicit, so the readback is kernel-checked and
-does not hide any missing Hestenes--Krein/colimit bridge.
--/
-theorem bost_connes_identity_verified (Vol : AmplituhedronVolumeData ℂ)
+/-- Read back the family equality using the explicit comparison. -/
+theorem bost_connes_comparison_verified (Vol : AmplituhedronVolumeData ℂ)
     (hComparison : ∀ (β : ℂ) (L : ℕ), bost_connes_zeta β = Vol L) :
     ∀ (β : ℂ) (L : ℕ),
       (bost_connes_amplituhedron_synthesis Vol hComparison).Z β =
         (bost_connes_amplituhedron_synthesis Vol hComparison).Vol L := by
   intro β L
-  exact (bost_connes_amplituhedron_synthesis Vol hComparison).equivalence β L
+  exact (bost_connes_amplituhedron_synthesis Vol hComparison).comparison β L
 
 end

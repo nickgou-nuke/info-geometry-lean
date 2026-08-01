@@ -2,8 +2,13 @@
 -- Continuous paths represented abstractly as functions.
 
 /-- A Krein space is represented abstractly -/
-structure KreinSpace where
-  dim : Nat
+abbrev KreinSpace := Nat
+
+namespace KreinSpace
+
+abbrev dim (k : KreinSpace) : Nat := k
+
+end KreinSpace
 
 /-- Continuous Path in Phase Space -/
 def Path : Type := Nat → Nat

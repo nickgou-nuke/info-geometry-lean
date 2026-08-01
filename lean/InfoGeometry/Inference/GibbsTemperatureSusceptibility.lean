@@ -26,12 +26,12 @@ variable {Data : Type*} [Fintype Data] [Nonempty Data]
 
 noncomputable def temperatureSusceptibility
     (E : Data → ℝ) (ε : ℝ) : ℝ :=
-  InfoGeometry.GrandCanonical.variance { energy := E } ε⁻¹
+  InfoGeometry.GrandCanonical.variance E ε⁻¹
 
 theorem temperatureSusceptibility_eq_logPartition_hessian
     (E : Data → ℝ) (ε : ℝ) :
     temperatureSusceptibility E ε =
-      InfoGeometry.GrandCanonical.hessian { energy := E } ε⁻¹ := by
+      InfoGeometry.GrandCanonical.hessian E ε⁻¹ := by
   unfold temperatureSusceptibility
   rw [InfoGeometry.GrandCanonical.potential_second_derivative_eq_variance]
 
@@ -39,14 +39,14 @@ theorem temperatureSusceptibility_nonneg
     (E : Data → ℝ) (ε : ℝ) :
     0 ≤ temperatureSusceptibility E ε := by
   unfold temperatureSusceptibility
-  exact InfoGeometry.GrandCanonical.variance_nonneg { energy := E } ε⁻¹
+  exact InfoGeometry.GrandCanonical.variance_nonneg E ε⁻¹
 
 theorem temperatureSusceptibility_eq_zero_iff
     (E : Data → ℝ) (ε : ℝ) :
     temperatureSusceptibility E ε = 0 ↔
-      ∀ i, E i = InfoGeometry.GrandCanonical.mean { energy := E } ε⁻¹ := by
+      ∀ i, E i = InfoGeometry.GrandCanonical.mean E ε⁻¹ := by
   unfold temperatureSusceptibility
   exact InfoGeometry.GrandCanonical.variance_eq_zero_iff_energy_eq_mean
-    { energy := E } ε⁻¹
+    E ε⁻¹
 
 end InfoGeometry.Inference.FiniteGibbs

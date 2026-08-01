@@ -20,7 +20,7 @@ noncomputable def sectorModel
     (energy : ∀ s, State s → ℝ) (particleNumber : Sector → ℝ)
     (β μ : ℝ) :
     FiniteGibbs.Model (Data := Sector) (Theta := Unit) :=
-  ⟨fun s _ => effectiveSectorPotential State energy particleNumber β μ s⟩
+  fun s _ => effectiveSectorPotential State energy particleNumber β μ s
 
 /-- The sector model's partition at temperature `1 / β` is the hierarchical
     grand partition. -/

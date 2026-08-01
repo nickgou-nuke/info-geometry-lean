@@ -40,7 +40,7 @@ noncomputable def PoissonModel.energy
 noncomputable def PoissonModel.gibbsModel
     (M : PoissonModel (Data := Data) (Theta := Theta)) :
     FiniteGibbs.Model (Data := Data) (Theta := Theta) :=
-  ⟨M.energy⟩
+  M.energy
 
 theorem PoissonModel.energy_nonneg
     (M : PoissonModel (Data := Data) (Theta := Theta)) (i : Data) (θ : Theta) :

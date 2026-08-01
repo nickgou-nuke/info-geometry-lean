@@ -32,8 +32,14 @@ variational bridge.
 `zeros_are_barrier_critical` is the explicit supplied bridge certificate.
 -/
 @[rep_depth operator]
-structure SelfConcordantZetaBarrierCalibrationPacket where
-  barrier : VariationalRHTarget
+abbrev SelfConcordantZetaBarrierCalibrationPacket := VariationalRHTarget
+
+namespace SelfConcordantZetaBarrierCalibrationPacket
+
+abbrev barrier (C : SelfConcordantZetaBarrierCalibrationPacket) :
+    VariationalRHTarget := C
+
+end SelfConcordantZetaBarrierCalibrationPacket
 
 variable (C : SelfConcordantZetaBarrierCalibrationPacket)
 

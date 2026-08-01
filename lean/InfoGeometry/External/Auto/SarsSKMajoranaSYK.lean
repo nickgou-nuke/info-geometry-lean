@@ -32,10 +32,11 @@ def matrixAlgDim (n : ℕ) : ℕ :=
 def cliffordRealBalancedDim (n : ℕ) : ℕ :=
   2^(2*n)
 
-structure SYKMajoranaSystem where
-  n : ℕ
+abbrev SYKMajoranaSystem := ℕ
 
 namespace SYKMajoranaSystem
+
+abbrev n (S : SYKMajoranaSystem) : ℕ := S
 
 def N (S : SYKMajoranaSystem) : ℕ := majoranaCount S.n
 
@@ -48,10 +49,11 @@ def pool_size (S : SYKMajoranaSystem) : ℕ := poolSizeSYK S.n
 
 end SYKMajoranaSystem
 
-structure SKSpinChain where
-  L : ℕ
+abbrev SKSpinChain := ℕ
 
 namespace SKSpinChain
+
+abbrev L (S : SKSpinChain) : ℕ := S
 
 def dla_dim (S : SKSpinChain) : ℕ := dlaDimSK S.L
 
@@ -59,10 +61,11 @@ def pool_size (S : SKSpinChain) : ℕ := poolSizeSK S.L
 
 end SKSpinChain
 
-structure PauliPairPool where
-  L : ℕ
+abbrev PauliPairPool := ℕ
 
 namespace PauliPairPool
+
+abbrev L (P : PauliPairPool) : ℕ := P
 
 def zy_terms (P : PauliPairPool) : ℕ := P.L * (P.L - 1) / 2
 

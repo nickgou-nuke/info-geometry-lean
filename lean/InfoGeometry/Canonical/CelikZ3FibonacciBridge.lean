@@ -2,17 +2,21 @@ import Mathlib.Logic.Equiv.Basic
 
 namespace InfoGeometry.Canonical.CelikZ3FibonacciBridge
 
-/-- Abstract representation of the B_n elements -/
-structure ArtinBraid (n : ℕ) where
-  val : ℕ
+/-- Abstract representation of a braid label at stage `n`.
+
+This owner carries no braid relation or stage-dependent invariant, so its
+native carrier is the underlying natural-number label. -/
+abbrev ArtinBraid (n : ℕ) := ℕ
+
+namespace ArtinBraid
+abbrev val {n : ℕ} (β : ArtinBraid n) : ℕ := β
+end ArtinBraid
 
 /--
-The true formal categorical relationship between the Z3 graded calculus
-and the Fibonacci anyons. 
+Bridge carrier between the Z3 graded calculus and the Fibonacci anyon lane.
 
-WARNING: Do not define this as an equality theorem. The Z3 parafermion 
-substrate does not equate dimension-for-dimension with the Fibonacci fusion 
-sector. The theorem is properly an Intertwining/Projection topological map.
+The structure records an intertwining/projection map rather than an equality
+theorem between the two carriers.
 -/
 structure Z3ParafermionToFibonacciBridge where
   z3Carrier : ℕ → Type

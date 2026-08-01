@@ -30,29 +30,28 @@ abbrev stageModuleDiagram : ℕ ⥤ ModuleCat ℂ :=
 
 /-- A stagewise star flow.  Its time and transition laws are explicit
 hypotheses of the descent theorems below. -/
-structure FlowData where
-  flow : ∀ n, ℝ → Stage n ≃⋆ₐ[ℂ] Stage n
+abbrev FlowData := ∀ n, ℝ → Stage n ≃⋆ₐ[ℂ] Stage n
 
 variable (Φ : FlowData Stage)
 
  theorem flow_zero
     (hflow_add :
       ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
-        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
+        Φ n (t + s) a = Φ n t (Φ n s a))
     (n : ℕ) (a : Stage n) :
-    Φ.flow n 0 a = a := by
+    Φ n 0 a = a := by
   have h := hflow_add n (1 : ℝ) 0 a
-  have h' : Φ.flow n 1 a = Φ.flow n 1 (Φ.flow n 0 a) := by
+  have h' : Φ n 1 a = Φ n 1 (Φ n 0 a) := by
     simpa using h
-  exact (Φ.flow n 1).injective h'.symm
+  exact (Φ n 1).injective h'.symm
 
 def flowNatTrans
     (hmap_naturality :
       ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
+        T.map hmn (Φ m t a) = Φ n t (T.map hmn a))
     (t : ℝ) :
     stageModuleDiagram Stage T ⟶ stageModuleDiagram Stage T where
-  app n := ModuleCat.ofHom ((Φ.flow n t).toAlgEquiv.toLinearMap)
+  app n := ModuleCat.ofHom ((Φ n t).toAlgEquiv.toLinearMap)
   naturality := by
     intro m n f
     apply ModuleCat.hom_ext
@@ -64,7 +63,7 @@ def flowNatTrans
 def flowColimitMap
     (hmap_naturality :
       ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
+        T.map hmn (Φ m t a) = Φ n t (T.map hmn a))
     (t : ℝ) :
     (colimit (stageModuleDiagram Stage T) : ModuleCat ℂ) ⟶
       (colimit (stageModuleDiagram Stage T) : ModuleCat ℂ) :=
@@ -73,21 +72,21 @@ def flowColimitMap
 @[simp] theorem flowColimitMap_inclusion
     (hmap_naturality :
       ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
+        T.map hmn (Φ m t a) = Φ n t (T.map hmn a))
     (t : ℝ) (n : ℕ) (a : Stage n) :
     flowColimitMap Stage T Φ hmap_naturality t
         ((colimit.ι (stageModuleDiagram Stage T) n).hom a) =
-      (colimit.ι (stageModuleDiagram Stage T) n).hom (Φ.flow n t a) := by
+      (colimit.ι (stageModuleDiagram Stage T) n).hom (Φ n t a) := by
   have hι := colimit.ι_map (flowNatTrans Stage T Φ hmap_naturality t) n
   exact congrArg (fun f => f a) hι
 
 theorem flowColimitMap_zero
     (hflow_add :
       ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
-        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
+        Φ n (t + s) a = Φ n t (Φ n s a))
     (hmap_naturality :
       ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a)) :
+        T.map hmn (Φ m t a) = Φ n t (T.map hmn a)) :
     flowColimitMap Stage T Φ hmap_naturality 0 = 𝟙 _ := by
   apply colimit.hom_ext
   intro n
@@ -103,10 +102,10 @@ theorem flowColimitMap_zero
 theorem flowColimitMap_add
     (hflow_add :
       ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
-        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
+        Φ n (t + s) a = Φ n t (Φ n s a))
     (hmap_naturality :
       ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
+        T.map hmn (Φ m t a) = Φ n t (T.map hmn a))
     (t s : ℝ) :
     flowColimitMap Stage T Φ hmap_naturality (t + s) =
       flowColimitMap Stage T Φ hmap_naturality s ≫
@@ -124,10 +123,10 @@ theorem flowColimitMap_add
 theorem flowColimitMap_right_inverse
     (hflow_add :
       ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
-        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
+        Φ n (t + s) a = Φ n t (Φ n s a))
     (hmap_naturality :
       ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
+        T.map hmn (Φ m t a) = Φ n t (T.map hmn a))
     (t : ℝ) :
     flowColimitMap Stage T Φ hmap_naturality t ≫
         flowColimitMap Stage T Φ hmap_naturality (-t) = 𝟙 _ := by
@@ -137,10 +136,10 @@ theorem flowColimitMap_right_inverse
 theorem flowColimitMap_left_inverse
     (hflow_add :
       ∀ (n : ℕ) (t s : ℝ) (a : Stage n),
-        Φ.flow n (t + s) a = Φ.flow n t (Φ.flow n s a))
+        Φ n (t + s) a = Φ n t (Φ n s a))
     (hmap_naturality :
       ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
-        T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))
+        T.map hmn (Φ m t a) = Φ n t (T.map hmn a))
     (t : ℝ) :
     flowColimitMap Stage T Φ hmap_naturality (-t) ≫
         flowColimitMap Stage T Φ hmap_naturality t = 𝟙 _ := by

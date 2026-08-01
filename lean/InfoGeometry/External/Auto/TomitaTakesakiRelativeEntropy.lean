@@ -15,5 +15,10 @@ theorem tomita_takesaki_holds (M : Type) [VonNeumannAlgebra M] [ModularData M] :
     TomitaTakesakiTheorem M := by
   exact ModularData.is_conjugation
 
-structure ProjectiveState (H : Type) where
-  ray : H
+abbrev ProjectiveState (H : Type) := H
+
+namespace ProjectiveState
+
+abbrev ray {H : Type} (x : ProjectiveState H) : H := x
+
+end ProjectiveState

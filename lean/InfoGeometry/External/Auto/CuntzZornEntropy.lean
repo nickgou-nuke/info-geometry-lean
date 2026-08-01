@@ -14,9 +14,15 @@ instance : Freed.CommMonoid ℝ where
   mul_comm := mul_comm
   mul_assoc := mul_assoc
 
-structure BogoliubovTransform where
-  squeeze : ℝ
-  tilt : ℝ
+abbrev BogoliubovTransform := ℝ × ℝ
+
+namespace BogoliubovTransform
+
+abbrev squeeze (b : BogoliubovTransform) : ℝ := b.1
+
+abbrev tilt (b : BogoliubovTransform) : ℝ := b.2
+
+end BogoliubovTransform
 
 -- "squeeze" and "tilt" map to phase 1 (attachment) and phase 0 (detachment)
 def bogoliubov_phase (b : BogoliubovTransform) : ℕ :=
@@ -26,7 +32,7 @@ def frame_entropy (Z : ZornMatrix ℝ) : ℝ :=
   Real.log |ZornMatrix.det Z|
 
 def mobius_parity_flip (Z : ZornMatrix ℝ) : ZornMatrix ℝ :=
-  ⟨-Z.val⟩
+  -Z
 
 theorem cuntz_entropy_balance (Z : ZornMatrix ℝ) :
     ZornMatrix.det (mobius_parity_flip Z) = - ZornMatrix.det Z ∧

@@ -12,10 +12,11 @@ noncomputable section
 namespace SkyrmionTopology
 
 /-- Skyrmion Topological Charge (Pontryagin Index) Q ∈ ℤ. -/
-structure SkyrmionState where
-  topologicalCharge : ℤ       -- Integer winding number Q
+abbrev SkyrmionState := ℤ
 
 namespace SkyrmionState
+
+abbrev topologicalCharge (skyrmion : SkyrmionState) : ℤ := skyrmion
 
 variable (skyrmion : SkyrmionState)
 

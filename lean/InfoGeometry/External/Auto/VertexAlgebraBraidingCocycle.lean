@@ -49,9 +49,15 @@ theorem logRatio_skew (S : EdgeSystem V) (i j : V) :
 /-- Closed walk on vertices: start plus intermediate vertices, implicitly
 `start → v1 → ⋯ → vn → start`.
 -/
-structure SpinNetCycle (V : Type*) where
-  start : V
-  interior : List V
+abbrev SpinNetCycle (V : Type*) := V × List V
+
+namespace SpinNetCycle
+
+abbrev start {V : Type*} (C : SpinNetCycle V) : V := C.1
+
+abbrev interior {V : Type*} (C : SpinNetCycle V) : List V := C.2
+
+end SpinNetCycle
 
 /-- Walk contribution from current vertex to finish a fixed start. -/
 def cycleWalk (S : EdgeSystem V) (start cur : V) : List V → ℝ

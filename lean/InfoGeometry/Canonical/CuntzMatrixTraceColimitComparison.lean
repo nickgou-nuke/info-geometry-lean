@@ -21,7 +21,7 @@ open InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
 
 @[simp] theorem trace_readout_agrees_on_stage
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
     (n : ℕ) (A : MatrixStage n) :
     traceColimitFunctional T hT (traceColimitInclusion T n A) =
       traceTopologicalColimitMap T hT (topologicalInclusion T n A) := by
@@ -30,7 +30,7 @@ open InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
 
 theorem trace_readout_agrees_on_transition
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
     {m n : ℕ} (hmn : m ≤ n) (A : MatrixStage m) :
     traceTopologicalColimitMap T hT
         (topologicalInclusion T n (map T hmn A)) =
@@ -41,7 +41,7 @@ theorem trace_readout_agrees_on_transition
 
 theorem trace_readout_is_stage_independent
     (T : Data)
-    (hT : ∀ n A, matrixTraceState (n + 1) (T.step n A) = matrixTraceState n A)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
     {m n : ℕ} (hmn : m ≤ n) (A : MatrixStage m) :
     traceTopologicalColimitMap T hT
         (topologicalInclusion T n (map T hmn A)) =

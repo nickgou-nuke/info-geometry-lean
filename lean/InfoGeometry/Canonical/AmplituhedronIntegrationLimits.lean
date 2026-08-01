@@ -3,18 +3,11 @@ import InfoGeometry.Canonical.BostConnesAmplituhedronBoundary
 import InfoGeometry.Canonical.AmplituhedronThermodynamicProjection
 
 /-!
-# Amplituhedron Integration Limits and Dlog Boundaries
+# Finite amplituhedron boundary data
 
-This module formalizes the explicit integration limits of the Amplituhedron 
-boundaries. The boundaries of the Amplituhedron correspond to the vanishing of 
-positive Plücker coordinates, where the canonical differential form exhibits 
-logarithmic (dlog) singularities.
-
-Per the Synthesis Dictionary:
-- The geometric volume is defined by a canonical form with dlog singularities 
-  strictly on the scattering boundary facets.
-- The integration limits are algebraically fixed by the positivity domain of 
-  the Grassmannian.
+This module records finite boundary readouts for a positive-geometry chart.
+It does not assert a canonical-form theorem, a residue theorem, or a global
+integration identity.
 -/
 
 noncomputable section
@@ -29,57 +22,54 @@ universe u
 variable {E : Type u} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /-!
-## 1. Amplituhedron Boundary Facets
+## 1. Boundary facets
 
-The faces of the Amplituhedron are the hyperplanes where specific 
-Plücker coordinates vanish. In the positive kinematic region, the 
-integration domain is strictly bounded by these positive constraints.
+The fields below are finite readouts for a chosen boundary coordinate and a
+chosen positive domain.
 -/
 
 /-- 
-The explicit algebraic boundary facets of the Amplituhedron.
-Integration limits are fixed where `boundary_coordinate = 0`.
+The explicit algebraic boundary facet of a finite chart.
 -/
-structure AmplituhedronBoundaryFacet (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℝ E] where
-  /-- The coordinate function defining the boundary (e.g., a Plücker minor). -/
+structure AmplituhedronBoundaryFacet (E : Type u) [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] where
+  /-- The coordinate function selected as a boundary readout. -/
   boundary_coordinate : E → ℝ
-  /-- The physical domain is restricted to the positive geometry. -/
+  /-- The chosen domain carries nonnegative boundary readout. -/
   is_positive_domain : ∀ (X : E), boundary_coordinate X ≥ 0
 
 /-!
-## 2. Canonical Dlog Form
+## 2. Boundary readout carrier
 
-The volume of the Amplituhedron is computed by integrating the unique 
-canonical form that has logarithmic singularities (simple poles) exactly 
-on all integration boundaries and nowhere else.
+The record below stores a finite readout attached to the chosen facet.
 -/
 
 /--
-The Canonical Dlog Form over the Amplituhedron geometry.
-The form diverges logarithmically exactly at the integration limits.
+Boundary readout attached to the facet.
 -/
-structure CanonicalDlogForm (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℝ E] (B : AmplituhedronBoundaryFacet E) where
-  /-- The differential canonical form amplitude. -/
+structure BoundaryReadout (E : Type u) [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] (B : AmplituhedronBoundaryFacet E) where
+  /-- The finite readout on the ambient space. -/
   amplitude_form : E → ℝ
-  /-- The form has a simple pole (dlog singularity) exactly when the boundary coordinate vanishes. -/
-  has_dlog_singularity : ∀ (X : E), B.boundary_coordinate X = 0 → amplitude_form X = 0
-  -- (Mathematically represented here as the inverse form vanishing for structural simplicity)
+  /-- The readout vanishes on the selected boundary facet. -/
+  vanishes_on_boundary : ∀ (X : E), B.boundary_coordinate X = 0 → amplitude_form X = 0
 
 /-!
-## 3. Explicit Integration Limits 
+## 3. Explicit integration window
 
-The formal integration mapping of the thermodynamic geometry over 
-the strictly bounded positive domain.
+The record below stores a finite window together with a boundary-vanishing
+readout.  No global integration theorem is asserted here.
 -/
 
 /--
-The formal evaluation of the Amplituhedron integral evaluated strictly 
-within the positive integration limits.
+The finite boundary window attached to the chosen readout.
 -/
-structure PositiveAmplituhedronIntegration (E : Type u) [NormedAddCommGroup E] [InnerProductSpace ℝ E] (B : AmplituhedronBoundaryFacet E) (C : CanonicalDlogForm E B) where
-  /-- The formal integrated volume. -/
+structure PositiveBoundaryWindow (E : Type u) [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] (B : AmplituhedronBoundaryFacet E)
+    (C : BoundaryReadout E B) where
+  /-- The finite integrated quantity. -/
   integrated_volume : ℝ
-  /-- The integration domain strictly enforces the boundary limits. -/
+  /-- The chosen window vanishes on the negative side of the boundary readout. -/
   respects_limits : ∀ (X : E), B.boundary_coordinate X < 0 → C.amplitude_form X = 0
 
 end InfoGeometry.Canonical.AmplituhedronIntegrationLimits

@@ -45,13 +45,17 @@ def pad1to2 (u : RPhaseSpace 1) : RPhaseSpace 2 :=
   unfold fockState normSq
   norm_num
 
-structure TwoStageWeylState where
-  omega1 : RPhaseSpace 1 → ℂ
-  omega2 : RPhaseSpace 2 → ℂ
+abbrev TwoStageWeylState := (RPhaseSpace 1 → ℂ) × (RPhaseSpace 2 → ℂ)
 
-def fockTwoStageState : TwoStageWeylState where
-  omega1 := fockState
-  omega2 := fockState
+namespace TwoStageWeylState
+
+def omega1 (state : TwoStageWeylState) : RPhaseSpace 1 → ℂ := state.1
+
+def omega2 (state : TwoStageWeylState) : RPhaseSpace 2 → ℂ := state.2
+
+end TwoStageWeylState
+
+def fockTwoStageState : TwoStageWeylState := (fockState, fockState)
 
 theorem fockTwoStageState_compatible (u : RPhaseSpace 1) :
     fockTwoStageState.omega2 (pad1to2 u) = fockTwoStageState.omega1 u := by

@@ -88,6 +88,8 @@ import InfoGeometry.Algebra.N2ModeCentralExtension
 import InfoGeometry.Algebra.SupergradedBracket
 import InfoGeometry.Algebra.BosonizedOSpCoproduct
 import InfoGeometry.Algebra.EquivariantBranching
+import InfoGeometry.Algebra.YangianCoproductTensorAction
+import InfoGeometry.Algebra.YangianLevelZeroRepresentation
 import InfoGeometry.Algebra.Coalgebra.FrobeniusPairing
 import InfoGeometry.Algebra.OSp12LogarithmicTransport
 import InfoGeometry.Algebra.LogarithmicJordanPair

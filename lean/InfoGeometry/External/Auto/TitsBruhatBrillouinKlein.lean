@@ -113,8 +113,13 @@ theorem tits_uses_same_relation
 /-! ## 3. Cohomological/nonsymmorphic twist as Z₂ parity mechanism -/
 
 /-- Orientation reversal sends a signed charge to its negative. -/
-structure OrientationReversalZ2 where
-  charge : ℤ
+abbrev OrientationReversalZ2 := ℤ
+
+namespace OrientationReversalZ2
+
+abbrev charge (O : OrientationReversalZ2) : ℤ := O
+
+end OrientationReversalZ2
 
 /-- The signed integer is not the invariant; its mod-two parity is. -/
 theorem parity_survives_reversal (O : OrientationReversalZ2) :

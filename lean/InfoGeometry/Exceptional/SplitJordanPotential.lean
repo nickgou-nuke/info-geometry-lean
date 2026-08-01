@@ -10,9 +10,18 @@ noncomputable section
 
 namespace InfoGeometry.Exceptional.SplitJordan
 
-/-- Minimal cubic Jordan norm datum. -/
-structure CubicJordanNormDatum (J : Type*) [AddCommGroup J] [Module ℝ J] where
-  norm : J → ℝ
+/-- A scalar norm readout on the Jordan carrier.
+
+The previous one-field wrapper carried no Jordan-product law or cubic
+identity.  The native carrier is therefore the function itself. -/
+abbrev CubicJordanNormDatum (J : Type*) [AddCommGroup J] [Module ℝ J] := J → ℝ
+
+namespace CubicJordanNormDatum
+
+abbrev norm {J : Type*} [AddCommGroup J] [Module ℝ J]
+    (D : CubicJordanNormDatum J) : J → ℝ := D
+
+end CubicJordanNormDatum
 
 namespace CubicJordanNormDatum
 

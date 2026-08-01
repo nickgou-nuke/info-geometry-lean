@@ -4,15 +4,20 @@ noncomputable section
 
 namespace KanekoA67HighSpinMED
 
-structure MirrorPair where
-  A : ℕ
-  protonRich : String
-  neutronRich : String
+abbrev MirrorPair := ℕ × String × String
 
-def Se67As67 : MirrorPair where
-  A := 67
-  protonRich := "67Se"
-  neutronRich := "67As"
+namespace MirrorPair
+
+abbrev A (P : MirrorPair) : ℕ := P.1
+
+abbrev protonRich (P : MirrorPair) : String := P.2.1
+
+abbrev neutronRich (P : MirrorPair) : String := P.2.2
+
+end MirrorPair
+
+def Se67As67 : MirrorPair :=
+  (67, "67Se", "67As")
 
 def MED (EminusTz EplusTz : ℚ) : ℚ :=
   EminusTz - EplusTz

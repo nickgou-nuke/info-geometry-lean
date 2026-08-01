@@ -2,11 +2,19 @@ import Mathlib
 
 namespace A67MirrorE1
 
-structure MirrorPair where
-  protonRichZ : ℕ
-  neutronRichZ : ℕ
-  protonRichN : ℕ
-  neutronRichN : ℕ
+abbrev MirrorPair := ℕ × ℕ × ℕ × ℕ
+
+namespace MirrorPair
+
+abbrev protonRichZ (P : MirrorPair) : ℕ := P.1
+
+abbrev neutronRichZ (P : MirrorPair) : ℕ := P.2.1
+
+abbrev protonRichN (P : MirrorPair) : ℕ := P.2.2.1
+
+abbrev neutronRichN (P : MirrorPair) : ℕ := P.2.2.2
+
+end MirrorPair
 
 def mirrorChargesExchange (P : MirrorPair) : Prop :=
   P.protonRichZ = P.neutronRichN ∧ P.neutronRichZ = P.protonRichN

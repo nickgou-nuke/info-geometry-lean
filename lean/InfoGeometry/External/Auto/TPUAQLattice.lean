@@ -14,10 +14,15 @@ inductive NodeTag where
   | vacuum
 deriving DecidableEq, Repr
 
-structure NormalForm where
-  tag : NodeTag
-  code : Fin 16
-deriving DecidableEq, Repr
+abbrev NormalForm := NodeTag × Fin 16
+
+namespace NormalForm
+
+abbrev tag (n : NormalForm) : NodeTag := n.1
+
+abbrev code (n : NormalForm) : Fin 16 := n.2
+
+end NormalForm
 
 def codeOfNat (n : Nat) : Fin 16 :=
   ⟨n % 16, Nat.mod_lt n (by decide)⟩

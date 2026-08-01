@@ -1,24 +1,39 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Tactic.Ring
 
-structure PhaseSpace where
-  q : ℝ
-  p : ℝ
+abbrev PhaseSpace := ℝ × ℝ
 
-structure WignerDistribution where
-  W : PhaseSpace → ℝ
+namespace PhaseSpace
 
-structure MadelungFluid where
-  rho : PhaseSpace → ℝ
-  S : PhaseSpace → ℝ
+abbrev q (x : PhaseSpace) : ℝ := x.1
+
+abbrev p (x : PhaseSpace) : ℝ := x.2
+
+end PhaseSpace
+
+abbrev WignerDistribution := PhaseSpace → ℝ
+
+namespace WignerDistribution
+
+abbrev W (w : WignerDistribution) : PhaseSpace → ℝ := w
+
+end WignerDistribution
+
+abbrev MadelungFluid := (PhaseSpace → ℝ) × (PhaseSpace → ℝ)
+
+namespace MadelungFluid
+
+abbrev rho (M : MadelungFluid) : PhaseSpace → ℝ := M.1
+
+abbrev S (M : MadelungFluid) : PhaseSpace → ℝ := M.2
+
+end MadelungFluid
 
 def wigner_to_madelung (w : WignerDistribution) : MadelungFluid :=
-  { rho := w.W
-    S := fun x => x.q * x.p }
+  (w.W, fun x => x.q * x.p)
 
 def phaseFlip (x : PhaseSpace) : PhaseSpace :=
-  { q := -x.q
-    p := -x.p }
+  (-x.q, -x.p)
 
 theorem wigner_madelung_density_projection
     (w : WignerDistribution) (x : PhaseSpace) :
@@ -36,9 +51,8 @@ theorem madelung_phase_even_under_phase_flip
     (w : WignerDistribution) (x : PhaseSpace) :
     (wigner_to_madelung w).S (phaseFlip x) =
       (wigner_to_madelung w).S x := by
-  have hmul : (-x.q) * (-x.p) = x.q * x.p := by
-    ring
-  simp [wigner_to_madelung, phaseFlip, hmul]
+  change (-x.q) * (-x.p) = x.q * x.p
+  ring
 
 structure KreinSpace where
   indefinite_metric : ℝ → ℝ → ℝ

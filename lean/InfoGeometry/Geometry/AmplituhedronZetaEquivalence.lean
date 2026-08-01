@@ -18,11 +18,11 @@ structure CanonicalVolumeForm (k n : ℕ) where
   logPoleBoundary : Set (Fin (k * n) → ℝ)
   has_log_poles : logPoleResidue logPoleBoundary ≠ 0
 
-/-- The Zeta-Volume Equivalence Theorem Predicate -/
+/-- The zeta-volume comparison predicate -/
 def AmplituhedronZetaEquivalence {k n : ℕ} 
     (Ω : CanonicalVolumeForm k n) (Z : ℝ → ℝ) (β_critical : ℝ) : Prop :=
-  -- Asserting that the geometric volume of the cell boundary matches
-  -- the partition function evaluated at the critical thermodynamic inverse temperature
+  -- Explicit comparison hypothesis between a geometric volume readout and a
+  -- partition readout at the chosen inverse temperature.
   Ω.omega Set.univ = Z β_critical
 
 variable {M : Type*} [TopologicalSpace M] [ChartedSpace (ℝ × ℝ) M]
@@ -59,10 +59,11 @@ theorem isClosedGaugeConnection_constant (c : ℝ) :
   intro x
   exact thermodynamicGaugeConnection_constant (M := M) c x
 
-/-- The Geometric-Thermodynamic Unification Theorem -/
+/-- The geometric-thermodynamic comparison carrier -/
 def AmplituhedronGaugeEquivalence {k n : ℕ} (Ω : CanonicalVolumeForm k n)
     (Potential : ThermodynamicPotential M) (β_critical : ℝ) : Prop :=
-  -- Fusing the Amplituhedron canonical volume directly to the integrated thermodynamic gauge trace
+  -- Explicit comparison hypothesis between the volume readout and the gauge
+  -- readout at the chosen inverse temperature.
   IsClosedGaugeConnection Potential ∧ Ω.omega Set.univ = β_critical
 
 /-- Closed gauge readout from an explicit zero-connection proof. -/

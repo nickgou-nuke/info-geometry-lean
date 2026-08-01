@@ -289,6 +289,7 @@ import InfoGeometry.Analysis.D23HurwitzCliffordFilterBank
 import InfoGeometry.Analysis.DirichletForm
 import InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 import InfoGeometry.Analysis.FiniteSpectralHeatMellin
+import InfoGeometry.Analysis.FiniteSpectralHeatMellinTopological
 import InfoGeometry.Analysis.FiniteSpectralMellinTaylor
 import InfoGeometry.Analysis.FractalMeasure.Basic
 import InfoGeometry.Analysis.Graph
@@ -3798,6 +3799,7 @@ import InfoGeometry.Physics.BogoliubovWeylChemicalPotential
 import InfoGeometry.Physics.BostConnesGNS
 import InfoGeometry.Physics.BostConnesMirrorSymmetry
 import InfoGeometry.Physics.BostConnesThermalTime
+import InfoGeometry.Topology.BostConnesDirichletTopological
 import InfoGeometry.Physics.BoundaryMajoranaDefectBridge
 import InfoGeometry.Physics.BoundaryMajoranaMassGap
 import InfoGeometry.Physics.BraidIdealDescent
@@ -4600,6 +4602,9 @@ import InfoGeometry.Canonical.KANModuliTopology
 import InfoGeometry.Canonical.AttentionExpertModuliTopological
 import InfoGeometry.Canonical.AttentionExpertSimplexModuliTopological
 import InfoGeometry.Canonical.BoundedAttentionLatentModuliTopological
+import InfoGeometry.Canonical.BoundedAttentionHeadTopological
+import InfoGeometry.Canonical.BoundedAttentionReadoutCompactTopological
+import InfoGeometry.Canonical.BoundedAttentionSimplexOrbitTopological
 import InfoGeometry.Canonical.ChiralConeOctonionicBridge
 import InfoGeometry.Canonical.OctonionicCuntzIsomorphism
 import InfoGeometry.Canonical.ChiralConeOctonionicTopological
@@ -4608,4 +4613,8 @@ import InfoGeometry.Inference.PoissonBregmanTopological
 import InfoGeometry.Inference.PoissonGibbsTopological
 import InfoGeometry.Inference.PoissonUnbalancedSinkhornCertificateTopological
 import InfoGeometry.Topology.AttentionLatentSimplexTopological
+import InfoGeometry.Topology.AttentionLatentSimplexCompactTopological
+import InfoGeometry.Topology.AttentionLatentSimplexInteriorTopological
+import InfoGeometry.Topology.BCFWShiftTopological
 import InfoGeometry.Topology.AttentionLatentHeadTopological
+import InfoGeometry.Topology.AttentionLatentHeadCompactTopological

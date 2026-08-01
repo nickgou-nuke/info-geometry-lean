@@ -38,13 +38,18 @@ def casimirSU2FromTwoJ (twoJ : ℕ) : Q := (twoJ * (twoJ + 2) : Q) / 4
 def spinCasimir (I : ℕ) : Q := casimirSU2FromTwoJ (2*I)
 def isospinCasimir (T : ℕ) : Q := casimirSU2FromTwoJ (2*T)
 
-structure PairingState where
-  T : ℕ
-  I : ℕ
-  deriving DecidableEq, Repr
+abbrev PairingState := ℕ × ℕ
 
-def isovectorPair : PairingState := ⟨1, 0⟩
-def isoscalarPair : PairingState := ⟨0, 1⟩
+namespace PairingState
+
+abbrev T (P : PairingState) : ℕ := P.1
+
+abbrev I (P : PairingState) : ℕ := P.2
+
+end PairingState
+
+def isovectorPair : PairingState := (1, 0)
+def isoscalarPair : PairingState := (0, 1)
 
 def isovectorPairT : ℕ := isovectorPair.T
 def isovectorPairI : ℕ := isovectorPair.I

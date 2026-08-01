@@ -108,14 +108,4 @@ theorem ordinary_matrix_mul_assoc (n : Type) [Fintype n] [DecidableEq n]
     (A B C : Matrix n n ℂ) : (A * B) * C = A * (B * C) := by
   rw [mul_assoc]
 
-/-- Main synthesis theorem. -/
-theorem octonion_matrix_encodings_synthesis :
-    zornMul (zornMul Zx Zy) Zz ≠ zornMul Zx (zornMul Zy Zz) := by
-  exact zorn_nonassociative
-
-#check no_faithful_assoc_rep_of_nonassoc
-#check zorn_nonassociative
-#check ordinary_matrix_mul_assoc
-#check octonion_matrix_encodings_synthesis
-
 end OctonionMatrixEncodings

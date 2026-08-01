@@ -40,24 +40,5 @@ theorem harmonicToCohomologyLinearMap_ker_eq_bot
   rw [LinearMap.ker_eq_bot]
   exact harmonicToCohomologyLinearMap_injective d dstar h_closed h_coclosed inner h_pos h_adj h_zero
 
-/-- **Theorem**: Master Hodge Map Injectivity Closure Synthesis.
-    Unifies:
-    1. Certified linear map π_H : ker(Δ) →ₗ[R] H_d.
-    2. Function injectivity Function.Injective π_H.
-    3. Submodule kernel triviality theorem LinearMap.ker π_H = ⊥.
-    4. Exact machine-checked proof closure of the injectivity kernel half of the Hodge Isomorphism Theorem. -/
-theorem master_hodge_map_injectivity_closure_synthesis
-    (d dstar : Module.End R (ExteriorAlgebra R V))
-    (h_closed : ∀ w ∈ harmonicSubmodule d dstar, d w = 0)
-    (h_coclosed : ∀ w ∈ harmonicSubmodule d dstar, dstar w = 0)
-    (inner : ExteriorAlgebra R V → ExteriorAlgebra R V → R)
-    (h_pos : ∀ x, inner x x = 0 → x = 0)
-    (h_adj : ∀ α w, inner (d α) w = inner α (dstar w))
-    (h_zero : ∀ α, inner α 0 = 0) :
-    (LinearMap.ker (harmonicToCohomologyLinearMap d dstar h_closed) = ⊥) ∧
-    (Function.Injective (harmonicToCohomologyLinearMap d dstar h_closed)) := ⟨
-  harmonicToCohomologyLinearMap_ker_eq_bot d dstar h_closed h_coclosed inner h_pos h_adj h_zero,
-  harmonicToCohomologyLinearMap_injective d dstar h_closed h_coclosed inner h_pos h_adj h_zero
-⟩
 
 end InfoGeometry.Canonical.HodgeMapInjectivityClosureBridge

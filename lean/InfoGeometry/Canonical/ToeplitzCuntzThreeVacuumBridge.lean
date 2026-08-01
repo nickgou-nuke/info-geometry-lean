@@ -236,14 +236,4 @@ theorem nontrivial_vacuum_witness (hP0 : g.P0 ≠ 0) : g.susyHamiltonian ≠ 1 :
     _ = 1 - 1 := by rw [hH]
     _ = 0 := sub_self 1
 
-/-- Master synthesis theorem validating core 3-ary Toeplitz-Cuntz properties. -/
-theorem master_toeplitz_cuntz_three_vacuum_synthesis :
-    g.P0 * g.P0 = g.P0 ∧
-    star g.P0 = g.P0 ∧
-    g.P1 + g.P2 + g.P3 + g.P0 = 1 := ⟨
-  defectProjection_sq g,
-  defectProjection_star g,
-  toeplitzCuntz3_resolution g
-⟩
-
 end InfoGeometry.Canonical.ToeplitzCuntzThreeVacuumBridge

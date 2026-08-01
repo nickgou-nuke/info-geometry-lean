@@ -54,16 +54,4 @@ theorem logBranchShift_neg (n : ℤ) :
   unfold logBranchShift
   norm_num
 
-/-- Synthesis: concrete spinor full twist and logarithm winding data. -/
-theorem spinor_monodromy_stepping_stone_synthesis :
-    spinorGate * spinorGate = -(1 : M2C) ∧
-    spinorGate ^ 4 = (1 : M2C) ∧
-    (∀ m n : ℤ, logBranchShift (m + n) = logBranchShift m + logBranchShift n) := by
-  exact ⟨spinorGate_sq, spinorGate_fourth_identity, logBranchShift_add⟩
-
-#check spinorGate_sq
-#check spinorGate_fourth_identity
-#check logBranchShift_add
-#check spinor_monodromy_stepping_stone_synthesis
-
 end SpinorMonodromySteppingStone

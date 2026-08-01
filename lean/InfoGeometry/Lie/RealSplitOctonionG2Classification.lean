@@ -39,24 +39,6 @@ theorem standard_split_octonion_derivations_span :
     InfoGeometry.Lie.SplitOctonionStandardDerivation.standardDerivationSpan = ⊤ :=
   canonicalDerivations_span_standard
 
-/-! ## Explicit witness and status boundary -/
-
-inductive RealClassificationStatus where
-  | exactNativeLieAlgebra
-  | nativeLeanGroupEquivalence
-  deriving DecidableEq, Repr
-
-def currentRealClassificationStatus : RealClassificationStatus :=
-  RealClassificationStatus.exactNativeLieAlgebra
-
-theorem current_status_is_exactNativeLieAlgebra :
-    currentRealClassificationStatus = RealClassificationStatus.exactNativeLieAlgebra :=
-  rfl
-
-theorem current_status_records_distinct_group_equivalence_lane :
-    currentRealClassificationStatus ≠ RealClassificationStatus.nativeLeanGroupEquivalence := by
-  decide
-
 theorem canonical_rotation_is_derivation : IsDeriv D01 :=
   D01_deriv
 

@@ -30,15 +30,4 @@ theorem contract_chain_anticommute
                (lambda2 u1 * lambda1 u2 - lambda2 u2 * lambda1 u1) = 0 := by ring
   rw [h_add, map_zero, zero_mul]
 
-/-- **Theorem**: Master Chain Covector Contraction Anti-Commutativity Synthesis.
-    Unifies:
-    1. Iterated covector contraction ι_{λ1} ι_{λ2} on adapted 5-frames down to 3-blade K3 ∈ ⋀³ V.
-    2. Exact anti-commutativity law ι_{λ1} ι_{λ2} + ι_{λ2} ι_{λ1} = 0.
-    3. Structural preservation of Cartan differential calculus on Grassmannian flag varieties. -/
-theorem master_chain_covector_contraction_synthesis
-    (lambda1 lambda2 : V →ₗ[R] R) (u1 u2 w1 w2 w3 : V) :
-    contractChain lambda1 lambda2 u1 u2 w1 w2 w3 +
-    contractChain lambda2 lambda1 u1 u2 w1 w2 w3 = 0 :=
-  contract_chain_anticommute lambda1 lambda2 u1 u2 w1 w2 w3
-
 end InfoGeometry.Canonical.ChainCovectorContractionBridge

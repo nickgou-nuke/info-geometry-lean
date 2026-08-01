@@ -43,24 +43,4 @@ theorem harmonic_exact_zero
     exact h_zero alpha
   exact h_pos w h_inner
 
-/-- **Theorem**: Master Hodge Harmonic Injectivity Synthesis.
-    Unifies:
-    1. Adjoint inner product relation ⟨d α, w⟩ = ⟨α, d* w⟩.
-    2. Positive definiteness ⟨w, w⟩ = 0 → w = 0.
-    3. Proof that harmonic exact forms vanish w ∈ ker(Δ) ∩ im(d) → w = 0.
-    4. Exact machine-checked proof closure for injectivity of the Hodge map π_H : ker(Δ) → H_d. -/
-theorem master_hodge_harmonic_injectivity_synthesis
-    (d dstar : Module.End R (ExteriorAlgebra R V))
-    (inner : ExteriorAlgebra R V → ExteriorAlgebra R V → R)
-    (h_pos : ∀ x, inner x x = 0 → x = 0)
-    (h_adj : ∀ α w, inner (d α) w = inner α (dstar w))
-    (h_zero : ∀ α, inner α 0 = 0)
-    (alpha w : ExteriorAlgebra R V)
-    (h_exact : w = d alpha)
-    (h_cocclosed : dstar w = 0) :
-    (w = 0) ∧ (inner w w = 0) := by
-  have h0 : w = 0 := harmonic_exact_zero d dstar inner h_pos h_adj h_zero alpha w h_exact h_cocclosed
-  have h1 : inner w w = 0 := by rw [h0]; exact h_zero 0
-  exact ⟨h0, h1⟩
-
 end InfoGeometry.Canonical.HodgeHarmonicInjectivityBridge

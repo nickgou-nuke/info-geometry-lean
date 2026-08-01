@@ -1080,30 +1080,6 @@ theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_cocycleGeneratorLift_zero
     (hBridge : ScalarCocycleBridge (H := H) σ)
     (hLift :
       CocycleGeneratorLift n T
-        (CocycleEntropyPotential (H := H) σ u hBridge))
-    (hZero : CocycleEntropyPotential (H := H) σ u hBridge 0 = 0) :
-    ∀ k : Nat,
-      |CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
-        - CocycleEntropyPotential (H := H) σ u hBridge k|
-        ≤ trajectoryRNBarrier n T k := by
-  exact cocycleIncrement_abs_le_trajectoryRNBarrier_of_cocycleGeneratorLift
-    (n := n) (H := H) (σ := σ) (u := u) (T := T)
-    (hBridge := hBridge) (hLift := hLift)
-
-/--
-Compatibility wrapper for the older zero-anchored Connes-cocycle increment
-control surface. The `IsConnesCocycle` packet is retained for named-argument
-callers, but it is used only to derive zero-normalization before routing through
-`cocycleIncrement_abs_le_trajectoryRNBarrier_of_cocycleGeneratorLift_zero`.
--/
-theorem cocycleIncrement_abs_le_trajectoryRNBarrier_of_connesCocycle_generatorLift_zero
-  (σ : AdditiveModularFlow (H := H))
-    (u : ℝ → AlgebraEnd H)
-    (T : SinkhornTrajectory n)
-    (hCocycle : IsConnesCocycle σ u)
-    (hBridge : ScalarCocycleBridge (H := H) σ)
-    (hLift :
-      CocycleGeneratorLift n T
         (CocycleEntropyPotential (H := H) σ u hBridge)) :
     ∀ k : Nat,
       |CocycleEntropyPotential (H := H) σ u hBridge (k + 1)
@@ -1134,28 +1110,6 @@ theorem topologicalBekensteinBound_of_cocycleGeneratorLift_zero
   exact topologicalBekensteinBound_of_zeroNormalizedCocycleGeneratorWitness
     (n := n) (H := H) (σ := σ) (u := u) (T := T)
     ⟨hBridge, hLift, hZero⟩
-
-/--
-Compatibility wrapper for the older zero-anchored Connes-cocycle theorem surface.
-The `IsConnesCocycle` packet is retained for named-argument callers, but it is
-used only to derive zero-normalization before routing through
-`topologicalBekensteinBound_of_cocycleGeneratorLift_zero`.
--/
-theorem topologicalBekensteinBound_of_connesCocycle_generatorLift_zero
-  (σ : AdditiveModularFlow (H := H))
-    (u : ℝ → AlgebraEnd H)
-    (T : SinkhornTrajectory n)
-    (hCocycle : IsConnesCocycle σ u)
-    (hBridge : ScalarCocycleBridge (H := H) σ)
-    (hLift :
-      CocycleGeneratorLift n T
-        (CocycleEntropyPotential (H := H) σ u hBridge)) :
-    TopologicalBekensteinBound n T := by
-  exact topologicalBekensteinBound_of_zeroNormalizedCocycleGeneratorWitness
-    (n := n) (H := H) (σ := σ) (u := u) (T := T)
-    (zeroNormalizedCocycleGeneratorWitness_of_connesCocycle_generatorLift
-      (n := n) (H := H) (σ := σ) (u := u) (T := T)
-      (hCocycle := hCocycle) (hBridge := hBridge) (hLift := hLift))
 
 /--
 Casini-style relative-entropy profile on discrete Sinkhorn steps.

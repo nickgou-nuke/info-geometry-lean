@@ -173,6 +173,8 @@ import InfoGeometry.Algebra.H3ZornJordanInstance
 import InfoGeometry.Algebra.H3ZornJordanProduct
 import InfoGeometry.Algebra.BaezF4H3Zorn
 import InfoGeometry.Algebra.BaezG2AlternativeDerivations
+import InfoGeometry.Algebra.F4Derivations
+import InfoGeometry.Algebra.H3ZornTopologicalReadout
 import InfoGeometry.Algebra.CyclicTraceStokes
 import InfoGeometry.Algebra.HyperrotorKMSBridge
 import InfoGeometry.Algebra.InvPairHolomorphicity

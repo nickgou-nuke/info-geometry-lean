@@ -123,26 +123,6 @@ theorem affine_bracket_rapidity_covariant (β : ℂ) (_ρ : ℝ) :
     PPlus + ((2 * β - 1 : ℂ) • PMinus) :=
   affineSuperBracket_sigmaPlus_sigmaMinus β
 
-/-! ## Fermi Level, Bandgap, and Bogoliubov Frame -/
-
-/-- The affine chiral bracket at β = 0, ½, 1 recovers the bandgap,
-Fermi level, and completeness, with the chiral projector algebra
-N₊ + N₋ = I and N₊ - N₋ = σ₃. -/
-theorem chiral_fermi_bandgap_synthesis :
-    affineSuperBracket (0 : ℂ) Z2Parity.odd Z2Parity.odd σPlus σMinus = σ3c ∧
-    affineSuperBracket ((1/2 : ℂ)) Z2Parity.odd Z2Parity.odd σPlus σMinus = PPlus ∧
-    affineSuperBracket ((1/2 : ℂ)) Z2Parity.odd Z2Parity.odd σMinus σPlus = PMinus ∧
-    affineSuperBracket (1 : ℂ) Z2Parity.odd Z2Parity.odd σPlus σMinus = (1 : M2C) ∧
-    (∀ β : ℂ, affineSuperBracket β Z2Parity.odd Z2Parity.odd σPlus σMinus =
-      (1 - β) • σ3c + β • (1 : M2C)) ∧
-    (PPlus + PMinus = (1 : M2C)) ∧ (PPlus - PMinus = σ3c) := by
-  exact ⟨affineSuperBracket_zero_gives_sigma3,
-    affineSuperBracket_half_gives_PPlus,
-    affineSuperBracket_half_gives_PMinus_rev,
-    affineSuperBracket_one_gives_identity,
-    affine_bracket_interpolates_chiral,
-    PPlus_add_PMinus, PPlus_sub_PMinus⟩
-
 /-! ## Grand-canonical bracket = affine superbracket
 
 The Bogoliubov frame's grand-canonical bracket in the odd--odd sector is

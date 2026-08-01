@@ -24,16 +24,5 @@ theorem moebiusInversion_involutive (z : ℝ) (hz : z ≠ 0) :
     | inr h2 => exact hz h2
   field_simp
 
-/-- **Theorem**: Master Möbius Core & Chiral Parity Synthesis.
-    Unifies:
-    1. Möbius inversion involution (-1 / (-1 / z) = z).
-    2. Chiral parity index definition chiralParityIndex x = leftPart x - rightPart x. -/
-theorem master_moebius_core_synthesis
-    (z : ℝ) (hz : z ≠ 0) (x : ChiralScalar) :
-    (moebiusInversion (moebiusInversion z) = z) ∧
-    (chiralParityIndex x = leftPart x - rightPart x) := ⟨
-  moebiusInversion_involutive z hz,
-  rfl
-⟩
 
 end InfoGeometry.Canonical.MoebiusCore

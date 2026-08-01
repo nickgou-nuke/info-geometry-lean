@@ -1,11 +1,8 @@
 import Mathlib.Tactic
-import InfoGeometry.External.Auto.A67MirrorE1
 
 noncomputable section
 
 namespace BizzetiA67IVGMR
-
-open A67MirrorE1
 
 def mirrorAsymmetryRatio (eps : ℚ) : ℚ :=
   ((1 + eps) / (1 - eps)) ^ 2
@@ -131,21 +128,6 @@ def IVGMREpsilon
 theorem IVGMREpsilon_denominator_nonzero_uniform_A1 :
     (1 + 3 * (0 : ℚ)) ≠ 0 := by
   norm_num
-
-theorem formalSummary :
-    mirrorChargesExchange As67Se67 ∧
-      uniformEta = 171 / 376 ∧
-      (70 / 100 : ℚ) < R_uniform_A1_negligible ∧
-      R_uniform_A1_negligible < (71 / 100 : ℚ) ∧
-      (161 / 100 : ℚ) < R_uniform_A0_negligible ∧
-      R_uniform_A0_negligible < (162 / 100 : ℚ) ∧
-      higherOrderUpperRelative = (1 / 10 : ℚ) ^ 3 := by
-  exact ⟨As67Se67_is_mirror, uniformEta_exact,
-    R_uniform_A1_negligible_window.1,
-    R_uniform_A1_negligible_window.2,
-    R_uniform_A0_negligible_window.1,
-    R_uniform_A0_negligible_window.2,
-    higherOrder_is_three_orders_lower⟩
 
 end BizzetiA67IVGMR
 

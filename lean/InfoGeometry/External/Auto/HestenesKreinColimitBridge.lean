@@ -187,34 +187,4 @@ def oneStageColimit : HestenesKreinColimitLimit oneStageTower where
     intro n x
     rfl
 
-/-- The concrete carrier theorem: rotor, mirror, and bracket compatibility
-all hold on the matrix carrier. -/
-theorem matrixStage_synthesis :
-    (∀ x : matrixStage.Carrier, matrixStage.rotor (matrixStage.rotor x) = -x) ∧
-    (∀ x : matrixStage.Carrier, matrixStage.mirror (matrixStage.mirror x) = x) ∧
-    (∀ x y : matrixStage.Carrier,
-      matrixStage.mirror (matrixStage.bracket x y) =
-        matrixStage.bracket (matrixStage.mirror x) (matrixStage.mirror y)) := by
-  constructor
-  · intro x
-    exact matrixStage.rotor_sq x
-  constructor
-  · intro x
-    exact matrixStage.mirror_sq x
-  · intro x y
-    exact matrixStage.bracket_mirror x y
-
-/-- The colimit-interface theorem: the lifted mirror and rotor commute with the
-stage inclusion in the finite constant system. -/
-theorem oneStageColimit_synthesis :
-    (∀ n (x : oneStageTower.Stage n), oneStageColimit.Jlim (oneStageColimit.inc n x) =
-      oneStageColimit.inc n (oneStageTower.mirror n x)) ∧
-    (∀ n (x : oneStageTower.Stage n), oneStageColimit.Ilim (oneStageColimit.inc n x) =
-      oneStageColimit.inc n (oneStageTower.rotor n x)) := by
-  constructor
-  · intro n x
-    exact oneStageColimit.J_compat n x
-  · intro n x
-    exact oneStageColimit.I_compat n x
-
 end HestenesKreinColimitBridge

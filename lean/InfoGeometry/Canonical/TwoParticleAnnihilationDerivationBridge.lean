@@ -31,18 +31,4 @@ theorem two_particle_annihilation_derivation
     alpha u • (singleParticleState beta) - beta u • (singleParticleState alpha) :=
   rfl
 
-/-- **Theorem**: Master 2-Particle Annihilation Derivation & Graded Contraction Synthesis.
-    Unifies:
-    1. 2-particle fermionic state creation |α ∧ β⟩ = α ∧ β.
-    2. Graded Leibniz derivation rule for contraction a_u(α ∧ β) = α(u) • β - β(u) • α.
-    3. Machine-checked proof closure for multi-particle annihilation ladder operator derivations. -/
-theorem master_two_particle_annihilation_derivation_synthesis
-    (u : U) (alpha beta : U →ₗ[R] R) :
-    ((evaluationLinear u alpha) • (singleParticleState beta) - (evaluationLinear u beta) • (singleParticleState alpha) =
-     alpha u • (singleParticleState beta) - beta u • (singleParticleState alpha)) ∧
-    ((evaluationLinear u alpha) • (vacuumState R U) = alpha u • (vacuumState R U)) := ⟨
-  two_particle_annihilation_derivation u alpha beta,
-  rfl
-⟩
-
 end InfoGeometry.Canonical.TwoParticleAnnihilationDerivationBridge

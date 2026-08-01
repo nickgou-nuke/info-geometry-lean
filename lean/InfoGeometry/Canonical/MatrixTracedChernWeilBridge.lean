@@ -48,22 +48,5 @@ theorem matrix_traced_curvature_square_closed
   dsimp [matrixTraceForm]
   simp
 
-/-- **Theorem**: Master Matrix-Traced Chern-Weil Closedness Synthesis.
-    Unifies:
-    1. Matrix trace map Tr : Matrix n n (⋀ V) →ₗ[R] ⋀ V.
-    2. Componentwise exterior derivative d M on matrix-valued differential forms.
-    3. Commutativity theorem d(Tr(M)) = Tr(d M).
-    4. Matrix-traced Chern-Weil closedness theorem d(Tr(F ∧ F)) = 0.
-    5. Exact machine-checked proof closure for Matrix-valued Chern-Weil gauge densities. -/
-theorem master_matrix_traced_chern_weil_synthesis
-    (d : Module.End R (ExteriorAlgebra R V))
-    (M : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
-    (F2 : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
-    (h_closed : matrixExteriorDerivative d F2 = 0) :
-    (d (matrixTraceForm M) = matrixTraceForm (matrixExteriorDerivative d M)) ∧
-    (d (matrixTraceForm F2) = 0) := ⟨
-  exteriorDerivative_matrixTraceForm d M,
-  matrix_traced_curvature_square_closed d F2 h_closed
-⟩
 
 end InfoGeometry.Canonical.MatrixTracedChernWeilBridge

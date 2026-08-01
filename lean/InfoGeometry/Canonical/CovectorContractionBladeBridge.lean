@@ -49,19 +49,4 @@ theorem contracted_five_blade_nilpotent
   rw [hK4]
   exact native_plucker_four_blade_nilpotent w1 w2 w3 w4
 
-/-- **Theorem**: Master Covector Contraction & 4-Blade Plücker Quadric Reduction Synthesis.
-    Unifies:
-    1. Adapted 5-frame covector contraction formula contract(K5) = K4 under λ(u) = 1 and λ(w_i) = 0.
-    2. Exact degree-lowering reduction of 5-plane boundaries to 4-plane Amplituhedron boundaries.
-    3. Plücker quadric nilpotency (K4)² = 0 for the contracted 4-blade in ExteriorAlgebra R V. -/
-theorem master_covector_contraction_blade_synthesis
-    (lambda : V →ₗ[R] R) (u w1 w2 w3 w4 : V)
-    (hu : lambda u = 1) (hw1 : lambda w1 = 0) (hw2 : lambda w2 = 0)
-    (hw3 : lambda w3 = 0) (hw4 : lambda w4 = 0) :
-    (contractFiveBlade lambda u w1 w2 w3 w4 = blade4 w1 w2 w3 w4) ∧
-    ((contractFiveBlade lambda u w1 w2 w3 w4) * (contractFiveBlade lambda u w1 w2 w3 w4) = 0) := ⟨
-  contraction_of_adapted_five_frame lambda u w1 w2 w3 w4 hu hw1 hw2 hw3 hw4,
-  contracted_five_blade_nilpotent lambda u w1 w2 w3 w4 hu hw1 hw2 hw3 hw4
-⟩
-
 end InfoGeometry.Canonical.CovectorContractionBladeBridge

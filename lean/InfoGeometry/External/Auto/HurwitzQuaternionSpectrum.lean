@@ -222,21 +222,4 @@ theorem finiteHurwitzCharacterCombination_zero
     finiteHurwitzCharacterCombination k N (fun _ => 0) s = 0 :=
   InfoGeometry.Quantum.HurwitzTwistedSector.finiteHurwitzCharacterCombination_zero k N s
 
-/--
-Bundled exact-arithmetic spectrum bridge.
-
-It records the exact lane condition carried by the quaternion, norm positivity
-for logarithmic energies, and the finite shifted Mellin compatibility.
--/
-theorem hurwitz_quaternion_spectrum_synthesis
-    (q : HurwitzQuaternion) (h_nonzero : q.a ≠ 0) (N : ℕ) (a : ℝ) (s : ℂ) :
-    (IntegralLane q.a q.b q.c q.d ∨ HalfIntegralLane q.a q.b q.c q.d) ∧
-      0 < q.normSq ∧
-      q.conj.normSq = q.normSq ∧
-      finiteHurwitzZetaTrace N a s = finiteHurwitzMellinTrace N a s := by
-  exact ⟨q.sameLane,
-    HurwitzQuaternion.normSq_pos_of_a_ne_zero q h_nonzero,
-    HurwitzQuaternion.normSq_conj q,
-    finite_mellin_compatibility N a s⟩
-
 end InfoGeometry.Arithmetic.HurwitzQuaternionSpectrum

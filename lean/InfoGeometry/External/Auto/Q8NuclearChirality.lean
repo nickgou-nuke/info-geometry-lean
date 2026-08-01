@@ -50,16 +50,6 @@ theorem fermionic_double_cover :
 theorem chiral_square_fermionic : qK * qK = -(1 : M2C) :=
   qK_sq
 
-/-- Consolidated finite Q₈ multiplication theorem. -/
-theorem q8_nuclear_chirality_synthesis :
-    qI * qI = -(1 : M2C) ∧
-    qJ * qJ = -(1 : M2C) ∧
-    qK * qK = -(1 : M2C) ∧
-    qI * qJ = qK ∧
-    qJ * qK = qI ∧
-    qK * qI = qJ :=
-  q8_quaternion_relations
-
 end Q8NuclearChirality
 
 end noncomputable section

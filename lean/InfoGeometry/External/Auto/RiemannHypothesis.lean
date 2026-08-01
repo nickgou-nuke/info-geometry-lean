@@ -111,30 +111,6 @@ theorem hilbertPolyaShape_implies_RHStatement
   rw [hγ]
   simp [rhCriticalLine]
 
-/-- Consolidated theorem-honest package for the complex-temperature dictionary. -/
-theorem riemannHypothesis_dictionary_synthesis :
-    (∀ σ t, (rhComplexTemperature σ t).re = σ) ∧
-    (∀ σ t, (rhComplexTemperature σ t).im = t) ∧
-    (∀ σ t, rhCriticalLine (rhComplexTemperature σ t) ↔ σ = 1 / 2) ∧
-    (∀ n, rhArithmeticPhase 0 n = 1) ∧
-    (∀ σ N, rhFiniteComplexTrace σ 0 N =
-      (Finset.range N).sum fun k => (rhDampingWeight σ (k + 1) : ℂ)) ∧
-    (∀ s, s ≠ rhHagedornPole → rhPoleModel s * (s - rhHagedornPole) = 1) ∧
-    (∀ Z : ℂ → ℂ, HilbertPolyaShape Z → RHStatement Z) := by
-  constructor
-  · exact rhComplexTemperature_re
-  constructor
-  · exact rhComplexTemperature_im
-  constructor
-  · exact rhCriticalLine_complexTemperature
-  constructor
-  · exact rhArithmeticPhase_zero
-  constructor
-  · exact rhFiniteTrace_zero_phase
-  constructor
-  · exact rhPoleModel_inverse_relation
-  intro Z hHP
-  exact hilbertPolyaShape_implies_RHStatement hHP
 
 /-- Final Layer-11 naming for the spectral-thermodynamic picture. -/
 def criticalDamping : ℝ := 1 / 2

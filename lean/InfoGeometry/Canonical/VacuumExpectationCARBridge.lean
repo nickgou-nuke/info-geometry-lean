@@ -28,17 +28,5 @@ theorem mixed_car_on_vacuum (u : U) (alpha : U →ₗ[R] R) :
   dsimp [mixedCARAnticommutator, creationOp, vacuumState, contractionOp]
   rw [mul_zero, add_zero]
 
-/-- **Theorem**: Master Vacuum Expectation Value of CAR Synthesis.
-    Unifies:
-    1. Mixed CAR operator anticommutator sum {a_u, ε_α} |0⟩ on vacuum state |0⟩ = 1.
-    2. Annihilation operator vacuum state annihilation a_u |0⟩ = 0.
-    3. Vacuum expectation pairing identity (ev_u α) • |0⟩ = α(u) • |0⟩. -/
-theorem master_vacuum_expectation_car_synthesis
-    (u : U) (alpha : U →ₗ[R] R) :
-    (mixedCARAnticommutator u alpha (vacuumState R U) = (contractionOp (evaluationLinear u)) (creationOp alpha (vacuumState R U))) ∧
-    ((evaluationLinear u alpha) • (vacuumState R U) = alpha u • (vacuumState R U)) := ⟨
-  mixed_car_on_vacuum u alpha,
-  rfl
-⟩
 
 end InfoGeometry.Canonical.VacuumExpectationCARBridge

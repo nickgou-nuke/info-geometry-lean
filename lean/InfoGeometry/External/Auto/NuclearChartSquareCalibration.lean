@@ -63,26 +63,4 @@ theorem plaquetteCurvature_coupled_corner
   unfold plaquetteCurvature
   ring
 
-/-- Consolidated chart-square arithmetic. -/
-theorem nuclear_chart_square_calibration_synthesis
-    (base zSlope nSlope coupling : ℝ) :
-    (let q := p31s31Square;
-      massNumber q.1 = 30 ∧
-      massNumber q.2.1 = 31 ∧
-      massNumber q.2.2.1 = 31 ∧
-      massNumber q.2.2.2 = 32) ∧
-    plaquetteCurvature
-      base
-      (base + zSlope)
-      (base + nSlope)
-      (base + zSlope + nSlope) = 0 ∧
-    plaquetteCurvature
-      base
-      (base + zSlope)
-      (base + nSlope)
-      (base + zSlope + nSlope + coupling) = coupling :=
-  ⟨p31s31Square_mass_numbers,
-    plaquetteCurvature_affine_zero base zSlope nSlope,
-    plaquetteCurvature_coupled_corner base zSlope nSlope coupling⟩
-
 end NuclearChartSquareCalibration

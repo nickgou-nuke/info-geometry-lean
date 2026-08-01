@@ -119,18 +119,4 @@ theorem inverse_partition_log_duality {Z : ℝ} :
   unfold fermionicInverseLogPotential bosonicLogPotential
   rw [Real.log_inv]
 
-/-- Consolidated finite CRB/Fenchel package. -/
-theorem cramer_rao_fisher_synthesis {I variance Z : ℝ}
-    (hI : 0 < I) (hprod : 1 ≤ I * variance) (hZ : 0 < Z) :
-    cramerRaoBound I ≤ variance ∧
-    (∀ θ E, θ * E ≤ fisherQuadratic I θ + dualFisherQuadratic I E) ∧
-    (∀ θ E, deriv (fun x : ℝ => deriv (fisherQuadratic I) x) θ *
-      deriv (fun x : ℝ => deriv (dualFisherQuadratic I) x) E = 1) ∧
-    fermionicInverseLogPotential Z = -bosonicLogPotential Z := by
-  have _ := hZ
-  exact ⟨cramerRao_from_information_product hI hprod,
-    fun θ E => fisher_fenchel_young hI,
-    fun θ E => hessian_inverse_duality (I := I) (θ := θ) (E := E) (ne_of_gt hI),
-    inverse_partition_log_duality⟩
-
 end noncomputable section

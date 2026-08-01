@@ -188,36 +188,6 @@ theorem Ndown_mul_Nup (u v : Fin 3 → ℂ) :
     fin_cases i <;> simp [Nup, Ndown, zornMul, cross3]
   · simp [Nup, Ndown, zornMul, dot3]
 
-/--
-Consolidated Zorn layer: cubic OP projectors and square-zero null paravectors
-live in the same vector-matrix package, and both are determinant-null.
--/
-theorem zorn_op_paravector_synthesis :
-    Eplus * Eplus = Eplus ∧
-    Eminus * Eminus = Eminus ∧
-    CubicProjector Eplus ∧
-    CubicProjector Eminus ∧
-    zornDet Eplus = 0 ∧
-    zornDet Eminus = 0 ∧
-    (∀ u : Fin 3 → ℂ, SquareZero (Nup u)) ∧
-    (∀ v : Fin 3 → ℂ, SquareZero (Ndown v)) ∧
-    (∀ u : Fin 3 → ℂ, zornDet (Nup u) = 0) ∧
-    (∀ v : Fin 3 → ℂ, zornDet (Ndown v) = 0) ∧
-    (∀ u v : Fin 3 → ℂ, Nup u * Ndown v = ⟨dot3 u v, 0, 0, 0⟩) ∧
-    (∀ u v : Fin 3 → ℂ, Ndown v * Nup u = ⟨0, 0, 0, dot3 v u⟩) := by
-  exact ⟨Eplus_sq,
-    Eminus_sq,
-    Eplus_cubic,
-    Eminus_cubic,
-    Eplus_det_zero,
-    Eminus_det_zero,
-    Nup_sq,
-    Ndown_sq,
-    Nup_det_zero,
-    Ndown_det_zero,
-    Nup_mul_Ndown,
-    Ndown_mul_Nup⟩
-
 end ZornOPParavector
 
 end noncomputable section

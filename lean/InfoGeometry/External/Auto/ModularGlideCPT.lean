@@ -41,12 +41,4 @@ theorem J_K_J_neg (v : ℂ) : J * Kboost v * J = - Kboost v := by
   fin_cases i <;> fin_cases j <;>
     simp [J, Kboost, Matrix.mul_apply, Matrix.neg_apply, Fin.sum_univ_two]
 
-/-- Main matrix-level synthesis. -/
-theorem modular_glide_cpt_synthesis :
-    J * J = 1 ∧
-    (∀ v : ℂ, J * Kboost v * J = - Kboost v) := by
-  constructor
-  · exact J_sq
-  · exact J_K_J_neg
-
 end ModularGlideCPT

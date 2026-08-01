@@ -57,16 +57,4 @@ theorem phaseMirror_refocusing_to_rotational
   dsimp [phaseMirrorReflection]
   rw [h_reflect, sub_zero]
 
-/-- **Master Synthesis**: Метриплектично Фазово Огледало & Изтриване на Битовете Synthesis. -/
-@[rep_depth transport, capstone]
-theorem master_metriplectic_phase_mirror_erasure_synthesis
-    {A : Type*} [Ring A] (flow : MetriplecticFlow A) (x : A) (h_reflect : flow.dissipative x = 0) :
-    (selfConcordantBarrier 1 = 0) ∧
-    (nAryBitErasureShift 10 ((1 : ℤ) : ℝ) = 0) ∧
-    (phaseMirrorReflection flow x = flow.rotational x) := ⟨
-  selfConcordantBarrier_vacuum_zero,
-  nAryBitErasure_vacuum_invariant 10 1,
-  phaseMirror_refocusing_to_rotational flow x h_reflect
-⟩
-
 end InfoGeometry.Canonical

@@ -337,23 +337,4 @@ theorem paravectorLightcone_iff (σ γ : ℝ) :
     show (paravectorTemperature σ γ).parabolic
     simpa [SplitParavector.parabolic, SplitParavector.det, paravectorTemperature] using h0
 
-/-- Stagewise synthesis theorem used by narrative layers.
-    No analytic RH/global claims are added here.
--/
-theorem souriau_thermo_colimit_synthesis :
-    (∀ n, ∀ v : SouriauFockStage n, souriauDenominatorZero n v →
-      souriauGradedIndexSingularity n v) ∧
-    (∀ n, ∀ v : SouriauFockStage n,
-      souriauGradedIndexSingularity n v → souriauDenominatorZero n v) ∧
-    (∀ n, ∀ v : SouriauFockStage n, (∀ i : Fin n, v i ≠ 1) →
-      souriauBosonicPartition n v * souriauMoebiusArithmeticIndex n v = 1) := by
-  constructor
-  · intro n v h
-    exact souriauGradedIndex_zero_of_denominator_zero n v h
-  constructor
-  · intro n v h
-    exact souriau_denominator_zero_of_gradedIndex_zero n v h
-  · intro n v h
-    exact souriau_stage_boson_graded_cancellation n v h
-
 end SouriauThermoColimit

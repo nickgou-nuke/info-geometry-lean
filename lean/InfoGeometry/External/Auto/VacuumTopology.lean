@@ -6,21 +6,12 @@ import Mathlib.Data.Real.Basic
 
 namespace VacuumTopology
 
-/-!
-## Section 1: The Vacuum as Mathematical Object
-The vacuum is mathematically defined as the empty string, representing the
-TerminalVoid in a rigorous algebraic way.
--/
+/-! ## Section 1: The empty string and its native monoid law. -/
 
 /-- The empty string acts as the vacuum state. -/
 def vacuum : String := ""
 
-/-- TerminalVoid is the proposition that the distinguished vacuum is the
-left identity for concatenation. -/
-def TerminalVoid : Prop := ∀ s : String, vacuum ++ s = s
-
-/-- The distinguished vacuum satisfies the TerminalVoid law. -/
-theorem terminalVoid_holds : TerminalVoid := by
+theorem terminalVoid_holds : ∀ s : String, vacuum ++ s = s := by
   intro s
   rfl
 
@@ -143,16 +134,5 @@ theorem vacuum_degeneracy_matches_nuclear_ground_state :
   constructor
   · rfl
   · exact vacuum_ground_state_degeneracy.symm
-
-/-!
-## Section 8: Grand Synthesis - Vacuum as Foundation
--/
-
-/-- Synthesis Theorem: Vacuum is not the end, but the BEGINNING. -/
-theorem vacuum_is_foundation_not_failure :
-  (∃ (e : String), ∀ s, e ++ s = s) ∧
-  (∃ (v : FlowState), ∀ ext, causal_flow v ext = v) ∧
-  (Fintype.card VacuumSpace = 1) := by
-  refine ⟨⟨vacuum, vacuum_is_left_identity⟩, ⟨vacuum_state, vacuum_is_absorbing⟩, vacuum_ground_state_degeneracy⟩
 
 end VacuumTopology

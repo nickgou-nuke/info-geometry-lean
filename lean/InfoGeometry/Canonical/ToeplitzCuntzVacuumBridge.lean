@@ -283,28 +283,6 @@ theorem nontrivial_algebraic_vacuum_witness
          (supercharges_vacuum_annihilation g).1,
          (supercharges_vacuum_annihilation g).2⟩
 
-/-- **Master Synthesis Theorem**: Pure Algebraic Toeplitz-Cuntz Vacuum & Defect-Sector Synthesis. -/
-theorem master_toeplitz_cuntz_vacuum_synthesis (g : ToeplitzCuntzGenerators R) :
-    P0 g * P0 g = P0 g ∧
-    star (P0 g) = P0 g ∧
-    PPlus g + PMinus g + P0 g = 1 ∧
-    QPlus g * QPlus g = 0 ∧
-    QMinus g * QMinus g = 0 ∧
-    susyHamiltonian g = 1 - P0 g ∧
-    susyHamiltonian g * P0 g = 0 ∧
-    P0 g * susyHamiltonian g = 0 ∧
-    (QPlus g * P0 g = 0 ∧ QMinus g * P0 g = 0) ∧
-    (P0 g * QPlus g = 0 ∧ P0 g * QMinus g = 0) := by
-  exact ⟨defectProjection_sq g,
-         defectProjection_star g,
-         toeplitzCuntz_resolution g,
-         qplus_sq_zero g,
-         qminus_sq_zero g,
-         susyHamiltonian_eq_one_sub_vacuum g,
-         susyHamiltonian_vacuum_annihilation g,
-         p0_susyHamiltonian_annihilation g,
-         supercharges_vacuum_annihilation g,
-         p0_supercharges_annihilation g⟩
 
 end ToeplitzCuntzGenerators
 

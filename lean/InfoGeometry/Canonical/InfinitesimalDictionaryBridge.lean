@@ -151,18 +151,6 @@ theorem stateSurprisalVariation_eq_neg_logGeneratorVariation :
     P.stateSurprisalVariation = -P.gauge.flow.d_ln_Q :=
   P.stateSurprisalVariation_eq_neg_dlnQ
 
-/-! Historical compatibility names.  These refer to state-surprisal
-variation, not Boltzmann macroentropy. -/
-@[deprecated stateSurprisalVariation (since := "2026-07-27")]
-abbrev operatorBoltzmannEntropy : Alg :=
-  P.stateSurprisalVariation
-
-@[deprecated stateSurprisalVariation_eq_neg_logGeneratorVariation
-    (since := "2026-07-27")]
-theorem operatorBoltzmannEntropy_eq_dlnQ :
-    P.operatorBoltzmannEntropy = -P.gauge.flow.d_ln_Q :=
-  P.stateSurprisalVariation_eq_neg_logGeneratorVariation
-
 /-- The Araki/Bregman gradient is the negative logarithmic de Rham current. -/
 theorem arakiRelativeEntropyGradient_eq_neg_dlnQ :
     P.arakiRelativeEntropyGradient = -P.gauge.flow.d_ln_Q := by
@@ -338,13 +326,6 @@ theorem finite_stateSurprisal_eq_neg_log_delta_diag
       -Real.log (relativeModularOperator (n := n) q q0 i i) := by
   rw [relativeModularHamiltonianOperator_diag]
   exact relativeModularPotential_eq_neg_log_relativeModularOperator_diag (n := n) q q0 i
-
-@[deprecated finite_stateSurprisal_eq_neg_log_delta_diag (since := "2026-07-27")]
-theorem finite_operatorBoltzmannEntropy_eq_neg_log_delta_diag
-    (q q0 : PositiveRay (Fin n)) (i : Fin n) :
-    relativeModularHamiltonianOperator (n := n) q q0 i i =
-      -Real.log (relativeModularOperator (n := n) q q0 i i) :=
-  finite_stateSurprisal_eq_neg_log_delta_diag (n := n) q q0 i
 
 end FiniteDeltaPrimary
 

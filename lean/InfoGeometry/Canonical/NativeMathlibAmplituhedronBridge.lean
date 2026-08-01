@@ -115,35 +115,4 @@ theorem native_finsupp_single_one_typed (i j : ℕ) :
     (Finsupp.single (i, j) (1 : R)) (i, j) = 1 :=
   Finsupp.single_eq_same
 
-/-- **Theorem**: Master Native Mathlib Amplituhedron & Exterior Algebra Synthesis.
-    Unifies:
-    1. Exterior algebra generator wedge nilpotency ι(v)^2 = 0.
-    2. Plücker 2-blade quadric nilpotency (v1 ∧ v2)^2 = 0.
-    3. Plücker 3-blade quadric nilpotency (v1 ∧ v2 ∧ v3)^2 = 0.
-    4. Plücker 4-blade quadric nilpotency (v1 ∧ v2 ∧ v3 ∧ v4)^2 = 0 for Gr(4,n).
-    5. 2-blade linear map pushforward conservation.
-    6. 4-blade linear map pushforward conservation for Gr(4,n) Amplituhedron kinematics.
-    7. Explicit base-ring typed Finsupp generator evaluation. -/
-theorem master_native_mathlib_amplituhedron_synthesis
-    (f : V →ₗ[R] W) (v v1 v2 v3 v4 : V) (i j : ℕ) :
-    (ExteriorAlgebra.ι R v * ExteriorAlgebra.ι R v = 0) ∧
-    ((ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2) * (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2) = 0) ∧
-    ((ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3) *
-      (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3) = 0) ∧
-    ((ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4) *
-      (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4) = 0) ∧
-    ((ExteriorAlgebra.map f (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2)) *
-      (ExteriorAlgebra.map f (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2)) = 0) ∧
-    ((ExteriorAlgebra.map f (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4)) *
-      (ExteriorAlgebra.map f (ExteriorAlgebra.ι R v1 * ExteriorAlgebra.ι R v2 * ExteriorAlgebra.ι R v3 * ExteriorAlgebra.ι R v4)) = 0) ∧
-    ((Finsupp.single (i, j) (1 : R)) (i, j) = 1) := ⟨
-  native_exterior_algebra_wedge_nilpotent v,
-  native_plucker_two_blade_nilpotent v1 v2,
-  native_plucker_three_blade_nilpotent v1 v2 v3,
-  native_plucker_four_blade_nilpotent v1 v2 v3 v4,
-  native_plucker_linear_map_conservation f v1 v2,
-  native_plucker_four_blade_linear_map_conservation f v1 v2 v3 v4,
-  native_finsupp_single_one_typed i j
-⟩
-
 end InfoGeometry.Canonical.NativeMathlibAmplituhedronBridge

@@ -837,21 +837,6 @@ variable {R Gauge Parameter Curvature G I X A S : Type*}
 variable (B : LiteratureWeylGrandCanonicalTKKKKTBridge
   R Gauge Parameter Curvature G I X A S)
 
-/-- The extended bridge exposes the explicit thermodynamic KKT packet. -/
-@[rep_depth thermo]
-theorem kktOptimizationPacket
-    (hPrimal : B.kktOptimization.primalFeasible)
-    (hDual : B.kktOptimization.dualFeasible)
-    (hStationarity : B.kktOptimization.stationarity)
-    (hSlack : B.kktOptimization.complementarySlackness)
-    (hFinite : B.kktOptimization.finitePartitionAdmissible) :
-    B.kktOptimization.primalFeasible ∧
-      B.kktOptimization.dualFeasible ∧
-      B.kktOptimization.stationarity ∧
-      B.kktOptimization.complementarySlackness ∧
-      B.kktOptimization.finitePartitionAdmissible :=
-  B.kktOptimization.packet
-
 /--
 The KKT-enhanced bridge still supplies the grand-canonical affine action from
 the underlying residue bridge.

@@ -100,19 +100,4 @@ theorem bogoliubov_preserves_krein (c s : ℝ) (h : c^2 - s^2 = 1) :
     simp [bogoliubov, kreinJ, Matrix.mul_apply, Fin.sum_univ_two] <;>
     nlinarith
 
-/-- Main synthesis theorem. -/
-theorem cartan_weyl_bogoliubov_gravity_synthesis :
-    (∀ i j : Fin 4, (1 / 4 : ℂ) * tr2C (σ i * σbar j + σ j * σbar i) = etaSign i j) ∧
-    (∀ e0 e1 e2 e3 : ℝ,
-      inducedMetric (tetradDiag e0 e1 e2 e3) = diagonal ![e0^2, -(e1^2), -(e2^2), -(e3^2)]) ∧
-    (∀ a b : ℝ, (a • boostK) * (b • boostK) - (b • boostK) * (a • boostK) = 0) ∧
-    (∀ c s : ℝ, c^2 - s^2 = 1 → (bogoliubov c s)ᵀ * kreinJ * (bogoliubov c s) = kreinJ) := by
-  constructor
-  · exact pauli_solder_metric
-  · constructor
-    · exact inducedMetric_diag
-    · constructor
-      · exact boost_connection_comm_zero
-      · exact bogoliubov_preserves_krein
-
 end CartanWeylBogoliubovGravity

@@ -29,18 +29,4 @@ theorem mixed_car_final_scalar_identity (u : U) (alpha : U →ₗ[R] R) (omega :
     (evaluationLinear u alpha) • omega = alpha u • omega :=
   rfl
 
-/-- **Theorem**: Master Mixed CAR Final Operator & Scalar Identity Synthesis.
-    Unifies:
-    1. Mixed CAR operator anticommutator sum {a_u, ε_α} ω = a_u(ε_α ω) + ε_α(a_u ω).
-    2. Canonical double-dual evaluation functional ev_u(α) = α(u).
-    3. Final scalar action identity (ev_u α) • ω = α(u) • ω.
-    4. Machine-checked proof closure for the full Clifford CAR super-selection algebra. -/
-theorem master_mixed_car_final_identity_synthesis
-    (u : U) (alpha : U →ₗ[R] R) (omega : ExteriorAlgebra R (U →ₗ[R] R)) :
-    (evaluationLinear u alpha = alpha u) ∧
-    ((evaluationLinear u alpha) • omega = alpha u • omega) := ⟨
-  rfl,
-  rfl
-⟩
-
 end InfoGeometry.Canonical.MixedCARFinalIdentityBridge

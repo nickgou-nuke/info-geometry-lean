@@ -143,32 +143,4 @@ theorem finiteComplexTrace_zero_phase (β : ℝ) (N : ℕ) :
 def finiteCancellation (M : RHModel) (s : ℂ) (N : ℕ) : Prop :=
   M.zeta s = 0 → finiteComplexArithmeticTraceComplex s N = 0
 
-/-- Consolidated complex-temperature/RH-boundary package. -/
-theorem complex_temperature_rh_synthesis :
-    (∀ β t, (complexTemperature β t).re = β) ∧
-    (∀ β t, (complexTemperature β t).im = t) ∧
-    (∀ β t, criticalBalanceLine (complexTemperature β t) ↔ β = 1 / 2) ∧
-    (∀ n, arithmeticPhase 0 n = 1) ∧
-    (∀ β N, finiteComplexArithmeticTrace β 0 N =
-      (Finset.range N).sum fun k => (arithmeticDampingWeight β (k + 1) : ℂ)) ∧
-    (∀ M : RHModel, ∀ s, criticalStrip s → cancellationZero M.zeta s →
-      criticalBalanceLine s) ∧
-    (∀ M : RHModel, ∀ s N, finiteCancellation M s N ↔ (M.zeta s = 0 →
-      finiteComplexArithmeticTraceComplex s N = 0)) := by
-  constructor
-  · exact complexTemperature_re
-  constructor
-  · exact complexTemperature_im
-  constructor
-  · exact criticalBalanceLine_complexTemperature
-  constructor
-  · exact arithmeticPhase_zero
-  constructor
-  · exact finiteComplexTrace_zero_phase
-  constructor
-  · intro M s hstrip hzero
-    exact M.h_nontrivial_zero_on_line s hstrip hzero
-  intro M s N
-  rfl
-
 end noncomputable section

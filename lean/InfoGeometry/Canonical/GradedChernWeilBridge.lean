@@ -63,25 +63,4 @@ theorem graded_bianchi_traced_chern_weil_closed
   have h_cov_leibniz := graded_covariant_two_form_square_leibniz D A F hF
   exact bianchi_implies_traced_curvature_square_closed h_cyclic A F D.d h_cov_leibniz hBianchi
 
-/-- **Theorem**: Master Graded Chern-Weil & Covariant Leibniz Synthesis.
-    Unifies:
-    1. Structural matrix exterior derivative product rule for homogeneous 2-forms derived strictly from |F|=2 and D.gradedLeibniz.
-    2. Structural covariant derivative product rule D_A(F^2) = (D_AF)F + F(D_AF).
-    3. Structural Chern-Weil closedness d(Tr(F^2)) = 0 from Bianchi D_AF = 0 and graded differential algebra. -/
-theorem master_graded_chern_weil_synthesis
-    (h_cyclic : ∀ A M : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V), matrixTraceForm (A * M) = matrixTraceForm (M * A))
-    (D : ExteriorDifferentialData R V)
-    (A F : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
-    (hF : MatrixIsHomogeneous 2 F)
-    (hBianchi : covariantDerivative A D.d F = 0) :
-    (matrixExteriorDerivative D.d (F * F) =
-      matrixExteriorDerivative D.d F * F + F * matrixExteriorDerivative D.d F) ∧
-    (covariantDerivative A D.d (F * F) =
-      covariantDerivative A D.d F * F + F * covariantDerivative A D.d F) ∧
-    (D.d (matrixTraceForm (F * F)) = 0) := ⟨
-  matrixExteriorDerivative_two_form_square D F hF,
-  graded_covariant_two_form_square_leibniz D A F hF,
-  graded_bianchi_traced_chern_weil_closed h_cyclic D A F hF hBianchi
-⟩
-
 end InfoGeometry.Canonical.GradedChernWeilBridge

@@ -131,18 +131,6 @@ theorem bogoliubovCreation_map_zero
     bogoliubovCreation (E := E) B 0 = 0 := by
   simp [bogoliubovCreation]
 
-@[deprecated bogoliubovAnnihilation_map_zero (since := "2026-03-21")]
-theorem bogoliubovAnnihilation_kills_vacuumVector
-    (B : HyperbolicMixingParams) :
-    bogoliubovAnnihilation (E := E) B 0 = 0 :=
-  bogoliubovAnnihilation_map_zero (E := E) B
-
-@[deprecated bogoliubovCreation_map_zero (since := "2026-03-21")]
-theorem bogoliubovCreation_kills_vacuumVector
-    (B : HyperbolicMixingParams) :
-    bogoliubovCreation (E := E) B 0 = 0 :=
-  bogoliubovCreation_map_zero (E := E) B
-
 /-- `ℤ₂` grading parity labels for superalgebra brackets. -/
 inductive SuperParity where
   | even

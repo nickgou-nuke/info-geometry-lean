@@ -128,38 +128,4 @@ theorem BdG2_null : BdG2 0 0 = 0 := by
     · simp [BdG2]
     · simp [BdG2]
 
-/-- Main synthesis theorem. -/
-theorem wallpaper_fermion_superconducting_gap_synthesis :
-    gapStructure .Δ1 = .fullGap ∧ gapStructure .Δ3 = .fullGap ∧ gapStructure .Δ4 = .fullGap ∧
-    gapStructure .Δ2 = .pointNode ∧ gapStructure .Δ5 = .lineNode ∧ gapStructure .Δ6 = .lineNode ∧
-    (∀ chi Dsq : Sign, isBDI chi Dsq ↔ chi = minus ∧ Dsq = minus) ∧
-    (∀ Nocc : ℤ, z2Invariant (Nocc + 2) = z2Invariant Nocc) ∧
-    (∀ ξ Δ : ℂ, (BdG2 ξ Δ).det = -(ξ^2 + Δ^2)) ∧
-    BdG2 0 0 = 0 := by
-  have hFull := full_gap_table
-  have hPoint := point_node_table
-  have hLine := line_node_table
-  refine And.intro ?_ ?_
-  · simpa using hFull.1
-  · refine And.intro ?_ ?_
-    · simpa using hFull.2.1
-    · refine And.intro ?_ ?_
-      · simpa using hFull.2.2
-      · refine And.intro ?_ ?_
-        · simpa using hPoint
-        · refine And.intro ?_ ?_
-          · simpa using hLine.1
-          · refine And.intro ?_ ?_
-            · simpa using hLine.2
-            · refine And.intro ?_ ?_
-              · intro chi Dsq
-                simpa using BDI_iff_odd_pair_and_minus_square chi Dsq
-              · refine And.intro ?_ ?_
-                · intro Nocc
-                  simpa using z2Invariant_periodic Nocc
-                · refine And.intro ?_ ?_
-                  · intro ξ Δ
-                    simpa using BdG2_det ξ Δ
-                  · simpa using BdG2_null
-
 end WallpaperFermionSuperconductingGap

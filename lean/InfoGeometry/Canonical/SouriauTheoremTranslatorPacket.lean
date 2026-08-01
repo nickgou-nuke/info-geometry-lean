@@ -664,13 +664,7 @@ required context via `IdentityBalancedStressSeed.toContext`.
 -/
 @[rep_depth thermo]
 theorem translatorPacket_of_seed
- {G Gdual Orbit Stress : Type*}
- (moment : Orbit → Gdual)
- (geometricTemperature : G)
- (pairing : G → Gdual → ℝ)
- (parityOfGenerator : G →
- InfoGeometry.Canonical.SouriauLieThermoKKTBridge.SuperParity)
-  (stressTensorProjection : Gdual → ℝ)
+ {G Gdual Orbit : Type*}
   (x : Orbit)
   (J : SuperSouriauFermionGasBridge.SuperMomentMapData Orbit Gdual Gdual)
   (P : SuperSouriauFermionGasBridge.SuperSouriauPairing Orbit Gdual Gdual)

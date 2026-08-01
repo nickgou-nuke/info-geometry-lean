@@ -38,22 +38,4 @@ theorem annihilation_two_particle_operator_pairing
       alpha u • singleParticleState beta - beta u • singleParticleState alpha :=
   rfl
 
-/-- **Theorem**: Master 2-Particle Operator Annihilation & Fermionic Ladder Action Synthesis.
-    Unifies:
-    1. Definition of 2-particle Fock state |α ∧ β⟩ = ε_α |β⟩.
-    2. Definition of annihilation operator a_u = ι_ev_u.
-    3. Literal machine-checked operator theorem a_u(|α ∧ β⟩) = α(u) |β⟩ - β(u) |α⟩.
-    4. Exact proof closure for multi-particle annihilation ladder operators on finite-particle states. -/
-theorem master_two_particle_operator_annihilation_synthesis
-    (u : U)
-    (alpha beta : U →ₗ[R] R) :
-    ((evaluationLinear u alpha) • (singleParticleState beta) - (evaluationLinear u beta) • (singleParticleState alpha) =
-      alpha u • singleParticleState beta - beta u • singleParticleState alpha) ∧
-    (twoParticleState alpha beta = creationOp alpha (singleParticleState beta)) ∧
-    (annihilationOp u = contractionOp (evaluationLinear (R := R) u)) := ⟨
-  rfl,
-  rfl,
-  rfl
-⟩
-
 end InfoGeometry.Canonical.TwoParticleOperatorAnnihilationBridge

@@ -53,21 +53,4 @@ theorem bianchi_implies_traced_curvature_square_closed
   have h_cov_sq := covariant_curvature_square_closed A F d h_cov_leibniz h_bianchi
   exact nonabelian_traced_curvature_square_closed h_cyclic A d (F * F) h_cov_sq
 
-/-- **Theorem**: Master Non-Abelian Curvature Square Bianchi Synthesis.
-    Unifies:
-    1. Covariant derivation product rule D_A (F * F) = (D_A F) * F + F * (D_A F).
-    2. Covariant closedness of curvature square D_A (F * F) = 0 from Bianchi D_A F = 0.
-    3. Direct proof closure deriving non-Abelian traced Chern-Weil closedness d(Tr(F ∧ F)) = 0 from non-Abelian Bianchi D_A F = 0. -/
-theorem master_nonabelian_curvature_square_bianchi_synthesis
-    (h_cyclic : ∀ A M : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V), matrixTraceForm (A * M) = matrixTraceForm (M * A))
-    (A F : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
-    (d : Module.End R (ExteriorAlgebra R V))
-    (h_cov_leibniz : covariantDerivative A d (F * F) = (covariantDerivative A d F) * F + F * (covariantDerivative A d F))
-    (h_bianchi : covariantDerivative A d F = 0) :
-    (covariantDerivative A d (F * F) = 0) ∧
-    (d (matrixTraceForm (F * F)) = 0) := ⟨
-  covariant_curvature_square_closed A F d h_cov_leibniz h_bianchi,
-  bianchi_implies_traced_curvature_square_closed h_cyclic A F d h_cov_leibniz h_bianchi
-⟩
-
 end InfoGeometry.Canonical.NonAbelianCurvatureSquareBianchiBridge

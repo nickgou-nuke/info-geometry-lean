@@ -201,20 +201,6 @@ theorem A9_A13_A17_A21_small_bar :
     smallBarMass 9 ∧ smallBarMass 13 ∧ smallBarMass 17 ∧ smallBarMass 21 := by
   norm_num [smallBarMass]
 
-def formalSummary : Prop :=
-  Tz 12 11 = 1 / 2 ∧
-    Tz 11 12 = -1 / 2 ∧
-    centralDelta A7_Li_Be = -185 ∧
-    centralDelta A9_Be_B = -123 ∧
-    withinReportedError A13_C_N ∧
-    nearZeroBand (centralDelta A25_Mg_Al) ∧
-    ¬ nearZeroBand (centralDelta A17_O_F)
-
-theorem formalSummary_proved : formalSummary := by
-  exact ⟨Tz_A23_Na_Mg.1, Tz_A23_Na_Mg.2, A7_delta_exact,
-    A9_delta_exact, A13_delta_within_error, A25_in_50keV_band,
-    A17_outside_50keV_band⟩
-
 end CakirliPnInteractionIsospin
 
 end noncomputable section

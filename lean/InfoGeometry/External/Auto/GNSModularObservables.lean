@@ -97,35 +97,6 @@ theorem chiral_projectors_orthogonal_in_trace :
   rw [PPlus_PMinus_orthogonal]
   simp [normalizedTrace]
 
-/-! ## 5. Synthesis — normalized trace identities -/
-
-theorem finite_normalized_trace_synthesis :
-    -- Vacuum normalized: τ(I) = 1
-    normalizedTrace (1 : M2C) = 1 ∧
-    -- Symmetric vacuum: τ(σ₃) = 0
-    normalizedTrace σ3c = 0 ∧
-    -- Chiral projectors: τ(N₊) = τ(N₋) = ½
-    normalizedTrace PPlus = 1/2 ∧ normalizedTrace PMinus = 1/2 ∧
-    -- Completeness: τ(N₊+N₋) = τ(I) = 1
-    normalizedTrace (PPlus + PMinus) = 1 ∧
-    -- The chiral commutator has normalized trace zero.
-    normalizedTrace (σPlus * σMinus - σMinus * σPlus) = 0 ∧
-    -- Anticommutator complete: CAR algebra
-    normalizedTrace (σPlus * σMinus + σMinus * σPlus) = 1 ∧
-    -- Charge variance = 1 bit
-    normalizedTrace (σ3c * σ3c) = 1 ∧
-    -- Projectors orthogonal
-    normalizedTrace (PPlus * PMinus) = 0 :=
-  ⟨normalizedTrace_identity,
-   normalizedTrace_sigma3,
-   (normalizedTrace_chiral_projectors).1,
-   (normalizedTrace_chiral_projectors).2.1,
-   (normalizedTrace_chiral_projectors).2.2,
-   normalizedTrace_commutator_vanishes,
-   normalizedTrace_anticommutator_complete,
-   normalizedTrace_sigma3_sq,
-   chiral_projectors_orthogonal_in_trace⟩
-
 end GNSModularObservables
 
 end noncomputable section

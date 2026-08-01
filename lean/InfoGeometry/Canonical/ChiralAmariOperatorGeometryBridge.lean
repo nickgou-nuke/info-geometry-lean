@@ -73,17 +73,4 @@ theorem vielbeinR_reconstitution (a : Fin d) :
   have h2 : (1 / 2 : R) + (1 / 2 : R) = 1 := by norm_num
   rw [h2, one_smul]
 
-/-- **Master Synthesis**: Мастър Теорема за Амари-Картановото Повдигане.
-    Унифицира гравитационния събирателен сектор и торзионния разностен сектор. -/
-theorem master_chiral_amari_operator_synthesis (a b : Fin d) :
-    (connectionSum s a b + (1 / 2 : R) • connectionDiff s a b = s.connL a b) ∧
-    (connectionSum s a b - (1 / 2 : R) • connectionDiff s a b = s.connR a b) ∧
-    (vielbeinVector s a + vielbeinAxial s a = s.vielbeinL a) ∧
-    (vielbeinVector s a - vielbeinAxial s a = s.vielbeinR a) := ⟨
-  connectionL_reconstitution s a b,
-  connectionR_reconstitution s a b,
-  vielbeinL_reconstitution s a,
-  vielbeinR_reconstitution s a
-⟩
-
 end InfoGeometry.Canonical

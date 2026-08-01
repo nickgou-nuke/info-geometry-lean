@@ -97,24 +97,4 @@ theorem riemann_half_fixed : riemannReflectReal (1/2 : ℚ) = 1/2 := by
 theorem riemann_half_recenters_to_klein_zero : recenterCriticalLine (1/2 : ℚ) = 0 := by
   norm_num [recenterCriticalLine]
 
-/-- Main synthesis theorem. -/
-theorem projective_kappa_klein_mobius_synthesis :
-    Mx * Ly = - (Ly * Mx) ∧
-    (Mx * Ly) * (Mx * Ly) = (-1 : ℂ) • (1 : M2C) ∧
-    (∀ k : KPoint, affineM (affineM k) = recipY k) ∧
-    (∀ z : ℂ, halfShiftPhase (halfShiftPhase z) = z) ∧
-    subK (addK kappaM (mirrorK kappaM)) kappaE = (0, 1) ∧
-    ReciprocalLatticePoint (subK (addK kappaM (mirrorK kappaM)) kappaE) ∧
-    riemannReflectReal (1/2 : ℚ) = 1/2 ∧
-    recenterCriticalLine (1/2 : ℚ) = 0 := by
-  exact ⟨Mx_Ly_anticomm, MxLy_sq_neg_one, affineM_sq, halfShiftPhase_sq,
-    kappa_square_defect, kappa_square_defect_in_lattice, riemann_half_fixed,
-    riemann_half_recenters_to_klein_zero⟩
-
-#check Mx_Ly_anticomm
-#check MxLy_sq_neg_one
-#check affineM_sq
-#check kappa_square_defect_in_lattice
-#check projective_kappa_klein_mobius_synthesis
-
 end ProjectiveKappaKleinMobius

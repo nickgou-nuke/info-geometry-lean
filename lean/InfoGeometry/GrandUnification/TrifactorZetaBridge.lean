@@ -58,10 +58,4 @@ theorem state_in_vacuum_sector_of_active_channels_vanish (ρ : H)
   rw [add_smul, h_chiral_anomaly, add_zero] at h_sum
   exact h_sum
 
-@[deprecated state_in_vacuum_sector_of_active_channels_vanish (since := "2026-06-10")]
-theorem riemann_zeros_in_vacuum_sector (ρ : H) (_h_zero : JSymmetricMode J ρ)
-    (h_chiral_anomaly : (P_plus O_scale + P_minus O_scale) • ρ = 0) :
-    P_zero O_scale • ρ = ρ :=
-  state_in_vacuum_sector_of_active_channels_vanish O_scale ρ h_chiral_anomaly
-
 end InfoGeometry.GrandUnification.TrifactorZeta

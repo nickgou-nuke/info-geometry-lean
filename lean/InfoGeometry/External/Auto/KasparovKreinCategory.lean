@@ -149,8 +149,10 @@ theorem kasparov_krein_product_chain_collapses_via_connes_bridge
         (inferInstance : CuntzKTheoryPairing.ConnesChernPairing
           CuntzKTheoryPairing.O2_K0 K1).pair k ξ := by
     simpa [kkBoundaryPairing] using hPair
-  exact CuntzKTheoryPairing.connes_chern_holographic_minimization_summary
-    (H := H) C hFaith S0 c hc k ξ hPair'
+  rcases CuntzKTheoryPairing.O2_pairing_triviality_yields_full_anomaly_collapse
+      (H := H) C hFaith S0 c hc k ξ hPair' with
+    ⟨hδ, _hIndex, hMin, hUnique, hLeak⟩
+  exact ⟨hδ, hMin, hUnique, hLeak⟩
 
 /--
 Typed Kasparov-chain firewall principle: a contractible O₂ boundary has no

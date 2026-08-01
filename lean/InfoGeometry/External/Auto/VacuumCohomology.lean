@@ -87,15 +87,5 @@ theorem corriolis_force_balance (M : MetriplecticTensor V) (v : V) (ω : ℝ) :
   rw [h_zero]
   ring
 
-/-- Synthesis Theorem: Vacuum is the cohomological foundation. 
-All boundaries in the complex vanish when properly projected, and inherently fall into the vacuum state. -/
-theorem vacuum_is_cohomological_foundation (bnd : BoundaryOperator V) :
-    (0 ∈ vacuum_state bnd) ∧
-    (∀ v : V, bnd.d (bnd.d v) = 0) := by
-  constructor
-  · exact Submodule.zero_mem (vacuum_state bnd)
-  · intro v
-    exact boundary_squared_vanishes bnd v
-
 end VacuumCohomology
 end noncomputable section

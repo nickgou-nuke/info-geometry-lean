@@ -33,13 +33,4 @@ theorem modularMirrorReflection_involutive
   simp only [mul_assoc]
   rw [hM.sq_eq_one, mul_one, ← mul_assoc, hM.sq_eq_one, one_mul]
 
-/-- **Master Synthesis**: Майоранова Конформна Сфера & Виртуален Комутант Synthesis. -/
-theorem master_majorana_conformal_commutant_synthesis
-    (gamma x : R) (hM : MajoranaBoundaryOperator gamma) :
-    (modularMirrorReflection gamma gamma = gamma) ∧
-    (modularMirrorReflection gamma (modularMirrorReflection gamma x) = x) := ⟨
-  majorana_modular_invariant gamma hM,
-  modularMirrorReflection_involutive gamma x hM
-⟩
-
 end InfoGeometry.Canonical

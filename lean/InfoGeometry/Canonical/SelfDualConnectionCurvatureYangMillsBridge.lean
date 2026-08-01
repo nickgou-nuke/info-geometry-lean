@@ -65,23 +65,5 @@ theorem anti_self_dual_connection_curvature_solves_yang_mills
   have h_cov_neg := covariantDerivative_neg A d (curvatureFromConnection d A)
   exact anti_self_dual_solves_yang_mills star A d (curvatureFromConnection d A) h_anti_self_dual h_cov_neg h_bianchi
 
-/-- **Theorem**: Master Self-Dual Connection Curvature Yang-Mills Synthesis.
-    Unifies:
-    1. Linearity lemma D_A (-M) = - D_A M.
-    2. Connection curvature identification F_A = d A + A * A.
-    3. Self-dual connection curvature instanton theorem: ★ F_A = F_A and D_A F_A = 0 imply D_A (★ F_A) = 0.
-    4. Anti-self-dual connection curvature instanton theorem: ★ F_A = -F_A and D_A F_A = 0 imply D_A (★ F_A) = 0 without extra linearity hypotheses.
-    5. Complete machine-checked proof closure for non-Abelian Yang-Mills gauge field curvature instanton solutions. -/
-theorem master_self_dual_connection_curvature_yang_mills_synthesis
-    (star : Module.End R (ExteriorAlgebra R V))
-    (A : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
-    (d : Module.End R (ExteriorAlgebra R V))
-    (h_self_dual : isSelfDualCurvature star (curvatureFromConnection d A))
-    (h_bianchi : covariantDerivative A d (curvatureFromConnection d A) = 0) :
-    (covariantDerivative A d (matrixHodgeStar star (curvatureFromConnection d A)) = 0) ∧
-    (covariantDerivative A d (- (curvatureFromConnection d A)) = - covariantDerivative A d (curvatureFromConnection d A)) := ⟨
-  self_dual_connection_curvature_solves_yang_mills star A d h_self_dual h_bianchi,
-  covariantDerivative_neg A d (curvatureFromConnection d A)
-⟩
 
 end InfoGeometry.Canonical.SelfDualConnectionCurvatureYangMillsBridge

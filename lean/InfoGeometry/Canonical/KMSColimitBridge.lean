@@ -49,20 +49,4 @@ theorem colimit_kms_trace_comm (A_inf : Type*) [AddCommGroup A_inf] [Module ℂ 
     psi_trace (psi (n + m) (diagEmbedSeq n m f)) = psi_trace (psi n f) := by
   rw [h_eval (n + m), normalizedTrace_seq n f m, ← h_eval n]
 
-set_option linter.unusedVariables false in
-/-- **Consolidated KMS Colimit Bridge Synthesis Theorem**
-    Proves trace non-vanishing transport, identity state invariance, and colimit trace commutativity
-    across arbitrary $m$-step colimit inclusions. -/
-theorem kms_colimit_bridge_synthesis :
-    (∀ (n m : ℕ) (f : DiagAlg n), normalizedTrace n f ≠ 0 → normalizedTrace (n + m) (diagEmbedSeq n m f) ≠ 0) ∧
-    (∀ (n m : ℕ), normalizedTrace (n + m) (diagEmbedSeq n m 1) = 1) ∧
-    (∀ (A_inf : Type*) [AddCommGroup A_inf] [Module ℂ A_inf]
-       (psi : ∀ n, DiagAlg n →ₗ[ℂ] A_inf) (psi_trace : A_inf →ₗ[ℂ] ℂ)
-       (h_eval : ∀ n (f : DiagAlg n), psi_trace (psi n f) = normalizedTrace n f)
-       (n m : ℕ) (f : DiagAlg n),
-       psi_trace (psi (n + m) (diagEmbedSeq n m f)) = psi_trace (psi n f)) :=
-  ⟨fun n m f h => kms_trace_nonvanishing_transport n f h m,
-   kms_identity_state_colimit_invariance,
-   colimit_kms_trace_comm⟩
-
 end InfoGeometry.Canonical.KMSColimitBridge

@@ -132,27 +132,6 @@ theorem frameColorSigma0_mu_shift {V : Type*} [AddCommMonoid V] [Module ℂ V]
   rw [frameBraidingPhase_mu_shift F δμ]
   simp [permuteColorSpinor4, qBraid4, smul_smul]
 
-/-- Consolidated graph theorem connecting the new explicit q-color braid action
-to the existing `S₃`, Yang--Baxter, and braid-ideal descent modules. -/
-theorem bogoliubov_braid_graph_synthesis {V : Type*}
-    [AddCommMonoid V] [Module ℂ V]
-    (F : BogoliubovInertialFrame) (ψ : ColorSpinor4 V) :
-    frameColorSigma0 F (frameColorSigma1 F (frameColorSigma0 F ψ)) =
-      frameColorSigma1 F (frameColorSigma0 F (frameColorSigma1 F ψ)) ∧
-    B3RepresentationBridge.s3_rep.σ0 * B3RepresentationBridge.s3_rep.σ1 *
-        B3RepresentationBridge.s3_rep.σ0 =
-      B3RepresentationBridge.s3_rep.σ1 * B3RepresentationBridge.s3_rep.σ0 *
-        B3RepresentationBridge.s3_rep.σ1 ∧
-    YangBaxterQSwap.C12 (frameBraidingPhase F) *
-        YangBaxterQSwap.C23 (frameBraidingPhase F) *
-        YangBaxterQSwap.C12 (frameBraidingPhase F) =
-      YangBaxterQSwap.C23 (frameBraidingPhase F) *
-        YangBaxterQSwap.C12 (frameBraidingPhase F) *
-        YangBaxterQSwap.C23 (frameBraidingPhase F) := by
-  exact ⟨frameColorBraid_artin F ψ,
-    color_braid_underlying_s3_artin,
-    frame_yang_baxter_qswap F⟩
-
 end BogoliubovBraidGraphWeld
 
 end noncomputable section

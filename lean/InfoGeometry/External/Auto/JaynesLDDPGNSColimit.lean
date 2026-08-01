@@ -66,17 +66,6 @@ theorem cut_equals_fractal_one_step
     cylinder (n + 1) (diagEmbedSucc n f) = cylinder n f :=
   ⟨embedded_cylinder_mem_colimit n f, embedded_cylinder_same_point n f⟩
 
-/-- Finite synthesis of self-relative entropy and UHF successor compatibility.
-This is not a categorical-colimit or GNS-completion theorem. -/
-theorem jaynes_lddp_colimit_synthesis
-    {α : Type*} [DecidableEq α]
-    (S : Finset α) (p : α → ℝ) (hp : ∀ a ∈ S, p a ≠ 0)
-    (n : ℕ) (f : DiagAlg n) :
-    jaynesRelativeEntropy S p p = 0 ∧
-    cylinder (n + 1) (diagEmbedSucc n f) = cylinder n f :=
-  ⟨jaynesRelativeEntropy_self S p hp,
-    categorical_lddp_cylinder_compatibility n f⟩
-
 end JaynesLDDPGNSColimit
 
 end noncomputable section

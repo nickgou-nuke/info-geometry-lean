@@ -18,21 +18,4 @@ open QuadricConf3BraidingCooperadBridge
 open VertexAlgebraBraidingCocycle
 open VertexAlgebraBraidingCocycle.EdgeSystem
 
-/-- Finite product-candidate cardinality, cooperad edge counts, and exact
-triangle-cycle identities. -/
-theorem product_candidate_cooperad_cycle_summary
-    (b : BlockDecomp3)
-    (S : EdgeSystem Vertex3) (potential : Vertex3 → ℝ)
-    (hExact : IsExact S potential) :
-    Fintype.card ProductBasis = 32 ∧
-    (arityThreeInternalEdges b).card = 1 ∧
-    (arityThreeOuterEdges b).card = 2 ∧
-    cycleEntropyProduction S triangle012 = 0 ∧
-    cycleEntropyProduction S triangle021 = 0 := by
-  exact ⟨productBasis_card,
-    (arityThree_cooperad_partition_counts b).1,
-    (arityThree_cooperad_partition_counts b).2,
-    (exact_three_vertex_cycle_summary S potential hExact).1,
-    (exact_three_vertex_cycle_summary S potential hExact).2⟩
-
 end CooperadEnvironmentalRank32

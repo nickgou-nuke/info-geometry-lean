@@ -289,24 +289,6 @@ theorem cooperad_action_eq
 
 end DeRhamCohomologyData
 
-/-- Finite theorem-honest synthesis: the arity-three combinatorics and generator
-degrees compile; analytic de Rham completeness remains explicit comparison data. -/
-theorem quadratic_configuration3_synthesis (E : EvenDimension) :
-    (∀ e : Edge3, genDegree E.D ⟨e, GenKind.alpha⟩ = 1) ∧
-    (∀ e : Edge3, genDegree E.D ⟨e, GenKind.beta⟩ = E.D - 1) ∧
-    (∀ b : BlockDecomp3, ∃ e : Edge3, cooperadEdge b e = TargetFactor.internal) ∧
-    (∀ b : BlockDecomp3, ∀ e : Edge3,
-      cooperadEdge b e = TargetFactor.outer ∨ cooperadEdge b e = TargetFactor.internal) := by
-  constructor
-  · intro e
-    rfl
-  constructor
-  · intro e
-    rfl
-  constructor
-  · exact cooperad_has_internal_edge
-  · exact cooperad_edge_outer_or_internal
-
 end QuadraticConfiguration3
 
 end noncomputable section

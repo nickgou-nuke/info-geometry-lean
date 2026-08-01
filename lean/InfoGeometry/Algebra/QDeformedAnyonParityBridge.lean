@@ -59,31 +59,4 @@ theorem bosonic_parity_commute {R : Type*} [CommRing R] (gamma a_star : R)
   rw [h_scale]
   ring
 
-/-- **Theorem**: Master q-Deformed Anyonic Parity Synthesis.
-    Unifies:
-    1. CAR limit {a, a*} = 1 at q = -1.
-    2. Cuntz isometry limit a a* = 1 at q = 0.
-    3. CCR limit [a, a*] = 1 at q = +1.
-    4. Fermionic parity anticommutator Γ a* = - a* Γ.
-    5. Bosonic parity commutator Γ a* = a* Γ. -/
-theorem master_q_deformed_anyon_parity_synthesis
-    {R : Type*} [CommRing R]
-    (g_car : QMutatorGenerators R (-1))
-    (g_cuntz : QMutatorGenerators R 0)
-    (g_ccr : QMutatorGenerators R 1)
-    (gamma_fermion gamma_bosonic a_star : R)
-    (h_ferm : qParityScalingRelation (-1) gamma_fermion a_star)
-    (h_bos : qParityScalingRelation 1 gamma_bosonic a_star) :
-    (g_car.a * g_car.a_star + g_car.a_star * g_car.a = 1) ∧
-    (g_cuntz.a * g_cuntz.a_star = 1) ∧
-    (g_ccr.a * g_ccr.a_star - g_ccr.a_star * g_ccr.a = 1) ∧
-    (gamma_fermion * a_star = - (a_star * gamma_fermion)) ∧
-    (gamma_bosonic * a_star = a_star * gamma_bosonic) := ⟨
-  q_mutator_car_limit g_car,
-  q_mutator_cuntz_limit g_cuntz,
-  q_mutator_ccr_limit g_ccr,
-  fermionic_parity_anticommute gamma_fermion a_star h_ferm,
-  bosonic_parity_commute gamma_bosonic a_star h_bos
-⟩
-
 end InfoGeometry.Algebra.QDeformedAnyonParityBridge

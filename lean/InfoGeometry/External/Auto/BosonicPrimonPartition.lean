@@ -59,16 +59,4 @@ theorem finite_2_3_bosonic_partition (β : ℝ) (K : ℕ) :
       twoPrimeBosonPartition 2 3 β K :=
   finite_two_prime_euler_product 2 3 β K
 
-/-- Consolidated finite bosonic partition package. -/
-theorem bosonic_primon_partition_synthesis :
-    (∀ p β, bosonOccupationWeight p β 0 = 1) ∧
-    (∀ p β k, bosonOccupationWeight p β (k + 1) =
-      bosonOccupationWeight p β k * primeBoltzmannWeight p β) ∧
-    (∀ p β K, singlePrimeBosonPartition p β (K + 1) =
-      singlePrimeBosonPartition p β K + bosonOccupationWeight p β (K + 1)) ∧
-    (∀ p q β K, singlePrimeBosonPartition p β K * singlePrimeBosonPartition q β K =
-      twoPrimeBosonPartition p q β K) := by
-  exact ⟨bosonOccupationWeight_zero, bosonOccupationWeight_succ,
-    singlePrimeBosonPartition_succ, finite_two_prime_euler_product⟩
-
 end noncomputable section

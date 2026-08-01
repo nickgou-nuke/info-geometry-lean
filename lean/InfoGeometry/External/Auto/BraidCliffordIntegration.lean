@@ -112,25 +112,6 @@ theorem finite_adjacent_to_infinite {n : ℕ} {i j : Fin n}
     (h : i.1 + 1 = j.1) :
     finiteToInfinite i + 1 = finiteToInfinite j := h
 
-/-- Consolidated bridge: Artin skeleton, Clifford amplitude, and two-atom representation. -/
-theorem braid_clifford_integration_synthesis :
-    (∀ {u v : List ℕ}, ArtinMove u v → u.length = v.length) ∧
-    (∀ {u v : List ℕ}, ArtinMove u v → ∀ q : ℝ,
-      uniformCliffordAmplitude q u = uniformCliffordAmplitude q v) ∧
-    (∀ {u v : List ℕ}, ArtinMove u v → ∀ α : ℝ,
-      braidWordWittenWeight α u = braidWordWittenWeight α v) ∧
-    (∀ i : ℕ,
-      cliffordBraidGate i * cliffordBraidGate (i + 1) * cliffordBraidGate i =
-        cliffordBraidGate (i + 1) * cliffordBraidGate i * cliffordBraidGate (i + 1)) ∧
-    (∀ i j : ℕ, cliffordBraidGate i * cliffordBraidGate j = cliffordBraidGate j * cliffordBraidGate i) ∧
-    (∀ n : ℕ, ∀ i : Fin n, finiteToInfinite (Fin.castSucc i) = finiteToInfinite i) := by
-  exact ⟨fun {u v} h => ArtinMove.length_eq h,
-    fun {u v} h q => artinMove_preserves_uniformCliffordAmplitude h q,
-    fun {u v} h α => artinMove_preserves_braidWordWittenWeight h α,
-    clifford_adjacent_artin,
-    clifford_separated_artin,
-    fun _ i => finiteToInfinite_castSucc i⟩
-
 end InfoGeometry.GrandUnification.BraidCliffordIntegration
 
 end noncomputable section

@@ -33,17 +33,4 @@ theorem annihilation_single_particle_pairing (u : U) (beta : U →ₗ[R] R) :
     (evaluationLinear u beta) • (vacuumState R U) = beta u • (vacuumState R U) :=
   rfl
 
-/-- **Theorem**: Master Cross-Anticommutator & State Reduction Synthesis.
-    Unifies:
-    1. Cross-anticommutator scalar right-hand side identity (ev_u α) • ω = α(u) • ω.
-    2. Annihilation operator pairing on single-particle state a_u |β⟩ = β(u) • |0⟩.
-    3. Structural completion of the CAR ladder operator algebra. -/
-theorem master_cross_anticommutator_synthesis
-    (u : U) (alpha beta : U →ₗ[R] R) (omega : ExteriorAlgebra R (U →ₗ[R] R)) :
-    (((evaluationLinear u alpha) • omega = alpha u • omega) ∧
-     ((evaluationLinear u beta) • (vacuumState R U) = beta u • (vacuumState R U))) := ⟨
-  cross_anticommutator_scalar_identity u alpha omega,
-  annihilation_single_particle_pairing u beta
-⟩
-
 end InfoGeometry.Canonical.CrossAnticommutatorBridge

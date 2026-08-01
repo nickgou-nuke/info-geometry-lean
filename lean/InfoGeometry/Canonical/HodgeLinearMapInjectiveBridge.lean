@@ -52,21 +52,4 @@ theorem harmonicToCohomologyLinearMap_injective
   rw [sub_eq_zero] at h_diff_zero
   exact h_diff_zero
 
-/-- **Theorem**: Master Hodge Linear Map Injectivity Synthesis.
-    Unifies:
-    1. Linear harmonic projection map π_H : ker(Δ) →ₗ[R] H_d.
-    2. Harmonic exact form zero theorem w ∈ im(d) ∩ ker(d*) → w = 0.
-    3. Literal machine-checked injectivity theorem Function.Injective π_H.
-    4. Exact formal proof closure of the injectivity half of the Hodge Isomorphism Theorem. -/
-theorem master_hodge_linear_map_injective_synthesis
-    (d dstar : Module.End R (ExteriorAlgebra R V))
-    (h_closed : ∀ w ∈ harmonicSubmodule d dstar, d w = 0)
-    (h_coclosed : ∀ w ∈ harmonicSubmodule d dstar, dstar w = 0)
-    (inner : ExteriorAlgebra R V → ExteriorAlgebra R V → R)
-    (h_pos : ∀ x, inner x x = 0 → x = 0)
-    (h_adj : ∀ α w, inner (d α) w = inner α (dstar w))
-    (h_zero : ∀ α, inner α 0 = 0) :
-    Function.Injective (harmonicToCohomologyLinearMap d dstar h_closed) :=
-  harmonicToCohomologyLinearMap_injective d dstar h_closed h_coclosed inner h_pos h_adj h_zero
-
 end InfoGeometry.Canonical.HodgeLinearMapInjectiveBridge

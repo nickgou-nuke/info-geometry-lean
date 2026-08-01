@@ -451,22 +451,6 @@ theorem defect_mul_braidedCubicSupercharge : D.P0 * D.Qbr = 0 := by
       _ = 0 := by noncomm_ring
   rw [h1, h2, zero_mul, zero_mul]
 
-/-- **Master Abstract Braided Compression Synthesis Theorem**. -/
-theorem master_abstract_braided_compression_synthesis :
-    (∀ x : InfoGeometry.Physics.B3PresentedGroup.B3,
-      Commute (D.b3Representation fullTwistWord) (D.b3Representation x)) ∧
-    D.Qbr * D.Qbr * D.Qbr = (D.b3Representation fullTwistWord : A) * D.H ∧
-    star D.Qbr * D.Qbr = D.H ∧
-    D.Qbr * star D.Qbr = D.H ∧
-    D.Qbr * D.P0 = 0 ∧
-    D.P0 * D.Qbr = 0 := ⟨
-  fullTwist_is_central_in_b3_image D,
-  braidedCubicSupercharge_cube D,
-  braidedCubicSupercharge_star_mul_self D,
-  braidedCubicSupercharge_mul_star D,
-  braidedCubicSupercharge_mul_defect D,
-  defect_mul_braidedCubicSupercharge D
-⟩
 
 end BraidedProjectionData
 

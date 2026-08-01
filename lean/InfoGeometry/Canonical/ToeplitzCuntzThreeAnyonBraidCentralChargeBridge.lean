@@ -126,15 +126,5 @@ theorem braidedCubicSupercharge_cube_eq_fullTwist_hamiltonian (D : BraidedExcita
       hH_sq D.preserves_H_left1 D.preserves_H_left2
       hFull (fullTwist_comm_hamiltonian g D)
 
-/-- **Master Synthesis**: Anyonic Braid Central Charge Q_br³ = Z_twist H. -/
-theorem master_toeplitz_cuntz_three_anyon_braid_synthesis (D : BraidedExcitationData g) :
-    braidedCubicSupercharge g D * g.P0 = 0 ∧
-    g.P0 * braidedCubicSupercharge g D = 0 ∧
-    braidedCubicSupercharge g D * braidedCubicSupercharge g D * braidedCubicSupercharge g D =
-      fullTwist g D * g.susyHamiltonian := ⟨
-  braidedCubicSupercharge_vacuum_annihilation g D,
-  vacuum_braidedCubicSupercharge_annihilation g D,
-  braidedCubicSupercharge_cube_eq_fullTwist_hamiltonian g D
-⟩
 
 end InfoGeometry.Canonical.ToeplitzCuntzThreeAnyonBraidCentralChargeBridge

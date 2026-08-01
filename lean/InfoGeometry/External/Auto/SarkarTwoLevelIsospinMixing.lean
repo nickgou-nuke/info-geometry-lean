@@ -170,17 +170,6 @@ theorem tableI_selected_percent_values :
   norm_num [P30_bi2_percent, S32_bf2_percent, Cl34_bi2_percent,
     Ar36_bf2_percent]
 
-def formalSummary : Prop :=
-    Mg24_obsGap = 3477 / 25 ∧
-    Mg24_b2_gap = 567 / 1159 ∧
-    unperturbedGap Mg24_E1 Mg24_E2 Mg24_b2_gap = Mg24_shellGap ∧
-    Co54_H22_central - Co54_H11_central = 992 / 5 ∧
-    P30_bi2_percent = 4723 / 1000
-
-theorem formalSummary_proved : formalSummary := by
-  exact ⟨Mg24_observed_gap_exact, Mg24_gap_formula_b2_exact,
-    Mg24_unperturbed_gap_reconstructs, Co54_table_unperturbed_gap_exact, rfl⟩
-
 end SarkarTwoLevelIsospinMixing
 
 end noncomputable section

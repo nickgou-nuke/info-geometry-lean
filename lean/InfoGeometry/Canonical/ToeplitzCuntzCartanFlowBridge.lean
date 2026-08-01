@@ -66,16 +66,4 @@ theorem cartanFlow_QPlus_transformation
   rw [star_mul]
   ring
 
-/-- **Master Synthesis**: Картанов Поток върху Топлиц-Кунц Алгебрата Synthesis. -/
-theorem master_toeplitz_cuntz_cartan_flow_synthesis
-    (u1 u2 : CartanPhaseElement R) (g : ToeplitzCuntzGenerators R) :
-    (star (cartanFlowV1 u1 g) * cartanFlowV1 u1 g = 1) ∧
-    (1 - (cartanFlowV1 u1 g * star (cartanFlowV1 u1 g) +
-          cartanFlowV2 u2 g * star (cartanFlowV2 u2 g)) = ToeplitzCuntzGenerators.P0 g) ∧
-    (cartanFlowV1 u1 g * star (cartanFlowV2 u2 g) = (u1.val * star u2.val) * ToeplitzCuntzGenerators.QPlus g) := ⟨
-  cartanFlow_V1_isometry u1 g,
-  cartanFlow_vacuum_invariant u1 u2 g,
-  cartanFlow_QPlus_transformation u1 u2 g
-⟩
-
 end InfoGeometry.Canonical

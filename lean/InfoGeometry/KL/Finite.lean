@@ -52,12 +52,3 @@ theorem divergence_nonneg {α : Type*} [MeasurableSpace α]
   zero_le _
 
 end InfoGeometry.KL
-
-namespace InfoGeometry
-
-/-- `fin_kl_div` and `fin_kl_div` are definitionally identical. -/
-lemma fin_kl_div_eq_KL_divergence
-    {α : Type*} [MeasurableSpace α] (p q : FinProb α) :
-    fin_kl_div p q = fin_kl_div p q := rfl
-
-end InfoGeometry

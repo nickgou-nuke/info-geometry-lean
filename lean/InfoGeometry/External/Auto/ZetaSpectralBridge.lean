@@ -76,20 +76,6 @@ theorem finitePrimonMellin_log_generator_eq_KAN_logdet (n : ℕ) :
       ∑ i : Fin (n + 1), Real.log ((i.1 + 1 : ℝ)) :=
   InfoGeometry.Quantum.PrimonCuntzTower.primonCuntz_tower_kan_log_bridge n
 
-/--
-Bundled finite bridge: heat trace, Gamma-normalized Mellin trace, Dirichlet
-trace, and KAN log-determinant generator all describe the same finite spectrum.
--/
-theorem finitePrimonMellin_KAN_synthesis (n : ℕ) (s : ℂ) :
-    finitePrimonHeatTrace n s = finitePrimonMellinTrace n s ∧
-      finitePrimonMellinTrace n s = finitePrimonDirichletTrace n s ∧
-      Real.log (Matrix.det (InfoGeometry.Quantum.KANFormalization.KANFactor.total
-        (InfoGeometry.Quantum.PrimonCuntzTower.primonCuntzKANFactor n))) =
-        ∑ i : Fin (n + 1), Real.log ((i.1 + 1 : ℝ)) := by
-  exact ⟨finitePrimonHeatTrace_eq_mellin n s,
-    finitePrimonMellinTrace_eq_dirichlet n s,
-    finitePrimonMellin_log_generator_eq_KAN_logdet n⟩
-
 /-!
 Infinite algebraic analyticity interface
 

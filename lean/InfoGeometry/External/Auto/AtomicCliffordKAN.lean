@@ -166,26 +166,4 @@ theorem finiteBulkWittenIndex_insert {S : Finset ℕ} {p : ℕ} (hp : p ∉ S) (
       (2 * Real.sinh (α p)) * finiteBulkWittenIndex S α := by
   rw [finiteBulkWittenIndex_eq, Finset.prod_insert hp, finiteBulkWittenIndex_eq]
 
-/-- Consolidated finite Clifford-atom package. -/
-theorem atomic_clifford_kan_synthesis :
-    sigmaPlus * sigmaPlus = (0 : M2R) ∧
-    sigma3 * sigma3 = (1 : M2R) ∧
-    iSigma2 * iSigma2 = -(1 : M2R) ∧
-    sigma3 * iSigma2 + iSigma2 * sigma3 = (0 : M2R) ∧
-    sigma3 * sigma3 * sigma3 = sigma3 ∧
-    Pzero = (0 : M2R) ∧
-    (∀ θ α n, atomicSupertrace (atomicNormalForm θ α n) =
-      2 * Real.sinh α * Real.cos θ - n * Real.exp (-α) * Real.sin θ) ∧
-    (∀ α, atomicSupertrace (atomicNormalForm 0 α 0) = 2 * Real.sinh α) ∧
-    (∀ p w z, (tracelessSplit p w z).det = p ^ 2 - w ^ 2 - z ^ 2) ∧
-    (∀ p w z, atomicSupertrace (tracelessSplit p w z) = 2 * z) ∧
-    (∀ t p w z, (paravectorSplit t p w z).det = t ^ 2 + p ^ 2 - w ^ 2 - z ^ 2) ∧
-    (∀ t p w z, onChiralLightCone t p w z ↔ t ^ 2 + p ^ 2 = w ^ 2 + z ^ 2) ∧
-    (∀ S α, finiteBulkWittenIndex S α = ∏ p ∈ S, 2 * Real.sinh (α p)) := by
-  exact ⟨sigmaPlus_sq, sigma3_sq, iSigma2_sq, sigma3_iSigma2_anticomm,
-    sigma3_cubed, Pzero_eq_zero, atomicSupertrace_formula,
-    atomicSupertrace_pure_squeeze, tracelessSplit_det,
-    atomicSupertrace_tracelessSplit, paravectorSplit_det,
-    onChiralLightCone_iff, finiteBulkWittenIndex_eq⟩
-
 end InfoGeometry.GrandUnification.AtomicCliffordKAN

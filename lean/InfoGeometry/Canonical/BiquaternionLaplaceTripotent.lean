@@ -107,16 +107,4 @@ structure ResolventScaleLimit where
   zeroMonodromyOnlyAsLimit :
     Filter.Tendsto monodromy (nhdsWithin 0 ({0}ᶜ : Set ℂ)) (nhds 0)
 
-/-- Synthesis theorem. -/
-theorem biquaternion_laplace_tripotent_synthesis :
-    (∀ s a₀ a₁ a₂ a₃ : ℂ,
-      (s • (1 : M2C) - biquatX a₀ a₁ a₂ a₃) * resolventNumerator s a₀ a₁ a₂ a₃ =
-        resolventDenominator s a₀ a₁ a₂ a₃ • (1 : M2C)) ∧
-    (∀ z : ℂ, Complex.exp z ≠ 0) ∧
-    Trip * Trip * Trip = Trip ∧
-    (∀ s : ℂ, (scaleMatrix s).det = (s - 1) * (s + 1) * s) ∧
-    (scaleMatrix 1).det = 0 ∧ (scaleMatrix (-1)).det = 0 ∧ (scaleMatrix 0).det = 0 := by
-  exact ⟨biquat_resolvent_left, complex_exp_ne_zero, Trip_tripotent,
-    scaleMatrix_det, scale_det_at_one, scale_det_at_neg_one, scale_det_at_zero⟩
-
 end BiquaternionLaplaceTripotent

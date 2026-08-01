@@ -90,20 +90,4 @@ theorem tripotentPole_zeros_det (p : TripotentPole) :
 
 /-! ## 4. Synthesis -/
 
-/-- Master synthesis theorem. -/
-theorem penrose_kms_spectral_dimension_synthesis
-    (phi : ℝ) (h_sq : phi * phi = phi + 1) (h_pos : 0 < phi)
-    {ρ : ℝ} (hlog : Real.log ρ ≠ 0) :
-    (PenroseM 0 0 + PenroseM 1 1 = 3) ∧
-    PenroseM.det = 1 ∧
-    (phi * phi) * (phi * phi) - 3 * (phi * phi) + 1 = 0 ∧
-    0 < phi * phi ∧
-    binaryCantorDimension ρ * Real.log ρ = Real.log 2 ∧
-    Trip * Trip * Trip = Trip ∧
-    (∀ s : ℂ, (scaleMatrix s).det = (s - 1) * (s + 1) * s) ∧
-    (∀ p : TripotentPole, (scaleMatrix p.value).det = 0) := by
-  exact ⟨PenroseM_trace_det.1, PenroseM_trace_det.2, perronRoot_char phi h_sq,
-    perronRoot_pos phi h_pos, binaryCantorDimension_log_identity hlog,
-    Trip_tripotent, scaleMatrix_det, tripotentPole_zeros_det⟩
-
 end PenroseKMSSpectralDimension

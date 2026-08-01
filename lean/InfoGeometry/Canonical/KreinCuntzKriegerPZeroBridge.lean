@@ -63,18 +63,4 @@ theorem krein_norm_physical_sector_positive
   dsimp [kreinInnerProduct, P0_projection]
   rw [gamma_action_on_Pplus Gamma P_plus P_minus h_gamma h_ortho h_idemp psi]
 
-/-- **Master Synthesis**: Cuntz-Krieger Krein Space & BRST Physical Sector Unitarity. -/
-theorem master_krein_cuntz_krieger_p0_synthesis
-    (inner_H : H →ₗ[ℂ] H →ₗ[ℂ] ℂ)
-    (Gamma P_plus P_minus : Module.End ℂ H)
-    (h_gamma : Gamma = P_plus - P_minus)
-    (h_ortho : P_minus.comp P_plus = 0)
-    (h_idemp : P_plus.comp P_plus = P_plus) :
-    (∀ psi : H, Gamma (P_plus psi) = P_plus psi) ∧
-    (∀ psi : H,
-      kreinInnerProduct inner_H Gamma (P0_projection P_plus psi) (P0_projection P_plus psi) =
-      inner_H (P_plus psi) (P_plus psi)) := by
-  exact ⟨fun psi => gamma_action_on_Pplus Gamma P_plus P_minus h_gamma h_ortho h_idemp psi,
-         fun psi => krein_norm_physical_sector_positive inner_H Gamma P_plus P_minus h_gamma h_ortho h_idemp psi⟩
-
 end InfoGeometry.Canonical.KreinCuntzKriegerPZeroBridge

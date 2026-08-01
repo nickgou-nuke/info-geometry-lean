@@ -30,17 +30,4 @@ theorem madelung_quantum_potential_linearization (u laplacian_u Q : ℝ)
       rw [h1, h2]
     _ = 0 := by ring
 
-/-- **Theorem 3: Master Madelung Hydrodynamic & Fisher-Rao Metric Synthesis**.
-    Unifies:
-    1. Fisher-Rao line element equivalence (dρ)^2 / ρ = 4 (du)^2.
-    2. Bohm-Madelung quantum potential operator linearization 2 u Q + laplacian_u = 0. -/
-theorem master_madelung_fisher_rao_synthesis
-    (u du dρ laplacian_u Q : ℝ) (hu : 0 < u) (hdρ : dρ = 2 * u * du)
-    (hQ : Q = - (1 / 2) * (laplacian_u / u)) :
-    (dρ * dρ / (u * u) = 4 * (du * du)) ∧
-    (2 * u * Q + laplacian_u = 0) := ⟨
-  madelung_fisher_rao_line_element u du dρ hu hdρ,
-  madelung_quantum_potential_linearization u laplacian_u Q hQ hu
-⟩
-
 end InfoGeometry.Canonical.MadelungFisherRaoSynthesisBridge

@@ -94,7 +94,6 @@ structure RegularWeylGNS (V A H : Type*)
   R : V → H →L[ℂ] H
   exp_generator_matches_weyl :
     ∀ u : V, NormedSpace.exp (R u) = pi (𝓦.W u)
-  identity_trace_status : String
 
 @[simp] theorem gns_vacuum_expectation
     {V A H : Type*}
@@ -121,19 +120,6 @@ theorem regular_generator_exp
     {𝓦 : WeylSystem V A} (G : RegularWeylGNS V A H 𝓦) (u : V) :
     NormedSpace.exp (G.R u) = G.pi (𝓦.W u) :=
   G.exp_generator_matches_weyl u
-
-theorem gns_weyl_colimit_kernel :
-    (∀ u v : RPhaseSpace 1,
-      canonicalSigma (pad1to2 u) (pad1to2 v) = canonicalSigma u v) ∧
-    (∀ u : RPhaseSpace 1, normSq (pad1to2 u) = normSq u) ∧
-    (∀ u v : RPhaseSpace 1,
-      weylPhase (canonicalSigma (pad1to2 u) (pad1to2 v)) =
-        weylPhase (canonicalSigma u v)) ∧
-    (∀ u : RPhaseSpace 1, fockState (pad1to2 u) = fockState u) ∧
-    fockState (0 : RPhaseSpace 1) = 1 := by
-  exact ⟨fun u v => pad1to2_sigma u v, fun u => pad1to2_normSq u,
-    fun u v => weylPhase_pad1to2 u v, fun u => fockState_pad1to2 u,
-    fockState_zero_one⟩
 
 end SarsGNSWeyl
 

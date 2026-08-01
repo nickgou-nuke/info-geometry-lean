@@ -15,6 +15,14 @@ def twoTz (X : Nucleus) : ℤ :=
 def isMirrorPair (X Y : Nucleus) : Prop :=
   X.A = Y.A ∧ X.Z = Y.N ∧ X.N = Y.Z
 
+/- A mirror pair reverses the signed proton-neutron imbalance. -/
+theorem twoTz_eq_neg_of_isMirrorPair {X Y : Nucleus}
+    (hXY : isMirrorPair X Y) :
+    twoTz X = -twoTz Y := by
+  rcases hXY with ⟨_, hXZ, hXN⟩
+  dsimp [twoTz]
+  omega
+
 def Mn47 : Nucleus where A := 47; Z := 25; N := 22
 def Ti47 : Nucleus where A := 47; Z := 22; N := 25
 def Cr45 : Nucleus where A := 45; Z := 24; N := 21
@@ -136,19 +144,6 @@ def spectroscopicFactorCMCorrection : ℚ := 1067 / 1000
 theorem cm_correction_positive :
     (1 : ℚ) < spectroscopicFactorCMCorrection := by
   norm_num [spectroscopicFactorCMCorrection]
-
-def formalSummary : Prop :=
-  isMirrorPair Mn47 Ti47 ∧ isMirrorPair Cr45 Sc45 ∧
-    twoTz Mn47 = -3 ∧ twoTz Ti47 = 3 ∧
-    Rs_Mn47_systematics < Rs_Ti47_systematics ∧
-    tau_Ti47_ps < tau_Mn47_ps ∧
-    |BM1_Mn47_over_Ti47 - 1| ≤ (1 / 10 : ℚ)
-
-theorem formalSummary_proved : formalSummary := by
-  exact ⟨Mn47_Ti47_mirror, Cr45_Sc45_mirror,
-    twoTz_Mn47, twoTz_Ti47,
-    stronger_binding_asymmetry_suppresses_Mn47,
-    Mn47_lifetime_longer, BM1_ratio_precision_10_percent⟩
 
 end UthayakumaarMirrorKnockout
 

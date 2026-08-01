@@ -38,17 +38,4 @@ theorem berezin_integral_generator_one (u : U) (alpha : U →ₗ[R] R) (hpair : 
   have h : evaluationLinear u alpha = (1 : R) := by rw [evaluation_linear_apply, hpair]
   rw [h]
 
-/-- **Theorem**: Master Berezin Fermionic Integration Synthesis.
-    Unifies:
-    1. Berezin integral operator definition ∫ dα = a_u via covector contraction ι_{ev_u}.
-    2. Fundamental Berezin integration law ∫ dα 1 = 0 on scalar vacuum state.
-    3. Fundamental Berezin integration law ∫ dα α = (1 : R) • |0⟩ on normalized Grassmann generator. -/
-theorem master_berezin_fermionic_integration_synthesis
-    (u : U) (alpha : U →ₗ[R] R) (hpair : alpha u = 1) :
-    ((berezinIntegralOp u (vacuumState R U) = 0) ∧
-     ((evaluationLinear u alpha) • (vacuumState R U) = (1 : R) • (vacuumState R U))) := ⟨
-  berezin_integral_scalar_zero u,
-  berezin_integral_generator_one u alpha hpair
-⟩
-
 end InfoGeometry.Canonical.BerezinFermionicIntegrationBridge

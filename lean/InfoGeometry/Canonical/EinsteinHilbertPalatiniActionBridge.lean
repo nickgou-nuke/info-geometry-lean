@@ -81,27 +81,4 @@ def palatiniLagrangianFourForm
   ∑ a, ∑ b, ∑ c, ∑ d_idx,
     (leviCivita4D R a b c d_idx • (e a * e b * riemannCurvatureTwoForm diff omega c d_idx))
 
-/-- **Theorem**: Master Einstein-Cartan Palatini Infrastructure Synthesis.
-    Unifies:
-    1. Torsion 2-form T^a = d(e^a) + ∑_b ω^{ab} ∧ e^b.
-    2. Riemann curvature 2-form R^{ab} = d(ω^{ab}) + ∑_c ω^{ac} ∧ ω^{cb}.
-    3. Structural anti-symmetry R^{ba} = -R^{ab} of Riemann curvature derived from spin connection anti-symmetry and 1-form degree.
-    4. 4-form Palatini Einstein-Hilbert Lagrangian density functional L_{Palatini} = ∑_{a,b,c,d} ε_{abcd} e^a ∧ e^b ∧ R^{cd}. -/
-theorem master_einstein_cartan_palatini_synthesis
-    (diff : Module.End R (ExteriorAlgebra R V))
-    (e : Fin 4 → ExteriorAlgebra R V)
-    (omega : Fin 4 → Fin 4 → ExteriorAlgebra R V)
-    (h_anti : IsAntiSymmetricSpinConnection omega)
-    (hω : ∀ a b, IsHomogeneousExteriorDegree (R:=R) (V:=V) 1 (omega a b))
-    (h_1form_anti : ∀ x y, IsHomogeneousExteriorDegree (R:=R) (V:=V) 1 x → IsHomogeneousExteriorDegree (R:=R) (V:=V) 1 y → x * y = -(y * x))
-    (a b : Fin 4) :
-    (riemannCurvatureTwoForm diff omega b a = -riemannCurvatureTwoForm diff omega a b) ∧
-    (torsionTwoForm diff e omega a = diff (e a) + ∑ c, omega a c * e c) ∧
-    (palatiniLagrangianFourForm diff e omega =
-      ∑ a1, ∑ b1, ∑ c1, ∑ d1, (leviCivita4D R a1 b1 c1 d1 • (e a1 * e b1 * riemannCurvatureTwoForm diff omega c1 d1))) := ⟨
-  riemannCurvature_antiSymmetric diff omega h_anti hω h_1form_anti a b,
-  rfl,
-  rfl
-⟩
-
 end InfoGeometry.Canonical.EinsteinHilbertPalatiniActionBridge

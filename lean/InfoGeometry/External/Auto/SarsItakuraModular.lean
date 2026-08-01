@@ -68,17 +68,6 @@ theorem modularItakuraDiag_vacuum_zero : modularItakuraDiag 0 0 = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [modularItakuraDiag, diag2, h]
 
-inductive InfoGeometryEdge where
-  | exponential_coordinate_transform
-  | bregman_dual
-  | stabilizes_modular_flow
-  deriving DecidableEq, Repr
-
-def edgeName : InfoGeometryEdge → String
-  | InfoGeometryEdge.exponential_coordinate_transform => "exp_coordinate_transform"
-  | InfoGeometryEdge.bregman_dual => "bregman_dual"
-  | InfoGeometryEdge.stabilizes_modular_flow => "stabilizes_modular_flow"
-
 end SarsItakuraModular
 
 end noncomputable section

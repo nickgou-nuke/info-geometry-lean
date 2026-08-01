@@ -143,24 +143,6 @@ structure ConcreteSUNBoundaryData (N : ℕ) where
   level : ℕ
   level_pos : 0 < level
 
-/-- Generic `SU(N)` loop/braid/Cuntz capstone proving the actual concrete identities. -/
-theorem sun_loop_braid_cuntz_boundary_synthesis {N : ℕ} {V : Type*}
-    [AddCommMonoid V] [Module ℂ V]
-    (B : AdjacentBraidData N) (q : ℂ) (i : ℕ) (ψ : ColorSpinorN N V)
-    (m n : ℤ) (A C D : Matrix (Fin N) (Fin N) ℂ) (c : ℂ)
-    (hcomm : A * C - C * A = c • D)
-    (_S : ConcreteSUNBoundaryData N) :
-    loopBracket (matrixLoopMode m A) (matrixLoopMode n C) =
-      loopSmul c (matrixLoopMode (m + n) D) ∧
-    qAdjacentColorBraidN B q i
-        (qAdjacentColorBraidN B q (i + 1) (qAdjacentColorBraidN B q i ψ)) =
-      qAdjacentColorBraidN B q (i + 1)
-        (qAdjacentColorBraidN B q i (qAdjacentColorBraidN B q (i + 1) ψ)) ∧
-    CuntzLaneCount N = N + 1 := by
-  exact ⟨loopBracket_of_commutator m n A C D c hcomm,
-    qAdjacentColorBraidN_artin B q i ψ,
-    cuntzLaneCount_color_singlet N⟩
-
 end SUNLoopBraidCuntzBoundary
 
 end noncomputable section

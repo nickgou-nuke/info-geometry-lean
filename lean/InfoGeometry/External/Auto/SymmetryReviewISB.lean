@@ -138,18 +138,6 @@ theorem MED_24Si_24Ne_selected_states :
       MED (-1298) 0 = -1298 := by
   norm_num [MED]
 
-def formalSummary : Prop :=
-  downQuarkMassMeV - upQuarkMassMeV = 62 / 25 ∧
-    qcdIsoscalarMass = 343 / 100 ∧
-    IMME 1 2 3 4 = 57 ∧
-    deltaNHMeV = 391 / 500 ∧
-    scatteringCIB 0 0 (-57 / 10) = 57 / 10 ∧
-    MED 477 0 = 477
-
-theorem formalSummary_proved : formalSummary := by
-  exact ⟨qcd_mass_split_exact.1, qcd_mass_split_exact.2.1, by norm_num [IMME],
-    deltaNH_exact, scattering_CIB_reported_anchor, by norm_num [MED]⟩
-
 end SymmetryReviewISB
 
 end noncomputable section

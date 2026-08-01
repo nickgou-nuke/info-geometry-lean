@@ -96,19 +96,4 @@ theorem finitePrimonFockTrace_succ (β : ℝ) (N : ℕ) :
     finitePrimonFockTrace_eq_zeta_partial β N]
   simp [finiteZetaPartial, Finset.sum_range_succ]
 
-/-- Consolidated finite bridge theorem. -/
-theorem primon_fock_trace_bridge_synthesis :
-    (∀ N, traceNormalized (primonSpectralData N)) ∧
-    (∀ β N, finitePrimonFockTrace β N = finiteZetaPartial β N) ∧
-    (∀ β N, finitePrimonFockTrace β (N + 1) =
-      finitePrimonFockTrace β N + ((N + 1 : ℕ) : ℝ) ^ (-β)) := by
-  exact ⟨primonSpectralData_traceNormalized,
-    finitePrimonFockTrace_eq_zeta_partial,
-    finitePrimonFockTrace_succ⟩
-
-#check spectralHeatTrace_traceNormalized
-#check finitePrimonFockTrace_eq_zeta_partial
-#check finitePrimonFockTrace_succ
-#check primon_fock_trace_bridge_synthesis
-
 end PrimonFockTraceBridge

@@ -29,19 +29,4 @@ theorem clifford_fermionic_supercharge_parity (Q : QuadraticForm R V) (v : V) :
     CliffordAlgebra.involute (CliffordAlgebra.ι Q v) = - CliffordAlgebra.ι Q v :=
   CliffordAlgebra.involute_ι v
 
-/-- **Theorem**: Master Supergraded Algebra, Chiral Supercharge & Clifford Synthesis.
-    Unifies:
-    1. Fermionic generator parity reflection under Clifford involute grading.
-    2. Supercharge self-anti-commutator identity {Q, Q} = 2 Q².
-    3. Nilpotent supercharge self-anti-commutator vanishing {Q, Q} = 0. -/
-theorem master_supergraded_chiral_supercharge_synthesis
-    (Qform : QuadraticForm R V) (v : V) {A : Type*} [Ring A] (Q : A) (hQ : Q * Q = 0) :
-    (CliffordAlgebra.involute (CliffordAlgebra.ι Qform v) = - CliffordAlgebra.ι Qform v) ∧
-    (superAntiCommutator Q Q = 2 * (Q * Q)) ∧
-    (superAntiCommutator Q Q = 0) := ⟨
-  clifford_fermionic_supercharge_parity Qform v,
-  supercharge_anti_commute_self Q,
-  supercharge_nilpotent_anti_commute_zero Q hQ
-⟩
-
 end InfoGeometry.Canonical.SupergradedChiralSuperchargeBridge

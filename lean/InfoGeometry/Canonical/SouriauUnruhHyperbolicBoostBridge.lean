@@ -45,14 +45,4 @@ theorem boostOp_inverse
   rw [boostOp_add K hK, add_neg_cancel, boostOp]
   simp only [Real.cosh_zero, Real.sinh_zero, one_smul, zero_smul, add_zero]
 
-/-- **Master Synthesis**: Мастър Теорема за Сурио-Унру Лоренцовите Бустове.
-    Унифицира хиперболичния генератор K² = I, груповия събирателен закон и Сурио Gibbs инверсията. -/
-theorem master_souriau_unruh_hyperbolic_boost_synthesis
-    (K : Module.End ℝ V) (hK : HyperbolicBoostGenerator K) (eta1 eta2 eta : ℝ) :
-    ((boostOp K eta1).comp (boostOp K eta2) = boostOp K (eta1 + eta2)) ∧
-    ((boostOp K eta).comp (souriauUnruhGibbsOp K eta) = LinearMap.id) := ⟨
-  boostOp_add K hK eta1 eta2,
-  boostOp_inverse K hK eta
-⟩
-
 end InfoGeometry.Canonical

@@ -104,16 +104,6 @@ def finalStatePureMixingProbability (Mexp M01 : ℚ) : ℚ :=
 def pureFinalDeviation (full pure : ℚ) : ℚ :=
   (pure - full) / full
 
-theorem formalSummary :
-    selfConjugate P30 ∧ selfConjugate S32 ∧ selfConjugate Cl34 ∧ selfConjugate Ar36 ∧
-      (57 / 10 : ℚ) < percent b2_P30 ∧
-      (28 / 10 : ℚ) < percent b2_S32 ∧
-      (22 / 100 : ℚ) < percent b2_Cl34 ∧
-      (100 / 100 : ℚ) < percent b2_Ar36 := by
-  exact ⟨P30_self, S32_self, Cl34_self, Ar36_self,
-    P30_percent_window.1, S32_percent_window.1,
-    Cl34_percent_window.1, Ar36_percent_window.1⟩
-
 end BisoiForbiddenE1Mixing
 
 end noncomputable section

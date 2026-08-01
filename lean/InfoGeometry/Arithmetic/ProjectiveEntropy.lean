@@ -166,20 +166,6 @@ model-supplied evidence.  Keep the old theorem names as compatibility
 projections, with the canonical owner as their proof source.
 -/
 
-@[deprecated readout_eq_density_difference (since := "2026-07-27")]
-theorem relative_eq_density_difference
-    {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
-    relativeReadout W u =
-      primitiveInvertedPartitionDensity A u -
-        arithmeticPrimeInvertedPartitionDensity A u :=
-  readout_eq_density_difference W hu
-
-@[deprecated readout_nonneg (since := "2026-07-27")]
-theorem relative_nonneg
-    {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
-    0 ≤ relativeReadout W u :=
-  readout_nonneg W hu
-
 /-- A calibrated nonnegative readout orders the two projective densities. -/
 theorem prime_density_le_primitive_density
     (W : ∀ u : ℝ, u ∈ Set.Ioo (0 : ℝ) 1 → 0 ≤ projectiveDensityGap A u)

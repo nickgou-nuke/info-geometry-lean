@@ -40,23 +40,4 @@ theorem physical_state_exact_decoupling_orthogonality
   rw [h_phys]
   exact h_zero1 chi
 
-/-- **Theorem**: Master Krein Space BRST Unitarity Synthesis.
-    Unifies:
-    1. Physical state condition Q ψ = 0 definition.
-    2. BRST self-adjointness ⟨Q x, y⟩ = ⟨x, Q y⟩ assumption in Krein space.
-    3. Physical state decoupling orthogonality ⟨ψ, Q χ⟩ = 0 for any physical state ψ and exact BRST state Q χ.
-    4. Guarantees physical S-matrix unitarity and ghost state decoupling in quantum field theory. -/
-theorem master_krein_space_brst_unitarity_synthesis
-    (inner : H → H → R)
-    (q : Module.End R H)
-    (h_adj : ∀ x y, inner (q x) y = inner x (q y))
-    (h_zero1 : ∀ y, inner 0 y = 0)
-    (psi chi : H)
-    (h_phys : isPhysicalState q psi) :
-    (inner psi (q chi) = 0) ∧
-    (isPhysicalState q psi) := ⟨
-  physical_state_exact_decoupling_orthogonality inner q h_adj h_zero1 psi chi h_phys,
-  h_phys
-⟩
-
 end InfoGeometry.Canonical.KreinSpaceBRSTUnitarityBridge

@@ -157,19 +157,4 @@ theorem sq_finite_to_infinite_limit (T : ℝ) :
       rw [sq_finite_prod_seq_val T n hn_gt]
     exact Filter.tendsto_congr' h_eq |>.mpr tendsto_const_nhds
 
-/--
-The coordinatewise result above does not prove a general Clifford/Hestenes
-colimit completion or differential-geometric flow.
--/
-/-
-The finite owner proved above is deliberately not promoted to a completion
-theorem.  The old declaration name is retained as a compatibility theorem, but
-now exposes the actual native algebraic law rather than a prose marker.
-The categorical completion remains a separate, genuinely open interface.
--/
-@[deprecated sq_nilpotent_exp_mul (since := "2026-07-29")]
-theorem split_quaternion_general_colimit_completion_debt (S T : ℝ) :
-    sq_nilpotent_exp S * sq_nilpotent_exp T = sq_nilpotent_exp (S + T) :=
-  sq_nilpotent_exp_mul S T
-
 end InfoGeometry.Clifford.SplitQuaternionNilpotentFlow

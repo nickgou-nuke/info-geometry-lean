@@ -143,20 +143,6 @@ theorem selected_to_mixing_configurations :
     configurationCount_mixing * 4 = configurationCount_selected := by
   norm_num [configurationCount_selected, configurationCount_mixing]
 
-def formalSummary : Prop :=
-  Tz 39 40 = -1 / 2 ∧
-    Tz 40 39 = 1 / 2 ∧
-    centralMED state7_2 = 1 ∧
-    centralMED state9_2 = 5 ∧
-    centralMED state11_2 = -11 ∧
-    betaY184 < betaYHigh ∧
-    |levelFromTransition 184 230 - 416| ≤ 3
-
-theorem formalSummary_proved : formalSummary := by
-  exact ⟨Zr79_Y79_Tz.1, Zr79_Y79_Tz.2, state7_2_MED_exact,
-    state9_2_MED_exact, state11_2_MED_exact, beta_ordering.1.trans beta_ordering.2.1,
-    Zr79_cascade_within_three_keV⟩
-
 end LlewellynZr79MED
 
 end noncomputable section

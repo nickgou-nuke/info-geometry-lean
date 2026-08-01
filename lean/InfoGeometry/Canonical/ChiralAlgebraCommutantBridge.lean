@@ -37,19 +37,4 @@ theorem commute_resolution :
 
 end ChiralCommutant
 
-/-- **Theorem**: Master Chiral Algebra Commutant Duality Synthesis.
-    Unifies:
-    1. Commutant operator preservation of chiral projection e+ (T e+ = e+ T).
-    2. Commutant operator preservation of chiral projection e- (T e- = e- T).
-    3. Commutant preservation of full chiral resolution of identity e+ + e-. -/
-theorem master_chiral_algebra_commutant_synthesis
-    {R : Type*} [Ring R] (c : ChiralCommutant R) :
-    (c.T * c.ePlus = c.ePlus * c.T) ∧
-    (c.T * c.eMinus = c.eMinus * c.T) ∧
-    (c.T * (c.ePlus + c.eMinus) = (c.ePlus + c.eMinus) * c.T) := ⟨
-  c.commute_ePlus,
-  c.commute_eMinus,
-  c.commute_resolution
-⟩
-
 end InfoGeometry.Canonical.ChiralAlgebraCommutantBridge

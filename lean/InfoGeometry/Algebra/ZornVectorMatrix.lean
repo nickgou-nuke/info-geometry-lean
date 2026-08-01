@@ -2402,5 +2402,59 @@ Zorn product is distributive and has a norm-composition law, but it is not
 associative.
 -/
 
+def coordEquiv : ZornVectorMatrix R ≃ (R × (Fin 3 → R) × (Fin 3 → R) × R) where
+  toFun X := (X.a, X.v, X.w, X.b)
+  invFun t := ⟨t.1, t.2.1, t.2.2.1, t.2.2.2⟩
+  left_inv X := by cases X; rfl
+  right_inv t := by rcases t with ⟨a, v, w, b⟩; rfl
+
+instance : Add (ZornVectorMatrix R) := ⟨add⟩
+instance : Zero (ZornVectorMatrix R) := ⟨zero⟩
+instance : Neg (ZornVectorMatrix R) := ⟨neg⟩
+instance : Sub (ZornVectorMatrix R) := ⟨sub⟩
+
+instance : AddCommGroup (ZornVectorMatrix R) :=
+  Equiv.addCommGroup coordEquiv
+
+instance : SMul R (ZornVectorMatrix R) := ⟨smul⟩
+
+instance : Module R (ZornVectorMatrix R) :=
+  Equiv.module R coordEquiv
+
+/-- A concrete rational Cartan coordinate. -/
+def cartanChargeFn (X : ZornVectorMatrix ℚ) : ℚ := X.a
+
+def cartanCharge : ZornVectorMatrix ℚ →ₗ[ℚ] ℚ where
+  toFun := cartanChargeFn
+  map_add' := by intro X Y; rfl
+  map_smul' := by intro r X; rfl
+
+/-- The finite charge labels used by this explicitly specified state sector. -/
+def chargeValue : Fin 6 → ℚ :=
+  ![0, -1, 1 / 3, -(1 / 3), 2 / 3, -(2 / 3)]
+
+def chargeState (i : Fin 6) : ZornVectorMatrix ℚ :=
+  diagonal (chargeValue i) 0
+
+theorem cartanCharge_state (i : Fin 6) :
+    cartanCharge (chargeState i) = chargeValue i := rfl
+
+theorem charge_image :
+    Set.range (fun i : Fin 6 => cartanCharge (chargeState i)) =
+      ({0, -1, 1 / 3, -(1 / 3), 2 / 3, -(2 / 3)} : Set ℚ) := by
+  ext q
+  constructor
+  · rintro ⟨i, rfl⟩
+    fin_cases i <;> simp [cartanCharge, cartanChargeFn, chargeState, chargeValue, diagonal]
+  · intro h
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff] at h
+    rcases h with rfl | rfl | rfl | rfl | rfl | rfl
+    · exact ⟨0, rfl⟩
+    · exact ⟨1, rfl⟩
+    · exact ⟨2, rfl⟩
+    · exact ⟨3, rfl⟩
+    · exact ⟨4, rfl⟩
+    · exact ⟨5, rfl⟩
+
 end ZornVectorMatrix
 end InfoGeometry.Algebra

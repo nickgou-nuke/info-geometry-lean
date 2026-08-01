@@ -104,12 +104,6 @@ theorem masterOp_nonneg (K : ℝ) : 0 ≤ masterOpReal K := by
     
     The stationary point K = 0 gives ω = Ω (thermal equilibrium).
     The Connes cocycle exp(itK) generates the modular flow. -/
-theorem master_equation_synthesis (K : ℝ) :
-    0 ≤ masterOpReal K ∧
-    masterOpReal K = Real.exp K - 1 - K ∧
-    masterOpReal 0 = 0 := by
-  exact ⟨masterOp_nonneg K, rfl, by simp [masterOpReal]⟩
-
 -- Bridges
 abbrev BridgeArtifact := String × String
 

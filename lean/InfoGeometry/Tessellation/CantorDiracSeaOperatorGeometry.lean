@@ -104,30 +104,43 @@ theorem cantorDiracSeaOperatorGeometryOwnerTarget :
       exact W.sector w |>.idem
     · constructor
       · intro Op _ W w
-        exact ⟨W.leftOrthogonal w, W.rightOrthogonal w⟩
+        refine ⟨?_, ?_⟩
+        · exact W.leftOrthogonal w
+        · exact W.rightOrthogonal w
       · constructor
         · intro Op _ W w
-          exact ⟨W.leftHop_square_zero w, W.rightHop_square_zero w⟩
+          refine ⟨?_, ?_⟩
+          · exact W.leftHop_square_zero w
+          · exact W.rightHop_square_zero w
         · constructor
           · intro Op _ D w
-            exact ⟨D.leftHop_flips_false_bit w, D.leftHop_preserves_true_bit w,
-              D.rightHop_flips_true_bit w, D.rightHop_preserves_false_bit w⟩
+            refine ⟨?_, ?_, ?_, ?_⟩
+            · exact D.leftHop_flips_false_bit w
+            · exact D.leftHop_preserves_true_bit w
+            · exact D.rightHop_flips_true_bit w
+            · exact D.rightHop_preserves_false_bit w
           · constructor
             · intro Op _ P
-              exact ⟨P.bitOperator_false_sq, P.bitOperator_true_sq, P.bitOperator_anticomm⟩
+              refine ⟨?_, ?_, ?_⟩
+              · exact P.bitOperator_false_sq
+              · exact P.bitOperator_true_sq
+              · exact P.bitOperator_anticomm
             · constructor
               · intro E _ _ _
-                exact ⟨chiralBoost_generator_sq_one (E := E),
-                  plusProjectorAfterPhaseFlip_eq_minusProjector (E := E),
-                  minusProjectorAfterPhaseFlip_eq_plusProjector (E := E),
-                  phaseFlip_projectorResolution (E := E)⟩
+                refine ⟨?_, ?_, ?_, ?_⟩
+                · exact chiralBoost_generator_sq_one (E := E)
+                · exact plusProjectorAfterPhaseFlip_eq_minusProjector (E := E)
+                · exact minusProjectorAfterPhaseFlip_eq_plusProjector (E := E)
+                · exact phaseFlip_projectorResolution (E := E)
               · constructor
                 · intro E _ _ _ A B
-                  exact ⟨doubledUPlus_mul_doubledUPlus_eq_zero (E := E) A B,
-                    doubledUMinus_mul_doubledUMinus_eq_zero (E := E) A B⟩
+                  refine ⟨?_, ?_⟩
+                  · exact doubledUPlus_mul_doubledUPlus_eq_zero (E := E) A B
+                  · exact doubledUMinus_mul_doubledUMinus_eq_zero (E := E) A B
                 · intro E _ _ _ θ
-                  exact ⟨doubledI_rotor_exp_reverse (E := E) θ,
-                    doubledI_rotor_reverse_comp_exp (E := E) θ⟩
+                  refine ⟨?_, ?_⟩
+                  · exact doubledI_rotor_exp_reverse (E := E) θ
+                  · exact doubledI_rotor_reverse_comp_exp (E := E) θ
 
 /-- Concise downstream name for the geometry/symmetry-hopping package on supergraded doubled operators. -/
 theorem geometry_eq_symmetry_constrained_hopping_on_supergraded_doubled_operator_space :

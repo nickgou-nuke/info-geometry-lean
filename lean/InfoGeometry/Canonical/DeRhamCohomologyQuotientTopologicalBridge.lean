@@ -19,7 +19,7 @@ namespace InfoGeometry.Canonical.DeRhamCohomologyQuotientTopologicalBridge
 open CategoryTheory
 open InfoGeometry.Canonical.DeRhamCohomologyQuotientBridge
 
-variable {R V Y : Type*} [CommRing R] [AddCommGroup V] [Module R V]
+variable {R V W Y : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
 abbrev deRhamSubmodule
     (d : Module.End R (ExteriorAlgebra R V)) :
@@ -71,5 +71,48 @@ def deRhamQuotientMkTopCat
   TopCat.ofHom
     { toFun := deRhamQuotientMk d
       continuous_toFun := continuous_deRhamQuotientMk d }
+
+/-- The map induced on de Rham quotients by a continuous map of closed-form
+carriers which preserves the exact-form equivalence relation. -/
+def deRhamQuotientMap
+    [AddCommGroup W] [Module R W]
+    (dV : Module.End R (ExteriorAlgebra R V))
+    (dW : Module.End R (ExteriorAlgebra R W))
+    (f : LinearMap.ker dV → LinearMap.ker dW)
+    (h_invariant : ∀ a b : LinearMap.ker dV,
+      (deRhamSubmodule dV).quotientRel a b →
+        deRhamQuotientMk dW (f a) = deRhamQuotientMk dW (f b)) :
+    deRhamQuotient dV → deRhamQuotient dW :=
+  Quotient.lift (fun a => deRhamQuotientMk dW (f a)) h_invariant
+
+theorem continuous_deRhamQuotientMap
+    [AddCommGroup W] [Module R W]
+    [TopologicalSpace (ExteriorAlgebra R V)]
+    [TopologicalSpace (ExteriorAlgebra R W)]
+    (dV : Module.End R (ExteriorAlgebra R V))
+    (dW : Module.End R (ExteriorAlgebra R W))
+    (f : LinearMap.ker dV → LinearMap.ker dW)
+    (hf : Continuous f)
+    (h_invariant : ∀ a b : LinearMap.ker dV,
+      (deRhamSubmodule dV).quotientRel a b →
+        deRhamQuotientMk dW (f a) = deRhamQuotientMk dW (f b)) :
+    Continuous (deRhamQuotientMap dV dW f h_invariant) := by
+  apply Continuous.quotient_lift
+  exact (continuous_deRhamQuotientMk dW).comp hf
+
+/-- The induced quotient map as a `TopCat` morphism when both complexes use
+the same exterior-algebra carrier. -/
+def deRhamQuotientMapTopCat
+    [TopologicalSpace (ExteriorAlgebra R V)]
+    (d₁ d₂ : Module.End R (ExteriorAlgebra R V))
+    (f : LinearMap.ker d₁ → LinearMap.ker d₂)
+    (hf : Continuous f)
+    (h_invariant : ∀ a b : LinearMap.ker d₁,
+      (deRhamSubmodule d₁).quotientRel a b →
+        deRhamQuotientMk d₂ (f a) = deRhamQuotientMk d₂ (f b)) :
+    deRhamQuotientTopCat d₁ ⟶ deRhamQuotientTopCat d₂ :=
+  TopCat.ofHom
+    { toFun := deRhamQuotientMap d₁ d₂ f h_invariant
+      continuous_toFun := continuous_deRhamQuotientMap d₁ d₂ f hf h_invariant }
 
 end InfoGeometry.Canonical.DeRhamCohomologyQuotientTopologicalBridge

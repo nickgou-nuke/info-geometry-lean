@@ -182,12 +182,13 @@ theorem repaired_MD011_statistical_info_packet {ι : Type} [Fintype ι]
     diagonalInvCov k * diagonalCov s = 1 ∧
     (finiteFisherCov2Atom w2 T).transpose = finiteFisherCov2Atom w2 T ∧
     0 ≤ ∑ a : Fin 2, ∑ b : Fin 2, u a * finiteFisherCov2Atom w2 T a b * u b := by
-  exact ⟨finiteCovReal_symmetric w O P,
-    finiteCovReal_zero_left_of_constant w hwsum 1 P,
-    gaussianEnergyDiag_expand k m z,
-    diagonalInvCov_mul_diagonalCov s k hinv,
-    finiteFisherCov2Atom_symmetric w2 T,
-    finiteFisherCov2Atom_quadratic_nonneg w2 hw2 u T⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact finiteCovReal_symmetric w O P
+  · exact finiteCovReal_zero_left_of_constant w hwsum 1 P
+  · exact gaussianEnergyDiag_expand k m z
+  · exact diagonalInvCov_mul_diagonalCov s k hinv
+  · exact finiteFisherCov2Atom_symmetric w2 T
+  · exact finiteFisherCov2Atom_quadratic_nonneg w2 hw2 u T
 
 end InfoGeometry.Physics.MD011StatisticalInfoGeometry
 

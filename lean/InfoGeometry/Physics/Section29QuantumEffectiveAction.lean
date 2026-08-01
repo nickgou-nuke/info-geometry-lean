@@ -139,7 +139,9 @@ theorem repaired_section29_loop_rg_packet
     (D : LoopActionDatum) (C : LinearRunningCoupling) (hbar t s : ℝ) :
     effectiveActionTwoLoop D hbar - D.classical = hbar * D.oneLoop + hbar ^ 2 * D.twoLoop ∧
       runningCoupling C (t + s) = runningCoupling C t - C.slope * s := by
-  exact ⟨effectiveActionTwoLoop_sub_classical D hbar, runningCoupling_add C t s⟩
+  refine ⟨?_, ?_⟩
+  · exact effectiveActionTwoLoop_sub_classical D hbar
+  · exact runningCoupling_add C t s
 
 end InfoGeometry.Physics.Section29QuantumEffectiveAction
 

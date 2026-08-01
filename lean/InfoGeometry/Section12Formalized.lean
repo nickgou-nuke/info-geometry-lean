@@ -272,8 +272,11 @@ theorem section12_formalized_capstone :
           (spinConnectionWithContorsion omegaLeviCivita contorsion) psi
         = spinorCovariantDerivative dPsi omegaLeviCivita psi + contorsion * psi) ∧
     (∀ q : Quat, maurerCartanTorsion q 0 = 0) := by
-  exact ⟨torsionTensor_antisymmetric_lower, torsionTensor_zero_iff_lower_symmetric,
-    coordinate_basis_torsionTwoFormCoeff_swap_eq_torsionTensor,
-    spinorCovariantDerivative_withContorsion, maurerCartanTorsion_constant_field⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact torsionTensor_antisymmetric_lower
+  · exact torsionTensor_zero_iff_lower_symmetric
+  · exact coordinate_basis_torsionTwoFormCoeff_swap_eq_torsionTensor
+  · exact spinorCovariantDerivative_withContorsion
+  · exact maurerCartanTorsion_constant_field
 
 end Section12Formalized

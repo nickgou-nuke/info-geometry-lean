@@ -43,54 +43,50 @@ def lowerLightray (w : Fin 3 → R) : ZornMatrix R where
 
 /-- The upper diagonal sector `p₊` lies on the Zorn null quadric. -/
 @[simp]
-theorem detZ_pPlus (cp : CrossProduct3 R) :
-    ZornMatrix.detZ cp (pPlus : ZornMatrix R) = 0 := by
-  simp [ZornMatrix.detZ, pPlus, cp.dot_zero_left]
+theorem detZ_pPlus :
+    ZornMatrix.detZ (pPlus : ZornMatrix R) = 0 := by
+  simp [ZornMatrix.detZ, pPlus, InfoGeometry.Canonical.ZornMatrix.dot]
 
 /-- The lower diagonal sector `p₋` lies on the Zorn null quadric. -/
 @[simp]
-theorem detZ_pMinus (cp : CrossProduct3 R) :
-    ZornMatrix.detZ cp (pMinus : ZornMatrix R) = 0 := by
-  simp [ZornMatrix.detZ, pMinus, cp.dot_zero_left]
+theorem detZ_pMinus :
+    ZornMatrix.detZ (pMinus : ZornMatrix R) = 0 := by
+  simp [ZornMatrix.detZ, pMinus, InfoGeometry.Canonical.ZornMatrix.dot]
 
 /-- Every upper off-diagonal arrow is Zorn-null. -/
 @[simp]
-theorem detZ_upperLightray
-    (cp : CrossProduct3 R) (v : Fin 3 → R) :
-    ZornMatrix.detZ cp (upperLightray v) = 0 := by
-  simp [ZornMatrix.detZ, upperLightray, cp.dot_zero_right]
+theorem detZ_upperLightray (v : Fin 3 → R) :
+    ZornMatrix.detZ (upperLightray v) = 0 := by
+  simp [ZornMatrix.detZ, upperLightray, InfoGeometry.Canonical.ZornMatrix.dot]
 
 /-- Every lower off-diagonal arrow is Zorn-null. -/
 @[simp]
-theorem detZ_lowerLightray
-    (cp : CrossProduct3 R) (w : Fin 3 → R) :
-    ZornMatrix.detZ cp (lowerLightray w) = 0 := by
-  simp [ZornMatrix.detZ, lowerLightray, cp.dot_zero_left]
+theorem detZ_lowerLightray (w : Fin 3 → R) :
+    ZornMatrix.detZ (lowerLightray w) = 0 := by
+  simp [ZornMatrix.detZ, lowerLightray, InfoGeometry.Canonical.ZornMatrix.dot]
 
 /-- `p₊` is null. -/
 @[simp]
-theorem pPlus_isNull (cp : CrossProduct3 R) :
-    ZornMatrix.IsNull cp (pPlus : ZornMatrix R) := by
-  exact detZ_pPlus cp
+theorem pPlus_isNull :
+    ZornMatrix.IsNull (pPlus : ZornMatrix R) := by
+  exact detZ_pPlus
 
 /-- `p₋` is null. -/
 @[simp]
-theorem pMinus_isNull (cp : CrossProduct3 R) :
-    ZornMatrix.IsNull cp (pMinus : ZornMatrix R) := by
-  exact detZ_pMinus cp
+theorem pMinus_isNull :
+    ZornMatrix.IsNull (pMinus : ZornMatrix R) := by
+  exact detZ_pMinus
 
 /-- Every upper lightray is null. -/
 @[simp]
-theorem upperLightray_isNull
-    (cp : CrossProduct3 R) (v : Fin 3 → R) :
-    ZornMatrix.IsNull cp (upperLightray v) := by
-  exact detZ_upperLightray cp v
+theorem upperLightray_isNull (v : Fin 3 → R) :
+    ZornMatrix.IsNull (upperLightray v) := by
+  exact detZ_upperLightray v
 
 /-- Every lower lightray is null. -/
 @[simp]
-theorem lowerLightray_isNull
-    (cp : CrossProduct3 R) (w : Fin 3 → R) :
-    ZornMatrix.IsNull cp (lowerLightray w) := by
-  exact detZ_lowerLightray cp w
+theorem lowerLightray_isNull (w : Fin 3 → R) :
+    ZornMatrix.IsNull (lowerLightray w) := by
+  exact detZ_lowerLightray w
 
 end InfoGeometry.Algebra.Zorn

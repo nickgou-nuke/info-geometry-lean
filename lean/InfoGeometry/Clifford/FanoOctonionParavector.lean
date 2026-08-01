@@ -146,10 +146,11 @@ theorem fano_octonion_paravector_synthesis :
         imaginary e2 ∧
       paravectorMul fanoOctonionParavectorData (imaginary e0) (imaginary e0) =
         scalar (-1 : ℝ) := by
-  exact ⟨fanoCross_self,
-    fanoCross_anticomm,
-    fanoCross_basis_0_1,
-    imaginary_e0_mul_e1,
-    imaginary_e0_sq⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact fanoCross_self
+  · exact fanoCross_anticomm
+  · exact fanoCross_basis_0_1
+  · exact imaginary_e0_mul_e1
+  · exact imaginary_e0_sq
 
 end InfoGeometry.Clifford.FanoOctonionParavector

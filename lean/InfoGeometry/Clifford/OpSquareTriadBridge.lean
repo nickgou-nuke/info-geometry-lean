@@ -104,7 +104,10 @@ theorem opSquareTriad_pivot :
     classifySquareValue (-1) = some OpSquareClass.elliptic ∧
       classifySquareValue 0 = some OpSquareClass.parabolic ∧
       classifySquareValue 1 = some OpSquareClass.hyperbolic := by
-  exact ⟨classifySquareValue_neg_one, ⟨classifySquareValue_zero, classifySquareValue_one⟩⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact classifySquareValue_neg_one
+  · exact classifySquareValue_zero
+  · exact classifySquareValue_one
 
 /-- Clifford orthogonality gives the ABS-style anticommutation law. -/
 theorem cliffordOrthogonal_anticommute

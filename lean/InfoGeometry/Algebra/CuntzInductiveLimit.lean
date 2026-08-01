@@ -53,6 +53,8 @@ theorem fermionicPartition_converges
     (primes : ℕ → ℕ) (hprime : ∀ i, Nat.Prime (primes i)) (β : ℝ) (hβ : 1 < β) :
     0 < β ∧ ∀ n : ℕ, 0 < fermionicPartitionTruncated n primes β := by
   have hβpos : 0 < β := by linarith
-  exact ⟨hβpos, fermionicPartitionTruncated_pos primes hprime β hβpos⟩
+  refine ⟨?_, ?_⟩
+  · exact hβpos
+  · exact fermionicPartitionTruncated_pos primes hprime β hβpos
 
 end InfoGeometry.Algebra.CuntzInductiveLimit

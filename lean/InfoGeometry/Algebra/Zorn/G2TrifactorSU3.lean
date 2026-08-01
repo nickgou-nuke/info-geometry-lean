@@ -138,13 +138,11 @@ The determinant premise is the honest finite substitute for the unproved
 statement that a given map is a norm-preserving split-octonion automorphism.
 -/
 theorem preserves_null_cone_of_det_preserving
-    (cp : ZornCompositionDatum R)
     (f : ZMat R → ZMat R)
-    (hdet : ∀ X, ZornMatrix.detZ cp.toCrossProduct3 (f X) =
-      ZornMatrix.detZ cp.toCrossProduct3 X)
+    (hdet : ∀ X, ZornMatrix.detZ (f X) = ZornMatrix.detZ X)
     (X : ZMat R)
-    (h_null : ZornMatrix.IsNull cp.toCrossProduct3 X) :
-    ZornMatrix.IsNull cp.toCrossProduct3 (f X) := by
+    (h_null : ZornMatrix.IsNull X) :
+    ZornMatrix.IsNull (f X) := by
   unfold ZornMatrix.IsNull at *
   rw [hdet X, h_null]
 

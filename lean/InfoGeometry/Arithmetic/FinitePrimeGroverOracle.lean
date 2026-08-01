@@ -220,22 +220,33 @@ This is an operational numerical predicate; it is not an RH statement.
 abbrev WithinError :=
   InfoGeometry.Arithmetic.GenuineBounds.CountingWithinError
 
-/--
-Quantum-counting certified finite fluctuation packet.
+/-- Raw coordinates for a finite fluctuation certificate. -/
+abbrev QuantumCountingFluctuationCoordinates :=
+  ℝ × (ℝ × (ℝ × (ℝ × ℝ)))
 
-The theorem below extracts the finite fluctuation bound from the estimate,
-the counting error bound, and the supplied error budget.
--/
-structure QuantumCountingFluctuationPacket where
-  estimate : ℝ
-  actual : ℝ
-  expected : ℝ
-  ε : ℝ
-  bound : ℝ
-  counting_error : WithinError estimate actual ε
-  error_budget : |estimate - expected| + ε ≤ bound
+/-- The two certified inequalities carried by a fluctuation certificate. -/
+def QuantumCountingFluctuationPredicate
+    (p : QuantumCountingFluctuationCoordinates) : Prop :=
+  WithinError p.1 p.2.1 p.2.2.2.1 ∧
+    |p.1 - p.2.2.1| + p.2.2.2.1 ≤ p.2.2.2.2
+
+/-- Finite quantum-counting fluctuation evidence as a native subtype. -/
+abbrev QuantumCountingFluctuationPacket :=
+  {p : QuantumCountingFluctuationCoordinates // QuantumCountingFluctuationPredicate p}
 
 namespace QuantumCountingFluctuationPacket
+
+abbrev estimate (P : QuantumCountingFluctuationPacket) : ℝ := P.1.1
+abbrev actual (P : QuantumCountingFluctuationPacket) : ℝ := P.1.2.1
+abbrev expected (P : QuantumCountingFluctuationPacket) : ℝ := P.1.2.2.1
+abbrev ε (P : QuantumCountingFluctuationPacket) : ℝ := P.1.2.2.2.1
+abbrev bound (P : QuantumCountingFluctuationPacket) : ℝ := P.1.2.2.2.2
+
+lemma counting_error (P : QuantumCountingFluctuationPacket) :
+    WithinError P.estimate P.actual P.ε := P.2.1
+
+lemma error_budget (P : QuantumCountingFluctuationPacket) :
+    |P.estimate - P.expected| + P.ε ≤ P.bound := P.2.2
 
 /-- Re-export of the certified finite fluctuation bound. -/
 theorem fluctuation_bound

@@ -101,9 +101,10 @@ theorem repaired_section32_quaternionic_spacetime_packet
         (blochCross1 ω1 ω2 ω3 (r * n1) (r * n2) (r * n3) • σ1 +
           blochCross2 ω1 ω2 ω3 (r * n1) (r * n2) (r * n3) • σ2 +
           blochCross3 ω1 ω2 ω3 (r * n1) (r * n2) (r * n3) • σ3) := by
-  exact ⟨quaternion_literal_i_j_sign_obstruction,
-    blochSpacetimePoint_det_zero_of_unit_boundary t r n1 n2 n3 hunit hr,
-    vonNeumannRHS_eq_bloch_precession ω1 ω2 ω3 (r * n1) (r * n2) (r * n3)⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact quaternion_literal_i_j_sign_obstruction
+  · exact blochSpacetimePoint_det_zero_of_unit_boundary t r n1 n2 n3 hunit hr
+  · exact vonNeumannRHS_eq_bloch_precession ω1 ω2 ω3 (r * n1) (r * n2) (r * n3)
 
 end InfoGeometry.Physics.Section32QuaternionicEmergentSpacetime
 

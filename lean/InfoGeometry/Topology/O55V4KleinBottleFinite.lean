@@ -144,12 +144,13 @@ theorem finite_o55_v4_klein_packet (x y : Vec55) :
     reflPair1 (reflPair1 x) = x ∧
     reflPair0 (reflPair1 x) = reflPair1 (reflPair0 x) ∧
     affineReflect0 (trans0 1 (affineReflect0 x)) = trans0 (-1) x := by
-  exact ⟨negAll_preserves_splitPair x y,
-    reflPair0_preserves_splitPair x y,
-    reflPair1_preserves_splitPair x y,
-    reflPair0_involutive x,
-    reflPair1_involutive x,
-    reflPair0_comm_reflPair1 x,
-    kleinBottle_affine_relation 1 x⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact negAll_preserves_splitPair x y
+  · exact reflPair0_preserves_splitPair x y
+  · exact reflPair1_preserves_splitPair x y
+  · exact reflPair0_involutive x
+  · exact reflPair1_involutive x
+  · exact reflPair0_comm_reflPair1 x
+  · exact kleinBottle_affine_relation 1 x
 
 end InfoGeometry.Topology.O55V4KleinBottleFinite

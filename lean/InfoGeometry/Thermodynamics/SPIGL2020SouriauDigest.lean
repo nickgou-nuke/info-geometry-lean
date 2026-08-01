@@ -317,15 +317,21 @@ structure FiniteSouriauDynamicsStageData (ι : Type*) [Fintype ι] [Nonempty ι]
     (Op : Type*) [Ring Op] [Algebra ℝ Op] where
   beta : ℝ
   energy : ι → ℝ
-  flow : InfoGeometry.Topology.ThermodynamicGauge.CausalNonequilibriumFlow Op
   trace : Op →ₗ[ℝ] ℝ
   pathPacket : InfoGeometry.Topology.MaximumCaliberPath.MaximumCaliberPacket Op
-  pathPacket_flow_eq : pathPacket.flow = flow
 
 namespace FiniteSouriauDynamicsStageData
 
 variable {ι : Type*} [Fintype ι] [Nonempty ι]
 variable {Op : Type*} [Ring Op] [Algebra ℝ Op]
+
+/-- The stage flow is the flow carried by its maximum-caliber path packet. -/
+abbrev flow (D : FiniteSouriauDynamicsStageData ι Op) := D.pathPacket.flow
+
+/-- The stage flow agrees definitionally with the path-packet flow. -/
+theorem pathPacket_flow_eq (D : FiniteSouriauDynamicsStageData ι Op) :
+    D.pathPacket.flow = D.flow := by
+  rfl
 
 @[rep_depth thermo]
 theorem souriauPartition_pos (D : FiniteSouriauDynamicsStageData ι Op) :

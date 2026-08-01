@@ -106,9 +106,13 @@ theorem sectorProjector_pairwise_orthogonal_packet :
     sectorProjector0 * sectorProjector1 = 0 ∧ sectorProjector1 * sectorProjector0 = 0 ∧
     sectorProjector1 * sectorProjector2 = 0 ∧ sectorProjector2 * sectorProjector1 = 0 ∧
     sectorProjector2 * sectorProjector0 = 0 ∧ sectorProjector0 * sectorProjector2 = 0 := by
-  exact ⟨sectorProjector0_mul_sectorProjector1, sectorProjector1_mul_sectorProjector0,
-    sectorProjector1_mul_sectorProjector2, sectorProjector2_mul_sectorProjector1,
-    sectorProjector2_mul_sectorProjector0, sectorProjector0_mul_sectorProjector2⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact sectorProjector0_mul_sectorProjector1
+  · exact sectorProjector1_mul_sectorProjector0
+  · exact sectorProjector1_mul_sectorProjector2
+  · exact sectorProjector2_mul_sectorProjector1
+  · exact sectorProjector2_mul_sectorProjector0
+  · exact sectorProjector0_mul_sectorProjector2
 
 /-- The three finite sector projectors sum to the identity. -/
 theorem sectorProjector_sum_identity :
@@ -250,13 +254,21 @@ theorem repaired_MD014_z3_projector_packet {G : Type} [Semigroup G]
     sectorPhase omega * sectorPhase omega * sectorPhase omega = 1 ∧
     finiteCentralExtensionMul tau (finiteCentralExtensionMul tau x y) z =
       finiteCentralExtensionMul tau x (finiteCentralExtensionMul tau y z) := by
-  exact ⟨sectorProjector0_idempotent, sectorProjector1_idempotent,
-    sectorProjector2_idempotent, sectorProjector0_mul_sectorProjector1,
-    sectorProjector1_mul_sectorProjector0, sectorProjector_sum_identity,
-    trace3_sectorProjector0, trace3_sectorProjector1, trace3_sectorProjector2,
-    trace3_sectorPhase omega, sectorPhase_mul_projector1 omega,
-    sectorProjector1_mul_sectorPhase omega, sectorPhase_cube_identity omega homega,
-    finiteCentralExtensionMul_assoc tau hassoc x y z⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact sectorProjector0_idempotent
+  · exact sectorProjector1_idempotent
+  · exact sectorProjector2_idempotent
+  · exact sectorProjector0_mul_sectorProjector1
+  · exact sectorProjector1_mul_sectorProjector0
+  · exact sectorProjector_sum_identity
+  · exact trace3_sectorProjector0
+  · exact trace3_sectorProjector1
+  · exact trace3_sectorProjector2
+  · exact trace3_sectorPhase omega
+  · exact sectorPhase_mul_projector1 omega
+  · exact sectorProjector1_mul_sectorPhase omega
+  · exact sectorPhase_cube_identity omega homega
+  · exact finiteCentralExtensionMul_assoc tau hassoc x y z
 
 end InfoGeometry.Physics.MD014TriSpinZ3Projectors
 

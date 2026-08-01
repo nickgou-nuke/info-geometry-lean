@@ -164,54 +164,37 @@ end RealDifferential
 
 /-! ## 3. witness-gated (Native Closure Mandated: Closure Debt) Drazin null support -/
 
-/--
-Drazin null support predicate for an endomorphism.
-
-This packet is anchored to the concrete Drazin complement from
-`DrazinCoreFlow`: the Drazin-null sector is the range of the complementary
-projector, and the generalized kernel is the corresponding `drazinCore`.
--/
-@[rep_depth operator]
-structure DrazinNullSupport
-    (C : Type*) [AddCommGroup C] [Module ℝ C] where
-  A : Module.End ℝ C
-  D : Module.End ℝ C
-  k : ℕ
-  hDrazin : InfoGeometry.Canonical.Drazin.IsDrazinInverse A D k
-
-namespace DrazinNullSupport
-
-variable {C : Type*}
-variable [AddCommGroup C] [Module ℝ C]
-variable (N : DrazinNullSupport C)
 
 /-- Drazin-null elements are exactly the range of the complementary projector. -/
 @[rep_depth operator]
-def IsDrazinNull (x : C) : Prop :=
-  x ∈ LinearMap.range (complementaryProjection N.A N.D)
+def IsDrazinNull {C : Type*} [AddCommGroup C] [Module ℝ C]
+    (A D : Module.End ℝ C) (x : C) : Prop :=
+  x ∈ LinearMap.range (complementaryProjection A D)
 
 /-- The generalized kernel is the concrete `drazinCore` from `DrazinCoreFlow`. -/
 @[rep_depth operator]
-def IsGeneralizedKernel (x : C) : Prop :=
-  x ∈ drazinCore N.A N.k
+def IsGeneralizedKernel {C : Type*} [AddCommGroup C] [Module ℝ C]
+    (A : Module.End ℝ C) (k : ℕ) (x : C) : Prop :=
+  x ∈ drazinCore A k
 
 /-- Readback of the concrete Drazin-null/generalized-kernel identification. -/
 @[rep_depth operator]
 theorem drazinNull_iff_generalizedKernel
+    {C : Type*} [AddCommGroup C] [Module ℝ C]
+    (A D : Module.End ℝ C) (k : ℕ)
+    (hDrazin : InfoGeometry.Canonical.Drazin.IsDrazinInverse A D k)
     (x : C) :
-    N.IsDrazinNull x ↔ N.IsGeneralizedKernel x := by
+    IsDrazinNull A D x ↔ IsGeneralizedKernel A k x := by
   constructor
   · intro hx
     rcases hx with ⟨y, hy⟩
     rw [← hy]
     exact complementaryProjection_mapsTo_drazinCore
-      (A := N.A) (D := N.D) (k := N.k) (h := N.hDrazin) y
+      (A := A) (D := D) (k := k) (h := hDrazin) y
   · intro hx
-    simpa [DrazinNullSupport.IsDrazinNull, DrazinNullSupport.IsGeneralizedKernel,
-      complementaryProjection_range_eq_drazinCore (A := N.A) (D := N.D) (k := N.k)
-        (h := N.hDrazin)] using hx
-
-end DrazinNullSupport
+    simpa [IsDrazinNull, IsGeneralizedKernel,
+      complementaryProjection_range_eq_drazinCore (A := A) (D := D) (k := k)
+        (h := hDrazin)] using hx
 
 /-! ## 3b. Direct Module.End Drazin generalized-kernel residue -/
 
@@ -278,6 +261,37 @@ theorem complementaryProjection_fixes_drazinNullCycle
   simpa using congrArg (fun F : Module.End K V => F y) hIdem
 
 end DrazinNullResidue
+
+/-! ## 3c. Genuine Green identity in the group-invertible Drazin sector -/
+
+/--
+For a Drazin inverse of index one, the generalized inverse is a Green
+operator in the usual `A G A = A` sense.  This is the index-one consequence
+of the native Drazin power law, not an assertion for an arbitrary nilpotent
+Drazin sector.
+-/
+theorem drazin_green_identity_of_index_one
+    {K V : Type*} [DivisionRing K] [AddCommGroup V] [Module K V]
+    {A G : Module.End K V}
+    (hG : IsDrazinInverse A G 1) :
+    A * G * A = A := by
+  calc
+    A * G * A = A * (G * A) := by simp [mul_assoc]
+    _ = A * (A * G) := by rw [hG.comm]
+    _ = A ^ 2 * G := by simp [pow_two, mul_assoc]
+    _ = A := by simpa [pow_two] using hG.power
+
+/--
+The preceding Green identity applied to the square of a real differential.
+The theorem requires the genuine index-one Drazin owner for `D²`; the
+nilpotence law `D² = 0` alone does not manufacture such a propagator.
+-/
+theorem differential_square_green_identity
+    {C : Type*} [AddCommGroup C] [Module ℝ C]
+    (𝒟 : RealDifferential C) (G : Module.End ℝ C)
+    (hG : IsDrazinInverse (𝒟.D.comp 𝒟.D) G 1) :
+    (𝒟.D.comp 𝒟.D) * G * (𝒟.D.comp 𝒟.D) = 𝒟.D.comp 𝒟.D := by
+  exact drazin_green_identity_of_index_one hG
 
 /-! ## 4. Generic null-projector adapter -/
 

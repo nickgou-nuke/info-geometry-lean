@@ -466,9 +466,10 @@ theorem virasoro_bracket_sl2_low_modes
     ∧
     ⁅P.affineVirasoro.virasoro.Lmode 0,
       P.affineVirasoro.virasoro.Lmode 0⁆ = 0 := by
-  exact ⟨P.virasoro_bracket_one_negOne_strict hvir,
-    P.virasoro_bracket_negOne_one_strict hvir,
-    P.virasoro_bracket_zero_zero hvir⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact P.virasoro_bracket_one_negOne_strict hvir
+  · exact P.virasoro_bracket_negOne_one_strict hvir
+  · exact P.virasoro_bracket_zero_zero hvir
 
 /-- Virasoro modes reparametrize affine currents by the supplied bridge law. -/
 @[rep_depth operator]

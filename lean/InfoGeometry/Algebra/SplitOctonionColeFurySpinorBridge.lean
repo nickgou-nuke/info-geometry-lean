@@ -18,7 +18,7 @@ This represents the 32 complex degrees of freedom for a single generation
 (8 particles: ν, e, 3 up quarks, 3 down quarks, each as a 4-component Dirac spinor, 
 yielding 8 * 4 = 32 complex dimensions).
 -/
-def ColeFurySpinor (C : Type*) [CommRing C] := Fin 32 → C
+abbrev ColeFurySpinor (C : Type*) [CommRing C] := Fin 32 → C
 
 namespace ColeFurySpinor
 

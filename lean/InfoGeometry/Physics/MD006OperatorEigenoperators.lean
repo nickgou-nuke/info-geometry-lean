@@ -222,18 +222,19 @@ theorem repaired_MD006_operator_eigenoperator_packet (A B X : MatrixQuantumCarri
     matrixComm UnifiedMatrixBasis.σ₃ E12 = (2 : ℂ) • E12 ∧
     matrixComm UnifiedMatrixBasis.σ₃ E21 = (-2 : ℂ) • E21 ∧
     matrixComm E12 E21 = UnifiedMatrixBasis.σ₃ := by
-  exact ⟨leftMul_rightMul_commute A B X,
-    leftMul_commutator_action A B X,
-    rightMul_commutator_action A B X,
-    sigma3_E12_joint_eigen.1,
-    sigma3_E12_joint_eigen.2,
-    matrixUnit_cross_products.1,
-    matrixUnit_cross_products.2,
-    E11_biquat_decomposition,
-    E12_biquat_decomposition,
-    sigma3_comm_E12,
-    sigma3_comm_E21,
-    E12_comm_E21⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact leftMul_rightMul_commute A B X
+  · exact leftMul_commutator_action A B X
+  · exact rightMul_commutator_action A B X
+  · exact sigma3_E12_joint_eigen.1
+  · exact sigma3_E12_joint_eigen.2
+  · exact matrixUnit_cross_products.1
+  · exact matrixUnit_cross_products.2
+  · exact E11_biquat_decomposition
+  · exact E12_biquat_decomposition
+  · exact sigma3_comm_E12
+  · exact sigma3_comm_E21
+  · exact E12_comm_E21
 
 end InfoGeometry.Physics.MD006OperatorEigenoperators
 

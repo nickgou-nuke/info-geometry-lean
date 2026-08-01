@@ -128,15 +128,29 @@ structure FibonacciBraidedTensorCategoryShadow where
   sqrtTau : ℂ
   sqrt_sq : sqrtTau ^ 2 = tau
   tau_sq_add_tau : tau ^ 2 + tau = 1
-  R : Matrix (Fin 2) (Fin 2) ℂ
-  B : Matrix (Fin 2) (Fin 2) ℂ
-  R_eq : R = fibonacciRMatrix q
-  B_eq : B = fibonacciBMatrix q tau sqrtTau
   fusion_rule :
     FibonacciCharge.fusion FibonacciCharge.eps FibonacciCharge.eps =
       {FibonacciCharge.one, FibonacciCharge.eps}
 
 namespace FibonacciBraidedTensorCategoryShadow
+
+/-- The finite Fibonacci `R` matrix determined by the phase parameter. -/
+abbrev R (F : FibonacciBraidedTensorCategoryShadow) :
+    Matrix (Fin 2) (Fin 2) ℂ :=
+  fibonacciRMatrix F.q
+
+@[simp] theorem R_eq (F : FibonacciBraidedTensorCategoryShadow) :
+    F.R = fibonacciRMatrix F.q :=
+  rfl
+
+/-- The finite Fibonacci braiding matrix determined by the scalar data. -/
+abbrev B (F : FibonacciBraidedTensorCategoryShadow) :
+    Matrix (Fin 2) (Fin 2) ℂ :=
+  fibonacciBMatrix F.q F.tau F.sqrtTau
+
+@[simp] theorem B_eq (F : FibonacciBraidedTensorCategoryShadow) :
+    F.B = fibonacciBMatrix F.q F.tau F.sqrtTau :=
+  rfl
 
 /-- The intrinsic finite Fibonacci self-fusion rule. -/
 theorem self_fusion_rule (F : FibonacciBraidedTensorCategoryShadow) :

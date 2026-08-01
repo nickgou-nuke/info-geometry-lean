@@ -76,11 +76,19 @@ theorem detSign_clI : detSign clI = DetSign.positive := by
 /-- Finite-level dimension theorem data for the UHF tower. -/
 structure MatrixTowerLevel where
   n : ℕ
-  dim : ℕ
-  dim_eq : dim = 2 ^ n
+namespace MatrixTowerLevel
+
+/-- The matrix level dimension determined by its level index. -/
+abbrev dim (L : MatrixTowerLevel) : ℕ := 2 ^ L.n
+
+/-- The level dimension is its canonical power-of-two dimension. -/
+theorem dim_eq (L : MatrixTowerLevel) : L.dim = 2 ^ L.n := by
+  rfl
+
+end MatrixTowerLevel
 
 def towerLevel (n : ℕ) : MatrixTowerLevel :=
-  ⟨n, 2 ^ n, rfl⟩
+  ⟨n⟩
 
 theorem towerLevel_succ_dim (n : ℕ) :
     (towerLevel (n + 1)).dim = (towerLevel n).dim * 2 := by
@@ -122,8 +130,17 @@ structure ThermodynamicLadder where
   level : ℕ → MatrixTowerLevel
   level_dim : ∀ n, (level n).dim = 2 ^ n
   doubles : ∀ n, (level (n + 1)).dim = (level n).dim * 2
-  braidModes : ℕ
-  braidModes_eq : braidModes = 3
+
+namespace ThermodynamicLadder
+
+/-- The ladder has the fixed ternary braid-mode readout. -/
+abbrev braidModes (_ : ThermodynamicLadder) : ℕ := 3
+
+/-- The braid-mode readout is definitionally three. -/
+theorem braidModes_eq (T : ThermodynamicLadder) : T.braidModes = 3 := by
+  rfl
+
+end ThermodynamicLadder
 
 def thermodynamicLadder : ThermodynamicLadder where
   seed := cl11Seed
@@ -132,5 +149,3 @@ def thermodynamicLadder : ThermodynamicLadder where
     intro n
     rfl
   doubles := towerLevel_succ_dim
-  braidModes := 3
-  braidModes_eq := rfl

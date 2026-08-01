@@ -77,15 +77,20 @@ theorem boundaryPrefix_tapeShift (n : ℕ) (τ : TuringTape) (i : Fin n) :
       boundaryPrefix (n + 1) τ ⟨i.1 + 1, Nat.succ_lt_succ i.2⟩ :=
   rfl
 
-/-- Exact finite-rational prior over length-`n` tape windows. -/
-structure FiniteTapePrior (n : ℕ) where
-  mass : BitWord n → ℚ
-  nonneg : ∀ w, 0 ≤ mass w
-  total : (∑ w : BitWord n, mass w) = 1
+/-- Exact finite-rational prior, natively as a mass-function subtype. -/
+abbrev FiniteTapePrior (n : ℕ) :=
+  {mass : BitWord n → ℚ //
+    (∀ w, 0 ≤ mass w) ∧ (∑ w : BitWord n, mass w) = 1}
 
 namespace FiniteTapePrior
 
 variable {n : ℕ}
+
+abbrev mass (μ : FiniteTapePrior n) : BitWord n → ℚ := μ.1
+
+lemma nonneg (μ : FiniteTapePrior n) (w : BitWord n) : 0 ≤ μ.mass w := μ.2.1 w
+
+lemma total (μ : FiniteTapePrior n) : (∑ w : BitWord n, μ.mass w) = 1 := μ.2.2
 
 /-- Probability of a finite event/program. -/
 def eventProb (μ : FiniteTapePrior n) (P : FiniteProgram n) : ℚ :=
@@ -96,14 +101,13 @@ def atomEvent (w : BitWord n) : FiniteProgram n :=
   {v | v = w}
 
 /-- Point mass at a finite observed prefix. -/
-def dirac (w : BitWord n) : FiniteTapePrior n where
-  mass := fun v => if v = w then 1 else 0
-  nonneg := by
-    intro v
-    by_cases h : v = w <;> simp [h]
-  total := by
-    classical
-    simp
+def dirac (w : BitWord n) : FiniteTapePrior n :=
+  ⟨fun v => if v = w then 1 else 0, by
+    constructor
+    · intro v
+      by_cases h : v = w <;> simp [h]
+    · classical
+      simp⟩
 
 /-- Conditioning on an observed atom collapses to the corresponding Dirac mass. -/
 def conditionOnObservedPrefix (_μ : FiniteTapePrior n) (w : BitWord n) : FiniteTapePrior n :=
@@ -112,25 +116,26 @@ def conditionOnObservedPrefix (_μ : FiniteTapePrior n) (w : BitWord n) : Finite
 @[simp] theorem conditionOnObservedPrefix_mass_self
     (μ : FiniteTapePrior n) (w : BitWord n) :
     (conditionOnObservedPrefix μ w).mass w = 1 := by
-  simp [conditionOnObservedPrefix, dirac]
+  simp [conditionOnObservedPrefix, dirac, FiniteTapePrior.mass]
 
 @[simp] theorem conditionOnObservedPrefix_mass_ne
     (μ : FiniteTapePrior n) {w v : BitWord n} (h : v ≠ w) :
     (conditionOnObservedPrefix μ w).mass v = 0 := by
-  simp [conditionOnObservedPrefix, dirac, h]
+  simp [conditionOnObservedPrefix, dirac, FiniteTapePrior.mass, h]
 
 /-- The conditioned atom has probability one. -/
 theorem eventProb_atom_conditioned_self (μ : FiniteTapePrior n) (w : BitWord n) :
     eventProb (conditionOnObservedPrefix μ w) (atomEvent w) = 1 := by
   classical
-  simp [eventProb, atomEvent, conditionOnObservedPrefix, dirac]
+  simp [eventProb, atomEvent, conditionOnObservedPrefix, dirac, FiniteTapePrior.mass]
 
 /-- A different atom has conditioned probability zero. -/
 theorem eventProb_atom_conditioned_ne
     (μ : FiniteTapePrior n) {w v : BitWord n} (h : v ≠ w) :
     eventProb (conditionOnObservedPrefix μ w) (atomEvent v) = 0 := by
   classical
-  simp [eventProb, atomEvent, conditionOnObservedPrefix, dirac, h]
+  simp [eventProb, atomEvent, conditionOnObservedPrefix, dirac,
+    FiniteTapePrior.mass, h]
 
 /-- Exact Bayesian normalization for the finite observed-prefix update. -/
 theorem conditionOnObservedPrefix_total (μ : FiniteTapePrior n) (w : BitWord n) :

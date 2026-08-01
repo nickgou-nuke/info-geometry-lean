@@ -108,8 +108,11 @@ theorem section25_capstone :
       ∀ lam mu nu : Fin 4,
         Section24.torsionCommutatorShadow kappa B lam nu mu =
           -Section24.torsionCommutatorShadow kappa B lam mu nu) := by
-  exact ⟨scalarRealityReadout_im_zero, revised_quaternion_norm_scalar,
-    revised_hamilton_basis_with_triple, revised_quaternion_metric_symmetric,
-    revised_torsionCommutatorShadow_antisymmetric⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · exact scalarRealityReadout_im_zero
+  · exact revised_quaternion_norm_scalar
+  · exact revised_hamilton_basis_with_triple
+  · exact revised_quaternion_metric_symmetric
+  · exact revised_torsionCommutatorShadow_antisymmetric
 
 end Section25

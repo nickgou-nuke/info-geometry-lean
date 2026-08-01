@@ -9,13 +9,19 @@ open InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
 
 namespace InfoGeometry.Arithmetic.PrimeSpinorWittenIndex
 
-structure PrimeSpinorWittenIndexPacket
+abbrev PrimeSpinorWittenIndexPacket
   (PrimeLabel R : Type*)
-  [CommRing R] where
-  modes : Finset PrimeLabel
-  amplitude : PrimeLabel → R
+  [CommRing R] := Finset PrimeLabel × (PrimeLabel → R)
 
 namespace PrimeSpinorWittenIndexPacket
+
+abbrev modes
+  {PrimeLabel R : Type*} [CommRing R]
+  (P : PrimeSpinorWittenIndexPacket PrimeLabel R) : Finset PrimeLabel := P.1
+
+abbrev amplitude
+  {PrimeLabel R : Type*} [CommRing R]
+  (P : PrimeSpinorWittenIndexPacket PrimeLabel R) : PrimeLabel → R := P.2
 
 theorem finite_readout
   {PrimeLabel R : Type*}

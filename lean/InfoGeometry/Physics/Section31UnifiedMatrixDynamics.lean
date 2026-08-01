@@ -95,8 +95,9 @@ theorem repaired_section31_dynamics_packet
     covDerivConst Γ (covDerivConst Λ X) -
       covDerivConst Λ (covDerivConst Γ X) =
         commutator (curvatureConst Γ Λ) X := by
-  exact ⟨vonNeumannRHS_eq_bloch_precession ω1 ω2 ω3 n1 n2 n3,
-    covDerivConst_commutator_eq_curvature_action Γ Λ X⟩
+  refine ⟨?_, ?_⟩
+  · exact vonNeumannRHS_eq_bloch_precession ω1 ω2 ω3 n1 n2 n3
+  · exact covDerivConst_commutator_eq_curvature_action Γ Λ X
 
 end InfoGeometry.Physics.Section31UnifiedMatrixDynamics
 

@@ -29,12 +29,17 @@ open CompletedZetaSouriauDInfinityThermodynamics
 /-! ## Affine chart for the zeta plane -/
 
 /-- Real affine chart for a complex spectral parameter `s = σ + iτ`. -/
-structure ZetaAffineChart where
-  sigma : ℝ
-  tau : ℝ
-  deriving DecidableEq
+abbrev ZetaAffineChart := ℝ × ℝ
 
 namespace ZetaAffineChart
+
+abbrev sigma (z : ZetaAffineChart) : ℝ := z.1
+
+abbrev tau (z : ZetaAffineChart) : ℝ := z.2
+
+@[simp] theorem sigma_apply (z : ZetaAffineChart) : sigma z = z.1 := rfl
+
+@[simp] theorem tau_apply (z : ZetaAffineChart) : tau z = z.2 := rfl
 
 @[ext] theorem ext {z w : ZetaAffineChart}
     (hsigma : z.sigma = w.sigma) (htau : z.tau = w.tau) : z = w := by
@@ -355,12 +360,17 @@ In these coordinates the zeta symmetry frame is linear:
 * functional duality is `(u, v) ↦ (-u, -v)`;
 * the critical antiunitary mirror is `(u, v) ↦ (-u, v)`.
 -/
-structure ZetaCenteredChart where
-  u : ℝ
-  v : ℝ
-  deriving DecidableEq
+abbrev ZetaCenteredChart := ℝ × ℝ
 
 namespace ZetaCenteredChart
+
+abbrev u (x : ZetaCenteredChart) : ℝ := x.1
+
+abbrev v (x : ZetaCenteredChart) : ℝ := x.2
+
+@[simp] theorem u_apply (x : ZetaCenteredChart) : u x = x.1 := rfl
+
+@[simp] theorem v_apply (x : ZetaCenteredChart) : v x = x.2 := rfl
 
 @[ext] theorem ext {x y : ZetaCenteredChart}
     (hu : x.u = y.u) (hv : x.v = y.v) : x = y := by

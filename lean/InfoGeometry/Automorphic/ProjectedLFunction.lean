@@ -559,6 +559,8 @@ Euler/completed data are supplied.
 theorem langlandsPrimeResonanceOwnerTarget :
     LanglandsPrimeResonanceOwnerTarget := by
   intro Bulk _ _ Boundary _ _ W P Eul completedL hCompleted
-  exact ⟨Eul.hasEulerProduct, hCompleted⟩
+  refine ⟨?_, ?_⟩
+  · exact Eul.hasEulerProduct
+  · exact hCompleted
 
 end InfoGeometry.Automorphic.SiegelResonance

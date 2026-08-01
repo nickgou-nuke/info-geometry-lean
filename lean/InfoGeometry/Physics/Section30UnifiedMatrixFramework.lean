@@ -176,8 +176,9 @@ theorem blochMatrix_det_eq_zero_of_unit_norm {nx ny nz : ℝ}
 theorem repaired_section30_matrix_packet (t x y z nx ny nz : ℝ) :
     - (spacetimeMatrix t x y z).det = minkowskiForm t x y z ∧
       (blochMatrix nx ny nz).trace = 1 := by
-  exact ⟨neg_det_spacetimeMatrix_eq_minkowskiForm t x y z,
-    blochMatrix_trace nx ny nz⟩
+  refine ⟨?_, ?_⟩
+  · exact neg_det_spacetimeMatrix_eq_minkowskiForm t x y z
+  · exact blochMatrix_trace nx ny nz
 
 end InfoGeometry.Physics.Section30UnifiedMatrixFramework
 

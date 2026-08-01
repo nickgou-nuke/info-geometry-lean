@@ -91,6 +91,9 @@ theorem section18_capstone :
     (∀ mu nu : Fin 4,
       Section5.γ mu * Section5.γ nu + Section5.γ nu * Section5.γ mu =
         (2 * Section5.η mu nu) • (1 : DiracMatrix)) := by
-  exact ⟨even_level_dimension, odd_level_dimension, gamma_jordan_metric_readout⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact even_level_dimension
+  · exact odd_level_dimension
+  · exact gamma_jordan_metric_readout
 
 end Section18

@@ -122,17 +122,18 @@ theorem mobius_cantor_tkk_closure_synthesis
     (∀ c : CentralizerAtom,
       centralizerValue c * centralizerValue c = (1 : ArtinMonodromyPin55.M2C)) ∧
     InfoGeometry.Clifford.Clifford55AnomalyOSP.anomalyIndex 5 5 = 0 := by
-  exact ⟨mobiusJ_involutive z,
-    mobiusGamma_involutive z,
-    mobiusJ_gamma_commute z,
-    cantor_head_tail_self_similarity b,
-    headN_prependN i b,
-    tailN_prependN i b,
-    cantor_cuntz_branch_orthogonality i j,
-    cantor_cuntz_branch_partition,
-    cantor_cut_fractal_step n f,
-    tkk_centralizer_atom_sq,
-    tkk_pin55_anomaly_zero⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact mobiusJ_involutive z
+  · exact mobiusGamma_involutive z
+  · exact mobiusJ_gamma_commute z
+  · exact cantor_head_tail_self_similarity b
+  · exact headN_prependN i b
+  · exact tailN_prependN i b
+  · exact cantor_cuntz_branch_orthogonality i j
+  · exact cantor_cuntz_branch_partition
+  · exact cantor_cut_fractal_step n f
+  · exact tkk_centralizer_atom_sq
+  · exact tkk_pin55_anomaly_zero
 
 /-! ## Cartan Decomposition and TKK Projectors -/
 

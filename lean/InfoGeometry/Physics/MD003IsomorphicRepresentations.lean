@@ -276,15 +276,17 @@ theorem repaired_MD003_isomorphic_representations_packet
     (∀ A Ap B Bp : Fin 2,
       unnormalizedSolderingContraction A Ap B Bp =
         -2 * epsilonSpinor A B * epsilonSpinor Ap Bp) := by
-  exact ⟨md003_minkowski_metric_from_determinant c dt dx dy dz hc,
-    md003_quaternion_norm_eq_trace_self c dt dx dy dz hc,
-    md003_trace_recover_time c dt dx dy dz hc,
-    md003_trace_recover_x c dt dx dy dz hc,
-    md003_trace_recover_y c dt dx dy dz hc,
-    md003_trace_recover_z c dt dx dy dz hc,
-    biquat_basis_multiplication_packet.2.2.2.1,
-    (biquat_trace_recover 0 dx dy dz).2.1,
-    fun A Ap B Bp => md003_unnormalized_fierz_identity A Ap B Bp⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact md003_minkowski_metric_from_determinant c dt dx dy dz hc
+  · exact md003_quaternion_norm_eq_trace_self c dt dx dy dz hc
+  · exact md003_trace_recover_time c dt dx dy dz hc
+  · exact md003_trace_recover_x c dt dx dy dz hc
+  · exact md003_trace_recover_y c dt dx dy dz hc
+  · exact md003_trace_recover_z c dt dx dy dz hc
+  · exact biquat_basis_multiplication_packet.2.2.2.1
+  · exact (biquat_trace_recover 0 dx dy dz).2.1
+  · intro A Ap B Bp
+    exact md003_unnormalized_fierz_identity A Ap B Bp
 
 end InfoGeometry.Physics.MD003IsomorphicRepresentations
 

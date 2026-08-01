@@ -164,12 +164,13 @@ theorem coefficient_complex_structure_quaternion_packet (v : PauliCoord) :
       _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexK
         (_root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexI v) =
         _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexJ v := by
-  exact ⟨_root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexI_sq v,
-    _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexJ_sq v,
-    _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexK_sq v,
-    _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexI_mul_complexJ v,
-    _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexJ_mul_complexK v,
-    _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexK_mul_complexI v⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexI_sq v
+  · exact _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexJ_sq v
+  · exact _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexK_sq v
+  · exact _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexI_mul_complexJ v
+  · exact _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexJ_mul_complexK v
+  · exact _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexK_mul_complexI v
 
 /-- The coefficient-space complex structures preserve the finite HS metric. -/
 theorem coefficient_complex_structures_preserve_hsMetric (a b : PauliCoord) :
@@ -185,12 +186,10 @@ theorem coefficient_complex_structures_preserve_hsMetric (a b : PauliCoord) :
         (_root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexK a)
         (_root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexK b) =
         hsMetric a b := by
-  exact ⟨_root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexI_preserves_hsMetric
-      a b,
-    _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexJ_preserves_hsMetric
-      a b,
-    _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexK_preserves_hsMetric
-      a b⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexI_preserves_hsMetric a b
+  · exact _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexJ_preserves_hsMetric a b
+  · exact _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexK_preserves_hsMetric a b
 
 /-! ## Basis reconstruction and quaternion sign fence -/
 
@@ -230,13 +229,14 @@ theorem section02_finite_fundamental_structures_packet (a b : PauliCoord) :
       _root_.InfoGeometry.Geometry.PauliParavectorBridge.Minkowski4.q
         (_root_.InfoGeometry.Physics.Section00MatrixBasisFramework.toMinkowski4
           { t := 0, x := 1, y := 0, z := 0 }) = -1 := by
-  exact ⟨pauli_square_packet.1,
-    pauli_anticommutation_packet.1,
-    _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexI_mul_complexJ a,
-    _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexI_preserves_hsMetric a b,
-    normalized_matrix_metric_eq_vectorInterval a,
-    ordinary_quaternion_norm_sign_boundary.1,
-    ordinary_quaternion_norm_sign_boundary.2⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact pauli_square_packet.1
+  · exact pauli_anticommutation_packet.1
+  · exact _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexI_mul_complexJ a
+  · exact _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.complexI_preserves_hsMetric a b
+  · exact normalized_matrix_metric_eq_vectorInterval a
+  · exact ordinary_quaternion_norm_sign_boundary.1
+  · exact ordinary_quaternion_norm_sign_boundary.2
 
 end InfoGeometry.Physics.Section02FundamentalStructures
 

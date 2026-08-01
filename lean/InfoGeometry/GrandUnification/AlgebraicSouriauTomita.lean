@@ -147,7 +147,10 @@ No external data are accepted: each component is discharged by its owner theorem
 -/
 theorem constructAlgebraicSouriauTomitaTarget :
     AlgebraicSouriauTomitaTarget := by
-  exact ⟨h1VolumeCocycleSurface, massieuVolumeSeparationSurface,
-    finiteConnesTransportSurface, boundaryWickAnomalySurface⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact h1VolumeCocycleSurface
+  · exact massieuVolumeSeparationSurface
+  · exact finiteConnesTransportSurface
+  · exact boundaryWickAnomalySurface
 
 end InfoGeometry.GrandUnification

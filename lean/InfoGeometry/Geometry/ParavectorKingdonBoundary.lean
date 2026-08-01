@@ -46,7 +46,7 @@ noncomputable def canonicalBoundary (v : Minkowski4) : CanonicalZorn :=
 
 /-- The canonical Zorn determinant of the boundary point is the Minkowski form. -/
 theorem canonicalBoundary_det_eq_minkowski_q (v : Minkowski4) :
-    ZornMatrix.detZ realCrossProduct3 (canonicalBoundary v) = v.q := by
+    ZornMatrix.detZ (canonicalBoundary v) = v.q := by
   change zornNorm (zornBoundaryOfMinkowski4 v) = v.q
   exact zornNorm_boundary_eq_minkowski_q v
 

@@ -221,14 +221,15 @@ theorem color_car_standard_model_synthesis :
     numberOp0 * numberOp0 = numberOp0 ∧
     numberOp1 * numberOp1 = numberOp1 ∧
     numberOp2 * numberOp2 = numberOp2 := by
-  exact ⟨e_mem_R_CAR,
-    car_submodule_is_left_tau_ideal,
-    N_plus_add_N_minus,
-    N_plus_sub_N_minus,
-    N_plus_mul_N_minus,
-    N_minus_mul_N_plus,
-    numberOp0_idem,
-    numberOp1_idem,
-    numberOp2_idem⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact e_mem_R_CAR
+  · exact car_submodule_is_left_tau_ideal
+  · exact N_plus_add_N_minus
+  · exact N_plus_sub_N_minus
+  · exact N_plus_mul_N_minus
+  · exact N_minus_mul_N_plus
+  · exact numberOp0_idem
+  · exact numberOp1_idem
+  · exact numberOp2_idem
 
 end InfoGeometry.Physics.ColorCARStandardModel

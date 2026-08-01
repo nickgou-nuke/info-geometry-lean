@@ -85,6 +85,9 @@ theorem wallpaper_to_affine_weyl_d5_packet (t : Z2) :
         latticeEmbed t 3 + latticeEmbed t 4 = 0) ∧
       matVec5 sigmaXMatrix (latticeEmbed t) = latticeEmbed (sigmaX t) ∧
       matVec5 sigmaDMatrix (latticeEmbed t) = latticeEmbed (sigmaD t) := by
-  exact ⟨latticeEmbed_sum_zero t, latticeEmbed_sigmaX t, latticeEmbed_sigmaD t⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact latticeEmbed_sum_zero t
+  · exact latticeEmbed_sigmaX t
+  · exact latticeEmbed_sigmaD t
 
 end InfoGeometry.Canonical.WallpaperAffineWeylD5Bridge

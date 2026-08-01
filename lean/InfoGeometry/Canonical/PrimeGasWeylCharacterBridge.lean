@@ -17,17 +17,31 @@ namespace InfoGeometry.Canonical.PrimeGasWeylCharacter
 
 /-- Raw prime-gas data used by the Weyl-character bridge. -/
 @[rep_depth operator]
-structure PrimeGasWeylData where
-  beta : ℝ
-  partitionFunction : ℝ
-  entropyReadout : ℝ
-  characterReadout : ℝ
+abbrev PrimeGasWeylData := ℝ × (ℝ × (ℝ × ℝ))
+
+namespace PrimeGasWeylData
+
+abbrev beta (P : PrimeGasWeylData) : ℝ := P.1
+
+abbrev partitionFunction (P : PrimeGasWeylData) : ℝ := P.2.1
+
+abbrev entropyReadout (P : PrimeGasWeylData) : ℝ := P.2.2.1
+
+abbrev characterReadout (P : PrimeGasWeylData) : ℝ := P.2.2.2
+
+end PrimeGasWeylData
 
 /-- Minimal Souriau thermodynamic readout packet. -/
 @[rep_depth operator]
-structure SouriauThermodynamicPacket where
-  beta : ℝ
-  entropyReadout : ℝ
+abbrev SouriauThermodynamicPacket := ℝ × ℝ
+
+namespace SouriauThermodynamicPacket
+
+abbrev beta (P : SouriauThermodynamicPacket) : ℝ := P.1
+
+abbrev entropyReadout (P : SouriauThermodynamicPacket) : ℝ := P.2
+
+end SouriauThermodynamicPacket
 
 /--
 Witness-gated Weyl-character bridge.
@@ -43,13 +57,18 @@ structure PrimeGasWeylCharacterBridge where
     souriau.beta = primeGas.beta
   entropy_eq :
     souriau.entropyReadout = primeGas.entropyReadout
-  weylCharacter : ℝ
-  weylCharacter_eq :
-    weylCharacter = primeGas.characterReadout
 
 namespace PrimeGasWeylCharacterBridge
 
 variable (B : PrimeGasWeylCharacterBridge)
+
+/-- Weyl-character readout supplied by the prime-gas owner. -/
+abbrev weylCharacter (B : PrimeGasWeylCharacterBridge) : ℝ :=
+  B.primeGas.characterReadout
+
+@[simp] theorem weylCharacter_eq (B : PrimeGasWeylCharacterBridge) :
+    B.weylCharacter = B.primeGas.characterReadout :=
+  rfl
 
 /-- The Souriau inverse-temperature readout matches the prime-gas beta. -/
 @[simp]

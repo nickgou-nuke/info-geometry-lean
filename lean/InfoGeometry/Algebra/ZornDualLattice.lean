@@ -73,6 +73,9 @@ lemma polarBilinear_symm (X Y : ZornVectorMatrix ℚ) :
     polarBilinear X Y = polarBilinear Y X := by
   exact polar_symm X Y
 
+theorem polarBilinear_isSymm : LinearMap.IsSymm polarBilinear :=
+  ⟨polarBilinear_symm⟩
+
 def dualLattice (L : AddSubgroup (ZornVectorMatrix ℚ)) :
     AddSubgroup (ZornVectorMatrix ℚ) where
   carrier := {X | ∀ Y ∈ L, ∃ n : ℤ, polar X Y = (n : ℚ)}

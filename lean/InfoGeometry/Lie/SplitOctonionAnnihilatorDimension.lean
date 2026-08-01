@@ -24,9 +24,9 @@ open InfoGeometry.Canonical.ZornVectorMatrixExplicit.KingdonSplitOctonion
 /-- Polarization of the canonical determinant on the full split-octonion
 space. -/
 def canonicalPolar (X Y : CanonicalZorn) : ℝ :=
-  ZornMatrix.detZ realCrossProduct3 (X + Y) -
-    ZornMatrix.detZ realCrossProduct3 X -
-      ZornMatrix.detZ realCrossProduct3 Y
+  ZornMatrix.detZ (X + Y) -
+    ZornMatrix.detZ X -
+      ZornMatrix.detZ Y
 
 /-- The canonical determinant polar form is nondegenerate.  This transports the
 already proved real Kingdon nondegeneracy theorem through the canonical linear
@@ -67,15 +67,15 @@ def canonicalConj (X : CanonicalZorn) : CanonicalZorn :=
 /-- The native Zorn norm agrees with the canonical determinant. -/
 theorem vector_norm_eq_canonical_det (X : CanonicalZorn) :
     InfoGeometry.Algebra.ZornVectorMatrix.norm (canonicalVectorEquiv X) =
-      ZornMatrix.detZ realCrossProduct3 X := by
+    ZornMatrix.detZ X := by
   simp [InfoGeometry.Algebra.ZornVectorMatrix.norm, ZornMatrix.detZ,
-    realCrossProduct3, InfoGeometry.Algebra.ZornVec3.dot,
+    InfoGeometry.Algebra.ZornVec3.dot,
     InfoGeometry.Canonical.ZornMatrix.dot, Fin.sum_univ_three]
 
 /-- Kirmse right contraction on the canonical carrier. -/
 theorem canonical_kirmse_right (X Y : CanonicalZorn) :
     (Y * X) * canonicalConj X =
-      ZornMatrix.detZ realCrossProduct3 X • Y := by
+      ZornMatrix.detZ X • Y := by
   apply canonicalVectorEquiv.injective
   simp only [canonicalVectorEquiv_mul, canonicalVectorEquiv_canonicalConj,
     canonicalVectorEquiv_smul]

@@ -223,9 +223,10 @@ theorem octonion_paravector_bridge_synthesis
       (∀ x y : Paravector V,
         S.projectParavector (S.includeParavector x * S.includeParavector y) =
           paravectorMul D x y) := by
-  exact ⟨one_paravectorMul D,
-    paravectorMul_one D,
-    imaginary_sq D,
-    S.projected_mul⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact one_paravectorMul D
+  · exact paravectorMul_one D
+  · exact imaginary_sq D
+  · exact S.projected_mul
 
 end InfoGeometry.Clifford.OctonionParavectorBridge

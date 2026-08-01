@@ -139,12 +139,13 @@ theorem repaired_MD016_prediction_packet
     c - gwSpeedShadow c beta f f0 = c * beta * (f / f0) ^ 2 ∧
     darkEnergyEOS (6 / 100 : ℝ) = -98 / 100 ∧
     omegaLambdaRatio gamma + omegaMatterRatio gamma = 1 := by
-  exact ⟨modifiedCrossSection_excess sigmaSM alpha E Lambda angular,
-    linearTrialityAngleShift_sub_baseline baseline sensitivity delta,
-    gwSpeedShadow_reference_frequency c beta f0 hf0,
-    gwSpeedShadow_deficit c beta f f0,
-    darkEnergyEOS_sample,
-    omegaRatios_sum_one gamma hgamma⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact modifiedCrossSection_excess sigmaSM alpha E Lambda angular
+  · exact linearTrialityAngleShift_sub_baseline baseline sensitivity delta
+  · exact gwSpeedShadow_reference_frequency c beta f0 hf0
+  · exact gwSpeedShadow_deficit c beta f f0
+  · exact darkEnergyEOS_sample
+  · exact omegaRatios_sum_one gamma hgamma
 
 end InfoGeometry.Physics.MD016ExperimentalPredictionsFinite
 

@@ -27,30 +27,10 @@ open InfoGeometry.Canonical.PrimeHurwitzLimit
 open InfoGeometry.Canonical.PrimeLeeYangConvergence
 open InfoGeometry.Analysis.LeeYangRootLimit
 
-/--
-Bridge packet from a convergence witness to a Hurwitz transfer witness.
-
-The packet is intentionally explicit: it keeps the convergence data and the
-Hurwitz data separate while allowing downstream code to relay the latter.
--/
-@[socket_debt_tag, rep_depth operator]
-structure PrimeLeeYangToHurwitzWitness
-    (Ξ : CompletedXiZeroPredicate)
-    (A : LeeYangApproximants) where
-  /-- The convergence socket that feeds the Hurwitz relay. -/
-  convergence :
-    PrimeLeeYangConvergenceSocket Ξ A
-
-  /-- The Hurwitz zero-transfer witness itself. -/
-  hurwitz :
-    CorrectHurwitzZeroTransferWitness Ξ A
-
-  /-- The two sockets describe the same limiting Cayley readout. -/
-  convergence_limit_eq_hurwitz_limit :
-    convergence.limitF = hurwitz.limitF
-
 variable {Ξ : CompletedXiZeroPredicate}
 variable {A : LeeYangApproximants}
+
+
 
 /--
 Completed-`xi` zeros map to the Lee--Yang circle when they are limits of

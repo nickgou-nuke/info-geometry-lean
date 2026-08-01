@@ -271,7 +271,10 @@ theorem kmsDetailedBalanceOwnerTarget
           D.kms.omega_eval (thermalWilsonHolonomyAt D.kms t b) a ∧
         I.boundaryIntegral Ω D.form.modularForm = 0 := by
   intro D t a b Ω
-  exact ⟨D.kms_boundary t a b, D.kms_boundary_wilson t a b, D.boundaryIntegral_eq_zero Ω⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact D.kms_boundary t a b
+  · exact D.kms_boundary_wilson t a b
+  · exact D.boundaryIntegral_eq_zero Ω
 
 end KMSDetailedBalance
 

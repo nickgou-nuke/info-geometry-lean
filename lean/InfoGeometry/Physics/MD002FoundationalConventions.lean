@@ -122,12 +122,13 @@ theorem repaired_MD002_foundational_conventions_packet
     jordanProduct A B = jordanProduct B A ∧
     lieProduct B A = - lieProduct A B ∧
     UnifiedMatrixBasis.complexI * UnifiedMatrixBasis.complexJ = UnifiedMatrixBasis.complexK := by
-  exact ⟨normalizedPauliSpacetimeMatrix_det c dt dx dy dz,
-    normalized_interval_eq_minkowski_minus_plus_plus_plus c dt dx dy dz hc,
-    normalized_hilbertSchmidt_identity_self c hc,
-    jordanProduct_comm A B,
-    lieProduct_antisymm A B,
-    md002_quaternion_complex_structure_packet.2.2.2.1⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact normalizedPauliSpacetimeMatrix_det c dt dx dy dz
+  · exact normalized_interval_eq_minkowski_minus_plus_plus_plus c dt dx dy dz hc
+  · exact normalized_hilbertSchmidt_identity_self c hc
+  · exact jordanProduct_comm A B
+  · exact lieProduct_antisymm A B
+  · exact md002_quaternion_complex_structure_packet.2.2.2.1
 
 end InfoGeometry.Physics.MD002FoundationalConventions
 

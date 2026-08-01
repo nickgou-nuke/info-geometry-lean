@@ -94,7 +94,9 @@ witness, but it is not used here to force the witness to exist.
 theorem pg_relation_keeps_explicit_jordan_witness (p : Lattice2D) (lam : ℂ)
     (h_pg : G (T_y p) = T_y.symm (G p)) :
     (G (T_y p) = T_y.symm (G p)) ∧ IsMatrixExceptionalPoint (jordanBlock lam) lam := by
-  exact ⟨h_pg, jordanBlock_is_matrixExceptionalPoint lam⟩
+  refine ⟨?_, ?_⟩
+  · exact h_pg
+  · exact jordanBlock_is_matrixExceptionalPoint lam
 
 end InfoGeometry.CognitiveTopology.ExceptionalPoints
 

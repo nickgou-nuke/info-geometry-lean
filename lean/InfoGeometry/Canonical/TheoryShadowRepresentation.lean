@@ -56,6 +56,9 @@ theorem splitCl44_TKK_shadow_bridge_packet
       P.closure.gibbs.IsOperatorAdmissible ∧
       P.triality.informationalDiracSquare = LinearMap.id := by
   have h := P.splitCl44_TKK_JordanLie_constructive_packet x xs
-  exact ⟨h.2.2.2.2.2.1, h.2.2.2.2.2.2.1, h.2.2.1⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact h.2.2.2.2.2.1
+  · exact h.2.2.2.2.2.2.1
+  · exact h.2.2.1
 
 end InfoGeometry.Canonical.TheoryShadow

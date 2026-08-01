@@ -147,8 +147,9 @@ theorem finiteWittenCancel_and_bekensteinHawkingDyadic
     (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 ∧
       bekensteinHawkingEntropy area G =
         massieuPotential (ι := Fin 2) (fun _ => (0 : ℝ)) := by
-  exact ⟨finite_witten_index_cancel P hP,
-    bekensteinHawkingEntropy_eq_twoBranch_massieu hG harea⟩
+  refine ⟨?_, ?_⟩
+  · exact finite_witten_index_cancel P hP
+  · exact bekensteinHawkingEntropy_eq_twoBranch_massieu hG harea
 
 /--
 Finite Witten cancellation synchronized with an `n`-bit dyadic horizon
@@ -161,8 +162,9 @@ theorem finiteWittenCancel_and_bekensteinHawkingDyadicBits
     (harea : area = 4 * G * dyadicEntropyBits n) :
     (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 ∧
       bekensteinHawkingEntropy area G = dyadicEntropyBits n := by
-  exact ⟨finite_witten_index_cancel P hP,
-    bekensteinHawkingEntropy_eq_dyadicEntropyBits n hG harea⟩
+  refine ⟨?_, ?_⟩
+  · exact finite_witten_index_cancel P hP
+  · exact bekensteinHawkingEntropy_eq_dyadicEntropyBits n hG harea
 
 /--
 State-level Möbius/Fermion parity plus finite Witten cancellation and dyadic
@@ -176,9 +178,10 @@ theorem primeBitState_mobiusParity_wittenCancel_bhDyadic
     (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 ∧
       bekensteinHawkingEntropy area G =
         massieuPotential (ι := Fin 2) (fun _ => (0 : ℝ)) := by
-  exact ⟨mobius_representedNatOfState_eq_fermionParity P ψ,
-    finite_witten_index_cancel P hP,
-    bekensteinHawkingEntropy_eq_twoBranch_massieu hG harea⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact mobius_representedNatOfState_eq_fermionParity P ψ
+  · exact finite_witten_index_cancel P hP
+  · exact bekensteinHawkingEntropy_eq_twoBranch_massieu hG harea
 
 /--
 State-level Möbius/Fermion parity plus finite Witten cancellation and an
@@ -191,9 +194,10 @@ theorem primeBitState_mobiusParity_wittenCancel_bhDyadicBits
     ArithmeticFunction.moebius (representedNatOfState P ψ) = fermionParityOfState P ψ ∧
     (∑ S ∈ P.primes.powerset, (-1 : ℤ) ^ S.card) = 0 ∧
       bekensteinHawkingEntropy area G = dyadicEntropyBits n := by
-  exact ⟨mobius_representedNatOfState_eq_fermionParity P ψ,
-    finite_witten_index_cancel P hP,
-    bekensteinHawkingEntropy_eq_dyadicEntropyBits n hG harea⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact mobius_representedNatOfState_eq_fermionParity P ψ
+  · exact finite_witten_index_cancel P hP
+  · exact bekensteinHawkingEntropy_eq_dyadicEntropyBits n hG harea
 
 end InfoGeometry.Holography.BekensteinHawkingDyadicEntropy
 

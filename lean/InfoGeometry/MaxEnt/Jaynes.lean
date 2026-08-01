@@ -417,14 +417,7 @@ lemma goodFraction_le_one
 def entropyConfidenceInterval (Hstar eps : ℝ) : Set ℝ :=
   Set.Icc (Hstar - eps) (Hstar + eps)
 
-/-- Finite concentration certificate mirroring Jaynes-style concentration statements. -/
-structure EntropyConcentrationCertificate
-    (S : Finset (Fin n → ℝ))
-    (Hstar eps eta : ℝ) where
-  eps_nonneg : 0 ≤ eps
-  eta_bounds : 0 ≤ eta ∧ eta ≤ 1
-  nonempty : S.Nonempty
-  lower_fraction_bound : eta ≤ goodFraction S Hstar eps
+
 
 /-- Membership in the entropy confidence interval implies entropy-band control. -/
 lemma entropyBand_of_mem_confidenceInterval

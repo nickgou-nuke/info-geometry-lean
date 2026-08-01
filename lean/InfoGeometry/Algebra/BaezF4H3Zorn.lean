@@ -197,6 +197,14 @@ theorem H3ZornJordanDerivation_lie
   exact (show ⁅D, E⁆ ∈ H3ZornF4Derivations from
     LieSubalgebra.lie_mem H3ZornF4Derivations hD hE)
 
+/-- Explicitly, the commutator of two Jordan derivations satisfies the Leibniz rule. -/
+theorem H3ZornJordanDerivation_commutator
+    {D E : Module.End ℝ (H3Zorn ℝ)}
+    (hD : H3ZornJordanDerivation D) (hE : H3ZornJordanDerivation E)
+    (X Y : H3Zorn ℝ) :
+    ⁅D, E⁆ (X * Y) = ⁅D, E⁆ X * Y + X * ⁅D, E⁆ Y := by
+  exact H3ZornJordanDerivation_lie hD hE X Y
+
 /-- The source-specific derivation carrier agrees exactly with the repository's
 generic native derivation Lie subalgebra. -/
 theorem H3ZornF4Derivations_eq_native :

@@ -68,7 +68,13 @@ theorem canonicalChiralOperatorCarrier_root_laws :
       (conformalOperator C).comp (conformalOperator C) =
         -(ContinuousLinearMap.id ℝ X.H) := by
   dsimp [boost, eps, uPlus, uMinus, conformalOperator]
-  exact ⟨rfl, rfl, rfl, rfl, rfl, X.K_sq⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · rfl
+  · rfl
+  · rfl
+  · rfl
+  · rfl
+  · exact X.K_sq
 
 end ChiralOperatorCarrier
 

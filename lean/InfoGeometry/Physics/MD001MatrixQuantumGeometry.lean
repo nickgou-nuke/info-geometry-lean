@@ -136,14 +136,15 @@ theorem repaired_MD001_matrix_quantum_geometry_packet (dt dx dy dz : ℂ)
     blochDensity bx bY bz * blochDensity bx bY bz = blochDensity bx bY bz ∧
     (Matrix.det (blochDensity bx bY bz) = 0) ∧
     InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauliRecompose A = A := by
-  exact ⟨pauliSpacetimeMatrix_det dt dx dy dz,
-    md001_pauli_square_packet.1,
-    md001_pauli_anticomm_packet.1,
-    md001_hilbertSchmidt_packet.1,
-    blochDensity_trace_one bx bY bz,
-    blochDensity_idempotent_of_unit bx bY bz hunit,
-    blochDensity_det_zero_of_unit bx bY bz hunit,
-    md001_local_matrix_recompose A⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact pauliSpacetimeMatrix_det dt dx dy dz
+  · exact md001_pauli_square_packet.1
+  · exact md001_pauli_anticomm_packet.1
+  · exact md001_hilbertSchmidt_packet.1
+  · exact blochDensity_trace_one bx bY bz
+  · exact blochDensity_idempotent_of_unit bx bY bz hunit
+  · exact blochDensity_det_zero_of_unit bx bY bz hunit
+  · exact md001_local_matrix_recompose A
 
 end InfoGeometry.Physics.MD001MatrixQuantumGeometry
 

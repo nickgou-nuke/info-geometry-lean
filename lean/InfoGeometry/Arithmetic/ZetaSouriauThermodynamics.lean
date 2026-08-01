@@ -41,8 +41,13 @@ abbrev SouriauTemperature : Type :=
 
 /-- Complex Souriau inverse-temperature datum. -/
 @[rep_depth thermo]
-structure ComplexSouriauBeta where
-  beta : SouriauTemperature
+abbrev ComplexSouriauBeta := SouriauTemperature
+
+namespace ComplexSouriauBeta
+
+abbrev beta (B : ComplexSouriauBeta) : SouriauTemperature := B
+
+end ComplexSouriauBeta
 
 /--
 Positive real-part complex Souriau inverse temperature.
@@ -51,8 +56,16 @@ This is a finite-side guard for the usual thermal half-plane.  Infinite
 normalizability is not asserted here.
 -/
 @[rep_depth thermo]
-structure PositiveComplexSouriauBeta extends ComplexSouriauBeta where
-  re_pos : 0 < beta.re
+abbrev PositiveComplexSouriauBeta :=
+  {B : ComplexSouriauBeta // 0 < B.re}
+
+namespace PositiveComplexSouriauBeta
+
+abbrev beta (B : PositiveComplexSouriauBeta) : SouriauTemperature := B.1
+
+abbrev re_pos (B : PositiveComplexSouriauBeta) : 0 < B.beta.re := B.2
+
+end PositiveComplexSouriauBeta
 
 variable {ι : Type*}
 
@@ -447,38 +460,18 @@ theorem regularizedBregmanComplex_nonneg
   have hdist : 0 ≤ ‖θ - η‖ ^ 2 := sq_nonneg _
   exact add_nonneg hB (mul_nonneg hε hdist)
 
-/--
-Self-contained regularized Bregman packet for a Massieu potential.
 
-The convexity/self-concordance facts are witness-gated.  The finite theorem
-above proves only elementary nonnegativity once the model supplies base
-Bregman nonnegativity.
--/
-structure RegularizedMassieuBregmanPacket where
-  potential : ℂ → ℝ
-  firstOrderAt : ℂ → ℂ → ℝ
-  epsilon : ℝ
-  epsilon_nonneg : 0 ≤ epsilon
-  base_bregman_nonneg :
-    ∀ θ η : ℂ, 0 ≤ bregmanComplex potential firstOrderAt θ η
-
-namespace RegularizedMassieuBregmanPacket
-
-variable (B : RegularizedMassieuBregmanPacket)
-
-/-- The packet's regularized divergence. -/
+/-- The regularized divergence of a Massieu potential is nonnegative, provided the base Bregman divergence is nonnegative and the regularization term is nonnegative. -/
 @[rep_depth thermo]
-def divergence (θ η : ℂ) : ℝ :=
-  regularizedBregmanComplex B.potential B.firstOrderAt B.epsilon θ η
-
-/-- The packet's regularized divergence is nonnegative. -/
-theorem divergence_nonneg (θ η : ℂ) :
-    0 ≤ B.divergence θ η :=
-  regularizedBregmanComplex_nonneg
-    B.potential B.firstOrderAt B.epsilon B.epsilon_nonneg
-    θ η (B.base_bregman_nonneg θ η)
-
-end RegularizedMassieuBregmanPacket
+theorem regularizedBregmanComplex_packet_divergence_nonneg
+    (potential : ℂ → ℝ)
+    (firstOrderAt : ℂ → ℂ → ℝ)
+    (epsilon : ℝ)
+    (h_eps : 0 ≤ epsilon)
+    (h_base : ∀ θ η : ℂ, 0 ≤ bregmanComplex potential firstOrderAt θ η)
+    (θ η : ℂ) :
+    0 ≤ regularizedBregmanComplex potential firstOrderAt epsilon θ η :=
+  regularizedBregmanComplex_nonneg potential firstOrderAt epsilon h_eps θ η (h_base θ η)
 
 
 /-! ## 5. Zeta-plane symmetry -/

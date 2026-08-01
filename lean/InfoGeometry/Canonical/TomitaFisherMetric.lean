@@ -125,7 +125,9 @@ theorem fisherQuad_upper_bound (v : V2R) :
 theorem fisherQuad_norm_equiv (v : V2R) :
     Real.exp (-1) * ((v 0 0) ^ 2 + (v 1 0) ^ 2) ≤ fisherQuad v ∧
     fisherQuad v ≤ Real.exp 1 * ((v 0 0) ^ 2 + (v 1 0) ^ 2) := by
-  exact ⟨fisherQuad_lower_bound v, fisherQuad_upper_bound v⟩
+  refine ⟨?_, ?_⟩
+  · exact fisherQuad_lower_bound v
+  · exact fisherQuad_upper_bound v
 
 /-- Vanishing of Fisher energy is equivalent to vanishing Euclidean square norm. -/
 theorem fisherQuad_eq_zero_iff_euclidean_sq_zero (v : V2R) :

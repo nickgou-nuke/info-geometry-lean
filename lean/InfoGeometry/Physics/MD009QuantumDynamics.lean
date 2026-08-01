@@ -137,11 +137,14 @@ theorem repaired_MD009_quantum_dynamics_packet (c ihbar : ℂ) (hc : IsPauliNorm
     standardQuaternionDerivativeOnQ = 2 ∧
     unscaledQuaternionDerivativeOnQ = 4 ∧
     canonicallyScaledQuaternionDerivativeOnQ = 1 := by
-  exact ⟨fun A Ap B Bp => normalized_pauli_completeness c hc A Ap B Bp,
-    fun A Ap B Bp => matrix_ccr_coefficient c ihbar hc A Ap B Bp,
-    standardQuaternionDerivativeOnQ_eq_two,
-    unscaledQuaternionDerivativeOnQ_eq_four,
-    canonicallyScaledQuaternionDerivativeOnQ_eq_one⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · intro A Ap B Bp
+    exact normalized_pauli_completeness c hc A Ap B Bp
+  · intro A Ap B Bp
+    exact matrix_ccr_coefficient c ihbar hc A Ap B Bp
+  · exact standardQuaternionDerivativeOnQ_eq_two
+  · exact unscaledQuaternionDerivativeOnQ_eq_four
+  · exact canonicallyScaledQuaternionDerivativeOnQ_eq_one
 
 end InfoGeometry.Physics.MD009QuantumDynamics
 

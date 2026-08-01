@@ -149,10 +149,18 @@ theorem section17_capstone :
           | 1 => q 3
           | 2 => -q 1
           | 3 => -q 2)) := by
-  exact ⟨biquatToMatrix_matrixToBiquat, matrixToBiquat_biquatToMatrix,
-    basis_square_Qi, basis_square_Qj, basis_square_Qk,
-    basis_product_Qi_Qj, basis_product_Qj_Qk, basis_product_Qk_Qi,
-    basis_product_Qj_Qi, basis_product_Qk_Qj, basis_product_Qi_Qk,
-    biquatToMatrix_eq_section16_evenToMatrix⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact biquatToMatrix_matrixToBiquat
+  · exact matrixToBiquat_biquatToMatrix
+  · exact basis_square_Qi
+  · exact basis_square_Qj
+  · exact basis_square_Qk
+  · exact basis_product_Qi_Qj
+  · exact basis_product_Qj_Qk
+  · exact basis_product_Qk_Qi
+  · exact basis_product_Qj_Qi
+  · exact basis_product_Qk_Qj
+  · exact basis_product_Qi_Qk
+  · exact biquatToMatrix_eq_section16_evenToMatrix
 
 end Section17

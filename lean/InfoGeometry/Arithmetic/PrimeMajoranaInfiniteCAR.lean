@@ -139,7 +139,10 @@ theorem exteriorCARPair_limit_image_car
         simp)
       n
   rcases h with ⟨hQ, hR, hQR, _, _, _⟩
-  exact ⟨hQ, hR, by simpa using hQR⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact hQ
+  · exact hR
+  · simpa using hQR
 
 /-- The compatible cone reads back the transported `c = ε + ι` Majorana at stage zero. -/
 theorem exteriorCARPair_cMajorana_limit_image
@@ -277,10 +280,10 @@ theorem exteriorCARPair_limit_image_majorana_laws
           ι n ((P n).dMajorana) * ι n ((P n).cMajorana) = 0 ∧
       ι n ((P n).parityOp) * ι n ((P n).parityOp) = 1 := by
   intro n
-  exact
-    ⟨by simpa using congrArg (ι n) ((P n).cMajorana_sq),
-      by simpa using congrArg (ι n) ((P n).dMajorana_sq),
-      by simpa using congrArg (ι n) ((P n).cMajorana_dMajorana_anticomm_zero),
-      by simpa using congrArg (ι n) ((P n).parityOp_sq)⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · simpa using congrArg (ι n) ((P n).cMajorana_sq)
+  · simpa using congrArg (ι n) ((P n).dMajorana_sq)
+  · simpa using congrArg (ι n) ((P n).cMajorana_dMajorana_anticomm_zero)
+  · simpa using congrArg (ι n) ((P n).parityOp_sq)
 
 end InfoGeometry.Arithmetic.PrimeMajoranaInfiniteCAR

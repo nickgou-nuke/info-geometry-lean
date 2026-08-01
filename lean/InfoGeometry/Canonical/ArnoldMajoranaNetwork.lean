@@ -674,4 +674,29 @@ theorem exists_network_fixed_transportWeylMinus_nonzero_ker_of_experts_fix_of_si
     (n := n) (net := net) (β := β) (x := fun _ : Unit => ψminus) (i := ())
     (hfix := fun e => hfix e ψminus hMinus hKerMinus)
 
+/-- 
+A cost matrix for the Sinkhorn optimal transport problem, representing the 
+transport cost between tokens and experts. 
+-/
+def SinkhornCostMatrix (Tok : Type*) [Fintype Tok] (n : Nat) := Tok → ExpertIdx n → ℝ
+
+/-- A transport plan for Sinkhorn routing. -/
+def SinkhornPlan (Tok : Type*) [Fintype Tok] (n : Nat) := Tok → ExpertIdx n → ℝ
+
+/-- 
+Extract the Sinkhorn cost matrix directly from the Arnold-Majorana network's routing energy.
+This formally bridges the algebraic expert routing with the PyTorch Sinkhorn optimal transport pipeline.
+-/
+noncomputable def arnoldToSinkhornCost (n : Nat) {Tok : Type*} [Fintype Tok] (x : Tok → ArnoldMajoranaCarrier E) :
+    SinkhornCostMatrix Tok n :=
+  fun i e => arnoldRoutingEnergy n x i e
+
+/-- 
+The Sinkhorn target objective (without entropy regularization) given a transport plan P 
+and the Arnold-Majorana cost matrix C.
+-/
+noncomputable def sinkhornObjective {Tok : Type*} [Fintype Tok] (n : Nat)
+    (P : SinkhornPlan (Tok := Tok) n) (C : SinkhornCostMatrix (Tok := Tok) n) : ℝ :=
+  ∑ i : Tok, ∑ e : ExpertIdx n, P i e * C i e
+
 end InfoGeometry.Canonical.MoE

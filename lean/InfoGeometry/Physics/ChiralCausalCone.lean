@@ -623,11 +623,18 @@ theorem chiral_causal_cone_synthesis :
     (PPlus * PMinus = 0) ∧ (PPlus + PMinus = (1 : M2C)) ∧ (PPlus - PMinus = σ3c) ∧
     (∀ t x y z : ℂ,
       (SolderingSpinConnectionBogoliubov.solder t x y z).det = t^2 - x^2 - y^2 - z^2) := by
-  refine ⟨chiral_decomposition, comm_σPlus_σMinus,
-    anti_σPlus_σMinus, σPlus_sq, σMinus_sq, PPlus_idempotent,
-    PMinus_idempotent, PPlus_PMinus_orthogonal, PPlus_add_PMinus,
-    PPlus_sub_PMinus, ?_⟩
-  exact SolderingSpinConnectionBogoliubov.solder_det
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact chiral_decomposition
+  · exact comm_σPlus_σMinus
+  · exact anti_σPlus_σMinus
+  · exact σPlus_sq
+  · exact σMinus_sq
+  · exact PPlus_idempotent
+  · exact PMinus_idempotent
+  · exact PPlus_PMinus_orthogonal
+  · exact PPlus_add_PMinus
+  · exact PPlus_sub_PMinus
+  · exact SolderingSpinConnectionBogoliubov.solder_det
 
 #check σPlus_sq
 #check σMinus_sq

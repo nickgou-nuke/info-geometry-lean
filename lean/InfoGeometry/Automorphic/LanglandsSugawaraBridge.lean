@@ -196,6 +196,8 @@ def langlandsSugawaraBridgeInstalledTarget :
       (P := P) (Finite := Finite) (Affine := Affine) (Vir := Vir) (State := State) B := by
   intro Bulk Boundary _ _ _ _ W P Finite Affine Vir State
     _ _ _ _ _ _ _ _ _ _ B
-  exact ⟨B.resonance, B.centralCharge_eq_completedL⟩
+  refine ⟨?_, ?_⟩
+  · exact B.resonance
+  · exact B.centralCharge_eq_completedL
 
 end InfoGeometry.Automorphic

@@ -229,8 +229,11 @@ theorem primonSupergradedFockSpine :
     ∧
     (cptSuperchargeOp (E := E)).comp (cptSuperchargeOp (E := E))
       = -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) := by
-  exact ⟨primonFermionCAR (E := E), primonSuperchargeCAR_zero (E := E),
-    primonSuperchargeCCR_eq_two_cpt (E := E), chiralSupercharge_sq (E := E)⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact primonFermionCAR (E := E)
+  · exact primonSuperchargeCAR_zero (E := E)
+  · exact primonSuperchargeCCR_eq_two_cpt (E := E)
+  · exact chiralSupercharge_sq (E := E)
 
 end Fock
 

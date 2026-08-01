@@ -25,14 +25,33 @@ open InfoGeometry.Canonical.MoE
 variable {n : Nat} [Nonempty (Fin n)]
 
 /-- A Poisson transport coupling together with its balanced-marginal witness. -/
-structure PoissonSinkhornBalancedCertificate
+def PoissonSinkhornBalancedCertificate
     (C : PoissonTransportCost (Observation := Fin n) (Component := Fin n))
-    (ε : ℝ) where
-  coupling : Matrix (Fin n) (Fin n) ℝ
-  balanced : coupling ∈ doublyStochastic ℝ (Fin n)
+    (ε : ℝ) : Type _ :=
+  {coupling : Matrix (Fin n) (Fin n) ℝ //
+    coupling ∈ doublyStochastic ℝ (Fin n)}
+
+namespace PoissonSinkhornBalancedCertificate
+
+/-- Native subtype projection for the transport coupling. -/
+abbrev coupling
+    {C : PoissonTransportCost (Observation := Fin n) (Component := Fin n)}
+    {ε : ℝ}
+    (cert : PoissonSinkhornBalancedCertificate C ε) :
+    Matrix (Fin n) (Fin n) ℝ :=
+  cert.1
+
+/-- Native subtype proof that the coupling is doubly stochastic. -/
+theorem balanced
+    {C : PoissonTransportCost (Observation := Fin n) (Component := Fin n)}
+    {ε : ℝ}
+    (cert : PoissonSinkhornBalancedCertificate C ε) :
+    cert.coupling ∈ doublyStochastic ℝ (Fin n) :=
+  cert.2
+
+end PoissonSinkhornBalancedCertificate
 
 /- A balanced coupling has unit row and column marginals. -/
-omit [Nonempty (Fin n)] in
 theorem PoissonSinkhornBalancedCertificate.has_unit_marginals
     {C : PoissonTransportCost (Observation := Fin n) (Component := Fin n)}
     {ε : ℝ}

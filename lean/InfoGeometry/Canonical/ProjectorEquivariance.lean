@@ -157,8 +157,9 @@ Fixed-grading sector-swap packet for the phase flip:
 theorem fixedGrading_projectorSwap :
     plusProjectorAfterPhaseFlip (E := E) = minusProjector (E := E)
       ∧ minusProjectorAfterPhaseFlip (E := E) = plusProjector (E := E) := by
-  exact ⟨plusProjectorAfterPhaseFlip_eq_minusProjector (E := E),
-    minusProjectorAfterPhaseFlip_eq_plusProjector (E := E)⟩
+  refine ⟨?_, ?_⟩
+  · exact plusProjectorAfterPhaseFlip_eq_minusProjector (E := E)
+  · exact minusProjectorAfterPhaseFlip_eq_plusProjector (E := E)
 
 omit [CompleteSpace E] in
 /-- Tautological equivariance identity on the `u_+` transport shell. -/

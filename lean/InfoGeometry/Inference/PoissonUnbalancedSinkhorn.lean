@@ -31,15 +31,65 @@ noncomputable def transportColMass
   ∑ i : Row, coupling i j
 
 /-- A finite coupling with strictly positive actual and target marginals. -/
-structure UnbalancedTransportCertificate where
-  coupling : Row → Col → ℝ
-  targetRowMass : Row → ℝ
-  targetColMass : Col → ℝ
-  coupling_nonneg : ∀ i j, 0 ≤ coupling i j
-  row_mass_pos : ∀ i, 0 < transportRowMass coupling i
-  col_mass_pos : ∀ j, 0 < transportColMass coupling j
-  target_row_mass_pos : ∀ i, 0 < targetRowMass i
-  target_col_mass_pos : ∀ j, 0 < targetColMass j
+def UnbalancedTransportCertificate : Type _ :=
+  {p : (Row → Col → ℝ) × (Row → ℝ) × (Col → ℝ) //
+    (∀ i j, 0 ≤ p.1 i j) ∧
+    (∀ i, 0 < transportRowMass p.1 i) ∧
+    (∀ j, 0 < transportColMass p.1 j) ∧
+    (∀ i, 0 < p.2.1 i) ∧
+    (∀ j, 0 < p.2.2 j)}
+
+namespace UnbalancedTransportCertificate
+
+/-- Native tuple projection for the coupling. -/
+abbrev coupling
+    (T : UnbalancedTransportCertificate (Row := Row) (Col := Col)) :
+    Row → Col → ℝ :=
+  T.1.1
+
+/-- Native tuple projection for the target row mass. -/
+abbrev targetRowMass
+    (T : UnbalancedTransportCertificate (Row := Row) (Col := Col)) :
+    Row → ℝ :=
+  T.1.2.1
+
+/-- Native tuple projection for the target column mass. -/
+abbrev targetColMass
+    (T : UnbalancedTransportCertificate (Row := Row) (Col := Col)) :
+    Col → ℝ :=
+  T.1.2.2
+
+/-- Native subtype proof of coupling nonnegativity. -/
+theorem coupling_nonneg
+    (T : UnbalancedTransportCertificate (Row := Row) (Col := Col)) :
+    ∀ i j, 0 ≤ T.coupling i j :=
+  T.2.1
+
+/-- Native subtype proof of positive row masses. -/
+theorem row_mass_pos
+    (T : UnbalancedTransportCertificate (Row := Row) (Col := Col)) :
+    ∀ i, 0 < transportRowMass T.coupling i :=
+  T.2.2.1
+
+/-- Native subtype proof of positive column masses. -/
+theorem col_mass_pos
+    (T : UnbalancedTransportCertificate (Row := Row) (Col := Col)) :
+    ∀ j, 0 < transportColMass T.coupling j :=
+  T.2.2.2.1
+
+/-- Native subtype proof of positive target row masses. -/
+theorem target_row_mass_pos
+    (T : UnbalancedTransportCertificate (Row := Row) (Col := Col)) :
+    ∀ i, 0 < T.targetRowMass i :=
+  T.2.2.2.2.1
+
+/-- Native subtype proof of positive target column masses. -/
+theorem target_col_mass_pos
+    (T : UnbalancedTransportCertificate (Row := Row) (Col := Col)) :
+    ∀ j, 0 < T.targetColMass j :=
+  T.2.2.2.2.2
+
+end UnbalancedTransportCertificate
 
 noncomputable def unbalancedRowPenalty
     (T : UnbalancedTransportCertificate (Row := Row) (Col := Col)) : ℝ :=
@@ -51,7 +101,6 @@ noncomputable def unbalancedColPenalty
   ∑ j : Col,
     PositiveMeasure.gklTerm (transportColMass T.coupling j) (T.targetColMass j)
 
-omit [Nonempty Row] [Nonempty Col] in
 theorem unbalancedRowPenalty_nonneg
     (T : UnbalancedTransportCertificate (Row := Row) (Col := Col)) :
     0 ≤ unbalancedRowPenalty T := by
@@ -61,7 +110,6 @@ theorem unbalancedRowPenalty_nonneg
   exact PositiveMeasure.gklTerm_nonneg _ _
     (T.row_mass_pos i) (T.target_row_mass_pos i)
 
-omit [Nonempty Row] [Nonempty Col] in
 theorem unbalancedColPenalty_nonneg
     (T : UnbalancedTransportCertificate (Row := Row) (Col := Col)) :
     0 ≤ unbalancedColPenalty T := by
@@ -80,7 +128,6 @@ noncomputable def unbalancedTransportObjective
     + rowPenalty * unbalancedRowPenalty T
     + colPenalty * unbalancedColPenalty T
 
-omit [Nonempty Row] [Nonempty Col] in
 theorem unbalancedTransportObjective_nonneg
     (T : UnbalancedTransportCertificate (Row := Row) (Col := Col))
     (cost : Row → Col → ℝ)
@@ -110,7 +157,6 @@ noncomputable def entropicTransportPenalty
   ∑ i : Row, ∑ j : Col,
     poissonBregman (T.coupling i j) (reference i j)
 
-omit [Nonempty Row] [Nonempty Col] in
 theorem entropicTransportPenalty_nonneg
     (T : UnbalancedTransportCertificate (Row := Row) (Col := Col))
     (reference : Row → Col → ℝ)
@@ -131,7 +177,6 @@ noncomputable def fullUnbalancedTransportObjective
   unbalancedTransportObjective T cost rowPenalty colPenalty
     + epsilon * entropicTransportPenalty T reference
 
-omit [Nonempty Row] [Nonempty Col] in
 theorem fullUnbalancedTransportObjective_nonneg
     (T : UnbalancedTransportCertificate (Row := Row) (Col := Col))
     (cost reference : Row → Col → ℝ)

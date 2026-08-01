@@ -78,6 +78,27 @@ def S3Perm.comp : S3Perm → S3Perm → S3Perm
   | S3Perm.s23_s12, S3Perm.s12_s23 => S3Perm.id
   | S3Perm.s23_s12, S3Perm.s23_s12 => S3Perm.s12_s23
 
+instance : Group S3Perm where
+  mul := S3Perm.comp
+  one := S3Perm.id
+  inv := S3Perm.inverse
+  div := fun σ τ => S3Perm.comp σ (S3Perm.inverse τ)
+  mul_assoc := by
+    intro σ τ υ
+    rcases σ <;> rcases τ <;> rcases υ <;> rfl
+  one_mul := by
+    intro σ
+    cases σ <;> rfl
+  mul_one := by
+    intro σ
+    cases σ <;> rfl
+  inv_mul_cancel := by
+    intro σ
+    cases σ <;> rfl
+  div_eq_mul_inv := by
+    intro σ τ
+    rfl
+
 /-- Peirce-2 space type (each ≃ 𝕆_s). We use the off-diagonal components from H3Zorn ℝ. -/
 def Peirce2Space := ZornVectorMatrix ℝ
 

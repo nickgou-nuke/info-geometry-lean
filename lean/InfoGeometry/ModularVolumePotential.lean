@@ -237,11 +237,14 @@ abbrev boltzmannFactor_eq {S : Type*} (Z : SpectralBoltzmannPacket S) :
 
 end SpectralBoltzmannPacket
 
-structure FiniteSpectralBoltzmannPartition (S : Type*) [Fintype S] where
-  /-- Spectral tilt data for the model. -/
-  spectrum : SpectralBoltzmannPacket S
+abbrev FiniteSpectralBoltzmannPartition (S : Type*) [Fintype S] :=
+  SpectralBoltzmannPacket S
 
 namespace FiniteSpectralBoltzmannPartition
+
+/-- Compatibility accessor for the native dependent-sum carrier. -/
+abbrev spectrum {S : Type*} [Fintype S]
+    (Z : FiniteSpectralBoltzmannPartition S) : SpectralBoltzmannPacket S := Z
 
 /-- The finite partition value determined by the supplied spectral data. -/
 noncomputable abbrev partition

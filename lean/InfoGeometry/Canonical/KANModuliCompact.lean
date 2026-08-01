@@ -22,6 +22,14 @@ instance kanModuliSpace_compact [CompactSpace V] :
     rw [Set.range_eq_univ.2 (quotientMap_surjective (V := V) (K := K))] at hrange
     exact hrange
 
+theorem isCompact_levelSet_on_kanModuli
+    [CompactSpace V]
+    (f : KANModuliSpace V K → ℝ) (hf : Continuous f) (c : ℝ) :
+    IsCompact {q | f q = c} := by
+  apply IsClosed.isCompact
+  change IsClosed (f ⁻¹' ({c} : Set ℝ))
+  exact isClosed_singleton.preimage hf
+
 theorem exists_global_minimum_on_kanModuli
     [CompactSpace V] [Nonempty V]
     (f : KANModuliSpace V K → ℝ) (hf : Continuous f) :
@@ -49,5 +57,18 @@ theorem exists_global_maximum_on_kanModuli
   intro q'
   have h := hq q'
   linarith
+
+/- The exact minimizer locus of a continuous loss is compact.  This packages
+the two independent topological facts above without asserting uniqueness of
+the minimizer (which finite permutation quotients generally do not provide).
+-/
+theorem exists_global_minimum_with_compact_levelSet_on_kanModuli
+    [CompactSpace V] [Nonempty V]
+    (f : KANModuliSpace V K → ℝ) (hf : Continuous f) :
+    ∃ q, (∀ q', f q ≤ f q') ∧
+      IsCompact {q' | f q' = f q} := by
+  rcases exists_global_minimum_on_kanModuli f hf with ⟨q, hq⟩
+  refine ⟨q, hq, ?_⟩
+  exact isCompact_levelSet_on_kanModuli f hf (f q)
 
 end InfoGeometry.Canonical.KANModuli

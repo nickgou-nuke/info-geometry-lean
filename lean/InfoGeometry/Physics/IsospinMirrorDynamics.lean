@@ -29,10 +29,16 @@ def Nucleon.T_z (n : Nucleon) : ℚ :=
   | .proton => 1 / 2
   | .neutron => - (1 / 2)
 
-/-- A nucleus defined by its proton number Z and neutron number N. -/
-structure Nucleus where
-  Z : ℕ
-  N : ℕ
+/-- A nucleus defined by its proton number `Z` and neutron number `N`,
+represented natively as a product. -/
+abbrev Nucleus := ℕ × ℕ
+
+namespace Nucleus
+
+@[simp] def Z (nuc : Nucleus) : ℕ := nuc.1
+@[simp] def N (nuc : Nucleus) : ℕ := nuc.2
+
+end Nucleus
 
 /-- Mass number A of a nucleus. -/
 def Nucleus.A (nuc : Nucleus) : ℕ := nuc.Z + nuc.N
@@ -104,18 +110,33 @@ theorem thomas_ehrman_shift
   rfl
 
 /-- Effective charges for protons and neutrons in a given model space. -/
-structure EffectiveCharge where
-  e_pi : ℝ -- effective proton charge
-  e_nu : ℝ -- effective neutron charge
+abbrev EffectiveCharge := ℝ × ℝ
+
+namespace EffectiveCharge
+
+@[simp] def e_pi (e : EffectiveCharge) : ℝ := e.1
+@[simp] def e_nu (e : EffectiveCharge) : ℝ := e.2
+
+end EffectiveCharge
 
 /-- Symmetry Energy parameters. -/
-structure EquationOfState where
-  S_0 : ℝ -- Symmetry energy at saturation density
-  L : ℝ   -- Slope parameter of the symmetry energy
+abbrev EquationOfState := ℝ × ℝ
+
+namespace EquationOfState
+
+@[simp] def S_0 (eos : EquationOfState) : ℝ := eos.1
+@[simp] def L (eos : EquationOfState) : ℝ := eos.2
+
+end EquationOfState
 
 /-- A model for the charge radius difference of mirror nuclei. -/
-structure ChargeRadiusDifference where
-  delta_R_ch : ℝ
+abbrev ChargeRadiusDifference := ℝ
+
+namespace ChargeRadiusDifference
+
+@[simp] def delta_R_ch (radius_diff : ChargeRadiusDifference) : ℝ := radius_diff
+
+end ChargeRadiusDifference
 
 /-- The correlation between the slope of the symmetry energy L and the difference
   in charge radii of mirror nuclei (ΔR_ch). Often formulated as a linear correlation. -/

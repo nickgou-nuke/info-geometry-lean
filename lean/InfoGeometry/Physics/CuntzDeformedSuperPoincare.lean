@@ -151,11 +151,10 @@ def poincareId : OperatorPoincareElement where
 affine rule `a₁ + Λ₁ a₂`. -/
 def poincareComp (g h : OperatorPoincareElement) : OperatorPoincareElement where
   Λ := g.Λ ∘ h.Λ
-  a := {
-    t := g.a.t + (g.Λ h.a).t
-    x := g.a.x + (g.Λ h.a).x
-    y := g.a.y + (g.Λ h.a).y
-    z := g.a.z + (g.Λ h.a).z }
+  a :=
+    (g.a.t + (g.Λ h.a).t,
+      (g.a.x + (g.Λ h.a).x,
+        (g.a.y + (g.Λ h.a).y, g.a.z + (g.Λ h.a).z)))
   preserves_pair := by
     intro p q
     simp

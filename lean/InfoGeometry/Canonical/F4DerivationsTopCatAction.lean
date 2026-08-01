@@ -272,4 +272,22 @@ theorem S3OnH3ZornTopCat_s31_involutive :
   change S3OnH3Zorn S3Perm.s31 (S3OnH3Zorn S3Perm.s31 X) = X
   exact S3OnH3Zorn_s31_involutive X
 
+/-- The orbit of a point under the six explicit `S₃` maps is compact.
+
+This is deliberately stated as a finite union of singletons: the finite
+permutation layer is the owner here, and no unproved finiteness or Jordan
+product structure is smuggled into the topological statement.
+-/
+def s3Orbit (X : H3Zorn ℝ) : Set (H3Zorn ℝ) :=
+  {S3OnH3Zorn S3Perm.id X} ∪
+    {S3OnH3Zorn S3Perm.s12 X} ∪
+    {S3OnH3Zorn S3Perm.s23 X} ∪
+    {S3OnH3Zorn S3Perm.s31 X} ∪
+    {S3OnH3Zorn S3Perm.s12_s23 X} ∪
+    {S3OnH3Zorn S3Perm.s23_s12 X}
+
+theorem isCompact_s3Orbit (X : H3Zorn ℝ) : IsCompact (s3Orbit X) := by
+  unfold s3Orbit
+  exact Set.Finite.isCompact (by simp)
+
 end InfoGeometry.Algebra

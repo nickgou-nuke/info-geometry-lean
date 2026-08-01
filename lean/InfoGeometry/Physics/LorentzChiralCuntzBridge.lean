@@ -100,11 +100,8 @@ theorem det_chiralConjAct (g : SL2C) (X : M2C) :
   simp [chiralConjAct, Matrix.det_mul]
 
 /-- Recover a complexified four-momentum from an arbitrary `2×2` matrix by Pauli traces. -/
-def fourMomentumOfMatrix (X : M2C) : FourMomentum where
-  E := recoverE X
-  px := recoverPx X
-  py := recoverPy X
-  pz := recoverPz X
+def fourMomentumOfMatrix (X : M2C) : FourMomentum :=
+  (recoverE X, (recoverPx X, (recoverPy X, recoverPz X)))
 
 /-- Pauli soldering and trace recovery round-trip for every `2×2` complex matrix. -/
 theorem pauliMomentum_fourMomentumOfMatrix (X : M2C) :
@@ -122,33 +119,24 @@ theorem pauliMomentum_fourMomentumOfMatrix (X : M2C) :
 /-- Equality of Pauli-soldered matrices detects equality of complexified four-momenta. -/
 theorem fourMomentum_ext_of_pauliMomentum_eq {P Q : FourMomentum}
     (h : pauliMomentum P = pauliMomentum Q) : P = Q := by
-  cases P with
-  | mk E px py pz =>
-  cases Q with
-  | mk E' px' py' pz' =>
-    have hE : E = E' := by simpa using congrArg recoverE h
-    have hpx : px = px' := by simpa using congrArg recoverPx h
-    have hpy : py = py' := by simpa using congrArg recoverPy h
-    have hpz : pz = pz' := by simpa using congrArg recoverPz h
-    subst hE
-    subst hpx
-    subst hpy
-    subst hpz
-    rfl
+  rcases P with ⟨E, px, py, pz⟩
+  rcases Q with ⟨E', px', py', pz'⟩
+  have hE : E = E' := by simpa using congrArg recoverE h
+  have hpx : px = px' := by simpa using congrArg recoverPx h
+  have hpy : py = py' := by simpa using congrArg recoverPy h
+  have hpz : pz = pz' := by simpa using congrArg recoverPz h
+  subst hE
+  subst hpx
+  subst hpy
+  subst hpz
+  rfl
 
 /-- Addition of complexified four-momenta, kept local to avoid typeclass commitments. -/
-def addFourMomentum (P Q : FourMomentum) : FourMomentum where
-  E := P.E + Q.E
-  px := P.px + Q.px
-  py := P.py + Q.py
-  pz := P.pz + Q.pz
+def addFourMomentum (P Q : FourMomentum) : FourMomentum :=
+  (P.E + Q.E, (P.px + Q.px, (P.py + Q.py, P.pz + Q.pz)))
 
 /-- Zero complexified four-momentum, kept local to avoid typeclass commitments. -/
-def zeroFourMomentum : FourMomentum where
-  E := 0
-  px := 0
-  py := 0
-  pz := 0
+def zeroFourMomentum : FourMomentum := (0, (0, (0, 0)))
 
 /-- Pauli soldering is additive for the local four-momentum addition. -/
 theorem pauliMomentum_add (P Q : FourMomentum) :

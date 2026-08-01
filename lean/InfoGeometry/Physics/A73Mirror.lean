@@ -6,8 +6,8 @@ import InfoGeometry.Physics.IsospinMirrorDynamics
 namespace InfoGeometry.Physics
 
 /-- The A=73 mirror pair (Sr-73 and Br-73). -/
-def Sr73 : Nucleus := { Z := 38, N := 35 }
-def Br73 : Nucleus := { Z := 35, N := 38 }
+def Sr73 : Nucleus := (38, 35)
+def Br73 : Nucleus := (35, 38)
 
 /-- The A=73 MirrorPair instance for Sr-73 and Br-73. -/
 def A73Pair : MirrorPair where

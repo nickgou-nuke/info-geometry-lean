@@ -29,10 +29,10 @@ structure PauliBostConnesClock (R : Type*) [CommRing R] extends PauliWorldClock 
   neg_invariant : ∀ t x, time_flow.flow t (-x) = -time_flow.flow t x
 
 /--
-**Theorem: Acausal Synchronicity is Time-Invariant**
-Because the thermodynamic axis is invariant under its own time flow, and the chiral rhythms 
-satisfy the synchronicity bridge (`e * u = -l`), the time flow preserves the synchronicity 
-constraint globally across all colors (wheels).
+The time flow preserves the displayed red/green synchronicity equality.
+
+The blue wheel satisfies the same bridge law in `PauliWorldClockSynchronicity`,
+so that file packages the full three-wheel invariant directly.
 -/
 theorem synchronicity_flow_invariance (sys : PauliBostConnesClock R) (t : ℝ) :
     sys.time_flow.flow t (sys.red_wheel.e * sys.red_wheel.u) = 

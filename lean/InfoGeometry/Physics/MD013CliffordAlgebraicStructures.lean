@@ -37,27 +37,39 @@ open InfoGeometry.Physics.MD001MatrixQuantumGeometry
 open InfoGeometry.Physics.MD006OperatorEigenoperators
 open InfoGeometry.Physics.MD007QuantumEigenoperatorInterpretation
 
-/-- Explicit left zero-divisor witness data in an associative algebra. -/
-structure LeftZeroDivisor (R : Type) [Mul R] [Zero R] where
-  a : R
-  annihilator : R
-  ha : a ≠ 0
-  hannihilator : annihilator ≠ 0
-  hmul : a * annihilator = 0
+/-- Explicit left zero-divisor witness data, represented as a subtype. -/
+def LeftZeroDivisor (R : Type) [Mul R] [Zero R] :=
+  { p : R × R // p.1 ≠ 0 ∧ p.2 ≠ 0 ∧ p.1 * p.2 = 0 }
 
-/-- Explicit right zero-divisor witness data in an associative algebra. -/
-structure RightZeroDivisor (R : Type) [Mul R] [Zero R] where
-  a : R
-  annihilator : R
-  ha : a ≠ 0
-  hannihilator : annihilator ≠ 0
-  hmul : annihilator * a = 0
+namespace LeftZeroDivisor
+
+abbrev a {R : Type} [Mul R] [Zero R] (w : LeftZeroDivisor R) : R := w.1.1
+abbrev annihilator {R : Type} [Mul R] [Zero R] (w : LeftZeroDivisor R) : R := w.1.2
+abbrev ha {R : Type} [Mul R] [Zero R] (w : LeftZeroDivisor R) : w.a ≠ 0 := w.2.1
+abbrev hannihilator {R : Type} [Mul R] [Zero R] (w : LeftZeroDivisor R) : w.annihilator ≠ 0 := w.2.2.1
+abbrev hmul {R : Type} [Mul R] [Zero R] (w : LeftZeroDivisor R) : w.a * w.annihilator = 0 := w.2.2.2
+
+end LeftZeroDivisor
+
+/-- Explicit right zero-divisor witness data, represented as a subtype. -/
+def RightZeroDivisor (R : Type) [Mul R] [Zero R] :=
+  { p : R × R // p.1 ≠ 0 ∧ p.2 ≠ 0 ∧ p.2 * p.1 = 0 }
+
+namespace RightZeroDivisor
+
+abbrev a {R : Type} [Mul R] [Zero R] (w : RightZeroDivisor R) : R := w.1.1
+abbrev annihilator {R : Type} [Mul R] [Zero R] (w : RightZeroDivisor R) : R := w.1.2
+abbrev ha {R : Type} [Mul R] [Zero R] (w : RightZeroDivisor R) : w.a ≠ 0 := w.2.1
+abbrev hannihilator {R : Type} [Mul R] [Zero R] (w : RightZeroDivisor R) : w.annihilator ≠ 0 := w.2.2.1
+abbrev hmul {R : Type} [Mul R] [Zero R] (w : RightZeroDivisor R) : w.annihilator * w.a = 0 := w.2.2.2
+
+end RightZeroDivisor
 
 /-- A nontrivial idempotent gives a left zero-divisor witness `e(1-e)=0`. -/
 def leftZeroDivisor_of_nontrivial_idempotent {R : Type} [Ring R]
     (e : R) (hidem : e * e = e) (hne0 : e ≠ 0) (hne1 : e ≠ 1) :
     LeftZeroDivisor R := by
-  refine ⟨e, 1 - e, hne0, ?_, ?_⟩
+  refine ⟨(e, 1 - e), hne0, ?_, ?_⟩
   · intro h
     exact hne1 (sub_eq_zero.mp h).symm
   · calc
@@ -68,7 +80,7 @@ def leftZeroDivisor_of_nontrivial_idempotent {R : Type} [Ring R]
 def rightZeroDivisor_of_nontrivial_idempotent {R : Type} [Ring R]
     (e : R) (hidem : e * e = e) (hne0 : e ≠ 0) (hne1 : e ≠ 1) :
     RightZeroDivisor R := by
-  refine ⟨e, 1 - e, hne0, ?_, ?_⟩
+  refine ⟨(e, 1 - e), hne0, ?_, ?_⟩
   · intro h
     exact hne1 (sub_eq_zero.mp h).symm
   · calc
@@ -78,12 +90,12 @@ def rightZeroDivisor_of_nontrivial_idempotent {R : Type} [Ring R]
 /-- A square-zero nonzero nilpotent gives a left zero-divisor witness. -/
 def leftZeroDivisor_of_square_zero {R : Type} [Mul R] [Zero R]
     (n : R) (hne0 : n ≠ 0) (hsq : n * n = 0) : LeftZeroDivisor R :=
-  ⟨n, n, hne0, hne0, hsq⟩
+  ⟨(n, n), hne0, hne0, hsq⟩
 
 /-- A square-zero nonzero nilpotent gives a right zero-divisor witness. -/
 def rightZeroDivisor_of_square_zero {R : Type} [Mul R] [Zero R]
     (n : R) (hne0 : n ≠ 0) (hsq : n * n = 0) : RightZeroDivisor R :=
-  ⟨n, n, hne0, hne0, hsq⟩
+  ⟨(n, n), hne0, hne0, hsq⟩
 
 /-- A right-zero-divisor relation is exactly a nontrivial kernel witness for right multiplication. -/
 theorem rightKernelWitness_of_rightZeroDivisor {R : Type} [Mul R] [Zero R]

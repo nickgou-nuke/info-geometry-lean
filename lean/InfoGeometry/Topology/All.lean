@@ -1,4 +1,6 @@
 import InfoGeometry.Topology.AharonovBohmVortices
+import InfoGeometry.Topology.AttentionLatentSimplexTopological
+import InfoGeometry.Topology.AttentionLatentHeadTopological
 import InfoGeometry.Topology.AmplituhedronBoundary
 import InfoGeometry.Topology.AmplituhedronBoundaryExternalDeRhamBridge
 import InfoGeometry.Topology.AmplituhedronBoundaryExternalRankBridge

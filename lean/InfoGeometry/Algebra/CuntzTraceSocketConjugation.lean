@@ -25,14 +25,31 @@ variable {n : ℕ}
 
 /-- `CuntzTraceSocket n` couples the scalar trace with the finite-matrix
 inverse-on-image map and asserts cyclicity on the faithful image. -/
-structure CuntzTraceSocket (n : ℕ) where
-  cuntz_trace : CuntzAlg n → ℝ
-  cuntz_inv_of_image : Matrix (Fin n) (Fin n) ℂ → CuntzAlg n
-  trace_cycle : ∀ {A B : Matrix (Fin n) (Fin n) ℂ},
-    cuntz_trace (cuntz_inv_of_image (A * B)) =
-      cuntz_trace (cuntz_inv_of_image (B * A))
-  trace_cycle_cuntz : ∀ X Y : CuntzAlg n,
-    cuntz_trace (X * Y) = cuntz_trace (Y * X)
+def CuntzTraceSocket (n : ℕ) :=
+  Subtype (fun p :
+      (CuntzAlg n → ℝ) ×
+        (Matrix (Fin n) (Fin n) ℂ → CuntzAlg n) =>
+    (∀ {A B : Matrix (Fin n) (Fin n) ℂ},
+      p.1 (p.2 (A * B)) = p.1 (p.2 (B * A))) ∧
+    (∀ X Y : CuntzAlg n, p.1 (X * Y) = p.1 (Y * X)))
+
+namespace CuntzTraceSocket
+
+def cuntz_trace (S : CuntzTraceSocket n) : CuntzAlg n → ℝ := S.1.1
+
+def cuntz_inv_of_image (S : CuntzTraceSocket n) :
+    Matrix (Fin n) (Fin n) ℂ → CuntzAlg n := S.1.2
+
+def trace_cycle (S : CuntzTraceSocket n) :
+    ∀ {A B : Matrix (Fin n) (Fin n) ℂ},
+      cuntz_trace S (cuntz_inv_of_image S (A * B)) =
+        cuntz_trace S (cuntz_inv_of_image S (B * A)) := S.2.1
+
+def trace_cycle_cuntz (S : CuntzTraceSocket n) :
+    ∀ X Y : CuntzAlg n,
+      cuntz_trace S (X * Y) = cuntz_trace S (Y * X) := S.2.2
+
+end CuntzTraceSocket
 
 open scoped Real BigOperators Matrix
 

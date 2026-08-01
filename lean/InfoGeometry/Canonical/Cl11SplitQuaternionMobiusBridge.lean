@@ -42,6 +42,15 @@ def splitIL : SplitQuaternion := splitI * splitL
 
 def splitNull : SplitQuaternion := splitL + splitI
 
+/-- Standard `sl₂` basis element `H` in the split-quaternion matrix model. -/
+def splitLieH : SplitQuaternion := splitL
+
+/-- Standard `sl₂` raising operator `E` in the split-quaternion matrix model. -/
+noncomputable def splitLieE : SplitQuaternion := (1 / 2 : ℝ) • (splitIL - splitI)
+
+/-- Standard `sl₂` lowering operator `F` in the split-quaternion matrix model. -/
+noncomputable def splitLieF : SplitQuaternion := (1 / 2 : ℝ) • (splitIL + splitI)
+
 theorem splitI_sq : splitI * splitI = -splitOne := by
   exact cl11_generator_relations.2.1
 
@@ -76,6 +85,40 @@ theorem splitIL_splitI_commutator :
     norm_num [splitIL, splitI, splitL, epsilon, sigma1,
       InfoGeometryCore.sigma1R, InfoGeometryCore.sigma3R,
       Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem splitLieH_splitLieE_commutator :
+    splitLieH * splitLieE - splitLieE * splitLieH = (2 : ℝ) • splitLieE := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [splitLieH, splitLieE, splitIL, splitI, splitL, epsilon, sigma1,
+      InfoGeometryCore.sigma1R, InfoGeometryCore.sigma3R,
+      Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem splitLieH_splitLieF_commutator :
+    splitLieH * splitLieF - splitLieF * splitLieH = (-2 : ℝ) • splitLieF := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [splitLieH, splitLieF, splitIL, splitI, splitL, epsilon, sigma1,
+      InfoGeometryCore.sigma1R, InfoGeometryCore.sigma3R,
+      Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem splitLieE_splitLieF_commutator :
+    splitLieE * splitLieF - splitLieF * splitLieE = splitLieH := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [splitLieH, splitLieE, splitLieF, splitIL, splitI, splitL,
+      epsilon, sigma1, InfoGeometryCore.sigma1R, InfoGeometryCore.sigma3R,
+      Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- The split-quaternion Lie closure matches the standard `sl₂` commutator
+table after the usual linear change of basis. -/
+theorem splitLie_sl2_table :
+    splitLieH * splitLieE - splitLieE * splitLieH = (2 : ℝ) • splitLieE ∧
+    splitLieH * splitLieF - splitLieF * splitLieH = (-2 : ℝ) • splitLieF ∧
+    splitLieE * splitLieF - splitLieF * splitLieE = splitLieH := by
+  refine ⟨splitLieH_splitLieE_commutator, ?_, ?_⟩
+  · exact splitLieH_splitLieF_commutator
+  · exact splitLieE_splitLieF_commutator
 
 theorem splitIL_eq_sigma3 : splitIL = sigma3 := by
   ext i j

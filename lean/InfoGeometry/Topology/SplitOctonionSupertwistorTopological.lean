@@ -35,6 +35,17 @@ theorem continuous_gunaydinGurseyCoordinate (i : Fin 8) :
       gunaydinGurseyCoordinates Z i) := by
   exact (continuous_apply i).comp continuous_induced_dom
 
+theorem continuous_levelZeroOctonionicAction_coordinate
+    (a : ExteriorAlgebra R V) (i : Fin 8)
+    (hleft : Continuous (fun x : ExteriorAlgebra R V => a * x)) :
+    Continuous (fun Z : GunaydinGurseySplitBasis R V =>
+      gunaydinGurseyCoordinates (levelZeroOctonionicAction a Z) i) := by
+  have h := hleft.comp (continuous_gunaydinGurseyCoordinate
+    (R := R) (V := V) i)
+  fin_cases i <;>
+    simpa [Function.comp_def, gunaydinGurseyCoordinates,
+      levelZeroOctonionicAction] using h
+
 variable [T1Space (ExteriorAlgebra R V)]
 
 /-- A prescribed coordinate value is a closed subset of the induced chart. -/

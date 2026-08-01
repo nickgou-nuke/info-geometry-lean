@@ -166,4 +166,95 @@ theorem integerChiralOrder_scalarExtension_rat :
   · apply Submodule.smul_mem; apply Submodule.subset_span; simp
   · apply Submodule.smul_mem; apply Submodule.subset_span; simp
 
+def parityMap : M2Z →+ (ZMod 2 × ZMod 2) where
+  toFun A :=
+    (((A 0 0 - A 1 1 : ℤ) : ZMod 2), ((A 0 1 - A 1 0 : ℤ) : ZMod 2))
+  map_zero' := by
+    simp
+  map_add' := by
+    intro A B
+    ext <;> simp [sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
+
+theorem parityMap_ker_eq :
+    parityMap.ker = integerChiralOrder.toAddSubgroup := by
+  ext A
+  constructor
+  · intro hA
+    change parityMap A = 0 at hA
+    have hA' := hA
+    simp [parityMap] at hA'
+    have h00eq : ((A 0 0 - A 1 1 : ℤ) : ZMod 2) = 0 := by
+      simpa [sub_eq_add_neg] using hA'.left
+    have h01eq : ((A 0 1 - A 1 0 : ℤ) : ZMod 2) = 0 := by
+      simpa [sub_eq_add_neg] using hA'.right
+    have hdiv00 : (2 : ℤ) ∣ A 0 0 - A 1 1 := by
+      exact (ZMod.intCast_zmod_eq_zero_iff_dvd (A 0 0 - A 1 1) 2).mp h00eq
+    have hdiv01 : (2 : ℤ) ∣ A 0 1 - A 1 0 := by
+      exact (ZMod.intCast_zmod_eq_zero_iff_dvd (A 0 1 - A 1 0) 2).mp h01eq
+    have hpar00 : Int.ModEq 2 (A 0 0) (A 1 1) := by
+      rcases hdiv00 with ⟨c, hc⟩
+      have hdiv00' : (2 : ℤ) ∣ A 1 1 - A 0 0 := by
+        refine ⟨-c, ?_⟩
+        omega
+      exact Int.modEq_iff_dvd.mpr hdiv00'
+    have hpar01 : Int.ModEq 2 (A 0 1) (A 1 0) := by
+      rcases hdiv01 with ⟨c, hc⟩
+      have hdiv01' : (2 : ℤ) ∣ A 1 0 - A 0 1 := by
+        refine ⟨-c, ?_⟩
+        omega
+      exact Int.modEq_iff_dvd.mpr hdiv01'
+    change A ∈ (integerChiralOrder : Set M2Z)
+    rw [integerChiralOrder_eq_paritySubring]
+    exact ⟨hpar00, hpar01⟩
+  · intro hA
+    have hmem : integralChiralParity A := by
+      have hA' : A ∈ (integerChiralOrder : Set M2Z) := hA
+      rw [integerChiralOrder_eq_paritySubring] at hA'
+      exact hA'
+    change parityMap A = 0
+    rcases hmem with ⟨h00, h01⟩
+    change
+      (((A 0 0 - A 1 1 : ℤ) : ZMod 2),
+        ((A 0 1 - A 1 0 : ℤ) : ZMod 2)) = (0, 0)
+    apply Prod.ext
+    · rw [ZMod.intCast_zmod_eq_zero_iff_dvd]
+      exact Int.modEq_iff_dvd.mp h00.symm
+    · rw [ZMod.intCast_zmod_eq_zero_iff_dvd]
+      exact Int.modEq_iff_dvd.mp h01.symm
+
+noncomputable def integerChiralOrder_quotient_equiv :
+    M2Z ⧸ integerChiralOrder.toAddSubgroup ≃+ (ZMod 2 × ZMod 2) := by
+  have hker : parityMap.ker = integerChiralOrder.toAddSubgroup := parityMap_ker_eq
+  have hsurj : Function.Surjective parityMap := by
+    intro z
+    rcases z with ⟨u, v⟩
+    fin_cases u <;> fin_cases v
+    · refine ⟨!![0, 0; 0, 0], ?_⟩
+      simp [parityMap]
+    · refine ⟨!![0, 1; 0, 0], ?_⟩
+      simp [parityMap]
+    · refine ⟨!![1, 0; 0, 0], ?_⟩
+      simp [parityMap]
+    · refine ⟨!![1, 1; 0, 0], ?_⟩
+      simp [parityMap]
+  have hrange : parityMap.range = ⊤ := AddMonoidHom.range_eq_top.mpr hsurj
+  have hquot :
+      M2Z ⧸ integerChiralOrder.toAddSubgroup ≃+ ↥parityMap.range := by
+    rw [← hker]
+    exact QuotientAddGroup.quotientKerEquivRange parityMap
+  have htop : ↥parityMap.range ≃+ (ZMod 2 × ZMod 2) := by
+    rw [hrange]
+    exact AddSubgroup.topEquiv
+  exact hquot.trans htop
+
+theorem integerChiralOrder_index_four :
+    integerChiralOrder.toAddSubgroup.index = 4 := by
+  rw [AddSubgroup.index_eq_card]
+  have hcard :
+      Nat.card (M2Z ⧸ integerChiralOrder.toAddSubgroup) =
+        Nat.card (ZMod 2 × ZMod 2) := by
+    exact Nat.card_congr integerChiralOrder_quotient_equiv
+  rw [hcard]
+  simp
+
 end InfoGeometry.Canonical

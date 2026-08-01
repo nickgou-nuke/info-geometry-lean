@@ -264,10 +264,4 @@ theorem concrete_null_cone_celestial_sphere_unit (X : RealSpacetime4x4)
   have h_int : interval X = 0 := (concrete_pfaffian_zero_iff_interval_zero X).mp h_null
   exact null_cone_celestial_sphere_unit X ht h_int
 
-/- #### BUCKET 3: OPEN CLOSURE DEBT -/
--- [Identified gaps, missing structural steps, or unverified steps. This defines the exact remaining debt line. No overclaims permitted.]
-
-/-- Fully discharged in this module. -/
-def open_closure_debt : List String := []
-
 end InfoGeometry.Canonical.RealSpacetime4x4Closure

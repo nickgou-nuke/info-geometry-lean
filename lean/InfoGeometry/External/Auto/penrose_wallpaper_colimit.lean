@@ -185,45 +185,4 @@ structure SymmetryTransition where
   classical_forbids_pentagon : (5 : ℕ) ∉ ({1,2,3,4,6} : Set ℕ)
   quantum_has_pentagon_root : ybe_bridge.pentagon_root ^ 5 = 1
 
-/-- GOUTEV PRINCIPLE: Spacetime is not a classical wallpaper. It is a
-    holographic thermodynamic continuum projected from a non-commutative,
-    pentagonal quantum fractal governed by the Yang-Baxter equation.
-
-    The "vacuum" is the reference KMS state on the UHF limit.
-    The "scale" is the golden ratio φ, emerging from the cyclotomic
-    field ℚ(e^{πi/5}). All measurements are relative to this reference. -/
-/-══════════════════════════════════════════════════════════════════════
-  BRIDGES TO PRE-PROVED THEOREMS
-  ═════════════════════════════════════════════════════════════════════-/
-
-abbrev BridgeArtifact := String × String × List String
-
-def bridge_yang_baxter : BridgeArtifact :=
-  ("Yang-Baxter", "proofs/FibAnyonThm4.lean", ["yang_baxter"])
-
-def bridge_pentagon : BridgeArtifact :=
-  ("Pentagon", "proofs/FibAnyonThm6_pentagon.lean", ["pentagon"])
-
-def bridge_hexagons : BridgeArtifact :=
-  ("Hexagons", "proofs/FibAnyonThm7_hexagon.lean", ["hexagon_forward", "hexagon_reverse"])
-
-def bridge_uhf_ladder : BridgeArtifact :=
-  ("UHF ladder", "proofs/uhf_ladder.lean", ["thermodynamicLadder"])
-
-def bridge_goutev_principle : BridgeArtifact :=
-  ("Goutev principle", "proofs/goutev_principle.lean", ["goutev_cycle_closes", "bridge_registry"])
-
-def bridge_clifford_seed : BridgeArtifact :=
-  ("Clifford seed", "proofs/clifford_seed.lean", ["Cl11", "Pauli"])
-
-def penrose_bridge_registry : List BridgeArtifact :=
-  [ bridge_yang_baxter
-  , bridge_pentagon
-  , bridge_hexagons
-  , bridge_uhf_ladder
-  , bridge_goutev_principle
-  , bridge_clifford_seed
-  ]
-
-theorem penrose_bridge_registry_length : penrose_bridge_registry.length = 6 := by
-  native_decide
+end

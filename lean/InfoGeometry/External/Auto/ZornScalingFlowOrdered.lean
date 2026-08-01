@@ -25,6 +25,24 @@ def cross3 (u v : Vec3) : Vec3
   | 1 => u 2 * v 0 - u 0 * v 2
   | 2 => u 0 * v 1 - u 1 * v 0
 
+@[simp] theorem dot3_zero_left (v : Vec3) : dot3 0 v = 0 := by
+  simp [dot3]
+
+@[simp] theorem dot3_zero_right (u : Vec3) : dot3 u 0 = 0 := by
+  simp [dot3]
+
+@[simp] theorem cross3_zero_left (v : Vec3) : cross3 0 v = 0 := by
+  funext i
+  fin_cases i <;> simp [cross3]
+
+@[simp] theorem cross3_zero_right (u : Vec3) : cross3 u 0 = 0 := by
+  funext i
+  fin_cases i <;> simp [cross3]
+
+@[simp] theorem cross3_self (u : Vec3) : cross3 u u = 0 := by
+  funext i
+  fin_cases i <;> simp [cross3, mul_comm]
+
 /-- Zorn coordinates in order `(a,b,u,v)`. -/
 abbrev Zorn := ℂ × ℂ × Vec3 × Vec3
 
@@ -68,14 +86,20 @@ theorem flow_formula {p : ℂ} (hp : p ≠ 0) (X : Zorn) :
         fun i => p^2 * X.u i,
         fun i => (p⁻¹)^2 * X.v i) := by
   apply zorn_ext
-  · simp [flow, zornMul, E, Einv, dot3]
+  · simp [flow, zornMul, E, Einv, Zorn.a, Zorn.b, Zorn.u, Zorn.v, dot3]
     field_simp [hp]
-  · simp [flow, zornMul, E, Einv, dot3]
+  · simp [flow, zornMul, E, Einv, Zorn.a, Zorn.b, Zorn.u, Zorn.v, dot3]
     field_simp [hp]
   · funext i
-    fin_cases i <;> simp [flow, zornMul, E, Einv, cross3] <;> field_simp [hp]
+    fin_cases i <;>
+      simp [flow, zornMul, E, Einv, Zorn.a, Zorn.b, Zorn.u, Zorn.v, cross3,
+        pow_two]
+    all_goals field_simp [hp]
   · funext i
-    fin_cases i <;> simp [flow, zornMul, E, Einv, cross3] <;> field_simp [hp]
+    fin_cases i <;>
+      simp [flow, zornMul, E, Einv, Zorn.a, Zorn.b, Zorn.u, Zorn.v, cross3,
+        pow_two]
+    all_goals field_simp [hp]
 
 /-- Pure upper nilpotent. -/
 def upperNil (u : Vec3) : Zorn := (0, 0, u, fun _ => 0)
@@ -89,17 +113,25 @@ def zero : Zorn := (0, 0, fun _ => 0, fun _ => 0)
 /-- Upper nilpotents square to zero. -/
 theorem upperNil_sq_zero (u : Vec3) : zornMul (upperNil u) (upperNil u) = zero := by
   apply zorn_ext
-  · simp [zornMul, upperNil, zero, dot3]
-  · simp [zornMul, upperNil, zero, dot3]
-  · funext i; fin_cases i <;> simp [zornMul, upperNil, zero, cross3]
-  · funext i; fin_cases i <;> simp [zornMul, upperNil, zero, cross3] <;> ring
+  · simp [zornMul, upperNil, zero, Zorn.a, Zorn.b, Zorn.u, Zorn.v, dot3]
+  · simp [zornMul, upperNil, zero, Zorn.a, Zorn.b, Zorn.u, Zorn.v, dot3]
+  · funext i
+    fin_cases i <;> simp [zornMul, upperNil, zero, Zorn.a, Zorn.b, Zorn.u,
+      Zorn.v, cross3, mul_comm]
+  · funext i
+    fin_cases i <;> simp [zornMul, upperNil, zero, Zorn.a, Zorn.b, Zorn.u,
+      Zorn.v, cross3, mul_comm]
 
 /-- Lower nilpotents square to zero. -/
 theorem lowerNil_sq_zero (v : Vec3) : zornMul (lowerNil v) (lowerNil v) = zero := by
   apply zorn_ext
-  · simp [zornMul, lowerNil, zero, dot3]
-  · simp [zornMul, lowerNil, zero, dot3]
-  · funext i; fin_cases i <;> simp [zornMul, lowerNil, zero, cross3] <;> ring
-  · funext i; fin_cases i <;> simp [zornMul, lowerNil, zero, cross3]
+  · simp [zornMul, lowerNil, zero, Zorn.a, Zorn.b, Zorn.u, Zorn.v, dot3]
+  · simp [zornMul, lowerNil, zero, Zorn.a, Zorn.b, Zorn.u, Zorn.v, dot3]
+  · funext i
+    fin_cases i <;> simp [zornMul, lowerNil, zero, Zorn.a, Zorn.b, Zorn.u,
+      Zorn.v, cross3, mul_comm]
+  · funext i
+    fin_cases i <;> simp [zornMul, lowerNil, zero, Zorn.a, Zorn.b, Zorn.u,
+      Zorn.v, cross3, mul_comm]
 
 end ZornScalingFlowOrdered

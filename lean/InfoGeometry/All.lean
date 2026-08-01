@@ -2729,7 +2729,6 @@ import InfoGeometry.External.Auto.ChiralCuntzInductive
 import InfoGeometry.External.Auto.CliffordInductiveTripotent
 import InfoGeometry.External.Auto.CofactorExpansion
 import InfoGeometry.External.Auto.CognitiveAccretionDiskSelfReferential
-import InfoGeometry.External.Auto.CognitiveVacuum
 import InfoGeometry.External.Auto.CoherentOrbitalPrecession
 import InfoGeometry.External.Auto.CompleteHolographicDictionary
 import InfoGeometry.External.Auto.ComplexTemperatureRH
@@ -3046,7 +3045,6 @@ import InfoGeometry.External.Auto.V4_test2
 import InfoGeometry.External.Auto.VacuumCohomology
 import InfoGeometry.External.Auto.VacuumGroundstate
 import InfoGeometry.External.Auto.VacuumJonesKleinBirefringence
-import InfoGeometry.External.Auto.VacuumTopology
 import InfoGeometry.External.Auto.VarlamovKleinSpectral
 import InfoGeometry.External.Auto.VerberckWallpaperFourier
 import InfoGeometry.External.Auto.VertexAlgebraBraidingCocycle

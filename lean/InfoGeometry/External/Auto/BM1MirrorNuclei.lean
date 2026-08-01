@@ -17,17 +17,6 @@ namespace BM1MirrorNuclei
 -/
 
 /--
-M1 transition operator in the shell-model notation used by the surrounding
-notes.
--/
-def M1_operator : String := "sqrt(3/4*pi) * (g_l^IV * L + g_s^IV * S)"
-
-/--
-Isovector M1 operator as a spin-isospin tensor.
--/
-def M1_isovector : String := "sigma tau_0"
-
-/--
 The two Clebsch-Gordan signs for the mirror pair have the same square.
 -/
 theorem GT_M1_isospin_relation :
@@ -121,16 +110,6 @@ theorem BM1_mass_ordering :
 /-!
 ## Section 4: Shell Corrections
 -/
-
-/--
-Shell correction factors for selected B(M1) mirror ratios.
--/
-def BM1_shell_corrections : List (ℝ × String) :=
-  [(27, "mid-shell enhancement: x1.20"),
-   (31, "near-magic: x1.00"),
-   (35, "near-magic: x1.05"),
-   (39, "near-magic: x1.00"),
-   (43, "approaching N=28: x0.90")]
 
 /--
 Shell-corrected B(M1) ratio for selected nuclei.

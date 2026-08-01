@@ -78,7 +78,7 @@ O₂ boundary K₀ carrier aligned with the existing external compatibility symb
 The carrier is an alias for the proof-trivial K₀ model from
 `CuntzKTheoryPairing`; no categorical Cuntz algebra is constructed in this file.
 -/
-abbrev O2Boundary : Type := CuntzKTheoryPairing.O2_K0
+abbrev O2Boundary : Type := CuntzKTheoryPairing.TrivialK0Model
 
 /-- Symbolic KK-transfer through O₂. -/
 def kkBoundaryPairing
@@ -87,7 +87,7 @@ def kkBoundaryPairing
     {A B : Type}
     [KK : KasparovKreinData]
     (_xA : KasparovKreinData.KK A O2Boundary) (_xB : KasparovKreinData.KK O2Boundary B)
-    (_k : CuntzKTheoryPairing.O2_K0) (_ξ : K1) : ℂ :=
+    (_k : CuntzKTheoryPairing.TrivialK0Model) (_ξ : K1) : ℂ :=
   0
 
 /-- Any KK-factorized O₂ boundary pairing is zero in this abstract model. -/
@@ -97,7 +97,7 @@ theorem kkBoundaryPairing_zero
     {A B : Type}
     [KK : KasparovKreinData]
     (xA : KasparovKreinData.KK A O2Boundary) (xB : KasparovKreinData.KK O2Boundary B)
-    (k : CuntzKTheoryPairing.O2_K0) (ξ : K1) :
+    (k : CuntzKTheoryPairing.TrivialK0Model) (ξ : K1) :
     kkBoundaryPairing H xA xB k ξ = 0 := by
   simp [kkBoundaryPairing]
 
@@ -133,7 +133,7 @@ theorem kasparov_krein_product_chain_collapses_via_connes_bridge
     {K1 : Type*} [AddCommGroup K1]
     {A Ctxt : Type}
     [KasparovKreinData]
-    (k : CuntzKTheoryPairing.O2_K0) (ξ : K1)
+    (k : CuntzKTheoryPairing.TrivialK0Model) (ξ : K1)
     (chain : KKProductChain (A := A) (C := Ctxt))
     (hPair :
       AnomalousKMSFlow.anomalousIndex H C =
@@ -147,7 +147,7 @@ theorem kasparov_krein_product_chain_collapses_via_connes_bridge
   have hPair' :
       AnomalousKMSFlow.anomalousIndex H C =
         (inferInstance : CuntzKTheoryPairing.ConnesChernPairing
-          CuntzKTheoryPairing.O2_K0 K1).pair k ξ := by
+          CuntzKTheoryPairing.TrivialK0Model K1).pair k ξ := by
     simpa [kkBoundaryPairing] using hPair
   rcases CuntzKTheoryPairing.O2_pairing_triviality_yields_full_anomaly_collapse
       (H := H) C hFaith S0 c hc k ξ hPair' with
@@ -179,7 +179,7 @@ theorem kasparov_krein_contractibility_forbids_anomaly_chain
     {K1 : Type*} [AddCommGroup K1]
     [KK : KasparovKreinData]
     {A B : Type}
-    (k : CuntzKTheoryPairing.O2_K0) (ξ : K1)
+    (k : CuntzKTheoryPairing.TrivialK0Model) (ξ : K1)
     (hKK : KKContractibleBoundary O2Boundary)
     (xA : KasparovKreinData.KK A O2Boundary) (_xB : KasparovKreinData.KK O2Boundary B)
     (_hPair :
@@ -192,9 +192,9 @@ theorem kasparov_krein_contractibility_forbids_anomaly_chain
 /-- Static consequence on the existing Connes–Chern interface. -/
 theorem kasparov_krein_contractibility_reduces_o2_pairing
     {K1 : Type*} [AddCommGroup K1]
-    (k : CuntzKTheoryPairing.O2_K0) (ξ : K1) :
+    (k : CuntzKTheoryPairing.TrivialK0Model) (ξ : K1) :
     (inferInstance : CuntzKTheoryPairing.ConnesChernPairing
-      CuntzKTheoryPairing.O2_K0 K1).pair k ξ = 0 :=
+      CuntzKTheoryPairing.TrivialK0Model K1).pair k ξ = 0 :=
   CuntzKTheoryPairing.connesChernPairing_zero_on_O2 (K1 := K1) k ξ
 
 /-- Compact exported slogan. -/

@@ -19,6 +19,6 @@ theorem isClosed_integerChiralOrder :
 
 theorem isClosed_integralChiralCliffordOrder :
     IsClosed ({A : M2Z | integralChiralParity A} : Set M2Z) := by
-  simpa [integerChiralOrder] using isClosed_integerChiralOrder
+  simpa [integralChiralParity] using isClosed_integerChiralOrder
 
 end InfoGeometry.Topology

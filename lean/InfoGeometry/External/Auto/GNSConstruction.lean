@@ -172,18 +172,4 @@ theorem gns_expectation (a : A) :
   unfold innerProductRaw representationRaw
   simp
 
-/-- The Tomita S-operator, recorded as documentation rather than as a theorem.
-    For a faithful state, the GNS vacuum is separating, and S is
-    a closable anti-linear operator. Its polar decomposition S = JΔ^{1/2}
-    gives the modular conjugation J and modular operator Δ.
-
-    This is the gateway to Tomita-Takesaki theory, KMS states,
-    and the classification of Type III von Neumann factors. -/
-def tomita_S_operator_description : String :=
-  "S : gnsSpace -> gnsSpace, S(pi(a)Omega) = pi(a*)Omega.
-   For faithful ω, S is closable and S = JΔ^{1/2} (polar decomposition).
-   J is the modular conjugation (anti-unitary involution).
-   Δ is the modular operator (positive, self-adjoint).
-   Δ^{it} is the modular flow (the thermodynamic time evolution)."
-
 end State

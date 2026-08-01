@@ -6,7 +6,6 @@ namespace PRL124RuPairingSymmetry
 
 abbrev Q := ℚ
 
-def doi : String := "10.1103/PhysRevLett.124.062501"
 def nucleusA : ℕ := 88
 def protonNumberZ : ℕ := 44
 def neutronNumberN : ℕ := 44

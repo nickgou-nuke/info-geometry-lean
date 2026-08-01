@@ -26,11 +26,13 @@ namespace InfoGeometry.Thermo.SplitChiralPolarizationBasis
 
 /-- Split-complex rapidity coordinate `sigma + j tau`, stored as real data. -/
 @[rep_depth thermo]
-structure SplitRapidity where
-  sigma : ℝ
-  tau : ℝ
+abbrev SplitRapidity := ℝ × ℝ
 
 namespace SplitRapidity
+
+abbrev sigma (s : SplitRapidity) : ℝ := s.1
+
+abbrev tau (s : SplitRapidity) : ℝ := s.2
 
 /-- Left-moving light-cone coordinate `u = sigma + tau`. -/
 @[rep_depth thermo]

@@ -7,8 +7,8 @@ This module separates three facts:
 
 1. KMS thermality is modular/operator-algebraic.
 2. Partial trace is only the finite/type-I shadow.
-3. Hawking/Unruh thermality requires a geometric horizon calibration
-   identifying modular flow with physical time/boost flow.
+3. Some downstream readouts use an additional calibration layer comparing
+   modular flow with an external flow datum.
 
 In particular, the KMS theorem is a Tomita-Takesaki theorem, not a theorem of
 `Cl(1,1)` non-orientability by itself.  At this layer we prove only
@@ -332,10 +332,10 @@ structure TomitaKMSThermalization
   modular_origin :
     ∀ t A, σ.flow t A = tomitaFlow.flow t A
 
-  /-- Physical horizon or wedge flow used for the geometric calibration. -/
+  /-- Calibration flow used for the geometric comparison. -/
   horizonFlow : OperatorFlow Op
 
-  /-- The Tomita carrier agrees with the chosen horizon/wedge flow. -/
+  /-- The Tomita carrier agrees with the chosen calibration flow. -/
   horizon_origin :
     ∀ t A, tomitaFlow.flow t A = horizonFlow.flow t A
 
@@ -401,11 +401,11 @@ theorem thermal_agrees_with_global_on_observable
 end TomitaKMSThermalization
 
 /--
-A horizon or topological boundary that routes observable degrees of freedom
+A boundary or transport layer that routes observable degrees of freedom
 toward the commutant.
 
-The boundary/twist does not by itself create a KMS state; it supplies geometric
-partition data to which a modular thermalization witness may be applied.
+The boundary/twist does not by itself create a KMS state; it supplies boundary
+data to which a modular thermalization witness may be applied.
 -/
 structure HorizonCommutantBoundary
     (Op : Type*) [Ring Op]
@@ -427,7 +427,7 @@ structure HorizonCommutantBoundary
 /--
 Full thermodynamic horizon witness:
 
-Tomita algebra/commutant routing, horizon boundary, observer reduction, and KMS
+Tomita algebra/commutant routing, boundary data, observer reduction, and KMS
 thermalization of the reduced state.
 -/
 structure HorizonKMSThermodynamics
@@ -493,21 +493,21 @@ structure ModularKMSDatum
 /-! ## 6. Horizon / Unruh / Hawking calibration -/
 
 /--
-A geometric calibration identifying modular time with physical horizon time.
+A calibration identifying modular time with an auxiliary comparison flow.
 
-Without this field, the KMS state is modular-thermal but not yet physically
-identified as Unruh or Hawking radiation.
+Without this field, the KMS state is modular-thermal but not yet compared to a
+separate flow datum.
 -/
 structure HorizonFlowCalibration
     (Op : Type*) [AddMonoid Op] [Monoid Op]
     (σ : OperatorFlow Op) where
-  /-- Physical flow, e.g. boost or Killing horizon flow. -/
+  /-- Comparison flow, e.g. a boost-flow calibration in applications. -/
   physicalFlow : OperatorFlow Op
 
   /-- Relation between modular time and physical time. -/
   time_rescaling : ℝ
 
-  /-- Calibration: modular flow equals the physical flow after rescaling. -/
+  /-- Calibration: modular flow equals the comparison flow after rescaling. -/
   modular_eq_physical_after_rescaling :
     ∀ t x,
       σ.flow t x =
@@ -517,20 +517,19 @@ structure HorizonFlowCalibration
 /--
 Emergent thermal radiation datum.
 
-This does not claim to prove Hawking radiation from topology alone. It records
-that a modular KMS state plus a horizon-flow calibration yields a physical
-thermal readout.
+This does not claim to prove any continuum radiation theorem. It records that a
+modular KMS state plus a flow calibration yields a comparison readout.
 -/
 structure EmergentThermalRadiation
     (Op : Type*) [AddMonoid Op] [Monoid Op] where
   /-- Modular KMS theorem socket. -/
   modularKMS : ModularKMSDatum Op
 
-  /-- Horizon/boost-flow calibration. -/
+  /-- Flow calibration. -/
   horizonCalibration :
     HorizonFlowCalibration Op modularKMS.modularFlow
 
-  /-- Physical inverse temperature after the geometric rescaling. -/
+  /-- Inverse temperature after the calibration rescaling. -/
   physicalBeta : ℝ
 
   /--
@@ -1014,10 +1013,10 @@ structure TomitaKMSThermalization
   modular_origin :
     ∀ t A, σ.flow t A = tomitaFlow.flow t A
 
-  /-- Physical horizon or wedge flow used for the geometric calibration. -/
+  /-- Calibration flow used for the geometric comparison. -/
   horizonFlow : ModularFlow Op
 
-  /-- The Tomita carrier agrees with the chosen horizon/wedge flow. -/
+  /-- The Tomita carrier agrees with the chosen calibration flow. -/
   horizon_origin :
     ∀ t A, tomitaFlow.flow t A = horizonFlow.flow t A
 
@@ -1086,7 +1085,7 @@ theorem thermal_agrees_with_global_on_observable
 end TomitaKMSThermalization
 
 /--
-A horizon or topological boundary that routes observable degrees of freedom
+A boundary or transport layer that routes observable degrees of freedom
 toward the commutant.
 
 The boundary/twist does not by itself create a KMS state; it supplies geometric
@@ -1219,36 +1218,34 @@ theorem thermal_eval_eq_global_visible_eval
 
 end ObservableKMSReduction
 
-/-! ## 6. Horizon/Hawking-Unruh calibration socket -/
+/-! ## 6. Flow-calibration socket -/
 
 /--
-Geometric calibration turning modular KMS thermality into a Hawking/Unruh
-readout.
+Geometric calibration turning modular KMS thermality into a comparison readout.
 
 This is not automatic from the algebraic KMS state alone.  It requires a
-geometric statement identifying modular time with physical horizon or wedge
-time.
+geometric statement comparing modular time with another flow.
 -/
 structure HorizonThermalCalibration
     (Visible : Type*) [Ring Visible] where
-  /-- Physical inverse temperature. -/
+  /-- Calibration inverse temperature. -/
   betaPhysical : ℝ
 
   /-- Modular flow of the visible observer algebra. -/
   modularFlow : ModularFlow Visible
 
-  /-- Physical horizon/wedge flow on the visible observer algebra. -/
+  /-- Calibration flow on the visible observer algebra. -/
   horizonFlow : ModularFlow Visible
 
-  /-- Modular time is identified with the calibrated horizon flow. -/
+  /-- Modular time is identified with the calibrated flow. -/
   modularFlow_is_horizon_time :
     ∀ t A, modularFlow.flow t A = horizonFlow.flow t A
 
-  /-- Actual KMS state supplying the thermal Hawking/Unruh readout. -/
+  /-- Actual KMS state supplying the thermal readout. -/
   KMS_is_hawking_unruh_readout :
     KMSState Visible modularFlow.toFlowDatum betaPhysical
 
-/-- A Hawking/Unruh branch is visible KMS reduction plus geometric calibration. -/
+/-- A branch is visible KMS reduction plus geometric calibration. -/
 structure HawkingUnruhBranch
     (Global Visible : Type*) [AddMonoid Global] [Mul Global]
     [Ring Visible] where
@@ -1256,11 +1253,11 @@ structure HawkingUnruhBranch
   reduction :
     ObservableKMSReduction Global Visible
 
-  /-- Horizon/wedge calibration. -/
+  /-- Flow calibration. -/
   calibration :
     HorizonThermalCalibration Visible
 
-  /-- The reduction temperature agrees with the calibrated physical temperature. -/
+  /-- The reduction temperature agrees with the calibrated temperature. -/
   beta_matches :
     reduction.beta = calibration.betaPhysical
 

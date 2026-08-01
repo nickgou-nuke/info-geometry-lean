@@ -123,16 +123,20 @@ theorem parabolic_fixes_base_null_ray (t : ℝ) :
   fin_cases i <;> fin_cases j <;>
     simp [parabolicChart_eq, baseNullRay, Matrix.mul_apply, Fin.sum_univ_two]
 
-structure Twistor where
-  omega : Fin 2 → ℝ
-  pi : Fin 2 → ℝ
+abbrev Twistor := (Fin 2 → ℝ) × (Fin 2 → ℝ)
+
+namespace Twistor
+
+abbrev omega (Z : Twistor) : Fin 2 → ℝ := Z.1
+abbrev pi (Z : Twistor) : Fin 2 → ℝ := Z.2
+
+end Twistor
 
 def twistorIncidence (X : Matrix (Fin 2) (Fin 2) ℝ) (Z : Twistor) : Fin 2 → ℝ :=
   fun i => Z.omega i - ∑ j, X i j * Z.pi j
 
-def scaleTwistor (s : ℝ) (Z : Twistor) : Twistor where
-  omega := fun i => s * Z.omega i
-  pi := fun i => s * Z.pi i
+def scaleTwistor (s : ℝ) (Z : Twistor) : Twistor :=
+  (fun i => s * Z.omega i, fun i => s * Z.pi i)
 
 /-- Twistor incidence is projective: scaling the twistor scales the incidence. -/
 theorem twistor_incidence_homogeneous

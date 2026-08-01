@@ -276,26 +276,6 @@ theorem diracHodgeCuntz_embIter_compatible (n k : ℕ) (f : Stage n) :
   rw [stageToSequence_diracHodgeCuntz n f]
   rw [stageToSequence_embIter]
 
-/-- Scaffold data record (parallel to the existing finite-stage interface). -/
-structure PrimonCuntzTowerData where
-  Stage : ℕ → Type*
-  [hNorm : ∀ n, NormedAddCommGroup (Stage n)]
-  [hIP : ∀ n, InnerProductSpace ℂ (Stage n)]
-  [hCS : ∀ n, CompleteSpace (Stage n)]
-  emb : ∀ n, Stage n →ₗᵢ[ℂ] Stage (n + 1)
-  D : ∀ n, Stage n →L[ℂ] Stage n
-  hD_selfAdj : ∀ n, IsSelfAdjoint (D n)
-  hD_comm : ∀ n, (D (n + 1)).comp (emb n).toContinuousLinearMap =
-    (emb n).toContinuousLinearMap.comp (D n)
-
-/-- Concrete finite scaffold package for this step of the tower. -/
-def primonCuntzTowerData : PrimonCuntzTowerData :=
-  { Stage := Stage
-  , emb := embIsometry
-  , D := D_n
-  , hD_selfAdj := D_n_selfAdjoint
-  , hD_comm := D_n_comm }
-
 /-- KAN-modeled finite spectral sector at stage `n`: compact/nilpotent sectors are unit,
     logarithmic sector is diagonal weights `i+1`. -/
 def primonCuntzKANFactor (n : ℕ) : InfoGeometry.Quantum.KANFormalization.KANFactor (Fin (n + 1)) :=
@@ -386,17 +366,5 @@ theorem primonCuntz_finite_stage_KAN_bridge (n : ℕ) :
     by simp [primonCuntzKANFactor],
     by simp [primonCuntzKANFactor],
     primonCuntz_tower_kan_log_bridge n⟩
-
-/-- Concrete Dirac-colimit record using this explicit finite model. -/
-def primonCuntzDiracData : InfoGeometry.Canonical.DiracColimit.DiracColimitData :=
-  { Stage := Stage
-  , hNorm := by infer_instance
-  , hIP := by infer_instance
-  , hCS := by infer_instance
-  , emb := embIsometry
-  , D := D_n
-  , hD_selfAdj := by intro n; exact D_n_selfAdjoint n
-  , hD_comm := D_n_comm
-  }
 
 end InfoGeometry.Quantum.PrimonCuntzTower

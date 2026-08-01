@@ -93,30 +93,3 @@ theorem masterOp_derivative (K : ℂ) : masterOp (K + 1) - masterOp K = exp K * 
 theorem masterOp_nonneg (K : ℝ) : 0 ≤ masterOpReal K := by
   unfold masterOpReal
   linarith [Real.add_one_le_exp K]
-
--- LAYER 6: SYNTHESIS — THE THERMODYNAMIC GAUGE EQUATION
-
-/-- The master equation of thermodynamic gauge flow:
-    
-    dω/dt = -∇_ω S(ω||Ω) = Ω - ω + ω·(log Ω - log ω)
-    
-    where Ω is the reference KMS state (the vacuum gauge choice).
-    In terms of K = log ω - log Ω:  dK/dt = I - exp(K) = -∇F(K).
-    
-    The stationary point K = 0 gives ω = Ω (thermal equilibrium).
-    The Connes cocycle exp(itK) generates the modular flow. -/
--- Bridges
-abbrev BridgeArtifact := String × String
-
-def bridge_thermo_gauge_flow : BridgeArtifact :=
-  ("thermodynamic gauge flow", "thermo_gauge_flow.lean")
-
-def bridge_tomita_kms : BridgeArtifact :=
-  ("Tomita KMS modular flow", "tomita_kms_v4.lean")
-
-def master_equation_bridge_registry : List BridgeArtifact :=
-  [bridge_thermo_gauge_flow, bridge_tomita_kms]
-
-theorem master_equation_bridge_registry_length :
-    master_equation_bridge_registry.length = 2 := by
-  native_decide

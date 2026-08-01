@@ -12,13 +12,19 @@ abbrev m (x : SplitPair) : Rat := x.2
 
 end SplitPair
 
-structure V55 where
-  x0 : SplitPair
-  x1 : SplitPair
-  x2 : SplitPair
-  x3 : SplitPair
-  x4 : SplitPair
-  deriving Repr, DecidableEq
+abbrev V55 := SplitPair × SplitPair × SplitPair × SplitPair × SplitPair
+
+namespace V55
+
+abbrev x0 (x : V55) : SplitPair := x.1
+abbrev x1 (x : V55) : SplitPair := x.2.1
+abbrev x2 (x : V55) : SplitPair := x.2.2.1
+abbrev x3 (x : V55) : SplitPair := x.2.2.2.1
+abbrev x4 (x : V55) : SplitPair := x.2.2.2.2
+
+abbrev mk (x0 x1 x2 x3 x4 : SplitPair) : V55 := (x0, x1, x2, x3, x4)
+
+end V55
 
 def q11 (x : SplitPair) : Rat := x.p * x.p - x.m * x.m
 
@@ -36,23 +42,23 @@ def bil11 (a b : SplitPair) : Rat := a.p * b.p - a.m * b.m
 
 def reflectE (x : SplitPair) : SplitPair := (-x.p, x.m)
 
-def nAt0 : V55 := { x0 := n, x1 := (0, 0), x2 := (0, 0), x3 := (0, 0), x4 := (0, 0) }
-def nAt1 : V55 := { x0 := (0, 0), x1 := n, x2 := (0, 0), x3 := (0, 0), x4 := (0, 0) }
-def nAt2 : V55 := { x0 := (0, 0), x1 := (0, 0), x2 := n, x3 := (0, 0), x4 := (0, 0) }
-def nAt3 : V55 := { x0 := (0, 0), x1 := (0, 0), x2 := (0, 0), x3 := n, x4 := (0, 0) }
-def nAt4 : V55 := { x0 := (0, 0), x1 := (0, 0), x2 := (0, 0), x3 := (0, 0), x4 := n }
+def nAt0 : V55 := V55.mk n (0, 0) (0, 0) (0, 0) (0, 0)
+def nAt1 : V55 := V55.mk (0, 0) n (0, 0) (0, 0) (0, 0)
+def nAt2 : V55 := V55.mk (0, 0) (0, 0) n (0, 0) (0, 0)
+def nAt3 : V55 := V55.mk (0, 0) (0, 0) (0, 0) n (0, 0)
+def nAt4 : V55 := V55.mk (0, 0) (0, 0) (0, 0) (0, 0) n
 
-def nbarAt0 : V55 := { x0 := nbar, x1 := (0, 0), x2 := (0, 0), x3 := (0, 0), x4 := (0, 0) }
-def nbarAt1 : V55 := { x0 := (0, 0), x1 := nbar, x2 := (0, 0), x3 := (0, 0), x4 := (0, 0) }
-def nbarAt2 : V55 := { x0 := (0, 0), x1 := (0, 0), x2 := nbar, x3 := (0, 0), x4 := (0, 0) }
-def nbarAt3 : V55 := { x0 := (0, 0), x1 := (0, 0), x2 := (0, 0), x3 := nbar, x4 := (0, 0) }
-def nbarAt4 : V55 := { x0 := (0, 0), x1 := (0, 0), x2 := (0, 0), x3 := (0, 0), x4 := nbar }
+def nbarAt0 : V55 := V55.mk nbar (0, 0) (0, 0) (0, 0) (0, 0)
+def nbarAt1 : V55 := V55.mk (0, 0) nbar (0, 0) (0, 0) (0, 0)
+def nbarAt2 : V55 := V55.mk (0, 0) (0, 0) nbar (0, 0) (0, 0)
+def nbarAt3 : V55 := V55.mk (0, 0) (0, 0) (0, 0) nbar (0, 0)
+def nbarAt4 : V55 := V55.mk (0, 0) (0, 0) (0, 0) (0, 0) nbar
 
-def nColl : V55 := { x0 := n, x1 := n, x2 := n, x3 := n, x4 := n }
-def nbarColl : V55 := { x0 := nbar, x1 := nbar, x2 := nbar, x3 := nbar, x4 := nbar }
+def nColl : V55 := V55.mk n n n n n
+def nbarColl : V55 := V55.mk nbar nbar nbar nbar nbar
 
 def reflectColl (x : V55) : V55 :=
-  { x0 := reflectE x.x0, x1 := reflectE x.x1, x2 := reflectE x.x2, x3 := reflectE x.x3, x4 := reflectE x.x4 }
+  V55.mk (reflectE x.x0) (reflectE x.x1) (reflectE x.x2) (reflectE x.x3) (reflectE x.x4)
 
 theorem e_sq : q11 e = 1 := by norm_num [q11, e]
 theorem ebar_sq : q11 ebar = -1 := by norm_num [q11, ebar]
@@ -67,26 +73,26 @@ theorem reflect_n : reflectE n = pairNeg nbar := by
 theorem reflect_nbar : reflectE nbar = pairNeg n := by
   norm_num [reflectE, pairNeg, n, nbar]
 
-theorem nAt0_null : Q55 nAt0 = 0 := by norm_num [Q55, q11, nAt0, n]
-theorem nAt1_null : Q55 nAt1 = 0 := by norm_num [Q55, q11, nAt1, n]
-theorem nAt2_null : Q55 nAt2 = 0 := by norm_num [Q55, q11, nAt2, n]
-theorem nAt3_null : Q55 nAt3 = 0 := by norm_num [Q55, q11, nAt3, n]
-theorem nAt4_null : Q55 nAt4 = 0 := by norm_num [Q55, q11, nAt4, n]
+theorem nAt0_null : Q55 nAt0 = 0 := by norm_num [V55.x0, V55.x1, V55.x2, V55.x3, V55.x4, Q55, q11, nAt0, n]
+theorem nAt1_null : Q55 nAt1 = 0 := by norm_num [V55.x0, V55.x1, V55.x2, V55.x3, V55.x4, Q55, q11, nAt1, n]
+theorem nAt2_null : Q55 nAt2 = 0 := by norm_num [V55.x0, V55.x1, V55.x2, V55.x3, V55.x4, Q55, q11, nAt2, n]
+theorem nAt3_null : Q55 nAt3 = 0 := by norm_num [V55.x0, V55.x1, V55.x2, V55.x3, V55.x4, Q55, q11, nAt3, n]
+theorem nAt4_null : Q55 nAt4 = 0 := by norm_num [V55.x0, V55.x1, V55.x2, V55.x3, V55.x4, Q55, q11, nAt4, n]
 
-theorem nbarAt0_null : Q55 nbarAt0 = 0 := by norm_num [Q55, q11, nbarAt0, nbar]
-theorem nbarAt1_null : Q55 nbarAt1 = 0 := by norm_num [Q55, q11, nbarAt1, nbar]
-theorem nbarAt2_null : Q55 nbarAt2 = 0 := by norm_num [Q55, q11, nbarAt2, nbar]
-theorem nbarAt3_null : Q55 nbarAt3 = 0 := by norm_num [Q55, q11, nbarAt3, nbar]
-theorem nbarAt4_null : Q55 nbarAt4 = 0 := by norm_num [Q55, q11, nbarAt4, nbar]
+theorem nbarAt0_null : Q55 nbarAt0 = 0 := by norm_num [V55.x0, V55.x1, V55.x2, V55.x3, V55.x4, Q55, q11, nbarAt0, nbar]
+theorem nbarAt1_null : Q55 nbarAt1 = 0 := by norm_num [V55.x0, V55.x1, V55.x2, V55.x3, V55.x4, Q55, q11, nbarAt1, nbar]
+theorem nbarAt2_null : Q55 nbarAt2 = 0 := by norm_num [V55.x0, V55.x1, V55.x2, V55.x3, V55.x4, Q55, q11, nbarAt2, nbar]
+theorem nbarAt3_null : Q55 nbarAt3 = 0 := by norm_num [V55.x0, V55.x1, V55.x2, V55.x3, V55.x4, Q55, q11, nbarAt3, nbar]
+theorem nbarAt4_null : Q55 nbarAt4 = 0 := by norm_num [V55.x0, V55.x1, V55.x2, V55.x3, V55.x4, Q55, q11, nbarAt4, nbar]
 
-theorem nColl_null : Q55 nColl = 0 := by norm_num [Q55, q11, nColl, n]
-theorem nbarColl_null : Q55 nbarColl = 0 := by norm_num [Q55, q11, nbarColl, nbar]
+theorem nColl_null : Q55 nColl = 0 := by norm_num [V55.x0, V55.x1, V55.x2, V55.x3, V55.x4, Q55, q11, nColl, n]
+theorem nbarColl_null : Q55 nbarColl = 0 := by norm_num [V55.x0, V55.x1, V55.x2, V55.x3, V55.x4, Q55, q11, nbarColl, nbar]
 theorem reflectColl_nColl : reflectColl nColl =
-    { x0 := pairNeg nbar, x1 := pairNeg nbar, x2 := pairNeg nbar, x3 := pairNeg nbar, x4 := pairNeg nbar } := by
-  norm_num [reflectColl, reflectE, pairNeg, nColl, n, nbar]
+    V55.mk (pairNeg nbar) (pairNeg nbar) (pairNeg nbar) (pairNeg nbar) (pairNeg nbar) := by
+    norm_num [V55.x0, V55.x1, V55.x2, V55.x3, V55.x4, reflectColl, reflectE, pairNeg, nColl, n, nbar]
 theorem reflectColl_nbarColl : reflectColl nbarColl =
-    { x0 := pairNeg n, x1 := pairNeg n, x2 := pairNeg n, x3 := pairNeg n, x4 := pairNeg n } := by
-  norm_num [reflectColl, reflectE, pairNeg, nbarColl, n, nbar]
+    V55.mk (pairNeg n) (pairNeg n) (pairNeg n) (pairNeg n) (pairNeg n) := by
+    norm_num [V55.x0, V55.x1, V55.x2, V55.x3, V55.x4, reflectColl, reflectE, pairNeg, nbarColl, n, nbar]
 
 inductive SpinSector where | v | s | c deriving Repr, DecidableEq
 

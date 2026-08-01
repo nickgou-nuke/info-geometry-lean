@@ -1,5 +1,7 @@
 import InfoGeometry.Canonical.H3ZornCubicJordanTopologicalReadout
 import InfoGeometry.Canonical.ChiralConeOctonionicBridge
+import InfoGeometry.Canonical.PauliWorldClockSynchronicity
+import InfoGeometry.Canonical.ChiralConeOctonionicTopological
 import InfoGeometry.Canonical.BostConnesPhaseTransition
 import InfoGeometry.Canonical.CuntzIsometryIntertwinerBridge
 import InfoGeometry.Canonical.CuntzGaugeAction

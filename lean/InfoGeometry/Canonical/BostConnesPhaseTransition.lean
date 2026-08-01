@@ -1,6 +1,4 @@
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
-import Mathlib.Topology.Instances.Real
-import Mathlib.Analysis.SpecialFunctions.Exp
+import Mathlib
 
 namespace InfoGeometry.Canonical
 

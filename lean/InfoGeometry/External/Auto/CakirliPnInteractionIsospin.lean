@@ -52,20 +52,14 @@ theorem mirrorDelta_antisym (x y : ℚ) :
   unfold mirrorDelta
   ring
 
-abbrev MirrorDeltaDatum :=
-  ℕ × String × String × ℚ × ℚ × ℚ × ℚ
-
-namespace MirrorDeltaDatum
-
-def A (d : MirrorDeltaDatum) : ℕ := d.1
-def tzPosNucleus (d : MirrorDeltaDatum) : String := d.2.1
-def tzNegNucleus (d : MirrorDeltaDatum) : String := d.2.2.1
-def deltaTzPosHalf_keV (d : MirrorDeltaDatum) : ℚ := d.2.2.2.1
-def deltaTzNegHalf_keV (d : MirrorDeltaDatum) : ℚ := d.2.2.2.2.1
-def reportedDelta_keV (d : MirrorDeltaDatum) : ℚ := d.2.2.2.2.2.1
-def reportedError_keV (d : MirrorDeltaDatum) : ℚ := d.2.2.2.2.2.2
-
-end MirrorDeltaDatum
+structure MirrorDeltaDatum where
+  A : ℕ
+  tzPosNucleus : String
+  tzNegNucleus : String
+  deltaTzPosHalf_keV : ℚ
+  deltaTzNegHalf_keV : ℚ
+  reportedDelta_keV : ℚ
+  reportedError_keV : ℚ
 
 def centralDelta (d : MirrorDeltaDatum) : ℚ :=
   mirrorDelta (MirrorDeltaDatum.deltaTzNegHalf_keV d)
@@ -76,31 +70,49 @@ def withinReportedError (d : MirrorDeltaDatum) : Prop :=
     MirrorDeltaDatum.reportedError_keV d
 
 def A7_Li_Be : MirrorDeltaDatum :=
-  (7, "7Li", "7Be", 5970, 5785, -185, 35)
+  { A := 7, tzPosNucleus := "7Li", tzNegNucleus := "7Be",
+    deltaTzPosHalf_keV := 5970, deltaTzNegHalf_keV := 5785,
+    reportedDelta_keV := -185, reportedError_keV := 35 }
 
 def A9_Be_B : MirrorDeltaDatum :=
-  (9, "9Be", "9B", 1037, 914, -123, 13)
+  { A := 9, tzPosNucleus := "9Be", tzNegNucleus := "9B",
+    deltaTzPosHalf_keV := 1037, deltaTzNegHalf_keV := 914,
+    reportedDelta_keV := -123, reportedError_keV := 13 }
 
 def A13_C_N : MirrorDeltaDatum :=
-  (13, "13C", "13N", 2222, 1661, -562, 3)
+  { A := 13, tzPosNucleus := "13C", tzNegNucleus := "13N",
+    deltaTzPosHalf_keV := 2222, deltaTzNegHalf_keV := 1661,
+    reportedDelta_keV := -562, reportedError_keV := 3 }
 
 def A15_N_O : MirrorDeltaDatum :=
-  (15, "15N", "15O", 41320 / 10, 41384 / 10, 64 / 10, 1 / 10)
+  { A := 15, tzPosNucleus := "15N", tzNegNucleus := "15O",
+    deltaTzPosHalf_keV := 41320 / 10, deltaTzNegHalf_keV := 41384 / 10,
+    reportedDelta_keV := 64 / 10, reportedError_keV := 1 / 10 }
 
 def A17_O_F : MirrorDeltaDatum :=
-  (17, "17O", "17F", 14625 / 10, 935, -527, 7)
+  { A := 17, tzPosNucleus := "17O", tzNegNucleus := "17F",
+    deltaTzPosHalf_keV := 14625 / 10, deltaTzNegHalf_keV := 935,
+    reportedDelta_keV := -527, reportedError_keV := 7 }
 
 def A19_F_Ne : MirrorDeltaDatum :=
-  (19, "19F", "19Ne", 36966 / 10, 37467 / 10, 500 / 10, 3 / 10)
+  { A := 19, tzPosNucleus := "19F", tzNegNucleus := "19Ne",
+    deltaTzPosHalf_keV := 36966 / 10, deltaTzNegHalf_keV := 37467 / 10,
+    reportedDelta_keV := 500 / 10, reportedError_keV := 3 / 10 }
 
 def A23_Na_Mg : MirrorDeltaDatum :=
-  (23, "23Na", "23Mg", 318140 / 100, 31920 / 10, 106 / 10, 1 / 10)
+  { A := 23, tzPosNucleus := "23Na", tzNegNucleus := "23Mg",
+    deltaTzPosHalf_keV := 318140 / 100, deltaTzNegHalf_keV := 31920 / 10,
+    reportedDelta_keV := 106 / 10, reportedError_keV := 1 / 10 }
 
 def A25_Mg_Al : MirrorDeltaDatum :=
-  (25, "25Mg", "25Al", 10650 / 10, 10650 / 10, 3 / 10, 3 / 10)
+  { A := 25, tzPosNucleus := "25Mg", tzNegNucleus := "25Al",
+    deltaTzPosHalf_keV := 10650 / 10, deltaTzNegHalf_keV := 10650 / 10,
+    reportedDelta_keV := 3 / 10, reportedError_keV := 3 / 10 }
 
 def A29_Si_P : MirrorDeltaDatum :=
-  (29, "29Si", "29P", 101510 / 100, 971, -44, 5)
+  { A := 29, tzPosNucleus := "29Si", tzNegNucleus := "29P",
+    deltaTzPosHalf_keV := 101510 / 100, deltaTzNegHalf_keV := 971,
+    reportedDelta_keV := -44, reportedError_keV := 5 }
 
 theorem A7_delta_exact : centralDelta A7_Li_Be = -185 := by
   norm_num [centralDelta, mirrorDelta, MirrorDeltaDatum.deltaTzNegHalf_keV,

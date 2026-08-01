@@ -13,15 +13,16 @@ open InfoGeometry.Canonical.ExteriorContractionOperatorBridge
 
 variable {R V : Type*} [CommRing R] [AddCommGroup V] [Module R V]
 
-/-- **Definition**: Dirac-Kähler Operator D = d + d* in Module.End R (ExteriorAlgebra R V). -/
+/-- Finite Dirac-Kähler operator `D = d + d*` in `Module.End R (ExteriorAlgebra R V)`. -/
 def diracKahlerOp (d dstar : Module.End R (ExteriorAlgebra R V)) : Module.End R (ExteriorAlgebra R V) :=
   d + dstar
 
-/-- **Definition**: Hodge-de Rham Laplacian Δ = d ∘ d* + d* ∘ d in Module.End R (ExteriorAlgebra R V). -/
+/-- Finite Hodge-de Rham Laplacian `Δ = d ∘ d* + d* ∘ d`. -/
 def hodgeDeRhamLaplacian (d dstar : Module.End R (ExteriorAlgebra R V)) : Module.End R (ExteriorAlgebra R V) :=
   d.comp dstar + dstar.comp d
 
-/-- **Theorem**: Dirac-Kähler Square Identity D² = (d + d*)² = d ∘ d* + d* ∘ d = Δ under d² = 0, (d*)² = 0. -/
+/-- The finite square identity `D² = Δ` under the nilpotence hypotheses `d² = 0`
+and `(d*)² = 0`. -/
 theorem dirac_kahler_sq_eq_laplacian
     (d dstar : Module.End R (ExteriorAlgebra R V))
     (hd2 : d.comp d = 0) (hdstar2 : dstar.comp dstar = 0) :

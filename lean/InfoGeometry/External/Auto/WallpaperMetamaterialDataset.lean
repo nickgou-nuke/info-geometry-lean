@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.External.Auto.MorandiWallpaperCohomology
 
 /-!
 # Wallpaper-group mechanical metamaterial dataset digest
@@ -16,19 +17,21 @@ paperwall/Klein/glide formalization.
 
 namespace WallpaperMetamaterialDataset
 
+abbrev WallpaperGroup := MorandiWallpaperCohomology.WallpaperGroup
+
 /-! ## 1. Wallpaper group coverage -/
 
-/-- Standard IUCr short names for the 17 wallpaper groups, as used by the dataset. -/
-def wallpaperGroups : List String :=
-  ["p1", "p2", "pm", "pg", "cm", "pmm", "pmg", "pgg", "cmm",
-   "p4", "p4m", "p4g", "p3", "p3m1", "p31m", "p6", "p6m"]
+/-- The dataset covers the finite carrier of all 17 wallpaper groups. -/
+def wallpaperGroups : List WallpaperGroup :=
+  MorandiWallpaperCohomology.allWallpaperGroups
 
 /-- Dataset covers all 17 wallpaper groups. -/
 theorem wallpaperGroups_length : wallpaperGroups.length = 17 := by
-  simp [wallpaperGroups]
+  exact MorandiWallpaperCohomology.allWallpaperGroups_length
 
-/-- Groups explicitly containing glide reflections in IUCr notation. -/
-def glideGroups : List String := ["pg", "pmg", "pgg", "p4g"]
+/-- Groups explicitly containing glide reflections. -/
+def glideGroups : List WallpaperGroup :=
+  [.pg, .pmg, .pgg, .p4g]
 
 /-- There are four explicit glide-containing names in this list. -/
 theorem glideGroups_length : glideGroups.length = 4 := by

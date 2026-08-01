@@ -349,4 +349,12 @@ theorem threeColor_intersection_eq_sharedAxis :
   simp
   aesop
 
+theorem master_three_color_embedding_synthesis :
+    (LinearMap.range redEmbedding ⊓ LinearMap.range greenEmbedding = sharedIntegralHyperbolicAxis) ∧
+    (LinearMap.range greenEmbedding ⊓ LinearMap.range blueEmbedding = sharedIntegralHyperbolicAxis) ∧
+    (LinearMap.range blueEmbedding ⊓ LinearMap.range redEmbedding = sharedIntegralHyperbolicAxis) :=
+  ⟨red_green_intersection_eq_sharedAxis,
+   green_blue_intersection_eq_sharedAxis,
+   blue_red_intersection_eq_sharedAxis⟩
+
 end InfoGeometry.Canonical

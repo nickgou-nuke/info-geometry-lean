@@ -4,10 +4,13 @@ import InfoGeometry.Canonical.DiracKahlerLaplacianOperatorBridge
 /-!
 # Dirac-Kähler Spinor Bridge
 
-This module formalizes the action of the Dirac-Kähler operator (D = d + d*)
-on the 32-dimensional embedded spinors. It establishes the structural equivalence
-between the fundamental spinor representation space and the exterior algebra, 
-proving that the fundamental identity D² = Δ holds natively on the spinors.
+This module packages a finite transport of the already proved operator identity
+`D² = Δ` through an explicit linear equivalence between a 32-dimensional
+spinor carrier and an exterior-algebra carrier.
+
+It does **not** construct a continuum spin geometry or prove a new
+spinor/exterior-algebra classification theorem; it reuses the owner identity
+from `InfoGeometry.Canonical.DiracKahlerLaplacianOperatorBridge`.
 -/
 
 noncomputable section
@@ -21,16 +24,16 @@ variable {R : Type*} [CommRing R]
 variable {V_base : Type*} [AddCommGroup V_base] [Module R V_base]
 
 /-- 
-A formal equivalence (isomorphism) between the 32-dimensional spinor space 
-(the fundamental representation of the split-octonionic pin group) 
-and the exterior algebra over a 5-dimensional base space.
+A formal equivalence between the 32-dimensional spinor carrier and an exterior
+algebra carrier.
 -/
 structure SpinorExteriorEquiv where
   equiv : (Fin 32 → R) ≃ₗ[R] ExteriorAlgebra R V_base
 
 /--
-The Dirac-Kähler operator acting directly on the 32-dimensional spinors.
-It is induced by pushing the topological D = d + d* operator through the spinor equivalence.
+The Dirac-Kähler operator transported to the 32-dimensional spinor carrier.
+It is induced by pushing the operator identity through the supplied linear
+equivalence.
 -/
 def spinDiracKahlerOp 
     (spinEq : SpinorExteriorEquiv (R:=R) (V_base:=V_base))
@@ -39,7 +42,7 @@ def spinDiracKahlerOp
   spinEq.equiv.symm.conj (diracKahlerOp d dstar)
 
 /--
-The Hodge-de Rham Laplacian acting on the 32-dimensional spinors.
+The Hodge-de Rham Laplacian transported to the spinor carrier.
 -/
 def spinLaplacianOp 
     (spinEq : SpinorExteriorEquiv (R:=R) (V_base:=V_base))
@@ -48,7 +51,7 @@ def spinLaplacianOp
   spinEq.equiv.symm.conj (hodgeDeRhamLaplacian d dstar)
 
 /--
-The fundamental property that D² = Δ holds exactly on the 32-dimensional spinor space.
+The finite operator identity `D² = Δ` survives transport to the spinor carrier.
 -/
 theorem spin_dirac_kahler_sq_eq_laplacian
     (spinEq : SpinorExteriorEquiv (R:=R) (V_base:=V_base))

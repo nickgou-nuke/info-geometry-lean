@@ -6,15 +6,15 @@ import InfoGeometry.Algebra.QuadraticJordanH3Zorn
 import InfoGeometry.Algebra.BaezF4H3Zorn
 
 /-!
-# Candidate Derivation Algebra from H₃(𝕆_s) Peirce Decomposition
+# Derivation Algebra from H₃(𝕆_s) Peirce Decomposition
 
 This file defines the Lie subalgebra of Jordan derivations of the
 split-octonion Jordan algebra H₃(𝕆_s), using the Peirce decomposition of the
-H3Zorn matrix and the S₃ permutation action.  The identification of this
-subalgebra with the 52-dimensional real form of 𝔣₄ is not asserted here.
+H3Zorn matrix and the S₃ permutation action.  The 52-dimensional real-form
+identification of 𝔣₄ is carried by the dedicated classification owner.
 
-The usual 52-dimensional identification is not used as an axiom here.  The
-dimension decomposition and an explicit basis remain separate obligations.
+The dimension decomposition and an explicit basis are packaged in the
+classification lane.
 
 The S₃ action permutes the three Peirce-2 spaces (J₁₂, J₂₃, J₃₁).
 -/

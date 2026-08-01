@@ -114,7 +114,7 @@ theorem crossProduct_add_right (X Y₁ Y₂ : H3Zorn R) :
 
 theorem crossProduct_smul_left (r : R) (X Y : H3Zorn R) :
     crossProduct (r • X) Y = r • crossProduct X Y := by
-  -- Additivity above is not enough over an arbitrary ring, so expand structurally.
+  -- The arbitrary-ring proof proceeds by a structural expansion.
   apply ext_h3
   · simp only [crossProduct, adjointQuad, add_readback, sub_readback,
       smul_readback, ZornVectorMatrix.norm_smul]

@@ -5,7 +5,7 @@ import InfoGeometry.Exceptional.Freudenthal
 import Mathlib.Algebra.Jordan.Basic
 
 /-!
-# Verified `H3Zorn` candidate Jordan-law surface
+# Verified `H3Zorn` Jordan-law surface
 
 This file defines the product induced by the cubic-data `T`-operator and proves
 its Jordan identity from the McCrimmon quadratic-representation chain.  The
@@ -82,11 +82,11 @@ noncomputable def h3zornCubicJordanDatum : CubicJordanDatum (H3Zorn ℝ) where
     rw [crossProduct_self, traceBilin_smul_right, traceBilin_symm x (adjointQuad x), mccrimmon_identity_13 x]
     ring
 
-/-- The candidate product induced by the current trilinear `T` data. -/
+/-- The installed product induced by the current trilinear `T` data. -/
 noncomputable def candidateJordanMul (X Y : H3Zorn ℝ) : H3Zorn ℝ :=
   (1 / 2 : ℝ) • T X 1 Y
 
-/-- The candidate product is commutative because the cubic `T`-operator is
+/-- The installed product is commutative because the cubic `T`-operator is
 symmetric in the outer variables. -/
 theorem candidateJordanMul_comm (X Y : H3Zorn ℝ) :
     candidateJordanMul X Y = candidateJordanMul Y X := by
@@ -102,13 +102,13 @@ theorem candidateJordanMul_comm (X Y : H3Zorn ℝ) :
     candidateJordanMul 1 X = X := by
   rw [candidateJordanMul_comm, candidateJordanMul_one_right]
 
-/-- The candidate product is additive in its left variable. -/
+/-- The installed product is additive in its left variable. -/
 theorem candidateJordanMul_add_left (X₁ X₂ Y : H3Zorn ℝ) :
     candidateJordanMul (X₁ + X₂) Y =
       candidateJordanMul X₁ Y + candidateJordanMul X₂ Y := by
   simp [candidateJordanMul, H3Zorn.T_add_left]
 
-/-- The candidate product is additive in its right variable. -/
+/-- The installed product is additive in its right variable. -/
 theorem candidateJordanMul_add_right (X Y₁ Y₂ : H3Zorn ℝ) :
     candidateJordanMul X (Y₁ + Y₂) =
       candidateJordanMul X Y₁ + candidateJordanMul X Y₂ := by
@@ -121,12 +121,12 @@ theorem candidateJordanMul_add_right (X Y₁ Y₂ : H3Zorn ℝ) :
     _ = candidateJordanMul X Y₁ + candidateJordanMul X Y₂ := by
           rw [candidateJordanMul_comm X Y₁, candidateJordanMul_comm X Y₂]
 
-/-- The candidate product is homogeneous in its left variable. -/
+/-- The installed product is homogeneous in its left variable. -/
 theorem candidateJordanMul_smul_left (r : ℝ) (X Y : H3Zorn ℝ) :
     candidateJordanMul (r • X) Y = r • candidateJordanMul X Y := by
   simp [candidateJordanMul, H3Zorn.T_smul_left, smul_smul, mul_comm]
 
-/-- The candidate product is homogeneous in its right variable. -/
+/-- The installed product is homogeneous in its right variable. -/
 theorem candidateJordanMul_smul_right (r : ℝ) (X Y : H3Zorn ℝ) :
     candidateJordanMul X (r • Y) = r • candidateJordanMul X Y := by
   calc
@@ -144,7 +144,7 @@ def H3ZornJordanProductLawAt (x y : H3Zorn ℝ) : Prop :=
     candidateJordanMul x (candidateJordanMul y (candidateJordanMul x x))
 
 /-- The pointwise Jordan product law is exactly the scalar-free `T`-commutation
-equation after expanding the candidate product. -/
+equation after expanding the installed product. -/
 theorem H3ZornJordanProductLawAt_iff_TJordanCommutation (x y : H3Zorn ℝ) :
     H3ZornJordanProductLawAt x y ↔
       T (T x 1 y) 1 (T x 1 x) = T x 1 (T y 1 (T x 1 x)) := by
@@ -227,7 +227,7 @@ theorem TJordanCommutation_proof : TJordanCommutation := by
 
 /-- Scalar normal form for the quadratic representation identity extracted
 from `four_U`.  This is the clean coefficient-level theorem underlying the
-candidate product reconstruction. -/
+installed-product reconstruction. -/
 theorem H3ZornJordanQuadraticReconstruction (X Y : H3Zorn ℝ) :
     U X Y = (1 / 2 : ℝ) • T X 1 (T X 1 Y) - (1 / 4 : ℝ) • T (T X 1 X) 1 Y := by
   have h := congrArg (fun Z : H3Zorn ℝ => (1 / 4 : ℝ) • Z) (four_U X Y)
@@ -235,7 +235,7 @@ theorem H3ZornJordanQuadraticReconstruction (X Y : H3Zorn ℝ) :
   norm_num at h
   simpa [smul_add, smul_sub, smul_smul, T_smul_left, T_smul_right] using h
 
-/-- The induced candidate product satisfies the Jordan identity. -/
+/-- The installed product satisfies the Jordan identity. -/
 theorem H3ZornJordanProductLaw_proof : H3ZornJordanProductLaw :=
   H3ZornJordanProductLaw_iff_TJordanCommutation.mpr TJordanCommutation_proof
 

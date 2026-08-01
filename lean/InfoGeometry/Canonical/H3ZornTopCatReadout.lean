@@ -5,8 +5,8 @@ import Mathlib.Topology.Category.TopCat.Basic
 # `TopCat` readout for the native H₃(Zorn) operators
 
 This file packages the continuity theorems proved by the H₃(Zorn) topology
-owner as genuine morphisms in `TopCat`.  It introduces no new topology and
-does not duplicate any algebraic operation.
+owner as genuine morphisms in `TopCat`.  It provides the topological readout
+surface for the existing algebraic maps.
 -/
 
 noncomputable section

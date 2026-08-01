@@ -4,17 +4,16 @@ import Mathlib.Algebra.Jordan.Basic
 /-!
 # The H3Zorn Jordan algebra instance
 
-This module installs the verified candidate product as a commutative
-non-associative ring on the H3Zorn carrier and derives the commutative Jordan
-axiom from the global product law in `H3ZornJordanIdentity`.
+This module installs the verified product as a commutative non-associative
+ring on the H3Zorn carrier and derives the commutative Jordan axiom from the
+global product law in `H3ZornJordanIdentity`.
 -/
 
 namespace InfoGeometry.Algebra
 
 open H3Zorn
 
-/-- Multiplication on the real split carrier is its verified candidate Jordan
-product. -/
+/-- Multiplication on the real split carrier is its verified Jordan product. -/
 noncomputable instance h3ZornJordanMul : Mul (H3Zorn ℝ) where
   mul := candidateJordanMul
 
@@ -61,8 +60,8 @@ theorem h3ZornJordanIdentityTarget : H3ZornJordanIdentityTarget :=
 
 /--
 Literature-facing readout for Baez's octonionic/Jordan-algebra discussion:
-the real split `H3Zorn` carrier, with the verified candidate product installed
-as multiplication, satisfies Mathlib's commutative Jordan algebra axiom.
+the real split `H3Zorn` carrier, with the verified product installed as
+multiplication, satisfies Mathlib's commutative Jordan algebra axiom.
 -/
 theorem h3Zorn_isCommJordan : IsCommJordan (H3Zorn ℝ) :=
   inferInstance

@@ -15,9 +15,9 @@ Mathlib's universal property produces an algebra homomorphism
 `CliffordAlgebra leftCliffordQuadratic →ₐ[ℝ] Module.End ℝ CanonicalZorn`.
 
 The source and target of this homomorphism are associative. The split-octonion
-carrier is only the representation module. In particular, this file does not
-claim that split octonions form an associative subalgebra of a Clifford algebra,
-or that `X ↦ imaginaryLeftMul X` preserves split-octonion multiplication.
+carrier serves as the representation module. In particular, this file keeps the
+associative Clifford algebra and the nonassociative split-octonion carrier in
+distinct roles.
 -/
 
 noncomputable section
@@ -128,8 +128,8 @@ theorem imaginaryLeftMul_sq (X : Imaginary) :
   rw [one_zMul]
 
 /-- Native Mathlib Clifford representation on the eight-dimensional
-split-octonion carrier. This is an operator representation, not an embedding of
-the nonassociative split-octonion algebra as an associative subalgebra. -/
+split-octonion carrier. This is an operator representation on the
+nonassociative split-octonion module. -/
 noncomputable def splitOctonionLeftCliffordRepresentation :
     CliffordAlgebra leftCliffordQuadratic →ₐ[ℝ] Module.End ℝ CanonicalZorn :=
   CliffordAlgebra.lift leftCliffordQuadratic ⟨imaginaryLeftMul, imaginaryLeftMul_sq⟩

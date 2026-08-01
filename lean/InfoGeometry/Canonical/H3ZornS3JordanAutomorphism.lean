@@ -4,10 +4,9 @@ import Mathlib.Topology.Category.TopCat.Basic
 /-!
 # Bundled topological Jordan automorphisms for the `S₃` action
 
-Mathlib exposes the linear/topological equivalence directly, but does not
-provide a universal `JordanAlgEquiv` wrapper.  This small structure records
-exactly the additional multiplication law already proved for `H3Zorn ℝ`.
-No Jordan-product preservation is inferred from linearity alone.
+Mathlib exposes the linear/topological equivalence directly.  This small
+structure records the additional multiplication law already proved for
+`H3Zorn ℝ`.
 -/
 
 namespace InfoGeometry.Canonical

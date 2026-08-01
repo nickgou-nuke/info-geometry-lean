@@ -89,7 +89,7 @@ noncomputable def imaginaryAut
   realZornCompositionAut_preserves_det φ X.1
 
 /-- The norm level set inside the seven-dimensional imaginary split-octonion
-space. No transitivity claim is built into this definition. -/
+space. -/
 def NormLevel (c : ℝ) : Set Imaginary :=
   {X | ZornMatrix.detZ X.1 = c}
 
@@ -103,8 +103,7 @@ multiplication automorphism. -/
     imaginaryAut φ X ∈ NormLevel c ↔ X ∈ NormLevel c := by
   simp only [mem_normLevel_iff, imaginaryAut_preserves_norm]
 
-/-- In particular, the imaginary null cone is invariant. This is an
-invariance theorem, not an assertion that its nonzero locus is one orbit. -/
+/-- In particular, the imaginary null cone is invariant. -/
 @[simp] theorem imaginaryAut_preserves_null
     (φ : realZornCompositionAut) (X : Imaginary) :
     imaginaryAut φ X ∈ NormLevel 0 ↔ X ∈ NormLevel 0 :=
@@ -506,9 +505,9 @@ instance : MulAction realZornCompositionAut Imaginary where
     apply Subtype.ext
     rfl
 
-/-- The genuine point stabilizer for the split-octonion automorphism action on
-its imaginary hyperplane. No identification with `SL₃(ℝ)` or `SU(2,1)` is
-claimed here. -/
+/-- The point stabilizer for the split-octonion automorphism action on its
+imaginary hyperplane. The `SL₃(ℝ)` and `SU(2,1)` identification lane is carried
+by separate classification files. -/
 def PointStabilizer (X : Imaginary) : Subgroup realZornCompositionAut :=
   MulAction.stabilizer realZornCompositionAut X
 
@@ -522,7 +521,7 @@ def Orbit (X : Imaginary) : Set Imaginary :=
     φ ∈ PointStabilizer X ↔ imaginaryAut φ X = X := Iff.rfl
 
 /-- Every automorphism orbit is contained in the norm level through its base
-point. This deliberately does not assert the converse transitivity claim. -/
+point. -/
 theorem orbit_subset_normLevel (X : Imaginary) :
     Orbit X ⊆ NormLevel (ZornMatrix.detZ X.1) := by
   intro Y hY

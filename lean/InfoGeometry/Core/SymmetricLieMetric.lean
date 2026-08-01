@@ -20,9 +20,15 @@ variable {L : Type _} [LieRing L] [LieAlgebra ℝ L]
 Stable owner package for odd/even sign obligations of the Cartan form on a
 symmetric pair.
 -/
-structure CartanOddMetricData where
-  S : SymmetricLieAlgebra L
-  signature : CartanSignature S
+def CartanOddMetricData :=
+  {S : SymmetricLieAlgebra L // CartanSignature S}
+
+namespace CartanOddMetricData
+
+def S (M : CartanOddMetricData (L := L)) : SymmetricLieAlgebra L := M.1
+def signature (M : CartanOddMetricData (L := L)) : CartanSignature M.S := M.2
+
+end CartanOddMetricData
 
 /-- Cartan-form quadratic value used as the information-mass observable. -/
 noncomputable def informationMassSq (M : CartanOddMetricData (L := L)) (x : L) : ℝ :=

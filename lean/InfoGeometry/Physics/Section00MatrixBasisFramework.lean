@@ -207,18 +207,20 @@ def toMinkowski4 (v : PauliCoord) :
 /-- Pauli square packet, delegated to Section30. -/
 theorem pauli_square_packet :
     sigma1 * sigma1 = 1 ∧ sigma2 * sigma2 = 1 ∧ sigma3 * sigma3 = 1 := by
-  exact ⟨_root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma1_sq,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma2_sq,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3_sq⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma1_sq
+  · exact _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma2_sq
+  · exact _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3_sq
 
 /-- Pauli product packet, delegated to Section30. -/
 theorem pauli_product_packet :
     sigma1 * sigma2 = Complex.I • sigma3 ∧
       sigma2 * sigma3 = Complex.I • sigma1 ∧
         sigma3 * sigma1 = Complex.I • sigma2 := by
-  exact ⟨_root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma1_mul_sigma2,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma2_mul_sigma3,
-    _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3_mul_sigma1⟩
+  refine ⟨?_, ?_, ?_⟩
+  · exact _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma1_mul_sigma2
+  · exact _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma2_mul_sigma3
+  · exact _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.sigma3_mul_sigma1
 
 /-- Section30 determinant readout for the Section00 Pauli matrix. -/
 theorem pauliMatrix_det (v : PauliCoord) :
@@ -301,14 +303,15 @@ theorem section00_finite_matrix_basis_packet (a b : PauliCoord) :
                   - (2 : ℂ) * (normalizedPauliMatrix a).det =
                     _root_.InfoGeometry.Physics.Section30UnifiedMatrixFramework.minkowskiForm
                       a.t a.x a.y a.z := by
-  exact ⟨complexI_mul_complexJ a,
-    complexJ_mul_complexK a,
-    complexK_mul_complexI a,
-    complexI_preserves_hsMetric a b,
-    complexJ_preserves_hsMetric a b,
-    complexK_preserves_hsMetric a b,
-    neg_det_pauliMatrix_eq_minkowskiForm a,
-    normalizedPauliMatrix_neg_two_det_eq_minkowskiForm a⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact complexI_mul_complexJ a
+  · exact complexJ_mul_complexK a
+  · exact complexK_mul_complexI a
+  · exact complexI_preserves_hsMetric a b
+  · exact complexJ_preserves_hsMetric a b
+  · exact complexK_preserves_hsMetric a b
+  · exact neg_det_pauliMatrix_eq_minkowskiForm a
+  · exact normalizedPauliMatrix_neg_two_det_eq_minkowskiForm a
 
 end InfoGeometry.Physics.Section00MatrixBasisFramework
 

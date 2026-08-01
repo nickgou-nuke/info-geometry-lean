@@ -144,11 +144,11 @@ theorem finite_braiding_input_readout
         fibonacciFusionMatrix τ s * fibonacciRMatrix q * fibonacciFusionMatrix τ s ∧
       fibonacciRMatrix q * fibonacciBMatrix q τ s * fibonacciRMatrix q =
         fibonacciBMatrix q τ s * fibonacciRMatrix q * fibonacciBMatrix q τ s := by
-  exact ⟨
-    F_sq τ s s_sq tau_sq_add_tau,
-    det_F τ s s_sq tau_sq_add_tau,
-    B_eq_FRF q τ s,
-    artin⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact InfoGeometry.Categorical.FibonacciBraiding.F_sq τ s s_sq tau_sq_add_tau
+  · exact InfoGeometry.Categorical.FibonacciBraiding.det_F τ s s_sq tau_sq_add_tau
+  · exact InfoGeometry.Categorical.FibonacciBraiding.B_eq_FRF q τ s
+  · exact artin
 
 /-! ## Zorn/inductive-support readout -/
 

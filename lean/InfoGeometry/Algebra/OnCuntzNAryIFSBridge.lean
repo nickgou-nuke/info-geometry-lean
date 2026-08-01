@@ -72,11 +72,11 @@ theorem master_on_cuntz_nary_ifs_synthesis
     (g.proj i * g.proj i = g.proj i) ∧
     (g.proj i * g.proj j = 0) ∧
     ((Finset.univ : Finset (Fin n)).sum (fun k => g.proj k) = 1) ∧
-    (NAryBoundary.prefixDigit d x 0 = d) := ⟨
-  g.proj_idempotent i,
-  g.proj_ortho h,
-  g.completeness,
-  rfl
-⟩
+    (NAryBoundary.prefixDigit d x 0 = d) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact g.proj_idempotent i
+  · exact g.proj_ortho h
+  · exact g.completeness
+  · rfl
 
 end InfoGeometry.Algebra.OnCuntzNAryIFSBridge

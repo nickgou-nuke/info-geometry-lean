@@ -88,13 +88,13 @@ theorem master_bost_connes_kms_synthesis
     ((g.x n * g.x_star n) * (g.x n * g.x_star n) = g.x n * g.x_star n) ∧
     (thermalKMSWeight β (m * n) = thermalKMSWeight β m * thermalKMSWeight β n) ∧
     (¬ (isHighTemperaturePhase β ∧ isLowTemperaturePhase β)) ∧
-    (1 < β) := ⟨
-  g.x_star_x n,
-  g.x_mul m n,
-  projection_mode_idempotent g n,
-  thermalKMSWeight_mul β m n,
-  phase_stratification_disjoint β,
-  critical_temperature_boundary β h_low
-⟩
+    (1 < β) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact g.x_star_x n
+  · exact g.x_mul m n
+  · exact projection_mode_idempotent g n
+  · exact thermalKMSWeight_mul β m n
+  · exact phase_stratification_disjoint β
+  · exact critical_temperature_boundary β h_low
 
 end InfoGeometry.Algebra.BostConnesKMSPhaseTransition

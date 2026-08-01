@@ -139,9 +139,14 @@ theorem cl11_atom_recovers_chiral_CAR_basis :
     σMinus = (1 / 2 : ℂ) • (gammaPosM - gammaNegM) ∧
     cl11ChiralCARPair.ann = σPlus ∧
     cl11ChiralCARPair.cre = σMinus := by
-  exact ⟨gammaPosM_sq, gammaNegM_sq, gammaPosM_mul_gammaNegM,
-    sigmaPlus_from_cl11_matrix, sigmaMinus_from_cl11_matrix,
-    cl11ChiralCARPair_ann, cl11ChiralCARPair_cre⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact gammaPosM_sq
+  · exact gammaNegM_sq
+  · exact gammaPosM_mul_gammaNegM
+  · exact sigmaPlus_from_cl11_matrix
+  · exact sigmaMinus_from_cl11_matrix
+  · exact cl11ChiralCARPair_ann
+  · exact cl11ChiralCARPair_cre
 
 /-- Capstone weld: the concrete real `CPTAtom` complexifies to the same finite
 `Cl(1,1)`/CAR bridge used by the chiral TL and braid layers. -/
@@ -153,9 +158,14 @@ theorem cpt_atom_matches_cl11_chiral_CAR_bridge :
     σMinus = (1/2 : ℂ) • (complexifyCl11 CPTAtom.eps + complexifyCl11 CPTAtom.J) ∧
     σPlus = SplitClifford.carAnn ∧
     σMinus = SplitClifford.carCre := by
-  exact ⟨gammaPosM_eq_complexifyCl11_eps, gammaNegM_eq_neg_complexifyCl11_J,
-    complexifyCl11_CPT, σPlus_from_cl11, σMinus_from_cl11,
-    σPlus_eq_carAnn, σMinus_eq_carCre⟩
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · exact gammaPosM_eq_complexifyCl11_eps
+  · exact gammaNegM_eq_neg_complexifyCl11_J
+  · exact complexifyCl11_CPT
+  · exact σPlus_from_cl11
+  · exact σMinus_from_cl11
+  · exact σPlus_eq_carAnn
+  · exact σMinus_eq_carCre
 
 
 end InfoGeometry.Physics.Cl11ChiralCARBridge

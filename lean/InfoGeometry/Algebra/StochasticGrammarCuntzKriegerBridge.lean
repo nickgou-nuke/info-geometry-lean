@@ -60,10 +60,10 @@ theorem master_stochastic_grammar_cuntz_krieger_synthesis
     ((Finset.univ : Finset (Fin n)).sum (fun j => M1.A i j) = 1) ∧
     ((Finset.univ : Finset (Fin n)).sum (fun j => (M1.amplitudeMatrix i j)^2) = 1) ∧
     (bhattacharyyaLanguageFidelity M1 M2 i =
-      (Finset.univ : Finset (Fin n)).sum (fun j => M1.amplitudeMatrix i j * M2.amplitudeMatrix i j)) := ⟨
-  M1.row_sum i,
-  M1.amplitude_row_l2_normalization i,
-  bhattacharyya_language_fidelity_eq_inner_product M1 M2 i
-⟩
+      (Finset.univ : Finset (Fin n)).sum (fun j => M1.amplitudeMatrix i j * M2.amplitudeMatrix i j)) := by
+  refine ⟨?_, ?_, ?_⟩
+  · exact M1.row_sum i
+  · exact M1.amplitude_row_l2_normalization i
+  · exact bhattacharyya_language_fidelity_eq_inner_product M1 M2 i
 
 end InfoGeometry.Algebra.StochasticGrammarCuntzKriegerBridge

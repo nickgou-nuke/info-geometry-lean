@@ -60,7 +60,7 @@ theorem spin_dirac_kahler_sq_eq_laplacian
   intro v
   dsimp [spinDiracKahlerOp, spinLaplacianOp, LinearEquiv.conj]
   simp only [LinearEquiv.apply_symm_apply]
-  have h_base := master_dirac_kahler_laplacian_synthesis d dstar hd2 hdstar2
+  have h_base := InfoGeometry.Canonical.DiracKahlerLaplacianOperatorBridge.dirac_kahler_sq_eq_laplacian d dstar hd2 hdstar2
   have h_eval := LinearMap.congr_fun h_base (spinEq.equiv v)
   exact congr_arg spinEq.equiv.symm h_eval
 

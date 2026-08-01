@@ -194,4 +194,182 @@ theorem rationalHalfIntegerSet_mem_iff (q : ℚ) :
     rw [hn]
     ring
 
+def rationalHalfIntegerZornSet : Set (ZornVectorMatrix ℚ) :=
+  {X | X.a ∈ rationalHalfIntegerSet ∧
+    X.b ∈ rationalHalfIntegerSet ∧
+    (∀ i, X.v i ∈ rationalHalfIntegerSet) ∧
+    ∀ i, X.w i ∈ rationalHalfIntegerSet}
+
+theorem isClosed_rationalHalfIntegerZornSet :
+    IsClosed rationalHalfIntegerZornSet := by
+  have ha : IsClosed {X : ZornVectorMatrix ℚ |
+      X.a ∈ rationalHalfIntegerSet} :=
+    isClosed_rationalHalfIntegerSet.preimage
+      continuous_zornVectorMatrix_rational_a
+  have hb : IsClosed {X : ZornVectorMatrix ℚ |
+      X.b ∈ rationalHalfIntegerSet} :=
+    isClosed_rationalHalfIntegerSet.preimage
+      continuous_zornVectorMatrix_rational_b
+  have hv : IsClosed {X : ZornVectorMatrix ℚ |
+      ∀ i, X.v i ∈ rationalHalfIntegerSet} := by
+    rw [show {X : ZornVectorMatrix ℚ |
+        ∀ i, X.v i ∈ rationalHalfIntegerSet} =
+        ⋂ i, (fun X : ZornVectorMatrix ℚ => X.v i) ⁻¹'
+          rationalHalfIntegerSet by
+      ext X
+      simp]
+    exact isClosed_iInter fun i =>
+      isClosed_rationalHalfIntegerSet.preimage
+        (continuous_zornVectorMatrix_rational_v i)
+  have hw : IsClosed {X : ZornVectorMatrix ℚ |
+      ∀ i, X.w i ∈ rationalHalfIntegerSet} := by
+    rw [show {X : ZornVectorMatrix ℚ |
+        ∀ i, X.w i ∈ rationalHalfIntegerSet} =
+        ⋂ i, (fun X : ZornVectorMatrix ℚ => X.w i) ⁻¹'
+          rationalHalfIntegerSet by
+      ext X
+      simp]
+    exact isClosed_iInter fun i =>
+      isClosed_rationalHalfIntegerSet.preimage
+        (continuous_zornVectorMatrix_rational_w i)
+  exact ha.inter (hb.inter (hv.inter hw))
+
+theorem isMaximalSplitOrder_half_mem_iff (X : ZornVectorMatrix ℚ) :
+    (∃ (za zb : ℤ) (zv zw : Fin 3 → ℤ),
+      X.a = (za : ℚ) / 2 ∧ X.b = (zb : ℚ) / 2 ∧
+      (∀ i, X.v i = (zv i : ℚ) / 2) ∧
+      (∀ i, X.w i = (zw i : ℚ) / 2)) ↔
+      X ∈ rationalHalfIntegerZornSet := by
+  classical
+  constructor
+  · rintro ⟨za, zb, zv, zw, ha, hb, hv, hw⟩
+    refine ⟨(rationalHalfIntegerSet_mem_iff _).2 ⟨za, ha⟩,
+      (rationalHalfIntegerSet_mem_iff _).2 ⟨zb, hb⟩, ?_, ?_⟩
+    · intro i
+      exact (rationalHalfIntegerSet_mem_iff _).2 ⟨zv i, hv i⟩
+    · intro i
+      exact (rationalHalfIntegerSet_mem_iff _).2 ⟨zw i, hw i⟩
+  · intro h
+    have ha := (rationalHalfIntegerSet_mem_iff X.a).1 h.1
+    have hb := (rationalHalfIntegerSet_mem_iff X.b).1 h.2.1
+    choose zv hv using fun i => (rationalHalfIntegerSet_mem_iff (X.v i)).1 (h.2.2.1 i)
+    choose zw hw using fun i => (rationalHalfIntegerSet_mem_iff (X.w i)).1 (h.2.2.2 i)
+    exact ⟨ha.choose, hb.choose, zv, zw, ha.choose_spec, hb.choose_spec, hv, hw⟩
+
+def rationalIntegerSet : Set ℚ := Set.range ((↑) : ℤ → ℚ)
+
+theorem isClosed_rationalIntegerSet : IsClosed rationalIntegerSet :=
+  Int.isClosedEmbedding_coe_rat.isClosed_range
+
+def rationalIntegralZornBaseSet : Set (ZornVectorMatrix ℚ) :=
+  rationalHalfIntegerZornSet ∩
+    ({X | ZornVectorMatrix.trace X ∈ rationalIntegerSet} ∩
+      {X | ZornVectorMatrix.norm X ∈ rationalIntegerSet})
+
+theorem isClosed_rationalIntegralZornBaseSet :
+    IsClosed rationalIntegralZornBaseSet := by
+  have htrace : IsClosed {X : ZornVectorMatrix ℚ |
+      ZornVectorMatrix.trace X ∈ rationalIntegerSet} :=
+    isClosed_rationalIntegerSet.preimage
+      continuous_zornVectorMatrix_rational_trace
+  have hnorm : IsClosed {X : ZornVectorMatrix ℚ |
+      ZornVectorMatrix.norm X ∈ rationalIntegerSet} :=
+    isClosed_rationalIntegerSet.preimage
+      continuous_zornVectorMatrix_rational_norm
+  exact isClosed_rationalHalfIntegerZornSet.inter (htrace.inter hnorm)
+
+def rationalIntegralZornBilinearSet : Set (ZornVectorMatrix ℚ) :=
+  {X | ∀ Y, Y ∈ rationalIntegralZornBaseSet →
+    polar X Y ∈ rationalIntegerSet}
+
+theorem isClosed_rationalIntegralZornBilinearSet :
+    IsClosed rationalIntegralZornBilinearSet := by
+  classical
+  let S : ZornVectorMatrix ℚ → Set (ZornVectorMatrix ℚ) := fun Y =>
+    if Y ∈ rationalIntegralZornBaseSet then
+      (fun X : ZornVectorMatrix ℚ => polar X Y) ⁻¹' rationalIntegerSet
+    else Set.univ
+  have hS : ∀ Y, IsClosed (S Y) := by
+    intro Y
+    by_cases hY : Y ∈ rationalIntegralZornBaseSet
+    · simp [S, hY]
+      exact isClosed_rationalIntegerSet.preimage
+        (continuous_zornDualLattice_polar_left Y)
+    · simp [S, hY]
+  have hEq : rationalIntegralZornBilinearSet = ⋂ Y, S Y := by
+    ext X
+    change (∀ Y, Y ∈ rationalIntegralZornBaseSet →
+      polar X Y ∈ rationalIntegerSet) ↔ X ∈ ⋂ Y, S Y
+    simp only [Set.mem_iInter]
+    constructor
+    · intro h Y
+      by_cases hY : Y ∈ rationalIntegralZornBaseSet
+      · simp only [S, if_pos hY, Set.mem_preimage]
+        exact h Y hY
+      · simp [S, hY]
+    · intro h Y hY
+      have hY' := h Y
+      simp only [S, if_pos hY, Set.mem_preimage] at hY'
+      exact hY'
+  rw [hEq]
+  exact isClosed_iInter hS
+
+theorem isMaximalSplitOrder_mem_iff_integralZorn
+    (X : ZornVectorMatrix ℚ) :
+    isMaximalSplitOrder X ↔
+      X ∈ rationalIntegralZornBaseSet ∩ rationalIntegralZornBilinearSet := by
+  constructor
+  · rintro ⟨hhalf, ⟨t, ht⟩, ⟨n, hn⟩, hbilin⟩
+    refine ⟨?_, ?_⟩
+    · refine ⟨(isMaximalSplitOrder_half_mem_iff X).1 hhalf, ?_⟩
+      refine ⟨⟨t, ht.symm⟩, ?_⟩
+      exact ⟨n, by
+        simpa [ZornVectorMatrix.norm, ZornVec3.dot_eq_sum_coords] using hn.symm⟩
+    · intro Y hY
+      have hYhalf :
+          (∃ (ya yb : ℤ) (yv yw : Fin 3 → ℤ),
+            Y.a = (ya : ℚ) / 2 ∧ Y.b = (yb : ℚ) / 2 ∧
+            (∀ i, Y.v i = (yv i : ℚ) / 2) ∧
+            (∀ i, Y.w i = (yw i : ℚ) / 2)) :=
+        (isMaximalSplitOrder_half_mem_iff Y).2 hY.1
+      rcases hY.2.1 with ⟨ty, hty⟩
+      have hYtrace : ∃ ty : ℤ, Y.a + Y.b = (ty : ℚ) :=
+        ⟨ty, hty.symm⟩
+      rcases hY.2.2 with ⟨ny, hny⟩
+      have hYnorm : ∃ ny : ℤ,
+          Y.a * Y.b - (Y.v 0 * Y.w 0 + Y.v 1 * Y.w 1 + Y.v 2 * Y.w 2) =
+            (ny : ℚ) :=
+        ⟨ny, by
+          simpa [ZornVectorMatrix.norm, ZornVec3.dot_eq_sum_coords] using hny.symm⟩
+      rcases hbilin Y hYhalf hYtrace hYnorm with ⟨m, hm⟩
+      exact ⟨m, by simpa [polar, mul_comm] using hm.symm⟩
+  · rintro ⟨hbase, hbilin⟩
+    refine ⟨(isMaximalSplitOrder_half_mem_iff X).2 hbase.1, ?_, ?_, ?_⟩
+    · rcases hbase.2.1 with ⟨t, ht⟩
+      exact ⟨t, ht.symm⟩
+    · rcases hbase.2.2 with ⟨n, hn⟩
+      exact ⟨n, by
+        simpa [ZornVectorMatrix.norm, ZornVec3.dot_eq_sum_coords] using hn.symm⟩
+    · intro Y hYhalf hYtrace hYnorm
+      have hYhalf' := (isMaximalSplitOrder_half_mem_iff Y).1 hYhalf
+      rcases hYtrace with ⟨ty, hty⟩
+      have hYtrace' : Y ∈ {X | ZornVectorMatrix.trace X ∈ rationalIntegerSet} :=
+        ⟨ty, hty.symm⟩
+      rcases hYnorm with ⟨ny, hny⟩
+      have hYnorm' : Y ∈ {X | ZornVectorMatrix.norm X ∈ rationalIntegerSet} :=
+        ⟨ny, by
+          simpa [ZornVectorMatrix.norm, ZornVec3.dot_eq_sum_coords] using hny.symm⟩
+      rcases hbilin Y ⟨hYhalf', hYtrace', hYnorm'⟩ with ⟨m, hm⟩
+      exact ⟨m, by simpa [polar, mul_comm] using hm.symm⟩
+
+theorem isClosed_integralLattice :
+    IsClosed (integralLattice : Set (ZornVectorMatrix ℚ)) := by
+  have hEq : (integralLattice : Set (ZornVectorMatrix ℚ)) =
+      rationalIntegralZornBaseSet ∩ rationalIntegralZornBilinearSet := by
+    ext X
+    exact isMaximalSplitOrder_mem_iff_integralZorn X
+  rw [hEq]
+  exact isClosed_rationalIntegralZornBaseSet.inter
+    isClosed_rationalIntegralZornBilinearSet
+
 end InfoGeometry.Canonical

@@ -39,18 +39,31 @@ Complexified first-law datum.
 
 This is an algebraic complex lift of the reversible scalar identity.
 -/
+abbrev ComplexFirstLawCoordinates := ℂ × (ℂ × (ℂ × ℂ))
+
+def ComplexFirstLawPredicate (p : ComplexFirstLawCoordinates) : Prop :=
+  (p.2.1 = p.2.2.1 * p.1) ∧ (p.2.2.2 = p.2.2.1⁻¹)
+
+/-- A complex first-law readout with its two defining scalar laws. -/
 @[rep_depth thermo]
-structure ComplexFirstLawDatum where
-  dQ : ℂ
-  dS : ℂ
-  β : ℂ
-  T : ℂ
-  firstLaw_inverse : dS = β * dQ
-  temperature_eq_inv_beta : T = β⁻¹
+abbrev ComplexFirstLawDatum :=
+  {p : ComplexFirstLawCoordinates // ComplexFirstLawPredicate p}
 
 namespace ComplexFirstLawDatum
 
 variable (D : ComplexFirstLawDatum)
+
+abbrev dQ : ℂ := D.1.1
+
+abbrev dS : ℂ := D.1.2.1
+
+abbrev β : ℂ := D.1.2.2.1
+
+abbrev T : ℂ := D.1.2.2.2
+
+lemma firstLaw_inverse : D.dS = D.β * D.dQ := D.2.1
+
+lemma temperature_eq_inv_beta : D.T = D.β⁻¹ := D.2.2
 
 /--
 If `β ≠ 0`, then `T dS = dQ`.

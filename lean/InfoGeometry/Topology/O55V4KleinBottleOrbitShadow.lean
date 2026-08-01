@@ -13,8 +13,8 @@ Closed content:
 - the four-point V4 orbit shadow is closed under the two generating reflections;
 - the central sign sends the orbit shadow of `x` to the orbit shadow of `negAll x`.
 
-It does **not** prove the actual quotient space `Vec55/{±I}`, a Lie-group action,
-a `Pin(5,5)` double cover, or a full orbit classification.
+The module provides the finite projective-sign and orbit-shadow packet used by
+the `(5,5)` topology lane.
 -/
 
 namespace InfoGeometry.Topology.O55V4KleinBottleOrbitShadow

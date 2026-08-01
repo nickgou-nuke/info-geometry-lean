@@ -64,15 +64,28 @@ log-partition function, its second-derivative relation, and a positivity
 premise.  The separate identification of that function with `log ζ` remains
 outside this packet until the corresponding analytic owner is supplied.
 -/
-structure FisherMetricAtTemperature (β : ℝ) where
-  /-- The Fisher information metric value g(β). -/
-  value : ℝ
-  /-- The supplied scalar log-partition readout. -/
-  logPartition : ℝ → ℝ
-  /-- The metric value is the second derivative of the supplied readout. -/
-  value_eq_second_derivative : value = deriv (deriv logPartition) β
-  /-- For β > 1, g(β) > 0 — the metric is positive definite. -/
-  positive_definite : β > 1 → value > 0
+abbrev FisherMetricCoordinates := ℝ × (ℝ → ℝ)
+
+def FisherMetricPredicate (β : ℝ) (p : FisherMetricCoordinates) : Prop :=
+  (p.1 = deriv (deriv p.2) β) ∧ (β > 1 → p.1 > 0)
+
+/-- A Fisher readout with its defining derivative and positivity evidence. -/
+abbrev FisherMetricAtTemperature (β : ℝ) :=
+  {p : FisherMetricCoordinates // FisherMetricPredicate β p}
+
+namespace FisherMetricAtTemperature
+
+abbrev value (D : FisherMetricAtTemperature β) : ℝ := D.1.1
+
+abbrev logPartition (D : FisherMetricAtTemperature β) : ℝ → ℝ := D.1.2
+
+lemma value_eq_second_derivative (D : FisherMetricAtTemperature β) :
+    D.value = deriv (deriv D.logPartition) β := D.2.1
+
+lemma positive_definite (D : FisherMetricAtTemperature β) :
+    β > 1 → D.value > 0 := D.2.2
+
+end FisherMetricAtTemperature
 
 /--
 Closure debt: prove the Fisher metric divergence at `β → 1+`.

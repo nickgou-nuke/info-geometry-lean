@@ -7,15 +7,16 @@ import InfoGeometry.Clifford.SplitCl44CausalEnvelope
 /-!
 # Nonmultiplicativity Obstruction for Split-Octonion Left Multiplication
 
-This module formalizes the exact mathematical statement that the left-multiplication
-Clifford representation does NOT preserve the split-octonion product.
+This module formalizes the exact obstruction to left multiplication preserving
+the split-octonion product.
 
 **Theorem (Nonmultiplicativity):**
 There exist imaginary split octonions `X, Y` such that
 `imaginaryLeftMul X * imaginaryLeftMul Y ≠ imaginaryLeftMul (X * Y)`.
 
-Equivalently, the map `X ↦ L_X` is not an algebra homomorphism from the
-nonassociative split-octonion algebra to the associative endomorphism algebra.
+The obstruction is the failure of the assignment `X ↦ L_X` to define an
+algebra homomorphism from the split-octonion algebra to the associative
+endomorphism algebra.
 -/
 
 noncomputable section
@@ -48,7 +49,7 @@ theorem ex_prod_imaginary :
   simp [ex_X, ex_Y, realZornTrace, mul, dot, cross]
 
 /-- The nonmultiplicativity obstruction: explicit imaginary split octonions
-X, Y such that the operator composition L_X ∘ L_Y differs from L_{X*Y}. -/
+X, Y such that the operator composition `L_X ∘ L_Y` differs from `L_{X*Y}`. -/
 theorem nonmultiplicativity_obstruction :
     ∃ (X Y : Imaginary) (h : realZornTrace (X.1 * Y.1) = 0),
       imaginaryLeftMul X * imaginaryLeftMul Y ≠
@@ -73,9 +74,9 @@ theorem associator_obstruction :
   have h_sub : ex_associator = 0 := sub_eq_zero.mpr h_eq
   exact ex_associator_ne_zero h_sub
 
-/-- Concrete counterexample using the idempotent basis:
+/-- Concrete obstruction witness using the idempotent basis:
 Let e₊ = (1,0,0,0), e₋ = (0,1,0,0), u₁ = (0,0,1,0) in the Zorn model.
-Then L_{e₊} L_{e₋} ≠ L_{e₊*e₋} when evaluated on ex_Z.1. -/
+Then `L_{e₊} L_{e₋}` and `L_{e₊*e₋}` differ when evaluated on `ex_Z.1`. -/
 theorem explicit_counterexample :
     ∃ (X Y : Imaginary) (h : realZornTrace (X.1 * Y.1) = 0),
       (imaginaryLeftMul X * imaginaryLeftMul Y) ex_Z.1 ≠

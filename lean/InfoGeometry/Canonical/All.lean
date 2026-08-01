@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.H3ZornCubicJordanTopologicalReadout
+import InfoGeometry.Topology.SpinorOrbitStratumTopological
 import InfoGeometry.Canonical.MoebiusUnruhBoostDiscriminantBridge
 import InfoGeometry.Algebra.F4S3JordanObstruction
 import InfoGeometry.Canonical.EinsteinCartanBianchiBridge
@@ -257,7 +258,9 @@ import InfoGeometry.Canonical.ColeFurySpinorProjectiveChart
 import InfoGeometry.Canonical.ColeFurySpinorProjectiveChartTransitions
 import InfoGeometry.Canonical.ColeFurySpinorProjectiveAtlas
 import InfoGeometry.Canonical.ColeFurySpinorProjectiveChartEmbedding
+import InfoGeometry.Canonical.ColeFurySpinorProjectiveObservable
 import InfoGeometry.Canonical.KANModuliSinkhornContinuity
+import InfoGeometry.Canonical.PoissonGibbsKANModuliTopological
 import InfoGeometry.Canonical.KANUnbalancedOTPoissonBridge
 import InfoGeometry.Canonical.KANFrobeniusGromovWittenBridge
 import InfoGeometry.Canonical.FiniteWDVVTopologicalReadout

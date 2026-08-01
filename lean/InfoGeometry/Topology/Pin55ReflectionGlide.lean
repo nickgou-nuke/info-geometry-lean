@@ -13,9 +13,8 @@ It proves:
 * the affine glide obtained by composing that reflection with a half-translation
   in an unaffected coordinate squares to the full translation.
 
-This is a finite `Pin(5,5)`-style reflection certificate, not a full
-construction of the Clifford algebra `Cl(5,5)`, the topological group
-`Pin(5,5)`, or a physical T-duality theorem.
+The module packages the reflection data as a finite `Pin(5,5)`-style
+certificate over the coordinate model used by the rest of the topology lane.
 -/
 
 namespace InfoGeometry.Topology.Pin55ReflectionGlide

@@ -100,7 +100,7 @@ theorem rot01Real_up0_readout :
       (rot01Real up0).y 0 = 0 ∧
       (rot01Real up0).y 1 = 0 ∧
       (rot01Real up0).y 2 = 0 := by
-  simp [rot01Real, up0]
+  simp [rot01Real]
 
 /-- The real `0-1` rotation is nonzero on `up0`. -/
 theorem rot01Real_nonzero_on_up0 : rot01Real up0 ≠ 0 := by

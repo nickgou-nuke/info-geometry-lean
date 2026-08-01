@@ -27,22 +27,31 @@ State-relative thermal readout.
 `β` is inverse temperature.
 `T` is temperature.
 -/
+abbrev RelativeTemperatureCoordinates := ℝ × (ℝ × (ℝ × ℝ))
+
+def RelativeTemperaturePredicate (p : RelativeTemperatureCoordinates) : Prop :=
+  (p.2.1 = p.2.2.1 * p.1) ∧ (p.2.2.2 = p.2.2.1⁻¹)
+
+/-- A relative-temperature readout with its two defining scalar laws. -/
 @[rep_depth thermo]
-structure RelativeTemperatureDatum where
-  dQ : ℝ
-  dS : ℝ
-  β : ℝ
-  T : ℝ
-
-  /-- Inverse-temperature form of the reversible first law. -/
-  firstLaw_inverse : dS = β * dQ
-
-  /-- Temperature is inverse modular scale. -/
-  temperature_eq_inv_beta : T = β⁻¹
+abbrev RelativeTemperatureDatum :=
+  {p : RelativeTemperatureCoordinates // RelativeTemperaturePredicate p}
 
 namespace RelativeTemperatureDatum
 
 variable (D : RelativeTemperatureDatum)
+
+abbrev dQ : ℝ := D.1.1
+
+abbrev dS : ℝ := D.1.2.1
+
+abbrev β : ℝ := D.1.2.2.1
+
+abbrev T : ℝ := D.1.2.2.2
+
+lemma firstLaw_inverse : D.dS = D.β * D.dQ := D.2.1
+
+lemma temperature_eq_inv_beta : D.T = D.β⁻¹ := D.2.2
 
 /--
 If `β ≠ 0`, then the usual reversible heat form follows:

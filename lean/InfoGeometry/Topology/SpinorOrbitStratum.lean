@@ -14,9 +14,8 @@ quadratic form:
 It also specializes the trichotomy to the concrete split `(5,5)` form `q55`
 from `Physics/Pin55Formal.lean`.
 
-Boundary: this is a predicate/case-split layer only.  It does **not** prove a
-full group orbit classification, spin-action invariance, a `Pin(5,5) → O(5,5)`
-double-cover theorem, CCC, analytic conformality, or global conformal inversion.
+The module gives the predicate and case-split layer used by the `(5,5)` orbit
+stratum files.
 -/
 
 namespace InfoGeometry.Topology.SpinorOrbitStratum

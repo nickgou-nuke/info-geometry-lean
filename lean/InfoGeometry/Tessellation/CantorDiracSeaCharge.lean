@@ -26,24 +26,42 @@ The underlying walk datum remains separate. This packet stores only the
 primitive laws saying how the left and right child hops transform a local `Z2`
 charge assignment on finite binary addresses.
 -/
-structure CantorDiracSeaChargeDatum
-    (Op : Type*) [Ring Op] where
-  walk : CantorDiracSeaWalkDatum Op (Z2Charge Bool)
-  left_charge_law :
-    ∀ w : FiniteBinaryWord,
-      walk.charge
-          (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w false) =
-        flipBit false (walk.charge w)
-  right_charge_law :
-    ∀ w : FiniteBinaryWord,
-      walk.charge
-          (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w true) =
-        flipBit true (walk.charge w)
+def CantorDiracSeaChargePredicate
+    {Op : Type*} [Ring Op]
+    (walk : CantorDiracSeaWalkDatum Op (Z2Charge Bool)) : Prop :=
+  (∀ w : FiniteBinaryWord,
+    walk.charge
+        (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w false) =
+      flipBit false (walk.charge w)) ∧
+  (∀ w : FiniteBinaryWord,
+    walk.charge
+        (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w true) =
+      flipBit true (walk.charge w))
+
+/-- A Cantor walk together with its two primitive binary charge laws. -/
+abbrev CantorDiracSeaChargeDatum
+    (Op : Type*) [Ring Op] :=
+  {walk : CantorDiracSeaWalkDatum Op (Z2Charge Bool) //
+    CantorDiracSeaChargePredicate walk}
 
 namespace CantorDiracSeaChargeDatum
 
 variable {Op : Type*} [Ring Op]
 variable (D : CantorDiracSeaChargeDatum Op)
+
+abbrev walk : CantorDiracSeaWalkDatum Op (Z2Charge Bool) := D.1
+
+lemma left_charge_law :
+    ∀ w : FiniteBinaryWord,
+      D.walk.charge
+          (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w false) =
+        flipBit false (D.walk.charge w) := D.2.1
+
+lemma right_charge_law :
+    ∀ w : FiniteBinaryWord,
+      D.walk.charge
+          (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w true) =
+        flipBit true (D.walk.charge w) := D.2.2
 
 /-- A left binary hop flips the false-bit charge coordinate. -/
 theorem leftHop_flips_false_bit

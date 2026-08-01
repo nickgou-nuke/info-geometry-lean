@@ -4599,4 +4599,5 @@ import InfoGeometry.Canonical.ArnoldCohenRelation
 import InfoGeometry.Canonical.KANModuliTopology
 import InfoGeometry.Inference.PoissonSinkhornTCSTopological
 import InfoGeometry.Inference.PoissonBregmanTopological
+import InfoGeometry.Inference.PoissonGibbsTopological
 import InfoGeometry.Inference.PoissonUnbalancedSinkhornCertificateTopological

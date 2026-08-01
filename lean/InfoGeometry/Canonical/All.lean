@@ -2042,6 +2042,7 @@ import InfoGeometry.Canonical.PositiveGrassmannianBCFWCells
 import InfoGeometry.Canonical.CanonicalFormBoundaryResidue
 import InfoGeometry.Canonical.PositiveGrassmannianAmplituhedron
 import InfoGeometry.Canonical.SupertwistorThreeCliffordBridge
+import InfoGeometry.Canonical.GenerationalCKMMixingBridge
 
 namespace InfoGeometry
 

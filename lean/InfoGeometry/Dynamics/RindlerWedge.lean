@@ -25,10 +25,20 @@ open InfoGeometry.Dynamics.HyperbolicComponent
 open InfoGeometry.Dynamics.RapiditySpace
 
 /-- Rindler coordinates with positive radius. -/
-structure RindlerCoordinates where
-  radius : ℝ
-  time : ℝ
-  radius_pos : 0 < radius
+def RindlerCoordinatePredicate (p : ℝ × ℝ) : Prop := 0 < p.1
+
+/-- Positive-radius Rindler coordinates. -/
+abbrev RindlerCoordinates := {p : ℝ × ℝ // RindlerCoordinatePredicate p}
+
+namespace RindlerCoordinates
+
+abbrev radius (coords : RindlerCoordinates) : ℝ := coords.1.1
+
+abbrev time (coords : RindlerCoordinates) : ℝ := coords.1.2
+
+lemma radius_pos (coords : RindlerCoordinates) : 0 < coords.radius := coords.2
+
+end RindlerCoordinates
 
 /-- Right-wedge condition in light-cone coordinates. -/
 def IsInRightRindlerWedge (xplus xminus : ℝ) : Prop :=
@@ -52,13 +62,16 @@ Applying the hyperbolic boost translates Rindler time by `λ`.
 theorem rindler_flow_is_time_translation (coords : RindlerCoordinates) (lam : ℝ) :
     componentAReal lam * rindlerToMinkowski coords =
       rindlerToMinkowski
-        { radius := coords.radius
-          time := coords.time + lam
-          radius_pos := coords.radius_pos } := by
+        ⟨(coords.radius, coords.time + lam), coords.radius_pos⟩ := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [componentAReal, rindlerToMinkowski, Matrix.mul_apply, Real.exp_add] <;>
-      ring_nf
+    simp [componentAReal, rindlerToMinkowski, RindlerCoordinates.radius,
+      RindlerCoordinates.time, Matrix.mul_apply, Real.exp_add,
+      add_comm, add_left_comm, add_assoc] <;>
+      ring_nf <;>
+      rw [← Real.exp_add] <;>
+      simp <;>
+      ring
 
 /-- The light-cone product of a Rindler point is the squared radius. -/
 theorem rindler_lightcone_product (coords : RindlerCoordinates) :
@@ -88,8 +101,6 @@ theorem rindler_flow_preserves_proper_distance (coords : RindlerCoordinates) (la
   rw [show flowed = componentAReal lam * rindlerToMinkowski coords by rfl]
   rw [rindler_flow_is_time_translation]
   exact rindler_lightcone_product
-    { radius := coords.radius
-      time := coords.time + lam
-      radius_pos := coords.radius_pos }
+    ⟨(coords.radius, coords.time + lam), coords.radius_pos⟩
 
 end InfoGeometry.Dynamics.RindlerWedge

@@ -37,6 +37,9 @@ def q55PositiveLocus : Set Vec55 :=
 def q55NegativeLocus : Set Vec55 :=
   {x | q55 x < 0}
 
+def q55NonzeroNullLocus : Set Vec55 :=
+  q55NullLocus \ ({0} : Set Vec55)
+
 theorem q55NullLocus_isClosed : IsClosed q55NullLocus := by
   change IsClosed ((q55 : Vec55 → ℚ) ⁻¹' ({0} : Set ℚ))
   exact (isClosed_singleton : IsClosed ({0} : Set ℚ)).preimage continuous_q55
@@ -53,6 +56,11 @@ theorem q55NegativeLocus_isOpen : IsOpen q55NegativeLocus := by
   change IsOpen ((q55 : Vec55 → ℚ) ⁻¹' Set.Iio 0)
   exact isOpen_Iio.preimage continuous_q55
 
+theorem q55NonzeroNullLocus_decomposition :
+    q55NonzeroNullLocus = q55NullLocus ∩ ({0} : Set Vec55)ᶜ := by
+  ext x
+  simp [q55NonzeroNullLocus]
+
 theorem continuous_reflect0 : Continuous (reflect0 : Vec55 → Vec55) := by
   unfold reflect0
   apply continuous_pi
@@ -62,9 +70,53 @@ theorem continuous_reflect0 : Continuous (reflect0 : Vec55 → Vec55) := by
     simpa using (continuous_neg.comp (continuous_apply 0))
   · simpa [hi] using (continuous_apply i)
 
+def reflect0Homeomorph : Vec55 ≃ₜ Vec55 where
+  toFun := reflect0
+  invFun := reflect0
+  left_inv := reflect0_involutive
+  right_inv := reflect0_involutive
+  continuous_toFun := continuous_reflect0
+  continuous_invFun := continuous_reflect0
+
+@[simp] theorem reflect0Homeomorph_apply (x : Vec55) :
+    reflect0Homeomorph x = reflect0 x := rfl
+
+@[simp] theorem reflect0Homeomorph_symm_apply (x : Vec55) :
+    reflect0Homeomorph.symm x = reflect0 x := rfl
+
 theorem q55_reflect0_preserves (x : Vec55) :
     q55 (reflect0 x) = q55 x := by
   simp [q55, reflect0]
+
+theorem q55NonzeroNullLocus_reflect0_preimage :
+    reflect0 ⁻¹' q55NonzeroNullLocus = q55NonzeroNullLocus := by
+  have hreflect_zero : reflect0 (0 : Vec55) = 0 := by
+    ext i
+    by_cases hi : i = 0 <;> simp [reflect0, hi]
+  have hzero : ∀ x : Vec55, reflect0 x = 0 ↔ x = 0 := by
+    intro x
+    constructor
+    · intro hx
+      calc
+        x = reflect0 (reflect0 x) := (reflect0_involutive x).symm
+        _ = reflect0 0 := congrArg reflect0 hx
+        _ = 0 := hreflect_zero
+    · intro hx
+      subst x
+      exact hreflect_zero
+  ext x
+  change (q55 (reflect0 x) = 0 ∧ reflect0 x ≠ 0) ↔
+    (q55 x = 0 ∧ x ≠ 0)
+  rw [q55_reflect0_preserves x]
+  constructor
+  · intro h
+    refine ⟨h.1, ?_⟩
+    intro hx
+    exact h.2 ((hzero x).mpr hx)
+  · intro h
+    refine ⟨h.1, ?_⟩
+    intro hx
+    exact h.2 ((hzero x).mp hx)
 
 theorem reflect0_preimage_q55NullLocus :
     reflect0 ⁻¹' q55NullLocus = q55NullLocus := by
@@ -85,5 +137,13 @@ theorem reflect0_preimage_q55NegativeLocus :
     reflect0 ⁻¹' q55NegativeLocus = q55NegativeLocus := by
   ext x
   simp [q55NegativeLocus, q55_reflect0_preserves]
+
+theorem reflect0Homeomorph_preimage_q55NullLocus :
+    reflect0Homeomorph ⁻¹' q55NullLocus = q55NullLocus := by
+  simpa [reflect0Homeomorph_apply] using reflect0_preimage_q55NullLocus
+
+theorem reflect0Homeomorph_preimage_q55NonzeroNullLocus :
+    reflect0Homeomorph ⁻¹' q55NonzeroNullLocus = q55NonzeroNullLocus := by
+  simpa [reflect0Homeomorph_apply] using q55NonzeroNullLocus_reflect0_preimage
 
 end InfoGeometry.Topology.SpinorOrbitStratumTopological

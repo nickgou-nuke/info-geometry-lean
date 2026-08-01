@@ -24,12 +24,25 @@ namespace InfoGeometry.Canonical.MoebiusClosure
 
 /-- A real `SL(2,R)` matrix, carried as explicit data. -/
 @[rep_depth projective]
-structure SL2RDatum where
-  a : ℝ
-  b : ℝ
-  c : ℝ
-  d : ℝ
-  det_eq_one : a * d - b * c = 1
+def SL2RCoordinates := ℝ × (ℝ × (ℝ × ℝ))
+
+def SL2RDatum : Type :=
+  {x : SL2RCoordinates // x.1 * x.2.2.2 - x.2.1 * x.2.2.1 = 1}
+
+namespace SL2RDatum
+
+def a (g : SL2RDatum) : ℝ := g.1.1
+
+def b (g : SL2RDatum) : ℝ := g.1.2.1
+
+def c (g : SL2RDatum) : ℝ := g.1.2.2.1
+
+def d (g : SL2RDatum) : ℝ := g.1.2.2.2
+
+def det_eq_one (g : SL2RDatum) : a g * d g - b g * c g = 1 := by
+  exact g.2
+
+end SL2RDatum
 
 /--
 Theorem-safe Möbius closure bridge.

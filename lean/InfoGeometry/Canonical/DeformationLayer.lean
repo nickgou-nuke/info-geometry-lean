@@ -14,20 +14,44 @@ namespace InfoGeometry.Canonical.DeformationLayer
 
 /-- Bare deformation parameter surface retained for layer-facing callers. -/
 @[rep_depth thermo]
-structure DeformationParameter where
-  q : ℝ
-  deformationDomain : Set ℝ
-  q_in_deformationDomain : q ∈ deformationDomain
+def DeformationParameter :=
+  {x : ℝ × Set ℝ // x.1 ∈ x.2}
+
+namespace DeformationParameter
+
+def q (W : DeformationParameter) : ℝ := W.1.1
+
+def deformationDomain (W : DeformationParameter) : Set ℝ := W.1.2
+
+def q_in_deformationDomain (W : DeformationParameter) :
+    q W ∈ deformationDomain W := W.2
+
+end DeformationParameter
 
 /-- Explicit witness connecting a deformation parameter to a chosen thermal map. -/
 @[rep_depth thermo]
-structure DeformationParameterWitness where
-  q : ℝ
-  thermalParameter : ℝ
-  q_eq_thermalParameter : q = thermalParameter
-  deformationDomain : Set ℝ
-  q_in_deformationDomain : q ∈ deformationDomain
-  thermalParameter_in_deformationDomain : thermalParameter ∈ deformationDomain
+def DeformationParameterWitness :=
+  {x : ℝ × (ℝ × Set ℝ) //
+    x.1 = x.2.1 ∧ x.1 ∈ x.2.2 ∧ x.2.1 ∈ x.2.2}
+
+namespace DeformationParameterWitness
+
+def q (W : DeformationParameterWitness) : ℝ := W.1.1
+
+def thermalParameter (W : DeformationParameterWitness) : ℝ := W.1.2.1
+
+def q_eq_thermalParameter (W : DeformationParameterWitness) :
+    q W = thermalParameter W := W.2.1
+
+def deformationDomain (W : DeformationParameterWitness) : Set ℝ := W.1.2.2
+
+def q_in_deformationDomain (W : DeformationParameterWitness) :
+    q W ∈ deformationDomain W := W.2.2.1
+
+def thermalParameter_in_deformationDomain (W : DeformationParameterWitness) :
+    thermalParameter W ∈ deformationDomain W := W.2.2.2
+
+end DeformationParameterWitness
 
 /-- Packet for a deformed character layer, gated by a deformation witness. -/
 @[rep_depth thermo]

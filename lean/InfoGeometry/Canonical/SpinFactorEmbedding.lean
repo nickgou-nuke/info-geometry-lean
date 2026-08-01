@@ -41,21 +41,19 @@ theorem transpose_o55_preserves_spin_factor_determinant
     (X : JordanMatrix2 K A) :
     ((G.transpose * emb.Phi X).transpose * (splitMetric10D K) * (G.transpose * emb.Phi X)) = 
     (fun _ _ => JordanMatrix2.determinant X) := by
-  dsimp [isO55Isometric] at hG
-  rw [Matrix.transpose_mul]
-  rw [Matrix.transpose_transpose]
-  simp only [Matrix.mul_assoc]
-  -- LHS: Φᵀ * (G * (η * (Gᵀ * Φ)))
-  rw [← Matrix.mul_assoc (splitMetric10D K) G.transpose (emb.Phi X)]
-  -- LHS: Φᵀ * (G * ((η * Gᵀ) * Φ))
-  rw [← Matrix.mul_assoc G (splitMetric10D K * G.transpose) (emb.Phi X)]
-  -- LHS: Φᵀ * ((G * (η * Gᵀ)) * Φ)
-  rw [← Matrix.mul_assoc G (splitMetric10D K) G.transpose]
-  -- LHS: Φᵀ * (((G * η) * Gᵀ) * Φ)
-  rw [hG]
-  -- LHS: Φᵀ * (η * Φ)
-  rw [← Matrix.mul_assoc]
-  -- LHS: (Φᵀ * η) * Φ
-  rw [emb.isometry X]
+  have hleft :
+      (G.transpose * emb.Phi X).transpose * (splitMetric10D K) * (G.transpose * emb.Phi X) =
+        (emb.Phi X).transpose * (G * splitMetric10D K * G.transpose) * emb.Phi X := by
+    simp [Matrix.transpose_mul, Matrix.mul_assoc]
+  have hconj :
+      (emb.Phi X).transpose * (G * splitMetric10D K * G.transpose) * emb.Phi X =
+        (fun _ _ => JordanMatrix2.determinant X) := by
+    calc
+      (emb.Phi X).transpose * (G * splitMetric10D K * G.transpose) * emb.Phi X
+          = (emb.Phi X).transpose * (splitMetric10D K) * emb.Phi X := by
+              simpa [Matrix.mul_assoc] using
+                congrArg (fun M => (emb.Phi X).transpose * M * emb.Phi X) hG
+      _ = (fun _ _ => JordanMatrix2.determinant X) := emb.isometry X
+  exact hleft.trans hconj
 
 end InfoGeometry.Canonical

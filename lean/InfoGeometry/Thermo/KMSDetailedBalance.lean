@@ -31,21 +31,27 @@ The KMS strip at inverse temperature `β`.
 This is only the geometric bookkeeping layer: lower boundary `t`, upper
 boundary `t + iβ`, and the closed horizontal strip.
 -/
-structure KMSRegion (β : ℝ) where
-  /-- The closed strip `0 ≤ Im z ≤ β`. -/
-  strip : Set ℂ
-  /-- Lower real-time boundary. -/
-  lowerBoundary : ℝ → ℂ
-  /-- Upper imaginary-time boundary. -/
-  upperBoundary : ℝ → ℂ
+abbrev KMSRegionCoordinates := Set ℂ × ((ℝ → ℂ) × (ℝ → ℂ))
+
+/-- Geometric KMS strip coordinates at inverse temperature `β`. -/
+abbrev KMSRegion (β : ℝ) := KMSRegionCoordinates
+
+namespace KMSRegion
+
+abbrev strip (R : KMSRegion β) : Set ℂ := R.1
+
+abbrev lowerBoundary (R : KMSRegion β) : ℝ → ℂ := R.2.1
+
+abbrev upperBoundary (R : KMSRegion β) : ℝ → ℂ := R.2.2
+
+end KMSRegion
 
 /-- The standard closed KMS strip model. -/
 def standardKMSRegion
     (β : ℝ) :
-    KMSRegion β where
-  strip := {z : ℂ | 0 ≤ z.im ∧ z.im ≤ β}
-  lowerBoundary := fun t => (t : ℂ)
-  upperBoundary := fun t => complexClockPoint t β
+    KMSRegion β :=
+  ({z : ℂ | 0 ≤ z.im ∧ z.im ≤ β},
+    (fun t => (t : ℂ), fun t => complexClockPoint t β))
 
 @[simp]
 theorem standardKMSRegion_lowerBoundary

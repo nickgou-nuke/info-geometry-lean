@@ -34,9 +34,14 @@ theorem fockExponentQuarter_nonpos (u : RPhase1) :
   have hnorm : 0 ≤ normSq1 u := normSq1_nonneg u
   linarith
 
-structure FronsdalRankOneOrbit where
-  p : Fin 2 → ℚ
-  q : Fin 2 → ℚ
+abbrev FronsdalRankOneOrbit := (Fin 2 → ℚ) × (Fin 2 → ℚ)
+
+namespace FronsdalRankOneOrbit
+
+abbrev p (x : FronsdalRankOneOrbit) : Fin 2 → ℚ := x.1
+abbrev q (x : FronsdalRankOneOrbit) : Fin 2 → ℚ := x.2
+
+end FronsdalRankOneOrbit
 
 def U (x : FronsdalRankOneOrbit) (a b : Fin 2) : ℚ := x.p a * x.q b
 
@@ -46,6 +51,7 @@ def josephMinor (x : FronsdalRankOneOrbit) : ℚ :=
 theorem rank_one_joseph_minor_zero (x : FronsdalRankOneOrbit) :
     josephMinor x = 0 := by
   unfold josephMinor U
+  simp only [FronsdalRankOneOrbit.p, FronsdalRankOneOrbit.q]
   ring
 
 def quadraticEmbeddingTrace2 (x : FronsdalRankOneOrbit) : ℚ := U x 0 0 + U x 1 1

@@ -19,12 +19,17 @@ inductive ExcitationsA39
   | p2_h3 : ExcitationsA39 -- 2 particles, 3 holes
 
 /-- Nuclear state properties specific to the A=39 CED downsloping analysis. -/
-structure A39State where
-  excitation : ExcitationsA39
-  excitation_energy : ℝ
-  spin : ℚ
-  parity : ℤ
-  spatial_overlap : ℝ
+abbrev A39State := ExcitationsA39 × ℝ × ℚ × ℤ × ℝ
+
+namespace A39State
+
+abbrev excitation (state : A39State) : ExcitationsA39 := state.1
+abbrev excitation_energy (state : A39State) : ℝ := state.2.1
+abbrev spin (state : A39State) : ℚ := state.2.2.1
+abbrev parity (state : A39State) : ℤ := state.2.2.2.1
+abbrev spatial_overlap (state : A39State) : ℝ := state.2.2.2.2
+
+end A39State
 
 /-- Coulomb Energy Difference (CED) as a function of the A=39 state. -/
 noncomputable def CED (state : A39State) : ℝ :=
@@ -40,6 +45,7 @@ theorem downsloping_CED_A39 (s1 s2 : A39State)
     s2.spatial_overlap > s1.spatial_overlap ∧ CED s2 < CED s1 := by
   refine ⟨h_overlap_inc, ?_⟩
   unfold CED
+  simp only [A39State.spatial_overlap] at h_overlap_inc ⊢
   nlinarith [h_overlap_inc]
 
 end InfoGeometry.Physics

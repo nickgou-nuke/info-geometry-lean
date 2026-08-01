@@ -25,17 +25,18 @@ open InfoGeometry.Exceptional.Freudenthal
 The 8 real amplitudes of a 3-qubit state (or STU black hole charge vector).
 Indices represent Alice (i), Bob (j), and Charlie (k).
 -/
-structure ThreeQubitState where
-  a000 : ℝ
-  a001 : ℝ
-  a010 : ℝ
-  a011 : ℝ
-  a100 : ℝ
-  a101 : ℝ
-  a110 : ℝ
-  a111 : ℝ
+abbrev ThreeQubitState := Fin 8 → ℝ
 
 namespace ThreeQubitState
+
+abbrev a000 (psi : ThreeQubitState) : ℝ := psi 0
+abbrev a001 (psi : ThreeQubitState) : ℝ := psi 1
+abbrev a010 (psi : ThreeQubitState) : ℝ := psi 2
+abbrev a011 (psi : ThreeQubitState) : ℝ := psi 3
+abbrev a100 (psi : ThreeQubitState) : ℝ := psi 4
+abbrev a101 (psi : ThreeQubitState) : ℝ := psi 5
+abbrev a110 (psi : ThreeQubitState) : ℝ := psi 6
+abbrev a111 (psi : ThreeQubitState) : ℝ := psi 7
 
 /--
 Cayley's Hyperdeterminant (Det_{2,2,2}).

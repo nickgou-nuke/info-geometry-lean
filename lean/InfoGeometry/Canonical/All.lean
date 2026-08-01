@@ -1,4 +1,8 @@
 import InfoGeometry.Canonical.SplitPauliMatrixRelations
+import InfoGeometry.Canonical.PeirceChiralConeSpinFrameBridge
+import InfoGeometry.Canonical.IntegralChiralCliffordOrder
+import InfoGeometry.Canonical.AlbertPeirceChiralFrameEmbedding
+import InfoGeometry.Canonical.ThreeColorIntegralCliffordEmbedding
 import InfoGeometry.Canonical.H3ZornCubicJordanTopologicalReadout
 import InfoGeometry.Canonical.ChiralConeOctonionicBridge
 import InfoGeometry.Canonical.OctonionicCuntzIsomorphism
@@ -2069,3 +2073,4 @@ modules in `lean/InfoGeometry/Canonical/`.
 -/
 
 end InfoGeometry
+import InfoGeometry.Canonical.AlbertPeirceChiralFrameEmbedding

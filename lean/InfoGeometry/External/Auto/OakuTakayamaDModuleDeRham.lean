@@ -106,29 +106,33 @@ one-dimensional operator
 
 This coefficient record is the interface where an external symbolic engine
 can provide the Weyl normal-ordering output as data. -/
-structure IntroFourierNormalForm where
-  coeff_x_d2 : ℚ
-  coeff_x_d : ℚ
-  coeff_d : ℚ
-  coeff_x : ℚ
-  coeff_one : ℚ
+abbrev IntroFourierNormalForm := ℚ × ℚ × ℚ × ℚ × ℚ
 
-def introFourierNormalForm (a b u v : ℚ) : IntroFourierNormalForm where
-  coeff_x_d2 := 1
-  coeff_x_d := u + v
-  coeff_d := 2 + a + b
-  coeff_x := u * v
-  coeff_one := u + v + a * v + b * u
+namespace IntroFourierNormalForm
+
+def coeff_x_d2 (form : IntroFourierNormalForm) : ℚ := form.1
+def coeff_x_d (form : IntroFourierNormalForm) : ℚ := form.2.1
+def coeff_d (form : IntroFourierNormalForm) : ℚ := form.2.2.1
+def coeff_x (form : IntroFourierNormalForm) : ℚ := form.2.2.2.1
+def coeff_one (form : IntroFourierNormalForm) : ℚ := form.2.2.2.2
+
+end IntroFourierNormalForm
+
+def introFourierNormalForm (a b u v : ℚ) : IntroFourierNormalForm :=
+  (1, u + v, 2 + a + b, u * v, u + v + a * v + b * u)
 
 theorem introFourierNormalForm_xd2 (a b u v : ℚ) :
-    (introFourierNormalForm a b u v).coeff_x_d2 = 1 := rfl
+    IntroFourierNormalForm.coeff_x_d2 (introFourierNormalForm a b u v) = 1 := rfl
 
 theorem introFourierNormalForm_coefficients (a b u v : ℚ) :
-    (introFourierNormalForm a b u v).coeff_x_d = u + v ∧
-    (introFourierNormalForm a b u v).coeff_d = 2 + a + b ∧
-    (introFourierNormalForm a b u v).coeff_x = u * v ∧
-    (introFourierNormalForm a b u v).coeff_one = u + v + a * v + b * u := by
-  simp [introFourierNormalForm]
+    IntroFourierNormalForm.coeff_x_d (introFourierNormalForm a b u v) = u + v ∧
+    IntroFourierNormalForm.coeff_d (introFourierNormalForm a b u v) = 2 + a + b ∧
+    IntroFourierNormalForm.coeff_x (introFourierNormalForm a b u v) = u * v ∧
+    IntroFourierNormalForm.coeff_one (introFourierNormalForm a b u v) =
+      u + v + a * v + b * u := by
+  simp [introFourierNormalForm, IntroFourierNormalForm.coeff_x_d,
+    IntroFourierNormalForm.coeff_d, IntroFourierNormalForm.coeff_x,
+    IntroFourierNormalForm.coeff_one]
 
 /-- Connection point for this repo's configuration-complement models:
 the Oaku--Takayama algorithm supplies the general D-module computation

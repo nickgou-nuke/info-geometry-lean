@@ -13,10 +13,18 @@ namespace VacuumCohomology
 
 /-- Cognitive state space modeled as a real vector space. 
 We represent the DAG node state geometrically. -/
-structure DAGNode (V : Type*) [AddCommGroup V] [Module ℝ V] where
-  state : V
-  winding_number : ℝ
-  entropy : ℝ
+abbrev DAGNode (V : Type*) [AddCommGroup V] [Module ℝ V] :=
+  V × ℝ × ℝ
+
+namespace DAGNode
+
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
+
+def state (node : DAGNode V) : V := node.1
+def winding_number (node : DAGNode V) : ℝ := node.2.1
+def entropy (node : DAGNode V) : ℝ := node.2.2
+
+end DAGNode
 
 /-- Boundary Operator ∂: Cohomological boundary. We model a 2-term complex V → V. -/
 structure BoundaryOperator (V : Type*) [AddCommGroup V] [Module ℝ V] where

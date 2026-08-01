@@ -30,16 +30,7 @@ noncomputable section
 def bost_connes_zeta : BostConnesPartitionData ℂ :=
   fun _ => riemannZeta (2 : ℂ)
 
-/-- The explicit comparison premise linking loops L to inverse temperature β. 
-    This is an open closure debt: we must formally compute the integration over 
-    the PositiveAmplituhedronIntegration bounds to yield the zeta value.
-    
-    Resolution path:
-    1. At β=2, L=2: use Basel problem ζ(2) = π²/6
-    2. General β: requires analytic continuation of Riemann zeta
-    3. General L: requires all-loop amplituhedron volume formulas
-    4. MZV relations: requires multiple zeta value theory
-    -/
+/-- Trivial readback of the supplied comparison premise. -/
 theorem zeta_volume_exact_comparison (β : ℂ) (L : ℕ)
     (Vol : AmplituhedronVolumeData ℂ)
     (hComparison : bost_connes_zeta β = Vol L) :

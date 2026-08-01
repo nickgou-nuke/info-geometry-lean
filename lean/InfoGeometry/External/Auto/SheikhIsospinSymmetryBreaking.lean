@@ -96,54 +96,51 @@ theorem IMME_mirror_sum (a b c t : ℚ) :
   unfold IMME
   ring
 
-structure IsodoubletMassSplit where
-  neutronRich : String
-  protonRich : String
-  neutronRichMass : ℚ
-  protonRichMass : ℚ
+abbrev IsodoubletMassSplit := String × String × ℚ × ℚ
+
+namespace IsodoubletMassSplit
+
+def neutronRich (p : IsodoubletMassSplit) : String := p.1
+def protonRich (p : IsodoubletMassSplit) : String := p.2.1
+def neutronRichMass (p : IsodoubletMassSplit) : ℚ := p.2.2.1
+def protonRichMass (p : IsodoubletMassSplit) : ℚ := p.2.2.2
+
+end IsodoubletMassSplit
 
 def massSplitting (p : IsodoubletMassSplit) : ℚ :=
-  p.neutronRichMass - p.protonRichMass
+  IsodoubletMassSplit.neutronRichMass p - IsodoubletMassSplit.protonRichMass p
 
-def neutronProtonSplit : IsodoubletMassSplit where
-  neutronRich := "n"
-  protonRich := "p"
-  neutronRichMass := 93957 / 100
-  protonRichMass := 93828 / 100
+def neutronProtonSplit : IsodoubletMassSplit :=
+  ("n", "p", 93957 / 100, 93828 / 100)
 
-def H3He3Split : IsodoubletMassSplit where
-  neutronRich := "3H"
-  protonRich := "3He"
-  neutronRichMass := 280894 / 100
-  protonRichMass := 280842 / 100
+def H3He3Split : IsodoubletMassSplit :=
+  ("3H", "3He", 280894 / 100, 280842 / 100)
 
-def He5Li5Split : IsodoubletMassSplit where
-  neutronRich := "5He"
-  protonRich := "5Li"
-  neutronRichMass := 466787 / 100
-  protonRichMass := 466766 / 100
+def He5Li5Split : IsodoubletMassSplit :=
+  ("5He", "5Li", 466787 / 100, 466766 / 100)
 
-def Li7Be7Split : IsodoubletMassSplit where
-  neutronRich := "7Li"
-  protonRich := "7Be"
-  neutronRichMass := 653389 / 100
-  protonRichMass := 653424 / 100
+def Li7Be7Split : IsodoubletMassSplit :=
+  ("7Li", "7Be", 653389 / 100, 653424 / 100)
 
 theorem neutron_proton_mass_split_exact :
     massSplitting neutronProtonSplit = 129 / 100 := by
-  norm_num [massSplitting, neutronProtonSplit]
+  norm_num [massSplitting, IsodoubletMassSplit.neutronRichMass,
+    IsodoubletMassSplit.protonRichMass, neutronProtonSplit]
 
 theorem H3_He3_mass_split_exact :
     massSplitting H3He3Split = 13 / 25 := by
-  norm_num [massSplitting, H3He3Split]
+  norm_num [massSplitting, IsodoubletMassSplit.neutronRichMass,
+    IsodoubletMassSplit.protonRichMass, H3He3Split]
 
 theorem He5_Li5_mass_split_exact :
     massSplitting He5Li5Split = 21 / 100 := by
-  norm_num [massSplitting, He5Li5Split]
+  norm_num [massSplitting, IsodoubletMassSplit.neutronRichMass,
+    IsodoubletMassSplit.protonRichMass, He5Li5Split]
 
 theorem Li7_Be7_mass_split_exact :
     massSplitting Li7Be7Split = -7 / 20 := by
-  norm_num [massSplitting, Li7Be7Split]
+  norm_num [massSplitting, IsodoubletMassSplit.neutronRichMass,
+    IsodoubletMassSplit.protonRichMass, Li7Be7Split]
 
 def chargeSymmetryEigenvalue_T0 : ℤ := 1
 def chargeSymmetryEigenvalue_T1 : ℤ := -1

@@ -14,6 +14,11 @@ namespace InfoGeometry.Topology
 
 open InfoGeometry.Canonical
 
+/- The finite carrier is given the topology induced by its coordinate map. -/
+instance : TopologicalSpace (SupertwistorSpace ℝ) :=
+  TopologicalSpace.induced
+    (fun Z : SupertwistorSpace ℝ => (Z : SplitOctonionBasis → ℝ)) inferInstance
+
 /-- Coordinate readout on the finite split-octonion supertwistor carrier. -/
 def supertwistorCoordinate (b : SplitOctonionBasis)
     (Z : SupertwistorSpace ℝ) : ℝ := Z b
@@ -21,7 +26,7 @@ def supertwistorCoordinate (b : SplitOctonionBasis)
 theorem continuous_supertwistorCoordinate (b : SplitOctonionBasis) :
     Continuous (supertwistorCoordinate b) := by
   unfold supertwistorCoordinate
-  fun_prop
+  exact (continuous_apply b).comp continuous_induced_dom
 
 /-- A coordinate level set in the finite supertwistor chart. -/
 def supertwistorCoordinateLevelSet (b : SplitOctonionBasis) (a : ℝ) :

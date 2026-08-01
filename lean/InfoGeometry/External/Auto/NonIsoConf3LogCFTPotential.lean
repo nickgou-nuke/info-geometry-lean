@@ -111,23 +111,24 @@ def entropyGapValue (entropyPotentialProduct entropyPotentialOS : ℝ) : ℝ :=
   entropyPotentialProduct - entropyPotentialOS
 
 /-- Compact diagnostic tuple for algebraic branch choice. -/
-structure EntropicBranchChoice where
-  entropyPotentialProduct : ℝ
-  entropyPotentialOS : ℝ
+abbrev EntropicBranchChoice := ℝ × ℝ
 
 namespace EntropicBranchChoice
 
+def entropyPotentialProduct (d : EntropicBranchChoice) : ℝ := d.1
+def entropyPotentialOS (d : EntropicBranchChoice) : ℝ := d.2
+
 def entropyGap (d : EntropicBranchChoice) : ℝ :=
-  entropyGapValue d.entropyPotentialProduct d.entropyPotentialOS
+  entropyGapValue (entropyPotentialProduct d) (entropyPotentialOS d)
 
 @[simp] theorem entropyGapEq (d : EntropicBranchChoice) :
-    d.entropyGap = entropyGapValue d.entropyPotentialProduct d.entropyPotentialOS := rfl
+    entropyGap d = entropyGapValue (entropyPotentialProduct d) (entropyPotentialOS d) := rfl
 
 def chosen (d : EntropicBranchChoice) : ModelChoice :=
-  logPotentialBranchChoice d.entropyPotentialProduct d.entropyPotentialOS
+  logPotentialBranchChoice (entropyPotentialProduct d) (entropyPotentialOS d)
 
 @[simp] theorem chosen_eq (d : EntropicBranchChoice) :
-    d.chosen = logPotentialBranchChoice d.entropyPotentialProduct d.entropyPotentialOS := rfl
+    chosen d = logPotentialBranchChoice (entropyPotentialProduct d) (entropyPotentialOS d) := rfl
 
 end EntropicBranchChoice
 

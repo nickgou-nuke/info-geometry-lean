@@ -190,14 +190,11 @@ theorem realSplitOctonionLiePacket_readback :
           InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.normZ Y) ∧
       Module.finrank ℝ
         InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations = 14 ∧
-      InfoGeometry.Lie.SplitOctonionStandardDerivation.standardDerivationSpan = ⊤ ∧
-      InfoGeometry.Lie.RealSplitOctonionG2Classification.currentRealClassificationStatus =
-        InfoGeometry.Lie.RealSplitOctonionG2Classification.RealClassificationStatus.exactNativeLieAlgebra := by
+      InfoGeometry.Lie.SplitOctonionStandardDerivation.standardDerivationSpan = ⊤ := by
   exact ⟨
     (fun X Y => InfoGeometry.Lie.RealSplitOctonionG2Classification.split_octonion_norm_composition X Y),
     InfoGeometry.Lie.RealSplitOctonionG2Classification.canonical_split_octonion_derivation_finrank,
-    InfoGeometry.Lie.RealSplitOctonionG2Classification.standard_split_octonion_derivations_span,
-    InfoGeometry.Lie.RealSplitOctonionG2Classification.current_status_is_exactNativeLieAlgebra⟩
+    InfoGeometry.Lie.RealSplitOctonionG2Classification.standard_split_octonion_derivations_span⟩
 
 /-- Canonical-chain readback into the native real derivation witness. -/
 theorem realSplitOctonionDerivationWitness_readback :

@@ -83,19 +83,4 @@ theorem fixedLine_casimir (E px : ℂ) :
   simp [momentumCasimir, fixedMomentum, dot3, Fin.sum_univ_three]
   ring
 
-/-- Synthesis theorem. -/
-theorem glide_supercharge_casimir_synthesis :
-    (∀ h : ℂ, ∀ k : ℂ × ℂ, kGlide h (kGlide h k) = recipTranslate (2*h) k) ∧
-    Q * Q = H ∧
-    Q * Q + Q * Q = (2 : ℂ) • H ∧
-    qNil * qNil = 0 ∧
-    (∀ E px : ℂ, momentumCasimir E (fixedMomentum px) = E^2 - px^2) := by
-  exact ⟨kGlide_sq, Q_sq, Q_anticomm, qNil_sq_zero, fixedLine_casimir⟩
-
-#check kGlide_sq
-#check Q_sq
-#check qNil_sq_zero
-#check fixedLine_casimir
-#check glide_supercharge_casimir_synthesis
-
 end GlideSuperchargeCasimir

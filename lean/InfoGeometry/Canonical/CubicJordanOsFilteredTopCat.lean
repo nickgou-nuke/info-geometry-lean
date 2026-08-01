@@ -35,14 +35,16 @@ def topologicalDiagram (S : ContinuousAlbertTransitionSystem J) :
   map_id := by
     intro i
     apply TopCat.hom_ext
-    ext x
+    apply ContinuousMap.ext
+    intro x
     change S.map (𝟙 i) x = x
     rw [S.map_id]
     rfl
   map_comp := by
     intro i j k f g
     apply TopCat.hom_ext
-    ext x
+    apply ContinuousMap.ext
+    intro x
     rw [TopCat.comp_app]
     exact (S.map_comp f g x).symm
 

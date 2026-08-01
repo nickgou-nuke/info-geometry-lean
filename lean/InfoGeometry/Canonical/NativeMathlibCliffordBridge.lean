@@ -42,26 +42,5 @@ theorem native_clifford_involute_ι (Q : QuadraticForm R V) (v : V) :
     CliffordAlgebra.involute (CliffordAlgebra.ι Q v) = - CliffordAlgebra.ι Q v :=
   CliffordAlgebra.involute_ι v
 
-/-- **Theorem**: Master Native Mathlib Clifford Algebra Synthesis.
-    Unifies:
-    1. Definitional zero-metric identity: CliffordAlgebra 0 = ExteriorAlgebra.
-    2. General metric anti-commutation: ι(v1) * ι(v2) + ι(v2) * ι(v1) = (polar Q v1 v2) • 1.
-    3. Generator square scalar law: ι(v)² = Q(v) • 1.
-    4. Involute parity involution: involute (involute c) = c.
-    5. Generator parity reflection: involute (ι(v)) = - ι(v). -/
-theorem master_native_mathlib_clifford_synthesis
-    (Q : QuadraticForm R V) (v v1 v2 : V) (c : CliffordAlgebra Q) :
-    (CliffordAlgebra (0 : QuadraticForm R V) = ExteriorAlgebra R V) ∧
-    (CliffordAlgebra.ι Q v1 * CliffordAlgebra.ι Q v2 + CliffordAlgebra.ι Q v2 * CliffordAlgebra.ι Q v1 =
-      algebraMap R (CliffordAlgebra Q) (QuadraticMap.polar Q v1 v2)) ∧
-    (CliffordAlgebra.ι Q v * CliffordAlgebra.ι Q v = algebraMap R (CliffordAlgebra Q) (Q v)) ∧
-    (CliffordAlgebra.involute (CliffordAlgebra.involute c) = c) ∧
-    (CliffordAlgebra.involute (CliffordAlgebra.ι Q v) = - CliffordAlgebra.ι Q v) := ⟨
-  clifford_zero_def_eq_exterior,
-  clifford_anti_commute Q v1 v2,
-  native_clifford_sq_scalar Q v,
-  native_clifford_involute_involution Q c,
-  native_clifford_involute_ι Q v
-⟩
 
 end InfoGeometry.Canonical.NativeMathlibCliffordBridge

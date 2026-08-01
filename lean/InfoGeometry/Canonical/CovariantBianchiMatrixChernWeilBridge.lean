@@ -56,21 +56,5 @@ theorem covariant_bianchi_traced_chern_weil_closed
   apply matrix_traced_curvature_square_closed
   exact bianchi_curvature_product_closed d h_derivation F h_bianchi
 
-/-- **Theorem**: Master Covariant Bianchi Matrix Chern-Weil Synthesis.
-    Unifies:
-    1. Bianchi identity d F = 0 for matrix-valued gauge field curvatures.
-    2. Curvature product derivation theorem d(F * F) = 0.
-    3. Traced Chern-Weil closedness theorem d(Tr(F ∧ F)) = 0.
-    4. Exact machine-checked proof closure deriving Chern-Weil closedness from Bianchi identity. -/
-theorem master_covariant_bianchi_matrix_chern_weil_synthesis
-    (d : Module.End R (ExteriorAlgebra R V))
-    (h_derivation : ∀ (x y : ExteriorAlgebra R V), d (x * y) = d x * y + x * d y)
-    (F : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
-    (h_bianchi : matrixExteriorDerivative d F = 0) :
-    (matrixExteriorDerivative d (matrixCurvatureWedgeSquare F) = 0) ∧
-    (d (matrixTraceForm (matrixCurvatureWedgeSquare F)) = 0) := ⟨
-  bianchi_curvature_product_closed d h_derivation F h_bianchi,
-  covariant_bianchi_traced_chern_weil_closed d h_derivation F h_bianchi
-⟩
 
 end InfoGeometry.Canonical.CovariantBianchiMatrixChernWeilBridge

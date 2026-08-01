@@ -53,19 +53,4 @@ theorem covariantDerivative_square_leibniz_from_exterior_leibniz
   rw [matrixCommutator_square_leibniz]
   noncomm_ring
 
-/-- **Theorem**: Master Matrix Commutator Square Leibniz Synthesis.
-    Unifies:
-    1. Pure algebraic proof closure of commutator Leibniz product rule [A, F * F] = [A, F] * F + F * [A, F] without extra assumptions.
-    2. Derivation of covariant derivative Leibniz rule D_A (F * F) = (D_A F) * F + F * (D_A F) from exterior derivative Leibniz rule.
-    3. Removal of the commutator half of the Leibniz assumption in non-Abelian Chern-Weil gauge field theory. -/
-theorem master_matrix_commutator_square_leibniz_synthesis
-    (A F : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
-    (d : Module.End R (ExteriorAlgebra R V))
-    (h_d_leibniz : matrixExteriorDerivative d (F * F) = matrixExteriorDerivative d F * F + F * matrixExteriorDerivative d F) :
-    (matrixCommutator A (F * F) = matrixCommutator A F * F + F * matrixCommutator A F) ∧
-    (covariantDerivative A d (F * F) = (covariantDerivative A d F) * F + F * (covariantDerivative A d F)) := ⟨
-  matrixCommutator_square_leibniz A F,
-  covariantDerivative_square_leibniz_from_exterior_leibniz A F d h_d_leibniz
-⟩
-
 end InfoGeometry.Canonical.MatrixCommutatorSquareLeibnizBridge

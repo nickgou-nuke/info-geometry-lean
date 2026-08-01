@@ -120,33 +120,6 @@ theorem holonomy_eq_chiralScale_of_flat_compat
         (CI := CI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
     _ = CI.chiralScale := CI.projectorObstruction_nnnorm_eq_chiralScale
 
-omit [Fintype I] [FiniteDimensional ℝ E] in
-@[deprecated holonomy_eq_chiralScale_of_flat_compat (since := "2026-04-06")]
-theorem holonomy_eq_chiralScale_of_flat
-    (CI : ConformalInference E)
-    (Δ : WeylDifferentialOperator ℝ X A)
-    (γ : WeylTrajectory I X)
-    (bridge :
-      FlatCurvatureChiralScaleBridge (CI := CI) (Δ := Δ) (γ := γ))
-    (B : WeylGaugeField X A)
-    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B) :
-    bridge.lineIntegrator.holonomy bridge.holonomyMap B γ = CI.chiralScale := by
-  simpa using holonomy_eq_target_of_flat (bridge := bridge) (B := B) hFlat
-
-omit [Fintype I] [FiniteDimensional ℝ E] in
-@[deprecated holonomy_eq_chiralScale_of_flat_compat (since := "2026-04-06")]
-theorem holonomy_eq_chiralScale_of_flat_of_projectorObstructionBridge
-    (CI : ConformalInference E)
-    (Δ : WeylDifferentialOperator ℝ X A)
-    (γ : WeylTrajectory I X)
-    (bridge :
-      FlatCurvatureProjectorObstructionBridge (CI := CI) (Δ := Δ) (γ := γ))
-    (B : WeylGaugeField X A)
-    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B) :
-    bridge.lineIntegrator.holonomy bridge.holonomyMap B γ = CI.chiralScale := by
-  exact holonomy_eq_chiralScale_of_flat_compat
-    (CI := CI) (Δ := Δ) (γ := γ) (bridge := bridge) (B := B) hFlat
-
 def finiteSumFlatCurvatureValueBridge
     (Δ : WeylDifferentialOperator ℝ X A)
     (γ : WeylTrajectory I X)
@@ -270,22 +243,6 @@ theorem finiteSum_holonomy_eq_chiralScale_of_flat_compat
   exact finiteSum_holonomy_eq_target_of_flat
     (Δ := Δ) (γ := γ) (H := H) (target := CI.chiralScale)
     (B := B) hZeroToChiral hFlat
-
-@[deprecated finiteSum_holonomy_eq_chiralScale_of_flat_compat (since := "2026-04-06")]
-theorem finiteSum_holonomy_eq_chiralScale_of_flat
-    (CI : ConformalInference E)
-    (Δ : WeylDifferentialOperator ℝ X A)
-    (γ : WeylTrajectory I X)
-    (H : WeylHolonomyMap A ℝ)
-    (B : WeylGaugeField X A)
-    (hZeroToChiral :
-      ∀ B' : WeylGaugeField X A,
-        (WeylLineIntegrator.finiteSumIntegrator (I := I) (A := A)).integrateCurvature Δ B' γ = 0 →
-        (WeylLineIntegrator.finiteSumIntegrator (I := I) (A := A)).holonomy H B' γ = CI.chiralScale)
-    (hFlat : WeylGaugeField.IsFlat (Δ := Δ) B) :
-    (WeylLineIntegrator.finiteSumIntegrator (I := I) (A := A)).holonomy H B γ = CI.chiralScale := by
-  exact finiteSum_holonomy_eq_chiralScale_of_flat_compat
-    (CI := CI) (Δ := Δ) (γ := γ) (H := H) (B := B) hZeroToChiral hFlat
 
 end
 

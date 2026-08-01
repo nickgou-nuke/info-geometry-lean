@@ -67,19 +67,6 @@ theorem vacuum_annihilated_by_susyHamiltonian : R_rep.rep g.susyHamiltonian R_re
     _ = R_rep.rep 0 R_rep.vacuum := by rw [h_alg]
     _ = 0 := by simp
 
-/-- **Master Synthesis Theorem**: Hilbert/Fock Representation BPS Vacuum Closure. -/
-theorem master_toeplitz_cuntz_fock_vacuum_synthesis :
-    R_rep.vacuum ≠ 0 ∧
-    R_rep.rep g.P0 R_rep.vacuum = R_rep.vacuum ∧
-    R_rep.rep g.QPlus R_rep.vacuum = 0 ∧
-    R_rep.rep g.QMinus R_rep.vacuum = 0 ∧
-    R_rep.rep g.susyHamiltonian R_rep.vacuum = 0 := by
-  exact ⟨R_rep.vacuum_nonzero,
-         R_rep.vacuum_eigenstate,
-         vacuum_annihilated_by_qplus R_rep,
-         vacuum_annihilated_by_qminus R_rep,
-         vacuum_annihilated_by_susyHamiltonian R_rep⟩
-
 end ToeplitzCuntzRepresentation
 
 end InfoGeometry.Canonical.ToeplitzCuntzFockVacuumBridge

@@ -40,44 +40,6 @@ open InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 
 /-! ## Prime OPE and current layer -/
 
-namespace CurrentCurrentLevelOneEvidence
-
-/-- Canonical resonant level-one Heisenberg commutator. -/
-@[rep_depth operator]
-theorem owner_level_one
-    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :
-    ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1,
-      InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1)⁆ =
-      (1 : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜 :=
-  InfoGeometry.Canonical.SplitCliffordHeisenbergBridge.canonicalInfiniteCurrent_lie_one_neg_one
-    (𝕜 := 𝕜)
-
-/-- Canonical reversed resonant commutator. -/
-@[rep_depth operator]
-theorem owner_level_one_reverse
-    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] :
-    ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1),
-      InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1⁆ =
-      ((-1 : Int) : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜 :=
-  InfoGeometry.Canonical.SplitCliffordHeisenbergBridge.canonicalInfiniteCurrent_lie_neg_one_one
-    (𝕜 := 𝕜)
-
-end CurrentCurrentLevelOneEvidence
-
-/-- Both canonical level-one laws, discharged directly by the infinite-current owner. -/
-@[rep_depth operator]
-theorem canonicalCurrentCurrentLevelOneEvidence :
-    (∀ (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜],
-        ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1,
-          InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1)⁆ =
-          (1 : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜) ∧
-      (∀ (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜],
-        ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1),
-          InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1⁆ =
-          ((-1 : Int) : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜) :=
-  ⟨CurrentCurrentLevelOneEvidence.owner_level_one,
-    CurrentCurrentLevelOneEvidence.owner_level_one_reverse⟩
-
 /--
 Prime current OPE packet.
 
@@ -124,27 +86,14 @@ def CurrentCurrentLevelOneLaw : Prop :=
       InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1)⁆ =
       (1 : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜
 
-/-- The packet exposes both canonical laws without storing duplicate evidence. -/
-@[rep_depth operator]
-theorem current_current_level_one_evidence
-    :
-    (∀ (𝕜 : Type*) [_root_.Field 𝕜] [CharZero 𝕜],
-        ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1,
-          InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1)⁆ =
-          (1 : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜) ∧
-      (∀ (𝕜 : Type*) [_root_.Field 𝕜] [CharZero 𝕜],
-        ⁅InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 (-1),
-          InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Jinf 𝕜 1⁆ =
-          ((-1 : Int) : 𝕜) • InfoGeometry.Canonical.SplitCliffordInfiniteCurrent.Kinf 𝕜) := by
-  exact canonicalCurrentCurrentLevelOneEvidence
-
 /-- The packet exposes the imported owner-backed level-one current-current law. -/
 @[rep_depth operator]
 theorem currentCurrentLevelOneLaw_holds
     : CurrentCurrentLevelOneLaw :=
 by
   intro 𝕜 _ _
-  exact CurrentCurrentLevelOneEvidence.owner_level_one 𝕜
+  exact InfoGeometry.Canonical.SplitCliffordHeisenbergBridge.canonicalInfiniteCurrent_lie_one_neg_one
+    (𝕜 := 𝕜)
 
 end PrimeCurrentOPEPacket
 

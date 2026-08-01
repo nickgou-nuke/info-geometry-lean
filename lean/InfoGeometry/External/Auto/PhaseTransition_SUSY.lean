@@ -84,13 +84,4 @@ theorem pole_log_second_derivative {β : ℝ} (hβ : β ≠ 1) :
     simpa [neg_neg] using hinv.neg
   simpa using hneg.deriv
 
-/-- Consolidated finite phase-transition package. -/
-theorem phase_transition_susy_synthesis (zeta : ℂ → ℂ) (βc : ℂ) (β : ℝ)
-    (hz : zeta βc ≠ 0) (hβ : β ≠ 1) :
-    TotalSUSYPartition zeta βc = 1 ∧
-    laurentPolePartition β * mobiusFermionRegulator β = 1 ∧
-    heatCapacityKernel β = ((β - 1) ^ 2)⁻¹ := by
-  exact ⟨susy_vacuum_regularization zeta βc hz,
-    pole_partition_regularized hβ, pole_log_second_derivative hβ⟩
-
 end noncomputable section

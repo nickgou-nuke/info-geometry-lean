@@ -294,11 +294,6 @@ noncomputable abbrev bregman (L : LegendrePotential) (θ θ' : ℝ) : ℝ :=
 @[simp] lemma bregman_def (L : LegendrePotential) (θ θ' : ℝ) :
     L.bregman θ θ' = InfoGeometry.bregmanDiv L.f θ θ' := rfl
 
-/-- Compatibility alias for `bregman` as divergence energy gap. -/
-@[deprecated bregman (since := "2026-02-18")]
-noncomputable def divergence (L : LegendrePotential) (θ θ' : ℝ) : ℝ :=
-  L.bregman θ θ'
-
 /-- Structural Legendre transform using the chosen inverse dual coordinate. -/
 noncomputable def legendreTransform (L : LegendrePotential) (η : ℝ) : ℝ :=
   η * thetaOfEta L η - L.f (thetaOfEta L η)
@@ -314,11 +309,6 @@ noncomputable def legendreTransform (L : LegendrePotential) (η : ℝ) : ℝ :=
           simp [thetaOfEta_eta]
     _ = θ * eta L θ - L.f θ := by
           ring
-
-/-- Compatibility alias for `legendreTransform`. -/
-@[deprecated legendreTransform (since := "2026-02-18")]
-noncomputable def legendre (L : LegendrePotential) (η : ℝ) : ℝ :=
-  L.legendreTransform η
 
 /-!
 ### Bridge to the abstract convex-functional layer

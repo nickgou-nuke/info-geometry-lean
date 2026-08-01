@@ -115,24 +115,4 @@ theorem integer_graded_brst_exact_state_class_zero
   rw [LinearMap.mem_range]
   exact ⟨chi, rfl⟩
 
-/-- **Theorem**: Master Integer-Graded BRST Cochain Complex Synthesis H^g_Q for g : ℤ.
-    Unifies:
-    1. Integer ghost number indexing g : ℤ for ghost eigenspaces E^g.
-    2. Restricted integer BRST map Q_g : E^g → E^{g+1} and composition nilpotency Q_{g+1} ∘ Q_g = 0.
-    3. Integer-graded BRST cohomology module H^{g+1}_Q = Ker(Q_{g+1}) / Im(Q_g) definition.
-    4. Integer-graded exact state zero class [Q_g χ_g] = 0 ∈ H^{g+1}_Q proof closure. -/
-theorem master_integer_graded_brst_cochain_complex_synthesis
-    (q g_op : Module.End R (ExteriorAlgebra R V))
-    (hq2 : q.comp q = 0)
-    (h_comm : g_op.comp q - q.comp g_op = q)
-    (g : ℤ)
-    (chi : integerGhostEigenspace g_op g) :
-    ((integerGradedBRSTMap q g_op h_comm (g + 1)).comp (integerGradedBRSTMap q g_op h_comm g) = 0) ∧
-    (Submodule.Quotient.mk (p := LinearMap.range (integerGradedBRSTMap q g_op h_comm g))
-      (integerGradedBRSTMap q g_op h_comm g chi) =
-      (Submodule.Quotient.mk 0 : integerGradedBRSTCohomologyDegree q g_op hq2 h_comm g)) := ⟨
-  integer_graded_brst_composition_zero q g_op hq2 h_comm g,
-  integer_graded_brst_exact_state_class_zero q g_op hq2 h_comm g chi
-⟩
-
 end InfoGeometry.Canonical.IntegerGradedBRSTCochainComplexBridge

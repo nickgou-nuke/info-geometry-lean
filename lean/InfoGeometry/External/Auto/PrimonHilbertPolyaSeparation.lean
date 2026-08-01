@@ -86,22 +86,6 @@ theorem zeta_zero_gives_reciprocal_ghost_singularity
   rh_zeta_zero_implies_graded_index_pole Z s hzero
 
 
-/-- Capstone synthesis of the theorem-honest separation. -/
-theorem primon_hilbert_polya_separation_synthesis
-    (Z : ℂ → ℂ) (β : ℝ) (N : ℕ) (s : ℂ)
-    (H : HilbertPolyaSpectralDatum Z)
-    (hzero : rhDenominatorZero Z s) :
-    finitePrimonFockTrace β N = finiteZetaPartial β N ∧
-    (∀ p : ℕ, primeCrystalPotentialCoeff p = primeEnergy p) ∧
-    RHStatement Z ∧
-    (rhGradedIndexSingularity Z s ↔ rhDenominatorZero Z s) ∧
-    rhGradedIndexSingularity Z s := by
-  exact ⟨primon_heat_trace_is_zeta_partial β N,
-    primeCrystalPotentialCoeff_eq_primeEnergy,
-    hilbert_polya_datum_implies_RH H,
-    reciprocal_ghost_singularity_iff_zero,
-    zeta_zero_gives_reciprocal_ghost_singularity Z s hzero⟩
-
 end PrimonHilbertPolyaSeparation
 
 end noncomputable section

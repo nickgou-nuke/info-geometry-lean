@@ -166,26 +166,6 @@ theorem finite_prime_boson_cancels_graded
   rw [← hweight]
   exact h mode hmode
 
-/--
-Finite Fock synthesis: local parity factors, finite determinant cancellation,
-and the three-prime even-minus-odd expansion.
--/
-theorem finite_prime_fock_synthesis :
-    (∀ x : ℂ, 1 + (-x) = gradedFermionLocal x) ∧
-    (∀ x y z : ℂ,
-      gradedFockSupertrace [x, y, z] =
-        1 - (x + y + z) + (x * y + x * z + y * z) - x * y * z) ∧
-    (∀ x : ℂ, x ≠ 1 → bosonLocal x * gradedFermionLocal x = 1) ∧
-    (∀ xs : List ℂ, (∀ x ∈ xs, x ≠ 1) →
-      bosonicFockDeterminant xs * gradedFockSupertrace xs = 1) ∧
-    (∀ modes : List PrimeMode, (∀ mode ∈ modes, mode.weight ≠ 1) →
-      finitePrimeBosonicPartition modes * finitePrimeGradedIndex modes = 1) := by
-  exact ⟨one_mode_graded_supertrace,
-    three_mode_graded_supertrace,
-    fun x hx => local_boson_cancels_graded hx,
-    finite_boson_cancels_graded,
-    finite_prime_boson_cancels_graded⟩
-
 end FinitePrimeFock
 
 end noncomputable section

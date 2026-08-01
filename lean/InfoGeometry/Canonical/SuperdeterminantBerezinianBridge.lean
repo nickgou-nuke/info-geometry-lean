@@ -30,17 +30,5 @@ theorem superdeterminant_identity :
   dsimp [superdeterminantBerezinian]
   ring
 
-/-- **Theorem**: Master Superdeterminant Berezinian & Supergeometry Synthesis.
-    Unifies:
-    1. Supermatrix Berezinian / Superdeterminant definition sdet(M) = (A - B D⁻¹ C) D⁻¹.
-    2. Diagonal reduction theorem sdet(A, 0, 0, D⁻¹) = A D⁻¹.
-    3. Identity supermatrix normalization sdet(I) = 1.
-    4. Exact algebraic bridge connecting Lie superalgebras to N=4 SYM Superamplituhedron volumes. -/
-theorem master_superdeterminant_berezinian_synthesis (a d_inv : R) :
-    (superdeterminantBerezinian a 0 0 d_inv = a * d_inv) ∧
-    (superdeterminantBerezinian (1 : R) 0 0 1 = 1) := ⟨
-  superdeterminant_diagonal a d_inv,
-  superdeterminant_identity
-⟩
 
 end InfoGeometry.Canonical.SuperdeterminantBerezinianBridge

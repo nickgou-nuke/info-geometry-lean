@@ -101,23 +101,4 @@ theorem jonesAct_apply (τ : ℝ) (v : Fin 2 → ℝ) :
   funext i
   fin_cases i <;> simp [jonesAct, jonesFierzTorsionMatrix, Fin.sum_univ_two]
 
-/-- Combined finite algebraic facts for the right jet and its left-right cubic difference. -/
-theorem amari_chentsov_fierz_torsion_synthesis (L : ChiralCubicLift) (ε : ℝ) :
-    potential L.right ε = dikinQuadratic L.right ε + poissonCubicTail L.right ε ∧
-    thirdJetAtZero L.right = L.right.amariCubic ∧
-    cubicTorsion L = L.right.amariCubic - L.left.amariCubic ∧
-    Matrix.trace (jonesFierzTorsionMatrix (cubicTorsion L)) = 0 ∧
-    (jonesFierzTorsionMatrix (cubicTorsion L))ᵀ =
-      - jonesFierzTorsionMatrix (cubicTorsion L) := by
-  constructor
-  · exact potential_eq_dikin_plus_tail L.right ε
-  constructor
-  · exact thirdJet_eq_amari L.right
-  constructor
-  · exact cubicTorsion_eq_amari_mismatch L
-  constructor
-  · exact jonesFierz_trace_zero (cubicTorsion L)
-  · exact jonesFierz_transpose (cubicTorsion L)
-
-
 end AmariChentsovFierzTorsion

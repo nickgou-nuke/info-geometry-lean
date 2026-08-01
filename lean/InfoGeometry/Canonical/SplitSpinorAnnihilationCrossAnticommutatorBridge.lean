@@ -141,29 +141,6 @@ theorem splitCliffordAlgebraHom_ι (w : U × Module.Dual R U) :
   rw [CliffordAlgebra.lift_ι_apply]
   rfl
 
-/-- **Master Split-Clifford Operator Algebra Synthesis Theorem**. -/
-theorem master_split_spinor_annihilation_cross_anticommutator_synthesis
-    (u v : U) (alpha beta : Module.Dual R U) :
-    creation alpha * creation alpha = 0 ∧
-    creation alpha * creation beta + creation beta * creation alpha = 0 ∧
-    ann.a u * ann.a u = 0 ∧
-    ann.a u * ann.a v + ann.a v * ann.a u = 0 ∧
-    creation alpha * ann.a u + ann.a u * creation alpha = (alpha u) • 1 ∧
-    ann.splitCliffordOp u alpha * ann.splitCliffordOp u alpha = (alpha u) • 1 ∧
-    ann.splitCliffordOp u alpha * ann.splitCliffordOp v beta +
-    ann.splitCliffordOp v beta * ann.splitCliffordOp u alpha = (alpha v + beta u) • 1 ∧
-    ann.splitCliffordAlgebraHom (CliffordAlgebra.ι (splitQuadraticForm R U) (u, alpha)) =
-    ann.splitCliffordOp u alpha := ⟨
-  creation_sq_zero alpha,
-  creation_anticomm alpha beta,
-  ann.a_sq_zero u,
-  ann.a_anticomm u v,
-  ann.cross_anticomm alpha u,
-  ann.splitCliffordOp_sq u alpha,
-  ann.splitCliffordOp_anticomm u v alpha beta,
-  ann.splitCliffordAlgebraHom_ι (u, alpha)
-⟩
-
 end AnnihilationStructure
 
 end InfoGeometry.Canonical.SplitSpinorAnnihilationCrossAnticommutatorBridge

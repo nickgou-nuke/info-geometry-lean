@@ -64,12 +64,4 @@ theorem creation_anticomm (alpha beta : Module.Dual R U) :
              ExteriorAlgebra.ι R beta * ExteriorAlgebra.ι R alpha) * ψ := by noncomm_ring
   rw [h1, h_anti, zero_mul]
 
-/-- **Master Synthesis**: Spinor Creation Operator CAR Algebra. -/
-theorem master_split_spinor_car_synthesis (alpha beta : Module.Dual R U) :
-    (creation alpha * creation alpha = 0) ∧
-    (creation alpha * creation beta + creation beta * creation alpha = 0) := ⟨
-  creation_sq_zero alpha,
-  creation_anticomm alpha beta
-⟩
-
 end InfoGeometry.Canonical.SplitSpinorCARAlgebraBridge

@@ -284,25 +284,6 @@ theorem infiniteHurwitzTrace_mellin_bridge
     M.heatTrace shift s = M.gamma s * M.infiniteHurwitzTrace shift s :=
   M.mellin_bridge shift s
 
-/--
-Bundled finite Hurwitz/twisted-sector bridge.
-
-It records the norm positivity needed for logarithmic energies, the
-multiplicative quaternion norm, and the shifted finite Hurwitz-zeta trace.
--/
-theorem hurwitz_twisted_sector_synthesis
-    (p q : HurwitzQuaternion) (h_nonzero : q.a0 ≠ 0)
-    (N : ℕ) (a : ℝ) (s : ℂ) :
-    0 < q.normSq ∧
-      (p * q).normSq = p.normSq * q.normSq ∧
-      finiteHurwitzZetaTrace N a s = finiteShiftedDirichletTrace N a s ∧
-      finiteHurwitzZetaTrace (N + 1) 1 s =
-        InfoGeometry.Quantum.ZetaSpectralBridge.finitePrimonMellinTrace N s := by
-  exact ⟨HurwitzQuaternion.normSq_pos_of_a0_ne_zero q h_nonzero,
-    HurwitzQuaternion.normSq_mul p q,
-    finiteHurwitzZetaTrace_eq_shiftedDirichlet N a s,
-    finiteHurwitzZetaTrace_shift_one_eq_primon N s⟩
-
 /-- Even/odd split term identity for the half-shifted Dirichlet summand. -/
 theorem half_shift_term_identity (n : ℕ) (s : ℂ) :
     (1 : ℂ) / (((n : ℂ) + (1 / 2 : ℂ)) ^ s) =

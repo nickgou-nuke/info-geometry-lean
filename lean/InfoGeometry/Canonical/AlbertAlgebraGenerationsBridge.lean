@@ -98,21 +98,6 @@ theorem albert_derivation_inhabited :
   intro X Y
   ext <;> (try dsimp [jordanMul, albertAdd, Zero.zero]; try simp; try ring)
 
-/-- **Master Synthesis**: Мастър Теорема за Алберт Алгебрата J₃(𝕆') и Трите Поколения.
-    Унифицира Комутативността, Идемпотентността на Пърс, Ортогоналността и 𝔣₄ Деривациите. -/
-theorem master_albert_algebra_generations_synthesis (X Y : AlbertMatrix R V) :
-    (jordanMul X Y = jordanMul Y X) ∧
-    (jordanMul (peirceIdempotent1 (R:=R) (V:=V)) (peirceIdempotent1 (R:=R) (V:=V)) =
-      peirceIdempotent1 (R:=R) (V:=V)) ∧
-    (jordanMul (peirceIdempotent1 (R:=R) (V:=V)) (peirceIdempotent2 (R:=R) (V:=V)) = 0) ∧
-    (IsAlbertDerivation (fun (_ : AlbertMatrix R V) => (0 : AlbertMatrix R V))) := ⟨
-  jordanMul_comm X Y,
-  peirce1_idempotent,
-  peirce_orthogonality_12,
-  albert_derivation_inhabited
-⟩
-
-
 /-- **Теорема**: Идемпотентност на Втория Проектор (c₂ ∘ c₂ = c₂). -/
 theorem peirce2_idempotent :
     jordanMul (peirceIdempotent2 (R:=R) (V:=V)) (peirceIdempotent2 (R:=R) (V:=V)) =
@@ -401,5 +386,4 @@ theorem three_generations_charge_sum_zero :
   norm_num
 
 end InfoGeometry.Canonical
-
 

@@ -108,17 +108,4 @@ theorem lowerNil_sq_zero (v : Vec3) : zornMul (lowerNil v) (lowerNil v) = zero :
   · funext i; fin_cases i <;> simp [zornMul, lowerNil, zero, cross3] <;> ring
   · funext i; fin_cases i <;> simp [zornMul, lowerNil, zero, cross3]
 
-/-- Synthesis theorem for the ordered tuple convention. -/
-theorem zorn_scaling_flow_ordered_synthesis :
-    (∀ {p : ℂ}, p ≠ 0 → ∀ X : Zorn,
-      flow p X = { a := X.a, b := X.b, u := fun i => p^2 * X.u i, v := fun i => (p⁻¹)^2 * X.v i }) ∧
-    (∀ u : Vec3, zornMul (upperNil u) (upperNil u) = zero) ∧
-    (∀ v : Vec3, zornMul (lowerNil v) (lowerNil v) = zero) := by
-  exact ⟨flow_formula, upperNil_sq_zero, lowerNil_sq_zero⟩
-
-#check flow_formula
-#check upperNil_sq_zero
-#check lowerNil_sq_zero
-#check zorn_scaling_flow_ordered_synthesis
-
 end ZornScalingFlowOrdered

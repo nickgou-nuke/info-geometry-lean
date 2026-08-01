@@ -47,21 +47,4 @@ theorem fisher_rao_infinitesimal_metric_element (u du dp : ℝ)
     _ = (2 * u * du) * (2 * u * du) := by ring
     _ = dp * dp := by rw [h_diff]
 
-/-- **Theorem**: Master Bhattacharyya & Fisher-Rao Metric Transformation Synthesis.
-    Unifies:
-    1. Amplitude L2 sphere normalization ∑ ψ_i^2 = 1.
-    2. Bhattacharyya coefficient as amplitude inner product BC(p, q) = ⟨ψ, φ⟩.
-    3. Infinitesimal Fisher-Rao line element 4 u^2 du^2 = dp^2. -/
-theorem master_bhattacharyya_fisher_rao_synthesis
-    {n : ℕ} (p q : Fin n → ℝ) (hp_pos : ∀ i, 0 ≤ p i)
-    (hp_sum : (Finset.univ : Finset (Fin n)).sum p = 1)
-    (u du dp : ℝ) (h_diff : 2 * u * du = dp) :
-    ((Finset.univ : Finset (Fin n)).sum (fun i => (amplitude p i)^2) = 1) ∧
-    (bhattacharyyaCoeff p q = (Finset.univ : Finset (Fin n)).sum (fun i => amplitude p i * amplitude q i)) ∧
-    (4 * (u * u) * (du * du) = dp * dp) := ⟨
-  amplitude_l2_normalization p hp_pos hp_sum,
-  bhattacharyya_eq_amplitude_inner_product p q hp_pos,
-  fisher_rao_infinitesimal_metric_element u du dp h_diff
-⟩
-
 end InfoGeometry.Algebra.BhattacharyyaFisherRaoBridge

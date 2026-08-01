@@ -75,22 +75,4 @@ theorem modularJ_reverses_zpow {J Δ : G} (hJ : IsModularJ J) (hInv : ModularJIn
   rw [hconj]
   exact inv_zpow' Δ n
 
-/-- Main synthesis theorem: glide = modular `J` at the algebraic skeleton. -/
-theorem glide_modular_j_synthesis (J Δ : G)
-    (hJ : IsModularJ J) (hInv : ModularJInverts J Δ) :
-    J * J = 1 ∧
-    J * Δ * J = Δ⁻¹ ∧
-    GlideInverts J Δ ∧
-    J * Δ * J * Δ = 1 ∧
-    (∀ n : ℤ, J * Δ^n * J = Δ^(-n)) := by
-  constructor
-  · simpa using hJ
-  · constructor
-    · exact modularJ_tomita_form hJ hInv
-    · constructor
-      · exact modularJ_is_glide hInv
-      · constructor
-        · exact modularJ_klein_word hJ hInv
-        · exact modularJ_reverses_zpow hJ hInv
-
 end GlideModularJ

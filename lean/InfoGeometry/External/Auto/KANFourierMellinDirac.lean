@@ -127,38 +127,11 @@ theorem cantorCylinder_refines (n : ℕ) :
   simp [cantorCylinderCount, pow_succ]
   ring
 
-/-- Synthesis theorem for the KAN/Fourier-Mellin/Dirac framework. -/
-theorem kan_fourier_mellin_dirac_synthesis :
-    (∀ K : KFactor, ∀ A : AFactor, ∀ N : NFactor, (K.mat * A.mat * N.mat).det = 1) ∧
-    (∀ kx ky : ℂ, nilDiracFourierSymbol kx ky * nilDiracFourierSymbol kx ky =
-      (-(kx * kx + ky * ky)) • (1 : M2C)) ∧
-    (∀ s kx ky : ℂ, ∃ a₀ a₁ a₂ a₃ : ℂ,
-      KANDiracSymbol s kx ky = a₀ • (1 : M2C) + a₁ • σ₁ + a₂ • σ₂ + a₃ • σ₃) ∧
-    Trip * Trip * Trip = Trip ∧
-    (∀ s : ℂ, (scaleMatrix s).det = (s - 1) * (s + 1) * s) ∧
-    (∀ n, cantorCylinderCount (n + 1) = 2 * cantorCylinderCount n) := by
-  constructor
-  · intro K A N
-    exact KAN_det_one K A N
-  constructor
-  · intro kx ky
-    exact nilDiracFourierSymbol_sq kx ky
-  constructor
-  · intro s kx ky
-    exact KANDiracSymbol_biquaternion_closed s kx ky
-  constructor
-  · exact Trip_tripotent
-  constructor
-  · intro s
-    exact scaleMatrix_det s
-  · intro n
-    exact cantorCylinder_refines n
 
 #check KAN_det_one
 #check nilDiracFourierSymbol_sq
 #check KANDiracSymbol_biquaternion_closed
 #check scaleMatrix_det
 #check cantorCylinder_refines
-#check kan_fourier_mellin_dirac_synthesis
 
 end KANFourierMellinDirac

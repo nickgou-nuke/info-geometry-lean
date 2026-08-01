@@ -49,8 +49,6 @@ theorem first_bianchi_identity_torsion
     (D : ExteriorDifferentialData R V)
     (omega : SpinConnectionMatrix d_dim R V)
     (e : TetradVector d_dim R V)
-    (h_omega_1form : ∀ a b, IsHomogeneousExteriorDegree 1 (omega a b))
-    (h_e_1form : ∀ a, IsHomogeneousExteriorDegree 1 (e a))
     (h_d2_e : ∀ a, D.d (D.d (e a)) = 0)
     (h_leibniz_omega_e : ∀ a b, D.d (omega a b * e b) = D.d (omega a b) * e b - omega a b * D.d (e b)) :
     (fun a => D.d (torsionForm D.d omega e a) + spinConnectionWedgeTetrad omega (torsionForm D.d omega e) a) =
@@ -79,7 +77,6 @@ theorem first_bianchi_identity_torsion
 theorem second_bianchi_identity_curvature
     (D : ExteriorDifferentialData R V)
     (omega : SpinConnectionMatrix d_dim R V)
-    (h_omega_1form : ∀ a b, IsHomogeneousExteriorDegree 1 (omega a b))
     (h_d2_omega : ∀ a b, D.d (D.d (omega a b)) = 0)
     (h_leibniz_omega_omega : ∀ a b c, D.d (omega a c * omega c b) = D.d (omega a c) * omega c b - omega a c * D.d (omega c b)) :
     (fun i j => (matrixExteriorDerivative D.d (riemannCurvatureForm D.d omega)) i j +
@@ -103,25 +100,6 @@ theorem second_bianchi_identity_curvature
   rw [h_assoc_1]
   abel
 
-/-- **Master Synthesis**: Айнщайн-Картан Бианки Мастър Теорема.
-    Унифицира Първото и Второто Тъждество на Бианки без нито една примитивна хипотеза! -/
-theorem master_einstein_cartan_bianchi_synthesis
-    (D : ExteriorDifferentialData R V)
-    (omega : SpinConnectionMatrix d_dim R V)
-    (e : TetradVector d_dim R V)
-    (h_omega_1form : ∀ a b, IsHomogeneousExteriorDegree 1 (omega a b))
-    (h_e_1form : ∀ a, IsHomogeneousExteriorDegree 1 (e a))
-    (h_d2_e : ∀ a, D.d (D.d (e a)) = 0)
-    (h_d2_omega : ∀ a b, D.d (D.d (omega a b)) = 0)
-    (h_leibniz_omega_e : ∀ a b, D.d (omega a b * e b) = D.d (omega a b) * e b - omega a b * D.d (e b))
-    (h_leibniz_omega_omega : ∀ a b c, D.d (omega a c * omega c b) = D.d (omega a c) * omega c b - omega a c * D.d (omega c b)) :
-    ((fun a => D.d (torsionForm D.d omega e a) + spinConnectionWedgeTetrad omega (torsionForm D.d omega e) a) =
-      spinConnectionWedgeTetrad (riemannCurvatureForm D.d omega) e) ∧
-    ((fun i j => (matrixExteriorDerivative D.d (riemannCurvatureForm D.d omega)) i j +
-      (∑ k, omega i k * riemannCurvatureForm D.d omega k j) -
-      (∑ k, riemannCurvatureForm D.d omega i k * omega k j)) = 0) := by
-  exact ⟨first_bianchi_identity_torsion D omega e h_omega_1form h_e_1form h_d2_e h_leibniz_omega_e,
-         second_bianchi_identity_curvature D omega h_omega_1form h_d2_omega h_leibniz_omega_omega⟩
 
 
 /-- 6. Действие на Айнщайн-Картан: S_EC = ∫ ε_{abcd} e^a ∧ e^b ∧ R^{cd}

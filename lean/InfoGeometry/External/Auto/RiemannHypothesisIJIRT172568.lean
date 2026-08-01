@@ -328,7 +328,6 @@ structure RiemannHypothesisPaper where
   theorem2_PNT : primeNumberTheorem
   theorem3_PrimeGaps : averagePrimeGapTheorem
   theorem4_GUE : (ℕ → ℝ) → ℝ → Prop
-  numericalEvidence : String
 
 namespace RiemannHypothesisPaper
 

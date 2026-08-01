@@ -145,33 +145,6 @@ theorem zornDet_pureLower (q : Fin 3 → ℝ) :
     zornDet (pureLower q) = 0 := by
   simp [zornDet, pureLower, dot3]
 
-/--
-Consolidated bridge: trifactor roots, Pauli determinant grading, and Zorn
-determinant-null embedding of the parabolic/null sector.
--/
-theorem pauli_zorn_trifactor_synthesis :
-    (∀ op : ℝ, CubicProjector op ↔ op * (op - 1) * (op + 1) = 0) ∧
-    CubicProjector (-1) ∧
-    CubicProjector 0 ∧
-    CubicProjector 1 ∧
-    (∀ t x y z : ℝ,
-      (pauliHermitian t x y z).det = (minkowskiNorm t x y z : ℂ)) ∧
-    (∀ t x y z : ℝ,
-      zornDet (pauliToZorn t x y z) = minkowskiNorm t x y z) ∧
-    (∀ t x y z : ℝ, minkowskiNorm t x y z = 0 →
-      zornDet (pauliToZorn t x y z) = 0) ∧
-    (∀ p : Fin 3 → ℝ, zornDet (pureUpper p) = 0) ∧
-    (∀ q : Fin 3 → ℝ, zornDet (pureLower q) = 0) := by
-  exact ⟨cubic_projector_iff_trifactor,
-    cubic_roots.1,
-    cubic_roots.2.1,
-    cubic_roots.2.2,
-    pauliHermitian_det,
-    zornDet_pauliToZorn,
-    fun t x y z h => zorn_null_of_pauli_null h,
-    zornDet_pureUpper,
-    zornDet_pureLower⟩
-
 end PauliZornTrifactor
 
 end noncomputable section

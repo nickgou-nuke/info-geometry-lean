@@ -30,20 +30,4 @@ theorem matrix_two_form_homogeneous (F : Matrix (Fin n) (Fin n) (ExteriorAlgebra
     IsHomogeneousExteriorDegree 2 (F i j) :=
   hF i j
 
-/-- **Theorem**: Master Exterior Homogeneous Degree & Matrix Homogeneity Synthesis.
-    Unifies:
-    1. Homogeneous exterior algebra degree predicate IsHomogeneousExteriorDegree k x for x ∈ ⋀^k V.
-    2. Matrix entrywise homogeneity predicate MatrixIsHomogeneous k M for M ∈ Matrix_{n×n}(⋀^k V).
-    3. Proof closure for 1-form connection matrix entrywise degree (k = 1) and 2-form curvature matrix entrywise degree (k = 2). -/
-theorem master_exterior_homogeneous_degree_synthesis
-    (A F : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
-    (hA : MatrixIsHomogeneous 1 A)
-    (hF : MatrixIsHomogeneous 2 F)
-    (i j : Fin n) :
-    (IsHomogeneousExteriorDegree 1 (A i j)) ∧
-    (IsHomogeneousExteriorDegree 2 (F i j)) := ⟨
-  matrix_one_form_homogeneous A hA i j,
-  matrix_two_form_homogeneous F hF i j
-⟩
-
 end InfoGeometry.Canonical.ExteriorHomogeneousDegreeBridge

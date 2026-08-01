@@ -181,7 +181,4 @@ structure JaynesFinitePartitionSynthesis where
   relativeEntropySelfZero : ∀ (P : FinitePartition) (p : DiscreteDistribution P),
     relativeEntropy p p = 0
 
-  -- Textual summary of the finite statements carried by this record.
-  slogan : String
-
 end

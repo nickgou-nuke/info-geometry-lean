@@ -83,20 +83,4 @@ theorem riemann_zeros_are_lightcones {Z : ℂ → ℂ}
     ∀ s, Z s = 0 → (paravector_temperature s.re s.im).parabolic := by
   simpa using H
 
-/-- Consolidated geometric-zeta package: graded reciprocal pole, paravector
-    determinant, and explicit lightcone compatibility schema. -/
-theorem geometric_zeta_lightcone_synthesis :
-    (∀ Z : ℂ → ℂ, ∀ s, geometricReciprocalSingularity Z s ↔ Z s = 0) ∧
-    (∀ Z : ℂ → ℂ, ∀ s, geometricReciprocalSingularity Z s →
-      Z_fermion_graded Z s = 0) ∧
-    (∀ σ γ : ℝ, (paravector_temperature σ γ).det = σ ^ 2 - γ ^ 2) ∧
-    (∀ σ γ : ℝ, (paravector_temperature σ γ).parabolic ↔ σ ^ 2 = γ ^ 2) := by
-  exact ⟨
-    fun Z s => geometricGradedIndexPole_iff_denominator_zero,
-    fun Z s hs => by
-      exact geometricGradedIndex_singularity Z hs,
-    fun σ γ => geometric_paravector_det σ γ,
-    fun σ γ => geometric_lightcone_iff_det_zero σ γ
-  ⟩
-
 end noncomputable section

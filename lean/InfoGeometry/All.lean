@@ -171,6 +171,7 @@ import InfoGeometry.Algebra.QCCRSupergradingBridge
 import InfoGeometry.Algebra.QuadraticJordanH3Zorn
 import InfoGeometry.Algebra.RealPauliCausalCone
 import InfoGeometry.Algebra.RealSplitAlbert
+import InfoGeometry.Algebra.RealAlbertTwistedS3
 import InfoGeometry.Algebra.SplitAlgebraHierarchyBridge
 import InfoGeometry.Algebra.SplitCliffordTensorTowerBridge
 import InfoGeometry.Algebra.ReducedStructureSpinCertifiedPacket

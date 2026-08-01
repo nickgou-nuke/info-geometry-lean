@@ -106,25 +106,6 @@ theorem kramers_wannier_energy_duality
 theorem original_ne_dual : SmithKiteLattice.original ≠ SmithKiteLattice.dual := by
   decide
 
-/-! ## 3. Synthesis -/
-
-/-- Capstone: finite paper data and exact duality equations compile. -/
-theorem smith_hat_ising_duality_synthesis :
-    smithHatSides = 13 ∧
-    smithHatKites = 8 ∧
-    maxReportedSpinNumber = 939201 ∧
-    reportedCriticalTemperature .original = 2405 / 1000 ∧
-    reportedCriticalTemperature .dual = 2143 / 1000 ∧
-    reportedCriticalTemperatureTolerance = 5 / 10000 ∧
-    reportedCriticalEnergyPerSpin .original = -1319 / 1000 ∧
-    reportedCriticalEnergyPerSpin .dual = -1505 / 1000 ∧
-    ProjectiveWallpaperGaugePSA.allWallpaperGroups.length = 17 ∧
-    SmithKiteLattice.original ≠ SmithKiteLattice.dual := by
-  exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, rfl,
-    ProjectiveWallpaperGaugePSA.allWallpaperGroups_length,
-    original_ne_dual⟩
-
-#check smith_hat_ising_duality_synthesis
 #check kramers_wannier_temperature_duality
 #check kramers_wannier_energy_duality
 

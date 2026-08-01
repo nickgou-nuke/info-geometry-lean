@@ -79,21 +79,4 @@ def scalarReg (δ : ℂ) : ℂ := (δ - 1) / (δ + 1)
 theorem scalarReg_one : scalarReg 1 = 0 := by
   norm_num [scalarReg]
 
-/-- Main synthesis theorem. -/
-theorem fredholm_modular_regularization_synthesis :
-    σ1 * σ1 = 1 ∧
-    (∀ c s : ℂ, c^2 - s^2 = 1 → c + 1 ≠ 0 → cayleyDen c s * cayleyDenInv c s = 1) ∧
-    (∀ c s : ℂ, c^2 - s^2 = 1 → c + 1 ≠ 0 →
-      cayleyNum c s * cayleyDenInv c s = (s / (c + 1)) • σ1) ∧
-    scalarReg 1 = 0 := by
-  constructor
-  · exact σ1_sq
-  constructor
-  · intro c s h hc
-    exact cayleyDen_mul_inv c s h hc
-  constructor
-  · intro c s h hc
-    exact cayley_regularization_pauli c s h hc
-  · exact scalarReg_one
-
 end FredholmModularRegularization

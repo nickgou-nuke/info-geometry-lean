@@ -191,42 +191,6 @@ theorem fock_stage_cancellation_cylinder
   rw [fock_stage_cancellation_observable xs hxs]
   exact cylinder_one xs.length
 
-/--
-Consolidated bridge:
-finite Fock determinants are UHF cylinder observables, are compatible with the
-UHF embedding, update by local prime factors, and cancel pointwise.
--/
-theorem fock_uhf_bridge_synthesis :
-    (∀ xs : List ℂ,
-      cylinder xs.length (gradedFockStageObservable xs) ∈ CylinderColimit) ∧
-    (∀ xs : List ℂ,
-      cylinder xs.length (bosonicFockStageObservable xs) ∈ CylinderColimit) ∧
-    (∀ xs : List ℂ,
-      cylinder (xs.length + 1)
-          (diagEmbedSucc xs.length (gradedFockStageObservable xs))
-        =
-      cylinder xs.length (gradedFockStageObservable xs)) ∧
-    (∀ xs : List ℂ, ∀ x : ℂ,
-      gradedFockSupertrace (xs ++ [x]) =
-        gradedFockSupertrace xs * (1 - x)) ∧
-    (∀ xs : List ℂ, ∀ x : ℂ,
-      cylinder ((xs ++ [x]).length) (gradedFockStageObservable (xs ++ [x]))
-        =
-      cylinder (xs.length + 1)
-        (diagEmbedSucc xs.length (gradedFockStageObservable xs) *
-          constantStageObservable (xs.length + 1) (1 - x))) ∧
-    (∀ xs : List ℂ, (∀ x ∈ xs, x ≠ 1) →
-      cylinder xs.length
-          (bosonicFockStageObservable xs * gradedFockStageObservable xs)
-        =
-      (1 : CantorBoundary → ℂ)) := by
-  exact ⟨gradedFockStage_mem_colimit,
-    bosonicFockStage_mem_colimit,
-    gradedFockStage_embed_same_cylinder,
-    gradedFockSupertrace_snoc,
-    gradedFockStage_add_prime,
-    fock_stage_cancellation_cylinder⟩
-
 end FockUHFBridge
 
 end noncomputable section

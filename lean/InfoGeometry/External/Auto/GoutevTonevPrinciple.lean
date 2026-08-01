@@ -66,21 +66,6 @@ theorem minimal_pixel_from_information_geometry
     0 < InformationGeometricCutoff.MinimalPhaseSpaceVolume cr :=
   InformationGeometricCutoff.minimal_phase_space_volume_pos cr
 
-/-- Closed algebraic synthesis of the Goutev--Tonev operator unit. -/
-theorem goutev_tonev_algebraic_synthesis
-    (ω : A →ₗ[ℝ] ℝ) (expOp : A → A) (h0 : expOp 0 = (1 : A)) :
-    (∀ K : A, informationUnit (A := A) expOp 0 K = 0) ∧
-    (∀ (ε : ℝ) (K : A),
-      ω (informationUnit (A := A) expOp ε K) =
-        ω (expOp (ε • K)) - ω (1 : A) - ε * ω K) ∧
-    (∀ (ε : ℝ) (K : A),
-      ω (quadraticInformationUnit (A := A) ε K) = (ε ^ 2 / 2) * ω (K * K)) := by
-  refine And.intro ?zeroCoupling ?readouts
-  · exact informationUnit_zero (A := A) expOp h0
-  · refine And.intro ?fullReadout ?quadraticReadout
-    · exact expectation_informationUnit (A := A) (ω := ω) expOp
-    · exact expectation_quadraticInformationUnit (A := A) (ω := ω)
-
 /-! ## Complex-linear maps on operator algebras -/
 
 section ComplexOperatorLinearMaps

@@ -35,9 +35,4 @@ theorem scaled_K_N_is_nilpotent (ε : ℂ) :
     _ = (ε * ε) • (0 : M2C) := by rw [K_N_is_nilpotent]
     _ = 0 := by simp
 
-/-- Consolidated finite KAN-nilpotent certificate. -/
-theorem kan_nilpotent_synthesis :
-    K_N * K_N = 0 ∧ (∀ ε : ℂ, (ε • K_N) * (ε • K_N) = 0) := by
-  exact ⟨K_N_is_nilpotent, scaled_K_N_is_nilpotent⟩
-
 end BiquaternionKANnilpotent

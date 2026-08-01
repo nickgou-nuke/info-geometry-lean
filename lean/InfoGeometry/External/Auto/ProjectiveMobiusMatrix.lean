@@ -236,40 +236,4 @@ theorem cayleyCompact_eq_projective_mobius (s : ℂ) :
   unfold cayleyCompact ProjectivePenrosePGA.mobius
   ring_nf
 
-/-- Projective Möbius + Cayley + discriminant synthesis. -/
-theorem projective_mobius_matrix_synthesis :
-    (∀ {lam : K} (M : Matrix (Fin 2) (Fin 2) K) (z : K),
-      lam ≠ 0 → M 1 0 * z + M 1 1 ≠ 0 →
-      mobiusMatrix (lam • M) z = mobiusMatrix M z) ∧
-    (∀ (M : Matrix (Fin 2) (Fin 2) K),
-      mobiusOption M none = none) ∧
-    (∀ (M : Matrix (Fin 2) (Fin 2) K) (z : K),
-      mobiusOption M (some z) =
-        if h : M 1 0 * z + M 1 1 = 0 then none
-        else some ((M 0 0 * z + M 0 1) / (M 1 0 * z + M 1 1))) ∧
-    (∀ (z : Option K),
-      mobiusOption (1 : Matrix (Fin 2) (Fin 2) K) z = z) ∧
-    (∀ (M : Matrix (Fin 2) (Fin 2) K),
-      (M - (1 : Matrix (Fin 2) (Fin 2) K)).det = M.det - trace2 M + 1) ∧
-    (∀ (M : Matrix (Fin 2) (Fin 2) K),
-      (M + (1 : Matrix (Fin 2) (Fin 2) K)).det = M.det + trace2 M + 1) ∧
-    (∀ (M : Matrix (Fin 2) (Fin 2) K),
-      (M - (1 : Matrix (Fin 2) (Fin 2) K)).det * (M + (1 : Matrix (Fin 2) (Fin 2) K)).det =
-        (M.det + 1)^2 - trace2 M ^ 2) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · intro lam M z hlam hden
-    exact mobiusMatrix_projective_rescale M z hlam hden
-  · intro M
-    rfl
-  · intro M z
-    rfl
-  · intro z
-    exact mobiusOption_one z
-  · intro M
-    exact det_sub_one M
-  · intro M
-    exact det_add_one M
-  · intro M
-    exact det_sub_one_mul_det_add_one M
-
 end ProjectiveMobiusMatrix

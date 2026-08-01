@@ -55,22 +55,6 @@ theorem bogoliubov_ccr_preservation (c s : R) (h_hyperbolic : c * c - s * s = 1)
     c * c - s * s = 1 :=
   h_hyperbolic
 
-/-- **Theorem**: Master Hyperbolic Bogoliubov Squeezing Synthesis.
-    Unifies:
-    1. Fundamental split relation ε^2 = 1.
-    2. Hyperbolic metric invariance u'^2 - v'^2 = u^2 - v^2 under Bogoliubov transformation.
-    3. Mode commutator preservation c^2 - s^2 = 1. -/
-theorem master_hyperbolic_bogoliubov_synthesis
-    {R : Type*} [CommRing R] (c s u v : R) (h_hyperbolic : c * c - s * s = 1) :
-    (mul (⟨0, 1⟩ : SplitComplex R) ⟨0, 1⟩ = ⟨1, 0⟩) ∧
-    (let (u', v') := bogoliubovTransform c s u v
-     u' * u' - v' * v' = u * u - v * v) ∧
-    (c * c - s * s = 1) := ⟨
-  epsilon_squared,
-  bogoliubov_interval_invariance c s u v h_hyperbolic,
-  h_hyperbolic
-⟩
-
 end SplitComplex
 
 end InfoGeometry.Algebra.HyperbolicBogoliubovSplitAlgebra

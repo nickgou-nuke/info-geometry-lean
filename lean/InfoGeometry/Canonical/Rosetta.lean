@@ -200,9 +200,9 @@ export InfoGeometry.Canonical.WeylLineIntegrator (
 
 export InfoGeometry.Canonical.WeylTransportBridge (
   FlatCurvatureChiralScaleBridge
-  holonomy_eq_chiralScale_of_flat
+  holonomy_eq_chiralScale_of_flat_compat
   finiteSumFlatCurvatureChiralScaleBridge
-  finiteSum_holonomy_eq_chiralScale_of_flat
+  finiteSum_holonomy_eq_chiralScale_of_flat_compat
 )
 
 export InfoGeometry.Canonical.SuperInference (

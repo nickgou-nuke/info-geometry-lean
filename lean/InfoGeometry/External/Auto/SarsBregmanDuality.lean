@@ -80,31 +80,6 @@ theorem bregmanDualDiag_vacuum_zero : bregmanDualDiag 0 0 0 0 = 0 := by
   have h : burgBregman 1 1 = 0 := by norm_num [burgBregman]
   ext i j <;> fin_cases i <;> fin_cases j <;> simp [bregmanDualDiag, diag2, h]
 
-inductive CrossDomainEdge where
-  | qft_modular_to_itakura_saito
-  | bregman_coordinate_isomorphism
-  | stabilizes_krein_entropy
-  deriving DecidableEq, Repr
-
-def edgeName : CrossDomainEdge → String
-  | CrossDomainEdge.qft_modular_to_itakura_saito => "qft_modular_to_itakura_saito"
-  | CrossDomainEdge.bregman_coordinate_isomorphism => "bregman_coordinate_isomorphism"
-  | CrossDomainEdge.stabilizes_krein_entropy => "stabilizes_krein_entropy"
-
-theorem bregman_duality_kernel :
-    (∀ x y : ℝ, expBregman x y = Real.exp y * modularSurprisal (x - y)) ∧
-    (∀ x y : ℝ, 0 ≤ expBregman x y) ∧
-    (∀ x y : ℝ, burgBregman (Real.exp x) (Real.exp y) = modularSurprisal (x - y)) ∧
-    (∀ x y : ℝ, 0 ≤ burgBregman (Real.exp x) (Real.exp y)) ∧
-    (∀ x : ℝ, itakuraSaitoToOne (Real.exp x) = modularSurprisal x) ∧
-    (∀ x0 y0 x1 y1 : ℝ, IsPSD2 (bregmanDualDiag x0 y0 x1 y1)) ∧
-    bregmanDualDiag 0 0 0 0 = 0 ∧
-    edgeName CrossDomainEdge.qft_modular_to_itakura_saito = "qft_modular_to_itakura_saito" ∧
-    edgeName CrossDomainEdge.bregman_coordinate_isomorphism = "bregman_coordinate_isomorphism" ∧
-    edgeName CrossDomainEdge.stabilizes_krein_entropy = "stabilizes_krein_entropy" := by
-  exact ⟨expBregman_factor, expBregman_nonneg, burg_exp_coordinate, burg_exp_nonneg,
-    itakura_exp_coordinate, bregmanDualDiag_psd, bregmanDualDiag_vacuum_zero, rfl, rfl, rfl⟩
-
 end SarsBregmanDuality
 
 end noncomputable section

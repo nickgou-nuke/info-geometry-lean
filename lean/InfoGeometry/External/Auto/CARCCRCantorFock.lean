@@ -186,36 +186,6 @@ theorem carGradedLocal_eq_bool_supertrace (x : ℂ) :
   simp [carGradedLocal]
   ring
 
-/--
-Consolidated CAR/CCR/Cantor-Fock package.
--/
-theorem car_ccr_cantor_fock_synthesis :
-    (∀ n : ℕ, Fintype.card (CARWord n) = 2 ^ n) ∧
-    (∀ n K : ℕ, Fintype.card (CCRCutoffWord n K) = (K + 1) ^ n) ∧
-    carAnnihilate * carAnnihilate = 0 ∧
-    carCreate * carCreate = 0 ∧
-    carAnnihilate * carCreate + carCreate * carAnnihilate =
-      (1 : Matrix (Fin 2) (Fin 2) ℂ) ∧
-    carNumber * carNumber = carNumber ∧
-    carParity * carParity = (1 : Matrix (Fin 2) (Fin 2) ℂ) ∧
-    (∀ x : ℂ, ccrCutoffLocal x 0 = 1) ∧
-    (∀ x : ℂ, ∀ K : ℕ,
-      ccrCutoffLocal x (K + 1) = ccrCutoffLocal x K + x ^ (K + 1)) ∧
-    (∀ x : ℂ, x ≠ 1 → ccrFormalLocal x * carGradedLocal x = 1) ∧
-    (∀ xs : List ℂ, (∀ x ∈ xs, x ≠ 1) →
-      ccrFormalPartition xs * carGradedPartition xs = 1) := by
-  exact ⟨carWord_card,
-    ccrCutoffWord_card,
-    carAnnihilate_sq,
-    carCreate_sq,
-    car_anticommutator,
-    carNumber_idempotent,
-    carParity_sq,
-    ccrCutoffLocal_zero,
-    ccrCutoffLocal_succ,
-    fun x hx => ccrFormal_cancels_carGraded hx,
-    ccrFormalPartition_cancels_carGraded⟩
-
 end CARCCRCantorFock
 
 end noncomputable section

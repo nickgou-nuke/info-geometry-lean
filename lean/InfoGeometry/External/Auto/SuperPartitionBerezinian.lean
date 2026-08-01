@@ -79,17 +79,4 @@ theorem exponential_chart_zero :
     Real.exp (0 : ℝ) = 1 := by
   simp
 
-/-- Consolidated finite super-ratio/Berezinian package. -/
-theorem super_partition_berezinian_synthesis :
-    (∀ x, superPartitionRatio x = cayleyPartition x) ∧
-    (∀ x, superPartitionRatio x = diagonalBerezinian (1 + x) (1 - x)) ∧
-    (∀ x, x ≠ 1 → fermionicLocalFactor x * bosonicLocalFactor x =
-      superPartitionRatio x) ∧
-    (∀ ε y, exponentialCayleyPartition ε y =
-      diagonalBerezinian (1 + Real.exp (ε * y)) (1 - Real.exp (ε * y))) ∧
-    Real.exp (0 : ℝ) = 1 := by
-  exact ⟨superPartitionRatio_eq_cayley, superPartitionRatio_eq_berezinian,
-    fun x hx => local_super_product hx, exponentialCayleyPartition_eq_berezinian,
-    exponential_chart_zero⟩
-
 end noncomputable section

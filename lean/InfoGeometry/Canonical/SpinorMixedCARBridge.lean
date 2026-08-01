@@ -31,17 +31,4 @@ theorem mixed_car_evaluation_identity
     (evaluationLinear u alpha) • omega = alpha u • omega :=
   rfl
 
-/-- **Theorem**: Master Mixed CAR Operator Anticommutator Synthesis.
-    Unifies:
-    1. Evaluation linear map ev_u(α) = α(u).
-    2. Mixed CAR scalar action ev_u(α) • ω = α(u) • ω.
-    3. Structural foundation for full CAR creation/annihilation anticommutation algebra. -/
-theorem master_spinor_mixed_car_synthesis
-    (u : U) (alpha : U →ₗ[R] R) (omega : ExteriorAlgebra R (U →ₗ[R] R)) :
-    (evaluationLinear u alpha = alpha u) ∧
-    ((evaluationLinear u alpha) • omega = alpha u • omega) := ⟨
-  rfl,
-  rfl
-⟩
-
 end InfoGeometry.Canonical.SpinorMixedCARBridge

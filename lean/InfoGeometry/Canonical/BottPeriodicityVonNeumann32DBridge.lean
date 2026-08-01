@@ -27,8 +27,4 @@ def observableCenter (R : Type*) [CommRing R]
     (A : Subalgebra R (Module.End R (Fin 32 → R))) : Subalgebra R A :=
   Subalgebra.center R A
 
-/-- **Master Synthesis**: Bott Periodicity, MASA 32D Dimension, and Center Synthesis. -/
-theorem master_bott_von_neumann_32d_synthesis :
-    ((2 : ℕ) ^ (8 / 2 + 1) = 32) := rfl
-
 end InfoGeometry.Canonical

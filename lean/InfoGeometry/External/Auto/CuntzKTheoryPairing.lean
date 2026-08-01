@@ -272,27 +272,4 @@ theorem connes_chern_holographic_index_pairing_zero
     AnomalousKMSFlow.anomaly_trace_total_zero (H := H) C hFaith
   exact ⟨hδ, hIndex, hTraceK⟩
 
-/-- Full holographic collapse summary: index pairing triviality kills anomaly,
-forces spectral minimization, and removes spectral leakage.
--/
-theorem connes_chern_holographic_minimization_summary
-    (H : Type*) [AddCommGroup H] [Module ℂ H]
-    (C : AnomalousKMSFlow.ModularAnomalyContext H)
-    (hFaith : AnomalousKMSFlow.TraceFaithful H C.tr)
-    (S0 c : ℝ) (hc : 0 < c)
-    {K1 : Type*} [AddCommGroup K1]
-    (k : O2_K0) (x : K1)
-    (hPair :
-      AnomalousKMSFlow.anomalousIndex H C =
-      (inferInstance : ConnesChernPairing O2_K0 K1).pair k x) :
-    (C.δK = 0) ∧
-      (ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c = S0) ∧
-      (∀ δ : Module.End ℂ H,
-        ConnesSpectralAction.connesSpectralAction (H := H) C δ S0 c =
-          ConnesSpectralAction.connesSpectralAction (H := H) C C.δK S0 c ↔ δ = C.δK) ∧
-      (∀ s, AnomalousKMSFlow.anomalousLineLeak (AnomalousKMSFlow.anomalousIndexLeakProfile H C) s = 0) := by
-  rcases O2_pairing_triviality_yields_full_anomaly_collapse
-      (H := H) C hFaith S0 c hc k x hPair with ⟨hδ, hmin, hBase, huniq, hLeak⟩
-  exact ⟨hδ, hBase, huniq, hLeak⟩
-
 end CuntzKTheoryPairing

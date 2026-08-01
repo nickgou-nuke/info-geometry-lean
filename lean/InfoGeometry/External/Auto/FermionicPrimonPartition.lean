@@ -79,21 +79,4 @@ theorem finite_2_3_fermionic_partition (β : ℝ) :
       twoPrimeFermionPartition 2 3 β :=
   finite_two_prime_fermion_euler_product 2 3 β
 
-/-- Consolidated finite fermionic partition package. -/
-theorem fermionic_primon_partition_synthesis :
-    (∀ p β, fermionOccupationWeight p β false = 1) ∧
-    (∀ p β, fermionOccupationWeight p β true = fermionPrimeBoltzmannWeight p β) ∧
-    (∀ p β, singlePrimeFermionPartition p β =
-      1 + fermionPrimeBoltzmannWeight p β) ∧
-    (∀ x : ℝ, x ≠ 1 → 1 + x = (1 - x ^ 2) / (1 - x)) ∧
-    (∀ p q β, singlePrimeFermionPartition p β * singlePrimeFermionPartition q β =
-      twoPrimeFermionPartition p q β) ∧
-    (∀ p q β, twoPrimeFermionPartition p q β =
-      1 + fermionPrimeBoltzmannWeight p β +
-        fermionPrimeBoltzmannWeight q β +
-          fermionPrimeBoltzmannWeight p β * fermionPrimeBoltzmannWeight q β) := by
-  exact ⟨fermionOccupationWeight_false, fermionOccupationWeight_true,
-    singlePrimeFermionPartition_eq, fun x hx => fermion_factor_as_boson_ratio hx,
-    finite_two_prime_fermion_euler_product, finite_two_prime_fermion_expansion⟩
-
 end noncomputable section

@@ -193,24 +193,6 @@ theorem zornDet_Eminus :
     zornDet Eminus = 0 := by
   simp [zornDet, Eminus, dot3]
 
-/--
-Consolidated split-octonion witness: square-zero paravector lanes coexist with
-an explicit nonzero associator.
--/
-theorem zorn_associator_split_octonion_synthesis :
-    (∀ u : Fin 3 → ℂ, U u * U u = 0) ∧
-    (∀ v : Fin 3 → ℂ, L v * L v = 0) ∧
-    associator (U e₁) (L e₁) (U e₂) = ⟨0, e₂, 0, 0⟩ ∧
-    associator (U e₁) (L e₁) (U e₂) ≠ 0 ∧
-    zornDet Eplus = 0 ∧
-    zornDet Eminus = 0 := by
-  exact ⟨U_sq,
-    L_sq,
-    associator_U₁_L₁_U₂,
-    associator_U₁_L₁_U₂_nonzero,
-    zornDet_Eplus,
-    zornDet_Eminus⟩
-
 end ZornAssociatorSplitOctonion
 
 end noncomputable section

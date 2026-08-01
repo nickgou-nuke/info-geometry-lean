@@ -58,8 +58,7 @@ theorem spinorialPairedEntropy_similarity_invariant
     (tr : Module.End R (ExteriorAlgebra R V) →ₗ[R] R)
     (h_cyclic : ∀ A B : Module.End R (ExteriorAlgebra R V), tr (A.comp B) = tr (B.comp A))
     (rho ell U U_inv : Module.End R (ExteriorAlgebra R V))
-    (h_left : U_inv.comp U = 1)
-    (h_right : U.comp U_inv = 1) :
+    (h_left : U_inv.comp U = 1) :
     spinorialPairedEntropy tr (U.comp (rho.comp U_inv)) (U.comp (ell.comp U_inv)) =
       spinorialPairedEntropy tr rho ell := by
   dsimp [spinorialPairedEntropy]
@@ -79,24 +78,5 @@ theorem spinorialPairedEntropy_similarity_invariant
     ext x
     rfl
   rw [h_id]
-
-/-- **Theorem**: Master Pre-Geometric Spinorial Information Geometry Interface Synthesis.
-    Unifies:
-    1. Pre-geometric spinorial algebraic carrier space S = ExteriorAlgebra R V.
-    2. Symmetric Quantum Fisher Information candidate form g_{ij}(ρ) = g_{ji}(ρ).
-    3. Spinorial paired entropy expression S(ρ, ℓ) = -Tr(ρ ℓ).
-    4. Similarity invariance S(U ρ U⁻¹, U ℓ U⁻¹) = S(ρ, ℓ) under two-sided invertibility and cyclic trace. -/
-theorem master_pregeometric_spinorial_information_geometry_synthesis
-    (tr : Module.End R (ExteriorAlgebra R V) →ₗ[R] R)
-    (h_cyclic : ∀ A B : Module.End R (ExteriorAlgebra R V), tr (A.comp B) = tr (B.comp A))
-    (rho ell L_i L_j U U_inv : Module.End R (ExteriorAlgebra R V))
-    (h_left : U_inv.comp U = 1)
-    (h_right : U.comp U_inv = 1) :
-    (spinorialQFICandidateForm tr rho L_i L_j = spinorialQFICandidateForm tr rho L_j L_i) ∧
-    (spinorialPairedEntropy tr (U.comp (rho.comp U_inv)) (U.comp (ell.comp U_inv)) =
-      spinorialPairedEntropy tr rho ell) := ⟨
-  spinorialQFICandidateForm_symmetric tr rho L_i L_j,
-  spinorialPairedEntropy_similarity_invariant tr h_cyclic rho ell U U_inv h_left h_right
-⟩
 
 end InfoGeometry.Canonical.PregeometricSpinorialInformationGeometryBridge

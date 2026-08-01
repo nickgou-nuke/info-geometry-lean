@@ -157,19 +157,6 @@ theorem SK_DLA_L4 :
     SKDLA_dim 4 = 126 := by
   norm_num [SKDLA_dim]
 
-def formalSummary : Prop :=
-  fourBodyCount 20 = 4845 ∧
-    sparseSYKExpectedTerms 9 20 = 180 ∧
-    skPoolSize 18 = 306 ∧
-    sykPoolSize 10 = 145 ∧
-    densityMatrixDimensionFromMajoranas 20 = 1024 ∧
-    denseSYKFidelity_N20 ≥ 993 / 1000
-
-theorem formalSummary_proved : formalSummary := by
-  exact ⟨dense_SYK_terms_N20, sparse_SYK_ks9_N20_terms,
-    sk_pool_size_L18, syk_pool_size_n10, Hilbert_dimension_N20,
-    dense_SYK_fidelity_above_993⟩
-
 end GuptaAdaptVQERandomHamiltonians
 
 end noncomputable section

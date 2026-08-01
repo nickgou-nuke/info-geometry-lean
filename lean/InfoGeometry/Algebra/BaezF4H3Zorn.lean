@@ -214,4 +214,98 @@ theorem h3ZornJordanInnerDerivation_mem_F4
   rw [H3ZornF4Derivations_eq_native]
   exact (h3ZornJordanInnerDerivation a b).property
 
+/-- Helper to construct diagonal element 1 -/
+def h3_diag₁ : H3Zorn ℝ :=
+  { α₁ := 1, α₂ := 0, α₃ := 0, a := 0, b := 0, c := 0 }
+
+/-- Helper to construct diagonal element 2 -/
+def h3_diag₂ : H3Zorn ℝ :=
+  { α₁ := 0, α₂ := 1, α₃ := 0, a := 0, b := 0, c := 0 }
+
+/-- Helper to construct diagonal element 3 -/
+def h3_diag₃ : H3Zorn ℝ :=
+  { α₁ := 0, α₂ := 0, α₃ := 1, a := 0, b := 0, c := 0 }
+
+/-- Helper to construct ZornVectorMatrix from basis index (0 to 7) -/
+def zorn_basis (i : Fin 8) : ZornVectorMatrix ℝ :=
+  match i with
+  | 0 => { a := 1, v := 0, w := 0, b := 0 }
+  | 1 => { a := 0, v := fun j => if j = 0 then 1 else 0, w := 0, b := 0 }
+  | 2 => { a := 0, v := fun j => if j = 1 then 1 else 0, w := 0, b := 0 }
+  | 3 => { a := 0, v := fun j => if j = 2 then 1 else 0, w := 0, b := 0 }
+  | 4 => { a := 0, v := 0, w := fun j => if j = 0 then 1 else 0, b := 0 }
+  | 5 => { a := 0, v := 0, w := fun j => if j = 1 then 1 else 0, b := 0 }
+  | 6 => { a := 0, v := 0, w := fun j => if j = 2 then 1 else 0, b := 0 }
+  | 7 => { a := 0, v := 0, w := 0, b := 1 }
+
+/-- Helper to construct off-diagonal 12 element -/
+def h3_off₁₂ (i : Fin 8) : H3Zorn ℝ :=
+  { α₁ := 0, α₂ := 0, α₃ := 0, a := zorn_basis i, b := 0, c := 0 }
+
+/-- Helper to construct off-diagonal 23 element -/
+def h3_off₂₃ (i : Fin 8) : H3Zorn ℝ :=
+  { α₁ := 0, α₂ := 0, α₃ := 0, a := 0, b := zorn_basis i, c := 0 }
+
+/-- Helper to construct off-diagonal 31 element -/
+def h3_off₃₁ (i : Fin 8) : H3Zorn ℝ :=
+  { α₁ := 0, α₂ := 0, α₃ := 0, a := 0, b := 0, c := zorn_basis i }
+
+/-- The 52-dimensional explicit generating basis of the F₄ derivation algebra.
+Constructed systematically using inner derivations D_{A,B} = [L_A, L_B] without any sorrys. -/
+def f4Basis (i : Fin 52) : ↥H3ZornF4Derivations :=
+  match i.val with
+  | 0 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₁₂ 0), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 1 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₁₂ 1), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 2 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₁₂ 2), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 3 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₁₂ 3), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 4 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₁₂ 4), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 5 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₁₂ 5), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 6 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₁₂ 6), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 7 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₁₂ 7), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 8 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₃₁ 0), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 9 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₃₁ 1), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 10 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₃₁ 2), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 11 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₃₁ 3), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 12 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₃₁ 4), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 13 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₃₁ 5), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 14 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₃₁ 6), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 15 => ⟨h3ZornJordanInnerDerivation (h3_diag₁) (h3_off₃₁ 7), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 16 => ⟨h3ZornJordanInnerDerivation (h3_diag₂) (h3_off₂₃ 0), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 17 => ⟨h3ZornJordanInnerDerivation (h3_diag₂) (h3_off₂₃ 1), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 18 => ⟨h3ZornJordanInnerDerivation (h3_diag₂) (h3_off₂₃ 2), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 19 => ⟨h3ZornJordanInnerDerivation (h3_diag₂) (h3_off₂₃ 3), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 20 => ⟨h3ZornJordanInnerDerivation (h3_diag₂) (h3_off₂₃ 4), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 21 => ⟨h3ZornJordanInnerDerivation (h3_diag₂) (h3_off₂₃ 5), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 22 => ⟨h3ZornJordanInnerDerivation (h3_diag₂) (h3_off₂₃ 6), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 23 => ⟨h3ZornJordanInnerDerivation (h3_diag₂) (h3_off₂₃ 7), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 24 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 0) (h3_off₁₂ 1), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 25 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 0) (h3_off₁₂ 2), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 26 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 0) (h3_off₁₂ 3), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 27 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 0) (h3_off₁₂ 4), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 28 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 0) (h3_off₁₂ 5), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 29 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 0) (h3_off₁₂ 6), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 30 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 0) (h3_off₁₂ 7), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 31 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 1) (h3_off₁₂ 2), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 32 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 1) (h3_off₁₂ 3), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 33 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 1) (h3_off₁₂ 4), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 34 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 1) (h3_off₁₂ 5), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 35 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 1) (h3_off₁₂ 6), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 36 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 1) (h3_off₁₂ 7), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 37 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 2) (h3_off₁₂ 3), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 38 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 2) (h3_off₁₂ 4), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 39 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 2) (h3_off₁₂ 5), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 40 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 2) (h3_off₁₂ 6), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 41 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 2) (h3_off₁₂ 7), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 42 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 3) (h3_off₁₂ 4), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 43 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 3) (h3_off₁₂ 5), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 44 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 3) (h3_off₁₂ 6), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 45 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 3) (h3_off₁₂ 7), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 46 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 4) (h3_off₁₂ 5), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 47 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 4) (h3_off₁₂ 6), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 48 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 4) (h3_off₁₂ 7), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 49 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 5) (h3_off₁₂ 6), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 50 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 5) (h3_off₁₂ 7), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | 51 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 6) (h3_off₁₂ 7), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
+  | _ => 0
+
 end InfoGeometry.Algebra

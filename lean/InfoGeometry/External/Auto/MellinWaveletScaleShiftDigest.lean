@@ -141,12 +141,6 @@ theorem riesz_mellin_even_odd_decomposition_from_additivity
   nth_rw 1 [← h_add]
   exact hLinear (evenPart f) (oddPart f) s
 
-/-- The complex numbers contain a nonzero element. -/
-theorem exists_nonzero_complex :
-    ∃ C : ℂ, C ≠ 0 := by
-  refine Exists.intro 1 ?_
-  exact one_ne_zero
-
 /-- A supplied left-inverse hypothesis gives reconstruction for the chosen
 operators. -/
 theorem wavelet_reconstruction_from_left_inverse
@@ -156,41 +150,6 @@ theorem wavelet_reconstruction_from_left_inverse
     ∀ f : ℝ → ℂ, Inv (W f) = f := by
   intro f
   exact hInv f
-
-/-- A constant operator family is invariant under the Blaschke Möbius formula. -/
-theorem constant_operator_family_invariant_under_blaschkeMobius :
-    ∃ U : ℂ → ((ℕ → ℂ) → (ℕ → ℂ)),
-      ∀ γ1 γ2 z : ℂ, U (blaschkeMobius γ1 γ2 z) = U z := by
-  refine Exists.intro (fun _ => id) ?_
-  intro γ1 γ2 z
-  rfl
-
-/-! ## Closed finite kernel -/
-
-/-- Closed finite kernel extracted from the Mellin/wavelet sources.
-
-This theorem proves only the algebraic/logarithmic identities present in this
-file, plus the explicitly conditional finite lemmas above. -/
-theorem mellin_wavelet_scale_shift_digest_finite_kernel :
-    (∀ (ψ : ℝ → ℂ) (a b t : ℝ) (_ : a ≠ 0),
-        waveletStdCore ψ a b t = waveletFreq ψ (1 / a) (b / a) t) ∧
-    (∀ (s : ℂ) (x : ℝ), mellinKernel s x = Complex.exp ((s - 1) * (Real.log x : ℂ))) ∧
-    (∀ (s : ℂ) (t : ℝ), logMellinKernel s (t + 0) = logMellinKernel s t) ∧
-    (∀ (f : ℝ → ℂ) (t : ℝ), evenPart f t + oddPart f t = f t) ∧
-    (∀ (γ1 γ2 z : ℂ), blaschkeMobius γ1 γ2 z =
-      (γ1 * z + γ2) / (starRingEnd ℂ γ2 * z + starRingEnd ℂ γ1)) := by
-  constructor
-  · exact waveletStdCore_as_freq
-  constructor
-  · intro s x
-    rfl
-  constructor
-  · intro s t
-    simp
-  constructor
-  · exact evenPart_add_oddPart
-  · intro γ1 γ2 z
-    rfl
 
 end MellinWaveletScaleShiftDigest
 

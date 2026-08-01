@@ -22,12 +22,6 @@ noncomputable def energyFromBregman
     (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) : Ω → ℝ :=
   fun ω => L.bregman (θ ω) θ0
 
-/-- Compatibility alias for Bregman-induced energy. -/
-@[deprecated energyFromBregman (since := "2026-02-18")]
-noncomputable def energyFromDivergence
-    (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) : Ω → ℝ :=
-  energyFromBregman (L := L) θ0 θ
-
 /-- Gibbs probability induced by Bregman energy. -/
 noncomputable def gibbsProbFromBregman
     (L : LegendrePotential) (θ0 : ℝ) (θ : Ω → ℝ) (ε : ℝ) :

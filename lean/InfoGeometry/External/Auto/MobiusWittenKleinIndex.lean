@@ -58,13 +58,4 @@ theorem surviving_fixed_line_mode_not_odd {k : ℕ} {c : ℂ}
   apply hnz
   exact pg_fixed_line_extinction hodd hrel
 
-/-- Consolidated finite Witten-index and glide-parity synthesis. -/
-theorem mobius_witten_klein_index_synthesis :
-    (∀ P : SUSYPair, pairContribution P = 0) ∧
-    (∀ {k : ℕ} {c : ℂ}, Odd k → c = pgPhase k * c → c = 0) ∧
-    (∀ {k : ℕ} {c : ℂ}, c = pgPhase k * c → c ≠ 0 → ¬ Odd k) := by
-  exact ⟨fun P => pairContribution_zero P,
-    fun hodd hrel => pg_fixed_line_extinction hodd hrel,
-    fun hrel hnz => surviving_fixed_line_mode_not_odd hrel hnz⟩
-
 end MobiusWittenKleinIndex

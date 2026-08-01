@@ -57,18 +57,4 @@ theorem Znil_square_zero : Znil * Znil = 0 := by
 theorem Znil_det_zero : Znil.det = 0 := by
   simp [Znil, Matrix.det_fin_two]
 
-/-- Main synthesis theorem for the Chapter 3 potential theory. -/
-theorem logdet_superkahler_barrier_synthesis :
-    (∀ x y : ℝ, (diagState x y).det = x * y) ∧
-    (∀ x : ℝ, x ≠ 0 → (scalarBarrierThirdAbs x)^2 = 4 * (scalarBarrierHessian x)^3) ∧
-    (∀ x : ℝ, 0 < x → 0 < scalarBarrierHessian x) ∧
-    Znil * Znil = 0 ∧ Znil.det = 0 := by
-  exact ⟨diagState_det, scalar_log_barrier_self_concordant_identity,
-    (fun x hx => scalarBarrierHessian_pos hx), Znil_square_zero, Znil_det_zero⟩
-
-#check diagState_det
-#check scalar_log_barrier_self_concordant_identity
-#check Znil_square_zero
-#check logdet_superkahler_barrier_synthesis
-
 end LogDetSuperKahlerBarrier

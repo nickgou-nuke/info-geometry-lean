@@ -23,19 +23,9 @@ variable {Ω : Type _} [Fintype Ω] [Nonempty Ω]
 noncomputable def weight (E : Ω → ℝ) (ε : ℝ) (ω : Ω) : ℝ :=
   Real.exp (-(E ω) / ε)
 
-/-- Compatibility alias for Gibbs weight `exp(-E/ε)`. -/
-@[deprecated weight (since := "2026-02-18")]
-noncomputable abbrev gibbsWeight (E : Ω → ℝ) (ε : ℝ) (ω : Ω) : ℝ :=
-  weight E ε ω
-
 /-- Partition function `Z(ε)`. -/
 noncomputable def Z (E : Ω → ℝ) (ε : ℝ) : ℝ :=
   ∑ ω, weight E ε ω
-
-/-- Compatibility alias for partition function `Z(ε)`. -/
-@[deprecated Z (since := "2026-02-18")]
-noncomputable abbrev partition (E : Ω → ℝ) (ε : ℝ) : ℝ :=
-  Z E ε
 
 /-- Log-partition function `log Z(ε)`. -/
 noncomputable def logZ (E : Ω → ℝ) (ε : ℝ) : ℝ :=

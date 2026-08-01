@@ -86,33 +86,6 @@ theorem transverse_flow_entropy_nonneg {State : Type*} {L : CasimirLeaf State}
     (F : TransverseDilationFlow State L) (q : State) :
     0 ≤ L.entropy (F.flow q) - L.entropy q := F.entropy_production q
 
-inductive CasimirSpringConcept where
-  | Poincare_Casimir_On_Shell
-  | Mass_Shell_Coadjoint_Orbit
-  | Souriau_Entropic_Leaf
-  | Conformal_Dilation_Spring
-  | Dilaton_Transverse_Flow
-  | Compton_Equilibrium_Scale
-  deriving DecidableEq, Repr
-
-inductive CasimirSpringEdge where
-  | labels
-  | identical_to
-  | gives_stiffness
-  | resists
-  | crosses
-  | restores_to
-  deriving DecidableEq, Repr
-
-def edgeHolds : CasimirSpringConcept → CasimirSpringEdge → CasimirSpringConcept → Bool
-  | CasimirSpringConcept.Poincare_Casimir_On_Shell, CasimirSpringEdge.labels, CasimirSpringConcept.Mass_Shell_Coadjoint_Orbit => true
-  | CasimirSpringConcept.Mass_Shell_Coadjoint_Orbit, CasimirSpringEdge.identical_to, CasimirSpringConcept.Souriau_Entropic_Leaf => true
-  | CasimirSpringConcept.Poincare_Casimir_On_Shell, CasimirSpringEdge.gives_stiffness, CasimirSpringConcept.Conformal_Dilation_Spring => true
-  | CasimirSpringConcept.Conformal_Dilation_Spring, CasimirSpringEdge.resists, CasimirSpringConcept.Dilaton_Transverse_Flow => true
-  | CasimirSpringConcept.Dilaton_Transverse_Flow, CasimirSpringEdge.crosses, CasimirSpringConcept.Souriau_Entropic_Leaf => true
-  | CasimirSpringConcept.Conformal_Dilation_Spring, CasimirSpringEdge.restores_to, CasimirSpringConcept.Compton_Equilibrium_Scale => true
-  | _, _, _ => false
-
 end SarsCasimirSpring
 
 end noncomputable section

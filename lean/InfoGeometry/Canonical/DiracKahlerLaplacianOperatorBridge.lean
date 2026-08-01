@@ -34,16 +34,4 @@ theorem dirac_kahler_sq_eq_laplacian
   rw [LinearMap.map_add, LinearMap.map_add, hd_sq omega, hdstar_sq omega]
   abel
 
-/-- **Theorem**: Master Dirac-Kähler & Hodge-de Rham Laplacian Operator Synthesis.
-    Unifies:
-    1. Dirac-Kähler differential operator D = d + d*.
-    2. Hodge-de Rham Laplacian Δ = d ∘ d* + d* ∘ d.
-    3. Fundamental Dirac-Kähler square identity D² = Δ under d² = 0 and (d*)² = 0.
-    4. Exact algebraic bridge connecting de Rham topology to Clifford-Dirac operators. -/
-theorem master_dirac_kahler_laplacian_synthesis
-    (d dstar : Module.End R (ExteriorAlgebra R V))
-    (hd2 : d.comp d = 0) (hdstar2 : dstar.comp dstar = 0) :
-    (diracKahlerOp d dstar).comp (diracKahlerOp d dstar) = hodgeDeRhamLaplacian d dstar :=
-  dirac_kahler_sq_eq_laplacian d dstar hd2 hdstar2
-
 end InfoGeometry.Canonical.DiracKahlerLaplacianOperatorBridge

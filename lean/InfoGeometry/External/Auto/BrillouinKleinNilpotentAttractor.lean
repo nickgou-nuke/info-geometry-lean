@@ -130,39 +130,4 @@ theorem nilItakuraSaito_zero (K : M2C) : nilItakuraSaito K = 0 := by
   ext i j
   simp [nilItakuraSaito, nilExp, Matrix.sub_apply]
 
-/-! ## Synthesis -/
-
-/-- Main synthesis theorem. -/
-theorem brillouin_klein_nilpotent_attractor_synthesis :
-    (∀ {k : ℕ} {c : ℂ}, Odd k → c = pgPhase k * c → c = 0) ∧
-    (∀ {k : ℕ} {c : ℂ}, c = pgPhase k * c → c ≠ 0 → ¬ Odd k) ∧
-    (∀ E px : ℂ, zornNorm (fixedParavector E px) = E^2 - px^2) ∧
-    (∀ px : ℂ, zornNorm (collapsedFixedLower px) = 0) ∧
-    (∀ px : ℂ, zornMul (collapsedFixedLower px) (collapsedFixedLower px) = zero) ∧
-    (∀ K : M2C, nilItakuraSaito K = 0) := by
-  constructor
-  · intro k c hodd hrel
-    exact pg_fixed_line_extinction hodd hrel
-  constructor
-  · intro k c hrel hnz
-    exact nonzero_fixed_line_mode_not_odd hrel hnz
-  constructor
-  · intro E px
-    exact fixed_paravector_mass_shell E px
-  constructor
-  · intro px
-    exact collapsed_fixed_norm_zero px
-  constructor
-  · intro px
-    exact collapsed_fixed_nilpotent px
-  · intro K
-    exact nilItakuraSaito_zero K
-
-#check pg_fixed_line_extinction
-#check fixed_paravector_mass_shell
-#check collapsed_fixed_norm_zero
-#check collapsed_fixed_nilpotent
-#check nilItakuraSaito_zero
-#check brillouin_klein_nilpotent_attractor_synthesis
-
 end BrillouinKleinNilpotentAttractor

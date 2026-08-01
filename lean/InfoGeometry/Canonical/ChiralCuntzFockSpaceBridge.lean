@@ -192,32 +192,4 @@ theorem grading_anticommutes_Q_plus :
           simp
     _ = 0 := by noncomm_ring
 
-/-- **Theorem**: Master Cuntz-SUSY Lightcone Dynamics, Grading & CAR1 Synthesis.
-    Unifies:
-    1. Q- = Q+*.
-    2. Self-adjoint projection laws IsSelfAdjoint P+ and IsSelfAdjoint P-.
-    3. Source and range projections: Q+* Q+ = P- and Q+ Q+* = P+.
-    4. Two-sided orthogonality: P+ P- = 0 and P- P+ = 0.
-    5. Total lightcone Hamiltonian H = P+ + P- = 1.
-    6. Grading operator involution Γ² = 1.
-    7. Grading operator anti-commutation with Q+ ({Γ, Q+} = 0). -/
-theorem master_cuntz_susy_fock_space_synthesis :
-    (Q_minus sys = star (Q_plus sys)) ∧
-    (IsSelfAdjoint (P_plus sys) ∧ P_plus sys * P_plus sys = P_plus sys) ∧
-    (IsSelfAdjoint (P_minus sys) ∧ P_minus sys * P_minus sys = P_minus sys) ∧
-    (star (Q_plus sys) * Q_plus sys = P_minus sys ∧ Q_plus sys * star (Q_plus sys) = P_plus sys) ∧
-    (P_plus sys * P_minus sys = 0 ∧ P_minus sys * P_plus sys = 0) ∧
-    (P_plus sys + P_minus sys = 1) ∧
-    (grading sys * grading sys = 1) ∧
-    (grading sys * Q_plus sys + Q_plus sys * grading sys = 0) := ⟨
-  Q_minus_eq_star_Q_plus sys,
-  P_plus_isProjection sys,
-  P_minus_isProjection sys,
-  Q_plus_source_range sys,
-  ⟨P_plus_P_minus_ortho sys, P_minus_P_plus_ortho sys⟩,
-  total_lightcone_hamiltonian_eq_one sys,
-  grading_sq_eq_one sys,
-  grading_anticommutes_Q_plus sys
-⟩
-
 end InfoGeometry.Canonical.ChiralCuntzFockSpaceBridge

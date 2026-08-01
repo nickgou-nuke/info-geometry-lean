@@ -73,62 +73,6 @@ theorem localEntropyQuadratic_nonneg (x : ℝ) : 0 ≤ localEntropyQuadratic x :
 theorem localEntropyQuadratic_zero : localEntropyQuadratic 0 = 0 := by
   norm_num [localEntropyQuadratic]
 
-inductive ChiralMassConcept where
-  | Left_Weyl_Sheet
-  | Right_Weyl_Sheet
-  | Tomita_Modular_Swap
-  | Dirac_Mass_Coupling
-  | Zitterbewegung
-  | Dilaton_Weyl_Scale
-  | Conformal_Spring
-  | Orthogonal_Entropy_Transport
-  deriving DecidableEq, Repr
-
-inductive ChiralMassEdge where
-  | swapped_by
-  | couples_to
-  | generates
-  | breaks_weyl_scale_by
-  | realizes_as
-  | drives_orthogonal_transport
-  deriving DecidableEq, Repr
-
-def edgeHolds : ChiralMassConcept → ChiralMassEdge → ChiralMassConcept → Bool
-  | ChiralMassConcept.Left_Weyl_Sheet, ChiralMassEdge.swapped_by, ChiralMassConcept.Tomita_Modular_Swap => true
-  | ChiralMassConcept.Right_Weyl_Sheet, ChiralMassEdge.swapped_by, ChiralMassConcept.Tomita_Modular_Swap => true
-  | ChiralMassConcept.Left_Weyl_Sheet, ChiralMassEdge.couples_to, ChiralMassConcept.Right_Weyl_Sheet => true
-  | ChiralMassConcept.Dirac_Mass_Coupling, ChiralMassEdge.generates, ChiralMassConcept.Zitterbewegung => true
-  | ChiralMassConcept.Dirac_Mass_Coupling, ChiralMassEdge.breaks_weyl_scale_by, ChiralMassConcept.Dilaton_Weyl_Scale => true
-  | ChiralMassConcept.Dilaton_Weyl_Scale, ChiralMassEdge.realizes_as, ChiralMassConcept.Conformal_Spring => true
-  | ChiralMassConcept.Conformal_Spring, ChiralMassEdge.drives_orthogonal_transport, ChiralMassConcept.Orthogonal_Entropy_Transport => true
-  | _, _, _ => false
-
-theorem chiral_mass_graph_kernel :
-    edgeHolds ChiralMassConcept.Left_Weyl_Sheet ChiralMassEdge.swapped_by ChiralMassConcept.Tomita_Modular_Swap = true ∧
-    edgeHolds ChiralMassConcept.Left_Weyl_Sheet ChiralMassEdge.couples_to ChiralMassConcept.Right_Weyl_Sheet = true ∧
-    edgeHolds ChiralMassConcept.Dirac_Mass_Coupling ChiralMassEdge.generates ChiralMassConcept.Zitterbewegung = true ∧
-    edgeHolds ChiralMassConcept.Dirac_Mass_Coupling ChiralMassEdge.breaks_weyl_scale_by ChiralMassConcept.Dilaton_Weyl_Scale = true ∧
-    edgeHolds ChiralMassConcept.Dilaton_Weyl_Scale ChiralMassEdge.realizes_as ChiralMassConcept.Conformal_Spring = true ∧
-    edgeHolds ChiralMassConcept.Conformal_Spring ChiralMassEdge.drives_orthogonal_transport ChiralMassConcept.Orthogonal_Entropy_Transport = true := by
-  decide
-
-theorem chiral_mass_dilaton_kernel :
-    PR * PL = 0 ∧
-    PR + PL = I2 ∧
-    Jmod * PL * Jmod = PR ∧
-    (∀ m : ℝ, diracMassCoupling m = !![0, m; m, 0]) ∧
-    (∀ m : ℝ, diagBlock (diracMassCoupling m) = 0) ∧
-    (∀ m : ℝ, offBlock (diracMassCoupling m) = diracMassCoupling m) ∧
-    (∀ lam : ℝ, localMass 0 lam = 0) ∧
-    (∀ m lam : ℝ, 0 ≤ springPotential m lam) ∧
-    (∀ m : ℝ, springPotential m 0 = 0) ∧
-    (∀ x : ℝ, 0 ≤ localEntropyQuadratic x) ∧
-    localEntropyQuadratic 0 = 0 := by
-  exact ⟨projectors_orthogonal, projectors_sum_identity, tomita_swaps_left_right,
-    diracMassCoupling_matrix, diracMassCoupling_diag_zero, diracMassCoupling_offblock_self,
-    localMass_zero_base, springPotential_nonneg, springPotential_zero_at_vacuum,
-    localEntropyQuadratic_nonneg, localEntropyQuadratic_zero⟩
-
 end SarsChiralMassDilaton
 
 end noncomputable section

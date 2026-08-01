@@ -59,20 +59,4 @@ theorem quantumHallConductance_add (c0 : ℝ) (p1 p2 : FredholmIndexPacket) :
   push_cast
   ring
 
-/-- **Theorem**: Master Connes Non-Commutative Torus & Quantum Hall Index Synthesis.
-    Unifies:
-    1. Non-commutative torus generator relation U V - q V U = 0.
-    2. Fredholm index additivity under direct sum.
-    3. Quantized Hall conductance additivity. -/
-theorem master_connes_quantum_hall_index_synthesis
-    {R : Type*} [Ring R] (g : NCTorusGenerators R) (c0 : ℝ) (p1 p2 : FredholmIndexPacket) :
-    (g.U * g.V - g.q * (g.V * g.U) = 0) ∧
-    ((FredholmIndexPacket.mk (p1.dimKer + p2.dimKer) (p1.dimCoker + p2.dimCoker)).index = p1.index + p2.index) ∧
-    (quantumHallConductance c0 (FredholmIndexPacket.mk (p1.dimKer + p2.dimKer) (p1.dimCoker + p2.dimCoker)) =
-      quantumHallConductance c0 p1 + quantumHallConductance c0 p2) := ⟨
-  g.nc_commutator_zero,
-  FredholmIndexPacket.direct_sum_index_add p1 p2,
-  quantumHallConductance_add c0 p1 p2
-⟩
-
 end InfoGeometry.Canonical.ConnesQuantumHallIndexBridge

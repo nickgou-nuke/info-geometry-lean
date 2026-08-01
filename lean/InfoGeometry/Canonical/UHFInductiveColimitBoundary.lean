@@ -158,31 +158,6 @@ theorem constant_cylinder_compatible (n : ℕ) (z : ℂ) :
       cylinder n (constantStageObservable n z) := by
   exact cylinder_compatible_succ n (constantStageObservable n z)
 
-/--
-Consolidated diagonal UHF/MASA colimit package: successor embeddings preserve
-algebra operations, are injective, and finite constants define compatible
-cylinder observables in the algebraic colimit carrier.
--/
-theorem diagonal_uhf_colimit_synthesis :
-    (∀ n : ℕ, Function.Injective (diagEmbedSucc n)) ∧
-    (∀ n : ℕ, ∀ f g : DiagAlg n,
-      diagEmbedSucc n (f + g) = diagEmbedSucc n f + diagEmbedSucc n g) ∧
-    (∀ n : ℕ, ∀ f g : DiagAlg n,
-      diagEmbedSucc n (f * g) = diagEmbedSucc n f * diagEmbedSucc n g) ∧
-    (∀ n : ℕ, diagEmbedSucc n 1 = (1 : DiagAlg (n + 1))) ∧
-    (∀ n : ℕ, ∀ f : DiagAlg n,
-      cylinder (n + 1) (diagEmbedSucc n f) = cylinder n f) ∧
-    (∀ n : ℕ, ∀ z : ℂ,
-      diagEmbedSucc n (constantStageObservable n z) =
-        constantStageObservable (n + 1) z) ∧
-    (∀ n : ℕ, ∀ f : DiagAlg n, cylinder n f ∈ CylinderColimit) := by
-  exact ⟨diagEmbedSucc_injective,
-    diagEmbedSucc_add,
-    diagEmbedSucc_mul,
-    diagEmbedSucc_one,
-    cylinder_compatible_succ,
-    constantStageObservable_embed,
-    cylinder_mem_colimit⟩
 
 end InfoGeometry.Canonical.UHFInductiveColimitBoundary
 

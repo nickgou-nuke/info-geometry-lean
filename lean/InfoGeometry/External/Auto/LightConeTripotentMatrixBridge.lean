@@ -81,18 +81,6 @@ theorem pauli_nonisotropic_iff_minkowski_nonzero (P : FourMomentum) :
   unfold MatrixNonIsotropic detQuadric
   rw [det_pauliMomentum]
 
-/-- Synthesis of the determinant light cone with the tripotent
-normalization/decomposition reading. -/
-theorem lightCone_tripotent_matrix_synthesis :
-    detQuadric E00 = 0 ∧
-    IsAssociativeTripotent E00 ∧
-    (∀ u v : Fin 2 → ℂ, MatrixLightCone (rankOneMatrix u v)) ∧
-    (∀ P : FourMomentum, MatrixLightCone (pauliMomentum P) ↔ minkowskiSq P = 0) := by
-  exact ⟨E00_det,
-    E00_tripotent,
-    rankOneMatrix_lightCone,
-    pauli_lightCone_iff_minkowski_null⟩
-
 end LightConeTripotentMatrixBridge
 
 end noncomputable section

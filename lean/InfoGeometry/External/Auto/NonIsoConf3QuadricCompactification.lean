@@ -39,11 +39,6 @@ def notDirectDupontReady (singular : CompactDivisor → Prop) : Prop :=
   singular quadricB ∨
   singular quadricDifference
 
-theorem compactification_obstruction_synthesis
-    (singular : CompactDivisor → Prop)
-    (hA : singular quadricA) :
-    notDirectDupontReady singular := by
-  exact Or.inl hA
 end NonIsoConf3QuadricCompactification
 
 end noncomputable section

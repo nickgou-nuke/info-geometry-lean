@@ -31,20 +31,4 @@ theorem dirac_kahler_zero_mode
     d omega + dstar omega = 0 := by
   exact hdirac
 
-/-- **Theorem**: Master Hodge Harmonic Forms & Kernel Equivalence Synthesis.
-    Unifies:
-    1. Harmonic form condition Δ ω = 0 for Hodge-de Rham Laplacian.
-    2. Closed and coclosed condition (d ω = 0 ∧ d* ω = 0) implies harmonic condition Δ ω = 0.
-    3. Dirac-Kähler zero mode equivalence D ω = 0 ↔ d ω + d* ω = 0.
-    4. Exact algebraic foundation for Atiyah-Singer index theorem and Hodge decomposition. -/
-theorem master_hodge_harmonic_forms_kernel_synthesis
-    (d dstar : Module.End R (ExteriorAlgebra R V))
-    (omega : ExteriorAlgebra R V)
-    (hclosed : d omega = 0) (hcoclosed : dstar omega = 0) :
-    (hodgeDeRhamLaplacian d dstar omega = 0) ∧
-    (diracKahlerOp d dstar omega = d omega + dstar omega) := ⟨
-  coclosed_and_closed_implies_harmonic d dstar omega hclosed hcoclosed,
-  rfl
-⟩
-
 end InfoGeometry.Canonical.HodgeHarmonicFormsKernelBridge

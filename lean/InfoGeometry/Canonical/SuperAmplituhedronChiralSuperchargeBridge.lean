@@ -35,19 +35,4 @@ theorem boundary_projector_invariance :
 
 end SuperAmplituhedronState
 
-/-- **Theorem**: Master Super-Amplituhedron & Chiral Supercharge Synthesis.
-    Unifies:
-    1. Chiral supercharge invariance of Super-Amplituhedron form Ω (Q Ω = 0).
-    2. Nilpotent chiral supercharge action Q(Q Ω) = 0.
-    3. Boundary chiral Cuntz projector invariance Q(e+ Ω) = 0. -/
-theorem master_super_amplituhedron_chiral_supercharge_synthesis
-    {V : Type*} [AddCommGroup V] (s : SuperAmplituhedronState V) :
-    (s.Q s.Omega = 0) ∧
-    (s.Q (s.Q s.Omega) = 0) ∧
-    (s.Q (s.ePlus s.Omega) = 0) := ⟨
-  s.form_invariance,
-  s.form_nilpotent,
-  s.boundary_projector_invariance
-⟩
-
 end InfoGeometry.Canonical.SuperAmplituhedronChiralSuperchargeBridge

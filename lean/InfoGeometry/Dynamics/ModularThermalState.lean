@@ -262,30 +262,12 @@ noncomputable def unruhModularFlow :
     simp [mul_assoc]
 
 /--
-Compatibility alias for older downstream names.
-
-Despite the legacy name, this is the nontrivial Unruh conjugation flow
-`A ↦ U_t A U_{-t}`, not the identity flow.
--/
-@[deprecated unruhModularFlow (since := "2026-05-02")]
-noncomputable abbrev unruhTrivialModularFlow :
-    InfoGeometry.OperatorAlgebra.OperatorThermodynamics.OperatorFlow Obs :=
-  unruhModularFlow (E := E)
-
-/--
 Complex-time continuation candidate tied to the Unruh modular Hamiltonian lane.
 We keep the same socket surface and model the strip top by real-shift transport.
 -/
 noncomputable def unruhSigmaC : ℂ → Obs → Obs :=
   fun z a =>
     ModularAutomorphismFamily.sigma (unruhModularFlow (E := E)) (z.re + z.im) a
-
-/--
-Compatibility alias for older downstream names.
--/
-@[deprecated unruhSigmaC (since := "2026-05-02")]
-noncomputable abbrev unruhTrivialSigmaC : ℂ → Obs → Obs :=
-  unruhSigmaC (E := E)
 
 /--
 Hestenes-Krein analytic continuation packet on the doubled carrier.

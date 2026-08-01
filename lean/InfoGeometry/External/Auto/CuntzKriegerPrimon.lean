@@ -85,19 +85,3 @@ theorem wordCount_recurrence (n : ℕ) :
 theorem finitePrimonPartition_zero (β : ℝ) :
     finitePrimonPartition β 0 = 1 := by
   simp [finitePrimonPartition, wordCount]
-
-/-- Finite Cuntz-Krieger/Primon package: Fibonacci adjacency, forbidden
-    transition, Perron polynomial, and finite partition recurrence. -/
-theorem cuntz_krieger_primon_synthesis :
-    fibonacciAdj * fibonacciAdj = fibonacciAdj + 1 ∧
-    fibonacciAdjInt.det = -1 ∧
-    allowedTransition 0 0 ∧
-    allowedTransition 0 1 ∧
-    allowedTransition 1 0 ∧
-    ¬ allowedTransition 1 1 ∧
-    goldenRatio ^ 2 - goldenRatio - 1 = 0 ∧
-    (∀ n, wordCount (n + 2) = wordCount (n + 1) + wordCount n) ∧
-    (∀ β, finitePrimonPartition β 0 = 1) := by
-  exact ⟨fibonacciAdj_sq, fibonacciAdjInt_det, allowed_00, allowed_01,
-    allowed_10, forbidden_11, goldenRatio_perron_polynomial,
-    wordCount_recurrence, finitePrimonPartition_zero⟩

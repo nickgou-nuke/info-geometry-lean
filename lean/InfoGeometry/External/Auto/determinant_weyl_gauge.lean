@@ -326,29 +326,3 @@ theorem boltzmannDegeneracy_weylFlow_vacuum (t : ℝ) :
     boltzmannDegeneracy (weylLieFlow t (1 : Matrix (Fin 2) (Fin 2) ℝ))
       = Real.exp ((Real.exp t) ^ 2) := by
   simp [boltzmannDegeneracy, fvolume_weylLieFlow_vacuum]
-
-/-- The determinant Weyl gauge theorem: causal grading, exponential charts,
-    conformal boundary, twistor incidence, and CPT determinant invariance. -/
-theorem determinant_weyl_gauge_synthesis :
-    e1 * e1 = 1 ∧
-    e2 * e2 = -1 ∧
-    e1 * e2 = -(e2 * e1) ∧
-    (∀ a b c : ℝ,
-      let X := tracelessPauli a b c
-      X * X = (-(X.det)) • (1 : Matrix (Fin 2) (Fin 2) ℝ)) ∧
-    (∀ t, (hyperbolicChart t).det = 1) ∧
-    (∀ t, (ellipticChart t).det = 1) ∧
-    (∀ t, (parabolicChart t).det = 1) ∧
-    nullProjector.det = 0 ∧
-    nilpotentN.det = 0 ∧
-    (∀ u, (boundaryPoint u).det = 0) ∧
-    (∀ t u, ((parabolicChart t) * boundaryPoint u).det = 0) ∧
-    (∀ s X Z,
-      twistorIncidence X (scaleTwistor s Z) = fun i => s * twistorIncidence X Z i) ∧
-    (∀ x, (P x).det = x.det ∧ (T_op x).det = x.det ∧ (PT x).det = x.det) := by
-  exact ⟨e1_sq, e2_sq_neg, e1_anticomm_e2, tracelessPauli_sq_eq_neg_det,
-    det_hyperbolicChart, det_ellipticChart, det_parabolicChart, det_nullProjector,
-    det_nilpotentN, det_boundaryPoint, parabolic_preserves_boundary_null,
-    twistor_incidence_homogeneous, by
-      intro x
-      exact ⟨det_P x, det_T x, det_PT x⟩⟩

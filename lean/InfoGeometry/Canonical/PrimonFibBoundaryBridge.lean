@@ -86,33 +86,4 @@ theorem graded_statistics_finite_owner
             -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) := by
   exact InfoGeometry.Arithmetic.PrimonSupergradedGasAlgebra.primonSupergradedFockSpine
 
-@[deprecated graded_statistics_finite_owner (since := "2026-07-29")]
-theorem graded_statistics_closure_debt
-    {E : Type 0} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] :
-    InfoGeometry.Canonical.BogoliubovFockSuper.IsCARPair (E := E)
-        (InfoGeometry.Canonical.SuperchargeCARCCRBridge.concreteCARAnnihilation
-          (E := E))
-        (InfoGeometry.Canonical.SuperchargeCARCCRBridge.concreteCARCreation
-          (E := E)) ∧
-      InfoGeometry.Canonical.SuperchargeCARCCRBridge.CARBracket (E := E)
-          (InfoGeometry.Canonical.SuperchargeCARCCRBridge.paritySuperchargeOp
-            (E := E))
-          (InfoGeometry.Canonical.SuperchargeCARCCRBridge.modularSuperchargeOp
-            (E := E)) = 0 ∧
-        InfoGeometry.Canonical.SuperchargeCARCCRBridge.CCRBracket (E := E)
-            (InfoGeometry.Canonical.SuperchargeCARCCRBridge.paritySuperchargeOp
-              (E := E))
-            (InfoGeometry.Canonical.SuperchargeCARCCRBridge.modularSuperchargeOp
-              (E := E)) =
-          (2 : ℝ) •
-            InfoGeometry.Canonical.SuperchargeCARCCRBridge.cptSuperchargeOp
-              (E := E) ∧
-          (InfoGeometry.Canonical.SuperchargeCARCCRBridge.cptSuperchargeOp
-            (E := E)).comp
-              (InfoGeometry.Canonical.SuperchargeCARCCRBridge.cptSuperchargeOp
-                (E := E)) =
-            -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) := by
-  exact graded_statistics_finite_owner
-
 end InfoGeometry.Canonical.PrimonFibBoundaryBridge

@@ -24,12 +24,6 @@ abbrev OperatorStateSurprisal
     (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] :=
   InfoGeometry.Canonical.ModularSurprisalThermoPacket.ModularHamiltonianSurprisalContext Op
 
-/-! Historical type name retained as a deprecated compatibility alias. -/
-@[deprecated OperatorStateSurprisal (since := "2026-07-27")]
-abbrev OperatorBoltzmannEntropy
-    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] :=
-  OperatorStateSurprisal Op
-
 namespace OperatorStateSurprisal
 
 variable {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
@@ -50,33 +44,12 @@ def logDensityOperator (B : OperatorStateSurprisal Op) : Op →L[ℝ] Op :=
 def stateSurprisalOperator (B : OperatorStateSurprisal Op) : Op →L[ℝ] Op :=
   B.negativeLogModularOperator
 
-@[deprecated stateSurprisalOperator (since := "2026-07-27")]
-abbrev operatorBoltzmannEntropy
-    (B : OperatorStateSurprisal Op) : Op →L[ℝ] Op :=
-  B.stateSurprisalOperator
-
-/-! The former record field is retained as a theorem projection.  It is an
-operator identity, not an additional scalar or diagonal construction. -/
-@[deprecated stateSurprisalOperator
-    (since := "2026-07-27")]
-theorem entropy_eq_neg_log
-    (B : OperatorStateSurprisal Op) :
-    B.operatorBoltzmannEntropy = -B.logDensityOperator := by
-  simp [operatorBoltzmannEntropy, stateSurprisalOperator, logDensityOperator]
-
 def modularHamiltonian (B : OperatorStateSurprisal Op) : Op →L[ℝ] Op :=
   B.negativeLogModularOperator
 
 @[simp] theorem modularHamiltonian_eq_stateSurprisalOperator
     (B : OperatorStateSurprisal Op) :
     B.modularHamiltonian = B.stateSurprisalOperator := rfl
-
-@[deprecated modularHamiltonian_eq_stateSurprisalOperator
-    (since := "2026-07-27")]
-theorem modularHamiltonian_eq_operatorBoltzmannEntropy
-    (B : OperatorStateSurprisal Op) :
-    B.modularHamiltonian = B.operatorBoltzmannEntropy :=
-  B.modularHamiltonian_eq_stateSurprisalOperator
 
 @[simp] theorem stateSurprisalOperator_eq_neg_logDensityOperator
     (B : OperatorStateSurprisal Op) :

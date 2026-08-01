@@ -35,16 +35,5 @@ theorem splitQuadraticForm_apply_mul (u : U) (alpha : U →ₗ[R] R) (r : R) :
     alpha u * r = (splitQuadraticForm (u, alpha)) * r :=
   rfl
 
-/-- **Master Synthesis**: Canonical Split Quadratic Evaluation Pairing.
-    Certifies:
-    1. Pointwise split pairing evaluation Q(u, α) = α(u).
-    2. Scalar-multiplication congruence. -/
-theorem master_split_quadratic_pairing_synthesis
-    (u : U) (alpha : U →ₗ[R] R) (r : R) :
-    (splitQuadraticForm (u, alpha) = alpha u) ∧
-    (alpha u * r = (splitQuadraticForm (u, alpha)) * r) := ⟨
-  splitQuadraticForm_apply u alpha,
-  splitQuadraticForm_apply_mul u alpha r
-⟩
 
 end InfoGeometry.Canonical.SplitSpinorCliffordRepresentationBridge

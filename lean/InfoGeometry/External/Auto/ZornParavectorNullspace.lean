@@ -96,23 +96,4 @@ theorem collapsed_state_nilpotent (p : Vec3) :
   · funext i
     fin_cases i <;> simp [zornMul, collapsedLower, zero, cross3]
 
-/-- Combined coordinate identities. -/
-theorem zorn_paravector_nullspace_synthesis :
-    (∀ E : ℂ, ∀ p : Vec3, zornNorm (paravector E p) = E^2 - dot3 p p) ∧
-    (∀ p : Vec3, zornNorm (collapsedLower p) = 0) ∧
-    (∀ p : Vec3, zornMul (collapsedLower p) (collapsedLower p) = zero) := by
-  constructor
-  · intro E p
-    exact paravector_norm_mass_shell E p
-  · constructor
-    · intro p
-      exact collapsed_state_norm_zero p
-    · intro p
-      exact collapsed_state_nilpotent p
-
-#check paravector_norm_mass_shell
-#check collapsed_state_norm_zero
-#check collapsed_state_nilpotent
-#check zorn_paravector_nullspace_synthesis
-
 end ZornParavectorNullspace

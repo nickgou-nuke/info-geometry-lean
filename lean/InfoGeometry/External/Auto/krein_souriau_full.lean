@@ -76,8 +76,9 @@ def commutant (A : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
 noncomputable def modularFlow (K t : ℝ) (A : ℂ) : ℂ :=
   Complex.exp (-Complex.I * (K : ℂ) * (t : ℂ)) * A * Complex.exp (Complex.I * (K : ℂ) * (t : ℂ))
 
-/-- The fundamental symmetry J_fund = P₊ - P₋ = Jm (from T27) -/
-theorem fundamental_symmetry : Jm = Jm := rfl
+/-- The fundamental symmetry J_fund = P₊ - P₋ = Jm (from T27). -/
+theorem fundamental_symmetry_sq_I : Jm * Jm = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
+  exact Jm_sq_I
 
 /-══════════════════════════════════════════════════════════════════════
    BLOCK 2: SOURIAU LIE GROUP THERMODYNAMICS

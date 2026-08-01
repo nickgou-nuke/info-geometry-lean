@@ -72,20 +72,4 @@ theorem z2Invariant_periodic (n : ℤ) : z2Invariant (n + 2) = z2Invariant n := 
   unfold z2Invariant
   omega
 
-/-- Main synthesis theorem for the arXiv kappa mechanism. -/
-theorem projective_crystal_kappa_synthesis :
-    Mx * Ly = - (Ly * Mx) ∧
-    Mx * Ly * Mx = -Ly ∧
-    (∀ k : KPoint, kMirrorGlide (kMirrorGlide k) = fullYTranslate k) ∧
-    (∀ z : ℂ, halfShiftPhase (halfShiftPhase z) = z) ∧
-    (∀ n : ℤ, z2Invariant (n + 2) = z2Invariant n) := by
-  exact ⟨Mx_Ly_anticomm, Mx_conj_Ly, kMirrorGlide_sq, halfShiftPhase_sq,
-    z2Invariant_periodic⟩
-
-#check Mx_Ly_anticomm
-#check Mx_conj_Ly
-#check kMirrorGlide_sq
-#check z2Invariant_periodic
-#check projective_crystal_kappa_synthesis
-
 end ProjectiveCrystalKappa

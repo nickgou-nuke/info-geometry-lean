@@ -33,18 +33,4 @@ theorem mixed_car_cross_scalar_identity
     (evaluationLinear u alpha) • omega = alpha u • omega :=
   rfl
 
-/-- **Theorem**: Master Mixed CAR Cross Algebra & Clifford Super-Selection Synthesis.
-    Unifies:
-    1. Mixed CAR cross anticommutator sum definition {a_u, ε_α} ω = a_u(ε_α ω) + ε_α(a_u ω).
-    2. Canonical double-dual evaluation functional ev_u(α) = α(u).
-    3. Mixed CAR scalar right-hand side action (ev_u α) • ω = α(u) • ω.
-    4. Structural completion of the full Clifford CAR super-selection algebra. -/
-theorem master_mixed_car_cross_algebra_synthesis
-    (u : U) (alpha : U →ₗ[R] R) (omega : ExteriorAlgebra R (U →ₗ[R] R)) :
-    (evaluationLinear u alpha = alpha u) ∧
-    ((evaluationLinear u alpha) • omega = alpha u • omega) := ⟨
-  rfl,
-  rfl
-⟩
-
 end InfoGeometry.Canonical.MixedCARCrossAlgebraBridge

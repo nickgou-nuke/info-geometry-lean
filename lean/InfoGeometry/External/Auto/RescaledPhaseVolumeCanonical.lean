@@ -102,23 +102,6 @@ theorem finite_weyl_plus_abstract_rescaled_canonical
     no_finite_m2_canonical_ccr,
     rescaled_canonical_commutator cr X P rawAction sx sp hraw hscale⟩
 
-/-- Synthesis of the native positivity, frame gauge, and algebraic rescaling results. -/
-theorem rescaled_phase_volume_canonical_synthesis
-    (cr : CramerRaoQuantumInequality) (F : BogoliubovInertialFrame)
-    {A : Type*} [Ring A] [Algebra ℂ A]
-    (X P : A) (rawAction sx sp : ℂ)
-    (hraw : commA X P = rawAction • (1 : A))
-    (hscale : sx * sp * rawAction = Complex.I * cramerRaoPhaseActionC cr) :
-    0 < cramerRaoPhaseAction cr ∧
-    frameWeylQ F = qRapidity (frameWeylLogClock F) ∧
-    framePhaseActionGauge cr F ≠ 0 ∧
-    commA (sx • X) (sp • P) =
-      (Complex.I * cramerRaoPhaseActionC cr) • (1 : A) :=
-  ⟨cramerRaoPhaseAction_pos cr,
-    frameWeylQ_eq_qRapidity_logClock F,
-    framePhaseActionGauge_ne_zero cr F,
-    rescaled_canonical_commutator cr X P rawAction sx sp hraw hscale⟩
-
 end RescaledPhaseVolumeCanonical
 
 end noncomputable section

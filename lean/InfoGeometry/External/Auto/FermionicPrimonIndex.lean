@@ -89,21 +89,4 @@ theorem graded_zero_model_cancels_bosonic_pole {s : ℂ} (hs : s ≠ 1) :
   have hsub : s - 1 ≠ 0 := sub_ne_zero.mpr hs
   simp [bosonicPoleModelIndex, gradedZeroModelAtBosonicPole, hsub]
 
-/-- Consolidated ordinary/graded fermion distinction. -/
-theorem fermionic_primon_index_synthesis :
-    (∀ x : ℂ, x ≠ 1 →
-      ordinaryFermionLocalFactor x = (1 - x ^ 2) / (1 - x)) ∧
-    (∀ x : ℂ, x ≠ 1 →
-      bosonicLocalFactor x * gradedFermionLocalFactor x = 1) ∧
-    (∀ Z : ℂ → ℂ, ∀ s, reciprocalIndexSingularity Z s ↔ Z s = 0) ∧
-    (∀ c s s₀ : ℂ, c ≠ 0 → s ≠ s₀ →
-      (c * (s - s₀))⁻¹ = c⁻¹ * (s - s₀)⁻¹) ∧
-    (∀ s : ℂ, s ≠ 1 →
-      bosonicPoleModelIndex s * gradedZeroModelAtBosonicPole s = 1) := by
-  exact ⟨fun x hx => ordinaryFermionLocal_as_zeta_ratio hx,
-    fun x hx => gradedFermionLocal_cancels_boson hx,
-    gradedIndex_singularity_iff_boson_zero,
-    fun c s s₀ hc hs => reciprocal_simple_zero_local_model hc hs,
-    fun s hs => graded_zero_model_cancels_bosonic_pole hs⟩
-
 end noncomputable section

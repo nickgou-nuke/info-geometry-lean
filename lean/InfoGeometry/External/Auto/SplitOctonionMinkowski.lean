@@ -147,21 +147,4 @@ theorem boost_preserves_octonionic_interval (η t x y z : ℂ) :
     (boostAction η (octonionicSpacetime t x y z)).det = t^2 - x^2 - y^2 - z^2 := by
   rw [boostAction_preserves_det, octonionic_minkowski_interval]
 
-/-- Main synthesis theorem. -/
-theorem split_octonion_minkowski_synthesis :
-    (∀ t x y z : ℂ, (octonionicSpacetime t x y z).det = t^2 - x^2 - y^2 - z^2) ∧
-    (∀ v : ℂ, octBoostGenerator v * octBoostGenerator v = (v * v) • (1 : M2C)) ∧
-    (∀ η : ℂ, (spinBoost η).det = 1) ∧
-    (∀ η : ℂ, ∀ X : M2C, (boostAction η X).det = X.det) := by
-  exact ⟨octonionic_minkowski_interval, octBoostGenerator_sq, spinBoost_det,
-    boostAction_preserves_det⟩
-
-#check oct_e1_sq
-#check octonionicSpacetime_eq_minkowski
-#check octonionic_minkowski_interval
-#check octBoostGenerator_sq
-#check octBoostClosed_nonzero
-#check boost_preserves_octonionic_interval
-#check split_octonion_minkowski_synthesis
-
 end SplitOctonionMinkowski

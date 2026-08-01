@@ -138,18 +138,6 @@ theorem finite_to_infinite_limit (T : ℝ) (N : A) (hN : N * N = 0) :
     exact finite_prod_seq_val T N hN n hn_gt
   exact Filter.tendsto_congr' h_eventually |>.mpr tendsto_const_nhds
 
-/--
-Debt marker only: this module proves the eventually-constant nilpotent case;
-it does not prove a general infinite-dimensional Hestenes/colimit product
-completion or identify the limit with any external Dirac/Virasoro flow.
--/
-/- The categorical completion remains open; the retained compatibility name now
-   exposes the proven generic nilpotent group law rather than a string marker. -/
-@[deprecated nilpotent_exp_mul (since := "2026-07-29")]
-theorem general_colimit_completion_debt (S T : ℝ) (N : A) (hN : N * N = 0) :
-    nilpotent_exp S N * nilpotent_exp T N = nilpotent_exp (S + T) N :=
-  nilpotent_exp_mul S T N hN
-
 end InfoGeometry.Algebra.NilpotentFiniteProductLimit
 
 end

@@ -204,9 +204,6 @@ namespace MiuraHbarOper
 /-- The defining representation rank is the index of the Miura oper. -/
 def rank {N : ℕ} (_ : MiuraHbarOper N) : ℕ := N
 
-/-- Every stored connection is equal to itself by reflexivity. -/
-theorem is_miura {N : ℕ} (M : MiuraHbarOper N) : M.connection = M.connection := rfl
-
 end MiuraHbarOper
 
 /-- Space of Z-twisted Miura ℏ-opers for G = GL_N

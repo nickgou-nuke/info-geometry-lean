@@ -40,22 +40,4 @@ theorem harmonic_cohomology_projection_add
       harmonicToCohomologyLinearMap d dstar h_closed w2 :=
   rfl
 
-/-- **Theorem**: Master Harmonic Representative Cohomology Projection Synthesis.
-    Unifies:
-    1. Certified linear map π_H : ker(Δ) →ₗ[R] H_d.
-    2. Proof of linear map additivity and scalar action preservation.
-    3. Machine-checked linear map projection of harmonic representatives into de Rham cohomology classes.
-    4. Exact formal closure of the linear projection map infrastructure for Hodge theory. -/
-theorem master_harmonic_representative_cohomology_projection_synthesis
-    (d dstar : Module.End R (ExteriorAlgebra R V))
-    (h_closed : ∀ w ∈ harmonicSubmodule d dstar, d w = 0)
-    (w1 w2 : harmonicSubmodule d dstar) :
-    (harmonicToCohomologyLinearMap d dstar h_closed (w1 + w2) =
-      harmonicToCohomologyLinearMap d dstar h_closed w1 +
-      harmonicToCohomologyLinearMap d dstar h_closed w2) ∧
-    (harmonicToCohomologyLinearMap d dstar h_closed w1 = Submodule.Quotient.mk ⟨w1.1, h_closed w1.1 w1.2⟩) := ⟨
-  rfl,
-  rfl
-⟩
-
 end InfoGeometry.Canonical.HarmonicRepresentativeCohomologyProjectionBridge

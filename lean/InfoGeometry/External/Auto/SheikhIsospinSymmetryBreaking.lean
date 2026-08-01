@@ -152,21 +152,6 @@ theorem charge_symmetry_neutral_T0_T1 :
     chargeSymmetryEigenvalue_T0 = 1 ∧ chargeSymmetryEigenvalue_T1 = -1 := by
   exact ⟨rfl, rfl⟩
 
-def formalSummary : Prop :=
-  twoTz 16 16 = 0 ∧
-    downQuarkMassMeV - upQuarkMassMeV = 62 / 25 ∧
-    qcdMassEntry tau3_up = upQuarkMassMeV ∧
-    qcdMassEntry tau3_down = downQuarkMassMeV ∧
-    henleyClassIII 7 tzNeutron tzProton = 0 ∧
-    massSplitting neutronProtonSplit = 129 / 100 ∧
-    massSplitting Li7Be7Split = -7 / 20
-
-theorem formalSummary_proved : formalSummary := by
-  exact ⟨rfl, down_minus_up_quark_mass,
-    qcd_mass_matrix_up_down_diagonal.1, qcd_mass_matrix_up_down_diagonal.2,
-    henley_classIII_np_vanishes 7, neutron_proton_mass_split_exact,
-    Li7_Be7_mass_split_exact⟩
-
 end SheikhIsospinSymmetryBreaking
 
 end noncomputable section

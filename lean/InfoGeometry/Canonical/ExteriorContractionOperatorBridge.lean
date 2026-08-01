@@ -27,18 +27,5 @@ theorem contraction_op_anticommute
   dsimp [contractionOp]
   simp
 
-/-- **Theorem**: Master Exterior Contraction Global Operator CAR Synthesis.
-    Unifies:
-    1. Global contraction operator ι_λ ∈ End(⋀ V).
-    2. Global contraction operator nilpotency ι_λ² = 0.
-    3. Global contraction operator anti-commutativity {ι_λ1, ι_λ2} = 0 in End(⋀ V). -/
-theorem master_exterior_contraction_operator_synthesis
-    (lambda1 lambda2 : V →ₗ[R] R) (omega : ExteriorAlgebra R V) :
-    ((contractionOp lambda1) ((contractionOp lambda1) omega) = 0) ∧
-    ((contractionOp lambda1) ((contractionOp lambda2) omega) +
-     (contractionOp lambda2) ((contractionOp lambda1) omega) = 0) := ⟨
-  contraction_op_sq_zero lambda1 omega,
-  contraction_op_anticommute lambda1 lambda2 omega
-⟩
 
 end InfoGeometry.Canonical.ExteriorContractionOperatorBridge

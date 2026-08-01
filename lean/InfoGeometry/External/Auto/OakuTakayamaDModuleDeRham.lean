@@ -139,14 +139,6 @@ structure ComplementCohomologyBridge where
   osToDModuleComparison : Type
   dModuleAlgorithm : ConstantSheafAlgorithmParameters affineComplementInput
 
-/-- Capstone for the formalized paper digest. -/
-theorem oaku_takayama_intro_atom_synthesis (a b u v : ℚ) :
-    introBPolynomial a b 0 = 0 ∧
-    introBPolynomial a b (a + b) = 0 ∧
-    (introFourierNormalForm a b u v).coeff_x_d2 = 1 ∧
-    (introFourierNormalForm a b u v).coeff_d = 2 + a + b := by
-  simp [introBPolynomial, introFourierNormalForm]
-
 end OakuTakayamaDModuleDeRham
 
 end noncomputable section

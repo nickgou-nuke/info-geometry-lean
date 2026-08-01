@@ -111,42 +111,6 @@ theorem three_coordinate_boolean_trace (x y z : ℂ) :
   simp [gradedLane_empty, gradedLane_occupied]
   ring
 
-/--
-Consolidated bridge:
-symbolic idempotents are UHF boundary coordinates, local graded lanes are
-pointwise selectors, and Boolean trace recovers finite graded Euler factors.
--/
-theorem symbolic_lane_uhf_bridge_synthesis :
-    (∀ i : ℕ, ∀ b : CantorBoundary,
-      coordinateIdempotent i b * coordinateIdempotent i b =
-        coordinateIdempotent i b) ∧
-    (∀ i : ℕ, ∀ x : ℂ, ∀ b : CantorBoundary,
-      boundaryGradedLane i x b = if b i then -x else 1) ∧
-    (∀ x : ℂ, gradedLane 0 x + gradedLane 1 x = 1 - x) ∧
-    (∀ x y : ℂ,
-      (gradedLane 0 x * gradedLane 0 y) +
-        (gradedLane 0 x * gradedLane 1 y) +
-        (gradedLane 1 x * gradedLane 0 y) +
-        (gradedLane 1 x * gradedLane 1 y)
-        =
-      (1 - x) * (1 - y)) ∧
-    (∀ x y z : ℂ,
-      (gradedLane 0 x * gradedLane 0 y * gradedLane 0 z) +
-        (gradedLane 0 x * gradedLane 0 y * gradedLane 1 z) +
-        (gradedLane 0 x * gradedLane 1 y * gradedLane 0 z) +
-        (gradedLane 0 x * gradedLane 1 y * gradedLane 1 z) +
-        (gradedLane 1 x * gradedLane 0 y * gradedLane 0 z) +
-        (gradedLane 1 x * gradedLane 0 y * gradedLane 1 z) +
-        (gradedLane 1 x * gradedLane 1 y * gradedLane 0 z) +
-        (gradedLane 1 x * gradedLane 1 y * gradedLane 1 z)
-        =
-      (1 - x) * (1 - y) * (1 - z)) := by
-  exact ⟨coordinateIdempotent_sq,
-    boundaryGradedLane_apply,
-    local_boolean_trace,
-    two_coordinate_boolean_trace,
-    three_coordinate_boolean_trace⟩
-
 end SymbolicLaneUHFBridge
 
 end noncomputable section

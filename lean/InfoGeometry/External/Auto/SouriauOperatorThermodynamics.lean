@@ -236,19 +236,6 @@ theorem expectation_goutevTonevUnit
     ω (goutevTonevUnit (A := A) ε K) = (ε ^ 2 / 2) * ω (K * K) := by
   simp [goutevTonevUnit]
 
-/-- Closed finite algebraic synthesis for the Goutev--Tonev operator unit. -/
-theorem goutevTonev_operator_synthesis
-    (ω : StateExpectation (A := A)) (expOp : A → A) (h0 : expOp 0 = (1 : A)) :
-    (∀ K : A, operatorBregmanGenerator (A := A) expOp 0 K = 0) ∧
-    (∀ (ε : ℝ) (K : A),
-      ω (operatorBregmanGenerator (A := A) expOp ε K) =
-        ω (expOp (ε • K)) - ω (1 : A) - ε * ω K) ∧
-    (∀ (ε : ℝ) (K : A),
-      ω (goutevTonevUnit (A := A) ε K) = (ε ^ 2 / 2) * ω (K * K)) := by
-  exact ⟨operatorBregmanGenerator_zero (A := A) expOp h0,
-    expectation_operatorBregmanGenerator (A := A) (ω := ω) expOp,
-    expectation_goutevTonevUnit (A := A) (ω := ω)⟩
-
 end OperatorSouriauSystem
 
 end Operatorial

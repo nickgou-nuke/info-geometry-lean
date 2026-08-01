@@ -69,6 +69,19 @@ def susyHamiltonianTopCatHom : TopCat.of R ⟶ TopCat.of R :=
 def defectProjectionTopCatHom : TopCat.of R ⟶ TopCat.of R :=
   leftMulTopCatHom g.P0
 
+theorem fullTwistTopCatHom_comm_susyHamiltonianTopCatHom
+    (D : ToeplitzBraidData g) :
+    fullTwistTopCatHom g D ≫ susyHamiltonianTopCatHom g =
+      susyHamiltonianTopCatHom g ≫ fullTwistTopCatHom g D := by
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro x
+  change g.susyHamiltonian * (fullTwist g D * x) =
+    fullTwist g D * (g.susyHamiltonian * x)
+  simpa only [mul_assoc] using
+    congrArg (fun z : R => z * x)
+      (fullTwist_commutes_hamiltonian g D).symm
+
 theorem braidedCubicSuperchargeTopCatHom_cube
     (D : ToeplitzBraidData g) :
     braidedCubicSuperchargeTopCatHom g D ≫

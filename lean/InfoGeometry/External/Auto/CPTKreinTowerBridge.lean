@@ -167,22 +167,6 @@ def blockGrowthPackage : BlockGrowthPackage where
     intro x y
     exact (pairEmb_bracket_compat x y).symm
 
-/-- The non-trivial growth package is internally consistent. -/
-theorem blockGrowthPackage_synthesis :
-    (∀ x : blockGrowthPackage.stage0,
-      blockGrowthPackage.emb (blockGrowthPackage.J0 x) =
-        blockGrowthPackage.J1 (blockGrowthPackage.emb x)) ∧
-    (∀ x y : blockGrowthPackage.stage0,
-      blockGrowthPackage.emb (blockGrowthPackage.bracket0 x y) =
-        blockGrowthPackage.bracket1 (blockGrowthPackage.emb x) (blockGrowthPackage.emb y)) ∧
-    (∀ x : blockGrowthPackage.stage1,
-      blockGrowthPackage.J1 (blockGrowthPackage.J1 x) = x) := by
-  constructor
-  · exact blockGrowthPackage.emb_J
-  constructor
-  · exact blockGrowthPackage.emb_bracket
-  · exact pairMirror_sq
-
 /-- Block lift of the `2×2` carrier into a doubled `4×4` carrier.
 
 This is the concrete "outer `2×2` acting on inner `2×2`" move:

@@ -26,13 +26,5 @@ theorem parabolic_discriminant_zero (a d : ℂ) (h_tr : a + d = 2) :
   rw [h_tr]
   ring
 
-/-- **Master Synthesis**: Мебиусова Дискриминанта & Параболичен Праг Synthesis. -/
-theorem master_moebius_discriminant_synthesis
-    (a b c d : ℂ) (h_det : a * d - b * c = 1) (h_tr : a + d = 2) :
-    (moebiusDiscriminant a d = (d - a)^2 + 4 * b * c) ∧
-    (moebiusDiscriminant a d = 0) := ⟨
-  moebius_discriminant_eq_fixed_point_disc a b c d h_det,
-  parabolic_discriminant_zero a d h_tr
-⟩
 
 end InfoGeometry.Canonical

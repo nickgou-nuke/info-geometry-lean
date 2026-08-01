@@ -118,13 +118,4 @@ theorem braidCirculationDefect12_zero_of_invariant
 /-- A finite decoration of the three unoriented edges. -/
 def EdgeLabeling (k : ℕ) := Edge3 → Fin k
 
-/-- Consolidated finite circulation statement. -/
-theorem finite_oriented_triangle_summary :
-    Antisymmetric unitCycleAffinity ∧
-    triangleCirculation unitCycleAffinity = 3 ∧
-    NonzeroCirculation unitCycleAffinity ∧
-    TriangleCocycle zeroAffinity :=
-  ⟨unitCycleAffinity_antisymmetric, unitCycleAffinity_circulation,
-    unitCycleAffinity_nonzero, zeroAffinity_is_cocycle⟩
-
 end BraidedCocycleWilsonEntropy

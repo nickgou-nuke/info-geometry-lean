@@ -95,24 +95,10 @@ theorem g9_2_pair_alignment_units :
     spinAlignmentUnits_g9_2_pair = 2 * 9 / 2 - 1 := by
   norm_num [spinAlignmentUnits_g9_2_pair]
 
-def quadrupoleJumpCorrelatesWithAlignment : Prop :=
-  proton_g9_2_jump_at_25half = 2 ∧ spinAlignmentUnits_g9_2_pair = 8
-
 theorem quadrupole_alignment_anchor :
-    quadrupoleJumpCorrelatesWithAlignment := by
-  exact ⟨rfl, rfl⟩
-
-def formalSummary : Prop :=
-  Se67As67.A = 67 ∧
-    epsilonLLShift_g9_2 - epsilonLLShift_f5_2 = -37 ∧
-    epsilonLSShift_g9_2_Se67 - epsilonLSShift_f5_2_Se67 = -132 ∧
-    proton_g9_2_jump_at_25half + neutron_g9_2_jump_at_25half = 3 ∧
-    highSpin_MED_model = -32
-
-theorem formalSummary_proved : formalSummary := by
-  exact ⟨rfl, epsilonLL_gap_g9_f5_reduction,
-    epsilonLS_gap_g9_f5_reduction_Se67,
-    g9_2_total_jump_at_25half, highSpin_MED_model_exact⟩
+    proton_g9_2_jump_at_25half = 2 ∧
+      spinAlignmentUnits_g9_2_pair = 8 := by
+  norm_num [proton_g9_2_jump_at_25half, spinAlignmentUnits_g9_2_pair]
 
 end KanekoA67HighSpinMED
 

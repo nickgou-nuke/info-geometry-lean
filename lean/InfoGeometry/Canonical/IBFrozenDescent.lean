@@ -366,7 +366,7 @@ theorem baFrozenTargetGapWithGibbs_step_eq_zero
           (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) x)
         ((ibBlahutArimotoStepFrozenGibbs
           (X := X) (Y := Y) (T := T) prob qT mY_givenT hq) x) = 0 := by
-    unfold InfoGeometry.fin_kl_div InfoGeometry.kl_div
+    unfold InfoGeometry.fin_kl_div InfoGeometry.KL.kl_div
     simpa using
       (InformationTheory.klDiv_self
         (μ := (((ibBlahutArimotoStepFrozenGibbs
@@ -667,7 +667,7 @@ theorem baFrozenTargetGapWith_step_eq_zero
       InfoGeometry.fin_kl_div
         ((ibBlahutArimotoStepFrozen prob qT mY_givenT) x)
         ((ibBlahutArimotoStepFrozen prob qT mY_givenT) x) = 0 := by
-    unfold InfoGeometry.fin_kl_div InfoGeometry.kl_div
+    unfold InfoGeometry.fin_kl_div InfoGeometry.KL.kl_div
     simpa using
       (InformationTheory.klDiv_self
         (μ := (((ibBlahutArimotoStepFrozen prob qT mY_givenT) x).toMeasure)))
@@ -744,7 +744,7 @@ theorem baFrozenTargetGap_step_eq_zero
       InfoGeometry.fin_kl_div
         ((ibBlahutArimotoStep prob pOld) x)
         ((ibBlahutArimotoStep prob pOld) x) = 0 := by
-    unfold InfoGeometry.fin_kl_div InfoGeometry.kl_div
+    unfold InfoGeometry.fin_kl_div InfoGeometry.KL.kl_div
     simpa using
       (InformationTheory.klDiv_self
         (μ := (((ibBlahutArimotoStep prob pOld) x).toMeasure)))

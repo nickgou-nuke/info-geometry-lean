@@ -59,16 +59,6 @@ theorem vacuum_annihilated_by_susyHamiltonian : A_rep.rep g.susyHamiltonian A_re
     _ = A_rep.rep 0 A_rep.vacuum := by rw [h_alg]
     _ = 0 := by simp
 
-/-- **Master Synthesis Theorem**: Hilbert/Fock Representation 3-ary BPS Vacuum Closure. -/
-theorem master_toeplitz_cuntz_three_fock_vacuum_synthesis :
-    A_rep.vacuum ≠ 0 ∧
-    A_rep.rep g.P0 A_rep.vacuum = A_rep.vacuum ∧
-    A_rep.rep (cyclicSupercharge g) A_rep.vacuum = 0 ∧
-    A_rep.rep g.susyHamiltonian A_rep.vacuum = 0 := by
-  exact ⟨A_rep.vacuum_nonzero,
-         A_rep.vacuum_eigenstate,
-         vacuum_annihilated_by_cyclicSupercharge A_rep,
-         vacuum_annihilated_by_susyHamiltonian A_rep⟩
 
 end ToeplitzCuntzThreeRepresentation
 

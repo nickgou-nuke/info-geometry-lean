@@ -46,19 +46,6 @@ theorem braid_gauge_covariance {V : Type*} [AddCommMonoid V] [Module ℂ V]
       cantorLoopGaugeStep4 (fun i => w (π i)) s (qColorBraid4 q π ψ) :=
   qColorBraid4_cantorLoopGaugeStep4_covariant q π w s ψ
 
-/-- Consolidated permutation, braid, and gauge covariance theorem. -/
-theorem color_spinor_3_plus_1_split_synthesis {V : Type*}
-    [AddCommMonoid V] [Module ℂ V]
-    (q : ℂ) (π : Equiv.Perm (Fin 3)) (w : Fin 3 → ℂ) (s : ℂ)
-    (ψ : ColorSpinor4 V) :
-    (permuteColorSpinor4 π ψ).2 = ψ.2 ∧
-    (∀ i : Fin 3, (permuteColorSpinor4 π ψ).1 i = ψ.1 (π i)) ∧
-    qColorBraid4 q π (cantorLoopGaugeStep4 w s ψ) =
-      cantorLoopGaugeStep4 (fun i => w (π i)) s (qColorBraid4 q π ψ) :=
-  ⟨singlet_lane_invariant π ψ,
-    fun i => color_triplet_stable π ψ i,
-    braid_gauge_covariance q π w s ψ⟩
-
 end S3ColorSpinorDecomposition
 
 end noncomputable section

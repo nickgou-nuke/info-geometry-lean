@@ -149,8 +149,6 @@ structure ColimitBridge where
           (∑ ω' : (finiteSide.stages n).sampleSpace,
             Real.exp (- β * (finiteSide.stages n).finiteIntegralOfMotion ω')) =
         Real.exp (- β * (finiteSide.stages n).finiteIntegralOfMotion x)
-  bridgeSlogan : String
-  mechanismSlogan : String
 
 /-- The finite-to-colimit lifting law exposed as a proposition from its owner. -/
 def ColimitBridge.finitePropertiesLift (B : ColimitBridge) : Prop :=
@@ -165,38 +163,5 @@ def ColimitBridge.finitePropertiesLift (B : ColimitBridge) : Prop :=
 /-- If the bridge includes a proof that finite compatible properties lift, then
 the recorded lifting statement is available. -/
 theorem bridge_lifting (B : ColimitBridge) : B.finitePropertiesLift := B.finitePropertiesLift_proof
-
-/-- The three-lineage slogan as explicit data. -/
-structure ThreeLineagesConverge where
-  leanKernelLine : String
-  categoryLine : String
-  jaynesLine : String
-  commonPrinciple : String
-
-/-- A canonical inhabitant of the slogan package. -/
-def threeLineagesConverge : ThreeLineagesConverge :=
-  { leanKernelLine := "infinity is controlled by inductive closure / successor"
-    categoryLine := "infinity is represented by directed colimit bookkeeping"
-    jaynesLine := "continuum probability is the stable limit of finite-set calculations"
-    commonPrinciple := "finite generation + compatible refinement + universal colimit completion" }
-
-/-- Synthesis: the file closes the finite packaging and exposes the continuum as
-explicit colimit data. -/
-theorem jaynes_lean_colimit_bridge_synthesis :
-    (∀ S : FiniteJaynesSide, finiteExpectation S (fun _ => 1) = 1) ∧
-    (∀ (D : JaynesDirectedSystem) (n : ℕ),
-      StageKolmogorov (D.stages n) →
-      StageKolmogorov (D.stages (n + 1))) ∧
-    (∀ (D : JaynesDirectedSystem) (n : ℕ),
-      StageKMS (D.stages n) →
-      StageKMS (D.stages (n + 1))) := by
-  constructor
-  · intro S
-    exact finiteExpectation_one S
-  · constructor
-    · intro D n h
-      exact kolmogorov_succ D n h
-    · intro D n h
-      exact kms_succ D n h
 
 end JaynesLeanColimitBridge

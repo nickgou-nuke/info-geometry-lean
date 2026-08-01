@@ -48,28 +48,4 @@ theorem traced_chern_weil_class_exact_invariance
   use omega
   abel
 
-/-- **Theorem**: Master Traced Chern-Weil Cohomology Class & Instanton Invariance Synthesis.
-    Unifies:
-    1. Literal de Rham cohomology class [Tr(F ∧ F)] ∈ H_d definition.
-    2. Invariance theorem [Tr(F²) + d ω] = [Tr(F²)] in H_d.
-    3. Machine-checked proof closure for Yang-Mills instanton topological charge class invariance. -/
-theorem master_traced_chern_weil_cohomology_class_synthesis
-    (d : Module.End R (ExteriorAlgebra R V))
-    (hd2 : d.comp d = 0)
-    (F2 : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
-    (h_closed : matrixExteriorDerivative d F2 = 0)
-    (omega : ExteriorAlgebra R V) :
-    (Submodule.Quotient.mk (p := (LinearMap.range d).comap (LinearMap.ker d).subtype)
-      ⟨matrixTraceForm F2 + d omega, by
-        rw [LinearMap.mem_ker]
-        rw [LinearMap.map_add]
-        have h1 : d (matrixTraceForm F2) = 0 := matrix_traced_curvature_square_closed d F2 h_closed
-        have h2 : d (d omega) = 0 := LinearMap.congr_fun hd2 omega
-        rw [h1, h2, add_zero]⟩ =
-    (tracedChernWeilCohomologyClass d F2 h_closed)) ∧
-    (tracedChernWeilCohomologyClass d F2 h_closed = Submodule.Quotient.mk ⟨matrixTraceForm F2, matrix_traced_curvature_square_closed d F2 h_closed⟩) := ⟨
-  traced_chern_weil_class_exact_invariance d hd2 F2 h_closed omega,
-  rfl
-⟩
-
 end InfoGeometry.Canonical.TracedChernWeilCohomologyClassBridge

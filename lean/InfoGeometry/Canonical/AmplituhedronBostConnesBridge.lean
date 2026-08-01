@@ -36,18 +36,4 @@ theorem boundary_vanishing :
 
 end KleinQuadricGenerators
 
-/-- **Theorem**: Master Amplituhedron Cohomology & Bost-Connes Synthesis.
-    Unifies:
-    1. BCFW Arnold-Cohen mixed form relation.
-    2. On-shell Klein quadric nilpotent boundary generators (S±² = 0). -/
-theorem master_amplituhedron_bost_connes_synthesis
-    {R : Type*} [Ring R] (g : KleinQuadricGenerators R) (w : ℝ) :
-    (g.Splus * g.Splus = 0) ∧
-    (g.Sminus * g.Sminus = 0) ∧
-    (arnoldCohenRelation w (-w) 0 = - (w^2)) := ⟨
-  g.nilpotent_plus,
-  g.nilpotent_minus,
-  by dsimp [arnoldCohenRelation]; ring
-⟩
-
 end InfoGeometry.Canonical.AmplituhedronBostConnesBridge

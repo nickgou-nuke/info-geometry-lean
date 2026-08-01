@@ -176,14 +176,6 @@ structure SymmetryTransition where
     The "vacuum" is the reference KMS state on the UHF limit.
     The "scale" is the golden ratio φ, emerging from the cyclotomic
     field ℚ(e^{πi/5}). All measurements are relative to this reference. -/
-theorem goutev_penrose_synthesis :
-    (5 : ℕ) ∉ ({1,2,3,4,6} : Set ℕ) ∧
-    fibonacciYangBaxterBypass.pentagon_root ^ 5 = 1 ∧
-    (∀ n, penroseFiniteLevelDim n = 2 ^ n) ∧
-    Nonempty (penroseBoundary ≃ (ℕ → Bool)) := by
-  exact ⟨pentagon_forbidden, fibonacciYangBaxterBypass.h_pentagon,
-    by intro n; rfl, ⟨penroseCantorCode⟩⟩
-
 /-══════════════════════════════════════════════════════════════════════
   BRIDGES TO PRE-PROVED THEOREMS
   ═════════════════════════════════════════════════════════════════════-/

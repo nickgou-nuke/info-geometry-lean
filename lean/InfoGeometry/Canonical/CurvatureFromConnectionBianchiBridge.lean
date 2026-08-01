@@ -95,26 +95,5 @@ theorem unconditional_anti_self_dual_yang_mills
   have h_bianchi := curvatureFromConnection_bianchi A d hd2_A h_d_A_square
   exact anti_self_dual_connection_curvature_solves_yang_mills star A d h_anti_self_dual h_bianchi
 
-/-- **Theorem**: Master Connection Curvature Bianchi & Dual Instanton Synthesis.
-    Unifies:
-    1. Direct non-tautological derivation of connection curvature Bianchi identity D_A F_A = 0 from d² A = 0 and d(A²) = dA * A - A * dA.
-    2. Unconditional self-dual Yang-Mills field equation D_A (★ F_A) = 0.
-    3. Unconditional anti-self-dual Yang-Mills field equation D_A (★ F_A) = 0.
-    4. Complete proof closure for Bianchi derivation and dual instanton field equations. -/
-theorem master_curvature_from_connection_bianchi_synthesis
-    (star : Module.End R (ExteriorAlgebra R V))
-    (A : Matrix (Fin n) (Fin n) (ExteriorAlgebra R V))
-    (d : Module.End R (ExteriorAlgebra R V))
-    (hd2_A : matrixExteriorDerivative d (matrixExteriorDerivative d A) = 0)
-    (h_d_A_square :
-      matrixExteriorDerivative d (A * A) =
-        matrixExteriorDerivative d A * A - A * matrixExteriorDerivative d A) :
-    (covariantDerivative A d (curvatureFromConnection d A) = 0) ∧
-    ((isSelfDualCurvature star (curvatureFromConnection d A) → covariantDerivative A d (matrixHodgeStar star (curvatureFromConnection d A)) = 0) ∧
-     (isAntiSelfDualCurvature star (curvatureFromConnection d A) → covariantDerivative A d (matrixHodgeStar star (curvatureFromConnection d A)) = 0)) := ⟨
-  curvatureFromConnection_bianchi A d hd2_A h_d_A_square,
-  ⟨fun h_sd => unconditional_self_dual_yang_mills star A d hd2_A h_d_A_square h_sd,
-   fun h_asd => unconditional_anti_self_dual_yang_mills star A d hd2_A h_d_A_square h_asd⟩
-⟩
 
 end InfoGeometry.Canonical.CurvatureFromConnectionBianchiBridge

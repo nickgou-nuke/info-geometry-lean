@@ -251,18 +251,4 @@ theorem allOnesCK_two_rhs (S : Fin 2 → Aop) [Mul Aop] [AddCommMonoid Aop]
   simp [allOnesAdj, Fin.sum_univ_two]
 
 
-/-- Finite algebraic package supporting the noncommutative tiling interpretation. -/
-theorem finite_tiling_algebra_anchors :
-    phi ^ 2 = phi + 1 ∧
-    FibR.mulVec ![phi, 1] = phi • ![phi, 1] ∧
-    thickFreq + thinFreq = 1 ∧
-    (∀ m n p q : ℤ, gapLabel m n + gapLabel p q = gapLabel (m + p) (n + q)) := by
-  constructor
-  · exact phi_sq_eq_phi_add_one
-  · constructor
-    · exact FibR_pf_eigen
-    · constructor
-      · exact thickFreq_add_thinFreq
-      · exact gapLabel_add
-
 end NoncommutativeTilingAlgebra

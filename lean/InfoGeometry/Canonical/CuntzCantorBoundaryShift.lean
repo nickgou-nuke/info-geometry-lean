@@ -141,29 +141,6 @@ theorem branch_pullback_mem_colimit (n : ℕ) (b : Bool) (f : DiagAlg (n + 1)) :
     cylinder n (branchPullback n b f) ∈ CylinderColimit := by
   exact cylinder_mem_colimit n (branchPullback n b f)
 
-/--
-Consolidated finite Cuntz-Cantor shift package: the two binary branches are
-injective, disjoint, cover the boundary, and preserve finite-cylinder status by
-pullback.
--/
-theorem finite_cuntz_cantor_shift_synthesis :
-    Function.Injective (prependBit false) ∧
-    Function.Injective (prependBit true) ∧
-    Disjoint (Set.range (prependBit false)) (Set.range (prependBit true)) ∧
-    (∀ x : CantorBoundary,
-      x ∈ Set.range (prependBit false) ∪ Set.range (prependBit true)) ∧
-    (∀ n : ℕ, ∀ b : Bool, ∀ f : DiagAlg (n + 1),
-      (fun x : CantorBoundary => cylinder (n + 1) f (prependBit b x)) =
-        cylinder n (branchPullback n b f)) ∧
-    (∀ n : ℕ, ∀ b : Bool, ∀ f : DiagAlg (n + 1),
-      cylinder n (branchPullback n b f) ∈ CylinderColimit) := by
-  exact ⟨prependBit_injective false,
-    prependBit_injective true,
-    prependBit_false_true_disjoint,
-    prependBit_range_cover,
-    cylinder_branch_pullback,
-    branch_pullback_mem_colimit⟩
-
 end InfoGeometry.Canonical.CuntzCantorBoundaryShift
 
 end noncomputable section

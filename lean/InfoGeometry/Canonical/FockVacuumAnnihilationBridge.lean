@@ -22,17 +22,4 @@ theorem annihilation_vacuum_zero (u : U) :
     (contractionOp (evaluationLinear u)) (vacuumState R U) = 0 := by
   dsimp [vacuumState, contractionOp]
 
-/-- **Theorem**: Master Fock Space Vacuum State Annihilation Synthesis.
-    Unifies:
-    1. Fock space unit vacuum state definition |0⟩ = 1 ∈ ExteriorAlgebra R (Dual U).
-    2. Annihilation operator vacuum state annihilation a_u |0⟩ = 0 for all u ∈ U.
-    3. Structural foundation for Fock space state grading and multi-particle creation. -/
-theorem master_fock_vacuum_annihilation_synthesis
-    (u : U) :
-    ((vacuumState R U = 1) ∧
-     ((contractionOp (evaluationLinear u)) (vacuumState R U) = 0)) := ⟨
-  rfl,
-  annihilation_vacuum_zero u
-⟩
-
 end InfoGeometry.Canonical.FockVacuumAnnihilationBridge

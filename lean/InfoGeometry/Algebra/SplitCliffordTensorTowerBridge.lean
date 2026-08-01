@@ -62,19 +62,4 @@ theorem tensor_tower_5_step_growth :
     (((1 * 4) * 4) * 4) * 4 * 4 = 1024 := by
   rfl
 
-/-- **Theorem**: Master Split Clifford Tensor Tower & CPT Fock Synthesis.
-    Unifies:
-    1. Cl(1,1) CPT operator square J^2 = +1.
-    2. Pin(5,5) metric trace neutrality ∑ eta_ii = 0 (Anomaly Cancellation Balance).
-    3. Cl(5,5) tensor algebra dimension 4^5 = 1024 = 2^10. -/
-theorem master_split_clifford_tensor_tower_synthesis
-    {R : Type*} [Ring R] (atom : Cl11Atom R) :
-    (atom.cptOperator * atom.cptOperator = 1) ∧
-    ((Finset.univ : Finset (Fin 10)).sum cl55Metric = 0) ∧
-    (2^(2 * 5) = 1024) := ⟨
-  atom.cptOperator_squared,
-  pin55_metric_trace_neutrality,
-  cl55_dimension
-⟩
-
 end InfoGeometry.Algebra.SplitCliffordTensorTowerBridge

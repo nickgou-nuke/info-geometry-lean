@@ -248,24 +248,6 @@ collapse. -/
 theorem collapse12_external_edges_identified :
     collapse12Edge Edge3.e13 = collapse12Edge Edge3.e23 := rfl
 
-/-- Finite synthesis for the stratum/Gysin/cooperad skeleton. -/
-theorem dupont_gysin_skeleton_synthesis :
-    Fintype.card StratumMask = 8 ∧
-    Fintype.card GysinCover = 12 ∧
-    openMask.codim = 0 ∧
-    tripleMask.codim = 3 ∧
-    (∀ n q : ℤ, cohomDegree (n + 1) q = cohomDegree n q + 2) ∧
-    (∀ n q : ℤ, tateTwist (n + 1) q = tateTwist n q + 1) ∧
-    collapse12Edge Edge3.e12 = CollapseSlot.inner ∧
-    collapse12Edge Edge3.e13 = collapse12Edge Edge3.e23 := by
-  exact ⟨stratumMask_card,
-    gysinCover_card,
-    openMask_codim,
-    tripleMask_codim,
-    gysin_cohomological_degree_shift,
-    gysin_tate_twist_shift,
-    collapse12_internal,
-    collapse12_external_edges_identified⟩
 
 end NonIsoConf3DupontGysinModel
 

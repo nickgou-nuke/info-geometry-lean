@@ -128,18 +128,3 @@ theorem zetaPartition_succ (β : ℝ) (N : ℕ) :
 
 -- SYNTHESIS
 
-theorem primon_synthesis :
-    (∀ n m (_ : n ≠ 0) (_ : m ≠ 0),
-      logPrimeEnergy (n * m) = logPrimeEnergy n + logPrimeEnergy m) ∧
-    (∀ (p k : ℕ), logPrimeEnergy (p ^ k) = (k : ℝ) * logPrimeEnergy p) ∧
-    (∀ q : ℚ, q ≠ 0 → rationalLogEnergy q⁻¹ = -rationalLogEnergy q) ∧
-    (∀ f : FermionicPrimon, fermionOccupation f ≤ 1) ∧
-    (∀ p, Nat.Prime p → 1 < p) ∧
-    (∀ p hp x y, 0 < padicDistance p hp x y) ∧
-    (∀ p hp x y, padicDistance p hp x y = padicDistance p hp y x) ∧
-    (∀ β N,
-      zetaPartition β (N + 1) =
-        zetaPartition β N + ((N : ℝ) + 1) ^ (-β)) := by
-  exact ⟨logPrimeEnergy_mul, logPrimeEnergy_pow, rationalLogEnergy_inv,
-    fermionOccupation_le_one, prime_scale_gt_one, padicDistance_positive,
-    padicDistance_symmetric, zetaPartition_succ⟩

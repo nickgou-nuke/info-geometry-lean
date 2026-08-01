@@ -147,18 +147,4 @@ theorem pauli_det (α x y z : ℂ) :
   simp [Complex.I_mul_I]
   ring
 
-theorem biquaternion_clifford_synthesis :
-    (σ₁ * σ₁ = (1 : M2C) ∧
-     σ₂ * σ₂ = (1 : M2C) ∧
-     σ₃ * σ₃ = (1 : M2C)) ∧
-    (i_q * i_q = -(1 : M2C) ∧
-     j_q * j_q = -(1 : M2C) ∧
-     k_q * k_q = -(1 : M2C) ∧
-     i_q * j_q = k_q) ∧
-    (ω * ω = -(1 : M2C) ∧
-     ω * σ₁ = σ₁ * ω ∧ ω * σ₂ = σ₂ * ω ∧ ω * σ₃ = σ₃ * ω) := by
-  exact ⟨⟨σ₁_sq, σ₂_sq, σ₃_sq⟩,
-         ⟨i_q_sq, j_q_sq, k_q_sq, ij_eq_k⟩,
-         ⟨ω_sq, ω_comm_σ₁, ω_comm_σ₂, ω_comm_σ₃⟩⟩
-
 end InfoGeometry.Canonical.BiquaternionCliffordIso

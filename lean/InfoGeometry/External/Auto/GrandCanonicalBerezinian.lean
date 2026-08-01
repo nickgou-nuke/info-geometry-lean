@@ -92,20 +92,4 @@ theorem gcBerezinian_local_cayley (x : ℝ) :
       gcDiagonalBerezinian (1 + x) (1 - x) := by
   simp [gcDiagonalBerezinian]
 
-/-- Consolidated finite grand-canonical Berezinian package. -/
-theorem grand_canonical_berezinian_synthesis :
-    (∀ μ Δ, (gcBerGappedEnergy μ μ Δ) ^ 2 = Δ ^ 2) ∧
-    (∀ β μ, gcBerFugacity β μ μ 0 = 1) ∧
-    (∀ β E μ Δ, gcSuperBerezinian β E μ Δ =
-      (1 + gcBerFugacity β E μ Δ) / (1 - gcBerFugacity β E μ Δ)) ∧
-    (∀ β E μ Δ, gcBerFugacity β E μ Δ ≠ 1 →
-      gcSuperBerezinian β E μ Δ =
-        gcGappedFermionFactor β E μ Δ * gcGappedBosonFactor β E μ Δ) ∧
-    (∀ β E μ Δ, gcBerFugacity β E μ Δ ≠ 1 →
-      gcBerBosonEvenDenominator β E μ Δ * gcSuperBerezinian β E μ Δ =
-        gcBerFermionOddBlock β E μ Δ) := by
-  exact ⟨gcBerGappedEnergy_at_fermi_sq, gcBerFugacity_zero_gap_at_fermi,
-    gcSuperBerezinian_eq_ratio, fun β E μ Δ h => gcSuperBerezinian_eq_product h,
-    fun β E μ Δ h => gcBerezinian_boson_denominator_cancel h⟩
-
 end noncomputable section

@@ -116,13 +116,6 @@ theorem wordToInfinite_injective (n : ℕ) :
     Function.Injective (wordToInfinite : FiniteBraidWord n → List InfiniteBraidGenerators) :=
   listMap_injective (finiteToInfinite_injective n)
 
-/-- Compact theorem package: the finite-to-infinite compatibility lemmas assemble into
-an honest categorical colimit model of the index tower. -/
-theorem braid_inductive_colimit_category_synthesis :
-    (∀ n i, generatorFromColimit (colimit.ι braidGeneratorDiagram n i) = finiteToInfinite i) ∧
-    (∀ n w, wordFromColimit (colimit.ι braidWordDiagram n w) = wordToInfinite w) := by
-  exact ⟨generatorFromColimit_ι, wordFromColimit_ι⟩
-
 end BraidInductiveColimitComplement
 
 end noncomputable section

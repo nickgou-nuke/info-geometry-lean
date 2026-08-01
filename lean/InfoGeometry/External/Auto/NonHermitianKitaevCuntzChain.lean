@@ -92,30 +92,4 @@ theorem cuntzShiftBlock_det_zero (q : ℂ) :
     (cuntzShiftBlock q).det = 0 := by
   simp [cuntzShiftBlock, chiralBlock_det]
 
-/-- Consolidated finite edge-mode package. -/
-theorem nonhermitian_kitaev_cuntz_chain_synthesis :
-    (∀ q r : ℂ, (chiralBlock q r).det = - q * r) ∧
-    (∀ q r : ℂ, chiralBlock q r * chiralBlock q r = (q * r) • (1 : M2C)) ∧
-    (∀ q : ℂ, cuntzShiftBlock q * cuntzShiftBlock q = (0 : M2C)) ∧
-    (∀ q : ℂ, cuntzShiftBlock q * leftEdge = (0 : Col2C)) ∧
-    (∀ r : ℂ, oppositeShiftBlock r * rightEdge = (0 : Col2C)) ∧
-    (∀ q : ℂ, (cuntzShiftBlock q).det = 0) := by
-  constructor
-  · intro q r
-    exact chiralBlock_det q r
-  constructor
-  · intro q r
-    exact chiralBlock_sq q r
-  constructor
-  · intro q
-    exact cuntzShiftBlock_sq q
-  constructor
-  · intro q
-    exact leftEdge_zero_mode q
-  constructor
-  · intro r
-    exact rightEdge_zero_mode r
-  · intro q
-    exact cuntzShiftBlock_det_zero q
-
 end InfoGeometry.GrandUnification.NonHermitianKitaevCuntzChain

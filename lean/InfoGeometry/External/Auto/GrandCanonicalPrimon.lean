@@ -158,32 +158,4 @@ theorem gcGappedBosonGeometric_local {β E μ Δ : ℝ}
   unfold gcGappedBosonGeometricPartition
   field_simp [sub_ne_zero.mpr (Ne.symm h)]
 
-/-- Consolidated grand-canonical primon package. -/
-theorem grand_canonical_primon_synthesis :
-    (∀ μ, gcShiftedEnergy μ μ = 0) ∧
-    (∀ β μ, gcFugacity β μ μ = 1) ∧
-    (∀ β μ, gcFermionLocalPartition β μ μ = 2) ∧
-    (∀ μ Δ, (gcGappedEnergy μ μ Δ) ^ 2 = Δ ^ 2) ∧
-    (∀ μ, gcGappedEnergy μ μ 0 = 0) ∧
-    (∀ β μ, gcGappedFermionPartition β μ μ 0 = 2) ∧
-    (∀ E μ Δ, |Δ| ≤ gcGappedEnergy E μ Δ) ∧
-    (∀ β E μ, gcBosonTruncatedPartition β E μ 0 = 1) ∧
-    (∀ β E μ K, gcBosonTruncatedPartition β E μ (K + 1) =
-      gcBosonTruncatedPartition β E μ K + (gcFugacity β E μ) ^ (K + 1)) ∧
-    (∀ β E₁ E₂ μ, gcTwoFermionPartition β E₁ E₂ μ =
-      1 + gcFugacity β E₁ μ + gcFugacity β E₂ μ +
-        gcFugacity β E₁ μ * gcFugacity β E₂ μ) ∧
-    (∀ β E μ, gcFugacity β E μ ≠ 1 →
-      (1 - gcFugacity β E μ) * gcBosonGeometricPartition β E μ = 1) ∧
-    (∀ β E μ Δ, gcGappedFugacity β E μ Δ ≠ 1 →
-      (1 - gcGappedFugacity β E μ Δ) *
-        gcGappedBosonGeometricPartition β E μ Δ = 1) := by
-  exact ⟨gcShiftedEnergy_at_fermi, gcFugacity_at_fermi,
-    gcFermionLocalPartition_at_fermi, gcGappedEnergy_at_fermi_sq,
-    gcGappedEnergy_zero_gap_at_fermi, gcGappedFermionPartition_zero_gap_at_fermi,
-    gcGappedEnergy_dominates_gap, gcBosonTruncatedPartition_zero,
-    gcBosonTruncatedPartition_succ, gcFermionTwoModeExpansion,
-    fun β E μ h => gcBosonGeometric_local h,
-    fun β E μ Δ h => gcGappedBosonGeometric_local h⟩
-
 end noncomputable section

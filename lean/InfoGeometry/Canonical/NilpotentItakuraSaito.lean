@@ -91,24 +91,6 @@ theorem fisher_quadratic_zero (S : NilpotentBoundaryInfoSocket) : S.K * S.K = 0 
   S.nilpotent
 
 /-- Main synthesis theorem. -/
-theorem nilpotent_itakura_saito_synthesis
-    (C : NilpotentCoefficientLimitSocket) (S : NilpotentBoundaryInfoSocket)
-    (hMassless : Matrix.trace S.K = 0)
-    (hPara : S.K ≠ 0) :
-    KNil * KNil = 0 ∧
-    nilItakuraSaito KNil = 0 ∧
-    (∀ eps : ℂ, nilItakuraSaito (eps • S.K) = 0) ∧
-    S.K * S.K = 0 ∧
-    Filter.Tendsto C.identityCoeff
-        (nhdsWithin (0 : ℂ) {z : ℂ | z ≠ 0}) (𝓝 0) ∧
-    Filter.Tendsto C.generatorCoeff
-        (nhdsWithin (0 : ℂ) {z : ℂ | z ≠ 0}) (𝓝 0) ∧
-    (¬ IsUnit S.K) ∧ Matrix.trace S.K = 0 ∧ S.K ≠ 0 := by
-  exact ⟨KNil_sq_zero, KNil_itakura_zero,
-    fun eps => scaled_nilItakuraSaito_zero eps S.K,
-    S.nilpotent, C.identityCoeffLimitZero, C.generatorCoeffLimitZero,
-    S.nonInvertibleBoundaryMode, hMassless, hPara⟩
-
 end InfoGeometry.Canonical.NilpotentItakuraSaito
 
 end noncomputable section

@@ -165,22 +165,6 @@ theorem spectralCPT_fixed_iff_criticalLine (s : ℂ) :
     · simp [spectralCPT]
 
 /-- Combined finite projective/null-cone algebra statement. -/
-theorem projective_affine_conformal_closure_55_synthesis
-    (x : PACSplit44) (X : PACSplit55)
-    (hX : Q55 X = 0) :
-    Q55 (conformalEmbed44to55 x) = 0 ∧
-    Q55 (reflectU X) = 0 ∧
-    Q55 (reflectV X) = 0 ∧
-    (∀ s : ℂ, spectralCPT s = s ↔ s.re = 1 / 2) := by
-  constructor
-  · exact conformalEmbed44to55_null x
-  constructor
-  · exact reflectU_preserves_null X hX
-  constructor
-  · exact reflectV_preserves_null X hX
-  · intro s
-    exact spectralCPT_fixed_iff_criticalLine s
-
 end ProjectiveAffineConformalClosure55
 
 end noncomputable section

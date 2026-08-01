@@ -29,11 +29,6 @@ namespace Omega.Zeta.GaugeGroupTripleDecomp
     thm:xi-foldbin-gauge-group-center-abel-derived-triple-decomposition -/
 theorem histogram_6 : 8 + 4 + 9 = (21 : ℕ) := by omega
 
-/-- Center dimension: only S₂ factors contribute (Z(S₂) = S₂ ≅ Z/2Z).
-    For m=6: dim_F₂ Z(G₆) = |S_{6,2}| = 8.
-    thm:xi-foldbin-gauge-group-center-abel-derived-triple-decomposition -/
-theorem center_dim_6 : (8 : ℕ) = 8 := rfl
-
 /-- Abelianization dimension: each S_d (d ≥ 2) contributes one Z/2Z.
     For m=6: dim_F₂ (G₆)^ab = 8 + 4 + 9 = 21 = |X_6|.
     thm:xi-foldbin-gauge-group-center-abel-derived-triple-decomposition -/
@@ -77,22 +72,12 @@ theorem pow_6_4 : 6 ^ 4 = (1296 : ℕ) := by omega
     thm:xi-foldbin-gauge-group-center-abel-derived-triple-decomposition -/
 theorem center_lt_abel : (8 : ℕ) < 21 := by omega
 
-/-- The abelianization rank 21 equals |X_6| (Fibonacci F(8) = 21).
-    thm:xi-foldbin-gauge-group-center-abel-derived-triple-decomposition -/
-theorem abel_rank_eq_fib8 : (21 : ℕ) = 21 := rfl
-
 /-- S₂ has trivial derived subgroup: [S₂, S₂] = {e}, so A₂ = {e}.
     Hence the 8 copies of S₂ do not contribute to the derived subgroup.
     thm:xi-foldbin-gauge-group-center-abel-derived-triple-decomposition -/
 theorem a2_trivial : Nat.factorial 2 / 2 = 1 := by decide
 
 /-! ## Even window specialization: (G_m^bin)^ab ≅ (Z/2Z)^{F_{m+2}} -/
-
-/-- For m = 6 (even window), all fibers have size ≥ 2, so
-    dim_F₂ (G₆)^ab = |X_6| = F(8) = 21.
-    thm:xi-foldbin-gauge-group-center-abel-derived-triple-decomposition -/
-theorem even_window_abel_dim :
-    (21 : ℕ) = 21 := rfl
 
 /-! ## Paper theorem wrapper -/
 

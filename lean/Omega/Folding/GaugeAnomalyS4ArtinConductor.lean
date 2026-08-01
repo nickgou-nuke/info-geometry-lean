@@ -77,12 +77,6 @@ theorem conductor_rho3 : 12 * 1 = 12 := by omega
     thm:fold-gauge-anomaly-s4-regular-closure-tame-artin-conductor-degrees -/
 theorem conductor_rho3' : 12 * 2 = 24 := by omega
 
-/-! ## Ramification point count -/
-
-/-- The covering has exactly 12 ramification points.
-    thm:fold-gauge-anomaly-s4-regular-closure-tame-artin-conductor-degrees -/
-theorem ramification_points : 12 = 12 := rfl
-
 /-! ## Paper theorem wrapper -/
 
 /-- Tame Artin conductor computation for S₄ regular closure:

@@ -4,9 +4,6 @@ import Omega.Conclusion.PhaseLedgerBudgetExactHalfspace
 
 namespace Omega.Conclusion
 
-/-- In the subexponential regime the ledger contribution collapses to the zero budget. -/
-theorem subexponential_ledger_budget_zero : (0 : ℝ) = 0 := rfl
-
 set_option maxHeartbeats 400000 in
 /-- Paper-facing seed: once the ledger contribution is subexponential, the effective budget is
 zero, so feasibility is equivalent to having at least two phase coordinates.
@@ -43,12 +40,12 @@ theorem paper_conclusion_subexponential_ledger_phase_universality
     {α : ℝ} (hα₁ : 1 < α) (hα₂ : α < 2) :
     (0 : ℝ) = 0 ∧
       ∀ {k : ℕ}, 1 ≤ k → (PhaseLedgerBudgetRealizable α 0 k ↔ 2 ≤ k) := by
-  refine ⟨subexponential_ledger_budget_zero, ?_⟩
+  refine ⟨rfl, ?_⟩
   intro k hk
   constructor
   · intro hreal
     have hkα : α ≤ k := by
-      simpa [subexponential_ledger_budget_zero] using
+      simpa using
         (paper_conclusion_phase_ledger_budget_exact_halfspace α 0 k).1 hreal
     by_cases hk1 : k = 1
     · have : α ≤ 1 := by simpa [hk1] using hkα
@@ -60,6 +57,6 @@ theorem paper_conclusion_subexponential_ledger_phase_universality
     have hkα : α ≤ k := by
       linarith
     exact (paper_conclusion_phase_ledger_budget_exact_halfspace α 0 k).2 <| by
-      simpa [subexponential_ledger_budget_zero] using hkα
+      simpa using hkα
 
 end Omega.Conclusion

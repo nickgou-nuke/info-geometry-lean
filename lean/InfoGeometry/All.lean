@@ -3300,7 +3300,6 @@ import InfoGeometry.Krein.CarrierTransport
 import InfoGeometry.Krein.CarrierWithGenerator
 import InfoGeometry.Krein.CartanDecomposition
 import InfoGeometry.Krein.Category
-import InfoGeometry.Krein.Cl55Certificates
 import InfoGeometry.Krein.Clifford
 import InfoGeometry.Krein.Dilation
 import InfoGeometry.Krein.DiracHodgeDoubledSpace
@@ -4616,3 +4615,4 @@ import InfoGeometry.Topology.AttentionLatentSimplexInteriorTopological
 import InfoGeometry.Topology.BCFWShiftTopological
 import InfoGeometry.Topology.AttentionLatentHeadTopological
 import InfoGeometry.Topology.AttentionLatentHeadCompactTopological
+import InfoGeometry.Canonical.ThreeColorIntegralMultiplicationTable

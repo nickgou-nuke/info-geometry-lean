@@ -31,6 +31,9 @@ import InfoGeometry.Topology.PeircePositiveCellStratificationTopology
 import InfoGeometry.Topology.PeirceDifferentialFormSocket
 import InfoGeometry.Topology.PeirceBoundaryCochainComplex
 import InfoGeometry.Topology.DiscreteHodgeStarConjugation
+import InfoGeometry.Topology.DiracKahlerMultiplication
+import InfoGeometry.Topology.PeirceBoundaryDiracKahlerData
+import InfoGeometry.Topology.PeirceCanonicalBoundaryFormContract
 import InfoGeometry.Topology.ChiralConeSpinFrameTopological
 import InfoGeometry.Topology.IntegralChiralCliffordOrderTopological
 import InfoGeometry.Topology.ThreeColorIntegralCliffordEmbeddingTopological
@@ -55,6 +58,8 @@ import InfoGeometry.Topology.DrazinEntropyGraph
 import InfoGeometry.Topology.DiscreteDiracHodge
 import InfoGeometry.Topology.EckmannDiscreteHodge
 import InfoGeometry.Topology.DiscreteDiracHodgeChiral
+import InfoGeometry.Topology.HodgeDecomposition
+import InfoGeometry.Topology.HodgeDecomposition
 import InfoGeometry.Topology.DiscreteHodgeStabilizer
 import InfoGeometry.Topology.FractalCantorFockWitness
 import InfoGeometry.Topology.FibonacciFR

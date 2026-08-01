@@ -123,12 +123,4 @@ def summary : Summary :=
 
 end BlackBookPacket
 
-/-- Conservative archetype detector for black-book integration packets. -/
-def detectArchetypes (B : BlackBookPacket) : Array String :=
-  InfoGeometry.Canonical.CognitiveArchetype.detectArchetypes B.conjectures
-
-/-- Conservative shadow detector for black-book integration packets. -/
-def detectShadows (B : BlackBookPacket) : Array String :=
-  InfoGeometry.Canonical.CognitiveShadow.detectShadows B.residualDebt
-
 end InfoGeometry.Canonical.BlackBookIntegration

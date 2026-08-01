@@ -108,10 +108,6 @@ def knownArchetypes : Array ArchetypeTemplate :=
       status := .recognized }
   ]
 
-/-- Return the names of templates detected by the observed terms. -/
-def detectArchetypes (observedTerms : Array String) : Array String :=
-  knownArchetypes.filter (fun T => T.detects observedTerms) |>.map (fun T => T.name.label)
-
 /-- Return all detected archetypes with their observed terms. -/
 def detectedArchetypes (observedTerms : Array String) : Array DetectedArchetype :=
   knownArchetypes.filter (fun T => T.detects observedTerms) |>.map (fun T =>

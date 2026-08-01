@@ -26,10 +26,6 @@ namespace Omega.Conclusion.CompressionLadderSpin10
 
 /-! ## F₂-vector space dimension arithmetic -/
 
-/-- P₆ ≅ (Z/2Z)³ has F₂-dimension 3.
-    thm:conclusion-window6-boundary-center-compression-ladder -/
-theorem boundary_parity_dim : 3 = 3 := rfl
-
 /-- Z(Spin(10)) ≅ Z/4Z: its 2-torsion has F₂-rank at most 1.
     thm:conclusion-window6-boundary-center-compression-ladder -/
 theorem spin10_center_2torsion_rank : 1 ≤ 1 := le_refl 1

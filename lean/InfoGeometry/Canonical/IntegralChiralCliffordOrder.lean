@@ -222,6 +222,12 @@ theorem parityMap_ker_eq :
     · rw [ZMod.intCast_zmod_eq_zero_iff_dvd]
       exact Int.modEq_iff_dvd.mp h01.symm
 
+/-- Bundle integerChiralOrder as a Subring of M2Z --/
+
+def integerChiralOrderSubring : Subring M2Z :=
+
+  Subring.copy paritySubring (integerChiralOrder : Set M2Z) integerChiralOrder_eq_paritySubring
+
 noncomputable def integerChiralOrder_quotient_equiv :
     M2Z ⧸ integerChiralOrder.toAddSubgroup ≃+ (ZMod 2 × ZMod 2) := by
   have hker : parityMap.ker = integerChiralOrder.toAddSubgroup := parityMap_ker_eq

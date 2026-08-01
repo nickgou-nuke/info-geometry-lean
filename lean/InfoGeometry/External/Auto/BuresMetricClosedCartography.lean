@@ -394,8 +394,6 @@ theorem tomita_takesaki_modular_flow : Matrix.trace I2 = 2 := by
   simp [I2, Matrix.trace, Fin.sum_univ_two]
   norm_num
 
-theorem langlands_functor_is_GNS_colimit : 1 + 1 = 2 := rfl
-
 theorem fierz_identity_is_trace_formula (A B : Matrix (Fin 2) (Fin 2) ℂ) : 
     Matrix.trace (A + B) = Matrix.trace A + Matrix.trace B := Matrix.trace_add _ _
 

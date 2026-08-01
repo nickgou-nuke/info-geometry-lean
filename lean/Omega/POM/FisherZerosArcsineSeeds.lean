@@ -124,15 +124,6 @@ theorem arcsineDiscriminant_symmetry :
     arcsineDiscriminant (-1) = arcsineDiscriminant (-3) := by
   simp [arcsineDiscriminant]
 
-/-! ## Zero count per level: exactly k zeros for L_k
-
-The polynomial P_k(t) = det(L_k + tI) has degree k, hence exactly k zeros
-(counted with multiplicity). All zeros are real and simple, lying in (-4, 0). -/
-
-/-- Total zero count at level k equals k (polynomial degree).
-    thm:pom-Lk-fisher-zeros-arcsine -/
-theorem zero_count_eq_degree (k : ℕ) : k = k := rfl
-
 /-! ## Joukowsky uniformization seeds: w^{2k+1} = -1
 
 Under the Joukowsky map t = w + w⁻¹ - 2, the zeros correspond to

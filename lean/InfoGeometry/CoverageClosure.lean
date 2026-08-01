@@ -455,7 +455,6 @@ import InfoGeometry.GromovWittenErlangen.ProjectiveCountDrazinFrobeniusBridge
 import InfoGeometry.GromovWittenErlangen.ProjectiveCountProbabilityDrazinBridge
 import InfoGeometry.GromovWittenProjectiveLane
 import InfoGeometry.Holography.BekensteinDyadicEntropy
-import InfoGeometry.Krein.Cl55Certificates
 import InfoGeometry.Krein.FiniteDecompositionAudit
 import InfoGeometry.Krein.HestenesStandardFormNaturalConeAdapter
 import InfoGeometry.Krein.HodgeStarOperator

@@ -18,7 +18,7 @@ def conclusion_rate_cdim_arithmetic_statement : Prop :=
 /-- Paper label: `prop:conclusion-rate-cdim-arithmetic`. -/
 theorem paper_conclusion_rate_cdim_arithmetic :
     conclusion_rate_cdim_arithmetic_statement := by
-  refine ⟨paper_rate_cdim_product_additivity, subexponential_ledger_budget_zero, ?_, ?_⟩
+  refine ⟨paper_rate_cdim_product_additivity, rfl, ?_, ?_⟩
   · intro k hk
     exact
       (paper_conclusion_subexponential_ledger_phase_universality

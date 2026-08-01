@@ -124,17 +124,6 @@ def spineFunctorKind? (env : Environment) (declName : Name) : Option SpineFuncto
   | #[kind] => some kind
   | _ => none
 
-/-- Collect the functor-role taxonomy attached to a declaration as strings. -/
-def spineFunctorKindStringsOf (env : Environment) (declName : Name) : Array String :=
-  (spineFunctorKindsOf env declName).map fun
-    | .lift => "lift"
-    | .constructor => "constructor"
-    | .responder => "responder"
-
-/-- Collect all semantic spine tags attached to a declaration as strings. -/
-def spineTagStringsOf (env : Environment) (declName : Name) : Array String :=
-  (spineTagsOf env declName).map toString
-
 /-- Test whether a declaration belongs to the tagged semantic spine. -/
 def isSpineTagged (env : Environment) (declName : Name) : Bool :=
   (spineTagsOf env declName).isEmpty = false

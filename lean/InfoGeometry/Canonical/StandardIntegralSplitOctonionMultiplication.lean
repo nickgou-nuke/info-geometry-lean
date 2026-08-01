@@ -1,86 +1,97 @@
-import Mathlib.Algebra.Module.Basic
-import Mathlib.Algebra.Module.LinearMap.Basic
 import InfoGeometry.Canonical.ThreeColorIntegralCliffordEmbedding
+import Mathlib
+
+open scoped BigOperators
 
 namespace InfoGeometry.Canonical
 
-/-- Tensor of structural constants of the Split Octonions over ℤ -/
-def basisMulCoeff : IntegralSplitBasis → IntegralSplitBasis → IntegralSplitBasis → ℤ
-  | .one, .one, .one => 1
-  | .one, .l, .l => 1
-  | .one, .i, .i => 1
-  | .one, .il, .il => 1
-  | .one, .j, .j => 1
-  | .one, .jl, .jl => 1
-  | .one, .k, .k => 1
-  | .one, .kl, .kl => 1
-  | .l, .one, .l => 1
-  | .l, .l, .one => 1
-  | .l, .i, .il => -1
-  | .l, .il, .i => -1
-  | .l, .j, .jl => -1
-  | .l, .jl, .j => -1
-  | .l, .k, .kl => -1
-  | .l, .kl, .k => -1
-  | .i, .one, .i => 1
-  | .i, .l, .il => 1
-  | .i, .i, .one => -1
-  | .i, .il, .l => -1
-  | .i, .j, .k => 1
-  | .i, .jl, .kl => -1
-  | .i, .k, .j => -1
-  | .i, .kl, .jl => 1
-  | .il, .one, .il => 1
-  | .il, .l, .i => 1
-  | .il, .i, .l => 1
-  | .il, .il, .one => 1
-  | .il, .j, .kl => -1
-  | .il, .jl, .k => 1
-  | .il, .k, .jl => 1
-  | .il, .kl, .j => -1
-  | .j, .one, .j => 1
-  | .j, .l, .jl => 1
-  | .j, .i, .k => -1
-  | .j, .il, .kl => 1
-  | .j, .j, .one => -1
-  | .j, .jl, .l => -1
-  | .j, .k, .i => 1
-  | .j, .kl, .il => -1
-  | .jl, .one, .jl => 1
-  | .jl, .l, .j => 1
-  | .jl, .i, .kl => 1
-  | .jl, .il, .k => -1
-  | .jl, .j, .l => 1
-  | .jl, .jl, .one => 1
-  | .jl, .k, .il => -1
-  | .jl, .kl, .i => 1
-  | .k, .one, .k => 1
-  | .k, .l, .kl => 1
-  | .k, .i, .j => 1
-  | .k, .il, .jl => -1
-  | .k, .j, .i => -1
-  | .k, .jl, .il => 1
-  | .k, .k, .one => -1
-  | .k, .kl, .l => -1
-  | .kl, .one, .kl => 1
-  | .kl, .l, .k => 1
-  | .kl, .i, .jl => -1
-  | .kl, .il, .j => 1
-  | .kl, .j, .il => 1
-  | .kl, .jl, .i => -1
-  | .kl, .k, .l => 1
-  | .kl, .kl, .one => 1
-  | _, _, _ => 0
+/-- 1. Таблица за Умножение на 8-те Базисни Елемента {1, l, i, il, j, jl, k, kl} -/
+def basisMul : IntegralSplitBasis → IntegralSplitBasis → StandardIntegralSplitOctonion
+  | .one, b  => splitBasisVector b
+  | a, .one  => splitBasisVector a
+  | .l, .l   => oneOct
+  | .i, .i   => -oneOct
+  | .j, .j   => -oneOct
+  | .k, .k   => -oneOct
+  | .il, .il => oneOct
+  | .jl, .jl => oneOct
+  | .kl, .kl => oneOct
+  | .i, .j   => kOct
+  | .j, .i   => -kOct
+  | .j, .k   => iOct
+  | .k, .j   => -iOct
+  | .k, .i   => jOct
+  | .i, .k   => -jOct
+  | .l, .i   => -ilOct
+  | .i, .l   => ilOct
+  | .l, .j   => -jlOct
+  | .j, .l   => jlOct
+  | .l, .k   => -klOct
+  | .k, .l   => klOct
+  | .l, .il  => iOct
+  | .il, .l  => -iOct
+  | .l, .jl  => jOct
+  | .jl, .l  => -jOct
+  | .l, .kl  => kOct
+  | .kl, .l  => -kOct
+  | .i, .il  => -lOct
+  | .il, .i  => lOct
+  | .j, .jl  => -lOct
+  | .jl, .j  => lOct
+  | .k, .kl  => -lOct
+  | .kl, .k  => lOct
+  | .i, .jl  => klOct
+  | .jl, .i  => -klOct
+  | .il, .j  => klOct
+  | .j, .il  => -klOct
+  | .il, .jl => kOct
+  | .jl, .il => -kOct
+  | .j, .kl  => ilOct
+  | .kl, .j  => -ilOct
+  | .jl, .k  => ilOct
+  | .k, .jl  => -ilOct
+  | .jl, .kl => iOct
+  | .kl, .jl => -iOct
+  | .k, .il  => jlOct
+  | .il, .k  => -jlOct
+  | .kl, .i  => jlOct
+  | .i, .kl  => -jlOct
+  | .kl, .il => jOct
+  | .il, .kl => -jOct
 
-open Finset
-
-/-- Bilinear Multiplication of Integral Split Octonions -/
+/-- 2. Билинейно Умножение върху Целочислените Сплит Октониони -/
 def splitOctonionMul (x y : StandardIntegralSplitOctonion) : StandardIntegralSplitOctonion :=
-  fun r => ∑ p : IntegralSplitBasis, ∑ q : IntegralSplitBasis, x p * y q * basisMulCoeff p q r
+  ∑ p : IntegralSplitBasis, ∑ q : IntegralSplitBasis, (x p * y q) • basisMul p q
 
-theorem red_mul_green_eq_blue :
-    splitOctonionMul (Pi.single .i 1) (Pi.single .j 1) = Pi.single .k 1 := by
+/-- **Теорема 1**: Червено × Зелено = Син (i * j = k) -/
+theorem i_mul_j_eq_k :
+    splitOctonionMul iOct jOct = kOct := by
+  dsimp [splitOctonionMul, iOct, jOct, kOct, splitBasisVector]
   ext r
-  fin_cases r <;> rfl
+  fin_cases r <;> decide
+
+/-- **Теорема 2**: Преплитане l * i = -il -/
+theorem l_mul_i_eq_neg_il :
+    splitOctonionMul lOct iOct = -ilOct := by
+  dsimp [splitOctonionMul, lOct, iOct, ilOct, splitBasisVector]
+  ext r
+  fin_cases r <;> decide
+
+/-- **Теорема 3**: Проекция към Часовниковата Ос i * il = -l -/
+theorem i_mul_il_eq_neg_l :
+    splitOctonionMul iOct ilOct = -lOct := by
+  dsimp [splitOctonionMul, iOct, ilOct, lOct, splitBasisVector]
+  ext r
+  fin_cases r <;> decide
+
+/-- **Master Synthesis**: Standard Integral Split Octonion Multiplication Synthesis -/
+theorem master_standard_split_octonion_multiplication_synthesis :
+    (splitOctonionMul iOct jOct = kOct) ∧
+    (splitOctonionMul lOct iOct = -ilOct) ∧
+    (splitOctonionMul iOct ilOct = -lOct) := ⟨
+  i_mul_j_eq_k,
+  l_mul_i_eq_neg_il,
+  i_mul_il_eq_neg_l
+⟩
 
 end InfoGeometry.Canonical

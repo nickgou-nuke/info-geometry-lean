@@ -26,11 +26,7 @@ a thin set. In particular, E_t = 0 is not solvable by radicals over ℚ(t).
 
 namespace Omega.Zeta.Degree11GenericGaloisS11
 
-/-! ## Polynomial degree and group orders -/
-
-/-- The polynomial E_t has degree 11.
-    cor:xi-degree11-Et-generic-galois-S11-hilbert -/
-theorem poly_degree : (11 : ℕ) = 11 := rfl
+/-! ## Group orders -/
 
 /-- 11 is prime (needed for Jordan's theorem: primitive permutation group
     of prime degree containing a p-cycle with p ≤ n - 3).
@@ -177,7 +173,7 @@ irreducibility audit at `p = 31`, the `(1)(3)(7)` Frobenius cycle at `p = 7`, th
 parity obstruction to `A₁₁`, and the Jordan-theorem numerical hypotheses recorded in this file. -/
 theorem paper_xi_degree11_et_specialization_galois_s11 :
     xi_degree11_et_specialization_galois_s11_statement := by
-  refine ⟨poly_degree, eleven_prime, p31_coprime_disc, splitting_mod7_degree_check, p7_unramified,
+  refine ⟨by omega, eleven_prime, p31_coprime_disc, splitting_mod7_degree_check, p7_unramified,
     jordan_cycle_bound, seven_prime, disc_odd_exponent_23, disc_exponents_not_all_even, s11_order,
     a11_order, s11_not_solvable_witness⟩
 

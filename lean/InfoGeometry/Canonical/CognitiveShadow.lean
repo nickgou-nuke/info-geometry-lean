@@ -117,10 +117,6 @@ def knownShadows : Array ShadowTemplate :=
       status := .recognized }
   ]
 
-/-- Return the names of shadow templates detected by the observed terms. -/
-def detectShadows (observedTerms : Array String) : Array String :=
-  knownShadows.filter (fun T => T.detects observedTerms) |>.map (fun T => T.name.label)
-
 /-- Return all detected shadow patterns with their observed terms. -/
 def detectedShadows (observedTerms : Array String) : Array DetectedShadow :=
   knownShadows.filter (fun T => T.detects observedTerms) |>.map (fun T =>

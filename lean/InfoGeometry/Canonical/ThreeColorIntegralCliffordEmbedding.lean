@@ -3,8 +3,10 @@ import InfoGeometry.Canonical.IntegralChiralCliffordOrder
 
 /- Coordinate-only eight-slot carrier and three linear embeddings for the
 integral three-color corridor.  This file does not introduce a multiplication
-table; the product structure is handled by the separate Zorn multiplication
-owner. -/
+table: `StandardIntegralSplitOctonion` is a named coordinate module, not yet a
+non-associative algebra.  The product structure belongs to a separate owner.
+Likewise, the rational span and quotient/index results belong to the
+`IntegralChiralCliffordOrder` owner rather than being inferred here. -/
 namespace InfoGeometry.Canonical
 
 inductive IntegralSplitBasis
@@ -350,11 +352,30 @@ theorem threeColor_intersection_eq_sharedAxis :
   aesop
 
 theorem master_three_color_embedding_synthesis :
-    (LinearMap.range redEmbedding ⊓ LinearMap.range greenEmbedding = sharedIntegralHyperbolicAxis) ∧
-    (LinearMap.range greenEmbedding ⊓ LinearMap.range blueEmbedding = sharedIntegralHyperbolicAxis) ∧
-    (LinearMap.range blueEmbedding ⊓ LinearMap.range redEmbedding = sharedIntegralHyperbolicAxis) :=
-  ⟨red_green_intersection_eq_sharedAxis,
-   green_blue_intersection_eq_sharedAxis,
-   blue_red_intersection_eq_sharedAxis⟩
+    Function.Injective redEmbedding ∧
+    Function.Injective greenEmbedding ∧
+    Function.Injective blueEmbedding ∧
+    LinearMap.range redEmbedding = redIntegralSector ∧
+    LinearMap.range greenEmbedding = greenIntegralSector ∧
+    LinearMap.range blueEmbedding = blueIntegralSector ∧
+    LinearMap.range redEmbedding ⊓ LinearMap.range greenEmbedding =
+      sharedIntegralHyperbolicAxis ∧
+    LinearMap.range greenEmbedding ⊓ LinearMap.range blueEmbedding =
+      sharedIntegralHyperbolicAxis ∧
+    LinearMap.range blueEmbedding ⊓ LinearMap.range redEmbedding =
+      sharedIntegralHyperbolicAxis ∧
+    LinearMap.range redEmbedding ⊓ LinearMap.range greenEmbedding ⊓
+        LinearMap.range blueEmbedding = sharedIntegralHyperbolicAxis := by
+  exact ⟨
+    redEmbedding_injective,
+    greenEmbedding_injective,
+    blueEmbedding_injective,
+    range_redEmbedding,
+    range_greenEmbedding,
+    range_blueEmbedding,
+    red_green_intersection_eq_sharedAxis,
+    green_blue_intersection_eq_sharedAxis,
+    blue_red_intersection_eq_sharedAxis,
+    threeColor_intersection_eq_sharedAxis⟩
 
 end InfoGeometry.Canonical

@@ -19,6 +19,9 @@ abbrev PeirceBoundaryChart := EuclideanSpace ℝ (Fin 3)
 abbrev PeirceDifferentialForm (n : ℕ) :=
   PeirceChart → PeirceChart [⋀^Fin n]→L[ℝ] ℝ
 
+abbrev PeirceBoundaryDifferentialForm (n : ℕ) :=
+  PeirceBoundaryChart → PeirceBoundaryChart [⋀^Fin n]→L[ℝ] ℝ
+
 /-! The boundary chart has coordinates `(a00, a01, a10, a11)`.
 
 The four boundary charts below are bundled continuous linear maps.  This is

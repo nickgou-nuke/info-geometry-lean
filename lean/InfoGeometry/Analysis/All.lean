@@ -5,6 +5,7 @@ import InfoGeometry.Analysis.CliffordWaveletDonohoStark
 import InfoGeometry.Analysis.D23HurwitzCliffordFilterBank
 import InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 import InfoGeometry.Analysis.LaplaceMellinScaleShapeTransform
+import InfoGeometry.Analysis.MellinWaveletScaleShapeBridge
 import InfoGeometry.Analysis.MellinZetaScaling
 import InfoGeometry.Analysis.FiniteSpectralMellinTaylor
 import InfoGeometry.Analysis.FiniteSpectralHeatMellin

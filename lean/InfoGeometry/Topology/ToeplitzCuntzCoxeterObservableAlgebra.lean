@@ -1,5 +1,6 @@
 import InfoGeometry.Topology.ToeplitzCuntzCoxeterInvariantContinuousObservables
 import Mathlib.Topology.ContinuousMap.Algebra
+import Mathlib.Topology.ContinuousMap.Star
 
 /-!
 # The algebraic fixed-point layer of quotient descent
@@ -105,5 +106,61 @@ def invariantContinuousRingEquiv :
     (F : C(CoxeterBoundaryOrbitSpace, A)) :
     invariantContinuousRingEquiv (A := A) F =
       pullbackContinuousRingHom (A := A) F := rfl
+
+section StarStructure
+
+variable [StarRing A] [ContinuousStar A]
+
+/-- The Coxeter fixed-point subring inherits the pointwise involution.
+
+This is deliberately an algebraic `StarRing` layer: no norm completion or
+`C*`-algebra claim is made here. -/
+instance invariantContinuousSubringStar :
+    Star (invariantContinuousSubring (A := A)) where
+  star f :=
+    ⟨star (f : C(TernaryBoundary, A)), by
+      intro x
+      exact congrArg star (f.property x)⟩
+
+instance invariantContinuousSubringStarRing :
+    StarRing (invariantContinuousSubring (A := A)) where
+  star_add f g := by
+    apply Subtype.ext
+    ext x
+    change star ((f.1 + g.1) x) = star (f.1 x) + star (g.1 x)
+    rw [ContinuousMap.add_apply, star_add]
+  star_involutive f := by
+    apply Subtype.ext
+    ext x
+    change star (star (f.1 x)) = f.1 x
+    exact star_star _
+  star_mul f g := by
+    apply Subtype.ext
+    ext x
+    change star ((f.1 * g.1) x) = star (g.1 x) * star (f.1 x)
+    rw [ContinuousMap.mul_apply, star_mul]
+
+/-- Pullback/descent isomorphism upgraded to a star-ring equivalence. -/
+def invariantContinuousStarRingEquiv :
+    C(CoxeterBoundaryOrbitSpace, A) ≃⋆+*
+      invariantContinuousSubring (A := A) :=
+  StarRingEquiv.mk (invariantContinuousRingEquiv (A := A)) (by
+    intro F
+    apply Subtype.ext
+    ext x
+    rfl)
+
+@[simp] theorem invariantContinuousStarRingEquiv_apply
+    (F : C(CoxeterBoundaryOrbitSpace, A)) :
+    invariantContinuousStarRingEquiv (A := A) F =
+      pullbackContinuousRingHom (A := A) F := rfl
+
+@[simp] theorem invariantContinuousStarRingEquiv_map_star
+    (F : C(CoxeterBoundaryOrbitSpace, A)) :
+    invariantContinuousStarRingEquiv (A := A) (star F) =
+      star (invariantContinuousStarRingEquiv (A := A) F) := by
+  rfl
+
+end StarStructure
 
 end InfoGeometry.Topology.ToeplitzCuntzCoxeterObservableAlgebra

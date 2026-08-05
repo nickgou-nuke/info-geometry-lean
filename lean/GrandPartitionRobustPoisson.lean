@@ -106,11 +106,9 @@ theorem weightedPoissonScore_eq_zero_at_mean
     (r x : ι → ℝ) (hN : (∑ i, r i) ≠ 0) :
     weightedPoissonScore r x (weightedPoissonMean r x) = 0 := by
   unfold weightedPoissonScore weightedPoissonMean
-  rw [Finset.sum_sub_distrib]
   simp_rw [mul_sub]
-  rw [Finset.sum_sub_distrib]
+  rw [Finset.sum_sub_distrib, ← Finset.sum_mul]
   field_simp [hN]
-  ring
 
 /-- The weighted score equation has the unique solution given by the weighted
 mean when the total fixed weight is nonzero. -/
@@ -121,7 +119,7 @@ theorem weightedPoissonScore_eq_zero_iff
       λ = weightedPoissonMean r x := by
   unfold weightedPoissonScore weightedPoissonMean
   simp_rw [mul_sub]
-  rw [Finset.sum_sub_distrib]
+  rw [Finset.sum_sub_distrib, ← Finset.sum_mul]
   constructor
   · intro h
     apply (eq_div_iff hN).2
@@ -129,6 +127,5 @@ theorem weightedPoissonScore_eq_zero_iff
   · intro h
     rw [h]
     field_simp [hN]
-    ring
 
 end RobustPoissonLayer

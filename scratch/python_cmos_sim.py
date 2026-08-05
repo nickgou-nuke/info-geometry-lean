@@ -41,11 +41,16 @@ class ModularMoebiusCMOSPipeline:
         noise_floor = max(self.params['read_noise_e_sq'] + self.params['quantization_noise_e_sq'], self.params['variance_floor'])
 
         # Check for domain faults
-        domain_floor = 1e-37
+        log_argument_floor = self.params.get('log_argument_floor', 1e-10)
+        hardware_cut = self.params.get('hardware_low_signal_cut', -1e9)
+        
         arg_X = X_e + noise_floor
         arg_B = self.B + noise_floor
         
-        valid_domain = (arg_X > domain_floor) & (arg_B > domain_floor)
+        math_valid = (arg_X > log_argument_floor) & (arg_B > log_argument_floor)
+        hw_valid = (X_e >= hardware_cut)
+        
+        valid_domain = math_valid & hw_valid
         domain_fault = ~valid_domain
 
         # 2. Fisher amplitude via exact quasi-deviance

@@ -30,14 +30,14 @@ variable [CStarAlgebra Ainf] [PartialOrder Ainf] [StarOrderedRing Ainf]
 variable (cocone : StarInductiveCocone (Ainf := Ainf) Stage sys)
 
 def continuousMap (i : I) : ContinuousMap (Stage i) Ainf :=
-  { toFun := cocone.ι i
+  { toFun := ContinuousStarInductiveSystem.StarInductiveCocone.leg (Stage := Stage) (sys := sys) cocone i
     continuous_toFun :=
-      (starAlgHomToContinuousLinearMap (cocone.ι i)).continuous }
+      (starAlgHomToContinuousLinearMap (ContinuousStarInductiveSystem.StarInductiveCocone.leg (Stage := Stage) (sys := sys) cocone i)).continuous }
 
 omit [∀ i, PartialOrder (Stage i)] [∀ i, StarOrderedRing (Stage i)] [PartialOrder Ainf]
   [StarOrderedRing Ainf] in
 @[simp] theorem continuousMap_apply (i : I) (a : Stage i) :
-    continuousMap sys cocone i a = cocone.ι i a :=
+    continuousMap sys cocone i a = ContinuousStarInductiveSystem.StarInductiveCocone.leg (Stage := Stage) (sys := sys) cocone i a :=
   rfl
 
 def toTopCatCocone : Cocone (topologicalDiagram Stage sys) where
@@ -49,39 +49,37 @@ def toTopCatCocone : Cocone (topologicalDiagram Stage sys) where
         apply TopCat.hom_ext
         apply ContinuousMap.ext
         intro a
-        change cocone.ι j (sys.map (leOfHom f) a) = cocone.ι i a
+        change ContinuousStarInductiveSystem.StarInductiveCocone.leg (Stage := Stage) (sys := sys) cocone j (sys.map (leOfHom f) a) = ContinuousStarInductiveSystem.StarInductiveCocone.leg (Stage := Stage) (sys := sys) cocone i a
         exact congrArg (fun g : Stage i →⋆ₐ[ℂ] Ainf => g a)
-          (cocone.ι_comm (leOfHom f)) }
+          (ContinuousStarInductiveSystem.StarInductiveCocone.compatibility (Stage := Stage) (sys := sys) cocone (leOfHom f)) }
 
-omit [PartialOrder Ainf] [StarOrderedRing Ainf] in
 @[simp] theorem toTopCatCocone_app_apply (i : I) (a : Stage i) :
-    (toTopCatCocone sys cocone).ι.app i a = cocone.ι i a :=
+    (toTopCatCocone sys cocone).ι.app i a = ContinuousStarInductiveSystem.StarInductiveCocone.leg (Stage := Stage) (sys := sys) cocone i a :=
   rfl
 
 noncomputable def toTopologicalColimitMap :
     topologicalColimit Stage sys ⟶ TopCat.of Ainf :=
-  topologicalDirectDescend (topologicalDiagram Stage sys)
+  colimit.desc (topologicalDiagram Stage sys)
     (toTopCatCocone sys cocone)
 
-omit [PartialOrder Ainf] [StarOrderedRing Ainf] in
 theorem toTopologicalColimitMap_inclusion (i : I) (a : Stage i) :
     toTopologicalColimitMap sys cocone
-        (topologicalInjection Stage sys i a) = cocone.ι i a := by
+        (topologicalInjection Stage sys i a) = ContinuousStarInductiveSystem.StarInductiveCocone.leg (Stage := Stage) (sys := sys) cocone i a := by
   have h := topologicalDirectDescend_stage
     (topologicalDiagram Stage sys) (toTopCatCocone sys cocone) i
   exact congrArg (fun f => f a) h
 
 def stateContinuousMap (ω : State Ainf) (i : I) :
     ContinuousMap (Stage i) (ULift ℂ) :=
-  { toFun := fun a => ULift.up (ω.functional (cocone.ι i a))
+  { toFun := fun a => ULift.up (ω.functional (ContinuousStarInductiveSystem.StarInductiveCocone.leg (Stage := Stage) (sys := sys) cocone i a))
     continuous_toFun :=
       continuous_uliftUp.comp (ω.toContinuousLinearMap.comp
-        (starAlgHomToContinuousLinearMap (cocone.ι i))).continuous }
+        (starAlgHomToContinuousLinearMap (ContinuousStarInductiveSystem.StarInductiveCocone.leg (Stage := Stage) (sys := sys) cocone i))).continuous }
 
 omit [∀ i, PartialOrder (Stage i)] [∀ i, StarOrderedRing (Stage i)] in
 @[simp] theorem stateContinuousMap_apply
     (ω : State Ainf) (i : I) (a : Stage i) :
-    stateContinuousMap sys cocone ω i a = ULift.up (ω.functional (cocone.ι i a)) :=
+    stateContinuousMap sys cocone ω i a = ULift.up (ω.functional (ContinuousStarInductiveSystem.StarInductiveCocone.leg (Stage := Stage) (sys := sys) cocone i a)) :=
   rfl
 
 def stateToTopCatCocone (ω : State Ainf) :
@@ -94,21 +92,21 @@ def stateToTopCatCocone (ω : State Ainf) :
         apply TopCat.hom_ext
         apply ContinuousMap.ext
         intro a
-        change ULift.up (ω.functional (cocone.ι j (sys.map (leOfHom f) a))) =
-          ULift.up (ω.functional (cocone.ι i a))
+        change ULift.up (ω.functional (ContinuousStarInductiveSystem.StarInductiveCocone.leg (Stage := Stage) (sys := sys) cocone j (sys.map (leOfHom f) a))) =
+          ULift.up (ω.functional (ContinuousStarInductiveSystem.StarInductiveCocone.leg (Stage := Stage) (sys := sys) cocone i a))
         exact congrArg ULift.up
           (state_readout_transition Stage sys cocone ω (leOfHom f) a) }
 
 noncomputable def stateTopologicalColimitMap (ω : State Ainf) :
     topologicalColimit Stage sys ⟶ TopCat.of (ULift ℂ) :=
-  topologicalDirectDescend (topologicalDiagram Stage sys)
+  colimit.desc (topologicalDiagram Stage sys)
     (stateToTopCatCocone sys (cocone := cocone) ω)
 
 theorem stateTopologicalColimitMap_inclusion
     (ω : State Ainf) (i : I) (a : Stage i) :
     stateTopologicalColimitMap sys cocone ω
         (topologicalInjection Stage sys i a) =
-      ULift.up (ω.functional (cocone.ι i a)) := by
+      ULift.up (ω.functional (ContinuousStarInductiveSystem.StarInductiveCocone.leg (Stage := Stage) (sys := sys) cocone i a)) := by
   have h := topologicalDirectDescend_stage
     (topologicalDiagram Stage sys)
       (stateToTopCatCocone sys (cocone := cocone) ω) i
@@ -121,7 +119,7 @@ theorem stateTopologicalColimitMap_unique
     (f : topologicalColimit Stage sys ⟶ TopCat.of (ULift ℂ))
     (hf : ∀ (i : I) (a : Stage i),
       f (topologicalInjection Stage sys i a) =
-        ULift.up (ω.functional (cocone.ι i a))) :
+        ULift.up (ω.functional (ContinuousStarInductiveSystem.StarInductiveCocone.leg (Stage := Stage) (sys := sys) cocone i a))) :
     f = stateTopologicalColimitMap sys cocone ω := by
   apply colimit.hom_ext
   intro i

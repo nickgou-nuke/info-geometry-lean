@@ -119,13 +119,19 @@ theorem blochSpacetimePoint_det_zero_of_scaled_unit (t r n1 n2 n3 : ℂ)
 /-! ## Finite biquaternion-pair socket -/
 
 /-- The theorem-safe finite shadow of a biquaternion: two Pauli-matrix parts. -/
-structure BiquaternionPair where
-  primal : Mat2
-  dual : Mat2
+abbrev BiquaternionPair := Mat2 × Mat2
+
+namespace BiquaternionPair
+
+abbrev primal (q : BiquaternionPair) : Mat2 := q.1
+
+abbrev dual (q : BiquaternionPair) : Mat2 := q.2
+
+end BiquaternionPair
 
 /-- Swap the two finite Pauli components. -/
 def dualSwap (q : BiquaternionPair) : BiquaternionPair :=
-  { primal := q.dual, dual := q.primal }
+  (q.dual, q.primal)
 
 /-- The dual swap is an involution. -/
 theorem dualSwap_involutive (q : BiquaternionPair) :
@@ -135,7 +141,7 @@ theorem dualSwap_involutive (q : BiquaternionPair) :
 
 /-- Recompose both parts of a biquaternion pair from Pauli coefficients. -/
 def pauliRecomposePair (q : BiquaternionPair) : BiquaternionPair :=
-  { primal := pauliRecompose q.primal, dual := pauliRecompose q.dual }
+  (pauliRecompose q.primal, pauliRecompose q.dual)
 
 /-- Pauli recomposition fixes both parts of a finite biquaternion pair. -/
 theorem pauliRecomposePair_eq_self (q : BiquaternionPair) :

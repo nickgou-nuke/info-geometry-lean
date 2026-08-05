@@ -379,10 +379,14 @@ def eulerAsChirality (atom : Cl11Atom K) : ChiralityOperator atom where
 
 /-! ## Packet -/
 
-structure SplitCliffordRealizationPacket (K : Type*) [Ring K] [Algebra ℝ K] (n : ℕ) where
-  cl11 : Cl11Atom K
+abbrev SplitCliffordRealizationPacket (K : Type*) [Ring K] [Algebra ℝ K] (n : ℕ) :=
+  Cl11Atom K
 
 namespace SplitCliffordRealizationPacket
+
+abbrev cl11 {K : Type*} [Ring K] [Algebra ℝ K] {n : ℕ}
+    (P : SplitCliffordRealizationPacket K n) : Cl11Atom K :=
+  P
 
 theorem euler_sq_one (P : SplitCliffordRealizationPacket K n) :
     EulerOperator P.cl11 * EulerOperator P.cl11 = 1 :=
@@ -435,8 +439,8 @@ theorem car_identity :
 
 end SplitCliffordRealizationPacket
 
-def mkRealization (cl11 : Cl11Atom K) (n : ℕ) : SplitCliffordRealizationPacket K n where
-  cl11 := cl11
+def mkRealization (cl11 : Cl11Atom K) (n : ℕ) : SplitCliffordRealizationPacket K n :=
+  cl11
 
 /-- Owner target for the split Clifford realization lane. -/
 abbrev SplitCliffordRealizationTarget (K : Type uK) [Ring K] [Algebra ℝ K] (n : ℕ) :

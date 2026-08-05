@@ -200,32 +200,30 @@ For `O(4,4)` this is the abstract `V₄ ≃ Z₂ × Z₂` bookkeeping: one bit m
 read as ordinary determinant/orientation, the other as the complementary
 positive/negative-plane orientation or time-orientation convention.
 -/
-structure O44Component where
-  orientation : OrientationBit
-  coorientation : OrientationBit
-deriving DecidableEq, Repr
+abbrev O44Component := OrientationBit × OrientationBit
 
 namespace O44Component
 
+abbrev orientation (C : O44Component) : OrientationBit := C.1
+
+abbrev coorientation (C : O44Component) : OrientationBit := C.2
+
+
 /-- Identity component label. -/
 def identity : O44Component :=
-  { orientation := OrientationBit.preserves
-    coorientation := OrientationBit.preserves }
+  (OrientationBit.preserves, OrientationBit.preserves)
 
 /-- A reflection-like component label. -/
 def reflection : O44Component :=
-  { orientation := OrientationBit.reverses
-    coorientation := OrientationBit.preserves }
+  (OrientationBit.reverses, OrientationBit.preserves)
 
 /-- A complementary/time-reflection-like component label. -/
 def coreflection : O44Component :=
-  { orientation := OrientationBit.preserves
-    coorientation := OrientationBit.reverses }
+  (OrientationBit.preserves, OrientationBit.reverses)
 
 /-- The total inversion/PT-like component label. -/
 def totalInversion : O44Component :=
-  { orientation := OrientationBit.reverses
-    coorientation := OrientationBit.reverses }
+  (OrientationBit.reverses, OrientationBit.reverses)
 
 end O44Component
 

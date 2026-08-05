@@ -31,9 +31,9 @@ def FiniteSpectralData (ι R : Type*) := (ι → R) × (ι → R)
 
 namespace FiniteSpectralData
 
-def spectralValue {ι R : Type*} (D : FiniteSpectralData ι R) : ι → R := D.1
+abbrev spectralValue {ι R : Type*} (D : FiniteSpectralData ι R) : ι → R := D.1
 
-def weight {ι R : Type*} (D : FiniteSpectralData ι R) : ι → R := D.2
+abbrev weight {ι R : Type*} (D : FiniteSpectralData ι R) : ι → R := D.2
 
 variable {ι R : Type*} [Fintype ι] [CommSemiring R]
 

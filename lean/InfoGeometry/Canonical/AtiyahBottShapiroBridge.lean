@@ -61,19 +61,6 @@ theorem cl11_bottAnalyticalIndex_const_of_conjugacy
     (InfoGeometry.Canonical.AnalyticalIndex.cl11BottIndexInvariantAlong_of_conjugacy
       (E := E) (F := F) Dn Γn eFlow hConj s)
 
-/-- The split Bott lift itself is invariant under the same conjugacy data. -/
-theorem cl11_bottIndexInvariantAlong_of_conjugacy
-    [FiniteDimensional ℝ F]
-    [FiniteDimensional ℝ (InfoGeometry.Krein.DoubledSpace E ⊗[ℝ] F)]
-    (Dn Γn : ℝ → Endomorphism F)
-    (eFlow : ℝ → F ≃ₗ[ℝ] F)
-    (hConj : ChiralConjugacyAlong Dn Γn eFlow) :
-    IndexInvariantAlong
-      (fun s => cl11BottDirac (E := E) (Dn s))
-      (fun s => cl11GlobalGrading (E := E) (Γn s)) := by
-  exact InfoGeometry.Canonical.AnalyticalIndex.cl11BottIndexInvariantAlong_of_conjugacy
-    (E := E) (F := F) Dn Γn eFlow hConj
-
 end BottLift
 
 end InfoGeometry.Canonical.AtiyahBottShapiroBridge

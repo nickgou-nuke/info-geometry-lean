@@ -201,20 +201,22 @@ def phaseConjugate
 A phase-preserving unit is an invertible endomorphism whose value and inverse
 both commute with `K`.
 -/
-structure PhaseUnit
+abbrev PhaseUnit
     {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
-    (K : EndR H) where
-  unit : Units (EndR H)
-  val_phase :
-    PhaseLinear K unit.val
-  inv_phase :
-    PhaseLinear K unit.inv
+    (K : EndR H) :=
+  {u : Units (EndR H) //
+    PhaseLinear K u.val ∧
+      PhaseLinear K u.inv}
 
 namespace PhaseUnit
 
 variable
     {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
     {K : EndR H}
+
+abbrev unit (g : PhaseUnit K) : Units (EndR H) := g.1
+abbrev val_phase (g : PhaseUnit K) : PhaseLinear K g.unit.val := g.2.1
+abbrev inv_phase (g : PhaseUnit K) : PhaseLinear K g.unit.inv := g.2.2
 
 /-- Conjugation by a phase-preserving unit. -/
 def conjugate
@@ -236,16 +238,29 @@ theorem conjugate_phaseLinear
 end PhaseUnit
 
 /-- An Erlanger invariant is a readout unchanged under admissible phase conjugation. -/
-structure ErlangerInvariant
+abbrev ErlangerInvariant
     {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
     (K : EndR H)
-    (α : Type*) where
-  read : EndR H → α
-
-  invariant_under_phase_conjugation :
+    (α : Type*) :=
+  {r : EndR H → α //
     ∀ (g : PhaseUnit K) (T : EndR H),
       PhaseLinear K T →
-        read (g.conjugate T) = read T
+        r (g.conjugate T) = r T}
+
+namespace ErlangerInvariant
+
+variable
+    {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
+    {K : EndR H} {α : Type*}
+    (E : ErlangerInvariant K α)
+
+abbrev read : EndR H → α := E.1
+abbrev invariant_under_phase_conjugation :
+    ∀ (g : PhaseUnit K) (T : EndR H),
+      PhaseLinear K T →
+        E.read (g.conjugate T) = E.read T := E.2
+
+end ErlangerInvariant
 
 /-! ## 4. Metric-preserving phase morphisms -/
 
@@ -258,17 +273,31 @@ def MetricPreserving
   ∀ v w : H₁, inner (𝕜 := ℝ) (F v) (F w) = inner (𝕜 := ℝ) v w
 
 /-- A phase-and-metric-preserving morphism. -/
-structure PhaseMetricMorphism
+abbrev PhaseMetricMorphism
     {H₁ H₂ : Type*}
     [NormedAddCommGroup H₁] [InnerProductSpace ℝ H₁]
     [NormedAddCommGroup H₂] [InnerProductSpace ℝ H₂]
     (K₁ : EndR H₁)
-    (K₂ : EndR H₂) where
-  toLinear : H₁ →L[ℝ] H₂
-  phase :
-    PhasePreserving K₁ K₂ toLinear
-  metric :
-    MetricPreserving toLinear
+    (K₂ : EndR H₂) :=
+  {F : H₁ →L[ℝ] H₂ //
+    PhasePreserving K₁ K₂ F ∧
+      MetricPreserving F}
+
+namespace PhaseMetricMorphism
+
+variable
+    {H₁ H₂ : Type*}
+    [NormedAddCommGroup H₁] [InnerProductSpace ℝ H₁]
+    [NormedAddCommGroup H₂] [InnerProductSpace ℝ H₂]
+    {K₁ : EndR H₁} {K₂ : EndR H₂}
+
+abbrev toLinear (F : PhaseMetricMorphism K₁ K₂) : H₁ →L[ℝ] H₂ := F.1
+abbrev phase (F : PhaseMetricMorphism K₁ K₂) :
+    PhasePreserving K₁ K₂ F.toLinear := F.2.1
+abbrev metric (F : PhaseMetricMorphism K₁ K₂) :
+    MetricPreserving F.toLinear := F.2.2
+
+end PhaseMetricMorphism
 
 /-! ## 5. Intertwining arbitrary operators and preserving K-height -/
 

@@ -129,16 +129,11 @@ The form is operator/thermal-model specific.  The only constructive theorem
 claimed here is that closedness of the form forces vanishing boundary integral
 through the supplied Stokes backend.
 -/
-structure KMSDetailedBalanceForm
+abbrev KMSDetailedBalanceForm
     (Region Point Tangent Value : Type*)
     [AddCommGroup Value] [Module ℝ Value]
-    (I : GeometricIntegralBackend Region Point Tangent Value) where
-  /-- Thermal/KMS correlation one-form. -/
-  modularForm :
-    OperatorOneForm Point Tangent Value
-  /-- Detailed balance as closedness/monogenicity of the modular form. -/
-  closed_modularForm :
-    I.IsClosedGeometricForm modularForm
+    (I : GeometricIntegralBackend Region Point Tangent Value) :=
+  {ω : OperatorOneForm Point Tangent Value // I.IsClosedGeometricForm ω}
 
 namespace KMSDetailedBalanceForm
 
@@ -148,6 +143,12 @@ variable
     {I : GeometricIntegralBackend Region Point Tangent Value}
 
 variable (D : KMSDetailedBalanceForm Region Point Tangent Value I)
+
+/-- Compatibility accessor for the thermal/KMS correlation one-form. -/
+abbrev modularForm : OperatorOneForm Point Tangent Value := D.1
+
+/-- Compatibility accessor for its closedness proof. -/
+abbrev closed_modularForm : I.IsClosedGeometricForm D.modularForm := D.2
 
 /--
 Detailed balance implies the thermal boundary integral vanishes.

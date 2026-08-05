@@ -67,8 +67,16 @@ The `matrix` field is the already-inserted global transport matrix.  The
 geometric admissibility and triangle-basis insertion map are deliberately not
 claimed here.
 -/
-structure DelaunayFlipContext (n : ℕ) where
-  matrix : Matrix (Fin (rohozhkinDim n)) (Fin (rohozhkinDim n)) ℚ
+abbrev DelaunayFlipContext (n : ℕ) :=
+  Matrix (Fin (rohozhkinDim n)) (Fin (rohozhkinDim n)) ℚ
+
+namespace DelaunayFlipContext
+
+/-- Compatibility accessor for the native flip transport matrix. -/
+abbrev matrix (F : DelaunayFlipContext n) :
+    Matrix (Fin (rohozhkinDim n)) (Fin (rohozhkinDim n)) ℚ := F
+
+end DelaunayFlipContext
 
 /-- The three local codimension-two move types used in Rohozhkin's invariant proof. -/
 inductive DelaunayMoveKind where
@@ -78,8 +86,14 @@ inductive DelaunayMoveKind where
   deriving DecidableEq, Repr
 
 /-- A sequence of abstract Delaunay flips. -/
-structure DelaunayFlipWord (n : ℕ) where
-  flips : List (DelaunayFlipContext n)
+abbrev DelaunayFlipWord (n : ℕ) := List (DelaunayFlipContext n)
+
+namespace DelaunayFlipWord
+
+/-- Compatibility accessor for the native list carrier. -/
+abbrev flips (W : DelaunayFlipWord n) : List (DelaunayFlipContext n) := W
+
+end DelaunayFlipWord
 
 /--
 Presentation-level admissibility of a Delaunay flip word.
@@ -122,22 +136,21 @@ def rohozhkinMatrix {n : ℕ}
 theorem rohozhkinMatrix_append {n : ℕ}
     (W₁ W₂ : DelaunayFlipWord n) :
     rohozhkinMatrix
-        ({ flips := W₁.flips ++ W₂.flips } :
-          DelaunayFlipWord n) =
+        (W₁.flips ++ W₂.flips : DelaunayFlipWord n) =
       rohozhkinMatrix W₁ * rohozhkinMatrix W₂ := by
   exact rohozhkinMatrixList_append W₁.flips W₂.flips
 
 @[simp]
 theorem rohozhkinMatrix_nil {n : ℕ} :
-    rohozhkinMatrix ({ flips := [] } : DelaunayFlipWord n) = 1 := by
+    rohozhkinMatrix ([] : DelaunayFlipWord n) = 1 := by
   rfl
 
 @[simp]
 theorem rohozhkinMatrix_cons {n : ℕ}
     (F : DelaunayFlipContext n) (tail : List (DelaunayFlipContext n)) :
-    rohozhkinMatrix ({ flips := F :: tail } : DelaunayFlipWord n) =
+    rohozhkinMatrix (F :: tail : DelaunayFlipWord n) =
       F.matrix *
-        rohozhkinMatrix ({ flips := tail } : DelaunayFlipWord n) := by
+        rohozhkinMatrix (tail : DelaunayFlipWord n) := by
   rfl
 
 /-- Concrete presentation-level move relation for Delaunay flip sequences. -/
@@ -178,11 +191,9 @@ theorem rohozhkin_invariant_under_inverse_move {n : ℕ}
     (w₁ w₂ : List (DelaunayFlipContext n)) (A B : DelaunayFlipContext n)
     (h : A.matrix * B.matrix = 1) :
     rohozhkinMatrix
-        ({ flips := w₁ ++ [A, B] ++ w₂ } :
-          DelaunayFlipWord n) =
+        (w₁ ++ [A, B] ++ w₂ : DelaunayFlipWord n) =
       rohozhkinMatrix
-        ({ flips := w₁ ++ w₂ } :
-          DelaunayFlipWord n) :=
+        (w₁ ++ w₂ : DelaunayFlipWord n) :=
   rohozhkinMatrixList_invariant_under_move
     (DelaunayMoveList.inverse w₁ w₂ A B h)
 
@@ -191,11 +202,9 @@ theorem rohozhkin_invariant_under_far_commute_move {n : ℕ}
     (w₁ w₂ : List (DelaunayFlipContext n)) (A B : DelaunayFlipContext n)
     (h : A.matrix * B.matrix = B.matrix * A.matrix) :
     rohozhkinMatrix
-        ({ flips := w₁ ++ [A, B] ++ w₂ } :
-          DelaunayFlipWord n) =
+        (w₁ ++ [A, B] ++ w₂ : DelaunayFlipWord n) =
       rohozhkinMatrix
-        ({ flips := w₁ ++ [B, A] ++ w₂ } :
-          DelaunayFlipWord n) :=
+        (w₁ ++ [B, A] ++ w₂ : DelaunayFlipWord n) :=
   rohozhkinMatrixList_invariant_under_move
     (DelaunayMoveList.farCommute w₁ w₂ A B h)
 
@@ -211,11 +220,9 @@ theorem rohozhkin_invariant_under_pentagon_move {n : ℕ}
     (A B C D E : DelaunayFlipContext n)
     (h : A.matrix * B.matrix * C.matrix * D.matrix * E.matrix = 1) :
     rohozhkinMatrix
-        ({ flips := w₁ ++ [A, B, C, D, E] ++ w₂ } :
-          DelaunayFlipWord n) =
+        (w₁ ++ [A, B, C, D, E] ++ w₂ : DelaunayFlipWord n) =
       rohozhkinMatrix
-        ({ flips := w₁ ++ w₂ } :
-          DelaunayFlipWord n) :=
+        (w₁ ++ w₂ : DelaunayFlipWord n) :=
   rohozhkinMatrixList_invariant_under_move
     (DelaunayMoveList.pentagon w₁ w₂ A B C D E h)
 
@@ -268,8 +275,15 @@ Boundary socket for a source pure-braid group map into the Delaunay flip-word
 quotient.  This is still the quotient/factorization boundary, not yet the final
 matrix-unit representation theorem.
 -/
-structure PureBraidQuotientBoundary (moving : ℕ) where
-  braidToQuotient : RohozhkinSourcePB moving → DelaunayQuotient moving
+abbrev PureBraidQuotientBoundary (moving : ℕ) :=
+  RohozhkinSourcePB moving → DelaunayQuotient moving
+
+namespace PureBraidQuotientBoundary
+
+abbrev braidToQuotient {moving : ℕ} (B : PureBraidQuotientBoundary moving) :
+    RohozhkinSourcePB moving → DelaunayQuotient moving := B
+
+end PureBraidQuotientBoundary
 
 /--
 Presented-group representation boundary with the paper's target shape:

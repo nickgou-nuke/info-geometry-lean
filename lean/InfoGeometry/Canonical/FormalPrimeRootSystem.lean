@@ -43,8 +43,13 @@ structure BooleanWeylGroup (L : FormalPrimeRootLattice) where
 
 /-- Finite `A₁^P` root system, deliberately only the Boolean prime-mode cutoff. -/
 @[rep_depth thermo]
-structure PrimeA1RootSystem where
-  lattice : FormalPrimeRootLattice
+abbrev PrimeA1RootSystem := FormalPrimeRootLattice
+
+namespace PrimeA1RootSystem
+
+abbrev lattice (R : PrimeA1RootSystem) : FormalPrimeRootLattice := R
+
+end PrimeA1RootSystem
 
 /-- Formal half-sum of positive roots, represented by its finite support. -/
 @[rep_depth thermo]

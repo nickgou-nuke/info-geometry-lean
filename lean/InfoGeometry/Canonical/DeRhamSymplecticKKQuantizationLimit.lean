@@ -142,7 +142,7 @@ interface.  This is a direct use of `CompatibleProofFamily.to_limit`, not a
 new global analytic theorem.
 -/
 theorem compatibleProofFamily_to_inductiveLimit
-    (S : SequentialColimitSystem)
+    (S : SequentialStageSystem)
     (F : CompatibleProofFamily S)
     {Pinf : S.Limit → Prop}
     (hread : S.LimitReadout F.1 Pinf)
@@ -155,7 +155,7 @@ Transport a compatible finite-stage theorem forward by `m` stages and then read
 it at the same colimit point.
 -/
 theorem compatibleProofFamily_transported_to_inductiveLimit
-    (S : SequentialColimitSystem)
+    (S : SequentialStageSystem)
     (F : CompatibleProofFamily S)
     {Pinf : S.Limit → Prop}
     (hread : S.LimitReadout F.1 Pinf)

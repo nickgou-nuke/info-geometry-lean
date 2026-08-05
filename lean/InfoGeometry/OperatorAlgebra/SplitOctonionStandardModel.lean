@@ -48,7 +48,7 @@ def basisToParticleSector : Basis8 → SMParticleSector
 The SU(3) color grading operator derived from the commutator of the horizon nilpotents. 
 Matches `g0 = [horizonDown, horizonUp]`.
 -/
-def colorGradingCore : Spin32Matrix := g0Core
+abbrev colorGradingCore : Spin32Matrix := g0Core
 
 /-- 
 Quark confinement projection. 

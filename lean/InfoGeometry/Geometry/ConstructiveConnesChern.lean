@@ -14,12 +14,23 @@ open InfoGeometry.Geometry.ConstructiveKasparov
 open InfoGeometry.Geometry.BilingualAnalyticity
 open InfoGeometry.Geometry.SpectralDivisors
 
-structure ConnesChernDatum
+abbrev ConnesChernDatum
     {Region Point Tangent A : Type*}
     [NormedAddCommGroup A] [NormedSpace ℝ A] [Ring A]
-    (I : GeometricIntegralBackend Region Point Tangent A)
-    (D : VerifiedBoundedDirac A) where
-  ccForm : OperatorOneForm Point Tangent A
+    (_I : GeometricIntegralBackend Region Point Tangent A)
+    (_D : VerifiedBoundedDirac A) :=
+  OperatorOneForm Point Tangent A
+
+namespace ConnesChernDatum
+
+abbrev ccForm
+    {Region Point Tangent A : Type*}
+    [NormedAddCommGroup A] [NormedSpace ℝ A] [Ring A]
+    {I : GeometricIntegralBackend Region Point Tangent A}
+    {D : VerifiedBoundedDirac A}
+    (CC : ConnesChernDatum I D) : OperatorOneForm Point Tangent A := CC
+
+end ConnesChernDatum
 
 theorem index_eq_boundary_integral
     {Region Point Tangent A : Type*}

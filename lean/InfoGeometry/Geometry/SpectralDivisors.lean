@@ -224,24 +224,26 @@ Spectral divisor data.
 
 `multiplicity z` is the local integer multiplicity / divisor order.
 -/
-structure SpectralDivisorDatum
+abbrev SpectralDivisorDatum
     (Point Value : Type*)
-    [Monoid Value] where
-  /-- The spectral function/operator family. -/
-  F : Point → Value
-  /-- Local divisor multiplicity. -/
-  multiplicity : Point → ℤ
-  /-- Off the divisor locus, multiplicity is zero. -/
-  multiplicity_zero_off_divisor :
+    [Monoid Value] :=
+  {p : (Point → Value) × (Point → ℤ) //
     ∀ z : Point,
-      ¬ IsSpectralDivisor F z →
-        multiplicity z = 0
+      ¬ IsSpectralDivisor p.1 z →
+        p.2 z = 0}
 
 namespace SpectralDivisorDatum
 
 variable {Point Value : Type*}
 variable [Monoid Value]
 variable (D : SpectralDivisorDatum Point Value)
+
+abbrev F : Point → Value := D.1.1
+abbrev multiplicity : Point → ℤ := D.1.2
+abbrev multiplicity_zero_off_divisor :
+    ∀ z : Point,
+      ¬ IsSpectralDivisor D.F z →
+        D.multiplicity z = 0 := D.2
 
 /-- The divisor locus of the spectral datum. -/
 def divisorLocus : Set Point :=
@@ -583,18 +585,17 @@ end WindingNumberDatum
 
 /-! ## 5. Explicit finite divisor counting -/
 
-/--
-A finite divisor counter for a region.
-
-The enclosed divisor charge is computed by summing the multiplicities of an
-explicit finite list of enclosed divisor points.
--/
-structure FiniteDivisorCounter
+/-- Finite list of divisor points enclosed by a region. -/
+abbrev FiniteDivisorCounter
     (Region Point Value : Type*)
     [Monoid Value]
-    (D : SpectralDivisorDatum Point Value) where
-  /-- Finite list of divisor points enclosed by a region. -/
-  enclosedDivisors : Region → List Point
+    (D : SpectralDivisorDatum Point Value) := Region → List Point
+
+abbrev FiniteDivisorCounter.enclosedDivisors
+    {Region Point Value : Type*}
+    [Monoid Value]
+    {D : SpectralDivisorDatum Point Value}
+    (C : FiniteDivisorCounter Region Point Value D) : Region → List Point := C
 
 namespace FiniteDivisorCounter
 

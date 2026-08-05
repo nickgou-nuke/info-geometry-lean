@@ -13,7 +13,7 @@ open InfoGeometry.Canonical.PrimitiveCuntzIsometry
 open InfoGeometry.Canonical.PrimitiveCuntzCohomology
 
 variable {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
-variable [UHF : UHFAlgebra A]
+variable [UHF : CuntzIsometryData A]
 
 /--
 The boundary transition element between the two Cuntz branches.
@@ -46,13 +46,13 @@ The boundary transition maps a right-supported expression to the corresponding
 left-right expression by the Cuntz isometry law.
 -/
 theorem connesLottBoundaryField_chiral_crossing (X : A) :
-    connesLottBoundaryField (A := A) * (UHFAlgebra.S_R (A := A) * X * star (UHFAlgebra.S_R (A := A))) =
-    UHFAlgebra.S_L (A := A) * X * star (UHFAlgebra.S_R (A := A)) := by
+    connesLottBoundaryField (A := A) * (CuntzIsometryData.S_R (A := A) * X * star (CuntzIsometryData.S_R (A := A))) =
+    CuntzIsometryData.S_L (A := A) * X * star (CuntzIsometryData.S_R (A := A)) := by
   dsimp [connesLottBoundaryField, UHF_boundary]
   calc
-    (UHFAlgebra.S_L (A := A) * star (UHFAlgebra.S_R (A := A))) * (UHFAlgebra.S_R (A := A) * X * star (UHFAlgebra.S_R (A := A)))
-      = UHFAlgebra.S_L (A := A) * (star (UHFAlgebra.S_R (A := A)) * UHFAlgebra.S_R (A := A)) * X * star (UHFAlgebra.S_R (A := A)) := by simp [mul_assoc]
-    _ = UHFAlgebra.S_L (A := A) * 1 * X * star (UHFAlgebra.S_R (A := A)) := by rw [UHFAlgebra.isometry_R]
-    _ = UHFAlgebra.S_L (A := A) * X * star (UHFAlgebra.S_R (A := A)) := by simp
+    (CuntzIsometryData.S_L (A := A) * star (CuntzIsometryData.S_R (A := A))) * (CuntzIsometryData.S_R (A := A) * X * star (CuntzIsometryData.S_R (A := A)))
+      = CuntzIsometryData.S_L (A := A) * (star (CuntzIsometryData.S_R (A := A)) * CuntzIsometryData.S_R (A := A)) * X * star (CuntzIsometryData.S_R (A := A)) := by simp [mul_assoc]
+    _ = CuntzIsometryData.S_L (A := A) * 1 * X * star (CuntzIsometryData.S_R (A := A)) := by rw [CuntzIsometryData.isometry_R]
+    _ = CuntzIsometryData.S_L (A := A) * X * star (CuntzIsometryData.S_R (A := A)) := by simp
 
 end InfoGeometry.Dynamics.ConnesLott

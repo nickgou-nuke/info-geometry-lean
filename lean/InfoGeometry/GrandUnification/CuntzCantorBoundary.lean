@@ -26,15 +26,15 @@ variable (T : R)
 
 /-- The Cuntz Isometry corresponding to the Exact (Holomorphic) shift.
 Mapped directly to the P_+ projector. -/
-def Cuntz_S_plus (T : R) : R := exact_op T
+abbrev Cuntz_S_plus (T : R) : R := exact_op T
 
 /-- The Cuntz Isometry corresponding to the Co-exact (Anti-holomorphic) shift.
 Mapped directly to the P_- projector. -/
-def Cuntz_S_minus (T : R) : R := coexact_op T
+abbrev Cuntz_S_minus (T : R) : R := coexact_op T
 
 /-- The Cuntz Isometry corresponding to the Harmonic (Zero-Mode) shift.
 Mapped directly to the P_0 projector. -/
-def Cuntz_S_zero (T : R) : R := harmonic_op T
+abbrev Cuntz_S_zero (T : R) : R := harmonic_op T
 
 /-- **Theorem: The Cuntz Boundary Identity**
 The sum of the Cuntz isometry projections perfectly reconstructs the Identity

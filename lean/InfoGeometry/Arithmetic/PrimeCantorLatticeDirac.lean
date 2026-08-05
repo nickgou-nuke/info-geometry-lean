@@ -198,10 +198,12 @@ A finite Dirac packet on the prime-Cantor lattice.
 finite algebraic module.
 -/
 @[rep_depth krein]
-structure PrimeCantorDirac (P : PrimeRegister) where
-  axisWeight : ℕ → ℝ
+abbrev PrimeCantorDirac (P : PrimeRegister) := ℕ → ℝ
 
 namespace PrimeCantorDirac
+
+abbrev axisWeight {P : PrimeRegister} (D : PrimeCantorDirac P) : ℕ → ℝ :=
+  D
 
 variable {P : PrimeRegister}
 variable (D : PrimeCantorDirac P)

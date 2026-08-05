@@ -386,8 +386,14 @@ theorem mismatch_zero_kills_correlation
 
 /-- Restricted Gaussian covariance on the Drazin-null sector. -/
 @[rep_depth transport]
-structure GaussianCovarianceOwner (Scalar : Type*) [Zero Scalar] where
-  restrictedCovariance : Scalar
+abbrev GaussianCovarianceOwner (Scalar : Type*) [Zero Scalar] := Scalar
+
+namespace GaussianCovarianceOwner
+
+/-- Compatibility accessor for the native restricted covariance carrier. -/
+abbrev restrictedCovariance (G : GaussianCovarianceOwner Scalar) : Scalar := G
+
+end GaussianCovarianceOwner
 
 /-- No Drazin-null-supported Gaussian covariance when the restricted covariance vanishes. -/
 def HasDrazinNullSupportedGaussianCovariance
@@ -449,16 +455,6 @@ def lightconeReadoutBoundary_projectivizationWitness
     {Q : QuadraticForm ℝ V} (W : LightconeReadoutBoundary V Q) :
     W.projectiveRay = Projectivization.mk ℝ W.kernelVector W.kernelNontrivial.2 :=
   W.projectivizationWitness
-
-/-- The full lightcone boundary packet can be read back as a conjunction of
-its four supplied boundary conditions. -/
-def lightconeReadoutBoundary_packet
-    {V : Type*} [AddCommGroup V] [Module ℝ V]
-  {Q : QuadraticForm ℝ V} (W : LightconeReadoutBoundary V Q) : Prop :=
-  (W.dirac.comp W.dirac = 0) ∧
-    (W.dirac W.kernelVector = 0 ∧ W.kernelVector ≠ 0) ∧
-    (Q W.kernelVector = 0) ∧
-    (W.projectiveRay = Projectivization.mk ℝ W.kernelVector W.kernelNontrivial.2)
 
 theorem nonfactorizing_covariance_is_not_entanglement
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]

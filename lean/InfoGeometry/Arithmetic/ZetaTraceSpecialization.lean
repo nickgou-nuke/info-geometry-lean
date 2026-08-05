@@ -138,59 +138,27 @@ theorem finitePrimeGasPartition_eq_weylDenominator_inv
 
 /-! ### 2. Readout package -/
 
-/--
-Finite zeta-trace readout.
-
-The supertrace is the alternating sum, the denominator is the finite Weyl
-product, the partition is its inverse, and the supervolume is the denominator
-viewed as a volume factor.
--/
-structure FiniteZetaTraceReadout (L : FormalPrimeRootLattice) where
-  evaluation : SouriauThermalEvaluation L
-  supertraceReadout : ℝ
-  denominatorReadout : ℝ
-  partitionReadout : ℝ
-  supervolumeReadout : ℝ
-  supertrace_eq_denominator : supertraceReadout = denominatorReadout
-  partition_eq_denominator_inv : partitionReadout = denominatorReadout⁻¹
-  supervolume_eq_denominator : supervolumeReadout = denominatorReadout
-
-namespace FiniteZetaTraceReadout
-
 variable {L : FormalPrimeRootLattice}
 
 /-- Canonical finite zeta-trace readout. -/
-def canonical (E : SouriauThermalEvaluation L) : FiniteZetaTraceReadout L where
-  evaluation := E
-  supertraceReadout := finiteZetaTraceSupertrace E
-  denominatorReadout := finiteZetaTraceDenominator E
-  partitionReadout := finitePrimeGasPartition E
-  supervolumeReadout := finiteZetaTraceSupervolume E
-  supertrace_eq_denominator := by
-    simp [finiteZetaTraceSupertrace, finiteZetaTraceDenominator]
-    exact (finite_euler_weyl_identity E).symm
-  partition_eq_denominator_inv := rfl
-  supervolume_eq_denominator := rfl
-
 @[simp]
 theorem canonical_supertrace_eq_denominator
     (E : SouriauThermalEvaluation L) :
-    (canonical E).supertraceReadout = (canonical E).denominatorReadout :=
-  (canonical E).supertrace_eq_denominator
+    finiteZetaTraceSupertrace E = finiteZetaTraceDenominator E := by
+  simp [finiteZetaTraceSupertrace, finiteZetaTraceDenominator]
+  exact (finite_euler_weyl_identity E).symm
 
 @[simp]
 theorem canonical_partition_eq_denominator_inv
     (E : SouriauThermalEvaluation L) :
-    (canonical E).partitionReadout = ((canonical E).denominatorReadout)⁻¹ :=
-  (canonical E).partition_eq_denominator_inv
+    finitePrimeGasPartition E = (finiteZetaTraceDenominator E)⁻¹ :=
+  rfl
 
 @[simp]
 theorem canonical_supervolume_eq_denominator
     (E : SouriauThermalEvaluation L) :
-    (canonical E).supervolumeReadout = (canonical E).denominatorReadout :=
-  (canonical E).supervolume_eq_denominator
-
-end FiniteZetaTraceReadout
+    finiteZetaTraceSupervolume E = finiteZetaTraceDenominator E :=
+  rfl
 
 /-- Finite negative log-supervolume potential. -/
 def finiteZetaTraceEffectiveAction {L : FormalPrimeRootLattice}

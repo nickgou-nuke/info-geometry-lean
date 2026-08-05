@@ -72,6 +72,61 @@ theorem finiteCantorDirac_eq_smul_id
       ((weight n : ℝ) : ℂ) • (1 : Module.End ℂ (FiniteWaveletSpace n)) := by
   rfl
 
+theorem finiteCantorDirac_commutes
+    (weight : ℕ → ℝ)
+    (n : ℕ)
+    (T : Module.End ℂ (FiniteWaveletSpace n)) :
+    finiteCantorDirac weight n * T = T * finiteCantorDirac weight n := by
+  ext ψ w
+  simp [finiteCantorDirac]
+
+theorem finiteCantorDirac_mul_self
+    (weight : ℕ → ℝ)
+    (n : ℕ) :
+    finiteCantorDirac weight n * finiteCantorDirac weight n =
+      (((weight n : ℝ) : ℂ) ^ 2) •
+        (1 : Module.End ℂ (FiniteWaveletSpace n)) := by
+  ext ψ w
+  simp [finiteCantorDirac, Algebra.smul_def, pow_two]
+
+theorem finiteCantorDirac_pow_apply
+    (weight : ℕ → ℝ)
+    (n k : ℕ)
+    (ψ : FiniteWaveletSpace n)
+    (w : InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n) :
+    ((finiteCantorDirac weight n) ^ k) ψ w =
+      (((weight n : ℝ) : ℂ) ^ k) * ψ w := by
+  induction k generalizing ψ with
+  | zero => simp
+  | succ k ih =>
+      rw [pow_succ, Module.End.mul_apply, ih]
+      simp [finiteCantorDirac_apply, mul_assoc]
+      ring
+
+theorem finiteCantorDirac_commutes_pow
+    (weight : ℕ → ℝ)
+    (n k : ℕ)
+    (T : Module.End ℂ (FiniteWaveletSpace n)) :
+    (finiteCantorDirac weight n) ^ k * T =
+      T * (finiteCantorDirac weight n) ^ k := by
+  induction k with
+  | zero => simp
+  | succ k ih =>
+      rw [pow_succ]
+      calc
+        (finiteCantorDirac weight n) ^ k *
+              (finiteCantorDirac weight n * T) =
+            (finiteCantorDirac weight n) ^ k *
+              (T * finiteCantorDirac weight n) := by
+                rw [finiteCantorDirac_commutes weight n T]
+        _ = ((finiteCantorDirac weight n) ^ k * T) *
+              finiteCantorDirac weight n := by
+                rw [mul_assoc]
+        _ = (T * (finiteCantorDirac weight n) ^ k) *
+              finiteCantorDirac weight n := by rw [ih]
+        _ = T * ((finiteCantorDirac weight n) ^ k *
+              finiteCantorDirac weight n) := by rw [mul_assoc]
+
 /-- The constant-one field is sent to the constant level weight. -/
 theorem finiteCantorDirac_const_one
     (weight : ℕ → ℝ)
@@ -85,6 +140,22 @@ theorem finiteCantorDirac_const_one
 def middleThirdsScale (n : ℕ) : ℝ :=
   (3 : ℝ) ^ n
 
+theorem middleThirdsScale_succ (n : ℕ) :
+    middleThirdsScale (n + 1) = 3 * middleThirdsScale n := by
+  simp [middleThirdsScale, pow_succ, mul_comm]
+
+theorem middleThirdsScale_pos (n : ℕ) :
+    0 < middleThirdsScale n := by
+  exact pow_pos (by norm_num) _
+
+theorem middleThirdsScale_one_le (n : ℕ) :
+    1 ≤ middleThirdsScale n := by
+  induction n with
+  | zero => simp [middleThirdsScale]
+  | succ n ih =>
+      rw [middleThirdsScale_succ]
+      nlinarith
+
 /-- Spectral scale assigned to the Cantor wavelet filtration. -/
 abbrev CantorDiracScale : Type :=
   ℕ → ℝ
@@ -94,121 +165,79 @@ def middleThirdsCantorDiracScale : CantorDiracScale :=
   middleThirdsScale
 
 /-! ## Native unbounded split-Krein owner -/
+/-! ## Native unbounded split-Krein statements -/
 
-/--
-Cantor wavelet realization inside a genuine unbounded split-Krein cycle.
-
-The cycle owns the dense domain, closed graph, grading, represented actions,
-bounded commutators, and compact resolvent.  This structure adds only the
-Cantor wavelet indexing and its eigenmode equation.
--/
-@[rep_depth operator]
-structure CantorDiracOperatorSocket
-    (A B H : Type*)
-    [NormedRing A] [NormedRing B]
-    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
-    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    [InfoGeometry.Krein.KreinSpace H]
-    [InfoGeometry.Krein.KreinGradedModule H] where
-  cycle : InfoGeometry.KK.RealSplitKreinUnboundedCycle A B H
-  scale : CantorDiracScale
-  waveletMode :
-    ∀ n : ℕ,
-      InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n →
-        {x : H // x ∈ cycle.domain}
-  dirac_wavelet :
-    ∀ (n : ℕ)
-      (w : InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n),
-      cycle.D (waveletMode n w) =
-        scale n • (waveletMode n w).1
-
-namespace CantorDiracOperatorSocket
-
-variable
-    {A B H : Type*}
-    [NormedRing A] [NormedRing B]
-    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
-    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    [InfoGeometry.Krein.KreinSpace H]
-    [InfoGeometry.Krein.KreinGradedModule H]
-    (S : CantorDiracOperatorSocket A B H)
-
-/-- The Cantor wavelet mode belongs to the native unbounded domain. -/
 theorem waveletMode_mem_domain
-    (n : ℕ)
-    (w : InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n) :
-    (S.waveletMode n w).1 ∈ S.cycle.domain :=
-  (S.waveletMode n w).2
-
-/-- Native unbounded Dirac eigenmode equation. -/
-@[rep_depth operator]
-theorem dirac_wavelet_holds
-    (n : ℕ)
-    (w : InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n) :
-    S.cycle.D (S.waveletMode n w) =
-      S.scale n • (S.waveletMode n w).1 :=
-  S.dirac_wavelet n w
-
-/-- The owner domain is dense in the ambient split-Krein carrier. -/
-theorem dense_domain :
-    Dense S.cycle.domain :=
-  S.cycle.dense_domain
-
-/-- The owner Dirac graph is closed. -/
-theorem closed_graph :
-    IsClosed
-      (Set.range
-        (fun x : {x : H // x ∈ S.cycle.domain} =>
-          ((x.1, S.cycle.D x) : H × H))) :=
-  S.cycle.closed_graph
-
-end CantorDiracOperatorSocket
-
-/--
-Native bounded transform of a Cantor unbounded cycle.
-
-This restores the bounded-realization layer without identifying the unbounded
-Dirac operator with a scalar finite matrix.
--/
-@[rep_depth operator]
-structure BoundedCantorDiracRealization
-    (A B H : Type*)
-    [NormedRing A] [NormedRing B]
-    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
-    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    [InfoGeometry.Krein.KreinSpace H]
-    [InfoGeometry.Krein.KreinGradedModule H] where
-  cantorDirac : CantorDiracOperatorSocket A B H
-  boundedTransform :
-    InfoGeometry.KK.RealSplitKreinBoundedTransform cantorDirac.cycle
-
-namespace BoundedCantorDiracRealization
-
-variable
     {A B H : Type*}
     [NormedRing A] [NormedRing B]
     [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
     [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [InfoGeometry.Krein.KreinSpace H]
     [InfoGeometry.Krein.KreinGradedModule H]
-    (R : BoundedCantorDiracRealization A B H)
-
-/-- The bounded phase is the compact resolvent owned by the unbounded cycle. -/
-theorem phase_compact :
-    InfoGeometry.KK.IsCompactEnd H
-      (InfoGeometry.KK.RealSplitKreinBoundedTransform.phase R.boundedTransform) :=
-  R.boundedTransform.phase_compact
-
-/-- Wavelet eigenmodes remain equations of the unbounded owner. -/
-theorem triple_dirac_wavelet
+    (cycle : InfoGeometry.KK.RealSplitKreinUnboundedCycle A B H)
+    (waveletMode : ∀ n : ℕ,
+      InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n →
+        {x : H // x ∈ cycle.domain})
     (n : ℕ)
     (w : InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n) :
-    R.cantorDirac.cycle.D (R.cantorDirac.waveletMode n w) =
-      R.cantorDirac.scale n •
-        (R.cantorDirac.waveletMode n w).1 :=
-  R.cantorDirac.dirac_wavelet_holds n w
+    (waveletMode n w).1 ∈ cycle.domain :=
+  (waveletMode n w).2
 
-end BoundedCantorDiracRealization
+theorem dirac_wavelet_holds
+    {A B H : Type*}
+    [NormedRing A] [NormedRing B]
+    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B] [NormedAddCommGroup H]
+    [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+    [InfoGeometry.Krein.KreinGradedModule H]
+    (cycle : InfoGeometry.KK.RealSplitKreinUnboundedCycle A B H)
+    (scale : CantorDiracScale)
+    (waveletMode : ∀ n : ℕ,
+      InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n →
+        {x : H // x ∈ cycle.domain})
+    (h : ∀ n w, cycle.D (waveletMode n w) =
+      scale n • (waveletMode n w).1)
+    (n : ℕ)
+    (w : InfoGeometry.Topology.CliffordFractalWaveletBridge.BinaryWord n) :
+    cycle.D (waveletMode n w) = scale n • (waveletMode n w).1 :=
+  h n w
+
+theorem dense_domain
+    {A B H : Type*}
+    [NormedRing A] [NormedRing B]
+    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B] [NormedAddCommGroup H]
+    [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+    [InfoGeometry.Krein.KreinGradedModule H]
+    (cycle : InfoGeometry.KK.RealSplitKreinUnboundedCycle A B H) :
+    Dense cycle.domain :=
+  cycle.dense_domain
+
+theorem closed_graph
+    {A B H : Type*}
+    [NormedRing A] [NormedRing B]
+    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B] [NormedAddCommGroup H]
+    [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+    [InfoGeometry.Krein.KreinGradedModule H]
+    (cycle : InfoGeometry.KK.RealSplitKreinUnboundedCycle A B H) :
+    IsClosed (Set.range (fun x : {x : H // x ∈ cycle.domain} =>
+      ((x.1, cycle.D x) : H × H))) :=
+  cycle.closed_graph
+
+theorem phase_compact
+    {A B H : Type*}
+    [NormedRing A] [NormedRing B]
+    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B] [NormedAddCommGroup H]
+    [InnerProductSpace ℝ H] [CompleteSpace H]
+    [InfoGeometry.Krein.KreinSpace H]
+    [InfoGeometry.Krein.KreinGradedModule H]
+    (cycle : InfoGeometry.KK.RealSplitKreinUnboundedCycle A B H)
+    (boundedTransform :
+      InfoGeometry.KK.RealSplitKreinBoundedTransform cycle) :
+    InfoGeometry.KK.IsCompactEnd H
+      (InfoGeometry.KK.RealSplitKreinBoundedTransform.phase boundedTransform) :=
+  boundedTransform.phase_compact
 
 /-- Direct eigenmode transfer through a bounded realization.
 
@@ -255,73 +284,31 @@ theorem finiteCantorThermalHamiltonian_eq_dirac
 
 open InfoGeometry.Dynamics
 
-/-! ## KMS thermal realization of the unbounded Cantor owner -/
+/-- Direct odd antiperiodicity supplied by a KMS strip. -/
+theorem odd_antiperiodic
+    {Observable : Type*} [Ring Observable]
+    (strip : HestenesKreinKMSStripData Observable)
+    (oddField : Observable)
+    (h : ∀ t : ℝ,
+      strip.analytic.sigmaC (complexClockPoint t strip.analytic.beta) oddField =
+        -(strip.analytic.sigmaC (t : ℂ) oddField))
+    (t : ℝ) :
+    strip.analytic.sigmaC (complexClockPoint t strip.analytic.beta) oddField =
+      -(strip.analytic.sigmaC (t : ℂ) oddField) :=
+  h t
 
-/--
-KMS thermal realization attached to a genuine unbounded Cantor Dirac cycle.
-
-The parity laws are equations on selected observables at the upper strip
-boundary.  No bare proposition fields remain.
--/
-@[rep_depth operator]
-structure CantorDiracKMSThermalVacuum
-    (A B H Observable : Type*)
-    [NormedRing A] [NormedRing B]
-    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
-    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    [InfoGeometry.Krein.KreinSpace H]
-    [InfoGeometry.Krein.KreinGradedModule H]
-    [Ring Observable] where
-  cantorDirac : CantorDiracOperatorSocket A B H
-  thermalGenerator : Observable
-  diracGeneratorReadout : Observable
-  thermalGenerator_matches_dirac :
-    thermalGenerator = diracGeneratorReadout
-  partitionFunction : ℝ
-  thermalState : ModularThermalState Observable
-  strip : HestenesKreinKMSStripData Observable
-  oddField : Observable
-  evenObservable : Observable
-  oddFieldAntiperiodic :
-    ∀ t : ℝ,
-      strip.analytic.sigmaC
-          (complexClockPoint t strip.analytic.beta) oddField =
-        -(strip.analytic.sigmaC (t : ℂ) oddField)
-  evenObservablePeriodic :
-    ∀ t : ℝ,
-      strip.analytic.sigmaC
-          (complexClockPoint t strip.analytic.beta) evenObservable =
-        strip.analytic.sigmaC (t : ℂ) evenObservable
-
-namespace CantorDiracKMSThermalVacuum
-
-variable
-    {A B H Observable : Type*}
-    [NormedRing A] [NormedRing B]
-    [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
-    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    [InfoGeometry.Krein.KreinSpace H]
-    [InfoGeometry.Krein.KreinGradedModule H]
-    [Ring Observable]
-    (T : CantorDiracKMSThermalVacuum A B H Observable)
-
-theorem thermalGenerator_eq_diracReadout :
-    T.thermalGenerator = T.diracGeneratorReadout :=
-  T.thermalGenerator_matches_dirac
-
-theorem odd_antiperiodic (t : ℝ) :
-    T.strip.analytic.sigmaC
-        (complexClockPoint t T.strip.analytic.beta) T.oddField =
-      -(T.strip.analytic.sigmaC (t : ℂ) T.oddField) :=
-  T.oddFieldAntiperiodic t
-
-theorem even_periodic (t : ℝ) :
-    T.strip.analytic.sigmaC
-        (complexClockPoint t T.strip.analytic.beta) T.evenObservable =
-      T.strip.analytic.sigmaC (t : ℂ) T.evenObservable :=
-  T.evenObservablePeriodic t
-
-end CantorDiracKMSThermalVacuum
+/-- Direct even periodicity supplied by a KMS strip. -/
+theorem even_periodic
+    {Observable : Type*} [Monoid Observable]
+    (strip : HestenesKreinKMSStripData Observable)
+    (evenObservable : Observable)
+    (h : ∀ t : ℝ,
+      strip.analytic.sigmaC (complexClockPoint t strip.analytic.beta) evenObservable =
+        strip.analytic.sigmaC (t : ℂ) evenObservable)
+    (t : ℝ) :
+    strip.analytic.sigmaC (complexClockPoint t strip.analytic.beta) evenObservable =
+      strip.analytic.sigmaC (t : ℂ) evenObservable :=
+  h t
 
 /-- Lower KMS boundary identity, directly from genuine strip data. -/
 theorem kms_lower_boundary

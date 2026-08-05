@@ -15,10 +15,8 @@ inductive ClosureDebt
   | compactifiedNullConeSocket
   deriving DecidableEq
 
-structure ThreeBucketAudit where
-  bucket1ClosedFiniteTheorems : List Lean.Name
-  bucket2ConditionalTheoremsFromExplicitWitnesses : List Lean.Name
-  bucket3OpenClosureDebt : List ClosureDebt
+abbrev ThreeBucketAudit :=
+  List Lean.Name × List Lean.Name × List ClosureDebt
 
 /-
 #### BUCKET 1: CLOSED FINITE THEOREMS
@@ -55,9 +53,9 @@ def bucket3OpenClosureDebt : List ClosureDebt :=
   , .compactifiedNullConeSocket
   ]
 
-def tomitaThreeBucketAudit : ThreeBucketAudit where
-  bucket1ClosedFiniteTheorems := bucket1ClosedFiniteTheorems
-  bucket2ConditionalTheoremsFromExplicitWitnesses := bucket2ConditionalTheoremsFromExplicitWitnesses
-  bucket3OpenClosureDebt := bucket3OpenClosureDebt
+def tomitaThreeBucketAudit : ThreeBucketAudit :=
+  (bucket1ClosedFiniteTheorems,
+    bucket2ConditionalTheoremsFromExplicitWitnesses,
+    bucket3OpenClosureDebt)
 
 end InfoGeometry.Canonical.TomitaTakesakiRealification

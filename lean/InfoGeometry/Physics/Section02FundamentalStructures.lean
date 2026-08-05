@@ -205,10 +205,10 @@ theorem pauli_basis_reconstruct (M : Mat2C) :
 /-- Ordinary Hamilton quaternion norm has the wrong spatial sign for the source metric. -/
 theorem ordinary_quaternion_norm_sign_boundary :
     _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.ordinaryQuaternionNormSq
-        { t := 0, x := 1, y := 0, z := 0 } = 1 ∧
+        ((0 : ℝ), (1 : ℝ), (0 : ℝ), (0 : ℝ)) = 1 ∧
       _root_.InfoGeometry.Geometry.PauliParavectorBridge.Minkowski4.q
         (_root_.InfoGeometry.Physics.Section00MatrixBasisFramework.toMinkowski4
-          { t := 0, x := 1, y := 0, z := 0 }) = -1 :=
+          ((0 : ℝ), (1 : ℝ), (0 : ℝ), (0 : ℝ))) = -1 :=
   _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.ordinaryQuaternionNorm_not_minkowski_spatial_unit
 
 /-- Repaired finite Section02 packet. -/
@@ -225,10 +225,10 @@ theorem section02_finite_fundamental_structures_packet (a b : PauliCoord) :
       - (2 : ℂ) * (normalizedPauliMatrix a).det =
         ((vectorInterval a.t a.x a.y a.z : ℝ) : ℂ) ∧
       _root_.InfoGeometry.Physics.Section00MatrixBasisFramework.ordinaryQuaternionNormSq
-        { t := 0, x := 1, y := 0, z := 0 } = 1 ∧
+        ((0 : ℝ), (1 : ℝ), (0 : ℝ), (0 : ℝ)) = 1 ∧
       _root_.InfoGeometry.Geometry.PauliParavectorBridge.Minkowski4.q
         (_root_.InfoGeometry.Physics.Section00MatrixBasisFramework.toMinkowski4
-          { t := 0, x := 1, y := 0, z := 0 }) = -1 := by
+          ((0 : ℝ), (1 : ℝ), (0 : ℝ), (0 : ℝ))) = -1 := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · exact pauli_square_packet.1
   · exact pauli_anticommutation_packet.1

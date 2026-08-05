@@ -25,8 +25,7 @@ lemma deriv_logPartition (η : ℝ) :
   simpa [logPartition] using hlog.deriv
 
 /-- Bernoulli family as a 1D Hessian Geometry. -/
-noncomputable def bernoulliHessianGeometry : HessianGeometry1D where
-  potential := logPartition
+noncomputable def bernoulliHessianGeometry : HessianGeometry1D := logPartition
 
 /-- The metric of the Bernoulli family is the variance: p(1-p). -/
 @[blueprint "thm:bernoulli-fisher-metric"]

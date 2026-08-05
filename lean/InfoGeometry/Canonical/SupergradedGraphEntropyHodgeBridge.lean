@@ -78,8 +78,8 @@ theorem graphEnergy_nonneg (ψ : P.graph.State) :
 /-- The supplied Laplacian is Hodge-even when `Δ = Q²` and `{Q,*}=0`. -/
 @[rep_depth operator]
 theorem laplacian_commutes_hodge :
-    P.hodge.laplacian * P.hodge.hodgeStar =
-      P.hodge.hodgeStar * P.hodge.laplacian :=
+    laplacian P.hodge * hodgeStar P.hodge =
+      hodgeStar P.hodge * laplacian P.hodge :=
   laplacian_commutes_hodge_of_dirac_closure
     P.hodge P.hodgeChiral P.laplacianFromDirac
 

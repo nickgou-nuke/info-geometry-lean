@@ -5,6 +5,7 @@ import InfoGeometry.Arithmetic.GenuineBounds
 import InfoGeometry.OperatorAlgebra.CliffordCAR
 import InfoGeometry.Topology.CliffordFractalWaveletBridge
 import InfoGeometry.OperatorAlgebra.WeylWeightBalance
+import InfoGeometry.Spectral.Colimit.Basic
 
 /-!
 # InfoGeometry.Canonical.ItFromBit
@@ -34,6 +35,9 @@ open InfoGeometry.OperatorAlgebra.CliffordCAR
 open InfoGeometry.Topology.CliffordFractalWaveletBridge
 open InfoGeometry.Topology.FractalCantorFockWitness
 open InfoGeometry.OperatorAlgebra.WeylWeightBalance
+open CategoryTheory
+open CategoryTheory.Limits
+open InfoGeometry.Spectral.Colimit
 
 /-! ## 1. Binary substrate -/
 
@@ -54,8 +58,7 @@ A finite Cantor cylinder represented by a binary word.
 The word specifies all infinite bitstreams with that prefix.
 -/
 @[rep_depth transport]
-structure CantorCylinder (n : ℕ) where
-  word : BinaryWord n
+abbrev CantorCylinder (n : ℕ) := BinaryWord n
 
 /--
 A Boolean event projection associated to a finite binary address.
@@ -341,7 +344,7 @@ structure ItFromBitPacket where
   fock : BitFockPacket n (Clnn n)
   walk : BitRandomWalk n
   stabilization : BitToItStabilizationPacket n
-  sameAddress : word = cantorCylinder.word
+  sameAddress : word = cantorCylinder
   itInvariant : stabilization.walk = walk
 
 namespace ItFromBitPacket
@@ -351,7 +354,7 @@ variable (P : ItFromBitPacket)
 /-- GENUINE LEMMA: All layers use the same binary address data. -/
 @[rep_depth transport]
 theorem same_address (P : ItFromBitPacket) :
-    P.word = P.cantorCylinder.word :=
+    P.word = P.cantorCylinder :=
   P.sameAddress
 
 /-- GENUINE LEMMA: The final object is an invariant of the stabilized bit process. -/
@@ -362,12 +365,12 @@ theorem it_invariant (P : ItFromBitPacket) :
 
 /-- The finite word readout is explicit. -/
 theorem word_readout (P : ItFromBitPacket) :
-    P.word = P.cantorCylinder.word :=
+    P.word = P.cantorCylinder :=
   P.sameAddress
 
 /-- The Cantor cylinder readout is explicit. -/
 theorem cantorCylinder_readout (P : ItFromBitPacket) :
-    P.cantorCylinder.word = P.word :=
+    P.cantorCylinder = P.word :=
   P.sameAddress.symm
 
 /-- The projection readout is explicit. -/
@@ -480,6 +483,10 @@ structure ItFromBitInductionSystem where
     ∀ n (x : Stage n),
       starStage (n + 1) (step n x) = step n (starStage n x)
 
+/-- The staged readout is a genuine sequential diagram in `Type`. -/
+def ItFromBitInductionSystem.diagram (I : ItFromBitInductionSystem) : ℕ ⥤ Type :=
+  Functor.ofSequence I.step
+
 namespace ItFromBitInductionSystem
 
 variable (I : ItFromBitInductionSystem)
@@ -502,43 +509,33 @@ theorem two_steps_preserve_star (n : ℕ) (x : I.Stage n) :
 
 end ItFromBitInductionSystem
 
-/--
-Explicit colimit socket for an already constructed staged system.
-The premises are the object, structure maps, and transition compatibility.
+/-!
+An explicit colimit candidate is a native sequential cocone.  In particular,
+its stage maps and their compatibility are supplied by `Cocone`, not by a
+second local wrapper with a hand-written `compat` field.
 -/
-structure ItFromBitColimitHypotheses where
-  system : ItFromBitInductionSystem
-  Colimit : Type
-  intoColimit : ∀ n, system.Stage n → Colimit
-  compat :
-    ∀ n (x : system.Stage n),
-      intoColimit (n + 1) (system.step n x) = intoColimit n x
+abbrev ItFromBitColimitHypotheses (I : ItFromBitInductionSystem) :=
+  SequentialCocone I.diagram
 
 namespace ItFromBitColimitHypotheses
 
-variable (C : ItFromBitColimitHypotheses)
+variable {I : ItFromBitInductionSystem}
+variable (C : ItFromBitColimitHypotheses I)
 
 /-- The supplied cocone maps are compatible with the induction transition. -/
-theorem transition_compatible (n : ℕ) (x : C.system.Stage n) :
-    C.intoColimit (n + 1) (C.system.step n x) = C.intoColimit n x :=
-  C.compat n x
+theorem transition_compatible (n : ℕ) (x : I.Stage n) :
+    C.ι.app (n + 1) (I.step n x) = C.ι.app n x := by
+  have h := sequentialCocone_compat C (h := Nat.le_succ n)
+  have h' := congrFun h x
+  simpa [ItFromBitInductionSystem.diagram, bondMap,
+    Functor.ofSequence_map_homOfLE_succ, Function.comp_def] using h'
 
 end ItFromBitColimitHypotheses
-
-/-- Kernel-checked finite Cuntz pipeline, for every finite stage. -/
-def ItFromBitCuntzPipelineTarget : Prop :=
-  ∀ n : ℕ, CuntzItFromBitFiniteTarget n
-
-/-- Constructor for the finite-stage Cuntz pipeline. -/
-theorem constructItFromBitCuntzPipelineTarget :
-    ItFromBitCuntzPipelineTarget := by
-  intro n
-  exact constructCuntzItFromBitFiniteTarget n
 
 /-! ## 6. Owner target -/
 
 /-- Owner target for the It-from-Bit doctrine. -/
-def ItFromBitTarget : Prop :=
+abbrev ItFromBitTarget : Prop :=
   Nonempty ItFromBitPacket
 
 /-- Constructor from explicit It-from-Bit data. -/

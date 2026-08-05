@@ -48,9 +48,8 @@ The standard modular `S` projective lift.
 
 This is the certified Lean anchor for the physical inversion `τ ↦ -1 / τ`.
 -/
-def modularSLiftInversion : ProjectiveLiftTemperatureInversion where
-  element := modularS
-  element_sq_lift := Or.inr modularS_sq
+def modularSLiftInversion : ProjectiveLiftTemperatureInversion :=
+  ⟨modularS, Or.inr modularS_sq⟩
 
 @[simp]
 theorem modularSLiftInversion_element :
@@ -77,21 +76,23 @@ theorem unitImaginary_im :
 theorem modularS_smul_unitImaginary :
     modularS • unitImaginary = unitImaginary := by
   have h :
-      toRealUpperHalfPlane (modularS • unitImaginary) =
-        toRealUpperHalfPlane unitImaginary := by
-    ext <;>
-      simp [unitImaginary, PositiveSouriauTemperature.temp, modularS, smul_def, ofRealUpperHalfPlane,
-        toRealUpperHalfPlane, RealUpperHalfPlane.smul_def,
-        RealUpperHalfPlane.moebius, RealUpperHalfPlane.a,
-        RealUpperHalfPlane.b, RealUpperHalfPlane.c, RealUpperHalfPlane.d,
-        RealUpperHalfPlane.denomSq]
+      modularS • ((0, ⟨1, by norm_num⟩) : RealUpperHalfPlane) =
+        ((0, ⟨1, by norm_num⟩) : RealUpperHalfPlane) := by
+    apply RealUpperHalfPlane.ext
+    · rw [RealUpperHalfPlane.smul_def, RealUpperHalfPlane.moebius_x]
+      norm_num [RealUpperHalfPlane.a, RealUpperHalfPlane.b,
+        RealUpperHalfPlane.c, RealUpperHalfPlane.d,
+        RealUpperHalfPlane.denomSq, modularS]
+    · rw [RealUpperHalfPlane.smul_def, RealUpperHalfPlane.moebius_y]
+      norm_num [RealUpperHalfPlane.a, RealUpperHalfPlane.b,
+        RealUpperHalfPlane.c, RealUpperHalfPlane.d,
+        RealUpperHalfPlane.denomSq, modularS]
   calc
     modularS • unitImaginary
         = ofRealUpperHalfPlane
-            (toRealUpperHalfPlane (modularS • unitImaginary)) := by
-            rw [ofRealUpperHalfPlane_toRealUpperHalfPlane]
+            (modularS • toRealUpperHalfPlane unitImaginary) := rfl
     _ = ofRealUpperHalfPlane (toRealUpperHalfPlane unitImaginary) := by
-            rw [h]
+      exact congrArg ofRealUpperHalfPlane h
     _ = unitImaginary := by
             rw [ofRealUpperHalfPlane_toRealUpperHalfPlane]
 

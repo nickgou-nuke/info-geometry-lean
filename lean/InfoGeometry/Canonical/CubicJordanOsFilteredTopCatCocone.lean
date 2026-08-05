@@ -12,11 +12,13 @@ noncomputable section
 
 namespace InfoGeometry.Algebra.CubicJordanOs
 
+universe u
+
 open CategoryTheory
 open CategoryTheory.Limits
 open FilteredColimit.Native.Topological
 
-variable {J : Type} [Category J]
+variable {J : Type} [Category.{u, 0} J]
 
 structure ContinuousAlbertCocone
     (S : ContinuousAlbertTransitionSystem J)
@@ -56,15 +58,14 @@ noncomputable def coconeDescend
     {Y : Type} [TopologicalSpace Y]
     (C : ContinuousAlbertCocone S Y) :
     topologicalColimit S ⟶ TopCat.of Y :=
-  topologicalDirectDescend (topologicalDiagram S) (toTopCatCocone C)
+  colimit.desc (topologicalDiagram S) (toTopCatCocone C)
 
 theorem coconeDescend_stage
     {S : ContinuousAlbertTransitionSystem J}
     {Y : Type} [TopologicalSpace Y]
     (C : ContinuousAlbertCocone S Y) (i : J) :
     topologicalInjection S i ≫ coconeDescend C = ιTopCatHom C i := by
-  exact topologicalDirectDescend_stage (topologicalDiagram S)
-    (toTopCatCocone C) i
+  exact colimit.ι_desc (toTopCatCocone C) i
 
 theorem coconeDescend_stage_apply
     {S : ContinuousAlbertTransitionSystem J}
@@ -80,9 +81,11 @@ theorem coconeDescend_unique
     (f : topologicalColimit S ⟶ TopCat.of Y)
     (hf : ∀ i : J, topologicalInjection S i ≫ f = ιTopCatHom C i) :
     f = coconeDescend C := by
-  apply topologicalDirectDescend_unique (topologicalDiagram S)
-    (toTopCatCocone C) f
+  apply colimit.hom_ext
   intro i
-  exact hf i
+  change topologicalInjection S i ≫ f =
+    topologicalInjection S i ≫ coconeDescend C
+  rw [hf i]
+  exact colimit.ι_desc (toTopCatCocone C) i |>.symm
 
 end InfoGeometry.Algebra.CubicJordanOs

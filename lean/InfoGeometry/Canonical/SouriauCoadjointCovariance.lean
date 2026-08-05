@@ -16,9 +16,17 @@ abbrev LieDual (V : Type*) [NormedAddCommGroup V] [NormedSpace ℝ V] :=
 def coadjoint (Ad : V ≃L[ℝ] V) : LieDual V → LieDual V :=
   fun μ => μ.comp (Ad.symm : V →L[ℝ] V)
 
-structure LieGroupAction (G V : Type*)
-    [NormedAddCommGroup V] [NormedSpace ℝ V] where
-  Ad : G → V ≃L[ℝ] V
+abbrev LieGroupAction (G V : Type*)
+    [NormedAddCommGroup V] [NormedSpace ℝ V] :=
+  G → V ≃L[ℝ] V
+
+namespace LieGroupAction
+
+abbrev Ad {G V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
+    (act : LieGroupAction G V) : G → V ≃L[ℝ] V :=
+  act
+
+end LieGroupAction
 
 structure SouriauThermodynamicAction (G V : Type*)
     [NormedAddCommGroup V] [NormedSpace ℝ V] where

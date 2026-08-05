@@ -44,6 +44,14 @@ theorem HaarPsi_eq_K : HaarPsi = InfoGeometry.Canonical.ModularLorentzBoost.K :=
   unfold HaarPsi
   simpa using K_eq_chiral_difference.symm
 
+theorem HaarPhi_mul_HaarPsi : HaarPhi * HaarPsi = HaarPsi := by
+  rw [HaarPhi_is_identity]
+  simp
+
+theorem HaarPsi_mul_HaarPhi : HaarPsi * HaarPhi = HaarPsi := by
+  rw [HaarPhi_is_identity]
+  simp
+
 /-- `ψ² = 1` (involution). -/
 theorem HaarPsi_involution : HaarPsi * HaarPsi = (1 : M2R) := by
   rw [HaarPsi_eq_K, InfoGeometry.Canonical.ModularLorentzBoost.K_eval]
@@ -57,4 +65,3 @@ theorem HaarPsi_boundary_regularization :
   exact trace_K_boundary_from_MP
 
 end InfoGeometry.Canonical.CantorHaarDiracSea
-

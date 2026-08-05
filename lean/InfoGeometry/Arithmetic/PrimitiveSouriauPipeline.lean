@@ -21,7 +21,7 @@ global KL/Jensen theorem.
 import InfoGeometry.Arithmetic.ArithmeticKMS
 import InfoGeometry.Arithmetic.PrimitiveSouriauZeta
 import InfoGeometry.Arithmetic.ProjectivePrimePartition
-import InfoGeometry.Arithmetic.ProjectiveRelativeEntropy
+import InfoGeometry.Canonical.SelfDualNormalConeBridge
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Arithmetic.WeylArithmeticDivergence
 import InfoGeometry.Thermodynamics.ProjectiveTemperature

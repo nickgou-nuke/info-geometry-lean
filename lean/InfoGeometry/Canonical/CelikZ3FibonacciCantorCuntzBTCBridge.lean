@@ -5,6 +5,8 @@ import InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 import InfoGeometry.Canonical.Z3GrassmannDifferentialCalculus
 import InfoGeometry.Categorical.FibonacciBraiding
 
+open InfoGeometry.Topology
+
 /-!
 # Çelik Z3 / Fibonacci / Cantor-Cuntz BTC bridge
 
@@ -289,57 +291,36 @@ end ExplicitZ3FibonacciBTCBridge
 
 /-! ## 5. Cantor/Cuntz crystal at the null boundary -/
 
-/--
-Cantor/Cuntz crystal data at the null topological boundary.
-
-The null boundary is represented by the empty binary word, i.e. the root
-cylinder of the Cantor/Cuntz recursion.
--/
-structure CantorCuntzNullBoundaryCrystal (Op : Type*) [Ring Op] [StarRing Op] where
-  basis : InfoGeometry.Canonical.CantorCuntzBasis.CantorCuntzBasisPacket Op
-  nullBoundary : InfoGeometry.Canonical.CantorCuntzBasis.BinaryWord
-  nullBoundary_eq_root : nullBoundary = []
-
-namespace CantorCuntzNullBoundaryCrystal
-
 variable {Op : Type*} [Ring Op] [StarRing Op]
 
 /-- The null-boundary orbit is the Cuntz/Cantor seed. -/
-theorem orbit_null_eq_seed (X : CantorCuntzNullBoundaryCrystal Op) :
-    InfoGeometry.Canonical.CantorCuntzBasis.CantorCuntzBasisPacket.orbit
-        X.basis X.nullBoundary = X.basis.seed := by
-  rw [X.nullBoundary_eq_root]
-  exact InfoGeometry.Canonical.CantorCuntzBasis.CantorCuntzBasisPacket.orbit_root_eq_seed X.basis
-
-end CantorCuntzNullBoundaryCrystal
+theorem orbit_null_eq_seed
+    (C : CuntzO2Carrier Op) (seed : Op)
+    (nullBoundary : CantorCuntzBasis.BinaryWord)
+    (nullBoundary_eq_root : nullBoundary = []) :
+    InfoGeometry.Canonical.CantorCuntzBasis.orbit
+        C seed nullBoundary = seed := by
+  rw [nullBoundary_eq_root]
+  exact CantorCuntzBasis.orbit_root_eq_seed C seed
 
 /-! ## 6. Combined Çelik--Fibonacci--Cantor/Cuntz bridge -/
-
-/--
-Combined bridge: local `Z3` Cartan/Yang--Baxter calculus, finite Fibonacci
-braided tensor shadow, and Cantor/Cuntz null-boundary crystal.
--/
-structure CelikZ3FibonacciCantorCuntzBridge
-    (A Op : Type*) [Ring A] [Ring Op] [StarRing Op] where
-  btc : ExplicitZ3FibonacciBTCBridge A
-  crystal : CantorCuntzNullBoundaryCrystal Op
-
-namespace CelikZ3FibonacciCantorCuntzBridge
 
 variable {A Op : Type*} [Ring A] [Ring Op] [StarRing Op]
 
 /-- The combined bridge inherits the transported Fibonacci Yang--Baxter relation. -/
-theorem fibonacci_yang_baxter (G : CelikZ3FibonacciCantorCuntzBridge A Op) :
-    G.btc.fibonacci.R * G.btc.fibonacci.B * G.btc.fibonacci.R =
-      G.btc.fibonacci.B * G.btc.fibonacci.R * G.btc.fibonacci.B :=
-  ExplicitZ3FibonacciBTCBridge.fibonacci_yang_baxter_from_celik G.btc
+theorem fibonacci_yang_baxter
+    (btc : ExplicitZ3FibonacciBTCBridge A) :
+    btc.fibonacci.R * btc.fibonacci.B * btc.fibonacci.R =
+      btc.fibonacci.B * btc.fibonacci.R * btc.fibonacci.B :=
+  ExplicitZ3FibonacciBTCBridge.fibonacci_yang_baxter_from_celik btc
 
 /-- The combined bridge reads the null Cantor/Cuntz boundary as the seed crystal. -/
-theorem null_boundary_orbit_eq_seed (G : CelikZ3FibonacciCantorCuntzBridge A Op) :
-    InfoGeometry.Canonical.CantorCuntzBasis.CantorCuntzBasisPacket.orbit
-        G.crystal.basis G.crystal.nullBoundary = G.crystal.basis.seed :=
-  CantorCuntzNullBoundaryCrystal.orbit_null_eq_seed G.crystal
-
-end CelikZ3FibonacciCantorCuntzBridge
+theorem null_boundary_orbit_eq_seed
+    (C : CuntzO2Carrier Op) (seed : Op)
+    (nullBoundary : CantorCuntzBasis.BinaryWord)
+    (nullBoundary_eq_root : nullBoundary = []) :
+    InfoGeometry.Canonical.CantorCuntzBasis.orbit
+        C seed nullBoundary = seed :=
+  orbit_null_eq_seed C seed nullBoundary nullBoundary_eq_root
 
 end InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge

@@ -178,22 +178,39 @@ A rank-32 Arnold exterior-product realization.
 The `carrierReadout` name is historical interface terminology: the structure only
 asserts that each label reads back as one declared Arnold exterior product.
 -/
-structure ArnoldProductRank32Realization
-    (R : Type*) [CommRing R] where
-  carrierReadout : BoundaryRank32State → ThreePointArnoldExterior R
-  channel : BoundaryRank32State → Fin 3
-  carrier_eq_arnoldChannelProduct :
-    ∀ s, carrierReadout s = arnoldChannelProduct R (channel s)
+abbrev ArnoldProductRank32Realization
+    (R : Type*) [CommRing R] :=
+  { p :
+      (BoundaryRank32State → ThreePointArnoldExterior R) ×
+        (BoundaryRank32State → Fin 3) //
+      ∀ s, p.1 s = arnoldChannelProduct R (p.2 s) }
+
+namespace ArnoldProductRank32Realization
+
+variable {R : Type*} [CommRing R]
+
+def carrierReadout (B : ArnoldProductRank32Realization R) :
+    BoundaryRank32State → ThreePointArnoldExterior R :=
+  B.1.1
+
+def channel (B : ArnoldProductRank32Realization R) :
+    BoundaryRank32State → Fin 3 :=
+  B.1.2
+
+theorem carrier_eq_arnoldChannelProduct
+    (B : ArnoldProductRank32Realization R) (s : BoundaryRank32State) :
+    B.carrierReadout s = arnoldChannelProduct R (B.channel s) :=
+  B.2 s
+
+end ArnoldProductRank32Realization
 
 /-- The canonical rank-32 Arnold exterior-product realization. -/
 noncomputable def canonicalArnoldProductRank32
     (R : Type*) [CommRing R] :
-    ArnoldProductRank32Realization R where
-  carrierReadout := boundaryRank32ArnoldProduct R
-  channel := boundaryRank32Channel
-  carrier_eq_arnoldChannelProduct := by
-    intro s
-    rfl
+    ArnoldProductRank32Realization R := by
+  refine ⟨(boundaryRank32ArnoldProduct R, boundaryRank32Channel), ?_⟩
+  intro s
+  rfl
 
 namespace ArnoldProductRank32Realization
 

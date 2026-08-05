@@ -14,15 +14,24 @@ algebraically generates the Tomita-Takesaki modular conjugation (the "two tapes"
 namespace InfoGeometry.Topology
 
 /-- A point on the 2D Thermal Stripe (space x, thermal time τ) -/
-@[ext]
-structure StripePoint where
-  x : ℝ
-  τ : ℝ
+abbrev StripePoint := ℝ × ℝ
+
+namespace StripePoint
+
+abbrev x (p : StripePoint) : ℝ := p.1
+abbrev τ (p : StripePoint) : ℝ := p.2
+
+end StripePoint
 
 /-- The thermal KMS stripe bounded between τ = 0 and τ = β -/
-structure ThermalStripe where
-  beta : ℝ
-  h_beta_pos : 0 < beta
+abbrev ThermalStripe := { beta : ℝ // 0 < beta }
+
+namespace ThermalStripe
+
+abbrev beta (stripe : ThermalStripe) : ℝ := stripe.1
+abbrev h_beta_pos (stripe : ThermalStripe) : 0 < stripe.beta := stripe.property
+
+end ThermalStripe
 
 variable (stripe : ThermalStripe)
 
@@ -32,7 +41,7 @@ variable (stripe : ThermalStripe)
   This turns the flat stripe into a Möbius tape.
 -/
 def moebius_glide (p : StripePoint) : StripePoint :=
-  { x := -p.x, τ := p.τ + stripe.beta }
+  (-p.x, p.τ + stripe.beta)
 
 /-- 
   THE DOUBLE TAPE THEOREM (Fermionic Periodicity).
@@ -40,11 +49,13 @@ def moebius_glide (p : StripePoint) : StripePoint :=
   and traverses exactly 2β (the double cover).
 -/
 theorem two_tapes_unfold (p : StripePoint) :
-    moebius_glide stripe (moebius_glide stripe p) = { x := p.x, τ := p.τ + 2 * stripe.beta } := by
+    moebius_glide stripe (moebius_glide stripe p) =
+      (p.x, p.τ + 2 * stripe.beta) := by
   dsimp [moebius_glide]
   ext
-  · simp only [neg_neg]
-  · linarith
+  · simp [StripePoint.x]
+  · simp [StripePoint.τ]
+    ring
 
 /--
   The Algebraic Connection to Tomita-Takesaki.
@@ -52,16 +63,19 @@ theorem two_tapes_unfold (p : StripePoint) :
   Here, J is the spatial parity flip (x ↦ -x), and 
   Δ^(1/2) is the thermal translation (τ ↦ τ + β).
 -/
-structure TomitaTakesakiTapeMap where
-  -- Spatial Conjugation J
-  J : StripePoint → StripePoint
-  -- Thermal translation Δ^(1/2)
-  Delta_half : StripePoint → StripePoint
+abbrev TomitaTakesakiTapeMap :=
+  (StripePoint → StripePoint) × (StripePoint → StripePoint)
+
+namespace TomitaTakesakiTapeMap
+
+abbrev J (T : TomitaTakesakiTapeMap) : StripePoint → StripePoint := T.1
+abbrev Delta_half (T : TomitaTakesakiTapeMap) : StripePoint → StripePoint := T.2
+
+end TomitaTakesakiTapeMap
 
 /-- The canonical Tomita-Takesaki map for the thermal stripe. -/
-def canonical_tt_map : TomitaTakesakiTapeMap where
-  J p := { x := -p.x, τ := p.τ }
-  Delta_half p := { x := p.x, τ := p.τ + stripe.beta }
+def canonical_tt_map : TomitaTakesakiTapeMap :=
+  ((fun p => (-p.x, p.τ)), (fun p => (p.x, p.τ + stripe.beta)))
   
 /--
   THE KMS MÖBIUS THEOREM:

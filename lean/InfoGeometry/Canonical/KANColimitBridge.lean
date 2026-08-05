@@ -27,7 +27,7 @@ structure KANStageSignatures (Stage : Type*) where
   tripotentT : Stage → Prop
 
 /-- Limit KAN signatures on the colimit carrier. -/
-structure KANLimitSignatures (Limit : Type*) where
+structure KANDirectLimitSignatures (Limit : Type*) where
   compactKInf : Limit → Prop
   hyperbolicAInf : Limit → Prop
   parabolicNInf : Limit → Prop
@@ -38,7 +38,7 @@ structure KANLimitSignatures (Limit : Type*) where
 A sequential KAN tower whose finite signatures are compatible with bonding maps
 and have explicit readouts on the colimit carrier.
 -/
-structure KANColimitTower where
+structure KANStageTower where
   Stage : ℕ → Type u
   stageRing : ∀ n, Ring (Stage n)
   bond : ∀ n, Stage n →+* Stage (n + 1)
@@ -49,11 +49,11 @@ structure KANColimitTower where
   nilpotent_compat : ∀ n x, (stage n).nilpotentN x → (stage (n + 1)).nilpotentN (bond n x)
   tripotent_compat : ∀ n x, (stage n).tripotentT x → (stage (n + 1)).tripotentT (bond n x)
 
-attribute [instance] KANColimitTower.stageRing
+attribute [instance] KANStageTower.stageRing
 
-namespace KANColimitTower
+namespace KANStageTower
 
-variable (T : KANColimitTower)
+variable (T : KANStageTower)
 
 abbrev Limit :=
   InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.DirectLimitSuperClosure T.bond
@@ -61,7 +61,7 @@ abbrev Limit :=
 noncomputable abbrev toLimit (n : ℕ) : T.Stage n →+* T.Limit :=
   InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.directLimitOf T.bond n
 
-def limit : KANLimitSignatures T.Limit where
+def limit : KANDirectLimitSignatures T.Limit where
   compactKInf := fun z => ∃ n x, T.toLimit n x = z ∧ (T.stage n).compactK x
   hyperbolicAInf := fun z => ∃ n x, T.toLimit n x = z ∧ (T.stage n).hyperbolicA x
   parabolicNInf := fun z => ∃ n x, T.toLimit n x = z ∧ (T.stage n).parabolicN x
@@ -87,77 +87,77 @@ theorem property_bondSeq
       exact hP (n + m) _ ih
 
 /-- Compact `K` signature survives the colimit. -/
-theorem compact_colimit {n : ℕ} {x : T.Stage n}
+theorem compact_directLimit {n : ℕ} {x : T.Stage n}
     (hx : (T.stage n).compactK x) :
     (T.limit).compactKInf (T.toLimit n x) := by
   exact ⟨n, x, rfl, hx⟩
 
 /-- Hyperbolic/abelian `A` signature survives the colimit. -/
-theorem hyperbolic_colimit {n : ℕ} {x : T.Stage n}
+theorem hyperbolic_directLimit {n : ℕ} {x : T.Stage n}
     (hx : (T.stage n).hyperbolicA x) :
     (T.limit).hyperbolicAInf (T.toLimit n x) := by
   exact ⟨n, x, rfl, hx⟩
 
 /-- Parabolic `N` signature survives the colimit. -/
-theorem parabolic_colimit {n : ℕ} {x : T.Stage n}
+theorem parabolic_directLimit {n : ℕ} {x : T.Stage n}
     (hx : (T.stage n).parabolicN x) :
     (T.limit).parabolicNInf (T.toLimit n x) := by
   exact ⟨n, x, rfl, hx⟩
 
 /-- Nilpotent `N²=0`-style signature survives the colimit. -/
-theorem nilpotent_colimit {n : ℕ} {x : T.Stage n}
+theorem nilpotent_directLimit {n : ℕ} {x : T.Stage n}
     (hx : (T.stage n).nilpotentN x) :
     (T.limit).nilpotentNInf (T.toLimit n x) := by
   exact ⟨n, x, rfl, hx⟩
 
 /-- Tripotent/Peirce `T³=T`-style signature survives the colimit. -/
-theorem tripotent_colimit {n : ℕ} {x : T.Stage n}
+theorem tripotent_directLimit {n : ℕ} {x : T.Stage n}
     (hx : (T.stage n).tripotentT x) :
     (T.limit).tripotentTInf (T.toLimit n x) := by
   exact ⟨n, x, rfl, hx⟩
 
 /-- Transport compact signature through finitely many bonding maps before taking the same colimit point. -/
-theorem compact_transport_to_colimit
+theorem compact_transport_to_directLimit
     (n m : ℕ) (x : T.Stage n) (hx : (T.stage n).compactK x) :
     (T.limit).compactKInf
       (T.toLimit (n + m) (T.bondSeq n m (Nat.le_add_right n m) x)) := by
-  exact T.compact_colimit
+  exact T.compact_directLimit
     (T.property_bondSeq (fun k y => (T.stage k).compactK y)
       T.compact_compat n m x hx)
 
 /-- Transport hyperbolic signature through finitely many bonding maps before taking the same colimit point. -/
-theorem hyperbolic_transport_to_colimit
+theorem hyperbolic_transport_to_directLimit
     (n m : ℕ) (x : T.Stage n) (hx : (T.stage n).hyperbolicA x) :
     (T.limit).hyperbolicAInf
       (T.toLimit (n + m) (T.bondSeq n m (Nat.le_add_right n m) x)) := by
-  exact T.hyperbolic_colimit
+  exact T.hyperbolic_directLimit
     (T.property_bondSeq (fun k y => (T.stage k).hyperbolicA y)
       T.hyperbolic_compat n m x hx)
 
 /-- Transport parabolic signature through finitely many bonding maps before taking the same colimit point. -/
-theorem parabolic_transport_to_colimit
+theorem parabolic_transport_to_directLimit
     (n m : ℕ) (x : T.Stage n) (hx : (T.stage n).parabolicN x) :
     (T.limit).parabolicNInf
       (T.toLimit (n + m) (T.bondSeq n m (Nat.le_add_right n m) x)) := by
-  exact T.parabolic_colimit
+  exact T.parabolic_directLimit
     (T.property_bondSeq (fun k y => (T.stage k).parabolicN y)
       T.parabolic_compat n m x hx)
 
 /-- Transport nilpotent signature through finitely many bonding maps before taking the same colimit point. -/
-theorem nilpotent_transport_to_colimit
+theorem nilpotent_transport_to_directLimit
     (n m : ℕ) (x : T.Stage n) (hx : (T.stage n).nilpotentN x) :
     (T.limit).nilpotentNInf
       (T.toLimit (n + m) (T.bondSeq n m (Nat.le_add_right n m) x)) := by
-  exact T.nilpotent_colimit
+  exact T.nilpotent_directLimit
     (T.property_bondSeq (fun k y => (T.stage k).nilpotentN y)
       T.nilpotent_compat n m x hx)
 
 /-- Transport tripotent signature through finitely many bonding maps before taking the same colimit point. -/
-theorem tripotent_transport_to_colimit
+theorem tripotent_transport_to_directLimit
     (n m : ℕ) (x : T.Stage n) (hx : (T.stage n).tripotentT x) :
     (T.limit).tripotentTInf
       (T.toLimit (n + m) (T.bondSeq n m (Nat.le_add_right n m) x)) := by
-  exact T.tripotent_colimit
+  exact T.tripotent_directLimit
     (T.property_bondSeq (fun k y => (T.stage k).tripotentT y)
       T.tripotent_compat n m x hx)
 
@@ -168,7 +168,7 @@ theorem transported_point_eq (n m : ℕ) (x : T.Stage n) :
     T.bond n (n + m) (Nat.le_add_right n m) x
 
 /-- Combined readout: K, A, N, nilpotent, and tripotent signatures survive together. -/
-theorem full_KAN_signature_colimit {n : ℕ} {x : T.Stage n}
+theorem full_KAN_signature_directLimit {n : ℕ} {x : T.Stage n}
     (hK : (T.stage n).compactK x)
     (hA : (T.stage n).hyperbolicA x)
     (hN : (T.stage n).parabolicN x)
@@ -179,12 +179,12 @@ theorem full_KAN_signature_colimit {n : ℕ} {x : T.Stage n}
       (T.limit).parabolicNInf (T.toLimit n x) ∧
       (T.limit).nilpotentNInf (T.toLimit n x) ∧
       (T.limit).tripotentTInf (T.toLimit n x) :=
-  ⟨T.compact_colimit hK,
-    T.hyperbolic_colimit hA,
-    T.parabolic_colimit hN,
-    T.nilpotent_colimit hNil,
-    T.tripotent_colimit hTri⟩
+  ⟨T.compact_directLimit hK,
+    T.hyperbolic_directLimit hA,
+    T.parabolic_directLimit hN,
+    T.nilpotent_directLimit hNil,
+    T.tripotent_directLimit hTri⟩
 
-end KANColimitTower
+end KANStageTower
 
 end InfoGeometry.Canonical.KANColimitBridge

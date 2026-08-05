@@ -49,10 +49,6 @@ namespace MirrorInvolution
 variable {Op : Type uOp} [Ring Op]
 variable (M : MirrorInvolution Op)
 
-theorem map_zero : M.mirror 0 = 0 := M.mirror.map_zero
-
-theorem map_one : M.mirror 1 = 1 := M.mirror.map_one
-
 theorem map_add (x y : Op) :
     M.mirror (x + y) = M.mirror x + M.mirror y := M.mirror.map_add x y
 

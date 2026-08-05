@@ -17,7 +17,7 @@ namespace InfoGeometry.Canonical.Cl11ConcreteSequentialColimitConsequences
 
 noncomputable section
 
-open InfoGeometry.Canonical.Cl11SequentialColimitSystemBridge
+open InfoGeometry.Canonical.Cl11SequentialStageSystemBridge
 open InfoGeometry.Clifford.Cl11InfiniteCarrier
 open InfoGeometry.Clifford.Cl11TensorTowerLimit
 

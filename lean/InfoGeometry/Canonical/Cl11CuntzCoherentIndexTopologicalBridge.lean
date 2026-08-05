@@ -31,6 +31,12 @@ open InfoGeometry.Canonical.Cl11MarkovJonesTopologicalColimit
 open InfoGeometry.Canonical.CuntzMatrixTraceTopologicalColimit
 open InfoGeometry.Canonical.CuntzMatrixTraceTopologicalGNSBridge
 
+/-! The topological trace owners are parameterized by a successor family.
+Expose the native concrete successor as that family once, so every colimit
+readout below uses the same `Data` witness as `concrete_trace_compatible`. -/
+abbrev concreteData : CuntzMatrixTraceTower.Data :=
+  fun n => CuntzMatrixTraceTower.concreteStep n
+
 abbrev ClStage (n : ℕ) : Type := MatStage n
 abbrev CoherentComplexStage (n : ℕ) : Type :=
   Matrix (Fin (2 ^ n)) (Fin (2 ^ n)) ℂ
@@ -191,15 +197,20 @@ def coherentComplexificationColimitCocone :
           CuntzMatrixTraceTopologicalColimit.topologicalInclusion concreteData m
             (coherentComplexifyClStage m A)
         rw [coherentComplexifyClStage_stageEmbedMap_naturality]
-        simpa [CuntzMatrixTraceTopologicalColimit.continuousTransition] using
-          (FilteredColimit.Native.Topological.topologicalDirectInjection_naturality_apply
+        change colimit.ι (CuntzMatrixTraceTopologicalColimit.topologicalDiagram concreteData) n
+            ((CuntzMatrixTraceTopologicalColimit.topologicalDiagram concreteData).map f
+              (coherentComplexifyClStage m A)) =
+          colimit.ι (CuntzMatrixTraceTopologicalColimit.topologicalDiagram concreteData) m
+            (coherentComplexifyClStage m A)
+        exact congrArg (fun g => g (coherentComplexifyClStage m A))
+          (colimit.w
             (CuntzMatrixTraceTopologicalColimit.topologicalDiagram concreteData)
-            (f := f) (coherentComplexifyClStage m A)) }
+            f) }
 
 noncomputable def coherentComplexificationColimitMap :
     Cl11MarkovJonesTopologicalColimit.topologicalColimitObject ⟶
       CuntzMatrixTraceTopologicalColimit.topologicalColimitObject concreteData :=
-  FilteredColimit.Native.Topological.topologicalDirectDescend
+  colimit.desc
     Cl11MarkovJonesTopologicalColimit.topologicalDiagram
     coherentComplexificationColimitCocone
 
@@ -346,11 +357,12 @@ noncomputable def coherentAlgebraicToTopological :
     (by
       intro m n h A
       rw [← coherentStageEmbedMap_eq_bondMap h A]
-      simpa [Cl11MarkovJonesTopologicalColimit.topologicalInclusion,
-        Cl11MarkovJonesTopologicalColimit.continuousStageEmbedMap] using
-        (FilteredColimit.Native.Topological.topologicalDirectInjection_naturality_apply
-          Cl11MarkovJonesTopologicalColimit.topologicalDiagram
-          (f := homOfLE h) A).symm)
+      change colimit.ι Cl11MarkovJonesTopologicalColimit.topologicalDiagram m A =
+        colimit.ι Cl11MarkovJonesTopologicalColimit.topologicalDiagram n
+          (Cl11MarkovJonesTopologicalColimit.topologicalDiagram.map (homOfLE h) A)
+      exact (FilteredColimit.Native.Topological.topologicalDirectInjection_naturality_apply
+        Cl11MarkovJonesTopologicalColimit.topologicalDiagram
+        (f := homOfLE h) A).symm)
 
 @[simp] theorem coherentAlgebraicToTopological_ofStage
     (n : ℕ) (A : ClStage n) :
@@ -408,15 +420,16 @@ noncomputable def cliffordCARToCl11MarkovCocone :
         rw [CliffordCARTopologicalColimit.bondCLM_apply,
           CliffordCARAlgebraicTopologicalComparison.bondAlgHom_eq_bondMap,
           ← coherentStageEmbedMap_eq_bondMap (leOfHom f) A]
-        simpa [Cl11MarkovJonesTopologicalColimit.continuousStageEmbedMap] using
-          (FilteredColimit.Native.Topological.topologicalDirectInjection_naturality_apply
-            Cl11MarkovJonesTopologicalColimit.topologicalDiagram
-            (f := f) A) }
+        change colimit.ι Cl11MarkovJonesTopologicalColimit.topologicalDiagram n
+            (Cl11MarkovJonesTopologicalColimit.topologicalDiagram.map f A) =
+          colimit.ι Cl11MarkovJonesTopologicalColimit.topologicalDiagram m A
+        exact FilteredColimit.Native.Topological.topologicalDirectInjection_naturality_apply
+          Cl11MarkovJonesTopologicalColimit.topologicalDiagram (f := f) A }
 
 noncomputable def cliffordCARToCl11MarkovTopological :
     CliffordCARTopologicalColimit.topologicalColimit ⟶
       Cl11MarkovJonesTopologicalColimit.topologicalColimitObject :=
-  FilteredColimit.Native.Topological.topologicalDirectDescend
+  colimit.desc
     CliffordCARTopologicalColimit.topologicalDiagram
     cliffordCARToCl11MarkovCocone
 

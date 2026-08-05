@@ -101,19 +101,6 @@ theorem sectorProjector0_mul_sectorProjector2 :
   ext i j
   fin_cases i <;> fin_cases j <;> simp [sectorProjector0, sectorProjector2, Matrix.mul_apply]
 
-/-- Complete pairwise orthogonality of the three sector projectors. -/
-theorem sectorProjector_pairwise_orthogonal_packet :
-    sectorProjector0 * sectorProjector1 = 0 ∧ sectorProjector1 * sectorProjector0 = 0 ∧
-    sectorProjector1 * sectorProjector2 = 0 ∧ sectorProjector2 * sectorProjector1 = 0 ∧
-    sectorProjector2 * sectorProjector0 = 0 ∧ sectorProjector0 * sectorProjector2 = 0 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact sectorProjector0_mul_sectorProjector1
-  · exact sectorProjector1_mul_sectorProjector0
-  · exact sectorProjector1_mul_sectorProjector2
-  · exact sectorProjector2_mul_sectorProjector1
-  · exact sectorProjector2_mul_sectorProjector0
-  · exact sectorProjector0_mul_sectorProjector2
-
 /-- The three finite sector projectors sum to the identity. -/
 theorem sectorProjector_sum_identity :
     sectorProjector0 + sectorProjector1 + sectorProjector2 = 1 := by
@@ -234,41 +221,6 @@ theorem finiteCentralExtension_kernel_add {G : Type} [Mul G] [One G]
     (tau : G → G → ZMod 3) (a b : ZMod 3) :
     (finiteCentralExtensionMul tau (1, a) (1, b)).2 = a + b + tau 1 1 := by
   rfl
-
-/-- Repaired theorem-safe Chapter 14 finite `Z₃` packet. -/
-theorem repaired_MD014_z3_projector_packet {G : Type} [Semigroup G]
-    (tau : G → G → ZMod 3) (hassoc : ProductCocycleAssociative tau)
-    (omega : ℂ) (homega : omega ^ 3 = 1) (x y z : G × ZMod 3) :
-    sectorProjector0 * sectorProjector0 = sectorProjector0 ∧
-    sectorProjector1 * sectorProjector1 = sectorProjector1 ∧
-    sectorProjector2 * sectorProjector2 = sectorProjector2 ∧
-    sectorProjector0 * sectorProjector1 = 0 ∧
-    sectorProjector1 * sectorProjector0 = 0 ∧
-    sectorProjector0 + sectorProjector1 + sectorProjector2 = 1 ∧
-    trace3 sectorProjector0 = 1 ∧
-    trace3 sectorProjector1 = 1 ∧
-    trace3 sectorProjector2 = 1 ∧
-    trace3 (sectorPhase omega) = 1 + omega + omega ^ 2 ∧
-    sectorPhase omega * sectorProjector1 = omega • sectorProjector1 ∧
-    sectorProjector1 * sectorPhase omega = omega • sectorProjector1 ∧
-    sectorPhase omega * sectorPhase omega * sectorPhase omega = 1 ∧
-    finiteCentralExtensionMul tau (finiteCentralExtensionMul tau x y) z =
-      finiteCentralExtensionMul tau x (finiteCentralExtensionMul tau y z) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact sectorProjector0_idempotent
-  · exact sectorProjector1_idempotent
-  · exact sectorProjector2_idempotent
-  · exact sectorProjector0_mul_sectorProjector1
-  · exact sectorProjector1_mul_sectorProjector0
-  · exact sectorProjector_sum_identity
-  · exact trace3_sectorProjector0
-  · exact trace3_sectorProjector1
-  · exact trace3_sectorProjector2
-  · exact trace3_sectorPhase omega
-  · exact sectorPhase_mul_projector1 omega
-  · exact sectorProjector1_mul_sectorPhase omega
-  · exact sectorPhase_cube_identity omega homega
-  · exact finiteCentralExtensionMul_assoc tau hassoc x y z
 
 end InfoGeometry.Physics.MD014TriSpinZ3Projectors
 

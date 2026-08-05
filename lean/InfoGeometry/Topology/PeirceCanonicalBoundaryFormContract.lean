@@ -66,4 +66,15 @@ theorem peirceBoundaryContract_residue_tendsto
       (_root_.nhds (PeirceBoundaryResidue C.residueSocket)) :=
   peirceBoundaryResidue_regularPart_tendsto C.residueSocket
 
+/-- Bundled boundary-form readback: pullback identity plus scalar residue socket. -/
+theorem peirceBoundaryContract_readback
+    {b : PeirceBoundaryCoordinate}
+    {path : ℝ → Matrix (Fin 2) (Fin 2) ℝ}
+    {n : ℕ} (C : PeirceCanonicalBoundaryFormContract b path n) :
+    C.boundaryForm = peirceBoundaryPullback b C.chartForm ∧
+      PeirceBoundaryResidue C.residueSocket = C.residueSocket.regularPart 0 := by
+  constructor
+  · exact C.boundaryForm_eq_pullback
+  · rfl
+
 end InfoGeometry.Topology

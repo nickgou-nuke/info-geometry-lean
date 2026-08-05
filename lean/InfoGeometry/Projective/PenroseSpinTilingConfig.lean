@@ -70,40 +70,6 @@ theorem pointCount_F5_verified :
   unfold tateMotivePolynomial
   norm_num
 
-/-- A finite point-count datum certified by the candidate counting polynomial. -/
-def PointCountEvidence : Type :=
-  {p : ℤ × ℤ // tateMotivePolynomial p.1 = p.2}
-
-namespace PointCountEvidence
-
-/-- The finite-field size parameter carried by the point-count evidence. -/
-abbrev q (E : PointCountEvidence) : ℤ :=
-  E.1.1
-
-/-- The certified point count carried by the evidence. -/
-abbrev count (E : PointCountEvidence) : ℤ :=
-  E.1.2
-
-/-- The defining point-count equality carried by the evidence. -/
-theorem count_eq (E : PointCountEvidence) :
-    tateMotivePolynomial (q E) = count E :=
-  E.2
-
-/-- Construct point-count evidence from its parameter, count, and equality. -/
-def mk (q count : ℤ) (h : tateMotivePolynomial q = count) :
-    PointCountEvidence :=
-  ⟨(q, count), h⟩
-
-end PointCountEvidence
-
-/-- The `q = 3` point-count evidence. -/
-def pointCountF3Evidence : PointCountEvidence :=
-  PointCountEvidence.mk 3 1296 pointCount_F3_verified
-
-/-- The `q = 5` point-count evidence. -/
-def pointCountF5Evidence : PointCountEvidence :=
-  PointCountEvidence.mk 5 175200 pointCount_F5_verified
-
 /-- The configured total de Rham rank target for the spin-tiling model. -/
 def assumedTotalDeRhamRank : ℕ := 32
 

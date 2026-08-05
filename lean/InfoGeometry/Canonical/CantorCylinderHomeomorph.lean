@@ -135,4 +135,10 @@ theorem prefixCylinderHomeomorph_apply
       ⟨prefixExtend w x, prefixExtend_mem_prefixCylinder w x⟩ :=
   rfl
 
+@[simp] theorem prefixCylinderHomeomorph_symm_apply
+    (n : ℕ) (w : BitWord n) (y : prefixCylinder n w) :
+    (prefixCylinderHomeomorph n w).symm y =
+      prefixTailN n y.1 :=
+  rfl
+
 end InfoGeometry.Canonical.CantorCylinderTopology

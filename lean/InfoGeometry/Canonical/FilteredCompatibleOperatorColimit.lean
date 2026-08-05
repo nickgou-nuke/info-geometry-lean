@@ -39,8 +39,7 @@ local notation "H∞" => HilbertDirectLimit E sys
 
 /-- A stagewise operator family that intertwines every transition and obeys
 one uniform operator bound. -/
-structure CompatibleOperatorFamily where
-  op : ∀ i, E i →L[ℂ] E i
+abbrev CompatibleOperatorFamily := ∀ i, E i →L[ℂ] E i
 
 variable (T : CompatibleOperatorFamily E)
 
@@ -50,33 +49,33 @@ def stageOperatorToDirectLimitRealMap
     (i : I) :
     E i →ₗ[ℝ] D∞ where
   toFun := fun x =>
-    stageToDirectLimitLinearMap E sys i (T.op i x)
+    stageToDirectLimitLinearMap E sys i (T i x)
   map_add' := by
     intro x y
     simp
   map_smul' := by
     intro r x
     have hop :=
-      (T.op i).toLinearMap.map_smul_of_tower r x
+      (T i).toLinearMap.map_smul_of_tower r x
     change
       (Module.DirectLimit.of
         ℝ I E
         (fun _ _ hij => realTransition E sys hij)
-        i) (T.op i (r • x)) =
+        i) (T i (r • x)) =
       r •
         (Module.DirectLimit.of
           ℝ I E
           (fun _ _ hij => realTransition E sys hij)
-          i) (T.op i x)
+          i) (T i x)
     calc
       (Module.DirectLimit.of
         ℝ I E
         (fun _ _ hij => realTransition E sys hij)
-        i) (T.op i (r • x)) =
+        i) (T i (r • x)) =
           (Module.DirectLimit.of
             ℝ I E
             (fun _ _ hij => realTransition E sys hij)
-            i) (r • T.op i x) :=
+            i) (r • T i x) :=
         congrArg
           (Module.DirectLimit.of
             ℝ I E
@@ -86,37 +85,37 @@ def stageOperatorToDirectLimitRealMap
           (Module.DirectLimit.of
             ℝ I E
             (fun _ _ hij => realTransition E sys hij)
-            i) (T.op i x) :=
+            i) (T i x) :=
         (Module.DirectLimit.of
           ℝ I E
           (fun _ _ hij => realTransition E sys hij)
-          i).map_smul r (T.op i x)
+          i).map_smul r (T i x)
 
 /-- The stage operator maps form a cocone over the underlying real direct
 system. -/
 theorem stageOperatorToDirectLimitRealMap_compatible
     (hintertwines :
       ∀ {i j : I} (hij : i ≤ j) (x : E i),
-        sys.map hij (T.op i x) = T.op j (sys.map hij x))
+        sys.map hij (T i x) = T j (sys.map hij x))
     (i j : I) (hij : i ≤ j) (x : E i) :
     stageOperatorToDirectLimitRealMap E sys T j
         (realTransition E sys hij x) =
       stageOperatorToDirectLimitRealMap E sys T i x := by
   change
     stageToDirectLimitLinearMap E sys j
-        (T.op j (sys.map hij x)) =
-      stageToDirectLimitLinearMap E sys i (T.op i x)
+        (T j (sys.map hij x)) =
+      stageToDirectLimitLinearMap E sys i (T i x)
   rw [← hintertwines hij x]
   exact
     stageToDirectLimitLinearMap_transition
-      E sys hij (T.op i x)
+      E sys hij (T i x)
 
 /-- Real-linear operator descended through the algebraic module direct
 limit. -/
 def algebraicOperatorReal
     (hintertwines :
       ∀ {i j : I} (hij : i ≤ j) (x : E i),
-        sys.map hij (T.op i x) = T.op j (sys.map hij x)) :
+        sys.map hij (T i x) = T j (sys.map hij x)) :
     D∞ →ₗ[ℝ] D∞ :=
   Module.DirectLimit.lift
     ℝ I E
@@ -127,7 +126,7 @@ def algebraicOperatorReal
 @[simp] theorem algebraicOperatorReal_of
     (hintertwines :
       ∀ {i j : I} (hij : i ≤ j) (x : E i),
-        sys.map hij (T.op i x) = T.op j (sys.map hij x))
+        sys.map hij (T i x) = T j (sys.map hij x))
     (i : I) (x : E i) :
     algebraicOperatorReal E sys T hintertwines
         (Module.DirectLimit.of
@@ -137,7 +136,7 @@ def algebraicOperatorReal
       Module.DirectLimit.of
         ℝ I E
         (fun _ _ hij => realTransition E sys hij)
-        i (T.op i x) := by
+        i (T i x) := by
   simpa only [stageOperatorToDirectLimitRealMap,
     stageToDirectLimitLinearMap] using
     (Module.DirectLimit.lift_of
@@ -150,7 +149,7 @@ was itself descended from the same transition system. -/
 def algebraicOperator
     (hintertwines :
       ∀ {i j : I} (hij : i ≤ j) (x : E i),
-        sys.map hij (T.op i x) = T.op j (sys.map hij x)) :
+        sys.map hij (T i x) = T j (sys.map hij x)) :
     D∞ →ₗ[ℂ] D∞ where
   toFun := algebraicOperatorReal E sys T hintertwines
   map_add' := (algebraicOperatorReal E sys T hintertwines).map_add
@@ -165,11 +164,11 @@ def algebraicOperator
 @[simp] theorem algebraicOperator_of
     (hintertwines :
       ∀ {i j : I} (hij : i ≤ j) (x : E i),
-        sys.map hij (T.op i x) = T.op j (sys.map hij x))
+        sys.map hij (T i x) = T j (sys.map hij x))
     (i : I) (x : E i) :
     algebraicOperator E sys T hintertwines
         (stageToDirectLimitLinearMap E sys i x) =
-      stageToDirectLimitLinearMap E sys i (T.op i x) := by
+      stageToDirectLimitLinearMap E sys i (T i x) := by
   exact algebraicOperatorReal_of E sys T hintertwines i x
 
 /-- The stagewise uniform bound descends unchanged to the algebraic
@@ -177,9 +176,9 @@ colimit. -/
 theorem algebraicOperator_norm_le
     (hintertwines :
       ∀ {i j : I} (hij : i ≤ j) (x : E i),
-        sys.map hij (T.op i x) = T.op j (sys.map hij x))
+        sys.map hij (T i x) = T j (sys.map hij x))
     (bound : ℝ)
-    (hnorm_le : ∀ i (x : E i), ‖T.op i x‖ ≤ bound * ‖x‖)
+    (hnorm_le : ∀ i (x : E i), ‖T i x‖ ≤ bound * ‖x‖)
     (z : D∞) :
     ‖algebraicOperator E sys T hintertwines z‖ ≤
       bound * ‖z‖ := by
@@ -193,7 +192,7 @@ theorem algebraicOperator_norm_le
       rw [algebraicOperator_of E sys T hintertwines]
       change
         ‖stageToDirectLimitLinearIsometry E sys i
-            (T.op i x)‖ ≤
+            (T i x)‖ ≤
           bound *
             ‖stageToDirectLimitLinearIsometry E sys i x‖
       rw [(stageToDirectLimitLinearIsometry E sys i).norm_map,
@@ -205,9 +204,9 @@ operator. -/
 def algebraicOperatorCLM
     (hintertwines :
       ∀ {i j : I} (hij : i ≤ j) (x : E i),
-        sys.map hij (T.op i x) = T.op j (sys.map hij x))
+        sys.map hij (T i x) = T j (sys.map hij x))
     (bound : ℝ)
-    (hnorm_le : ∀ i (x : E i), ‖T.op i x‖ ≤ bound * ‖x‖) :
+    (hnorm_le : ∀ i (x : E i), ‖T i x‖ ≤ bound * ‖x‖) :
     D∞ →L[ℂ] D∞ :=
   (algebraicOperator E sys T hintertwines).mkContinuous
     bound
@@ -216,9 +215,9 @@ def algebraicOperatorCLM
 @[simp] theorem algebraicOperatorCLM_apply
     (hintertwines :
       ∀ {i j : I} (hij : i ≤ j) (x : E i),
-        sys.map hij (T.op i x) = T.op j (sys.map hij x))
+        sys.map hij (T i x) = T j (sys.map hij x))
     (bound : ℝ)
-    (hnorm_le : ∀ i (x : E i), ‖T.op i x‖ ≤ bound * ‖x‖)
+    (hnorm_le : ∀ i (x : E i), ‖T i x‖ ≤ bound * ‖x‖)
     (z : D∞) :
     algebraicOperatorCLM E sys T hintertwines bound hnorm_le z =
       algebraicOperator E sys T hintertwines z :=
@@ -229,9 +228,9 @@ Hilbert colimit. -/
 def completedOperator
     (hintertwines :
       ∀ {i j : I} (hij : i ≤ j) (x : E i),
-        sys.map hij (T.op i x) = T.op j (sys.map hij x))
+        sys.map hij (T i x) = T j (sys.map hij x))
     (bound : ℝ)
-    (hnorm_le : ∀ i (x : E i), ‖T.op i x‖ ≤ bound * ‖x‖) :
+    (hnorm_le : ∀ i (x : E i), ‖T i x‖ ≤ bound * ‖x‖) :
     H∞ →L[ℂ] H∞ :=
   (algebraicOperatorCLM E sys T hintertwines bound hnorm_le).completion
 
@@ -240,9 +239,9 @@ completion embedding of the descended operator. -/
 theorem completedOperator_coe
     (hintertwines :
       ∀ {i j : I} (hij : i ≤ j) (x : E i),
-        sys.map hij (T.op i x) = T.op j (sys.map hij x))
+        sys.map hij (T i x) = T j (sys.map hij x))
     (bound : ℝ)
-    (hnorm_le : ∀ i (x : E i), ‖T.op i x‖ ≤ bound * ‖x‖)
+    (hnorm_le : ∀ i (x : E i), ‖T i x‖ ≤ bound * ‖x‖)
     (z : D∞) :
     completedOperator E sys T hintertwines bound hnorm_le
         (directLimitToCompletion E sys z) =
@@ -256,14 +255,14 @@ stage operator. -/
 @[simp] theorem completedOperator_stage
     (hintertwines :
       ∀ {i j : I} (hij : i ≤ j) (x : E i),
-        sys.map hij (T.op i x) = T.op j (sys.map hij x))
+        sys.map hij (T i x) = T j (sys.map hij x))
     (bound : ℝ)
-    (hnorm_le : ∀ i (x : E i), ‖T.op i x‖ ≤ bound * ‖x‖)
+    (hnorm_le : ∀ i (x : E i), ‖T i x‖ ≤ bound * ‖x‖)
     (i : I) (x : E i) :
     completedOperator E sys T hintertwines bound hnorm_le
         (stageToHilbertDirectLimit E sys i x) =
       stageToHilbertDirectLimit E sys i
-        (T.op i x) := by
+        (T i x) := by
   rw [stageToHilbertDirectLimit_apply,
     stageToHilbertDirectLimit_apply,
     completedOperator_coe,

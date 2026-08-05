@@ -35,10 +35,25 @@ multiplication by `density` against a reference linear functional.
 structure LocalDensityState where
   ref : A →ₗ[ℝ] ℝ
   density : A
-  state : A →ₗ[ℝ] ℝ
-  state_eq : ∀ a, state a = ref (density * a)
   norm_ref : ref 1 = 1
-  norm_state : state 1 = 1
+  norm_density : ref density = 1
+
+/-- The state induced by left multiplication with the density element. -/
+def LocalDensityState.state (S : LocalDensityState (A := A)) : A →ₗ[ℝ] ℝ :=
+  S.ref.comp (LinearMap.mulLeft ℝ S.density)
+
+/-- The induced state is definitionally the reference functional on `density * a`. -/
+@[simp] theorem LocalDensityState.state_eq
+    (S : LocalDensityState (A := A)) (a : A) :
+    S.state a = S.ref (S.density * a) := by
+  rfl
+
+/-- Normalization of the induced state, expressed through the density. -/
+theorem LocalDensityState.norm_state
+    (S : LocalDensityState (A := A))
+    (h_density : S.ref S.density = 1) :
+    S.state 1 = 1 := by
+  simpa [LocalDensityState.state] using h_density
 
 /-- Centered density (shifted by the unit). -/
 def centeredDensity (S : LocalDensityState (A := A)) : A :=
@@ -65,7 +80,8 @@ theorem centeredFunctional_eq_delta_minus_one
 theorem centeredFunctional_one_eq_zero
     (S : LocalDensityState (A := A)) :
     centeredFunctional (A := A) S 1 = 0 := by
-  simp [centeredFunctional, S.norm_state, S.norm_ref]
+  have hstate := S.norm_state S.norm_density
+  simp [centeredFunctional, hstate, S.norm_ref]
 
 /--
 Finite-level projective comparability for two local density states with respect to a
@@ -266,14 +282,12 @@ def cantorPathLocalDensityState (x : ℕ → Bool) (n : ℕ) :
     LocalDensityState (A := BinaryWord n → ℝ) :=
   { ref := cantorRefFunctional (n := n)
     density := cantorPointDensity (x := x) n
-    state := cantorPointState (x := x) n
-    state_eq := by
-      intro a
-      simpa [cantorPointDensity] using (cantorPointState_state_eq_ref (x := x) n a)
     norm_ref := by
       simpa using (cantorRefFunctional_one (n := n))
-    norm_state := by
-      rfl }
+    norm_density := by
+      have h := cantorPointState_state_eq_ref (x := x) n
+        (1 : BinaryWord n → ℝ)
+      simpa [cantorPointState, cantorPointDensity] using h.symm }
 
 /-- The local density state is projectively comparable to itself (ratio `1`). -/
 theorem cantorPathLocalDensityState_projectivelyComparable_self
@@ -348,7 +362,8 @@ theorem cantorPathCentered_eq_eval_sub_uniform
             rw [hstate, href]
     _ = a (cantorPrefixWord (x := x) n) - uniformMean (n := n) a := by
             have hstateEval : S.state a = a (cantorPrefixWord (x := x) n) := by
-              rfl
+              change S.ref (S.density * a) = a (cantorPrefixWord (x := x) n)
+              exact (cantorPointState_state_eq_ref (x := x) n a).symm
             rw [hstateEval]
 /-- Rewriting the centered functional as the preexisting finite Cantor score. -/
 theorem cantorPathCentered_eq_scoreAt
@@ -413,7 +428,16 @@ theorem cantorPathCentered_eq_state_sub_ref
       ((cantorPathCenteredNet (x := x)).ref n) a := by
   change centeredFunctional (A := BinaryWord n → ℝ) (cantorPathLocalDensityState (x := x) n) a =
     cantorPointState (x := x) n a - cantorRefFunctional (n := n) a
-  simp [centeredFunctional, cantorPathLocalDensityState]
+  have hstate :
+      (cantorPathLocalDensityState (x := x) n).state a =
+        cantorPointState (x := x) n a := by
+    change cantorRefFunctional (n := n) (cantorPointDensity (x := x) n * a) =
+      cantorPointState (x := x) n a
+    exact (cantorPointState_state_eq_ref (x := x) n a).symm
+  have href :
+      (cantorPathLocalDensityState (x := x) n).ref a =
+        cantorRefFunctional (n := n) a := rfl
+  simp [centeredFunctional, hstate, href]
 
 /-- Centered local score is normalized (`η_n(1)=0`). -/
 theorem cantorPathCentered_one

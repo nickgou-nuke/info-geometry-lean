@@ -963,7 +963,7 @@ theorem heatHiddenInformationOwnerTarget :
 /--
 Owner target for supplying a Stinespring/Tomita information dilation.
 -/
-def StinespringInformationDilationOwnerTarget
+abbrev StinespringInformationDilationOwnerTarget
     (System Dilated Env : Type*)
     [NormedAddCommGroup System] [NormedSpace ℝ System]
     [NormedAddCommGroup Dilated] [NormedSpace ℝ Dilated]

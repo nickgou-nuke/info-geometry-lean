@@ -219,6 +219,12 @@ theorem setIndicator_compl_eq_one_sub {R : Type*} [Ring R]
   funext v
   simp [setIndicator]
 
+@[simp] theorem setIndicator_univ {R : Type*} [Zero R] [One R]
+    {n : ℕ} :
+    setIndicator R (Set.univ : Set (BinaryWord n)) = 1 := by
+  funext v
+  simp [setIndicator]
+
 /-- Disjoint sector sets have orthogonal characteristic idempotents. -/
 theorem setIndicator_mul_eq_zero_of_inf_eq_bot {R : Type*} [MonoidWithZero R]
     {n : ℕ} {S T : Set (BinaryWord n)} (h : S ⊓ T = ⊥) :
@@ -230,6 +236,13 @@ theorem setIndicator_mul_eq_zero_of_inf_eq_bot {R : Type*} [MonoidWithZero R]
 noncomputable def cylinderIndicator (R : Type*) [Zero R] [One R]
     {n : ℕ} (w : BinaryWord n) : BinaryWord n → R :=
   setIndicator R (cylinder n w)
+
+theorem sum_cylinderIndicator_eq_one {R : Type*} [Ring R]
+    {n : ℕ} :
+    (∑ w : BinaryWord n, cylinderIndicator R w) = 1 := by
+  classical
+  funext v
+  simp [cylinderIndicator, setIndicator, cylinder]
 
 /-- Cylinder characteristic functions are idempotents in the finite function algebra. -/
 theorem cylinderIndicator_idempotent {R : Type*} [MonoidWithZero R]

@@ -105,31 +105,40 @@ theorem finiteGibbsDensity_sum_eq_one
 Finite positive Gibbs KMS packet.
 The state and partition are derived, not supplied.
 -/
-structure PositiveGibbsKMSPacket (State : Type*) [Fintype State] where
-  energy : State → ℝ
-  beta : ℝ
+abbrev PositiveGibbsKMSPacket (State : Type*) [Fintype State] :=
+  (State → ℝ) × ℝ
+
+/-- Compatibility accessor for the finite Gibbs energy function. -/
+abbrev PositiveGibbsKMSPacket.energy
+    {State : Type*} [Fintype State]
+    (P : PositiveGibbsKMSPacket State) : State → ℝ := P.1
+
+/-- Compatibility accessor for the inverse temperature. -/
+abbrev PositiveGibbsKMSPacket.beta
+    {State : Type*} [Fintype State]
+    (P : PositiveGibbsKMSPacket State) : ℝ := P.2
 
 namespace PositiveGibbsKMSPacket
 
 variable {State : Type*} [Fintype State] (P : PositiveGibbsKMSPacket State)
 
 /-- Derived partition function. -/
-def partition : ℝ := positivePartition P.energy P.beta
+def partition : ℝ := positivePartition (energy P) (beta P)
 
 lemma partition_pos [Nonempty State] :
     0 < P.partition := by
-  exact positivePartition_pos P.energy P.beta
+  exact positivePartition_pos (energy P) (beta P)
 
 /-- Derived state on observables. -/
 def state : (State → ℝ) → ℝ :=
-  fun A => (∑ s, (P.partition⁻¹) * positiveGibbsWeight P.energy P.beta s * A s)
+  fun A => (∑ s, (partition P)⁻¹ * positiveGibbsWeight (energy P) (beta P) s * A s)
 
 /--
 The finite Gibbs state satisfies the KMS condition in the commutative/diagonal
 case: the flow is trivial, and the state is a trace.
 -/
 theorem satisfies_kms :
-    ∀ A B : State → ℝ, P.state (A * B) = P.state (B * A) := by
+    ∀ A B : State → ℝ, state P (A * B) = state P (B * A) := by
   intro A B
   unfold state
   refine Finset.sum_congr rfl ?_
@@ -216,11 +225,16 @@ structure MobiusKreinSignature (State : Type*) [Fintype State] where
 Infinite positive primon KMS packet.
 All analytic statements are formally derived from the Riemann zeta function.
 -/
-structure InfinitePrimonKMSPacket where
-  beta : ℝ
-  h_beta : 1 < beta
+abbrev InfinitePrimonKMSPacket := {beta : ℝ // 1 < beta}
 
 namespace InfinitePrimonKMSPacket
+
+/-- Compatibility accessor for the inverse-temperature parameter. -/
+abbrev beta (P : InfinitePrimonKMSPacket) : ℝ := P.1
+
+/-- Compatibility accessor for the genuine low-temperature hypothesis. -/
+abbrev h_beta (P : InfinitePrimonKMSPacket) : 1 < P.beta := P.2
+
 
 variable (P : InfinitePrimonKMSPacket)
 
@@ -237,11 +251,16 @@ end InfinitePrimonKMSPacket
 Infinite Möbius/Krein supertrace interpretation.
 The signed exterior/Krein trace is formally `1 / ζ(β)`.
 -/
-structure InfiniteMobiusKreinTrace where
-  beta : ℝ
-  h_beta : 1 < beta
+abbrev InfiniteMobiusKreinTrace := {beta : ℝ // 1 < beta}
 
 namespace InfiniteMobiusKreinTrace
+
+/-- Compatibility accessor for the inverse-temperature parameter. -/
+abbrev beta (C : InfiniteMobiusKreinTrace) : ℝ := C.1
+
+/-- Compatibility accessor for the genuine low-temperature hypothesis. -/
+abbrev h_beta (C : InfiniteMobiusKreinTrace) : 1 < C.beta := C.2
+
 
 variable (C : InfiniteMobiusKreinTrace)
 
@@ -281,8 +300,10 @@ theorem liouvillean_plus_minus_sign_laws
 
 /-- The positive KMS condition is formally satisfied. -/
 theorem positiveKMS_holds :
-    ∀ A B : State → ℝ, P.positiveKMS.state (A * B) = P.positiveKMS.state (B * A) :=
-  P.positiveKMS.satisfies_kms
+    ∀ A B : State → ℝ,
+      PositiveGibbsKMSPacket.state P.positiveKMS (A * B) =
+        PositiveGibbsKMSPacket.state P.positiveKMS (B * A) :=
+  PositiveGibbsKMSPacket.satisfies_kms P.positiveKMS
 
 end DoubledKreinPrimonKMSPacket
 

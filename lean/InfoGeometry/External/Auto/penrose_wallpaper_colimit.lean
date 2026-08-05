@@ -100,18 +100,20 @@ def n {α : Type} (patch : PenrosePatch α) : ℕ := patch.2
 
 end PenrosePatch
 
-/-- The full Penrose tiling is the inductive colimit.
-    Each finite step is a type (the patch at level n).
-    The embedding maps smaller patches into larger ones. -/
-structure PenroseColimit where
+/-- Finite-stage data for a Penrose inflation system.
+    Each stage is a type (the patch at level n), and the embedding maps
+    smaller patches into larger ones.
+
+    This is deliberately not a categorical colimit: no diagram, cocone, or
+    universal property is supplied by this external-data owner. -/
+structure PenroseInflationData where
   patch : ℕ → Type
   embed : (n : ℕ) → patch n → patch (n+1)
-  colimit : Type
 
-/-- The Penrose colimit is homeomorphic to the UHF_{2^∞} algebra.
-    The inflation factor is the golden ratio φ = (1+√5)/2.
-    This connects Penrose tilings to the inductive limit of
-    matrix algebras M₂ⁿ (our UHF ladder in proofs/uhf_ladder.lean). -/
+/-- Finite-level dimension and boundary readout data for the Penrose lane.
+    No UHF identification or categorical limit theorem is asserted here.
+    Those claims require a concrete diagram, a native colimit object, and a
+    separately verified equivalence. -/
 def penroseFiniteLevelDim (n : ℕ) : ℕ := 2 ^ n
 def penroseBoundary : Type := ℕ → Bool
 def penroseCantorCode : penroseBoundary ≃ (ℕ → Bool) := Equiv.refl (ℕ → Bool)

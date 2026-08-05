@@ -23,9 +23,8 @@ open InfoGeometry.Canonical.SplitCliffordTensorBridge
 set_option linter.dupNamespace false
 
 /-- Finite `K(G,n)` readout: the carrier is `G` with basepoint `0`. -/
-def EM (G : Type*) [Zero G] (_n : ℕ) : PointedReadout where
-  carrier := G
-  base := 0
+def EM (G : Type*) [Zero G] (_n : ℕ) : PointedReadout :=
+  Pointed.mk G 0
 
 @[simp]
 theorem EM_base (G : Type*) [Zero G] (n : ℕ) :

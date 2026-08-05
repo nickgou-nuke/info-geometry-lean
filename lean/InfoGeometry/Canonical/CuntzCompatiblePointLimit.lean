@@ -64,7 +64,7 @@ noncomputable def cuntzCompatiblePointLimitMap
 @[simp]
 theorem cuntzCompatiblePointLimitMap_projection
     (family : CompatibleCuntzPointFamily sys) (i : I) (u : PUnit) :
-    topologicalInverseProjection
+    limit.π
         (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i
         (cuntzCompatiblePointLimitMap sys family u) =
       cuntzCompatiblePointTopCatFamily sys family i u := by
@@ -83,7 +83,7 @@ noncomputable def cuntzCompatiblePointAmbientLimitMap
 @[simp]
 theorem cuntzCompatiblePointAmbientLimitMap_projection
     (family : CompatibleCuntzPointFamily sys) (i : I) (u : PUnit) :
-    topologicalInverseProjection
+    limit.π
         (qCcrParameterTopologicalDiagram Stage sys) i
         (cuntzCompatiblePointAmbientLimitMap sys family u) =
       (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i

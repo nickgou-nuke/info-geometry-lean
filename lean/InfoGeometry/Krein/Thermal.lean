@@ -160,11 +160,26 @@ lemma kms_zero_implies_commutation
     (krein_kms_zero_implies_commutation (H := H₂) K ω hKMS)
 
 /-- Thermal vacuum data for a chosen modular generator `K`. -/
-structure ThermalVacuum (K : EndH) where
-  Omega : H₂
-  modular_j_fixed : modular_j Omega = Omega
-  generator_annihilates : K Omega = 0
-  vacuum_nonzero : Omega ≠ 0
+abbrev ThermalVacuum (K : EndH) :=
+  {Omega : H₂ //
+    modular_j Omega = Omega ∧ K Omega = 0 ∧ Omega ≠ 0}
+
+namespace ThermalVacuum
+
+abbrev Omega {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    {K : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (V : ThermalVacuum K) : DoubledSpace E := V.1
+abbrev modular_j_fixed {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    {K : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (V : ThermalVacuum K) : modular_j V.1 = V.1 := V.2.1
+abbrev generator_annihilates {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    {K : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (V : ThermalVacuum K) : K V.1 = 0 := V.2.2.1
+abbrev vacuum_nonzero {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    {K : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (V : ThermalVacuum K) : V.1 ≠ 0 := V.2.2.2
+
+end ThermalVacuum
 
 omit [CompleteSpace E] in
 lemma spectral_epsilon_eq_zero_iff (v : H₂) :

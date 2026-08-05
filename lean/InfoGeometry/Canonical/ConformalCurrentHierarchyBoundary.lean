@@ -27,12 +27,21 @@ universe u
 Boundary packet between the five-grade conformal inversion and the current
 hierarchy.
 -/
-structure ConformalCurrentBoundary
-    (L : Type*) (A : Type*) [Ring A] where
-  inversion : FiveGradedConformalInversion L
-  rawCAR : InfoGeometry.Canonical.BosonizationConstructiveCurrent.RawCARAlgebra A
+abbrev ConformalCurrentBoundary
+    (L : Type*) (A : Type*) [Ring A] :=
+  FiveGradedConformalInversion L ×
+    InfoGeometry.Canonical.BosonizationConstructiveCurrent.RawCARAlgebra A
 
 namespace ConformalCurrentBoundary
+
+abbrev inversion
+    {L A : Type*} [Ring A]
+    (B : ConformalCurrentBoundary L A) : FiveGradedConformalInversion L := B.1
+
+abbrev rawCAR
+    {L A : Type*} [Ring A]
+    (B : ConformalCurrentBoundary L A) :
+    InfoGeometry.Canonical.BosonizationConstructiveCurrent.RawCARAlgebra A := B.2
 
 variable {L A : Type*} [Ring A]
 variable (B : ConformalCurrentBoundary L A)

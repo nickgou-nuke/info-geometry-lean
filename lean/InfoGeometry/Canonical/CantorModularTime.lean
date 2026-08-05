@@ -60,6 +60,14 @@ def sigma_R (t : ℝ) : CantorOp :=
 def star_sigma_R (t : ℝ) : CantorOp :=
   (timeScale t)⁻¹ • star_S_R_linear
 
+theorem sigma_L_add (s t : ℝ) :
+    sigma_L (s + t) = timeScale s • sigma_L t := by
+  simp [sigma_L, timeScale_mul, smul_smul, mul_comm]
+
+theorem sigma_R_add (s t : ℝ) :
+    sigma_R (s + t) = timeScale s • sigma_R t := by
+  simp [sigma_R, timeScale_mul, smul_smul, mul_comm]
+
 /-- The modular time evolution preserves the left isometry relation `s* s = 1`. -/
 theorem sigma_L_star_sigma_L (t : ℝ) :
     star_sigma_L t * sigma_L t = 1 := by

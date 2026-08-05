@@ -10,11 +10,13 @@ variable {Map n : Type*}
 variable [Fintype n] [DecidableEq n]
 
 /-- A finite real matrix-valued Jacobian family. -/
-structure MatrixJacobianFamily (Map n : Type*)
-    [Fintype n] [DecidableEq n] where
-  jacobian : Map → Matrix n n ℝ
+abbrev MatrixJacobianFamily (Map n : Type*)
+    [Fintype n] [DecidableEq n] := Map → Matrix n n ℝ
 
 namespace MatrixJacobianFamily
+
+/-- Compatibility accessor for the native Jacobian family. -/
+abbrev jacobian (J : MatrixJacobianFamily Map n) : Map → Matrix n n ℝ := J
 
 /-- Absolute determinant volume multiplier of a finite Jacobian. -/
 def volumeMultiplier
@@ -59,8 +61,8 @@ theorem compressionPotential_eq_matrixLogdetBarrier
 /-- Pointwise product of two finite matrix-Jacobian families. -/
 def mul
     (J₁ J₂ : MatrixJacobianFamily Map n) :
-    MatrixJacobianFamily Map n where
-  jacobian φ := J₁.jacobian φ * J₂.jacobian φ
+    MatrixJacobianFamily Map n :=
+  fun φ => J₁.jacobian φ * J₂.jacobian φ
 
 @[simp]
 theorem mul_jacobian

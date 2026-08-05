@@ -103,17 +103,12 @@ Witnessed discrete modular step carried by the Cuntz map.
 This is the honest theorem surface behind the slogan that the Cuntz map is the
 clock tick: the supplied `sigma` is definitionally the two-branch Cuntz map.
 -/
-def discreteCuntzStep :
-    DiscreteCuntzModularStep Op where
-  S_left := S_left
-  S_right := S_right
-  sigma := cuntzMap S_left S_right
-  sigma_eq_cuntzMap := by
-    intro X
-    rfl
+def discreteCuntzStep (S_left S_right : Op) :
+    DiscreteCuntzModularStep Op :=
+  (S_left, S_right)
 
 theorem discreteCuntzStep_apply (X : Op) :
-    (discreteCuntzStep (S_left := S_left) (S_right := S_right)).sigma X =
+    (discreteCuntzStep S_left S_right).sigma X =
       cuntzMap S_left S_right X := by
   rfl
 

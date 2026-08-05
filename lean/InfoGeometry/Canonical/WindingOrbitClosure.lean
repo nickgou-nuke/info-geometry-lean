@@ -284,7 +284,7 @@ def IsClockFaithfulExponentialBranch (K : EndH) (N : ℤ) : Prop :=
     Commute K (clockAxis H)
 
 /--
-Local gauge certificate for clock-faithful winding branches.
+Local gauge data for clock-faithful winding branches.
 
 The Weyl field/shift/response fields record the local-gauge data. The only
 non-formal analytic content required for D1 is the final faithful-readout field:
@@ -293,7 +293,7 @@ the clock commutator must vanish. This isolates the needed local symmetry
 hypothesis instead of replacing it with global exponential injectivity.
 -/
 @[rep_depth transport]
-structure LocalClockGaugeSymmetryCertificate (K : EndH) (N : ℤ) where
+structure LocalClockGaugeSymmetryData (K : EndH) (N : ℤ) where
   gaugeField : InfoGeometry.Canonical.WeylGaugeField EndH EndH
   gaugeShift : InfoGeometry.Canonical.WeylGaugeParameter EndH EndH
   response : InfoGeometry.Canonical.GeometricResponse EndH EndH
@@ -311,7 +311,7 @@ responses under the certified local shift.
 -/
 theorem localClockGauge_response_transform_eq
     {K : EndH} {N : ℤ}
-    (C : LocalClockGaugeSymmetryCertificate (H := H) K N) :
+    (C : LocalClockGaugeSymmetryData (H := H) K N) :
     (C.gaugeField.transform C.gaugeShift).respond C.response C.logGenerator =
       C.gaugeField.respond C.response C.logGenerator := by
   exact InfoGeometry.Canonical.WeylGaugeField.respond_transform_eq_of_isGaugeInvariant
@@ -323,7 +323,7 @@ exponential branch required for the reverse D1 implication.
 -/
 theorem clockFaithfulExponentialBranch_of_localClockGaugeSymmetry
     {K : EndH} {N : ℤ}
-    (C : LocalClockGaugeSymmetryCertificate (H := H) K N) :
+    (C : LocalClockGaugeSymmetryData (H := H) K N) :
     IsClockFaithfulExponentialBranch (H := H) K N := by
   intro hExp
   exact C.branch_readout_faithful (congrArg C.response.responseOf hExp)
@@ -365,7 +365,7 @@ obstruction, removing the explicit
 -/
 theorem commute_clockAxis_of_windingOrbitObstruction_eq_zero_of_localClockGaugeSymmetry
     {K : EndH} {N : ℤ}
-    (C : LocalClockGaugeSymmetryCertificate (H := H) K N)
+    (C : LocalClockGaugeSymmetryData (H := H) K N)
     (hObs : windingOrbitObstruction K N = 0) :
     Commute K (clockAxis H) := by
   exact

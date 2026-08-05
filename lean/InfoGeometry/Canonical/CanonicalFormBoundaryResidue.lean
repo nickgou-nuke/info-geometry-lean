@@ -22,10 +22,21 @@ A product boundary B ≃ B_L × B_R induces a factorization of the canonical for
 Ω(B) = Ω(B_L) ∧ Ω(B_R).
 We define this structurally for given left and right sub-geometries.
 -/
-structure ProductBoundaryFactorization {A Ω Boundary : Type*} 
-    (geom : PositiveGeometry A Ω Boundary) (a : A) (B : Boundary) (b_L b_R : A) : Prop where
-  productBoundary_canonicalForm : 
-    geom.canonicalForm (geom.boundaryGeometry a B) = geom.space.wedge (geom.canonicalForm b_L) (geom.canonicalForm b_R)
+abbrev ProductBoundaryFactorization {A Ω Boundary : Type*}
+    (geom : PositiveGeometry A Ω Boundary) (a : A) (B : Boundary) (b_L b_R : A) : Prop :=
+  geom.canonicalForm (geom.boundaryGeometry a B) =
+    geom.space.wedge (geom.canonicalForm b_L) (geom.canonicalForm b_R)
+
+namespace ProductBoundaryFactorization
+
+theorem productBoundary_canonicalForm
+    {A Ω Boundary : Type*}
+    (geom : PositiveGeometry A Ω Boundary) (a : A) (B : Boundary) (b_L b_R : A)
+    (h : ProductBoundaryFactorization geom a B b_L b_R) :
+    geom.canonicalForm (geom.boundaryGeometry a B) =
+      geom.space.wedge (geom.canonicalForm b_L) (geom.canonicalForm b_R) := h
+
+end ProductBoundaryFactorization
 
 /-- 
 BCFW boundary factorization: If B is a BCFW product boundary of an amplituhedron A, 
@@ -36,7 +47,8 @@ theorem bcfwBoundary_factorization {A Ω Boundary : Type*}
     (h_prod : ProductBoundaryFactorization geom a B b_L b_R) :
     geom.space.residue (geom.canonicalForm a) B = geom.space.wedge (geom.canonicalForm b_L) (geom.canonicalForm b_R) := by
   rw [geom.residue_canonicalForm_boundary]
-  exact h_prod.productBoundary_canonicalForm
+  exact ProductBoundaryFactorization.productBoundary_canonicalForm
+    geom a B b_L b_R h_prod
 
 open scoped BigOperators
 

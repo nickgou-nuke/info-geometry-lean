@@ -72,8 +72,14 @@ This keeps the square-killing claim as a theorem-shaped surface rather than
 as a kernel axiom.
 -/
 @[rep_depth transport]
-structure SquareFreeSupportPacket where
-  label : ℕ
-  squareFree : Squarefree label
+abbrev SquareFreeSupportPacket :=
+  {n : ℕ // Squarefree n}
+
+namespace SquareFreeSupportPacket
+
+abbrev label (P : SquareFreeSupportPacket) : ℕ := P.1
+abbrev squareFree (P : SquareFreeSupportPacket) : Squarefree P.label := P.2
+
+end SquareFreeSupportPacket
 
 end InfoGeometry.Canonical.KleinBottleOrientifold

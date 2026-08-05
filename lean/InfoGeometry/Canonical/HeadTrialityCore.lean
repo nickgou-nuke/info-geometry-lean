@@ -107,11 +107,14 @@ structure SplitDoubledHead128 where
   majorana : MajoranaHalf64
   weyl : WeylHalf64
 
-/--
-Mass-like coupling interface from Majorana to Weyl lanes.
--/
-structure MajoranaWeylCoupling where
-  massMap : MajoranaHalf64 →ₗ[ℝ] WeylHalf64
+/-- Native linear-map carrier for a Majorana-to-Weyl coupling. -/
+abbrev MajoranaWeylCoupling := MajoranaHalf64 →ₗ[ℝ] WeylHalf64
+
+abbrev MajoranaWeylCoupling.massMap
+    (C : MajoranaWeylCoupling) : MajoranaHalf64 →ₗ[ℝ] WeylHalf64 := C
+
+def MajoranaWeylCoupling.mk
+    (massMap : MajoranaHalf64 →ₗ[ℝ] WeylHalf64) : MajoranaWeylCoupling := massMap
 
 /-- Coupled Weyl lane after applying the mass-like Majorana→Weyl map. -/
 noncomputable def coupledWeylLane

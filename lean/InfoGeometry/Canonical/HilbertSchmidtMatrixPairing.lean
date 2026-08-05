@@ -44,17 +44,29 @@ theorem hilbertSchmidt_pos_semidef (A : Matrix (Fin n) (Fin n) ℝ) :
   intro j _
   simpa [pow_two] using sq_nonneg (A j i)
 
-/-- Hilbert-Schmidt Metriplectic System with Hamiltonian matrix H and state matrix rho. -/
-structure HilbertSchmidtMetriplecticSystem (n : ℕ) where
-  H : Matrix (Fin n) (Fin n) ℝ
-  rho : Matrix (Fin n) (Fin n) ℝ
-  h_kernel : ∀ A : Matrix (Fin n) (Fin n) ℝ, hilbertSchmidtPairing A (H * rho - rho * H) = 0
-
-/-- **Theorem**: Hilbert-Schmidt Energy Conservation under Lie bracket kernel. -/
-theorem hilbertSchmidt_energy_conservation (sys : HilbertSchmidtMetriplecticSystem n) :
-    hilbertSchmidtPairing (sys.H * sys.rho - sys.rho * sys.H) sys.H = 0 := by
-  rw [hilbertSchmidt_symmetry]
-  exact sys.h_kernel sys.H
+/-!
+The previous version packaged a universal kernel equation as a field of a
+"metriplectic system".  That equation is not a consequence of the
+Hilbert--Schmidt pairing and is false for arbitrary matrices.  The honest
+finite-dimensional statement needs the usual self-adjointness hypotheses.
+-/
+theorem hilbertSchmidt_commutator_energy_orthogonal
+    (H rho : Matrix (Fin n) (Fin n) ℝ)
+    (hH : H.transpose = H)
+    (hrho : rho.transpose = rho) :
+    hilbertSchmidtPairing (H * rho - rho * H) H = 0 := by
+  dsimp [hilbertSchmidtPairing]
+  rw [Matrix.transpose_sub, Matrix.transpose_mul, Matrix.transpose_mul,
+    hH, hrho, Matrix.sub_mul, Matrix.trace_sub]
+  have h₁ : trace (rho * H * H) = trace (H * (rho * H)) := by
+    calc
+      trace (rho * H * H) = trace ((rho * H) * H) := by
+        rw [Matrix.mul_assoc]
+      _ = trace (H * (rho * H)) := Matrix.trace_mul_comm (rho * H) H
+  have h₂ : trace (H * rho * H) = trace (H * (rho * H)) := by
+    rw [Matrix.mul_assoc]
+  rw [h₁, h₂]
+  exact sub_self _
 
 /-- **Theorem**: Hilbert-Schmidt Entropy Dissipation Non-Negativity. -/
 theorem hilbertSchmidt_dissipation_nonneg (dS : Matrix (Fin n) (Fin n) ℝ) :

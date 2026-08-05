@@ -111,7 +111,8 @@ generator is the ordered product of the corresponding generators.
 theorem S_list_prod (C : BostConnesCuntzSystem Op) (l : List ℕ+) :
     S C l.prod = (l.map (S C)).prod := by
   simpa [S, S_hom, CuntzMultiplicativeIndexing.generator] using
-    C.toMultiplicativeIndexing.generator_list_prod l
+    MultiplicativeIndexing.generator_list_prod
+      C.toMultiplicativeIndexingHom l
 
 /--
 Prime-power readback for a factorization component.

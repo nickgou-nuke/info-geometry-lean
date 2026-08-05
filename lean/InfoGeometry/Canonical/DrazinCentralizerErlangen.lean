@@ -212,8 +212,8 @@ def centralizerExpectationFierzVector
     (φ : InfoGeometry.Canonical.DrazinFierzBridge.ExpectationState Obs)
     (C : InfoGeometry.Canonical.DrazinFierzBridge.FierzChannelMap Obs)
     (D : DrazinSupportData Obs) :
-    InfoGeometry.Canonical.DrazinFierzBridge.NormalizedFierzCoordinates where
-  coord := fun ch => centralizerExpectationFierzCoordinate φ C D ch
+    InfoGeometry.Canonical.DrazinFierzBridge.NormalizedFierzCoordinates :=
+  fun ch => centralizerExpectationFierzCoordinate φ C D ch
 
 /--
 Expectation-only Fierz vector attached to a centralizer sanctuary.

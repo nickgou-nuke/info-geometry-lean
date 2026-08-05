@@ -26,10 +26,16 @@ open InfoGeometry.OperatorAlgebra.TopologicalSnap
 /-! ## 1. Bregman Hessian degeneracy -/
 
 /-- Bregman/Fenchel Hessian data. -/
-structure BregmanHessianDatum
-    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] where
-  /-- Hessian/response operator at a state. -/
-  hessian : Op → (Op →L[ℝ] Op)
+abbrev BregmanHessianDatum
+    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] :=
+  Op → (Op →L[ℝ] Op)
+
+namespace BregmanHessianDatum
+
+abbrev hessian {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    (H : BregmanHessianDatum Op) : Op → (Op →L[ℝ] Op) := H
+
+end BregmanHessianDatum
 
 /-! The regularity predicate is owned by the stored operator, not supplied as
 an unrelated proposition. -/
@@ -57,10 +63,18 @@ Dual-flat operator geometry.
 `nablaExp` and `nablaMix` represent the exponential and mixture connections.
 Their difference is the Amari-Chentsov/Bregman shear operator.
 -/
-structure DualFlatOperatorGeometry
-    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] where
-  nablaExp : Op → (Op →L[ℝ] Op)
-  nablaMix : Op → (Op →L[ℝ] Op)
+abbrev DualFlatOperatorGeometry
+    (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op] :=
+  (Op → (Op →L[ℝ] Op)) × (Op → (Op →L[ℝ] Op))
+
+namespace DualFlatOperatorGeometry
+
+abbrev nablaExp {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    (G : DualFlatOperatorGeometry Op) : Op → (Op →L[ℝ] Op) := G.1
+abbrev nablaMix {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    (G : DualFlatOperatorGeometry Op) : Op → (Op →L[ℝ] Op) := G.2
+
+end DualFlatOperatorGeometry
 
 /-- Amari-Chentsov shear operator. -/
 def torsionShear
@@ -97,13 +111,14 @@ This is where an Unruh, Hawking, or material-temperature readout can be
 connected to the Bregman shear.  The temperature does not itself define the
 snap; it is calibrated into a shear threshold.
 -/
-structure ThermalDriveDatum
-    (Op : Type*) where
-  /-- Temperature or effective thermal drive readout. -/
-  temperature : Op → ℝ
+abbrev ThermalDriveDatum (Op : Type*) := (Op → ℝ) × ℝ
 
-  /-- Critical temperature/readout. -/
-  criticalTemperature : ℝ
+namespace ThermalDriveDatum
+
+abbrev temperature {Op : Type*} (T : ThermalDriveDatum Op) : Op → ℝ := T.1
+abbrev criticalTemperature {Op : Type*} (T : ThermalDriveDatum Op) : ℝ := T.2
+
+end ThermalDriveDatum
 
 /--
 The state is thermally critical when its calibrated thermal drive exceeds the
@@ -121,21 +136,31 @@ A calibration saying thermal criticality forces extreme Bregman shear.
 This is the precise place where a statement such as "Unruh temperature is high
 enough to trigger the snap" belongs.
 -/
-structure ThermalShearCalibration
+abbrev ThermalShearCalibration
     (Op : Type*) [NormedAddCommGroup Op] [NormedSpace ℝ Op]
     (G : DualFlatOperatorGeometry Op)
-    (T : ThermalDriveDatum Op) where
-  /-- Shear threshold. -/
-  shearThreshold : ℝ
+    (T : ThermalDriveDatum Op) :=
+  {s : ℝ //
+    0 ≤ s ∧
+      ∀ U : Op,
+        IsThermallyCritical T U →
+          IsExtremeShear G s U}
 
-  /-- The threshold is nonnegative. -/
-  shearThreshold_nonneg : 0 ≤ shearThreshold
+namespace ThermalShearCalibration
 
-  /-- Thermal criticality implies extreme Bregman shear. -/
-  thermal_critical_implies_extreme_shear :
+variable
+    {Op : Type*} [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+    {G : DualFlatOperatorGeometry Op} {T : ThermalDriveDatum Op}
+    (C : ThermalShearCalibration Op G T)
+
+abbrev shearThreshold : ℝ := C.1
+abbrev shearThreshold_nonneg : 0 ≤ C.shearThreshold := C.2.1
+abbrev thermal_critical_implies_extreme_shear :
     ∀ U : Op,
       IsThermallyCritical T U →
-        IsExtremeShear G shearThreshold U
+        IsExtremeShear G C.shearThreshold U := C.2.2
+
+end ThermalShearCalibration
 
 /-! ## 4. Majorana-Weyl residue socket -/
 
@@ -145,16 +170,20 @@ A stable chiral residue created at a snap boundary.
 The certificates are intentionally proof-carrying because Majorana/Weyl
 conditions depend on signature, dimension, representation, and real structure.
 -/
-structure MajoranaWeylResidueDatum
-    (Charge Residue : Type*) [Zero Charge] where
-  /-- The produced residue object. -/
-  residue : Residue
+abbrev MajoranaWeylResidueDatum
+    (Charge Residue : Type*) [Zero Charge] :=
+  {p : Residue × Charge // p.2 ≠ 0}
 
-  /-- Topological/anomaly charge carried by the residue. -/
-  charge : Charge
+namespace MajoranaWeylResidueDatum
 
-  /-- The residue is topologically nontrivial. -/
-  charge_nonzero : charge ≠ 0
+abbrev residue {Charge Residue : Type*} [Zero Charge]
+    (R : MajoranaWeylResidueDatum Charge Residue) : Residue := R.1.1
+abbrev charge {Charge Residue : Type*} [Zero Charge]
+    (R : MajoranaWeylResidueDatum Charge Residue) : Charge := R.1.2
+abbrev charge_nonzero {Charge Residue : Type*} [Zero Charge]
+    (R : MajoranaWeylResidueDatum Charge Residue) : R.charge ≠ 0 := R.2
+
+end MajoranaWeylResidueDatum
 
 /-! ## 5. Chiral tubule crystallization -/
 

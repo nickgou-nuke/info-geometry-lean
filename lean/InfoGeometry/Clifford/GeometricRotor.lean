@@ -17,15 +17,36 @@ open InfoGeometry.Krein
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-/-- A rotor generator as an operator on the doubled carrier. -/
-structure Bivector (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
-  op : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E
-  square_neg : op.comp op = -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E))
+/-- A rotor generator as an operator on the doubled carrier.
+
+This is a subtype because the only extra datum is the square identity; the
+operator itself remains the native `ContinuousLinearMap` carrier. -/
+abbrev Bivector (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] :=
+  {op : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E //
+    op.comp op = -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E))}
+
+namespace Bivector
+
+abbrev op (B : Bivector E) :
+    InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E :=
+  B.1
+
+abbrev square_neg (B : Bivector E) :
+    B.op.comp B.op = -(ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) :=
+  B.2
+
+end Bivector
 
 /-- Rotor parameters in operational form. -/
-structure Rotor (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
-  B : Bivector E
-  θ : ℝ
+abbrev Rotor (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  Bivector E × ℝ
+
+/-- Compatibility accessor for the bivector component of a rotor. -/
+abbrev Rotor.B (R : Rotor E) : Bivector E := R.1
+
+/-- Compatibility accessor for the rotation parameter of a rotor. -/
+abbrev Rotor.θ (R : Rotor E) : ℝ := R.2
 
 namespace Rotor
 
@@ -99,13 +120,52 @@ theorem reverse_comp_exp (R : Rotor E) :
 noncomputable def evolve (R : Rotor E) (ψ : InfoGeometry.Krein.DoubledSpace E) : InfoGeometry.Krein.DoubledSpace E :=
   R.exp (R.reverse ψ)
 
+/-! Conjugation by a real rotor on the associative operator envelope.  This
+does not identify the rotor with an antilinear or complex operation. -/
+
+noncomputable def conjugate (R : Rotor E)
+    (T : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E) :
+    InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E :=
+  R.exp.comp (T.comp R.reverse)
+
+theorem conjugate_apply (R : Rotor E)
+    (T : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E)
+    (ψ : InfoGeometry.Krein.DoubledSpace E) :
+    conjugate R T ψ = R.exp (T (R.reverse ψ)) := by
+  rfl
+
+theorem conjugate_mul (R : Rotor E)
+    (T U : InfoGeometry.Krein.DoubledSpace E →L[ℝ] InfoGeometry.Krein.DoubledSpace E) :
+    conjugate R (T.comp U) =
+      (conjugate R T).comp (conjugate R U) := by
+  apply ContinuousLinearMap.ext
+  intro ψ
+  change R.exp (T (U (R.reverse ψ))) =
+    R.exp (T (R.reverse (R.exp (U (R.reverse ψ)))))
+  have hrev : R.reverse (R.exp (U (R.reverse ψ))) =
+      U (R.reverse ψ) := by
+    simpa [ContinuousLinearMap.comp_apply] using
+      congrArg (fun f => f (U (R.reverse ψ))) (R.reverse_comp_exp)
+  rw [hrev]
+
+theorem conjugate_id (R : Rotor E) :
+    conjugate R (ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E)) =
+      ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E) := by
+  apply ContinuousLinearMap.ext
+  intro ψ
+  simp [conjugate, ContinuousLinearMap.comp_apply, Rotor.exp_reverse]
+
 /-- Modular flow is the 1-parameter family `R(s) = exp(-K s / 2)`. -/
 def modularFlow (K : Bivector E) (s : ℝ) : Rotor E :=
-  { B := K, θ := s }
+  (K, s)
 
 @[simp] theorem evolve_zero (K : Bivector E) (ψ : InfoGeometry.Krein.DoubledSpace E) :
     evolve (R := modularFlow K 0) ψ = ψ := by
-  simp [evolve, modularFlow, exp, reverse]
+  dsimp [evolve, modularFlow, Rotor.exp, Rotor.reverse]
+  have hBBu : K.op (K.op ψ) = -ψ := by
+    simpa [ContinuousLinearMap.comp_apply] using
+      congrArg (fun f => f ψ) K.square_neg
+  simpa [hBBu, Rotor.θ, smul_add, add_smul, sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
 
 /-- One full `2π` rotor turn acts by `-1` on the spinorial transport operator. -/
 theorem exp_two_pi_eq_neg_id (K : Bivector E) :

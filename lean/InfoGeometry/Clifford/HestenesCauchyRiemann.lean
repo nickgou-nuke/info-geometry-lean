@@ -208,43 +208,4 @@ theorem hestenes_cr_equivalence (C : StandardCRComponents) :
         · norm_num [standardCRToHestenes]
         · norm_num [standardCRToHestenes]
 
-/--
-A Weierstrass-style analytic socket for a real-coordinate complex function.
-No convergence theorem is asserted here; this is only the owner surface carrying
-power-series data and the radius on which a downstream module may reason.
--/
-structure WeierstrassAnalyticSocket (f : ComplexReal → ComplexReal) (z₀ : ComplexReal) where
-  coeffs : ℕ → ComplexReal
-  radius : ℝ
-  radius_pos : 0 < radius
-  seriesModel : ComplexReal → ComplexReal
-
-namespace WeierstrassAnalyticSocket
-
-/-- The analytic socket center is the index parameter supplied to the owner. -/
-def center {f : ComplexReal → ComplexReal} {z₀ : ComplexReal}
-    (_ : WeierstrassAnalyticSocket f z₀) : ComplexReal := z₀
-
-/-- The analytic socket source is the function supplied to the owner. -/
-def source {f : ComplexReal → ComplexReal} {z₀ : ComplexReal}
-    (_ : WeierstrassAnalyticSocket f z₀) : ComplexReal → ComplexReal := f
-
-end WeierstrassAnalyticSocket
-
-/--
-A Hestenes-style analytic socket: explicit partial-derivative data together with
-an owned CR readback on the selected real phase plane.
--/
-structure HestenesAnalyticSocket (ψ : ℝ → ℝ → HestenesSpinor) where
-  partials : ℝ → ℝ → HestenesPartialDerivs
-  hestenes_cr_law : ∀ x y : ℝ, satisfy_hestenes_cr (partials x y)
-
-namespace HestenesAnalyticSocket
-
-/-- The Hestenes analytic source is the function supplied to the owner. -/
-def source {ψ : ℝ → ℝ → HestenesSpinor}
-    (_ : HestenesAnalyticSocket ψ) : ℝ → ℝ → HestenesSpinor := ψ
-
-end HestenesAnalyticSocket
-
 end InfoGeometry.Clifford.HestenesCauchyRiemann

@@ -13,8 +13,8 @@ def FibonacciData : Type :=
 
 namespace FibonacciData
 
-def z (D : FibonacciData) : ℂ := D.1.1
-def s (D : FibonacciData) : ℂ := D.1.2
+abbrev z (D : FibonacciData) : ℂ := D.1.1
+abbrev s (D : FibonacciData) : ℂ := D.1.2
 
 theorem z_eq (D : FibonacciData) :
     D.z ^ 4 - D.z ^ 3 + D.z ^ 2 - D.z + 1 = 0 :=

@@ -662,15 +662,4 @@ theorem jUnitaryTopologicalChargeOwnerTarget :
   intro Op _ Adj Det J hJ U
   exact JUnitary.det_sq_eq_one Det hJ U
 
-/-- Packet readout for a concrete `J`-unitary determinant obstruction. -/
-theorem jUnitaryTopologicalCharge_packet
-    (Op : Type*) [Monoid Op]
-    (Adj : AdjointDatum Op)
-    (Det : AdjointDeterminantDatum Op Adj)
-    (J : Op)
-    (hJ : Det.det J ≠ 0)
-    (U : JUnitary Adj J) :
-    Det.det U.op ^ 2 = 1 :=
-  jUnitaryTopologicalChargeOwnerTarget Op Adj Det J hJ U
-
 end InfoGeometry.OperatorAlgebra.TopologicalCharge

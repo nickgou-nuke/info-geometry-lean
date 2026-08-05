@@ -1,0 +1,96 @@
+{
+  "all_coordinate_reflections_verified": true,
+  "clifford_generator_count": 10,
+  "clifford_signature": [
+    5,
+    5
+  ],
+  "coefficient_field": "QQ",
+  "coordinate_reflections_checked": 10,
+  "full_orthogonal_surjectivity_proved": false,
+  "pin_cover_target": "Pin(5,5) -> O(5,5)",
+  "reflections": [
+    {
+      "axis": 0,
+      "is_coordinate_reflection": true,
+      "is_involution": true,
+      "label": "gamma0",
+      "preserves_quadratic_form": true,
+      "square": 1
+    },
+    {
+      "axis": 1,
+      "is_coordinate_reflection": true,
+      "is_involution": true,
+      "label": "gamma1",
+      "preserves_quadratic_form": true,
+      "square": 1
+    },
+    {
+      "axis": 2,
+      "is_coordinate_reflection": true,
+      "is_involution": true,
+      "label": "gamma2",
+      "preserves_quadratic_form": true,
+      "square": 1
+    },
+    {
+      "axis": 3,
+      "is_coordinate_reflection": true,
+      "is_involution": true,
+      "label": "gamma3",
+      "preserves_quadratic_form": true,
+      "square": 1
+    },
+    {
+      "axis": 4,
+      "is_coordinate_reflection": true,
+      "is_involution": true,
+      "label": "gamma4",
+      "preserves_quadratic_form": true,
+      "square": 1
+    },
+    {
+      "axis": 5,
+      "is_coordinate_reflection": true,
+      "is_involution": true,
+      "label": "gamma5",
+      "preserves_quadratic_form": true,
+      "square": -1
+    },
+    {
+      "axis": 6,
+      "is_coordinate_reflection": true,
+      "is_involution": true,
+      "label": "gamma6",
+      "preserves_quadratic_form": true,
+      "square": -1
+    },
+    {
+      "axis": 7,
+      "is_coordinate_reflection": true,
+      "is_involution": true,
+      "label": "gamma7",
+      "preserves_quadratic_form": true,
+      "square": -1
+    },
+    {
+      "axis": 8,
+      "is_coordinate_reflection": true,
+      "is_involution": true,
+      "label": "gamma8",
+      "preserves_quadratic_form": true,
+      "square": -1
+    },
+    {
+      "axis": 9,
+      "is_coordinate_reflection": true,
+      "is_involution": true,
+      "label": "gamma9",
+      "preserves_quadratic_form": true,
+      "square": -1
+    }
+  ],
+  "twisted_adjoint_checked": true,
+  "weyl_quotient_identified": false
+}

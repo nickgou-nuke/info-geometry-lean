@@ -31,20 +31,6 @@ variable {S : Type*}
 variable [NormedAddCommGroup S] [InnerProductSpace ℝ S] [CompleteSpace S]
 variable {M : RealMajoranaDatum (S := S)}
 
-/-- Strict symmetry morphisms induce Bogoliubov transports that preserve CAR. -/
-theorem car_realization_of_strictSymmetryBogoliubov
-    {X Y : PolarizedMajorana (S := S) M} (h : X ⟶ Y) :
-    MajoranaCARWitness (S := S) (fun u v => inner ℝ u v)
-      ((h.toBogoliubovTransform).transportGamma) := by
-  exact (h.toBogoliubovTransform).car_realization_of_clifford
-
-/-- The transported `K`-axis remains an internal square-minus-one operator. -/
-theorem transportK_sq_of_strictSymmetryBogoliubov
-    {X Y : PolarizedMajorana (S := S) M} (h : X ⟶ Y) :
-    (h.toBogoliubovTransform).transportK.comp (h.toBogoliubovTransform).transportK
-      = -(ContinuousLinearMap.id ℝ S) := by
-  exact (h.toBogoliubovTransform).transportK_sq
-
 /-- A strict symmetry morphism transports the source polarization onto the target one. -/
 theorem transportP_eq_targetPolarization_of_strictSymmetry
     {X Y : PolarizedMajorana (S := S) M} (h : X ⟶ Y) :

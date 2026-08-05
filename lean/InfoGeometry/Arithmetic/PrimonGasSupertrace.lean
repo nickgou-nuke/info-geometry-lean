@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
 
 /-!
@@ -100,6 +101,36 @@ structure MobiusCoefficient where
   /-- `\mathrm{SqFree}(n) \to \mu(n)^2=1`. -/
   coeff_sq_eq_one_of_squarefree :
     ∀ n : ℕ, IsSquarefreeState n → coeff n ^ 2 = 1
+
+/-! ## Native Mathlib Mobius coefficient
+
+The general `MobiusCoefficient` socket remains available for model-specific
+coefficients.  The canonical arithmetic coefficient below is not an evidence
+packet: it is Mathlib's `ArithmeticFunction.moebius`, coerced to `ℝ`.
+-/
+
+def mathlibMobiusCoefficient (n : ℕ) : ℝ :=
+  (ArithmeticFunction.moebius n : ℤ)
+
+theorem mathlibMobiusCoefficient_eq_zero_of_not_squarefree
+    {n : ℕ} (h : ¬ IsSquarefreeState n) :
+    mathlibMobiusCoefficient n = 0 := by
+  unfold mathlibMobiusCoefficient
+  rw [ArithmeticFunction.moebius_eq_zero_of_not_squarefree h]
+  norm_num
+
+theorem mathlibMobiusCoefficient_sq_eq_one_of_squarefree
+    {n : ℕ} (h : IsSquarefreeState n) :
+    mathlibMobiusCoefficient n ^ 2 = 1 := by
+  unfold mathlibMobiusCoefficient
+  exact_mod_cast ArithmeticFunction.moebius_sq_eq_one_of_squarefree h
+
+def canonicalMobiusCoefficient : MobiusCoefficient where
+  coeff := mathlibMobiusCoefficient
+  coeff_eq_zero_of_not_squarefree :=
+    fun n h => mathlibMobiusCoefficient_eq_zero_of_not_squarefree h
+  coeff_sq_eq_one_of_squarefree :=
+    fun n h => mathlibMobiusCoefficient_sq_eq_one_of_squarefree h
 
 namespace MobiusCoefficient
 

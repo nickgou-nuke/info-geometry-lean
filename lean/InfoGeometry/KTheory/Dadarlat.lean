@@ -94,8 +94,13 @@ inductive KirchbergModel where
   | OInfinityTensorUHF
 
 /-- Explicit classification data for a named algebra object. -/
-structure AutomaticTrivialityClassification (D : Type*) where
-  model : KirchbergModel
+abbrev AutomaticTrivialityClassification (D : Type*) := KirchbergModel
+
+namespace AutomaticTrivialityClassification
+
+abbrev model {D : Type*} (C : AutomaticTrivialityClassification D) : KirchbergModel := C
+
+end AutomaticTrivialityClassification
 
 theorem automatic_triviality_classification
     (D : Type*) (C : AutomaticTrivialityClassification D) :

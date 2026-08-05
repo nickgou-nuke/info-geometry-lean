@@ -1,0 +1,16 @@
+{
+  "carrier_dimension": 32,
+  "cartan_action": "H_i -> -H_i",
+  "clock_action": "N -> -N",
+  "coefficient_field": "QQ",
+  "creation_annihilation_exchange": true,
+  "grade_exchange": {
+    "+1": "-1",
+    "+2": "-2",
+    "-1": "+1",
+    "-2": "+2",
+    "0": "0"
+  },
+  "mirror_square": true,
+  "scope": "global_sheet_reflection_readout"
+}

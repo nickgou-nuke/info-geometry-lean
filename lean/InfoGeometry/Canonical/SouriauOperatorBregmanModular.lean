@@ -103,11 +103,14 @@ theorem boundedOperatorBregman_self
 
 /-- A Souriau representation by bounded operators on the real doubled carrier. -/
 @[rep_depth thermo]
-structure SouriauOperatorRepresentation (g : Type*) where
-  /-- Infinitesimal generator assigned to an abstract Souriau parameter. -/
-  rep : g → OperatorPrimal (E := E)
+abbrev SouriauOperatorRepresentation (g : Type*) :=
+  g → OperatorPrimal (E := E)
 
 namespace SouriauOperatorRepresentation
+
+abbrev rep {g : Type*} (R : SouriauOperatorRepresentation (E := E) g) :
+    g → OperatorPrimal (E := E) :=
+  R
 
 variable {g : Type*} (R : SouriauOperatorRepresentation (E := E) g)
 

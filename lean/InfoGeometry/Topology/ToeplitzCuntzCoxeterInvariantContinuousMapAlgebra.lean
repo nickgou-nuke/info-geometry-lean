@@ -19,14 +19,28 @@ open InfoGeometry.Topology.ToeplitzCuntzCoxeterInvariantContinuousObservables
 open InfoGeometry.Topology.ToeplitzCuntzThreeTriality
 
 /-- Bundled continuous observables on the concrete ternary boundary. -/
-structure ContinuousCoxeterObservable (A : Type*) [TopologicalSpace A] where
-  toFun : TernaryBoundary → A
-  invariant : IsCoxeterInvariant toFun
-  continuous : Continuous toFun
+abbrev ContinuousCoxeterObservable (A : Type*) [TopologicalSpace A] :=
+  {f : C(TernaryBoundary, A) // IsCoxeterInvariant f}
+
+namespace ContinuousCoxeterObservable
+
+abbrev toFun
+    {A : Type*} [TopologicalSpace A]
+    (f : ContinuousCoxeterObservable A) : TernaryBoundary → A := f.1
+
+abbrev invariant
+    {A : Type*} [TopologicalSpace A]
+    (f : ContinuousCoxeterObservable A) : IsCoxeterInvariant f.toFun := f.2
+
+abbrev continuous
+    {A : Type*} [TopologicalSpace A]
+    (f : ContinuousCoxeterObservable A) : Continuous f.toFun := f.1.continuous
+
+end ContinuousCoxeterObservable
 
 instance {A : Type*} [TopologicalSpace A] : CoeFun (ContinuousCoxeterObservable A)
     (fun _ => TernaryBoundary → A) :=
-  ⟨ContinuousCoxeterObservable.toFun⟩
+  ⟨fun f => f.toFun⟩
 
 /-- Descend a bundled continuous observable through the coarse orbit quotient. -/
 def descendedContinuousMap {A : Type*} [TopologicalSpace A]
@@ -57,30 +71,27 @@ variable [Star A] [ContinuousStar A]
 
 def continuousObservableAdd
     (f g : ContinuousCoxeterObservable A) :
-    ContinuousCoxeterObservable A :=
-  { toFun := fun x => f x + g x
-    invariant := by
+  ContinuousCoxeterObservable A :=
+  ⟨{ toFun := fun x => f x + g x,
+      continuous_toFun := f.continuous.add g.continuous }, by
       intro x
-      simp [f.invariant x, g.invariant x]
-    continuous := f.continuous.add g.continuous }
+      simp [f.invariant x, g.invariant x]⟩
 
 def continuousObservableMul
     (f g : ContinuousCoxeterObservable A) :
-    ContinuousCoxeterObservable A :=
-  { toFun := fun x => f x * g x
-    invariant := by
+  ContinuousCoxeterObservable A :=
+  ⟨{ toFun := fun x => f x * g x,
+      continuous_toFun := f.continuous.mul g.continuous }, by
       intro x
-      simp [f.invariant x, g.invariant x]
-    continuous := f.continuous.mul g.continuous }
+      simp [f.invariant x, g.invariant x]⟩
 
 def continuousObservableStar
     (f : ContinuousCoxeterObservable A) :
-    ContinuousCoxeterObservable A :=
-  { toFun := fun x => star (f x)
-    invariant := by
+  ContinuousCoxeterObservable A :=
+  ⟨{ toFun := fun x => star (f x),
+      continuous_toFun := continuous_star.comp f.continuous }, by
       intro x
-      simpa using congrArg star (f.invariant x)
-    continuous := continuous_star.comp f.continuous }
+      simpa using congrArg star (f.invariant x)⟩
 
 theorem descendedContinuousMap_add
     (f g : ContinuousCoxeterObservable A) :

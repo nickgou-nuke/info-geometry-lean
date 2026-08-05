@@ -480,13 +480,14 @@ structure DIIIIndexCalibration
 /--
 A DIII interaction calibration for the four-bit `Cl(1,1)^⊗4` address space.
 -/
-structure DIIIInteractionCalibration where
-  /-- Encoding of local four-bit sectors into a cyclic DIII stacking class. -/
-  encode : Charge4 → ZMod 16
+abbrev DIIIInteractionCalibration := Charge4 → ZMod 16
 
 namespace DIIIInteractionCalibration
 
 variable (C : DIIIInteractionCalibration)
+
+/-- Compatibility accessor for the native cyclic encoder. -/
+abbrev encode : Charge4 → ZMod 16 := C
 
 /-- Repackage the four-bit interaction calibration as the generic index calibration. -/
 def toDIIIIndexCalibration : DIIIIndexCalibration Charge4 where

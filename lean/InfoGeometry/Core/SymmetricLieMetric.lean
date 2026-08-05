@@ -25,8 +25,8 @@ def CartanOddMetricData :=
 
 namespace CartanOddMetricData
 
-def S (M : CartanOddMetricData (L := L)) : SymmetricLieAlgebra L := M.1
-def signature (M : CartanOddMetricData (L := L)) : CartanSignature M.S := M.2
+abbrev S (M : CartanOddMetricData (L := L)) : SymmetricLieAlgebra L := M.1
+abbrev signature (M : CartanOddMetricData (L := L)) : CartanSignature M.S := M.2
 
 end CartanOddMetricData
 

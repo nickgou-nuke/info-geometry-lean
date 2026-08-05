@@ -116,8 +116,11 @@ Audit context for a new genesis/quench.
 `genesisOrientation` is the chiral orientation required by the new metric
 quench.
 -/
-structure ChiralAuditContext where
-  genesisOrientation : ChiralParity
+abbrev ChiralAuditContext := ChiralParity
+
+/-- Compatibility accessor for the native parity context. -/
+abbrev ChiralAuditContext.genesisOrientation
+    (C : ChiralAuditContext) : ChiralParity := C
 
 /--
 Audit verdict.
@@ -347,4 +350,3 @@ theorem not_global_regular_of_audit_obstructed
 end ChiralAuditRegularityBridge
 
 end InfoGeometry.OperatorAlgebra.ChiralResidueAudit
-

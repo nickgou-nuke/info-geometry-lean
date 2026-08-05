@@ -148,8 +148,8 @@ structure KreinRHColimitZornClosure
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     (C : KreinSpectralChart H) where
-  colimitSupport : KreinInductiveColimitSupportCertificate C
-  zornSubsystem : KreinZornMaximalSubsystemCertificate C
+  colimitSupport : KreinFiniteStageSupportData C
+  zornSubsystem : KreinZornMaximalSubsystemData C
 
 namespace KreinRHColimitZornClosure
 
@@ -176,7 +176,7 @@ theorem translated_krein_rh_from_odd_obstruction
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     {C : KreinSpectralChart H}
-    (O : KreinOddObstructionCertificate C) :
+    (O : KreinOddObstructionData C) :
     HestenesKreinTranslatedRH C :=
   kreinRH_of_oddObstructionCertificate O
 
@@ -188,7 +188,7 @@ theorem translated_krein_rh_from_inductive_colimit
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     {C : KreinSpectralChart H}
-    (L : KreinInductiveColimitSupportCertificate C) :
+    (L : KreinFiniteStageSupportData C) :
     HestenesKreinTranslatedRH C :=
   kreinRH_of_inductiveColimitSupport L
 
@@ -199,7 +199,7 @@ theorem translated_krein_rh_from_zorn_maximal_subsystem
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     {C : KreinSpectralChart H}
-    (Z : KreinZornMaximalSubsystemCertificate C) :
+    (Z : KreinZornMaximalSubsystemData C) :
     HestenesKreinTranslatedRH C :=
   kreinRH_of_zornMaximalSubsystem Z
 

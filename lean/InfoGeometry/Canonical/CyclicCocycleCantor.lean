@@ -38,7 +38,7 @@ abbrev KTheoryProjection (n : ℕ) :=
 
 namespace KTheoryProjection
 
-def e {n : ℕ} (proj : KTheoryProjection n) : Matrix (Fin n) (Fin n) ℂ := proj.1
+abbrev e {n : ℕ} (proj : KTheoryProjection n) : Matrix (Fin n) (Fin n) ℂ := proj.1
 
 theorem is_idempotent {n : ℕ} (proj : KTheoryProjection n) :
     e proj * e proj = e proj := by

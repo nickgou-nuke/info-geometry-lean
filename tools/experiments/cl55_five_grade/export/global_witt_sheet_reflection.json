@@ -1,0 +1,142 @@
+{
+  "carrier_dimension": 32,
+  "clifford_signature": [
+    5,
+    5
+  ],
+  "coefficient_field": "QQ",
+  "exchanges_creation_annihilation": true,
+  "full_orthogonal_surjectivity_proved": false,
+  "full_pin_cover_proved": false,
+  "induced_action_determinant": -1,
+  "induced_action_square": 1,
+  "orthogonal_action_matrix": [
+    [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      -1,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      -1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      -1,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      -1,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      -1
+    ]
+  ],
+  "pin_cover_target": "Pin(5,5) -> O(5,5)",
+  "preserves_quadratic_form": true,
+  "raw_pin_square": 1,
+  "reverses_N": true,
+  "reverses_witt_grades": true,
+  "versor": "Gamma_0^+ Gamma_1^+ Gamma_2^+ Gamma_3^+ Gamma_4^+",
+  "versor_parity": "odd"
+}

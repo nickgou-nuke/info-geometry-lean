@@ -26,6 +26,23 @@ variable {Data Theta : Type*} [Fintype Data] [Nonempty Data]
 noncomputable def poissonDeviance (y lam : ℝ) : ℝ :=
   2 * poissonBregman y lam
 
+theorem poissonDeviance_self_eq_zero (x : ℝ) :
+    poissonDeviance x x = 0 := by
+  by_cases hx : x = 0
+  · simp [poissonDeviance, hx, poissonBregman]
+  · simp [poissonDeviance, poissonBregman, hx]
+
+noncomputable def poissonDevianceGibbsFactor
+    (y lam ε : ℝ) : ℝ :=
+  Real.exp (-poissonDeviance y lam / ε)
+
+theorem poissonDevianceGibbsFactor_self_eq_one
+    (x ε : ℝ) :
+    poissonDevianceGibbsFactor x x ε = 1 := by
+  unfold poissonDevianceGibbsFactor
+  rw [poissonDeviance_self_eq_zero x, neg_zero, zero_div]
+  simpa using Real.exp_zero
+
 theorem poissonDeviance_nonneg
     {y lam : ℝ} (hy : 0 ≤ y) (hlam : 0 < lam) :
     0 ≤ poissonDeviance y lam := by

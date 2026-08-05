@@ -104,6 +104,27 @@ theorem DiagTrace_compat (n : ℕ) (f : DiagAlg n) :
   rw [h_pow_succ]
   ring
 
+theorem DiagTrace_const (n : ℕ) (z : ℂ) :
+    DiagTrace n (fun _ : BitWord n => z) = z := by
+  simp [DiagTrace, Finset.sum_const, Finset.card_univ, card_BitWord,
+    Nat.cast_pow, inv_pow]
+
+theorem DiagTrace_smul (n : ℕ) (z : ℂ) (f : DiagAlg n) :
+    DiagTrace n (z • f) = z * DiagTrace n f := by
+  unfold DiagTrace
+  change (2 : ℂ)⁻¹ ^ n * (∑ w : BitWord n, z * f w) =
+    z * ((2 : ℂ)⁻¹ ^ n * ∑ w : BitWord n, f w)
+  rw [← Finset.mul_sum]
+  ring
+
+theorem DiagTrace_mul_comm (n : ℕ) (f g : DiagAlg n) :
+    DiagTrace n (f * g) = DiagTrace n (g * f) := by
+  unfold DiagTrace
+  congr 1
+  apply Finset.sum_congr rfl
+  intro w hw
+  exact mul_comm (f w) (g w)
+
 end InfoGeometry.Canonical.CantorKMSState
 
 end noncomputable section

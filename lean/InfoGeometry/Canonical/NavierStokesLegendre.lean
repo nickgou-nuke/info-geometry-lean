@@ -41,7 +41,7 @@ local notation "EndH" => AlgebraEnd E
 
 /-- Characterizing the Fenchel-Legendre gap zero condition as a contact coordinate condition. -/
 theorem fenchelGap_eq_zero_iff_contact (L : LegendreModel) (θ η : ℝ)
-    (hd : HasDerivAt L.L.ψ (L.grad θ) θ) :
+    (hd : HasDerivAt L.L (L.grad θ) θ) :
     L.fenchelGap θ η = 0 ↔ η = L.grad θ :=
   L.fenchelGap_eq_zero_iff_eq_grad_of_hasDerivAt θ η hd
 
@@ -71,7 +71,7 @@ theorem fenchel_legendre_gap_zero_iff_madelung_divergence_free
     (L : LegendreModel) (θ η : ℝ) (β : ℝ) (K : EndH)
     (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
     (hSmooth : IsThermodynamicallySmoothed β K)
-    (hd : HasDerivAt L.L.ψ (L.grad θ) θ)
+    (hd : HasDerivAt L.L (L.grad θ) θ)
     (hContact : η = L.grad θ ↔ LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0)
     (h_beta : β = 0 → η = L.grad θ) :
     L.fenchelGap θ η = 0 ↔ IsDivergenceFree (madelungFluidState β K vac ω hSmooth).u := by
@@ -84,6 +84,49 @@ theorem fenchel_legendre_gap_zero_iff_madelung_divergence_free
   · rintro (rfl | hTr)
     · exact h_beta rfl
     · rwa [contact_iff_collapsed_trace_zero L θ η K hContact]
+
+/--
+The forward implication needs no extra infinite-temperature hypothesis.  A
+vanishing Fenchel gap gives the contact equality, and the supplied contact
+identification gives the trace-zero branch of the Madelung criterion.
+-/
+theorem fenchel_gap_zero_imp_madelung_divergence_free
+    (L : LegendreModel) (θ η : ℝ) (β : ℝ) (K : EndH)
+    (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
+    (hSmooth : IsThermodynamicallySmoothed β K)
+    (hd : HasDerivAt L.L (L.grad θ) θ)
+    (hContact : η = L.grad θ ↔
+      LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0)
+    (hGap : L.fenchelGap θ η = 0) :
+    IsDivergenceFree (madelungFluidState β K vac ω hSmooth).u := by
+  have h_contact : η = L.grad θ :=
+    (fenchelGap_eq_zero_iff_contact L θ η hd).mp hGap
+  rw [madelung_divergence_free_iff β K vac ω hSmooth]
+  exact Or.inr ((contact_iff_collapsed_trace_zero L θ η K hContact).mp h_contact)
+
+/--
+In the trace-zero sector, the Fenchel contact condition is equivalent to the
+divergence-free Madelung condition without assuming `β = 0 → η = grad θ`.
+The latter hypothesis is needed only for the separate zero-trace branch of
+the disjunctive velocity criterion.
+-/
+theorem fenchel_gap_zero_iff_madelung_divergence_free_of_trace_zero
+    (L : LegendreModel) (θ η : ℝ) (β : ℝ) (K : EndH)
+    (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
+    (hSmooth : IsThermodynamicallySmoothed β K)
+    (hd : HasDerivAt L.L (L.grad θ) θ)
+    (hContact : η = L.grad θ ↔
+      LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0)
+    (hTrace : LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0) :
+    L.fenchelGap θ η = 0 ↔
+      IsDivergenceFree (madelungFluidState β K vac ω hSmooth).u := by
+  rw [fenchelGap_eq_zero_iff_contact L θ η hd]
+  rw [madelung_divergence_free_iff β K vac ω hSmooth]
+  constructor
+  · intro h_contact
+    exact Or.inr hTrace
+  · intro _
+    exact (contact_iff_collapsed_trace_zero L θ η K hContact).mpr hTrace
 
 /-- A point on the Fenchel-Legendre variety where the gap vanishes. -/
 structure FLVarietyPoint (L : LegendreModel) where
@@ -113,7 +156,7 @@ instance : Preorder (DivergenceFreeFluidState E) where
 def kaluzaKleinLift (L : LegendreModel) (β : ℝ) (K : EndH)
     (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
     (hSmooth : IsThermodynamicallySmoothed β K)
-    (hd : ∀ θ, HasDerivAt L.L.ψ (L.grad θ) θ)
+    (hd : ∀ θ, HasDerivAt L.L (L.grad θ) θ)
     (hContact :
       ∀ θ η, η = L.grad θ ↔ LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0) :
     FLVarietyPoint L ⥤ DivergenceFreeFluidState E where

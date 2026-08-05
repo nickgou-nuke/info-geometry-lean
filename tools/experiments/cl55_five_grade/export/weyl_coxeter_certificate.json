@@ -1,0 +1,86 @@
+{
+  "abstract_coxeter_relations_verified": true,
+  "abstract_group_order": 3840,
+  "abstract_group_order_expected": 3840,
+  "coefficient_field": "QQ",
+  "full_pin_extension_proved": false,
+  "relations": [
+    {
+      "abstract_holds": true,
+      "label": "generator_0_square",
+      "spinor_central_sign": 1
+    },
+    {
+      "abstract_holds": true,
+      "label": "generator_1_square",
+      "spinor_central_sign": 1
+    },
+    {
+      "abstract_holds": true,
+      "label": "generator_2_square",
+      "spinor_central_sign": 1
+    },
+    {
+      "abstract_holds": true,
+      "label": "generator_3_square",
+      "spinor_central_sign": 1
+    },
+    {
+      "abstract_holds": true,
+      "label": "generator_4_square",
+      "spinor_central_sign": 1
+    },
+    {
+      "abstract_holds": true,
+      "label": "adjacent_0_1_cube",
+      "spinor_central_sign": 1
+    },
+    {
+      "abstract_holds": true,
+      "label": "adjacent_1_2_cube",
+      "spinor_central_sign": 1
+    },
+    {
+      "abstract_holds": true,
+      "label": "adjacent_2_3_cube",
+      "spinor_central_sign": 1
+    },
+    {
+      "abstract_holds": true,
+      "label": "sign_edge_0_4_power_2",
+      "spinor_central_sign": 1
+    },
+    {
+      "abstract_holds": true,
+      "label": "sign_edge_1_4_power_2",
+      "spinor_central_sign": 1
+    },
+    {
+      "abstract_holds": true,
+      "label": "sign_edge_2_4_power_2",
+      "spinor_central_sign": 1
+    },
+    {
+      "abstract_holds": true,
+      "label": "sign_edge_3_4_power_4",
+      "spinor_central_sign": 1
+    },
+    {
+      "abstract_holds": true,
+      "label": "distant_0_2_square",
+      "spinor_central_sign": 1
+    },
+    {
+      "abstract_holds": true,
+      "label": "distant_0_3_square",
+      "spinor_central_sign": 1
+    },
+    {
+      "abstract_holds": true,
+      "label": "distant_1_3_square",
+      "spinor_central_sign": 1
+    }
+  ],
+  "spinor_lifts_relations_modulo_center": true,
+  "weyl_type": "extended_D5"
+}

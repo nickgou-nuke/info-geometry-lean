@@ -79,12 +79,12 @@ theorem kms_reference_stationarity
 
 /-- Read back the global functional on a finite embedded stage. -/
 theorem stage_readback (n : ℕ) (x : A n) :
-    S.global (S.limit.inj n x) = S.family.omega n x :=
+    S.global (S.limit.inj n x) = S.family n x :=
   S.limit.limit_functional_recovers_stage S.family S.global S.extendsFamily n x
 
 /-- The stationary Bayesian update has the same finite-stage readback. -/
 theorem bayesianUpdate_stage_readback (n : ℕ) (x : A n) :
-    S.bayesianUpdate (S.limit.inj n x) = S.family.omega n x := by
+    S.bayesianUpdate (S.limit.inj n x) = S.family n x := by
   rw [S.bayesianUpdate_eq_global]
   exact S.stage_readback n x
 
@@ -93,20 +93,20 @@ theorem kms_stage_readback
     (kms_state : S.limit.LimitFunctional)
     (h_kms : kms_state = S.global)
     (n : ℕ) (x : A n) :
-    kms_state (S.limit.inj n x) = S.family.omega n x := by
+    kms_state (S.limit.inj n x) = S.family n x := by
   subst kms_state
   exact S.stage_readback n x
 
 /-- Compatibility of the finite family is recovered from the global extension. -/
 theorem compatibility (n : ℕ) (x : A n) :
-    S.family.omega (n + 1) (bond n x) = S.family.omega n x :=
+    S.family (n + 1) (bond n x) = S.family n x :=
   S.limit.extending_limit_functional_implies_compatible S.family S.global S.extendsFamily n x
 
 /-- State compatibility through the local conditional expectation. -/
 theorem local_expectation_state_compatibility
     (n : ℕ)
     (x : S.limit.AInf) :
-    S.global x = S.family.omega n ((S.expectations n).E x) :=
+    S.global x = S.family n ((S.expectations n).E x) :=
   TensorInductiveLimit.ConditionalExpectation.state_compatibility
     (S.expectations n) S.family S.global S.extendsFamily x
 

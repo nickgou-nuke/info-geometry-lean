@@ -27,36 +27,44 @@ theorem nc_commutator_zero :
 
 end NCTorusGenerators
 
-/-- **Definition**: Abstract Fredholm Operator Index Packet (dim ker - dim coker). -/
-structure FredholmIndexPacket where
-  dimKer : ℕ
-  dimCoker : ℕ
+/-!
+The previous version stored `dimKer` and `dimCoker` as unrelated natural
+numbers.  That was only an evidence packet, not an index of an operator.
 
-namespace FredholmIndexPacket
+The native finite-dimensional shadow below keeps the actual linear map and
+uses Mathlib's kernel, range, and quotient-module constructions.  It is not a
+Fredholm theorem: analytic Fredholmness and direct-sum additivity require
+additional hypotheses and are intentionally not asserted here.
+-/
+section FiniteDimensionalIndex
 
-/-- Integer Fredholm Index: index(D) = dim ker(D) - dim coker(D). -/
-def index (p : FredholmIndexPacket) : ℤ :=
-  (p.dimKer : ℤ) - (p.dimCoker : ℤ)
+variable {𝕜 V W : Type*}
+variable [DivisionRing 𝕜]
+variable [AddCommGroup V] [AddCommGroup W]
+variable [Module 𝕜 V] [Module 𝕜 W]
 
-/-- **Theorem**: Direct Sum Index Additivity index(D1 ⊕ D2) = index(D1) + index(D2). -/
-theorem direct_sum_index_add (p1 p2 : FredholmIndexPacket) :
-    (FredholmIndexPacket.mk (p1.dimKer + p2.dimKer) (p1.dimCoker + p2.dimCoker)).index =
-      p1.index + p2.index := by
-  dsimp [index]
-  ring
+/-- The finite-dimensional index shadow of a linear map.
 
-end FredholmIndexPacket
+The second term is the dimension of the native quotient by the range, so it is
+the cokernel dimension rather than an independently supplied number.
+-/
+def finiteDimensionalIndex (f : V →ₗ[𝕜] W) : ℤ :=
+  (Module.finrank 𝕜 (LinearMap.ker f) : ℤ) -
+    (Module.finrank 𝕜 (W ⧸ LinearMap.range f) : ℤ)
 
-/-- Quantized Quantum Hall Conductance σ_xy = c0 * index(D). -/
-def quantumHallConductance (c0 : ℝ) (p : FredholmIndexPacket) : ℝ :=
-  c0 * (p.index : ℝ)
+@[simp] theorem finiteDimensionalIndex_eq (f : V →ₗ[𝕜] W) :
+    finiteDimensionalIndex f =
+      (Module.finrank 𝕜 (LinearMap.ker f) : ℤ) -
+        (Module.finrank 𝕜 (W ⧸ LinearMap.range f) : ℤ) :=
+  rfl
 
-/-- **Theorem**: Quantum Hall Conductance Additivity under Direct Sum. -/
-theorem quantumHallConductance_add (c0 : ℝ) (p1 p2 : FredholmIndexPacket) :
-    quantumHallConductance c0 (FredholmIndexPacket.mk (p1.dimKer + p2.dimKer) (p1.dimCoker + p2.dimCoker)) =
-      quantumHallConductance c0 p1 + quantumHallConductance c0 p2 := by
-  dsimp [quantumHallConductance, FredholmIndexPacket.index]
-  push_cast
-  ring
+end FiniteDimensionalIndex
+
+/-- A conductance readout from the finite-dimensional index shadow. -/
+def quantumHallConductance
+    {V W : Type*} [AddCommGroup V] [AddCommGroup W]
+    [Module ℝ V] [Module ℝ W]
+    (c0 : ℝ) (f : V →ₗ[ℝ] W) : ℝ :=
+  c0 * (finiteDimensionalIndex (𝕜 := ℝ) (V := V) (W := W) f : ℤ)
 
 end InfoGeometry.Canonical.ConnesQuantumHallIndexBridge

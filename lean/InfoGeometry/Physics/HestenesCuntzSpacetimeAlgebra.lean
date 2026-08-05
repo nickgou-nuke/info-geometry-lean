@@ -26,64 +26,46 @@ open Matrix
 open ChiralPoincareSouriauBridge
 open LorentzChiralCuntzBridge
 
-/-- Hestenes paravector/operator representative of a complexified four-vector. -/
-def spacetimeVectorOperator (P : FourMomentum) : M2C := pauliMomentum P
-
-/-- Momentum operators use the same Pauli soldering map in this finite model. -/
-def momentumOperator (P : FourMomentum) : M2C := spacetimeVectorOperator P
-
-/-- Scalar coordinate duals/readouts from a `2×2` paravector operator. -/
-def coordE : M2C → ℂ := recoverE
-def coordX : M2C → ℂ := recoverPx
-def coordY : M2C → ℂ := recoverPy
-def coordZ : M2C → ℂ := recoverPz
-
-/-- Reassemble a four-vector from the coordinate dual readouts. -/
-def coordinatesOfOperator (X : M2C) : FourMomentum := fourMomentumOfMatrix X
-
-/-- Local notation for the Hestenes/Minkowski quadratic. -/
-def hestenesNormSq (P : FourMomentum) : ℂ := minkowskiSq P
-
 /-- Local polarization pairing from the quadratic form. -/
 def hestenesPair (P Q : FourMomentum) : ℂ :=
   (1 / 2 : ℂ) *
-    (hestenesNormSq (addFourMomentum P Q) - hestenesNormSq P - hestenesNormSq Q)
+    (minkowskiSq (addFourMomentum P Q) - minkowskiSq P - minkowskiSq Q)
 
 /-- Explicit coordinate formula for the polarized Hestenes/Minkowski pairing. -/
 theorem hestenesPair_apply (P Q : FourMomentum) :
     hestenesPair P Q = P.E * Q.E - P.px * Q.px - P.py * Q.py - P.pz * Q.pz := by
   cases P
   cases Q
-  simp [hestenesPair, hestenesNormSq, addFourMomentum, minkowskiSq]
+  simp [hestenesPair, addFourMomentum, minkowskiSq]
   ring
 
 /-- The coordinate duals recover the components of a soldered paravector. -/
 theorem coordinate_duals_recover (P : FourMomentum) :
-    coordE (spacetimeVectorOperator P) = P.E ∧
-    coordX (spacetimeVectorOperator P) = P.px ∧
-    coordY (spacetimeVectorOperator P) = P.py ∧
-    coordZ (spacetimeVectorOperator P) = P.pz := by
-  simp [coordE, coordX, coordY, coordZ, spacetimeVectorOperator]
+    recoverE (pauliMomentum P) = P.E ∧
+    recoverPx (pauliMomentum P) = P.px ∧
+    recoverPy (pauliMomentum P) = P.py ∧
+    recoverPz (pauliMomentum P) = P.pz := by
+  simp
 
 /-- Re-soldering the coordinate readouts of an operator recovers that operator. -/
 theorem coordinate_operator_roundtrip (X : M2C) :
-    spacetimeVectorOperator (coordinatesOfOperator X) = X := by
+    pauliMomentum (fourMomentumOfMatrix X) = X := by
   exact pauliMomentum_fourMomentumOfMatrix X
 
 /-- Re-soldering recovered coordinates of a soldered vector is identity. -/
 theorem vector_coordinate_roundtrip (P : FourMomentum) :
-    coordinatesOfOperator (spacetimeVectorOperator P) = P := by
+    fourMomentumOfMatrix (pauliMomentum P) = P := by
   apply fourMomentum_ext_of_pauliMomentum_eq
-  exact coordinate_operator_roundtrip (spacetimeVectorOperator P)
+  exact coordinate_operator_roundtrip (pauliMomentum P)
 
 /-- The Hestenes paravector determinant is the Minkowski quadratic. -/
 theorem hestenes_metric_from_determinant (P : FourMomentum) :
-    (spacetimeVectorOperator P).det = hestenesNormSq P := by
+    (pauliMomentum P).det = minkowskiSq P := by
   exact det_pauliMomentum P
 
 /-- Lorentz covariance of the finite Hestenes norm. -/
 theorem hestenes_lorentz_covariance (g : SL2C) (P : FourMomentum) :
-    hestenesNormSq (spinLorentzAction g P) = hestenesNormSq P := by
+    minkowskiSq (spinLorentzAction g P) = minkowskiSq P := by
   exact spinLorentzAction_preserves_minkowskiSq g P
 
 /-- Poincaré action obeys the semidirect-product group law. -/
@@ -172,13 +154,13 @@ theorem hestenes_cuntz_spacetime_synthesis
     (g : SL2C) (G H : ChiralPoincareElement) (P Q : FourMomentum)
     (S : CuntzDeformedSuperPoincare.ChiralOperatorPresentation)
     (β : ℂ) (x y : M2C) :
-    coordE (spacetimeVectorOperator P) = P.E ∧
-    coordX (spacetimeVectorOperator P) = P.px ∧
-    coordY (spacetimeVectorOperator P) = P.py ∧
-    coordZ (spacetimeVectorOperator P) = P.pz ∧
-    (spacetimeVectorOperator P).det = hestenesNormSq P ∧
+    recoverE (pauliMomentum P) = P.E ∧
+    recoverPx (pauliMomentum P) = P.px ∧
+    recoverPy (pauliMomentum P) = P.py ∧
+    recoverPz (pauliMomentum P) = P.pz ∧
+    (pauliMomentum P).det = minkowskiSq P ∧
     hestenesPair P Q = P.E * Q.E - P.px * Q.px - P.py * Q.py - P.pz * Q.pz ∧
-    hestenesNormSq (spinLorentzAction g P) = hestenesNormSq P ∧
+    minkowskiSq (spinLorentzAction g P) = minkowskiSq P ∧
     chiralPoincareAct (chiralPoincareComp G H) P =
       chiralPoincareAct G (chiralPoincareAct H P) ∧
     chiralFierzStatement ∧

@@ -1,0 +1,87 @@
+{
+  "all_grade_and_parabolic_routes_verified": true,
+  "carrier_dimension": 32,
+  "coefficient_field": "QQ",
+  "global_sheet_reflection_checked": true,
+  "grade_dimensions": {
+    "-1": 5,
+    "-2": 10,
+    "0": 25,
+    "1": 5,
+    "2": 10
+  },
+  "grading_stabilizer_generators": 5,
+  "negative_parabolic_grades": [
+    -2,
+    -1,
+    0
+  ],
+  "positive_parabolic_grades": [
+    0,
+    1,
+    2
+  ],
+  "reports": [
+    {
+      "grade_action": "k_to_k",
+      "label": "mode_swap_0_1",
+      "maps_grade_spaces": true,
+      "preserves_N": true,
+      "preserves_parabolics": true,
+      "reverses_N": false,
+      "swaps_N_plus_minus": false,
+      "swaps_opposite_parabolics": false
+    },
+    {
+      "grade_action": "k_to_k",
+      "label": "mode_swap_1_2",
+      "maps_grade_spaces": true,
+      "preserves_N": true,
+      "preserves_parabolics": true,
+      "reverses_N": false,
+      "swaps_N_plus_minus": false,
+      "swaps_opposite_parabolics": false
+    },
+    {
+      "grade_action": "k_to_k",
+      "label": "mode_swap_2_3",
+      "maps_grade_spaces": true,
+      "preserves_N": true,
+      "preserves_parabolics": true,
+      "reverses_N": false,
+      "swaps_N_plus_minus": false,
+      "swaps_opposite_parabolics": false
+    },
+    {
+      "grade_action": "k_to_k",
+      "label": "mode_swap_3_4",
+      "maps_grade_spaces": true,
+      "preserves_N": true,
+      "preserves_parabolics": true,
+      "reverses_N": false,
+      "swaps_N_plus_minus": false,
+      "swaps_opposite_parabolics": false
+    },
+    {
+      "grade_action": "k_to_k",
+      "label": "local_particle_hole_candidate",
+      "maps_grade_spaces": true,
+      "preserves_N": true,
+      "preserves_parabolics": true,
+      "reverses_N": false,
+      "swaps_N_plus_minus": false,
+      "swaps_opposite_parabolics": false
+    },
+    {
+      "grade_action": "k_to_-k",
+      "label": "global_witt_sheet",
+      "maps_grade_spaces": true,
+      "preserves_N": false,
+      "preserves_parabolics": false,
+      "reverses_N": true,
+      "swaps_N_plus_minus": true,
+      "swaps_opposite_parabolics": true
+    }
+  ],
+  "witt_lie_dimension": 55
+}

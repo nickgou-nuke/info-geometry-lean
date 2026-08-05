@@ -50,6 +50,23 @@ theorem realBinaryPartialReadout_succ
   unfold realBinaryPartialReadout
   rw [Finset.sum_range_succ]
 
+theorem realBinaryPartialReadout_nonnegative
+    (N : ℕ) (w : InfiniteBinaryWordSpace) :
+    0 ≤ realBinaryPartialReadout N w := by
+  unfold realBinaryPartialReadout
+  exact Finset.sum_nonneg fun n hn => by
+    dsimp [realBinaryTerm]
+    split <;> positivity
+
+theorem realBinaryPartialReadout_mono
+    {N M : ℕ} (hNM : N ≤ M) (w : InfiniteBinaryWordSpace) :
+    realBinaryPartialReadout N w ≤ realBinaryPartialReadout M w := by
+  unfold realBinaryPartialReadout
+  exact Finset.sum_le_sum_of_subset_of_nonneg (Finset.range_mono hNM)
+    (fun n hn hnot => by
+      dsimp [realBinaryTerm]
+      split <;> positivity)
+
 theorem realBinaryPartialReadout_difference_at_first_difference
     {w v : InfiniteBinaryWordSpace} {k : ℕ}
     (hprefix : ∀ n < k, w n = v n)
@@ -175,6 +192,14 @@ theorem realBinaryPartialReadout_le_readout
       dsimp [realBinaryTerm]
       positivity)
 
+theorem realBinaryPartialReadout_mem_unitInterval
+    (N : ℕ) (w : InfiniteBinaryWordSpace) :
+    realBinaryPartialReadout N w ∈ Set.Icc (0 : ℝ) 1 := by
+  constructor
+  · exact realBinaryPartialReadout_nonnegative N w
+  · exact le_trans (realBinaryPartialReadout_le_readout N w)
+      (realBinaryReadout_mem_unitInterval w).2
+
 theorem realBinaryPartialReadout_tendsto_readout
     (w : InfiniteBinaryWordSpace) :
     Filter.Tendsto
@@ -275,6 +300,15 @@ theorem realBinaryReadout_injective_on_canonical
           linarith
       | true => exact hdiff (by rw [hwk, hvk])
 
+/-- The canonical readout is injective on the canonical-word subtype. -/
+theorem realBinaryReadout_injective_on_canonicalSpace :
+    Function.Injective
+      (fun w : {w : InfiniteBinaryWordSpace // CanonicalBinaryWord w} =>
+        realBinaryReadout w.val) := by
+  intro w v hreadout
+  apply Subtype.ext
+  exact realBinaryReadout_injective_on_canonical w.property v.property hreadout
+
 theorem abs_realBinaryReadout_sub_le_of_prefix
     (N : ℕ) (w v : InfiniteBinaryWordSpace)
     (hprefix : ∀ n < N, w n = v n) :
@@ -309,6 +343,11 @@ theorem realBinaryReadout_lt_one_of_canonical
   have hzero := realBinaryPartialReadout_zero w
   norm_num [hzero] at hstrict ⊢
   linarith
+
+theorem realBinaryReadout_lt_one_on_canonicalSpace
+    (w : {w : InfiniteBinaryWordSpace // CanonicalBinaryWord w}) :
+    realBinaryReadout w.val < 1 :=
+  realBinaryReadout_lt_one_of_canonical w.val w.property
 
 theorem continuous_realBinaryPartialReadout
     (N : ℕ) :

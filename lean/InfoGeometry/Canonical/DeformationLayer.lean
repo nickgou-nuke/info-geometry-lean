@@ -19,9 +19,9 @@ def DeformationParameter :=
 
 namespace DeformationParameter
 
-def q (W : DeformationParameter) : ℝ := W.1.1
+abbrev q (W : DeformationParameter) : ℝ := W.1.1
 
-def deformationDomain (W : DeformationParameter) : Set ℝ := W.1.2
+abbrev deformationDomain (W : DeformationParameter) : Set ℝ := W.1.2
 
 def q_in_deformationDomain (W : DeformationParameter) :
     q W ∈ deformationDomain W := W.2
@@ -36,14 +36,14 @@ def DeformationParameterWitness :=
 
 namespace DeformationParameterWitness
 
-def q (W : DeformationParameterWitness) : ℝ := W.1.1
+abbrev q (W : DeformationParameterWitness) : ℝ := W.1.1
 
-def thermalParameter (W : DeformationParameterWitness) : ℝ := W.1.2.1
+abbrev thermalParameter (W : DeformationParameterWitness) : ℝ := W.1.2.1
 
 def q_eq_thermalParameter (W : DeformationParameterWitness) :
     q W = thermalParameter W := W.2.1
 
-def deformationDomain (W : DeformationParameterWitness) : Set ℝ := W.1.2.2
+abbrev deformationDomain (W : DeformationParameterWitness) : Set ℝ := W.1.2.2
 
 def q_in_deformationDomain (W : DeformationParameterWitness) :
     q W ∈ deformationDomain W := W.2.2.1
@@ -60,11 +60,11 @@ def DeformedCharacterWitness :=
 
 namespace DeformedCharacterWitness
 
-def undeformedCharacter (W : DeformedCharacterWitness) : ℝ := W.1.1
+abbrev undeformedCharacter (W : DeformedCharacterWitness) : ℝ := W.1.1
 
-def deformedCharacter (W : DeformedCharacterWitness) : ℝ := W.1.2.1
+abbrev deformedCharacter (W : DeformedCharacterWitness) : ℝ := W.1.2.1
 
-def deformation (W : DeformedCharacterWitness) : DeformationParameterWitness :=
+abbrev deformation (W : DeformedCharacterWitness) : DeformationParameterWitness :=
   W.1.2.2
 
 def deformationLaw (W : DeformedCharacterWitness) :

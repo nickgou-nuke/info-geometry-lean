@@ -47,9 +47,14 @@ theorem cliffordStageDim_strictMono :
   unfold cliffordStageDim
   exact Nat.pow_lt_pow_right (by decide) h
 
-/-- Clifford tensor stage state vector structure. -/
-structure CliffordTensorState (n : ℕ) where
-  vec : Fin (2 ^ n) → ℂ
+/-! The stage state is natively its finite complex coordinate vector. -/
+abbrev CliffordTensorState (n : ℕ) := Fin (2 ^ n) → ℂ
+
+namespace CliffordTensorState
+
+def vec (ψ : CliffordTensorState n) : Fin (2 ^ n) → ℂ := ψ
+
+end CliffordTensorState
 
 /-- The Clifford tower uses the common finite-stage Dirac owner. -/
 abbrev CliffordDiracData (V : Type*) [AddCommGroup V] [Module ℝ V] :=

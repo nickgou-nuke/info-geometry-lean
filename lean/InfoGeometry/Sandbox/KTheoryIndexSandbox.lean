@@ -9,15 +9,12 @@ infinite direct limit Clifford module, bypassing human authority via the type ke
 -/
 
 /-- Representation of the abstract K₀ Grothendieck Group for an algebra -/
-structure K0Group (A : Type*) where
-  G : Type*
-  [instAddCommGroup : AddCommGroup G]
-
-attribute [instance] K0Group.instAddCommGroup
+abbrev K0Group (_A : Type*) := Type*
 
 /-- The Fredholm Index Operator Mapping into the K-Theory Group -/
-structure FredholmIndex (A : Type*) [AddMonoid A] (K : K0Group A) where
-  index_map : A → K.G
+structure FredholmIndex (A : Type*) [AddMonoid A] (K : K0Group A)
+    [AddCommGroup K] where
+  index_map : A → K
   -- The index must behave as an additive homomorphism (Index(D₁ ⊗ D₂) = Index(D₁) + Index(D₂))
   is_additive : ∀ (x y : A), index_map (x + y) = index_map x + index_map y
 
@@ -30,7 +27,8 @@ def m2_stable_k0_rank : ℤ := 1
   Proves that the infinite direct limit preserves the integrity of 
   the quantized Fredholm index invariants across the entire Clifford tower.
 -/
-theorem k0_index_preserves_stability (A : Type*) [AddMonoid A] (K : K0Group A) (Idx : FredholmIndex A K)
+theorem k0_index_preserves_stability (A : Type*) [AddMonoid A] (K : K0Group A)
+    [AddCommGroup K] (Idx : FredholmIndex A K)
     (h_rank : m2_stable_k0_rank = 1) :
     ∀ (x : A), Idx.index_map (x + 0) = Idx.index_map x := by
   -- Fully resolved by the structural additivity properties of the group

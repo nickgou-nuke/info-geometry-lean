@@ -921,7 +921,159 @@ lean_lib InfoGeometryMeta where
   globs := #[.andSubmodules `InfoGeometry.Meta]
 
 lean_lib InfoGeometryCanonical where
-  roots := #[`InfoGeometry.Canonical.All]
+  roots := #[`InfoGeometry.Canonical.All, `InfoGeometry.Canonical.SplitOctonionTKK55,
+    `InfoGeometry.Canonical.SplitOctonionTKK55Blocks,
+    `InfoGeometry.Canonical.SplitOctonionTKK55LieEquivalence,
+    `InfoGeometry.Canonical.HyperbolicDiagonalO55,
+    `InfoGeometry.Canonical.OrthogonalGroup55,
+    `InfoGeometry.Canonical.Pin55OrthogonalBridge,
+    `InfoGeometry.Canonical.Pin55NativeCover,
+    `InfoGeometry.Canonical.SheetSplitQuaternionic,
+    `InfoGeometry.Canonical.HexagonalSixRootTiling,
+    `InfoGeometry.Canonical.SixStateSpectralBridge,
+    `InfoGeometry.Canonical.SixStateCharacteristicPolynomial,
+    `InfoGeometry.Canonical.TwoSheetOperatorCoordinates,
+    `InfoGeometry.Canonical.TwoSheetStokesCoordinates]
+
+lean_lib HestenesPauliSheet where
+  roots := #[`InfoGeometry.Canonical.ChiralStokesPauliBasis,
+    `InfoGeometry.Canonical.HestenesPauliSheetBridge]
+
+lean_lib SixStateModularConjugation where
+  roots := #[`InfoGeometry.Canonical.SixStateModularConjugationIdentification]
+
+lean_lib AffineOrthogonal55Glide where
+  roots := #[`InfoGeometry.Canonical.AffineOrthogonal55Glide]
+
+lean_lib Clifford55PinFramework where
+  roots := #[
+      `InfoGeometry.Clifford.Cl55WittNativeCartanDieudonne,
+      `InfoGeometry.Clifford.Cl55WittPinNativeTwistedAction,
+      `InfoGeometry.Clifford.Cl55RealSplitPinVolumeAnticommutation,
+      `InfoGeometry.Clifford.Cl55WittPinCoverEvidence,
+      `InfoGeometry.Clifford.Pin55OrthogonalCover]
+
+lean_lib Clifford55ChiralHyperbolicStructure where
+  roots := #[`InfoGeometry.Clifford.Clifford55ChiralHyperbolicStructure]
+
+lean_lib AffineOrthogonal55Semidirect where
+  roots := #[`InfoGeometry.Canonical.AffineOrthogonal55Semidirect]
+
+lean_lib Orthogonal55Components where
+  roots := #[`InfoGeometry.Canonical.Orthogonal55Components]
+
+lean_lib AffinePin55Cover where
+  roots := #[`InfoGeometry.Canonical.AffinePin55Cover]
+
+lean_lib TKK55LieEquivalence where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionTKK55LieEquivalence]
+
+lean_lib HyperbolicDiagonalO55Bridge where
+  roots := #[`InfoGeometry.Canonical.HyperbolicDiagonalO55]
+
+lean_lib TwelveFoldSheetColorOmega where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldSheetColorOmega]
+
+lean_lib SplitOctonionSixSectorBridge where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionSixSectorBridge]
+
+lean_lib SplitOctonionChiralFrame where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionChiralFrame]
+
+lean_lib SplitOctonionSixSectorFin3 where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionSixSectorFin3]
+
+lean_lib TwelveFoldSpectralBridge where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldSpectralBridge]
+
+lean_lib TwelveFoldParityCompatibility where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldParityCompatibility]
+
+lean_lib HexIndexSplitOctonionBridge where
+  roots := #[`InfoGeometry.Canonical.HexIndexSplitOctonionBridge]
+
+lean_lib HexIndexTrialityEquivariance where
+  roots := #[`InfoGeometry.Canonical.HexIndexTrialityEquivariance]
+
+lean_lib HexIndexTrialityLabelBridge where
+  roots := #[`InfoGeometry.Canonical.HexIndexTrialityLabelBridge]
+
+lean_lib SplitOctonionParavectorCorners where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionParavectorCorners]
+
+lean_lib SplitOctonionChiralReflectionBridge where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionChiralReflectionBridge]
+
+lean_lib Cl55OddChiralityExchange where
+  roots := #[`InfoGeometry.Clifford.Cl55OddChiralityExchange]
+
+lean_lib HestenesQuaternionCore where
+  roots := #[`InfoGeometry.Canonical.HestenesQuaternionCore]
+
+lean_lib HestenesQuaternionSlice where
+  roots := #[`InfoGeometry.Canonical.HestenesQuaternionSlice]
+
+lean_lib ClPlus14DualProduct where
+  roots := #[`InfoGeometry.Canonical.ClPlus14DualProduct]
+
+lean_lib SixStateModularConjugationIdentification where
+  roots := #[`InfoGeometry.Canonical.SixStateModularConjugationIdentification]
+
+lean_lib FiniteKreinTomitaSixState where
+  roots := #[`InfoGeometry.Canonical.FiniteKreinTomitaSixState]
+
+lean_lib HestenesOmegaHyperbolic where
+  roots := #[`InfoGeometry.Canonical.HestenesOmegaHyperbolic]
+
+lean_lib HestenesSheetBoost where
+  roots := #[`InfoGeometry.Canonical.HestenesSheetBoost]
+
+lean_lib HestenesHyperbolicDoubling where
+  roots := #[`InfoGeometry.Canonical.HestenesHyperbolicDoubling]
+
+lean_lib HestenesPauliEvenClifford where
+  roots := #[`InfoGeometry.Canonical.HestenesPauliEvenClifford]
+
+lean_lib HestenesPauliEvenAdjoint where
+  roots := #[`InfoGeometry.Canonical.HestenesPauliEvenAdjoint]
+
+lean_lib HestenesPauliSheetBridge where
+  roots := #[`InfoGeometry.Canonical.HestenesPauliSheetBridge]
+
+lean_lib HestenesSplitOctonionBasis where
+  roots := #[`InfoGeometry.Canonical.HestenesSplitOctonionBasis]
+
+lean_lib QuaternionOmegaDoublingSquare where
+  roots := #[`InfoGeometry.Canonical.QuaternionOmegaDoublingSquare]
+
+lean_lib HestenesRotorOwners where
+  roots := #[
+    `InfoGeometry.Canonical.HestenesCircularSheetCAR,
+    `InfoGeometry.Canonical.HestenesPhaseBoostRotors,
+    `InfoGeometry.Canonical.HestenesLoxodromicRotor,
+    `InfoGeometry.Canonical.HestenesLoxodromicCasimirs]
+
+lean_lib HestenesStokesFlowTopCat where
+  roots := #[`InfoGeometry.Canonical.HestenesStokesFlowTopCat]
+
+lean_lib HestenesCliffordKrein where
+  roots := #[`InfoGeometry.Canonical.HestenesCliffordKrein]
+
+lean_lib TwoSheetKreinAdjoint where
+  roots := #[`InfoGeometry.Canonical.TwoSheetKreinAdjoint]
+
+lean_lib TwoSheetKreinRealLinear where
+  roots := #[`InfoGeometry.Canonical.TwoSheetKreinRealLinear]
+
+lean_lib TwoSheetStokesKreinRealLinear where
+  roots := #[`InfoGeometry.Canonical.TwoSheetStokesKreinRealLinear]
+
+lean_lib TwoSheetKreinModularCompatibility where
+  roots := #[`InfoGeometry.Canonical.TwoSheetKreinModularCompatibility]
+
+lean_lib TwoSheetStokesKreinModularCompatibility where
+  roots := #[`InfoGeometry.Canonical.TwoSheetStokesKreinModularCompatibility]
+
 
 lean_lib InfoGeometryLLM where
   globs := #[.andSubmodules `InfoGeometry.LLM]

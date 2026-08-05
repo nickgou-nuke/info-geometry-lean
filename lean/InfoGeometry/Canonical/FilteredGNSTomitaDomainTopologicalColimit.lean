@@ -82,11 +82,11 @@ def topologicalDiagram : I ⥤ TopCat where
           (leOfHom f) (leOfHom g)).symm)
 
 abbrev topologicalColimit : TopCat :=
-  topologicalDirectColimit (topologicalDiagram Stage sys ω)
+  colimit (topologicalDiagram Stage sys ω)
 
 def topologicalInjection (i : I) :
     (topologicalDiagram Stage sys ω).obj i ⟶ topologicalColimit Stage sys ω :=
-  topologicalDirectInjection (topologicalDiagram Stage sys ω) i
+  colimit.ι (topologicalDiagram Stage sys ω) i
 
 omit [Nonempty I] [IsDirectedOrder I] [DecidableEq I] in
 theorem topologicalInjection_transition

@@ -218,24 +218,6 @@ theorem mul_assoc (x y z : DualSplitQ) : mul (mul x y) z = mul x (mul y z) := by
   ring_nf
   repeat constructor
 
-/-- Closed finite packet for the dual split-quaternion backbone. -/
-theorem dualSplitQuaternion_backbone_packet :
-    coordinateCount = 8 ∧
-      SplitQ.mul SplitQ.i SplitQ.i = SplitQ.neg SplitQ.one ∧
-      SplitQ.mul SplitQ.j SplitQ.j = SplitQ.one ∧
-      SplitQ.mul SplitQ.k SplitQ.k = SplitQ.one ∧
-      SplitQ.mul (SplitQ.mul SplitQ.i SplitQ.j) SplitQ.k = SplitQ.one ∧
-      (∀ x y z : SplitQ, SplitQ.mul (SplitQ.mul x y) z = SplitQ.mul x (SplitQ.mul y z)) ∧
-      (∀ x : SplitQ, SplitQ.mul x (SplitQ.conj x) = ⟨SplitQ.normScalar x, 0, 0, 0⟩) ∧
-      (∀ x y : SplitQ, mul (baseLift x) (baseLift y) = baseLift (SplitQ.mul x y)) ∧
-      (∀ x y : SplitQ, mul (epsLift x) (epsLift y) = zero) ∧
-      mul epsilon epsilon = zero ∧
-      mul epsilon epsilon ≠ baseLift SplitQ.one ∧
-      (∀ x y z : DualSplitQ, mul (mul x y) z = mul x (mul y z)) := by
-  exact ⟨coordinate_count, SplitQ.i_sq, SplitQ.j_sq, SplitQ.k_sq, SplitQ.ijk_eq_one,
-    SplitQ.mul_assoc, SplitQ.mul_conj_eq_norm, baseLift_mul, epsLift_mul_epsLift_zero,
-    epsilon_sq_zero, epsilon_sq_ne_one, mul_assoc⟩
-
 end DualSplitQ
 
 end InfoGeometry.OperatorAlgebra.DualSplitQuaternionBackbone

@@ -193,30 +193,6 @@ theorem oneModeCAR_projector_partition_identity :
     E12 * E21 + E21 * E12 = 1 := by
   rw [oneModeCAR_matrix_units, E11_add_E22_eq_one]
 
-/-- Repaired theorem-safe Chapter 13 finite Clifford-algebra packet. -/
-theorem repaired_MD013_clifford_algebra_packet {R : Type} [Ring R]
-    (e n a b : R) (heidem : e * e = e) (he0 : e ≠ 0) (he1 : e ≠ 1)
-    (hn0 : n ≠ 0) (hn2 : n * n = 0) (hb0 : b ≠ 0) (hba : b * a = 0) :
-    e * (1 - e) = 0 ∧
-    (1 - e) * e = 0 ∧
-    (∃ y : R, y ≠ 0 ∧ n * y = 0) ∧
-    (∃ x : R, x ≠ 0 ∧ x * a = 0) ∧
-    E12 * E12 = 0 ∧
-    E21 * E21 = 0 ∧
-    E12 * E21 + E21 * E12 = E11 + E22 ∧
-    E12 * E21 + E21 * E12 = 1 ∧
-    (E12 * E21) * (E12 * E21) = E12 * E21 ∧
-    (E21 * E12) * (E21 * E12) = E21 * E12 ∧
-    (E12 * E21) * (E21 * E12) = 0 ∧
-    (E21 * E12) * (E12 * E21) = 0 := by
-  refine ⟨?_, ?_, ⟨n, hn0, hn2⟩, rightKernelWitness_of_rightZeroDivisor a b hb0 hba,
-    E12_square_zero, E21_square_zero, oneModeCAR_matrix_units,
-    oneModeCAR_projector_partition_identity, oneModeCAR_projector_left,
-    oneModeCAR_projector_right, oneModeCAR_projectors_orthogonal.1,
-    oneModeCAR_projectors_orthogonal.2⟩
-  · exact (leftZeroDivisor_of_nontrivial_idempotent e heidem he0 he1).hmul
-  · exact (rightZeroDivisor_of_nontrivial_idempotent e heidem he0 he1).hmul
-
 end InfoGeometry.Physics.MD013CliffordAlgebraicStructures
 
 end noncomputable section

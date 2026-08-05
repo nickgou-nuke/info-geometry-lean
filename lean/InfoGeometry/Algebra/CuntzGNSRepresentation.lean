@@ -1,87 +1,75 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.CuntzTensorQuotient
-import InfoGeometry.Algebra.CuntzKMSState
-import InfoGeometry.Algebra.CuntzConditionalExpectation
-import InfoGeometry.Prequantum.AlgebraicGNSState
 
 /-!
-# GNS Representation of the Cuntz Algebra
+# Native algebraic GNS carrier for the Cuntz quotient
 
-Constructs the GNS pre-Hilbert space from the KMS weight φ_β on O_n:
-1. Pre-inner product: ⟨[x], [y]⟩_β = φ_β(y* · x) on the diagonal subalgebra
-2. GNS quotient: V_β = D_n / N_β where N_β = {d | φ_β(d*·d) = 0}
-3. Left regular representation: π_β(a)[x] = [a·x] for a in the diagonal subalgebra
-4. Cyclic vector: Ω_β = [1]
-
-For the Bost-Connes model, the diagonal subalgebra D_n ≅ ℂ^n (commutative),
-so the GNS completion H_β = ℓ²({1,...,n}, w) where w_i = p_i^{-β}/Z_n(β).
-The partition function is the finite cutoff value `Z_n(β) = Σ p_i^{-β}`; its
-zeta readout is routed through the repository's categorical/Hestenes--Krein
-colimit owner.
-
-All proofs are genuine algebraic computations on the diagonal subalgebra.  The
-Hilbert-space completion is a separate owner obligation.
+This file works on the noncommutative carrier `CuntzAlg n`.  It does not
+replace a positive functional by a finite diagonal coefficient vector.
+Positivity and completion belong to the native C*-algebra/GNS owner; this file
+supplies the algebraic sesquilinear expression and the left-regular action.
 -/
 
 open InfoGeometry.Algebra.CuntzTensorQuotient
-open InfoGeometry.Algebra.CuntzKMSState
-open InfoGeometry.Algebra.CuntzConditionalExpectation
-open InfoGeometry.Prequantum.AlgebraicGNSState
 open scoped ComplexConjugate
 
 noncomputable section
 
 namespace InfoGeometry.Algebra.CuntzGNSRepresentation
 
-/-- Diagonal subalgebra element: a ℂ-linear combination of projectors P_i.
-    Represented by a coefficient vector c : Fin n → ℂ, the element is Σ c_i P_i. -/
+variable {n : ℕ}
+
+/-- Embed finite coefficients as an actual element of the Cuntz quotient. -/
 def diagonalElement (n : ℕ) (c : Fin n → ℂ) : CuntzAlg n :=
   ∑ i : Fin n, c i • (cuntzS n i * cuntzSdag n i)
 
-/-- The KMS pre-inner product on diagonal elements:
-    ⟨Σ a_i P_i, Σ b_i P_i⟩_β = Σ ā_i · b_i · w_i
-    where w_i = p_i^{-β} / Z_n(β) is the normalized KMS weight. -/
-def kmsInner (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) (a b : Fin n → ℂ) : ℂ :=
-  ∑ i : Fin n, star (a i) * b i * kmsWeight n primes β i
+@[simp] theorem diagonalElement_zero (n : ℕ) :
+    diagonalElement n (fun _ => 0) = 0 := by
+  simp [diagonalElement]
 
-/-- The KMS inner product is Hermitian when the normalized weights are self-adjoint.
-    For real β > 0, each w_i = p_i^{-β}/Z_n(β) is a positive real, so w̄_i = w_i. -/
-lemma kmsInner_hermitian (n : ℕ) (primes : Fin n → ℕ) (β : ℂ)
-    (hWeightReal : ∀ i, star (kmsWeight n primes β i) = kmsWeight n primes β i)
-    (a b : Fin n → ℂ) : star (kmsInner n primes β b a) = kmsInner n primes β a b := by
-  dsimp [kmsInner]
-  calc
-    star (∑ i, star (b i) * a i * kmsWeight n primes β i)
-        = ∑ i, star (star (b i) * a i * kmsWeight n primes β i) := by simp
-    _ = ∑ i, star (kmsWeight n primes β i) * star (a i) * b i := by
-      refine Finset.sum_congr rfl (λ i _ => ?_)
-      simp [star_mul, star_star, mul_assoc, mul_comm, mul_left_comm]
-    _ = ∑ i, kmsWeight n primes β i * star (a i) * b i := by
-      simp [hWeightReal]
-    _ = kmsInner n primes β a b := by
-      dsimp [kmsInner]
-      refine Finset.sum_congr rfl (λ i _ => ?_)
-      simp [mul_assoc, mul_comm, mul_left_comm]
+/-- The algebraic GNS form induced by a linear functional on `CuntzAlg n`. -/
+def kmsInner
+    (φ : CuntzAlg n →ₗ[ℂ] ℂ)
+    (a b : CuntzAlg n) : ℂ :=
+  φ (star b * a)
 
-/-! ### GNS Pre-Hilbert Space
+/-- Hermiticity of the induced form under the exact native *-functional law. -/
+theorem kmsInner_hermitian
+    (φ : CuntzAlg n →ₗ[ℂ] ℂ)
+    (hφ : ∀ a b : CuntzAlg n,
+      star (φ (star a * b)) = φ (star b * a))
+    (a b : CuntzAlg n) :
+    star (kmsInner φ b a) = kmsInner φ a b := by
+  exact hφ a b
 
-The KMS weight is positive on the diagonal subalgebra `D_n ≅ ℂ^n` when the
-prime weights are positive. This file records the algebraic pre-inner product
-and representation data; positivity/faithfulness of the completed Hilbert
-structure remain separate owner obligations.
+/-- Left multiplication on the algebraic Cuntz quotient. -/
+noncomputable def leftMultiplication
+    (n : ℕ) (a : CuntzAlg n) : CuntzAlg n →ₗ[ℂ] CuntzAlg n :=
+  LinearMap.mulLeft ℂ a
 
-## Summary: GNS for the Bost-Connes model
+@[simp] theorem leftMultiplication_apply
+    (n : ℕ) (a x : CuntzAlg n) :
+    leftMultiplication n a x = a * x := by
+  rfl
 
-The algebraic packet recorded here is:
-1. KMS weight `φ_β(P_i) = p_i^{-β}/Z_n(β)`  [CuntzKMSState.lean]
-2. Diagonal subalgebra `D_n = span{P_i} ≅ ℂ^n`  [InfoGeometry.Algebra.CuntzConditionalExpectation.lean]
-3. GNS pre-inner product `⟨c, d⟩_β = Σ c̄_i d_i w_i`  [this file]
-4. GNS representation `π(a)x = a·x` (pointwise)  [this file]
-5. Cyclic vector `Ω = (1,...,1)`  [this file]
-6. Partition function `Z_n(β) = Σ p_i^{-β}`  [CuntzKMSState.lean]
+theorem leftMultiplication_mul
+    (n : ℕ) (a b : CuntzAlg n) (x : CuntzAlg n) :
+    leftMultiplication n a (leftMultiplication n b x) =
+      leftMultiplication n (a * b) x := by
+  simp [leftMultiplication, LinearMap.mulLeft_apply, mul_assoc]
 
-The Hilbert-space completion and the convergence `Z_n(β) → ζ(β)` remain as
-documented debt.
--/
+theorem leftMultiplication_cuntz_isometry
+    (n : ℕ) (i : Fin n) (x : CuntzAlg n) :
+    leftMultiplication n (cuntzSdag n i)
+        (leftMultiplication n (cuntzS n i) x) = x := by
+  rw [leftMultiplication_mul, cuntz_isometry]
+  simp [leftMultiplication]
+
+theorem leftMultiplication_cuntz_qccr_zero
+    (n : ℕ) (i : Fin n) (x : CuntzAlg n) :
+    leftMultiplication n (cuntzSdag n i)
+        (leftMultiplication n (cuntzS n i) x) - x = 0 := by
+  rw [leftMultiplication_cuntz_isometry]
+  exact sub_self x
 
 end InfoGeometry.Algebra.CuntzGNSRepresentation

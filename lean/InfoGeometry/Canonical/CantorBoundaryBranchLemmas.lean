@@ -12,6 +12,17 @@ namespace InfoGeometry.Canonical.CantorBoundaryBranchLemmas
 
 open InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 
+@[simp] theorem boundaryHead_boundaryCons
+    (a : Bool) (w : InfiniteBinaryWordSpace) :
+    boundaryHead (boundaryCons a w) = a := by
+  rfl
+
+@[simp] theorem boundaryTail_boundaryCons
+    (a : Bool) (w : InfiniteBinaryWordSpace) :
+    boundaryTail (boundaryCons a w) = w := by
+  funext n
+  rfl
+
 theorem boundaryCons_injective (a : Bool) :
     Function.Injective (boundaryCons a) := by
   intro w v h
@@ -32,5 +43,21 @@ theorem boundaryCons_true_ne_false
   intro h
   have hzero := congrFun h 0
   simpa [boundaryCons] using hzero
+
+theorem boundaryCons_boundaryHead_tail
+    (x : InfiniteBinaryWordSpace) :
+    boundaryCons (boundaryHead x) (boundaryTail x) = x := by
+  exact (boundary_recursive_decomposition x).symm
+
+theorem boundaryCons_eq_iff
+    (a b : Bool) (w v : InfiniteBinaryWordSpace) :
+    boundaryCons a w = boundaryCons b v ↔ a = b ∧ w = v := by
+  constructor
+  · intro h
+    refine ⟨?_, ?_⟩
+    · exact congrFun h 0
+    · simpa using congrArg boundaryTail h
+  · rintro ⟨rfl, rfl⟩
+    rfl
 
 end InfoGeometry.Canonical.CantorBoundaryBranchLemmas

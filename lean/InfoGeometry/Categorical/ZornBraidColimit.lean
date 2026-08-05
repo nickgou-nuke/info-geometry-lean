@@ -36,7 +36,7 @@ analytical continuations.
 Because Zorn coordinates (split-octonions) are non-associative, they cannot be
 modeled in `RingCat` or `AlgebraCat` natively. Instead, we model the finite
 algebraic stages as a filtered functor `F : J ⥤ ModuleCat R` and define the
-continuum carrier as `colimit F`.
+continuum carrier as `CategoryTheory.Limits.colimit F`.
 
 The generic multiplication layer remains conditional because a family of
 stagewise bilinear maps alone does not imply compatibility with the bonding
@@ -74,13 +74,6 @@ variable {J : Type u} [Category.{u} J]
 
 -- The directed diagram representing the finite tower of Zorn vector spaces over R.
 variable (ZornSequence : J ⥤ ModuleCat.{u} R)
-
-/--
-The infinite-dimensional continuous Zorn limit is exactly the
-categorical direct colimit of the finite Zorn sequence in ModuleCat.
--/
-noncomputable def zornContinuumModule [HasColimit ZornSequence] : ModuleCat.{u} R :=
-  colimit ZornSequence
 
 /-! ## Witnessed bilinear multiplication on the colimit -/
 
@@ -143,7 +136,7 @@ the universal property of the limit in ModuleCat.
 -/
 noncomputable def zorn_scaling_covariance_colimit
     [HasColimit ZornSequence] [HasColimit ZornSequenceScaled] :
-    zornContinuumModule R ZornSequence ≅ zornContinuumModule R ZornSequenceScaled :=
+    colimit ZornSequence ≅ colimit ZornSequenceScaled :=
   HasColimit.isoOfNatIso zorn_scaling_covariance
 
 /--
@@ -166,7 +159,7 @@ multiplication is expressed as a bilinear map.
 -/
 noncomputable def tensorLeftColimitIso
     (A : ModuleCat.{u} R) (F : J ⥤ ModuleCat.{u} R) [HasColimit F] :
-    (CategoryTheory.MonoidalCategory.tensorLeft A).obj (colimit F) ≅
+    (CategoryTheory.MonoidalCategory.tensorLeft A).obj (CategoryTheory.Limits.colimit F) ≅
       colimit (F ⋙ CategoryTheory.MonoidalCategory.tensorLeft A) := by
   have hcol :
       IsColimit ((CategoryTheory.MonoidalCategory.tensorLeft A).mapCocone
@@ -198,7 +191,7 @@ The colimit image of a finite nilpotent seed.  The name records the intended
 Cuntz/on-shell use case, while the theorem below only asserts the proved
 square-zero algebraic fact supplied by the witness `M`.
 -/
-noncomputable def continuumCuntzGenerator (j : J) : ↑(zornContinuumModule R ZornSequence) :=
+noncomputable def continuumCuntzGenerator (j : J) : ↑(colimit ZornSequence) :=
   colimit.ι ZornSequence j (zornCuntzGenerator j)
 
 /--

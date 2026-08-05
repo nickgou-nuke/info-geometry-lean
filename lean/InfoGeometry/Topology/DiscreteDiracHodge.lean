@@ -81,6 +81,13 @@ instance : Sub (TotalForm n0 n1 n2) where
 @[simp] theorem neg_two_component (x : TotalForm n0 n1 n2) :
     (-x).two = -x.two := rfl
 
+@[simp] theorem sub_zero_component (x y : TotalForm n0 n1 n2) :
+    (x - y).zero = x.zero - y.zero := rfl
+@[simp] theorem sub_one_component (x y : TotalForm n0 n1 n2) :
+    (x - y).one = x.one - y.one := rfl
+@[simp] theorem sub_two_component (x y : TotalForm n0 n1 n2) :
+    (x - y).two = x.two - y.two := rfl
+
 end TotalForm
 
 variable {n0 n1 n2 : ℕ}

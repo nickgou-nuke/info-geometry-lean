@@ -61,27 +61,6 @@ def pathCoconeOfLegs
         intro i j f
         simpa using hnat f }
 
-/--
-If every competing cocone admits an explicit factorization through a chosen path
-cocone, and that factorization is unique, then the chosen cocone is colimiting.
--/
-def pathCoconeIsColimitOfExplicitDesc
-    (P : FinitePatch (α := α))
-    (F : J ⥤ CategoryTheory.Paths (PatchVertex (α := α) P))
-    (c : Cocone F)
-    (desc : ∀ s : Cocone F, c.pt ⟶ s.pt)
-    (fac : ∀ s : Cocone F, ∀ j : J, c.ι.app j ≫ desc s = s.ι.app j)
-    (uniq : ∀ (s : Cocone F) (m : c.pt ⟶ s.pt),
-      (∀ j : J, c.ι.app j ≫ m = s.ι.app j) → m = desc s) :
-    IsColimit c where
-  desc := desc
-  fac := by
-    intro s j
-    exact fac s j
-  uniq := by
-    intro s m hm
-    exact uniq s m hm
-
 end PathCocones
 
 section PathColimit

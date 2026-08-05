@@ -50,9 +50,9 @@ def OperatorPrimalDualSocket (Op : Type*) [AddGroup Op] :=
 
 namespace OperatorPrimalDualSocket
 
-def product (S : OperatorPrimalDualSocket Op) : Op → Op → Op := S.1.1
+abbrev product (S : OperatorPrimalDualSocket Op) : Op → Op → Op := S.1.1
 
-def readout (S : OperatorPrimalDualSocket Op) : Op → ℝ := S.1.2
+abbrev readout (S : OperatorPrimalDualSocket Op) : Op → ℝ := S.1.2
 
 def product_zero_right_readout (S : OperatorPrimalDualSocket Op) :
     ∀ X : Op, readout S (product S X 0) = 0 := S.2

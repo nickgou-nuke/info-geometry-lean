@@ -11,12 +11,32 @@ open scoped Manifold
 
 namespace InfoGeometry.Geometry
 
-/-- The Canonical Differential Volume Form on the Amplituhedron -/
-structure CanonicalVolumeForm (k n : ℕ) where
-  omega : Set (Fin (k * n) → ℝ) → ℝ  -- Representation of the integrated volume
-  logPoleResidue : Set (Fin (k * n) → ℝ) → ℝ
-  logPoleBoundary : Set (Fin (k * n) → ℝ)
-  has_log_poles : logPoleResidue logPoleBoundary ≠ 0
+/-- The readouts and nonzero-pole certificate of a canonical volume form.
+
+This is a subtype rather than a wrapper record: the carrier is the native
+product of the three readouts, and the only extra datum is its predicate.
+-/
+abbrev CanonicalVolumeForm (k n : ℕ) :=
+  {data :
+      (Set (Fin (k * n) → ℝ) → ℝ) ×
+        ((Set (Fin (k * n) → ℝ) → ℝ) × Set (Fin (k * n) → ℝ)) //
+    data.2.1 data.2.2 ≠ 0}
+
+namespace CanonicalVolumeForm
+
+abbrev omega {k n : ℕ} (Ω : CanonicalVolumeForm k n) :
+    Set (Fin (k * n) → ℝ) → ℝ := Ω.1.1
+
+abbrev logPoleResidue {k n : ℕ} (Ω : CanonicalVolumeForm k n) :
+    Set (Fin (k * n) → ℝ) → ℝ := Ω.1.2.1
+
+abbrev logPoleBoundary {k n : ℕ} (Ω : CanonicalVolumeForm k n) :
+    Set (Fin (k * n) → ℝ) := Ω.1.2.2
+
+theorem has_log_poles {k n : ℕ} (Ω : CanonicalVolumeForm k n) :
+    Ω.logPoleResidue Ω.logPoleBoundary ≠ 0 := Ω.2
+
+end CanonicalVolumeForm
 
 /-- The zeta-volume comparison predicate. -/
 def AmplituhedronZetaComparison {k n : ℕ}

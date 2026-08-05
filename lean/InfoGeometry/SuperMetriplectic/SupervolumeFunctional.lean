@@ -242,8 +242,13 @@ readout.
 namespace SplitSupervolumeTranslation
 
 /-- Operator-level supervolume shadow on the split Clifford carrier. -/
-structure SplitSupervolumeShadow (n : ℕ) where
-  operator : SplitCliffordEnd n
+abbrev SplitSupervolumeShadow (n : ℕ) := SplitCliffordEnd n
+
+namespace SplitSupervolumeShadow
+
+abbrev operator (S : SplitSupervolumeShadow n) : SplitCliffordEnd n := S
+
+end SplitSupervolumeShadow
 
 /-- The supertrace readout is derived from the split-Clifford operator. -/
 noncomputable def SplitSupervolumeShadow.supertraceReadout

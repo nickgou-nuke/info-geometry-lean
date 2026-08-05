@@ -64,9 +64,6 @@ noncomputable def ofAngle (θ : ℝ) : HyperbolicMixingParams where
 
 end HyperbolicMixingParams
 
-/-- Backward-compatible alias for the older projector-branch parameter name. -/
-abbrev BogoliubovParams := HyperbolicMixingParams
-
 /-- Backward-compatible alias for the older mixing-parameter surface. -/
 abbrev BogoliubovMixingParams := HyperbolicMixingParams
 
@@ -922,7 +919,6 @@ lemma grandCanonicalFockGenerator_eq_hamiltonian_of_vacuumTransported
 end EinsteinBridge
 
 attribute [deprecated FockEndomorphism (since := "2026-02-26")] FockEnd
-attribute [deprecated HyperbolicMixingParams (since := "2026-03-21")] BogoliubovParams
 attribute [deprecated bogoliubovNumberOperator (since := "2026-02-26")] numberOperator
 attribute [deprecated grandCanonicalFockGenerator (since := "2026-02-26")] grandCanonicalGenerator
 attribute [deprecated grandCanonicalFockEulerStep (since := "2026-02-26")] grandCanonicalEulerStep

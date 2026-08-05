@@ -116,13 +116,14 @@ variable (𝔤 A : Type*) [Ring A] [Algebra ℝ A]
 /-- Operatorial Souriau system: the thermodynamic covector `β` is sent to an
 observable/modular-energy operator.  Scalar thermodynamic potentials are not
 primitive; they are read out by states. -/
-structure OperatorSouriauSystem where
-  hamiltonianOp : 𝔤 → A
+abbrev OperatorSouriauSystem := 𝔤 → A
 
 namespace OperatorSouriauSystem
 
 variable {𝔤 A : Type*} [Ring A] [Algebra ℝ A]
 variable (S : OperatorSouriauSystem 𝔤 A)
+
+abbrev hamiltonianOp (S : OperatorSouriauSystem 𝔤 A) : 𝔤 → A := S
 
 /-- Add a scalar log-potential to an operator as `ψ·1`. -/
 def potentialOp (ψ : ℝ) : A :=

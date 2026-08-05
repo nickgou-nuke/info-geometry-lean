@@ -13,7 +13,7 @@ Formalizes the absolute convergence via the p-series test:
 
     Σ |n^{-β}| = Σ n^{-Re(β)} < ∞   ⇔   Re(β) > 1
 
-This is the constructive step that instantiates the FredholmClosureCertificate:
+This is the constructive step that instantiates the FredholmClosureData:
 once the absolute convergence is proved, the trace-class operator T = -e^{-βH}
 on ℓ²(ℕ^+) has trace ζ(β), and the Fredholm determinant identity follows.
 
@@ -81,18 +81,18 @@ entire chain. The SplitCliffordInfinity colimit provides the limit.
 The colimit IS the trace of the trace-class operator T = -e^{-βH}:
     Tr(T) = lim_{N→∞} Σ_{n=1}^N n^{-β} = ζ(β)   for Re(β) > 1.
 
-This is intended to instantiate the `FredholmClosureCertificate`:
+This is intended to instantiate the `FredholmClosureData`:
     determinant(β) = ∏ (1-n^{-β}) = 1/ζ(β)
     determinant_mul_zeta_eq_one: det·ζ = 1 for Re(β) > 1.
     determinant_ne_zero: det ≠ 0 for Re(β) > 1/2.
 -/
 theorem zeta_colimit_exists
-    (C : InfoGeometry.Arithmetic.FredholmClosure.FredholmClosureCertificate)
+    (C : InfoGeometry.Arithmetic.FredholmClosure.FredholmClosureData)
     {β : ℂ} (h : 1 < β.re) :
     Filter.Tendsto
       (fun N : ℕ => C.determinantOnIdeal (C.finiteCutoff β N))
       Filter.atTop
       (nhds (C.determinantOnIdeal (C.limitOperator β))) :=
-  InfoGeometry.Arithmetic.FredholmClosure.FredholmClosureCertificate.determinant_cutoff_converges C h
+  InfoGeometry.Arithmetic.FredholmClosure.FredholmClosureData.determinant_cutoff_converges C h
 
 end InfoGeometry.Arithmetic.ZetaConvergence

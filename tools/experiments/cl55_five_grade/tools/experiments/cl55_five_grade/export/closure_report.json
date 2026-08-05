@@ -1,0 +1,52 @@
+{
+  "associative_generator_closure": {
+    "algebra": "M_32(QQ)",
+    "dimension": 1024,
+    "grade_dimensions": {
+      "-5": 1,
+      "-4": 10,
+      "-3": 45,
+      "-2": 120,
+      "-1": 210,
+      "0": 252,
+      "1": 210,
+      "2": 120,
+      "3": 45,
+      "4": 10,
+      "5": 1
+    },
+    "grade_max": 5,
+    "grade_min": -5,
+    "nonzero_grade_plus_3": true
+  },
+  "coefficient_field": "QQ",
+  "full_envelope_commutator_algebra": {
+    "candidate": "sl_32(QQ)",
+    "dimension": 1023
+  },
+  "spinor_dimension": 32,
+  "witt_generator_lie_closure": {
+    "bracket": "ordinary_commutator",
+    "dimension": 55,
+    "generators": "c_i,a_i",
+    "grade_dimensions": {
+      "-5": 0,
+      "-4": 0,
+      "-3": 0,
+      "-2": 10,
+      "-1": 5,
+      "0": 25,
+      "1": 5,
+      "2": 10,
+      "3": 0,
+      "4": 0,
+      "5": 0
+    },
+    "obstruction_pairs_nonzero": {
+      "+2,+1": false,
+      "+2,+2": false,
+      "-2,-1": false,
+      "-2,-2": false
+    }
+  }
+}

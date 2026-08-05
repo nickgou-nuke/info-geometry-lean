@@ -163,14 +163,4 @@ theorem projective_double_flip (A : Spin32Matrix) : negId * (negId * A) = A := b
   rw [negId_mul, negId_mul]
   simp
 
-/-- Finite kernel packet for the projective signed-center quotient surface. -/
-theorem projective_center_packet :
-    negId * negId = 1 ∧
-      (∀ A : Spin32Matrix, negId * A = A * negId) ∧
-      (∀ A : Spin32Matrix, negId * A = -A) ∧
-      (∀ A : Spin32Matrix, ProjectivelyEquivalent A (-A)) ∧
-      (∀ A : Spin32Matrix, negId * (negId * A) = A) := by
-  exact ⟨negId_sq, negId_commutes, negId_mul, projectivelyEquivalent_neg,
-    projective_double_flip⟩
-
 end InfoGeometry.OperatorAlgebra.ProjectiveCenter

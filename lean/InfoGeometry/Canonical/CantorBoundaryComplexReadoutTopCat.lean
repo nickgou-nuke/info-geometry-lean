@@ -19,8 +19,10 @@ open InfoGeometry.Canonical.CantorBoundaryComplexReadout
 open InfoGeometry.Canonical.CantorBoundaryReadoutComplexRealBridge
 open InfoGeometry.Canonical.CantorBoundaryReadoutBounds
 open InfoGeometry.Canonical.CantorBoundaryFiniteReadout
+open InfoGeometry.Canonical.CantorBoundaryReadoutRefinement
 open InfoGeometry.Canonical.CantorBoundaryReadoutTopCat
 open InfoGeometry.Canonical.CantorBoundaryCuntzShift
+open InfoGeometry.Canonical.CantorCylinderTopology
 
 def complexBinaryReadoutTopCatHom :
     TopCat.of InfiniteBinaryWordSpace ⟶ TopCat.of ℂ :=
@@ -64,6 +66,18 @@ theorem complexBinaryReadoutTopCatHom_factorization :
   rw [TopCat.comp_app]
   change binaryReadout w = Complex.ofReal (realBinaryReadout w)
   exact complex_binaryReadout_eq_ofReal w
+
+theorem complex_binaryReadout_prefixExtend
+    (n : ℕ) (w : InfoGeometry.Canonical.UHFInductiveColimitBoundary.BitWord n)
+    (x : InfiniteBinaryWordSpace) :
+    binaryReadout (prefixExtend w x) =
+      (finitePrefixReadout (List.ofFn w) : ℂ) +
+        (1 / 2 : ℂ) ^ n * binaryReadout x := by
+  rw [complex_binaryReadout_eq_ofReal,
+    complex_binaryReadout_eq_ofReal]
+  have h := congrArg Complex.ofReal
+    (realBinaryReadout_prefixExtend n w x)
+  simpa [Complex.ofReal_add, Complex.ofReal_mul, Complex.ofReal_pow] using h
 
 theorem complexBinaryReadout_prefixTopCat_square (b : Bool) :
     prefixTopCatHom b ≫ complexBinaryReadoutTopCatHom =

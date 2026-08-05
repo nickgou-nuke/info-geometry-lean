@@ -21,24 +21,13 @@ section DiagonalObs
 
 variable {n : ℕ}
 
-/-- Diagonal observables, represented by their diagonal coefficients. -/
-structure DiagonalObservable (n : ℕ) where
-  coeff : Fin n → ℝ
+/-- Diagonal observables are native coefficient functions. -/
+abbrev DiagonalObservable (n : ℕ) := Fin n → ℝ
 
 namespace DiagonalObservable
 
-instance : CoeFun (DiagonalObservable n) (fun _ => Fin n → ℝ) := ⟨fun A => A.coeff⟩
-
--- DEBT_ID: THM-ZD-001
--- DEBT_KIND: ZERO_DATUM
--- ZERO_DATUM: canonical zero diagonal observable
-instance : Zero (DiagonalObservable n) := ⟨⟨fun _ => 0⟩⟩
-instance : One (DiagonalObservable n) := ⟨⟨fun _ => 1⟩⟩
-instance : Add (DiagonalObservable n) := ⟨fun A B => ⟨fun i => A i + B i⟩⟩
-instance : Neg (DiagonalObservable n) := ⟨fun A => ⟨fun i => -A i⟩⟩
-instance : Sub (DiagonalObservable n) := ⟨fun A B => ⟨fun i => A i - B i⟩⟩
-instance : Mul (DiagonalObservable n) := ⟨fun A B => ⟨fun i => A i * B i⟩⟩
-instance : SMul ℝ (DiagonalObservable n) := ⟨fun a A => ⟨fun i => a * A i⟩⟩
+/-- Compatibility accessor for the native coefficient-function carrier. -/
+abbrev coeff (A : DiagonalObservable n) : Fin n → ℝ := A
 
 @[simp] lemma zero_apply (i : Fin n) : (0 : DiagonalObservable n) i = 0 := rfl
 @[simp] lemma one_apply (i : Fin n) : (1 : DiagonalObservable n) i = 1 := rfl
@@ -70,8 +59,14 @@ variable {n : ℕ} [Nonempty (Fin n)]
 open DiagonalObservable
 
 /-- A finite diagonal Hamiltonian, encoded by energy levels `Eᵢ`. -/
-structure Hamiltonian (n : ℕ) where
-  energy : Fin n → ℝ
+abbrev Hamiltonian (n : ℕ) := Fin n → ℝ
+
+namespace Hamiltonian
+
+/-- Compatibility accessor for the native function representation. -/
+abbrev energy (H : Hamiltonian n) : Fin n → ℝ := H
+
+end Hamiltonian
 
 namespace Hamiltonian
 
@@ -129,7 +124,7 @@ noncomputable def logDensityCoeff (H : Hamiltonian n) (β : ℝ) : Fin n → ℝ
 
 /-- Diagonal "modular Hamiltonian"/log-density observable. -/
 noncomputable def logDensityObs (H : Hamiltonian n) (β : ℝ) : DiagonalObservable n :=
-  ⟨H.logDensityCoeff β⟩
+  H.logDensityCoeff β
 
 lemma gibbsWeight_eq_exp_logDensity (H : Hamiltonian n) (β : ℝ) (i : Fin n) :
     H.gibbsWeight β i = Real.exp (H.logDensityCoeff β i) := by
@@ -184,7 +179,7 @@ lemma thermalState_nonneg
 
 /-- Energy observable as a diagonal operator. -/
 noncomputable def energyObs (H : Hamiltonian n) : DiagonalObservable n :=
-  ⟨H.energy⟩
+  H.energy
 
 /-- Internal energy `U(β) = E_{ρ_β}[H]`. -/
 noncomputable def internalEnergy (H : Hamiltonian n) (β : ℝ) : ℝ :=

@@ -60,8 +60,8 @@ The `mellinBridge` field is a `FiniteMellinScalingDatum` where:
   - sample r = reflection across root α_r (Weyl group action);
   - Mellin f = Σ_r weight_r · f(r), the character sum.
 
-The `hamiltonianMellinDecomposition` field states that H₂ - H₁ equals the
-Mellin-weighted sum over root directions.
+The Mellin/commutator decomposition is not stored as a structure field.  Any
+zero-readout theorem below must receive the required equality explicitly.
 -/
 structure CocycleOverCoadjointOrbit (Orbit LieAlg LieCoalg : Type*)
     [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
@@ -74,9 +74,6 @@ structure CocycleOverCoadjointOrbit (Orbit LieAlg LieCoalg : Type*)
   isFiberDirection : LieAlg → Prop
   /-- Mellin scaling datum encoding Weyl denominator factors as root weights. -/
   mellinBridge : FiniteMellinScalingDatum LieAlg LieAlg
-  /-- The cocycle derivative decomposes as a Mellin-weighted sum over roots:
-      H₂ - H₁ = Σ_{r ∈ roots} weight_r · [Q_r, H₀]                    -/
-  hamiltonianMellinDecomposition : H₂ - H₁ = 0
 
 namespace CocycleOverCoadjointOrbit
 
@@ -107,14 +104,16 @@ theorem cocycleDerivative_zero_of_hamiltonians_equal (X : LieAlg)
 
 /-- The fiber readout is the actual zero cocycle-derivative equation. -/
 theorem offDiagonalMetricZero (X : LieAlg)
-    (hfiber : ctx.isFiberDirection X) : ctx.H₂ - ctx.H₁ = 0 := by
-  exact ctx.hamiltonianMellinDecomposition
+    (hfiber : ctx.isFiberDirection X)
+    (hdecomp : ctx.H₂ - ctx.H₁ = 0) : ctx.H₂ - ctx.H₁ = 0 := by
+  exact hdecomp
 
 /-- Zero cocycle derivative commutes with every fiber operator. -/
 theorem fiberOrthogonalToBoundary (X : LieAlg)
-    (hfiber : ctx.isFiberDirection X) :
+    (hfiber : ctx.isFiberDirection X)
+    (hdecomp : ctx.H₂ - ctx.H₁ = 0) :
     (ctx.H₂ - ctx.H₁) * X = X * (ctx.H₂ - ctx.H₁) := by
-  rw [ctx.hamiltonianMellinDecomposition]
+  rw [hdecomp]
   simp
 
 /--

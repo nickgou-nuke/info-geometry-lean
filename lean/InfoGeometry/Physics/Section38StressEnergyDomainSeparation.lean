@@ -43,12 +43,21 @@ abbrev QuantumOperator := Mat2
 def quantumTraceToClassical (A : QuantumOperator) : ClassicalScalar :=
   trace A
 
-/-- Finite domain-separated stress datum. -/
-structure DomainSeparatedStressDatum where
-  metric : SpacetimeIndex → SpacetimeIndex → ClassicalScalar
-  densityDerivative : SpacetimeIndex → QuantumOperator
-  potential : ClassicalScalar
-  connectionVariation : SpacetimeIndex → SpacetimeIndex → ClassicalScalar
+/-- Finite domain-separated stress datum.
+
+This declaration carries four independent finite tables and no extra law; the
+stress identities below are theorem owners, so the carrier is a native nested
+product rather than a wrapper structure.
+-/
+abbrev DomainSeparatedStressDatum :=
+  (SpacetimeIndex → SpacetimeIndex → ClassicalScalar) ×
+    ((SpacetimeIndex → QuantumOperator) ×
+      (ClassicalScalar × (SpacetimeIndex → SpacetimeIndex → ClassicalScalar)))
+
+abbrev DomainSeparatedStressDatum.metric (D : DomainSeparatedStressDatum) := D.1
+abbrev DomainSeparatedStressDatum.densityDerivative (D : DomainSeparatedStressDatum) := D.2.1
+abbrev DomainSeparatedStressDatum.potential (D : DomainSeparatedStressDatum) := D.2.2.1
+abbrev DomainSeparatedStressDatum.connectionVariation (D : DomainSeparatedStressDatum) := D.2.2.2
 
 namespace DomainSeparatedStressDatum
 
@@ -92,11 +101,8 @@ def zeroConnectionVariation : SpacetimeIndex → SpacetimeIndex → ClassicalSca
 def compactStressDatum
     (metric : SpacetimeIndex → SpacetimeIndex → ClassicalScalar)
     (densityDerivative : SpacetimeIndex → QuantumOperator)
-    (potential : ClassicalScalar) : DomainSeparatedStressDatum where
-  metric := metric
-  densityDerivative := densityDerivative
-  potential := potential
-  connectionVariation := zeroConnectionVariation
+    (potential : ClassicalScalar) : DomainSeparatedStressDatum :=
+  (metric, (densityDerivative, (potential, zeroConnectionVariation)))
 
 end InfoGeometry.Physics.Section38StressEnergyDomainSeparation
 

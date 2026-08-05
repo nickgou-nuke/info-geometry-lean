@@ -97,14 +97,23 @@ theorem rationalCoboundary_sq_zero
             exact K.incidence_sq_zero p sigma tau
           simp [hzero]
 
-structure RationalHodgeData (V : Type*) [AddCommGroup V] [Module ℚ V] where
-  star : V ≃ₗ[ℚ] V
+abbrev RationalHodgeData (V : Type*) [AddCommGroup V] [Module ℚ V] :=
+  V ≃ₗ[ℚ] V
+
+namespace RationalHodgeData
+
+/-- Compatibility accessor for the native rational Hodge equivalence. -/
+def star {V : Type*} [AddCommGroup V] [Module ℚ V]
+    (H : RationalHodgeData V) : V ≃ₗ[ℚ] V := H
+
+end RationalHodgeData
 
 def conjugateCodifferential
     {V : Type*} [AddCommGroup V] [Module ℚ V]
     (H : RationalHodgeData V)
     (d : V →ₗ[ℚ] V) : V →ₗ[ℚ] V :=
-  H.star.symm.toLinearMap.comp (d.comp H.star.toLinearMap)
+  (RationalHodgeData.star H).symm.toLinearMap.comp
+    (d.comp (RationalHodgeData.star H).toLinearMap)
 
 theorem conjugateCodifferential_sq_zero
     {V : Type*} [AddCommGroup V] [Module ℚ V]
@@ -114,12 +123,15 @@ theorem conjugateCodifferential_sq_zero
     (conjugateCodifferential H d).comp
         (conjugateCodifferential H d) = 0 := by
   ext x
-  have hdx : d (d (H.star x)) = 0 := by
-    have h := congrArg (fun f : V →ₗ[ℚ] V => f (H.star x)) hd
+  have hdx : d (d ((RationalHodgeData.star H) x)) = 0 := by
+    have h := congrArg
+      (fun f : V →ₗ[ℚ] V => f ((RationalHodgeData.star H) x)) hd
     simpa [LinearMap.comp_apply] using h
-  change H.star.symm
-      (d (H.star (H.star.symm (d (H.star x))))) = 0
-  rw [H.star.apply_symm_apply, hdx]
+  change (RationalHodgeData.star H).symm
+      (d ((RationalHodgeData.star H)
+        ((RationalHodgeData.star H).symm
+          (d ((RationalHodgeData.star H) x))))) = 0
+  rw [(RationalHodgeData.star H).apply_symm_apply, hdx]
   simp
 
 def rationalDiracKahler

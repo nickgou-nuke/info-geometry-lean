@@ -24,17 +24,21 @@ Radon-Nikodym character, index character, cyclic pairing, ...).
 Exact descent from a multiplicative source to a commutative multiplicative
 character.
 -/
-structure ExactAbelianizingBridge (M S : Type*) [Monoid M] [CommMonoid S] where
-  character : M →* S
+abbrev ExactAbelianizingBridge (M S : Type*) [Monoid M] [CommMonoid S] :=
+  M →* S
 
 namespace ExactAbelianizingBridge
+
+/-- Compatibility accessor for the native multiplicative character. -/
+abbrev character {M S : Type*} [Monoid M] [CommMonoid S]
+    (B : ExactAbelianizingBridge M S) : M →* S := B
 
 variable {M S : Type*} [Monoid M] [CommMonoid S]
 
 /-- The descended commutative character is multiplicative. -/
 theorem map_mul (B : ExactAbelianizingBridge M S) (x y : M) :
-    B.character (x * y) = B.character x * B.character y :=
-  B.character.map_mul x y
+    B (x * y) = B x * B y :=
+  MonoidHom.map_mul B x y
 
 end ExactAbelianizingBridge
 
@@ -65,7 +69,7 @@ variable {M S : Type*} [Monoid M] [CommMonoid S]
 
 /-- Exact descent yields a defective descent with trivial defect. -/
 def toDefective (B : ExactAbelianizingBridge M S) : DefectiveAbelianizingBridge M S where
-  character := B.character
+  character := B
   defect := fun _ _ => 1
   map_mul_defect := by
     intro x y
@@ -132,7 +136,7 @@ variable {M S A : Type*} [Monoid M] [CommMonoid S] [AddCommMonoid A]
 
 /-- The additive invariant attached to the exact bridge. -/
 def additiveInvariant (B : ExactMultiplicativeToAdditiveBridge M S A) : M → A :=
-  fun x => B.toAdditiveLinearization.linearize (B.toExactAbelianizingBridge.character x)
+  fun x => B.toAdditiveLinearization.linearize (B.toExactAbelianizingBridge x)
 
 /-- Exact descent plus exact linearization yields an additive law upstairs. -/
 theorem additiveInvariant_mul (B : ExactMultiplicativeToAdditiveBridge M S A) (x y : M) :

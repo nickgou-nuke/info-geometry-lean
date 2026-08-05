@@ -62,15 +62,28 @@ end SuperGeometricTemperature
 
 /-- KMS target packet for the prime-gas bridge. -/
 @[rep_depth operator]
-structure PrimeGasKMSTargetBridge where
-  superTemperature : SuperGeometricTemperature
-  zero_odd :
-    superTemperature.oddTemperature = 0
-  absorption : ℝ
-  spontaneousEmission : ℝ
-  stimulatedEmission : ℝ
-  detailedBalance :
-    absorption = spontaneousEmission + stimulatedEmission
+abbrev PrimeGasKMSTargetBridge :=
+  {p : SuperGeometricTemperature × (ℝ × ℝ × ℝ) //
+    p.1.oddTemperature = 0 ∧
+    p.2.1 = p.2.2.1 + p.2.2.2}
+
+namespace PrimeGasKMSTargetBridge
+
+abbrev superTemperature (T : PrimeGasKMSTargetBridge) : SuperGeometricTemperature := T.1.1
+
+theorem zero_odd (T : PrimeGasKMSTargetBridge) :
+    T.superTemperature.oddTemperature = 0 := T.2.1
+
+abbrev absorption (T : PrimeGasKMSTargetBridge) : ℝ := T.1.2.1
+
+abbrev spontaneousEmission (T : PrimeGasKMSTargetBridge) : ℝ := T.1.2.2.1
+
+abbrev stimulatedEmission (T : PrimeGasKMSTargetBridge) : ℝ := T.1.2.2.2
+
+theorem detailedBalance (T : PrimeGasKMSTargetBridge) :
+    T.absorption = T.spontaneousEmission + T.stimulatedEmission := T.2.2
+
+end PrimeGasKMSTargetBridge
 
 /-- Prime-gas/super-KMS bridge using the KMS target as temperature owner. -/
 @[rep_depth operator]

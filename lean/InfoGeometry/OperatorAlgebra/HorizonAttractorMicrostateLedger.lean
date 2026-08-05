@@ -23,7 +23,6 @@ itself does not decode hidden memory.
 -/
 
 import Mathlib.Tactic
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -154,17 +153,10 @@ Recovery witness for a horizon microstate ledger.
 This is deliberately not derived from thermality or evaporation. A concrete
 model must supply the decoder/readout and the equality with hidden memory.
 -/
-structure HorizonMemoryRecoveryWitness
+abbrev HorizonMemoryRecoveryWitness
     {State Charge Scalar Memory : Type*}
-    (L : HorizonAttractorMicrostateLedger State Charge Scalar Memory) where
-  /-- Visible/recovered memory readout. -/
-  recoveredMemory :
-    State → Memory
-
-  /-- Recovery law: the visible recovered memory equals the hidden memory. -/
-  recovery_law :
-    ∀ s : State,
-      recoveredMemory s = L.hiddenMemory s
+    (L : HorizonAttractorMicrostateLedger State Charge Scalar Memory) :=
+  { recoveredMemory : State → Memory // recoveredMemory = L.hiddenMemory }
 
 namespace HorizonMemoryRecoveryWitness
 
@@ -174,6 +166,18 @@ variable
 
 variable
     (R : HorizonMemoryRecoveryWitness L)
+
+/-- Visible/recovered memory readout of the native equality subtype. -/
+def recoveredMemory : State → Memory :=
+  R.1
+
+/-- Recovery law derived from the subtype equality. -/
+theorem recovery_law :
+    ∀ s : State,
+      R.recoveredMemory s = L.hiddenMemory s := by
+  intro s
+  change R.1 s = L.hiddenMemory s
+  rw [R.2]
 
 /-- A supplied recovery witness decodes the hidden memory. -/
 theorem recoveredMemory_eq_hiddenMemory
@@ -220,27 +224,5 @@ variable
     (T : HorizonThermalLedger State ThermalReadout)
 
 end HorizonThermalLedger
-
-/-! ## 4. Owner theorem -/
-
-/--
-Once the ledger is supplied, entropy is determined by charge through the
-installed attractor law.
--/
-theorem horizonAttractorMicrostateOwnerTarget :
-  ∀ (State Charge Scalar Memory : Type*),
-  ∀ L : HorizonAttractorMicrostateLedger State Charge Scalar Memory,
-  ∀ s : State,
-    L.entropyReadout s = L.entropyOfCharge (L.chargeReadout s) := by
-  intro State Charge Scalar Memory L s
-  exact L.entropyReadout_eq_entropyOfCharge s
-
-/-- One-state attractor readout from a supplied horizon microstate ledger. -/
-theorem horizonAttractorMicrostate_packet
-    {State Charge Scalar Memory : Type*}
-    (L : HorizonAttractorMicrostateLedger State Charge Scalar Memory)
-    (s : State) :
-    L.entropyReadout s = L.entropyOfCharge (L.chargeReadout s) :=
-  horizonAttractorMicrostateOwnerTarget State Charge Scalar Memory L s
 
 end InfoGeometry.OperatorAlgebra.HorizonAttractorMicrostateLedger

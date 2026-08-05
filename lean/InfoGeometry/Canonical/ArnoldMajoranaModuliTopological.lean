@@ -25,30 +25,30 @@ instance arnoldMajoranaNetworkSetoidInstance (n : Nat) :
 
 def expertFunctionEquiv (V : Type*) : Expert V ≃ (V → V) where
   toFun e := e.apply
-  invFun f := { apply := f }
-  left_inv e := by cases e; rfl
+  invFun f := f
+  left_inv e := rfl
   right_inv f := rfl
 
 instance expertTopologicalSpace (V : Type*) [TopologicalSpace V] :
     TopologicalSpace (Expert V) :=
-  TopologicalSpace.induced (expertFunctionEquiv V).toFun inferInstance
+  inferInstance
 
 def moeLayerFunctionEquiv (n : Nat) (V : Type*) :
     MoELayer n V ≃ (Fin n → Expert V) where
   toFun M := M.experts
-  invFun f := { experts := f }
-  left_inv M := by cases M; rfl
+  invFun f := f
+  left_inv M := rfl
   right_inv f := rfl
 
 instance moeLayerTopologicalSpace (n : Nat) (V : Type*)
     [TopologicalSpace V] : TopologicalSpace (MoELayer n V) :=
-  TopologicalSpace.induced (moeLayerFunctionEquiv n V).toFun inferInstance
+  inferInstance
 
 def arnoldMajoranaNetworkFunctionEquiv (n : Nat) :
     ArnoldMajoranaNetwork n E ≃
       (Fin n → (ArnoldMajoranaCarrier E → ArnoldMajoranaCarrier E)) where
   toFun N := fun e => (N.moe.experts e).apply
-  invFun f := { moe := { experts := fun e => { apply := f e } } }
+  invFun f := { moe := fun e => f e }
   left_inv N := by cases N; rfl
   right_inv f := rfl
 
@@ -65,7 +65,7 @@ instance arnoldMajoranaModuliTopologicalSpace (n : Nat) :
 theorem continuous_arnoldMajoranaNetworkFunctionEquiv (n : Nat) :
     Continuous
       (arnoldMajoranaNetworkFunctionEquiv (E := E) n :
-        ArnoldMajoranaNetwork n E →
+      ArnoldMajoranaNetwork n E →
           (Fin n → (ArnoldMajoranaCarrier E → ArnoldMajoranaCarrier E))) :=
   continuous_induced_dom
 

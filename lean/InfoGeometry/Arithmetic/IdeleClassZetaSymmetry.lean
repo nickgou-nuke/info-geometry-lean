@@ -365,19 +365,21 @@ Three-layer symmetry element:
 * `layer.arithmetic` models the profinite arithmetic/Galois unit;
 * `parity` models the Fourier/Pontryagin `Z₂` involution.
 -/
-structure ThreeLayerIdeleSymmetry (G : Type*) where
-  layer : IdeleClassLayer G
-  parity : FourierParity
+abbrev ThreeLayerIdeleSymmetry (G : Type*) :=
+  IdeleClassLayer G × FourierParity
 
 namespace ThreeLayerIdeleSymmetry
+
+abbrev layer {G : Type*} (A : ThreeLayerIdeleSymmetry G) : IdeleClassLayer G := A.1
+
+abbrev parity {G : Type*} (A : ThreeLayerIdeleSymmetry G) : FourierParity := A.2
+
 
 variable {G : Type*}
 
 @[ext] theorem ext {A B : ThreeLayerIdeleSymmetry G}
     (hlayer : A.layer = B.layer) (hparity : A.parity = B.parity) : A = B := by
-  cases A
-  cases B
-  simp_all
+  exact Prod.ext hlayer hparity
 
 section CommGroup
 
@@ -399,22 +401,36 @@ def compose (A B : ThreeLayerIdeleSymmetry G) : ThreeLayerIdeleSymmetry G :=
 @[simp] theorem identity_compose (A : ThreeLayerIdeleSymmetry G) :
     compose identity A = A := by
   cases A with
-  | mk layer parity =>
-    cases layer
-    cases parity <;>
-      ext <;>
-      simp [compose, identity, IdeleClassLayer.compose, IdeleClassLayer.identity,
-        FourierParity.actOnIdele]
+  | mk layerValue parityValue =>
+    cases layerValue
+    cases parityValue with
+    | identity =>
+      apply ext
+      · simp [compose, identity, IdeleClassLayer.compose, IdeleClassLayer.identity,
+          FourierParity.actOnIdele]
+      · rfl
+    | dual =>
+      apply ext
+      · simp [compose, identity, IdeleClassLayer.compose, IdeleClassLayer.identity,
+          FourierParity.actOnIdele]
+      · rfl
 
 @[simp] theorem compose_identity (A : ThreeLayerIdeleSymmetry G) :
     compose A identity = A := by
   cases A with
-  | mk layer parity =>
-    cases layer
-    cases parity <;>
-      ext <;>
-      simp [compose, identity, IdeleClassLayer.compose, IdeleClassLayer.identity,
-        FourierParity.actOnIdele, IdeleClassLayer.inverse]
+  | mk layerValue parityValue =>
+    cases layerValue
+    cases parityValue with
+    | identity =>
+      apply ext
+      · simp [compose, identity, IdeleClassLayer.compose, IdeleClassLayer.identity,
+          FourierParity.actOnIdele, IdeleClassLayer.inverse]
+      · rfl
+    | dual =>
+      apply ext
+      · simp [compose, identity, IdeleClassLayer.compose, IdeleClassLayer.identity,
+          FourierParity.actOnIdele, IdeleClassLayer.inverse]
+      · rfl
 
 end CommGroup
 

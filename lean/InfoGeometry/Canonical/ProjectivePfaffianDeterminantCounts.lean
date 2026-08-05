@@ -47,8 +47,14 @@ open scoped BigOperators
 
 /-- Source--sink weighted path kernel. -/
 @[rep_depth operator]
-structure SourceSinkKernel (Source Sink : Type*) where
-  K : Source → Sink → ℝ
+abbrev SourceSinkKernel (Source Sink : Type*) := Source → Sink → ℝ
+
+namespace SourceSinkKernel
+
+/-- Compatibility accessor for the native source--sink kernel. -/
+abbrev K (kernel : SourceSinkKernel Source Sink) : Source → Sink → ℝ := kernel
+
+end SourceSinkKernel
 
 /-- Square matrix associated to a source--sink kernel with the same index type. -/
 @[rep_depth operator]

@@ -555,7 +555,7 @@ theorem gnsColimitInclusion_transition
     gnsModuleDiagram Stage sys ω
   have hw := colimit.w F (homOfLE hij)
   have hx := congrArg
-    (fun k : F.obj i ⟶ colimit F => k x)
+    (fun k : F.obj i ⟶ CategoryTheory.Limits.colimit F => k x)
     hw.symm
   have htransition :
       (gnsDirectInductiveSystem Stage sys ω).f hij x =

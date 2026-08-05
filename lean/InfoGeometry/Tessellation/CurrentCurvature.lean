@@ -69,24 +69,29 @@ theorem currentCurvature_is_centralRicciAnomaly_if
 end CurrentCurvature
 
 /-- The identity sector as a tessellation diamond. -/
-def unitDiamond (A : Type*) [Semiring A] : Diamond A where
-  P := 1
-  idem := by simp
+def unitDiamond (A : Type*) [Semiring A] : Diamond A :=
+  ⟨1, by simp⟩
 
 /--
 A Wilson loop at the identity sector whose defect is the prescribed integer
 multiple of the identity.
 -/
 def centralDefectLoop (A : Type*) [Ring A] (k : Int) :
-    WilsonLoop A (unitDiamond A) where
-  holonomy := 1 + k • (1 : A)
-  left_support := by simp [unitDiamond]
-  right_support := by simp [unitDiamond]
+    WilsonLoop A (unitDiamond A) :=
+  ⟨1 + (k : A), by
+    constructor
+    · change (1 : A) * (1 + (k : A)) = 1 + (k : A)
+      simp
+    · change (1 + (k : A)) * (1 : A) = 1 + (k : A)
+      simp⟩
 
 /-- The defect of `centralDefectLoop` is exactly `k • 1`. -/
 theorem centralDefectLoop_defect (A : Type*) [Ring A] (k : Int) :
     WilsonLoop.defect (centralDefectLoop A k) = k • (1 : A) := by
-  simp [WilsonLoop.defect, centralDefectLoop, unitDiamond]
+  have hk : (k : A) = k • (1 : A) := by
+    simpa using (Int.cast_smul_eq_zsmul A k (1 : A))
+  change (1 + (k : A)) - 1 = k • (1 : A)
+  rw [add_sub_cancel_left, hk]
 
 /--
 A Wilson-loop defect realized as a scalar central curvature on the base sector.
@@ -133,6 +138,9 @@ def centralDefectLoop_realization (A : Type*) [Ring A] (k : Int) :
     CentralDefectRealization A ℤ (centralDefectLoop A k) where
   scalar := k
   defect_eq := by
-    simp [centralDefectLoop_defect, unitDiamond]
+    rw [centralDefectLoop_defect]
+    rw [← Int.cast_smul_eq_zsmul A k (1 : A)]
+    change (k : A) * (1 : A) = (k : A) * (unitDiamond A).P
+    rw [show (unitDiamond A).P = (1 : A) by rfl]
 
 end InfoGeometry.Tessellation

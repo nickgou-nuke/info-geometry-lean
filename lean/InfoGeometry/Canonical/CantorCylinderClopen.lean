@@ -61,6 +61,22 @@ theorem prefixCylinder_disjoint_of_ne
   change boundaryPrefix n x = v at hy
   exact hwv (hx.symm.trans hy)
 
+theorem prefixCylinder_inter
+    (n : ℕ) (w v : BitWord n) :
+    prefixCylinder n w ∩ prefixCylinder n v =
+      if w = v then prefixCylinder n w else ∅ := by
+  by_cases h : w = v
+  · subst v
+    simp
+  · ext x
+    rw [if_neg h]
+    constructor
+    · intro hx
+      exact False.elim
+        ((Set.disjoint_left.mp (prefixCylinder_disjoint_of_ne n h)) hx.1 hx.2)
+    · intro hx
+      exact False.elim (by simpa using hx)
+
 theorem iUnion_prefixCylinder_eq_univ (n : ℕ) :
     (⋃ w : BitWord n, prefixCylinder n w) = Set.univ := by
   ext x

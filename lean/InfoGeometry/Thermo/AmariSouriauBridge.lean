@@ -45,7 +45,7 @@ structure Bridge
   logPotential : InfoGeometry.LogPotential ℝ
 
   /-- The log-potential shadow is the same scalar function as `legendre.f`. -/
-  logPotential_eq : logPotential.ψ = legendre.f
+  logPotential_eq : logPotential = legendre.f
 
   /-- Thermodynamic gauge / Souriau socket. -/
   gauge : SouriauAmariGauge Op ℝ ℝ X

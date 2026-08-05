@@ -104,10 +104,13 @@ A representation channel from one associative algebra to another.
 For the intended geometry, the source is the coordinate-free connection algebra
 and targets are the vector, spinor, or quaternion readout algebras.
 -/
-structure ConnectionChannel where
-  map : A →+* B
+abbrev ConnectionChannel := A →+* B
 
 namespace ConnectionChannel
+
+/-- Compatibility accessor for the native ring-hom channel. -/
+abbrev map (ρ : ConnectionChannel (A := A) (B := B)) : A →+* B := ρ
+
 
 /-- A channel preserves commutators. -/
 theorem map_commutator (ρ : ConnectionChannel (A := A) (B := B)) (X Y : A) :

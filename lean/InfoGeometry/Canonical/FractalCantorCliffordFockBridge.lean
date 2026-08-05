@@ -520,7 +520,7 @@ theorem cuntz_rangeProjection_sum_one
 @[rep_depth operator]
 theorem carFromCuntz_sq_eq_zero
     {Op : Type*} [Ring Op] [StarRing Op]
-    (C : CantorCuntzO2Carrier Op) :
+    (C : InfoGeometry.Topology.CuntzO2Carrier Op) :
     carFromCuntz C * carFromCuntz C = 0 :=
   InfoGeometry.Canonical.carFromCuntz_sq_eq_zero C
 
@@ -528,7 +528,7 @@ theorem carFromCuntz_sq_eq_zero
 @[rep_depth operator]
 theorem carFromCuntz_anticommutator_star_eq_one
     {Op : Type*} [Ring Op] [StarRing Op]
-    (C : CantorCuntzO2Carrier Op) :
+    (C : InfoGeometry.Topology.CuntzO2Carrier Op) :
     cantorAnticommutator (carFromCuntz C) (star (carFromCuntz C)) = 1 :=
   InfoGeometry.Canonical.carFromCuntz_anticommutator_star_eq_one C
 

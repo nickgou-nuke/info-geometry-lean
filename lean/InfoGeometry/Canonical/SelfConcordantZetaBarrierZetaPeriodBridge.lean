@@ -43,11 +43,11 @@ barrier transports the barrier's proved zero-location theorem.
 @[bridge_target_tag, rep_depth operator]
 theorem braneZetaPeriod_zero_implies_criticalLine
     (barrier : VariationalRHTarget)
-    (brane : CantorDiracSYZZetaBraneConjectureSocket)
+    (centralCharge : ℂ → ℂ)
     (zetaPeriod_eq_xi :
-      ∀ z : ℂ, brane.centralCharge z = barrier.xi z)
+      ∀ z : ℂ, centralCharge z = barrier.xi z)
     (s : ℂ)
-    (hz : brane.centralCharge s = 0) :
+    (hz : centralCharge s = 0) :
     OnCriticalLine s := by
   apply variationalRH_implies_criticalLine barrier s
   simpa [zetaPeriod_eq_xi s] using hz

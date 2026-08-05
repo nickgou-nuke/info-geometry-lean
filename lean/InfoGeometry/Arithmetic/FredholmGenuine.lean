@@ -7,12 +7,12 @@ import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
 
 /-!
-# Fredholm Genuine — Certificate-Gated Analytic Boundary
+# Fredholm Genuine — Data-Gated Analytic Boundary
 
 This file records the strongest Lean-safe Fredholm endpoint currently available
 in this repository. Finite determinant and recurrence identities are proved in
 owner files. The infinite Fredholm determinant remains gated by the explicit
-`FredholmClosureCertificate` from `FredholmClosure.lean`.
+`FredholmClosureData` from `FredholmClosure.lean`.
 
 ## The Finite/Certificate Chain
 
@@ -31,7 +31,7 @@ owner files. The infinite Fredholm determinant remains gated by the explicit
 
 5. **Analytic closure**: trace-class convergence, Fredholm determinant
    continuity, and determinant/zeta calibration are explicit fields of
-   `FredholmClosureCertificate`; they are not manufactured here.
+   `FredholmClosureData`; they are not manufactured here.
 
 ## What is PROVED vs Structural
 
@@ -130,19 +130,19 @@ Proof sketch:
    FredholmClosure.lean (regularizedDetStage_succ).
 
 3. Trace-norm convergence: ‖T - T_N‖₁ → 0 for Re(β) > 1.
-   Supplied by `FredholmClosureCertificate.traceNorm_cutoff_tendsto`.
+   Supplied by `FredholmClosureData.traceNorm_cutoff_tendsto`.
 
 4. Continuity of det: supplied by
-   `FredholmClosureCertificate.determinant_cutoff_tendsto`.
+   `FredholmClosureData.determinant_cutoff_tendsto`.
 
 5. Universal property: lim_{N→∞} det(I+T_N) = det(I+lim_{N→∞} T_N).
    Follows from (3) + (4).
 
 6. The Lean theorem below projects the determinant/zeta identity and
-   nonvanishing from an explicit `FredholmClosureCertificate`.
+   nonvanishing from explicit `FredholmClosureData`.
 -/
 theorem genuine_fredholm_determinant
-    (C : FredholmClosure.FredholmClosureCertificate) {β : ℂ} (hβ : 1 < β.re) :
+    (C : FredholmClosure.FredholmClosureData) {β : ℂ} (hβ : 1 < β.re) :
     C.determinant β * C.zeta β = 1 ∧ C.determinant β ≠ 0 :=
   ⟨FredholmClosure.fredholm_determinant_mul_zeta_eq_one C hβ,
     FredholmClosure.fredholm_closure_theorem C hβ⟩

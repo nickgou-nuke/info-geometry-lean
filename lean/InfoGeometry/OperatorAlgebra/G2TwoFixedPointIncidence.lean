@@ -76,16 +76,4 @@ theorem fixedInternalLineCount_ne_fanoPlaneLineCount :
     fixedInternalLineCount ≠ fanoPlaneLineCount := by
   norm_num [fixedInternalLineCount, fanoPlaneLineCount]
 
-/-- Consolidated theorem-safe incidence packet. -/
-theorem fixed_point_incidence_packet :
-    h2PointCount = 63 ∧
-      h2PointGraphEdgeCount = 189 ∧
-      h2LineCount = 63 ∧
-      outerC2FixedPointCount = 7 ∧
-      fixedInternalEdgeCount = 9 ∧
-      fixedInternalLineCount = 3 ∧
-      fixedIncidentLineCount = 15 ∧
-      fixedInternalLineCount ≠ fanoPlaneLineCount := by
-  exact ⟨rfl, rfl, rfl, rfl, rfl, rfl, rfl, fixedInternalLineCount_ne_fanoPlaneLineCount⟩
-
 end InfoGeometry.OperatorAlgebra.G2TwoFixedPointIncidence

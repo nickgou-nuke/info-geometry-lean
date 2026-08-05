@@ -18,59 +18,37 @@ theorem adjointQuad_adjointQuad (X : H3Zorn R) :
     adjointQuad (adjointQuad X) = normCubic X • X := by
   rcases X with ⟨a1, a2, a3, a, b, c⟩
   apply ext_h3
-  · simpa only [adjointQuad, normCubic] using
+  · simpa only [adjointQuad, normCubic, smul_readback, sub_readback,
+      sub_eq_add_neg, ZornVectorMatrix.sub_eq_add_neg, ← zvm_add_def, ← zvm_neg_def,
+      ← zvm_smul_def, ← zvm_mul_def] using
       (ZornVectorMatrix.adjoint_diagonal_composition a1 a2 a3 a b c)
   · have h := ZornVectorMatrix.adjoint_diagonal_composition a2 a3 a1 b c a
     have ht := ZornVectorMatrix.trace_mul_cyclic a b c
     change ZornVectorMatrix.trace ((a * b) * c) =
       ZornVectorMatrix.trace ((b * c) * a) at ht
     rw [← ht] at h
-    simp only [adjointQuad, normCubic]
-    change (a2 * a3 - ZornVectorMatrix.norm b) *
-        (a1 * a2 - ZornVectorMatrix.norm a) -
-        ZornVectorMatrix.norm
-          (ZornVectorMatrix.conj b * ZornVectorMatrix.conj a - a2 • c) =
-      (a1 * a2 * a3 - a1 * ZornVectorMatrix.norm b -
-        a2 * ZornVectorMatrix.norm c - a3 * ZornVectorMatrix.norm a +
-        ZornVectorMatrix.trace ((a * b) * c)) * a2
-    calc
-      _ = (a2 * a1 - ZornVectorMatrix.norm a) *
-          (a2 * a3 - ZornVectorMatrix.norm b) -
-          ZornVectorMatrix.norm
-            (ZornVectorMatrix.conj b * ZornVectorMatrix.conj a - a2 • c) := by ring
-      _ = (a2 * a3 * a1 - a2 * ZornVectorMatrix.norm c -
-          a3 * ZornVectorMatrix.norm a - a1 * ZornVectorMatrix.norm b +
-          ZornVectorMatrix.trace ((a * b) * c)) * a2 := h
-      _ = _ := by ring
+    simp only [adjointQuad, normCubic, smul_readback, sub_readback,
+      sub_eq_add_neg, ZornVectorMatrix.sub_eq_add_neg, ← zvm_add_def, ← zvm_neg_def,
+      ← zvm_smul_def, ← zvm_mul_def] at h ⊢
+    convert h using 1 <;> ring
   · have h := ZornVectorMatrix.adjoint_diagonal_composition a3 a1 a2 c a b
     have ht := ZornVectorMatrix.trace_mul_cyclic c a b
     change ZornVectorMatrix.trace ((c * a) * b) =
       ZornVectorMatrix.trace ((a * b) * c) at ht
     rw [ht] at h
-    simp only [adjointQuad, normCubic]
-    change (a2 * a3 - ZornVectorMatrix.norm b) *
-        (a1 * a3 - ZornVectorMatrix.norm c) -
-        ZornVectorMatrix.norm
-          (ZornVectorMatrix.conj c * ZornVectorMatrix.conj b - a3 • a) =
-      (a1 * a2 * a3 - a1 * ZornVectorMatrix.norm b -
-        a2 * ZornVectorMatrix.norm c - a3 * ZornVectorMatrix.norm a +
-        ZornVectorMatrix.trace ((a * b) * c)) * a3
-    calc
-      _ = (a3 * a2 - ZornVectorMatrix.norm b) *
-          (a3 * a1 - ZornVectorMatrix.norm c) -
-          ZornVectorMatrix.norm
-            (ZornVectorMatrix.conj c * ZornVectorMatrix.conj b - a3 • a) := by ring
-      _ = (a3 * a1 * a2 - a3 * ZornVectorMatrix.norm a -
-          a1 * ZornVectorMatrix.norm b - a2 * ZornVectorMatrix.norm c +
-          ZornVectorMatrix.trace ((a * b) * c)) * a3 := h
-      _ = _ := by ring
+    simp only [adjointQuad, normCubic, smul_readback, sub_readback,
+      sub_eq_add_neg, ZornVectorMatrix.sub_eq_add_neg, ← zvm_add_def, ← zvm_neg_def,
+      ← zvm_smul_def, ← zvm_mul_def] at h ⊢
+    convert h using 1 <;> ring
   · simp only [adjointQuad, normCubic]
     rw [ZornVectorMatrix.conj_sub, ZornVectorMatrix.conj_mul,
       ZornVectorMatrix.conj_conj, ZornVectorMatrix.conj_conj,
       ZornVectorMatrix.conj_smul, ZornVectorMatrix.conj_sub,
       ZornVectorMatrix.conj_mul, ZornVectorMatrix.conj_conj,
       ZornVectorMatrix.conj_conj, ZornVectorMatrix.conj_smul]
-    exact ZornVectorMatrix.adjoint_component_composition a1 a2 a3 a b c
+    simpa only [sub_eq_add_neg, ZornVectorMatrix.sub_eq_add_neg, ← zvm_add_def, ← zvm_neg_def,
+      ← zvm_smul_def, ← zvm_mul_def] using
+      (ZornVectorMatrix.adjoint_component_composition a1 a2 a3 a b c)
   · simp only [adjointQuad, normCubic]
     rw [ZornVectorMatrix.conj_sub, ZornVectorMatrix.conj_mul,
       ZornVectorMatrix.conj_conj, ZornVectorMatrix.conj_conj,
@@ -82,20 +60,10 @@ theorem adjointQuad_adjointQuad (X : H3Zorn R) :
     change ZornVectorMatrix.trace ((a * b) * c) =
       ZornVectorMatrix.trace ((b * c) * a) at ht
     rw [← ht] at h
-    change ((b * c - a3 • ZornVectorMatrix.conj a) *
-        (a * b - a2 • ZornVectorMatrix.conj c) -
-        (a2 * a3 - ZornVectorMatrix.norm b) •
-          (ZornVectorMatrix.conj a * ZornVectorMatrix.conj c - a1 • b)) =
-      (a1 * a2 * a3 - a1 * ZornVectorMatrix.norm b -
-        a2 * ZornVectorMatrix.norm c - a3 * ZornVectorMatrix.norm a +
-        ZornVectorMatrix.trace ((a * b) * c)) • b
-    calc
-      _ = (a2 * a3 * a1 - a2 * ZornVectorMatrix.norm c -
-          a3 * ZornVectorMatrix.norm a - a1 * ZornVectorMatrix.norm b +
-          ZornVectorMatrix.trace ((a * b) * c)) • b := h
-      _ = _ := by
-        congr 1
-        ring
+    simp only [adjointQuad, normCubic, smul_readback, sub_readback,
+      sub_eq_add_neg, ZornVectorMatrix.sub_eq_add_neg, ← zvm_add_def, ← zvm_neg_def,
+      ← zvm_smul_def, ← zvm_mul_def] at h ⊢
+    convert h using 1 <;> ring
   · simp only [adjointQuad, normCubic]
     rw [ZornVectorMatrix.conj_sub, ZornVectorMatrix.conj_mul,
       ZornVectorMatrix.conj_conj, ZornVectorMatrix.conj_conj,
@@ -107,22 +75,10 @@ theorem adjointQuad_adjointQuad (X : H3Zorn R) :
     change ZornVectorMatrix.trace ((c * a) * b) =
       ZornVectorMatrix.trace ((a * b) * c) at ht
     rw [ht] at h
-    change ((c * a - a1 • ZornVectorMatrix.conj b) *
-        (b * c - a3 • ZornVectorMatrix.conj a) -
-        (a1 * a3 - ZornVectorMatrix.norm c) •
-          (ZornVectorMatrix.conj b * ZornVectorMatrix.conj a - a2 • c)) =
-      (a1 * a2 * a3 - a1 * ZornVectorMatrix.norm b -
-        a2 * ZornVectorMatrix.norm c - a3 * ZornVectorMatrix.norm a +
-        ZornVectorMatrix.trace ((a * b) * c)) • c
-    calc
-      _ = (a3 * a1 * a2 - a3 * ZornVectorMatrix.norm a -
-          a1 * ZornVectorMatrix.norm b - a2 * ZornVectorMatrix.norm c +
-          ZornVectorMatrix.trace ((a * b) * c)) • c := by
-        rw [mul_comm a1 a3]
-        exact h
-      _ = _ := by
-        congr 1
-        ring
+    simp only [adjointQuad, normCubic, smul_readback, sub_readback,
+      sub_eq_add_neg, ZornVectorMatrix.sub_eq_add_neg, ← zvm_add_def, ← zvm_neg_def,
+      ← zvm_smul_def, ← zvm_mul_def] at h ⊢
+    convert h using 1 <;> ring
 
 /-- Polarization of the cubic norm.  Equivalently, the coefficient linear in
 `Y` in `N(X + Y)` is `traceBilin (X#) Y`. -/

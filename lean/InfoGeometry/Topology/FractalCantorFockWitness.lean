@@ -282,6 +282,16 @@ theorem tilt_switch_anticomm (j : ℕ) :
   ext x
   by_cases hx : x j <;> simp [tilt, switch, CantorBoundary.flipAt, hx]
 
+theorem tilt_switch_anticommutator_eq_zero (j : ℕ) :
+    (tilt j) * (switch j) + (switch j) * (tilt j) = 0 := by
+  rw [tilt_switch_anticomm]
+  simp
+
+theorem switch_tilt_anticomm (j : ℕ) :
+    (switch j) * (tilt j) = - ((tilt j) * (switch j)) := by
+  rw [tilt_switch_anticomm]
+  simp
+
 /-- The canonical infinite Cantor tilt/switch system. -/
 def canonicalTiltSwitchSystem :
     TiltSwitchSystem (CantorBoundaryFunctionSpace →ₗ[ℝ] CantorBoundaryFunctionSpace) where
@@ -431,15 +441,18 @@ This records the explicit Hilbert carrier together with the deferred Fock
 socket.  The Hilbert basis is the actual analytic object; the Fock-space names
 remain as ambient targets for later bridge files.
 -/
-@[rep_depth operator]
-structure CelikKocakInfiniteFockCarrierData
-    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] where
-  hilbertCarrier : CelikKocakInfiniteHilbertCarrier E
+abbrev CelikKocakInfiniteFockCarrierData
+    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] :=
+  CelikKocakInfiniteHilbertCarrier E
 
 namespace CelikKocakInfiniteFockCarrierData
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
 variable (D : CelikKocakInfiniteFockCarrierData E)
+
+/-- Compatibility accessor for the native Hilbert carrier owner. -/
+abbrev hilbertCarrier : CelikKocakInfiniteHilbertCarrier E :=
+  D
 
 /-- The analytic Cantor orbit basis is orthonormal. -/
 @[rep_depth operator]
@@ -504,36 +517,23 @@ Finite-dimensional Cantor-Pauli witness over a real/doubled matrix carrier.
 The representation on endpoint functions agrees with the real Pauli tensor lane
 through an explicit witness.
 -/
-@[rep_depth operator]
-structure FiniteCantorPauliWitness
-    (n : ℕ) (Mat : Type*) [Ring Mat] where
-  psiGamma : Fin (2 * n) → Mat
+theorem finite_cantor_pauli_generator_sq
+    {n : ℕ} {Mat : Type*} [Ring Mat]
+    (psiGamma : Fin (2 * n) → Mat)
+    (gamma_sq : ∀ i, psiGamma i * psiGamma i = 1)
+    (i : Fin (2 * n)) :
+    psiGamma i * psiGamma i = 1 :=
+  gamma_sq i
 
-  gamma_sq :
-    ∀ i, psiGamma i * psiGamma i = 1
-
-  gamma_anticomm :
-    ∀ i j, i ≠ j → psiGamma i * psiGamma j = - (psiGamma j * psiGamma i)
-
-namespace FiniteCantorPauliWitness
-
-variable {n : ℕ} {Mat : Type*} [Ring Mat]
-variable (W : FiniteCantorPauliWitness n Mat)
-
-/-- Finite Clifford square law readback. -/
-@[rep_depth operator]
-theorem generator_sq (i : Fin (2 * n)) :
-    W.psiGamma i * W.psiGamma i = 1 :=
-  W.gamma_sq i
-
-/-- Finite Clifford anticommutator readback. -/
-@[rep_depth operator]
-theorem generator_anticomm {i j : Fin (2 * n)} (hij : i ≠ j) :
-    W.psiGamma i * W.psiGamma j + W.psiGamma j * W.psiGamma i = 0 := by
-  rw [W.gamma_anticomm i j hij]
+theorem finite_cantor_pauli_generator_anticomm
+    {n : ℕ} {Mat : Type*} [Ring Mat]
+    (psiGamma : Fin (2 * n) → Mat)
+    (gamma_anticomm :
+      ∀ i j, i ≠ j → psiGamma i * psiGamma j = -(psiGamma j * psiGamma i))
+    {i j : Fin (2 * n)} (hij : i ≠ j) :
+    psiGamma i * psiGamma j + psiGamma j * psiGamma i = 0 := by
+  rw [gamma_anticomm i j hij]
   simp
-
-end FiniteCantorPauliWitness
 
 /--
 Real CAR pair.

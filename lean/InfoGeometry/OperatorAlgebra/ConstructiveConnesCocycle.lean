@@ -14,9 +14,16 @@ open InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 /-! The modular automorphism group is the repository-native `OperatorFlow`.
     This file owns only cocycle data and its algebraic composition laws. -/
 
-structure ConnesCocycleData (A : Type*) [Monoid A]
-    (flow_phi flow_omega : OperatorFlow A) where
-  u : ℝ → A
+abbrev ConnesCocycleData (A : Type*) [Monoid A]
+    (flow_phi flow_omega : OperatorFlow A) := ℝ → A
+
+namespace ConnesCocycleData
+
+def u {A : Type*} [Monoid A]
+    {flow_phi flow_omega : OperatorFlow A}
+    (C : ConnesCocycleData A flow_phi flow_omega) : ℝ → A := C
+
+end ConnesCocycleData
 
 def IsConnesCocycle
     {A : Type*} [Monoid A]
@@ -37,8 +44,8 @@ def chain_cocycles
     {flow_phi flow_omega flow_psi : OperatorFlow A}
     (u : ConnesCocycleData A flow_phi flow_omega)
     (v : ConnesCocycleData A flow_omega flow_psi) :
-    ConnesCocycleData A flow_phi flow_psi where
-  u := fun t => u.u t * v.u t
+    ConnesCocycleData A flow_phi flow_psi :=
+  fun t => u.u t * v.u t
 
 theorem chain_cocycles_isConnesCocycle
     {A : Type*} [Monoid A]

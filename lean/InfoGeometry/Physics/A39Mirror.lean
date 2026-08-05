@@ -8,10 +8,8 @@ namespace InfoGeometry.Physics
 
 /-- The A=39 mirror pair (Ca-39 and K-39). -/
 def A39Pair : MirrorPair where
-  nuc1 := (20, 19)
-  nuc2 := (19, 20)
-  mirror_cond_Z := rfl
-  mirror_cond_N := rfl
+  val := ((20, 19), (19, 20))
+  property := by norm_num
 
 /-- Cross-shell excitations for the A=39 mirror pair. -/
 inductive ExcitationsA39

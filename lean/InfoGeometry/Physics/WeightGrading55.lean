@@ -23,16 +23,16 @@ namespace JordanMatrix10D
 /-! ## 1. 5-graded components -/
 
 /-- The weight -2 component: ⟨ξ₊⟩. -/
-def weightMinusTwo (X : JordanMatrix10D) : ℚ := X.xp
+abbrev weightMinusTwo (X : JordanMatrix10D) : ℚ := X.xp
 
 /-- The weight +2 component: ⟨ξ₋⟩. -/
-def weightPlusTwo (X : JordanMatrix10D) : ℚ := X.xm
+abbrev weightPlusTwo (X : JordanMatrix10D) : ℚ := X.xm
 
 /-- The weight -1 component: the octonionic coordinate Z ∈ 𝕆_s. -/
-def weightMinusOne (X : JordanMatrix10D) : SplitOct := X.z
+abbrev weightMinusOne (X : JordanMatrix10D) : SplitOct := X.z
 
 /-- The weight +1 component: conj(Z) (same octonion, by Hermiticity). -/
-def weightPlusOne (X : JordanMatrix10D) : SplitOct := X.z
+abbrev weightPlusOne (X : JordanMatrix10D) : SplitOct := X.z
 
 /--
 A finite record of the five weight slots used in the local `J₂(𝕆_s)` socket.
@@ -40,21 +40,25 @@ A finite record of the five weight slots used in the local `J₂(𝕆_s)` socket
 This is only a coordinate packet: it records the pieces named by the grading,
 but does not claim any Lie-bracket closure or global TKK theorem.
 -/
-structure WeightCoordinates where
-  minusTwo : ℚ
-  minusOne : SplitOct
-  zeroWeight : ℚ
-  plusOne : SplitOct
-  plusTwo : ℚ
-  deriving Repr
+abbrev WeightCoordinates := ℚ × SplitOct × ℚ × SplitOct × ℚ
+
+namespace WeightCoordinates
+
+abbrev minusTwo (W : WeightCoordinates) : ℚ := W.1
+
+abbrev minusOne (W : WeightCoordinates) : SplitOct := W.2.1
+
+abbrev zeroWeight (W : WeightCoordinates) : ℚ := W.2.2.1
+
+abbrev plusOne (W : WeightCoordinates) : SplitOct := W.2.2.2.1
+
+abbrev plusTwo (W : WeightCoordinates) : ℚ := W.2.2.2.2
+
+end WeightCoordinates
 
 /-- The local five-slot coordinate packet attached to `X`. -/
 def weightCoordinates (X : JordanMatrix10D) : WeightCoordinates :=
-  { minusTwo := weightMinusTwo X
-    minusOne := weightMinusOne X
-    zeroWeight := 0
-    plusOne := weightPlusOne X
-    plusTwo := weightPlusTwo X }
+  (weightMinusTwo X, weightMinusOne X, 0, weightPlusOne X, weightPlusTwo X)
 
 @[simp] theorem weightCoordinates_minusTwo (X : JordanMatrix10D) :
     (weightCoordinates X).minusTwo = X.xp := rfl
@@ -74,11 +78,7 @@ def weightCoordinates (X : JordanMatrix10D) : WeightCoordinates :=
 /-- The local coordinate packet reconstructs the original named weight slots. -/
 theorem weightCoordinates_eta (X : JordanMatrix10D) :
     weightCoordinates X =
-      { minusTwo := X.xp
-        minusOne := X.z
-        zeroWeight := 0
-        plusOne := X.z
-        plusTwo := X.xm } := rfl
+      (X.xp, X.z, 0, X.z, X.xm) := rfl
 
 /-! ## 2. Refined orbit types under the 5-grading -/
 

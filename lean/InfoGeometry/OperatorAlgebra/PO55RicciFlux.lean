@@ -45,12 +45,9 @@ The intended relation is the standard conformal algebra pattern
 up to the sign convention chosen by the concrete model.  This structure carries
 that convention explicitly in `cross_closure`.
 -/
-@[socket_debt_tag]
 structure ConformalBracketSocket
-    (Idx L : Type*) [AddCommGroup L] [Module ℝ L] where
-  /-- Bracket in the conformal Lie socket. -/
-  bracket : L → L → L
-
+    (Idx L : Type*) [AddCommGroup L] [Module ℝ L]
+    [LieRing L] [LieAlgebra ℝ L] where
   /-- Split metric coefficients on the index set. -/
   eta : Idx → Idx → ℝ
 
@@ -69,37 +66,22 @@ structure ConformalBracketSocket
   /-- Exact cross-bracket closure in the chosen convention. -/
   cross_closure :
     ∀ a b : Idx,
-      bracket (P a) (K b) =
+      ⁅P a, K b⁆ =
         2 • ((eta a b) • D + M a b)
 
   /-- Translation grade is abelian. -/
   translations_abelian :
-    ∀ a b : Idx, bracket (P a) (P b) = 0
+    ∀ a b : Idx, ⁅P a, P b⁆ = 0
 
   /-- Special conformal grade is abelian. -/
   specials_abelian :
-    ∀ a b : Idx, bracket (K a) (K b) = 0
-
-  /-- Left additivity of the bracket. -/
-  bracket_add_left :
-    ∀ x y z : L, bracket (x + y) z = bracket x z + bracket y z
-
-  /-- Left scalar compatibility of the bracket. -/
-  bracket_smul_left :
-    ∀ (c : ℝ) (x y : L), bracket (c • x) y = c • bracket x y
-
-  /-- Jacobi identity for the conformal bracket socket. -/
-  jacobi :
-    ∀ x y z : L,
-      bracket x (bracket y z) +
-          bracket y (bracket z x) +
-          bracket z (bracket x y)
-        = 0
+    ∀ a b : Idx, ⁅K a, K b⁆ = 0
 
 namespace ConformalBracketSocket
 
 variable
     {Idx L : Type*} [AddCommGroup L] [Module ℝ L]
+    [LieRing L] [LieAlgebra ℝ L]
     (C : ConformalBracketSocket Idx L)
 
 /-- The expected grade-zero cross bracket `[P_a,K_b]`. -/
@@ -110,7 +92,7 @@ def expectedCross
 /-- The exact cross-bracket defect.  For a closed model this is zero. -/
 def crossDefect
     (a b : Idx) : L :=
-  C.bracket (C.P a) (C.K b) - C.expectedCross a b
+  ⁅C.P a, C.K b⁆ - C.expectedCross a b
 
 /-- In the exact conformal/TKK model, the cross defect vanishes. -/
 theorem crossDefect_eq_zero

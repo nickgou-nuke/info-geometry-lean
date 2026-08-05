@@ -170,26 +170,6 @@ theorem finiteFisherCov2Atom_quadratic_nonneg
   rw [finiteFisherCov2Atom_quadratic_eq_variance w u T]
   exact finiteVarianceReal_nonneg_of_weights_fin2 w hw (linStat2Atom u T)
 
-/-- Repaired theorem-safe Chapter 11 finite statistical/information packet. -/
-theorem repaired_MD011_statistical_info_packet {ι : Type} [Fintype ι]
-    (w : ι → ℝ) (hwsum : ∑ i, w i = 1) (O P : ι → ℝ)
-    (s k m z : RVec2) (hinv : ∀ i, k i * s i = 1)
-    (w2 : Fin 2 → ℝ) (hw2 : ∀ i, 0 ≤ w2 i) (u : RVec2) (T : Fin 2 → Fin 2 → ℝ) :
-    finiteCovReal w O P = finiteCovReal w P O ∧
-    finiteCovReal w (fun _ => (1 : ℝ)) P = 0 ∧
-    gaussianEnergyDiag k m z =
-      (1 / 2 : ℝ) * (k 0 * (z 0 - m 0) ^ 2 + k 1 * (z 1 - m 1) ^ 2) ∧
-    diagonalInvCov k * diagonalCov s = 1 ∧
-    (finiteFisherCov2Atom w2 T).transpose = finiteFisherCov2Atom w2 T ∧
-    0 ≤ ∑ a : Fin 2, ∑ b : Fin 2, u a * finiteFisherCov2Atom w2 T a b * u b := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact finiteCovReal_symmetric w O P
-  · exact finiteCovReal_zero_left_of_constant w hwsum 1 P
-  · exact gaussianEnergyDiag_expand k m z
-  · exact diagonalInvCov_mul_diagonalCov s k hinv
-  · exact finiteFisherCov2Atom_symmetric w2 T
-  · exact finiteFisherCov2Atom_quadratic_nonneg w2 hw2 u T
-
 end InfoGeometry.Physics.MD011StatisticalInfoGeometry
 
 end noncomputable section

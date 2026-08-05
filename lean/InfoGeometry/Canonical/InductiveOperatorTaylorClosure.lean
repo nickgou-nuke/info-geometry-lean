@@ -28,9 +28,13 @@ open InfoGeometry.Canonical.SymmetryClosureConformalBlocks
 open InfoGeometry.Canonical.SymmetryClosureConformalBlocks.SectorDecomposition
 
 /-- A coefficient recursion for finite Taylor prefixes. -/
-structure TaylorCoefficientRecursion where
-  /-- Coefficient sequence. -/
-  coeff : ℕ → ℂ
+abbrev TaylorCoefficientRecursion := ℕ → ℂ
+
+namespace TaylorCoefficientRecursion
+
+def coeff (R : TaylorCoefficientRecursion) : ℕ → ℂ := R
+
+end TaylorCoefficientRecursion
 
 /-- Finite operator-Taylor prefix `∑_{k < N} cₖ A^k`. -/
 noncomputable def operatorTaylorPrefix {V : Type*} [AddCommGroup V] [Module ℂ V]

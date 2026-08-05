@@ -17,16 +17,26 @@ namespace InfoGeometry.Geometry.JonesTransportMetric
 
 open InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus
 
-/--
-A projective polarization state represented by an algebraic projector.
+/-!
+A projective polarization state is the native subtype of algebraic
+projectors.  This replaces the former one-field certificate structure while
+retaining the `P` and `idem` accessors used by the owner API.
 -/
-structure ProjectivePolarizationState
-    (Op : Type*) [Mul Op] where
-  /-- Projector representative. -/
-  P : Op
+abbrev ProjectivePolarizationState
+    (Op : Type*) [Mul Op] :=
+  {P : Op // IsProjector P}
 
-  /-- Idempotence of the representative. -/
-  idem : IsProjector P
+namespace ProjectivePolarizationState
+
+abbrev P {Op : Type*} [Mul Op]
+    (A : ProjectivePolarizationState Op) : Op :=
+  A.1
+
+abbrev idem {Op : Type*} [Mul Op]
+    (A : ProjectivePolarizationState Op) : IsProjector A.P :=
+  A.2
+
+end ProjectivePolarizationState
 
 /--
 A Jones transport takes one projective state to another.

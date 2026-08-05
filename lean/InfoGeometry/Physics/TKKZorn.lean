@@ -156,11 +156,13 @@ def gamow_teller_operator (X : ZornMatrix R) : ZornMatrix R :=
 -- 5. Projective Nuclear State wrapper
 -- ============================================================================
 
-structure ProjectiveZornState (R : Type*) [CommRing R] where
-  vector : ZornMatrix R
-  non_zero : vector ≠ 0
+abbrev ProjectiveZornState (R : Type*) [CommRing R] :=
+  {vector : ZornMatrix R // vector ≠ 0}
 
 namespace ProjectiveZornState
+
+abbrev vector (ψ : ProjectiveZornState R) : ZornMatrix R := ψ.1
+abbrev non_zero (ψ : ProjectiveZornState R) : ψ.vector ≠ 0 := ψ.2
 
 def applyFermi (g0 : ZornMatrix R)
     (ψ : ProjectiveZornState R)

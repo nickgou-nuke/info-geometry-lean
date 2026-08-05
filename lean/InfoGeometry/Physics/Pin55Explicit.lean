@@ -15,7 +15,7 @@ def s2 : Matrix (Fin 2) (Fin 2) ℂ := ![![0, -I], ![I, 0]]
 The core algebraic generator of the Pin(5,5) reflection R.
 The full 32x32 Cl(5,5) matrix is R_core ⊗ I_16.
 -/
-def R_core : Matrix (Fin 2) (Fin 2) ℂ := s1
+abbrev R_core : Matrix (Fin 2) (Fin 2) ℂ := s1
 
 /-- 
 The core algebraic generator of the spatial translation T.

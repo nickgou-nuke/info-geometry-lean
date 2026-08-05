@@ -111,6 +111,16 @@ theorem rangeProjection_sum_one :
     C.leftRangeProjection + C.rightRangeProjection = 1 := by
   exact range_sum C
 
+theorem leftRangeProjection_star :
+    star C.leftRangeProjection = C.leftRangeProjection := by
+  unfold leftRangeProjection
+  rw [star_mul, star_star]
+
+theorem rightRangeProjection_star :
+    star C.rightRangeProjection = C.rightRangeProjection := by
+  unfold rightRangeProjection
+  rw [star_mul, star_star]
+
 section ProjectionSubequiv
 
 variable {Op : Type*} [Ring Op]
@@ -297,7 +307,7 @@ variable {Op : Type*} [Ring Op]
 
 /-- A Cuntz projection remembers its underlying operator. -/
 @[rep_depth operator]
-def val (p : CuntzProjection (Op := Op)) : Op := p.1
+abbrev val (p : CuntzProjection (Op := Op)) : Op := p.1
 
 /-- The idempotence proof of a Cuntz projection. -/
 @[rep_depth operator]
@@ -1151,14 +1161,16 @@ instance doubledSpaceEndPhaseAxis
   phaseAxis := clockAxis (E := E)
 
 @[rep_depth operator]
-structure CuntzMajoranaCandidates
-    (Op : Type*) [Ring Op] [StarRing Op] [PhaseAxisCarrier Op] where
-  cuntz : CuntzO2Carrier Op
+abbrev CuntzMajoranaCandidates
+    (Op : Type*) [Ring Op] [StarRing Op] [PhaseAxisCarrier Op] :=
+  CuntzO2Carrier Op
 
 namespace CuntzMajoranaCandidates
 
 variable {Op : Type*} [Ring Op] [StarRing Op] [PhaseAxisCarrier Op]
 variable (M : CuntzMajoranaCandidates Op)
+
+abbrev cuntz (M : CuntzMajoranaCandidates Op) : CuntzO2Carrier Op := M
 
 /-- Canonical phase axis supplied by the carrier instance. -/
 @[rep_depth operator]
@@ -1355,15 +1367,18 @@ theorem doubledSpace_carrierPhaseAxis_eq_clockAxis
   rfl
 
 /-- Real-doubled specialization of the Cuntz/Majorana lane. -/
-@[rep_depth operator]
-structure RealDoubledCuntzMajoranaPacket
-    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
-  cuntz : CuntzO2Carrier (Op := DoubledSpace E →L[ℝ] DoubledSpace E)
+abbrev RealDoubledCuntzMajoranaPacket
+    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  CuntzO2Carrier (Op := DoubledSpace E →L[ℝ] DoubledSpace E)
 
 namespace RealDoubledCuntzMajoranaPacket
 
 variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable (M : RealDoubledCuntzMajoranaPacket (E := E))
+
+/-- Compatibility accessor for the native Cuntz carrier. -/
+abbrev cuntz : CuntzO2Carrier (Op := DoubledSpace E →L[ℝ] DoubledSpace E) :=
+  M
 
 local notation "EndH" => DoubledSpace E →L[ℝ] DoubledSpace E
 
@@ -1389,8 +1404,8 @@ theorem realDoubledPhaseAxis_eq_complex_i :
 /-- Convert the specialized packet to the generic Cuntz/Majorana candidate. -/
 @[rep_depth operator]
 noncomputable def toCuntzMajoranaCandidates :
-    CuntzMajoranaCandidates (Op := EndH) where
-  cuntz := M.cuntz
+    CuntzMajoranaCandidates (Op := EndH) :=
+  M.cuntz
 
 /-- The specialized packet uses the canonical `e₂` construction. -/
 @[rep_depth operator, simp]
@@ -1621,54 +1636,28 @@ theorem compactResolventOrSummability_holds :
   T.compactResolventOrSummability.resolvent_compact
 
 end CuntzCantorSpectralTriple
-
-/--
-Connection socket from a combinatorial `ErlangenNet` boundary to a Cuntz/Cantor
-spectral triple.
--/
-@[rep_depth operator]
-structure ErlangenNetCuntzRealization
-    (Alg Frame Sym Label Op H : Type*) [Ring Op] [StarRing Op]
-    [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H] where
-  net : IteratedObservableSectorization Alg Frame Sym BinarySector Label
-  triple : CuntzCantorSpectralTriple Op H
-
-  /-- The depth-one left cylinder is represented by the left Cuntz shift. -/
-  leftPrefixRealization :
+theorem erlangen_net_left_prefix_realization
+    {Alg Frame Sym Label Op H : Type*} [Ring Op] [StarRing Op]
+    [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H]
+    (net : IteratedObservableSectorization Alg Frame Sym BinarySector Label)
+    (triple : CuntzCantorSpectralTriple Op H)
+    (hLeft :
+      triple.cylinderRepresentation 1 (fun _ => BinarySector.plus) =
+        triple.cuntz.S_left) :
     triple.cylinderRepresentation 1 (fun _ => BinarySector.plus) =
-      triple.cuntz.S_left
+      triple.cuntz.S_left :=
+  hLeft
 
-  /-- The depth-one right cylinder is represented by the right Cuntz shift. -/
-  rightPrefixRealization :
+theorem erlangen_net_right_prefix_realization
+    {Alg Frame Sym Label Op H : Type*} [Ring Op] [StarRing Op]
+    [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H]
+    (net : IteratedObservableSectorization Alg Frame Sym BinarySector Label)
+    (triple : CuntzCantorSpectralTriple Op H)
+    (hRight :
+      triple.cylinderRepresentation 1 (fun _ => BinarySector.minus) =
+        triple.cuntz.S_right) :
     triple.cylinderRepresentation 1 (fun _ => BinarySector.minus) =
-      triple.cuntz.S_right
-
-namespace ErlangenNetCuntzRealization
-
-variable {Alg Frame Sym Label Op H : Type*} [Ring Op] [StarRing Op]
-variable [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H]
-variable (R : ErlangenNetCuntzRealization Alg Frame Sym Label Op H)
-
-/-- Re-export the left-prefix realization witness. -/
-@[rep_depth operator]
-theorem leftPrefixRealization_holds :
-    R.triple.cylinderRepresentation 1 (fun _ => BinarySector.plus) =
-      R.triple.cuntz.S_left :=
-  R.leftPrefixRealization
-
-/-- Re-export the right-prefix realization witness. -/
-@[rep_depth operator]
-theorem rightPrefixRealization_holds :
-    R.triple.cylinderRepresentation 1 (fun _ => BinarySector.minus) =
-      R.triple.cuntz.S_right :=
-  R.rightPrefixRealization
-
-/-- The Cuntz realization gives the first-level boundary decomposition. -/
-@[rep_depth operator]
-theorem realized_firstLevelCylinder_sum_one :
-    R.triple.leftCylinderProjection + R.triple.rightCylinderProjection = 1 :=
-  R.triple.firstLevelCylinder_sum_one
-
-end ErlangenNetCuntzRealization
+      triple.cuntz.S_right :=
+  hRight
 
 end InfoGeometry.Topology

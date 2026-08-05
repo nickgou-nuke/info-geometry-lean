@@ -43,10 +43,14 @@ theorem anyon_stabilizer_unitary :
     h_unitary g
 
 /-- Logical Operator L commuting with all stabilizer generators [g, L] = 0. -/
-structure LogicalOperator (g : AnyonStabilizerGenerator n) where
-  L_val : Matrix (Fin n) (Fin n) ℂ
+abbrev LogicalOperator (g : AnyonStabilizerGenerator n) :=
+  Matrix (Fin n) (Fin n) ℂ
 
 namespace LogicalOperator
+
+/-- Compatibility accessor for the native logical-operator matrix. -/
+abbrev L_val (L : LogicalOperator g) : Matrix (Fin n) (Fin n) ℂ := L
+
 
 variable {g : AnyonStabilizerGenerator n} (L : LogicalOperator g)
 

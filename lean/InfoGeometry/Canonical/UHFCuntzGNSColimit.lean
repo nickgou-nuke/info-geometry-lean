@@ -87,13 +87,13 @@ def cuntzGNS_topologicalCocone :
   gnsTopologicalCocone Stage (cuntzSystem Stage T) ω
 
 noncomputable def cuntzGNS_topologicalColimitToHilbert :
-    topologicalDirectColimit (cuntzGNS_topologicalDiagram Stage T ω) ⟶
+    colimit (cuntzGNS_topologicalDiagram Stage T ω) ⟶
       TopCat.of (CuntzKMSHilbertColimit Stage T ω) :=
   gnsTopologicalColimitToHilbert Stage (cuntzSystem Stage T) ω
 
 @[reassoc] theorem cuntzGNS_topologicalColimitToHilbert_stage
     (n : ℕ) :
-    topologicalDirectInjection (cuntzGNS_topologicalDiagram Stage T ω) n ≫
+    colimit.ι (cuntzGNS_topologicalDiagram Stage T ω) n ≫
         cuntzGNS_topologicalColimitToHilbert Stage T ω =
       (cuntzGNS_topologicalCocone Stage T ω).ι.app n := by
   exact gnsTopologicalColimitToHilbert_stage

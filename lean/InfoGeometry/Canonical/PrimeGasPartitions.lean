@@ -89,11 +89,16 @@ def infiniteParityTrace (s : ℂ) : ℂ :=
 Proof-carrying half-plane context for the genuine infinite Euler products.
 -/
 @[rep_depth thermo]
-structure InfiniteEulerProductConvergenceWitness where
-  s : ℂ
-  halfPlane_Re_gt_one : 1 < s.re
+abbrev InfiniteEulerProductConvergenceWitness :=
+  {s : ℂ // 1 < s.re}
 
 namespace InfiniteEulerProductConvergenceWitness
+
+/-- Compatibility accessor for the complex parameter of the half-plane subtype. -/
+abbrev s (W : InfiniteEulerProductConvergenceWitness) : ℂ := W.1
+
+/-- Compatibility accessor for its genuine half-plane hypothesis. -/
+abbrev halfPlane_Re_gt_one (W : InfiniteEulerProductConvergenceWitness) : 1 < W.s.re := W.2
 
 def zeta (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
   riemannZeta W.s

@@ -13,7 +13,7 @@ as explicit witness data.
 -/
 
 import InfoGeometry.Arithmetic.PrimitiveProjectiveRays
-import InfoGeometry.Arithmetic.ProjectiveRelativeEntropy
+import InfoGeometry.Canonical.SelfDualNormalConeBridge
 import InfoGeometry.Thermodynamics.ProjectiveTemperature
 
 noncomputable section

@@ -1,4 +1,4 @@
-import InfoGeometry.Algebra.KawamuraCuntzCAR
+import InfoGeometry.Algebra
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 
 open InfoGeometry.Topology

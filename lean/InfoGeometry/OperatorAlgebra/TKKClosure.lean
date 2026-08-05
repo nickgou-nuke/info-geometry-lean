@@ -27,6 +27,7 @@ algebra or a concrete Jordan triple system; it records the dependency graph and
 proof-carrying closure laws needed by concrete models.
 -/
 
+import Mathlib.Algebra.Lie.Basic
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.O44PinMobiusProjective
 import InfoGeometry.OperatorAlgebra.KleinianTwist
@@ -133,7 +134,6 @@ This avoids committing the repository to a concrete `LieAlgebra` realization at
 this owner layer.  Downstream modules can replace it by Mathlib's Lie algebra
 API once the concrete carrier is chosen.
 -/
-@[socket_debt_tag]
 structure LieSocket
     (L : Type*) [AddCommGroup L] [Module ℝ L] where
   bracket : L → L → L
@@ -159,6 +159,51 @@ namespace LieSocket
 variable
     {L : Type*} [AddCommGroup L] [Module ℝ L]
     (𝔤 : LieSocket L)
+
+/-!
+The socket laws determine a genuine Mathlib `LieRing`.  The adapter is kept
+separate from `TKKLieClosure` so existing projection-based callers remain
+source-compatible while downstream concrete models can use native Lie APIs.
+-/
+def toLieRing : LieRing L where
+  bracket := 𝔤.bracket
+  add_lie := 𝔤.bracket_add_left
+  lie_add := by
+    intro x y z
+    calc
+      𝔤.bracket x (y + z) = -𝔤.bracket (y + z) x := 𝔤.bracket_skew _ _
+      _ = -(𝔤.bracket y x + 𝔤.bracket z x) := by
+        rw [𝔤.bracket_add_left]
+      _ = -𝔤.bracket y x + -𝔤.bracket z x := neg_add _ _
+      _ = 𝔤.bracket x y + 𝔤.bracket x z := by
+        rw [𝔤.bracket_skew y x, 𝔤.bracket_skew z x]
+        simp only [neg_neg]
+  lie_self := by
+    intro x
+    have h := 𝔤.bracket_skew x x
+    have hz : 𝔤.bracket x x + 𝔤.bracket x x = 0 :=
+      (eq_neg_iff_add_eq_zero.mp h)
+    have htwo : (2 : ℝ) • 𝔤.bracket x x = 0 := by
+      simpa [two_smul] using hz
+    calc
+      𝔤.bracket x x = (1 : ℝ) • 𝔤.bracket x x := by rw [one_smul]
+      _ = ((2 : ℝ)⁻¹ * 2) • 𝔤.bracket x x := by norm_num
+      _ = (2 : ℝ)⁻¹ • ((2 : ℝ) • 𝔤.bracket x x) := by rw [mul_smul]
+      _ = 0 := by rw [htwo, smul_zero]
+  leibniz_lie := by
+    have bracket_neg_left : ∀ x y : L, 𝔤.bracket (-x) y = -𝔤.bracket x y := by
+      intro x y
+      simpa using 𝔤.bracket_smul_left (-1 : ℝ) x y
+    have bracket_neg_right : ∀ x y : L, 𝔤.bracket x (-y) = -𝔤.bracket x y := by
+      intro x y
+      rw [𝔤.bracket_skew, bracket_neg_left]
+      simpa only [neg_neg] using 𝔤.bracket_skew y x
+    intro x y z
+    have h := 𝔤.jacobi x y z
+    rw [𝔤.bracket_skew z x, bracket_neg_right,
+      𝔤.bracket_skew z (𝔤.bracket x y)] at h
+    apply eq_of_sub_eq_zero
+    convert h using 1 <;> abel
 
 end LieSocket
 
@@ -584,33 +629,5 @@ theorem tkkClosureOwnerTarget :
     C.inversionClosure.maps_pos_to_neg y,
     C.pinMobius.basePin_lifts_to_conformalPin.cover_compatibility,
     C.projective_null_ray_action⟩
-
-/-- Packet readout for a concrete TKK/Möbius compatibility datum. -/
-theorem tkkClosure_packet
-    (J L V W PinBase PinConf : Type*)
-    [AddCommGroup J] [Module ℝ J]
-    [AddCommGroup L] [Module ℝ L]
-    [AddCommGroup V] [Module ℝ V]
-    [AddCommGroup W] [Module ℝ W]
-    [Monoid PinBase] [Monoid PinConf]
-    (C : TKKClosureCompatibility J L V W PinBase PinConf)
-    (x y : J) :
-    C.tkk.neg x ∈ C.tkk.gradeSet TKKGrade.negative ∧
-      C.tkk.zero x y ∈ C.tkk.gradeSet TKKGrade.zero ∧
-      C.tkk.pos y ∈ C.tkk.gradeSet TKKGrade.positive ∧
-      C.inversionClosure.inversion (C.tkk.neg x) = C.tkk.pos x ∧
-      C.inversionClosure.inversion (C.tkk.pos y) = C.tkk.neg y ∧
-      (∀ (a : PinBase) (ha : C.pinMobius.basePin.isPin a),
-        C.pinMobius.conformalPin.cover
-            (C.pinMobius.basePin_lifts_to_conformalPin.pinMap a)
-            (C.pinMobius.basePin_lifts_to_conformalPin.pinMap_isPin a ha) =
-          C.pinMobius.mobius.base_orthogonal_lift
-            (C.pinMobius.basePin.cover a ha)) ∧
-      (∀ r : ProjectiveRay W,
-        r.IsAmbientNullRay C.pinMobius.mobius.ambientQ →
-          ((C.pinMobius.conformalPin.cover C.pinMobius.conformalPin.inversionPin
-            C.pinMobius.conformalPin.inversionPin_isPin).actRay r).IsAmbientNullRay
-              C.pinMobius.mobius.ambientQ) :=
-  tkkClosureOwnerTarget J L V W PinBase PinConf C x y
 
 end InfoGeometry.OperatorAlgebra

@@ -121,8 +121,8 @@ theorem hodgeDirac_laplacian_even
     (C : HodgeDiracLaplacianCarrier Op)
     (hChiral : IsDiracHodgeChiral C)
     (hDelta : IsLaplacianFromDirac C) :
-    C.laplacian * C.hodgeStar =
-      C.hodgeStar * C.laplacian :=
+    laplacian C * hodgeStar C =
+      hodgeStar C * laplacian C :=
   laplacian_commutes_hodge_of_dirac_closure C hChiral hDelta
 
 /-- Finite Fibonacci Yang--Baxter/Artin relation from the exact owner matrix proof. -/

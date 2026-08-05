@@ -70,8 +70,8 @@ def modularAutomorphismRingHom (Delta : Aˣ) : A →+* A where
 
 /-- Inner modular automorphism as a coordinate-free representation channel. -/
 def modularAutomorphismChannel (Delta : Aˣ) :
-    ConnectionChannel (A := A) (B := A) where
-  map := modularAutomorphismRingHom Delta
+    ConnectionChannel (A := A) (B := A) :=
+  modularAutomorphismRingHom Delta
 
 /-- Modular automorphisms preserve commutators. -/
 theorem modularAutomorphism_commutator (Delta : Aˣ) (X Y : A) :

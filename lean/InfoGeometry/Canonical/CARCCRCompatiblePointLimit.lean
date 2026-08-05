@@ -64,7 +64,7 @@ noncomputable def carCompatiblePointLimitMap
 @[simp]
 theorem carCompatiblePointLimitMap_projection
     (family : CompatibleCARPointFamily sys) (i : I) (u : PUnit) :
-    topologicalInverseProjection
+    limit.π
         (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i
         (carCompatiblePointLimitMap sys family u) =
       carCompatiblePointTopCatFamily sys family i u := by
@@ -83,7 +83,7 @@ noncomputable def carCompatiblePointAmbientLimitMap
 @[simp]
 theorem carCompatiblePointAmbientLimitMap_projection
     (family : CompatibleCARPointFamily sys) (i : I) (u : PUnit) :
-    topologicalInverseProjection
+    limit.π
         (qCcrParameterTopologicalDiagram Stage sys) i
         (carCompatiblePointAmbientLimitMap sys family u) =
       (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i
@@ -125,7 +125,7 @@ noncomputable def ccrCompatiblePointLimitMap
 @[simp]
 theorem ccrCompatiblePointLimitMap_projection
     (family : CompatibleCCRPointFamily sys) (i : I) (u : PUnit) :
-    topologicalInverseProjection
+    limit.π
         (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i
         (ccrCompatiblePointLimitMap sys family u) =
       ccrCompatiblePointTopCatFamily sys family i u := by
@@ -144,7 +144,7 @@ noncomputable def ccrCompatiblePointAmbientLimitMap
 @[simp]
 theorem ccrCompatiblePointAmbientLimitMap_projection
     (family : CompatibleCCRPointFamily sys) (i : I) (u : PUnit) :
-    topologicalInverseProjection
+    limit.π
         (qCcrParameterTopologicalDiagram Stage sys) i
         (ccrCompatiblePointAmbientLimitMap sys family u) =
       (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i

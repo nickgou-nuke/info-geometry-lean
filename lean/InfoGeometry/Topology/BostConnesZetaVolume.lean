@@ -36,10 +36,7 @@ variable (vol : BraidedBulkVolume M)
   volume of the anyonic bulk is proportional to the Basel value π²/6.
 -/
 theorem bulk_volume_equals_zeta_two 
-    (h_temp : β = 2) 
     (h_zeta : bost_connes_partition_function 2 = Real.pi^2 / 6) :
     ∃ (scale : ℝ), scale * (Real.pi^2 / 6) = Real.pi^2 / 6 := by
-  -- Shows that the volume of the anyonic bulk stabilizes to the 
-  -- exact-rational partition value of the arithmetic vacuum.
   use 1
   rw [one_mul]

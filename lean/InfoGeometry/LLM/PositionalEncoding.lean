@@ -3,20 +3,21 @@ import InfoGeometry.LLM.MaskedTransformerBlock
 namespace InfoGeometry.LLM
 
 /-- Positional-encoding abstraction over query/state space `Q`. -/
-structure PositionalEncoding (Q : Type*) where
-  encode : Q → Q
+abbrev PositionalEncoding (Q : Type*) := Q → Q
 
 namespace PositionalEncoding
 
 variable {Q : Type*}
 
+/-- Compatibility accessor for the native function representation. -/
+abbrev encode (P : PositionalEncoding Q) : Q → Q := P
+
 /-- Identity positional encoding. -/
-def id : PositionalEncoding Q where
-  encode := fun q => q
+def id : PositionalEncoding Q := fun q => q
 
 /-- Sequential composition (`P2 ∘ P1`). -/
-def comp (P1 P2 : PositionalEncoding Q) : PositionalEncoding Q where
-  encode := fun q => P2.encode (P1.encode q)
+def comp (P1 P2 : PositionalEncoding Q) : PositionalEncoding Q :=
+  fun q => P2 (P1 q)
 
 @[simp] lemma id_apply (q : Q) : (id (Q := Q)).encode q = q := rfl
 @[simp] lemma comp_apply (P1 P2 : PositionalEncoding Q) (q : Q) :

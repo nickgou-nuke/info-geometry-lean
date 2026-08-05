@@ -219,6 +219,15 @@ theorem realSpin44DiracRepresentation_val
       (spinGroup.toUnits g) : Module.End ℝ DiracSpinor16) = _
   simp
 
+/-- The real `(4,4)` null cone is transported to the native complex Zorn
+Dirac representation: a null real vector has square-zero gamma action. -/
+theorem realSplit44_null_diracGamma_sq
+    (x : RealSplit44) (hx : realQuadratic44 x = 0) :
+    diracGamma (realSplit44ToVector8 x) *
+        diracGamma (realSplit44ToVector8 x) = 0 := by
+  rw [diracGamma_sq, vectorQuadratic_realSplit44ToVector8, hx]
+  simp
+
 /-- The real `(4,4)` quadratic form, its canonical Zorn isometry, its Clifford
 action, and the induced spin-group representation coexist in one theorem. -/
 theorem real_spin44_zorn_triality_closure (x : RealSplit44) :

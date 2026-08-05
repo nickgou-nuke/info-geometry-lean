@@ -57,7 +57,7 @@ def S7Shadow := {ψ : TwoQubitVec // IsNormalized ψ}
 
 namespace S7Shadow
 
-def vec (ψ : S7Shadow) : TwoQubitVec := ψ.1
+abbrev vec (ψ : S7Shadow) : TwoQubitVec := ψ.1
 
 theorem normalized (ψ : S7Shadow) : IsNormalized ψ.vec := ψ.2
 

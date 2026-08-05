@@ -63,7 +63,7 @@ theorem CompatibleCCRPointFamily.toQCCR_compatible
 
 noncomputable def ccrCompatiblePointColimitMap
     (family : CompatibleCCRPointFamily sys) :
-    topologicalDirectColimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
+    colimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
       qCcrParameterZeroFiberTopologicalColimit Stage sys :=
   compatiblePointColimitMap sys family.toQCCR
     family.toQCCR_compatible
@@ -71,7 +71,7 @@ noncomputable def ccrCompatiblePointColimitMap
 theorem ccrCompatiblePointColimitMap_stage_apply
     (family : CompatibleCCRPointFamily sys) (i : I) (u : PUnit.{u + 1}) :
     ccrCompatiblePointColimitMap sys family
-        (topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i u) =
+        (colimit.ι ((Functor.const I).obj (TopCat.of PUnit)) i u) =
       qCcrParameterZeroFiberTopologicalInjection Stage sys i
         (family.toQCCR.point i) := by
   exact compatiblePointColimitMap_stage_apply sys family.toQCCR
@@ -79,7 +79,7 @@ theorem ccrCompatiblePointColimitMap_stage_apply
 
 noncomputable def ccrCompatiblePointParameterColimitMap
     (family : CompatibleCCRPointFamily sys) :
-    topologicalDirectColimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
+    colimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
       qCcrParameterTopologicalColimit Stage sys :=
   ccrCompatiblePointColimitMap sys family ≫
     qCcrParameterZeroFiberToParameterColimit Stage sys
@@ -87,7 +87,7 @@ noncomputable def ccrCompatiblePointParameterColimitMap
 theorem ccrCompatiblePointParameterColimitMap_stage_apply
     (family : CompatibleCCRPointFamily sys) (i : I) (u : PUnit.{u + 1}) :
     ccrCompatiblePointParameterColimitMap sys family
-        (topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i u) =
+        (colimit.ι ((Functor.const I).obj (TopCat.of PUnit)) i u) =
       qCcrParameterTopologicalInjection Stage sys i
         (family.toQCCR.point i).1 := by
   have hpoint := compatiblePointColimitMap_stage_apply sys family.toQCCR

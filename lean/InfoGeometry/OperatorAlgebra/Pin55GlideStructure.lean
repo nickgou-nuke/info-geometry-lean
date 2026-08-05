@@ -94,15 +94,4 @@ theorem spinor_glide_core_sq : spinorGlideCore * spinorGlideCore = 1 := by
   unfold spinorGlideCore gamma_space gamma_time upperRightId32 lowerLeftId32
   native_decide
 
-/-- Finite kernel-checked packet for the concrete Pin(5,5) spinor glide core. -/
-theorem pin55_spinor_glide_packet :
-    gamma_space * gamma_space = 1 ∧
-      gamma_time * gamma_time = -1 ∧
-      gamma_space * gamma_time = - (gamma_time * gamma_space) ∧
-      gamma_space * spinorGlideCore = gamma_time ∧
-      spinorGlideCore * gamma_space = -gamma_time ∧
-      spinorGlideCore * spinorGlideCore = 1 := by
-  exact ⟨gamma_space_sq, gamma_time_sq, gamma_space_time_anticomm,
-    spinor_glide_composition_anticommutes, spinor_glide_right_sign, spinor_glide_core_sq⟩
-
 end InfoGeometry.OperatorAlgebra.Pin55

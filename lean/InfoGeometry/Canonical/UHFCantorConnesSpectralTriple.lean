@@ -26,8 +26,7 @@ theorem stageCommutatorNorm_nonneg (D a : A) :
     0 ≤ stageCommutatorNorm D a := by
   exact norm_nonneg _
 
-def stageSpectralTriple (D : A) : ConnesSpectral.SpectralTriple A where
-  dirac := D
+def stageSpectralTriple (D : A) : ConnesSpectral.SpectralTriple A := D
 
 def stageLipschitz (D a : A) : Prop :=
   (stageSpectralTriple D).LipschitzFunction a

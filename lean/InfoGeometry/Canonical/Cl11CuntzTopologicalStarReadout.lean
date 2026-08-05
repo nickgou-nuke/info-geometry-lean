@@ -55,7 +55,7 @@ def topologicalStarCocone
 noncomputable def topologicalStarReadout
     (T : InfoGeometry.Canonical.CuntzMatrixTraceTower.Data) :
     topologicalColimitObject T ⟶ topologicalColimitObject T :=
-  topologicalDirectDescend (topologicalDiagram T) (topologicalStarCocone T)
+  colimit.desc (topologicalDiagram T) (topologicalStarCocone T)
 
 theorem topologicalStarReadout_inclusion
     (T : InfoGeometry.Canonical.CuntzMatrixTraceTower.Data) (n : ℕ)

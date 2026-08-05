@@ -103,12 +103,28 @@ theorem iteratedVirasoroCocycle_two_resonant (c : ℝ) (m : Int) :
     iteratedVirasoroCocycle 2 c m (-m) = (c / 12) * (((m : ℝ)^3) - (m : ℝ)) := by
   rw [iteratedVirasoroCocycle_two, virasoroCocycleDensity_eq_resonant (c := c) (m := m) (n := -m) (by simp)]
 
-/-- Readout data attached to a nilpotent cross-flux seed. -/
-structure NilpotentFluxReadout (A : Type*) [Ring A] [Algebra ℝ A] where
-  N : A
-  ρ : A ⊗[ℝ] A →ₗ[ℝ] ℝ
-  hN : N * N = 0
-  crossRead : ρ (crossFlux (R := ℝ) N) = 1
+/-- Readout data attached to a nilpotent cross-flux seed.
+
+The carrier is the ordinary product of the seed and its linear readout; the
+subtype predicate contains exactly the two required laws. -/
+abbrev NilpotentFluxReadout (A : Type*) [Ring A] [Algebra ℝ A] :=
+  {p : A × (A ⊗[ℝ] A →ₗ[ℝ] ℝ) //
+    p.1 * p.1 = 0 ∧ p.2 (crossFlux (R := ℝ) p.1) = 1}
+
+namespace NilpotentFluxReadout
+
+variable {A : Type*} [Ring A] [Algebra ℝ A]
+
+abbrev N (S : NilpotentFluxReadout A) : A := S.1.1
+
+abbrev ρ (S : NilpotentFluxReadout A) : A ⊗[ℝ] A →ₗ[ℝ] ℝ := S.1.2
+
+theorem hN (S : NilpotentFluxReadout A) : S.N * S.N = 0 := S.2.1
+
+theorem crossRead (S : NilpotentFluxReadout A) :
+    S.ρ (crossFlux (R := ℝ) S.N) = 1 := S.2.2
+
+end NilpotentFluxReadout
 
 /-- Under a linear readout, `liftFlux^2` contributes exactly twice the cross term. -/
 theorem liftFlux_sq_readout

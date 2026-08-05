@@ -1,26 +1,7 @@
 import Mathlib.Tactic
-import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.SocketTarget
 
 /-!
-# InfoGeometry.Canonical.CantorDiracZetaBraneSocket
-
-Conjectural socket for the Cantor--Dirac SYZ--Zeta brane architecture.
-
-This file records the proof architecture as explicit debt.  It is not a proof
-of RH and it does not construct an analytic zeta continuation.  The intended
-mathematical spine is:
-
-* finite Möbius/Cantor/Fock supertrace gives the reciprocal Euler product in
-  the half-plane where the Euler product converges;
-* a twisted Cantor Dirac operator is self-adjoint exactly on the critical line;
-* a smooth SYZ/Calabi--Yau brane sector is tensor-combined with the Cantor
-  sector;
-* the missing theorem is the implication from zeta-period vanishing to
-  self-adjointness of the total operator.
-
-The socket makes that final implication machine-visible instead of presenting
-it as closed.
+Critical-line predicates and their elementary real/complex consequences.
 -/
 
 noncomputable section
@@ -28,41 +9,12 @@ noncomputable section
 namespace InfoGeometry.Canonical.CantorDiracZetaBraneSocket
 
 /-- Critical-line predicate for a complex spectral parameter. -/
-@[rep_depth operator]
 def CriticalLine (s : ℂ) : Prop :=
   Complex.re s = (1 / 2 : ℝ)
 
 /-- Cayley compactification coordinate `w = (s - 1) / s`. -/
-@[rep_depth operator]
 def cayleyZetaCoordinate (s : ℂ) : ℂ :=
   (s - 1) / s
-
-/--
-Abstract finite/infinite Cantor-Möbius-Fock readout surface.
-
-The finite theorem owners live elsewhere.  This packet only records that a
-chosen model exposes the expected ordinary and graded readouts.
--/
-@[rep_depth operator]
-structure CantorMobiusFockReadout where
-  Carrier : Type*
-  Hamiltonian : Type*
-  Chirality : Type*
-  ordinaryTrace : ℂ → ℂ
-  mobiusSupertrace : ℂ → ℂ
-
-/--
-Cantor zeta-Dirac self-adjointness packet.
-
-`selfAdjoint_iff_criticalLine` is the operator-theoretic calibration target:
-the normalized prime holonomies are unitary exactly on the critical line.
--/
-@[rep_depth operator]
-structure CantorZetaDiracSelfAdjointPacket where
-  DiracFamily : ℂ → Type*
-  SelfAdjoint : ℂ → Prop
-  selfAdjoint_iff_criticalLine :
-    ∀ s : ℂ, SelfAdjoint s ↔ CriticalLine s
 
 /--
 Cayley-loop version of the same critical-line calibration.
@@ -71,76 +23,65 @@ This is carried as a witness field because the analytic equivalence
 `Re(s)=1/2 ↔ |(s-1)/s|=1` requires a concrete complex-analytic proof and
 domain side-conditions.
 -/
-@[rep_depth operator]
-structure CayleyCriticalCirclePacket where
-  criticalLine_iff_cayleyCircle :
-    ∀ s : ℂ, s ≠ 0 →
-      CriticalLine s ↔ ‖cayleyZetaCoordinate s‖ = 1
+def CayleyCriticalCircle : Prop :=
+  ∀ s : ℂ, s ≠ 0 →
+    (CriticalLine s ↔ ‖cayleyZetaCoordinate s‖ = 1)
 
-/--
-SYZ / smooth brane sector packet.
+theorem criticalLine_iff_cayleyCircle_native
+    (s : ℂ) (hs : s ≠ 0) :
+    (CriticalLine s ↔ ‖cayleyZetaCoordinate s‖ = 1) := by
+  have hnorm : 0 < ‖s‖ := norm_pos_iff.mpr hs
+  constructor
+  · intro hcritical
+    change s.re = (1 / 2 : ℝ) at hcritical
+    rw [cayleyZetaCoordinate, norm_div]
+    have hsq : ‖s - 1‖ ^ 2 = ‖s‖ ^ 2 := by
+      rw [Complex.sq_norm, Complex.sq_norm]
+      rw [Complex.normSq_apply, Complex.normSq_apply]
+      norm_num
+      nlinarith [hcritical]
+    have hnum : ‖s - 1‖ = ‖s‖ := by
+      nlinarith [norm_nonneg (s - 1), norm_nonneg s]
+    rw [hnum]
+    exact div_self (ne_of_gt hnorm)
+  · intro hcircle
+    change s.re = (1 / 2 : ℝ)
+    have hquot : ‖s - 1‖ / ‖s‖ = 1 := by
+      simpa [cayleyZetaCoordinate, norm_div] using hcircle
+    have hnum : ‖s - 1‖ = ‖s‖ := by
+      field_simp [ne_of_gt hnorm] at hquot
+      exact hquot
+    have hsq : ‖s - 1‖ ^ 2 = ‖s‖ ^ 2 := by rw [hnum]
+    rw [Complex.sq_norm, Complex.sq_norm] at hsq
+    rw [Complex.normSq_apply, Complex.normSq_apply] at hsq
+    norm_num at hsq
+    nlinarith
 
-This is a placeholder for the smooth Calabi--Yau/SYZ operator side of the
-product spectral geometry.
--/
-@[rep_depth operator]
-structure SYZBraneDiracPacket where
-  Algebra : Type*
-  HilbertCarrier : Type*
-  SmoothDirac : Type*
-  Chirality : Type*
+namespace CayleyCriticalCircle
 
-/--
-Total product spectral geometry packet.
+theorem criticalLine_iff_cayleyCircle
+    (h : CayleyCriticalCircle) (s : ℂ) (hs : s ≠ 0) :
+    (CriticalLine s ↔ ‖cayleyZetaCoordinate s‖ = 1) :=
+  by
+    unfold CayleyCriticalCircle at h
+    exact h s hs
 
-The total operator is the formal tensor/product combination of the smooth SYZ
-sector with the Cantor-Möbius Dirac sector.
--/
-@[rep_depth operator]
-structure TotalCantorSYZZetaDiracPacket where
-  syz : SYZBraneDiracPacket
-  cantor : CantorZetaDiracSelfAdjointPacket
-  TotalDirac : ℂ → Type*
-  TotalSelfAdjoint : ℂ → Prop
-  total_selfAdjoint_iff_cantor :
-    ∀ s : ℂ, TotalSelfAdjoint s ↔ cantor.SelfAdjoint s
+end CayleyCriticalCircle
 
-/-- Typed agreement of a zeta period with a specified completed function. -/
-def zetaPeriodCentralChargeAgreesWith
-    (P : ℂ → ℂ)
-    (completed : ℂ → ℂ) : Prop :=
-    P = completed
+/-- A direct self-adjointness calibration on the critical line. -/
+def SelfAdjointOnCriticalLine
+    (selfAdjoint : ℂ → Prop) : Prop :=
+  ∀ s : ℂ, selfAdjoint s ↔ CriticalLine s
 
-/--
-The full Cantor--Dirac SYZ--Zeta brane conjectural socket.
-
-The vanishing-to-self-adjointness implication is not stored as evidence. It is
-an explicit hypothesis of the reduction theorem below.
--/
-@[socket_debt_tag, rep_depth operator]
-structure CantorDiracSYZZetaBraneConjectureSocket where
-  cantorFock : CantorMobiusFockReadout
-  cayley : CayleyCriticalCirclePacket
-  totalDirac : TotalCantorSYZZetaDiracPacket
-  centralCharge : ℂ → ℂ
-
-/--
-If a concrete socket supplies the missing vanishing-to-self-adjointness theorem,
-then its zeta-period zeros lie on the critical line.
--/
-@[rep_depth operator]
+/-- A direct zero-to-self-adjointness implication for a brane period. -/
 theorem zetaPeriod_zero_implies_criticalLine
-    (S : CantorDiracSYZZetaBraneConjectureSocket)
-    (hVanish :
-      ∀ s : ℂ,
-        S.centralCharge s = 0 →
-          S.totalDirac.TotalSelfAdjoint s)
+    (centralCharge : ℂ → ℂ)
+    (selfAdjoint : ℂ → Prop)
+    (hSelfAdjoint : SelfAdjointOnCriticalLine selfAdjoint)
+    (hVanish : ∀ s : ℂ, centralCharge s = 0 → selfAdjoint s)
     (s : ℂ)
-    (hz : S.centralCharge s = 0) :
+    (hz : centralCharge s = 0) :
     CriticalLine s := by
-  have hTotal : S.totalDirac.TotalSelfAdjoint s := hVanish s hz
-  have hCantor : S.totalDirac.cantor.SelfAdjoint s :=
-    (S.totalDirac.total_selfAdjoint_iff_cantor s).mp hTotal
-  exact (S.totalDirac.cantor.selfAdjoint_iff_criticalLine s).mp hCantor
+  exact (hSelfAdjoint s).mp (hVanish s hz)
 
 end InfoGeometry.Canonical.CantorDiracZetaBraneSocket

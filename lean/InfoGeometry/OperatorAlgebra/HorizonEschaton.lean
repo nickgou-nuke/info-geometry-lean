@@ -634,10 +634,12 @@ A classified horizon process.
 This stores a label and a proof-carrying explanation law. Concrete models
 should use the more specific bridge structures above.
 -/
-structure HorizonProcessClassification where
-  outcome : HorizonOutcome
+abbrev HorizonProcessClassification := HorizonOutcome
 
 namespace HorizonProcessClassification
+
+abbrev outcome (C : HorizonProcessClassification) : HorizonOutcome :=
+  C
 
 variable (C : HorizonProcessClassification)
 

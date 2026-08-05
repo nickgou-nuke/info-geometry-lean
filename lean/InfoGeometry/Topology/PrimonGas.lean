@@ -16,8 +16,8 @@ def PrimonGasState := {p : ℝ × ℝ // p.1 > p.2}
 
 namespace PrimonGasState
 
-def E_0 (state : PrimonGasState) : ℝ := state.1.1
-def T (state : PrimonGasState) : ℝ := state.1.2
+abbrev E_0 (state : PrimonGasState) : ℝ := state.1.1
+abbrev T (state : PrimonGasState) : ℝ := state.1.2
 
 theorem below_hagedorn (state : PrimonGasState) : state.E_0 > state.T :=
   state.2

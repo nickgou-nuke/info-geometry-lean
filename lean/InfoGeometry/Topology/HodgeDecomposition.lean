@@ -1,12 +1,13 @@
 import InfoGeometry.Topology.DiscreteDiracHodgeChiral
 
 /-!
-  A theorem-safe finite Hodge-decomposition contract.
+# Native finite Hodge decomposition
 
-  The existence of a decomposition is supplied as finite algebraic data; this
-  file does not claim an analytic orthogonal-projection theorem.  The
-  previously existing owner used undeclared cochain types and `sorry` proofs,
-  so the API is intentionally reduced to the explicit matrix-level contract.
+The exact, coexact, and harmonic sectors are Mathlib submodules.  A Hodge
+decomposition is an existential proposition about membership in those sectors,
+not a record carrying duplicated proof fields.  Nilpotence gives closedness of
+the exact and coexact sectors; it does not by itself give orthogonality or a
+direct-sum theorem.
 -/
 
 namespace InfoGeometry.Topology.HodgeDecomposition
@@ -15,45 +16,59 @@ open InfoGeometry.Topology.DiscreteDiracHodgeChiral
 
 noncomputable section
 
-structure Witness {n : ℕ} (d δ : EndCochain n) (x : Cochains n) where
-  exactPart : Cochains n
-  coexactPart : Cochains n
-  harmonicPart : Cochains n
-  decomposition :
-    x = d.mulVec exactPart + δ.mulVec coexactPart + harmonicPart
-  harmonic :
-    (hodgeLaplacian d δ).mulVec harmonicPart = 0
+variable {n : ℕ}
 
-def IsHodgeDecomposition {n : ℕ}
-    (d δ : EndCochain n) (x : Cochains n) : Prop :=
-  Nonempty (Witness d δ x)
+/-- Exact finite cochains, as the range of the differential. -/
+abbrev exactSubmodule (d : EndCochain n) : Submodule ℝ (Cochains n) :=
+  LinearMap.range (Matrix.toLin' d)
 
-theorem decomposition_readout {n : ℕ}
+/-- Coexact finite cochains, as the range of the codifferential. -/
+abbrev coexactSubmodule (δ : EndCochain n) : Submodule ℝ (Cochains n) :=
+  LinearMap.range (Matrix.toLin' δ)
+
+/-- Harmonic finite cochains, as the kernel of the Hodge Laplacian. -/
+abbrev harmonicSubmodule (d δ : EndCochain n) : Submodule ℝ (Cochains n) :=
+  LinearMap.ker (Matrix.toLin' (hodgeLaplacian d δ))
+
+/-- Native existential form of finite Hodge decomposition. -/
+def IsHodgeDecomposition (d δ : EndCochain n) (x : Cochains n) : Prop :=
+  ∃ e c h : Cochains n,
+    x = e + c + h ∧
+    e ∈ exactSubmodule d ∧
+    c ∈ coexactSubmodule δ ∧
+    h ∈ harmonicSubmodule d δ
+
+theorem decomposition_readout
     (d δ : EndCochain n) (x : Cochains n)
-    (w : Witness d δ x) :
-    x = d.mulVec w.exactPart + δ.mulVec w.coexactPart + w.harmonicPart ∧
-      (hodgeLaplacian d δ).mulVec w.harmonicPart = 0 :=
-  ⟨w.decomposition, w.harmonic⟩
+    (h : IsHodgeDecomposition d δ x) :
+    ∃ e c h' : Cochains n,
+      x = e + c + h' ∧
+      e ∈ exactSubmodule d ∧
+      c ∈ coexactSubmodule δ ∧
+      h' ∈ harmonicSubmodule d δ :=
+  h
 
-theorem decomposition_exists_of_witness {n : ℕ}
+theorem decomposition_exists_of_membership
     (d δ : EndCochain n) (x : Cochains n)
-    (w : Witness d δ x) :
+    (h : IsHodgeDecomposition d δ x) :
     IsHodgeDecomposition d δ x :=
-  ⟨w⟩
+  h
 
-theorem exact_closed_of_nilpotent {n : ℕ}
+theorem exact_closed_of_nilpotent
     (d : EndCochain n) (hd : d * d = 0)
-    {x : Cochains n} (hx : ∃ y, d.mulVec y = x) :
+    {x : Cochains n} (hx : x ∈ exactSubmodule d) :
     d.mulVec x = 0 := by
-  rcases hx with ⟨y, rfl⟩
+  rcases hx with ⟨y, hy⟩
+  rw [← hy]
   have h := congrArg (fun M => M.mulVec y) hd
   simpa [Matrix.mulVec_mulVec] using h
 
-theorem coexact_coclosed_of_nilpotent {n : ℕ}
+theorem coexact_coclosed_of_nilpotent
     (δ : EndCochain n) (hδ : δ * δ = 0)
-    {x : Cochains n} (hx : ∃ y, δ.mulVec y = x) :
+    {x : Cochains n} (hx : x ∈ coexactSubmodule δ) :
     δ.mulVec x = 0 := by
-  rcases hx with ⟨y, rfl⟩
+  rcases hx with ⟨y, hy⟩
+  rw [← hy]
   have h := congrArg (fun M => M.mulVec y) hδ
   simpa [Matrix.mulVec_mulVec] using h
 

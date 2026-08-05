@@ -27,7 +27,6 @@ super-TKK socket over `TKKConformalClosure.TKKRicciFluxDatum`.
 
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TKKConformalClosure
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -797,36 +796,5 @@ theorem heat_eq_zero_of_bps
   B.heat_eq_zero_of_bps hBPS
 
 end BPSDefectBridge
-
-/-! ## 6. Owner target -/
-
-/--
-Owner target for super-TKK defect absorption.
-
-Once an absorption witness is supplied, every TKK closure defect has an
-explicit same-left-chirality supercharge-square representative.
--/
-@[owner_target_tag]
-def SuperTKKDefectAbsorptionOwnerTarget : Prop :=
-  ∀ (L Odd State Geometry : Type*)
-    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
-    [AddCommGroup Odd] [Module ℝ Odd]
-    [AddCommGroup State] [Module ℝ State]
-    [AddCommGroup Geometry] [Module ℝ Geometry],
-  ∀ R : InfoGeometry.OperatorAlgebra.TKKConformalClosure.TKKRicciFluxDatum L State Geometry,
-  ∀ A : SuperTKKDefectAbsorption L Odd State Geometry R,
-  ∀ X : L,
-  ∀ s : State,
-    ∃ Q : Odd, ∃ Rq : Odd,
-      Q ∈ A.supercharges.qLeft ∧
-      Rq ∈ A.supercharges.qLeft ∧
-      A.geometryLift (R.closureDefect.defect X s) =
-        A.supercharges.superAnticommutator Q Rq
-
-/-- The owner target follows from the supplied absorption witness. -/
-theorem superTKKDefectAbsorptionOwnerTarget :
-    SuperTKKDefectAbsorptionOwnerTarget := by
-  intro L Odd State Geometry _ _ _ _ _ _ _ _ _ _ R A X s
-  exact A.closure_defect_has_left_left_square X s
 
 end InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure

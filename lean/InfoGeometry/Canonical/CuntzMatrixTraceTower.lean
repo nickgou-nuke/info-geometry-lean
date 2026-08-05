@@ -96,11 +96,9 @@ The only scalar calculation here is normalization of the genuine matrix
 trace; positivity and the algebra map are supplied by the matrix owners
 above, not by an artificial order on matrices. -/
 
-def concreteData : Data := concreteStep
-
 theorem concrete_trace_compatible (n : ℕ) (A : MatrixStage n) :
-    matrixTraceState (n + 1) (concreteData n A) = matrixTraceState n A := by
-  dsimp [concreteData, matrixTraceState, matrixTraceFunctional]
+    matrixTraceState (n + 1) (concreteStep n A) = matrixTraceState n A := by
+  dsimp [matrixTraceState, matrixTraceFunctional]
   rw [concreteStep_trace]
   rw [pow_succ]
   field_simp [show (2 : ℂ) ^ n ≠ 0 by norm_num]
@@ -153,19 +151,19 @@ later colimit owner; no state or order structure is smuggled in here. -/
 
 def concreteMap {i j : ℕ} (hij : i ≤ j) :
     MatrixStage i →⋆ₐ[ℂ] MatrixStage j :=
-  map concreteData hij
+  map concreteStep hij
 
 @[simp] theorem concreteMap_id (i : ℕ) :
     concreteMap (le_refl i) = StarAlgHom.id ℂ (MatrixStage i) := by
-  exact map_id concreteData i
+  exact map_id concreteStep i
 
 theorem concreteMap_comp {i j k : ℕ} (hij : i ≤ j) (hjk : j ≤ k) :
     (concreteMap hjk).comp (concreteMap hij) = concreteMap (le_trans hij hjk) := by
-  exact map_comp concreteData hij hjk
+  exact map_comp concreteStep hij hjk
 
 theorem concreteMap_trace {i j : ℕ} (hij : i ≤ j) (A : MatrixStage i) :
     matrixTraceState j (concreteMap hij A) = matrixTraceState i A := by
-  exact trace_compatible concreteData concrete_trace_compatible hij A
+  exact trace_compatible concreteStep concrete_trace_compatible hij A
 
 /-! ### Categorical filtered colimit of the raw matrix tower
 

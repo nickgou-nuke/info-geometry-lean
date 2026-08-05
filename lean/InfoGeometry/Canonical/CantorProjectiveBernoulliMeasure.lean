@@ -217,6 +217,60 @@ theorem projectiveLimitReadoutMeasure_apply_compl_unitInterval :
       exact False.elim (by simpa using hp)
   rw [hpre, measure_empty]
 
+/-- The projective-limit readout regarded as a map into the closed unit interval. -/
+def projectiveLimitUnitIntervalReadout
+    (p : PrefixProjectiveLimit) : Set.Icc (0 : ℝ) 1 :=
+  ⟨realBinaryReadout (toCantor p),
+    projectiveLimit_readout_image_subset_unitInterval ⟨p, rfl⟩⟩
+
+theorem continuous_projectiveLimitUnitIntervalReadout :
+    Continuous projectiveLimitUnitIntervalReadout := by
+  exact continuous_projectiveLimit_readout.subtype_mk (fun p =>
+    projectiveLimit_readout_image_subset_unitInterval ⟨p, rfl⟩)
+
+def projectiveLimitUnitIntervalMeasure :
+    Measure (Set.Icc (0 : ℝ) 1) :=
+  Measure.map projectiveLimitUnitIntervalReadout projectiveLimitMeasure
+
+instance projectiveLimitUnitIntervalMeasure_isProbabilityMeasure :
+    IsProbabilityMeasure projectiveLimitUnitIntervalMeasure := by
+  unfold projectiveLimitUnitIntervalMeasure
+  exact Measure.isProbabilityMeasure_map
+    continuous_projectiveLimitUnitIntervalReadout.measurable.aemeasurable
+
+theorem projectiveLimitUnitIntervalMeasure_map_subtypeVal :
+    Measure.map (fun x : Set.Icc (0 : ℝ) 1 => (x : ℝ))
+        projectiveLimitUnitIntervalMeasure =
+      projectiveLimitReadoutMeasure := by
+  unfold projectiveLimitUnitIntervalMeasure projectiveLimitReadoutMeasure
+  rw [Measure.map_map (μ := projectiveLimitMeasure)
+    (f := projectiveLimitUnitIntervalReadout)
+    (g := fun x : Set.Icc (0 : ℝ) 1 => (x : ℝ))
+    continuous_subtype_val.measurable
+    continuous_projectiveLimitUnitIntervalReadout.measurable]
+  rfl
+
+theorem projectiveLimitUnitIntervalMeasure_integral_comp
+    (φ : Set.Icc (0 : ℝ) 1 → ℝ)
+    (hφ : AEStronglyMeasurable φ projectiveLimitUnitIntervalMeasure) :
+    (∫ x, φ x ∂projectiveLimitUnitIntervalMeasure) =
+      ∫ p, φ (projectiveLimitUnitIntervalReadout p) ∂projectiveLimitMeasure := by
+  exact MeasureTheory.integral_map
+    continuous_projectiveLimitUnitIntervalReadout.measurable.aemeasurable hφ
+
+theorem projectiveLimitUnitIntervalMeasure_continuous_integral_comp
+    (φ : Set.Icc (0 : ℝ) 1 → ℝ)
+    (hφ : Continuous φ) (C : ℝ)
+    (hC : ∀ x, ‖φ x‖ ≤ C) :
+    Integrable φ projectiveLimitUnitIntervalMeasure ∧
+      (∫ x, φ x ∂projectiveLimitUnitIntervalMeasure) =
+        ∫ p, φ (projectiveLimitUnitIntervalReadout p) ∂projectiveLimitMeasure := by
+  have hstrong : AEStronglyMeasurable φ projectiveLimitUnitIntervalMeasure :=
+    hφ.aestronglyMeasurable
+  have hint : Integrable φ projectiveLimitUnitIntervalMeasure :=
+    Integrable.of_bound hstrong C (ae_of_all _ hC)
+  exact ⟨hint, projectiveLimitUnitIntervalMeasure_integral_comp φ hstrong⟩
+
 def tomitaSymmetrizedMeasure : Measure PrefixProjectiveLimit :=
   (1 / 2 : ℝ≥0∞) •
     (projectiveLimitMeasure +

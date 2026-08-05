@@ -27,14 +27,6 @@ theorem FiniteTiltDiracShellBridgeOwnerTarget :
   ⟨finiteTiltDiracShell_sq, finiteTiltCurrentDensity_eq_boundaryCurrent_bridge⟩
 
 @[rep_depth operator]
-theorem finiteTiltDiracShellBridgeOwnerTarget :
-    (∀ m : ℝ,
-      finiteTiltDiracShell m * finiteTiltDiracShell m =
-        (m ^ 2 : ℝ) • (1 : Mat2)) ∧
-      finiteTiltCurrentDensity = finiteTiltBoundaryCurrent :=
-  FiniteTiltDiracShellBridgeOwnerTarget
-
-@[rep_depth operator]
 alias finiteTiltDiracShellBridge_shell_square := finiteTiltDiracShell_sq
 
 @[rep_depth operator]

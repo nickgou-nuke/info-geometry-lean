@@ -62,7 +62,7 @@ noncomputable def compatiblePointColimitMap
     (hcompatible : ∀ {i j : I} (hij : i ≤ j),
       qCcrParameterZeroFiberTransitionMap Stage sys hij (family.point i) =
         family.point j) :
-    topologicalDirectColimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
+    colimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
       qCcrParameterZeroFiberTopologicalColimit Stage sys :=
   colim.map (compatiblePointNatTrans sys family hcompatible)
 
@@ -72,14 +72,16 @@ theorem compatiblePointColimitMap_stage
       qCcrParameterZeroFiberTransitionMap Stage sys hij (family.point i) =
         family.point j)
     (i : I) :
-    topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i ≫
+    colimit.ι ((Functor.const I).obj (TopCat.of PUnit)) i ≫
         compatiblePointColimitMap sys family hcompatible =
       (compatiblePointNatTrans sys family hcompatible).app i ≫
         qCcrParameterZeroFiberTopologicalInjection Stage sys i := by
-  simpa [compatiblePointColimitMap,
-    qCcrParameterZeroFiberTopologicalInjection,
-    topologicalDirectInjection] using
-    (colimit.ι_map (compatiblePointNatTrans sys family hcompatible) i)
+  change
+    colimit.ι ((Functor.const I).obj (TopCat.of PUnit)) i ≫
+        colim.map (compatiblePointNatTrans sys family hcompatible) =
+      (compatiblePointNatTrans sys family hcompatible).app i ≫
+        colimit.ι (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i
+  exact colimit.ι_map (compatiblePointNatTrans sys family hcompatible) i
 
 theorem compatiblePointColimitMap_stage_apply
     (family : CompatibleQCCRPointFamily sys)
@@ -88,7 +90,7 @@ theorem compatiblePointColimitMap_stage_apply
         family.point j)
     (i : I) (u : PUnit) :
     compatiblePointColimitMap sys family hcompatible
-        (topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i u) =
+        (colimit.ι ((Functor.const I).obj (TopCat.of PUnit)) i u) =
       qCcrParameterZeroFiberTopologicalInjection Stage sys i (family.point i) := by
   have h := compatiblePointColimitMap_stage sys family hcompatible i
   exact congrArg (fun f => f u) h

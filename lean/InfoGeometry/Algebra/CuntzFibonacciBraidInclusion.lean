@@ -182,9 +182,9 @@ def ItakuraCuntzSocket (n : ℕ) :=
 
 namespace ItakuraCuntzSocket
 
-def cuntzTrace (socket : ItakuraCuntzSocket n) : CuntzAlg n → ℝ := socket.1
+abbrev cuntzTrace (socket : ItakuraCuntzSocket n) : CuntzAlg n → ℝ := socket.1
 
-def invImage (socket : ItakuraCuntzSocket n) :
+abbrev invImage (socket : ItakuraCuntzSocket n) :
     Matrix (Fin n) (Fin n) ℂ → CuntzAlg n := socket.2
 
 end ItakuraCuntzSocket

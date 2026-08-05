@@ -33,11 +33,19 @@ A Gauge Field (Character) over the Prime Roots.
 Evaluates the Aharonov-Bohm phase acquired by traversing the prime cycle.
 -/
 @[rep_depth transport]
-structure GaugeTwist (G : Type*) [Group G] where
-  /-- The character evaluating on primes (values in the complex plane). -/
-  χ : ℕ → ℂ
-  /-- Multiplicativity ensures it forms a valid gauge representation. -/
-  is_multiplicative : ∀ a b, χ (a * b) = χ a * χ b
+abbrev GaugeTwist (G : Type*) [Group G] := ℕ →* ℂ
+
+namespace GaugeTwist
+
+/-- The character evaluating on primes (values in the complex plane). -/
+abbrev χ {G : Type*} [Group G] (twist : GaugeTwist G) : ℕ → ℂ := twist
+
+/-- Multiplicativity is the native `MonoidHom.map_mul` law. -/
+theorem is_multiplicative {G : Type*} [Group G] (twist : GaugeTwist G) (a b : ℕ) :
+    χ twist (a * b) = χ twist a * χ twist b :=
+  twist.map_mul a b
+
+end GaugeTwist
 
 /--
 The Twisted Souriau-Weyl Partition Function (The L-Function).
@@ -47,7 +55,7 @@ The positive roots α (primes) are weighted by the gauge field χ(p).
 def twistedEulerProduct
     {G : Type*} [Group G]
     (positiveRoots : Finset ℕ) (temperature_s : ℂ) (twist : GaugeTwist G) : ℂ :=
-  ∏ p ∈ positiveRoots, (1 - twist.χ p * (p : ℂ)^(-temperature_s))⁻¹
+  ∏ p ∈ positiveRoots, (1 - GaugeTwist.χ twist p * (p : ℂ)^(-temperature_s))⁻¹
 
 /--
 Langlands Thermodynamic Equivalence.

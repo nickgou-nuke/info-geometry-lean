@@ -15,12 +15,14 @@ namespace ConnesSpectral
 
 variable {A : Type*} [NormedRing A]
 
-structure SpectralTriple (A : Type*) [NormedRing A] where
-  dirac : A
+abbrev SpectralTriple (A : Type*) [NormedRing A] := A
 
 namespace SpectralTriple
 
 variable (ST : SpectralTriple A)
+
+/-- Compatibility accessor for the native Dirac-element carrier. -/
+abbrev dirac : A := ST
 
 def commutator (f : A) : A := ST.dirac * f - f * ST.dirac
 

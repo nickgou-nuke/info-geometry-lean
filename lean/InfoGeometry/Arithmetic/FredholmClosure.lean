@@ -1,7 +1,6 @@
 import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.Cocycle.MatrixDetExpTrace.Diagonal
 import InfoGeometry.Meta.FiniteToInfiniteTransitionSOP
-import InfoGeometry.Analysis.TraceClassBridge
 
 /-!
 # Fredholm Closure Ledger
@@ -79,17 +78,17 @@ theorem regularizedDetStage_succ (factor : ℕ → ℂ) (N : ℕ) :
       regularizedDetStage factor N * factor N := by
   simp [regularizedDetStage, Finset.prod_range_succ]
 
-/- ## The Fredholm Closure Certificate -/
+/- ## The Fredholm Closure Data -/
 
 /--
 Colimit-owner data required to promote the finite determinant recurrence to the
 infinite Fredholm-style readout.
 
-This is intentionally a certificate, not a proof of trace-class operator
+This is intentionally data, not a proof of trace-class operator
 theory.  A future Hestenes--Krein/categorical owner theorem should construct
 this data from the finite-stage tower.
 -/
-structure FredholmClosureCertificate where
+structure FredholmClosureData where
   /-- Concrete trace-class-style ideal used by the colimit owner, if that route is instantiated. -/
   TraceIdeal : Type
   /-- Ambient operator space, e.g. bounded operators on `ℓ²(ℕ⁺)`. -/
@@ -152,29 +151,29 @@ structure FredholmClosureCertificate where
   determinant_ne_zero_on_abs_convergence :
     ∀ s : ℂ, 1 < s.re → determinant s ≠ 0
 
-namespace FredholmClosureCertificate
+namespace FredholmClosureData
 
 /-- The infinite diagonal operator lands in the trace-class ideal by construction. -/
 theorem limitOperator_isTraceClass
-    (C : FredholmClosureCertificate) (s : ℂ) :
+    (C : FredholmClosureData) (s : ℂ) :
     C.isTraceClass (C.idealToAmbient (C.limitOperator s)) :=
   C.idealToAmbient_isTraceClass (C.limitOperator s)
 
 /-- The infinite diagonal operator is compact because trace-class implies compact. -/
 theorem limitOperator_isCompact
-    (C : FredholmClosureCertificate) (s : ℂ) :
+    (C : FredholmClosureData) (s : ℂ) :
     C.isCompact (C.idealToAmbient (C.limitOperator s)) :=
   C.traceClass_isCompact _ (C.limitOperator_isTraceClass s)
 
 /-- Finite cutoff operators land in the trace-class ideal by construction. -/
 theorem finiteCutoff_isTraceClass
-    (C : FredholmClosureCertificate) (s : ℂ) (N : ℕ) :
+    (C : FredholmClosureData) (s : ℂ) (N : ℕ) :
     C.isTraceClass (C.idealToAmbient (C.finiteCutoff s N)) :=
   C.idealToAmbient_isTraceClass (C.finiteCutoff s N)
 
 /-- Trace-norm convergence of the finite cutoffs, exposed as a theorem. -/
 theorem traceNorm_cutoff_converges
-    (C : FredholmClosureCertificate) {s : ℂ} (hs : 1 < s.re) :
+    (C : FredholmClosureData) {s : ℂ} (hs : 1 < s.re) :
     Filter.Tendsto
       (fun N : ℕ => C.traceNormDist (C.finiteCutoff s N) (C.limitOperator s))
       Filter.atTop (nhds 0) :=
@@ -182,13 +181,13 @@ theorem traceNorm_cutoff_converges
 
 /-- Continuity of the Fredholm determinant along the trace-norm cutoff path. -/
 theorem determinant_cutoff_converges
-    (C : FredholmClosureCertificate) {s : ℂ} (hs : 1 < s.re) :
+    (C : FredholmClosureData) {s : ℂ} (hs : 1 < s.re) :
     Filter.Tendsto
       (fun N : ℕ => C.determinantOnIdeal (C.finiteCutoff s N))
       Filter.atTop (nhds (C.determinantOnIdeal (C.limitOperator s))) :=
   C.determinant_cutoff_tendsto s hs
 
-end FredholmClosureCertificate
+end FredholmClosureData
 
 /- ## The Fredholm Closure Theorem -/
 
@@ -200,7 +199,7 @@ only kernel-checked consequence available once the Hestenes--Krein/categorical
 colimit owner supplies the determinant-style readout data.
 -/
 theorem fredholm_closure_theorem
-    (C : FredholmClosureCertificate) {s : ℂ} (hs : 1 < s.re) :
+    (C : FredholmClosureData) {s : ℂ} (hs : 1 < s.re) :
     C.determinant s ≠ 0 :=
   C.determinant_ne_zero_on_abs_convergence s hs
 
@@ -209,7 +208,7 @@ On the guarded side, the supplied determinant/zeta calibration gives the
 multiplicative inverse relation.
 -/
 theorem fredholm_determinant_mul_zeta_eq_one
-    (C : FredholmClosureCertificate) {s : ℂ} (hs : 1 < s.re) :
+    (C : FredholmClosureData) {s : ℂ} (hs : 1 < s.re) :
     C.determinant s * C.zeta s = 1 :=
   C.determinant_mul_zeta_eq_one s hs
 

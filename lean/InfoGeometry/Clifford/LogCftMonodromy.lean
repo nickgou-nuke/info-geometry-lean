@@ -209,6 +209,29 @@ Hadjiivanov logarithmic monodromy for one wrap around a singularity:
 def hadjiivanovMonodromy (h : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   upperJordan (lcftPhase h) (logShear h)
 
+/-- The Hadjiivanov monodromy depends continuously on the LCFT parameter. -/
+theorem continuous_upperJordan {X : Type*} [TopologicalSpace X]
+    (a b : X → ℂ) (ha : Continuous a) (hb : Continuous b) :
+    Continuous (fun x => upperJordan (a x) (b x)) := by
+  refine continuous_pi (fun i => ?_)
+  refine continuous_pi (fun j => ?_)
+  fin_cases i <;> fin_cases j
+  · simpa [upperJordan] using ha
+  · simpa [upperJordan] using hb
+  · simpa [upperJordan] using
+      (continuous_const : Continuous (fun _ : X => (0 : ℂ)))
+  · simpa [upperJordan] using ha
+
+theorem continuous_hadjiivanovMonodromy :
+    Continuous hadjiivanovMonodromy := by
+  exact continuous_upperJordan lcftPhase logShear
+    (by
+      unfold lcftPhase
+      fun_prop)
+    (by
+      unfold logShear logShearBase lcftPhase
+      fun_prop)
+
 /-- The nilpotent part of the one-wrap monodromy. -/
 def monodromyNilpotentPart (h : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   !![0, logShear h; 0, 0]

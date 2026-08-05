@@ -1,0 +1,13 @@
+{
+  "cartan_action_kernel_order": 64,
+  "cartan_action_order": 120,
+  "coefficient_field": "QQ",
+  "full_split_pin_kernel_proved": false,
+  "generator_count": 6,
+  "lift_group_order": 7680,
+  "projected_signed_group_order": 3840,
+  "scope": "finite_signed_mode_lift_only",
+  "spinor_dimension": 32,
+  "witt_lie_action_kernel_is_scalar_pm_identity": true,
+  "witt_lie_action_kernel_order": 2
+}

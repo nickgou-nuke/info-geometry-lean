@@ -119,7 +119,7 @@ theorem closedTomitaDomainColimitInclusion_transition
       Stage sys ω
   have hw := colimit.w F (homOfLE hij)
   have hx := congrArg
-    (fun k : F.obj i ⟶ colimit F => k x)
+    (fun k : F.obj i ⟶ CategoryTheory.Limits.colimit F => k x)
     hw.symm
   simpa [F, closedTomitaDomainColimitInclusion,
     closedTomitaDomainModuleDiagram,

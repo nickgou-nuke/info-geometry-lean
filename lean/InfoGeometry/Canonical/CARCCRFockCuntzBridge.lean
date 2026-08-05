@@ -34,7 +34,7 @@ theorem finite_car_qccr_anticommutator :
 
 theorem cuntz_derived_car_qccr_minus_one
     {Op : Type*} [Ring Op] [StarRing Op]
-    (C : CantorCuntzO2Carrier Op) :
+    (C : InfoGeometry.Topology.CuntzO2Carrier Op) :
     qCcrRelation (carFromCuntz C) (star (carFromCuntz C)) (-1) = 0 := by
   exact (qccr_fermionic_limit (carFromCuntz C) (star (carFromCuntz C))).2
     (by simpa [cantorAnticommutator] using

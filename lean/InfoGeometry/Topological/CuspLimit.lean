@@ -22,23 +22,19 @@ namespace CuspLimitData
 
 variable {X Y : Type*} [TopologicalSpace X] [TopologicalSpace Y]
 
-def cuspFilter (D : CuspLimitData X Y) : Filter X := D.1.1
-def cuspOrbit (D : CuspLimitData X Y) : X → Y := D.1.2.1
-def cuspValue (D : CuspLimitData X Y) : Y := D.1.2.2
+abbrev cuspFilter (D : CuspLimitData X Y) : Filter X := D.1.1
+abbrev cuspOrbit (D : CuspLimitData X Y) : X → Y := D.1.2.1
+abbrev cuspValue (D : CuspLimitData X Y) : Y := D.1.2.2
 
 theorem orbit_tendsto (D : CuspLimitData X Y) :
     Tendsto D.cuspOrbit D.cuspFilter (𝓝 D.cuspValue) :=
   D.2
 
 /-- The cusp limit is recorded purely as a `Tendsto` fact. -/
-theorem tendsto_cuspOrbit (D : CuspLimitData X Y) :
-    Tendsto D.cuspOrbit D.cuspFilter (𝓝 D.cuspValue) :=
-  D.orbit_tendsto
+alias tendsto_cuspOrbit := CuspLimitData.orbit_tendsto
 
 /-- Compatibility alias for the cusp-limit contract. -/
-theorem cuspLimit_tendsto (D : CuspLimitData X Y) :
-    Tendsto D.cuspOrbit D.cuspFilter (𝓝 D.cuspValue) :=
-  D.orbit_tendsto
+alias cuspLimit_tendsto := CuspLimitData.orbit_tendsto
 
 end CuspLimitData
 

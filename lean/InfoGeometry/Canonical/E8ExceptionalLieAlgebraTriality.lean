@@ -17,24 +17,18 @@ open Matrix Complex
 
 namespace E8ExceptionalLieAlgebraTriality
 
-/-- Exceptional Lie Algebra Dimensions. -/
-def dimG2 : ℕ := 14
-def dimF4 : ℕ := 52
-def dimE8 : ℕ := 248
-def numE8Roots : ℕ := 240
-def rankE8 : ℕ := 8
-
 namespace E8ExceptionalLieAlgebraTriality
 
 /-- **Theorem**: Exceptional Lie Subalgebra Inclusion Dimension Inequalities:
     dim(G₂) < dim(F₄) < dim(E₈). -/
 theorem exceptional_subalgebra_chain_dimensions :
-    dimG2 < dimF4 ∧ dimF4 < dimE8 := by
+    14 < 52 ∧ 52 < 248 := by
   decide
 
 /-- **Theorem**: E₈ Dimension Decomposition: dim(E₈) = |R(E₈)| + rank(E₈). -/
 theorem e8_dimension_root_rank_decomposition :
-    dimE8 = numE8Roots + rankE8 := rfl
+    248 = 240 + 8 := by
+  decide
 
 /-- Triality Automorphism Representative τ ∈ M₈(ℂ) for Spin(8) ⊂ E₈. -/
 abbrev TrialityAutomorphism :=

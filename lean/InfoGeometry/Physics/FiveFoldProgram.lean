@@ -42,8 +42,15 @@ structure SymplecticManifold where
   (witten_index : ℤ)
   (anomaly_free : chern_class_1 = 0 ∧ witten_index = 0)
 
-/-- 5. Fractal-to-Continuum: Cuntz O_2 boundary maps to Calabi-Yau bulk -/
-structure CuntzUHFIso (Boundary : Type*) (Bulk : Type*) where
-  (iso : Boundary ≃ Bulk)
+/-- 5. Fractal-to-Continuum: Cuntz O_2 boundary maps to Calabi-Yau bulk.
+
+This is exactly a Mathlib equivalence, not an additional proof-carrying
+structure.  Keep the historical `.iso` projection as a compatibility
+accessor while using the native carrier directly.
+-/
+abbrev CuntzUHFIso (Boundary : Type*) (Bulk : Type*) := Boundary ≃ Bulk
+
+abbrev CuntzUHFIso.iso {Boundary Bulk : Type*}
+    (e : CuntzUHFIso Boundary Bulk) : Boundary ≃ Bulk := e
 
 end InfoGeometry.Physics.FiveFoldProgram

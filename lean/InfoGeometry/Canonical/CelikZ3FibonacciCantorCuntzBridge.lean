@@ -29,6 +29,7 @@ namespace InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBridge
 open InfoGeometry.Canonical.Z3GrassmannDifferentialCalculus
 open InfoGeometry.Canonical.CantorBoundaryCuntzShift
 open InfoGeometry.Canonical.CantorCuntzBasis
+open InfoGeometry.Topology
 
 /--
 Salih Çelik `Z3`-graded calculus readout.
@@ -76,11 +77,37 @@ C*-completion is asserted here.
 -/
 theorem cantor_cuntz_null_boundary_orbit_readout
     {Op : Type*} [Ring Op] [StarRing Op]
-    (B : CantorCuntzBasisPacket Op) (b : Bool) (w : BinaryWord) :
-    CantorCuntzBasisPacket.orbit B (b :: w) =
-      (if b then B.cuntz.S_right else B.cuntz.S_left) *
-        CantorCuntzBasisPacket.orbit B w :=
-  orbit_branch_recursion_readout B b w
+    (C : CuntzO2Carrier Op) (seed : Op) (b : Bool) (w : BinaryWord) :
+    CantorCuntzBasis.orbit C seed (b :: w) =
+      (if b then CuntzO2Carrier.S_right C else CuntzO2Carrier.S_left C) *
+        CantorCuntzBasis.orbit C seed w :=
+  orbit_branch_recursion_readout C seed b w
+
+theorem cantor_cuntz_two_step_orbit_readout
+    {Op : Type*} [Ring Op] [StarRing Op]
+    (C : CuntzO2Carrier Op) (seed : Op) (a b : Bool) (w : BinaryWord) :
+    CantorCuntzBasis.orbit C seed (a :: b :: w) =
+      (if a then CuntzO2Carrier.S_right C else CuntzO2Carrier.S_left C) *
+        (if b then CuntzO2Carrier.S_right C else CuntzO2Carrier.S_left C) *
+          CantorCuntzBasis.orbit C seed w := by
+  rw [cantor_cuntz_null_boundary_orbit_readout C seed a (b :: w)]
+  rw [cantor_cuntz_null_boundary_orbit_readout C seed b w]
+  rw [mul_assoc]
+
+theorem cantor_cuntz_word_orbit_readout
+    {Op : Type*} [Ring Op] [StarRing Op]
+    (C : CuntzO2Carrier Op) (seed : Op) (u w : BinaryWord) :
+    CantorCuntzBasis.orbit C seed (u ++ w) =
+      List.foldr
+        (fun b x =>
+          (if b then CuntzO2Carrier.S_right C else CuntzO2Carrier.S_left C) * x)
+        (CantorCuntzBasis.orbit C seed w) u := by
+  induction u with
+  | nil => rfl
+  | cons b u ih =>
+      rw [List.cons_append, cantor_cuntz_null_boundary_orbit_readout]
+      simp only [List.foldr]
+      rw [ih]
 
 /--
 Explicit theorem-safe bridge from Salih Çelik's `Z3`-graded calculus technology
@@ -96,7 +123,7 @@ negative scope above and remains open closure debt until separately proved.
 theorem explicit_braided_tensor_category_bridge
     {A Op : Type*} [Zero A] [Add A] [Mul A] [Ring Op] [StarRing Op]
     (D : Z3DifferentialCalculus A) (x y : A)
-    (B : CantorCuntzBasisPacket Op) (b : Bool) (w : BinaryWord) :
+    (C : CuntzO2Carrier Op) (seed : Op) (b : Bool) (w : BinaryWord) :
     (D.d (D.d (D.d x)) = 0 ∧
       D.d (x * y) = D.d x * y + D.omegaPow (D.degree x) * (x * D.d y)) ∧
     InfoGeometry.Categorical.FibonacciFusionCategoryData.N_tau *
@@ -110,14 +137,14 @@ theorem explicit_braided_tensor_category_bridge
       InfoGeometry.Canonical.FibonacciParafermionAtoms.z3BMatrix *
         InfoGeometry.Canonical.FibonacciParafermionAtoms.z3RMatrix *
         InfoGeometry.Canonical.FibonacciParafermionAtoms.z3BMatrix ∧
-    CantorCuntzBasisPacket.orbit B (b :: w) =
-      (if b then B.cuntz.S_right else B.cuntz.S_left) *
-        CantorCuntzBasisPacket.orbit B w := by
+    CantorCuntzBasis.orbit C seed (b :: w) =
+      (if b then CuntzO2Carrier.S_right C else CuntzO2Carrier.S_left C) *
+        CantorCuntzBasis.orbit C seed w := by
   exact ⟨
     salih_celik_z3_calculus_readout D x y,
     InfoGeometry.Categorical.FibonacciFusionCategoryData.N_tau_sq_eq_N_unit_add_N_tau,
     InfoGeometry.Canonical.CelikErlangenBraidBridge.z3_artin_relation_via_atoms,
-    cantor_cuntz_null_boundary_orbit_readout B b w⟩
+    cantor_cuntz_null_boundary_orbit_readout C seed b w⟩
 
 end InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBridge
 

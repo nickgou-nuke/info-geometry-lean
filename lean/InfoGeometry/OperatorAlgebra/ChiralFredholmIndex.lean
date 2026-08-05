@@ -87,14 +87,15 @@ This is the algebraic shadow of
 
 `index(D₊) = dim ker D₊ - dim ker D₋`.
 -/
-structure ChiralKernelCount where
-  /-- Left/chiral-positive zero modes. -/
-  leftKernel : ℕ
-
-  /-- Right/chiral-negative zero modes. -/
-  rightKernel : ℕ
+abbrev ChiralKernelCount := ℕ × ℕ
 
 namespace ChiralKernelCount
+
+/-- Left/chiral-positive zero modes. -/
+abbrev leftKernel (C : ChiralKernelCount) : ℕ := C.1
+
+/-- Right/chiral-negative zero modes. -/
+abbrev rightKernel (C : ChiralKernelCount) : ℕ := C.2
 
 /-- The chiral index: `leftKernel - rightKernel`. -/
 def index
@@ -103,9 +104,8 @@ def index
 
 /-- The mirror count swaps left and right kernels. -/
 def mirror
-    (C : ChiralKernelCount) : ChiralKernelCount where
-  leftKernel := C.rightKernel
-  rightKernel := C.leftKernel
+    (C : ChiralKernelCount) : ChiralKernelCount :=
+  (C.rightKernel, C.leftKernel)
 
 /-- Mirroring reverses the chiral index. -/
 theorem mirror_index
@@ -218,10 +218,8 @@ structure ModularMirrorFredholmCompatibility
   This is the kernel-count shadow of `J P_L J = P_R`.
   -/
   mirror_swaps_kernelCount :
-    F.kernelCount.mirror = {
-      leftKernel := F.kernelCount.rightKernel
-      rightKernel := F.kernelCount.leftKernel
-    }
+    F.kernelCount.mirror =
+      (F.kernelCount.rightKernel, F.kernelCount.leftKernel)
 
 namespace ModularMirrorFredholmCompatibility
 

@@ -154,7 +154,7 @@ def KreinSpectralConcentration
   ∀ ψ : H, C.zeroSector ψ → C.throat ψ
 
 /--
-Proof-carrying obstruction certificate for the final no-leakage step.
+Obstruction data for the final no-leakage step.
 
 This is the precise place where the topology enters the RH reformulation:
 an off-throat zero must create a `J`-odd obstruction, while the twisted-index
@@ -162,7 +162,7 @@ vanishing theorem supplies the obstruction-vanishing clause.  Only the
 combination proves spectral concentration.
 -/
 @[rep_depth krein]
-structure KreinOddObstructionCertificate
+structure KreinOddObstructionData
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     (C : KreinSpectralChart H) where
@@ -183,7 +183,7 @@ through a direct-limit carrier.  It says every zero-state has a finite-stage
 representative, and every such stage already proves the throat condition.
 -/
 @[rep_depth krein]
-structure KreinInductiveColimitSupportCertificate
+structure KreinFiniteStageSupportData
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     (C : KreinSpectralChart H) where
@@ -206,7 +206,7 @@ subsystem between a seed and an ambient boundary, make it maximal by Zorn's
 lemma, and prove the zero sector is contained in that maximal subsystem.
 -/
 @[rep_depth krein]
-structure KreinZornMaximalSubsystemCertificate
+structure KreinZornMaximalSubsystemData
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     (C : KreinSpectralChart H) where
@@ -218,19 +218,9 @@ structure KreinZornMaximalSubsystemCertificate
   ambient : Set H
   /-- Zorn-maximal subsystem between `seed` and `ambient`. -/
   maximal : Set H
-  seed_subset_ambient : seed ⊆ ambient
-  seed_admissible : admissible seed
-  maximal_contains_seed : seed ⊆ maximal
-  maximal_subset_ambient : maximal ⊆ ambient
-  maximal_admissible : admissible maximal
-  /-- Maximality condition produced by the Zorn step. -/
+  /-- Native order-theoretic maximality in the constrained subsystem set. -/
   maximality :
-    ∀ N : Set H,
-      seed ⊆ N →
-        N ⊆ ambient →
-          admissible N →
-            maximal ⊆ N →
-              N = maximal
+    Maximal (fun N : Set H => seed ⊆ N ∧ N ⊆ ambient ∧ admissible N) maximal
   /-- The analytic zero sector is contained in the Zorn-maximal subsystem. -/
   zero_subset_maximal :
     ∀ ψ : H, C.zeroSector ψ → ψ ∈ maximal
@@ -275,7 +265,7 @@ theorem kreinRH_of_oddObstructionCertificate
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     {C : KreinSpectralChart H}
-    (O : KreinOddObstructionCertificate C) :
+    (O : KreinOddObstructionData C) :
     KreinRH C := by
   intro ψ hzero
   by_contra hnot
@@ -287,7 +277,7 @@ theorem kreinSpectralConcentration_of_oddObstructionCertificate
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     {C : KreinSpectralChart H}
-    (O : KreinOddObstructionCertificate C) :
+    (O : KreinOddObstructionData C) :
     KreinSpectralConcentration C :=
   kreinRH_of_oddObstructionCertificate O
 
@@ -297,7 +287,7 @@ theorem kreinRH_of_inductiveColimitSupport
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     {C : KreinSpectralChart H}
-    (L : KreinInductiveColimitSupportCertificate C) :
+    (L : KreinFiniteStageSupportData C) :
     KreinRH C := by
   intro ψ hzero
   rcases L.zero_has_stage ψ hzero with ⟨n, hn⟩
@@ -308,7 +298,7 @@ theorem kreinSpectralConcentration_of_inductiveColimitSupport
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     {C : KreinSpectralChart H}
-    (L : KreinInductiveColimitSupportCertificate C) :
+    (L : KreinFiniteStageSupportData C) :
     KreinSpectralConcentration C :=
   kreinRH_of_inductiveColimitSupport L
 
@@ -318,7 +308,7 @@ theorem kreinRH_of_zornMaximalSubsystem
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     {C : KreinSpectralChart H}
-    (Z : KreinZornMaximalSubsystemCertificate C) :
+    (Z : KreinZornMaximalSubsystemData C) :
     KreinRH C := by
   intro ψ hzero
   exact Z.maximal_no_leakage ψ (Z.zero_subset_maximal ψ hzero) hzero
@@ -328,7 +318,7 @@ theorem kreinSpectralConcentration_of_zornMaximalSubsystem
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
     [KreinSpace H]
     {C : KreinSpectralChart H}
-    (Z : KreinZornMaximalSubsystemCertificate C) :
+    (Z : KreinZornMaximalSubsystemData C) :
     KreinSpectralConcentration C :=
   kreinRH_of_zornMaximalSubsystem Z
 

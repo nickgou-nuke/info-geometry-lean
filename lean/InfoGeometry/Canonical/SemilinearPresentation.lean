@@ -100,14 +100,14 @@ def idMap
 @[rep_depth krein]
 def compMap
     {R S T : Type*} [Semiring R] [Semiring S] [Semiring T]
-    {σ : R →+* S} {τ : S →+* T}
+    {σ : R →+* S} {τ : S →+* T} {υ : R →+* T}
+    [RingHomCompTriple σ τ υ]
     {P : ModulePresentation R}
     {Q : ModulePresentation S}
     {U : ModulePresentation T}
     (F : SemilinearPresentationMap σ P Q)
     (G : SemilinearPresentationMap τ Q U) :
-    SemilinearPresentationMap (τ.comp σ) P U :=
-  letI : RingHomCompTriple σ τ (τ.comp σ) := ⟨rfl⟩
+    SemilinearPresentationMap υ P U :=
   {
     mapState := G.mapState.comp F.mapState
     mapObservable := G.mapObservable.comp F.mapObservable
@@ -150,6 +150,37 @@ def compMap
                 rw [G.map_phaseReadout (F.mapState s)]
   }
 
+@[ext]
+theorem SemilinearPresentationMap.ext
+    {R S : Type*} [Semiring R] [Semiring S]
+    {σ : R →+* S} {P : ModulePresentation R} {Q : ModulePresentation S}
+    {F G : SemilinearPresentationMap σ P Q}
+    (hState : F.mapState = G.mapState)
+    (hObservable : F.mapObservable = G.mapObservable)
+    (hReadout : F.mapReadout = G.mapReadout) :
+    F = G := by
+  cases F
+  cases G
+  simp_all
+
+@[simp]
+theorem compMap_id
+    {R S : Type*} [Semiring R] [Semiring S]
+    {σ : R →+* S} [RingHomCompTriple σ (RingHom.id S) σ]
+    {P : ModulePresentation R} {Q : ModulePresentation S}
+    (F : SemilinearPresentationMap σ P Q) :
+    compMap F (idMap Q) = F := by
+  apply SemilinearPresentationMap.ext <;> rfl
+
+@[simp]
+theorem id_compMap
+    {R S : Type*} [Semiring R] [Semiring S]
+    {σ : R →+* S} [RingHomCompTriple (RingHom.id R) σ σ]
+    {P : ModulePresentation R} {Q : ModulePresentation S}
+    (F : SemilinearPresentationMap σ P Q) :
+    compMap (idMap P) F = F := by
+  apply SemilinearPresentationMap.ext <;> rfl
+
 /-- Semilinear presentation isomorphism with inverse laws on all transported carriers. -/
 @[rep_depth krein]
 structure SemilinearPresentationIso
@@ -174,6 +205,17 @@ structure SemilinearPresentationIso
     ∀ x : P.Readout, invMap.mapReadout (toMap.mapReadout x) = x
   right_readout :
     ∀ x : Q.Readout, toMap.mapReadout (invMap.mapReadout x) = x
+
+theorem SemilinearPresentationIso.support_iff
+    {R S : Type*} [Semiring R] [Semiring S]
+    {σ : R ≃+* S} {P : ModulePresentation R} {Q : ModulePresentation S}
+    (F : SemilinearPresentationIso σ P Q) (s : P.State) :
+    P.support s ↔ Q.support (F.toMap.mapState s) := by
+  constructor
+  · exact F.toMap.map_support s
+  · intro hs
+    have h := F.invMap.map_support (F.toMap.mapState s) hs
+    simpa [F.left_state s] using h
 
 /-- Identity semilinear presentation isomorphism. -/
 @[rep_depth krein]
@@ -204,7 +246,7 @@ def idIso
 
 section PairedOffDiagonal
 
-variable (R : Type*) [CommSemiring R]
+variable (R : Type*) [Semiring R]
 
 /-- Paired presentation on the non-diagonal sector. -/
 @[rep_depth operator]

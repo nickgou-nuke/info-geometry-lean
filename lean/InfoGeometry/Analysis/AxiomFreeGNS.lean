@@ -114,9 +114,14 @@ theorem omega_of_head_minus {x : BaseIndex} (h : head x = BinarySector.minus) :
   simp [omega, h]
 
 /-- State carrier on the concrete Cuntz operator lane. -/
-structure CuntzKMSState where
-  /-- The real KMS state functional on the concrete operator lane. -/
-  phi : (H → H) → ℝ
+abbrev CuntzKMSState := (H → H) → ℝ
+
+namespace CuntzKMSState
+
+/-- Compatibility accessor for the native state-functional carrier. -/
+abbrev phi (Φ : CuntzKMSState) : (H → H) → ℝ := Φ
+
+end CuntzKMSState
 
 /-- The state is normalized: φ(I) = 1. -/
 def NormalizedState (φ : (H → H) → ℝ) : Prop :=

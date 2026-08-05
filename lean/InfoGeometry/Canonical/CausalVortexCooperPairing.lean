@@ -34,8 +34,14 @@ namespace CausalVortex
 variable {n : ℕ}
 
 /-- A square root of minus one acting on a finite matrix space. -/
-structure KahlerPhase (n : ℕ) where
-  K : (Matrix (Fin n) (Fin n) ℂ)ˣ
+abbrev KahlerPhase (n : ℕ) := (Matrix (Fin n) (Fin n) ℂ)ˣ
+
+namespace KahlerPhase
+
+abbrev K {n : ℕ} (phase : KahlerPhase n) :
+    (Matrix (Fin n) (Fin n) ℂ)ˣ := phase
+
+end KahlerPhase
 
 /-- The algebraic phase action on a radial matrix. -/
 noncomputable def symplecticTrick (phase : KahlerPhase n)

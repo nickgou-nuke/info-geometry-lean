@@ -95,28 +95,38 @@ natural cone.
 state/weight representative.
 -/
 @[rep_depth krein]
-structure HestenesKreinNaturalConeVacuum where
-  /-- Natural-cone carrier. -/
-  natural :
-    Bridge (H := H) (NormalPositive := NormalPositive) (Op := Op)
-
-  /-- Vacuum vector `Ω`. -/
-  Omega : H
-
-  /-- The vacuum lies in the supplied natural cone. -/
-  omega_in_cone : Omega ∈ natural.naturalCone
-
-  /-- The Krein/Tomita reflection fixes the vacuum. -/
-  J_fixes_omega : KreinSpace.jCLM (H := H) Omega = Omega
-
-  /-- The vacuum is normalized in the supplied Krein convention. -/
-  omega_normalized : KreinSpace.kreinInner (H := H) Omega Omega = 1
+abbrev HestenesKreinNaturalConeVacuum :=
+  { data :
+      Bridge (H := H) (NormalPositive := NormalPositive) (Op := Op) × H //
+    data.2 ∈ data.1.naturalCone ∧
+    KreinSpace.jCLM (H := H) data.2 = data.2 ∧
+    KreinSpace.kreinInner (H := H) data.2 data.2 = 1 }
 
 namespace HestenesKreinNaturalConeVacuum
 
-variable (V : HestenesKreinNaturalConeVacuum (H := H)
-  (NormalPositive := NormalPositive) (Op := Op))
+abbrev natural
+    (V : HestenesKreinNaturalConeVacuum (H := H)
+      (NormalPositive := NormalPositive) (Op := Op)) :
+    Bridge (H := H) (NormalPositive := NormalPositive) (Op := Op) := V.1.1
 
+abbrev Omega
+    (V : HestenesKreinNaturalConeVacuum (H := H)
+      (NormalPositive := NormalPositive) (Op := Op)) : H := V.1.2
+
+abbrev omega_in_cone
+    (V : HestenesKreinNaturalConeVacuum (H := H)
+      (NormalPositive := NormalPositive) (Op := Op)) :
+    V.Omega ∈ V.natural.naturalCone := V.2.1
+
+abbrev J_fixes_omega
+    (V : HestenesKreinNaturalConeVacuum (H := H)
+      (NormalPositive := NormalPositive) (Op := Op)) :
+    KreinSpace.jCLM (H := H) V.Omega = V.Omega := V.2.2.1
+
+abbrev omega_normalized
+    (V : HestenesKreinNaturalConeVacuum (H := H)
+      (NormalPositive := NormalPositive) (Op := Op)) :
+    KreinSpace.kreinInner (H := H) V.Omega V.Omega = 1 := V.2.2.2
 
 end HestenesKreinNaturalConeVacuum
 

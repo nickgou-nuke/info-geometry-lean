@@ -10,19 +10,22 @@ isolated fixed points of the spinorial flow natively inside Lean 4.
 variable {R : Type*} [CommRing R]
 
 /-- Abstract representation of the Graded Cohomology Vector Space -/
-structure GradedCohomology (X : Type*) (R : Type*) [CommRing R] where
-  H_total : Type*
-  [instAddCommGroup : AddCommGroup H_total]
-  [instModule : Module R H_total]
-
-attribute [instance] GradedCohomology.instAddCommGroup
-attribute [instance] GradedCohomology.instModule
+abbrev GradedCohomology (_X : Type*) (_R : Type*) [CommRing _R] := Type*
 
 /-- Structure tracking a discrete fixed point x ∈ Fix(f) along its tangent data -/
-structure IsolatedFixedPoint (X : Type*) (R : Type*) [CommRing R] where
-  point_id : ℕ
-  local_det : R
-  h_nonzero : local_det ≠ 0 -- Enforces non-degeneracy from Macaulay2 checks
+abbrev IsolatedFixedPoint (X : Type*) (R : Type*) [CommRing R] :=
+  {data : ℕ × R // data.2 ≠ 0}
+
+namespace IsolatedFixedPoint
+
+abbrev point_id {X R : Type*} [CommRing R]
+    (p : IsolatedFixedPoint X R) : ℕ := p.1.1
+abbrev local_det {X R : Type*} [CommRing R]
+    (p : IsolatedFixedPoint X R) : R := p.1.2
+abbrev h_nonzero {X R : Type*} [CommRing R]
+    (p : IsolatedFixedPoint X R) : p.local_det ≠ 0 := p.2
+
+end IsolatedFixedPoint
 
 /-- The hardcoded determinant weight verified by the Macaulay2 engine -/
 def m2_lefschetz_det_weight : ℤ := 2
@@ -33,9 +36,21 @@ def m2_lefschetz_det_weight : ℤ := 2
   Formulates the type tree assertion equating the global alternating cohomology trace
   to the localized sum of tangent weights over the discrete fixed-point array.
 -/
-structure LefschetzFormulaSetup (X : Type*) (GradedH : GradedCohomology X R) where
-  global_cohomology_trace : R
-  fixed_points_list : List (IsolatedFixedPoint X R)
-  -- The global-to-local trace equality pairing
-  trace_equivalence :
-    global_cohomology_trace = (fixed_points_list.map (fun p => p.local_det)).sum
+abbrev LefschetzFormulaSetup (X : Type*) (GradedH : GradedCohomology X R) :=
+  {data : R × List (IsolatedFixedPoint X R) //
+    data.1 = (data.2.map (fun p => p.local_det)).sum}
+
+namespace LefschetzFormulaSetup
+
+abbrev global_cohomology_trace {X : Type*} {R : Type*} [CommRing R]
+    {GradedH : GradedCohomology X R}
+    (S : LefschetzFormulaSetup X GradedH) : R := S.1.1
+abbrev fixed_points_list {X : Type*} {R : Type*} [CommRing R]
+    {GradedH : GradedCohomology X R}
+    (S : LefschetzFormulaSetup X GradedH) : List (IsolatedFixedPoint X R) := S.1.2
+abbrev trace_equivalence {X : Type*} {R : Type*} [CommRing R]
+    {GradedH : GradedCohomology X R}
+    (S : LefschetzFormulaSetup X GradedH) :
+    S.global_cohomology_trace = (S.fixed_points_list.map (fun p => p.local_det)).sum := S.2
+
+end LefschetzFormulaSetup

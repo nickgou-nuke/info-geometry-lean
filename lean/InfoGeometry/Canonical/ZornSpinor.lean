@@ -217,6 +217,78 @@ theorem anticolorProject_idempotent (Z : ZornMatrix R) :
     anticolorProject (anticolorProject Z) = anticolorProject Z := by
   rw [anticolorProject_apply, anticolorProject_apply]
 
+/-- The upper chiral basis vectors are the off-diagonal vector generators. -/
+def chiralUpperBasis (i : Fin 3) : ZornMatrix R :=
+  { a := 0, b := 0, x := Pi.single i 1, y := 0 }
+
+/-- The lower chiral basis vectors are the off-diagonal covector generators. -/
+def chiralLowerBasis (i : Fin 3) : ZornMatrix R :=
+  { a := 0, b := 0, x := 0, y := Pi.single i 1 }
+
+private theorem smul_a_projection (r : R) (Z : ZornMatrix R) :
+    (r • Z).a = r * Z.a := by
+  rw [Equiv.smul_def coordEquiv]
+  rfl
+
+private theorem smul_b_projection (r : R) (Z : ZornMatrix R) :
+    (r • Z).b = r * Z.b := by
+  rw [Equiv.smul_def coordEquiv]
+  rfl
+
+private theorem smul_x_projection (r : R) (Z : ZornMatrix R) (i : Fin 3) :
+    (r • Z).x i = r * Z.x i := by
+  rw [Equiv.smul_def coordEquiv]
+  rfl
+
+private theorem smul_y_projection (r : R) (Z : ZornMatrix R) (i : Fin 3) :
+    (r • Z).y i = r * Z.y i := by
+  rw [Equiv.smul_def coordEquiv]
+  rfl
+
+/-- The color projector is the sum of the three upper chiral basis vectors. -/
+theorem colorProject_eq_chiralUpper_sum (Z : ZornMatrix R) :
+    colorProject Z = ∑ i : Fin 3, Z.x i • chiralUpperBasis i := by
+  cases Z
+  apply ZornMatrix.ext
+  · simp [colorProject_apply, chiralUpperBasis, Fin.sum_univ_three,
+      ZornMatrix.add_def, smul_a_projection, smul_b_projection,
+      smul_x_projection, smul_y_projection]
+  · simp [colorProject_apply, chiralUpperBasis, Fin.sum_univ_three,
+      ZornMatrix.add_def, smul_a_projection, smul_b_projection,
+      smul_x_projection, smul_y_projection]
+  · funext i
+    fin_cases i <;>
+      simp [colorProject_apply, chiralUpperBasis, Fin.sum_univ_three,
+        ZornMatrix.add_def, smul_a_projection, smul_b_projection,
+        smul_x_projection, smul_y_projection]
+  · funext i
+    fin_cases i <;>
+      simp [colorProject_apply, chiralUpperBasis, Fin.sum_univ_three,
+        ZornMatrix.add_def, smul_a_projection, smul_b_projection,
+        smul_x_projection, smul_y_projection]
+
+/-- The anticolor projector is the sum of the three lower chiral basis vectors. -/
+theorem anticolorProject_eq_chiralLower_sum (Z : ZornMatrix R) :
+    anticolorProject Z = ∑ i : Fin 3, Z.y i • chiralLowerBasis i := by
+  cases Z
+  apply ZornMatrix.ext
+  · simp [anticolorProject_apply, chiralLowerBasis, Fin.sum_univ_three,
+      ZornMatrix.add_def, smul_a_projection, smul_b_projection,
+      smul_x_projection, smul_y_projection]
+  · simp [anticolorProject_apply, chiralLowerBasis, Fin.sum_univ_three,
+      ZornMatrix.add_def, smul_a_projection, smul_b_projection,
+      smul_x_projection, smul_y_projection]
+  · funext i
+    fin_cases i <;>
+      simp [anticolorProject_apply, chiralLowerBasis, Fin.sum_univ_three,
+        ZornMatrix.add_def, smul_a_projection, smul_b_projection,
+        smul_x_projection, smul_y_projection]
+  · funext i
+    fin_cases i <;>
+      simp [anticolorProject_apply, chiralLowerBasis, Fin.sum_univ_three,
+        ZornMatrix.add_def, smul_a_projection, smul_b_projection,
+        smul_x_projection, smul_y_projection]
+
 /-- The four Peirce components reconstruct the Zorn cell. -/
 theorem zorn_peirce_decomposition (Z : ZornMatrix R) :
     Z = peirceComponent zornPlus zornPlus Z + colorProject Z +

@@ -38,8 +38,14 @@ namespace InfoGeometry.Projective.Scrambling
 open InfoGeometry.Canonical.FiniteFibonacciAnyonBraiding
 
 /-- Finite boundary microstate registers. -/
-structure HorizonMicrostates (n : ℕ) where
-  state_vector : Matrix (Fin n) (Fin 1) ℂ
+abbrev HorizonMicrostates (n : ℕ) := Matrix (Fin n) (Fin 1) ℂ
+
+namespace HorizonMicrostates
+
+/-- Compatibility accessor for the native finite state vector. -/
+abbrev state_vector (state : HorizonMicrostates n) : Matrix (Fin n) (Fin 1) ℂ := state
+
+end HorizonMicrostates
 
 /-- Matrix quadratic-form conservation equation for a supplied braid operator. -/
 def InformationConservationEquation {n : ℕ}

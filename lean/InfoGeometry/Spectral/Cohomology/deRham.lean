@@ -135,6 +135,18 @@ abbrev d (C : deRhamComplex M V) (k : ℕ) :
     C.forms k →ₗ[ℝ] C.forms (k + 1) :=
   F.d k
 
+/-! The pointwise square-zero axiom exposed as native linear-map algebra. -/
+
+theorem d_comp_d_zero (C : deRhamComplex M V) (k : ℕ) :
+    (C.d (k + 1)).comp (C.d k) = 0 := by
+  ext x
+  exact F.d_sq_zero k x
+
+theorem range_d_le_ker_d (C : deRhamComplex M V) (k : ℕ) :
+    LinearMap.range (C.d k) ≤ LinearMap.ker (C.d (k + 1)) := by
+  rintro _ ⟨x, rfl⟩
+  exact F.d_sq_zero k x
+
 /-- Closed forms in degree `k`. -/
 def cycles (C : deRhamComplex M V) (k : ℕ) : Submodule ℝ (C.forms k) :=
   LinearMap.ker (C.d k)

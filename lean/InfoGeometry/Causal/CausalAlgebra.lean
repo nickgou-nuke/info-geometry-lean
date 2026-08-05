@@ -163,9 +163,18 @@ An abstract causal orientation on an ℝ-module V with an involutive
 linear map O. The operators d, δ, D, Δ_H, Δ_D are derived.
 -/
 
-structure CausalOrientation (V : Type*) [AddCommGroup V] [Module ℝ V] where
-  O : V →ₗ[ℝ] V
-  O_sq_eq_id : O * O = 1
+abbrev CausalOrientation (V : Type*) [AddCommGroup V] [Module ℝ V] :=
+  {O : V →ₗ[ℝ] V // O * O = 1}
+
+namespace CausalOrientation
+
+abbrev O {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (c : CausalOrientation V) : V →ₗ[ℝ] V := c.1
+
+abbrev O_sq_eq_id {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (c : CausalOrientation V) : c.O * c.O = 1 := c.2
+
+end CausalOrientation
 
 namespace CausalOrientation
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]

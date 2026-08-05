@@ -48,12 +48,15 @@ local instance : IsScalarTower ℝ EndH EndH := inferInstance
 /-- Bridge packet tying the unified Drazin owner lane to the generic gap
 shadow on the same carrier. -/
 @[rep_depth transport]
-structure UnifiedTopologicalGapCompatibility where
-  U : InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage (E := E)
+abbrev UnifiedTopologicalGapCompatibility :=
+  InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage (E := E)
 
 namespace UnifiedTopologicalGapCompatibility
 
 variable (C : UnifiedTopologicalGapCompatibility (E := E))
+
+abbrev U : InfoGeometry.Canonical.UnifiedSuperchargeAlgebra.UnifiedSuperchargePackage
+    (E := E) := C
 local notation "ownerTranslation" =>
   InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge.UnifiedSuperchargePackage.ownerTranslationCandidate
 local notation "ownerCentral" =>

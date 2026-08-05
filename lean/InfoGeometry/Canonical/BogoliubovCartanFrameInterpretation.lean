@@ -212,21 +212,6 @@ abbrev diagonalReadout (O : OperatorInBogoliubovKANChart (E := E)) :
 
 variable (O : OperatorInBogoliubovKANChart (E := E))
 
-/-- The primitive owner of the chart is the original neutral-space operator. -/
-theorem primitive_operator_owner :
-    O.operator = O.operator :=
-  rfl
-
-/-- Re-export: the framed operator is the full Bogoliubov frame action. -/
-theorem framedOperator_eq_frameAction :
-    O.framedOperator = O.frame.frameAction O.operator :=
-  O.framedOperator_eq
-
-/-- Re-export: the diagonal object is only the Cartan/A-component readout. -/
-theorem diagonalReadout_eq_Apart_readout :
-    O.diagonalReadout = O.frame.diagonalOperatorReadout O.operator :=
-  O.diagonalReadout_eq
-
 /--
 The chart package explicitly witnesses that its diagonal readout is only a
 Cartan/KAN shadow of the primitive noncommutative operator.

@@ -320,26 +320,4 @@ structure TypeIIISuperIntegrationDatum
     Option (CoreSuperTraceDatum M Core Scalar)
 
 
-/-! ## 8. Owner target -/
-
-/--
-Owner target for trace-free graded integration.
-
-A concrete model must supply a super integration datum. The theorem payload is
-the defining graded readout law `Super(x) = backendReadout (χ * x)`.
--/
-def TraceFreeSuperIntegrationOwnerTarget
-    (A Scalar : Type*) [Ring A] : Prop :=
-  ∀ (S : SuperIntegrationDatum A Scalar) (x : A),
-    S.superReadout x = S.backendReadout (S.grading.chi * x)
-
-/--
-The owner target is discharged by the defining graded-readout equation.
--/
-theorem traceFreeSuperIntegrationOwnerTarget
-    (A Scalar : Type*) [Ring A] :
-    TraceFreeSuperIntegrationOwnerTarget A Scalar := by
-  intro S x
-  exact S.superReadout_apply x
-
 end InfoGeometry.OperatorAlgebra.TraceFreeSuperIntegration

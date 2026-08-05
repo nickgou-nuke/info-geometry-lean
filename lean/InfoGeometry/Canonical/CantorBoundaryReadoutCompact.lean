@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBoundaryReadoutRefinement
+import Mathlib.Topology.Instances.Real.Lemmas
 
 /-!
 # Compact readout images of finite cylinders
@@ -24,6 +25,12 @@ theorem isCompact_readout_image_prefixCylinder
     IsCompact (realBinaryReadout '' prefixCylinder n w) := by
   exact (isCompact_prefixCylinder n w).image continuous_realBinaryReadout
 
+theorem isClosed_readout_image_prefixCylinder
+    (n : ℕ) (w : BitWord n) :
+    IsClosed (realBinaryReadout '' prefixCylinder n w) := by
+  letI : T2Space ℝ := TopologicalSpace.t2Space_of_metrizableSpace
+  exact (isCompact_readout_image_prefixCylinder n w).isClosed
+
 theorem prefixCylinder_nonempty (n : ℕ) (w : BitWord n) :
     (prefixCylinder n w).Nonempty := by
   exact ⟨prefixExtend w (fun _ => false), prefixExtend_mem_prefixCylinder w _⟩
@@ -33,6 +40,13 @@ theorem readout_image_prefixCylinder_nonempty
     (realBinaryReadout '' prefixCylinder n w).Nonempty := by
   rcases prefixCylinder_nonempty n w with ⟨x, hx⟩
   exact ⟨realBinaryReadout x, ⟨x, hx, rfl⟩⟩
+
+theorem readout_image_prefixCylinder_subset_unitInterval
+    (n : ℕ) (w : BitWord n) :
+    realBinaryReadout '' prefixCylinder n w ⊆ Set.Icc (0 : ℝ) 1 := by
+  intro z hz
+  rcases hz with ⟨x, _, rfl⟩
+  exact realBinaryReadout_mem_unitInterval x
 
 theorem readout_image_prefixCylinder_subset_dyadicInterval
     (n : ℕ) (w : BitWord n) :

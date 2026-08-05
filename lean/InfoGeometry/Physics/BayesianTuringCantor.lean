@@ -201,28 +201,5 @@ theorem logResidue_self {Q : ℚ} (hQ : Q ≠ 0) :
 theorem tape_carrier_eq : CantorBoundary = TuringTape :=
   rfl
 
-/--
-The finite Bayesian/Turing/logarithmic closure theorem.
-
-This was formerly an evidence structure whose only inhabitant copied the three
-theorems below into fields.  The conjunction exposes the actual propositions
-without introducing a second carrier or projection-only proofs.
--/
-theorem BayesianTuringPacket :
-    (∀ n (P Q : FiniteProgram n),
-      programCylinder n (P ∩ Q) = programCylinder n P ∩ programCylinder n Q) ∧
-    (∀ φ ψ χ : ℚ,
-      logRNIncrement φ ψ + logRNIncrement ψ χ = logRNIncrement φ χ) ∧
-    (∀ {Q : ℚ}, Q ≠ 0 → logResidue Q Q = 1) :=
-  ⟨programCylinder_inter, logRNIncrement_cocycle, logResidue_self⟩
-
-/-- Historical entry point for the finite Bayesian/Turing closure theorem. -/
-theorem bayesian_turing_cantor_packet :
-    (∀ n (P Q : FiniteProgram n),
-      programCylinder n (P ∩ Q) = programCylinder n P ∩ programCylinder n Q) ∧
-    (∀ φ ψ χ : ℚ,
-      logRNIncrement φ ψ + logRNIncrement ψ χ = logRNIncrement φ χ) ∧
-    (∀ {Q : ℚ}, Q ≠ 0 → logResidue Q Q = 1) :=
-  BayesianTuringPacket
 
 end InfoGeometry.Physics.BayesianTuringCantor

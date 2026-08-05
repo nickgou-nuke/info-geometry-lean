@@ -39,26 +39,28 @@ packet names the modular/CPT propositions used by the scale/shape and
 wavelet-lane bridges.  Their certificates live in separate theorems.
 -/
 @[rep_depth transport]
-structure Cl11ModularAtom (E : Type*)
-    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
-  atom : ModularCPTChiralAtom E
+abbrev Cl11ModularAtom (E : Type*)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  ModularCPTChiralAtom E
 
 namespace Cl11ModularAtom
+
+abbrev atom (A : Cl11ModularAtom E) : ModularCPTChiralAtom E := A
 
 /-- The axis is derived from the canonical modular atom, not stored as a
 separate evidence field. -/
 abbrev axis (A : Cl11ModularAtom E) : KAxis E :=
-  A.atom.toKAxis
+  A.toKAxis
 
 @[simp] theorem axis_eq (A : Cl11ModularAtom E) :
-    A.axis = A.atom.toKAxis :=
+    A.axis = A.toKAxis :=
   rfl
 
 /-- The derived typed `K`-axis is the one extracted from the modular atom. -/
 @[rep_depth transport]
 theorem axis_eq_toKAxis
     (A : Cl11ModularAtom E) :
-    A.axis = A.atom.toKAxis :=
+    A.axis = A.toKAxis :=
   A.axis_eq
 
 /-- The modular atom carries a square-minus-one axis. -/
@@ -68,7 +70,7 @@ theorem axis_square_neg_one
     A.axis.K * A.axis.K =
       -(1 : InfoGeometry.Krein.NeutralSpace E →L[ℝ] InfoGeometry.Krein.NeutralSpace E) := by
   rw [A.axis_eq]
-  exact A.atom.K_sq_neg_one_eq
+  exact A.K_sq_neg_one_eq
 
 end Cl11ModularAtom
 

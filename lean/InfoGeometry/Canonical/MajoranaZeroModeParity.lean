@@ -22,9 +22,9 @@ namespace MajoranaPair
 
 variable (gamma1 gamma2 : selfAdjoint (Matrix (Fin n) (Fin n) ℂ))
 
-def gamma1Val : Matrix (Fin n) (Fin n) ℂ := gamma1
+abbrev gamma1Val : Matrix (Fin n) (Fin n) ℂ := gamma1
 
-def gamma2Val : Matrix (Fin n) (Fin n) ℂ := gamma2
+abbrev gamma2Val : Matrix (Fin n) (Fin n) ℂ := gamma2
 
 theorem gamma1_self_adjoint : (gamma1Val gamma1).conjTranspose = gamma1Val gamma1 := by
   simpa only [gamma1Val, Matrix.star_eq_conjTranspose] using gamma1.property

@@ -47,9 +47,8 @@ def toStarInductiveCocone
     (hι_comm : ∀ {i j : I} (hij : i ≤ j),
       (R.ι j).comp (sys.map hij) = R.ι i) :
     ContinuousStarInductiveSystem.StarInductiveCocone
-      (Ainf := B) Stage sys where
-  ι := R.ι
-  ι_comm := hι_comm
+      (Ainf := B) Stage sys :=
+  ⟨R.ι, hι_comm⟩
 
 def algebraicDescend
     (R : TopologicalRealization (Stage := Stage) (sys := sys) (B := B))
@@ -90,8 +89,10 @@ theorem topologicalColimitMap_inclusion
     (i : I) (x : Stage i) :
     topologicalColimitMap Stage sys R hι_comm
         (topologicalInjection Stage sys i x) = R.ι i x := by
-  exact toTopologicalColimitMap_inclusion sys
-    (topologicalCocone Stage sys R hι_comm) i x
+  change toTopologicalColimitMap sys (topologicalCocone Stage sys R hι_comm)
+      (topologicalInjection Stage sys i x) = R.ι i x
+  rw [toTopologicalColimitMap_inclusion]
+  rfl
 
 theorem topologicalColimitMap_continuous_stage
     (R : TopologicalRealization (Stage := Stage) (sys := sys) (B := B))

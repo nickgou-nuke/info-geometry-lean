@@ -39,4 +39,25 @@ theorem chiral_fierz_identity :
   fin_cases i1 <;> fin_cases i2 <;> fin_cases j1 <;> fin_cases j2 <;>
     simp [Swap, kroneckerMap, σPlus, σMinus, σ3c] <;> ring
 
+/-- Pointwise readout of the chiral Fierz identity on matrix entries. -/
+@[simp] theorem chiral_fierz_identity_apply
+    (i j : Fin 2 × Fin 2) :
+    ((1/2 : ℂ) • (Matrix.kroneckerMap (fun (a b : ℂ) => a * b)
+        (1 : Matrix (Fin 2) (Fin 2) ℂ)
+        (1 : Matrix (Fin 2) (Fin 2) ℂ) +
+      Matrix.kroneckerMap (fun (a b : ℂ) => a * b) σ3c σ3c) +
+      Matrix.kroneckerMap (fun (a b : ℂ) => a * b) σPlus σMinus +
+      Matrix.kroneckerMap (fun (a b : ℂ) => a * b) σMinus σPlus) i j =
+      Swap i j := by
+  simpa using congrArg (fun M : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ => M i j)
+    chiral_fierz_identity
+
+/-- The swap operator is an involution. -/
+theorem Swap_mul_Swap : Swap * Swap = (1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+  all_goals
+    rw [Matrix.mul_apply, Fintype.sum_prod_type]
+    simp [Swap, Fin.sum_univ_two]
+
 end InfoGeometry.Physics.FierzIdentities

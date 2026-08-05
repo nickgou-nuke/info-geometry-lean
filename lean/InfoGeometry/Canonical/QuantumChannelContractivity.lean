@@ -21,12 +21,15 @@ namespace QuantumChannelContractivity
 variable {n m : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)] [Fintype (Fin m)] [DecidableEq (Fin m)]
 
 /-- Kraus Representation Quantum Channel Operator Φ(ρ) = K * ρ * K† with K† * K = 1. -/
-structure KrausQuantumChannel (n m : ℕ) [Fintype (Fin n)] [DecidableEq (Fin n)] [Fintype (Fin m)] [DecidableEq (Fin m)] where
-  K_val : Matrix (Fin m) (Fin n) ℂ
+abbrev KrausQuantumChannel (n m : ℕ) [Fintype (Fin n)] [DecidableEq (Fin n)] [Fintype (Fin m)] [DecidableEq (Fin m)] :=
+  Matrix (Fin m) (Fin n) ℂ
 
 namespace KrausQuantumChannel
 
 variable (channel : KrausQuantumChannel n m)
+
+/-- Compatibility accessor for the native Kraus matrix carrier. -/
+abbrev K_val : Matrix (Fin m) (Fin n) ℂ := channel
 
 /-- The rectangular Kraus operator acts as a linear map between the finite
 Euclidean Hilbert spaces carried by its input and output indices. -/

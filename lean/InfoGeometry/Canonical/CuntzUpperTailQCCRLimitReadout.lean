@@ -69,7 +69,7 @@ noncomputable def upperTailCuntzQCCRLimitMap
 @[simp]
 theorem upperTailCuntzQCCRLimitMap_projection
     (m : ℕ) (i : Fin m) (j : UpperNatIndex m) (u : PUnit) :
-    topologicalInverseProjection
+    limit.π
         (qCcrParameterZeroFiberTopologicalDiagram
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) j
         (upperTailCuntzQCCRLimitMap Stage T m i u) =
@@ -94,7 +94,7 @@ noncomputable def upperTailCuntzQCCRAmbientLimitMap
 @[simp]
 theorem upperTailCuntzQCCRAmbientLimitMap_projection
     (m : ℕ) (i : Fin m) (j : UpperNatIndex m) (u : PUnit) :
-    topologicalInverseProjection
+    limit.π
         (qCcrParameterTopologicalDiagram
           (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m)) j
         (upperTailCuntzQCCRAmbientLimitMap Stage T m i u) =

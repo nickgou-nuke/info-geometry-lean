@@ -139,10 +139,10 @@ namespace FiniteOpticalKernelReadout
 variable (K : FiniteOpticalKernelReadout)
 
 /-- Read a defect matrix as a finite list of projected modes. -/
-def modesOfDefect : JonesMat → List JonesMode := K.1
+abbrev modesOfDefect : JonesMat → List JonesMode := K.1
 
 /-- Grade of each projected optical mode. -/
-def grade : JonesMode → KernelGrade := K.2
+abbrev grade : JonesMode → KernelGrade := K.2
 
 /-- Construct a finite optical kernel readout from its two maps. -/
 def mk (modesOfDefect : JonesMat → List JonesMode)

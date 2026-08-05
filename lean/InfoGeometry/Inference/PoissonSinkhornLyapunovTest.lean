@@ -18,14 +18,15 @@ noncomputable def lyapunovSmokeRowNormalized : Matrix (Fin 2) (Fin 2) ℝ :=
   rowNormalize 2 lyapunovSmokeMatrix lyapunovSmokeRowPositive
 
 example :
-    poissonSinkhornStep SinkhornPhase.row
+    SinkhornStep 2 SinkhornPhase.row
       lyapunovSmokeMatrix lyapunovSmokeRowNormalized :=
   ⟨lyapunovSmokeRowPositive, rfl⟩
 
 example :
     phaseLyapunovAfter 2 SinkhornPhase.row lyapunovSmokeRowNormalized ≤
       phaseLyapunovBefore 2 SinkhornPhase.row lyapunovSmokeMatrix :=
-  poissonSinkhornStep_lyapunov_nonincrease
+  sinkhornStep_phaseLyapunov_monotone
+    (n := 2)
     (M := lyapunovSmokeMatrix)
     (M' := lyapunovSmokeRowNormalized)
     ⟨lyapunovSmokeRowPositive, rfl⟩
@@ -33,7 +34,8 @@ example :
 example :
     phaseRNBarrierAfter 2 SinkhornPhase.row lyapunovSmokeRowNormalized ≤
       phaseRNBarrierBefore 2 SinkhornPhase.row lyapunovSmokeMatrix :=
-  poissonSinkhornStep_rnBarrier_nonincrease
+  sinkhornStep_phaseRNBarrier_monotone
+    (n := 2)
     (M := lyapunovSmokeMatrix)
     (M' := lyapunovSmokeRowNormalized)
     ⟨lyapunovSmokeRowPositive, rfl⟩

@@ -21,12 +21,14 @@ structure Data (V : Type*) [AddCommGroup V] [Module ℝ V] where
   codifferential : V →ₗ[ℝ] V
   chirality : V →ₗ[ℝ] V
   d_sq_zero : d.comp d = 0
-  codifferential_sq_zero :
-    codifferential.comp codifferential = 0
-  d_anticommutes :
-    d.comp chirality = -(chirality.comp d)
+  codifferential_sq_zero : codifferential.comp codifferential = 0
+  d_anticommutes : d.comp chirality = -(chirality.comp d)
   codifferential_anticommutes :
     codifferential.comp chirality = -(chirality.comp codifferential)
+
+namespace Data
+
+end Data
 
 def dirac {V : Type*} [AddCommGroup V] [Module ℝ V]
     (D : Data V) : V →ₗ[ℝ] V :=
@@ -67,9 +69,8 @@ theorem dirac_square_expansion
       D.d.comp D.d + D.d.comp D.codifferential +
         (D.codifferential.comp D.d +
           D.codifferential.comp D.codifferential) := by
-  unfold dirac
-  simp only [LinearMap.add_comp, LinearMap.comp_add]
-  abel
+  ext x
+  simp [dirac, LinearMap.comp_apply, LinearMap.add_apply, add_assoc, add_left_comm, add_comm]
 
 end
 

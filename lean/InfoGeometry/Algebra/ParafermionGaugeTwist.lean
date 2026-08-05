@@ -2,7 +2,7 @@ import Mathlib.Tactic
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
-import InfoGeometry.Algebra.KawamuraCuntzCAR
+import InfoGeometry.Algebra
 
 open InfoGeometry.Topology
 

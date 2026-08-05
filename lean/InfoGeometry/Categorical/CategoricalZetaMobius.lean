@@ -1,5 +1,5 @@
 import Mathlib.Tactic
-import Mathlib.Algebra.Star.Basic
+import Mathlib.Algebra.Star.StarProjection
 import Mathlib.CategoryTheory.Category.Preorder
 
 namespace InfoGeometry.Categorical.CategoricalZetaMobius
@@ -11,14 +11,17 @@ section NoncommutativePoset
 variable (A : Type*) [Ring A] [StarRing A]
 
 /-- A self-adjoint projector in a star-ring (e.g. von Neumann algebra, C*-algebra). -/
-structure Projector where
-  p : A
-  is_proj : p * p = p
-  is_self_adjoint : star p = p
+abbrev Projector := {p : A // IsStarProjection p}
 
 namespace Projector
 
 variable {A}
+
+abbrev p (P : Projector A) : A := P.1
+abbrev is_proj (P : Projector A) : IsIdempotentElem P.p :=
+  P.2.isIdempotentElem
+abbrev is_self_adjoint (P : Projector A) : star P.p = P.p :=
+  P.2.isSelfAdjoint
 
 /-- The quantum ordering relation on projectors: P ≤ Q iff P * Q = P. -/
 def le (P Q : Projector A) : Prop :=
@@ -49,7 +52,6 @@ theorem le_antisymm (P Q : Projector A) (hPQ : P ≤ Q) (hQP : Q ≤ P) : P = Q 
       _ = Q.p := hQP
   rcases P with ⟨p_val, p_proj, p_sa⟩
   rcases Q with ⟨q_val, q_proj, q_sa⟩
-  dsimp at h_eq
   subst h_eq
   rfl
 

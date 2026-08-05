@@ -55,8 +55,8 @@ theorem kms_functional_family_compat (n : ℕ) (f : DiagAlg n) :
 /-- **Theorem: CPT/KMS Compatible Functional Family**
     The collection of normalized KMS traces at every finite stage n forms a compatible
     functional family over the diagonal algebra tower. -/
-def kmsCompatibleFunctionalFamily : CompatibleFunctionalFamily (A := DiagAlg) diagBondAlg where
-  omega n := normalizedTraceLinear n
+def kmsCompatibleFunctionalFamily : CompatibleFunctionalFamily (A := DiagAlg) diagBondAlg :=
+  fun n => normalizedTraceLinear n
 
 /-- The cylinder map as an algebra homomorphism over `ℂ`. -/
 noncomputable def cylinderAlg (n : ℕ) : DiagAlg n →ₐ[ℂ] (CantorBoundary → ℂ) where

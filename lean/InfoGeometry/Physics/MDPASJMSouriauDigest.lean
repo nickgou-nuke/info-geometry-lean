@@ -38,188 +38,6 @@ open InfoGeometry.Topology.ThermodynamicGauge
 open InfoGeometry.Topology.MaximumCaliberPath
 open InfoGeometry.Prequantum
 
-/-! ## 1. Operatorial Souriau thermodynamics -/
-
-theorem entropy_eq_expectation_modularPotential_digest
-    {State LieAlgebra LieDual : Type*}
-    (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) :
-    D.entropy = D.expectationBeta D.modularPotential :=
-  SouriauNegativeLogRNDerivative.entropy_eq_expectation_modularPotential D
-
-theorem souriauEntropy_eq_Phi_add_pairing_Q_beta_digest
-    {State LieAlgebra LieDual : Type*}
-    (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) :
-    D.entropy = D.souriau.partitionPotential + D.souriau.pairing D.Q D.souriau.beta :=
-  SouriauNegativeLogRNDerivative.souriauEntropy_eq_Phi_add_pairing_Q_beta D
-
-theorem firstVariation_eq_negative_pairing_Q_digest
-    {State LieAlgebra LieDual : Type*}
-    (M : MomentMapGeneratingPotential State LieAlgebra LieDual)
-    (δβ : LieAlgebra) :
-    M.dPhi δβ = -M.souriau.pairing M.Q δβ :=
-  MomentMapGeneratingPotential.firstVariation_eq_negative_pairing_Q M δβ
-
-theorem secondVariation_eq_covariance_digest
-    {State LieAlgebra LieDual : Type*}
-    (M : MomentMapGeneratingPotential State LieAlgebra LieDual)
-    (ξ η : LieAlgebra) :
-    M.hessian ξ η = M.covarianceTensor ξ η :=
-  MomentMapGeneratingPotential.secondVariation_eq_covariance M ξ η
-
-theorem KL_eq_souriau_Bregman_digest
-    {State LieAlgebra LieDual : Type*}
-    (B : SouriauKLBregmanWitness State LieAlgebra LieDual) :
-    B.klValue =
-      B.alphaPartitionPotential
-      - B.generator.souriau.partitionPotential
-      - B.generator.dPhi B.alphaMinusBeta :=
-  SouriauKLBregmanWitness.KL_eq_souriau_Bregman B
-
-theorem relativeEntropy_eq_expectation_difference_digest
-    {State LieAlgebra LieDual : Type*}
-    (B : SouriauKLBregmanWitness State LieAlgebra LieDual) :
-    B.klValue =
-      B.alphaPartitionPotential
-      - B.generator.souriau.partitionPotential
-      - B.generator.dPhi B.alphaMinusBeta :=
-  SouriauKLBregmanWitness.relativeEntropy_eq_expectation_difference B
-
-/-! ## 2. Finite Gibbs / Fisher / Bregman shadow -/
-
-theorem relativeEntropy_eq_massieuBregman_digest
-    {ι : Type*} [Fintype ι] [Nonempty ι]
-    (θ η : FiniteTemperature ι) (hZ : 0 < Z θ) :
-    relativeEntropy θ η = massieuBregman θ η :=
-  relativeEntropy_eq_massieuBregman θ η hZ
-
-theorem fisherMetric_eq_covariance_digest
-    {ι : Type*} [Fintype ι] [Nonempty ι]
-    (θ : FiniteTemperature ι) (X Y : ι → ℝ) (hZ : 0 < Z θ) :
-    fisherMetric θ X Y =
-      expect θ (fun i => X i * Y i) - expect θ X * expect θ Y :=
-  fisherMetric_eq_covariance θ X Y hZ
-
-theorem massieuBregman_self_digest
-    {ι : Type*} [Fintype ι]
-    (θ : FiniteTemperature ι) :
-    massieuBregman θ θ = 0 :=
-  massieuBregman_self θ
-
-theorem relativeEntropy_self_digest
-    {ι : Type*} [Fintype ι] [Nonempty ι]
-    (θ : FiniteTemperature ι) (hZ : 0 < Z θ) :
-    relativeEntropy θ θ = 0 :=
-  relativeEntropy_self θ hZ
-
-theorem souriauPartition_pos_digest
-    {ι : Type*} [Fintype ι] [Nonempty ι]
-    (beta : ℝ) (energy : ι → ℝ) :
-    0 < souriauPartition beta energy :=
-  souriauPartition_pos beta energy
-
-theorem gibbsWeight_sum_eq_one_digest
-    {ι : Type*} [Fintype ι] [Nonempty ι]
-    (beta : ℝ) (energy : ι → ℝ) :
-    (∑ i : ι, gibbsWeight beta energy i) = 1 :=
-  gibbsWeight_sum_eq_one beta energy
-
-theorem boltzmannEntropy_gibbsWeight_eq_massieu_add_beta_meanEnergy_digest
-    {ι : Type*} [Fintype ι] [Nonempty ι]
-    (beta : ℝ) (energy : ι → ℝ) :
-    InfoGeometry.Physics.SouriauMassieuPlanckFunctional.boltzmannEntropy
-        (InfoGeometry.Physics.SouriauMassieuPlanckFunctional.gibbsWeight beta energy) =
-      InfoGeometry.Physics.SouriauMassieuPlanckFunctional.massieuPlanckPotential beta energy +
-        beta *
-          InfoGeometry.Physics.SouriauMassieuPlanckFunctional.meanEnergy beta energy :=
-  boltzmannEntropy_gibbsWeight_eq_massieu_add_beta_meanEnergy beta energy
-
-theorem scalarBregman_self_digest (phi gradPhi : ℝ → ℝ) (x : ℝ) :
-    InfoGeometry.Physics.SouriauMassieuPlanckFunctional.scalarBregman phi gradPhi x x = 0 :=
-  scalarBregman_self phi gradPhi x
-
-/-! ## 3. Finite thermodynamic gauge and maximum caliber -/
-
-theorem entropy_production_eq_commutator_digest
-    {Op : Type*} [Ring Op] (flow : CausalNonequilibriumFlow Op) :
-    entropy_production flow =
-      flow.P_forward * flow.P_backward - flow.P_backward * flow.P_forward :=
-  entropy_production_eq_commutator flow
-
-theorem entropy_production_eq_zero_iff_detailed_balance_digest
-    {Op : Type*} [Ring Op] (flow : CausalNonequilibriumFlow Op) :
-    entropy_production flow = 0 ↔
-      flow.P_forward * flow.P_backward = flow.P_backward * flow.P_forward :=
-  entropy_production_eq_zero_iff_detailed_balance flow
-
-theorem finiteConnesFlux_cocycle_digest
-    {G : Type*} [Group G]
-    (Uψ Uφ : ℝ → G)
-    (hψ_add : ∀ s t : ℝ, Uψ (s + t) = Uψ s * Uψ t)
-    (hφ_add : ∀ s t : ℝ, Uφ (s + t) = Uφ s * Uφ t)
-    (s t : ℝ) :
-    Uψ (s + t) * (Uφ (s + t))⁻¹ =
-      (Uψ s * (Uφ s)⁻¹) *
-        (Uφ s * (Uψ t * (Uφ t)⁻¹) * (Uφ s)⁻¹) :=
-  finiteConnesFlux_cocycle Uψ Uφ hψ_add hφ_add s t
-
-theorem finitePositiveDensityRatioAtTime_add_digest
-    {ι : Type*}
-    (ΔK : ι → ℝ) (s t : ℝ) (i : ι) :
-    InfoGeometry.Thermodynamics.FiniteConnesCocycle.finitePositiveDensityRatioAtTime
-        ΔK (s + t) i =
-      InfoGeometry.Thermodynamics.FiniteConnesCocycle.finitePositiveDensityRatioAtTime
-        ΔK s i *
-        InfoGeometry.Thermodynamics.FiniteConnesCocycle.finitePositiveDensityRatioAtTime
-          ΔK t i :=
-  finitePositiveDensityRatioAtTime_add ΔK s t i
-
-theorem finiteCommutingConnesPhase_add_time_digest
-    {ι : Type*}
-    (ΔK : ι → ℝ) (s t : ℝ) (i : ι) :
-    InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhase
-        ΔK (s + t) i =
-      InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhase
-        ΔK s i *
-        InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhase
-          ΔK t i :=
-  finiteCommutingConnesPhase_add_time ΔK s t i
-
-theorem pathEntropy_eq_zero_of_detailed_balance_digest
-    {Op : Type*} [Ring Op] [Algebra ℝ Op]
-    (P : MaximumCaliberPacket Op)
-    (hdb : entropy_production P.flow = 0) :
-    P.pathEntropy = 0 :=
-  MaximumCaliberPacket.pathEntropy_eq_zero_of_detailed_balance P hdb
-
-theorem caliber_eq_zero_of_detailed_balance_digest
-    {Op : Type*} [Ring Op] [Algebra ℝ Op]
-    (P : MaximumCaliberPacket Op)
-    (hdb : entropy_production P.flow = 0) :
-    P.caliber = 0 :=
-  MaximumCaliberPacket.caliber_eq_zero_of_detailed_balance P hdb
-
-/-! ## 4. Scalarized prequantum scaling shadow -/
-
-theorem prequantum_holonomyScale_eq_omega_over_hbar_digest
-    (P : PrequantumData) :
-    P.holonomyScale = P.omegaScale / P.hbar :=
-  PrequantumData.holonomyScale_eq_omega_over_hbar P
-
-theorem prequantum_connectionScale_smul_digest
-    (u : PrequantumData.Gauge) (P : PrequantumData) :
-    PrequantumData.connectionScale (u • P) = PrequantumData.connectionScale P / (u : ℝ) :=
-  PrequantumData.connectionScale_smul u P
-
-theorem prequantum_covariantScale_smul_digest
-    (u : PrequantumData.Gauge) (P : PrequantumData) :
-    PrequantumData.covariantScale (u • P) = PrequantumData.covariantScale P :=
-  PrequantumData.covariantScale_smul u P
-
-theorem prequantum_covariantScale_eq_omega_digest
-    (P : PrequantumData) :
-    PrequantumData.covariantScale P = P.omegaScale :=
-  PrequantumData.covariantScale_eq_omega P
-
 /-! ## 5. Finite-stage carrier for future colimit transport -/
 
 structure FiniteMDPASJMStageData
@@ -343,11 +161,23 @@ theorem prequantum_holonomyScale_eq_omega_over_hbar
 
 end FiniteMDPASJMStageData
 
-structure FiniteMDPASJMTowerSeed
+/-- A finite tower is natively a stage-indexed family.
+
+No additional law is carried at this level; stage-specific laws are already
+fields of `FiniteMDPASJMStageData`.
+-/
+abbrev FiniteMDPASJMTowerSeed
     (ι : Type*) [Fintype ι] [Nonempty ι]
     (Op : Type*) [Ring Op] [Algebra ℝ Op]
-    (State LieAlgebra LieDual : Type*) where
-  stage : ℕ → FiniteMDPASJMStageData ι Op State LieAlgebra LieDual
+    (State LieAlgebra LieDual : Type*) :=
+  ℕ → FiniteMDPASJMStageData ι Op State LieAlgebra LieDual
+
+abbrev FiniteMDPASJMTowerSeed.stage
+    {ι : Type*} [Fintype ι] [Nonempty ι]
+    {Op : Type*} [Ring Op] [Algebra ℝ Op]
+    {State LieAlgebra LieDual : Type*}
+    (T : FiniteMDPASJMTowerSeed ι Op State LieAlgebra LieDual) :
+    ℕ → FiniteMDPASJMStageData ι Op State LieAlgebra LieDual := T
 
 namespace FiniteMDPASJMTowerSeed
 

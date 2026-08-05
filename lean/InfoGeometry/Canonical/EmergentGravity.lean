@@ -186,9 +186,18 @@ def scaledVielbeinReadout {V M : Type*}
   simp [scaledVielbeinReadout]
 
 /-- Explicit map from spinor carriers to a finite torsion carrier. -/
-structure SpinorTorsion (V : Type*) [AddCommGroup V] [Module ℂ V] (T : Type*) [AddCommGroup T] [Module ℝ T] where
-  /-- User-supplied bilinear readout for a torsion marker. -/
-  torsion_map : V → V → T
+abbrev SpinorTorsion (V : Type*) [AddCommGroup V] [Module ℂ V]
+    (T : Type*) [AddCommGroup T] [Module ℝ T] :=
+  V → V → T
+
+namespace SpinorTorsion
+
+abbrev torsion_map {V T : Type*} [AddCommGroup V] [Module ℂ V]
+    [AddCommGroup T] [Module ℝ T]
+    (st : SpinorTorsion V T) : V → V → T :=
+  st
+
+end SpinorTorsion
 
 /-- Read out the finite torsion marker from the condensate carrier. -/
 def condensate_torsion {V T : Type*} [AddCommGroup V] [Module ℂ V] [AddCommGroup T] [Module ℝ T]

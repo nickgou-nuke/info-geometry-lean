@@ -13,7 +13,7 @@ namespace InfoGeometry.OperatorAlgebra.KasparovKreinDIIIBridge
 abbrev Fin2Matrix := Matrix (Fin 2) (Fin 2) ℝ
 
 /-- Finite 2×2 DIII time-reversal operator (the Möbius-parity convention in this repo). -/
-def DIII_TimeReversal : Fin2Matrix := mobiusParity2
+abbrev DIII_TimeReversal : Fin2Matrix := mobiusParity2
 
 /-- Particle-hole/CPT involution in the finite model (`C² = 1`). -/
 def DIII_ParticleHole : Fin2Matrix :=

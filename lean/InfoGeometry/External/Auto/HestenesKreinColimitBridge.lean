@@ -140,7 +140,7 @@ structure HestenesKreinTower where
 attribute [instance] HestenesKreinTower.hAdd HestenesKreinTower.hMod
 
 /-- A colimit-lift interface mirroring the repo's direct-limit style. -/
-structure HestenesKreinColimitLimit (T : HestenesKreinTower) where
+structure HestenesKreinCompatibleLift (T : HestenesKreinTower) where
   Carrier : Type*
   [hAdd : AddCommGroup Carrier]
   [hMod : Module ℝ Carrier]
@@ -151,7 +151,7 @@ structure HestenesKreinColimitLimit (T : HestenesKreinTower) where
   J_compat : ∀ n (x : T.Stage n), Jlim (inc n x) = inc n (T.mirror n x)
   I_compat : ∀ n (x : T.Stage n), Ilim (inc n x) = inc n (T.rotor n x)
 
-attribute [instance] HestenesKreinColimitLimit.hAdd HestenesKreinColimitLimit.hMod
+attribute [instance] HestenesKreinCompatibleLift.hAdd HestenesKreinCompatibleLift.hMod
 
 /-- The one-stage constant tower built from the concrete matrix carrier. -/
 def oneStageTower : HestenesKreinTower where
@@ -170,8 +170,8 @@ def oneStageTower : HestenesKreinTower where
     intro n x y
     rfl
 
-/-- The corresponding one-stage colimit-lift package. -/
-def oneStageColimit : HestenesKreinColimitLimit oneStageTower where
+/-- The corresponding one-stage compatible-lift package. -/
+def oneStageCompatibleLift : HestenesKreinCompatibleLift oneStageTower where
   Carrier := M2R
   inc := fun _ => LinearMap.id
   hInc := by

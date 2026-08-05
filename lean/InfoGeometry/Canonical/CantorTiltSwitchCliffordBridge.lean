@@ -1,7 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.HodgeDrazinEnvelope
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
@@ -45,7 +44,6 @@ Abstract tilt/switch system.
 characteristic law is local anticommutation `T_j S_j = - S_j T_j`; different
 slots commute.
 -/
-@[rep_depth operator]
 structure TiltSwitchSystem
     (Op : Type*) [Ring Op] where
   T : ℕ → Op
@@ -75,53 +73,44 @@ variable {Op : Type*} [Ring Op]
 variable (TS : TiltSwitchSystem Op)
 
 /-- The local tilt generator squares to one. -/
-@[rep_depth operator]
 theorem local_tilt_sq (j : ℕ) :
     TS.T j * TS.T j = 1 :=
   TS.T_sq j
 
 /-- The local switch generator squares to one. -/
-@[rep_depth operator]
 theorem local_switch_sq (j : ℕ) :
     TS.S j * TS.S j = 1 :=
   TS.S_sq j
 
 /-- Tilt and switch anticommute at the same Cantor address slot. -/
-@[rep_depth operator]
 theorem local_tilt_switch_anticomm (j : ℕ) :
     TS.T j * TS.S j + TS.S j * TS.T j = 0 := by
   rw [TS.T_S_anticomm j]
   simp
 
 /-- Tilt and switch commute at different Cantor address slots. -/
-@[rep_depth operator]
 theorem tilt_switch_comm_of_ne {i j : ℕ} (hij : i ≠ j) :
     TS.T i * TS.S j = TS.S j * TS.T i :=
   TS.T_S_comm_ne i j hij
 
 /-- Split-Majorana `c_j = S_j` from a normalized tilt/switch atom. -/
-@[rep_depth operator]
 def localMajoranaC (j : ℕ) : Op :=
   TS.S j
 
 /-- Split-Majorana `d_j = S_j T_j` from a normalized tilt/switch atom. -/
-@[rep_depth operator]
 def localMajoranaD (j : ℕ) : Op :=
   TS.S j * TS.T j
 
 /-- Local parity `Π_j = c_j d_j`. -/
-@[rep_depth operator]
 def localMajoranaParity (j : ℕ) : Op :=
   TS.localMajoranaC j * TS.localMajoranaD j
 
 /-- `c_j² = 1`. -/
-@[rep_depth operator]
 theorem localMajoranaC_sq (j : ℕ) :
     TS.localMajoranaC j * TS.localMajoranaC j = 1 :=
   TS.S_sq j
 
 /-- `d_j² = -1`. -/
-@[rep_depth operator]
 theorem localMajoranaD_sq (j : ℕ) :
     TS.localMajoranaD j * TS.localMajoranaD j = -1 := by
   unfold localMajoranaD
@@ -138,7 +127,6 @@ theorem localMajoranaD_sq (j : ℕ) :
     _ = -1 := by simp
 
 /-- `c_j d_j + d_j c_j = 0`. -/
-@[rep_depth operator]
 theorem localMajoranaC_D_anticomm (j : ℕ) :
     TS.localMajoranaC j * TS.localMajoranaD j +
       TS.localMajoranaD j * TS.localMajoranaC j = 0 := by
@@ -152,15 +140,19 @@ theorem localMajoranaC_D_anticomm (j : ℕ) :
   simp
 
 /-- `d_j c_j + c_j d_j = 0`. -/
-@[rep_depth operator]
 theorem localMajoranaD_C_anticomm (j : ℕ) :
     TS.localMajoranaD j * TS.localMajoranaC j +
       TS.localMajoranaC j * TS.localMajoranaD j = 0 := by
   rw [add_comm]
   exact TS.localMajoranaC_D_anticomm j
 
+theorem localMajoranaC_C_comm (i j : ℕ) :
+    TS.localMajoranaC i * TS.localMajoranaC j =
+      TS.localMajoranaC j * TS.localMajoranaC i := by
+  unfold localMajoranaC
+  exact TS.S_comm i j
+
 /-- The local split-Majorana parity is the normalized tilt operator. -/
-@[rep_depth operator]
 theorem localMajoranaParity_eq_tilt (j : ℕ) :
     TS.localMajoranaParity j = TS.T j := by
   unfold localMajoranaParity localMajoranaC localMajoranaD
@@ -176,7 +168,6 @@ variable (TSS : TiltSwitchSystem OpS)
 If the local switch is star-fixed, then the split-Majorana generator
 `c_j = S_j` is self-adjoint.
 -/
-@[rep_depth operator]
 theorem localMajoranaC_star_eq_self_of_switch_star
     (j : ℕ)
     (hS : star (TSS.S j) = TSS.S j) :
@@ -188,7 +179,6 @@ If the local tilt and switch are star-fixed, then the split-Majorana generator
 `d_j = S_j T_j` is skew-adjoint.  This is the honest split-real status before
 multiplication by a skew phase axis.
 -/
-@[rep_depth operator]
 theorem localMajoranaD_star_eq_neg_of_tilt_switch_star
     (j : ℕ)
     (hT : star (TSS.T j) = TSS.T j)
@@ -208,7 +198,6 @@ theorem localMajoranaD_star_eq_neg_of_tilt_switch_star
 A skew phase axis times the skew split-Majorana `d_j` is self-adjoint, provided
 the phase axis commutes with `d_j`.
 -/
-@[rep_depth operator]
 theorem phaseAxis_mul_localMajoranaD_star_eq_self_of_tilt_switch_star
     (J : OpS)
     (j : ℕ)
@@ -230,12 +219,10 @@ theorem phaseAxis_mul_localMajoranaD_star_eq_self_of_tilt_switch_star
 end StarReadbacks
 
 /-- Twice the CAR creation/nilpotent generator: `2 ε_j = c_j + d_j`. -/
-@[rep_depth operator]
 def localCARCreationTwice (j : ℕ) : Op :=
   TS.localMajoranaC j + TS.localMajoranaD j
 
 /-- Twice the CAR annihilation/nilpotent generator: `2 ι_j = c_j - d_j`. -/
-@[rep_depth operator]
 def localCARAnnihilationTwice (j : ℕ) : Op :=
   TS.localMajoranaC j - TS.localMajoranaD j
 
@@ -243,7 +230,6 @@ def localCARAnnihilationTwice (j : ℕ) : Op :=
 The reconstructed creation generator is square-zero, up to the harmless factor
 `2`: `(2 ε_j)^2 = 0`.
 -/
-@[rep_depth operator]
 theorem localCARCreationTwice_sq (j : ℕ) :
     TS.localCARCreationTwice j * TS.localCARCreationTwice j = 0 := by
   let c : Op := TS.localMajoranaC j
@@ -271,7 +257,6 @@ theorem localCARCreationTwice_sq (j : ℕ) :
 The reconstructed annihilation generator is square-zero, up to the harmless
 factor `2`: `(2 ι_j)^2 = 0`.
 -/
-@[rep_depth operator]
 theorem localCARAnnihilationTwice_sq (j : ℕ) :
     TS.localCARAnnihilationTwice j * TS.localCARAnnihilationTwice j = 0 := by
   let c : Op := TS.localMajoranaC j
@@ -302,7 +287,6 @@ The unnormalized CAR anticommutator:
 
 After adjoining `1/2`, this is exactly `{ι_j, ε_j} = 1`.
 -/
-@[rep_depth operator]
 theorem localCARTwice_anticomm (j : ℕ) :
     TS.localCARAnnihilationTwice j * TS.localCARCreationTwice j +
       TS.localCARCreationTwice j * TS.localCARAnnihilationTwice j =
@@ -326,29 +310,24 @@ theorem localCARTwice_anticomm (j : ℕ) :
             norm_num
 
 /-- Raw exterior-creation nilpotent: `ε_raw = c + d`. -/
-@[rep_depth operator]
 def localExteriorCreateRaw (j : ℕ) : Op :=
   TS.localCARCreationTwice j
 
 /-- Raw exterior-contraction nilpotent: `ι_raw = c - d`. -/
-@[rep_depth operator]
 def localExteriorContractRaw (j : ℕ) : Op :=
   TS.localCARAnnihilationTwice j
 
 /-- The raw exterior-creation operator squares to zero. -/
-@[rep_depth operator]
 theorem localExteriorCreateRaw_sq_zero (j : ℕ) :
     TS.localExteriorCreateRaw j * TS.localExteriorCreateRaw j = 0 := by
   simpa [localExteriorCreateRaw] using TS.localCARCreationTwice_sq j
 
 /-- The raw exterior-contraction operator squares to zero. -/
-@[rep_depth operator]
 theorem localExteriorContractRaw_sq_zero (j : ℕ) :
     TS.localExteriorContractRaw j * TS.localExteriorContractRaw j = 0 := by
   simpa [localExteriorContractRaw] using TS.localCARAnnihilationTwice_sq j
 
 /-- Raw CAR normalization: `(c - d)(c + d) + (c + d)(c - d) = 4`. -/
-@[rep_depth operator]
 theorem localExteriorContractRaw_mul_createRaw_add_createRaw_mul_contractRaw
     (j : ℕ) :
     TS.localExteriorContractRaw j * TS.localExteriorCreateRaw j +
@@ -356,7 +335,6 @@ theorem localExteriorContractRaw_mul_createRaw_add_createRaw_mul_contractRaw
   simpa [localExteriorContractRaw, localExteriorCreateRaw] using TS.localCARTwice_anticomm j
 
 /-- Raw product `ε_raw ι_raw = 2 - 2Π`. -/
-@[rep_depth operator]
 theorem localExteriorCreateRaw_mul_contractRaw_eq_two_sub_two_parity
     (j : ℕ) :
     TS.localExteriorCreateRaw j * TS.localExteriorContractRaw j =
@@ -393,7 +371,6 @@ theorem localExteriorCreateRaw_mul_contractRaw_eq_two_sub_two_parity
                     norm_num
 
 /-- Raw product `ι_raw ε_raw = 2 + 2Π`. -/
-@[rep_depth operator]
 theorem localExteriorContractRaw_mul_createRaw_eq_two_add_two_parity
     (j : ℕ) :
     TS.localExteriorContractRaw j * TS.localExteriorCreateRaw j =
@@ -416,17 +393,14 @@ theorem localExteriorContractRaw_mul_createRaw_eq_two_add_two_parity
                     norm_num
 
 /-- Normalized exterior creation with an explicitly supplied half scalar. -/
-@[rep_depth operator]
 def localExteriorCreateWith (half : Op) (j : ℕ) : Op :=
   half * TS.localExteriorCreateRaw j
 
 /-- Normalized exterior contraction with an explicitly supplied half scalar. -/
-@[rep_depth operator]
 def localExteriorContractWith (half : Op) (j : ℕ) : Op :=
   half * TS.localExteriorContractRaw j
 
 /-- If `half` commutes with `ε_raw`, then normalized creation is square-zero. -/
-@[rep_depth operator]
 theorem localExteriorCreateWith_sq_zero
     (half : Op) (j : ℕ)
     (hcomm : TS.localExteriorCreateRaw j * half = half * TS.localExteriorCreateRaw j) :
@@ -446,7 +420,6 @@ theorem localExteriorCreateWith_sq_zero
     _ = 0 := by simp
 
 /-- If `half` commutes with `ι_raw`, then normalized contraction is square-zero. -/
-@[rep_depth operator]
 theorem localExteriorContractWith_sq_zero
     (half : Op) (j : ℕ)
     (hcomm : TS.localExteriorContractRaw j * half = half * TS.localExteriorContractRaw j) :
@@ -466,7 +439,6 @@ theorem localExteriorContractWith_sq_zero
     _ = 0 := by simp
 
 /-- Normalized CAR from an explicit half scalar: `ι ε + ε ι = 1`. -/
-@[rep_depth operator]
 theorem localExteriorContractWith_mul_createWith_add_createWith_mul_contractWith
     (half : Op) (j : ℕ)
     (hcommCreate : TS.localExteriorCreateRaw j * half = half * TS.localExteriorCreateRaw j)
@@ -498,7 +470,6 @@ theorem localExteriorContractWith_mul_createWith_add_createWith_mul_contractWith
 Explicit normalized CAR corollary with local names `ε, ι`:
 `ι * ε + ε * ι = 1`.
 -/
-@[rep_depth operator]
 theorem localExteriorWith_anticomm_eq_one
     (half : Op) (j : ℕ)
     (hcommCreate : TS.localExteriorCreateRaw j * half = half * TS.localExteriorCreateRaw j)
@@ -512,13 +483,11 @@ theorem localExteriorWith_anticomm_eq_one
       half j hcommCreate hcommContract hhalf)
 
 /-- Explicit local split-Majorana product readout: `c_j d_j = T_j`. -/
-@[rep_depth operator]
 theorem localMajoranaC_mul_D_eq_tilt (j : ℕ) :
     TS.localMajoranaC j * TS.localMajoranaD j = TS.T j := by
   simpa [localMajoranaParity] using TS.localMajoranaParity_eq_tilt j
 
 /-- Local parity squares to one. -/
-@[rep_depth operator]
 theorem localMajoranaParity_sq (j : ℕ) :
     TS.localMajoranaParity j * TS.localMajoranaParity j = 1 := by
   rw [TS.localMajoranaParity_eq_tilt]
@@ -532,7 +501,6 @@ generators:
 
 The normalized CAR creation is `(1/2) ε̃_j` when `2` is invertible.
 -/
-@[rep_depth operator]
 def localCreationUnscaled (j : ℕ) : Op :=
   TS.localMajoranaC j + TS.localMajoranaD j
 
@@ -544,12 +512,10 @@ generators:
 
 The normalized CAR contraction is `(1/2) ι̃_j` when `2` is invertible.
 -/
-@[rep_depth operator]
 def localAnnihilationUnscaled (j : ℕ) : Op :=
   TS.localMajoranaC j - TS.localMajoranaD j
 
 /-- The recovered unscaled creation operator squares to zero. -/
-@[rep_depth operator]
 theorem localCreationUnscaled_sq_zero (j : ℕ) :
     TS.localCreationUnscaled j * TS.localCreationUnscaled j = 0 := by
   unfold localCreationUnscaled
@@ -570,7 +536,6 @@ theorem localCreationUnscaled_sq_zero (j : ℕ) :
           simp
 
 /-- The recovered unscaled annihilation/contraction operator squares to zero. -/
-@[rep_depth operator]
 theorem localAnnihilationUnscaled_sq_zero (j : ℕ) :
     TS.localAnnihilationUnscaled j * TS.localAnnihilationUnscaled j = 0 := by
   unfold localAnnihilationUnscaled
@@ -595,7 +560,6 @@ The unscaled CAR anticommutator is `4`.
 
 After normalization by `1/2`, this becomes `{ι_j, ε_j} = 1`.
 -/
-@[rep_depth operator]
 theorem localAnnihilation_creation_anticomm_unscaled (j : ℕ) :
     TS.localAnnihilationUnscaled j * TS.localCreationUnscaled j
       + TS.localCreationUnscaled j * TS.localAnnihilationUnscaled j
@@ -623,17 +587,14 @@ variable {OpC : Type*} [CommRing OpC]
 variable (TSC : TiltSwitchSystem OpC)
 
 /-- CAR reconstruction: `ε_j = (c_j + d_j)/2`. -/
-@[rep_depth operator]
 def localEpsilon [Invertible (2 : OpC)] (j : ℕ) : OpC :=
   ⅟ (2 : OpC) * (TSC.localMajoranaC j + TSC.localMajoranaD j)
 
 /-- CAR reconstruction: `ι_j = (c_j - d_j)/2`. -/
-@[rep_depth operator]
 def localIota [Invertible (2 : OpC)] (j : ℕ) : OpC :=
   ⅟ (2 : OpC) * (TSC.localMajoranaC j - TSC.localMajoranaD j)
 
 /-- Reconstructed CAR creator is square-zero. -/
-@[rep_depth operator]
 theorem localEpsilon_sq [Invertible (2 : OpC)] (j : ℕ) :
     TSC.localEpsilon j * TSC.localEpsilon j = 0 := by
   unfold localEpsilon
@@ -654,7 +615,6 @@ theorem localEpsilon_sq [Invertible (2 : OpC)] (j : ℕ) :
     _ = 0 := by simp [hsum_sq]
 
 /-- Reconstructed CAR annihilator is square-zero. -/
-@[rep_depth operator]
 theorem localIota_sq [Invertible (2 : OpC)] (j : ℕ) :
     TSC.localIota j * TSC.localIota j = 0 := by
   unfold localIota
@@ -675,7 +635,6 @@ theorem localIota_sq [Invertible (2 : OpC)] (j : ℕ) :
     _ = 0 := by simp [hdiff_sq]
 
 /-- Reconstructed CAR anticommutator: `ι_j ε_j + ε_j ι_j = 1`. -/
-@[rep_depth operator]
 theorem localIota_localEpsilon_anticomm [Invertible (2 : OpC)] (j : ℕ) :
     TSC.localIota j * TSC.localEpsilon j + TSC.localEpsilon j * TSC.localIota j = 1 := by
   unfold localIota localEpsilon
@@ -715,12 +674,10 @@ theorem localIota_localEpsilon_anticomm [Invertible (2 : OpC)] (j : ℕ) :
               simp [hhalf]
 
 /-- CAR number operator reconstructed from `ε_j, ι_j`. -/
-@[rep_depth operator]
 def localNumber [Invertible (2 : OpC)] (j : ℕ) : OpC :=
   TSC.localEpsilon j * TSC.localIota j
 
 /-- CAR parity reconstructed from `ε_j, ι_j`: `1 - 2N_j`. -/
-@[rep_depth operator]
 def localParityFromCAR [Invertible (2 : OpC)] (j : ℕ) : OpC :=
   1 - (2 : OpC) * TSC.localNumber j
 
@@ -728,7 +685,6 @@ def localParityFromCAR [Invertible (2 : OpC)] (j : ℕ) : OpC :=
 Commutative reconstruction consequence:
 the CAR parity readout `1 - 2(ε_j ι_j)` vanishes.
 -/
-@[rep_depth operator]
 theorem localParityFromCAR_eq_zero [Invertible (2 : OpC)] (j : ℕ) :
     TSC.localParityFromCAR j = 0 := by
   have hcar : TSC.localIota j * TSC.localEpsilon j + TSC.localEpsilon j * TSC.localIota j = 1 :=
@@ -756,7 +712,6 @@ A Clifford representation produced from a Cantor tilt/switch system.
 
 `gamma i` is the image of the `i`-th Clifford generator.
 -/
-@[rep_depth operator]
 structure CantorCliffordRepresentation
     (Op : Type*) [Ring Op] where
   tiltSwitch : TiltSwitchSystem Op
@@ -775,13 +730,11 @@ variable {Op : Type*} [Ring Op]
 variable (R : CantorCliffordRepresentation Op)
 
 /-- Re-export of the Clifford square law. -/
-@[rep_depth operator]
 theorem generator_sq (i : ℕ) :
     R.gamma i * R.gamma i = 1 :=
   R.gamma_sq i
 
 /-- Re-export of the Clifford anticommutation law. -/
-@[rep_depth operator]
 theorem generator_anticomm {i j : ℕ} (hij : i ≠ j) :
     R.gamma i * R.gamma j + R.gamma j * R.gamma i = 0 := by
   rw [R.gamma_anticomm i j hij]
@@ -795,7 +748,6 @@ Finite Cantor-Pauli bridge.
 For the endpoint set `V_n`, the representation of `Cl_{2n}` on functions
 `V_n -> ℂ` is represented by Pauli tensor-product matrices.
 -/
-@[rep_depth operator]
 structure FiniteCantorPauliBridge
     (n : ℕ)
     (Mat : Type*) [Ring Mat] where
@@ -813,13 +765,11 @@ variable {n : ℕ} {Mat : Type*} [Ring Mat]
 variable (B : FiniteCantorPauliBridge n Mat)
 
 /-- Re-export of the finite Pauli square law. -/
-@[rep_depth operator]
 theorem gamma_sq (i : Fin (2 * n)) :
     B.psiGamma i * B.psiGamma i = 1 :=
   B.clifford_sq i
 
 /-- Re-export of the finite Pauli anticommutation law. -/
-@[rep_depth operator]
 theorem gamma_anticomm {i j : Fin (2 * n)} (hij : i ≠ j) :
     B.psiGamma i * B.psiGamma j + B.psiGamma j * B.psiGamma i = 0 := by
   rw [B.clifford_anticomm i j hij]
@@ -842,7 +792,6 @@ Physical matter envelope:
 
 `x_phys = H_L * (p_A * x * p_A) * H_L`.
 -/
-@[rep_depth operator]
 def cantorCliffordMatterEnvelope
     {Op : Type*} [Ring Op] [Star Op]
     (D : DrazinHorizon Op)
@@ -850,8 +799,24 @@ def cantorCliffordMatterEnvelope
     (x : Op) : Op :=
   G.P_harm * (D.p * x * D.p) * G.P_harm
 
+theorem cantorCliffordMatterEnvelope_zero
+    {Op : Type*} [Ring Op] [Star Op]
+    (D : DrazinHorizon Op)
+    (G : DrazinGreenHarmonic Op) :
+    cantorCliffordMatterEnvelope D G 0 = 0 := by
+  simp [cantorCliffordMatterEnvelope]
+
+theorem cantorCliffordMatterEnvelope_add
+    {Op : Type*} [Ring Op] [Star Op]
+    (D : DrazinHorizon Op)
+    (G : DrazinGreenHarmonic Op)
+    (x y : Op) :
+    cantorCliffordMatterEnvelope D G (x + y) =
+      cantorCliffordMatterEnvelope D G x +
+        cantorCliffordMatterEnvelope D G y := by
+  simp [cantorCliffordMatterEnvelope, mul_add, add_mul]
+
 /-- The matter envelope is the existing Hodge-Drazin physical envelope. -/
-@[rep_depth operator]
 theorem cantorCliffordMatterEnvelope_eq_physicalEnvelope
     {Op : Type*} [Ring Op] [Star Op]
     (D : DrazinHorizon Op)
@@ -863,7 +828,6 @@ theorem cantorCliffordMatterEnvelope_eq_physicalEnvelope
   rfl
 
 /-- Fierz readout happens after Drazin-Hodge envelope extraction. -/
-@[rep_depth operator]
 def envelopeFierzCoordinate
     {Op : Type*} [Ring Op] [Star Op]
     (D : DrazinHorizon Op)
@@ -872,51 +836,16 @@ def envelopeFierzCoordinate
     (x : Op) : ℝ :=
   channel (cantorCliffordMatterEnvelope D G x)
 
-/--
-Full direct Cantor tilt/switch -> Clifford -> envelope -> readout socket.
-
-This is the primary owner route supplied by the Cantor/Clifford papers.  It does
-not pass through Cuntz, and it does not assert a Fierz/Klein law without a
-separate admissibility witness.
--/
-@[socket_debt_tag, rep_depth operator]
-structure CantorTiltSwitchMatterReadoutSocket
-    (Op : Type*) [Ring Op] [Star Op] where
-  clifford : CantorCliffordRepresentation Op
-  horizon : DrazinHorizon Op
-  harmonic : DrazinGreenHarmonic Op
-  channel : Op → ℝ
-  fierzAdmissibilityPredicate : Op → Prop
-  fierzAdmissible : ∀ x : Op, fierzAdmissibilityPredicate x
-
-namespace CantorTiltSwitchMatterReadoutSocket
-
-variable {Op : Type*} [Ring Op] [Star Op]
-variable (S : CantorTiltSwitchMatterReadoutSocket Op)
-
-/-- The socket evaluates channels on the Drazin-Hodge envelope, not raw operators. -/
-@[rep_depth operator]
-def coordinate (x : Op) : ℝ :=
-  envelopeFierzCoordinate S.horizon S.harmonic S.channel x
-
-end CantorTiltSwitchMatterReadoutSocket
-
-/-- Packaged owner target for the direct Cantor tilt/switch Clifford bridge. -/
-@[rep_depth operator]
-structure CantorTiltSwitchCliffordOwner where
-  Op : Type
-  instRing : Ring Op
-  representation : @CantorCliffordRepresentation Op instRing
-
 /-- Owner target for the direct Cantor tilt/switch Clifford bridge. -/
-def CantorTiltSwitchCliffordBridgeTarget : Prop :=
-  Nonempty CantorTiltSwitchCliffordOwner
+def CantorTiltSwitchCliffordBridgeTarget
+    (Op : Type*) [Ring Op] : Prop :=
+  Nonempty (CantorCliffordRepresentation Op)
 
-/-- Constructor for the direct Cantor tilt/switch Clifford owner target. -/
-@[rep_depth operator]
+/-- A concrete Clifford representation inhabits the owner target. -/
 theorem constructCantorTiltSwitchCliffordBridgeTarget
-{Op : Type} [Ring Op]
-(R : CantorCliffordRepresentation Op) :
-CantorTiltSwitchCliffordBridgeTarget := by
-exact ⟨{ Op := Op, instRing := inferInstance, representation := R }⟩
+    {Op : Type*} [Ring Op]
+    (R : CantorCliffordRepresentation Op) :
+    CantorTiltSwitchCliffordBridgeTarget Op :=
+  ⟨R⟩
+
 end InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge

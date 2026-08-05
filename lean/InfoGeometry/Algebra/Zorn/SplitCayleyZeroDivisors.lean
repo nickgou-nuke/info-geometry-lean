@@ -42,8 +42,8 @@ def Dminus : ZornCell ℝ := ⟨1 / 2, 1 / 2, -(1 / 2), 0, 0, -(1 / 2), 0, 0⟩
 def dplus : ZornCell ℝ := ⟨0, 1, 0, 0, 0, 0, 0, 0⟩
 def dminus : ZornCell ℝ := ⟨1, 0, 0, 0, 0, 0, 0, 0⟩
 
-def Gplus : ZornCell ℝ := u1
-def Gminus : ZornCell ℝ := v1
+abbrev Gplus : ZornCell ℝ := u1
+abbrev Gminus : ZornCell ℝ := v1
 
 @[simp] theorem Dplus_idempotent : Dplus * Dplus = Dplus := by
   change ZornCell.mulZ Dplus Dplus = Dplus

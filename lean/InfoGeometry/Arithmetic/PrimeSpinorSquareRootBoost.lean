@@ -33,9 +33,15 @@ open PrimonFinite
 /-! ## 1. Two-component prime spinors -/
 
 /-- A two-component chiral spinor over a coefficient ring. -/
-structure PrimeSpinor (R : Type*) where
-  plus : R
-  minus : R
+abbrev PrimeSpinor (R : Type*) := R × R
+
+namespace PrimeSpinor
+
+abbrev plus {R : Type*} (u : PrimeSpinor R) : R := u.1
+
+abbrev minus {R : Type*} (u : PrimeSpinor R) : R := u.2
+
+end PrimeSpinor
 
 /-- The positive one-prime thermal spinor `(1, a)`. -/
 def thermalSpinorPlus
@@ -130,7 +136,10 @@ theorem projectiveRatio_chiralBoostSpinor_eq_square
     (y : R) :
     projectiveRatio (chiralBoostSpinor y) = scalarWeightFromSpinor y := by
   unfold projectiveRatio chiralBoostSpinor scalarWeightFromSpinor
-  simp
+  by_cases hy : y = 0
+  · simp [hy]
+  · change y * (y⁻¹)⁻¹ = y * y
+    rw [inv_inv]
 
 /--
 One-prime Euler factor as a spinor bilinear.

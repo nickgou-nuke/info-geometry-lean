@@ -25,7 +25,7 @@ Abstract inductive tower of finite-dimensional stages and Dirac operators.
 - `D n`   : self-adjoint Dirac-type operator on stage `n`.
 - `hD_comm` : compatibility of consecutive operators across the tower.
 -/
-structure DiracColimitData where
+structure DiracTowerData where
   Stage : ℕ → Type*
   [hNorm : ∀ n, NormedAddCommGroup (Stage n)]
   [hIP : ∀ n, InnerProductSpace ℂ (Stage n)]
@@ -37,7 +37,7 @@ structure DiracColimitData where
     (D (n + 1)).comp (emb n).toContinuousLinearMap =
       (emb n).toContinuousLinearMap.comp (D n)
 
-attribute [instance] DiracColimitData.hNorm DiracColimitData.hIP DiracColimitData.hCS
+attribute [instance] DiracTowerData.hNorm DiracTowerData.hIP DiracTowerData.hCS
 
 /--
 Data specifying a categorical limit object for the tower.
@@ -47,7 +47,7 @@ Data specifying a categorical limit object for the tower.
 - `hInc` enforces compatibility of level embeddings (`inc (n+1) ∘ emb n = inc n`).
 - `hDlim_compat` enforces compatibility of the direct-limit Dirac operator.
 -/
-structure DiracColimitLimit (S : DiracColimitData) where
+structure DiracCompatibleLimitData (S : DiracTowerData) where
   Hlim : Type*
   [hNorm : NormedAddCommGroup Hlim]
   [hIP : InnerProductSpace ℂ Hlim]
@@ -62,15 +62,16 @@ structure DiracColimitLimit (S : DiracColimitData) where
     Dlim.comp (inc n).toContinuousLinearMap =
       (inc n).toContinuousLinearMap.comp (S.D n)
 
-attribute [instance] DiracColimitLimit.hNorm DiracColimitLimit.hIP DiracColimitLimit.hCS
+attribute [instance] DiracCompatibleLimitData.hNorm
+  DiracCompatibleLimitData.hIP DiracCompatibleLimitData.hCS
 
 /--
 Self-adjointness of the direct-limit Dirac operator from stagewise self-adjointness
 and colimit compatibility assumptions.
 -/
-theorem dirac_colimit_selfAdjoint
-    (S : DiracColimitData)
-    (L : DiracColimitLimit S) : IsSelfAdjoint L.Dlim := by
+theorem dirac_compatible_limit_selfAdjoint
+    (S : DiracTowerData)
+    (L : DiracCompatibleLimitData S) : IsSelfAdjoint L.Dlim := by
   refine (ContinuousLinearMap.isSelfAdjoint_iff_isSymmetric).2 ?_
   intro x y
   rcases L.hPair x y with ⟨n, u, v, rfl, rfl⟩
@@ -93,13 +94,13 @@ theorem dirac_colimit_selfAdjoint
 /-- Corollary: spectrum of `Dlim` is real-valued.
 This is the operator-theoretic Hilbert-Pólya shadow used in the narrative.
 -/
-theorem dirac_colimit_spectrum_is_real
-    (S : DiracColimitData)
-    (L : DiracColimitLimit S)
+theorem dirac_compatible_limit_spectrum_is_real
+    (S : DiracTowerData)
+    (L : DiracCompatibleLimitData S)
     (z : ℂ)
     (hz : z ∈ spectrum ℂ L.Dlim) :
     z.im = 0 := by
-  have hSelf : IsSelfAdjoint L.Dlim := dirac_colimit_selfAdjoint S L
+  have hSelf : IsSelfAdjoint L.Dlim := dirac_compatible_limit_selfAdjoint S L
   exact selfAdjoint_spectrum_im_eq_zero L.Dlim hSelf z hz
 
 /--
@@ -107,13 +108,13 @@ A compact transport package used by other layers:
 any colimit-constructed spectral argument can be discharged by pointing at
 `dirac_colimit_spectrum_is_real`.
 -/
-theorem dirac_colimit_reality_chain
-    (S : DiracColimitData)
-    (L : DiracColimitLimit S)
+theorem dirac_compatible_limit_reality_chain
+    (S : DiracTowerData)
+    (L : DiracCompatibleLimitData S)
     (z : ℂ)
     (hSpec : z ∈ spectrum ℂ L.Dlim) :
     z.im = 0 :=
-  dirac_colimit_spectrum_is_real S L z hSpec
+  dirac_compatible_limit_spectrum_is_real S L z hSpec
 
 /--
 Concrete one-mode tower: every finite stage is `ℂ`, every bonding map is the
@@ -123,7 +124,7 @@ This is the smallest genuine instantiation of the abstract colimit hypotheses.
 It does not claim to be the full Clifford/Cuntz tower; it proves the interface
 is constructible by an actual Lean object.
 -/
-def oneModeDiracData : DiracColimitData where
+def oneModeDiracData : DiracTowerData where
   Stage := fun _ => ℂ
   emb := fun _ => LinearIsometry.id
   D := fun _ => ContinuousLinearMap.id ℂ ℂ
@@ -138,7 +139,7 @@ def oneModeDiracData : DiracColimitData where
     rfl
 
 /-- The corresponding concrete one-mode colimit. -/
-def oneModeDiracLimit : DiracColimitLimit oneModeDiracData where
+def oneModeDiracCompatibleLimit : DiracCompatibleLimitData oneModeDiracData where
   Hlim := ℂ
   inc := fun _ => LinearIsometry.id
   hPair := by
@@ -155,15 +156,16 @@ def oneModeDiracLimit : DiracColimitLimit oneModeDiracData where
     rfl
 
 /-- Concrete discharge of the colimit self-adjointness theorem. -/
-theorem oneMode_dirac_colimit_selfAdjoint :
-    IsSelfAdjoint oneModeDiracLimit.Dlim :=
-  dirac_colimit_selfAdjoint oneModeDiracData oneModeDiracLimit
+theorem oneMode_dirac_compatible_limit_selfAdjoint :
+    IsSelfAdjoint oneModeDiracCompatibleLimit.Dlim :=
+  dirac_compatible_limit_selfAdjoint oneModeDiracData oneModeDiracCompatibleLimit
 
 /-- Spectrum-reality corollary for the concrete one-mode colimit. -/
-theorem oneMode_dirac_colimit_spectrum_is_real
+theorem oneMode_dirac_compatible_limit_spectrum_is_real
     (z : ℂ)
-    (hz : z ∈ spectrum ℂ oneModeDiracLimit.Dlim) :
+    (hz : z ∈ spectrum ℂ oneModeDiracCompatibleLimit.Dlim) :
     z.im = 0 :=
-  dirac_colimit_spectrum_is_real oneModeDiracData oneModeDiracLimit z hz
+  dirac_compatible_limit_spectrum_is_real
+    oneModeDiracData oneModeDiracCompatibleLimit z hz
 
 end InfoGeometry.Canonical.DiracColimit

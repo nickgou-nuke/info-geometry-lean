@@ -22,7 +22,7 @@ open RohozhkinRepresentation
 /-- The Appendix A five-flip word in the `n = 1` Delaunay presentation layer. -/
 noncomputable def appendixPentagonWord
     (zi zj zk zl zm : ℚ) : DelaunayFlipWord 1 :=
-  { flips := appendixPentagonContexts zi zj zk zl zm }
+  appendixPentagonContexts zi zj zk zl zm
 
 /-- The Appendix A pentagon word evaluates to the identity transport matrix. -/
 theorem appendixPentagonWord_matrix_eq_one
@@ -51,8 +51,7 @@ theorem appendixPentagonWord_equiv_empty
     (h_jl : zj - zl ≠ 0) :
     DelaunayEquiv
       (appendixPentagonWord zi zj zk zl zm)
-      ({ flips := [] } :
-         DelaunayFlipWord 1) := by
+      ([] : DelaunayFlipWord 1) := by
   simpa [appendixPentagonWord] using
     (appendix_pentagon_delaunay_equiv zi zj zk zl zm
       h_il h_ik h_km h_jm h_jl

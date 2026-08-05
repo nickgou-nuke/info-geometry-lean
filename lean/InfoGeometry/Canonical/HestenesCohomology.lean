@@ -47,15 +47,29 @@ abbrev IsHestenesAnticohainOperator (A : EndH) : Prop :=
 
 /-- Packaged K-linear operator-valued real cochain/readout. -/
 @[rep_depth krein]
-structure HestenesCochainOperator where
-  op : EndH
-  kLinear : IsHestenesCochainOperator (E := E) op
+abbrev HestenesCochainOperator :=
+  {A : EndH // IsHestenesCochainOperator (E := E) A}
 
 /-- Packaged K-antilinear operator-valued real cochain/readout. -/
 @[rep_depth krein]
-structure HestenesAnticohainOperator where
-  op : EndH
-  kAntilinear : IsHestenesAnticohainOperator (E := E) op
+abbrev HestenesAnticohainOperator :=
+  {A : EndH // IsHestenesAnticohainOperator (E := E) A}
+
+namespace HestenesCochainOperator
+
+abbrev op (Φ : HestenesCochainOperator (E := E)) : EndH := Φ.1
+abbrev kLinear (Φ : HestenesCochainOperator (E := E)) :
+    IsHestenesCochainOperator (E := E) Φ.op := Φ.2
+
+end HestenesCochainOperator
+
+namespace HestenesAnticohainOperator
+
+abbrev op (Φ : HestenesAnticohainOperator (E := E)) : EndH := Φ.1
+abbrev kAntilinear (Φ : HestenesAnticohainOperator (E := E)) :
+    IsHestenesAnticohainOperator (E := E) Φ.op := Φ.2
+
+end HestenesAnticohainOperator
 
 section OmitComplete
 
@@ -152,27 +166,24 @@ variable (Φ Ψ : HestenesCochainOperator (E := E))
 
 /-- Sum of K-linear cochains. -/
 @[rep_depth krein]
-noncomputable def add : HestenesCochainOperator (E := E) where
-  op := Φ.op + Ψ.op
-  kLinear := add_isHestenesCochainOperator (E := E) Φ.kLinear Ψ.kLinear
+noncomputable def add : HestenesCochainOperator (E := E) :=
+  ⟨Φ.op + Ψ.op, add_isHestenesCochainOperator (E := E) Φ.kLinear Ψ.kLinear⟩
 
 /-- Real scalar multiple of a K-linear cochain. -/
 @[rep_depth krein]
-noncomputable def smul (r : ℝ) : HestenesCochainOperator (E := E) where
-  op := r • Φ.op
-  kLinear := smul_isHestenesCochainOperator (E := E) r Φ.kLinear
+noncomputable def smul (r : ℝ) : HestenesCochainOperator (E := E) :=
+  ⟨r • Φ.op, smul_isHestenesCochainOperator (E := E) r Φ.kLinear⟩
 
 /-- Composition of K-linear cochains. -/
 @[rep_depth krein]
-noncomputable def comp : HestenesCochainOperator (E := E) where
-  op := Φ.op.comp Ψ.op
-  kLinear := comp_isHestenesCochainOperator (E := E) Φ.kLinear Ψ.kLinear
+noncomputable def comp : HestenesCochainOperator (E := E) :=
+  ⟨Φ.op.comp Ψ.op, comp_isHestenesCochainOperator (E := E) Φ.kLinear Ψ.kLinear⟩
 
 /-- Commutator of K-linear cochains. -/
 @[rep_depth krein]
-noncomputable def commutator : HestenesCochainOperator (E := E) where
-  op := hestenesSymmetryCommutator (E := E) Φ.op Ψ.op
-  kLinear := commutator_isHestenesCochainOperator (E := E) Φ.kLinear Ψ.kLinear
+noncomputable def commutator : HestenesCochainOperator (E := E) :=
+  ⟨hestenesSymmetryCommutator (E := E) Φ.op Ψ.op,
+    commutator_isHestenesCochainOperator (E := E) Φ.kLinear Ψ.kLinear⟩
 
 end HestenesCochainOperator
 

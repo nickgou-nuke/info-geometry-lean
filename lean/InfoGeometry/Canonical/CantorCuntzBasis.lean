@@ -16,52 +16,54 @@ namespace CantorCuntzBasis
 /-- Binary orbit words indexing the Cantor/Cuntz recursion. -/
 abbrev BinaryWord := List Bool
 
-/--
-The theorem-backed Cantor/Cuntz basis packet.
-
-This keeps the carrier minimal: an `O₂`-style Cuntz algebra carrier and a
-distinguished seed vector from which the orbit is recursively generated.
--/
-@[rep_depth operator]
-structure CantorCuntzBasisPacket
-    (Op : Type*) [Ring Op] [StarRing Op] where
-  cuntz : CuntzO2Carrier Op
-  seed : Op
-
-namespace CantorCuntzBasisPacket
-
 variable {Op : Type*} [Ring Op] [StarRing Op]
-variable (B : CantorCuntzBasisPacket Op)
+variable (C : CuntzO2Carrier Op) (seed : Op)
 
 /-- The recursively generated binary orbit. -/
 @[rep_depth operator]
 def orbit : BinaryWord → Op
-  | [] => B.seed
-  | false :: w => B.cuntz.S_left * orbit w
-  | true :: w => B.cuntz.S_right * orbit w
+  | [] => seed
+  | false :: w => CuntzO2Carrier.S_left C * orbit w
+  | true :: w => CuntzO2Carrier.S_right C * orbit w
+
+theorem left_branch_isometry :
+    star (CuntzO2Carrier.S_left C) * CuntzO2Carrier.S_left C = 1 := by
+  simpa [CuntzO2Carrier.S_left] using CuntzO2Carrier.left_isometry C
+
+theorem right_branch_isometry :
+    star (CuntzO2Carrier.S_right C) * CuntzO2Carrier.S_right C = 1 := by
+  simpa [CuntzO2Carrier.S_right] using CuntzO2Carrier.right_isometry C
+
+theorem left_right_branch_orthogonal :
+    star (CuntzO2Carrier.S_left C) * CuntzO2Carrier.S_right C = 0 := by
+  exact (CuntzO2Carrier.orthogonal_ranges C).1
+
+theorem right_left_branch_orthogonal :
+    star (CuntzO2Carrier.S_right C) * CuntzO2Carrier.S_left C = 0 := by
+  exact (CuntzO2Carrier.orthogonal_ranges C).2
 
 /-- The orbit at the empty word is the seed. -/
 @[rep_depth operator]
 theorem orbit_root_eq_seed :
-    orbit B [] = B.seed := by
+    orbit C seed [] = seed := by
   rfl
 
 /-- The seed is exactly the root orbit. -/
 @[rep_depth operator]
 theorem orbit_seed_eq :
-    B.seed = orbit B [] := by
+    seed = orbit C seed [] := by
   rfl
 
 /-- Left branch action on a false child word. -/
 @[rep_depth operator]
 theorem orbit_cons_false_action (w : BinaryWord) :
-    orbit B (false :: w) = B.cuntz.S_left * orbit B w := by
+    orbit C seed (false :: w) = CuntzO2Carrier.S_left C * orbit C seed w := by
   rfl
 
 /-- Right branch action on a true child word. -/
 @[rep_depth operator]
 theorem orbit_cons_true_action (w : BinaryWord) :
-    orbit B (true :: w) = B.cuntz.S_right * orbit B w := by
+    orbit C seed (true :: w) = CuntzO2Carrier.S_right C * orbit C seed w := by
   rfl
 
 /--
@@ -71,9 +73,148 @@ This is the direct binary recursion behind the Cantor/Cuntz orbit.
 -/
 @[rep_depth operator]
 theorem orbit_branch_recursion (b : Bool) (w : BinaryWord) :
-    orbit B (b :: w) =
-      (if b then B.cuntz.S_right else B.cuntz.S_left) * orbit B w := by
+    orbit C seed (b :: w) =
+      (if b then CuntzO2Carrier.S_right C else CuntzO2Carrier.S_left C) * orbit C seed w := by
   cases b <;> simp [orbit]
+
+theorem orbit_append_recursion (u w : BinaryWord) :
+    orbit C seed (u ++ w) =
+      List.foldr
+        (fun b x => (if b then CuntzO2Carrier.S_right C else CuntzO2Carrier.S_left C) * x)
+        (orbit C seed w) u := by
+  induction u with
+  | nil => rfl
+  | cons b u ih =>
+      rw [List.cons_append, orbit_branch_recursion]
+      simp only [List.foldr]
+      rw [ih]
+
+theorem left_action_preserves_star_mul (x : Op) :
+    star (CuntzO2Carrier.S_left C) * CuntzO2Carrier.S_left C * (star x * x) =
+      star x * x := by
+  rw [left_branch_isometry C]
+  simp
+
+theorem right_action_preserves_star_mul (x : Op) :
+    star (CuntzO2Carrier.S_right C) * CuntzO2Carrier.S_right C * (star x * x) =
+      star x * x := by
+  rw [right_branch_isometry C]
+  simp
+
+theorem orbit_words_orthogonal
+    (u v : BinaryWord)
+    (hlen : u.length = v.length)
+    (hne : u ≠ v) :
+    star (orbit C seed u) * orbit C seed v = 0 := by
+  induction u generalizing v with
+  | nil =>
+      cases v with
+      | nil => exact (hne rfl).elim
+      | cons c v => simp at hlen
+  | cons b u ih =>
+      cases v with
+      | nil => simp at hlen
+      | cons c v =>
+          have htail : u.length = v.length := by simpa using hlen
+          cases b with
+          | false =>
+              cases c with
+              | false =>
+                  simp only [orbit, star_mul]
+                  calc
+                    star (orbit C seed u) * star (CuntzO2Carrier.S_left C) *
+                          (CuntzO2Carrier.S_left C * orbit C seed v) =
+                        star (orbit C seed u) *
+                          (star (CuntzO2Carrier.S_left C) * CuntzO2Carrier.S_left C) *
+                            orbit C seed v := by noncomm_ring
+                    _ = star (orbit C seed u) * orbit C seed v := by
+                      rw [left_branch_isometry C]
+                      simp
+                    _ = 0 := ih v htail (by
+                      intro huv
+                      apply hne
+                      simp [huv])
+              | true =>
+                  simp only [orbit, star_mul]
+                  calc
+                    star (orbit C seed u) * star (CuntzO2Carrier.S_left C) *
+                          (CuntzO2Carrier.S_right C * orbit C seed v) =
+                        star (orbit C seed u) *
+                          (star (CuntzO2Carrier.S_left C) * CuntzO2Carrier.S_right C) *
+                            orbit C seed v := by noncomm_ring
+                    _ = 0 := by
+                      rw [left_right_branch_orthogonal C]
+                      simp
+          | true =>
+              cases c with
+              | false =>
+                  simp only [orbit, star_mul]
+                  calc
+                    star (orbit C seed u) * star (CuntzO2Carrier.S_right C) *
+                          (CuntzO2Carrier.S_left C * orbit C seed v) =
+                        star (orbit C seed u) *
+                          (star (CuntzO2Carrier.S_right C) * CuntzO2Carrier.S_left C) *
+                            orbit C seed v := by noncomm_ring
+                    _ = 0 := by
+                      rw [right_left_branch_orthogonal C]
+                      simp
+              | true =>
+                  simp only [orbit, star_mul]
+                  calc
+                    star (orbit C seed u) * star (CuntzO2Carrier.S_right C) *
+                          (CuntzO2Carrier.S_right C * orbit C seed v) =
+                        star (orbit C seed u) *
+                          (star (CuntzO2Carrier.S_right C) * CuntzO2Carrier.S_right C) *
+                            orbit C seed v := by noncomm_ring
+                    _ = star (orbit C seed u) * orbit C seed v := by
+                      rw [right_branch_isometry C]
+                      simp
+                    _ = 0 := ih v htail (by
+                      intro huv
+                      apply hne
+                      simp [huv])
+
+theorem orbit_word_isometric (w : BinaryWord) :
+    star (orbit C seed w) * orbit C seed w = star seed * seed := by
+  induction w with
+  | nil => rfl
+  | cons b w ih =>
+      cases b with
+      | false =>
+          simp only [orbit, star_mul]
+          calc
+            star (orbit C seed w) * star (CuntzO2Carrier.S_left C) *
+                  (CuntzO2Carrier.S_left C * orbit C seed w) =
+                star (orbit C seed w) *
+                  (star (CuntzO2Carrier.S_left C) * CuntzO2Carrier.S_left C) *
+                    orbit C seed w := by noncomm_ring
+            _ = star (orbit C seed w) * orbit C seed w := by
+              rw [left_branch_isometry C]
+              simp
+            _ = star seed * seed := ih
+      | true =>
+          simp only [orbit, star_mul]
+          calc
+            star (orbit C seed w) * star (CuntzO2Carrier.S_right C) *
+                  (CuntzO2Carrier.S_right C * orbit C seed w) =
+                star (orbit C seed w) *
+                  (star (CuntzO2Carrier.S_right C) * CuntzO2Carrier.S_right C) *
+                    orbit C seed w := by noncomm_ring
+            _ = star (orbit C seed w) * orbit C seed w := by
+              rw [right_branch_isometry C]
+              simp
+            _ = star seed * seed := ih
+
+theorem orbit_words_inner_eq_ite
+    (u v : BinaryWord)
+    (hlen : u.length = v.length) :
+    star (orbit C seed u) * orbit C seed v =
+      if u = v then star seed * seed else 0 := by
+  by_cases h : u = v
+  · subst v
+    simp [orbit_word_isometric]
+  · rw [orbit_words_orthogonal C seed u v hlen h]
+    simp [h]
 
 /--
 General induction principle for orbit words.
@@ -99,7 +240,7 @@ theorem orbit_word_induction
       | true =>
           simpa using h_true w ih
 
-end CantorCuntzBasisPacket
+
 
 namespace CuntzO2Carrier
 
@@ -176,6 +317,25 @@ theorem seed_branch_decomposition_sum
     CuntzO2Carrier.seedBranchLeft C seed + CuntzO2Carrier.seedBranchRight C seed = seed := by
   simpa [CuntzO2Carrier.seedBranchLeft, CuntzO2Carrier.seedBranchRight] using
     CuntzO2Carrier.seed_branch_decomposition C seed
+
+
+
+variable {Op : Type*} [Ring Op] [StarRing Op]
+variable (C : CuntzO2Carrier Op) (seed : Op)
+
+theorem orbit_words_equal_norm
+    (u v : BinaryWord) (h : u.length = v.length) :
+    star (orbit C seed u) * orbit C seed u =
+      star (orbit C seed v) * orbit C seed v := by
+  rw [orbit_word_isometric C seed u, orbit_word_isometric C seed v]
+
+theorem orbit_append_preserves_norm
+    (u v : BinaryWord) :
+    star (orbit C seed (u ++ v)) * orbit C seed (u ++ v) =
+      star (orbit C seed u) * orbit C seed u := by
+  rw [orbit_word_isometric C seed (u ++ v), orbit_word_isometric C seed u]
+
+
 
 end CantorCuntzBasis
 

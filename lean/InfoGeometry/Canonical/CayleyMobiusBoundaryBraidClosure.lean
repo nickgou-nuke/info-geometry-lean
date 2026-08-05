@@ -88,15 +88,17 @@ theorem map_preserves_interior (f : X → X) {p : AlgebraicCompactification X}
 end AlgebraicCompactification
 
 /-- A finite Cayley--Möbius inversion packet: an involution on labels. -/
-structure CayleyMobiusInversion (X : Type*) where
-  /-- Algebraic time/Möbius inversion map. -/
-  inv : X → X
-  /-- Involutivity. -/
-  inv_inv : ∀ x : X, inv (inv x) = x
+abbrev CayleyMobiusInversion (X : Type*) :=
+  {f : X → X // Function.Involutive f}
 
 namespace CayleyMobiusInversion
 
-variable {X : Type*} (C : CayleyMobiusInversion X)
+variable {X : Type*}
+
+abbrev inv (C : CayleyMobiusInversion X) : X → X := C.1
+abbrev inv_inv (C : CayleyMobiusInversion X) : ∀ x : X, C.inv (C.inv x) = x := C.2
+
+variable (C : CayleyMobiusInversion X)
 
 /-- Inversion induced on the algebraic compactification. -/
 def compactifiedInversion :

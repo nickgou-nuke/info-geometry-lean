@@ -26,13 +26,13 @@ instance : CoeSort Atom (Type u) := ⟨fun X => X.core⟩
 namespace Atom
 
 /-- The four distinguished generators of the split-Clifford atom. -/
-def oneOp (X : Atom) : X →ₗ[ℝ] X := LinearMap.id
+abbrev oneOp (X : Atom) : X →ₗ[ℝ] X := LinearMap.id
 
-def epsOp (X : Atom) : X →ₗ[ℝ] X := X.core.eps
+abbrev epsOp (X : Atom) : X →ₗ[ℝ] X := X.core.eps
 
-def jOp (X : Atom) : X →ₗ[ℝ] X := X.core.J
+abbrev jOp (X : Atom) : X →ₗ[ℝ] X := X.core.J
 
-noncomputable def kOp (X : Atom) : X →ₗ[ℝ] X :=
+noncomputable abbrev kOp (X : Atom) : X →ₗ[ℝ] X :=
   X.core.K
 
 @[simp] lemma j_sq (X : Atom) :

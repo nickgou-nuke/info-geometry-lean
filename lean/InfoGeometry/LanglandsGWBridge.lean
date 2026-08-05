@@ -137,13 +137,29 @@ theorem SymplecticQuotientData.mem_zeroLocus_iff
     a ∈ Q.zeroLocus ↔ Q.momentumMap a = 0 := by
   rfl
 
-/-- The Weyl carrier is the existing finite-root owner, not a pair of type sockets. -/
-structure WeylIntegrationData (GaugeGroup Torus : Type)
-    [Group GaugeGroup] [Group Torus] where
-  /-- Root-system and Weyl-action data from the existing Weyl owner. -/
-  rootData : WeylIntegration.WeylData GaugeGroup Torus
-  /-- Explicit reduction map from the original group to the torus. -/
-  torusMap : GaugeGroup → Torus
+/-- Weyl reduction data is a native product of the root owner and torus map.
+
+No additional compatibility law is carried here; those laws belong to the
+underlying `WeylData` owner or to downstream integration theorems.
+-/
+abbrev WeylIntegrationData (GaugeGroup Torus : Type)
+    [Group GaugeGroup] [Group Torus] :=
+  WeylIntegration.WeylData GaugeGroup Torus × (GaugeGroup → Torus)
+
+abbrev WeylIntegrationData.rootData
+    {GaugeGroup Torus : Type} [Group GaugeGroup] [Group Torus]
+    (W : WeylIntegrationData GaugeGroup Torus) :
+    WeylIntegration.WeylData GaugeGroup Torus := W.1
+
+abbrev WeylIntegrationData.torusMap
+    {GaugeGroup Torus : Type} [Group GaugeGroup] [Group Torus]
+    (W : WeylIntegrationData GaugeGroup Torus) : GaugeGroup → Torus := W.2
+
+def WeylIntegrationData.mk
+    {GaugeGroup Torus : Type} [Group GaugeGroup] [Group Torus]
+    (rootData : WeylIntegration.WeylData GaugeGroup Torus)
+    (torusMap : GaugeGroup → Torus) :
+    WeylIntegrationData GaugeGroup Torus := (rootData, torusMap)
 
 /--
 Pullback along the torus map.
@@ -165,19 +181,25 @@ theorem WeylIntegrationData.pullback_apply
     W.pullback f g = f (W.torusMap g) := by
   rfl
 
-/--
-Combined carrier data for Atiyah--Bott/Abelian-reduction style localization.
-
-The combined carrier is an owner-level shape: the moduli object is presented with
-its momentum constraint and a Weyl-type torus reduction shadow.
--/
-structure SymplecticWeylVolumeData (Space GaugeGroup Torus : Type)
+/-! Combined carrier data has no additional law beyond its two components. -/
+abbrev SymplecticWeylVolumeData (Space GaugeGroup Torus : Type)
     [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
-    [instGroup : Group GaugeGroup] [Group Torus] where
-  /-- Symplectic quotient layer. -/
-  quotient : SymplecticQuotientData Space GaugeGroup
-  /-- Weyl torus-reduction layer. -/
-  weyl : WeylIntegrationData GaugeGroup Torus
+    [instGroup : Group GaugeGroup] [Group Torus] :=
+  SymplecticQuotientData Space GaugeGroup × WeylIntegrationData GaugeGroup Torus
+
+abbrev SymplecticWeylVolumeData.quotient
+    {Space GaugeGroup Torus : Type}
+    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
+    [Group GaugeGroup] [Group Torus]
+    (D : SymplecticWeylVolumeData Space GaugeGroup Torus) :
+    SymplecticQuotientData Space GaugeGroup := D.1
+
+abbrev SymplecticWeylVolumeData.weyl
+    {Space GaugeGroup Torus : Type}
+    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
+    [Group GaugeGroup] [Group Torus]
+    (D : SymplecticWeylVolumeData Space GaugeGroup Torus) :
+    WeylIntegrationData GaugeGroup Torus := D.2
 
 /--
 Canonical assembly from separate symplectic-quotient and Weyl-reduction data.
@@ -215,30 +237,52 @@ theorem constructSymplecticWeylVolumeData_weyl
     (constructSymplecticWeylVolumeData Q W).weyl = W := by
   rfl
 
-/--
-Connector data for the theorem-safe Weyl-integration scaffold.
-
-This does not prove the Weyl integration formula.  It records the existing
-owner surfaces that such a formula must pass through: torus pullback, coadjoint
-orbit, finite Mellin scaling, finite spectral Taylor/Mellin readout, and the
-scale/shape channel split.
--/
-structure WeylIntegrationPillarData
+/-! The pillar is a product of existing owner carriers, with no extra law. -/
+abbrev WeylIntegrationPillarData
     (Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type)
     [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
-    [Group GaugeGroup] [Group Torus] [AddCommMonoid Func] [CommSemiring R] [Fintype ι] where
-  /-- Gauge-theoretic symplectic quotient carrier. -/
-  quotient : SymplecticQuotientData Space GaugeGroup
-  /-- Weyl torus-reduction carrier. -/
-  weyl : WeylIntegrationData GaugeGroup Torus
-  /-- Coadjoint orbit/metriplectic carrier from the Souriau owner. -/
-  orbit : InfiniteCoadjointOrbitMetriplecticContext Orbit LieAlg LieCoalg
-  /-- Finite Mellin orbit-scaling datum. -/
-  mellin : FiniteMellinScalingDatum Func R
-  /-- Finite spectral Taylor/Mellin packet. -/
-  spectral : SpectralTaylorMellinPacket ι
-  /-- Analytic scale/shape channel split. -/
-  scaleShape : LaplaceMellinScaleShapePacket
+    [Group GaugeGroup] [Group Torus] [AddCommMonoid Func] [CommSemiring R] [Fintype ι] :=
+  SymplecticQuotientData Space GaugeGroup ×
+    (WeylIntegrationData GaugeGroup Torus ×
+      (InfiniteCoadjointOrbitMetriplecticContext Orbit LieAlg LieCoalg ×
+        (FiniteMellinScalingDatum Func R ×
+          (SpectralTaylorMellinPacket ι × LaplaceMellinScaleShapePacket))))
+
+abbrev WeylIntegrationPillarData.quotient
+    {Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type}
+    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
+    [Group GaugeGroup] [Group Torus] [AddCommMonoid Func] [CommSemiring R] [Fintype ι]
+    (P : WeylIntegrationPillarData Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι) := P.1
+
+abbrev WeylIntegrationPillarData.weyl
+    {Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type}
+    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
+    [Group GaugeGroup] [Group Torus] [AddCommMonoid Func] [CommSemiring R] [Fintype ι]
+    (P : WeylIntegrationPillarData Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι) := P.2.1
+
+abbrev WeylIntegrationPillarData.orbit
+    {Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type}
+    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
+    [Group GaugeGroup] [Group Torus] [AddCommMonoid Func] [CommSemiring R] [Fintype ι]
+    (P : WeylIntegrationPillarData Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι) := P.2.2.1
+
+abbrev WeylIntegrationPillarData.mellin
+    {Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type}
+    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
+    [Group GaugeGroup] [Group Torus] [AddCommMonoid Func] [CommSemiring R] [Fintype ι]
+    (P : WeylIntegrationPillarData Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι) := P.2.2.2.1
+
+abbrev WeylIntegrationPillarData.spectral
+    {Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type}
+    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space] [Group GaugeGroup] [Group Torus]
+    [AddCommMonoid Func] [CommSemiring R] [Fintype ι]
+    (P : WeylIntegrationPillarData Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι) := P.2.2.2.2.1
+
+abbrev WeylIntegrationPillarData.scaleShape
+    {Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type}
+    [NormedAddCommGroup Space] [InnerProductSpace ℝ Space] [Group GaugeGroup] [Group Torus]
+    [AddCommMonoid Func] [CommSemiring R] [Fintype ι]
+    (P : WeylIntegrationPillarData Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι) := P.2.2.2.2.2
 
 namespace WeylIntegrationPillarData
 

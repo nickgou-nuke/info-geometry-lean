@@ -21,17 +21,6 @@ open InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
 open InfoGeometry.Canonical.SouriauThermodynamics
 open InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
 
-theorem spin44_vectorCharacter_shadow_eq_two_sum_cosh
-    (β : Cartan4) :
-    vectorCharacter β = vectorCharacterCosh β :=
-  vectorCharacter_eq_two_sum_cosh β
-
-theorem exactKKT_dimensionAgnostic_stationarity_packet :
-    let K := DimensionAgnosticKKTResiduals.exact.toShadow
-    K.coneAdmissible ∧ K.stationarity ∧
-      K.complementarySlackness ∧ K.finitePartitionAdmissible :=
-  DimensionAgnosticKKTResiduals.exact_stationarity_packet
-
 theorem exactKKT_translator_shadow_packet
     [Fintype α] [Nonempty α]
     (C : SouriauFenchelContext (α := α))

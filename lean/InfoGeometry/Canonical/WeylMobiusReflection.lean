@@ -54,4 +54,11 @@ theorem weyl_conj_N_transpose :
     W * Nᵀ * W = -Nᵀ := by
   simpa [Nt_eq_transpose] using weyl_conj_Nt
 
+/-! The Weyl reflection fixes the diagonal parity/Cartan lane and reverses
+the nilpotent Möbius lane. -/
+
+theorem weyl_mobius_parity_comparison :
+    (W * K * W = K) ∧ (W * N * W = -N) := by
+  exact ⟨weyl_conj_K, weyl_conj_N⟩
+
 end InfoGeometry.Canonical.WeylMobiusReflection

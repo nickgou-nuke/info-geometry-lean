@@ -9,31 +9,46 @@ Conserved Vector Current (CVC) hypothesis which states that the vector coupling
 constant is unrenormalized, resulting in a universal `ft` value for all
 superallowed 0+ to 0+ nuclear beta decays.
 -/
-structure SuperallowedFermiDecay where
-  initial_state : NuclearState
-  final_state : NuclearState
-  /-- The comparative half-life (ft value) in seconds. -/
-  ft_value : ℝ
-  /-- CVC hypothesis asserts this ft_value is a universal constant (approx 3072 s). -/
-  ft_is_universal : ft_value = 3072
+abbrev SuperallowedFermiDecay :=
+  {data : NuclearState × (NuclearState × ℝ) // data.2.2 = 3072}
+
+namespace SuperallowedFermiDecay
+
+abbrev initial_state (D : SuperallowedFermiDecay) : NuclearState := D.1.1
+abbrev final_state (D : SuperallowedFermiDecay) : NuclearState := D.1.2.1
+abbrev ft_value (D : SuperallowedFermiDecay) : ℝ := D.1.2.2
+abbrev ft_is_universal (D : SuperallowedFermiDecay) : D.ft_value = 3072 := D.2
+
+end SuperallowedFermiDecay
 
 /--
 A transition structure specifically for 0+ to 0+ superallowed decays.
 We assert that the transition strength depends solely on the isospin
 raising/lowering operators (encoded here via the expectation value of T_plus/T_minus).
 -/
-structure SuperallowedZeroPlusTransition extends SuperallowedFermiDecay where
-  initial_zero_plus : initial_state.spin = 0 ∧ initial_state.parity = 1
-  final_zero_plus : final_state.spin = 0 ∧ final_state.parity = 1
-  /-- The isospin must be the same T for both states in an isobaric analogue transition. -/
-  isospin_T_conserved : initial_state.isospin.T = final_state.isospin.T
-  /-- Matrix element squared |M_F|^2. -/
-  matrix_element_sq : ℝ
-  /-- The transition strength (matrix element squared) depends solely on the isospin operators:
-      |M_F|^2 = T(T+1) - T_z,i * T_z,f  (assuming a pure Fermi transition between analogue states). -/
-  matrix_element_cvc : matrix_element_sq =
-    (initial_state.isospin.T : ℝ) * ((initial_state.isospin.T : ℝ) + 1) -
-    (initial_state.isospin.T_z : ℝ) * (final_state.isospin.T_z : ℝ)
+abbrev SuperallowedZeroPlusTransition :=
+  {data : SuperallowedFermiDecay × ℝ //
+    data.1.initial_state.spin = 0 ∧
+      data.1.initial_state.parity = 1 ∧
+      data.1.final_state.spin = 0 ∧
+      data.1.final_state.parity = 1 ∧
+      data.1.initial_state.isospin.T = data.1.final_state.isospin.T ∧
+      data.2 =
+        (data.1.initial_state.isospin.T : ℝ) *
+            ((data.1.initial_state.isospin.T : ℝ) + 1) -
+          (data.1.initial_state.isospin.T_z : ℝ) *
+            (data.1.final_state.isospin.T_z : ℝ)}
+
+namespace SuperallowedZeroPlusTransition
+
+abbrev decay (T : SuperallowedZeroPlusTransition) : SuperallowedFermiDecay := T.1.1
+abbrev initial_state (T : SuperallowedZeroPlusTransition) : NuclearState := T.decay.initial_state
+abbrev final_state (T : SuperallowedZeroPlusTransition) : NuclearState := T.decay.final_state
+abbrev ft_value (T : SuperallowedZeroPlusTransition) : ℝ := T.decay.ft_value
+abbrev ft_is_universal (T : SuperallowedZeroPlusTransition) : T.ft_value = 3072 := T.decay.ft_is_universal
+abbrev matrix_element_sq (T : SuperallowedZeroPlusTransition) : ℝ := T.1.2
+
+end SuperallowedZeroPlusTransition
 
 /--
 A theorem formalizing that for 0+ to 0+ superallowed Fermi transitions,

@@ -64,12 +64,18 @@ The map `susceptibility U` sends an applied field to the induced response.  For
 optics, this is morally `P = χ E`, with frequency/momentum dependence carried
 by `Op` or by later concrete parameters.
 -/
-structure SusceptibilityDatum
+abbrev SusceptibilityDatum
     (Op Field Response : Type*)
     [NormedAddCommGroup Field] [NormedSpace ℝ Field]
-    [NormedAddCommGroup Response] [NormedSpace ℝ Response] where
-  /-- Linear material susceptibility at the chosen state/parameter. -/
-  susceptibility : Op → Field →L[ℝ] Response
+    [NormedAddCommGroup Response] [NormedSpace ℝ Response] :=
+  Op → Field →L[ℝ] Response
+
+/-- Compatibility accessor for the material susceptibility map. -/
+abbrev SusceptibilityDatum.susceptibility
+    {Op Field Response : Type*}
+    [NormedAddCommGroup Field] [NormedSpace ℝ Field]
+    [NormedAddCommGroup Response] [NormedSpace ℝ Response]
+    (S : SusceptibilityDatum Op Field Response) : Op → Field →L[ℝ] Response := S
 
 namespace SusceptibilityDatum
 
@@ -155,8 +161,8 @@ The `derived_from_hessian` evidence is the explicit equality above, not an
 uninterpreted external hypothesis.
 -/
 def toSusceptibilityDatum :
-    SusceptibilityDatum Op Field Response where
-  susceptibility := C.susceptibility
+    SusceptibilityDatum Op Field Response :=
+  C.susceptibility
 
 /-- The generated susceptibility datum has the constructive susceptibility map. -/
 theorem toSusceptibilityDatum_susceptibility :

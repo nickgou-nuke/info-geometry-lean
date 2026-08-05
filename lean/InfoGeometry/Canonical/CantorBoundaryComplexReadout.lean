@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
+import InfoGeometry.Canonical.CantorBoundaryReadoutBounds
 
 /-!
 # Complex readout of the binary Cantor boundary
@@ -14,12 +15,23 @@ noncomputable section
 namespace InfoGeometry.Canonical.CantorBoundaryComplexReadout
 
 open InfoGeometry.Canonical.FractalCantorCliffordFockBridge
+open InfoGeometry.Canonical.CantorBoundaryReadoutBounds
 
 def binaryDigit (b : Bool) : ℂ :=
   if b then 1 else 0
 
 def binaryTerm (w : InfiniteBinaryWordSpace) (n : ℕ) : ℂ :=
   binaryDigit (w n) * (1 / 2 : ℂ) ^ (n + 1)
+
+theorem binaryDigit_eq_ofReal (b : Bool) :
+    binaryDigit b = Complex.ofReal (if b then (1 : ℝ) else 0) := by
+  cases b <;> rfl
+
+theorem binaryTerm_eq_ofReal_realTerm
+    (w : InfiniteBinaryWordSpace) (n : ℕ) :
+    binaryTerm w n = Complex.ofReal (realBinaryTerm w n) := by
+  cases h : w n <;>
+    simp [binaryTerm, binaryDigit, realBinaryTerm, h, Complex.ofReal_pow]
 
 theorem binaryTerm_summable (w : InfiniteBinaryWordSpace) :
     Summable (binaryTerm w) := by
@@ -36,6 +48,24 @@ theorem binaryTerm_summable (w : InfiniteBinaryWordSpace) :
 
 noncomputable def binaryReadout (w : InfiniteBinaryWordSpace) : ℂ :=
   ∑' n : ℕ, binaryTerm w n
+
+theorem binaryReadout_eq_ofReal (w : InfiniteBinaryWordSpace) :
+    binaryReadout w = Complex.ofReal (realBinaryReadout w) := by
+  rw [binaryReadout, realBinaryReadout, Complex.ofReal_tsum]
+  apply tsum_congr
+  intro n
+  exact binaryTerm_eq_ofReal_realTerm w n
+
+theorem binaryReadout_im (w : InfiniteBinaryWordSpace) :
+    (binaryReadout w).im = 0 := by
+  rw [binaryReadout_eq_ofReal]
+  rfl
+
+theorem binaryReadout_norm_le_one (w : InfiniteBinaryWordSpace) :
+    ‖binaryReadout w‖ ≤ 1 := by
+  rw [binaryReadout_eq_ofReal, Complex.norm_real, Real.norm_eq_abs,
+    abs_of_nonneg (realBinaryReadout_nonnegative w)]
+  exact realBinaryReadout_le_one w
 
 theorem binaryDigit_complement_add (b : Bool) :
     binaryDigit (!b) + binaryDigit b = 1 := by
@@ -65,6 +95,11 @@ theorem binary_readout_complement (w : InfiniteBinaryWordSpace) :
   rw [← add_mul]
   rw [binaryDigit_complement_add]
   ring
+
+theorem binary_readout_complement_eq_one_sub
+    (w : InfiniteBinaryWordSpace) :
+    binaryReadout (fun n => !w n) = 1 - binaryReadout w := by
+  exact (eq_sub_iff_add_eq).2 (binary_readout_complement w)
 
 theorem binary_readout_intertwining_of_pointwise_complement
     (tomita : InfiniteBinaryWordSpace → InfiniteBinaryWordSpace)

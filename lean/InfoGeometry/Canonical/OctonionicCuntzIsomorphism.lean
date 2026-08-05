@@ -13,11 +13,13 @@ namespace InfoGeometry.Canonical
 
 variable {R : Type*} [Field R] [CharZero R]
 
-structure LightconeCuntzProjectorData (R : Type*) [Field R] [CharZero R] where
-  u : R
-  square_eq_one : u * u = 1
+abbrev LightconeCuntzProjectorData (R : Type*) [Field R] [CharZero R] :=
+  {u : R // u * u = 1}
 
 namespace LightconeCuntzProjectorData
+
+abbrev u (D : LightconeCuntzProjectorData R) : R := D.1
+abbrev square_eq_one (D : LightconeCuntzProjectorData R) : D.u * D.u = 1 := D.2
 
 def projectorPlus (D : LightconeCuntzProjectorData R) : R := lightconePlus D.u
 def projectorMinus (D : LightconeCuntzProjectorData R) : R := lightconeMinus D.u

@@ -34,9 +34,9 @@ def FiniteLDDSDatum (ι : Type*) := (ι → ℝ) × (ι → ℝ)
 
 namespace FiniteLDDSDatum
 
-def density (D : FiniteLDDSDatum ι) : ι → ℝ := D.1
+abbrev density (D : FiniteLDDSDatum ι) : ι → ℝ := D.1
 
-def reference (D : FiniteLDDSDatum ι) : ι → ℝ := D.2
+abbrev reference (D : FiniteLDDSDatum ι) : ι → ℝ := D.2
 
 variable {ι : Type*} [Fintype ι]
 

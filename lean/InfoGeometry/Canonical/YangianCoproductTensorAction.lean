@@ -6,8 +6,18 @@ namespace InfoGeometry.Canonical
 variable {K : Type*} [CommRing K]
 
 /-- The abstract representation of a Hopf algebra generator acting on a state space V. -/
-structure HopfRepresentation (K H V : Type*) [CommRing K] [CommRing H] [Algebra K H] [AddCommGroup V] [Module K V] where
-  action : H →ₗ[K] (V →ₗ[K] V)
+abbrev HopfRepresentation (K H V : Type*) [CommRing K] [CommRing H] [Algebra K H]
+    [AddCommGroup V] [Module K V] :=
+  H →ₗ[K] (V →ₗ[K] V)
+
+namespace HopfRepresentation
+
+abbrev action {K H V : Type*} [CommRing K] [CommRing H] [Algebra K H]
+    [AddCommGroup V] [Module K V]
+    (ρ : HopfRepresentation K H V) : H →ₗ[K] (V →ₗ[K] V) :=
+  ρ
+
+end HopfRepresentation
   
 /-- 
 A state v ∈ V is invariant under the Hopf algebra if its action matches the counit ε.

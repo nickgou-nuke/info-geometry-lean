@@ -167,12 +167,14 @@ The stabilization itself is supplied as a witness. This packet only exposes
 the readbacks forced by that witness.
 -/
 @[rep_depth krein]
-structure BottStabilizedPipeline where
-  stabilization : BottStabilizedHomologyFrame (E := E) (F := F)
+abbrev BottStabilizedPipeline :=
+  BottStabilizedHomologyFrame (E := E) (F := F)
 
 namespace BottStabilizedPipeline
 
 variable (P : BottStabilizedPipeline (E := E) (F := F))
+
+abbrev stabilization : BottStabilizedHomologyFrame (E := E) (F := F) := P
 
 /-- Bott stabilization preserves source homology equivalence by the supplied witness. -/
 @[rep_depth transport]
@@ -230,4 +232,3 @@ end BottStabilizedPipeline
 end BottPipeline
 
 end InfoGeometry.Canonical.RealHestenesKreinPipelineCapstone
-

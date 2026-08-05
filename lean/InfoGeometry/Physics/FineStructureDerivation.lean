@@ -19,16 +19,14 @@ open InfoGeometry.Clifford.CliffordTower
 open InfoGeometry.BostConnes
 open PellisFineStructure
 
-def parafermionCentralizerDim : ℕ := parafermion_centralizer_dim
-
 theorem centralizer_equals_hierarchy :
-    parafermionCentralizerDim = mersenne 2 + mersenne 3 + mersenne 7 := by
-  rw [parafermionCentralizerDim]; exact parafermion_centralizer_equals_hierarchy
+    parafermion_centralizer_dim = mersenne 2 + mersenne 3 + mersenne 7 := by
+  exact parafermion_centralizer_equals_hierarchy
 
-theorem centralizer_is_137 : parafermionCentralizerDim = 137 := by
+theorem centralizer_is_137 : parafermion_centralizer_dim = 137 := by
   rw [centralizer_equals_hierarchy]; exact combinatorial_hierarchy_sum
 
-noncomputable def alpha_combinatorial : ℝ := 1 / (parafermionCentralizerDim : ℝ)
+noncomputable def alpha_combinatorial : ℝ := 1 / (parafermion_centralizer_dim : ℝ)
 
 theorem combinatorial_alpha_is_1_137 : alpha_combinatorial = 1 / (137:ℝ) := by
   rw [alpha_combinatorial, centralizer_is_137]; rfl

@@ -1,5 +1,11 @@
 # Repository Agent Routing
 
+> ⚠️ **CRITICAL SYSTEM OVERRIDE: NEVER RUN LAKE CLEAN**
+> You must read this before every command. NEVER RUN `lake clean`. NEVER delete the build cache.
+> Concurrent builds are also strictly BANNED. You must use `manage_task list` to verify no builds are running.
+> NEVER kill a running `lake` task unless you explicitly ask the user for authorization and receive approval.
+> ⚠️
+
 > Canonical pipeline: read `docs/CANONICAL_AGENT_PIPELINE.md` first for the
 > current repo path, tool routing, aiClaw queue discipline, Pi extension stack,
 > GEPA flow, and forbidden legacy routes. If a generated transcript or archived

@@ -313,6 +313,45 @@ theorem tailPullback_prefixPullback_eval
     tailPullback (prefixPullback a f) (consBoundary a ξ) = f (consBoundary a ξ) := by
   rfl
 
+@[simp, rep_depth krein]
+theorem prefixPullback_tailPullback
+    {Value : Type*}
+    (a : CausalArrow)
+    (f : BoundaryFunction Value)
+    (ξ : ChiralBoundary) :
+    prefixPullback a (tailPullback f) ξ = f ξ := by
+  change f (tailBoundary (consBoundary a ξ)) = f ξ
+  rw [tailBoundary_consBoundary]
+
+theorem prefixPullback_surjective
+    {Value : Type*}
+    (a : CausalArrow) :
+    Function.Surjective (prefixPullback a :
+      BoundaryFunction Value → BoundaryFunction Value) := by
+  intro f
+  refine ⟨tailPullback f, ?_⟩
+  funext ξ
+  exact prefixPullback_tailPullback a f ξ
+
+theorem tailPullBack_injective
+    {Value : Type*} :
+    Function.Injective (tailPullback :
+      BoundaryFunction Value → BoundaryFunction Value) := by
+  intro f g h
+  funext ξ
+  have h' := congrFun h (consBoundary ChiralArrow.plus ξ)
+  simpa [prefixPullback, tailPullback, tailBoundary_consBoundary] using h'
+
+@[simp, rep_depth krein]
+theorem tailPullback_prefixPullback_apply
+    {Value : Type*}
+    (a : CausalArrow)
+    (f : BoundaryFunction Value)
+    (ξ : ChiralBoundary) :
+    tailPullback (prefixPullback a f) ξ =
+      f (consBoundary a (tailBoundary ξ)) := by
+  rfl
+
 /-- Prefix pullback respects function equality. -/
 @[rep_depth krein]
 theorem prefixPullback_congr
@@ -322,6 +361,36 @@ theorem prefixPullback_congr
     (a : CausalArrow) :
     prefixPullback a f = prefixPullback a g := by
   rw [hfg]
+
+@[simp, rep_depth krein]
+theorem prefixPullback_apply
+    {Value : Type*}
+    (a : CausalArrow)
+    (f : BoundaryFunction Value)
+    (ξ : ChiralBoundary) :
+    prefixPullback a f ξ = f (consBoundary a ξ) := by
+  rfl
+
+@[simp, rep_depth krein]
+theorem prefixPullback_tailBoundary
+    {Value : Type*}
+    (a : CausalArrow)
+    (f : BoundaryFunction Value)
+    (ξ : ChiralBoundary) :
+    prefixPullback a f (tailBoundary (consBoundary a ξ)) =
+      f (consBoundary a ξ) := by
+  rw [tailBoundary_consBoundary]
+  rfl
+
+@[simp, rep_depth krein]
+theorem prefixPullback_comp
+    {Value : Type*}
+    (a b : CausalArrow)
+    (f : BoundaryFunction Value)
+    (ξ : ChiralBoundary) :
+    prefixPullback a (prefixPullback b f) ξ =
+      f (consBoundary b (consBoundary a ξ)) := by
+  rfl
 
 /-- Finite-prefix pullback evaluates by inserting the finite prefix. -/
 @[simp, rep_depth krein]
@@ -363,5 +432,28 @@ def canonicalPrefixBoundaryAction
   plusPullback := prefixPullback ChiralArrow.plus
   minusPullback := prefixPullback ChiralArrow.minus
   tail := tailPullback
+
+@[simp, rep_depth krein]
+theorem canonicalPrefixBoundaryAction_plus
+    {Value : Type*}
+    (f : BoundaryFunction Value) :
+    (canonicalPrefixBoundaryAction Value).plusPullback f =
+      prefixPullback ChiralArrow.plus f := by
+  rfl
+
+@[simp, rep_depth krein]
+theorem canonicalPrefixBoundaryAction_minus
+    {Value : Type*}
+    (f : BoundaryFunction Value) :
+    (canonicalPrefixBoundaryAction Value).minusPullback f =
+      prefixPullback ChiralArrow.minus f := by
+  rfl
+
+@[simp, rep_depth krein]
+theorem canonicalPrefixBoundaryAction_tail
+    {Value : Type*}
+    (f : BoundaryFunction Value) :
+    (canonicalPrefixBoundaryAction Value).tail f = tailPullback f := by
+  rfl
 
 end InfoGeometry.Canonical.CantorCliffordFunctionModel

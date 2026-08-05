@@ -253,8 +253,13 @@ Optional spectral hook surface for the corpus:
 the bridge can carry an external certified chiral package without altering the
 routing-side invariants.
 -/
-structure SpectralHookDatum where
-  chiralPackage : CertifiedChiralSpectralTriple E
+abbrev SpectralHookDatum := CertifiedChiralSpectralTriple E
+
+namespace SpectralHookDatum
+
+def chiralPackage (S : SpectralHookDatum (E := E)) : CertifiedChiralSpectralTriple E := S
+
+end SpectralHookDatum
 
 /-- Spectral obstruction operator exposed at the hook level. -/
 noncomputable def spectralObstruction (S : SpectralHookDatum (E := E)) : E →L[ℝ] E :=

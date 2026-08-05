@@ -1,6 +1,8 @@
 import InfoGeometry.Canonical.FilteredQCCRParameterTopologicalLimit
 import InfoGeometry.Canonical.CARCCRFockCuntzParameterTopologicalReadout
 import InfoGeometry.Canonical.FixedIndexCuntzStarTower
+import Mathlib.Topology.Category.TopCat.Limits.Basic
+import Mathlib.Topology.Category.TopCat.Limits.Basic
 
 /-!
 # Fixed-index Cuntz generator readouts in q-CCR TopCat limits
@@ -25,6 +27,10 @@ open InfoGeometry.Canonical.FixedIndexCuntzStarTower
 open CStarStateColimit.Native
 open FilteredColimit.Native.Topological
 
+local instance fixedIndexPUnitNatColimit :
+    HasColimit ((Functor.const ℕ).obj (TopCat.of PUnit.{1})) :=
+  (TopCat.topCat_hasColimitsOfShape.{0, 0, 0} ℕ).has_colimit _
+
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 variable {Stage : ℕ → Type}
 variable [∀ n, CStarAlgebra (Stage n)]
@@ -34,7 +40,7 @@ variable (T : FixedIndexCuntzStarTower.Data (ι := ι) Stage)
 
 /-- The q-CCR zero-fibre point carried by a fixed generator label at stage n. -/
 def fixedIndexCuntzParameterPoint (i : ι) (n : ℕ) :
-    TopCat.of PUnit ⟶
+    TopCat.of PUnit.{1} ⟶
       TopCat.of {p : QCCRParameterSpace (Stage n) //
         p ∈ qCcrParameterZeroLocus (A := Stage n)} :=
   cstarCuntzParameterPointTopCatHom (T.family n) i
@@ -57,7 +63,7 @@ theorem fixedIndexCuntzParameterPoint_natural
     T.map_generator, map_star]
 
 noncomputable def fixedIndexCuntzParameterPointLimitMap (i : ι) :
-    TopCat.of PUnit ⟶
+    TopCat.of PUnit.{1} ⟶
       qCcrParameterZeroFiberTopologicalLimit Stage
         T.toContinuousStarInductiveSystem :=
   qCcrParameterZeroFiberPointLimitMap Stage
@@ -70,7 +76,7 @@ noncomputable def fixedIndexCuntzParameterPointLimitMap (i : ι) :
 @[simp]
 theorem fixedIndexCuntzParameterPointLimitMap_projection
     (i : ι) (n : ℕ) (u : PUnit) :
-    topologicalInverseProjection
+    limit.π
         (qCcrParameterZeroFiberTopologicalDiagram Stage
           T.toContinuousStarInductiveSystem) n
         (fixedIndexCuntzParameterPointLimitMap T i u) =
@@ -82,8 +88,8 @@ theorem fixedIndexCuntzParameterPointLimitMap_projection
       exact fixedIndexCuntzParameterPoint_natural T (leOfHom f) i) n u
 
 noncomputable def fixedIndexCuntzParameterPointColimitMap (i : ι) :
-    topologicalDirectColimit
-        ((Functor.const ℕ).obj (TopCat.of PUnit)) ⟶
+    colimit
+        ((Functor.const ℕ).obj (TopCat.of PUnit.{1})) ⟶
       qCcrParameterZeroFiberTopologicalColimit Stage
         T.toContinuousStarInductiveSystem :=
   qCcrParameterZeroFiberPointColimitMap Stage
@@ -96,7 +102,7 @@ noncomputable def fixedIndexCuntzParameterPointColimitMap (i : ι) :
 @[reassoc]
 theorem fixedIndexCuntzParameterPointColimitMap_stage
     (i : ι) (n : ℕ) :
-    topologicalDirectInjection ((Functor.const ℕ).obj (TopCat.of PUnit)) n ≫
+    colimit.ι ((Functor.const ℕ).obj (TopCat.of PUnit.{1})) n ≫
         fixedIndexCuntzParameterPointColimitMap T i =
       (fixedIndexCuntzParameterPoint T i n) ≫
         qCcrParameterZeroFiberTopologicalInjection Stage
@@ -108,7 +114,7 @@ theorem fixedIndexCuntzParameterPointColimitMap_stage
       exact fixedIndexCuntzParameterPoint_natural T (leOfHom f) i) n
 
 noncomputable def fixedIndexCuntzParameterPointAmbientLimitMap (i : ι) :
-    TopCat.of PUnit ⟶
+    TopCat.of PUnit.{1} ⟶
       qCcrParameterTopologicalLimit Stage
         T.toContinuousStarInductiveSystem :=
   qCcrParameterZeroFiberPointAmbientLimitMap Stage
@@ -121,7 +127,7 @@ noncomputable def fixedIndexCuntzParameterPointAmbientLimitMap (i : ι) :
 @[simp]
 theorem fixedIndexCuntzParameterPointAmbientLimitMap_projection
     (i : ι) (n : ℕ) (u : PUnit) :
-    topologicalInverseProjection
+    limit.π
         (qCcrParameterTopologicalDiagram Stage
           T.toContinuousStarInductiveSystem) n
         (fixedIndexCuntzParameterPointAmbientLimitMap T i u) =
@@ -135,8 +141,8 @@ theorem fixedIndexCuntzParameterPointAmbientLimitMap_projection
       exact fixedIndexCuntzParameterPoint_natural T (leOfHom f) i) n u
 
 noncomputable def fixedIndexCuntzParameterPointAmbientColimitMap (i : ι) :
-    topologicalDirectColimit
-        ((Functor.const ℕ).obj (TopCat.of PUnit)) ⟶
+    colimit
+        ((Functor.const ℕ).obj (TopCat.of PUnit.{1})) ⟶
       qCcrParameterTopologicalColimit Stage
         T.toContinuousStarInductiveSystem :=
   qCcrParameterZeroFiberPointAmbientColimitMap Stage
@@ -149,7 +155,7 @@ noncomputable def fixedIndexCuntzParameterPointAmbientColimitMap (i : ι) :
 @[reassoc]
 theorem fixedIndexCuntzParameterPointAmbientColimitMap_stage
     (i : ι) (n : ℕ) :
-    topologicalDirectInjection ((Functor.const ℕ).obj (TopCat.of PUnit)) n ≫
+    colimit.ι ((Functor.const ℕ).obj (TopCat.of PUnit.{1})) n ≫
         fixedIndexCuntzParameterPointAmbientColimitMap T i =
       (fixedIndexCuntzParameterPoint T i n) ≫
         (qCcrParameterZeroFiberToParameterNatTrans Stage

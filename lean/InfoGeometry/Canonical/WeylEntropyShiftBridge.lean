@@ -26,13 +26,18 @@ The homogeneous readout supplies
 The positivity field supplies the domain needed for the entropy/log readout.
 -/
 @[rep_depth operator]
-structure WeylHomogeneousEntropy (Op : Type*) where
-  homogeneous : WeylHomogeneousOperatorReadout Op
-  readout_pos : ∀ A, 0 < homogeneous.readout A
+abbrev WeylHomogeneousEntropy (Op : Type*) :=
+  {W : WeylHomogeneousOperatorReadout Op // ∀ A, 0 < W.readout A}
 
 namespace WeylHomogeneousEntropy
 
 variable {Op : Type*}
+
+abbrev homogeneous (W : WeylHomogeneousEntropy Op) :
+    WeylHomogeneousOperatorReadout Op := W.1
+abbrev readout_pos (W : WeylHomogeneousEntropy Op) :
+    ∀ A, 0 < W.homogeneous.readout A := W.2
+
 variable (W : WeylHomogeneousEntropy Op)
 
 /-- Entropy/log readout of the positive homogeneous partition. -/

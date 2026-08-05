@@ -188,15 +188,15 @@ KAN colimit compatibility readback for the parabolic/nilpotent sector.
 
 This deliberately does not use a matrix direct-limit carrier as an
 operator-Bregman carrier.  It only reads the nilpotent signature through the
-repository-owned `KANColimitTower`.
+repository-owned `KANStageTower`.
 -/
 @[rep_depth operator]
 theorem KAN_colimit_parabolic_nilpotent_readout
-    (T : InfoGeometry.Canonical.KANColimitBridge.KANColimitTower)
+    (T : InfoGeometry.Canonical.KANColimitBridge.KANStageTower)
     {n : ℕ} {x : T.Stage n}
     (hx : (T.stage n).nilpotentN x) :
     T.limit.nilpotentNInf (T.toLimit n x) :=
-  T.nilpotent_colimit hx
+  T.nilpotent_directLimit hx
 
 /-! ## Bounded doubled-carrier specialization -/
 

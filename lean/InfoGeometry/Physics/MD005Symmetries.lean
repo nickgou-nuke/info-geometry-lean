@@ -158,24 +158,6 @@ theorem translate_comm (ξ η x : Vec4) :
   simp [translate]
   ring
 
-/-- Repaired theorem-safe Chapter 5 finite symmetry packet. -/
-theorem repaired_MD005_symmetry_packet
-    (A B X : MatrixQuantumCarrier) (hA : Matrix.det A = 1)
-    (α β : ℝ) (hunit : α * α + β * β = 1) (u v : Coord4) (ξ η x : Vec4) :
-    Matrix.det (congruenceAction A X) = Matrix.det X ∧
-    congruenceAction A (congruenceAction B X) = congruenceAction (A * B) X ∧
-    scalarCongruenceAction 1 X = X ∧
-    scalarCongruenceAction (-1) X = X ∧
-    dot4 (ICircleRotate α β u) (ICircleRotate α β v) = dot4 u v ∧
-    translate ξ (translate η x) = translate η (translate ξ x) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact det_congruence_of_det_one A X hA
-  · exact congruenceAction_comp A B X
-  · exact scalarCongruenceAction_one X
-  · exact scalarCongruenceAction_neg_one X
-  · exact ICircleRotate_preserves_dot4 α β hunit u v
-  · exact translate_comm ξ η x
-
 end InfoGeometry.Physics.MD005Symmetries
 
 end noncomputable section

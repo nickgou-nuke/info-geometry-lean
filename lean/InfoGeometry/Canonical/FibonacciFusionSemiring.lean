@@ -26,18 +26,42 @@ def fibMul (x y : FibFusionSemiring) : FibFusionSemiring :=
 instance : CommSemiring FibFusionSemiring :=
   { (inferInstance : AddCommMonoid (ℕ × ℕ)) with
     mul := fibMul
-    left_distrib := sorry
-    right_distrib := sorry
-    zero_mul := sorry
-    mul_zero := sorry
-    mul_assoc := sorry
+    left_distrib := by
+      intro x y z
+      change fibMul x (y + z) = fibMul x y + fibMul x z
+      ext <;> dsimp [fibMul] <;> ring
+    right_distrib := by
+      intro x y z
+      change fibMul (x + y) z = fibMul x z + fibMul y z
+      ext <;> dsimp [fibMul] <;> ring
+    zero_mul := by
+      intro x
+      change fibMul (0, 0) x = (0, 0)
+      ext <;> dsimp [fibMul] <;> simp
+    mul_zero := by
+      intro x
+      change fibMul x (0, 0) = (0, 0)
+      ext <;> dsimp [fibMul] <;> simp
+    mul_assoc := by
+      intro x y z
+      change fibMul (fibMul x y) z = fibMul x (fibMul y z)
+      ext <;> dsimp [fibMul] <;> ring
     one := (1, 0)
-    one_mul := sorry
-    mul_one := sorry
-    mul_comm := sorry
-    npow := fun n x => Nat.recOn n (1, 0) (fun _ p => fibMul x p)
+    one_mul := by
+      intro x
+      change fibMul (1, 0) x = x
+      ext <;> dsimp [fibMul] <;> simp
+    mul_one := by
+      intro x
+      change fibMul x (1, 0) = x
+      ext <;> dsimp [fibMul] <;> simp
+    mul_comm := by
+      intro x y
+      change fibMul x y = fibMul y x
+      ext <;> dsimp [fibMul] <;> ring
+    npow := fun n x => Nat.recOn n (1, 0) (fun _ p => fibMul p x)
     npow_zero := fun x => rfl
-    npow_succ := fun n x => sorry
+    npow_succ := fun n x => rfl
     natCast := fun n => (n, 0)
     natCast_zero := rfl
     natCast_succ := fun n => rfl

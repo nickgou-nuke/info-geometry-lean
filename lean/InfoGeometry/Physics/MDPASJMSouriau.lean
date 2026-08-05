@@ -212,7 +212,4 @@ theorem spin_half_prequantization
 
 end FiniteSpinParticleCertificate
 
-def certificate (p u v : Vec4) (field : Tensor2) (hfield : IsAntisymmetric field) :
-    FiniteSpinParticleCertificate := ⟨p, u, v, field, hfield⟩
-
 end InfoGeometry.Physics.MDPASJMSouriau

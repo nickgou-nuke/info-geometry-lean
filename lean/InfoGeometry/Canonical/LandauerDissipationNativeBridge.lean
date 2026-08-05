@@ -29,11 +29,11 @@ def LandauerErasureData :=
 
 namespace LandauerErasureData
 
-def kolmogorovX (data : LandauerErasureData) : ℕ := data.1.1
+abbrev kolmogorovX (data : LandauerErasureData) : ℕ := data.1.1
 
-def kolmogorovY (data : LandauerErasureData) : ℕ := data.1.2.1
+abbrev kolmogorovY (data : LandauerErasureData) : ℕ := data.1.2.1
 
-def beta (data : LandauerErasureData) : ℝ := data.1.2.2
+abbrev beta (data : LandauerErasureData) : ℝ := data.1.2.2
 
 def complexity_decrease (data : LandauerErasureData) :
     kolmogorovY data < kolmogorovX data := data.2.1

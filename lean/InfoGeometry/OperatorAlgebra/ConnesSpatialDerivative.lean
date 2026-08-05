@@ -280,11 +280,13 @@ Positive scalar weight.
 
 This is the one-dimensional unnormalized cone model.
 -/
-structure PositiveScalarWeight where
-  mass : ℝ
-  mass_pos : 0 < mass
+abbrev PositiveScalarWeight := {mass : ℝ // 0 < mass}
 
 namespace PositiveScalarWeight
+
+abbrev mass (φ : PositiveScalarWeight) : ℝ := φ.1
+
+abbrev mass_pos (φ : PositiveScalarWeight) : 0 < φ.mass := φ.2
 
 /--
 Connes spatial derivative in the positive scalar cone:

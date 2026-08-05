@@ -174,10 +174,8 @@ This is the bridge into `FiniteJonesStinespring` and downstream Bregman
 modules.
 -/
 def toStinespringIsometry :
-    InfoGeometry.Optics.FiniteJonesStinespring.StinespringIsometry JonesMat where
-  R := D.R
-  V := D.V
-  isometry_eq_one := D.blockColumn_isometry
+    InfoGeometry.Optics.FiniteJonesStinespring.StinespringIsometry JonesMat :=
+  ⟨⟨D.R, D.V⟩, D.blockColumn_isometry⟩
 
 @[simp]
 theorem toStinespringIsometry_R :

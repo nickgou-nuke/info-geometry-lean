@@ -99,10 +99,15 @@ theorem parityOp_mul_dMajorana :
 end PrimeMajoranaCAR.ExteriorCARPair
 
 /-- Prime-indexed family of local split-Majorana CAR owners. -/
-structure PrimeLocalCARFamily (PrimeLabel Op : Type*) [Ring Op] where
-  pair : PrimeLabel → PrimeMajoranaCAR.ExteriorCARPair Op
+abbrev PrimeLocalCARFamily (PrimeLabel Op : Type*) [Ring Op] :=
+  PrimeLabel → PrimeMajoranaCAR.ExteriorCARPair Op
 
 namespace PrimeLocalCARFamily
+
+abbrev pair {PrimeLabel Op : Type*} [Ring Op]
+    (F : PrimeLocalCARFamily PrimeLabel Op) :
+    PrimeLabel → PrimeMajoranaCAR.ExteriorCARPair Op :=
+  F
 
 variable {PrimeLabel Op : Type*} [Ring Op]
 

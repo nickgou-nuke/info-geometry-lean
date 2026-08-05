@@ -349,7 +349,7 @@ Primal Bregman/Fenchel readout at the Souriau bridge basepoint.
 @[rep_depth transport]
 theorem primalBregman_eq_fenchelGap_at_bridge_base
     (θ : ℝ)
-    (hgrad : C.model.grad C.theta = deriv C.model.L.ψ C.theta) :
+    (hgrad : C.model.grad C.theta = deriv C.model.L C.theta) :
     C.model.primalBregman θ C.theta =
       C.model.fenchelGap θ (C.model.dualCoord C.theta) :=
   C.model.primalBregman_eq_fenchelGap_at_dualCoord_of_grad_eq_deriv θ C.theta hgrad
@@ -361,7 +361,7 @@ the primal Bregman divergence is nonnegative.
 @[rep_depth transport]
 theorem primalBregman_nonneg_at_bridge_base
     (θ : ℝ)
-    (hgrad : C.model.grad C.theta = deriv C.model.L.ψ C.theta) :
+    (hgrad : C.model.grad C.theta = deriv C.model.L C.theta) :
     0 ≤ C.model.primalBregman θ C.theta :=
   C.model.primalBregman_nonneg_of_grad_eq_deriv θ C.theta hgrad
 

@@ -155,7 +155,7 @@ def LanglandsLaneCoreTarget
     (_K : KWPhysicalDualityWitness GState GdualState GLoop GdualLoop Scalar Wr Tr D) :
     Prop :=
   FiniteJonesErlangerBridgeOwnerTarget ∧
-    (∀ s : ℂ, P.L s = P.functional.coeff s (W.cuspidalProjector P.bulkState)) ∧
+    (∀ s : ℂ, P.L s = P.functional s (W.cuspidalProjector P.bulkState)) ∧
     HasEulerProduct P.L packet.eulerProduct.PrimeIndex packet.eulerProduct.localFactor
       packet.eulerProduct.convergenceRegion ∧
     HasCompletedFunctionalEquation P.L packet.completedLFunction.completedL ∧

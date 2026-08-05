@@ -62,11 +62,19 @@ def SamePO55Action
   ∀ r : ProjectiveRay W,
     (g.actRay r).SameProjectiveRay (h.actRay r)
 
-/-- A projective `O(5,5)` element, represented by an ambient orthogonal map. -/
-structure ProjectiveOrthogonal55
+/-- Current owner representation of a projective element is its orthogonal
+representative.  No scalar quotient is claimed at this layer. -/
+abbrev ProjectiveOrthogonal55
     {W : Type*} [AddCommGroup W] [Module ℝ W]
-    (Q : SplitQuadratic55 W) where
-  rep : Orthogonal55 Q
+    (Q : SplitQuadratic55 W) := Orthogonal55 Q
+
+abbrev ProjectiveOrthogonal55.rep
+    {W : Type*} [AddCommGroup W] [Module ℝ W]
+    {Q : SplitQuadratic55 W} (g : ProjectiveOrthogonal55 Q) : Orthogonal55 Q := g
+
+def ProjectiveOrthogonal55.mk
+    {W : Type*} [AddCommGroup W] [Module ℝ W]
+    {Q : SplitQuadratic55 W} (rep : Orthogonal55 Q) : ProjectiveOrthogonal55 Q := rep
 
 namespace ProjectiveOrthogonal55
 
@@ -261,8 +269,7 @@ variable (I : NullSwapInversion Q N)
 
 /-- The null swap is an ambient projective orthogonal element. -/
 def toProjectiveOrthogonal55 :
-    ProjectiveOrthogonal55 Q where
-  rep := I.swap
+    ProjectiveOrthogonal55 Q := I.swap
 
 /-- The affine-chart inversion law is available. -/
 theorem realizes_affine_inversion_holds :

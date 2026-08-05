@@ -1,0 +1,34 @@
+name: Grand Partition Polynomial Check
+
+on:
+  push:
+    branches:
+      - feat/grand-partition-polynomial
+  pull_request:
+    branches:
+      - main
+    paths:
+      - lean/GrandPartitionPolynomial.lean
+      - .github/workflows/grand-partition-check.yml
+      - lean-toolchain
+      - lakefile.lean
+      - lake-manifest.json
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Fetch dependencies
+        run: |
+          lake update
+          lake exe cache get
+      - name: Kernel-check owner module
+        run: lake env lean lean/GrandPartitionPolynomial.lean
+      - name: Enforce zero proof placeholders
+        run: |
+          ! grep -nE '\bsorry\b|\badmit\b' lean/GrandPartitionPolynomial.lean

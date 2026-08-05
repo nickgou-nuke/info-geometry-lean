@@ -1,4 +1,5 @@
-# Agentic System — Python dependencies
-sympy>=1.12
-websocket-client>=1.7
-gepa>=0.1.0
+numpy==2.0.2
+scipy==1.14.1
+astropy==6.1.7
+matplotlib==3.10.0
+pytest==9.0.2

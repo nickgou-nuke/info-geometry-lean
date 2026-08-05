@@ -117,7 +117,7 @@ theorem responsibilityFloor_mem_unit
     (hm0 : 0 ≤ rmin) (hm1 : rmin ≤ 1) :
     0 ≤ responsibilityFloor r rmin ∧ responsibilityFloor r rmin ≤ 1 := by
   constructor
-  · exact le_trans hm0 (le_max_left _ _)
+  · exact max_nonneg hm0 hr0
   · exact max_le hm1 hr1
 
 end OnlineLayer

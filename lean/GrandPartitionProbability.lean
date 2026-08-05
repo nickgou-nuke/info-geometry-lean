@@ -78,7 +78,7 @@ theorem occupancyPMF_sum_one
     (hΞ : grandPartition n q b ≠ 0) :
     ∑ m ∈ range (n + 1), occupancyPMF n q b m = 1 := by
   simp_rw [occupancyPMF]
-  rw [Finset.sum_div, occupancyWeight_sum, div_self hΞ]
+  rw [← Finset.sum_div, occupancyWeight_sum, div_self hΞ]
 
 /-- PMF first raw moment. -/
 def pmfMean
@@ -97,23 +97,43 @@ def pmfVariance
 
 theorem pmfMean_eq_expectedOccupancy
     (n : ℕ) (q : ℝ) (b : ℕ → ℝ)
-    (hΞ : grandPartition n q b ≠ 0) :
+    (_hΞ : grandPartition n q b ≠ 0) :
     pmfMean n q b = expectedOccupancy n q b := by
   unfold pmfMean occupancyPMF occupancyWeight expectedOccupancy
-  rw [eval_euler_grandPartitionPoly_eq_sum, ← Finset.sum_div]
-  apply Finset.sum_congr rfl
-  intro m hm
-  ring
+  rw [eval_euler_grandPartitionPoly_eq_sum]
+  calc
+    (∑ m ∈ range (n + 1),
+        (m : ℝ) * (q ^ m * canonicalPartition b n m / grandPartition n q b)) =
+        ∑ m ∈ range (n + 1),
+          ((m : ℝ) * q ^ m * canonicalPartition b n m) /
+            grandPartition n q b := by
+          apply Finset.sum_congr rfl
+          intro m hm
+          ring
+    _ = (∑ m ∈ range (n + 1),
+          (m : ℝ) * q ^ m * canonicalPartition b n m) /
+            grandPartition n q b := by
+          rw [← Finset.sum_div]
 
 theorem pmfSecondRaw_eq_secondRawOccupancy
     (n : ℕ) (q : ℝ) (b : ℕ → ℝ)
-    (hΞ : grandPartition n q b ≠ 0) :
+    (_hΞ : grandPartition n q b ≠ 0) :
     pmfSecondRaw n q b = secondRawOccupancy n q b := by
   unfold pmfSecondRaw occupancyPMF occupancyWeight secondRawOccupancy
-  rw [eval_eulerOp_euler_grandPartitionPoly_eq_sum, ← Finset.sum_div]
-  apply Finset.sum_congr rfl
-  intro m hm
-  ring
+  rw [eval_eulerOp_euler_grandPartitionPoly_eq_sum]
+  calc
+    (∑ m ∈ range (n + 1),
+        (m : ℝ) ^ 2 * (q ^ m * canonicalPartition b n m / grandPartition n q b)) =
+        ∑ m ∈ range (n + 1),
+          ((m : ℝ) ^ 2 * q ^ m * canonicalPartition b n m) /
+            grandPartition n q b := by
+          apply Finset.sum_congr rfl
+          intro m hm
+          ring
+    _ = (∑ m ∈ range (n + 1),
+          (m : ℝ) ^ 2 * q ^ m * canonicalPartition b n m) /
+            grandPartition n q b := by
+          rw [← Finset.sum_div]
 
 theorem pmfVariance_eq_varianceOccupancy
     (n : ℕ) (q : ℝ) (b : ℕ → ℝ)

@@ -82,8 +82,14 @@ theorem OnlineState.update_admissionRate_mem_unit
   constructor
   · exact add_nonneg (mul_nonneg hρa0 ha0)
       (mul_nonneg (sub_nonneg.mpr hρa1) hr0)
-  · nlinarith [mul_nonneg hρa0 (sub_nonneg.mpr ha1),
-      mul_nonneg (sub_nonneg.mpr hρa1) (sub_nonneg.mpr hr1)]
+  · change ρa * st.admissionRate + (1 - ρa) * r ≤ 1
+    calc
+      ρa * st.admissionRate + (1 - ρa) * r ≤
+          ρa * 1 + (1 - ρa) * 1 :=
+        add_le_add
+          (mul_le_mul_of_nonneg_left ha1 hρa0)
+          (mul_le_mul_of_nonneg_left hr1 (sub_nonneg.mpr hρa1))
+      _ = 1 := by ring
 
 /-- Persistent exact rejection causes both sufficient statistics to decay by
 the same discount factor while preserving their ratio. -/
@@ -111,7 +117,7 @@ theorem responsibilityFloor_mem_unit
     (hm0 : 0 ≤ rmin) (hm1 : rmin ≤ 1) :
     0 ≤ responsibilityFloor r rmin ∧ responsibilityFloor r rmin ≤ 1 := by
   constructor
-  · exact le_trans hr0 (le_max_right _ _)
+  · exact le_trans hm0 (le_max_left _ _)
   · exact max_le hm1 hr1
 
 end OnlineLayer

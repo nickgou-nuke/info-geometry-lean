@@ -1,0 +1,52 @@
+{
+    "gain_e_per_adu": 1.1952792832762598,
+    "pedestal_adu": 99.9905776977539,
+    "read_noise_e_sq": 12.875884368700463,
+    "variance_coefficients": {
+        "c0": 12.875884368700463,
+        "c1": 1.0,
+        "c2": 0.0
+    },
+    "saturation_adu": 65535,
+    "bad_pixel_mask": null,
+    "temperature_range_c": [
+        -20.0,
+        -20.0
+    ],
+    "exposure_range_s": [
+        0.0,
+        3.0
+    ],
+    "fit_diagnostics": {
+        "ptc_slope": 0.8366245562785968,
+        "ptc_intercept": 23.811201559363827
+    },
+    "source_files": [
+        "mock_fits/bias_0.fits",
+        "mock_fits/bias_1.fits",
+        "mock_fits/bias_2.fits",
+        "mock_fits/bias_3.fits",
+        "mock_fits/bias_4.fits",
+        "mock_fits/bias_5.fits",
+        "mock_fits/bias_6.fits",
+        "mock_fits/bias_7.fits",
+        "mock_fits/bias_8.fits",
+        "mock_fits/bias_9.fits",
+        "mock_fits/bias_10.fits",
+        "mock_fits/bias_11.fits",
+        "mock_fits/bias_12.fits",
+        "mock_fits/bias_13.fits",
+        "mock_fits/bias_14.fits",
+        "mock_fits/bias_15.fits",
+        "mock_fits/bias_16.fits",
+        "mock_fits/bias_17.fits",
+        "mock_fits/bias_18.fits",
+        "mock_fits/bias_19.fits",
+        "mock_fits/flat_0_0.fits",
+        "mock_fits/flat_0_1.fits",
+        "mock_fits/flat_1_0.fits",
+        "mock_fits/flat_1_1.fits",
+        "mock_fits/flat_2_0.fits",
+        "mock_fits/flat_2_1.fits"
+    ]
+}

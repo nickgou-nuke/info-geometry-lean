@@ -83,13 +83,13 @@ variable (B : BuresMetricStabilizationBridge L)
 /-- The supplied global functional recovers the finite family at every stage. -/
 theorem global_functional_recovers_stage
     (n : ℕ) (x : A n) :
-    B.globalFunctional (L.inj n x) = B.family.omega n x :=
+    B.globalFunctional (L.inj n x) = B.family n x :=
   L.limit_functional_recovers_stage B.family B.globalFunctional B.extendsFamily n x
 
 /-- The supplied global functional implies the finite compatibility equations. -/
 theorem global_implies_compatible
     (n : ℕ) (x : A n) :
-    B.family.omega (n + 1) (bond n x) = B.family.omega n x :=
+    B.family (n + 1) (bond n x) = B.family n x :=
   L.extending_limit_functional_implies_compatible B.family B.globalFunctional B.extendsFamily n x
 
 /-- The Bures/Wasserstein cost of the tracked local states is preserved by one tensor step. -/

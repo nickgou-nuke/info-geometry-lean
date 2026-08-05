@@ -21,7 +21,7 @@ structure SplitCurrentEndTransport
   Jlift : Int → V →ₗ[𝕜] V
   transported :
     ∀ n : Int, ∀ v : V,
-      S.embed (Jlift n v) = Jsrc.modeAction n v
+      S.embed (Jlift n v) = Jsrc n v
   truncLift :
     ∀ v : V, ∀ᶠ n : Int in atTop, Jlift n v = 0
   wickLift :
@@ -55,7 +55,7 @@ theorem toCurrentHeisenbergRep_readout
           (T.toCurrentHeisenbergRep.J m).commutator (T.toCurrentHeisenbergRep.J n) =
             if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0)
       ∧ (∀ n : Int, ∀ v : V,
-          S.embed (T.toCurrentHeisenbergRep.J n v) = Jsrc.modeAction n v) := by
+          S.embed (T.toCurrentHeisenbergRep.J n v) = Jsrc n v) := by
   constructor
   · rfl
   constructor

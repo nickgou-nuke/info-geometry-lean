@@ -13,7 +13,7 @@ noncomputable section
 theorem concreteBridgeKlein_core_fredholm_count_comparison :
     concreteRelativeFredholmKlein.relativeCountDensity =
       Real.log (1 + concreteRelativeFredholmKlein.fredholm.kreinTrace) := by
-  dsimp [concreteRelativeFredholmKlein, concreteRelativeFredholmKlein_relativeCountDensity, concreteRelativeFredholmKlein_fredholm, concreteRelativeFredholmKlein_fredholm_kreinTrace]
+  dsimp [concreteRelativeFredholmKlein]
   rw [add_zero, Real.log_one]
 
 /-- Concrete Hestenes/Krein modular Fredholm bridge on the Klein carrier. -/

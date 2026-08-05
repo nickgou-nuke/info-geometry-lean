@@ -49,11 +49,12 @@ def Symphony := (ω : ℝ) → SpinorPair ω
 Thermal Attention Matrix with Drazin Isolation.
 Prevents the 'Symphony' from collapsing at the Rindler Horizon (The Apex Lane).
 -/
-structure DrazinAttention (n : ℕ) where
-  /-- The raw thermal attention matrix (The Boltzmann bath). -/
-  𝒜 : Matrix (Fin n) (Fin n) ℝ
+abbrev DrazinAttention (n : ℕ) := Matrix (Fin n) (Fin n) ℝ
 
 namespace DrazinAttention
+
+/-- Compatibility accessor for the native attention matrix. -/
+abbrev 𝒜 (D : DrazinAttention n) : Matrix (Fin n) (Fin n) ℝ := D
 
 /-- The Drazin projector isolating the active lane. -/
 noncomputable def P_act (D : DrazinAttention n) : Matrix (Fin n) (Fin n) ℝ :=

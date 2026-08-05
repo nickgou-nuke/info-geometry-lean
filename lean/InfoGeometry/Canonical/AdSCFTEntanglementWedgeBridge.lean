@@ -16,13 +16,15 @@ open Real Finset
 namespace AdSCFT
 
 /-- A boundary CFT region R with associated Ryu-Takayanagi minimal surface area. -/
-structure EntanglementWedge where
-  area : ℝ           -- Area of the Ryu-Takayanagi minimal surface γ_R
-  area_nonneg : 0 ≤ area
-  G_N : ℝ            -- Bulk Newton's constant G_N
-  G_N_pos : 0 < G_N
+abbrev EntanglementWedge :=
+  { p : ℝ × ℝ // 0 ≤ p.1 ∧ 0 < p.2 }
 
 namespace EntanglementWedge
+
+abbrev area (W : EntanglementWedge) : ℝ := W.1.1
+abbrev area_nonneg (W : EntanglementWedge) : 0 ≤ W.area := W.2.1
+abbrev G_N (W : EntanglementWedge) : ℝ := W.1.2
+abbrev G_N_pos (W : EntanglementWedge) : 0 < W.G_N := W.2.2
 
 variable (W : EntanglementWedge)
 
@@ -42,10 +44,21 @@ theorem ryu_takayanagi_zero (h : W.area = 0) : W.ryuTakayanagiEntropy = 0 := by
   rw [h, zero_div]
 
 /-- Subregion duality: Modular flow identity on boundary CFT region vs bulk entanglement wedge. -/
-structure JLMSModularFlow (n : Type*) [Fintype n] [DecidableEq n] where
-  bndFlow : n → ℝ    -- Boundary CFT modular flow σ_t^boundary
-  bulkFlow : n → ℝ   -- Bulk entanglement wedge modular flow σ_t^bulk
-  jlms_eq : bndFlow = bulkFlow -- JLMS Theorem identity
+abbrev JLMSModularFlow (n : Type*) [Fintype n] [DecidableEq n] :=
+  {p : (n → ℝ) × (n → ℝ) // p.1 = p.2}
+
+namespace JLMSModularFlow
+
+def bndFlow {n : Type*} [Fintype n] [DecidableEq n]
+    (flow : JLMSModularFlow n) : n → ℝ := flow.1.1
+
+def bulkFlow {n : Type*} [Fintype n] [DecidableEq n]
+    (flow : JLMSModularFlow n) : n → ℝ := flow.1.2
+
+theorem jlms_eq {n : Type*} [Fintype n] [DecidableEq n]
+    (flow : JLMSModularFlow n) : flow.bndFlow = flow.bulkFlow := flow.2
+
+end JLMSModularFlow
 
 /-- **Theorem**: JLMS Subregion Duality: Boundary modular flow strictly equals bulk modular flow. -/
 theorem jlms_subregion_duality {n : Type*} [Fintype n] [DecidableEq n]

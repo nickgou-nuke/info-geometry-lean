@@ -33,8 +33,15 @@ def quarkBasis (q : Fin 8) : ZornVectorMatrix R :=
   | _ => uStar 2
 
 /-- Explicit target data for a typed Zorn-to-tetrad readout. -/
-structure QuarkTetradMap where
-  toVector : ZornVectorMatrix R → V
+abbrev QuarkTetradMap := ZornVectorMatrix R → V
+
+namespace QuarkTetradMap
+
+abbrev toVector (Q : QuarkTetradMap (R := R) (V := V)) :
+    ZornVectorMatrix R → V :=
+  Q
+
+end QuarkTetradMap
 
 /-- The induced ExteriorAlgebra component map. -/
 def exteriorComponent (Q : QuarkTetradMap (R := R) (V := V))

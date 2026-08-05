@@ -95,8 +95,10 @@ theorem modularFlowTopologicalColimitMap_comp_stateTopologicalColimitMap
     (ω : CStarStateColimit.Native.State Ainf)
     (h_invariant :
       ∀ (n : ℕ) (t : ℝ) (a : Stage n),
-        ω.functional (cocone.ι n (Φ.flow n t a)) =
-          ω.functional (cocone.ι n a))
+        ω.functional (ContinuousStarInductiveSystem.StarInductiveCocone.leg
+          (Stage := Stage) (sys := system Stage T) cocone n (Φ.flow n t a)) =
+          ω.functional (ContinuousStarInductiveSystem.StarInductiveCocone.leg
+            (Stage := Stage) (sys := system Stage T) cocone n a))
     (hmap_naturality :
       ∀ {m n : ℕ} (hmn : m ≤ n) (t : ℝ) (a : Stage m),
         T.map hmn (Φ.flow m t a) = Φ.flow n t (T.map hmn a))

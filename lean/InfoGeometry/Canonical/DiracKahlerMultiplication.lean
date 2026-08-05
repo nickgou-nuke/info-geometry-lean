@@ -42,24 +42,47 @@ theorem clifford_relations (A B : Fin 10) :
       algebraMap ℝ Cl55 (2 * cl55Matrix A B) := by
   dsimp [Gamma]
   rw [CliffordAlgebra.ι_mul_ι_add_swap]
-  congr 1
-  simp [cl55Metric, cl55Matrix, Matrix.toQuadraticMap', QuadraticMap.polar]
-  fin_cases A <;> fin_cases B <;> norm_num
+  have hpolar :
+      QuadraticMap.polar (⇑cl55Metric) (Pi.single A 1) (Pi.single B 1) =
+        2 * cl55Matrix A B := by
+    dsimp [cl55Metric, Matrix.toQuadraticMap']
+    rw [LinearMap.BilinMap.polar_toQuadraticMap]
+    simp [cl55Metric, cl55Matrix, Matrix.toQuadraticMap',
+      Matrix.toLinearMap₂'_apply, dotProduct, Matrix.mulVec, Pi.single_apply]
+    fin_cases A <;> fin_cases B <;>
+      norm_num [Matrix.toLinearMap₂'_apply, dotProduct, Matrix.mulVec,
+        Pi.single_apply]
+  rw [hpolar]
 
 /- **6. Chirality Operator Γⁱ¹⋯Γ¹⁰ = Γ¹ ⋯ Γ¹⁰** -/
 def ChiralityOperator : Cl55 :=
   (List.finRange 10).map Gamma |>.prod
 
 /- **7. Dirac-Kähler symbol: the algebraic part of `D = Γᴬ ∂ᴬ`. -/
-structure DiracKahlerOperator where
-  coefficients : Fin 10 → Cl55
+abbrev DiracKahlerOperator := Fin 10 → Cl55
+
+namespace DiracKahlerOperator
+
+/-- Compatibility accessor for the native Clifford coefficient family. -/
+abbrev coefficients (D : DiracKahlerOperator) : Fin 10 → Cl55 := D
+
+end DiracKahlerOperator
 
 def diracKahlerSymbol (D : DiracKahlerOperator) : Cl55 :=
   ∑ A : Fin 10, Gamma A * D.coefficients A
 
 theorem diracKahlerSymbol_zero :
-    diracKahlerSymbol ⟨fun _ => 0⟩ = 0 := by
+    diracKahlerSymbol (fun _ => 0) = 0 := by
   simp [diracKahlerSymbol]
+
+theorem diracKahlerSymbol_add (D E : DiracKahlerOperator) :
+    diracKahlerSymbol (D + E) =
+      diracKahlerSymbol D + diracKahlerSymbol E := by
+  simp [diracKahlerSymbol, Finset.sum_add_distrib, mul_add]
+
+theorem diracKahlerSymbol_smul (r : ℝ) (D : DiracKahlerOperator) :
+    diracKahlerSymbol (r • D) = r • diracKahlerSymbol D := by
+  simp [diracKahlerSymbol, Finset.smul_sum, mul_smul_comm]
 
 /- **8. Algebraic Dirac-Kähler square.**
 

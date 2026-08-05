@@ -106,8 +106,14 @@ The dark-energy layer consumes this explicit finite equilibrium packet.  The
 state parameter is retained as a witness type; no analytic equilibrium
 construction is asserted here.
 -/
-structure InformationLambdaReadout where
-  lambdaInfo : ℝ
+abbrev InformationLambdaReadout := ℝ
+
+namespace InformationLambdaReadout
+
+/-- Compatibility accessor for the native scalar cosmological readout. -/
+abbrev lambdaInfo (x : InformationLambdaReadout) : ℝ := x
+
+end InformationLambdaReadout
 
 structure InformationEquilibriumCapstone
     (ι : Type*) [Fintype ι] (State : Type*) where

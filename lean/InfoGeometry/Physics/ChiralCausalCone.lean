@@ -416,6 +416,18 @@ theorem PPlus_add_PMinus : PPlus + PMinus = (1 : M2C) := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [Matrix.add_apply]
 
+/-- The chiral decomposition can be rewritten through the projector partition `P₊ + P₋ = 1`. -/
+theorem chiral_decomposition_via_projectors (A : M2C) :
+    A = coeffI A • (PPlus + PMinus) + coeffPlus A • σPlus +
+        coeffMinus A • σMinus + coeff3 A • σ3c := by
+  rw [PPlus_add_PMinus]
+  exact chiral_decomposition A
+
+/-- Pointwise form of the chiral projector partition of the identity. -/
+@[simp] theorem PPlus_add_PMinus_apply (i j : Fin 2) :
+    (PPlus + PMinus) i j = (1 : M2C) i j := by
+  simpa using congrArg (fun M : M2C => M i j) PPlus_add_PMinus
+
 /-- P₊ - P₋ = σ³ — the projector difference gives the chirality grading. -/
 theorem PPlus_sub_PMinus : PPlus - PMinus = σ3c := by
   rw [PPlus_matrix, PMinus_matrix]
@@ -492,6 +504,13 @@ theorem solder_in_chiral_basis (t x y z : ℂ) :
       Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply]; ring
   · simp [σPlus, σMinus, SolderingSpinConnectionBogoliubov.σ3,
       Matrix.smul_apply, Matrix.add_apply, Matrix.sub_apply]
+
+/-- Pointwise readout of the soldering form in the chiral basis. -/
+@[simp] theorem solder_in_chiral_basis_apply (t x y z : ℂ) (i j : Fin 2) :
+    SolderingSpinConnectionBogoliubov.solder t x y z i j =
+      (t • (1 : M2C) + (x - Complex.I * y) • σPlus +
+        (x + Complex.I * y) • σMinus + z • σ3c) i j := by
+  simpa using congrArg (fun M : M2C => M i j) (solder_in_chiral_basis t x y z)
 
 /-- For a real 4-vector, the chiral coefficients are complex conjugates. This is
 the Hermiticity condition: the soldered matrix is Hermitian iff the 4-vector is real. -/
@@ -603,6 +622,17 @@ theorem circular_polarization_projector_decomposition
     (PPlus - PMinus = σ3c) := by
   rcases circular_polarization_closure epsPlus epsMinus h_comm h_anti with ⟨h1, h2⟩
   exact ⟨h1, h2, PPlus_add_PMinus, PPlus_sub_PMinus⟩
+
+/-- Pointwise readout of the circular polarization closure. -/
+@[simp] theorem circular_polarization_closure_apply
+    (epsPlus epsMinus : M2C)
+    (h_comm : epsPlus * epsMinus - epsMinus * epsPlus = σ3c)
+    (h_anti : epsPlus * epsMinus + epsMinus * epsPlus = (1 : M2C))
+    (i j : Fin 2) :
+    (epsPlus * epsMinus) i j = PPlus i j ∧
+    (epsMinus * epsPlus) i j = PMinus i j := by
+  rcases circular_polarization_closure epsPlus epsMinus h_comm h_anti with ⟨h1, h2⟩
+  exact ⟨congrArg (fun M : M2C => M i j) h1, congrArg (fun M : M2C => M i j) h2⟩
 
 /-! ## Full chiral algebraic closure synthesis
 

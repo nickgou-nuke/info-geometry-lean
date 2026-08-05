@@ -40,14 +40,14 @@ theorem flow_intertwines_tensor_to_UHF
       flowColimitMap D t ≫ fusionTensorToUHFTopologicalColimit T := by
   apply colimit.hom_ext
   intro n
-  change topologicalDirectInjection
+  change colimit.ι
       (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
       (fusionTensorToUHFTopologicalColimit T ≫ targetFlow t) =
-    topologicalDirectInjection
+    colimit.ι
       (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
       (flowColimitMap D t ≫ fusionTensorToUHFTopologicalColimit T)
   calc
-    _ = (topologicalDirectInjection
+    _ = (colimit.ι
         (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
         fusionTensorToUHFTopologicalColimit T) ≫ targetFlow t := by
           simp only [Category.assoc]
@@ -61,19 +61,19 @@ theorem flow_intertwines_tensor_to_UHF
         (fusionTensorStageTwoTopCatHom ≫ topologicalInclusion T 2) := by
           simp only [Category.assoc]
     _ = (D.flow t).hom ≫
-        (topologicalDirectInjection
+        (colimit.ι
           (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
           fusionTensorToUHFTopologicalColimit T) := by
           rw [fusionTensorToUHFTopologicalColimit_stage]
-    _ = ((D.flow t).hom ≫ topologicalDirectInjection
+    _ = ((D.flow t).hom ≫ colimit.ι
         (fusionTensorTopologicalDiagram (K := ℂ)) n) ≫
         fusionTensorToUHFTopologicalColimit T := by
           simp only [Category.assoc]
-    _ = (topologicalDirectInjection
+    _ = (colimit.ι
         (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
         flowColimitMap D t) ≫ fusionTensorToUHFTopologicalColimit T := by
           rw [← flowColimitMap_stage]
-    _ = topologicalDirectInjection
+    _ = colimit.ι
         (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
         (flowColimitMap D t ≫ fusionTensorToUHFTopologicalColimit T) := by
           simp only [Category.assoc]

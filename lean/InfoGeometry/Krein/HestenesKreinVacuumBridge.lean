@@ -31,26 +31,49 @@ certificate supplied by the Hestenes--Krein owner.  Locally, this bridge proves
 the Krein readbacks that follow from the supplied witnesses.
 -/
 @[rep_depth krein]
-structure HestenesKreinVacuum (P : HestenesKreinKMSPacket (E := E)) where
-  /-- Vacuum vector representative. -/
-  omega : E
+abbrev HestenesKreinVacuum (P : HestenesKreinKMSPacket (E := E)) :=
+  {omega : E //
+    omega ∈ P.HestenesNaturalCone ∧
+    KreinSpace.kreinInner (H := E) omega omega = 1 ∧
+    KreinSpace.jCLM (H := E) omega = omega ∧
+    (∀ t : ℝ, P.rotor t omega = omega) ∧
+    (∀ (t : ℝ) (A : EndH),
+      P.hestenesExpectation omega (P.modularFlow.flow t A) =
+        P.hestenesExpectation omega A)}
 
-  /-- The vacuum lies in the Hestenes/Krein natural cone. -/
-  omega_in_cone : omega ∈ P.HestenesNaturalCone
+namespace HestenesKreinVacuum
 
-  /-- Krein normalization `[Ω, Ω]_J = 1`. -/
-  omega_normalized : KreinSpace.kreinInner (H := E) omega omega = 1
+abbrev omega {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] [KreinSpace E]
+    {P : HestenesKreinKMSPacket (E := E)}
+    (V : HestenesKreinVacuum P) : E := V.1
+abbrev omega_in_cone {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] [KreinSpace E]
+    {P : HestenesKreinKMSPacket (E := E)}
+    (V : HestenesKreinVacuum P) : V.1 ∈ P.HestenesNaturalCone := V.2.1
+abbrev omega_normalized {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] [KreinSpace E]
+    {P : HestenesKreinKMSPacket (E := E)}
+    (V : HestenesKreinVacuum P) :
+    KreinSpace.kreinInner (H := E) V.1 V.1 = 1 := V.2.2.1
+abbrev J_fixes_omega {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] [KreinSpace E]
+    {P : HestenesKreinKMSPacket (E := E)}
+    (V : HestenesKreinVacuum P) :
+    KreinSpace.jCLM (H := E) V.1 = V.1 := V.2.2.2.1
+abbrev rotor_fixes_omega {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] [KreinSpace E]
+    {P : HestenesKreinKMSPacket (E := E)}
+    (V : HestenesKreinVacuum P) : ∀ t : ℝ, P.rotor t V.1 = V.1 := V.2.2.2.2.1
+abbrev omega_expectation_flow_invariant {E : Type*} [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [CompleteSpace E] [KreinSpace E]
+    {P : HestenesKreinKMSPacket (E := E)}
+    (V : HestenesKreinVacuum P) :
+    ∀ (t : ℝ) (A : E →L[ℝ] E),
+      P.hestenesExpectation V.1 (P.modularFlow.flow t A) =
+        P.hestenesExpectation V.1 A := V.2.2.2.2.2
 
-  /-- The Krein fundamental symmetry fixes the vacuum. -/
-  J_fixes_omega : KreinSpace.jCLM (H := E) omega = omega
-
-  /-- The real modular rotor fixes the vacuum vector. -/
-  rotor_fixes_omega : ∀ t : ℝ, P.rotor t omega = omega
-
-  /-- The vacuum expectation is invariant under the real modular flow. -/
-  omega_expectation_flow_invariant :
-    ∀ (t : ℝ) (A : EndH),
-      P.hestenesExpectation omega (P.modularFlow.flow t A) = P.hestenesExpectation omega A
+end HestenesKreinVacuum
 
 
 namespace HestenesKreinVacuum

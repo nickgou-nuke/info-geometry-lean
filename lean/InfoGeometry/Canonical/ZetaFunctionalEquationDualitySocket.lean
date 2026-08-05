@@ -141,14 +141,14 @@ an additional wrapper packet.
 -/
 @[rep_depth operator]
 theorem braneZetaPeriod_zero_reflects
-    (S : CantorDiracSYZZetaBraneConjectureSocket)
+    (centralCharge : ℂ → ℂ)
     (hagrees :
-      ∀ z : ℂ, S.centralCharge z = completedZeta z)
+      ∀ z : ℂ, centralCharge z = completedZeta z)
     {s : ℂ}
-    (hz : S.centralCharge s = 0) :
-    S.centralCharge (1 - s) = 0 := by
+    (hz : centralCharge s = 0) :
+    centralCharge (1 - s) = 0 := by
   apply zetaPeriod_zero_reflects_of_agrees
-    (zetaPeriod := S.centralCharge)
+    (zetaPeriod := centralCharge)
     (hagrees := funext hagrees)
     hz
 
@@ -159,19 +159,22 @@ critical-line predicates.
 -/
 @[rep_depth operator]
 theorem braneZetaPeriod_zero_implies_criticalLine
-    (S : CantorDiracSYZZetaBraneConjectureSocket)
+    (centralCharge : ℂ → ℂ)
+    (selfAdjoint : ℂ → Prop)
+    (hSelfAdjoint :
+      InfoGeometry.Canonical.CantorDiracZetaBraneSocket.SelfAdjointOnCriticalLine
+        selfAdjoint)
     (hVanish :
       ∀ z : ℂ,
-        S.centralCharge z = 0 →
-          S.totalDirac.TotalSelfAdjoint z)
+        centralCharge z = 0 → selfAdjoint z)
     (s : ℂ)
-    (hz : S.centralCharge s = 0) :
+    (hz : centralCharge s = 0) :
     CriticalLine s := by
   simpa [CriticalLine,
     InfoGeometry.Canonical.CantorDiracZetaBraneSocket.CriticalLine,
     OnCriticalLine] using
     InfoGeometry.Canonical.CantorDiracZetaBraneSocket.zetaPeriod_zero_implies_criticalLine
-      S hVanish s hz
+      centralCharge selfAdjoint hSelfAdjoint hVanish s hz
 
 /--
 Combining completed-xi reflection with the Cantor--Dirac owner places the
@@ -179,18 +182,21 @@ reflected brane-period zero on the critical line.
 -/
 @[rep_depth operator]
 theorem reflected_braneZetaPeriod_zero_implies_criticalLine
-    (S : CantorDiracSYZZetaBraneConjectureSocket)
+    (centralCharge : ℂ → ℂ)
+    (selfAdjoint : ℂ → Prop)
+    (hSelfAdjoint :
+      InfoGeometry.Canonical.CantorDiracZetaBraneSocket.SelfAdjointOnCriticalLine
+        selfAdjoint)
     (hagrees :
-      ∀ z : ℂ, S.centralCharge z = completedZeta z)
+      ∀ z : ℂ, centralCharge z = completedZeta z)
     (hVanish :
       ∀ z : ℂ,
-        S.centralCharge z = 0 →
-          S.totalDirac.TotalSelfAdjoint z)
+        centralCharge z = 0 → selfAdjoint z)
     (s : ℂ)
-    (hz : S.centralCharge s = 0) :
+    (hz : centralCharge s = 0) :
     CriticalLine (1 - s) :=
   braneZetaPeriod_zero_implies_criticalLine
-    S hVanish (1 - s)
-      (braneZetaPeriod_zero_reflects S hagrees hz)
+    centralCharge selfAdjoint hSelfAdjoint hVanish (1 - s)
+      (braneZetaPeriod_zero_reflects centralCharge hagrees hz)
 
 end InfoGeometry.Canonical.ZetaFunctionalEquationDualitySocket

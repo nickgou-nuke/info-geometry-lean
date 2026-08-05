@@ -23,14 +23,27 @@ namespace InfoGeometry.Canonical.TomitaTakesakiWickRotation
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
 /-- Tomita-Takesaki Modular Conjugation operator. -/
-structure TomitaTakesakiConjugation (V : Type*) [AddCommGroup V] [Module ℝ V] where
-  J : V →ₗ[ℝ] V
-  involutive : J.comp J = LinearMap.id
+abbrev TomitaTakesakiConjugation (V : Type*) [AddCommGroup V] [Module ℝ V] :=
+  {J : V →ₗ[ℝ] V // J.comp J = LinearMap.id}
+
+namespace TomitaTakesakiConjugation
+
+abbrev J (T : TomitaTakesakiConjugation V) : V →ₗ[ℝ] V := T.1
+abbrev involutive (T : TomitaTakesakiConjugation V) : T.J.comp T.J = LinearMap.id := T.2
+
+end TomitaTakesakiConjugation
 
 /-- Indefinite Krein Space inner product structure. -/
-structure KreinInnerProduct (V : Type*) [AddCommGroup V] [Module ℝ V] where
-  kreinPairing : V →ₗ[ℝ] V →ₗ[ℝ] ℝ
-  symmetric : ∀ u v, kreinPairing u v = kreinPairing v u
+abbrev KreinInnerProduct (V : Type*) [AddCommGroup V] [Module ℝ V] :=
+  {B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ // ∀ u v, B u v = B v u}
+
+namespace KreinInnerProduct
+
+abbrev kreinPairing (K : KreinInnerProduct V) : V →ₗ[ℝ] V →ₗ[ℝ] ℝ := K.1
+abbrev symmetric (K : KreinInnerProduct V) :
+    ∀ u v, K.kreinPairing u v = K.kreinPairing v u := K.2
+
+end KreinInnerProduct
 
 /-- Wick Rotation map: $\langle u, v \rangle_E = \langle u, J v \rangle_K$. -/
 def wickRotatedPairing (K : KreinInnerProduct V) (TT : TomitaTakesakiConjugation V) : V →ₗ[ℝ] V →ₗ[ℝ] ℝ where

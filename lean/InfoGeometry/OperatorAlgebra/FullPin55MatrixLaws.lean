@@ -175,17 +175,6 @@ theorem buscherSwapFirst_nontrivial :
   rw [buscherSwapFirst_basis_zero]
   decide
 
-/-- Closed finite packet for the off-diagonal `O(5,5)` Buscher-swap surface. -/
-theorem buscherSwapFirst_packet :
-    IsO55Off buscherSwapFirst ∧
-      buscherSwapFirst * buscherSwapFirst = 1 ∧
-      buscherSwapFirst.mulVec (basisVec 0) = basisVec 5 ∧
-      buscherSwapFirst.mulVec (basisVec 5) = basisVec 0 ∧
-      buscherSwapFirst.mulVec (basisVec 0) ≠ basisVec 0 := by
-  exact ⟨buscherSwapFirst_o55Off, buscherSwapFirst_involutive,
-    buscherSwapFirst_basis_zero, buscherSwapFirst_basis_five,
-    buscherSwapFirst_nontrivial⟩
-
 /-- A basis Pin reflection negates its own coordinate basis vector. -/
 theorem pinReflect_self_action :
     ∀ k : Fin 10, (pinReflect k).mulVec (basisVec k) = -basisVec k := by
@@ -220,17 +209,5 @@ theorem pin_parity_half_shadow : 2 ^ 9 = (512 : ℕ) := by
 /-- Bivector/Spin Lie algebra dimension shadow: `10 choose 2 = 45`. -/
 theorem spin55_bivector_count_shadow : 10 * 9 / 2 = (45 : ℕ) := by
   decide
-
-/-- Closed finite packet for the basis-generator `Pin(5,5)` matrix-law surface. -/
-theorem full_pin55_basis_packet :
-    (∀ k : Fin 10, IsO55 (pinReflect k)) ∧
-      (∀ k : Fin 10, pinReflect k * pinReflect k = 1) ∧
-      (∀ i j : Fin 10, IsO55 (pinProduct i j)) ∧
-      (∀ k j : Fin 10,
-        (pinReflect k).mulVec (basisVec j) = if k = j then -basisVec j else basisVec j) ∧
-      (∀ i : Fin 5, cliffordSquareSign ⟨i.val, by omega⟩ = 1) ∧
-      (∀ i : Fin 5, cliffordSquareSign ⟨i.val + 5, by omega⟩ = -1) := by
-  exact ⟨pinReflect_all_o55, pinReflect_all_involutive, pinProduct_all_o55,
-    pinReflect_basis_action, positive_square_signs, negative_square_signs⟩
 
 end InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws

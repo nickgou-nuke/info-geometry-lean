@@ -97,7 +97,7 @@ def upperLeftAdjointGeneratorActionNatTrans
     simp
 
 abbrev upperStageTopologicalColimit (m : ℕ) : TopCat :=
-  topologicalDirectColimit (upperStageTopologicalDiagram Stage T m)
+  colimit (upperStageTopologicalDiagram Stage T m)
 
 noncomputable def upperLeftGeneratorActionColimitMap
     (m : ℕ) (i : Fin m) :
@@ -134,7 +134,7 @@ noncomputable def upperGeneratorCornerColimitMap
 def upperStageTopologicalInjection (m : ℕ) (j : UpperNatIndex m) :
     (upperStageTopologicalDiagram Stage T m).obj j ⟶
       upperStageTopologicalColimit Stage T m :=
-  topologicalDirectInjection (upperStageTopologicalDiagram Stage T m) j
+  colimit.ι (upperStageTopologicalDiagram Stage T m) j
 
 theorem upperLeftGeneratorActionColimitMap_stage
     (m : ℕ) (i : Fin m) (j : UpperNatIndex m) :

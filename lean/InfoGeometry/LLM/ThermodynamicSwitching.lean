@@ -30,12 +30,18 @@ theorem routerPartition_eq_exp_logSumExp (β : ℝ) (x : Tok → V) (i : Tok) :
   rw [Real.exp_log (routerPartition_pos (n := n) β x i)]
 
 /-- Boolean expert mask for gated/all-top switching. -/
-structure SwitchMask (n : Nat) where
-  active : ExpertIdx n → Bool
+abbrev SwitchMask (n : Nat) := ExpertIdx n → Bool
+
+namespace SwitchMask
+
+abbrev active {n : Nat} (mask : SwitchMask n) : ExpertIdx n → Bool :=
+  mask
+
+end SwitchMask
 
 /-- All-top mode keeps every expert active. -/
-def allTopMask (n : Nat) : SwitchMask n where
-  active := fun _ => true
+def allTopMask (n : Nat) : SwitchMask n :=
+  fun _ => true
 
 /-- Masked thermodynamic routing weight. -/
 noncomputable def maskedNormalizedWeight

@@ -577,13 +577,13 @@ namespace QuantumOperatorialSouriauFamily
 variable {LieAlgebra Obs : Type*}
 
 @[rep_depth operator]
-def Jhat (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : LieAlgebra → Obs := Q.1
+abbrev Jhat (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : LieAlgebra → Obs := Q.1
 
 @[rep_depth operator]
-def beta (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : LieAlgebra := Q.2.1
+abbrev beta (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : LieAlgebra := Q.2.1
 
 @[rep_depth operator]
-def untracedExponential (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Obs :=
+abbrev untracedExponential (Q : QuantumOperatorialSouriauFamily LieAlgebra Obs) : Obs :=
   Q.2.2.1
 
 @[rep_depth thermo]

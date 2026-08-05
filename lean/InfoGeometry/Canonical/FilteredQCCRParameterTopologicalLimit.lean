@@ -33,11 +33,11 @@ variable (sys : ContinuousStarInductiveSystem Stage)
 
 /-- The ambient compatible-family space of q-CCR parameters. -/
 abbrev qCcrParameterTopologicalLimit : TopCat :=
-  topologicalInverseLimit (qCcrParameterTopologicalDiagram Stage sys)
+  limit (qCcrParameterTopologicalDiagram Stage sys)
 
 /-- The compatible-family space cut out by the zero q-CCR relation. -/
 abbrev qCcrParameterZeroFiberTopologicalLimit : TopCat :=
-  topologicalInverseLimit
+  limit
     (qCcrParameterZeroFiberTopologicalDiagram Stage sys)
 
 /-- A compatible family of finite-stage zero-fibre points is a genuine
@@ -67,7 +67,7 @@ noncomputable def qCcrParameterZeroFiberPointLimitMap
       point i ≫ qCcrParameterZeroFiberTransitionTopCatHom Stage sys
           (leOfHom f) = point j) :
     TopCat.of PUnit ⟶ qCcrParameterZeroFiberTopologicalLimit Stage sys :=
-  topologicalInverseLift
+  limit.lift
     (qCcrParameterZeroFiberTopologicalDiagram Stage sys)
     (qCcrParameterZeroFiberPointCone Stage sys point hpoint)
 
@@ -80,7 +80,7 @@ theorem qCcrParameterZeroFiberPointLimitMap_projection
       point i ≫ qCcrParameterZeroFiberTransitionTopCatHom Stage sys
           (leOfHom f) = point j)
     (i : I) (u : PUnit) :
-    topologicalInverseProjection
+    limit.π
         (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i
         (qCcrParameterZeroFiberPointLimitMap Stage sys point hpoint u) =
       point i u := by
@@ -97,7 +97,7 @@ theorem qCcrParameterZeroFiberPointLimitMap_unique
           (leOfHom f) = point j)
     (f : TopCat.of PUnit ⟶ qCcrParameterZeroFiberTopologicalLimit Stage sys)
     (h : ∀ i : I,
-      f ≫ topologicalInverseProjection
+      f ≫ limit.π
           (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i = point i) :
     f = qCcrParameterZeroFiberPointLimitMap Stage sys point hpoint := by
   apply topologicalInverseLift_unique
@@ -130,7 +130,7 @@ noncomputable def qCcrParameterZeroFiberPointColimitMap
     (hpoint : ∀ {i j : I} (f : i ⟶ j),
       point i ≫ qCcrParameterZeroFiberTransitionTopCatHom Stage sys
           (leOfHom f) = point j) :
-    topologicalDirectColimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
+    colimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
       qCcrParameterZeroFiberTopologicalColimit Stage sys :=
   colim.map (qCcrParameterZeroFiberPointNatTrans Stage sys point hpoint)
 
@@ -143,7 +143,7 @@ theorem qCcrParameterZeroFiberPointColimitMap_stage
       point i ≫ qCcrParameterZeroFiberTransitionTopCatHom Stage sys
           (leOfHom f) = point j)
     (i : I) :
-    topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i ≫
+    colimit.ι ((Functor.const I).obj (TopCat.of PUnit)) i ≫
         qCcrParameterZeroFiberPointColimitMap Stage sys point hpoint =
       (qCcrParameterZeroFiberPointNatTrans Stage sys point hpoint).app i ≫
         qCcrParameterZeroFiberTopologicalInjection Stage sys i := by
@@ -157,17 +157,17 @@ theorem qCcrParameterZeroFiberPointColimitMap_unique
     (hpoint : ∀ {i j : I} (f : i ⟶ j),
       point i ≫ qCcrParameterZeroFiberTransitionTopCatHom Stage sys
           (leOfHom f) = point j)
-    (f : topologicalDirectColimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
+    (f : colimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
       qCcrParameterZeroFiberTopologicalColimit Stage sys)
     (h : ∀ i : I,
-      topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i ≫ f =
+      colimit.ι ((Functor.const I).obj (TopCat.of PUnit)) i ≫ f =
         (qCcrParameterZeroFiberPointNatTrans Stage sys point hpoint).app i ≫
           qCcrParameterZeroFiberTopologicalInjection Stage sys i) :
     f = qCcrParameterZeroFiberPointColimitMap Stage sys point hpoint := by
   apply colimit.hom_ext
   intro i
-  change topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i ≫ f =
-    topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i ≫
+  change colimit.ι ((Functor.const I).obj (TopCat.of PUnit)) i ≫ f =
+    colimit.ι ((Functor.const I).obj (TopCat.of PUnit)) i ≫
       qCcrParameterZeroFiberPointColimitMap Stage sys point hpoint
   rw [h i, qCcrParameterZeroFiberPointColimitMap_stage]
 
@@ -180,7 +180,7 @@ noncomputable def qCcrParameterZeroFiberPointAmbientColimitMap
     (hpoint : ∀ {i j : I} (f : i ⟶ j),
       point i ≫ qCcrParameterZeroFiberTransitionTopCatHom Stage sys
           (leOfHom f) = point j) :
-    topologicalDirectColimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
+    colimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
       qCcrParameterTopologicalColimit Stage sys :=
   qCcrParameterZeroFiberPointColimitMap Stage sys point hpoint ≫
     qCcrParameterZeroFiberToParameterColimit Stage sys
@@ -194,13 +194,13 @@ theorem qCcrParameterZeroFiberPointAmbientColimitMap_stage
       point i ≫ qCcrParameterZeroFiberTransitionTopCatHom Stage sys
           (leOfHom f) = point j)
     (i : I) :
-    topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i ≫
+    colimit.ι ((Functor.const I).obj (TopCat.of PUnit)) i ≫
         qCcrParameterZeroFiberPointAmbientColimitMap Stage sys point hpoint =
       (qCcrParameterZeroFiberPointNatTrans Stage sys point hpoint).app i ≫
         (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i ≫
           qCcrParameterTopologicalInjection Stage sys i := by
   change
-    (topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i ≫
+    (colimit.ι ((Functor.const I).obj (TopCat.of PUnit)) i ≫
       qCcrParameterZeroFiberPointColimitMap Stage sys point hpoint) ≫
       qCcrParameterZeroFiberToParameterColimit Stage sys = _
   rw [qCcrParameterZeroFiberPointColimitMap_stage]
@@ -214,18 +214,18 @@ theorem qCcrParameterZeroFiberPointAmbientColimitMap_unique
     (hpoint : ∀ {i j : I} (f : i ⟶ j),
       point i ≫ qCcrParameterZeroFiberTransitionTopCatHom Stage sys
           (leOfHom f) = point j)
-    (f : topologicalDirectColimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
+    (f : colimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
       qCcrParameterTopologicalColimit Stage sys)
     (h : ∀ i : I,
-      topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i ≫ f =
+      colimit.ι ((Functor.const I).obj (TopCat.of PUnit)) i ≫ f =
         (qCcrParameterZeroFiberPointNatTrans Stage sys point hpoint).app i ≫
           (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i ≫
           qCcrParameterTopologicalInjection Stage sys i) :
     f = qCcrParameterZeroFiberPointAmbientColimitMap Stage sys point hpoint := by
   apply colimit.hom_ext
   intro i
-  change topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i ≫ f =
-    topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i ≫
+  change colimit.ι ((Functor.const I).obj (TopCat.of PUnit)) i ≫ f =
+    colimit.ι ((Functor.const I).obj (TopCat.of PUnit)) i ≫
       qCcrParameterZeroFiberPointAmbientColimitMap Stage sys point hpoint
   rw [h i]
   rw [qCcrParameterZeroFiberPointAmbientColimitMap_stage]
@@ -237,16 +237,16 @@ def qCcrParameterZeroFiberToParameterLimitCone :
   pt := qCcrParameterZeroFiberTopologicalLimit Stage sys
   π :=
     { app := fun i =>
-        topologicalInverseProjection
+        limit.π
             (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i ≫
           (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i
       naturality := by
         intro i j f
         change
-          (𝟙 _ ≫ topologicalInverseProjection
+          (𝟙 _ ≫ limit.π
             (qCcrParameterZeroFiberTopologicalDiagram Stage sys) j) ≫
               (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app j =
-            topologicalInverseProjection
+            limit.π
                 (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i ≫
               (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i ≫
               (qCcrParameterTopologicalDiagram Stage sys).map f
@@ -261,14 +261,14 @@ def qCcrParameterZeroFiberToParameterLimitCone :
 noncomputable def qCcrParameterZeroFiberToParameterLimit :
     qCcrParameterZeroFiberTopologicalLimit Stage sys ⟶
       qCcrParameterTopologicalLimit Stage sys :=
-  topologicalInverseLift (qCcrParameterTopologicalDiagram Stage sys)
+  limit.lift (qCcrParameterTopologicalDiagram Stage sys)
     (qCcrParameterZeroFiberToParameterLimitCone Stage sys)
 
 @[reassoc]
 theorem qCcrParameterZeroFiberToParameterLimit_projection
     (i : I) :
     qCcrParameterZeroFiberToParameterLimit Stage sys ≫
-        topologicalInverseProjection
+        limit.π
           (qCcrParameterTopologicalDiagram Stage sys) i =
       (qCcrParameterZeroFiberToParameterLimitCone Stage sys).π.app i := by
   exact topologicalInverseLift_projection
@@ -277,7 +277,7 @@ theorem qCcrParameterZeroFiberToParameterLimit_projection
 
 theorem qCcrParameterZeroFiberToParameterLimit_projection_apply
     (i : I) (x : qCcrParameterZeroFiberTopologicalLimit Stage sys) :
-    topologicalInverseProjection
+    limit.π
         (qCcrParameterTopologicalDiagram Stage sys) i
         (qCcrParameterZeroFiberToParameterLimit Stage sys x) =
       (qCcrParameterZeroFiberToParameterLimitCone Stage sys).π.app i x := by
@@ -311,10 +311,10 @@ theorem qCcrParameterZeroFiberToParameterLimit_injective :
           (qCcrParameterZeroFiberToParameterLimitCone Stage sys).π.app i y := by
       calc
         (qCcrParameterZeroFiberToParameterLimitCone Stage sys).π.app i x =
-            topologicalInverseProjection
+            limit.π
               (qCcrParameterTopologicalDiagram Stage sys) i
               (qCcrParameterZeroFiberToParameterLimit Stage sys x) := hx.symm
-        _ = topologicalInverseProjection
+        _ = limit.π
               (qCcrParameterTopologicalDiagram Stage sys) i
               (qCcrParameterZeroFiberToParameterLimit Stage sys y) := by
           rw [hxy]
@@ -344,14 +344,14 @@ theorem qCcrParameterZeroFiberPointAmbientLimitMap_projection
       point i ≫ qCcrParameterZeroFiberTransitionTopCatHom Stage sys
           (leOfHom f) = point j)
     (i : I) (u : PUnit) :
-    topologicalInverseProjection
+    limit.π
         (qCcrParameterTopologicalDiagram Stage sys) i
         (qCcrParameterZeroFiberPointAmbientLimitMap Stage sys point hpoint u) =
       (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i
         (point i u) := by
   change
     (qCcrParameterZeroFiberToParameterLimit Stage sys ≫
-      topologicalInverseProjection
+      limit.π
         (qCcrParameterTopologicalDiagram Stage sys) i)
       (qCcrParameterZeroFiberPointLimitMap Stage sys point hpoint u) = _
   rw [qCcrParameterZeroFiberToParameterLimit_projection Stage sys i]
@@ -368,35 +368,35 @@ theorem qCcrParameterZeroFiberPointAmbientLimitMap_unique
           (leOfHom f) = point j)
     (f : TopCat.of PUnit ⟶ qCcrParameterTopologicalLimit Stage sys)
     (h : ∀ i : I,
-      f ≫ topologicalInverseProjection
+      f ≫ limit.π
           (qCcrParameterTopologicalDiagram Stage sys) i =
         point i ≫ (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i) :
     f = qCcrParameterZeroFiberPointAmbientLimitMap Stage sys point hpoint := by
   apply limit.hom_ext
   intro i
-  change f ≫ topologicalInverseProjection
+  change f ≫ limit.π
       (qCcrParameterTopologicalDiagram Stage sys) i =
     qCcrParameterZeroFiberPointAmbientLimitMap Stage sys point hpoint ≫
-      topologicalInverseProjection
+      limit.π
         (qCcrParameterTopologicalDiagram Stage sys) i
   rw [h i]
   change point i ≫
       (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i =
     (qCcrParameterZeroFiberPointLimitMap Stage sys point hpoint ≫
       qCcrParameterZeroFiberToParameterLimit Stage sys) ≫
-      topologicalInverseProjection
+      limit.π
         (qCcrParameterTopologicalDiagram Stage sys) i
   rw [Category.assoc,
     qCcrParameterZeroFiberToParameterLimit_projection Stage sys i]
   change point i ≫
       (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i =
     qCcrParameterZeroFiberPointLimitMap Stage sys point hpoint ≫
-      (topologicalInverseProjection
+      (limit.π
         (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i ≫
         (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i)
   rw [← Category.assoc]
   rw [show qCcrParameterZeroFiberPointLimitMap Stage sys point hpoint ≫
-      topologicalInverseProjection
+      limit.π
         (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i =
       point i by
     apply TopCat.hom_ext

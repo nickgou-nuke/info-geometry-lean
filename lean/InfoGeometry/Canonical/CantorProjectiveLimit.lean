@@ -45,6 +45,12 @@ def π (n : ℕ) (p : PrefixProjectiveLimit) : BitWord n :=
 @[simp] theorem π_apply (n : ℕ) (p : PrefixProjectiveLimit) :
     π n p = p.word n := rfl
 
+theorem ext_of_π_eq {p q : PrefixProjectiveLimit}
+    (h : ∀ n : ℕ, π n p = π n q) : p = q := by
+  apply PrefixProjectiveLimit.ext
+  funext n
+  exact h n
+
 /-- The topology on the projective limit is the subspace topology inherited from
 `∀ n, BitWord n`. -/
 instance : TopologicalSpace PrefixProjectiveLimit :=

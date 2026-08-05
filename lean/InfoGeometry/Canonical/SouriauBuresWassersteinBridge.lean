@@ -25,7 +25,7 @@ variable {n : ℕ}
    is an additional property of the chosen metric implementation. -/
 def matrixPositiveDomain (n : ℕ) :
     PositiveStateDomain (Matrix (Fin n) (Fin n) ℝ) :=
-  ⟨Set.univ⟩
+  Set.univ
 
 def matrixPositiveState (n : ℕ) (ρ : Matrix (Fin n) (Fin n) ℝ) :
     PositiveState (matrixPositiveDomain n) :=

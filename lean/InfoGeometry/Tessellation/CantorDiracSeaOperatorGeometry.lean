@@ -141,13 +141,3 @@ theorem cantorDiracSeaOperatorGeometryOwnerTarget :
                   refine ⟨?_, ?_⟩
                   · exact doubledI_rotor_exp_reverse (E := E) θ
                   · exact doubledI_rotor_reverse_comp_exp (E := E) θ
-
-/-- Concise downstream name for the geometry/symmetry-hopping package on supergraded doubled operators. -/
-theorem geometry_eq_symmetry_constrained_hopping_on_supergraded_doubled_operator_space :
-    CantorDiracSeaOperatorGeometryOwnerTarget :=
-  cantorDiracSeaOperatorGeometryOwnerTarget
-
-/-- Short form for downstream references. -/
-theorem geometry_eq_symmetry_constrained_hopping :
-    CantorDiracSeaOperatorGeometryOwnerTarget :=
-  geometry_eq_symmetry_constrained_hopping_on_supergraded_doubled_operator_space

@@ -1,5 +1,7 @@
 import Mathlib.Tactic
 import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.CategoryTheory.Limits.HasLimits
+import Mathlib.CategoryTheory.Limits.Types.Filtered
 
 /-!
 # The Jaynes--Lean Colimit Bridge
@@ -20,8 +22,11 @@ targets.  No analytic continuum theorem is asserted beyond supplied fields.
 noncomputable section
 
 open BigOperators
+open CategoryTheory CategoryTheory.Limits
 
 namespace JaynesLeanColimitBridge
+
+universe u v
 
 /-- The finite Kolmogorov probability axioms for a concrete finite support. -/
 def FiniteKolmogorovAxioms (Ω : Type) [Fintype Ω] (prob : Ω → ℝ) : Prop :=
@@ -113,55 +118,29 @@ theorem kms_succ
     StageKMS (D.stages (n + 1)) :=
   (D.refinements n).preserves_kms h
 
-/-- A bare colimit object for a directed Jaynes system.  The universal property
-is stored as a field of the chosen colimit object. -/
-structure InductionColimit (D : JaynesDirectedSystem) where
-  colimitCarrier : Type
-  inclusions : ∀ n, (D.stages n).sampleSpace → colimitCarrier
-  universalProperty : ∀ (C : Type) (f : ∀ n, (D.stages n).sampleSpace → C),
-    (∀ n x, f (n + 1) ((D.refinements n).map x) = f n x) →
-    ∃! g : colimitCarrier → C, ∀ n x, g (inclusions n x) = f n x
+/-- A native readout from the canonical colimit to a supplied cocone target. -/
+noncomputable def nativeColimitReadout
+    {J : Type v} [Category.{v} J] (F : J ⥤ Type u)
+    [HasColimit F]
+    (C : Cocone F) : colimit F ⟶ C.pt :=
+  colimit.desc F C
 
-/-- Continuum data over the directed finite system.  These are the
-analytic/geometric targets carried by the chosen colimit object, not new
-kernel-proved continuum theorems. -/
-structure ColimitContinuumData (D : JaynesDirectedSystem) (IC : InductionColimit D) where
-  kmsState : IC.colimitCarrier → ℝ
-  kmsState_is_colimit : ∀ n x, kmsState (IC.inclusions n x) = (D.stages n).prob x
-  buresMetric : IC.colimitCarrier → IC.colimitCarrier → ℝ
-  buresMetric_is_colimit : ∀ n x y, buresMetric (IC.inclusions n x) (IC.inclusions n y) = Real.sqrt ((D.stages n).prob x * (D.stages n).prob y)
-  gnsHilbertSpace : Type
-  [gnsHilbertSpace_normed : NormedAddCommGroup gnsHilbertSpace]
-  [gnsHilbertSpace_inner : InnerProductSpace ℝ gnsHilbertSpace]
-  gnsVacuum : gnsHilbertSpace
-  gns_is_colimit : ∀ n x, ∃ (v : gnsHilbertSpace), ‖v‖^2 = (D.stages n).prob x
+theorem nativeColimitReadout_ι
+    {J : Type v} [Category.{v} J] (F : J ⥤ Type u)
+    [HasColimit F]
+    (C : Cocone F) (j : J) :
+    colimit.ι F j ≫ nativeColimitReadout F C = C.ι.app j := by
+  exact colimit.ι_desc C j
 
-/-- The complete theorem-object: finite Jaynes stages, colimit mechanism, and
-continuum data targets. -/
-structure ColimitBridge where
-  finiteSide : JaynesDirectedSystem
-  colimitMechanism : InductionColimit finiteSide
-  continuum : ColimitContinuumData finiteSide colimitMechanism
-  finitePropertiesLift_proof : ∀ n, StageKMS (finiteSide.stages n) →
-    letI := (finiteSide.stages n).sampleSpace_fintype
-    ∃ β, ∀ x,
-      continuum.kmsState (colimitMechanism.inclusions n x) *
-          (∑ ω' : (finiteSide.stages n).sampleSpace,
-            Real.exp (- β * (finiteSide.stages n).finiteIntegralOfMotion ω')) =
-        Real.exp (- β * (finiteSide.stages n).finiteIntegralOfMotion x)
-
-/-- The finite-to-colimit lifting law exposed as a proposition from its owner. -/
-def ColimitBridge.finitePropertiesLift (B : ColimitBridge) : Prop :=
-  ∀ n, StageKMS (B.finiteSide.stages n) →
-    letI := (B.finiteSide.stages n).sampleSpace_fintype
-    ∃ β, ∀ x,
-      B.continuum.kmsState (B.colimitMechanism.inclusions n x) *
-          (∑ ω' : (B.finiteSide.stages n).sampleSpace,
-            Real.exp (- β * (B.finiteSide.stages n).finiteIntegralOfMotion ω')) =
-        Real.exp (- β * (B.finiteSide.stages n).finiteIntegralOfMotion x)
-
-/-- If the bridge includes a proof that finite compatible properties lift, then
-the recorded lifting statement is available. -/
-theorem bridge_lifting (B : ColimitBridge) : B.finitePropertiesLift := B.finitePropertiesLift_proof
+theorem nativeColimitReadout_unique
+    {J : Type v} [Category.{v} J] (F : J ⥤ Type u)
+    [HasColimit F]
+    (C : Cocone F)
+    (g : colimit F ⟶ C.pt)
+    (hg : ∀ j : J, colimit.ι F j ≫ g = C.ι.app j) :
+    g = nativeColimitReadout F C := by
+  apply colimit.hom_ext
+  intro j
+  rw [hg j, nativeColimitReadout_ι]
 
 end JaynesLeanColimitBridge

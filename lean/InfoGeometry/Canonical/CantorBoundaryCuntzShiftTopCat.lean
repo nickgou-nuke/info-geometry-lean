@@ -60,6 +60,11 @@ def prefixBitTopCatIso (b : Bool) :
       ⟨prefixBit b x, ⟨x, rfl⟩⟩ :=
   rfl
 
+@[simp] theorem prefixBitTopCatInv_apply
+    (b : Bool) (y : Set.range (prefixBit b)) :
+    prefixBitTopCatInv b y = prefixTail y.1 :=
+  rfl
+
 theorem prefixBitTopCatIso_target_is_clopen (b : Bool) :
     IsOpen (Set.range (prefixBit b)) ∧
       IsClosed (Set.range (prefixBit b)) :=

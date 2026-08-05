@@ -8,8 +8,8 @@ variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
 /-- **1. Дефиниция на Хиперболичен / Лоренцов Генератор K**:
     Удовлетворява K² = I (аналог на хиперболичната единица ε² = +1). -/
-structure HyperbolicBoostGenerator (K : Module.End ℝ V) : Prop where
-  sq_eq_id : K.comp K = LinearMap.id
+def HyperbolicBoostGenerator (K : Module.End ℝ V) : Prop :=
+  K.comp K = LinearMap.id
 
 /-- **2. 1-Параметричен Лоренцов Буст Оператор U(η) = cosh(η) I + sinh(η) K**:
     Генерира хиперболични ротации с бързина (rapidity) η. -/
@@ -30,7 +30,7 @@ theorem boostOp_add
   ext x
   simp only [LinearMap.add_apply, LinearMap.smul_apply, LinearMap.comp_apply, LinearMap.id_apply]
   have hK_apply : K (K x) = x := by
-    have h_comp := LinearMap.congr_fun hK.sq_eq_id x
+    have h_comp := LinearMap.congr_fun hK x
     exact h_comp
   rw [LinearMap.map_add, LinearMap.map_smul, LinearMap.map_smul, hK_apply]
   rw [Real.cosh_add, Real.sinh_add]

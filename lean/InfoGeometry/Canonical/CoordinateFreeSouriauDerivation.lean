@@ -21,8 +21,16 @@ variable {M : Type*}
 variable (Tangent : M → Type*)
 
 /-- Coordinate-free metric packet on tangent fibers. -/
-structure CoordinateFreeMetric where
-  g : ∀ p : M, Tangent p → Tangent p → ℝ
+abbrev CoordinateFreeMetric :=
+  ∀ p : M, Tangent p → Tangent p → ℝ
+
+namespace CoordinateFreeMetric
+
+abbrev g (metric : CoordinateFreeMetric Tangent) :
+    ∀ p : M, Tangent p → Tangent p → ℝ :=
+  metric
+
+end CoordinateFreeMetric
 
 /--
 Abstract Lie-derivative readout of the metric along a distinguished generator
@@ -33,7 +41,7 @@ def metricLieDerivative
     (bracket : ∀ p : M, Tangent p → Tangent p → Tangent p)
     (β : ∀ p : M, Tangent p)
     (p : M) (X Y : Tangent p) : ℝ :=
-  -(g.g p (bracket p (β p) X) Y) - (g.g p X (bracket p (β p) Y))
+  -(g p (bracket p (β p) X) Y) - (g p X (bracket p (β p) Y))
 
 /-- Equilibrium (Killing-type) condition in coordinate-free form. -/
 def IsEquilibrium
@@ -53,7 +61,7 @@ def IsConformalFlow
     (β : ∀ p : M, Tangent p)
     (σ : M → ℝ) : Prop :=
   ∀ p : M, ∀ X Y : Tangent p,
-    metricLieDerivative (Tangent := Tangent) g bracket β p X Y = σ p * g.g p X Y
+    metricLieDerivative (Tangent := Tangent) g bracket β p X Y = σ p * g p X Y
 
 /-- Equilibrium is the zero-dilation conformal profile. -/
 theorem equilibrium_iff_conformal_zero

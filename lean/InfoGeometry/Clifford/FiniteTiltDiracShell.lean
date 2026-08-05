@@ -32,15 +32,15 @@ abbrev Mat2 : Type := Matrix (Fin 2) (Fin 2) ℝ
 
 /-- Odd tilt generator `Q_A`. -/
 @[rep_depth operator]
-def tiltOddA : Mat2 := Eplus
+abbrev tiltOddA : Mat2 := Eplus
 
 /-- Odd tilt generator `Q_B`. -/
 @[rep_depth operator]
-def tiltOddB : Mat2 := Eminus
+abbrev tiltOddB : Mat2 := Eminus
 
 /-- Even rotation generator `J`. -/
 @[rep_depth operator]
-def tiltEvenJ : Mat2 := J1
+abbrev tiltEvenJ : Mat2 := J1
 
 @[simp, rep_depth operator]
 theorem tiltOddA_sq :
@@ -206,61 +206,25 @@ theorem finiteTiltDiracShell_charpoly (m : ℝ) :
   simp [sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
 
 @[rep_depth operator]
-abbrev FiniteTiltDiracShellSpectralTarget : Prop := True
-
-namespace FiniteTiltDiracShellSpectralTarget
-
-theorem trace_zero (_ : FiniteTiltDiracShellSpectralTarget) (m : ℝ) :
-    Matrix.trace (finiteTiltDiracShell m) = 0 :=
-  finiteTiltDiracShell_trace m
-
-theorem det_eq (_ : FiniteTiltDiracShellSpectralTarget) (m : ℝ) :
-    Matrix.det (finiteTiltDiracShell m) = - m ^ 2 :=
-  finiteTiltDiracShell_det m
-
-theorem charpoly_eq (_ : FiniteTiltDiracShellSpectralTarget) (m : ℝ) :
-    (finiteTiltDiracShell m).charpoly =
-      Polynomial.X ^ 2 - Polynomial.C (m ^ 2 : ℝ) :=
-  finiteTiltDiracShell_charpoly m
-
-end FiniteTiltDiracShellSpectralTarget
-
-theorem finiteTiltDiracShellSpectralTarget :
-    FiniteTiltDiracShellSpectralTarget := by
-  trivial
-
-@[rep_depth operator]
 theorem finiteTiltDiracShellSpectralTarget_trace_zero (m : ℝ) :
     Matrix.trace (finiteTiltDiracShell m) = 0 :=
-  let pkt := finiteTiltDiracShellSpectralTarget
-  pkt.trace_zero m
+  finiteTiltDiracShell_trace m
 
 @[rep_depth operator]
 theorem finiteTiltDiracShellSpectralTarget_det_eq (m : ℝ) :
     Matrix.det (finiteTiltDiracShell m) = - m ^ 2 :=
-  let pkt := finiteTiltDiracShellSpectralTarget
-  pkt.det_eq m
+  finiteTiltDiracShell_det m
 
 @[rep_depth operator]
 theorem finiteTiltDiracShellSpectralTarget_charpoly_eq (m : ℝ) :
     (finiteTiltDiracShell m).charpoly =
       Polynomial.X ^ 2 - Polynomial.C (m ^ 2 : ℝ) :=
-  let pkt := finiteTiltDiracShellSpectralTarget
-  pkt.charpoly_eq m
-
-@[rep_depth operator]
-def FiniteTiltDiracShellOwnerTarget : Prop :=
-  ∀ m : ℝ, finiteTiltDiracShell m * finiteTiltDiracShell m =
-    (m ^ 2 : ℝ) • (1 : Mat2)
-
-theorem finiteTiltDiracShellOwnerTarget :
-    FiniteTiltDiracShellOwnerTarget := by
-  exact finiteTiltDiracShell_sq
+  finiteTiltDiracShell_charpoly m
 
 @[rep_depth operator]
 theorem finiteTiltDiracShellOwnerTarget_shell_square (m : ℝ) :
     finiteTiltDiracShell m * finiteTiltDiracShell m =
     (m ^ 2 : ℝ) • (1 : Mat2) :=
-  finiteTiltDiracShellOwnerTarget m
+  finiteTiltDiracShell_sq m
 
 end InfoGeometry.Clifford.FiniteTiltDiracShell

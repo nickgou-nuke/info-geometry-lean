@@ -129,6 +129,26 @@ theorem boundaryPrefix_prependBit (n : ℕ) (b : Bool) (x : CantorBoundary) :
 def branchPullback (n : ℕ) (b : Bool) (f : DiagAlg (n + 1)) : DiagAlg n :=
   fun w => f (branchPrefix n b w)
 
+@[simp] theorem branchPullback_zero (n : ℕ) (b : Bool) :
+    branchPullback n b (0 : DiagAlg (n + 1)) = 0 := by
+  rfl
+
+@[simp] theorem branchPullback_one (n : ℕ) (b : Bool) :
+    branchPullback n b (1 : DiagAlg (n + 1)) = 1 := by
+  rfl
+
+theorem branchPullback_add
+    (n : ℕ) (b : Bool) (f g : DiagAlg (n + 1)) :
+    branchPullback n b (f + g) =
+      branchPullback n b f + branchPullback n b g := by
+  rfl
+
+theorem branchPullback_mul
+    (n : ℕ) (b : Bool) (f g : DiagAlg (n + 1)) :
+    branchPullback n b (f * g) =
+      branchPullback n b f * branchPullback n b g := by
+  rfl
+
 /-- Pulling a finite cylinder back along a branch is again a finite cylinder. -/
 theorem cylinder_branch_pullback (n : ℕ) (b : Bool) (f : DiagAlg (n + 1)) :
     (fun x : CantorBoundary => cylinder (n + 1) f (prependBit b x)) =

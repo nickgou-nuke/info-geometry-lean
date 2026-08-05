@@ -18,7 +18,6 @@ The result can be exported both as a `CircularPolarization` and as the
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ChiralPolarization
 import InfoGeometry.OperatorAlgebra.TomitaCartanSplit
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -351,17 +350,5 @@ theorem chiralProjectorFromInvolutionOwnerTarget :
     C.Pleft_add_Pright,
     C.Pleft_sub_Pright
   ⟩
-
-/-- Direct packet for one chiral involution's two projectors. -/
-theorem chiralProjectorFromInvolution_packet
-    {Op : Type*} [Ring Op] [Algebra ℝ Op]
-    (C : ChiralInvolution Op) :
-    C.Pleft * C.Pleft = C.Pleft ∧
-      C.Pright * C.Pright = C.Pright ∧
-      C.Pleft * C.Pright = 0 ∧
-      C.Pright * C.Pleft = 0 ∧
-      C.Pleft + C.Pright = 1 ∧
-      C.Pleft - C.Pright = C.chi :=
-  chiralProjectorFromInvolutionOwnerTarget Op C
 
 end InfoGeometry.OperatorAlgebra

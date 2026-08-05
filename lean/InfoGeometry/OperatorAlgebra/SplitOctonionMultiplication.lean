@@ -281,73 +281,6 @@ def basisMul : Basis8 → Basis8 → SplitOct
 @[simp] theorem basisElem_mul (i j : Basis8) : mulZ (basisElem i) (basisElem j) = basisMul i j := by
   cases i <;> cases j <;> decide
 
-/-- Full 8×8 multiplication-table packet for the indexed split-octonion basis. -/
-theorem basis_table_packet :
-      mulZ (basisElem Basis8.ePlus) (basisElem Basis8.ePlus) = ePlus ∧
-      mulZ (basisElem Basis8.ePlus) (basisElem Basis8.eMinus) = zeroZ ∧
-      mulZ (basisElem Basis8.ePlus) (basisElem Basis8.up0) = up0 ∧
-      mulZ (basisElem Basis8.ePlus) (basisElem Basis8.up1) = up1 ∧
-      mulZ (basisElem Basis8.ePlus) (basisElem Basis8.up2) = up2 ∧
-      mulZ (basisElem Basis8.ePlus) (basisElem Basis8.down0) = zeroZ ∧
-      mulZ (basisElem Basis8.ePlus) (basisElem Basis8.down1) = zeroZ ∧
-      mulZ (basisElem Basis8.ePlus) (basisElem Basis8.down2) = zeroZ ∧
-      mulZ (basisElem Basis8.eMinus) (basisElem Basis8.ePlus) = zeroZ ∧
-      mulZ (basisElem Basis8.eMinus) (basisElem Basis8.eMinus) = eMinus ∧
-      mulZ (basisElem Basis8.eMinus) (basisElem Basis8.up0) = zeroZ ∧
-      mulZ (basisElem Basis8.eMinus) (basisElem Basis8.up1) = zeroZ ∧
-      mulZ (basisElem Basis8.eMinus) (basisElem Basis8.up2) = zeroZ ∧
-      mulZ (basisElem Basis8.eMinus) (basisElem Basis8.down0) = down0 ∧
-      mulZ (basisElem Basis8.eMinus) (basisElem Basis8.down1) = down1 ∧
-      mulZ (basisElem Basis8.eMinus) (basisElem Basis8.down2) = down2 ∧
-      mulZ (basisElem Basis8.up0) (basisElem Basis8.ePlus) = zeroZ ∧
-      mulZ (basisElem Basis8.up0) (basisElem Basis8.eMinus) = up0 ∧
-      mulZ (basisElem Basis8.up0) (basisElem Basis8.up0) = zeroZ ∧
-      mulZ (basisElem Basis8.up0) (basisElem Basis8.up1) = down2 ∧
-      mulZ (basisElem Basis8.up0) (basisElem Basis8.up2) = negZ down1 ∧
-      mulZ (basisElem Basis8.up0) (basisElem Basis8.down0) = ePlus ∧
-      mulZ (basisElem Basis8.up0) (basisElem Basis8.down1) = zeroZ ∧
-      mulZ (basisElem Basis8.up0) (basisElem Basis8.down2) = zeroZ ∧
-      mulZ (basisElem Basis8.up1) (basisElem Basis8.ePlus) = zeroZ ∧
-      mulZ (basisElem Basis8.up1) (basisElem Basis8.eMinus) = up1 ∧
-      mulZ (basisElem Basis8.up1) (basisElem Basis8.up0) = negZ down2 ∧
-      mulZ (basisElem Basis8.up1) (basisElem Basis8.up1) = zeroZ ∧
-      mulZ (basisElem Basis8.up1) (basisElem Basis8.up2) = down0 ∧
-      mulZ (basisElem Basis8.up1) (basisElem Basis8.down0) = zeroZ ∧
-      mulZ (basisElem Basis8.up1) (basisElem Basis8.down1) = ePlus ∧
-      mulZ (basisElem Basis8.up1) (basisElem Basis8.down2) = zeroZ ∧
-      mulZ (basisElem Basis8.up2) (basisElem Basis8.ePlus) = zeroZ ∧
-      mulZ (basisElem Basis8.up2) (basisElem Basis8.eMinus) = up2 ∧
-      mulZ (basisElem Basis8.up2) (basisElem Basis8.up0) = down1 ∧
-      mulZ (basisElem Basis8.up2) (basisElem Basis8.up1) = negZ down0 ∧
-      mulZ (basisElem Basis8.up2) (basisElem Basis8.up2) = zeroZ ∧
-      mulZ (basisElem Basis8.up2) (basisElem Basis8.down0) = zeroZ ∧
-      mulZ (basisElem Basis8.up2) (basisElem Basis8.down1) = zeroZ ∧
-      mulZ (basisElem Basis8.up2) (basisElem Basis8.down2) = ePlus ∧
-      mulZ (basisElem Basis8.down0) (basisElem Basis8.ePlus) = down0 ∧
-      mulZ (basisElem Basis8.down0) (basisElem Basis8.eMinus) = zeroZ ∧
-      mulZ (basisElem Basis8.down0) (basisElem Basis8.up0) = eMinus ∧
-      mulZ (basisElem Basis8.down0) (basisElem Basis8.up1) = zeroZ ∧
-      mulZ (basisElem Basis8.down0) (basisElem Basis8.up2) = zeroZ ∧
-      mulZ (basisElem Basis8.down0) (basisElem Basis8.down0) = zeroZ ∧
-      mulZ (basisElem Basis8.down0) (basisElem Basis8.down1) = negZ up2 ∧
-      mulZ (basisElem Basis8.down0) (basisElem Basis8.down2) = up1 ∧
-      mulZ (basisElem Basis8.down1) (basisElem Basis8.ePlus) = down1 ∧
-      mulZ (basisElem Basis8.down1) (basisElem Basis8.eMinus) = zeroZ ∧
-      mulZ (basisElem Basis8.down1) (basisElem Basis8.up0) = zeroZ ∧
-      mulZ (basisElem Basis8.down1) (basisElem Basis8.up1) = eMinus ∧
-      mulZ (basisElem Basis8.down1) (basisElem Basis8.up2) = zeroZ ∧
-      mulZ (basisElem Basis8.down1) (basisElem Basis8.down0) = up2 ∧
-      mulZ (basisElem Basis8.down1) (basisElem Basis8.down1) = zeroZ ∧
-      mulZ (basisElem Basis8.down1) (basisElem Basis8.down2) = negZ up0 ∧
-      mulZ (basisElem Basis8.down2) (basisElem Basis8.ePlus) = down2 ∧
-      mulZ (basisElem Basis8.down2) (basisElem Basis8.eMinus) = zeroZ ∧
-      mulZ (basisElem Basis8.down2) (basisElem Basis8.up0) = zeroZ ∧
-      mulZ (basisElem Basis8.down2) (basisElem Basis8.up1) = zeroZ ∧
-      mulZ (basisElem Basis8.down2) (basisElem Basis8.up2) = eMinus ∧
-      mulZ (basisElem Basis8.down2) (basisElem Basis8.down0) = negZ up1 ∧
-      mulZ (basisElem Basis8.down2) (basisElem Basis8.down1) = up0 ∧
-      mulZ (basisElem Basis8.down2) (basisElem Basis8.down2) = zeroZ := by
-  decide
 
 /-- Index readout for upper units. -/
 def up : Fin 3 → SplitOct
@@ -600,25 +533,26 @@ structure ZornStatisticalVariety where
 
 /-- Algebraic inverse-determinant capacity.  This is the determinant part of a
 log-barrier readback, not an analytic logarithm over `ℤ`. -/
-def zornLogBarrierCapacity (M : ZornStatisticalVariety) : ℤ :=
+def zornLogBarrierCapacity (M : ZornStatisticalVariety) : ℤ := by
   letI := M.det_invertible
-  ⅟ M.base.det
+  exact ⅟ M.base.det
 
 /-- Three coordinate entries of the determinant-capacity tensor on the base.
 
 This is a symbolic/algebraic tensor readback.  It is not promoted as a Fisher
 metric from a proved smooth Hessian. -/
-structure FisherMetricTensor where
-  g_trace_trace : ℤ
-  g_trace_det : ℤ
-  g_det_det : ℤ
-  deriving DecidableEq, Repr
+abbrev FisherMetricTensor := ℤ × ℤ × ℤ
+
+/-- Coordinate accessors for the native triple representation. -/
+abbrev FisherMetricTensor.g_trace_trace (G : FisherMetricTensor) : ℤ := G.1
+abbrev FisherMetricTensor.g_trace_det (G : FisherMetricTensor) : ℤ := G.2.1
+abbrev FisherMetricTensor.g_det_det (G : FisherMetricTensor) : ℤ := G.2.2
 
 /-- Algebraic determinant-capacity tensor: only the determinant entry survives. -/
-def computeFisherMetric (M : ZornStatisticalVariety) : FisherMetricTensor :=
+def computeFisherMetric (M : ZornStatisticalVariety) : FisherMetricTensor := by
   letI := M.det_invertible
   let invDet := ⅟ M.base.det
-  ⟨0, 0, invDet * invDet⟩
+  exact (0, 0, invDet * invDet)
 
 /-! ### Algebraic information-geometry readbacks -/
 
@@ -628,25 +562,27 @@ This is the truth-cross-section of a proposed Christoffel-symbol formula.  It is
 only an algebraic readback over the determinant-invertible integer owner lane;
 it does not assert a smooth manifold, Levi-Civita connection, geodesic equation,
 or curvature theorem. -/
-structure CapacityConnectionSymbol where
-  gamma_det_det_det : ℤ
-  deriving DecidableEq, Repr
+abbrev CapacityConnectionSymbol := ℤ
+
+/-- Compatibility accessor for the native integer coefficient carrier. -/
+abbrev CapacityConnectionSymbol.gamma_det_det_det
+    (C : CapacityConnectionSymbol) : ℤ := C
 
 /-- Algebraic inverse-cubic determinant-capacity coefficient. -/
-def capacityConnectionZ (M : ZornStatisticalVariety) : CapacityConnectionSymbol :=
+def capacityConnectionZ (M : ZornStatisticalVariety) : CapacityConnectionSymbol := by
   letI := M.det_invertible
   let invDet := ⅟ M.base.det
-  ⟨-2 * (invDet * invDet * invDet)⟩
+  exact -(2 * (invDet * invDet * invDet))
 
 /-- Cleared algebraic KL-style jet.
 
 This is twice the symbolic contrast, avoiding division by `2` over the integer
 owner lane.  It is not a theorem about analytic KL divergence, Taylor expansion,
 or a Fisher-Hessian identification. -/
-def twiceAlgebraicKLJet (M : ZornStatisticalVariety) (d_det : ℤ) : ℤ :=
+def twiceAlgebraicKLJet (M : ZornStatisticalVariety) (d_det : ℤ) : ℤ := by
   letI := M.det_invertible
   let invDet := ⅟ M.base.det
-  2 * (invDet * d_det) + (invDet * invDet) * (d_det * d_det)
+  exact 2 * (invDet * d_det) + (invDet * invDet) * (d_det * d_det)
 
 /-- Two symbolic capacity-defect charges.  These are algebraic labels, not a
 cohomology theory or a geometric lattice-disclination construction. -/
@@ -665,7 +601,7 @@ charge. -/
 def defectWarpedCapacityTensor (M : ZornStatisticalVariety)
     (d : CapacityDefect) : FisherMetricTensor :=
   let g := computeFisherMetric M
-  ⟨g.g_trace_trace, g.g_trace_det, g.g_det_det + capacityDefectCharge d⟩
+  (g.g_trace_trace, g.g_trace_det, g.g_det_det + capacityDefectCharge d)
 
 /-! ### Axiom-clean raw algebraic cores
 
@@ -676,7 +612,7 @@ smooth information geometry. -/
 /-- Raw inverse-cubic capacity coefficient from an explicitly supplied inverse
 determinant coordinate. -/
 def rawCapacityConnection (invDet : ℤ) : CapacityConnectionSymbol :=
-  ⟨-2 * (invDet * invDet * invDet)⟩
+  -2 * (invDet * invDet * invDet)
 
 /-- Axiom-clean definitional readback for the raw inverse-cubic coefficient. -/
 theorem rawCapacityConnection_readback (invDet : ℤ) :

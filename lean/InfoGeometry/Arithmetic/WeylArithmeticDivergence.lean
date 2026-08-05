@@ -13,6 +13,7 @@ payload.
 
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Arithmetic.ProjectivePrimePartition
+import Mathlib.Tactic.Linarith
 
 noncomputable section
 
@@ -192,6 +193,18 @@ belong to a concrete model witness.
 def itakuraSaito (x y : ℝ) : ℝ :=
   x / y - Real.log (x / y) - 1
 
+/-- The scalar Itakura--Saito divergence is nonnegative on positive inputs.
+
+This is the native convexity inequality `log t ≤ t - 1`, applied to
+`t = x / y`; no model-specific witness or wrapper is involved.
+-/
+theorem itakuraSaito_nonneg {x y : ℝ} (hx : 0 < x) (hy : 0 < y) :
+    0 ≤ itakuraSaito x y := by
+  unfold itakuraSaito
+  have hratio : 0 < x / y := div_pos hx hy
+  have hlog := Real.log_le_sub_one_of_pos hratio
+  linarith
+
 /--
 Arithmetic scale-invariant shape divergence between two finite count profiles.
 
@@ -203,6 +216,17 @@ def arithmeticShapeDivergence
   Finset.sum A (fun n =>
     itakuraSaito (arithmeticBaseShape A countsP n)
       (arithmeticBaseShape A countsQ n))
+
+/-- A finite arithmetic shape divergence is nonnegative when both normalized
+profiles are strictly positive on the support. -/
+theorem arithmeticShapeDivergence_nonneg
+    (A : Finset ℕ) (countsP countsQ : ℕ → ℝ)
+    (hP : ∀ n ∈ A, 0 < arithmeticBaseShape A countsP n)
+    (hQ : ∀ n ∈ A, 0 < arithmeticBaseShape A countsQ n) :
+    0 ≤ arithmeticShapeDivergence A countsP countsQ := by
+  unfold arithmeticShapeDivergence
+  exact Finset.sum_nonneg (fun n hn =>
+    itakuraSaito_nonneg (hP n hn) (hQ n hn))
 
 /--
 Relative thermal mass / Weyl conformal factor between two arithmetic profiles.

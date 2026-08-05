@@ -66,8 +66,15 @@ def prepotentialToWDVV {dim : ℕ} (F : GromovWittenPrepotential dim) : FiniteWD
 /--
 A Gauge Transformation on the Moduli Space (e.g., KAN internal gauge).
 -/
-structure GaugeTransformation (dim : ℕ) where
-  transform : Fin dim → Fin dim → ℝ
+abbrev GaugeTransformation (dim : ℕ) := Matrix (Fin dim) (Fin dim) ℝ
+
+namespace GaugeTransformation
+
+abbrev transform {dim : ℕ} (g : GaugeTransformation dim) :
+    Fin dim → Fin dim → ℝ :=
+  g
+
+end GaugeTransformation
 
 /--
 The structure constants are gauge invariant under the Gauge Quotient.
@@ -79,15 +86,14 @@ def isGaugeInvariant {dim : ℕ} (F : GromovWittenPrepotential dim) (g : GaugeTr
       g.transform i a * g.transform j b * g.transform k c * F.F3 a b c
 
 /-- The Identity Gauge Transformation (no-op on the moduli space coordinates). -/
-def GaugeTransformation.id (dim : ℕ) : GaugeTransformation dim where
-  transform i j := if i = j then (1 : ℝ) else (0 : ℝ)
+def GaugeTransformation.id (dim : ℕ) : GaugeTransformation dim :=
+  fun i j => if i = j then (1 : ℝ) else (0 : ℝ)
 
 /-- The Prepotential is trivially invariant under the identity gauge transformation. -/
 theorem gauge_invariant_id {dim : ℕ} (F : GromovWittenPrepotential dim) :
     isGaugeInvariant F (GaugeTransformation.id dim) := by
   intro i j k
-  dsimp [isGaugeInvariant, GaugeTransformation.id]
-  simp
+  simp [isGaugeInvariant, GaugeTransformation.id, GaugeTransformation.transform]
 
 /--
 A KAN Frobenius Manifold is an Arnold-Majorana Network equipped with a Gromov-Witten

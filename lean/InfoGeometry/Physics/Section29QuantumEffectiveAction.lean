@@ -53,9 +53,17 @@ theorem effectiveActionTwoLoop_eq_classical_of_zero_loops
   simp [effectiveActionTwoLoop, h1, h2]
 
 /-- A finite linear RG running datum for a coupling. -/
-structure LinearRunningCoupling where
-  initial : ℝ
-  slope : ℝ
+abbrev LinearRunningCoupling := ℝ × ℝ
+
+namespace LinearRunningCoupling
+
+abbrev initial (C : LinearRunningCoupling) : ℝ :=
+  C.1
+
+abbrev slope (C : LinearRunningCoupling) : ℝ :=
+  C.2
+
+end LinearRunningCoupling
 
 /-- Linear running `g(t) = g₀ - slope * t`, where `t = log μ` is a formal parameter. -/
 def runningCoupling (C : LinearRunningCoupling) (t : ℝ) : ℝ :=

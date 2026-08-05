@@ -35,9 +35,9 @@ def CuntzTraceSocket (n : ℕ) :=
 
 namespace CuntzTraceSocket
 
-def cuntz_trace (S : CuntzTraceSocket n) : CuntzAlg n → ℝ := S.1.1
+abbrev cuntz_trace (S : CuntzTraceSocket n) : CuntzAlg n → ℝ := S.1.1
 
-def cuntz_inv_of_image (S : CuntzTraceSocket n) :
+abbrev cuntz_inv_of_image (S : CuntzTraceSocket n) :
     Matrix (Fin n) (Fin n) ℂ → CuntzAlg n := S.1.2
 
 def trace_cycle (S : CuntzTraceSocket n) :

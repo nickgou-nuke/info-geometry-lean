@@ -62,7 +62,7 @@ def topologicalStarCocone :
 
 noncomputable def topologicalStarReadout :
     topologicalColimit Stage sys ⟶ topologicalColimit Stage sys :=
-  topologicalDirectDescend (topologicalDiagram Stage sys)
+  colimit.desc (topologicalDiagram Stage sys)
     (topologicalStarCocone Stage sys)
 
 omit [Nonempty I] [IsDirectedOrder I] in

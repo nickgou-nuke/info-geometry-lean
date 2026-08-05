@@ -18,13 +18,24 @@ A Wilson loop at a base idempotent sector.
 The holonomy is supported on the base sector on both sides.  This is the
 minimal loop readout used before any typed path calculus is introduced.
 -/
-structure WilsonLoop (A : Type*) [Semiring A] (base : Diamond A) where
-  /-- Loop holonomy at the base sector. -/
-  holonomy : A
-  /-- Left support at the base sector. -/
-  left_support : base.P * holonomy = holonomy
-  /-- Right support at the base sector. -/
-  right_support : holonomy * base.P = holonomy
+abbrev WilsonLoop (A : Type*) [Semiring A] (base : Diamond A) :=
+  {p : A // Diamond.P base * p = p ∧ p * Diamond.P base = p}
+
+namespace WilsonLoop
+
+/-- Loop holonomy at the base sector. -/
+abbrev holonomy {A : Type*} [Semiring A] {base : Diamond A}
+    (L : WilsonLoop A base) : A := L.1
+
+/-- Left support at the base sector. -/
+abbrev left_support {A : Type*} [Semiring A] {base : Diamond A}
+    (L : WilsonLoop A base) : base.P * L.holonomy = L.holonomy := L.2.1
+
+/-- Right support at the base sector. -/
+abbrev right_support {A : Type*} [Semiring A] {base : Diamond A}
+    (L : WilsonLoop A base) : L.holonomy * base.P = L.holonomy := L.2.2
+
+end WilsonLoop
 
 /-- The Wilson loop defect: holonomy minus the base idempotent. -/
 def WilsonLoop.defect {A : Type*} [Ring A] {base : Diamond A}

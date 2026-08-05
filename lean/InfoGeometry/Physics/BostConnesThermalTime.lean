@@ -123,6 +123,97 @@ theorem modularFlowCl11_group_property (t s : ThermalTime) (q : Cl11) :
   have hangle : 2 * (t + s) = 2 * t + 2 * s := by ring
   ext <;> simp [modularFlowCl11, hangle, Real.cos_add, Real.sin_add] <;> ring
 
+/-- Product coordinates for the finite `Cl(1,1)` carrier. -/
+abbrev Cl11Coordinates := ℝ × (ℝ × (ℝ × ℝ))
+
+/-- The coordinate readout of a `Cl(1,1)` element. -/
+def cl11Coordinates (q : Cl11) : Cl11Coordinates :=
+  (q.s, (q.e1, (q.e2, q.e12)))
+
+instance : TopologicalSpace Cl11 :=
+  TopologicalSpace.induced cl11Coordinates inferInstance
+
+theorem continuous_cl11Coordinates : Continuous cl11Coordinates :=
+  continuous_induced_dom
+
+theorem continuous_cl11_s : Continuous (fun q : Cl11 => q.s) :=
+  continuous_cl11Coordinates.fst
+
+theorem continuous_cl11_e1 : Continuous (fun q : Cl11 => q.e1) :=
+  continuous_cl11Coordinates.snd.fst
+
+theorem continuous_cl11_e2 : Continuous (fun q : Cl11 => q.e2) :=
+  continuous_cl11Coordinates.snd.snd.fst
+
+theorem continuous_cl11_e12 : Continuous (fun q : Cl11 => q.e12) :=
+  continuous_cl11Coordinates.snd.snd.snd
+
+theorem continuous_modularFlowCl11 (t : ThermalTime) :
+    Continuous (cl11Coordinates ∘ modularFlowCl11 t) := by
+  have hs : Continuous (fun q : Cl11 => (modularFlowCl11 t q).s) := by
+    simpa [modularFlowCl11] using continuous_cl11_s
+  have he1 : Continuous (fun q : Cl11 => (modularFlowCl11 t q).e1) := by
+    simpa [modularFlowCl11] using continuous_cl11_e1
+  have he2 : Continuous (fun q : Cl11 => (modularFlowCl11 t q).e2) := by
+    have he2a : Continuous (fun q : Cl11 => Real.cos (2 * t) * q.e2) := by
+      simpa using (continuous_const.mul continuous_cl11_e2)
+    have he2b : Continuous (fun q : Cl11 => Real.sin (2 * t) * q.e12) := by
+      simpa using (continuous_const.mul continuous_cl11_e12)
+    simpa [modularFlowCl11] using he2a.sub he2b
+  have he12 : Continuous (fun q : Cl11 => (modularFlowCl11 t q).e12) := by
+    have he12a : Continuous (fun q : Cl11 => Real.sin (2 * t) * q.e2) := by
+      simpa using (continuous_const.mul continuous_cl11_e2)
+    have he12b : Continuous (fun q : Cl11 => Real.cos (2 * t) * q.e12) := by
+      simpa using (continuous_const.mul continuous_cl11_e12)
+    simpa [modularFlowCl11] using he12a.add he12b
+  change Continuous (fun q : Cl11 =>
+    ((modularFlowCl11 t q).s,
+      ((modularFlowCl11 t q).e1,
+        ((modularFlowCl11 t q).e2, (modularFlowCl11 t q).e12))))
+  exact Continuous.prodMk hs
+    (Continuous.prodMk he1 (Continuous.prodMk he2 he12))
+
+theorem continuous_modularFlowCl11_map (t : ThermalTime) :
+    Continuous (modularFlowCl11 t) := by
+  exact (continuous_induced_rng).2 (continuous_modularFlowCl11 t)
+
+/-- The modular flow acts by homeomorphisms on the induced `Cl(1,1)` topology. -/
+noncomputable def modularFlowCl11Homeomorph (t : ThermalTime) :
+    Cl11 ≃ₜ Cl11 where
+  toFun := modularFlowCl11 t
+  invFun := modularFlowCl11 (-t)
+  left_inv := by
+    intro q
+    have h := modularFlowCl11_group_property (-t) t q
+    simpa [modularFlowCl11_zero, add_comm] using h.symm
+  right_inv := by
+    intro q
+    have h := modularFlowCl11_group_property t (-t) q
+    simpa [modularFlowCl11_zero, add_comm] using h.symm
+  continuous_toFun := continuous_modularFlowCl11_map t
+  continuous_invFun := continuous_modularFlowCl11_map (-t)
+
+@[simp] theorem modularFlowCl11Homeomorph_apply
+    (t : ThermalTime) (q : Cl11) :
+    modularFlowCl11Homeomorph t q = modularFlowCl11 t q :=
+  rfl
+
+@[simp] theorem modularFlowCl11Homeomorph_symm_apply
+    (t : ThermalTime) (q : Cl11) :
+    (modularFlowCl11Homeomorph t).symm q = modularFlowCl11 (-t) q :=
+  rfl
+
+theorem modularFlowCl11Homeomorph_comp
+    (s t : ThermalTime) :
+    (modularFlowCl11Homeomorph t).trans (modularFlowCl11Homeomorph s) =
+      modularFlowCl11Homeomorph (t + s) := by
+  apply Homeomorph.ext
+  intro q
+  change modularFlowCl11 s (modularFlowCl11 t q) =
+    modularFlowCl11 (t + s) q
+  have h := modularFlowCl11_group_property s t q
+  simpa [add_comm] using h.symm
+
 /-!
 ## 2. Modular Flow on Zorn Matrices
 -/
@@ -135,12 +226,33 @@ Proof-carrying finite interface for a Zorn modular flow.  The file does not
 construct split-octonion Zorn matrices; it records exactly the data needed for
 norm preservation and the one-parameter group law when such a model is supplied.
 -/
-structure ZornModularFlowModel (ZornMatrix : Type) where
-  flow : ThermalTime → ZornMatrix → ZornMatrix
-  norm : ZornMatrix → ℝ
-  norm_preserved : ∀ t M, norm (flow t M) = norm M
-  flow_zero : ∀ M, flow 0 M = M
-  flow_add : ∀ t s M, flow (t + s) M = flow t (flow s M)
+abbrev ZornModularFlowModel (ZornMatrix : Type) :=
+  Subtype (fun p : (ThermalTime → ZornMatrix → ZornMatrix) × (ZornMatrix → ℝ) =>
+    (∀ t M, p.2 (p.1 t M) = p.2 M) ∧
+    (∀ M, p.1 0 M = M) ∧
+    (∀ t s M, p.1 (t + s) M = p.1 t (p.1 s M)))
+
+namespace ZornModularFlowModel
+
+abbrev flow {ZornMatrix : Type} (model : ZornModularFlowModel ZornMatrix) :
+    ThermalTime → ZornMatrix → ZornMatrix := model.1.1
+
+abbrev norm {ZornMatrix : Type} (model : ZornModularFlowModel ZornMatrix) :
+    ZornMatrix → ℝ := model.1.2
+
+abbrev norm_preserved {ZornMatrix : Type}
+    (model : ZornModularFlowModel ZornMatrix) :
+    ∀ t M, model.norm (model.flow t M) = model.norm M := model.2.1
+
+abbrev flow_zero {ZornMatrix : Type}
+    (model : ZornModularFlowModel ZornMatrix) :
+    ∀ M, model.flow 0 M = M := model.2.2.1
+
+abbrev flow_add {ZornMatrix : Type}
+    (model : ZornModularFlowModel ZornMatrix) :
+    ∀ t s M, model.flow (t + s) M = model.flow t (model.flow s M) := model.2.2.2
+
+end ZornModularFlowModel
 
 /--
 Modular flow on Zorn matrices.
@@ -277,30 +389,22 @@ theorem bostConnesDirichletTerm_of_ne_zero
       Real.exp (-beta * Real.log (n : ℝ)) := by
   simp [bostConnesDirichletTerm, hn]
 
-/--
-Explicit data for a symmetry group acting on a supplied state space.
-The finite bridge does not construct the Bost-Connes idele-class action; any
-nontrivial symmetry claim must provide this group, action, and the two action
-laws as witness data.
+/-!
+The finite symmetry interface is Mathlib's native `MulAction`.  No custom
+Bost--Connes action packet is needed: the identity and composition laws are
+the standard `one_smul` and `mul_smul` theorems.
 -/
-structure BostConnesSymmetryModel where
-  SymmetryGroup : Type
-  [group : Group SymmetryGroup]
-  State : Type
-  action : SymmetryGroup → State → State
-  action_one : ∀ x, action 1 x = x
-  action_mul : ∀ g h x, action (g * h) x = action g (action h x)
 
-attribute [instance] BostConnesSymmetryModel.group
+theorem symmetryAction_one
+    {G State : Type*} [Group G] [MulAction G State] (x : State) :
+    (1 : G) • x = x :=
+  one_smul G x
 
-theorem symmetryAction_one (M : BostConnesSymmetryModel) (x : M.State) :
-    M.action 1 x = x :=
-  M.action_one x
-
-theorem symmetryAction_mul (M : BostConnesSymmetryModel)
-    (g h : M.SymmetryGroup) (x : M.State) :
-    M.action (g * h) x = M.action g (M.action h x) :=
-  M.action_mul g h x
+theorem symmetryAction_mul
+    {G State : Type*} [Group G] [MulAction G State]
+    (g h : G) (x : State) :
+    (g * h) • x = g • h • x :=
+  mul_smul g h x
 
 /-!
 ## 5. Connection to Mersenne Hierarchy

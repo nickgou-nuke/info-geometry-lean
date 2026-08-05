@@ -50,12 +50,12 @@ def topologicalDiagram (S : ContinuousAlbertTransitionSystem J) :
 
 noncomputable def topologicalColimit
     (S : ContinuousAlbertTransitionSystem J) : TopCat :=
-  topologicalDirectColimit (topologicalDiagram S)
+  colimit (topologicalDiagram S)
 
 noncomputable def topologicalInjection
     (S : ContinuousAlbertTransitionSystem J) (i : J) :
     TopCat.of AlbertMatrix ⟶ topologicalColimit S :=
-  topologicalDirectInjection (topologicalDiagram S) i
+  colimit.ι (topologicalDiagram S) i
 
 @[reassoc (attr := simp)]
 theorem topologicalInjection_transition
@@ -63,7 +63,7 @@ theorem topologicalInjection_transition
     {i j : J} (f : i ⟶ j) :
     (topologicalDiagram S).map f ≫ topologicalInjection S j =
       topologicalInjection S i := by
-  exact topologicalDirectInjection_naturality (topologicalDiagram S) f
+  exact colimit.w (topologicalDiagram S) f
 
 theorem topologicalInjection_transition_apply
     (S : ContinuousAlbertTransitionSystem J)

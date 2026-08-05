@@ -1,0 +1,14 @@
+{
+  "anisotropic_factors": 5,
+  "coefficient_field": "QQ",
+  "factor_witness_verified": true,
+  "full_real_O55_surjectivity": false,
+  "orthogonal_product_verified": true,
+  "quadratic_signature": [
+    5,
+    5
+  ],
+  "residual_identity_verified": true,
+  "test_product_length": 5,
+  "universal_cartan_dieudonne_theorem": false
+}

@@ -1,7 +1,11 @@
 import Mathlib
 
 /-!
-# Lean 4 / mathlib4 surface for semilinear-map paper snippets
+# Lean 4 / mathlib4 surface smoke-test for semilinear paper snippets
+
+This file is an explicit API compatibility check, not a canonical theorem
+owner.  Its `#check` declarations and examples are intentionally kept out of
+the umbrella imports.
 -/
 
 noncomputable section

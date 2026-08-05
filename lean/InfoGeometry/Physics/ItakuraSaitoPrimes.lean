@@ -20,9 +20,15 @@ noncomputable def itakura_saito (P Q : ℝ) : ℝ :=
   The Prime Log-Generating Potential (Riemann Zeta).
   Here we abstract it as a function of the thermodynamic beta.
 -/
-structure PrimeGeneratingPotential where
-  zeta : ℝ → ℝ
-  zeta_pos : ∀ β, 0 < zeta β
+abbrev PrimeGeneratingPotential :=
+  {zeta : ℝ → ℝ // ∀ β, 0 < zeta β}
+
+namespace PrimeGeneratingPotential
+
+abbrev zeta (P : PrimeGeneratingPotential) : ℝ → ℝ := P.1
+abbrev zeta_pos (P : PrimeGeneratingPotential) : ∀ β, 0 < P.zeta β := P.2
+
+end PrimeGeneratingPotential
 
 /--
   The Regularized Free Energy.

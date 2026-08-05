@@ -28,16 +28,16 @@ open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 abbrev ColorSlot := Fin 3
 
 /-- Positive diagonal scalar/idempotent slot. -/
-def scalarPlus : SplitOct := ePlus
+abbrev scalarPlus : SplitOct := ePlus
 
 /-- Negative diagonal scalar/idempotent slot. -/
-def scalarMinus : SplitOct := eMinus
+abbrev scalarMinus : SplitOct := eMinus
 
 /-- Upper `3`-slot readout. -/
-def upperSlot (i : ColorSlot) : SplitOct := up i
+abbrev upperSlot (i : ColorSlot) : SplitOct := up i
 
 /-- Lower `3`-slot readout. -/
-def lowerSlot (i : ColorSlot) : SplitOct := down i
+abbrev lowerSlot (i : ColorSlot) : SplitOct := down i
 
 /-- The two scalar slots are idempotent and mutually orthogonal. -/
 theorem scalar_slots_orthogonal_idempotents :

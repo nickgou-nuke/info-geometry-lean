@@ -10,11 +10,8 @@ def Sr73 : Nucleus := (38, 35)
 def Br73 : Nucleus := (35, 38)
 
 /-- The A=73 MirrorPair instance for Sr-73 and Br-73. -/
-def A73Pair : MirrorPair where
-  nuc1 := Sr73
-  nuc2 := Br73
-  mirror_cond_Z := by rfl
-  mirror_cond_N := by rfl
+def A73Pair : MirrorPair :=
+  ⟨(Sr73, Br73), by constructor <;> rfl⟩
 
 /-- Nuclear state properties including spin. -/
 abbrev A73State := ℝ × (ℚ × ℤ)

@@ -16,8 +16,6 @@ def PrimonGasProperty := ∀ (β : ℝ), β > 1 → ℝ
 
 namespace PrimonGasProperty
 
-def primon_partition_function (P : PrimonGasProperty) : ∀ (β : ℝ), β > 1 → ℝ := P
-
 end PrimonGasProperty
 
 /-- Distinguished parameter value used by this packet. -/
@@ -29,21 +27,15 @@ def MirrorBalanceC2 :=
 
 namespace MirrorBalanceC2
 
-def higgs_branch_dim (m : MirrorBalanceC2) : ℕ := m.1.1
-def coulomb_branch_dim (m : MirrorBalanceC2) : ℕ := m.1.2
-
 theorem mirror_balance (m : MirrorBalanceC2) :
-    m.higgs_branch_dim = m.coulomb_branch_dim :=
+    m.1.1 = m.1.2 :=
   m.2.1
 
 theorem difference_zero (m : MirrorBalanceC2) :
-    m.higgs_branch_dim - m.coulomb_branch_dim = 0 :=
+    m.1.1 - m.1.2 = 0 :=
   m.2.2
 
 end MirrorBalanceC2
 
-theorem mirrorBalanceC2_difference_zero (m : MirrorBalanceC2) :
-  m.higgs_branch_dim - m.coulomb_branch_dim = 0 :=
-  m.difference_zero
 
 end InfoGeometry.Physics.BostConnesMirrorSymmetry

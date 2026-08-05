@@ -134,8 +134,14 @@ type: the finite index `ι` is retained as the state-space parameter, while the
 functional and body positivity laws are supplied as data.
 -/
 
-structure InformationSuperGasFunctional where
-  weylCharacter : ℝ
+abbrev InformationSuperGasFunctional := ℝ
+
+namespace InformationSuperGasFunctional
+
+/-- Compatibility accessor for the native scalar Weyl-character readout. -/
+abbrev weylCharacter (F : InformationSuperGasFunctional) : ℝ := F
+
+end InformationSuperGasFunctional
 
 structure InformationSuperGasEntropyBody where
   production : ℝ

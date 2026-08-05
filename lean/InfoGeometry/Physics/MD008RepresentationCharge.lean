@@ -111,50 +111,11 @@ def weightE21 : Weight := (-1, 1)
 /-- Matrix-unit weight shadow: `E₂₂` has left/right `σ₃` weights `(-1,-1)`. -/
 def weightE22 : Weight := (-1, -1)
 
-/-- The already-proved matrix-unit eigenvalues are the four finite Cartan weights. -/
-theorem matrix_unit_cartan_weight_packet :
-    leftMul UnifiedMatrixBasis.σ₃ E11 = E11 ∧
-    rightMul UnifiedMatrixBasis.σ₃ E11 = E11 ∧
-    leftMul UnifiedMatrixBasis.σ₃ E12 = E12 ∧
-    rightMul UnifiedMatrixBasis.σ₃ E12 = -E12 ∧
-    leftMul UnifiedMatrixBasis.σ₃ E21 = -E21 ∧
-    rightMul UnifiedMatrixBasis.σ₃ E21 = E21 ∧
-    leftMul UnifiedMatrixBasis.σ₃ E22 = -E22 ∧
-    rightMul UnifiedMatrixBasis.σ₃ E22 = -E22 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact sigma3_E11_joint_eigen.1
-  · exact sigma3_E11_joint_eigen.2
-  · exact sigma3_E12_joint_eigen.1
-  · exact sigma3_E12_joint_eigen.2
-  · exact sigma3_E21_joint_eigen.1
-  · exact sigma3_E21_joint_eigen.2
-  · exact sigma3_E22_joint_eigen.1
-  · exact sigma3_E22_joint_eigen.2
-
 /-- All four `M₂(ℂ)` matrix-unit weights are odd/odd in the finite parity quotient. -/
 theorem matrix_unit_weight_charges :
     charge weightE11 = (1, 1) ∧ charge weightE12 = (1, 1) ∧
     charge weightE21 = (1, 1) ∧ charge weightE22 = (1, 1) := by
   simp [charge, weightE11, weightE12, weightE21, weightE22]
-
-/-- Repaired theorem-safe Chapter 8 finite representation-charge packet. -/
-theorem repaired_MD008_representation_charge_packet (w : Weight) (a b : ℤ) :
-    charge alphaLPlus = (0, 0) ∧
-    charge alphaRPlus = (0, 0) ∧
-    charge (addWeight w (rootShift a b)) = charge w ∧
-    (charge w = (0, 0) ∨ charge w = (1, 0) ∨
-      charge w = (0, 1) ∨ charge w = (1, 1)) ∧
-    charge weightE12 = (1, 1) ∧
-    leftMul UnifiedMatrixBasis.σ₃ E12 = E12 ∧
-    rightMul UnifiedMatrixBasis.σ₃ E12 = -E12 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · simp [charge, alphaLPlus]
-  · simp [charge, alphaRPlus]
-  · exact charge_add_rootShift w a b
-  · exact charge_four_representatives w
-  · exact matrix_unit_weight_charges.2.1
-  · exact sigma3_E12_joint_eigen.1
-  · exact sigma3_E12_joint_eigen.2
 
 end InfoGeometry.Physics.MD008RepresentationCharge
 

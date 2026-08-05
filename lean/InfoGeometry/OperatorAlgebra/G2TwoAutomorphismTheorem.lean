@@ -184,25 +184,6 @@ theorem psu33_order_is_half_g2two : psu33Order * 2 = g2twoOrder := by
 theorem pgl33_order_ne_g2two_order : pgl33Order ≠ g2twoOrder := by
   norm_num [pgl33Order, g2twoOrder]
 
-theorem splitOctF2_basis_product_packet :
-    mul ePlus ePlus = ePlus ∧
-      mul eMinus eMinus = eMinus ∧
-      mul ePlus eMinus = zero ∧
-      mul eMinus ePlus = zero ∧
-      mul up0 up0 = zero ∧
-      mul up1 up1 = zero ∧
-      mul up2 up2 = zero ∧
-      mul down0 down0 = zero ∧
-      mul down1 down1 = zero ∧
-      mul down2 down2 = zero ∧
-      mul up0 down0 = ePlus ∧
-      mul down0 up0 = eMinus ∧
-      mul up0 up1 = down2 ∧
-      mul up1 up0 = down2 ∧
-      mul down0 down1 = up2 ∧
-      mul down1 down0 = up2 := by
-  decide
-
 /-- Predicate for a unital split-octonion algebra automorphism over `F₂`. -/
 def IsSplitOctF2Aut (f : SplitOctF2 ≃ SplitOctF2) : Prop :=
   f one = one ∧ ∀ X Y : SplitOctF2, f (mul X Y) = mul (f X) (f Y)

@@ -31,13 +31,13 @@ def SL2RDatum : Type :=
 
 namespace SL2RDatum
 
-def a (g : SL2RDatum) : ℝ := g.1.1
+abbrev a (g : SL2RDatum) : ℝ := g.1.1
 
-def b (g : SL2RDatum) : ℝ := g.1.2.1
+abbrev b (g : SL2RDatum) : ℝ := g.1.2.1
 
-def c (g : SL2RDatum) : ℝ := g.1.2.2.1
+abbrev c (g : SL2RDatum) : ℝ := g.1.2.2.1
 
-def d (g : SL2RDatum) : ℝ := g.1.2.2.2
+abbrev d (g : SL2RDatum) : ℝ := g.1.2.2.2
 
 def det_eq_one (g : SL2RDatum) : a g * d g - b g * c g = 1 := by
   exact g.2

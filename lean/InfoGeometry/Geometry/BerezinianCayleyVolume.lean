@@ -61,11 +61,14 @@ def operatorCayleyTransform
 A Cayley disk point is not merely an operator `U`; it remembers the
 upper-half-plane point and the denominator inverse used to construct it.
 -/
-structure CayleyDiskPoint where
-  source : BilingualUpperHalfPlane D
-  denominator : CayleyDenominator source
+abbrev CayleyDiskPoint :=
+  Σ source : BilingualUpperHalfPlane D, CayleyDenominator source
 
 namespace CayleyDiskPoint
+
+abbrev source (X : CayleyDiskPoint (D := D)) : BilingualUpperHalfPlane D := X.1
+
+abbrev denominator (X : CayleyDiskPoint (D := D)) : CayleyDenominator X.source := X.2
 
 /-- The Cayley operator determined by the source and its invertible denominator. -/
 abbrev U (X : CayleyDiskPoint (D := D)) : EndH :=
@@ -84,19 +87,25 @@ This is the formal place where the Moore-Penrose metric sector and the
 Drazin/topological sector should enter. Do not hard-code those sectors as
 strings or `sorryAx`; package their projectors and algebraic laws.
 -/
-structure SectorSplit where
-  bosonic : EndH
-  fermionic : EndH
-  bosonic_idem :
-    bosonic.comp bosonic = bosonic
-  fermionic_idem :
-    fermionic.comp fermionic = fermionic
-  orthogonal_bf :
-    bosonic.comp fermionic = 0
-  orthogonal_fb :
-    fermionic.comp bosonic = 0
-  complete :
-    bosonic + fermionic = 1
+abbrev SectorSplit :=
+  {P : EndH × EndH //
+    P.1.comp P.1 = P.1 ∧
+    P.2.comp P.2 = P.2 ∧
+    P.1.comp P.2 = 0 ∧
+    P.2.comp P.1 = 0 ∧
+    P.1 + P.2 = 1}
+
+namespace SectorSplit
+
+abbrev bosonic (S : SectorSplit (E := E)) : EndH := S.1.1
+abbrev fermionic (S : SectorSplit (E := E)) : EndH := S.1.2
+abbrev bosonic_idem (S : SectorSplit (E := E)) : S.bosonic.comp S.bosonic = S.bosonic := S.2.1
+abbrev fermionic_idem (S : SectorSplit (E := E)) : S.fermionic.comp S.fermionic = S.fermionic := S.2.2.1
+abbrev orthogonal_bf (S : SectorSplit (E := E)) : S.bosonic.comp S.fermionic = 0 := S.2.2.2.1
+abbrev orthogonal_fb (S : SectorSplit (E := E)) : S.fermionic.comp S.bosonic = 0 := S.2.2.2.2.1
+abbrev complete (S : SectorSplit (E := E)) : S.bosonic + S.fermionic = 1 := S.2.2.2.2.2
+
+end SectorSplit
 
 /-- Compression of an operator to a sector projector. -/
 def sectorCompress (P T : EndH) : EndH :=

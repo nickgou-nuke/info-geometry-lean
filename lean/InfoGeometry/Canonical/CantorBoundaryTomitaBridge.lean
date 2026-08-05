@@ -31,4 +31,14 @@ theorem binary_readout_tomita_fixed_state_on_critical_line
   exact binary_readout_fixed_state_on_critical_line
     tomitaWordConjugation w (fun n => rfl) h_invariant
 
+theorem binary_readout_tomita_fixed_state_eq_half
+    (w : InfiniteBinaryWordSpace)
+    (h_invariant :
+      binaryReadout (tomitaWordConjugation w) = star (binaryReadout w)) :
+    binaryReadout w = (1 / 2 : ℂ) := by
+  apply Complex.ext
+  · simpa using binary_readout_tomita_fixed_state_on_critical_line w h_invariant
+  · simpa using
+      InfoGeometry.Canonical.CantorBoundaryComplexReadout.binaryReadout_im w
+
 end InfoGeometry.Canonical.CantorBoundaryTomitaBridge

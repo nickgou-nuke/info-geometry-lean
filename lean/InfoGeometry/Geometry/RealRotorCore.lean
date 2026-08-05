@@ -14,6 +14,7 @@ The complex compatibility layer, when needed, must be downstream only.
 
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathlib.LinearAlgebra.Matrix.SpecialLinearGroup
 import InfoGeometry.Geometry.RealUpperHalfPlane
 
 noncomputable section
@@ -21,12 +22,17 @@ noncomputable section
 namespace InfoGeometry.Geometry
 
 /-- A real `SL₂(ℝ)` matrix, written by entries. -/
-structure SL2RMatrix where
-  a : ℝ
-  b : ℝ
-  c : ℝ
-  d : ℝ
-  det_eq_one : a * d - b * c = 1
+abbrev SL2RMatrix := Matrix.SpecialLinearGroup (Fin 2) ℝ
+
+namespace SL2RMatrix
+
+abbrev a (g : SL2RMatrix) : ℝ := g.1 0 0
+abbrev b (g : SL2RMatrix) : ℝ := g.1 0 1
+abbrev c (g : SL2RMatrix) : ℝ := g.1 1 0
+abbrev d (g : SL2RMatrix) : ℝ := g.1 1 1
+abbrev det_eq_one (g : SL2RMatrix) : g.1.det = 1 := g.2
+
+end SL2RMatrix
 
 /--
 Real chiral phase element.
@@ -34,11 +40,12 @@ Real chiral phase element.
 Interpretation: `scalar + bivector * J`, where `J² = -1`.
 This is not a complex number. It is a real two-component rotor coordinate.
 -/
-structure RealChiralPhase where
-  scalar : ℝ
-  bivector : ℝ
+abbrev RealChiralPhase := ℝ × ℝ
 
 namespace RealChiralPhase
+
+abbrev scalar (z : RealChiralPhase) : ℝ := z.1
+abbrev bivector (z : RealChiralPhase) : ℝ := z.2
 
 /-- Norm square of a real chiral phase. -/
 def normSq (z : RealChiralPhase) : ℝ :=
@@ -64,13 +71,13 @@ theorem normSq_eq_zero_iff (z : RealChiralPhase) :
 
 /-- Multiplication in the real rotor plane, with `J² = -1`. -/
 def mul (z w : RealChiralPhase) : RealChiralPhase where
-  scalar := z.scalar * w.scalar - z.bivector * w.bivector
-  bivector := z.scalar * w.bivector + z.bivector * w.scalar
+  fst := z.scalar * w.scalar - z.bivector * w.bivector
+  snd := z.scalar * w.bivector + z.bivector * w.scalar
 
 /-- Identity chiral phase. -/
 def one : RealChiralPhase where
-  scalar := 1
-  bivector := 0
+  fst := 1
+  snd := 0
 
 instance : One RealChiralPhase where
   one := one
@@ -101,10 +108,11 @@ The normalized rotor associated to a nonzero chiral phase.
 
 This is the internal real rotor readout; it is not a complex phase.
 -/
-structure NormalizedRotor where
-  scalar : ℝ
-  bivector : ℝ
-  normSq : scalar ^ 2 + bivector ^ 2 = 1
+abbrev NormalizedRotor := {z : RealChiralPhase // normSq z = 1}
+
+abbrev NormalizedRotor.scalar (z : NormalizedRotor) : ℝ := z.1.scalar
+abbrev NormalizedRotor.bivector (z : NormalizedRotor) : ℝ := z.1.bivector
+abbrev NormalizedRotor.normSq (z : NormalizedRotor) : z.1.normSq = 1 := z.2
 
 end RealChiralPhase
 
@@ -113,10 +121,7 @@ Unit real Spin2 rotor.
 
 This is the real replacement for a unit complex phase.
 -/
-structure Spin2 where
-  scalar : ℝ
-  bivector : ℝ
-  unit_norm : scalar ^ 2 + bivector ^ 2 = 1
+abbrev Spin2 := RealChiralPhase.NormalizedRotor
 
 /--
 The unnormalized real modular denominator:
@@ -128,8 +133,8 @@ No complex numbers are used.
 def realModularDenominator
     (g : SL2RMatrix)
     (τ : RealUpperHalfPlane) : RealChiralPhase where
-  scalar := g.c * τ.x + g.d
-  bivector := g.c * τ.y
+  fst := g.c * τ.x + g.d
+  snd := g.c * τ.y
 
 /-- Denominator norm square: `(c x + d)^2 + (c y)^2`. -/
 def realModularDenominatorNormSq
@@ -176,14 +181,11 @@ def realMoebiusApply
     (g : SL2RMatrix)
     (τ : RealUpperHalfPlane)
     (hden : 0 < realMoebiusDenSq g τ) :
-    RealUpperHalfPlane where
-  x :=
-    ((g.a * τ.x + g.b) * (g.c * τ.x + g.d)
-      + g.a * g.c * τ.y ^ 2) / realMoebiusDenSq g τ
-  y :=
-    τ.y / realMoebiusDenSq g τ
-  y_pos := by
-    exact div_pos τ.y_pos hden
+    RealUpperHalfPlane :=
+  ( ((g.a * τ.x + g.b) * (g.c * τ.x + g.d)
+      + g.a * g.c * τ.y ^ 2) / realMoebiusDenSq g τ,
+    ⟨τ.y / realMoebiusDenSq g τ, by
+      exact div_pos τ.y_pos hden⟩ )
 
 /-- The real Möbius action lands back in the positive-height half-plane. -/
 theorem realMoebiusApply_y_pos

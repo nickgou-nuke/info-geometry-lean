@@ -40,11 +40,16 @@ namespace InfoGeometry.Physics.MD015QuantumCorrectionsFinite
 open InfoGeometry.Physics.Section29QuantumEffectiveAction
 
 /-- Finite scalar coefficients for a formal three-loop effective action. -/
-structure Loop3ActionDatum where
-  classical : ℝ
-  oneLoop : ℝ
-  twoLoop : ℝ
-  threeLoop : ℝ
+abbrev Loop3ActionDatum := ℝ × ℝ × ℝ × ℝ
+
+namespace Loop3ActionDatum
+
+abbrev classical (D : Loop3ActionDatum) : ℝ := D.1
+abbrev oneLoop (D : Loop3ActionDatum) : ℝ := D.2.1
+abbrev twoLoop (D : Loop3ActionDatum) : ℝ := D.2.2.1
+abbrev threeLoop (D : Loop3ActionDatum) : ℝ := D.2.2.2
+
+end Loop3ActionDatum
 
 /-- Forget the third-loop slot to reuse the Section 29 two-loop owner. -/
 def Loop3ActionDatum.toTwoLoop (D : Loop3ActionDatum) : LoopActionDatum :=
@@ -128,28 +133,6 @@ theorem quaternionFluctuation_normSq_add (Q0 q : Section8.Quat) :
       Section8.Quat.normSq Q0 + 2 * quatDot Q0 q + Section8.Quat.normSq q := by
   simp [quatDot, Section8.Quat.normSq, Section8.Quat.dot]
   ring
-
-/-- Repaired theorem-safe MD015 finite quantum-correction packet. -/
-theorem repaired_MD015_quantum_corrections_packet
-    (D : Loop3ActionDatum) (hbar : ℝ) (T U : ℂ)
-    (S0 L H delta inverseKernel dR dS : ℝ) (hL : L = 0)
-    (Q0 q : Section8.Quat) :
-    effectiveActionThreeLoop D hbar =
-      effectiveActionTwoLoop D.toTwoLoop hbar + hbar ^ 3 * D.threeLoop ∧
-    effectiveActionThreeLoop D hbar - D.classical =
-      hbar * D.oneLoop + hbar ^ 2 * D.twoLoop + hbar ^ 3 * D.threeLoop ∧
-    oneLoopTraceLogShadow (T + U) = oneLoopTraceLogShadow T + oneLoopTraceLogShadow U ∧
-    quadraticFluctuationAction S0 L H delta - S0 = (1 / 2 : ℝ) * H * delta ^ 2 ∧
-    frgScalarRHS inverseKernel (dR + dS) = frgScalarRHS inverseKernel dR + frgScalarRHS inverseKernel dS ∧
-    Section8.Quat.normSq (Q0 + q) =
-    Section8.Quat.normSq Q0 + 2 * quatDot Q0 q + Section8.Quat.normSq q := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact effectiveActionThreeLoop_eq_twoLoop_add_cubic D hbar
-  · exact effectiveActionThreeLoop_sub_classical D hbar
-  · exact oneLoopTraceLogShadow_add T U
-  · exact quadraticFluctuationAction_sub_background_of_stationary S0 L H delta hL
-  · exact frgScalarRHS_add_cutoffDerivative inverseKernel dR dS
-  · exact quaternionFluctuation_normSq_add Q0 q
 
 end InfoGeometry.Physics.MD015QuantumCorrectionsFinite
 

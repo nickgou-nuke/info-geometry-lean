@@ -163,26 +163,23 @@ def FiniteStokesGate (M : ModularBerryCarrier G X Rotor Bivector) : Prop :=
 def AnalyticCuspGate (M : ModularBerryCarrier G X Rotor Bivector) : Prop :=
   Tendsto M.boundarySymmetryReadout atTop (nhds M.totalBoundaryAnomaly)
 
-/-- Specialization into the actual modular Berry data. -/
-structure GeometricSpecialization (M : ModularBerryCarrier G X Rotor Bivector) where
-  finite_stokes : ∀ Y : ℝ, M.bulkInvariant Y = M.boundarySymmetryReadout Y
-  cusp_convergence : Tendsto M.boundarySymmetryReadout atTop (nhds M.totalBoundaryAnomaly)
-
 /--
 Main bridge theorem.
 
 The exponentiated bulk rotor is determined by the ordered boundary anomalies
 once the finite Stokes law and cusp limit are supplied.
 -/
-theorem bulkInvariant_limit_eq_totalAnomaly_of_specialization
+theorem bulkInvariant_limit_eq_totalAnomaly_of_stokes_and_cusp
     {M : ModularBerryCarrier G X Rotor Bivector}
-    (hM : GeometricSpecialization M) :
+    (h_stokes : ∀ Y : ℝ, M.bulkInvariant Y = M.boundarySymmetryReadout Y)
+    (h_cusp : Tendsto M.boundarySymmetryReadout atTop
+      (nhds M.totalBoundaryAnomaly)) :
     Tendsto M.bulkInvariant atTop (nhds M.totalBoundaryAnomaly) := by
   have hfun : M.bulkInvariant = M.boundarySymmetryReadout := by
     funext Y
-    exact hM.finite_stokes Y
+    exact h_stokes Y
   rw [hfun]
-  exact hM.cusp_convergence
+  exact h_cusp
 
 /-- Canonical wrapper around the verified bridge data. -/
 def canonicalModularBerry
@@ -190,34 +187,14 @@ def canonicalModularBerry
     ModularBerryCarrier G X Rotor Bivector :=
   { bridgeData := D }
 
-/-- The canonical specialization induced by the bridge data. -/
-def canonicalSpecialization
-    (D : RealModularBerryBridgeData G X Rotor Bivector) :
-    GeometricSpecialization (canonicalModularBerry D) where
-  finite_stokes := fun Y => D.finite_stokes Y
-  cusp_convergence := by
-    have hmul :
-        Tendsto
-          (fun Y : ℝ =>
-            D.stabilizerProduct * D.cocycle D.cuspGenerator (D.cuspRay Y))
-          atTop
-          (nhds (D.stabilizerProduct * D.cuspAnomaly)) := by
-      exact tendsto_const_nhds.mul D.cusp_tendsto
-    simpa [
-      canonicalModularBerry,
-      ModularBerryCarrier.boundarySymmetryReadout,
-      ModularBerryCarrier.totalBoundaryAnomaly,
-      RealModularBerryBridgeData.boundaryRotor
-    ] using hmul
-
 /-- Canonical bulk-to-boundary limit theorem. -/
 theorem canonical_bulkInvariant_eq_totalAnomaly
     (D : RealModularBerryBridgeData G X Rotor Bivector) :
     Tendsto (canonicalModularBerry D).bulkInvariant
       atTop
-      (nhds (canonicalModularBerry D).totalBoundaryAnomaly) :=
-  bulkInvariant_limit_eq_totalAnomaly_of_specialization
-    (canonicalSpecialization D)
+      (nhds (canonicalModularBerry D).totalBoundaryAnomaly) := by
+  change Tendsto D.bulkRotor atTop (nhds D.boundaryRotor)
+  exact D.bulkBoundary_tendsto
 
 end ModularBerryCarrier
 

@@ -87,10 +87,12 @@ end D4RootLabel
 /--
 Chiral spinor weight label for `D₄`: `1/2 (±e₁ ± e₂ ± e₃ ± e₄)`.
 -/
-structure D4SpinorWeight where
-  signs : Fin 4 → D4Sign
+abbrev D4SpinorWeight := Fin 4 → D4Sign
 
 namespace D4SpinorWeight
+
+abbrev signs (W : D4SpinorWeight) : Fin 4 → D4Sign :=
+  W
 
 /-- Chirality is derived from the parity of the sign label. -/
 def positiveChirality (W : D4SpinorWeight) : Prop :=

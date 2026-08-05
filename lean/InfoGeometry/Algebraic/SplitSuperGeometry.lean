@@ -177,14 +177,14 @@ the Clifford carrier has a parity involution;
 supertrace, Berezinian, and supervolume are derived from this involution,
 not from coordinate-level alternating sums.
 -/
-structure SplitSuperGeometry (n : ℕ) where
-  parity : ParityInvolution (Cl_nn n)
+abbrev SplitSuperGeometry (n : ℕ) := ParityInvolution (Cl_nn n)
 
 namespace SplitSuperGeometry
 
+abbrev parity {n : ℕ} (S : SplitSuperGeometry n) : ParityInvolution (Cl_nn n) := S
+
 /-- Canonical split supergeometry from the Clifford grade involution. -/
-def canonical (n : ℕ) : SplitSuperGeometry n where
-  parity := splitCliffordParityInvolution n
+abbrev canonical (n : ℕ) : SplitSuperGeometry n := splitCliffordParityInvolution n
 
 /-- Supertrace of an endomorphism of the split Clifford carrier. -/
 def supertrace
@@ -266,14 +266,14 @@ Split Clifford supergeometry package.
 This packages the canonical parity structure on `Cl(n,n)`.
 The determinant/Berezinian data is intentionally separate.
 -/
-structure SplitSuperCarrier (n : ℕ) where
-  parity : ParityInvolution (Cl_nn n)
+abbrev SplitSuperCarrier (n : ℕ) := ParityInvolution (Cl_nn n)
 
 namespace SplitSuperCarrier
 
+abbrev parity {n : ℕ} (S : SplitSuperCarrier n) : ParityInvolution (Cl_nn n) := S
+
 /-- The standard split Clifford super carrier using the Clifford grade involution. -/
-def standard (n : ℕ) : SplitSuperCarrier n where
-  parity := splitCliffordParityInvolution n
+def standard (n : ℕ) : SplitSuperCarrier n := splitCliffordParityInvolution n
 
 end SplitSuperCarrier
 

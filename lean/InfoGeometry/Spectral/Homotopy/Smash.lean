@@ -16,9 +16,8 @@ namespace InfoGeometry.Spectral.Homotopy.Smash
 open InfoGeometry.Spectral.Homotopy.Suspension
 
 /-- Finite pointed smash readout, represented by product of carriers. -/
-def SmashProduct (X Y : PointedReadout) : PointedReadout where
-  carrier := X.carrier × Y.carrier
-  base := (X.base, Y.base)
+def SmashProduct (X Y : PointedReadout) : PointedReadout :=
+  Pointed.mk (X.carrier × Y.carrier) (X.base, Y.base)
 
 infixr:70 " ⋀ " => SmashProduct
 

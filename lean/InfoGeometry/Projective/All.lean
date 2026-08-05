@@ -45,6 +45,8 @@ import InfoGeometry.Projective.Quadrics.SignatureDeterminant
 import InfoGeometry.Projective.Quadrics.QuadricSliceSignPacket
 import InfoGeometry.Projective.KleinQuadric
 import InfoGeometry.Projective.TwistorConfigurationSpace
+import InfoGeometry.Projective.Conf3ArnoldDifferentialForms
+import InfoGeometry.Feynman.FeynmanTwistedDeRhamComplex
 import InfoGeometry.Projective.KleinQuadricMonodromy
 import InfoGeometry.Projective.KleinQuadricGrothendieckDeRham
 import InfoGeometry.Projective.KleinQuadricTime
@@ -76,7 +78,7 @@ import InfoGeometry.Projective.SplitOctonions.ZornLogVolume
 import InfoGeometry.Projective.SplitOctonions.ZornFlowRelativeVolume
 import InfoGeometry.Projective.SplitOctonions.ZornFlowRelativeVolumeAbstract
 import InfoGeometry.Projective.SplitOctonions.Polar
-import InfoGeometry.Projective.SplitOctonions.PolarConcrete
+import InfoGeometry.Projective.SplitOctonions.PolarIncidenceConcrete
 import InfoGeometry.Projective.SplitOctonions.SplitOctonionsColorStabilizer
 import InfoGeometry.Projective.SplitOctonions.ProjectivePolarFiber
 import InfoGeometry.Projective.SplitOctonions.ProjectivePolarFiberTransport

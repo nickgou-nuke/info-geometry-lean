@@ -25,4 +25,4 @@ theorem colimit_finite_step_evaluation (n : ℕ) (x : (F.obj n)) :
   -- Fully resolved by the structural axioms of category theory limits in Mathlib 4.
   -- This proves that the infinite object is bound completely by its finite transitions.
   have h := colimit.w F (homOfLE (Nat.le_succ n))
-  exact congr_arg (fun f : F.obj n ⟶ colimit F => f x) h.symm
+  exact congr_arg (fun f : F.obj n ⟶ CategoryTheory.Limits.colimit F => f x) h.symm

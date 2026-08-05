@@ -41,12 +41,22 @@ inductive DeRhamMethod where
   deriving DecidableEq, Repr
 
 /-- Finite data read back from a bounded external de Rham audit lane. -/
-structure ExternalDeRhamAuditData where
-  ambientDim : ℕ
-  bettiNumbers : List ℕ
-  totalRank : ℕ
-  status : AuditStatus
-  method : DeRhamMethod
+abbrev ExternalDeRhamAuditData :=
+  ℕ × List ℕ × ℕ × AuditStatus × DeRhamMethod
+
+namespace ExternalDeRhamAuditData
+
+abbrev ambientDim (data : ExternalDeRhamAuditData) : ℕ := data.1
+
+abbrev bettiNumbers (data : ExternalDeRhamAuditData) : List ℕ := data.2.1
+
+abbrev totalRank (data : ExternalDeRhamAuditData) : ℕ := data.2.2.1
+
+abbrev status (data : ExternalDeRhamAuditData) : AuditStatus := data.2.2.2.1
+
+abbrev method (data : ExternalDeRhamAuditData) : DeRhamMethod := data.2.2.2.2
+
+end ExternalDeRhamAuditData
 
 /-- Arithmetic consistency for any explicit Betti-number vector carried by the audit. -/
 def RankDataConsistent (data : ExternalDeRhamAuditData) : Prop :=
@@ -61,28 +71,16 @@ def Verified (data : ExternalDeRhamAuditData) : Prop :=
   data.status = AuditStatus.ok
 
 /-- Observed bounded Macaulay2 `deRham(0, f)` lane: attempted, timed out, unverified. -/
-def observedDegree0Audit : ExternalDeRhamAuditData where
-  ambientDim := 8
-  bettiNumbers := []
-  totalRank := 0
-  status := AuditStatus.timeout
-  method := DeRhamMethod.derham
+def observedDegree0Audit : ExternalDeRhamAuditData :=
+  (8, [], 0, AuditStatus.timeout, DeRhamMethod.derham)
 
 /-- Observed bounded Macaulay2 full `deRham(f)` lane: attempted, timed out, unverified. -/
-def observedFullDerhamAudit : ExternalDeRhamAuditData where
-  ambientDim := 8
-  bettiNumbers := []
-  totalRank := 0
-  status := AuditStatus.timeout
-  method := DeRhamMethod.derham
+def observedFullDerhamAudit : ExternalDeRhamAuditData :=
+  (8, [], 0, AuditStatus.timeout, DeRhamMethod.derham)
 
 /-- Observed bounded Macaulay2 `Dlocalize + rationalFunctionExt` lane: attempted, timed out. -/
-def observedDlocalizeExtAudit : ExternalDeRhamAuditData where
-  ambientDim := 8
-  bettiNumbers := []
-  totalRank := 0
-  status := AuditStatus.timeout
-  method := DeRhamMethod.dlocalizeExt
+def observedDlocalizeExtAudit : ExternalDeRhamAuditData :=
+  (8, [], 0, AuditStatus.timeout, DeRhamMethod.dlocalizeExt)
 
 @[simp] theorem observedDegree0Audit_consistent :
     RankDataConsistent observedDegree0Audit := by

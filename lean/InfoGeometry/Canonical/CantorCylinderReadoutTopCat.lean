@@ -38,9 +38,12 @@ def prefixCylinderTopCatIso (n : ℕ) (w : BitWord n) :
     simp [TopCat.ofHom]
   inv_hom_id := by
     apply TopCat.hom_ext
-    ext x
+    apply ContinuousMap.ext
+    intro x
     rw [TopCat.comp_app, TopCat.id_app]
-    simp [TopCat.ofHom]
+    change prefixCylinderHomeomorph n w
+        ((prefixCylinderHomeomorph n w).symm x) = x
+    exact (prefixCylinderHomeomorph n w).apply_symm_apply x
 
 def prefixCylinderReadoutTopCatHom (n : ℕ) (w : BitWord n) :
     TopCat.of (prefixCylinder n w) ⟶ TopCat.of ℝ :=

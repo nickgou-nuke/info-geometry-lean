@@ -66,9 +66,8 @@ theorem IsInCorner.sub
 
 /-- Unit conjugation transports causal diamonds to causal diamonds. -/
 def unitConjDiamond {A : Type*} [Semiring A] (g : Aˣ) (D : Diamond A) :
-    Diamond A where
-  P := unitConjRing g D.P
-  idem := unitConj_idempotent g D.idem
+    Diamond A :=
+  ⟨unitConjRing g D.P, unitConj_idempotent g D.idem⟩
 
 /-- Unit conjugation transports corner membership. -/
 theorem unitConjRing_mem_corner

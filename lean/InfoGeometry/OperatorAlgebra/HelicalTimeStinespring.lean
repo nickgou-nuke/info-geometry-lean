@@ -271,16 +271,15 @@ structure LFunctionHelicalBranch
   divisor : SpectralDivisorDatum
   calibration :
     HelicalSpectralChargeCalibration State helix divisor
-  /-- Intended zeta/L/scattering determinant for this model. -/
-  referenceSpectralFunction : ℂ → ℂ
-  /-- The divisor's spectral function is exactly the intended function. -/
-  divisor_L_eq_reference :
-    divisor.L = referenceSpectralFunction
 
 namespace LFunctionHelicalBranch
 
 variable {State : Type*}
 variable (B : LFunctionHelicalBranch State)
+
+/-- The branch's spectral function is the one owned by its divisor. -/
+def referenceSpectralFunction : ℂ → ℂ :=
+  B.divisor.L
 
 /-- The helical sheet of a state is the divisor charge of its spectral region. -/
 theorem sheet_eq_divisor_charge
@@ -293,7 +292,7 @@ theorem sheet_eq_divisor_charge
 reference function. -/
 theorem spectral_function_calibrated :
     B.divisor.L = B.referenceSpectralFunction :=
-  B.divisor_L_eq_reference
+  rfl
 
 end LFunctionHelicalBranch
 

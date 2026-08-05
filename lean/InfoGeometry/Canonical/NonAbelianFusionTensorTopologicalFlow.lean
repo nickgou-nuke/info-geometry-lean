@@ -32,31 +32,31 @@ theorem flow_zero : D.flow 0 =
   simpa using (D.flow_add 1 0).symm
 
 def flowColimitMap (t : ℝ) :
-    topologicalDirectColimit
+    colimit
         (fusionTensorTopologicalDiagram (K := ℂ)) ⟶
-      topologicalDirectColimit
+      colimit
         (fusionTensorTopologicalDiagram (K := ℂ)) :=
   tensorActionColimitEndomorphism (K := ℂ) (D.flow t).hom
 
 theorem flowColimitMap_stage (t : ℝ) (n : ℕ) :
-    topologicalDirectInjection
+    colimit.ι
         (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
         flowColimitMap D t =
-      (D.flow t).hom ≫ topologicalDirectInjection
+      (D.flow t).hom ≫ colimit.ι
         (fusionTensorTopologicalDiagram (K := ℂ)) n := by
   exact tensorActionColimitEndomorphism_stage (K := ℂ) (D.flow t).hom n
 
 theorem flowColimitMap_zero :
     flowColimitMap D 0 =
-      𝟙 (topologicalDirectColimit
+      𝟙 (colimit
         (fusionTensorTopologicalDiagram (K := ℂ))) := by
   apply colimit.hom_ext
   intro n
-  change topologicalDirectInjection
+  change colimit.ι
       (fusionTensorTopologicalDiagram (K := ℂ)) n ≫ flowColimitMap D 0 =
-    topologicalDirectInjection
+    colimit.ι
       (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
-      𝟙 (topologicalDirectColimit
+      𝟙 (colimit
         (fusionTensorTopologicalDiagram (K := ℂ)))
   rw [Category.comp_id]
   rw [flowColimitMap_stage]
@@ -68,58 +68,58 @@ theorem flowColimitMap_add (t s : ℝ) :
       flowColimitMap D s ≫ flowColimitMap D t := by
   apply colimit.hom_ext
   intro n
-  change topologicalDirectInjection
+  change colimit.ι
       (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
       flowColimitMap D (t + s) =
-    topologicalDirectInjection
+    colimit.ι
       (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
       (flowColimitMap D s ≫ flowColimitMap D t)
   rw [flowColimitMap_stage]
   calc
-    (D.flow (t + s)).hom ≫ topologicalDirectInjection
+    (D.flow (t + s)).hom ≫ colimit.ι
         (fusionTensorTopologicalDiagram (K := ℂ)) n =
-      ((D.flow s).hom ≫ (D.flow t).hom) ≫ topologicalDirectInjection
+      ((D.flow s).hom ≫ (D.flow t).hom) ≫ colimit.ι
         (fusionTensorTopologicalDiagram (K := ℂ)) n := by rw [D.flow_add]
     _ = (D.flow s).hom ≫
-        ((D.flow t).hom ≫ topologicalDirectInjection
+        ((D.flow t).hom ≫ colimit.ι
           (fusionTensorTopologicalDiagram (K := ℂ)) n) := by
           simp only [Category.assoc]
     _ = (D.flow s).hom ≫
-        (topologicalDirectInjection
+        (colimit.ι
           (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
           flowColimitMap D t) := by
           rw [flowColimitMap_stage]
-    _ = ((D.flow s).hom ≫ topologicalDirectInjection
+    _ = ((D.flow s).hom ≫ colimit.ι
           (fusionTensorTopologicalDiagram (K := ℂ)) n) ≫
           flowColimitMap D t := by
           simp only [Category.assoc]
-    _ = (topologicalDirectInjection
+    _ = (colimit.ι
           (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
         flowColimitMap D s) ≫ flowColimitMap D t := by
           rw [← flowColimitMap_stage]
-    _ = topologicalDirectInjection
+    _ = colimit.ι
           (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
         (flowColimitMap D s ≫ flowColimitMap D t) := by
           simp only [Category.assoc]
 
 theorem flowColimitMap_right_inverse (t : ℝ) :
     flowColimitMap D t ≫ flowColimitMap D (-t) =
-      𝟙 (topologicalDirectColimit
+      𝟙 (colimit
         (fusionTensorTopologicalDiagram (K := ℂ))) := by
   rw [← flowColimitMap_add D (-t) t]
   simpa using flowColimitMap_zero D
 
 theorem flowColimitMap_left_inverse (t : ℝ) :
     flowColimitMap D (-t) ≫ flowColimitMap D t =
-      𝟙 (topologicalDirectColimit
+      𝟙 (colimit
         (fusionTensorTopologicalDiagram (K := ℂ))) := by
   rw [← flowColimitMap_add D t (-t)]
   simpa using flowColimitMap_zero D
 
 def flowColimitIso (t : ℝ) :
-    topologicalDirectColimit
+    colimit
         (fusionTensorTopologicalDiagram (K := ℂ)) ≅
-      topologicalDirectColimit
+      colimit
         (fusionTensorTopologicalDiagram (K := ℂ)) where
   hom := flowColimitMap D t
   inv := flowColimitMap D (-t)

@@ -400,16 +400,13 @@ theorem protectedNavierStokesSnapSectorOwnerTarget
   intro S t
   exact S.cannot_relax_to_flat t
 
-/--
-Installed-owner target: once a snap bridge is supplied, projected classical
-extreme behavior activates the hidden/topological sector.
+/-!
+The installed-owner name is retained as an API alias; the proposition is
+owned by `NavierStokesOperatorSnapBridgeOwnerTarget` above.
 -/
-def NavierStokesOperatorSnapBridgeInstalledTarget
+abbrev NavierStokesOperatorSnapBridgeInstalledTarget
     (State Classical Hidden : Type*) : Prop :=
-  ∀ B : NavierStokesOperatorSnapBridge State Classical Hidden,
-  ∀ s : State,
-    B.classical.ClassicalExtreme (B.classical.project s) →
-      B.operator.HiddenNontrivial (B.operator.hiddenReadout s)
+  NavierStokesOperatorSnapBridgeOwnerTarget State Classical Hidden
 
 /-- Installed snap bridges satisfy the hidden-sector activation target. -/
 theorem navierStokesOperatorSnapBridgeInstalledTarget
@@ -418,15 +415,13 @@ theorem navierStokesOperatorSnapBridgeInstalledTarget
   intro B s hExtreme
   exact B.projected_extreme_implies_hidden_nontrivial s hExtreme
 
-/--
-Installed-owner target: once a protected post-snap sector is supplied, the
-snapped state cannot flow back into the flat sector.
+/-!
+The installed-owner name is retained as an API alias; the proposition is
+owned by `ProtectedNavierStokesSnapSectorOwnerTarget` above.
 -/
-def ProtectedNavierStokesSnapSectorInstalledTarget
+abbrev ProtectedNavierStokesSnapSectorInstalledTarget
     (State Charge : Type*) [Zero Charge] : Prop :=
-  ∀ S : ProtectedNavierStokesSnapSector State Charge,
-  ∀ t : ℝ,
-    S.obstructionFlow.flow t S.snappedState ∉ S.obstructionFlow.Flat
+  ProtectedNavierStokesSnapSectorOwnerTarget State Charge
 
 /-- Installed protected snap sectors satisfy the no-relaxation target. -/
 theorem protectedNavierStokesSnapSectorInstalledTarget

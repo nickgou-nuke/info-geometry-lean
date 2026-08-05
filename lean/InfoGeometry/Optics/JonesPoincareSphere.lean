@@ -169,18 +169,17 @@ theorem circularProjectors_sum_one :
 /-! ## Pauli/Hestenes null readout -/
 
 /-- Stokes four-vector as a real Pauli/Hestenes paravector. -/
-def stokesMinkowski4 (J : JonesSpinor) : Minkowski4 where
-  t := J.stokes0
-  x := J.stokes2
-  y := J.stokes3
-  z := J.stokes1
+def stokesMinkowski4 (J : JonesSpinor) : Minkowski4 := fun
+  | 0 => J.stokes0
+  | 1 => J.stokes2
+  | 2 => J.stokes3
+  | 3 => J.stokes1
 
 /-- The Stokes four-vector is lightlike for the Pauli/Hestenes metric. -/
 theorem stokesMinkowski4_q (J : JonesSpinor) :
     (stokesMinkowski4 J).q = 0 := by
-  dsimp [stokesMinkowski4, Minkowski4.q]
-  have h := stokes_lightcone_identity J
-  nlinarith
+  change J.stokes0 ^ 2 - J.stokes2 ^ 2 - J.stokes3 ^ 2 - J.stokes1 ^ 2 = 0
+  nlinarith [stokes_lightcone_identity J]
 
 /-- The Stokes four-vector is a null Pauli/Hestenes vector. -/
 theorem stokesMinkowski4_isNull (J : JonesSpinor) :

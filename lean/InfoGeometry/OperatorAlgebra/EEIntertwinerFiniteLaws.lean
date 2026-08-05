@@ -95,17 +95,4 @@ theorem W_g0_anticommutes (v : Spinor32) : W (g0 v) = -g0 (W v) := by
   rcases p with ⟨s, i⟩
   fin_cases s <;> simp [W, g0]
 
-/-- Closed finite packet for the block-swap intertwiner identities. -/
-theorem ee_intertwiner_finite_laws_packet :
-    (∀ v : Spinor32, W (W v) = v) ∧
-      (∀ v : Spinor32, W (UL (W v)) = LR v) ∧
-      (∀ v : Spinor32, W (LR (W v)) = UL v) ∧
-      (∀ v : Spinor32, W (g0 v) = -g0 (W v)) ∧
-      (∀ v : Spinor32, UL (UL v) = UL v) ∧
-      (∀ v : Spinor32, LR (LR v) = LR v) ∧
-      (∀ v : Spinor32, UL (LR v) = 0) ∧
-      (∀ v : Spinor32, LR (UL v) = 0) := by
-  exact ⟨W_involutive, W_UL_W_eq_LR, W_LR_W_eq_UL, W_g0_anticommutes,
-    UL_idempotent, LR_idempotent, UL_after_LR_zero, LR_after_UL_zero⟩
-
 end InfoGeometry.OperatorAlgebra.EEIntertwinerFiniteLaws

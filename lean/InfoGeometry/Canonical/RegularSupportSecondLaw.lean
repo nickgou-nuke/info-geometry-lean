@@ -386,13 +386,13 @@ theorem split_second_law_on_regular_corner
     S.compressedState S.support S.dissipator x hx
 
 /--
-Certificate packet for the regular-support Second Law lane.
+Data packet for the regular-support Second Law lane.
 
 It packages the state, flow, Drazin support, dissipator, and modular fixedness.
 Orthogonality is theorem-owned from `q = 1 - p` and `p * p = p`.
 -/
 @[rep_depth krein]
-structure RegularSupportSecondLawCertificate
+structure RegularSupportSecondLawData
     (Op : Type*) [Ring Op] [Star Op] [SMul ℝ Op] where
   state : RealExpectationState Op
   flow : ModularFlow Op
@@ -404,7 +404,7 @@ structure RegularSupportSecondLawCertificate
 @[rep_depth krein]
 theorem certificate_no_leakage
     {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
-    (C : RegularSupportSecondLawCertificate Op) :
+    (C : RegularSupportSecondLawData Op) :
     (∀ t : ℝ, leakageOperator C.flow C.support t = 0)
       ∧
     (∀ t : ℝ, rightLeakageOperator C.flow C.support t = 0) :=
@@ -415,7 +415,7 @@ theorem certificate_no_leakage
 @[rep_depth krein]
 theorem certificate_defect_modular_fixed
     {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
-    (C : RegularSupportSecondLawCertificate Op) :
+    (C : RegularSupportSecondLawData Op) :
     ∀ t : ℝ, C.flow.sigma t C.support.q = C.support.q :=
   defect_support_modular_fixed C.flow C.support C.support_fixed
 
@@ -423,7 +423,7 @@ theorem certificate_defect_modular_fixed
 @[rep_depth krein]
 theorem certificate_second
     {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
-    (C : RegularSupportSecondLawCertificate Op)
+    (C : RegularSupportSecondLawData Op)
     (x : Op)
     (hx : InRegularCorner C.support x) :
     0 ≤ entropyProduction C.state C.dissipator x :=
@@ -433,62 +433,10 @@ theorem certificate_second
 @[rep_depth krein]
 theorem certificate_leakage_energy_zero
     {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
-    (C : RegularSupportSecondLawCertificate Op) :
+    (C : RegularSupportSecondLawData Op) :
     ∀ t : ℝ, leakageEnergy C.state C.flow C.support t = 0 :=
   leakage_energy_zero_of_modular_fixed_support
     C.state C.flow C.support C.support_fixed
-
-/-- Packet for the regular-support Second Law socket over a fixed algebra. -/
-@[rep_depth krein]
-structure RegularSupportSecondLawPacket
-    (Op : Type*) [Ring Op] [Star Op] [SMul ℝ Op] where
-  flow : ModularFlow Op
-  state : RealExpectationState Op
-  support : DrazinRegularSupport Op
-  support_modular_fixed : ModularFixedSupport flow support
-  dissipator : RegularOnsagerDissipator Op
-
-namespace RegularSupportSecondLawPacket
-
-variable {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
-
-/-- Convert a packet to the certificate API. -/
-@[rep_depth krein]
-def toCertificate
-    (P : RegularSupportSecondLawPacket Op) :
-    RegularSupportSecondLawCertificate Op where
-  state := P.state
-  flow := P.flow
-  support := P.support
-  dissipator := P.dissipator
-  support_fixed := P.support_modular_fixed
-
-/-- Packet readback: entropy production is nonnegative on the regular corner. -/
-@[rep_depth krein]
-theorem entropy_nonnegative
-    (P : RegularSupportSecondLawPacket Op)
-    (x : Op)
-    (hx : InRegularCorner P.support x) :
-    0 ≤ entropyProduction P.state P.dissipator x :=
-  certificate_second P.toCertificate x hx
-
-/-- Packet readback: modular fixed support gives two-sided no leakage. -/
-@[rep_depth krein]
-theorem no_leakage
-    (P : RegularSupportSecondLawPacket Op) :
-    (∀ t : ℝ, leakageOperator P.flow P.support t = 0)
-      ∧
-    (∀ t : ℝ, rightLeakageOperator P.flow P.support t = 0) :=
-  certificate_no_leakage P.toCertificate
-
-/-- Packet readback: the defect complement is modularly fixed. -/
-@[rep_depth krein]
-theorem defect_modular_fixed
-    (P : RegularSupportSecondLawPacket Op) :
-    ∀ t : ℝ, P.flow.sigma t P.support.q = P.support.q :=
-  certificate_defect_modular_fixed P.toCertificate
-
-end RegularSupportSecondLawPacket
 
 /-- Owner target for the regular-support Second Law socket over a fixed algebra. -/
 @[rep_depth krein]

@@ -1,0 +1,13 @@
+{
+  "clifford_vector_generator_count": 10,
+  "coefficient_field": "QQ",
+  "odd_supercentralizer_intersection": 0,
+  "ordinary_centralizer_dimension": 1,
+  "ordinary_centralizer_is_scalar": true,
+  "scope": "full_matrix_spinor_model_over_Q",
+  "spinor_dimension": 32,
+  "uniform_anticentralizer_dimension": 1,
+  "uniform_anticentralizer_is_volume_line": true,
+  "volume_is_involute_even": true,
+  "volume_word_length": 10
+}

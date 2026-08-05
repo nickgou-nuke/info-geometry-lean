@@ -35,11 +35,11 @@ def nb_plus : StandardIntegralSplitOctonion := kOct + klOct
 def nb_minus : StandardIntegralSplitOctonion := kOct - klOct
 
 theorem redPlus_mul_greenPlus :
-    splitOctonionMul nr_plus ng_plus = 2 • nb_plus := by
+    splitOctonionMul nr_plus ng_plus = 2 • nb_minus := by
   ext r <;> fin_cases r <;> native_decide
 
 theorem redMinus_mul_greenMinus :
-    splitOctonionMul nr_minus ng_minus = 2 • nb_minus := by
+    splitOctonionMul nr_minus ng_minus = 2 • nb_plus := by
   ext r <;> fin_cases r <;> native_decide
 
 theorem redPlus_mul_greenMinus :
@@ -56,14 +56,14 @@ def splitAssociator (x y z : StandardIntegralSplitOctonion) :
     splitOctonionMul x (splitOctonionMul y z)
 
 theorem i_l_j_associator_value :
-    splitAssociator iOct lOct jOct = (2 : ℤ) • klOct := by
+    splitAssociator iOct lOct jOct = (-2 : ℤ) • klOct := by
   ext r <;> fin_cases r <;> native_decide
 
 theorem i_l_j_associator_ne_zero :
     splitAssociator iOct lOct jOct ≠ 0 := by
   rw [i_l_j_associator_value]
   intro h
-  have hk : ((2 : ℤ) • klOct) IntegralSplitBasis.kl =
+  have hk : ((-2 : ℤ) • klOct) IntegralSplitBasis.kl =
       (0 : StandardIntegralSplitOctonion) IntegralSplitBasis.kl := by
     rw [h]
   norm_num [klOct, splitBasisVector] at hk

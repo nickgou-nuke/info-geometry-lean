@@ -41,12 +41,19 @@ structure ConnesSpectralTriple (A H : Type*) [NormedRing A] [NormedAddCommGroup 
   compact_resolvent : IsCompactResolvent D 1.0
 
 /-- Formalizing the continuous one-parameter time evolution group -/
-structure BostConnesEvolution (A : Type*) [Ring A] where
-  σ : ℝ → (A ≃+* A) -- Group homomorphism into ring automorphisms
+abbrev BostConnesEvolution (A : Type*) [Ring A] :=
+  ℝ → (A ≃+* A)
+
+namespace BostConnesEvolution
+
+/-- Compatibility accessor for the native automorphism-valued flow. -/
+abbrev σ (E : BostConnesEvolution A) : ℝ → (A ≃+* A) := E
+
+end BostConnesEvolution
 
 /-- Predicate verifying the state evolution preserves the Cuntz operator bounds -/
 def IsKMSState {A : Type*} [Ring A] (E : BostConnesEvolution A) (β : ℝ) (state : A → ℂ) : Prop :=
-  ∀ (x y : A), state (x * ((E.σ β) y)) = state (((E.σ β) y) * x)
+  ∀ (x y : A), state (x * (E β y)) = state ((E β y) * x)
 
 /-- The Phase Transition Predicate for the Cuntz-Cantor KMS System -/
 structure KMSPhaseTransition {A : Type*} [Ring A] (E : BostConnesEvolution A) (β_c : ℝ) where

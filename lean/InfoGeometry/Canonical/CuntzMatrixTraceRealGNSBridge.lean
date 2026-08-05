@@ -74,8 +74,8 @@ theorem matrixTraceRealAlgebraicState_positive (n : ℕ) (A : MatrixStage n) :
   (matrixTraceRealAlgebraicState n).positive A
 
 def realInductiveNet (T : Data) :
-    InductiveAlgebraNet (𝕜 := ℝ) (A := MatrixStage) where
-  embed n := (T n).toAlgHom.restrictScalars ℝ
+    InductiveAlgebraNet (𝕜 := ℝ) (A := MatrixStage) :=
+  fun n => (T n).toAlgHom.restrictScalars ℝ
 
 def realTraceNet (T : Data)
     (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :
@@ -88,7 +88,7 @@ def realTraceNet (T : Data)
     intro n A
     rw [matrixTraceRealLinearMap_apply, matrixTraceRealLinearMap_apply]
     have h := congrArg Complex.re (hT n A)
-    exact h
+    simpa [matrixTraceState] using h
 
 def compatibleRealStateNet (T : Data)
     (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :

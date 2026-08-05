@@ -559,14 +559,14 @@ end ThreeLayerSiegelResonanceOperator
 /-! ## 9. Owner targets -/
 
 /-- Owner target for installing a Siegel arithmetic resonance filter. -/
-def SiegelArithmeticResonanceFilterOwnerTarget
+abbrev SiegelArithmeticResonanceFilterOwnerTarget
     (Bulk : Type uBulk) (Boundary : Type uBoundary)
     [AddCommGroup Bulk] [Module ℝ Bulk]
     [AddCommGroup Boundary] [Module ℝ Boundary] : Prop :=
   Nonempty (SiegelArithmeticResonanceFilter Bulk Boundary)
 
 /-- Owner target for attaching a readout to a Siegel arithmetic resonance filter. -/
-def SiegelArithmeticReadoutOwnerTarget
+abbrev SiegelArithmeticReadoutOwnerTarget
     (Bulk : Type uBulk) (Boundary : Type uBoundary) (Readout : Type uReadout)
     [AddCommGroup Bulk] [Module ℝ Bulk]
     [AddCommGroup Boundary] [Module ℝ Boundary]
@@ -575,7 +575,7 @@ def SiegelArithmeticReadoutOwnerTarget
   Nonempty (SiegelArithmeticReadoutCalibration Bulk Boundary Readout F)
 
 /-- Owner target for finite zeta-trace calibration of a Siegel-purified state. -/
-def SiegelZetaTraceCalibrationOwnerTarget
+abbrev SiegelZetaTraceCalibrationOwnerTarget
     (Bulk : Type uBulk) (Boundary : Type uBoundary)
     [AddCommGroup Bulk] [Module ℝ Bulk]
     [AddCommGroup Boundary] [Module ℝ Boundary]
@@ -584,12 +584,12 @@ def SiegelZetaTraceCalibrationOwnerTarget
   Nonempty (SiegelZetaTraceCalibration Bulk Boundary L F)
 
 /-- Owner target for a Jordan-Siegel norm reduction. -/
-def JordanSiegelNormReductionOwnerTarget
+abbrev JordanSiegelNormReductionOwnerTarget
     (Cubic Boundary : Type*) : Prop :=
   Nonempty (JordanSiegelNormReduction Cubic Boundary)
 
 /-- Owner target for the three-layer Siegel resonance operator. -/
-def ThreeLayerSiegelResonanceOperatorOwnerTarget
+abbrev ThreeLayerSiegelResonanceOperatorOwnerTarget
     (Cubic JordanBoundary : Type*)
     (Bulk : Type uBulk) (AutoBoundary : Type uBoundary)
     [AddCommGroup Bulk] [Module ℝ Bulk]

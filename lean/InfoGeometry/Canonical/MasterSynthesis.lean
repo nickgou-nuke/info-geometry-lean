@@ -1,2 +1,1 @@
-import InfoGeometry.Canonical.MasterFiniteBridgeLedger
 import InfoGeometry.Canonical.GrandSynthesis

@@ -32,32 +32,11 @@ section ModuleDiagramLimits
 variable {I₁ : Type u} [SmallCategory I₁]
 variable {K₁ : Type u} [SmallCategory K₁]
 
-/-- The algebraic colimit of a small diagram of `R`-modules.
-
-Filteredness is not needed to construct the colimit; it becomes relevant for
-exactness and finite-limit preservation below.
--/
-noncomputable abbrev ModuleInductiveLimit
-    (F : I₁ ⥤ ModuleCat.{u} R) : ModuleCat.{u} R :=
-  colimit F
-
-/-- Canonical map from one stage into the algebraic inductive limit. -/
-noncomputable def stageInjection
-    (F : I₁ ⥤ ModuleCat.{u} R) (i : I₁) :
-    F.obj i ⟶ ModuleInductiveLimit R F :=
-  colimit.ι F i
-
-/-- Descend a compatible cocone of local operators through the colimit. -/
-noncomputable def descendInductiveLimit
-    (F : I₁ ⥤ ModuleCat.{u} R) (t : Cocone F) :
-    ModuleInductiveLimit R F ⟶ t.pt :=
-  colimit.desc F t
-
 /-- The descended map agrees with every local operator on its stage. -/
 @[reassoc]
 theorem stageInjection_desc
     (F : I₁ ⥤ ModuleCat.{u} R) (t : Cocone F) (i : I₁) :
-    stageInjection R F i ≫ descendInductiveLimit R F t = t.ι.app i := by
+    colimit.ι F i ≫ colimit.desc F t = t.ι.app i := by
   exact colimit.ι_desc t i
 
 /-- A compatible family of algebraic states on a module diagram.
@@ -73,13 +52,13 @@ abbrev CompatibleStateFamily
 algebraic states on all stages.
 
 This is the precise categorical content of
-`Hom(colimit F, R) ≃ limit_i Hom(F i, R)`. It concerns all `R`-linear
+`Hom(CategoryTheory.Limits.colimit F, R) ≃ limit_i Hom(F i, R)`. It concerns all `R`-linear
 functionals. Positivity, normalization, continuity, and the KMS condition are
 additional structures or predicates and are not asserted by this equivalence.
 -/
 noncomputable def colimitStateEquivCompatibleFamily
     (F : I₁ ⥤ ModuleCat.{u} R) :
-    (ModuleInductiveLimit R F ⟶ ModuleCat.of R R) ≃
+    (CategoryTheory.Limits.colimit F ⟶ ModuleCat.of R R) ≃
       CompatibleStateFamily R F :=
   (colimit.isColimit F).homEquiv (W := ModuleCat.of R R)
 
@@ -88,9 +67,9 @@ canonical stage injection. -/
 @[simp]
 theorem colimitStateEquivCompatibleFamily_apply_app
     (F : I₁ ⥤ ModuleCat.{u} R)
-    (φ : ModuleInductiveLimit R F ⟶ ModuleCat.of R R) (i : I₁) :
+    (φ : CategoryTheory.Limits.colimit F ⟶ ModuleCat.of R R) (i : I₁) :
     (colimitStateEquivCompatibleFamily R F φ).app i =
-      stageInjection R F i ≫ φ := by
+      colimit.ι F i ≫ φ := by
   rfl
 
 /-- Gluing a compatible family and then restricting to a stage recovers the
@@ -99,38 +78,16 @@ original stage state. -/
 theorem colimitStateEquivCompatibleFamily_symm_app
     (F : I₁ ⥤ ModuleCat.{u} R)
     (s : CompatibleStateFamily R F) (i : I₁) :
-    stageInjection R F i ≫
+    colimit.ι F i ≫
         (colimitStateEquivCompatibleFamily R F).symm s =
       s.app i := by
   exact (colimit.isColimit F).ι_app_homEquiv_symm s i
-
-/-- The algebraic limit of a small diagram of `R`-modules.
-
-For a cofiltered quotient diagram this is the underlying algebraic projective
-limit. Calling it a topological completion requires additional topology and a
-proved comparison theorem.
--/
-noncomputable abbrev ModuleProjectiveLimit
-    (G : K₁ ⥤ ModuleCat.{u} R) : ModuleCat.{u} R :=
-  limit G
-
-/-- Canonical projection from the projective limit to one stage. -/
-noncomputable def stageProjection
-    (G : K₁ ⥤ ModuleCat.{u} R) (k : K₁) :
-    ModuleProjectiveLimit R G ⟶ G.obj k :=
-  limit.π G k
-
-/-- Lift a compatible cone of truncation maps into the projective limit. -/
-noncomputable def liftProjectiveLimit
-    (G : K₁ ⥤ ModuleCat.{u} R) (t : Cone G) :
-    t.pt ⟶ ModuleProjectiveLimit R G :=
-  limit.lift G t
 
 /-- The lifted map recovers every component of the original cone. -/
 @[reassoc]
 theorem lift_stageProjection
     (G : K₁ ⥤ ModuleCat.{u} R) (t : Cone G) (k : K₁) :
-    liftProjectiveLimit R G t ≫ stageProjection R G k = t.π.app k := by
+    limit.lift G t ≫ limit.π G k = t.π.app k := by
   exact limit.lift_π t k
 
 end ModuleDiagramLimits

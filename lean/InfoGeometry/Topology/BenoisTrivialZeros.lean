@@ -15,9 +15,6 @@ def Newform (K : Type*) := ℕ × (K → K)
 
 namespace Newform
 
-def weight {K : Type*} (f : Newform K) : ℕ := f.1
-def char_val {K : Type*} (f : Newform K) : K → K := f.2
-
 end Newform
 
 /-- 
@@ -33,6 +30,6 @@ structure BenoisTrivialZeroData (K : Type*) [Field K] where
   l_inv : K
   L_alg : K
   L_p_deriv : K
-  benois_formula : L_p_deriv = l_inv * (1 - f.char_val p / p) * L_alg
+  benois_formula : L_p_deriv = l_inv * (1 - f.2 p / p) * L_alg
 
 end InfoGeometry.Topology.BenoisTrivialZeros

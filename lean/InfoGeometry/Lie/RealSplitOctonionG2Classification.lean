@@ -33,13 +33,15 @@ theorem split_octonion_derivation_bracket_closed
 theorem canonical_split_octonion_derivation_finrank :
     Module.finrank ℝ
       InfoGeometry.Lie.CanonicalZornDerivation.canonicalZornDerivations = 14 :=
-  canonicalDerivations_finrank
+  InfoGeometry.Lie.SplitOctonionStandardDerivation.canonical_derivation_finrank
 
 theorem standard_split_octonion_derivations_span :
     InfoGeometry.Lie.SplitOctonionStandardDerivation.standardDerivationSpan = ⊤ :=
-  canonicalDerivations_span_standard
+  InfoGeometry.Lie.SplitOctonionStandardDerivation.standardDerivations_span_top
 
-theorem canonical_rotation_is_derivation : IsDeriv D01 :=
-  D01_deriv
+theorem canonical_rotation_is_derivation :
+    InfoGeometry.Lie.G2FromSplitOctonions.IsDeriv
+      InfoGeometry.OperatorAlgebra.SplitOctonions.DerivationWitness.rot01Derivation :=
+  InfoGeometry.Lie.G2FromSplitOctonions.D01_deriv
 
 end InfoGeometry.Lie.RealSplitOctonionG2Classification

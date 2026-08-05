@@ -1,22 +1,10 @@
 import InfoGeometry.Canonical.CantorSplitNullBridge
 
 /-!
-# Finite Cantor/split-null external audit bridge
+# Native finite Cantor split-null identities
 
-This file records the bounded external-tool status for the finite Cantor/split-null
-bridge.
-
-Closed here:
-- explicit audit-status data for the external lanes actually run;
-- exact readback of the observed `ok` / `timeout` statuses;
-- a theorem-safe separation between the verified finite bridge and the timed-out
-  Macaulay2 `deRham(0,q)` lane.
-
-Out of scope:
-- any assertion that the timed-out Macaulay2 D-module lane computed a full
-  de Rham certificate;
-- any upgrade from these finite audits to a global Cantor-colimit or
-  GNS-quotient closure theorem.
+This owner contains only kernel-checked identities for the finite Cantor
+split-null construction. External tool status is not part of the Lean model.
 -/
 
 namespace InfoGeometry.Canonical.CantorSplitNullExternalAudit
@@ -25,127 +13,22 @@ open InfoGeometry.Canonical.CantorSplitNullBridge
 open InfoGeometry.Algebra.Zorn.ConcreteComposition
 open InfoGeometry.Algebra.Zorn.ConcreteComposition.ZornCell
 
-inductive AuditStatus where
-  | ok
-  | timeout
-  | missing
-  | error
-  deriving DecidableEq, Repr
+theorem child_false_detZ_zero (w : FiniteBinaryWord) :
+    detZ (addressNullGenerator
+      (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w false)) = 0 := by
+  simpa using addressNullGenerator_child_detZ_zero w false
 
-inductive ExternalEngine where
-  | macaulay2SingularLocus
-  | macaulay2Derham0
-  | sageGap
-  | sympy
-  | clifford
-  | galgebra
-  deriving DecidableEq, Repr
+theorem child_true_detZ_zero (w : FiniteBinaryWord) :
+    detZ (addressNullGenerator
+      (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w true)) = 0 := by
+  simpa using addressNullGenerator_child_detZ_zero w true
 
-/-- Minimal readback for one bounded external lane. -/
-structure ExternalAuditLane where
-  engine : ExternalEngine
-  status : AuditStatus
-
-/-- A finite lane is verified exactly when its native status is `ok`. -/
-def Verified (lane : ExternalAuditLane) : Prop :=
-  lane.status = AuditStatus.ok
-
-/-- Macaulay2 with explicit `Dmodules` load reached the singular-locus readback. -/
-def observedMacaulay2SingularLocus : ExternalAuditLane where
-  engine := ExternalEngine.macaulay2SingularLocus
-  status := AuditStatus.ok
-
-/-- Bounded `deRham(0,q)` timed out and is therefore unverified. -/
-def observedMacaulay2Derham0 : ExternalAuditLane where
-  engine := ExternalEngine.macaulay2Derham0
-  status := AuditStatus.timeout
-
-/-- Sage/GAP lane completed the finite hyperbolic-pair readback. -/
-def observedSageGap : ExternalAuditLane where
-  engine := ExternalEngine.sageGap
-  status := AuditStatus.ok
-
-/-- SymPy lane completed the finite split-null readback. -/
-def observedSymPy : ExternalAuditLane where
-  engine := ExternalEngine.sympy
-  status := AuditStatus.ok
-
-/-- clifford lane completed the split `Cl(4,4)` null-vector readback. -/
-def observedClifford : ExternalAuditLane where
-  engine := ExternalEngine.clifford
-  status := AuditStatus.ok
-
-/-- galgebra lane completed the split `Cl(4,4)` null-vector readback. -/
-def observedGalgebra : ExternalAuditLane where
-  engine := ExternalEngine.galgebra
-  status := AuditStatus.ok
-
-@[simp] theorem observedMacaulay2SingularLocus_verified :
-    Verified observedMacaulay2SingularLocus := by
-  rfl
-
-@[simp] theorem observedSageGap_verified :
-    Verified observedSageGap := by
-  rfl
-
-@[simp] theorem observedSymPy_verified :
-    Verified observedSymPy := by
-  rfl
-
-@[simp] theorem observedClifford_verified :
-    Verified observedClifford := by
-  rfl
-
-@[simp] theorem observedGalgebra_verified :
-    Verified observedGalgebra := by
-  rfl
-
-theorem observedMacaulay2Derham0_not_verified :
-    ¬ Verified observedMacaulay2Derham0 := by
-  simp [Verified, observedMacaulay2Derham0]
-
-/-- Exact status packet matching the observed external runs. -/
-theorem observed_external_audit_packet :
-    observedMacaulay2SingularLocus.status = AuditStatus.ok ∧
-      observedMacaulay2Derham0.status = AuditStatus.timeout ∧
-      observedSageGap.status = AuditStatus.ok ∧
-      observedSymPy.status = AuditStatus.ok ∧
-      observedClifford.status = AuditStatus.ok ∧
-      observedGalgebra.status = AuditStatus.ok ∧
-      Verified observedMacaulay2SingularLocus ∧
-      ¬ Verified observedMacaulay2Derham0 ∧
-      Verified observedSageGap ∧
-      Verified observedSymPy ∧
-      Verified observedClifford ∧
-      Verified observedGalgebra := by
-  exact ⟨rfl, rfl, rfl, rfl, rfl, rfl,
-    observedMacaulay2SingularLocus_verified,
-    observedMacaulay2Derham0_not_verified,
-    observedSageGap_verified,
-    observedSymPy_verified,
-    observedClifford_verified,
-    observedGalgebra_verified⟩
-
-/-- Honest finite package: the external-lane status packet plus the kernel-checked
-Cantor/split-null bridge for the root address. -/
-theorem finite_audit_plus_bridge_packet :
-    observedMacaulay2Derham0.status = AuditStatus.timeout ∧
-      ¬ Verified observedMacaulay2Derham0 ∧
-      detZ (addressNullGenerator
-        (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child
-          ([] : FiniteBinaryWord) false)) = 0 ∧
-      detZ (addressNullGenerator
-        (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child
-          ([] : FiniteBinaryWord) true)) = 0 ∧
-      polarZ (addressNullGenerator
-        (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child
-          ([] : FiniteBinaryWord) false))
-          (addressNullGenerator
-            (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child
-              ([] : FiniteBinaryWord) true)) = -1 := by
-  refine ⟨rfl, observedMacaulay2Derham0_not_verified, ?_, ?_, ?_⟩
-  · simpa using addressNullGenerator_child_detZ_zero ([] : FiniteBinaryWord) false
-  · simpa using addressNullGenerator_child_detZ_zero ([] : FiniteBinaryWord) true
-  · simpa using child_false_true_polar_pair ([] : FiniteBinaryWord)
+theorem child_false_true_polar_pair (w : FiniteBinaryWord) :
+    polarZ
+      (addressNullGenerator
+        (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w false))
+      (addressNullGenerator
+        (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w true)) = -1 := by
+  simpa using InfoGeometry.Canonical.CantorSplitNullBridge.child_false_true_polar_pair w
 
 end InfoGeometry.Canonical.CantorSplitNullExternalAudit

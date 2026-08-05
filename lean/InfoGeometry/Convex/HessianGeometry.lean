@@ -30,10 +30,12 @@ def bregmanTriadicCore {Q K V : Type*} [BregmanDivergence Q K]
   route := route
 
 /-- Minimal 1D Hessian geometry package. -/
-structure HessianGeometry1D where
-  potential : ℝ → ℝ
+abbrev HessianGeometry1D := ℝ → ℝ
 
 namespace HessianGeometry1D
+
+/-- Compatibility accessor for the native potential function. -/
+abbrev potential (H : HessianGeometry1D) : ℝ → ℝ := H
 
 /-- Hessian metric in 1D (totalized second derivative). -/
 noncomputable def metric (H : HessianGeometry1D) (x : ℝ) : ℝ :=
@@ -61,8 +63,7 @@ noncomputable def divergence (H : HessianGeometry1D) (x y : ℝ) : ℝ :=
     H.divergence x y = H.potential x - H.potential y - (H.dualMap y) * (x - y) := rfl
 
 /-- Any 1D `LogPotential` induces a 1D Hessian geometry. -/
-noncomputable def ofLogPotential (L : InfoGeometry.LogPotential ℝ) : HessianGeometry1D where
-  potential := L.ψ
+noncomputable def ofLogPotential (L : InfoGeometry.LogPotential ℝ) : HessianGeometry1D := L
 
 /-- A named Bregman divergence instance attached to `H`. -/
 noncomputable def bregmanDiv (H : HessianGeometry1D) : BregmanDivergence ℝ ℝ where

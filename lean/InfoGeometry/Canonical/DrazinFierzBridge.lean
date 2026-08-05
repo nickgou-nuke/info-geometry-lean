@@ -80,10 +80,12 @@ spectrum of the relative-position operator `H`.  This socket keeps the domain
 as `ℝ`; spectral support and spectral measure are supplied separately.
 -/
 @[rep_depth operator]
-structure BSExpectationPhi where
-  fiber : ℝ → FiberMatrix
+abbrev BSExpectationPhi := ℝ → FiberMatrix
 
 namespace BSExpectationPhi
+
+abbrev fiber (Φ : BSExpectationPhi) : ℝ → FiberMatrix :=
+  Φ
 
 variable (Φ : BSExpectationPhi)
 
@@ -384,13 +386,25 @@ def expectationFierzVector
 
 /-- Normalized expectation-valued Fierz coordinates. -/
 @[rep_depth operator]
-structure NormalizedFierzCoordinates where
-  coord : FierzChannel → ℂ
+abbrev NormalizedFierzCoordinates := FierzChannel → ℂ
+
+namespace NormalizedFierzCoordinates
+
+abbrev coord (x : NormalizedFierzCoordinates) : FierzChannel → ℂ :=
+  x
+
+end NormalizedFierzCoordinates
 
 /-- Model-specific residual for a normalized Fierz coordinate packet. -/
 @[rep_depth operator]
-structure FierzResidual where
-  residual : NormalizedFierzCoordinates → ℝ
+abbrev FierzResidual := NormalizedFierzCoordinates → ℝ
+
+namespace FierzResidual
+
+abbrev residual (r : FierzResidual) : NormalizedFierzCoordinates → ℝ :=
+  r
+
+end FierzResidual
 
 /--
 Compatibility assumption connecting trace-free Drazin-stable two-projection

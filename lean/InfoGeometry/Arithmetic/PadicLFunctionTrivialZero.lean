@@ -17,11 +17,19 @@ The components of the trivial zero derivative formula:
 - L_M_0: The complex L-function evaluated at s = 0.
 - Omega_inf: The complex period.
 -/
-structure TrivialZeroConjectureData where
-  L_p_prime_0 : ℝ
-  ell_p_M : ℝ
-  L_M_0 : ℝ
-  Omega_inf : ℝ
+abbrev TrivialZeroConjectureData := ℝ × ℝ × ℝ × ℝ
+
+namespace TrivialZeroConjectureData
+
+abbrev L_p_prime_0 (d : TrivialZeroConjectureData) : ℝ := d.1
+
+abbrev ell_p_M (d : TrivialZeroConjectureData) : ℝ := d.2.1
+
+abbrev L_M_0 (d : TrivialZeroConjectureData) : ℝ := d.2.2.1
+
+abbrev Omega_inf (d : TrivialZeroConjectureData) : ℝ := d.2.2.2
+
+end TrivialZeroConjectureData
 
 /--
 The Greenberg-Tilouine / Greenberg conjecture for the derivative of the p-adic L-function 

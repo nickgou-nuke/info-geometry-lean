@@ -801,6 +801,17 @@ theorem madelung_divergence_free_iff (β : ℝ) (K : AlgebraEnd E)
   rw [trace_madelung_velocity_eq]
   exact mul_eq_zero
 
+/-- The zero-parameter Madelung state has divergence-free velocity. -/
+theorem madelungFluidState_isDivergenceFree_of_zero_beta
+    (K : AlgebraEnd E)
+    (vac : ThermalVacuum (E := E) K)
+    (ω : AlgebraEnd E →L[ℝ] ℝ) :
+    IsDivergenceFree
+      (madelungFluidState_zero (E := E) K vac ω).u := by
+  unfold IsDivergenceFree
+  rw [madelungFluidState_zero_velocity]
+  simp
+
 end MadelungBridge
 
 

@@ -59,7 +59,7 @@ structure Cl11Atom (K : Type*) [Ring K] where
 variable {K : Type*} [Ring K] [Algebra ℝ K] (atom : Cl11Atom K)
 
 /-- The internal complex structure J = r5. -/
-def ComplexStructure : K := atom.r5
+abbrev ComplexStructure : K := atom.r5
 
 /-- J² = -1: the complex structure axiom. -/
 theorem complex_structure_sq_neg_one :

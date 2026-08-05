@@ -27,11 +27,11 @@ noncomputable section
 
 variable (r s : Real)
 
-/-- The Weyl dilaton scale (Massieu potential / self-concordant log barrier). -/
+/-- Logarithmic geometric-mean coordinate on the positive diagonal sector. -/
 def xi : Real :=
   (Real.log r + Real.log s) / 2
 
-/-- The Rindler boost rapidity (the modular flow parameter). -/
+/-- Half-logarithmic ratio coordinate. -/
 def eta : Real :=
   (Real.log r - Real.log s) / 2
 

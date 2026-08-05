@@ -11,8 +11,14 @@ Causal-mask interface over token indices.
 
 `allow q i` is interpreted as "query state `q` may attend to index `i`".
 -/
-structure CausalMask (Q ι : Type*) where
-  allow : Q → ι → Prop
+abbrev CausalMask (Q ι : Type*) := Q → ι → Prop
+
+namespace CausalMask
+
+/-- Compatibility accessor for the native mask predicate. -/
+abbrev allow (M : CausalMask Q ι) : Q → ι → Prop := M
+
+end CausalMask
 
 /--
 Masked transformer block built on top of the canonical `TransformerBlock` scaffold.

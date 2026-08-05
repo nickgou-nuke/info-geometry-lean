@@ -114,6 +114,218 @@ theorem bitOperator_anticomm :
 
 end BinaryWordTiltReadout
 
+theorem mul_sq_neg_one_of_sq_one_of_anticomm
+    {Op : Type*} [Ring Op]
+    {a b : Op}
+    (ha : a * a = 1)
+    (hb : b * b = 1)
+    (hab : a * b + b * a = 0) :
+    (a * b) * (a * b) = -1 := by
+  have hba : b * a = -(a * b) :=
+    eq_neg_of_add_eq_zero_right hab
+  rw [show (a * b) * (a * b) = a * (b * a) * b by noncomm_ring]
+  rw [hba]
+  rw [show a * (-(a * b)) * b = -(a * a) * (b * b) by
+    noncomm_ring]
+  rw [ha, hb]
+  noncomm_ring
+
+@[rep_depth operator]
+theorem bitOperator_product_sq_neg_one
+    {Op : Type*} [Ring Op]
+    (P : BinaryWordTiltReadout Op) :
+    (P.bitOperator false * P.bitOperator true) *
+        (P.bitOperator false * P.bitOperator true) = -1 :=
+  mul_sq_neg_one_of_sq_one_of_anticomm
+    P.bitOperator_false_sq P.bitOperator_true_sq P.bitOperator_anticomm
+
+def localCl11Positive
+    {Op : Type*} [Ring Op]
+    (P : BinaryWordTiltReadout Op) : Op :=
+  P.bitOperator false
+
+def localCl11Negative
+    {Op : Type*} [Ring Op]
+    (P : BinaryWordTiltReadout Op) : Op :=
+  P.bitOperator false * P.bitOperator true
+
+@[simp] theorem localCl11Positive_sq
+    {Op : Type*} [Ring Op]
+    (P : BinaryWordTiltReadout Op) :
+    localCl11Positive P * localCl11Positive P = 1 :=
+  P.bitOperator_false_sq
+
+@[simp] theorem localCl11Negative_sq
+    {Op : Type*} [Ring Op]
+    (P : BinaryWordTiltReadout Op) :
+    localCl11Negative P * localCl11Negative P = -1 :=
+  bitOperator_product_sq_neg_one P
+
+theorem localCl11Positive_negative_anticomm
+    {Op : Type*} [Ring Op]
+    (P : BinaryWordTiltReadout Op) :
+    localCl11Positive P * localCl11Negative P +
+      localCl11Negative P * localCl11Positive P = 0 := by
+  unfold localCl11Positive localCl11Negative
+  have hanti := P.bitOperator_anticomm
+  have hba :
+      P.bitOperator true * P.bitOperator false =
+        -(P.bitOperator false * P.bitOperator true) :=
+    eq_neg_of_add_eq_zero_right hanti
+  rw [show
+    P.bitOperator false *
+          (P.bitOperator false * P.bitOperator true) +
+        (P.bitOperator false * P.bitOperator true) *
+          P.bitOperator false =
+      (P.bitOperator false * P.bitOperator false) *
+          P.bitOperator true +
+        P.bitOperator false *
+          (P.bitOperator true * P.bitOperator false) by
+      noncomm_ring]
+  rw [P.bitOperator_false_sq, hba]
+  have hassoc :
+      P.bitOperator false *
+          (P.bitOperator false * P.bitOperator true) =
+        (P.bitOperator false * P.bitOperator false) *
+          P.bitOperator true := by
+    noncomm_ring
+  have hneg :
+      P.bitOperator false *
+          -(P.bitOperator false * P.bitOperator true) =
+        -(P.bitOperator false *
+          (P.bitOperator false * P.bitOperator true)) := by
+    noncomm_ring
+  rw [hneg, hassoc, P.bitOperator_false_sq]
+  simp
+
+@[simp] theorem localCl11Positive_mul_negative
+    {Op : Type*} [Ring Op]
+    (P : BinaryWordTiltReadout Op) :
+    localCl11Positive P * localCl11Negative P =
+      P.bitOperator true := by
+  unfold localCl11Positive localCl11Negative
+  rw [show P.bitOperator false *
+      (P.bitOperator false * P.bitOperator true) =
+        (P.bitOperator false * P.bitOperator false) *
+          P.bitOperator true by noncomm_ring]
+  rw [P.bitOperator_false_sq]
+  simp
+
+@[simp] theorem localCl11Negative_mul_positive
+    {Op : Type*} [Ring Op]
+    (P : BinaryWordTiltReadout Op) :
+    localCl11Negative P * localCl11Positive P =
+      -(P.bitOperator true) := by
+  unfold localCl11Negative localCl11Positive
+  have hba :
+      P.bitOperator true * P.bitOperator false =
+        -(P.bitOperator false * P.bitOperator true) :=
+    eq_neg_of_add_eq_zero_right P.bitOperator_anticomm
+  rw [show
+      (P.bitOperator false * P.bitOperator true) *
+          P.bitOperator false =
+        P.bitOperator false *
+          (P.bitOperator true * P.bitOperator false) by noncomm_ring]
+  rw [hba]
+  rw [show P.bitOperator false *
+      -(P.bitOperator false * P.bitOperator true) =
+        -(P.bitOperator false *
+          (P.bitOperator false * P.bitOperator true)) by noncomm_ring]
+  rw [show P.bitOperator false *
+      (P.bitOperator false * P.bitOperator true) =
+        (P.bitOperator false * P.bitOperator false) *
+          P.bitOperator true by noncomm_ring]
+  rw [P.bitOperator_false_sq]
+  simp
+
+@[simp] theorem localCl11Positive_mul_switch
+    {Op : Type*} [Ring Op]
+    (P : BinaryWordTiltReadout Op) :
+    localCl11Positive P * P.bitOperator true =
+      localCl11Negative P := by
+  rfl
+
+@[simp] theorem localCl11Switch_mul_positive
+    {Op : Type*} [Ring Op]
+    (P : BinaryWordTiltReadout Op) :
+    P.bitOperator true * localCl11Positive P =
+      -(localCl11Negative P) := by
+  unfold localCl11Positive localCl11Negative
+  exact eq_neg_of_add_eq_zero_right P.bitOperator_anticomm
+
+@[simp] theorem localCl11Negative_mul_switch
+    {Op : Type*} [Ring Op]
+    (P : BinaryWordTiltReadout Op) :
+    localCl11Negative P * P.bitOperator true =
+      localCl11Positive P := by
+  unfold localCl11Negative localCl11Positive
+  rw [show (P.bitOperator false * P.bitOperator true) *
+      P.bitOperator true = P.bitOperator false *
+        (P.bitOperator true * P.bitOperator true) by noncomm_ring]
+  rw [P.bitOperator_true_sq]
+  simp
+
+@[simp] theorem localCl11Switch_mul_negative
+    {Op : Type*} [Ring Op]
+    (P : BinaryWordTiltReadout Op) :
+    P.bitOperator true * localCl11Negative P =
+      -(localCl11Positive P) := by
+  unfold localCl11Negative localCl11Positive
+  have hba :
+      P.bitOperator true * P.bitOperator false =
+        -(P.bitOperator false * P.bitOperator true) :=
+    eq_neg_of_add_eq_zero_right P.bitOperator_anticomm
+  rw [show P.bitOperator true *
+      (P.bitOperator false * P.bitOperator true) =
+        (P.bitOperator true * P.bitOperator false) *
+          P.bitOperator true by noncomm_ring]
+  rw [hba]
+  rw [show -(P.bitOperator false * P.bitOperator true) *
+      P.bitOperator true =
+        -(P.bitOperator false *
+          (P.bitOperator true * P.bitOperator true)) by noncomm_ring]
+  rw [P.bitOperator_true_sq]
+  simp
+
+/- Conjugation by the switch implements the local grade reflection. -/
+@[simp] theorem switch_conj_localCl11Positive
+    {Op : Type*} [Ring Op]
+    (P : BinaryWordTiltReadout Op) :
+    P.bitOperator true * localCl11Positive P * P.bitOperator true =
+      -(localCl11Positive P) := by
+  rw [localCl11Switch_mul_positive, neg_mul,
+    localCl11Negative_mul_switch]
+
+@[simp] theorem switch_conj_localCl11Negative
+    {Op : Type*} [Ring Op]
+    (P : BinaryWordTiltReadout Op) :
+    P.bitOperator true * localCl11Negative P * P.bitOperator true =
+      -(localCl11Negative P) := by
+  rw [localCl11Switch_mul_negative, neg_mul,
+    localCl11Positive_mul_switch]
+
+def IsLocalCl11Relation
+    {Op : Type*} [Ring Op]
+    (positive negative : Op) : Prop :=
+  positive * positive = 1 ∧
+  negative * negative = -1 ∧
+  positive * negative + negative * positive = 0
+
+theorem binaryWordLocalCl11Relation
+    {Op : Type*} [Ring Op] (P : BinaryWordTiltReadout Op) :
+    IsLocalCl11Relation (localCl11Positive P) (localCl11Negative P) := by
+  exact ⟨localCl11Positive_sq P, localCl11Negative_sq P,
+    localCl11Positive_negative_anticomm P⟩
+
+theorem binaryWordLocalCl11Relation_readout
+    {Op : Type*} [Ring Op] (P : BinaryWordTiltReadout Op) :
+    localCl11Positive P * localCl11Negative P = P.bitOperator true ∧
+    localCl11Negative P * localCl11Positive P = -(P.bitOperator true) ∧
+    localCl11Positive P * localCl11Negative P +
+      localCl11Negative P * localCl11Positive P = 0 := by
+  simp [localCl11Positive_mul_negative, localCl11Negative_mul_positive,
+    localCl11Positive_negative_anticomm]
+
 /-- Re-export of the Clifford generator square law. -/
 @[rep_depth operator]
 theorem cantorClifford_generator_sq
@@ -236,5 +448,63 @@ theorem cantorBinaryTiltCARCCROwnerTarget :
         · exact canonicalCCR_channel (E := E)
         · exact concreteSplitCl11CARPair (E := E)
         · exact concreteSplitCl11NormalizedCARPair (E := E)
+
+/-! A fuller aggregation target, including the already-owned cylinder and
+mixed-CAR readouts.  This remains an aggregation theorem; it introduces no
+compatibility map between the independent binary and Clifford packets. -/
+theorem cantorBinaryTiltCARCCRSupplementalTarget :
+    (∀ w : BinaryWord, ∀ b : Bool,
+      wordDepth (BinaryWord.child w b) = wordDepth w + 1)
+      ∧ (∀ w : BinaryWord, w ∈ BinaryWord.closedCylinder w)
+      ∧ (∀ w : BinaryWord,
+        BinaryWord.closedCylinder w =
+          ({w} : Set BinaryWord)
+            ∪ BinaryWord.closedCylinder (BinaryWord.child w false)
+            ∪ BinaryWord.closedCylinder (BinaryWord.child w true))
+      ∧ (∀ {Op : Type*} [Ring Op] (P : BinaryWordTiltReadout Op),
+        (P.bitOperator false * P.bitOperator false = 1
+          ∧ P.bitOperator true * P.bitOperator true = 1
+          ∧ P.bitOperator false * P.bitOperator true
+              + P.bitOperator true * P.bitOperator false = 0)
+        ∧ (P.bitOperator false * P.bitOperator true) *
+            (P.bitOperator false * P.bitOperator true) = -1)
+      ∧ (∀ {E : Type 0}
+        [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],
+        CARBracket (E := E)
+            (concreteCARAnnihilation (E := E))
+            (concreteCARCreation (E := E)) =
+          ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · intro w b
+    exact binaryWord_child_length w b
+  · intro w
+    exact binaryWord_mem_closedCylinder_self w
+  · intro w
+    exact binaryWord_closedCylinder_split w
+  · constructor
+    · intro Op _ P
+      exact ⟨⟨P.bitOperator_false_sq, P.bitOperator_true_sq,
+        P.bitOperator_anticomm⟩, bitOperator_product_sq_neg_one P⟩
+    · intro E _ _ _
+      exact concreteSplitCl11CARMixed (E := E)
+
+/-! Public certificate for the bundled local `Cl(1,1)` atom. -/
+theorem cantorBinaryLocalCl11PacketTarget :
+    ∀ {Op : Type*} [Ring Op] (P : BinaryWordTiltReadout Op),
+      localCl11Positive P * localCl11Positive P = 1 ∧
+      localCl11Negative P * localCl11Negative P = -1 ∧
+      localCl11Positive P * localCl11Negative P +
+        localCl11Negative P * localCl11Positive P = 0 ∧
+      localCl11Positive P * localCl11Negative P = P.bitOperator true ∧
+      P.bitOperator true * localCl11Positive P * P.bitOperator true =
+        -localCl11Positive P ∧
+      P.bitOperator true * localCl11Negative P * P.bitOperator true =
+        -localCl11Negative P := by
+  intro Op _ P
+  exact ⟨localCl11Positive_sq P, localCl11Negative_sq P,
+    localCl11Positive_negative_anticomm P,
+    localCl11Positive_mul_negative P,
+    switch_conj_localCl11Positive P,
+    switch_conj_localCl11Negative P⟩
 
 end InfoGeometry.Canonical.CantorBinaryTiltCARCCRBridge

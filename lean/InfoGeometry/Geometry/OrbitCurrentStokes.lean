@@ -118,13 +118,25 @@ projection or Drazin projector formula; those require separate spectral-contour
 hypotheses.
 -/
 @[rep_depth operator]
-structure ResolventOrbitCurrentDatum
+abbrev ResolventOrbitCurrentDatum
     {Value : Type*} [NormedRing Value] [NormedAlgebra ℝ Value]
     (Time State Form : Type*)
-    (K Z : Value) where
-  stokes : OrbitCurrentStokesDatum Time State Form Value
-  kernelFamily : VerifiedCauchyKernel.VerifiedKernelFamily K Z
-  kernelForm : ℝ → Form
+    (K Z : Value) :=
+  OrbitCurrentStokesDatum Time State Form Value ×
+    (VerifiedCauchyKernel.VerifiedKernelFamily K Z × (ℝ → Form))
+
+namespace ResolventOrbitCurrentDatum
+
+variable
+    {Value : Type*} [NormedRing Value] [NormedAlgebra ℝ Value]
+    {Time State Form : Type*} {K Z : Value}
+    (R : ResolventOrbitCurrentDatum Time State Form K Z)
+
+abbrev stokes : OrbitCurrentStokesDatum Time State Form Value := R.1
+abbrev kernelFamily : VerifiedCauchyKernel.VerifiedKernelFamily K Z := R.2.1
+abbrev kernelForm : ℝ → Form := R.2.2
+
+end ResolventOrbitCurrentDatum
 
 /-! ## Finite defect Stokes readback -/
 

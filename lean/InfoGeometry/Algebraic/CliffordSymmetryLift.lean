@@ -21,10 +21,13 @@ carrier.
 
 This is the correct input for a Clifford lift.
 -/
-structure SplitQuadraticSymmetry (n : ℕ) where
-  iso : (splitQuadraticForm n).IsometryEquiv (splitQuadraticForm n)
+abbrev SplitQuadraticSymmetry (n : ℕ) :=
+  (splitQuadraticForm n).IsometryEquiv (splitQuadraticForm n)
 
 namespace SplitQuadraticSymmetry
+
+abbrev iso {n : ℕ} (S : SplitQuadraticSymmetry n) :=
+  S
 
 /-- Underlying linear equivalence of a split quadratic symmetry. -/
 def toLinearEquiv {n : ℕ} (S : SplitQuadraticSymmetry n) :
@@ -59,12 +62,19 @@ Any split quadratic symmetry yields a Clifford algebra automorphism.
 
 This is the base gate for later rotor, Narain, and modular specializations.
 -/
-structure SplitCliffordSymmetry (n : ℕ) where
-  lift : Cl_nn n ≃ₐ[ℝ] Cl_nn n
+abbrev SplitCliffordSymmetry (n : ℕ) :=
+  Cl_nn n ≃ₐ[ℝ] Cl_nn n
+
+namespace SplitCliffordSymmetry
+
+abbrev lift {n : ℕ} (S : SplitCliffordSymmetry n) :=
+  S
+
+end SplitCliffordSymmetry
 
 /-- Canonical packaging of the Clifford lift as a symmetry object. -/
 def canonicalCliffordSymmetry (n : ℕ) (S : SplitQuadraticSymmetry n) :
-    SplitCliffordSymmetry n where
-  lift := splitCliffordLift n S
+    SplitCliffordSymmetry n :=
+  splitCliffordLift n S
 
 end InfoGeometry.Algebraic.SplitSignature

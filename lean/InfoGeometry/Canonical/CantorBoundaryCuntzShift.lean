@@ -83,6 +83,58 @@ def rightShift (x : CantorBoundary) : CantorBoundary :=
     rightShift x (n + 1) = x n := by
   rfl
 
+theorem prefixBit_injective (b : Bool) :
+    Function.Injective (prefixBit b) := by
+  intro x y hxy
+  funext n
+  have h := congrFun hxy (n + 1)
+  simpa [prefixBit] using h
+
+theorem leftShift_injective :
+    Function.Injective leftShift := by
+  simpa [leftShift] using prefixBit_injective false
+
+theorem rightShift_injective :
+    Function.Injective rightShift := by
+  simpa [rightShift] using prefixBit_injective true
+
+theorem leftShift_range_disjoint (x y : CantorBoundary) :
+    leftShift x ≠ rightShift y := by
+  intro hxy
+  have h := congrFun hxy 0
+  simpa [leftShift, rightShift, prefixBit] using h
+
+theorem prefixBit_head_tail (x : CantorBoundary) :
+    prefixBit (x 0) (fun n => x (n + 1)) = x := by
+  funext n
+  cases n with
+  | zero => rfl
+  | succ n => rfl
+
+theorem prefixBit_range_cover (x : CantorBoundary) :
+    (∃ y, prefixBit false y = x) ∨
+      ∃ y, prefixBit true y = x := by
+  cases h : x 0 with
+  | false =>
+      left
+      exact ⟨fun n => x (n + 1), by
+        simpa [h] using prefixBit_head_tail x⟩
+  | true =>
+      right
+      exact ⟨fun n => x (n + 1), by
+        simpa [h] using prefixBit_head_tail x⟩
+
+theorem prefixBit_nested_succ_succ
+    (a b : Bool) (x : CantorBoundary) (n : ℕ) :
+    prefixBit a (prefixBit b x) (n + 2) = x n := by
+  rfl
+
+theorem prefixBit_nested_prefix
+    (a b : Bool) (x : CantorBoundary) :
+    prefixBit a (prefixBit b x) 0 = a ∧
+      prefixBit a (prefixBit b x) 1 = b := by
+  exact ⟨rfl, rfl⟩
+
 /-- Prefixing fixes the first finite prefix bit. -/
 theorem boundaryPrefix_prefixBit_zero (n : ℕ) (b : Bool) (x : CantorBoundary) :
     boundaryPrefix (n + 1) (prefixBit b x) ⟨0, Nat.succ_pos n⟩ = b := by
@@ -121,6 +173,11 @@ def appendRightAtDepth (n : ℕ) (x : CantorBoundary) : CantorBoundary :=
 @[simp] theorem appendBitAtDepth_self (n : ℕ) (b : Bool) (x : CantorBoundary) :
     appendBitAtDepth n b x n = b := by
   simp [appendBitAtDepth]
+
+@[simp] theorem appendBitAtDepth_of_gt
+    {n k : ℕ} (hk : n < k) (b : Bool) (x : CantorBoundary) :
+    appendBitAtDepth n b x k = x k := by
+  simp [appendBitAtDepth, Nat.not_lt_of_ge (Nat.le_of_lt hk), Nat.ne_of_gt hk]
 
 /--
 The first `n+1` bits of the stage-local branch are exactly the finite word
@@ -163,35 +220,24 @@ theorem cylinder_diagEmbedSucc_appendRightAtDepth
 
 /-! ## Boundary maps attached to abstract Cuntz branches -/
 
-/--
-Proof-carrying boundary/Cuntz branch packet.
-
-The symbolic branch maps are front-prefix maps.  The algebraic branch operators
-are the existing abstract Cuntz `O₂` operators.
--/
-abbrev BoundaryCuntzShiftPacket
-    (Op : Type*) [Ring Op] [StarRing Op] := CuntzO2Carrier Op
-
 namespace BoundaryCuntzShiftPacket
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
 
-abbrev cuntz (P : BoundaryCuntzShiftPacket Op) : CuntzO2Carrier Op := P
-
-variable (P : BoundaryCuntzShiftPacket Op)
+variable (P : CuntzO2Carrier Op)
 
 /-- The symbolic boundary maps are definitions, not independent packet data. -/
-def leftBoundary : CantorBoundary → CantorBoundary := leftShift
+abbrev leftBoundary : CantorBoundary → CantorBoundary := leftShift
 
-def rightBoundary : CantorBoundary → CantorBoundary := rightShift
+abbrev rightBoundary : CantorBoundary → CantorBoundary := rightShift
 
 /-- The left algebraic Cuntz branch operator. -/
 def leftOperator : Op :=
-  P.cuntz.S_left
+  CuntzO2Carrier.S_left P
 
 /-- The right algebraic Cuntz branch operator. -/
 def rightOperator : Op :=
-  P.cuntz.S_right
+  CuntzO2Carrier.S_right P
 
 theorem leftBoundary_apply (x : CantorBoundary) :
     leftBoundary x = leftShift x := by
@@ -202,22 +248,43 @@ theorem rightBoundary_apply (x : CantorBoundary) :
   rfl
 
 theorem leftOperator_eq_cuntz :
-    P.leftOperator = P.cuntz.S_left := by
+    leftOperator P = CuntzO2Carrier.S_left P := by
   rfl
 
 theorem rightOperator_eq_cuntz :
-    P.rightOperator = P.cuntz.S_right := by
+    rightOperator P = CuntzO2Carrier.S_right P := by
   rfl
 
 /-- The Cuntz-derived CAR generator is nilpotent. -/
 theorem car_sq_zero :
-    carFromCuntz P.cuntz * carFromCuntz P.cuntz = 0 :=
-  carFromCuntz_sq_eq_zero P.cuntz
+    carFromCuntz P * carFromCuntz P = 0 :=
+  carFromCuntz_sq_eq_zero P
 
 /-- The Cuntz-derived CAR generator satisfies `{a,a*}=1`. -/
 theorem car_anticommutator_star_eq_one :
-    cantorAnticommutator (carFromCuntz P.cuntz) (star (carFromCuntz P.cuntz)) = 1 :=
-  carFromCuntz_anticommutator_star_eq_one P.cuntz
+    cantorAnticommutator (carFromCuntz P) (star (carFromCuntz P)) = 1 :=
+  carFromCuntz_anticommutator_star_eq_one P
+
+theorem left_operator_isometry :
+    star (CuntzO2Carrier.S_left P) * CuntzO2Carrier.S_left P = 1 :=
+  CuntzO2Carrier.left_isometry P
+
+theorem right_operator_isometry :
+    star (CuntzO2Carrier.S_right P) * CuntzO2Carrier.S_right P = 1 :=
+  CuntzO2Carrier.right_isometry P
+
+theorem left_right_ranges_orthogonal :
+    star (CuntzO2Carrier.S_left P) * CuntzO2Carrier.S_right P = 0 :=
+  (CuntzO2Carrier.orthogonal_ranges P).1
+
+theorem right_left_ranges_orthogonal :
+    star (CuntzO2Carrier.S_right P) * CuntzO2Carrier.S_left P = 0 :=
+  (CuntzO2Carrier.orthogonal_ranges P).2
+
+theorem range_projections_sum :
+    CuntzO2Carrier.S_left P * star (CuntzO2Carrier.S_left P) +
+        CuntzO2Carrier.S_right P * star (CuntzO2Carrier.S_right P) = 1 :=
+  CuntzO2Carrier.range_sum P
 
 end BoundaryCuntzShiftPacket
 
@@ -226,26 +293,26 @@ end BoundaryCuntzShiftPacket
 variable {Op : Type*} [Ring Op] [StarRing Op]
 
 theorem orbit_left_branch
-    (B : CantorCuntzBasis.CantorCuntzBasisPacket Op)
+    (C : CuntzO2Carrier Op) (seed : Op)
     (w : CantorCuntzBasis.BinaryWord) :
-    CantorCuntzBasis.CantorCuntzBasisPacket.orbit B (false :: w) =
-      B.cuntz.S_left * CantorCuntzBasis.CantorCuntzBasisPacket.orbit B w :=
-  CantorCuntzBasis.CantorCuntzBasisPacket.orbit_cons_false_action B w
+    CantorCuntzBasis.orbit C seed (false :: w) =
+      CuntzO2Carrier.S_left C * CantorCuntzBasis.orbit C seed w :=
+  CantorCuntzBasis.orbit_cons_false_action C seed w
 
 theorem orbit_right_branch
-    (B : CantorCuntzBasis.CantorCuntzBasisPacket Op)
+    (C : CuntzO2Carrier Op) (seed : Op)
     (w : CantorCuntzBasis.BinaryWord) :
-    CantorCuntzBasis.CantorCuntzBasisPacket.orbit B (true :: w) =
-      B.cuntz.S_right * CantorCuntzBasis.CantorCuntzBasisPacket.orbit B w :=
-  CantorCuntzBasis.CantorCuntzBasisPacket.orbit_cons_true_action B w
+    CantorCuntzBasis.orbit C seed (true :: w) =
+      CuntzO2Carrier.S_right C * CantorCuntzBasis.orbit C seed w :=
+  CantorCuntzBasis.orbit_cons_true_action C seed w
 
 theorem orbit_branch_recursion_readout
-    (B : CantorCuntzBasis.CantorCuntzBasisPacket Op)
+    (C : CuntzO2Carrier Op) (seed : Op)
     (b : Bool) (w : CantorCuntzBasis.BinaryWord) :
-    CantorCuntzBasis.CantorCuntzBasisPacket.orbit B (b :: w) =
-      (if b then B.cuntz.S_right else B.cuntz.S_left) *
-        CantorCuntzBasis.CantorCuntzBasisPacket.orbit B w :=
-  CantorCuntzBasis.CantorCuntzBasisPacket.orbit_branch_recursion B b w
+    CantorCuntzBasis.orbit C seed (b :: w) =
+      (if b then CuntzO2Carrier.S_right C else CuntzO2Carrier.S_left C) *
+        CantorCuntzBasis.orbit C seed w :=
+  CantorCuntzBasis.orbit_branch_recursion C seed b w
 
 end InfoGeometry.Canonical.CantorBoundaryCuntzShift
 

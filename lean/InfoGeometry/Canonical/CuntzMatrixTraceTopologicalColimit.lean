@@ -44,14 +44,14 @@ def topologicalDiagram (T : Data) : ℕ ⥤ TopCat where
     simpa [continuousTransition] using h
 
 abbrev topologicalColimitObject (T : Data) : TopCat :=
-  topologicalDirectColimit (topologicalDiagram T)
+  colimit (topologicalDiagram T)
 
 abbrev topologicalColimit (T : Data) : Type :=
   (topologicalColimitObject T)
 
 def topologicalInclusion (T : Data) (n : ℕ) :
     (topologicalDiagram T).obj n ⟶ topologicalColimitObject T :=
-  topologicalDirectInjection (topologicalDiagram T) n
+  colimit.ι (topologicalDiagram T) n
 
 def continuousTrace (n : ℕ) : ContinuousMap (MatrixStage n) ℂ :=
   { toFun := matrixTraceFunctional n
@@ -77,7 +77,7 @@ def traceTopologicalCocone (T : Data)
 noncomputable def traceTopologicalColimitMap (T : Data)
     (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :
     topologicalColimitObject T ⟶ TopCat.of ℂ :=
-  topologicalDirectDescend (topologicalDiagram T) (traceTopologicalCocone T hT)
+  colimit.desc (topologicalDiagram T) (traceTopologicalCocone T hT)
 
 theorem traceTopologicalColimitMap_inclusion (T : Data)
     (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)

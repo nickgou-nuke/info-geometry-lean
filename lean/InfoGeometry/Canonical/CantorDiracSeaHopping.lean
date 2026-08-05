@@ -64,6 +64,33 @@ theorem flipAt_involutive (i : Nat) (w : BinaryWord) :
       | cons b w =>
           simp [ih]
 
+theorem flipAt_comm_of_ne
+    {i j : Nat} (hij : i ≠ j) (w : BinaryWord) :
+    flipAt i (flipAt j w) = flipAt j (flipAt i w) := by
+  induction i generalizing j w with
+  | zero =>
+      cases j with
+      | zero => exact False.elim (hij rfl)
+      | succ j =>
+          cases w with
+          | nil => rfl
+          | cons b w => rfl
+  | succ i ih =>
+      cases j with
+      | zero =>
+          cases w with
+          | nil => rfl
+          | cons b w => rfl
+      | succ j =>
+          cases w with
+          | nil => rfl
+          | cons b w =>
+              have hne : i ≠ j := by
+                intro h
+                apply hij
+                simp [h]
+              simpa using ih hne w
+
 /-- A flip beyond the word length is the identity. -/
 theorem flipAt_eq_self_of_length_le
     {i : Nat} {w : BinaryWord}

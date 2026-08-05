@@ -58,17 +58,17 @@ A Fresnel reflection event in the `s/p` basis.
 `rs` and `rp` are the complex Fresnel amplitude reflection coefficients.
 `tag` records the discrete orientation bookkeeping of the event.
 -/
-structure FresnelReflection where
-  /-- Complex `s`-polarized reflection coefficient. -/
-  rs : ℂ
-
-  /-- Complex `p`-polarized reflection coefficient. -/
-  rp : ℂ
-
-  /-- Discrete V4 orientation tag. -/
-  tag : InfoGeometry.Geometry.KleinFourTag.Tag
+abbrev FresnelReflection :=
+  ℂ × ℂ × InfoGeometry.Geometry.KleinFourTag.Tag
 
 namespace FresnelReflection
+
+abbrev rs (R : FresnelReflection) : ℂ := R.1
+
+abbrev rp (R : FresnelReflection) : ℂ := R.2.1
+
+abbrev tag (R : FresnelReflection) : InfoGeometry.Geometry.KleinFourTag.Tag := R.2.2
+
 
 /-- Jones matrix of a Fresnel reflection in the `s/p` basis. -/
 def jones
@@ -130,17 +130,17 @@ Transport in the circular `L/R` basis.
 A chiral medium is diagonal in this basis when it has circular birefringence or
 circular dichroism.
 -/
-structure CircularTransport where
-  /-- Left-circular channel coefficient. -/
-  lCoeff : ℂ
-
-  /-- Right-circular channel coefficient. -/
-  rCoeff : ℂ
-
-  /-- Discrete V4 orientation tag. -/
-  tag : InfoGeometry.Geometry.KleinFourTag.Tag
+abbrev CircularTransport :=
+  ℂ × ℂ × InfoGeometry.Geometry.KleinFourTag.Tag
 
 namespace CircularTransport
+
+abbrev lCoeff (C : CircularTransport) : ℂ := C.1
+
+abbrev rCoeff (C : CircularTransport) : ℂ := C.2.1
+
+abbrev tag (C : CircularTransport) : InfoGeometry.Geometry.KleinFourTag.Tag := C.2.2
+
 
 /-- Jones matrix in the circular `L/R` basis. -/
 def jones
@@ -182,45 +182,40 @@ This packages a Jones matrix with its discrete V4 orientation tag.  Coherence,
 complete positivity, and noncommutative transport laws belong to their
 operator-algebraic owners and are not represented by free proposition fields.
 -/
-structure JonesTransport where
-  /-- Continuous Jones/Fresnel operator. -/
-  matrix : JonesMat
+abbrev JonesTransport :=
+  JonesMat × InfoGeometry.Geometry.KleinFourTag.Tag × OpticalEventKind
 
-  /-- Discrete orientation/PT/parity bookkeeping. -/
-  tag : InfoGeometry.Geometry.KleinFourTag.Tag
+namespace JonesTransport
 
-  /-- Optical event type. -/
-  kind : OpticalEventKind
+abbrev matrix (J : JonesTransport) : JonesMat := J.1
+
+abbrev tag (J : JonesTransport) : InfoGeometry.Geometry.KleinFourTag.Tag := J.2.1
+
+abbrev kind (J : JonesTransport) : OpticalEventKind := J.2.2
+
+end JonesTransport
 
 /-- A Fresnel reflection supplies a diagonal `s/p` Jones transport. -/
 def fresnelJonesTransport
-    (R : FresnelReflection) : JonesTransport where
-  matrix := R.jones
-  tag := R.tag
-  kind := OpticalEventKind.dielectricReflection
+    (R : FresnelReflection) : JonesTransport :=
+  (R.jones, R.tag, OpticalEventKind.dielectricReflection)
 
 /-- A Brewster reflection supplies a singular/projector-type transport event. -/
 def brewsterJonesTransport
     (R : FresnelReflection)
-    (_hR : IsBrewsterReflection R) : JonesTransport where
-  matrix := R.jones
-  tag := R.tag
-  kind := OpticalEventKind.brewsterReflection
+    (_hR : IsBrewsterReflection R) : JonesTransport :=
+  (R.jones, R.tag, OpticalEventKind.brewsterReflection)
 
 /-- A lossless total-internal-reflection branch supplies a phase-retarder event. -/
 def losslessRetarderJonesTransport
     (R : FresnelReflection)
-    (_hR : IsLosslessRetarder R) : JonesTransport where
-  matrix := R.jones
-  tag := R.tag
-  kind := OpticalEventKind.totalInternalReflection
+    (_hR : IsLosslessRetarder R) : JonesTransport :=
+  (R.jones, R.tag, OpticalEventKind.totalInternalReflection)
 
 /-- A chiral medium supplies circular-basis Cartan transport. -/
 def chiralJonesTransport
-    (C : CircularTransport) : JonesTransport where
-  matrix := C.jones
-  tag := C.tag
-  kind := OpticalEventKind.chiralMedium
+    (C : CircularTransport) : JonesTransport :=
+  (C.jones, C.tag, OpticalEventKind.chiralMedium)
 
 /--
 Rough or depolarizing surfaces are marked explicitly as outside the pure Jones
@@ -228,10 +223,8 @@ regime unless a concrete model supplies a coherence certificate.
 -/
 def depolarizingSurfaceTransport
     (M : JonesMat)
-    (tag : InfoGeometry.Geometry.KleinFourTag.Tag) : JonesTransport where
-  matrix := M
-  tag := tag
-  kind := OpticalEventKind.roughDepolarizingSurface
+    (tag : InfoGeometry.Geometry.KleinFourTag.Tag) : JonesTransport :=
+  (M, tag, OpticalEventKind.roughDepolarizingSurface)
 
 /-! ## 6. Noncommutative operatorial realization -/
 

@@ -20,8 +20,14 @@ A minimal stability gate: the unpaired leakage scalar is represented by the
 same finite Witten-index trace.  This is an algebraic isolation valve, not a
 spectral or model-completeness theorem.
 -/
-structure HomologicalBraidStability where
-  unpairedLeak : ℂ
+abbrev HomologicalBraidStability := ℂ
+
+namespace HomologicalBraidStability
+
+/-- Compatibility accessor for the native complex leakage scalar. -/
+abbrev unpairedLeak (stable : HomologicalBraidStability) : ℂ := stable
+
+end HomologicalBraidStability
 
 namespace HomologicalBraidStability
 
@@ -40,8 +46,8 @@ theorem no_unpaired_leak
 end HomologicalBraidStability
 
 /-- Canonical finite stability gate for the two-state SUSY block. -/
-def canonicalHomologicalBraidStability : HomologicalBraidStability where
-  unpairedLeak := witten_index_trace
+def canonicalHomologicalBraidStability : HomologicalBraidStability :=
+  witten_index_trace
 
 /-- The canonical finite braid-stability gate has no unpaired leakage. -/
 theorem canonical_no_unpaired_leak : canonicalHomologicalBraidStability.unpairedLeak = 0 :=

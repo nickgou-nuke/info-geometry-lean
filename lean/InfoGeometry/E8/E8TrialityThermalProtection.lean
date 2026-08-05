@@ -47,31 +47,36 @@ The split real form of E₈ has maximal non-compact signature.
 Maximal compact subalgebra: so(8, 8) ≅ Spin(8,8) / ℤ₂
 TODO: replace this finite witness by a real split-form construction when available
 -/
-structure E8SplitForm where
-  dimension : ℕ
-  rank : ℕ
-  /-- Maximal compact subgroup dimension witness. -/
-  maximal_compact_dimension : ℕ
+/- The finite carrier is the native triple of numerical readouts, restricted
+to the canonical values used by this owner. -/
+abbrev E8SplitForm :=
+  {data : ℕ × (ℕ × ℕ) //
+    data.1 = dim_E8 ∧
+      data.2.1 = rank_E8 ∧
+      data.2.2 = positive_roots_E8}
 
-/-- Finite numerical predicate for the canonical datum used in this file. -/
-def E8SplitForm.IsCanonical (E : E8SplitForm) : Prop :=
-  E.dimension = dim_E8 ∧
-  E.rank = rank_E8 ∧
-  E.maximal_compact_dimension = positive_roots_E8
+namespace E8SplitForm
+
+abbrev dimension (E : E8SplitForm) : ℕ := E.1.1
+abbrev rank (E : E8SplitForm) : ℕ := E.1.2.1
+abbrev maximal_compact_dimension (E : E8SplitForm) : ℕ := E.1.2.2
+
+def IsCanonical (E : E8SplitForm) : Prop :=
+  E.1.1 = dim_E8 ∧
+    E.1.2.1 = rank_E8 ∧
+    E.1.2.2 = positive_roots_E8
+
+end E8SplitForm
 
 /-- Canonical E8 split form instance -/
-def canonicalE8SplitForm : E8SplitForm where
-  dimension := dim_E8
-  rank := rank_E8
-  maximal_compact_dimension := 120
+def canonicalE8SplitForm : E8SplitForm :=
+  ⟨(dim_E8, rank_E8, positive_roots_E8), by
+    simp [dim_E8, rank_E8, positive_roots_E8]⟩
 
 /-- The canonical finite witness has the declared E₈ dimension and rank. -/
 theorem canonicalE8SplitForm_isCanonical :
     canonicalE8SplitForm.IsCanonical := by
-  refine ⟨?_, ?_, ?_⟩
-  · rfl
-  · rfl
-  · rfl
+  simpa [E8SplitForm.IsCanonical] using canonicalE8SplitForm.property
 
 /--
 Historical finite split-lane readback, recovered from the strengthened
@@ -92,6 +97,7 @@ theorem canonicalE8SplitForm_is_split :
 namespace E8SplitForm
 
 /-- A canonical finite datum has compact-dimension parameter `120`. -/
+
 theorem maximal_compact_dim_eq_120 (E : E8SplitForm)
     (hE : E.IsCanonical) :
     E.maximal_compact_dimension = 120 :=

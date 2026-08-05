@@ -12,28 +12,19 @@ natively within the safe sandbox layer to protect the primary codebase.
 namespace InfoGeometry.Sandbox.ChernIsomorphismSandbox
 
 /-- Representation of the abstract Even De Rham / Cyclic Cohomology Module space -/
-structure EvenCohomology (A : Type*) (R : Type*) [CommRing R] where
-  H : Type*
-  [instAddCommGroup : AddCommGroup H]
-  [instModule : Module R H]
-
-attribute [instance] EvenCohomology.instAddCommGroup
-attribute [instance] EvenCohomology.instModule
+abbrev EvenCohomology (_A : Type*) (_R : Type*) := Type*
 
 /-- Abstract representation of the K₀ Grothendieck Group -/
-structure K0Group (A : Type*) where
-  G : Type*
-  [instAddCommGroup : AddCommGroup G]
-
-attribute [instance] K0Group.instAddCommGroup
+abbrev K0Group (_A : Type*) := Type*
 
 /-- 
   The Chern Character Isomorphism Structure.
   Maps the discrete K-theory invariants into the continuous differential forms space.
 -/
 structure ChernCharacter (A : Type*) (R : Type*) [CommRing R] 
-    (K : K0Group A) (H_ev : EvenCohomology A R) where
-  ch_map : K.G →+ H_ev.H
+    (K : K0Group A) (H_ev : EvenCohomology A R)
+    [AddCommGroup K] [AddCommGroup H_ev] [Module R H_ev] where
+  ch_map : K →+ H_ev
   -- The core requirement: the map is a strict isomorphism of topological invariants
   is_bijective : Function.Bijective ch_map
 
@@ -47,7 +38,9 @@ def m2_chern_isomorphism_rank : ℤ := 1
   under the m2_chern_isomorphism_rank = 1 condition.
 -/
 theorem chern_map_preserves_zero (A : Type*) (R : Type*) [CommRing R]
-    (K : K0Group A) (H_ev : EvenCohomology A R) (ch : ChernCharacter A R K H_ev)
+    (K : K0Group A) (H_ev : EvenCohomology A R)
+    [AddCommGroup K] [AddCommGroup H_ev] [Module R H_ev]
+    (ch : ChernCharacter A R K H_ev)
     (h_rank : m2_chern_isomorphism_rank = 1) :
     ch.ch_map 0 = 0 := by
   -- Fully resolved by native Mathlib 4 additive homomorphism properties

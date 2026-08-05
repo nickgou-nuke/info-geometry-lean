@@ -48,10 +48,8 @@ namespace PositiveSouriauTemperature
 /-- Forget the thermodynamic packaging and read the temperature as a real UHP point. -/
 def toRealUpperHalfPlane
     (T : PositiveSouriauTemperature) :
-    RealUpperHalfPlane where
-  x := T.temp.s.re
-  y := T.temp.s.im
-  y_pos := T.im_pos
+    RealUpperHalfPlane :=
+  (T.temp.s.re, ⟨T.temp.s.im, T.im_pos⟩)
 
 /-- Package a real UHP point as a positive Souriau temperature. -/
 def ofRealUpperHalfPlane
@@ -162,11 +160,14 @@ element.
 This is deliberately witness-gated: the sidecar does not assert which matrix is
 the physical inversion unless a model supplies it.
 -/
-structure ProjectiveTemperatureInversion where
-  element : SL2R
-  element_sq : element * element = 1
+abbrev ProjectiveTemperatureInversion :=
+  {element : SL2R // element * element = 1}
 
 namespace ProjectiveTemperatureInversion
+
+abbrev element (I : ProjectiveTemperatureInversion) : SL2R := I.1
+
+abbrev element_sq (I : ProjectiveTemperatureInversion) : I.element * I.element = 1 := I.2
 
 /--
 The existing abstract closure-involution socket applied to the transported
@@ -264,15 +265,15 @@ whose square is either `I` or `-I`.
 This is the concrete socket for matrices such as the modular `S` element:
 `S^2 = -I` in `SL2R`, but `-I` acts trivially on the upper half-plane.
 -/
-structure ProjectiveLiftTemperatureInversion where
-  /-- A chosen `SL2R` lift of the projective inversion. -/
-  element : SL2R
-
-  /-- The lift squares to either `I` or the central lift `-I`. -/
-  element_sq_lift :
-    element * element = 1 ∨ element * element = negIdSL2R
+abbrev ProjectiveLiftTemperatureInversion :=
+  {element : SL2R // element * element = 1 ∨ element * element = negIdSL2R}
 
 namespace ProjectiveLiftTemperatureInversion
+
+abbrev element (I : ProjectiveLiftTemperatureInversion) : SL2R := I.1
+
+abbrev element_sq_lift (I : ProjectiveLiftTemperatureInversion) :
+    I.element * I.element = 1 ∨ I.element * I.element = negIdSL2R := I.2
 
 /-- The lift square acts trivially on positive Souriau temperatures. -/
 theorem smul_trivial_of_projective_sq

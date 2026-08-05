@@ -1,3 +1,6 @@
+import Mathlib.Topology.LocallyClosed
+import Mathlib.Topology.Compactness.LocallyCompact
+import Mathlib.Topology.Instances.Matrix
 import InfoGeometry.Topology.PositiveGrassmannianAmplituhedronTopological
 
 /-!
@@ -30,6 +33,12 @@ def vanishingMinorLocus (spec : MinorCellSpec k n) :
     Set (Matrix (Fin k) (Fin n) ℝ) :=
   {C | ∀ r, maximalMinor C (spec.vanishingIndex r) = 0}
 
+/-- The finite BCFW-style cell locus obtained by imposing positive and vanishing
+minor constraints simultaneously. -/
+def minorCellLocus (spec : MinorCellSpec k n) :
+    Set (Matrix (Fin k) (Fin n) ℝ) :=
+  positiveMinorLocus spec ∩ vanishingMinorLocus spec
+
 theorem isOpen_positiveMinorLocus (spec : MinorCellSpec k n) :
     IsOpen (positiveMinorLocus spec) := by
   rw [show positiveMinorLocus spec =
@@ -54,5 +63,20 @@ theorem isClosed_vanishingMinorLocus (spec : MinorCellSpec k n) :
   intro r
   exact isClosed_singleton.preimage
     (continuous_maximalMinor (spec.vanishingIndex r))
+
+theorem isLocallyClosed_minorCellLocus (spec : MinorCellSpec k n) :
+    IsLocallyClosed (minorCellLocus spec) := by
+  unfold minorCellLocus
+  exact (isOpen_positiveMinorLocus spec).isLocallyClosed.inter
+    (isClosed_vanishingMinorLocus spec).isLocallyClosed
+
+/-- The BCFW-style minor cell locus is locally compact inside the ambient
+matrix chart. -/
+instance minorCellLocus_locallyCompactSpace (spec : MinorCellSpec k n) :
+    LocallyCompactSpace (minorCellLocus spec) := by
+  haveI : LocallyCompactSpace (Matrix (Fin k) (Fin n) ℝ) := by
+    change LocallyCompactSpace (Fin k → Fin n → ℝ)
+    infer_instance
+  exact (isLocallyClosed_minorCellLocus spec).locallyCompactSpace
 
 end InfoGeometry.Topology

@@ -109,9 +109,9 @@ theorem exists_perm_decomposition_of_bistochastic
     (switchMatrix_mem_doublyStochastic (n := n) β x hcol)
 
 /--
-Certificate that a switch matrix has been Sinkhorn-balanced into a bistochastic matrix.
+Data witnessing that a switch matrix has been Sinkhorn-balanced into a bistochastic matrix.
 -/
-structure SinkhornCertificate (β : ℝ) (x : Fin n → V) where
+structure SinkhornBalanceData (β : ℝ) (x : Fin n → V) where
   leftScale : Fin n → ℝ
   rightScale : Fin n → ℝ
   leftScale_pos : ∀ i, 0 < leftScale i
@@ -122,9 +122,9 @@ structure SinkhornCertificate (β : ℝ) (x : Fin n → V) where
 
 omit [NormedSpace ℝ V] [Nonempty (Fin n)] in
 /-- Construct a certificate trivially when the switch is already bistochastic. -/
-noncomputable def SinkhornCertificate.ofBistochastic
+noncomputable def SinkhornBalanceData.ofBistochastic
     (β : ℝ) (x : Fin n → V) (hcol : IsBistochasticSwitch n β x) :
-    SinkhornCertificate (n := n) β x where
+    SinkhornBalanceData (n := n) β x where
   leftScale := fun _ => 1
   rightScale := fun _ => 1
   leftScale_pos _ := zero_lt_one
@@ -139,7 +139,7 @@ omit [NormedSpace ℝ V] [Nonempty (Fin n)] in
 Any Sinkhorn-balanced switch matrix admits a permutation simplex decomposition.
 -/
 theorem exists_perm_decomposition_of_sinkhornBalanced
-    (β : ℝ) (x : Fin n → V) (cert : SinkhornCertificate (n := n) β x) :
+    (β : ℝ) (x : Fin n → V) (cert : SinkhornBalanceData (n := n) β x) :
     ∃ w : Equiv.Perm (Fin n) → ℝ,
       (∀ σ, 0 ≤ w σ) ∧
       ∑ σ, w σ = 1 ∧
@@ -864,7 +864,7 @@ attribute [rep_depth operator]
   switchMatrix_row_sum_one
   switchMatrix_mem_rowStochastic
   switchMatrix_mem_doublyStochastic
-  SinkhornCertificate.ofBistochastic
+  SinkhornBalanceData.ofBistochastic
   gc_partition_eq_routerPartition
   gc_gibbsWeight_eq_normalizedWeights
   routerParams

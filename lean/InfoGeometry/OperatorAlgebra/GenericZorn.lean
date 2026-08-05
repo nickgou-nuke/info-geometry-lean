@@ -14,6 +14,9 @@ open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
 
 namespace InfoGeometry.OperatorAlgebra.GenericZorn
 
+variable {R : Type*} [CommRing R]
+
+@[ext]
 structure ZornSplitOctonion (R : Type*) [CommRing R] where
   a : R
   b : R
@@ -36,11 +39,11 @@ def scalar (r : R) : ZornSplitOctonion R :=
 def mul (x y : ZornSplitOctonion R) : ZornSplitOctonion R :=
   ⟨ x.a * y.a + (x.x0 * y.y0 + x.x1 * y.y1 + x.x2 * y.y2),
     x.b * y.b + (x.y0 * y.x0 + x.y1 * y.x1 + x.y2 * y.x2),
-    x.a * y.x0 + y.b * x.x0 - (x.x1 * y.x2 - x.x2 * y.x1),
-    x.a * y.x1 + y.b * x.x1 - (x.x2 * y.x0 - x.x0 * y.x2),
-    x.a * y.x2 + y.b * x.x2 - (x.x0 * y.x1 - x.x1 * y.x0),
-    x.b * y.y0 + y.a * x.y0 + (x.y1 * y.y2 - x.y2 * y.y1),
-    x.b * y.y1 + y.a * x.y1 + (x.y2 * y.y0 - x.y0 * y.y2),
+    x.a * y.x0 + y.b * x.x0 - (x.y1 * y.y2 - x.y2 * y.y1),
+    x.a * y.x1 + y.b * x.x1 - (x.y2 * y.y0 - x.y0 * y.y2),
+    x.a * y.x2 + y.b * x.x2 - (x.y0 * y.y1 - x.y1 * y.y0),
+    x.b * y.y0 + y.a * x.y0 + (x.x1 * y.x2 - x.x2 * y.x1),
+    x.b * y.y1 + y.a * x.y1 + (x.x2 * y.x0 - x.x0 * y.x2),
     x.b * y.y2 + y.a * x.y2 + (x.x0 * y.x1 - x.x1 * y.x0) ⟩
 
 def norm (x : ZornSplitOctonion R) : R :=
@@ -56,7 +59,7 @@ theorem norm_mul (x y : ZornSplitOctonion R) :
     cases y with
     | mk c d u0 u1 u2 v0 v1 v2 =>
       simp [norm, mul]
-      ring
+      ring_nf
 
 theorem mul_conjugate (x : ZornSplitOctonion R) :
     mul x (conjugate x) = scalar (norm x) := by
@@ -85,7 +88,7 @@ def integralLattice : Set (ZornSplitOctonion ℚ) :=
 
 theorem integral_norm (x : SplitOct) :
     norm (integralEmbedding x) = (detZ x : ℚ) := by
-  rfl
+  simp [norm, integralEmbedding, detZ]
 
 theorem integral_mul_embedding (x y : SplitOct) :
     mul (integralEmbedding x) (integralEmbedding y) =
@@ -106,7 +109,7 @@ theorem integral_lattice_mul_closed
   exact ⟨mulZ x y, (integral_mul_embedding x y).symm⟩
 
 /-- A concrete rational Cartan coordinate. -/
-def cartanCharge (x : ZornSplitOctonion ℚ) : ℚ := x.a
+abbrev cartanCharge (x : ZornSplitOctonion ℚ) : ℚ := x.a
 
 /-- The finite charge labels used by this explicitly specified state sector. -/
 def chargeValue : Fin 6 → ℚ :=

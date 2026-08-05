@@ -11,8 +11,14 @@ open InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost
 
 namespace InfoGeometry.Arithmetic.PrimeSpinorWittenIndex
 
-structure MajoranaPfaffianBlock (R : Type*) where
-  entry : R
+abbrev MajoranaPfaffianBlock (R : Type*) := R
+
+namespace MajoranaPfaffianBlock
+
+abbrev entry {R : Type*} (B : MajoranaPfaffianBlock R) : R :=
+  B
+
+end MajoranaPfaffianBlock
 
 def majoranaBlockPfaffian
   {R : Type*}
@@ -34,7 +40,7 @@ theorem majoranaBlockPfaffian_sq_eq_determinant
 def primeSpinorMajoranaBlock
   {R : Type*} [CommRing R]
   (a : R) : MajoranaPfaffianBlock R :=
-  ⟨spinorBilinear (thermalSpinorPlus a) (thermalSpinorMinus a)⟩
+  spinorBilinear (thermalSpinorPlus a) (thermalSpinorMinus a)
 
 theorem majoranaBlockPfaffian_primeSpinorMajoranaBlock
   {R : Type*} [CommRing R]

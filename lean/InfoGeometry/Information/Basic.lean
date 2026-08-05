@@ -12,13 +12,12 @@ open MeasureTheory
 /--
 An open parameter domain in `ℝ^n`, represented as a set with an explicit `IsOpen` proof.
 -/
-structure OpenParameterDomain (n : ℕ) where
-  carrier : Set (EuclideanSpace ℝ (Fin n))
-  isOpen : IsOpen carrier
+abbrev OpenParameterDomain (n : ℕ) :=
+  {U : Set (EuclideanSpace ℝ (Fin n)) // IsOpen U}
 
 /-- Parameter points are subtype points of the open chart. -/
 abbrev ParameterPoint (n : ℕ) (U : OpenParameterDomain n) : Type _ :=
-  {θ : EuclideanSpace ℝ (Fin n) // θ ∈ U.carrier}
+  {θ : EuclideanSpace ℝ (Fin n) // θ ∈ U.1}
 
 /--
 Parametric family of measures indexed by an arbitrary parameter space `Θ`, together with

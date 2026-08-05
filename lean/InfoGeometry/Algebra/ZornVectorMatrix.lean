@@ -2411,7 +2411,6 @@ def coordEquiv : ZornVectorMatrix R ≃ (R × (Fin 3 → R) × (Fin 3 → R) × 
 instance : Add (ZornVectorMatrix R) := ⟨add⟩
 instance : Zero (ZornVectorMatrix R) := ⟨zero⟩
 instance : Neg (ZornVectorMatrix R) := ⟨neg⟩
-instance : Sub (ZornVectorMatrix R) := ⟨sub⟩
 
 instance : AddCommGroup (ZornVectorMatrix R) :=
   Equiv.addCommGroup coordEquiv

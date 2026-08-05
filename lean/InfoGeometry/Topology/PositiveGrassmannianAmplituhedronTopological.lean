@@ -116,6 +116,27 @@ theorem isCompact_boundedAmplituhedronImage
   exact (isCompact_positiveGrassmannianBoundedSlice (k := k) (n := n) B).image
     (continuous_amplituhedronMap Z)
 
+/-! A compact bounded chart has a closed amplituhedron image.  This is a
+finite-dimensional topological result; it does not identify the image with a
+quotient Grassmannian or with a canonical-form boundary. -/
+theorem isClosed_boundedAmplituhedronImage
+    (Z : Matrix (Fin n) (Fin m) ℝ) (B : ℝ) :
+    IsClosed (boundedAmplituhedronImage (k := k) (n := n) (m := m) Z B) := by
+  exact (isCompact_boundedAmplituhedronImage (k := k) (n := n) (m := m) Z B).isClosed
+
+theorem boundedAmplituhedronImage_subset_amplituhedronImage
+    (Z : Matrix (Fin n) (Fin m) ℝ) (B : ℝ) :
+    boundedAmplituhedronImage (k := k) (n := n) (m := m) Z B ⊆
+      amplituhedronImage (k := k) (n := n) (m := m) Z := by
+  rintro Y ⟨C, hC, rfl⟩
+  exact ⟨C, hC.1, rfl⟩
+
+theorem closure_boundedAmplituhedronImage
+    (Z : Matrix (Fin n) (Fin m) ℝ) (B : ℝ) :
+    closure (boundedAmplituhedronImage (k := k) (n := n) (m := m) Z B) =
+      boundedAmplituhedronImage (k := k) (n := n) (m := m) Z B := by
+  exact (isClosed_boundedAmplituhedronImage (k := k) (n := n) (m := m) Z B).closure_eq
+
 theorem isClosed_amplituhedronMap_coordinate_sublevel
     (Z : Matrix (Fin n) (Fin m) ℝ) (i : Fin k) (j : Fin m) (a : ℝ) :
     IsClosed {C : Matrix (Fin k) (Fin n) ℝ |

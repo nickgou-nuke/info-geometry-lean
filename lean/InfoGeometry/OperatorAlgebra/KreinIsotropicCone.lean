@@ -453,9 +453,9 @@ def HasDrazinInverse
 
 namespace HasDrazinInverse
 
-def x {A : Type*} [Ring A] {a : A} (h : HasDrazinInverse a) : A := h.1.1
+abbrev x {A : Type*} [Ring A] {a : A} (h : HasDrazinInverse a) : A := h.1.1
 
-def index {A : Type*} [Ring A] {a : A} (h : HasDrazinInverse a) : ℕ := h.1.2
+abbrev index {A : Type*} [Ring A] {a : A} (h : HasDrazinInverse a) : ℕ := h.1.2
 
 theorem commute {A : Type*} [Ring A] {a : A} (h : HasDrazinInverse a) :
     a * h.x = h.x * a :=

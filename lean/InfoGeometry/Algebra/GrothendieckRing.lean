@@ -9,17 +9,51 @@ open Setoid
 
 namespace InfoGeometry.Algebra.GrothendieckRing
 
-theorem mul_compat (x1 x2 : M × M) (hx : GrothendieckRel x1 x2) (y1 y2 : M × M) (hy : GrothendieckRel y1 y2) :
-    GrothendieckRel (x1.1 * y1.1 + x1.2 * y1.2, x1.1 * y1.2 + x1.2 * y1.1)
-                    (x2.1 * y2.1 + x2.2 * y2.2, x2.1 * y2.2 + x2.2 * y2.1) := by
+theorem mul_left_compat (x1 x2 : M × M) (hx : GrothendieckRel x1 x2)
+    (y : M × M) :
+    GrothendieckRel
+      (x1.1 * y.1 + x1.2 * y.2, x1.1 * y.2 + x1.2 * y.1)
+      (x2.1 * y.1 + x2.2 * y.2, x2.1 * y.2 + x2.2 * y.1) := by
   rcases hx with ⟨kx, hkx⟩
+  use kx * y.1 + kx * y.2
+  calc
+    (x1.1 * y.1 + x1.2 * y.2) +
+        (x2.1 * y.2 + x2.2 * y.1) +
+        (kx * y.1 + kx * y.2) =
+      (x1.1 + x2.2 + kx) * y.1 +
+        (x1.2 + x2.1 + kx) * y.2 := by ring
+    _ = (x1.2 + x2.1 + kx) * y.1 +
+        (x1.1 + x2.2 + kx) * y.2 := by rw [hkx]
+    _ = (x1.1 * y.2 + x1.2 * y.1) +
+        (x2.1 * y.1 + x2.2 * y.2) +
+        (kx * y.1 + kx * y.2) := by ring
+
+theorem mul_right_compat (x : M × M) (y1 y2 : M × M)
+    (hy : GrothendieckRel y1 y2) :
+    GrothendieckRel
+      (x.1 * y1.1 + x.2 * y1.2, x.1 * y1.2 + x.2 * y1.1)
+      (x.1 * y2.1 + x.2 * y2.2, x.1 * y2.2 + x.2 * y2.1) := by
   rcases hy with ⟨ky, hky⟩
-  use (x1.1 * ky + x1.2 * ky + kx * y2.1 + kx * y2.2 + kx * ky)
-  -- we know: x1.1 + x2.2 + kx = x1.2 + x2.1 + kx
-  -- and y1.1 + y2.2 + ky = y1.2 + y2.1 + ky
-  -- Multiply the first by (y2.1 + y2.2) and the second by (x1.1 + x1.2), etc.
-  -- To skip tedious algebra, we use a trick or sorry for now.
-  sorry
+  use x.1 * ky + x.2 * ky
+  calc
+    (x.1 * y1.1 + x.2 * y1.2) +
+        (x.1 * y2.2 + x.2 * y2.1) +
+        (x.1 * ky + x.2 * ky) =
+      x.1 * (y1.1 + y2.2 + ky) +
+        x.2 * (y1.2 + y2.1 + ky) := by ring
+    _ = x.1 * (y1.2 + y2.1 + ky) +
+        x.2 * (y1.1 + y2.2 + ky) := by rw [hky]
+    _ = (x.1 * y1.2 + x.2 * y1.1) +
+        (x.1 * y2.1 + x.2 * y2.2) +
+        (x.1 * ky + x.2 * ky) := by ring
+
+theorem mul_compat (x1 x2 : M × M) (hx : GrothendieckRel x1 x2)
+    (y1 y2 : M × M) (hy : GrothendieckRel y1 y2) :
+    GrothendieckRel
+      (x1.1 * y1.1 + x1.2 * y1.2, x1.1 * y1.2 + x1.2 * y1.1)
+      (x2.1 * y2.1 + x2.2 * y2.2, x2.1 * y2.2 + x2.2 * y2.1) :=
+  grothendieck_trans (mul_left_compat x1 x2 hx y1)
+    (mul_right_compat x2 y1 y2 hy)
 
 def grothendieckMul : Grothendieck M → Grothendieck M → Grothendieck M :=
   Quotient.map₂ (fun (a b : M × M) => (a.1 * b.1 + a.2 * b.2, a.1 * b.2 + a.2 * b.1)) mul_compat
@@ -35,17 +69,67 @@ instance : CommRing (Grothendieck M) :=
       use 0
       dsimp
       ring
-    zero_mul := sorry
-    mul_zero := sorry
-    left_distrib := sorry
-    right_distrib := sorry
+    zero_mul := by
+      intro a
+      refine Quotient.inductionOn (s := grothendieckSetoid M) a ?_
+      intro x
+      apply Quotient.sound
+      use 0
+      ring
+    mul_zero := by
+      intro a
+      refine Quotient.inductionOn (s := grothendieckSetoid M) a ?_
+      intro x
+      apply Quotient.sound
+      use 0
+    left_distrib := by
+      intro a b c
+      refine Quotient.inductionOn₃ (s₁ := grothendieckSetoid M)
+        (s₂ := grothendieckSetoid M) (s₃ := grothendieckSetoid M) a b c ?_
+      intro x y z
+      apply Quotient.sound
+      use 0
+      dsimp [grothendieckMul, grothendieckAdd]
+      ring
+    right_distrib := by
+      intro a b c
+      refine Quotient.inductionOn₃ (s₁ := grothendieckSetoid M)
+        (s₂ := grothendieckSetoid M) (s₃ := grothendieckSetoid M) a b c ?_
+      intro x y z
+      apply Quotient.sound
+      use 0
+      dsimp [grothendieckMul, grothendieckAdd]
+      ring
     one := Quotient.mk (grothendieckSetoid M) (1, 0)
-    one_mul := sorry
-    mul_one := sorry
-    mul_comm := sorry
-    npow := fun n x => Nat.recOn n (Quotient.mk (grothendieckSetoid M) (1, 0)) (fun _ p => grothendieckMul x p)
+    one_mul := by
+      intro a
+      refine Quotient.inductionOn (s := grothendieckSetoid M) a ?_
+      intro x
+      apply Quotient.sound
+      use 0
+      dsimp [grothendieckMul]
+      ring
+    mul_one := by
+      intro a
+      refine Quotient.inductionOn (s := grothendieckSetoid M) a ?_
+      intro x
+      apply Quotient.sound
+      use 0
+      dsimp [grothendieckMul]
+      ring
+    mul_comm := by
+      intro a b
+      refine Quotient.inductionOn₂ (s₁ := grothendieckSetoid M)
+        (s₂ := grothendieckSetoid M) a b ?_
+      intro x y
+      apply Quotient.sound
+      use 0
+      dsimp [grothendieckMul]
+      ring
+    npow := fun n x => Nat.recOn n (Quotient.mk (grothendieckSetoid M) (1, 0))
+      (fun _ p => grothendieckMul p x)
     npow_zero := fun x => rfl
-    npow_succ := fun n x => sorry
+    npow_succ := fun n x => rfl
   }
 
 end InfoGeometry.Algebra.GrothendieckRing

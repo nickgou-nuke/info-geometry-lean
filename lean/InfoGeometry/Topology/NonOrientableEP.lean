@@ -5,18 +5,28 @@ import Mathlib.Data.Real.Pi.Bounds
 namespace InfoGeometry.Topology.NonOrientableEP
 
 /-- Coordinates in the Brillouin Zone -/
-structure Momentum where
-  kx : ℝ
-  ky : ℝ
+abbrev Momentum := ℝ × ℝ
+
+namespace Momentum
+
+abbrev kx (k : Momentum) : ℝ := k.1
+abbrev ky (k : Momentum) : ℝ := k.2
+
+end Momentum
 
 /-- The action of glide symmetry on momentum space -/
 noncomputable def glide (k : Momentum) : Momentum :=
-  { kx := -k.kx, ky := k.ky + Real.pi }
+  (-k.kx, k.ky + Real.pi)
 
 /-- An abstract 2-band Hamiltonian -/
-structure TwoBandHamiltonian where
-  dx : Momentum → ℂ
-  dy : Momentum → ℂ
+abbrev TwoBandHamiltonian := (Momentum → ℂ) × (Momentum → ℂ)
+
+namespace TwoBandHamiltonian
+
+abbrev dx (H : TwoBandHamiltonian) : Momentum → ℂ := H.1
+abbrev dy (H : TwoBandHamiltonian) : Momentum → ℂ := H.2
+
+end TwoBandHamiltonian
 
 /-- A Hamiltonian satisfies the Klein Brillouin Zone glide symmetry if it is invariant under the glide operation -/
 def is_KBZ_symmetric (H : TwoBandHamiltonian) : Prop :=
@@ -34,8 +44,7 @@ noncomputable def dy_model (β γ : ℝ) (k : Momentum) : ℂ :=
   - (Real.sin k.kx : ℂ) * (((1 - γ) * Real.sin k.ky + γ * Real.cos k.ky) : ℂ) - (0.5 : ℂ) + (Complex.I * (β : ℂ))
 
 noncomputable def H_model (α β γ : ℝ) : TwoBandHamiltonian :=
-  { dx := dx_model α,
-    dy := dy_model β γ }
+  (dx_model α, dy_model β γ)
 
 /-- Theorem: The model Hamiltonian satisfies the Klein Brillouin Zone glide symmetry. -/
 theorem model_is_KBZ_symmetric (α β γ : ℝ) : is_KBZ_symmetric (H_model α β γ) := by

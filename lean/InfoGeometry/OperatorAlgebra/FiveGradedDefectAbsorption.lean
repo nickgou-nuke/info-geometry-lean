@@ -84,19 +84,6 @@ structure ThreeGradeClosureDefect
     (State Defect : Type*) where
   defect : State → Defect
 
-namespace ThreeGradeClosureDefect
-
-variable {State Defect : Type*}
-variable (D : ThreeGradeClosureDefect State Defect)
-
-/-- The closure-defect readout is the supplied defect function. -/
-theorem defect_readout
-    (s : State) :
-    D.defect s = D.defect s :=
-  rfl
-
-end ThreeGradeClosureDefect
-
 /--
 Absorption of a three-grade closure defect into the positive grade-two
 memory/contact sector of a five-graded algebra.
@@ -126,15 +113,6 @@ variable (A : DefectAbsorbedInPlusTwo L State Defect G D)
 
 /-- The closure defect is stored in the top contact/memory grade. -/
 theorem defect_is_plus_two_memory
-    (s : State) :
-    A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo :=
-  A.defect_mem_plus_two s
-
-/--
-The old TKK closure defect is represented by a top-grade element in the
-extended algebra.
--/
-theorem absorption
     (s : State) :
     A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo :=
   A.defect_mem_plus_two s
@@ -466,18 +444,6 @@ theorem fiveGradeDefectAbsorptionOwnerTarget :
     A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo := by
   intro L State Defect _ _ _ _ _ _ G D A s
   exact A.defect_is_plus_two_memory s
-
-/-- Packet readout for one five-grade defect absorption witness. -/
-theorem fiveGradeDefectAbsorption_packet
-    (L State Defect : Type*)
-    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
-    [AddCommGroup Defect] [Module ℝ Defect]
-    (G : FiveGrading L)
-    (D : ThreeGradeClosureDefect State Defect)
-    (A : DefectAbsorbedInPlusTwo L State Defect G D)
-    (s : State) :
-    A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo :=
-  fiveGradeDefectAbsorptionOwnerTarget L State Defect G D A s
 
 /--
 Owner target for installing a BPS/central-charge bound.

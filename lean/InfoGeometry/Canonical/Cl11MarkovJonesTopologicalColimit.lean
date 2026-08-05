@@ -98,13 +98,13 @@ def topologicalDiagram : ℕ ⥤ TopCat where
     simpa using h
 
 abbrev topologicalColimitObject : TopCat :=
-  topologicalDirectColimit topologicalDiagram
+  colimit topologicalDiagram
 
 abbrev topologicalColimit : Type := topologicalColimitObject
 
 def topologicalInclusion (n : ℕ) :
     (topologicalDiagram).obj n ⟶ topologicalColimitObject :=
-  topologicalDirectInjection topologicalDiagram n
+  colimit.ι topologicalDiagram n
 
 def traceTopologicalCocone : Cocone topologicalDiagram where
   pt := TopCat.of ℝ
@@ -121,7 +121,7 @@ def traceTopologicalCocone : Cocone topologicalDiagram where
 
 noncomputable def traceTopologicalColimitMap :
     topologicalColimitObject ⟶ TopCat.of ℝ :=
-  topologicalDirectDescend topologicalDiagram traceTopologicalCocone
+  colimit.desc topologicalDiagram traceTopologicalCocone
 
 theorem traceTopologicalColimitMap_inclusion (n : ℕ) (A : MatStage n) :
     traceTopologicalColimitMap (topologicalInclusion n A) =

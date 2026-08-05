@@ -28,9 +28,7 @@ Native Clifford chiral algebra on the split Clifford carrier.
 This is the new canonical surface. The only primitive datum is the Clifford
 grade involution; everything else is derived from it.
 -/
-structure ChiralOperatorAlgebra (n : ℕ) where
-  /-- Clifford grade involution, the parity operator. -/
-  parity : ParityInvolution (Cl_nn n)
+abbrev ChiralOperatorAlgebra (n : ℕ) := ParityInvolution (Cl_nn n)
 
 namespace ChiralOperatorAlgebra
 
@@ -38,43 +36,43 @@ variable {n : ℕ}
 
 /-- Modular boost derived from the Clifford grade involution. -/
 def modularBoost (C : ChiralOperatorAlgebra n) : Module.End ℝ (Cl_nn n) :=
-  C.parity.toLinearMap
+  C.toLinearMap
 
 /-- Left chiral sector, derived as the `+1` eigenspace of parity. -/
 def leftChiralCharge (C : ChiralOperatorAlgebra n) : Submodule ℝ (Cl_nn n) :=
-  C.parity.evenPart
+  C.evenPart
 
 /-- Right chiral sector, derived as the `-1` eigenspace of parity. -/
 def rightChiralCharge (C : ChiralOperatorAlgebra n) : Submodule ℝ (Cl_nn n) :=
-  C.parity.oddPart
+  C.oddPart
 
 /-- Modular Hamiltonian derived from the modular boost. -/
-def modularHamiltonian (C : ChiralOperatorAlgebra n) : Module.End ℝ (Cl_nn n) :=
+abbrev modularHamiltonian (C : ChiralOperatorAlgebra n) : Module.End ℝ (Cl_nn n) :=
   C.modularBoost
 
 /-- The Clifford grade involution read out as the chiral parity. -/
-def chiralParity (C : ChiralOperatorAlgebra n) : ParityInvolution (Cl_nn n) :=
-  C.parity
+abbrev chiralParity (C : ChiralOperatorAlgebra n) : ParityInvolution (Cl_nn n) :=
+  C
 
 /-- Compatibility shadow for the old boost name. -/
-def boost (C : ChiralOperatorAlgebra n) : Module.End ℝ (Cl_nn n) :=
+abbrev boost (C : ChiralOperatorAlgebra n) : Module.End ℝ (Cl_nn n) :=
   C.modularBoost
 
 /-- Compatibility shadow for the old `uPlus` name. -/
-def uPlus (C : ChiralOperatorAlgebra n) : Submodule ℝ (Cl_nn n) :=
+abbrev uPlus (C : ChiralOperatorAlgebra n) : Submodule ℝ (Cl_nn n) :=
   C.leftChiralCharge
 
 /-- Compatibility shadow for the old `uMinus` name. -/
-def uMinus (C : ChiralOperatorAlgebra n) : Submodule ℝ (Cl_nn n) :=
+abbrev uMinus (C : ChiralOperatorAlgebra n) : Submodule ℝ (Cl_nn n) :=
   C.rightChiralCharge
 
 /-- Compatibility shadow for the old conformal operator name. -/
-def conformalOperator (C : ChiralOperatorAlgebra n) : Module.End ℝ (Cl_nn n) :=
+abbrev conformalOperator (C : ChiralOperatorAlgebra n) : Module.End ℝ (Cl_nn n) :=
   C.modularHamiltonian
 
 /-- The canonical Clifford chiral algebra. -/
-def canonical (n : ℕ) : ChiralOperatorAlgebra n where
-  parity := splitCliffordParityInvolution n
+def canonical (n : ℕ) : ChiralOperatorAlgebra n :=
+  splitCliffordParityInvolution n
 
 @[simp]
 theorem canonical_chiralParity
@@ -118,7 +116,7 @@ The Clifford root-law vector rule in the new canonical language.
 -/
 theorem canonical_root_laws
     {n : ℕ} (v : SplitModule n) :
-    (canonical n).parity.toAlgEquiv (splitCliffordVector n v) =
+    (canonical n).toAlgEquiv (splitCliffordVector n v) =
       - splitCliffordVector n v :=
   splitCliffordParityInvolution_vector (n := n) v
 
@@ -130,7 +128,7 @@ carrier language.
 -/
 @[simp]
 theorem canonical_cl11_pos_generator_odd :
-    (canonical 1).parity.toAlgEquiv
+    (canonical 1).toAlgEquiv
         (splitCliffordVector 1 (splitBasisVector (Sum.inl (0 : Fin 1)))) =
       - splitCliffordVector 1 (splitBasisVector (Sum.inl (0 : Fin 1))) := by
   simpa using
@@ -145,7 +143,7 @@ Together with `canonical_cl11_pos_generator_odd`, this gives the symmetric
 -/
 @[simp]
 theorem canonical_cl11_neg_generator_odd :
-    (canonical 1).parity.toAlgEquiv
+    (canonical 1).toAlgEquiv
         (splitCliffordVector 1 (splitBasisVector (Sum.inr (0 : Fin 1)))) =
       - splitCliffordVector 1 (splitBasisVector (Sum.inr (0 : Fin 1))) := by
   simpa using

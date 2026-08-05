@@ -42,12 +42,6 @@ namespace InfoGeometry.Algebra.SupergradedSUSY
 
 open Matrix InfoGeometry.Topology.KANWallpaper
 
-/-- The odd generator `Q`, represented by the non-symmorphic glide reflection. -/
-def Q : ProjMatrix := G
-
-/-- The even translation generator `P_x`, represented by the unit `x` translation. -/
-def P_x : ProjMatrix := T_x
-
 /-- Matrix anticommutator `{A,B} = AB + BA`. -/
 def superAnticommutator (A B : ProjMatrix) : ProjMatrix :=
   A * B + B * A
@@ -63,13 +57,13 @@ The self-anticommutator of the odd glide generator is twice the even
 translation generator.
 -/
 theorem susy_anticommutator_generates_spacetime :
-    superAnticommutator Q Q = P_x + P_x := by
-  unfold superAnticommutator Q P_x
+    superAnticommutator G G = T_x + T_x := by
+  unfold superAnticommutator
   rw [glide_squared_is_translation]
 
 /-- Scalar form of the finite SUSY-shaped anticommutator `{Q,Q} = 2 • P_x`. -/
 theorem susy_anticommutator_generates_two_smul_momentum :
-    superAnticommutator Q Q = (2 : ℝ) • P_x := by
+    superAnticommutator G G = (2 : ℝ) • T_x := by
   rw [susy_anticommutator_generates_spacetime]
   ext i j
   simp
@@ -78,8 +72,7 @@ theorem susy_anticommutator_generates_two_smul_momentum :
 
 /-- The odd glide generator commutes with the even translation matrix. -/
 theorem supercharge_commutes_with_momentum_matrix :
-    Q * P_x = P_x * Q := by
-  unfold Q P_x
+    G * T_x = T_x * G := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [G, T_x, Matrix.mul_apply, Fin.sum_univ_three]
@@ -87,7 +80,7 @@ theorem supercharge_commutes_with_momentum_matrix :
 
 /-- The matrix commutator of `Q` with `P_x` is zero. -/
 theorem supercharge_commutator_with_momentum_zero :
-    commutator Q P_x = 0 := by
+    commutator G T_x = 0 := by
   unfold commutator
   rw [supercharge_commutes_with_momentum_matrix]
   simp

@@ -57,17 +57,6 @@ structure WeylRootSystem where
   PositiveRoot : Type*
   positiveRootWeight : PositiveRoot → ℝ
 
-namespace WeylRootSystem
-
-variable (Φ : WeylRootSystem)
-
-/-- Symbolic Weyl denominator value attached to the positive-root system. -/
-@[rep_depth thermo]
-noncomputable def denominatorValue : ℝ :=
-  1
-
-end WeylRootSystem
-
 /-- Prime-rapidity encoding of positive roots. -/
 @[rep_depth thermo]
 structure PrimeRapidityEncoding (Φ : WeylRootSystem) where
@@ -173,22 +162,6 @@ theorem denominator_is_prime_euler_product :
   P.denominatorBridge.weylDenominator_eq_primeEulerProduct
 
 @[rep_depth thermo]
-theorem squareFreeToWeyl_stable
-    (n : ℕ)
-    (h : P.parityWitness.squareFree n) :
-    P.parityWitness.squareFreeToWeyl n h =
-      P.parityWitness.squareFreeToWeyl n h := by
-  rfl
-
-@[rep_depth thermo]
-theorem signature_squareFreeToWeyl_eq_self
-    (n : ℕ)
-    (h : P.parityWitness.squareFree n) :
-    P.parityWitness.signature (P.parityWitness.squareFreeToWeyl n h) =
-      P.parityWitness.signature (P.parityWitness.squareFreeToWeyl n h) := by
-  rw [P.squareFreeToWeyl_stable n h]
-
-@[rep_depth thermo]
 theorem parityWitness_signature_eq_mobius
     (n : ℕ)
     (h : P.parityWitness.squareFree n) :
@@ -216,19 +189,9 @@ structure WeylDenominatorPrimeModePacket where
   product_eq_euler : weylDenominatorProduct = primeEulerProduct
 
 @[rep_depth thermo]
-noncomputable def weylDenominatorProduct
-    (P : WeylDenominatorPrimeModePacket) : ℝ :=
-  P.weylDenominatorProduct
-
-@[rep_depth thermo]
-noncomputable def primeEulerProduct
-    (P : WeylDenominatorPrimeModePacket) : ℝ :=
-  P.primeEulerProduct
-
-@[rep_depth thermo]
 theorem weylDenominator_eulerProduct_isomorphic
     (P : WeylDenominatorPrimeModePacket) :
-    weylDenominatorProduct P = primeEulerProduct P :=
+    P.weylDenominatorProduct = P.primeEulerProduct :=
   P.product_eq_euler
 
 @[rep_depth thermo]
@@ -308,19 +271,9 @@ structure PrimeIndexedSouriauThermalEvaluation where
     zeta = reciprocalBosonicPartition
 
 @[rep_depth thermo]
-def inverseZetaAsPrimeIndexedWeylDenominator
-    (E : PrimeIndexedSouriauThermalEvaluation) : ℝ :=
-  E.primeIndexedWeylDenominator
-
-@[rep_depth thermo]
-def reciprocalBosonicPartitionFunction
-    (E : PrimeIndexedSouriauThermalEvaluation) : ℝ :=
-  E.reciprocalBosonicPartition
-
-@[rep_depth thermo]
 theorem inverseZeta_eq_primeIndexedWeylDenominator
     (E : PrimeIndexedSouriauThermalEvaluation) :
-    E.inverseZeta = inverseZetaAsPrimeIndexedWeylDenominator E :=
+    E.inverseZeta = E.primeIndexedWeylDenominator :=
   E.inverseZeta_eq_primeIndexedWeylDenominator
 
 @[rep_depth thermo]
@@ -332,7 +285,7 @@ theorem inverseZeta_eq_paritySupertrace
 @[rep_depth thermo]
 theorem zeta_eq_reciprocalBosonicPartitionFunction
     (E : PrimeIndexedSouriauThermalEvaluation) :
-    E.zeta = reciprocalBosonicPartitionFunction E :=
+    E.zeta = E.reciprocalBosonicPartition :=
   E.zeta_eq_reciprocalBosonicPartition
 
 /--

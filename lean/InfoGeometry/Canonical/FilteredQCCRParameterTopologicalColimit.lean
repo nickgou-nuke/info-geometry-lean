@@ -116,12 +116,12 @@ def qCcrParameterTopologicalDiagram : I ⥤ TopCat where
           (sys.map_comp (leOfHom f) (leOfHom g)).symm
 
 abbrev qCcrParameterTopologicalColimit : TopCat :=
-  topologicalDirectColimit (qCcrParameterTopologicalDiagram Stage sys)
+  colimit (qCcrParameterTopologicalDiagram Stage sys)
 
 def qCcrParameterTopologicalInjection (i : I) :
     (qCcrParameterTopologicalDiagram Stage sys).obj i ⟶
       qCcrParameterTopologicalColimit Stage sys :=
-  topologicalDirectInjection (qCcrParameterTopologicalDiagram Stage sys) i
+  colimit.ι (qCcrParameterTopologicalDiagram Stage sys) i
 
 theorem qCcrParameterTopologicalInjection_transition
     {i j : I} (hij : i ≤ j)
@@ -332,14 +332,12 @@ theorem qCcrParameterZeroFiberToParameterNatTrans_app_closed_range
     Stage sys i).isClosed_range
 
 abbrev qCcrParameterZeroFiberTopologicalColimit : TopCat :=
-  FilteredColimit.Native.Topological.topologicalDirectColimit
-    (qCcrParameterZeroFiberTopologicalDiagram Stage sys)
+  colimit (qCcrParameterZeroFiberTopologicalDiagram Stage sys)
 
 def qCcrParameterZeroFiberTopologicalInjection (i : I) :
     (qCcrParameterZeroFiberTopologicalDiagram Stage sys).obj i ⟶
       qCcrParameterZeroFiberTopologicalColimit Stage sys :=
-  FilteredColimit.Native.Topological.topologicalDirectInjection
-    (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i
+  colimit.ι (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i
 
 /-- Canonical map from the relation-locus colimit to the ambient parameter
 colimit, obtained by the natural inclusion of diagrams. -/

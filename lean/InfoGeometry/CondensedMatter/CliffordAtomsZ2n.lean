@@ -247,12 +247,17 @@ The `index` type is deliberately independent of the local Boolean charge
 space.  Examples include a free integer winding invariant, a parity invariant,
 or an interacting cyclic invariant such as `ZMod 16`.
 -/
-structure GlobalAnomalyClass where
-  /-- Carrier of the global index. -/
-  indexType : Type*
+abbrev GlobalAnomalyClass := Σ indexType : Type*, indexType
 
-  /-- Chosen global anomaly/index value. -/
-  index : indexType
+namespace GlobalAnomalyClass
+
+/-- Carrier of the global index. -/
+abbrev indexType (C : GlobalAnomalyClass) : Type := C.1
+
+/-- Chosen global anomaly/index value. -/
+abbrev index (C : GlobalAnomalyClass) : C.indexType := C.2
+
+end GlobalAnomalyClass
 
 /--
 Concrete shape of a cyclic `Z16` anomaly readout.
@@ -260,9 +265,8 @@ Concrete shape of a cyclic `Z16` anomaly readout.
 This is only one possible global backend; it is not the same object as
 `Z2FourCharge`.
 -/
-def Z16AnomalyClass (index : ZMod 16) : GlobalAnomalyClass where
-  indexType := ZMod 16
-  index := index
+def Z16AnomalyClass (index : ZMod 16) : GlobalAnomalyClass :=
+  ⟨ZMod 16, index⟩
 
 /--
 Bridge from local Clifford signs to a global anomaly/index class.
@@ -315,7 +319,7 @@ structure CliffordAtomsZ2nOwnerTarget
     (Op State : Type*) [Ring Op] where
   fourAtomChirality : FourAtomChirality Op
   hypercubeAction : CliffordHypercubeAction (Fin 4) Op State
-  anomalyDatum : LocalToGlobalAnomalyDatum.{0}
+  anomalyDatum : LocalToGlobalAnomalyDatum
 
 namespace CliffordAtomsZ2nOwnerTarget
 
@@ -336,7 +340,7 @@ def hypercubeAction_of
 /-- The owner target exposes the local-to-global anomaly datum directly. -/
 def anomalyDatum_of
     (T : CliffordAtomsZ2nOwnerTarget Op State) :
-    LocalToGlobalAnomalyDatum.{0} :=
+    LocalToGlobalAnomalyDatum :=
   T.anomalyDatum
 
 end CliffordAtomsZ2nOwnerTarget

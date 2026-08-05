@@ -128,16 +128,16 @@ def gnsTopologicalCocone :
 /-- The universal continuous map from the categorical TopCat colimit of the
 GNS stages to the concrete Hilbert colimit. -/
 noncomputable def gnsTopologicalColimitToHilbert :
-    topologicalDirectColimit (gnsTopologicalDiagram Stage sys ω) ⟶
+    colimit (gnsTopologicalDiagram Stage sys ω) ⟶
       (gnsTopologicalCocone Stage sys ω).pt :=
-  topologicalDirectDescend
+  colimit.desc
     (gnsTopologicalDiagram Stage sys ω)
     (gnsTopologicalCocone Stage sys ω)
 
 @[reassoc]
 theorem gnsTopologicalColimitToHilbert_stage
     (i : I) :
-    topologicalDirectInjection
+    colimit.ι
         (gnsTopologicalDiagram Stage sys ω) i ≫
       gnsTopologicalColimitToHilbert Stage sys ω =
       (gnsTopologicalCocone Stage sys ω).ι.app i := by
@@ -148,7 +148,7 @@ theorem gnsTopologicalColimitToHilbert_stage
 theorem gnsTopologicalColimitToHilbert_stage_apply
     (i : I) (x : (ω.state i).functional.GNS) :
     gnsTopologicalColimitToHilbert Stage sys ω
-        (topologicalDirectInjection
+        (colimit.ι
           (gnsTopologicalDiagram Stage sys ω) i x) =
       gnsStageToHilbertColimitContinuousLinearMap Stage sys ω i x := by
   have h := congrArg (fun f => f x)
@@ -156,10 +156,10 @@ theorem gnsTopologicalColimitToHilbert_stage_apply
   simpa only [ConcreteCategory.comp_apply] using h
 
 theorem gnsTopologicalColimitToHilbert_unique
-    (f : topologicalDirectColimit (gnsTopologicalDiagram Stage sys ω) ⟶
+    (f : colimit (gnsTopologicalDiagram Stage sys ω) ⟶
       (gnsTopologicalCocone Stage sys ω).pt)
     (h : ∀ i : I,
-      topologicalDirectInjection (gnsTopologicalDiagram Stage sys ω) i ≫ f =
+      colimit.ι (gnsTopologicalDiagram Stage sys ω) i ≫ f =
         (gnsTopologicalCocone Stage sys ω).ι.app i) :
     f = gnsTopologicalColimitToHilbert Stage sys ω := by
   apply topologicalDirectDescend_unique
@@ -180,10 +180,10 @@ theorem gnsTopologicalColimitToHilbert_denseRange :
   · intro y hy
     rcases Set.mem_iUnion.mp hy with ⟨i, hy⟩
     rcases hy with ⟨x, rfl⟩
-    refine ⟨topologicalDirectInjection
+    refine ⟨colimit.ι
         (gnsTopologicalDiagram Stage sys ω) i x, ?_⟩
     change gnsTopologicalColimitToHilbert Stage sys ω
-        (topologicalDirectInjection
+        (colimit.ι
           (gnsTopologicalDiagram Stage sys ω) i x) =
       gnsStageToHilbertColimitContinuousLinearMap Stage sys ω i x
     simpa only [ConcreteCategory.comp_apply] using

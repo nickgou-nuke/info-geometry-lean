@@ -29,9 +29,14 @@ open InfoGeometry.Geometry.SpectralDivisors
 
 /-! ## 0. Existing bounded-Dirac algebra -/
 
-structure VerifiedBoundedDirac (A : Type*) [Ring A] where
-  F : A
-  P : A
+abbrev VerifiedBoundedDirac (A : Type*) [Ring A] := A × A
+
+namespace VerifiedBoundedDirac
+
+abbrev F {A : Type*} [Ring A] (D : VerifiedBoundedDirac A) : A := D.1
+abbrev P {A : Type*} [Ring A] (D : VerifiedBoundedDirac A) : A := D.2
+
+end VerifiedBoundedDirac
 
 theorem F_cube_eq_F {A : Type*} [Ring A]
     (D : VerifiedBoundedDirac A)
@@ -55,9 +60,16 @@ theorem F_cube_eq_F {A : Type*} [Ring A]
     _ = D.F := by
           rw [sub_zero]
 
-structure KasparovIndexDatum
-    (A Scalar : Type*) [Ring A] [AddCommGroup Scalar] where
-  superReadout : A → Scalar
+abbrev KasparovIndexDatum
+    (A Scalar : Type*) [Ring A] [AddCommGroup Scalar] := A → Scalar
+
+namespace KasparovIndexDatum
+
+abbrev superReadout
+    {A Scalar : Type*} [Ring A] [AddCommGroup Scalar]
+    (Idx : KasparovIndexDatum A Scalar) : A → Scalar := Idx
+
+end KasparovIndexDatum
 
 theorem mckean_singer_is_kasparov_defect
     {A Scalar : Type*} [Ring A] [AddCommGroup Scalar]

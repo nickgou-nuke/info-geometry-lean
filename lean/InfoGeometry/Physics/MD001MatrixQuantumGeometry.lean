@@ -44,33 +44,6 @@ theorem pauliSpacetimeMatrix_det (dt dx dy dz : ℂ) :
   simpa [pauliSpacetimeMatrix] using
     UnifiedMatrixBasis.metric_equivalence dt dx dy dz
 
-/-- The Pauli spatial generators square to the identity. -/
-theorem md001_pauli_square_packet :
-    UnifiedMatrixBasis.σ₁ * UnifiedMatrixBasis.σ₁ = UnifiedMatrixBasis.I₂ ∧
-    UnifiedMatrixBasis.σ₂ * UnifiedMatrixBasis.σ₂ = UnifiedMatrixBasis.I₂ ∧
-    UnifiedMatrixBasis.σ₃ * UnifiedMatrixBasis.σ₃ = UnifiedMatrixBasis.I₂ :=
-  UnifiedMatrixBasis.pauli_square
-
-/-- Distinct Pauli spatial generators anticommute in the three cyclic pairs. -/
-theorem md001_pauli_anticomm_packet :
-    UnifiedMatrixBasis.σ₁ * UnifiedMatrixBasis.σ₂ +
-        UnifiedMatrixBasis.σ₂ * UnifiedMatrixBasis.σ₁ = 0 ∧
-    UnifiedMatrixBasis.σ₂ * UnifiedMatrixBasis.σ₃ +
-        UnifiedMatrixBasis.σ₃ * UnifiedMatrixBasis.σ₂ = 0 ∧
-    UnifiedMatrixBasis.σ₃ * UnifiedMatrixBasis.σ₁ +
-        UnifiedMatrixBasis.σ₁ * UnifiedMatrixBasis.σ₃ = 0 :=
-  UnifiedMatrixBasis.pauli_anticomm
-
-/-- The normalized trace/Hilbert--Schmidt readout normalizes the identity and Pauli axes. -/
-theorem md001_hilbertSchmidt_packet :
-    UnifiedMatrixBasis.hilbertSchmidt UnifiedMatrixBasis.I₂ UnifiedMatrixBasis.I₂ = (1 : ℂ) ∧
-    UnifiedMatrixBasis.hilbertSchmidt UnifiedMatrixBasis.σ₁ UnifiedMatrixBasis.σ₁ = (1 : ℂ) ∧
-    UnifiedMatrixBasis.hilbertSchmidt UnifiedMatrixBasis.σ₂ UnifiedMatrixBasis.σ₂ = (1 : ℂ) ∧
-    UnifiedMatrixBasis.hilbertSchmidt UnifiedMatrixBasis.σ₃ UnifiedMatrixBasis.σ₃ = (1 : ℂ) ∧
-    UnifiedMatrixBasis.hilbertSchmidt UnifiedMatrixBasis.I₂ UnifiedMatrixBasis.σ₁ = 0 :=
-  UnifiedMatrixBasis.hilbertSchmidt_orthonormal
-
-/-- Finite Bloch-form density matrix `ρ = 1/2(I + xσ₁ + yσ₂ + zσ₃)`. -/
 def blochDensity (x y z : ℂ) : MatrixQuantumCarrier :=
   (1 / 2 : ℂ) •
     (UnifiedMatrixBasis.I₂ + x • UnifiedMatrixBasis.σ₁ +
@@ -117,34 +90,6 @@ theorem blochDensity_det_zero_of_unit (x y z : ℂ)
     Matrix.det (blochDensity x y z) = 0 := by
   rw [blochDensity_det, hunit]
   ring
-
-/-- Any concrete local matrix configuration is recovered from its Pauli coefficients. -/
-theorem md001_local_matrix_recompose (A : LocalMatrixConfig) :
-    InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauliRecompose A = A :=
-  localMatrix_recompose A
-
-/-- Repaired theorem-safe Chapter 1 packet. -/
-theorem repaired_MD001_matrix_quantum_geometry_packet (dt dx dy dz : ℂ)
-    (A : LocalMatrixConfig) (bx bY bz : ℂ) (hunit : bx * bx + bY * bY + bz * bz = 1) :
-    Matrix.det (pauliSpacetimeMatrix dt dx dy dz) =
-        dt * dt - (dx * dx + dy * dy + dz * dz) ∧
-    UnifiedMatrixBasis.σ₁ * UnifiedMatrixBasis.σ₁ = UnifiedMatrixBasis.I₂ ∧
-    UnifiedMatrixBasis.σ₁ * UnifiedMatrixBasis.σ₂ +
-        UnifiedMatrixBasis.σ₂ * UnifiedMatrixBasis.σ₁ = 0 ∧
-    UnifiedMatrixBasis.hilbertSchmidt UnifiedMatrixBasis.I₂ UnifiedMatrixBasis.I₂ = (1 : ℂ) ∧
-    Matrix.trace (blochDensity bx bY bz) = 1 ∧
-    blochDensity bx bY bz * blochDensity bx bY bz = blochDensity bx bY bz ∧
-    (Matrix.det (blochDensity bx bY bz) = 0) ∧
-    InfoGeometry.Physics.Section33PauliBiquaternionCompletion.pauliRecompose A = A := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact pauliSpacetimeMatrix_det dt dx dy dz
-  · exact md001_pauli_square_packet.1
-  · exact md001_pauli_anticomm_packet.1
-  · exact md001_hilbertSchmidt_packet.1
-  · exact blochDensity_trace_one bx bY bz
-  · exact blochDensity_idempotent_of_unit bx bY bz hunit
-  · exact blochDensity_det_zero_of_unit bx bY bz hunit
-  · exact md001_local_matrix_recompose A
 
 end InfoGeometry.Physics.MD001MatrixQuantumGeometry
 

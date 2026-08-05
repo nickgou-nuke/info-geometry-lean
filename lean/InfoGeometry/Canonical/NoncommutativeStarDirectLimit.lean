@@ -35,8 +35,17 @@ structure StarAlgebraDirectedSystem where
 variable (sys : StarAlgebraDirectedSystem (I := I) (A := A))
 
 /-- Stagewise Star-Algebra Homomorphism Family into a Target Star-Algebra B. -/
-structure CompatibleStarHomFamily (B : Type v) [Ring B] [StarRing B] [Algebra ℂ B] [StarModule ℂ B] where
-  hom : ∀ i, A i →ₐ[ℂ] B
+abbrev CompatibleStarHomFamily (B : Type v) [Ring B] [StarRing B] [Algebra ℂ B]
+    [StarModule ℂ B] :=
+  ∀ i, A i →ₐ[ℂ] B
+
+namespace CompatibleStarHomFamily
+
+abbrev hom {B : Type v} [Ring B] [StarRing B] [Algebra ℂ B] [StarModule ℂ B]
+    (F : CompatibleStarHomFamily (A := A) B) : ∀ i, A i →ₐ[ℂ] B :=
+  F
+
+end CompatibleStarHomFamily
 
 namespace UniversalProperty
 

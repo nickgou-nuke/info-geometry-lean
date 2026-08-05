@@ -142,8 +142,10 @@ theorem lifted_associator_base_ne_zero :
 
 This is carrier data only.  The product/ideal conditions are predicates below,
 not fields smuggled as closure. -/
-structure AutCandidate where
-  carrierMap : DualSplitOct → DualSplitOct
+abbrev AutCandidate := DualSplitOct → DualSplitOct
+
+/-- Compatibility accessor for the underlying endomap of an automorphism candidate. -/
+abbrev AutCandidate.carrierMap (F : AutCandidate) : DualSplitOct → DualSplitOct := F
 
 namespace AutCandidate
 
@@ -165,7 +167,7 @@ def IsDualSplitOctonionAutCandidate (F : AutCandidate) : Prop :=
 
 /-- Identity candidate. -/
 def idCandidate : AutCandidate :=
-  ⟨id⟩
+  id
 
 theorem id_preserves_mul : PreservesMul idCandidate := by
   intro X Y

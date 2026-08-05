@@ -26,7 +26,7 @@ Explicit algebraic cone from a staged star-ring system into a target star-ring.
 The field `compatible` says the chosen target inclusion agrees with each
 one-step bonding map.  No topology or completion is included here.
 -/
-structure AlgebraicLimitCone
+structure AlgebraicStageCompatibility
     (Stage : Nat → Type*) [∀ n, Ring (Stage n)] [∀ n, StarRing (Stage n)]
     (Limit : Type*) [Ring Limit] [StarRing Limit]
     (bond : ∀ n, StarRingHom (Stage n) (Stage (n + 1))) where
@@ -34,7 +34,7 @@ structure AlgebraicLimitCone
   compatible :
     ∀ n (x : Stage n), includeStage (n + 1) (bond n x) = includeStage n x
 
-namespace AlgebraicLimitCone
+namespace AlgebraicStageCompatibility
 
 variable
     {Stage : Nat → Type*} [∀ n, Ring (Stage n)] [∀ n, StarRing (Stage n)]
@@ -45,7 +45,7 @@ variable
 Readback for one-step compatibility of the explicit stage maps.
 -/
 theorem include_bond
-    (C : AlgebraicLimitCone Stage Limit bond)
+    (C : AlgebraicStageCompatibility Stage Limit bond)
     (n : Nat) (x : Stage n) :
     C.includeStage (n + 1) (bond n x) = C.includeStage n x :=
   C.compatible n x
@@ -58,7 +58,7 @@ This is image-local.  It does not say that the central lane commutes with every
 element of the target.
 -/
 theorem stage_image_closure
-    (C : AlgebraicLimitCone Stage Limit bond)
+    (C : AlgebraicStageCompatibility Stage Limit bond)
     {n : Nat}
     (I : SupergradedClosureAt (Stage n)) :
     SupergradedClosureAt.ImageClosure I (C.includeStage n) :=
@@ -66,7 +66,7 @@ theorem stage_image_closure
 
 /-- Square-zero odd lane after inclusion into the target. -/
 theorem include_odd_sq_zero
-    (C : AlgebraicLimitCone Stage Limit bond)
+    (C : AlgebraicStageCompatibility Stage Limit bond)
     {n : Nat}
     (I : SupergradedClosureAt (Stage n)) :
     C.includeStage n I.Q * C.includeStage n I.Q = 0 :=
@@ -74,7 +74,7 @@ theorem include_odd_sq_zero
 
 /-- Projector/idempotent lane after inclusion into the target. -/
 theorem include_parity_idempotent
-    (C : AlgebraicLimitCone Stage Limit bond)
+    (C : AlgebraicStageCompatibility Stage Limit bond)
     {n : Nat}
     (I : SupergradedClosureAt (Stage n)) :
     C.includeStage n I.P * C.includeStage n I.P = C.includeStage n I.P :=
@@ -82,7 +82,7 @@ theorem include_parity_idempotent
 
 /-- Odd-odd star closure after inclusion into the target. -/
 theorem include_odd_odd_closure
-    (C : AlgebraicLimitCone Stage Limit bond)
+    (C : AlgebraicStageCompatibility Stage Limit bond)
     {n : Nat}
     (I : SupergradedClosureAt (Stage n)) :
     C.includeStage n I.Q * star (C.includeStage n I.Q) +
@@ -92,7 +92,7 @@ theorem include_odd_odd_closure
 
 /-- Parity/odd anticommutation after inclusion into the target. -/
 theorem include_parity_odd_anticomm
-    (C : AlgebraicLimitCone Stage Limit bond)
+    (C : AlgebraicStageCompatibility Stage Limit bond)
     {n : Nat}
     (I : SupergradedClosureAt (Stage n)) :
     C.includeStage n I.P * C.includeStage n I.Q +
@@ -106,7 +106,7 @@ This is the correct unconditional limit-interface statement:
 `includeStage n I.C` commutes with elements also coming from `Stage n`.
 -/
 theorem include_image_central
-    (C : AlgebraicLimitCone Stage Limit bond)
+    (C : AlgebraicStageCompatibility Stage Limit bond)
     {n : Nat}
     (I : SupergradedClosureAt (Stage n)) :
     SupergradedClosureAt.ImageCentral I (C.includeStage n) :=
@@ -117,7 +117,7 @@ Square-zero closure is unchanged when the next-stage representative is included
 through the explicit compatible cone.
 -/
 theorem include_bond_odd_sq_zero
-    (C : AlgebraicLimitCone Stage Limit bond)
+    (C : AlgebraicStageCompatibility Stage Limit bond)
     {n : Nat}
     (I : SupergradedClosureAt (Stage n)) :
     C.includeStage (n + 1) (bond n I.Q) *
@@ -130,7 +130,7 @@ Projector/idempotent closure is unchanged when the next-stage representative is
 included through the explicit compatible cone.
 -/
 theorem include_bond_parity_idempotent
-    (C : AlgebraicLimitCone Stage Limit bond)
+    (C : AlgebraicStageCompatibility Stage Limit bond)
     {n : Nat}
     (I : SupergradedClosureAt (Stage n)) :
     C.includeStage (n + 1) (bond n I.P) *
@@ -144,7 +144,7 @@ Odd-odd star closure is unchanged when the next-stage representative is
 included through the explicit compatible cone.
 -/
 theorem include_bond_odd_odd_closure
-    (C : AlgebraicLimitCone Stage Limit bond)
+    (C : AlgebraicStageCompatibility Stage Limit bond)
     {n : Nat}
     (I : SupergradedClosureAt (Stage n)) :
     C.includeStage (n + 1) (bond n I.Q) *
@@ -160,7 +160,7 @@ Parity/odd anticommutation is unchanged when the next-stage representative is
 included through the explicit compatible cone.
 -/
 theorem include_bond_parity_odd_anticomm
-    (C : AlgebraicLimitCone Stage Limit bond)
+    (C : AlgebraicStageCompatibility Stage Limit bond)
     {n : Nat}
     (I : SupergradedClosureAt (Stage n)) :
     C.includeStage (n + 1) (bond n I.P) *
@@ -175,7 +175,7 @@ Image-centrality is unchanged when both representatives are advanced by one
 bonding map before inclusion into the explicit target.
 -/
 theorem include_bond_image_central
-    (C : AlgebraicLimitCone Stage Limit bond)
+    (C : AlgebraicStageCompatibility Stage Limit bond)
     {n : Nat}
     (I : SupergradedClosureAt (Stage n)) :
     ∀ X : Stage n,
@@ -196,7 +196,7 @@ image-local closure identities hold there.  No global target centrality,
 completion, density, or analytic limit is asserted.
 -/
 theorem include_bond_image_closure
-    (C : AlgebraicLimitCone Stage Limit bond)
+    (C : AlgebraicStageCompatibility Stage Limit bond)
     {n : Nat}
     (I : SupergradedClosureAt (Stage n)) :
     C.includeStage (n + 1) (bond n I.Q) *
@@ -225,6 +225,6 @@ theorem include_bond_image_closure
       include_bond_parity_odd_anticomm C I,
       include_bond_image_central C I⟩
 
-end AlgebraicLimitCone
+end AlgebraicStageCompatibility
 
 end InfoGeometry.Meta.InductiveLimitClosureInterface

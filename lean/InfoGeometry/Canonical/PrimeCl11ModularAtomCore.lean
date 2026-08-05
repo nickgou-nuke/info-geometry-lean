@@ -150,19 +150,13 @@ theorem d_anticommutes_mobiusParity :
 
 /-- Hodge--Dirac carrier obtained by reading `c` as the odd Dirac generator. -/
 @[rep_depth operator]
-def hodgeDiracCarrierFromC : HodgeDiracLaplacianCarrier A where
-  hodgeStar := atom.mobiusParity
-  dirac := atom.c
-  laplacian := atom.c * atom.c
-  centralReadout := atom.mobiusParity
+def hodgeDiracCarrierFromC : HodgeDiracLaplacianCarrier A :=
+  (atom.mobiusParity, atom.c, atom.c * atom.c, atom.mobiusParity)
 
 /-- Hodge--Dirac carrier obtained by reading `d` as the odd Dirac generator. -/
 @[rep_depth operator]
-def hodgeDiracCarrierFromD : HodgeDiracLaplacianCarrier A where
-  hodgeStar := atom.mobiusParity
-  dirac := atom.d
-  laplacian := atom.d * atom.d
-  centralReadout := atom.mobiusParity
+def hodgeDiracCarrierFromD : HodgeDiracLaplacianCarrier A :=
+  (atom.mobiusParity, atom.d, atom.d * atom.d, atom.mobiusParity)
 
 /-- Carrier-level readback: `c` anticommutes with the supplied parity/Hodge axis. -/
 @[rep_depth operator]

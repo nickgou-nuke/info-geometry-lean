@@ -442,13 +442,4 @@ theorem finiteAndreevImbalanceOwnerTarget :
         -(electronAmplitude - holeAmplitude) :=
   finite_electron_hole_imbalance_anti_fixed
 
-@[owner_target_tag]
-theorem finiteAndreevBoundary_packet :
-    electronAmplitude + holeAmplitude ∈ finiteAndreevClosure.Fixed ∧
-      finiteAndreevClosure.theta
-          (electronAmplitude - holeAmplitude)
-        =
-          -(electronAmplitude - holeAmplitude) :=
-  ⟨finiteAndreevDiagonalOwnerTarget, finiteAndreevImbalanceOwnerTarget⟩
-
 end InfoGeometry.OperatorAlgebra.AndreevBoundary

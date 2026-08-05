@@ -94,11 +94,11 @@ def topologicalDiagram : ℕ ⥤ TopCat where
       (bondAlgHom_trans _ _ _ (leOfHom f) (leOfHom g))
 
 abbrev topologicalColimit : TopCat :=
-  topologicalDirectColimit topologicalDiagram
+  colimit topologicalDiagram
 
 def topologicalInjection (n : ℕ) :
     (topologicalDiagram.obj n) ⟶ topologicalColimit :=
-  topologicalDirectInjection topologicalDiagram n
+  colimit.ι topologicalDiagram n
 
 theorem topologicalInjection_transition
     {m n : ℕ} (hmn : m ≤ n) (A : Stage m) :

@@ -31,8 +31,17 @@ open InfoGeometry.Canonical.ColimitRigidityProofChainBridge
 open InfoGeometry.Canonical.CategoricalRiemannRigidity
 
 /-- Finite-stage Dirac operator data structure on a real vector space. -/
-structure FiniteDiracData (V : Type*) [AddCommGroup V] [Module ℝ V] where
-  diracOp : V →ₗ[ℝ] V
+abbrev FiniteDiracData (V : Type*) [AddCommGroup V] [Module ℝ V] :=
+  V →ₗ[ℝ] V
+
+namespace FiniteDiracData
+
+abbrev diracOp
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (data : FiniteDiracData V) : V →ₗ[ℝ] V :=
+  data
+
+end FiniteDiracData
 
 namespace FiniteDiracData
 

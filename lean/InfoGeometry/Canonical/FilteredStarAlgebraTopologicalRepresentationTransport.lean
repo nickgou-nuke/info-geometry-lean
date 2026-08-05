@@ -82,7 +82,7 @@ noncomputable def topologicalRepresentation
       (R.ι j).comp (sys.map hij) = R.ι i)
     (hcontinuous_ι : ∀ i, Continuous (R.ι i)) :
     topologicalColimit Stage sys ⟶ TopCat.of B :=
-  topologicalDirectDescend (topologicalDiagram Stage sys)
+  colimit.desc (topologicalDiagram Stage sys)
     (topologicalRepresentationCocone Stage sys R hι_comm hcontinuous_ι)
 
 @[simp] theorem algebraicRepresentation_of_stage

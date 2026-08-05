@@ -32,9 +32,15 @@ The concrete owner should later replace this by the completed Riemann `xi`
 function.
 -/
 @[rep_depth operator]
-structure CompletedXiFunction where
-  xi : ℂ → ℂ
-  nontrivial : ∃ s, xi s ≠ 0
+abbrev CompletedXiFunction :=
+  {xi : ℂ → ℂ // ∃ s, xi s ≠ 0}
+
+namespace CompletedXiFunction
+
+abbrev xi (X : CompletedXiFunction) : ℂ → ℂ := X.1
+abbrev nontrivial (X : CompletedXiFunction) : ∃ s, X.xi s ≠ 0 := X.2
+
+end CompletedXiFunction
 
 /-- Prime Lee--Yang approximants with nonvanishing renormalization. -/
 @[rep_depth operator]

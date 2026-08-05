@@ -25,15 +25,15 @@ structure LegendreModel where
   /-- Candidate dual potential `φ(η)`. -/
   φ : ℝ → ℝ
   /-- Fenchel inequality `θη ≤ ψ(θ) + φ(η)`. -/
-  fenchel_ineq : ∀ θ η, θ * η ≤ L.ψ θ + φ η
+  fenchel_ineq : ∀ θ η, θ * η ≤ L θ + φ η
   /-- Contact equality at the chosen dual coordinate `η = grad θ`. -/
-  contact : ∀ θ, φ (grad θ) = θ * grad θ - L.ψ θ
+  contact : ∀ θ, φ (grad θ) = θ * grad θ - L θ
 
 namespace LegendreModel
 
 /-- Massieu potential (log-partition in statistical mechanics conventions). -/
 def massieu (M : LegendreModel) (θ : ℝ) : ℝ :=
-  M.L.ψ θ
+  M.L θ
 
 /-- Partition function recovered from the log-potential: `Z = exp ψ`. -/
 noncomputable def partition (M : LegendreModel) (θ : ℝ) : ℝ :=
@@ -64,16 +64,16 @@ noncomputable def dualBregman (M : LegendreModel) (η η₀ : ℝ) : ℝ :=
   bregmanDiv M.φ η η₀
 
 @[simp] lemma massieu_def (M : LegendreModel) (θ : ℝ) :
-    M.massieu θ = M.L.ψ θ := rfl
+    M.massieu θ = M.L θ := rfl
 
 @[simp] lemma partition_def (M : LegendreModel) (θ : ℝ) :
-    M.partition θ = Real.exp (M.L.ψ θ) := rfl
+    M.partition θ = Real.exp (M.L θ) := rfl
 
 @[simp] lemma dualCoord_def (M : LegendreModel) (θ : ℝ) :
     M.dualCoord θ = M.grad θ := rfl
 
 @[simp] lemma fenchelGap_def (M : LegendreModel) (θ η : ℝ) :
-    M.fenchelGap θ η = M.L.ψ θ + M.φ η - θ * η := rfl
+    M.fenchelGap θ η = M.L θ + M.φ η - θ * η := rfl
 
 lemma fenchelGap_nonneg (M : LegendreModel) (θ η : ℝ) :
     0 ≤ M.fenchelGap θ η := by
@@ -138,7 +138,7 @@ lemma fenchelGap_eq_dual_defect_add_pairing_defect
 
 /-- Free energy is just a scaled negative Massieu potential by definition. -/
 @[simp] lemma freeEnergy_def (M : LegendreModel) (ε θ : ℝ) :
-    M.freeEnergy ε θ = -ε * M.L.ψ θ := rfl
+    M.freeEnergy ε θ = -ε * M.L θ := rfl
 
 /-- Canonical-ensemble energy convention:
 for Gibbs weights `exp(-θ f)`, one usually has `U = -∂ψ/∂θ`,
@@ -259,7 +259,7 @@ where `η₀ = grad θ₀ = deriv ψ θ₀`.
 -/
 lemma primalBregman_eq_fenchelGap_at_dualCoord_of_grad_eq_deriv
     (M : LegendreModel) (θ θ₀ : ℝ)
-  (hgrad : M.grad θ₀ = deriv M.L.ψ θ₀) :
+  (hgrad : M.grad θ₀ = deriv M.L θ₀) :
     M.primalBregman θ θ₀ = M.fenchelGap θ (M.dualCoord θ₀) := by
   unfold primalBregman fenchelGap massieu dualCoord
   unfold InfoGeometry.LogPotential.bregman InfoGeometry.bregmanDiv
@@ -272,7 +272,7 @@ Nonnegativity of primal Bregman divergence via the Fenchel gap bridge.
 -/
 lemma primalBregman_nonneg_of_grad_eq_deriv
     (M : LegendreModel) (θ θ₀ : ℝ)
-    (hgrad : M.grad θ₀ = deriv M.L.ψ θ₀) :
+    (hgrad : M.grad θ₀ = deriv M.L θ₀) :
     0 ≤ M.primalBregman θ θ₀ := by
   rw [M.primalBregman_eq_fenchelGap_at_dualCoord_of_grad_eq_deriv θ θ₀ hgrad]
   exact M.fenchelGap_nonneg θ (M.dualCoord θ₀)
@@ -317,19 +317,19 @@ theorem unique_subgradient_of_differentiable {f : ℝ → ℝ} {x y g : ℝ}
 /-- Fenchel gap vanishes if and only if η matches the gradient under differentiability. -/
 theorem fenchelGap_eq_zero_iff_eq_grad_of_hasDerivAt
     (M : LegendreModel) (θ η : ℝ)
-    (hd : HasDerivAt M.L.ψ (M.grad θ) θ) :
+    (hd : HasDerivAt M.L (M.grad θ) θ) :
     M.fenchelGap θ η = 0 ↔ η = M.grad θ := by
   constructor
   · intro hGap
-    have hsub : ∀ z, η * (z - θ) ≤ M.L.ψ z - M.L.ψ θ := by
+    have hsub : ∀ z, η * (z - θ) ≤ M.L z - M.L θ := by
       intro z
       have h_ineq := M.fenchel_ineq z η
-      have h_gap_eq : M.L.ψ θ + M.φ η - θ * η = 0 := hGap
-      have h_phi : M.φ η = θ * η - M.L.ψ θ := by linarith
+      have h_gap_eq : M.L θ + M.φ η - θ * η = 0 := hGap
+      have h_phi : M.φ η = θ * η - M.L θ := by linarith
       rw [h_phi] at h_ineq
       calc
         η * (z - θ) = z * η - θ * η := by ring
-        _ ≤ M.L.ψ z - M.L.ψ θ := by linarith
+        _ ≤ M.L z - M.L θ := by linarith
     exact unique_subgradient_of_differentiable hd hsub
   · intro h
     rw [h]

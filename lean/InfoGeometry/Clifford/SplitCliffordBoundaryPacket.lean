@@ -38,82 +38,39 @@ open InfoGeometry.Clifford.SplitCl44CausalEnvelope
 open InfoGeometry.Clifford.SplitCl44Complexification
 open InfoGeometry.Clifford.Cl44GenerationRotation
 open InfoGeometry.Canonical.Cl44ConformalNormalization
-
-/--
-Repo-facing split Clifford boundary packet.
-
-This is a theorem bundle, not a new classification theorem.
--/
-structure SplitCliffordBoundaryPacket where
-  /-- The split Albert-Cayley-Dickson doubling layer has canonical null factors. -/
-  split_albert_zero_divisors :
+theorem split_albert_zero_divisors :
     ∃ x y : AlbertStep ℝ (SplitQuaternion ℝ) (1 : ℝ),
-      x ≠ 0 ∧ y ≠ 0 ∧ AlbertStep.mul x y = 0
+      x ≠ 0 ∧ y ≠ 0 ∧ AlbertStep.mul x y = 0 :=
+  AlbertStep.gamma_one_has_canonical_zero_divisors (F := ℝ)
+    (A := SplitQuaternion ℝ)
 
-  /-- The recursive split `Cl(1,1)` tensor step used by the tower. -/
-  cl11_tensor_step :
-    SplitClNNAlg 4 ≃ₐ[ℝ] SplitClNNTensorStep 3
+theorem cl44_stage : SplitCl44Algebra = SplitBottClifford 4 := rfl
 
-  /-- The repo-owned `Cl(4,4)` stage of the split Bott tower. -/
-  cl44_stage : SplitCl44Algebra = SplitBottClifford 4
-
-  /-- The next split Bott stage, i.e. the repo-owned `Cl(5,5)` tower step. -/
-  cl55_stage :
-    SplitBottClifford 5
-      ≃ₐ[ℝ]
-        (CliffordAlgebra.evenOdd Q11 ᵍ⊗[ℝ]
-          CliffordAlgebra.evenOdd (SplitBottQuad 4))
-
-  /-- The split `Cl(4,4)` complexification equivalence. -/
-  cl44_complexification : Cl44Complex ≃ₐ[ℂ] ℂ ⊗[ℝ] Cl44
-
-  /-- The quadratic split `Cl(4,4)` conformal-count diagnostic. -/
-  quadratic_conformal_count :
+theorem quadratic_conformal_count :
     quadraticLightSpaceDim
       + (quadraticLeviRotationDim + dilationCharacterDim)
       + quadraticLightSpaceDim
-        = quadraticConformalClosureDim
+        = quadraticConformalClosureDim :=
+  splitCl44_quadratic_conformal_count
 
-  /-- The split `Cl(4,4)` spin-factor route is not the quadratic `so(5,5)` count. -/
-  spin_factor_not_so55 :
+theorem spin_factor_not_so55 :
     ¬ spinFactorDim
         + (spinFactorStructureRotationDim + dilationCharacterDim)
         + spinFactorDim
-          = quadraticConformalClosureDim
+          = quadraticConformalClosureDim :=
+  splitCl44_spin_factor_route_not_so55_count
 
-  /-- The split `Cl(4,4)` triality placement packet in the Levi layer. -/
-  triality_levi_placement : TrialityLeviPlacement
-
-  /-- The label-level `S₃` generation packet. -/
-  generation_rotation : SplitCl44GenerationRotationPacket
-
-  /-- The first normalized head null pairing in the split `Cl(4,4)` carrier. -/
-  head_null_pairing :
+theorem head_null_pairing :
     SplitCl44Bilinear
       (InfoGeometry.Clifford.ClNN.headNullMinus 3)
-      (InfoGeometry.Clifford.ClNN.headNullPlus 3) = 1 / 2
+      (InfoGeometry.Clifford.ClNN.headNullPlus 3) = 1 / 2 :=
+  splitCl44_headNull_pairing
 
-  /-- The normalized split-null Clifford CAR in the `Cl(4,4)` carrier. -/
-  head_null_clifford_car :
+theorem head_null_clifford_car :
     InfoGeometry.Clifford.ClNN.gammaHeadNullMinus 3
         * InfoGeometry.Clifford.ClNN.gammaHeadNullPlus 3
       + InfoGeometry.Clifford.ClNN.gammaHeadNullPlus 3
-        * InfoGeometry.Clifford.ClNN.gammaHeadNullMinus 3 = 1
-
-/-- Canonical repository packet for the split Clifford boundary. -/
-def canonicalSplitCliffordBoundaryPacket : SplitCliffordBoundaryPacket where
-  split_albert_zero_divisors :=
-    AlbertStep.gamma_one_has_canonical_zero_divisors (F := ℝ)
-      (A := SplitQuaternion ℝ)
-  cl11_tensor_step := splitCliffordTensorStepEquiv 3
-  cl44_stage := rfl
-  cl55_stage := cl55_as_splitBottStep
-  cl44_complexification := cl44ComplexificationEquiv
-  quadratic_conformal_count := splitCl44_quadratic_conformal_count
-  spin_factor_not_so55 := splitCl44_spin_factor_route_not_so55_count
-  triality_levi_placement := splitCl44_triality_levi_placement
-  generation_rotation := canonicalGenerationRotationPacket
-  head_null_pairing := splitCl44_headNull_pairing
-  head_null_clifford_car := splitCl44_headNull_clifford_car
+        * InfoGeometry.Clifford.ClNN.gammaHeadNullMinus 3 = 1 :=
+  splitCl44_headNull_clifford_car
 
 end InfoGeometry.Clifford.SplitCliffordBoundary

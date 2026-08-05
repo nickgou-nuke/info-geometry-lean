@@ -53,6 +53,19 @@ theorem flipBit_other {i j : ℕ} (hji : j ≠ i) (x : CantorWord) :
   ext j
   by_cases hji : j = i <;> simp [flipBit, hji]
 
+/-- Flips at distinct coordinates commute. -/
+theorem flipBit_commute_of_ne {i j : ℕ} (hij : i ≠ j) (x : CantorWord) :
+    flipBit i (flipBit j x) = flipBit j (flipBit i x) := by
+  ext k
+  by_cases hki : k = i
+  · have hkj : k ≠ j := by
+      intro h
+      exact hij (hki ▸ h)
+    simp [flipBit, hki, hkj, hij, Ne.symm hij]
+  · by_cases hkj : k = j
+    · simp [flipBit, hki, hkj, hij, Ne.symm hij]
+    · simp [flipBit, hki, hkj, hij, Ne.symm hij]
+
 /-- A singleton bit flip always changes the word. -/
 theorem flipBit_ne_self (i : ℕ) (x : CantorWord) :
     flipBit i x ≠ x := by

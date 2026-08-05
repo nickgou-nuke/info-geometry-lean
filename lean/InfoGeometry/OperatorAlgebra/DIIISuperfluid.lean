@@ -360,12 +360,6 @@ variable
     [NormedAddCommGroup H] [NormedSpace ℝ H]
     (D : MomentumDIIISuperfluidDatum Kpt H)
 
-/-- Momentum reversal is an involution. -/
-alias invK_invK := MomentumDIIISuperfluidDatum.invK_involutive
-
-/-- Re-export the chiral oddness law. -/
-alias chiral_odd := MomentumDIIISuperfluidDatum.chiral
-
 end MomentumDIIISuperfluidDatum
 
 /-! ## 4. Owner theorem -/

@@ -1,8 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Topology.FractalCantorFockWitness
 import InfoGeometry.Clifford.BottPeriodicity
-import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Topology.BottPeriodicCantorEntropyGraph
@@ -138,166 +136,94 @@ A Bott-periodic random walk on multi-stream Cantor words.
 At each depth the walk chooses one full Bott block, i.e. one bit for each
 parallel stream.
 -/
-@[rep_depth transport]
-structure BottPeriodicRandomWalk (kind : BottKind) where
-  transitionWeight :
-    ∀ n : ℕ, BottWord kind n → BottBlock kind → ℝ
 
-  nonnegative :
-    ∀ (n : ℕ) (word : BottWord kind n) (block : BottBlock kind),
-      0 ≤ transitionWeight n word block
+def IsBottPeriodicRandomWalk
+    {kind : BottKind}
+    (transitionWeight :
+      ∀ n : ℕ, BottWord kind n → BottBlock kind → ℝ) : Prop :=
+  (∀ (n : ℕ) (word : BottWord kind n) (block : BottBlock kind),
+    0 ≤ transitionWeight n word block) ∧
+  (∀ (n : ℕ) (word : BottWord kind n),
+    Finset.univ.sum
+      (fun block : BottBlock kind => transitionWeight n word block) = 1)
 
-  row_sum_one :
-    ∀ (n : ℕ) (word : BottWord kind n),
-      Finset.univ.sum
-        (fun block : BottBlock kind => transitionWeight n word block) = 1
-
-namespace BottPeriodicRandomWalk
-
-variable {kind : BottKind}
-variable (R : BottPeriodicRandomWalk kind)
-
-/-- One-step block entropy at a finite Bott word. -/
-def localBlockEntropy (n : ℕ) (word : BottWord kind n) : ℝ :=
+def localBlockEntropy
+    {kind : BottKind}
+    (transitionWeight :
+      ∀ n : ℕ, BottWord kind n → BottBlock kind → ℝ)
+    (n : ℕ) (word : BottWord kind n) : ℝ :=
   - Finset.univ.sum
       (fun block : BottBlock kind =>
-        let p := R.transitionWeight n word block
+        let p := transitionWeight n word block
         if p = 0 then 0 else p * Real.log p)
 
-end BottPeriodicRandomWalk
+theorem localBlockEntropy_nonnegative
+    {kind : BottKind}
+    (transitionWeight :
+      ∀ n : ℕ, BottWord kind n → BottBlock kind → ℝ)
+    (h : IsBottPeriodicRandomWalk transitionWeight)
+    (n : ℕ) (word : BottWord kind n) :
+    0 ≤ localBlockEntropy transitionWeight n word := by
+  unfold localBlockEntropy
+  apply neg_nonneg.mpr
+  apply Finset.sum_nonpos
+  intro block hblock
+  dsimp
+  split_ifs with hp
+  · simp
+  · have hnonneg : 0 ≤ transitionWeight n word block :=
+      h.1 n word block
+    have hle : transitionWeight n word block ≤ 1 := by
+      calc
+        transitionWeight n word block ≤
+            Finset.univ.sum (fun b : BottBlock kind =>
+              transitionWeight n word b) :=
+          Finset.single_le_sum
+            (fun b hb => h.1 n word b) hblock
+        _ = 1 := h.2 n word
+    exact mul_nonpos_of_nonneg_of_nonpos hnonneg
+      (Real.log_nonpos hnonneg hle)
 
-/--
-Entropy coupling between the Bott streams at one finite stage.
+def couplingReadout
+    {kind : BottKind}
+    (jointEntropy : ℝ)
+    (streamEntropy : BottPhase kind → ℝ) : ℝ :=
+  jointEntropy -
+    Finset.univ.sum (fun phase : BottPhase kind => streamEntropy phase)
 
-`jointEntropy` is the entropy of full Bott blocks.  `streamEntropy phase` is the
-entropy readout assigned to an individual stream.  The coupling is their
-non-additive residual.
--/
-@[rep_depth transport]
-structure BottStreamEntropyCoupling (kind : BottKind) where
-  jointEntropy : ℝ
-  streamEntropy : BottPhase kind → ℝ
+def IsBottPeriodicCantorEntropy
+    {kind : BottKind}
+    (transitionWeight :
+      ∀ n : ℕ, BottWord kind n → BottBlock kind → ℝ)
+    (depthEntropy : ℕ → ℝ) : Prop :=
+  IsBottPeriodicRandomWalk transitionWeight ∧
+  ∀ n : ℕ, 0 ≤ depthEntropy n
 
-namespace BottStreamEntropyCoupling
+noncomputable def bottSplitStep (towerIndex : ℕ) :=
+  InfoGeometry.Clifford.BottPeriodicity.splitBottStep towerIndex
 
-variable {kind : BottKind}
-variable (C : BottStreamEntropyCoupling kind)
-
-/-- Non-additive residual between joint and single-stream entropy readouts. -/
-def couplingReadout : ℝ :=
-  C.jointEntropy -
-    Finset.univ.sum (fun phase : BottPhase kind => C.streamEntropy phase)
-
-end BottStreamEntropyCoupling
-
-/--
-Entropy packet for a Bott-periodic Cantor boundary.
-
-The entropy values are supplied as readouts because proving nonnegativity and
-entropy-rate convergence depends on the chosen Markov/dynamical model.
--/
-@[rep_depth transport]
-structure BottPeriodicCantorEntropyPacket (kind : BottKind) where
-  walk : BottPeriodicRandomWalk kind
-
-  depthEntropy : ℕ → ℝ
-  entropy_nonnegative : ∀ n : ℕ, 0 ≤ depthEntropy n
-
-  coupling : ℕ → BottStreamEntropyCoupling kind
-
-
-/-! ## 3. Bott-periodic Clifford and It-from-bit sockets -/
-
-/--
-Clifford/CAR block data attached to a Bott clock.
-
-The phase-indexed operators are calibrated to the repository-owned split
-Clifford Bott step.  The witness is an actual algebra equivalence.
--/
-@[rep_depth operator]
-structure BottPeriodicCliffordPacket
-    (kind : BottKind)
-    (Op : Type*) [Ring Op] where
-  gamma : BottPhase kind → Op
-  towerIndex : ℕ
-
-namespace BottPeriodicCliffordPacket
-
-variable {kind : BottKind} {Op : Type*} [Ring Op]
-
-/-- The Bott step is derived from its canonical Clifford-periodicity owner. -/
-noncomputable def splitStep
-    (C : BottPeriodicCliffordPacket kind Op) :=
-  InfoGeometry.Clifford.BottPeriodicity.splitBottStep C.towerIndex
-
-/-- The derived Bott step is definitionally the canonical owner equivalence. -/
-@[simp]
-theorem splitStep_eq_owner
-    (C : BottPeriodicCliffordPacket kind Op) :
-    C.splitStep =
-      InfoGeometry.Clifford.BottPeriodicity.splitBottStep C.towerIndex :=
+theorem splitStep_eq_owner (towerIndex : ℕ) :
+    bottSplitStep towerIndex =
+      InfoGeometry.Clifford.BottPeriodicity.splitBottStep towerIndex :=
   rfl
 
-/--
-Block periodicity is the bijectivity of the native split Bott algebra
-equivalence, not a stored proposition.
--/
-@[rep_depth operator]
-theorem block_periodicity
-    (C : BottPeriodicCliffordPacket kind Op) :
-    Function.Bijective C.splitStep :=
-  C.splitStep.bijective
+theorem block_periodicity (towerIndex : ℕ) :
+    Function.Bijective (bottSplitStep towerIndex) :=
+  (bottSplitStep towerIndex).bijective
 
-/--
-The graded `Cl(1,1)` amplification preserves multiplication through the native
-split Bott algebra equivalence.
--/
-@[rep_depth operator]
 theorem matrix_amplification
-    (C : BottPeriodicCliffordPacket kind Op)
+    (towerIndex : ℕ)
     (x y :
       InfoGeometry.Clifford.BottPeriodicity.SplitBottClifford
-        (C.towerIndex + 1)) :
-    C.splitStep (x * y) = C.splitStep x * C.splitStep y :=
-  map_mul C.splitStep x y
+        (towerIndex + 1)) :
+    bottSplitStep towerIndex (x * y) =
+      bottSplitStep towerIndex x * bottSplitStep towerIndex y :=
+  map_mul (bottSplitStep towerIndex) x y
 
-end BottPeriodicCliffordPacket
-
-/--
-Bott-periodic It-from-bit socket.
-
-The "bit" side is the Bott-periodic Cantor entropy packet.  The "it" side is
-the Drazin-Hodge envelope of a bit-derived operator.
--/
-@[socket_debt_tag, rep_depth operator]
-structure BottPeriodicItFromBitSocket
-    (Op : Type*) [Ring Op] where
-  kind : BottKind
-
-  entropyBoundary : BottPeriodicCantorEntropyPacket kind
-  cliffordBlock : BottPeriodicCliffordPacket kind Op
-
-  A : Op
-  AD : Op
-
-  L : Op
-  LD : Op
-
-  xRaw : Op
-
-/--
-Fierz-Klein law for a Bott-periodic It-from-bit socket.
-
-The residual is abstract because different downstream files choose different
-Fierz coordinate systems.  The theorem-owned statement here is that the chosen
-readout lies on its declared quadric.
--/
-@[rep_depth operator]
-structure BottPeriodicFierzKleinLaw
-    (Op : Type*) [Ring Op] where
-  socket : BottPeriodicItFromBitSocket Op
-  coords : FractalCantorFockWitness.FierzChannel → ℝ
-  residual : (FractalCantorFockWitness.FierzChannel → ℝ) → ℝ
-  quadric_zero_property : residual coords = 0
+/- The Fierz--Klein law is a direct proposition on readout data. -/
+def BottPeriodicFierzKleinLaw
+    (coords : FractalCantorFockWitness.FierzChannel → ℝ)
+    (residual : (FractalCantorFockWitness.FierzChannel → ℝ) → ℝ) : Prop :=
+  residual coords = 0
 
 end InfoGeometry.Topology.BottPeriodicCantorEntropyGraph

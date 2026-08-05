@@ -30,11 +30,12 @@ universe u
 
 /-- A discrete orbit label together with its primitive/irreducible status. -/
 @[rep_depth transport]
-structure PrimeGeodesicOrbit where
-  label : ℕ
-  primeLabel : Nat.Prime label
+abbrev PrimeGeodesicOrbit := {n : ℕ // Nat.Prime n}
 
 namespace PrimeGeodesicOrbit
+
+abbrev label (o : PrimeGeodesicOrbit) : ℕ := o.1
+abbrev primeLabel (o : PrimeGeodesicOrbit) : Nat.Prime o.label := o.2
 
 /-- The boost-energy readout of the orbit. -/
 @[rep_depth transport]

@@ -787,8 +787,7 @@ noncomputable def weldedProjectorObstructionStatePhaseReadout
 noncomputable def weldedProjectorObstructionStateGeneratorField
     (SCI : StarCertifiedConformalInference E) :
     InfoGeometry.Canonical.PolarizedMadelungBridge.StateGeneratorField (E := E) :=
-  InfoGeometry.Canonical.PolarizedMadelungBridge.StateGeneratorField.mk
-    (generator := fun _ => SCI.liftedEinsteinAnomalyOperator)
+  fun _ => SCI.liftedEinsteinAnomalyOperator
 
 /--
 State-dependent phase readout of the welded obstruction axis, expressed through

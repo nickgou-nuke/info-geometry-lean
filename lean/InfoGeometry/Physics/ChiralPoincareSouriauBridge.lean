@@ -65,8 +65,60 @@ theorem det_pauliMomentum (P : FourMomentum) :
   rcases P with ⟨E, px, py, pz⟩
   simp [pauliMomentum, minkowskiSq]
   ring_nf
-  simp [Complex.I_mul_I]
+  simp
   ring
+
+/-- The Pauli determinant barrier is the separate log-absolute-value readout.
+
+This is the entropy-like quantity associated to the Lorentzian interval, not a
+volume form.  The determinant itself is still the Minkowski quadratic Casimir.
+-/
+def pauliLogAbsDet (P : FourMomentum) : ℝ :=
+  -Real.log ‖(pauliMomentum P).det‖
+
+/-- The Pauli log-det barrier is the log-absolute Minkowski quadratic form. -/
+theorem pauliLogAbsDet_eq_logAbs_minkowskiSq (P : FourMomentum) :
+    pauliLogAbsDet P = -Real.log ‖minkowskiSq P‖ := by
+  simp [pauliLogAbsDet, det_pauliMomentum]
+
+/-- Exponentiating the negative log barrier recovers the absolute interval
+readout.  This is the scalar distinguishability channel, separate from the
+signed Minkowski quadratic form itself. -/
+theorem exp_neg_pauliLogAbsDet_eq_abs_minkowskiSq (P : FourMomentum)
+    (h : minkowskiSq P ≠ 0) :
+    Real.exp (-pauliLogAbsDet P) = ‖minkowskiSq P‖ := by
+  have hpos : 0 < ‖minkowskiSq P‖ := norm_pos_iff.mpr h
+  simp [pauliLogAbsDet, det_pauliMomentum]
+  rw [Real.exp_log hpos]
+
+/-! The square-root readout is the length/mass scale associated to the
+quadratic Casimir.  The preceding theorem intentionally returns the square,
+not this scale. -/
+
+theorem exp_neg_half_pauliLogAbsDet_eq_sqrt_abs_minkowskiSq
+    (P : FourMomentum) (h : minkowskiSq P ≠ 0) :
+    Real.exp (-(1 / 2 : ℝ) * pauliLogAbsDet P) =
+      Real.sqrt ‖minkowskiSq P‖ := by
+  have hx : 0 < ‖minkowskiSq P‖ := norm_pos_iff.mpr h
+  have hlog : pauliLogAbsDet P = -Real.log ‖minkowskiSq P‖ := by
+    simp [pauliLogAbsDet, det_pauliMomentum]
+  rw [hlog]
+  have harg :
+      -(1 / 2 : ℝ) * -Real.log ‖minkowskiSq P‖ =
+        (1 / 2 : ℝ) * Real.log ‖minkowskiSq P‖ := by ring
+  rw [harg]
+  have hsq :
+    ‖minkowskiSq P‖ =
+        Real.exp ((1 / 2 : ℝ) * Real.log ‖minkowskiSq P‖) *
+          Real.exp ((1 / 2 : ℝ) * Real.log ‖minkowskiSq P‖) := by
+    rw [← Real.exp_add]
+    have hsum :
+        (1 / 2 : ℝ) * Real.log ‖minkowskiSq P‖ +
+            (1 / 2 : ℝ) * Real.log ‖minkowskiSq P‖ =
+          Real.log ‖minkowskiSq P‖ := by ring
+    rw [hsum, Real.exp_log hx]
+  symm
+  exact (Real.sqrt_eq_iff_mul_self_eq (le_of_lt hx) (Real.exp_nonneg _)).2 hsq
 
 /-- Chiral super-Poincaré relation: the odd anticommutator matrix is `2P`. -/
 structure ChiralSUSYMomentum where
@@ -106,20 +158,20 @@ def recoverPz (A : M2C) : ℂ := (1 / 2 : ℂ) * Matrix.trace (A * σ3)
 @[simp] theorem recoverPx_pauliMomentum (P : FourMomentum) :
     recoverPx (pauliMomentum P) = P.px := by
   rcases P with ⟨E, px, py, pz⟩
-  simp [recoverPx, pauliMomentum, σ1, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]
+  simp [recoverPx, pauliMomentum, σ1, Matrix.trace, Fin.sum_univ_two]
   ring
 
 @[simp] theorem recoverPy_pauliMomentum (P : FourMomentum) :
     recoverPy (pauliMomentum P) = P.py := by
   rcases P with ⟨E, px, py, pz⟩
-  simp [recoverPy, pauliMomentum, σ2, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]
+  simp [recoverPy, pauliMomentum, σ2, Matrix.trace, Fin.sum_univ_two]
   ring_nf
-  simp [Complex.I_mul_I]
+  simp
 
 @[simp] theorem recoverPz_pauliMomentum (P : FourMomentum) :
     recoverPz (pauliMomentum P) = P.pz := by
   rcases P with ⟨E, px, py, pz⟩
-  simp [recoverPz, pauliMomentum, σ3, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_two]
+  simp [recoverPz, pauliMomentum, σ3, Matrix.trace, Fin.sum_univ_two]
   ring
 
 /-- The inverse Pauli transform recovers all four components from `{Q,Q̄}/2`. -/
@@ -183,27 +235,5 @@ theorem souriau_beta_norm
     (γ / T) ^ 2 - (γ * vx / T) ^ 2 - (γ * vy / T) ^ 2 - (γ * vz / T) ^ 2
         = (γ ^ 2 * (1 - vx ^ 2 - vy ^ 2 - vz ^ 2)) / T ^ 2 := by ring
     _ = (T ^ 2)⁻¹ := by rw [hγ]; ring
-
-/-- Compact synthesis theorem for the bridge. -/
-theorem chiral_poincare_souriau_bridge_synthesis (S : ChiralSUSYMomentum) :
-    momentumSpinorFromSupercharges S = pauliMomentum S.P ∧
-    (pauliMomentum S.P).det = minkowskiSq S.P ∧
-    recoverE (momentumSpinorFromSupercharges S) = S.P.E ∧
-    recoverPx (momentumSpinorFromSupercharges S) = S.P.px ∧
-    recoverPy (momentumSpinorFromSupercharges S) = S.P.py ∧
-    recoverPz (momentumSpinorFromSupercharges S) = S.P.pz := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact momentum_from_supercharges S
-  · exact det_pauliMomentum S.P
-  · exact (supercharge_pauli_inverse S).1
-  · exact (supercharge_pauli_inverse S).2.1
-  · exact (supercharge_pauli_inverse S).2.2.1
-  · exact (supercharge_pauli_inverse S).2.2.2
-
-#check det_pauliMomentum
-#check momentum_from_supercharges
-#check det_spinorOuter_zero
-#check souriau_beta_norm
-#check chiral_poincare_souriau_bridge_synthesis
 
 end InfoGeometry.Physics.ChiralPoincareSouriauBridge

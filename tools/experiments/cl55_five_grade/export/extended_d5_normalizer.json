@@ -1,0 +1,18 @@
+{
+  "ambient_group": "(Z/2Z)^5 semidirect S5",
+  "coefficient_field": "combinatorial_exact",
+  "coxeter_relations": true,
+  "generators": [
+    "s1",
+    "s2",
+    "s3",
+    "s4",
+    "r5"
+  ],
+  "order": 3840,
+  "pin_lift_identified": false,
+  "scope": "finite_signed_cartan_readout",
+  "stabilizer_N_order": 120,
+  "stabilizer_RN_order": 240,
+  "weyl_isomorphism_proved": false
+}

@@ -478,23 +478,4 @@ theorem conformalLedgerBridgeOwnerTarget :
   intro Sys Comm L State Geometry _ _ _ _ _ _ _ _ _ _ _ _ Λ x
   exact Λ.heat_eq_tkk_ricci_flux x
 
-/-- Packet readout for one conformal thermodynamic ledger. -/
-theorem conformalLedgerBridge_packet
-    (Sys Comm L State Geometry : Type*)
-    [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
-    [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
-    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
-    [AddCommGroup State] [Module ℝ State]
-    [AddCommGroup Geometry] [Module ℝ Geometry]
-    (Λ : ConformalThermodynamicLedger
-      Sys Comm L State Geometry)
-    (x : Sys) :
-    heatLoss Λ.bregman Λ.channel x =
-      scalarTKKRicciFlux
-        Λ.closure
-        Λ.heatRicciBridge.scalarReadout
-        (Λ.heatRicciBridge.generatorOf x)
-        (Λ.heatRicciBridge.stateOf x) :=
-  conformalLedgerBridgeOwnerTarget Sys Comm L State Geometry Λ x
-
 end InfoGeometry.OperatorAlgebra.ConformalLedgerBridge

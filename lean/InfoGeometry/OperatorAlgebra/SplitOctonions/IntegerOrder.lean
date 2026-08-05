@@ -35,7 +35,11 @@ theorem ofSplitOct_toSplitOct (x : ZornIntegerSplitOctonion) :
     ofSplitOct (toSplitOct x) = x := by
   cases x with
   | mk a b v w =>
-    congr
+    change
+      ({ a := a, b := b, v := ![v 0, v 1, v 2], w := ![w 0, w 1, w 2] } :
+        ZornIntegerSplitOctonion) =
+        ({ a := a, b := b, v := v, w := w } : ZornIntegerSplitOctonion)
+    congr 1
     · funext i
       fin_cases i <;> rfl
     · funext i
@@ -78,6 +82,7 @@ theorem norm_eq_fin_sum (x : ZornIntegerSplitOctonion) :
     norm x = x.a * x.b - ∑ i : Fin 3, x.v i * x.w i := by
   rw [norm_eq_coordinate_formula]
   simp [Fin.sum_univ_succ]
+  ring
 
 /-- Norm multiplicativity is inherited from the concrete Zorn model. -/
 theorem norm_mul (x y : ZornIntegerSplitOctonion) :
@@ -91,6 +96,7 @@ theorem norm_conjugate (x : ZornIntegerSplitOctonion) :
     norm (conjugate x) = norm x := by
   rw [norm, conjugate]
   dsimp [toSplitOct, conjZ, ofSplitOct, detZ]
+  rw [norm_eq_coordinate_formula]
   ring
 
 /-- The norm is the scalar part of multiplication by the conjugate. -/

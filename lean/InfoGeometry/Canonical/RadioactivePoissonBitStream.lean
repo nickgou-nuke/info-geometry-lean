@@ -1,7 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.SocketTarget
 
@@ -265,17 +264,5 @@ theorem covariance_eq_clifford_delta
     (i j : Fin 4) :
     C.covariance i j = deltaFin4 i j :=
   hcovariance i j
-
-/-- Owner target for radioactive spinor sockets. -/
-@[rep_depth projective]
-def RadioactiveSpinorSocketTarget : Prop :=
-  Nonempty RadioactiveSpinorSocket
-
-/-- Constructor for the radioactive spinor socket target. -/
-@[rep_depth projective]
-theorem constructRadioactiveSpinorSocketTarget
-    (rss : RadioactiveSpinorSocket) :
-    RadioactiveSpinorSocketTarget :=
-  ⟨rss⟩
 
 end InfoGeometry.Canonical.RadioactivePoissonBitStream

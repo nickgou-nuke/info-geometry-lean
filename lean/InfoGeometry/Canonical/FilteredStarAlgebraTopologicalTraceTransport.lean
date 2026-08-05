@@ -35,8 +35,14 @@ variable {B : Type u} [CStarAlgebra B] [PartialOrder B] [StarOrderedRing B]
 
 /-- A compatible continuous family of scalar-valued stage traces, with the
 cyclic law made explicit at each noncommutative stage. -/
-structure CyclicTraceRealization where
-  realization : TopologicalRealization (Stage := Stage) (sys := sys) (B := B)
+abbrev CyclicTraceRealization :=
+  TopologicalRealization (Stage := Stage) (sys := sys) (B := B)
+
+namespace CyclicTraceRealization
+
+def realization (T : CyclicTraceRealization (Stage := Stage) (sys := sys) (B := B)) := T
+
+end CyclicTraceRealization
 
 variable (T : CyclicTraceRealization (Stage := Stage) (sys := sys) (B := B))
 

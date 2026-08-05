@@ -25,7 +25,7 @@ variable {R : Type*} [CommRing R]
 variable (T : R)
 
 /-- The Harmonic operator (Kernel), corresponding to ℋ (P_zero) -/
-def harmonic_op : R := P_zero T
+abbrev harmonic_op : R := P_zero T
 
 /-! ### The Cartan Involution -/
 
@@ -64,10 +64,10 @@ variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 variable (T : R)
 
 /-- The Exact (Holomorphic) operator, corresponding to d (P_plus) -/
-def exact_op : R := P_plus T
+abbrev exact_op : R := P_plus T
 
 /-- The Co-exact (Anti-holomorphic) operator, corresponding to δ (P_minus) -/
-def coexact_op : R := P_minus T
+abbrev coexact_op : R := P_minus T
 
 /-- **Theorem: The Non-Commutative Hodge Decomposition**
 Every state decomposes into Exact, Co-exact, and Harmonic components.

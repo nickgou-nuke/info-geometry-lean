@@ -59,7 +59,6 @@ def zornBoundaryOfMinkowski4 (v : Minkowski4) : ZornCoord :=
 /-- The Zorn reduced norm of the boundary representative is the Minkowski norm. -/
 theorem zornNorm_boundary_eq_minkowski_q (v : Minkowski4) :
     zornNorm (zornBoundaryOfMinkowski4 v) = v.q := by
-  rcases v with ⟨t, x, y, z⟩
   simp [zornBoundaryOfMinkowski4, xyPlaneVec, zornNorm, zornMk, zornA, zornB,
     zornX, zornY, dot3, Minkowski4.q]
   ring
@@ -67,7 +66,6 @@ theorem zornNorm_boundary_eq_minkowski_q (v : Minkowski4) :
 /-- The Zorn trace of the boundary representative is twice the time component. -/
 theorem zornTrace_boundary_eq_two_time (v : Minkowski4) :
     zornTrace (zornBoundaryOfMinkowski4 v) = 2 * v.t := by
-  rcases v with ⟨t, x, y, z⟩
   simp [zornBoundaryOfMinkowski4, zornTrace, zornMk, zornA, zornB]
   ring
 

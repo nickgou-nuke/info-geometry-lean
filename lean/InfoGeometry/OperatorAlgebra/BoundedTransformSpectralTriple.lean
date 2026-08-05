@@ -65,22 +65,6 @@ theorem boundedTransform_sq_eq_of_commute
     _ = D * D * (R * R) := by
       simp [mul_assoc]
 
-/-- Left defect identity for a formal bounded transform from the exact defect hypothesis. -/
-theorem boundedTransform_defect_left
-{A : Type*} [Ring A]
-(D R Q : A)
-(hdefect : 1 - (D * R) * (D * R) = Q) :
-1 - (D * R) * (D * R) = Q :=
-hdefect
-
-/-- Right defect identity for a formal bounded transform from the exact defect hypothesis. -/
-theorem boundedTransform_defect_right
-{A : Type*} [Ring A]
-(D R Q : A)
-(hdefect : 1 - (D * R) * (D * R) = Q) :
-1 - (D * R) * (D * R) = Q :=
-hdefect
-
 /-- The bounded transform commutes with the resolvent when the source does. -/
 theorem boundedTransform_commutes_with_resolvent_of_commute
 {A : Type*} [Semigroup A]
@@ -92,55 +76,5 @@ theorem boundedTransform_commutes_with_resolvent_of_commute
       rw [hcomm]
     _ = R * (D * R) := by
       simp [mul_assoc]
-
-/-- Left inverse readback for a Cayley transform from explicit hypotheses. -/
-theorem cayley_inverse_left_apply
-{A : Type*} [Monoid A]
-(cayley inverse : A)
-(hleft : inverse * cayley = 1) :
-inverse * cayley = 1 :=
-hleft
-
-/-- Right inverse readback for a Cayley transform from explicit hypotheses. -/
-theorem cayley_inverse_right_apply
-{A : Type*} [Monoid A]
-(cayley inverse : A)
-(hright : cayley * inverse = 1) :
-cayley * inverse = 1 :=
-hright
-
-/-- Conditional self-adjointness transfer for the bounded transform. -/
-theorem boundedTransform_selfAdjoint_of_source
-{Op : Type*}
-(SelfAdjoint : Op → Prop)
-(source boundedTransform : Op)
-(htransfer : SelfAdjoint source → SelfAdjoint boundedTransform)
-(hsource : SelfAdjoint source) :
-SelfAdjoint boundedTransform :=
-htransfer hsource
-
-/-- Conditional commutator boundedness readback for the transformed spectral triple. -/
-theorem boundedTransform_commutator_bounded_of_spectralTriple_hypothesis
-{Alg Op : Type*}
-(commutator : Alg → Op → Op)
-(Bounded : Op → Prop)
-(boundedTransform : Op)
-(hcomm : ∀ a : Alg, Bounded (commutator a boundedTransform)) :
-∀ a : Alg, Bounded (commutator a boundedTransform) :=
-hcomm
-
-/-- Conditional owner packet for the bounded-transform spectral triple surface. -/
-theorem boundedTransform_spectralTriple_packet
-{Alg Op : Type*}
-(SelfAdjoint Bounded : Op → Prop)
-(commutator : Alg → Op → Op)
-(source boundedTransform : Op)
-(hself : SelfAdjoint boundedTransform)
-(hbounded : Bounded boundedTransform)
-(hcomm : ∀ a : Alg, Bounded (commutator a boundedTransform)) :
-SelfAdjoint boundedTransform ∧
-Bounded boundedTransform ∧
-∀ a : Alg, Bounded (commutator a boundedTransform) :=
-⟨hself, hbounded, hcomm⟩
 
 end InfoGeometry.Canonical.BoundedTransformSpectralTriple

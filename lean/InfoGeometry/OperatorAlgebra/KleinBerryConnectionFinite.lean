@@ -133,18 +133,4 @@ theorem exceptional_dimension_ledger :
       e7Su8ScalarLedger = 70 := by
   decide
 
-/-- Consolidated finite KBZ connection packet. -/
-theorem kleinBerryConnection_finite_packet :
-    monodromyDerivativeCorrection = (0 : Conn8Z) ∧
-      transformConnection ⟨0, 0⟩ = ⟨0, 0⟩ ∧
-      phaseParity 1 = (1 : ZMod 2) ∧
-      (∀ n : ℤ, phaseParity (n + 2) = phaseParity n) ∧
-      (∀ theta : ℤ,
-        InfoGeometry.Topology.BrillouinKleinGauge.klein_bottle_z2_invariant theta (-theta) = 0) ∧
-      g2Cartan 0 1 = -3 ∧
-      g2Dimension = 14 ∧ e7Dimension = 133 ∧ e7Su8ScalarLedger = 70 := by
-  exact ⟨monodromyDerivativeCorrection_zero, transformConnection_zero, phaseParity_one,
-    phaseParity_add_two, antisymmetric_boundary_klein_invariant_zero,
-    g2Cartan_entries.2.1, rfl, rfl, rfl⟩
-
 end InfoGeometry.OperatorAlgebra.KleinBerryConnectionFinite

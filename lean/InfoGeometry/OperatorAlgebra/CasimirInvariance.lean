@@ -139,17 +139,4 @@ theorem casimirInvarianceOwnerTarget :
   intro Op _ G _ α C hcentral u v huv
   exact verifiedCasimir_fixed_under_conjugation C hcentral u v huv
 
-@[owner_target_tag]
-theorem casimirInvariance_packet
-    (Op : Type*) [Ring Op]
-    (G : Type*) [Group G]
-    (α : SymmetryAction G Op)
-    (C : VerifiedCasimir α)
-    (hcentral : IsCentral C)
-    (u v : Op)
-    (huv : u * v = 1) :
-    u * C * v = C ∧
-      IsCentral C := by
-  exact ⟨casimirInvarianceOwnerTarget Op G α C hcentral u v huv, hcentral⟩
-
 end InfoGeometry.OperatorAlgebra.CasimirInvariance

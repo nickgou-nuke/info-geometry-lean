@@ -48,8 +48,8 @@ theorem trace_one_matStage (n : ℕ) :
 /-- The concrete `Cl(1,1)` matrix tower as a finite algebraic inductive net. -/
 def cl11InductiveAlgebraNet :
     InfoGeometry.Meta.MarkovJonesInduction.InductiveAlgebraNet
-      (𝕜 := ℝ) (A := MatStage) where
-  embed := stageEmbed
+      (𝕜 := ℝ) (A := MatStage) :=
+  stageEmbed
 
 /-- Binary-volume normalized trace as a linear map at stage `n`. -/
 def normalizedTraceLinear (n : ℕ) : MatStage n →ₗ[ℝ] ℝ where
@@ -78,6 +78,7 @@ def cl11MarkovTraceNet :
     field_simp [pow_ne_zero n (by norm_num : (2 : ℝ) ≠ 0)]
   trace_stable := by
     intro n A
+    change normalizedTrace (n + 1) (stageEmbed n A) = normalizedTrace n A
     exact normalizedTrace_matStageEmbed n A
 
 /-- The packaged Markov trace agrees definitionally with `normalizedTrace`. -/

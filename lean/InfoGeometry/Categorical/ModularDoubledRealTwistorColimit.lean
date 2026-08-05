@@ -85,7 +85,7 @@ Each finite scale has a stage projection.  The limit objects carry one
 continuum projection, and the commuting square says every finite/fractal stage
 projects to the same base after passing to the colimit.
 -/
-structure FractalScaleProjectionColimit where
+structure FractalScaleProjectionData where
   StageTotal : ℕ → Type u
   StageBase : ℕ → Type v
   stageProjection : ∀ n : ℕ, StageTotal n → StageBase n
@@ -98,9 +98,9 @@ structure FractalScaleProjectionColimit where
     ∀ (n : ℕ) (x : StageTotal n),
       limitProjection (stageToLimit n x) = baseToLimit n (stageProjection n x)
 
-namespace FractalScaleProjectionColimit
+namespace FractalScaleProjectionData
 
-variable (C : FractalScaleProjectionColimit.{u, v, w, z})
+variable (C : FractalScaleProjectionData.{u, v, w, z})
 
 /--
 The continuum projection of a stage point is computed by first projecting at
@@ -149,6 +149,6 @@ def toModularDoubledRealFibration
   baseTwist_involutive := baseTwist_involutive
   projection_twist := projection_twist
 
-end FractalScaleProjectionColimit
+end FractalScaleProjectionData
 
 end InfoGeometry.Categorical.ModularDoubledRealTwistorColimit

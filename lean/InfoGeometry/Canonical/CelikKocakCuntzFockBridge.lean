@@ -41,6 +41,22 @@ open InfoGeometry.Clifford.Cl11TensorTowerLimit
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
 
+theorem realCARPair_creation_annihilation_eq_one
+    (C : RealCARPair Op) :
+    C.creation * C.annihilation + C.annihilation * C.creation = 1 := by
+  rw [add_comm]
+  exact C.car
+
+theorem realCARPair_creation_sq_zero
+    (C : RealCARPair Op) :
+    C.creation * C.creation = 0 :=
+  C.nilpotent_creation
+
+theorem realCARPair_annihilation_sq_zero
+    (C : RealCARPair Op) :
+    C.annihilation * C.annihilation = 0 :=
+  C.nilpotent_annihilation
+
 /--
 Split Fock clock data: a real CAR pair whose creation/annihilation operators
 are the left/right branches of a witnessed Cuntz modular step.

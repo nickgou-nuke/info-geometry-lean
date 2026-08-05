@@ -54,9 +54,6 @@ def Z : SpinPair := (1/2 : ℂ) • ((1 : M2C) ⊗ₜ[ℂ] (1 : M2C) - σ3c ⊗�
 /-- The Temperley-Lieb generator on two sites: `e = X + Y + Z`. -/
 def e : SpinPair := X + Y + Z
 
-/-- The TL generator as the singlet projector in the chiral basis. -/
-theorem e_eq_X_add_Y_add_Z : e = X + Y + Z := rfl
-
 /-! ## Chiral eigenvector relations
 
 The chiral exchange terms `X` and `Y` are left- and right-eigenvectors
@@ -427,8 +424,6 @@ def klein_classification : KleinClassification where
 def loopParameter : ℂ := 2
 noncomputable def braidParameter : ℂ := Complex.I
 
-theorem loop_eq : loopParameter = 2 := rfl
-
 theorem braid_relation : loopParameter = -(braidParameter ^ 2) - (braidParameter⁻¹) ^ 2 := by
   dsimp [loopParameter, braidParameter]
   norm_num
@@ -449,7 +444,7 @@ theorem chiral_tl_recoupling_synthesis :
       (1/2 : ℂ) • ((1 : M2C) ⊗ₜ[ℂ] (1 : M2C) - σ3c ⊗ₜ[ℂ] σ3c)) ∧
     (loopParameter = 2) ∧
     (loopParameter = -(braidParameter ^ 2) - (braidParameter⁻¹) ^ 2) := by
-  refine ⟨e_sq, ?_, ?_, projector_tensor_identity, loop_eq, braid_relation⟩
+  refine ⟨e_sq, ?_, ?_, projector_tensor_identity, rfl, braid_relation⟩
   · rw [Algebra.TensorProduct.tmul_mul_tmul]; simp [ σPlus_sq, σMinus_sq]
   · rw [Algebra.TensorProduct.tmul_mul_tmul]; simp [ σMinus_sq, σPlus_sq]
 

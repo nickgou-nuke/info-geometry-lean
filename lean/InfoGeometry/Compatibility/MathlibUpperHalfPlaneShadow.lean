@@ -36,9 +36,7 @@ def realToMathlibUHP (τ : RealUpperHalfPlane) : MathlibUHP :=
 
 /-- Mathlib's complex-backed upper-half-plane point as real coordinates. -/
 def mathlibUHPToReal (z : MathlibUHP) : RealUpperHalfPlane :=
-  { x := z.re,
-    y := z.im,
-    y_pos := z.im_pos }
+  (z.re, ⟨z.im, z.im_pos⟩)
 
 /--
 The coordinate equivalence between the real substrate and Mathlib's

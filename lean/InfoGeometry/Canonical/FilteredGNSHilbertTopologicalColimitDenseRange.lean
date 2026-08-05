@@ -37,7 +37,7 @@ theorem denseRange_gnsTopologicalColimitToHilbert :
         Set.range (gnsTopologicalColimitToHilbert Stage sys ω) := by
     intro y hy
     rcases Set.mem_iUnion.mp hy with ⟨i, ⟨x, rfl⟩⟩
-    refine ⟨topologicalDirectInjection
+    refine ⟨colimit.ι
       (gnsTopologicalDiagram Stage sys ω) i x, ?_⟩
     have h := congrArg (fun f => f x)
       (gnsTopologicalColimitToHilbert_stage Stage sys ω i)

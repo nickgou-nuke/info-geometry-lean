@@ -780,15 +780,6 @@ theorem invariantProjectorOwnerTarget :
   intro G _ Op _ α
   exact Projector.one_isInvariantProjector α
 
-/-- Trivial invariant packet: unit lies in the invariant subring and is an invariant projector. -/
-theorem trivialInvariant_unit_packet
-    (G : Type uG) [Group G]
-    (Op : Type uOp) [Ring Op]
-    (α : SymmetryAction G Op) :
-    (⟨1, IsInvariant.one α⟩ : invariantSubring α).val = 1 ∧
-      IsInvariantProjector α (1 : Op) := by
-  exact ⟨rfl, Projector.one_isInvariantProjector α⟩
-
 /-! ## 9. Real-linear operator symmetry actions -/
 
 /--

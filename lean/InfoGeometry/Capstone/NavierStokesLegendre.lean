@@ -40,7 +40,7 @@ local notation "EndH" => AlgebraEnd E
 
 /-- Characterizing the Fenchel-Legendre gap zero condition as a contact coordinate condition. -/
 theorem fenchelGap_eq_zero_iff_contact (L : LegendreModel) (θ η : ℝ)
-    (hd : HasDerivAt L.L.ψ (L.grad θ) θ) :
+    (hd : HasDerivAt L.L (L.grad θ) θ) :
     L.fenchelGap θ η = 0 ↔ η = L.grad θ :=
   L.fenchelGap_eq_zero_iff_eq_grad_of_hasDerivAt θ η hd
 
@@ -55,7 +55,7 @@ theorem fenchel_legendre_gap_zero_iff_madelung_divergence_free
     (L : LegendreModel) (θ η : ℝ) (β : ℝ) (K : EndH)
     (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
     (hSmooth : IsThermodynamicallySmoothed β K)
-    (hd : HasDerivAt L.L.ψ (L.grad θ) θ)
+    (hd : HasDerivAt L.L (L.grad θ) θ)
     (hContact : η = L.grad θ ↔ LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0)
     (h_beta : β = 0 → η = L.grad θ) :
     L.fenchelGap θ η = 0 ↔ IsDivergenceFree (madelungFluidState β K vac ω hSmooth).u := by
@@ -97,7 +97,7 @@ instance : Preorder (DivergenceFreeFluidState E) where
 def kaluzaKleinLift (L : LegendreModel) (β : ℝ) (K : EndH)
     (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
     (hSmooth : IsThermodynamicallySmoothed β K)
-    (hd : ∀ θ, HasDerivAt L.L.ψ (L.grad θ) θ)
+    (hd : ∀ θ, HasDerivAt L.L (L.grad θ) θ)
     (hContact :
       ∀ θ η, η = L.grad θ ↔ LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0) :
     FLVarietyPoint L ⥤ DivergenceFreeFluidState E where

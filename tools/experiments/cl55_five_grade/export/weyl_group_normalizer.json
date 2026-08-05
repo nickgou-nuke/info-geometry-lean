@@ -1,0 +1,54 @@
+{
+  "carrier_dimension": 32,
+  "coefficient_field": "QQ",
+  "expected_weyl_group_order": 3840,
+  "generator_count": 5,
+  "generator_reports": [
+    {
+      "conjugates_cartan": true,
+      "kind": "mode_permutation_reflection",
+      "label": "swap01",
+      "normalizes_witt_lie_span": true,
+      "preserves_grading_operator": true,
+      "square_is_identity": true
+    },
+    {
+      "conjugates_cartan": true,
+      "kind": "mode_permutation_reflection",
+      "label": "swap12",
+      "normalizes_witt_lie_span": true,
+      "preserves_grading_operator": true,
+      "square_is_identity": true
+    },
+    {
+      "conjugates_cartan": true,
+      "kind": "mode_permutation_reflection",
+      "label": "swap23",
+      "normalizes_witt_lie_span": true,
+      "preserves_grading_operator": true,
+      "square_is_identity": true
+    },
+    {
+      "conjugates_cartan": true,
+      "kind": "mode_permutation_reflection",
+      "label": "swap34",
+      "normalizes_witt_lie_span": true,
+      "preserves_grading_operator": true,
+      "square_is_identity": true
+    },
+    {
+      "conjugates_cartan": true,
+      "kind": "mode_sign_reflection",
+      "label": "sign_mode0",
+      "normalizes_witt_lie_span": true,
+      "preserves_grading_operator": true,
+      "square_is_identity": true
+    }
+  ],
+  "identity_component_lie_dimension": 55,
+  "normalizer_scope": "signed_mode_permutations_on_spinor_carrier",
+  "pin_group_extension_proved": false,
+  "weyl_group_identified": true,
+  "weyl_group_order": 3840,
+  "weyl_type": "B5"
+}

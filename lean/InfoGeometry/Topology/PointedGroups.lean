@@ -116,11 +116,11 @@ namespace PointedGroupBraidWitness
 variable {Carrier : Type} [Group Carrier]
 variable (W : PointedGroupBraidWitness Carrier)
 
-def base : Carrier := W.1
+abbrev base : Carrier := W.1
 
-def x : Carrier := W.2.1
+abbrev x : Carrier := W.2.1
 
-def y : Carrier := W.2.2
+abbrev y : Carrier := W.2.2
 
 def mk (base x y : Carrier) : PointedGroupBraidWitness Carrier :=
   (base, x, y)

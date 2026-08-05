@@ -54,7 +54,7 @@ def complexTraceToRealTopCatHom : TopCat.of ℂ ⟶ TopCat.of ℝ :=
 noncomputable def realTraceTopologicalColimitMap (T : Data)
     (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :
     topologicalColimitObject T ⟶ TopCat.of ℝ :=
-  topologicalDirectDescend (topologicalDiagram T)
+  colimit.desc (topologicalDiagram T)
     (realTraceTopologicalCocone T hT)
 
 theorem realTraceTopologicalColimitMap_inclusion

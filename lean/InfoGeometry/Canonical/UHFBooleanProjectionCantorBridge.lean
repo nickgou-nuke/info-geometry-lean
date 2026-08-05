@@ -343,7 +343,25 @@ theorem conditionedWeight_of_mem {n : ℕ}
     (hw : w ∈ A) :
     P.conditionedWeight A w = P.weight w / P.eventMass A := by
   classical
-  simp [conditionedWeight, hw]
+    simp [conditionedWeight, hw]
+
+theorem conditionedWeight_nonnegative {n : ℕ}
+    (P : FiniteBayesianState n) (A : FiniteBooleanAlgebra n)
+    (hA : P.eventMass A ≠ 0) (w : BitWord n) :
+    0 ≤ P.conditionedWeight A w := by
+  by_cases hw : w ∈ A
+  · rw [conditionedWeight_of_mem P A hw]
+    exact div_nonneg (P.nonnegative w)
+      (le_of_lt (lt_of_le_of_ne (P.eventMass_nonnegative A)
+        (Ne.symm hA)))
+  · rw [conditionedWeight_of_not_mem P A hw]
+
+theorem conditionedWeight_mul_eventMass_of_mem {n : ℕ}
+    (P : FiniteBayesianState n) (A : FiniteBooleanAlgebra n)
+    (hA : P.eventMass A ≠ 0) {w : BitWord n} (hw : w ∈ A) :
+    P.conditionedWeight A w * P.eventMass A = P.weight w := by
+  rw [conditionedWeight_of_mem P A hw]
+  field_simp
 
 /-- The post-conditioning mass assigned to the observed event. -/
 def conditionedEventMass {n : ℕ}

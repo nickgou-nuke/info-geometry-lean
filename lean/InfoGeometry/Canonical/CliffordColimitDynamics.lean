@@ -30,33 +30,33 @@ section ColimitDynamics
 
 variable {F : ℕ ⥤ RingCat} 
 -- Note: In the final wiring, F is instantiated as `Cl_functor` 
--- and `colimit F` is the transfinite `CliffordInfinity`.
+-- and `CategoryTheory.Limits.colimit F` is the transfinite `CliffordInfinity`.
 
-def commutator {R : Type*} [Ring R] (a b : R) : R :=
+def ringCommutator {R : Type*} [Ring R] (a b : R) : R :=
   a * b - b * a
 
 /-- Injection maps into the transfinite Clifford algebra preserve the Lie bracket. -/
 lemma ι_bracket_preserve (N : ℕ) (a b : (F.obj N).carrier) :
-    (colimit.ι F N : F.obj N ⟶ colimit F) (commutator a b) =
-      commutator ((colimit.ι F N : F.obj N ⟶ colimit F) a)
-                 ((colimit.ι F N : F.obj N ⟶ colimit F) b) := by
-  dsimp [commutator]
+    (colimit.ι F N : F.obj N ⟶ CategoryTheory.Limits.colimit F) (ringCommutator a b) =
+      ringCommutator ((colimit.ι F N : F.obj N ⟶ CategoryTheory.Limits.colimit F) a)
+                    ((colimit.ι F N : F.obj N ⟶ CategoryTheory.Limits.colimit F) b) := by
+  dsimp [ringCommutator]
   rw [map_sub, map_mul, map_mul]
 
 /-- 2. The commutator is preserved by each colimit injection. -/
 theorem global_colimit_bracket (N : ℕ) (x y : (F.obj N).carrier) :
-    commutator ((colimit.ι F N : F.obj N ⟶ colimit F) x)
-      ((colimit.ι F N : F.obj N ⟶ colimit F) y) =
-      (colimit.ι F N : F.obj N ⟶ colimit F) (commutator x y) := by
-  dsimp [commutator]
+    ringCommutator ((colimit.ι F N : F.obj N ⟶ CategoryTheory.Limits.colimit F) x)
+      ((colimit.ι F N : F.obj N ⟶ CategoryTheory.Limits.colimit F) y) =
+      (colimit.ι F N : F.obj N ⟶ CategoryTheory.Limits.colimit F) (ringCommutator x y) := by
+  dsimp [ringCommutator]
   simp [map_sub, map_mul]
 
 /-- 3. The Pin(5,5) Chiral Anomaly Cancellation is Preserved at Infinity. -/
 theorem witten_moebius_index_zero_preserved 
-    (Γ J : (colimit F).carrier) 
+    (Γ J : (CategoryTheory.Limits.colimit F).carrier) 
     (h_finite_anomaly_free : ∃ (N : ℕ) (γ j : (F.obj N).carrier), 
-      Γ = (colimit.ι F N : F.obj N ⟶ colimit F) γ ∧ 
-      J = (colimit.ι F N : F.obj N ⟶ colimit F) j ∧ 
+      Γ = (colimit.ι F N : F.obj N ⟶ CategoryTheory.Limits.colimit F) γ ∧ 
+      J = (colimit.ι F N : F.obj N ⟶ CategoryTheory.Limits.colimit F) j ∧ 
       j * γ * j = -γ) :
     J * Γ * J = -Γ := by
   obtain ⟨N, γ, j, hΓ, hJ, h_symm⟩ := h_finite_anomaly_free

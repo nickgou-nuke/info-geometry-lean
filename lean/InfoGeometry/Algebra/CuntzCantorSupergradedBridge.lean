@@ -74,6 +74,16 @@ theorem odd_odd_concat_even (a b : Bool) :
   change (2 : ZMod 2) = 0
   native_decide
 
+theorem cuntz_odd_odd_generates_even_translation_packet
+    (n : ℕ) (i : Fin n) :
+    CuntzSuperalgebra.parity n (cuntzSuperMomentum n i) = cuntzSuperMomentum n i ∧
+      algebraicAnticommutator
+          (cuntzMajoranaSupercharge n i)
+          (cuntzMajoranaSupercharge n i) =
+        (2 : ℂ) • cuntzSuperMomentum n i := by
+  exact ⟨parity_cuntzSuperMomentum n i,
+    cuntz_anticommutator_generates_momentum n i⟩
+
 end InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 
 end noncomputable section

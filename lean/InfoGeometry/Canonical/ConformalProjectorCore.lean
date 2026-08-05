@@ -25,8 +25,19 @@ Conformal Inference Structure.
 Formalizes the unification of Conformal Algebra, Generalized Inverses,
 and Geometric Chirality.
 -/
-structure ConformalInference (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
-    [CompleteSpace E] extends InfoGeometry.Canonical.InverseKernel E where
+abbrev ConformalInference (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] := InfoGeometry.Canonical.InverseKernel E
+
+namespace ConformalInference
+
+variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+/-- Native compatibility view for clients that previously traversed the redundant
+conformal wrapper before reaching the canonical inverse-kernel carrier. -/
+abbrev toInverseKernel (CI : ConformalInference E) :
+    InfoGeometry.Canonical.InverseKernel E := CI
+
+end ConformalInference
 
 /--
 Certified conformal inference package.
@@ -71,12 +82,14 @@ variable (CIK : InfoGeometry.Canonical.CertifiedInverseKernel E)
 /-- Adapter from the canonical certified inverse-kernel owner to the conformal
 surface. -/
 abbrev toConformalInference : ConformalInference E :=
-  { toInverseKernel := CIK.toInverseKernel' }
+  CIK.toInverseKernel'
 
 /-- Certified adapter from the inverse-kernel owner to the certified conformal
 surface. -/
 abbrev toCertifiedConformalInference : CertifiedConformalInference E :=
-  { toConformalInference := toConformalInference CIK
+  { A := CIK.A
+    A_D := CIK.A_D
+    A_MP := CIK.A_MP
     drazinIndex := CIK.drazinIndex
     hDrazin := CIK.hDrazin
     hMoorePenrose := CIK.hMoorePenrose }
@@ -87,9 +100,15 @@ namespace CertifiedConformalInference
 
 variable (CCI : CertifiedConformalInference E)
 
+/-- Native view of the certified carrier as its canonical inverse kernel. -/
+abbrev toConformalInference : ConformalInference E :=
+  { A := CCI.A, A_D := CCI.A_D, A_MP := CCI.A_MP }
+
 /-- Adapter from the conformal surface to the canonical certified inverse kernel. -/
 abbrev toCertifiedInverseKernel : InfoGeometry.Canonical.CertifiedInverseKernel E :=
-  { toInverseKernel := CCI.toConformalInference.toInverseKernel
+  { A := CCI.A
+    A_D := CCI.A_D
+    A_MP := CCI.A_MP
     drazinIndex := CCI.drazinIndex
     hDrazin := CCI.hDrazin
     hMoorePenrose := CCI.hMoorePenrose }
@@ -160,7 +179,9 @@ theorem spectralProjector_star_of_isSelfAdjoint
     (hAD : IsSelfAdjoint CCI.A_D) :
     star CCI.spectralProjector = CCI.spectralProjector := by
   simpa [CertifiedConformalInference.spectralProjector] using
-    CCI.toCertifiedInverseKernel.spectralProjector_star_of_isSelfAdjoint hA hAD
+    CCI.toCertifiedInverseKernel.spectralProjector_star_of_isSelfAdjoint
+      (by simpa [CertifiedConformalInference.toCertifiedInverseKernel] using hA)
+      (by simpa [CertifiedConformalInference.toCertifiedInverseKernel] using hAD)
 
 /-- The certified Drazin spectral projector is self-adjoint if `A` and `A_D` are. -/
 theorem spectralProjector_isSelfAdjoint_of_isSelfAdjoint
@@ -168,7 +189,9 @@ theorem spectralProjector_isSelfAdjoint_of_isSelfAdjoint
     (hAD : IsSelfAdjoint CCI.A_D) :
     IsSelfAdjoint CCI.spectralProjector := by
   simpa [CertifiedConformalInference.spectralProjector] using
-    CCI.toCertifiedInverseKernel.spectralProjector_isSelfAdjoint_of_isSelfAdjoint hA hAD
+    CCI.toCertifiedInverseKernel.spectralProjector_isSelfAdjoint_of_isSelfAdjoint
+      (by simpa [CertifiedConformalInference.toCertifiedInverseKernel] using hA)
+      (by simpa [CertifiedConformalInference.toCertifiedInverseKernel] using hAD)
 
 /-- The certified left anomaly commutator is skew-adjoint if `A` and `A_D` are. -/
 theorem leftAnomalyCommutator_star_eq_neg_of_isSelfAdjoint
@@ -238,8 +261,9 @@ theorem rightProjector_eq_leftProjector :
 theorem mpRangeProjector_eq_metricProjector :
     PCCI.toCertifiedConformalInference.mpRangeProjector
       = PCCI.toCertifiedConformalInference.metricProjector := by
-  simpa [CertifiedConformalInference.mpRangeProjector, CertifiedConformalInference.metricProjector]
-    using PCCI.rightProjector_eq_leftProjector
+  change IsMoorePenroseInverse.rightProjector PCCI.A PCCI.A_MP =
+    IsMoorePenroseInverse.leftProjector PCCI.A PCCI.A_MP
+  exact PCCI.rightProjector_eq_leftProjector
 
 /-- Under projector-agreement certification, the right and left certified
 anomaly conventions coincide. -/
@@ -263,8 +287,13 @@ surface upgrades to the star-certified surface with explicit `star P_D = P_D`.
 def toStarCertifiedConformalInference
     (hA : IsSelfAdjoint CCI.A)
     (hAD : IsSelfAdjoint CCI.A_D) :
-    StarCertifiedConformalInference E where
-  toCertifiedConformalInference := CCI
+  StarCertifiedConformalInference E where
+  A := CCI.A
+  A_D := CCI.A_D
+  A_MP := CCI.A_MP
+  drazinIndex := CCI.drazinIndex
+  hDrazin := CCI.hDrazin
+  hMoorePenrose := CCI.hMoorePenrose
   spectralProjector_star := CCI.spectralProjector_star_of_isSelfAdjoint hA hAD
 
 /--
@@ -275,8 +304,13 @@ def toProjectorAgreementCertifiedConformalInference
     (hProj :
       IsMoorePenroseInverse.rightProjector CCI.A CCI.A_MP =
         IsMoorePenroseInverse.leftProjector CCI.A CCI.A_MP) :
-    ProjectorAgreementCertifiedConformalInference E where
-  toCertifiedConformalInference := CCI
+  ProjectorAgreementCertifiedConformalInference E where
+  A := CCI.A
+  A_D := CCI.A_D
+  A_MP := CCI.A_MP
+  drazinIndex := CCI.drazinIndex
+  hDrazin := CCI.hDrazin
+  hMoorePenrose := CCI.hMoorePenrose
   projectorAgreement := hProj
 
 end CertifiedConformalInference

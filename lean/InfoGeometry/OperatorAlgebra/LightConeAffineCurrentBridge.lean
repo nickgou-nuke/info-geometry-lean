@@ -68,12 +68,10 @@ theorem bridge_virasoro_eq : B.bridge.virasoro = B.virasoro :=
   rfl
 
 /-- Compatibility alias retained for downstream source stability. -/
-theorem bridge_affine_eq_theorem : B.bridge.affine = B.affine :=
-  B.bridge_affine_eq
+alias bridge_affine_eq_theorem := bridge_affine_eq
 
 /-- Compatibility alias retained for downstream source stability. -/
-theorem bridge_virasoro_eq_theorem : B.bridge.virasoro = B.virasoro :=
-  B.bridge_virasoro_eq
+alias bridge_virasoro_eq_theorem := bridge_virasoro_eq
 
 /--
 Concrete lightcone-current realization carried by the bridge.

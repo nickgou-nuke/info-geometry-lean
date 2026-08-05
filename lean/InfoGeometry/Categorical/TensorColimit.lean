@@ -42,7 +42,7 @@ noncomputable def tensorColimitIso
     [PreservesColimit F ((tensoringRight (ModuleCat R)).obj M)]
     [HasColimit (F ⋙ (tensoringRight (ModuleCat R)).obj M)] :
     colimit (F ⋙ (tensoringRight (ModuleCat R)).obj M) ≅
-      ((tensoringRight (ModuleCat R)).obj M).obj (colimit F) :=
+      ((tensoringRight (ModuleCat R)).obj M).obj (CategoryTheory.Limits.colimit F) :=
   (preservesColimitIso
     ((tensoringRight (ModuleCat R)).obj M) F).symm
 

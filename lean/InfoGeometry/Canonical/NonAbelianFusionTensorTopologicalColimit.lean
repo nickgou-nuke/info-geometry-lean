@@ -87,9 +87,9 @@ def tensorActionNaturalTransformation
 noncomputable def tensorActionColimitMap
     (action : TopCat.of (FusionTensorCarrier K) ⟶
       TopCat.of (FusionTensorCarrier K)) :
-    topologicalDirectColimit (fusionTensorTopologicalDiagram (K := K)) ⟶
+    colimit (fusionTensorTopologicalDiagram (K := K)) ⟶
       TopCat.of (FusionTensorCarrier K) :=
-  topologicalDirectDescend (fusionTensorTopologicalDiagram (K := K))
+  colimit.desc (fusionTensorTopologicalDiagram (K := K))
     (tensorActionCocone (K := K) action)
 
 theorem tensorActionColimitMap_stage
@@ -97,7 +97,7 @@ theorem tensorActionColimitMap_stage
       TopCat.of (FusionTensorCarrier K)) (n : ℕ)
     (X : FusionTensorCarrier K) :
     tensorActionColimitMap (K := K) action
-        (topologicalDirectInjection
+        (colimit.ι
           (fusionTensorTopologicalDiagram (K := K)) n X) = action X := by
   have h := topologicalDirectDescend_stage
     (fusionTensorTopologicalDiagram (K := K))
@@ -108,10 +108,10 @@ def tensorActionColimitCocone
     (action : TopCat.of (FusionTensorCarrier K) ⟶
       TopCat.of (FusionTensorCarrier K)) :
     Cocone (fusionTensorTopologicalDiagram (K := K)) where
-  pt := topologicalDirectColimit (fusionTensorTopologicalDiagram (K := K))
+  pt := colimit (fusionTensorTopologicalDiagram (K := K))
   ι :=
     { app := fun n => action ≫
-        topologicalDirectInjection
+        colimit.ι
           (fusionTensorTopologicalDiagram (K := K)) n
       naturality := by
         intro i j f
@@ -124,18 +124,18 @@ def tensorActionColimitCocone
 noncomputable def tensorActionColimitEndomorphism
     (action : TopCat.of (FusionTensorCarrier K) ⟶
       TopCat.of (FusionTensorCarrier K)) :
-    topologicalDirectColimit (fusionTensorTopologicalDiagram (K := K)) ⟶
-      topologicalDirectColimit (fusionTensorTopologicalDiagram (K := K)) :=
-  topologicalDirectDescend (fusionTensorTopologicalDiagram (K := K))
+    colimit (fusionTensorTopologicalDiagram (K := K)) ⟶
+      colimit (fusionTensorTopologicalDiagram (K := K)) :=
+  colimit.desc (fusionTensorTopologicalDiagram (K := K))
     (tensorActionColimitCocone (K := K) action)
 
 theorem tensorActionColimitEndomorphism_stage
     (action : TopCat.of (FusionTensorCarrier K) ⟶
       TopCat.of (FusionTensorCarrier K)) (n : ℕ) :
-    topologicalDirectInjection
+    colimit.ι
         (fusionTensorTopologicalDiagram (K := K)) n ≫
         tensorActionColimitEndomorphism (K := K) action =
-      action ≫ topologicalDirectInjection
+      action ≫ colimit.ι
         (fusionTensorTopologicalDiagram (K := K)) n := by
   exact topologicalDirectDescend_stage
     (fusionTensorTopologicalDiagram (K := K))
@@ -149,10 +149,10 @@ theorem tensorActionColimitEndomorphism_eq_map
         (tensorActionNaturalTransformation (K := K) action) := by
   apply colimit.hom_ext
   intro n
-  change topologicalDirectInjection
+  change colimit.ι
       (fusionTensorTopologicalDiagram (K := K)) n ≫
       tensorActionColimitEndomorphism (K := K) action =
-    topologicalDirectInjection
+    colimit.ι
       (fusionTensorTopologicalDiagram (K := K)) n ≫
       topologicalDirectMapBetween
         (tensorActionNaturalTransformation (K := K) action)
@@ -163,33 +163,33 @@ theorem tensorActionColimitEndomorphism_eq_map
 theorem tensorActionColimitEndomorphism_comp_stage
     (action₁ action₂ : TopCat.of (FusionTensorCarrier K) ⟶
       TopCat.of (FusionTensorCarrier K)) (n : ℕ) :
-    topologicalDirectInjection
+    colimit.ι
         (fusionTensorTopologicalDiagram (K := K)) n ≫
         (tensorActionColimitEndomorphism (K := K) action₁ ≫
           tensorActionColimitEndomorphism (K := K) action₂) =
       (action₁ ≫ action₂) ≫
-        topologicalDirectInjection
+        colimit.ι
           (fusionTensorTopologicalDiagram (K := K)) n := by
   calc
-    _ = (topologicalDirectInjection
+    _ = (colimit.ι
         (fusionTensorTopologicalDiagram (K := K)) n ≫
         tensorActionColimitEndomorphism (K := K) action₁) ≫
         tensorActionColimitEndomorphism (K := K) action₂ := by
           simp only [Category.assoc]
 
-    _ = (action₁ ≫ topologicalDirectInjection
+    _ = (action₁ ≫ colimit.ι
         (fusionTensorTopologicalDiagram (K := K)) n) ≫
         tensorActionColimitEndomorphism (K := K) action₂ := by
           rw [tensorActionColimitEndomorphism_stage (K := K) action₁ n]
-    _ = action₁ ≫ (topologicalDirectInjection
+    _ = action₁ ≫ (colimit.ι
         (fusionTensorTopologicalDiagram (K := K)) n ≫
         tensorActionColimitEndomorphism (K := K) action₂) := by
           simp only [Category.assoc]
-    _ = action₁ ≫ (action₂ ≫ topologicalDirectInjection
+    _ = action₁ ≫ (action₂ ≫ colimit.ι
         (fusionTensorTopologicalDiagram (K := K)) n) := by
           rw [tensorActionColimitEndomorphism_stage (K := K) action₂ n]
     _ = (action₁ ≫ action₂) ≫
-        topologicalDirectInjection
+        colimit.ι
           (fusionTensorTopologicalDiagram (K := K)) n := by
           simp only [Category.assoc]
 
@@ -202,15 +202,15 @@ theorem tensorActionColimitEndomorphism_comp
   apply colimit.hom_ext
   intro n
   calc
-    topologicalDirectInjection
+    colimit.ι
           (fusionTensorTopologicalDiagram (K := K)) n ≫
         (tensorActionColimitEndomorphism (K := K) action₁ ≫
           tensorActionColimitEndomorphism (K := K) action₂) =
       (action₁ ≫ action₂) ≫
-        topologicalDirectInjection
+        colimit.ι
           (fusionTensorTopologicalDiagram (K := K)) n :=
       tensorActionColimitEndomorphism_comp_stage (K := K) action₁ action₂ n
-    _ = topologicalDirectInjection
+    _ = colimit.ι
           (fusionTensorTopologicalDiagram (K := K)) n ≫
         tensorActionColimitEndomorphism (K := K) (action₁ ≫ action₂) := by
       symm
@@ -225,19 +225,19 @@ theorem tensorActionColimitEndomorphism_id :
   intro n
   have h := tensorActionColimitEndomorphism_stage (K := K)
     (𝟙 (TopCat.of (FusionTensorCarrier K))) n
-  change topologicalDirectInjection
+  change colimit.ι
       (fusionTensorTopologicalDiagram (K := K)) n ≫
       tensorActionColimitEndomorphism (K := K)
         (𝟙 (TopCat.of (FusionTensorCarrier K))) =
-    topologicalDirectInjection
+    colimit.ι
       (fusionTensorTopologicalDiagram (K := K)) n ≫ 𝟙 _
   simpa only [Category.id_comp, Category.comp_id] using h
 
 def fusionCoxeterTensorColimitEndomorphism
     (a b q1 q2 : K) :
-    topologicalDirectColimit
+    colimit
         (fusionTensorTopologicalDiagram (K := K)) ⟶
-      topologicalDirectColimit
+      colimit
         (fusionTensorTopologicalDiagram (K := K)) :=
   tensorActionColimitEndomorphism (K := K)
     (tensorLeftTopCatHom
@@ -245,12 +245,12 @@ def fusionCoxeterTensorColimitEndomorphism
 
 theorem fusionCoxeterTensorColimitEndomorphism_stage
     (a b q1 q2 : K) (n : ℕ) :
-    topologicalDirectInjection
+    colimit.ι
         (fusionTensorTopologicalDiagram (K := K)) n ≫
         fusionCoxeterTensorColimitEndomorphism (K := K) a b q1 q2 =
       tensorLeftTopCatHom
           (braidGen2 K a b q1 q2) (braidGen1 K q1 q2) ≫
-        topologicalDirectInjection
+        colimit.ι
           (fusionTensorTopologicalDiagram (K := K)) n := by
   exact tensorActionColimitEndomorphism_stage (K := K)
     (tensorLeftTopCatHom
@@ -258,9 +258,9 @@ theorem fusionCoxeterTensorColimitEndomorphism_stage
 
 def fusionCoxeterTensorFullTwistColimitEndomorphism
     (a b q1 q2 : K) :
-    topologicalDirectColimit
+    colimit
         (fusionTensorTopologicalDiagram (K := K)) ⟶
-      topologicalDirectColimit
+      colimit
         (fusionTensorTopologicalDiagram (K := K)) :=
   fusionCoxeterTensorColimitEndomorphism (K := K) a b q1 q2 ≫
     fusionCoxeterTensorColimitEndomorphism (K := K) a b q1 q2 ≫
@@ -287,7 +287,7 @@ theorem fusionCoxeterTensorFullTwist_eq_tensorActionColimit
 
 theorem fusionCoxeterTensorFullTwist_stage
     (a b q1 q2 : K) (n : ℕ) :
-    topologicalDirectInjection
+    colimit.ι
         (fusionTensorTopologicalDiagram (K := K)) n ≫
         fusionCoxeterTensorFullTwistColimitEndomorphism
           (K := K) a b q1 q2 =
@@ -297,7 +297,7 @@ theorem fusionCoxeterTensorFullTwist_stage
           (braidGen2 K a b q1 q2) (braidGen1 K q1 q2) ≫
         tensorLeftTopCatHom
           (braidGen2 K a b q1 q2) (braidGen1 K q1 q2)) ≫
-        topologicalDirectInjection
+        colimit.ι
           (fusionTensorTopologicalDiagram (K := K)) n := by
   dsimp [fusionCoxeterTensorFullTwistColimitEndomorphism,
     fusionCoxeterTensorColimitEndomorphism]
@@ -306,26 +306,26 @@ theorem fusionCoxeterTensorFullTwist_stage
       (braidGen2 K a b q1 q2) (braidGen1 K q1 q2))
   let t := tensorLeftTopCatHom
     (braidGen2 K a b q1 q2) (braidGen1 K q1 q2)
-  change topologicalDirectInjection
+  change colimit.ι
       (fusionTensorTopologicalDiagram (K := K)) n ≫ (e ≫ e ≫ e) =
-    (t ≫ t ≫ t) ≫ topologicalDirectInjection
+    (t ≫ t ≫ t) ≫ colimit.ι
       (fusionTensorTopologicalDiagram (K := K)) n
   calc
-    _ = (topologicalDirectInjection
+    _ = (colimit.ι
         (fusionTensorTopologicalDiagram (K := K)) n ≫ (e ≫ e)) ≫ e := by
           simp only [Category.assoc]
-    _ = ((t ≫ t) ≫ topologicalDirectInjection
+    _ = ((t ≫ t) ≫ colimit.ι
         (fusionTensorTopologicalDiagram (K := K)) n) ≫ e := by
           rw [tensorActionColimitEndomorphism_comp_stage]
     _ = (t ≫ t) ≫
-        (topologicalDirectInjection
+        (colimit.ι
           (fusionTensorTopologicalDiagram (K := K)) n ≫ e) := by
           simp only [Category.assoc]
     _ = (t ≫ t) ≫
-        (t ≫ topologicalDirectInjection
+        (t ≫ colimit.ι
           (fusionTensorTopologicalDiagram (K := K)) n) := by
           rw [tensorActionColimitEndomorphism_stage]
-    _ = (t ≫ t ≫ t) ≫ topologicalDirectInjection
+    _ = (t ≫ t ≫ t) ≫ colimit.ι
         (fusionTensorTopologicalDiagram (K := K)) n := by
           simp only [Category.assoc]
 
@@ -333,9 +333,9 @@ theorem fusionCoxeterTensorFullTwist_stage_apply
     (a b q1 q2 : K) (n : ℕ) (X : FusionTensorCarrier K) :
     fusionCoxeterTensorFullTwistColimitEndomorphism
         (K := K) a b q1 q2
-      (topologicalDirectInjection
+      (colimit.ι
         (fusionTensorTopologicalDiagram (K := K)) n X) =
-      topologicalDirectInjection
+      colimit.ι
         (fusionTensorTopologicalDiagram (K := K)) n
         (((braidGen2 K a b q1 q2 ⊗ₖ braidGen1 K q1 q2) *
           (braidGen2 K a b q1 q2 ⊗ₖ braidGen1 K q1 q2) *

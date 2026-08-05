@@ -6,6 +6,7 @@ No complex imports.
 -/
 
 import Mathlib.Topology.Basic
+import Mathlib.Topology.Category.TopCat.Basic
 import InfoGeometry.Algebraic.SplitQuadraticForm
 
 noncomputable section
@@ -21,11 +22,7 @@ This is the formal placeholder for the symmetric space
 `O(n,n)/(O(n) × O(n))`. The concrete matrix model can be added later without
 changing the downstream cocycle or boundary APIs.
 -/
-structure SplitOrthogonalCartanSpace (n : ℕ) where
-  carrier : Type
-  instTopologicalSpace : TopologicalSpace carrier
-
-attribute [instance] SplitOrthogonalCartanSpace.instTopologicalSpace
+abbrev SplitOrthogonalCartanSpace (_n : ℕ) := TopCat
 
 /--
 Abstract isotropic boundary carrier for split-orthogonal degeneration.
@@ -33,10 +30,6 @@ Abstract isotropic boundary carrier for split-orthogonal degeneration.
 This is the natural boundary/readout object paired with
 `SplitOrthogonalCartanSpace`.
 -/
-structure SplitOrthogonalBoundary (n : ℕ) where
-  carrier : Type
-  instTopologicalSpace : TopologicalSpace carrier
-
-attribute [instance] SplitOrthogonalBoundary.instTopologicalSpace
+abbrev SplitOrthogonalBoundary (_n : ℕ) := TopCat
 
 end InfoGeometry.Geometry.Cartan

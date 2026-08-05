@@ -22,16 +22,21 @@ structure InvolutiveDerivation where
 instance : CoeFun (InvolutiveDerivation (A := A) sharp) (fun _ => A → A) :=
   ⟨fun D => D.toAddHom⟩
 
-structure SharpCuntzFamily (sharp : A → A) where
-  S : Fin N → A
+abbrev SharpCuntzFamily (sharp : A → A) := Fin N → A
+
+namespace SharpCuntzFamily
+
+abbrev S (O : SharpCuntzFamily (N := N) sharp) : Fin N → A := O
+
+end SharpCuntzFamily
 
 structure SharpCuntzTangent (O : SharpCuntzFamily (N := N) sharp) where
   X : Fin N → A
   tangent_isometry : ∀ i j,
-    sharp (X i) * O.S j + sharp (O.S i) * X j = 0
+    sharp (X i) * O j + sharp (O i) * X j = 0
   tangent_complete :
     ∑ i : Fin N,
-      (X i * sharp (O.S i) + O.S i * sharp (X i)) = 0
+      (X i * sharp (O i) + O i * sharp (X i)) = 0
 
 lemma InvolutiveDerivation.map_zero
     (D : InvolutiveDerivation (A := A) sharp) : D 0 = 0 :=
@@ -49,19 +54,19 @@ noncomputable def InvolutiveDerivation.cuntzTangent
     (D : InvolutiveDerivation (A := A) sharp)
     (O : SharpCuntzFamily (N := N) sharp)
     (h_isometry : ∀ i j,
-      sharp (O.S i) * O.S j = if i = j then 1 else 0)
-    (h_range_sum : ∑ i : Fin N, O.S i * sharp (O.S i) = 1) :
+      sharp (O i) * O j = if i = j then 1 else 0)
+    (h_range_sum : ∑ i : Fin N, O i * sharp (O i) = 1) :
     SharpCuntzTangent sharp O := by
-  let X : Fin N → A := fun i => D (O.S i)
+  let X : Fin N → A := fun i => D (O i)
   have hD1 : D (1 : A) = 0 := D.map_one
   have hisometry (i j : Fin N) :
-      D (sharp (O.S i) * O.S j) =
-        sharp (X i) * O.S j + sharp (O.S i) * X j := by
+      D (sharp (O i) * O j) =
+        sharp (X i) * O j + sharp (O i) * X j := by
     rw [D.leibniz', D.sharp']
   have hsum :
-      D (∑ i : Fin N, O.S i * sharp (O.S i)) =
+      D (∑ i : Fin N, O i * sharp (O i)) =
         ∑ i : Fin N,
-          (X i * sharp (O.S i) + O.S i * sharp (X i)) := by
+          (X i * sharp (O i) + O i * sharp (X i)) := by
     rw [map_sum]
     apply Finset.sum_congr rfl
     intro i hi

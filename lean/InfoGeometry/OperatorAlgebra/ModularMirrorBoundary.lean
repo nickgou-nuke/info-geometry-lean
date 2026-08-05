@@ -384,12 +384,4 @@ theorem modularMirrorBoundaryOwnerTarget :
     ⟨M.diagonal_transparent,
       M.imbalance_anti_fixed⟩
 
-/-- Packet readout for one concrete modular mirror boundary. -/
-theorem modularMirrorBoundary_packet
-    (V : Type*) [AddCommGroup V] [Module ℝ V]
-    (M : ClosureMirrorBoundary V) :
-    M.IsTransparent M.diagonal ∧
-      M.closure.theta M.imbalance = -M.imbalance :=
-  modularMirrorBoundaryOwnerTarget V M
-
 end InfoGeometry.OperatorAlgebra.ModularMirrorBoundary

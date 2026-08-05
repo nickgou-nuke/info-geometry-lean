@@ -29,8 +29,14 @@ A localized puncture in a superconducting/order-parameter ledger.
 is defined intrinsically by nonzero winding rather than by an independent
 proposition field.
 -/
-structure LocalizedPuncture where
-  winding : ℤ
+abbrev LocalizedPuncture := ℤ
+
+namespace LocalizedPuncture
+
+/-- Compatibility accessor for the native integer winding carrier. -/
+abbrev winding (P : LocalizedPuncture) : ℤ := P
+
+end LocalizedPuncture
 
 /-- A puncture is topologically nontrivial if its winding is nonzero. -/
 def LocalizedPuncture.Nontrivial
@@ -148,9 +154,6 @@ structure SubgapRepairWitness
   /-- The core state is represented by the localized subgap state. -/
   core_eq_subgap : V.coreState = subgapState
 
-  /-- A repaired core has no residual mismatch with its localized state. -/
-  residual_eq_zero : V.coreState - subgapState = 0
-
 namespace SubgapRepairWitness
 
 variable
@@ -171,7 +174,9 @@ def Resolved : Prop :=
 /-- Every subgap repair witness is resolved by its concrete residual law. -/
 theorem resolved :
     S.Resolved :=
-  S.residual_eq_zero
+  by
+    unfold Resolved
+    rw [S.core_eq_subgap, sub_self]
 
 /-- The residual formulation is equivalent to the represented-core law. -/
 theorem resolved_iff_core_eq_subgap :

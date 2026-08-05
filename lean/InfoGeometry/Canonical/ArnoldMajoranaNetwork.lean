@@ -19,7 +19,8 @@ A specialized MoE layer where experts operate on the doubled `ArnoldMajoranaCarr
 - Input: `ArnoldMajoranaCarrier E`
 - Output: `ArnoldMajoranaCarrier E`
 -/
-structure ArnoldMajoranaNetwork (n : Nat) (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E] where
+structure ArnoldMajoranaNetwork (n : Nat) (E : Type*) [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [CompleteSpace E] [FiniteDimensional ℝ E] where
   moe : MoELayer n (ArnoldMajoranaCarrier E)
 
 /--

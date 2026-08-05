@@ -76,21 +76,21 @@ generators identically to the Bost--Connes KMS projection weights.
 -/
 abbrev ZornBraidKMSState : Type _ :=
   KMSProjectionState C ×
-    (↑(zornContinuumModule R ZornSequence) → ℝ) ×
+    (↑(colimit ZornSequence) → ℝ) ×
       (J → ℕ+) ×
-        (↑(zornContinuumModule R ZornSequence) →
-          ↑(zornContinuumModule R ZornSequence))
+        (↑(colimit ZornSequence) →
+          ↑(colimit ZornSequence))
 
 namespace ZornBraidKMSState
 
 variable (state : ZornBraidKMSState C ZornSequence)
 
 abbrev bcKMS : KMSProjectionState C := state.1
-abbrev zornState : ↑(zornContinuumModule R ZornSequence) → ℝ := state.2.1
+abbrev zornState : ↑(colimit ZornSequence) → ℝ := state.2.1
 abbrev stageIndex : J → ℕ+ := state.2.2.1
 abbrev continuumStar :
-    ↑(zornContinuumModule R ZornSequence) →
-      ↑(zornContinuumModule R ZornSequence) := state.2.2.2
+    ↑(colimit ZornSequence) →
+      ↑(colimit ZornSequence) := state.2.2.2
 
 end ZornBraidKMSState
 

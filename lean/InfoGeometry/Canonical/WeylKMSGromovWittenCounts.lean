@@ -59,9 +59,16 @@ def paritySign {Γ : Type*} (S : SuperOrbitSpace Γ) (γ : Γ) : ℝ :=
   if S γ then -1 else 1
 
 /-- A Weyl gauge assigns a positive local dilation weight to each orbit sector. -/
-structure WeylGaugeWeight (Γ : Type*) where
-  weight : Γ → ℝ
-  positive : ∀ γ, 0 < weight γ
+abbrev WeylGaugeWeight (Γ : Type*) :=
+  {weight : Γ → ℝ // ∀ γ, 0 < weight γ}
+
+namespace WeylGaugeWeight
+
+abbrev weight {Γ : Type*} (Ω : WeylGaugeWeight Γ) : Γ → ℝ := Ω.1
+
+abbrev positive {Γ : Type*} (Ω : WeylGaugeWeight Γ) : ∀ γ, 0 < Ω.weight γ := Ω.2
+
+end WeylGaugeWeight
 
 /--
 A KMS/Jaynes reproducing state on orbit projectors.
@@ -69,9 +76,16 @@ A KMS/Jaynes reproducing state on orbit projectors.
 `expect γ` is the real expectation value of the projector/indicator for the
 orbit sector `γ`.
 -/
-structure KMSOrbitState (Γ : Type*) where
-  expect : Γ → ℝ
-  nonnegative : ∀ γ, 0 ≤ expect γ
+abbrev KMSOrbitState (Γ : Type*) :=
+  {expect : Γ → ℝ // ∀ γ, 0 ≤ expect γ}
+
+namespace KMSOrbitState
+
+abbrev expect {Γ : Type*} (φ : KMSOrbitState Γ) : Γ → ℝ := φ.1
+
+abbrev nonnegative {Γ : Type*} (φ : KMSOrbitState Γ) : ∀ γ, 0 ≤ φ.expect γ := φ.2
+
+end KMSOrbitState
 
 /--
 Weyl/KMS weighted signed zero-mode count.
@@ -109,62 +123,31 @@ def projectiveOrbitCoordinate
     (γ : Γ) : ℝ :=
   Ω.weight γ * φ.expect γ / orbitPartitionFunction Ω φ
 
-/--
-Witness that zero-mode orbit sectors are identified with curve/stable-map
-sectors of a GW-type theory.
-
-This prevents the overclaim that every zero-mode count is automatically a
-Gromov--Witten invariant.
--/
-structure GromovWittenCalibration
-    {Γ : Type*}
-    [Fintype Γ]
-    (Ω : WeylGaugeWeight Γ)
-    (φ : KMSOrbitState Γ) where
-  curveClass : Γ → Type*
-  gwWeight : Γ → ℝ
-  gwWeight_eq_weylKMS :
-    ∀ γ : Γ, gwWeight γ = Ω.weight γ * φ.expect γ
-
-namespace GromovWittenCalibration
-
-/--
-The total calibrated Gromov--Witten weight is the Weyl/KMS orbit partition
-function.
--/
+/-- A finite weight function has the Weyl/KMS orbit sum when its pointwise
+    values are identified with the corresponding Weyl/KMS weights. -/
 theorem sum_gwWeight_eq_orbitPartitionFunction
     {Γ : Type*}
     [Fintype Γ]
     {Ω : WeylGaugeWeight Γ}
     {φ : KMSOrbitState Γ}
-    (C : GromovWittenCalibration Ω φ) :
-    Finset.univ.sum C.gwWeight =
+    (gwWeight : Γ → ℝ)
+    (h_gwWeight_eq_weylKMS :
+      ∀ γ : Γ, gwWeight γ = Ω.weight γ * φ.expect γ) :
+    Finset.univ.sum gwWeight =
       orbitPartitionFunction Ω φ := by
   unfold orbitPartitionFunction
   apply Finset.sum_congr rfl
   intro γ _
-  exact C.gwWeight_eq_weylKMS γ
+  exact h_gwWeight_eq_weylKMS γ
 
-end GromovWittenCalibration
-
-/--
-A calibrated effective volume law.
-
-The effective volume equals a scale times the Weyl/KMS zero-mode count only
-under this explicit calibration.
--/
-structure WeylKMSVolumeCalibration
-    {Γ : Type*}
-    [Fintype Γ]
-    (S : SuperOrbitSpace Γ)
-    (Ω : WeylGaugeWeight Γ)
-    (φ : KMSOrbitState Γ) where
-
-  volume : ℝ
-  scale : ℝ
-
-  volume_eq_weighted_count :
-    volume = scale * weightedZeroModeCount S Ω φ
+/- A calibrated effective volume law is stated directly as an equality. -/
+theorem volume_eq_weighted_count
+    {Γ : Type*} [Fintype Γ]
+    {S : SuperOrbitSpace Γ} {Ω : WeylGaugeWeight Γ} {φ : KMSOrbitState Γ}
+    (volume scale : ℝ)
+    (h : volume = scale * weightedZeroModeCount S Ω φ) :
+    volume = scale * weightedZeroModeCount S Ω φ :=
+  h
 
 /-- Read back the calibrated effective volume law. -/
 theorem effective_volume_from_weyl_kms_counts
@@ -173,9 +156,10 @@ theorem effective_volume_from_weyl_kms_counts
     (S : SuperOrbitSpace Γ)
     (Ω : WeylGaugeWeight Γ)
     (φ : KMSOrbitState Γ)
-    (C : WeylKMSVolumeCalibration S Ω φ) :
-    C.volume = C.scale * weightedZeroModeCount S Ω φ :=
-  C.volume_eq_weighted_count
+    (volume scale : ℝ)
+    (h : volume = scale * weightedZeroModeCount S Ω φ) :
+    volume = scale * weightedZeroModeCount S Ω φ :=
+  volume_eq_weighted_count volume scale h
 
 /--
 Real Fierz channels for projective count readout.

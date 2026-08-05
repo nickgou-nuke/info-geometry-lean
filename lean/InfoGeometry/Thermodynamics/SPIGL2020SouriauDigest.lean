@@ -262,8 +262,17 @@ The tower is deliberately lightweight: it stores a stagewise family of finite
 Souriau packets.  A future bonding/colimit module can add the actual
 compatibility maps without changing the finite owner data.
 -/
-structure FiniteSouriauTowerSeed (State LieAlgebra LieDual : Type*) where
-  stage : ℕ → FiniteSouriauStageData State LieAlgebra LieDual
+abbrev FiniteSouriauTowerSeed (State LieAlg LieDual : Type*) :=
+  ℕ → FiniteSouriauStageData State LieAlg LieDual
+
+namespace FiniteSouriauTowerSeed
+
+abbrev stage
+    (T : FiniteSouriauTowerSeed State LieAlg LieDual) :
+    ℕ → FiniteSouriauStageData State LieAlg LieDual :=
+  T
+
+end FiniteSouriauTowerSeed
 
 namespace FiniteSouriauTowerSeed
 

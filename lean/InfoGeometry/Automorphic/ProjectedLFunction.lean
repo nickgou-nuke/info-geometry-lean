@@ -38,10 +38,14 @@ For a concrete automorphic model, `coeff s` may be a Mellin transform, a Hecke
 eigen-coefficient functional, a Whittaker coefficient, or another arithmetic
 readout.
 -/
-structure AutomorphicLFunctional
+abbrev AutomorphicLFunctional
     (Bulk : Type uBulk)
-    [AddCommGroup Bulk] [Module ℝ Bulk] where
-  coeff : ℂ → Bulk →ₗ[ℝ] ℂ
+    [AddCommGroup Bulk] [Module ℝ Bulk] :=
+  ℂ → Bulk →ₗ[ℝ] ℂ
+
+namespace AutomorphicLFunctional
+
+end AutomorphicLFunctional
 
 /--
 The raw, unprojected automorphic spectral function.
@@ -51,7 +55,7 @@ def rawLFunction
     [AddCommGroup Bulk] [Module ℝ Bulk]
     (Λ : AutomorphicLFunctional Bulk)
     (F : Bulk) : ℂ → ℂ :=
-  fun s => Λ.coeff s F
+  fun s => Λ s F
 
 /--
 The boundary/Eisenstein spectral readout.
@@ -63,7 +67,7 @@ def boundaryLFunction
     (W : SiegelEisensteinWitness Bulk Boundary)
     (Λ : AutomorphicLFunctional Bulk)
     (F : Bulk) : ℂ → ℂ :=
-  fun s => Λ.coeff s (W.boundaryProjector F)
+  fun s => Λ s (W.boundaryProjector F)
 
 /--
 The cuspidally projected automorphic L-function.
@@ -77,7 +81,7 @@ def cuspidalLFunction
     (W : SiegelEisensteinWitness Bulk Boundary)
     (Λ : AutomorphicLFunctional Bulk)
     (F : Bulk) : ℂ → ℂ :=
-  fun s => Λ.coeff s (W.cuspidalProjector F)
+  fun s => Λ s (W.cuspidalProjector F)
 
 namespace SiegelEisensteinWitness
 
@@ -166,13 +170,13 @@ A spectral functional kills the Eisenstein boundary if it vanishes on every
 Eisenstein lift.
 -/
 def KillsBoundary : Prop :=
-  ∀ (s : ℂ) (b : Boundary), Λ.coeff s (W.eisenstein b) = 0
+  ∀ (s : ℂ) (b : Boundary), Λ s (W.eisenstein b) = 0
 
 /--
 If the functional kills the boundary, the boundary L-function vanishes.
 -/
 theorem boundaryLFunction_eq_zero_of_killsBoundary
-    (hΛ : W.KillsBoundary Λ)
+    (hΛ : SiegelEisensteinWitness.KillsBoundary (W := W) Λ)
     (F : Bulk) :
     boundaryLFunction W Λ F = 0 := by
   funext s
@@ -184,7 +188,7 @@ If the functional kills the Eisenstein boundary, the raw readout is already the
 cuspidal readout.
 -/
 theorem rawLFunction_eq_cuspidalLFunction_of_killsBoundary
-    (hΛ : W.KillsBoundary Λ)
+    (hΛ : SiegelEisensteinWitness.KillsBoundary (W := W) Λ)
     (F : Bulk) :
     rawLFunction Λ F = cuspidalLFunction W Λ F := by
   funext s
@@ -254,7 +258,7 @@ theorem eval_eq_projected
     (P : ProjectedAutomorphicLFunctionWitness W)
     (s : ℂ) :
     P.L s =
-      P.functional.coeff s (W.cuspidalProjector P.bulkState) := by
+      P.functional s (W.cuspidalProjector P.bulkState) := by
   rw [P.L_eq_projected]
   rfl
 
@@ -266,7 +270,7 @@ theorem resonance_iff_projected_zero
     (P : ProjectedAutomorphicLFunctionWitness W)
     (s : ℂ) :
     IsAutomorphicResonance P.L s ↔
-      P.functional.coeff s (W.cuspidalProjector P.bulkState) = 0 := by
+      P.functional s (W.cuspidalProjector P.bulkState) = 0 := by
   unfold IsAutomorphicResonance
   rw [P.eval_eq_projected s]
 
@@ -523,7 +527,7 @@ def ProjectedAutomorphicLFunctionOwnerTarget : Prop :=
   ∀ (_F : Bulk),
   ∀ s : ℂ,
     cuspidalLFunction W _Λ _F s =
-      _Λ.coeff s (W.cuspidalProjector _F)
+      _Λ s (W.cuspidalProjector _F)
 
 /--
 The projected L-function owner target is satisfied by definition.

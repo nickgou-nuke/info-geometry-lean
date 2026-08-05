@@ -28,7 +28,7 @@ variable (F : J ⥤ SSet.{u}) (c : SSet.{u})
     For such objects, the mapping space functor `Maps(c, -)` commutes with filtered colimits. -/
 noncomputable def rozenblyum_mapping_space_commutes_colimit
     [IsFinitelyPresentable c] [HasColimit F] [HasColimit (F ⋙ coyoneda.obj (op c))] :
-    (c ⟶ colimit F) ≅ colimit (F ⋙ coyoneda.obj (op c)) := by
+    (c ⟶ CategoryTheory.Limits.colimit F) ≅ colimit (F ⋙ coyoneda.obj (op c)) := by
   haveI : PreservesFilteredColimits (coyoneda.obj (op c)) :=
     isFinitelyPresentable_iff_preservesFilteredColimits.mp ‹IsFinitelyPresentable c›
   haveI : PreservesColimitsOfShape J (coyoneda.obj (op c)) :=

@@ -47,7 +47,7 @@ namespace FibonacciFusionShadow
 
 variable {R : Type r} [CommSemiring R]
 
-def tau (F : FibonacciFusionShadow R) : R := F.1
+abbrev tau (F : FibonacciFusionShadow R) : R := F.1
 
 theorem tau_sq (F : FibonacciFusionShadow R) : F.tau ^ 2 = 1 + F.tau := F.2
 
@@ -158,13 +158,17 @@ theorem rotate_three (x : ConnectionSector) :
 end ConnectionSector
 
 /-- A cyclic `Z3` action shadow on a carrier. -/
-structure Z3Action (X : Type s) where
-  rotate : X → X
-  rotate_three : ∀ x : X, rotate (rotate (rotate x)) = x
+abbrev Z3Action (X : Type s) :=
+  {rotate : X → X // ∀ x : X, rotate (rotate (rotate x)) = x}
 
 namespace Z3Action
 
 variable {X : Type s}
+
+abbrev rotate (A : Z3Action X) : X → X := A.1
+
+abbrev rotate_three (A : Z3Action X) :
+    ∀ x : X, A.rotate (A.rotate (A.rotate x)) = x := A.2
 
 /-- Any order-three rotation is injective. -/
 theorem injective (A : Z3Action X) : Function.Injective A.rotate := by
@@ -177,9 +181,8 @@ theorem injective (A : Z3Action X) : Function.Injective A.rotate := by
 end Z3Action
 
 /-- The canonical `Z3` action on the three connection sectors. -/
-def connectionSectorZ3 : Z3Action ConnectionSector where
-  rotate := ConnectionSector.rotate
-  rotate_three := ConnectionSector.rotate_three
+def connectionSectorZ3 : Z3Action ConnectionSector :=
+  ⟨ConnectionSector.rotate, ConnectionSector.rotate_three⟩
 
 /-- Concrete sector readout: one full `Z3` cycle returns to the vector sector. -/
 theorem connectionSectorZ3_vector_cycle :

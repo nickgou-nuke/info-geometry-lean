@@ -21,14 +21,23 @@ or all half-integers.
 This restricts the continuous real degrees of freedom of the $2 \times 2$ blocks
 to a discrete lattice.
 -/
-structure HurwitzInteger where
-  a : ℚ
-  b : ℚ
-  c : ℚ
-  d : ℚ
-  is_hurwitz : (a.isInt ∧ b.isInt ∧ c.isInt ∧ d.isInt) ∨
-               ((a * 2).isInt ∧ (b * 2).isInt ∧ (c * 2).isInt ∧ (d * 2).isInt ∧
-                ¬a.isInt ∧ ¬b.isInt ∧ ¬c.isInt ∧ ¬d.isInt)
+abbrev HurwitzInteger :=
+  {data : ℚ × (ℚ × (ℚ × ℚ)) //
+    (data.1.isInt ∧ data.2.1.isInt ∧ data.2.2.1.isInt ∧ data.2.2.2.isInt) ∨
+      ((data.1 * 2).isInt ∧ (data.2.1 * 2).isInt ∧
+       (data.2.2.1 * 2).isInt ∧ (data.2.2.2 * 2).isInt ∧
+       ¬data.1.isInt ∧ ¬data.2.1.isInt ∧
+       ¬data.2.2.1.isInt ∧ ¬data.2.2.2.isInt)}
+
+namespace HurwitzInteger
+
+abbrev a (h : HurwitzInteger) : ℚ := h.1.1
+abbrev b (h : HurwitzInteger) : ℚ := h.1.2.1
+abbrev c (h : HurwitzInteger) : ℚ := h.1.2.2.1
+abbrev d (h : HurwitzInteger) : ℚ := h.1.2.2.2
+abbrev is_hurwitz (h : HurwitzInteger) := h.2
+
+end HurwitzInteger
 
 /--
 HONEST THEOREM DEBT:

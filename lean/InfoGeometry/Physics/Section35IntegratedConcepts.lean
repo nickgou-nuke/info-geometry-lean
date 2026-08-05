@@ -83,7 +83,7 @@ theorem blochSpacetimePoint_det_zero_of_residual_zero (t r n1 n2 n3 : ℂ)
 
 /-- Finite `j`-conjugation on a biquaternion pair: keep primal, flip dual. -/
 def dualConj (q : BiquaternionPair) : BiquaternionPair :=
-  { primal := q.primal, dual := -q.dual }
+  (q.primal, -q.dual)
 
 /-- Quadratic trace shadow preserved by dual conjugation. -/
 def pairQuadraticTrace (q : BiquaternionPair) : ℂ :=
@@ -97,19 +97,21 @@ def chiralAsymmetryTrace (q : BiquaternionPair) : ℂ :=
 theorem dualConj_involutive (q : BiquaternionPair) :
     dualConj (dualConj q) = q := by
   cases q
-  simp [dualConj]
+  simp [dualConj, BiquaternionPair.primal, BiquaternionPair.dual]
 
 /-- The quadratic trace shadow is invariant under dual conjugation. -/
 theorem pairQuadraticTrace_dualConj (q : BiquaternionPair) :
     pairQuadraticTrace (dualConj q) = pairQuadraticTrace q := by
   cases q
-  simp [pairQuadraticTrace, dualConj]
+  simp [pairQuadraticTrace, dualConj,
+    BiquaternionPair.primal, BiquaternionPair.dual]
 
 /-- The linear chiral-asymmetry shadow flips sign under dual conjugation. -/
 theorem chiralAsymmetryTrace_dualConj (q : BiquaternionPair) :
     chiralAsymmetryTrace (dualConj q) = -chiralAsymmetryTrace q := by
   cases q
-  simp [chiralAsymmetryTrace, dualConj]
+  simp [chiralAsymmetryTrace, dualConj,
+    BiquaternionPair.primal, BiquaternionPair.dual]
 
 /-- Repaired Section 35 finite packet. -/
 theorem repaired_section35_integrated_concepts_packet

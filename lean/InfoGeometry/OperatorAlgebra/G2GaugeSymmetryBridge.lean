@@ -31,16 +31,6 @@ def isValidGaugeGenerator (D : SplitOct → SplitOct) : Prop :=
   (∀ (c : ℤ) X, D (scaleZ c X) = scaleZ c (D X)) ∧
   (∀ X Y, D (mulZ X Y) = mulZ (D X) Y + mulZ X (D Y))
 
-/--
-Theorem: Every valid gauge generator canonically induces a G₂ derivation.
-This rigorously restricts the maximal continuous gauge symmetry group of the 
-observable sector to subgroups of the exceptional Lie group G₂.
--/
-theorem valid_gauge_generator_is_g2 (D : SplitOct → SplitOct) 
-    (h_valid : isValidGaugeGenerator D) : 
-    isValidGaugeGenerator D :=
-  h_valid
-
 theorem mulZ_zeroZ_eq (X : SplitOct) : mulZ X zeroZ = zeroZ := by
   ext <;> simp [mulZ, zeroZ]
 

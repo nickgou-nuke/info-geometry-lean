@@ -149,7 +149,7 @@ is model data, not derived from bare Cuntz relations.
 structure ParityEquivariantCuntzCarrier
     (Op : Type*) [Ring Op] [StarRing Op] where
   parity : StarWittenParity Op
-  cuntz : CantorCuntzO2Carrier Op
+  cuntz : InfoGeometry.Topology.CuntzO2Carrier Op
   left_even : ParityEven parity cuntz.S_left
   right_odd : ParityOdd parity cuntz.S_right
 
@@ -164,16 +164,6 @@ theorem carFromCuntz_parity_odd :
   unfold ParityOdd carFromCuntz
   rw [map_mul, E.parity.map_star, E.left_even, E.right_odd]
   simp
-
-/-- Re-export: the Cuntz-derived CAR generator is nilpotent. -/
-theorem carFromCuntz_sq_zero :
-    carFromCuntz E.cuntz * carFromCuntz E.cuntz = 0 :=
-  InfoGeometry.Canonical.carFromCuntz_sq_eq_zero E.cuntz
-
-/-- Re-export: the Cuntz-derived CAR generator satisfies `{a,a*}=1`. -/
-theorem carFromCuntz_anticommutator_star_eq_one :
-    cantorAnticommutator (carFromCuntz E.cuntz) (star (carFromCuntz E.cuntz)) = 1 :=
-  InfoGeometry.Canonical.carFromCuntz_anticommutator_star_eq_one E.cuntz
 
 /--
 If the state is invariant under the supplied Witten parity, then the

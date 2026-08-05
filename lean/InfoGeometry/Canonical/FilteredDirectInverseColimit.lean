@@ -4,8 +4,7 @@ import Mathlib.Algebra.Category.ModuleCat.Basic
 import Mathlib.Order.Directed
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
-import InfoGeometry.Categorical.FilteredDirectLimitOwner
-import InfoGeometry.Categorical.StateSpaceColimitCommutativity
+import InfoGeometry.Categorical.Holonomy
 
 set_option linter.unusedSectionVars false
 set_option linter.unnecessarySeqFocus false
@@ -22,15 +21,27 @@ structure DirectInductiveSystem (R : Type*) [CommRing R] (I : Type*) [Preorder I
   f_comp : ∀ {i j k : I} (hij : i ≤ j) (hjk : j ≤ k), (f hjk).comp (f hij) = f (le_trans hij hjk)
 
 /-- Cocone over a Direct Inductive System targeting a Module A_inf. -/
-structure InductiveCocone (R : Type*) [CommRing R] {I : Type*} [Preorder I] {A : I → Type*} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)] (sys : DirectInductiveSystem R I A) (A_inf : Type*) [AddCommGroup A_inf] [Module R A_inf] where
-  psi : ∀ i : I, A i →ₗ[R] A_inf
-  psi_comm : ∀ {i j : I} (hij : i ≤ j), (psi j).comp (sys.f hij) = psi i
+abbrev InductiveCocone (R : Type*) [CommRing R] {I : Type*} [Preorder I]
+    {A : I → Type*} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
+    (sys : DirectInductiveSystem R I A) (A_inf : Type*)
+    [AddCommGroup A_inf] [Module R A_inf] : Type _ :=
+  {psi : ∀ i : I, A i →ₗ[R] A_inf //
+    ∀ {i j : I} (hij : i ≤ j), (psi j).comp (sys.f hij) = psi i}
 
 namespace InductiveCocone
 
 variable {R : Type*} [CommRing R] {I : Type*} [Preorder I] {A : I → Type*} [∀ i, AddCommGroup (A i)] [∀ i, Module R (A i)]
 variable {sys : DirectInductiveSystem R I A} {A_inf : Type*} [AddCommGroup A_inf] [Module R A_inf]
 variable (cocone : InductiveCocone R sys A_inf)
+
+abbrev psi (cocone : InductiveCocone R sys A_inf) (i : I) :
+    A i →ₗ[R] A_inf := cocone.1 i
+
+abbrev psi_comm (cocone : InductiveCocone R sys A_inf)
+    {i j : I} (hij : i ≤ j) :
+    (cocone.psi j).comp (sys.f hij) = cocone.psi i := by
+  change (cocone.1 j).comp (sys.f hij) = cocone.1 i
+  exact cocone.2 hij
 
 /-- **Theorem**: Direct Inductive Colimit Cocone Commutativity:
     For any transition map f_{i, j} (i ≤ j) and element x ∈ A_i,
@@ -145,7 +156,7 @@ variable {K : Type u} [Category.{u} K]
 diagram, not merely the composition law of precomposition maps. -/
 
 noncomputable abbrev projectiveModuleLimit (G : K ⥤ ModuleCat.{u} R) : ModuleCat.{u} R :=
-  limit G
+  CategoryTheory.Limits.limit G
 
 noncomputable def projectiveLimitProjection
     (G : K ⥤ ModuleCat.{u} R) (k : K) :
@@ -172,7 +183,7 @@ preservation theorem, rather than by a finite or diagonal surrogate. -/
 
 noncomputable def filteredColimitFiniteLimitIso
     (F : L ⥤ J ⥤ ModuleCat.{u} R) :
-    colimit (limit F) ≅ limit (colimit F.flip) := by
+    colimit (CategoryTheory.Limits.limit F) ≅ limit (CategoryTheory.Limits.colimit F.flip) := by
   exact InfoGeometry.Categorical.Holonomy.colimit_limit_iso R F
 
 end Native

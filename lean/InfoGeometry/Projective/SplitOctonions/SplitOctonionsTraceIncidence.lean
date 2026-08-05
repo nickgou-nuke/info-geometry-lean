@@ -1,4 +1,4 @@
-import InfoGeometry.Projective.SplitOctonions.PolarConcrete
+import InfoGeometry.Projective.SplitOctonions.PolarIncidenceConcrete
 
 /-!
 # InfoGeometry.Projective.SplitOctonions.SplitOctonionsTraceIncidence

@@ -22,7 +22,7 @@ open InfoGeometry.Clifford.ConformalLift55
 variable (P : ConformalNullPair)
 
 /-- The standard CGA origin generator. -/
-def n_zero : Cl55 := P.u
+abbrev n_zero : Cl55 := P.u
 
 /-- The standard CGA infinity generator. -/
 def n_infty : Cl55 := (-2 : ℝ) • P.v

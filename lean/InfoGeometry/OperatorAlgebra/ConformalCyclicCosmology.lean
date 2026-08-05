@@ -397,17 +397,18 @@ end CrossoverMemoryRecoveryBridge
 
 /-! ## 5. Linear closure survivor packet -/
 
-/--
-A linearized aeon-reset packet.
+/-- Native carrier alias for the existing linear closure involution owner. -/
+abbrev LinearAeonReset
+    (V : Type*) [AddCommGroup V] [Module ℝ V] :=
+  LinearClosureInvolution V
 
-This packages the statement that what survives a closure/reset involution is
-the fixed equalizer, while the anti-diagonal records orientation/scale-sensitive
-data.
--/
-structure LinearAeonReset
-    (V : Type*) [AddCommGroup V] [Module ℝ V] where
-  closure :
-    LinearClosureInvolution V
+abbrev LinearAeonReset.closure
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (A : LinearAeonReset V) : LinearClosureInvolution V := A
+
+def LinearAeonReset.mk
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (closure : LinearClosureInvolution V) : LinearAeonReset V := closure
 
 namespace LinearAeonReset
 

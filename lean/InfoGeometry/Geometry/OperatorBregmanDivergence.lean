@@ -252,9 +252,8 @@ variable (F : ModularRegularConeFlow c)
 def mapPoint
     (t : ℝ)
     (U : RegularConePoint c) :
-    RegularConePoint c where
-  op := F.flow t U.op
-  mem := F.preserves_cone t U.op U.mem
+    RegularConePoint c :=
+  ⟨F.flow t U.op, F.preserves_cone t U.op U.mem⟩
 
 @[simp]
 theorem mapPoint_zero
@@ -317,9 +316,14 @@ A second-variation extractor at `t = 0`.
 Concrete calculus modules may instantiate this by a second derivative at zero
 or by a quadratic-form/Hessian construction.
 -/
-structure SecondVariationAtZero where
-  /-- Second variation of a real path at zero. -/
-  eval : (ℝ → ℝ) → ℝ
+abbrev SecondVariationAtZero := (ℝ → ℝ) → ℝ
+
+namespace SecondVariationAtZero
+
+/-- Compatibility accessor for the native second-variation functional. -/
+abbrev eval (D : SecondVariationAtZero) : (ℝ → ℝ) → ℝ := D
+
+end SecondVariationAtZero
 
 /-! ## 7. Bregman realization of Ricci flux -/
 

@@ -56,6 +56,10 @@ theorem localVacuum_annihilation :
 def localParity : M2R :=
   SplitCliffordJordanWigner.P
 
+@[simp] theorem localParity_sq :
+    localParity * localParity = (1 : M2R) := by
+  simpa [localParity] using SplitCliffordJordanWigner.parity_sq_eq_one
+
 /-- Finite CAR pair extracted from the local nilpotent seed. -/
 def localCARPair : RealCARPair M2R where
   annihilation := localAnnihilation

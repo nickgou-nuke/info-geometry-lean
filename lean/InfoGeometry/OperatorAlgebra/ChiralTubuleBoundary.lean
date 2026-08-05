@@ -686,21 +686,6 @@ theorem chiralTubuleBoundaryOwnerTarget :
   intro State Tangent Charge Residue H _ _ _ _ Q C h
   exact h
 
-/-- Packet readout for a concrete chiral tubule boundary compatibility witness. -/
-theorem chiralTubuleBoundary_packet
-    (State Tangent Charge Residue H : Type*)
-    [Zero Tangent] [Zero Charge]
-    [AddCommGroup H] [Module ℝ H]
-    (Q : KreinIsotropicCone.KreinQuadraticDatum H)
-    (C : ModuleCircularPolarization H)
-    (h :
-      ChiralTubuleBoundaryCompatibility
-        State Tangent Charge Residue H Q C) :
-    Nonempty
-      (ChiralTubuleBoundaryWitness
-        State Tangent Charge Residue H Q C) :=
-  chiralTubuleBoundaryOwnerTarget State Tangent Charge Residue H Q C h
-
 /--
 Compatibility predicate for constructing an Unruh-driven chiral tubule
 boundary.
@@ -729,21 +714,6 @@ theorem unruhDrivenChiralTubuleOwnerTarget :
           State Tangent Charge Residue H Q C) := by
   intro State Tangent Charge Residue H _ _ _ _ Q C h
   exact h
-
-/-- Packet readout for a concrete Unruh-driven chiral tubule compatibility witness. -/
-theorem unruhDrivenChiralTubule_packet
-    (State Tangent Charge Residue H : Type*)
-    [Zero Tangent] [Zero Charge]
-    [AddCommGroup H] [Module ℝ H]
-    (Q : KreinIsotropicCone.KreinQuadraticDatum H)
-    (C : ModuleCircularPolarization H)
-    (h :
-      UnruhDrivenChiralTubuleCompatibility
-        State Tangent Charge Residue H Q C) :
-    Nonempty
-      (UnruhDrivenChiralTubuleBoundary
-        State Tangent Charge Residue H Q C) :=
-  unruhDrivenChiralTubuleOwnerTarget State Tangent Charge Residue H Q C h
 
 attribute [rep_depth operator]
   HessianCollapseEvent
@@ -788,9 +758,7 @@ attribute [rep_depth operator]
   JonesRankCollapseEvent.r_p_eq_zero
   ChiralTubuleBoundaryCompatibility
   chiralTubuleBoundaryOwnerTarget
-  chiralTubuleBoundary_packet
   UnruhDrivenChiralTubuleCompatibility
   unruhDrivenChiralTubuleOwnerTarget
-  unruhDrivenChiralTubule_packet
 
 end InfoGeometry.OperatorAlgebra.ChiralTubuleBoundary

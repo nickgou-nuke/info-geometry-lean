@@ -39,10 +39,15 @@ abbrev Vec4 := Fin 4 → ℚ
 /-! ## 1. Finite de Rham obstruction on a 3-cycle -/
 
 /-- A rational 1-cochain on the oriented cycle `0 → 1 → 2 → 0`. -/
-structure TriangleOneForm where
-  e01 : ℚ
-  e12 : ℚ
-  e20 : ℚ
+abbrev TriangleOneForm := ℚ × ℚ × ℚ
+
+namespace TriangleOneForm
+
+abbrev e01 (A : TriangleOneForm) : ℚ := A.1
+abbrev e12 (A : TriangleOneForm) : ℚ := A.2.1
+abbrev e20 (A : TriangleOneForm) : ℚ := A.2.2
+
+end TriangleOneForm
 
 /-- The cycle integral of a 1-form around `0 → 1 → 2 → 0`. -/
 def cycleIntegral (A : TriangleOneForm) : ℚ :=
@@ -71,7 +76,7 @@ theorem not_exact_of_cycleIntegral_ne_zero
 
 /-- The constant unit current around the 3-cycle has obstruction `3`. -/
 def unitCycleCurrent : TriangleOneForm :=
-  { e01 := 1, e12 := 1, e20 := 1 }
+  (1, 1, 1)
 
 @[simp] theorem cycleIntegral_unitCycleCurrent :
     cycleIntegral unitCycleCurrent = 3 := by

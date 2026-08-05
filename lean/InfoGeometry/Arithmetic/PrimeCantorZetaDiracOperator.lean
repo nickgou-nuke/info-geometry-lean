@@ -127,6 +127,40 @@ theorem creationPush_sq_zero {P : PrimeCutoff}
   · have hmem : p ∈ insert p S := by simp
     simp [hp, hmem]
 
+theorem creationPush_comm_of_ne {P : PrimeCutoff}
+    {p q : PrimeMode P} (hpq : p ≠ q)
+    (f : CantorField P) (S : Vertex P) :
+    creationPush p (creationPush q f) S =
+      creationPush q (creationPush p f) S := by
+  by_cases hp : p ∈ S
+  · by_cases hq : q ∈ S
+    · simp [creationPush, PrimeExteriorGraphDirac.create, hp, hq]
+    · have hpqS : p ∈ insert q S := by simp [hp]
+      simp [creationPush, PrimeExteriorGraphDirac.create, hp, hq, hpqS]
+  · by_cases hq : q ∈ S
+    · simp [creationPush, PrimeExteriorGraphDirac.create, hp, hq]
+    · simp [creationPush, PrimeExteriorGraphDirac.create, hp, hq,
+        hpq, Ne.symm hpq, Finset.insert_comm]
+
+theorem annihilationPush_comm_of_ne {P : PrimeCutoff}
+    {p q : PrimeMode P} (hpq : p ≠ q)
+    (f : CantorField P) (S : Vertex P) :
+    annihilationPush p (annihilationPush q f) S =
+      annihilationPush q (annihilationPush p f) S := by
+  by_cases hp : p ∈ S
+  · by_cases hq : q ∈ S
+    · have herase : (S.erase q).erase p = (S.erase p).erase q := by
+        ext r
+        simp [hpq, Ne.symm hpq, and_assoc, and_left_comm, and_comm]
+      simp [annihilationPush, PrimeExteriorGraphDirac.annihilate,
+        hp, hq, hpq, Ne.symm hpq, herase]
+    · simp [annihilationPush, PrimeExteriorGraphDirac.annihilate,
+        hp, hq]
+  · by_cases hq : q ∈ S
+    · simp [annihilationPush, PrimeExteriorGraphDirac.annihilate,
+        hp, hq, hpq, Ne.symm hpq]
+    · simp [annihilationPush, PrimeExteriorGraphDirac.annihilate, hp, hq]
+
 /-- Annihilation push-forward is nilpotent on a fixed prime axis: `ι_p² = 0`. -/
 @[simp, rep_depth thermo]
 theorem annihilationPush_sq_zero {P : PrimeCutoff}

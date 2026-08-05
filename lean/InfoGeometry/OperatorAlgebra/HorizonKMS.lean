@@ -936,23 +936,17 @@ def HorizonKMSFiveGradeBridgeOwnerTarget
       H.heatCalibration.memoryHeat
         (H.ledger.memoryReadout (A.hiddenTotal x y))
 
-/--
-Installed-owner target: once a bridge witness is supplied, observed heat equals
-hidden grade-two memory heat.
+/-!
+The installed-owner name is retained as an API alias, but its proposition is
+owned by `HorizonKMSFiveGradeBridgeOwnerTarget` above.
 -/
-def HorizonKMSFiveGradeBridgeInstalledTarget
+abbrev HorizonKMSFiveGradeBridgeInstalledTarget
     (J L Obs Memory : Type*)
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Obs] [Module ℝ Obs]
     [AddCommGroup Memory] [Module ℝ Memory] : Prop :=
-  ∀ G : FiveGrading L,
-  ∀ A : FiveGradeProjectedAccounting J L Obs G,
-  ∀ H : HorizonKMSFiveGradeBridge J L Obs Memory A,
-  ∀ x y : J,
-    H.heatCalibration.observedHeat (A.observedDefect x y) =
-      H.heatCalibration.memoryHeat
-        (H.ledger.memoryReadout (A.hiddenTotal x y))
+  HorizonKMSFiveGradeBridgeOwnerTarget J L Obs Memory
 
 /--
 The installed-owner target follows from the supplied bridge witness.

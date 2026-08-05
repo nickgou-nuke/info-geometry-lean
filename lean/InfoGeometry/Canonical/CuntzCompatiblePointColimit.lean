@@ -65,7 +65,7 @@ theorem CompatibleCuntzPointFamily.toQCCR_compatible
 
 noncomputable def cuntzCompatiblePointColimitMap
     (family : CompatibleCuntzPointFamily sys) :
-    topologicalDirectColimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
+    colimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
       qCcrParameterZeroFiberTopologicalColimit Stage sys :=
   compatiblePointColimitMap sys family.toQCCR
     family.toQCCR_compatible
@@ -73,7 +73,7 @@ noncomputable def cuntzCompatiblePointColimitMap
 theorem cuntzCompatiblePointColimitMap_stage_apply
     (family : CompatibleCuntzPointFamily sys) (i : I) (u : PUnit.{u + 1}) :
     cuntzCompatiblePointColimitMap sys family
-        (topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i u) =
+        (colimit.ι ((Functor.const I).obj (TopCat.of PUnit)) i u) =
       qCcrParameterZeroFiberTopologicalInjection Stage sys i
         (family.toQCCR.point i) := by
   exact compatiblePointColimitMap_stage_apply sys family.toQCCR
@@ -81,7 +81,7 @@ theorem cuntzCompatiblePointColimitMap_stage_apply
 
 noncomputable def cuntzCompatiblePointParameterColimitMap
     (family : CompatibleCuntzPointFamily sys) :
-    topologicalDirectColimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
+    colimit ((Functor.const I).obj (TopCat.of PUnit)) ⟶
       qCcrParameterTopologicalColimit Stage sys :=
   cuntzCompatiblePointColimitMap sys family ≫
     qCcrParameterZeroFiberToParameterColimit Stage sys
@@ -89,7 +89,7 @@ noncomputable def cuntzCompatiblePointParameterColimitMap
 theorem cuntzCompatiblePointParameterColimitMap_stage_apply
     (family : CompatibleCuntzPointFamily sys) (i : I) (u : PUnit.{u + 1}) :
     cuntzCompatiblePointParameterColimitMap sys family
-        (topologicalDirectInjection ((Functor.const I).obj (TopCat.of PUnit)) i u) =
+        (colimit.ι ((Functor.const I).obj (TopCat.of PUnit)) i u) =
       qCcrParameterTopologicalInjection Stage sys i
         (family.toQCCR.point i).1 := by
   have hpoint := compatiblePointColimitMap_stage_apply sys family.toQCCR

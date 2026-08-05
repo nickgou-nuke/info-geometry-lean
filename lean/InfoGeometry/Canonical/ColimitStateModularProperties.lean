@@ -68,8 +68,14 @@ action at the finite stages and prove its colimit persistence.
 A localized modular automorphism proxy at stage n. 
 In full Tomita-Takesaki theory, this is `σ_t(x) = Δ^{it} x Δ^{-it}`.
 -/
-structure ModularAutomorphism (n : ℕ) where
-  auto : Stage n →+* Stage n
+abbrev ModularAutomorphism (n : ℕ) := Stage n →+* Stage n
+
+namespace ModularAutomorphism
+
+/-- Compatibility accessor for the native stage ring homomorphism. -/
+abbrev auto (σ : ModularAutomorphism n) : Stage n →+* Stage n := σ
+
+end ModularAutomorphism
 
 /-- The modular automorphism sequence must be structurally compatible with the bonding map. -/
 def IsCompatibleModularFlow (σ : ∀ n, ModularAutomorphism n) : Prop :=

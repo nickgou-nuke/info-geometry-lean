@@ -42,16 +42,16 @@ Proper-carrier data for a stagewise self-dual cone tower.
 The carrier is a monotone family of subsets, the pairing is fixed, and every
 element is assigned an explicit finite stage.
 -/
-structure ProperCarrierColimitPacket {E : Type u} (pairing : E → E → ℝ) where
+structure ProperCarrierStagePacket {E : Type u} (pairing : E → E → ℝ) where
   carrier : ℕ → Set E
   mono : Monotone carrier
   selfDual : ∀ n : ℕ, IsSelfDualCone pairing (carrier n)
   stageIndex : HasFiniteCarrierStage carrier
 
-namespace ProperCarrierColimitPacket
+namespace ProperCarrierStagePacket
 
 variable {E : Type u} {pairing : E → E → ℝ}
-variable (P : ProperCarrierColimitPacket (E := E) pairing)
+variable (P : ProperCarrierStagePacket (E := E) pairing)
 
 /-- The infinite proper-carrier union is self-dual. -/
 theorem properCarrier_inductiveColimit_selfDualCone :
@@ -77,7 +77,7 @@ theorem properCarrier_inductiveColimit_stage_readback
     x ∈ Set.iUnion P.carrier := by
   exact Set.mem_iUnion.mpr ⟨P.stageIndex.stage x, hx⟩
 
-end ProperCarrierColimitPacket
+end ProperCarrierStagePacket
 
 /--
 Standalone colimit theorem for a proper-carrier tower.

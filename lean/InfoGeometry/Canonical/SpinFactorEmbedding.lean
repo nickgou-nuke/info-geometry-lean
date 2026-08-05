@@ -17,14 +17,23 @@ variable [SplitCompositionAlgebra K A]
   Изометрично вложение на JordanMatrix2 (експертното състояние в KAN)
   към 10D векторното пространство, където действа O(5,5).
 -/
-structure SpinFactorEmbedding where
-  Phi : JordanMatrix2 K A → Matrix (Sum (Fin 5) (Fin 5)) (Fin 1) K
-  
-  -- Изометричното условие: Φ(X)ᵀ · η · Φ(X) = [det(X)]
-  -- Детерминантата на 2x2 матрицата се превръща в квадратичната форма в 10D!
-  isometry : ∀ X : JordanMatrix2 K A, 
-    (Phi X).transpose * (splitMetric10D K) * (Phi X) = 
-    (fun _ _ => JordanMatrix2.determinant X)
+abbrev SpinFactorEmbedding :=
+  {Phi : JordanMatrix2 K A → Matrix (Sum (Fin 5) (Fin 5)) (Fin 1) K //
+    ∀ X : JordanMatrix2 K A,
+      (Phi X).transpose * (splitMetric10D K) * (Phi X) =
+        (fun _ _ => JordanMatrix2.determinant X)}
+
+def Phi {K A : Type*} [CommRing K] [NonAssocSemiring A] [SMul K A]
+    [SplitCompositionAlgebra K A] (emb : SpinFactorEmbedding K A) :
+    JordanMatrix2 K A → Matrix (Sum (Fin 5) (Fin 5)) (Fin 1) K :=
+  emb.1
+
+theorem isometry {K A : Type*} [CommRing K] [NonAssocSemiring A] [SMul K A]
+    [SplitCompositionAlgebra K A]
+    (emb : SpinFactorEmbedding K A) (X : JordanMatrix2 K A) :
+    (Phi emb X).transpose * (splitMetric10D K) * (Phi emb X) =
+      (fun _ _ => JordanMatrix2.determinant X) :=
+  emb.2 X
 
 /--
   2. ТЕОРЕМА ЗА СИМЕТРИЯТА НА МАРШРУТИЗАЦИЯТА (Routing Symmetry Theorem)
@@ -39,21 +48,23 @@ theorem transpose_o55_preserves_spin_factor_determinant
     (G : Matrix (Sum (Fin 5) (Fin 5)) (Sum (Fin 5) (Fin 5)) K)
     (hG : isO55Isometric K G)
     (X : JordanMatrix2 K A) :
-    ((G.transpose * emb.Phi X).transpose * (splitMetric10D K) * (G.transpose * emb.Phi X)) = 
+    ((G.transpose * Phi emb X).transpose * (splitMetric10D K) *
+      (G.transpose * Phi emb X)) =
     (fun _ _ => JordanMatrix2.determinant X) := by
   have hleft :
-      (G.transpose * emb.Phi X).transpose * (splitMetric10D K) * (G.transpose * emb.Phi X) =
-        (emb.Phi X).transpose * (G * splitMetric10D K * G.transpose) * emb.Phi X := by
+      (G.transpose * Phi emb X).transpose * (splitMetric10D K) *
+          (G.transpose * Phi emb X) =
+        (Phi emb X).transpose * (G * splitMetric10D K * G.transpose) * Phi emb X := by
     simp [Matrix.transpose_mul, Matrix.mul_assoc]
   have hconj :
-      (emb.Phi X).transpose * (G * splitMetric10D K * G.transpose) * emb.Phi X =
+      (Phi emb X).transpose * (G * splitMetric10D K * G.transpose) * Phi emb X =
         (fun _ _ => JordanMatrix2.determinant X) := by
     calc
-      (emb.Phi X).transpose * (G * splitMetric10D K * G.transpose) * emb.Phi X
-          = (emb.Phi X).transpose * (splitMetric10D K) * emb.Phi X := by
+      (Phi emb X).transpose * (G * splitMetric10D K * G.transpose) * Phi emb X
+          = (Phi emb X).transpose * (splitMetric10D K) * Phi emb X := by
               simpa [Matrix.mul_assoc] using
-                congrArg (fun M => (emb.Phi X).transpose * M * emb.Phi X) hG
-      _ = (fun _ _ => JordanMatrix2.determinant X) := emb.isometry X
+                congrArg (fun M => (Phi emb X).transpose * M * Phi emb X) hG
+      _ = (fun _ _ => JordanMatrix2.determinant X) := isometry emb X
   exact hleft.trans hconj
 
 end InfoGeometry.Canonical

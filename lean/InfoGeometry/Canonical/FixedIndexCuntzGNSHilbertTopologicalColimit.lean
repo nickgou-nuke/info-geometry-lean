@@ -38,11 +38,11 @@ abbrev stageCocone : Cocone (stageDiagram (ι := ι) T ω) :=
   gnsTopologicalCocone ωStage (fixedIndexSystem (ι := ι) T) ω
 
 abbrev topologicalColimit : TopCat :=
-  topologicalDirectColimit (stageDiagram (ι := ι) T ω)
+  colimit (stageDiagram (ι := ι) T ω)
 
 def stageInjection (n : ℕ) :
     (stageDiagram (ι := ι) T ω).obj n ⟶ topologicalColimit (ι := ι) T ω :=
-  topologicalDirectInjection (stageDiagram (ι := ι) T ω) n
+  colimit.ι (stageDiagram (ι := ι) T ω) n
 
 noncomputable def colimitToHilbert :
     topologicalColimit (ι := ι) T ω ⟶

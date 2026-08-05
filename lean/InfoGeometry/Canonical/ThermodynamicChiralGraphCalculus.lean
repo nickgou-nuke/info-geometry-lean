@@ -417,8 +417,14 @@ theorem cycleCurvatureLog_of_gradient_eq_zero
 /-- A time-indexed thermodynamic graph.  We use finite/discrete time here to keep
 Mandal--Jarzynski style pumping constraints algebraic and fast; continuous-time
 integration can later be an owner layer over this readout. -/
-structure DrivenThermoGraph (Time : Type) where
-  graphAt : Time → DirectedThermoGraph V E
+abbrev DrivenThermoGraph (Time : Type) := Time → DirectedThermoGraph V E
+
+namespace DrivenThermoGraph
+
+def graphAt (D : DrivenThermoGraph (V := V) (E := E) Time) :
+    Time → DirectedThermoGraph V E := D
+
+end DrivenThermoGraph
 
 /-- Discrete pumped-current/holonomy readout over one driving period. -/
 noncomputable def DrivenThermoGraph.integratedPumpedCurrent {Time : Type} [Fintype Time]
@@ -1165,10 +1171,12 @@ end ThermoTerm
 /-! ### Trace/port closure correctness -/
 
 /-- Abstract port signature for graph terms. -/
-structure PortSignature where
-  openPort : Nat → Prop
+abbrev PortSignature := Nat → Prop
 
 namespace PortSignature
+
+abbrev openPort (S : PortSignature) : Nat → Prop :=
+  S
 
 /-- A port signature is closed when no open port remains. -/
 def IsClosed (S : PortSignature) : Prop :=
@@ -1179,8 +1187,8 @@ def OnlyPort (S : PortSignature) (p : Nat) : Prop :=
   ∀ q, S.openPort q → q = p
 
 /-- Closing a port removes that port from the open-port predicate. -/
-def tracePort (S : PortSignature) (p : Nat) : PortSignature where
-  openPort q := S.openPort q ∧ q ≠ p
+def tracePort (S : PortSignature) (p : Nat) : PortSignature :=
+  fun q => S.openPort q ∧ q ≠ p
 
 /-- If `p` is the only possible open port, tracing/closing `p` leaves a closed
 signature. -/

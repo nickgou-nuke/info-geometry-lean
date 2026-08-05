@@ -1,4 +1,4 @@
-import Mathlib.Tactic
+import Mathlib
 import InfoGeometry.Spectral.Spectrum.Basic
 
 /-!
@@ -19,9 +19,11 @@ open InfoGeometry.Canonical.SplitCliffordTensorBridge
 set_option linter.dupNamespace false
 
 /-- Minimal pointed carrier used by the finite spectral homotopy readouts. -/
-structure PointedReadout where
-  carrier : Type*
-  base : carrier
+abbrev PointedReadout := Pointed
+
+abbrev PointedReadout.carrier (X : PointedReadout) : Type _ := X.X
+
+abbrev PointedReadout.base (X : PointedReadout) : X.carrier := X.point
 
 /-- Basepoint-preserving map between finite pointed readouts. -/
 structure PointedMap (X Y : PointedReadout) where
@@ -89,10 +91,10 @@ theorem refl_apply (X : PointedReadout) (x : X.carrier) :
 end PointedEquiv
 
 /-- Finite readout standing in the old port for suspension bookkeeping. -/
-def Suspension (X : PointedReadout) : PointedReadout := X
+abbrev Suspension (X : PointedReadout) : PointedReadout := X
 
 /-- Finite readout standing in the old port for loop-space bookkeeping. -/
-def LoopSpace (X : PointedReadout) : PointedReadout := X
+abbrev LoopSpace (X : PointedReadout) : PointedReadout := X
 
 /-- Suspension functoriality for the finite readout. -/
 def Suspension.map {X Y : PointedReadout} (f : PointedMap X Y) :
@@ -154,8 +156,8 @@ theorem IteratedLoopSpace_succ (n : ℕ) (X : PointedReadout) :
 
 /-- Split-Clifford stage as a pointed finite readout, based at zero. -/
 def SplitCliffordSuspension (n : ℕ) : PointedReadout where
-  carrier := SplitClNNAlg n
-  base := 0
+  X := SplitClNNAlg n
+  point := 0
 
 /-- The split-Clifford one-step map as a pointed readout map. -/
 def SplitCliffordSuspensionMap (n : ℕ) :

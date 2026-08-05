@@ -196,8 +196,8 @@ zero-parametrization theorem.  This connects the bridge interface to the
 existing colimit machinery without adding extra axioms in this file.
 -/
 def bridgeOfDiracColimit
-    (S : InfoGeometry.Canonical.DiracColimit.DiracColimitData)
-    (L : InfoGeometry.Canonical.DiracColimit.DiracColimitLimit S)
+    (S : InfoGeometry.Canonical.DiracColimit.DiracTowerData)
+    (L : InfoGeometry.Canonical.DiracColimit.DiracCompatibleLimitData S)
     (spectralDeterminant : ℂ → ℂ)
     (zero_to_real_spectral_parameter :
       ∀ s : ℂ, spectralDeterminant s = 0 →
@@ -205,7 +205,7 @@ def bridgeOfDiracColimit
     BridgeCertificate L.Hlim L.Dlim where
   spectralDeterminant := spectralDeterminant
   selfAdjoint :=
-    InfoGeometry.Canonical.DiracColimit.dirac_colimit_selfAdjoint S L
+    InfoGeometry.Canonical.DiracColimit.dirac_compatible_limit_selfAdjoint S L
   zero_to_real_spectral_parameter := zero_to_real_spectral_parameter
 
 /--
@@ -274,15 +274,16 @@ Bridge package for a concrete colimit Dirac operator with the stronger `hBridge`
 assumption made explicit.
 -/
 def bridgeOfDiracColimit
-    (S : InfoGeometry.Canonical.DiracColimit.DiracColimitData)
-    (L : InfoGeometry.Canonical.DiracColimit.DiracColimitLimit S)
+    (S : InfoGeometry.Canonical.DiracColimit.DiracTowerData)
+    (L : InfoGeometry.Canonical.DiracColimit.DiracCompatibleLimitData S)
     (spectralDet : ℂ → ℂ)
     (hBridge :
       ∀ s : ℂ, spectralDet s = 0 ↔
         ∃ t : ℝ, s = criticalLineParam t ∧ (t : ℂ) ∈ spectrum ℂ L.Dlim) :
     ZetaSpectralData L.Hlim where
   D := L.Dlim
-  hD_selfAdjoint := InfoGeometry.Canonical.DiracColimit.dirac_colimit_selfAdjoint S L
+  hD_selfAdjoint :=
+    InfoGeometry.Canonical.DiracColimit.dirac_compatible_limit_selfAdjoint S L
   spectralDet := spectralDet
   hBridge := hBridge
 

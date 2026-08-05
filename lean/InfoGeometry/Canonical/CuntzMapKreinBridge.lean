@@ -147,21 +147,26 @@ clock tick in the finite rational/DAG shadow: the supplied step `sigma` is
 pointwise the canonical two-branch Cuntz map.
 -/
 @[rep_depth operator]
-structure DiscreteCuntzModularStep (Op : Type*) [Ring Op] [StarRing Op] where
-  S_left : Op
-  S_right : Op
-  sigma : Op → Op
-  sigma_eq_cuntzMap : ∀ X, sigma X = cuntzMapTwo S_left S_right X
+abbrev DiscreteCuntzModularStep (Op : Type*) [Ring Op] [StarRing Op] := Op × Op
 
 namespace DiscreteCuntzModularStep
 
+variable {Op : Type*} [Ring Op] [StarRing Op]
+
+abbrev S_left (M : DiscreteCuntzModularStep Op) : Op := M.1
+abbrev S_right (M : DiscreteCuntzModularStep Op) : Op := M.2
+
+/-- The discrete modular step is the canonical two-branch Cuntz map. -/
+def sigma (M : DiscreteCuntzModularStep Op) : Op → Op :=
+  cuntzMapTwo M.S_left M.S_right
+
 variable (M : DiscreteCuntzModularStep Op)
 
-/-- The discrete modular step is the Cuntz map under its explicit witness. -/
+/-- The defining equation for the discrete modular step. -/
 @[rep_depth operator]
 theorem apply_eq_cuntzMap (X : Op) :
     M.sigma X = cuntzMapTwo M.S_left M.S_right X :=
-  M.sigma_eq_cuntzMap X
+  rfl
 
 /-- Fixed real readout for a witnessed discrete modular Cuntz step. -/
 @[rep_depth operator]

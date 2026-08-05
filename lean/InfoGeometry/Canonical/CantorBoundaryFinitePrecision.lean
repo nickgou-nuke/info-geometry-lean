@@ -38,6 +38,16 @@ theorem complex_readout_prefix_stability
           rw [Complex.norm_def, Complex.normSq_ofReal, ← pow_two, Real.sqrt_sq_eq_abs]
     _ ≤ (1 / 2 : ℝ) ^ N := hreal
 
+theorem complex_readout_prefix_closedBall_mem
+    (N : ℕ) (w v : InfiniteBinaryWordSpace)
+    (hprefix : ∀ n < N, w n = v n) :
+    binaryReadout v ∈
+      Metric.closedBall (binaryReadout w) ((1 / 2 : ℝ) ^ N) := by
+  rw [Metric.mem_closedBall]
+  have hbound := complex_readout_prefix_stability N w v hprefix
+  rw [dist_eq_norm]
+  simpa [norm_sub_rev] using hbound
+
 /-- Prefix agreement puts values into a dyadic closed interval around the limit. -/
 theorem real_readout_prefix_ball_mem
     (N : ℕ) (w v : InfiniteBinaryWordSpace)

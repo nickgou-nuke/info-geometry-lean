@@ -68,8 +68,13 @@ Bridge object packaging the repo-owned spectral Cartan split as a conservative
 `CartanOnsagerSplit`.
 -/
 @[rep_depth transport]
-structure DrazinCartanOnsagerBridge where
-  CIK : CertifiedInverseKernel E
+abbrev DrazinCartanOnsagerBridge := CertifiedInverseKernel E
+
+namespace DrazinCartanOnsagerBridge
+
+abbrev CIK (B : DrazinCartanOnsagerBridge (E := E)) : CertifiedInverseKernel E := B
+
+end DrazinCartanOnsagerBridge
 
 namespace DrazinCartanOnsagerBridge
 

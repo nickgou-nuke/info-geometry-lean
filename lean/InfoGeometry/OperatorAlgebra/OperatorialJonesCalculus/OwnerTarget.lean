@@ -1,36 +1,9 @@
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus.PolarizationProjectors
 
-noncomputable section
+/-!
+Compatibility import for the Jones-calculus owner target.
 
-namespace InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus
-
-/-! ## 5. Owner target -/
-
-/--
-Owner target for connecting Fresnel/Jones data to the bilingual operator
-geometry.
+`PolarizationProjectorPair` is the native carrier; this module intentionally
+introduces no abbreviation, constructor wrapper, or reflexive readback.
 -/
-structure OperatorialJonesOwnerTarget
-    (Op : Type*) [Ring Op] [Algebra ℂ Op] where
-  /-- The Fresnel `s/p` projector pair owned by the Jones calculus layer. -/
-  projectors : PolarizationProjectorPair Op
-
-namespace OperatorialJonesOwnerTarget
-
-variable {Op : Type*} [Ring Op] [Algebra ℂ Op]
-
-/-- Read back the concrete projector pair carried by the owner target. -/
-def toProjectorPair
-    (T : OperatorialJonesOwnerTarget Op) :
-    PolarizationProjectorPair Op :=
-  T.projectors
-
-@[simp] theorem toProjectorPair_mk
-    (P : PolarizationProjectorPair Op) :
-    toProjectorPair (OperatorialJonesOwnerTarget.mk P) = P :=
-  rfl
-
-end OperatorialJonesOwnerTarget
-
-end InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus

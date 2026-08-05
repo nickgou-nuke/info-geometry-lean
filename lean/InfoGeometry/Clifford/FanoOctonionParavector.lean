@@ -24,6 +24,94 @@ abbrev R7 := Fin 7 → ℝ
 def basisVector (i : Fin 7) : R7 :=
   Pi.single i 1
 
+abbrev OctonionCarrier := Paravector R7
+
+/-!
+The SageMath Cayley--Dickson ordering
+
+`{1, i, j, k, l, i*l, j*l, k*l}`
+
+is represented here by the scalar line followed by the seven Fano coordinate
+directions.  This is a family of carrier elements, not an assertion that the
+nonassociative octonion product is an associative algebra product.
+-/
+def sageOctonionBasisFamily : Fin 8 → OctonionCarrier
+  | ⟨0, _⟩ => scalar 1
+  | ⟨1, _⟩ => imaginary (basisVector 0)
+  | ⟨2, _⟩ => imaginary (basisVector 1)
+  | ⟨3, _⟩ => imaginary (basisVector 2)
+  | ⟨4, _⟩ => imaginary (basisVector 3)
+  | ⟨5, _⟩ => imaginary (basisVector 4)
+  | ⟨6, _⟩ => imaginary (basisVector 5)
+  | ⟨7, _⟩ => imaginary (basisVector 6)
+
+/-- Coordinates for the Sage/Cayley--Dickson ordering. -/
+def sageOctonionCoordinateEquiv : OctonionCarrier ≃ₗ[ℝ] Fin 8 → ℝ where
+  toFun x := ![x.1, x.2 0, x.2 1, x.2 2, x.2 3, x.2 4, x.2 5, x.2 6]
+  invFun v := (v 0, ![v 1, v 2, v 3, v 4, v 5, v 6, v 7])
+  left_inv := by
+    intro x
+    apply Prod.ext
+    · rfl
+    · funext i
+      fin_cases i <;> rfl
+  right_inv := by
+    intro v
+    funext i
+    fin_cases i <;> rfl
+  map_add' := by
+    intro x y
+    funext i
+    fin_cases i <;> simp
+  map_smul' := by
+    intro a x
+    funext i
+    fin_cases i <;> simp
+
+/-- The SageMath family as a genuine Mathlib module basis. -/
+noncomputable def sageOctonionBasis : Module.Basis (Fin 8) ℝ OctonionCarrier :=
+  Module.Basis.ofEquivFun sageOctonionCoordinateEquiv
+
+@[simp] theorem sageOctonionBasis_apply (i : Fin 8) :
+    sageOctonionBasis i = sageOctonionBasisFamily i := by
+  fin_cases i <;>
+    simp [sageOctonionBasis, Module.Basis.coe_ofEquivFun,
+      sageOctonionCoordinateEquiv, sageOctonionBasisFamily,
+      scalar, imaginary, basisVector] <;>
+    ext j <;> fin_cases j <;> simp [Pi.single_apply]
+
+@[simp] theorem sageOctonionBasisFamily_zero :
+    sageOctonionBasisFamily 0 = scalar 1 := by
+  rfl
+
+@[simp] theorem sageOctonionBasisFamily_one :
+    sageOctonionBasisFamily 1 = imaginary (basisVector 0) := by
+  rfl
+
+@[simp] theorem sageOctonionBasisFamily_two :
+    sageOctonionBasisFamily 2 = imaginary (basisVector 1) := by
+  rfl
+
+@[simp] theorem sageOctonionBasisFamily_three :
+    sageOctonionBasisFamily 3 = imaginary (basisVector 2) := by
+  rfl
+
+@[simp] theorem sageOctonionBasisFamily_four :
+    sageOctonionBasisFamily 4 = imaginary (basisVector 3) := by
+  rfl
+
+@[simp] theorem sageOctonionBasisFamily_five :
+    sageOctonionBasisFamily 5 = imaginary (basisVector 4) := by
+  rfl
+
+@[simp] theorem sageOctonionBasisFamily_six :
+    sageOctonionBasisFamily 6 = imaginary (basisVector 5) := by
+  rfl
+
+@[simp] theorem sageOctonionBasisFamily_seven :
+    sageOctonionBasisFamily 7 = imaginary (basisVector 6) := by
+  rfl
+
 /-- The first Fano basis vector. -/
 def e0 : R7 := fun i => if i.val = 0 then 1 else 0
 

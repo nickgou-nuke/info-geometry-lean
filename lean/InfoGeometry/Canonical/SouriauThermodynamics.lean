@@ -57,8 +57,14 @@ operator sidecars; this structure is the scalar projection used by the finite
 Weyl/Souriau partition lane.
 -/
 @[rep_depth thermo]
-structure SouriauTemperature (Cartan : Type*) where
-  thermalElement : Cartan
+abbrev SouriauTemperature (Cartan : Type*) := Cartan
+
+namespace SouriauTemperature
+
+/-- Compatibility accessor for the native Cartan element carrier. -/
+abbrev thermalElement (T : SouriauTemperature Cartan) : Cartan := T
+
+end SouriauTemperature
 
 /--
 Finite thermal representation readout.
@@ -109,8 +115,16 @@ structure GeneralizedSouriauTemperature (LieAlgebra : Type*) where
 
 /-- Classical moment-map surface used by the Weyl/Souriau compatibility lane. -/
 @[rep_depth thermo]
-structure ClassicalMomentMap (Phase : Type*) (LieAlgebra : Type*) where
-  moment : Phase → LieAlgebra → ℝ
+abbrev ClassicalMomentMap (Phase : Type*) (LieAlgebra : Type*) :=
+  Phase → LieAlgebra → ℝ
+
+namespace ClassicalMomentMap
+
+/-- Compatibility accessor for the native moment-map function. -/
+abbrev moment (M : ClassicalMomentMap Phase LieAlgebra) :
+    Phase → LieAlgebra → ℝ := M
+
+end ClassicalMomentMap
 
 @[rep_depth thermo]
 def classicalThermalHamiltonian
@@ -137,8 +151,16 @@ finite, `quantumPartitionFunction` below constructs that trace as the native
 finite sum.
 -/
 @[rep_depth thermo]
-structure QuantumRepresentationLayer (State LieAlgebra : Type*) where
-  thermalGenerator : GeneralizedSouriauTemperature LieAlgebra → State → ℝ
+abbrev QuantumRepresentationLayer (State LieAlgebra : Type*) :=
+  GeneralizedSouriauTemperature LieAlgebra → State → ℝ
+
+namespace QuantumRepresentationLayer
+
+abbrev thermalGenerator {State LieAlgebra : Type*}
+    (R : QuantumRepresentationLayer State LieAlgebra) :
+    GeneralizedSouriauTemperature LieAlgebra → State → ℝ := R
+
+end QuantumRepresentationLayer
 
 @[rep_depth thermo]
 noncomputable def quantumThermalGenerator

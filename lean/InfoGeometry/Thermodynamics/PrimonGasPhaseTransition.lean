@@ -23,18 +23,21 @@ noncomputable def zetaPartitionReadout (β : ℂ) : ℂ :=
 
 /-- The formal structure of a finite Primon-gas packet carrying a partition
 readout at inverse temperature `β`. -/
-structure PrimonGas where
-  /-- The inverse temperature (Thermodynamic Time). -/
-  β : ℂ
-  /-- The finite partition readout carried by this phase-transition packet. -/
-  partitionFunction : ℂ
-  /-- The partition function must map to the zeta readout owned downstream. -/
-  partition_eq_zeta : partitionFunction = zetaPartitionReadout β
+abbrev PrimonGas := ℂ
+
+namespace PrimonGas
+
+abbrev β (gas : PrimonGas) : ℂ := gas
+
+noncomputable def partitionFunction (gas : PrimonGas) : ℂ :=
+  zetaPartitionReadout gas.β
+
+end PrimonGas
 
 /-- The Primon-gas packet exposes its carried partition/zeta equality. -/
 theorem primon_partition_eq_zeta (gas : PrimonGas) :
     gas.partitionFunction = zetaPartitionReadout gas.β :=
-  gas.partition_eq_zeta
+  rfl
 
 /-- 
   The Burg Entropy / Free Energy of the Primon Gas.
@@ -42,7 +45,7 @@ theorem primon_partition_eq_zeta (gas : PrimonGas) :
   This thermodynamic potential generates the barrier function that 
   shapes the macroscopic volume of spacetime.
 -/
-def primonFreeEnergy (gas : PrimonGas) : ℂ :=
+noncomputable def primonFreeEnergy (gas : PrimonGas) : ℂ :=
   -- This finite phase-transition layer keeps only the algebraic readout.
   -gas.partitionFunction
 

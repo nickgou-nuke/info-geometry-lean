@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 import InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine
 import InfoGeometry.Canonical.CantorCuntzCliffordBridge
-import InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket
+import InfoGeometry.Topology.FractalCantorFockWitness
 import InfoGeometry.Canonical.CelikKocakKreinSupergradedLift
 import InfoGeometry.Canonical.CuntzMapKreinBridge
 import InfoGeometry.Quantum.RealMajoranaCategory
@@ -33,7 +33,6 @@ open InfoGeometry.Canonical.CelikKocakPaperFormalism
 open InfoGeometry.Canonical.SplitCliffordTensorBridge
 open InfoGeometry.Canonical.SplitCliffordDirectLimit
 open InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine
-open InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket
 open InfoGeometry.Quantum.RealMajoranaCategory
 open InfoGeometry.Canonical.CelikKocakKreinSupergradedLift
 open InfoGeometry.Canonical.CuntzMapKreinBridge
@@ -181,19 +180,6 @@ structure SplitCliffordInfiniteBoundaryComplement
       DirectLimit.Module.of ℝ ℕ SplitClNNAlg
         (fun m n h => splitCliffordMap m n h) n x = splitInfinity
 
-/--
-The infinite split boundary can be packaged with the literature-owned infinite
-Cantor/Fock socket and read back through the socket API.
--/
-@[rep_depth operator]
-structure SplitCliffordInfiniteSocketComplement
-    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℂ E]
-    [CompleteSpace E] where
-  boundaryComplement : SplitCliffordInfiniteBoundaryComplement E
-  infiniteSocket : InfiniteCantorCliffordFockSocket E
-  carrier_readout_eq :
-    carrierData_readout (S := infiniteSocket) = boundaryComplement.cantorFock
-
 /-- Any split direct-limit point and any analytic Cantor/Fock carrier determine a crossing packet. -/
 @[rep_depth operator]
 noncomputable def splitCliffordInfinity_boundary_complement
@@ -201,18 +187,6 @@ noncomputable def splitCliffordInfinity_boundary_complement
     (D : CelikKocakInfiniteFockCarrierData E) :
     SplitCliffordInfiniteBoundaryComplement E := by
   refine { splitInfinity := z, cantorFock := D, expanding_representatives := ?_ }
-  intro N
-  exact splitCliffordInfinity_unbounded_representatives z N
-
-/-- The split infinite boundary and the Cantor/Fock socket can be packaged together theorem-only. -/
-@[rep_depth operator]
-noncomputable def splitCliffordInfinity_socket_complement
-    (z : SplitCliffordInfinity)
-    (D : CelikKocakInfiniteFockCarrierData E) :
-    SplitCliffordInfiniteSocketComplement E := by
-  refine { boundaryComplement := { splitInfinity := z, cantorFock := D, expanding_representatives := ?_ },
-           infiniteSocket := { carrierData := D },
-           carrier_readout_eq := rfl }
   intro N
   exact splitCliffordInfinity_unbounded_representatives z N
 

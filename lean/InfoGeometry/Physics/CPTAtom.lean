@@ -62,20 +62,31 @@ theorem CPT_sq : CPT * CPT = 1 := by
     _ = 1 := by rw [eps_sq, J_sq]; ext i j <;> fin_cases i <;> fin_cases j <;> simp
 
 /-- Abstract CPT atom structure. -/
-structure CPTAtomStruct where
-  ε : M2R
-  Jg : M2R
-  eps_sq' : ε * ε = 1
-  J_sq' : Jg * Jg = (-1 : ℝ) • (1 : M2R)
-  anticomm' : ε * Jg = - (Jg * ε)
+abbrev CPTAtomStruct :=
+  {p : M2R × M2R //
+    p.1 * p.1 = 1 ∧
+    p.2 * p.2 = (-1 : ℝ) • (1 : M2R) ∧
+    p.1 * p.2 = -(p.2 * p.1)}
+
+namespace CPTAtomStruct
+
+abbrev ε (A : CPTAtomStruct) : M2R := A.1.1
+
+abbrev Jg (A : CPTAtomStruct) : M2R := A.1.2
+
+abbrev eps_sq' (A : CPTAtomStruct) : A.ε * A.ε = 1 := A.2.1
+
+abbrev J_sq' (A : CPTAtomStruct) :
+    A.Jg * A.Jg = (-1 : ℝ) • (1 : M2R) := A.2.2.1
+
+abbrev anticomm' (A : CPTAtomStruct) :
+    A.ε * A.Jg = -(A.Jg * A.ε) := A.2.2.2
+
+end CPTAtomStruct
 
 /-- Concrete `Cl(1,1)` atom. -/
-def concreteAtom : CPTAtomStruct where
-  ε := eps
-  Jg := J
-  eps_sq' := eps_sq
-  J_sq' := J_sq
-  anticomm' := eps_J_anticomm
+def concreteAtom : CPTAtomStruct :=
+  ⟨(eps, J), ⟨eps_sq, J_sq, eps_J_anticomm⟩⟩
 
 /-- Boost generator `K=vε`. -/
 def Kboost (v : ℝ) : M2R := v • eps

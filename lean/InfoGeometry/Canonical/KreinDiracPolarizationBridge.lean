@@ -116,7 +116,7 @@ theorem kreinDiracPolarizationBridge_of_strictSymmetry
     (transportDirac IST h.toBogoliubovTransform).comp
       (transportDirac IST h.toBogoliubovTransform)
       = transportMetricOp IST h.toBogoliubovTransform := by
-  exact ⟨transportK_sq_of_strictSymmetryBogoliubov h,
+  exact ⟨h.toBogoliubovTransform.transportK_sq,
     transportP_eq_targetPolarization_of_strictSymmetry h,
     transportDirac_sq_eq_transportMetricOp_of_strictSymmetry (IST := IST) h⟩
 

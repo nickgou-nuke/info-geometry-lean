@@ -56,6 +56,13 @@ theorem metricTestOp_commutator_sq :
       · rfl
     simp [h_true, tail_prependBit, prependBit_tail_of_head]
 
+theorem metricTestOp_commutator_ne_zero :
+    DiracComm metricTestOp ≠ 0 := by
+  intro hzero
+  have hsq := metricTestOp_commutator_sq
+  rw [hzero] at hsq
+  simpa using hsq
+
 /-- The metric test operator realizes an evaluation difference of exactly 1,
     establishing that the emergent Connes distance between the boundary poles is at least 1. -/
 theorem metricTestOp_evaluation_diff :

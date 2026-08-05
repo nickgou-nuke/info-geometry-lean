@@ -38,6 +38,11 @@ theorem DiracOp_sq_eq_one : DiracOp * DiracOp = 1 := by
   rw [S_L_star_S_R_mul_S_R_star_S_L, S_R_star_S_L_mul_S_L_star_S_R]
   exact cuntz_partition_linear
 
+theorem DiracOp_apply_apply (f : CantorSpace) :
+    DiracOp (DiracOp f) = f := by
+  have h := congrArg (fun T : CantorOp => T f) DiracOp_sq_eq_one
+  simpa using h
+
 /-- Massless Dirac Equation eigenstates.
     Since `D^2 = 1`, the only possible eigenvalues of `DiracOp` are 1 and -1. -/
 def IsDiracChiralState (f : CantorSpace) (eigenval : ℂ) : Prop :=

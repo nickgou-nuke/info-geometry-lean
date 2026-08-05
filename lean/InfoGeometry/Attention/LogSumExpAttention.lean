@@ -76,7 +76,7 @@ theorem attention_divergence_free_from_logSumExp
     (L : LegendreModel) (_θ : ℝ) (β : ℝ) (K : EndH)
     (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
     (hSmooth : IsThermodynamicallySmoothed β K)
-    (_hLogSumExp : L.L.ψ = logSumExp (w := fun _ => 1) a)
+    (_hLogSumExp : L.L = logSumExp (w := fun _ => 1) a)
     (h_bivector : star K = -K) :
     IsDivergenceFree (madelungFluidState β K vac ω hSmooth).u := by
   have h_trace_zero : LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0 :=

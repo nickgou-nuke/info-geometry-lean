@@ -182,6 +182,25 @@ theorem noAdjacentOnes_cons_true_of_head_false
   | succ n =>
       exact x.2 n hpair
 
+theorem noAdjacentOnes_cons_true_iff_head_false
+    (x : GoldenMeanBoundary) :
+    NoAdjacentOnes (consBit true x.1) ↔ x.1 0 = false := by
+  constructor
+  · intro h
+    by_cases hx : x.1 0 = false
+    · exact hx
+    · have hxtrue : x.1 0 = true := by
+        cases hbit : x.1 0 <;> simp_all
+      have hpair :
+          consBit true x.1 0 = true ∧
+            consBit true x.1 (0 + 1) = true := by
+        constructor
+        · rfl
+        · simpa [consBit] using hxtrue
+      exact False.elim (h 0 hpair)
+  · intro hhead
+    exact noAdjacentOnes_cons_true_of_head_false x hhead
+
 /-- Finite prefixes remain golden-mean admissible after legally prepending `true`. -/
 theorem prefix_noAdjacentFinite_cons_true_of_head_false
     (x : GoldenMeanBoundary) (hhead : x.1 0 = false) (n : Nat) :

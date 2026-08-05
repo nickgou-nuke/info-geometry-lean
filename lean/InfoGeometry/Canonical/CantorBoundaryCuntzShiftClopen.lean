@@ -80,8 +80,49 @@ theorem range_prefixBit_false_union_true :
         | zero => exact hbit.symm
         | succ k => rfl
 
+theorem mem_range_prefixBit_iff (b : Bool) (y : CantorBoundary) :
+    y ∈ Set.range (prefixBit b) ↔ y 0 = b := by
+  rw [range_prefixBit_eq_coordinate_cylinder b]
+  rfl
+
+theorem range_prefixBit_compl (b : Bool) :
+    (Set.range (prefixBit b))ᶜ = Set.range (prefixBit (!b)) := by
+  ext y
+  rw [mem_compl_iff, mem_range_prefixBit_iff,
+    mem_range_prefixBit_iff]
+  cases b <;> cases h : y 0 <;> simp [h]
+
+theorem range_prefixBit_false_inter_true :
+    Set.range (prefixBit false) ∩ Set.range (prefixBit true) = (∅ : Set CantorBoundary) := by
+  ext y
+  constructor
+  · intro hy
+    rcases hy with ⟨hyFalse, hyTrue⟩
+    have hFalse : y 0 = false := (mem_range_prefixBit_iff false y).1 hyFalse
+    have hTrue : y 0 = true := (mem_range_prefixBit_iff true y).1 hyTrue
+    rw [hFalse] at hTrue
+    cases hTrue
+  · intro hy
+    cases hy
+
 def prefixTail (y : CantorBoundary) : CantorBoundary :=
   fun n => y (n + 1)
+
+@[simp]
+theorem prefixTail_prefixBit (b : Bool) (x : CantorBoundary) :
+    prefixTail (prefixBit b x) = x := by
+  funext n
+  rfl
+
+theorem prefixBit_prefixTail_of_mem_range
+    {b : Bool} {y : CantorBoundary}
+    (hy : y ∈ Set.range (prefixBit b)) :
+    prefixBit b (prefixTail y) = y := by
+  rcases hy with ⟨x, rfl⟩
+  funext n
+  cases n with
+  | zero => rfl
+  | succ k => rfl
 
 theorem continuous_prefixTail : Continuous (prefixTail) := by
   apply continuous_pi
@@ -111,6 +152,11 @@ noncomputable def prefixBitHomeomorphRange (b : Bool) :
 
 theorem prefixBitHomeomorphRange_apply (b : Bool) (x : CantorBoundary) :
     prefixBitHomeomorphRange b x = ⟨prefixBit b x, ⟨x, rfl⟩⟩ :=
+  rfl
+
+@[simp] theorem prefixBitHomeomorphRange_symm_apply
+    (b : Bool) (y : Set.range (prefixBit b)) :
+    (prefixBitHomeomorphRange b).symm y = prefixTail y.1 :=
   rfl
 
 end InfoGeometry.Canonical.CantorBoundaryCuntzShift

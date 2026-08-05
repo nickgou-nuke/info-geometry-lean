@@ -364,15 +364,24 @@ def unruhTemperature (acceleration : ℝ) : ℝ := acceleration / (2 * Real.pi)
 
 /-- A formal affine/Weyl thermodynamic ensemble: a stage algebra equipped with an
 affine bracket parameter.  This is finite algebraic data, not a C*-completion. -/
-structure AffineWeylThermoEnsemble (A : Type*) [Semiring A] [Algebra ℂ A] where
-  beta : ℂ
-  weylGauge : ℂ
-  rapidity : ℝ
-  acceleration : ℝ
-  energy : A
-  q_is_exp_rapidity : beta = qRapidity rapidity
+abbrev AffineWeylThermoEnsemble (A : Type*) [Semiring A] [Algebra ℂ A] :=
+  {data : ℂ × (ℂ × (ℝ × (ℝ × A))) //
+    data.1 = qRapidity data.2.2.1}
 
 namespace AffineWeylThermoEnsemble
+
+abbrev beta {A : Type*} [Semiring A] [Algebra ℂ A]
+    (E : AffineWeylThermoEnsemble A) : ℂ := E.1.1
+abbrev weylGauge {A : Type*} [Semiring A] [Algebra ℂ A]
+    (E : AffineWeylThermoEnsemble A) : ℂ := E.1.2.1
+abbrev rapidity {A : Type*} [Semiring A] [Algebra ℂ A]
+    (E : AffineWeylThermoEnsemble A) : ℝ := E.1.2.2.1
+abbrev acceleration {A : Type*} [Semiring A] [Algebra ℂ A]
+    (E : AffineWeylThermoEnsemble A) : ℝ := E.1.2.2.2.1
+abbrev energy {A : Type*} [Semiring A] [Algebra ℂ A]
+    (E : AffineWeylThermoEnsemble A) : A := E.1.2.2.2.2
+abbrev q_is_exp_rapidity {A : Type*} [Semiring A] [Algebra ℂ A]
+    (E : AffineWeylThermoEnsemble A) : E.beta = qRapidity E.rapidity := E.2
 
 /-- The affine superbracket derived from the ensemble's thermodynamic parameter. -/
 @[simp] def bracket {A : Type*} [Semiring A] [Algebra ℂ A]
@@ -388,19 +397,15 @@ end AffineWeylThermoEnsemble
 
 /-- The canonical affine ensemble attached to a finite Cuntz--BdG stage. -/
 def cuntzBdGAffineEnsemble (n : ℕ) (ρ : ℝ) (gauge : ℂ) (acceleration : ℝ) :
-    AffineWeylThermoEnsemble (CuntzAlg ℂ (Fin (2 * n))) where
-  beta := qRapidity ρ
-  weylGauge := gauge
-  rapidity := ρ
-  acceleration := acceleration
-  energy := 1
-  q_is_exp_rapidity := rfl
+    AffineWeylThermoEnsemble (CuntzAlg ℂ (Fin (2 * n))) :=
+  ⟨(qRapidity ρ, (gauge, (ρ, (acceleration, 1)))), rfl⟩
 
 /-- At zero affine parameter the canonical ensemble bracket is the Lie bracket. -/
 theorem cuntzBdGAffineEnsemble_zero_rapidity_bracket (n : ℕ) (gauge : ℂ) (a : ℝ)
     (p q : Z2Parity) (x y : CuntzAlg ℂ (Fin (2 * n))) :
     (cuntzBdGAffineEnsemble n 0 gauge a).bracket p q x y = superBracket p q x y := by
-  simp [cuntzBdGAffineEnsemble]
+  simp [cuntzBdGAffineEnsemble, AffineWeylThermoEnsemble.bracket,
+    AffineWeylThermoEnsemble.beta, qRapidity]
 
 /-- At logarithmic rapidity `log β`, the ensemble realizes affine parameter `β`. -/
 theorem cuntzBdGAffineEnsemble_logScale_bracket (n : ℕ) {β : ℝ} (hβ : 0 < β)
@@ -418,13 +423,8 @@ abbrev ComplexStarCuntzBdGStage (n : ℕ) := ComplexStarCuntzAlg (Fin (2 * n))
 
 /-- Canonical affine/Weyl ensemble over the genuine complex-star Cuntz source. -/
 def complexStarCuntzBdGAffineEnsemble (n : ℕ) (ρ : ℝ) (gauge : ℂ) (acceleration : ℝ) :
-    AffineWeylThermoEnsemble (ComplexStarCuntzBdGStage n) where
-  beta := qRapidity ρ
-  weylGauge := gauge
-  rapidity := ρ
-  acceleration := acceleration
-  energy := 1
-  q_is_exp_rapidity := rfl
+    AffineWeylThermoEnsemble (ComplexStarCuntzBdGStage n) :=
+  ⟨(qRapidity ρ, (gauge, (ρ, (acceleration, 1)))), rfl⟩
 
 /-- The genuine complex-star ensemble has conjugate-semilinear source star. -/
 theorem complexStarCuntzBdG_star_smul (n : ℕ) (z : ℂ) (x : ComplexStarCuntzBdGStage n) :
@@ -445,7 +445,8 @@ theorem complexStarCuntzBdG_star_smul (n : ℕ) (z : ℂ) (x : ComplexStarCuntzB
 theorem complexStarCuntzBdGAffineEnsemble_zero_rapidity_bracket (n : ℕ) (gauge : ℂ) (a : ℝ)
     (p q : Z2Parity) (x y : ComplexStarCuntzBdGStage n) :
     (complexStarCuntzBdGAffineEnsemble n 0 gauge a).bracket p q x y = superBracket p q x y := by
-  simp [complexStarCuntzBdGAffineEnsemble]
+  simp [complexStarCuntzBdGAffineEnsemble, AffineWeylThermoEnsemble.bracket,
+    AffineWeylThermoEnsemble.beta, qRapidity]
 
 /-- Positive real q-parameter recovered by logarithmic rapidity in the genuine source. -/
 theorem complexStarCuntzBdGAffineEnsemble_logScale_bracket (n : ℕ) {β : ℝ} (hβ : 0 < β)

@@ -64,14 +64,14 @@ def fusionTensorToUHFColimitCocone
 
 noncomputable def fusionTensorToUHFTopologicalColimit
     (T : CuntzMatrixTraceTower.Data) :
-    topologicalDirectColimit (fusionTensorTopologicalDiagram (K := ℂ)) ⟶
+    colimit (fusionTensorTopologicalDiagram (K := ℂ)) ⟶
       topologicalColimitObject T :=
-  topologicalDirectDescend (fusionTensorTopologicalDiagram (K := ℂ))
+  colimit.desc (fusionTensorTopologicalDiagram (K := ℂ))
     (fusionTensorToUHFColimitCocone T)
 
 theorem fusionTensorToUHFTopologicalColimit_stage
     (T : CuntzMatrixTraceTower.Data) (n : ℕ) :
-    topologicalDirectInjection
+    colimit.ι
         (fusionTensorTopologicalDiagram (K := ℂ)) n ≫
       fusionTensorToUHFTopologicalColimit T =
     fusionTensorStageTwoTopCatHom ≫ topologicalInclusion T 2 := by
@@ -83,7 +83,7 @@ theorem fusionTensorToUHFTopologicalColimit_stage_apply
     (T : CuntzMatrixTraceTower.Data) (n : ℕ)
     (X : FusionTensorCarrier ℂ) :
     fusionTensorToUHFTopologicalColimit T
-      (topologicalDirectInjection
+      (colimit.ι
         (fusionTensorTopologicalDiagram (K := ℂ)) n X) =
       topologicalInclusion T 2 (fusionTensorStageTwoAlgEquiv X) := by
   have h := fusionTensorToUHFTopologicalColimit_stage T n

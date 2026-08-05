@@ -114,13 +114,13 @@ def QuarkLadderPacket :=
 
 namespace QuarkLadderPacket
 
-def alpha (packet : QuarkLadderPacket) : Fin 3 → CliffordAlgebra q11 := packet.1
+abbrev alpha (packet : QuarkLadderPacket) : Fin 3 → CliffordAlgebra q11 := packet.1
 
-def alphaDag (packet : QuarkLadderPacket) : Fin 3 → CliffordAlgebra q11 := packet.2.1
+abbrev alphaDag (packet : QuarkLadderPacket) : Fin 3 → CliffordAlgebra q11 := packet.2.1
 
-def beta (packet : QuarkLadderPacket) : Fin 3 → CliffordAlgebra q11 := packet.2.2.1
+abbrev beta (packet : QuarkLadderPacket) : Fin 3 → CliffordAlgebra q11 := packet.2.2.1
 
-def betaDag (packet : QuarkLadderPacket) : Fin 3 → CliffordAlgebra q11 := packet.2.2.2
+abbrev betaDag (packet : QuarkLadderPacket) : Fin 3 → CliffordAlgebra q11 := packet.2.2.2
 
 end QuarkLadderPacket
 
@@ -132,13 +132,13 @@ def LeptonLadderPacket :=
 
 namespace LeptonLadderPacket
 
-def nu (packet : LeptonLadderPacket) : CliffordAlgebra q11 := packet.1
+abbrev nu (packet : LeptonLadderPacket) : CliffordAlgebra q11 := packet.1
 
-def nuDag (packet : LeptonLadderPacket) : CliffordAlgebra q11 := packet.2.1
+abbrev nuDag (packet : LeptonLadderPacket) : CliffordAlgebra q11 := packet.2.1
 
-def electron (packet : LeptonLadderPacket) : CliffordAlgebra q11 := packet.2.2.1
+abbrev electron (packet : LeptonLadderPacket) : CliffordAlgebra q11 := packet.2.2.1
 
-def electronDag (packet : LeptonLadderPacket) : CliffordAlgebra q11 := packet.2.2.2
+abbrev electronDag (packet : LeptonLadderPacket) : CliffordAlgebra q11 := packet.2.2.2
 
 end LeptonLadderPacket
 

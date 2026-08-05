@@ -103,6 +103,39 @@ theorem cuntz_partition : (∑ i : Fin 4, cuntzS i * cuntzT i) = (1 : C4Function
       simp [Finset.mem_univ]
     _ = f b := by simp
 
+theorem cuntz_projection_apply (i : Fin 4) (f : C4Functions)
+    (b : C4Boundary) :
+    (cuntzS i * cuntzT i) f b =
+      if headN b = i then f b else 0 := by
+  dsimp [cuntzS, cuntzT]
+  by_cases h : headN b = i
+  · simp only [if_pos h, if_pos rfl]
+    rw [← h]
+    exact congrArg f (prependN_headN_tailN b)
+  · simp [h]
+
+theorem cuntz_projection_idempotent (i : Fin 4) :
+    (cuntzS i * cuntzT i) * (cuntzS i * cuntzT i) =
+      cuntzS i * cuntzT i := by
+  calc
+    (cuntzS i * cuntzT i) * (cuntzS i * cuntzT i) =
+        cuntzS i * (cuntzT i * cuntzS i) * cuntzT i := by
+          simp [mul_assoc]
+    _ = cuntzS i * (1 : C4Functions →ₗ[ℂ] C4Functions) * cuntzT i := by
+          rw [cuntz_ortho]
+          simp
+    _ = cuntzS i * cuntzT i := by simp
+
+theorem cuntz_projections_orthogonal {i j : Fin 4} (hij : i ≠ j) :
+    (cuntzS i * cuntzT i) * (cuntzS j * cuntzT j) = 0 := by
+  calc
+    (cuntzS i * cuntzT i) * (cuntzS j * cuntzT j) =
+        cuntzS i * (cuntzT i * cuntzS j) * cuntzT j := by
+          simp [mul_assoc]
+    _ = cuntzS i * (0 : C4Functions →ₗ[ℂ] C4Functions) * cuntzT j := by
+          rw [cuntz_ortho, if_neg hij]
+    _ = 0 := by simp
+
 /-- The concrete Cuntz family on the 4-symbol Cantor boundary. -/
 def c4CuntzFamily : CuntzFamilyOn C4Functions where
   S := cuntzS

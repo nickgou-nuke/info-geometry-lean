@@ -186,20 +186,4 @@ theorem full_so55_basis_count : 5 * 4 / 2 + 5 * 4 / 2 + 5 * 5 = 45 := by
 theorem d5_root_count_shadow : 45 - 5 = 40 := by
   native_decide
 
-/-- Closed finite packet for the full O(5,5) matrix-law owner surface. -/
-theorem full_o55_matrix_law_packet :
-    eta * eta = 1 ∧
-      (∀ i j : Fin 5, IsSO55Lie (rotPlus i j)) ∧
-      (∀ i j : Fin 5, IsSO55Lie (rotMinus i j)) ∧
-      (∀ i j : Fin 5, IsSO55Lie (boost i j)) ∧
-      (∀ i j : Fin 5, comm (boost i i) (boost j j) = 0) ∧
-      IsO55 pairSwap01 ∧ IsO55 evenSignFlip01 ∧ IsO55 singleSignFlip0 ∧
-      (∀ i : Fin 5, etaPair (lightlikePlus i) (lightlikePlus i) = 0) ∧
-      (∀ i : Fin 5, etaPair (lightlikeMinus i) (lightlikeMinus i) = 0) ∧
-      (∀ i : Fin 5, etaPair (lightlikePlus i) (lightlikeMinus i) = 2) := by
-  exact ⟨eta_sq, rotPlus_all_so55, rotMinus_all_so55, boost_all_so55,
-    cartan_commutes, pairSwap01_is_o55, evenSignFlip01_is_o55,
-    singleSignFlip0_is_o55, lightlikePlus_null, lightlikeMinus_null,
-    lightlike_pairing⟩
-
 end InfoGeometry.OperatorAlgebra.FullO55MatrixLaws

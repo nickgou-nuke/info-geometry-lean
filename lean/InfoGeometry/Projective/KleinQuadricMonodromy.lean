@@ -48,6 +48,10 @@ theorem circleIntegral_one_div (R : ℝ) (hR : 0 < R) :
 noncomputable def logarithmicPhase (n : ℤ) : ℂ :=
   (n : ℂ) * (2 * Real.pi * Complex.I : ℂ)
 
+@[simp] theorem logarithmicPhase_add (m n : ℤ) :
+    logarithmicPhase (m + n) = logarithmicPhase m + logarithmicPhase n := by
+  simp [logarithmicPhase, add_mul, mul_add, add_comm, add_left_comm, add_assoc]
+
 /-- Algebraic monodromy on the universal cover increments by `2πi` per sheet. -/
 theorem universalCoverLog_sheet_increment (z : ℂ) (n : ℤ) :
     uLog (z, n + 1) - uLog (z, n) = (2 * Real.pi * Complex.I : ℂ) := by
@@ -77,6 +81,13 @@ theorem deRhamClass_of_winding (R : ℝ) (hR : 0 < R) (n : ℤ) :
         = (n : ℂ) * (2 * Real.pi * Complex.I : ℂ) := by
             rw [circleIntegral_one_div R hR]
     _ = logarithmicPhase n := rfl
+
+theorem deRhamClass_of_winding_add (R : ℝ) (hR : 0 < R) (m n : ℤ) :
+    (m + n : ℂ) * (∮ z in C((0 : ℂ), R), poleForm z) =
+      (m : ℂ) * (∮ z in C((0 : ℂ), R), poleForm z) +
+        (n : ℂ) * (∮ z in C((0 : ℂ), R), poleForm z) := by
+  rw [circleIntegral_one_div R hR]
+  ring
 
 /-- Wilson-loop phase for an integer winding: integrating the log-derivative form.
 

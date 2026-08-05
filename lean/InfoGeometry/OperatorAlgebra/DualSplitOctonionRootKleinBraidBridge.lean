@@ -172,19 +172,4 @@ theorem g2_artin_length_six (x : Fin 6) :
     g2ArtinLeft x = g2ArtinRight x := by
   fin_cases x <;> rfl
 
-/-- Consolidated finite bridge packet. -/
-theorem dual_split_octonion_root_klein_braid_packet :
-    z2PowerGrade 2 true = false ∧
-      centralSignGrade I2Z = false ∧
-      centralSignGrade negI2Z = false ∧
-      negI2Z * negI2Z = I2Z ∧
-      tripotentZ3 * tripotentZ3 * tripotentZ3 = tripotentZ3 ∧
-      (∀ s : Z3Sector, z3Rotate (z3Rotate (z3Rotate s)) = s) ∧
-      My * Mx * My = Mx ∧
-      Mx * Mx = (1 : Mat8Z) ∧
-      (∀ x : Fin 6, g2ArtinLeft x = g2ArtinRight x) := by
-  exact ⟨square_root_grade_one_lands_even, central_sign_pair_even.1,
-    central_sign_pair_even.2, negI2Z_sq, tripotentZ3_cube, z3Rotate_cube,
-    klein_monodromy_relation, Mx_sq, g2_artin_length_six⟩
-
 end InfoGeometry.OperatorAlgebra.DualSplitOctonionRootKleinBraidBridge

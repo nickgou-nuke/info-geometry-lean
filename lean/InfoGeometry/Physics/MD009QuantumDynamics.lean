@@ -128,24 +128,6 @@ theorem canonicallyScaledQuaternionDerivativeOnQ_eq_one :
     canonicallyScaledQuaternionDerivativeOnQ = 1 := by
   norm_num [canonicallyScaledQuaternionDerivativeOnQ, standardQuaternionDerivativeOnQ_eq_two]
 
-/-- Repaired theorem-safe Chapter 9 finite dynamics packet. -/
-theorem repaired_MD009_quantum_dynamics_packet (c ihbar : ℂ) (hc : IsPauliNormalization c) :
-    (∀ A Ap B Bp : Fin 2,
-      pauliCompletenessCoeff c A Ap B Bp = delta2 A B * delta2 Ap Bp) ∧
-    (∀ A Ap B Bp : Fin 2,
-      matrixCCRCoeff c ihbar A Ap B Bp = ihbar * delta2 A B * delta2 Ap Bp) ∧
-    standardQuaternionDerivativeOnQ = 2 ∧
-    unscaledQuaternionDerivativeOnQ = 4 ∧
-    canonicallyScaledQuaternionDerivativeOnQ = 1 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · intro A Ap B Bp
-    exact normalized_pauli_completeness c hc A Ap B Bp
-  · intro A Ap B Bp
-    exact matrix_ccr_coefficient c ihbar hc A Ap B Bp
-  · exact standardQuaternionDerivativeOnQ_eq_two
-  · exact unscaledQuaternionDerivativeOnQ_eq_four
-  · exact canonicallyScaledQuaternionDerivativeOnQ_eq_one
-
 end InfoGeometry.Physics.MD009QuantumDynamics
 
 end noncomputable section

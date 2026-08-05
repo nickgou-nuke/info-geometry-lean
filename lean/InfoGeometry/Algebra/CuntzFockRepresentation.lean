@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Algebra.CuntzKMSState
 import InfoGeometry.Algebra.CuntzGNSRepresentation
 import InfoGeometry.Algebra.CuntzTensorQuotient
 
@@ -17,7 +16,6 @@ not asserted here.
 -/
 
 open InfoGeometry.Algebra.CuntzTensorQuotient
-open InfoGeometry.Algebra.CuntzKMSState
 open InfoGeometry.Algebra.CuntzGNSRepresentation
 noncomputable section
 
@@ -27,22 +25,16 @@ open InfoGeometry.Algebra.CuntzTensorQuotient
 
 variable {n : ℕ}
 
-theorem diagonalKMSInner_hermitian (n : ℕ) (primes : Fin n → ℕ) (β : ℂ)
-    (hWeightReal : ∀ i, star (kmsWeight n primes β i) = kmsWeight n primes β i)
-    (a b : Fin n → ℂ) :
-    star (CuntzGNSRepresentation.kmsInner n primes β b a) =
-        CuntzGNSRepresentation.kmsInner n primes β a b := by
-  simpa using CuntzGNSRepresentation.kmsInner_hermitian
-    n primes β hWeightReal a b
+theorem nativeKMSInner_hermitian
+    (φ : CuntzAlg n →ₗ[ℂ] ℂ)
+    (hφ : ∀ a b : CuntzAlg n,
+      star (φ (star a * b)) = φ (star b * a))
+    (a b : CuntzAlg n) :
+    star (CuntzGNSRepresentation.kmsInner φ b a) =
+      CuntzGNSRepresentation.kmsInner φ a b :=
+  CuntzGNSRepresentation.kmsInner_hermitian φ hφ a b
 
-/-- Left multiplication by `a` on the Cuntz algebra. -/
-noncomputable def leftMultiplication (n : ℕ) (a : CuntzAlg n) : CuntzAlg n →ₗ[ℂ] CuntzAlg n :=
-  LinearMap.mulLeft ℂ a
-
-/-- Composition of left multiplications is left multiplication by the product. -/
-theorem leftMultiplication_mul (n : ℕ) (a b : CuntzAlg n) (x : CuntzAlg n) :
-    leftMultiplication n a (leftMultiplication n b x) = leftMultiplication n (a * b) x := by
-  simp [leftMultiplication, LinearMap.mulLeft_apply]
+abbrev leftMultiplication := CuntzGNSRepresentation.leftMultiplication
 
 /-! ### Cuntz q-CCR boundary in the left-regular Fock action -/
 

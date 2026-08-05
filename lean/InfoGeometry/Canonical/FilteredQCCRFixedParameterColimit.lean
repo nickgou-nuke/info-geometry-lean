@@ -121,7 +121,7 @@ abbrev qCcrZeroLocusTopologicalColimit
     (qdata : CompatibleQParameter Stage sys)
     (hq : ∀ {i j : I} (hij : i ≤ j),
       sys.map hij (qdata.q i) = qdata.q j) : TopCat :=
-  topologicalDirectColimit (qCcrZeroLocusTopologicalDiagram Stage sys qdata hq)
+  colimit (qCcrZeroLocusTopologicalDiagram Stage sys qdata hq)
 
 def qCcrZeroLocusTopologicalInjection
     (qdata : CompatibleQParameter Stage sys)
@@ -129,7 +129,7 @@ def qCcrZeroLocusTopologicalInjection
       sys.map hij (qdata.q i) = qdata.q j) (i : I) :
     (qCcrZeroLocusTopologicalDiagram Stage sys qdata hq).obj i ⟶
       qCcrZeroLocusTopologicalColimit Stage sys qdata hq :=
-  topologicalDirectInjection
+  colimit.ι
     (qCcrZeroLocusTopologicalDiagram Stage sys qdata hq) i
 
 def qCcrZeroLocusSpecializationTopCatHom
@@ -259,11 +259,11 @@ theorem qCcrZeroLocusSpecializationColimitMap_stage
         qCcrZeroLocusSpecializationColimitMap Stage sys qdata hq =
       qCcrZeroLocusSpecializationTopCatHom Stage sys qdata hq i ≫
         qCcrParameterZeroFiberTopologicalInjection Stage sys i := by
-  change topologicalDirectInjection
+  change colimit.ι
       (qCcrZeroLocusTopologicalDiagram Stage sys qdata hq) i ≫
       colim.map (qCcrZeroLocusSpecializationNatTrans Stage sys qdata hq) =
     (qCcrZeroLocusSpecializationNatTrans Stage sys qdata hq).app i ≫
-      topologicalDirectInjection
+      colimit.ι
         (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i
   exact colimit.ι_map (qCcrZeroLocusSpecializationNatTrans Stage sys qdata hq) i
 
@@ -311,7 +311,7 @@ noncomputable def qCcrZeroLocusSpecializationCoconeMap
     (hq : ∀ {i j : I} (hij : i ≤ j), sys.map hij (qdata.q i) = qdata.q j) :
     qCcrZeroLocusTopologicalColimit Stage sys qdata hq ⟶
       qCcrParameterZeroFiberTopologicalColimit Stage sys :=
-  topologicalDirectDescend
+  colimit.desc
     (qCcrZeroLocusTopologicalDiagram Stage sys qdata hq)
     (qCcrZeroLocusSpecializationCocone Stage sys qdata hq)
 

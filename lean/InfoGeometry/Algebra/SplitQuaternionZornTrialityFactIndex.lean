@@ -38,7 +38,6 @@ open InfoGeometry.Algebra.SplitQuaternionMatrices
 open InfoGeometry.Algebra.Zorn
 open InfoGeometry.Algebra.CPT
 open InfoGeometry.Algebra.AnyonFiniteSpinBraid
-open InfoGeometry.Clifford.SplitCliffordBoundary
 
 /-- Split-quaternion trace-zero determinant readback: the live owner proves the
 `(1,2)` form `y² - x² - z²`. -/
@@ -128,11 +127,6 @@ theorem cl11_euler_reverses_chiral_sheets
     chiralProjectorPlus atom * EulerOperator atom =
       EulerOperator atom * chiralProjectorMinus atom :=
   euler_operator_reverses_chiral_sheets atom
-
-/-- The repo-owned split `Cl(4,4)` boundary packet, including its label-level
-`S₃` generation-rotation component. -/
-def splitCl44BoundaryPacket : SplitCliffordBoundaryPacket :=
-  canonicalSplitCliffordBoundaryPacket
 
 /-- Concrete finite `B₃` spin operators satisfy the Artin braid packet. -/
 theorem finite_b3_spin_artin_packet :

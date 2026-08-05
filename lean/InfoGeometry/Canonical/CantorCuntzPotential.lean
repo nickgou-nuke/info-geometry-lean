@@ -17,6 +17,18 @@ def formal_deriv_potential (lam : ℝ) : ℝ :=
 def confining_force (lam : ℝ) : ℝ :=
   - formal_deriv_potential a lam
 
+theorem background_potential_nonneg
+    (h_a_nonneg : 0 ≤ a) (lam : ℝ) :
+    0 ≤ background_potential a lam := by
+  unfold background_potential
+  exact mul_nonneg h_a_nonneg (sq_nonneg lam)
+
+theorem background_potential_pos_of_pos
+    (h_a_pos : 0 < a) {lam : ℝ} (h_lam : lam ≠ 0) :
+    0 < background_potential a lam := by
+  unfold background_potential
+  exact mul_pos h_a_pos (sq_pos_of_ne_zero h_lam)
+
 /-- If `a ≠ 0`, the negative formal derivative vanishes only at `lam = 0`. -/
 theorem trap_equilibrium (h_a_pos : a ≠ 0) (lam : ℝ) (h_eq : confining_force a lam = 0) :
     lam = 0 := by

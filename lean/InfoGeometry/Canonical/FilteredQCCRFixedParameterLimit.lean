@@ -38,7 +38,7 @@ abbrev qCcrZeroLocusTopologicalLimit
     (qdata : CompatibleQParameter Stage sys)
     (hq : ∀ {i j : I} (hij : i ≤ j),
       sys.map hij (qdata.q i) = qdata.q j) : TopCat :=
-  topologicalInverseLimit
+  limit
     (qCcrZeroLocusTopologicalDiagram Stage sys qdata hq)
 
 /-- The cone obtained by composing fixed-q projections with the stagewise
@@ -51,16 +51,16 @@ def qCcrZeroLocusSpecializationLimitCone
   pt := qCcrZeroLocusTopologicalLimit Stage sys qdata hq
   π :=
     { app := fun i =>
-        topologicalInverseProjection
+        limit.π
             (qCcrZeroLocusTopologicalDiagram Stage sys qdata hq) i ≫
           (qCcrZeroLocusSpecializationNatTrans Stage sys qdata hq).app i
       naturality := by
         intro i j f
         change
-          (𝟙 _ ≫ topologicalInverseProjection
+          (𝟙 _ ≫ limit.π
             (qCcrZeroLocusTopologicalDiagram Stage sys qdata hq) j) ≫
               (qCcrZeroLocusSpecializationNatTrans Stage sys qdata hq).app j =
-            topologicalInverseProjection
+            limit.π
                 (qCcrZeroLocusTopologicalDiagram Stage sys qdata hq) i ≫
               (qCcrZeroLocusSpecializationNatTrans Stage sys qdata hq).app i ≫
               (qCcrParameterZeroFiberTopologicalDiagram Stage sys).map f
@@ -77,7 +77,7 @@ noncomputable def qCcrZeroLocusSpecializationLimitMap
       sys.map hij (qdata.q i) = qdata.q j) :
     qCcrZeroLocusTopologicalLimit Stage sys qdata hq ⟶
       qCcrParameterZeroFiberTopologicalLimit Stage sys :=
-  topologicalInverseLift
+  limit.lift
     (qCcrParameterZeroFiberTopologicalDiagram Stage sys)
     (qCcrZeroLocusSpecializationLimitCone Stage sys qdata hq)
 
@@ -87,7 +87,7 @@ theorem qCcrZeroLocusSpecializationLimitMap_projection
     (hq : ∀ {i j : I} (hij : i ≤ j),
       sys.map hij (qdata.q i) = qdata.q j) (i : I) :
     qCcrZeroLocusSpecializationLimitMap Stage sys qdata hq ≫
-        topologicalInverseProjection
+        limit.π
           (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i =
       (qCcrZeroLocusSpecializationLimitCone Stage sys qdata hq).π.app i := by
   exact topologicalInverseLift_projection
@@ -99,7 +99,7 @@ theorem qCcrZeroLocusSpecializationLimitMap_projection_apply
     (hq : ∀ {i j : I} (hij : i ≤ j),
       sys.map hij (qdata.q i) = qdata.q j) (i : I)
     (x : qCcrZeroLocusTopologicalLimit Stage sys qdata hq) :
-    topologicalInverseProjection
+    limit.π
         (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i
         (qCcrZeroLocusSpecializationLimitMap Stage sys qdata hq x) =
       (qCcrZeroLocusSpecializationLimitCone Stage sys qdata hq).π.app i x := by
@@ -114,7 +114,7 @@ theorem qCcrZeroLocusSpecializationLimitMap_unique
     (f : qCcrZeroLocusTopologicalLimit Stage sys qdata hq ⟶
       qCcrParameterZeroFiberTopologicalLimit Stage sys)
     (h : ∀ i : I,
-      f ≫ topologicalInverseProjection
+      f ≫ limit.π
           (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i =
         (qCcrZeroLocusSpecializationLimitCone Stage sys qdata hq).π.app i) :
     f = qCcrZeroLocusSpecializationLimitMap Stage sys qdata hq := by
@@ -145,14 +145,14 @@ theorem qCcrZeroLocusSpecializationLimitMap_injective
     apply ContinuousMap.ext
     intro u
     have hstage :
-        topologicalInverseProjection
+        limit.π
             (qCcrZeroLocusTopologicalDiagram Stage sys qdata hq) i x =
-          topologicalInverseProjection
+          limit.π
             (qCcrZeroLocusTopologicalDiagram Stage sys qdata hq) i y := by
       apply qCcrZeroLocusSpecializationTopCatHom_isClosedEmbedding
         Stage sys qdata hq i |>.injective
       have hproj := congrArg
-        (fun z => topologicalInverseProjection
+        (fun z => limit.π
           (qCcrParameterZeroFiberTopologicalDiagram Stage sys) i z) hxy
       simpa [qCcrZeroLocusSpecializationLimitMap_projection_apply,
         qCcrZeroLocusSpecializationLimitCone] using hproj
@@ -175,14 +175,14 @@ theorem qCcrZeroLocusParameterLimitMap_projection_apply
     (hq : ∀ {i j : I} (hij : i ≤ j),
       sys.map hij (qdata.q i) = qdata.q j) (i : I)
     (x : qCcrZeroLocusTopologicalLimit Stage sys qdata hq) :
-    topologicalInverseProjection
+    limit.π
         (qCcrParameterTopologicalDiagram Stage sys) i
         (qCcrZeroLocusParameterLimitMap Stage sys qdata hq x) =
       (qCcrParameterZeroFiberToParameterNatTrans Stage sys).app i
         ((qCcrZeroLocusSpecializationLimitCone Stage sys qdata hq).π.app i x) := by
   change
     (qCcrParameterZeroFiberToParameterLimit Stage sys ≫
-      topologicalInverseProjection
+      limit.π
         (qCcrParameterTopologicalDiagram Stage sys) i)
       (qCcrZeroLocusSpecializationLimitMap Stage sys qdata hq x) = _
   rw [qCcrParameterZeroFiberToParameterLimit_projection Stage sys i]

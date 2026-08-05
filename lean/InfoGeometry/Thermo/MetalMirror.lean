@@ -88,16 +88,14 @@ variable
 /-- Actual reflected state as a regular cone point. -/
 def actualPoint
     (U : RegularConePoint c) :
-    RegularConePoint c where
-  op := M.actualFlow U.op
-  mem := M.actual_preserves_cone U.op U.mem
+    RegularConePoint c :=
+  ⟨M.actualFlow U.op, M.actual_preserves_cone U.op U.mem⟩
 
 /-- Ideal reflected state as a regular cone point. -/
 def idealPoint
     (U : RegularConePoint c) :
-    RegularConePoint c where
-  op := M.idealFlow U.op
-  mem := M.ideal_preserves_cone U.op U.mem
+    RegularConePoint c :=
+  ⟨M.idealFlow U.op, M.ideal_preserves_cone U.op U.mem⟩
 
 @[simp]
 theorem actualPoint_op
@@ -323,30 +321,36 @@ end RegularCone
 /-! ### Regular cone and Bregman backend -/
 
 /-- A regular cone/domain on which the thermodynamic potential is valid. -/
-structure RegularConeDatum
-    (Op : Type*) where
-  cone : Set Op
+abbrev RegularConeDatum (Op : Type*) := Set Op
+
+/-- Compatibility accessor for the underlying regular cone/domain. -/
+abbrev RegularConeDatum.cone (Ω : RegularConeDatum Op) : Set Op := Ω
 
 /-- A point of a regular cone. -/
-structure RegularConePoint
+abbrev RegularConePoint
     {Op : Type*}
-    (Ω : RegularConeDatum Op) where
-  op : Op
-  mem : op ∈ Ω.cone
+    (Ω : RegularConeDatum Op) :=
+  {op : Op // op ∈ Ω.cone}
 
 namespace RegularConePoint
 
 variable {Op : Type*} {Ω : RegularConeDatum Op}
 
+/-- Compatibility accessor for the underlying cone point. -/
+abbrev op (U : RegularConePoint Ω) : Op := U.1
+
+/-- Compatibility accessor for cone membership. -/
+abbrev mem (U : RegularConePoint Ω) : U.op ∈ Ω.cone := U.2
+
 /-- Coercion to the underlying operator/state. -/
 instance : CoeOut (RegularConePoint Ω) Op where
-  coe U := U.op
+  coe U := U.1
 
 @[simp]
 theorem coe_mk
     (x : Op)
     (hx : x ∈ Ω.cone) :
-    ((RegularConePoint.mk x hx : RegularConePoint Ω) : Op) = x :=
+    ((⟨x, hx⟩ : RegularConePoint Ω) : Op) = x :=
   rfl
 
 end RegularConePoint
@@ -421,16 +425,14 @@ variable
 /-- Actual reflected state as a regular cone point. -/
 def actualPoint
     (U : RegularConePoint Ω) :
-    RegularConePoint Ω where
-  op := M.actualFlow U.op
-  mem := M.actual_preserves_cone U.op U.mem
+    RegularConePoint Ω :=
+  ⟨M.actualFlow U.op, M.actual_preserves_cone U.op U.mem⟩
 
 /-- Ideal reflected state as a regular cone point. -/
 def idealPoint
     (U : RegularConePoint Ω) :
-    RegularConePoint Ω where
-  op := M.idealUnitary U.op
-  mem := M.ideal_preserves_cone U.op U.mem
+    RegularConePoint Ω :=
+  ⟨M.idealUnitary U.op, M.ideal_preserves_cone U.op U.mem⟩
 
 /-- Native dissipative-branch predicate for the backend-generic channel. -/
 def ActualDissipativeBranch : Prop :=

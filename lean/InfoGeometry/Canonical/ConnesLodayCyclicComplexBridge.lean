@@ -19,26 +19,28 @@ section Differential
 variable {A : Type u} [NonUnitalNonAssocSemiring A]
 
 /-- A noncommutative differential one-form with coefficients in `A`. -/
-structure DiffOneForm (A : Type u) where
-  coeff : A
+abbrev DiffOneForm (A : Type u) := A
 
 namespace DiffOneForm
 
+/-- Compatibility accessor for the native coefficient carrier. -/
+abbrev coeff (df : DiffOneForm A) : A := df
+
 /-- Universal differential operator at a chosen coefficient. -/
 def d (_val deriv : A) : DiffOneForm A :=
-  ⟨deriv⟩
+  deriv
 
 /-- Right multiplication of a one-form coefficient. -/
 def mulRight (df : DiffOneForm A) (b : A) : DiffOneForm A :=
-  ⟨df.coeff * b⟩
+  df.coeff * b
 
 /-- Left multiplication of a one-form coefficient. -/
 def mulLeft (a : A) (df : DiffOneForm A) : DiffOneForm A :=
-  ⟨a * df.coeff⟩
+  a * df.coeff
 
 /-- Addition of one-form coefficients. -/
 def add (df1 df2 : DiffOneForm A) : DiffOneForm A :=
-  ⟨df1.coeff + df2.coeff⟩
+  df1.coeff + df2.coeff
 
 /-- Leibniz rule for the universal algebraic differential interface. -/
 theorem leibniz_rule (a a' b b' : A) :

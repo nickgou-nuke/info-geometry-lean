@@ -27,8 +27,19 @@ variable {V_base : Type*} [AddCommGroup V_base] [Module R V_base]
 A formal equivalence between the 32-dimensional spinor carrier and an exterior
 algebra carrier.
 -/
-structure SpinorExteriorEquiv where
-  equiv : (Fin 32 → R) ≃ₗ[R] ExteriorAlgebra R V_base
+abbrev SpinorExteriorEquiv (R : Type*) [CommRing R]
+    (V_base : Type*) [AddCommGroup V_base] [Module R V_base] :=
+  (Fin 32 → R) ≃ₗ[R] ExteriorAlgebra R V_base
+
+namespace SpinorExteriorEquiv
+
+abbrev equiv {R : Type*} [CommRing R]
+    {V_base : Type*} [AddCommGroup V_base] [Module R V_base]
+    (e : SpinorExteriorEquiv R V_base) :
+    (Fin 32 → R) ≃ₗ[R] ExteriorAlgebra R V_base :=
+  e
+
+end SpinorExteriorEquiv
 
 /--
 The Dirac-Kähler operator transported to the 32-dimensional spinor carrier.

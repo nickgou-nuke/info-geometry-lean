@@ -20,22 +20,21 @@ result, or a superconducting event-horizon theorem.
 namespace InfoGeometry.Physics.FermionicAndreevReflection
 
 /-- Two real coordinates for a finite electron/hole BdG amplitude. -/
-@[ext]
-structure BdGQuasiparticle where
-  /-- Electron-like coordinate. -/
-  e : ℝ
-  /-- Hole-like coordinate. -/
-  h : ℝ
+abbrev BdGQuasiparticle := ℝ × ℝ
 
-instance : Neg BdGQuasiparticle where
-  neg p := ⟨-p.e, -p.h⟩
+namespace BdGQuasiparticle
 
-instance : Zero BdGQuasiparticle where
-  zero := ⟨0, 0⟩
+/-- Electron-like coordinate. -/
+abbrev e (p : BdGQuasiparticle) : ℝ := p.1
+
+/-- Hole-like coordinate. -/
+abbrev h (p : BdGQuasiparticle) : ℝ := p.2
+
+end BdGQuasiparticle
 
 /-- Finite Andreev reflection atom `(e,h) ↦ (-h,e)`. -/
 def andreevReflection (p : BdGQuasiparticle) : BdGQuasiparticle :=
-  ⟨-p.h, p.e⟩
+  (-p.h, p.e)
 
 /-- Euclidean squared amplitude of the finite electron/hole coordinate pair. -/
 def amplitudeNormSq (p : BdGQuasiparticle) : ℝ :=
@@ -60,13 +59,11 @@ theorem andreev_reflection_fermionic (p : BdGQuasiparticle) :
 /-- Applying the finite Andreev reflection four times returns the amplitude. -/
 theorem andreevReflection_fourth (p : BdGQuasiparticle) :
     andreevReflection (andreevReflection (andreevReflection (andreevReflection p))) = p := by
-  ext <;> simp [andreevReflection]
+  ext <;> simp [andreevReflection, BdGQuasiparticle.e, BdGQuasiparticle.h]
 
 /-- The finite Andreev reflection fixes the zero amplitude. -/
 theorem andreevReflection_zero :
     andreevReflection 0 = 0 := by
-  change andreevReflection (⟨0, 0⟩ : BdGQuasiparticle) =
-    (⟨0, 0⟩ : BdGQuasiparticle)
-  ext <;> norm_num [andreevReflection]
+  ext <;> simp [andreevReflection, BdGQuasiparticle.e, BdGQuasiparticle.h]
 
 end InfoGeometry.Physics.FermionicAndreevReflection

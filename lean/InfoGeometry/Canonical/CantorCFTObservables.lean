@@ -58,10 +58,15 @@ Parameters:
   - `temperature`   : the inverse modular parameter (β)
   - `partitionValue` : `Z(τ) = Tr(q^{L₀ - c/24})` evaluated at modular parameter τ
 -/
-structure CFTBoundaryPartition where
-  centralCharge : ℝ
-  temperature : ℝ
-  partitionValue : ℝ
+abbrev CFTBoundaryPartition := ℝ × (ℝ × ℝ)
+
+namespace CFTBoundaryPartition
+
+abbrev centralCharge (P : CFTBoundaryPartition) : ℝ := P.1
+abbrev temperature (P : CFTBoundaryPartition) : ℝ := P.2.1
+abbrev partitionValue (P : CFTBoundaryPartition) : ℝ := P.2.2
+
+end CFTBoundaryPartition
 
 /--
 The KMS state at β = ln 2 gives the partition function normalization.
@@ -73,10 +78,14 @@ with `c` the Sugawara central charge.
 The partition function `Z(β) = Tr(exp(-β H))` at β = ln 2 evaluates
 to the normalization of the tracial state on O₂.
 -/
-def kms_boundary_partition (c : ℝ) : CFTBoundaryPartition where
-  centralCharge := c
-  temperature := Real.log 2
-  partitionValue := 1
+def kms_boundary_partition (c : ℝ) : CFTBoundaryPartition :=
+  (c, (Real.log 2, 1))
+
+theorem kms_boundary_partition_central_charge (c : ℝ) :
+    (kms_boundary_partition c).centralCharge = c := rfl
+
+theorem kms_boundary_partition_temperature (c : ℝ) :
+    (kms_boundary_partition c).temperature = Real.log 2 := rfl
 
 /--
 At the flat Cantor boundary where the Dikin deformation vanishes,

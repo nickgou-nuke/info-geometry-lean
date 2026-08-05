@@ -23,18 +23,17 @@ open InfoGeometry.Spectral.Homotopy.Smash
 
 set_option autoImplicit false
 
-@[simp]
 theorem loopSpace_eq (X : PointedReadout) :
     LoopSpace X = X := by
   rfl
 
-@[simp]
 theorem iteratedLoopSpace_eq (n : ℕ) (X : PointedReadout) :
     IteratedLoopSpace n X = X := by
   induction n with
   | zero => rfl
   | succ n ih =>
-      simp [IteratedLoopSpace, loopSpace_eq, ih]
+      change LoopSpace (IteratedLoopSpace n X) = X
+      rw [ih]
 
 /-
   1. Higher-group style objects

@@ -185,9 +185,8 @@ theorem tailGNSOperator_norm_le
 full GNS operators on its upper tail. -/
 def tailGNSCompatibleOperatorFamily
     {i₀ : I} (a : Stage i₀) :
-    CompatibleOperatorFamily
-      (TailGNSStage Stage sys ω i₀) where
-  op := tailGNSOperator Stage sys ω a
+    CompatibleOperatorFamily (TailGNSStage Stage sys ω i₀) :=
+  fun j => tailGNSOperator Stage sys ω a j
 
 /-- The bounded operator induced by a stage observable on the Hilbert
 completion of its cofinal GNS tail. -/

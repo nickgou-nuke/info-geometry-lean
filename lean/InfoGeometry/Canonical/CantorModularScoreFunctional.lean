@@ -178,6 +178,12 @@ theorem uniformMean_smul {n : Nat} (c : ℝ) (f : BinaryWord n → ℝ) :
   rw [← mul_sum]
   ring
 
+theorem uniformMean_sub {n : Nat} (f g : BinaryWord n → ℝ) :
+    uniformMean (fun w => f w - g w) = uniformMean f - uniformMean g := by
+  unfold uniformMean
+  rw [sum_sub_distrib]
+  ring
+
 /-- The finite centered score is additive. -/
 theorem scoreAt_add {n : Nat} (w : BinaryWord n) (f g : BinaryWord n → ℝ) :
     scoreAt w (fun v => f v + g v) = scoreAt w f + scoreAt w g := by
@@ -188,6 +194,12 @@ theorem scoreAt_add {n : Nat} (w : BinaryWord n) (f g : BinaryWord n → ℝ) :
 theorem scoreAt_smul {n : Nat} (w : BinaryWord n) (c : ℝ) (f : BinaryWord n → ℝ) :
     scoreAt w (fun v => c * f v) = c * scoreAt w f := by
   simp [scoreAt, uniformMean_smul]
+  ring
+
+theorem scoreAt_sub {n : Nat} (w : BinaryWord n)
+    (f g : BinaryWord n → ℝ) :
+    scoreAt w (fun v => f v - g v) = scoreAt w f - scoreAt w g := by
+  simp [scoreAt, uniformMean_sub]
   ring
 
 /-- The finite centered score as a linear map on level-`n` observables. -/
@@ -207,6 +219,10 @@ theorem scoreLinear_apply {n : Nat} (w : BinaryWord n) (f : BinaryWord n → ℝ
 theorem scoreLinear_one {n : Nat} (w : BinaryWord n) :
     scoreLinear w (fun _ : BinaryWord n => (1 : ℝ)) = 0 := by
   exact scoreAt_one w
+
+theorem scoreLinear_zero {n : Nat} (w : BinaryWord n) :
+    scoreLinear w (0 : BinaryWord n → ℝ) = 0 := by
+  simp [scoreLinear, scoreAt, uniformMean]
 
 end
 

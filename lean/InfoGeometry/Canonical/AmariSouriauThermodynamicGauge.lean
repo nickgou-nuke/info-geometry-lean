@@ -212,23 +212,29 @@ structure DuallyFlatGradientFlow (Θ V : Type*) [AddCommGroup V] where
   θStar : Θ
   /-- Target/equilibrium dual coordinate. -/
   ηStar : V
-  /-- Natural-gradient vector field in primal coordinates. -/
-  thetaFlow : Θ → V
-  /-- Induced flow in dual/expectation coordinates. -/
-  etaFlow : Θ → V
   /-- Bregman driving potential. -/
   drivingBregman : Θ → ℝ
   /-- The target dual coordinate is the gradient coordinate of `θStar`. -/
   etaStar_eq_grad : ηStar = info.gradΨ θStar
-  /-- Supplied primal natural-gradient law. -/
-  thetaFlow_eq : ∀ θ : Θ, thetaFlow θ = -(info.gradΨ θ - ηStar)
-  /-- Supplied dual-coordinate linear relaxation. -/
-  etaFlow_linear : ∀ θ : Θ, etaFlow θ = -(info.gradΨ θ - ηStar)
 
 namespace DuallyFlatGradientFlow
 
 variable {Θ V : Type*} [AddCommGroup V]
 variable (F : DuallyFlatGradientFlow Θ V)
+
+/-- Native primal natural-gradient vector field. -/
+def thetaFlow (θ : Θ) : V := -(F.info.gradΨ θ - F.ηStar)
+
+/-- Native dual-coordinate relaxation field. -/
+def etaFlow (θ : Θ) : V := -(F.info.gradΨ θ - F.ηStar)
+
+/-- Defining equation for the primal flow. -/
+theorem thetaFlow_eq (θ : Θ) :
+    F.thetaFlow θ = -(F.info.gradΨ θ - F.ηStar) := rfl
+
+/-- Defining equation for the dual-coordinate flow. -/
+theorem etaFlow_linear (θ : Θ) :
+    F.etaFlow θ = -(F.info.gradΨ θ - F.ηStar) := rfl
 
 /-- The target expectation coordinate is the target gradient of the log-partition potential. -/
 theorem target_dual_coord_eq_grad : F.ηStar = F.info.gradΨ F.θStar :=

@@ -20,11 +20,6 @@ open InfoGeometry.Canonical.UHFBoundaryExactSequence
 open InfoGeometry.Canonical.UHFColimitRepresentationBridge
 open InfoGeometry.Canonical.OmegaBoundaryRepresentation
 
-/-- A normalized state on the Cantor boundary operator algebra. -/
-structure BoundaryState where
-  val : CantorOp →ₗ[ℂ] ℂ
-  normalized : val 1 = 1
-
 /-- The constant vacuum function `ξ₀ = 1` on the Cantor boundary. -/
 def vacuumState : InfoGeometry.Canonical.UHFInductiveColimitBoundary.CantorBoundary → ℂ :=
   fun _ => 1
@@ -55,14 +50,14 @@ theorem evalKMS_one : evalKMS_linear 1 = 1 := by
   dsimp [evalKMS_linear, evalKMS, vacuumState, wL, wR]
   ring
 
-/-- The symmetric KMS boundary state. -/
-def KMSState : BoundaryState where
-  val := evalKMS_linear
-  normalized := evalKMS_one
+def KMSState : CantorOp →ₗ[ℂ] ℂ := evalKMS_linear
+
+theorem KMSState_normalized : KMSState 1 = 1 :=
+  evalKMS_one
 
 /-- The KMS state halves the expectation value of the left subtree projector. -/
 theorem KMSState_S_L :
-    KMSState.val (S_L_linear * star_S_L_linear) = (2 : ℂ)⁻¹ := by
+    KMSState (S_L_linear * star_S_L_linear) = (2 : ℂ)⁻¹ := by
   dsimp [KMSState, evalKMS_linear, evalKMS]
   have h_L_wL : S_L_linear (star_S_L_linear vacuumState) wL = 1 := by
     dsimp [S_L_linear, star_S_L_linear, S_L_op, star_S_L_op, wL, vacuumState]
@@ -73,7 +68,7 @@ theorem KMSState_S_L :
 
 /-- The KMS state halves the expectation value of the right subtree projector. -/
 theorem KMSState_S_R :
-    KMSState.val (S_R_linear * star_S_R_linear) = (2 : ℂ)⁻¹ := by
+    KMSState (S_R_linear * star_S_R_linear) = (2 : ℂ)⁻¹ := by
   dsimp [KMSState, evalKMS_linear, evalKMS]
   have h_R_wL : S_R_linear (star_S_R_linear vacuumState) wL = 0 := by
     dsimp [S_R_linear, star_S_R_linear, S_R_op, star_S_R_op, wL, vacuumState]

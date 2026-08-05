@@ -17,16 +17,14 @@ open InfoGeometry.Spectral.Homotopy.Suspension
 open InfoGeometry.Spectral.Homotopy.Smash
 
 /-- Finite pointed wedge readout, represented by a sum carrier. -/
-def WedgeSum (X Y : PointedReadout) : PointedReadout where
-  carrier := X.carrier ⊕ Y.carrier
-  base := Sum.inl X.base
+def WedgeSum (X Y : PointedReadout) : PointedReadout :=
+  Pointed.mk (X.carrier ⊕ Y.carrier) (Sum.inl X.base)
 
 infixr:65 " ⋁ " => WedgeSum
 
 /-- Finite pointed join readout, represented here by a product carrier. -/
-def Join (X Y : PointedReadout) : PointedReadout where
-  carrier := X.carrier × Y.carrier
-  base := (X.base, Y.base)
+def Join (X Y : PointedReadout) : PointedReadout :=
+  Pointed.mk (X.carrier × Y.carrier) (X.base, Y.base)
 
 infixr:70 " ★ " => Join
 

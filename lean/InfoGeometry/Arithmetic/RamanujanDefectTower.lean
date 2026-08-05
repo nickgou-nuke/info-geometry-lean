@@ -36,16 +36,27 @@ Three-channel factorization data for a Dirichlet mode with logarithmic weight
 `log n`: critical-line ground envelope, scale-normal dissipation, and tangential
 phase.
 -/
-structure DirichletChannelSplit (n : ℕ) (z : CenteredChart) where
-  ground : ℝ
-  dissipation : ℝ
-  phase : ℂ
+abbrev DirichletChannelSplit (n : ℕ) (z : CenteredChart) :=
+  ℝ × ℝ × ℂ
+
+namespace DirichletChannelSplit
+
+abbrev ground {n : ℕ} {z : CenteredChart}
+    (C : DirichletChannelSplit n z) : ℝ := C.1
+
+abbrev dissipation {n : ℕ} {z : CenteredChart}
+    (C : DirichletChannelSplit n z) : ℝ := C.2.1
+
+abbrev phase {n : ℕ} {z : CenteredChart}
+    (C : DirichletChannelSplit n z) : ℂ := C.2.2
+
+end DirichletChannelSplit
 
 /-- The canonical three-channel split, expressed through the existing owner functions. -/
-def dirichletChannelSplit (n : ℕ) (z : CenteredChart) : DirichletChannelSplit n z where
-  ground := Real.exp (-(1 / 2 : ℝ) * Real.log n)
-  dissipation := Real.exp (-z.u * Real.log n)
-  phase := Complex.exp (-(z.v * Real.log n : ℝ) * Complex.I)
+def dirichletChannelSplit (n : ℕ) (z : CenteredChart) : DirichletChannelSplit n z :=
+  (Real.exp (-(1 / 2 : ℝ) * Real.log n),
+    Real.exp (-z.u * Real.log n),
+    Complex.exp (-(z.v * Real.log n : ℝ) * Complex.I))
 
 /-- The three channels multiply back to the repository-owned centered Dirichlet mode. -/
 theorem dirichletChannelSplit_product (n : ℕ) (z : CenteredChart) :

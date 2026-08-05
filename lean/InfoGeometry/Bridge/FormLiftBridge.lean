@@ -155,8 +155,17 @@ def finsuppOperatorOneForm
     Point → Tangent → Value :=
   fun Z V => leftAction (F Z) V
 
-/-- The Hestenes form calibration using Finsupp forms. -/
-structure FinsuppHestenesFormCalibration (Point Tangent Value : Type*) where
-  formOf : (Point → Value) → (Point → Tangent → Value)
+/-- The Hestenes form calibration using Finsupp forms.
+
+This declaration carries only a function, so the native function type is the
+owner. The old `.formOf` projection is retained as a compatibility accessor.
+-/
+abbrev FinsuppHestenesFormCalibration (Point Tangent Value : Type*) :=
+  (Point → Value) → (Point → Tangent → Value)
+
+abbrev FinsuppHestenesFormCalibration.formOf
+    {Point Tangent Value : Type*}
+    (C : FinsuppHestenesFormCalibration Point Tangent Value) :
+    (Point → Value) → (Point → Tangent → Value) := C
 
 end InfoGeometry.Bridge.FormLiftBridge

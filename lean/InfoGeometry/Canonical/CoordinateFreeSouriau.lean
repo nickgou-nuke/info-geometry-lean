@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.RingTheory.Derivation.Basic
 
 /-!
 # InfoGeometry.Canonical.CoordinateFreeSouriau
@@ -19,29 +20,30 @@ section Core
 variable {M T : Type*}
 
 /-- Coordinate-free derivation on a commutative scalar algebra. -/
-structure ScalarDerivation (F : Type*) [CommRing F] where
-  toFun : F → F
-  map_add' : ∀ a b : F, toFun (a + b) = toFun a + toFun b
-  map_mul' : ∀ a b : F, toFun (a * b) = a * toFun b + b * toFun a
+abbrev ScalarDerivation (F : Type*) [CommRing F] :=
+  Derivation ℤ F F
 
 namespace ScalarDerivation
 
 variable {F : Type*} [CommRing F]
 
-instance : CoeFun (ScalarDerivation F) (fun _ => F → F) where
-  coe D := D.toFun
-
 @[simp] theorem map_add (D : ScalarDerivation F) (a b : F) :
-    D (a + b) = D a + D b := D.map_add' a b
+    D (a + b) = D a + D b := D.toLinearMap.map_add a b
 
 @[simp] theorem map_mul (D : ScalarDerivation F) (a b : F) :
-    D (a * b) = a * D b + b * D a := D.map_mul' a b
+    D (a * b) = a * D b + b * D a := by
+  simpa [smul_eq_mul] using D.leibniz' a b
 
 end ScalarDerivation
 
 /-- Coordinate-free metric seed on a model tangent fiber `T`. -/
-structure CoordinateFreeMetric where
-  inner : T → T → ℝ
+abbrev CoordinateFreeMetric := T → T → ℝ
+
+namespace CoordinateFreeMetric
+
+abbrev inner (g : CoordinateFreeMetric (T := T)) : T → T → ℝ := g
+
+end CoordinateFreeMetric
 
 /--
 Coordinate-free Souriau data:

@@ -37,8 +37,14 @@ open InfoGeometry.Arithmetic.PrimeSurprisalNormalization
 /-! ## 1. Log-volume normalization -/
 
 /-- A profile carrying raw multiplicative volume data. -/
-structure VolumeProfile (α : Type*) where
-  volume : α → ℝ
+abbrev VolumeProfile (α : Type*) := α → ℝ
+
+namespace VolumeProfile
+
+/-- Compatibility accessor for the native volume profile function. -/
+abbrev volume (P : VolumeProfile α) : α → ℝ := P
+
+end VolumeProfile
 
 /-- Energy is the logarithm of the volume. -/
 def energy {α : Type*} (P : VolumeProfile α) (x : α) : ℝ :=

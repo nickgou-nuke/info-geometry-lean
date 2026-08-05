@@ -514,11 +514,7 @@ theorem complementaryProjection_fixes_drazinNullCycle
 end ModuleEndDrazinResidue
 
 /-- A real pairing between homology-side vectors and cohomology witnesses. -/
-@[socket_debt_tag, rep_depth transport]
-structure RealPairingSocket (Cochain : Type u) where
-  pairing : H₂ → Cochain → ℝ
-  pairing_sub_left :
-    ∀ x y φ, pairing (x - y) φ = pairing x φ - pairing y φ
+abbrev RealPairingSocket (Cochain : Type u) := RealPairing H₂ Cochain
 
 namespace RealPairingSocket
 
@@ -587,7 +583,7 @@ theorem pairing_eq_of_homologyEquivalent
     rw [← hz]
     exact hφ z
   have hsub : P.pairing (x - y) φ = P.pairing x φ - P.pairing y φ :=
-    P.pairing_sub_left x y φ
+    P.sub_left x y φ
   rw [hboundary] at hsub
   exact sub_eq_zero.mp hsub.symm
 

@@ -2,8 +2,6 @@ import Mathlib.Tactic
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge
 import InfoGeometry.Canonical.PrimeGasPartitions
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.CantorCliffordMellinPrimeGasBridge
@@ -54,29 +52,6 @@ abbrev BinaryProfile (k : ℕ) : Type :=
 def occ (b : Bool) : ℝ :=
   if b then 1 else 0
 
-/--
-Address layer: a binary profile is simultaneously a finite Cantor address and
-a Clifford/Fock occupation word.
-
-The file does not construct the full Cantor or Clifford representation.  It
-records the common address socket.
--/
-structure CantorCliffordAddressPacket where
-  /-- Nominal address length. -/
-  k : ℕ
-  /-- Binary profile carrier. -/
-  Profile : Type*
-  /-- Cantor cylinder carrier. -/
-  CantorCylinder : Type*
-  /-- Clifford/Fock mode carrier. -/
-  CliffordFockMode : Type*
-  /-- Concrete identification of the address carrier with binary profiles. -/
-  profileEquiv : Profile ≃ BinaryProfile k
-  /-- Address-to-cylinder map. -/
-  addressToCylinder : Profile → CantorCylinder
-  /-- Address-to-Fock-mode map. -/
-  addressToFockMode : Profile → CliffordFockMode
-
 /-! ## 2. Finite prime profile and energy -/
 
 /-- Finite prime-scale packet.  `p i` is the prime assigned to bit position `i`. -/
@@ -97,6 +72,21 @@ def profileEnergy
     (fun i : Fin k =>
       occ (ε i) * Real.log ((P.p i : ℕ) : ℝ))
 
+theorem occ_nonnegative (b : Bool) : 0 ≤ occ b := by
+  cases b <;> simp [occ]
+
+theorem profileEnergy_nonnegative
+    {k : ℕ}
+    (P : FinitePrimeProfile k)
+    (ε : BinaryProfile k) :
+    0 ≤ profileEnergy P ε := by
+  unfold profileEnergy
+  apply Finset.sum_nonneg
+  intro i hi
+  apply mul_nonneg (occ_nonnegative (ε i))
+  apply Real.log_nonneg
+  exact_mod_cast (P.prime_law i).one_le
+
 /-- Squarefree integer attached to a binary prime profile: `n(epsilon) = prod p_i^epsilon_i`. -/
 def profileNat
     {k : ℕ}
@@ -106,6 +96,34 @@ def profileNat
     (fun i : Fin k =>
       if ε i then P.p i else 1)
 
+theorem profileNat_cast
+    {k : ℕ}
+    (P : FinitePrimeProfile k)
+    (ε : BinaryProfile k) :
+    (profileNat P ε : ℝ) =
+      Finset.univ.prod (fun i : Fin k =>
+        if ε i then (P.p i : ℝ) else 1) := by
+  unfold profileNat
+  simp
+
+theorem profileEnergy_eq_log_profileNat
+    {k : ℕ}
+    (P : FinitePrimeProfile k)
+    (ε : BinaryProfile k) :
+    profileEnergy P ε = Real.log (profileNat P ε : ℝ) := by
+  unfold profileEnergy
+  rw [profileNat_cast P ε, Real.log_prod]
+  · refine Finset.sum_congr rfl ?_
+    intro i hi
+    unfold occ
+    by_cases h : ε i
+    · simp [h]
+    · simp [h]
+  · intro i hi
+    by_cases h : ε i
+    · simp [h, Nat.ne_of_gt (P.prime_law i).pos]
+    · simp [h]
+
 /-- Finite Mellin kernel `exp(-beta * E(epsilon))`. -/
 def mellinKernel
     {k : ℕ}
@@ -114,6 +132,15 @@ def mellinKernel
     (ε : BinaryProfile k) : ℝ :=
   Real.exp (-β * profileEnergy P ε)
 
+theorem mellinKernel_pos
+    {k : ℕ}
+    (P : FinitePrimeProfile k)
+    (β : ℝ)
+    (ε : BinaryProfile k) :
+    0 < mellinKernel P β ε := by
+  unfold mellinKernel
+  exact Real.exp_pos _
+
 /--
 Witness that the finite Mellin kernel equals the squarefree integer weight.
 
@@ -121,43 +148,13 @@ The concrete theorem is already owned upstream by the finite prime-bit lattice
 lane.  This structure lets the composed bridge use the equality without
 reproving it here.
 -/
-structure MellinProfileLaw
+def MellinProfileLaw
     {k : ℕ}
     (P : FinitePrimeProfile k)
-    (β : ℝ) where
-  /-- Integer-weight readout for a profile. -/
-  integerWeight : BinaryProfile k → ℝ
-  /-- Finite Mellin law for each binary profile. -/
-  law :
-    ∀ ε : BinaryProfile k,
-      mellinKernel P β ε = integerWeight ε
-
-/-- Prime-bit Mellin packet wrapping the existing `FinitePrimeBitLattice`. -/
-structure PrimeBitMellinPacket where
-  /-- Existing finite prime-bit lattice owner data. -/
-  lattice : FinitePrimeBitLattice
-  /-- Selected binary prime occupation profile. -/
-  profile : lattice.Profile
-
-namespace PrimeBitMellinPacket
-
-/-- Arithmetic integer readout of the selected finite prime-bit profile. -/
-abbrev integerReadout (B : PrimeBitMellinPacket) : ℕ :=
-  B.lattice.bitInteger B.profile
-
-@[simp] theorem integerReadout_eq (B : PrimeBitMellinPacket) :
-    B.integerReadout = B.lattice.bitInteger B.profile :=
-  rfl
-
-/-- Logarithmic energy readout of the selected finite prime-bit profile. -/
-abbrev energyReadout (B : PrimeBitMellinPacket) : ℝ :=
-  B.lattice.bitEnergy B.profile
-
-@[simp] theorem energyReadout_eq (B : PrimeBitMellinPacket) :
-    B.energyReadout = B.lattice.bitEnergy B.profile :=
-  rfl
-
-end PrimeBitMellinPacket
+    (β : ℝ)
+    (integerWeight : BinaryProfile k → ℝ) : Prop :=
+  ∀ ε : BinaryProfile k,
+    mellinKernel P β ε = integerWeight ε
 
 /-! ## 3. Finite prime-gas partition channels -/
 
@@ -192,66 +189,47 @@ noncomputable def paritySupertracePartition
     (fun i : Fin k =>
       1 - Real.rpow ((P.p i : ℕ) : ℝ) (-β))
 
-/--
-Finite zeta-channel separation.
-
-This records the three finite channels by equality.  Interpretive labels are
-witness fields, not theorem claims about infinite Euler products.
--/
-structure FiniteZetaChannelSeparation
-    (k : ℕ)
+/-- Finite channel separation as a direct proposition over three readouts. -/
+def FiniteZetaChannelSeparation
+    {k : ℕ}
     (P : FinitePrimeProfile k)
-    (β : ℝ) where
-  /-- Bosonic finite channel. -/
-  bosonChannel : ℝ
-  /-- Ordinary fermionic finite channel. -/
-  fermionTraceChannel : ℝ
-  /-- Parity supertrace finite channel. -/
-  paritySupertraceChannel : ℝ
-  /-- Bosonic channel equality to the finite reciprocal product. -/
-  bosonChannel_eq :
-    bosonChannel = bosonicPartition P β
-  /-- Ordinary fermionic channel equality to the finite positive square-free product. -/
-  fermionTraceChannel_eq :
-    fermionTraceChannel = fermionicTracePartition P β
-  /-- Parity supertrace equality to the finite inverse-zeta product. -/
-  paritySupertraceChannel_eq :
-    paritySupertraceChannel = paritySupertracePartition P β
+    (β bosonChannel fermionTraceChannel paritySupertraceChannel : ℝ) : Prop :=
+  bosonChannel = bosonicPartition P β ∧
+  fermionTraceChannel = fermionicTracePartition P β ∧
+  paritySupertraceChannel = paritySupertracePartition P β
 
-/-- Bosonic finite channel is tied by equality to the finite boson product. -/
 theorem bosonChannel_eq_bosonicPartition
     {k : ℕ}
     {P : FinitePrimeProfile k}
-    {β : ℝ}
-    (Z : FiniteZetaChannelSeparation k P β) :
-    Z.bosonChannel = bosonicPartition P β :=
-  Z.bosonChannel_eq
+    {β bosonChannel fermionTraceChannel paritySupertraceChannel : ℝ}
+    (h : FiniteZetaChannelSeparation P β bosonChannel
+      fermionTraceChannel paritySupertraceChannel) :
+    bosonChannel = bosonicPartition P β :=
+  h.1
 
-/-- Ordinary fermionic trace channel is tied by equality to the finite fermion product. -/
 theorem fermionTraceChannel_eq_fermionicTracePartition
     {k : ℕ}
     {P : FinitePrimeProfile k}
-    {β : ℝ}
-    (Z : FiniteZetaChannelSeparation k P β) :
-    Z.fermionTraceChannel = fermionicTracePartition P β :=
-  Z.fermionTraceChannel_eq
+    {β bosonChannel fermionTraceChannel paritySupertraceChannel : ℝ}
+    (h : FiniteZetaChannelSeparation P β bosonChannel
+      fermionTraceChannel paritySupertraceChannel) :
+    fermionTraceChannel = fermionicTracePartition P β :=
+  h.2.1
 
-/-- Parity supertrace channel is tied by equality to the finite inverse-zeta product. -/
 theorem paritySupertraceChannel_eq_paritySupertracePartition
     {k : ℕ}
     {P : FinitePrimeProfile k}
-    {β : ℝ}
-    (Z : FiniteZetaChannelSeparation k P β) :
-    Z.paritySupertraceChannel = paritySupertracePartition P β :=
-  Z.paritySupertraceChannel_eq
+    {β bosonChannel fermionTraceChannel paritySupertraceChannel : ℝ}
+    (h : FiniteZetaChannelSeparation P β bosonChannel
+      fermionTraceChannel paritySupertraceChannel) :
+    paritySupertraceChannel = paritySupertracePartition P β :=
+  h.2.2
 
 /-! ## 4. Modular / Mellin shift -/
 
-/-- Discrete Mellin shift `beta -> beta + s`. -/
 def mellinShift (β s : ℝ) : ℝ :=
   β + s
 
-/-! The finite Mellin shift law is a direct predicate. -/
 def MellinShiftLaw
     {k : ℕ}
     (P : FinitePrimeProfile k)
@@ -270,122 +248,16 @@ theorem mellinShiftLaw_proved
       (-β * profileEnergy P ε) + (-s * profileEnergy P ε) by ring]
   rw [Real.exp_add]
 
-/-! ## 5. Analytic zeta and zero sockets -/
+/-! ## 5. Analytic continuation predicates -/
 
-/--
-Analytic zeta-channel socket.
+def IsAnalyticContinuation
+    (L continuation : ℂ → ℂ) (domain : Set ℂ) : Prop :=
+  IsOpen domain ∧
+  (∀ z, z ∈ domain → continuation z = L z) ∧
+  DifferentiableOn ℂ continuation domain
 
-This is explicitly witness-gated. It may be supplied by an Euler product,
-completed L-function, Bost--Connes system, or another analytic package.
-
-It is not a theorem derived from the finite profile identity.
--/
-structure ZetaChannelWitnessPacket where
-  /-- Mellin/zeta parameter. -/
-  beta : ℝ
-  /-- Zeta-channel value. -/
-  zeta : ℝ
-  /-- Zeta value at `2 beta` for the ordinary fermion ratio channel. -/
-  zetaTwoBeta : ℝ
-  /-- Inverse-zeta channel value. -/
-  inverseZeta : ℝ
-  /-- Bosonic trace readout. -/
-  bosonTrace : ℝ
-  /-- Ordinary fermionic trace readout. -/
-  fermionTrace : ℝ
-  /-- Parity supertrace readout. -/
-  parityTrace : ℝ
-  /-- Bosonic trace equals the zeta channel. -/
-  boson_eq_zeta :
-    bosonTrace = zeta
-  /-- Ordinary fermion trace equals the zeta-ratio channel. -/
-  fermion_eq_zeta_ratio :
-    fermionTrace = zeta / zetaTwoBeta
-  /-- Parity supertrace equals the inverse-zeta channel. -/
-  parity_eq_inverse_zeta :
-    parityTrace = inverseZeta
-
-/-- Zero-location socket recording a spectral/analytic zero statement only as supplied data. -/
-@[socket_debt_tag]
-structure AnalyticContinuationData (L : ℂ → ℂ) where
-  domain : Set ℂ
-  domain_open : IsOpen domain
-  continuation : ℂ → ℂ
-  continuation_eq : ∀ z, z ∈ domain → continuation z = L z
-  holomorphic : DifferentiableOn ℂ continuation domain
-
-structure ZetaZeroSocket where
-  zetaFunction : ℂ → ℂ
-  analyticContinuation : AnalyticContinuationData zetaFunction
-  zeroLocation : Set ℂ
-  zeroLocation_spec :
-    ∀ z, z ∈ zeroLocation ↔ analyticContinuation.continuation z = 0
-
-/-! ## 6. Full composed bridge -/
-
-/--
-Complete Cantor/Clifford/Mellin/prime-gas bridge.
-
-This composes the finite binary profile corridor into zeta-channel separation,
-without proving RH or infinite Euler-product facts.
--/
-structure CantorCliffordMellinPrimeGasBridge where
-  /-- Finite profile length. -/
-  k : ℕ
-  /-- Binary/Cantor/Clifford address socket. -/
-  address : CantorCliffordAddressPacket
-  /-- Concrete finite prime profile. -/
-  primes : FinitePrimeProfile k
-  /-- Inverse temperature / Mellin parameter. -/
-  β : ℝ
-  /-- Finite trace-channel separation. -/
-  zetaChannels :
-    FiniteZetaChannelSeparation k primes β
-  /-- Optional Mellin law tying profile energy to integer weights. -/
-  mellinLaw :
-    MellinProfileLaw primes β
-  /-- Existing finite prime-bit Mellin packet. -/
-  primeBitMellin :
-    PrimeBitMellinPacket
-  /-- Optional analytic channel witness. -/
-  analytic :
-    Option ZetaChannelWitnessPacket
-  /-- Optional zero-location socket. -/
-  zeroSocket :
-    Option ZetaZeroSocket
-
-/-- The bosonic channel is the finite reciprocal-product lane. -/
-@[bridge_target_tag]
-theorem bridge_bosonChannel_eq
-    (B : CantorCliffordMellinPrimeGasBridge) :
-    B.zetaChannels.bosonChannel =
-      bosonicPartition B.primes B.β :=
-  B.zetaChannels.bosonChannel_eq
-
-/-- The ordinary fermion channel is the finite positive square-free product. -/
-@[bridge_target_tag]
-theorem bridge_fermionTraceChannel_eq
-    (B : CantorCliffordMellinPrimeGasBridge) :
-    B.zetaChannels.fermionTraceChannel =
-      fermionicTracePartition B.primes B.β :=
-  B.zetaChannels.fermionTraceChannel_eq
-
-/-- The parity supertrace channel is the finite inverse-zeta product. -/
-@[bridge_target_tag]
-theorem bridge_paritySupertraceChannel_eq
-    (B : CantorCliffordMellinPrimeGasBridge) :
-    B.zetaChannels.paritySupertraceChannel =
-      paritySupertracePartition B.primes B.β :=
-  B.zetaChannels.paritySupertraceChannel_eq
-
-/-- Owner target for the composed Cantor/Clifford/Mellin/prime-gas bridge. -/
-abbrev CantorCliffordMellinPrimeGasTarget :=
-  CantorCliffordMellinPrimeGasBridge
-
-/-- Constructor for the composed bridge target. -/
-def constructCantorCliffordMellinPrimeGasTarget
-    (P : CantorCliffordMellinPrimeGasBridge) :
-    CantorCliffordMellinPrimeGasTarget :=
-  P
+def IsZeroSet
+    (continuation : ℂ → ℂ) (zeroLocation : Set ℂ) : Prop :=
+  ∀ z, z ∈ zeroLocation ↔ continuation z = 0
 
 end InfoGeometry.Canonical.CantorCliffordMellinPrimeGasBridge

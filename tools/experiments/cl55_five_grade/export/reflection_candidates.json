@@ -1,0 +1,121 @@
+{
+  "candidate_count": 10,
+  "candidates": [
+    {
+      "label": "gamma0",
+      "raw_square": 1,
+      "spinor_adjoint_normalizes_witt_lie_closure": true,
+      "twisted_adjoint_action": {
+        "determinant": -1,
+        "orthogonal": true,
+        "square_is_identity": true
+      }
+    },
+    {
+      "label": "gamma1",
+      "raw_square": 1,
+      "spinor_adjoint_normalizes_witt_lie_closure": true,
+      "twisted_adjoint_action": {
+        "determinant": -1,
+        "orthogonal": true,
+        "square_is_identity": true
+      }
+    },
+    {
+      "label": "gamma2",
+      "raw_square": 1,
+      "spinor_adjoint_normalizes_witt_lie_closure": true,
+      "twisted_adjoint_action": {
+        "determinant": -1,
+        "orthogonal": true,
+        "square_is_identity": true
+      }
+    },
+    {
+      "label": "gamma3",
+      "raw_square": 1,
+      "spinor_adjoint_normalizes_witt_lie_closure": true,
+      "twisted_adjoint_action": {
+        "determinant": -1,
+        "orthogonal": true,
+        "square_is_identity": true
+      }
+    },
+    {
+      "label": "gamma4",
+      "raw_square": 1,
+      "spinor_adjoint_normalizes_witt_lie_closure": true,
+      "twisted_adjoint_action": {
+        "determinant": -1,
+        "orthogonal": true,
+        "square_is_identity": true
+      }
+    },
+    {
+      "label": "gamma5",
+      "raw_square": -1,
+      "spinor_adjoint_normalizes_witt_lie_closure": true,
+      "twisted_adjoint_action": {
+        "determinant": -1,
+        "orthogonal": true,
+        "square_is_identity": true
+      }
+    },
+    {
+      "label": "gamma6",
+      "raw_square": -1,
+      "spinor_adjoint_normalizes_witt_lie_closure": true,
+      "twisted_adjoint_action": {
+        "determinant": -1,
+        "orthogonal": true,
+        "square_is_identity": true
+      }
+    },
+    {
+      "label": "gamma7",
+      "raw_square": -1,
+      "spinor_adjoint_normalizes_witt_lie_closure": true,
+      "twisted_adjoint_action": {
+        "determinant": -1,
+        "orthogonal": true,
+        "square_is_identity": true
+      }
+    },
+    {
+      "label": "gamma8",
+      "raw_square": -1,
+      "spinor_adjoint_normalizes_witt_lie_closure": true,
+      "twisted_adjoint_action": {
+        "determinant": -1,
+        "orthogonal": true,
+        "square_is_identity": true
+      }
+    },
+    {
+      "label": "gamma9",
+      "raw_square": -1,
+      "spinor_adjoint_normalizes_witt_lie_closure": true,
+      "twisted_adjoint_action": {
+        "determinant": -1,
+        "orthogonal": true,
+        "square_is_identity": true
+      }
+    }
+  ],
+  "carrier_dimension": 32,
+  "clifford_generator_count": 10,
+  "clifford_signature": [
+    5,
+    5
+  ],
+  "coefficient_field": "QQ",
+  "global_sheet_reflection": {
+    "exchanges_creation_annihilation": true,
+    "raw_square": 1
+  },
+  "pin_cover_target": "Pin(5,5) -> O(5,5)",
+  "quadratic_dimension": 10,
+  "scope": "explicit_reflection_subsystem_only",
+  "weyl_group_identified": false,
+  "witt_lie_dimension": 55
+}

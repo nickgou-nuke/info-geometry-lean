@@ -59,6 +59,11 @@ import InfoGeometry.Krein.Grading
 import InfoGeometry.Krein.Superalgebra
 import InfoGeometry.Krein.Superphysics
 import InfoGeometry.Krein.Modular
+import InfoGeometry.Krein.KreinModularBilinearReadout
+import InfoGeometry.Krein.KreinModularCartanCompatibility
+import InfoGeometry.Krein.KreinModularConjugatedOperatorBridge
+import InfoGeometry.Krein.KreinModularConjugatedCartanBridge
+import InfoGeometry.Krein.KreinModularSpinorBilinearBridge
 import InfoGeometry.Krein.Representation
 import InfoGeometry.Krein.State
 import InfoGeometry.Krein.Dilation

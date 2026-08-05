@@ -64,7 +64,7 @@ def entropyProduction
 @[rep_depth krein]
 def toSecondLawCertificate
     (F : DrazinThermoFrame Op) :
-    RegularSupportSecondLawCertificate Op where
+    RegularSupportSecondLawData Op where
   state := F.compressedState
   flow := F.flow
   support := F.support

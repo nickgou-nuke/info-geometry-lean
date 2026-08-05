@@ -59,9 +59,6 @@ variable (V : VirasoroAlgebraDatum L)
 /-- The central charge is central. -/
 alias central_commutes := VirasoroAlgebraDatum.central_commutes_hyp
 
-/-- Read back the supplied Virasoro bracket formula. -/
-alias bracket_genL := VirasoroAlgebraDatum.virasoro_bracket
-
 end VirasoroAlgebraDatum
 
 /-! ## 2. Global conformal anomaly coefficient -/
@@ -126,9 +123,6 @@ variable
     {L : Type*} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
 variable (S : SuperVirasoroAlgebraDatum L)
 
-/-- Read back the supplied odd/odd supercharge bracket formula. -/
-alias bracket_genG := SuperVirasoroAlgebraDatum.super_bracket
-
 end SuperVirasoroAlgebraDatum
 
 /-! ## 4. Central charge bridge -/
@@ -171,10 +165,6 @@ variable
 
 variable
     (B : VirasoroCentralChargeBridge L State Defect)
-
-/-- The macroscopic defect equals the central charge readout. -/
-alias defect_eq_central_charge_readout :=
-  VirasoroCentralChargeBridge.defect_is_central_charge
 
 end VirasoroCentralChargeBridge
 

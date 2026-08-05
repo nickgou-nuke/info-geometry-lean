@@ -5,6 +5,9 @@ import InfoGeometry.Analysis.CliffordWaveletDonohoStark
 import InfoGeometry.Analysis.D23HurwitzCliffordFilterBank
 import InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 import InfoGeometry.Analysis.LaplaceMellinScaleShapeTransform
+import InfoGeometry.Analysis.MellinWaveletConformalMapping
+import InfoGeometry.Analysis.MellinInversePositiveAxis
+import InfoGeometry.Analysis.WaveletAdmissibilityCondition
 import InfoGeometry.Analysis.MellinZetaScaling
 import InfoGeometry.Analysis.FiniteSpectralMellinTaylor
 import InfoGeometry.Analysis.FiniteSpectralHeatMellin
@@ -15,6 +18,14 @@ import InfoGeometry.Analysis.LaplaceContour
 import InfoGeometry.Analysis.QuaternionNonSeparableWaveletOptimization
 import InfoGeometry.Analysis.BregmanAnalyticBound
 import InfoGeometry.Analysis.JaynesRelativeStates
+import InfoGeometry.Analysis.BinaryCuntzEntropy
+import InfoGeometry.Analysis.GramPathDeformationEntropy
+import InfoGeometry.Analysis.FiniteMatrixJacobiDerivative
+import InfoGeometry.Analysis.NoncommutativeJacobiLiouvilleFlow
+import InfoGeometry.Analysis.NoncommutativeHessianCongruenceFlow
+import InfoGeometry.Analysis.LieExponentialTraceDeterminant
+import InfoGeometry.Analysis.GramLieFlowCompression
+import InfoGeometry.Analysis.MongeAmpereLieCongruence
 import InfoGeometry.Analysis.KatzSarnakDensity
 import InfoGeometry.Analysis.MathieuZetaSeries
 import InfoGeometry.Analysis.ComplexBSpline

@@ -25,7 +25,7 @@ def N : M2R :=
      0, 0]
 
 /-- Local annihilation operator. -/
-def a : M2R := N
+abbrev a : M2R := N
 
 /-- Local creation operator. -/
 def aDag : M2R :=

@@ -30,17 +30,14 @@ open scoped Matrix
 
 /-- Real Minkowski four-vector in coordinates `(t,x,y,z)`. -/
 @[rep_depth operator]
-structure Minkowski4 where
-  /-- Time/energy component. -/
-  t : ℝ
-  /-- Spatial `x` component. -/
-  x : ℝ
-  /-- Spatial `y` component. -/
-  y : ℝ
-  /-- Spatial `z` component. -/
-  z : ℝ
+abbrev Minkowski4 := Fin 4 → ℝ
 
 namespace Minkowski4
+
+abbrev t (v : Minkowski4) : ℝ := v 0
+abbrev x (v : Minkowski4) : ℝ := v 1
+abbrev y (v : Minkowski4) : ℝ := v 2
+abbrev z (v : Minkowski4) : ℝ := v 3
 
 /-- Minkowski quadratic form with signature `(+, -, -, -)`. -/
 def q
@@ -130,16 +127,21 @@ A model supplies a spinor action on Pauli matrices, intended as `X ↦ L X L†`
 This file does not prove the `SL(2,ℂ)` double-cover theorem.
 -/
 @[rep_depth operator]
-structure PauliSpinorTransport where
-  /-- Transport/action on Pauli matrices. -/
-  transform : PauliMat → PauliMat
-
-  /-- Determinant preservation under the supplied transport. -/
-  preservesQuadratic :
+def PauliSpinorTransport :=
+  {transform : PauliMat → PauliMat //
     ∀ v : Minkowski4,
-      Matrix.det (transform (pauliMatrix v)) = Matrix.det (pauliMatrix v)
+      Matrix.det (transform (pauliMatrix v)) = Matrix.det (pauliMatrix v)}
 
 namespace PauliSpinorTransport
+
+/-- Transport/action on Pauli matrices. -/
+abbrev transform (T : PauliSpinorTransport) : PauliMat → PauliMat := T.1
+
+/-- Determinant preservation under the supplied transport. -/
+theorem preservesQuadratic
+    (T : PauliSpinorTransport) (v : Minkowski4) :
+    Matrix.det (T.transform (pauliMatrix v)) = Matrix.det (pauliMatrix v) :=
+  T.2 v
 
 variable (T : PauliSpinorTransport)
 
@@ -162,18 +164,20 @@ This finite interface owns only the readout map.  A model-specific law requires
 actual bivector operations and is not represented by an opaque proposition.
 -/
 @[rep_depth operator]
-structure SpinBivectorReadout
-    (Spinor Bivector : Type*) where
-  /-- Spin plane/bivector readout. -/
-  spinPlane : Spinor → Bivector
-  /-- Model-specific relation defining a valid spin-plane readout. -/
-  IsSpinPlaneReadout : Spinor → Bivector → Prop
-  /-- Every selected spin plane satisfies that relation. -/
-  spinPlane_spec : ∀ psi, IsSpinPlaneReadout psi (spinPlane psi)
+abbrev SpinBivectorReadout
+    (Spinor Bivector : Type*) :=
+  {p : (Spinor → Bivector) × (Spinor → Bivector → Prop) //
+    ∀ psi, p.2 psi (p.1 psi)}
 
 namespace SpinBivectorReadout
 
 variable {Spinor Bivector : Type*}
+
+abbrev spinPlane (S : SpinBivectorReadout Spinor Bivector) : Spinor → Bivector := S.1.1
+abbrev IsSpinPlaneReadout (S : SpinBivectorReadout Spinor Bivector) :
+    Spinor → Bivector → Prop := S.1.2
+abbrev spinPlane_spec (S : SpinBivectorReadout Spinor Bivector) :
+    ∀ psi, S.IsSpinPlaneReadout psi (S.spinPlane psi) := S.2
 
 theorem readout_holds
     (S : SpinBivectorReadout Spinor Bivector) (psi : Spinor) :

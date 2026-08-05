@@ -77,24 +77,4 @@ theorem fibonacciPathCount_initial :
     fibonacciPathCount 0 = 1 ∧ fibonacciPathCount 1 = 1 := by
   simp [fibonacciPathCount]
 
-/-- Consolidated finite Fibonacci boundary packet. -/
-theorem fibonacci_boundary_packet :
-    fibonacciAdjacency 0 0 = 0 ∧
-      fibonacciAdjacency 0 1 = 1 ∧
-      fibonacciAdjacency 1 0 = 1 ∧
-      fibonacciAdjacency 1 1 = 1 ∧
-      fibonacciPathCount 0 = 1 ∧
-      fibonacciPathCount 1 = 1 ∧
-      ∀ n : ℕ,
-        fibonacciPathCount (n + 2) =
-          fibonacciPathCount (n + 1) + fibonacciPathCount n := by
-  exact ⟨
-    fibonacciAdjacency_entries.1,
-    fibonacciAdjacency_entries.2.1,
-    fibonacciAdjacency_entries.2.2.1,
-    fibonacciAdjacency_entries.2.2.2,
-    fibonacciPathCount_initial.1,
-    fibonacciPathCount_initial.2,
-    fibonacciPathCount_recursion⟩
-
 end InfoGeometry.OperatorAlgebra.FibonacciCantorCuntzBoundary

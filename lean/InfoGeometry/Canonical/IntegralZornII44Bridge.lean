@@ -28,10 +28,10 @@ open CanonicalZornProjectiveTKKBridge
 /-- Integral Zorn coordinates `(a,u,v,b)` with `u,v : Fin 3 → ℤ`. -/
 abbrev IntegralZorn := ℤ × (Fin 3 → ℤ) × ((Fin 3 → ℤ) × ℤ)
 
-def IntegralZorn.a (X : IntegralZorn) : ℤ := X.1
-def IntegralZorn.u (X : IntegralZorn) : Fin 3 → ℤ := X.2.1
-def IntegralZorn.v (X : IntegralZorn) : Fin 3 → ℤ := X.2.2.1
-def IntegralZorn.b (X : IntegralZorn) : ℤ := X.2.2.2
+abbrev IntegralZorn.a (X : IntegralZorn) : ℤ := X.1
+abbrev IntegralZorn.u (X : IntegralZorn) : Fin 3 → ℤ := X.2.1
+abbrev IntegralZorn.v (X : IntegralZorn) : Fin 3 → ℤ := X.2.2.1
+abbrev IntegralZorn.b (X : IntegralZorn) : ℤ := X.2.2.2
 
 /-- Four integral hyperbolic coordinate pairs. -/
 abbrev II44Coordinates := (Fin 4 → ℤ) × (Fin 4 → ℤ)

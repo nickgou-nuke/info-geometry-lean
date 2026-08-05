@@ -17,6 +17,13 @@ open InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 def realBinaryTerm (w : InfiniteBinaryWordSpace) (n : ℕ) : ℝ :=
   (if w n then 1 else 0) * (1 / 2 : ℝ) ^ (n + 1)
 
+theorem realBinaryTerm_complement_add
+    (w : InfiniteBinaryWordSpace) (n : ℕ) :
+    realBinaryTerm (fun k => !w k) n + realBinaryTerm w n =
+      (1 / 2 : ℝ) ^ (n + 1) := by
+  dsimp [realBinaryTerm]
+  cases h : w n <;> simp [h]
+
 theorem realBinaryTerm_summable (w : InfiniteBinaryWordSpace) :
     Summable (realBinaryTerm w) := by
   apply Summable.of_norm_bounded (f := realBinaryTerm w)
@@ -75,5 +82,49 @@ theorem realBinaryReadout_le_one (w : InfiniteBinaryWordSpace) :
 theorem realBinaryReadout_mem_unitInterval (w : InfiniteBinaryWordSpace) :
     realBinaryReadout w ∈ Set.Icc (0 : ℝ) 1 := by
   exact ⟨realBinaryReadout_nonnegative w, realBinaryReadout_le_one w⟩
+
+theorem realBinaryReadout_complement (w : InfiniteBinaryWordSpace) :
+    realBinaryReadout (fun n => !w n) + realBinaryReadout w = 1 := by
+  have hcomp : Summable (realBinaryTerm (fun n => !w n)) :=
+    realBinaryTerm_summable (fun n => !w n)
+  have hw : Summable (realBinaryTerm w) := realBinaryTerm_summable w
+  have hgeom : Summable (fun n : ℕ => (1 / 2 : ℝ) ^ n) := by
+    exact summable_geometric_of_norm_lt_one (by norm_num)
+  have hshift : Summable (fun n : ℕ => (1 / 2 : ℝ) ^ (n + 1)) := by
+    simpa [Function.comp_def] using
+      hgeom.comp_injective (i := fun n : ℕ => n + 1)
+        (by intro a b h; exact Nat.add_right_cancel h)
+  have hsum : (∑' n : ℕ, (1 / 2 : ℝ) ^ (n + 1)) = 1 := by
+    have hterm : (fun n : ℕ => (1 / 2 : ℝ) ^ (n + 1)) =
+        (fun n => (1 / 2 : ℝ) * (1 / 2 : ℝ) ^ n) := by
+      funext n
+      rw [pow_add]
+      ring
+    letI : T2Space ℝ := TopologicalSpace.t2Space_of_metrizableSpace
+    rw [hterm, tsum_mul_left]
+    have hseries : (∑' n : ℕ, (1 / 2 : ℝ) ^ n) = 2 := by
+      convert (tsum_geometric_of_norm_lt_one (ξ := (1 / 2 : ℝ)) (by norm_num)) using 1 <;>
+        norm_num
+    rw [hseries]
+    norm_num
+  letI : T2Space ℝ := TopologicalSpace.t2Space_of_metrizableSpace
+  calc
+    realBinaryReadout (fun n => !w n) + realBinaryReadout w =
+        ∑' n : ℕ, (realBinaryTerm (fun n => !w n) n + realBinaryTerm w n) := by
+          change
+            (∑' n : ℕ, realBinaryTerm (fun n => !w n) n) +
+                ∑' n : ℕ, realBinaryTerm w n = _
+          exact (hcomp.tsum_add hw).symm
+    _ = ∑' n : ℕ, (1 / 2 : ℝ) ^ (n + 1) := by
+      apply tsum_congr
+      intro n
+      dsimp [realBinaryTerm]
+      cases h : w n <;> simp [h]
+    _ = 1 := hsum
+
+theorem realBinaryReadout_complement_eq_one_sub
+    (w : InfiniteBinaryWordSpace) :
+    realBinaryReadout (fun n => !w n) = 1 - realBinaryReadout w := by
+  linarith [realBinaryReadout_complement w]
 
 end InfoGeometry.Canonical.CantorBoundaryReadoutBounds

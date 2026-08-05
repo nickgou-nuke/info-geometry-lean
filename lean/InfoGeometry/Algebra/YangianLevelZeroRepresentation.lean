@@ -17,8 +17,14 @@ variable [AddCommMonoid V] [Module R V]
 variable [AddCommMonoid W] [Module R W]
 
 /-- A level-zero action of `A` on `V` by `R`-linear endomorphisms. -/
-structure YangianLevelZeroRepresentation where
-  rho : A →ₐ[R] Module.End R V
+abbrev YangianLevelZeroRepresentation := A →ₐ[R] Module.End R V
+
+namespace YangianLevelZeroRepresentation
+
+def rho (ρ : YangianLevelZeroRepresentation (R := R) (A := A) (V := V)) :
+    A →ₐ[R] Module.End R V := ρ
+
+end YangianLevelZeroRepresentation
 
 @[simp] theorem levelZero_map_zero
     (ρ : YangianLevelZeroRepresentation (R := R) (A := A) (V := V)) :

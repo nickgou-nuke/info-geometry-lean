@@ -97,6 +97,41 @@ theorem leibniz_entropy_H_eq_metric
   unfold leibniz
   rw [h_casimir_right, zero_add]
 
+/-- Right-Casimir specialization pointwise in the second argument. -/
+theorem leibniz_entropy_eq_metric_right
+    (h_casimir_right : ∀ x, M.poisson M.Entropy x = 0) :
+    ∀ x, M.leibniz M.Entropy x = M.metric M.Entropy x := by
+  intro x
+  unfold leibniz
+  rw [h_casimir_right x, zero_add]
+
+/-- Packaged finite metriplectic core summary: bracket antisymmetry,
+kernel identities, and the two first/second-law style readbacks. -/
+theorem metriplectic_summary
+    (h_poisson_diag : M.poisson M.Hamiltonian M.Hamiltonian = 0) :
+    (∀ x, M.metric x M.Hamiltonian = 0) ∧
+    (∀ x, M.metric M.Hamiltonian x = 0) ∧
+    (∀ x, M.poisson x M.Entropy = 0) ∧
+    (∀ x, M.poisson M.Entropy x = 0) ∧
+    M.leibniz M.Hamiltonian M.Hamiltonian = 0 ∧
+    (∀ x, M.leibniz M.Entropy x = M.metric M.Entropy x) := by
+  constructor
+  · intro x
+    exact M.metric_H_zero x
+  · constructor
+    · intro x
+      exact M.metric_H_zero_right x
+    · constructor
+      · intro x
+        exact M.poisson_entropy_zero x
+      · constructor
+        · intro x
+          exact M.poisson_entropy_zero_right x
+        · constructor
+          · exact M.leibniz_H_H_eq_zero h_poisson_diag
+          · intro x
+            exact M.leibniz_entropy_eq_metric_right M.poisson_entropy_zero_right x
+
 end MetriplecticSystem
 
 /--

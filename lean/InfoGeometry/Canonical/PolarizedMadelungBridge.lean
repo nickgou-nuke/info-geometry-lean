@@ -310,10 +310,12 @@ open InfoGeometry.Canonical.StateDependentTransport
 State-dependent generator field on the doubled carrier.
 This keeps the generator operatorial and avoids scalar diagonal proxies.
 -/
-structure StateGeneratorField where
-  generator : H₂ → EndH
+abbrev StateGeneratorField := H₂ → EndH
 
 namespace StateGeneratorField
+
+/-- Compatibility accessor for the native operator-valued field. -/
+abbrev generator (G : StateGeneratorField (E := E)) : H₂ → EndH := G
 
 noncomputable def toStateModularDatum
     (G : StateGeneratorField (E := E)) : StateModularDatum E :=

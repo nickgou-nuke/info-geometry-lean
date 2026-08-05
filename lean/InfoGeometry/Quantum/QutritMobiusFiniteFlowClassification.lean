@@ -233,26 +233,70 @@ def hyperbolicFinite (t : ℝ) : InfoGeometry.SL2C :=
   ⟨hyperbolicMatrixFlow t, by
     simpa [hyperbolicMatrixFlow] using qutritMobiusMatrixFlow_det 2 (t : ℂ)⟩
 
+private theorem ellipticGenerator_diag_zero :
+    complexifyRealMat2 !![0, -1; 1, 0] 0 0 = 0 := by
+  norm_num [complexifyRealMat2, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Matrix.head_cons, Matrix.tail_cons]
+
+private theorem ellipticGenerator_diag_one :
+    complexifyRealMat2 !![0, -1; 1, 0] 1 1 = 0 := by
+  norm_num [complexifyRealMat2, Matrix.cons_val_zero, Matrix.cons_val_one,
+    Matrix.head_cons, Matrix.tail_cons]
+
+private theorem parabolicGenerator_trace_zero :
+    complexifyRealMat2 !![0, 1; 0, 0] 0 0 = 0 ∧
+      complexifyRealMat2 !![0, 1; 0, 0] 1 1 = 0 := by
+  constructor <;> norm_num [complexifyRealMat2, Matrix.cons_val_zero,
+    Matrix.cons_val_one, Matrix.head_cons, Matrix.tail_cons]
+
+private theorem parabolicGenerator_offdiag_re_ne_zero :
+    (complexifyRealMat2 (qutritMobiusOperator 1) 0 1).re ≠ 0 := by
+  norm_num [complexifyRealMat2, qutritMobiusOperator, qutritOpSquareClass,
+    InfoGeometry.Clifford.OpSquareTriadBridge.opSquareMatrix,
+    InfoGeometry.Algebra.HypercomplexTriad.N]
+
+private theorem hyperbolicGenerator_diag_zero :
+    complexifyRealMat2 !![1, 0; 0, -1] 0 1 = 0 ∧
+      complexifyRealMat2 !![1, 0; 0, -1] 1 0 = 0 := by
+  constructor <;> norm_num [complexifyRealMat2, Matrix.cons_val_zero,
+    Matrix.cons_val_one, Matrix.head_cons, Matrix.tail_cons]
+
 theorem ellipticFinite_traceSq (t : ℝ) :
     InfoGeometry.traceSq (ellipticFinite t) = (4 * Real.cos t ^ 2 : ℝ) := by
   change Matrix.trace (ellipticMatrixFlow t) ^ 2 = _
   rw [ellipticMatrixFlow_closedForm, Matrix.trace_add, Matrix.trace_smul,
     Matrix.trace_smul]
-  simp [Matrix.trace_one, Matrix.trace_fin_two, qutritMobiusGenerator, sl2C.matrix]
+  norm_num [Matrix.trace_one, Matrix.trace_fin_two, qutritMobiusGenerator,
+    sl2C.matrix, qutritMobiusOperator, qutritOpSquareClass,
+    Clifford.OpSquareTriadBridge.opSquareMatrix,
+    InfoGeometry.Algebra.HypercomplexTriad.I, complexifyRealMat2,
+    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+    Matrix.tail_cons, ellipticGenerator_diag_zero,
+    ellipticGenerator_diag_one]
   ring
 
 theorem parabolicFinite_traceSq (t : ℝ) :
     InfoGeometry.traceSq (parabolicFinite t) = 4 := by
   change Matrix.trace (parabolicMatrixFlow t) ^ 2 = _
   rw [parabolicMatrixFlow_closedForm, Matrix.trace_add, Matrix.trace_smul]
-  norm_num [Matrix.trace_one, Matrix.trace_fin_two, qutritMobiusGenerator, sl2C.matrix]
+  norm_num [Matrix.trace_one, Matrix.trace_fin_two, qutritMobiusGenerator,
+    sl2C.matrix, qutritMobiusOperator, qutritOpSquareClass,
+    Clifford.OpSquareTriadBridge.opSquareMatrix,
+    InfoGeometry.Algebra.HypercomplexTriad.N, complexifyRealMat2,
+    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+    Matrix.tail_cons, parabolicGenerator_trace_zero]
 
 theorem hyperbolicFinite_traceSq (t : ℝ) :
     InfoGeometry.traceSq (hyperbolicFinite t) = (4 * Real.cosh t ^ 2 : ℝ) := by
   change Matrix.trace (hyperbolicMatrixFlow t) ^ 2 = _
   rw [hyperbolicMatrixFlow_closedForm, Matrix.trace_add, Matrix.trace_smul,
     Matrix.trace_smul]
-  simp [Matrix.trace_one, Matrix.trace_fin_two, qutritMobiusGenerator, sl2C.matrix]
+  norm_num [Matrix.trace_one, Matrix.trace_fin_two, qutritMobiusGenerator,
+    sl2C.matrix, qutritMobiusOperator, qutritOpSquareClass,
+    Clifford.OpSquareTriadBridge.opSquareMatrix,
+    InfoGeometry.Algebra.HypercomplexTriad.E, complexifyRealMat2,
+    Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
+    Matrix.tail_cons, hyperbolicGenerator_diag_zero]
   ring
 
 /-- Nontrivial rotations are elliptic in the canonical finite trace-square classifier. -/
@@ -270,14 +314,16 @@ theorem parabolicFinite_isParabolic {t : ℝ} (ht : t ≠ 0) :
     have h01 := congr_fun (congr_fun h (0 : Fin 2)) (1 : Fin 2)
     change parabolicMatrixFlow t 0 1 = (1 : M2C) 0 1 at h01
     rw [parabolicMatrixFlow_closedForm] at h01
-    simp [qutritMobiusGenerator, sl2C.matrix] at h01
-    exact ht h01
+    have hreal := congrArg Complex.re h01
+    norm_num [qutritMobiusGenerator, sl2C.matrix, sl2C.ofCoords] at hreal
+    exact ht hreal
   · intro h
     have h01 := congr_fun (congr_fun h (0 : Fin 2)) (1 : Fin 2)
     change parabolicMatrixFlow t 0 1 = (-1 : M2C) 0 1 at h01
     rw [parabolicMatrixFlow_closedForm] at h01
-    simp [qutritMobiusGenerator, sl2C.matrix] at h01
-    exact ht h01
+    have hreal := congrArg Complex.re h01
+    norm_num [qutritMobiusGenerator, sl2C.matrix, sl2C.ofCoords] at hreal
+    exact ht hreal
 
 /-- Every nonzero split-scaling flow is hyperbolic. -/
 theorem hyperbolicFinite_isHyperbolic {t : ℝ} (ht : t ≠ 0) :
@@ -309,7 +355,8 @@ theorem ellipticTransform_eval_some (t : ℝ) (z : ℂ) :
     else some ((ellipticMatrixFlow t 0 0 * z + ellipticMatrixFlow t 0 1) /
       (ellipticMatrixFlow t 1 0 * z + ellipticMatrixFlow t 1 1))) = _
   rw [ellipticMatrixFlow_closedForm]
-  simp [qutritMobiusGenerator, sl2C.matrix, sub_eq_add_neg]
+  simp [qutritMobiusGenerator, sl2C.matrix, sl2C.ofCoords, sl2C.a, sl2C.b,
+    sl2C.c, sub_eq_add_neg]
 
 /-- Exact affine translation generated by the parabolic Möbius operator. -/
 theorem parabolicTransform_eval_some (t : ℝ) (z : ℂ) :
@@ -319,7 +366,8 @@ theorem parabolicTransform_eval_some (t : ℝ) (z : ℂ) :
     else some ((parabolicMatrixFlow t 0 0 * z + parabolicMatrixFlow t 0 1) /
       (parabolicMatrixFlow t 1 0 * z + parabolicMatrixFlow t 1 1))) = _
   rw [parabolicMatrixFlow_closedForm]
-  simp [qutritMobiusGenerator, sl2C.matrix]
+  simp [qutritMobiusGenerator, sl2C.matrix, sl2C.ofCoords, sl2C.a, sl2C.b,
+    sl2C.c]
 
 private theorem cosh_sub_sinh_ne_zero (t : ℝ) : Real.cosh t - Real.sinh t ≠ 0 := by
   rw [Real.cosh_sub_sinh]
@@ -339,12 +387,14 @@ theorem hyperbolicTransform_eval_some (t : ℝ) (z : ℂ) :
       hyperbolicMatrixFlow t 1 0 * z + hyperbolicMatrixFlow t 1 1 =
         Complex.cosh (t : ℂ) - Complex.sinh (t : ℂ) := by
     rw [hyperbolicMatrixFlow_closedForm]
-    simp [qutritMobiusGenerator, sl2C.matrix, sub_eq_add_neg]
+    simp [qutritMobiusGenerator, sl2C.matrix, sl2C.ofCoords, sl2C.a, sl2C.b,
+      sl2C.c, sub_eq_add_neg]
   have hnumExpr :
       hyperbolicMatrixFlow t 0 0 * z + hyperbolicMatrixFlow t 0 1 =
         (Complex.cosh (t : ℂ) + Complex.sinh (t : ℂ)) * z := by
     rw [hyperbolicMatrixFlow_closedForm]
-    simp [qutritMobiusGenerator, sl2C.matrix]
+    simp [qutritMobiusGenerator, sl2C.matrix, sl2C.ofCoords, sl2C.a, sl2C.b,
+      sl2C.c]
   rw [hdenExpr, if_neg hden, hnumExpr]
   congr 1
   rw [Complex.cosh_add_sinh, Complex.cosh_sub_sinh]

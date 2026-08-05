@@ -33,9 +33,19 @@ theorem single_mode_partition_mu_zero (p_neg_beta : ℝ) :
   The Modular Hamiltonian generator H for the Bost-Connes KMS state.
   H|n> = ln(n)|n>
 -/
-structure ModularHamiltonian where
-  eigenvalue : ℝ → ℝ
-  is_log : ∀ n > 0, eigenvalue n = Real.log n
+abbrev ModularHamiltonian :=
+  { f : ℝ → ℝ // ∀ n > 0, f n = Real.log n }
+
+namespace ModularHamiltonian
+
+abbrev eigenvalue (H : ModularHamiltonian) : ℝ → ℝ :=
+  H.1
+
+theorem is_log (H : ModularHamiltonian) :
+    ∀ n > 0, H.eigenvalue n = Real.log n :=
+  H.2
+
+end ModularHamiltonian
 
 /-- The trace partition of the total Hamiltonian recovers a supplied zeta-product
 readout.  This is an explicit finite equality socket, not a vacuous placeholder

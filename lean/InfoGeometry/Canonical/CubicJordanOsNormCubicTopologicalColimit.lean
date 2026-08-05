@@ -18,10 +18,18 @@ open InfoGeometry.Algebra.CubicJordanOs.AlbertMatrix
 
 variable {J : Type} [Category J]
 
-structure NormCubicCompatible
-    (S : ContinuousAlbertTransitionSystem J) : Prop where
-  map_preserves : ∀ {i j : J} (f : i ⟶ j) (x : AlbertMatrix),
+abbrev NormCubicCompatible
+    (S : ContinuousAlbertTransitionSystem J) : Prop :=
+  ∀ {i j : J} (f : i ⟶ j) (x : AlbertMatrix),
     normCubic (S.map f x) = normCubic x
+
+namespace NormCubicCompatible
+
+theorem map_preserves
+    (hS : NormCubicCompatible S) {i j : J} (f : i ⟶ j) (x : AlbertMatrix) :
+    normCubic (S.map f x) = normCubic x := hS f x
+
+end NormCubicCompatible
 
 noncomputable def normCubicCocone
     (S : ContinuousAlbertTransitionSystem J)
@@ -31,7 +39,7 @@ noncomputable def normCubicCocone
   continuous_ι := fun _ => continuous_normCubic
   ι_comm := by
     intro i j f x
-    exact hS.map_preserves f x
+    exact NormCubicCompatible.map_preserves hS f x
 
 noncomputable def normCubicColimitReadout
     (S : ContinuousAlbertTransitionSystem J)

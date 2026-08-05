@@ -29,16 +29,16 @@ namespace InfoGeometry.Canonical.InductiveColimitBridge
 universe u v
 
 /-- A concrete sequential directed system with a cocone into a proposed limit. -/
-structure SequentialColimitSystem where
+structure SequentialStageSystem where
   Stage : ℕ → Type u
   Limit : Type v
   bond : ∀ n : ℕ, Stage n → Stage (n + 1)
   toLimit : ∀ n : ℕ, Stage n → Limit
   cone_comm : ∀ (n : ℕ) (x : Stage n), toLimit (n + 1) (bond n x) = toLimit n x
 
-namespace SequentialColimitSystem
+namespace SequentialStageSystem
 
-variable (S : SequentialColimitSystem)
+variable (S : SequentialStageSystem)
 
 /-- Iterated transition map from stage `n` to stage `n+m`. -/
 def bondSeq (n : ℕ) : ∀ m : ℕ, S.Stage n → S.Stage (n + m)
@@ -110,7 +110,7 @@ theorem transported_limit_point_eq
     S.toLimit (n + m) (S.bondSeq n m x) = S.toLimit n x :=
   S.toLimit_bondSeq n m x
 
-end SequentialColimitSystem
+end SequentialStageSystem
 
 /-! ## Proof families and theorem colimits -/
 
@@ -118,12 +118,12 @@ end SequentialColimitSystem
 A proof family over a sequential directed system: every finite stage has a
 property, and the property is preserved by the bonding maps.
 -/
-abbrev CompatibleProofFamily (S : SequentialColimitSystem) :=
+abbrev CompatibleProofFamily (S : SequentialStageSystem) :=
   { P : (∀ n : ℕ, S.Stage n → Prop) // S.CompatibleProperty P }
 
 namespace CompatibleProofFamily
 
-variable {S : SequentialColimitSystem} (F : CompatibleProofFamily S)
+variable {S : SequentialStageSystem} (F : CompatibleProofFamily S)
 
 /-- The proof family transports along any finite number of bonding maps. -/
 theorem transport (n m : ℕ) (x : S.Stage n) (hx : F.1 n x) :
@@ -148,8 +148,8 @@ to an infinite-generator colimit.  `LeftStage` may model the `q`-CCR side and
 and compatible finite equivalences.
 -/
 structure CompatibleFiniteEquivalenceTower where
-  Left : SequentialColimitSystem
-  Right : SequentialColimitSystem
+  Left : SequentialStageSystem
+  Right : SequentialStageSystem
   equivAt : ∀ n : ℕ, Left.Stage n → Right.Stage n → Prop
   equiv_compat : ∀ (n : ℕ) (x : Left.Stage n) (y : Right.Stage n),
     equivAt n x y → equivAt (n + 1) (Left.bond n x) (Right.bond n y)

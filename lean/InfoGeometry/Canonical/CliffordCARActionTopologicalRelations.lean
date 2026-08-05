@@ -207,7 +207,7 @@ def upperAnnihilationActionNatTrans (m : ℕ) :
       annihilationActionTopCat, TopCat.ofHom, hindex] using h.symm
 
 abbrev upperCARTopologicalColimit (m : ℕ) : TopCat :=
-  topologicalDirectColimit (upperCARTopologicalDiagram m)
+  colimit (upperCARTopologicalDiagram m)
 
 noncomputable def upperCreationActionColimit (m : ℕ) :
     upperCARTopologicalColimit m ⟶ upperCARTopologicalColimit m :=
@@ -219,7 +219,7 @@ noncomputable def upperAnnihilationActionColimit (m : ℕ) :
 
 def upperCARTopologicalInjection (m : ℕ) (j : UpperNatIndex m) :
     (upperCARTopologicalDiagram m).obj j ⟶ upperCARTopologicalColimit m :=
-  topologicalDirectInjection (upperCARTopologicalDiagram m) j
+  colimit.ι (upperCARTopologicalDiagram m) j
 
 theorem upperCreationActionColimit_stage (m : ℕ) (j : UpperNatIndex m) :
     upperCARTopologicalInjection m j ≫ upperCreationActionColimit m =
@@ -240,8 +240,10 @@ theorem upperCreationActionColimit_stage_apply
         (jwCreation j.1 (Fin.castLE j.2 ⟨m, Nat.lt_succ_self m⟩) * A) := by
   have h := upperCreationActionColimit_stage m j
   have hv := congrArg (fun f => f A) h
-  simpa [upperCreationActionColimit, upperCARTopologicalInjection,
-    upperCreationActionNatTrans, creationActionTopCat, TopCat.ofHom] using hv
+  change upperCreationActionColimit m (upperCARTopologicalInjection m j A) =
+    upperCARTopologicalInjection m j
+      (jwCreation j.1 (Fin.castLE j.2 ⟨m, Nat.lt_succ_self m⟩) * A) at hv
+  exact hv
 
 theorem upperAnnihilationActionColimit_stage_apply
     (m : ℕ) (j : UpperNatIndex m) (A : TStage j.1) :
@@ -250,8 +252,10 @@ theorem upperAnnihilationActionColimit_stage_apply
         (jwAnnihilation j.1 (Fin.castLE j.2 ⟨m, Nat.lt_succ_self m⟩) * A) := by
   have h := upperAnnihilationActionColimit_stage m j
   have hv := congrArg (fun f => f A) h
-  simpa [upperAnnihilationActionColimit, upperCARTopologicalInjection,
-    upperAnnihilationActionNatTrans, annihilationActionTopCat, TopCat.ofHom] using hv
+  change upperAnnihilationActionColimit m (upperCARTopologicalInjection m j A) =
+    upperCARTopologicalInjection m j
+      (jwAnnihilation j.1 (Fin.castLE j.2 ⟨m, Nat.lt_succ_self m⟩) * A) at hv
+  exact hv
 
 /-! ## Continuous-linear cross-site CAR identities -/
 

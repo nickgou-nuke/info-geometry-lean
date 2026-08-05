@@ -96,21 +96,24 @@ end FibonacciMatrixReadout
 /-! ## Elementary cocycle-chain readout -/
 
 /-- Minimal proved quadratic Legendre data used by this finite bridge file. -/
-structure LegendreDuality where
-  f : ℝ → ℝ
-  Φ : ℝ → ℝ
-  fisher_metric : ℝ → ℝ
+abbrev LegendreDuality := (ℝ → ℝ) × (ℝ → ℝ) × (ℝ → ℝ)
+
+namespace LegendreDuality
+
+abbrev f (L : LegendreDuality) : ℝ → ℝ := L.1
+abbrev Φ (L : LegendreDuality) : ℝ → ℝ := L.2.1
+abbrev fisher_metric (L : LegendreDuality) : ℝ → ℝ := L.2.2
+
+end LegendreDuality
 
 /-- The Gaussian potential is self-dual under the elementary Legendre transform. -/
-def gaussianLegendreDuality : LegendreDuality where
-  f x := x ^ 2 / 2
-  Φ p := p ^ 2 / 2
-  fisher_metric _ := 1
+def gaussianLegendreDuality : LegendreDuality :=
+  (fun x => x ^ 2 / 2, fun p => p ^ 2 / 2, fun _ => 1)
 
 /-- The elementary Gaussian Legendre inequality. -/
 theorem souriau_fisher_theorem (x p : ℝ) :
     x * p - x ^ 2 / 2 ≤ gaussianLegendreDuality.Φ p := by
-  simp [gaussianLegendreDuality]
+  simp [gaussianLegendreDuality, LegendreDuality.Φ]
   have hsq : 0 ≤ (x - p) ^ 2 := sq_nonneg (x - p)
   nlinarith
 

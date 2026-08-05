@@ -44,7 +44,7 @@ namespace InfoGeometry.Topology.MobiusDeRhamMonodromy
 /-! ## 1. 0-fixing and ∞-fixing circle-integral preservation ---- -/
 
 theorem moebius_zero_fix_circleIntegral
-    (M : InfoGeometry.SL2C)
+    (_M : InfoGeometry.SL2C)
     (R R' : ℝ) (hR : 0 < R) (hR' : 0 < R') :
     (∮ z in C((0 : ℂ), R), poleForm z) = (∮ w in C((0 : ℂ), R'), poleForm w) := by
   have h₁ := circleIntegral_one_div R hR
@@ -52,7 +52,7 @@ theorem moebius_zero_fix_circleIntegral
   exact h₁.trans h₂.symm
 
 theorem moebius_infinity_fix_circleIntegral
-    (M : InfoGeometry.SL2C)
+    (_M : InfoGeometry.SL2C)
     (R R' : ℝ) (hR : 0 < R) (hR' : 0 < R') :
     (∮ z in C((0 : ℂ), R), poleForm z) = (∮ w in C((0 : ℂ), R'), poleForm w) := by
   have h₁ := circleIntegral_one_div R hR
@@ -62,26 +62,30 @@ theorem moebius_infinity_fix_circleIntegral
 /-! ## 2. Verified 0-fix de Rham invariance ---- -/
 
 theorem moebius_zero_fix_deRhamClass_eq
-    (M : InfoGeometry.SL2C)
+    (_M : InfoGeometry.SL2C)
     (R R' : ℝ) (hR : 0 < R) (hR' : 0 < R')
     (n : ℤ) :
     (n : ℂ) * (∮ z in C((0 : ℂ), R), poleForm z) =
       (n : ℂ) * (∮ w in C((0 : ℂ), R'), poleForm w) := by
-  have h₁ := deRhamClass_of_winding R hR n
-  have h₂ := deRhamClass_of_winding R' hR' n
-  have h_circle := moebius_zero_fix_circleIntegral M R R' hR hR'
-  simp [h_circle, h₁, h₂]
+  calc
+    (n : ℂ) * (∮ z in C((0 : ℂ), R), poleForm z) = logarithmicPhase n := by
+      exact deRhamClass_of_winding R hR n
+    _ = (n : ℂ) * (∮ w in C((0 : ℂ), R'), poleForm w) := by
+      symm
+      exact deRhamClass_of_winding R' hR' n
 
 theorem moebius_infinity_fix_deRhamClass_eq
-    (M : InfoGeometry.SL2C)
+    (_M : InfoGeometry.SL2C)
     (R R' : ℝ) (hR : 0 < R) (hR' : 0 < R')
     (n : ℤ) :
     (n : ℂ) * (∮ z in C((0 : ℂ), R), poleForm z) =
       (n : ℂ) * (∮ w in C((0 : ℂ), R'), poleForm w) := by
-  have h₁ := deRhamClass_of_winding R hR n
-  have h₂ := deRhamClass_of_winding R' hR' n
-  have h_circle := moebius_infinity_fix_circleIntegral M R R' hR hR'
-  simp [h_circle, h₁, h₂]
+  calc
+    (n : ℂ) * (∮ z in C((0 : ℂ), R), poleForm z) = logarithmicPhase n := by
+      exact deRhamClass_of_winding R hR n
+    _ = (n : ℂ) * (∮ w in C((0 : ℂ), R'), poleForm w) := by
+      symm
+      exact deRhamClass_of_winding R' hR' n
 
 /-! ## 3. Möbius classification by trace spectrum ---- -/
 
@@ -93,23 +97,28 @@ theorem parabolic_mobius_trace_sq_four
 /-! ## 4. Wilson holonomy and thermal-time calibration ---- -/
 
 theorem mobius_zero_fix_wilson_holonomy
-    (M : InfoGeometry.SL2C) (hb : M.val 0 1 = 0)
+    (M : InfoGeometry.SL2C) (_hb : M.val 0 1 = 0)
     (R : ℝ) (hR : 0 < R) (n : ℤ) :
     Complex.exp (logarithmicPhase n) = 1 ∧
-    logarithmicPhase n = logarithmicPhase n := by
+    (n : ℂ) * (∮ z in C((0 : ℂ), R), poleForm z) = logarithmicPhase n := by
   constructor
-  · exact Complex.exp_int_mul_two_pi_mul_I n
-  · rfl
+  · exact holonomyPhase_is_root_of_unity n
+  · exact deRhamClass_of_winding R hR n
 
 theorem mobius_deRham_thermal_time_calibration
-    (M : InfoGeometry.SL2C) (hb : M.val 0 1 = 0)
+    (M : InfoGeometry.SL2C) (_hb : M.val 0 1 = 0)
     (C : ThermalTimeWindingCalibration) (n : ℤ)
-    (R : ℝ) (hR : 0 < R) (R' : ℝ) (hR' : 0 < R') :
+    (R : ℝ) (hR : 0 < R) :
     C.timeOfWinding n = (n : ℝ) * C.period ∧
-    logarithmicPhase n = logarithmicPhase n := by
+    (n : ℂ) * (∮ z in C((0 : ℂ), R), poleForm z) = logarithmicPhase n := by
   constructor
   · simp [ThermalTimeWindingCalibration.timeOfWinding]
-  · rfl
+  · exact deRhamClass_of_winding R hR n
+
+theorem thermalTimeWindingCalibration_add
+    (C : ThermalTimeWindingCalibration) (m n : ℤ) :
+    C.timeOfWinding (m + n) = C.timeOfWinding m + C.timeOfWinding n := by
+  simpa using C.timeOfWinding_add m n
 
 end InfoGeometry.Topology.MobiusDeRhamMonodromy
 

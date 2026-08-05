@@ -37,6 +37,24 @@ def wordComplementEquiv (n : ℕ) : BitWord n ≃ BitWord n where
 def complementPullback {n : ℕ} (f : DiagAlg n) : DiagAlg n :=
   fun w => f (wordComplement w)
 
+@[simp] theorem complementPullback_zero {n : ℕ} :
+    complementPullback (0 : DiagAlg n) = 0 := by
+  rfl
+
+@[simp] theorem complementPullback_one {n : ℕ} :
+    complementPullback (1 : DiagAlg n) = 1 := by
+  rfl
+
+theorem complementPullback_add {n : ℕ} (f g : DiagAlg n) :
+    complementPullback (f + g) =
+      complementPullback f + complementPullback g := by
+  rfl
+
+theorem complementPullback_mul {n : ℕ} (f g : DiagAlg n) :
+    complementPullback (f * g) =
+      complementPullback f * complementPullback g := by
+  rfl
+
 theorem complementPullback_involutive {n : ℕ} (f : DiagAlg n) :
     complementPullback (complementPullback f) = f := by
   funext w

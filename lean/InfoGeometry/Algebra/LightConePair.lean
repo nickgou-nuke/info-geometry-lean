@@ -30,9 +30,9 @@ namespace LightConePair
 variable {R : Type*} [Ring R]
 variable (P : LightConePair R)
 
-def ePlus : R := P.1.1
+abbrev ePlus : R := P.1.1
 
-def eMinus : R := P.1.2
+abbrev eMinus : R := P.1.2
 
 def ePlus_sq : ePlus P * ePlus P = 0 := P.2.1
 

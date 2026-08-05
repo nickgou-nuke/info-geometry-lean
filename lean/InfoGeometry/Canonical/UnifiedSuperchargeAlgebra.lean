@@ -3096,12 +3096,14 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 Transport package for the primitive supercharges on the quasilattice lane.
 -/
 @[rep_depth transport]
-structure TransportedSuperchargePackage where
-  V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)
+abbrev TransportedSuperchargePackage :=
+  BogoliubovVielbein.BogoliubovVielbeinBundle (E := E)
 
 namespace TransportedSuperchargePackage
 
 variable (T : TransportedSuperchargePackage (E := E))
+
+abbrev V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E) := T
 
 /-- Transported parity supercharge `QΠ(t)`. -/
 noncomputable abbrev QPi_t (t : ℝ) : EndH :=

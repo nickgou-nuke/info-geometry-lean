@@ -8,10 +8,10 @@ namespace InfoGeometry.Algebra.SusyCore
 open InfoGeometry.Algebra.SpinCore
 
 /-- Fermionic Supercharge operator A -/
-def Supercharge_A : Matrix (Fin 2) (Fin 2) ℚ := J_plus
+abbrev Supercharge_A : Matrix (Fin 2) (Fin 2) ℚ := J_plus
 
 /-- Conjugate Supercharge operator A† -/
-def Supercharge_Adjoint : Matrix (Fin 2) (Fin 2) ℚ := J_minus
+abbrev Supercharge_Adjoint : Matrix (Fin 2) (Fin 2) ℚ := J_minus
 
 /-- Bosonic Partner Hamiltonian H₋ = A†A -/
 def H_minus : Matrix (Fin 2) (Fin 2) ℚ := Supercharge_Adjoint * Supercharge_A

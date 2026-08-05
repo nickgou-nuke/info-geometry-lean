@@ -127,21 +127,4 @@ theorem g0Core_horizonDown_weight : g0Core * horizonDown - horizonDown * g0Core 
   unfold g0Core horizonUp horizonDown
   native_decide
 
-/-- Finite kernel-checked packet for the 32-dimensional quadrant ideal laws. -/
-theorem coleFury_ideal_packet :
-    upperLeft * upperLeft = upperLeft ∧
-      lowerRight * lowerRight = lowerRight ∧
-      horizonUp * horizonUp = 0 ∧
-      horizonDown * horizonDown = 0 ∧
-      horizonUp * horizonDown = upperLeft ∧
-      horizonDown * horizonUp = lowerRight ∧
-      horizonDown * horizonUp - horizonUp * horizonDown = expectedG0Core ∧
-      g0Core * g0Core = 1 ∧
-      g0Core * horizonUp - horizonUp * g0Core = (-2 : ℤ) • horizonUp ∧
-      g0Core * horizonDown - horizonDown * g0Core = (2 : ℤ) • horizonDown := by
-  exact ⟨upperLeft_idempotent, lowerRight_idempotent, horizonUp_nilpotent,
-    horizonDown_nilpotent, horizonUp_horizonDown, horizonDown_horizonUp,
-    horizon_commutator_expected, g0Core_sq, g0Core_horizonUp_weight,
-    g0Core_horizonDown_weight⟩
-
 end InfoGeometry.OperatorAlgebra.ColeFury

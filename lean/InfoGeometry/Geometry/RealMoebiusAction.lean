@@ -57,12 +57,10 @@ theorem realDenomSq_pos (g : SL2R) (τ : RealUpperHalfPlane) :
     exact add_pos_of_nonneg_of_pos (sq_nonneg _) hcy
 
 def moebius (g : SL2R) (τ : RealUpperHalfPlane) : RealUpperHalfPlane :=
-  { x :=
-      ((a g * τ.x + b g) * (c g * τ.x + d g) + a g * c g * τ.y ^ 2) /
-        denomSq g τ
-    y := τ.y / denomSq g τ
-    y_pos := by
-      exact div_pos τ.y_pos (realDenomSq_pos g τ) }
+  ( ((a g * τ.x + b g) * (c g * τ.x + d g) + a g * c g * τ.y ^ 2) /
+        denomSq g τ,
+    ⟨τ.y / denomSq g τ, by
+      exact div_pos τ.y_pos (realDenomSq_pos g τ)⟩ )
 
 @[simp]
 theorem moebius_x (g : SL2R) (τ : RealUpperHalfPlane) :

@@ -30,10 +30,10 @@ structure ContinuousBraidNaturalData where
 variable (D : ContinuousBraidNaturalData F)
 
 /-- The two continuous braid endomorphisms induced on the topological colimit. -/
-def colimitBraid1 : colimit F ⟶ colimit F :=
+def colimitBraid1 : CategoryTheory.Limits.colimit F ⟶ CategoryTheory.Limits.colimit F :=
   colim.map D.braid1
 
-def colimitBraid2 : colimit F ⟶ colimit F :=
+def colimitBraid2 : CategoryTheory.Limits.colimit F ⟶ CategoryTheory.Limits.colimit F :=
   colim.map D.braid2
 
 theorem colimitInjection_braid1 (j : J) :
@@ -130,7 +130,7 @@ theorem colimit_readout_invariant
 theorem colimit_readout_invariant_apply
     (α : F ⟶ F) (c : Cocone F)
     (hα : ∀ j : J, α.app j ≫ c.ι.app j = c.ι.app j)
-    (x : (colimit F).carrier) :
+    (x : (CategoryTheory.Limits.colimit F).carrier) :
     colimit.desc F c (colim.map α x) = colimit.desc F c x := by
   exact congrArg (fun f => f x) (colimit_readout_invariant (F := F) α c hα)
 
@@ -195,11 +195,11 @@ theorem colimit_artin_relation :
 /-! ## Full twist in the descended braid image -/
 
 /-- The positive Coxeter word on the colimit. -/
-def colimitCoxeter : colimit F ⟶ colimit F :=
+def colimitCoxeter : CategoryTheory.Limits.colimit F ⟶ CategoryTheory.Limits.colimit F :=
   colimitBraid2 F D ≫ colimitBraid1 F D
 
 /-- The full twist, defined as the cube of the positive Coxeter word. -/
-def colimitFullTwist : colimit F ⟶ colimit F :=
+def colimitFullTwist : CategoryTheory.Limits.colimit F ⟶ CategoryTheory.Limits.colimit F :=
   colimitCoxeter F D ≫ colimitCoxeter F D ≫ colimitCoxeter F D
 
 /-- The full twist is the square of the Garside word. -/

@@ -18,7 +18,6 @@ No claim is made that every vortex hosts a Majorana zero mode.
 
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -312,26 +311,5 @@ theorem core_mode_localized :
   W.localized_at_core
 
 end VortexCoreMajoranaWitness
-
-/-! ## 6. Owner theorem -/
-
-/--
-An Andreev electron/hole swap has a particle-hole fixed diagonal mode.
--/
-theorem andreevLedgerOwnerTarget :
-  ∀ (V : Type*) [AddCommGroup V] [Module ℝ V],
-  ∀ A : Ledger V,
-  ∀ P : AndreevPair A,
-    P.evenMajorana ∈ A.Fixed := by
-  intro V _ _ A P
-  exact P.evenMajorana_fixed
-
-/-- Packet readout for an Andreev pair: the diagonal mode is fixed and self-conjugate. -/
-theorem andreevPair_majorana_packet
-    {V : Type*} [AddCommGroup V] [Module ℝ V]
-    {A : Ledger V} (P : AndreevPair A) :
-    P.evenMajorana ∈ A.Fixed ∧
-      A.theta P.evenMajorana = P.evenMajorana := by
-  exact ⟨andreevLedgerOwnerTarget V A P, P.theta_evenMajorana_eq_evenMajorana⟩
 
 end InfoGeometry.OperatorAlgebra.AndreevLedger

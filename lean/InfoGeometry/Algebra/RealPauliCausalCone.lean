@@ -14,13 +14,13 @@ def RealPauliOp := ℝ × (ℝ × (ℝ × ℝ))
 
 namespace RealPauliOp
 
-def t (X : RealPauliOp) : ℝ := X.1
+abbrev t (X : RealPauliOp) : ℝ := X.1
 
-def x (X : RealPauliOp) : ℝ := X.2.1
+abbrev x (X : RealPauliOp) : ℝ := X.2.1
 
-def y (X : RealPauliOp) : ℝ := X.2.2.1
+abbrev y (X : RealPauliOp) : ℝ := X.2.2.1
 
-def z (X : RealPauliOp) : ℝ := X.2.2.2
+abbrev z (X : RealPauliOp) : ℝ := X.2.2.2
 
 end RealPauliOp
 

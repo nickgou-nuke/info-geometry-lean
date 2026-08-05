@@ -33,6 +33,8 @@ InfoGeometry.Projective.TwistorBridge | twistor bridge is discharged by `zeroNul
 InfoGeometry.Unstable.YangMillsBridge | bridge stores QFT obligations and later projects them out
 
 InfoGeometry.Canonical.ChiralTorsionRelativeVolume | imports quarantined BeliefDynamics and still sits on the review-surface facade path
+InfoGeometry.Canonical.CuntzCanonicalKMSFunctional | legacy owner depends on the missing Algebra.CuntzAlgebra and assumes a diagonal coefficient projection absent from the native quotient API
+InfoGeometry.Canonical.SplitG2HodgeWedgeCharacterization | Hodge wedge characterization requires explicit metricStar34 basis-action theorems not present in the native owner; former file contained sorry-based zero and uniqueness wrappers
 InfoGeometry.Canonical.CountEmergentFlow | imports quarantined HolographicEmergence and still sits on the review-surface facade path
 InfoGeometry.Exploration.Symphony.Basic | exploratory symphony lane is intentionally outside the authoritative `InfoGeometry.All` coverage spine
 InfoGeometry.Exploration.Symphony.Draft | draft symphony-attention lane contains placeholder/sorry scaffolding and is intentionally excluded from strict coverage

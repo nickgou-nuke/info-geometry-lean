@@ -4,13 +4,22 @@ set_option linter.unusedVariables false
 
 namespace InfoGeometry.TKK
 
--- Placeholder for the TKK 5-graded Lie algebra structure
-structure TKKGrading (E : Type _) [AddCommGroup E] [Module ℝ E] where
-  g₂ : Set E
-  g₁ : Set E
-  g₀ : Set E
-  «g₋₁» : Set E
-  «g₋₂» : Set E
+-- The five graded carriers are indexed by a native finite family.  Bracket
+-- closure laws belong to separate structures/theorems and are not implicit.
+abbrev TKKGrading (E : Type _) [AddCommGroup E] [Module ℝ E] :=
+  Fin 5 → Set E
+
+namespace TKKGrading
+
+variable {E : Type _} [AddCommGroup E] [Module ℝ E]
+
+abbrev g₂ (G : TKKGrading E) : Set E := G 0
+abbrev g₁ (G : TKKGrading E) : Set E := G 1
+abbrev g₀ (G : TKKGrading E) : Set E := G 2
+abbrev «g₋₁» (G : TKKGrading E) : Set E := G 3
+abbrev «g₋₂» (G : TKKGrading E) : Set E := G 4
+
+end TKKGrading
 
 -- Placeholder for Cartan subalgebra of 𝔰𝔬(8)
 def cartan_subalgebra_so8 : Set (Matrix (Fin 8) (Fin 8) ℝ) := {M | False}
@@ -66,9 +75,15 @@ def central_node_idx : Fin 4 := 1
 
 def external_legs : List (Fin 4) := [0, 2, 3]
 
-structure D4TrialityPerm where
-  perm : Equiv.Perm (Fin 4)
-  fixes_central : perm central_node_idx = central_node_idx
+abbrev D4TrialityPerm :=
+  {perm : Equiv.Perm (Fin 4) // perm central_node_idx = central_node_idx}
+
+namespace D4TrialityPerm
+
+abbrev perm (σ : D4TrialityPerm) : Equiv.Perm (Fin 4) := σ.1
+abbrev fixes_central (σ : D4TrialityPerm) : σ.perm central_node_idx = central_node_idx := σ.2
+
+end D4TrialityPerm
 
 def D4Lattice.dot (v w : D4Lattice) : ℤ :=
   ∑ i : Fin 4, v i * w i

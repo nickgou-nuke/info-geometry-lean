@@ -91,14 +91,17 @@ The determinant condition is
 
 `a*d - b*c = 1`.
 -/
-structure ModularMatrix where
-  a : ℤ
-  b : ℤ
-  c : ℤ
-  d : ℤ
-  det_eq_one : a * d - b * c = 1
+abbrev ModularMatrix := Matrix.SpecialLinearGroup (Fin 2) ℤ
 
 namespace ModularMatrix
+
+abbrev matrix (γ : ModularMatrix) : Matrix (Fin 2) (Fin 2) ℤ := γ.1
+abbrev a (γ : ModularMatrix) : ℤ := γ.matrix 0 0
+abbrev b (γ : ModularMatrix) : ℤ := γ.matrix 0 1
+abbrev c (γ : ModularMatrix) : ℤ := γ.matrix 1 0
+abbrev d (γ : ModularMatrix) : ℤ := γ.matrix 1 1
+abbrev det_eq_one (γ : ModularMatrix) : Matrix.det γ.matrix = 1 := γ.2
+
 
 /--
 The translation generator
@@ -107,12 +110,10 @@ The translation generator
 
 Classically, `T • z = z + 1`.
 -/
-def T : ModularMatrix where
-  a := 1
-  b := 1
-  c := 0
-  d := 1
-  det_eq_one := by norm_num
+def T : ModularMatrix :=
+  ⟨!![1, 1; 0, 1], by
+    norm_num [Matrix.det_fin_two]
+  ⟩
 
 /--
 The inversion generator
@@ -121,12 +122,10 @@ The inversion generator
 
 Classically, `S • z = -1 / z`.
 -/
-def S : ModularMatrix where
-  a := 0
-  b := -1
-  c := 1
-  d := 0
-  det_eq_one := by norm_num
+def S : ModularMatrix :=
+  ⟨!![0, -1; 1, 0], by
+    norm_num [Matrix.det_fin_two]
+  ⟩
 
 @[simp] theorem T_a : T.a = 1 := rfl
 @[simp] theorem T_b : T.b = 1 := rfl

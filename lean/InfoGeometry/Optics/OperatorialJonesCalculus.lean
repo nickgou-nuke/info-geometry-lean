@@ -460,24 +460,28 @@ structure PolarizationChannel
   channel : Op → Op
 
 
-/--
-Rough reflection belongs to the channel/Mueller layer, not the pure Jones
-single-operator layer.
--/
-structure RoughReflectionChannel
-    (Op : Type*) [Ring Op]
-    extends PolarizationChannel Op where
+/-- Rough reflection is represented by the native statistical channel carrier. -/
+abbrev RoughReflectionChannel
+    (Op : Type*) [Ring Op] := PolarizationChannel Op
+
+abbrev RoughReflectionChannel.toPolarizationChannel
+    {Op : Type*} [Ring Op]
+    (R : RoughReflectionChannel Op) : PolarizationChannel Op := R
 
 /-! ## 5. Owner target -/
 
-/--
-Owner target for connecting Fresnel/Jones data to the bilingual operator
-geometry.
--/
-structure OperatorialJonesOwnerTarget
-    (Op : Type*) [Ring Op] [Algebra ℂ Op] where
-  /-- The Fresnel `s/p` projector pair owned by the Jones calculus layer. -/
-  projectors : PolarizationProjectorPair Op
+/-- The owner target is exactly the native projector-pair carrier. -/
+abbrev OperatorialJonesOwnerTarget
+    (Op : Type*) [Ring Op] [Algebra ℂ Op] :=
+  PolarizationProjectorPair Op
+
+abbrev OperatorialJonesOwnerTarget.projectors
+    {Op : Type*} [Ring Op] [Algebra ℂ Op]
+    (T : OperatorialJonesOwnerTarget Op) : PolarizationProjectorPair Op := T
+
+def OperatorialJonesOwnerTarget.mk
+    {Op : Type*} [Ring Op] [Algebra ℂ Op]
+    (P : PolarizationProjectorPair Op) : OperatorialJonesOwnerTarget Op := P
 
 namespace OperatorialJonesOwnerTarget
 

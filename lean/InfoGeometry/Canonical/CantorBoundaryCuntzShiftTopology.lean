@@ -18,6 +18,7 @@ open scoped Topology BigOperators
 namespace InfoGeometry.Canonical.CantorBoundaryCuntzShift
 
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
+open InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 open InfoGeometry.Canonical.CantorBoundaryReadoutBounds
 open InfoGeometry.Canonical.CantorBoundaryFiniteReadout
 
@@ -28,6 +29,21 @@ theorem continuous_prefixBit (b : Bool) :
   cases n with
   | zero => exact continuous_const
   | succ n => exact continuous_apply n
+
+theorem continuous_boundaryHead :
+    Continuous (boundaryHead : CantorBoundary → Bool) := by
+  exact continuous_apply 0
+
+theorem continuous_boundaryTail :
+    Continuous (boundaryTail : CantorBoundary → CantorBoundary) := by
+  apply continuous_pi
+  intro n
+  exact continuous_apply (n + 1)
+
+theorem boundaryTail_prefixBit (b : Bool) (x : CantorBoundary) :
+    boundaryTail (prefixBit b x) = x := by
+  funext n
+  rfl
 
 theorem injective_prefixBit (b : Bool) :
     Function.Injective (prefixBit b) := by
@@ -42,13 +58,19 @@ theorem left_right_branch_images_disjoint
   have hzero := congrFun h 0
   simp [prefixBit] at hzero
 
-alias continuous_leftShift := continuous_prefixBit
+theorem prefixBit_head_tail_topology (x : CantorBoundary) :
+    prefixBit (boundaryHead x) (boundaryTail x) = x := by
+  simpa [prefixBit] using (boundary_recursive_decomposition x).symm
 
-alias continuous_rightShift := continuous_prefixBit
-
-alias leftShift_injective := injective_prefixBit
-
-alias rightShift_injective := injective_prefixBit
+theorem prefixBit_range_cover_topology (x : CantorBoundary) :
+    (∃ y, prefixBit false y = x) ∨ ∃ y, prefixBit true y = x := by
+  cases h : boundaryHead x with
+  | false =>
+      left
+      exact ⟨boundaryTail x, by simpa [h] using prefixBit_head_tail_topology x⟩
+  | true =>
+      right
+      exact ⟨boundaryTail x, by simpa [h] using prefixBit_head_tail_topology x⟩
 
 theorem realBinaryReadout_prefixBit
     (b : Bool) (x : CantorBoundary) :

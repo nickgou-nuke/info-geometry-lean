@@ -15,7 +15,7 @@ namespace IdempotentProjection
 
 variable (proj : IdempotentProjection (n := n) (R := R))
 
-def e : Matrix n n R := proj.1
+abbrev e : Matrix n n R := proj.1
 
 theorem idem : e proj * e proj = e proj := by
   simpa only [e, IsIdempotentElem] using proj.2

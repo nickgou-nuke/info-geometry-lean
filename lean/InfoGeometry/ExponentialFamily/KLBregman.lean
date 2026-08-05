@@ -113,7 +113,6 @@ lemma KLParam_eq_LogPotential_bregman_of_statMean_eq_deriv
   rw [hmean]
   unfold InfoGeometry.LogPotential.bregman logPotential
   unfold InfoGeometry.bregmanDiv
-  simp only [InfoGeometry.LogPotential.ψ]
   ring
 
 lemma KLParam_eq_bregman_if_deriv_mean

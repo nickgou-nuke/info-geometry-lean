@@ -131,9 +131,8 @@ The remaining closure obligation is stated over the canonical direct-limit
 carrier. The carrier, ring structure, injections, and transition law are
 derived from Mathlib's quotient direct limit rather than supplied as fields.
 -/
-structure LimitPassageSocket (C : InductiveOperatorChain) where
-  /-- The core limit closure passage for the canonical algebraic colimit. -/
-  limit_closure_stable : ∀ (Q0 Qsharp0 : C.Stage 0),
+def LimitPassageSocket (C : InductiveOperatorChain) : Prop :=
+  ∀ (Q0 Qsharp0 : C.Stage 0),
     (∀ n, SupergradedClosureAt (R := C.Stage n)
       (C.iterMap n Q0) (C.iterMap n Qsharp0)) →
     SupergradedClosureAt (R := LimitStage C)
@@ -142,6 +141,14 @@ structure LimitPassageSocket (C : InductiveOperatorChain) where
 namespace LimitPassageSocket
 
 variable {C : InductiveOperatorChain}
+
+theorem limit_closure_stable (h : LimitPassageSocket C)
+    (Q0 Qsharp0 : C.Stage 0)
+    (hStages : ∀ n, SupergradedClosureAt (R := C.Stage n)
+      (C.iterMap n Q0) (C.iterMap n Qsharp0)) :
+    SupergradedClosureAt (R := LimitStage C)
+      (limitEmbed C 0 Q0) (limitEmbed C 0 Qsharp0) :=
+  h Q0 Qsharp0 hStages
 
 instance : Ring (LimitStage C) := inferInstance
 

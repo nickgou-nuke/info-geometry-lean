@@ -98,16 +98,14 @@ actual bonding homomorphisms. Its invariant predicates are finite-stage image
 predicates, so closure is proved by moving finitely many representatives to a
 common stage.
 -/
-@[socket_debt_tag]
-structure ColimitInheritsInvariants 
+def ColimitInheritsInvariants
     (Chain : ℕ → Type*) [∀ n, Ring (Chain n)]
     (Invariants : ∀ n, SupergradedClosureAt (Chain n))
-    (Bonding : ∀ n, BondingIntertwiner (Invariants n) (Invariants (n+1))) where
-  LimitInvariants :
-    @SupergradedClosureAt
-      (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.DirectLimitSuperClosure
-        (fun n => (Bonding n).map))
-      inferInstance
+    (Bonding : ∀ n, BondingIntertwiner (Invariants n) (Invariants (n+1))) : Type _ :=
+  @SupergradedClosureAt
+    (InfoGeometry.Algebra.DirectLimitSuperClosureLemmas.DirectLimitSuperClosure
+      (fun n => (Bonding n).map))
+    inferInstance
 
 namespace ColimitInheritsInvariants
 
@@ -189,7 +187,6 @@ def fromStages
   have central_preserves : ∀ n x, (Invariants n).is_central x →
       (Invariants (n + 1)).is_central ((Bonding n).map x) :=
     fun n x hx => (Bonding n).preserves_central x hx
-  refine { LimitInvariants := ?_ }
   refine { is_odd := odd, is_even := even, is_central := central, odd_nilpotency := ?_, odd_odd_closure := ?_, central_lane := ?_, projector_identity := ?_ }
   · intro x hx
     obtain ⟨n, a, rfl, ha⟩ := hx

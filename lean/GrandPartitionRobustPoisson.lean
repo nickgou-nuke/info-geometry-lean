@@ -21,7 +21,7 @@ theorem poissonDeviance_zero (μ : ℝ) :
 
 theorem poissonDeviance_self {μ : ℝ} (hμ : μ ≠ 0) :
     poissonDeviance μ μ = 0 := by
-  simp [poissonDeviance, hμ, div_self hμ]
+  simp [poissonDeviance, hμ]
 
 /-- Anscombe variance-stabilizing map used as an optional Euclidean
 approximation to the exact Poisson geometry. -/
@@ -108,6 +108,7 @@ theorem weightedPoissonScore_eq_zero_at_mean
   simp_rw [mul_sub]
   rw [Finset.sum_sub_distrib, ← Finset.sum_mul]
   field_simp [hN]
+  ring
 
 /-- The weighted score equation has the unique solution given by the weighted
 mean when the total fixed weight is nonzero. -/
@@ -126,5 +127,6 @@ theorem weightedPoissonScore_eq_zero_iff
   · intro h
     rw [h]
     field_simp [hN]
+    ring
 
 end RobustPoissonLayer

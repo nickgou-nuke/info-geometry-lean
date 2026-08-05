@@ -222,5 +222,65 @@ theorem affineDeviance_self (a b μ : ℝ) (h_pos : a * μ + b > 0) :
   rw [h_div, Real.log_one]
   ring
 
+/-- The domain safety condition for affine deviance.
+Both the measurement variance scaling and reference variance scaling must be strictly positive. -/
+def affineDevianceDomainSafe (a b x μ : ℝ) : Prop :=
+  a * x + b > 0 ∧ a * μ + b > 0
+
+/-- Given domain safety, the logarithm argument is strictly positive. -/
+theorem affineDeviance_log_arg_pos (a b x μ : ℝ) (h : affineDevianceDomainSafe a b x μ) :
+    (a * x + b) / (a * μ + b) > 0 :=
+  div_pos h.1 h.2
+
+/-- Affine deviance expanded in terms of the particle-hole displacement δ = x - μ. -/
+theorem affineDeviance_displacement (a b μ δ : ℝ) (hμ : a * μ + b > 0) :
+    let x := μ + δ
+    affineDeviance a b x μ =
+      (2 / a^2) * ((a * μ + b + a * δ) * Real.log (1 + (a * δ) / (a * μ + b)) - a * δ) := by
+  intro x
+  dsimp [affineDeviance]
+  have h_x : a * x + b = a * μ + b + a * δ := by
+    dsimp [x]
+    ring
+  have h_diff : x - μ = δ := by
+    dsimp [x]
+    ring
+  rw [h_x, h_diff]
+  have h_div : (a * μ + b + a * δ) / (a * μ + b) = 1 + (a * δ) / (a * μ + b) := by
+    have h1 : (a * μ + b + a * δ) / (a * μ + b) = (a * μ + b) / (a * μ + b) + (a * δ) / (a * μ + b) := add_div _ _ _
+    rw [h1]
+    have h2 : (a * μ + b) / (a * μ + b) = 1 := div_self (ne_of_gt hμ)
+    rw [h2]
+  rw [h_div]
+
+/-- Positive part of the displacement (particle / signal). -/
+noncomputable def deltaPos (δ : ℝ) : ℝ := max δ 0
+
+/-- Negative part of the displacement (hole / dip). -/
+noncomputable def deltaNeg (δ : ℝ) : ℝ := max (-δ) 0
+
+/-- Decomposition of the displacement into particle and hole components. -/
+theorem delta_decomposition (δ : ℝ) : δ = deltaPos δ - deltaNeg δ := by
+  dsimp [deltaPos, deltaNeg]
+  rcases le_total δ 0 with h | h
+  · have h1 : max δ 0 = 0 := max_eq_right h
+    have h2 : max (-δ) 0 = -δ := max_eq_left (neg_nonneg.mpr h)
+    rw [h1, h2, zero_sub, neg_neg]
+  · have h1 : max δ 0 = δ := max_eq_left h
+    have h2 : max (-δ) 0 = 0 := max_eq_right (neg_nonpos.mpr h)
+    rw [h1, h2, sub_zero]
+
+/-- The decomposition applied to the affine deviance variable x = μ + δ. -/
+theorem affineDeviance_particle_hole (a b μ δ : ℝ) (hμ : a * μ + b > 0) :
+    let x := μ + (deltaPos δ - deltaNeg δ)
+    affineDeviance a b x μ =
+      (2 / a^2) * ((a * μ + b + a * (deltaPos δ - deltaNeg δ)) *
+        Real.log (1 + (a * (deltaPos δ - deltaNeg δ)) / (a * μ + b)) - a * (deltaPos δ - deltaNeg δ)) := by
+  intro x
+  have h_sub : deltaPos δ - deltaNeg δ = δ := (delta_decomposition δ).symm
+  have h_dev := affineDeviance_displacement a b μ δ hμ
+  rw [← h_sub] at h_dev
+  exact h_dev
+
 end InfoGeometry.Canonical
 

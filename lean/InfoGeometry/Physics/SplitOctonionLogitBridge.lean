@@ -160,7 +160,6 @@ theorem bayesPosterior_odds
   have hadmNe : likelihoodAdmission ≠ 0 := ne_of_gt hadm
   have hrejNe : likelihoodRejection ≠ 0 := ne_of_gt hrej
   field_simp [hsum, hpriorComp, hadmNe, hrejNe]
-  ring
 
 /-- Bayes' theorem in natural log-odds coordinates: posterior logit equals
 prior logit plus the log-likelihood ratio. -/
@@ -174,10 +173,9 @@ theorem logit_bayesPosterior
         Real.log (likelihoodAdmission / likelihoodRejection) := by
   unfold logit
   rw [bayesPosterior_odds hprior0 hprior1 hadm hrej]
-  rw [Real.log_mul]
-  · rfl
-  · exact ne_of_gt (div_pos hprior0 (sub_pos.mpr hprior1))
-  · exact ne_of_gt (div_pos hadm hrej)
+  rw [Real.log_mul
+    (ne_of_gt (div_pos hprior0 (sub_pos.mpr hprior1)))
+    (ne_of_gt (div_pos hadm hrej))]
 
 /-- Strong Bayesian bridge: if the split norm independently encodes prior
 log-odds plus the log-likelihood ratio, then it is the scaled posterior logit. -/
@@ -221,7 +219,6 @@ theorem scaled_logit_gibbsPosterior
   rw [logit_gibbsPosterior hprior0 hprior1]
   unfold chemicalPotential
   field_simp [ne_of_gt hepsilon]
-  ring
 
 /-- Final CMOS interpretation: an independently established split-norm energy
 gap `mu_c - deviance` equals the posterior log-odds energy. -/

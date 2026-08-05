@@ -52,3 +52,15 @@ theorem surprisal_total_equilibrium (β : ℝ) :
   norm_num [Matrix.mul_apply, Fin.sum_univ_two]
 
 end InfoGeometry.Canonical.OperatorSurprisal
+
+/-- Operator surprisal definition for a faithful real-valued density or probability p -/
+noncomputable def K_surprisal (p : ℝ) : ℝ := - Real.log p
+
+/-- The modular exponent recovers powers of p -/
+theorem exp_neg_s_K (s p : ℝ) (hp : 0 < p) :
+    Real.exp (- (s * K_surprisal p)) = p ^ s := by
+  dsimp [K_surprisal]
+  rw [mul_neg, neg_neg]
+  have h_exp_log : Real.exp (s * Real.log p) = p ^ s := by
+    rw [mul_comm, ← Real.rpow_def_of_pos hp]
+  exact h_exp_log

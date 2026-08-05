@@ -49,19 +49,27 @@ jobs:
               `GrandPartitionAll
             ]
           EOF
-      - name: Cache isolated dependencies
-        uses: actions/cache@v4
+      - name: Restore isolated dependencies
+        id: dependency-cache
+        uses: actions/cache/restore@v4
         with:
           path: |
             ~/.elan
             /tmp/grand-partition-check/.lake
-          key: grand-partition-lean-4.28.1-mathlib-v4.28.1
-          save-always: true
+          key: grand-partition-lean-4.28.1-mathlib-v4.28.1-v2
       - name: Fetch Mathlib and binary cache
         working-directory: /tmp/grand-partition-check
         run: |
           lake update
           lake exe cache get
+      - name: Save isolated dependencies
+        if: steps.dependency-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            /tmp/grand-partition-check/.lake
+          key: grand-partition-lean-4.28.1-mathlib-v4.28.1-v2
       - name: Kernel-check full pipeline
         working-directory: /tmp/grand-partition-check
         run: lake build GrandPartition

@@ -9,19 +9,19 @@ open scoped BigOperators
 section RobustPoissonLayer
 
 /-- Exact scalar Poisson deviance with the boundary convention
-`D(0; λ) = 2λ`. -/
-def poissonDeviance (y λ : ℝ) : ℝ :=
-  if y = 0 then 2 * λ
-  else 2 * (y * Real.log (y / λ) - y + λ)
+`D(0; μ) = 2μ`. -/
+def poissonDeviance (y μ : ℝ) : ℝ :=
+  if y = 0 then 2 * μ
+  else 2 * (y * Real.log (y / μ) - y + μ)
 
 @[simp]
-theorem poissonDeviance_zero (λ : ℝ) :
-    poissonDeviance 0 λ = 2 * λ := by
+theorem poissonDeviance_zero (μ : ℝ) :
+    poissonDeviance 0 μ = 2 * μ := by
   simp [poissonDeviance]
 
-theorem poissonDeviance_self {λ : ℝ} (hλ : λ ≠ 0) :
-    poissonDeviance λ λ = 0 := by
-  simp [poissonDeviance, hλ, div_self hλ]
+theorem poissonDeviance_self {μ : ℝ} (hμ : μ ≠ 0) :
+    poissonDeviance μ μ = 0 := by
+  simp [poissonDeviance, hμ, div_self hμ]
 
 /-- Anscombe variance-stabilizing map used as an optional Euclidean
 approximation to the exact Poisson geometry. -/
@@ -84,7 +84,6 @@ def reducedRobustLoss (α ε d : ℝ) : ℝ :=
 theorem binaryPartitionFactor_zero_deviance (α ε : ℝ) :
     binaryPartitionFactor α ε 0 = 1 := by
   simp [binaryPartitionFactor, boltzmannFactor]
-  ring
 
 @[simp]
 theorem reducedRobustLoss_zero (α ε : ℝ) :
@@ -98,8 +97,8 @@ def weightedPoissonMean
 
 /-- Weighted score equation. -/
 def weightedPoissonScore
-    {ι : Type*} [Fintype ι] (r x : ι → ℝ) (λ : ℝ) : ℝ :=
-  ∑ i, r i * (x i - λ)
+    {ι : Type*} [Fintype ι] (r x : ι → ℝ) (μ : ℝ) : ℝ :=
+  ∑ i, r i * (x i - μ)
 
 theorem weightedPoissonScore_eq_zero_at_mean
     {ι : Type*} [Fintype ι]
@@ -114,9 +113,9 @@ theorem weightedPoissonScore_eq_zero_at_mean
 mean when the total fixed weight is nonzero. -/
 theorem weightedPoissonScore_eq_zero_iff
     {ι : Type*} [Fintype ι]
-    (r x : ι → ℝ) (λ : ℝ) (hN : (∑ i, r i) ≠ 0) :
-    weightedPoissonScore r x λ = 0 ↔
-      λ = weightedPoissonMean r x := by
+    (r x : ι → ℝ) (μ : ℝ) (hN : (∑ i, r i) ≠ 0) :
+    weightedPoissonScore r x μ = 0 ↔
+      μ = weightedPoissonMean r x := by
   unfold weightedPoissonScore weightedPoissonMean
   simp_rw [mul_sub]
   rw [Finset.sum_sub_distrib, ← Finset.sum_mul]

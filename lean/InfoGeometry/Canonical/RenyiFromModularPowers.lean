@@ -1,19 +1,15 @@
-import Mathlib.Data.Real.Basic
 import InfoGeometry.Canonical.ModularLogGenerating
 
 namespace InfoGeometry.Canonical
 
 open Real
 
-variable {α : Type*} [Fintype α]
+/-- The Rényi entropy as a secant of the modular potential. -/
+noncomputable def renyiEntropy {n : ℕ} (kB : ℝ) (p : Fin n → ℝ) (s : ℝ) : ℝ :=
+  (kB / (1 - s)) * modularLogGenerating p s
 
-/-- The Rényi entropy of order s ≠ 1 -/
-noncomputable def S_R_renyi (ρ : α → ℝ) (k_B s : ℝ) : ℝ :=
-  (k_B / (1 - s)) * Psi_rho ρ s
-
-/-- Rényi entropy is the secant of the modular potential -/
-theorem S_R_eq_secant_Psi (ρ : α → ℝ) (k_B s : ℝ) :
-    S_R_renyi ρ k_B s = (k_B / (1 - s)) * Psi_rho ρ s := by
-  rfl
+/-- The Petz Rényi divergence (relative entropy). -/
+noncomputable def petzRenyiDivergence {n : ℕ} (p w : Fin n → ℝ) (s : ℝ) : ℝ :=
+  (1 / (s - 1)) * relativeModularLogGenerating p w s
 
 end InfoGeometry.Canonical

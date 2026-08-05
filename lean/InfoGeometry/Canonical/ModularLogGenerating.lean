@@ -1,25 +1,20 @@
-import Mathlib.Data.Real.Basic
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
-import Mathlib.Algebra.BigOperators.Group.Finset.Basic
-import Mathlib.Analysis.SpecialFunctions.Pow.Real
+import InfoGeometry.Canonical.OperatorSurprisal
 
 namespace InfoGeometry.Canonical
 
 open Real
-open scoped BigOperators
+open Finset
 
-variable {α : Type*} [Fintype α]
+/-- The spectral partition function Z_p(s) = Tr(p^s). -/
+noncomputable def spectralPartition {n : ℕ} (p : Fin n → ℝ) (s : ℝ) : ℝ :=
+  ∑ i : Fin n, (p i) ^ s
 
-/-- The spectral partition function Z_rho(s) = Tr(rho^s) -/
-noncomputable def Z_rho (ρ : α → ℝ) (s : ℝ) : ℝ :=
-  ∑ i, (ρ i) ^ s
+/-- The log-generating potential of modular-operator exponents. -/
+noncomputable def modularLogGenerating {n : ℕ} (p : Fin n → ℝ) (s : ℝ) : ℝ :=
+  Real.log (spectralPartition p s)
 
-/-- The modular log-generating function Psi_rho(s) = log Z_rho(s) -/
-noncomputable def Psi_rho (ρ : α → ℝ) (s : ℝ) : ℝ :=
-  log (Z_rho ρ s)
-
-/-- The escort state at order s -/
-noncomputable def escort_state (ρ : α → ℝ) (s : ℝ) (i : α) : ℝ :=
-  (ρ i) ^ s / Z_rho ρ s
+/-- The relative modular generating function. -/
+noncomputable def relativeModularLogGenerating {n : ℕ} (p w : Fin n → ℝ) (s : ℝ) : ℝ :=
+  Real.log (∑ i : Fin n, (p i) ^ s * (w i) ^ (1 - s))
 
 end InfoGeometry.Canonical

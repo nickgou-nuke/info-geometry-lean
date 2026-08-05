@@ -38,7 +38,16 @@ jobs:
 
           @[default_target]
           lean_lib GrandPartition where
-            roots := #[`GrandPartitionAll]
+            roots := #[
+              `GrandPartitionPolynomial,
+              `GrandPartitionTransform,
+              `GrandPartitionEuler,
+              `GrandPartitionRational,
+              `GrandPartitionProbability,
+              `GrandPartitionRobustPoisson,
+              `GrandPartitionOnline,
+              `GrandPartitionAll
+            ]
           EOF
       - name: Cache isolated dependencies
         uses: actions/cache@v4
@@ -47,6 +56,7 @@ jobs:
             ~/.elan
             /tmp/grand-partition-check/.lake
           key: grand-partition-lean-4.28.1-mathlib-v4.28.1
+          save-always: true
       - name: Fetch Mathlib and binary cache
         working-directory: /tmp/grand-partition-check
         run: |

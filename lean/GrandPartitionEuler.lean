@@ -58,6 +58,28 @@ theorem euler_grandPartitionPoly_as_sum
     rw [eulerOp_coeff, hzero]
     simp [hk]
 
+/-- Finite coefficient expansion of the second raw occupancy-moment
+polynomial. -/
+theorem eulerOp_euler_grandPartitionPoly_as_sum
+    (b : ℕ → R) (n : ℕ) :
+    eulerOp (eulerOp (grandPartitionPoly b n)) =
+      ∑ m ∈ range (n + 1),
+        C ((m : R) ^ 2 * canonicalPartition b n m) * X ^ m := by
+  ext k
+  by_cases hk : k ∈ range (n + 1)
+  · rw [eulerOp_coeff, eulerOp_coeff]
+    simp [canonicalPartition, hk]
+    ring
+  · have hnot : ¬ k < n + 1 := by
+      simpa [Finset.mem_range] using hk
+    have hnk : n < k :=
+      Nat.lt_of_lt_of_le (Nat.lt_succ_self n) (Nat.not_lt.mp hnot)
+    have hzero : (grandPartitionPoly b n).coeff k = 0 := by
+      change canonicalPartition b n k = 0
+      exact canonical_degree_bound (b := b) n k hnk
+    rw [eulerOp_coeff, eulerOp_coeff, hzero]
+    simp [hk]
+
 /-- The evaluated Euler polynomial is the unnormalized first occupancy
 moment. -/
 theorem eval_euler_grandPartitionPoly_eq_sum
@@ -75,10 +97,7 @@ theorem eval_eulerOp_euler_grandPartitionPoly_eq_sum
     (eulerOp (eulerOp (grandPartitionPoly b n))).eval q =
       ∑ m ∈ range (n + 1),
         (m : R) ^ 2 * q ^ m * canonicalPartition b n m := by
-  rw [euler_grandPartitionPoly_as_sum]
-  rw [euler_grandPartitionPoly_as_sum]
-  apply Finset.sum_congr rfl
-  intro m hm
-  ring
+  rw [eulerOp_euler_grandPartitionPoly_as_sum]
+  simp [mul_assoc, mul_left_comm]
 
 end EulerLayer

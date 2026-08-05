@@ -35,7 +35,18 @@ jobs:
 
           require mathlib from git
             "https://github.com/leanprover-community/mathlib4.git" @ "v4.28.1"
+
+          @[default_target]
+          lean_lib GrandPartition where
+            roots := #[`GrandPartitionAll]
           EOF
+      - name: Cache isolated dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            /tmp/grand-partition-check/.lake
+          key: grand-partition-lean-4.28.1-mathlib-v4.28.1
       - name: Fetch Mathlib and binary cache
         working-directory: /tmp/grand-partition-check
         run: |
@@ -43,7 +54,7 @@ jobs:
           lake exe cache get
       - name: Kernel-check full pipeline
         working-directory: /tmp/grand-partition-check
-        run: lake env lean GrandPartitionAll.lean
+        run: lake build GrandPartition
       - name: Enforce zero proof placeholders
         run: |
           ! grep -nE '\bsorry\b|\badmit\b' lean/GrandPartition*.lean

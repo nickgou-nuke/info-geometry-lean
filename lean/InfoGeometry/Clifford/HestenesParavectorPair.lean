@@ -67,10 +67,10 @@ theorem left_mul_right_paravector_eq_norm (hv0_norm : Q v0 = 1) (x : M) :
       rw [← mul_assoc (ι Q x) (ι Q x) (gamma0 Q v0)]
       rw [← mul_assoc (gamma0 Q v0) (ι Q x * ι Q x) (gamma0 Q v0)]
     _ = gamma0 Q v0 * (algebraMap R (CliffordAlgebra Q) (Q x)) * gamma0 Q v0 := by rw [ι_sq_scalar Q x]
-    _ = (algebraMap R (CliffordAlgebra Q) (Q x)) * (gamma0 Q v0 * gamma0 Q v0) := by 
-        rw [Algebra.commutes]
-        exact mul_assoc _ _ _
+    _ = (algebraMap R (CliffordAlgebra Q) (Q x)) * gamma0 Q v0 * gamma0 Q v0 := by 
+        rw [← Algebra.commutes (Q x) (gamma0 Q v0)]
+    _ = (algebraMap R (CliffordAlgebra Q) (Q x)) * (gamma0 Q v0 * gamma0 Q v0) := by rw [mul_assoc]
     _ = (algebraMap R (CliffordAlgebra Q) (Q x)) * 1 := by rw [gamma0_sq Q v0 hv0_norm]
-    _ = algebraMap R (CliffordAlgebra Q) (Q x) := mul_one _
+    _ = algebraMap R (CliffordAlgebra Q) (Q x) := by rw [mul_one]
 
 end InfoGeometry.Clifford.Hestenes

@@ -46,6 +46,6 @@ theorem prior_normalization
     (∏ i ∈ range n, ((1 - α) + α * b i)) =
       (1 - α) ^ n * grandPartition n (α / (1 - α)) b := by
   apply prior_normalization_of_relation
-  field_simp
+  field_simp [hα]
 
 end RationalLayer

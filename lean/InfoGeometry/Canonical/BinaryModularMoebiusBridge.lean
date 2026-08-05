@@ -15,7 +15,10 @@ theorem binary_moebius_spectral_gap (α r : ℝ) (hα0 : 0 < α) (hα1 : α < 1)
   have hd_plus : Δ_plus = r / α := rfl
   have hd_minus : Δ_minus = (1 - r) / (1 - α) := rfl
   rw [hd_plus, hd_minus]
-  have h1 : (r / α) / ((1 - r) / (1 - α)) = (r / (1 - r)) / (α / (1 - α)) := by ring
+  have h1 : (r / α) / ((1 - r) / (1 - α)) = (r / (1 - r)) / (α / (1 - α)) := by
+    change (r * α⁻¹) * ((1 - r) * (1 - α)⁻¹)⁻¹ = (r * (1 - r)⁻¹) * (α * (1 - α)⁻¹)⁻¹
+    rw [mul_inv, mul_inv]
+    ring
   rw [h1]
   have hr_div_pos : 0 < r / (1 - r) := div_pos hr0 (sub_pos.mpr hr1)
   have hα_div_pos : 0 < α / (1 - α) := div_pos hα0 (sub_pos.mpr hα1)

@@ -11,8 +11,6 @@ on:
       - lean/GrandPartitionPolynomial.lean
       - .github/workflows/grand-partition-check.yml
       - lean-toolchain
-      - lakefile.lean
-      - lake-manifest.json
 
 jobs:
   check:
@@ -23,12 +21,29 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Fetch dependencies
+      - name: Create isolated Mathlib project
+        run: |
+          rm -rf /tmp/grand-partition-check
+          mkdir -p /tmp/grand-partition-check
+          cp lean-toolchain /tmp/grand-partition-check/lean-toolchain
+          cp lean/GrandPartitionPolynomial.lean /tmp/grand-partition-check/GrandPartitionPolynomial.lean
+          cat > /tmp/grand-partition-check/lakefile.lean <<'EOF'
+          import Lake
+          open Lake DSL
+
+          package grandPartitionCheck
+
+          require mathlib from git
+            "https://github.com/leanprover-community/mathlib4.git" @ "v4.28.0"
+          EOF
+      - name: Fetch Mathlib and binary cache
+        working-directory: /tmp/grand-partition-check
         run: |
           lake update
           lake exe cache get
       - name: Kernel-check owner module
-        run: lake env lean lean/GrandPartitionPolynomial.lean
+        working-directory: /tmp/grand-partition-check
+        run: lake env lean GrandPartitionPolynomial.lean
       - name: Enforce zero proof placeholders
         run: |
           ! grep -nE '\bsorry\b|\badmit\b' lean/GrandPartitionPolynomial.lean

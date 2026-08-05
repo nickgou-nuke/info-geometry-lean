@@ -1,0 +1,17 @@
+{
+  "mu_admission": 18.76,
+  "epsilon_admission": 3.23,
+  "tau_cosmic": 25.38,
+  "epsilon_cosmic": 3.00,
+  "tau_dropout": 62.57,
+  "epsilon_dropout": 3.00,
+  "k_l_admission": 0.0,
+  "k_l_cosmic": 0.0,
+  "k_l_dropout": 0.0,
+  "background": 100.0,
+  "variance": 9.05,
+  "dataset_hash": "synthesized-calibration",
+  "random_seed": 0,
+  "commit_sha": "d2f05e91e",
+  "figure_kind": "optimized"
+}

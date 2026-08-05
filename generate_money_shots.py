@@ -6,10 +6,10 @@ def generate_plots():
     # Locked optimal parameters
     pipeline = ModularAsymmetricCMOSPipeline(
         a=1.0, b=0.0, domain_floor=84.95,
-        mu_admission=3.0, epsilon_admission=2.0,
-        tau_cosmic=15.0, epsilon_cosmic=2.0,
-        tau_dropout=15.0, epsilon_dropout=1.5,
-        k_l_admission=0.5, k_l_cosmic=1.0, k_l_dropout=0.5, k_track=1.0
+        mu_admission=18.76, epsilon_admission=3.23,
+        tau_cosmic=25.38, epsilon_cosmic=3.0,
+        tau_dropout=62.57, epsilon_dropout=3.0,
+        k_l_admission=0.0, k_l_cosmic=0.0, k_l_dropout=0.0, k_track=0.0
     )
     
     bg = 100.0

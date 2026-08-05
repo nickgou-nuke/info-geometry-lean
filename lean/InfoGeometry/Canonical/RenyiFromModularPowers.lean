@@ -36,8 +36,8 @@ theorem relativeModularGeneratingFunction_eq (s : ℝ) :
 noncomputable def petzRenyiDivergence (s : ℝ) (hs : s ≠ 1) : ℝ :=
   (relativeModularGeneratingFunction pi p s) / (s - 1)
 
-theorem petzRenyiDivergence_eq_standard (s : ℝ) (hs : s ≠ 1) :
-    petzRenyiDivergence pi p s hs = 
+theorem petzRenyiDivergence_eq_standard (s : ℝ) (_hs : s ≠ 1) :
+    petzRenyiDivergence pi p s _hs = 
     (1 / (s - 1)) * log ((p.prob ^ s) * (pi.prob ^ (1 - s)) + 
                          ((1 - p.prob) ^ s) * ((1 - pi.prob) ^ (1 - s))) := by
   dsimp [petzRenyiDivergence]

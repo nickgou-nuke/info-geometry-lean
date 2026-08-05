@@ -77,8 +77,8 @@ theorem occupancyPMF_sum_one
     (n : ℕ) (q : ℝ) (b : ℕ → ℝ)
     (hΞ : grandPartition n q b ≠ 0) :
     ∑ m ∈ range (n + 1), occupancyPMF n q b m = 1 := by
-  rw [occupancyPMF, ← Finset.sum_div, occupancyWeight_sum]
-  exact div_self hΞ
+  simp_rw [occupancyPMF]
+  rw [Finset.sum_div, occupancyWeight_sum, div_self hΞ]
 
 /-- PMF first raw moment. -/
 def pmfMean
@@ -100,8 +100,7 @@ theorem pmfMean_eq_expectedOccupancy
     (hΞ : grandPartition n q b ≠ 0) :
     pmfMean n q b = expectedOccupancy n q b := by
   unfold pmfMean occupancyPMF occupancyWeight expectedOccupancy
-  field_simp [hΞ]
-  rw [eval_euler_grandPartitionPoly_eq_sum]
+  rw [eval_euler_grandPartitionPoly_eq_sum, ← Finset.sum_div]
   apply Finset.sum_congr rfl
   intro m hm
   ring
@@ -111,8 +110,7 @@ theorem pmfSecondRaw_eq_secondRawOccupancy
     (hΞ : grandPartition n q b ≠ 0) :
     pmfSecondRaw n q b = secondRawOccupancy n q b := by
   unfold pmfSecondRaw occupancyPMF occupancyWeight secondRawOccupancy
-  field_simp [hΞ]
-  rw [eval_eulerOp_euler_grandPartitionPoly_eq_sum]
+  rw [eval_eulerOp_euler_grandPartitionPoly_eq_sum, ← Finset.sum_div]
   apply Finset.sum_congr rfl
   intro m hm
   ring

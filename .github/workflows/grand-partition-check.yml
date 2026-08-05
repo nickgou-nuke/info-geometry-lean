@@ -1,4 +1,4 @@
-name: Grand Partition Polynomial Check
+name: Grand Partition Full Pipeline Check
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
     branches:
       - main
     paths:
-      - lean/GrandPartitionPolynomial.lean
+      - lean/GrandPartition*.lean
       - .github/workflows/grand-partition-check.yml
       - lean-toolchain
 
@@ -26,7 +26,7 @@ jobs:
           rm -rf /tmp/grand-partition-check
           mkdir -p /tmp/grand-partition-check
           cp lean-toolchain /tmp/grand-partition-check/lean-toolchain
-          cp lean/GrandPartitionPolynomial.lean /tmp/grand-partition-check/GrandPartitionPolynomial.lean
+          cp lean/GrandPartition*.lean /tmp/grand-partition-check/
           cat > /tmp/grand-partition-check/lakefile.lean <<'EOF'
           import Lake
           open Lake DSL
@@ -41,9 +41,9 @@ jobs:
         run: |
           lake update
           lake exe cache get
-      - name: Kernel-check owner module
+      - name: Kernel-check full pipeline
         working-directory: /tmp/grand-partition-check
-        run: lake env lean GrandPartitionPolynomial.lean
+        run: lake env lean GrandPartitionAll.lean
       - name: Enforce zero proof placeholders
         run: |
-          ! grep -nE '\bsorry\b|\badmit\b' lean/GrandPartitionPolynomial.lean
+          ! grep -nE '\bsorry\b|\badmit\b' lean/GrandPartition*.lean

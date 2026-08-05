@@ -30,7 +30,7 @@ theorem eulerOp_coeff (P : R[X]) (m : ℕ) :
     (eulerOp P).coeff m = (m : R) * P.coeff m := by
   cases m with
   | zero => simp
-  | succ m => simpa [Nat.cast_succ] using eulerOp_coeff_succ P m
+  | succ m => simp
 
 /-- Evaluation commutes with the Euler construction in the expected algebraic
 form `eval q (𝒟P) = q * eval q P'`. -/
@@ -51,7 +51,7 @@ theorem euler_grandPartitionPoly_as_sum
     · simp [canonicalPartition]
     · intro j hj hne
       rw [Polynomial.coeff_monomial]
-      simp [hne, Ne.symm hne]
+      simp [hne]
     · intro hknot
       exact (hknot hk).elim
   · have hnot : ¬ k < n + 1 := by
@@ -70,7 +70,7 @@ theorem euler_grandPartitionPoly_as_sum
       intro h
       subst j
       exact hk hj
-    simp [hkj, Ne.symm hkj]
+    simp [Ne.symm hkj]
 
 /-- Finite monomial expansion of the second raw occupancy-moment polynomial. -/
 theorem eulerOp_euler_grandPartitionPoly_as_sum
@@ -86,7 +86,7 @@ theorem eulerOp_euler_grandPartitionPoly_as_sum
       ring
     · intro j hj hne
       rw [Polynomial.coeff_monomial]
-      simp [hne, Ne.symm hne]
+      simp [hne]
     · intro hknot
       exact (hknot hk).elim
   · have hnot : ¬ k < n + 1 := by
@@ -105,7 +105,7 @@ theorem eulerOp_euler_grandPartitionPoly_as_sum
       intro h
       subst j
       exact hk hj
-    simp [hkj, Ne.symm hkj]
+    simp [Ne.symm hkj]
 
 /-- The evaluated Euler polynomial is the unnormalized first occupancy
 moment. -/

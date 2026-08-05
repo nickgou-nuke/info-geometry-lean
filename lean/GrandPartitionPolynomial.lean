@@ -37,7 +37,7 @@ lemma canonical_succ_succ (n m : ℕ) :
   change
     (grandPartitionPoly b n * (1 + C (b n) * X)).coeff (m + 1) =
       (grandPartitionPoly b n).coeff (m + 1) + b n * (grandPartitionPoly b n).coeff m
-  rw [mul_add, mul_one, coeff_add, mul_assoc, coeff_mul_X, coeff_mul_C]
+  rw [mul_add, mul_one, coeff_add, ← mul_assoc, coeff_mul_X, coeff_mul_C]
   rw [mul_comm ((grandPartitionPoly b n).coeff m) (b n)]
 
 -- 4. Finite Support Bound
@@ -47,8 +47,7 @@ lemma canonical_degree_bound (n m : ℕ) (h : n < m) :
   | zero =>
       have hm : m ≠ 0 := Nat.ne_of_gt h
       change (1 : R[X]).coeff m = 0
-      rw [show (1 : R[X]) = C 1 by simp]
-      simp [hm]
+      rw [coeff_one, if_neg hm]
   | succ n ih =>
       cases m with
       | zero =>
@@ -74,7 +73,7 @@ lemma grandPartitionPoly_as_sum (n : ℕ) :
       ∑ m ∈ range (n + 1), C (canonicalPartition b n m) * X ^ m := by
   ext k
   by_cases hk : k ∈ range (n + 1)
-  · simp [canonicalPartition, Polynomial.coeff_C_mul_X_pow, hk]
+  · simp [canonicalPartition, hk]
   · have hnot : ¬ k < n + 1 := by
       simpa [Finset.mem_range] using hk
     have hnk : n < k :=
@@ -83,6 +82,6 @@ lemma grandPartitionPoly_as_sum (n : ℕ) :
       change canonicalPartition b n k = 0
       exact canonical_degree_bound (b := b) n k hnk
     rw [hzero]
-    simp [Polynomial.coeff_C_mul_X_pow, hk]
+    simp [hk]
 
 end CommutativeAlgebra

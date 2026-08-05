@@ -1,15 +1,49 @@
-import InfoGeometry.Canonical.ModularLogGenerating
+import Mathlib.Tactic
+import InfoGeometry.Canonical.BinaryModularMoebiusBridge
 
-namespace InfoGeometry.Canonical
+namespace InfoGeometry.Canonical.ModularTheory
 
 open Real
+open StrictBinaryState
 
-/-- The Rényi entropy as a secant of the modular potential. -/
-noncomputable def renyiEntropy {n : ℕ} (kB : ℝ) (p : Fin n → ℝ) (s : ℝ) : ℝ :=
-  (kB / (1 - s)) * modularLogGenerating p s
+namespace StrictBinaryState
 
-/-- The Petz Rényi divergence (relative entropy). -/
-noncomputable def petzRenyiDivergence {n : ℕ} (p w : Fin n → ℝ) (s : ℝ) : ℝ :=
-  (1 / (s - 1)) * relativeModularLogGenerating p w s
+variable (pi p : StrictBinaryState)
 
-end InfoGeometry.Canonical
+/-- Psi_{p|pi}(s) -/
+noncomputable def relativeModularGeneratingFunction (s : ℝ) : ℝ :=
+  log (pi.prob * (deltaPlus pi p) ^ s + 
+       (1 - pi.prob) * (deltaMinus pi p) ^ s)
+
+theorem relativeModularGeneratingFunction_eq (s : ℝ) :
+    relativeModularGeneratingFunction pi p s = 
+    log ((p.prob ^ s) * (pi.prob ^ (1 - s)) + 
+         ((1 - p.prob) ^ s) * ((1 - pi.prob) ^ (1 - s))) := by
+  dsimp [relativeModularGeneratingFunction, deltaPlus, deltaMinus]
+  have ha_pos : 0 < pi.prob := pi.h_pos
+  have hr_pos : 0 < p.prob := p.h_pos
+  have ha_sub_pos : 0 < 1 - pi.prob := sub_pos_of_lt pi.h_lt_one
+  have hr_sub_pos : 0 < 1 - p.prob := sub_pos_of_lt p.h_lt_one
+  have h1 : pi.prob * (p.prob / pi.prob) ^ s = p.prob ^ s * pi.prob ^ (1 - s) := by
+    rw [div_rpow hr_pos.le ha_pos.le, rpow_sub ha_pos, rpow_one]
+    ring
+  have h2 : (1 - pi.prob) * ((1 - p.prob) / (1 - pi.prob)) ^ s = (1 - p.prob) ^ s * (1 - pi.prob) ^ (1 - s) := by
+    rw [div_rpow hr_sub_pos.le ha_sub_pos.le, rpow_sub ha_sub_pos, rpow_one]
+    ring
+  rw [h1, h2]
+
+/-- Petz-Rényi divergence D_s^P(p | pi) -/
+noncomputable def petzRenyiDivergence (s : ℝ) (hs : s ≠ 1) : ℝ :=
+  (relativeModularGeneratingFunction pi p s) / (s - 1)
+
+theorem petzRenyiDivergence_eq_standard (s : ℝ) (hs : s ≠ 1) :
+    petzRenyiDivergence pi p s hs = 
+    (1 / (s - 1)) * log ((p.prob ^ s) * (pi.prob ^ (1 - s)) + 
+                         ((1 - p.prob) ^ s) * ((1 - pi.prob) ^ (1 - s))) := by
+  dsimp [petzRenyiDivergence]
+  rw [relativeModularGeneratingFunction_eq pi p s]
+  ring
+
+end StrictBinaryState
+
+end InfoGeometry.Canonical.ModularTheory

@@ -1,66 +1,20 @@
-import Mathlib.Tactic
-import InfoGeometry.Algebra.HypercomplexTriad
-import InfoGeometry.Canonical.ModularLorentzBoost
-import InfoGeometry.Canonical.SplitCliffordChiralProjection
-import InfoGeometry.Canonical.EmergentKillingField
+import Mathlib
 
-/-!
-# InfoGeometry.Canonical.OperatorSurprisal
+namespace InfoGeometry.Canonical
 
-Operator surprisal as a scaled modular generator and its chiral trace readout.
--/
+open Real
+open Finset
 
-namespace InfoGeometry.Canonical.OperatorSurprisal
+/-- The surprisal for a discrete probability state p. -/
+noncomputable def stateSurprisal {n : ℕ} (p : Fin n → ℝ) (i : Fin n) : ℝ :=
+  - Real.log (p i)
 
-open Matrix
-open InfoGeometry.Algebra.HypercomplexTriad
-open InfoGeometry.Canonical.ModularLorentzBoost
-open InfoGeometry.Canonical.SplitCliffordChiralProjection
-open InfoGeometry.Canonical.EmergentKillingField
+/-- The Gibbs/Shannon entropy as the expectation of the surprisal. -/
+noncomputable def gibbsEntropy {n : ℕ} (kB : ℝ) (p : Fin n → ℝ) : ℝ :=
+  kB * ∑ i : Fin n, p i * stateSurprisal p i
 
-abbrev M2R := Matrix (Fin 2) (Fin 2) ℝ
+/-- Relative operator surprisal (log-ratio) between p and w. -/
+noncomputable def relativeSurprisal {n : ℕ} (p w : Fin n → ℝ) (i : Fin n) : ℝ :=
+  - Real.log (p i / w i)
 
-/-- Operator surprisal: `β • K`. -/
-noncomputable def surprisal (β : ℝ) : M2R := β • K
-
-/-- Surprisal commutator on the nilpotent boundary is the `2β` boost scaling. -/
-theorem surprisal_generates_hyperbolic_boost (β : ℝ) :
-    surprisal β * N - N * surprisal β = (2 * β) • N := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [surprisal, K, N, E, I, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
-
-/-- Chiral left trace readout of surprisal is `β`. -/
-theorem surprisal_trace_left (β : ℝ) :
-    traceForm (surprisal β) N_left = β := by
-  unfold traceForm tr surprisal
-  rw [K_eval, N_left_eval]
-  norm_num [Matrix.mul_apply, Fin.sum_univ_two]
-
-/-- Chiral right trace readout of surprisal is `-β`. -/
-theorem surprisal_trace_right (β : ℝ) :
-    traceForm (surprisal β) N_right = -β := by
-  unfold traceForm tr surprisal
-  rw [K_eval, N_right_eval]
-  norm_num [Matrix.mul_apply, Fin.sum_univ_two]
-
-/-- Total surprisal readout on `N_left + N_right` is balanced to `0`. -/
-theorem surprisal_total_equilibrium (β : ℝ) :
-    traceForm (surprisal β) (N_left + N_right) = 0 := by
-  rw [N_left_eval, N_right_eval]
-  unfold traceForm tr surprisal
-  rw [K_eval]
-  norm_num [Matrix.mul_apply, Fin.sum_univ_two]
-
-end InfoGeometry.Canonical.OperatorSurprisal
-
-/-- Operator surprisal definition for a faithful real-valued density or probability p -/
-noncomputable def K_surprisal (p : ℝ) : ℝ := - Real.log p
-
-/-- The modular exponent recovers powers of p -/
-theorem exp_neg_s_K (s p : ℝ) (hp : 0 < p) :
-    Real.exp (- (s * K_surprisal p)) = p ^ s := by
-  dsimp [K_surprisal]
-  rw [mul_neg, neg_neg]
-  have h_exp_log : Real.exp (s * Real.log p) = p ^ s := by
-    rw [mul_comm, ← Real.rpow_def_of_pos hp]
-  exact h_exp_log
+end InfoGeometry.Canonical

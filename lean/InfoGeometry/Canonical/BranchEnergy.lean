@@ -7,80 +7,56 @@ namespace InfoGeometry.Canonical
 
 open Real
 
-/-- The positive branch energy D_+ -/
-noncomputable def positiveBranchEnergy (D : ℝ) (X μ : ℝ) : ℝ :=
-  if X ≥ μ then D else 0
+noncomputable def positiveBranchEnergy (a b : ℝ) (ha : a ≠ 0) (X μ : ℝ) : ℝ :=
+  if μ ≤ X then D_affine a b X μ else 0
 
-/-- The negative branch energy D_- -/
-noncomputable def negativeBranchEnergy (D : ℝ) (X μ : ℝ) : ℝ :=
-  if X < μ then D else 0
+noncomputable def negativeBranchEnergy (a b : ℝ) (ha : a ≠ 0) (X μ : ℝ) : ℝ :=
+  if X < μ then D_affine a b X μ else 0
 
-theorem branchEnergy_add (D X μ : ℝ) :
-    positiveBranchEnergy D X μ + negativeBranchEnergy D X μ = D := by
-  dsimp [positiveBranchEnergy, negativeBranchEnergy]
-  by_cases h : X ≥ μ
-  · rw [if_pos h]
-    have h_not : ¬(X < μ) := by linarith
-    rw [if_neg h_not]
-    ring
-  · rw [if_neg h]
-    have h_lt : X < μ := by linarith
-    rw [if_pos h_lt]
-    ring
+theorem branchEnergy_add (a b : ℝ) (ha : a ≠ 0) (X μ : ℝ) :
+    positiveBranchEnergy a b ha X μ + negativeBranchEnergy a b ha X μ = D_affine a b X μ := by
+  by_cases h : μ ≤ X
+  · have hnlt : ¬ X < μ := not_lt_of_ge h
+    simp [positiveBranchEnergy, negativeBranchEnergy, h, hnlt]
+  · have hlt : X < μ := lt_of_not_ge h
+    simp [positiveBranchEnergy, negativeBranchEnergy, h, hlt]
 
-theorem branchEnergy_mul_eq_zero (D X μ : ℝ) :
-    positiveBranchEnergy D X μ * negativeBranchEnergy D X μ = 0 := by
-  dsimp [positiveBranchEnergy, negativeBranchEnergy]
-  by_cases h : X ≥ μ
-  · rw [if_pos h]
-    have h_not : ¬(X < μ) := by linarith
-    rw [if_neg h_not]
-    ring
-  · rw [if_neg h]
-    have h_lt : X < μ := by linarith
-    rw [if_pos h_lt]
-    ring
+theorem branchEnergy_mul_eq_zero (a b : ℝ) (ha : a ≠ 0) (X μ : ℝ) :
+    positiveBranchEnergy a b ha X μ * negativeBranchEnergy a b ha X μ = 0 := by
+  by_cases h : μ ≤ X
+  · have hnlt : ¬ X < μ := not_lt_of_ge h
+    simp [positiveBranchEnergy, negativeBranchEnergy, h, hnlt]
+  · have hlt : X < μ := lt_of_not_ge h
+    simp [positiveBranchEnergy, negativeBranchEnergy, h, hlt]
 
-/-- The signed root deviance s(X, μ) -/
-noncomputable def signedRoot (D X μ : ℝ) : ℝ :=
-  if X ≥ μ then sqrt D else - sqrt D
+noncomputable def signedRootDeviance (a b : ℝ) (ha : a ≠ 0) (X μ : ℝ) : ℝ :=
+  if μ ≤ X then
+    Real.sqrt (D_affine a b X μ)
+  else
+    -Real.sqrt (D_affine a b X μ)
 
-noncomputable def s_plus (D X μ : ℝ) : ℝ := max (signedRoot D X μ) 0
-noncomputable def s_minus (D X μ : ℝ) : ℝ := max (- signedRoot D X μ) 0
+noncomputable def signedRootPos (a b : ℝ) (ha : a ≠ 0) (X μ : ℝ) : ℝ :=
+  max (signedRootDeviance a b ha X μ) 0
 
-theorem signedRoot_pos_sq (D X μ : ℝ) (hD : 0 ≤ D) :
-    (s_plus D X μ) ^ 2 = positiveBranchEnergy D X μ := by
-  dsimp [s_plus, signedRoot, positiveBranchEnergy]
-  by_cases h : X ≥ μ
-  · rw [if_pos h, if_pos h]
-    have h_sqrt : 0 ≤ sqrt D := sqrt_nonneg D
-    rw [max_eq_left h_sqrt, sq_sqrt hD]
-  · rw [if_neg h, if_neg h]
-    have h_sqrt : - sqrt D ≤ 0 := neg_nonpos.mpr (sqrt_nonneg D)
-    rw [max_eq_right h_sqrt, zero_pow (by decide)]
+noncomputable def signedRootNeg (a b : ℝ) (ha : a ≠ 0) (X μ : ℝ) : ℝ :=
+  max (-signedRootDeviance a b ha X μ) 0
 
-theorem signedRoot_neg_sq (D X μ : ℝ) (hD : 0 ≤ D) :
-    (s_minus D X μ) ^ 2 = negativeBranchEnergy D X μ := by
-  dsimp [s_minus, signedRoot, negativeBranchEnergy]
-  by_cases h : X ≥ μ
-  · rw [if_pos h]
-    have h_not : ¬(X < μ) := by linarith
-    rw [if_neg h_not]
-    have h_sqrt : - sqrt D ≤ 0 := neg_nonpos.mpr (sqrt_nonneg D)
-    rw [max_eq_right h_sqrt, zero_pow (by decide)]
-  · rw [if_neg h]
-    have h_lt : X < μ := by linarith
-    rw [if_pos h_lt]
-    have h_sqrt : 0 ≤ sqrt D := sqrt_nonneg D
-    rw [neg_neg, max_eq_left h_sqrt, sq_sqrt hD]
-
-/-- Base lemma for deviance nonnegativity: y - 1 - log y ≥ 0 for y > 0. -/
 lemma deviance_core_nonneg (y : ℝ) (hy : 0 < y) :
     0 ≤ y - 1 - log y := by
   have H : log y ≤ y - 1 := log_le_sub_one_of_pos hy
   linarith
 
-/-- Base lemma: x log (x / μ) - (x - μ) ≥ 0 for x, μ > 0. -/
+lemma deviance_core_eq_zero_iff (y : ℝ) (hy : 0 < y) :
+    y - 1 - log y = 0 ↔ y = 1 := by
+  constructor
+  · intro h
+    by_contra hne
+    have h_lt : log y < y - 1 := log_lt_sub_one_of_pos hy hne
+    linarith
+  · intro h
+    rw [h, log_one]
+    norm_num
+
 lemma x_log_div_sub_nonneg (x μ : ℝ) (hx : 0 < x) (hμ : 0 < μ) :
     0 ≤ x * log (x / μ) - (x - μ) := by
   have hy := deviance_core_nonneg (μ / x) (div_pos hμ hx)
@@ -98,8 +74,31 @@ lemma x_log_div_sub_nonneg (x μ : ℝ) (hx : 0 < x) (hμ : 0 < μ) :
     ring
   rwa [← h_eq]
 
-/-- Non-negativity of the affine deviance. -/
-theorem affineDeviance_nonneg (a b x μ : ℝ) (hx : 0 < a * x + b) (hμ : 0 < a * μ + b) :
+lemma x_log_div_sub_eq_zero_iff (x μ : ℝ) (hx : 0 < x) (hμ : 0 < μ) :
+    x * log (x / μ) - (x - μ) = 0 ↔ x = μ := by
+  have h_eq : x * log (x / μ) - (x - μ) = x * (log (x / μ) - (1 - μ / x)) := by
+    have h1 : x * (1 - μ / x) = x - μ := by
+      rw [mul_sub, mul_one, mul_div_cancel₀ _ hx.ne']
+    rw [mul_sub, h1]
+  rw [h_eq]
+  have hx_pos : x ≠ 0 := hx.ne'
+  rw [mul_eq_zero, sub_eq_zero]
+  simp only [hx_pos, false_or]
+  have h_log : log (x / μ) = - log (μ / x) := by
+    rw [log_div hx.ne' hμ.ne', log_div hμ.ne' hx.ne']
+    ring
+  rw [h_log]
+  have h1 : - log (μ / x) = 1 - μ / x ↔ μ / x - 1 - log (μ / x) = 0 := by
+    constructor
+    · intro h; linarith
+    · intro h; linarith
+  rw [h1]
+  rw [deviance_core_eq_zero_iff (μ / x) (div_pos hμ hx)]
+  have h_div : μ / x = 1 ↔ μ = x := div_eq_one_iff_eq hx.ne'
+  rw [h_div]
+  exact eq_comm
+
+theorem affineDeviance_nonneg (a b x μ : ℝ) (ha : a ≠ 0) (hx : 0 < a * x + b) (hμ : 0 < a * μ + b) :
     0 ≤ D_affine a b x μ := by
   dsimp [D_affine]
   have H := x_log_div_sub_nonneg (a * x + b) (a * μ + b) hx hμ
@@ -111,5 +110,39 @@ theorem affineDeviance_nonneg (a b x μ : ℝ) (hx : 0 < a * x + b) (hμ : 0 < a
   rw [h_eq]
   exact mul_nonneg h_pos H
 
+theorem affineDeviance_eq_zero_iff (a b x μ : ℝ) (ha : a ≠ 0) (hx : 0 < a * x + b) (hμ : 0 < a * μ + b) :
+    D_affine a b x μ = 0 ↔ x = μ := by
+  dsimp [D_affine]
+  have h_pos : 2 / a ^ 2 ≠ 0 := div_ne_zero (by norm_num) (pow_ne_zero 2 ha)
+  rw [mul_eq_zero]
+  simp only [h_pos, false_or]
+  have h_eq : (a * x + b) * log ((a * x + b) / (a * μ + b)) - a * (x - μ) = 
+              (a * x + b) * log ((a * x + b) / (a * μ + b)) - ((a * x + b) - (a * μ + b)) := by
+    congr 1
+    ring
+  rw [h_eq]
+  rw [x_log_div_sub_eq_zero_iff (a * x + b) (a * μ + b) hx hμ]
+  constructor
+  · intro h
+    have h1 : a * x = a * μ := by linarith
+    exact (mul_right_inj' ha).mp h1
+  · intro h
+    rw [h]
+
+theorem signedRoot_pos_sq (a b : ℝ) (ha : a ≠ 0) (X μ : ℝ) (hx : 0 < a * X + b) (hμ : 0 < a * μ + b) :
+    signedRootPos a b ha X μ ^ 2 = positiveBranchEnergy a b ha X μ := by
+  have hD : 0 ≤ D_affine a b X μ := affineDeviance_nonneg a b X μ ha hx hμ
+  by_cases h : μ ≤ X
+  · simp [signedRootPos, signedRootDeviance, positiveBranchEnergy, h, Real.sqrt_nonneg, Real.sq_sqrt hD]
+  · have hlt : X < μ := lt_of_not_ge h
+    simp [signedRootPos, signedRootDeviance, positiveBranchEnergy, h, Real.sqrt_nonneg]
+
+theorem signedRoot_neg_sq (a b : ℝ) (ha : a ≠ 0) (X μ : ℝ) (hx : 0 < a * X + b) (hμ : 0 < a * μ + b) :
+    signedRootNeg a b ha X μ ^ 2 = negativeBranchEnergy a b ha X μ := by
+  have hD : 0 ≤ D_affine a b X μ := affineDeviance_nonneg a b X μ ha hx hμ
+  by_cases h : μ ≤ X
+  · simp [signedRootNeg, signedRootDeviance, negativeBranchEnergy, h, Real.sqrt_nonneg]
+  · have hlt : X < μ := lt_of_not_ge h
+    simp [signedRootNeg, signedRootDeviance, negativeBranchEnergy, h, Real.sqrt_nonneg, Real.sq_sqrt hD]
 
 end InfoGeometry.Canonical

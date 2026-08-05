@@ -30,7 +30,7 @@ theorem eulerOp_coeff (P : R[X]) (m : ℕ) :
     (eulerOp P).coeff m = (m : R) * P.coeff m := by
   cases m with
   | zero => simp
-  | succ m => exact eulerOp_coeff_succ P m
+  | succ m => simpa [Nat.cast_succ] using eulerOp_coeff_succ P m
 
 /-- Evaluation commutes with the Euler construction in the expected algebraic
 form `eval q (𝒟P) = q * eval q P'`. -/
@@ -38,21 +38,22 @@ theorem eval_eulerOp (P : R[X]) (q : R) :
     (eulerOp P).eval q = q * (derivative P).eval q := by
   simp [eulerOp]
 
-/-- Finite coefficient expansion of the first occupancy-moment polynomial. -/
+/-- Finite monomial expansion of the first occupancy-moment polynomial. -/
 theorem euler_grandPartitionPoly_as_sum
     (b : ℕ → R) (n : ℕ) :
     eulerOp (grandPartitionPoly b n) =
       ∑ m ∈ range (n + 1),
-        C ((m : R) * canonicalPartition b n m) * X ^ m := by
+        monomial m ((m : R) * canonicalPartition b n m) := by
   ext k
   rw [eulerOp_coeff, Polynomial.finset_sum_coeff]
   by_cases hk : k ∈ range (n + 1)
   · rw [Finset.sum_eq_single k]
     · simp [canonicalPartition]
     · intro j hj hne
-      rw [Polynomial.coeff_C_mul_X_pow]
-      simp [hne]
-    · exact hk
+      rw [Polynomial.coeff_monomial]
+      simp [hne, Ne.symm hne]
+    · intro hknot
+      exact (hknot hk).elim
   · have hnot : ¬ k < n + 1 := by
       simpa [Finset.mem_range] using hk
     have hnk : n < k :=
@@ -64,20 +65,19 @@ theorem euler_grandPartitionPoly_as_sum
     symm
     apply Finset.sum_eq_zero
     intro j hj
-    rw [Polynomial.coeff_C_mul_X_pow]
+    rw [Polynomial.coeff_monomial]
     have hkj : k ≠ j := by
       intro h
       subst j
       exact hk hj
-    simp [hkj]
+    simp [hkj, Ne.symm hkj]
 
-/-- Finite coefficient expansion of the second raw occupancy-moment
-polynomial. -/
+/-- Finite monomial expansion of the second raw occupancy-moment polynomial. -/
 theorem eulerOp_euler_grandPartitionPoly_as_sum
     (b : ℕ → R) (n : ℕ) :
     eulerOp (eulerOp (grandPartitionPoly b n)) =
       ∑ m ∈ range (n + 1),
-        C ((m : R) ^ 2 * canonicalPartition b n m) * X ^ m := by
+        monomial m ((m : R) ^ 2 * canonicalPartition b n m) := by
   ext k
   rw [eulerOp_coeff, eulerOp_coeff, Polynomial.finset_sum_coeff]
   by_cases hk : k ∈ range (n + 1)
@@ -85,9 +85,10 @@ theorem eulerOp_euler_grandPartitionPoly_as_sum
     · simp [canonicalPartition]
       ring
     · intro j hj hne
-      rw [Polynomial.coeff_C_mul_X_pow]
-      simp [hne]
-    · exact hk
+      rw [Polynomial.coeff_monomial]
+      simp [hne, Ne.symm hne]
+    · intro hknot
+      exact (hknot hk).elim
   · have hnot : ¬ k < n + 1 := by
       simpa [Finset.mem_range] using hk
     have hnk : n < k :=
@@ -99,12 +100,12 @@ theorem eulerOp_euler_grandPartitionPoly_as_sum
     symm
     apply Finset.sum_eq_zero
     intro j hj
-    rw [Polynomial.coeff_C_mul_X_pow]
+    rw [Polynomial.coeff_monomial]
     have hkj : k ≠ j := by
       intro h
       subst j
       exact hk hj
-    simp [hkj]
+    simp [hkj, Ne.symm hkj]
 
 /-- The evaluated Euler polynomial is the unnormalized first occupancy
 moment. -/
@@ -116,7 +117,7 @@ theorem eval_euler_grandPartitionPoly_eq_sum
   rw [euler_grandPartitionPoly_as_sum, eval_finset_sum]
   apply Finset.sum_congr rfl
   intro m hm
-  rw [eval_mul, eval_C, eval_pow, eval_X]
+  rw [eval_monomial]
   ring
 
 /-- Applying the Euler operator twice produces the unnormalized second raw
@@ -129,7 +130,7 @@ theorem eval_eulerOp_euler_grandPartitionPoly_eq_sum
   rw [eulerOp_euler_grandPartitionPoly_as_sum, eval_finset_sum]
   apply Finset.sum_congr rfl
   intro m hm
-  rw [eval_mul, eval_C, eval_pow, eval_X]
+  rw [eval_monomial]
   ring
 
 end EulerLayer

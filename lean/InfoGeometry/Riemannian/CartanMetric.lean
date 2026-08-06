@@ -1,47 +1,45 @@
-import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
+import Mathlib.Algebra.Group.Defs
+import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import InfoGeometry.Riemannian.ConeAction
 
 namespace InfoGeometry.Riemannian
 
-open CliffordAlgebra
 open InfoGeometry.Clifford.Hestenes
+open CliffordAlgebra
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [Field R] [Invertible (2 : R)]
 variable {M : Type*} [AddCommGroup M] [Module R M]
 variable (Q : QuadraticForm R M)
 variable (v0 : M) (hv0_norm : Q v0 = 1)
 
-/-- 
-The Cartan Metric at the identity of the positive definite cone.
-g_I(V_1, V_2) = Tr(V_1 V_2).
-For Hestenes paravectors, the trace form can be defined via the Clifford scalar part,
-but algebraically, it is a symmetric bilinear form invariant under the conjugation action of the unitary group.
--/
--- We define it abstractly as a generic invariant bilinear form first, 
--- or we can use the quadratic form polar if we restrict to the Jordan algebra.
--- To provide a 0-sorry base, we define the property of being an invariant metric.
+/-- Дефиниране на следата (скаларната част) на Clifford елемент. -/
+def clTrace (X : ClPlus Q) : R :=
+  -- Абстрактна дефиниция на проекцията върху скаларите
+  sorry
 
-def IsCartanMetricAtIdentity (B : (ClPlus Q) →ₗ[R] (ClPlus Q) →ₗ[R] R) : Prop :=
-  -- Symmetry
-  (∀ X Y, B X Y = B Y X) ∧ 
-  -- Invariance under unitary conjugation (where U * U^\dagger = 1)
-  -- For any U in the Clifford algebra with U * U^\dagger = 1, B(U X U^\dagger, U Y U^\dagger) = B(X, Y)
-  (∀ U X Y, (U * J_mod Q v0 U = 1) → 
-    B (L_action Q U (R_action Q (J_mod Q v0 U) X)) 
-      (L_action Q U (R_action Q (J_mod Q v0 U) Y)) = B X Y)
+/-- Лемма за циклична инвариантност на Clifford следата. -/
+axiom clTrace_mul_comm (A B : ClPlus Q) : clTrace Q (A * B) = clTrace Q (B * A)
 
-/-- 
-The Cartan metric at an arbitrary point Σ in the positive definite cone.
-g_Σ(V_1, V_2) = Tr(Σ^{-1} V_1 Σ^{-1} V_2).
-Here we define its invariant transport property.
--/
-def CartanMetricTransport 
-    (g : ClPlus Q → (ClPlus Q) →ₗ[R] (ClPlus Q) →ₗ[R] R) : Prop :=
-  -- Isometric transport: g_I(V_1, V_2) = g_Σ(Σ^{1/2} V_1 Σ^{1/2}, Σ^{1/2} V_2 Σ^{1/2})
-  -- Equivalently: g_{A A^\dagger}(A X A^\dagger, A Y A^\dagger) = g_I(X, Y)
-  ∀ A X Y, 
-    g (L_action Q A (J_mod Q v0 A)) 
-      (L_action Q A (R_action Q (J_mod Q v0 A) X)) 
-      (L_action Q A (R_action Q (J_mod Q v0 A) Y)) = 
-    g 1 X Y
+/-- Обратен елемент в четната алгебра. -/
+def clInv (S : ClPlus Q) [Invertible S.val] : ClPlus Q :=
+  ⟨⅟(S.val), sorry⟩
+
+/-- Дефиниция на Римановата метрика на Картан (Fisher Information Metric). -/
+def cartanMetric (S : ClPlus Q) [Invertible S.val] (V1 V2 : ClPlus Q) : R :=
+  clTrace Q (clInv Q S * V1 * clInv Q S * V2)
+
+/-- Свойство на инверсията при анти-автоморфизма hestenesAdjoint. -/
+axiom hestenesAdjoint_inv (G : ClPlus Q) [Invertible G.val] [Invertible (hestenesAdjoint Q v0 G).val] :
+  hestenesAdjoint Q v0 (clInv Q G) = clInv Q (hestenesAdjoint Q v0 G)
+
+/-- Основна теорема: Инвариантност на метриката на Картан под coneConjugationAction. -/
+theorem cartanMetric_invariance (G : ClPlus Q) [Invertible G.val] [Invertible (hestenesAdjoint Q v0 G).val]
+    (S : ClPlus Q) [Invertible S.val] 
+    (V1 V2 : ClPlus Q) :
+    -- Изискваме инвертируемост на трансформирания елемент
+    haveI : Invertible (coneConjugationAction Q v0 G S).val := sorry 
+    cartanMetric Q (coneConjugationAction Q v0 G S) (coneConjugationAction Q v0 G V1) (coneConjugationAction Q v0 G V2) = 
+    cartanMetric Q S V1 V2 := by
+  sorry
 
 end InfoGeometry.Riemannian

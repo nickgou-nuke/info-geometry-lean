@@ -2652,6 +2652,7 @@ import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Exceptional.FreudenthalAction
 import InfoGeometry.Exceptional.STUDatum
 import InfoGeometry.Exceptional.SplitJordanPotential
+import InfoGeometry.Exceptional.SplitQuaternionBayesMobiusBridge
 import InfoGeometry.Exceptional.SplitOctonionZorn
 import InfoGeometry.Exceptional.SplitOctonionZornReal
 import InfoGeometry.Exceptional.ZornMatrixGeneric

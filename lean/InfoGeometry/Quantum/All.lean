@@ -63,3 +63,4 @@ Umbrella module for the quantum information geometry layer.
 -/
 
 end InfoGeometry
+import InfoGeometry.Quantum.TwinWaveCayleyDickson

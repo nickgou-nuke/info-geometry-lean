@@ -1,327 +1,78 @@
-Created At: 2026-08-01T16:45:36+03:00
-Completed At: 2026-08-01T16:45:36+03:00
-File Path: `file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/TrichotomySummaryTheorems.lean`
-Total Lines: 319
-Total Bytes: 18200
-Showing lines 1 to 319
-The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
-1: Created At: 2026-07-19T20:18:08+03:00
-2: Completed At: 2026-07-19T20:18:08+03:00
-3: File Path: `file:///home/goutev/repos/info-geometry-lean/lean/InfoGeometry/Canonical/All.lean`
-4: Total Lines: 1309
-5: Total Bytes: 68571
-6: Showing lines 1000 to 1309
-7: The following code has been modified to include a line number before every line, in the format: <line_number>: <original_line>. Please note that any changes targeting the original code should remove the line number, colon, and leading space.
-8: 1000: import InfoGeometry.Canonical.SandboxVerification
-9: 1001: import InfoGeometry.Canonical.SiegelBerryBridge
-10: 1002: import InfoGeometry.Canonical.SignedParticleBridge
-11: 1003: import InfoGeometry.Canonical.Singular
-12: 1004: import InfoGeometry.Canonical.SingularBoundaryCorrection
-13: 1005: import InfoGeometry.Canonical.SingularDecompositionSurrogate
-14: 1006: import InfoGeometry.Canonical.SingularTransportSystem
-15: 1007: import InfoGeometry.Canonical.SinkhornFoundation
-16: 1008: import InfoGeometry.Canonical.SinkhornGaugeThermodynamicsBridge
-17: 1009: import InfoGeometry.Canonical.SinkhornKMSCore
-18: 1010: import InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplecticTheorem
-19: 1011: import InfoGeometry.Canonical.SouriauConformalKKTContext
-20: 1012: import InfoGeometry.Canonical.SouriauDensityWeightContext
-21: 1013: import InfoGeometry.Canonical.SouriauDiracHodgeCoupling
-22: 1014: import InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
-23: 1015: import InfoGeometry.Canonical.SouriauCasimirInvariant
-24: 1016: import InfoGeometry.Canonical.SouriauOrbitDynamics
-25: 1017: import InfoGeometry.Canonical.SouriauFlowCliffordBridge
-26: 1018: import InfoGeometry.Canonical.SouriauKreinMetriplecticContext
-27: 1019: import InfoGeometry.Canonical.SouriauLieThermoKKTBridge
-28: 1020: import InfoGeometry.Canonical.SouriauMetriplecticContext
-29: 1021: import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
-30: 1022: import InfoGeometry.Canonical.SouriauGWCountOTBridge
-31: 1023: import InfoGeometry.Canonical.SouriauOperatorialLogPotential
-32: 1024: import InfoGeometry.Canonical.SouriauOperatorBregmanModular
-33: 1025: import InfoGeometry.Canonical.SelfConcordantZetaBarrier
-34: 1026: import InfoGeometry.Canonical.SelfConcordantZetaBarrierCalibration
-35: 1027: import InfoGeometry.Canonical.SouriauModularBregmanOperator
-36: 1028: import InfoGeometry.Canonical.SouriauPlanckVector
-37: 1029: import InfoGeometry.Canonical.SouriauTheoremTranslatorPacket
-38: 1030: import InfoGeometry.Canonical.SouriauThermalEvaluation
-39: 1031: import InfoGeometry.Canonical.SouriauThermodynamics
-40: 1032: import InfoGeometry.Canonical.SouriauRelativeTemperatureBridge
-41: 1033: import InfoGeometry.Canonical.SouriauSurprisalKLFreeEnergyBridge
-42: 1034: import InfoGeometry.Canonical.SouriauModularHamiltonianBridge
-43: 1035: import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
-44: 1036: import InfoGeometry.Canonical.SpectralGeneratorProxy
-45: 1037: import InfoGeometry.Canonical.SpectralSchurDrazinPenroseHierarchy
-46: 1038: import InfoGeometry.Canonical.SpectralInference
-47: 1039: import InfoGeometry.Canonical.SpectroscopicGauge
-48: 1040: import InfoGeometry.Canonical.SpectroscopicGaugeKMSBridge
-49: 1041: import InfoGeometry.Canonical.S3BruhatLengths
-50: 1042: import InfoGeometry.Canonical.SpecialLinearLieAlgebra
-51: 1043: import InfoGeometry.Canonical.Spin44CharacterShadow
-52: 1044: import InfoGeometry.Canonical.SpinConnection
-53: 1045: import InfoGeometry.Canonical.SpineAttributes
-54: 1046: import InfoGeometry.Canonical.SpinorModularBridge
-55: 1047: import InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
-56: 1048: import InfoGeometry.Canonical.SplitCliffordHeadEquivariance
-57: 1049: import InfoGeometry.Canonical.SplitCliffordHeadLift
-58: 1050: import InfoGeometry.Canonical.SplitCliffordHeadPhaseFlip
-59: 1051: import InfoGeometry.Canonical.SplitCliffordHeadPolarization
-60: 1052: import InfoGeometry.Canonical.SplitCliffordHeadProjectors
-61: 1053: import InfoGeometry.Canonical.SplitCliffordHeadSuperBracket
-62: 1054: import InfoGeometry.Canonical.SplitCliffordDirectLimit
-63: 1055: import InfoGeometry.Canonical.SplitCliffordTensorBridge
-64: 1056: import InfoGeometry.Canonical.SplitCliffordThermalBridge
-65: 1057: import InfoGeometry.Canonical.StandardFormCore
-66: 1058: import InfoGeometry.Canonical.StandardFormNaturalConeBridge
-67: 1059: import InfoGeometry.Canonical.StateDependentTransport
-68: 1060: import InfoGeometry.Canonical.StateIndexedModularSeedBridge
-69: 1061: import InfoGeometry.ExponentialFamily.Bernoulli
-70: 1062: import InfoGeometry.ExponentialFamily.Class
-71: 1063: import InfoGeometry.ExponentialFamily.Finite
-72: 1064: import InfoGeometry.ExponentialFamily.Gaussian
-73: 1065: import InfoGeometry.KL
-74: 1066: import InfoGeometry.MaxEnt
-75: 1067: import InfoGeometry.MaxEnt.DualBridge
-76: 1068: import InfoGeometry.MaxEnt.Finite
-77: 1069: import InfoGeometry.MaxEnt.Jaynes
-78: 1070: import InfoGeometry.MaxEnt.IProjection
-79: 1071: import InfoGeometry.MaxEnt.JaynesInfoStatMech
-80: 1072: import InfoGeometry.MaxEnt.JaynesInfoStatMechTest
-81: 1073: import InfoGeometry.MaxEnt.Lagrange
-82: 1074: import InfoGeometry.MaxEnt.Optimality
-83: 1075: import InfoGeometry.PositiveMeasure
-84: 1076: import InfoGeometry.RegularizedKL
-85: 1077: import InfoGeometry.KL.RegularizedKLTest
-86: 1078: import InfoGeometry.Renyi
-87: 1079: import InfoGeometry.Canonical.TomitaCliffordJordanLieBridge
-88: 1080: import InfoGeometry.Canonical.SuperAnomaly
-89: 1081: import InfoGeometry.Canonical.SuperchargeCARCCRBridge
-90: 1082: import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
-91: 1083: import InfoGeometry.Canonical.TwoSheetComplexPolarization
-92: 1084: import InfoGeometry.Canonical.CreationAnnihilationTomitaBridge
-93: 1085: import InfoGeometry.Canonical.MajoranaPHSZeroMode
-94: 1086: import InfoGeometry.Canonical.TomitaConnesBridge
-95: 1087: import InfoGeometry.Canonical.CliffordCurrentHierarchyBoundary
-96: 1088: import InfoGeometry.Canonical.ModeExtensionBoundary
-97: 1089: import InfoGeometry.Canonical.CliffordCantorModeHierarchy
-98: 1090: import InfoGeometry.Canonical.LevelSeparationNoIso
-99: 1091: import InfoGeometry.Canonical.CanonicalNormalOrdering
-100: 1092: import InfoGeometry.Canonical.BoundaryMatrixUnitWick
-101: 1093: import InfoGeometry.Canonical.WilsonSchwingerBridge
-102: 1094: import InfoGeometry.Canonical.BosonizationBoundary
-103: 1095: import InfoGeometry.Canonical.BosonizationSchwinger
-104: 1096: import InfoGeometry.Canonical.BosonizationTheorem
-105: 1097: import InfoGeometry.Canonical.TensorModularAtomCurrent
-106: 1098: import InfoGeometry.Canonical.CurrentSugawaraBridge
-107: 1099: import InfoGeometry.Canonical.CurrentConjugationLemmas
-108: 1100: import InfoGeometry.Canonical.MetricSugawaraBridge
-109: 1101: import InfoGeometry.Canonical.CurrentSugawaraFlipBridge
-110: 1102: import InfoGeometry.Canonical.SUSYCentralChargeBridge
-111: 1103: import InfoGeometry.Canonical.SupercurrentBridge
-112: 1104: import InfoGeometry.Canonical.BosonFermionFockIntertwiner
-113: 1105: import InfoGeometry.Canonical.CliffordCompleteLatticeCurrentHierarchy
-114: 1106: import InfoGeometry.Canonical.WeylNormalizedCARCCRBridge
-115: 1107: import InfoGeometry.Canonical.SuperchargeCentralChargeClosure
-116: 1108: import InfoGeometry.Canonical.SuperchargeEinsteinSourceBridge
-117: 1109: import InfoGeometry.Canonical.SuperchargeGapBridge
-118: 1110: import InfoGeometry.Canonical.SuperchargeGapHessianBridge
-119: 1111: import InfoGeometry.Canonical.SuperchargeHoppingBridge
-120: 1112: import InfoGeometry.Canonical.SuperchargeModularHamiltonianBridge
-121: 1113: import InfoGeometry.Canonical.SuperchargeOddOddDecomposition
-122: 1114: import InfoGeometry.Canonical.SuperchargeRoleBridge
-123: 1115: import InfoGeometry.Canonical.SuperchargeTransportBridge
-124: 1116: import InfoGeometry.Canonical.SuperInference
-125: 1117: import InfoGeometry.Canonical.SuperJordanLie
-126: 1118: import InfoGeometry.Canonical.SuperKMS_Equilibrium
-127: 1119: import InfoGeometry.Canonical.SuperSouriauFermionGasBridge
-128: 1120: import InfoGeometry.Canonical.SuperUnified
-129: 1121: import InfoGeometry.Canonical.SYKKitaevGuardrails
-130: 1122: import InfoGeometry.Canonical.SYKTwoCopyInterface
-131: 1123: import InfoGeometry.Canonical.TheoryShadowRepresentation
-132: 1124: import InfoGeometry.Thermo.FiniteDiagonal
-133: 1125: import InfoGeometry.Thermo.FiniteMatrix
-134: 1126: import InfoGeometry.Thermo.FromBregman
-135: 1127: import InfoGeometry.Canonical.ThermodynamicAction
-136: 1128: import InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus
-137: 1129: import InfoGeometry.Canonical.ThermodynamicClosureTargets
-138: 1130: import InfoGeometry.Canonical.ThermodynamicGenerator
-139: 1131: import InfoGeometry.Thermo.FromLogDet
-140: 1132: import InfoGeometry.Thermo.Gibbs
-141: 1133: import InfoGeometry.Thermo.ThermodynamicIdentities
-142: 1134: import InfoGeometry.Thermal.FiniteMatrix
-143: 1135: import InfoGeometry.Canonical.TimeReversalKramers
-144: 1136: import InfoGeometry.Canonical.TomitaTakesaki
-145: 1137: import InfoGeometry.Canonical.TomitaTakesakiRealification
-146: 1138: import InfoGeometry.Canonical.TomitaTakesakiRealStandardForm
-147: 1139: import InfoGeometry.Canonical.RealTomitaStandardSubspace
-148: 1140: import InfoGeometry.Canonical.CausalConeProjectorBridge
-149: 1141: import InfoGeometry.Canonical.ProofCausalityBridge
-150: 1142: import InfoGeometry.Canonical.ProofTopologyBridge
-151: 1143: import InfoGeometry.Canonical.ProofGraphExteriorCalculusBridge
-152: 1144: import InfoGeometry.Canonical.ProofDAGRepresentationBridge
-153: 1145: import InfoGeometry.Canonical.TessellationCocycleBridge
-154: 1146: import InfoGeometry.Canonical.TrichotomyClosureBundle
-155: 1147: import InfoGeometry.Canonical.TrichotomySummaryTheorems
-156: 1148: import InfoGeometry.Canonical.TrifactorDecomposition
-157: 1149: import InfoGeometry.Canonical.DeterminantTrifactor
-158: 1150: import InfoGeometry.Canonical.ExplicitHalfTriFacetAlgebra
-159: 1151: import InfoGeometry.Canonical.TopologicalEuler
-160: 1152: import InfoGeometry.Canonical.TopologicalGapShadow
-161: 1153: import InfoGeometry.Canonical.TopologicalInvariantInvariance
-162: 1154: import InfoGeometry.Canonical.TopologicalInvariants
-163: 1155: import InfoGeometry.Canonical.TopologicalResidue
-164: 1156: import InfoGeometry.Canonical.TransportLieDerivative
-165: 1157: import InfoGeometry.Canonical.Triality
-166: 1158: import InfoGeometry.Twistor.NullProjective
-167: 1159: import InfoGeometry.Twistor.Incidence
-168: 1160: import InfoGeometry.Canonical.TwistorOperatorialIncidence
-169: 1161: import InfoGeometry.Canonical.TwistorHodgePalatialBridge
-170: 1162: import InfoGeometry.Canonical.TypeIIIContinuousCoreReal
-171: 1163: import InfoGeometry.Canonical.TypeIIILambdaCore
-172: 1164: import InfoGeometry.Canonical.UhlmannBuresHolonomy
-173: 1165: import InfoGeometry.Canonical.Unification
-174: 1166: import InfoGeometry.Canonical.UnifiedSuperchargeAlgebra
-175: 1167: import InfoGeometry.Canonical.UnifiedSuperchargeOddOddBridge
-176: 1168: import InfoGeometry.Canonical.UnifiedTopologicalGapBridge
-177: 1169: import InfoGeometry.Volume.LogPotential
-178: 1170: import InfoGeometry.Volume.ConnesCocycle
-179: 1171: import InfoGeometry.Volume.DeterminantBundle
-180: 1172: import InfoGeometry.Canonical.VandermondeExclusionBridge
-181: 1173: import InfoGeometry.Canonical.VariationalLadder
-182: 1174: import InfoGeometry.Canonical.VolumeDeformationPrinciple
-183: 1175: import InfoGeometry.Canonical.VortexAnomalyLink
-184: 1176: import InfoGeometry.Canonical.VortexReferenceGaugeBridge
-185: 1177: import InfoGeometry.Canonical.WedgeBoostModularBridge
-186: 1178: import InfoGeometry.Canonical.WeightedWeylNormalizationBridge
-187: 1179: import InfoGeometry.Canonical.WeylA2AlternatingDeterminantShadow
-188: 1180: import InfoGeometry.Canonical.WeylA2CancellationChart
-189: 1181: import InfoGeometry.Canonical.WeylA2ProductDivisibilityShadow
-190: 1182: import InfoGeometry.Canonical.WeylAlternatingNumeratorShadow
-191: 1183: import InfoGeometry.Canonical.WeylAnomalySource
-192: 1184: import InfoGeometry.Canonical.WeylAntisymmetricDivisibilityShadow
-193: 1185: import InfoGeometry.Canonical.WeylCharacterEquivalence
-194: 1186: import InfoGeometry.Canonical.WeylMobiusReflection
-195: 1187: import InfoGeometry.Canonical.WeylA1Character
-196: 1188: import InfoGeometry.Canonical.WeylCharacterVandermondeShadow
-197: 1189: import InfoGeometry.Canonical.WeylGaugeField
-198: 1190: import InfoGeometry.Canonical.WeylGaugeOperatorLift
-199: 1191: import InfoGeometry.Canonical.WeylHomogeneousReadoutBridge
-200: 1192: import InfoGeometry.Canonical.WeylEntropyShiftBridge
-201: 1193: import InfoGeometry.Canonical.WeylGWVolumeBridge
-202: 1194: import InfoGeometry.Canonical.WeylIntegrationFromPillars
-203: 1195: import InfoGeometry.Canonical.BKMDriftMetric
-204: 1196: import InfoGeometry.Canonical.WeylBKMDriftMassBridge
-205: 1197: import InfoGeometry.Canonical.WeylFiveGradeBalanceBridge
-206: 1198: import InfoGeometry.Canonical.WeylFiveGradePhysicalReadoutBridge
-207: 1199: import InfoGeometry.Canonical.WeylKKTAnomalyIdentity
-208: 1200: import InfoGeometry.Canonical.WeylLocalCancellationShadow
-209: 1201: import InfoGeometry.Canonical.WeylPathHysteresis
-210: 1202: import InfoGeometry.Canonical.WeylPolynomialDivisibilityShadow
-211: 1203: import InfoGeometry.Canonical.WeylSupertraceOwner
-212: 1204: import InfoGeometry.Canonical.WeylTransport
-213: 1205: import InfoGeometry.Canonical.WeylTransportChiralBridge
-214: 1206: import InfoGeometry.Canonical.WeylTwoNodeCancellationChart
-215: 1207: import InfoGeometry.Canonical.WindingOrbitClosure
-216: 1208: import InfoGeometry.Canonical.YangMillsContinuum
-217: 1209: import InfoGeometry.Canonical.YangMillsFiniteBridge
-218: 1210: import InfoGeometry.Canonical.YangMillsFiniteQFT
-219: 1211: import InfoGeometry.Canonical.YangBaxterProof
-220: 1212: import InfoGeometry.Canonical.ZetaDeterminant
-221: 1213: import InfoGeometry.Canonical.ZetaFunctionalEquationDualitySocket
-222: 1214: import InfoGeometry.Canonical.ZetaFunctionalEquationLayer
-223: 1215: import InfoGeometry.Arithmetic.ZetaSymmetryAdaptedDefinitions
-224: 1216: import InfoGeometry.Arithmetic.RiemannZetaEquivalences
-225: 1217: import InfoGeometry.Arithmetic.RamanujanDefectTower
-226: 1218: import InfoGeometry.Arithmetic.WittenParityIndex
-227: 1219: import InfoGeometry.Canonical.UHFInductiveColimitBoundary
-228: 1220: import InfoGeometry.Canonical.CuntzCantorBoundaryShift
-229: 1221: import InfoGeometry.Canonical.CantorBoundaryCuntzShift
-230: 1222: import InfoGeometry.Canonical.KashiwaraCuntzCohomology
-231: 1223: import InfoGeometry.Canonical.CuntzCrystalRepresentation
-232: 1224: import InfoGeometry.Canonical.BostConnesSuperalgebra
-233: 1225: import InfoGeometry.Canonical.DeformedSuperCuntzWarp
-234: 1226: import InfoGeometry.Canonical.InductiveColimitBridge
-235: 1227: import InfoGeometry.Canonical.KuzminColimit
-236: 1228: import InfoGeometry.Canonical.AmariSouriauThermodynamicGauge
-237: 1229: import InfoGeometry.Canonical.KANColimitBridge
-238: 1230: import InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
-239: 1231: import InfoGeometry.Canonical.TensorColimitExpectation
-240: 1232: import InfoGeometry.Canonical.EvansHarmonicTrap
-241: 1233: import InfoGeometry.Canonical.PrimonGasGUE
-242: 1234: import InfoGeometry.Canonical.PrimonCoulombGas
-243: 1235: import InfoGeometry.Canonical.GaloisKMSVacuum
-244: 1236: import InfoGeometry.Canonical.DeformedIdeleAction
-245: 1237: import InfoGeometry.Canonical.DysonCoulombGas
-246: 1238: import InfoGeometry.Canonical.HagedornKMSBoundary
-247: 1239: import InfoGeometry.Canonical.CantorCuntzPotential
-248: 1240: import InfoGeometry.Canonical.FinitePhenomenologyReadout
-249: 1241: import InfoGeometry.Canonical.DeformedIdeleDysonBridge
-250: 1242: import InfoGeometry.Canonical.ZetaBraneCantorDirac
-251: 1243: import InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout
-252: 1244: import InfoGeometry.Canonical.SplitOctonionAssociator
-253: 1245: import InfoGeometry.Canonical.SplitOctonionRigidity
-254: 1246: import InfoGeometry.Canonical.SplitOctonionAutomorphism
-255: 1247: import InfoGeometry.Canonical.ZornSpinor
-256: 1248: import InfoGeometry.Canonical.ZornVectorMatrixExplicit
-257: 1249: import InfoGeometry.Canonical.ComplexCliffordHierarchy
-258: 1250: import InfoGeometry.Canonical.Cl3ComplexMatrixProduct
-259: 1251: import InfoGeometry.Canonical.Cl4ComplexMatrixProduct
-260: 1252: import InfoGeometry.Canonical.StandardQuaternionIsomorphism
-261: 1253: import InfoGeometry.Canonical.BilingualBiquaternionBridge
-262: 1254: import InfoGeometry.Canonical.HopfTest
-263: 1255: import InfoGeometry.Canonical.HessianGeometry
-264: 1256: import InfoGeometry.Canonical.ThermalIndividuation
-265: 1257: import InfoGeometry.Canonical.Monotonicity
-266: 1258: import InfoGeometry.Canonical.MathematicalUnification
-267: 1259: import InfoGeometry.Canonical.Mat2
-268: 1260: import InfoGeometry.Canonical.CliffordInfiniteSplitAlgebra
-269: 1261: import InfoGeometry.Canonical.DrazinAnomaly
-270: 1262: import InfoGeometry.Canonical.TransportObservable
-271: 1263: import InfoGeometry.Canonical.CosmologicalCoupling
-272: 1264: import InfoGeometry.Canonical.FineStructureConstant
-273: 1265: import InfoGeometry.Canonical.SpinCommutation
-274: 1266: import InfoGeometry.Canonical.JordanMinkowski
-275: 1267: import InfoGeometry.Canonical.ChirlaTorsionHierarchy
-276: 1268: import InfoGeometry.Canonical.OctonionCl8
-277: 1269: import InfoGeometry.Canonical.SpinStatisticsBridge
-278: 1270: import InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge
-279: 1271: import InfoGeometry.Canonical.ConfigurationSpaceColimit
-280: 1272: import InfoGeometry.Canonical.MasterSynthesis
-281: 1273: import InfoGeometry.Canonical.BiquaternionNegativeRootsLog
-282: 1274: import InfoGeometry.Canonical.BiquaternionKANnilpotent
-283: 1275: import InfoGeometry.Canonical.NilpotentItakuraSaito
-284: 1276: import InfoGeometry.Canonical.BiquaternionLaplaceTripotent
-285: 1277: import InfoGeometry.Canonical.BiquaternionLaplaceResolvent
-286: 1278: import InfoGeometry.Canonical.BiquaternionLogarithmMonodromy
-287: 1279: import InfoGeometry.Canonical.BiquaternionCliffordIso
-288: 1280: import InfoGeometry.Canonical.BiquaternionExpClosure
-289: 1281: import InfoGeometry.Canonical.BuresMetricClosedCartography
-290: 1282: import InfoGeometry.Canonical.BuresInformationGeodesicFlow
-291: 1283: 
-292: 1284: namespace InfoGeometry
-293: 1285: 
-294: 1286: /-!
-295: 1287: # InfoGeometry.Canonical.All
-296: 1288: 
-297: 1289: Stable umbrella import for the canonical publication surface.
-298: 1290: 
-299: 1291: This file intentionally excludes modules listed in
-300: 1292: `scripts/quality/quarantine_manifest.txt`. Quarantined synthesis/facade layers
-301: 1293: must be imported explicitly from their owner modules while they remain on the
-302: 1294: review surface.
-303: 1295: 
-304: 1296: This file is still only an import aggregator, not an authoritative description
-305: 1297: of the current theory graph. For current repository state and workflow, prefer:
-306: 1298: - `README.md`
-307: 1299: - `docs/README.md`
-308: 1300: - `lean/DAG/README.md`
-309: 1301: - `tools/README.md`
-310: 1302: 
-311: 1303: Conceptual notes under `docs/` are orientation aids only. Exact ownership,
-312: 1304: theorem names, and file boundaries must be checked against the current owner
-313: 1305: modules in `lean/InfoGeometry/Canonical/`.
-314: 1306: -/
-315: 1307: 
-316: 1308: end InfoGeometry
-317: 1309: 
-318: The above content does NOT show the entire file contents. If you need to view any lines of the file which were not shown to complete your task, call this tool again to view those lines.
-319: 
-The above content shows the entire, complete file contents of the requested file.
+import Mathlib.Tactic
+import InfoGeometry.Canonical.CliffordDiracAlgebra
+import InfoGeometry.Canonical.TrichotomyClosureBundle
+
+namespace InfoGeometry.Canonical.TrichotomySummaryTheorems
+
+open InfoGeometry.Canonical.CliffordDiracAlgebra
+open InfoGeometry.Canonical.CausalConeProjectorBridge
+open InfoGeometry.Canonical.TrichotomyClosureBundle
+open InfoGeometry.Canonical.RealTomitaStandardSubspace
+
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
+
+/-- Summary row (elliptic): `Op² = -1`. -/
+theorem row_elliptic (A : Module.End ℝ V) :
+    IsElliptic A ↔ A * A = -(1 : Module.End ℝ V) := by
+  rfl
+
+/-- Summary row (hyperbolic): `Op² = +1`. -/
+theorem row_hyperbolic (A : Module.End ℝ V) :
+    IsHyperbolic A ↔ A * A = (1 : Module.End ℝ V) := by
+  rfl
+
+/-- Summary row (parabolic): `Op² = 0`. -/
+theorem row_parabolic (A : Module.End ℝ V) :
+    IsParabolic A ↔ A * A = (0 : Module.End ℝ V) := by
+  rfl
+
+/-- Summary row (projective): `P² = P`. -/
+theorem row_projective (P : Module.End ℝ V) :
+    IsProjector P ↔ P * P = P := by
+  rfl
+
+/-- Hyperbolic involution gives projector splitting into `P±`. -/
+theorem row_projector_split_of_involution (J : Module.End ℝ V) (hJ : IsInvolution J) :
+    IsProjector (Pplus J) ∧ IsProjector (Pminus J) ∧
+    Pplus J + Pminus J = (1 : Module.End ℝ V) ∧
+    Pplus J * Pminus J = (0 : Module.End ℝ V) := by
+  refine ⟨Projector.Pplus_idempotent (J := J) hJ,
+    Projector.Pminus_idempotent (J := J) hJ,
+    Projector.Pplus_add_Pminus (J := J),
+    Projector.Pplus_comp_Pminus (J := J) hJ⟩
+
+/-- Combined operator-table statement as a product of the four row equivalences. -/
+theorem summary_operator_table (A P : Module.End ℝ V) :
+    (IsElliptic A ↔ A * A = -(1 : Module.End ℝ V)) ∧
+    (IsHyperbolic A ↔ A * A = (1 : Module.End ℝ V)) ∧
+    (IsParabolic A ↔ A * A = (0 : Module.End ℝ V)) ∧
+    (IsProjector P ↔ P * P = P) := by
+  exact ⟨row_elliptic (A := A), row_hyperbolic (A := A), row_parabolic (A := A), row_projective (P := P)⟩
+
+/-- Combined closure citation for trichotomy with cone-sector projector compatibility. -/
+theorem summary_trichotomy_sector_closure
+    (T : KANTriple V) {S : CausalSplit V} {Q : Module.End ℝ V}
+    (hQ : IsConeCompatibleProjector S Q) :
+    IsElliptic T.K ∧ IsHyperbolic T.A ∧ IsParabolic T.N ∧
+    (∀ x, x ∈ S.bulk → Q x ∈ S.bulk) ∧
+    (∀ x, x ∈ S.boundary → Q x ∈ S.boundary) ∧
+    (∀ x, x ∈ S.nullCone → Q x ∈ S.nullCone) :=
+  trichotomy_closed_under_sector_split (T := T) hQ
+
+section StandardSector
+
+variable {H : Type*} [NormedAddCommGroup H] [NormedSpace ℂ H]
+  [InnerProductSpace ℂ H] [CompleteSpace H]
+
+/-- Combined closure citation for reduced Tomita transport on the standard physical sector. -/
+theorem summary_tomita_reduced_involutive
+    (K : Submodule ℝ H) (hK : IsStandardSubspace (H := H) K)
+    (z : ↥(K ⊔ ImaginarySubmodule (H := H) K)) :
+    reducedTransport (standardPhysicalProjector (H := H) K) (TomitaOnStandard (H := H) K hK)
+      (reducedTransport (standardPhysicalProjector (H := H) K) (TomitaOnStandard (H := H) K hK) z)
+      = z :=
+  tomita_causal_reduction_involutive (H := H) K hK z
+
+end StandardSector
+
+end InfoGeometry.Canonical.TrichotomySummaryTheorems

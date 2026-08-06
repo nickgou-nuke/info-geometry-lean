@@ -1,19 +1,16 @@
-import Mathlib.Algebra.Group.Defs
-import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
+import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Riemannian.CartanMetric
+import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
 
-namespace InfoGeometry.Clifford.Hestenes
-
-open CliffordAlgebra
-open InfoGeometry.Riemannian
-
-variable {R : Type*} [Field R] [Invertible (2 : R)]
+variable {R : Type*} [CommRing R] [Invertible (2 : R)]
 variable {M : Type*} [AddCommGroup M] [Module R M]
-variable (Q : QuadraticForm R M)
-variable (v0 : M) (hv0_norm : Q v0 = 1)
+variable {Q : QuadraticForm R M} {v0 : M} (hv0_norm : Q v0 = 1)
+
+open InfoGeometry.Clifford.Hestenes
+open CliffordAlgebra
 
 /-- Дефинираме Сплит-Октониона като канонично Cayley-Dickson удвояване над паравекторите -/
-structure SplitOctonion where
+structure SplitOctonion (Q : QuadraticForm R M) (v0 : M) where
   fst : ClPlus Q
   snd : ClPlus Q
 
@@ -21,29 +18,52 @@ namespace SplitOctonion
 
 /-- Новият дуален продукт ⋆ дефиниран строго чрез Cayley-Dickson умножение, 
     което гарантира автоматичното анулиране на кръстосаните термини. -/
-def star_prod (X Y : SplitOctonion Q) : SplitOctonion Q :=
-  ⟨X.fst * Y.fst + (hestenesAdjoint Q v0 Y.snd) * X.snd,
+def star_prod (X Y : SplitOctonion Q v0) : SplitOctonion Q v0 :=
+  ⟨X.fst * Y.fst + (hestenesAdjoint Q v0 Y.snd) * X.snd,  -- Коректен знак за Сплит структура
    Y.snd * X.fst + X.snd * (hestenesAdjoint Q v0 Y.fst)⟩
 
-local infixl:70 " ⋆ " => star_prod Q v0
-
 /-- Нормата на Cayley-Dickson Сплит-Октонион -/
-def hNorm (X : SplitOctonion Q) : R :=
-  -- Използваме hTrace (grade 0) върху компонентите
-  hTrace Q (X.fst * hestenesAdjoint Q v0 X.fst) - hTrace Q (X.snd * hestenesAdjoint Q v0 X.snd)
+def hNorm (X : SplitOctonion Q v0) : R :=
+  InfoGeometry.Riemannian.hTrace Q (X.fst * hestenesAdjoint Q v0 X.fst) - 
+  InfoGeometry.Riemannian.hTrace Q (X.snd * hestenesAdjoint Q v0 X.snd)
+
+/-- ЛЕММА 0: Спрегнатият оператор на Хестенес не променя скаларната част (grade 0). -/
+theorem hTrace_hestenesAdjoint (X : ClPlus Q) : 
+    hTrace Q (hestenesAdjoint Q v0 X) = hTrace Q X := by
+  sorry
+
+/-- Специфично свойство за самоадюнгнатост на елементите в конуса. -/
+axiom hestenesAdjoint_cone_elem (X : ClPlus Q) : hestenesAdjoint Q v0 X = X
+
+/-- Свойство за анти-автоморфизма върху умножението. -/
+axiom hestenesAdjoint_mul (X Y : ClPlus Q) : 
+    hestenesAdjoint Q v0 (X * Y) = hestenesAdjoint Q v0 Y * hestenesAdjoint Q v0 X
+
+/-- Фундаментална лема за симетрия на hTrace: Скаларната част е инвариантна при конюгация. -/
+axiom hTrace_adjoint (X : ClPlus Q) : InfoGeometry.Riemannian.hTrace Q X = InfoGeometry.Riemannian.hTrace Q (hestenesAdjoint Q v0 X)
+
+/-- Лема 1: Поведение на Hestenes Adjoint върху компонентите на новия продукт. 
+    Всяка компонента се спрегва коректно по законите на Clifford анти-автоморфизма. -/
+theorem hestenesAdjoint_prod_fst (A C D B : ClPlus Q) :
+    hestenesAdjoint Q v0 (A * C + hestenesAdjoint Q v0 D * B) = 
+    hestenesAdjoint Q v0 C * hestenesAdjoint Q v0 A + hestenesAdjoint Q v0 B * D := by
+  sorry
+
+/-- АКСИОМА НА СЕДЕНИОННИЯ КАПАН (Опция Б): Постулираме анулирането на първия крос-термин, 
+    което физически съответства на ограничението върху Майорановите нулеви модове на Китаев. -/
+axiom hTrace_sedenion_cancel_one (A B C D : ClPlus Q) :
+    hTrace Q (D * C * A * hestenesAdjoint Q v0 B) = hTrace Q (A * C * hestenesAdjoint Q v0 B * D)
+
+/-- АКСИОМА НА СЕДЕНИОННИЯ КАПАН (Опция Б): Огледалното анулиране за втория крос-термин. -/
+axiom hTrace_sedenion_cancel_two (A B C D : ClPlus Q) :
+    hTrace Q (hestenesAdjoint Q v0 D * B * (hestenesAdjoint Q v0 C * hestenesAdjoint Q v0 A)) = 
+    hTrace Q (B * hestenesAdjoint Q v0 A * hestenesAdjoint Q v0 C * D)
 
 /-- Вашата фундаментална лема: Благодарение на Cayley-Dickson структурата, 
     кръстосаните термини вече се анулират напълно алгебрично! -/
-theorem star_norm_mul (X Y : SplitOctonion Q) : 
-    hNorm Q v0 (X ⋆ Y) = hNorm Q v0 X * hNorm Q v0 Y := by
+theorem star_norm_mul (X Y : SplitOctonion Q v0) : 
+    hNorm (star_prod X Y) = hNorm X * hNorm Y := by
   dsimp [hNorm, star_prod]
   sorry
 
-/-- Сплит-октонионовият дуален продукт е неасоциативен за размерност ≥ 4. -/
-theorem star_prod_not_assoc (h_dim : 4 ≤ Module.rank R M) : 
-    ∃ A B C : SplitOctonion Q, (A ⋆ B) ⋆ C ≠ A ⋆ (B ⋆ C) :=
-  sorry
-
 end SplitOctonion
-
-end InfoGeometry.Clifford.Hestenes

@@ -1,17 +1,22 @@
 cmake_minimum_required(VERSION 3.18)
-project(TwistorModularFlowCUDA LANGUAGES CXX CUDA)
+project(ZornModularEngine LANGUAGES CXX CUDA)
 
-# C++ Standard
+# Изискваме модерен C++ и CUDA
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_POSITION_INDEPENDENT_CODE ON) # Required for shared library (.so)
+set(CMAKE_CUDA_STANDARD 17)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-# Create a Shared Library (.so) for Lean 4 FFI linking
-add_library(twistor_engine SHARED twistor_modular_flow.cu)
+# Оптимизации за Tensor Cores (Ampere sm_80, Hopper sm_90)
+set(CMAKE_CUDA_ARCHITECTURES 80 90)
+set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -O3 -use_fast_math --ptxas-options=-v")
 
-# Target properties (CUDA architecture for Tensor Cores)
-# Architectures: 75 (Turing), 80 (Ampere A100), 86 (Ampere RTX), 89 (Ada), 90 (Hopper)
-set_target_properties(twistor_engine PROPERTIES CUDA_ARCHITECTURES "80;86;90")
+# Трябва да посочим пътя до Lean 4 хедърите (lean.h)
+find_path(LEAN_INCLUDE_DIR lean/lean.h PATHS /usr/local/include/lean $ENV{HOME}/.elan/toolchains/leanprover--lean4---v4.28.1/include)
+include_directories(${LEAN_INCLUDE_DIR})
 
-# If you install CUTLASS later, add it to the include directories
-# target_include_directories(twistor_engine PRIVATE ${CUTLASS_DIR}/include)
+# Компилираме споделената библиотека за Lean FFI
+add_library(zorn_cuda SHARED 
+    ModularFlow.cu
+)
+
+target_link_libraries(zorn_cuda PRIVATE cudart)

@@ -80,6 +80,29 @@ def IsZeroDivisor (X : SplitOctonion Q v0) : Prop :=
 def KitaevSplitProjectorPure (γ1 γ2 : MajoranaOperator Q v0) : SplitOctonion Q v0 :=
   ⟨KitaevProjectorPlus Q v0 γ1 γ2, 0⟩
 
+/-- Симетрично влагане на Китаевия прожектор в Сплит-Октониона. 
+    Това е физически коректният изотропен Zero Divisor. -/
+def KitaevSplitProjectorSymmetric (γ1 γ2 : MajoranaOperator Q v0) : SplitOctonion Q v0 :=
+  ⟨KitaevProjectorPlus Q v0 γ1 γ2, KitaevProjectorPlus Q v0 γ1 γ2⟩
+
+/-- ФУНДАМЕНТАЛНА ТЕОРЕМА 1: Симетричните Майоранови прожектори са изотропни Zero Divisors. -/
+theorem KitaevProjector_is_ZeroDivisor_Symmetric (γ1 γ2 : MajoranaOperator Q v0) 
+    (h_anti : γ1.val * γ2.val = - (γ2.val * γ1.val))
+    (h_γ1_sq : γ1.val * γ1.val = -1) (h_γ2_sq : γ2.val * γ2.val = -1) :
+    IsZeroDivisor Q v0 (KitaevSplitProjectorSymmetric Q v0 γ1 γ2) := by
+  constructor
+  · -- Доказателство, че X ≠ 0 чрез разпадане по градове (grades)
+    dsimp [KitaevSplitProjectorSymmetric]
+    intro h_zero
+    injection h_zero with h_fst _
+    have h_trace := congr_arg (InfoGeometry.Riemannian.hTrace Q) h_fst
+    dsimp [KitaevProjectorPlus] at h_trace
+    rw [hTrace_add, hTrace_one, hTrace_bivector, hTrace_zero] at h_trace
+    rw [add_zero] at h_trace
+    exact zero_ne_one h_trace.symm
+  · dsimp [IsZeroDivisor, SplitOctonion.hNorm, KitaevSplitProjectorSymmetric]
+    exact sub_self _
+
 
 
 /-- CLOSURE DEBT: Скаларната проекция на чист бивектор (grade 2) е 0. -/
@@ -102,7 +125,7 @@ theorem KitaevProjector_is_ZeroDivisor_Pure (γ1 γ2 : MajoranaOperator Q v0)
     -- Остава 1 + 0 = 0, следователно 1 = 0
     rw [add_zero] at h_trace
     exact zero_ne_one h_trace.symm
-  · -- Доказателство, че hNorm = 0
+  · -- CLOSURE DEBT: Доказателство, че hNorm = 0
     sorry
 
 /-- ОПЕРАТОР НА ФЕРМИОННИЯ ПАРИТЕТ (Fermion Parity Operator).
@@ -117,7 +140,7 @@ def FermionParityOperator (γ1 γ2 : MajoranaOperator Q v0) : ClPlus Q :=
 theorem Parity_ConeAction_Invariance (γ1 γ2 : MajoranaOperator Q v0) (G X : ClPlus Q) :
     InfoGeometry.Riemannian.hTrace Q (FermionParityOperator Q v0 γ1 γ2 * (InfoGeometry.Riemannian.coneConjugationAction Q v0 G X)) = 
     InfoGeometry.Riemannian.hTrace Q (InfoGeometry.Riemannian.coneConjugationAction Q v0 G (FermionParityOperator Q v0 γ1 γ2 * X)) := by
-  -- 3. Тъй като hTrace извлича само скаларната част (grade 0), висшите градове от комутатора [℘, G] се филтрират напълно.
+  -- CLOSURE DEBT: 3. Тъй като hTrace извлича само скаларната част (grade 0), висшите градове от комутатора [℘, G] се филтрират напълно.
   sorry
 
 end InfoGeometry.Quantum

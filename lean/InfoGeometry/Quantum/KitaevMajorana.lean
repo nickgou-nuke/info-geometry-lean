@@ -1,11 +1,13 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
 import InfoGeometry.Clifford.SplitOctonionsDualProduct
+import InfoGeometry.Riemannian.CartanMetric
 
 namespace InfoGeometry.Quantum
 
 open CliffordAlgebra
 open InfoGeometry.Clifford.Hestenes
+open InfoGeometry.Riemannian
 
 variable {R : Type*} [Field R] [Invertible (2 : R)]
 variable {M : Type*} [AddCommGroup M] [Module R M]
@@ -78,17 +80,10 @@ def IsZeroDivisor (X : SplitOctonion Q v0) : Prop :=
 def KitaevSplitProjectorPure (γ1 γ2 : MajoranaOperator Q v0) : SplitOctonion Q v0 :=
   ⟨KitaevProjectorPlus Q v0 γ1 γ2, 0⟩
 
-/-- CLOSURE DEBT: Линейност на скаларната проекция. -/
-theorem hTrace_add (A B : ClPlus Q) : InfoGeometry.Riemannian.hTrace Q (A + B) = InfoGeometry.Riemannian.hTrace Q A + InfoGeometry.Riemannian.hTrace Q B := sorry
 
-/-- CLOSURE DEBT: Скаларната проекция на единицата (grade 0) е 1. -/
-theorem hTrace_one : InfoGeometry.Riemannian.hTrace Q 1 = 1 := sorry
 
 /-- CLOSURE DEBT: Скаларната проекция на чист бивектор (grade 2) е 0. -/
 theorem hTrace_bivector (γ1 γ2 : MajoranaOperator Q v0) : InfoGeometry.Riemannian.hTrace Q (γ1.val * γ2.val) = 0 := sorry
-
-/-- CLOSURE DEBT: Скаларната проекция на нулата е 0. -/
-theorem hTrace_zero : InfoGeometry.Riemannian.hTrace Q 0 = 0 := sorry
 
 /-- ФУНДАМЕНТАЛНА ТЕОРЕМА 1: Майорановите прожектори са изотропни Zero Divisors. -/
 theorem KitaevProjector_is_ZeroDivisor_Pure (γ1 γ2 : MajoranaOperator Q v0) 

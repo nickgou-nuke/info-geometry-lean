@@ -60,7 +60,10 @@ import InfoGeometry.Clifford.Decomposition
 import InfoGeometry.Clifford.GeneralizedMetricBField
 import InfoGeometry.Clifford.Grading
 import InfoGeometry.Clifford.Hestenes
-import InfoGeometry.Clifford.Hestenes
+import InfoGeometry.Clifford.HestenesSpinRotor
+import InfoGeometry.Clifford.HestenesSpinRotorCartanDieudonne
+import InfoGeometry.Clifford.ConformalTwistorBridge
+import InfoGeometry.Clifford.ConformalTwistorDilation
 import InfoGeometry.Clifford.GullDoranPseudoscalarBridge
 import InfoGeometry.Clifford.HestenesCauchyRiemann
 import InfoGeometry.Clifford.CantorDiracSeaHestenesBridge

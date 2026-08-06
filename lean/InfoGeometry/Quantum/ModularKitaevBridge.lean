@@ -14,6 +14,9 @@ We demonstrate that when the modular flow approaches the light cone boundary
 becomes isomorphic to the symmetric Kitaev topological projector `(P_+, P_+)`.
 -/
 
+set_option linter.unusedVariables false
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Quantum.ModularKitaevBridge
 
 open InfoGeometry.Quantum

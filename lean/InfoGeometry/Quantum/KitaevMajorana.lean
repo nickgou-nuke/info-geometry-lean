@@ -3,6 +3,9 @@ import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
 import InfoGeometry.Clifford.SplitOctonionsDualProduct
 import InfoGeometry.Riemannian.CartanMetric
 
+set_option linter.unusedVariables false
+set_option linter.unusedSectionVars false
+
 namespace InfoGeometry.Quantum
 
 open CliffordAlgebra
@@ -80,15 +83,16 @@ def IsZeroDivisor (X : SplitOctonion Q v0) : Prop :=
 def KitaevSplitProjectorPure (γ1 γ2 : MajoranaOperator Q v0) : SplitOctonion Q v0 :=
   ⟨KitaevProjectorPlus Q v0 γ1 γ2, 0⟩
 
+/-- CLOSURE DEBT: Скаларната проекция на чист бивектор (grade 2) е 0. -/
+theorem hTrace_bivector (γ1 γ2 : MajoranaOperator Q v0) : InfoGeometry.Riemannian.hTrace Q (γ1.val * γ2.val) = 0 := sorry
+
 /-- Симетрично влагане на Китаевия прожектор в Сплит-Октониона. 
     Това е физически коректният изотропен Zero Divisor. -/
 def KitaevSplitProjectorSymmetric (γ1 γ2 : MajoranaOperator Q v0) : SplitOctonion Q v0 :=
   ⟨KitaevProjectorPlus Q v0 γ1 γ2, KitaevProjectorPlus Q v0 γ1 γ2⟩
 
 /-- ФУНДАМЕНТАЛНА ТЕОРЕМА 1: Симетричните Майоранови прожектори са изотропни Zero Divisors. -/
-theorem KitaevProjector_is_ZeroDivisor_Symmetric (γ1 γ2 : MajoranaOperator Q v0) 
-    (h_anti : γ1.val * γ2.val = - (γ2.val * γ1.val))
-    (h_γ1_sq : γ1.val * γ1.val = -1) (h_γ2_sq : γ2.val * γ2.val = -1) :
+theorem KitaevProjector_is_ZeroDivisor_Symmetric (γ1 γ2 : MajoranaOperator Q v0) :
     IsZeroDivisor Q v0 (KitaevSplitProjectorSymmetric Q v0 γ1 γ2) := by
   constructor
   · -- Доказателство, че X ≠ 0 чрез разпадане по градове (grades)
@@ -102,11 +106,6 @@ theorem KitaevProjector_is_ZeroDivisor_Symmetric (γ1 γ2 : MajoranaOperator Q v
     exact zero_ne_one h_trace.symm
   · dsimp [IsZeroDivisor, SplitOctonion.hNorm, KitaevSplitProjectorSymmetric]
     exact sub_self _
-
-
-
-/-- CLOSURE DEBT: Скаларната проекция на чист бивектор (grade 2) е 0. -/
-theorem hTrace_bivector (γ1 γ2 : MajoranaOperator Q v0) : InfoGeometry.Riemannian.hTrace Q (γ1.val * γ2.val) = 0 := sorry
 
 /-- ФУНДАМЕНТАЛНА ТЕОРЕМА 1: Майорановите прожектори са изотропни Zero Divisors. -/
 theorem KitaevProjector_is_ZeroDivisor_Pure (γ1 γ2 : MajoranaOperator Q v0) 

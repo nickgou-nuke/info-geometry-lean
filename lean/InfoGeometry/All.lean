@@ -4631,3 +4631,4 @@ import InfoGeometry.Topology.AttentionLatentHeadCompactTopological
 import InfoGeometry.Canonical.ThreeColorIntegralMultiplicationTable
 import InfoGeometry.External.Auto.TKKCompileData
 import InfoGeometry.Exceptional.ModularFlowCUDA
+import InfoGeometry.Hardware.TensorCoreFlow

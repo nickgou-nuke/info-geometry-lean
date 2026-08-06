@@ -1,21 +1,20 @@
-import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
-import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
-import InfoGeometry.Clifford.SplitOctonionsDualProduct
+import Mathlib.Algebra.Group.Defs
+import InfoGeometry.Clifford.HestenesOddSector
+import InfoGeometry.Clifford.HestenesParavectorPair
 import InfoGeometry.Riemannian.CartanMetric
-
-set_option linter.unusedVariables false
-set_option linter.unusedSectionVars false
+import InfoGeometry.Clifford.SplitOctonionsDualProduct
 
 namespace InfoGeometry.Quantum
 
-open CliffordAlgebra
 open InfoGeometry.Clifford.Hestenes
 open InfoGeometry.Riemannian
+open SplitOctonion
+open CliffordAlgebra
 
 variable {R : Type*} [Field R] [Invertible (2 : R)]
 variable {M : Type*} [AddCommGroup M] [Module R M]
-variable (Q : QuadraticForm R M) [CartanGeometry Q]
-variable (v0 : M) (hv0_norm : Q v0 = 1) [SplitOctonion.SedenionCancellation Q v0]
+variable (Q : QuadraticForm R M)
+variable (v0 : M) (hv0_norm : Q v0 = 1)
 
 /-- 
 Майорановото подпространство (Majorana Subspace).
@@ -65,21 +64,15 @@ def KitaevProjectorPlus (γ1 γ2 : MajoranaOperator Q v0) : ClPlus Q :=
 def KitaevProjectorMinus (γ1 γ2 : MajoranaOperator Q v0) : ClPlus Q :=
   (1 - γ1.val * γ2.val)
 
--- Тук ще докажем строгата версия на седенионните аксиоми за елементи от това подпространство.
-theorem hTrace_majorana_cancel_one {A B C D : ClPlus Q} 
-    (hA : A ∈ MajoranaSubspace Q v0) (hB : B ∈ MajoranaSubspace Q v0) 
-    (hC : C ∈ MajoranaSubspace Q v0) (hD : D ∈ MajoranaSubspace Q v0) :
-    InfoGeometry.Riemannian.hTrace Q (D * C * A * hestenesAdjoint Q v0 B) = 
-    InfoGeometry.Riemannian.hTrace Q (A * C * hestenesAdjoint Q v0 B * D) := by
-  exact SplitOctonion.SedenionCancellation.hTrace_sedenion_cancel_one A B C D
-
 theorem hTrace_neg (A : ClPlus Q) : InfoGeometry.Riemannian.hTrace Q (-A) = - InfoGeometry.Riemannian.hTrace Q A := by
   have h : InfoGeometry.Riemannian.hTrace Q (A + -A) = InfoGeometry.Riemannian.hTrace Q A + InfoGeometry.Riemannian.hTrace Q (-A) := InfoGeometry.Riemannian.hTrace_add Q A (-A)
   rw [add_neg_cancel, InfoGeometry.Riemannian.hTrace_zero Q] at h
   have h2 : InfoGeometry.Riemannian.hTrace Q (-A) + InfoGeometry.Riemannian.hTrace Q A = 0 := by rw [add_comm, ← h]
   exact eq_neg_of_add_eq_zero_left h2
 
-/-- ФУНДАМЕНТАЛНА ТЕОРЕМА: Скаларната проекция на чист бивектор (grade 2) е 0. -/
+/- ФУНДАМЕНТАЛНА ТЕОРЕМА: Скаларната проекция на чист бивектор (grade 2) е 0.
+   Изисква цикличност на следата, която не е доказана. Реализирано в ZornMatrix модела. -/
+/-
 theorem hTrace_bivector (γ1 γ2 : MajoranaOperator Q v0) 
     (h_anti : γ1.val * γ2.val = - (γ2.val * γ1.val)) : 
     InfoGeometry.Riemannian.hTrace Q (γ1.val * γ2.val) = 0 := by
@@ -96,6 +89,7 @@ theorem hTrace_bivector (γ1 γ2 : MajoranaOperator Q v0)
   have h4 : ⅟(2 : R) * ((2 : R) * InfoGeometry.Riemannian.hTrace Q (γ1.val * γ2.val)) = ⅟(2 : R) * 0 := by rw [h3]
   rw [← mul_assoc, invOf_mul_self, one_mul, mul_zero] at h4
   exact h4
+-/
 
 instance : Zero (SplitOctonion Q v0) := ⟨⟨0, 0⟩⟩
 
@@ -112,7 +106,9 @@ def KitaevSplitProjectorPure (γ1 γ2 : MajoranaOperator Q v0) : SplitOctonion Q
 def KitaevSplitProjectorSymmetric (γ1 γ2 : MajoranaOperator Q v0) : SplitOctonion Q v0 :=
   ⟨KitaevProjectorPlus Q v0 γ1 γ2, KitaevProjectorPlus Q v0 γ1 γ2⟩
 
-/-- ФУНДАМЕНТАЛНА ТЕОРЕМА 1: Симетричните Майоранови прожектори са изотропни Zero Divisors. -/
+/- ФУНДАМЕНТАЛНА ТЕОРЕМА 1: Симетричните Майоранови прожектори са изотропни Zero Divisors.
+   Временно коментирано поради липса на конструктивно доказателство за следата. -/
+/-
 theorem KitaevProjector_is_ZeroDivisor_Symmetric (γ1 γ2 : MajoranaOperator Q v0) 
     (h_anti : γ1.val * γ2.val = - (γ2.val * γ1.val)) :
     IsZeroDivisor Q v0 (KitaevSplitProjectorSymmetric Q v0 γ1 γ2) := by
@@ -128,7 +124,7 @@ theorem KitaevProjector_is_ZeroDivisor_Symmetric (γ1 γ2 : MajoranaOperator Q v
     exact zero_ne_one h_trace.symm
   · dsimp [IsZeroDivisor, SplitOctonion.hNorm, KitaevSplitProjectorSymmetric]
     exact sub_self _
-
+-/
 
 
 /-- ОПЕРАТОР НА ФЕРМИОННИЯ ПАРИТЕТ (Fermion Parity Operator).
@@ -137,9 +133,13 @@ theorem KitaevProjector_is_ZeroDivisor_Symmetric (γ1 γ2 : MajoranaOperator Q v
 def FermionParityOperator (γ1 γ2 : MajoranaOperator Q v0) : ClPlus Q :=
   - (γ1.val * γ2.val)
 
-/-- ФУНДАМЕНТАЛНА ТЕОРЕМА 2 (Свещеният Граал): 
-    Инвариантност на Топологичния заряд спрямо Картановата геометрия!
-    Комутация на Паритета с Лоренцовото конусово действие под следата. -/
+/- 
+ФУНДАМЕНТАЛНА ТЕОРЕМА 2 (Свещеният Граал): 
+Това изисква конструктивно доказателство на цикличността на следата за произволни паравектори.
+Временно коментирано, за да се избегнат нечестни аксиоми (dishonest cheat typeclasses).
+Истинският конструктивен модел е реализиран в InfoGeometry.Exceptional.SplitOctonionZorn.
+-/
+/-
 theorem Parity_ConeAction_Invariance (γ1 γ2 : MajoranaOperator Q v0) (G : SplitOctonion Q v0) :
     let wp : SplitOctonion Q v0 := SplitOctonion.mk (FermionParityOperator Q v0 γ1 γ2) 0;
     InfoGeometry.Riemannian.hTrace Q (SplitOctonion.star_prod wp G).fst = InfoGeometry.Riemannian.hTrace Q (SplitOctonion.star_prod G wp).fst := by
@@ -152,5 +152,6 @@ theorem Parity_ConeAction_Invariance (γ1 γ2 : MajoranaOperator Q v0) (G : Spli
     rw [map_zero, mul_zero, zero_mul]
   rw [h0, mul_zero, zero_mul, add_zero, add_zero]
   exact InfoGeometry.Riemannian.hTrace_mul_comm Q _ _
+-/
 
 end InfoGeometry.Quantum

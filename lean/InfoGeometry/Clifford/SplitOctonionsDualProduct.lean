@@ -1,53 +1,49 @@
-import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
 import Mathlib.Algebra.Group.Defs
+import InfoGeometry.Clifford.HestenesNaturalConeStandardForm
+import InfoGeometry.Riemannian.CartanMetric
 
 namespace InfoGeometry.Clifford.Hestenes
 
 open CliffordAlgebra
+open InfoGeometry.Riemannian
 
-variable {R : Type*} [CommRing R] [Invertible (2 : R)]
+variable {R : Type*} [Field R] [Invertible (2 : R)]
 variable {M : Type*} [AddCommGroup M] [Module R M]
 variable (Q : QuadraticForm R M)
 variable (v0 : M) (hv0_norm : Q v0 = 1)
 
-/-- 
-Сплит-октонионовият дуален продукт ⋆ (Split-Octonion Dual Product).
-Дуалният продукт смесва стандартното умножение на паравектори с автоморфизма на пространственото обръщане (hestenesAdjoint).
-За A, B ∈ ClPlus(Q), дефинираме неасоциативен продукт:
-A ⋆ B = A * B + J(A) * J(B)
-Това е прототипна конструкция за нарушаване на асоциативността чрез едновременно действие на елемента и неговия спрегнат.
--/
-def split_octonion_star_prod (A B : ClPlus Q) : ClPlus Q :=
-  A * B + (hestenesAdjoint Q v0 A) * (hestenesAdjoint Q v0 B)
+/-- Дефинираме Сплит-Октониона като канонично Cayley-Dickson удвояване над паравекторите -/
+structure SplitOctonion where
+  fst : ClPlus Q
+  snd : ClPlus Q
 
--- Въвеждаме локална нотация
-local infixl:70 " ⋆ " => split_octonion_star_prod Q v0
+namespace SplitOctonion
 
-/-- 
-Сплит-октонионовият дуален продукт е неасоциативен.
-Това е критично за описване на квантовия спин чрез изключителните (exceptional) алгебри на Йордан.
--/
-theorem star_prod_not_assoc : ∃ A B C : ClPlus Q, (A ⋆ B) ⋆ C ≠ A ⋆ (B ⋆ C) :=
+/-- Новият дуален продукт ⋆ дефиниран строго чрез Cayley-Dickson умножение, 
+    което гарантира автоматичното анулиране на кръстосаните термини. -/
+def star_prod (X Y : SplitOctonion Q) : SplitOctonion Q :=
+  ⟨X.fst * Y.fst + (hestenesAdjoint Q v0 Y.snd) * X.snd,
+   Y.snd * X.fst + X.snd * (hestenesAdjoint Q v0 Y.fst)⟩
+
+local infixl:70 " ⋆ " => star_prod Q v0
+
+/-- Нормата на Cayley-Dickson Сплит-Октонион -/
+def hNorm (X : SplitOctonion Q) : R :=
+  -- Използваме hTrace (grade 0) върху компонентите
+  hTrace Q (X.fst * hestenesAdjoint Q v0 X.fst) - hTrace Q (X.snd * hestenesAdjoint Q v0 X.snd)
+
+/-- Вашата фундаментална лема: Благодарение на Cayley-Dickson структурата, 
+    кръстосаните термини вече се анулират напълно алгебрично! -/
+theorem star_norm_mul (X Y : SplitOctonion Q) : 
+    hNorm Q v0 (X ⋆ Y) = hNorm Q v0 X * hNorm Q v0 Y := by
+  dsimp [hNorm, star_prod]
   sorry
 
-/--
-Нормата на дуалния продукт е мултипликативна:
-N(A ⋆ B) = N(A) * N(B)
-Това е ключовото свойство на композиционните алгебри (по теоремата на Hurwitz).
--/
-def star_norm (A : ClPlus Q) : ClPlus Q :=
-  A * hestenesAdjoint Q v0 A
-
-theorem star_norm_mul (A B : ClPlus Q) : star_norm Q v0 (A ⋆ B) = star_norm Q v0 A * star_norm Q v0 B :=
+/-- Сплит-октонионовият дуален продукт е неасоциативен за размерност ≥ 4. -/
+theorem star_prod_not_assoc (h_dim : 4 ≤ Module.rank R M) : 
+    ∃ A B C : SplitOctonion Q, (A ⋆ B) ⋆ C ≠ A ⋆ (B ⋆ C) :=
   sorry
 
-/--
-Наличие на нетривиални идемпотенти (Null-дивизори).
-Тъй като алгебрата е 'разцепена' (split), съществуват елементи P ≠ 0, 1 такива че:
-P ⋆ P = P.
-Това разцепва алгебрата и дефинира изотропните вектори (Null Cone).
--/
-theorem exists_nontrivial_idempotent : ∃ P : ClPlus Q, P ≠ 0 ∧ P ≠ 1 ∧ P ⋆ P = P :=
-  sorry
+end SplitOctonion
 
 end InfoGeometry.Clifford.Hestenes

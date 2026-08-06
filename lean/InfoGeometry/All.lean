@@ -4630,3 +4630,4 @@ import InfoGeometry.Topology.AttentionLatentHeadTopological
 import InfoGeometry.Topology.AttentionLatentHeadCompactTopological
 import InfoGeometry.Canonical.ThreeColorIntegralMultiplicationTable
 import InfoGeometry.External.Auto.TKKCompileData
+import InfoGeometry.Exceptional.ModularFlowCUDA

@@ -1,286 +1,136 @@
-import Mathlib
-import InfoGeometry.Canonical.SplitOctonionKleinFourTriality
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Algebra.Order.Field.Basic
+import Mathlib.Data.Real.Basic
+import Mathlib.Tactic.Linarith
+import Mathlib.Tactic.Ring
 
 namespace InfoGeometry.Canonical
 
-open Real
+noncomputable def logit (p : ℝ) : ℝ := Real.log (p / (1 - p))
 
-/-- The logit function mapping probabilities in (0, 1) to ℝ. -/
-noncomputable def logit (p : ℝ) : ℝ :=
-  Real.log (p / (1 - p))
+noncomputable def bayesUpdate (Λ p : ℝ) : ℝ := (Λ * p) / (1 + (Λ - 1) * p)
 
-/-- The standard logistic sigmoid function, inverse of logit. -/
-noncomputable def sigmoid (x : ℝ) : ℝ :=
-  1 / (1 + Real.exp (-x))
-
-/-- The Bayesian likelihood-ratio update for a binary hypothesis. -/
-noncomputable def bayesUpdate (Λ : ℝ) (p : ℝ) : ℝ :=
-  (Λ * p) / (1 + (Λ - 1) * p)
-
-/-- The translation by `τ` in log-odds space. -/
-noncomputable def translation (τ η : ℝ) : ℝ :=
-  η + τ
-
-theorem logit_bayesUpdate (Λ p : ℝ) (hΛ : 0 < Λ) (hp : 0 < p) (hp1 : p < 1) :
+theorem logit_bayesUpdate (Λ p : ℝ) (hp1 : 0 < p) (hp2 : p < 1) (hΛ : 0 < Λ) :
     logit (bayesUpdate Λ p) = logit p + Real.log Λ := by
   dsimp [logit, bayesUpdate]
-  have h_den : 1 + (Λ - 1) * p ≠ 0 := by
-    have : 1 + (Λ - 1) * p > 0 := by nlinarith
-    exact ne_of_gt this
-  have h1 : 1 - (Λ * p) / (1 + (Λ - 1) * p) = (1 - p) / (1 + (Λ - 1) * p) := by
-    rw [sub_eq_iff_eq_add]
-    have : (1 - p) / (1 + (Λ - 1) * p) + (Λ * p) / (1 + (Λ - 1) * p) = (1 - p + Λ * p) / (1 + (Λ - 1) * p) := by rw [add_div]
-    rw [this]
-    have : 1 - p + Λ * p = 1 + (Λ - 1) * p := by ring
-    rw [this, div_self h_den]
-  rw [h1]
-  rw [div_div_div_cancel_right₀ h_den]
-  have hp2 : 1 - p > 0 := by linarith
-  have hp3 : p / (1 - p) > 0 := div_pos hp hp2
-  have h3 : Real.log ((Λ * p) / (1 - p)) = Real.log (p / (1 - p)) + Real.log Λ := by
-    have eq_mul : (Λ * p) / (1 - p) = Λ * (p / (1 - p)) := by ring
-    rw [eq_mul, Real.log_mul (ne_of_gt hΛ) (ne_of_gt hp3), add_comm]
-  rw [h3]
+  let D := 1 + (Λ - 1) * p
+  have hD : 0 < D := by
+    dsimp [D]
+    have h_rew : 1 + (Λ - 1) * p = (1 - p) + Λ * p := by ring
+    rw [h_rew]
+    exact add_pos (sub_pos.mpr hp2) (mul_pos hΛ hp1)
+  have hD_ne : D ≠ 0 := ne_of_gt hD
+  
+  have h_arg_rewrite : ((Λ * p) / D) / (1 - (Λ * p) / D) = (Λ * p) / (1 - p) := by
+    have h_sub : 1 - (Λ * p) / D = (D - Λ * p) / D := by 
+      have h1 : (1 : ℝ) = D / D := (div_self hD_ne).symm
+      nth_rw 1 [h1]
+      exact (sub_div D (Λ * p) D).symm
+    have h_num : D - Λ * p = 1 - p := by dsimp [D]; ring
+    rw [h_sub, h_num]
+    have h_num_mul : (Λ * p) / D = (Λ * p) * (1 / D) := div_eq_mul_one_div (Λ * p) D
+    have h_den_mul : (1 - p) / D = (1 - p) * (1 / D) := div_eq_mul_one_div (1 - p) D
+    rw [h_num_mul, h_den_mul]
+    have h_div_div : ((Λ * p) * (1 / D)) / ((1 - p) * (1 / D)) = (Λ * p) / (1 - p) := by
+      exact mul_div_mul_right (Λ * p) (1 - p) (one_div_ne_zero hD_ne)
+    exact h_div_div
 
-/-- A minimal split octonion norm encoding for the evidence gap.
-    We assert the mathematical relation structurally. -/
-noncomputable def evidenceGapEncode (N_O ε : ℝ) : ℝ :=
-  1 / (1 + Real.exp (-(N_O / ε)))
+  rw [h_arg_rewrite]
+  have h_div_mul : (Λ * p) / (1 - p) = Λ * (p / (1 - p)) := by ring
+  rw [h_div_mul]
+  have h_p_sub_pos : 0 < p / (1 - p) := div_pos hp1 (sub_pos.mpr hp2)
+  rw [Real.log_mul (ne_of_gt hΛ) (ne_of_gt h_p_sub_pos)]
+  ring
+
+noncomputable def naturalCoordinate (a b X B : ℝ) : ℝ := (1 / a) * Real.log ((a * X + b) / (a * B + b))
+
+theorem naturalCoordinate_eq_logit (a b X B : ℝ) (ha : 0 < a) 
+    (hX : 0 < a * X + b) (hB : 0 < a * B + b) :
+    naturalCoordinate a b X B = (1 / a) * logit ((a * X + b) / (a * X + a * B + 2 * b)) := by
+  dsimp [naturalCoordinate, logit]
+  let num := a * X + b
+  let den := a * B + b
+  have h_sum_pos : 0 < num + den := add_pos hX hB
+  have h_sum_ne : num + den ≠ 0 := ne_of_gt h_sum_pos
+  
+  have h_equiv : (num / (num + den)) / (1 - num / (num + den)) = num / den := by
+    have h_sub : 1 - num / (num + den) = ((num + den) - num) / (num + den) := by
+      have h1 : (1 : ℝ) = (num + den) / (num + den) := (div_self h_sum_ne).symm
+      nth_rw 1 [h1]
+      exact (sub_div (num + den) num (num + den)).symm
+    have h_num_sub : (num + den) - num = den := by ring
+    rw [h_sub, h_num_sub]
+    have h_num_mul : num / (num + den) = num * (1 / (num + den)) := div_eq_mul_one_div num (num + den)
+    have h_den_mul : den / (num + den) = den * (1 / (num + den)) := div_eq_mul_one_div den (num + den)
+    rw [h_num_mul, h_den_mul]
+    exact mul_div_mul_right num den (one_div_ne_zero h_sum_ne)
+  have h_den : a * X + a * B + 2 * b = num + den := by dsimp [num, den]; ring
+  rw [h_den, h_equiv]
+
+noncomputable def updateSum (ρ S r X : ℝ) : ℝ := ρ * S + r * X
+noncomputable def updateMass (ρ N r : ℝ) : ℝ := ρ * N + r
+noncomputable def updateBackground (S N : ℝ) : ℝ := S / N
+
+theorem barycentric_update (ρ S N r X : ℝ) (hN : 0 < N) (hr : 0 ≤ r) (hρ : 0 < ρ) (h_mass : 0 < ρ * N + r) :
+    updateBackground (updateSum ρ S r X) (updateMass ρ N r) = 
+    updateBackground S N + (r / (ρ * N + r)) * (X - updateBackground S N) := by
+  dsimp [updateBackground, updateSum, updateMass]
+  have hN_ne : N ≠ 0 := ne_of_gt hN
+  have hM_ne : ρ * N + r ≠ 0 := ne_of_gt h_mass
+  
+  have h_rhs : S / N + (r / (ρ * N + r)) * (X - S / N) = (ρ * S + r * X) / (ρ * N + r) := by
+    have hX : X - S / N = (X * N - S) / N := by
+      have h1 : X = (X * N) / N := (mul_div_cancel_right₀ X hN_ne).symm
+      nth_rw 1 [h1]
+      exact (sub_div (X * N) S N).symm
+    rw [hX]
+    have h_mul : (r / (ρ * N + r)) * ((X * N - S) / N) = (r * (X * N - S)) / ((ρ * N + r) * N) := div_mul_div_comm r (ρ * N + r) (X * N - S) N
+    rw [h_mul]
+    have h_denom : (ρ * N + r) * N = N * (ρ * N + r) := mul_comm (ρ * N + r) N
+    rw [h_denom]
+    have h_add : S / N + (r * (X * N - S)) / (N * (ρ * N + r)) = (S * (ρ * N + r) + r * (X * N - S)) / (N * (ρ * N + r)) := by
+      have h_add_div : (S * (ρ * N + r)) / (N * (ρ * N + r)) + (r * (X * N - S)) / (N * (ρ * N + r)) = (S * (ρ * N + r) + r * (X * N - S)) / (N * (ρ * N + r)) := (add_div (S * (ρ * N + r)) (r * (X * N - S)) (N * (ρ * N + r))).symm
+      have h_cancel : (S * (ρ * N + r)) / (N * (ρ * N + r)) = S / N := by
+        exact mul_div_mul_right S N hM_ne
+      rw [← h_cancel]
+      exact h_add_div
+    rw [h_add]
+    have h_num : S * (ρ * N + r) + r * (X * N - S) = N * (ρ * S + r * X) := by ring
+    rw [h_num]
+    have h_denom2 : N * (ρ * N + r) = (ρ * N + r) * N := mul_comm N (ρ * N + r)
+    rw [h_denom2]
+    have h_res : (N * (ρ * S + r * X)) / ((ρ * N + r) * N) = (ρ * S + r * X) / (ρ * N + r) := by
+      rw [mul_comm N (ρ * S + r * X)]
+      exact mul_div_mul_right (ρ * S + r * X) (ρ * N + r) hN_ne
+    exact h_res
+  rw [h_rhs]
+
+noncomputable def evidenceGapEncode (N_O ε : ℝ) : ℝ := 1 / (1 + Real.exp (-(N_O / ε)))
 
 theorem splitNorm_encode_logit (N_O ε : ℝ) (hε : 0 < ε) :
     N_O = ε * logit (evidenceGapEncode N_O ε) := by
   dsimp [evidenceGapEncode, logit]
-  have h_den : 1 + Real.exp (-(N_O / ε)) ≠ 0 := by
-    have : 1 + Real.exp (-(N_O / ε)) > 0 := by positivity
-    exact ne_of_gt this
-  have h1 : 1 - 1 / (1 + Real.exp (-(N_O / ε))) = Real.exp (-(N_O / ε)) / (1 + Real.exp (-(N_O / ε))) := by
-    rw [sub_eq_iff_eq_add]
-    have : Real.exp (-(N_O / ε)) / (1 + Real.exp (-(N_O / ε))) + 1 / (1 + Real.exp (-(N_O / ε))) = (Real.exp (-(N_O / ε)) + 1) / (1 + Real.exp (-(N_O / ε))) := by rw [add_div]
-    rw [this]
-    have : Real.exp (-(N_O / ε)) + 1 = 1 + Real.exp (-(N_O / ε)) := by ring
-    rw [this, div_self h_den]
-  rw [h1]
-  rw [div_div_div_cancel_right₀ h_den, one_div, Real.log_inv, Real.log_exp, neg_neg]
+  let E := Real.exp (-(N_O / ε))
+  have hE_pos : 0 < E := Real.exp_pos (-(N_O / ε))
+  have h_add_ne : 1 + E ≠ 0 := ne_of_gt (by linarith)
+  
+  have h_equiv : (1 / (1 + E)) / (1 - 1 / (1 + E)) = 1 / E := by
+    have h_sub : 1 - 1 / (1 + E) = ((1 + E) - 1) / (1 + E) := by
+      have h1 : (1 : ℝ) = (1 + E) / (1 + E) := (div_self h_add_ne).symm
+      nth_rw 1 [h1]
+      exact (sub_div (1 + E) 1 (1 + E)).symm
+    have h_num : (1 + E) - 1 = E := by ring
+    rw [h_sub, h_num]
+    have h_num_mul : 1 / (1 + E) = 1 * (1 / (1 + E)) := by ring
+    have h_den_mul : E / (1 + E) = E * (1 / (1 + E)) := div_eq_mul_one_div E (1 + E)
+    rw [h_num_mul, h_den_mul]
+    exact mul_div_mul_right 1 E (one_div_ne_zero h_add_ne)
+    
+  rw [h_equiv]
+  have h_inv : 1 / E = Real.exp (N_O / ε) := by
+    dsimp [E]
+    rw [one_div, ← Real.exp_neg, neg_neg]
+  rw [h_inv, Real.log_exp (N_O / ε)]
   exact (mul_div_cancel₀ N_O (ne_of_gt hε)).symm
 
--- 2. and 3. The natural logarithmic coordinate
-
-noncomputable def naturalCoordinate (a b X B : ℝ) : ℝ :=
-  (1 / a) * Real.log ((a * X + b) / (a * B + b))
-
-theorem naturalCoordinate_eq_logit (a b X B : ℝ) (h_den1 : a * X + a * B + 2 * b ≠ 0) :
-    naturalCoordinate a b X B = (1 / a) * logit ((a * X + b) / (a * X + a * B + 2 * b)) := by
-  dsimp [naturalCoordinate, logit]
-  congr 2
-  have h1 : 1 - (a * X + b) / (a * X + a * B + 2 * b) = (a * B + b) / (a * X + a * B + 2 * b) := by
-    have h_eq : (1 : ℝ) = (a * X + a * B + 2 * b) / (a * X + a * B + 2 * b) := (div_self h_den1).symm
-    rw [h_eq]
-    rw [← sub_div]
-    congr 1
-    ring
-  rw [h1]
-  exact (div_div_div_cancel_right₀ h_den1 (a * X + b) (a * B + b)).symm
-
--- 10, 11, 12. Recursive online background estimator
-
-noncomputable def updateSum (ρ S_prev r X : ℝ) : ℝ :=
-  ρ * S_prev + r * X
-
-noncomputable def updateMass (ρ N_prev r : ℝ) : ℝ :=
-  ρ * N_prev + r
-
-noncomputable def updateBackground (S N : ℝ) : ℝ :=
-  S / N
-
-theorem barycentric_update (ρ S_prev N_prev r X B_prev : ℝ)
-    (hB : B_prev = S_prev / N_prev)
-    (hN : ρ * N_prev + r ≠ 0)
-    (hN_prev : N_prev ≠ 0) :
-    updateBackground (updateSum ρ S_prev r X) (updateMass ρ N_prev r) =
-      B_prev + (r / (ρ * N_prev + r)) * (X - B_prev) := by
-  dsimp [updateBackground, updateSum, updateMass]
-  rw [hB]
-  have h1 : S_prev / N_prev + (r / (ρ * N_prev + r)) * (X - S_prev / N_prev) = (S_prev / N_prev * (ρ * N_prev + r) + r * (X - S_prev / N_prev)) / (ρ * N_prev + r) := by
-    have h_eq : S_prev / N_prev = (S_prev / N_prev * (ρ * N_prev + r)) / (ρ * N_prev + r) := by
-      rw [mul_div_cancel_right₀ _ hN]
-    nth_rw 1 [h_eq]
-    have h_mul : (r / (ρ * N_prev + r)) * (X - S_prev / N_prev) = (r * (X - S_prev / N_prev)) / (ρ * N_prev + r) := by ring
-    rw [h_mul, add_div]
-  rw [h1]
-  congr 1
-  calc
-    ρ * S_prev + r * X = S_prev * ρ + r * X := by ring
-    _ = (S_prev / N_prev * N_prev) * ρ + r * X := by rw [div_mul_cancel₀ S_prev hN_prev]
-    _ = (S_prev / N_prev) * (N_prev * ρ) + r * X := by ring
-    _ = (S_prev / N_prev) * (ρ * N_prev) + (S_prev / N_prev) * r + r * X - r * (S_prev / N_prev) := by ring
-    _ = S_prev / N_prev * (ρ * N_prev + r) + r * (X - S_prev / N_prev) := by ring
-
-theorem logit_sigmoid (x : ℝ) :
-    logit (sigmoid x) = x := by
-  dsimp [sigmoid, logit]
-  have h_den : 1 + Real.exp (-x) > 0 := by positivity
-  have h1 : 1 - 1 / (1 + Real.exp (-x)) = Real.exp (-x) / (1 + Real.exp (-x)) := by
-    have h_eq : (1 : ℝ) = (1 + Real.exp (-x)) / (1 + Real.exp (-x)) := (div_self (ne_of_gt h_den)).symm
-    nth_rw 1 [h_eq]
-    rw [← sub_div]
-    congr 1
-    ring
-  rw [h1]
-  have h2 : (1 / (1 + Real.exp (-x))) / (Real.exp (-x) / (1 + Real.exp (-x))) = 1 / Real.exp (-x) := by
-    exact div_div_div_cancel_right₀ (ne_of_gt h_den) 1 (Real.exp (-x))
-  rw [h2, one_div, Real.log_inv, Real.log_exp, neg_neg]
-
-theorem sigmoid_logit (p : ℝ) (hp0 : 0 < p) (hp1 : p < 1) :
-    sigmoid (logit p) = p := by
-  dsimp [sigmoid, logit]
-  rw [Real.exp_neg]
-  have hp_div : p / (1 - p) > 0 := by
-    apply div_pos hp0
-    linarith
-  rw [Real.exp_log hp_div]
-  have h2 : (p / (1 - p))⁻¹ = (1 - p) / p := by rw [inv_div]
-  rw [h2]
-  have h3 : 1 + (1 - p) / p = 1 / p := by
-    have h_eq : (1 : ℝ) = p / p := (div_self (ne_of_gt hp0)).symm
-    nth_rw 1 [h_eq]
-    rw [← add_div]
-    congr 1
-    ring
-  rw [h3, one_div, one_div, inv_inv]
-
-/-- The one-parameter Möbius flow theorem. -/
-noncomputable def bayesFlow (τ p : ℝ) : ℝ :=
-  bayesUpdate (Real.exp τ) p
-
-theorem bayesFlow_zero (p : ℝ) :
-    bayesFlow 0 p = p := by
-  dsimp [bayesFlow, bayesUpdate]
-  rw [Real.exp_zero]
-  ring_nf
-
-theorem bayesFlow_eq_sigmoid (τ p : ℝ) (hp0 : 0 < p) (hp1 : p < 1) :
-    bayesFlow τ p = sigmoid (logit p + τ) := by
-  have h_exp_pos : 0 < Real.exp τ := Real.exp_pos τ
-  have h_logit := logit_bayesUpdate (Real.exp τ) p h_exp_pos hp0 hp1
-  have h_apply : sigmoid (logit (bayesFlow τ p)) = sigmoid (logit p + τ) := by
-    have : logit (bayesFlow τ p) = logit (bayesUpdate (Real.exp τ) p) := rfl
-    rw [this, h_logit, Real.log_exp]
-  have h_den : 1 - p + p * Real.exp τ > 0 := add_pos (sub_pos.mpr hp1) (mul_pos hp0 h_exp_pos)
-  have h_num : Real.exp τ * p > 0 := mul_pos h_exp_pos hp0
-  have h_pos : 0 < bayesFlow τ p := by
-    dsimp [bayesFlow, bayesUpdate]
-    have h_den2 : 1 + (Real.exp τ - 1) * p = 1 - p + p * Real.exp τ := by ring
-    rw [h_den2]
-    exact div_pos h_num h_den
-  have h_lt1 : bayesFlow τ p < 1 := by
-    dsimp [bayesFlow, bayesUpdate]
-    have h_den2 : 1 + (Real.exp τ - 1) * p = 1 - p + p * Real.exp τ := by ring
-    rw [h_den2]
-    rw [div_lt_one h_den]
-    have : Real.exp τ * p = p * Real.exp τ := mul_comm _ _
-    rw [this]
-    linarith
-  have h_cancel := sigmoid_logit (bayesFlow τ p) h_pos h_lt1
-  rw [← h_cancel]
-  exact h_apply
-
-theorem bayesFlow_add (τ₁ τ₂ p : ℝ) (hp0 : 0 < p) (hp1 : p < 1) :
-    bayesFlow (τ₁ + τ₂) p = bayesFlow τ₁ (bayesFlow τ₂ p) := by
-  rw [bayesFlow_eq_sigmoid (τ₁ + τ₂) p hp0 hp1]
-  have h_pos : 0 < bayesFlow τ₂ p := by
-    have h_exp_pos : 0 < Real.exp τ₂ := Real.exp_pos τ₂
-    have h_den : 1 - p + p * Real.exp τ₂ > 0 := add_pos (sub_pos.mpr hp1) (mul_pos hp0 h_exp_pos)
-    dsimp [bayesFlow, bayesUpdate]
-    have h_den2 : 1 + (Real.exp τ₂ - 1) * p = 1 - p + p * Real.exp τ₂ := by ring
-    rw [h_den2]
-    exact div_pos (mul_pos h_exp_pos hp0) h_den
-  have h_lt1 : bayesFlow τ₂ p < 1 := by
-    have h_exp_pos : 0 < Real.exp τ₂ := Real.exp_pos τ₂
-    have h_den : 1 - p + p * Real.exp τ₂ > 0 := add_pos (sub_pos.mpr hp1) (mul_pos hp0 h_exp_pos)
-    dsimp [bayesFlow, bayesUpdate]
-    have h_den2 : 1 + (Real.exp τ₂ - 1) * p = 1 - p + p * Real.exp τ₂ := by ring
-    rw [h_den2]
-    rw [div_lt_one h_den]
-    have : Real.exp τ₂ * p = p * Real.exp τ₂ := mul_comm _ _
-    rw [this]
-    linarith
-  rw [bayesFlow_eq_sigmoid τ₁ (bayesFlow τ₂ p) h_pos h_lt1]
-  rw [bayesFlow_eq_sigmoid τ₂ p hp0 hp1]
-  rw [logit_sigmoid (logit p + τ₂)]
-  have h_assoc : logit p + (τ₁ + τ₂) = logit p + τ₂ + τ₁ := by ring
-  rw [h_assoc]
-
-/-- The affine quasi-deviance model for CMOS sensor noise with variance V(μ) = aμ + b. -/
-noncomputable def affineDeviance (a b x μ : ℝ) : ℝ :=
-  (2 / a^2) * ((a * x + b) * Real.log ((a * x + b) / (a * μ + b)) - a * (x - μ))
-
-/-- The quasi-deviance is exactly zero when the observation matches the reference. -/
-theorem affineDeviance_self (a b μ : ℝ) (h_pos : a * μ + b > 0) :
-    affineDeviance a b μ μ = 0 := by
-  dsimp [affineDeviance]
-  have h_div : (a * μ + b) / (a * μ + b) = 1 := div_self (ne_of_gt h_pos)
-  rw [h_div, Real.log_one]
-  ring
-
-/-- The domain safety condition for affine deviance.
-Both the measurement variance scaling and reference variance scaling must be strictly positive. -/
-def affineDevianceDomainSafe (a b x μ : ℝ) : Prop :=
-  a * x + b > 0 ∧ a * μ + b > 0
-
-/-- Given domain safety, the logarithm argument is strictly positive. -/
-theorem affineDeviance_log_arg_pos (a b x μ : ℝ) (h : affineDevianceDomainSafe a b x μ) :
-    (a * x + b) / (a * μ + b) > 0 :=
-  div_pos h.1 h.2
-
-/-- Affine deviance expanded in terms of the particle-hole displacement δ = x - μ. -/
-theorem affineDeviance_displacement (a b μ δ : ℝ) (hμ : a * μ + b > 0) :
-    let x := μ + δ
-    affineDeviance a b x μ =
-      (2 / a^2) * ((a * μ + b + a * δ) * Real.log (1 + (a * δ) / (a * μ + b)) - a * δ) := by
-  intro x
-  dsimp [affineDeviance]
-  have h_x : a * x + b = a * μ + b + a * δ := by
-    dsimp [x]
-    ring
-  have h_diff : x - μ = δ := by
-    dsimp [x]
-    ring
-  rw [h_x, h_diff]
-  have h_div : (a * μ + b + a * δ) / (a * μ + b) = 1 + (a * δ) / (a * μ + b) := by
-    have h1 : (a * μ + b + a * δ) / (a * μ + b) = (a * μ + b) / (a * μ + b) + (a * δ) / (a * μ + b) := add_div _ _ _
-    rw [h1]
-    have h2 : (a * μ + b) / (a * μ + b) = 1 := div_self (ne_of_gt hμ)
-    rw [h2]
-  rw [h_div]
-
-/-- Positive part of the displacement (particle / signal). -/
-noncomputable def deltaPos (δ : ℝ) : ℝ := max δ 0
-
-/-- Negative part of the displacement (hole / dip). -/
-noncomputable def deltaNeg (δ : ℝ) : ℝ := max (-δ) 0
-
-/-- Decomposition of the displacement into particle and hole components. -/
-theorem delta_decomposition (δ : ℝ) : δ = deltaPos δ - deltaNeg δ := by
-  dsimp [deltaPos, deltaNeg]
-  rcases le_total δ 0 with h | h
-  · have h1 : max δ 0 = 0 := max_eq_right h
-    have h2 : max (-δ) 0 = -δ := max_eq_left (neg_nonneg.mpr h)
-    rw [h1, h2, zero_sub, neg_neg]
-  · have h1 : max δ 0 = δ := max_eq_left h
-    have h2 : max (-δ) 0 = 0 := max_eq_right (neg_nonpos.mpr h)
-    rw [h1, h2, sub_zero]
-
-/-- The decomposition applied to the affine deviance variable x = μ + δ. -/
-theorem affineDeviance_particle_hole (a b μ δ : ℝ) (hμ : a * μ + b > 0) :
-    let x := μ + (deltaPos δ - deltaNeg δ)
-    affineDeviance a b x μ =
-      (2 / a^2) * ((a * μ + b + a * (deltaPos δ - deltaNeg δ)) *
-        Real.log (1 + (a * (deltaPos δ - deltaNeg δ)) / (a * μ + b)) - a * (deltaPos δ - deltaNeg δ)) := by
-  intro x
-  have h_sub : deltaPos δ - deltaNeg δ = δ := (delta_decomposition δ).symm
-  have h_dev := affineDeviance_displacement a b μ δ hμ
-  rw [← h_sub] at h_dev
-  exact h_dev
-
 end InfoGeometry.Canonical
-

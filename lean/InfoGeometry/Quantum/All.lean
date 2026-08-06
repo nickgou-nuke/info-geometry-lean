@@ -53,6 +53,7 @@ import InfoGeometry.Quantum.TriadicBogoliubovBridge
 import InfoGeometry.Quantum.WeldedProjectorCorrelationBridge
 import InfoGeometry.Quantum.ZeroPointEnergy
 import InfoGeometry.Quantum.ThermofieldDouble
+import InfoGeometry.Quantum.TwinWaveCayleyDickson
 
 namespace InfoGeometry
 
@@ -63,4 +64,3 @@ Umbrella module for the quantum information geometry layer.
 -/
 
 end InfoGeometry
-import InfoGeometry.Quantum.TwinWaveCayleyDickson

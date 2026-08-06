@@ -26,6 +26,10 @@ theorem hTrace_add (A B : evenOdd Q 0) : hTrace Q (A + B) = hTrace Q A + hTrace 
   change hTrace_cl Q (A.val + B.val) = hTrace_cl Q A.val + hTrace_cl Q B.val
   exact map_add (hTrace_cl Q) A.val B.val
 
+theorem hTrace_smul (c : R) (A : evenOdd Q 0) : hTrace Q (c • A) = c * hTrace Q A := by
+  change hTrace_cl Q (c • A.val) = c * hTrace_cl Q A.val
+  exact LinearMap.map_smul (hTrace_cl Q) c A.val
+
 theorem hTrace_zero : hTrace Q 0 = 0 := by
   change hTrace_cl Q 0 = 0
   exact map_zero (hTrace_cl Q)

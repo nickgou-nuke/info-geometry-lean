@@ -2653,6 +2653,9 @@ import InfoGeometry.Exceptional.FreudenthalAction
 import InfoGeometry.Exceptional.STUDatum
 import InfoGeometry.Exceptional.SplitJordanPotential
 import InfoGeometry.Exceptional.SplitOctonionZorn
+import InfoGeometry.Exceptional.SplitOctonionZornReal
+import InfoGeometry.Exceptional.ZornMatrixGeneric
+import InfoGeometry.Exceptional.TwistorZornEmbedding
 import InfoGeometry.Exceptional.VectorSpinorQuartic
 import InfoGeometry.Experimental.ModularSpinorBridge
 import InfoGeometry.Experimental.WeylCantorFock

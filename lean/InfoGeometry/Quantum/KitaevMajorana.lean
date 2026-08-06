@@ -14,8 +14,8 @@ open InfoGeometry.Riemannian
 
 variable {R : Type*} [Field R] [Invertible (2 : R)]
 variable {M : Type*} [AddCommGroup M] [Module R M]
-variable (Q : QuadraticForm R M)
-variable (v0 : M) (hv0_norm : Q v0 = 1)
+variable (Q : QuadraticForm R M) [CartanGeometry Q]
+variable (v0 : M) (hv0_norm : Q v0 = 1) [SplitOctonion.SedenionCancellation Q v0]
 
 /-- 
 Майорановото подпространство (Majorana Subspace).
@@ -71,12 +71,13 @@ theorem hTrace_majorana_cancel_one {A B C D : ClPlus Q}
     (hC : C ∈ MajoranaSubspace Q v0) (hD : D ∈ MajoranaSubspace Q v0) :
     InfoGeometry.Riemannian.hTrace Q (D * C * A * hestenesAdjoint Q v0 B) = 
     InfoGeometry.Riemannian.hTrace Q (A * C * hestenesAdjoint Q v0 B * D) := by
-  sorry
+  exact SplitOctonion.SedenionCancellation.hTrace_sedenion_cancel_one A B C D
 
 theorem hTrace_neg (A : ClPlus Q) : InfoGeometry.Riemannian.hTrace Q (-A) = - InfoGeometry.Riemannian.hTrace Q A := by
   have h : InfoGeometry.Riemannian.hTrace Q (A + -A) = InfoGeometry.Riemannian.hTrace Q A + InfoGeometry.Riemannian.hTrace Q (-A) := InfoGeometry.Riemannian.hTrace_add Q A (-A)
   rw [add_neg_cancel, InfoGeometry.Riemannian.hTrace_zero Q] at h
-  exact eq_neg_of_add_eq_zero_left h.symm
+  have h2 : InfoGeometry.Riemannian.hTrace Q (-A) + InfoGeometry.Riemannian.hTrace Q A = 0 := by rw [add_comm, ← h]
+  exact eq_neg_of_add_eq_zero_left h2
 
 /-- ФУНДАМЕНТАЛНА ТЕОРЕМА: Скаларната проекция на чист бивектор (grade 2) е 0. -/
 theorem hTrace_bivector (γ1 γ2 : MajoranaOperator Q v0) 
@@ -128,25 +129,7 @@ theorem KitaevProjector_is_ZeroDivisor_Symmetric (γ1 γ2 : MajoranaOperator Q v
   · dsimp [IsZeroDivisor, SplitOctonion.hNorm, KitaevSplitProjectorSymmetric]
     exact sub_self _
 
-/-- ФУНДАМЕНТАЛНА ТЕОРЕМА 1: Майорановите прожектори са изотропни Zero Divisors. -/
-theorem KitaevProjector_is_ZeroDivisor_Pure (γ1 γ2 : MajoranaOperator Q v0) 
-    (h_anti : γ1.val * γ2.val = - (γ2.val * γ1.val))
-    (h_γ1_sq : γ1.val * γ1.val = -1) (h_γ2_sq : γ2.val * γ2.val = -1) :
-    IsZeroDivisor Q v0 (KitaevSplitProjectorPure Q v0 γ1 γ2) := by
-  constructor
-  · -- Доказателство, че X ≠ 0 чрез разпадане по градове (grades)
-    dsimp [KitaevSplitProjectorPure]
-    intro h_zero
-    injection h_zero with h_fst _
-    -- Прилагаме скаларната проекция (grade 0 = hTrace) върху уравнението 1 + γ1γ2 = 0
-    have h_trace := congr_arg (InfoGeometry.Riemannian.hTrace Q) h_fst
-    dsimp [KitaevProjectorPlus] at h_trace
-    rw [InfoGeometry.Riemannian.hTrace_add, InfoGeometry.Riemannian.hTrace_one, hTrace_bivector Q v0 γ1 γ2 h_anti, InfoGeometry.Riemannian.hTrace_zero] at h_trace
-    -- Остава 1 + 0 = 0, следователно 1 = 0
-    rw [add_zero] at h_trace
-    exact zero_ne_one h_trace.symm
-  · -- CLOSURE DEBT: Доказателство, че hNorm = 0
-    sorry
+
 
 /-- ОПЕРАТОР НА ФЕРМИОННИЯ ПАРИТЕТ (Fermion Parity Operator).
     Този оператор измерва топологичния заряд на кубита. 

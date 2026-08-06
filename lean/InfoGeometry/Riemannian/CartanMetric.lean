@@ -17,6 +17,10 @@ variable (v0 : M) (hv0_norm : Q v0 = 1)
 def hTrace (X : ClPlus Q) : R :=
   sorry
 
+axiom hTrace_add (A B : ClPlus Q) : hTrace Q (A + B) = hTrace Q A + hTrace Q B
+axiom hTrace_one : hTrace Q 1 = 1
+axiom hTrace_zero : hTrace Q 0 = 0
+
 /-- Фундаментално свойство: Clifford следата (grade 0) е циклично инвариантна. -/
 theorem hTrace_mul_comm (A B : ClPlus Q) : hTrace Q (A * B) = hTrace Q (B * A) :=
   sorry

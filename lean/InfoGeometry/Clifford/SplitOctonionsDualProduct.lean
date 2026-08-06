@@ -62,12 +62,7 @@ theorem cross_term_cancel_two (A B C D : ClPlus Q)
     (hC : hestenesAdjoint Q v0 C = C) (hD : hestenesAdjoint Q v0 D = D) :
     hTrace Q (hestenesAdjoint Q v0 D * B * (hestenesAdjoint Q v0 C * hestenesAdjoint Q v0 A)) = 
     hTrace Q (B * hestenesAdjoint Q v0 A * hestenesAdjoint Q v0 C * D) := by
-  rw [hC, hD]
-  rw [← hTrace_adjoint]
-  simp only [hestenesAdjoint_mul]
-  sorry -- 4. hestenesAdjoint_cone_elem_pure
-  -- 5. rw [hTrace_mul_comm (A * C) (hestenesAdjoint Q v0 B * D)]
-  -- rfl
+  sorry
 
 /-- АКСИОМА НА СЕДЕНИОННИЯ КАПАН (Опция Б): Огледалното анулиране за втория крос-термин. -/
 axiom hTrace_sedenion_cancel_two (A B C D : ClPlus Q) :

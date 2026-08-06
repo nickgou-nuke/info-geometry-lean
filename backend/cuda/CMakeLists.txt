@@ -10,20 +10,22 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CUDA_ARCHITECTURES 80 90)
 set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -O3 -use_fast_math")
 
-# Find Lean 4 headers
-find_path(LEAN_INCLUDE_DIR lean/lean.h PATHS /usr/local/include/lean $ENV{HOME}/.elan/toolchains/leanprover--lean4---v4.0.0/include $ENV{HOME}/.elan/toolchains/leanprover--lean4---v4.2.0/include $ENV{HOME}/.elan/toolchains/leanprover--lean4---v4.11.0/include)
-include_directories(${LEAN_INCLUDE_DIR})
+# Lean FFI is currently disabled for PyBind11 standalone module
 
-# Compile shared library for Lean FFI
-add_library(zorn_cuda SHARED 
-    src/ModularFlow.cu
+# CUTLASS Headers
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/cutlass/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/cutlass/tools/util/include)
+
+# Fetch and configure PyBind11
+include(FetchContent)
+FetchContent_Declare(
+  pybind11
+  GIT_REPOSITORY https://github.com/pybind/pybind11.git
+  GIT_TAG        v2.11.1
 )
+FetchContent_MakeAvailable(pybind11)
 
+# PyBind11 Extension Module
+pybind11_add_module(zorn_cuda zorn_pybind.cpp GibbsFermiSensor.cu)
 target_link_libraries(zorn_cuda PRIVATE cudart)
-
-# CPU Standalone Executable (Gibbs-Fermi CMOS Pipeline Prototype)
-find_package(Eigen3 REQUIRED NO_MODULE)
-add_executable(twistor_isp twistor_isp_main.cpp)
-target_include_directories(twistor_isp PRIVATE ${EIGEN3_INCLUDE_DIR})
-target_compile_options(twistor_isp PRIVATE -fopenmp)
-target_link_options(twistor_isp PRIVATE -fopenmp)
+set_target_properties(zorn_cuda PROPERTIES CUDA_ARCHITECTURES "80;90")

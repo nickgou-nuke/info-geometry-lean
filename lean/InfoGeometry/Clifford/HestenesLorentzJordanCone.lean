@@ -85,6 +85,6 @@ def HestenesSelfAdjoint : Submodule R (ClPlus Q) where
 детерминантата (която съответства на Q(x)) и следата.
 Тук поставяме структурната основа. -/
 def FutureLorentzCone : Set (HestenesSelfAdjoint Q v0) :=
-  Set.univ
+  {X | ∃ Y : ClPlus Q, X.val.val = Y.val * (hestenesAdjoint Q v0 Y).val}
 
 end InfoGeometry.Clifford.Hestenes

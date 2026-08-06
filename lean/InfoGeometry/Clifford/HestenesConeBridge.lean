@@ -20,10 +20,14 @@ variable (v0 : M) (hv0_norm : Q v0 = 1)
 -/
 theorem future_lorentz_cone_eq_natural_cone (X : HestenesSelfAdjoint Q v0) :
     X ∈ FutureLorentzCone Q v0 ↔ X.val ∈ NaturalCone Q v0 := by
-  -- FutureLorentzCone е дефиниран в HestenesLorentzJordanCone.lean
-  -- NaturalCone е дефиниран в HestenesNaturalConeStandardForm.lean
-  -- Доказателството изисква дълбока структура (Positivity, Determinant), 
-  -- но архитектурно установяваме изоморфизма.
-  sorry
+  dsimp [FutureLorentzCone, NaturalCone, L_action, J_mod]
+  apply Iff.intro
+  · rintro ⟨Y, hY⟩
+    use Y
+    apply Subtype.ext
+    exact hY
+  · rintro ⟨Y, hY⟩
+    use Y
+    exact congrArg Subtype.val hY
 
 end InfoGeometry.Clifford.Hestenes

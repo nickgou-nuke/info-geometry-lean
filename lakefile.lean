@@ -883,6 +883,7 @@ lean_lib Omega where
 
 @[default_target]
 lean_lib InfoGeometry where
+  moreLinkArgs := #["-L./backend/cuda/build", "-lzorn_cuda", "-lcudart"]
   -- Build the root project entrypoint. Repository policy is that every
   -- repo-owned Lean module under `lean/InfoGeometry` must be buildable and
   -- provided through the root/`InfoGeometry.All` surface. Generated, proposal,

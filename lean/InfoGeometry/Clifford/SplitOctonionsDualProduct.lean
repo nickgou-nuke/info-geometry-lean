@@ -8,6 +8,7 @@ variable {Q : QuadraticForm R M} {v0 : M} (hv0_norm : Q v0 = 1)
 
 open InfoGeometry.Clifford.Hestenes
 open CliffordAlgebra
+open InfoGeometry.Riemannian
 
 /-- Дефинираме Сплит-Октониона като канонично Cayley-Dickson удвояване над паравекторите -/
 structure SplitOctonion (Q : QuadraticForm R M) (v0 : M) where
@@ -54,10 +55,27 @@ theorem hestenesAdjoint_prod_fst (A C D B : ClPlus Q) :
 axiom hTrace_sedenion_cancel_one (A B C D : ClPlus Q) :
     hTrace Q (D * C * A * hestenesAdjoint Q v0 B) = hTrace Q (A * C * hestenesAdjoint Q v0 B * D)
 
+/-- ТЕОРЕМА: cross_term_cancel_two
+    Огледалното анулиране на втория седенионен крос-термин,
+    доказуемо когато C и D са елементи от конуса (самоадюнгнати). -/
+theorem cross_term_cancel_two (A B C D : ClPlus Q) 
+    (hC : hestenesAdjoint Q v0 C = C) (hD : hestenesAdjoint Q v0 D = D) :
+    hTrace Q (hestenesAdjoint Q v0 D * B * (hestenesAdjoint Q v0 C * hestenesAdjoint Q v0 A)) = 
+    hTrace Q (B * hestenesAdjoint Q v0 A * hestenesAdjoint Q v0 C * D) := by
+  rw [hC, hD]
+  rw [← hTrace_adjoint]
+  simp only [hestenesAdjoint_mul]
+  sorry -- 4. hestenesAdjoint_cone_elem_pure
+  -- 5. rw [hTrace_mul_comm (A * C) (hestenesAdjoint Q v0 B * D)]
+  -- rfl
+
 /-- АКСИОМА НА СЕДЕНИОННИЯ КАПАН (Опция Б): Огледалното анулиране за втория крос-термин. -/
 axiom hTrace_sedenion_cancel_two (A B C D : ClPlus Q) :
     hTrace Q (hestenesAdjoint Q v0 D * B * (hestenesAdjoint Q v0 C * hestenesAdjoint Q v0 A)) = 
     hTrace Q (B * hestenesAdjoint Q v0 A * hestenesAdjoint Q v0 C * D)
+
+axiom hTrace_add (A B : ClPlus Q) : hTrace Q (A + B) = hTrace Q A + hTrace Q B
+axiom hTrace_sub (A B : ClPlus Q) : hTrace Q (A - B) = hTrace Q A - hTrace Q B
 
 /-- Вашата фундаментална лема: Благодарение на Cayley-Dickson структурата, 
     кръстосаните термини вече се анулират напълно алгебрично! -/

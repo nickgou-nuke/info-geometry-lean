@@ -30,7 +30,9 @@ theorem coneAction_one (hv0_norm : Q v0 = 1) (X : ClPlus Q) : coneConjugationAct
   dsimp [coneConjugationAction]
   apply Subtype.ext
   dsimp [L_action, R_action]
-  have h_adj : (hestenesAdjoint Q v0 (1 : ClPlus Q)).val = 1 := congrArg Subtype.val (hestenesAdjoint_one Q v0 hv0_norm)
+  have h_adj : (hestenesAdjoint Q v0 (1 : ClPlus Q)).val = 1 := by
+    rw [hestenesAdjoint_one Q v0 hv0_norm]
+    rfl
   rw [h_adj, mul_one, one_mul]
 
 /-- hestenesAdjoint обръща реда на умножение (анти-автоморфизъм). -/
@@ -38,12 +40,12 @@ theorem hestenesAdjoint_mul (hv0_norm : Q v0 = 1) (G1 G2 : ClPlus Q) :
     hestenesAdjoint Q v0 (G1 * G2) = hestenesAdjoint Q v0 G2 * hestenesAdjoint Q v0 G1 := by
   apply Subtype.ext
   dsimp [hestenesAdjoint]
-  rw [reverse.map_mul]
+  rw [CliffordAlgebra.reverse.map_mul]
   have hsq := gamma0_sq Q v0 hv0_norm
-  simp only [mul_assoc]
-  congr 1
-  congr 1
-  rw [← mul_assoc (gamma0 Q v0) (gamma0 Q v0), hsq, one_mul]
+  calc gamma0 Q v0 * (reverse G2.val * reverse G1.val) * gamma0 Q v0
+    _ = gamma0 Q v0 * reverse G2.val * 1 * reverse G1.val * gamma0 Q v0 := by simp only [mul_assoc, mul_one]
+    _ = gamma0 Q v0 * reverse G2.val * (gamma0 Q v0 * gamma0 Q v0) * reverse G1.val * gamma0 Q v0 := by rw [hsq]
+    _ = (gamma0 Q v0 * reverse G2.val * gamma0 Q v0) * (gamma0 Q v0 * reverse G1.val * gamma0 Q v0) := by simp only [mul_assoc]
 
 /-- Доказателство за свойството на съвместимост: (G1 * G2) ⬝ X = G1 ⬝ (G2 ⬝ X) -/
 theorem coneAction_mul (hv0_norm : Q v0 = 1) (G1 G2 : ClPlus Q) (X : ClPlus Q) :

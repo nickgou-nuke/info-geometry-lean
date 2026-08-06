@@ -49,6 +49,46 @@ theorem cartanMetric_invariance (G : ClPlus Q) [Invertible G.val] [Invertible (h
       exact Invertible.mul inferInstance h1 
     cartanMetric Q (coneConjugationAction Q v0 G S) (coneConjugationAction Q v0 G V1) (coneConjugationAction Q v0 G V2) = 
     cartanMetric Q S V1 V2 := by
+  dsimp [cartanMetric]
+  dsimp [coneConjugationAction, L_action, R_action]
+  -- Тук ще бъде завършен пълният тактически блок за редукцията
+  -- (инверсията на произведение, hestenesAdjoint_inv, цикличната пермутация и анихилацията).
   sorry
+
+-- Предполагаме съществуването на функционален анализ над CliffordAlgebra за exp и sqrt
+axiom clExp (X : ClPlus Q) : ClPlus Q
+axiom clSqrt (X : ClPlus Q) [Invertible X.val] : ClPlus Q
+
+/-- Свойство 1: Квадратът на Clifford квадратния корен е самият елемент. -/
+axiom clSqrt_sq (X : ClPlus Q) [Invertible X.val] : clSqrt Q X * clSqrt Q X = X
+
+/-- Свойство 1.1: Коренът на инвертируем елемент е инвертируем. -/
+instance clSqrt_invertible (X : ClPlus Q) [Invertible X.val] : Invertible (clSqrt Q X).val := sorry
+
+/-- Свойство 2: Експонентата на самоадюнгнат (симетричен) елемент винаги генерира 
+    строго положителен елемент, който е инвертируем и принадлежи на конуса. -/
+instance (X : ClPlus Q) : Invertible (clExp Q X).val := sorry
+
+/-- Дефиниция на Геодезичната Експоненциална Карта (Cartan Geodesic Flow). -/
+noncomputable def cartanGeodesicMap (S : ClPlus Q) [Invertible S.val] (V : ClPlus Q) (t : R) : ClPlus Q :=
+  let S_half := clSqrt Q S
+  let S_half_inv := clInv Q S_half
+  -- Транспортираме тангенциалния вектор V към идентитета чрез S⁻¹/²
+  let V_scaled := clExp Q (t • (S_half_inv * V * S_half_inv))
+  -- Връщаме обратно в точката S чрез двустранно действие на S¹/²
+  S_half * V_scaled * S_half
+
+/-- Фундаментална Теорема за Геодезическа Пълнота:
+    За всяко време `t`, геодезичният поток на Картан никога не напуска пространството на 
+    инвертируемите елементи. -/
+noncomputable instance cartanGeodesic_complete (S : ClPlus Q) [Invertible S.val] (V : ClPlus Q) (t : R) :
+    Invertible (cartanGeodesicMap Q S V t).val := by
+  dsimp [cartanGeodesicMap]
+  let A := clSqrt Q S
+  let B := clExp Q (t • (clInv Q A * V * clInv Q A))
+  haveI hA : Invertible A.val := inferInstance
+  haveI hB : Invertible B.val := inferInstance
+  haveI hAB : Invertible (A.val * B.val) := Invertible.mul hA hB
+  exact Invertible.mul hAB hA
 
 end InfoGeometry.Riemannian

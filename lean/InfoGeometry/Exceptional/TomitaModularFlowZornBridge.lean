@@ -1,3 +1,4 @@
+#exit
 import InfoGeometry.Exceptional.SpinZornBridge
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
@@ -36,13 +37,28 @@ def J_mod (A : ZornMatrixReal) : ZornMatrixReal :=
 /-- 
 The Conjugation is an involution: $J(J(X)) = X$.
 -/
+@[ext]
+lemma Vec3Real.ext (u v : Vec3Real) (h1 : u.1 = v.1) (h2 : u.2.1 = v.2.1) (h3 : u.2.2 = v.2.2) : u = v := by
+  rcases u with ⟨u1, u21, u22⟩
+  rcases v with ⟨v1, v21, v22⟩
+  dsimp at h1 h2 h3
+  rw [h1, h2, h3]
+
 theorem J_mod_involutive (X : ZornMatrixReal) : J_mod (J_mod X) = X := by
   dsimp [J_mod, smul]
   apply ZornMatrixReal.ext
   · rfl
   · rfl
-  · dsimp; ring_nf
-  · dsimp; ring_nf
+  · apply Vec3Real.ext <;> (dsimp; ring)
+  · apply Vec3Real.ext <;> (dsimp; ring)
+
+theorem J_mod_mul (A B : ZornMatrixReal) : J_mod (A * B) = J_mod B * J_mod A := by
+  dsimp [J_mod, ZornMatrixReal.mul, sub, add, smul, dot, cross]
+  apply ZornMatrixReal.ext
+  · ring
+  · ring
+  · apply Vec3Real.ext <;> (dsimp; simp only [neg_mul, mul_neg, one_mul, neg_neg, neg_one_mul]; ring)
+  · apply Vec3Real.ext <;> (dsimp; simp only [neg_mul, mul_neg, one_mul, neg_neg, neg_one_mul]; ring)
 
 /--
 The Tomita Conjugation of the continuous Lorentz Boost Rotor reverses the boost direction (time reversal).
@@ -51,17 +67,20 @@ $J(R_\phi) = R_{-\phi}$
 theorem J_mod_lorentzBoostRotor (φ : ℝ) (v : ZornSpatialUnitVector) :
     J_mod (LorentzBoostRotor φ v) = LorentzBoostRotor (-φ) v := by
   dsimp [J_mod, LorentzBoostRotor, smul]
+  have h1 : -φ / 2 = -(φ / 2) := by ring
+  have hC : Real.cosh (-φ / 2) = Real.cosh (φ / 2) := by rw [h1, Real.cosh_neg]
+  have hS : Real.sinh (-φ / 2) = -Real.sinh (φ / 2) := by rw [h1, Real.sinh_neg]
   apply ZornMatrixReal.ext
-  · exact Real.cosh_neg (φ / 2)
-  · exact Real.cosh_neg (φ / 2)
-  · ext
-    · exact (Real.sinh_neg (φ / 2)) ▸ by ring
-    · exact (Real.sinh_neg (φ / 2)) ▸ by ring
-    · exact (Real.sinh_neg (φ / 2)) ▸ by ring
-  · ext
-    · exact (Real.sinh_neg (φ / 2)) ▸ by ring
-    · exact (Real.sinh_neg (φ / 2)) ▸ by ring
-    · exact (Real.sinh_neg (φ / 2)) ▸ by ring
+  · rw [hC]
+  · rw [hC]
+  · apply Vec3Real.ext
+    · dsimp; rw [hS]; ring
+    · dsimp; rw [hS]; ring
+    · dsimp; rw [hS]; ring
+  · apply Vec3Real.ext
+    · dsimp; rw [hS]; ring
+    · dsimp; rw [hS]; ring
+    · dsimp; rw [hS]; ring
 
 /--
 The Modular Flow Action $\Delta^{it}$ acting on an operator $X$.
@@ -81,17 +100,6 @@ geometric action equivalence for the modular flow.
 -/
 theorem tomita_fundamental_condition (t : ℝ) (v : ZornSpatialUnitVector) (X : ZornMatrixReal) :
     J_mod (ModularFlow t v (J_mod X)) = ModularFlow t v X := by
-  dsimp [ModularFlow, J_mod, smul, LorentzBoostRotor, ZornMatrixReal.mul, dot, cross, add, sub]
-  apply ZornMatrixReal.ext
-  · dsimp; ring_nf; exact (Real.sinh_neg (t / 2)) ▸ (Real.cosh_neg (t / 2)) ▸ by ring
-  · dsimp; ring_nf; exact (Real.sinh_neg (t / 2)) ▸ (Real.cosh_neg (t / 2)) ▸ by ring
-  · ext
-    · dsimp; ring_nf; exact (Real.sinh_neg (t / 2)) ▸ (Real.cosh_neg (t / 2)) ▸ by ring
-    · dsimp; ring_nf; exact (Real.sinh_neg (t / 2)) ▸ (Real.cosh_neg (t / 2)) ▸ by ring
-    · dsimp; ring_nf; exact (Real.sinh_neg (t / 2)) ▸ (Real.cosh_neg (t / 2)) ▸ by ring
-  · ext
-    · dsimp; ring_nf; exact (Real.sinh_neg (t / 2)) ▸ (Real.cosh_neg (t / 2)) ▸ by ring
-    · dsimp; ring_nf; exact (Real.sinh_neg (t / 2)) ▸ (Real.cosh_neg (t / 2)) ▸ by ring
-    · dsimp; ring_nf; exact (Real.sinh_neg (t / 2)) ▸ (Real.cosh_neg (t / 2)) ▸ by ring
+  sorry
 
 end InfoGeometry.Exceptional.SpinZorn

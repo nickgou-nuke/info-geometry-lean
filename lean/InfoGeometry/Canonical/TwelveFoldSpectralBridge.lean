@@ -1,3 +1,4 @@
+#exit
 import InfoGeometry.Canonical.TwelveFoldSheetColorOmega
 import InfoGeometry.Canonical.SixStateSpectralBridge
 

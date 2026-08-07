@@ -129,6 +129,43 @@ zorn_cuda/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/zorn_cuda.dir/build.make CMakeFiles/zorn_cuda.dir/build
 .PHONY : zorn_cuda/fast
 
+#=============================================================================
+# Target rules for targets named zorn_cuda_py
+
+# Build rule for target.
+zorn_cuda_py: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 zorn_cuda_py
+.PHONY : zorn_cuda_py
+
+# fast build rule for target.
+zorn_cuda_py/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zorn_cuda_py.dir/build.make CMakeFiles/zorn_cuda_py.dir/build
+.PHONY : zorn_cuda_py/fast
+
+GibbsFermiSensor.o: GibbsFermiSensor.cu.o
+.PHONY : GibbsFermiSensor.o
+
+# target to build an object file
+GibbsFermiSensor.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zorn_cuda.dir/build.make CMakeFiles/zorn_cuda.dir/GibbsFermiSensor.cu.o
+.PHONY : GibbsFermiSensor.cu.o
+
+GibbsFermiSensor.i: GibbsFermiSensor.cu.i
+.PHONY : GibbsFermiSensor.i
+
+# target to preprocess a source file
+GibbsFermiSensor.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zorn_cuda.dir/build.make CMakeFiles/zorn_cuda.dir/GibbsFermiSensor.cu.i
+.PHONY : GibbsFermiSensor.cu.i
+
+GibbsFermiSensor.s: GibbsFermiSensor.cu.s
+.PHONY : GibbsFermiSensor.s
+
+# target to generate assembly for a file
+GibbsFermiSensor.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zorn_cuda.dir/build.make CMakeFiles/zorn_cuda.dir/GibbsFermiSensor.cu.s
+.PHONY : GibbsFermiSensor.cu.s
+
 ModularFlow.o: ModularFlow.cu.o
 .PHONY : ModularFlow.o
 
@@ -153,6 +190,54 @@ ModularFlow.cu.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/zorn_cuda.dir/build.make CMakeFiles/zorn_cuda.dir/ModularFlow.cu.s
 .PHONY : ModularFlow.cu.s
 
+src/tensor_core_isp.o: src/tensor_core_isp.cu.o
+.PHONY : src/tensor_core_isp.o
+
+# target to build an object file
+src/tensor_core_isp.cu.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zorn_cuda.dir/build.make CMakeFiles/zorn_cuda.dir/src/tensor_core_isp.cu.o
+.PHONY : src/tensor_core_isp.cu.o
+
+src/tensor_core_isp.i: src/tensor_core_isp.cu.i
+.PHONY : src/tensor_core_isp.i
+
+# target to preprocess a source file
+src/tensor_core_isp.cu.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zorn_cuda.dir/build.make CMakeFiles/zorn_cuda.dir/src/tensor_core_isp.cu.i
+.PHONY : src/tensor_core_isp.cu.i
+
+src/tensor_core_isp.s: src/tensor_core_isp.cu.s
+.PHONY : src/tensor_core_isp.s
+
+# target to generate assembly for a file
+src/tensor_core_isp.cu.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zorn_cuda.dir/build.make CMakeFiles/zorn_cuda.dir/src/tensor_core_isp.cu.s
+.PHONY : src/tensor_core_isp.cu.s
+
+zorn_pybind.o: zorn_pybind.cpp.o
+.PHONY : zorn_pybind.o
+
+# target to build an object file
+zorn_pybind.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zorn_cuda_py.dir/build.make CMakeFiles/zorn_cuda_py.dir/zorn_pybind.cpp.o
+.PHONY : zorn_pybind.cpp.o
+
+zorn_pybind.i: zorn_pybind.cpp.i
+.PHONY : zorn_pybind.i
+
+# target to preprocess a source file
+zorn_pybind.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zorn_cuda_py.dir/build.make CMakeFiles/zorn_cuda_py.dir/zorn_pybind.cpp.i
+.PHONY : zorn_pybind.cpp.i
+
+zorn_pybind.s: zorn_pybind.cpp.s
+.PHONY : zorn_pybind.s
+
+# target to generate assembly for a file
+zorn_pybind.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/zorn_cuda_py.dir/build.make CMakeFiles/zorn_cuda_py.dir/zorn_pybind.cpp.s
+.PHONY : zorn_pybind.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -162,9 +247,19 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... zorn_cuda"
+	@echo "... zorn_cuda_py"
+	@echo "... GibbsFermiSensor.o"
+	@echo "... GibbsFermiSensor.i"
+	@echo "... GibbsFermiSensor.s"
 	@echo "... ModularFlow.o"
 	@echo "... ModularFlow.i"
 	@echo "... ModularFlow.s"
+	@echo "... src/tensor_core_isp.o"
+	@echo "... src/tensor_core_isp.i"
+	@echo "... src/tensor_core_isp.s"
+	@echo "... zorn_pybind.o"
+	@echo "... zorn_pybind.i"
+	@echo "... zorn_pybind.s"
 .PHONY : help
 
 

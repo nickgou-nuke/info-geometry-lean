@@ -1,1 +1,1 @@
--I"/home/goutev/.elan/toolchains/leanprover--lean4---v4.28.1/include"
+-I"/home/goutev/.elan/toolchains/leanprover--lean4---v4.28.1/include" -I"/home/goutev/repos/info-geometry-lean/backend/cuda/cutlass/include" -I"/home/goutev/repos/info-geometry-lean/backend/cuda/cutlass/tools/util/include"

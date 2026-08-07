@@ -24,6 +24,16 @@ latter supplies the associative central product.  These declarations expose
 the common doubling-unit calculations without identifying the two products.
 -/
 
+instance : SMulCommClass ℝ (Quaternion ℝ) (Quaternion ℝ) where
+  smul_comm r a b := by
+    ext <;> simp [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul,
+      Quaternion.re_smul, Quaternion.imI_smul, Quaternion.imJ_smul, Quaternion.imK_smul] <;> ring
+
+instance : IsScalarTower ℝ (Quaternion ℝ) (Quaternion ℝ) where
+  smul_assoc r a b := by
+    ext <;> simp [Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul,
+      Quaternion.re_smul, Quaternion.imI_smul, Quaternion.imJ_smul, Quaternion.imK_smul] <;> ring
+
 abbrev ParamQuaternionDouble (ε : ℝ) :=
   AlbertStep ℝ (Quaternion ℝ) ε
 

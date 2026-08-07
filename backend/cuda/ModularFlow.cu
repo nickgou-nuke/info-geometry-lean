@@ -1,6 +1,7 @@
 #include "ZornFFI.h"
 #include <cuda_runtime.h>
 #include <iostream>
+#include <cmath>
 
 // Глобална константна памет за Лоренцовия бууст (Светкавичен достъп за всички нишки)
 __constant__ cuDoubleComplex const_B_t[4];     // B_t
@@ -19,19 +20,37 @@ __device__ __forceinline__ void multiply_clplus(
 }
 
 // ---------------------------------------------------------
-// The Grand Kernel: Tomita-Takesaki Modular Flow
+// Pixel <-> Logit Bridges
 // ---------------------------------------------------------
-__global__ void execute_modular_flow_kernel(TwistorField_SoA field, int N) {
+__device__ __forceinline__ double logit_d(double p) {
+    p = fmax(1e-7, fmin(1.0 - 1e-7, p));
+    return log(p / (1.0 - p));
+}
+
+__device__ __forceinline__ double sigmoid_d(double E) {
+    return 1.0 / (1.0 + exp(-E));
+}
+
+// ---------------------------------------------------------
+// The Grand Kernel: Tomita-Takesaki Modular Flow for ISP
+// ---------------------------------------------------------
+__global__ void execute_isp_kernel(const double* img_in, double* img_out, int N) {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (idx >= N) return;
 
-    // 1. Зареждане на локалния Туистор X в регистрите на нишката (Coalesced Memory Access)
-    cuDoubleComplex x00 = field.z00[idx];
-    cuDoubleComplex x01 = field.z01[idx];
-    cuDoubleComplex x10 = field.z10[idx];
-    cuDoubleComplex x11 = field.z11[idx];
+    // 1. Pixel to Logit (Energy Gap)
+    double p = img_in[idx];
+    double energy_gap = logit_d(p);
 
-    // 2. Междинен резултат: Y = B_t * X
+    // 2. The Twistor Lift
+    // Z = (ω^0, ω^1, π_0', π_1') => Represented as 2x2 ClPlus Matrix
+    // We map π_0' (index 2) to z10 for matrix multiplication
+    cuDoubleComplex x00 = make_cuDoubleComplex(1.0, 0.0);
+    cuDoubleComplex x01 = make_cuDoubleComplex(0.0, 0.0);
+    cuDoubleComplex x10 = make_cuDoubleComplex(energy_gap, 0.0);
+    cuDoubleComplex x11 = make_cuDoubleComplex(0.0, 0.0);
+
+    // 3. Modular Flow: Y = B_t * X
     cuDoubleComplex y00, y01, y10, y11;
     multiply_clplus(
         const_B_t[0], const_B_t[1], const_B_t[2], const_B_t[3], // B_t
@@ -39,33 +58,45 @@ __global__ void execute_modular_flow_kernel(TwistorField_SoA field, int N) {
         y00, y01, y10, y11
     );
 
-    // 3. Финален резултат: X' = Y * B_{-t} = B_t * X * B_{-t}
-    cuDoubleComplex out00, out01, out10, out11;
-    multiply_clplus(
-        y00, y01, y10, y11,                                     // Y
-        const_B_t_inv[0], const_B_t_inv[1], const_B_t_inv[2], const_B_t_inv[3], // B_{-t}
-        out00, out01, out10, out11
-    );
+    // 4. Sensor Projection (Trace logic) -> extracting the filtered energy
+    double filtered_energy = cuCreal(y10); // Extract evolved energy gap
 
-    // 4. Записване на новото термодинамично състояние обратно в паметта
-    field.z00[idx] = out00;
-    field.z01[idx] = out01;
-    field.z10[idx] = out10;
-    field.z11[idx] = out11;
+    // 5. Logit to Pixel (Gibbs-Fermi Admission)
+    img_out[idx] = sigmoid_d(filtered_energy);
 }
 
 // ---------------------------------------------------------
-// Lean 4 FFI Входна точка
+// C-API for Python/ctypes
 // ---------------------------------------------------------
-extern "C" lean_obj_res cuda_execute_modular_flow(
-    uint32_t N, double t, 
-    lean_obj_arg z00_re, lean_obj_arg z00_im,
-    lean_obj_arg z10_re, lean_obj_arg z10_im,
-    lean_obj_arg z01_re, lean_obj_arg z01_im,
-    lean_obj_arg z11_re, lean_obj_arg z11_im) 
-{
-    // Тук ще разопаковаме масивите (lean_float_array_data),
-    // ще алокираме cudaMalloc, ще извикаме ядрото и ще върнем резултата към Lean.
-    // Засега връщаме празен обект, за да може Lean да се компилира.
-    return lean_io_result_mk_ok(lean_box(0)); 
+extern "C" void run_twistor_isp_cuda(int N, double t, const double* host_in, double* host_out) {
+    // 1. Calculate Lorentz Boost (Host)
+    double ch = cosh(t / 2.0);
+    double sh = sinh(t / 2.0);
+    cuDoubleComplex host_B_t[4] = {
+        make_cuDoubleComplex(ch + sh, 0.0), make_cuDoubleComplex(0.0, 0.0),
+        make_cuDoubleComplex(0.0, 0.0),     make_cuDoubleComplex(ch - sh, 0.0)
+    };
+    cudaMemcpyToSymbol(const_B_t, host_B_t, 4 * sizeof(cuDoubleComplex));
+
+    // 2. Allocate and transfer Device memory
+    double *d_in, *d_out;
+    cudaMalloc(&d_in, N * sizeof(double));
+    cudaMalloc(&d_out, N * sizeof(double));
+    
+    cudaMemcpy(d_in, host_in, N * sizeof(double), cudaMemcpyHostToDevice);
+
+    // 3. Launch Kernel
+    int threadsPerBlock = 256;
+    int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
+    execute_isp_kernel<<<blocksPerGrid, threadsPerBlock>>>(d_in, d_out, N);
+    
+    // 4. Retrieve data
+    cudaMemcpy(host_out, d_out, N * sizeof(double), cudaMemcpyDeviceToHost);
+    
+    cudaFree(d_in);
+    cudaFree(d_out);
 }
+
+// ---------------------------------------------------------
+// Lean 4 FFI Входна точка (Placeholder removed for Python integration)
+// ---------------------------------------------------------

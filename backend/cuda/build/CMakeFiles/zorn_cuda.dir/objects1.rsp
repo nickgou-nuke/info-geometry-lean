@@ -1,1 +1,1 @@
-CMakeFiles/zorn_cuda.dir/ModularFlow.cu.o
+CMakeFiles/zorn_cuda.dir/ModularFlow.cu.o CMakeFiles/zorn_cuda.dir/GibbsFermiSensor.cu.o CMakeFiles/zorn_cuda.dir/src/tensor_core_isp.cu.o

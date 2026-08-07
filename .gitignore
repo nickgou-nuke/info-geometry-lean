@@ -217,6 +217,10 @@ Miniforge*.sh
 REAL-Prover/
 REAL-Prover
 aihub/
+
+# CUDA backend build outputs and vendored deps (never track as phantom gitlinks)
+/backend/cuda/build/
+/backend/cuda/cutlass/
 arango_export/
 src/hermes-agent/
 src/infogeometry/

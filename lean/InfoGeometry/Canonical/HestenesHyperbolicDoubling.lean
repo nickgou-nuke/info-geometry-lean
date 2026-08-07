@@ -16,6 +16,12 @@ namespace InfoGeometry.Canonical.HestenesHyperbolicDoubling
 
 open InfoGeometry.Canonical.AlbertCayleyDickson
 
+instance : SMulCommClass ℝ (Quaternion ℝ) (Quaternion ℝ) where
+  smul_comm r a b := (Algebra.mul_smul_comm r a b).symm
+
+instance : IsScalarTower ℝ (Quaternion ℝ) (Quaternion ℝ) where
+  smul_assoc r a b := Algebra.smul_mul_assoc r a b
+
 abbrev QuaternionDouble := AlbertStep ℝ (Quaternion ℝ) (1 : ℝ)
 
 def quaternionDoubleAdd (x y : QuaternionDouble) : QuaternionDouble :=

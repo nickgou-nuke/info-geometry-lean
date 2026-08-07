@@ -883,7 +883,7 @@ lean_lib Omega where
 
 @[default_target]
 lean_lib InfoGeometry where
-  moreLinkArgs := #["-L./backend/cuda/build", "-lzorn_cuda", "-lcudart", "-lcublas"]
+  moreLinkArgs := #["-L./backend/cuda/build", "-L/usr/local/cuda/lib64", "-lzorn_cuda", "-lcudart", "-lcublas"]
   -- Build the root project entrypoint. Repository policy is that every
   -- repo-owned Lean module under `lean/InfoGeometry` must be buildable and
   -- provided through the root/`InfoGeometry.All` surface. Generated, proposal,
@@ -1201,3 +1201,8 @@ lean_lib AuditNative where
 
 lean_lib AuditStrict where
   globs := #[`AuditStrict]
+
+lean_exe benchmark {
+  root := `InfoGeometry.Hardware.Benchmark
+  moreLinkArgs := #["-L./backend/cuda/build", "-L/usr/local/cuda/lib64", "-lzorn_cuda", "-lcudart", "-lcublas"]
+}

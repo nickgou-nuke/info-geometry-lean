@@ -192,5 +192,27 @@ theorem splitOctonion_two_poles_plus_six_channels :
     modularNPlus + modularNMinus = chiralZornOne :=
   chiralZorn_basis_resolution
 
+def nullParavectorPlus (c : SplitOctonionColour) : ChiralZornCarrier :=
+  modularNPlus + modularSigmaMinus c
+
+def nullParavectorMinus (c : SplitOctonionColour) : ChiralZornCarrier :=
+  modularNMinus + modularSigmaPlus c
+
+theorem nullParavectorPlus_idempotent (c : SplitOctonionColour) :
+    chiralZornMul (nullParavectorPlus c) (nullParavectorPlus c) = nullParavectorPlus c := by
+  cases c <;> native_decide
+
+theorem nullParavectorMinus_idempotent (c : SplitOctonionColour) :
+    chiralZornMul (nullParavectorMinus c) (nullParavectorMinus c) = nullParavectorMinus c := by
+  cases c <;> native_decide
+
+theorem nullParavectorPlus_norm (c : SplitOctonionColour) :
+    coordinateSplitNorm (nullParavectorPlus c) = 0 := by
+  cases c <;> native_decide
+
+theorem nullParavectorMinus_norm (c : SplitOctonionColour) :
+    coordinateSplitNorm (nullParavectorMinus c) = 0 := by
+  cases c <;> native_decide
+
 end
 end InfoGeometry.Canonical

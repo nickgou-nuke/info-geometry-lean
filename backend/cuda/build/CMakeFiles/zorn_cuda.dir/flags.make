@@ -6,5 +6,5 @@ CUDA_DEFINES = -Dzorn_cuda_EXPORTS
 
 CUDA_INCLUDES = --options-file CMakeFiles/zorn_cuda.dir/includes_CUDA.rsp
 
-CUDA_FLAGS =  -O3 -use_fast_math --ptxas-options=-v -std=c++17 "--generate-code=arch=compute_80,code=[compute_80,sm_80]" "--generate-code=arch=compute_90,code=[compute_90,sm_90]" -Xcompiler=-fPIC
+CUDA_FLAGS =  -O3 -use_fast_math -std=c++17 "--generate-code=arch=compute_80,code=[compute_80,sm_80]" "--generate-code=arch=compute_90,code=[compute_90,sm_90]" -Xcompiler=-fPIC
 

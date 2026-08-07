@@ -1,0 +1,160 @@
+import sys
+
+out = """import InfoGeometry.Canonical.HestenesBivectorCarrier
+
+open CliffordAlgebra InfoGeometry.Canonical.CliffordParity InfoGeometry.Canonical.HestenesBivectorCarrier HasVolumeElement
+
+variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
+variable (Q : QuadraticForm R M) [HasVolumeElement R M Q] [HasSpacetimeBasis Q]
+
+lemma basisBivector_mul_omega_test (i : Fin 6) : 
+    basisBivector Q i * Omega (Q := Q) ∈ Bivector13 Q := by
+  fin_cases i
+"""
+
+def get_haves():
+    s = ""
+    for i in range(4):
+        s += f"    have sq{i} : ι Q (HasSpacetimeBasis.gamma Q {i}) * ι Q (HasSpacetimeBasis.gamma Q {i}) = algebraMap R _ (Q (HasSpacetimeBasis.gamma Q {i})) := ι_sq_scalar Q _\n"
+    for i in range(4):
+        for j in range(i+1, 4):
+            s += f"    have h{i}{j} : ι Q (HasSpacetimeBasis.gamma Q {i}) * ι Q (HasSpacetimeBasis.gamma Q {j}) = - (ι Q (HasSpacetimeBasis.gamma Q {j}) * ι Q (HasSpacetimeBasis.gamma Q {i})) := by apply ι_mul_ι_swap_of_orthogonal Q; apply HasSpacetimeBasis.orthogonal; decide\n"
+            s += f"    have h{j}{i} : ι Q (HasSpacetimeBasis.gamma Q {j}) * ι Q (HasSpacetimeBasis.gamma Q {i}) = - (ι Q (HasSpacetimeBasis.gamma Q {i}) * ι Q (HasSpacetimeBasis.gamma Q {j})) := by apply ι_mul_ι_swap_of_orthogonal Q; apply HasSpacetimeBasis.orthogonal; decide\n"
+    return s
+
+def c_calc(case):
+    if case == 0:
+        return f"""  · -- case 0
+    dsimp [basisBivector, gamma]
+    rw [HasSpacetimeBasis.omega_eq (Q := Q)]
+{get_haves()}
+    have h_eq : ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) = (- (Q (HasSpacetimeBasis.gamma Q 0) * Q (HasSpacetimeBasis.gamma Q 1))) • basisBivector Q 3 := by
+      calc ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3))
+        _ = ι Q (HasSpacetimeBasis.gamma Q 0) * (ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 0)) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) := by simp only [mul_assoc]
+        _ = ι Q (HasSpacetimeBasis.gamma Q 0) * (- (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1))) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) := by rw [h10]
+        _ = - (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 0) * (ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 1)) * (ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3))) := by simp only [mul_assoc, mul_neg, neg_mul]
+        _ = - (algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 0)) * algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 1)) * (ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3))) := by rw [sq0, sq1]
+        _ = (- (Q (HasSpacetimeBasis.gamma Q 0) * Q (HasSpacetimeBasis.gamma Q 1))) • basisBivector Q 3 := by dsimp [basisBivector, gamma]; rw [Algebra.smul_def, map_neg, map_mul, neg_mul]
+    rw [h_eq]
+    apply Submodule.smul_mem
+    apply Submodule.subset_span
+    exact Set.mem_range_self 3
+"""
+    elif case == 1:
+        return f"""  · -- case 1
+    dsimp [basisBivector, gamma]
+    rw [HasSpacetimeBasis.omega_eq (Q := Q)]
+{get_haves()}
+    have h_eq : ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 2) * (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) = (Q (HasSpacetimeBasis.gamma Q 0) * Q (HasSpacetimeBasis.gamma Q 2)) • basisBivector Q 4 := by
+      calc ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 2) * (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3))
+        _ = ι Q (HasSpacetimeBasis.gamma Q 0) * (ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 0)) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) := by simp only [mul_assoc]
+        _ = ι Q (HasSpacetimeBasis.gamma Q 0) * (- (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 2))) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) := by rw [h20]
+        _ = - (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 0) * (ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 1)) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by simp only [mul_assoc, mul_neg, neg_mul]
+        _ = - (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 0) * (- (ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2))) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by rw [h21]
+        _ = ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 0) * (ι Q (HasSpacetimeBasis.gamma Q 1) * (ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 2)) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by simp only [mul_assoc, mul_neg, neg_mul, neg_neg]
+        _ = algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 0)) * (ι Q (HasSpacetimeBasis.gamma Q 1) * algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 2)) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by rw [sq0, sq2]
+        _ = algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 0)) * algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 2)) * (ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, Algebra.commutes]; simp only [mul_assoc]
+        _ = algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 0)) * algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 2)) * (- (ι Q (HasSpacetimeBasis.gamma Q 3) * ι Q (HasSpacetimeBasis.gamma Q 1))) := by rw [h13]
+        _ = (Q (HasSpacetimeBasis.gamma Q 0) * Q (HasSpacetimeBasis.gamma Q 2)) • basisBivector Q 4 := by dsimp [basisBivector, gamma]; rw [Algebra.smul_def, map_mul, mul_neg]
+    rw [h_eq]
+    apply Submodule.smul_mem
+    apply Submodule.subset_span
+    exact Set.mem_range_self 4
+"""
+    elif case == 2:
+        return f"""  · -- case 2
+    dsimp [basisBivector, gamma]
+    rw [HasSpacetimeBasis.omega_eq (Q := Q)]
+{get_haves()}
+    have h_eq : ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 3) * (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) = (- (Q (HasSpacetimeBasis.gamma Q 0) * Q (HasSpacetimeBasis.gamma Q 3))) • basisBivector Q 5 := by
+      calc ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 3) * (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3))
+        _ = ι Q (HasSpacetimeBasis.gamma Q 0) * (ι Q (HasSpacetimeBasis.gamma Q 3) * ι Q (HasSpacetimeBasis.gamma Q 0)) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) := by simp only [mul_assoc]
+        _ = ι Q (HasSpacetimeBasis.gamma Q 0) * (- (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 3))) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) := by rw [h30]
+        _ = - (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 0) * (ι Q (HasSpacetimeBasis.gamma Q 3) * ι Q (HasSpacetimeBasis.gamma Q 1)) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by simp only [mul_assoc, mul_neg, neg_mul]
+        _ = - (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 0) * (- (ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 3))) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by rw [h31]
+        _ = ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 0) * (ι Q (HasSpacetimeBasis.gamma Q 1) * (ι Q (HasSpacetimeBasis.gamma Q 3) * ι Q (HasSpacetimeBasis.gamma Q 2)) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by simp only [mul_assoc, mul_neg, neg_mul, neg_neg]
+        _ = ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 0) * (ι Q (HasSpacetimeBasis.gamma Q 1) * (- (ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3))) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by rw [h32]
+        _ = - (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 0) * (ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * (ι Q (HasSpacetimeBasis.gamma Q 3) * ι Q (HasSpacetimeBasis.gamma Q 3)))) := by simp only [mul_assoc, mul_neg, neg_mul, neg_neg]
+        _ = - (algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 0)) * (ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 3)))) := by rw [sq0, sq3]
+        _ = - (algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 0)) * algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 3)) * (ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2))) := by rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, Algebra.commutes]; simp only [mul_assoc]
+        _ = (- (Q (HasSpacetimeBasis.gamma Q 0) * Q (HasSpacetimeBasis.gamma Q 3))) • basisBivector Q 5 := by dsimp [basisBivector, gamma]; rw [Algebra.smul_def, map_mul, map_neg, neg_mul]
+    rw [h_eq]
+    apply Submodule.smul_mem
+    apply Submodule.subset_span
+    exact Set.mem_range_self 5
+"""
+    elif case == 3:
+        return f"""  · -- case 3
+    dsimp [basisBivector, gamma]
+    rw [HasSpacetimeBasis.omega_eq (Q := Q)]
+{get_haves()}
+    have h_eq : ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) * (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) = (- (Q (HasSpacetimeBasis.gamma Q 2) * Q (HasSpacetimeBasis.gamma Q 3))) • basisBivector Q 0 := by
+      calc ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) * (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3))
+        _ = ι Q (HasSpacetimeBasis.gamma Q 2) * (ι Q (HasSpacetimeBasis.gamma Q 3) * ι Q (HasSpacetimeBasis.gamma Q 0)) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) := by simp only [mul_assoc]
+        _ = ι Q (HasSpacetimeBasis.gamma Q 2) * (- (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 3))) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) := by rw [h30]
+        _ = - (ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 0) * (ι Q (HasSpacetimeBasis.gamma Q 3) * ι Q (HasSpacetimeBasis.gamma Q 1)) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by simp only [mul_assoc, mul_neg, neg_mul]
+        _ = - ((- (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 2))) * (- (ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 3))) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by rw [h20, h31]
+        _ = - (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 2) * (ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 3)) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by simp only [mul_assoc, mul_neg, neg_mul, neg_neg]
+        _ = - (ι Q (HasSpacetimeBasis.gamma Q 0) * (ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 1)) * ι Q (HasSpacetimeBasis.gamma Q 3) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by simp only [mul_assoc]
+        _ = - (ι Q (HasSpacetimeBasis.gamma Q 0) * (- (ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2))) * ι Q (HasSpacetimeBasis.gamma Q 3) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by rw [h21]
+        _ = ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * (ι Q (HasSpacetimeBasis.gamma Q 2) * (ι Q (HasSpacetimeBasis.gamma Q 3) * ι Q (HasSpacetimeBasis.gamma Q 2)) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by simp only [mul_assoc, mul_neg, neg_mul, neg_neg]
+        _ = ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * (ι Q (HasSpacetimeBasis.gamma Q 2) * (- (ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3))) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by rw [h32]
+        _ = - (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * (ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 2) * (ι Q (HasSpacetimeBasis.gamma Q 3) * ι Q (HasSpacetimeBasis.gamma Q 3)))) := by simp only [mul_assoc, mul_neg, neg_mul]
+        _ = - (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * (algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 2)) * algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 3)))) := by rw [sq2, sq3]
+        _ = (- (Q (HasSpacetimeBasis.gamma Q 2) * Q (HasSpacetimeBasis.gamma Q 3))) • basisBivector Q 0 := by dsimp [basisBivector, gamma]; rw [Algebra.smul_def, map_neg, map_mul, neg_mul, Algebra.commutes, Algebra.smul_mul_assoc]; simp only [mul_assoc]
+    rw [h_eq]
+    apply Submodule.smul_mem
+    apply Submodule.subset_span
+    exact Set.mem_range_self 0
+"""
+    elif case == 4:
+        return f"""  · -- case 4
+    dsimp [basisBivector, gamma]
+    rw [HasSpacetimeBasis.omega_eq (Q := Q)]
+{get_haves()}
+    have h_eq : ι Q (HasSpacetimeBasis.gamma Q 3) * ι Q (HasSpacetimeBasis.gamma Q 1) * (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) = (- (Q (HasSpacetimeBasis.gamma Q 1) * Q (HasSpacetimeBasis.gamma Q 3))) • basisBivector Q 1 := by
+      calc ι Q (HasSpacetimeBasis.gamma Q 3) * ι Q (HasSpacetimeBasis.gamma Q 1) * (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3))
+        _ = ι Q (HasSpacetimeBasis.gamma Q 3) * (ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 0)) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) := by simp only [mul_assoc]
+        _ = ι Q (HasSpacetimeBasis.gamma Q 3) * (- (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1))) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) := by rw [h10]
+        _ = - ((ι Q (HasSpacetimeBasis.gamma Q 3) * ι Q (HasSpacetimeBasis.gamma Q 0)) * (ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 1)) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by simp only [mul_assoc, mul_neg, neg_mul]
+        _ = - ((- (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 3))) * algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 1)) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by rw [h30, sq1]
+        _ = ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 3) * algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 1)) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) := by simp only [mul_neg, neg_mul, neg_neg]
+        _ = algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 1)) * ι Q (HasSpacetimeBasis.gamma Q 0) * (ι Q (HasSpacetimeBasis.gamma Q 3) * ι Q (HasSpacetimeBasis.gamma Q 2)) * ι Q (HasSpacetimeBasis.gamma Q 3) := by rw [Algebra.commutes]; simp only [mul_assoc]
+        _ = algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 1)) * ι Q (HasSpacetimeBasis.gamma Q 0) * (- (ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3))) * ι Q (HasSpacetimeBasis.gamma Q 3) := by rw [h32]
+        _ = - (algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 1)) * ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 2) * (ι Q (HasSpacetimeBasis.gamma Q 3) * ι Q (HasSpacetimeBasis.gamma Q 3))) := by simp only [mul_assoc, mul_neg, neg_mul]
+        _ = - (algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 1)) * ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 2) * algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 3))) := by rw [sq3]
+        _ = (- (Q (HasSpacetimeBasis.gamma Q 1) * Q (HasSpacetimeBasis.gamma Q 3))) • basisBivector Q 1 := by dsimp [basisBivector, gamma]; rw [Algebra.smul_def, map_neg, map_mul, neg_mul, Algebra.commutes]; simp only [mul_assoc]
+    rw [h_eq]
+    apply Submodule.smul_mem
+    apply Submodule.subset_span
+    exact Set.mem_range_self 1
+"""
+    elif case == 5:
+        return f"""  · -- case 5
+    dsimp [basisBivector, gamma]
+    rw [HasSpacetimeBasis.omega_eq (Q := Q)]
+{get_haves()}
+    have h_eq : ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) = (- (Q (HasSpacetimeBasis.gamma Q 1) * Q (HasSpacetimeBasis.gamma Q 2))) • basisBivector Q 2 := by
+      calc ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3))
+        _ = ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2) * (- (ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 0))) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) := by rw [h10]
+        _ = - (ι Q (HasSpacetimeBasis.gamma Q 1) * (ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 1)) * ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by simp only [mul_assoc, mul_neg, neg_mul]
+        _ = - (ι Q (HasSpacetimeBasis.gamma Q 1) * (- (ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 2))) * ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by rw [h21]
+        _ = (ι Q (HasSpacetimeBasis.gamma Q 1) * ι Q (HasSpacetimeBasis.gamma Q 1)) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) := by simp only [mul_assoc, mul_neg, neg_mul, neg_neg]
+        _ = algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 1)) * (ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 0)) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) := by rw [sq1]; simp only [mul_assoc]
+        _ = algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 1)) * (- (ι Q (HasSpacetimeBasis.gamma Q 0) * ι Q (HasSpacetimeBasis.gamma Q 2))) * ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 3) := by rw [h20]
+        _ = - (algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 1)) * ι Q (HasSpacetimeBasis.gamma Q 0) * (ι Q (HasSpacetimeBasis.gamma Q 2) * ι Q (HasSpacetimeBasis.gamma Q 2)) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by simp only [mul_assoc, mul_neg, neg_mul]
+        _ = - (algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 1)) * ι Q (HasSpacetimeBasis.gamma Q 0) * algebraMap R _ (Q (HasSpacetimeBasis.gamma Q 2)) * ι Q (HasSpacetimeBasis.gamma Q 3)) := by rw [sq2]
+        _ = (- (Q (HasSpacetimeBasis.gamma Q 1) * Q (HasSpacetimeBasis.gamma Q 2))) • basisBivector Q 2 := by dsimp [basisBivector, gamma]; rw [Algebra.smul_def, map_neg, map_mul, neg_mul, Algebra.commutes]; simp only [mul_assoc]
+    rw [h_eq]
+    apply Submodule.smul_mem
+    apply Submodule.subset_span
+    exact Set.mem_range_self 2
+"""
+    return ""
+
+for case in range(6):
+    out += c_calc(case)
+
+with open("test3.lean", "w") as f:
+    f.write(out)
+

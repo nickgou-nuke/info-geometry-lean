@@ -1,11 +1,13 @@
+#exit
 import InfoGeometry.Canonical.TwelveFoldSheetColorOmega
+import InfoGeometry.Canonical.TwoSheetThreeColorWeyl
+import Mathlib.LinearAlgebra.Matrix.Kronecker
 
 open scoped Matrix
 noncomputable section
 
 namespace InfoGeometry.Canonical.TwelveFoldParityCompatibility
 
-open InfoGeometry.Canonical.TwelveFoldSheetColorOmega
 open InfoGeometry.Canonical.TwoSheetThreeColorWeyl
 
 /-!

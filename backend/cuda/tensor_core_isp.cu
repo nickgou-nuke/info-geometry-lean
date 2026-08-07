@@ -10,114 +10,157 @@
         exit(-1); \
     }
 
-__device__ __forceinline__ double logit_d(double p) {
-    p = fmax(1e-7, fmin(1.0 - 1e-7, p));
-    return log(p / (1.0 - p));
-}
-
-__device__ __forceinline__ double sigmoid_d(double E) {
-    return 1.0 / (1.0 + exp(-E));
-}
-
-// Кернел за повдигане на пиксели в Туистори (Column-Major 4xN матрица)
-__global__ void twistor_lift_kernel(const double* raw_in, cuDoubleComplex* Z_matrix, int N) {
+__global__ void twistor_lift_kernel(const double* raw_in, cuDoubleComplex* z_matrix, int N) {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (idx >= N) return;
     
     double p = raw_in[idx];
-    double energy_gap = logit_d(p);
+    p = fmax(1e-7, fmin(1.0 - 1e-7, p));
+    double energy_gap = log(p / (1.0 - p));
     
-    // В cuBLAS Column-Major, колона `idx` започва от `idx * 4`
-    int col_offset = idx * 4;
-    Z_matrix[col_offset + 0] = make_cuDoubleComplex(1.0, 0.0);
-    Z_matrix[col_offset + 1] = make_cuDoubleComplex(0.0, 0.0);
-    Z_matrix[col_offset + 2] = make_cuDoubleComplex(energy_gap, 0.0);
-    Z_matrix[col_offset + 3] = make_cuDoubleComplex(0.0, 0.0);
+    z_matrix[0 * N + idx] = make_cuDoubleComplex(1.0, 0.0);
+    z_matrix[1 * N + idx] = make_cuDoubleComplex(0.0, 0.0);
+    z_matrix[2 * N + idx] = make_cuDoubleComplex(energy_gap, 0.0);
+    z_matrix[3 * N + idx] = make_cuDoubleComplex(0.0, 0.0);
 }
 
-// Кернел за проекция на филтрираните Туистори обратно в пиксели
-__global__ void twistor_project_kernel(const cuDoubleComplex* Z_out, double* clean_out, int N) {
+__global__ void trace_projection_kernel(const cuDoubleComplex* z_out, double* clean_out, int N) {
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
     if (idx >= N) return;
     
-    int col_offset = idx * 4;
-    double filtered_energy = cuCreal(Z_out[col_offset + 2]);
-    clean_out[idx] = sigmoid_d(filtered_energy);
+    double filtered_energy = cuCreal(z_out[2 * N + idx]);
+    clean_out[idx] = 1.0 / (1.0 + exp(-filtered_energy));
+}
+
+// Persistent GPU Context
+struct TwistorEngine {
+    uint32_t N;
+    cudaStream_t stream;
+    cublasHandle_t cublas;
+    
+    cuDoubleComplex* d_Z_matrix;
+    cuDoubleComplex* d_B_t;
+    cuDoubleComplex* d_Z_out;
+    double* d_raw_in;
+    double* d_clean_out;
+    
+    // Pinned Host Memory for zero-copy transfers
+    double* h_pinned_in;
+    double* h_pinned_out;
+};
+
+// Lean External Object class registration
+static lean_external_class* g_engine_class = nullptr;
+
+static void engine_finalizer(void* ptr) {
+    TwistorEngine* eng = static_cast<TwistorEngine*>(ptr);
+    cudaFreeHost(eng->h_pinned_in);
+    cudaFreeHost(eng->h_pinned_out);
+    cudaFree(eng->d_Z_matrix);
+    cudaFree(eng->d_B_t);
+    cudaFree(eng->d_Z_out);
+    cudaFree(eng->d_raw_in);
+    cudaFree(eng->d_clean_out);
+    cublasDestroy(eng->cublas);
+    cudaStreamDestroy(eng->stream);
+    delete eng;
+}
+
+static void engine_foreach(void* ptr, b_lean_obj_arg b) {
+    // No nested Lean objects
 }
 
 extern "C" {
 
-lean_obj_res cuda_tensorcore_modular_flow(uint32_t N, double t, lean_obj_arg raw_pixels_obj) {
-    // 1. Извличане на данните от Lean 4 без копиране (Zero-Copy on Host)
-    double* h_raw_pixels = lean_float_array_cptr(raw_pixels_obj);
-
-    // 2. Алокиране на VRAM
-    double* d_raw_pixels;
-    double* d_clean_pixels;
-    cuDoubleComplex* d_Z_matrix;
-    cuDoubleComplex* d_B_t;
-    cuDoubleComplex* d_Z_out;
+lean_obj_res cuda_init_twistor_engine(uint32_t N, lean_obj_arg w) {
+    printf("C++: Inside cuda_init_twistor_engine, N = %d\n", N);
+    fflush(stdout);
     
-    CUDA_CHECK(cudaMalloc((void**)&d_raw_pixels, N * sizeof(double)));
-    CUDA_CHECK(cudaMalloc((void**)&d_clean_pixels, N * sizeof(double)));
-    CUDA_CHECK(cudaMalloc((void**)&d_Z_matrix, 4 * N * sizeof(cuDoubleComplex)));
-    CUDA_CHECK(cudaMalloc((void**)&d_B_t, 4 * 4 * sizeof(cuDoubleComplex)));
-    CUDA_CHECK(cudaMalloc((void**)&d_Z_out, 4 * N * sizeof(cuDoubleComplex)));
+    if (g_engine_class == nullptr) {
+        g_engine_class = lean_register_external_class(engine_finalizer, engine_foreach);
+    }
+    
+    TwistorEngine* eng = new TwistorEngine();
+    eng->N = N;
+    
+    CUDA_CHECK(cudaStreamCreate(&eng->stream));
+    cublasCreate(&eng->cublas);
+    cublasSetStream(eng->cublas, eng->stream);
+    cublasSetMathMode(eng->cublas, CUBLAS_TENSOR_OP_MATH);
+    
+    // Allocate Device Memory
+    CUDA_CHECK(cudaMalloc((void**)&eng->d_Z_matrix, 4 * N * sizeof(cuDoubleComplex)));
+    CUDA_CHECK(cudaMalloc((void**)&eng->d_B_t, 4 * 4 * sizeof(cuDoubleComplex)));
+    CUDA_CHECK(cudaMalloc((void**)&eng->d_Z_out, 4 * N * sizeof(cuDoubleComplex)));
+    CUDA_CHECK(cudaMalloc((void**)&eng->d_raw_in, N * sizeof(double)));
+    CUDA_CHECK(cudaMalloc((void**)&eng->d_clean_out, N * sizeof(double)));
+    
+    // Allocate Pinned Host Memory
+    CUDA_CHECK(cudaMallocHost((void**)&eng->h_pinned_in, N * sizeof(double)));
+    CUDA_CHECK(cudaMallocHost((void**)&eng->h_pinned_out, N * sizeof(double)));
+    
+    return lean_io_result_mk_ok(lean_alloc_external(g_engine_class, eng));
+}
 
-    // Копиране на суровите пиксели към GPU
-    CUDA_CHECK(cudaMemcpy(d_raw_pixels, h_raw_pixels, N * sizeof(double), cudaMemcpyHostToDevice));
-
-    // 3. Подготовка на Лоренцовия Бууст B_t (4x4) на Хоста
-    double ch = cosh(t / 2.0);
-    double sh = sinh(t / 2.0);
+lean_obj_res cuda_execute_twistor_engine(lean_obj_arg engine_obj, double t, lean_obj_arg raw_pixels_obj) {
+    printf("C++: Inside cuda_execute_twistor_engine\n");
+    fflush(stdout);
+    TwistorEngine* eng = static_cast<TwistorEngine*>(lean_get_external_data(engine_obj));
+    uint32_t N = eng->N;
+    double* h_raw_pixels = lean_float_array_cptr(raw_pixels_obj);
+    
+    printf("C++: N = %d\n", N);
+    fflush(stdout);
+    
+    // 1. Copy Lean Array to Pinned Memory (Fast CPU copy)
+    memcpy(eng->h_pinned_in, h_raw_pixels, N * sizeof(double));
+    
+    // 2. Async H2D Transfer
+    CUDA_CHECK(cudaMemcpyAsync(eng->d_raw_in, eng->h_pinned_in, N * sizeof(double), cudaMemcpyHostToDevice, eng->stream));
+    
+    // 3. Prepare Boost Matrix
+    double ch = std::cosh(t / 2.0);
+    double sh = std::sinh(t / 2.0);
     cuDoubleComplex h_B_t[16] = {make_cuDoubleComplex(0,0)};
-    // Запълване на диагонала (Column-major формат за cuBLAS)
-    h_B_t[0]  = make_cuDoubleComplex(ch + sh, 0); // (0,0)
-    h_B_t[5]  = make_cuDoubleComplex(ch - sh, 0); // (1,1)
-    h_B_t[10] = make_cuDoubleComplex(ch - sh, 0); // (2,2)
-    h_B_t[15] = make_cuDoubleComplex(ch + sh, 0); // (3,3)
-    CUDA_CHECK(cudaMemcpy(d_B_t, h_B_t, 16 * sizeof(cuDoubleComplex), cudaMemcpyHostToDevice));
-
-    // 4. Custom Kernel: Превръщане на Lean FloatArray в Туистор матрица на GPU
+    h_B_t[0]  = make_cuDoubleComplex(ch + sh, 0); 
+    h_B_t[5]  = make_cuDoubleComplex(ch - sh, 0); 
+    h_B_t[10] = make_cuDoubleComplex(ch - sh, 0); 
+    h_B_t[15] = make_cuDoubleComplex(ch + sh, 0); 
+    CUDA_CHECK(cudaMemcpyAsync(eng->d_B_t, h_B_t, 16 * sizeof(cuDoubleComplex), cudaMemcpyHostToDevice, eng->stream));
+    
+    // 4. Launch Lift Kernel
     int threadsPerBlock = 256;
     int blocksPerGrid = (N + threadsPerBlock - 1) / threadsPerBlock;
-    twistor_lift_kernel<<<blocksPerGrid, threadsPerBlock>>>(d_raw_pixels, d_Z_matrix, N);
-
-    // 5. Инициализация на cuBLAS и ТЕНЗОРНИТЕ ЯДРА (The Magic!)
-    cublasHandle_t handle;
-    cublasCreate(&handle);
-    // НАРЕЖДАМЕ ИЗПОЛЗВАНЕТО НА NVIDIA TENSOR CORES
-    cublasSetMathMode(handle, CUBLAS_TENSOR_OP_MATH);
-
+    twistor_lift_kernel<<<blocksPerGrid, threadsPerBlock, 0, eng->stream>>>(eng->d_raw_in, eng->d_Z_matrix, N);
+    
+    // 5. GEMM Tensor Cores
     cuDoubleComplex alpha = make_cuDoubleComplex(1.0, 0.0);
     cuDoubleComplex beta  = make_cuDoubleComplex(0.0, 0.0);
-
-    // 6. Хардуерното Умножение: Z_out = B_t * Z_matrix
-    cublasZgemm(handle, CUBLAS_OP_N, CUBLAS_OP_N,
+    cublasZgemm(eng->cublas, CUBLAS_OP_N, CUBLAS_OP_N,
                 4, N, 4,
-                &alpha,
-                d_B_t, 4,
-                d_Z_matrix, 4,
-                &beta,
-                d_Z_out, 4);
-
-    // 7. Изтегляне на резултата и прилагане на Gibbs-Fermi (sigmoid)
-    twistor_project_kernel<<<blocksPerGrid, threadsPerBlock>>>(d_Z_out, d_clean_pixels, N);
+                &alpha, eng->d_B_t, 4,
+                eng->d_Z_matrix, 4,
+                &beta, eng->d_Z_out, 4);
+                
+    // 6. Trace Projection Kernel
+    trace_projection_kernel<<<blocksPerGrid, threadsPerBlock, 0, eng->stream>>>(eng->d_Z_out, eng->d_clean_out, N);
     
-    // Създаваме нов Lean FloatArray за резултата
+    // 7. Async D2H Transfer
+    CUDA_CHECK(cudaMemcpyAsync(eng->h_pinned_out, eng->d_clean_out, N * sizeof(double), cudaMemcpyDeviceToHost, eng->stream));
+    
+    // 8. Synchronize Stream to wait for completion
+    CUDA_CHECK(cudaStreamSynchronize(eng->stream));
+    printf("C++: Stream Synchronized\n");
+    
+    // 9. Copy to Lean Array
     lean_object* clean_pixels_obj = lean_alloc_sarray(sizeof(double), N, N);
     double* h_clean_pixels = lean_float_array_cptr(clean_pixels_obj);
+    memcpy(h_clean_pixels, eng->h_pinned_out, N * sizeof(double));
+    printf("C++: Returning clean array\n");
     
-    CUDA_CHECK(cudaMemcpy(h_clean_pixels, d_clean_pixels, N * sizeof(double), cudaMemcpyDeviceToHost));
-    
-    // Почистване
-    cublasDestroy(handle);
-    cudaFree(d_raw_pixels); cudaFree(d_clean_pixels);
-    cudaFree(d_Z_matrix); cudaFree(d_B_t); cudaFree(d_Z_out);
-    
-    // Намаляваме брояча на референциите на входния обект
+    // Release objects
     lean_dec(raw_pixels_obj);
-
+    
     return clean_pixels_obj;
 }
 

@@ -29,8 +29,9 @@ FetchContent_MakeAvailable(pybind11)
 
 # Compile shared library for Lean FFI
 add_library(zorn_cuda SHARED 
+    ModularFlow.cu
     GibbsFermiSensor.cu
-    tensor_core_isp.cu
+    src/tensor_core_isp.cu
 )
 target_link_libraries(zorn_cuda PRIVATE cudart cublas)
 

@@ -8,7 +8,9 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/goutev/repos/info-geometry-lean/backend/cuda/GibbsFermiSensor.cu" "CMakeFiles/zorn_cuda.dir/GibbsFermiSensor.cu.o" "gcc" "CMakeFiles/zorn_cuda.dir/GibbsFermiSensor.cu.o.d"
   "/home/goutev/repos/info-geometry-lean/backend/cuda/ModularFlow.cu" "CMakeFiles/zorn_cuda.dir/ModularFlow.cu.o" "gcc" "CMakeFiles/zorn_cuda.dir/ModularFlow.cu.o.d"
+  "/home/goutev/repos/info-geometry-lean/backend/cuda/src/tensor_core_isp.cu" "CMakeFiles/zorn_cuda.dir/src/tensor_core_isp.cu.o" "gcc" "CMakeFiles/zorn_cuda.dir/src/tensor_core_isp.cu.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

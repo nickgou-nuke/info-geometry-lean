@@ -1,6 +1,10 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/zorn_cuda.dir/GibbsFermiSensor.cu.o"
+  "CMakeFiles/zorn_cuda.dir/GibbsFermiSensor.cu.o.d"
   "CMakeFiles/zorn_cuda.dir/ModularFlow.cu.o"
   "CMakeFiles/zorn_cuda.dir/ModularFlow.cu.o.d"
+  "CMakeFiles/zorn_cuda.dir/src/tensor_core_isp.cu.o"
+  "CMakeFiles/zorn_cuda.dir/src/tensor_core_isp.cu.o.d"
   "libzorn_cuda.pdb"
   "libzorn_cuda.so"
 )

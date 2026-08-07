@@ -1,27 +1,24 @@
 
+
 namespace InfoGeometry.Hardware
 
 /-!
-# Tensor Core Accelerated Modular Flow
+# Persistent Tensor Core Accelerated Modular Flow
 
-This module defines the FFI bindings to the NVIDIA Tensor Core backend.
-It pushes the raw pixel array (logit energy gap) to the GPU, performs the
-SU(2,2) Conformal Twistor dilation using GEMM, and returns the Gibbs-Fermi admission array.
+This module defines the FFI bindings to the NVIDIA Tensor Core backend
+with Pinned Memory (Page-Locked) and Persistent CUDA Context (Zero-Overhead).
 -/
 
 /-- 
-External CUDA function binding.
-Executes Δ^{it} = B_t * Z across millions of twistors using hardware Tensor Cores.
+Opaque reference to the C++ TwistorEngine class.
+Managed automatically by Lean's reference counter (engine_finalizer).
 -/
-@[extern "cuda_tensorcore_modular_flow"]
-opaque executeModularFlow (N : UInt32) (t : Float) (rawPixels : FloatArray) : FloatArray
+opaque TwistorEngine : Type
 
-/-- 
-A safe wrapper for the hardware engine. 
-This is what your high-level Lean 4 pipeline will call.
--/
-def applyTwistorFilter (t : Float) (image : FloatArray) : FloatArray :=
-  let N := image.size.toUInt32
-  executeModularFlow N t image
+@[extern "cuda_init_twistor_engine"]
+opaque initTwistorEngine (N : UInt32) : IO TwistorEngine
+
+@[extern "cuda_execute_twistor_engine"]
+opaque executeTwistorEngine (engine : TwistorEngine) (t : Float) (rawPixels : FloatArray) : FloatArray
 
 end InfoGeometry.Hardware

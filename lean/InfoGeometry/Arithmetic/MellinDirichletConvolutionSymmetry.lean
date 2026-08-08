@@ -24,7 +24,7 @@ bridge:
    * the standard `1/2` is the normalized midpoint of the marked pair `0,1`.
 
 No infinite convergence theorem, analytic continuation theorem, or Riemann
-hypothesis claim is introduced here.
+property claim is introduced here.
 -/
 
 noncomputable section

@@ -6,7 +6,7 @@ import Mathlib.Tactic.Module
 
 Mathlib-canonical phase-flip equivariance on the split `Cl(1,1)` atom.
 
-This file keeps the story entirely algebraic. It does not postulate
+This file keeps the story entirely algebraic. It does not postulat3
 projector/anomaly language as primitives; it derives the first fixed and
 anti-fixed combinations directly from the canonical `K`-axis phase flip.
 -/

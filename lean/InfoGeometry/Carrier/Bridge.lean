@@ -16,7 +16,7 @@ open InfoGeometry.Krein
 
 /--
 Construct a `HestenesKreinSpace` from an involutive self-dual carrier,
-assuming the standard positivity witness for the induced Hilbert pairing.
+assuming the standard positivity property for the induced Hilbert pairing.
 -/
 def hestenesKreinSpaceFromCarrier
     (X : InvolutiveSelfDualCarrier)

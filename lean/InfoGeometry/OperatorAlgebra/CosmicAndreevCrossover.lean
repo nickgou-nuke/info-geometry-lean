@@ -22,7 +22,7 @@ open InfoGeometry.OperatorAlgebra.AndreevBoundary
 open InfoGeometry.OperatorAlgebra.ClosureInvolution
 
 /--
-A witness that a conformal crossover has an Andreev-like closure boundary.
+A property that a conformal crossover has an Andreev-like closure boundary.
 
 `oldNullData` is the old-aeon/conformal/null input.
 `newMetricData` is the new-aeon/output datum.

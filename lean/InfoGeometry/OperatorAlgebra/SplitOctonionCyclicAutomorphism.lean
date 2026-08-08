@@ -16,7 +16,7 @@ u₀ ↦ u₁ ↦ u₂ ↦ u₀,
 v₀ ↦ v₁ ↦ v₂ ↦ v₀.
 ```
 
-This is a concrete `G₂(2)`-type automorphism witness for the split-octonion
+This is a concrete `G₂(2)`-type automorphism property for the split-octonion
 multiplication table.  It is not a group-classification theorem saying that the
 full automorphism group is `G₂(2)`, and it does not assert any `SU(3)` stabilizer
 or particle-classification theorem.

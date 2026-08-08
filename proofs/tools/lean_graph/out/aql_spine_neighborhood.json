@@ -1,0 +1,233 @@
+[
+  {
+    "spine": {
+      "_key": "ThermodynamicNetworkSpine_closed_thermodynamic_network_spine",
+      "kind": "theorem",
+      "module": "ThermodynamicNetworkSpine",
+      "name": "ThermodynamicNetworkSpine.closed_thermodynamic_network_spine"
+    },
+    "deps": [
+      {
+        "name": "BuresInformationGeodesicFlow.modularFlow_zero_time",
+        "module": "BuresInformationGeodesicFlow",
+        "kind": null
+      },
+      {
+        "name": "CuntzP6MWallpaperBoundary.PrimeSector.p3",
+        "module": "CuntzP6MWallpaperBoundary",
+        "kind": null
+      },
+      {
+        "name": "CuntzP6MWallpaperBoundary.sectorArity",
+        "module": "CuntzP6MWallpaperBoundary",
+        "kind": null
+      },
+      {
+        "name": "DiracCuntzCrystalDispersion.bandSign",
+        "module": "DiracCuntzCrystalDispersion",
+        "kind": null
+      },
+      {
+        "name": "DiracCuntzCrystalDispersion.DiracBand.conduction",
+        "module": "DiracCuntzCrystalDispersion",
+        "kind": null
+      },
+      {
+        "name": "DiracCuntzCrystalDispersion.DiracBand.valence",
+        "module": "DiracCuntzCrystalDispersion",
+        "kind": null
+      },
+      {
+        "name": "DiracCuntzCrystalDispersion.kNormSq",
+        "module": "DiracCuntzCrystalDispersion",
+        "kind": null
+      },
+      {
+        "name": "DiracCuntzCrystalDispersion.masslessDiracCuntzEnergySq",
+        "module": "DiracCuntzCrystalDispersion",
+        "kind": null
+      },
+      {
+        "name": "DiracCuntzCrystalDispersion.masslessDiracCuntzEnergySq_zero_rapidity",
+        "module": "DiracCuntzCrystalDispersion",
+        "kind": null
+      },
+      {
+        "name": "KTheoryChernConfinementSignature.blochFreeRank",
+        "module": "KTheoryChernConfinementSignature",
+        "kind": null
+      },
+      {
+        "name": "KTheoryChernConfinementSignature.chernParity",
+        "module": "KTheoryChernConfinementSignature",
+        "kind": null
+      },
+      {
+        "name": "KTheoryChernConfinementSignature.chernParity_zero",
+        "module": "KTheoryChernConfinementSignature",
+        "kind": null
+      },
+      {
+        "name": "KTheoryChernConfinementSignature.crossedProductK1Rank",
+        "module": "KTheoryChernConfinementSignature",
+        "kind": null
+      },
+      {
+        "name": "KTheoryChernConfinementSignature.cuntzK0Modulus",
+        "module": "KTheoryChernConfinementSignature",
+        "kind": null
+      },
+      {
+        "name": "KTheoryChernConfinementSignature.fixedOrbitCountP6M",
+        "module": "KTheoryChernConfinementSignature",
+        "kind": null
+      },
+      {
+        "name": "KTheoryChernConfinementSignature.jonesIndexD6",
+        "module": "KTheoryChernConfinementSignature",
+        "kind": null
+      },
+      {
+        "name": "NonAbelianBrillouinKleinBottle.bkbChernNumber",
+        "module": "NonAbelianBrillouinKleinBottle",
+        "kind": null
+      },
+      {
+        "name": "NonAbelianBrillouinKleinBottle.bkbFold",
+        "module": "NonAbelianBrillouinKleinBottle",
+        "kind": null
+      },
+      {
+        "name": "NonAbelianBrillouinKleinBottle.bkbFold_involutive",
+        "module": "NonAbelianBrillouinKleinBottle",
+        "kind": null
+      },
+      {
+        "name": "NonAbelianBrillouinKleinBottle.bkbLaneTransition",
+        "module": "NonAbelianBrillouinKleinBottle",
+        "kind": null
+      },
+      {
+        "name": "NonAbelianBrillouinKleinBottle.bkbLaneTransition_involutive",
+        "module": "NonAbelianBrillouinKleinBottle",
+        "kind": null
+      },
+      {
+        "name": "NonAbelianBrillouinKleinBottle.kleinParityInvariant",
+        "module": "NonAbelianBrillouinKleinBottle",
+        "kind": null
+      },
+      {
+        "name": "NonAbelianBrillouinKleinBottle.MomentumPoint",
+        "module": "NonAbelianBrillouinKleinBottle",
+        "kind": null
+      },
+      {
+        "name": "ThermalBoostLorentzSuperalgebra.gamma_zero",
+        "module": "ThermalBoostLorentzSuperalgebra",
+        "kind": null
+      },
+      {
+        "name": "ThermalBoostLorentzSuperalgebra.gammaOfRapidity",
+        "module": "ThermalBoostLorentzSuperalgebra",
+        "kind": null
+      },
+      {
+        "name": "ThermalBoostLorentzSuperalgebra.lorentzBoost",
+        "module": "ThermalBoostLorentzSuperalgebra",
+        "kind": null
+      },
+      {
+        "name": "ThermalBoostLorentzSuperalgebra.lorentzBoost_zero",
+        "module": "ThermalBoostLorentzSuperalgebra",
+        "kind": null
+      },
+      {
+        "name": "ThermalBoostLorentzSuperalgebra.qOfRapidity",
+        "module": "ThermalBoostLorentzSuperalgebra",
+        "kind": null
+      },
+      {
+        "name": "ThermalBoostLorentzSuperalgebra.qOfRapidity_zero",
+        "module": "ThermalBoostLorentzSuperalgebra",
+        "kind": null
+      },
+      {
+        "name": "ThermalBoostLorentzSuperalgebra.safeDispersionFactor",
+        "module": "ThermalBoostLorentzSuperalgebra",
+        "kind": null
+      },
+      {
+        "name": "ThermalBoostLorentzSuperalgebra.safeDispersionFactor_zero",
+        "module": "ThermalBoostLorentzSuperalgebra",
+        "kind": null
+      },
+      {
+        "name": "ThermalBoostLorentzSuperalgebra.ScreenCoord",
+        "module": "ThermalBoostLorentzSuperalgebra",
+        "kind": null
+      },
+      {
+        "name": "ThermodynamicLorentzBoost.BoostParameter",
+        "module": "ThermodynamicLorentzBoost",
+        "kind": null
+      },
+      {
+        "name": "ThermodynamicLorentzBoost.equivariant_lorentz_boost_signature",
+        "module": "ThermodynamicLorentzBoost",
+        "kind": "theorem"
+      },
+      {
+        "name": "ThermodynamicLorentzBoost.K0EquivariantBoost",
+        "module": "ThermodynamicLorentzBoost",
+        "kind": null
+      },
+      {
+        "name": "ThermodynamicLorentzBoost.zeroBoost",
+        "module": "ThermodynamicLorentzBoost",
+        "kind": null
+      },
+      {
+        "name": "ThermodynamicNetworkSpine.ThermodynamicNetworkOwnerDebt",
+        "module": "ThermodynamicNetworkSpine",
+        "kind": null
+      },
+      {
+        "name": "ThermodynamicNetworkSpine.ThermodynamicNetworkOwnerDebt.crossedProductKTheoryTransported",
+        "module": "ThermodynamicNetworkSpine",
+        "kind": null
+      },
+      {
+        "name": "ThermodynamicNetworkSpine.ThermodynamicNetworkOwnerDebt.kmsLorentzHomotopyConstructed",
+        "module": "ThermodynamicNetworkSpine",
+        "kind": null
+      },
+      {
+        "name": "ThermodynamicNetworkSpine.ThermodynamicNetworkOwnerDebt.nonAbelianBerryPfaffianComputed",
+        "module": "ThermodynamicNetworkSpine",
+        "kind": null
+      },
+      {
+        "name": "ThermodynamicNetworkSpine.ThermodynamicNetworkOwnerDebt.physicalThermalDiracBKBRealization",
+        "module": "ThermodynamicNetworkSpine",
+        "kind": null
+      },
+      {
+        "name": "ThermodynamicTKKBridge.formalChiralParityIndex",
+        "module": "ThermodynamicTKKBridge",
+        "kind": null
+      },
+      {
+        "name": "ThermodynamicTKKBridge.formalChiralParityIndex_zero",
+        "module": "ThermodynamicTKKBridge",
+        "kind": null
+      },
+      {
+        "name": "TopologicalAndreevPump.ParafermionLane",
+        "module": "TopologicalAndreevPump",
+        "kind": null
+      }
+    ],
+    "users": []
+  }
+]

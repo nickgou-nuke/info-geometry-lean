@@ -10,7 +10,7 @@ import InfoGeometry.Meta.Architecture
 Formalization of Zorn matrices over split-octonions, providing the algebraic
 foundation for the $C\ell(4,4)$ informational gravity framework.
 
-This module replaces the lyrical hypothesis of "Zorn spinors" with an explicit
+This module replaces the lyrical property of "Zorn spinors" with an explicit
 algebraic construction.
 -/
 

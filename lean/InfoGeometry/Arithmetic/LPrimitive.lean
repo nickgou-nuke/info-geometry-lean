@@ -141,7 +141,7 @@ end LTrichotomyInput
 Canonical finite-cutoff density of `L_a` in `{0, ..., cutoff}`.
 
 The historical name is retained, but this is now an explicitly computed real
-number rather than a proof-carrying witness record.
+number rather than a proof-carrying property record.
 -/
 noncomputable def LMultipleDensityWitness (a cutoff : ℕ) : ℝ :=
   by

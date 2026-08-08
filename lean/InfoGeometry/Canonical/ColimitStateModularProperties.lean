@@ -53,7 +53,7 @@ theorem tracial_limit_persistence
   -- Applying the global extension limit property
   rw [h_extends n (x * y)]
   rw [h_extends n (y * x)]
-  -- Closing with the local tracial hypothesis
+  -- Closing with the local tracial property
   exact h_local_trace n x y
 
 /-!

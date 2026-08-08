@@ -20,7 +20,7 @@ Cantor boundary.  Instead it provides a theorem-safe calibration interface:
 * a supplied Krein-isometric vector action fixing the vacuum `Ω`;
 * invariance readbacks for Ω-expectations and Connes--Wilson holonomies.
 
-The mathematical doctrine is witness-gated: a concrete CFT/Jones/Cantor backend
+The mathematical doctrine is property-gated: a concrete CFT/Jones/Cantor backend
 supplies the Möbius representation laws, while this bridge records the exact
 consequences needed by the real Hestenes--Krein volume pipeline.
 -/

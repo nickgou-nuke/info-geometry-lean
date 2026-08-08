@@ -50,7 +50,7 @@ def IsO55 (A : M10Z) : Prop := Aᵀ * eta * A = eta
 /--
 Off-diagonal `O(5,5)` metric `[[0, I₅], [I₅, 0]]`.
 
-This is the exact finite matrix instantiated from the symbolic CAS witness
+This is the exact finite matrix instantiated from the symbolic CAS property
 `sympy_t_duality_cascade.py`.
 -/
 def etaOff : M10Z :=

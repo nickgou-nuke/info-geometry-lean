@@ -70,7 +70,7 @@ theorem rotation2_orthogonal {a b : ℝ} (h : a * a + b * b = 1) :
 /--
 In dimension two the same rotation atom preserves the standard symplectic
 form.  This is the finite `SO(2) = Sp(2,ℝ) ∩ O(2)` shadow used here as a
-compact-symmetry witness.
+compact-symmetry property.
 -/
 theorem rotation2_symplectic {a b : ℝ} (h : a * a + b * b = 1) :
     (rotation2 a b)ᵀ * symplecticJ * rotation2 a b = symplecticJ := by

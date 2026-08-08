@@ -188,7 +188,7 @@ structure ParafermionZeroVolume where
   volume_eq_zero : volume = 0
   determinant_eq_zero : determinant = 0
 
-/-- The canonical zero-volume parafermion witness. -/
+/-- The canonical zero-volume parafermion property. -/
 def zeroVolumeParafermion : ParafermionZeroVolume where
   volume := 0
   determinant := 0

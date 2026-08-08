@@ -1,0 +1,30 @@
+=======================================
+ B3 YANG-BAXTER SYMPY EXACT CERTIFICATE
+=======================================
+
+1. Exact Rational Generators for B3 (Reduced Burau):
+R1 (sigma_1):
+⎡-q  1⎤
+⎢     ⎥
+⎣0   1⎦
+
+R2 (sigma_2):
+⎡1  0 ⎤
+⎢     ⎥
+⎣q  -q⎦
+
+2. Checking Artin / Yang-Baxter Braid Relation:
+LHS = R1 * R2 * R1:
+⎡ 0   -q⎤
+⎢       ⎥
+⎢  2    ⎥
+⎣-q   0 ⎦
+
+RHS = R2 * R1 * R2:
+⎡ 0   -q⎤
+⎢       ⎥
+⎢  2    ⎥
+⎣-q   0 ⎦
+
+[CERTIFICATE] Yang-Baxter relation exactly verified: True
+Certificate: LHS and RHS are exact algebraic equivalents over Q(q).

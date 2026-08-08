@@ -35,7 +35,7 @@ theorem PlanckScaleCalibration.kB_pos
     (P : PlanckScaleCalibration) : 0 < P.kB := by
   simp [PlanckScaleCalibration.kB]
 
-/-- Black-hole thermodynamic readout contract (witness-gated (Native Closure Mandated: Closure Debt)). -/
+/-- Black-hole thermodynamic readout contract (property-gated (Native Closure Mandated: Closure Debt)). -/
 structure BlackHoleThermodynamics (P : PlanckScaleCalibration) (State : Type*) where
   /-- Validity predicate for states to which laws apply. -/
   valid_state : State → Prop

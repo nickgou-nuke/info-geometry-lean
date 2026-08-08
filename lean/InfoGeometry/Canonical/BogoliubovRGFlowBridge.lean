@@ -43,7 +43,7 @@ metriplectic flow on the same endomorphism space.
 structure Bridge
     (E : Type)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
-  /-- The certified regular lane reduction. -/
+  /-- The property regular lane reduction. -/
   reduction :
     CertifiedModularReduction (E := InfoGeometry.Krein.DoubledSpace E)
 
@@ -96,7 +96,7 @@ variable (B : Bridge E)
 
 /--
 Canonical operatorial Souriau/Onsager context.  Its observable is
-definitionally the certified regular BdG generator.
+definitionally the property regular BdG generator.
 -/
 @[rep_depth transport]
 noncomputable def onsagerContext :

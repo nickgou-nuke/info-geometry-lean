@@ -19,7 +19,7 @@ open InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus
 
 /-!
 A projective polarization state is the native subtype of algebraic
-projectors.  This replaces the former one-field certificate structure while
+projectors.  This replaces the former one-field property structure while
 retaining the `P` and `idem` accessors used by the owner API.
 -/
 abbrev ProjectivePolarizationState
@@ -59,7 +59,7 @@ structure JonesTransportMetricDatum
 
   A concrete model can restrict this to lossless, Krein-calibrated, coherent, or
   other theorem-owned transport classes. This file does not manufacture such a
-  class from an arbitrary certificate on `OperatorialJonesDatum`.
+  class from an arbitrary property on `OperatorialJonesDatum`.
   -/
   admissible : OperatorialJonesDatum Op → Prop
 

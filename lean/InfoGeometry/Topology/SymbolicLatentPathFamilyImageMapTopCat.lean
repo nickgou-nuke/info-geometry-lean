@@ -11,7 +11,7 @@ open CategoryTheory
 
 The image of a transported family receives a canonical map from the image of
 the original family.  No injectivity is assumed here; the map is simply the
-restriction of the continuous latent map, with its range witness carried
+restriction of the continuous latent map, with its range property carried
 along explicitly.
 -/
 

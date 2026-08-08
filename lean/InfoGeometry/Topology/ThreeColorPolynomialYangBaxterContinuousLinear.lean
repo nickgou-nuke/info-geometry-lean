@@ -4,7 +4,7 @@ import InfoGeometry.Topology.ThreeColorPolynomialYangBaxterTopological
 /-!
 # Continuous-linear lift of the exact three-colour swap
 
-The canonical matrix owner contains the exact polynomial certificate.  This
+The canonical matrix owner contains the exact polynomial property.  This
 owner lifts the same permutation to a continuous `ℚ`-linear endomorphism of
 the finite colour tensor space, keeping the matrix and topological layers
 separate.
@@ -41,7 +41,7 @@ noncomputable def colourSwapContinuousLinear :
         (colourSwapContinuousLinear T) = T := by
   exact R_swap_quadratic_relation T
 
-theorem colourSwapContinuousLinear_polynomial_certificate :
+theorem colourSwapContinuousLinear_polynomial_property :
     ∀ T : ColorTensor2,
       colourSwapContinuousLinear
           (colourSwapContinuousLinear T) - T = 0 := by

@@ -371,7 +371,7 @@ A BPS/central-charge bound.
 This is the formal statement that a mass/energy readout is bounded below by a
 central or grade-two charge readout.
 
-The structure is intentionally scalar and witness-gated. A concrete
+The structure is intentionally scalar and property-gated. A concrete
 supergravity, Virasoro, or horizon model supplies the charge norm and the proof
 of the inequality.
 -/
@@ -430,7 +430,7 @@ end BPSBoundDatum
 /--
 Five-grade defect absorption readout.
 
-Once a five-grade absorption witness is supplied, every old closure defect is
+Once a five-grade absorption property is supplied, every old closure defect is
 represented in the `g_+2` memory sector.
 -/
 theorem fiveGradeDefectAbsorptionOwnerTarget :

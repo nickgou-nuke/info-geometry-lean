@@ -35,7 +35,7 @@ construction.
 
 The actual quaternionic and non-separability conditions are defined below as
 typed mathematical predicates.  The optimization objective is derived from
-the KKT residual certificate.
+the KKT residual property.
 -/
 @[rep_depth operator]
 structure QuaternionNonSeparableWaveletOptimizationProblem where
@@ -56,7 +56,7 @@ def quaternionValued
 
 /--
 The cascade is non-separable when two actual wavelet-detail modes differ.
-This replaces the unrelated arithmetic witness that two scale indices differ.
+This replaces the unrelated arithmetic property that two scale indices differ.
 -/
 @[rep_depth operator]
 def nonSeparable
@@ -83,7 +83,7 @@ theorem objectiveLowerBound
   unfold objective
   split_ifs <;> norm_num
 
-/-- The finite-partition admissibility condition induced by the residual certificate. -/
+/-- The finite-partition admissibility condition induced by the residual property. -/
 @[rep_depth operator]
 def finitePartitionAdmissible (P : QuaternionNonSeparableWaveletOptimizationProblem) : Prop :=
   P.kktCertificate.toThermodynamicData.finitePartitionAdmissible
@@ -92,10 +92,10 @@ end QuaternionNonSeparableWaveletOptimizationProblem
 
 /--
 Owner-side theorem: the quaternion/non-separable optimization carrier supplies
-the declared finite-partition admissibility certificate.
+the declared finite-partition admissibility property.
 
 This does not assert existence of an optimizer; it only re-exports the concrete
-admissibility certificate carried by the owner datum.
+admissibility property carried by the owner datum.
 -/
 @[rep_depth operator]
 theorem quaternionNonSeparableWavelet_finitePartitionAdmissible

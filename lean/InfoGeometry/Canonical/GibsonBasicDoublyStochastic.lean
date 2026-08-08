@@ -152,7 +152,7 @@ def nonsingular (_C : NonsingularBasicGenerationCertificate F n)
     (A : Matrix (Fin n) (Fin n) F) : Prop :=
   IsNonsingular A
 
-/-- Gibson Theorem 2.8, reverse direction, as a certificate readout. -/
+/-- Gibson Theorem 2.8, reverse direction, as a property readout. -/
 theorem all_nonsingular_generated_of_fieldCondition (h : C.fieldCondition) :
     ∀ A, IsAlgebraicDoublyStochastic A → C.nonsingular A → C.generatedByBasics A :=
   C.mpr h
@@ -184,12 +184,12 @@ def generatedByBasics (_C : FullBasicGenerationCertificate F n)
     (A : Matrix (Fin n) (Fin n) F) : Prop :=
   GeneratedByBasicDoublyStochastic A
 
-/-- Gibson Theorem 3.4, reverse direction, as a certificate readout. -/
+/-- Gibson Theorem 3.4, reverse direction, as a property readout. -/
 theorem all_generated_of_fieldCondition (h : C.fieldCondition) :
     ∀ A, IsAlgebraicDoublyStochastic A → C.generatedByBasics A :=
   C.mpr h
 
-/-- Gibson Theorem 3.4, forward direction, as a certificate readout. -/
+/-- Gibson Theorem 3.4, forward direction, as a property readout. -/
 theorem fieldCondition_of_all_generated
     (h : ∀ A, IsAlgebraicDoublyStochastic A → C.generatedByBasics A) :
     C.fieldCondition :=
@@ -217,7 +217,7 @@ namespace RankDefectBasicFactorizationCertificate
 variable {F : Type u} [Field F] {n : ℕ}
 variable (C : RankDefectBasicFactorizationCertificate F n)
 
-/-- Any supplied Gibson 3.5 certificate yields exact rank-defect singular count. -/
+/-- Any supplied Gibson 3.5 property yields exact rank-defect singular count. -/
 theorem exact_singular_count_readout
     (A : Matrix (Fin n) (Fin n) F) (hA : IsAlgebraicDoublyStochastic A) :
     ∃ count, count = n - C.rank A ∧ count = C.singularBasicFactorCount A :=

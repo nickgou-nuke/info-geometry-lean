@@ -15,7 +15,7 @@ Dual Affine Flat Super-Kähler manifold.
 3. The Witten Index corresponds to the topological Euler characteristic,
    where the Gromov-Witten invariants count the prime-geodesic L-curves.
 
-UTMOST MANDATE: No witness-gating. The geometric structures are directly
+UTMOST MANDATE: No property-gating. The geometric structures are directly
 extracted from the underlying thermodynamic and dynamical layers.
 -/
 

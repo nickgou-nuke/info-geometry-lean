@@ -80,7 +80,7 @@ structure CertifiedBlockedTrialityDatum (blocks cellDim : Nat)
     extends BlockedTrialityDatum blocks cellDim where
   structured : IsStructuredTrinity toBlockedTrialityDatum
 
-/-- In a certified package, each blockwise route equals its `V`-cell. -/
+/-- In a property package, each blockwise route equals its `V`-cell. -/
 theorem routedCell_eq_value_of_structured
     {blocks cellDim : Nat}
     (T : CertifiedBlockedTrialityDatum blocks cellDim) (b : Fin blocks) :
@@ -168,7 +168,7 @@ abbrev BlockedQKV128 := BlockedQKV 16 8
 /-- Canonical blocked-triality datum for 128-dimensional heads. -/
 abbrev BlockedTriality128 := BlockedTrialityDatum 16 8
 
-/-- Canonical certified blocked-triality datum for 128-dimensional heads. -/
+/-- Canonical property blocked-triality datum for 128-dimensional heads. -/
 abbrev CertifiedBlockedTriality128 := CertifiedBlockedTrialityDatum 16 8
 
 /-- Dimension sanity check for the blocked ansatz. -/

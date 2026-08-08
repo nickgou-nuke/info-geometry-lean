@@ -949,6 +949,9 @@ lean_lib ChiralGrandCanonicalHestenesRotor where
 lean_lib ChiralGrandCanonicalLoxodromicRotor where
   roots := #[`InfoGeometry.Clifford.ChiralGrandCanonicalLoxodromicRotor]
 
+lean_lib ChiralGrandCanonicalFiniteKMS where
+  roots := #[`InfoGeometry.Physics.Thermodynamics.ChiralGrandCanonicalFiniteKMS]
+
 lean_lib ChiralParitySuperalgebra where
   roots := #[`InfoGeometry.Canonical.ChiralParitySuperalgebra]
 
@@ -973,6 +976,12 @@ lean_lib ThreeZ2OperatorGradings where
 lean_lib InnerConjugation where
   roots := #[`InfoGeometry.OperatorAlgebra.InnerConjugation]
 
+lean_lib OperatorProjectiveRatio where
+  roots := #[`InfoGeometry.OperatorAlgebra.OperatorProjectiveRatio]
+
+lean_lib OperatorMobiusAction where
+  roots := #[`InfoGeometry.OperatorAlgebra.OperatorMobiusAction]
+
 lean_lib ColimitBracketTransport where
   roots := #[`InfoGeometry.OperatorAlgebra.ColimitBracketTransport]
 
@@ -984,6 +993,9 @@ lean_lib EmergentComplexStructure where
 
 lean_lib ModularZ2CubeGrading where
   roots := #[`InfoGeometry.Canonical.ModularZ2CubeGrading]
+
+lean_lib TomitaTakesakiInvolutions where
+  roots := #[`InfoGeometry.Canonical.TomitaTakesakiInvolutions]
 
 lean_lib InfoGeometryCanonical where
   roots := #[`InfoGeometry.Canonical.All, `InfoGeometry.Canonical.SplitOctonionTKK55,

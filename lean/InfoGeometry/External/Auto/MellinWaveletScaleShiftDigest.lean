@@ -78,7 +78,7 @@ def logMellinKernel (s : ℂ) (t : ℝ) : ℂ :=
 /-- The Mellin kernel is the Fourier kernel on the logarithmic axis. -/
 theorem mellinKernel_as_log_fourier (omega t : ℝ) :
     logMellinKernel (Complex.I * omega + 1) t = Complex.exp (Complex.I * omega * t) := by
-  exact mellin_is_log_fourier omega t
+  exact TransformsAndScale.mellin_is_log_fourier omega t
 
 /-- Multiplicative scale becomes additive translation after the logarithm. -/
 theorem log_mul_as_add (a x : ℝ) (ha : 0 < a) (hx : 0 < x) :
@@ -128,7 +128,7 @@ def normalizedGamma2 (θ α : ℝ) : ℂ :=
 The following statements prove only what their hypotheses or elementary finite
 data provide.  They do not assert continuum transform theory. -/
 
-/-- A linearity hypothesis decomposes a chosen transform across the explicit
+/-- A linearity property decomposes a chosen transform across the explicit
 even/odd splitting. -/
 theorem riesz_mellin_even_odd_decomposition_from_additivity
     (R : (ℝ → ℂ) → (ℝ → ℂ))
@@ -141,7 +141,7 @@ theorem riesz_mellin_even_odd_decomposition_from_additivity
   nth_rw 1 [← h_add]
   exact hLinear (evenPart f) (oddPart f) s
 
-/-- A supplied left-inverse hypothesis gives reconstruction for the chosen
+/-- A supplied left-inverse property gives reconstruction for the chosen
 operators. -/
 theorem wavelet_reconstruction_from_left_inverse
     (W : (ℝ → ℂ) → (ℝ → ℝ → ℂ))

@@ -12,7 +12,7 @@ This module packages finite, Mathlib-native pieces of Jaynes' rationale:
 - Shannon entropy on finite simplices
 - combinatorial multiplicity via multinomial coefficients
 - linear-constraint feasible classes
-- entropy concentration as a formal certificate interface
+- entropy concentration as a formal property interface
 - Gibbs canonical form as MaxEnt optimizer
 - time-series autocovariance and Burg-style AR spectral form
 -/
@@ -304,7 +304,7 @@ lemma thermodynamicPreference_pos
   unfold thermodynamicPreference
   exact Real.exp_pos _
 
-/-- A formal witness for the asymptotic equipartition statement. -/
+/-- A formal property for the asymptotic equipartition statement. -/
 structure AsymptoticEquipartitionWitness (p : Fin n → ℝ) where
   countsSeq : ℕ → Fin n → ℕ
   total_pos : ∀ N, 0 < totalCount (countsSeq N)

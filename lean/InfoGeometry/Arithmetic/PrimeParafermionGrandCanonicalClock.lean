@@ -424,7 +424,7 @@ theorem massieu_eq_boltzmannEntropy_minus_scaled_shift
 
 /--
 Actual logarithmic derivative of the finite parafermion partition in the fugacity coordinate.
-The slit-plane hypothesis is exactly the principal-branch condition for `Complex.log`.
+The slit-plane property is exactly the principal-branch condition for `Complex.log`.
 -/
 theorem deriv_z_parafermionMassieu_eq_partition_deriv_div
     (S : Finset Nat.Primes) (z s : ℂ) (κ : ℕ)

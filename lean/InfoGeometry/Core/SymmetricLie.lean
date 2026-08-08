@@ -301,7 +301,7 @@ lemma add_smul_sub_mem_odd (S : SymmetricLieAlgebra L) {x y : L}
 
 /-- Abstract symmetric-pair bracket relations:
 `[k,k] ⊆ k`, `[k,p] ⊆ p`, `[p,p] ⊆ k`. -/
-theorem symmetric_pair_axioms (S : SymmetricLieAlgebra L) :
+theorem symmetric_pair_properties (S : SymmetricLieAlgebra L) :
     (∀ {x y}, x ∈ S.evenLieSubalgebra →
       y ∈ S.evenLieSubalgebra →
       ⁅x, y⁆ ∈ S.evenLieSubalgebra)
@@ -605,8 +605,8 @@ lemma triple_closed (S : SymmetricLieAlgebra L)
     (hy : y ∈ S.oddSubmodule)
     (hz : z ∈ S.oddSubmodule) :
     S.triple x y z ∈ S.oddSubmodule := by
-  have h1 : ⁅x, y⁆ ∈ S.evenLieSubalgebra := (S.symmetric_pair_axioms.2.2) hx hy
-  exact (S.symmetric_pair_axioms.2.1) h1 hz
+  have h1 : ⁅x, y⁆ ∈ S.evenLieSubalgebra := (S.symmetric_pair_properties.2.2) hx hy
+  exact (S.symmetric_pair_properties.2.1) h1 hz
 
 /-- Fundamental identity for the induced triple product. -/
 lemma triple_jacobi (S : SymmetricLieAlgebra L) (x y z u v : L) :

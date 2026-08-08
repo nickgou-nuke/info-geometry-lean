@@ -1,6 +1,8 @@
 import Mathlib.Tactic
 open Complex
 
+namespace GoutevPrinciple
+
 /-══════════════════════════════════════════════════════════════════════
   GOUTEV PRINCIPLE — All measurements are relative
   
@@ -140,3 +142,5 @@ structure HolographicBoundary where
 /-══════════════════════════════════════════════════════════════════════
   BRIDGES — connections to pre-proved theorems
   ═════════════════════════════════════════════════════════════════════-/
+
+end GoutevPrinciple

@@ -23,7 +23,7 @@ Theorem-safe synthesis for the requested lane:
 
 This file does not assert RH, zeta analytic continuation, a Lee--Yang theorem
 for the prime chain, or a full braided-category instance.  Those remain owned
-by their existing witness-gated or categorical files.
+by their existing property-gated or categorical files.
 -/
 
 noncomputable section
@@ -53,7 +53,7 @@ theorem riemannReflection_eq_fugacityInversion
     cayleyToFugacity (1 - s) = (cayleyToFugacity s)⁻¹ :=
   cayleyToFugacity_one_sub_eq_inv s
 
-/-- Conditional RH readout remains routed through the witness-gated Lee--Yang bridge. -/
+/-- Conditional RH readout remains routed through the property-gated Lee--Yang bridge. -/
 theorem conditional_RH_from_primeLeeYang
     {n : ℕ}
     (W : InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain.PrimeFerromagneticChain.LeeYangStabilityWitness (n := n))

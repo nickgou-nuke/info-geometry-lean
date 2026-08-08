@@ -10,6 +10,8 @@ open InfoGeometry.Clifford.Hestenes
 open CliffordAlgebra
 open InfoGeometry.Riemannian
 
+namespace InfoGeometry.Clifford.SplitOctonionsDualProduct
+
 /-- Дефинираме Сплит-Октониона като канонично Cayley-Dickson удвояване над паравекторите -/
 structure SplitOctonion (Q : QuadraticForm R M) (v0 : M) where
   fst : evenOdd Q 0
@@ -30,3 +32,5 @@ noncomputable def hNorm (X : SplitOctonion Q v0) : R :=
   InfoGeometry.Riemannian.hTrace Q (X.snd * hestenesAdjoint Q v0 X.snd)
 
 end SplitOctonion
+
+end InfoGeometry.Clifford.SplitOctonionsDualProduct

@@ -77,8 +77,8 @@ theorem log_mul_relativeModularOperator_diag
       exact Real.exp_pos _
 
 /--
-Same `log`-linearization statement, with explicit commuting hypothesis.
-In the finite diagonal lane the commute hypothesis is satisfied canonically.
+Same `log`-linearization statement, with explicit commuting property.
+In the finite diagonal lane the commute property is satisfied canonically.
 -/
 @[rep_depth operator, capstone]
 theorem log_mul_relativeModularOperator_diag_of_commute

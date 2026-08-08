@@ -103,7 +103,7 @@ theorem entropyProduction_zero
 
 /-!
 The dark-energy layer consumes this explicit finite equilibrium packet.  The
-state parameter is retained as a witness type; no analytic equilibrium
+state parameter is retained as a property type; no analytic equilibrium
 construction is asserted here.
 -/
 abbrev InformationLambdaReadout := ℝ

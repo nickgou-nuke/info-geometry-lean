@@ -112,7 +112,7 @@ omit [FiniteDimensional ℝ E] in
 Proof-carrying unit-relative-volume route for Cartan anomaly collapse.
 
 This is the constructive companion to `cartan_collapse_of_unitRelativeVolume`:
-callers supply the `UnitRelativeVolumeBit` witness packet rather than a bare
+callers supply the `UnitRelativeVolumeBit` property packet rather than a bare
 `relativeVolumeChangeRN n M = 1` equality.
 -/
 theorem cartan_collapse_of_unitRelativeVolumeBit

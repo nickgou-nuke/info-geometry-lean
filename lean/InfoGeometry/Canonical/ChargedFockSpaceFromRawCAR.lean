@@ -48,7 +48,7 @@ theorem chargedFockSpaceWitnessFromRawCAR_toCurrentHeisenbergRep
   rfl
 
 /--
-The Virasoro stress-energy modes derived from the raw CAR witness match the canonical
+The Virasoro stress-energy modes derived from the raw CAR property match the canonical
 Sugawara representation.
 -/
 theorem chargedFockSpaceWitnessFromRawCAR_sugawaraStressMode

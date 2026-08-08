@@ -281,7 +281,7 @@ Combined sequence package:
 from interval invariance and local expansivity of the step, obtain both
 boundedness in `[0, tMinus]` and monotone growth of all positive iterates.
 -/
-theorem majorantSeq_mem_and_monotone_of_step_axioms
+theorem majorantSeq_mem_and_monotone_of_step_properties
     (L η : ℝ)
     (hη_mem : η ∈ Set.Icc 0 (tMinus L η))
     (hInv : ∀ t, t ∈ Set.Icc 0 (tMinus L η) →
@@ -429,7 +429,7 @@ theorem majorantSeq_mem_and_monotone_of_P_nonneg_and_step_upper
   have hInv : ∀ t, t ∈ Set.Icc 0 (tMinus L η) →
       majorantStep L η t ∈ Set.Icc 0 (tMinus L η) :=
     step_invariant_of_step_bounds L η hLower hUpper
-  exact majorantSeq_mem_and_monotone_of_step_axioms L η hη_mem hInv hStepGe
+  exact majorantSeq_mem_and_monotone_of_step_properties L η hη_mem hInv hStepGe
 
 /-- Read `η` from the root equation `P(tMinus)=0`. -/
 theorem eta_eq_tMinus_sub_half_L_sq

@@ -17,6 +17,8 @@ of a Primon gas whose underlying field is ℚ(√5).
 
 noncomputable section
 
+namespace PenroseArithmetic
+
 /-- The Golden Ratio φ, the fundamental scaling constant of the Penrose universe. -/
 def goldenRatio : ℝ := (1 + Real.sqrt 5) / 2
 
@@ -24,6 +26,10 @@ def goldenRatio : ℝ := (1 + Real.sqrt 5) / 2
     the multiplicative inflation of the Penrose tiling becomes the fundamental 
     additive quantum of energy. -/
 def goldenEnergy : ℝ := Real.log goldenRatio
+
+end PenroseArithmetic
+
+namespace PenroseArithmetic
 
 /-- The Cut-and-Project Method: A 5D classical periodic lattice is projected 
     into a 2D physical shadow and a 3D internal (hidden) space. 
@@ -53,6 +59,10 @@ def irrational_window (data : CutAndProject5D) : Set data.internal3D :=
   data.2.2.2.2.2
 
 end CutAndProject5D
+
+end PenroseArithmetic
+
+namespace PenroseArithmetic
 
 /-- In the Golden Number Field ℚ(√5), distances are measured ultrametrically.
     The φ-adic distance between two points represents how many inflations (k) 
@@ -233,5 +243,7 @@ theorem arithmetic_quantum_gravity_unification :
     goldenPrimeClass_split_19, goldenPrimeClass_inert_3, goldenPrimeClass_inert_13,
     goldenMul_phi_phi, goldenConj_involutive, goldenNorm_conj, goldenNorm_mul,
     goldenEval_mul⟩
+
+end PenroseArithmetic
 
 end noncomputable section

@@ -8,7 +8,7 @@ import InfoGeometry.Topology.PoissonSinkhornBregmanTopCat
 The native finite owner identifies the primal-dual gap with a nonnegative
 Bregman gap under strict positivity and unit marginals.  This file packages
 that result over the corresponding subtype as a continuous `TopCat` readout.
-It is a certificate surface, not a convergence theorem.
+It is a property surface, not a convergence theorem.
 -/
 
 open scoped BigOperators

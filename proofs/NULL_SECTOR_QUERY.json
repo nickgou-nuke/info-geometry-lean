@@ -1,0 +1,3 @@
+{
+  "query": "FOR sink IN steps FILTER sink.content_hash == 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855' FOR edge IN next_step FILTER edge._to == sink._id FOR parent IN steps FILTER parent._id == edge._from LIMIT 3 RETURN { type: parent.type, content: LEFT(parent.content, 250) }"
+}

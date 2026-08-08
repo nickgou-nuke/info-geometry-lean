@@ -1,3 +1,4 @@
+import InfoGeometry.OperatorAlgebra.ColimitConservedThermalClosure
 import InfoGeometry.OperatorAlgebra.ChiralOperatorEnvelope
 import InfoGeometry.OperatorAlgebra.ChiralOperatorChargeFiltration
 import InfoGeometry.OperatorAlgebra.ChiralRetainedWordFiveGradeClosure
@@ -67,6 +68,7 @@ import InfoGeometry.OperatorAlgebra.ChiralTubuleBoundary
 import InfoGeometry.OperatorAlgebra.CliffordAtomsZ2n
 import InfoGeometry.OperatorAlgebra.CliffordSplitOctonionCAR
 import InfoGeometry.OperatorAlgebra.CliffordCAR
+import InfoGeometry.OperatorAlgebra.CliffordCARQuadraticClosure
 import InfoGeometry.OperatorAlgebra.CliffordCARFockParity
 import InfoGeometry.OperatorAlgebra.CARFermionParity
 import InfoGeometry.OperatorAlgebra.CliffordInfinityCAR

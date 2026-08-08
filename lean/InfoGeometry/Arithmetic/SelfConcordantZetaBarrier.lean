@@ -63,9 +63,9 @@ def NNBoundOn (Ω : ℝ → Prop) (F : C3Potential) : Prop :=
   ∀ x : ℝ, Ω x → 0 ≤ F.d2 x ∧ (F.d3 x)^2 ≤ 4 * (F.d2 x)^3
 
 /--
-A one-dimensional self-concordant barrier certificate.
+A one-dimensional self-concordant barrier property.
 
-The certificate records the differential data owned by this algebraic layer.
+The property records the differential data owned by this algebraic layer.
 The topological blow-up behavior at a boundary is deliberately a separate
 analytic theorem, while the monotonicity of the third derivative is explicit
 operator-free data used by the concrete logarithmic barriers below.
@@ -181,7 +181,7 @@ theorem force_eq_vonMangoldt_of_region
 A real self-concordant corridor through the zeta Massieu surface.
 
 The actual analytic theorem to prove is the construction of such a corridor and
-certificate for the intended zeta potential.  This structure merely states the
+property for the intended zeta potential.  This structure merely states the
 required data.
 -/
 structure ZetaSelfConcordanceModel where
@@ -189,17 +189,17 @@ structure ZetaSelfConcordanceModel where
   realDomain : ℝ → Prop
   embed : ℝ → ℂ
   corridor : C3Potential
-  certificate : SelfConcordantBarrier1D realDomain corridor
+  property : SelfConcordantBarrier1D realDomain corridor
 
 namespace ZetaSelfConcordanceModel
 
 variable (M : ZetaSelfConcordanceModel)
 
-/-- Extract the NN differential bound from a certified zeta barrier model. -/
+/-- Extract the NN differential bound from a property zeta barrier model. -/
 theorem nn_bound : NNBoundOn M.realDomain M.corridor :=
-  M.certificate.2.2.1
+  M.property.2.2.1
 
-/-- The certified zeta-corridor Bregman divergence vanishes on the diagonal. -/
+/-- The property zeta-corridor Bregman divergence vanishes on the diagonal. -/
 theorem bregman_self_on_corridor (x : ℝ) :
     Bregman M.corridor x x = 0 :=
   bregman_self M.corridor x
@@ -219,7 +219,7 @@ end ZetaSelfConcordanceModel
 /-! ## 5. Genuine Nesterov-Nemirovski barriers for the zeta potential -/
 
 /--
-Genuine self-concordance certificate for the logarithmic barrier.
+Genuine self-concordance property for the logarithmic barrier.
 
 For `f(x) = -log x` on `x > 0`:
 - f'(x) = -1/x
@@ -286,12 +286,12 @@ theorem logBarrier_is_self_concordant_barrier :
       exact logBarrier_third_derivative_nonpos hx)⟩
 
 /--
-Genuine self-concordance certificate for the zeta Massieu potential.
+Genuine self-concordance property for the zeta Massieu potential.
 
 The zeta Massieu potential is `Φ(s) = -log ζ(s)`.  On the critical line
 and in the zero-free region, the Hessian is nonnegative and the NN bound holds.
 
-This theorem states the exact conditions under which the certificate is valid.
+This theorem states the exact conditions under which the property is valid.
 -/
 theorem zeta_massieu_self_concordant_on_critical_corridor
     (M : ZetaSelfConcordanceModel)
@@ -300,7 +300,7 @@ theorem zeta_massieu_self_concordant_on_critical_corridor
   exact M.nn_bound x hx
 
 /--
-Genuine self-concordance certificate for the finite logarithmic barrier.
+Genuine self-concordance property for the finite logarithmic barrier.
 
 For `f(x) = -∑ᵢ log xᵢ` on the positive orthant:
 - f'(x)ᵢ = -1/xᵢ
@@ -358,7 +358,7 @@ theorem finiteLogBarrier_third_derivative_nonpos {ι : Type} [Fintype ι]
   exact div_nonpos_of_nonpos_of_nonneg hnum hden
 
 /--
-Genuine finite log-barrier self-concordance certificate.
+Genuine finite log-barrier self-concordance property.
 -/
 theorem finiteLogBarrier_is_self_concordant {ι : Type} [Fintype ι] :
     SelfConcordantBarrier1D (finiteLogBarrierDomain (ι := ι)) (finiteLogBarrierPotential (ι := ι)) :=

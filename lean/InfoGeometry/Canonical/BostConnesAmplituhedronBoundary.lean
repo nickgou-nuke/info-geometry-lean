@@ -5,7 +5,7 @@ import InfoGeometry.Projective.BostConnesZeta
 /-!
 # Bost-Connes partition/readout comparison carrier
 
-This module packages an explicit comparison hypothesis between the Bost-Connes
+This module packages an explicit comparison property between the Bost-Connes
 partition readout and an amplituhedron volume readout.  It does not prove a
 global analytic identity between the two objects.
 -/
@@ -90,7 +90,7 @@ structure ChiralQuadricBoundary (R : Type u) [CommRing R] where
 /-!
 ## 3. The amplituhedron/zeta comparison carrier
 
-The record below stores an explicit comparison hypothesis for a given volume
+The record below stores an explicit comparison property for a given volume
 readout and a given partition readout.
 -/
 

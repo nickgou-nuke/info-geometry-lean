@@ -15,10 +15,12 @@ This keeps KMS winding/monodromy visible instead of hiding it in a single real
 parameter.
 -/
 
-noncomputable section
-
 set_option linter.unnecessarySeqFocus false
 set_option linter.unnecessarySimpa false
+
+namespace ModularMonodromy
+
+noncomputable section
 
 def sheetTime (β t : ℝ) (n : ℤ) : ℝ := t + (n : ℝ) * β
 
@@ -140,3 +142,7 @@ theorem modular_monodromy_theorem :
   exact ⟨sheetTime_add, modularFactor_splits, kms_one_winding,
     parabolic_ticks_add, parabolic_tick_inverse, parity_flips_boost,
     det_bogoliubovBoost, quadratic_legendre_value⟩
+
+end
+
+end ModularMonodromy

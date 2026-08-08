@@ -67,6 +67,6 @@ theorem fibonacci_braid_is_braid_pair :
       (fibonacciBraidCuntzRepresentation YangBaxterProof.R)
       (fibonacciBraidCuntzRepresentation YangBaxterProof.B) := by
   dsimp [IsBraidPair]
-  exact hypothesis4_yang_baxter_relation
+  exact property4_yang_baxter_relation
 
 end InfoGeometry.Canonical.BraidColimitTransport

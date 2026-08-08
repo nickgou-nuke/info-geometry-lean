@@ -12,7 +12,7 @@ variable {n : Type*} [Fintype n] [DecidableEq n]
 Trace-cyclicity for the left-generator conjugate `U⁻¹ * (A * U)`.
 
 This is the noncommutative readout step: the trace collapses the similarity
-conjugate to the bare generator without any commuting assumption.
+conjugate to the bare generator without any commuting property.
 -/
 theorem trace_conjugate_left_generator
     (U A : Matrix n n ℝ) (hU : IsUnit U) :
@@ -34,7 +34,7 @@ theorem trace_conjugate_left_generator
 Jacobi--Liouville determinant derivative for a noncommutative left-generator
 matrix path `U' = A(t) * U(t)`.
 
-No commuting hypothesis is used.  The determinant derivative is reduced to the
+No commuting property is used.  The determinant derivative is reduced to the
 generator trace only after the similarity-conjugate trace is collapsed by
 cyclicity.
 -/

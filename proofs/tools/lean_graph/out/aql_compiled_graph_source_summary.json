@@ -1,0 +1,661 @@
+[
+  {
+    "source_count": 4811,
+    "isolated_source_count": 113,
+    "nonisolated_source_count": 4698,
+    "by_kind": [
+      {
+        "kind": "theorem",
+        "count": 2657
+      },
+      {
+        "kind": "def",
+        "count": 2154
+      }
+    ],
+    "top_modules": [
+      {
+        "module": "SplitClifford",
+        "source_count": 161
+      },
+      {
+        "module": "SupergradedCuntzBdG",
+        "source_count": 148
+      },
+      {
+        "module": "QuadraticConfiguration3",
+        "source_count": 103
+      },
+      {
+        "module": "PenroseSpinTilingConfig",
+        "source_count": 102
+      },
+      {
+        "module": "JaynesLDDPGNSColimit",
+        "source_count": 94
+      },
+      {
+        "module": "NonIsoConf3DeRhamCooperad",
+        "source_count": 92
+      },
+      {
+        "module": "TrainsumQuanticsTensorTrainsDigest",
+        "source_count": 86
+      },
+      {
+        "module": "NonIsoConf3OrlikSolomon",
+        "source_count": 78
+      },
+      {
+        "module": "JaynesLeanColimitBridge",
+        "source_count": 71
+      },
+      {
+        "module": "NonIsoConf3QuadricD4Model",
+        "source_count": 70
+      },
+      {
+        "module": "ThermodynamicTKKBridge",
+        "source_count": 70
+      },
+      {
+        "module": "TripotentCliffordColimit",
+        "source_count": 70
+      },
+      {
+        "module": "WallpaperHolographicSelectionRules",
+        "source_count": 68
+      },
+      {
+        "module": "QuaternionQuanticsBackendDigest",
+        "source_count": 67
+      },
+      {
+        "module": "HillWheelerProjection",
+        "source_count": 65
+      },
+      {
+        "module": "ChiralCausalCone",
+        "source_count": 61
+      },
+      {
+        "module": "ChemicalPotentialDeRhamG0Bridge",
+        "source_count": 60
+      },
+      {
+        "module": "MellinWaveletScaleShiftDigest",
+        "source_count": 59
+      },
+      {
+        "module": "TopologicalAndreevPump",
+        "source_count": 58
+      },
+      {
+        "module": "TKKJordanPairSocket",
+        "source_count": 57
+      },
+      {
+        "module": "EntropicChiralDeRhamDictionary",
+        "source_count": 56
+      },
+      {
+        "module": "InfiniteLightConeConfColimit",
+        "source_count": 56
+      },
+      {
+        "module": "MotivicHolographyGroebnerLFunction",
+        "source_count": 52
+      },
+      {
+        "module": "SplitOctonionBraidSU3",
+        "source_count": 52
+      },
+      {
+        "module": "SouriauOperatorThermodynamics",
+        "source_count": 50
+      },
+      {
+        "module": "LightConeConf3DeRhamCooperad",
+        "source_count": 45
+      },
+      {
+        "module": "TwistorParafermionBoundary",
+        "source_count": 44
+      },
+      {
+        "module": "Mirror31PSLnQFlowToy",
+        "source_count": 40
+      },
+      {
+        "module": "NuclearWallpaperSpectraClassification",
+        "source_count": 40
+      },
+      {
+        "module": "OctonionMatrixEncodings",
+        "source_count": 40
+      },
+      {
+        "module": "StimulatedScatteringAmplituhedron",
+        "source_count": 40
+      },
+      {
+        "module": "ModularRadonNikodymJacobianBridge",
+        "source_count": 39
+      },
+      {
+        "module": "ProjectiveAffineConformalClosure55",
+        "source_count": 39
+      },
+      {
+        "module": "BraidedCocycleWilsonEntropy",
+        "source_count": 38
+      },
+      {
+        "module": "CooperadEnvironmentalRank32",
+        "source_count": 38
+      },
+      {
+        "module": "LogCFTGeneratingPotential",
+        "source_count": 38
+      },
+      {
+        "module": "XanaduSpinNetworkCodeDigest",
+        "source_count": 38
+      },
+      {
+        "module": "GaugeLnQTensorNetworkToy",
+        "source_count": 37
+      },
+      {
+        "module": "HestenesCuntzPhaseSpace",
+        "source_count": 37
+      },
+      {
+        "module": "PrimonCoarseGrainedHilbertPolyaPotential",
+        "source_count": 37
+      }
+    ],
+    "top_nonisolated_sources": [
+      {
+        "name": "FiniteSpinePublicationCertificate.finite_spine_publication_certificate",
+        "module": "FiniteSpinePublicationCertificate",
+        "kind": "theorem",
+        "outgoing": 113
+      },
+      {
+        "name": "ModularRadonNikodymJacobianBridge.de_rham_alpha_beta_forbidden_cone_clock_synthesis",
+        "module": "ModularRadonNikodymJacobianBridge",
+        "kind": "theorem",
+        "outgoing": 58
+      },
+      {
+        "name": "ModularRadonNikodymJacobianBridge.modular_rn_jacobian_chemical_derham_tkk_synthesis",
+        "module": "ModularRadonNikodymJacobianBridge",
+        "kind": "theorem",
+        "outgoing": 56
+      },
+      {
+        "name": "PenroseQuadricTopologySynthesis.penrose_quadric_topological_compilation",
+        "module": "PenroseQuadricTopologySynthesis",
+        "kind": "theorem",
+        "outgoing": 56
+      },
+      {
+        "name": "TopologicalColorCrystalFormal.topological_color_crystal_formal_synthesis",
+        "module": "TopologicalColorCrystalFormal",
+        "kind": "theorem",
+        "outgoing": 53
+      },
+      {
+        "name": "EntropicChiralDeRhamDictionary.entropic_chiral_deRham_dictionary_synthesis",
+        "module": "EntropicChiralDeRhamDictionary",
+        "kind": "theorem",
+        "outgoing": 52
+      },
+      {
+        "name": "ChemicalPotentialDeRhamG0Bridge.chemical_potential_derham_g0_synthesis",
+        "module": "ChemicalPotentialDeRhamG0Bridge",
+        "kind": "theorem",
+        "outgoing": 49
+      },
+      {
+        "name": "CurryHowardLambekColimit.curry_howard_lambek_colimit_synthesis",
+        "module": "CurryHowardLambekColimit",
+        "kind": "theorem",
+        "outgoing": 49
+      },
+      {
+        "name": "HolographicGaugeSymmetryUniqueness.holographic_gauge_symmetry_uniqueness_synthesis",
+        "module": "HolographicGaugeSymmetryUniqueness",
+        "kind": "theorem",
+        "outgoing": 48
+      },
+      {
+        "name": "SuperconductingHolographicResonator.superconducting_holographic_resonator_synthesis",
+        "module": "SuperconductingHolographicResonator",
+        "kind": "theorem",
+        "outgoing": 48
+      },
+      {
+        "name": "ThermodynamicTKKBridge.thermodynamic_tkk_bridge_synthesis",
+        "module": "ThermodynamicTKKBridge",
+        "kind": "theorem",
+        "outgoing": 46
+      },
+      {
+        "name": "FinalSpectroscopicSynthesisAudit.final_spectroscopic_synthesis_audit",
+        "module": "FinalSpectroscopicSynthesisAudit",
+        "kind": "theorem",
+        "outgoing": 43
+      },
+      {
+        "name": "TopologicalAndreevPump.topological_andreev_pump_synthesis",
+        "module": "TopologicalAndreevPump",
+        "kind": "theorem",
+        "outgoing": 43
+      },
+      {
+        "name": "ConformalScaleRecurrence.conformal_scale_recurrence_synthesis",
+        "module": "ConformalScaleRecurrence",
+        "kind": "theorem",
+        "outgoing": 40
+      },
+      {
+        "name": "CuntzBoundarySolderRealization.cuntz_boundary_solder_realization_synthesis",
+        "module": "CuntzBoundarySolderRealization",
+        "kind": "theorem",
+        "outgoing": 39
+      },
+      {
+        "name": "Mirror31PSLnQFlowToy.mirror31_ps_lnq_flow_toy_synthesis",
+        "module": "Mirror31PSLnQFlowToy",
+        "kind": "theorem",
+        "outgoing": 39
+      },
+      {
+        "name": "ClebschGordanPenroseNonequilibriumSpinGraph.cg_penrose_nonequilibrium_spin_graph_synthesis",
+        "module": "ClebschGordanPenroseNonequilibriumSpinGraph",
+        "kind": "theorem",
+        "outgoing": 38
+      },
+      {
+        "name": "MetamaterialQuasicrystalBloch.metamaterial_quasicrystal_bloch_synthesis",
+        "module": "MetamaterialQuasicrystalBloch",
+        "kind": "theorem",
+        "outgoing": 38
+      },
+      {
+        "name": "StimulatedScatteringAmplituhedron.stimulated_scattering_amplituhedron_synthesis",
+        "module": "StimulatedScatteringAmplituhedron",
+        "kind": "theorem",
+        "outgoing": 38
+      },
+      {
+        "name": "ChemicalPotentialTKKGradeZero.chemical_potential_tkk_g0_rank32_environmental_synthesis",
+        "module": "ChemicalPotentialTKKGradeZero",
+        "kind": "theorem",
+        "outgoing": 37
+      },
+      {
+        "name": "TopologicalMetasurfaceSupercurrent.topological_metasurface_supercurrent_synthesis",
+        "module": "TopologicalMetasurfaceSupercurrent",
+        "kind": "theorem",
+        "outgoing": 37
+      },
+      {
+        "name": "TwistedTorusVacuumMachine.twisted_torus_vacuum_machine_synthesis",
+        "module": "TwistedTorusVacuumMachine",
+        "kind": "theorem",
+        "outgoing": 37
+      },
+      {
+        "name": "BuresFisherAndreevGeodesicFlow.bures_fisher_andreev_geodesic_flow_synthesis",
+        "module": "BuresFisherAndreevGeodesicFlow",
+        "kind": "theorem",
+        "outgoing": 36
+      },
+      {
+        "name": "NuclearWallpaperSpectraClassification.nuclear_wallpaper_spectra_classification_synthesis",
+        "module": "NuclearWallpaperSpectraClassification",
+        "kind": "theorem",
+        "outgoing": 35
+      },
+      {
+        "name": "Clifford55AnomalyOSP.clifford_55_anomaly_osp_synthesis",
+        "module": "Clifford55AnomalyOSP",
+        "kind": "theorem",
+        "outgoing": 34
+      },
+      {
+        "name": "ThermodynamicLorentzBoost.closed_thermodynamic_lorentz_boost_kernel",
+        "module": "ThermodynamicLorentzBoost",
+        "kind": "theorem",
+        "outgoing": 34
+      },
+      {
+        "name": "ModularParabolicTimeBridge.deRham_is_modular_parabolic_time_derivation",
+        "module": "ModularParabolicTimeBridge",
+        "kind": "theorem",
+        "outgoing": 33
+      },
+      {
+        "name": "QuadricConf3BraidingCooperadBridge.quadric_conf3_deRham_cooperad_braiding_synthesis",
+        "module": "QuadricConf3BraidingCooperadBridge",
+        "kind": "theorem",
+        "outgoing": 33
+      },
+      {
+        "name": "XanaduSpinNetworkCodeDigest.xanadu_spin_network_code_digest_synthesis",
+        "module": "XanaduSpinNetworkCodeDigest",
+        "kind": "theorem",
+        "outgoing": 33
+      },
+      {
+        "name": "GaugeLnQTensorNetworkToy.gauge_lnq_tensor_network_toy_synthesis",
+        "module": "GaugeLnQTensorNetworkToy",
+        "kind": "theorem",
+        "outgoing": 32
+      },
+      {
+        "name": "KasparovKreinKleinO55Kernel.kasparov_krein_klein_o55_kernel_synthesis",
+        "module": "KasparovKreinKleinO55Kernel",
+        "kind": "theorem",
+        "outgoing": 32
+      },
+      {
+        "name": "ProjectiveAffineConformalClosure55.projective_affine_conformal_closure_55_synthesis",
+        "module": "ProjectiveAffineConformalClosure55",
+        "kind": "theorem",
+        "outgoing": 31
+      },
+      {
+        "name": "TrappedHarmonicModes.trapped_harmonic_modes_synthesis",
+        "module": "TrappedHarmonicModes",
+        "kind": "theorem",
+        "outgoing": 31
+      },
+      {
+        "name": "BoltzmannLnQTensorFlowToy.boltzmann_lnq_tensor_flow_toy_synthesis",
+        "module": "BoltzmannLnQTensorFlowToy",
+        "kind": "theorem",
+        "outgoing": 30
+      },
+      {
+        "name": "GellMannParafermionSolder.gellmann_parafermion_solder_synthesis",
+        "module": "GellMannParafermionSolder",
+        "kind": "theorem",
+        "outgoing": 30
+      },
+      {
+        "name": "JackiwRebbiCantorEdgeStates.jackiw_rebbi_cantor_edge_states_synthesis",
+        "module": "JackiwRebbiCantorEdgeStates",
+        "kind": "theorem",
+        "outgoing": 30
+      },
+      {
+        "name": "MellinWaveletScaleShiftDigest.mellin_calderon_reconstruction_socket_synthesis",
+        "module": "MellinWaveletScaleShiftDigest",
+        "kind": "theorem",
+        "outgoing": 30
+      },
+      {
+        "name": "ModularRadonNikodymJacobianBridge.forbidden_cone_dlog_modular_parabolic_clock_synthesis",
+        "module": "ModularRadonNikodymJacobianBridge",
+        "kind": "theorem",
+        "outgoing": 30
+      },
+      {
+        "name": "NonAbelianBrillouinKleinBottle.nonabelian_brillouin_klein_bottle_synthesis",
+        "module": "NonAbelianBrillouinKleinBottle",
+        "kind": "theorem",
+        "outgoing": 30
+      },
+      {
+        "name": "NuclearSpectroscopyEnergyLevels.nuclear_spectroscopy_energy_level_synthesis",
+        "module": "NuclearSpectroscopyEnergyLevels",
+        "kind": "theorem",
+        "outgoing": 30
+      },
+      {
+        "name": "O55CartanPhononReduction.o55_cartan_phonon_reduction_synthesis",
+        "module": "O55CartanPhononReduction",
+        "kind": "theorem",
+        "outgoing": 30
+      },
+      {
+        "name": "QuaternionQuanticsBackendDigest.quaternion_quantics_backend_digest_synthesis",
+        "module": "QuaternionQuanticsBackendDigest",
+        "kind": "theorem",
+        "outgoing": 30
+      },
+      {
+        "name": "WeylColimitCanonicalLimit.weyl_colimit_to_cramer_rao_canonical_socket",
+        "module": "WeylColimitCanonicalLimit",
+        "kind": "theorem",
+        "outgoing": 30
+      },
+      {
+        "name": "ChiralCausalCone.chiral_causal_cone_synthesis",
+        "module": "ChiralCausalCone",
+        "kind": "theorem",
+        "outgoing": 29
+      },
+      {
+        "name": "EastSU2EquivariantSpinNetworkCircuits.east_su2_equivariant_spin_network_circuits_synthesis",
+        "module": "EastSU2EquivariantSpinNetworkCircuits",
+        "kind": "theorem",
+        "outgoing": 29
+      },
+      {
+        "name": "PhaseConjugateVacuumMirror.phase_conjugate_vacuum_mirror_synthesis",
+        "module": "PhaseConjugateVacuumMirror",
+        "kind": "theorem",
+        "outgoing": 29
+      },
+      {
+        "name": "SplitOctonionBraidSU3.split_octonion_braid_su3_synthesis",
+        "module": "SplitOctonionBraidSU3",
+        "kind": "theorem",
+        "outgoing": 29
+      },
+      {
+        "name": "ModularRadonNikodymJacobianBridge.forbidden_cone_modular_derivation_clocks_parabolic_time",
+        "module": "ModularRadonNikodymJacobianBridge",
+        "kind": "theorem",
+        "outgoing": 28
+      },
+      {
+        "name": "SU3LoopBraidCuntzBoundary.su3_loop_braid_cuntz_boundary_synthesis",
+        "module": "SU3LoopBraidCuntzBoundary",
+        "kind": "theorem",
+        "outgoing": 28
+      },
+      {
+        "name": "CP3CantorGeometricObstruction.cp3_cantor_geometric_obstruction_synthesis",
+        "module": "CP3CantorGeometricObstruction",
+        "kind": "theorem",
+        "outgoing": 27
+      },
+      {
+        "name": "PenroseChiralNuclearTrainsumToy.penrose_chiral_nuclear_trainsum_toy_synthesis",
+        "module": "PenroseChiralNuclearTrainsumToy",
+        "kind": "theorem",
+        "outgoing": 27
+      },
+      {
+        "name": "TripotentCliffordColimit.tripotent_clifford_colimit_synthesis",
+        "module": "TripotentCliffordColimit",
+        "kind": "theorem",
+        "outgoing": 27
+      },
+      {
+        "name": "TwistorParafermionBoundary.twistor_parafermion_boundary_synthesis",
+        "module": "TwistorParafermionBoundary",
+        "kind": "theorem",
+        "outgoing": 27
+      },
+      {
+        "name": "ZornScalingFlow.zorn_scaling_flow_synthesis",
+        "module": "ZornScalingFlow",
+        "kind": "theorem",
+        "outgoing": 27
+      },
+      {
+        "name": "HestenesCuntzPhaseSpace.hestenes_cuntz_phase_space_synthesis",
+        "module": "HestenesCuntzPhaseSpace",
+        "kind": "theorem",
+        "outgoing": 26
+      },
+      {
+        "name": "HestenesCuntzSpacetimeAlgebra.hestenes_cuntz_spacetime_synthesis",
+        "module": "HestenesCuntzSpacetimeAlgebra",
+        "kind": "theorem",
+        "outgoing": 26
+      },
+      {
+        "name": "KleinBrillouinRamanDynamics.klein_brillouin_raman_dynamics_synthesis",
+        "module": "KleinBrillouinRamanDynamics",
+        "kind": "theorem",
+        "outgoing": 26
+      },
+      {
+        "name": "JackiwRebbiCantorEdgeStates.jackiw_rebbi_edge_localization",
+        "module": "JackiwRebbiCantorEdgeStates",
+        "kind": "theorem",
+        "outgoing": 25
+      },
+      {
+        "name": "RescaledPhaseVolumeCanonical.rescaled_phase_volume_canonical_synthesis",
+        "module": "RescaledPhaseVolumeCanonical",
+        "kind": "theorem",
+        "outgoing": 25
+      },
+      {
+        "name": "SUNQuantumBraidDuality.sun_quantum_braid_duality_synthesis",
+        "module": "SUNQuantumBraidDuality",
+        "kind": "theorem",
+        "outgoing": 25
+      },
+      {
+        "name": "BashoreSpinNetworkQubit.bashore_spin_network_qubit_synthesis",
+        "module": "BashoreSpinNetworkQubit",
+        "kind": "theorem",
+        "outgoing": 24
+      },
+      {
+        "name": "ChiralB3PresentedBridge.complete_B3_representation_verified",
+        "module": "ChiralB3PresentedBridge",
+        "kind": "theorem",
+        "outgoing": 24
+      },
+      {
+        "name": "CooperadEnvironmentalRank32.anyonic_baryon_thermo_topology_synthesis",
+        "module": "CooperadEnvironmentalRank32",
+        "kind": "theorem",
+        "outgoing": 24
+      },
+      {
+        "name": "NonAbelianBrillouinKleinBottle.finite_nonabelian_bkb_kernel",
+        "module": "NonAbelianBrillouinKleinBottle",
+        "kind": "theorem",
+        "outgoing": 24
+      },
+      {
+        "name": "ParafermionIdentityRealization.parafermion_realization_synthesis",
+        "module": "ParafermionIdentityRealization",
+        "kind": "theorem",
+        "outgoing": 24
+      },
+      {
+        "name": "SmithHatIsingDuality.smith_hat_ising_duality_synthesis",
+        "module": "SmithHatIsingDuality",
+        "kind": "theorem",
+        "outgoing": 24
+      },
+      {
+        "name": "ThermalBoostLorentzSuperalgebra.thermal_boost_lorentz_superalgebra_synthesis",
+        "module": "ThermalBoostLorentzSuperalgebra",
+        "kind": "theorem",
+        "outgoing": 24
+      },
+      {
+        "name": "BogoliubovWeylChemicalPotential.bogoliubov_weyl_chemical_potential_synthesis",
+        "module": "BogoliubovWeylChemicalPotential",
+        "kind": "theorem",
+        "outgoing": 23
+      },
+      {
+        "name": "CuntzP6MWallpaperBoundary.cuntz_p6m_wallpaper_boundary_synthesis",
+        "module": "CuntzP6MWallpaperBoundary",
+        "kind": "theorem",
+        "outgoing": 23
+      },
+      {
+        "name": "LightConeConf3DeRhamCooperad.lightCone_conf3_finite_deRham_cooperad_candidate",
+        "module": "LightConeConf3DeRhamCooperad",
+        "kind": "theorem",
+        "outgoing": 23
+      },
+      {
+        "name": "SpectralCPTKleinBottle.spectral_cpt_klein_bottle_synthesis",
+        "module": "SpectralCPTKleinBottle",
+        "kind": "theorem",
+        "outgoing": 23
+      },
+      {
+        "name": "CooperadEnvironmentalRank32.cooperad_environmental_split_preserves_rank32",
+        "module": "CooperadEnvironmentalRank32",
+        "kind": "theorem",
+        "outgoing": 22
+      },
+      {
+        "name": "HillWheelerUniversalProjection.hill_wheeler_universal_projection_synthesis",
+        "module": "HillWheelerUniversalProjection",
+        "kind": "theorem",
+        "outgoing": 22
+      },
+      {
+        "name": "MisraPrimeEntropyDigest.misra_prime_entropy_digest_synthesis",
+        "module": "MisraPrimeEntropyDigest",
+        "kind": "theorem",
+        "outgoing": 22
+      },
+      {
+        "name": "TrainsumQuanticsTensorTrainsDigest.trainsum_quantics_tensor_trains_digest_synthesis",
+        "module": "TrainsumQuanticsTensorTrainsDigest",
+        "kind": "theorem",
+        "outgoing": 22
+      },
+      {
+        "name": "CooperadEnvironmentalRank32.generic_cooperad_environmental_split_preserves_rank32",
+        "module": "CooperadEnvironmentalRank32",
+        "kind": "theorem",
+        "outgoing": 21
+      },
+      {
+        "name": "DoubledChargeLatticeKasparovKreinBridge.doubled_charge_lattice_kasparov_krein_bridge_synthesis",
+        "module": "DoubledChargeLatticeKasparovKreinBridge",
+        "kind": "theorem",
+        "outgoing": 21
+      },
+      {
+        "name": "KreinCuntzShadow.krein_cuntz_shadow_synthesis",
+        "module": "KreinCuntzShadow",
+        "kind": "theorem",
+        "outgoing": 21
+      },
+      {
+        "name": "MellinWaveletScaleShiftDigest.mellin_wavelet_scale_shift_digest_synthesis",
+        "module": "MellinWaveletScaleShiftDigest",
+        "kind": "theorem",
+        "outgoing": 21
+      },
+      {
+        "name": "NonIsoConf3DeRhamCooperad.non_iso_conf3_derham_cooperad_synthesis",
+        "module": "NonIsoConf3DeRhamCooperad",
+        "kind": "theorem",
+        "outgoing": 21
+      }
+    ]
+  }
+]

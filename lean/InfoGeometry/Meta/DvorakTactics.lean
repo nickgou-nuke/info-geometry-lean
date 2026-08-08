@@ -15,6 +15,7 @@ namespace InfoGeometry.Meta
 It introduces hypotheses, applies the given term `t`, and then uses `aesop` to 
 discharge any remaining side goals (such as validity or measurability conditions).
 -/
-macro "aeply" t:term : tactic => `(tactic| try intro <;> apply $t <;> first | aesop | assumption)
+macro "aeply" t:term : tactic =>
+  `(tactic| try intro <;> apply $t <;> first | aesop | solve_by_elim)
 
 end InfoGeometry.Meta

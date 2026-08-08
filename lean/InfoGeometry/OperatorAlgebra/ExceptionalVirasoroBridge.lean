@@ -14,7 +14,7 @@ It does not identify finite `E8(8)` with Virasoro. The bridge is mediated by
 an affine/current extension, morally `E9(9)`, and a Sugawara/stress-tensor
 calibration.
 
-The physical statement is witness-gated:
+The physical statement is property-gated:
 
   hidden grade-two memory
       -> affine current mode

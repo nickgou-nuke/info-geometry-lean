@@ -11,8 +11,8 @@ modular flow, Drazin horizon, chiral/CPT involution, frequency Drazin
 projector, harmonic envelope, and zero-mode predicates.
 
 This file adds readout coordinates and residual laws.  The Fierz residual
-vanishing theorem is explicitly assumption-derived: the conclusion is read from
-an assumption packet, not derived from horizon localization or modular fixedness
+vanishing theorem is explicitly property-derived: the conclusion is read from
+an property packet, not derived from horizon localization or modular fixedness
 alone.
 -/
 
@@ -40,7 +40,7 @@ def horizonZitterFierzVector
   fun ch => φA.expect (C.channel ch Z.envelope)
 
 /--
-Compatibility assumption for horizon zitter Fierz geometry.
+Compatibility property for horizon zitter Fierz geometry.
 
 This is not an owner-derived theorem.  Horizon localization and modular
 zero-mode status alone do not imply the residual law.
@@ -52,7 +52,7 @@ structure HorizonZitterFierzCompatibilityAssumption
   state : RealExpectationState Obs
   channels : FierzChannelMap Obs
   residual : FierzResidual
-  compatibility_assumption :
+  compatibility_property :
     ∀ Z : HorizonZitterMode Obs,
       residual.residual (horizonZitterFierzVector state channels Z) = 0
 
@@ -60,12 +60,12 @@ structure HorizonZitterFierzCompatibilityAssumption
 Assumption-derived Fierz readback for horizon zitter envelopes.
 -/
 @[rep_depth operator]
-theorem horizonZitter_fierz_quadric_from_assumption
+theorem horizonZitter_fierz_quadric_from_property
     {Obs : Type*}
     [Ring Obs] [Star Obs]
     (K : HorizonZitterFierzCompatibilityAssumption Obs)
     (Z : HorizonZitterMode Obs) :
     K.residual.residual (horizonZitterFierzVector K.state K.channels Z) = 0 :=
-  K.compatibility_assumption Z
+  K.compatibility_property Z
 
 end InfoGeometry.Canonical.HorizonZitterFierzReadout

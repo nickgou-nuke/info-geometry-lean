@@ -25,8 +25,8 @@ using the repository's concrete integer Zorn split-octonion multiplication.
   `ι x * δ y = δ (xy)`, and `δ x * ι y = δ (xy)`.
 * The distinguished dual unit `ε = δ oneZ` squares to zero.
 * Projection onto the primal split-octonion slot preserves multiplication.
-* The nonzero split-octonion associator witness lifts to a nonzero dual
-  associator witness.
+* The nonzero split-octonion associator property lifts to a nonzero dual
+  associator property.
 * External-system arithmetic readouts are mirrored as finite Lean ledgers:
   GAP/Atlas finite `G₂(2)` order/index data, Sage `G₂`/`D₄`/`D₅`
   root-Weyl counts, split Clifford dimensions `2^8` and `2^10`, and the

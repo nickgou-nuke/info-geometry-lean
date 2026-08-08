@@ -165,7 +165,7 @@ local notation "H₂" => InfoGeometry.Krein.DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
 
 /--
-Concrete palatial-operator interface induced by certified conformal inference.
+Concrete palatial-operator interface induced by property conformal inference.
 
 The operatorial incidence field is exactly the existing projector-obstruction
 incidence predicate; no new palatial theorem is asserted.
@@ -230,7 +230,7 @@ section ClassicalIncidence
 
 /--
 Classical twistor incidence supplies the SD/ASD-side incidence compatibility
-only under its own nonzero-spinor hypothesis.  This is deliberately kept as a
+only under its own nonzero-spinor property.  This is deliberately kept as a
 separate interface from palatial operator algebra.
 -/
 @[rep_depth projective]

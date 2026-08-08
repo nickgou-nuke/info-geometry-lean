@@ -5,7 +5,7 @@ import InfoGeometry.Prequantum.GNSAction
 # Quotient action for the finite real trace GNS states
 
 The finite matrix trace is faithful on quadratic squares.  Consequently its
-algebraic GNS null set is zero, which supplies the null-left-ideal witness
+algebraic GNS null set is zero, which supplies the null-left-ideal property
 required by the existing quotient-action owner.
 -/
 

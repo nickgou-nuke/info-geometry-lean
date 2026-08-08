@@ -43,7 +43,7 @@ structure LanglandsSugawaraBridge
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State] where
 
-  /-- Strong arithmetic witness for the projected L-function. -/
+  /-- Strong arithmetic property for the projected L-function. -/
   resonance :
     LanglandsPrimeResonanceStrongWitness P
 
@@ -63,7 +63,7 @@ structure LanglandsSugawaraBridge
   Calibration law: Virasoro/Sugawara central-charge readout equals the selected
   completed L-function value.
 
-  This is the true bridge hypothesis.
+  This is the true bridge property.
   -/
   centralCharge_eq_completedL_value :
     affineVirasoro.centralChargeReadout state =
@@ -86,17 +86,17 @@ variable
 variable
     (B : LanglandsSugawaraBridge P Finite Affine Vir State)
 
-/-- Legacy weak Euler-product data read back from the strong witness lane. -/
+/-- Legacy weak Euler-product data read back from the strong property lane. -/
 def eulerProduct :
     EulerProductData P.L :=
   B.resonance.eulerProduct.toEulerProductData
 
-/-- Legacy completed L-function read back from the strong witness lane. -/
+/-- Legacy completed L-function read back from the strong property lane. -/
 def completedL :
     ℂ → ℂ :=
   B.resonance.completed.completedL
 
-/-- Legacy completed-functional-equation witness read back from the strong witness lane. -/
+/-- Legacy completed-functional-equation property read back from the strong property lane. -/
 theorem completedFunctionalEquation :
     HasCompletedFunctionalEquation P.L B.completedL :=
   B.resonance.completed.toHasCompletedFunctionalEquation
@@ -157,7 +157,7 @@ end LanglandsSugawaraBridge
 /--
 Installed owner target for the Langlands/Sugawara bridge.
 
-Once the bridge witness is supplied, it packages the strong
+Once the bridge property is supplied, it packages the strong
 `LanglandsPrimeResonanceStrongWitness` already carried by the bridge and
 exposes the central-charge/completed-L calibration.
 -/
@@ -178,7 +178,7 @@ def LanglandsSugawaraBridgeInstalledTarget
       B.completedL B.spectralPoint
 
 /--
-The installed target data follows from the supplied bridge witness.
+The installed target data follows from the supplied bridge property.
 -/
 def langlandsSugawaraBridgeInstalledTarget :
     ∀ {Bulk : Type uBulk} {Boundary : Type uBoundary}

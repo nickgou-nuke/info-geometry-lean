@@ -5,7 +5,7 @@ import InfoGeometry.Geometry.GromovHyperbolicity
 /-!
 # Polynomial geometry thread bridge
 
-This is a witness-level integration surface for three existing finite owners:
+This is a property-level integration surface for three existing finite owners:
 
 * additive Grothendieck completion;
 * the Plücker/Klein quadratic boundary;

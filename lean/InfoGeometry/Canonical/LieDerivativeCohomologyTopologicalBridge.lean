@@ -10,7 +10,7 @@ import InfoGeometry.Canonical.CartanLieDerivativeMagicBridge
 The algebraic Lie-derivative owner proves that the Lie derivative of every
 closed form is exact.  This companion packages the corresponding map on the
 closed-form carrier and invokes the generic quotient-topology descent theorem.
-Continuity is an explicit hypothesis; it is not inferred from the algebraic
+Continuity is an explicit property; it is not inferred from the algebraic
 Cartan identities.
 -/
 

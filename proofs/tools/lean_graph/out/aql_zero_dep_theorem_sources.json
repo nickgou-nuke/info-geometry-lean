@@ -1,0 +1,1210 @@
+[
+  {
+    "name": "B3PresentedGroup.b3_relation_holds._simp_1_10",
+    "module": "B3PresentedGroup",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "B3PresentedGroup.b3_relation_holds._simp_1_6",
+    "module": "B3PresentedGroup",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "B3PresentedGroup.b3_relation_holds._simp_1_7",
+    "module": "B3PresentedGroup",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "B3PresentedGroup.b3_relation_holds._simp_1_9",
+    "module": "B3PresentedGroup",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "BashoreLQGReportExtraction.tetrahedron_bookkeeping",
+    "module": "BashoreLQGReportExtraction",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "CantorBoundaryCuntzFamily.cuntz_partition._simp_1_1",
+    "module": "CantorBoundaryCuntzFamily",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ChiralCausalCone.causal_cone_iff_solder_det_zero",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ChiralCausalCone.chiral_decomposition_unique._simp_1_10",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ChiralCausalCone.chiral_decomposition_unique._simp_1_11",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ChiralCausalCone.chiral_decomposition_unique._simp_1_12",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ChiralCausalCone.chiral_decomposition_unique._simp_1_13",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ChiralCausalCone.chiral_decomposition_unique._simp_1_14",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ChiralCausalCone.chiral_decomposition_unique._simp_1_8",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ChiralCausalCone.chiral_decomposition_unique._simp_1_9",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ChiralCausalCone.solder_chiral_coeffs._simp_1_10",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ChiralCausalCone.solder_chiral_coeffs._simp_1_11",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ChiralCausalCone.solder_chiral_coeffs._simp_1_12",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ChiralCausalCone.solder_chiral_coeffs._simp_1_13",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ChiralCausalCone.solder_chiral_coeffs._simp_1_14",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ChiralCausalCone.solder_chiral_coeffs._simp_1_8",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ChiralCausalCone.solder_chiral_coeffs._simp_1_9",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "CuntzP6MBoundary.p6m_projective_counts",
+    "module": "CuntzP6MBoundary",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "DikinGoutevTonevBridge.dikinCoreQuadratic_eq",
+    "module": "DikinGoutevTonevBridge",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ExceptionalBraid.hermitian_doubling._simp_1_2",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ExceptionalBraid.hermitian_doubling._simp_1_3",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ExceptionalBraid.hermitian_doubling._simp_1_4",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ExceptionalBraid.hermitian_doubling._simp_1_5",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ExceptionalBraid.hermitian_doubling._simp_1_6",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ExceptionalBraid.non_hermitian_unpaired._simp_1_2",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ExceptionalBraid.non_hermitian_unpaired._simp_1_3",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ExceptionalBraid.non_hermitian_unpaired._simp_1_5",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ExceptionalBraid.non_hermitian_unpaired._simp_1_6",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ExceptionalBraid.non_hermitian_unpaired._simp_1_7",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "GoutevTonevPrinciple.algebra_linear_selfmap_determined_by_one",
+    "module": "GoutevTonevPrinciple",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "GoutevTonevPrinciple.minimal_pixel_from_information_geometry",
+    "module": "GoutevTonevPrinciple",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "GoutevTonevPrinciple.quantum_cutoff_from_information_geometry",
+    "module": "GoutevTonevPrinciple",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "GrothendieckGromovWittenYangBaxter.braid_relation_from_yang_baxter",
+    "module": "GrothendieckGromovWittenYangBaxter",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "GrothendieckGromovWittenYangBaxter.yang_baxter_from_braid_relation",
+    "module": "GrothendieckGromovWittenYangBaxter",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "JaynesLDDPGNSColimit.cut_equals_fractal_one_step",
+    "module": "JaynesLDDPGNSColimit",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "MellinWaveletScaleShiftDigest.waveletStdCore_as_freq._simp_1_1",
+    "module": "MellinWaveletScaleShiftDigest",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "MellinWaveletScaleShiftDigest.waveletStdCore_as_freq._simp_1_2",
+    "module": "MellinWaveletScaleShiftDigest",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "MellinWaveletScaleShiftDigest.waveletStdCore_as_freq._simp_1_3",
+    "module": "MellinWaveletScaleShiftDigest",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "MellinWaveletScaleShiftDigest.waveletStdCore_as_freq._simp_1_4",
+    "module": "MellinWaveletScaleShiftDigest",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "MellinWaveletScaleShiftDigest.waveletStdCore_as_freq._simp_1_5",
+    "module": "MellinWaveletScaleShiftDigest",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "MellinWaveletScaleShiftDigest.waveletStdCore_as_freq._simp_1_6",
+    "module": "MellinWaveletScaleShiftDigest",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "MellinWaveletScaleShiftDigest.waveletStdCore_as_freq._simp_1_7",
+    "module": "MellinWaveletScaleShiftDigest",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "MetamaterialQuasicrystalBloch.primon_cuntz_isometric_step",
+    "module": "MetamaterialQuasicrystalBloch",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "NonIsoConf3RankDecision.independent_alpha_flux_rank",
+    "module": "NonIsoConf3RankDecision",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "NonIsoConf3RankDecision.independent_alpha_rank",
+    "module": "NonIsoConf3RankDecision",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "NonIsoConf3RankDecision.two_flux_rank",
+    "module": "NonIsoConf3RankDecision",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "OctonionMatrixEncodings.no_faithful_assoc_rep_of_nonassoc",
+    "module": "OctonionMatrixEncodings",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "OctonionMatrixEncodings.ordinary_matrix_mul_assoc",
+    "module": "OctonionMatrixEncodings",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "PhaseConjugateVacuumMirror.glide_phase_conjugate_skeleton",
+    "module": "PhaseConjugateVacuumMirror",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SplitOctonionMinkowski.octBoostClosed_nonzero._simp_1_2",
+    "module": "SplitOctonionMinkowski",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SplitOctonionMinkowski.octBoostClosed_nonzero._simp_1_3",
+    "module": "SplitOctonionMinkowski",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SplitOctonionMinkowski.octBoostClosed_nonzero._simp_1_4",
+    "module": "SplitOctonionMinkowski",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SplitOctonionMinkowski.octBoostClosed_nonzero._simp_1_5",
+    "module": "SplitOctonionMinkowski",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SplitOctonionMinkowski.octBoostClosed_nonzero._simp_1_6",
+    "module": "SplitOctonionMinkowski",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SplitOctonionMinkowski.octBoostClosed_nonzero._simp_1_7",
+    "module": "SplitOctonionMinkowski",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SplitOctonionMinkowski.octBoostClosed_nonzero._simp_1_8",
+    "module": "SplitOctonionMinkowski",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SU3LoopBraidDuality.braid_acts_on_cuntz_via_weyl",
+    "module": "SU3LoopBraidDuality",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SU3LoopBraidDuality.braid_to_weyl_projection_socket",
+    "module": "SU3LoopBraidDuality",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature._simp_1_1",
+    "module": "SupergradedCuntzBdG",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature._simp_1_2",
+    "module": "SupergradedCuntzBdG",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature._simp_1_3",
+    "module": "SupergradedCuntzBdG",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature._simp_1_4",
+    "module": "SupergradedCuntzBdG",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature._simp_1_5",
+    "module": "SupergradedCuntzBdG",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature._simp_1_6",
+    "module": "SupergradedCuntzBdG",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature._simp_1_7",
+    "module": "SupergradedCuntzBdG",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature._simp_1_8",
+    "module": "SupergradedCuntzBdG",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "TorusKleinO55Bridge.affine_torus_to_klein_generator_witness",
+    "module": "TorusKleinO55Bridge",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "TwistedTorusVacuumMachine.twisted_torus_generator_relations",
+    "module": "TwistedTorusVacuumMachine",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "UnorientedS3KleinTQFT.bloch_modes_match_cuntz_generators",
+    "module": "UnorientedS3KleinTQFT",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "UnorientedS3KleinTQFT.chi_orthogonality_dimensions",
+    "module": "UnorientedS3KleinTQFT",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "UnorientedS3KleinTQFT.cpt_fixes_s3_center",
+    "module": "UnorientedS3KleinTQFT",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "UnorientedS3KleinTQFT.klein_bottle_partition_function_s3",
+    "module": "UnorientedS3KleinTQFT",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "UnorientedS3KleinTQFT.mobius_trace_vanishes",
+    "module": "UnorientedS3KleinTQFT",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "UnorientedS3KleinTQFT.mobius_twist_from_tkk",
+    "module": "UnorientedS3KleinTQFT",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ZornScalingFlow.diagConj_formula._simp_1_10",
+    "module": "ZornScalingFlow",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ZornScalingFlow.diagConj_formula._simp_1_11",
+    "module": "ZornScalingFlow",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ZornScalingFlow.diagConj_formula._simp_1_5",
+    "module": "ZornScalingFlow",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ZornScalingFlow.diagConj_formula._simp_1_6",
+    "module": "ZornScalingFlow",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ZornScalingFlow.diagConj_formula._simp_1_7",
+    "module": "ZornScalingFlow",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ZornScalingFlow.diagConj_formula._simp_1_8",
+    "module": "ZornScalingFlow",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "ZornScalingFlow.diagConj_formula._simp_1_9",
+    "module": "ZornScalingFlow",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_zero_dep_theorem"
+  },
+  {
+    "name": "B3PresentedGroup.b3_relation_holds._simp_1_11",
+    "module": "B3PresentedGroup",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "B3PresentedGroup.b3_relation_holds._simp_1_5",
+    "module": "B3PresentedGroup",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "B3PresentedGroup.b3_relation_holds._simp_1_8",
+    "module": "B3PresentedGroup",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "BashoreLQGReportExtraction.deficitAngle._proof_1",
+    "module": "BashoreLQGReportExtraction",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "BiquaternionLaplaceTripotent.complex_exp_ne_zero",
+    "module": "BiquaternionLaplaceTripotent",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "BuresFisherAndreevGeodesicFlow.fisher_gradient_eq",
+    "module": "BuresFisherAndreevGeodesicFlow",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "ChemicalPotentialMetricBridge.chemicalLocalVielbein._proof_1",
+    "module": "ChemicalPotentialMetricBridge",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "ChiralTensorMatrixBridge.R_chiral_matrix._proof_1",
+    "module": "ChiralTensorMatrixBridge",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "Clifford55AnomalyOSP.matrix_dim_factor",
+    "module": "Clifford55AnomalyOSP",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "ComplexStarCuntzRedesign.idComplexStarAlgHom._proof_1",
+    "module": "ComplexStarCuntzRedesign",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "ContinuumAsColimitCounting.counting_refinement_preserves_cylinder",
+    "module": "ContinuumAsColimitCounting",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "ContinuumAsColimitCounting.finite_count_observable_mem_colimit",
+    "module": "ContinuumAsColimitCounting",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "ContinuumAsColimitCounting.prefixSucc4._proof_1",
+    "module": "ContinuumAsColimitCounting",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "CStarCuntzTensorQuotient.CStarCuntzFamily.generatedCStarSubalgebra.cstar._proof_2",
+    "module": "CStarCuntzTensorQuotient",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "CStarCuntzTensorQuotient.CStarCuntzFamily.generatedCStarSubalgebra.cstar._proof_3",
+    "module": "CStarCuntzTensorQuotient",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "DoubledChargeLatticeKasparovKreinBridge.kasparov_krein_firewall",
+    "module": "DoubledChargeLatticeKasparovKreinBridge",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "EntropicChiralDeRhamDictionary.matrixTile2_slot_count",
+    "module": "EntropicChiralDeRhamDictionary",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "EuclideanNilpotentObstruction.sq_zero_eq_zero_of_noZeroDivisors",
+    "module": "EuclideanNilpotentObstruction",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "ExceptionalBraid.hermitian_doubling._simp_1_1",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "ExceptionalBraid.hermitian_doubling._simp_1_7",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "ExceptionalBraid.non_hermitian_unpaired._simp_1_1",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "ExceptionalBraid.non_hermitian_unpaired._simp_1_4",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "FureyCharges.fureyCharge._proof_1",
+    "module": "FureyCharges",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "GaugeUHFLift.prefixSucc_val_zero",
+    "module": "GaugeUHFLift",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "GoutevTonevPrinciple.leftMulLinear._proof_1",
+    "module": "GoutevTonevPrinciple",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "GoutevTonevPrinciple.leftMulLinear._proof_2",
+    "module": "GoutevTonevPrinciple",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "GoutevTonevPrinciple.rightMulLinear._proof_1",
+    "module": "GoutevTonevPrinciple",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "GoutevTonevPrinciple.rightMulLinear._proof_2",
+    "module": "GoutevTonevPrinciple",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "HestenesCuntzSpacetimeAlgebra.hestenes_poincare_group_law",
+    "module": "HestenesCuntzSpacetimeAlgebra",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "InfiniteLightConeConfColimit.instDecidableEqArityEdge.decEq._proof_1",
+    "module": "InfiniteLightConeConfColimit",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "JackiwRebbiCantorEdgeStates.boundaryZeroMode._proof_1",
+    "module": "JackiwRebbiCantorEdgeStates",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "JaynesLDDPGNSColimit.uhfDiagonalDiagram._proof_1",
+    "module": "JaynesLDDPGNSColimit",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "KasparovKreinKleinO55Kernel.o2_kasparov_krein_pairing_zero",
+    "module": "KasparovKreinKleinO55Kernel",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "KleinBrillouinRamanDynamics.pg_glide_extinction_selection_rule",
+    "module": "KleinBrillouinRamanDynamics",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "LogCFTGeneratingPotential.logGeneratingPotential_add_of_factorized",
+    "module": "LogCFTGeneratingPotential",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "MisraPrimeEntropyDigest.one_not_natPrime",
+    "module": "MisraPrimeEntropyDigest",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "O55CartanPhononReduction.cartanPhononEnergy._proof_1",
+    "module": "O55CartanPhononReduction",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "O55CartanPhononReduction.cartanPhononEnergy._proof_2",
+    "module": "O55CartanPhononReduction",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "PrimonCoarseGraining.rg_step_adds_occupation",
+    "module": "PrimonCoarseGraining",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "SolovievQPNMChiralCuntz.second_moment_decimal_gap",
+    "module": "SolovievQPNMChiralCuntz",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "SplitClifford.pos_ortho_neg._simp_1_1",
+    "module": "SplitClifford",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "ThermodynamicLorentzBoost.zeroBoost._proof_1",
+    "module": "ThermodynamicLorentzBoost",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "TopologicalMetasurfaceSupercurrent.photonicBandgapToy._proof_1",
+    "module": "TopologicalMetasurfaceSupercurrent",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "TrainsumQuanticsTensorTrainsDigest.wavelet_coeff_bound_example",
+    "module": "TrainsumQuanticsTensorTrainsDigest",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "TwistorParafermionBoundary.incidentTwistor._proof_1",
+    "module": "TwistorParafermionBoundary",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "WeylGaugeColimitWeld.transportWeylPair._proof_1",
+    "module": "WeylGaugeColimitWeld",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "YangBaxterQuotientDescent.ybe_pointwise",
+    "module": "YangBaxterQuotientDescent",
+    "kind": "theorem",
+    "incoming": 1,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "AmariChentsovFierzTorsion.potential._proof_1",
+    "module": "AmariChentsovFierzTorsion",
+    "kind": "theorem",
+    "incoming": 2,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "AmariChentsovFierzTorsion.potential._proof_2",
+    "module": "AmariChentsovFierzTorsion",
+    "kind": "theorem",
+    "incoming": 2,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "BuresInformationGeodesicFlow.fisher_curvature_inverse",
+    "module": "BuresInformationGeodesicFlow",
+    "kind": "theorem",
+    "incoming": 2,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "BuresInformationGeodesicFlow.fisher_legendre_geodesic_cost",
+    "module": "BuresInformationGeodesicFlow",
+    "kind": "theorem",
+    "incoming": 2,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "CStarCuntzTensorQuotient.CStarCuntzFamily.generatedCStarSubalgebra._proof_1",
+    "module": "CStarCuntzTensorQuotient",
+    "kind": "theorem",
+    "incoming": 2,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "CStarCuntzTensorQuotient.CStarCuntzFamily.generatedCStarSubalgebra._proof_2",
+    "module": "CStarCuntzTensorQuotient",
+    "kind": "theorem",
+    "incoming": 2,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "FureyCharges.fureyOccupationNumber._proof_1",
+    "module": "FureyCharges",
+    "kind": "theorem",
+    "incoming": 2,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "HestenesCuntzSpacetimeAlgebra.pauli_sigma1_sq",
+    "module": "HestenesCuntzSpacetimeAlgebra",
+    "kind": "theorem",
+    "incoming": 2,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "HestenesCuntzSpacetimeAlgebra.pauli_sigma2_sq",
+    "module": "HestenesCuntzSpacetimeAlgebra",
+    "kind": "theorem",
+    "incoming": 2,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "HestenesCuntzSpacetimeAlgebra.pauli_sigma3_sq",
+    "module": "HestenesCuntzSpacetimeAlgebra",
+    "kind": "theorem",
+    "incoming": 2,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "JackiwRebbiCantorEdgeStates.odd_glide_modes_extinguished",
+    "module": "JackiwRebbiCantorEdgeStates",
+    "kind": "theorem",
+    "incoming": 2,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "ParafermionIdentityRealization.cuntzFamilyLift._proof_1",
+    "module": "ParafermionIdentityRealization",
+    "kind": "theorem",
+    "incoming": 2,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "ParafermionIdentityRealization.cuntzFamilyLift._proof_2",
+    "module": "ParafermionIdentityRealization",
+    "kind": "theorem",
+    "incoming": 2,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "QuadricConf3BraidingCooperadBridge.triangle012._proof_1",
+    "module": "QuadricConf3BraidingCooperadBridge",
+    "kind": "theorem",
+    "incoming": 2,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "NonIsoConf3LogWedgeObstruction.arnoldDlogNumerator_dx0dy0._proof_1",
+    "module": "NonIsoConf3LogWedgeObstruction",
+    "kind": "theorem",
+    "incoming": 3,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "SouriauBiquaternionGaussian.tr2._proof_1",
+    "module": "SouriauBiquaternionGaussian",
+    "kind": "theorem",
+    "incoming": 3,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "ZornChiralBridge.zornToMatrix._proof_1",
+    "module": "ZornChiralBridge",
+    "kind": "theorem",
+    "incoming": 4,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "ZornParavectorNullspace.cross3._proof_1",
+    "module": "ZornParavectorNullspace",
+    "kind": "theorem",
+    "incoming": 6,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  },
+  {
+    "name": "MellinWaveletScaleShiftDigest.evenPart._proof_1",
+    "module": "MellinWaveletScaleShiftDigest",
+    "kind": "theorem",
+    "incoming": 7,
+    "outgoing": 0,
+    "graph_role": "base_zero_dep_theorem_used"
+  }
+]

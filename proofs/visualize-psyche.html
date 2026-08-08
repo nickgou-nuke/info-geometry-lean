@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Psyche: Real-Time Individuation Graph</title>
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: #0d1117; color: #c9d1d9; font-family: 'SF Mono', 'Cascadia Code', monospace; overflow: hidden; }
+    #network { width: 100vw; height: 100vh; }
+    #overlay {
+      position: absolute; top: 20px; left: 20px;
+      background: rgba(13, 17, 23, 0.85);
+      border: 1px solid #30363d;
+      padding: 20px; border-radius: 12px; z-index: 100;
+      min-width: 280px;
+      backdrop-filter: blur(8px);
+    }
+    #overlay h2 {
+      margin: 0 0 8px 0;
+      font-size: 1.1rem;
+      color: #58a6ff;
+      letter-spacing: 0.5px;
+    }
+    #overlay .subtitle {
+      font-size: 0.8rem;
+      color: #8b949e;
+      margin-bottom: 12px;
+    }
+    .legend-item { display: flex; align-items: center; margin-top: 6px; font-size: 0.85rem; }
+    .legend-item .dot {
+      width: 12px; height: 12px; border-radius: 50%;
+      margin-right: 12px; flex-shrink: 0;
+    }
+    #stats {
+      margin-top: 14px; padding-top: 12px;
+      border-top: 1px solid #21262d;
+      font-size: 0.85rem; color: #8b949e;
+      line-height: 1.5;
+    }
+    #status {
+      margin-top: 8px; font-size: 0.8rem;
+      color: #3fb950; display: flex; align-items: center;
+      gap: 6px;
+    }
+    #status .pulse { width: 8px; height: 8px; border-radius: 50%; background: #3fb950; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    #consciousCount { color: #ffd700; font-weight: bold; }
+    #totalCount { color: #58a6ff; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div id="overlay">
+    <h2>🧬 Cybernetic Individuation</h2>
+    <div class="subtitle">Real-time AI Psyche Graph</div>
+    <div class="legend-item"><div class="dot" style="background: #4a5568;"></div> The Unconscious (Raw Literature)</div>
+    <div class="legend-item"><div class="dot" style="background: #ffd700; box-shadow: 0 0 8px #ffd700;"></div> The Self (Verified Truth)</div>
+    <div class="legend-item"><div class="dot" style="background: #30363d; border: 2px dashed #4a5568;"></div> Citation / Derivation Edge</div>
+    <div id="stats">
+      Nodes: <span id="totalCount">0</span><br>
+      Conscious Truths: <span id="consciousCount">0</span>
+    </div>
+    <div id="status">
+      <span class="pulse"></span> Polling ArangoDB every 3s
+    </div>
+  </div>
+  <div id="network"></div>
+
+  <script>
+    // Configuration
+    const ARANGO_URL = 'http://localhost:8529/_db/aiclaw_rag/_api/cursor';
+    const AUTH = 'Basic ' + btoa('root:password');
+
+    const nodes = new vis.DataSet();
+    const edges = new vis.DataSet();
+    const container = document.getElementById('network');
+    const data = { nodes, edges };
+
+    const options = {
+      nodes: {
+        font: { color: '#c9d1d9', size: 12, face: 'monospace' },
+        borderWidth: 0,
+        shapeProperties: { useBorderWithImage: false },
+      },
+      edges: {
+        color: { color: '#30363d', opacity: 0.5 },
+        smooth: { type: 'continuous' },
+        arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+      },
+      physics: {
+        solver: 'barnesHut',
+        barnesHut: {
+          gravitationalConstant: -3000,
+          centralGravity: 0.3,
+          springLength: 200,
+          springConstant: 0.04,
+          damping: 0.5,
+        },
+        stabilization: { iterations: 100 },
+      },
+      interaction: {
+        hover: true,
+        tooltipDelay: 200,
+        zoomView: true,
+        dragView: true,
+      },
+    };
+
+    const network = new vis.Network(container, data, options);
+
+    async function fetchPsyche() {
+      const query = `
+        LET n = (FOR doc IN literature_nodes RETURN doc)
+        LET e = (FOR edge IN citation_edges RETURN edge)
+        RETURN { nodes: n, edges: e }
+      `;
+
+      try {
+        const res = await fetch(ARANGO_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': AUTH,
+          },
+          body: JSON.stringify({ query }),
+        });
+
+        if (!res.ok) {
+          document.getElementById('status').innerHTML = '⚠️ ArangoDB connection failed';
+          return;
+        }
+
+        const json = await res.json();
+        const graphData = json.result[0];
+        if (!graphData) return;
+
+        let consciousCount = 0;
+        const newNodeIds = new Set();
+        const newEdgeIds = new Set();
+
+        graphData.nodes.forEach(n => {
+          const isConscious = n.status === 'verified_conscious_truth';
+          if (isConscious) consciousCount++;
+
+          const nodeId = n._id || n._key;
+          newNodeIds.add(nodeId);
+
+          const nodeData = {
+            id: nodeId,
+            label: n.title || n._key || nodeId,
+            title: `<b>${n.title || nodeId}</b><br>${(n.content || '').substring(0, 200)}...<br><br><i>Status: ${n.status || 'unknown'}</i>`,
+            shape: isConscious ? 'star' : 'dot',
+            size: isConscious ? 30 : 15 + (n._relevance || 0) * 10,
+            color: {
+              background: isConscious ? '#ffd700' : '#4a5568',
+              border: isConscious ? '#ffea70' : '#2d3748',
+            },
+            shadow: isConscious
+              ? { enabled: true, color: 'rgba(255, 215, 0, 0.6)', size: 20 }
+              : false,
+            borderWidth: isConscious ? 2 : 0,
+          };
+
+          if (!nodes.get(nodeId)) {
+            nodes.add(nodeData);
+          } else {
+            nodes.update(nodeData);
+          }
+        });
+
+        graphData.edges.forEach(e => {
+          const edgeId = e._id;
+          newEdgeIds.add(edgeId);
+
+          const isDerived = e.type === 'derived_from_unconscious_literature';
+          const edgeData = {
+            id: edgeId,
+            from: e._from,
+            to: e._to,
+            color: {
+              color: isDerived ? '#ffd700' : '#30363d',
+              opacity: isDerived ? 0.8 : 0.3,
+            },
+            width: isDerived ? 2 : 1,
+            arrows: 'to',
+            title: `<b>${e.type || 'citation'}</b>`,
+            dashes: isDerived ? false : [5, 5],
+          };
+
+          if (!edges.get(edgeId)) {
+            edges.add(edgeData);
+          } else {
+            edges.update(edgeData);
+          }
+        });
+
+        // Update stats
+        document.getElementById('totalCount').textContent = graphData.nodes.length;
+        document.getElementById('consciousCount').textContent = consciousCount;
+        document.getElementById('status').innerHTML = '<span class="pulse"></span> Live — ' + new Date().toLocaleTimeString();
+
+      } catch (err) {
+        document.getElementById('status').innerHTML = '⚠️ Error: ' + err.message;
+      }
+    }
+
+    // Poll every 3 seconds
+    setInterval(fetchPsyche, 3000);
+    fetchPsyche();
+
+    // Initial empty state message
+    setTimeout(() => {
+      if (nodes.length === 0) {
+        nodes.add({
+          id: 'waiting',
+          label: 'Awaiting Knowledge...',
+          shape: 'dot',
+          size: 20,
+          color: { background: '#4a5568', border: '#2d3748' },
+        });
+      }
+    }, 1000);
+  </script>
+</body>
+</html>

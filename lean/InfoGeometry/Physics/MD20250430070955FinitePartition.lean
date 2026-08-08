@@ -10,7 +10,7 @@ Source: `github-nick:nickgou-nuke/MD`, file
 The source is a broad report on partition functions as a bridge between
 information geometry, quantum-state geometry, and spacetime geometry.  Most of
 its continuum, QFT, GR, Kähler-Fisher, and emergence claims are stated as
-background, analogy, conjecture, hypothesis, or open research program.  This
+background, analogy, conjecture, property, or open research program.  This
 file extracts the finite theorem-safe core:
 
 * a finite partition function is just a finite sum of nonzero-normalized

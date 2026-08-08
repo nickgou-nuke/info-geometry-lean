@@ -89,7 +89,7 @@ namespace HomologyFrameEquiv
 
 variable (F : HomologyFrameEquiv (E := E))
 
-/-- The inverse-frame pullback of a scalar real witness. -/
+/-- The inverse-frame pullback of a scalar real property. -/
 @[rep_depth transport]
 noncomputable def transportScalarWitness
     (φ : H₂ →L[ℝ] ℝ) : H₂ →L[ℝ] ℝ :=
@@ -195,7 +195,7 @@ theorem transportedWitness_descends_on_source_homology
     {x y : H₂}
     (hxy : HomologyEquivalent (E := E) F.Dsrc x y) :
     φ (F.U x) = φ (F.U y) := by
-  exact witness_descends_to_homologyEquivalent (E := E) hφ
+  exact property_descends_to_homologyEquivalent (E := E) hφ
     (F.maps_homologyEquivalent hxy)
 
 end HomologyFrameEquiv

@@ -221,7 +221,7 @@ end RevelationRecoveryDatum
 /-! ## 6. Constructive obstruction to Revelation -/
 
 /--
-A witness that exterior data has collapsed distinct hidden memories.
+A property that exterior data has collapsed distinct hidden memories.
 
 This is the precise obstruction to faithful Revelation-style recovery.
 -/
@@ -261,7 +261,7 @@ theorem no_faithful_recovery
 end ExteriorCollapseWitness
 
 /--
-Evaporation plus an exterior-collapse witness does not yield Revelation.
+Evaporation plus an exterior-collapse property does not yield Revelation.
 
 This is the honest replacement for the invalid slogan
 “evaporation does not imply recovery” as a bare theorem.
@@ -284,7 +284,7 @@ variable (W :
   EvaporationWithoutRecoveryWitness Time Entropy Event Obs Memory)
 
 /--
-Given a concrete exterior-collapse witness, there is no faithful recovery datum
+Given a concrete exterior-collapse property, there is no faithful recovery datum
 for the ledger.
 -/
 theorem no_faithful_recovery :
@@ -403,7 +403,7 @@ theorem pralaya_not_faithful_recovery
 
 end HiddenDistinctionWitness
 
-/-! ## 9. Outcome witness package -/
+/-! ## 9. Outcome property package -/
 
 /--
 Operational eschaton package.
@@ -423,11 +423,11 @@ structure HorizonEschatonDatum
   outcome :
     HorizonOutcome
 
-  /-- Optional revelation witness. -/
+  /-- Optional revelation property. -/
   revelation :
     Option (RevelationRecoveryDatum ledger)
 
-  /-- Optional Mahapralaya dissolution witness. -/
+  /-- Optional Mahapralaya dissolution property. -/
   pralaya :
     Option (PralayaDissolutionDatum Memory Terminal)
 
@@ -438,7 +438,7 @@ variable (E :
   HorizonEschatonDatum Time Entropy Event Obs Memory Terminal)
 
 /--
-If a revelation witness is present, hidden memory is externally decoded.
+If a revelation property is present, hidden memory is externally decoded.
 -/
 theorem revelation_recovers
     (R : RevelationRecoveryDatum E.ledger)
@@ -448,7 +448,7 @@ theorem revelation_recovers
   R.faithful_recovery e
 
 /--
-If a Pralaya witness is present, all hidden memory has the same terminal image.
+If a Pralaya property is present, all hidden memory has the same terminal image.
 -/
 theorem pralaya_collapses
     (P : PralayaDissolutionDatum Memory Terminal)
@@ -715,7 +715,7 @@ def EvaporationWithoutRecoveryOwnerTarget
   ∀ W : EvaporationWithoutRecoveryWitness Time Entropy Event Obs Memory,
     ¬ Nonempty (RevelationRecoveryDatum W.ledger)
 
-/-- Exterior collapse blocks faithful Revelation recovery for the witness ledger. -/
+/-- Exterior collapse blocks faithful Revelation recovery for the property ledger. -/
 theorem evaporationWithoutRecoveryOwnerTarget
     (Time Entropy Event Obs Memory : Type*) :
     EvaporationWithoutRecoveryOwnerTarget Time Entropy Event Obs Memory := by

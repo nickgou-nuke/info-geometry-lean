@@ -8,7 +8,7 @@ Concrete coordinate analogue of the split-complex trace-reversal determinant
 identity for `J₂(ℍ_s)`.
 
 This file proves only finite coordinate identities for the determinant packet and
-its trace-reversal witness.  It does not prove a global conformal-group theorem,
+its trace-reversal property.  It does not prove a global conformal-group theorem,
 a `Spin(3,3)` isomorphism, or an octonionic/`Spin(5,5)` statement.
 -/
 

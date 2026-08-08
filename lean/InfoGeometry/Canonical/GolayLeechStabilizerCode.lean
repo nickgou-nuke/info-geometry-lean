@@ -97,7 +97,7 @@ The genuine Construction-B/neighbor numerator carrier for the Leech lattice.
 
 This owner removes the roots present in the ordinary Construction-A lattice
 by imposing the Golay/parity congruence conditions.  Its minimum-norm-four
-theorem is deliberately not replaced by a numerical certificate.
+theorem is deliberately not replaced by a numerical property.
 -/
 abbrev leechLatticeNumerator :=
   InfoGeometry.Combinatorics.LeechLattice.numerator

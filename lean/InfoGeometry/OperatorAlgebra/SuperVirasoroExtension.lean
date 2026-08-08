@@ -93,7 +93,7 @@ Super-Virasoro extension.
 
 The chiral supercharges are represented by `genG`.
 
-The anticommutation law is kept as a proof-carrying certificate because the
+The anticommutation law is kept as a proof-carrying property because the
 index set differs between the Ramond and Neveu-Schwarz sectors.
 -/
 structure SuperVirasoroAlgebraDatum

@@ -1,0 +1,39 @@
+{
+  "D": 4,
+  "ambient_dimension": 8,
+  "inputs": {
+    "macaulay2": "non_iso_conf3_rank32.m2",
+    "sagemanifolds": "non_iso_conf3_rank32_sagemanifolds.sage",
+    "singular": "non_iso_conf3_rank32.sing"
+  },
+  "notes": "Launch artifact for external D-module audit. Replace pointwise.betti and total_rank when macaualey2/singular output is parsed into a structured JSON layer.",
+  "pointwise": {
+    "betti": [],
+    "max_degree": 0,
+    "total_rank": 0
+  },
+  "rank_decision_verifications": {
+    "betaGysinLeavesTwoIndependentFluxClasses": false,
+    "codimDataEqExpected": true,
+    "cooperadFunctorialityForResolvedModel": false,
+    "dupontModelComputesActualDeRham": false,
+    "resolvedDupontArrangementConstructed": false
+  },
+  "source": "non_iso_conf3_rank32_external_audit.py",
+  "status": "inconclusive",
+  "three_quadric_codim_data": {
+    "codimQA": 1,
+    "codimQAB": 1,
+    "codimQA_QAB": 2,
+    "codimQA_QB": 2,
+    "codimQB": 1,
+    "codimQB_QAB": 2,
+    "codimTriple": 3
+  },
+  "toolchain": {
+    "macaulay2": "missing",
+    "sage": "missing",
+    "sagemanifolds": "missing",
+    "singular": "missing"
+  }
+}

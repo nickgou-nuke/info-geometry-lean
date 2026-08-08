@@ -1,0 +1,10 @@
+R = QQ[x,y,q,dq, WeylAlgebra => {q=>dq}];
+repoCount=8; mathlibCount=1; totalSources=9; bridgeLayers=9; compatibilityEdges=11; hottBridgeRank=29;
+homotopyEquivFields=4; exactCoupleMaps=3; serrePageStart=2; serreStablePage=3; quasicategorySimplexArity=2; modelCategoryClasses=3; fibredProjectionCount=1;
+infinityBridgeSignature=homotopyEquivFields+exactCoupleMaps+serrePageStart+serreStablePage+quasicategorySimplexArity+modelCategoryClasses+fibredProjectionCount;
+assert(totalSources==9 and bridgeLayers==9 and compatibilityEdges==11 and hottBridgeRank==29 and infinityBridgeSignature==18);
+I = ideal(q*dq-dq*q-1); assert(numgens I==1);
+bridgeIdeal = ideal(totalSources*x-9*x, bridgeLayers*y-9*y, compatibilityEdges*x-11*x, infinityBridgeSignature*y-18*y);
+assert(numgens bridgeIdeal==4);
+serreIdeal = ideal(x^2, y^3); assert(numgens serreIdeal==2);
+print {"repoCount",repoCount,"mathlibCount",mathlibCount,"totalSources",totalSources,"bridgeLayers",bridgeLayers,"compatibilityEdges",compatibilityEdges,"hottBridgeRank",hottBridgeRank,"homotopyEquivFields",homotopyEquivFields,"exactCoupleMaps",exactCoupleMaps,"serrePageStart",serrePageStart,"serreStablePage",serreStablePage,"quasicategorySimplexArity",quasicategorySimplexArity,"modelCategoryClasses",modelCategoryClasses,"fibredProjectionCount",fibredProjectionCount,"infinityBridgeSignature",infinityBridgeSignature,"dmoduleCCRGenerators",numgens I,"bridgeIdealGenerators",numgens bridgeIdeal,"serreIdealGenerators",numgens serreIdeal};

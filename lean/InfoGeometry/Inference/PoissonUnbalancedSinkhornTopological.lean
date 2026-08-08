@@ -4,7 +4,7 @@ import Mathlib.Topology.ContinuousMap.Basic
 /-!
 # Topological finite objective for unbalanced Poisson transport
 
-The transport certificate and its row/column data are finite.  This file adds
+The transport property and its row/column data are finite.  This file adds
 the native topological readout in the three scalar penalty parameters.  It
 does not assert convergence of Sinkhorn iteration or a continuum transport
 theorem.

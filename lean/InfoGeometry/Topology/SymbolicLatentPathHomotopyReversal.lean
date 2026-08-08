@@ -8,7 +8,7 @@ namespace InfoGeometry.Topology
 # Reversal of endpoint-preserving symbolic-latent homotopies
 
 Reversal acts on the homotopy parameter and leaves the path parameter fixed.
-The endpoint conditions needed for the reversed witness follow from the
+The endpoint conditions needed for the reversed property follow from the
 homotopy's existing endpoint-invariance lemmas.
 -/
 

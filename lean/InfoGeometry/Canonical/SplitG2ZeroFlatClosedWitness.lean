@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.SplitG2GaugeHodgeCurvatureBridge
 namespace InfoGeometry.Canonical
 
 /-!
-# Zero flat/closed witness
+# Zero flat/closed property
 
 This is a concrete anchor model for the cellular DAG.  It uses identity edge
 transport, empty face boundaries, and zero cochains.  It proves that the

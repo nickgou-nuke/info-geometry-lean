@@ -17,8 +17,8 @@ and the quadratic readout `t² - x² - z²`.
 No AdS/CFT theorem.
 No holographic isomorphism.
 No black-hole horizon theorem.
-No proof-carrying witness class.
-No axiom.
+No proof-carrying property class.
+No ax!om.
 -/
 
 namespace InfoGeometry.Projective.Quadrics.MonomialBulk2x2

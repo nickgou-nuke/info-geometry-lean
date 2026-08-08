@@ -32,7 +32,7 @@ This is the finite optical audit:
   visible absorption = hidden environment gain.
 
 This file does not claim an arbitrary lossy Jones channel and does not claim a
-full 4x4 unitary dilation unless such a theorem/certificate is supplied
+full 4x4 unitary dilation unless such a theorem/property is supplied
 separately.
 -/
 
@@ -265,7 +265,7 @@ Explicit Julia/Halmos dilation:
 for the constructive visible/hidden pair.
 
 This definition only constructs the block matrix. Full `4 x 4` unitarity is
-not claimed here unless a separate theorem/certificate is supplied.
+not claimed here unless a separate theorem/property is supplied.
 -/
 def juliaBlockMatrix
     (D : ConstructiveJonesStinespring) : DilatedJonesMat
@@ -279,7 +279,7 @@ def juliaBlockMatrix
       D.Rᴴ i j
 
 /--
-Deprecated/safe alias: this is only a block matrix, not a certified unitary
+Deprecated/safe alias: this is only a block matrix, not a property unitary
 dilation unless a separate unitarity theorem is supplied.
 -/
 abbrev juliaDilation :=

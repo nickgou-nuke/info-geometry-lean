@@ -265,7 +265,7 @@ theorem flux_eq_zero_of_observed_eq
 
 end RicciFluxReadout
 
-/-! ## 5. Hidden-sector inertia as a hypothesis, not an identification -/
+/-! ## 5. Hidden-sector inertia as a property, not an identification -/
 
 /--
 A dark/hidden-sector inertia readout for the positive TKK grade.

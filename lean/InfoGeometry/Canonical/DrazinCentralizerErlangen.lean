@@ -280,7 +280,7 @@ def IsStateRelativeWittenBalanced
 Final expectation-only Drazin/Fierz centralizer law.
 
 The field `residual_vanishes` is explicitly supplied.  This prevents
-laundering a Fierz identity through the centralizer hypothesis alone.
+laundering a Fierz identity through the centralizer property alone.
 -/
 @[rep_depth operator]
 structure DrazinCentralizerFierzLaw

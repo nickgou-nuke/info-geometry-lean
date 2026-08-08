@@ -12,7 +12,7 @@ Riemann Zeta function analytic continuation from the finite, algebraic CAR
 and Pfaffian structures.
 
 The core physics slogan is preserved:
-"zeta zeros as Majorana zero modes" is a physical spectral hypothesis, 
+"zeta zeros as Majorana zero modes" is a physical spectral property, 
 not a theorem, until a self-adjoint real operator and analytic Pfaffian 
 determinant identity are fully constructed.
 -/
@@ -26,7 +26,7 @@ open scoped BigOperators
 /--
 Witness for the infinite Euler product evaluating to $1/\zeta(s)$.
 This is an external analytic fact, explicitly gated here as a structural
-assumption so it does not pollute the algebraic layers.
+property so it does not pollute the algebraic layers.
 -/
 structure InfiniteEulerProductWitness (s : ℂ) where
   /-- Finite Euler-product readouts indexed by the cutoff. -/
@@ -49,7 +49,7 @@ structure InfiniteEulerProductWitness (s : ℂ) where
 /--
 Analytic Spectral Hypothesis: Zeta zeros correspond to Majorana zero modes.
 This is the ultimate target of the thermodynamic bridge, maintained here
-as an unproved physical hypothesis pending the infinite-dimensional Pfaffian.
+as an unproved physical property pending the infinite-dimensional Pfaffian.
 -/
 structure MajoranaZeroModeHypothesis
     (s : ℂ) (H : Type*)

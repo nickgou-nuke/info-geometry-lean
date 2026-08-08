@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.SouriauThermalEvaluation
 
 Quarantine module for Macdonald/q-character, Weyl-Kac, Borcherds, and
 non-equilibrium Souriau deformation language.  It records that a deformation
-parameter may be compared with thermal evaluation only through explicit witness
+parameter may be compared with thermal evaluation only through explicit property
 data; no global identification `q = e^{-β}` is made here.
 -/
 
@@ -28,7 +28,7 @@ def q_in_deformationDomain (W : DeformationParameter) :
 
 end DeformationParameter
 
-/-- Explicit witness connecting a deformation parameter to a chosen thermal map. -/
+/-- Explicit property connecting a deformation parameter to a chosen thermal map. -/
 @[rep_depth thermo]
 def DeformationParameterWitness :=
   {x : ℝ × (ℝ × Set ℝ) //
@@ -53,7 +53,7 @@ def thermalParameter_in_deformationDomain (W : DeformationParameterWitness) :
 
 end DeformationParameterWitness
 
-/-- Packet for a deformed character layer, gated by a deformation witness. -/
+/-- Packet for a deformed character layer, gated by a deformation property. -/
 @[rep_depth thermo]
 def DeformedCharacterWitness :=
   {x : ℝ × (ℝ × DeformationParameterWitness) // x.1 = x.2.1}
@@ -88,15 +88,15 @@ structure SeparatedDeformationWitness where
   thermal : ThermalEvaluationMap
   separated : deformation.q = thermal.thermalParameter
 
-/-- Identification of `q` with a thermal parameter is available only from witness data. -/
+/-- Identification of `q` with a thermal parameter is available only from property data. -/
 @[rep_depth thermo]
-theorem q_identification_from_witness
+theorem q_identification_from_property
     (W : DeformationParameterWitness) :
     W.q = W.thermalParameter :=
   W.q_eq_thermalParameter
 
 @[rep_depth thermo]
-theorem q_identified_with_thermal_parameter_from_witness
+theorem q_identified_with_thermal_parameter_from_property
     (W : DeformationParameterWitness) :
     W.q = W.thermalParameter :=
   W.q_eq_thermalParameter

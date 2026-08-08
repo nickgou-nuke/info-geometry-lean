@@ -12,9 +12,9 @@ variable (c : CertifiedModularReduction (E := H₂))
 local notation "EndH" => H₂ →L[ℝ] H₂
 
 /--
-Owner obstruction `χ` for holonomy/curvature on the certified lane.
+Owner obstruction `χ` for holonomy/curvature on the property lane.
 
-This is the certified spectral/metric anomaly, not the ambient commutator
+This is the property spectral/metric anomaly, not the ambient commutator
 `[Kambient, Preg]` (which is structurally zero on the support-compressed lane).
 -/
 @[rep_depth operator]

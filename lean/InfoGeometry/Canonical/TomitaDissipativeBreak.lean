@@ -203,7 +203,7 @@ theorem pMinus_not_idempotent : mul pMinus pMinus ≠ pMinus := by
 
 /--
 Proof-directed channel classifier for the parabolic dual-number model.
-Supplying a square-zero witness classifies the carrier as `Parabolic`.
+Supplying a square-zero property classifies the carrier as `Parabolic`.
 -/
 def channelOfNilpotent (V : ParabolicOperator) (_h : mul V V = ⟨0, 0⟩) : ChiralChannel :=
   ChiralChannel.Parabolic
@@ -251,7 +251,7 @@ theorem square_zero_iff_scalar_zero (V : ParabolicOperator) :
 
 /--
 Concrete photonic contraction packet:
-an operator carrier together with a square-zero witness.
+an operator carrier together with a square-zero property.
 -/
 structure PhotonicParabolicPacket where
   Ω : ParabolicOperator

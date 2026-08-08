@@ -31,7 +31,7 @@ generic semiring.
 #### BUCKET 3: OPEN CLOSURE DEBT
 
 No domain theorem, self-adjointness theorem, pseudo-Hermitian metric theorem,
-completeness theorem, or Riemann-hypothesis implication is proved here. The
+completeness theorem, or Riemann-property implication is proved here. The
 paper itself treats those analytic operator-theoretic points as the hard
 closure problem.
 -/

@@ -15,7 +15,7 @@ set_option linter.unusedVariables false
 This module reformulates parts of the Lee--Yang / LogCFT proof plan within the
 **categorical filtered direct/inductive colimit and inverse-limit framework**.
 It proves native algebraic facts only; analytic continuation, meromorphic
-continuation, and the Riemann hypothesis are not proved here.
+continuation, and the Riemann property are not proved here.
 
 1. **Multiaffine Support & Separate Affine Direct System**:
    degree-one monomial bounds imply separate linearity in each variable.

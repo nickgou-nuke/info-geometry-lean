@@ -109,7 +109,7 @@ theorem brewsterMatrix_eq_s_core
 /--
 A constructive Brewster collapse event.
 
-No `Prop` certificate is needed for trace/determinant collapse; those are
+No `Prop` property is needed for trace/determinant collapse; those are
 proved theorems from the matrix definition.
 -/
 abbrev ConstructiveBrewsterCollapse := ℂ

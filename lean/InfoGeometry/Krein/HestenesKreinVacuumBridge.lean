@@ -27,7 +27,7 @@ Vacuum vector socket for the Hestenes/Krein real KMS packet.
 
 This file does not prove a global Haagerup--Araki standard-form uniqueness
 statement.  The cyclic/separating/uniqueness content remains an explicit
-certificate supplied by the Hestenes--Krein owner.  Locally, this bridge proves
+property supplied by the Hestenes--Krein owner.  Locally, this bridge proves
 the Krein readbacks that follow from the supplied witnesses.
 -/
 @[rep_depth krein]

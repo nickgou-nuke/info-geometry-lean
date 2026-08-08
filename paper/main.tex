@@ -1,0 +1,66 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\input{macros}
+
+\title{
+Hyperbolic Spectral Projectors and the Quaternionic Polar Chart on Split Octonions:
+A Formally Verified Framework in Lean 4
+}
+
+\author{Nikolay Goutev \and Dimitar Tonev}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We formalize a rigorous hyperbolic spectral framework on the split octonions in Lean 4.
+By utilizing a quaternionic-hyperbolic polar chart on the invertible sectors, we define the radial coordinate $\rho$ and rapidity $\eta$, and extract a canonical pure-imaginary generator $J_g$. We formally verify the global polar decomposition $X = \rho(u, 0) e^{\eta J_g}$ using exact algebraic identities, completely avoiding $C^*$-algebra approximations. We further extend this to construct twin-wave spectral projectors $p_\pm = \frac{1}{2}(1 \pm J_g)$ that capture the reciprocal spectral sheets, and we establish the bridging relations between the hyperbolic and elliptic structures.
+
+Our framework strictly adheres to native mathlib structures, employing pure algebraic proofs and discarding any legacy witness-based axioms. This solidifies the foundational geometry required for the algebraic treatment of topological quantum field theories and operator algebras.
+\end{abstract}
+
+\section*{Claim Hierarchy and Verification Status}
+To maintain a strict separation between formally verified facts and mathematical hypotheses, every core statement in this manuscript is assigned to one of four verification classes. The classification is summarized in Table~\ref{tab:claim_hierarchy}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{llp{7cm}}
+\toprule
+\textbf{Class} & \textbf{Meaning} & \textbf{Current Status in Repository} \\
+\midrule
+\textbf{Theorem} & Compiled Lean theorem with published \texttt{\#print axioms} output. & Quaternionic polar chart \texttt{polar\_decomposition} (verified), $J_g^2 = 1$ property (verified), Twin-wave projectors (pending). \\
+\textbf{Implementation invariant} & Enforced and regression-tested. & Pure mathlib import paths, absence of \texttt{sorry} and witness gaps. \\
+\textbf{Benchmark claim} & Supported by reproducible log metrics. & Lean 4 kernel compilation times and exact term sizes. \\
+\textbf{Mathematical hypothesis} & Standard unverified assumption. & Extensions to infinite-dimensional Tomita modular conjugations via $L^2(\mathrm{Cl}^+(1,3))$. \\
+\bottomrule
+\end{tabular}
+\caption{Classification of manuscript claims by verification standard.}
+\label{tab:claim_hierarchy}
+\end{table}
+\input{sections/01_introduction}
+\input{sections/02_cmos_quasideviance}
+\input{sections/03_mixed_bregman_geometry}
+\input{sections/04_recurrent_estimator}
+\input{sections/05_formal_verification}
+\input{sections/06_implementation}
+\input{sections/07_experiments}
+\input{sections/08_limitations}
+\input{sections/09_conclusion}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\appendix
+\section{Artifacts}
+\input{artifacts/theorem_status}
+\input{artifacts/benchmark_environment}
+\input{artifacts/reproducibility_manifest}
+
+\end{document}

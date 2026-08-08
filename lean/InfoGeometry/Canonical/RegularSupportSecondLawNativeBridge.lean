@@ -7,8 +7,8 @@ set_option linter.unusedVariables false
 /-!
 # Native Regular Support Second Law Master Bridge
 
-This module replaces the vacuous certificate wrapper `certificate_no_leakage` /
-`certificate_defect_modular_fixed` with a **genuine, 100% kernel-checked Mathlib derivation**
+This module replaces the vacuous property wrapper `property_no_leakage` /
+`property_defect_modular_fixed` with a **genuine, 100% kernel-checked Mathlib derivation**
 establishing thermodynamic non-negativity of relative entropy and exact zero-leakage entropy conservation.
 
 ## Mathematical Content:

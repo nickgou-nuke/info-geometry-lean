@@ -23,7 +23,7 @@ ferromagnetic facts:
 
 It also defines a finite Ising Hamiltonian with external field/fugacity
 readout. The actual Lee--Yang circle theorem for the resulting partition
-polynomial is deliberately a witness socket; this file does not prove
+polynomial is deliberately a property socket; this file does not prove
 Lee--Yang stability, analytic continuation of `xi`, or RH.
 -/
 
@@ -475,7 +475,7 @@ that uses it.
 -/
 @[socket_debt_tag]
 structure LeeYangStabilityWitness where
-  /-- The finite chain whose partition polynomial is being certified. -/
+  /-- The finite chain whose partition polynomial is being property. -/
   chain : PrimeFerromagneticChain n
   partitionPolynomial : Polynomial ℂ
   fieldToFugacity : (Fin n → ℝ) → ℂ

@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 /-!
 # Spectral thermal normalization: owner exports
 
-The former version of this module stored analytic claims as `Type*` witness
+The former version of this module stored analytic claims as `Type*` property
 fields.  Such fields do not state, and cannot prove, a normalization identity,
 a KMS condition, or a Type-III modular theorem.  The native owner is
 `Canonical.SouriauOperatorialLogPotential`: it keeps the statewise logarithmic

@@ -139,7 +139,7 @@ KMS adapter for a Hestenes/Krein natural-cone readout.
 
 The geometric real readout and the complex KMS state are connected by an
 explicit theorem owner below.  The analytic strip condition remains the
-existing `OperatorThermodynamics.KMSState` certificate.
+existing `OperatorThermodynamics.KMSState` property.
 -/
 @[rep_depth krein]
 structure HestenesKreinNaturalConeKMSBridge where
@@ -157,7 +157,7 @@ structure HestenesKreinNaturalConeKMSBridge where
   /-- Inverse temperature. -/
   beta : ℝ
 
-  /-- Existing complex KMS state/certificate. -/
+  /-- Existing complex KMS state/property. -/
   kms : KMSState Op flow beta
 
   /-- The selected state is calibrated to the vacuum vector `Ω`. -/
@@ -230,7 +230,7 @@ end KMS
 /--
 Vector-side flow carrier with a supplied Krein-isometry law.
 
-This is the correct hypothesis surface for null-cone preservation; it is not
+This is the correct property surface for null-cone preservation; it is not
 derived from an operator flow or from `K² = -1`.
 -/
 @[rep_depth krein]

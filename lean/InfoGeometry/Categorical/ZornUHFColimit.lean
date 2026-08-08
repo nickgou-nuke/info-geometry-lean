@@ -267,11 +267,15 @@ def colimitProduct (x y : ZornColimit) : ZornColimit := colimitMul (x ⊗ₜ[ℂ
 
 theorem colimitProduct_add_left (x y z : ZornColimit) :
     colimitProduct (x + y) z = colimitProduct x z + colimitProduct y z := by
-  simp [colimitProduct, TensorProduct.add_tmul]
+  unfold colimitProduct
+  rw [TensorProduct.add_tmul]
+  exact colimitMul.hom.map_add (x ⊗ₜ[ℂ] z) (y ⊗ₜ[ℂ] z)
 
 theorem colimitProduct_add_right (x y z : ZornColimit) :
     colimitProduct x (y + z) = colimitProduct x y + colimitProduct x z := by
-  simp [colimitProduct, TensorProduct.tmul_add]
+  unfold colimitProduct
+  rw [TensorProduct.tmul_add]
+  exact colimitMul.hom.map_add (x ⊗ₜ[ℂ] y) (x ⊗ₜ[ℂ] z)
 
 theorem colimitProduct_smul_left (c : ℂ) (x y : ZornColimit) :
     colimitProduct (c • x) y = c • colimitProduct x y := by

@@ -16,15 +16,15 @@ This file consumes:
 * `BoundedModularFlowCalibration`, which calibrates an external flow against
   the bounded surrogate action;
 * `OperatorThermodynamics.KMSState`, which carries the analytic KMS boundary
-  condition as explicit witness data.
+  condition as explicit property data.
 
 No analytic strip theorem is proved here. The KMS boundary condition remains a
-certificate supplied by the model.
+property supplied by the model.
 
 The purpose is to read back:
 
 * invariance of the KMS state under the bounded calibrated flow;
-* availability of the KMS analytic boundary certificate;
+* availability of the KMS analytic boundary property;
 * compatibility of the bounded flow with `KsurAction`.
 -/
 

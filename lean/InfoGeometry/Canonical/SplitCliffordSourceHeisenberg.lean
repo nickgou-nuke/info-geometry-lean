@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.SplitCliffordSourceCurrentWick
 # InfoGeometry.Canonical.SplitCliffordSourceHeisenberg
 
 Strict packaging from proved endomorphism-valued current laws to the existing
-split Heisenberg witness.
+split Heisenberg property.
 
 This file introduces no pseudo-closure surfaces.
 -/
@@ -21,7 +21,7 @@ open InfoGeometry.Canonical.SplitCliffordSourceCurrent
 
 /--
 Bundle a proved endomorphism-valued current family into the split Heisenberg
-bridge witness.
+bridge property.
 -/
 def packagedHeisenbergWitness
     {𝕜 V : Type*} [Field 𝕜] [CharZero 𝕜]
@@ -36,7 +36,7 @@ def packagedHeisenbergWitness
 
 /--
 `truncLift`: extract eventual truncation from the concrete charged-Fock source
-current witness.
+current property.
 -/
 theorem truncLift_of_represented_current
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
@@ -50,7 +50,7 @@ theorem truncLift_of_represented_current
 
 /--
 `wickLift`: extract the endomorphism-valued Wick/Heisenberg commutator law
-from the concrete charged-Fock source current witness.
+from the concrete charged-Fock source current property.
 -/
 theorem wickLift_of_represented_current
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
@@ -63,7 +63,7 @@ theorem wickLift_of_represented_current
   exact ⟨J, hwick⟩
 
 /--
-Strict witness packaging theorem: the concrete charged-Fock current family
+Strict property packaging theorem: the concrete charged-Fock current family
 provides a `SplitCliffordHeisenbergWitness` without any extra closure surface.
 -/
 theorem strictWitness_of_represented_current

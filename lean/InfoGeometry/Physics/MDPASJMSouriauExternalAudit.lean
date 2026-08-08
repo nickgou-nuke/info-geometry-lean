@@ -129,8 +129,8 @@ theorem observed_timeout_audit_packet :
   · simp [Verified, observedFullDerhamAudit]
   · simp [Verified, observedDlocalizeExtAudit]
 
-/-- Any verified external certificate carries its rank arithmetic by projection. -/
-theorem verified_certificate_rank_readback
+/-- Any verified external property carries its rank arithmetic by projection. -/
+theorem verified_property_rank_readback
     (data : ExternalDeRhamAuditData)
     (hconsistent : RankDataConsistent data) :
     ∃ bVals : List ℕ,

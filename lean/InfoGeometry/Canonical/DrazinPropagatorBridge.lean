@@ -26,7 +26,7 @@ theorem drazin_propagator_commutes
     A * G = G * A :=
   hG.comm
 
-/-- The generalized inverse law supplied by the Drazin witness. -/
+/-- The generalized inverse law supplied by the Drazin property. -/
 theorem drazin_propagator_reverse_identity
     (A G : Module.End ℝ V)
     (hG : IsDrazinInverse A G 1) :
@@ -41,7 +41,7 @@ theorem differential_square_propagator_identity
     (𝒟.D.comp 𝒟.D) * G * (𝒟.D.comp 𝒟.D) = 𝒟.D.comp 𝒟.D := by
   exact drazin_propagator_identity _ _ hG
 
-/-- The chain-complex square has the canonical zero Drazin witness.  This is
+/-- The chain-complex square has the canonical zero Drazin property.  This is
 the degenerate finite case forced by `RealDifferential.D_sq_zero`; it is not a
 claim about an analytic inverse on a nonzero Laplacian. -/
 theorem realDifferential_square_zero_drazin

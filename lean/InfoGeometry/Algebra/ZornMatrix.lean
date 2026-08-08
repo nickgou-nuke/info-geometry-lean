@@ -579,8 +579,8 @@ theorem U_one_mul_U_zero :
       simp [U, V, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
   · simp [U, V, Vec3.basis, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul]
 
-/-- A concrete associator witness: the Zorn product is not associative. --/
-theorem nonassociative_witness [Nontrivial R] :
+/-- A concrete associator property: the Zorn product is not associative. --/
+theorem nonassociative_property [Nontrivial R] :
     ((U 0 : ZornMatrix R) * U 1) * U 2 ≠ U 0 * (U 1 * U 2) := by
   intro h
   have hleft : ((U 0 : ZornMatrix R) * U 1) * U 2 = E22 := by

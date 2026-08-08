@@ -82,7 +82,7 @@ noncomputable def operatorZetaRegularizedLogDet
 /--
 Right-composition additivity for the operatorial zeta log-determinant.
 
-No commutativity assumption is imposed on `L` and `K`; composition is the
+No commutativity property is imposed on `L` and `K`; composition is the
 ambient (potentially noncommutative) operator product.  The logarithmic split
 requires explicit nondegeneracy of the scaled and right factors.
 -/

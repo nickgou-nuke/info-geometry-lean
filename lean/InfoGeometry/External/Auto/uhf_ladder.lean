@@ -6,7 +6,7 @@ open Matrix
 # UHF/CAR Ladder Seed
 
 This file keeps the ladder finite and checkable: the Clifford seed is the
-real Pauli model of `Cl(1,1)`, and the UHF levels are certified by their
+real Pauli model of `Cl(1,1)`, and the UHF levels are property by their
 matrix sizes `2^n`.
 -/
 

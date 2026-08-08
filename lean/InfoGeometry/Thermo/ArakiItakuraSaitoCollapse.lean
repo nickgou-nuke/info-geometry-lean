@@ -20,7 +20,7 @@ open InfoGeometry.Prequantum.GNSBridge
 open InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
 
 /--
-GNS-restricted noncommutative operator collapse witness.
+GNS-restricted noncommutative operator collapse property.
 
 The canonical Araki/Itakura--Saito collapse lives in the owner module; this
 wrapper records that the same operatorial Bregman readout is seen through a

@@ -6,7 +6,7 @@ set_option linter.unusedSectionVars false
 # KL–Bregman Bridge (Finite Exponential Family)
 
 Algebraic bridge between parameterized KL divergence and Bregman divergence
-of the log-partition potential, with a derivative-mean compatibility hypothesis.
+of the log-partition potential, with a derivative-mean compatibility property.
 -/
 
 namespace InfoGeometry.ExponentialFamily

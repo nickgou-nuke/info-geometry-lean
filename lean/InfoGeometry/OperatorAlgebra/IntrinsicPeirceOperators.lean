@@ -16,6 +16,8 @@ collapsing them to elements of the ambient algebra.
 
 namespace InfoGeometry.OperatorAlgebra
 
+namespace IntrinsicPeirceOperators
+
 variable {R A : Type*}
 variable [Field R] [NeZero (2 : R)] [NonUnitalNonAssocRing A] [Module R A]
 
@@ -102,5 +104,7 @@ theorem leftActionDefect_apply (a b x : A) :
     intrinsicCommutator, associator]
   rw [sub_mul]
   abel
+
+end IntrinsicPeirceOperators
 
 end InfoGeometry.OperatorAlgebra

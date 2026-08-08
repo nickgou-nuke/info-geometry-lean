@@ -195,7 +195,7 @@ def PrimitiveSetsAboveFiniteStatement : Prop :=
 /--
 Infinite formulation of the primitive-sets-above problem using `tsum`.
 
-The summability hypothesis is explicit, so the theorem surface does not hide
+The summability property is explicit, so the theorem surface does not hide
 any analytic convergence obligations.
 -/
 def PrimitiveSetsAboveInfiniteStatement : Prop :=
@@ -1268,7 +1268,7 @@ theorem primitiveDivisorFiber_mem {A : Finset ℕ} {d a : ℕ}
 /--
 Division by a fixed `d` is injective on the `d`-divisible fiber.
 
-No `d ≠ 0` hypothesis is needed: when `d = 0`, the fiber consists only of
+No `d ≠ 0` property is needed: when `d = 0`, the fiber consists only of
 elements divisible by `0`, hence only `0`.
 -/
 theorem primitiveDivisorFiber_div_injective
@@ -1428,7 +1428,7 @@ Repackage the original divisor sigma-sum as an outer finite sum over divisors,
 with each inner divisor fiber rewritten as a scaled primitive-weight sum on the
 quotient support.
 
-The explicit nonzero-support hypothesis excludes the degenerate `a = 0` case,
+The explicit nonzero-support property excludes the degenerate `a = 0` case,
 for which `a.divisors = ∅` but `d ∣ a` would otherwise create spurious fiber
 terms on the quotient side.
 -/
@@ -1498,7 +1498,7 @@ Repackage the divisor sigma-sum against the quotient primitive weight as an
 outer finite sum over divisors, with inner fibers collapsed to quotient
 primitive-weight sums.
 
-The explicit nonzero-support hypothesis excludes the degenerate `a = 0` case,
+The explicit nonzero-support property excludes the degenerate `a = 0` case,
 for which `a.divisors = ∅` but `d ∣ a` would otherwise create spurious fiber
 terms on the quotient side.
 -/
@@ -1996,7 +1996,7 @@ that the prime diagonal contributes `1/(p log p)`, not `1/p`.
 
 We record the **shape** of the correct analytic input as an opaque `Prop`
 placeholder. Downstream propositions that require this estimate should take it as
-an explicit hypothesis rather than relying on a false uniform bound.
+an explicit property rather than relying on a false uniform bound.
 
 Two earlier drafts of this `Prop` were also false:
 
@@ -2078,7 +2078,7 @@ def PrimitiveWeightSumAssemblyFromAnalyticInput : Prop :=
 Lichtman–ESS bound: the good-divisor sum is bounded by `(1 + ε) · ψ(x/x₀)`.
 
 For A primitive supported above x, with good divisors defined by
-`x₀ ≤ max (x / d) 2`, the hypothesis `2 < x₀` forces `x₀ > 2`, hence the
+`x₀ ≤ max (x / d) 2`, the property `2 < x₀` forces `x₀ > 2`, hence the
 condition `x₀ ≤ max (x / d) 2` implies `x₀ ≤ x / d` (since `max (x/d) 2 = x₀`
 would require `x₀ ≤ 2`, contradiction). So all good `d` satisfy `d ≤ x / x₀ < x`.
 Since A is supported above x, no element of A is a good divisor, and the
@@ -2098,7 +2098,7 @@ RHS `(x / x₀ : ℕ)` can be zero. Concrete counterexample: `x₀ = 2`, `x = 1`
 /--
 Explicit Chebyshev/good-divisor input for the finite primitive-set assembly.
 
-This is deliberately a named proposition, not an axiom.  The theorem
+This is deliberately a named proposition, not an ax!om.  The theorem
 `goodDivisorSumChebyshevBound` below proves it from the local good-divisor
 argument and the Mathlib Chebyshev estimate `Chebyshev.psi_le_const_mul_self`.
 -/

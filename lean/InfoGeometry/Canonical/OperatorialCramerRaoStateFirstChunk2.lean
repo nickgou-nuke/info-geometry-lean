@@ -12,7 +12,7 @@ Chunk-2 translation of the state-first/type-III doctrine into repo-native Lean.
 
 This file adds:
 
-1. an explicit commutation interface on the certified spectral projector lane,
+1. an explicit commutation interface on the property spectral projector lane,
 2. extraction of split/supercharge clauses from that interface,
 3. apex-zero degeneration to the active block,
 4. a state-first package combining apex-zero active-only split with the
@@ -40,7 +40,7 @@ noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
 
 /--
 Explicit commutation interface for Chunk-2:
-the transport representative commutes with the certified spectral projector.
+the transport representative commutes with the property spectral projector.
 -/
 @[rep_depth transport]
 structure StateFirstCommutationInterface
@@ -74,7 +74,7 @@ theorem stateFirstCommutationInterface_of_wedgeCalibrated
       (E := E) (CIK := CIK) (W := W) C τ |>.symm
 
 /--
-From one explicit commutation witness, recover the projector-compressed split
+From one explicit commutation property, recover the projector-compressed split
 and the supercharge closure clause.
 -/
 @[rep_depth transport, capstone]
@@ -101,7 +101,7 @@ theorem modularSplit_and_supercharge_of_commutationInterface
 
 /--
 Apex-zero degeneration:
-if the certified apex projector vanishes, the split collapses to the active
+if the property apex projector vanishes, the split collapses to the active
 projector block.
 -/
 @[rep_depth transport, capstone]

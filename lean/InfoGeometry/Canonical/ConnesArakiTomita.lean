@@ -8,7 +8,7 @@ import InfoGeometry.Canonical.TomitaTakesaki
 Tomita-specialized Connes-Araki endpoints over the generic core carrier.
 
 This lane is owner-facing and diagnostic-oriented: it reuses the generic
-Connes-Araki core plus the Tomita flow-unit cocycle witness, while keeping the
+Connes-Araki core plus the Tomita flow-unit cocycle property, while keeping the
 finite diagonal branch as a readout/diagnostic projection.
 
 The finite diagonal outputs are explicit shadow diagnostics induced by chosen
@@ -229,7 +229,7 @@ theorem tomitaUnitConnesAraki_flowUnitCocycle_shadow_readout_eq_one
     (1 : AlgebraEnd H) := by
   simpa using (tomitaUnitConnesAraki_flowUnitCocycle_shadow_eq_one (H := H) t)
 
-/-- Canonical Connes-cocycle witness for the Tomita flow-unit lane. -/
+/-- Canonical Connes-cocycle property for the Tomita flow-unit lane. -/
 theorem tomitaUnitConnesAraki_flowUnitCocycle_cocycle :
     IsConnesCocycle
       (TomitaTakesaki.modularSignAdditiveModularFlow (E := H))
@@ -478,7 +478,7 @@ theorem abs_squeezingLogShear_le_of_abs_time_le_tomitaArakiRelativeEntropyDrop
 
 /--
 Carrier-completing endpoint: Tomita-specialized Connes-Araki data gives the
-trajectorywise Bekenstein bound, while a thermal KMS-like hypothesis for the
+trajectorywise Bekenstein bound, while a thermal KMS-like property for the
 modular-sign generator is re-expressed directly in the Tomita modular-flow
 language used by the Connes-Araki carrier.
 -/
@@ -507,7 +507,7 @@ theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
 
 /--
 Owner-name form of the Tomita-specialized Bekenstein/KMS endpoint: the KMS
-assumption is stated directly on the root modular-sign operator `spectral_epsilon`.
+property is stated directly on the root modular-sign operator `spectral_epsilon`.
 -/
 theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData_root
     (D : TomitaConnesArakiData (H := H) u T)
@@ -531,7 +531,7 @@ theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaConnesArakiData
 
 /--
 Unit-cocycle specialization of the Tomita endpoint:
-the cocycle lane is fixed to the welded flow-unit cocycle witness.
+the cocycle lane is fixed to the welded flow-unit cocycle property.
 -/
 theorem topologicalBekensteinBound_and_tomitaModularKMS_of_tomitaUnitConnesArakiData
     (D : TomitaUnitConnesArakiData (H := H) T)

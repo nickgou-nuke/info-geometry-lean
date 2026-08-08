@@ -47,7 +47,7 @@ local instance : IsScalarTower ℝ EndH EndH := inferInstance
 /--
 Self-dual Rindler wedge package in the real standard-form lane.
 
-This collects the existing `R ↔ L` exchange witness together with the
+This collects the existing `R ↔ L` exchange property together with the
 wedge/boost calibration packet.  It does not assert any extra analytic
 hypotheses beyond the owner surfaces already present in the repo.
 -/
@@ -93,7 +93,7 @@ theorem modular_flow_at_wedgeParameter (τ : ℝ) :
 end SelfDualRindlerWedge
 
 /--
-Chiral Cartan package on the certified inverse-kernel lane.
+Chiral Cartan package on the property inverse-kernel lane.
 
 This does not create a new Cartan decomposition; it exposes the existing
 compact/noncompact closure laws under a chiral-oriented name.
@@ -144,7 +144,7 @@ theorem compact_commutator_with_chiral_mem_chiral
 
 /--
 Chiral Cartan split package: the operator cone, its compact closure, and the
-Cartan commutator rules are all owned by the certified inverse-kernel lane.
+Cartan commutator rules are all owned by the property inverse-kernel lane.
 -/
 @[rep_depth transport, capstone]
 theorem cartan_split_packet

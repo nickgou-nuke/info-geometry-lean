@@ -24,7 +24,7 @@ local instance : SMulCommClass ℝ EndH EndH := inferInstance
 local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
 /--
-The chiral operator cone on the certified inverse-kernel lane.
+The chiral operator cone on the property inverse-kernel lane.
 
 This is the spectral noncompact (`-1` Cartan eigensector), i.e. operators
 anticommuting with the spectral grading `Γ_S`.
@@ -246,7 +246,7 @@ theorem spectralCommutator_chiral_chiral_mem_spectralCompact
 /-! ## Circular-polarized and projector enrollment -/
 
 /--
-If the split `Cl(1,1)` grading `eps` is the certified spectral grading `Γ_S`,
+If the split `Cl(1,1)` grading `eps` is the property spectral grading `Γ_S`,
 then `P+` is a spectrally compact operator.
 -/
 @[rep_depth krein]
@@ -260,7 +260,7 @@ theorem plusProjector_mem_spectralCompact_of_eps_eq_GammaS
   rw [KKTCore.plusProjector_mul_eps, KKTCore.eps_mul_plusProjector]
 
 /--
-If the split `Cl(1,1)` grading `eps` is the certified spectral grading `Γ_S`,
+If the split `Cl(1,1)` grading `eps` is the property spectral grading `Γ_S`,
 then `P-` is a spectrally compact operator.
 -/
 @[rep_depth krein]
@@ -274,7 +274,7 @@ theorem minusProjector_mem_spectralCompact_of_eps_eq_GammaS
   rw [KKTCore.minusProjector_mul_eps, KKTCore.eps_mul_minusProjector]
 
 /--
-If the split `Cl(1,1)` grading `eps` is the certified spectral grading `Γ_S`,
+If the split `Cl(1,1)` grading `eps` is the property spectral grading `Γ_S`,
 then the circularly polarized `u+` operator is in the chiral cone.
 -/
 @[rep_depth krein]
@@ -293,7 +293,7 @@ theorem uPlus_mem_chiralOperatorCone_of_eps_eq_GammaS
   simp
 
 /--
-If the split `Cl(1,1)` grading `eps` is the certified spectral grading `Γ_S`,
+If the split `Cl(1,1)` grading `eps` is the property spectral grading `Γ_S`,
 then the circularly polarized `u-` operator is in the chiral cone.
 -/
 @[rep_depth krein]

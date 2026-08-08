@@ -16,7 +16,7 @@ This file records the theorem-safe foundation layer:
 * spectra, determinants, and diagonal coordinates are readouts, not primitive
   ontology.
 
-It is intentionally a witness-gated owner surface.  It does not construct a
+It is intentionally a property-gated owner surface.  It does not construct a
 Tomita--Takesaki theory, prove a trace formula, or prove a Hilbert--Polya
 operator for the Riemann zeroes.
 -/
@@ -253,7 +253,7 @@ structure HilbertPolyaOperatorPacket where
   Supplied equivalence between critical-line zeroes and spectral values.
 
   This is the nontrivial Hilbert--Polya content and remains explicitly
-  hypothesis-bearing.
+  property-bearing.
   -/
   zero_iff_spectral_value :
     ∀ γ : ℝ,

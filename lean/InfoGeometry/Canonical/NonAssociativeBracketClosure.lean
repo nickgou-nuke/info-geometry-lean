@@ -5,7 +5,7 @@ import Mathlib.Tactic
 # Closure under the binary Jordan/Lie splitting
 
 This owner isolates the algebraic fact used by split-octonion element closure.
-It does not assume associativity.  The only extra hypothesis is that the
+It does not assume associativity.  The only extra property is that the
 scalar `2` is invertible, so multiplication can be recovered from its
 commutator and anticommutator parts.
 -/

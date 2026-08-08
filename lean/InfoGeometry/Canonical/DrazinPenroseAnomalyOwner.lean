@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.OperatorProjectorMismatch
 # Drazin/Penrose anomaly owner
 
 The anomaly owner is algebraic/projector mismatch first.  Physical anomaly
-interpretations require a separate realization witness.
+interpretations require a separate realization property.
 -/
 
 namespace InfoGeometry.Canonical.DrazinPenroseAnomalyOwner

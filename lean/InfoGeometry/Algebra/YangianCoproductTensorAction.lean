@@ -11,7 +11,7 @@ Yangian, nor does it provide Serre relations or a level-one representation.
 
 The tensor action is supplied together with its coproduct compatibility and
 the action law on counital invariant pure tensors.  The latter is an explicit
-representation witness: it is not inferred from names or from a scalar
+representation property: it is not inferred from names or from a scalar
 kernel argument.
 -/
 

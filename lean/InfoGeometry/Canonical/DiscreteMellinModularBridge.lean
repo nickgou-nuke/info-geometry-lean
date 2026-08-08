@@ -118,7 +118,7 @@ structure OperatorialDiscreteModularHamiltonianContext
   H : EndH
   commutes_spectralProjectors : ∀ k : ℤ, Commute H (P k)
 
-/-- The carried operatorial Hamiltonian commutes with its certified spectral projectors. -/
+/-- The carried operatorial Hamiltonian commutes with its property spectral projectors. -/
 @[rep_depth operator]
 theorem modularHamiltonian_commutes_spectralProjectors
     {η0 Δη : ℝ} {P : ℤ → EndH}

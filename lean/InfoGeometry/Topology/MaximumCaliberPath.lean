@@ -85,7 +85,7 @@ end MaximumCaliberPacket
 
 /-- Abstract finite-path MaxCal variational socket.
 
-The optimizer certificate is explicit: this file does not prove analytic
+The optimizer property is explicit: this file does not prove analytic
 existence or uniqueness of path-entropy maximizers.
 -/
 structure MaximumCaliberOptimizer (Path : Type u) where

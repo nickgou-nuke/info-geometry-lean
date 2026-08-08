@@ -74,7 +74,7 @@ def gammaLVal (m : NullBoundaryMajoranas n) : Matrix (Fin n) (Fin n) ℂ := m.ga
 
 def gammaRVal (m : NullBoundaryMajoranas n) : Matrix (Fin n) (Fin n) ℂ := m.gamma_R
 
-/-- The extra hypothesis needed to identify the algebraic partner with an
+/-- The extra property needed to identify the algebraic partner with an
 actual Hilbert-space adjoint. -/
 def MajoranasSelfAdjoint (m : NullBoundaryMajoranas n) : Prop :=
   (gammaLVal m)ᴴ = gammaLVal m ∧ (gammaRVal m)ᴴ = gammaRVal m

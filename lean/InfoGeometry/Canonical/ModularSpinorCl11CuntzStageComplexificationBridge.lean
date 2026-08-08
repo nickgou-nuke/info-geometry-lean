@@ -193,7 +193,7 @@ theorem cl11CuntzStage_complexify_transition
         (1 : Matrix (Fin 2) (Fin 2) ℂ) :=
   complexifyClTensorStage_transition n A
 
-/-- Under the explicit index-coherence hypothesis, the finite-stage Cl(1,1)
+/-- Under the explicit index-coherence property, the finite-stage Cl(1,1)
 complexification agrees with the concrete Cuntz step. -/
 theorem cl11CuntzStage_complexify_concreteStep_of_indexCoherence
   (n : ℕ)

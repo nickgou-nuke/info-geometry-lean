@@ -26,7 +26,7 @@ zeta zero theorem.  The infinite identity
 sum mu(n) n^(-beta) = 1 / zeta(beta)
 ```
 
-belongs in a separate analytic witness once convergence and zeta APIs are
+belongs in a separate analytic property once convergence and zeta APIs are
 installed.
 -/
 
@@ -465,7 +465,7 @@ theorem primitiveMellinKernel_bitInteger_eq_exp_neg_mul_bitEnergy
 
 end FinitePrimeBitLattice
 
-/-! ## 6. Infinite zeta/supertrace witness socket -/
+/-! ## 6. Infinite zeta/supertrace property socket -/
 
 /--
 Witness-gated infinite supersymmetric primon zeta calibration.

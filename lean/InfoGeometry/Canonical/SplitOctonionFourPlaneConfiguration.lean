@@ -293,7 +293,7 @@ theorem jPlane_orthogonal_kPlane (x y : FourPlaneCarrier) :
   simp [jPlaneComponent, kPlaneComponent, splitInner, coordinateSplitNorm]
   ring
 
-/-- The canonical four-plane configuration packaged as a reusable witness.
+/-- The canonical four-plane configuration packaged as a reusable property.
 
 This records the four coordinate 2-planes together with their finite-rank
 readout, the component-wise reconstruction theorem, and the pairwise
@@ -336,7 +336,7 @@ structure SplitOctonionFourPlaneConfiguration where
     ∀ x y : FourPlaneCarrier,
       splitInner (jPlaneComponent x) (kPlaneComponent y) = 0
 
-/-- The canonical witness for the coordinate four-plane splitting. -/
+/-- The canonical property for the coordinate four-plane splitting. -/
 def standardSplitOctonionFourPlaneConfiguration :
     SplitOctonionFourPlaneConfiguration where
   oneLPlane := oneLPlane

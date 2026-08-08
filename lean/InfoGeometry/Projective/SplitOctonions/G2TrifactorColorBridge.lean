@@ -19,7 +19,7 @@ color-stabilizer owner surface in `SplitOctonionsColorStabilizer.lean`.
 
 Instead of overstating the finite Zorn projector file to claim full 
 Lie group G₂ → SU(3) symmetry directly, this bridge honestly connects the 
-`OP`-stabilizing hypothesis to the exact longitudinal-invariant `colorAct` 
+`OP`-stabilizing property to the exact longitudinal-invariant `colorAct` 
 transformations already fully formalized in the repository.
 
 In the Bektaş representation, the macroscopic scalars (Cl(1,1)) correspond 
@@ -41,7 +41,7 @@ def IsBektasStabilizer (f : BektasMatrix R → BektasMatrix R) : Prop :=
 /-- 
 The concrete `colorAct` defined by a unit-norm quaternion (representing the 
 color stabilizer gauge element) is strictly an `OP`-stabilizer.
-This bridges the Zorn projector invariant hypothesis to the explicit 
+This bridges the Zorn projector invariant property to the explicit 
 norm-preserving color group action.
 -/
 theorem colorAct_is_stabilizer (g : ColorStabilizerElement R) :

@@ -13,7 +13,7 @@ the `Cl(1,1)` tensor tower:
 * the associated inner commutator is a derivation;
 * the second commutator is not vacuously zero: it is the explicit middle term
   `-(K X K) - (K X K)`, and vanishes only under the corresponding annihilation
-  hypothesis.
+  property.
 -/
 
 noncomputable section

@@ -30,7 +30,7 @@ inductive H70Authority where
   | speculative
   deriving DecidableEq, Repr
 
-/-- Minimal metadata carrier for hypothesis tracking. -/
+/-- Minimal metadata carrier for property tracking. -/
 structure H70Claim where
   id : String
   label : String

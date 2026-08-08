@@ -6,7 +6,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.CayleyMobiusPowerLaws
 
 /--
-An explicit involutive-power lemma with no witness/socket fields:
+An explicit involutive-power lemma with no property/socket fields:
 an involutive map `f` is periodic of period `2` pointwise.
 -/
 theorem iterate_two_of_involution

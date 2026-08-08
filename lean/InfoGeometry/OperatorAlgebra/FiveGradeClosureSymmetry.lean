@@ -70,7 +70,7 @@ theorem zero_setwise_stable :
 /--
 A fixed grade-zero element is a pointwise survivor.
 
-The fixedness hypothesis is essential: setwise stability alone only says the
+The fixedness property is essential: setwise stability alone only says the
 closure image remains in grade zero.
 -/
 theorem fixed_zero_mem_and_fixed

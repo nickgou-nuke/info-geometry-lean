@@ -9,7 +9,7 @@ Bregman divergence between the ideal reflected state and the actual reflected
 state.
 
 The total information-conserving picture is represented by a
-Stinespring-Tomita dilation witness: the apparent loss in the system branch is
+Stinespring-Tomita dilation property: the apparent loss in the system branch is
 routed into a mirrored commutant/environment branch.
 
 The public API is backend-generic and uses bounded real-linear channels. The
@@ -132,7 +132,7 @@ end MetalMirrorChannel
 /-! ## 2. Stinespring-Tomita dilation -/
 
 /--
-A Stinespring-Tomita dilation witness for a metal mirror.
+A Stinespring-Tomita dilation property for a metal mirror.
 
 The conservation equality says that the ideal lossless comparison branch
 decomposes into the actual reflected system branch plus a Tomita-mirrored
@@ -316,7 +316,7 @@ end MetalMirrorRicciFluxBridge
 
 end RegularCone
 
-/-! ## 6. Backend-generic metal mirror witness layer -/
+/-! ## 6. Backend-generic metal mirror property layer -/
 
 /-! ### Regular cone and Bregman backend -/
 
@@ -457,7 +457,7 @@ end MetalMirrorChannel
 /-! ### Stinespring/Tomita dilation -/
 
 /--
-Stinespring/Tomita dilation witness for the mirror.
+Stinespring/Tomita dilation property for the mirror.
 
 The conservation law says that the ideal lossless channel decomposes into the
 observed dissipative channel plus a mirrored environment/commutant component.

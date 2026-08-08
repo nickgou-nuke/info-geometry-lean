@@ -18,7 +18,7 @@ transitions into an Automorphic L-Function vacuum.
 The Langlands Functoriality is physically realized as the equivalence of
 partition functions across dual gauge configurations.
 
-UTMOST MANDATE: No witness-gating. The Langlands equivalence is stated as the
+UTMOST MANDATE: No property-gating. The Langlands equivalence is stated as the
 exact thermodynamic duality of twisted Euler products.
 -/
 

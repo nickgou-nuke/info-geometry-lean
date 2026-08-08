@@ -136,7 +136,7 @@ theorem topologicalDirectDescend_denseRange
   · exact h_dense
 
 /-! Naturality of the universal direct-colimit map with respect to cocone
-    descent.  The stage compatibility equation is the only hypothesis. -/
+    descent.  The stage compatibility equation is the only property. -/
 theorem topologicalDirectMapBetween_comp_descend_eq
     {F G : J ⥤ TopCat.{u}} (α : F ⟶ G)
     (cF : Cocone F) (cG : Cocone G) (k : cF.pt ⟶ cG.pt)
@@ -256,7 +256,7 @@ theorem topologicalDirectMapBetween_iso_inv
     topologicalDirectColimitIso_inv_stage]
 
 /- Transport a pair of universal maps across a natural isomorphism of
-diagrams.  The stage equation is the exact hypothesis needed for the
+diagrams.  The stage equation is the exact property needed for the
 universal property of the source colimit. -/
 @[reassoc]
 theorem topologicalDirectColimitIso_hom_comp_descend_eq

@@ -4,6 +4,8 @@ import InfoGeometry.External.Auto.ComplexTemperatureRH
 import InfoGeometry.External.Auto.LieFlowCompilerBridge
 import InfoGeometry.External.Auto.uhf_cantor_boundary
 
+open UhfCantorBoundary
+
 /-!
   Honest extracted theorem seeds from `/home/goutev/g&t.txt`.
 

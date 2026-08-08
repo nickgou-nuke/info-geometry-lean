@@ -162,7 +162,7 @@ noncomputable def arnoldQuantumPresentation
   InfoGeometry.Canonical.ArnoldNetworkPresentation.toQuantumPresentation
     (E := E) n net β
 
-/-- Tagged representation witness for the Arnold network lane in LLM space. -/
+/-- Tagged representation property for the Arnold network lane in LLM space. -/
 @[rep_depth operator]
 noncomputable def arnoldTaggedPresentation
     (n : Nat)

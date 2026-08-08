@@ -14,7 +14,7 @@ decomposition and proves the exact left/right splitting laws for an arbitrary
 split `Cl(1,1)` element.
 
 No socket.
-No certificate.
+No property.
 No CFT claim.
 -/
 

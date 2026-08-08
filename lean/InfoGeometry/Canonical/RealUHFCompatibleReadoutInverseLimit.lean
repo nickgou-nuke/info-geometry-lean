@@ -7,7 +7,7 @@ import InfoGeometry.Canonical.RealUHFCompatibleStateObservableTopCat
 Restriction of stage observables induces pullback on continuous readouts.  The
 compatible-family carrier is therefore the limit of the resulting direct
 sequence of readout spaces.  This owner supplies the native `TopCat` cone and
-its `IsLimit` witness.
+its `IsLimit` property.
 -/
 
 noncomputable section

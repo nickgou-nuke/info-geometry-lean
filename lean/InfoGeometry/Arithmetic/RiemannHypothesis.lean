@@ -7,11 +7,11 @@ import DAG.GraphHodge
 import DAG.ChiralDiracAnticommutation
 
 /-!
-# Riemann-hypothesis bridge interfaces and finite projections
+# Riemann-property bridge interfaces and finite projections
 
 This file keeps the RH bridge honest by exporting only kernel-checked facts
 from owner files and by making the analytic Fredholm half-plane claim an
-explicit certificate interface.
+explicit property interface.
 
 The closed local projections are:
 
@@ -91,10 +91,10 @@ theorem hodge_chiral_dirac_anticommutation {n0 n1 n2 : ℕ}
   exact DAG.ChiralDiracAnticommutation.dirac_anticommutes_gamma B1 B2
 
 /--
-Analytic certificate required for the Fredholm half-plane claim.
+Analytic property required for the Fredholm half-plane claim.
 
 This is intentionally a data interface: the repo does not currently contain a
-trace-class Fredholm determinant theorem proving this certificate from first
+trace-class Fredholm determinant theorem proving this property from first
 principles.
 -/
 def FredholmHalfPlaneCertificate : Type _ :=
@@ -103,11 +103,11 @@ def FredholmHalfPlaneCertificate : Type _ :=
 
 namespace FredholmHalfPlaneCertificate
 
-/-- The Fredholm determinant carried by the certificate. -/
+/-- The Fredholm determinant carried by the property. -/
 abbrev determinant (C : FredholmHalfPlaneCertificate) : ℂ → ℂ :=
   C.1
 
-/-- The half-plane nonvanishing law carried by the certificate. -/
+/-- The half-plane nonvanishing law carried by the property. -/
 theorem determinant_ne_zero
     (C : FredholmHalfPlaneCertificate)
     (s : ℂ)
@@ -115,7 +115,7 @@ theorem determinant_ne_zero
     determinant C s ≠ 0 :=
   C.2 s hs
 
-/-- Construct a Fredholm half-plane certificate from its determinant law. -/
+/-- Construct a Fredholm half-plane property from its determinant law. -/
 def mk
     (determinant : ℂ → ℂ)
     (h : ∀ s : ℂ, (1 / 2 : ℝ) < s.re → determinant s ≠ 0) :
@@ -127,8 +127,8 @@ end FredholmHalfPlaneCertificate
 /--
 **Formulation 4 (Fredholm Invertibility).**
 
-Projection from an explicit analytic certificate: if a Fredholm determinant
-certificate supplies nonvanishing on the open half-plane, the local readout is
+Projection from an explicit analytic property: if a Fredholm determinant
+property supplies nonvanishing on the open half-plane, the local readout is
 nonzero there.
 -/
 theorem fredholm_determinant_nonzero_on_critical_halfplane

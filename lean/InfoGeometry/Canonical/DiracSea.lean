@@ -70,7 +70,7 @@ abbrev InfiniteDiracBoundary := InfiniteBinaryWordSpace
 /-- Canonical (all-zero) boundary word used for the finite-prefix vacuum readout. -/
 abbrev diracVacuumBoundary : InfiniteDiracBoundary := vacuumBoundary
 
-/-- Vacuum-prefix state embedding into the witness Hilbert carrier. -/
+/-- Vacuum-prefix state embedding into the property Hilbert carrier. -/
 def diracVacuumPrefixState
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
     (W : CelikKocakInfiniteFockCarrierData E) (n : ℕ) : E :=

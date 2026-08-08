@@ -78,7 +78,7 @@ noncomputable abbrev hessianFrameConjugation
 Frame conjugation by the modular-J Hessian frame is involutive.
 
 This is a constructive consequence of the existing Cartan involution theorem, not an
-uninterpreted witness field.
+uninterpreted property field.
 -/
 theorem hessianFrameConjugation_modularJ_involutive
     (A : NeutralSpace E →L[ℝ] NeutralSpace E) :

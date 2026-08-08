@@ -58,7 +58,7 @@ lemma entrywisePositive_hasPositiveColSums
     exact Finset.single_le_sum (fun i _hi => (hM i j).le) (by simp)
   exact lt_of_lt_of_le hdiag hle
 
-/-- Matrix together with an entrywise-positivity certificate. -/
+/-- Matrix together with an entrywise-positivity property. -/
 structure PositiveSinkhornState where
   M : SinkhornMatrix n
   pos : EntrywisePositive n M

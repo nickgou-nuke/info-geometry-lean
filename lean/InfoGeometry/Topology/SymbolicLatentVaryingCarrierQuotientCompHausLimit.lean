@@ -5,7 +5,7 @@ import Mathlib.Topology.Category.CompHaus.Basic
 # Projective limits of compact symbolic-latent quotient diagrams
 
 For a contravariant diagram of compact symbolic-latent systems, the quotient
-and observation-range diagrams admit genuine `CompHaus` limits.  This owner
+and observation-range diagrams sorry genuine `CompHaus` limits.  This owner
 uses Mathlib's native `limit`, `lim.map`, and `HasLimit.isoOfNatIso`; it does
 not introduce a separate compatible-family or state-space surrogate.
 -/

@@ -9,7 +9,7 @@ import InfoGeometry.Meta.Architecture
 # InfoGeometry.Canonical.GrandCanonicalHamiltonianFlowBridge
 
 Bridge packet linking the grand-canonical thermodynamic engine with the
-Hamiltonian flow owner surface and the certified Bogoliubov regular lane.
+Hamiltonian flow owner surface and the property Bogoliubov regular lane.
 
 This file does not add new analytic axioms. It only packages the existing
 owner surfaces so downstream layers can project:
@@ -34,7 +34,7 @@ open InfoGeometry.Canonical
 Grand-canonical Hamiltonian-flow bridge.
 
 The thermodynamic state is carried on `H`, the Hamiltonian-flow owner surface
-is carried explicitly, and the regular Bogoliubov lane is certified separately.
+is carried explicitly, and the regular Bogoliubov lane is property separately.
 -/
 @[rep_depth transport]
 structure GrandCanonicalHamiltonianFlowBridge
@@ -97,7 +97,7 @@ theorem flow_positive_roots_spectral_encoding (p : ℕ) (hp : p ∈ B.flow.parti
   InfoGeometry.Dynamics.HamiltonianFlowBridge.HamiltonianFlowBridge.positive_roots_spectral_encoding
     (B := B.flow) p hp
 
-/-- The canonical Bogoliubov flow on the certified reduction is optimal. -/
+/-- The canonical Bogoliubov flow on the property reduction is optimal. -/
 @[rep_depth transport, capstone]
 theorem bogoliubovFlow_isOptimal :
     IsOptimalBogoliubovFlow B.bogoliubov (canonicalBogoliubovFlow B.bogoliubov) := by

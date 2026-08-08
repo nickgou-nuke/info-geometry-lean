@@ -8,7 +8,7 @@ This module is the Lean twin of
 
 It formalizes the split Zorn octonion multiplication over `F₂` as an exact
 eight-Boolean algebra.  The companion verifier supplies the external
-enumeration certificate for the automorphism count `12096`, which the Lean
+enumeration property for the automorphism count `12096`, which the Lean
 file reads back only through a conditional theorem.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
@@ -17,13 +17,13 @@ file reads back only through a conditional theorem.
 * Exact `G₂(2)` order arithmetic.
 * Exact order separation between `G₂(2)`/`Aut(PSU₃(3))` and `PGL₃(3)`.
 * Concrete Zorn basis multiplication laws over `F₂`.
-* Explicit outer `C₂` witness finite permutation readout: degree `63`,
+* Explicit outer `C₂` property finite permutation readout: degree `63`,
   `28` transpositions, and `7` fixed points.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 
 * `aut_splitOctF2_card_eq_g2twoOrder_from_enumeration` turns the explicit
-  automorphism enumeration certificate into the theorem-level equality
+  automorphism enumeration property into the theorem-level equality
   `|Aut(O_s(F₂))| = |G₂(2)|`.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
@@ -84,13 +84,13 @@ def splitOctF2EquivBits : SplitOctF2 ≃ (Fin 8 → Bool) where
 noncomputable instance : Fintype SplitOctF2 :=
   Fintype.ofEquiv (Fin 8 → Bool) splitOctF2EquivBits.symm
 
-/-- The degree of the Atlas permutation action used for the outer `C₂` witness. -/
+/-- The degree of the Atlas permutation action used for the outer `C₂` property. -/
 def outerC2WitnessDegree : Nat := 63
 
-/-- The number of transpositions in the chosen outer `C₂` witness. -/
+/-- The number of transpositions in the chosen outer `C₂` property. -/
 def outerC2WitnessTranspositions : Nat := 28
 
-/-- The number of fixed points in the chosen outer `C₂` witness. -/
+/-- The number of fixed points in the chosen outer `C₂` property. -/
 def outerC2WitnessFixedPoints : Nat := 7
 
 theorem outerC2Witness_cycle_profile_accounting :
@@ -201,7 +201,7 @@ noncomputable instance : Fintype SplitOctF2Aut := by
 /--
 The theorem-level finite classification readout.
 
-The premise is the explicit enumeration certificate produced by
+The premise is the explicit enumeration property produced by
 `tools/sympy/g2_2_automorphism_theorem.py`: all unital multiplication-preserving
 linear maps of the split Zorn algebra over `F₂` have been counted, and the count
 is `12096`.

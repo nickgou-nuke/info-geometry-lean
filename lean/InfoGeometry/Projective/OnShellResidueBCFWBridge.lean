@@ -159,7 +159,7 @@ theorem on_shell_q_residue_packet {Op : Type*} [Ring Op] [Star Op] [Algebra ℝ 
 Package an on-shell residue packet into BCFW + curvature readouts.
 This helper keeps the Option-B interface explicit.
 -/
-def on_shell_q_residue_to_bost_connes_certificate
+def on_shell_q_residue_to_bost_connes_property
     {Op : Type*} [Ring Op] [Star Op] [Algebra ℝ Op]
     {moving : ℕ} {jewel : QuantumJewel Op}
     {trace : Op →ₗ[ℝ] ℝ}

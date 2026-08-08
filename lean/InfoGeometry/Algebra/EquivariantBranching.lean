@@ -10,7 +10,7 @@ The actual branching of states is a separate linear map
 `B : Vᵢₙ →ₗ[R] V₁ ⊗[R] V₂`.
 
 This file states equivariance directly as an equality of Mathlib linear maps.
-No morphism record or proof-carrying witness is introduced.
+No morphism record or proof-carrying property is introduced.
 -/
 
 namespace InfoGeometry.Algebra.EquivariantBranching

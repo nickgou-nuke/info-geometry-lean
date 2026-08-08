@@ -5,7 +5,7 @@ namespace InfoGeometry.Physics
 
 /--
 A representation of a superallowed Fermi decay, primarily focusing on the
-Conserved Vector Current (CVC) hypothesis which states that the vector coupling
+Conserved Vector Current (CVC) property which states that the vector coupling
 constant is unrenormalized, resulting in a universal `ft` value for all
 superallowed 0+ to 0+ nuclear beta decays.
 -/
@@ -52,7 +52,7 @@ end SuperallowedZeroPlusTransition
 
 /--
 A theorem formalizing that for 0+ to 0+ superallowed Fermi transitions,
-the structure-independence of the CVC hypothesis guarantees that the ft value
+the structure-independence of the CVC property guarantees that the ft value
 is precisely the universal constant.
 -/
 theorem cvc_structure_independence (decay : SuperallowedZeroPlusTransition) :

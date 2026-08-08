@@ -232,7 +232,7 @@ def qCcrParameterZeroFiberTransitionTopCatHom
       continuous_toFun :=
         continuous_qCcrParameterZeroFiberTransitionMap Stage sys hij }
 
-/-- Forget the fixed-q witness and include a fiber point in the ambient
+/-- Forget the fixed-q property and include a fiber point in the ambient
     residual zero-locus. -/
 def qCcrParameterZeroLocusFiberInclusionTopCatHom (i : I) (q : Stage i) :
     TopCat.of

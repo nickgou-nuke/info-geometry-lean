@@ -1,0 +1,4 @@
+session NuclearPhononGenerators = HOL +
+  theories
+    NuclearPhononGenerators
+    NuclearPhononMetriplecticBridge

@@ -16,7 +16,7 @@ repository still needs from the literature:
 * finite ferromagnetic coupling data supplied by the prime-chain anchor.
 
 The theorem packet is a Lean-native target so the missing substrate can be
-tracked without pretending the witness is already discharged.
+tracked without pretending the property is already discharged.
 -/
 
 noncomputable section
@@ -64,7 +64,7 @@ def HighTemperatureLeeYangSourceClaim (N : ℕ) : Prop :=
         multiPartition D lam y ≠ 0)
 
 /--
-The exact finite Lee--Yang source claim is discharged by the packet witness.
+The exact finite Lee--Yang source claim is discharged by the packet property.
 
 This is the theorem-safe bridge from the source packet statement to the
 already-defined `LeeYangPolydiscWitness` payload. It does not prove the
@@ -79,7 +79,7 @@ theorem highTemperatureLeeYangSourceClaim
   exact ⟨LY.1 D lam hLam, LY.2 D lam hLam⟩
 
 /--
-The source claim and the standard Lee--Yang witness carry the same finite
+The source claim and the standard Lee--Yang property carry the same finite
 zero-freeness content.
 
 This is a definitional bridge: the repository keeps the exact theorem

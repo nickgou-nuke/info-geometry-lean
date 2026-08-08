@@ -177,7 +177,7 @@ def genDegree (D : ℕ) (g : EdgeGen) : ℕ :=
 @[simp] theorem beta_degree (D : ℕ) (e : Edge3) :
     genDegree D ⟨e, GenKind.beta⟩ = D - 1 := rfl
 
-/-- Even-dimensional hypothesis package for the quadric calculation. -/
+/-- Even-dimensional property package for the quadric calculation. -/
 structure EvenDimension where
   D : ℕ
   evenD : D % 2 = 0

@@ -16,10 +16,10 @@ Theorem-safe adapter separating three Hestenes--Krein structures:
 * `K`-linearity / Hestenes analyticity: operators commute with the internal
   phase axis `clockAxis`;
 * phase covariance of a supplied operator flow;
-* the existing operator-thermodynamic KMS boundary certificate.
+* the existing operator-thermodynamic KMS boundary property.
 
 The file does not derive the analytic strip theorem from `K² = -1`.  The
-ordinary KMS boundary remains the proof-carrying certificate owned by
+ordinary KMS boundary remains the proof-carrying property owned by
 `OperatorThermodynamics.KMSState`; this bridge does not duplicate those proof
 fields.
 -/
@@ -79,7 +79,7 @@ structure Bridge where
   beta :
     ℝ
 
-  /-- Existing operator-thermodynamic KMS certificate. -/
+  /-- Existing operator-thermodynamic KMS property. -/
   kms :
     KMSState EndH flow beta
 

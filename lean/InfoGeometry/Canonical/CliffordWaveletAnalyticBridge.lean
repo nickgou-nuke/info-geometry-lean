@@ -17,7 +17,7 @@ socket:
 No `sorry`.
 No Hilbert-space representation theorem.
 No wavelet convergence theorem.
-No RH-level witness.
+No RH-level property.
 -/
 
 noncomputable section

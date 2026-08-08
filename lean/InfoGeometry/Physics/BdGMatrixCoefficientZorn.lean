@@ -4,7 +4,7 @@ import InfoGeometry.Physics.ZornMultiplicationOverBdG
 /-!
 # Matrix-coefficient Zorn system
 
-This owner records the concrete noncommutative coefficient witness for the
+This owner records the concrete noncommutative coefficient property for the
 canonical matrix-valued Zorn carrier.  The coefficient algebra is
 `Matrix (Fin 2) (Fin 2) ℚ`; no associativity, alternativity, Clifford module,
 or physical representation theorem is asserted for the outer carrier.

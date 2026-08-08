@@ -1,0 +1,13 @@
+[
+  {
+    "check": "normal_form_shortest",
+    "tool": "sage_braid_normal_form.sage.py",
+    "word_raw": ["s0", "s1", "s0^-1", "s1"],
+    "normal_form": [
+      "s0^-1*s1^-1*s0^-1*s2^-1*s1^-1*s0^-1",
+      "s0*s1*s2*s1*s0",
+      "s0*s1",
+      "s1"
+    ]
+  }
+]

@@ -28,7 +28,7 @@ structure ChiralScatteringMass (Rad : Type u) where
 
 /--
 Constructive branch: mass is defined from flip-rate rather than postulated equal to it.
-This narrows the packet and removes an explicit equality hypothesis field.
+This narrows the packet and removes an explicit equality property field.
 -/
 structure ConstructiveChiralScatteringMass (Rad : Type u) where
   cones : ChiralRadiationCones Rad

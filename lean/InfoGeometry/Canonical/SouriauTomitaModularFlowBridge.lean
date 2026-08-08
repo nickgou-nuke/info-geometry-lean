@@ -35,7 +35,7 @@ local notation "Obs" => AlgebraEnd H
 Constructive Souriau/Tomita logarithm context.
 
 The logarithmic modular generator (`K = -log Δ` in the manuscript convention)
-is not an additional hypothesis in this bridge: it is definitionally the
+is not an additional property in this bridge: it is definitionally the
 Souriau thermal generator, i.e. the moment operator evaluated at the geometric
 temperature.
 -/
@@ -205,7 +205,7 @@ noncomputable def zeroThermalSouriauMoment (geometricTemperature : Symmetry) :
 /--
 Constructive identity-branch logarithmic context.
 
-The modular Hamiltonian is not supplied as a zero hypothesis here: it is the
+The modular Hamiltonian is not supplied as a zero property here: it is the
 Souriau moment at the chosen geometric temperature, and this constructor makes
 that moment definitionally zero.
 -/
@@ -265,7 +265,7 @@ structure MinimalSouriauTomitaKMSContext where
 
 namespace MinimalSouriauTomitaKMSContext
 
-/-- The modular state is read directly from the KMS witness. -/
+/-- The modular state is read directly from the KMS property. -/
 @[rep_depth operator]
 def state (C : MinimalSouriauTomitaKMSContext (H := H) (Symmetry := Symmetry)) :
     InfoGeometry.Canonical.CoordinatelessSouriauKMSBridge.AlgebraicState
@@ -320,7 +320,7 @@ Minimal constructive KMS identity over the Souriau-generated modular flow.
 
 This theorem keeps the narrowed branch on `MinimalSouriauTomitaKMSContext`: the
 state is read definitionally from the `KMSState` packet, and no separate
-`state`/`kms_state_eq` hypothesis is exposed.
+`state`/`kms_state_eq` property is exposed.
 -/
 @[rep_depth operator]
 theorem kms_eval_mul_souriau_modular_eq_eval_flip
@@ -365,7 +365,7 @@ end MinimalSouriauTomitaKMSContext
 
 namespace SouriauTomitaKMSContext
 
-/-- The modular state is read directly from the KMS witness. -/
+/-- The modular state is read directly from the KMS property. -/
 @[rep_depth operator]
 def state (C : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry)) :
     InfoGeometry.Canonical.CoordinatelessSouriauKMSBridge.AlgebraicState
@@ -384,7 +384,7 @@ theorem kms_state_eq (C : SouriauTomitaKMSContext (H := H) (Symmetry := Symmetry
     C.state = C.kms.state :=
   rfl
 
-/-- Constructor theorem exposing the state field from an explicit KMS witness packet. -/
+/-- Constructor theorem exposing the state field from an explicit KMS property packet. -/
 @[rep_depth operator]
 theorem mk_of_state_kms
     (logContext : SouriauTomitaLogContext (H := H) (Symmetry := Symmetry))
@@ -411,9 +411,9 @@ theorem mk_of_kms
   refine ⟨{ logContext := logContext, beta := beta, kms := kms }, by
     rfl⟩
 /-- Direct constructor: build a `SouriauTomitaKMSContext` from a `KMSState`
-    without carrying an explicit `state` field or `kms_state_eq` hypothesis.
+    without carrying an explicit `state` field or `kms_state_eq` property.
     The state is derived from `kms.state` definitionally, removing the explicit
-    hypothesis packet from the exposed surface on the constructive route while
+    property packet from the exposed surface on the constructive route while
     preserving the standard-form carrier and the KMS identity.
 -/
 @[rep_depth operator]
@@ -454,7 +454,7 @@ theorem toMinimalSouriauTomitaKMSContext_state_eq
   rfl
 
 /--
-Compatibility constructor: a minimal constructive KMS witness immediately
+Compatibility constructor: a minimal constructive KMS property immediately
 rebuilds the broad Souriau/Tomita KMS context without re-supplying any explicit
 state packet.
 -/
@@ -553,7 +553,7 @@ packet is supplied.  Instead, the branch carries only:
 * the modular inverse temperature `beta`.
 
 From these data the module constructs the zero modular Hamiltonian, the induced
-Souriau/Tomita modular flow, and the KMS witness.
+Souriau/Tomita modular flow, and the KMS property.
 -/
 @[rep_depth operator]
 structure CyclicSouriauTomitaKMSContext where
@@ -584,7 +584,7 @@ theorem sigma_apply_eq_self (t : ℝ) (A : Obs) :
   rw [C.modularHamiltonian_zero]
   simp [InfoGeometry.Krein.modular_shift, InfoGeometry.Krein.krein_modular_shift]
 
-/-- Constructive KMS witness derived from cyclicity on the zero-thermal branch. -/
+/-- Constructive KMS property derived from cyclicity on the zero-thermal branch. -/
 @[rep_depth operator]
 noncomputable def kms :
     KMSState (H := H) C.logContext.souriauAdditiveModularFlow C.beta where
@@ -685,7 +685,7 @@ Direct constructive minimal KMS constructor from cyclicity on the zero-thermal
 Souriau/Tomita branch.
 
 This removes the explicit `kms : KMSState ...` packet from the minimal surface:
-the KMS witness is constructed from the cyclic state, the zero-thermal
+the KMS property is constructed from the cyclic state, the zero-thermal
 logarithmic context, and the inverse temperature.
 -/
 @[rep_depth operator]

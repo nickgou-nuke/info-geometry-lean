@@ -5,7 +5,7 @@ import InfoGeometry.OperatorAlgebra.D4StarCrossedProductLinearRepresentation
 
 The finite coefficient carrier has a native finite-dimensional complex-vector
 space instance.  Consequently Mathlib supplies continuity of every linear
-left-regular operator; no extra continuity axiom is needed in this finite
+left-regular operator; no extra continuity ax!om is needed in this finite
 stage.
 -/
 

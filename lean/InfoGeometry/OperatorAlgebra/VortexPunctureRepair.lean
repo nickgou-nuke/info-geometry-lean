@@ -137,7 +137,7 @@ end MajoranaPlugWitness
 /-! ## 4. YSR / subgap localized repair datum -/
 
 /--
-Localized subgap repair witness.
+Localized subgap repair property.
 
 This abstracts YSR-type or vortex-core subgap localization.
 
@@ -171,7 +171,7 @@ theorem core_eq_subgap_state :
 def Resolved : Prop :=
   V.coreState - S.subgapState = 0
 
-/-- Every subgap repair witness is resolved by its concrete residual law. -/
+/-- Every subgap repair property is resolved by its concrete residual law. -/
 theorem resolved :
     S.Resolved :=
   by

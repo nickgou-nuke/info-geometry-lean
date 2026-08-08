@@ -1,0 +1,13 @@
+R = QQ[q,p,r,s];
+sigma1 = q*s - p*r;
+sigma2 = q*s + 0 - p*r - 0;
+norm1 = q^2 + p^2;
+norm2 = q^2 + 0 + p^2 + 0;
+assert(sigma2 - sigma1 == 0);
+assert(norm2 - norm1 == 0);
+W = QQ[x, dx, WeylAlgebra => {x=>dx}];
+I = ideal(x*dx - dx*x - 1);
+M = W^1 / image matrix{{x*dx - dx*x - 1}};
+assert(numgens I == 1);
+assert(rank source presentation M == 1);
+print {sigmaPreserved=>sigma2-sigma1, normPreserved=>norm2-norm1, fockStateZero=>1, identityTraceStatus=>"not_trace_class_in_infinite_GNS", dmoduleCCRGenerators=>numgens I};

@@ -38,7 +38,7 @@ noncomputable abbrev boundaryAnomalyDensity
 
 /--
 Canonical closure package for anomaly inflow in the reduced spectral proxy
-model. The closure is derived under the flat-loop Chern-Simons hypothesis from
+model. The closure is derived under the flat-loop Chern-Simons property from
 `TopologicalInvariants`.
 -/
 def AnomalyInflowClosure (L : BayesianLoop E) (IST : InfoSpectralTriple E) : Prop :=

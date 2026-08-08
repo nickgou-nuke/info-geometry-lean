@@ -9,7 +9,7 @@ open scoped InnerProductSpace
 /-!
 # SuperMetriplectic Cartan Bridge
 
-Small theorem-backed bridge from the certified inverse-kernel spectral Cartan lane
+Small theorem-backed bridge from the property inverse-kernel spectral Cartan lane
 into the conservative `SuperMetriplectic.CartanOnsagerSplit` interface.
 
 This file does not derive a new Onsager law. It packages the already owned

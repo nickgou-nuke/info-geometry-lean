@@ -330,7 +330,7 @@ theorem nonEquilibriumClockDefect_norm_le_ZD_of_detailedEquilibrium
 Zero-defect clock bridge for detailed equilibrium.
 
 Detailed equilibrium kills the canonical non-equilibrium clock defect, so the
-`ZD` budget is closed without an independent bound assumption.
+`ZD` budget is closed without an independent bound property.
 -/
 noncomputable def ofDetailedEquilibrium
     (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂)
@@ -1101,7 +1101,7 @@ Witness-routed row-count constructor for the trajectory-local RN-barrier
 profile lift.
 
 This narrows the explicit `hrow` / `hMass` pair to a single proof-carrying
-mass-normalization witness.
+mass-normalization property.
 -/
 noncomputable def SinkhornRNBarrierProfileLift.ofRowCountMassNormalizedWitness
     {n : Nat}

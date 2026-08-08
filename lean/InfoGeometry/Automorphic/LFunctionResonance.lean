@@ -15,7 +15,7 @@ Principle:
     𝔖_P F.
 
 No Euler product, functional equation, spectral theorem, or zero theorem is
-asserted here. Those are future witness layers.
+asserted here. Those are future property layers.
 -/
 
 import Mathlib.Tactic
@@ -170,7 +170,7 @@ structure CuspidalLFunctionDatum
   /-- Function-valued linear map `F ↦ L(F, ·)`. -/
   Lmap : Bulk →ₗ[ℝ] (ℂ → ℂ)
 
-  /-- Placeholder for the concrete Langlands L-functional certificate. -/
+  /-- Placeholder for the concrete Langlands L-functional property. -/
   langlands :
     IsCuspidalLanglandsLFunctional W Lmap
 
@@ -282,7 +282,7 @@ structure BoundaryScatteringLFunctionDatum
   /-- Function-valued linear map on boundary data. -/
   Lmap : Boundary →ₗ[ℝ] (ℂ → ℂ)
 
-  /-- Placeholder scattering certificate. -/
+  /-- Placeholder scattering property. -/
   scattering :
     IsBoundaryScatteringLFunctional W Lmap
 
@@ -415,7 +415,7 @@ theorem hasHeckeEulerCompatibility
   ⟨L.langlands,
     fun F hF => hasCuspidalEigenpacket_of_siegel_zero Ops F hF⟩
 
-/-! ## 5. Unified automorphic resonance witness -/
+/-! ## 5. Unified automorphic resonance property -/
 
 /--
 Automorphic resonance package.
@@ -441,7 +441,7 @@ structure AutomorphicLResonanceWitness
     HasHeckeEulerCompatibility operators cuspL
 
 /--
-Admissibility package for constructing an automorphic L-resonance witness.
+Admissibility package for constructing an automorphic L-resonance property.
 
 This prevents the owner target from asserting that arbitrary split sequences
 canonically carry Langlands L-functions.

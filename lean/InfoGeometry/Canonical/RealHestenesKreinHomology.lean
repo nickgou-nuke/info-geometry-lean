@@ -25,7 +25,7 @@ This file provides a theorem-safe real homology/cohomology socket:
 
 * a real nilpotent differential gives cycles and boundaries;
 * homology equivalence is difference by a real boundary;
-* Drazin generalized-kernel readback is witness-gated;
+* Drazin generalized-kernel readback is property-gated;
 * a complementary projector selects the null residue by idempotence;
 * boundary-vanishing real witnesses descend to homology classes;
 * Krein/Hestenes frame data preserves the real pairing readout.
@@ -123,7 +123,7 @@ theorem HomologyEquivalent_isEquivalence :
 /-! ## 5. Boundary-vanishing witnesses descend to homology -/
 
 /--
-A real homology witness/readout.
+A real homology property/readout.
 
 It descends to homology if it vanishes on generated boundaries.
 -/
@@ -150,7 +150,7 @@ end BoundaryVanishingWitness
 
 end RealDifferential
 
-/-! ## 3. witness-gated (Native Closure Mandated: Closure Debt) Drazin null support -/
+/-! ## 3. property-gated (Native Closure Mandated: Closure Debt) Drazin null support -/
 
 
 /-- Drazin-null elements are exactly the range of the complementary projector. -/
@@ -287,7 +287,7 @@ theorem differential_square_green_identity
 Generic idempotent null-projector adapter.
 
 Use this when the projector is already known to be idempotent but is not
-necessarily presented through a Drazin inverse witness.
+necessarily presented through a Drazin inverse property.
 -/
 @[rep_depth operator]
 structure NullProjector

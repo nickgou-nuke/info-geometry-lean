@@ -201,7 +201,7 @@ Strict positive-definite Onsager gate for the finite response packet.
 
 This is intentionally stronger than `PositiveSemidefinite`: it says the
 entropy-production quadratic form is strictly positive on every nonzero force
-vector.  It is the finite hypothesis needed for the equality case
+vector.  It is the finite property needed for the equality case
 `σ = 0 ↔ X = 0`.
 -/
 def PositiveDefinite (M : ResponseMatrix2) : Prop :=

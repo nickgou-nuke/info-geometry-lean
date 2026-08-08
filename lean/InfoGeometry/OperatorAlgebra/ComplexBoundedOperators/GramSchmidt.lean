@@ -21,7 +21,7 @@ products:
 * the projection `adjuster`,
 * the accumulator and no-reversal formulations of Gram-Schmidt,
 * the code equation connecting both formulations,
-* witness-gated result packets for the full AFP correctness surface.
+* property-gated result packets for the full AFP correctness surface.
 -/
 
 noncomputable section
@@ -252,7 +252,7 @@ theorem gramSchmidt_length {ι : Type*} [Fintype ι]
   rw [gramSchmidt_code]
   exact gramSchmidtSub2_length [] ws
 
-/-! ## witness-gated (Native Closure Mandated: Closure Debt) AFP correctness surface -/
+/-! ## property-gated (Native Closure Mandated: Closure Debt) AFP correctness surface -/
 
 /--
 Certified output of Gram-Schmidt for a list of finite complex vectors.

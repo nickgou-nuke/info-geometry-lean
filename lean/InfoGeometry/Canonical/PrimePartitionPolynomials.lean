@@ -19,7 +19,7 @@ function of local fugacities
 
 rather than using the non-polynomial expression `z^(log pᵢ)`.
 
-The Riemann/Mellin pullback is a separate witness layer:
+The Riemann/Mellin pullback is a separate property layer:
 
 `yᵢ(s) = exp (-(s - 1/2) log pᵢ)`.
 
@@ -163,7 +163,7 @@ def multiPartition
       ∏ i : Fin N, if k i then y i else 1
 
 /--
-Multivariate Lee--Yang zero-free witness.
+Multivariate Lee--Yang zero-free property.
 
 Instead of asserting the full Asano/Ruelle contraction theorem in this file, we
 store exactly the consequence needed:
@@ -196,7 +196,7 @@ The intended concrete model is
 `field s = s - 1/2` and
 `localFugacity s i = exp (-(field s) * ellᵢ)`.
 
-The exponential estimates are stored as witness fields so this bridge does not
+The exponential estimates are stored as property fields so this bridge does not
 accumulate complex-analysis proof debt.
 -/
 @[rep_depth thermo]
@@ -308,7 +308,7 @@ Witness for the finite Lee--Yang theorem applied to the prime-chain partition
 polynomial.
 
 The ordinary polynomial Lee--Yang theorem is not proved here. A later
-Asano/Grace-style formalization can replace this witness.
+Asano/Grace-style formalization can replace this property.
 -/
 @[rep_depth thermo]
 def LeeYangPolynomialWitness : Prop :=
@@ -381,7 +381,7 @@ theorem isRoot_of_Z_eq_zero
 
 /--
 Construct the Hurwitz approximant family from finite prime partition
-polynomials and a Lee--Yang witness.
+polynomials and a Lee--Yang property.
 -/
 @[rep_depth thermo]
 def toLeeYangApproximants

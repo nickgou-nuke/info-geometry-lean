@@ -138,7 +138,7 @@ variable
     {constraint : State → Prop}
     {prior posterior : State}
 
-/-- The Markov step is a Bayesian/MaxCal projection in the supplied witness. -/
+/-- The Markov step is a Bayesian/MaxCal projection in the supplied property. -/
 theorem markov_step_is_bayesian_projection
     (B : MaximumCaliberMarkovBridge M divergence constraint prior posterior) :
     TensorLimitStateSpace.IsBayesianProjection divergence constraint prior (M prior) :=

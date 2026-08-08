@@ -10,7 +10,7 @@ This module formalizes the finite linear-algebra readout of the proposed
 * the remaining eight coordinates are the transverse coordinates;
 * the decidable integer core has Gram matrix `diag(2,2,1,...,1)`, so the first
   doubled cell is the only part needing the external `1 / sqrt 2`
-  normalization used by the SymPy witness;
+  normalization used by the SymPy property;
 * the shifted closed-string mass readout with zero intercept is recorded as a
   conditional algebraic formula.
 
@@ -41,7 +41,7 @@ The decidable integer core of the finite light-cone projection matrix.
 
 Rows `0,1` perform the unnormalized light-cone rotation of the first doubled
 cell. Rows `2` through `9` leave the eight transverse coordinates fixed.  The
-SymPy witness applies the external normalization `1 / sqrt 2` to the first
+SymPy property applies the external normalization `1 / sqrt 2` to the first
 block.
 -/
 def lightConeIntegerCore : M10Z :=

@@ -1,0 +1,18 @@
+// cantor_set_ideals.sing
+// Formulation of the algebraic ideals of the fractal Cantor set state space
+
+ring r = 0, (x, y, z), dp;
+
+// The Cantor set can be modeled through iterated function systems.
+// We approximate the algebraic boundary of the state space at a finite iteration level,
+// using boolean conditions to mimic a discrete Cantor pre-fractal.
+
+ideal I = x*(x-1), y*(y-1), z*(z-1); 
+
+print("Ideal corresponding to the discrete Cantor set state space bounds defined.");
+
+// Compute Groebner basis
+I = std(I);
+
+print("Groebner basis computed for the Cantor state space ideals:");
+print(I);

@@ -10,7 +10,7 @@ the existing KKT/chiral operator lane.
 
 This file intentionally does not identify the finite matrix blocks with the
 KKT operators.  It records the exact context needed to use both surfaces
-together: a local Drazin inverse context for one Dirac-Souriau sector, and a certified
+together: a local Drazin inverse context for one Dirac-Souriau sector, and a property
 inverse-kernel carrier whose supercharge already satisfies the KKT/chiral
 closure theorems.
 -/
@@ -29,7 +29,7 @@ variable {E : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
-Context joining one concrete finite Dirac-Souriau sector to one certified
+Context joining one concrete finite Dirac-Souriau sector to one property
 KKT/chiral operator carrier.
 -/
 structure KKTChiralContext (S : DiracSouriauSector ℝ) where
@@ -47,20 +47,20 @@ theorem exists_kktChiralContext_of_field
   rcases DiracSouriauSector.exists_drazinInverseContext_of_field S with ⟨drazin, hdrazin⟩
   exact ⟨⟨CIK, drazin⟩, hdrazin⟩
 
-/-- The context carries the local Dirac-Souriau Drazin hypothesis. -/
+/-- The context carries the local Dirac-Souriau Drazin property. -/
 theorem hasDrazinInverse_of_kktChiralContext
     {S : DiracSouriauSector ℝ} (Ctxt : KKTChiralContext (E := E) S) :
     S.HasDrazinInverse Ctxt.drazin.k :=
   DiracSouriauSector.hasDrazinInverse_of_context Ctxt.drazin
 
-/-- The certified supercharge in the context is in the chiral operator cone. -/
+/-- The property supercharge in the context is in the chiral operator cone. -/
 theorem supercharge_mem_chiralOperatorCone_of_kktChiralContext
     {S : DiracSouriauSector ℝ} (Ctxt : KKTChiralContext (E := E) S) :
     IsInChiralOperatorCone Ctxt.CIK
       (DrazinSupercharge.CertifiedInverseKernel.supercharge Ctxt.CIK) :=
   supercharge_mem_chiralOperatorCone Ctxt.CIK
 
-/-- The certified supercharge in the context satisfies the KKT odd-odd closure. -/
+/-- The property supercharge in the context satisfies the KKT odd-odd closure. -/
 theorem anticommutator_QD_QD_eq_two_smul_HD_of_kktChiralContext
     {S : DiracSouriauSector ℝ} (Ctxt : KKTChiralContext (E := E) S) :
     DrazinSupercharge.anticommutator (QD Ctxt.CIK) (QD Ctxt.CIK) =

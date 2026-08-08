@@ -97,14 +97,14 @@ theorem native_vector_product_lowerLane (i j : Fin 3) :
   funext k
   fin_cases k <;> simp
 
-theorem native_associator_parity_witness :
+theorem native_associator_parity_property :
     ((U 0 : Carrier) * U 1) * U 2 - U 0 * (U 1 * U 2) =
       E22 - E11 := by
   rw [U_zero_mul_U_one, V_mul_U_self, U_one_mul_U_two, U_mul_V_self]
 
-theorem native_associator_parity_witness_ne_zero :
+theorem native_associator_parity_property_ne_zero :
     ((U 0 : Carrier) * U 1) * U 2 ≠ U 0 * (U 1 * U 2) := by
-  exact ZornMatrix.nonassociative_witness (R := ℂ)
+  exact ZornMatrix.nonassociative_property (R := ℂ)
 
 theorem native_sheet_closure_packet :
     (E11 : Carrier) * E11 = E11 ∧
@@ -116,7 +116,7 @@ theorem native_sheet_closure_packet :
     fun i j => native_vector_vector_anticommutator i j,
     fun i => native_peirce_unit_vector i,
     fun i j => native_vector_product_lowerLane i j,
-    native_associator_parity_witness⟩
+    native_associator_parity_property⟩
 
 end
 end InfoGeometry.Canonical.SplitOctonionPolarizedJordanMalcev

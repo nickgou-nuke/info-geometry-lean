@@ -95,14 +95,14 @@ theorem epsilon_eq_projectorObstruction_nnnorm :
     _ = ‖CI.projectorObstruction‖₊ := CI.obstructionScale_eq_projectorObstruction_nnnorm
 
 /-
-Proof-carrying witness for the structured projector hypotheses on the Weyl/KKT
+Proof-carrying property for the structured projector hypotheses on the Weyl/KKT
 anomaly lane.
 
-This packages the paired projector identities into one constructive witness so
+This packages the paired projector identities into one constructive property so
 downstream collapse routes need not carry the raw `hProj`/`hLeft` pair.
 -/
 /-
-Proof-carrying RN/Kähler witness for the conformal zero-scale lane.
+Proof-carrying RN/Kähler property for the conformal zero-scale lane.
 
 This bundles the Kähler readback identification together with the owned
 unit-relative-volume bit, so downstream zero-collapse routes need not carry the
@@ -202,7 +202,7 @@ theorem semanticCollapsePacket_of_structuredProjectorHypotheses_of_chiralScale_e
 
 /--
 Zero-scale semantic collapse packet through the proof-carrying structured
-projector witness.
+projector property.
 -/
 @[rep_depth transport]
 theorem semanticCollapsePacket_of_structuredProjectorWitness_of_chiralScale_eq_zero
@@ -226,7 +226,7 @@ Smaller constructive projector/dilation zero packet from the proof-carrying
 unit-relative-volume bit route.
 
 This removes the explicit `hScaleZero : CI.chiralScale = 0` gate when the
-caller already owns the RN/Kähler witness packet forcing zero chiral scale.
+caller already owns the RN/Kähler property packet forcing zero chiral scale.
 -/
 @[rep_depth transport]
 theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelativeVolumeBit_of_structuredProjectorHypotheses
@@ -247,11 +247,11 @@ theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelat
 
 /--
 Smaller constructive projector/dilation zero packet through the proof-carrying
-structured projector witness and the unit-relative-volume bit route.
+structured projector property and the unit-relative-volume bit route.
 
 This removes the raw `hProj`/`hLeft` projector pair together with the explicit
 `hScaleZero : CI.chiralScale = 0` gate when the caller already owns both
-constructive witness packets.
+constructive property packets.
 -/
 @[rep_depth transport]
 theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelativeVolumeBit_of_structuredProjectorWitness
@@ -269,7 +269,7 @@ theorem projectorObstruction_eq_zero_and_dilationCommutator_eq_zero_of_unitRelat
 
 /--
 Smaller constructive projector/dilation zero packet from a single RN/Kähler
-witness packet together with the structured projector witness.
+property packet together with the structured projector property.
 
 This removes the explicit `(hScaleFromKahler, bit)` pair from the theorem
 surface when the caller already owns the proof-carrying
@@ -306,7 +306,7 @@ Souriau-to-Weyl zero-scale packet through an explicit stationarity readout.
 This theorem does not assert the false unconditional claim that a
 `GibbsSouriauEquilibriumSeed` alone determines the conformal anomaly scale.
 It removes the low-level `hScaleZero` gate only when the caller supplies the
-missing semantic witness from thermodynamic readout stationarity to
+missing semantic property from thermodynamic readout stationarity to
 `CI.chiralScale = 0`.
 -/
 @[rep_depth transport]
@@ -336,10 +336,10 @@ theorem semanticCollapsePacket_of_equilibriumSeed_of_stationaryScaleZeroWitness_
 
 /--
 Souriau-to-Weyl zero-scale packet through explicit stationarity and structured
-projector witness packets.
+projector property packets.
 
 This removes the raw `hProj`/`hLeft` pair from the equilibrium-seed route when
-callers already own the proof-carrying projector witness.
+callers already own the proof-carrying projector property.
 -/
 @[rep_depth transport]
 theorem semanticCollapsePacket_of_equilibriumSeed_of_stationaryScaleZeroWitness_of_structuredProjectorWitness
@@ -365,7 +365,7 @@ Souriau-to-Weyl zero-scale packet through an explicit stationarity readout.
 This theorem does not assert the false unconditional claim that a
 `GibbsSouriauEquilibriumSeed` alone determines the conformal anomaly scale.
 It removes the low-level `hScaleZero` gate only when the caller supplies the
-missing semantic witness from thermodynamic readout stationarity to
+missing semantic property from thermodynamic readout stationarity to
 `CI.chiralScale = 0`.
 -/
 @[rep_depth transport]
@@ -394,9 +394,9 @@ theorem semanticCollapsePacket_of_equilibriumSeed_of_structuredProjectorHypothes
 Smaller constructive zero-scale packet from the proof-carrying unit-relative-volume
 bit route.
 
-This removes the explicit bridge hypothesis
+This removes the explicit bridge property
 `hStationaryToScaleZero : IsThermodynamicReadoutStationary ... → CI.chiralScale = 0`
-when the caller already owns the RN/Kähler witness packet forcing
+when the caller already owns the RN/Kähler property packet forcing
 `CI.chiralScale = 0`.
 -/
 @[rep_depth transport]
@@ -420,11 +420,11 @@ theorem semanticCollapsePacket_of_unitRelativeVolumeBit_of_structuredProjectorHy
 
 /--
 Smaller constructive zero-scale packet through the proof-carrying structured
-projector witness and the unit-relative-volume bit route.
+projector property and the unit-relative-volume bit route.
 
 This removes the raw `hProj`/`hLeft` projector pair together with the explicit
-bridge-to-zero-scale hypothesis when the caller already owns both constructive
-witness packets.
+bridge-to-zero-scale property when the caller already owns both constructive
+property packets.
 -/
 @[rep_depth transport]
 theorem semanticCollapsePacket_of_unitRelativeVolumeBit_of_structuredProjectorWitness
@@ -443,8 +443,8 @@ theorem semanticCollapsePacket_of_unitRelativeVolumeBit_of_structuredProjectorWi
       (CI := CI) (M := M) hScaleFromKahler bit W.1 W.2
 
 /--
-Smaller constructive zero-scale packet from a single RN/Kähler witness packet
-and the structured projector witness.
+Smaller constructive zero-scale packet from a single RN/Kähler property packet
+and the structured projector property.
 
 This removes the explicit `(hScaleFromKahler, bit)` pair from the theorem
 surface when the caller already owns the proof-carrying
@@ -467,8 +467,8 @@ theorem semanticCollapsePacket_of_unitRelativeVolumeScaleWitness_of_structuredPr
 /--
 Souriau-to-Weyl zero-scale packet from the smaller constructive thermodynamic
 surface: faithful probing plus vanishing first variation.  This removes the
-need to carry `GibbsSouriauEquilibriumSeed` as a bridge hypothesis when the raw
-stationarity witness is already available.
+need to carry `GibbsSouriauEquilibriumSeed` as a bridge property when the raw
+stationarity property is already available.
 -/
 @[rep_depth transport]
 theorem semanticCollapsePacket_of_firstVariation_eq_zero_of_probeFaithful_of_stationaryScaleZeroWitness
@@ -497,7 +497,7 @@ theorem semanticCollapsePacket_of_firstVariation_eq_zero_of_probeFaithful_of_sta
 
 /--
 Smaller constructive zero-scale packet from the proof-carrying stationarity to
-scale-zero witness.  This removes the bare bridge hypothesis
+scale-zero property.  This removes the bare bridge property
 `hStationaryToScaleZero : IsThermodynamicReadoutStationary ... → CI.chiralScale = 0`
 from the new theorem surface while keeping the older compatibility theorem
 available.

@@ -24,7 +24,7 @@ and then derives upper-half-plane positivity.
 
 It also proves the honest real-resolvent consequence available at this level:
 real shifted operators have trivial kernel. Full invertibility still requires
-an explicit `IsUnit` witness.
+an explicit `IsUnit` property.
 -/
 
 import Mathlib.Tactic
@@ -205,7 +205,7 @@ Exact Cartesian height identity:
 
 `⟪v, K τ v⟫ = - ⟪v, Y v⟫`.
 
-This is the constructive replacement for a raw `K_positivity` hypothesis.
+This is the constructive replacement for a raw `K_positivity` property.
 -/
 theorem K_tau_quadratic_eq_neg_Y
     (v : H₂) :
@@ -374,15 +374,15 @@ def toUHP :
 
 end PhysicalSectorDatum
 
-/-! ## 3. Cauchy kernel from an explicit unit witness -/
+/-! ## 3. Cauchy kernel from an explicit unit property -/
 
 /--
 In the physical sector, a real Cauchy kernel can be built once an invertibility
-witness for `(ζ - τ)` is supplied.
+property for `(ζ - τ)` is supplied.
 
 This definition does not prove the real resolvent theorem. The Cartesian
 positivity proves trivial kernel for real `ζ`; full invertibility still needs
-a unit/surjectivity/Fredholm witness.
+a unit/surjectivity/Fredholm property.
 -/
 def kernelInPhysicalSector
     {D : ProjectivePolarizedBigradedBogoliubovDatum (E := E)}

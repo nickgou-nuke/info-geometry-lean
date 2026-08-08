@@ -14,7 +14,7 @@ This module keeps the prime gas on the actual JaynesRNMaxEnt surface:
 - the carrier is an arbitrary measurable space,
 - the constraints are two explicit moments: energy and particle number,
 - the partition function and Gibbs measure are the existing Jaynes objects,
-- the Euler-product claim remains an explicit hypothesis and is not promoted
+- the Euler-product claim remains an explicit property and is not promoted
   to a theorem.
 
 The intent is to provide the missing partition-function owner surface without
@@ -61,7 +61,7 @@ Explicit Jaynes data for the prime-occupation gas.
 
 The carrier is arbitrary and measurable.  The energy and particle-number
 readouts are explicit moment constraints.  The analytic number theory claim
-(`eulerProductPartition`) remains quarantined as a hypothesis.
+(`eulerProductPartition`) remains quarantined as a property.
 -/
 @[rep_depth thermo]
 structure PrimeGasJaynesData where
@@ -165,7 +165,7 @@ theorem rnDeriv_gibbsMeasure_toReal_eq (lam : Bool → ℝ) :
 The prime gas partition-function bridge.
 
 This packages the MaxEnt, Gibbs, and symmetry surfaces together while keeping
-the Euler-product claim quarantined as a separate hypothesis field.
+the Euler-product claim quarantined as a separate property field.
 -/
 @[rep_depth thermo]
 structure PrimeGasPartitionPacket where
@@ -181,9 +181,9 @@ structure PrimeGasPartitionPacket where
             / partitionFunction D lam)
 
 /--
-Explicit prime-gas Jaynes hypothesis packet.
+Explicit prime-gas Jaynes property packet.
 
-The analytic number theory claim is still a hypothesis; the MaxEnt partition
+The analytic number theory claim is still a property; the MaxEnt partition
 and Gibbs surfaces are owned by the module above.
 -/
 @[rep_depth thermo]

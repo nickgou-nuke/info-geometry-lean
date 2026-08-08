@@ -1,0 +1,21 @@
+LIB "primdec.lib";
+ring r = 0, (x,y,z,t), dp;
+ideal I_infty = x, y;
+ideal I_zero = z, t;
+
+print("Ideal of Infinity:");
+print(I_infty);
+print("Ideal of Zero:");
+print(I_zero);
+
+// Conformal inversion map x->t, y->z, z->y, t->x
+map phi = r, t, z, y, x;
+ideal mapped_I_infty = phi(I_infty);
+
+print("Mapped Ideal of Infinity under conformal inversion:");
+print(mapped_I_infty);
+
+if (mapped_I_infty[1] == I_zero[2] and mapped_I_infty[2] == I_zero[1]) {
+    print("Success: Inversion preserves algebraic relations and maps Infinity to Zero.");
+}
+exit;

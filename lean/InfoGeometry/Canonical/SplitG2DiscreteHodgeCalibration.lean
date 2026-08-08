@@ -8,7 +8,7 @@ namespace InfoGeometry.Canonical
 This is the first cochain-level torsion-free socket.  The degree `3 → 4`
 operator is explicit data on the chosen finite cell complex; it is not inferred
 from the pointwise octonion metric.  Closedness is likewise recorded as a
-geometric/cellular hypothesis, not as a consequence of Moufang identities.
+geometric/cellular property, not as a consequence of Moufang identities.
 -/
 
 structure SplitG2DiscreteHodgeCalibration (K : FiniteOrientedCellComplex) where

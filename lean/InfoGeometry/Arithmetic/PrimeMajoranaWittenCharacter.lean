@@ -6,7 +6,7 @@ import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 /-!
 # InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
 
-Finite Möbius-graded thermal character over the certified prime register.
+Finite Möbius-graded thermal character over the property prime register.
 
 This module gives the clean finite arithmetic-supertrace anchor:
 
@@ -14,7 +14,7 @@ This module gives the clean finite arithmetic-supertrace anchor:
 * a local Witten factor `1 - exp(-s log p)`;
 * the finite supertrace product theorem;
 * compatibility with the existing finite Dirichlet/Witten owner;
-* an explicit infinite reciprocal-zeta bridge socket, kept witness-gated.
+* an explicit infinite reciprocal-zeta bridge socket, kept property-gated.
 
 No infinite Euler product, analytic continuation, Pfaffian determinant, or RH
 claim is asserted here.
@@ -93,12 +93,12 @@ theorem localWittenCharacter_eq_reciprocalEulerFactor
   rw [localWittenCharacter, sum_prod_boolean]
   ring
 
-/-- Finite Witten character over a certified prime register. -/
+/-- Finite Witten character over a property prime register. -/
 def finiteWittenCharacter
     (P : PrimeRegister) (q : ℕ → ℝ) : ℝ :=
   PrimonFinite.STrF P.primes q
 
-/-- Finite Möbius-graded thermal character over a certified prime register. -/
+/-- Finite Möbius-graded thermal character over a property prime register. -/
 def mobiusGradedThermalCharacter
     (P : PrimeRegister) (q : ℕ → ℝ) : ℝ :=
   finiteWittenCharacter P q

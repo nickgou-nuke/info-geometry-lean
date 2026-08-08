@@ -6,7 +6,7 @@ import Mathlib.Topology.Category.TopCat.Limits.Basic
 /-!
 # CAR and CCR upper-tail readouts
 
-The CAR and CCR witness families are transported through the common generic
+The CAR and CCR property families are transported through the common generic
 upper-tail q-CCR colimit map.  This keeps the sign distinction in the point
 family while sharing the same categorical ambient construction.
 -/

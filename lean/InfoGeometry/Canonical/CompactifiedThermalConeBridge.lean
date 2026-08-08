@@ -33,7 +33,7 @@ structure CompactifiedThermalConeCarrier
   /-- Compactified thermal operator acting on the Hilbert carrier. -/
   compactifiedOperator : Hilb → Hilb
 
-  /-- Cone preservation witness for the compactified thermal operator. -/
+  /-- Cone preservation property for the compactified thermal operator. -/
   compactifiedOperator_preserves_cone :
     ∀ ξ : Hilb, ξ ∈ standardForm.cone → compactifiedOperator ξ ∈ standardForm.cone
 

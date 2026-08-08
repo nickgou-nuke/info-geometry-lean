@@ -81,9 +81,9 @@ end InfoGeometry.OperatorAlgebra.SuperCartan
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 - `SuperCartanAlgebra`: Structure dependent on an underlying `Ring` and `Module ℝ`.
-- `CayleyCompactification`: Conditionally requires a `SuperCartanAlgebra` witness and exact invertibility constraints on `(1 + H)`.
+- `CayleyCompactification`: Conditionally requires a `SuperCartanAlgebra` property and exact invertibility constraints on `(1 + H)`.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
-- Full Cayley Transform mapping theorem: The proof that `cayley_transform H` strictly yields a compact operator (`theta (cayley H) = cayley H`) requires a structural assumption that `theta` distributes over the localized inverse, which is deferred as a debt.
-- Matrix Representation: Super-Lie closure brackets require an explicit representation matrix witness (e.g., `M_2(ℝ)`) to close the exact continuous spectrum.
+- Full Cayley Transform mapping theorem: The proof that `cayley_transform H` strictly yields a compact operator (`theta (cayley H) = cayley H`) requires a structural property that `theta` distributes over the localized inverse, which is deferred as a debt.
+- Matrix Representation: Super-Lie closure brackets require an explicit representation matrix property (e.g., `M_2(ℝ)`) to close the exact continuous spectrum.
 -/

@@ -146,7 +146,7 @@ def IsHestenesAnalyticSymmetry (A : EndH) : Prop :=
 /-- The identity endomorphism is a Hestenes-analytic symmetry generator.
 
 This is the constructive owner route for the identity-mode branch: callers no
-longer need to pass a bare phase-axis-preservation hypothesis for the identity
+longer need to pass a bare phase-axis-preservation property for the identity
 operator before using commutator closure. -/
 @[rep_depth krein]
 theorem id_isHestenesAnalyticSymmetry :
@@ -179,9 +179,9 @@ theorem hestenesAnalyticSymmetry_commutator
     _ = (InfoGeometry.Krein.clockAxis (E := E)).comp (A.comp B - B.comp A) := by
             simp [ContinuousLinearMap.comp_sub, ContinuousLinearMap.comp_assoc]
 
-/-- Right-identity commutator branch with the identity analytic witness derived
+/-- Right-identity commutator branch with the identity analytic property derived
 constructively from `id_isHestenesAnalyticSymmetry` rather than passed as a raw
-hypothesis. -/
+property. -/
 @[rep_depth krein]
 theorem hestenesAnalyticSymmetry_commutator_id_right
     {A : EndH}
@@ -191,9 +191,9 @@ theorem hestenesAnalyticSymmetry_commutator_id_right
   exact hestenesAnalyticSymmetry_commutator (E := E) hA
     (id_isHestenesAnalyticSymmetry (E := E))
 
-/-- Left-identity commutator branch with the identity analytic witness derived
+/-- Left-identity commutator branch with the identity analytic property derived
 constructively from `id_isHestenesAnalyticSymmetry` rather than passed as a raw
-hypothesis. -/
+property. -/
 @[rep_depth krein]
 theorem hestenesAnalyticSymmetry_commutator_id_left
     {A : EndH}

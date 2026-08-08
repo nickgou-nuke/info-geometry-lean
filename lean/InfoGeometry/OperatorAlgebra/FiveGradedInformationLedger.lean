@@ -82,7 +82,7 @@ theorem bracket_graded_holds :
   ⟨@G.negOne_posOne_mem_zero, G.bracket_negTwo_posTwo,
     @G.posOne_posOne_mem_posTwo, @G.negOne_negOne_mem_negTwo⟩
 
-/-- Backward-compatible mixed-grade bracket witness name. -/
+/-- Backward-compatible mixed-grade bracket property name. -/
 theorem bracket_negOne_posOne_mem_zero
     {X Y : L}
     (hX : X ∈ G.gNegOne)
@@ -216,7 +216,7 @@ def visibleHiddenProjection
     (x y : J) : Obs :=
   A.obs (B.hiddenGradeTwoSum x y)
 
-/-- Re-export of ledger nontrivial-memory implies nontrivial-hidden witness. -/
+/-- Re-export of ledger nontrivial-memory implies nontrivial-hidden property. -/
 theorem hiddenGradeTwoSum_ne_zero_of_memoryReadout_ne_zero
     (x y : J)
     (hmem : B.memoryReadout (B.hiddenGradeTwoSum x y) ≠ 0) :

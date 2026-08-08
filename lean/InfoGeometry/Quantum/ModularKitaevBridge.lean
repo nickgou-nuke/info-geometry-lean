@@ -20,6 +20,8 @@ set_option linter.unusedSectionVars false
 namespace InfoGeometry.Quantum.ModularKitaevBridge
 
 open InfoGeometry.Quantum
+open InfoGeometry.Clifford.SplitOctonionsDualProduct
+open InfoGeometry.Clifford.SplitOctonionsDualProduct.SplitOctonion
 
 variable {R : Type*} [Field R] [Invertible (2 : R)]
 variable {M : Type*} [AddCommGroup M] [Module R M]

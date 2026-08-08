@@ -191,11 +191,11 @@ noncomputable def splitCliffordInfinity_boundary_complement
   exact splitCliffordInfinity_unbounded_representatives z N
 
 /--
-The split infinite boundary and the concrete CAR witness can be packaged
+The split infinite boundary and the concrete CAR property can be packaged
 together without introducing any new infinite tensor product theorem.
 
 The Cantor/Fock socket lives over a complex carrier `E`, while the concrete CAR
-witness lives over a real doubled carrier `F`; the theorem keeps those ambient
+property lives over a real doubled carrier `F`; the theorem keeps those ambient
 types separate.
 -/
 @[rep_depth operator]
@@ -241,7 +241,7 @@ theorem splitCliffordInfinity_leg_orthogonal
 
 /--
 The split infinite boundary, the Cuntz root branch decomposition, and the
-concrete CAR witness can be packaged together in one theorem-backed packet.
+concrete CAR property can be packaged together in one theorem-backed packet.
 
 This keeps the boundary expansion explicit using only the names already owned
 in this file: the split direct-limit completion, the local binary boundary

@@ -1,0 +1,18 @@
+// curve_orientation_ideals.sing
+ring r = 0, (x,y), dp;
+// Define the curve: circle x^2 + y^2 - 1 = 0
+poly C = x^2 + y^2 - 1;
+
+// The interior is given by C < 0.
+// Algebraically, we can consider the variety over real numbers, but in singular we deal with ideals.
+ideal boundary = C;
+
+// A point p in the plane is in the interior if C(p) < 0.
+// Let's test a point (0,0) and (2,2)
+poly p_int = subst(subst(C, x, 0), y, 0);
+poly p_ext = subst(subst(C, x, 2), y, 2);
+
+print("Value of C at (0,0) (interior):");
+print(p_int);
+print("Value of C at (2,2) (exterior):");
+print(p_ext);

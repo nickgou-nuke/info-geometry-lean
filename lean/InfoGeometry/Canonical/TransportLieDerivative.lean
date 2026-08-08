@@ -142,7 +142,7 @@ theorem deriv_expTransport_at_zero_eq_zero_of_commute
 Exact exponential conjugation fixes a seed that commutes with the generator.
 
 This is the finite-time version of `deriv_expTransport_at_zero_eq_zero_of_commute`;
-it turns a commutation witness into a constructive transport-fixedness proof.
+it turns a commutation property into a constructive transport-fixedness proof.
 -/
 theorem expTransport_eq_self_of_commute
     {A : Type*} [NormedRing A] [NormedAlgebra ℚ A] [NormedAlgebra ℝ A] [CompleteSpace A]

@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.Cl11MarkovJonesCompatibleFunctionalFamily
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
 
 /-!
-# Algebraic tensor-inductive-limit witness for the `Cl(1,1)` tower
+# Algebraic tensor-inductive-limit property for the `Cl(1,1)` tower
 
 The concrete direct-limit carrier already owned by
 `Cl11TensorTowerLimit` is packaged as the repository's

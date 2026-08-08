@@ -9,7 +9,7 @@ geometric structure is expressed as invariance under an already-installed
 action.
 
 There is deliberately no wrapper structure carrying an action field and no
-modular-flow witness.  The group action is the ordinary mathlib `MulAction`
+modular-flow property.  The group action is the ordinary mathlib `MulAction`
 typeclass, and the Lie action is the ordinary mathlib Lie-module bracket.
 Every theorem below is just an unpacking of those action interfaces.
 -/

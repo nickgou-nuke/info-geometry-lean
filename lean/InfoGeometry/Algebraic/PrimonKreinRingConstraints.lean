@@ -149,7 +149,7 @@ Bridge: read a `HyperbolicPrimonFlow` as a `CarrierTransport` on the canonical
 `doubledCarrier`.
 
 Since `doubledCarrier` stores the ambient Hilbert bilinear pairing, this bridge
-requires an explicit pairing-preservation witness for that pairing.
+requires an explicit pairing-preservation property for that pairing.
 -/
 noncomputable def HyperbolicPrimonFlow.toCarrierTransport
     (F : HyperbolicPrimonFlow (E := E))

@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.FilteredQCCRParameterTopologicalLimit
 
 The upper-tail Cuntz construction already has a direct-colimit readout.  This
 owner supplies the compatible inverse-limit point and its ambient parameter
-map, preserving the same finite-stage witness at every tail index.
+map, preserving the same finite-stage property at every tail index.
 -/
 
 noncomputable section

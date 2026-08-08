@@ -13,7 +13,7 @@ without extra topological machinery is disk-local:
 * `DifferentiableOn.isExactOn_ball`
 
 We therefore prove only the disk-local and explicitly-premised consequences.
-There is no postulate for a global partition function and no claim that an
+There is no postulat3 for a global partition function and no claim that an
 arbitrary global domain is simply connected.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
@@ -51,7 +51,7 @@ theorem differentiableOn_ball_to_isExactOn
   hf.isExactOn_ball
 
 /--
-Unfolded primitive witness form of `differentiableOn_ball_to_isExactOn`.
+Unfolded primitive property form of `differentiableOn_ball_to_isExactOn`.
 -/
 theorem differentiableOn_ball_exists_primitive
     {f : ℂ → ℂ} {c : ℂ} {r : ℝ}

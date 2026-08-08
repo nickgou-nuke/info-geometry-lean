@@ -65,7 +65,7 @@ Tilted CAR generator from Cuntz isometries.
 
 This is the native readout used by the integration hub.  The CAR/CCR phase
 transition itself is not derivable from the bare Cuntz relations, so the
-nontrivial commutation readouts are stored as witness fields in
+nontrivial commutation readouts are stored as property fields in
 `TiltedCuntzCARPacket`.
 -/
 @[rep_depth operator]

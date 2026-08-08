@@ -40,7 +40,7 @@ Primitive full/gapped modular sign-CPT relations.
 
 This is the constructible algebraic input: two involutions `eps` and `J` that
 anticommute.  The modular phase axis is then forced to be `J ∘ eps`, and its
-square law is proved below rather than stored as a free certificate.
+square law is proved below rather than stored as a free property.
 -/
 structure ModularSignCPTRelations
     (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] where
@@ -205,7 +205,7 @@ The dynamically generated modular phase axis squares to `-1`.
 This is the real Clifford calculation:
 
 At this abstract socket layer this is re-exported from the datum. A concrete
-functional-calculus layer can later prove the witness from `eps_square`,
+functional-calculus layer can later prove the property from `eps_square`,
 `J_square`, and `J_eps_anticomm`.
 -/
 theorem Kmod_square_apply :
@@ -504,7 +504,7 @@ The partial modular phase axis squares to `-support`.
 This is the zero-mode-corrected Clifford calculation:
 
 At this abstract layer this is re-exported from the datum; concrete modular
-functional calculus should prove the witness.
+functional calculus should prove the property.
 -/
 theorem Kmod_square_apply :
     M.Kmod.comp M.Kmod = -M.support := by

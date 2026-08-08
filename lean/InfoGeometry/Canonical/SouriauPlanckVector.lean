@@ -80,7 +80,7 @@ def GibbsSouriauEquilibriumSeed
 /--
 Faithful thermodynamic probing plus vanishing first variation construct the
 Gibbs-Souriau equilibrium seed directly.  Downstream bridges can consume this
-constructor instead of carrying the seed as an opaque hypothesis.
+constructor instead of carrying the seed as an opaque property.
 -/
 @[rep_depth transport]
 theorem equilibriumSeed_of_probeFaithful_of_firstVariation_eq_zero
@@ -125,7 +125,7 @@ theorem souriauEquilibrium_of_equilibriumSeed
 /--
 Stationary Gibbs-Souriau data directly constructs the bundled thermodynamic
 readout-stationarity predicate.  Downstream bridges should consume this theorem
-instead of reconstructing the route through an explicit Killing hypothesis.
+instead of reconstructing the route through an explicit Killing property.
 -/
 @[rep_depth transport]
 theorem isThermodynamicReadoutStationary_of_equilibriumSeed
@@ -141,7 +141,7 @@ theorem isThermodynamicReadoutStationary_of_equilibriumSeed
 
 /--
 Faithful probing plus vanishing first variation imply thermodynamic readout
-stationarity without packaging an explicit equilibrium-seed hypothesis first.
+stationarity without packaging an explicit equilibrium-seed property first.
 -/
 @[rep_depth transport]
 theorem isThermodynamicReadoutStationary_of_firstVariation_eq_zero_of_probeFaithful

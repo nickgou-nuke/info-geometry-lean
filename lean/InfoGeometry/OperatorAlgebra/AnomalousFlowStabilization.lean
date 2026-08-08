@@ -3,7 +3,7 @@ InfoGeometry/OperatorAlgebra/AnomalousFlowStabilization.lean
 
 Anomalous flow stabilization sockets.
 
-This file records the model-level witness saying that a nonzero anomaly/readout
+This file records the model-level property saying that a nonzero anomaly/readout
 and a protected topological charge force a stable non-flat representative.  It
 does not claim that Clifford kinematics alone prove a tubule phase.
 -/
@@ -14,7 +14,7 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.AnomalousFlowStabilization
 
-/-! ## 1. Stabilization witness -/
+/-! ## 1. Stabilization property -/
 
 /--
 Witness data for anomalous-flow stabilization.
@@ -47,7 +47,7 @@ structure AnomalousFlowStabilizationWitness
   nonflat_stable : State → Prop
 
   /--
-  Model certificate: nonzero anomaly and nonzero topological charge force a
+  Model property: nonzero anomaly and nonzero topological charge force a
   stable non-flat representative.
   -/
   anomaly_forces_stable_nonflat :
@@ -68,7 +68,7 @@ theorem charge_preserved
     W.topologicalCharge (W.flow t x) = W.topologicalCharge x :=
   W.charge_invariant_under_flow t x
 
-/-- Re-export the stable non-flat representative certificate. -/
+/-- Re-export the stable non-flat representative property. -/
 theorem stable_nonflat_of_anomaly_and_charge
     {x : State}
     (hanom : W.anomalyReadout x ≠ 0)

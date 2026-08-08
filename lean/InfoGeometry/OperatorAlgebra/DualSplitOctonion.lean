@@ -161,7 +161,7 @@ def PreservesEpsilonIdeal (F : AutCandidate) : Prop :=
 def FixesEpsilon (F : AutCandidate) : Prop :=
   F.carrierMap dualEpsilon = dualEpsilon
 
-/-- Predicate package for a future certificate.  This is not a classification. -/
+/-- Predicate package for a future property.  This is not a classification. -/
 def IsDualSplitOctonionAutCandidate (F : AutCandidate) : Prop :=
   PreservesMul F ∧ PreservesEpsilonIdeal F
 

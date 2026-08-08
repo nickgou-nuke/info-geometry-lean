@@ -19,7 +19,7 @@ def cayleyZetaCoordinate (s : ℂ) : ℂ :=
 /--
 Cayley-loop version of the same critical-line calibration.
 
-This is carried as a witness field because the analytic equivalence
+This is carried as a property field because the analytic equivalence
 `Re(s)=1/2 ↔ |(s-1)/s|=1` requires a concrete complex-analytic proof and
 domain side-conditions.
 -/

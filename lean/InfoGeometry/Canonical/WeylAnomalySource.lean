@@ -129,7 +129,7 @@ private theorem cartanWeyl_dilation_sources_transportedEinsteinResidual
     (V := V) (Γ := Γ) hSource hAnom
 
 /--
-Cartan/Weyl closure in primitive form (no bundled split witness):
+Cartan/Weyl closure in primitive form (no bundled split property):
 given explicit compact/non-compact sector hypotheses for `(M,D)`, nonzero
 anomaly still forces nonzero transported Einstein residual under the same
 source relation.

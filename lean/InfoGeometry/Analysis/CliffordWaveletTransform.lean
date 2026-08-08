@@ -113,7 +113,7 @@ def covariance
     W.waveletTransform (signalAction g f) =
       coefficientAction g (W.waveletTransform f)
 
-/-- A covariance witness evaluates to the corresponding transform identity. -/
+/-- A covariance property evaluates to the corresponding transform identity. -/
 theorem waveletTransform_covariant
     (W : CliffordWaveletModel)
     (signalAction :

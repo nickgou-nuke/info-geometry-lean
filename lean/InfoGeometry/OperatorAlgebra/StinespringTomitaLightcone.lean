@@ -10,11 +10,11 @@ This module formalizes the statement:
   Tomita commutant.
 
 If the lost component also has a carrier readout on the chiral lightcone, then
-local absorption is certified as reflection into the commutant chiral
+local absorption is property as reflection into the commutant chiral
 lightcone.
 
 This file does not claim that every CP map automatically routes into the
-commutant. That routing is a proof-carrying Tomita/Stinespring witness.
+commutant. That routing is a proof-carrying Tomita/Stinespring property.
 -/
 
 import Mathlib.Tactic
@@ -74,7 +74,7 @@ A Stinespring-Tomita dilation of a local channel.
 `globalEvolution` is the dilated evolution.
 
 `leakage x` is the part not seen by the local observer. The key Tomita
-certificate is that this leakage lies in the commutant side.
+property is that this leakage lies in the commutant side.
 -/
 structure StinespringTomitaDilation
     (Op GlobalOp : Type*)
@@ -370,7 +370,7 @@ theorem stinespringTomitaDilationOwnerTarget
 
 /-!
 The chiral-lightcone compatibility name is likewise the concrete dilation
-owner, not a one-field witness packet.
+owner, not a one-field property packet.
 -/
 abbrev StinespringTomitaChiralLightconeCompatibility
     (Op GlobalOp H : Type*)

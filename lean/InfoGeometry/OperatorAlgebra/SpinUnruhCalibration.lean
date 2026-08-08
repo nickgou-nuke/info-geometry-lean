@@ -66,12 +66,12 @@ noncomputable def unruhTemperatureNatural
 /--
 Unruh calibration datum.
 
-The equality is carried as a model certificate because it depends on the
+The equality is carried as a model property because it depends on the
 normalization of modular flow, physical time, and units.
 -/
 structure UnruhTemperatureCalibration
     (State : Type*) where
-  /-- Spin-modular/boost compatibility witness. -/
+  /-- Spin-modular/boost compatibility property. -/
   spinModular :
     SpinModularCompatibility State
 
@@ -103,7 +103,7 @@ end UnruhTemperatureCalibration
 Modular acceleration calibration.
 
 This is the constructive natural-unit Unruh calibration.  The final temperature
-formula is not stored as a hypothesis: it is derived from the physical inverse
+formula is not stored as a property: it is derived from the physical inverse
 temperature calibration `β = 2π / a` and the definition `T = β⁻¹`.
 -/
 structure ModularAccelerationCalibration where

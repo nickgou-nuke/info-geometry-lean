@@ -89,7 +89,7 @@ noncomputable def lorentzBivectorSeed
 /--
 Comparison theorem to the active spectral-wedge lane:
 after multiplying by the bridged wedge sign, the canonical bivector seed factors
-through `J * P_D` on the certified regular Drazin block.
+through `J * P_D` on the property regular Drazin block.
 -/
 @[rep_depth transport]
 theorem canonicalBivectorSeed_mul_owned_epsilon_eq_neg_superHamiltonian_mul_modular_j_mul_spectralProjector
@@ -132,7 +132,7 @@ theorem canonicalBivectorSeed_mul_owned_epsilon_eq_neg_superHamiltonian_mul_modu
 /--
 Projector-first specialization of the canonical-seed comparison theorem:
 using the owned sign operator `Σ = P₊ - P₋`, the canonical seed factors through
-`J * P_D` on the certified regular Drazin block.
+`J * P_D` on the property regular Drazin block.
 -/
 @[rep_depth transport]
 theorem canonicalBivectorSeed_mul_modularSign_eq_neg_superHamiltonian_mul_modular_j_mul_spectralProjector
@@ -268,9 +268,9 @@ noncomputable def lorentzChiralConeOrbit
     A
 
 /--
-Compatibility witness for the modular capstone on the projected Drazin lane.
+Compatibility property for the modular capstone on the projected Drazin lane.
 
-This is now assumption-free on the even/generator equality:
+This is now property-free on the even/generator equality:
 the modular seed is fixed canonically from `H_D`.
 -/
 @[rep_depth transport]
@@ -359,7 +359,7 @@ theorem modularGenerator_eq_canonicalKinetic_plus_canonicalDefectCentral :
 
 /--
 Existence form on the modular lane:
-`A_mod = H + Z` with the same Drazin-lane centrality witness for `Z`.
+`A_mod = H + Z` with the same Drazin-lane centrality property for `Z`.
 -/
 @[rep_depth transport]
 theorem exists_modularGenerator_split_with_drazin_lane_centrality :
@@ -483,7 +483,7 @@ theorem flow_eq_unruh_modular_polynomial_of_wedgeCompatibility
 end ModularSuperchargeCompatibility
 
 /--
-Compatibility witness identifying the canonical projected Drazin seed with an
+Compatibility property identifying the canonical projected Drazin seed with an
 owned real-Tomita `δ = log Δ` package.
 
 This is the missing bridge from canonical-seed closure to the explicit
@@ -593,7 +593,7 @@ theorem superHamiltonian_fixed_under_tomitaAdjointFlow (t : ℝ) :
 
 /--
 Tomita-side wedge bridge:
-if a wedge compatibility witness is provided on `T.deltaLog`, then Tomita flow
+if a wedge compatibility property is provided on `T.deltaLog`, then Tomita flow
 at wedge-normalized time equals Unruh flow.
 -/
 @[rep_depth transport]
@@ -644,7 +644,7 @@ theorem canonicalTomitaLogData_deltaLog
       = canonicalBivectorSeed (E := E) CIK := rfl
 
 /--
-Canonical compatibility witness from the canonical projected seed to the
+Canonical compatibility property from the canonical projected seed to the
 canonical real-Tomita package.
 -/
 @[rep_depth transport]
@@ -704,7 +704,7 @@ theorem superHamiltonian_fixed_under_canonicalTomitaAdjointFlow
 /--
 Wedge-calibrated closure (kernel lane):
 if canonical Tomita flow is calibrated to a compatible wedge packet, then it
-commutes with the certified complementary Drazin projector `Q_D`.
+commutes with the property complementary Drazin projector `Q_D`.
 -/
 @[rep_depth transport]
 theorem canonicalTomitaFlow_commutes_spectralComplementaryProjector_of_wedgeCalibrated
@@ -764,7 +764,7 @@ noncomputable def canonicalRelativeModularOperator
   (canonicalTomitaLogData (E := E) CIK).flow τ
 
 /--
-Wedge-calibrated commutation witness on the active projector lane:
+Wedge-calibrated commutation property on the active projector lane:
 the canonical bounded relative modular representative commutes with `P_D`.
 -/
 @[rep_depth transport]
@@ -799,7 +799,7 @@ theorem canonicalRelativeModularOperator_commutes_spectralProjector_of_wedgeCali
 
 /--
 Wedge-calibrated mixed-block vanishing for the canonical bounded relative
-modular representative on the certified active/apex split.
+modular representative on the property active/apex split.
 -/
 @[rep_depth transport, capstone]
 theorem canonicalRelativeModularOperator_mixed_blocks_zero_of_wedgeCalibrated
@@ -975,7 +975,7 @@ theorem superHamiltonian_eq_two_pi_smul_canonicalInternalModularHamiltonian
 /--
 Internal Unruh target on the projected lane, defined directly from `H_D`.
 
-This target is fully operator-internal and assumption-free.
+This target is fully operator-internal and property-free.
 -/
 @[rep_depth transport]
 noncomputable def internalUnruhFlowOfModularTime
@@ -1007,7 +1007,7 @@ theorem canonicalSeedFlow_eq_internalUnruhFlowOfModularTime
   simp [internalUnruhFlowOfModularTime, BogoliubovTransport.modularTransportFlow, hGen]
 
 /--
-Canonical-seed wedge bridge with a single hypothesis:
+Canonical-seed wedge bridge with a single property:
 if the canonical-seed modular flow matches the Unruh modular-time flow, then
 at wedge-normalized time it matches the wedge-rapidity Unruh flow.
 -/
@@ -1294,7 +1294,7 @@ theorem canonicalSeed_kms_relation_beta_zero_of_pairwise_commute
 /--
 Borchers-style commutation compatibility packet.
 
-This packet carries only the explicit transport-commutation witness required
+This packet carries only the explicit transport-commutation property required
 by this lane.
 -/
 @[rep_depth transport]
@@ -1307,7 +1307,7 @@ structure BorchersSpectrumCompatibility where
         (canonicalBivectorSeed (E := E) CIK))
 
 /--
-Borchers-style fixedness consequence under an explicit commutation witness.
+Borchers-style fixedness consequence under an explicit commutation property.
 -/
 @[rep_depth transport]
 theorem superHamiltonian_fixed_under_modularAdjointFlow_of_borchersSpectrumCompatibility
@@ -1367,7 +1367,7 @@ theorem canonicalSeedFlowEqUnruhTarget_of_generator_identification
 Canonical generator-identification route specialized from `H_D`.
 
 This packages the single algebraic generator identification
-`H_D = (2π)·K_unruh` with the exponential-flow identification witness into
+`H_D = (2π)·K_unruh` with the exponential-flow identification property into
 `FlowEqUnruh(canonicalBivectorSeed)`.
 -/
 @[rep_depth transport]
@@ -1399,13 +1399,13 @@ theorem canonicalSeedFlowEqUnruhTarget_of_superHamiltonian_identification
     (E := E) CIK hGen hExp
 
 /--
-Hyperbolic exponential witness for the wedge/Unruh modular-time lane.
+Hyperbolic exponential property for the wedge/Unruh modular-time lane.
 
 If the chosen modular Hamiltonian squares to `Id`, the exponential transport law
 matches the owned Unruh modular-time polynomial exactly.
 -/
 @[rep_depth transport]
-theorem unruh_exponential_witness_of_modularHamiltonian_sq_one
+theorem unruh_exponential_property_of_modularHamiltonian_sq_one
     :
     ∀ τmod : ℝ,
       NormedSpace.exp
@@ -1450,7 +1450,7 @@ theorem unruh_exponential_witness_of_modularHamiltonian_sq_one
 /--
 Canonical-seed discharge route specialized to the hyperbolic square law.
 
-This removes the separate exponential witness hypothesis by deriving it from
+This removes the separate exponential property property by deriving it from
 `modularHamiltonian^2 = Id`.
 -/
 @[rep_depth transport]
@@ -1463,13 +1463,13 @@ theorem canonicalSeedFlowEqUnruhTarget_of_superHamiltonian_identification_of_mod
     canonicalSeedFlowEqUnruhTarget (E := E) CIK := by
   exact canonicalSeedFlowEqUnruhTarget_of_superHamiltonian_identification
     (E := E) CIK hHD
-    unruh_exponential_witness_of_modularHamiltonian_sq_one
+    unruh_exponential_property_of_modularHamiltonian_sq_one
 
 /--
 Owner-level calibration contract for the wedge-normalized closure lane.
 
 This packages the remaining generator-identification obligation as a single
-named compatibility surface, avoiding ad-hoc hypothesis threading.
+named compatibility surface, avoiding ad-hoc property threading.
 -/
 @[rep_depth transport]
 structure SuperHamiltonianWedgeCalibration where
@@ -1489,7 +1489,7 @@ abbrev BisognanoWichmannCalibration : Type _ :=
   SuperHamiltonianWedgeCalibration (E := E)
 
 /--
-Under a packaged Bisognano-Wichmann calibration witness, the internal
+Under a packaged Bisognano-Wichmann calibration property, the internal
 normalization recovers the owned Unruh modular Hamiltonian.
 -/
 @[rep_depth transport]
@@ -1775,7 +1775,7 @@ theorem canonicalSeed_flow_at_wedgeParameter_of_flowEqUnruh
 
 /--
 Canonical real-Tomita wedge bridge with the same single canonical-seed
-flow-equality hypothesis.
+flow-equality property.
 -/
 @[rep_depth transport]
 theorem canonicalTomitaFlow_at_wedgeParameter_of_flowEqUnruh
@@ -1814,7 +1814,7 @@ theorem canonicalTomitaFlow_at_wedgeParameter_of_flowEqUnruh
     _ = InfoGeometry.Dynamics.unruhFlow (E := E) τwedge := hSeedFlow
 
 /--
-Single-hypothesis canonical-seed compatibility interface for wedge/Unruh flow.
+Single-property canonical-seed compatibility interface for wedge/Unruh flow.
 
 This isolates the remaining modular capstone gap to one theorem field:
 `FlowEqUnruh(canonicalBivectorSeed)`.
@@ -1829,7 +1829,7 @@ namespace CanonicalSeedUnruhCompatibility
 variable (U : CanonicalSeedUnruhCompatibility (E := E))
 
 /--
-Export the canonical-seed compatibility as the generic wedge/modular witness.
+Export the canonical-seed compatibility as the generic wedge/modular property.
 -/
 @[rep_depth transport]
 noncomputable def toWedgeBoostModularCompatibility :
@@ -1838,7 +1838,7 @@ noncomputable def toWedgeBoostModularCompatibility :
   hFlowEqUnruh := U.hFlowEqUnruh
 
 /--
-Wedge-parameter bridge on the canonical seed from the single-hypothesis
+Wedge-parameter bridge on the canonical seed from the single-property
 compatibility interface.
 -/
 @[rep_depth transport]
@@ -1878,7 +1878,7 @@ theorem tomitaFlow_at_wedgeParameter (τwedge : ℝ) :
 
 /--
 Polynomial modular-time form of the canonical-seed flow under the same single
-compatibility hypothesis.
+compatibility property.
 -/
 @[rep_depth transport]
 theorem flow_eq_unruh_modular_polynomial (τmod : ℝ) :
@@ -1918,7 +1918,7 @@ theorem flow_eq_unruh_modular_polynomial (τmod : ℝ) :
 
 /--
 Lower-owner extraction of the calibration identity from the canonical-seed
-Unruh compatibility witness.
+Unruh compatibility property.
 -/
 @[rep_depth transport]
 theorem superHamiltonian_eq_two_pi_modularHamiltonian :
@@ -1950,7 +1950,7 @@ namespace SuperHamiltonianWedgeCalibration
 variable (C : SuperHamiltonianWedgeCalibration (E := E))
 
 /--
-The packaged wedge calibration implies the canonical-seed/Unruh flow witness.
+The packaged wedge calibration implies the canonical-seed/Unruh flow property.
 -/
 @[rep_depth transport]
 theorem hFlowEqUnruh :
@@ -1972,7 +1972,7 @@ end SuperHamiltonianWedgeCalibration
 
 /--
 Transport-level corridor equivalence:
-the canonical-seed Unruh witness and the packaged wedge calibration are
+the canonical-seed Unruh property and the packaged wedge calibration are
 isomorphic compatibility surfaces.
 -/
 @[rep_depth transport]
@@ -2119,7 +2119,7 @@ theorem modularGenerator_eq_canonicalKinetic_plus_canonicalDefectCentral_canonic
 
 /--
 Existence form on the canonical-seed modular lane:
-`A_mod = H + Z` with the same Drazin-lane centrality witness for `Z`.
+`A_mod = H + Z` with the same Drazin-lane centrality property for `Z`.
 -/
 @[rep_depth transport]
 theorem exists_modularGenerator_split_with_drazin_lane_centrality_canonicalSeed
@@ -2154,9 +2154,9 @@ theorem exists_lorentzBivectorGenerator_split_with_drazin_lane_centrality
       (E := E) (CIK := CIK))
 
 /--
-Canonical identity-kernel witness on the doubled carrier.
+Canonical identity-kernel property on the doubled carrier.
 
-This gives a concrete certified inverse-kernel instance where all projector
+This gives a concrete property inverse-kernel instance where all projector
 mismatch/anomaly lanes vanish exactly.
 -/
 @[rep_depth operator]
@@ -2170,7 +2170,7 @@ noncomputable def idCertifiedInverseKernel : CertifiedInverseKernel H₂ where
   hMoorePenrose := by
     refine ⟨?_, ?_, ?_, ?_⟩ <;> simp
 
-/-- On the identity certified kernel, the projected odd supercharge vanishes. -/
+/-- On the identity property kernel, the projected odd supercharge vanishes. -/
 @[rep_depth operator]
 theorem supercharge_idCertifiedInverseKernel_eq_zero :
     DrazinSupercharge.CertifiedInverseKernel.supercharge
@@ -2192,7 +2192,7 @@ theorem supercharge_idCertifiedInverseKernel_eq_zero :
     _ = 0 := by
       simp [DrazinSupercharge.commutator, hDil]
 
-/-- On the identity certified kernel, the projected even generator `Q_D²` vanishes. -/
+/-- On the identity property kernel, the projected even generator `Q_D²` vanishes. -/
 @[rep_depth krein]
 theorem superHamiltonianK_idCertifiedInverseKernel_eq_zero :
     DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK
@@ -2208,7 +2208,7 @@ theorem superHamiltonianK_idCertifiedInverseKernel_eq_zero :
 
 /--
 Counterexample theorem: the equation
-`H_D = (2π) • modularHamiltonian` is not derivable uniformly for all certified
+`H_D = (2π) • modularHamiltonian` is not derivable uniformly for all property
 inverse kernels from the current lower-owner assumptions alone.
 -/
 @[rep_depth transport, capstone]

@@ -21,7 +21,7 @@ Scope discipline:
   currently compiles.
 - It does NOT prove analytic continuation, Euler products, Ramanujan's full
   odd-zeta transform, or an operator-level theorem `exp (-s H) = exp (-H/2) exp (-u H) exp (-iv H)`.
-- The Ramanujan/Lambert lane is kept witness-gated on purpose.
+- The Ramanujan/Lambert lane is kept property-gated on purpose.
 -/
 
 noncomputable section

@@ -5,7 +5,7 @@ import InfoGeometry.Topology.SymbolicLatentObservationQuotientTopCat
 
 The observational quotient already has a continuous bijection onto the range
 of its feature readout.  For compact carriers, this owner supplies the missing
-quotient-map witness using Mathlib's compact-to-Hausdorff theorem and packages
+quotient-map property using Mathlib's compact-to-Hausdorff theorem and packages
 the resulting canonical `TopCat` isomorphism.  No new quotient carrier or
 analytic latent-space structure is introduced.
 -/

@@ -1,0 +1,634 @@
+{
+  "summary": {
+    "claims_total": 38,
+    "vacuities_total": 24,
+    "confabulation_risk": "high"
+  },
+  "claims_summary": {
+    "claims_total": 38,
+    "claims_by_risk": {
+      "zero_sorries_claim": 2,
+      "completeness_claim": 6,
+      "obviousness_claim": 19,
+      "triviality_claim": 10,
+      "every_universal": 1
+    },
+    "files": [
+      "/home/goutev/auto/proofs/ForTheUnbelievers.md",
+      "/home/goutev/auto/proofs/TKKQQBRIDGE_README.md",
+      "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "/home/goutev/auto/proofs/external_repos/gal/docs/benchmarks.md",
+      "/home/goutev/auto/proofs/external_repos/lean-ga/docs/misc/buchholz2005.md",
+      "/home/goutev/auto/proofs/external_repos/lean-ga/docs/misc/many_faces.md",
+      "/home/goutev/auto/proofs/pdf_theorem_extraction.md",
+      "/home/goutev/auto/proofs/quantum-proof-plan.md",
+      "/home/goutev/auto/proofs/tools/lean_graph/out/vacuity_audit_report.md",
+      "/home/goutev/auto/proofs/tools/lean_graph/out/vacuity_cleanup_report.md"
+    ]
+  },
+  "vacuities_summary": {
+    "vacuities_total": 24,
+    "vacuities_by_kind": {
+      "term_sorry": 22,
+      "generalized_sorry_true_trivial": 2
+    },
+    "files": [
+      "/home/goutev/auto/proofs/SpinNetworkTwistorQuantization.lean",
+      "/home/goutev/auto/proofs/WallpaperHolographicSelectionRules.lean",
+      "/home/goutev/auto/proofs/external_repos/lean-matrix-cookbook/MatrixCookbook/5SolutionsAndDecompositions.lean",
+      "/home/goutev/auto/proofs/external_repos/lean-matrix-cookbook/MatrixCookbook/6StatisticsAndProbability.lean",
+      "/home/goutev/auto/proofs/external_repos/lean-matrix-cookbook/MatrixCookbook/7MultivariateDistributions.lean",
+      "/home/goutev/auto/proofs/external_repos/lean-matrix-cookbook/MatrixCookbook/8Gaussians.lean"
+    ]
+  },
+  "arango_summary": {
+    "database": "info_geometry",
+    "lean_decls_suspicious": [
+      {
+        "kind": "missing_vacuum_state",
+        "detail": "No obvious vacuum/False seed node found in lean_decls.",
+        "risk": "topology_incomplete"
+      }
+    ],
+    "tactic_states_suspicious": [
+      {
+        "kind": "empty_tactic_states",
+        "count": 11251,
+        "risk": "extractor_capture_artifacts"
+      },
+      {
+        "kind": "high_duplicate_tactic_chunks",
+        "examples": [
+          [
+            "by",
+            16653
+          ],
+          [
+            "focus",
+            8620
+          ],
+          [
+            "with_annotate_state <;>  skip",
+            3547
+          ],
+          [
+            "<;>",
+            4474
+          ],
+          [
+            "skip",
+            12571
+          ],
+          [
+            "norm_num",
+            3747
+          ],
+          [
+            "case  =>",
+            2087
+          ],
+          [
+            ";",
+            8586
+          ],
+          [
+            "rotate_right",
+            1638
+          ],
+          [
+            "ext i j <;> fin_cases i  with_annotate_state <;>  skip  all_goals fin_cases j",
+            1134
+          ],
+          [
+            "ext i j  with_annotate_state <;>  skip  all_goals fin_cases i",
+            1134
+          ],
+          [
+            "ext i j",
+            1491
+          ],
+          [
+            "fin_cases i",
+            2821
+          ],
+          [
+            "all_goals fin_cases j",
+            1347
+          ],
+          [
+            "fin_cases j",
+            8830
+          ],
+          [
+            "fin_cases i  with_annotate_state <;>  skip  all_goals fin_cases j",
+            1536
+          ],
+          [
+            "simp",
+            1896
+          ],
+          [
+            "rfl",
+            14655
+          ],
+          [
+            "eq_refl",
+            2403
+          ],
+          [
+            "rewrite  [",
+            4041
+          ]
+        ],
+        "risk": "captured_noop_or_debug_tactics"
+      }
+    ],
+    "tactic_state_count": 377167
+  },
+  "claims": [
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/ForTheUnbelievers.md",
+      "line": 5,
+      "risk": "zero_sorries_claim",
+      "text": "**Status**: 8347 jobs compiled, zero errors, zero sorries"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/ForTheUnbelievers.md",
+      "line": 257,
+      "risk": "zero_sorries_claim",
+      "text": "*8347 jobs. Zero errors. Zero sorries.*"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/TKKQQBRIDGE_README.md",
+      "line": 197,
+      "risk": "completeness_claim",
+      "text": "1. **Complete proofs:**"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/external_repos/gal/docs/benchmarks.md",
+      "line": 41,
+      "risk": "obviousness_claim",
+      "text": "The file size of the compiled test can be a useful indicator of future bloat if used in your library or application. Obviously, you will need to measure this in your own code since the final size may not scale in any predictable way."
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/external_repos/gal/docs/benchmarks.md",
+      "line": 43,
+      "risk": "obviousness_claim",
+      "text": "The sizes of various segments (`.strtab`, `.text`, and `.symtab`) are included as an indication of what bloat may be attributed to. Smaller sections are omitted for brevity. Also, note that the raw sizes are obviously more important than the percentages. Statistics were taken by using the [google/bloaty](https://github.com/google/bloaty) ELF parser."
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/external_repos/lean-ga/docs/misc/buchholz2005.md",
+      "line": 105,
+      "risk": "obviousness_claim",
+      "text": "algebra of quaternions. Obviously, $1$ is the identity element of $\\mathbb{H}$."
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/external_repos/lean-ga/docs/misc/many_faces.md",
+      "line": 479,
+      "risk": "triviality_claim",
+      "text": "(3) for orthonormal basis vectors $\\left\\{e_{i}\\right\\}$ and stipulates that $e_{i} e_{i}=1$ and $e_{i} e_{j}=-e_{j} e_{i}$ for $i \\neq j .$ (Our Eqs. (1) and (2) But to show that these rules can be consistently applied, he needs something analogous to our lemma, which he does not supply. And once it is supplied, the associativity of the geometric product is trivial, as we have seen. Then Riesz's proof of the associativity in Sec. 1.3 becomes superfluous."
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/pdf_theorem_extraction.md",
+      "line": 26,
+      "risk": "obviousness_claim",
+      "text": "the order-3 EP, which is clearly different from the situation in Fig. 3h. The Berry phases accumulated"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/pdf_theorem_extraction.md",
+      "line": 81,
+      "risk": "obviousness_claim",
+      "text": "recover the EWN formula (Eq. (2)). Obviously, if"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/quantum-proof-plan.md",
+      "line": 102,
+      "risk": "triviality_claim",
+      "text": "These are non-trivial theorems that require substantial category theory and representation theory. However, for the purpose of verifying the hexagon equations, Chapters 7-8 are sufficient \u2014 we work directly with the explicit F and R matrices."
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/tools/lean_graph/out/vacuity_audit_report.md",
+      "line": 81,
+      "risk": "triviality_claim",
+      "text": "Replace all 64 `True := trivial` theorems with either:"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/tools/lean_graph/out/vacuity_cleanup_report.md",
+      "line": 5,
+      "risk": "completeness_claim",
+      "text": "Replaced all 63 occurrences of `True := trivial` across 19 files with proper mathematical statements and complete proof chains."
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/tools/lean_graph/out/vacuity_cleanup_report.md",
+      "line": 31,
+      "risk": "completeness_claim",
+      "text": "- Complete module with 15 theorems, all proved"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/tools/lean_graph/out/vacuity_cleanup_report.md",
+      "line": 148,
+      "risk": "completeness_claim",
+      "text": "2. A complete proof (not `trivial`)"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 3241,
+      "risk": "obviousness_claim",
+      "text": "defined. While we could obviously define this operation trivially just as we did there, we would"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 3636,
+      "risk": "obviousness_claim",
+      "text": "clearly can\u2019t use the same notation for both without causing confusion9 , and so only the former"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 3821,
+      "risk": "every_universal",
+      "text": "algebra requires every instance to provide values for these fields. To make matters worse, mathlib"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 4720,
+      "risk": "obviousness_claim",
+      "text": "type A ((i + j) + k)\u201d. While these are \u201cobviously\u201d equal, that\u2019s not enough for Lean; for the"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 5217,
+      "risk": "obviousness_claim",
+      "text": "clearly do not permit a decomposition\ufffd [mathlib#9214]. As such, we cannot use this as our"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 5809,
+      "risk": "obviousness_claim",
+      "text": "To mathematicians, this diagram obviously commutes; weakening a ring to an abelian monoid"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 5811,
+      "risk": "obviousness_claim",
+      "text": "\u201cobviously\u201d: when determining equality of types, it\u2019s not enough for them to just be provably"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 6668,
+      "risk": "triviality_claim",
+      "text": "which trivially satisfies theorem 8.4:"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 6815,
+      "risk": "obviousness_claim",
+      "text": "This is obviously linear, as it is the composition of operations each of which is linear. We can"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 6816,
+      "risk": "completeness_claim",
+      "text": "show that lift+ [f ](r) = r by using properties of eq. (8.6). To complete the proof that this is an"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 7035,
+      "risk": "obviousness_claim",
+      "text": "right side is more obviously SO(3). Rather than repeat the construction in section 8.3.2, we can"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 7044,
+      "risk": "triviality_claim",
+      "text": "trivially satisfies theorem 8.4:"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 7202,
+      "risk": "obviousness_claim",
+      "text": "the second entry holding our result x. Equation (8.63a) is obviously linear, and we are obliged to"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 7321,
+      "risk": "obviousness_claim",
+      "text": "are obviously important to a formalization, every proof has to start with a theorem statement,"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 7379,
+      "risk": "triviality_claim",
+      "text": "component-wise, and the trivial but presumably verbose proofs are omitted from [72]."
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 7687,
+      "risk": "triviality_claim",
+      "text": "where by simp is producing the trivial proof that -(\u03b9 Q v)*-(\u03b9 Q v) = (\u03b9 Q v)*(\u03b9 Q v). Just"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 7925,
+      "risk": "triviality_claim",
+      "text": "repeating a trivial proof:"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 7969,
+      "risk": "obviousness_claim",
+      "text": "Here we use some more verbose Lean syntax to clearly indicate each branch of the induction."
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 8292,
+      "risk": "obviousness_claim",
+      "text": "but they are no longer unique; and so there is no longer an obviously canonical choice of"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 8495,
+      "risk": "completeness_claim",
+      "text": "A complete archive consisting of the formalizations, the translations of parts of existing"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 10469,
+      "risk": "triviality_claim",
+      "text": "The construction of the map is trivial, though the proof that it is alternating [mathlib#5124]"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 10740,
+      "risk": "obviousness_claim",
+      "text": "Ignoring the issue of canonicity for a moment, we clearly still need a formalization of some"
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 11274,
+      "risk": "obviousness_claim",
+      "text": "parent, or even for structures where one parent is clearly more important than another."
+    },
+    {
+      "type": "fragile_claim",
+      "file": "/home/goutev/auto/proofs/eric-wieser-thesis.txt",
+      "line": 13111,
+      "risk": "triviality_claim",
+      "text": "Eric Wieser. chore(algebra/quaternion): missing trivial lemmas. Reviewed by"
+    }
+  ],
+  "vacuities": [
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/SpinNetworkTwistorQuantization.lean",
+      "line": 250,
+      "kind": "term_sorry",
+      "name": "penrose_spin_network_evaluation_target",
+      "snippet": "theorem penrose_spin_network_evaluation_target : False := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/SpinNetworkTwistorQuantization.lean",
+      "line": 252,
+      "kind": "term_sorry",
+      "name": "twistor_quantization_hilbert_space_target",
+      "snippet": "theorem twistor_quantization_hilbert_space_target : False := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/SpinNetworkTwistorQuantization.lean",
+      "line": 254,
+      "kind": "term_sorry",
+      "name": "deformed_cuntz_algebra_well_defined_target",
+      "snippet": "theorem deformed_cuntz_algebra_well_defined_target : False := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/SpinNetworkTwistorQuantization.lean",
+      "line": 256,
+      "kind": "term_sorry",
+      "name": "bogoliubov_transport_path_independence_target",
+      "snippet": "theorem bogoliubov_transport_path_independence_target : False := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/SpinNetworkTwistorQuantization.lean",
+      "line": 258,
+      "kind": "term_sorry",
+      "name": "modular_mirror_symmetry_target",
+      "snippet": "theorem modular_mirror_symmetry_target : False := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/SpinNetworkTwistorQuantization.lean",
+      "line": 260,
+      "kind": "term_sorry",
+      "name": "spin_connection_flatness_target",
+      "snippet": "theorem spin_connection_flatness_target : False := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/SpinNetworkTwistorQuantization.lean",
+      "line": 262,
+      "kind": "term_sorry",
+      "name": "deformed_compass_yang_baxter_target",
+      "snippet": "theorem deformed_compass_yang_baxter_target : False := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/WallpaperHolographicSelectionRules.lean",
+      "line": 42,
+      "kind": "term_sorry",
+      "name": "pg_klein_boundary_realization_target",
+      "snippet": "theorem pg_klein_boundary_realization_target : False := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/WallpaperHolographicSelectionRules.lean",
+      "line": 45,
+      "kind": "term_sorry",
+      "name": "p6m_su3_color_crystal_realization_target",
+      "snippet": "theorem p6m_su3_color_crystal_realization_target : False := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/WallpaperHolographicSelectionRules.lean",
+      "line": 48,
+      "kind": "term_sorry",
+      "name": "wallpaper_bloch_weyl_observable_sectors_target",
+      "snippet": "theorem wallpaper_bloch_weyl_observable_sectors_target : False := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/WallpaperHolographicSelectionRules.lean",
+      "line": 51,
+      "kind": "term_sorry",
+      "name": "raman_selection_rule_interpretation_target",
+      "snippet": "theorem raman_selection_rule_interpretation_target : False := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/WallpaperHolographicSelectionRules.lean",
+      "line": 54,
+      "kind": "term_sorry",
+      "name": "dikin_tile_tessellates_m2c_algebra_target",
+      "snippet": "theorem dikin_tile_tessellates_m2c_algebra_target : False := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/WallpaperHolographicSelectionRules.lean",
+      "line": 57,
+      "kind": "term_sorry",
+      "name": "jaynes_lddp_uniform_counting_across_tiles_target",
+      "snippet": "theorem jaynes_lddp_uniform_counting_across_tiles_target : False := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/WallpaperHolographicSelectionRules.lean",
+      "line": 60,
+      "kind": "term_sorry",
+      "name": "grothendieck_motive_blueprint_target",
+      "snippet": "theorem grothendieck_motive_blueprint_target : False := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/WallpaperHolographicSelectionRules.lean",
+      "line": 63,
+      "kind": "term_sorry",
+      "name": "gromov_witten_trajectory_count_interpretation_target",
+      "snippet": "theorem gromov_witten_trajectory_count_interpretation_target : False := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/WallpaperHolographicSelectionRules.lean",
+      "line": 66,
+      "kind": "term_sorry",
+      "name": "global_holographic_screen_realization_target",
+      "snippet": "theorem global_holographic_screen_realization_target : False := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/external_repos/lean-matrix-cookbook/MatrixCookbook/5SolutionsAndDecompositions.lean",
+      "line": 93,
+      "kind": "generalized_sorry_true_trivial",
+      "name": "eq_272",
+      "snippet": "theorem eq_272 : True := trivial",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/external_repos/lean-matrix-cookbook/MatrixCookbook/5SolutionsAndDecompositions.lean",
+      "line": 108,
+      "kind": "generalized_sorry_true_trivial",
+      "name": "eq_274",
+      "snippet": "theorem eq_274 : True := trivial",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/external_repos/lean-matrix-cookbook/MatrixCookbook/6StatisticsAndProbability.lean",
+      "line": 5,
+      "kind": "term_sorry",
+      "name": "eq_303",
+      "snippet": "theorem eq_303 : (sorry : Prop) := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/external_repos/lean-matrix-cookbook/MatrixCookbook/6StatisticsAndProbability.lean",
+      "line": 9,
+      "kind": "term_sorry",
+      "name": "eq_334",
+      "snippet": "theorem eq_334 : (sorry : Prop) := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/external_repos/lean-matrix-cookbook/MatrixCookbook/7MultivariateDistributions.lean",
+      "line": 5,
+      "kind": "term_sorry",
+      "name": "eq_335",
+      "snippet": "theorem eq_335 : (sorry : Prop) := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/external_repos/lean-matrix-cookbook/MatrixCookbook/7MultivariateDistributions.lean",
+      "line": 9,
+      "kind": "term_sorry",
+      "name": "eq_345",
+      "snippet": "theorem eq_345 : (sorry : Prop) := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/external_repos/lean-matrix-cookbook/MatrixCookbook/8Gaussians.lean",
+      "line": 5,
+      "kind": "term_sorry",
+      "name": "eq_346",
+      "snippet": "theorem eq_346 : (sorry : Prop) := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    },
+    {
+      "type": "vacuity",
+      "file": "/home/goutev/auto/proofs/external_repos/lean-matrix-cookbook/MatrixCookbook/8Gaussians.lean",
+      "line": 9,
+      "kind": "term_sorry",
+      "name": "eq_396",
+      "snippet": "theorem eq_396 : (sorry : Prop) := sorry",
+      "risk": "generalized_sorry_or_vacuous_stub"
+    }
+  ]
+}

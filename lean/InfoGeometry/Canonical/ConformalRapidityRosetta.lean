@@ -10,7 +10,7 @@ import InfoGeometry.Canonical.ConformalSL2GeneratorBridge
 Rosetta table for the rapidity, Rindler, inversion, Möbius, and adjoint lanes.
 
 This file does not add new mathematics. It pins the existing owner surfaces to a
-single named translation table so the SymPy witness and the Lean owner theorems
+single named translation table so the SymPy property and the Lean owner theorems
 share the same vocabulary.
 
 | SymPy / geometric readout | Lean owner |

@@ -10,8 +10,8 @@ open CategoryTheory
 
 On the triple-overlap carrier, a direct transition from chart `i` to chart
 `k` agrees with the composite of the transitions `i → j → k`.  The proof is
-pointwise through the common observation map; no gluing axiom or abstract
-descent witness is introduced.
+pointwise through the common observation map; no gluing ax!om or abstract
+descent property is introduced.
 -/
 
 theorem SymbolicLatentAtlas.overlapObservation_transition_cech_cocycle

@@ -4,7 +4,7 @@ InfoGeometry/OperatorAlgebra/CondensateSaturationAudit.lean
 Capacity and saturation audit for a hidden condensate/commutant ledger.
 
 This module does not prove cosmological saturation or horizon failure.
-It defines the witness structure needed to say that a condensate is near
+It defines the property structure needed to say that a condensate is near
 capacity and that an Andreev/modular mirror is beginning to fail.
 -/
 
@@ -14,10 +14,10 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra.CondensateSaturationAudit
 
-/-! ## 1. Capacity witness -/
+/-! ## 1. Capacity property -/
 
 /--
-Capacity witness for a hidden condensate / commutant memory sector.
+Capacity property for a hidden condensate / commutant memory sector.
 
 `capacity` is the installed entropy/information bound.
 `load` is the current hidden-memory load.
@@ -77,7 +77,7 @@ theorem saturated_of_capacity_le_load
 
 end CondensateCapacityWitness
 
-/-! ## 2. Mirror health witness -/
+/-! ## 2. Mirror health property -/
 
 /--
 Health audit for an Andreev/modular mirror.
@@ -139,7 +139,7 @@ theorem failing_of_balanceResidual_gt
 
 end MirrorHealthWitness
 
-/-! ## 3. Modular flattening witness -/
+/-! ## 3. Modular flattening property -/
 
 /--
 Modular flattening readout.
@@ -169,7 +169,7 @@ def NearTracial
 
 end ModularFlatteningWitness
 
-/-! ## 4. Recovery backlog witness -/
+/-! ## 4. Recovery backlog property -/
 
 /--
 Recovery backlog readout.
@@ -199,7 +199,7 @@ end RecoveryBacklogWitness
 /--
 Composite audit for condensate saturation.
 
-This is the specific witness that determines whether the current aeon's
+This is the specific property that determines whether the current aeon's
 condensate is nearing saturation.
 -/
 structure CondensateSaturationWitness

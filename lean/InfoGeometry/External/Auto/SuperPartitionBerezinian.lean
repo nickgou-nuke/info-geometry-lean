@@ -1,5 +1,7 @@
 import Mathlib.Tactic
 
+namespace SuperPartitionBerezinian
+
 /-!
 # Super Partition Ratios and the Berezinian
 
@@ -79,4 +81,6 @@ theorem exponential_chart_zero :
     Real.exp (0 : ℝ) = 1 := by
   simp
 
-end noncomputable section
+end
+
+end SuperPartitionBerezinian

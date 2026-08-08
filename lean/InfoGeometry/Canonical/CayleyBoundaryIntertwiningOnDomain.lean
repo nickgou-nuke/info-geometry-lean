@@ -8,7 +8,7 @@ open InfoGeometry.Topology
 /-!
 The Cayley chart intertwines the real hyperbolic dilation with the disk
 Möbius map on the domain where the latter denominator is nonzero.  Keeping
-the pole hypothesis explicit avoids silently turning a fractional-linear map
+the pole property explicit avoids silently turning a fractional-linear map
 into a globally regular map.
 -/
 

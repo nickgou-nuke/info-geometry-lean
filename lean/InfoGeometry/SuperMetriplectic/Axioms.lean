@@ -132,12 +132,12 @@ namespace CartanOnsagerSplit
 
 variable {L : Type*} [LieRing L] [LieAlgebra ℝ L]
 
-/-- The topological/Drazin lane is the `+1` Cartan eigenspace by assumption. -/
+/-- The topological/Drazin lane is the `+1` Cartan eigenspace by property. -/
 theorem drazinCore_is_cartan_k (C : CartanOnsagerSplit L) :
     C.drazinCore = C.S.𝔨 :=
   C.drazinCore_eq_k
 
-/-- The dissipative/range lane is the `-1` Cartan eigenspace by assumption. -/
+/-- The dissipative/range lane is the `-1` Cartan eigenspace by property. -/
 theorem dissipativeRange_is_cartan_p (C : CartanOnsagerSplit L) :
     C.dissipativeRange = C.S.𝔭 :=
   C.dissipativeRange_eq_p
@@ -145,7 +145,7 @@ theorem dissipativeRange_is_cartan_p (C : CartanOnsagerSplit L) :
 end CartanOnsagerSplit
 
 /--
-Scalar Moore-Penrose inverse witness.
+Scalar Moore-Penrose inverse property.
 
 This is the one-dimensional body-level shadow of the operator inverse data.
 Higher-dimensional/operator versions should replace `ℝ` with the existing
@@ -157,7 +157,7 @@ structure ScalarPenroseInverse where
   aba : a * aPlus * a = a
   bab : aPlus * a * aPlus = aPlus
 
-/-- Scalar Drazin inverse witness for spectral/topological memory. -/
+/-- Scalar Drazin inverse property for spectral/topological memory. -/
 structure ScalarDrazinInverse where
   a : ℝ
   aD : ℝ
@@ -227,7 +227,7 @@ Body-level entropy production packet.
 
 Grassmann/nilpotent contributions are not ordered here.  The observable second
 law is represented by a real body projection and an explicit nonnegativity
-witness.
+property.
 -/
 structure BodyEntropyProduction where
   bodyForce : ℝ

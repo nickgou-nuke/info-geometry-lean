@@ -7,7 +7,7 @@ import InfoGeometry.Topology.AmplituhedronBoundaryRank32
 # Configuration-space normalization and Arnold readout
 
 This is a small topological packet for the `Conf₃` normalization story.
-It couples the already-proved `0, 1, ∞` Möbius normalization witness with the
+It couples the already-proved `0, 1, ∞` Möbius normalization property with the
 canonical three-edge Arnold relation carrier.  The file does **not** claim an
 analytic de Rham computation or a Feynman period evaluation.
 -/

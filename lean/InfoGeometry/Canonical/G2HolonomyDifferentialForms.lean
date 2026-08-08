@@ -9,7 +9,7 @@ namespace InfoGeometry.Canonical
 The Hodge owner supplies an explicit `3 ↔ 4` inverse pair on alternating
 maps.  This file only transports a chosen four-form along the existing
 discrete gauge connection.  In particular, it does not identify the current
-three-form value witness with an `AlternatingMap`, and it does not infer
+three-form value property with an `AlternatingMap`, and it does not infer
 closedness from Moufang identities.
 -/
 

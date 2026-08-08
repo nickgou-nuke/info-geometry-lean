@@ -14,7 +14,7 @@ tower:
 * `Bsplit n` is the corresponding split bilinear form;
 * the Clifford anticommutator reads back to the bilinear form.
 
-No witness packet is introduced here.  Every law is a theorem from the explicit
+No property packet is introduced here.  Every law is a theorem from the explicit
 recursive definitions and mathlib's Clifford-algebra relations.
 -/
 

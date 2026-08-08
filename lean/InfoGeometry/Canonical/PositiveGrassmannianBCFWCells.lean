@@ -9,7 +9,7 @@ variable {k n m : ℕ}
 
 /-- 
 An abstract representation of the Plücker coordinates (k x k minors) of a k x n matrix.
-For formalization simplicity at this layer, we postulate a minor extraction map. 
+For formalization simplicity at this layer, we postulat3 a minor extraction map. 
 In a full matrix library, this is `Matrix.det` of a submatrix.
 -/
 def extractMinor (C : Matrix (Fin k) (Fin n) ℝ) (I : Fin k → Fin n) : ℝ :=

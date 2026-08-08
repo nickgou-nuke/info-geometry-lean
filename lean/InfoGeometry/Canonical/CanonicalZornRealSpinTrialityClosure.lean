@@ -12,7 +12,7 @@ complex spin group whose vector action preserves the embedded real split locus
 in both directions.
 
 This bidirectional condition is stable under multiplication and inversion. It
-produces a total real vector action and removes the hypothesis from the affine
+produces a total real vector action and removes the property from the affine
 conformal projective closure theorem.
 -/
 
@@ -95,7 +95,7 @@ def realLocusSpinRelatedRepresentation :
     realLocusSpin44 →* CartanTrialityGroup :=
   complexSpinRelatedRepresentation.comp realLocusSpin44.subtype
 
-/-- The real image point selected from the forward preservation certificate. -/
+/-- The real image point selected from the forward preservation property. -/
 def realLocusVectorAction
     (g : realLocusSpin44) (x : RealSplit44) : RealSplit44 :=
   Classical.choose (g.2.1 x)

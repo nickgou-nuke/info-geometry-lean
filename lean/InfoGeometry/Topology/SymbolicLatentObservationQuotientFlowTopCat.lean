@@ -12,8 +12,8 @@ open CategoryTheory
 
 The observational quotient already carries a descended continuous flow.  This
 file exposes its time slices as categorical morphisms and homeomorphisms.  No
-extra quotient-topology or dynamical hypothesis is introduced here: continuity
-remains the explicit hypothesis required by the quotient-flow owner.
+extra quotient-topology or dynamical property is introduced here: continuity
+remains the explicit property required by the quotient-flow owner.
 -/
 
 abbrev SymbolicLatentObservationQuotientObject

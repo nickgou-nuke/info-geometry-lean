@@ -19,7 +19,7 @@ open InfoGeometry.Quantum
 Geometry-side packet for the Erlangen/Langlands lane.
 
 This carries a concrete bilingual upper-half-plane datum and its corresponding
-completed `L`-function witness so that the geometric/categorical content is
+completed `L`-function property so that the geometric/categorical content is
 explicitly retained in the lane pipeline.
 -/
 structure LanglandsLaneGeometryPacket

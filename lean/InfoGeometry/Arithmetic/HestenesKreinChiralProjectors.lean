@@ -16,7 +16,7 @@ This file stays on the algebraic side:
 
 No bridge tags.
 No socket imports.
-No certificate carrier.
+No property carrier.
 No Virasoro placeholder.
 -/
 

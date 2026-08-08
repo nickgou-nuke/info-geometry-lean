@@ -122,7 +122,7 @@ theorem measurableOperator_modularFlow_state_stable
 
 /--
 Bridge to the owned operatorial uncertainty surface:
-measurability exposes the spectral commutation witness and grants the
+measurability exposes the spectral commutation property and grants the
 Robertson-Schrödinger channel inequality for phase-linear `X`.
 -/
 @[rep_depth transport]

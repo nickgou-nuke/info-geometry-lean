@@ -4,6 +4,8 @@ import Mathlib.Tactic.NoncommRing
 
 namespace InfoGeometry.Physics.Geometry
 
+namespace LegacyCayleyPoincareTransform
+
 open InfoGeometry.Physics
 
 variable {A : Type*} [CommRing A] [StarRing A]
@@ -44,5 +46,7 @@ theorem braid_dirac_identity (Delta : A) :
     simp [artinBraidGenerator, diracOperator, chiralGrading,
       Matrix.mul_apply, Matrix.add_apply, Matrix.one_apply, Matrix.vecMul,
       dotProduct, Fin.sum_univ_two] <;> ring
+
+end LegacyCayleyPoincareTransform
 
 end InfoGeometry.Physics.Geometry

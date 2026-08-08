@@ -7,7 +7,7 @@ namespace InfoGeometry.Topology
 # A theorem-honest interface for path concatenation
 
 The half restrictions are canonical.  A continuous piecewise gluing requires
-an endpoint compatibility proof, so this owner packages the gluing witness
+an endpoint compatibility proof, so this owner packages the gluing property
 explicitly rather than pretending that an arbitrary pair of paths has already
 been glued.
 -/

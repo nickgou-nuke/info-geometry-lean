@@ -1,0 +1,289 @@
+[
+  {
+    "name": "Clifford55AnomalyOSP.BottOSPColimitSocket.zeroModesSurviveThermodynamicLimit",
+    "kind": null,
+    "module": "Clifford55AnomalyOSP",
+    "used_by": 1,
+    "deps": 0
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 26,
+    "deps": 1
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.boltzmannEntropy",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 2,
+    "deps": 6
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.boltzmannEntropy_eq_expect_energy_add_potential",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 1,
+    "deps": 9
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.energy",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 5,
+    "deps": 5
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.exponentialDensity",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 5,
+    "deps": 4
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.instFintype",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 4,
+    "deps": 0
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.legendreFenchel",
+    "kind": "def",
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 0,
+    "deps": 0
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.logGeneratingPotential",
+    "kind": "def",
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 0,
+    "deps": 3
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.mk",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 1,
+    "deps": 0
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.modularHamiltonian",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 4,
+    "deps": 4
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.modularHamiltonian_eq_energy_add_potential",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 2,
+    "deps": 6
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.ModularJLegendreFenchelSocket",
+    "kind": "inductive",
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 0,
+    "deps": 1
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.ModularJLegendreFenchelSocket.mk",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 1,
+    "deps": 0
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.moment",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 1,
+    "deps": 0
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.pairing",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 1,
+    "deps": 0
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.partition",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 1,
+    "deps": 5
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.souriau_operatorial_dictionary",
+    "kind": "theorem",
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 0,
+    "deps": 10
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 4,
+    "deps": 1
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.expectation_goutevTonevUnit",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 2,
+    "deps": 3
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.expectation_modularHamiltonianOp",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 1,
+    "deps": 5
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.expectation_operatorBregmanGenerator",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 3,
+    "deps": 2
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.goutevTonev_operator_synthesis",
+    "kind": "theorem",
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 0,
+    "deps": 6
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.GoutevTonevAnalyticReadoutSocket",
+    "kind": "inductive",
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 0,
+    "deps": 1
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.GoutevTonevAnalyticReadoutSocket.mk",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 1,
+    "deps": 0
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.goutevTonevUnit",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 7,
+    "deps": 1
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.goutevTonevUnit_zero",
+    "kind": "theorem",
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 0,
+    "deps": 2
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.goutevTonevUnit._proof_1",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 4,
+    "deps": 0
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.hamiltonianOp",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 4,
+    "deps": 0
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.identityOp",
+    "kind": "def",
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 0,
+    "deps": 0
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.mk",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 1,
+    "deps": 0
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.modularHamiltonianOp",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 3,
+    "deps": 3
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.modularHamiltonianOp_eq",
+    "kind": "theorem",
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 0,
+    "deps": 4
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.normalized_expectation_modularHamiltonianOp",
+    "kind": "theorem",
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 0,
+    "deps": 5
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.normalized_expectation_operatorBregmanGenerator",
+    "kind": "theorem",
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 0,
+    "deps": 3
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.operatorBregmanGenerator",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 6,
+    "deps": 0
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.operatorBregmanGenerator_eq_remainder",
+    "kind": "theorem",
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 0,
+    "deps": 2
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.operatorBregmanGenerator_zero",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 2,
+    "deps": 1
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.operatorBregmanGenerator.eq_1",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 1,
+    "deps": 0
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.potentialOp",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 3,
+    "deps": 0
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.StateExpectation",
+    "kind": null,
+    "module": "SouriauOperatorThermodynamics",
+    "used_by": 6,
+    "deps": 0
+  }
+]

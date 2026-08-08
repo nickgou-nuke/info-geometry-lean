@@ -478,7 +478,7 @@ def observablePreimage
 **Definition 7.3 — Support invariant with measure-like properties.**
 
 `Inv` may be ideals, subspaces, filtered modules, or spectra ordered by
-inclusion.  The cup-product axiom requires a multiplication on `Inv`.
+inclusion.  The cup-product ax!om requires a multiplication on `Inv`.
 -/
 def SupportInvariantMeasureLike
     (O Inv : Type*) [Preorder Inv] [Mul Inv]
@@ -490,7 +490,7 @@ def SupportInvariantMeasureLike
 **Definition 7.4 — Homological probability theory.**
 
 Assigns an ordered invariant to each observable event, monotone w.r.t.
-event inclusion.  The `[Preorder Inv]` makes the monotonicity axiom non-trivial.
+event inclusion.  The `[Preorder Inv]` makes the monotonicity ax!om non-trivial.
 -/
 def HomologicalProbabilityTheory (O Inv : Type*) [Preorder Inv] : Type _ :=
   {assign : Set O → Inv // ∀ (U V : Set O), U ⊆ V → assign U ≤ assign V}
@@ -836,7 +836,7 @@ section TypeIIIProbability
 **Definition 15.1 — Tracial state.**
 
 `φ` is tracial if `φ(ab) = φ(ba)` for all `a, b`.
-Type III von Neumann factors admit no finite normal tracial state.
+Type III von Neumann factors sorry no finite normal tracial state.
 -/
 def IsTracialState {A : Type*} [Ring A] (φ : A → ℝ) : Prop :=
   ∀ a b : A, φ (a * b) = φ (b * a)
@@ -998,7 +998,7 @@ theorem hurwitzDimension_spec :
 
 Ordinary probability does not require a division algebra.  Hurwitz algebras
 appear only in amplitude, spinorial, Jordan, or exceptional symmetric contexts.
-Parameterized by a divisibility hypothesis `isNormedRealDivAlg` on type `D`.
+Parameterized by a divisibility property `isNormedRealDivAlg` on type `D`.
 -/
 def HurwitzExceptionalPrinciple
     (_D : Type*) (dim : ℕ)
@@ -1294,7 +1294,7 @@ def GWBundleIsomorphismStatement
 /--
 **Theorem 22.5 — Affine closure encodes GW boundary data.**
 
-Owner-surface statement: an `AffineClosure` witness is sufficient to reconstruct
+Owner-surface statement: an `AffineClosure` property is sufficient to reconstruct
 the GW bundle isomorphism — the boundary localization residues at `BX` determine
 the quantum cohomology ring, hence the GW isomorphism between bundles with equal
 equivariant Chern classes.
@@ -1307,11 +1307,11 @@ def AffineClosureOwnerStatement
   GWBundleIsomorphismStatement Bundle ChernClass chernClasses gwTheory
 
 /--
-**Definition 22.6 — Erlangen–Langlands five-graded owner witness.**
+**Definition 22.6 — Erlangen–Langlands five-graded owner property.**
 
 Packages the five-graded symmetry group acting on a homogeneous space, the
 affine closure of that space, and the GW-bundle isomorphism principle into a
-single owner witness.  This is the §22 Erlangen–Langlands owner target.
+single owner property.  This is the §22 Erlangen–Langlands owner target.
 -/
 abbrev ErlangenFiveGradedOwnerWitness
     (Sym X XBar BX G Bundle ChernClass : Type*)
@@ -1493,11 +1493,11 @@ def KleinGromovAlignmentStatement
       gwInvariant α = locShadow locData
 
 /--
-**Definition 23.5 — Klein-Gromov master owner witness.**
+**Definition 23.5 — Klein-Gromov master owner property.**
 
 Packages the full Klein-Gromov Synthesis:
 - The Erlangen target `G/P` (homogeneous space structure)
-- Torus-orbit curve witness (coroot SL₂ orbits = rational curves)
+- Torus-orbit curve property (coroot SL₂ orbits = rational curves)
 - Weyl-graph localization datum (virtual localization data)
 - GW–localization alignment (GW = Weyl-graph shadow)
 
@@ -1620,7 +1620,7 @@ The lecture's hidden spine:
    `ωₚ(M) ~ a_D · Vol(M)^{(D-1)/D} · p^{1/D}` (cycle *p*-width Weyl law).
    Volume is the leading coefficient of asymptotic homological/spectral growth.
 
-The five witness packets below track the exact chapter structure of the roadmap.
+The five property packets below track the exact chapter structure of the roadmap.
 -/
 
 /--
@@ -1774,7 +1774,7 @@ end CycleVolumeSpectrumPacket
 **Theorem 24.4a — Cycle-spectrum packet agrees with §8 `spectralValue`.**
 
 The `spectralVal` of a `CycleVolumeSpectrumPacket` equals the `spectralValue`
-of §8 (mechanically verified directly from the `spectralVal_eq` axiom).
+of §8 (mechanically verified directly from the `spectralVal_eq` ax!om).
 -/
 theorem cycleSpectrumPacket_spectralVal_eq
     (pkt : CycleVolumeSpectrumPacket) (α : pkt.HomologyClass) :
@@ -2078,7 +2078,7 @@ def classicalToModularWitness
     cl.klDivergence⟩
 
 /--
-In the commutative specialization, the modular Radon-Nikodym witness is the
+In the commutative specialization, the modular Radon-Nikodym property is the
 actual equality of the multiplication operator readout and the cocycle readout.
 -/
 theorem classicalToModularWitness_modularNCRadonNikodymWitness_iff
@@ -2452,7 +2452,7 @@ end SpectralVolumeWeightPacket
 /--
 **Theorem 26.1a — Spectral weight is Boltzmann-tilted spectral volume.**
 
-The Boltzmann weight `w_i(β) = v_i e^{-βE_i}/Z_β` by the packet axiom.
+The Boltzmann weight `w_i(β) = v_i e^{-βE_i}/Z_β` by the packet ax!om.
 Mechanically verified: no `by rfl`.
 -/
 theorem spectralWeight_is_boltzmannTilt
@@ -2499,9 +2499,9 @@ abbrev superPartitionFunction (P : SupertraceSupervolumePacket) : ℝ := P.2.2.2
 end SupertraceSupervolumePacket
 
 /--
-**Theorem 26.2a — Supertrace axiom stated cleanly.**
+**Theorem 26.2a — Supertrace ax!om stated cleanly.**
 
-The supertrace is the even-minus-odd difference by axiom.
+The supertrace is the even-minus-odd difference by ax!om.
 Mechanically verified: no `by rfl`.
 -/
 theorem supertrace_eq_even_minus_odd
@@ -2512,7 +2512,7 @@ theorem supertrace_eq_even_minus_odd
 /--
 **Packet 26.3 — Modular volume bridge packet (grand synthesis hub).**
 
-Thin witness hub collecting comparison data between:
+Thin property hub collecting comparison data between:
 - Classical logarithmic measure model (log RN density, KL divergence);
 - Von Neumann modular model (relative modular operator, Araki entropy);
 - Spectral/Weyl geometry (density of states, asymptotic volume).

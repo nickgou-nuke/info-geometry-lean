@@ -8,7 +8,7 @@ import Lean
 /-!
 # Witness-Pack Lint — Detection Logic
 
-Detects the generic statement/witness anti-pattern in structure
+Detects the generic statement/property anti-pattern in structure
 declarations.
 
 The pattern:
@@ -30,7 +30,7 @@ This module provides detection utilities consumed by the Pauli linter
 
 ## Detection criteria
 
-A pair `(f, g)` of structure fields is a **witness-pack pair** when:
+A pair `(f, g)` of structure fields is a **property-pack pair** when:
 
 1. `f` is a field whose *name* ends in `_statement`, AND
 2. `f`'s projected type, after stripping the self-parameter binder, is
@@ -72,9 +72,9 @@ private def endsWithStatement (s : String) : Bool :=
 private def endsWithWitness (s : String) : Bool :=
   s.endsWith "_sorry"
 
-/-- Compute the expected witness field name from a statement field name.
+/-- Compute the expected property field name from a statement field name.
     `foo_statement` → `foo_sorry`. -/
-private def witnessNameOf (statementName : String) : String :=
+private def propertyNameOf (statementName : String) : String :=
   (statementName.dropEnd "_statement".length).toString ++ "_sorry"
 
 -- ============================================================
@@ -90,14 +90,14 @@ structure VacuityPair where
   deriving Repr, Inhabited
 
 /--
-Detect generic statement/witness pairs in the fields of a structure.
+Detect generic statement/property pairs in the fields of a structure.
 
 For each field `f`:
 - whose leaf name ends in `_statement` or `_sorry`, AND
 - whose projected type (after stripping the implicit self-binder) is bare `Prop`,
 
 we check whether a statement field has a companion field named
-`stem_sorry` among the structure's fields.  Bare witness fields of type `Prop`
+`stem_sorry` among the structure's fields.  Bare property fields of type `Prop`
 are reported directly.
 
 Returns an array of detected pairs (with or without companion).
@@ -118,12 +118,12 @@ def detectWitnessPackPairs (env : Environment) (structName : Name) :
         let projType := cinfo.type
         let body := stripForalls projType
         unless isBarePropSort body do continue
-        -- Every bare Prop field is a witness violation: report it directly as a cheat.
+        -- Every bare Prop field is a property violation: report it directly as a cheat.
         pairs := pairs.push { statementField := fieldName, companionField? := some fieldName }
     | none => continue
   return pairs
 
-/-- True if a structure has at least one witness-pack pair. -/
+/-- True if a structure has at least one property-pack pair. -/
 def hasWitnessPackPairs (env : Environment) (structName : Name) : Bool :=
   !(detectWitnessPackPairs env structName).isEmpty
 
@@ -131,7 +131,7 @@ def hasWitnessPackPairs (env : Environment) (structName : Name) : Bool :=
 -- § Rendered diagnostics
 -- ============================================================
 
-/-- Render a witness-pack diagnostic message for a single pair. -/
+/-- Render a property-pack diagnostic message for a single pair. -/
 def renderWitnessPackDiag (structName : Name) (pair : VacuityPair) : MessageData :=
   match pair.companionField? with
   | some wf =>
@@ -149,7 +149,7 @@ def renderWitnessPackDiag (structName : Name) (pair : VacuityPair) : MessageData
          `{pair.statementField}` with no concrete content. \
          Replace with a concrete mathematical statement or remove."
 
-/-- Render all witness-pack diagnostics for a structure. -/
+/-- Render all property-pack diagnostics for a structure. -/
 def renderAllWitnessPackDiags (structName : Name) (pairs : Array VacuityPair) :
     Array MessageData :=
   pairs.map (renderWitnessPackDiag structName)

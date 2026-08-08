@@ -6,7 +6,7 @@ noncomputable section
 /-!
 # Concrete Cuntz O₂ / Phase-Axis Commutation on ℓ²(CantorBoundary) ⊗ ℝ²
 
-**What:** The last missing `KLinear` hypothesis for the e₂ self-adjointness
+**What:** The last missing `KLinear` property for the e₂ self-adjointness
 chain (see `KLinearGap.lean`).
 
 **How:** We construct the concrete Hilbert space

@@ -31,7 +31,7 @@ open InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
 
 /-! ## 1. Square-free primon occupation states -/
 
-/-- A square-free primon state is a finite occupied subset of a certified prime register. -/
+/-- A square-free primon state is a finite occupied subset of a property prime register. -/
 abbrev SquareFreePrimonState (P : PrimeRegister) :=
   {S : Finset ℕ // S ⊆ P.primes}
 

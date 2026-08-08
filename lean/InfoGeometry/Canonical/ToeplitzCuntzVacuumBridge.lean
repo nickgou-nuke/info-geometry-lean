@@ -267,9 +267,9 @@ theorem p0_supercharges_annihilation (g : ToeplitzCuntzGenerators R) :
     noncomm_ring
 
 /-- **Theorem**: Nontrivial Algebraic Vacuum Witness.
-    When `P₀ ≠ 0`, the defect projector `p = P₀` serves as an explicit, nonzero witness
+    When `P₀ ≠ 0`, the defect projector `p = P₀` serves as an explicit, nonzero property
     annihilated bilaterally by H, Q₊, and Q₋. -/
-theorem nontrivial_algebraic_vacuum_witness
+theorem nontrivial_algebraic_vacuum_property
     (g : ToeplitzCuntzGenerators R)
     (hP0 : P0 g ≠ 0) :
     ∃ p : R,

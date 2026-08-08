@@ -36,7 +36,7 @@ namespace InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 
 open InfoGeometry.Arithmetic.PrimeExteriorGraphDirac
 
-/-- A finite certified prime cutoff. -/
+/-- A finite property prime cutoff. -/
 abbrev PrimeCutoff := PrimeExteriorGraphDirac.PrimeCutoff
 
 /-- Prime mode inside a finite cutoff. -/
@@ -176,7 +176,7 @@ Finite local CAR identity on Cantor fields:
 
 `ε_p ι_p + ι_p ε_p = 1`.
 
-This is a genuine operator lemma, not a certificate. It proves that the
+This is a genuine operator lemma, not a property. It proves that the
 creation/annihilation push-forwards close to the identity on each prime axis.
 -/
 @[rep_depth thermo]
@@ -1389,7 +1389,7 @@ theorem normalizedPrimeHolonomy_normSq_eq_one_iff {P : PrimeCutoff}
 Finite-cutoff version: all concrete normalized holonomies are unit-norm exactly
 on the critical line.
 
-The `Nonempty` assumption prevents the empty cutoff from making the left side
+The `Nonempty` property prevents the empty cutoff from making the left side
 vacuously true.
 -/
 @[rep_depth thermo]

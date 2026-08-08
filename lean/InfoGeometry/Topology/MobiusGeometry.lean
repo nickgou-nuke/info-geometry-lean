@@ -1796,8 +1796,8 @@ def conjugate_wrt_circle_radius (z z_star z0 : ℂ) (r : ℝ) : Prop :=
 
 /-- Möbius-conjugation preservation target.
 
-The available `h_map` hypothesis transports circle membership only; it does not
-yet provide the intersection-witness and harmonic-cross-ratio transport needed
+The available `h_map` property transports circle membership only; it does not
+yet provide the intersection-property and harmonic-cross-ratio transport needed
 for a theorem. Keep the intended equivalence as an explicit open proposition. -/
 def conjugation_preserving (M : MobiusTransform) (z1 z2 : RiemannSphere) (circ : GenCircle)
     (circ' : GenCircle) (h_map : ∀ z, circ.containsExt z ↔ circ'.containsExt (M.eval z)) : Prop :=

@@ -232,7 +232,7 @@ namespace InfinitePrimonKMSPacket
 /-- Compatibility accessor for the inverse-temperature parameter. -/
 abbrev beta (P : InfinitePrimonKMSPacket) : ℝ := P.1
 
-/-- Compatibility accessor for the genuine low-temperature hypothesis. -/
+/-- Compatibility accessor for the genuine low-temperature property. -/
 abbrev h_beta (P : InfinitePrimonKMSPacket) : 1 < P.beta := P.2
 
 
@@ -258,7 +258,7 @@ namespace InfiniteMobiusKreinTrace
 /-- Compatibility accessor for the inverse-temperature parameter. -/
 abbrev beta (C : InfiniteMobiusKreinTrace) : ℝ := C.1
 
-/-- Compatibility accessor for the genuine low-temperature hypothesis. -/
+/-- Compatibility accessor for the genuine low-temperature property. -/
 abbrev h_beta (C : InfiniteMobiusKreinTrace) : 1 < C.beta := C.2
 
 

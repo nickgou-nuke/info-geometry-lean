@@ -2,12 +2,12 @@ import InfoGeometry.Canonical.Cl11TensorInductiveLimitWitness
 import InfoGeometry.Canonical.CliffordCARAlgebraicTopologicalComparison
 
 /-!
-# Tensor-inductive-limit witness and topological comparison
+# Tensor-inductive-limit property and topological comparison
 
 This owner connects the concrete `TensorInductiveLimit` packaging of the
 `Cl(1,1)` tower with the existing algebraic-to-`TopCat` comparison.  It does
 not put a topology on the algebraic direct limit and does not assert a
-topological universal property for the witness.
+topological universal property for the property.
 -/
 
 noncomputable section

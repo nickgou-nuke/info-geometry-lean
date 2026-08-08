@@ -1,0 +1,7 @@
+Initializing Braid Group B_4...
+Generators: (s0, s1, s2)
+Original word: s0*s1*s0^-1*s1
+Left normal form: (s0^-1*s1^-1*s0^-1*s2^-1*s1^-1*s0^-1, s0*s1*s2*s1*s0, s0*s1, s1)
+Certificate mapping original word to its normal-form generator list:
+Original syllables: ((s0, 1), (s1, 1), (s0, -1), (s1, 1))
+Normal Form: (s0^-1*s1^-1*s0^-1*s2^-1*s1^-1*s0^-1, s0*s1*s2*s1*s0, s0*s1, s1)

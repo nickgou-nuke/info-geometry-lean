@@ -8,7 +8,7 @@ Capstone scaffold for the operator-Penrose unification lane.
 
 This file is intentionally a typed closure surface for the bounded/regularized
 program first. It records the five open junction obligations from `docs/ModuleMap.md`
-and packages a single theorem-shaped capstone witness.
+and packages a single theorem-shaped capstone property.
 
 Full unbounded Type III closure is tracked as a later translation layer.
 -/
@@ -52,7 +52,7 @@ abbrev CoherentClosure
     F.mapState (P.generator (P.act o s))
       = Q.generator (Q.act (F.mapObservable o) (F.mapState s))
 
-/-- Every intertwiner carries a canonical generator-preservation witness. -/
+/-- Every intertwiner carries a canonical generator-preservation property. -/
 @[rep_depth krein]
 theorem generatorPreservation_of_intertwiner
     {P Q : Presentation} (F : Intertwiner P Q) :
@@ -96,7 +96,7 @@ def CountProjectivePolarizedAttachment
   ∃ F : Intertwiner S.operatorLane S.causalCompactifiedLane,
     ReadoutPreservation F
 
-/-- Junction 3: one twisted end-to-end finite-dimensional witness. -/
+/-- Junction 3: one twisted end-to-end finite-dimensional property. -/
 @[rep_depth krein]
 def TwistedFiniteDimensionalWitness
     (S : UnifiedCompactificationSystem) : Prop :=
@@ -129,7 +129,7 @@ theorem realizedProjectorTomitaIdentification_canonical
 
 /--
 Capstone discharge for junction 2:
-readout preservation follows from the capstone intertwiner witness.
+readout preservation follows from the capstone intertwiner property.
 -/
 @[rep_depth krein]
 theorem countProjectivePolarizedAttachment_of_capstone
@@ -141,7 +141,7 @@ theorem countProjectivePolarizedAttachment_of_capstone
 
 /--
 Capstone discharge for junction 4:
-generator preservation follows from the capstone intertwiner witness.
+generator preservation follows from the capstone intertwiner property.
 -/
 @[rep_depth krein]
 theorem tightenedWeylAnomalyResponse_of_capstone
@@ -215,8 +215,8 @@ theorem junction5_spinor_modular_identification
 
 /--
 Constructive dependency bundle:
-all junctions except the finite witness are discharged by the capstone witness,
-and the finite witness is supplied explicitly by `hFinite`.
+all junctions except the finite property are discharged by the capstone property,
+and the finite property is supplied explicitly by `hFinite`.
 -/
 @[rep_depth krein]
 theorem unificationDependencies_of_capstone
@@ -234,7 +234,7 @@ theorem unificationDependencies_of_capstone
     spinorModularIdentification_of_capstone S Φ hBoundary hGenerator⟩
 
 /--
-Capstone witness wrapper for constructive dependency discharge.
+Capstone property wrapper for constructive dependency discharge.
 -/
 @[rep_depth krein]
 theorem unificationDependencies_of_capstoneWitness
@@ -249,7 +249,7 @@ theorem unificationDependencies_of_capstoneWitness
     S Φ hReadout hGenerator hBoundary hFinite
 
 /--
-Fully bundled bounded dependency discharge from a closed capstone witness.
+Fully bundled bounded dependency discharge from a closed capstone property.
 -/
 @[rep_depth krein]
 theorem unificationDependencies_of_closedCapstoneWitness
@@ -284,7 +284,7 @@ theorem operator_penrose_unification
 /--
 Dependency-free closure form:
 the capstone theorem can be stated without an externally packaged dependency
-record once a concrete finite witness is provided.
+record once a concrete finite property is provided.
 -/
 @[rep_depth krein]
 theorem operator_penrose_unification_of_capstone
@@ -302,7 +302,7 @@ theorem operator_penrose_unification_of_capstone
 
 /--
 Closed-capstone form of the bounded unification theorem: all junction
-dependencies are internal to one witness package.
+dependencies are internal to one property package.
 -/
 @[rep_depth krein]
 theorem operator_penrose_unification_closed
@@ -341,7 +341,7 @@ structure UnboundedModularTranslation (S : UnifiedCompactificationSystem) where
           (translation.mapObservable o) (translation.mapState s)
 
 /--
-A bounded capstone witness seeds the unbounded program at the contract level.
+A bounded capstone property seeds the unbounded program at the contract level.
 -/
 @[rep_depth krein]
 theorem boundedCapstone_seeds_unbounded_translation

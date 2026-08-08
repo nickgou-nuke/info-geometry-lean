@@ -1,0 +1,19 @@
+\section{Calibrated CMOS Quasi-Deviance}
+\label{sec:cmos_quasideviance}
+
+To develop a principled anomaly detector for RAW CMOS sequences, we begin with the underlying physical variance law of the sensor. The total heteroscedastic variance of a pixel, under standard operation, is modeled by the polynomial:
+\begin{equation}
+V(\mu) = c_0 + c_1\mu + c_2\mu^2,
+\end{equation}
+subject to the constraints
+\begin{equation}
+c_0 > 0, \qquad c_1, c_2 \ge 0.
+\end{equation}
+Here, $c_0$ captures the constant read noise floor, $c_1\mu$ models the Poisson-distributed photon shot noise, and $c_2\mu^2$ accounts for multiplicative gain variations or flat-fielding uncertainties at high signal levels.
+
+Given this variance function, we construct the quasi-deviance observation model as the foundational physical metric for the estimator. The quasi-deviance $D_V(x | \mu)$ between an observation $x$ and an expected background $\mu$ is defined via the integral:
+\begin{equation}
+D_V(x|\mu) = 2\int_\mu^x \frac{x-u}{V(u)}\,du.
+\end{equation}
+
+By construction, this quasi-deviance locally scales the squared prediction error by the physical variance, smoothly interpolating between Gaussian geometry in the read-noise limit, Poisson geometry in the shot-noise limit, and Itakura--Saito (Gamma) geometry in the high-signal limit. This provides a robust, physics-informed distance measure that governs the admission responsibility of incoming pixels without requiring ad hoc variance stabilization transforms.

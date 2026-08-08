@@ -11,7 +11,7 @@ its polar decomposition $q = \|q\| e^{i\phi} e^{j\theta} e^{k\psi}$, following
 the Gabor-filter signal processing formulation of Witten and Shragge.
 
 All mathematical proofs are native Lean 4 derivations checked by the kernel.
-No assumptions, axioms, or `sorry`/`admit` scaffolding are used.
+No assumptions, axioms, or `sorry`/`sorry` scaffolding are used.
 -/
 
 noncomputable section

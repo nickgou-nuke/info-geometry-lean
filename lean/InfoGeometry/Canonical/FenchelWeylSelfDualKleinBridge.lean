@@ -103,7 +103,7 @@ theorem kleinBottle_weyl_kleinReassoc :
       InfoGeometry.Canonical.SelfDualWeylRootKleinBridge.kleinA :=
   SelfDualWeylRootKleinBridge.kleinA_mul_kleinW_eq_kleinW_mul_kleinBx_mul_kleinA
 
-/-- Explicit non-commutation witness kept at this bridge layer. -/
+/-- Explicit non-commutation property kept at this bridge layer. -/
 theorem kleinBottle_weyl_noncommute :
     InfoGeometry.Canonical.SelfDualWeylRootKleinBridge.kleinA *
       InfoGeometry.Canonical.SelfDualWeylRootKleinBridge.kleinW ≠

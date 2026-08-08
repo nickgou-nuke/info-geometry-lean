@@ -1,0 +1,24 @@
+// prigogine_ideals.sing
+// D-modules for non-equilibrium metric flow driven by Itakura-Saito divergence
+
+LIB "dmod.lib";
+
+ring r = 0,(x,y,t),(dp,dp,dp);
+// Weyl algebra setup
+def D = Weyl();
+setring D;
+
+// Metric flow equations representation
+poly f1 = x*dx + y*dy + t*dt;
+poly f2 = dx^2 + dy^2 - dt^2; // Wave operator / conformal part
+poly f3 = x*y*dt - t*dx*dy;   // Non-equilibrium driving term
+
+ideal I = f1, f2, f3;
+I = groebner(I);
+print("Groebner basis of Prigogine Ideal:");
+print(I);
+
+// Stability analysis: holonomic D-module check
+int h = isHolonomic(I);
+print("Is holonomic (stability of metric flow):");
+print(h);

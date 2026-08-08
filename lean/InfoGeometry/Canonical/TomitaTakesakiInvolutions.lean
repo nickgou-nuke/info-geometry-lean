@@ -129,4 +129,42 @@ theorem J_Tomita_reverses_flow (t : ℝ) (x : Fin 8 → ℝ) :
   ext j
   fin_cases j <;> simp [GammaNFun, boostFun, Real.cosh_neg, Real.sinh_neg] <;> ring
 
+/-- The Clifford reversion commutes with the charge-conjugation automorphism. -/
+theorem reverse_commutes_GammaN (z : Cl44) :
+    reverse (GammaN z) = GammaN (reverse z) := by
+  induction z using CliffordAlgebra.induction with
+  | algebraMap r => simp [GammaN]
+  | ι x => simp [GammaN]
+  | mul x y hx hy =>
+      simp only [map_mul, reverse.map_mul, hx, hy]
+  | add x y hx hy =>
+      simp only [map_add, reverse.map_add, hx, hy]
+
+theorem GammaN_involutive (z : Cl44) :
+    GammaN (GammaN z) = z := by
+  induction z using CliffordAlgebra.induction with
+  | algebraMap r => simp [GammaN]
+  | ι x =>
+      have h1 : ∀ v, GammaN (ι splitQ44 v) = ι splitQ44 (GammaNFun v) := by
+        intro v
+        change CliffordAlgebra.map GammaNIsometry.toIsometry (ι splitQ44 v) = _
+        rw [CliffordAlgebra.map_apply_ι]
+        rfl
+      rw [h1, h1]
+      congr 1
+      ext j
+      fin_cases j <;> simp [GammaNFun]
+  | mul x y hx hy =>
+      simp only [map_mul, hx, hy]
+  | add x y hx hy =>
+      simp only [map_add, hx, hy]
+
+/- The Tomita map is therefore an involution on the whole Clifford carrier. -/
+theorem J_Tomita_involutive (z : Cl44) :
+    J_Tomita (J_Tomita z) = z := by
+  change reverse (GammaN (reverse (GammaN z))) = z
+  rw [reverse_commutes_GammaN]
+  simp only [reverse_reverse]
+  exact GammaN_involutive z
+
 end InfoGeometry.Canonical.TomitaTakesakiInvolutions

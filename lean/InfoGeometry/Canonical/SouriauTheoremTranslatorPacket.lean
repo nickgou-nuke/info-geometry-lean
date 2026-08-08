@@ -131,7 +131,7 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 Stage-2 operatorial enrichment for Claim D on the doubled-Krein lane.
 
 This is the constructive operator analog of the inverse-Hessian narrative:
-given a continuous-linear equivalence witness for the Fisher side, the entropy
+given a continuous-linear equivalence property for the Fisher side, the entropy
 and Fisher Hessians form a two-sided inverse packet on the operator carrier.
 -/
 @[rep_depth thermo]
@@ -159,7 +159,7 @@ end OperatorLegendreEnrichment
 Strict Onsager equilibrium gate.
 
 The finite PSD theorem proves `σ ≥ 0`. The stronger equality case
-`σ = 0 ↔ force = 0` requires a stricter positivity/nondegeneracy hypothesis,
+`σ = 0 ↔ force = 0` requires a stricter positivity/nondegeneracy property,
 so it is represented here as explicit proof-carrying data.
 -/
 @[rep_depth thermo]
@@ -363,7 +363,7 @@ theorem structuredSouriauTranslatorPacket
  claimE_entropyProduction_nonneg_of_PSD C.M C.T hPSD xβ xμ⟩
 
 /--
-Combined theorem packet with the finite positivity hypothesis narrowed to the
+Combined theorem packet with the finite positivity property narrowed to the
 actual remaining determinant gate.
 -/
 @[rep_depth thermo]
@@ -404,7 +404,7 @@ theorem structuredSouriauTranslatorPacket_of_det_nonneg
 
 /--
 Claim K: the Karush-Kuhn-Tucker reading is an explicit entropy-optimization
-hypothesis packet.
+property packet.
 
 This keeps the literature phrase "KKT conditions" separate from the repo's
 chiral `KKTCore` corridor. A concrete optimization model must supply cone
@@ -426,7 +426,7 @@ theorem claimK_kktEntropyStationarity_packet
 /--
 Claim K on the exact dimension-agnostic owner lane.
 
-This removes the explicit shadow packet and the four separate KKT hypothesis
+This removes the explicit shadow packet and the four separate KKT property
 arguments on the owned exact-residual branch by reading them directly from
 `DimensionAgnosticKKTResiduals.exact`.
 -/
@@ -511,7 +511,7 @@ theorem structuredSouriauKKTTranslatorPacket_ofExactResiduals_det_nonneg
 
 /--
 Constructive route through `souriauFisherResponseMatrix_positiveSemidefinite_of_det_nonneg`.
-Eliminates the explicit `hPSD` hypothesis.
+Eliminates the explicit `hPSD` property.
 -/
 @[rep_depth thermo]
 theorem structuredSouriauKKTTranslatorPacket_ofExactResiduals_of_det
@@ -659,7 +659,7 @@ theorem claimF_superSouriauFermionGas_packet
 
 /--
 Constructive translator packet using an `IdentityBalancedStressSeed` instead of an explicit
-`WeylSupertraceFreeStressContext`. This removes the explicit `W` hypothesis by building the
+`WeylSupertraceFreeStressContext`. This removes the explicit `W` property by building the
 required context via `IdentityBalancedStressSeed.toContext`.
 -/
 @[rep_depth thermo]
@@ -727,7 +727,7 @@ def claimF_W {State : Type u} {EvenMoment : Type v} {OddMoment : Type w}
 /--
 Claim F with identity-balanced stress.
 
-Removes the explicit `WeylSupertraceFreeStressContext` hypothesis by using the
+Removes the explicit `WeylSupertraceFreeStressContext` property by using the
 `ofIdentityBalanced` constructor.
 -/
 @[rep_depth thermo, capstone]

@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.SplitOctonionClassificationCore
 import InfoGeometry.Tessellation.Incidence
 
 /-!
-# Split sign, idempotents, incidence, and Zorn witness claims
+# Split sign, idempotents, incidence, and Zorn property claims
 
 This file collects the theorem-safe statements that are already formalized in
 the repository and that match the text's legitimate mathematics:
@@ -73,7 +73,7 @@ theorem supported_corner_incidence_square_zero
     L.N * L.N = 0 :=
   Tessellation.supported_lightray_square_zero L
 
-/-- A non-scalar Zorn element has a nonzero commutator witness. -/
+/-- A non-scalar Zorn element has a nonzero commutator property. -/
 theorem non_scalar_has_nonzero_commutator
     {R : Type*} [CommRing R]
     {x : InfoGeometry.Canonical.ZornMatrix R}
@@ -84,8 +84,8 @@ theorem non_scalar_has_nonzero_commutator
     (R := R) (x := x) hx
 
 /--
-The concrete associator witness currently formalized in the explicit Zorn core:
-if the `y`-vector is nonzero, there exists a nonzero associator witness.
+The concrete associator property currently formalized in the explicit Zorn core:
+if the `y`-vector is nonzero, there exists a nonzero associator property.
 -/
 theorem nonzero_associator_of_y_ne_zero
     {R : Type*} [CommRing R]

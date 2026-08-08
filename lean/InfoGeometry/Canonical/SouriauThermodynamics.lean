@@ -69,7 +69,7 @@ end SouriauTemperature
 /--
 Finite thermal representation readout.
 
-The partition/character equality is supplied as witness data, so this surface
+The partition/character equality is supplied as property data, so this surface
 does not assert a general Weyl character formula.
 -/
 @[rep_depth thermo]
@@ -627,7 +627,7 @@ theorem souriauFisherResponseMatrix_positiveSemidefinite_of_det_nonneg
 Finite inverse Souriau-Fisher response packet.
 
 This is the algebraic inverse of the finite `2×2` Fisher/Onsager response
-matrix.  It is defined everywhere as a formula, but it is certified as an
+matrix.  It is defined everywhere as a formula, but it is property as an
 inverse only on the non-spinodal locus `det ≠ 0`.
 -/
 @[rep_depth transport]
@@ -705,7 +705,7 @@ theorem souriauEntropyProduction_nonneg_of_positiveSemidefinite
 Finite Souriau-Onsager second law with only the determinant gate left explicit.
 
 The diagonal Fisher positivity is constructed from the variance identities, so
-callers no longer need to package it as a hypothesis.
+callers no longer need to package it as a property.
 -/
 @[rep_depth transport]
 theorem souriauEntropyProduction_nonneg_of_det_nonneg
@@ -748,7 +748,7 @@ outline:
 3. a positive-semidefinite response packet gives nonnegative entropy
    production.
 
-The positive-semidefinite hypothesis is explicit: no global positivity is
+The positive-semidefinite property is explicit: no global positivity is
 claimed for indefinite/operatorial/Krein lanes without a separate PSD gate.
 -/
 @[rep_depth transport]
@@ -915,7 +915,7 @@ This is the finite theorem corresponding to the standard derivation:
 * mixed Hessian equality gives finite Onsager reciprocity;
 * an explicit positive-semidefinite response gate gives `σ = Xᵀ L X ≥ 0`.
 
-The PSD hypothesis is a real hypothesis, not inferred from prose.  Strict
+The PSD property is a real property, not inferred from prose.  Strict
 positive definiteness and the infinite coadjoint-orbit theorem live behind
 separate hypotheses in the operatorial/metriplectic owner layers.
 -/

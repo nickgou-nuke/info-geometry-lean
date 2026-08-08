@@ -400,7 +400,7 @@ theorem cantorDirac_isSelfAdjoint
   exact cantorDirac_is_selfAdjoint P γ h_self
 
 /--
-Alias with explicit hypothesis naming:
+Alias with explicit property naming:
 self-adjoint Majorana generators imply self-adjoint finite Cantor Dirac.
 -/
 @[rep_depth thermo]

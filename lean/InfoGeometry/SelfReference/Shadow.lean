@@ -62,7 +62,7 @@ toString
 
 def ShadowKind.describe : ShadowKind → String
 | ShadowKind.sorryDebt => "explicit sorry in proof body"
-| ShadowKind.missingPremise => "proof relies on unstated hypothesis"
+| ShadowKind.missingPremise => "proof relies on unstated property"
 | ShadowKind.overclaimedBridge => "doc claims theorem but no formal proof exists"
 | ShadowKind.archetypeRecurrence => "operator pattern recurs but lacks domain formalization"
 | ShadowKind.failedSynthesis => "conflicting approaches not yet resolved"

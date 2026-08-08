@@ -18,7 +18,7 @@ topological-gap shadow interface.
 * `UnifiedSuperchargeOddOddBridge` owns the derived odd-odd decomposition.
 
 Because the gap owner now uses the same real odd-odd self-closure `{Q_D, Q_D}`
-as the unified Drazin lane, no extra compatibility hypothesis is needed here.
+as the unified Drazin lane, no extra compatibility property is needed here.
 -/
 
 namespace InfoGeometry.Canonical.UnifiedTopologicalGapBridge

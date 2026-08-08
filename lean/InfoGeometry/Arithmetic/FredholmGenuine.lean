@@ -101,7 +101,7 @@ The construction requires:
 Steps 1-4 are functional-analysis obligations. Step 5 is a theorem about
 the Fredholm determinant. The local mathlib snapshot does not expose a
 ready-made trace-class Fredholm determinant API in the owner searches used for
-this file, so this remains certificate data.
+this file, so this remains property data.
 
 The repo already has:
 - `FiniteToInfiniteTransitionSOP.lean`: the SOP for lifting readouts

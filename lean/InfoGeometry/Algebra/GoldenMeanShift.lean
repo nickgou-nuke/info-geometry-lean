@@ -19,7 +19,7 @@ of unity / −1, Möbius scaffolding) plus a genuine noncommutative Cuntz lift
 `X² = X + 1` of the apex into `O_2`, built on the verified
 `CuntzFibonacciBraidInclusion` embedding.
 
-NO `sorry`, NO `axiom`, NO `admit`. Every line is kernel-checked.
+NO `sorry`, NO `ax!om`, NO `sorry`. Every line is kernel-checked.
 -/
 
 /-! ## Apex re-anchoring: the seed is `τ² = τ + 1` -/

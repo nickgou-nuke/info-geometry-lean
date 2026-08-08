@@ -323,10 +323,10 @@ theorem hasCKSignature_of_square_eq_neg_one
   simpa [hasCKSignature] using h
 
 /--
-Conjugation preserves hyperbolic square law `x² = 1` via constructive signature witness.
+Conjugation preserves hyperbolic square law `x² = 1` via constructive signature property.
 -/
 @[rep_depth thermo]
-theorem conjugation_preserves_square_one_of_witness
+theorem conjugation_preserves_square_one_of_property
     (u : Units ℂ) (x : ℂ)
     (hx : hasCKSignature x CKSignature.hyperbolic) :
     (↑u * x * ↑u⁻¹) * (↑u * x * ↑u⁻¹) = 1 := by
@@ -867,7 +867,7 @@ theorem conjugation_preserves_square_zero_basic
 
 /--
 Wick twist preserves parabolic nilpotency:
-if `B² = 0`, then `(ωB)² = 0` under the same commuting hypothesis.
+if `B² = 0`, then `(ωB)² = 0` under the same commuting property.
 -/
 @[rep_depth thermo]
 theorem wick_twist_parabolic_stable
@@ -2118,7 +2118,7 @@ theorem majorana_plus_not_parabolic_of_nontrivial
   exact hx ((h1 x).symm.trans (h0 x))
 
 /--
-Owner-side CAR rigidity on the Majorana-plus lane, witness-free:
+Owner-side CAR rigidity on the Majorana-plus lane, property-free:
 under `NoZeroSMulDivisors ℤ A` and nontriviality, hyperbolic excludes elliptic.
 -/
 @[rep_depth thermo]
@@ -2930,7 +2930,7 @@ theorem projected_oddOdd_bracket_eq_two_smul_translation_plus_defect :
 /--
 Best available repo-native paired odd candidate on the Drazin lane.
 
-At present this is a Majorana-conjugate witness rather than a fully independent
+At present this is a Majorana-conjugate property rather than a fully independent
 owner-defined `Q̄_D`: it is `Q_D` viewed through the Majorana fixed-sector bridge.
 -/
 @[rep_depth transport]
@@ -3017,7 +3017,7 @@ theorem paired_oddOdd_majoranaBracket_eq_two_smul_translation_plus_defect_of_com
 /--
 Nontrivial Kramers-conjugated odd candidate on the Drazin lane.
 
-Unlike the Majorana witness above, this really uses an external symmetry action:
+Unlike the Majorana property above, this really uses an external symmetry action:
 `Θ * Q_D * Θ`.
 -/
 @[rep_depth transport]
@@ -3725,7 +3725,7 @@ theorem bogoliubov_hyperbolic_not_parabolic
   exact hx ((h1 x).symm.trans (h0 x))
 
 /--
-Non-collapse of the hyperbolic Bogoliubov lane, witness-free:
+Non-collapse of the hyperbolic Bogoliubov lane, property-free:
 if `B² = id`, it cannot also be elliptic under
 `NoZeroSMulDivisors ℤ A` and nontriviality.
 -/

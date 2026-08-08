@@ -15,7 +15,7 @@ thermodynamic/direct limit.  Use the native declarations directly:
   stage maps, descent, and uniqueness.
 
 This routing module intentionally declares no aliases or custom evidence
-structures.  The filtered hypothesis remains available through the imported
+structures.  The filtered property remains available through the imported
 `IsFiltered` API, while existence of a particular colimit is expressed by
 Mathlib's `HasColimit` instance.
 -/

@@ -6,7 +6,7 @@ open scoped InnerProductSpace
 /-!
 # InfoGeometry.Canonical.Sandbox_CP003_SingularPolarDecomposition
 
-CP-003 witness sandbox.
+CP-003 property sandbox.
 
 This file is intentionally non-authority and reuses canonical owners from
 `GlobalChiralDecomposition`. It exists to preserve translation-facing theorem
@@ -33,7 +33,7 @@ noncomputable local instance : NormedRing EndH := inferInstance
 noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
 
 /--
-CP-003 witness alias:
+CP-003 property alias:
 global active/apex decomposition on the doubled carrier.
 -/
 @[rep_depth transport]
@@ -50,7 +50,7 @@ theorem global_active_apex_decomposition
     (E := E) (CIK := CIK) (R := R) hComm
 
 /--
-CP-003 witness alias:
+CP-003 property alias:
 chiral range/domain decomposition identity.
 -/
 @[rep_depth krein]
@@ -60,7 +60,7 @@ theorem chiral_range_domain_decomposition
   exact chiralRangeDomain_decomposition (E := E) K
 
 /--
-CP-003 witness alias:
+CP-003 property alias:
 singular surrogate closure on the geometric Cartan lane.
 -/
 @[rep_depth krein]
@@ -72,7 +72,7 @@ theorem singular_polar_surrogate_closure
   exact chiralKKT_commutator_geometric_closure (E := E) K
 
 /--
-CP-003 witness package:
+CP-003 property package:
 active/apex decomposition plus KKT closure identities.
 -/
 @[rep_depth transport, capstone]

@@ -488,7 +488,7 @@ theorem cantorBinaryTiltCARCCRSupplementalTarget :
     · intro E _ _ _
       exact concreteSplitCl11CARMixed (E := E)
 
-/-! Public certificate for the bundled local `Cl(1,1)` atom. -/
+/-! Public property for the bundled local `Cl(1,1)` atom. -/
 theorem cantorBinaryLocalCl11PacketTarget :
     ∀ {Op : Type*} [Ring Op] (P : BinaryWordTiltReadout Op),
       localCl11Positive P * localCl11Positive P = 1 ∧

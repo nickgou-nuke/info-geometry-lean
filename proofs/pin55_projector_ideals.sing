@@ -1,0 +1,16 @@
+// pin55_projector_ideals.sing
+// Algebraic ideals of the P+ and P- Cartan projectors.
+
+LIB "inout.lib";
+print("Formulating algebraic ideals of the P+ and P- Cartan projectors...");
+
+// Define a polynomial ring
+ring r = 0, (p_plus, p_minus), dp;
+
+// Projectors satisfy P^2 = P and P+ * P- = 0, P+ + P- = 1
+ideal I = p_plus^2 - p_plus, p_minus^2 - p_minus, p_plus * p_minus, p_plus + p_minus - 1;
+
+// Compute Groebner basis
+ideal G = std(I);
+print("Groebner basis of the projector ideals:");
+print(G);

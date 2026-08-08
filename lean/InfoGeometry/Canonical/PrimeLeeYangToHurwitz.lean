@@ -14,8 +14,8 @@ socket.
 
 This file does not prove any prime-to-`xi` convergence statement and does not
 prove RH. It isolates the transfer step that comes after the analytic
-convergence witness. The Clifford-wavelet layer is imported only as the
-candidate source of that convergence witness.
+convergence property. The Clifford-wavelet layer is imported only as the
+candidate source of that convergence property.
 -/
 
 noncomputable section
@@ -36,7 +36,7 @@ variable {A : LeeYangApproximants}
 Completed-`xi` zeros map to the Lee--Yang circle when they are limits of
 actual roots of the finite renormalized approximants.
 
-Unlike the former relay theorem, this statement consumes no witness packet and
+Unlike the former relay theorem, this statement consumes no property packet and
 does not store the desired zero-location conclusion as data.
 -/
 @[rep_depth operator]

@@ -7,7 +7,7 @@ import Mathlib.Data.Fintype.Basic
 # Split Majorana finite character core
 
 This module used to package split-Majorana CAR/OPE and Euclidean-lift laws as
-model-supplied witness fields.  Those statements are not constructive theorem
+model-supplied property fields.  Those statements are not constructive theorem
 surfaces by themselves, so this file now keeps only the finite scalar readouts
 that are definitionally owned here.
 

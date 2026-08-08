@@ -1,0 +1,6420 @@
+{
+  "nodes": [
+    {
+      "id": "ASTExtractor",
+      "path": "proofs/ASTExtractor.lean",
+      "category": "Tooling / graph extraction",
+      "imports": [
+        "ExtractBraid"
+      ]
+    },
+    {
+      "id": "AffineDynkinGoutevTonev",
+      "path": "proofs/AffineDynkinGoutevTonev.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "iR",
+        "GoutevTonevPrinciple"
+      ]
+    },
+    {
+      "id": "AlgebraicCuntzQuotient",
+      "path": "proofs/AlgebraicCuntzQuotient.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "AlgebraicCuntzToeplitzInductive",
+      "path": "proofs/AlgebraicCuntzToeplitzInductive.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "AmariChentsovFierzTorsion",
+      "path": "proofs/AmariChentsovFierzTorsion.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "AnomalousKMSFlow",
+      "path": "proofs/AnomalousKMSFlow.lean",
+      "category": "Spectral / index / anomaly",
+      "imports": [
+        "tomita_kms_v4"
+      ]
+    },
+    {
+      "id": "ArithmeticHamiltonianZeta",
+      "path": "proofs/ArithmeticHamiltonianZeta.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "ArtinCentralizerMonodromy",
+      "path": "proofs/ArtinCentralizerMonodromy.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "ArtinMonodromyPin55",
+      "path": "proofs/ArtinMonodromyPin55.lean",
+      "category": "Braids / YBE / topology",
+      "imports": [
+        "BraidNegativeIdentityMonodromy",
+        "Clifford55AnomalyOSP"
+      ]
+    },
+    {
+      "id": "ArtinParityFlowWitness",
+      "path": "proofs/ArtinParityFlowWitness.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "BraidCliffordIntegration"
+      ]
+    },
+    {
+      "id": "AssociativeCommutatorLie",
+      "path": "proofs/AssociativeCommutatorLie.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "AtomicCliffordKAN",
+      "path": "proofs/AtomicCliffordKAN.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "B3PresentedGroup",
+      "path": "proofs/B3PresentedGroup.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "JonesBraidB3"
+      ]
+    },
+    {
+      "id": "B3RepresentationBridge",
+      "path": "proofs/B3RepresentationBridge.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "B3PresentedGroup"
+      ]
+    },
+    {
+      "id": "BPSPositiveEnergyBound",
+      "path": "proofs/BPSPositiveEnergyBound.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "BaxterAnchorManifest",
+      "path": "proofs/BaxterAnchorManifest.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "ChiralCausalCone",
+        "ChiralTensorRecoupling",
+        "TLChain",
+        "JonesBraidB3",
+        "YangBaxterQSwap",
+        "B3PresentedGroup",
+        "SpectralYangBaxter",
+        "FibAnyonThm4",
+        "HexagonCocycle",
+        "BraidNegativeIdentityMonodromy",
+        "ArtinMonodromyPin55"
+      ]
+    },
+    {
+      "id": "BiquaternionCliffordIso",
+      "path": "proofs/BiquaternionCliffordIso.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "BiquaternionExpClosure",
+      "path": "proofs/BiquaternionExpClosure.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "BiquaternionKANnilpotent",
+      "path": "proofs/BiquaternionKANnilpotent.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "BiquaternionLaplaceResolvent",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/BiquaternionLaplaceResolvent.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "BiquaternionLaplaceTripotent",
+      "path": "proofs/BiquaternionLaplaceTripotent.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "BiquaternionLogarithmMonodromy",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/BiquaternionLogarithmMonodromy.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "BiquaternionMobiusSquashing",
+      "path": "proofs/BiquaternionMobiusSquashing.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "BiquaternionNegativeRootsLog",
+      "path": "proofs/BiquaternionNegativeRootsLog.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "BlackHoleHolography",
+      "path": "proofs/BlackHoleHolography.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "BogoliubovBraidGraphWeld",
+      "path": "proofs/BogoliubovBraidGraphWeld.lean",
+      "category": "Braids / YBE / topology",
+      "imports": [
+        "BogoliubovSU3ParafermionProofChain",
+        "B3RepresentationBridge",
+        "YangBaxterQSwap",
+        "BraidIdealDescent"
+      ]
+    },
+    {
+      "id": "BogoliubovFrameTransport",
+      "path": "proofs/BogoliubovFrameTransport.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": [
+        "KANTraceSectorization"
+      ]
+    },
+    {
+      "id": "BogoliubovSU3ParafermionProofChain",
+      "path": "proofs/BogoliubovSU3ParafermionProofChain.lean",
+      "category": "Gauge / Standard Model color",
+      "imports": [
+        "BogoliubovSU3ParafermionWeld"
+      ]
+    },
+    {
+      "id": "BogoliubovSU3ParafermionWeld",
+      "path": "proofs/BogoliubovSU3ParafermionWeld.lean",
+      "category": "Gauge / Standard Model color",
+      "imports": [
+        "BogoliubovWeylChemicalPotential",
+        "GellMannSU3",
+        "ColorCARStandardModel"
+      ]
+    },
+    {
+      "id": "BogoliubovWeylChemicalPotential",
+      "path": "proofs/BogoliubovWeylChemicalPotential.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": [
+        "HestenesCuntzPhaseSpace"
+      ]
+    },
+    {
+      "id": "BosonicPrimonPartition",
+      "path": "proofs/BosonicPrimonPartition.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "BostConnesDeformation",
+      "path": "proofs/BostConnesDeformation.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "BraidCliffordIntegration",
+      "path": "proofs/BraidCliffordIntegration.lean",
+      "category": "Braids / YBE / topology",
+      "imports": [
+        "FibonacciCliffordBridge"
+      ]
+    },
+    {
+      "id": "BraidIdealDescent",
+      "path": "proofs/BraidIdealDescent.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "BraidInductiveColimitComplement",
+      "path": "proofs/BraidInductiveColimitComplement.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "BraidNegativeIdentityMonodromy",
+      "path": "proofs/BraidNegativeIdentityMonodromy.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "BrillouinKleinNilpotentAttractor",
+      "path": "proofs/BrillouinKleinNilpotentAttractor.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "BuresMetricClosedCartography",
+      "path": "proofs/BuresMetricClosedCartography.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "CARCCRCantorFock",
+      "path": "proofs/CARCCRCantorFock.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "CP3CantorGeometricObstruction",
+      "path": "proofs/CP3CantorGeometricObstruction.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": [
+        "TwistorParafermionBoundary",
+        "CantorBoundaryCuntzFamily"
+      ]
+    },
+    {
+      "id": "CPTAtom",
+      "path": "proofs/CPTAtom.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "CPTConformantTriaxialHamiltonian",
+      "path": "proofs/CPTConformantTriaxialHamiltonian.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "MirrorNucleiIsospinGNS",
+        "Q8NuclearChirality"
+      ]
+    },
+    {
+      "id": "CStarCuntzTensorQuotient",
+      "path": "proofs/CStarCuntzTensorQuotient.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "AlgebraicCuntzQuotient"
+      ]
+    },
+    {
+      "id": "CanonicalSouriauPauliThermodynamics",
+      "path": "proofs/CanonicalSouriauPauliThermodynamics.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": []
+    },
+    {
+      "id": "CantorBoundaryCuntzFamily",
+      "path": "proofs/CantorBoundaryCuntzFamily.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "ParafermionIdentityRealization",
+        "UHFInductiveColimit"
+      ]
+    },
+    {
+      "id": "CartanKleinBottleGeometry",
+      "path": "proofs/CartanKleinBottleGeometry.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "MobiusCantorTKKClosure",
+        "ProjectiveAffineConformalClosure55",
+        "Clifford55AnomalyOSP",
+        "MajoranaPrimonSpectralBridge"
+      ]
+    },
+    {
+      "id": "CartanWeylBogoliubovGravity",
+      "path": "proofs/CartanWeylBogoliubovGravity.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "CausalityCondensate",
+      "path": "proofs/CausalityCondensate.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "CayleyHilbertPolyaBraid",
+      "path": "proofs/CayleyHilbertPolyaBraid.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "CayleySchreierGauge",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/CayleySchreierGauge.lean",
+      "category": "Gauge / Standard Model color",
+      "imports": []
+    },
+    {
+      "id": "CheckLimit",
+      "path": "proofs/CheckLimit.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "CheckPUnitAdd",
+      "path": "proofs/CheckPUnitAdd.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "ChiralAffineBogoliubovWeld",
+      "path": "proofs/ChiralAffineBogoliubovWeld.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "SupergradedCuntzBdG",
+        "ChiralCausalCone",
+        "BogoliubovWeylChemicalPotential"
+      ]
+    },
+    {
+      "id": "ChiralB3PresentedBridge",
+      "path": "proofs/ChiralB3PresentedBridge.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "ChiralTensorRecoupling",
+        "ChiralTensorMatrixBridge",
+        "TLChain",
+        "JonesBraidB3",
+        "YangBaxterQSwap",
+        "B3PresentedGroup"
+      ]
+    },
+    {
+      "id": "ChiralCausalCone",
+      "path": "proofs/ChiralCausalCone.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "CPTAtom",
+        "SolderingSpinConnectionBogoliubov",
+        "SplitCliffordAlgebras"
+      ]
+    },
+    {
+      "id": "ChiralCuntzInductive",
+      "path": "proofs/ChiralCuntzInductive.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "AlgebraicCuntzToeplitzInductive"
+      ]
+    },
+    {
+      "id": "ChiralGUEWignerDyson",
+      "path": "proofs/ChiralGUEWignerDyson.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "ChiralIsospinEOMSU2",
+      "path": "proofs/ChiralIsospinEOMSU2.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "ColorConfinementGNS",
+        "WeakIsospinSU2",
+        "ChiralAffineBogoliubovWeld"
+      ]
+    },
+    {
+      "id": "ChiralPoincareSouriauBridge",
+      "path": "proofs/ChiralPoincareSouriauBridge.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "ChiralScratch",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/ChiralScratch.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "ChiralTLDescent",
+      "path": "proofs/ChiralTLDescent.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "TLChain",
+        "ChiralTensorRecoupling",
+        "ChiralTensorMatrixBridge",
+        "BraidIdealDescent"
+      ]
+    },
+    {
+      "id": "ChiralTensorMatrixBridge",
+      "path": "proofs/ChiralTensorMatrixBridge.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "ChiralTensorRecoupling",
+        "TLChain"
+      ]
+    },
+    {
+      "id": "ChiralTensorRecoupling",
+      "path": "proofs/ChiralTensorRecoupling.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "ChiralCausalCone"
+      ]
+    },
+    {
+      "id": "ChiralTwistedFibration",
+      "path": "proofs/ChiralTwistedFibration.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "Cl11ChiralCARBridge",
+      "path": "proofs/Cl11ChiralCARBridge.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "ChiralCausalCone"
+      ]
+    },
+    {
+      "id": "Clifford55AnomalyOSP",
+      "path": "proofs/Clifford55AnomalyOSP.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "CliffordFiveFiveAnomaly",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/CliffordFiveFiveAnomaly.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "CliffordInductiveTripotent",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/CliffordInductiveTripotent.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "CognitiveAccretionDiskSelfReferential",
+      "path": "proofs/CognitiveAccretionDiskSelfReferential.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "ColorCARStandardModel",
+      "path": "proofs/ColorCARStandardModel.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "ChiralCausalCone",
+        "ChiralTensorRecoupling",
+        "BraidIdealDescent",
+        "ChiralTLDescent"
+      ]
+    },
+    {
+      "id": "ColorConfinementGNS",
+      "path": "proofs/ColorConfinementGNS.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "S3ColorSpinorDecomposition",
+        "JaynesLDDPGNSColimit",
+        "SU3LoopBraidDuality"
+      ]
+    },
+    {
+      "id": "CompleteHolographicDictionary",
+      "path": "proofs/CompleteHolographicDictionary.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "ComplexStarCuntzRedesign",
+      "path": "proofs/ComplexStarCuntzRedesign.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "CStarCuntzTensorQuotient"
+      ]
+    },
+    {
+      "id": "ComplexTemperatureRH",
+      "path": "proofs/ComplexTemperatureRH.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "ConcreteCliffordDiracTower",
+      "path": "proofs/ConcreteCliffordDiracTower.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "ConnesSpectralAction",
+      "path": "proofs/ConnesSpectralAction.lean",
+      "category": "Spectral / index / anomaly",
+      "imports": [
+        "AnomalousKMSFlow"
+      ]
+    },
+    {
+      "id": "ContinuumAsColimitCounting",
+      "path": "proofs/ContinuumAsColimitCounting.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "JaynesLDDPGNSColimit"
+      ]
+    },
+    {
+      "id": "ConvexAlgebraicDuality",
+      "path": "proofs/ConvexAlgebraicDuality.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "CptFractalClosure",
+      "path": "proofs/CptFractalClosure.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "CptTensorFractal",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/CptTensorFractal.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "CramerRaoFisher",
+      "path": "proofs/CramerRaoFisher.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": []
+    },
+    {
+      "id": "Crystallographic",
+      "path": "proofs/Crystallographic.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "CubicJordanPeirceDecomposition",
+      "path": "proofs/CubicJordanPeirceDecomposition.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "CuntzBoundarySolderRealization",
+      "path": "proofs/CuntzBoundarySolderRealization.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "ParafermionIdentityRealization",
+        "CantorBoundaryCuntzFamily",
+        "WeylSolderedParafermionSymmetry"
+      ]
+    },
+    {
+      "id": "CuntzDeformedSuperPoincare",
+      "path": "proofs/CuntzDeformedSuperPoincare.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "SupergradedCuntzBdG",
+        "SuperPoincareOperatorCharges",
+        "LorentzBoostMinkowski",
+        "ChiralPoincareSouriauBridge"
+      ]
+    },
+    {
+      "id": "CuntzK0TorsionRelation",
+      "path": "proofs/CuntzK0TorsionRelation.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "CuntzKTheoryPairing",
+      "path": "proofs/CuntzKTheoryPairing.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "ConnesSpectralAction",
+        "AnomalousKMSFlow"
+      ]
+    },
+    {
+      "id": "CuntzKreinMinkowski",
+      "path": "proofs/CuntzKreinMinkowski.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "CuntzKriegerFibonacciK",
+      "path": "proofs/CuntzKriegerFibonacciK.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "CuntzKriegerKTheory",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/CuntzKriegerKTheory.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "CuntzKriegerPrimon",
+      "path": "proofs/CuntzKriegerPrimon.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "CurryHowardLambekColimit",
+      "path": "proofs/CurryHowardLambekColimit.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "ContinuumAsColimitCounting",
+        "HillWheelerUniversalProjection"
+      ]
+    },
+    {
+      "id": "CurryHowardLambekPhysics",
+      "path": "proofs/CurryHowardLambekPhysics.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "ContinuumAsColimitCounting",
+        "MobiusCantorTKKClosure",
+        "PrimonCoarseGraining"
+      ]
+    },
+    {
+      "id": "DeterminantMoebiusFunctor",
+      "path": "proofs/DeterminantMoebiusFunctor.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "DeterminantSupergrading",
+        "TrifactorGeometry",
+        "MobiusInversion"
+      ]
+    },
+    {
+      "id": "DeterminantSupergrading",
+      "path": "proofs/DeterminantSupergrading.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "DikinGoutevTonevBridge",
+      "path": "proofs/DikinGoutevTonevBridge.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": [
+        "KreinMoorePenrose",
+        "InformationGeometricCutoff",
+        "SouriauOperatorThermodynamics"
+      ]
+    },
+    {
+      "id": "DikinOnsagerCramerRaoOperator",
+      "path": "proofs/DikinOnsagerCramerRaoOperator.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "PrimonFlavorCKM",
+        "DikinGoutevTonevBridge",
+        "SouriauOperatorThermodynamics",
+        "RescaledPhaseVolumeCanonical"
+      ]
+    },
+    {
+      "id": "DiracColimit",
+      "path": "proofs/DiracColimit.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "DiracFourierMellin",
+      "path": "proofs/DiracFourierMellin.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "DiracKreinMetriplectic",
+      "path": "proofs/DiracKreinMetriplectic.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "DiracResolventZeroModeTripotent",
+      "path": "proofs/DiracResolventZeroModeTripotent.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "DiracZeroModes",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/DiracZeroModes.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "DumpLeanGraph",
+      "path": "proofs/tools/lean_graph/DumpLeanGraph.lean",
+      "category": "Tooling / graph extraction",
+      "imports": []
+    },
+    {
+      "id": "DupontHypersurfaceOSModel",
+      "path": "proofs/DupontHypersurfaceOSModel.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "NonIsoConf3QuadricD4PointCount"
+      ]
+    },
+    {
+      "id": "EinsteinThermodynamicBridge",
+      "path": "proofs/EinsteinThermodynamicBridge.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": [
+        "InformationGeometricCutoff",
+        "BlackHoleHolography"
+      ]
+    },
+    {
+      "id": "EmergentSpacetimeAnsatz",
+      "path": "proofs/EmergentSpacetimeAnsatz.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "EuclideanNilpotentObstruction",
+      "path": "proofs/EuclideanNilpotentObstruction.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "ChiralCausalCone"
+      ]
+    },
+    {
+      "id": "ExceptionalBraidTopology",
+      "path": "proofs/ExceptionalBraidTopology.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "ExceptionalKleinGlideEP",
+      "path": "proofs/ExceptionalKleinGlideEP.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "ExceptionalNonorientableTopology",
+      "path": "proofs/ExceptionalNonorientableTopology.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "ExceptionalPointCollapse",
+      "path": "proofs/ExceptionalPointCollapse.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "ExceptionalPointMonodromy",
+      "path": "proofs/ExceptionalPointMonodromy.lean",
+      "category": "Braids / YBE / topology",
+      "imports": [
+        "ExceptionalPointNullSector",
+        "DeterminantSupergrading",
+        "Z2NonAbelianBraiding",
+        "LieFlowCompilerBridge"
+      ]
+    },
+    {
+      "id": "ExceptionalPointNullSector",
+      "path": "proofs/ExceptionalPointNullSector.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "ExceptionalTopologicalBandStructures",
+      "path": "proofs/ExceptionalTopologicalBandStructures.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "ExtractBraid",
+      "path": "proofs/ExtractBraid.lean",
+      "category": "Tooling / graph extraction",
+      "imports": []
+    },
+    {
+      "id": "ExtractGraph",
+      "path": "proofs/tools/ExtractGraph.lean",
+      "category": "Tooling / graph extraction",
+      "imports": [
+        "ChiralCausalCone",
+        "ChiralTensorRecoupling",
+        "TLChain",
+        "JonesBraidB3",
+        "YangBaxterQSwap",
+        "B3PresentedGroup",
+        "YangBaxterQuotientDescent",
+        "BraidIdealDescent",
+        "ChiralTensorMatrixBridge",
+        "ChiralTLDescent",
+        "ChiralB3PresentedBridge",
+        "AlgebraicCuntzQuotient",
+        "CStarCuntzTensorQuotient",
+        "ComplexStarCuntzRedesign",
+        "SupergradedCuntzBdG",
+        "HestenesCuntzSpacetimeAlgebra",
+        "HestenesCuntzPhaseSpace",
+        "BogoliubovWeylChemicalPotential",
+        "RelativeModularStateDikin",
+        "RescaledPhaseVolumeCanonical",
+        "GaugeUHFLift",
+        "WeylGaugeColimitWeld",
+        "WeylColimitCanonicalLimit",
+        "BogoliubovSU3ParafermionWeld",
+        "BogoliubovSU3ParafermionProofChain",
+        "WeylSU3ColorSymmetry",
+        "GellMannParafermionSolder",
+        "ParafermionIdentityRealization",
+        "CantorBoundaryCuntzFamily",
+        "WeylSolderedParafermionSymmetry",
+        "CuntzBoundarySolderRealization",
+        "GellMannParafermionRealizationRoutesSynthesis",
+        "BogoliubovBraidGraphWeld",
+        "SplitCliffordAlgebras",
+        "AtomicCliffordKAN",
+        "BiquaternionCliffordIso",
+        "BiquaternionExpClosure",
+        "BiquaternionKANnilpotent",
+        "BiquaternionLaplaceTripotent",
+        "TrifactorGeometry",
+        "TripotentCliffordColimit",
+        "ZornParavectorNullspace",
+        "ZornScalingFlow",
+        "SouriauMoebiusCoupling",
+        "SouriauBiquaternionGaussian",
+        "SouriauHestenesKrein",
+        "ExceptionalBraidTopology",
+        "ExceptionalPointCollapse",
+        "MobiusWittenIndex",
+        "OctonionMatrixEncodings",
+        "SplitOctonionBraidSU3",
+        "SplitOctonionMinkowski",
+        "Clifford55AnomalyOSP",
+        "MinkowskiBiquaternion",
+        "PolynomialSymmetryOperators",
+        "BraidCliffordIntegration",
+        "ColorCARStandardModel",
+        "FureyCharges",
+        "KreinMoorePenrose",
+        "GoutevTonevPrinciple",
+        "DikinGoutevTonevBridge",
+        "AffineDynkinGoutevTonev",
+        "GellMannCartan",
+        "GellMannSU3",
+        "WeakIsospinSU2",
+        "FierzIdentities",
+        "SpectralSquashCayleyDKT",
+        "QSuperCuntzRegularization",
+        "QRootOfUnityTruncation",
+        "QuadraticConfiguration3",
+        "NonIsoConf3OrlikSolomon",
+        "NonIsoConf3DeRhamCooperad",
+        "NonIsoConf3QuadricD4EPolynomial",
+        "GrothendieckGromovWittenYangBaxter",
+        "PenroseSpinTilingConfig",
+        "PenroseSpinIncidenceTessellation",
+        "KleinErlangenGrothendieckBridge",
+        "MotivicHolographyGroebnerLFunction",
+        "AmariChentsovFierzTorsion",
+        "TKKJordanPairSocket",
+        "GNSQuotientFinite",
+        "FiniteMatrixElementDuality",
+        "KreinCuntzShadow",
+        "EuclideanNilpotentObstruction",
+        "ZornChiralBridge",
+        "ArithmeticHamiltonianZeta",
+        "PrimonSuperThermodynamics",
+        "RiemannHypothesis",
+        "MajoranaPrimonSpectralBridge",
+        "PrimonHilbertPolyaSeparation",
+        "IJIRTRiemannDigest",
+        "MisraPrimeEntropyDigest",
+        "PrimonBosonFermionDuality",
+        "PrimonCoarseGraining",
+        "PrimonCoarseGrainedHilbertPolyaPotential",
+        "JaynesLDDPGNSColimit",
+        "JaynesLeanColimitBridge",
+        "ContinuumAsColimitCounting",
+        "CurryHowardLambekColimit",
+        "ProjectiveAffineConformalClosure55",
+        "TwistorParafermionBoundary",
+        "CP3CantorGeometricObstruction",
+        "HillWheelerProjection",
+        "HillWheelerUniversalProjection",
+        "SU3LoopBraidCuntzBoundary",
+        "SU3LoopBraidDuality",
+        "HolographicGaugeSymmetryUniqueness",
+        "GravitationalQuantumBraidDuality",
+        "SUNQuantumBraidDuality",
+        "TopologicalColorCrystalFormal",
+        "SolovievQPNMChiralCuntz",
+        "UnorientedS3KleinTQFT",
+        "SpectralCPTKleinBottle"
+      ]
+    },
+    {
+      "id": "FenchelSpacetime",
+      "path": "proofs/FenchelSpacetime.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "FermiLevelGap",
+      "path": "proofs/FermiLevelGap.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "FermionicPrimonIndex",
+      "path": "proofs/FermionicPrimonIndex.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "FermionicPrimonPartition",
+      "path": "proofs/FermionicPrimonPartition.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "FibAnyonThm1",
+      "path": "proofs/FibAnyonThm1.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "FibAnyonThm2",
+      "path": "proofs/FibAnyonThm2.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "FibAnyonThm3",
+      "path": "proofs/FibAnyonThm3.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "FibAnyonThm4",
+      "path": "proofs/FibAnyonThm4.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "FibAnyonThm4_bridge",
+      "path": "proofs/_deprecated/FibAnyonThm4_bridge.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "FibAnyonThm5",
+      "path": "proofs/FibAnyonThm5.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "FibAnyonThm6_pentagon",
+      "path": "proofs/FibAnyonThm6_pentagon.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "FibAnyonThm7_hexagon",
+      "path": "proofs/FibAnyonThm7_hexagon.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "FibonacciCliffordBridge",
+      "path": "proofs/FibonacciCliffordBridge.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "FibonacciGoldenBraiding",
+      "path": "proofs/FibonacciGoldenBraiding.lean",
+      "category": "Braids / YBE / topology",
+      "imports": [
+        "Q8NuclearChirality",
+        "ModularEntropyPrimes"
+      ]
+    },
+    {
+      "id": "FierzIdentities",
+      "path": "proofs/FierzIdentities.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "ChiralCausalCone"
+      ]
+    },
+    {
+      "id": "FinalHolographicThesisSeal",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/FinalHolographicThesisSeal.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "FiniteArithmeticUHFTrace",
+      "path": "proofs/FiniteArithmeticUHFTrace.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "FiniteDirichletOccupation",
+      "path": "proofs/FiniteDirichletOccupation.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "FiniteGNSConstruction",
+      "path": "proofs/FiniteGNSConstruction.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "FiniteMatrixElementDuality",
+      "path": "proofs/FiniteMatrixElementDuality.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "FiniteMobiusCoefficient",
+      "path": "proofs/FiniteMobiusCoefficient.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "FinitePrimeFock",
+      "path": "proofs/FinitePrimeFock.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "FiniteProjectorSpectralCalculus",
+      "path": "proofs/FiniteProjectorSpectralCalculus.lean",
+      "category": "Spectral / index / anomaly",
+      "imports": []
+    },
+    {
+      "id": "FiniteUHFBooleanTrace",
+      "path": "proofs/FiniteUHFBooleanTrace.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "FixedLineRiemannKlein",
+      "path": "proofs/FixedLineRiemannKlein.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "FockSpaceDerivation",
+      "path": "proofs/FockSpaceDerivation.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "FockUHFBridge",
+      "path": "proofs/FockUHFBridge.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "FractalHamiltonian",
+      "path": "proofs/FractalHamiltonian.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "FractalKleinSUSYFramework",
+      "path": "proofs/FractalKleinSUSYFramework.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "FredholmModularRegularization",
+      "path": "proofs/FredholmModularRegularization.lean",
+      "category": "Spectral / index / anomaly",
+      "imports": []
+    },
+    {
+      "id": "FredholmRegularization",
+      "path": "proofs/FredholmRegularization.lean",
+      "category": "Spectral / index / anomaly",
+      "imports": []
+    },
+    {
+      "id": "FureyCharges",
+      "path": "proofs/FureyCharges.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "ColorCARStandardModel"
+      ]
+    },
+    {
+      "id": "FureyZornFermionBridge",
+      "path": "proofs/FureyZornFermionBridge.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "ZornOPParavector"
+      ]
+    },
+    {
+      "id": "GNSConstruction",
+      "path": "proofs/GNSConstruction.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "GNSModularObservables",
+      "path": "proofs/GNSModularObservables.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "QCDScaleExtraction",
+        "FierzIdentities",
+        "ChiralCausalCone"
+      ]
+    },
+    {
+      "id": "GNSQuotientFinite",
+      "path": "proofs/GNSQuotientFinite.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "FiniteGNSConstruction"
+      ]
+    },
+    {
+      "id": "GT_FromText",
+      "path": "proofs/GT_FromText.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "GUE2x2ExponentialFamily",
+      "path": "proofs/GUE2x2ExponentialFamily.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "GaugeUHFLift",
+      "path": "proofs/GaugeUHFLift.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "UHFInductiveColimit",
+        "ChiralCausalCone"
+      ]
+    },
+    {
+      "id": "GellMannCartan",
+      "path": "proofs/GellMannCartan.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "GellMannParafermionRealizationRoutesSynthesis",
+      "path": "proofs/GellMannParafermionRealizationRoutesSynthesis.lean",
+      "category": "Gauge / Standard Model color",
+      "imports": [
+        "CuntzBoundarySolderRealization",
+        "WeylSolderedParafermionSymmetry",
+        "BogoliubovSU3ParafermionWeld",
+        "BogoliubovSU3ParafermionProofChain",
+        "CantorBoundaryCuntzFamily",
+        "ChiralAffineBogoliubovWeld"
+      ]
+    },
+    {
+      "id": "GellMannParafermionSolder",
+      "path": "proofs/GellMannParafermionSolder.lean",
+      "category": "Gauge / Standard Model color",
+      "imports": [
+        "BogoliubovSU3ParafermionProofChain"
+      ]
+    },
+    {
+      "id": "GellMannSU3",
+      "path": "proofs/GellMannSU3.lean",
+      "category": "Gauge / Standard Model color",
+      "imports": []
+    },
+    {
+      "id": "GeometricZeta",
+      "path": "proofs/GeometricZeta.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "GlideDiracSelectionRule",
+      "path": "proofs/GlideDiracSelectionRule.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "GlideModularJ",
+      "path": "proofs/GlideModularJ.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "GlideSuperchargeCasimir",
+      "path": "proofs/GlideSuperchargeCasimir.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "GlideSymmetricInvariant",
+      "path": "proofs/GlideSymmetricInvariant.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "GohbergKreinIndex",
+      "path": "proofs/GohbergKreinIndex.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "GoldenCCR",
+      "path": "proofs/GoldenCCR.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "GoldenSpectralTriple",
+      "path": "proofs/GoldenSpectralTriple.lean",
+      "category": "Spectral / index / anomaly",
+      "imports": []
+    },
+    {
+      "id": "GoutevTonevPrinciple",
+      "path": "proofs/GoutevTonevPrinciple.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "SouriauOperatorThermodynamics",
+        "InformationGeometricCutoff"
+      ]
+    },
+    {
+      "id": "GrandCanonicalBerezinian",
+      "path": "proofs/GrandCanonicalBerezinian.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "GrandCanonicalPrimon",
+      "path": "proofs/GrandCanonicalPrimon.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "GrandHolographicLoop",
+      "path": "proofs/GrandHolographicLoop.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "GrandHolographicTheorem",
+      "path": "proofs/GrandHolographicTheorem.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "GravitationalQuantumBraidDuality",
+      "path": "proofs/GravitationalQuantumBraidDuality.lean",
+      "category": "Braids / YBE / topology",
+      "imports": [
+        "SU3LoopBraidDuality",
+        "BogoliubovWeylChemicalPotential",
+        "ChiralAffineBogoliubovWeld",
+        "WeylSU3ColorSymmetry",
+        "CantorBoundaryCuntzFamily"
+      ]
+    },
+    {
+      "id": "GravitySoldering",
+      "path": "proofs/GravitySoldering.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": [
+        "CartanWeylBogoliubovGravity"
+      ]
+    },
+    {
+      "id": "GrothendieckGromovWittenYangBaxter",
+      "path": "proofs/GrothendieckGromovWittenYangBaxter.lean",
+      "category": "Braids / YBE / topology",
+      "imports": [
+        "NonIsoConf3QuadricD4EPolynomial"
+      ]
+    },
+    {
+      "id": "GrothendieckMotiveGWInvariant",
+      "path": "proofs/GrothendieckMotiveGWInvariant.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "HestenesCuntzPhaseSpace",
+      "path": "proofs/HestenesCuntzPhaseSpace.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "HestenesCuntzSpacetimeAlgebra"
+      ]
+    },
+    {
+      "id": "HestenesCuntzSpacetimeAlgebra",
+      "path": "proofs/HestenesCuntzSpacetimeAlgebra.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "LorentzChiralCuntzBridge"
+      ]
+    },
+    {
+      "id": "HexagonCocycle",
+      "path": "proofs/HexagonCocycle.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "HilbertPolyaBivariant",
+      "path": "proofs/HilbertPolyaBivariant.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": [
+        "ZetaCoordinateSymmetry",
+        "AnomalousKMSFlow",
+        "KasparovKreinCategory",
+        "UnifiedAnomalyArchitecture"
+      ]
+    },
+    {
+      "id": "HillWheelerProjection",
+      "path": "proofs/HillWheelerProjection.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "MajoranaPrimonSpectralBridge",
+        "PrimonBosonFermionDuality",
+        "CantorBoundaryCuntzFamily"
+      ]
+    },
+    {
+      "id": "HillWheelerUniversalProjection",
+      "path": "proofs/HillWheelerUniversalProjection.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "HillWheelerProjection",
+        "JaynesLDDPGNSColimit",
+        "ProjectiveAffineConformalClosure55"
+      ]
+    },
+    {
+      "id": "HolographicDictionarySynthesis",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/HolographicDictionarySynthesis.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": [
+        "CliffordFiveFiveAnomaly",
+        "MobiusWittenIndex",
+        "KleinNilpotentThermo",
+        "RiemannKleinDuality",
+        "ZornParavectorNullspace",
+        "OctonionMatrixObstruction"
+      ]
+    },
+    {
+      "id": "HolographicErlangenCompletion",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/HolographicErlangenCompletion.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "HolographicGaugeSymmetryUniqueness",
+      "path": "proofs/HolographicGaugeSymmetryUniqueness.lean",
+      "category": "Gauge / Standard Model color",
+      "imports": [
+        "SU3LoopBraidCuntzBoundary",
+        "ItFromBitProjectiveHolographicSynthesis",
+        "Clifford55AnomalyOSP",
+        "YangBaxterQSwap"
+      ]
+    },
+    {
+      "id": "HolographicGaugeSymmetryUniqueness20",
+      "path": "proofs/HolographicGaugeSymmetryUniqueness20.lean",
+      "category": "Gauge / Standard Model color",
+      "imports": [
+        "HolographicGaugeSymmetryUniqueness"
+      ]
+    },
+    {
+      "id": "HolographicProxyQLimit",
+      "path": "proofs/HolographicProxyQLimit.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": [
+        "TopologicalColorCrystal",
+        "GravitationalQuantumBraidDuality",
+        "SU3CorrelationExtraction",
+        "SU3LoopBraidDuality",
+        "ChiralAffineBogoliubovWeld"
+      ]
+    },
+    {
+      "id": "HolographicScaleExtinctions",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/HolographicScaleExtinctions.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "HurwitzQuaternionSpectrum",
+      "path": "proofs/HurwitzQuaternionSpectrum.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "HurwitzTwistedSector"
+      ]
+    },
+    {
+      "id": "HurwitzTwistedSector",
+      "path": "proofs/HurwitzTwistedSector.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "ZetaSpectralBridge"
+      ]
+    },
+    {
+      "id": "IJIRTRiemannDigest",
+      "path": "proofs/IJIRTRiemannDigest.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": [
+        "MajoranaPrimonSpectralBridge",
+        "PrimonHilbertPolyaSeparation"
+      ]
+    },
+    {
+      "id": "IdealDescentProof",
+      "path": "proofs/IdealDescentProof.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "BraidIdealDescent",
+        "YangBaxterQuotientDescent",
+        "JonesBraidB3",
+        "YangBaxterQSwap"
+      ]
+    },
+    {
+      "id": "InductiveAnalyticFlow",
+      "path": "proofs/InductiveAnalyticFlow.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "LieAlgebraColimit"
+      ]
+    },
+    {
+      "id": "InfoGeometry",
+      "path": "proofs/InfoGeometry.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "SplitCliffordAlgebras",
+        "ProjectiveCuntzToeplitzCARCCR",
+        "ProjectivePenrosePGA",
+        "NoncommutativeTilingAlgebra",
+        "ConvexAlgebraicDuality",
+        "GoldenCCR",
+        "FractalHamiltonian",
+        "BlackHoleHolography",
+        "GoldenSpectralTriple",
+        "InformationGeometricCutoff",
+        "EinsteinThermodynamicBridge",
+        "UnifiedGaugeField",
+        "DiracKreinMetriplectic",
+        "SuperBerezinianKlein",
+        "GlideSymmetricInvariant",
+        "CubicJordanPeirceDecomposition",
+        "MinkowskiBiquaternion",
+        "DiracFourierMellin",
+        "PolynomialSymmetryOperators",
+        "BiquaternionKANnilpotent",
+        "CptFractalClosure",
+        "GravitySoldering",
+        "WallpaperIsometry",
+        "BraidIdealDescent",
+        "GohbergKreinIndex",
+        "ArtinCentralizerMonodromy",
+        "ArtinMonodromyPin55"
+      ]
+    },
+    {
+      "id": "InformationGeometricCutoff",
+      "path": "proofs/InformationGeometricCutoff.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": []
+    },
+    {
+      "id": "InformationTheoreticPNT",
+      "path": "proofs/InformationTheoreticPNT.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": [
+        "ModularEntropyPrimes"
+      ]
+    },
+    {
+      "id": "ItFromBitProjectiveHolographicSynthesis",
+      "path": "proofs/ItFromBitProjectiveHolographicSynthesis.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": [
+        "TwistorParafermionBoundary",
+        "ProjectiveAffineConformalClosure55",
+        "HillWheelerUniversalProjection",
+        "PrimonHilbertPolyaSeparation"
+      ]
+    },
+    {
+      "id": "IwasawaAnalyticityLock",
+      "path": "proofs/IwasawaAnalyticityLock.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "KANFormalization",
+        "PrimonCuntzTower"
+      ]
+    },
+    {
+      "id": "IwasawaKUnification",
+      "path": "proofs/IwasawaKUnification.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "J_duality_chain",
+      "path": "proofs/J_duality_chain.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "JaynesFinitePartitionColimit",
+      "path": "proofs/JaynesFinitePartitionColimit.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "JaynesFiniteSetsColimitBridge",
+      "path": "proofs/JaynesFiniteSetsColimitBridge.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "JaynesLDDPGNSColimit",
+      "path": "proofs/JaynesLDDPGNSColimit.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "UHFInductiveColimit",
+        "RegularizationCayleyPipeline"
+      ]
+    },
+    {
+      "id": "JaynesLeanColimitBridge",
+      "path": "proofs/JaynesLeanColimitBridge.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "JonesBraidB3",
+      "path": "proofs/JonesBraidB3.lean",
+      "category": "Braids / YBE / topology",
+      "imports": [
+        "TLChain"
+      ]
+    },
+    {
+      "id": "JordanBlock2",
+      "path": "proofs/JordanBlock2.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "KANFormalization",
+      "path": "proofs/KANFormalization.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "KANFourierMellinDirac",
+      "path": "proofs/KANFourierMellinDirac.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "KANLogDetUnification",
+      "path": "proofs/KANLogDetUnification.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "KanCayley",
+        "DeterminantSupergrading",
+        "KreinDeterminantAnalyticity"
+      ]
+    },
+    {
+      "id": "KANTraceSectorization",
+      "path": "proofs/KANTraceSectorization.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "KanCayley",
+        "TraceSeparationFlow"
+      ]
+    },
+    {
+      "id": "KanCayley",
+      "path": "proofs/KanCayley.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "KasparovKreinCategory",
+      "path": "proofs/KasparovKreinCategory.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": [
+        "AnomalousKMSFlow",
+        "ConnesSpectralAction",
+        "CuntzKTheoryPairing"
+      ]
+    },
+    {
+      "id": "KasparovKreinDoubling",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/KasparovKreinDoubling.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "KleinBottle",
+      "path": "proofs/KleinBottle.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "KleinBottleKANCoordinates",
+      "path": "proofs/KleinBottleKANCoordinates.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": [
+        "DeterminantSupergrading",
+        "IwasawaKUnification",
+        "KleinBottleSymmetry",
+        "KleinFourAnomalyCancellation"
+      ]
+    },
+    {
+      "id": "KleinBottleParafermionInvariant",
+      "path": "proofs/KleinBottleParafermionInvariant.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "KleinBottleSymmetry",
+      "path": "proofs/KleinBottleSymmetry.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "KleinErlangenGrothendieckBridge",
+      "path": "proofs/KleinErlangenGrothendieckBridge.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": [
+        "PenroseSpinIncidenceTessellation",
+        "TKKJordanPairSocket"
+      ]
+    },
+    {
+      "id": "KleinFourAnomalyCancellation",
+      "path": "proofs/KleinFourAnomalyCancellation.lean",
+      "category": "Spectral / index / anomaly",
+      "imports": []
+    },
+    {
+      "id": "KleinGeometrySupergraded",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/KleinGeometrySupergraded.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "KleinGrapheneTunneling",
+      "path": "proofs/KleinGrapheneTunneling.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "KleinNilpotentThermo",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/KleinNilpotentThermo.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": []
+    },
+    {
+      "id": "KleinParafermionCohomology",
+      "path": "proofs/KleinParafermionCohomology.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "KreinCuntzShadow",
+      "path": "proofs/KreinCuntzShadow.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "SolovievQPNMChiralCuntz",
+        "FiniteMatrixElementDuality",
+        "FierzIdentities",
+        "Cl11ChiralCARBridge"
+      ]
+    },
+    {
+      "id": "KreinDeterminantAnalyticity",
+      "path": "proofs/KreinDeterminantAnalyticity.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "KreinMoorePenrose",
+      "path": "proofs/KreinMoorePenrose.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "KreinVacuumKMSBridge",
+      "path": "proofs/KreinVacuumKMSBridge.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": [
+        "KreinVacuumPropagator",
+        "AnomalousKMSFlow"
+      ]
+    },
+    {
+      "id": "KreinVacuumPropagator",
+      "path": "proofs/KreinVacuumPropagator.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": [
+        "AnomalousKMSFlow"
+      ]
+    },
+    {
+      "id": "LQGProblemsResolvedByChiralFramework",
+      "path": "proofs/LQGProblemsResolvedByChiralFramework.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "LieAlgebraColimit",
+      "path": "proofs/LieAlgebraColimit.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "LieFlowCompilerBridge",
+      "path": "proofs/LieFlowCompilerBridge.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "LieFlowMatching",
+        "TrifactorGeometry",
+        "DeterminantSupergrading"
+      ]
+    },
+    {
+      "id": "LieFlowMatching",
+      "path": "proofs/LieFlowMatching.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "LiuCollinsAffineInvariance",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/LiuCollinsAffineInvariance.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "LogDetSuperKahlerBarrier",
+      "path": "proofs/LogDetSuperKahlerBarrier.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "LorentzBoostMinkowski",
+      "path": "proofs/LorentzBoostMinkowski.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "LorentzChiralCuntzBridge",
+      "path": "proofs/LorentzChiralCuntzBridge.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "ChiralCausalCone",
+        "ChiralPoincareSouriauBridge",
+        "CuntzDeformedSuperPoincare",
+        "FierzIdentities"
+      ]
+    },
+    {
+      "id": "MajoranaPrimonSpectralBridge",
+      "path": "proofs/MajoranaPrimonSpectralBridge.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": [
+        "SupergradedCuntzBdG"
+      ]
+    },
+    {
+      "id": "Matrix2KANPauliChain",
+      "path": "proofs/Matrix2KANPauliChain.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "MellinHeatKernelBridge",
+      "path": "proofs/MellinHeatKernelBridge.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "ZetaSpectralBridge"
+      ]
+    },
+    {
+      "id": "MillenniumRosettaStone",
+      "path": "proofs/MillenniumRosettaStone.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "HolographicProxyQLimit",
+        "PrimonHilbertPolyaSeparation"
+      ]
+    },
+    {
+      "id": "MinkowskiBiquaternion",
+      "path": "proofs/MinkowskiBiquaternion.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "MirrorNucleiIsospinGNS",
+      "path": "proofs/MirrorNucleiIsospinGNS.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "Q8NuclearChirality",
+        "HillWheelerProjection"
+      ]
+    },
+    {
+      "id": "MisraPrimeEntropyDigest",
+      "path": "proofs/MisraPrimeEntropyDigest.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": [
+        "IJIRTRiemannDigest"
+      ]
+    },
+    {
+      "id": "MobiusCantorTKKClosure",
+      "path": "proofs/MobiusCantorTKKClosure.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": [
+        "CantorBoundaryCuntzFamily",
+        "ArtinMonodromyPin55",
+        "UHFInductiveColimit"
+      ]
+    },
+    {
+      "id": "MobiusInversion",
+      "path": "proofs/MobiusInversion.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "MobiusWittenIndex",
+      "path": "proofs/MobiusWittenIndex.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "MobiusWittenKleinIndex",
+      "path": "proofs/MobiusWittenKleinIndex.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "ModularAutomorphismGroup",
+      "path": "proofs/ModularAutomorphismGroup.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "ModularEntropyPrimes",
+      "path": "proofs/ModularEntropyPrimes.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": [
+        "PrimonBosonFermionDuality",
+        "PrimonCoarseGraining",
+        "MajoranaPrimonSpectralBridge",
+        "BosonicPrimonPartition"
+      ]
+    },
+    {
+      "id": "ModularGlideCPT",
+      "path": "proofs/ModularGlideCPT.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "ModularHolographicMetric",
+      "path": "proofs/ModularHolographicMetric.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "ModularItakuraBiquaternion",
+      "path": "proofs/ModularItakuraBiquaternion.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "ModularMonodromy",
+      "path": "proofs/ModularMonodromy.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "MorandiWallpaperCohomology",
+      "path": "proofs/MorandiWallpaperCohomology.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "MotivicHolographyGroebnerLFunction",
+      "path": "proofs/MotivicHolographyGroebnerLFunction.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": [
+        "KleinErlangenGrothendieckBridge"
+      ]
+    },
+    {
+      "id": "NilpotentItakuraSaito",
+      "path": "proofs/NilpotentItakuraSaito.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "NonHermitianKitaevCuntzChain",
+      "path": "proofs/NonHermitianKitaevCuntzChain.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "NonHermitianSMatrixDefect",
+      "path": "proofs/NonHermitianSMatrixDefect.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "ScatteringSMatrix"
+      ]
+    },
+    {
+      "id": "NonInvertiblePenroseCategoricalSymmetry",
+      "path": "proofs/NonInvertiblePenroseCategoricalSymmetry.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "NonIsoConf3DeRhamCooperad",
+      "path": "proofs/NonIsoConf3DeRhamCooperad.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "QuadraticConfiguration3",
+        "NonIsoConf3OrlikSolomon"
+      ]
+    },
+    {
+      "id": "NonIsoConf3DupontGysinModel",
+      "path": "proofs/NonIsoConf3DupontGysinModel.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "DupontHypersurfaceOSModel",
+        "PenroseSpinIncidenceTessellation"
+      ]
+    },
+    {
+      "id": "NonIsoConf3OrlikSolomon",
+      "path": "proofs/NonIsoConf3OrlikSolomon.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "NonIsoConf3QuadricCompactification",
+      "path": "proofs/NonIsoConf3QuadricCompactification.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "DupontHypersurfaceOSModel"
+      ]
+    },
+    {
+      "id": "NonIsoConf3QuadricD4EPolynomial",
+      "path": "proofs/NonIsoConf3QuadricD4EPolynomial.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "NonIsoConf3QuadricD4PointCount"
+      ]
+    },
+    {
+      "id": "NonIsoConf3QuadricD4Model",
+      "path": "proofs/NonIsoConf3QuadricD4Model.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "NonIsoConf3OrlikSolomon"
+      ]
+    },
+    {
+      "id": "NonIsoConf3QuadricD4PointCount",
+      "path": "proofs/NonIsoConf3QuadricD4PointCount.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "NonIsoConf3QuadricD4Model"
+      ]
+    },
+    {
+      "id": "NonIsoConf3ThreePointDeRhamCooperad",
+      "path": "proofs/NonIsoConf3ThreePointDeRhamCooperad.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "QuadraticConfiguration3",
+        "NonIsoConf3OrlikSolomon",
+        "NonIsoConf3QuadricD4Model",
+        "NonIsoConf3QuadricD4PointCount"
+      ]
+    },
+    {
+      "id": "NonOrientableBraid",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/NonOrientableBraid.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "NoncommutativeTilingAlgebra",
+      "path": "proofs/NoncommutativeTilingAlgebra.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "OakuTakayamaDModuleDeRham",
+      "path": "proofs/OakuTakayamaDModuleDeRham.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "OctonionMatrixEncodings",
+      "path": "proofs/OctonionMatrixEncodings.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "OctonionMatrixObstruction",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/OctonionMatrixObstruction.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "OctonionicStandardModel",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/OctonionicStandardModel.lean",
+      "category": "Gauge / Standard Model color",
+      "imports": []
+    },
+    {
+      "id": "OpticalAndreevSpinor",
+      "path": "proofs/OpticalAndreevSpinor.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "PaperwallDiscreteSUSY",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/PaperwallDiscreteSUSY.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "PaperwallHolographicSUSY",
+      "path": "proofs/PaperwallHolographicSUSY.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "PaperwallSUSY",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/PaperwallSUSY.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "ParafermionIdentityRealization",
+      "path": "proofs/ParafermionIdentityRealization.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "GellMannParafermionSolder",
+        "AlgebraicCuntzQuotient",
+        "UHFInductiveColimit"
+      ]
+    },
+    {
+      "id": "PartitionPoleCriterion",
+      "path": "proofs/PartitionPoleCriterion.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "PauliZornTrifactor",
+      "path": "proofs/PauliZornTrifactor.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "PenroseAF",
+      "path": "proofs/PenroseAF.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "PenroseArithmetic",
+      "path": "proofs/PenroseArithmetic.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "PenroseCuntzKriegerHolography",
+      "path": "proofs/PenroseCuntzKriegerHolography.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "PenroseKMSSpectralDimension",
+      "path": "proofs/PenroseKMSSpectralDimension.lean",
+      "category": "Spectral / index / anomaly",
+      "imports": []
+    },
+    {
+      "id": "PenroseSpinIncidenceTessellation",
+      "path": "proofs/PenroseSpinIncidenceTessellation.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": [
+        "PenroseSpinTilingConfig",
+        "NonIsoConf3QuadricD4PointCount"
+      ]
+    },
+    {
+      "id": "PenroseSpinNetworkChiralIsomorphism",
+      "path": "proofs/PenroseSpinNetworkChiralIsomorphism.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "PenroseSpinTilingCapstone",
+      "path": "proofs/PenroseSpinTilingCapstone.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": [
+        "PenroseSpinTilingConfig",
+        "PenroseSpinIncidenceTessellation",
+        "NonIsoConf3QuadricD4PointCount",
+        "KleinErlangenGrothendieckBridge",
+        "NonIsoConf3DupontGysinModel",
+        "NonIsoConf3ThreePointDeRhamCooperad",
+        "NonIsoConf3DeRhamCooperad"
+      ]
+    },
+    {
+      "id": "PenroseSpinTilingConfig",
+      "path": "proofs/PenroseSpinTilingConfig.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": [
+        "GrothendieckGromovWittenYangBaxter",
+        "NonIsoConf3QuadricD4Model"
+      ]
+    },
+    {
+      "id": "PentagonPenroseWallpaperFractal",
+      "path": "proofs/PentagonPenroseWallpaperFractal.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "PhaseTransition_SUSY",
+      "path": "proofs/PhaseTransition_SUSY.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "PhotonicCMTTMM",
+      "path": "proofs/PhotonicCMTTMM.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "TwoPortScatteringCoefficients"
+      ]
+    },
+    {
+      "id": "PhotonicHardwareLayout",
+      "path": "proofs/PhotonicHardwareLayout.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "TransferMatrixScattering"
+      ]
+    },
+    {
+      "id": "PlatycosmKTheory",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/PlatycosmKTheory.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "PoissonGaussianGNSColimit",
+      "path": "proofs/PoissonGaussianGNSColimit.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "PolynomialSymmetryOperators",
+      "path": "proofs/PolynomialSymmetryOperators.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "PrimonBosonFermionDuality",
+      "path": "proofs/PrimonBosonFermionDuality.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": [
+        "BosonicPrimonPartition",
+        "FermionicPrimonPartition",
+        "MajoranaPrimonSpectralBridge"
+      ]
+    },
+    {
+      "id": "PrimonCoarseGrainedHilbertPolyaPotential",
+      "path": "proofs/PrimonCoarseGrainedHilbertPolyaPotential.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": [
+        "PrimonHilbertPolyaSeparation"
+      ]
+    },
+    {
+      "id": "PrimonCoarseGraining",
+      "path": "proofs/PrimonCoarseGraining.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": [
+        "PrimonBosonFermionDuality",
+        "PrimonHilbertPolyaSeparation",
+        "UHFInductiveColimit"
+      ]
+    },
+    {
+      "id": "PrimonCuntzTower",
+      "path": "proofs/PrimonCuntzTower.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": [
+        "DiracColimit",
+        "KANFormalization"
+      ]
+    },
+    {
+      "id": "PrimonFlavorCKM",
+      "path": "proofs/PrimonFlavorCKM.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": [
+        "ChiralIsospinEOMSU2",
+        "PrimonCuntzTower",
+        "ContinuumAsColimitCounting",
+        "PrimonBosonFermionDuality",
+        "MajoranaPrimonSpectralBridge"
+      ]
+    },
+    {
+      "id": "PrimonFockTraceBridge",
+      "path": "proofs/PrimonFockTraceBridge.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "PrimonHilbertPolyaSeparation",
+      "path": "proofs/PrimonHilbertPolyaSeparation.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": [
+        "PrimonFockTraceBridge",
+        "PrimonSuperThermodynamics",
+        "RiemannHypothesis"
+      ]
+    },
+    {
+      "id": "PrimonSuperThermodynamics",
+      "path": "proofs/PrimonSuperThermodynamics.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "PrimonZetaMobius",
+      "path": "proofs/PrimonZetaMobius.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "ProjectiveAffineConformalClosure55",
+      "path": "proofs/ProjectiveAffineConformalClosure55.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": [
+        "Clifford55AnomalyOSP",
+        "RiemannHypothesis"
+      ]
+    },
+    {
+      "id": "ProjectiveCrystalKappa",
+      "path": "proofs/ProjectiveCrystalKappa.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "ProjectiveCrystalMackeyDecomposition",
+      "path": "proofs/ProjectiveCrystalMackeyDecomposition.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "ProjectiveCrystalSymmetry",
+      "path": "proofs/ProjectiveCrystalSymmetry.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "ProjectiveCrystalTopology",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/ProjectiveCrystalTopology.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "ProjectiveCuntzToeplitzCARCCR",
+      "path": "proofs/ProjectiveCuntzToeplitzCARCCR.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "ProjectiveGlideSuperchargeUnification",
+      "path": "proofs/ProjectiveGlideSuperchargeUnification.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "ProjectiveKappaKleinMobius",
+      "path": "proofs/ProjectiveKappaKleinMobius.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "ProjectivePenrosePGA",
+      "path": "proofs/ProjectivePenrosePGA.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "ProjectiveSymmetryAlgebra",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/ProjectiveSymmetryAlgebra.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "ProjectiveWallpaperGaugePSA",
+      "path": "proofs/ProjectiveWallpaperGaugePSA.lean",
+      "category": "Gauge / Standard Model color",
+      "imports": []
+    },
+    {
+      "id": "PublishedThesisArchitecture",
+      "path": "proofs/PublishedThesisArchitecture.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "Q8NuclearChirality",
+      "path": "proofs/Q8NuclearChirality.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "WeakIsospinSU2",
+        "ChiralCausalCone",
+        "ChiralAffineBogoliubovWeld"
+      ]
+    },
+    {
+      "id": "QCDScaleExtraction",
+      "path": "proofs/QCDScaleExtraction.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "DikinOnsagerCramerRaoOperator",
+        "ColorConfinementGNS"
+      ]
+    },
+    {
+      "id": "QDeformedSuperCuntz",
+      "path": "proofs/QDeformedSuperCuntz.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "QRootOfUnityTruncation",
+      "path": "proofs/QRootOfUnityTruncation.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "QSuperCuntzRegularization",
+      "path": "proofs/QSuperCuntzRegularization.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "SpectralSquashCayleyDKT"
+      ]
+    },
+    {
+      "id": "QSuperRegularizationRosetta",
+      "path": "proofs/QSuperRegularizationRosetta.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "QSuperCuntzRegularization",
+        "RegularizationCayleyPipeline"
+      ]
+    },
+    {
+      "id": "QuadraticConfiguration3",
+      "path": "proofs/QuadraticConfiguration3.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "RGFixedPoint",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/RGFixedPoint.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "RP3Octupole",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/RP3Octupole.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "RegularizationCayleyPipeline",
+      "path": "proofs/RegularizationCayleyPipeline.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "RelativeModularStateDikin",
+      "path": "proofs/RelativeModularStateDikin.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": [
+        "GoutevTonevPrinciple"
+      ]
+    },
+    {
+      "id": "RelativisticBiquaternionKAN",
+      "path": "proofs/RelativisticBiquaternionKAN.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "RescaledPhaseVolumeCanonical",
+      "path": "proofs/RescaledPhaseVolumeCanonical.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": [
+        "BogoliubovWeylChemicalPotential",
+        "InformationGeometricCutoff",
+        "AffineDynkinGoutevTonev"
+      ]
+    },
+    {
+      "id": "RiemannHypothesis",
+      "path": "proofs/RiemannHypothesis.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "RiemannHypothesisIJIRT172568",
+      "path": "proofs/RiemannHypothesisIJIRT172568.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "RiemannKleinDuality",
+      "path": "proofs/RiemannKleinDuality.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "RunExtractor",
+      "path": "proofs/RunExtractor.lean",
+      "category": "Tooling / graph extraction",
+      "imports": [
+        "ExtractBraid",
+        "FibAnyonThm7_hexagon",
+        "rigorous_proofs",
+        "KleinBottle"
+      ]
+    },
+    {
+      "id": "S3ColorSpinorDecomposition",
+      "path": "proofs/S3ColorSpinorDecomposition.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "WeylSU3ColorSymmetry",
+        "GellMannParafermionSolder",
+        "BogoliubovBraidGraphWeld",
+        "SU3LoopBraidDuality"
+      ]
+    },
+    {
+      "id": "SU3CorrelationExtraction",
+      "path": "proofs/SU3CorrelationExtraction.lean",
+      "category": "Gauge / Standard Model color",
+      "imports": [
+        "HolographicGaugeSymmetryUniqueness",
+        "MajoranaPrimonSpectralBridge",
+        "PrimonBosonFermionDuality"
+      ]
+    },
+    {
+      "id": "SU3LoopBraidCuntzBoundary",
+      "path": "proofs/SU3LoopBraidCuntzBoundary.lean",
+      "category": "Braids / YBE / topology",
+      "imports": [
+        "GellMannSU3",
+        "BogoliubovBraidGraphWeld",
+        "GellMannParafermionSolder",
+        "CantorBoundaryCuntzFamily"
+      ]
+    },
+    {
+      "id": "SU3LoopBraidDuality",
+      "path": "proofs/SU3LoopBraidDuality.lean",
+      "category": "Braids / YBE / topology",
+      "imports": [
+        "GellMannSU3",
+        "WeylSU3ColorSymmetry",
+        "CantorBoundaryCuntzFamily",
+        "JonesBraidB3",
+        "SupergradedCuntzBdG",
+        "BogoliubovBraidGraphWeld"
+      ]
+    },
+    {
+      "id": "SUNLoopBraidCuntzBoundary",
+      "path": "proofs/SUNLoopBraidCuntzBoundary.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "SUNQuantumBraidDuality",
+      "path": "proofs/SUNQuantumBraidDuality.lean",
+      "category": "Braids / YBE / topology",
+      "imports": [
+        "GravitationalQuantumBraidDuality"
+      ]
+    },
+    {
+      "id": "ScatteringSMatrix",
+      "path": "proofs/ScatteringSMatrix.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "BraidCliffordIntegration"
+      ]
+    },
+    {
+      "id": "SiliconPhotonicChipCoefficients",
+      "path": "proofs/SiliconPhotonicChipCoefficients.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "NonHermitianSMatrixDefect"
+      ]
+    },
+    {
+      "id": "SocketDischargeChain",
+      "path": "proofs/SocketDischargeChain.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "TwistorParafermionBoundary",
+        "PrimonBosonFermionDuality",
+        "PrimonCoarseGraining",
+        "CantorBoundaryCuntzFamily"
+      ]
+    },
+    {
+      "id": "SolderingForms",
+      "path": "proofs/SolderingForms.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "SolderingRoundTrip",
+      "path": "proofs/SolderingRoundTrip.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "SolderingSpinConnectionBogoliubov",
+      "path": "proofs/SolderingSpinConnectionBogoliubov.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "SolovievQPNMChiralCuntz",
+      "path": "proofs/SolovievQPNMChiralCuntz.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "SouriauBiquaternionGaussian",
+      "path": "proofs/SouriauBiquaternionGaussian.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": []
+    },
+    {
+      "id": "SouriauComplexTemperature",
+      "path": "proofs/SouriauComplexTemperature.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": []
+    },
+    {
+      "id": "SouriauGaussian",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/SouriauGaussian.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": []
+    },
+    {
+      "id": "SouriauHestenesKrein",
+      "path": "proofs/SouriauHestenesKrein.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": []
+    },
+    {
+      "id": "SouriauHestenesMobiusPole",
+      "path": "proofs/SouriauHestenesMobiusPole.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "SouriauMoebiusCoupling",
+      "path": "proofs/SouriauMoebiusCoupling.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": []
+    },
+    {
+      "id": "SouriauOperatorThermodynamics",
+      "path": "proofs/SouriauOperatorThermodynamics.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "SouriauThermoColimit",
+      "path": "proofs/SouriauThermoColimit.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": []
+    },
+    {
+      "id": "SpacetimeGUEIsomorphism",
+      "path": "proofs/SpacetimeGUEIsomorphism.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "SpacetimeIsSpin",
+      "path": "proofs/SpacetimeIsSpin.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "SpectralCPTKleinBottle",
+      "path": "proofs/SpectralCPTKleinBottle.lean",
+      "category": "Spectral / index / anomaly",
+      "imports": [
+        "MobiusCantorTKKClosure",
+        "TopologicalColorCrystalFormal",
+        "HillWheelerUniversalProjection"
+      ]
+    },
+    {
+      "id": "SpectralSquashCayleyDKT",
+      "path": "proofs/SpectralSquashCayleyDKT.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "SpectralYangBaxter",
+      "path": "proofs/SpectralYangBaxter.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "SpinorMonodromySteppingStone",
+      "path": "proofs/SpinorMonodromySteppingStone.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "SplitCliffordAlgebras",
+      "path": "proofs/SplitCliffordAlgebras.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "SplitOctonionBraidSU3",
+      "path": "proofs/SplitOctonionBraidSU3.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "SplitOctonionMinkowski",
+      "path": "proofs/SplitOctonionMinkowski.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "SplitOctonionNilpotent",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/SplitOctonionNilpotent.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "SquashingOperator",
+      "path": "proofs/SquashingOperator.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "SuperBerezinianKlein",
+      "path": "proofs/SuperBerezinianKlein.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "SuperCuntzGrading",
+      "path": "proofs/SuperCuntzGrading.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "ChiralCuntzInductive"
+      ]
+    },
+    {
+      "id": "SuperPartitionBerezinian",
+      "path": "proofs/SuperPartitionBerezinian.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "SuperPoincareOperatorCharges",
+      "path": "proofs/SuperPoincareOperatorCharges.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "SuperchargeSquare",
+      "path": "proofs/SuperchargeSquare.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "SupergradedCuntzBdG",
+      "path": "proofs/SupergradedCuntzBdG.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": [
+        "ComplexStarCuntzRedesign"
+      ]
+    },
+    {
+      "id": "SymbolicFockLane",
+      "path": "proofs/SymbolicFockLane.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "SymbolicLaneUHFBridge",
+      "path": "proofs/SymbolicLaneUHFBridge.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "TKKClosureErlangenGeometry",
+      "path": "proofs/TKKClosureErlangenGeometry.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "TKKCompileSocket",
+      "path": "proofs/TKKCompileSocket.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": []
+    },
+    {
+      "id": "TKKJordanPairSocket",
+      "path": "proofs/TKKJordanPairSocket.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": [
+        "SpectralSquashCayleyDKT"
+      ]
+    },
+    {
+      "id": "TLChain",
+      "path": "proofs/TLChain.lean",
+      "category": "Braids / YBE / topology",
+      "imports": [
+        "ChiralCausalCone"
+      ]
+    },
+    {
+      "id": "TemperleyLieb",
+      "path": "proofs/_deprecated/TemperleyLieb.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "TestAF",
+      "path": "proofs/TestAF.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "TestBraid",
+      "path": "proofs/TestBraid.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "TestHex",
+      "path": "proofs/_deprecated/TestHex.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "TestImport2",
+      "path": "proofs/TestImport2.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "tomita_kms_v4"
+      ]
+    },
+    {
+      "id": "TestImportGP",
+      "path": "proofs/TestImportGP.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "goutev_principle"
+      ]
+    },
+    {
+      "id": "TestImportKB",
+      "path": "proofs/TestImportKB.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "KleinBottle"
+      ]
+    },
+    {
+      "id": "TestTL",
+      "path": "proofs/TestTL.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "TetronParityLifetimeBridge",
+      "path": "proofs/TetronParityLifetimeBridge.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "ThesisMaster",
+      "path": "proofs/ThesisMaster.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "TitsBruhatBrillouinKlein",
+      "path": "proofs/TitsBruhatBrillouinKlein.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "TopologicalColorCrystal",
+      "path": "proofs/TopologicalColorCrystal.lean",
+      "category": "Braids / YBE / topology",
+      "imports": [
+        "SU3CorrelationExtraction",
+        "TripotentCliffordColimit",
+        "TopologicalColorCrystalFormal"
+      ]
+    },
+    {
+      "id": "TopologicalColorCrystalFormal",
+      "path": "proofs/TopologicalColorCrystalFormal.lean",
+      "category": "Braids / YBE / topology",
+      "imports": [
+        "SUNLoopBraidCuntzBoundary",
+        "SU3LoopBraidCuntzBoundary",
+        "HillWheelerUniversalProjection",
+        "FixedLineRiemannKlein",
+        "ProjectiveCrystalSymmetry"
+      ]
+    },
+    {
+      "id": "TraceSeparationFlow",
+      "path": "proofs/TraceSeparationFlow.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "KanCayley"
+      ]
+    },
+    {
+      "id": "TransferMatrixScattering",
+      "path": "proofs/TransferMatrixScattering.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "Matrix2KANPauliChain"
+      ]
+    },
+    {
+      "id": "TransformsAndScale",
+      "path": "proofs/TransformsAndScale.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "TrifactorGeometry",
+      "path": "proofs/TrifactorGeometry.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "TripotentCliffordColimit",
+      "path": "proofs/TripotentCliffordColimit.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "TripotentPenroseHolography",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/TripotentPenroseHolography.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "TwistedHeckeKleinBottle",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/TwistedHeckeKleinBottle.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "TwistorParafermionBoundary",
+      "path": "proofs/TwistorParafermionBoundary.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": [
+        "CantorBoundaryCuntzFamily",
+        "GellMannParafermionSolder",
+        "ProjectiveAffineConformalClosure55"
+      ]
+    },
+    {
+      "id": "TwoPortScatteringCoefficients",
+      "path": "proofs/TwoPortScatteringCoefficients.lean",
+      "category": "Core algebra / misc",
+      "imports": [
+        "SiliconPhotonicChipCoefficients"
+      ]
+    },
+    {
+      "id": "UHFInductiveColimit",
+      "path": "proofs/UHFInductiveColimit.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "UnifiedAnomalyArchitecture",
+      "path": "proofs/UnifiedAnomalyArchitecture.lean",
+      "category": "Spectral / index / anomaly",
+      "imports": [
+        "AnomalousKMSFlow",
+        "CuntzKTheoryPairing",
+        "ZetaCoordinateSymmetry",
+        "PrimonSuperThermodynamics",
+        "ConnesSpectralAction"
+      ]
+    },
+    {
+      "id": "UnifiedGaugeField",
+      "path": "proofs/UnifiedGaugeField.lean",
+      "category": "Gauge / Standard Model color",
+      "imports": [
+        "EinsteinThermodynamicBridge"
+      ]
+    },
+    {
+      "id": "UnifiedKleinHolographicArchitecture",
+      "path": "proofs/UnifiedKleinHolographicArchitecture.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "UnorientedS3KleinTQFT",
+      "path": "proofs/UnorientedS3KleinTQFT.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": [
+        "MobiusCantorTKKClosure",
+        "SU3LoopBraidDuality"
+      ]
+    },
+    {
+      "id": "VerberckWallpaperFourier",
+      "path": "proofs/VerberckWallpaperFourier.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "WallpaperBulkAnyonProjection",
+      "path": "proofs/WallpaperBulkAnyonProjection.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "WallpaperClassification",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/WallpaperClassification.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "WallpaperCohomology",
+      "path": "proofs/WallpaperCohomology.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "WallpaperFermionSuperconductingGap",
+      "path": "proofs/WallpaperFermionSuperconductingGap.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "WallpaperIsometry",
+      "path": "proofs/WallpaperIsometry.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "WallpaperMetamaterialDataset",
+      "path": "proofs/WallpaperMetamaterialDataset.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "WallpaperSemidirectProduct",
+      "path": "proofs/_deprecated/removed_from_default_2026_06_15/WallpaperSemidirectProduct.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "WaveguideEPBraidSpec",
+      "path": "proofs/WaveguideEPBraidSpec.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "WeakIsospinSU2",
+      "path": "proofs/WeakIsospinSU2.lean",
+      "category": "Gauge / Standard Model color",
+      "imports": [
+        "ChiralCausalCone"
+      ]
+    },
+    {
+      "id": "WeylColimitCanonicalLimit",
+      "path": "proofs/WeylColimitCanonicalLimit.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": [
+        "WeylGaugeColimitWeld",
+        "RescaledPhaseVolumeCanonical"
+      ]
+    },
+    {
+      "id": "WeylGaugeColimitWeld",
+      "path": "proofs/WeylGaugeColimitWeld.lean",
+      "category": "Gauge / Standard Model color",
+      "imports": [
+        "GaugeUHFLift",
+        "HestenesCuntzPhaseSpace"
+      ]
+    },
+    {
+      "id": "WeylSU3ColorSymmetry",
+      "path": "proofs/WeylSU3ColorSymmetry.lean",
+      "category": "Gauge / Standard Model color",
+      "imports": [
+        "BogoliubovSU3ParafermionProofChain",
+        "SplitOctonionBraidSU3"
+      ]
+    },
+    {
+      "id": "WeylSolderedParafermionSymmetry",
+      "path": "proofs/WeylSolderedParafermionSymmetry.lean",
+      "category": "Spacetime / phase / Bogoliubov",
+      "imports": [
+        "GellMannParafermionSolder",
+        "WeylSU3ColorSymmetry"
+      ]
+    },
+    {
+      "id": "YangBaxterQSwap",
+      "path": "proofs/YangBaxterQSwap.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "YangBaxterQuotientDescent",
+      "path": "proofs/YangBaxterQuotientDescent.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "Z2NonAbelianBraiding",
+      "path": "proofs/Z2NonAbelianBraiding.lean",
+      "category": "Braids / YBE / topology",
+      "imports": [
+        "DeterminantSupergrading",
+        "TrifactorGeometry",
+        "LieFlowCompilerBridge",
+        "MobiusInversion"
+      ]
+    },
+    {
+      "id": "ZetaCoordinateSymmetry",
+      "path": "proofs/ZetaCoordinateSymmetry.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "ZetaSpectralBridge",
+      "path": "proofs/ZetaSpectralBridge.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": [
+        "DiracColimit",
+        "PrimonCuntzTower"
+      ]
+    },
+    {
+      "id": "ZornAssociatorSplitOctonion",
+      "path": "proofs/ZornAssociatorSplitOctonion.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "ZornChiralBridge",
+      "path": "proofs/ZornChiralBridge.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": [
+        "ZornParavectorNullspace",
+        "ChiralCausalCone"
+      ]
+    },
+    {
+      "id": "ZornOPParavector",
+      "path": "proofs/ZornOPParavector.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "ZornParavectorNullspace",
+      "path": "proofs/ZornParavectorNullspace.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "ZornScalingFlow",
+      "path": "proofs/ZornScalingFlow.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "ZornScalingFlowOrdered",
+      "path": "proofs/ZornScalingFlowOrdered.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "bridge_full",
+      "path": "proofs/bridge_full.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "clifford_seed",
+      "path": "proofs/clifford_seed.lean",
+      "category": "Clifford / chiral / spinors",
+      "imports": []
+    },
+    {
+      "id": "determinant_weyl_gauge",
+      "path": "proofs/determinant_weyl_gauge.lean",
+      "category": "Gauge / Standard Model color",
+      "imports": []
+    },
+    {
+      "id": "discrete_maxflow_mincut",
+      "path": "proofs/discrete_maxflow_mincut.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "goutev_principle",
+      "path": "proofs/goutev_principle.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "iR",
+      "path": "proofs/iR.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "inductive_colimit_uhf_group",
+      "path": "proofs/inductive_colimit_uhf_group.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "krein_souriau",
+      "path": "proofs/krein_souriau.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": []
+    },
+    {
+      "id": "krein_souriau_full",
+      "path": "proofs/krein_souriau_full.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": []
+    },
+    {
+      "id": "master_equation",
+      "path": "proofs/master_equation.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "penrose_wallpaper_colimit",
+      "path": "proofs/penrose_wallpaper_colimit.lean",
+      "category": "Geometry / holography / tilings",
+      "imports": []
+    },
+    {
+      "id": "primon_system",
+      "path": "proofs/primon_system.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    },
+    {
+      "id": "rigorous_proofs",
+      "path": "proofs/rigorous_proofs.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "test",
+      "path": "proofs/test.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "test_braid",
+      "path": "proofs/test_braid.lean",
+      "category": "Braids / YBE / topology",
+      "imports": []
+    },
+    {
+      "id": "test_noncomm",
+      "path": "proofs/test_noncomm.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "test_ring",
+      "path": "proofs/test_ring.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "test_simp",
+      "path": "proofs/test_simp.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "test_smul",
+      "path": "proofs/test_smul.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "test_smul2",
+      "path": "proofs/test_smul2.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "test_tl",
+      "path": "proofs/_deprecated/test_tl.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "test_tl2",
+      "path": "proofs/_deprecated/test_tl2.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "test_wrapper",
+      "path": "proofs/test_wrapper.lean",
+      "category": "Core algebra / misc",
+      "imports": []
+    },
+    {
+      "id": "thermo_gauge_flow",
+      "path": "proofs/thermo_gauge_flow.lean",
+      "category": "Information geometry / thermodynamics",
+      "imports": []
+    },
+    {
+      "id": "tomita_kms_v4",
+      "path": "proofs/tomita_kms_v4.lean",
+      "category": "Spectral / index / anomaly",
+      "imports": []
+    },
+    {
+      "id": "uhf_cantor_boundary",
+      "path": "proofs/uhf_cantor_boundary.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "uhf_ladder",
+      "path": "proofs/uhf_ladder.lean",
+      "category": "Operator algebras / CAR-CCR-Cuntz",
+      "imports": []
+    },
+    {
+      "id": "zeta_zeros_moebius_klein",
+      "path": "proofs/zeta_zeros_moebius_klein.lean",
+      "category": "Arithmetic / zeta / primons",
+      "imports": []
+    }
+  ],
+  "edges": [
+    {
+      "source": "ASTExtractor",
+      "target": "ExtractBraid",
+      "from": "ASTExtractor",
+      "to": "ExtractBraid"
+    },
+    {
+      "source": "AffineDynkinGoutevTonev",
+      "target": "iR",
+      "from": "AffineDynkinGoutevTonev",
+      "to": "iR"
+    },
+    {
+      "source": "AffineDynkinGoutevTonev",
+      "target": "GoutevTonevPrinciple",
+      "from": "AffineDynkinGoutevTonev",
+      "to": "GoutevTonevPrinciple"
+    },
+    {
+      "source": "AnomalousKMSFlow",
+      "target": "tomita_kms_v4",
+      "from": "AnomalousKMSFlow",
+      "to": "tomita_kms_v4"
+    },
+    {
+      "source": "ArtinMonodromyPin55",
+      "target": "BraidNegativeIdentityMonodromy",
+      "from": "ArtinMonodromyPin55",
+      "to": "BraidNegativeIdentityMonodromy"
+    },
+    {
+      "source": "ArtinMonodromyPin55",
+      "target": "Clifford55AnomalyOSP",
+      "from": "ArtinMonodromyPin55",
+      "to": "Clifford55AnomalyOSP"
+    },
+    {
+      "source": "ArtinParityFlowWitness",
+      "target": "BraidCliffordIntegration",
+      "from": "ArtinParityFlowWitness",
+      "to": "BraidCliffordIntegration"
+    },
+    {
+      "source": "B3PresentedGroup",
+      "target": "JonesBraidB3",
+      "from": "B3PresentedGroup",
+      "to": "JonesBraidB3"
+    },
+    {
+      "source": "B3RepresentationBridge",
+      "target": "B3PresentedGroup",
+      "from": "B3RepresentationBridge",
+      "to": "B3PresentedGroup"
+    },
+    {
+      "source": "BaxterAnchorManifest",
+      "target": "ChiralCausalCone",
+      "from": "BaxterAnchorManifest",
+      "to": "ChiralCausalCone"
+    },
+    {
+      "source": "BaxterAnchorManifest",
+      "target": "ChiralTensorRecoupling",
+      "from": "BaxterAnchorManifest",
+      "to": "ChiralTensorRecoupling"
+    },
+    {
+      "source": "BaxterAnchorManifest",
+      "target": "TLChain",
+      "from": "BaxterAnchorManifest",
+      "to": "TLChain"
+    },
+    {
+      "source": "BaxterAnchorManifest",
+      "target": "JonesBraidB3",
+      "from": "BaxterAnchorManifest",
+      "to": "JonesBraidB3"
+    },
+    {
+      "source": "BaxterAnchorManifest",
+      "target": "YangBaxterQSwap",
+      "from": "BaxterAnchorManifest",
+      "to": "YangBaxterQSwap"
+    },
+    {
+      "source": "BaxterAnchorManifest",
+      "target": "B3PresentedGroup",
+      "from": "BaxterAnchorManifest",
+      "to": "B3PresentedGroup"
+    },
+    {
+      "source": "BaxterAnchorManifest",
+      "target": "SpectralYangBaxter",
+      "from": "BaxterAnchorManifest",
+      "to": "SpectralYangBaxter"
+    },
+    {
+      "source": "BaxterAnchorManifest",
+      "target": "FibAnyonThm4",
+      "from": "BaxterAnchorManifest",
+      "to": "FibAnyonThm4"
+    },
+    {
+      "source": "BaxterAnchorManifest",
+      "target": "HexagonCocycle",
+      "from": "BaxterAnchorManifest",
+      "to": "HexagonCocycle"
+    },
+    {
+      "source": "BaxterAnchorManifest",
+      "target": "BraidNegativeIdentityMonodromy",
+      "from": "BaxterAnchorManifest",
+      "to": "BraidNegativeIdentityMonodromy"
+    },
+    {
+      "source": "BaxterAnchorManifest",
+      "target": "ArtinMonodromyPin55",
+      "from": "BaxterAnchorManifest",
+      "to": "ArtinMonodromyPin55"
+    },
+    {
+      "source": "BogoliubovBraidGraphWeld",
+      "target": "BogoliubovSU3ParafermionProofChain",
+      "from": "BogoliubovBraidGraphWeld",
+      "to": "BogoliubovSU3ParafermionProofChain"
+    },
+    {
+      "source": "BogoliubovBraidGraphWeld",
+      "target": "B3RepresentationBridge",
+      "from": "BogoliubovBraidGraphWeld",
+      "to": "B3RepresentationBridge"
+    },
+    {
+      "source": "BogoliubovBraidGraphWeld",
+      "target": "YangBaxterQSwap",
+      "from": "BogoliubovBraidGraphWeld",
+      "to": "YangBaxterQSwap"
+    },
+    {
+      "source": "BogoliubovBraidGraphWeld",
+      "target": "BraidIdealDescent",
+      "from": "BogoliubovBraidGraphWeld",
+      "to": "BraidIdealDescent"
+    },
+    {
+      "source": "BogoliubovFrameTransport",
+      "target": "KANTraceSectorization",
+      "from": "BogoliubovFrameTransport",
+      "to": "KANTraceSectorization"
+    },
+    {
+      "source": "BogoliubovSU3ParafermionProofChain",
+      "target": "BogoliubovSU3ParafermionWeld",
+      "from": "BogoliubovSU3ParafermionProofChain",
+      "to": "BogoliubovSU3ParafermionWeld"
+    },
+    {
+      "source": "BogoliubovSU3ParafermionWeld",
+      "target": "BogoliubovWeylChemicalPotential",
+      "from": "BogoliubovSU3ParafermionWeld",
+      "to": "BogoliubovWeylChemicalPotential"
+    },
+    {
+      "source": "BogoliubovSU3ParafermionWeld",
+      "target": "GellMannSU3",
+      "from": "BogoliubovSU3ParafermionWeld",
+      "to": "GellMannSU3"
+    },
+    {
+      "source": "BogoliubovSU3ParafermionWeld",
+      "target": "ColorCARStandardModel",
+      "from": "BogoliubovSU3ParafermionWeld",
+      "to": "ColorCARStandardModel"
+    },
+    {
+      "source": "BogoliubovWeylChemicalPotential",
+      "target": "HestenesCuntzPhaseSpace",
+      "from": "BogoliubovWeylChemicalPotential",
+      "to": "HestenesCuntzPhaseSpace"
+    },
+    {
+      "source": "BraidCliffordIntegration",
+      "target": "FibonacciCliffordBridge",
+      "from": "BraidCliffordIntegration",
+      "to": "FibonacciCliffordBridge"
+    },
+    {
+      "source": "CP3CantorGeometricObstruction",
+      "target": "TwistorParafermionBoundary",
+      "from": "CP3CantorGeometricObstruction",
+      "to": "TwistorParafermionBoundary"
+    },
+    {
+      "source": "CP3CantorGeometricObstruction",
+      "target": "CantorBoundaryCuntzFamily",
+      "from": "CP3CantorGeometricObstruction",
+      "to": "CantorBoundaryCuntzFamily"
+    },
+    {
+      "source": "CPTConformantTriaxialHamiltonian",
+      "target": "MirrorNucleiIsospinGNS",
+      "from": "CPTConformantTriaxialHamiltonian",
+      "to": "MirrorNucleiIsospinGNS"
+    },
+    {
+      "source": "CPTConformantTriaxialHamiltonian",
+      "target": "Q8NuclearChirality",
+      "from": "CPTConformantTriaxialHamiltonian",
+      "to": "Q8NuclearChirality"
+    },
+    {
+      "source": "CStarCuntzTensorQuotient",
+      "target": "AlgebraicCuntzQuotient",
+      "from": "CStarCuntzTensorQuotient",
+      "to": "AlgebraicCuntzQuotient"
+    },
+    {
+      "source": "CantorBoundaryCuntzFamily",
+      "target": "ParafermionIdentityRealization",
+      "from": "CantorBoundaryCuntzFamily",
+      "to": "ParafermionIdentityRealization"
+    },
+    {
+      "source": "CantorBoundaryCuntzFamily",
+      "target": "UHFInductiveColimit",
+      "from": "CantorBoundaryCuntzFamily",
+      "to": "UHFInductiveColimit"
+    },
+    {
+      "source": "CartanKleinBottleGeometry",
+      "target": "MobiusCantorTKKClosure",
+      "from": "CartanKleinBottleGeometry",
+      "to": "MobiusCantorTKKClosure"
+    },
+    {
+      "source": "CartanKleinBottleGeometry",
+      "target": "ProjectiveAffineConformalClosure55",
+      "from": "CartanKleinBottleGeometry",
+      "to": "ProjectiveAffineConformalClosure55"
+    },
+    {
+      "source": "CartanKleinBottleGeometry",
+      "target": "Clifford55AnomalyOSP",
+      "from": "CartanKleinBottleGeometry",
+      "to": "Clifford55AnomalyOSP"
+    },
+    {
+      "source": "CartanKleinBottleGeometry",
+      "target": "MajoranaPrimonSpectralBridge",
+      "from": "CartanKleinBottleGeometry",
+      "to": "MajoranaPrimonSpectralBridge"
+    },
+    {
+      "source": "ChiralAffineBogoliubovWeld",
+      "target": "SupergradedCuntzBdG",
+      "from": "ChiralAffineBogoliubovWeld",
+      "to": "SupergradedCuntzBdG"
+    },
+    {
+      "source": "ChiralAffineBogoliubovWeld",
+      "target": "ChiralCausalCone",
+      "from": "ChiralAffineBogoliubovWeld",
+      "to": "ChiralCausalCone"
+    },
+    {
+      "source": "ChiralAffineBogoliubovWeld",
+      "target": "BogoliubovWeylChemicalPotential",
+      "from": "ChiralAffineBogoliubovWeld",
+      "to": "BogoliubovWeylChemicalPotential"
+    },
+    {
+      "source": "ChiralB3PresentedBridge",
+      "target": "ChiralTensorRecoupling",
+      "from": "ChiralB3PresentedBridge",
+      "to": "ChiralTensorRecoupling"
+    },
+    {
+      "source": "ChiralB3PresentedBridge",
+      "target": "ChiralTensorMatrixBridge",
+      "from": "ChiralB3PresentedBridge",
+      "to": "ChiralTensorMatrixBridge"
+    },
+    {
+      "source": "ChiralB3PresentedBridge",
+      "target": "TLChain",
+      "from": "ChiralB3PresentedBridge",
+      "to": "TLChain"
+    },
+    {
+      "source": "ChiralB3PresentedBridge",
+      "target": "JonesBraidB3",
+      "from": "ChiralB3PresentedBridge",
+      "to": "JonesBraidB3"
+    },
+    {
+      "source": "ChiralB3PresentedBridge",
+      "target": "YangBaxterQSwap",
+      "from": "ChiralB3PresentedBridge",
+      "to": "YangBaxterQSwap"
+    },
+    {
+      "source": "ChiralB3PresentedBridge",
+      "target": "B3PresentedGroup",
+      "from": "ChiralB3PresentedBridge",
+      "to": "B3PresentedGroup"
+    },
+    {
+      "source": "ChiralCausalCone",
+      "target": "CPTAtom",
+      "from": "ChiralCausalCone",
+      "to": "CPTAtom"
+    },
+    {
+      "source": "ChiralCausalCone",
+      "target": "SolderingSpinConnectionBogoliubov",
+      "from": "ChiralCausalCone",
+      "to": "SolderingSpinConnectionBogoliubov"
+    },
+    {
+      "source": "ChiralCausalCone",
+      "target": "SplitCliffordAlgebras",
+      "from": "ChiralCausalCone",
+      "to": "SplitCliffordAlgebras"
+    },
+    {
+      "source": "ChiralCuntzInductive",
+      "target": "AlgebraicCuntzToeplitzInductive",
+      "from": "ChiralCuntzInductive",
+      "to": "AlgebraicCuntzToeplitzInductive"
+    },
+    {
+      "source": "ChiralIsospinEOMSU2",
+      "target": "ColorConfinementGNS",
+      "from": "ChiralIsospinEOMSU2",
+      "to": "ColorConfinementGNS"
+    },
+    {
+      "source": "ChiralIsospinEOMSU2",
+      "target": "WeakIsospinSU2",
+      "from": "ChiralIsospinEOMSU2",
+      "to": "WeakIsospinSU2"
+    },
+    {
+      "source": "ChiralIsospinEOMSU2",
+      "target": "ChiralAffineBogoliubovWeld",
+      "from": "ChiralIsospinEOMSU2",
+      "to": "ChiralAffineBogoliubovWeld"
+    },
+    {
+      "source": "ChiralTLDescent",
+      "target": "TLChain",
+      "from": "ChiralTLDescent",
+      "to": "TLChain"
+    },
+    {
+      "source": "ChiralTLDescent",
+      "target": "ChiralTensorRecoupling",
+      "from": "ChiralTLDescent",
+      "to": "ChiralTensorRecoupling"
+    },
+    {
+      "source": "ChiralTLDescent",
+      "target": "ChiralTensorMatrixBridge",
+      "from": "ChiralTLDescent",
+      "to": "ChiralTensorMatrixBridge"
+    },
+    {
+      "source": "ChiralTLDescent",
+      "target": "BraidIdealDescent",
+      "from": "ChiralTLDescent",
+      "to": "BraidIdealDescent"
+    },
+    {
+      "source": "ChiralTensorMatrixBridge",
+      "target": "ChiralTensorRecoupling",
+      "from": "ChiralTensorMatrixBridge",
+      "to": "ChiralTensorRecoupling"
+    },
+    {
+      "source": "ChiralTensorMatrixBridge",
+      "target": "TLChain",
+      "from": "ChiralTensorMatrixBridge",
+      "to": "TLChain"
+    },
+    {
+      "source": "ChiralTensorRecoupling",
+      "target": "ChiralCausalCone",
+      "from": "ChiralTensorRecoupling",
+      "to": "ChiralCausalCone"
+    },
+    {
+      "source": "Cl11ChiralCARBridge",
+      "target": "ChiralCausalCone",
+      "from": "Cl11ChiralCARBridge",
+      "to": "ChiralCausalCone"
+    },
+    {
+      "source": "ColorCARStandardModel",
+      "target": "ChiralCausalCone",
+      "from": "ColorCARStandardModel",
+      "to": "ChiralCausalCone"
+    },
+    {
+      "source": "ColorCARStandardModel",
+      "target": "ChiralTensorRecoupling",
+      "from": "ColorCARStandardModel",
+      "to": "ChiralTensorRecoupling"
+    },
+    {
+      "source": "ColorCARStandardModel",
+      "target": "BraidIdealDescent",
+      "from": "ColorCARStandardModel",
+      "to": "BraidIdealDescent"
+    },
+    {
+      "source": "ColorCARStandardModel",
+      "target": "ChiralTLDescent",
+      "from": "ColorCARStandardModel",
+      "to": "ChiralTLDescent"
+    },
+    {
+      "source": "ColorConfinementGNS",
+      "target": "S3ColorSpinorDecomposition",
+      "from": "ColorConfinementGNS",
+      "to": "S3ColorSpinorDecomposition"
+    },
+    {
+      "source": "ColorConfinementGNS",
+      "target": "JaynesLDDPGNSColimit",
+      "from": "ColorConfinementGNS",
+      "to": "JaynesLDDPGNSColimit"
+    },
+    {
+      "source": "ColorConfinementGNS",
+      "target": "SU3LoopBraidDuality",
+      "from": "ColorConfinementGNS",
+      "to": "SU3LoopBraidDuality"
+    },
+    {
+      "source": "ComplexStarCuntzRedesign",
+      "target": "CStarCuntzTensorQuotient",
+      "from": "ComplexStarCuntzRedesign",
+      "to": "CStarCuntzTensorQuotient"
+    },
+    {
+      "source": "ConnesSpectralAction",
+      "target": "AnomalousKMSFlow",
+      "from": "ConnesSpectralAction",
+      "to": "AnomalousKMSFlow"
+    },
+    {
+      "source": "ContinuumAsColimitCounting",
+      "target": "JaynesLDDPGNSColimit",
+      "from": "ContinuumAsColimitCounting",
+      "to": "JaynesLDDPGNSColimit"
+    },
+    {
+      "source": "CuntzBoundarySolderRealization",
+      "target": "ParafermionIdentityRealization",
+      "from": "CuntzBoundarySolderRealization",
+      "to": "ParafermionIdentityRealization"
+    },
+    {
+      "source": "CuntzBoundarySolderRealization",
+      "target": "CantorBoundaryCuntzFamily",
+      "from": "CuntzBoundarySolderRealization",
+      "to": "CantorBoundaryCuntzFamily"
+    },
+    {
+      "source": "CuntzBoundarySolderRealization",
+      "target": "WeylSolderedParafermionSymmetry",
+      "from": "CuntzBoundarySolderRealization",
+      "to": "WeylSolderedParafermionSymmetry"
+    },
+    {
+      "source": "CuntzDeformedSuperPoincare",
+      "target": "SupergradedCuntzBdG",
+      "from": "CuntzDeformedSuperPoincare",
+      "to": "SupergradedCuntzBdG"
+    },
+    {
+      "source": "CuntzDeformedSuperPoincare",
+      "target": "SuperPoincareOperatorCharges",
+      "from": "CuntzDeformedSuperPoincare",
+      "to": "SuperPoincareOperatorCharges"
+    },
+    {
+      "source": "CuntzDeformedSuperPoincare",
+      "target": "LorentzBoostMinkowski",
+      "from": "CuntzDeformedSuperPoincare",
+      "to": "LorentzBoostMinkowski"
+    },
+    {
+      "source": "CuntzDeformedSuperPoincare",
+      "target": "ChiralPoincareSouriauBridge",
+      "from": "CuntzDeformedSuperPoincare",
+      "to": "ChiralPoincareSouriauBridge"
+    },
+    {
+      "source": "CuntzKTheoryPairing",
+      "target": "ConnesSpectralAction",
+      "from": "CuntzKTheoryPairing",
+      "to": "ConnesSpectralAction"
+    },
+    {
+      "source": "CuntzKTheoryPairing",
+      "target": "AnomalousKMSFlow",
+      "from": "CuntzKTheoryPairing",
+      "to": "AnomalousKMSFlow"
+    },
+    {
+      "source": "CurryHowardLambekColimit",
+      "target": "ContinuumAsColimitCounting",
+      "from": "CurryHowardLambekColimit",
+      "to": "ContinuumAsColimitCounting"
+    },
+    {
+      "source": "CurryHowardLambekColimit",
+      "target": "HillWheelerUniversalProjection",
+      "from": "CurryHowardLambekColimit",
+      "to": "HillWheelerUniversalProjection"
+    },
+    {
+      "source": "CurryHowardLambekPhysics",
+      "target": "ContinuumAsColimitCounting",
+      "from": "CurryHowardLambekPhysics",
+      "to": "ContinuumAsColimitCounting"
+    },
+    {
+      "source": "CurryHowardLambekPhysics",
+      "target": "MobiusCantorTKKClosure",
+      "from": "CurryHowardLambekPhysics",
+      "to": "MobiusCantorTKKClosure"
+    },
+    {
+      "source": "CurryHowardLambekPhysics",
+      "target": "PrimonCoarseGraining",
+      "from": "CurryHowardLambekPhysics",
+      "to": "PrimonCoarseGraining"
+    },
+    {
+      "source": "DeterminantMoebiusFunctor",
+      "target": "DeterminantSupergrading",
+      "from": "DeterminantMoebiusFunctor",
+      "to": "DeterminantSupergrading"
+    },
+    {
+      "source": "DeterminantMoebiusFunctor",
+      "target": "TrifactorGeometry",
+      "from": "DeterminantMoebiusFunctor",
+      "to": "TrifactorGeometry"
+    },
+    {
+      "source": "DeterminantMoebiusFunctor",
+      "target": "MobiusInversion",
+      "from": "DeterminantMoebiusFunctor",
+      "to": "MobiusInversion"
+    },
+    {
+      "source": "DikinGoutevTonevBridge",
+      "target": "KreinMoorePenrose",
+      "from": "DikinGoutevTonevBridge",
+      "to": "KreinMoorePenrose"
+    },
+    {
+      "source": "DikinGoutevTonevBridge",
+      "target": "InformationGeometricCutoff",
+      "from": "DikinGoutevTonevBridge",
+      "to": "InformationGeometricCutoff"
+    },
+    {
+      "source": "DikinGoutevTonevBridge",
+      "target": "SouriauOperatorThermodynamics",
+      "from": "DikinGoutevTonevBridge",
+      "to": "SouriauOperatorThermodynamics"
+    },
+    {
+      "source": "DikinOnsagerCramerRaoOperator",
+      "target": "PrimonFlavorCKM",
+      "from": "DikinOnsagerCramerRaoOperator",
+      "to": "PrimonFlavorCKM"
+    },
+    {
+      "source": "DikinOnsagerCramerRaoOperator",
+      "target": "DikinGoutevTonevBridge",
+      "from": "DikinOnsagerCramerRaoOperator",
+      "to": "DikinGoutevTonevBridge"
+    },
+    {
+      "source": "DikinOnsagerCramerRaoOperator",
+      "target": "SouriauOperatorThermodynamics",
+      "from": "DikinOnsagerCramerRaoOperator",
+      "to": "SouriauOperatorThermodynamics"
+    },
+    {
+      "source": "DikinOnsagerCramerRaoOperator",
+      "target": "RescaledPhaseVolumeCanonical",
+      "from": "DikinOnsagerCramerRaoOperator",
+      "to": "RescaledPhaseVolumeCanonical"
+    },
+    {
+      "source": "DupontHypersurfaceOSModel",
+      "target": "NonIsoConf3QuadricD4PointCount",
+      "from": "DupontHypersurfaceOSModel",
+      "to": "NonIsoConf3QuadricD4PointCount"
+    },
+    {
+      "source": "EinsteinThermodynamicBridge",
+      "target": "InformationGeometricCutoff",
+      "from": "EinsteinThermodynamicBridge",
+      "to": "InformationGeometricCutoff"
+    },
+    {
+      "source": "EinsteinThermodynamicBridge",
+      "target": "BlackHoleHolography",
+      "from": "EinsteinThermodynamicBridge",
+      "to": "BlackHoleHolography"
+    },
+    {
+      "source": "EuclideanNilpotentObstruction",
+      "target": "ChiralCausalCone",
+      "from": "EuclideanNilpotentObstruction",
+      "to": "ChiralCausalCone"
+    },
+    {
+      "source": "ExceptionalPointMonodromy",
+      "target": "ExceptionalPointNullSector",
+      "from": "ExceptionalPointMonodromy",
+      "to": "ExceptionalPointNullSector"
+    },
+    {
+      "source": "ExceptionalPointMonodromy",
+      "target": "DeterminantSupergrading",
+      "from": "ExceptionalPointMonodromy",
+      "to": "DeterminantSupergrading"
+    },
+    {
+      "source": "ExceptionalPointMonodromy",
+      "target": "Z2NonAbelianBraiding",
+      "from": "ExceptionalPointMonodromy",
+      "to": "Z2NonAbelianBraiding"
+    },
+    {
+      "source": "ExceptionalPointMonodromy",
+      "target": "LieFlowCompilerBridge",
+      "from": "ExceptionalPointMonodromy",
+      "to": "LieFlowCompilerBridge"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "ChiralCausalCone",
+      "from": "ExtractGraph",
+      "to": "ChiralCausalCone"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "ChiralTensorRecoupling",
+      "from": "ExtractGraph",
+      "to": "ChiralTensorRecoupling"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "TLChain",
+      "from": "ExtractGraph",
+      "to": "TLChain"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "JonesBraidB3",
+      "from": "ExtractGraph",
+      "to": "JonesBraidB3"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "YangBaxterQSwap",
+      "from": "ExtractGraph",
+      "to": "YangBaxterQSwap"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "B3PresentedGroup",
+      "from": "ExtractGraph",
+      "to": "B3PresentedGroup"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "YangBaxterQuotientDescent",
+      "from": "ExtractGraph",
+      "to": "YangBaxterQuotientDescent"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "BraidIdealDescent",
+      "from": "ExtractGraph",
+      "to": "BraidIdealDescent"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "ChiralTensorMatrixBridge",
+      "from": "ExtractGraph",
+      "to": "ChiralTensorMatrixBridge"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "ChiralTLDescent",
+      "from": "ExtractGraph",
+      "to": "ChiralTLDescent"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "ChiralB3PresentedBridge",
+      "from": "ExtractGraph",
+      "to": "ChiralB3PresentedBridge"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "AlgebraicCuntzQuotient",
+      "from": "ExtractGraph",
+      "to": "AlgebraicCuntzQuotient"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "CStarCuntzTensorQuotient",
+      "from": "ExtractGraph",
+      "to": "CStarCuntzTensorQuotient"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "ComplexStarCuntzRedesign",
+      "from": "ExtractGraph",
+      "to": "ComplexStarCuntzRedesign"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "SupergradedCuntzBdG",
+      "from": "ExtractGraph",
+      "to": "SupergradedCuntzBdG"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "HestenesCuntzSpacetimeAlgebra",
+      "from": "ExtractGraph",
+      "to": "HestenesCuntzSpacetimeAlgebra"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "HestenesCuntzPhaseSpace",
+      "from": "ExtractGraph",
+      "to": "HestenesCuntzPhaseSpace"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "BogoliubovWeylChemicalPotential",
+      "from": "ExtractGraph",
+      "to": "BogoliubovWeylChemicalPotential"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "RelativeModularStateDikin",
+      "from": "ExtractGraph",
+      "to": "RelativeModularStateDikin"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "RescaledPhaseVolumeCanonical",
+      "from": "ExtractGraph",
+      "to": "RescaledPhaseVolumeCanonical"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "GaugeUHFLift",
+      "from": "ExtractGraph",
+      "to": "GaugeUHFLift"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "WeylGaugeColimitWeld",
+      "from": "ExtractGraph",
+      "to": "WeylGaugeColimitWeld"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "WeylColimitCanonicalLimit",
+      "from": "ExtractGraph",
+      "to": "WeylColimitCanonicalLimit"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "BogoliubovSU3ParafermionWeld",
+      "from": "ExtractGraph",
+      "to": "BogoliubovSU3ParafermionWeld"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "BogoliubovSU3ParafermionProofChain",
+      "from": "ExtractGraph",
+      "to": "BogoliubovSU3ParafermionProofChain"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "WeylSU3ColorSymmetry",
+      "from": "ExtractGraph",
+      "to": "WeylSU3ColorSymmetry"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "GellMannParafermionSolder",
+      "from": "ExtractGraph",
+      "to": "GellMannParafermionSolder"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "ParafermionIdentityRealization",
+      "from": "ExtractGraph",
+      "to": "ParafermionIdentityRealization"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "CantorBoundaryCuntzFamily",
+      "from": "ExtractGraph",
+      "to": "CantorBoundaryCuntzFamily"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "WeylSolderedParafermionSymmetry",
+      "from": "ExtractGraph",
+      "to": "WeylSolderedParafermionSymmetry"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "CuntzBoundarySolderRealization",
+      "from": "ExtractGraph",
+      "to": "CuntzBoundarySolderRealization"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "GellMannParafermionRealizationRoutesSynthesis",
+      "from": "ExtractGraph",
+      "to": "GellMannParafermionRealizationRoutesSynthesis"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "BogoliubovBraidGraphWeld",
+      "from": "ExtractGraph",
+      "to": "BogoliubovBraidGraphWeld"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "SplitCliffordAlgebras",
+      "from": "ExtractGraph",
+      "to": "SplitCliffordAlgebras"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "AtomicCliffordKAN",
+      "from": "ExtractGraph",
+      "to": "AtomicCliffordKAN"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "BiquaternionCliffordIso",
+      "from": "ExtractGraph",
+      "to": "BiquaternionCliffordIso"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "BiquaternionExpClosure",
+      "from": "ExtractGraph",
+      "to": "BiquaternionExpClosure"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "BiquaternionKANnilpotent",
+      "from": "ExtractGraph",
+      "to": "BiquaternionKANnilpotent"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "BiquaternionLaplaceTripotent",
+      "from": "ExtractGraph",
+      "to": "BiquaternionLaplaceTripotent"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "TrifactorGeometry",
+      "from": "ExtractGraph",
+      "to": "TrifactorGeometry"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "TripotentCliffordColimit",
+      "from": "ExtractGraph",
+      "to": "TripotentCliffordColimit"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "ZornParavectorNullspace",
+      "from": "ExtractGraph",
+      "to": "ZornParavectorNullspace"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "ZornScalingFlow",
+      "from": "ExtractGraph",
+      "to": "ZornScalingFlow"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "SouriauMoebiusCoupling",
+      "from": "ExtractGraph",
+      "to": "SouriauMoebiusCoupling"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "SouriauBiquaternionGaussian",
+      "from": "ExtractGraph",
+      "to": "SouriauBiquaternionGaussian"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "SouriauHestenesKrein",
+      "from": "ExtractGraph",
+      "to": "SouriauHestenesKrein"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "ExceptionalBraidTopology",
+      "from": "ExtractGraph",
+      "to": "ExceptionalBraidTopology"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "ExceptionalPointCollapse",
+      "from": "ExtractGraph",
+      "to": "ExceptionalPointCollapse"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "MobiusWittenIndex",
+      "from": "ExtractGraph",
+      "to": "MobiusWittenIndex"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "OctonionMatrixEncodings",
+      "from": "ExtractGraph",
+      "to": "OctonionMatrixEncodings"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "SplitOctonionBraidSU3",
+      "from": "ExtractGraph",
+      "to": "SplitOctonionBraidSU3"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "SplitOctonionMinkowski",
+      "from": "ExtractGraph",
+      "to": "SplitOctonionMinkowski"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "Clifford55AnomalyOSP",
+      "from": "ExtractGraph",
+      "to": "Clifford55AnomalyOSP"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "MinkowskiBiquaternion",
+      "from": "ExtractGraph",
+      "to": "MinkowskiBiquaternion"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "PolynomialSymmetryOperators",
+      "from": "ExtractGraph",
+      "to": "PolynomialSymmetryOperators"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "BraidCliffordIntegration",
+      "from": "ExtractGraph",
+      "to": "BraidCliffordIntegration"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "ColorCARStandardModel",
+      "from": "ExtractGraph",
+      "to": "ColorCARStandardModel"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "FureyCharges",
+      "from": "ExtractGraph",
+      "to": "FureyCharges"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "KreinMoorePenrose",
+      "from": "ExtractGraph",
+      "to": "KreinMoorePenrose"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "GoutevTonevPrinciple",
+      "from": "ExtractGraph",
+      "to": "GoutevTonevPrinciple"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "DikinGoutevTonevBridge",
+      "from": "ExtractGraph",
+      "to": "DikinGoutevTonevBridge"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "AffineDynkinGoutevTonev",
+      "from": "ExtractGraph",
+      "to": "AffineDynkinGoutevTonev"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "GellMannCartan",
+      "from": "ExtractGraph",
+      "to": "GellMannCartan"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "GellMannSU3",
+      "from": "ExtractGraph",
+      "to": "GellMannSU3"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "WeakIsospinSU2",
+      "from": "ExtractGraph",
+      "to": "WeakIsospinSU2"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "FierzIdentities",
+      "from": "ExtractGraph",
+      "to": "FierzIdentities"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "SpectralSquashCayleyDKT",
+      "from": "ExtractGraph",
+      "to": "SpectralSquashCayleyDKT"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "QSuperCuntzRegularization",
+      "from": "ExtractGraph",
+      "to": "QSuperCuntzRegularization"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "QRootOfUnityTruncation",
+      "from": "ExtractGraph",
+      "to": "QRootOfUnityTruncation"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "QuadraticConfiguration3",
+      "from": "ExtractGraph",
+      "to": "QuadraticConfiguration3"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "NonIsoConf3OrlikSolomon",
+      "from": "ExtractGraph",
+      "to": "NonIsoConf3OrlikSolomon"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "NonIsoConf3DeRhamCooperad",
+      "from": "ExtractGraph",
+      "to": "NonIsoConf3DeRhamCooperad"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "NonIsoConf3QuadricD4EPolynomial",
+      "from": "ExtractGraph",
+      "to": "NonIsoConf3QuadricD4EPolynomial"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "GrothendieckGromovWittenYangBaxter",
+      "from": "ExtractGraph",
+      "to": "GrothendieckGromovWittenYangBaxter"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "PenroseSpinTilingConfig",
+      "from": "ExtractGraph",
+      "to": "PenroseSpinTilingConfig"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "PenroseSpinIncidenceTessellation",
+      "from": "ExtractGraph",
+      "to": "PenroseSpinIncidenceTessellation"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "KleinErlangenGrothendieckBridge",
+      "from": "ExtractGraph",
+      "to": "KleinErlangenGrothendieckBridge"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "MotivicHolographyGroebnerLFunction",
+      "from": "ExtractGraph",
+      "to": "MotivicHolographyGroebnerLFunction"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "AmariChentsovFierzTorsion",
+      "from": "ExtractGraph",
+      "to": "AmariChentsovFierzTorsion"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "TKKJordanPairSocket",
+      "from": "ExtractGraph",
+      "to": "TKKJordanPairSocket"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "GNSQuotientFinite",
+      "from": "ExtractGraph",
+      "to": "GNSQuotientFinite"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "FiniteMatrixElementDuality",
+      "from": "ExtractGraph",
+      "to": "FiniteMatrixElementDuality"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "KreinCuntzShadow",
+      "from": "ExtractGraph",
+      "to": "KreinCuntzShadow"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "EuclideanNilpotentObstruction",
+      "from": "ExtractGraph",
+      "to": "EuclideanNilpotentObstruction"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "ZornChiralBridge",
+      "from": "ExtractGraph",
+      "to": "ZornChiralBridge"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "ArithmeticHamiltonianZeta",
+      "from": "ExtractGraph",
+      "to": "ArithmeticHamiltonianZeta"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "PrimonSuperThermodynamics",
+      "from": "ExtractGraph",
+      "to": "PrimonSuperThermodynamics"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "RiemannHypothesis",
+      "from": "ExtractGraph",
+      "to": "RiemannHypothesis"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "MajoranaPrimonSpectralBridge",
+      "from": "ExtractGraph",
+      "to": "MajoranaPrimonSpectralBridge"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "PrimonHilbertPolyaSeparation",
+      "from": "ExtractGraph",
+      "to": "PrimonHilbertPolyaSeparation"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "IJIRTRiemannDigest",
+      "from": "ExtractGraph",
+      "to": "IJIRTRiemannDigest"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "MisraPrimeEntropyDigest",
+      "from": "ExtractGraph",
+      "to": "MisraPrimeEntropyDigest"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "PrimonBosonFermionDuality",
+      "from": "ExtractGraph",
+      "to": "PrimonBosonFermionDuality"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "PrimonCoarseGraining",
+      "from": "ExtractGraph",
+      "to": "PrimonCoarseGraining"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "PrimonCoarseGrainedHilbertPolyaPotential",
+      "from": "ExtractGraph",
+      "to": "PrimonCoarseGrainedHilbertPolyaPotential"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "JaynesLDDPGNSColimit",
+      "from": "ExtractGraph",
+      "to": "JaynesLDDPGNSColimit"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "JaynesLeanColimitBridge",
+      "from": "ExtractGraph",
+      "to": "JaynesLeanColimitBridge"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "ContinuumAsColimitCounting",
+      "from": "ExtractGraph",
+      "to": "ContinuumAsColimitCounting"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "CurryHowardLambekColimit",
+      "from": "ExtractGraph",
+      "to": "CurryHowardLambekColimit"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "ProjectiveAffineConformalClosure55",
+      "from": "ExtractGraph",
+      "to": "ProjectiveAffineConformalClosure55"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "TwistorParafermionBoundary",
+      "from": "ExtractGraph",
+      "to": "TwistorParafermionBoundary"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "CP3CantorGeometricObstruction",
+      "from": "ExtractGraph",
+      "to": "CP3CantorGeometricObstruction"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "HillWheelerProjection",
+      "from": "ExtractGraph",
+      "to": "HillWheelerProjection"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "HillWheelerUniversalProjection",
+      "from": "ExtractGraph",
+      "to": "HillWheelerUniversalProjection"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "SU3LoopBraidCuntzBoundary",
+      "from": "ExtractGraph",
+      "to": "SU3LoopBraidCuntzBoundary"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "SU3LoopBraidDuality",
+      "from": "ExtractGraph",
+      "to": "SU3LoopBraidDuality"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "HolographicGaugeSymmetryUniqueness",
+      "from": "ExtractGraph",
+      "to": "HolographicGaugeSymmetryUniqueness"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "GravitationalQuantumBraidDuality",
+      "from": "ExtractGraph",
+      "to": "GravitationalQuantumBraidDuality"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "SUNQuantumBraidDuality",
+      "from": "ExtractGraph",
+      "to": "SUNQuantumBraidDuality"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "TopologicalColorCrystalFormal",
+      "from": "ExtractGraph",
+      "to": "TopologicalColorCrystalFormal"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "SolovievQPNMChiralCuntz",
+      "from": "ExtractGraph",
+      "to": "SolovievQPNMChiralCuntz"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "UnorientedS3KleinTQFT",
+      "from": "ExtractGraph",
+      "to": "UnorientedS3KleinTQFT"
+    },
+    {
+      "source": "ExtractGraph",
+      "target": "SpectralCPTKleinBottle",
+      "from": "ExtractGraph",
+      "to": "SpectralCPTKleinBottle"
+    },
+    {
+      "source": "FibonacciGoldenBraiding",
+      "target": "Q8NuclearChirality",
+      "from": "FibonacciGoldenBraiding",
+      "to": "Q8NuclearChirality"
+    },
+    {
+      "source": "FibonacciGoldenBraiding",
+      "target": "ModularEntropyPrimes",
+      "from": "FibonacciGoldenBraiding",
+      "to": "ModularEntropyPrimes"
+    },
+    {
+      "source": "FierzIdentities",
+      "target": "ChiralCausalCone",
+      "from": "FierzIdentities",
+      "to": "ChiralCausalCone"
+    },
+    {
+      "source": "FureyCharges",
+      "target": "ColorCARStandardModel",
+      "from": "FureyCharges",
+      "to": "ColorCARStandardModel"
+    },
+    {
+      "source": "FureyZornFermionBridge",
+      "target": "ZornOPParavector",
+      "from": "FureyZornFermionBridge",
+      "to": "ZornOPParavector"
+    },
+    {
+      "source": "GNSModularObservables",
+      "target": "QCDScaleExtraction",
+      "from": "GNSModularObservables",
+      "to": "QCDScaleExtraction"
+    },
+    {
+      "source": "GNSModularObservables",
+      "target": "FierzIdentities",
+      "from": "GNSModularObservables",
+      "to": "FierzIdentities"
+    },
+    {
+      "source": "GNSModularObservables",
+      "target": "ChiralCausalCone",
+      "from": "GNSModularObservables",
+      "to": "ChiralCausalCone"
+    },
+    {
+      "source": "GNSQuotientFinite",
+      "target": "FiniteGNSConstruction",
+      "from": "GNSQuotientFinite",
+      "to": "FiniteGNSConstruction"
+    },
+    {
+      "source": "GaugeUHFLift",
+      "target": "UHFInductiveColimit",
+      "from": "GaugeUHFLift",
+      "to": "UHFInductiveColimit"
+    },
+    {
+      "source": "GaugeUHFLift",
+      "target": "ChiralCausalCone",
+      "from": "GaugeUHFLift",
+      "to": "ChiralCausalCone"
+    },
+    {
+      "source": "GellMannParafermionRealizationRoutesSynthesis",
+      "target": "CuntzBoundarySolderRealization",
+      "from": "GellMannParafermionRealizationRoutesSynthesis",
+      "to": "CuntzBoundarySolderRealization"
+    },
+    {
+      "source": "GellMannParafermionRealizationRoutesSynthesis",
+      "target": "WeylSolderedParafermionSymmetry",
+      "from": "GellMannParafermionRealizationRoutesSynthesis",
+      "to": "WeylSolderedParafermionSymmetry"
+    },
+    {
+      "source": "GellMannParafermionRealizationRoutesSynthesis",
+      "target": "BogoliubovSU3ParafermionWeld",
+      "from": "GellMannParafermionRealizationRoutesSynthesis",
+      "to": "BogoliubovSU3ParafermionWeld"
+    },
+    {
+      "source": "GellMannParafermionRealizationRoutesSynthesis",
+      "target": "BogoliubovSU3ParafermionProofChain",
+      "from": "GellMannParafermionRealizationRoutesSynthesis",
+      "to": "BogoliubovSU3ParafermionProofChain"
+    },
+    {
+      "source": "GellMannParafermionRealizationRoutesSynthesis",
+      "target": "CantorBoundaryCuntzFamily",
+      "from": "GellMannParafermionRealizationRoutesSynthesis",
+      "to": "CantorBoundaryCuntzFamily"
+    },
+    {
+      "source": "GellMannParafermionRealizationRoutesSynthesis",
+      "target": "ChiralAffineBogoliubovWeld",
+      "from": "GellMannParafermionRealizationRoutesSynthesis",
+      "to": "ChiralAffineBogoliubovWeld"
+    },
+    {
+      "source": "GellMannParafermionSolder",
+      "target": "BogoliubovSU3ParafermionProofChain",
+      "from": "GellMannParafermionSolder",
+      "to": "BogoliubovSU3ParafermionProofChain"
+    },
+    {
+      "source": "GoutevTonevPrinciple",
+      "target": "SouriauOperatorThermodynamics",
+      "from": "GoutevTonevPrinciple",
+      "to": "SouriauOperatorThermodynamics"
+    },
+    {
+      "source": "GoutevTonevPrinciple",
+      "target": "InformationGeometricCutoff",
+      "from": "GoutevTonevPrinciple",
+      "to": "InformationGeometricCutoff"
+    },
+    {
+      "source": "GravitationalQuantumBraidDuality",
+      "target": "SU3LoopBraidDuality",
+      "from": "GravitationalQuantumBraidDuality",
+      "to": "SU3LoopBraidDuality"
+    },
+    {
+      "source": "GravitationalQuantumBraidDuality",
+      "target": "BogoliubovWeylChemicalPotential",
+      "from": "GravitationalQuantumBraidDuality",
+      "to": "BogoliubovWeylChemicalPotential"
+    },
+    {
+      "source": "GravitationalQuantumBraidDuality",
+      "target": "ChiralAffineBogoliubovWeld",
+      "from": "GravitationalQuantumBraidDuality",
+      "to": "ChiralAffineBogoliubovWeld"
+    },
+    {
+      "source": "GravitationalQuantumBraidDuality",
+      "target": "WeylSU3ColorSymmetry",
+      "from": "GravitationalQuantumBraidDuality",
+      "to": "WeylSU3ColorSymmetry"
+    },
+    {
+      "source": "GravitationalQuantumBraidDuality",
+      "target": "CantorBoundaryCuntzFamily",
+      "from": "GravitationalQuantumBraidDuality",
+      "to": "CantorBoundaryCuntzFamily"
+    },
+    {
+      "source": "GravitySoldering",
+      "target": "CartanWeylBogoliubovGravity",
+      "from": "GravitySoldering",
+      "to": "CartanWeylBogoliubovGravity"
+    },
+    {
+      "source": "GrothendieckGromovWittenYangBaxter",
+      "target": "NonIsoConf3QuadricD4EPolynomial",
+      "from": "GrothendieckGromovWittenYangBaxter",
+      "to": "NonIsoConf3QuadricD4EPolynomial"
+    },
+    {
+      "source": "HestenesCuntzPhaseSpace",
+      "target": "HestenesCuntzSpacetimeAlgebra",
+      "from": "HestenesCuntzPhaseSpace",
+      "to": "HestenesCuntzSpacetimeAlgebra"
+    },
+    {
+      "source": "HestenesCuntzSpacetimeAlgebra",
+      "target": "LorentzChiralCuntzBridge",
+      "from": "HestenesCuntzSpacetimeAlgebra",
+      "to": "LorentzChiralCuntzBridge"
+    },
+    {
+      "source": "HilbertPolyaBivariant",
+      "target": "ZetaCoordinateSymmetry",
+      "from": "HilbertPolyaBivariant",
+      "to": "ZetaCoordinateSymmetry"
+    },
+    {
+      "source": "HilbertPolyaBivariant",
+      "target": "AnomalousKMSFlow",
+      "from": "HilbertPolyaBivariant",
+      "to": "AnomalousKMSFlow"
+    },
+    {
+      "source": "HilbertPolyaBivariant",
+      "target": "KasparovKreinCategory",
+      "from": "HilbertPolyaBivariant",
+      "to": "KasparovKreinCategory"
+    },
+    {
+      "source": "HilbertPolyaBivariant",
+      "target": "UnifiedAnomalyArchitecture",
+      "from": "HilbertPolyaBivariant",
+      "to": "UnifiedAnomalyArchitecture"
+    },
+    {
+      "source": "HillWheelerProjection",
+      "target": "MajoranaPrimonSpectralBridge",
+      "from": "HillWheelerProjection",
+      "to": "MajoranaPrimonSpectralBridge"
+    },
+    {
+      "source": "HillWheelerProjection",
+      "target": "PrimonBosonFermionDuality",
+      "from": "HillWheelerProjection",
+      "to": "PrimonBosonFermionDuality"
+    },
+    {
+      "source": "HillWheelerProjection",
+      "target": "CantorBoundaryCuntzFamily",
+      "from": "HillWheelerProjection",
+      "to": "CantorBoundaryCuntzFamily"
+    },
+    {
+      "source": "HillWheelerUniversalProjection",
+      "target": "HillWheelerProjection",
+      "from": "HillWheelerUniversalProjection",
+      "to": "HillWheelerProjection"
+    },
+    {
+      "source": "HillWheelerUniversalProjection",
+      "target": "JaynesLDDPGNSColimit",
+      "from": "HillWheelerUniversalProjection",
+      "to": "JaynesLDDPGNSColimit"
+    },
+    {
+      "source": "HillWheelerUniversalProjection",
+      "target": "ProjectiveAffineConformalClosure55",
+      "from": "HillWheelerUniversalProjection",
+      "to": "ProjectiveAffineConformalClosure55"
+    },
+    {
+      "source": "HolographicDictionarySynthesis",
+      "target": "CliffordFiveFiveAnomaly",
+      "from": "HolographicDictionarySynthesis",
+      "to": "CliffordFiveFiveAnomaly"
+    },
+    {
+      "source": "HolographicDictionarySynthesis",
+      "target": "MobiusWittenIndex",
+      "from": "HolographicDictionarySynthesis",
+      "to": "MobiusWittenIndex"
+    },
+    {
+      "source": "HolographicDictionarySynthesis",
+      "target": "KleinNilpotentThermo",
+      "from": "HolographicDictionarySynthesis",
+      "to": "KleinNilpotentThermo"
+    },
+    {
+      "source": "HolographicDictionarySynthesis",
+      "target": "RiemannKleinDuality",
+      "from": "HolographicDictionarySynthesis",
+      "to": "RiemannKleinDuality"
+    },
+    {
+      "source": "HolographicDictionarySynthesis",
+      "target": "ZornParavectorNullspace",
+      "from": "HolographicDictionarySynthesis",
+      "to": "ZornParavectorNullspace"
+    },
+    {
+      "source": "HolographicDictionarySynthesis",
+      "target": "OctonionMatrixObstruction",
+      "from": "HolographicDictionarySynthesis",
+      "to": "OctonionMatrixObstruction"
+    },
+    {
+      "source": "HolographicGaugeSymmetryUniqueness",
+      "target": "SU3LoopBraidCuntzBoundary",
+      "from": "HolographicGaugeSymmetryUniqueness",
+      "to": "SU3LoopBraidCuntzBoundary"
+    },
+    {
+      "source": "HolographicGaugeSymmetryUniqueness",
+      "target": "ItFromBitProjectiveHolographicSynthesis",
+      "from": "HolographicGaugeSymmetryUniqueness",
+      "to": "ItFromBitProjectiveHolographicSynthesis"
+    },
+    {
+      "source": "HolographicGaugeSymmetryUniqueness",
+      "target": "Clifford55AnomalyOSP",
+      "from": "HolographicGaugeSymmetryUniqueness",
+      "to": "Clifford55AnomalyOSP"
+    },
+    {
+      "source": "HolographicGaugeSymmetryUniqueness",
+      "target": "YangBaxterQSwap",
+      "from": "HolographicGaugeSymmetryUniqueness",
+      "to": "YangBaxterQSwap"
+    },
+    {
+      "source": "HolographicGaugeSymmetryUniqueness20",
+      "target": "HolographicGaugeSymmetryUniqueness",
+      "from": "HolographicGaugeSymmetryUniqueness20",
+      "to": "HolographicGaugeSymmetryUniqueness"
+    },
+    {
+      "source": "HolographicProxyQLimit",
+      "target": "TopologicalColorCrystal",
+      "from": "HolographicProxyQLimit",
+      "to": "TopologicalColorCrystal"
+    },
+    {
+      "source": "HolographicProxyQLimit",
+      "target": "GravitationalQuantumBraidDuality",
+      "from": "HolographicProxyQLimit",
+      "to": "GravitationalQuantumBraidDuality"
+    },
+    {
+      "source": "HolographicProxyQLimit",
+      "target": "SU3CorrelationExtraction",
+      "from": "HolographicProxyQLimit",
+      "to": "SU3CorrelationExtraction"
+    },
+    {
+      "source": "HolographicProxyQLimit",
+      "target": "SU3LoopBraidDuality",
+      "from": "HolographicProxyQLimit",
+      "to": "SU3LoopBraidDuality"
+    },
+    {
+      "source": "HolographicProxyQLimit",
+      "target": "ChiralAffineBogoliubovWeld",
+      "from": "HolographicProxyQLimit",
+      "to": "ChiralAffineBogoliubovWeld"
+    },
+    {
+      "source": "HurwitzQuaternionSpectrum",
+      "target": "HurwitzTwistedSector",
+      "from": "HurwitzQuaternionSpectrum",
+      "to": "HurwitzTwistedSector"
+    },
+    {
+      "source": "HurwitzTwistedSector",
+      "target": "ZetaSpectralBridge",
+      "from": "HurwitzTwistedSector",
+      "to": "ZetaSpectralBridge"
+    },
+    {
+      "source": "IJIRTRiemannDigest",
+      "target": "MajoranaPrimonSpectralBridge",
+      "from": "IJIRTRiemannDigest",
+      "to": "MajoranaPrimonSpectralBridge"
+    },
+    {
+      "source": "IJIRTRiemannDigest",
+      "target": "PrimonHilbertPolyaSeparation",
+      "from": "IJIRTRiemannDigest",
+      "to": "PrimonHilbertPolyaSeparation"
+    },
+    {
+      "source": "IdealDescentProof",
+      "target": "BraidIdealDescent",
+      "from": "IdealDescentProof",
+      "to": "BraidIdealDescent"
+    },
+    {
+      "source": "IdealDescentProof",
+      "target": "YangBaxterQuotientDescent",
+      "from": "IdealDescentProof",
+      "to": "YangBaxterQuotientDescent"
+    },
+    {
+      "source": "IdealDescentProof",
+      "target": "JonesBraidB3",
+      "from": "IdealDescentProof",
+      "to": "JonesBraidB3"
+    },
+    {
+      "source": "IdealDescentProof",
+      "target": "YangBaxterQSwap",
+      "from": "IdealDescentProof",
+      "to": "YangBaxterQSwap"
+    },
+    {
+      "source": "InductiveAnalyticFlow",
+      "target": "LieAlgebraColimit",
+      "from": "InductiveAnalyticFlow",
+      "to": "LieAlgebraColimit"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "SplitCliffordAlgebras",
+      "from": "InfoGeometry",
+      "to": "SplitCliffordAlgebras"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "ProjectiveCuntzToeplitzCARCCR",
+      "from": "InfoGeometry",
+      "to": "ProjectiveCuntzToeplitzCARCCR"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "ProjectivePenrosePGA",
+      "from": "InfoGeometry",
+      "to": "ProjectivePenrosePGA"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "NoncommutativeTilingAlgebra",
+      "from": "InfoGeometry",
+      "to": "NoncommutativeTilingAlgebra"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "ConvexAlgebraicDuality",
+      "from": "InfoGeometry",
+      "to": "ConvexAlgebraicDuality"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "GoldenCCR",
+      "from": "InfoGeometry",
+      "to": "GoldenCCR"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "FractalHamiltonian",
+      "from": "InfoGeometry",
+      "to": "FractalHamiltonian"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "BlackHoleHolography",
+      "from": "InfoGeometry",
+      "to": "BlackHoleHolography"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "GoldenSpectralTriple",
+      "from": "InfoGeometry",
+      "to": "GoldenSpectralTriple"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "InformationGeometricCutoff",
+      "from": "InfoGeometry",
+      "to": "InformationGeometricCutoff"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "EinsteinThermodynamicBridge",
+      "from": "InfoGeometry",
+      "to": "EinsteinThermodynamicBridge"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "UnifiedGaugeField",
+      "from": "InfoGeometry",
+      "to": "UnifiedGaugeField"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "DiracKreinMetriplectic",
+      "from": "InfoGeometry",
+      "to": "DiracKreinMetriplectic"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "SuperBerezinianKlein",
+      "from": "InfoGeometry",
+      "to": "SuperBerezinianKlein"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "GlideSymmetricInvariant",
+      "from": "InfoGeometry",
+      "to": "GlideSymmetricInvariant"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "CubicJordanPeirceDecomposition",
+      "from": "InfoGeometry",
+      "to": "CubicJordanPeirceDecomposition"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "MinkowskiBiquaternion",
+      "from": "InfoGeometry",
+      "to": "MinkowskiBiquaternion"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "DiracFourierMellin",
+      "from": "InfoGeometry",
+      "to": "DiracFourierMellin"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "PolynomialSymmetryOperators",
+      "from": "InfoGeometry",
+      "to": "PolynomialSymmetryOperators"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "BiquaternionKANnilpotent",
+      "from": "InfoGeometry",
+      "to": "BiquaternionKANnilpotent"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "CptFractalClosure",
+      "from": "InfoGeometry",
+      "to": "CptFractalClosure"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "GravitySoldering",
+      "from": "InfoGeometry",
+      "to": "GravitySoldering"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "WallpaperIsometry",
+      "from": "InfoGeometry",
+      "to": "WallpaperIsometry"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "BraidIdealDescent",
+      "from": "InfoGeometry",
+      "to": "BraidIdealDescent"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "GohbergKreinIndex",
+      "from": "InfoGeometry",
+      "to": "GohbergKreinIndex"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "ArtinCentralizerMonodromy",
+      "from": "InfoGeometry",
+      "to": "ArtinCentralizerMonodromy"
+    },
+    {
+      "source": "InfoGeometry",
+      "target": "ArtinMonodromyPin55",
+      "from": "InfoGeometry",
+      "to": "ArtinMonodromyPin55"
+    },
+    {
+      "source": "InformationTheoreticPNT",
+      "target": "ModularEntropyPrimes",
+      "from": "InformationTheoreticPNT",
+      "to": "ModularEntropyPrimes"
+    },
+    {
+      "source": "ItFromBitProjectiveHolographicSynthesis",
+      "target": "TwistorParafermionBoundary",
+      "from": "ItFromBitProjectiveHolographicSynthesis",
+      "to": "TwistorParafermionBoundary"
+    },
+    {
+      "source": "ItFromBitProjectiveHolographicSynthesis",
+      "target": "ProjectiveAffineConformalClosure55",
+      "from": "ItFromBitProjectiveHolographicSynthesis",
+      "to": "ProjectiveAffineConformalClosure55"
+    },
+    {
+      "source": "ItFromBitProjectiveHolographicSynthesis",
+      "target": "HillWheelerUniversalProjection",
+      "from": "ItFromBitProjectiveHolographicSynthesis",
+      "to": "HillWheelerUniversalProjection"
+    },
+    {
+      "source": "ItFromBitProjectiveHolographicSynthesis",
+      "target": "PrimonHilbertPolyaSeparation",
+      "from": "ItFromBitProjectiveHolographicSynthesis",
+      "to": "PrimonHilbertPolyaSeparation"
+    },
+    {
+      "source": "IwasawaAnalyticityLock",
+      "target": "KANFormalization",
+      "from": "IwasawaAnalyticityLock",
+      "to": "KANFormalization"
+    },
+    {
+      "source": "IwasawaAnalyticityLock",
+      "target": "PrimonCuntzTower",
+      "from": "IwasawaAnalyticityLock",
+      "to": "PrimonCuntzTower"
+    },
+    {
+      "source": "JaynesLDDPGNSColimit",
+      "target": "UHFInductiveColimit",
+      "from": "JaynesLDDPGNSColimit",
+      "to": "UHFInductiveColimit"
+    },
+    {
+      "source": "JaynesLDDPGNSColimit",
+      "target": "RegularizationCayleyPipeline",
+      "from": "JaynesLDDPGNSColimit",
+      "to": "RegularizationCayleyPipeline"
+    },
+    {
+      "source": "JonesBraidB3",
+      "target": "TLChain",
+      "from": "JonesBraidB3",
+      "to": "TLChain"
+    },
+    {
+      "source": "KANLogDetUnification",
+      "target": "KanCayley",
+      "from": "KANLogDetUnification",
+      "to": "KanCayley"
+    },
+    {
+      "source": "KANLogDetUnification",
+      "target": "DeterminantSupergrading",
+      "from": "KANLogDetUnification",
+      "to": "DeterminantSupergrading"
+    },
+    {
+      "source": "KANLogDetUnification",
+      "target": "KreinDeterminantAnalyticity",
+      "from": "KANLogDetUnification",
+      "to": "KreinDeterminantAnalyticity"
+    },
+    {
+      "source": "KANTraceSectorization",
+      "target": "KanCayley",
+      "from": "KANTraceSectorization",
+      "to": "KanCayley"
+    },
+    {
+      "source": "KANTraceSectorization",
+      "target": "TraceSeparationFlow",
+      "from": "KANTraceSectorization",
+      "to": "TraceSeparationFlow"
+    },
+    {
+      "source": "KasparovKreinCategory",
+      "target": "AnomalousKMSFlow",
+      "from": "KasparovKreinCategory",
+      "to": "AnomalousKMSFlow"
+    },
+    {
+      "source": "KasparovKreinCategory",
+      "target": "ConnesSpectralAction",
+      "from": "KasparovKreinCategory",
+      "to": "ConnesSpectralAction"
+    },
+    {
+      "source": "KasparovKreinCategory",
+      "target": "CuntzKTheoryPairing",
+      "from": "KasparovKreinCategory",
+      "to": "CuntzKTheoryPairing"
+    },
+    {
+      "source": "KleinBottleKANCoordinates",
+      "target": "DeterminantSupergrading",
+      "from": "KleinBottleKANCoordinates",
+      "to": "DeterminantSupergrading"
+    },
+    {
+      "source": "KleinBottleKANCoordinates",
+      "target": "IwasawaKUnification",
+      "from": "KleinBottleKANCoordinates",
+      "to": "IwasawaKUnification"
+    },
+    {
+      "source": "KleinBottleKANCoordinates",
+      "target": "KleinBottleSymmetry",
+      "from": "KleinBottleKANCoordinates",
+      "to": "KleinBottleSymmetry"
+    },
+    {
+      "source": "KleinBottleKANCoordinates",
+      "target": "KleinFourAnomalyCancellation",
+      "from": "KleinBottleKANCoordinates",
+      "to": "KleinFourAnomalyCancellation"
+    },
+    {
+      "source": "KleinErlangenGrothendieckBridge",
+      "target": "PenroseSpinIncidenceTessellation",
+      "from": "KleinErlangenGrothendieckBridge",
+      "to": "PenroseSpinIncidenceTessellation"
+    },
+    {
+      "source": "KleinErlangenGrothendieckBridge",
+      "target": "TKKJordanPairSocket",
+      "from": "KleinErlangenGrothendieckBridge",
+      "to": "TKKJordanPairSocket"
+    },
+    {
+      "source": "KreinCuntzShadow",
+      "target": "SolovievQPNMChiralCuntz",
+      "from": "KreinCuntzShadow",
+      "to": "SolovievQPNMChiralCuntz"
+    },
+    {
+      "source": "KreinCuntzShadow",
+      "target": "FiniteMatrixElementDuality",
+      "from": "KreinCuntzShadow",
+      "to": "FiniteMatrixElementDuality"
+    },
+    {
+      "source": "KreinCuntzShadow",
+      "target": "FierzIdentities",
+      "from": "KreinCuntzShadow",
+      "to": "FierzIdentities"
+    },
+    {
+      "source": "KreinCuntzShadow",
+      "target": "Cl11ChiralCARBridge",
+      "from": "KreinCuntzShadow",
+      "to": "Cl11ChiralCARBridge"
+    },
+    {
+      "source": "KreinVacuumKMSBridge",
+      "target": "KreinVacuumPropagator",
+      "from": "KreinVacuumKMSBridge",
+      "to": "KreinVacuumPropagator"
+    },
+    {
+      "source": "KreinVacuumKMSBridge",
+      "target": "AnomalousKMSFlow",
+      "from": "KreinVacuumKMSBridge",
+      "to": "AnomalousKMSFlow"
+    },
+    {
+      "source": "KreinVacuumPropagator",
+      "target": "AnomalousKMSFlow",
+      "from": "KreinVacuumPropagator",
+      "to": "AnomalousKMSFlow"
+    },
+    {
+      "source": "LieFlowCompilerBridge",
+      "target": "LieFlowMatching",
+      "from": "LieFlowCompilerBridge",
+      "to": "LieFlowMatching"
+    },
+    {
+      "source": "LieFlowCompilerBridge",
+      "target": "TrifactorGeometry",
+      "from": "LieFlowCompilerBridge",
+      "to": "TrifactorGeometry"
+    },
+    {
+      "source": "LieFlowCompilerBridge",
+      "target": "DeterminantSupergrading",
+      "from": "LieFlowCompilerBridge",
+      "to": "DeterminantSupergrading"
+    },
+    {
+      "source": "LorentzChiralCuntzBridge",
+      "target": "ChiralCausalCone",
+      "from": "LorentzChiralCuntzBridge",
+      "to": "ChiralCausalCone"
+    },
+    {
+      "source": "LorentzChiralCuntzBridge",
+      "target": "ChiralPoincareSouriauBridge",
+      "from": "LorentzChiralCuntzBridge",
+      "to": "ChiralPoincareSouriauBridge"
+    },
+    {
+      "source": "LorentzChiralCuntzBridge",
+      "target": "CuntzDeformedSuperPoincare",
+      "from": "LorentzChiralCuntzBridge",
+      "to": "CuntzDeformedSuperPoincare"
+    },
+    {
+      "source": "LorentzChiralCuntzBridge",
+      "target": "FierzIdentities",
+      "from": "LorentzChiralCuntzBridge",
+      "to": "FierzIdentities"
+    },
+    {
+      "source": "MajoranaPrimonSpectralBridge",
+      "target": "SupergradedCuntzBdG",
+      "from": "MajoranaPrimonSpectralBridge",
+      "to": "SupergradedCuntzBdG"
+    },
+    {
+      "source": "MellinHeatKernelBridge",
+      "target": "ZetaSpectralBridge",
+      "from": "MellinHeatKernelBridge",
+      "to": "ZetaSpectralBridge"
+    },
+    {
+      "source": "MillenniumRosettaStone",
+      "target": "HolographicProxyQLimit",
+      "from": "MillenniumRosettaStone",
+      "to": "HolographicProxyQLimit"
+    },
+    {
+      "source": "MillenniumRosettaStone",
+      "target": "PrimonHilbertPolyaSeparation",
+      "from": "MillenniumRosettaStone",
+      "to": "PrimonHilbertPolyaSeparation"
+    },
+    {
+      "source": "MirrorNucleiIsospinGNS",
+      "target": "Q8NuclearChirality",
+      "from": "MirrorNucleiIsospinGNS",
+      "to": "Q8NuclearChirality"
+    },
+    {
+      "source": "MirrorNucleiIsospinGNS",
+      "target": "HillWheelerProjection",
+      "from": "MirrorNucleiIsospinGNS",
+      "to": "HillWheelerProjection"
+    },
+    {
+      "source": "MisraPrimeEntropyDigest",
+      "target": "IJIRTRiemannDigest",
+      "from": "MisraPrimeEntropyDigest",
+      "to": "IJIRTRiemannDigest"
+    },
+    {
+      "source": "MobiusCantorTKKClosure",
+      "target": "CantorBoundaryCuntzFamily",
+      "from": "MobiusCantorTKKClosure",
+      "to": "CantorBoundaryCuntzFamily"
+    },
+    {
+      "source": "MobiusCantorTKKClosure",
+      "target": "ArtinMonodromyPin55",
+      "from": "MobiusCantorTKKClosure",
+      "to": "ArtinMonodromyPin55"
+    },
+    {
+      "source": "MobiusCantorTKKClosure",
+      "target": "UHFInductiveColimit",
+      "from": "MobiusCantorTKKClosure",
+      "to": "UHFInductiveColimit"
+    },
+    {
+      "source": "ModularEntropyPrimes",
+      "target": "PrimonBosonFermionDuality",
+      "from": "ModularEntropyPrimes",
+      "to": "PrimonBosonFermionDuality"
+    },
+    {
+      "source": "ModularEntropyPrimes",
+      "target": "PrimonCoarseGraining",
+      "from": "ModularEntropyPrimes",
+      "to": "PrimonCoarseGraining"
+    },
+    {
+      "source": "ModularEntropyPrimes",
+      "target": "MajoranaPrimonSpectralBridge",
+      "from": "ModularEntropyPrimes",
+      "to": "MajoranaPrimonSpectralBridge"
+    },
+    {
+      "source": "ModularEntropyPrimes",
+      "target": "BosonicPrimonPartition",
+      "from": "ModularEntropyPrimes",
+      "to": "BosonicPrimonPartition"
+    },
+    {
+      "source": "MotivicHolographyGroebnerLFunction",
+      "target": "KleinErlangenGrothendieckBridge",
+      "from": "MotivicHolographyGroebnerLFunction",
+      "to": "KleinErlangenGrothendieckBridge"
+    },
+    {
+      "source": "NonHermitianSMatrixDefect",
+      "target": "ScatteringSMatrix",
+      "from": "NonHermitianSMatrixDefect",
+      "to": "ScatteringSMatrix"
+    },
+    {
+      "source": "NonIsoConf3DeRhamCooperad",
+      "target": "QuadraticConfiguration3",
+      "from": "NonIsoConf3DeRhamCooperad",
+      "to": "QuadraticConfiguration3"
+    },
+    {
+      "source": "NonIsoConf3DeRhamCooperad",
+      "target": "NonIsoConf3OrlikSolomon",
+      "from": "NonIsoConf3DeRhamCooperad",
+      "to": "NonIsoConf3OrlikSolomon"
+    },
+    {
+      "source": "NonIsoConf3DupontGysinModel",
+      "target": "DupontHypersurfaceOSModel",
+      "from": "NonIsoConf3DupontGysinModel",
+      "to": "DupontHypersurfaceOSModel"
+    },
+    {
+      "source": "NonIsoConf3DupontGysinModel",
+      "target": "PenroseSpinIncidenceTessellation",
+      "from": "NonIsoConf3DupontGysinModel",
+      "to": "PenroseSpinIncidenceTessellation"
+    },
+    {
+      "source": "NonIsoConf3QuadricCompactification",
+      "target": "DupontHypersurfaceOSModel",
+      "from": "NonIsoConf3QuadricCompactification",
+      "to": "DupontHypersurfaceOSModel"
+    },
+    {
+      "source": "NonIsoConf3QuadricD4EPolynomial",
+      "target": "NonIsoConf3QuadricD4PointCount",
+      "from": "NonIsoConf3QuadricD4EPolynomial",
+      "to": "NonIsoConf3QuadricD4PointCount"
+    },
+    {
+      "source": "NonIsoConf3QuadricD4Model",
+      "target": "NonIsoConf3OrlikSolomon",
+      "from": "NonIsoConf3QuadricD4Model",
+      "to": "NonIsoConf3OrlikSolomon"
+    },
+    {
+      "source": "NonIsoConf3QuadricD4PointCount",
+      "target": "NonIsoConf3QuadricD4Model",
+      "from": "NonIsoConf3QuadricD4PointCount",
+      "to": "NonIsoConf3QuadricD4Model"
+    },
+    {
+      "source": "NonIsoConf3ThreePointDeRhamCooperad",
+      "target": "QuadraticConfiguration3",
+      "from": "NonIsoConf3ThreePointDeRhamCooperad",
+      "to": "QuadraticConfiguration3"
+    },
+    {
+      "source": "NonIsoConf3ThreePointDeRhamCooperad",
+      "target": "NonIsoConf3OrlikSolomon",
+      "from": "NonIsoConf3ThreePointDeRhamCooperad",
+      "to": "NonIsoConf3OrlikSolomon"
+    },
+    {
+      "source": "NonIsoConf3ThreePointDeRhamCooperad",
+      "target": "NonIsoConf3QuadricD4Model",
+      "from": "NonIsoConf3ThreePointDeRhamCooperad",
+      "to": "NonIsoConf3QuadricD4Model"
+    },
+    {
+      "source": "NonIsoConf3ThreePointDeRhamCooperad",
+      "target": "NonIsoConf3QuadricD4PointCount",
+      "from": "NonIsoConf3ThreePointDeRhamCooperad",
+      "to": "NonIsoConf3QuadricD4PointCount"
+    },
+    {
+      "source": "ParafermionIdentityRealization",
+      "target": "GellMannParafermionSolder",
+      "from": "ParafermionIdentityRealization",
+      "to": "GellMannParafermionSolder"
+    },
+    {
+      "source": "ParafermionIdentityRealization",
+      "target": "AlgebraicCuntzQuotient",
+      "from": "ParafermionIdentityRealization",
+      "to": "AlgebraicCuntzQuotient"
+    },
+    {
+      "source": "ParafermionIdentityRealization",
+      "target": "UHFInductiveColimit",
+      "from": "ParafermionIdentityRealization",
+      "to": "UHFInductiveColimit"
+    },
+    {
+      "source": "PenroseSpinIncidenceTessellation",
+      "target": "PenroseSpinTilingConfig",
+      "from": "PenroseSpinIncidenceTessellation",
+      "to": "PenroseSpinTilingConfig"
+    },
+    {
+      "source": "PenroseSpinIncidenceTessellation",
+      "target": "NonIsoConf3QuadricD4PointCount",
+      "from": "PenroseSpinIncidenceTessellation",
+      "to": "NonIsoConf3QuadricD4PointCount"
+    },
+    {
+      "source": "PenroseSpinTilingCapstone",
+      "target": "PenroseSpinTilingConfig",
+      "from": "PenroseSpinTilingCapstone",
+      "to": "PenroseSpinTilingConfig"
+    },
+    {
+      "source": "PenroseSpinTilingCapstone",
+      "target": "PenroseSpinIncidenceTessellation",
+      "from": "PenroseSpinTilingCapstone",
+      "to": "PenroseSpinIncidenceTessellation"
+    },
+    {
+      "source": "PenroseSpinTilingCapstone",
+      "target": "NonIsoConf3QuadricD4PointCount",
+      "from": "PenroseSpinTilingCapstone",
+      "to": "NonIsoConf3QuadricD4PointCount"
+    },
+    {
+      "source": "PenroseSpinTilingCapstone",
+      "target": "KleinErlangenGrothendieckBridge",
+      "from": "PenroseSpinTilingCapstone",
+      "to": "KleinErlangenGrothendieckBridge"
+    },
+    {
+      "source": "PenroseSpinTilingCapstone",
+      "target": "NonIsoConf3DupontGysinModel",
+      "from": "PenroseSpinTilingCapstone",
+      "to": "NonIsoConf3DupontGysinModel"
+    },
+    {
+      "source": "PenroseSpinTilingCapstone",
+      "target": "NonIsoConf3ThreePointDeRhamCooperad",
+      "from": "PenroseSpinTilingCapstone",
+      "to": "NonIsoConf3ThreePointDeRhamCooperad"
+    },
+    {
+      "source": "PenroseSpinTilingCapstone",
+      "target": "NonIsoConf3DeRhamCooperad",
+      "from": "PenroseSpinTilingCapstone",
+      "to": "NonIsoConf3DeRhamCooperad"
+    },
+    {
+      "source": "PenroseSpinTilingConfig",
+      "target": "GrothendieckGromovWittenYangBaxter",
+      "from": "PenroseSpinTilingConfig",
+      "to": "GrothendieckGromovWittenYangBaxter"
+    },
+    {
+      "source": "PenroseSpinTilingConfig",
+      "target": "NonIsoConf3QuadricD4Model",
+      "from": "PenroseSpinTilingConfig",
+      "to": "NonIsoConf3QuadricD4Model"
+    },
+    {
+      "source": "PhotonicCMTTMM",
+      "target": "TwoPortScatteringCoefficients",
+      "from": "PhotonicCMTTMM",
+      "to": "TwoPortScatteringCoefficients"
+    },
+    {
+      "source": "PhotonicHardwareLayout",
+      "target": "TransferMatrixScattering",
+      "from": "PhotonicHardwareLayout",
+      "to": "TransferMatrixScattering"
+    },
+    {
+      "source": "PrimonBosonFermionDuality",
+      "target": "BosonicPrimonPartition",
+      "from": "PrimonBosonFermionDuality",
+      "to": "BosonicPrimonPartition"
+    },
+    {
+      "source": "PrimonBosonFermionDuality",
+      "target": "FermionicPrimonPartition",
+      "from": "PrimonBosonFermionDuality",
+      "to": "FermionicPrimonPartition"
+    },
+    {
+      "source": "PrimonBosonFermionDuality",
+      "target": "MajoranaPrimonSpectralBridge",
+      "from": "PrimonBosonFermionDuality",
+      "to": "MajoranaPrimonSpectralBridge"
+    },
+    {
+      "source": "PrimonCoarseGrainedHilbertPolyaPotential",
+      "target": "PrimonHilbertPolyaSeparation",
+      "from": "PrimonCoarseGrainedHilbertPolyaPotential",
+      "to": "PrimonHilbertPolyaSeparation"
+    },
+    {
+      "source": "PrimonCoarseGraining",
+      "target": "PrimonBosonFermionDuality",
+      "from": "PrimonCoarseGraining",
+      "to": "PrimonBosonFermionDuality"
+    },
+    {
+      "source": "PrimonCoarseGraining",
+      "target": "PrimonHilbertPolyaSeparation",
+      "from": "PrimonCoarseGraining",
+      "to": "PrimonHilbertPolyaSeparation"
+    },
+    {
+      "source": "PrimonCoarseGraining",
+      "target": "UHFInductiveColimit",
+      "from": "PrimonCoarseGraining",
+      "to": "UHFInductiveColimit"
+    },
+    {
+      "source": "PrimonCuntzTower",
+      "target": "DiracColimit",
+      "from": "PrimonCuntzTower",
+      "to": "DiracColimit"
+    },
+    {
+      "source": "PrimonCuntzTower",
+      "target": "KANFormalization",
+      "from": "PrimonCuntzTower",
+      "to": "KANFormalization"
+    },
+    {
+      "source": "PrimonFlavorCKM",
+      "target": "ChiralIsospinEOMSU2",
+      "from": "PrimonFlavorCKM",
+      "to": "ChiralIsospinEOMSU2"
+    },
+    {
+      "source": "PrimonFlavorCKM",
+      "target": "PrimonCuntzTower",
+      "from": "PrimonFlavorCKM",
+      "to": "PrimonCuntzTower"
+    },
+    {
+      "source": "PrimonFlavorCKM",
+      "target": "ContinuumAsColimitCounting",
+      "from": "PrimonFlavorCKM",
+      "to": "ContinuumAsColimitCounting"
+    },
+    {
+      "source": "PrimonFlavorCKM",
+      "target": "PrimonBosonFermionDuality",
+      "from": "PrimonFlavorCKM",
+      "to": "PrimonBosonFermionDuality"
+    },
+    {
+      "source": "PrimonFlavorCKM",
+      "target": "MajoranaPrimonSpectralBridge",
+      "from": "PrimonFlavorCKM",
+      "to": "MajoranaPrimonSpectralBridge"
+    },
+    {
+      "source": "PrimonHilbertPolyaSeparation",
+      "target": "PrimonFockTraceBridge",
+      "from": "PrimonHilbertPolyaSeparation",
+      "to": "PrimonFockTraceBridge"
+    },
+    {
+      "source": "PrimonHilbertPolyaSeparation",
+      "target": "PrimonSuperThermodynamics",
+      "from": "PrimonHilbertPolyaSeparation",
+      "to": "PrimonSuperThermodynamics"
+    },
+    {
+      "source": "PrimonHilbertPolyaSeparation",
+      "target": "RiemannHypothesis",
+      "from": "PrimonHilbertPolyaSeparation",
+      "to": "RiemannHypothesis"
+    },
+    {
+      "source": "ProjectiveAffineConformalClosure55",
+      "target": "Clifford55AnomalyOSP",
+      "from": "ProjectiveAffineConformalClosure55",
+      "to": "Clifford55AnomalyOSP"
+    },
+    {
+      "source": "ProjectiveAffineConformalClosure55",
+      "target": "RiemannHypothesis",
+      "from": "ProjectiveAffineConformalClosure55",
+      "to": "RiemannHypothesis"
+    },
+    {
+      "source": "Q8NuclearChirality",
+      "target": "WeakIsospinSU2",
+      "from": "Q8NuclearChirality",
+      "to": "WeakIsospinSU2"
+    },
+    {
+      "source": "Q8NuclearChirality",
+      "target": "ChiralCausalCone",
+      "from": "Q8NuclearChirality",
+      "to": "ChiralCausalCone"
+    },
+    {
+      "source": "Q8NuclearChirality",
+      "target": "ChiralAffineBogoliubovWeld",
+      "from": "Q8NuclearChirality",
+      "to": "ChiralAffineBogoliubovWeld"
+    },
+    {
+      "source": "QCDScaleExtraction",
+      "target": "DikinOnsagerCramerRaoOperator",
+      "from": "QCDScaleExtraction",
+      "to": "DikinOnsagerCramerRaoOperator"
+    },
+    {
+      "source": "QCDScaleExtraction",
+      "target": "ColorConfinementGNS",
+      "from": "QCDScaleExtraction",
+      "to": "ColorConfinementGNS"
+    },
+    {
+      "source": "QSuperCuntzRegularization",
+      "target": "SpectralSquashCayleyDKT",
+      "from": "QSuperCuntzRegularization",
+      "to": "SpectralSquashCayleyDKT"
+    },
+    {
+      "source": "QSuperRegularizationRosetta",
+      "target": "QSuperCuntzRegularization",
+      "from": "QSuperRegularizationRosetta",
+      "to": "QSuperCuntzRegularization"
+    },
+    {
+      "source": "QSuperRegularizationRosetta",
+      "target": "RegularizationCayleyPipeline",
+      "from": "QSuperRegularizationRosetta",
+      "to": "RegularizationCayleyPipeline"
+    },
+    {
+      "source": "RelativeModularStateDikin",
+      "target": "GoutevTonevPrinciple",
+      "from": "RelativeModularStateDikin",
+      "to": "GoutevTonevPrinciple"
+    },
+    {
+      "source": "RescaledPhaseVolumeCanonical",
+      "target": "BogoliubovWeylChemicalPotential",
+      "from": "RescaledPhaseVolumeCanonical",
+      "to": "BogoliubovWeylChemicalPotential"
+    },
+    {
+      "source": "RescaledPhaseVolumeCanonical",
+      "target": "InformationGeometricCutoff",
+      "from": "RescaledPhaseVolumeCanonical",
+      "to": "InformationGeometricCutoff"
+    },
+    {
+      "source": "RescaledPhaseVolumeCanonical",
+      "target": "AffineDynkinGoutevTonev",
+      "from": "RescaledPhaseVolumeCanonical",
+      "to": "AffineDynkinGoutevTonev"
+    },
+    {
+      "source": "RunExtractor",
+      "target": "ExtractBraid",
+      "from": "RunExtractor",
+      "to": "ExtractBraid"
+    },
+    {
+      "source": "RunExtractor",
+      "target": "FibAnyonThm7_hexagon",
+      "from": "RunExtractor",
+      "to": "FibAnyonThm7_hexagon"
+    },
+    {
+      "source": "RunExtractor",
+      "target": "rigorous_proofs",
+      "from": "RunExtractor",
+      "to": "rigorous_proofs"
+    },
+    {
+      "source": "RunExtractor",
+      "target": "KleinBottle",
+      "from": "RunExtractor",
+      "to": "KleinBottle"
+    },
+    {
+      "source": "S3ColorSpinorDecomposition",
+      "target": "WeylSU3ColorSymmetry",
+      "from": "S3ColorSpinorDecomposition",
+      "to": "WeylSU3ColorSymmetry"
+    },
+    {
+      "source": "S3ColorSpinorDecomposition",
+      "target": "GellMannParafermionSolder",
+      "from": "S3ColorSpinorDecomposition",
+      "to": "GellMannParafermionSolder"
+    },
+    {
+      "source": "S3ColorSpinorDecomposition",
+      "target": "BogoliubovBraidGraphWeld",
+      "from": "S3ColorSpinorDecomposition",
+      "to": "BogoliubovBraidGraphWeld"
+    },
+    {
+      "source": "S3ColorSpinorDecomposition",
+      "target": "SU3LoopBraidDuality",
+      "from": "S3ColorSpinorDecomposition",
+      "to": "SU3LoopBraidDuality"
+    },
+    {
+      "source": "SU3CorrelationExtraction",
+      "target": "HolographicGaugeSymmetryUniqueness",
+      "from": "SU3CorrelationExtraction",
+      "to": "HolographicGaugeSymmetryUniqueness"
+    },
+    {
+      "source": "SU3CorrelationExtraction",
+      "target": "MajoranaPrimonSpectralBridge",
+      "from": "SU3CorrelationExtraction",
+      "to": "MajoranaPrimonSpectralBridge"
+    },
+    {
+      "source": "SU3CorrelationExtraction",
+      "target": "PrimonBosonFermionDuality",
+      "from": "SU3CorrelationExtraction",
+      "to": "PrimonBosonFermionDuality"
+    },
+    {
+      "source": "SU3LoopBraidCuntzBoundary",
+      "target": "GellMannSU3",
+      "from": "SU3LoopBraidCuntzBoundary",
+      "to": "GellMannSU3"
+    },
+    {
+      "source": "SU3LoopBraidCuntzBoundary",
+      "target": "BogoliubovBraidGraphWeld",
+      "from": "SU3LoopBraidCuntzBoundary",
+      "to": "BogoliubovBraidGraphWeld"
+    },
+    {
+      "source": "SU3LoopBraidCuntzBoundary",
+      "target": "GellMannParafermionSolder",
+      "from": "SU3LoopBraidCuntzBoundary",
+      "to": "GellMannParafermionSolder"
+    },
+    {
+      "source": "SU3LoopBraidCuntzBoundary",
+      "target": "CantorBoundaryCuntzFamily",
+      "from": "SU3LoopBraidCuntzBoundary",
+      "to": "CantorBoundaryCuntzFamily"
+    },
+    {
+      "source": "SU3LoopBraidDuality",
+      "target": "GellMannSU3",
+      "from": "SU3LoopBraidDuality",
+      "to": "GellMannSU3"
+    },
+    {
+      "source": "SU3LoopBraidDuality",
+      "target": "WeylSU3ColorSymmetry",
+      "from": "SU3LoopBraidDuality",
+      "to": "WeylSU3ColorSymmetry"
+    },
+    {
+      "source": "SU3LoopBraidDuality",
+      "target": "CantorBoundaryCuntzFamily",
+      "from": "SU3LoopBraidDuality",
+      "to": "CantorBoundaryCuntzFamily"
+    },
+    {
+      "source": "SU3LoopBraidDuality",
+      "target": "JonesBraidB3",
+      "from": "SU3LoopBraidDuality",
+      "to": "JonesBraidB3"
+    },
+    {
+      "source": "SU3LoopBraidDuality",
+      "target": "SupergradedCuntzBdG",
+      "from": "SU3LoopBraidDuality",
+      "to": "SupergradedCuntzBdG"
+    },
+    {
+      "source": "SU3LoopBraidDuality",
+      "target": "BogoliubovBraidGraphWeld",
+      "from": "SU3LoopBraidDuality",
+      "to": "BogoliubovBraidGraphWeld"
+    },
+    {
+      "source": "SUNQuantumBraidDuality",
+      "target": "GravitationalQuantumBraidDuality",
+      "from": "SUNQuantumBraidDuality",
+      "to": "GravitationalQuantumBraidDuality"
+    },
+    {
+      "source": "ScatteringSMatrix",
+      "target": "BraidCliffordIntegration",
+      "from": "ScatteringSMatrix",
+      "to": "BraidCliffordIntegration"
+    },
+    {
+      "source": "SiliconPhotonicChipCoefficients",
+      "target": "NonHermitianSMatrixDefect",
+      "from": "SiliconPhotonicChipCoefficients",
+      "to": "NonHermitianSMatrixDefect"
+    },
+    {
+      "source": "SocketDischargeChain",
+      "target": "TwistorParafermionBoundary",
+      "from": "SocketDischargeChain",
+      "to": "TwistorParafermionBoundary"
+    },
+    {
+      "source": "SocketDischargeChain",
+      "target": "PrimonBosonFermionDuality",
+      "from": "SocketDischargeChain",
+      "to": "PrimonBosonFermionDuality"
+    },
+    {
+      "source": "SocketDischargeChain",
+      "target": "PrimonCoarseGraining",
+      "from": "SocketDischargeChain",
+      "to": "PrimonCoarseGraining"
+    },
+    {
+      "source": "SocketDischargeChain",
+      "target": "CantorBoundaryCuntzFamily",
+      "from": "SocketDischargeChain",
+      "to": "CantorBoundaryCuntzFamily"
+    },
+    {
+      "source": "SpectralCPTKleinBottle",
+      "target": "MobiusCantorTKKClosure",
+      "from": "SpectralCPTKleinBottle",
+      "to": "MobiusCantorTKKClosure"
+    },
+    {
+      "source": "SpectralCPTKleinBottle",
+      "target": "TopologicalColorCrystalFormal",
+      "from": "SpectralCPTKleinBottle",
+      "to": "TopologicalColorCrystalFormal"
+    },
+    {
+      "source": "SpectralCPTKleinBottle",
+      "target": "HillWheelerUniversalProjection",
+      "from": "SpectralCPTKleinBottle",
+      "to": "HillWheelerUniversalProjection"
+    },
+    {
+      "source": "SuperCuntzGrading",
+      "target": "ChiralCuntzInductive",
+      "from": "SuperCuntzGrading",
+      "to": "ChiralCuntzInductive"
+    },
+    {
+      "source": "SupergradedCuntzBdG",
+      "target": "ComplexStarCuntzRedesign",
+      "from": "SupergradedCuntzBdG",
+      "to": "ComplexStarCuntzRedesign"
+    },
+    {
+      "source": "TKKJordanPairSocket",
+      "target": "SpectralSquashCayleyDKT",
+      "from": "TKKJordanPairSocket",
+      "to": "SpectralSquashCayleyDKT"
+    },
+    {
+      "source": "TLChain",
+      "target": "ChiralCausalCone",
+      "from": "TLChain",
+      "to": "ChiralCausalCone"
+    },
+    {
+      "source": "TestImport2",
+      "target": "tomita_kms_v4",
+      "from": "TestImport2",
+      "to": "tomita_kms_v4"
+    },
+    {
+      "source": "TestImportGP",
+      "target": "goutev_principle",
+      "from": "TestImportGP",
+      "to": "goutev_principle"
+    },
+    {
+      "source": "TestImportKB",
+      "target": "KleinBottle",
+      "from": "TestImportKB",
+      "to": "KleinBottle"
+    },
+    {
+      "source": "TopologicalColorCrystal",
+      "target": "SU3CorrelationExtraction",
+      "from": "TopologicalColorCrystal",
+      "to": "SU3CorrelationExtraction"
+    },
+    {
+      "source": "TopologicalColorCrystal",
+      "target": "TripotentCliffordColimit",
+      "from": "TopologicalColorCrystal",
+      "to": "TripotentCliffordColimit"
+    },
+    {
+      "source": "TopologicalColorCrystal",
+      "target": "TopologicalColorCrystalFormal",
+      "from": "TopologicalColorCrystal",
+      "to": "TopologicalColorCrystalFormal"
+    },
+    {
+      "source": "TopologicalColorCrystalFormal",
+      "target": "SUNLoopBraidCuntzBoundary",
+      "from": "TopologicalColorCrystalFormal",
+      "to": "SUNLoopBraidCuntzBoundary"
+    },
+    {
+      "source": "TopologicalColorCrystalFormal",
+      "target": "SU3LoopBraidCuntzBoundary",
+      "from": "TopologicalColorCrystalFormal",
+      "to": "SU3LoopBraidCuntzBoundary"
+    },
+    {
+      "source": "TopologicalColorCrystalFormal",
+      "target": "HillWheelerUniversalProjection",
+      "from": "TopologicalColorCrystalFormal",
+      "to": "HillWheelerUniversalProjection"
+    },
+    {
+      "source": "TopologicalColorCrystalFormal",
+      "target": "FixedLineRiemannKlein",
+      "from": "TopologicalColorCrystalFormal",
+      "to": "FixedLineRiemannKlein"
+    },
+    {
+      "source": "TopologicalColorCrystalFormal",
+      "target": "ProjectiveCrystalSymmetry",
+      "from": "TopologicalColorCrystalFormal",
+      "to": "ProjectiveCrystalSymmetry"
+    },
+    {
+      "source": "TraceSeparationFlow",
+      "target": "KanCayley",
+      "from": "TraceSeparationFlow",
+      "to": "KanCayley"
+    },
+    {
+      "source": "TransferMatrixScattering",
+      "target": "Matrix2KANPauliChain",
+      "from": "TransferMatrixScattering",
+      "to": "Matrix2KANPauliChain"
+    },
+    {
+      "source": "TwistorParafermionBoundary",
+      "target": "CantorBoundaryCuntzFamily",
+      "from": "TwistorParafermionBoundary",
+      "to": "CantorBoundaryCuntzFamily"
+    },
+    {
+      "source": "TwistorParafermionBoundary",
+      "target": "GellMannParafermionSolder",
+      "from": "TwistorParafermionBoundary",
+      "to": "GellMannParafermionSolder"
+    },
+    {
+      "source": "TwistorParafermionBoundary",
+      "target": "ProjectiveAffineConformalClosure55",
+      "from": "TwistorParafermionBoundary",
+      "to": "ProjectiveAffineConformalClosure55"
+    },
+    {
+      "source": "TwoPortScatteringCoefficients",
+      "target": "SiliconPhotonicChipCoefficients",
+      "from": "TwoPortScatteringCoefficients",
+      "to": "SiliconPhotonicChipCoefficients"
+    },
+    {
+      "source": "UnifiedAnomalyArchitecture",
+      "target": "AnomalousKMSFlow",
+      "from": "UnifiedAnomalyArchitecture",
+      "to": "AnomalousKMSFlow"
+    },
+    {
+      "source": "UnifiedAnomalyArchitecture",
+      "target": "CuntzKTheoryPairing",
+      "from": "UnifiedAnomalyArchitecture",
+      "to": "CuntzKTheoryPairing"
+    },
+    {
+      "source": "UnifiedAnomalyArchitecture",
+      "target": "ZetaCoordinateSymmetry",
+      "from": "UnifiedAnomalyArchitecture",
+      "to": "ZetaCoordinateSymmetry"
+    },
+    {
+      "source": "UnifiedAnomalyArchitecture",
+      "target": "PrimonSuperThermodynamics",
+      "from": "UnifiedAnomalyArchitecture",
+      "to": "PrimonSuperThermodynamics"
+    },
+    {
+      "source": "UnifiedAnomalyArchitecture",
+      "target": "ConnesSpectralAction",
+      "from": "UnifiedAnomalyArchitecture",
+      "to": "ConnesSpectralAction"
+    },
+    {
+      "source": "UnifiedGaugeField",
+      "target": "EinsteinThermodynamicBridge",
+      "from": "UnifiedGaugeField",
+      "to": "EinsteinThermodynamicBridge"
+    },
+    {
+      "source": "UnorientedS3KleinTQFT",
+      "target": "MobiusCantorTKKClosure",
+      "from": "UnorientedS3KleinTQFT",
+      "to": "MobiusCantorTKKClosure"
+    },
+    {
+      "source": "UnorientedS3KleinTQFT",
+      "target": "SU3LoopBraidDuality",
+      "from": "UnorientedS3KleinTQFT",
+      "to": "SU3LoopBraidDuality"
+    },
+    {
+      "source": "WeakIsospinSU2",
+      "target": "ChiralCausalCone",
+      "from": "WeakIsospinSU2",
+      "to": "ChiralCausalCone"
+    },
+    {
+      "source": "WeylColimitCanonicalLimit",
+      "target": "WeylGaugeColimitWeld",
+      "from": "WeylColimitCanonicalLimit",
+      "to": "WeylGaugeColimitWeld"
+    },
+    {
+      "source": "WeylColimitCanonicalLimit",
+      "target": "RescaledPhaseVolumeCanonical",
+      "from": "WeylColimitCanonicalLimit",
+      "to": "RescaledPhaseVolumeCanonical"
+    },
+    {
+      "source": "WeylGaugeColimitWeld",
+      "target": "GaugeUHFLift",
+      "from": "WeylGaugeColimitWeld",
+      "to": "GaugeUHFLift"
+    },
+    {
+      "source": "WeylGaugeColimitWeld",
+      "target": "HestenesCuntzPhaseSpace",
+      "from": "WeylGaugeColimitWeld",
+      "to": "HestenesCuntzPhaseSpace"
+    },
+    {
+      "source": "WeylSU3ColorSymmetry",
+      "target": "BogoliubovSU3ParafermionProofChain",
+      "from": "WeylSU3ColorSymmetry",
+      "to": "BogoliubovSU3ParafermionProofChain"
+    },
+    {
+      "source": "WeylSU3ColorSymmetry",
+      "target": "SplitOctonionBraidSU3",
+      "from": "WeylSU3ColorSymmetry",
+      "to": "SplitOctonionBraidSU3"
+    },
+    {
+      "source": "WeylSolderedParafermionSymmetry",
+      "target": "GellMannParafermionSolder",
+      "from": "WeylSolderedParafermionSymmetry",
+      "to": "GellMannParafermionSolder"
+    },
+    {
+      "source": "WeylSolderedParafermionSymmetry",
+      "target": "WeylSU3ColorSymmetry",
+      "from": "WeylSolderedParafermionSymmetry",
+      "to": "WeylSU3ColorSymmetry"
+    },
+    {
+      "source": "Z2NonAbelianBraiding",
+      "target": "DeterminantSupergrading",
+      "from": "Z2NonAbelianBraiding",
+      "to": "DeterminantSupergrading"
+    },
+    {
+      "source": "Z2NonAbelianBraiding",
+      "target": "TrifactorGeometry",
+      "from": "Z2NonAbelianBraiding",
+      "to": "TrifactorGeometry"
+    },
+    {
+      "source": "Z2NonAbelianBraiding",
+      "target": "LieFlowCompilerBridge",
+      "from": "Z2NonAbelianBraiding",
+      "to": "LieFlowCompilerBridge"
+    },
+    {
+      "source": "Z2NonAbelianBraiding",
+      "target": "MobiusInversion",
+      "from": "Z2NonAbelianBraiding",
+      "to": "MobiusInversion"
+    },
+    {
+      "source": "ZetaSpectralBridge",
+      "target": "DiracColimit",
+      "from": "ZetaSpectralBridge",
+      "to": "DiracColimit"
+    },
+    {
+      "source": "ZetaSpectralBridge",
+      "target": "PrimonCuntzTower",
+      "from": "ZetaSpectralBridge",
+      "to": "PrimonCuntzTower"
+    },
+    {
+      "source": "ZornChiralBridge",
+      "target": "ZornParavectorNullspace",
+      "from": "ZornChiralBridge",
+      "to": "ZornParavectorNullspace"
+    },
+    {
+      "source": "ZornChiralBridge",
+      "target": "ChiralCausalCone",
+      "from": "ZornChiralBridge",
+      "to": "ChiralCausalCone"
+    }
+  ]
+}

@@ -57,7 +57,7 @@ structure NontrivialRegularizationPackage
     IsDrazinInverse.projection Q Q_D ≠ (1 : S →L[ℝ] S)
 
 /--
-Canonical package combining a concrete zero-mode witness with a nontrivial
+Canonical package combining a concrete zero-mode property with a nontrivial
 generalized-inverse regularization package for the same operator.
 -/
 @[rep_depth operator]
@@ -215,7 +215,7 @@ theorem exists_zero_mode_regularization_package_of_dim_mismatch
       hv, hvne, hMP, hD, hRight, hLeft, hDrazin⟩
 
 /--
-Explicit witness version of the nontrivial regularization package.
+Explicit property version of the nontrivial regularization package.
 -/
 @[rep_depth operator]
 theorem exists_zeroMode_and_nontrivial_regularization_pair_of_dim_mismatch

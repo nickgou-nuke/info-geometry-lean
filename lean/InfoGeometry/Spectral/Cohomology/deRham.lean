@@ -135,7 +135,7 @@ abbrev d (C : deRhamComplex M V) (k : ℕ) :
     C.forms k →ₗ[ℝ] C.forms (k + 1) :=
   F.d k
 
-/-! The pointwise square-zero axiom exposed as native linear-map algebra. -/
+/-! The pointwise square-zero ax!om exposed as native linear-map algebra. -/
 
 theorem d_comp_d_zero (C : deRhamComplex M V) (k : ℕ) :
     (C.d (k + 1)).comp (C.d k) = 0 := by

@@ -7,9 +7,9 @@ Bulgarian Academy of Sciences.
 import InfoGeometry.Inference.PoissonSinkhornPrimalDual
 
 /-!
-# Balanced Poisson Sinkhorn certificate
+# Balanced Poisson Sinkhorn property
 
-This module connects the row-wise Gibbs variational certificate to the
+This module connects the row-wise Gibbs variational property to the
 matrix-level balanced coupling interface. The result is deliberately finite:
 it certifies unit marginals and a nonnegative summed primal-dual gap, while
 leaving numerical convergence of an iterative Sinkhorn implementation to its
@@ -24,7 +24,7 @@ open InfoGeometry.Canonical.MoE
 
 variable {n : Nat} [Nonempty (Fin n)]
 
-/-- A Poisson transport coupling together with its balanced-marginal witness. -/
+/-- A Poisson transport coupling together with its balanced-marginal property. -/
 def PoissonSinkhornBalancedCertificate
     (C : PoissonTransportCost (Observation := Fin n) (Component := Fin n))
     (ε : ℝ) : Type _ :=

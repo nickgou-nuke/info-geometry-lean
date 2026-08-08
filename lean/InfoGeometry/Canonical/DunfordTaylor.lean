@@ -25,7 +25,7 @@ is not idempotent for an arbitrary path `γ : ℝ → ℂ`. Idempotence and
 range-invariance require spectral-separation and contour-admissibility
 hypotheses. This file therefore proves the genuine algebraic resolvent
 identities and packages the Riesz projection laws behind an admissibility
-certificate, rather than asserting false theorem-shaped placeholders.
+property, rather than asserting false theorem-shaped placeholders.
 -/
 
 namespace InfoGeometry.Canonical

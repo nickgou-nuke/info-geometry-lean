@@ -369,7 +369,7 @@ theorem affineNullRootMinus_eq_uMinus (A : EndH) :
     B.affineNullRootMinus A = B.drazinSplit.uMinus A :=
   rfl
 
-/-- The supplied triality certificate is available. -/
+/-- The supplied triality property is available. -/
 @[rep_depth projective]
 theorem triality_readback :
     ∀ g : MoebiusParameter, B.trialityAction g ^ 3 = 1 :=

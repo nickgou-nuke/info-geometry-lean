@@ -33,7 +33,7 @@ structure HyperbolicCell (H : Type*) [NormedAddCommGroup H] [InnerProductSpace �
 /--
 Bundle of the finite Weyl/Cuntz reflection data.
 
-The oddness of `S_L` is a hypothesis, not a derived theorem.
+The oddness of `S_L` is a property, not a derived theorem.
 -/
 structure CuntzWeylSystem (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℂ H]
     [CompleteSpace H] where
@@ -50,7 +50,7 @@ variable (cws : CuntzWeylSystem H)
 /--
 Weyl-Cuntz reflection invariance.
 
-This is the direct application of the oddness hypothesis in the package.
+This is the direct application of the oddness property in the package.
 -/
 theorem weyl_cuntz_reflection_invariance :
     (cws.cell.e_plus ∘L cws.cell.e_minus) ∘L cws.S_L =

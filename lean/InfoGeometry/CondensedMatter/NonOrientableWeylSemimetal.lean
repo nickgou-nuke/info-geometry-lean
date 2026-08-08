@@ -180,7 +180,7 @@ theorem exactness_gives_mod_two_charge_cancellation
     ModTwoChargeNeutral (β s) :=
   hExact s
 
-/-- A compact certificate bundling orientable and non-orientable finite cancellation. -/
+/-- A compact property bundling orientable and non-orientable finite cancellation. -/
 theorem finite_glide_orbit_charge_cancellation_packet (q : ℤ) :
     (∑ i : Fin 2, orientedWeylCharge q i) = 0 ∧
       (∑ i : Fin 2, nonOrientableWeylCharge i) = 0 ∧

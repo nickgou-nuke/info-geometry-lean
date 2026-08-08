@@ -19,7 +19,7 @@ It packages the expected finite symmetry mechanism:
 * endpoint alternative extraction;
 * reduction from that extraction to `AsanoNondegenerateTopologicalTheorem`.
 
-The actual global covering proof must instantiate this certificate.
+The actual global covering proof must instantiate this property.
 -/
 
 noncomputable section
@@ -64,11 +64,11 @@ def endpointAlternativeHolds
       B ≠ 0 ∧ -(B / D) ∈ K₂
 
 /--
-Klein-four / Möbius-CPT compactification certificate.
+Klein-four / Möbius-CPT compactification property.
 
 This is the geometric socket for the missing global argument.
 
-The certificate says: under the nondegenerate Asano hypotheses and a contracted
+The property says: under the nondegenerate Asano hypotheses and a contracted
 root, the compactified V4 orbit analysis selects one endpoint representative
 and proves that its endpoint alternative holds.
 -/
@@ -131,7 +131,7 @@ structure AsanoKleinV4CompactificationCertificate where
 
 /--
 Certificate-to-endpoint bridge: under the nondegenerate root hypotheses, a
-Klein-V4 compactification certificate yields the concrete endpoint disjunction
+Klein-V4 compactification property yields the concrete endpoint disjunction
 consumed by the native Asano endpoint theorem.
 -/
 @[rep_depth operator]
@@ -163,7 +163,7 @@ theorem endpoint_disjunction_of_kleinV4_compactification
         (V4.endpoint_holds h0K₁ h0K₂ hClosed₁ hClosed₂ hD hDet hPhi hroot)
 
 /--
-A Klein-four / Möbius-CPT compactification certificate closes the remaining
+A Klein-four / Möbius-CPT compactification property closes the remaining
 nondegenerate topological Asano branch.
 -/
 @[rep_depth operator]
@@ -184,7 +184,7 @@ theorem asano_nondegenerate_topological_of_kleinV4_compactification
 
 /--
 Full Asano contraction from the Klein-four / Möbius-CPT compactification
-certificate.
+property.
 -/
 @[rep_depth operator]
 theorem asano_contraction_full_of_kleinV4_compactification
@@ -207,7 +207,7 @@ theorem asano_contraction_full_of_kleinV4_compactification
     h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hzOff
 
 /--
-Paired full Asano closure from the Klein-four certificate through the
+Paired full Asano closure from the Klein-four property through the
 topological reduction path:
 1) outside forbidden set implies contraction nonvanishing;
 2) contracted root implies forbidden-set membership.
@@ -258,7 +258,7 @@ theorem not_root_of_not_mem_negProductSet_of_kleinV4_compactification
       V4 h0K₁ h0K₂ hClosed₁ hClosed₂ hPhi hzOff
 
 /--
-Direct full Asano contraction from the Klein-four certificate through the
+Direct full Asano contraction from the Klein-four property through the
 endpoint-based nondegenerate reduction (without routing through the abstract
 `AsanoNondegenerateTopologicalTheorem` wrapper).
 -/

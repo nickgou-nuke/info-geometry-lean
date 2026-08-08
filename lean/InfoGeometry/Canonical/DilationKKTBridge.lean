@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.OperatorProjectorMismatch
 # Dilation/KKT bridge
 
 A projector obstruction may feed a dilation/KKT readout only through an explicit
-witness.  This module deliberately does not prove that every mismatch admits a
+property.  This module deliberately does not prove that every mismatch admits a
 resolving dilation.
 -/
 
@@ -24,7 +24,7 @@ structure DilationFromProjectorObstruction where
     dilationGenerator = 0
 
 /-
-Compatibility name for the former dilation witness.  The owner is the
+Compatibility name for the former dilation property.  The owner is the
 projector-obstruction datum itself; unconstrained ambient maps are not evidence
 of a dilation theorem.
 -/

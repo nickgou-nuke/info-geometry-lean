@@ -21,7 +21,7 @@ finite N=2 closure theorem
 → optional finite-support/direct-sum preservation
 ```
 
-There are no wrappers, witness fields, law fields, certificates, guards, or
+There are no wrappers, property fields, law fields, certificates, guards, or
 hidden convergence assumptions.
 -/
 

@@ -6,5 +6,5 @@ import InfoGeometry.Canonical.HadjiivanovMonodromyProjection
 
 The fixed-point decomposition is owned by
 `InfoGeometry.Krein.krein_projector_decomposition`.  This module keeps the
-historical import path without duplicating that theorem under a witness name.
+historical import path without duplicating that theorem under a property name.
 -/

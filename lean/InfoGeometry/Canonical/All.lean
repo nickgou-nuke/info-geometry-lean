@@ -1,3 +1,6 @@
+import InfoGeometry.Canonical.TomitaTakesakiInvolutions
+import InfoGeometry.Canonical.SplitOctonionHyperbolicFunctionalCalculus
+import InfoGeometry.Canonical.SplitOctonionDoubledLoxodromicSpectral
 import InfoGeometry.Canonical.SplitOctonionSkew28
 import InfoGeometry.Canonical.SplitOctonionJordanForm
 import InfoGeometry.Canonical.SplitOctonionJordanCore
@@ -5,6 +8,7 @@ import InfoGeometry.Canonical.SplitOctonionSpinJordanTriple
 import InfoGeometry.Canonical.SplitOctonionJordanStructure
 import InfoGeometry.Canonical.SplitOctonionTKK55
 import InfoGeometry.Canonical.SplitOctonionTKK55Blocks
+import InfoGeometry.Canonical.SplitOctonionTKK55LieEquivalence
 import InfoGeometry.Canonical.HyperbolicDiagonalO55
 import InfoGeometry.Canonical.OrthogonalGroup55
 import InfoGeometry.Canonical.Pin55OrthogonalBridge
@@ -1264,6 +1268,8 @@ import InfoGeometry.Canonical.StressEnergyTensor
 import InfoGeometry.Canonical.QuaternionCondensate
 import InfoGeometry.Canonical.Cl11LorentzAction
 import InfoGeometry.Canonical.Cl11PolarizedBasis
+import InfoGeometry.Canonical.OperatorCl11WittBasis
+import InfoGeometry.Canonical.OperatorCl11AlgebraHom
 import InfoGeometry.Canonical.Cl44BridgeCandidate
 import InfoGeometry.Canonical.Cl44ConformalNormalization
 import InfoGeometry.Canonical.SplitCayleyDicksonTrace
@@ -1281,6 +1287,13 @@ import InfoGeometry.Cocycle.SplitQuaternionicJacobian
 import InfoGeometry.Canonical.ZornComposition
 import InfoGeometry.Canonical.ZornBasisTable
 import InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
+import InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary
+import InfoGeometry.Canonical.Cl55OperatorCl11Boundary
+import InfoGeometry.Canonical.OperatorPin55Action
+import InfoGeometry.Canonical.OperatorTKKAnomalyAnnihilation
+import InfoGeometry.Canonical.Cl55OperatorAlgebraHom
+import InfoGeometry.Canonical.Cl55OperatorRingCatColimit
+import InfoGeometry.Canonical.ModularZ2CubeGrading
 import InfoGeometry.Canonical.TKKJordanPairData
 import InfoGeometry.Canonical.KantorPeirceFiveGrading
 import InfoGeometry.Canonical.ZornTrialityTKKBridge
@@ -2628,6 +2641,8 @@ import InfoGeometry.Canonical.SplitOctonionDiracTwoFactorAlgebraicReduction
 import InfoGeometry.Canonical.SplitOctonionSignalCoordinateReadout
 import InfoGeometry.Canonical.SplitOctonionDiracFrameCl31
 import InfoGeometry.Canonical.ZornChiralMultiplicationReadback
+import InfoGeometry.Canonical.SpinConnectionPolarization
+import InfoGeometry.Canonical.OperatorThermalBogoliubovZ2Bridge
 
 namespace InfoGeometry
 

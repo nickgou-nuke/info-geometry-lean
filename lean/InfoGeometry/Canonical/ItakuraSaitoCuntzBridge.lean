@@ -29,7 +29,7 @@ The following operator-bridge theorems are **not** proved yet:
   readback `Tr(F ∧ F*)` on `CuntzAlg n`;
 * `matrixToCuntz_itakura_equiv_of_comm`: needs explicit trace/inv/commutation
   bridge through the Cuntz generators for the supplied group element;
-* `braid_flow_itakura_noncomm`: needs a verified nondegeneracy hypothesis for
+* `braid_flow_itakura_noncomm`: needs a verified nondegeneracy property for
   the Itakura--Saito divergence, not merely an assumed implication;
 * direct finiteness/excision of `fibonacciBraidCuntzRepresentation`.
 

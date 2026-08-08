@@ -1,0 +1,66 @@
+// Singular audit for the D=4 three-quadric non-isotropic configuration complement.
+// Run with:
+//   conda run -n singular-noniso Singular -q proofs/singular_noniso_conf3_d4_strata.sing
+//
+// We use the split complex quadric q(z)=z0*z1+z2*z3, equivalent over C to
+// the light-cone quadric.  Variables a0..a3,b0..b3 are translation-reduced
+// coordinates, with divisors q(a)=0, q(b)=0, q(a-b)=0.
+
+LIB "primdec.lib";
+
+ring R = 0,(a0,a1,a2,a3,b0,b1,b2,b3),dp;
+poly qa  = a0*a1 + a2*a3;
+poly qb  = b0*b1 + b2*b3;
+poly qab = (a0-b0)*(a1-b1) + (a2-b2)*(a3-b3);
+poly f = qa*qb*qab;
+
+ideal I = qa,qb,qab;
+ideal sI = std(I);
+print("=== split D=4 triple-intersection ideal I=(qa,qb,qab) ===");
+print("dim I; expected 5 if codim 3 complete intersection");
+dim(sI);
+print("degree I");
+degree(sI);
+print("radical ideal generators");
+radical(I);
+
+matrix J = jacob(I);
+ideal minors3 = minor(J,3);
+ideal SingI = std(I + minors3);
+print("=== singular locus of triple intersection: I + 3x3 minors(J) ===");
+print("dim singular locus; should be < 5 for generically transverse triple intersection");
+dim(SingI);
+print("degree singular locus");
+degree(SingI);
+
+// Check an explicit smooth triple-intersection witness over QQ:
+// a=(1,0,0,0), b=(0,0,1,0). Then qa=qb=qab=0.
+ideal P = a0-1,a1,a2,a3,b0,b1,b2-1,b3;
+print("=== point witness a=e0, b=e2 ===");
+print("qa,qb,qab reduce to");
+reduce(qa,std(P)); reduce(qb,std(P)); reduce(qab,std(P));
+print("some 3x3 minor nonzero at P? normal form list follows");
+int found = 0;
+poly witnessMinor;
+poly witnessValue;
+for (int k=1; k<=ncols(minors3); k=k+1)
+{
+  witnessMinor = minors3[k];
+  witnessValue = reduce(witnessMinor,std(P));
+  if (witnessValue != 0)
+  {
+    found = 1;
+    print("nonzero minor:"); print(witnessMinor); print("value:"); print(witnessValue);
+    break;
+  }
+}
+print("rank >= 3 at witness? 1=yes"); found;
+
+// Critical locus of the hypersurface f itself: useful for D-module/resolution planning.
+ideal gradf = jacob(f);
+ideal CritF = std(f + gradf);
+print("=== hypersurface critical locus f=0, df=0 ===");
+print("dim CritF"); dim(CritF);
+print("degree CritF"); degree(CritF);
+
+quit;

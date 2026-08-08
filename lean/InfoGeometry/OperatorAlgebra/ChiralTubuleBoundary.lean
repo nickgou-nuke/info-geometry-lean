@@ -9,7 +9,7 @@ This module packages the capstone boundary event:
     + extreme shear threshold
     + conserved topological obstruction
     + chiral lightcone support
-    ⇒ stable chiral residue / tubule boundary witness.
+    ⇒ stable chiral residue / tubule boundary property.
 
 The Unruh temperature may drive the threshold once a modular acceleration
 calibration is supplied, but temperature alone is not the snap theorem.
@@ -59,7 +59,7 @@ structure HessianCollapseEvent
   /-- The Hessian vanishes or collapses along the chosen direction. -/
   hessian_collapse : response state nullDirection = 0
 
-  /-- Rank-defect / loss-of-invertibility certificate. -/
+  /-- Rank-defect / loss-of-invertibility property. -/
   rank_defect : ¬ Function.Injective (response state)
 
 /-!
@@ -226,7 +226,7 @@ structure ChiralResidue
   /-- The residue state is fixed by the model-specific stability evolution. -/
   stable : stabilityMap state = state
 
-/-! ## 4. Chiral tubule boundary witness -/
+/-! ## 4. Chiral tubule boundary property -/
 
 /--
 The capstone boundary event.
@@ -338,7 +338,7 @@ structure UnruhDrivenChiralTubuleBoundary
     (Q : KreinIsotropicCone.KreinQuadraticDatum H)
     (C : ModuleCircularPolarization H) where
 
-  /-- Underlying chiral tubule boundary witness. -/
+  /-- Underlying chiral tubule boundary property. -/
   boundary :
     ChiralTubuleBoundaryWitness
       State Tangent Charge Residue H Q C
@@ -555,7 +555,7 @@ structure TomitaChiralLocalLossBoundary
   /-- Locally lost observable. -/
   observable : Op
 
-  /-- Local loss hypothesis for the observable. -/
+  /-- Local loss property for the observable. -/
   locally_lost :
     Phi.IsLocallyLost observable
 
@@ -672,7 +672,7 @@ def ChiralTubuleBoundaryCompatibility
     (ChiralTubuleBoundaryWitness
       _State _Tangent Charge _Residue H Q C)
 
-/-- Construct the chiral tubule boundary witness from its explicit compatibility data. -/
+/-- Construct the chiral tubule boundary property from its explicit compatibility data. -/
 theorem chiralTubuleBoundaryOwnerTarget :
   ∀ (State Tangent Charge Residue H : Type*)
     [Zero Tangent] [Zero Charge]

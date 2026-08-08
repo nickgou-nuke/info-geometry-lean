@@ -12,7 +12,7 @@ Theorem-safe formalization inspired by:
 This file keeps the owner lane real.
 
 It does not assert that every complex/GW/CAR module has a real form.  It
-records the witness-gated splitting criterion:
+records the property-gated splitting criterion:
 
   reflected measure equivalent to the original measure,
   complement-invariant multiplicity,
@@ -22,7 +22,7 @@ records the witness-gated splitting criterion:
 
 It also does not identify this real Clifford module lane with split `Cl(n,n)`,
 `O(n,n)`, or `Pin(n,n)` data.  That requires a separate doubled Krein /
-split-quadratic witness.
+split-quadratic property.
 -/
 
 import Mathlib.Tactic
@@ -58,7 +58,7 @@ and in an orthonormal sequence:
   J_i^2 = -1,
   J_i J_j = -J_j J_i  for i != j.
 
-The actual analytic Hilbert/skew-adjoint structure is witness-gated.
+The actual analytic Hilbert/skew-adjoint structure is property-gated.
 -/
 structure RealCliffordHilbertModulePacket where
   /-- Real generator module and its quadratic form. -/
@@ -194,7 +194,7 @@ structure GWOccupationPacket where
   /-- Every distinguished finite flip is non-singular for the reference measure.
 
   This is the native Mathlib measure-theoretic contract replacing the former
-  untyped witness socket. -/
+  untyped property socket. -/
   finiteFlipQuasiInvarianceWitness :
     ∀ g : FiniteFlipGroup,
       MeasureTheory.Measure.QuasiMeasurePreserving
@@ -204,7 +204,7 @@ attribute [instance] GWOccupationPacket.occupationMeasurableSpace
   GWOccupationPacket.finiteFlipMonoid
 
 /--
-Real splitting witness for a GW module.
+Real splitting property for a GW module.
 
 This is the theorem-safe content of the Galina-Kaplan-Saal real-form
 criterion.  A real form exists only after all of these witnesses are supplied.
@@ -246,7 +246,7 @@ structure GWRealSplittingWitness where
     r c_k(1-x) = (-1)^(degree k) c_k(x) r.
 
   The operator action makes this an equation in the actual carrier, rather
-  than a bare type-valued witness.
+  than a bare type-valued property.
   -/
   ckRealCompatibility :
     ∀ (x : gw.OccupationSpace) (k : gw.FlipIndex)
@@ -272,7 +272,7 @@ Finite-dimensional Cartan-Killing splitting residue.
 
 The paper recalls the classical finite-dimensional condition: complex Clifford
 modules split over `R` exactly in specific mod-4 cases.  This packet stores
-that as theorem-bank witness data, not as an automatic theorem of arbitrary
+that as theorem-bank property data, not as an automatic theorem of arbitrary
 finite data.
 -/
 structure FiniteRealCliffordSplittingPacket where
@@ -311,7 +311,7 @@ An actual analytic carrier for a split `(4,4)` quadratic model.
 The quadratic form and its signature are supplied by the owner
 `SplitQuadratic44`; the normed/Hilbert structure is included because the
 orthogonal-group owner acts on a continuous carrier.  This is a bundled
-mathematical model, not an untyped signature witness.
+mathematical model, not an untyped signature property.
 -/
 structure SplitQuadraticModel where
   V : Type*
@@ -355,7 +355,7 @@ structure FermiFockRealSplitGuardPacket where
     ¬ (occupation.measureData ≪ occupation.reflectedMeasureData ∧
       occupation.reflectedMeasureData ≪ occupation.measureData)
 
-  /-- No GW real splitting witness exists for this occupation packet. -/
+  /-- No GW real splitting property exists for this occupation packet. -/
   noInvariantRealForm :
     ¬ Nonempty {W : GWRealSplittingWitness // W.gw = occupation}
 
@@ -367,13 +367,13 @@ The Galina-Kaplan-Saal theorem supplies real Clifford module splitting data.
 It does not automatically supply split `Cl(n,n)`, `O(n,n)`, or `Pin(n,n)`
 data.
 
-Those require a doubled Krein / split-quadratic witness.
+Those require a doubled Krein / split-quadratic property.
 -/
 structure RealGWToSplitKreinBridgePacket where
   /-- Real Clifford Hilbert module. -/
   realCliffordModule : RealCliffordHilbertModulePacket
 
-  /-- Optional GW real splitting witness. -/
+  /-- Optional GW real splitting property. -/
   gwRealSplitting : GWRealSplittingWitness
 
   /-- Genuine split quadratic carrier and signature model. -/

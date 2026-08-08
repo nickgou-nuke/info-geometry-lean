@@ -1,0 +1,26 @@
+
+// D=4 non-isotropic Conf3: f = q(a)q(b)q(a-b)
+// NOTE: this is a structural scaffold. Adjust q(*) to your chosen
+// nondegenerate complex quadric normalization over characteristic 0.
+ring R = 0,(a0,a1,a2,a3,b0,b1,b2,b3),dp;
+
+poly qa = a0^2 + a1^2 + a2^2 + a3^2;
+poly qb = b0^2 + b1^2 + b2^2 + b3^2;
+poly qab = (a0-b0)^2 + (a1-b1)^2 + (a2-b2)^2 + (a3-b3)^2;
+
+ideal I = qa, qb, qab;
+
+// Codim data / transversality probes for strata
+int dimI = dim(I);
+ideal singI = jacob(I);
+
+matrix J[3][8];
+J[1,1] = diff(qa,a0); J[1,2] = diff(qa,a1); J[1,3] = diff(qa,a2); J[1,4] = diff(qa,a3);
+J[1,5] = 0;         J[1,6] = 0;         J[1,7] = 0;         J[1,8] = 0;
+J[2,1] = 0;         J[2,2] = 0;         J[2,3] = 0;         J[2,4] = 0;
+J[2,5] = diff(qb,b0);J[2,6] = diff(qb,b1);J[2,7] = diff(qb,b2);J[2,8] = diff(qb,b3);
+J[3,1] = diff(qab,a0);J[3,2] = diff(qab,a1);J[3,3] = diff(qab,a2);J[3,4] = diff(qab,a3);
+J[3,5] = diff(qab,b0);J[3,6] = diff(qab,b1);J[3,7] = diff(qab,b2);J[3,8] = diff(qab,b3);
+
+// print(dimI);
+// print(J);

@@ -41,7 +41,7 @@ separate amplituhedron owner.
 - Prove any comparison between Arnold/cooperad relations and BCFW recursion.
 - Prove any comparison between Rohozhkin/Delaunay flips and plabic graph moves.
 - Replace the candidate `Conf₃` rank fixture by an independently audited
-  D-module/Singular certificate if the project needs a final rank theorem.
+  D-module/Singular property if the project needs a final rank theorem.
 -/
 
 namespace InfoGeometry.Projective.TwistorAmplituhedronBridge
@@ -76,7 +76,7 @@ theorem penrose_projective_null_twistor_readout :
 Readout of the existing candidate `Conf₃` spin-tiled rank arithmetic.
 
 This is still the candidate fixture from `NonIsoConf3RankIngestion`, not a
-certified external D-module computation.
+property external D-module computation.
 -/
 theorem candidate_conf3_spin_tiled_rank32_readout :
     candidateLocalBettiData.totalRank *

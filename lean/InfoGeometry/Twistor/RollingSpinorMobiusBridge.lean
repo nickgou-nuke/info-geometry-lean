@@ -26,7 +26,7 @@ It proves only structural facts that are genuinely available in native Lean:
 
 The file intentionally does **not** claim the full theorem that the radius-`3`
 rolling distribution, Penrose twistor geometry, amplituhedron forms, or `G₂`
-classification are equivalent.  No placeholder bridge hypothesis is introduced
+classification are equivalent.  No placeholder bridge property is introduced
 for that missing theorem.
 -/
 
@@ -1057,7 +1057,7 @@ variable {Q : A → ℝ}
 
 /-- A quadratic-multiplicative automorphism preserves null-subalgebra incidence.
 This is the direct owner theorem from the rolling/null-subalgebra layer, exposed
-without inventing an extra gluing hypothesis. -/
+without inventing an extra gluing property. -/
 theorem quadraticMulAut_preserves_null_incidence
     (g : QuadraticMulAut (A := A) Q)
     {P L : NullSubalgebra (A := A) Q}

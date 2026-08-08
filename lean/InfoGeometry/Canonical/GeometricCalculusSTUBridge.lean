@@ -40,7 +40,7 @@ Freudenthal charge geometry attached to any cubic Jordan datum.
 The horizon locus is intentionally left as `Set.univ`: this adapter only
 supplies the quartic invariant and entropy normalization.  More refined large
 or small black-hole strata should be supplied by a stronger charge-boundary
-witness.
+property.
 -/
 def freudenthalChargeGeometry
     {J : Type*} [AddCommGroup J] [Module ℝ J]
@@ -175,7 +175,7 @@ theorem STUQubitBoundaryFluxBridge.scalarFlux_eq_hyperdeterminantEntropy
 /--
 Owner target for reading the STU-specialized boundary bridge.
 
-The construction remains witness-gated: the Clifford resolvent family,
+The construction remains property-gated: the Clifford resolvent family,
 boundary, observer, and flux/entropy equality must still be supplied by future
 analytic geometry.
 -/

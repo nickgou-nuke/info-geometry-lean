@@ -280,7 +280,7 @@ theorem fisher_metric_eq_killing_form_of_orbit_base_relation_and_killing_conjuga
           rw [hKInv X Y]
 
 /--
-Orbit-level Fisher/Killing proportionality under a more structural hypothesis:
+Orbit-level Fisher/Killing proportionality under a more structural property:
 the symmetric involution `θ` commutes with operator conjugation, so the
 required Killing-side invariance is derived rather than supplied separately.
 -/

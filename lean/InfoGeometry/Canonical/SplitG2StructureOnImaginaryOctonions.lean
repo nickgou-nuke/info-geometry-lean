@@ -4,7 +4,7 @@ namespace InfoGeometry.Canonical
 
 /-!
 The imaginary split-octonion carrier is the kernel of the scalar-coordinate
-projection.  This file packages the canonical trilinear witness on that carrier
+projection.  This file packages the canonical trilinear property on that carrier
 and the verified colour-cycle invariance.  It does not claim a holonomy theorem
 or a full differential-geometric `G₂` structure.
 -/

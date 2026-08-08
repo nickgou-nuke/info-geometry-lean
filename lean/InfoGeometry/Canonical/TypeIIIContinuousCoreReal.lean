@@ -93,7 +93,7 @@ theorem modularHamiltonian_eq_neg_log_rn :
 /--
 Bridge hook into the real Tomita `δ = log Δ` package.
 
-`hExp` is the explicit witness that the chosen generator exponentiates to `Δ`.
+`hExp` is the explicit property that the chosen generator exponentiates to `Δ`.
 -/
 @[rep_depth transport]
 noncomputable def toRealModularLogData
@@ -396,7 +396,7 @@ theorem coreTrace_dualAction_eq_singularPolar_split_of_wedgeCalibrated
 /--
 Wedge-calibrated CP-003 capstone package on the Type-III core lane:
 bundles the base core-trace split equality, its dual-action transport form, and
-the mixed active/apex block-vanishing witness.
+the mixed active/apex block-vanishing property.
 -/
 @[rep_depth transport, capstone]
 theorem coreTrace_wedgeCalibrated_activeApex_stability_package

@@ -1,0 +1,135 @@
+{
+  "arango_counts": {
+    "nodes": 13059,
+    "references": 42788,
+    "dependency_roots": 464
+  },
+  "global_deepest": {
+    "depth_edges": 28,
+    "start": "SupergradedCuntzBdG.ComplexStarCuntzBdGRepresentation.mk.injEq",
+    "root": "AlgebraicCuntzQuotient.CuntzLetter.s",
+    "path": [
+      "SupergradedCuntzBdG.ComplexStarCuntzBdGRepresentation.mk.injEq",
+      "SupergradedCuntzBdG.ComplexStarCuntzBdGRepresentation.mk.noConfusion",
+      "SupergradedCuntzBdG.ComplexStarCuntzBdGRepresentation.noConfusion",
+      "SupergradedCuntzBdG.ComplexStarCuntzBdGRepresentation.noConfusionType",
+      "SupergradedCuntzBdG.ComplexStarCuntzBdGRepresentation.casesOn",
+      "SupergradedCuntzBdG.ComplexStarCuntzBdGRepresentation.rec",
+      "SupergradedCuntzBdG.ComplexStarCuntzBdGRepresentation",
+      "SupergradedCuntzBdG.ComplexStarCuntzBdGRepresentation.mk",
+      "AlgebraicCuntzQuotient.instStarRing",
+      "AlgebraicCuntzQuotient.star_star",
+      "AlgebraicCuntzQuotient.star_star_mk",
+      "AlgebraicCuntzQuotient.star_mk_ι",
+      "AlgebraicCuntzQuotient.starOp_mk_ι",
+      "AlgebraicCuntzQuotient.starOp_S",
+      "AlgebraicCuntzQuotient.lift_S",
+      "AlgebraicCuntzQuotient.lift",
+      "AlgebraicCuntzQuotient.liftCondition",
+      "AlgebraicCuntzQuotient.Rel.casesOn",
+      "AlgebraicCuntzQuotient.Rel.rec",
+      "AlgebraicCuntzQuotient.Rel",
+      "AlgebraicCuntzQuotient.Rel.ortho",
+      "AlgebraicCuntzQuotient.S",
+      "AlgebraicCuntzQuotient.mk",
+      "AlgebraicCuntzQuotient.instAlgebraCuntzAlg",
+      "AlgebraicCuntzQuotient.TAlg",
+      "AlgebraicCuntzQuotient.Gen",
+      "AlgebraicCuntzQuotient.CuntzLetter",
+      "AlgebraicCuntzQuotient.CuntzLetter.s"
+    ]
+  },
+  "capstone_deepest": {
+    "capstone": "FiniteSpinePublicationCertificate.finite_spine_publication_certificate",
+    "depth_edges": 24,
+    "root": "AlgebraicCuntzQuotient.CuntzLetter.s",
+    "path": [
+      "FiniteSpinePublicationCertificate.finite_spine_publication_certificate",
+      "ColorParafermionCuntzBusSpine.closed_color_parafermion_cuntz_bus_spine",
+      "GellMannParafermionRealizationRoutesSynthesis.gellmann_parafermion_realization_routes_synthesis",
+      "CuntzBoundarySolderRealization.cantor_boundary_weyl_gl1_gl2",
+      "CuntzBoundarySolderRealization.cantor_boundary_weyl_soldered_transport",
+      "WeylSolderedParafermionSymmetry.weyl_soldered_parafermion_symmetry_synthesis",
+      "WeylSolderedParafermionSymmetry.swap12_soldered_parafermion_transport",
+      "WeylSolderedParafermionSymmetry.weyl_soldered_parafermion_transport",
+      "GellMannParafermionSolder.gellMannParafermionSolder",
+      "GellMannParafermionSolder.realizedParafermionColorSpinor4",
+      "GellMannParafermionSolder.ParafermionRealization.map",
+      "GellMannParafermionSolder.ParafermionRealization",
+      "GellMannParafermionSolder.ParafermionRealization.mk",
+      "GellMannParafermionSolder.ParafermionStage4",
+      "AlgebraicCuntzQuotient.CuntzAlg",
+      "AlgebraicCuntzQuotient.Rel",
+      "AlgebraicCuntzQuotient.Rel.ortho",
+      "AlgebraicCuntzQuotient.S",
+      "AlgebraicCuntzQuotient.mk",
+      "AlgebraicCuntzQuotient.instAlgebraCuntzAlg",
+      "AlgebraicCuntzQuotient.TAlg",
+      "AlgebraicCuntzQuotient.Gen",
+      "AlgebraicCuntzQuotient.CuntzLetter",
+      "AlgebraicCuntzQuotient.CuntzLetter.s"
+    ]
+  },
+  "root_inbound_top10": [
+    {
+      "name": "ChiralCausalCone.M2C",
+      "module": "ChiralCausalCone",
+      "kind": null,
+      "used_by": 275
+    },
+    {
+      "name": "BogoliubovSU3ParafermionProofChain.ColorSpinor4",
+      "module": "BogoliubovSU3ParafermionProofChain",
+      "kind": null,
+      "used_by": 95
+    },
+    {
+      "name": "SupergradedCuntzBdG.qRapidity",
+      "module": "SupergradedCuntzBdG",
+      "kind": null,
+      "used_by": 83
+    },
+    {
+      "name": "ZornParavectorNullspace.Vec3",
+      "module": "ZornParavectorNullspace",
+      "kind": null,
+      "used_by": 60
+    },
+    {
+      "name": "QuadricConf3BraidingCooperadBridge.Vertex3",
+      "module": "QuadricConf3BraidingCooperadBridge",
+      "kind": null,
+      "used_by": 49
+    },
+    {
+      "name": "GellMannSU3.gl1",
+      "module": "GellMannSU3",
+      "kind": null,
+      "used_by": 47
+    },
+    {
+      "name": "GellMannSU3.gl2",
+      "module": "GellMannSU3",
+      "kind": null,
+      "used_by": 47
+    },
+    {
+      "name": "GellMannSU3.gl3",
+      "module": "GellMannSU3",
+      "kind": null,
+      "used_by": 46
+    },
+    {
+      "name": "QuadraticConfiguration3.V",
+      "module": "QuadraticConfiguration3",
+      "kind": null,
+      "used_by": 45
+    },
+    {
+      "name": "SpectralSquashCayleyDKT.M2C",
+      "module": "SpectralSquashCayleyDKT",
+      "kind": null,
+      "used_by": 39
+    }
+  ]
+}

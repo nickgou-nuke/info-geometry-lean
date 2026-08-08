@@ -9,7 +9,7 @@ import InfoGeometry.Clifford.DiracPauliGamma
 This file repairs the Section 19 prose into a theorem-safe finite model.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
-Using the already-certified Pauli-Dirac matrices, we construct four
+Using the already-property Pauli-Dirac matrices, we construct four
 `4 x 4` complex matrices
 `E0 = i γ0`, `E1 = γ1`, `E2 = γ2`, and `E3 = γ3`. Each squares to `-I`, and
 distinct generators anticommute. This is a finite matrix representation of the

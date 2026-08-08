@@ -6,7 +6,7 @@ import Mathlib.Data.Nat.Prime.Basic
 
 This module records a small state structure and a predicate equal to its
 `E_0 > T` field.  It does not construct a Riemann gas, prove a zeta partition
-function theorem, or prove any Riemann-hypothesis statement.
+function theorem, or prove any Riemann-property statement.
 -/
 
 namespace InfoGeometry.Topology.PrimonGas

@@ -13,8 +13,8 @@ It formalizes the safe operator skeleton:
 under a supplied S-duality map.
 
 The theorem payload is transport of an eigen/readout condition across a
-duality witness. The geometric Langlands interpretation is kept as a separate
-witness-gated socket.
+duality property. The geometric Langlands interpretation is kept as a separate
+property-gated socket.
 -/
 
 import Mathlib.Tactic
@@ -187,7 +187,7 @@ end PairingDualityDatum
 /-! ## 5. Geometric Langlands interpretation socket -/
 
 /--
-A witness-gated geometric Langlands interpretation.
+A property-gated geometric Langlands interpretation.
 
 This is intentionally not a theorem of the abstract operator S-duality socket.
 A concrete model must supply the curve, group, dual group, D-module or sheaf
@@ -247,7 +247,7 @@ structure ExceptionalSymmetrySocket
 /--
 Owner target for the operator S-duality socket.
 
-Given an S-duality witness, Wilson eigenconditions transport to 't Hooft
+Given an S-duality property, Wilson eigenconditions transport to 't Hooft
 eigenconditions.
 -/
 @[owner_target_tag]

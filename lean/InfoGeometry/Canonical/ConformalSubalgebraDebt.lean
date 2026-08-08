@@ -56,7 +56,7 @@ theorem ad_derivation_step (d a b : Cl) :
     If J is an invertible element such that J^2 = -1, the conjugation action matches θ. -/
 theorem reflection_conjugation_sq_neg_one (J x : Cl) (hJ : J * J = -1) (hx : J * x = - x * J) :
     J * x * J = x := by
-  -- normalize anti-commutation witness to `-(x * J)`
+  -- normalize anti-commutation property to `-(x * J)`
   have hx' : J * x = - (x * J) := by
     simpa [neg_mul] using hx
   calc

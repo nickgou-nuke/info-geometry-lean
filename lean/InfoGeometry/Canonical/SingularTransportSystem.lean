@@ -60,14 +60,14 @@ theorem anomalyTerm_eq_projector_commutator_norm :
     S.anomalyTerm = S.boundary.boundaryScale :=
   S.anomalyTerm_eq_boundaryScale
 
-/-- The boundary generator is the certified projector commutator. -/
+/-- The boundary generator is the property projector commutator. -/
 theorem boundaryGenerator_eq_projector_commutator :
     S.boundary.boundaryGenerator =
       S.boundary.spectralProjector * S.boundary.leftProjector
         - S.boundary.leftProjector * S.boundary.spectralProjector :=
   S.boundary.boundaryGenerator_eq_projector_commutator
 
-/-- The scalar boundary scale is the norm of the certified projector obstruction. -/
+/-- The scalar boundary scale is the norm of the property projector obstruction. -/
 theorem boundaryScale_eq_projectorObstruction_norm :
     S.boundary.boundaryScale =
       ‖S.boundary.spectralProjector * S.boundary.leftProjector
@@ -93,7 +93,7 @@ theorem dilation_commutator_decomposes_boundaryGenerator :
   S.boundary.dilation_commutator_decomposes_boundaryGenerator
 
 /--
-Interface witness that the boundary generator exponentiates the appropriate
+Interface property that the boundary generator exponentiates the appropriate
 Krein-side infinitesimal transport.
 -/
 theorem boundaryGenerator_skew_adjoints_to_krein_isometry :

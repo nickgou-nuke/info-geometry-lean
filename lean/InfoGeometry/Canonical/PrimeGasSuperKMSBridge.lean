@@ -8,7 +8,7 @@ Bridge between a prime-gas max-entropy packet and a super-KMS temperature
 packet.
 
 The super-temperature is owned by the KMS target.  It is not duplicated in the
-bridge and no separate compatibility witness is required.
+bridge and no separate compatibility property is required.
 -/
 
 noncomputable section
@@ -101,7 +101,7 @@ namespace PrimeGasSuperKMSBridge
 
 variable (B : PrimeGasSuperKMSBridge)
 
-/-- The odd super-temperature vanishes by the stored KMS witness. -/
+/-- The odd super-temperature vanishes by the stored KMS property. -/
 @[simp]
 theorem superTemperature_odd_eq_zero :
     B.superTemperature.oddTemperature = 0 :=
@@ -113,7 +113,7 @@ theorem detailedBalance :
       B.kmsTarget.spontaneousEmission + B.kmsTarget.stimulatedEmission :=
   B.kmsTarget.detailedBalance
 
-/-- The Jaynes and RN entropy readouts agree by the stored witness. -/
+/-- The Jaynes and RN entropy readouts agree by the stored property. -/
 theorem jaynesEntropy_eq_rnEntropy :
     B.jaynesRN.jaynesEntropy = B.jaynesRN.rnEntropy :=
   B.jaynesRN.jaynes_eq_rn

@@ -21,7 +21,7 @@ This file adds the arithmetic-resonance interpretation layer:
 * finite zeta-trace readouts may be attached as proof-carrying calibration
   data.
 
-It does not claim the Riemann hypothesis, analytic continuation, an actual
+It does not claim the Riemann property, analytic continuation, an actual
 E8 lattice theorem, or a full Siegel modular-form construction.
 -/
 
@@ -45,7 +45,7 @@ universe uBulk uBoundary uReadout
 /-!
 The arithmetic resonance filter is the existing Siegel/Eisenstein owner
 itself.  The same split exact sequence supplies the boundary/Eisenstein and
-cuspidal components; the former one-field witness packet added no mathematical
+cuspidal components; the former one-field property packet added no mathematical
 content.
 -/
 abbrev SiegelArithmeticResonanceFilter

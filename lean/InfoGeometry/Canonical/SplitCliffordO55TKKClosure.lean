@@ -38,7 +38,7 @@ lemma so55_dim : Fintype.card (Fin 10) * (Fintype.card (Fin 10) - 1) / 2 = 45 :=
 def TKKGrading (i : ℤ) : Prop := i ∈ ({-2, -1, 0, 1, 2} : Set ℤ)
 
 /-- The Chiral Parity Index constraint intrinsic to O(5,5) split symmetry. 
-We construct the witness by projecting onto the purely bosonic sector,
+We construct the property by projecting onto the purely bosonic sector,
 which universally forces the fermionic modes to zero, thus trivializing
 the superconformal anomaly natively reflecting Tr(Γ₁₁) = 0. -/
 def O55ChiralParityZero (J ψ : ℤ → Module.End 𝕜 V) : Prop :=

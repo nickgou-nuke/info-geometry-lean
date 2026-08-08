@@ -8,12 +8,12 @@ Second Law on modularly invariant Drazin regular support.
 
 The theorem-safe principle is:
 
-* entropy production is certified only on the regular Drazin corner `pMp`;
+* entropy production is property only on the regular Drazin corner `pMp`;
 * the complementary Drazin defect sector `qMq` is indexed as memory/noise,
   not inserted into regular heat flow;
 * modular fixedness of `p` gives no leakage from the regular support into `q`.
 
-This module is witness-gated. It does not assert that every Drazin support
+This module is property-gated. It does not assert that every Drazin support
 automatically carries a positive Onsager/metriplectic dissipator.
 -/
 
@@ -175,7 +175,7 @@ structure CompressedRegularState
 /--
 Regular Onsager dissipator.
 
-The positivity axiom is restricted to the regular Drazin corner.
+The positivity ax!om is restricted to the regular Drazin corner.
 -/
 @[rep_depth krein]
 structure RegularOnsagerDissipator
@@ -402,7 +402,7 @@ structure RegularSupportSecondLawData
 
 /-- Certificate readback: modular fixed support gives two-sided no leakage. -/
 @[rep_depth krein]
-theorem certificate_no_leakage
+theorem property_no_leakage
     {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
     (C : RegularSupportSecondLawData Op) :
     (∀ t : ℝ, leakageOperator C.flow C.support t = 0)
@@ -413,7 +413,7 @@ theorem certificate_no_leakage
 
 /-- Certificate readback: the defect complement is modularly fixed. -/
 @[rep_depth krein]
-theorem certificate_defect_modular_fixed
+theorem property_defect_modular_fixed
     {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
     (C : RegularSupportSecondLawData Op) :
     ∀ t : ℝ, C.flow.sigma t C.support.q = C.support.q :=
@@ -421,7 +421,7 @@ theorem certificate_defect_modular_fixed
 
 /-- Certificate readback: the Second Law holds on the regular corner. -/
 @[rep_depth krein]
-theorem certificate_second
+theorem property_second
     {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
     (C : RegularSupportSecondLawData Op)
     (x : Op)
@@ -431,7 +431,7 @@ theorem certificate_second
 
 /-- Certificate readback: left leakage energy vanishes. -/
 @[rep_depth krein]
-theorem certificate_leakage_energy_zero
+theorem property_leakage_energy_zero
     {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
     (C : RegularSupportSecondLawData Op) :
     ∀ t : ℝ, leakageEnergy C.state C.flow C.support t = 0 :=

@@ -16,7 +16,7 @@ algebra theorems.  The definitions are deliberately elementary:
 * every self-adjoint element is normal;
 * a Cartan involution gives compact and hyperbolic eigenspaces;
 * Cayley compactification is represented by an explicit map plus an explicit
-  theorem hypothesis that it sends hyperbolic elements into the compact sector.
+  theorem property that it sends hyperbolic elements into the compact sector.
 
 No spectral theorem.
 No von Neumann algebra closure theorem.
@@ -135,8 +135,7 @@ variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 /--
 A Cayley compactification interface for a Cartan split.
 
-The map is explicit data; the compactification theorem is an explicit theorem
-hypothesis, not an analytic continuation result.
+The map is explicit data; the compactification theorem is an explicit theorem property, not an analytic continuation result.
 -/
 structure AlgebraicCayleyCompactification (θ : CartanInvolution (V := V)) where
   /-- Algebraic Cayley transform/readout. -/

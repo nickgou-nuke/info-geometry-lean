@@ -17,7 +17,7 @@ and replaces it with a constructive algebraic path:
   5. show centrality implies invariance under unit conjugation.
 
 The cancellation identity is the remaining model-specific law.  It is no
-longer hidden inside a bare `is_central` hypothesis.
+longer hidden inside a bare `is_central` property.
 -/
 
 import Mathlib.Tactic
@@ -166,7 +166,7 @@ The only remaining model-specific input is the explicit cancellation identity:
 
 `sum_i ([A,X_i]Y_i + X_i[A,Y_i]) = 0`.
 
-This replaces a bare centrality assumption.
+This replaces a bare centrality property.
 -/
 structure VerifiedQuadraticCasimir
     (A ι : Type*) [Ring A] [Fintype ι] where
@@ -203,7 +203,7 @@ def element : A :=
 The verified quadratic Casimir is central.
 
 This is the first coagulation theorem: centrality is no longer a primitive
-hypothesis.
+property.
 -/
 theorem isCentral :
     IsCentral C.element := by
@@ -319,7 +319,7 @@ def VerifiedQuadraticCasimir.toIndividuatedCasimir
 Owner target for a constructive quadratic Casimir.
 
 This target is intentionally non-vacuous: it requires an actual verified
-quadratic Casimir datum, not a bare centrality postulate.
+quadratic Casimir datum, not a bare centrality postulat3.
 -/
 def ConstructiveCasimirOwnerTarget
     (A ι : Type*) [Ring A] [Fintype ι] : Prop :=

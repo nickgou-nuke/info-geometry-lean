@@ -1,0 +1,24 @@
+// Singular Script: Souriau Symplectic Ideals and Metric Gradient Descents
+
+ring r = 0, (x, y, z, p_x, p_y, p_z), dp;
+
+// Symplectic level sets (Conservation laws) - Hamiltonian H
+poly H = p_x^2 + p_y^2 + p_z^2 + x^2 + y^2 + z^2;
+
+// Ideals defining the level sets (Poisson bracket relations)
+ideal symplectic_ideal = diff(H, p_x), diff(H, p_y), diff(H, p_z);
+
+// Metric gradient descents (Entropy production) - Dissipative potential S
+poly S = x^4 + y^4 + z^4;
+
+ideal metric_ideal = diff(S, x), diff(S, y), diff(S, z);
+
+print("Symplectic Ideal (Conservation laws):");
+symplectic_ideal;
+
+print("Metric Ideal (Entropy production/Gradient descent):");
+metric_ideal;
+
+// Intersecting or analyzing the ideals for metriplectic equilibrium
+ideal equilibrium = symplectic_ideal + metric_ideal;
+std(equilibrium);

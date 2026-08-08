@@ -25,7 +25,7 @@ noncommutative matrix algebra `Mₙ(ℂ)`; when packaged as
 The closed-form `phaseAxis` rotation corridor later in the file is separate:
 that lane uses the skew complex-structure generator with square `-I`, not the
 self-adjoint modular Hamiltonian.  This file does not prove the analytic matrix
-remainder estimate. Instead, it names that estimate as an explicit hypothesis
+remainder estimate. Instead, it names that estimate as an explicit property
 and proves the kernel-checkable consequences used by the Cantor-boundary lane.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
@@ -540,7 +540,7 @@ theorem phase_axis_norm_bound_of_closed_exp {n : ℕ}
 /--
 Explicit local quadratic remainder estimate.
 
-This is a proposition, not a global postulate. The analytic closure target is
+This is a proposition, not a global postulat3. The analytic closure target is
 to prove this predicate for the concrete phase-axis norm used by the
 representation.
 -/
@@ -583,7 +583,7 @@ theorem matrix_bregman_size_le_dikin_radius_sq_of_quadratic_bound {n : ℕ}
     _ = (ε * ‖K‖) ^ 2 := by ring
 
 /--
-Read back the quadratic Bregman estimate from an explicit theorem hypothesis.
+Read back the quadratic Bregman estimate from an explicit theorem property.
 -/
 theorem phase_axis_deformation_bounded_of_quadratic_bound {n : ℕ}
     (K : MatrixEnd n)

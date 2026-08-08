@@ -21,7 +21,7 @@ What is not proved here:
 * construction/continuity of the infinite Fredholm determinant;
 * analytic continuation or nonvanishing in the critical half-plane.
 
-Those analytic facts must be supplied by an explicit certificate until the
+Those analytic facts must be supplied by an explicit property until the
 trace-class owner file constructs them from first principles.
 -/
 
@@ -192,9 +192,9 @@ end FredholmClosureData
 /- ## The Fredholm Closure Theorem -/
 
 /--
-Projection from an explicit Fredholm closure certificate.
+Projection from an explicit Fredholm closure property.
 
-The theorem intentionally does not manufacture the certificate.  It states the
+The theorem intentionally does not manufacture the property.  It states the
 only kernel-checked consequence available once the Hestenes--Krein/categorical
 colimit owner supplies the determinant-style readout data.
 -/

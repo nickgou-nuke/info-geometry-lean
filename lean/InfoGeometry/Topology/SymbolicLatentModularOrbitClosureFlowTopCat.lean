@@ -11,7 +11,7 @@ open CategoryTheory
 
 The orbit closure is a native closed subtype.  A time slice of the modular
 flow transports it to the closure of the translated orbit; no recurrence or
-minimality assumption is introduced.
+minimality property is introduced.
 -/
 
 theorem SymbolicLatentModularFlow.actHomeomorph_image_orbit

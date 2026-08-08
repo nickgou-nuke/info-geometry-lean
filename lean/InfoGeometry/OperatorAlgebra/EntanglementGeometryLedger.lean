@@ -16,9 +16,9 @@ It proves the constructive monogamy obstruction:
 
 Therefore, if A and B' are distinct, the AMPS configuration is impossible
 unless one of the entanglement assumptions is broken or a bridge/identification
-witness equates A with B'.
+property equates A with B'.
 
-The complexity-growth part is witness-gated: bridge length equals complexity
+The complexity-growth part is property-gated: bridge length equals complexity
 only after a concrete calibration is supplied.
 -/
 
@@ -145,7 +145,7 @@ theorem contradiction_of_distinct
 The “ER identification” resolution forced by monogamy.
 
 This is the precise formal content of saying that the interior partner `A` and
-external purifier `B'` must be identified by a bridge/quotient/witness if both
+external purifier `B'` must be identified by a bridge/quotient/property if both
 entanglements are kept.
 -/
 def ERIdentificationForced : Prop :=
@@ -165,7 +165,7 @@ end AMPSMonogamyData
 /--
 A bridge between entanglement and geometric connectivity.
 
-This is the witness-gated ER=EPR socket. It does not identify entanglement and
+This is the property-gated ER=EPR socket. It does not identify entanglement and
 geometry definitionally. It records how a concrete model translates between
 the two.
 -/
@@ -175,13 +175,13 @@ structure EntanglementConnectivityBridge
   /-- Geometric connectivity / ER bridge predicate. -/
   ConnectedBy : System → System → Geometry → Prop
 
-  /-- Entanglement produces a bridge witness. -/
+  /-- Entanglement produces a bridge property. -/
   connected_of_entangled :
     ∀ {x y : System},
       E.Entangled x y →
         ∃ g : Geometry, ConnectedBy x y g
 
-  /-- A bridge witness implies entanglement in this model. -/
+  /-- A bridge property implies entanglement in this model. -/
   entangled_of_connected :
     ∀ {x y : System} {g : Geometry},
       ConnectedBy x y g →
@@ -219,7 +219,7 @@ end EntanglementConnectivityBridge
 /-! ## 4. ER route / nontraversability socket -/
 
 /--
-A nontraversable ER route witness.
+A nontraversable ER route property.
 
 This separates two claims:
 
@@ -337,7 +337,7 @@ structure ComplexityLedger
   thermalized : Time → State → Prop
 
 /--
-A witness that complexity changes after thermalization.
+A property that complexity changes after thermalization.
 -/
 structure PostThermalComplexityGrowth
     (State Time Quantity : Type*)
@@ -363,7 +363,7 @@ variable (W : PostThermalComplexityGrowth State Time Quantity C)
 
 /--
 Thermalization does not imply frozen complexity, once a post-thermal complexity
-growth witness is supplied.
+growth property is supplied.
 -/
 theorem not_complexity_constant_on_thermal_window :
     ¬ (∀ t : Time,
@@ -382,7 +382,7 @@ end PostThermalComplexityGrowth
 /--
 Calibration between interior bridge length/volume and quantum complexity.
 
-This is witness-gated. The module does not assert `length = complexity`
+This is property-gated. The module does not assert `length = complexity`
 without a concrete model.
 -/
 structure ERBridgeGrowthComplexityCalibration

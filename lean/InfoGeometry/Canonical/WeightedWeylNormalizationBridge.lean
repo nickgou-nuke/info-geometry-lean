@@ -180,7 +180,7 @@ theorem densityWeightLiftedReadout_pair_eq_zeroWeight_add_weighted_phaseAxisRead
 /--
 Constructive route: equilibrium seed → zero-weight vanishing → explicit weighted phase-axis response.
 
-This removes the explicit equilibrium-seed hypothesis packet by rerouting through
+This removes the explicit equilibrium-seed property packet by rerouting through
 the existing zero-weight owner theorem in `DensityWeightIntertwinerBridge`.
 -/
 @[rep_depth transport]
@@ -458,7 +458,7 @@ theorem densityWeightLiftedReadout_pair_eq_zero_of_firstVariation_eq_zero_of_pro
 
 /--
 On the canonical phase-axis observable branch, the phase-axis commutation
-hypothesis is discharged constructively by reflexivity.
+property is discharged constructively by reflexivity.
 -/
 @[rep_depth transport]
 theorem densityWeightLiftedReadout_phaseAxis_pair_eq_zero_of_equilibriumSeed
@@ -482,7 +482,7 @@ theorem densityWeightLiftedReadout_phaseAxis_pair_eq_zero_of_equilibriumSeed
 
 /--
 On the canonical phase-axis observable branch, faithful probing plus vanishing
-first variation discharge the commutation hypothesis constructively by
+first variation discharge the commutation property constructively by
 reflexivity.
 -/
 @[rep_depth transport]

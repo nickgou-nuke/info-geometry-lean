@@ -26,7 +26,7 @@ The module deliberately separates four layers:
 * a binary symbolic boundary `N -> BinarySector`;
 * Cuntz `O_2`-style isometry data on an abstract star algebra;
 * candidate Majorana/Clifford operators built from shifts;
-* a witness-gated Cantor spectral-triple packet.
+* a property-gated Cantor spectral-triple packet.
 
 Guardrail: the Cuntz relations alone do not prove that `S + S*` is a Clifford
 unitary. The CAR/Clifford laws are therefore carried by explicit witnesses.
@@ -395,7 +395,7 @@ def zeroCuntzProjection : CuntzProjection (Op := Op) where
 /--
 Orthogonality of Cuntz projections.
 
-This is the compatibility hypothesis needed to form an additive projection sum.
+This is the compatibility property needed to form an additive projection sum.
 -/
 @[rep_depth operator]
 def projectionOrthogonal (p q : CuntzProjection (Op := Op)) : Prop :=
@@ -708,7 +708,7 @@ def CuntzProjectionSetoid : Setoid (CuntzProjection (Op := Op)) where
 @[rep_depth operator]
 abbrev CuntzCu := Quotient (CuntzProjectionSetoid (Op := Op))
 
-/-- The quotient class of an orthogonal sum is independent of the orthogonality witness. -/
+/-- The quotient class of an orthogonal sum is independent of the orthogonality property. -/
 @[rep_depth operator]
 theorem CuntzCu_orthogonalSum_proof_irrel
     (p q : CuntzProjection (Op := Op))
@@ -1268,7 +1268,7 @@ def anticommutator
 /--
 The three Clifford/CAR equations for the Cuntz Majorana candidates.
 
-This is a proposition, not a proof-carrying witness structure.  It remains
+This is a proposition, not a proof-carrying property structure.  It remains
 explicitly conditional because these equations are not consequences of the
 Cuntz relations alone.
 -/
@@ -1494,7 +1494,7 @@ theorem leftShiftSkewPart_commutes_canonicalPhase_of_left_commutes
 
 /--
 The real-doubled `e₂` Majorana candidate is self-adjoint from the single
-phase-linearity hypothesis that the left Cuntz branch commutes with the
+phase-linearity property that the left Cuntz branch commutes with the
 canonical doubled phase axis.
 -/
 @[rep_depth operator]

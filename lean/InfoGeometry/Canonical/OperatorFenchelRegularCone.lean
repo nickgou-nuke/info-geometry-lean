@@ -91,7 +91,7 @@ noncomputable def operatorFenchelConjugateOnRegularCone
 /--
 Fenchel-Young inequality on the doubled-Krein operator lane.
 
-The positivity hypothesis is the owner gate that certifies `log` admissibility on
+The positivity property is the owner gate that certifies `log` admissibility on
 `Δreg`; the inequality is then the generic Fenchel statement on the same lane.
 -/
 @[rep_depth transport, capstone]
@@ -121,7 +121,7 @@ Constructive operatorial Legendre inverse packet on the doubled-Krein lane.
 
 This is the operator-lifted, dimension-agnostic replacement for scalar
 inverse-Hessian prose: the inverse laws are carried by a continuous-linear
-equivalence witness on `EndH`, not by ad hoc scalar assumptions.
+equivalence property on `EndH`, not by ad hoc scalar assumptions.
 -/
 @[rep_depth thermo]
 theorem operatorLegendreHessianInverse_packet_of_continuousLinearEquiv

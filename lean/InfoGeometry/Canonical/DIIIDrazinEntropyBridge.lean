@@ -12,7 +12,7 @@ This file does not construct a quaternionic matrix model and does not prove a
 division-algebra classification theorem. It records the theorem-safe chain:
 
 * `topologicalIndexZ2 chain = 1` plus a simplified boundary model gives a
-  boundary zero-mode witness via `Quantum.BulkBoundary`;
+  boundary zero-mode property via `Quantum.BulkBoundary`;
 * a model-supplied division-fiber calibration identifies the MP projector with
   the localized division-block identity;
 * with an explicitly supplied validity proof, faithful trace of that identity
@@ -83,7 +83,7 @@ variable (B : DIIIZ2DivisionEntropyBridge (S := S) M P0 Op State)
 
 /--
 The repo-owned bulk-boundary lane supplies a structure-valued boundary
-zero-mode witness from `topologicalIndexZ2 = 1`.
+zero-mode property from `topologicalIndexZ2 = 1`.
 -/
 def boundaryZeroModeWitness :
     BoundaryLocalizedZeroModeWitness
@@ -94,7 +94,7 @@ def boundaryZeroModeWitness :
     B.topologicalIndexZ2_eq_one
     B.simplifiedBoundaryModel
 
-/-- The same topological sector gives an operator zero-mode witness. -/
+/-- The same topological sector gives an operator zero-mode property. -/
 def operatorZeroModeWitness :
     OperatorZeroModeWitness
       (S := S)
@@ -147,7 +147,7 @@ theorem entropy_eq_log_mp_trace_of_DIII_Z2_sector
 /--
 The finite static bridge, stated without overclaiming:
 
-* the nontrivial DIII/`ZMod 2` sector supplies a boundary zero-mode witness;
+* the nontrivial DIII/`ZMod 2` sector supplies a boundary zero-mode property;
 * the supplied nontrivially represented division-fiber calibration makes the
   corresponding MP/Drazin entropy nonnegative.
 -/

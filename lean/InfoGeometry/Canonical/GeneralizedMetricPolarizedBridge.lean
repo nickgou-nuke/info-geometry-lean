@@ -14,7 +14,7 @@ This file keeps the scope narrow:
 - the canonical generalized-metric projectors are the spectral plus/minus projectors,
 - hence polarized lifts are fixed by those projectors,
 - and a polarized relative-modular pair canonically induces a generalized-metric
-  witness package without changing the underlying carrier data.
+  property package without changing the underlying carrier data.
 -/
 
 namespace InfoGeometry.Canonical.GeneralizedMetricPolarizedBridge

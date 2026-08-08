@@ -1,0 +1,26 @@
+// Singular Script for Collinearity Ideals
+
+ring r = 0, (x1, y1, x2, y2, x3, y3), dp;
+
+// The determinant of the 3x3 orientation matrix
+poly det = x1*y2 - x1*y3 - y1*x2 + y1*x3 + x2*y3 - x3*y2;
+
+// The ideal defining the collinearity of three points
+ideal I = det;
+
+// Print the ideal
+print("Ideal for collinearity:");
+I;
+
+// Check if some points are collinear by substituting their coordinates
+// For example: (0,0), (1,1), (2,2)
+map phi = r, 0, 0, 1, 1, 2, 2;
+poly eval_det = phi(det);
+print("Evaluated at collinear points (0,0), (1,1), (2,2):");
+eval_det; // Should be 0
+
+// For (0,0), (2,0), (1,1)
+map phi2 = r, 0, 0, 2, 0, 1, 1;
+poly eval_det2 = phi2(det);
+print("Evaluated at non-collinear points (0,0), (2,0), (1,1):");
+eval_det2; // Should not be 0

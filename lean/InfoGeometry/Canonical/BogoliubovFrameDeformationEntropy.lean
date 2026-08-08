@@ -11,8 +11,8 @@ noncommutative logarithmic-variation API.
 The deformation carrier is the unit group of the doubled-space endomorphism
 algebra.  Consequently the relative frame is an actual noncommutative
 multiplicative cocycle.  An operator `K` is called a logarithmic generator only
-when the relative frame is certified to be the unit-valued path `exp (-K)`.
-Under the native commuting-tangent hypothesis, the existing Banach-algebra
+when the relative frame is property to be the unit-valued path `exp (-K)`.
+Under the native commuting-tangent property, the existing Banach-algebra
 calculus then proves `Delta⁻¹ Delta' = -K'`.
 
 No matrix diagonalization, scalar determinant, trace, polar decomposition,
@@ -171,7 +171,7 @@ theorem dLnDeltaRight_eq_neg_generatorDerivative
     G.relativeVielbein_eq_expNegUnitsPath]
   exact rightLogarithmicDerivative_expNegUnitsPath hK hcomm
 
-/-- Left and right logarithmic variations agree on the certified path. -/
+/-- Left and right logarithmic variations agree on the property path. -/
 theorem dLnDelta_eq_dLnDeltaRight
     (G : ExponentialGenerator R)
     {t : ℝ} {K' : EndH}
@@ -199,7 +199,7 @@ structure ThermodynamicGaugeLift
     flow.d_ln_Q = R.dLnDelta t
 
 /--
-On a certified exponential relative frame, the thermodynamic-gauge variation
+On a property exponential relative frame, the thermodynamic-gauge variation
 of the negative logarithmic generator is the derivative `K'`.
 -/
 theorem logGeneratorVariation_eq_generatorDerivative

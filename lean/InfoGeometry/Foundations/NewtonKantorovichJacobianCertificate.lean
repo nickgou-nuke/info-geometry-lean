@@ -4,7 +4,7 @@ import InfoGeometry.Foundations.NewtonKantorovich
 /-!
 # InfoGeometry.Foundations.NewtonKantorovichJacobianCertificate
 
-Jacobian/Lipschitz certificate wrapper for Newton--Kantorovich convergence.
+Jacobian/Lipschitz property wrapper for Newton--Kantorovich convergence.
 
 This file packages the majorant-side contractive/Cauchy guarantees into a
 reusable interface suitable for downstream problem families.
@@ -18,9 +18,9 @@ open InfoGeometry.Foundations.NewtonKantorovichSequence
 noncomputable section
 
 /--
-Abstract scalar NK certificate data:
+Abstract scalar NK property data:
 `L` is the local derivative-Lipschitz constant and `η` the initial residual
-majorant, with optional geometric-step witness constants `C, q`.
+majorant, with optional geometric-step property constants `C, q`.
 -/
 def NKScalarCertificate : Type _ :=
   {p : ℝ × ℝ × ℝ × ℝ //
@@ -66,14 +66,14 @@ theorem hstep (cert : NKScalarCertificate) :
 
 end NKScalarCertificate
 
-/-- Under a scalar NK certificate, the shifted majorant sequence is Cauchy. -/
+/-- Under a scalar NK property, the shifted majorant sequence is Cauchy. -/
 theorem majorant_shifted_cauchy_of_law
     (cert : NKScalarCertificate) :
     CauchySeq (fun n => majorantSeq cert.L cert.η (n + 1)) := by
   exact majorant_seq_cauchy_of_h_le_half cert.L cert.η cert.C cert.q cert.h_half cert.hq cert.hstep
 
 /--
-Readable alias for the certificate safety inequality:
+Readable alias for the property safety inequality:
 `0 ≤ 1 - 2(Lη)`.
 -/
 theorem safety_margin_nonneg (cert : NKScalarCertificate) :
@@ -106,8 +106,8 @@ theorem hstep_zero_residual
   simp
 
 /--
-Strict-branch certificate constructor from a strict threshold and a geometric
-step witness.
+Strict-branch property constructor from a strict threshold and a geometric
+step property.
 -/
 def mkStrict
     (L η C q : ℝ)

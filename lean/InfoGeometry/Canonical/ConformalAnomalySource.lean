@@ -45,7 +45,7 @@ theorem projectorObstruction_isGZero_of_kkt_wings
 
 /--
 The projector obstruction is grade zero from a single proof-carrying KKT wing
-witness, without threading the explicit `(hA, hAMP, hAD)` hypothesis triple.
+property, without threading the explicit `(hA, hAMP, hAD)` property triple.
 -/
 theorem projectorObstruction_isGZero_of_kktWingWitness
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
@@ -66,7 +66,7 @@ theorem projectorObstruction_gOnePart_eq_zero_of_kkt_wings
 
 /--
 The grade-`+1` projector-obstruction component vanishes from a proof-carrying
-KKT wing witness, without threading the explicit `(hA, hAMP, hAD)` hypothesis
+KKT wing property, without threading the explicit `(hA, hAMP, hAD)` property
 triple.
 -/
 theorem projectorObstruction_gOnePart_eq_zero_of_kktWingWitness
@@ -88,7 +88,7 @@ theorem projectorObstruction_gNegOnePart_eq_zero_of_kkt_wings
 
 /--
 The grade-`-1` projector-obstruction component vanishes from a proof-carrying
-KKT wing witness, without threading the explicit `(hA, hAMP, hAD)` hypothesis
+KKT wing property, without threading the explicit `(hA, hAMP, hAD)` property
 triple.
 -/
 theorem projectorObstruction_gNegOnePart_eq_zero_of_kktWingWitness
@@ -114,8 +114,8 @@ theorem projectorObstruction_eq_diagonal_blocks_of_kkt_wings
 
 /--
 The projector obstruction is supported on the diagonal KKT blocks from a single
-proof-carrying KKT wing witness, without threading the explicit
-`(hA, hAMP, hAD)` hypothesis triple.
+proof-carrying KKT wing property, without threading the explicit
+`(hA, hAMP, hAD)` property triple.
 -/
 theorem projectorObstruction_eq_diagonal_blocks_of_kktWingWitness
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
@@ -385,7 +385,7 @@ end
 section
 
 /--
-Proof-carrying unit relative-volume witness for the RN/Kähler/log-det lane in
+Proof-carrying unit relative-volume property for the RN/Kähler/log-det lane in
 this conformal owner module.
 -/
 def UnitRelativeVolumeWitness (n : Nat) (M : InfoGeometry.Canonical.MoE.SinkhornMatrix n) : Prop :=
@@ -430,8 +430,8 @@ theorem chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolume
 Proof-carrying unit-relative-volume route for scalar normality.
 
 This constructive companion removes the bare
-`relativeVolumeChangeRN n M = 1` hypothesis from the scalar zero-scale branch
-when callers already own the `UnitRelativeVolumeBit` witness packet.
+`relativeVolumeChangeRN n M = 1` property from the scalar zero-scale branch
+when callers already own the `UnitRelativeVolumeBit` property packet.
 -/
 theorem chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolumeBit
     {n : Nat}
@@ -444,7 +444,7 @@ theorem chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolumeBit
 
 /--
 Constructive owner route for scalar normality using a single proof-carrying
-RN/Kähler/log-det witness packet.
+RN/Kähler/log-det property packet.
 -/
 theorem chiralScale_eq_zero_of_kahlerLogDet_unitRelativeVolumeWitness
     {n : Nat}
@@ -473,9 +473,9 @@ theorem projectorObstruction_eq_zero_of_chiralScale_eq_zero
 /--
 Constructive obstruction collapse from the RN/Kähler/log-det lane.
 
-This removes the bare scalar-zero hypothesis at the obstruction operator level
+This removes the bare scalar-zero property at the obstruction operator level
 when the caller already owns the infinite/operatorial unit-relative-volume
-witness route.
+property route.
 -/
 theorem projectorObstruction_eq_zero_of_kahlerLogDet_unitRelativeVolume
     {n : Nat}
@@ -502,7 +502,7 @@ theorem projectorObstruction_eq_zero_of_kahlerLogDet_unitRelativeVolumeBit
 
 /--
 Constructive obstruction collapse using the single proof-carrying
-RN/Kähler/log-det witness packet.
+RN/Kähler/log-det property packet.
 -/
 theorem projectorObstruction_eq_zero_of_kahlerLogDet_unitRelativeVolumeWitness
     {n : Nat}
@@ -516,7 +516,7 @@ theorem projectorObstruction_eq_zero_of_kahlerLogDet_unitRelativeVolumeWitness
 Scalar zero anomaly is equivalent to vanishing of the canonical projector
 obstruction.
 
-This removes the need for a bare scalar-zero hypothesis at obstruction-level
+This removes the need for a bare scalar-zero property at obstruction-level
 call sites: callers may route through the explicit operator equality, and the
 scalar compatibility wrapper remains available by the reverse direction.
 -/
@@ -545,8 +545,8 @@ theorem projectors_commute_of_chiralScale_eq_zero
 Constructive iff route between scalar zero anomaly and projector commutation.
 
 This packages the existing obstruction-operator owner theorem so downstream
-users can consume the canonical `Commute` witness instead of carrying a bare
-multiplication equality hypothesis.
+users can consume the canonical `Commute` property instead of carrying a bare
+multiplication equality property.
 -/
 theorem chiralScale_eq_zero_iff_projectors_commute :
     CI.chiralScale = 0
@@ -578,7 +578,7 @@ theorem spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_
 
 /--
 Proof-carrying dilation-collapse route using the compact
-`UnitRelativeVolumeWitness` packet instead of a bare zero-scale hypothesis.
+`UnitRelativeVolumeWitness` packet instead of a bare zero-scale property.
 -/
 theorem spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_of_kahlerLogDet_unitRelativeVolumeBit
     {n : Nat}
@@ -658,8 +658,8 @@ theorem squashedProjectorObstruction_isGZero_of_kkt_wings
 
 /--
 The bounded squashed obstruction inherits grade-zero structure from a single
-proof-carrying KKT wing witness, without threading the explicit
-`(hA, hAMP, hAD)` hypothesis triple.
+proof-carrying KKT wing property, without threading the explicit
+`(hA, hAMP, hAD)` property triple.
 -/
 theorem squashedProjectorObstruction_isGZero_of_kktWingWitness
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)
@@ -728,8 +728,8 @@ theorem spectralProjector_commutator_dilation_eq_zero_of_rightProjector_commute_
 Under right-projector commutation, vanishing of the dilation commutator is
 exactly vanishing of the projector obstruction.
 
-This replaces the raw multiplication-equality hypothesis on the owner route with
-an explicit `Commute` witness and packages both directions as a single
+This replaces the raw multiplication-equality property on the owner route with
+an explicit `Commute` property and packages both directions as a single
 operator-level iff.
 -/
 theorem spectralProjector_commutator_dilation_eq_zero_iff_projectorObstruction_eq_zero_of_rightProjectorCommute
@@ -770,7 +770,7 @@ theorem projectors_commute_of_kahlerLogDet_unitRelativeVolume
 /--
 Proof-carrying unit-relative-volume route for projector commutation.
 
-This removes the bare `relativeVolumeChangeRN n M = 1` hypothesis from the
+This removes the bare `relativeVolumeChangeRN n M = 1` property from the
 projector-closure lane when callers already own the compact
 `UnitRelativeVolumeWitness` packet.
 -/
@@ -859,7 +859,7 @@ section
 /--
 Canonical anomaly-flow derivation from the Kähler/log-det layer.
 
-This discharges the anomaly-flow witness directly from normalized Kähler-Ricci
+This discharges the anomaly-flow property directly from normalized Kähler-Ricci
 flow and unit relative volume in the log-det potential layer.
 -/
 theorem anomalyDrivenScalarRicciFlow_of_kahlerLogDet_normalized
@@ -915,7 +915,7 @@ end
 Projector commutation from normalized Kähler/log-det data at a scalar Ricci
 fixed point.
 
-This discharges the anomaly-flow witness internally:
+This discharges the anomaly-flow property internally:
 `hAnomFlow` is derived from the Kähler/log-det layer and then fed into the
 fixed-point commutation closure.
 -/
@@ -940,7 +940,7 @@ theorem projectors_commute_of_kahlerLogDet_normalized_fixedpoint
 /--
 Proof-carrying normalized fixed-point projector-commutation route using the
 compact `UnitRelativeVolumeWitness` packet instead of a bare unit-volume
-hypothesis.
+property.
 -/
 theorem projectors_commute_of_kahlerLogDet_normalized_fixedpoint_unitRelativeVolumeBit
     (flow : ScalarRicciFlow E)
@@ -1031,7 +1031,7 @@ theorem isNormalInference_of_logDetBarrier_selfConcordance_mechanics_unitRelativ
   simpa [IsNormalInference] using hMechanics.2.1
 
 /--
-Normal-inference corollary using the single RN/Kähler/log-det witness packet.
+Normal-inference corollary using the single RN/Kähler/log-det property packet.
 -/
 theorem isNormalInference_of_logDetBarrier_selfConcordance_mechanics_unitRelativeVolumeWitness
     {n : Nat}
@@ -1164,7 +1164,7 @@ Constructive unit-of-action collapse from the RN/Kähler/log-det lane.
 
 This packages the owner route
 `unitOfAction = chiralScale = kahlerPotentialRN = 0` once the caller already
-owns the unit-relative-volume witness on the infinite/operatorial lane.
+owns the unit-relative-volume property on the infinite/operatorial lane.
 -/
 theorem unitOfAction_eq_zero_of_kahlerLogDet_unitRelativeVolume
     {n : Nat}
@@ -1191,7 +1191,7 @@ theorem unitOfAction_eq_zero_of_kahlerLogDet_unitRelativeVolumeBit
 
 /--
 Constructive unit-of-action collapse using the single proof-carrying
-RN/Kähler/log-det witness packet.
+RN/Kähler/log-det property packet.
 -/
 theorem unitOfAction_eq_zero_of_kahlerLogDet_unitRelativeVolumeWitness
     {n : Nat}
@@ -1262,7 +1262,7 @@ theorem isNormalInference_of_kahlerLogDet_unitRelativeVolumeBit
 
 /--
 Constructive bridge from the RN/Kahler/log-det lane into the normal phase via
-its single proof-carrying witness packet.
+its single proof-carrying property packet.
 -/
 theorem isNormalInference_of_kahlerLogDet_unitRelativeVolumeWitness
     {n : Nat}
@@ -1305,7 +1305,7 @@ theorem chiralAnomalyOperator_eq_zero_of_unitRelativeVolumeBit
 
 /--
 Constructive zero-anomaly endpoint using the single proof-carrying
-Kähler/log-det/unit-relative-volume witness packet.
+Kähler/log-det/unit-relative-volume property packet.
 -/
 theorem chiralAnomalyOperator_eq_zero_of_unitRelativeVolumeWitness
     {n : Nat}
@@ -1325,7 +1325,7 @@ variable (CIK : InfoGeometry.Canonical.CertifiedInverseKernel E)
 Certified-kernel Einstein source closure.
 
 This is the owner-path gravity bridge: the Einstein source equation is derived
-from the canonical certified inverse-kernel package via the conformal adapter,
+from the canonical property inverse-kernel package via the conformal adapter,
 without introducing a separate bridge payload.
 -/
 theorem einsteinEquation_of_projectorObstruction_source
@@ -1347,7 +1347,7 @@ namespace CertifiedConformalInference
 
 variable (CCI : InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference E)
 
-/-- Certified-conformal Einstein source closure routed through the certified
+/-- Certified-conformal Einstein source closure routed through the property
 inverse-kernel owner package. -/
 theorem einsteinEquation_of_projectorObstruction_source
     (c : ℝ) (R : RicciTensor E)

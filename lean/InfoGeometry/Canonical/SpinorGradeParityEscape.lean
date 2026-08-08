@@ -75,14 +75,14 @@ theorem spatialAxial_closed_form (Psi : DiracSpinor) :
     Fin.sum_univ_succ]
   ring
 
-/-- The temporal vielbein witness evaluates exactly to `1`. -/
+/-- The temporal vielbein property evaluates exactly to `1`. -/
 theorem temporalVielbein_gravityWitness_eval :
     spinorBilinear (![1, 0, 0, 0] : DiracSpinor) gamma0
         (![1, 0, 0, 0] : DiracSpinor) = 1 := by
   rw [temporalVielbein_closed_form]
   simp
 
-/-- The temporal axial witness evaluates exactly to `-2`. -/
+/-- The temporal axial property evaluates exactly to `-2`. -/
 theorem temporalAxial_temporalWitness_eval :
     spinorBilinear (![1, 0, 1, 0] : DiracSpinor) (gamma5 * gamma0)
         (![1, 0, 1, 0] : DiracSpinor) = -2 := by
@@ -90,7 +90,7 @@ theorem temporalAxial_temporalWitness_eval :
   simp
   ring_nf
 
-/-- The spatial axial witness evaluates exactly to `-2`. -/
+/-- The spatial axial property evaluates exactly to `-2`. -/
 theorem spatialAxial_spatialWitness_eval :
     spinorBilinear (![1, 1, 0, 0] : DiracSpinor) (gamma5 * gamma1)
         (![1, 1, 0, 0] : DiracSpinor) = -2 := by
@@ -98,21 +98,21 @@ theorem spatialAxial_spatialWitness_eval :
   simp
   ring_nf
 
-/-- The temporal vielbein witness is genuinely nonzero. -/
+/-- The temporal vielbein property is genuinely nonzero. -/
 theorem temporalVielbein_gravityWitness_ne_zero :
     spinorBilinear (![1, 0, 0, 0] : DiracSpinor) gamma0
         (![1, 0, 0, 0] : DiracSpinor) ≠ 0 := by
   rw [temporalVielbein_gravityWitness_eval]
   norm_num
 
-/-- The temporal axial witness is genuinely nonzero. -/
+/-- The temporal axial property is genuinely nonzero. -/
 theorem temporalAxial_temporalWitness_ne_zero :
     spinorBilinear (![1, 0, 1, 0] : DiracSpinor) (gamma5 * gamma0)
         (![1, 0, 1, 0] : DiracSpinor) ≠ 0 := by
   rw [temporalAxial_temporalWitness_eval]
   norm_num
 
-/-- The spatial axial witness is genuinely nonzero. -/
+/-- The spatial axial property is genuinely nonzero. -/
 theorem spatialAxial_spatialWitness_ne_zero :
     spinorBilinear (![1, 1, 0, 0] : DiracSpinor) (gamma5 * gamma1)
         (![1, 1, 0, 0] : DiracSpinor) ≠ 0 := by

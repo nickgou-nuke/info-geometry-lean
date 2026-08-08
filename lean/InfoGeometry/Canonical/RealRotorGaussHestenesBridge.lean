@@ -96,7 +96,7 @@ end RealRotorCalculus
 Real generalized-integral readout.
 
 `boundaryReadout` and `bulkReadout` are arbitrary real readouts, connected by an
-explicit Gauss/Stokes witness. This is the correct socket for generalized
+explicit Gauss/Stokes property. This is the correct socket for generalized
 integrals, avoiding contour-residue assumptions.
 -/
 @[rep_depth transport]

@@ -265,7 +265,7 @@ end InfoGeometry.Clifford.ConformalProjectiveEmbedding55
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 [Theorems that compile conditionally based on explicitly named, valid premises or external verified witnesses. No hidden assumptions.]
-- All theorems are parameterized by an explicit `ConformalNullPair` witness `P`.
+- All theorems are parameterized by an explicit `ConformalNullPair` property `P`.
 - `conformal_inversion_maps_to_geoInv` and `F_sq_zero` additionally require explicit orthogonality hypotheses.
 
 #### BUCKET 3: OPEN CLOSURE DEBT

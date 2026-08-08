@@ -91,7 +91,7 @@ theorem centralCorrection_commutator_eq_cocycle
       - κ.centralCorrection Y * κ.centralCorrection X = κ.cocycle X Y :=
   κ.moment_defect X Y
 
-/-- The 2-cocycle antisymmetry witness. -/
+/-- The 2-cocycle antisymmetry property. -/
 @[rep_depth operator]
 theorem cocycle_antisymmetric
     {Symmetry : Type v}

@@ -55,7 +55,7 @@ theorem signatureChange_det_ne_zero :
 
 /--
 An invertible real congruence carries the split form to `diag(2,-2)`.
-This is the explicit rank-`(1,1)` signature certificate.
+This is the explicit rank-`(1,1)` signature property.
 -/
 theorem kreinG_congr_diagonal :
     signatureChange.transpose * kreinG * signatureChange =

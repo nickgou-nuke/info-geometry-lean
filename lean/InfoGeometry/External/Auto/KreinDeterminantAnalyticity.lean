@@ -118,7 +118,7 @@ lemma hyperbolicFlow_analytic (θ : ℝ) : IsAnalyticFlow2 (hyperbolicFlow θ) :
     simp
   simp [Matrix.det_fin_two, hmul]
 
-/-- Logarithmic volume (Jacobi-Liouville) witness on the concrete family above:
+/-- Logarithmic volume (Jacobi-Liouville) property on the concrete family above:
     `diag(e^θ,e^{-θ})` has determinant one, so its determinant-log is zero.
     This replaces classical complex analyticity in the real doubled setting.
 -/

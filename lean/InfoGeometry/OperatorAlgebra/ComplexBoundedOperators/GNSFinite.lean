@@ -59,7 +59,7 @@ theorem vector_state_recovers_omega {n : ℕ} (a : FinAlg n) :
   rfl
 
 /-- Cyclicity: every vector is `a Ω` for `a = x`. -/
-theorem cyclic_witness {n : ℕ} (x : FinAlg n) :
+theorem cyclic_property {n : ℕ} (x : FinAlg n) :
     ∃ a : FinAlg n, mulVec a (omegaVec n) = x := by
   refine ⟨x, ?_⟩
   funext i

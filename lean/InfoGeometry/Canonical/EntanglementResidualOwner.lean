@@ -29,7 +29,7 @@ structure TransportedMismatchPrerequisite
     (P P' : ProjectorPair R) where
   transport : SimilarityTransport P P'
 
-/-- The mismatch transports covariantly; zero requires an additional agreement witness. -/
+/-- The mismatch transports covariantly; zero requires an additional agreement property. -/
 theorem transportedMismatch_covariant
     {P P' : ProjectorPair R}
     (W : TransportedMismatchPrerequisite P P') :
@@ -57,7 +57,7 @@ theorem transportedAgreement_implies_projectorEquality
     P'.PD = P'.PMP :=
   (ProjectorPair.projectorAgreement_iff_eq (P := P')).1 W.transportedAgreement
 
-/-- Positive compression witness for a projector/compression sector. -/
+/-- Positive compression property for a projector/compression sector. -/
 @[rep_depth transport]
 structure PositiveCompressionWitness (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] where
   projector : A
@@ -83,7 +83,7 @@ noncomputable abbrev compressedState
 
 end PositiveCompressionWitness
 
-/-- Algebraic Drazin-null sector witness. Physical support needs a separate compression witness. -/
+/-- Algebraic Drazin-null sector property. Physical support needs a separate compression property. -/
 @[rep_depth transport]
 structure DrazinNullSector (R : Type*) [Ring R] where
   pair : ProjectorPair R
@@ -159,7 +159,7 @@ theorem corr_nonzero_implies_not_factorize
   exact hCorr (factorizes_implies_corr_zero (R := R) hFact ha hb)
 
 /-- Compatibility surface retained for the v2 owner-map tests: a Drazin-null
-covariance is residual covariance plus a nonzero covariance certificate.  It is
+covariance is residual covariance plus a nonzero covariance property.  It is
 not the entanglement itself. -/
 @[rep_depth transport]
 structure DrazinNullCovariance (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] where
@@ -180,7 +180,7 @@ theorem nonfactorizingCovariance_implies_drazinNullSupportedCorrelation
     (a := C.leftObservable) (b := C.rightObservable)
     C.left_mem C.right_mem C.nonfactorizingCovariance
 
-/-- Entropy witness: the existing two-state RT owner theorem gives a concrete
+/-- Entropy property: the existing two-state RT owner theorem gives a concrete
 entropy readout. -/
 noncomputable def entropyReadout_of_twoStateRT : ℝ :=
   InfoGeometry.Holography.RyuTakayanagiEmergence.vonNeumannEntropy (1 / 2 : ℝ)
@@ -191,7 +191,7 @@ theorem entropyReadout_of_twoStateRT_eq_ln2 :
   dsimp [entropyReadout_of_twoStateRT]
   simpa using InfoGeometry.Holography.RyuTakayanagiEmergence.maxEntropy_twoState
 
-/-- Negativity witness: a residual covariance packet plus a certified nonzero
+/-- Negativity property: a residual covariance packet plus a property nonzero
 covariance readout. -/
 @[rep_depth transport]
 structure NegativityWitness (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] where
@@ -199,7 +199,7 @@ structure NegativityWitness (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] wh
   covarianceNonzero :
     residual.residual.corrD0 residual.leftObservable residual.rightObservable ≠ 0
 
-/-- A concrete negativity witness comes directly from any supplied Drazin-null
+/-- A concrete negativity property comes directly from any supplied Drazin-null
 supported covariance packet. -/
 def negativityWitness_of_drazinNullCovariance
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
@@ -208,14 +208,14 @@ def negativityWitness_of_drazinNullCovariance
   refine ⟨C, ?_⟩
   exact C.nonfactorizingCovariance
 
-/-- A negativity witness exposes an explicit nonzero covariance readout. -/
+/-- A negativity property exposes an explicit nonzero covariance readout. -/
 theorem negativityWitness_covarianceNonzero
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : NegativityWitness A) :
     W.residual.residual.corrD0 W.residual.leftObservable W.residual.rightObservable ≠ 0 :=
   W.covarianceNonzero
 
-/-- A negativity witness directly blocks factorization. -/
+/-- A negativity property directly blocks factorization. -/
 theorem negativityWitness_blocks_factorization
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : NegativityWitness A) :
@@ -224,14 +224,14 @@ theorem negativityWitness_blocks_factorization
   nonfactorizingCovariance_implies_drazinNullSupportedCorrelation
     (A := A) W.residual
 
-/-- The positive-compression witness exposes the idempotent projector law. -/
+/-- The positive-compression property exposes the idempotent projector law. -/
 theorem positiveCompressionWitness_projector_idem
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : PositiveCompressionWitness A) :
     W.projector * W.projector = W.projector :=
   W.projector_idem
 
-/-- The positive-compression witness exposes the self-adjoint projector side-condition. -/
+/-- The positive-compression property exposes the self-adjoint projector side-condition. -/
 def positiveCompressionWitness_projector_selfAdj_G
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : PositiveCompressionWitness A) : IsSelfAdjoint W.projector :=
@@ -251,7 +251,7 @@ theorem positiveCompressionWitness_compression_on_projector
     congrArg (fun x => x * W.projector) W.projector_idem
   rw [hnum]
 
-/-- The Drazin-null sector exposes its physical-null certificate. -/
+/-- The Drazin-null sector exposes its physical-null property. -/
 def drazinNullSector_physicalNull
     (W : DrazinNullSector R) (a : R) : W.nullProjector * a = 0 :=
   W.physicalNull a
@@ -263,7 +263,7 @@ theorem drazinNullSector_physicalWitness
       (W.nullProjector * a * W.nullProjector = 0) :=
   W.physicalWitness
 
-/-- Entanglement witness assembled from one of the concrete witness lanes. -/
+/-- Entanglement property assembled from one of the concrete property lanes. -/
 @[rep_depth transport]
 inductive EntanglementWitness (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] where
   | entropy : (entropyReadout : ℝ) → entropyReadout = Real.log 2 → EntanglementWitness A
@@ -277,39 +277,39 @@ inductive EntanglementWitness (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] 
       InfoGeometry.Canonical.ScaledCARPair E →
         EntanglementWitness A
 
-/-- Entanglement is represented by the existence of an explicit witness. -/
+/-- Entanglement is represented by the existence of an explicit property. -/
 def IsEntangled (A : Type*) [Semiring A] [Star A] [Algebra ℝ A] : Prop :=
   Nonempty (EntanglementWitness A)
 
-/-- An entanglement witness certifies entanglement. -/
+/-- An entanglement property certifies entanglement. -/
 theorem entanglementWitness_implies_entangled
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : EntanglementWitness A) :
     IsEntangled A := by
   exact ⟨W⟩
 
-/-- Lemma 1: an explicit entropy witness proves entanglement. -/
+/-- Lemma 1: an explicit entropy property proves entanglement. -/
 theorem isEntangled_of_entropy
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (entropyReadout : ℝ) (hEntropy : entropyReadout = Real.log 2) :
     IsEntangled A := by
   exact ⟨EntanglementWitness.entropy entropyReadout hEntropy⟩
 
-/-- The two-state RT entropy witness directly certifies entanglement. -/
+/-- The two-state RT entropy property directly certifies entanglement. -/
 theorem isEntangled_of_twoStateRT
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A] :
     IsEntangled (A := A) := by
   exact isEntangled_of_entropy (A := A) entropyReadout_of_twoStateRT
     entropyReadout_of_twoStateRT_eq_ln2
 
-/-- Lemma 2: an explicit negativity witness proves entanglement. -/
+/-- Lemma 2: an explicit negativity property proves entanglement. -/
 theorem isEntangled_of_negativity
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : NegativityWitness A) :
     IsEntangled A := by
   exact ⟨EntanglementWitness.negativity W⟩
 
-/-- Lemma 3: an explicit Gaussian bosonic witness proves entanglement. -/
+/-- Lemma 3: an explicit Gaussian bosonic property proves entanglement. -/
 theorem isEntangled_of_gaussianBosonic
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -317,7 +317,7 @@ theorem isEntangled_of_gaussianBosonic
     IsEntangled A := by
   exact ⟨EntanglementWitness.gaussianBosonic W⟩
 
-/-- The bosonic Gaussian witness exposes a normalized CAR pair. -/
+/-- The bosonic Gaussian property exposes a normalized CAR pair. -/
 theorem gaussianBosonicWitness_car_is_normalized
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -326,7 +326,7 @@ theorem gaussianBosonicWitness_car_is_normalized
       (E := E) W.car.normalizedAnnihilation W.car.normalizedCreation :=
   W.car_is_normalized
 
-/-- The bosonic Gaussian witness also exposes the normalized CCR pair. -/
+/-- The bosonic Gaussian property also exposes the normalized CCR pair. -/
 theorem gaussianBosonicWitness_ccr_is_normalized
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -335,7 +335,7 @@ theorem gaussianBosonicWitness_ccr_is_normalized
       (E := E) W.ccr.normalizedAnnihilation W.ccr.normalizedCreation :=
   W.ccr_is_normalized
 
-/-- Lemma 4: an explicit Gaussian fermionic witness proves entanglement. -/
+/-- Lemma 4: an explicit Gaussian fermionic property proves entanglement. -/
 theorem isEntangled_of_gaussianFermionic
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -343,7 +343,7 @@ theorem isEntangled_of_gaussianFermionic
     IsEntangled A := by
   exact ⟨EntanglementWitness.gaussianFermionic W⟩
 
-/-- The fermionic Gaussian witness exposes a normalized CAR pair. -/
+/-- The fermionic Gaussian property exposes a normalized CAR pair. -/
 theorem gaussianFermionicWitness_car_is_normalized
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -352,7 +352,7 @@ theorem gaussianFermionicWitness_car_is_normalized
       (E := E) W.normalizedAnnihilation W.normalizedCreation :=
   W.normalized_isCARPair
 
-/-- Lemma 5: any witness inhabits the entangled predicate. -/
+/-- Lemma 5: any property inhabits the entangled predicate. -/
 theorem isEntangled_of_entanglementWitness
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : EntanglementWitness A) :
@@ -408,7 +408,7 @@ theorem restrictedCovariance_zero_implies_no_support
   intro hSupp
   exact hSupp h
 
-/-- Lorentzian lightcone witness: null rays need a dedicated Dirac witness. -/
+/-- Lorentzian lightcone property: null rays need a dedicated Dirac property. -/
 @[rep_depth transport]
 structure LightconeReadoutBoundary
     (V : Type*) [AddCommGroup V] [Module ℝ V]
@@ -422,34 +422,34 @@ structure LightconeReadoutBoundary
   projectivizationWitness :
     projectiveRay = Projectivization.mk ℝ kernelVector kernelNontrivial.2
 
-theorem entanglement_claim_from_witness
+theorem entanglement_claim_from_property
     {A : Type*} [Semiring A] [Star A] [Algebra ℝ A]
     (W : EntanglementWitness (A := A)) :
     IsEntangled (A := A) :=
   entanglementWitness_implies_entangled (A := A) W
 
-/-- A lightcone boundary witness exposes its Dirac-square side condition. -/
+/-- A lightcone boundary property exposes its Dirac-square side condition. -/
 def lightconeReadoutBoundary_diracSquare
     {V : Type*} [AddCommGroup V] [Module ℝ V]
     {Q : QuadraticForm ℝ V} (W : LightconeReadoutBoundary V Q) :
     W.dirac.comp W.dirac = 0 :=
   W.diracSquare
 
-/-- A lightcone boundary witness exposes kernel nontriviality. -/
+/-- A lightcone boundary property exposes kernel nontriviality. -/
 def lightconeReadoutBoundary_kernelNontrivial
     {V : Type*} [AddCommGroup V] [Module ℝ V]
     {Q : QuadraticForm ℝ V} (W : LightconeReadoutBoundary V Q) :
     W.dirac W.kernelVector = 0 ∧ W.kernelVector ≠ 0 :=
   W.kernelNontrivial
 
-/-- A lightcone boundary witness exposes null-cone certification. -/
+/-- A lightcone boundary property exposes null-cone certification. -/
 def lightconeReadoutBoundary_nullConeCertified
     {V : Type*} [AddCommGroup V] [Module ℝ V]
     {Q : QuadraticForm ℝ V} (W : LightconeReadoutBoundary V Q) :
     Q W.kernelVector = 0 :=
   W.nullConeCertified
 
-/-- A lightcone boundary witness exposes the projectivization witness. -/
+/-- A lightcone boundary property exposes the projectivization property. -/
 def lightconeReadoutBoundary_projectivizationWitness
     {V : Type*} [AddCommGroup V] [Module ℝ V]
     {Q : QuadraticForm ℝ V} (W : LightconeReadoutBoundary V Q) :

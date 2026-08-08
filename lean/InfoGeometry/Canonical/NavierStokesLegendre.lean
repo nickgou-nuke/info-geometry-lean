@@ -86,7 +86,7 @@ theorem fenchel_legendre_gap_zero_iff_madelung_divergence_free
     · rwa [contact_iff_collapsed_trace_zero L θ η K hContact]
 
 /--
-The forward implication needs no extra infinite-temperature hypothesis.  A
+The forward implication needs no extra infinite-temperature property.  A
 vanishing Fenchel gap gives the contact equality, and the supplied contact
 identification gives the trace-zero branch of the Madelung criterion.
 -/
@@ -107,7 +107,7 @@ theorem fenchel_gap_zero_imp_madelung_divergence_free
 /--
 In the trace-zero sector, the Fenchel contact condition is equivalent to the
 divergence-free Madelung condition without assuming `β = 0 → η = grad θ`.
-The latter hypothesis is needed only for the separate zero-trace branch of
+The latter property is needed only for the separate zero-trace branch of
 the disjunctive velocity criterion.
 -/
 theorem fenchel_gap_zero_iff_madelung_divergence_free_of_trace_zero

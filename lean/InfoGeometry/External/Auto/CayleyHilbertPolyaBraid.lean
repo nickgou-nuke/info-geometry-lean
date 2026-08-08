@@ -11,6 +11,8 @@ noncomputable section
 open Matrix
 open Complex
 
+namespace LegacyCayleyHilbertPolyaBraid
+
 /-- The Cayley transform:
     C(H) = (H − iI)(H + iI)⁻¹
 
@@ -40,4 +42,5 @@ theorem conjTranspose_one {n : Type*} [Fintype n] [DecidableEq n] :
   · have h2 : j ≠ i := Ne.symm h
     simp [h, h2]
 
+end LegacyCayleyHilbertPolyaBraid
 end

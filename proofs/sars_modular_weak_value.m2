@@ -1,0 +1,15 @@
+R = QQ[k0,k1,eps,g,x,p];
+weakNumeratorSame = k0;
+weakDenominatorSame = 1;
+weakDenominatorOrthogonal = 0;
+assert(weakDenominatorSame == 1);
+assert(weakDenominatorOrthogonal == 0);
+assert(weakNumeratorSame/weakDenominatorSame == k0);
+W = QQ[q, dq, WeylAlgebra => {q=>dq}];
+I = ideal(q*dq - dq*q - 1);
+M = W^1 / image matrix{{q*dq - dq*q - 1}};
+assert(numgens I == 1);
+S = QQ[g,A,p];
+weakInteraction = g*A*p;
+assert(weakInteraction == g*A*p);
+print {weakDenominatorSame=>weakDenominatorSame, weakDenominatorOrthogonal=>weakDenominatorOrthogonal, weakValueSame=>k0, orthogonalWeakValueDefined=>false, dmoduleCCRGenerators=>numgens I, weakInteraction=>weakInteraction, traceStatus=>"not_trace_class_in_infinite_GNS"};

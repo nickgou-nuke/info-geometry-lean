@@ -141,7 +141,7 @@ theorem logSample_owner_grid
   rw [Q.dmt.logSample_eq_logCoordinate k]
   exact Q.logCoordinates_match_rapidity k
 
-/-- The modular Hamiltonian commutes with every certified Mellin spectral projector. -/
+/-- The modular Hamiltonian commutes with every property Mellin spectral projector. -/
 theorem modularHamiltonian_commutes_spectralProjectors
     {η0 Δη : ℝ} {P : ℤ → EndH}
     (Q : DiscreteLorentzMellinQuantizationPacket (E := E) η0 Δη P)
@@ -152,7 +152,7 @@ theorem modularHamiltonian_commutes_spectralProjectors
 /--
 Discrete Mellin modular-Hamiltonian theorem:
 the Mellin spectrum is the DFT spectrum on logarithmic samples, those samples
-are exactly rapidity samples, and the modular Hamiltonian is certified by
+are exactly rapidity samples, and the modular Hamiltonian is property by
 spectral-projector commutation.
 -/
 theorem discrete_mellin_modular_hamiltonian_theorem
@@ -173,7 +173,7 @@ Proof-carrying Casimir residual quantization packet over a discrete modular
 Mellin lattice.
 
 The important audit boundary is explicit: `bandlimited` alone does not prove the
-spectral gap formula.  The actual quantization equality is carried as certified
+spectral gap formula.  The actual quantization equality is carried as property
 data, while the lattice and band-limit witnesses guarantee that the claim lives
 on the existing operatorial discrete-Mellin owner surface.
 -/

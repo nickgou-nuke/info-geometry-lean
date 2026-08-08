@@ -1032,7 +1032,7 @@ theorem vec55Split_jordanNullPlus :
     headNullMinus, headPair, Algebra.SplitOctonionQ.SplitO.zero] <;>
     try norm_num
   all_goals exfalso
-  all_goals exact Fin.elim0 (by assumption)
+  all_goals exact Fin.elim0 ‹_›
 
 theorem vec55Split_jordanNullMinus :
     vec55SplitEquiv (castVec55 (toVec55Q jordanNullMinus)) =
@@ -1041,7 +1041,7 @@ theorem vec55Split_jordanNullMinus :
     headNullPlus, headPair, Algebra.SplitOctonionQ.SplitO.zero] <;>
     try norm_num
   all_goals exfalso
-  all_goals exact Fin.elim0 (by assumption)
+  all_goals exact Fin.elim0 ‹_›
 
 theorem gammaJordanNullPlus_eq_u5 :
     gammaJordanNullPlus =

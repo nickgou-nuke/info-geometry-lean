@@ -429,7 +429,7 @@ theorem operator_twisted_index_vanishing
 
 /--
 Operator-level asymptotic anomaly cancellation, delegated to the
-continuous-linear-map owner.  The convergence hypothesis remains owned by
+continuous-linear-map owner.  The convergence property remains owned by
 `InfoGeometry.Dynamics.SouriauDiracHodge`.
 -/
 theorem operator_zero_temperature_anomaly_cancellation

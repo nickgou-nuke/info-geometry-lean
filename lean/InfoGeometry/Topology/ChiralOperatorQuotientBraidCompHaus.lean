@@ -5,7 +5,7 @@ import InfoGeometry.Topology.SymbolicLatentNoncommutativeObservationQuotientComp
 # Compact-Hausdorff quotient braid action
 
 The quotient braid action is promoted to `CompHaus` only under the explicit
-compactness hypothesis on the coefficient carrier.  The general topological
+compactness property on the coefficient carrier.  The general topological
 action remains in the preceding `TopCat` owner.
 -/
 

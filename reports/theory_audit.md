@@ -1,6 +1,6 @@
 # Theory Audit Report
 
-Generated: 2026-08-05 23:04:33Z
+Generated: 2026-08-08 16:31:25Z
 
 ## Build toolchain status
 - lake: available (/home/goutev/.elan/bin/lake)
@@ -11,130 +11,130 @@ Lake version 5.0.0-src+978f81d (Lean version 4.28.1)
 ## Placeholder proof debt (sorry/admit)
 
 ```text
-lean/InfoGeometry/Application/OperatorFreudenthalBoundary.lean:167:  /-- Boundary states admit Drazin surgery. -/
 lean/InfoGeometry/Lie/Pin55KreinConformalBridge.lean:28:* Remaining `sorry` debt, with exact blocker names:
-lean/InfoGeometry/Lint/NonTriviality.lean:27:* transitive axiom audit using `Lean.collectAxioms`, with explicit `sorry` treated as honest closure debt when configured;
-lean/InfoGeometry/Lint/NonTriviality.lean:57:/-- Permit explicit `sorry` as honest, visible closure debt. -/
-lean/InfoGeometry/Lint/Pauli.lean:11:/-- Option to control the Pauli sorry linter. -/
-lean/InfoGeometry/Lint/Pauli.lean:100:                  logError m!"[Pauli/Axiom-Surface Seal] {declName} depends on nonstandard `admitAx`; use explicit `sorry` instead of a disguised placeholder."
-lean/InfoGeometry/Probability/HomologicalProbability.lean:839:Type III von Neumann factors admit no finite normal tracial state.
+lean/InfoGeometry/Probability/HomologicalProbability.lean:839:Type III von Neumann factors sorry no finite normal tracial state.
+lean/InfoGeometry/SelfReference/Shadow.lean:64:| ShadowKind.sorryDebt => "explicit sorry in proof body"
 lean/InfoGeometry/Automorphic/HeckePurification.lean:82:  `Prop`/`sorry` placeholder with a concrete theorem-shaped obligation.
-lean/InfoGeometry/Topology/SymbolicLatentObservedPathImageCompHausEvaluation.lean:10:inclusion maps admit a genuine `CompHaus` source/target packaging.  The
-lean/InfoGeometry/OperatorAlgebra/GeneralizedNilpotentTripotent.lean:19:`sorry` debt**.  The two sections of the blueprint are implemented exactly:
-lean/InfoGeometry/OperatorAlgebra/SplitOctonionLoxodromic.lean:18:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
-lean/InfoGeometry/OperatorAlgebra/SplitQuaternionSL2Isomorphism.lean:20:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
+lean/InfoGeometry/Application/OperatorFreudenthalBoundary.lean:167:  /-- Boundary states sorry Drazin surgery. -/
 lean/InfoGeometry/Eval/SorryFillerTest.lean:6:This file contains controlled `sorry` placeholders used as evaluation targets
 lean/InfoGeometry/Eval/SorryFillerTest.lean:7:for the GEPA skill evolution loop. Each theorem has a `sorry` that needs to
-lean/InfoGeometry/Topology/MobiusNonParabolicRecovered.lean:15:/-- On the Riemann sphere, every two distinct points admit a third distinct point. -/
-lean/InfoGeometry/Clifford/FanoOctonionParavector.lean:12:All proofs are native and closed without sorry.
-lean/InfoGeometry/SelfReference/Shadow.lean:64:| ShadowKind.sorryDebt => "explicit sorry in proof body"
-lean/InfoGeometry/Clifford/ConformalReflection55.lean:36:These are **native Lean proofs** — no axioms, sorry, or external certificates.
-lean/InfoGeometry/Topology/CliffordMobiusDeRhamMonodromy.lean:17:## Verified theorems (no sorry)
-lean/InfoGeometry/Topology/MobiusDeRhamMonodromy.lean:22:## Verified theorems (no sorry)
-lean/InfoGeometry/Topology/SymbolicLatentVaryingCarrierQuotientCompHausLimit.lean:8:and observation-range diagrams admit genuine `CompHaus` limits.  This owner
-lean/InfoGeometry/Arithmetic/PrimitiveSetsAbove.lean:2070:Kept as a `Prop` (not a `theorem ... := by sorry`) because this module does not
-lean/InfoGeometry/Tooling/VacuityCritic.lean:24:    field.value != "sorry" && field.value != "admit"
-lean/InfoGeometry/Signal/QuaternionPhase.lean:14:No assumptions, axioms, or `sorry`/`admit` scaffolding are used.
-lean/InfoGeometry/Arithmetic/PolyaHilbertDiracHodgeCantorBridge.lean:20:Plus the internal proof: `SouriauDiracHodgeCoupling` (659 lines, 32 thm, 0 sorry).
+lean/InfoGeometry/Topology/SymbolicLatentObservedPathImageCompHausEvaluation.lean:10:inclusion maps sorry a genuine `CompHaus` source/target packaging.  The
 lean/InfoGeometry/Analysis/AsanoRuelleBasicBranches.lean:16:No `sorry`.
+lean/InfoGeometry/Analysis/LaplaceUniqueness.lean:302:If two Laplace data agree on the same Bromwich contour and both sorry the
+lean/InfoGeometry/Clifford/FanoOctonionParavector.lean:12:All proofs are native and closed without sorry.
+lean/InfoGeometry/OperatorAlgebra/SplitQuaternionSL2Isomorphism.lean:20:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
+lean/InfoGeometry/Clifford/ConformalReflection55.lean:36:These are **native Lean proofs** — no axioms, sorry, or external certificates.
+lean/InfoGeometry/OperatorAlgebra/SplitOctonionLoxodromic.lean:18:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
+lean/InfoGeometry/OperatorAlgebra/GeneralizedNilpotentTripotent.lean:19:`sorry` debt**.  The two sections of the blueprint are implemented exactly:
 lean/InfoGeometry/OperatorAlgebra/TripotentFactorization.lean:11:All proofs are native Lean 4 derivations checked by the kernel with zero sorry debt.
-lean/InfoGeometry/OperatorAlgebra/SplitOctonionPseudoReal.lean:18:No `sorry`/`axiom`/`admit`/certificate scaffolding is used.
+lean/InfoGeometry/OperatorAlgebra/SplitOctonionPseudoReal.lean:18:No `sorry`/`ax!om`/`sorry`/property scaffolding is used.
 lean/InfoGeometry/OperatorAlgebra/ChiralCliffordSplit.lean:17:All proofs are native, formal Lean 4 derivations checked by the kernel with zero sorry debt.
 lean/InfoGeometry/OperatorAlgebra/TripotentMatrix2x2.lean:15:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
-lean/InfoGeometry/Analysis/LaplaceUniqueness.lean:302:If two Laplace data agree on the same Bromwich contour and both admit the
+lean/InfoGeometry/Topology/MobiusDeRhamMonodromy.lean:22:## Verified theorems (no sorry)
 lean/InfoGeometry/OperatorAlgebra/WittenMöbiusBraidBridge.lean:18:All proofs are native Lean 4 derivations checked by the kernel with zero remaining sorry debt.
-lean/InfoGeometry/Arithmetic/ZetaDihedral.lean:15:No sockets. No certificates. No axioms. No `sorry`.
-lean/InfoGeometry/Arithmetic/SelfConcordantZetaBarrierProofs.lean:6:No sockets. No certificates. No axioms. No `sorry`.
-lean/InfoGeometry/AsanoRuelle/MobiusInversion.lean:9:No placeholders. No `sorry`.
-lean/InfoGeometry/AsanoRuelle/AsanoRuelleCounterexample.lean:12:No wrappers. No `sorry`.
-lean/InfoGeometry/Meta/OwnerTarget.lean:43:  A `sorry` in an owner-target proof is machine-visible closure debt.
+lean/InfoGeometry/Topology/SymbolicLatentVaryingCarrierQuotientCompHausLimit.lean:8:and observation-range diagrams sorry genuine `CompHaus` limits.  This owner
+lean/InfoGeometry/External/Auto/RegularizationCayleyPipeline.lean:10:work behind a `sorry`.  The finite SymPy property in
+lean/InfoGeometry/Arithmetic/PrimitiveSetsAbove.lean:2070:Kept as a `Prop` (not a `theorem ... := by sorry`) because this module does not
 lean/InfoGeometry/Meta/StrictDef.lean:18:  , ``Lean.Parser.Term.«sorry»
 lean/InfoGeometry/Meta/StrictDef.lean:31:      "strict {declKind} `{declName}` uses forbidden term syntax (`by`, `sorry`, or `unsafe`) in its type."
 lean/InfoGeometry/Meta/StrictDef.lean:34:      "strict {declKind} `{declName}` uses forbidden term syntax (`by`, `sorry`, or `unsafe`) in its value."
 lean/InfoGeometry/Meta/StrictDef.lean:291:It accepts only ordinary `def` syntax and rejects tactic blocks, `sorry`, and
+lean/InfoGeometry/External/Auto/BlackHoleHolography.lean:10:is proved without axioms or `sorry`.
 lean/InfoGeometry/Meta/SocketTarget.lean:12:normal `sorry` detection because the law itself is a parameter.
 lean/InfoGeometry/Meta/SocketTarget.lean:29:   closure debt — the architectural equivalent of a typed `sorry`.
 lean/InfoGeometry/Meta/SocketTarget.lean:49:not check for `sorry` — sockets are *expected* to carry opaque laws.
 lean/InfoGeometry/Meta/Admission.lean:141:      mkAdmissionReason syntheticDecl "trust.sorry" "error"
-lean/InfoGeometry/Meta/ThermodynamicGEORegulation.lean:37:  fitness : ℝ          -- between 0 and 1 (1 = compiles, 0 = sorry)
 lean/InfoGeometry/Meta/HonestyPolicy.lean:15:- if it does not exist yet, expose the gap explicitly as `sorry` or an
 lean/InfoGeometry/Meta/HonestyPolicy.lean:43:  /-- Explicit `sorry` is acceptable only as visible debt. -/
-lean/InfoGeometry/Meta/HonestyPolicy.lean:47:  /-- Banner text must not claim certified readback when `sorry` remains. -/
+lean/InfoGeometry/Meta/HonestyPolicy.lean:47:  /-- Banner text must not claim property readback when `sorry` remains. -/
 lean/InfoGeometry/Meta/HonestyPolicy.lean:70:      "If a Mathlib-rooted derivation chain is missing, expose the gap explicitly as sorry or an explicit zero-datum. Do not hide debt behind fake witnesses, empty shells, or misleading certification banners." }
-lean/InfoGeometry/Meta/ClosureAttribute.lean:11:anchored to the DAG, and free of `sorry` or `admit`.
-lean/InfoGeometry/Algebra/AssociativityObstruction.lean:31:* therefore a genuinely nonassociative algebra cannot admit such a
-lean/InfoGeometry/Projective/SplitOctonions/SplitOctonionsLegendre.lean:21:No wrappers. No `sorry`.
-lean/InfoGeometry/Projective/SplitOctonions/SplitOctonionsColorStabilizer.lean:14:No wrappers. No `sorry`.
-lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarInvariant.lean:21:No `sorry`.
-lean/InfoGeometry/Projective/SplitOctonions/BektasMatrix.lean:14:No wrappers. No `sorry`.
-lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarFiberTransport.lean:22:No `sorry`.
-lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarFiber.lean:19:No `sorry`.
-lean/InfoGeometry/Canonical/SO3RotationFenchelWitness.lean:14:No wrappers. No `sorry`.
-lean/InfoGeometry/External/Auto/RegularizationCayleyPipeline.lean:10:work behind a `sorry`.  The finite SymPy witness in
-lean/InfoGeometry/Projective/KleinQuadricPlucker.lean:16:No wrappers. No `sorry`.
-lean/InfoGeometry/Projective/KleinCrossRatioInvariant.lean:16:No wrappers. No `sorry`.
-lean/InfoGeometry/Algebra/NilpotentNonunit.lean:11:No wrappers. No `sorry`.
-lean/InfoGeometry/Projective/SplitOctonions.lean:16:No `sorry`, no `True` placeholders, no fake Freudenthal determinant.
-lean/InfoGeometry/External/Auto/BlackHoleHolography.lean:10:is proved without axioms or `sorry`.
+lean/InfoGeometry/Meta/OwnerTarget.lean:43:  A `sorry` in an owner-target proof is machine-visible closure debt.
+lean/InfoGeometry/Meta/ClosureAttribute.lean:11:anchored to the DAG, and free of `sorry` or `sorry`.
+lean/InfoGeometry/Meta/ThermodynamicGEORegulation.lean:37:  fitness : ℝ          -- between 0 and 1 (1 = compiles, 0 = sorry)
+lean/InfoGeometry/Arithmetic/PolyaHilbertDiracHodgeCantorBridge.lean:20:Plus the internal proof: `SouriauDiracHodgeCoupling` (659 lines, 32 thm, 0 sorry).
+lean/InfoGeometry/Tooling/VacuityCritic.lean:24:    field.value != "sorry" && field.value != "sorry"
+lean/InfoGeometry/AsanoRuelle/MobiusInversion.lean:9:No placeholders. No `sorry`.
+lean/InfoGeometry/Signal/QuaternionPhase.lean:14:No assumptions, axioms, or `sorry`/`sorry` scaffolding are used.
+lean/InfoGeometry/AsanoRuelle/AsanoRuelleCounterexample.lean:12:No wrappers. No `sorry`.
+lean/InfoGeometry/Algebra/AssociativityObstruction.lean:31:* therefore a genuinely nonassociative algebra cannot sorry such a
 lean/InfoGeometry/Algebra/CuntzRecursiveFermionSystem.lean:219:/-! ## Wedge Actions (sorry-free) -/
+lean/InfoGeometry/Topology/CliffordMobiusDeRhamMonodromy.lean:17:## Verified theorems (no sorry)
+lean/InfoGeometry/Algebra/ZeckendorfBijection.lean:15:NO `sorry`, NO `ax!om`, NO `sorry`. Every line is kernel-checked.
+lean/InfoGeometry/Arithmetic/ZetaDihedral.lean:15:No sockets. No certificates. No axioms. No `sorry`.
+lean/InfoGeometry/Arithmetic/SelfConcordantZetaBarrierProofs.lean:6:No sockets. No certificates. No axioms. No `sorry`.
+lean/InfoGeometry/Algebra/GoldenMeanShift.lean:22:NO `sorry`, NO `ax!om`, NO `sorry`. Every line is kernel-checked.
+lean/InfoGeometry/Algebra/NilpotentNonunit.lean:11:No wrappers. No `sorry`.
+lean/InfoGeometry/Algebra/NoFaithfulAssociativeModel.lean:17:No wrappers. No structures. No `sorry`.
+lean/InfoGeometry/Algebra/HypercomplexTriadMatrix.lean:18:No `sorry`.
+lean/InfoGeometry/Topology/MobiusNonParabolicRecovered.lean:15:/-- On the Riemann sphere, every two distinct points sorry a third distinct point. -/
 lean/InfoGeometry/Algebra/Zorn/ConcreteComposition.lean:15:No wrappers. No `sorry`.
-lean/InfoGeometry/Projective/KleinQuadric.lean:23:No `sorry`.
-lean/InfoGeometry/Projective/KleinQuadricIncidence.lean:16:No wrappers. No `sorry`.
-lean/InfoGeometry/Algebra/ZeckendorfBijection.lean:15:NO `sorry`, NO `axiom`, NO `admit`. Every line is kernel-checked.
 lean/InfoGeometry/Algebra/Zorn/ConcreteBarrier.lean:18:No `sorry`.
 lean/InfoGeometry/Algebra/Zorn/Concrete.lean:9:No wrappers. No abstract datum. No `sorry`.
 lean/InfoGeometry/Projective/Quadrics/AffineSlices.lean:23:No `sorry`.
-lean/InfoGeometry/Algebra/HypercomplexTriadMatrix.lean:18:No `sorry`.
+lean/InfoGeometry/Lint/NonTriviality.lean:27:* transitive ax!om audit using `Lean.collectAxioms`, with explicit `sorry` treated as honest closure debt when configured;
+lean/InfoGeometry/Lint/NonTriviality.lean:57:/-- Permit explicit `sorry` as honest, visible closure debt. -/
+lean/InfoGeometry/Lint/Pauli.lean:11:/-- Option to control the Pauli sorry linter. -/
+lean/InfoGeometry/Lint/Pauli.lean:100:                  logError m!"[Pauli/Axiom-Surface Seal] {declName} depends on nonstandard `admitAx`; use explicit `sorry` instead of a disguised placeholder."
+lean/InfoGeometry/Projective/KleinCrossRatioInvariant.lean:16:No wrappers. No `sorry`.
+lean/InfoGeometry/Projective/KleinQuadric.lean:23:No `sorry`.
+lean/InfoGeometry/Projective/KleinQuadricIncidence.lean:16:No wrappers. No `sorry`.
+lean/InfoGeometry/Projective/SplitOctonions.lean:16:No `sorry`, no `True` placeholders, no fake Freudenthal determinant.
+lean/InfoGeometry/Projective/KleinQuadricPlucker.lean:16:No wrappers. No `sorry`.
+lean/InfoGeometry/Projective/SplitOctonions/BektasMatrix.lean:14:No wrappers. No `sorry`.
+lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarFiberTransport.lean:22:No `sorry`.
+lean/InfoGeometry/Projective/SplitOctonions/SplitOctonionsLegendre.lean:21:No wrappers. No `sorry`.
+lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarFiber.lean:19:No `sorry`.
+lean/InfoGeometry/Projective/SplitOctonions/SplitOctonionsColorStabilizer.lean:14:No wrappers. No `sorry`.
+lean/InfoGeometry/Projective/SplitOctonions/ProjectivePolarInvariant.lean:21:No `sorry`.
 lean/InfoGeometry/Canonical/TomitaFisherMetric.lean:17:No wrappers. No `sorry`.
-lean/InfoGeometry/Algebra/GoldenMeanShift.lean:22:NO `sorry`, NO `axiom`, NO `admit`. Every line is kernel-checked.
+lean/InfoGeometry/Canonical/SO3RotationFenchelWitness.lean:14:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/LieOrbitInfinitesimal.lean:13:No wrappers. No `sorry`.
-lean/InfoGeometry/Algebra/NoFaithfulAssociativeModel.lean:17:No wrappers. No structures. No `sorry`.
 lean/InfoGeometry/Canonical/ModularTensorInduction.lean:15:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/LieOrbitSymmetryChart2x2.lean:9:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/CognitiveShadow.lean:89:      triggerTerms := #["sorry", "proof debt", "hole"]
+lean/InfoGeometry/Canonical/LieOrbitSymmetryChart2x2.lean:9:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/MajoranaKitaevSpinorBridge.lean:18:It does not depend on the sorry-equivalent modular spinor layer.
 lean/InfoGeometry/Canonical/SplitCliffordVacuumExpectation.lean:15:No placeholders. No `sorry`.
 lean/InfoGeometry/Canonical/LeeYangAsanoNativeCore.lean:17:No `sorry`.
-lean/InfoGeometry/Canonical/TomitaBregmanDuality.lean:21:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/AsanoRuelleTopologicalEndpoint.lean:20:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/SplitCliffordChiralProjection.lean:17:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/CartanSuperbracketClosure.lean:29:No `sorry`.
-lean/InfoGeometry/Canonical/ModularSL2R.lean:11:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/AsanoRuelleCounterexample.lean:15:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/CantorHaarDiracSea.lean:18:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/AlgebraicDerivations.lean:13:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/SplitCliffordFiniteCurrentObstruction.lean:21:No `sorry`.
 lean/InfoGeometry/Canonical/LeeYangAsanoMobiusNative.lean:25:No `sorry`.
-lean/InfoGeometry/Canonical/TopologicalGroupIsoExpLog.lean:13:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/DrazinAnomalousProjector.lean:16:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/GrandCanonicalSouriau.lean:18:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/TomitaBregmanDuality.lean:21:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/SplitCliffordChiralProjection.lean:17:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/AsanoRuellePoleExclusion.lean:9:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/AsanoRuelleTopologicalEndpoint.lean:20:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/CartanSuperbracketClosure.lean:29:No `sorry`.
+lean/InfoGeometry/Canonical/CantorHaarDiracSea.lean:18:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/ModularSL2R.lean:11:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/DrazinAnomalousProjector.lean:16:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/AsanoRuelleCounterexample.lean:15:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/SplitCliffordFiniteCurrentObstruction.lean:21:No `sorry`.
+lean/InfoGeometry/Canonical/TopologicalGroupIsoExpLog.lean:13:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/AlgebraicDerivations.lean:13:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/GrandCanonicalSouriau.lean:18:No wrappers. No `sorry`.
+lean/InfoGeometry/Canonical/DimensionAgnosticModularKLDivergence.lean:7:remaining fully constructive (no `sorry`).
 lean/InfoGeometry/Canonical/SplitCliffordJordanWignerTwoModeCurrent.lean:13:No `sorry`.
 lean/InfoGeometry/Canonical/SuperKahlerModularSpinors.lean:16:laws.  The former declarations in this file were unsupported `sorry`-based
-lean/InfoGeometry/Canonical/DimensionAgnosticModularKLDivergence.lean:7:remaining fully constructive (no `sorry`).
+lean/InfoGeometry/Canonical/RelativeDeterminantScatteringSocket.lean:10:unsupported claims are exposed as explicit `sorry` debt, not hidden as arbitrary
+lean/InfoGeometry/Canonical/BayesianConformalCompression.lean:16:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/ChiralKKTIsolation.lean:11:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/FenchelExpLogCore.lean:14:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/SplitCliffordTwoModeWick.lean:16:No placeholders. No `sorry`.
+lean/InfoGeometry/Canonical/FenchelExpLogCore.lean:14:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/DepthLogScaleInvariant.lean:21:No `sorry`.
 lean/InfoGeometry/Canonical/OperatorPenroseUnification.lean:112:/-- Junction 5: spinor-modular identification without sorry-equivalent layer. -/
+lean/InfoGeometry/Canonical/KreinCuntzKriegerPZeroBridge.lean:13:a positive-definite Hilbert metric on the P₀ physical sector without any `sorry`.
 lean/InfoGeometry/Canonical/GaugeGroups.lean:14:Dead declarations (`SU2N`, `block_embedding_*`) removed — sorry-equivalent
 lean/InfoGeometry/Canonical/GaugeGroups.lean:15:with zero external consumers. See `reports/dag/sorry-equivalence.md`.
-lean/InfoGeometry/Canonical/RelativeDeterminantScatteringSocket.lean:10:unsupported claims are exposed as explicit `sorry` debt, not hidden as arbitrary
+lean/InfoGeometry/Canonical/RindlerWeylDecomposition.lean:21:No placeholders. No `sorry`.
 lean/InfoGeometry/Canonical/GeneralizedOperatorChiral.lean:9:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/BayesianConformalCompression.lean:16:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/LieFenchelQuadratic.lean:15:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/BraidKMSG2Bridge.lean:18:former declarations in this file used `sorry` for precisely those missing
 lean/InfoGeometry/Canonical/LieOrbitAdjointInvariants.lean:13:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/KreinCuntzKriegerPZeroBridge.lean:13:a positive-definite Hilbert metric on the P₀ physical sector without any `sorry`.
-lean/InfoGeometry/Canonical/ModularLorentzBoost.lean:9:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/SouriauInfinitesimalInvariance.lean:8:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/RindlerWeylDecomposition.lean:21:No placeholders. No `sorry`.
+lean/InfoGeometry/Canonical/ModularLorentzBoost.lean:9:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/CliffordWaveletAnalyticBridge.lean:17:No `sorry`.
 lean/InfoGeometry/Canonical/QuaternionCoaxialOrbit.lean:10:No wrappers. No `sorry`.
 lean/InfoGeometry/Canonical/KreinMajoranaZeroModeBlock.lean:11:No wrappers. No `sorry`.
-lean/InfoGeometry/Canonical/SplitCliffordTwoModeTrace.lean:11:No placeholders. No `sorry`.
-lean/InfoGeometry/Canonical/PrimeLeeYangLargeDeviation.lean:30:`sorry` debt, not as arbitrary `Prop` fields.
 lean/InfoGeometry/Canonical/LeeYangAsanoDigest.lean:895:`Analysis.AsanoContractionNative` (no `sorry`).
+lean/InfoGeometry/Canonical/PrimeLeeYangLargeDeviation.lean:30:`sorry` debt, not as arbitrary `Prop` fields.
+lean/InfoGeometry/Canonical/SplitCliffordTwoModeTrace.lean:11:No placeholders. No `sorry`.
 ```
 
 - Total placeholder occurrences in canonical tree: 124
@@ -142,9 +142,8 @@ lean/InfoGeometry/Canonical/LeeYangAsanoDigest.lean:895:`Analysis.AsanoContracti
 ## Axiom declarations
 
 ```text
-lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axiom.
 ```
-- Total explicit axiom declarations: 1
+- Total explicit axiom declarations: 0
 
 ## Namespace audit
 
@@ -152,8 +151,8 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 [audit] Project namespace: InfoGeometry
 [audit] Scanning root:       ./lean/InfoGeometry
 
-[audit] Files with namespace InfoGeometry*: 6049
-[audit] Files missing namespace InfoGeometry*: 1174
+[audit] Files with namespace InfoGeometry*: 6162
+[audit] Files missing namespace InfoGeometry*: 1212
 
 === Missing namespace InfoGeometry ===
 ./lean/InfoGeometry/Albert/AlbertCubicDatum.lean
@@ -258,6 +257,7 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Canonical/BerryKeatingXPCantorDiracSocket.lean
 ./lean/InfoGeometry/Canonical/BiquaternionKANnilpotent.lean
 ./lean/InfoGeometry/Canonical/BiquaternionLaplaceTripotent.lean
+./lean/InfoGeometry/Canonical/BiquaternionLorentzPolarBridge.lean
 ./lean/InfoGeometry/Canonical/BiquaternionNegativeRootsLog.lean
 ./lean/InfoGeometry/Canonical/BisognanoWichmannUnruhAQFT.lean
 ./lean/InfoGeometry/Canonical/BMSSymmetrySoftHairBridge.lean
@@ -288,6 +288,7 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Canonical/CanonicalZornUnifiedClosure.lean
 ./lean/InfoGeometry/Canonical/CantorCoadjointHamiltonianFlowBridge.lean
 ./lean/InfoGeometry/Canonical/CantorTwoTreeColimitBridge.lean
+./lean/InfoGeometry/Canonical/CausalDiracMatrixBasisChange.lean
 ./lean/InfoGeometry/Canonical/CausalFunctor.lean
 ./lean/InfoGeometry/Canonical/CausalVortexCooperPairing.lean
 ./lean/InfoGeometry/Canonical/CausalVortexPauliEigenspaces.lean
@@ -300,9 +301,14 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Canonical/ChernSimonsKnotInvariant.lean
 ./lean/InfoGeometry/Canonical/ChiralAnomalyCantor.lean
 ./lean/InfoGeometry/Canonical/ChiralCuntzSuperchargeBridge.lean
+./lean/InfoGeometry/Canonical/ChiralParitySuperalgebra.lean
 ./lean/InfoGeometry/Canonical/CKWEntanglementMonogamyBridge.lean
+./lean/InfoGeometry/Canonical/Cl11DiracOperatorConnection.lean
+./lean/InfoGeometry/Canonical/Cl11SheetDiracMatrices.lean
 ./lean/InfoGeometry/Canonical/Cl11TrifactorSeed.lean
+./lean/InfoGeometry/Canonical/Cl11WittBasis.lean
 ./lean/InfoGeometry/Canonical/Cl44BridgeCandidate.lean
+./lean/InfoGeometry/Canonical/Cl55OperatorAlgebraHom.lean
 ./lean/InfoGeometry/Canonical/CliffordCantorModeHierarchy.lean
 ./lean/InfoGeometry/Canonical/CliffordInfiniteLimit.lean
 ./lean/InfoGeometry/Canonical/CliffordInfiniteSplitAlgebra.lean
@@ -441,6 +447,14 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Canonical/HaagKastlerReehSchliederAQFT.lean
 ./lean/InfoGeometry/Canonical/HaPPYPerfectTensorHolography.lean
 ./lean/InfoGeometry/Canonical/HessianGeometry.lean
+./lean/InfoGeometry/Canonical/HestenesBivectorBracket.lean
+./lean/InfoGeometry/Canonical/HestenesBivectorCarrierTest10.lean
+./lean/InfoGeometry/Canonical/HestenesBivectorCarrierTest3.lean
+./lean/InfoGeometry/Canonical/HestenesBivectorCarrierTest4.lean
+./lean/InfoGeometry/Canonical/HestenesBivectorCarrierTest5.lean
+./lean/InfoGeometry/Canonical/HestenesBivectorCarrierTest6.lean
+./lean/InfoGeometry/Canonical/HestenesBivectorCarrierTest7.lean
+./lean/InfoGeometry/Canonical/HestenesBivectorCarrierTest8.lean
 ./lean/InfoGeometry/Canonical/HestenesKreinKleinWitnessPacket.lean
 ./lean/InfoGeometry/Canonical/HilbertSchmidtMatrixPairing.lean
 ./lean/InfoGeometry/Canonical/HolevoQuantityChannelCapacityBridge.lean
@@ -498,6 +512,7 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Canonical/ModularEvolution.lean
 ./lean/InfoGeometry/Canonical/ModularSpectralAsymmetryBridge.lean
 ./lean/InfoGeometry/Canonical/ModularTomitaGeometry.lean
+./lean/InfoGeometry/Canonical/ModularZ2CubeGrading.lean
 ./lean/InfoGeometry/Canonical/Monotonicity.lean
 ./lean/InfoGeometry/Canonical/MontonenOliveSDualityDiracQuantization.lean
 ./lean/InfoGeometry/Canonical/MooreReadPfaffianFractionalHall.lean
@@ -515,7 +530,10 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Canonical/NormalizedTraceCyclicity.lean
 ./lean/InfoGeometry/Canonical/NormalizedTraceInvariance.lean
 ./lean/InfoGeometry/Canonical/NormalizedTracePositivity.lean
+./lean/InfoGeometry/Canonical/OperatorGradedAdjointLift.lean
 ./lean/InfoGeometry/Canonical/OperatorialFierzBridge.lean
+./lean/InfoGeometry/Canonical/OperatorPin55Action.lean
+./lean/InfoGeometry/Canonical/OperatorTKKAnomalyAnnihilation.lean
 ./lean/InfoGeometry/Canonical/OTOCScramblingChaosBridge.lean
 ./lean/InfoGeometry/Canonical/PeirceDeWittIdealModularBridge.lean
 ./lean/InfoGeometry/Canonical/_PeirceScratch.lean
@@ -589,7 +607,23 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Canonical/SouriauRelativeEntropySublevelDiagram.lean
 ./lean/InfoGeometry/Canonical/SouriauRelativeEntropySublevelTopology.lean
 ./lean/InfoGeometry/Canonical/SouriauWassersteinGradientFlow.lean
+./lean/InfoGeometry/Canonical/SplitOctonionAlternativeLaws.lean
+./lean/InfoGeometry/Canonical/SplitOctonionConjugation.lean
 ./lean/InfoGeometry/Canonical/SplitOctonionCuntzMasterBridge.lean
+./lean/InfoGeometry/Canonical/SplitOctonionDoubledLoxodromic.lean
+./lean/InfoGeometry/Canonical/SplitOctonionDoubledLoxodromicSpectral.lean
+./lean/InfoGeometry/Canonical/SplitOctonionExpLog.lean
+./lean/InfoGeometry/Canonical/SplitOctonionHyperbolicFunctionalCalculus.lean
+./lean/InfoGeometry/Canonical/SplitOctonionHyperbolicPolarStructure.lean
+./lean/InfoGeometry/Canonical/SplitOctonionHyperbolicSpectralProjectors.lean
+./lean/InfoGeometry/Canonical/SplitOctonionLoxodromicCircularBridge.lean
+./lean/InfoGeometry/Canonical/SplitOctonionQuaternionChart.lean
+./lean/InfoGeometry/Canonical/SplitOctonionQuaternionPolar.lean
+./lean/InfoGeometry/Canonical/SplitOctonionRegularEllipticOperators.lean
+./lean/InfoGeometry/Canonical/SplitOctonionRegularNormOperators.lean
+./lean/InfoGeometry/Canonical/SplitOctonionRegularOperators.lean
+./lean/InfoGeometry/Canonical/SplitOctonionRegularParabolicOperators.lean
+./lean/InfoGeometry/Canonical/SplitOctonionRegularProjectors.lean
 ./lean/InfoGeometry/Canonical/SplitOctonionSymplecticDeterminantMasterBridge.lean
 ./lean/InfoGeometry/Canonical/SplitQuaternionCayleyZornBridge.lean
 ./lean/InfoGeometry/Canonical/SplitQuaternionConcrete.lean
@@ -617,6 +651,8 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Canonical/TopologicalInsulatorZ2Bridge.lean
 ./lean/InfoGeometry/Canonical/TopologicalModularFormsEllipticGenera.lean
 ./lean/InfoGeometry/Canonical/ToricCodeTwistDefectIsingBridge.lean
+./lean/InfoGeometry/Canonical/UHFColimitSuperchargeBridge.lean
+./lean/InfoGeometry/Canonical/UHFColimitTKKAnomalyBridge.lean
 ./lean/InfoGeometry/Canonical/UHFDirectLimitCARAlgebra.lean
 ./lean/InfoGeometry/Canonical/UnitTraceNormalization.lean
 ./lean/InfoGeometry/Canonical/VerlindeFormulaFibonacciBridge.lean
@@ -758,7 +794,6 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/External/Auto/CubicJordanPeirceDecomposition.lean
 ./lean/InfoGeometry/External/Auto/CuntzAlgebra.lean
 ./lean/InfoGeometry/External/Auto/CuntzBraidCantor.lean
-./lean/InfoGeometry/External/Auto/CuntzEndomorphism.lean
 ./lean/InfoGeometry/External/Auto/CuntzInverseLimit.lean
 ./lean/InfoGeometry/External/Auto/CuntzK0TorsionRelation.lean
 ./lean/InfoGeometry/External/Auto/CuntzKriegerFibonacciK.lean
@@ -1163,6 +1198,7 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/GromovProbability.lean
 ./lean/InfoGeometry/GromovWittenErlangen/LieOrbitCurveWitness.lean
 ./lean/InfoGeometry/GW/All.lean
+./lean/InfoGeometry/Hardware/Benchmark.lean
 ./lean/InfoGeometry/Hestenes/SpacetimeAlgebra.lean
 ./lean/InfoGeometry/HilbertTensorProduct.lean
 ./lean/InfoGeometry/HilbertTensorProduct/Phase2_HS2Ell2.lean
@@ -1176,7 +1212,6 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/JordanDecomposition/Scratch.lean
 ./lean/InfoGeometry/Kaehler/FubiniStudyAsymptotics.lean
 ./lean/InfoGeometry/Kaehler/PoincareMetric.lean
-./lean/InfoGeometry/KreinCarrierInstances_tmp.lean
 ./lean/InfoGeometry/Krein/HestenesJonesGWVolumeBridge.lean
 ./lean/InfoGeometry/Lie/All.lean
 ./lean/InfoGeometry/Measure/ProjectiveState.lean
@@ -1304,6 +1339,8 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Spectral/Colimit/SeqColim.lean
 ./lean/InfoGeometry/Spectral/RealProjective.lean
 ./lean/InfoGeometry/Tessellation/All.lean
+./lean/InfoGeometry/test_exp.lean
+./lean/InfoGeometry/test_j_g_sq.lean
 ./lean/InfoGeometry/Thermo/SandboxComplexThermodynamicLiftTest.lean
 ./lean/InfoGeometry/Thermo/SandboxJacobianBregmanBridgeTest.lean
 ./lean/InfoGeometry/TKK/TKKTest.lean
@@ -1391,6 +1428,7 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Canonical/AubertPlymen.lean :: 32:namespace AubertPlymen
 ./lean/InfoGeometry/Canonical/BiquaternionKANnilpotent.lean :: 12:namespace BiquaternionKANnilpotent
 ./lean/InfoGeometry/Canonical/BiquaternionLaplaceTripotent.lean :: 13:namespace BiquaternionLaplaceTripotent
+./lean/InfoGeometry/Canonical/BiquaternionLorentzPolarBridge.lean :: 10:namespace SplitOctonion
 ./lean/InfoGeometry/Canonical/BiquaternionNegativeRootsLog.lean :: 16:namespace BiquaternionNegativeRootsLog
 ./lean/InfoGeometry/Canonical/BisognanoWichmannUnruhAQFT.lean :: 17:namespace BisognanoWichmannUnruh
 ./lean/InfoGeometry/Canonical/BMSSymmetrySoftHairBridge.lean :: 16:namespace BMSSymmetry
@@ -1415,6 +1453,7 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Canonical/CanonicalZornSpinRelatedFiber.lean :: 19:namespace CanonicalZornSpinRelatedFiber
 ./lean/InfoGeometry/Canonical/CanonicalZornUnifiedClosure.lean :: 19:namespace CanonicalZornUnifiedClosure
 ./lean/InfoGeometry/Canonical/CantorTwoTreeColimitBridge.lean :: 19:namespace CantorTwoTree
+./lean/InfoGeometry/Canonical/CausalDiracMatrixBasisChange.lean :: 4:namespace SplitOctonion
 ./lean/InfoGeometry/Canonical/CausalFunctor.lean :: 69:namespace EinsteinCausality
 ./lean/InfoGeometry/Canonical/CausalVortexCooperPairing.lean :: 32:namespace CausalVortex
 ./lean/InfoGeometry/Canonical/CausalVortexPauliEigenspaces.lean :: 16:namespace CausalVortex
@@ -1425,7 +1464,12 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Canonical/ChernSimonsKnotInvariant.lean :: 16:namespace ChernSimonsKnot
 ./lean/InfoGeometry/Canonical/ChiralAnomalyCantor.lean :: 17:namespace KTheoryProjection
 ./lean/InfoGeometry/Canonical/ChiralCuntzSuperchargeBridge.lean :: 3:namespace ChiralCuntzSuperchargeBridge
+./lean/InfoGeometry/Canonical/ChiralParitySuperalgebra.lean :: 19:namespace NoncommutativeGeometry
 ./lean/InfoGeometry/Canonical/CKWEntanglementMonogamyBridge.lean :: 12:namespace CKWMonogamy
+./lean/InfoGeometry/Canonical/Cl11DiracOperatorConnection.lean :: 6:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/Cl11SheetDiracMatrices.lean :: 5:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/Cl11WittBasis.lean :: 4:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/Cl55OperatorAlgebraHom.lean :: 16:namespace NoncommutativeGeometry
 ./lean/InfoGeometry/Canonical/CliffordCantorModeHierarchy.lean :: 14:namespace CliffordCantorModeHierarchy
 ./lean/InfoGeometry/Canonical/CofinalTailModularFlowTopologicalBridge.lean :: 15:namespace CStarStateColimit.Native.CofinalTailModularFlowTopologicalBridge
 ./lean/InfoGeometry/Canonical/CofinalTailTomitaGraphTopologicalBridge.lean :: 15:namespace CStarStateColimit.Native.CofinalTailTomitaGraphTopologicalBridge
@@ -1569,6 +1613,7 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Canonical/MERATensorNetworkHolographyBridge.lean :: 14:namespace MERAHolography
 ./lean/InfoGeometry/Canonical/MetriplecticDissipativeSystem.lean :: 16:namespace MetriplecticSystem
 ./lean/InfoGeometry/Canonical/ModularSpectralAsymmetryBridge.lean :: 16:namespace ModularSpectral
+./lean/InfoGeometry/Canonical/ModularZ2CubeGrading.lean :: 18:namespace ModularZ2CubeGrading
 ./lean/InfoGeometry/Canonical/MontonenOliveSDualityDiracQuantization.lean :: 17:namespace MontonenOliveSDualityDiracQuantization
 ./lean/InfoGeometry/Canonical/MooreReadPfaffianFractionalHall.lean :: 17:namespace MooreReadPfaffianFractionalHall
 ./lean/InfoGeometry/Canonical/MultiChainUHFEmbedding.lean :: 10:namespace MultiChainUHF
@@ -1582,6 +1627,9 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Canonical/NormalizedTraceCyclicity.lean :: 7:namespace NormalizedTraceCyclicity
 ./lean/InfoGeometry/Canonical/NormalizedTraceInvariance.lean :: 10:namespace MultiChainNormalizedTrace
 ./lean/InfoGeometry/Canonical/NormalizedTracePositivity.lean :: 11:namespace NormalizedTracePositivity
+./lean/InfoGeometry/Canonical/OperatorGradedAdjointLift.lean :: 29:namespace NoncommutativeGeometry
+./lean/InfoGeometry/Canonical/OperatorPin55Action.lean :: 14:namespace NoncommutativeGeometry
+./lean/InfoGeometry/Canonical/OperatorTKKAnomalyAnnihilation.lean :: 14:namespace NoncommutativeGeometry
 ./lean/InfoGeometry/Canonical/OTOCScramblingChaosBridge.lean :: 16:namespace OTOCScrambling
 ./lean/InfoGeometry/Canonical/PeirceDeWittIdealModularBridge.lean :: 17:namespace PeirceDeWittIdeal
 ./lean/InfoGeometry/Canonical/_PeirceScratch.lean :: 2:namespace Test
@@ -1639,6 +1687,22 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Canonical/SouriauRelativeEntropySublevelDiagram.lean :: 3:namespace SouriauRelativeEntropySublevelDiagram
 ./lean/InfoGeometry/Canonical/SouriauRelativeEntropySublevelTopology.lean :: 3:namespace SouriauRelativeEntropySublevel
 ./lean/InfoGeometry/Canonical/SouriauWassersteinGradientFlow.lean :: 11:namespace SouriauWasserstein
+./lean/InfoGeometry/Canonical/SplitOctonionAlternativeLaws.lean :: 6:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/SplitOctonionConjugation.lean :: 6:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/SplitOctonionDoubledLoxodromic.lean :: 7:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/SplitOctonionDoubledLoxodromicSpectral.lean :: 14:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/SplitOctonionExpLog.lean :: 7:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/SplitOctonionHyperbolicFunctionalCalculus.lean :: 16:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/SplitOctonionHyperbolicPolarStructure.lean :: 10:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/SplitOctonionHyperbolicSpectralProjectors.lean :: 10:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/SplitOctonionLoxodromicCircularBridge.lean :: 10:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/SplitOctonionQuaternionChart.lean :: 12:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/SplitOctonionQuaternionPolar.lean :: 9:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/SplitOctonionRegularEllipticOperators.lean :: 7:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/SplitOctonionRegularNormOperators.lean :: 6:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/SplitOctonionRegularOperators.lean :: 6:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/SplitOctonionRegularParabolicOperators.lean :: 6:namespace SplitOctonion
+./lean/InfoGeometry/Canonical/SplitOctonionRegularProjectors.lean :: 7:namespace SplitOctonion
 ./lean/InfoGeometry/Canonical/SplitQuaternionCayleyZornBridge.lean :: 18:namespace SplitQuaternionZorn
 ./lean/InfoGeometry/Canonical/StarAlgEquivPullback.lean :: 15:namespace StarAlgEquivPullback
 ./lean/InfoGeometry/Canonical/StarAlgEquivTransport.lean :: 11:namespace StarAlgEquivTransport
@@ -1655,6 +1719,8 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Canonical/TopologicalInsulatorZ2Bridge.lean :: 12:namespace TopologicalInsulator
 ./lean/InfoGeometry/Canonical/TopologicalModularFormsEllipticGenera.lean :: 17:namespace TopologicalModularFormsEllipticGenera
 ./lean/InfoGeometry/Canonical/ToricCodeTwistDefectIsingBridge.lean :: 17:namespace ToricCodeTwistDefectIsingBridge
+./lean/InfoGeometry/Canonical/UHFColimitSuperchargeBridge.lean :: 29:namespace NoncommutativeGeometry
+./lean/InfoGeometry/Canonical/UHFColimitTKKAnomalyBridge.lean :: 31:namespace NoncommutativeGeometry
 ./lean/InfoGeometry/Canonical/UHFDirectLimitCARAlgebra.lean :: 16:namespace UHFDirectLimitCAR
 ./lean/InfoGeometry/Canonical/UnitTraceNormalization.lean :: 7:namespace UnitTraceNormalization
 ./lean/InfoGeometry/Canonical/VerlindeFormulaFibonacciBridge.lean :: 17:namespace VerlindeFormulaFibonacciBridge
@@ -1718,6 +1784,7 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/External/Auto/CasimirIsospinHamiltonian.lean :: 5:namespace CasimirIsospinHamiltonian
 ./lean/InfoGeometry/External/Auto/CausalPosetEntropy.lean :: 15:namespace CausalPoset
 ./lean/InfoGeometry/External/Auto/CausalStructure.lean :: 24:namespace GloballyHyperbolic
+./lean/InfoGeometry/External/Auto/CayleyHilbertPolyaBraid.lean :: 14:namespace LegacyCayleyHilbertPolyaBraid
 ./lean/InfoGeometry/External/Auto/CayleySchreierGauge.lean :: 12:namespace CayleySchreierGauge
 ./lean/InfoGeometry/External/Auto/ChemicalPotentialMetricBridge.lean :: 12:namespace ChemicalPotentialMetricBridge
 ./lean/InfoGeometry/External/Auto/ChiralAffineBogoliubovWeld.lean :: 24:namespace ChiralAffineBogoliubovWeld
@@ -1757,6 +1824,7 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/External/Auto/ExceptionalNonorientableTopology.lean :: 26:namespace ExceptionalNonorientableTopology
 ./lean/InfoGeometry/External/Auto/ExceptionalTopologicalBandStructures.lean :: 20:namespace ExceptionalTopologicalBandStructures
 ./lean/InfoGeometry/External/Auto/FarneaGe64IsospinMixing.lean :: 12:namespace FarneaGe64IsospinMixing
+./lean/InfoGeometry/External/Auto/FibAnyonThm7_hexagon.lean :: 6:namespace FibAnyonThm7Hexagon
 ./lean/InfoGeometry/External/Auto/FiniteArithmeticUHFTrace.lean :: 20:namespace FiniteArithmeticUHFTrace
 ./lean/InfoGeometry/External/Auto/FiniteDirichletOccupation.lean :: 23:namespace FiniteDirichletOccupation
 ./lean/InfoGeometry/External/Auto/FiniteGNSConstruction.lean :: 5:namespace FiniteGNSConstruction
@@ -1785,10 +1853,11 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/External/Auto/GohbergKreinIndex.lean :: 13:namespace GohbergKreinIndex
 ./lean/InfoGeometry/External/Auto/GoldenCCR.lean :: 16:namespace GoldenCCR
 ./lean/InfoGeometry/External/Auto/GoldenSpectralTriple.lean :: 13:namespace GoldenSpectralTriple
+./lean/InfoGeometry/External/Auto/goutev_principle.lean :: 4:namespace GoutevPrinciple
 ./lean/InfoGeometry/External/Auto/GoutevTonevPrinciple.lean :: 20:namespace GoutevTonevPrinciple
 ./lean/InfoGeometry/External/Auto/GrandHolographicTheorem.lean :: 19:namespace GrandHolographicTheorem
 ./lean/InfoGeometry/External/Auto/GravitySoldering.lean :: 12:namespace GravitySoldering
-./lean/InfoGeometry/External/Auto/GT_FromText.lean :: 15:namespace GT.Extracted
+./lean/InfoGeometry/External/Auto/GT_FromText.lean :: 17:namespace GT.Extracted
 ./lean/InfoGeometry/External/Auto/GuptaAdaptVQERandomHamiltonians.lean :: 5:namespace GuptaAdaptVQERandomHamiltonians
 ./lean/InfoGeometry/External/Auto/HeavyIsospinMixingSystematics.lean :: 7:namespace HeavyIsospinMixingSystematics
 ./lean/InfoGeometry/External/Auto/HestenesKreinColimitBridge.lean :: 22:namespace HestenesKreinColimitBridge
@@ -1802,15 +1871,18 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/External/Auto/IsospinSymmetryBreaking.lean :: 4:namespace IsospinSymmetryBreaking
 ./lean/InfoGeometry/External/Auto/JaynesLDDPGNSColimit.lean :: 18:namespace JaynesLDDPGNSColimit
 ./lean/InfoGeometry/External/Auto/JaynesLeanColimitBridge.lean :: 27:namespace JaynesLeanColimitBridge
+./lean/InfoGeometry/External/Auto/J_duality_chain.lean :: 6:namespace LegacyJDualityChain
 ./lean/InfoGeometry/External/Auto/JordanBlock2.lean :: 5:namespace JordanBlock2
 ./lean/InfoGeometry/External/Auto/KanekoA67HighSpinMED.lean :: 5:namespace KanekoA67HighSpinMED
 ./lean/InfoGeometry/External/Auto/KaneMeleOrbifold.lean :: 4:namespace KaneMeleOrbifold
 ./lean/InfoGeometry/External/Auto/KANFourierMellinDirac.lean :: 20:namespace KANFourierMellinDirac
 ./lean/InfoGeometry/External/Auto/KasparovKreinDoubling.lean :: 12:namespace KasparovKrein
 ./lean/InfoGeometry/External/Auto/KleinBottleCobordism.lean :: 21:namespace UV_Cutoff
+./lean/InfoGeometry/External/Auto/KleinBottle.lean :: 5:namespace KleinBottle
 ./lean/InfoGeometry/External/Auto/KleinGeometrySupergraded.lean :: 12:namespace KleinGeometrySupergraded
 ./lean/InfoGeometry/External/Auto/KleinGrapheneTunneling.lean :: 22:namespace KleinGrapheneTunneling
 ./lean/InfoGeometry/External/Auto/KoroteevZeitlin3DMirror.lean :: 13:namespace KoroteevZeitlin
+./lean/InfoGeometry/External/Auto/krein_souriau.lean :: 4:namespace KreinSouriau
 ./lean/InfoGeometry/External/Auto/LanglandsGromovWitten.lean :: 6:namespace GeometricLanglandsLimit
 ./lean/InfoGeometry/External/Auto/LECM2022ElectroweakRadiiISB.lean :: 9:namespace LECM2022ElectroweakRadiiISB
 ./lean/InfoGeometry/External/Auto/LegendreFenchelSpectralGap.lean :: 18:namespace LegendreFenchelSpectralGap
@@ -1818,11 +1890,12 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/External/Auto/LightConeTripotentMatrixBridge.lean :: 21:namespace LightConeTripotentMatrixBridge
 ./lean/InfoGeometry/External/Auto/LiuCollinsAffineInvariance.lean :: 12:namespace LiuCollins
 ./lean/InfoGeometry/External/Auto/LlewellynZr79MED.lean :: 5:namespace LlewellynZr79MED
+./lean/InfoGeometry/External/Auto/LogDeterminantHomomorphism.lean :: 3:namespace LogDeterminantHomomorphism
 ./lean/InfoGeometry/External/Auto/LogDetSuperKahlerBarrier.lean :: 17:namespace LogDetSuperKahlerBarrier
 ./lean/InfoGeometry/External/Auto/MajoranaPrimonSpectralBridge.lean :: 18:namespace MajoranaPrimonSpectralBridge
 ./lean/InfoGeometry/External/Auto/master_equation.lean :: 64:namespace ConnesFlow
 ./lean/InfoGeometry/External/Automath/SpectralSquashCayleyDKT.lean :: 17:namespace SpectralSquashCayleyDKT
-./lean/InfoGeometry/External/Auto/MaxCalFeynmanGaussBonnet.lean :: 7:namespace KreinSpace
+./lean/InfoGeometry/External/Auto/MaxCalFeynmanGaussBonnet.lean :: 4:namespace LegacyMaxCalFeynmanGaussBonnet
 ./lean/InfoGeometry/External/Auto/MellinWaveletScaleShiftDigest.lean :: 28:namespace MellinWaveletScaleShiftDigest
 ./lean/InfoGeometry/External/Auto/MetriplecticCausality.lean :: 13:namespace MetriplecticCausality
 ./lean/InfoGeometry/External/Auto/MinkowskiBiquaternion.lean :: 10:namespace MinkowskiBiquaternion
@@ -1836,6 +1909,7 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/External/Auto/ModularHolographicMetric.lean :: 18:namespace ModularHolographicMetric
 ./lean/InfoGeometry/External/Auto/ModularItakuraBiquaternion.lean :: 21:namespace ModularItakuraBiquaternion
 ./lean/InfoGeometry/External/Auto/ModularKreinReflectionColimit.lean :: 17:namespace ModularKreinReflectionColimit
+./lean/InfoGeometry/External/Auto/ModularMonodromy.lean :: 21:namespace ModularMonodromy
 ./lean/InfoGeometry/External/Auto/MorandiWallpaperCohomology.lean :: 26:namespace MorandiWallpaperCohomology
 ./lean/InfoGeometry/External/Auto/NoncommutativeTilingAlgebra.lean :: 16:namespace NoncommutativeTilingAlgebra
 ./lean/InfoGeometry/External/Auto/NonInvertiblePenroseCategoricalSymmetry.lean :: 18:namespace NonInvertiblePenroseCategoricalSymmetry
@@ -1862,7 +1936,7 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/External/Auto/PaperwallHolographicSUSY.lean :: 18:namespace PaperwallHolographicSUSY
 ./lean/InfoGeometry/External/Auto/PaperwallSUSY.lean :: 12:namespace PaperwallSUSY
 ./lean/InfoGeometry/External/Auto/PauliZornTrifactor.lean :: 21:namespace PauliZornTrifactor
-./lean/InfoGeometry/External/Auto/PenroseArithmetic.lean :: 38:namespace CutAndProject5D
+./lean/InfoGeometry/External/Auto/PenroseArithmetic.lean :: 20:namespace PenroseArithmetic
 ./lean/InfoGeometry/External/Auto/PenroseCuntzKriegerHolography.lean :: 5:namespace PenroseCuntzKriegerHolography
 ./lean/InfoGeometry/External/Auto/PenroseKMSSpectralDimension.lean :: 17:namespace PenroseKMSSpectralDimension
 ./lean/InfoGeometry/External/Auto/PenroseSpinIncidenceTessellation.lean :: 14:namespace PenroseSpinIncidenceTessellation
@@ -1902,7 +1976,9 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/External/Auto/RescaledPhaseVolumeCanonical.lean :: 17:namespace RescaledPhaseVolumeCanonical
 ./lean/InfoGeometry/External/Auto/RGFixedPoint.lean :: 13:namespace RGFixedPoint
 ./lean/InfoGeometry/External/Auto/RiemannHypothesisIJIRT172568.lean :: 332:namespace RiemannHypothesisPaper
+./lean/InfoGeometry/External/Auto/RiemannHypothesis.lean :: 18:namespace RiemannHypothesis
 ./lean/InfoGeometry/External/Auto/RiemannKleinDuality.lean :: 14:namespace RiemannKleinDuality
+./lean/InfoGeometry/External/Auto/rigorous_proofs.lean :: 7:namespace LegacyRigorousProofs
 ./lean/InfoGeometry/External/Auto/RP3Octupole.lean :: 12:namespace RP3Topology
 ./lean/InfoGeometry/External/Auto/S3ColorSpinorDecomposition.lean :: 14:namespace S3ColorSpinorDecomposition
 ./lean/InfoGeometry/External/Auto/SarkarTwoLevelIsospinMixing.lean :: 5:namespace SarkarTwoLevelIsospinMixing
@@ -1922,12 +1998,14 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/External/Auto/SarsWeylColimit.lean :: 5:namespace SarsWeylColimit
 ./lean/InfoGeometry/External/Auto/SheikhIsospinSymmetryBreaking.lean :: 5:namespace SheikhIsospinSymmetryBreaking
 ./lean/InfoGeometry/External/Auto/SmithHatIsingDuality.lean :: 16:namespace SmithHatIsingDuality
+./lean/InfoGeometry/External/Auto/SolderingForms.lean :: 5:namespace SolderingForms
 ./lean/InfoGeometry/External/Auto/SolderingRoundTrip.lean :: 14:namespace Vec4
 ./lean/InfoGeometry/External/Auto/SolovievQPNMChiralCuntz.lean :: 33:namespace SolovievQPNMChiralCuntz
 ./lean/InfoGeometry/External/Auto/SouriauBiquaternionGaussian.lean :: 14:namespace SouriauBiquaternionGaussian
 ./lean/InfoGeometry/External/Auto/SouriauCasimirEntropyLeaves.lean :: 5:namespace SouriauCasimirEntropyLeaves
-./lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean :: 22:namespace BetaVector
+./lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean :: 3:namespace SouriauComplexTemperature
 ./lean/InfoGeometry/External/Auto/SouriauGaussian.lean :: 12:namespace SouriauGaussian
+./lean/InfoGeometry/External/Auto/SouriauHestenesKrein.lean :: 5:namespace SouriauHestenesKrein
 ./lean/InfoGeometry/External/Auto/SouriauHestenesMobiusPole.lean :: 22:namespace SouriauHestenesMobiusPole
 ./lean/InfoGeometry/External/Auto/SouriauOperatorThermodynamics.lean :: 20:namespace SouriauOperatorThermodynamics
 ./lean/InfoGeometry/External/Auto/SouriauThermoColimit.lean :: 25:namespace SouriauThermoColimit
@@ -1942,9 +2020,16 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/External/Auto/SUNLoopBraidCuntzBoundary.lean :: 22:namespace SUNLoopBraidCuntzBoundary
 ./lean/InfoGeometry/External/Auto/SuperBerezinianKlein.lean :: 18:namespace SuperBerezinianKlein
 ./lean/InfoGeometry/External/Auto/SuperchargeSquare.lean :: 16:namespace SuperchargeSquare
+./lean/InfoGeometry/External/Auto/SuperPartitionBerezinian.lean :: 3:namespace SuperPartitionBerezinian
 ./lean/InfoGeometry/External/Auto/SymbolicFockLane.lean :: 25:namespace SymbolicFockLane
 ./lean/InfoGeometry/External/Auto/SymbolicLaneUHFBridge.lean :: 19:namespace SymbolicLaneUHFBridge
 ./lean/InfoGeometry/External/Auto/SymmetryReviewISB.lean :: 5:namespace SymmetryReviewISB
+./lean/InfoGeometry/External/Auto/temp.lean :: 3:namespace ExternalTemp
+./lean/InfoGeometry/External/Auto/test4.lean :: 5:namespace ExternalTest4
+./lean/InfoGeometry/External/Auto/TestAF.lean :: 5:namespace ExternalTestAF
+./lean/InfoGeometry/External/Auto/TestBraid.lean :: 6:namespace TestBraid
+./lean/InfoGeometry/External/Auto/TestTL.lean :: 5:namespace TestTL
+./lean/InfoGeometry/External/Auto/test_wrapper.lean :: 6:namespace TestWrapper
 ./lean/InfoGeometry/External/Auto/ThesisMaster.lean :: 22:namespace ThesisMaster
 ./lean/InfoGeometry/External/Auto/ThreeDMirrorSymmetry.lean :: 8:namespace ThreeDMirrorSymmetry
 ./lean/InfoGeometry/External/Auto/TitsBruhatBrillouinKlein.lean :: 26:namespace TitsBruhatBrillouinKlein
@@ -1952,11 +2037,13 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/External/Auto/TKKCompileData.lean :: 16:namespace TKKCompileData
 ./lean/InfoGeometry/External/Auto/TKKQQBridge.lean :: 6:namespace TKKQQBridge
 ./lean/InfoGeometry/External/Auto/TKK_StandardModel.lean :: 13:namespace TKK_StandardModel
-./lean/InfoGeometry/External/Auto/TomitaTakesakiRelativeEntropy.lean :: 20:namespace ProjectiveState
+./lean/InfoGeometry/External/Auto/TomitaTakesakiRelativeEntropy.lean :: 3:namespace TomitaTakesakiRelativeEntropy
 ./lean/InfoGeometry/External/Auto/TPUAQLattice.lean :: 3:namespace AutonomousHypothesisEngine
+./lean/InfoGeometry/External/Auto/TransformsAndScale.lean :: 20:namespace TransformsAndScale
 ./lean/InfoGeometry/External/Auto/TrifactorGeometry.lean :: 20:namespace TrifactorGeometry
 ./lean/InfoGeometry/External/Auto/TripotentCliffordColimit.lean :: 22:namespace TripotentCliffordColimit
 ./lean/InfoGeometry/External/Auto/TripotentPenroseHolography.lean :: 12:namespace TripotentPenrose
+./lean/InfoGeometry/External/Auto/uhf_cantor_boundary.lean :: 10:namespace UhfCantorBoundary
 ./lean/InfoGeometry/External/Auto/UHFInductiveColimit.lean :: 22:namespace UHFInductiveColimit
 ./lean/InfoGeometry/External/Auto/uhf_ladder.lean :: 79:namespace MatrixTowerLevel
 ./lean/InfoGeometry/External/Auto/UnifiedKleinHolographicArchitecture.lean :: 15:namespace UnifiedKleinHolographicArchitecture
@@ -2082,6 +2169,8 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/Section7.lean :: 17:namespace Section7
 ./lean/InfoGeometry/Section8.lean :: 22:namespace Section8
 ./lean/InfoGeometry/Section9.lean :: 29:namespace Section9
+./lean/InfoGeometry/test_exp.lean :: 7:namespace SplitOctonion
+./lean/InfoGeometry/test_j_g_sq.lean :: 7:namespace SplitOctonion
 ./lean/InfoGeometry/TKK/TKKTest.lean :: 12:namespace D4TrialityPerm
 ./lean/InfoGeometry/Topology/D4SingularityDBrane.lean :: 32:namespace D4MatrixFactorization
 ./lean/InfoGeometry/Topology/DBraneMatrixFactorization.lean :: 26:namespace MatrixFactorization
@@ -2094,21 +2183,23 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ./lean/InfoGeometry/UnifiedMatrixBasis.lean :: 14:namespace UnifiedMatrixBasis
 
 === Namespace prefix histogram (first namespace line per file) ===
-   6082 InfoGeometry
+   6196 InfoGeometry
      63 CStarStateColimit
      29 Bridge
+     25 SplitOctonion
      22 VirasoroProject
      22 Automath
      19 ZornCell
      13 GradedExactCouple
      12 CertifiedInverseKernel
-     10 ZornMatrix
+     11 ZornMatrix
      10 SymmetricLieAlgebra
      10 Audit
       9 ConformalInference
       8 TwoPeriodicComplex
       8 PhaseLinear
       8 GromovWittenErlangen
+      7 NoncommutativeGeometry
       6 ThreeLevelFiniteGibbs
       6 Tensor
       6 RawCARModeCompletion
@@ -2122,8 +2213,6 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
       5 LieTwoCocycle
       5 KoroteevZeitlin
       5 Hom
-      5 HierarchicalGrandCanonical
-      5 CyclicAlgebraicState
 
 [audit] Done.
 ```
@@ -2131,87 +2220,88 @@ lean/InfoGeometry/Topology/SymbolicLatentModularOrbitClosureCompHaus.lean:10:axi
 ## Orphaned Lean file audit
 
 ```text
-[orphaned-check] Orphaned top-level Lean file in lean/: ast_export_test.lean
+[orphaned-check] Orphaned top-level Lean file in lean/: test_axiom.lean
 ```
 
 ## Quarantine Boundary Audit
 
 ```text
 Forbidden quarantined import: InfoGeometry.Canonical.AQFTOperatorInterface in lean/InfoGeometry/CoverageClosure.lean:78
-Forbidden quarantined import: InfoGeometry.Canonical.AQFTOperatorInterface in lean/InfoGeometry/All.lean:580
+Forbidden quarantined import: InfoGeometry.Canonical.AQFTOperatorInterface in lean/InfoGeometry/All.lean:766
 Forbidden quarantined import: InfoGeometry.Canonical.AnomalyDilationBridge in lean/InfoGeometry/CoverageClosure.lean:81
-Forbidden quarantined import: InfoGeometry.Canonical.AnomalyDilationBridge in lean/InfoGeometry/All.lean:606
+Forbidden quarantined import: InfoGeometry.Canonical.AnomalyDilationBridge in lean/InfoGeometry/All.lean:754
 Forbidden quarantined import: InfoGeometry.Canonical.BeliefDynamics in lean/InfoGeometry/CoverageClosure.lean:89
-Forbidden quarantined import: InfoGeometry.Canonical.BeliefDynamics in lean/InfoGeometry/All.lean:658
-Forbidden quarantined import: InfoGeometry.Canonical.BerryPhase in lean/InfoGeometry/All.lean:664
-Forbidden quarantined import: InfoGeometry.Canonical.BerryPhase in lean/InfoGeometry/All.lean:666
+Forbidden quarantined import: InfoGeometry.Canonical.BeliefDynamics in lean/InfoGeometry/All.lean:841
 Forbidden quarantined import: InfoGeometry.Canonical.BerryPhase in lean/InfoGeometry/CoverageClosure.lean:91
+Forbidden quarantined import: InfoGeometry.Canonical.BerryPhase in lean/InfoGeometry/All.lean:850
 Forbidden quarantined import: InfoGeometry.Canonical.BerryPhase in lean/InfoGeometry/Canonical/BerryHolonomy.lean:1
 Forbidden quarantined import: InfoGeometry.Canonical.BerryPhase in lean/InfoGeometry/Canonical/SouriauBerryPhaseMonodromyBridge.lean:6
 Forbidden quarantined import: InfoGeometry.Canonical.CalabiYauBridge in lean/InfoGeometry/CoverageClosure.lean:103
-Forbidden quarantined import: InfoGeometry.Canonical.CalabiYauBridge in lean/InfoGeometry/All.lean:829
+Forbidden quarantined import: InfoGeometry.Canonical.CalabiYauBridge in lean/InfoGeometry/All.lean:979
 Forbidden quarantined import: InfoGeometry.Canonical.CalabiYauBridge in lean/InfoGeometry/Canonical/CalabiYauGrandDualityBridge.lean:1
-Forbidden quarantined import: InfoGeometry.Canonical.ChiralAction in lean/InfoGeometry/Quantum/DoubleCopyBridge.lean:4
-Forbidden quarantined import: InfoGeometry.Canonical.ChiralAction in lean/InfoGeometry/All.lean:929
 Forbidden quarantined import: InfoGeometry.Canonical.ChiralAction in lean/InfoGeometry/CoverageClosure.lean:113
+Forbidden quarantined import: InfoGeometry.Canonical.ChiralAction in lean/InfoGeometry/All.lean:1195
+Forbidden quarantined import: InfoGeometry.Canonical.ChiralAction in lean/InfoGeometry/Quantum/DoubleCopyBridge.lean:4
+Forbidden quarantined import: InfoGeometry.Canonical.ChiralCliffordBridge in lean/InfoGeometry/All.lean:1205
 Forbidden quarantined import: InfoGeometry.Canonical.ChiralCliffordBridge in lean/InfoGeometry/CoverageClosure.lean:116
-Forbidden quarantined import: InfoGeometry.Canonical.ChiralCliffordBridge in lean/InfoGeometry/All.lean:935
 Forbidden quarantined import: InfoGeometry.Canonical.ConformalWard in lean/InfoGeometry/CoverageClosure.lean:133
-Forbidden quarantined import: InfoGeometry.Canonical.ConformalWard in lean/InfoGeometry/All.lean:1034
+Forbidden quarantined import: InfoGeometry.Canonical.ConformalWard in lean/InfoGeometry/All.lean:1399
+Forbidden quarantined import: InfoGeometry.Canonical.DiracRicciBridge in lean/InfoGeometry/All.lean:1591
 Forbidden quarantined import: InfoGeometry.Canonical.DiracRicciBridge in lean/InfoGeometry/CoverageClosure.lean:148
-Forbidden quarantined import: InfoGeometry.Canonical.DiracRicciBridge in lean/InfoGeometry/All.lean:1111
-Forbidden quarantined import: InfoGeometry.Canonical.GrandSynthesis in lean/InfoGeometry/All.lean:1324
 Forbidden quarantined import: InfoGeometry.Canonical.GrandSynthesis in lean/InfoGeometry/CoverageClosure.lean:191
-Forbidden quarantined import: InfoGeometry.Canonical.GrandUnificationBlueprint in lean/InfoGeometry/All.lean:1330
+Forbidden quarantined import: InfoGeometry.Canonical.GrandSynthesis in lean/InfoGeometry/All.lean:2049
 Forbidden quarantined import: InfoGeometry.Canonical.GrandUnificationBlueprint in lean/InfoGeometry/CoverageClosure.lean:192
+Forbidden quarantined import: InfoGeometry.Canonical.GrandUnificationBlueprint in lean/InfoGeometry/All.lean:2052
+Forbidden quarantined import: InfoGeometry.Canonical.HolographicEmergence in lean/InfoGeometry/All.lean:2205
 Forbidden quarantined import: InfoGeometry.Canonical.HolographicEmergence in lean/InfoGeometry/CoverageClosure.lean:201
-Forbidden quarantined import: InfoGeometry.Canonical.HolographicEmergence in lean/InfoGeometry/All.lean:1384
-Forbidden quarantined import: InfoGeometry.Canonical.MasterSynthesis in lean/InfoGeometry/All.lean:1568
-Forbidden quarantined import: InfoGeometry.Canonical.MasterSynthesis in lean/InfoGeometry/Canonical/All.lean:2300
+Forbidden quarantined import: InfoGeometry.Canonical.MasterSynthesis in lean/InfoGeometry/All.lean:2489
+Forbidden quarantined import: InfoGeometry.Canonical.MasterSynthesis in lean/InfoGeometry/Canonical/All.lean:2308
 Forbidden quarantined import: InfoGeometry.Canonical.PositiveRayProjectiveBridge in lean/InfoGeometry/CoverageClosure.lean:246
-Forbidden quarantined import: InfoGeometry.Canonical.PositiveRayProjectiveBridge in lean/InfoGeometry/All.lean:1749
-Forbidden quarantined import: InfoGeometry.Canonical.RedLine in lean/InfoGeometry/All.lean:1869
-Forbidden quarantined import: InfoGeometry.Canonical.Rosetta in lean/InfoGeometry/All.lean:1909
-Forbidden quarantined import: InfoGeometry.Canonical.SUSYBayes in lean/InfoGeometry/All.lean:1921
+Forbidden quarantined import: InfoGeometry.Canonical.PositiveRayProjectiveBridge in lean/InfoGeometry/All.lean:2795
+Forbidden quarantined import: InfoGeometry.Canonical.RedLine in lean/InfoGeometry/All.lean:3059
+Forbidden quarantined import: InfoGeometry.Canonical.Rosetta in lean/InfoGeometry/All.lean:3108
+Forbidden quarantined import: InfoGeometry.Canonical.SUSYBayes in lean/InfoGeometry/All.lean:3514
 Forbidden quarantined import: InfoGeometry.Canonical.SUSYBayes in lean/InfoGeometry/CoverageClosure.lean:267
-Forbidden quarantined import: InfoGeometry.Canonical.WilsonLoop in lean/InfoGeometry/All.lean:2277
+Forbidden quarantined import: InfoGeometry.Canonical.WilsonLoop in lean/InfoGeometry/All.lean:3811
 Forbidden quarantined import: InfoGeometry.Prequantum.Connection in lean/InfoGeometry/CoverageClosure.lean:525
-Forbidden quarantined import: InfoGeometry.Prequantum.Connection in lean/InfoGeometry/All.lean:3956
-Forbidden quarantined import: InfoGeometry.Prequantum.Quotient in lean/InfoGeometry/All.lean:3962
+Forbidden quarantined import: InfoGeometry.Prequantum.Connection in lean/InfoGeometry/All.lean:5972
 Forbidden quarantined import: InfoGeometry.Prequantum.Quotient in lean/InfoGeometry/CoverageClosure.lean:526
+Forbidden quarantined import: InfoGeometry.Prequantum.Quotient in lean/InfoGeometry/All.lean:5978
 Forbidden quarantined import: InfoGeometry.Projective.TwistorBridge in lean/InfoGeometry/CoverageClosure.lean:554
-Forbidden quarantined import: InfoGeometry.Projective.TwistorBridge in lean/InfoGeometry/All.lean:4104
+Forbidden quarantined import: InfoGeometry.Projective.TwistorBridge in lean/InfoGeometry/All.lean:6128
 Forbidden quarantined import: InfoGeometry.Unstable.YangMillsBridge in lean/InfoGeometry/CoverageClosure.lean:648
-Forbidden quarantined import: InfoGeometry.Unstable.YangMillsBridge in lean/InfoGeometry/All.lean:4561
+Forbidden quarantined import: InfoGeometry.Unstable.YangMillsBridge in lean/InfoGeometry/All.lean:7218
 Forbidden quarantined import: InfoGeometry.Canonical.ChiralTorsionRelativeVolume in lean/InfoGeometry/CoverageClosure.lean:119
-Forbidden quarantined import: InfoGeometry.Canonical.ChiralTorsionRelativeVolume in lean/InfoGeometry/All.lean:957
+Forbidden quarantined import: InfoGeometry.Canonical.ChiralTorsionRelativeVolume in lean/InfoGeometry/All.lean:1245
+Forbidden quarantined import: InfoGeometry.Canonical.CuntzCanonicalKMSFunctional in lean/InfoGeometry/All.lean:1471
+Forbidden quarantined import: InfoGeometry.Canonical.SplitG2HodgeWedgeCharacterization in lean/InfoGeometry/All.lean:3352
 Forbidden quarantined import: InfoGeometry.Canonical.SplitG2HodgeWedgeCharacterization in lean/InfoGeometry/Canonical/StandardSplitQuaternionCalibrationBridge.lean:1
-Forbidden quarantined import: InfoGeometry.Canonical.SplitG2HodgeWedgeCharacterization in lean/InfoGeometry/Canonical/All.lean:2433
-Forbidden quarantined import: InfoGeometry.Exploration.Symphony.Basic in lean/InfoGeometry/All.lean:2661
+Forbidden quarantined import: InfoGeometry.Canonical.SplitG2HodgeWedgeCharacterization in lean/InfoGeometry/Canonical/All.lean:2441
 Forbidden quarantined import: InfoGeometry.Exploration.Symphony.Basic in lean/InfoGeometry/CoverageClosure.lean:417
+Forbidden quarantined import: InfoGeometry.Exploration.Symphony.Basic in lean/InfoGeometry/All.lean:4342
 Forbidden quarantined import: InfoGeometry.Exploration.Symphony.Draft in lean/InfoGeometry/CoverageClosure.lean:418
-Forbidden quarantined import: InfoGeometry.Exploration.Symphony.Draft in lean/InfoGeometry/All.lean:2662
+Forbidden quarantined import: InfoGeometry.Exploration.Symphony.Draft in lean/InfoGeometry/All.lean:4343
 Quarantine import boundary check failed.
 ```
 
 ## Exact Constructivity Audit
 
 ```text
-wrote /tmp/proof_gap_report.md (0 gaps)
+wrote /tmp/proof_gap_report.md (1 gaps)
 wrote /tmp/proof_gap_report.tex
 ```
 
 ## Review-Only Surrogate Audit
 
 ```text
-wrote /tmp/proof_gap_report.review.md (0 gaps)
+wrote /tmp/proof_gap_report.review.md (1 gaps)
 wrote /tmp/proof_gap_report.review.tex
 ```
 
 ## Mathless Proposition Audit
 
 ```text
-Found 3579 candidate(s):
+Found 3618 candidate(s):
 
 lean/InfoGeometry/Albert/Generations.lean:48: theorem single_gen_fermions_count [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
@@ -2270,7 +2360,7 @@ lean/InfoGeometry/Algebra/ChiralOperatorChargeFiltration.lean:100: theorem sMinu
 lean/InfoGeometry/Algebra/ChiralOperatorSymbolProjection.lean:43: theorem symbolProjection_add_defect [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Algebra/ChiralSymbolProjectionMirror.lean:45: theorem mirror_symbolDefect [skeletal_proof]
+lean/InfoGeometry/Algebra/ChiralSymbolProjectionMirror.lean:54: theorem mirror_symbolDefect [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Algebra/Cl11Fermions.lean:26: theorem orth [skeletal_proof]
@@ -4112,6 +4202,12 @@ lean/InfoGeometry/Canonical/CantorianFractalSpacetime.lean:182: theorem binary_e
 lean/InfoGeometry/Canonical/CayleyCriticalLineCircleBridge.lean:126: theorem cayleyToFugacity_mem_unitCircle_iff_criticalLine [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
+lean/InfoGeometry/Canonical/CayleyDicksonEmbedding.lean:31: theorem cdEmbed_zero [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/CayleyDicksonEmbedding.lean:33: theorem cdEmbed_one [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
 lean/InfoGeometry/Canonical/CayleyMobiusBoundaryBraidClosure.lean:63: theorem not_isInterior_boundary [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
@@ -4199,7 +4295,7 @@ lean/InfoGeometry/Canonical/ChiralPauliOperators.lean:41: theorem chiralityT_app
 lean/InfoGeometry/Canonical/ChiralRadiationCones.lean:44: theorem constructive_mass_eq_flipRate [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Canonical/ChiralStokesPauliBasis.lean:52: theorem assembleStokes_eq_block_reconstruction [skeletal_proof]
+lean/InfoGeometry/Canonical/ChiralStokesPauliBasis.lean:114: theorem assembleStokes_eq_block_reconstruction [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Canonical/ChiralSuperPoincareSouriauBridge.lean:43: theorem minkowskiMetricCoeff_time_time [skeletal_proof]
@@ -4254,6 +4350,9 @@ lean/InfoGeometry/Canonical/Cl11TensorTowerBridge.lean:37: theorem normalizedLog
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Canonical/Cl3ComplexMatrixProduct.lean:432: lemma finrank_prodMat2C [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/Cl55OperatorAlgebraHom.lean:19: theorem map_lie_bracket [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Canonical/Cl55V4SpinorFragmentation.lean:32: theorem J_sandwich_u [skeletal_proof]
@@ -5303,6 +5402,15 @@ lean/InfoGeometry/Canonical/Herm2x2OsO55RationalBridge.lean:169: theorem conjuga
 lean/InfoGeometry/Canonical/Herm2x2OsO55RationalBridge.lean:219: theorem nullSwap_preserves_det [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
+lean/InfoGeometry/Canonical/HestenesBivectorSelfDuality.lean:70: lemma rearrange_terms_proj [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/HestenesBivectorSelfDuality.lean:95: lemma rearrange_terms_proj_anti [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/HestenesBivectorSelfDuality.lean:120: lemma rearrange_terms_zero [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
 lean/InfoGeometry/Canonical/HestenesCliffordKrein.lean:17: theorem gamma0_sq [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
@@ -5327,7 +5435,7 @@ lean/InfoGeometry/Canonical/HestenesCliffordKrein.lean:196: theorem hestenesKrei
 lean/InfoGeometry/Canonical/HestenesCliffordKrein.lean:224: theorem hestenesKreinAdjoint_beta [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Canonical/HestenesHyperbolicDoubling.lean:156: theorem doubled_decomposition [skeletal_proof]
+lean/InfoGeometry/Canonical/HestenesHyperbolicDoubling.lean:162: theorem doubled_decomposition [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Canonical/HestenesKreinVacuum.lean:46: theorem a_eq_N [skeletal_proof]
@@ -5639,6 +5747,9 @@ lean/InfoGeometry/Canonical/MetriplecticCore.lean:88: theorem leibniz_entropy_H_
 lean/InfoGeometry/Canonical/MicrostateBoltzmannEntropy.lean:126: theorem microstate_operator_basis_action [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
+lean/InfoGeometry/Canonical/MixedBetaPotential.lean:55: theorem admission_responsibility_invalid [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
 lean/InfoGeometry/Canonical/MixedCARCrossAlgebraBridge.lean:25: theorem evaluation_functional_apply [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
@@ -5711,13 +5822,16 @@ lean/InfoGeometry/Canonical/OperatorJKOStep.lean:119: theorem objective_le_previ
 lean/InfoGeometry/Canonical/OperatorSurgery.lean:245: theorem identitySplit_projector_nil [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
+lean/InfoGeometry/Canonical/OperatorTKKAnomalyAnnihilation.lean:24: theorem projective_compensation_tkk_closure [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
 lean/InfoGeometry/Canonical/OperatorThermodynamics.lean:206: theorem supervolumePotential_eq_freeEnergy' [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Canonical/OperatorThermodynamics.lean:216: theorem partitionPotential_eq_freeEnergy [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Canonical/OrthogonalGroup55.lean:83: theorem coordinateReflectionGL_val [skeletal_proof]
+lean/InfoGeometry/Canonical/OrthogonalGroup55.lean:87: theorem coordinateReflectionGL_val [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Canonical/PauliJungTrialityD4Synthesis.lean:81: theorem gradeCycle_preserves_sharedGrade [skeletal_proof]
@@ -5811,6 +5925,12 @@ lean/InfoGeometry/Canonical/PositiveGrassmannianAmplituhedron.lean:71: theorem a
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Canonical/PositiveGrassmannianAmplituhedron.lean:78: theorem amplituhedronMap_smul [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/PowerVarianceCumulants.lean:29: theorem gaussianCumulant_one [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/PowerVarianceCumulants.lean:31: theorem gaussianCumulant_two [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Canonical/PrepotentialToWDVVTopologicalBridge.lean:13: theorem prepotentialToWDVV_residual_readout [skeletal_proof]
@@ -5933,7 +6053,7 @@ lean/InfoGeometry/Canonical/QuaternionCondensate.lean:121: theorem normSq_conj [
 lean/InfoGeometry/Canonical/QuaternionCondensate.lean:143: theorem normSq_phase [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Canonical/QuaternionOmegaDoublingSquare.lean:117: theorem central_decomposition [skeletal_proof]
+lean/InfoGeometry/Canonical/QuaternionOmegaDoublingSquare.lean:127: theorem central_decomposition [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Canonical/RealComplexRotor.lean:13: theorem realRotorAction_zero [skeletal_proof]
@@ -6656,7 +6776,7 @@ lean/InfoGeometry/Canonical/SplitOctonionJordanPairTKKInput.lean:88: theorem plu
 lean/InfoGeometry/Canonical/SplitOctonionJordanStructure.lean:355: theorem structureCarrier_finrank [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Canonical/SplitOctonionKleinFourTriality.lean:89: theorem swapGrade_zero [skeletal_proof]
+lean/InfoGeometry/Canonical/SplitOctonionKleinFourTriality.lean:233: theorem swapGrade_zero [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Canonical/SplitOctonionNilpotentLeftDifferential.lean:32: theorem leftMulDifferential_apply [skeletal_proof]
@@ -6683,7 +6803,28 @@ lean/InfoGeometry/Canonical/SplitOctonionPolarizedJordanMalcev.lean:55: theorem 
 lean/InfoGeometry/Canonical/SplitOctonionPolarizedJordanMalcev.lean:86: theorem native_vector_vector_commutator_readout [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
+lean/InfoGeometry/Canonical/SplitOctonionQuaternionChart.lean:40: lemma mul_b [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/SplitOctonionQuaternionChart.lean:57: lemma normSq_eq_re_mul_star [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
 lean/InfoGeometry/Canonical/SplitOctonionQuaternionGrassmannian.lean:202: theorem volumeForm_restriction [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/SplitOctonionRegularEllipticOperators.lean:12: theorem ellipticAxisOperator_apply [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/SplitOctonionRegularOperators.lean:146: theorem associatorOperator_apply [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/SplitOctonionRegularOperators.lean:155: theorem rightRegular_comp_defect_apply [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/SplitOctonionRegularParabolicOperators.lean:21: theorem parabolicOperatorFlow_apply [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Canonical/SplitOctonionRegularProjectors.lean:17: theorem hyperbolicAxisOperator_apply [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Canonical/SplitOctonionSixSectorBridge.lean:105: theorem sixSectorBasis_pos_mul_neg [skeletal_proof]
@@ -6990,18 +7131,6 @@ lean/InfoGeometry/Canonical/TrichotomySummaryTheorems.lean:25: theorem row_parab
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Canonical/TrichotomySummaryTheorems.lean:30: theorem row_projective [skeletal_proof]
-  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
-
-lean/InfoGeometry/Canonical/TwelveFoldSheetColorOmega.lean:238: theorem masterTwelve_pow_two_ne_one [skeletal_proof]
-  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
-
-lean/InfoGeometry/Canonical/TwelveFoldSheetColorOmega.lean:242: theorem masterTwelve_pow_three_ne_one [skeletal_proof]
-  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
-
-lean/InfoGeometry/Canonical/TwelveFoldSheetColorOmega.lean:255: theorem masterTwelve_pow_six_ne_one [skeletal_proof]
-  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
-
-lean/InfoGeometry/Canonical/TwelveFoldSheetColorOmega.lean:259: theorem masterTwelve_pow_eight_ne_one [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Canonical/TwoSheetComplexPolarization.lean:160: theorem diracHodgeHopping_eq_shift_sum [skeletal_proof]
@@ -7376,7 +7505,22 @@ lean/InfoGeometry/Clifford/BudinichCliqueSpinor.lean:289: theorem budinichGraphV
 lean/InfoGeometry/Clifford/BudinichSpinorsNullVectors.lean:250: theorem spinor2_finrank [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Clifford/Cl11CoordinateAlgebra.lean:268: theorem cl11_commutator_is_derivation [skeletal_proof]
+lean/InfoGeometry/Clifford/ChiralGrandCanonicalOperatorGeometry.lean:78: theorem sheetAdjoint_one [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Clifford/ChiralGrandCanonicalOperatorGeometry.lean:961: theorem chiralCharge_conserved_of_commutator [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Clifford/ChiralLorentzCARLift.lean:48: theorem unitConjugation_smul [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Clifford/ChiralLorentzFockQuadratic.lean:31: theorem quadraticWittGenerator_eq [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Clifford/ChiralLorentzFockQuadratic.lean:34: theorem wittNumberOperator_eq [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Clifford/Cl11CoordinateAlgebra.lean:331: theorem cl11_commutator_is_derivation [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Clifford/Cl11MarkovJonesEngine.lean:85: theorem cl11MarkovTraceNet_apply [skeletal_proof]
@@ -7400,22 +7544,34 @@ lean/InfoGeometry/Clifford/Cl3ComplexMatrixProduct.lean:423: lemma finrank_prodM
 lean/InfoGeometry/Clifford/Cl44GenerationRotation.lean:88: theorem canonicalGenerationRotationPacket_hierarchy [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Clifford/Cl44Witt.lean:125: theorem witt_CAR_ne [skeletal_proof]
+lean/InfoGeometry/Clifford/Cl44Witt.lean:137: theorem witt_CAR_ne [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Clifford/Cl44Witt.lean:151: theorem cl11_a_sq_zero [skeletal_proof]
+lean/InfoGeometry/Clifford/Cl44Witt.lean:142: theorem witt_CAR_eq [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Clifford/Cl44Witt.lean:155: theorem cl11_adag_sq_zero [skeletal_proof]
+lean/InfoGeometry/Clifford/Cl44Witt.lean:175: theorem cl11_a_sq_zero [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Clifford/Cl44Witt.lean:179: theorem cl11_adag_sq_zero [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Clifford/Cl4ComplexMatrixPeriodicity.lean:212: theorem mat4C_complex_finrank [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Clifford/Cl55ModularDerivation.lean:39: theorem cl55Commutator_one [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Clifford/Cl55ModularDerivation.lean:43: theorem cl55Commutator_of_commute [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Clifford/Cl55RealSplitPinDeterminant.lean:40: theorem realSplitPinOrthogonalDet_apply [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Clifford/Cl55RealSplitPinVectorReflection.lean:46: theorem normalizedVectorReflection_apply [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Clifford/Cl55SpinOperatorAutomorphism.lean:27: theorem spinCliffordRingEquiv_mul [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Clifford/Cl55SpinorChirality.lean:111: theorem gammaBasis55_eq_recursiveGammaTensor [skeletal_proof]
@@ -7689,6 +7845,9 @@ lean/InfoGeometry/Clifford/SplitQuaternion.lean:96: theorem det_2x2_eq_matrix_de
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Clifford/TodorovInternalSpace.lean:168: theorem mem_linearStabilizer_iff [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Clifford/TomitaInversionBridge.lean:35: theorem conformalInversion_eq_J_mod [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Clifford/UniversalCoverLog.lean:118: theorem uLog_restrict_principal [skeletal_proof]
@@ -8606,28 +8765,28 @@ lean/InfoGeometry/External/Auto/KasparovKreinCategory.lean:94: theorem kkBoundar
 lean/InfoGeometry/External/Auto/KasparovKreinDoubling.lean:34: theorem bdg_trace_zero [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/KleinBottle.lean:63: theorem mirror_fixed_points [skeletal_proof]
+lean/InfoGeometry/External/Auto/KleinBottle.lean:65: theorem mirror_fixed_points [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/KleinBottle.lean:67: theorem mirror_involution [skeletal_proof]
+lean/InfoGeometry/External/Auto/KleinBottle.lean:69: theorem mirror_involution [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/KleinBottle.lean:72: theorem cone_point_origin [skeletal_proof]
+lean/InfoGeometry/External/Auto/KleinBottle.lean:74: theorem cone_point_origin [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/KleinBottle.lean:76: theorem half_turn_involution [skeletal_proof]
+lean/InfoGeometry/External/Auto/KleinBottle.lean:78: theorem half_turn_involution [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/KleinBottle.lean:81: theorem glide_is_mirror_translated [skeletal_proof]
+lean/InfoGeometry/External/Auto/KleinBottle.lean:83: theorem glide_is_mirror_translated [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/KleinBottle.lean:101: theorem mirror_orientation_reversing [skeletal_proof]
+lean/InfoGeometry/External/Auto/KleinBottle.lean:103: theorem mirror_orientation_reversing [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/KleinBottle.lean:104: theorem cone_point_orientation_preserving [skeletal_proof]
+lean/InfoGeometry/External/Auto/KleinBottle.lean:106: theorem cone_point_orientation_preserving [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/KleinBottle.lean:107: theorem glide_orientation_reversing [skeletal_proof]
+lean/InfoGeometry/External/Auto/KleinBottle.lean:109: theorem glide_orientation_reversing [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/External/Auto/KleinBottleCobordism.lean:62: theorem vacuum_is_defect_free [skeletal_proof]
@@ -8709,9 +8868,6 @@ lean/InfoGeometry/External/Auto/Matrix2KANPauliChain.lean:163: theorem kLog_trac
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/External/Auto/Matrix2KANPauliChain.lean:164: theorem aLog_trace [skeletal_proof]
-  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
-
-lean/InfoGeometry/External/Auto/MaxCalFeynmanGaussBonnet.lean:30: theorem max_cal_feynman_iso [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/External/Auto/MellinWaveletScaleShiftDigest.lean:84: theorem log_mul_as_add [skeletal_proof]
@@ -8825,28 +8981,28 @@ lean/InfoGeometry/External/Auto/PauliZornTrifactor.lean:54: theorem detSector_po
 lean/InfoGeometry/External/Auto/PauliZornTrifactor.lean:149: theorem zornDet_pureUpper [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/PenroseArithmetic.lean:128: theorem phiAdicDistance_zero [skeletal_proof]
+lean/InfoGeometry/External/Auto/PenroseArithmetic.lean:138: theorem phiAdicDistance_zero [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/PenroseArithmetic.lean:153: theorem inflationEnergy_one [skeletal_proof]
+lean/InfoGeometry/External/Auto/PenroseArithmetic.lean:163: theorem inflationEnergy_one [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/PenroseArithmetic.lean:156: theorem goldenPrimeClass_five [skeletal_proof]
+lean/InfoGeometry/External/Auto/PenroseArithmetic.lean:166: theorem goldenPrimeClass_five [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/PenroseArithmetic.lean:160: theorem goldenPrimeClass_split_11 [skeletal_proof]
+lean/InfoGeometry/External/Auto/PenroseArithmetic.lean:170: theorem goldenPrimeClass_split_11 [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/PenroseArithmetic.lean:164: theorem goldenPrimeClass_split_19 [skeletal_proof]
+lean/InfoGeometry/External/Auto/PenroseArithmetic.lean:174: theorem goldenPrimeClass_split_19 [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/PenroseArithmetic.lean:168: theorem goldenPrimeClass_inert_3 [skeletal_proof]
+lean/InfoGeometry/External/Auto/PenroseArithmetic.lean:178: theorem goldenPrimeClass_inert_3 [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/PenroseArithmetic.lean:172: theorem goldenPrimeClass_inert_13 [skeletal_proof]
+lean/InfoGeometry/External/Auto/PenroseArithmetic.lean:182: theorem goldenPrimeClass_inert_13 [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/PenroseArithmetic.lean:176: theorem goldenMul_phi_phi [skeletal_proof]
+lean/InfoGeometry/External/Auto/PenroseArithmetic.lean:186: theorem goldenMul_phi_phi [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/External/Auto/PenroseCuntzKriegerHolography.lean:24: theorem M_det [skeletal_proof]
@@ -8909,7 +9065,7 @@ lean/InfoGeometry/External/Auto/PrimonCuntzTower.lean:165: theorem stageToSequen
 lean/InfoGeometry/External/Auto/PrimonCuntzTower.lean:169: theorem stageToSequence_apply_of_not_le [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/PrimonHilbertPolyaSeparation.lean:44: theorem primeCrystalPotentialCoeff_eq_primeEnergy [skeletal_proof]
+lean/InfoGeometry/External/Auto/PrimonHilbertPolyaSeparation.lean:45: theorem primeCrystalPotentialCoeff_eq_primeEnergy [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/External/Auto/PrimonSuperThermodynamics.lean:34: lemma super_partition_singleton [skeletal_proof]
@@ -8990,16 +9146,16 @@ lean/InfoGeometry/External/Auto/RelativisticBiquaternionKAN.lean:98: theorem spi
 lean/InfoGeometry/External/Auto/RescaledPhaseVolumeCanonical.lean:28: theorem commA_rescale [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/RiemannHypothesis.lean:61: theorem rhComplexTemperature_re [skeletal_proof]
+lean/InfoGeometry/External/Auto/RiemannHypothesis.lean:63: theorem rhComplexTemperature_re [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/RiemannHypothesis.lean:65: theorem rhComplexTemperature_im [skeletal_proof]
+lean/InfoGeometry/External/Auto/RiemannHypothesis.lean:67: theorem rhComplexTemperature_im [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/RiemannHypothesis.lean:69: theorem rhCriticalLine_complexTemperature [skeletal_proof]
+lean/InfoGeometry/External/Auto/RiemannHypothesis.lean:71: theorem rhCriticalLine_complexTemperature [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/RiemannHypothesis.lean:73: theorem rhArithmeticPhase_zero [skeletal_proof]
+lean/InfoGeometry/External/Auto/RiemannHypothesis.lean:75: theorem rhArithmeticPhase_zero [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/External/Auto/S3ColorSpinorDecomposition.lean:21: theorem singlet_lane_invariant [skeletal_proof]
@@ -9038,16 +9194,16 @@ lean/InfoGeometry/External/Auto/SheikhIsospinSymmetryBreaking.lean:13: theorem t
 lean/InfoGeometry/External/Auto/SheikhIsospinSymmetryBreaking.lean:16: theorem Tz_self_conjugate [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SolderingForms.lean:117: theorem solder_coord_t_of_solder [skeletal_proof]
+lean/InfoGeometry/External/Auto/SolderingForms.lean:119: theorem solder_coord_t_of_solder [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SolderingForms.lean:121: theorem solder_coord_x_of_solder [skeletal_proof]
+lean/InfoGeometry/External/Auto/SolderingForms.lean:123: theorem solder_coord_x_of_solder [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SolderingForms.lean:132: theorem solder_coord_y_of_solder [skeletal_proof]
+lean/InfoGeometry/External/Auto/SolderingForms.lean:134: theorem solder_coord_y_of_solder [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SolderingForms.lean:143: theorem solder_coord_z_of_solder [skeletal_proof]
+lean/InfoGeometry/External/Auto/SolderingForms.lean:145: theorem solder_coord_z_of_solder [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/External/Auto/SolovievQPNMChiralCuntz.lean:173: theorem coincidenceGram_eq_AadjA [skeletal_proof]
@@ -9056,40 +9212,40 @@ lean/InfoGeometry/External/Auto/SolovievQPNMChiralCuntz.lean:173: theorem coinci
 lean/InfoGeometry/External/Auto/SouriauCasimirEntropyLeaves.lean:82: theorem dilation_spring_stiffness_massSq [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean:58: theorem complexTemperature_eq [skeletal_proof]
+lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean:60: theorem complexTemperature_eq [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean:61: theorem complexTemperature_betaDirection [skeletal_proof]
+lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean:63: theorem complexTemperature_betaDirection [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean:65: theorem complexTemperature_phaseDirection [skeletal_proof]
+lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean:67: theorem complexTemperature_phaseDirection [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean:84: theorem riemannSphereChart_some [skeletal_proof]
+lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean:86: theorem riemannSphereChart_some [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean:87: theorem riemannSphereChart_none [skeletal_proof]
+lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean:89: theorem riemannSphereChart_none [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean:90: theorem souriauModularExp_zero_eps [skeletal_proof]
+lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean:92: theorem souriauModularExp_zero_eps [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean:94: theorem souriauModularExp_zero_K [skeletal_proof]
+lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean:96: theorem souriauModularExp_zero_K [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean:128: theorem complexMasterDensity_zero [skeletal_proof]
+lean/InfoGeometry/External/Auto/SouriauComplexTemperature.lean:130: theorem complexMasterDensity_zero [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SouriauHestenesKrein.lean:106: theorem det_sectorTripotentOperator [skeletal_proof]
+lean/InfoGeometry/External/Auto/SouriauHestenesKrein.lean:108: theorem det_sectorTripotentOperator [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SouriauHestenesKrein.lean:110: theorem sectorTripotent_positive [skeletal_proof]
+lean/InfoGeometry/External/Auto/SouriauHestenesKrein.lean:112: theorem sectorTripotent_positive [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SouriauHestenesKrein.lean:114: theorem sectorTripotent_zero [skeletal_proof]
+lean/InfoGeometry/External/Auto/SouriauHestenesKrein.lean:116: theorem sectorTripotent_zero [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SouriauHestenesKrein.lean:118: theorem sectorTripotent_negative [skeletal_proof]
+lean/InfoGeometry/External/Auto/SouriauHestenesKrein.lean:120: theorem sectorTripotent_negative [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/External/Auto/SouriauHestenesMobiusPole.lean:98: theorem detSector_positive [skeletal_proof]
@@ -9134,13 +9290,13 @@ lean/InfoGeometry/External/Auto/SplitOctonionNilpotent.lean:60: theorem Z_mode_n
 lean/InfoGeometry/External/Auto/SuperBerezinianKlein.lean:83: theorem superBerezinian1_no_mixing [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SuperPartitionBerezinian.lean:44: theorem superPartitionRatio_eq_cayley [skeletal_proof]
+lean/InfoGeometry/External/Auto/SuperPartitionBerezinian.lean:46: theorem superPartitionRatio_eq_cayley [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SuperPartitionBerezinian.lean:48: theorem superPartitionRatio_eq_berezinian [skeletal_proof]
+lean/InfoGeometry/External/Auto/SuperPartitionBerezinian.lean:50: theorem superPartitionRatio_eq_berezinian [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/SuperPartitionBerezinian.lean:73: theorem exponentialCayleyPartition_eq_berezinian [skeletal_proof]
+lean/InfoGeometry/External/Auto/SuperPartitionBerezinian.lean:75: theorem exponentialCayleyPartition_eq_berezinian [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/External/Auto/SymbolicFockLane.lean:43: theorem occupationLane_empty [skeletal_proof]
@@ -9173,7 +9329,7 @@ lean/InfoGeometry/External/Auto/SymbolicLaneUHFBridge.lean:67: theorem gradedLan
 lean/InfoGeometry/External/Auto/T5Z2AnomalyCancellation.lean:20: theorem anomaly_cancellation [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/TestTL.lean:23: lemma TL_e_sq [skeletal_proof]
+lean/InfoGeometry/External/Auto/TestTL.lean:25: lemma TL_e_sq [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/External/Auto/ThesisMaster.lean:92: theorem klein_fixed_zero [skeletal_proof]
@@ -9473,28 +9629,25 @@ lean/InfoGeometry/External/Auto/primon_system.lean:79: theorem mellinDirichlet_a
 lean/InfoGeometry/External/Auto/primon_system.lean:125: theorem zetaPartition_succ [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/rigorous_proofs.lean:167: theorem sector_J_cpx [skeletal_proof]
+lean/InfoGeometry/External/Auto/rigorous_proofs.lean:169: theorem sector_J_cpx [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/rigorous_proofs.lean:170: theorem sector_J_mod [skeletal_proof]
+lean/InfoGeometry/External/Auto/rigorous_proofs.lean:172: theorem sector_J_mod [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/rigorous_proofs.lean:173: theorem sector_nullProjector [skeletal_proof]
+lean/InfoGeometry/External/Auto/rigorous_proofs.lean:175: theorem sector_nullProjector [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/rigorous_proofs.lean:195: theorem sector_ellipticExpChart [skeletal_proof]
-  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
-
-lean/InfoGeometry/External/Auto/rigorous_proofs.lean:259: theorem KMS_statement [skeletal_proof]
+lean/InfoGeometry/External/Auto/rigorous_proofs.lean:197: theorem sector_ellipticExpChart [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/External/Auto/test_braid.lean:61: lemma yang_baxter_id [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/uhf_cantor_boundary.lean:22: lemma diagonalEmbed_lt [skeletal_proof]
+lean/InfoGeometry/External/Auto/uhf_cantor_boundary.lean:24: lemma diagonalEmbed_lt [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/External/Auto/uhf_cantor_boundary.lean:26: lemma diagonalEmbed_eq [skeletal_proof]
+lean/InfoGeometry/External/Auto/uhf_cantor_boundary.lean:28: lemma diagonalEmbed_eq [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/External/Auto/uhf_ladder.lean:67: theorem detSign_clE [skeletal_proof]
@@ -10010,22 +10163,22 @@ lean/InfoGeometry/Krein/SplitComplex.lean:45: theorem krein_split_sign_has_nonze
 lean/InfoGeometry/Krein/SplitComplex.lean:50: theorem one_add_eps_mul_one_sub_eps_zero [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/KreinCarrierInstances_tmp.lean:93: theorem modularGeneratorKlein_apply [skeletal_proof]
+lean/InfoGeometry/KreinCarrierInstances_tmp.lean:95: theorem modularGeneratorKlein_apply [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/KreinCarrierInstances_tmp.lean:148: theorem concreteRotorFlowKlein_rotor_zero [skeletal_proof]
+lean/InfoGeometry/KreinCarrierInstances_tmp.lean:150: theorem concreteRotorFlowKlein_rotor_zero [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/KreinCarrierInstances_tmp.lean:151: theorem concreteRotorFlowKlein_rotorInv_zero [skeletal_proof]
+lean/InfoGeometry/KreinCarrierInstances_tmp.lean:153: theorem concreteRotorFlowKlein_rotorInv_zero [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/KreinCarrierInstances_tmp.lean:223: theorem concreteCoreProjectorKlein_core_krein_selfadjoint [skeletal_proof]
+lean/InfoGeometry/KreinCarrierInstances_tmp.lean:225: theorem concreteCoreProjectorKlein_core_krein_selfadjoint [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/KreinCarrierInstances_tmp.lean:264: theorem concreteRelativeFredholmKlein_relativePartitionReadout_eq_det [skeletal_proof]
+lean/InfoGeometry/KreinCarrierInstances_tmp.lean:266: theorem concreteRelativeFredholmKlein_relativePartitionReadout_eq_det [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/KreinCarrierInstances_tmp.lean:302: theorem concreteBridgeKlein_kreinTrace [skeletal_proof]
+lean/InfoGeometry/KreinCarrierInstances_tmp.lean:304: theorem concreteBridgeKlein_kreinTrace [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/LLM/MirrorPhaseCrystalBridge.lean:72: theorem crystalChildAttentionWeight_eq_twoBranchAttentionWeight [skeletal_proof]
@@ -10245,6 +10398,12 @@ lean/InfoGeometry/OperatorAlgebra/CliffordCAR.lean:1093: theorem hasOperatorGrad
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/OperatorAlgebra/CliffordCARFockParity.lean:39: theorem n0_fermionNumber [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/OperatorAlgebra/CliffordCARGrandCanonical.lean:31: theorem totalNumber_eq_numberPlus_add_numberMinus [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/OperatorAlgebra/CliffordCARGrandCanonical.lean:34: theorem chiralCharge_eq_numberPlus_sub_numberMinus [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/OperatorAlgebra/ClosureInvolution.lean:431: theorem antiProjection_apply [skeletal_proof]
@@ -10616,7 +10775,7 @@ lean/InfoGeometry/OperatorAlgebra/G2TwoHexagonIncidenceWitness.lean:60: theorem 
 lean/InfoGeometry/OperatorAlgebra/G2TwoHexagonIncidenceWitness.lean:79: theorem unique_candidate_line_orbit_count [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/OperatorAlgebra/G2TwoHexagonIncidenceWitness.lean:83: theorem outer_witness_fixed_point_count [skeletal_proof]
+lean/InfoGeometry/OperatorAlgebra/G2TwoHexagonIncidenceWitness.lean:83: theorem outer_property_fixed_point_count [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/OperatorAlgebra/G2TwoHexagonIncidenceWitness.lean:87: theorem all_fixed_point_line_count_eq_three [skeletal_proof]
@@ -10635,6 +10794,9 @@ lean/InfoGeometry/OperatorAlgebra/GenericZorn.lean:123: theorem cartanCharge_sta
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/OperatorAlgebra/IndividuatedCayley.lean:47: theorem self [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/OperatorAlgebra/InnerConjugation.lean:87: theorem innerConjugationNat_zero [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/OperatorAlgebra/JUnitaryTopologicalCharge.lean:375: theorem topologicalCharge_eq_one_of_det_eq_one [skeletal_proof]
@@ -10749,6 +10911,9 @@ lean/InfoGeometry/OperatorAlgebra/ProjectiveCenterQuotient.lean:83: theorem id_c
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/OperatorAlgebra/QCCRResidual.lean:37: theorem qCcrRelation_map_zero [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/OperatorAlgebra/QuadraticNoncommutativeIdentity.lean:33: theorem RingHom.map_quadraticCommutator [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/OperatorAlgebra/SpatialDerivativeBogoliubovIntertwiner.lean:175: theorem toRealModularLogData_deltaLog [skeletal_proof]
@@ -10949,6 +11114,12 @@ lean/InfoGeometry/OperatorAlgebra/SymmetryInvariants.lean:861: theorem act_map_z
 lean/InfoGeometry/OperatorAlgebra/SymmetryInvariants.lean:1001: theorem commutator_self [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
+lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean:25: theorem thermalAnticommutator_map [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/OperatorAlgebra/ThermalBogoliubovCAR.lean:32: theorem thermalAnnihilator_map [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
 lean/InfoGeometry/OperatorAlgebra/TomitaCartanSplit.lean:62: theorem map_sub [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
@@ -10959,6 +11130,24 @@ lean/InfoGeometry/OperatorAlgebra/TomitaCartanSplit.lean:1070: theorem diagonal_
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/OperatorAlgebra/TomitaCartanSplit.lean:1156: theorem globalGenerator_compact [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Optics/ChiralCircularTransport.lean:72: theorem act_ellipticInvolution_of_elliptic [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Optics/ChiralLorentzOperatorLift.lean:129: theorem adjointAction_mul [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Optics/ChiralLorentzOperatorLift.lean:133: theorem adjointAction_one [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Optics/ChiralLorentzOperatorLift.lean:136: theorem adjointAction_add [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Optics/ChiralLorentzOperatorLift.lean:261: theorem operatorAdjointAction_one [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Optics/ChiralLorentzOperatorLift.lean:272: theorem operatorAdjointAction_add [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Optics/FiniteJonesBrewsterCollapse.lean:47: theorem brewsterMatrix_trace [skeletal_proof]
@@ -11007,6 +11196,9 @@ lean/InfoGeometry/Optics/JonesCalibration.lean:244: theorem secondCoeff_eq [skel
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Optics/JonesPoincareSphere.lean:49: theorem jonesSpinorEquiv_apply [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Optics/OperatorCausalSoldering.lean:96: theorem matrixConnection_curvature [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Optics/OperatorialJonesCalculus.lean:162: theorem brewsterReflector_eq [skeletal_proof]
@@ -11075,7 +11267,7 @@ lean/InfoGeometry/Physics/BogoliubovSU3ParafermionProofChain.lean:103: theorem b
 lean/InfoGeometry/Physics/BogoliubovSU3ParafermionWeld.lean:110: theorem bdgParafermionPlus4_sq [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Physics/BostConnes.lean:38: theorem kmsState_critical [skeletal_proof]
+lean/InfoGeometry/Physics/BostConnes.lean:40: theorem kmsState_critical [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Physics/BostConnesGNS.lean:38: theorem kmsState_critical [skeletal_proof]
@@ -11672,6 +11864,21 @@ lean/InfoGeometry/Quantum/AZTenFoldFullPeriodicTable.lean:47: theorem class_D_1D
 lean/InfoGeometry/Quantum/AZTenFoldFullPeriodicTable.lean:51: theorem class_D_2D_is_Z [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
+lean/InfoGeometry/Quantum/ArakiModular.lean:32: lemma val_mul_eq_mul_val [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Quantum/ArakiModular.lean:33: lemma val_add_eq_add_val [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Quantum/ArakiModular.lean:34: lemma val_sub_eq_sub_val [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Quantum/ArakiModular.lean:35: lemma val_smul_eq_smul_val [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
+lean/InfoGeometry/Quantum/ArakiModular.lean:36: lemma val_one_eq_one_val [skeletal_proof]
+  - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
+
 lean/InfoGeometry/Quantum/AttentionBridge.lean:23: theorem split_softmax_weight_formula [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
@@ -11888,7 +12095,7 @@ lean/InfoGeometry/Section8.lean:220: theorem quaternionConnection_real [skeletal
 lean/InfoGeometry/Section8.lean:270: theorem spinConnectionFlat_antisymmetric [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
-lean/InfoGeometry/Section8.lean:274: theorem tetrad_postulate_flat [skeletal_proof]
+lean/InfoGeometry/Section8.lean:274: theorem tetrad_property_flat [skeletal_proof]
   - proof body appears to be `rfl`/`trivial`/`simp`/`aesop`-only
 
 lean/InfoGeometry/Section9.lean:126: theorem riemannCurvature_flat [skeletal_proof]

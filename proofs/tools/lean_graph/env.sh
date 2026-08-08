@@ -1,0 +1,5 @@
+export ARANGO_URL="http://127.0.0.1:8529"
+export ARANGO_DATABASE="agent_brain"
+export ARANGO_USER="root"
+export ARANGO_PASSWORD=""
+export ARANGO_GRAPH="CompiledTheoryCognitiveGraph"

@@ -14,7 +14,7 @@ It proves:
   in an unaffected coordinate squares to the full translation.
 
 The module packages the reflection data as a finite `Pin(5,5)`-style
-certificate over the coordinate model used by the rest of the topology lane.
+property over the coordinate model used by the rest of the topology lane.
 -/
 
 namespace InfoGeometry.Topology.Pin55ReflectionGlide
@@ -39,7 +39,7 @@ def translate1 (a : ℚ) (x : Vec55) : Vec55 :=
 def glide01 (x : Vec55) : Vec55 :=
   translate1 (1 / 2) (reflect0 x)
 
-/-- Abstract finite certificate for a split `(5,5)` reflection. -/
+/-- Abstract finite property for a split `(5,5)` reflection. -/
 structure Pin55Reflection where
   map : Vec55 → Vec55
   preserves_splitNorm : ∀ x, splitNorm55 (map x) = splitNorm55 x
@@ -56,7 +56,7 @@ theorem reflect0_involutive (x : Vec55) :
   ext i
   fin_cases i <;> simp [reflect0]
 
-/-- The coordinate reflection as a finite `Pin(5,5)`-style certificate. -/
+/-- The coordinate reflection as a finite `Pin(5,5)`-style property. -/
 def reflect0_pin55 : Pin55Reflection where
   map := reflect0
   preserves_splitNorm := reflect0_preserves_splitNorm

@@ -77,12 +77,22 @@ else
   echo -e "  ${YELLOW}⚠${NC} Try: lake build --no-build"
 fi
 
-# Step 5: Verify each theorem
-echo -e "${YELLOW}[4/4]${NC} Verifying theorems..."
-for f in "$SCRIPT_DIR"/FibAnyonThm*.lean; do
-  name=$(basename "$f" .lean)
-  echo -n "  Checking $name... "
-  if lean "$f" 2>/dev/null; then
+# Step 5: Verify the current bridge files with the project environment.
+echo -e "${YELLOW}[4/4]${NC} Verifying bridge files..."
+VERIFY_FILES=(
+  "CPTKreinTowerBridge.lean"
+  "HestenesKreinColimitBridge.lean"
+  "ModularKreinReflectionColimit.lean"
+  "PeirceCuntzTKKBridge.lean"
+  "ZornTrialityTKKBridge.lean"
+  "CanonicalSplitOctonionTKK.lean"
+  "ChiralCausalConeTKKBridge.lean"
+  "Pin55ChiralZornTKKBridge.lean"
+  "ZornTrialityFormSocket.lean"
+)
+for f in "${VERIFY_FILES[@]}"; do
+  echo -n "  Checking $f... "
+  if lake env lean "$f" >/dev/null 2>&1; then
     echo -e "${GREEN}✓${NC}"
   else
     echo -e "${RED}✗${NC}"
@@ -91,6 +101,5 @@ done
 
 echo ""
 echo -e "${GREEN}═══════════════════════════════════════════════════${NC}"
-echo -e "${GREEN}  All done! 6/6 theorems in knowledge_base.json    ${NC}"
-echo -e "${GREEN}  5/5 Lean proof files in proofs/                   ${NC}"
+echo -e "${GREEN}  Build completed and bridge files verified         ${NC}"
 echo -e "${GREEN}═══════════════════════════════════════════════════${NC}"

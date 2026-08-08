@@ -46,10 +46,10 @@ def IsCDRegular {PrimeLabel Field Kernel : Type*}
   ∀ p q, OPE.singularPart (OPE.c p) (OPE.d q) = OPE.regularPart
 
 /--
-Equation-level quantum OPE data induces the arithmetic witness packet.
+Equation-level quantum OPE data induces the arithmetic property packet.
 
 This is a genuine transport theorem from explicit singular-part equalities into
-the witness-gated `Arithmetic.PrimeMajoranaOPE` surface; it does not claim any
+the property-gated `Arithmetic.PrimeMajoranaOPE` surface; it does not claim any
 analytic VOA/Laurent construction beyond the supplied equations.
 -/
 def toArithmeticSplitMajoranaOPE

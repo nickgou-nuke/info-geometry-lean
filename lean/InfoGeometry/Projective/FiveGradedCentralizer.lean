@@ -58,8 +58,8 @@ theorem zero_gromov_witten_anomaly_resolution (n : ℕ)
 /-!
 ## Concrete 2x2 Möbius Parity Witness
 
-The abstract closure above is a hypothesis package.  The following finite
-instance gives the basic spin/ribbon generator used by the SymPy witness:
+The abstract closure above is a property package.  The following finite
+instance gives the basic spin/ribbon generator used by the SymPy property:
 
 `S = [[0, 1], [-1, 0]]`, with `S^2 = -I` and `trace S = 0`.
 -/

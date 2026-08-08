@@ -36,7 +36,7 @@ theorem cl55_as_split_step_eq_owner :
   rfl
 
 /--
-Structural witness for a null vector pair spanning the adjoined split `Cl(1,1)`
+Structural property for a null vector pair spanning the adjoined split `Cl(1,1)`
 hyperbolic plane inside `Cl(5,5)`.
 
 The normalization of the pairing is intentionally left as theorem debt; the

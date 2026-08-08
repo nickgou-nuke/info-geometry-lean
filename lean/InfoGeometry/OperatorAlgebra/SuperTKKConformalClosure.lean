@@ -516,7 +516,7 @@ structure SuperTKKDefectAbsorption
     Geometry →ₗ[ℝ] L
 
   /--
-  Constructive absorption witness.
+  Constructive absorption property.
 
   For every closure defect, produce two left-chiral supercharges whose
   anticommutator is exactly the lifted defect.

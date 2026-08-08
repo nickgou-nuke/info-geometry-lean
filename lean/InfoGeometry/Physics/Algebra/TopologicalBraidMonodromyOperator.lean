@@ -222,7 +222,7 @@ noncomputable def continuousUnipotentFlowEquiv (t : ℝ) :
 
 /--
 The norm of the unipotent factor grows at most linearly in the winding
-number.  The square-zero hypothesis is part of the carrier structure, but
+number.  The square-zero property is part of the carrier structure, but
 the estimate itself uses only boundedness of `N`.
 -/
 theorem continuous_monodromy_norm_bound (n : ℕ) :

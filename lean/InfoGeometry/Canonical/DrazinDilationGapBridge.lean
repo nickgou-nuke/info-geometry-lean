@@ -20,7 +20,7 @@ The theorem-owned identities here are:
 * `Q_D = [P_D, Γ_G]`;
 * `{Γ_S, Q_D} = 0`.
 
-This file does not assert that every certified kernel automatically carries a
+This file does not assert that every property kernel automatically carries a
 thermodynamic heat/memory split.
 -/
 

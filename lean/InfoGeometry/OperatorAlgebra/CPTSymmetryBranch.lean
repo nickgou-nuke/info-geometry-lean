@@ -537,11 +537,11 @@ structure CPTAlgebraCommutantBranch
   /-- Multiplicative/additive CPT mirror on represented operators. -/
   alphaJ : Op →+* Op
 
-  /-- Tomita routing hypothesis: algebra-side elements mirror into the commutant. -/
+  /-- Tomita routing property: algebra-side elements mirror into the commutant. -/
   alphaJ_maps_algebra_to_commutant :
     ∀ a : Op, InAlgebra a → InCommutant (alphaJ a)
 
-  /-- Chiral-flip hypothesis: the left projector mirrors to the right projector. -/
+  /-- Chiral-flip property: the left projector mirrors to the right projector. -/
   alphaJ_P_left :
     alphaJ P_left = P_right
 

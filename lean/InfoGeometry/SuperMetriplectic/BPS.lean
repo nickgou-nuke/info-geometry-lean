@@ -8,7 +8,7 @@ Conservative body-level packets for the supersymmetric thermodynamic layer.
 This file keeps the BPS/Witten statements explicit:
 
 * central charge data are represented by scalar readouts;
-* BPS saturation is an assumption, not derived here;
+* BPS saturation is an property, not derived here;
 * protected Onsager directions are represented by an explicit null response;
 * the Witten index is represented by a temperature-invariant scalar readout.
 -/

@@ -17,7 +17,7 @@ Theorem-safe bridge for the core chain:
 * infinite binary Cantor boundary;
 * finite binary cylinder refinement;
 * Cuntz `O₂` branching and CAR readout;
-* infinite Clifford/Fock witness packet;
+* infinite Clifford/Fock property packet;
 * spectral-dimension / Hausdorff-calibration readout.
 
 This file does not construct a new ultrametric on the Cantor boundary, nor
@@ -212,7 +212,7 @@ theorem boundary_finite_reconstruction
     ξ = boundaryConsList (boundaryPrefix n ξ) (boundaryIterateTail n ξ) :=
   boundary_iterated_decomposition n ξ
 
-/-- Boundary crossing witness with explicit prefix/tail fields. -/
+/-- Boundary crossing property with explicit prefix/tail fields. -/
 @[rep_depth operator]
 def BoundaryCrossingWitness (n : ℕ) (ξ : InfiniteBinaryWordSpace) : Prop :=
   ξ = boundaryConsList (boundaryPrefix n ξ) (boundaryIterateTail n ξ)
@@ -237,13 +237,13 @@ def suf {n : ℕ} {ξ : InfiniteBinaryWordSpace}
 
 end BoundaryCrossingWitness
 
-/-- Canonical boundary crossing witness at depth `n`. -/
+/-- Canonical boundary crossing property at depth `n`. -/
 @[rep_depth operator]
 def boundaryCrossingWitness
     (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
     BoundaryCrossingWitness n ξ := boundary_finite_reconstruction n ξ
 
-/-- Boundary crossing readout: the canonical witness is exactly prefix/tail reconstruction. -/
+/-- Boundary crossing readout: the canonical property is exactly prefix/tail reconstruction. -/
 @[rep_depth operator]
 theorem boundary_crossing
     (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
@@ -532,7 +532,7 @@ theorem carFromCuntz_anticommutator_star_eq_one
     cantorAnticommutator (carFromCuntz C) (star (carFromCuntz C)) = 1 :=
   InfoGeometry.Canonical.carFromCuntz_anticommutator_star_eq_one C
 
-/-- Re-export of the infinite Clifford square law from the paper witness. -/
+/-- Re-export of the infinite Clifford square law from the paper property. -/
 @[rep_depth operator]
 theorem infiniteClifford_generator_sq
     {Op : Type*} [Ring Op]
@@ -540,7 +540,7 @@ theorem infiniteClifford_generator_sq
     C.gamma i * C.gamma i = 1 :=
   C.gamma_sq i
 
-/-- Re-export of the infinite Clifford anticommutation law from the paper witness. -/
+/-- Re-export of the infinite Clifford anticommutation law from the paper property. -/
 @[rep_depth operator]
 theorem infiniteClifford_generator_anticomm
     {Op : Type*} [Ring Op]

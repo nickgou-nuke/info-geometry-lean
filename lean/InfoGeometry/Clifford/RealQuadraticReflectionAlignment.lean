@@ -6,7 +6,7 @@ namespace InfoGeometry.Clifford
 # Generic reflection alignment for real quadratic forms
 
 These are the local two-reflection identities used in a
-Cartan--Dieudonné argument.  They require no signature assumption and do
+Cartan--Dieudonné argument.  They require no signature property and do
 not claim that reflections generate the whole isometry group.
 -/
 

@@ -25,7 +25,7 @@ theorem primesUpto_mono {n m : ℕ} (h : n ≤ m) :
   rw [mem_primesUpto_iff] at hp ⊢
   exact ⟨hp.1.trans h, hp.2⟩
 
-/-- The canonical certified prime register at cutoff `n`. -/
+/-- The canonical property prime register at cutoff `n`. -/
 abbrev PrimeStageRegister (n : ℕ) :=
   primeCutoffRegister n
 

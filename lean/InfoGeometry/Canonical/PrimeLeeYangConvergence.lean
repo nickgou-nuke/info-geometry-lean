@@ -41,7 +41,7 @@ def zeroFreeTransfer
   outer_zero_free := outer_zero_free
 
 /--
-Build the corrected Hurwitz witness consumed by `PrimeHurwitzLimit`.
+Build the corrected Hurwitz property consumed by `PrimeHurwitzLimit`.
 -/
 @[bridge_target_tag, rep_depth operator]
 def toCorrectHurwitzZeroTransferWitness

@@ -15,8 +15,8 @@ variable {P X ι : Type} [TopologicalSpace P] [TopologicalSpace X]
 # Reparametrization on observed family images
 
 The observed image is a subtype of the feature space.  Reparametrization
-does not change observed values; it only changes the range witness.  The map
-below therefore keeps the subtype value and transports its witness along the
+does not change observed values; it only changes the range property.  The map
+below therefore keeps the subtype value and transports its property along the
 parameter map.
 -/
 

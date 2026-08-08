@@ -62,7 +62,7 @@ theorem exists_pureBraidMatrixRepresentation_of_relators (moving : ℕ)
   · exact pureBraidMatrixRepresentationOfRelators_of moving gen hrel
 
 /-
-The historical identity assignment was only a vacuous compatibility witness.
+The historical identity assignment was only a vacuous compatibility property.
 Retain the names as a migration surface, but route them directly through the
 generic native descent theorem with an explicit generator assignment and
 relator proof.

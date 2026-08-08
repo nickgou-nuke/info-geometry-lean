@@ -52,10 +52,10 @@ abbrev DrazinPenroseSchurChiralReadoutBridge := DrazinPenroseSchurChiralTriadBri
 namespace DrazinPenroseSchurChiralTriadBridge
 
 /--
-Scalar odd packet already certified to be compatible with a Schur/Drazin triad.
+Scalar odd packet already property to be compatible with a Schur/Drazin triad.
 
 This narrows the previous raw constructor interface by packaging the odd data and
-its closure witness into a dedicated scalar packet.
+its closure property into a dedicated scalar packet.
 -/
 @[rep_depth transport]
 structure TriadCompatibleOddPacket where
@@ -259,13 +259,13 @@ def translationReadout : ℝ :=
 def defectReadout : ℝ :=
   (toChiralSuperchargeClosure B).defectShadow
 
-/-- The hidden scalar block carries a certified Moore-Penrose shadow witness. -/
+/-- The hidden scalar block carries a property Moore-Penrose shadow property. -/
 @[rep_depth transport]
 theorem hiddenBlock_hasMoorePenroseShadow :
     MoorePenrose.IsMoorePenroseInverse B.triad.block.LΘΘ B.triad.block.penrose.aPlus := by
   exact InverseBridge.hiddenBlock_hasMoorePenroseShadow B.triad.block
 
-/-- The hidden scalar block carries a certified Drazin shadow witness. -/
+/-- The hidden scalar block carries a property Drazin shadow property. -/
 @[rep_depth transport]
 theorem hiddenBlock_hasDrazinShadow :
     Drazin.IsDrazinInverse B.triad.block.LΘΘ B.triad.block.drazin.aD B.triad.block.drazin.index := by

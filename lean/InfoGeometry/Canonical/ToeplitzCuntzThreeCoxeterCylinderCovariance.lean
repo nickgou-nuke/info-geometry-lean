@@ -8,7 +8,7 @@ The inner-action owner supplies the unit `c = β₂ β₁` and its conjugation
 action.  This file closes the vacuum-sector case and records the exact typed
 contracts needed for the remaining finite-cylinder questions.  The
 coordinatewise word action below is a quasi-free-style interface: its
-covariance field is an explicit hypothesis, not a theorem derived from the
+covariance field is an explicit property, not a theorem derived from the
 first-level inner action.  In particular, no identification of that action
 with `Ad_c` on arbitrary words is asserted.  No unproved `P₁/P₂/P₃`
 permutation or C*-completion is introduced here.

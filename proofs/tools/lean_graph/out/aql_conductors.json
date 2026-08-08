@@ -1,0 +1,322 @@
+[
+  {
+    "score": 25.39685019840059,
+    "used_by": 43,
+    "deps": 15,
+    "kind": null,
+    "module": "AlgebraicCuntzQuotient",
+    "name": "AlgebraicCuntzQuotient.S"
+  },
+  {
+    "score": 25.39685019840059,
+    "used_by": 43,
+    "deps": 15,
+    "kind": null,
+    "module": "AlgebraicCuntzQuotient",
+    "name": "AlgebraicCuntzQuotient.T"
+  },
+  {
+    "score": 19.28730152198591,
+    "used_by": 93,
+    "deps": 4,
+    "kind": null,
+    "module": "AlgebraicCuntzQuotient",
+    "name": "AlgebraicCuntzQuotient.CuntzAlg"
+  },
+  {
+    "score": 16.1245154965971,
+    "used_by": 10,
+    "deps": 26,
+    "kind": null,
+    "module": "BogoliubovSU3ParafermionProofChain",
+    "name": "BogoliubovSU3ParafermionProofChain.su3_color_action_all_commutators"
+  },
+  {
+    "score": 11.532562594670797,
+    "used_by": 19,
+    "deps": 7,
+    "kind": null,
+    "module": "BogoliubovWeylChemicalPotential",
+    "name": "BogoliubovWeylChemicalPotential.frameWeylQ"
+  },
+  {
+    "score": 11.180339887498949,
+    "used_by": 25,
+    "deps": 5,
+    "kind": null,
+    "module": "GellMannParafermionSolder",
+    "name": "GellMannParafermionSolder.gellMannParafermionSolder"
+  },
+  {
+    "score": 10.954451150103322,
+    "used_by": 15,
+    "deps": 8,
+    "kind": null,
+    "module": "WeakIsospinSU2",
+    "name": "WeakIsospinSU2.I₂"
+  },
+  {
+    "score": 10.198039027185569,
+    "used_by": 52,
+    "deps": 2,
+    "kind": null,
+    "module": "BogoliubovSU3ParafermionProofChain",
+    "name": "BogoliubovSU3ParafermionProofChain.colorLieAction4"
+  },
+  {
+    "score": 10.14889156509222,
+    "used_by": 103,
+    "deps": 1,
+    "kind": null,
+    "module": "BogoliubovWeylChemicalPotential",
+    "name": "BogoliubovWeylChemicalPotential.BogoliubovInertialFrame"
+  },
+  {
+    "score": 9.746794344808963,
+    "used_by": 19,
+    "deps": 5,
+    "kind": null,
+    "module": "BogoliubovSU3ParafermionProofChain",
+    "name": "BogoliubovSU3ParafermionProofChain.bdgMajoranaPlusColorSpinor4"
+  },
+  {
+    "score": 9.486832980505138,
+    "used_by": 18,
+    "deps": 5,
+    "kind": null,
+    "module": "BogoliubovSU3ParafermionProofChain",
+    "name": "BogoliubovSU3ParafermionProofChain.colorLieAction4_commutator"
+  },
+  {
+    "score": 9.38083151964686,
+    "used_by": 8,
+    "deps": 11,
+    "kind": null,
+    "module": "ParafermionIdentityRealization",
+    "name": "ParafermionIdentityRealization.cuntzFamilyLift"
+  },
+  {
+    "score": 9.38083151964686,
+    "used_by": 8,
+    "deps": 11,
+    "kind": null,
+    "module": "ProjectiveAffineConformalClosure55",
+    "name": "ProjectiveAffineConformalClosure55.Q55"
+  },
+  {
+    "score": 9.219544457292887,
+    "used_by": 17,
+    "deps": 5,
+    "kind": null,
+    "module": "SplitClifford",
+    "name": "SplitClifford.Qsplit"
+  },
+  {
+    "score": 9.16515138991168,
+    "used_by": 12,
+    "deps": 7,
+    "kind": null,
+    "module": "HestenesCuntzPhaseSpace",
+    "name": "HestenesCuntzPhaseSpace.twoCellWeylPair"
+  },
+  {
+    "score": 8.94427190999916,
+    "used_by": 10,
+    "deps": 8,
+    "kind": null,
+    "module": "AlgebraicCuntzQuotient",
+    "name": "AlgebraicCuntzQuotient.starOp"
+  },
+  {
+    "score": 8.660254037844387,
+    "used_by": 15,
+    "deps": 5,
+    "kind": null,
+    "module": "GaugeUHFLift",
+    "name": "GaugeUHFLift.gaugeActAt"
+  },
+  {
+    "score": 8.48528137423857,
+    "used_by": 36,
+    "deps": 2,
+    "kind": null,
+    "module": "SupergradedCuntzBdG",
+    "name": "SupergradedCuntzBdG.Z2Parity"
+  },
+  {
+    "score": 8.366600265340756,
+    "used_by": 14,
+    "deps": 5,
+    "kind": null,
+    "module": "GellMannParafermionSolder",
+    "name": "GellMannParafermionSolder.realizedParafermionColorSpinor4"
+  },
+  {
+    "score": 8.366600265340756,
+    "used_by": 7,
+    "deps": 10,
+    "kind": null,
+    "module": "BogoliubovWeylChemicalPotential",
+    "name": "BogoliubovWeylChemicalPotential.frameWeylQ_eq_qRapidity_logClock"
+  },
+  {
+    "score": 8.366600265340756,
+    "used_by": 14,
+    "deps": 5,
+    "kind": null,
+    "module": "TKKJordanPairSocket",
+    "name": "TKKJordanPairSocket.TKKGrade"
+  },
+  {
+    "score": 8.246211251235321,
+    "used_by": 68,
+    "deps": 1,
+    "kind": null,
+    "module": "ChiralCausalCone",
+    "name": "ChiralCausalCone.σPlus"
+  },
+  {
+    "score": 8.12403840463596,
+    "used_by": 11,
+    "deps": 6,
+    "kind": null,
+    "module": "CantorBoundaryCuntzFamily",
+    "name": "CantorBoundaryCuntzFamily.cuntzS"
+  },
+  {
+    "score": 8.12403840463596,
+    "used_by": 6,
+    "deps": 11,
+    "kind": null,
+    "module": "AlgebraicCuntzQuotient",
+    "name": "AlgebraicCuntzQuotient.lift"
+  },
+  {
+    "score": 8,
+    "used_by": 32,
+    "deps": 2,
+    "kind": null,
+    "module": "AlgebraicCuntzQuotient",
+    "name": "AlgebraicCuntzQuotient.CuntzLetter"
+  },
+  {
+    "score": 8,
+    "used_by": 16,
+    "deps": 4,
+    "kind": null,
+    "module": "SplitClifford",
+    "name": "SplitClifford.Clnn"
+  },
+  {
+    "score": 8,
+    "used_by": 8,
+    "deps": 8,
+    "kind": null,
+    "module": "AlgebraicCuntzQuotient",
+    "name": "AlgebraicCuntzQuotient.mk"
+  },
+  {
+    "score": 8,
+    "used_by": 64,
+    "deps": 1,
+    "kind": null,
+    "module": "ChiralCausalCone",
+    "name": "ChiralCausalCone.σMinus"
+  },
+  {
+    "score": 8,
+    "used_by": 32,
+    "deps": 2,
+    "kind": null,
+    "module": "SplitClifford",
+    "name": "SplitClifford.Q11"
+  },
+  {
+    "score": 7.937253933193772,
+    "used_by": 7,
+    "deps": 9,
+    "kind": null,
+    "module": "CStarCuntzTensorQuotient",
+    "name": "CStarCuntzTensorQuotient.CStarCuntzFamily.lift"
+  },
+  {
+    "score": 7.745966692414834,
+    "used_by": 12,
+    "deps": 5,
+    "kind": null,
+    "module": "ChiralTensorRecoupling",
+    "name": "ChiralTensorRecoupling.e"
+  },
+  {
+    "score": 7.745966692414834,
+    "used_by": 5,
+    "deps": 12,
+    "kind": null,
+    "module": "WeylSU3ColorSymmetry",
+    "name": "WeylSU3ColorSymmetry.permMatrix_swap12_sq"
+  },
+  {
+    "score": 7.745966692414834,
+    "used_by": 10,
+    "deps": 6,
+    "kind": null,
+    "module": "ParafermionIdentityRealization",
+    "name": "ParafermionIdentityRealization.idRealization"
+  },
+  {
+    "score": 7.54983443527075,
+    "used_by": 19,
+    "deps": 3,
+    "kind": null,
+    "module": "BiquaternionCliffordIso",
+    "name": "BiquaternionCliffordIso.σ₁"
+  },
+  {
+    "score": 7.54983443527075,
+    "used_by": 19,
+    "deps": 3,
+    "kind": null,
+    "module": "AlgebraicCuntzQuotient",
+    "name": "AlgebraicCuntzQuotient.Rel"
+  },
+  {
+    "score": 7.483314773547883,
+    "used_by": 4,
+    "deps": 14,
+    "kind": null,
+    "module": "AlgebraicCuntzQuotient",
+    "name": "AlgebraicCuntzQuotient.lift_T"
+  },
+  {
+    "score": 7.483314773547883,
+    "used_by": 4,
+    "deps": 14,
+    "kind": null,
+    "module": "AlgebraicCuntzQuotient",
+    "name": "AlgebraicCuntzQuotient.lift_S"
+  },
+  {
+    "score": 7.416198487095663,
+    "used_by": 5,
+    "deps": 11,
+    "kind": null,
+    "module": "CStarCuntzTensorQuotient",
+    "name": "CStarCuntzTensorQuotient.CStarCuntzFamily.lift_S"
+  },
+  {
+    "score": 7.416198487095663,
+    "used_by": 5,
+    "deps": 11,
+    "kind": null,
+    "module": "CStarCuntzTensorQuotient",
+    "name": "CStarCuntzTensorQuotient.CStarCuntzFamily.lift_T"
+  },
+  {
+    "score": 7.416198487095663,
+    "used_by": 11,
+    "deps": 5,
+    "kind": null,
+    "module": "CantorBoundaryCuntzFamily",
+    "name": "CantorBoundaryCuntzFamily.cuntzT"
+  }
+]

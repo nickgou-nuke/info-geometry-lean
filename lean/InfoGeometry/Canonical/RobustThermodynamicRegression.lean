@@ -117,7 +117,7 @@ by
   have h_A_gt_B : (x.sum fun i xi => x.sum fun j xj => xi * A i j * xj) > (x.sum fun i xi => x.sum fun j xj => xi * B i j * xj) :=
     sub_pos.mp h_H_pos
     
-  -- But our instability hypothesis says B >= A. Contradiction!
+  -- But our instability property says B >= A. Contradiction!
   linarith
 
 end FUSION

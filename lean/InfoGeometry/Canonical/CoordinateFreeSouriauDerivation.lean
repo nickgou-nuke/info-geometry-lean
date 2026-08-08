@@ -87,7 +87,7 @@ theorem conformal_zero_implies_equilibrium
 
 /--
 Coordinate-free Souriau packet with inverse-temperature norm readout and
-equilibrium witness.
+equilibrium property.
 -/
 structure CoordinateFreeSouriau where
   metric : CoordinateFreeMetric (Tangent := Tangent)

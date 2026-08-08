@@ -1,0 +1,9 @@
+import proofs.CuntzPeirceLogicalQubit
+
+#print axioms CuntzPeirceLogicalCorner.cuntzLogicalMatrixUnit_mul
+#print axioms CuntzPeirceLogicalCorner.cuntzLogicalMatrixUnit_star
+#print axioms CuntzPeirceLogicalCorner.cuntzLogicalMatrixUnit_diagonal_sum
+#print axioms CuntzPeirceLogicalCorner.cuntzCodeProjector_mul_logicalMatrixUnit
+#print axioms CuntzPeirceLogicalQubit.cuntzLogicalMatrixUnit_mul_codeProjector
+#print axioms CuntzPeirceLogicalQubit.canonicalCuntzPeirce_transports_KL
+#print axioms CuntzPeirceLogicalQubit.canonicalCuntzPeirceLogicalQubit_exists

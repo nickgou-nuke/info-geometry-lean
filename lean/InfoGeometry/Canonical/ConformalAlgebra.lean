@@ -59,7 +59,7 @@ def SatisfiesKWeight : Prop :=
   CBA.D * CBA.CI.K - CBA.CI.K * CBA.D = - CBA.CI.K
 
 /--
-The master conformal relation witness:
+The master conformal relation property:
 `[K, P] = 2 (η • D - M)` for a chosen scalar coefficient `η`.
 -/
 def SatisfiesMasterRelation (η : ℝ) : Prop :=
@@ -116,7 +116,7 @@ theorem generatorCartanDecomposition_of_parts
     CBA.GeneratorCartanDecomposition := by
   exact ⟨hM, hD⟩
 
-/-- Cartan grading involutivity hypothesis `Γ^2 = 1`. -/
+/-- Cartan grading involutivity property `Γ^2 = 1`. -/
 def GradingInvolutive : Prop :=
   chiralGrading CBA.CI * chiralGrading CBA.CI = (1 : E →L[ℝ] E)
 

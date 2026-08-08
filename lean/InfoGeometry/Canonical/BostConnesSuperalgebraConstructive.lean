@@ -9,7 +9,7 @@ Bost--Connes/Cuntz/Witten-parity interface.
 The proof boundary is explicit:
 
 * no concrete infinite UHF algebra is postulated;
-* no KMS phase transition, BEC statement, or Riemann-hypothesis consequence is
+* no KMS phase transition, BEC statement, or Riemann-property consequence is
   claimed;
 * the algebra carrier, Witten parity, state, and Cuntz equivariance are
   proof-carrying data;
@@ -28,7 +28,7 @@ supplied parity-invariance or anti-invariance premises.
 #### BUCKET 3: OPEN CLOSURE DEBT
 Infinite UHF/C*-completion, Bost--Connes KMS phase transition, Galois action,
 BEC interpretation, Tate adelic functional equation, zeta continuation, and
-Riemann-hypothesis consequences.
+Riemann-property consequences.
 -/
 
 noncomputable section

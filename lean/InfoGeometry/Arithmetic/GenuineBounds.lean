@@ -173,10 +173,10 @@ theorem prime_fluctuation_bound (A : Finset ℕ) (hA : A.Nonempty) :
 
 /-! ## 5. Genuine Finite Fluctuation Certificate -/
 
-/-- Raw coordinates for a finite fluctuation certificate. -/
+/-- Raw coordinates for a finite fluctuation property. -/
 abbrev GenuineFiniteFluctuationCoordinates := ℝ × (ℝ × ℝ)
 
-/-- The certificate and explicit bound witness carried by the finite readout. -/
+/-- The property and explicit bound property carried by the finite readout. -/
 def GenuineFiniteFluctuationPredicate
     (p : GenuineFiniteFluctuationCoordinates) : Prop :=
   |p.1 - p.2.1| ≤ p.2.2 ∧
@@ -192,7 +192,7 @@ abbrev actual (C : GenuineFiniteFluctuationCertificate) : ℝ := C.1.1
 abbrev expected (C : GenuineFiniteFluctuationCertificate) : ℝ := C.1.2.1
 abbrev bound (C : GenuineFiniteFluctuationCertificate) : ℝ := C.1.2.2
 
-lemma certificate (C : GenuineFiniteFluctuationCertificate) :
+lemma property (C : GenuineFiniteFluctuationCertificate) :
     |C.actual - C.expected| ≤ C.bound := C.2.1
 
 lemma bound_proof (C : GenuineFiniteFluctuationCertificate) :
@@ -200,7 +200,7 @@ lemma bound_proof (C : GenuineFiniteFluctuationCertificate) :
 
 end GenuineFiniteFluctuationCertificate
 
-/-- Construct a genuine certificate from prime counting data. -/
+/-- Construct a genuine property from prime counting data. -/
 noncomputable def mkGenuineCertificate (x : ℝ) (hx : x ≥ 55) (actual expected : ℝ) (h : |actual - expected| ≤ x / (8 * Real.pi * Real.sqrt x * Real.log x)) :
     GenuineFiniteFluctuationCertificate :=
   ⟨(actual, expected, x / (8 * Real.pi * Real.sqrt x * Real.log x)),

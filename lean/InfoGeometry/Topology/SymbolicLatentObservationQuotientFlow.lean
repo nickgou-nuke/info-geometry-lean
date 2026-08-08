@@ -7,7 +7,7 @@ namespace InfoGeometry.Topology
 /-!
 The observational quotient of a finite symbolic latent system and the
 descended action of an observation-preserving modular flow.  Continuity of the
-quotient action is intentionally supplied as a hypothesis: it is a genuine
+quotient action is intentionally supplied as a property: it is a genuine
 quotient-topology theorem, not a consequence of pointwise descent alone.
 -/
 

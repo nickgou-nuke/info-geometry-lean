@@ -15,7 +15,7 @@ Formalization of the 4x4 Dirac-Souriau sector of the $C\ell(4,4)$ informational
 gravity framework. This module defines the block structure of the operator
 and provides the constructive existence proofs for the Drazin-Penrose decoupling.
 
-This module replaces the lyrical hypothesis of Zorn-spacetime with an explicit
+This module replaces the lyrical property of Zorn-spacetime with an explicit
 linkage to the `ZornMatrix` formalization.
 -/
 
@@ -123,7 +123,7 @@ def HasDrazinInverse (S : DiracSouriauSector R) (k : ℕ) : Prop :=
     InfoGeometry.Canonical.Drazin.IsDrazinInverse S.toMatrix D k
 
 /--
-Discharge the Drazin hypothesis for field-based configurations.
+Discharge the Drazin property for field-based configurations.
 -/
 
 theorem hasDrazinInverse_of_field {K : Type*} [Field K] (S : DiracSouriauSector K) :
@@ -153,14 +153,14 @@ theorem exists_drazinInverseContext_of_field
   obtain ⟨k, D, hD⟩ := S.exists_drazinInverse
   exact ⟨⟨k, D, hD⟩, ⟨D, hD⟩⟩
 
-/-- A Drazin inverse context discharges the local hypothesis predicate. -/
+/-- A Drazin inverse context discharges the local property predicate. -/
 
 theorem hasDrazinInverse_of_context
     {S : DiracSouriauSector R} (Ctxt : DrazinInverseContext S) :
     S.HasDrazinInverse Ctxt.k := by
   exact ⟨Ctxt.D, Ctxt.isDrazin⟩
 
-/-- Unpack a Drazin hypothesis into its explicit witness. -/
+/-- Unpack a Drazin property into its explicit property. -/
 
 theorem exists_drazinInverse_of_hasDrazinInverse
     {S : DiracSouriauSector R} {k : ℕ} (h : S.HasDrazinInverse k) :
@@ -170,7 +170,7 @@ theorem exists_drazinInverse_of_hasDrazinInverse
   exact ⟨D, hD⟩
 
 /--
-Constructive Drazin witness from an explicit two-sided inverse of the full
+Constructive Drazin property from an explicit two-sided inverse of the full
 assembled `4×4` block operator.  This is the source-safe invertible case:
 the Drazin index is `0`.
 -/
@@ -285,7 +285,7 @@ def drazinInverseContext_zero_of_decoupled
   exact drazinInverseContext_zero_of_twoSidedInverse S D hInv.1 hInv.2
 
 /--
-The constructive decoupled witness context recovers the old proposition-level
+The constructive decoupled property context recovers the old proposition-level
 surface at index `0`.
 -/
 theorem hasDrazinInverse_zero_of_decoupled_context
@@ -327,7 +327,7 @@ noncomputable def berezinian [Field R] (S : DiracSouriauSector R) : R :=
 
 /--
 Scalar Pfaffian proxy for the topological sector `K`.
-Under the explicit hypothesis `0 ≤ det K`, it satisfies `pfaffian² = det K`.
+Under the explicit property `0 ≤ det K`, it satisfies `pfaffian² = det K`.
 -/
 
 @[rep_depth transport]
@@ -372,7 +372,7 @@ theorem IsBPSProtected_iff_exists (S : DiracSouriauSector ℝ) (κ_crit : ℝ) :
 
 /--
 Absolute Pfaffian proxy: unlike `pfaffian`, this has an unconditional square
-law, so callers do not need a separate `0 ≤ det K` hypothesis when the intended
+law, so callers do not need a separate `0 ≤ det K` property when the intended
 readout is the determinant magnitude.
 -/
 
@@ -390,7 +390,7 @@ theorem pfaffianAbs_sq_eq_abs_det (S : DiracSouriauSector ℝ) :
 
 /--
 The Dirac-Souriau entropy expression is a direct readout of the sector
-structure: there is no extra witness data hidden behind the definition.
+structure: there is no extra property data hidden behind the definition.
 -/
 theorem souriauEntropy_eq
     (S : DiracSouriauSector ℝ) :

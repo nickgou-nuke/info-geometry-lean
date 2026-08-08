@@ -141,14 +141,14 @@ end RealMajoranaCore
 def anticommutator {X : RealMajoranaCore} (A B : X →ₗ[ℝ] X) : X →ₗ[ℝ] X :=
   A * B + B * A
 
-/-- Standard single-mode CAR witness for an odd pair `(a, a†)`. -/
+/-- Standard single-mode CAR property for an odd pair `(a, a†)`. -/
 def CARWitness (X : RealMajoranaCore) (a adag : X →ₗ[ℝ] X) : Prop :=
   anticommutator a a = 0 ∧
     anticommutator adag adag = 0 ∧
     anticommutator a adag = (LinearMap.id : X →ₗ[ℝ] X)
 
 /--
-Primitive (two-sorted) Majorana CAR witness:
+Primitive (two-sorted) Majorana CAR property:
 mode space `Mode`, state space `X`.
 -/
 def MajoranaCARWitness (X : RealMajoranaCore) {Mode : Type*}

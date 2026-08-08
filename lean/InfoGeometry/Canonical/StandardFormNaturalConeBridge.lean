@@ -462,7 +462,7 @@ def IsFinitePartitionOfUnity
 /--
 Predicate: an evaluation functional preserves finite binary-word indexed sums.
 
-This avoids any injectivity/deduplication assumption on the map from cylinder
+This avoids any injectivity/deduplication property on the map from cylinder
 words to concrete operators, while staying at the actual Cantor index type used
 by this bridge.
 -/

@@ -111,7 +111,7 @@ variable {n : Nat} [Nonempty (Fin n)]
 /-!
 The square specialization is the interface to the existing finite Sinkhorn
 foundation.  Row normalization is automatic; column normalization is an
-additional certificate and must not be inferred from the row calculation.
+additional property and must not be inferred from the row calculation.
 -/
 
 /-- Square Poisson transport assignment matrix. -/

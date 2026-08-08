@@ -12,7 +12,7 @@ namespace InfoGeometry.Canonical.ViazovskaCohnElkiesMellin
 /-!
 # Viazovska Magic Function & Cohn-Elkies Linear Programming Bound
 
-This module formalizes the Cohn-Elkies linear programming bound certificate
+This module formalizes the Cohn-Elkies linear programming bound property
 for sphere packing, Viazovska's 8D $E_8$ density constant $\pi^4 / 384$,
 and its connection to the Bost-Connes KMS partition function product factorization.
 -/
@@ -21,7 +21,7 @@ and its connection to the Bost-Connes KMS partition function product factorizati
 
 This is deliberately only the algebraic scalar expression.  The analytic
 Fourier-positivity and interpolation hypotheses of the Cohn--Elkies theorem
-are not encoded by a certificate wrapper here.
+are not encoded by a property wrapper here.
 -/
 def densityBoundRatio (f_zero f_fourier_zero vol_ball : ℝ) : ℝ :=
   vol_ball * (f_fourier_zero / f_zero)

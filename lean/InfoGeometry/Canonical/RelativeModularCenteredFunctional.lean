@@ -325,14 +325,14 @@ def cantorPathRestrictLinear (x : ℕ → Bool) (n : ℕ) :
     intro c a
     rfl
 
-/-- Compatibility witness for the fixed-word local state family. -/
+/-- Compatibility property for the fixed-word local state family. -/
 theorem cantorPathStateCompatible (x : ℕ → Bool) (n : ℕ)
     (a : BinaryWord (n + 1) → ℝ) :
     cantorPointState (x := x) (n + 1) a =
       cantorPointState (x := x) n (cantorPathRestrict (x := x) n a) := by
   simp [cantorPointState, cantorPathRestrict, cantorPrefixWord_succ]
 
-/-- Linearized compatibility witness for the restricted observables. -/
+/-- Linearized compatibility property for the restricted observables. -/
 theorem cantorPathStateCompatibleLinear (x : ℕ → Bool) (n : ℕ)
     (a : BinaryWord (n + 1) → ℝ) :
     cantorPointState (x := x) (n + 1) a =

@@ -80,7 +80,7 @@ def quantumDeformationParameter (β : ℝ) (E : ℝ) (μ : ℝ) (Q : ℝ) (θ : 
 
 /-! The identification of a quantum `SU_q(3)` representation category with a
 Cuntz/Cuntz--Krieger model is not formalized here.  No proposition-valued
-certificate for that analytic statement is introduced. -/
+property for that analytic statement is introduced. -/
 
 /-! ## Cantor-loop gauge steps and braid covariance -/
 

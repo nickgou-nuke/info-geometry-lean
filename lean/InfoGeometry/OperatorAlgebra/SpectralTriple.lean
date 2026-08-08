@@ -461,7 +461,7 @@ namespace RenormalizedIntegrationBackend
 
 variable {A : Type*} [Mul A]
 
-/-- A cyclic-cocycle readout is cyclic when its cyclicity witness is supplied. -/
+/-- A cyclic-cocycle readout is cyclic when its cyclicity property is supplied. -/
 theorem cyclicCocycle_cyclicity
     (readout : A → ℝ)
     (hcyc : ∀ a b : A, readout (a * b) = readout (b * a)) :
@@ -475,7 +475,7 @@ end RenormalizedIntegrationBackend
 /--
 A real, phase-compatible, integration-aware spectral triple socket.
 
-This is deliberately witness-based. It separates:
+This is deliberately property-based. It separates:
 
 * `K`, the Hestenes phase axis;
 * `J`, the Connes real structure;
@@ -568,7 +568,7 @@ theorem lipschitz_nonneg
     0 ≤ T.lipschitz a :=
   lipschitzSeminorm_nonneg T.representedAlgebra T.spectralGenerator a
 
-/-- Order-one condition, re-exported as a theorem from the witness. -/
+/-- Order-one condition, re-exported as a theorem from the property. -/
 theorem orderOne_apply
     (T : PhaseRealSpectralTriple A H)
     (a b : A) :

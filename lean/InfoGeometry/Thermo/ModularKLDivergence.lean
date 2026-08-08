@@ -50,7 +50,7 @@ theorem operatorial_gibbs_variational_principle_frozen
       (X := X) (Y := Y) (T := T) prob qT mY_givenT hq x t
 
 /--
-If the BA ratio positivity witness is provided, the scalar modular potential is
+If the BA ratio positivity property is provided, the scalar modular potential is
 `β · KL + logPartition`.
 -/
 theorem operatorial_gibbs_variational_principle_frozen_scalar

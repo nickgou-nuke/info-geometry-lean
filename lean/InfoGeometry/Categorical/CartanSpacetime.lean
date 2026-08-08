@@ -13,7 +13,7 @@ The content is finite and algebraic:
 * `id` is left/right covariant for supplied actions;
 * composition preserves explicitly stated covariance equations;
 * function composition has left/right identity and associativity;
-* an explicitly supplied trace-invariance hypothesis is stable after composing
+* an explicitly supplied trace-invariance property is stable after composing
   with `id`.
 
 No Connes correspondence, Radon--Nikodym cocycle, GNS vacuum, braid-group

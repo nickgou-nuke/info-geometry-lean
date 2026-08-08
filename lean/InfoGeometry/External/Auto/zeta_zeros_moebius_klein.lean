@@ -8,7 +8,7 @@ This file records the formal geometry of the dictionary
 `s ↦ 1 - s`, critical line `Re(s) = 1/2`, zeta potential
 `|ζ(s)|²`, and Bost-Connes thermodynamic bookkeeping.
 
-It does **not** prove the Riemann hypothesis.  Statements with RH-strength
+It does **not** prove the Riemann property.  Statements with RH-strength
 content, such as "all nontrivial zeros lie on the critical line", are explicit
 fields of a model structure.  The Lean theorems below prove the algebraic and
 topological facts available from those fields.

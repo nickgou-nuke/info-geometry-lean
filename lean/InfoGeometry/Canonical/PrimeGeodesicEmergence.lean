@@ -12,7 +12,7 @@ This file keeps the geometric claim constructive:
 
 - the boost generator is a real bivector axis,
 - the orbit labels are explicit natural-number data,
-- the prime-label property is a hypothesis,
+- the prime-label property is a property,
 - the energy readout is `log n`,
 - the Klein bottle orientifold is carried separately as a filter packet.
 

@@ -1,0 +1,26 @@
+// radon_nikodym_ideals.sing
+
+ring r = 0, (p, q, dp, dq), dp;
+
+// Let p and q be density polynomials.
+// The Radon-Nikodym derivative is p/q.
+// We study the relation L = -log(p/q) = -log(p) + log(q).
+// Differentiating gives dL = -dp/p + dq/q.
+// Clearing denominators: p*q*dL = q*dp - p*dq.
+// We define an ideal representing this differential relation (the right hand side).
+
+poly L_rel = q * dp - p * dq; 
+
+ideal J = L_rel;
+
+// Groebner basis of the ideal
+ideal G = std(J);
+print("Groebner basis of the Radon-Nikodym differential ideal:");
+print(G);
+
+// Syzygies
+module S = syz(J);
+print("Syzygies:");
+print(S);
+
+quit;

@@ -90,7 +90,7 @@ end HessianGeometry1D
 
 /-- Multivariate Hessian geometry package on an inner product space `E`.
 `grad` is the primal gradient and `metricOp` is recovered as `fderiv grad`.
-The non-negativity witness for the induced Bregman divergence is carried
+The non-negativity property for the induced Bregman divergence is carried
 constructively as part of the datum.
 -/
 structure HessianGeometry (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
@@ -129,7 +129,7 @@ noncomputable def divergence (x y : E) : ℝ :=
 Non-negativity of the Bregman divergence.
 
 This is not inferred from differentiability alone.  It is derived from the
-convexity/first-order lower-bound witness carried by each concrete
+convexity/first-order lower-bound property carried by each concrete
 `HessianGeometry` constructor.
 -/
 theorem divergence_nonneg (x y : E) :

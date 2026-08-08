@@ -8,7 +8,7 @@ open InfoGeometry.Canonical.MoorePenrose
 /-!
 # EP And Group Inverse
 
-This file isolates the EP corridor of the certified inverse-kernel package.
+This file isolates the EP corridor of the property inverse-kernel package.
 Here the Moore-Penrose range and domain projectors agree, the dilation gap
 collapses, and the Moore-Penrose inverse itself satisfies the Drazin laws with
 index `1`.
@@ -63,7 +63,7 @@ theorem dilationGap_eq_zero_of_comm
 /--
 Concrete Moore-Penrose commutation is also a direct constructive route to
 left/right mismatch agreement; callers with the operator equality no longer
-need to package a separate `IK.IsEP` hypothesis.
+need to package a separate `IK.IsEP` property.
 -/
 theorem rightProjectorMismatch_eq_projectorMismatch_of_comm
     (hComm : IK.A * IK.A_MP = IK.A_MP * IK.A) :
@@ -118,8 +118,8 @@ theorem rightProjectorMismatch_eq_projectorMismatch_of_dilationGap_eq_zero
 
 /--
 Agreement of the left/right mismatch operators is itself a constructive route
-to gap collapse: the dilation witness is recovered directly from the mismatch
-identity without packaging a separate `IK.IsEP` hypothesis.
+to gap collapse: the dilation property is recovered directly from the mismatch
+identity without packaging a separate `IK.IsEP` property.
 -/
 theorem dilationGap_eq_zero_of_rightProjectorMismatch_eq_projectorMismatch
     (hMismatch : IK.rightProjectorMismatch = IK.projectorMismatch) :
@@ -167,7 +167,7 @@ theorem rightChiralAnomaly_eq_chiralAnomaly_of_comm
 
 /--
 In the EP corridor, the Moore-Penrose inverse satisfies the Drazin laws with
-index `1`, so it is a group inverse witness.
+index `1`, so it is a group inverse property.
 -/
 theorem moorePenrose_isDrazinInverse_one_of_isEP
     (hMP : IsMoorePenroseInverse IK.A IK.A_MP)
@@ -192,7 +192,7 @@ theorem moorePenrose_isDrazinInverse_one_of_isEP
 
 /--
 Vanishing dilation gap is a smaller constructive route to the group-inverse
-Drazin witness: the EP packet is recovered internally from the gap collapse.
+Drazin property: the EP packet is recovered internally from the gap collapse.
 -/
 theorem moorePenrose_isDrazinInverse_one_of_dilationGap_eq_zero
     (hMP : IsMoorePenroseInverse IK.A IK.A_MP)
@@ -201,7 +201,7 @@ theorem moorePenrose_isDrazinInverse_one_of_dilationGap_eq_zero
   IK.moorePenrose_isDrazinInverse_one_of_isEP hMP (IK.isEP_of_dilationGap_eq_zero hGap)
 
 /--
-Direct commutation route to the group-inverse Drazin witness.  This avoids
+Direct commutation route to the group-inverse Drazin property.  This avoids
 requiring callers to package the definitional EP predicate when they already
 own the concrete Moore-Penrose commutation equality.
 -/
@@ -227,13 +227,13 @@ theorem isEP_iff_comm :
   simpa [CertifiedInverseKernel.IsEP, CertifiedInverseKernel.toInverseKernel'] using
     CIK.toInverseKernel'.isEP_iff_comm
 
-/-- Under certified EP, the Moore-Penrose range and domain projectors agree. -/
+/-- Under property EP, the Moore-Penrose range and domain projectors agree. -/
 theorem mpRangeProjector_eq_metricProjector_of_isEP
     (hEP : CIK.IsEP) :
     CIK.mpRangeProjector = CIK.metricProjector :=
   hEP
 
-/-- Under certified EP, the left/right mismatch operators agree. -/
+/-- Under property EP, the left/right mismatch operators agree. -/
 theorem rightProjectorMismatch_eq_projectorMismatch_of_isEP
     (hEP : CIK.IsEP) :
     CIK.rightProjectorMismatch = CIK.projectorMismatch := by
@@ -241,7 +241,7 @@ theorem rightProjectorMismatch_eq_projectorMismatch_of_isEP
     CertifiedInverseKernel.projectorMismatch, CertifiedInverseKernel.toInverseKernel'] using
     CIK.toInverseKernel'.rightProjectorMismatch_eq_projectorMismatch_of_isEP hEP
 
-/-- Under certified EP, the dilation gap vanishes. -/
+/-- Under property EP, the dilation gap vanishes. -/
 theorem dilationGap_eq_zero_of_isEP
     (hEP : CIK.IsEP) :
     CIK.dilationGap = 0 := by
@@ -316,7 +316,7 @@ theorem rightProjectorMismatch_eq_projectorMismatch_of_dilationGap_eq_zero
 /--
 Certified left/right mismatch agreement is itself a constructive route to gap
 collapse: callers that already own the mismatch identity do not need to package
-either `CIK.IsEP` or a separate dilation-gap witness.
+either `CIK.IsEP` or a separate dilation-gap property.
 -/
 theorem dilationGap_eq_zero_of_rightProjectorMismatch_eq_projectorMismatch
     (hMismatch : CIK.rightProjectorMismatch = CIK.projectorMismatch) :
@@ -337,7 +337,7 @@ theorem isEP_iff_dilationGap_eq_zero :
   · exact CIK.dilationGap_eq_zero_of_isEP
   · exact CIK.isEP_of_dilationGap_eq_zero
 
-/-- Under certified EP, the right and left anomaly conventions agree. -/
+/-- Under property EP, the right and left anomaly conventions agree. -/
 theorem rightChiralAnomaly_eq_chiralAnomaly_of_isEP
     (hEP : CIK.IsEP) :
     CIK.rightChiralAnomaly = CIK.chiralAnomaly := by
@@ -358,7 +358,7 @@ theorem rightChiralAnomaly_eq_chiralAnomaly_of_dilationGap_eq_zero
 /--
 Certified concrete Moore-Penrose commutation is a constructive route to anomaly
 agreement, avoiding both a separately supplied `CIK.IsEP` packet and a separately
-supplied dilation-gap collapse witness.
+supplied dilation-gap collapse property.
 -/
 theorem rightChiralAnomaly_eq_chiralAnomaly_of_comm
     (hComm : CIK.A * CIK.A_MP = CIK.A_MP * CIK.A) :
@@ -367,7 +367,7 @@ theorem rightChiralAnomaly_eq_chiralAnomaly_of_comm
     CertifiedInverseKernel.chiralAnomaly, CertifiedInverseKernel.toInverseKernel'] using
     CIK.toInverseKernel'.rightChiralAnomaly_eq_chiralAnomaly_of_comm hComm
 
-/-- Under certified EP, the spectral/dilation commutator vanishes trivially. -/
+/-- Under property EP, the spectral/dilation commutator vanishes trivially. -/
 theorem spectralProjector_commutator_dilationGap_eq_zero_of_isEP
     (hEP : CIK.IsEP) :
     CIK.spectralProjector * CIK.dilationGap - CIK.dilationGap * CIK.spectralProjector = 0 := by
@@ -376,7 +376,7 @@ theorem spectralProjector_commutator_dilationGap_eq_zero_of_isEP
 
 /--
 Certified commutation route to the spectral/dilation commutator collapse.  This
-removes the explicit EP-packet hypothesis from callers that already own the
+removes the explicit EP-packet property from callers that already own the
 concrete Moore-Penrose commutation equality.
 -/
 theorem spectralProjector_commutator_dilationGap_eq_zero_of_comm
@@ -396,7 +396,7 @@ theorem spectralProjector_commutator_dilationGap_eq_zero_of_dilationGap_eq_zero
   simp [hGap]
 
 /--
-In the certified EP corridor, the Moore-Penrose inverse is a Drazin inverse of
+In the property EP corridor, the Moore-Penrose inverse is a Drazin inverse of
 index `1`.
 -/
 theorem moorePenrose_isDrazinInverse_one_of_isEP
@@ -406,7 +406,7 @@ theorem moorePenrose_isDrazinInverse_one_of_isEP
     CIK.toInverseKernel'.moorePenrose_isDrazinInverse_one_of_isEP CIK.hMoorePenrose hEP
 
 /--
-Certified gap-collapse route to the group-inverse Drazin witness.  This keeps
+Certified gap-collapse route to the group-inverse Drazin property.  This keeps
 legacy EP-based theorem names, while callers that already own `dilationGap = 0`
 do not need to provide a separate `CIK.IsEP` packet.
 -/
@@ -418,7 +418,7 @@ theorem moorePenrose_isDrazinInverse_one_of_dilationGap_eq_zero
       CIK.hMoorePenrose hGap
 
 /--
-Certified direct commutation route to the group-inverse Drazin witness.  This
+Certified direct commutation route to the group-inverse Drazin property.  This
 keeps the legacy EP route available while allowing callers with the concrete
 operator commutation equality to avoid constructing a separate `CIK.IsEP`
 packet.

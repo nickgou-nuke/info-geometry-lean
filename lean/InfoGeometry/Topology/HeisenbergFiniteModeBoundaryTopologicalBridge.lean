@@ -8,7 +8,7 @@ import InfoGeometry.Canonical.HeisenbergFiniteModeColimit
 This file packages the already-proved finite-mode Heisenberg boundary
 exhaustion as a topological packet.  The source and target are given discrete
 topologies, so continuity and local constancy are bookkeeping consequences of
-the canonical boundary witness.
+the canonical boundary property.
 -/
 
 namespace InfoGeometry.Topology.HeisenbergFiniteModeBoundaryTopologicalBridge
@@ -29,14 +29,14 @@ instance heisenbergAlgebraTopologicalSpace :
 instance heisenbergAlgebraDiscreteTopology :
     DiscreteTopology (HeisenbergAlgebra 𝕜) := ⟨rfl⟩
 
-/-- A finite-mode Heisenberg boundary witness packaged as a topological packet. -/
+/-- A finite-mode Heisenberg boundary property packaged as a topological packet. -/
 structure HeisenbergFiniteModeBoundaryPacket where
   current : HeisenbergAlgebra 𝕜
   stage : Finset (Option ℤ)
-  witness : InfoGeometry.Canonical.heisenbergFiniteModeStage (𝕜 := 𝕜) stage
+  property : InfoGeometry.Canonical.heisenbergFiniteModeStage (𝕜 := 𝕜) stage
   boundaryEq :
     (InfoGeometry.Canonical.heisenbergFiniteModeColimitMap (𝕜 := 𝕜)).hom
-        ((colimit.ι (InfoGeometry.Canonical.heisenbergFiniteModeDiagram (𝕜 := 𝕜)) stage).hom witness) =
+        ((colimit.ι (InfoGeometry.Canonical.heisenbergFiniteModeDiagram (𝕜 := 𝕜)) stage).hom property) =
       current
 
 instance heisenbergFiniteModeBoundaryPacketTopologicalSpace :

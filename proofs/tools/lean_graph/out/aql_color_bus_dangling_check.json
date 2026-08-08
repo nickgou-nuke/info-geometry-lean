@@ -1,0 +1,30 @@
+[
+  {
+    "name": "BogoliubovSU3ParafermionProofChain.bogoliubov_su3_parafermion_proof_chain",
+    "module": "BogoliubovSU3ParafermionProofChain",
+    "kind": null,
+    "used_by": 1,
+    "deps": 34
+  },
+  {
+    "name": "BogoliubovSU3ParafermionWeld.bogoliubov_su3_parafermion_synthesis",
+    "module": "BogoliubovSU3ParafermionWeld",
+    "kind": null,
+    "used_by": 1,
+    "deps": 45
+  },
+  {
+    "name": "ColorParafermionCuntzBusSpine.closed_color_parafermion_cuntz_bus_spine",
+    "module": "ColorParafermionCuntzBusSpine",
+    "kind": "theorem",
+    "used_by": 0,
+    "deps": 78
+  },
+  {
+    "name": "GellMannParafermionRealizationRoutesSynthesis.gellmann_parafermion_realization_routes_synthesis",
+    "module": "GellMannParafermionRealizationRoutesSynthesis",
+    "kind": null,
+    "used_by": 1,
+    "deps": 60
+  }
+]

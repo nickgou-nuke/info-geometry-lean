@@ -1,0 +1,1228 @@
+[
+  {
+    "repo": "auto",
+    "path": "proofs/ASTExtractor.lean",
+    "role": "lean-info-tree-export",
+    "note": "Lean-native environment/syntax extraction entrypoint.",
+    "tags": [
+      "Lean",
+      "InfoTree",
+      "syntax",
+      "environment"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/ExtractBraid.lean",
+    "role": "lean-extraction",
+    "note": "Lean extraction helper used for braid/graph export.",
+    "tags": [
+      "Lean",
+      "syntax",
+      "graph"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/RunExtractor.lean",
+    "role": "lean-extraction",
+    "note": "Wrapper for running the Lean extractor.",
+    "tags": [
+      "Lean",
+      "InfoTree",
+      "CLI"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/fast_extract.py",
+    "role": "lean-extraction",
+    "note": "Fast Python-side extractor/runner.",
+    "tags": [
+      "Python",
+      "extractor"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/python_arango_ingest.py",
+    "role": "arango-ingest",
+    "note": "Python ingest bridge into ArangoDB.",
+    "tags": [
+      "Python",
+      "Arango",
+      "ingest"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/scripts/gepa_optimize.py",
+    "role": "graph-optimization",
+    "note": "GEPA optimization layer for the graph pipeline.",
+    "tags": [
+      "Python",
+      "GEPA",
+      "graph"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/scripts/ingest_to_arango.py",
+    "role": "arango-ingest",
+    "note": "Legacy ingest-to-Arango wrapper.",
+    "tags": [
+      "Python",
+      "Arango",
+      "ingest"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/tools/ExtractGraph.lean",
+    "role": "lean-info-tree-export",
+    "note": "Authoritative Lean module-graph extractor.",
+    "tags": [
+      "Lean",
+      "graph",
+      "environment"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/tools/lean_graph/DumpLeanGraph.lean",
+    "role": "lean-info-tree-export",
+    "note": "Lean syntax/env dump for JSONL graph ingestion.",
+    "tags": [
+      "Lean",
+      "syntax",
+      "InfoTree"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/tools/lean_graph/aql_query.py",
+    "role": "aql-query",
+    "note": "Small stdlib AQL client for live queries.",
+    "tags": [
+      "Python",
+      "AQL",
+      "Arango"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/tools/lean_graph/bridge_syntax_env.py",
+    "role": "syntax-env-bridge",
+    "note": "Builds syntax/env bridge records.",
+    "tags": [
+      "Python",
+      "bridge",
+      "syntax",
+      "environment"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/tools/lean_graph/check_dump_shape.py",
+    "role": "validation",
+    "note": "Validates Lean dump shapes before ingest.",
+    "tags": [
+      "Python",
+      "validation",
+      "syntax"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/tools/lean_graph/export_bdg_kms_certificate.py",
+    "role": "graph-export",
+    "note": "Exports BDG/KMS audit certificate from graph data.",
+    "tags": [
+      "Python",
+      "Arango",
+      "certificate"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/tools/lean_graph/export_chiral_certificate.py",
+    "role": "graph-export",
+    "note": "Exports chiral certificate from graph data.",
+    "tags": [
+      "Python",
+      "Arango",
+      "certificate"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/tools/lean_graph/export_spine_dot.py",
+    "role": "graph-export",
+    "note": "Exports subgraph/spine DOT visualizations.",
+    "tags": [
+      "Python",
+      "graph",
+      "DOT"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/tools/lean_graph/import_arango.py",
+    "role": "arango-ingest",
+    "note": "Imports syntax/env bridge records into ArangoDB.",
+    "tags": [
+      "Python",
+      "Arango",
+      "graph",
+      "ingest"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/tools/lean_graph/import_module_graph_arango.py",
+    "role": "graph-import",
+    "note": "Imports the Lean module import graph into ArangoDB.",
+    "tags": [
+      "Python",
+      "Arango",
+      "module-graph"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/tools/lean_graph/ingest_bridge_to_arango.py",
+    "role": "arango-ingest",
+    "note": "Bridge-record ingest into ArangoDB.",
+    "tags": [
+      "Python",
+      "Arango",
+      "bridge"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/tools/lean_graph/ingest_syntax_to_arango.py",
+    "role": "arango-ingest",
+    "note": "Syntax-tree ingest into ArangoDB.",
+    "tags": [
+      "Python",
+      "Arango",
+      "syntax"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/tools/lean_graph/join_syntax_env.py",
+    "role": "syntax-env-bridge",
+    "note": "Joins syntax JSONL and environment JSON.",
+    "tags": [
+      "Python",
+      "bridge",
+      "join"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "proofs/tools/lean_graph/normalize_syntax_index.py",
+    "role": "validation",
+    "note": "Normalizes syntax indexing for downstream ingest.",
+    "tags": [
+      "Python",
+      "syntax",
+      "normalization"
+    ]
+  },
+  {
+    "repo": "auto",
+    "path": "ui/dump_graph.py",
+    "role": "graph-visualization",
+    "note": "Frontend graph dump/loader helper.",
+    "tags": [
+      "Python",
+      "UI",
+      "graph"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "find_scc.py",
+    "role": "graph-analysis",
+    "note": "Strongly connected components on the graph.",
+    "tags": [
+      "Python",
+      "graph",
+      "SCC"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "lean/DAG/BlockExport.lean",
+    "role": "lean-arango-export",
+    "note": "Block-level export for the DAG pipeline.",
+    "tags": [
+      "Lean",
+      "graph",
+      "export"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "lean/DAG/ExprArangoExport.lean",
+    "role": "lean-arango-export",
+    "note": "Exports Lean expressions to Arango-shaped data.",
+    "tags": [
+      "Lean",
+      "Arango",
+      "Expr"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "lean/DAG/GroundTruthHarvester.lean",
+    "role": "lean-graph-harvest",
+    "note": "Harvester for ground-truth graph facts.",
+    "tags": [
+      "Lean",
+      "graph",
+      "harvest"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "lean/DAG/HolonomyExporter.lean",
+    "role": "lean-graph-export",
+    "note": "Holonomy-oriented export layer for the DAG.",
+    "tags": [
+      "Lean",
+      "graph",
+      "export"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "lean/DAG/Indexer.lean",
+    "role": "lean-indexer",
+    "note": "Index builder for graph/export artifacts.",
+    "tags": [
+      "Lean",
+      "index",
+      "graph"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "lean/DAG/RawInfoTreeExport.lean",
+    "role": "lean-info-tree-export",
+    "note": "Raw InfoTree export layer.",
+    "tags": [
+      "Lean",
+      "InfoTree",
+      "export"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "lean/DAG/ServerExport.lean",
+    "role": "lean-graph-export",
+    "note": "Server-side export layer for graph serving.",
+    "tags": [
+      "Lean",
+      "server",
+      "graph"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "lean/InfoGeometry/Meta/Architecture.lean",
+    "role": "lean-meta",
+    "note": "Repository architecture/graph meta layer.",
+    "tags": [
+      "Lean",
+      "meta",
+      "architecture"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "lean/InfoGeometry/Meta/HiveLogos.lean",
+    "role": "lean-meta",
+    "note": "Hive/logos metadata tied to the graph pipeline.",
+    "tags": [
+      "Lean",
+      "meta",
+      "hive"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "list_collections.py",
+    "role": "arango-admin",
+    "note": "Lists Arango collections.",
+    "tags": [
+      "Python",
+      "Arango",
+      "admin"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "query_arango.py",
+    "role": "arango-query",
+    "note": "ArangoDB query helper.",
+    "tags": [
+      "Python",
+      "Arango",
+      "query"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "query_dag.py",
+    "role": "graph-query",
+    "note": "DAG query helper.",
+    "tags": [
+      "Python",
+      "graph",
+      "query"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "run_arango_query.py",
+    "role": "arango-query",
+    "note": "AQL query runner.",
+    "tags": [
+      "Python",
+      "Arango",
+      "AQL"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "run_arango_query2.py",
+    "role": "arango-query",
+    "note": "Alternate AQL query runner.",
+    "tags": [
+      "Python",
+      "Arango",
+      "AQL"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "src/igf/cli.py",
+    "role": "pipeline-cli",
+    "note": "Top-level CLI for the IGF pipeline.",
+    "tags": [
+      "Python",
+      "CLI",
+      "pipeline"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "src/igf/config/env_aliases.py",
+    "role": "arango-config",
+    "note": "Environment alias normalization for Arango creds.",
+    "tags": [
+      "Python",
+      "Arango",
+      "env"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "src/igf/config/loader.py",
+    "role": "pipeline-config",
+    "note": "Configuration loader for the ingest stack.",
+    "tags": [
+      "Python",
+      "config"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "src/igf/config/model.py",
+    "role": "pipeline-config",
+    "note": "Config model definitions.",
+    "tags": [
+      "Python",
+      "config"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "src/igf/config/preflight.py",
+    "role": "pipeline-config",
+    "note": "Preflight checks for pipeline execution.",
+    "tags": [
+      "Python",
+      "config"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "src/igf/graph/arango_client.py",
+    "role": "arango-client",
+    "note": "ArangoDB client wrapper.",
+    "tags": [
+      "Python",
+      "Arango",
+      "client"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "src/igf/graph/arango_http.py",
+    "role": "arango-client",
+    "note": "HTTP-level Arango access helpers.",
+    "tags": [
+      "Python",
+      "Arango",
+      "HTTP"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "src/igf/graph/query_registry.py",
+    "role": "graph-query",
+    "note": "Registry of graph queries.",
+    "tags": [
+      "Python",
+      "graph",
+      "query"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "src/igf/graph/query_runner.py",
+    "role": "graph-query",
+    "note": "Query runner abstraction.",
+    "tags": [
+      "Python",
+      "graph",
+      "query"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "src/igf/pipeline/build.py",
+    "role": "pipeline",
+    "note": "Build orchestration for graph artifacts.",
+    "tags": [
+      "Python",
+      "pipeline",
+      "graph"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "src/igf/pipeline/ingest.py",
+    "role": "pipeline",
+    "note": "Ingest orchestration for graph/Infotree data.",
+    "tags": [
+      "Python",
+      "pipeline",
+      "ingest"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "src/igf/pipeline/orchestrator.py",
+    "role": "pipeline",
+    "note": "Main pipeline orchestrator.",
+    "tags": [
+      "Python",
+      "pipeline",
+      "orchestrator"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tests/infra/test_igf_greenfield_suite.py",
+    "role": "test",
+    "note": "IGF end-to-end greenfield suite.",
+    "tags": [
+      "test",
+      "pipeline"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tests/infra/test_igf_ingest_cli_contract.py",
+    "role": "test",
+    "note": "Ingest CLI contract tests.",
+    "tags": [
+      "test",
+      "CLI",
+      "ingest"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tests/infra/test_igf_orchestrator_run.py",
+    "role": "test",
+    "note": "Orchestrator run contract tests.",
+    "tags": [
+      "test",
+      "orchestrator"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tests/infra/test_igf_verify_cli_contract.py",
+    "role": "test",
+    "note": "Verify CLI contract tests.",
+    "tags": [
+      "test",
+      "CLI",
+      "verify"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tests/test_arango_dag_algorithms.py",
+    "role": "test",
+    "note": "Tests Arango DAG algorithms.",
+    "tags": [
+      "test",
+      "graph",
+      "algorithms"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tests/test_arango_env_wrappers.py",
+    "role": "test",
+    "note": "Tests Arango env-wrapper behavior.",
+    "tags": [
+      "test",
+      "Arango",
+      "env"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tests/test_arango_raw_infotree_ingest.py",
+    "role": "test",
+    "note": "Tests raw InfoTree ingest into ArangoDB.",
+    "tags": [
+      "test",
+      "InfoTree",
+      "Arango"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tests/test_hive_arango_queue.py",
+    "role": "test",
+    "note": "Tests the hive/Arango queue.",
+    "tags": [
+      "test",
+      "Arango",
+      "queue"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tests/test_hive_bee.py",
+    "role": "test",
+    "note": "Tests bee worker behavior.",
+    "tags": [
+      "test",
+      "worker"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tests/test_hive_json_ingestor.py",
+    "role": "test",
+    "note": "Tests JSON ingestor behavior.",
+    "tags": [
+      "test",
+      "ingest"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tests/test_hive_swarm.py",
+    "role": "test",
+    "note": "Tests swarm orchestration.",
+    "tags": [
+      "test",
+      "orchestrator"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tests/test_hydrate_arango_topology.py",
+    "role": "test",
+    "note": "Tests topology hydration.",
+    "tags": [
+      "test",
+      "graph",
+      "topology"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/alexandria/arango_ingest.py",
+    "role": "arango-ingest",
+    "note": "Alexandria-specific Arango ingest.",
+    "tags": [
+      "Python",
+      "Arango",
+      "ingest"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/alexandria/repair_lineage.py",
+    "role": "repair",
+    "note": "Lineage repair helper for graph data.",
+    "tags": [
+      "Python",
+      "graph",
+      "repair"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/alexandria/semantic_ingest.py",
+    "role": "ingest",
+    "note": "Semantic ingest layer for Alexandria.",
+    "tags": [
+      "Python",
+      "ingest",
+      "semantic"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/arango_dag_algorithms.py",
+    "role": "graph-algorithms",
+    "note": "Graph/DAG algorithms over Arango data.",
+    "tags": [
+      "Python",
+      "graph",
+      "algorithms"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/arango_env.py",
+    "role": "arango-config",
+    "note": "Arango env loading/alias helpers.",
+    "tags": [
+      "Python",
+      "Arango",
+      "env"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/arango_fidelity_audit.py",
+    "role": "audit",
+    "note": "Audits Arango fidelity against source data.",
+    "tags": [
+      "Python",
+      "Arango",
+      "audit"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/arango_gravity_context.py",
+    "role": "analysis",
+    "note": "Arango gravity/context analysis helpers.",
+    "tags": [
+      "Python",
+      "Arango",
+      "analysis"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/arango_layered_ingest.py",
+    "role": "arango-ingest",
+    "note": "Layered Arango ingest pipeline.",
+    "tags": [
+      "Python",
+      "Arango",
+      "ingest"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/arango_raw_infotree_graph.py",
+    "role": "raw-infotree-graph",
+    "note": "Builds the raw InfoTree graph representation.",
+    "tags": [
+      "Python",
+      "InfoTree",
+      "graph"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/arango_raw_infotree_ingest.py",
+    "role": "raw-infotree-ingest",
+    "note": "Ingests raw InfoTree data into ArangoDB.",
+    "tags": [
+      "Python",
+      "InfoTree",
+      "Arango"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/arango_structural_vacuity_audit.py",
+    "role": "audit",
+    "note": "Checks structural vacuity in Arango graph data.",
+    "tags": [
+      "Python",
+      "Arango",
+      "audit"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/batch_raw_infotree_export.py",
+    "role": "raw-infotree-export",
+    "note": "Batch exporter for raw InfoTree data.",
+    "tags": [
+      "Python",
+      "InfoTree",
+      "export"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/claim_promote.py",
+    "role": "promotion",
+    "note": "Claim/promotion workflow helper.",
+    "tags": [
+      "Python",
+      "workflow"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/debug_gravity.py",
+    "role": "debug",
+    "note": "Debugging support for graph/gravity context.",
+    "tags": [
+      "Python",
+      "debug"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/decl_graph_support.py",
+    "role": "graph-support",
+    "note": "Helpers for declaration-graph operations.",
+    "tags": [
+      "Python",
+      "graph",
+      "support"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/extract_expr_fingerprints.py",
+    "role": "graph-analysis",
+    "note": "Expression fingerprint extraction.",
+    "tags": [
+      "Python",
+      "Expr",
+      "graph"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/generate_causal_report.py",
+    "role": "report",
+    "note": "Causal report generation from graph data.",
+    "tags": [
+      "Python",
+      "report",
+      "graph"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/generate_expr_alpha_dedup.py",
+    "role": "graph-analysis",
+    "note": "Alpha-dedup for expression graphs.",
+    "tags": [
+      "Python",
+      "Expr",
+      "dedup"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/generate_replacement_frontier.py",
+    "role": "analysis",
+    "note": "Replacement-frontier generation helper.",
+    "tags": [
+      "Python",
+      "analysis"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/generate_sorry_equivalence.py",
+    "role": "graph-analysis",
+    "note": "Tracks sorry-equivalence artifacts.",
+    "tags": [
+      "Python",
+      "Lean",
+      "graph"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/generate_theory_spire_viz.py",
+    "role": "visualization",
+    "note": "Visualization of theory spires from graph data.",
+    "tags": [
+      "Python",
+      "viz",
+      "graph"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/graph_hodge_spectrum.py",
+    "role": "analysis",
+    "note": "Hodge-spectrum analysis on graph data.",
+    "tags": [
+      "Python",
+      "graph",
+      "analysis"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/gravitational_retrieval.py",
+    "role": "analysis",
+    "note": "Retrieval logic over graph-derived context.",
+    "tags": [
+      "Python",
+      "graph",
+      "retrieval"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/hermes_bounded_runner.py",
+    "role": "runner",
+    "note": "Bounded runner used by the graph pipeline.",
+    "tags": [
+      "Python",
+      "runner"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/hive_arango_queue.py",
+    "role": "worker",
+    "note": "Queue layer for Arango-backed hive jobs.",
+    "tags": [
+      "Python",
+      "Arango",
+      "queue"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/hive_audit_worker.py",
+    "role": "worker",
+    "note": "Audit worker over graph artifacts.",
+    "tags": [
+      "Python",
+      "worker",
+      "audit"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/hive_bee.py",
+    "role": "worker",
+    "note": "Bee worker for hive orchestration.",
+    "tags": [
+      "Python",
+      "worker"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/hive_build_worker.py",
+    "role": "worker",
+    "note": "Build worker for pipeline jobs.",
+    "tags": [
+      "Python",
+      "worker",
+      "build"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/hive_leansearch_bee.py",
+    "role": "worker",
+    "note": "Lean search worker tied to the graph.",
+    "tags": [
+      "Python",
+      "worker",
+      "Lean"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/hive_packet_path_runner.py",
+    "role": "worker",
+    "note": "Packet/path runner for graph jobs.",
+    "tags": [
+      "Python",
+      "worker",
+      "path"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/hive_promotion_worker.py",
+    "role": "worker",
+    "note": "Promotion worker for graph/theorem states.",
+    "tags": [
+      "Python",
+      "worker"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/hive_qi_heartbeat.py",
+    "role": "worker",
+    "note": "Heartbeat worker for the hive graph stack.",
+    "tags": [
+      "Python",
+      "worker",
+      "heartbeat"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/hive_swarm.py",
+    "role": "worker",
+    "note": "Swarm coordinator for hive tasks.",
+    "tags": [
+      "Python",
+      "worker",
+      "orchestrator"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/hollow_semantic_auditor.py",
+    "role": "audit",
+    "note": "Semantic hollowness auditor.",
+    "tags": [
+      "Python",
+      "audit",
+      "semantic"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/hydrate_arango_topology.py",
+    "role": "graph-topology",
+    "note": "Hydrates topology data into graph form.",
+    "tags": [
+      "Python",
+      "graph",
+      "topology"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/ingest_chiral_sidecars.py",
+    "role": "ingest",
+    "note": "Ingests sidecar graph artifacts.",
+    "tags": [
+      "Python",
+      "ingest",
+      "graph"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/materialize_lossless_infotree.py",
+    "role": "raw-infotree-materialize",
+    "note": "Materializes a lossless InfoTree representation.",
+    "tags": [
+      "Python",
+      "InfoTree",
+      "materialize"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/pauli_authority_bridge.py",
+    "role": "bridge",
+    "note": "Bridge layer for authority/graph semantics.",
+    "tags": [
+      "Python",
+      "bridge"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/prima_materia_ingest.py",
+    "role": "ingest",
+    "note": "Ingest of raw material into graph storage.",
+    "tags": [
+      "Python",
+      "ingest"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/representation_depth_from_graph.py",
+    "role": "analysis",
+    "note": "Computes representation depth from the graph.",
+    "tags": [
+      "Python",
+      "graph",
+      "analysis"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/rerank_arango_links.py",
+    "role": "ranking",
+    "note": "Re-ranks Arango graph links.",
+    "tags": [
+      "Python",
+      "Arango",
+      "ranking"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/research_digest_worker.py",
+    "role": "worker",
+    "note": "Research digest worker over graph artifacts.",
+    "tags": [
+      "Python",
+      "worker",
+      "digest"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/run_full_dag_toolchain.py",
+    "role": "pipeline",
+    "note": "End-to-end DAG toolchain runner.",
+    "tags": [
+      "Python",
+      "pipeline",
+      "DAG"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/validate_raw_infotree_export.py",
+    "role": "validation",
+    "note": "Validates raw InfoTree exports.",
+    "tags": [
+      "Python",
+      "InfoTree",
+      "validation"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/verify_layered_arango_descent.py",
+    "role": "validation",
+    "note": "Verifies layered Arango descent invariants.",
+    "tags": [
+      "Python",
+      "Arango",
+      "validation"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/infra/verify_raw_infotree_arango_descent.py",
+    "role": "validation",
+    "note": "Verifies Arango descent for raw InfoTree data.",
+    "tags": [
+      "Python",
+      "InfoTree",
+      "Arango",
+      "validation"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/leantrail/adapters.py",
+    "role": "bridge",
+    "note": "Adapters for Leantrail/Arango interop.",
+    "tags": [
+      "Python",
+      "bridge"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/leantrail/arango_ingest.py",
+    "role": "arango-ingest",
+    "note": "Leantrail ingest into ArangoDB.",
+    "tags": [
+      "Python",
+      "Arango",
+      "ingest"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/leantrail/arango_physics_evaluator.py",
+    "role": "analysis",
+    "note": "Physics-style evaluator over Arango graph data.",
+    "tags": [
+      "Python",
+      "Arango",
+      "analysis"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/leantrail/conformance.py",
+    "role": "validation",
+    "note": "Leantrail conformance checks.",
+    "tags": [
+      "Python",
+      "validation"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/leantrail/export.py",
+    "role": "export",
+    "note": "Leantrail export helper.",
+    "tags": [
+      "Python",
+      "export"
+    ]
+  },
+  {
+    "repo": "info-geometry-lean",
+    "path": "tools/leantrail/path_lock_registry.py",
+    "role": "registry",
+    "note": "Path-lock registry for Leantrail graph workflows.",
+    "tags": [
+      "Python",
+      "registry"
+    ]
+  }
+]

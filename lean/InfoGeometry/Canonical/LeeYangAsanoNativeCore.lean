@@ -13,7 +13,7 @@ This file does not claim the full Ruelle/Asano theorem.
 It packages the algebraic `D = 0` branch, the determinant-zero transfer
 branch, and the quadratic reduction used by the Möbius case.
 
-No witness packets.
+No property packets.
 No `sorry`.
 No convergence claim.
 -/

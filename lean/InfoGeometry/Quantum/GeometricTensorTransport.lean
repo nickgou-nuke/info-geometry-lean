@@ -402,7 +402,7 @@ theorem berryTwoFormJEpsOfOperator_modularTransportFlow_eq_of_commute_generator
       (E := E) (A := A) (hMod := hMod) hSelf hPhase hCommGen t u v
 
 /--
-Exact modular-flow transport of the certified lifted Einstein anomaly operator.
+Exact modular-flow transport of the property lifted Einstein anomaly operator.
 
 If the lifted Einstein anomaly commutes with the true modular transport
 generator, then its operatorial metric seed is preserved along the full flow.

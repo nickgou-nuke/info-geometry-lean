@@ -92,6 +92,16 @@ Run the stages in this order and stop when a prerequisite fails:
 6. Open the owner files for the returned class and run kernel checks before
    making any closure or promotion claim.
 
+Full-graph invariant:
+
+- The canonical refresh imports `InfoGeometry.All` and indexes the complete
+  reachable `InfoGeometry` declaration namespace.
+- Do not substitute a narrower import root or namespace, truncate the emitted
+  declaration stream, sample files, cap the number of declarations or edges,
+  or confuse bounded post-index query traversal with graph construction.
+- Traversal depths such as `--backward-depth` and `--forward-depth` limit only a
+  requested query packet; they never authorize shortening the stored graph.
+
 The pinned repository workflow does not run `lake update` as part of this
 sequence. Dependency and toolchain pins are compatibility state; refresh only
 the declaration graph and generated graph artifacts.
@@ -139,7 +149,7 @@ read and kernel-audited.
 # 1. ArangoDB running on localhost:8530 (repo default)
 # 2. Python arango driver: pip install python-arango
 # 3. Lean 4 + Lake with dagIndexer target built
-# 4. Mathlib cache populated: lake exe cache get!
+# 4. The pinned Mathlib cache is already populated before this workflow starts.
 ```
 
 ---
@@ -176,19 +186,26 @@ print('Collections:', [c['name'] for c in db.collections() if not c['name'].star
 
 ---
 
-## Phase 2: Build & Stream Declaration Graph to ArangoDB
+## Phase 2: Verify & Stream the Full Declaration Graph to ArangoDB
 
 ```bash
-# 2.1 Sync mathlib cache (required for full namespace)
-lake update
-lake exe cache get!
+# 2.1 Verify that no competing Lean/Lake process is active.
+# Use the repository task manager when available; these exact-process probes are
+# the non-mutating fallback.
+pgrep -a -x lake || true
+pgrep -a -x lean || true
 
-# 2.2 Build the dagIndexer (one-time, ~5 min)
-lake build dagIndexer
+# 2.2 Verify the existing indexer.  Do not run `lake update`, fetch a new cache,
+# or rebuild dependencies as part of graph refresh.
+test -x .lake/build/bin/dagIndexer
 
-# 2.3 Stream declaration graph to ArangoDB (constant memory, ~400 sec for full codebase)
+# 2.3 Stream the FULL declaration graph to ArangoDB (constant memory).
+# `InfoGeometry.All` and namespace `InfoGeometry` are intentional: do not replace
+# them with a smaller import root, namespace, sampled file list, or bounded graph.
 python3 tools/infra/refresh_decl_graph.py \
   --stream \
+  --run-mode exe \
+  --skip-prebuild \
   --import-root InfoGeometry.All \
   --namespace InfoGeometry \
   --arango-db infogeometry
@@ -212,7 +229,14 @@ print('edges:', db.collection('edges').count())
 "
 ```
 
-**Output expected**: `decls: ~133356, edges: ~858760` (for full codebase)
+Required validation is structural, not a frozen count: both collections must be
+nonempty, every retained edge must resolve both endpoints in `decls`, and the
+streamer must report the complete emitted/orphaned/retained edge counts.  Counts
+change with the checkout.
+
+Reference full refresh on 2026-08-08 (`InfoGeometry.All`, namespace
+`InfoGeometry`): 130772 declarations, 5077300 emitted dependency edges, 849775
+retained endpoint-valid edges, and 0 orphan edges after validation.
 
 ---
 
@@ -425,24 +449,28 @@ FOR d IN dominators
 
 ---
 
-## Phase 5: Complete Workflow Script
+## Phase 5: Complete Cache-Preserving Full-Graph Workflow Script
 
 ```bash
 #!/bin/bash
 # full_refresh_and_search.sh
 
-set -e
+set -euo pipefail
 
-echo "=== Phase 1: Update Mathlib Cache ==="
-lake update
-lake exe cache get!
+echo "=== Phase 1: Verify no competing compiler task ==="
+if pgrep -x lake >/dev/null || pgrep -x lean >/dev/null; then
+  echo "Refusing to start: a Lean/Lake process is already active" >&2
+  exit 1
+fi
 
-echo "=== Phase 2: Build Indexer ==="
-lake build dagIndexer
+echo "=== Phase 2: Verify existing indexer ==="
+test -x .lake/build/bin/dagIndexer
 
-echo "=== Phase 3: Stream to ArangoDB ==="
+echo "=== Phase 3: Stream FULL InfoGeometry declaration graph ==="
 python3 tools/infra/refresh_decl_graph.py \
   --stream \
+  --run-mode exe \
+  --skip-prebuild \
   --import-root InfoGeometry.All \
   --namespace InfoGeometry \
   --arango-db infogeometry
@@ -519,6 +547,11 @@ PYEOF
 
 ## Phase 6: CI Integration (GitHub Actions Example)
 
+The build step below is for an isolated clean CI runner, not for an in-place
+refresh of the persistent repository workspace.  Local refreshes must use the
+cache-preserving Phase 2 command above.  CI must still index the full
+`InfoGeometry.All` / `InfoGeometry` graph.
+
 ```yaml
 # .github/workflows/decl-graph.yml
 name: Declaration Graph Refresh
@@ -552,7 +585,24 @@ jobs:
             --namespace InfoGeometry \
             --arango-db infogeometry
       - name: Run Verification Queries
-        run: python3 tools/infra/verify_decl_graph.py
+        run: |
+          python3 tools/infra/arango_causal_memory.py \
+            --database infogeometry query '
+          LET declCount = LENGTH(decls)
+          LET edgeCount = LENGTH(edges)
+          LET orphanCount = LENGTH(
+            FOR e IN edges
+              LET from_doc = DOCUMENT(e._from)
+              LET to_doc = DOCUMENT(e._to)
+              FILTER from_doc == null OR to_doc == null
+              RETURN 1
+          )
+          RETURN {
+            decls: declCount,
+            edges: edgeCount,
+            orphans: orphanCount
+          }
+          '
 ```
 
 ---
@@ -579,12 +629,11 @@ jobs:
 | Issue | Fix |
 |-------|-----|
 | `python-arango not installed` | `pip install python-arango` |
-| `dagIndexer not found` not found | `lake build dagIndexer` |
-| `object file .olean does not exist` | `lake build <namespace>` |
+| `dagIndexer` executable absent | Use the direct Lean runner supported by `refresh_decl_graph.py`; schedule any required build separately rather than rebuilding during refresh |
+| `object file .olean does not exist` | Stop the refresh and repair the pinned cache separately; do not run `lake update` as part of ASTAQLHASH refresh |
 | `could not execute external process` | Check `.lake/build/bin/dagIndexer` exists |
-| Network timeout on `lake update` | Increase timeout, check git connectivity |
 | ArangoDB connection refused | Ensure ArangoDB running on port 8530 |
-| `object file InfoGeometry/All.olean does not exist` | `lake build InfoGeometry.All` |
+| `object file InfoGeometry/All.olean does not exist` | Stop and restore/build the pinned `InfoGeometry.All` cache as a separate, sequential maintenance task before restarting refresh |
 | `python-arango not installed` in lake env | Use `lake env pip install python-arango` |
 
 ---

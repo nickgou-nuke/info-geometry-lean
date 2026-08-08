@@ -9,7 +9,7 @@ This module installs the theorem-safe correction for the affine
 `c = k * dim(g) / (k + h∨)`, with `k = 1`, `dim so(8) = 28`, `h∨ = 6`,
 so `c = 4`.
 
-The Cardy entropy layer remains witness-gated.  No Kac-Moody construction,
+The Cardy entropy layer remains property-gated.  No Kac-Moody construction,
 Sugawara theorem, or Cardy theorem is proved here.
 -/
 

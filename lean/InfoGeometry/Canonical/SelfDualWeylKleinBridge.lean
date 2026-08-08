@@ -9,7 +9,7 @@ import InfoGeometry.Canonical.KleinBottleOrientifold
 /-!
 # SelfDualWeylKleinBridge
 
-SymPy witness: `tools/sympy/selfdual_weyl_klein_bridge.py`
+SymPy property: `tools/sympy/selfdual_weyl_klein_bridge.py`
 
 Connects self-dual cones, Fenchel-Legendre operator duality, root systems,
 Weyl symmetry, maximal torus, and Klein bottle symmetry through the shared

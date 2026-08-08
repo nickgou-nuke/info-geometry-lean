@@ -7,7 +7,7 @@ import InfoGeometry.Algebra.CuntzMatrixUnits
 For `E i j = S i S j†`, the native matrix-unit law gives
 `E i j * E k l = δ(j,k) E i l`.  The grading below is only the finite
 matrix-unit sector of `CuntzAlg 3`; it is not a decomposition theorem for the
-whole Cuntz algebra and it is not a TKK witness.
+whole Cuntz algebra and it is not a TKK property.
 -/
 
 noncomputable section

@@ -77,7 +77,7 @@ structure SiegelJacobiFormPacket
   /-- Hecke action datum. -/
   HeckeActionData : Type
 
-  /-- Hecke eigenform witness/data. -/
+  /-- Hecke eigenform property/data. -/
   HeckeEigenData : Type
 
   /-- Exact automorphy law for the supplied form and factor. -/
@@ -122,10 +122,10 @@ structure SiegelJacobiStandardLFunctionPacket
   /-- Dirichlet-series / coefficient readout datum. -/
   DirichletSeriesData : Type
 
-  /-- Euler-product witness compatible with the existing automorphic lane. -/
+  /-- Euler-product property compatible with the existing automorphic lane. -/
   eulerProduct : EulerProductWitness L
 
-  /-- Completed L-function witness compatible with the existing automorphic lane. -/
+  /-- Completed L-function property compatible with the existing automorphic lane. -/
   completedLFunction : CompletedLFunctionWitness L
 
   /-- Klingen-type Eisenstein-series or integral-representation datum. -/
@@ -239,7 +239,7 @@ theorem projected_resonance_iff_standard_zero
 
 end SiegelJacobiProjectedRealization
 
-/-- Transport an Euler-product witness across equality of L-functions. -/
+/-- Transport an Euler-product property across equality of L-functions. -/
 def transportEulerProductWitness
     {L₁ L₂ : ℂ → ℂ}
     (h : L₁ = L₂)
@@ -248,7 +248,7 @@ def transportEulerProductWitness
   rw [h]
   exact E
 
-/-- Transport a completed-L-function witness across equality of L-functions. -/
+/-- Transport a completed-L-function property across equality of L-functions. -/
 def transportCompletedLFunctionWitness
     {L₁ L₂ : ℂ → ℂ}
     (h : L₁ = L₂)
@@ -259,7 +259,7 @@ def transportCompletedLFunctionWitness
 
 /--
 Adapter from a Siegel--Jacobi projected realization to the existing strong
-Langlands-prime resonance witness.
+Langlands-prime resonance property.
 -/
 def toLanglandsPrimeResonanceStrongWitness
     {Bulk : Type uBulk} {Boundary : Type uBoundary}
@@ -278,7 +278,7 @@ def toLanglandsPrimeResonanceStrongWitness
 
 /--
 Adapter from a Siegel--Jacobi projected realization to the existing weak
-Langlands-prime resonance witness.
+Langlands-prime resonance property.
 -/
 def toLanglandsPrimeResonanceWitness
     {Bulk : Type uBulk} {Boundary : Type uBoundary}

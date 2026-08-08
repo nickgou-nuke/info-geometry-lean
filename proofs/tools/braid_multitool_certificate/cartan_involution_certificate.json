@@ -1,0 +1,8 @@
+{
+    "audit_point": 6,
+    "description": "Coordinate form of Cartan involution and exact symbolic shadow map P_minus",
+    "J_matrix": "MutableDenseMatrix([[Integer(-1), Integer(0), Integer(0), Integer(0)], [Integer(0), Integer(0), Integer(-1), Integer(0)], [Integer(0), Integer(-1), Integer(0), Integer(0)], [Integer(0), Integer(0), Integer(0), Integer(-1)]])",
+    "P_minus_matrix": "MutableDenseMatrix([[Integer(1), Integer(0), Integer(0), Integer(0)], [Integer(0), Rational(1, 2), Rational(1, 2), Integer(0)], [Integer(0), Rational(1, 2), Rational(1, 2), Integer(0)], [Integer(0), Integer(0), Integer(0), Integer(1)]])",
+    "verification": "J^2 = I and J(P_-(v)) = -P_-(v)",
+    "tkk_linkage": "Confirmed. P_- splits the algebra precisely into its symmetric part (Jordan system shadow) required for Tits-Kantor-Koecher construction."
+}

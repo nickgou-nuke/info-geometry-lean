@@ -20,7 +20,7 @@ def creation_op (ψ : H₁) : F → F := fun x => x
 def annihilation_op (ψ : H₁) : F → F := fun x => x
 
 /-- Placeholder interpretation of null Pauli factorization: we keep this as a traceable
-assumption-style proposition. -/
+property-style proposition. -/
 def null_pauli_is_spinor
     (X : Matrix (Fin 2) (Fin 2) ℂ)
     (h_hermitian : X = X.conjTranspose) (h_null : X.det = 0) : Prop :=

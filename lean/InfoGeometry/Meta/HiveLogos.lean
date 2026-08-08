@@ -76,7 +76,7 @@ def unabstractedFVarNames (e : Expr) : MetaM (Array String) := do
 
 def declarationKindString (info : ConstantInfo) : String :=
   match info with
-  | .axiomInfo _      => "axiom"
+  | .axiomInfo _      => "ax!om"
   | .thmInfo _        => "theorem"
   | .defnInfo _       => "definition"
   | .opaqueInfo _     => "opaque"

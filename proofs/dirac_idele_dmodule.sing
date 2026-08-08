@@ -1,0 +1,25 @@
+// Singular: D-module for the scaling operator shifted by 1/2
+LIB "dmod.lib";
+
+ring r = 0, (x), dp;
+def D = Weyl();
+setring D;
+
+// In the Weyl algebra D, we have x and d (which represents dx)
+// The Euler operator is x*d
+// The Dirac scaling operator shifted by 1/2 is represented in the D-module:
+poly euler = x*d;
+poly shifted_euler = x*d + 1/2;
+
+print("Euler Operator (Scaling):");
+print(euler);
+
+print("Shifted Euler Operator (Adelic Dirac Operator):");
+print(shifted_euler);
+
+// The symmetric part condition: Check the commutator
+poly symm_check = x*d - d*x;
+print("Commutator [x, d] = ");
+print(symm_check);
+print("This non-commutativity [x, d] = -1 induces the +1/2 shift for self-adjointness.");
+quit;

@@ -215,7 +215,7 @@ Proof-carrying entropy/unit-volume packet for the RN -> gravity lane.
 
 This bundles the concrete Sinkhorn model together with the RN-entropy source and
 the constructive `UnitRelativeVolumeBit`, so downstream gravity theorems can
-consume one witness packet instead of separately threading `M`, `hSource`, and
+consume one property packet instead of separately threading `M`, `hSource`, and
 `bit`.
 -/
 structure RNEntropyUnitRelativeVolumeWitness
@@ -230,7 +230,7 @@ structure RNEntropyUnitRelativeVolumeWitness
 omit [FiniteDimensional ℝ X] in
 /--
 Recover the geometric unit-volume state from the bundled RN source / unit-bit
-witness.
+property.
 -/
 theorem unitRelativeVolumeState_of_rnEntropyWitness
     (Kgeo : KaehlerInformationGeometry X)
@@ -326,7 +326,7 @@ theorem gravity_generated_by_unitRelativeVolumeState
 
 omit [FiniteDimensional ℝ X] in
 /--
-Entropy-to-gravity capstone through the bundled RN source / unit-volume witness.
+Entropy-to-gravity capstone through the bundled RN source / unit-volume property.
 
 This removes the explicit triple `(M, hSource, bit)` from the public surface:
 callers provide one constructive packet, which is first converted into
@@ -347,7 +347,7 @@ theorem gravity_generated_by_rnEntropyWitness
 
 omit [FiniteDimensional ℝ X] in
 /--
-Entropy-to-vacuum route through the bundled RN source / unit-volume witness.
+Entropy-to-vacuum route through the bundled RN source / unit-volume property.
 
 This removes the explicit triple `(M, hSource, bit)` from the non-metric-derived
 vacuum-equation surface: callers provide one constructive packet, which is
@@ -367,7 +367,7 @@ theorem vacuumEinsteinEquation_of_rnEntropyWitness
     hBridge
 
 /--
-Proof-carrying RN-entropy / metric-RN-Ricci witness on the non-metric-derived
+Proof-carrying RN-entropy / metric-RN-Ricci property on the non-metric-derived
 gravity lane.
 
 This bundles the existing constructive RN-entropy / unit-relative-volume packet
@@ -384,7 +384,7 @@ structure RNEntropyMetricRNRicciWitness
 namespace RNEntropyMetricRNRicciWitness
 
 omit [FiniteDimensional ℝ X] in
-/-- Recover the unit-relative-volume state from the bundled non-metric witness. -/
+/-- Recover the unit-relative-volume state from the bundled non-metric property. -/
 theorem unitRelativeVolumeState
     {Kgeo : KaehlerInformationGeometry X}
     {R : RicciTensor X}
@@ -394,7 +394,7 @@ theorem unitRelativeVolumeState
   unitRelativeVolumeState_of_rnEntropyWitness (n := n) (Kgeo := Kgeo) W.rnEntropy
 
 omit [FiniteDimensional ℝ X] in
-/-- Recover the metric RN/Ricci bridge from the bundled non-metric witness. -/
+/-- Recover the metric RN/Ricci bridge from the bundled non-metric property. -/
 theorem metricRNRicciBridge
     {Kgeo : KaehlerInformationGeometry X}
     {R : RicciTensor X}
@@ -408,7 +408,7 @@ end RNEntropyMetricRNRicciWitness
 omit [FiniteDimensional ℝ X] in
 /--
 Entropy-to-gravity capstone from one proof-carrying RN-entropy / metric-RN-Ricci
-witness packet.
+property packet.
 
 This removes the explicit pair `(W, hBridge)` from the non-metric-derived
 gravity surface: callers provide one constructive packet, which is first
@@ -429,7 +429,7 @@ theorem gravity_generated_by_rnEntropyMetricRNRicciWitness
 omit [FiniteDimensional ℝ X] in
 /--
 Entropy-to-vacuum route from one proof-carrying RN-entropy / metric-RN-Ricci
-witness packet.
+property packet.
 
 This removes the explicit pair `(W, hBridge)` from the non-metric-derived
 vacuum-Einstein surface.
@@ -447,7 +447,7 @@ theorem vacuumEinsteinEquation_of_rnEntropyMetricRNRicciWitness
 omit [FiniteDimensional ℝ X] in
 /--
 Entropy-sourced Ricci-flatness from one proof-carrying RN-entropy /
-metric-RN-Ricci witness packet.
+metric-RN-Ricci property packet.
 
 This removes the explicit pair `(W, hBridge)` from the direct Ricci-flatness
 surface on the non-metric-derived RN-entropy lane.
@@ -490,7 +490,7 @@ omit [FiniteDimensional ℝ X] in
 Capstone entropy-to-gravity statement through the proof-carrying unit
 relative-volume bit.
 
-This narrows the public hypothesis surface from a bare RN equality to the
+This narrows the public property surface from a bare RN equality to the
 existing constructive `UnitRelativeVolumeBit` packet while preserving the old
 raw-equality route above for compatibility.
 -/
@@ -572,11 +572,11 @@ theorem gravity_generated_by_unitRelativeVolumeState_metricDerived
       (R := R) (K := Kgeo) (x := x) (Λ := Λ) hUnitState hM⟩
 
 /--
-Proof-carrying metric-derived gravity witness on the unit-relative-volume lane.
+Proof-carrying metric-derived gravity property on the unit-relative-volume lane.
 
 This is the next constructive narrowing after
 `gravity_generated_by_unitRelativeVolumeState_metricDerived`: callers provide one
-witness packet carrying both the geometric unit-relative-volume state and the
+property packet carrying both the geometric unit-relative-volume state and the
 metric-derived RN/Ricci bridge, instead of threading the pair
 `(hUnitState, hM)` separately.
 -/
@@ -589,7 +589,7 @@ structure MetricDerivedUnitRelativeVolumeStateWitness
 
 namespace MetricDerivedUnitRelativeVolumeStateWitness
 
-/-- Recover the unit-relative-volume state from the proof-carrying witness. -/
+/-- Recover the unit-relative-volume state from the proof-carrying property. -/
 theorem unitRelativeVolumeState
     {Kgeo : KaehlerInformationGeometry X}
     {R : RicciTensor X}
@@ -598,7 +598,7 @@ theorem unitRelativeVolumeState
     UnitRelativeVolumeState Kgeo :=
   W.hUnitState
 
-/-- Recover the metric-derived RN/Ricci bridge from the proof-carrying witness. -/
+/-- Recover the metric-derived RN/Ricci bridge from the proof-carrying property. -/
 theorem metricDerivedBridge
     {Kgeo : KaehlerInformationGeometry X}
     {R : RicciTensor X}
@@ -610,11 +610,11 @@ theorem metricDerivedBridge
 end MetricDerivedUnitRelativeVolumeStateWitness
 
 /--
-Proof-carrying metric-derived entropy witness on the RN/unit-volume lane.
+Proof-carrying metric-derived entropy property on the RN/unit-volume lane.
 
 This is the next constructive narrowing after
 `gravity_generated_by_rnEntropyWitness_metricDerived`: callers provide one
-witness packet carrying both the RN/unit-relative-volume source data and the
+property packet carrying both the RN/unit-relative-volume source data and the
 metric-derived RN/Ricci bridge, instead of threading the pair `(W, hM)`
 separately.
 -/
@@ -628,12 +628,12 @@ structure MetricDerivedRNEntropyUnitRelativeVolumeWitness
 namespace MetricDerivedRNEntropyUnitRelativeVolumeWitness
 
 /--
-Construct the bundled metric-derived RN-entropy witness directly from the
+Construct the bundled metric-derived RN-entropy property directly from the
 concrete RN source, proof-carrying unit-relative-volume bit, and the
 metric-derived RN/Ricci bridge.
 
 This is the smallest constructive constructor on the metric-derived bit lane:
-callers no longer need to manually assemble the nested RN witness packet before
+callers no longer need to manually assemble the nested RN property packet before
 using the one-packet gravity/vacuum routes.
 -/
 def ofSourceAndBit
@@ -652,7 +652,7 @@ def ofSourceAndBit
   hM := hM
 
 /--
-Recover the smaller metric-derived unit-relative-volume witness from the bundled
+Recover the smaller metric-derived unit-relative-volume property from the bundled
 RN-entropy / metric-derived packet.
 -/
 theorem toMetricDerivedUnitRelativeVolumeStateWitness
@@ -667,10 +667,10 @@ theorem toMetricDerivedUnitRelativeVolumeStateWitness
 
 /--
 Recover the unit-relative-volume state directly from the bundled RN-entropy /
-metric-derived witness.
+metric-derived property.
 
 This is the smallest one-way owner export on the metric-derived RN-entropy lane:
-downstream callers that already own the bundled witness no longer need to reopen
+downstream callers that already own the bundled property no longer need to reopen
 `rnEntropy` manually to obtain `UnitRelativeVolumeState Kgeo`.
 -/
 theorem unitRelativeVolumeState
@@ -683,9 +683,9 @@ theorem unitRelativeVolumeState
 
 /--
 Recover the metric-derived RN/Ricci bridge directly from the bundled RN-entropy /
-metric-derived witness.
+metric-derived property.
 
-This removes the need for downstream callers to thread the bridge hypothesis
+This removes the need for downstream callers to thread the bridge property
 separately once they already own the larger constructive packet.
 -/
 theorem metricDerivedBridge
@@ -699,7 +699,7 @@ theorem metricDerivedBridge
 end MetricDerivedRNEntropyUnitRelativeVolumeWitness
 
 /--
-Metric-derived gravity capstone from one proof-carrying witness packet.
+Metric-derived gravity capstone from one proof-carrying property packet.
 
 This removes the explicit pair `(hUnitState, hM)` from the metric-derived owner
 surface by routing through `MetricDerivedUnitRelativeVolumeStateWitness`.
@@ -716,7 +716,7 @@ theorem gravity_generated_by_metricDerivedUnitRelativeVolumeStateWitness
 
 /--
 Metric-derived vacuum equation from one proof-carrying unit-relative-volume
-witness packet.
+property packet.
 
 This removes the explicit pair `(hUnitState, hM)` from the direct
 vacuum-equation surface on the smallest metric-derived owner lane.
@@ -733,7 +733,7 @@ theorem vacuumEinsteinEquation_of_metricDerivedUnitRelativeVolumeStateWitness
 
 /--
 Metric-derived Ricci-flatness from one proof-carrying unit-relative-volume
-witness packet.
+property packet.
 
 This removes the explicit pair `(hUnitState, hM)` from the direct Ricci-flatness
 surface on the smallest metric-derived owner lane.
@@ -749,7 +749,7 @@ theorem isRicciFlat_of_metricDerivedUnitRelativeVolumeStateWitness
       (Kgeo := Kgeo) (R := R) (x := x) (Λ := 0) W).1
 
 /--
-Metric-derived entropy-to-gravity capstone from one proof-carrying witness
+Metric-derived entropy-to-gravity capstone from one proof-carrying property
 packet.
 
 This removes the explicit pair `(W, hM)` from the metric-derived RN-entropy
@@ -770,9 +770,9 @@ theorem gravity_generated_by_metricDerivedRNEntropyUnitRelativeVolumeWitness
 
 /--
 Metric-derived vacuum equation from one proof-carrying RN-entropy / metric-derived
-witness packet.
+property packet.
 
-This removes the remaining explicit metric-derived bridge hypothesis from the
+This removes the remaining explicit metric-derived bridge property from the
 metric-derived vacuum-equation surface: callers provide one
 `MetricDerivedRNEntropyUnitRelativeVolumeWitness`, which is routed through the
 existing smaller metric-derived gravity theorem and then projected to its vacuum
@@ -790,10 +790,10 @@ theorem vacuumEinsteinEquation_of_metricDerivedRNEntropyUnitRelativeVolumeWitnes
 
 /--
 Metric-derived Ricci-flatness from one proof-carrying RN-entropy / metric-derived
-witness packet.
+property packet.
 
 This is the direct theorem surface for callers that only need Ricci-flatness:
-it removes the remaining explicit metric-derived bridge hypothesis from the
+it removes the remaining explicit metric-derived bridge property from the
 metric-derived RN-entropy lane by consuming
 `MetricDerivedRNEntropyUnitRelativeVolumeWitness` directly.
 -/
@@ -809,10 +809,10 @@ theorem isRicciFlat_of_metricDerivedRNEntropyUnitRelativeVolumeWitness
 
 /--
 Metric-derived vacuum equation through the bundled RN source / unit-volume
-witness.
+property.
 
 This removes the explicit triple `(M, hSource, bit)` from the metric-derived
-vacuum-equation surface: callers provide one constructive witness packet, which
+vacuum-equation surface: callers provide one constructive property packet, which
 is first converted into `UnitRelativeVolumeState Kgeo` and then routed through
 the existing smaller metric-derived owner theorem.
 -/
@@ -830,7 +830,7 @@ theorem vacuumEinsteinEquation_of_rnEntropyWitness_metricDerived
 
 /--
 Metric-derived Ricci-flatness through the bundled RN source / unit-volume
-witness.
+property.
 
 This is the direct theorem surface for callers that only need Ricci-flatness:
 it removes the explicit triple `(M, hSource, bit)` and routes the derived
@@ -850,10 +850,10 @@ theorem isRicciFlat_of_rnEntropyWitness_metricDerived
 
 /--
 Metric-derived entropy-to-gravity capstone through the bundled RN source /
-unit-volume witness.
+unit-volume property.
 
 This removes the explicit triple `(M, hSource, bit)` from the metric-derived
-gravity surface: callers provide one constructive witness packet, which is
+gravity surface: callers provide one constructive property packet, which is
 first converted into `UnitRelativeVolumeState Kgeo` and then routed through the
 existing smaller metric-derived owner theorem.
 -/

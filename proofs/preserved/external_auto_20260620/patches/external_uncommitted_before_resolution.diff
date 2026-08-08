@@ -1,0 +1,491 @@
+diff --git a/proofs/BraidCliffordIntegration.lean b/proofs/BraidCliffordIntegration.lean
+index 5b1e5bf..b66663a 100644
+--- a/proofs/BraidCliffordIntegration.lean
++++ b/proofs/BraidCliffordIntegration.lean
+@@ -1,5 +1,6 @@
+ import Mathlib
+ import FibonacciCliffordBridge
++import MajoranaBraidGroup
+ 
+ /-!
+ # Braid--Clifford Integration
+@@ -112,6 +113,32 @@ theorem finite_adjacent_to_infinite {n : ℕ} {i j : Fin n}
+     (h : i.1 + 1 = j.1) :
+     finiteToInfinite i + 1 = finiteToInfinite j := h
+ 
++/-- The finite Majorana braid matrix used as the first nondegenerate adjacent generator. -/
++def majoranaGate12 : InfoGeometry.GrandUnification.MajoranaBraidGroup.M8Z :=
++  InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12
++
++/-- The finite Majorana braid matrix used as the second nondegenerate adjacent generator. -/
++def majoranaGate23 : InfoGeometry.GrandUnification.MajoranaBraidGroup.M8Z :=
++  InfoGeometry.GrandUnification.MajoranaBraidGroup.braid23
++
++/-- Nondegenerate adjacent Majorana generators satisfy the Artin braid relation. -/
++theorem majorana_adjacent_artin_bridge :
++    majoranaGate12 * majoranaGate23 * majoranaGate12 =
++      majoranaGate23 * majoranaGate12 * majoranaGate23 := by
++  exact InfoGeometry.GrandUnification.MajoranaBraidGroup.majorana_adjacent_artin
++
++/-- Unlike the uniform two-atom parity channel, the Majorana adjacent generators do not commute. -/
++theorem majorana_adjacent_noncommuting_bridge :
++    majoranaGate12 * majoranaGate23 ≠ majoranaGate23 * majoranaGate12 := by
++  native_decide
++
++/-- The imported Majorana finite certificate strengthens the braid--Clifford bridge. -/
++theorem braid_clifford_majorana_strengthening :
++    majoranaGate12 * majoranaGate23 * majoranaGate12 =
++      majoranaGate23 * majoranaGate12 * majoranaGate23 ∧
++    majoranaGate12 * majoranaGate23 ≠ majoranaGate23 * majoranaGate12 := by
++  exact ⟨majorana_adjacent_artin_bridge, majorana_adjacent_noncommuting_bridge⟩
++
+ /-- Consolidated bridge: Artin skeleton, Clifford amplitude, and two-atom representation. -/
+ theorem braid_clifford_integration_synthesis :
+     (∀ {u v : List ℕ}, ArtinMove u v → u.length = v.length) ∧
+diff --git a/proofs/BraidNegativeIdentityMonodromy.lean b/proofs/BraidNegativeIdentityMonodromy.lean
+index 54d988e..c7f8bc7 100644
+--- a/proofs/BraidNegativeIdentityMonodromy.lean
++++ b/proofs/BraidNegativeIdentityMonodromy.lean
+@@ -1,4 +1,5 @@
+ import Mathlib
++import MajoranaBraidGroup
+ 
+ open Matrix Complex
+ 
+@@ -23,7 +24,8 @@ def spinorHalfTwist : M2C := !![0, 1; -1, 0]
+ 
+ /-- A local spinor half twist squares to the negative identity. -/
+ theorem spinorHalfTwist_sq : spinorHalfTwist * spinorHalfTwist = -(1 : M2C) := by
+-  ext i j <;> fin_cases i <;> fin_cases j <;> simp [spinorHalfTwist]
++  ext i j
++  fin_cases i <;> fin_cases j <;> simp [spinorHalfTwist]
+ 
+ /-- Therefore four half twists return to the positive identity. -/
+ theorem spinorHalfTwist_fourth : spinorHalfTwist ^ 4 = (1 : M2C) := by
+@@ -49,7 +51,8 @@ def DeltaB3 : M2C := ρσ 0 * ρσ 1 * ρσ 0
+ 
+ /-- The B₃ central full twist `Δ²` acts by `-I`. -/
+ theorem B3_full_twist_negative : DeltaB3 * DeltaB3 = -(1 : M2C) := by
+-  ext i j <;> fin_cases i <;> fin_cases j <;>
++  ext i j
++  fin_cases i <;> fin_cases j <;>
+     simp [DeltaB3, ρσ, spinorHalfTwist, Matrix.mul_apply, Fin.sum_univ_two, Matrix.neg_apply]
+ 
+ /-- Algebraic root stepping stone: if a matrix has `d`-th power `-I`, then its `2d`-th power is `I`. -/
+@@ -58,6 +61,26 @@ theorem negative_root_doubles_to_identity (A : M2C) (d : ℕ) (h : A ^ d = -(1 :
+   rw [show 2 * d = d + d by omega, pow_add, h]
+   simp
+ 
++/-- Majorana bivectors give an 8×8 integer negative-identity monodromy witness. -/
++theorem majorana_bivectors_negative_identity_bridge :
++    InfoGeometry.GrandUnification.MajoranaBraidGroup.bivector12 *
++        InfoGeometry.GrandUnification.MajoranaBraidGroup.bivector12 =
++      -(1 : InfoGeometry.GrandUnification.MajoranaBraidGroup.M8Z) ∧
++    InfoGeometry.GrandUnification.MajoranaBraidGroup.bivector23 *
++        InfoGeometry.GrandUnification.MajoranaBraidGroup.bivector23 =
++      -(1 : InfoGeometry.GrandUnification.MajoranaBraidGroup.M8Z) := by
++  exact InfoGeometry.GrandUnification.MajoranaBraidGroup.majorana_bivector_squares
++
++/-- Majorana braid gates have projective inverses, the finite analogue of the spinor phase channel. -/
++theorem majorana_projective_inverse_bridge :
++    InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12 *
++        InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12InvNumerator =
++      (2 : ℤ) • (1 : InfoGeometry.GrandUnification.MajoranaBraidGroup.M8Z) ∧
++    InfoGeometry.GrandUnification.MajoranaBraidGroup.braid23 *
++        InfoGeometry.GrandUnification.MajoranaBraidGroup.braid23InvNumerator =
++      (2 : ℤ) • (1 : InfoGeometry.GrandUnification.MajoranaBraidGroup.M8Z) := by
++  exact InfoGeometry.GrandUnification.MajoranaBraidGroup.majorana_projective_inverses
++
+ /-- Synthesis: local negative roots realize braid full-twist spinor monodromy. -/
+ theorem braid_negative_identity_synthesis :
+     (ρσ 0 * ρσ 0 = -(1 : M2C)) ∧
+diff --git a/proofs/ExceptionalBraidTopology.lean b/proofs/ExceptionalBraidTopology.lean
+index d47da0c..949247a 100644
+--- a/proofs/ExceptionalBraidTopology.lean
++++ b/proofs/ExceptionalBraidTopology.lean
+@@ -1,4 +1,5 @@
+ import Mathlib
++import MajoranaBraidGroup
+ 
+ /-!
+ # Exceptional Braid Topology
+@@ -72,8 +73,45 @@ theorem exceptional_braid_topology_synthesis (Hx Hy Nx Ny : B)
+   exact ⟨hermitian_doubling Hx Hy hComm, non_hermitian_unpaired Nx Ny hNoncomm,
+     hEP, hTor, hUnpaired, hDouble⟩
+ 
++/-- The finite Majorana model supplies a concrete noncommuting braid pair.
++This is the checked finite witness used by the non-Hermitian branch: adjacent
++Majorana braid gates satisfy Artin, but the two adjacent generators do not
++commute. -/
++theorem majorana_braid_noncommuting_witness :
++    InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12 *
++        InfoGeometry.GrandUnification.MajoranaBraidGroup.braid23 ≠
++      InfoGeometry.GrandUnification.MajoranaBraidGroup.braid23 *
++        InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12 := by
++  native_decide
++
++/-- The same concrete witness also carries the adjacent Artin relation. -/
++theorem majorana_braid_artin_witness :
++    InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12 *
++        InfoGeometry.GrandUnification.MajoranaBraidGroup.braid23 *
++        InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12 =
++      InfoGeometry.GrandUnification.MajoranaBraidGroup.braid23 *
++        InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12 *
++        InfoGeometry.GrandUnification.MajoranaBraidGroup.braid23 := by
++  exact InfoGeometry.GrandUnification.MajoranaBraidGroup.majorana_adjacent_artin
++
++/-- Finite matrix certificate backing the non-Abelian braid premise. -/
++theorem exceptional_braid_majorana_certificate :
++    InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12 *
++        InfoGeometry.GrandUnification.MajoranaBraidGroup.braid23 ≠
++      InfoGeometry.GrandUnification.MajoranaBraidGroup.braid23 *
++        InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12 ∧
++    InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12 *
++        InfoGeometry.GrandUnification.MajoranaBraidGroup.braid23 *
++        InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12 =
++      InfoGeometry.GrandUnification.MajoranaBraidGroup.braid23 *
++        InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12 *
++        InfoGeometry.GrandUnification.MajoranaBraidGroup.braid23 := by
++  exact ⟨majorana_braid_noncommuting_witness, majorana_braid_artin_witness⟩
++
+ #check hermitian_doubling
+ #check non_hermitian_unpaired
++#check majorana_braid_noncommuting_witness
++#check majorana_braid_artin_witness
+ #check exceptional_braid_topology_synthesis
+ 
+ end ExceptionalBraid
+diff --git a/proofs/MorandiWallpaperCohomology.lean b/proofs/MorandiWallpaperCohomology.lean
+index bf3e952..25f8ba3 100644
+--- a/proofs/MorandiWallpaperCohomology.lean
++++ b/proofs/MorandiWallpaperCohomology.lean
+@@ -120,6 +120,29 @@ def extensionFirst (c : G → G → T) (x y : T × G) : T :=
+ def extensionMul (c : G → G → T) (x y : T × G) : T × G :=
+   (extensionFirst c x y, x.2 * y.2)
+ 
++/-- The neutral element for Morandi's extension product. -/
++def extensionOne : T × G := (0, 1)
++
++/-- Left identity for the extension product, assuming normalized cocycle at the identity. -/
++theorem extensionMul_one_left (c : G → G → T) (h1 : ∀ g : G, c 1 g = 0)
++    (x : T × G) :
++    extensionMul c extensionOne x = x := by
++  cases x with
++  | mk sx gx =>
++    ext
++    · simp [extensionMul, extensionFirst, extensionOne, h1]
++    · simp [extensionMul, extensionOne]
++
++/-- Right identity for the extension product, assuming normalized cocycle at the identity. -/
++theorem extensionMul_one_right (c : G → G → T) (h1 : ∀ g : G, c g 1 = 0)
++    (x : T × G) :
++    extensionMul c x extensionOne = x := by
++  cases x with
++  | mk sx gx =>
++    ext
++    · simp [extensionMul, extensionFirst, extensionOne, h1]
++    · simp [extensionMul, extensionOne]
++
+ /-- The 2-cocycle equation is exactly associativity of the extension product. -/
+ theorem extensionMul_assoc_of_cocycle (c : G → G → T) (hc : IsTwoCocycle c)
+     (x y z : T × G) :
+@@ -154,6 +177,8 @@ theorem morandi_wallpaper_cohomology_synthesis :
+ #check pointGroupTypeCount_eq_ten
+ #check totalExtensionClasses_eq_18
+ #check morandiWallpaperCount_eq_17
++#check extensionMul_one_left
++#check extensionMul_one_right
+ #check extensionMul_assoc_of_cocycle
+ #check morandi_wallpaper_cohomology_synthesis
+ 
+diff --git a/proofs/ProjectiveWallpaperGaugePSA.lean b/proofs/ProjectiveWallpaperGaugePSA.lean
+index a05f22e..decb735 100644
+--- a/proofs/ProjectiveWallpaperGaugePSA.lean
++++ b/proofs/ProjectiveWallpaperGaugePSA.lean
+@@ -159,19 +159,37 @@ def La : M2C := !![1, 0; 0, -1]
+ /-- Magnetic translation representative `L_b`. -/
+ def Lb : M2C := !![0, 1; 1, 0]
+ 
++/-- The first magnetic translation representative is involutive. -/
++theorem La_sq : La * La = (1 : M2C) := by
++  ext i j
++  all_goals fin_cases i <;> fin_cases j <;> simp [La]
++
++/-- The second magnetic translation representative is involutive. -/
++theorem Lb_sq : Lb * Lb = (1 : M2C) := by
++  ext i j
++  all_goals fin_cases i <;> fin_cases j <;> simp [Lb]
++
+ /-- `L_a L_b L_a⁻¹ L_b⁻¹ = -I`, the `σ=-1` π-flux invariant. -/
+ theorem magnetic_translation_commutator_neg :
+     La * Lb * La * Lb = -(1 : M2C) := by
+-  ext i j <;> fin_cases i <;> fin_cases j <;>
++  ext i j
++  all_goals fin_cases i <;> fin_cases j <;>
+     simp [La, Lb, Matrix.mul_apply, Fin.sum_univ_two, Matrix.neg_apply]
+ 
++/-- The π-flux magnetic translations genuinely fail to commute. -/
++theorem magnetic_translations_noncommute : La * Lb ≠ Lb * La := by
++  intro h
++  have hentry := congr_fun (congr_fun h 0) 1
++  norm_num [La, Lb, Matrix.mul_apply, Fin.sum_univ_two] at hentry
++
+ /-- Projective rotation/square-root representative with square `-I`. -/
+ def projectiveHalfRotation : M2C := !![I, 0; 0, -I]
+ 
+ /-- `α=-1` is represented by a symmetry whose square is `-I`. -/
+ theorem projectiveHalfRotation_sq_neg :
+     projectiveHalfRotation * projectiveHalfRotation = -(1 : M2C) := by
+-  ext i j <;> fin_cases i <;> fin_cases j <;>
++  ext i j
++  all_goals fin_cases i <;> fin_cases j <;>
+     simp [projectiveHalfRotation, Matrix.mul_apply, Fin.sum_univ_two, Matrix.neg_apply,
+       Complex.I_mul_I]
+ 
+@@ -203,16 +221,22 @@ theorem projective_wallpaper_gauge_psa_synthesis :
+     totalNonEquivalentPSACount = 189 ∧
+     invariantClasses.length = 5 ∧
+     psaSignatures.length = 3 ∧
++    La * La = (1 : M2C) ∧
++    Lb * Lb = (1 : M2C) ∧
++    La * Lb ≠ Lb * La ∧
+     La * Lb * La * Lb = -(1 : M2C) ∧
+     projectiveHalfRotation * projectiveHalfRotation = -(1 : M2C) := by
+   exact ⟨allWallpaperGroups_length, totalPSACount_eq_458,
+     totalNonEquivalentPSACount_eq_189, invariantClasses_length,
+-    psaSignatures_length, magnetic_translation_commutator_neg,
+-    projectiveHalfRotation_sq_neg⟩
++    psaSignatures_length, La_sq, Lb_sq, magnetic_translations_noncommute,
++    magnetic_translation_commutator_neg, projectiveHalfRotation_sq_neg⟩
+ 
+ #check totalPSACount_eq_458
+ #check totalNonEquivalentPSACount_eq_189
+ #check piFlux_sigma_minus
++#check La_sq
++#check Lb_sq
++#check magnetic_translations_noncommute
+ #check magnetic_translation_commutator_neg
+ #check projectiveHalfRotation_sq_neg
+ #check projective_wallpaper_gauge_psa_synthesis
+diff --git a/proofs/WallpaperBulkAnyonProjection.lean b/proofs/WallpaperBulkAnyonProjection.lean
+index 8895401..040308c 100644
+--- a/proofs/WallpaperBulkAnyonProjection.lean
++++ b/proofs/WallpaperBulkAnyonProjection.lean
+@@ -1,4 +1,5 @@
+ import Mathlib
++import ProjectiveWallpaperGaugePSA
+ 
+ /-!
+ # Wallpaper cocycle projection to bulk anyonic ribbons
+@@ -91,6 +92,23 @@ theorem piTwistPhase_sq : piTwistPhase * piTwistPhase = (1 : ℂ) := by
+ theorem piTwistPhase_nontrivial : piTwistPhase ≠ (1 : ℂ) := by
+   norm_num [piTwistPhase]
+ 
++/-- The π-twist phase agrees with the nontrivial projective `Z₂` phase. -/
++theorem piTwistPhase_eq_projective_minus :
++    piTwistPhase = ProjectiveWallpaperGaugePSA.Z2Phase.toComplex .minus := rfl
++
++/-- The projective wallpaper π-flux representative supplies the same negative commutator. -/
++theorem projective_wallpaper_flux_commutator_bridge :
++    ProjectiveWallpaperGaugePSA.La * ProjectiveWallpaperGaugePSA.Lb *
++        ProjectiveWallpaperGaugePSA.La * ProjectiveWallpaperGaugePSA.Lb =
++      -(1 : ProjectiveWallpaperGaugePSA.M2C) := by
++  exact ProjectiveWallpaperGaugePSA.magnetic_translation_commutator_neg
++
++/-- The projective wallpaper π-flux translations are a concrete noncommuting pair. -/
++theorem projective_wallpaper_flux_noncommuting_bridge :
++    ProjectiveWallpaperGaugePSA.La * ProjectiveWallpaperGaugePSA.Lb ≠
++      ProjectiveWallpaperGaugePSA.Lb * ProjectiveWallpaperGaugePSA.La := by
++  exact ProjectiveWallpaperGaugePSA.magnetic_translations_noncommute
++
+ /-- Braid exchange is conjugated by glide wrapping, the algebraic ribbon anomaly. -/
+ structure RibbonBraidAnomaly (B : Type*) [Group B] where
+   exchange : B
+@@ -126,14 +144,21 @@ theorem wallpaper_bulk_anyon_projection_synthesis
+     K.glide * K.orienting * K.glide⁻¹ = K.orienting⁻¹ ∧
+     (∀ a : Charge, P.wrap a = P.conj a) ∧
+     piTwistPhase * piTwistPhase = (1 : ℂ) ∧
++    piTwistPhase = ProjectiveWallpaperGaugePSA.Z2Phase.toComplex .minus ∧
++    ProjectiveWallpaperGaugePSA.La * ProjectiveWallpaperGaugePSA.Lb ≠
++      ProjectiveWallpaperGaugePSA.Lb * ProjectiveWallpaperGaugePSA.La ∧
+     R.wrap * R.exchange * R.wrap⁻¹ = R.exchange⁻¹ := by
+   exact ⟨glide_implies_nontrivial_cocycle c G, glide_reverses_cycle K,
+-    glide_wrap_conjugates_charge P, piTwistPhase_sq, wrap_reverses_exchange R⟩
++    glide_wrap_conjugates_charge P, piTwistPhase_sq, piTwistPhase_eq_projective_minus,
++    projective_wallpaper_flux_noncommuting_bridge, wrap_reverses_exchange R⟩
+ 
+ #check glide_implies_nontrivial_cocycle
+ #check glide_reverses_cycle
+ #check glide_wrap_conjugates_charge
+ #check piTwistPhase_sq
++#check piTwistPhase_eq_projective_minus
++#check projective_wallpaper_flux_commutator_bridge
++#check projective_wallpaper_flux_noncommuting_bridge
+ #check wrap_reverses_exchange
+ #check wallpaper_bulk_anyon_projection_synthesis
+ 
+diff --git a/proofs/WallpaperSemidirectProduct.lean b/proofs/WallpaperSemidirectProduct.lean
+index 1b4bd05..0f458ff 100644
+--- a/proofs/WallpaperSemidirectProduct.lean
++++ b/proofs/WallpaperSemidirectProduct.lean
+@@ -1,65 +1,96 @@
+-import Mathlib.Algebra.Group.Defs
++import Mathlib
+ import Mathlib.GroupTheory.SemidirectProduct
+ 
+ /-!
+-# Wallpaper Groups as Semidirect Products
++# Wallpaper groups as semidirect products
+ 
+-Formalizes the structural group theory of symmorphic wallpaper groups.
+-We mathematically prove the composition law of Euclidean isometries `ISO(2)`, 
+-demonstrate that the lattice group `T` is a normal subgroup, and define 
+-the semidirect product `G = T ⋊ G_0` as outlined in Bonfanti's surface symmetry notes.
++This file replaces the earlier prose-only wallpaper-group socket with kernel-checked
++semidirect-product group theory.  The lattice/translation factor is a genuine normal
++subgroup of `T ⋊[φ] P`, and the coordinate multiplication law is the standard
++wallpaper composition rule: translation part followed by the point-group action on
++the next translation.
+ -/
+ 
+ namespace WallpaperSemidirectProduct
+ 
+-/-- 
+-The elements of `ISO(2)` are defined as pairs `(O, t)` where `O` is an orthogonal 
+-matrix (the point group part) and `t` is a translation vector.
+-We represent this generically.
+--/
+-structure Iso2Element (PointGroup LatticeGroup : Type*) where
+-  O : PointGroup
+-  t : LatticeGroup
++variable {T P : Type*} [Group T] [Group P] (φ : P →* MulAut T)
+ 
+-variable {PointGroup LatticeGroup : Type*} 
+-variable [Group PointGroup] [AddCommGroup LatticeGroup]
++abbrev WallpaperGroup := T ⋊[φ] P
+ 
+-/-- 
+-The action of the point group on the lattice group. 
+-A rotation acts on a translation vector, returning a new vector.
+--/
+-variable (action : PointGroup → LatticeGroup → LatticeGroup)
++abbrev translationSubgroup : Subgroup (WallpaperGroup φ) :=
++  (SemidirectProduct.inl : T →* WallpaperGroup φ).range
+ 
+-/--
+-The composition law for Euclidean Isometries (Eq. 3 in Bonfanti):
+-`(O₂, t₂) * (O₁, t₁) = (O₂ * O₁, t₂ + O₂ * t₁)`
+--/
+-def composeIso2 (g₂ g₁ : Iso2Element PointGroup LatticeGroup) : Iso2Element PointGroup LatticeGroup :=
+-  { O := g₂.O * g₁.O, 
+-    t := g₂.t + action g₂.O g₁.t }
+-
+-/-- 
+-A symmorphic group is exactly the semidirect product `T ⋊ G_0`.
+-In Lean, we construct this using `SemidirectProduct`, which inherently 
+-requires `T` (the LatticeGroup) to be a normal subgroup, allowing the 
+-unique decomposition `g = t * r`.
+--/
+--- We require that the action preserves the group structure of the lattice
+-variable [MulAction PointGroup LatticeGroup]
+-
+--- In a full mathematical framework, we would instantiate `SemidirectProduct LatticeGroup PointGroup`.
+--- This requires demonstrating that the action of G₀ on T is an automorphism, 
+--- which geometrically means rotating a lattice vector produces another valid lattice vector.
+-
+-/--
+-Theorem: Normal Subgroup Property.
+-In a semidirect product `G = T ⋊ G_0`, the translation group `T` is strictly 
+-a normal subgroup. This means for any `g ∈ G` and `t₁ ∈ T`, `g⁻¹ t₁ g ∈ T`.
+-This is geometrically necessary because changing the origin of a pure translation 
+-yields another pure translation.
+--/
+--- Lean's `SemidirectProduct` inherently enforces that the left factor is a normal subgroup.
+--- We state this structurally: the normal subgroup property is what permits the 
+--- factorization of the symmetrization projector `P_G = P_{G_0} P_T` (Eq 6).
++/-- The point-group coordinate of a pure translation is trivial. -/
++theorem pure_translation_right (t : T) :
++    (SemidirectProduct.inl t : WallpaperGroup φ).right = 1 := by
++  simp
++
++/-- Membership in the translation subgroup is exactly having trivial point part. -/
++theorem mem_translationSubgroup_iff_right_eq_one (x : WallpaperGroup φ) :
++    x ∈ translationSubgroup φ ↔ x.right = 1 := by
++  constructor
++  · intro hx
++    rcases hx with ⟨t, rfl⟩
++    exact pure_translation_right φ t
++  · intro hx
++    refine ⟨x.left, ?_⟩
++    ext <;> simp [hx]
++
++/-- Coordinate multiplication in a wallpaper semidirect product. -/
++theorem wallpaper_mul_coordinates (a b : WallpaperGroup φ) :
++    a * b = SemidirectProduct.mk (a.left * (φ a.right) b.left) (a.right * b.right) := by
++  exact SemidirectProduct.mul_def a b
++
++/-- The translation subgroup is closed under conjugation by the full wallpaper group. -/
++theorem conjugate_translation_mem (g : WallpaperGroup φ) (t : T) :
++    g * SemidirectProduct.inl t * g⁻¹ ∈ translationSubgroup φ := by
++  rw [mem_translationSubgroup_iff_right_eq_one]
++  simp
++
++/-- Explicit normality criterion for the lattice/translation factor. -/
++theorem translationSubgroup_normal : (translationSubgroup φ).Normal := by
++  constructor
++  intro t ht g
++  rw [mem_translationSubgroup_iff_right_eq_one] at ht ⊢
++  simp [ht]
++
++/-- A symmorphic wallpaper group has unique translation/point coordinates. -/
++theorem wallpaper_ext {a b : WallpaperGroup φ}
++    (hT : a.left = b.left) (hP : a.right = b.right) : a = b := by
++  exact SemidirectProduct.ext hT hP
++
++/-- Projection to the point group is a group homomorphism. -/
++theorem point_projection_mul (a b : WallpaperGroup φ) :
++    (a * b).right = a.right * b.right := by
++  simp
++
++/-- The kernel of the point projection is the translation subgroup. -/
++theorem point_projection_kernel_eq_translationSubgroup :
++    (SemidirectProduct.rightHom : WallpaperGroup φ →* P).ker = translationSubgroup φ := by
++  ext x
++  constructor
++  · intro hx
++    rw [mem_translationSubgroup_iff_right_eq_one]
++    exact hx
++  · intro hx
++    rw [MonoidHom.mem_ker]
++    exact (mem_translationSubgroup_iff_right_eq_one φ x).mp hx
++
++/-- Consolidated group-theoretic support for the symmorphic wallpaper lane. -/
++theorem wallpaper_semidirect_product_certificate :
++    (∀ a b : WallpaperGroup φ,
++      a * b = SemidirectProduct.mk (a.left * (φ a.right) b.left) (a.right * b.right)) ∧
++    (∀ g : WallpaperGroup φ, ∀ t : T,
++      g * SemidirectProduct.inl t * g⁻¹ ∈ translationSubgroup φ) ∧
++    (translationSubgroup φ).Normal ∧
++    (SemidirectProduct.rightHom : WallpaperGroup φ →* P).ker = translationSubgroup φ := by
++  exact ⟨wallpaper_mul_coordinates φ, conjugate_translation_mem φ,
++    translationSubgroup_normal φ, point_projection_kernel_eq_translationSubgroup φ⟩
++
++#check wallpaper_mul_coordinates
++#check conjugate_translation_mem
++#check translationSubgroup_normal
++#check point_projection_kernel_eq_translationSubgroup
++#check wallpaper_semidirect_product_certificate
+ 
+ end WallpaperSemidirectProduct
+diff --git a/proofs/lakefile.toml b/proofs/lakefile.toml
+index b687a69..b7842bb 100644
+--- a/proofs/lakefile.toml
++++ b/proofs/lakefile.toml
+@@ -74,6 +74,7 @@ roots = [
+   "AtomicCliffordKAN",
+   "FibonacciCliffordBridge",
+   "BraidCliffordIntegration",
++  "MajoranaBraidGroup",
+   "WaveguideEPBraidSpec",
+   "ScatteringSMatrix",
+   "NonHermitianSMatrixDefect",

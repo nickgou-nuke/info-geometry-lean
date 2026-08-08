@@ -1,0 +1,146 @@
+[
+  {
+    "name": "ThermodynamicLorentzBoost.BoostParameter",
+    "kind": null,
+    "module": "ThermodynamicLorentzBoost",
+    "used_by": 4,
+    "deps": 1,
+    "key": "ThermodynamicLorentzBoost_BoostParameter"
+  },
+  {
+    "name": "ThermodynamicLorentzBoost.BoostParameter.mk",
+    "kind": null,
+    "module": "ThermodynamicLorentzBoost",
+    "used_by": 2,
+    "deps": 0,
+    "key": "ThermodynamicLorentzBoost_BoostParameter_mk"
+  },
+  {
+    "name": "ThermodynamicLorentzBoost.closed_thermodynamic_lorentz_boost_kernel",
+    "kind": "theorem",
+    "module": "ThermodynamicLorentzBoost",
+    "used_by": 0,
+    "deps": 34,
+    "key": "ThermodynamicLorentzBoost_closed_thermodynamic_lorentz_boost_kernel"
+  },
+  {
+    "name": "ThermodynamicLorentzBoost.equivariant_lorentz_boost_signature",
+    "kind": "theorem",
+    "module": "ThermodynamicLorentzBoost",
+    "used_by": 1,
+    "deps": 3,
+    "key": "ThermodynamicLorentzBoost_equivariant_lorentz_boost_signature"
+  },
+  {
+    "name": "ThermodynamicLorentzBoost.EquivariantCuntzP6m",
+    "kind": "inductive",
+    "module": "ThermodynamicLorentzBoost",
+    "used_by": 0,
+    "deps": 1,
+    "key": "ThermodynamicLorentzBoost_EquivariantCuntzP6m"
+  },
+  {
+    "name": "ThermodynamicLorentzBoost.EquivariantCuntzP6m.mk",
+    "kind": null,
+    "module": "ThermodynamicLorentzBoost",
+    "used_by": 1,
+    "deps": 0,
+    "key": "ThermodynamicLorentzBoost_EquivariantCuntzP6m_mk"
+  },
+  {
+    "name": "ThermodynamicLorentzBoost.EquivariantKTheoryOwnerDebt",
+    "kind": "inductive",
+    "module": "ThermodynamicLorentzBoost",
+    "used_by": 0,
+    "deps": 1,
+    "key": "ThermodynamicLorentzBoost_EquivariantKTheoryOwnerDebt"
+  },
+  {
+    "name": "ThermodynamicLorentzBoost.EquivariantKTheoryOwnerDebt.mk",
+    "kind": null,
+    "module": "ThermodynamicLorentzBoost",
+    "used_by": 1,
+    "deps": 0,
+    "key": "ThermodynamicLorentzBoost_EquivariantKTheoryOwnerDebt_mk"
+  },
+  {
+    "name": "ThermodynamicLorentzBoost.K0EquivariantBoost",
+    "kind": null,
+    "module": "ThermodynamicLorentzBoost",
+    "used_by": 2,
+    "deps": 1,
+    "key": "ThermodynamicLorentzBoost_K0EquivariantBoost"
+  },
+  {
+    "name": "ThermodynamicLorentzBoost.zeroBoost",
+    "kind": null,
+    "module": "ThermodynamicLorentzBoost",
+    "used_by": 2,
+    "deps": 3,
+    "key": "ThermodynamicLorentzBoost_zeroBoost"
+  },
+  {
+    "name": "ThermodynamicLorentzBoost.zeroBoost._proof_1",
+    "kind": null,
+    "module": "ThermodynamicLorentzBoost",
+    "used_by": 1,
+    "deps": 0,
+    "key": "ThermodynamicLorentzBoost_zeroBoost__proof_1"
+  },
+  {
+    "name": "ThermodynamicNetworkSpine.closed_thermodynamic_network_spine",
+    "kind": "theorem",
+    "module": "ThermodynamicNetworkSpine",
+    "used_by": 0,
+    "deps": 44,
+    "key": "ThermodynamicNetworkSpine_closed_thermodynamic_network_spine"
+  },
+  {
+    "name": "ThermodynamicNetworkSpine.ThermodynamicNetworkOwnerDebt",
+    "kind": null,
+    "module": "ThermodynamicNetworkSpine",
+    "used_by": 1,
+    "deps": 1,
+    "key": "ThermodynamicNetworkSpine_ThermodynamicNetworkOwnerDebt"
+  },
+  {
+    "name": "ThermodynamicNetworkSpine.ThermodynamicNetworkOwnerDebt.crossedProductKTheoryTransported",
+    "kind": null,
+    "module": "ThermodynamicNetworkSpine",
+    "used_by": 1,
+    "deps": 0,
+    "key": "ThermodynamicNetworkSpine_ThermodynamicNetworkOwnerDebt_crossedProductKTheoryTransported"
+  },
+  {
+    "name": "ThermodynamicNetworkSpine.ThermodynamicNetworkOwnerDebt.kmsLorentzHomotopyConstructed",
+    "kind": null,
+    "module": "ThermodynamicNetworkSpine",
+    "used_by": 1,
+    "deps": 0,
+    "key": "ThermodynamicNetworkSpine_ThermodynamicNetworkOwnerDebt_kmsLorentzHomotopyConstructed"
+  },
+  {
+    "name": "ThermodynamicNetworkSpine.ThermodynamicNetworkOwnerDebt.mk",
+    "kind": null,
+    "module": "ThermodynamicNetworkSpine",
+    "used_by": 1,
+    "deps": 0,
+    "key": "ThermodynamicNetworkSpine_ThermodynamicNetworkOwnerDebt_mk"
+  },
+  {
+    "name": "ThermodynamicNetworkSpine.ThermodynamicNetworkOwnerDebt.nonAbelianBerryPfaffianComputed",
+    "kind": null,
+    "module": "ThermodynamicNetworkSpine",
+    "used_by": 1,
+    "deps": 0,
+    "key": "ThermodynamicNetworkSpine_ThermodynamicNetworkOwnerDebt_nonAbelianBerryPfaffianComputed"
+  },
+  {
+    "name": "ThermodynamicNetworkSpine.ThermodynamicNetworkOwnerDebt.physicalThermalDiracBKBRealization",
+    "kind": null,
+    "module": "ThermodynamicNetworkSpine",
+    "used_by": 1,
+    "deps": 0,
+    "key": "ThermodynamicNetworkSpine_ThermodynamicNetworkOwnerDebt_physicalThermalDiracBKBRealization"
+  }
+]

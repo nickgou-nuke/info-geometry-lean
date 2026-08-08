@@ -14,7 +14,7 @@ The concrete owner-supported content is:
 * selected cleared Jordan-triple readbacks close on named concrete sectors;
 * the concrete `e⁺/e⁻` commutator packet remains exactly zero.
 
-The abstract TKK route is recorded only as an explicit hypothesis packet over a
+The abstract TKK route is recorded only as an explicit property packet over a
 Jordan triple system and its Lie closure socket.
 -/
 
@@ -75,7 +75,7 @@ theorem concrete_boundary_packet :
   · exact concrete_ePlus_eMinus_packet
 
 /-- The abstract TKK route is legitimate only after supplying a concrete
-`TKKLieClosure` witness, which already packages the Jordan triple data together
+`TKKLieClosure` property, which already packages the Jordan triple data together
 with its 3-graded Lie closure. -/
 structure JordanTripleTKKClosureHypotheses
     (J : Type*) [AddCommGroup J] [Module ℝ J] where
@@ -149,7 +149,7 @@ theorem pos_zero_triple_action (x y z : J) :
   H.closure.bracket_pos_zero x y z
 
 /-- Small theorem-safe packet collecting the basic bracket identities carried by
-the supplied `TKKLieClosure` witness. -/
+the supplied `TKKLieClosure` property. -/
 theorem basic_closure_consequences (x y z : J) :
     H.closure.lie.bracket (H.closure.neg x) (H.closure.neg y) = 0 ∧
       H.closure.lie.bracket (H.closure.pos x) (H.closure.pos y) = 0 ∧

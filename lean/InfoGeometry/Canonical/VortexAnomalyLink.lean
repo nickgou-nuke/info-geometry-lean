@@ -734,7 +734,7 @@ set_option linter.unusedSectionVars false in
 /--
 If the singular boundary generator is identified with the canonical source seed,
 then nonzero transported central charge forces that source seed to act
-nontrivially on a localized boundary-vortex witness.
+nontrivially on a localized boundary-vortex property.
 -/
 @[rep_depth transport]
 theorem exists_sourceSinkSeedLocalizedVortex_of_operatorialCentralCharge_ne_zero_of_boundaryGenerator_eq_source_of_identifiedTransportedPolarization

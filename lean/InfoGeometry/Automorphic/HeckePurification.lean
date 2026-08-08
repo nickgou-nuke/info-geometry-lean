@@ -3,7 +3,7 @@ InfoGeometry/Automorphic/HeckePurification.lean
 
 Hecke spectral purification for Siegel-Langlands resonance.
 
-This module formalizes a proof-carrying Hecke-Sugawara purification witness.
+This module formalizes a proof-carrying Hecke-Sugawara purification property.
 It calibrates operator-algebraic Sugawara readouts against arithmetic
 automorphic L-functions when the required Hecke compatibility is supplied by a
 concrete model.
@@ -41,7 +41,7 @@ universe uBulk uBoundary uHecke
 Witness that the Sugawara stress-tensor readout on the Siegel boundary
 intertwines with the Hecke action on the bulk.
 
-This is the core 'Purification' witness. It states that the boundary constant
+This is the core 'Purification' property. It states that the boundary constant
 term (Siegel projection) of a bulk Hecke action is compatible with the
 operatorial Sugawara readout.
 -/
@@ -164,15 +164,15 @@ theorem hiddenGradeMemory_eq_l_value
 end HeckeSugawaraIntertwining
 
 /--
-A supplied Langlands/Sugawara bridge and a Hecke purification witness together
+A supplied Langlands/Sugawara bridge and a Hecke purification property together
 provide the two certificates needed by the Siegel-Langlands resonance lane:
 
 * the purified Sugawara readout equals the Hecke L-value at zero;
 * the Langlands/Sugawara bridge is inhabited.
 
-The bridge itself is not constructed from the Hecke witness alone; Euler
+The bridge itself is not constructed from the Hecke property alone; Euler
 products, completed functional equations, and affine/Virasoro calibration remain
-separate witness data.
+separate property data.
 -/
 theorem langlandsSugawaraBridge_nonempty_of_purification
     {Bulk : Type uBulk} {Boundary : Type uBoundary} {HeckeIndex : Type uHecke}

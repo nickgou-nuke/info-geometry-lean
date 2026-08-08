@@ -16,7 +16,7 @@ This file is a narrow composition layer over existing owner surfaces:
 * Witten parity/supertrace cancellation: `BostConnesSuperalgebraConstructive`.
 
 It does not define a new graph model and does not assert analytic KMS, C*-completion,
-zeta, or Riemann-hypothesis consequences.
+zeta, or Riemann-property consequences.
 -/
 
 noncomputable section

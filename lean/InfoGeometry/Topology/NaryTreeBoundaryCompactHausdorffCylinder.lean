@@ -5,7 +5,7 @@ import InfoGeometry.Topology.NaryTreeBoundaryInverseLimit
 
 For an arbitrary compact Hausdorff alphabet, finite-prefix cylinders are
 closed and compact.  Openness is intentionally not asserted: it requires the
-stronger discrete-alphabet hypothesis owned by `NaryTreeBoundaryCylinderTopology`.
+stronger discrete-alphabet property owned by `NaryTreeBoundaryCylinderTopology`.
 -/
 
 noncomputable section

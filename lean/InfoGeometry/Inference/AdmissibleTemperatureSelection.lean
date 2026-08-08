@@ -14,7 +14,7 @@ import Mathlib.Data.Real.Basic
 # Stability-constrained finite temperature selection
 
 Selection is performed only over an explicitly admissible finite subset. The
-nonemptiness hypothesis is intentional: an empty admissible set is reported as
+nonemptiness property is intentional: an empty admissible set is reported as
 an unresolved fit rather than silently replaced by an unstable temperature.
 -/
 

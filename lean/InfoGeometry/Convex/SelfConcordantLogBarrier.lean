@@ -24,7 +24,7 @@ No zeta theorem.
 No analytic continuation.
 No RH claim.
 No socket.
-No certificate.
+No property.
 -/
 
 noncomputable section

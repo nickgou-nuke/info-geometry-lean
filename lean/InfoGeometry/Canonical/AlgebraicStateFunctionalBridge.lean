@@ -16,7 +16,7 @@ This file is intentionally modest. It does **not** formalize a full C*- or
 von-Neumann-state theory, and it does **not** implement a full GNS theorem.
 It records the smallest truthful bridge currently supported by the repo:
 `VectorState.expectation` on the doubled carrier gives a normalized linear probe
-once a normalization witness is supplied.
+once a normalization property is supplied.
 -/
 
 namespace InfoGeometry.Canonical.AlgebraicStateFunctionalBridge
@@ -57,7 +57,7 @@ theorem probe_id :
 
 /--
 Construct a normalized algebraic probe from a doubled-space vector state once a
-normalization witness is supplied.
+normalization property is supplied.
 -/
 @[rep_depth krein]
 noncomputable def ofNormalizedVectorState

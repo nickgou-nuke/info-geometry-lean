@@ -1,7 +1,7 @@
 import InfoGeometry.Canonical.PoissonGibbsKANModuliCouplingTopological
 
 /-!
-# Positive transport certificate from the quotient Gibbs readout
+# Positive transport property from the quotient Gibbs readout
 
 The independent coupling is now packaged as the native finite
 `UnbalancedTransportCertificate`.  All positivity obligations are discharged

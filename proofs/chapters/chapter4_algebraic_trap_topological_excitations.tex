@@ -1,0 +1,245 @@
+\chapter{The Algebraic Trap and Topological Excitations}
+
+Chapter 3 identified the thermodynamic endpoint of holographic scaling as a nilpotent zero-mode sector.  We now describe the topology of the trap that catches these modes.  The central observation is that the boundary possesses fixed loci: spatial fixed lines produced by nonsymmorphic glide/Klein geometry and spectral fixed lines produced by scale reflection.  These two fixed sets are formally parallel:
+\begin{equation}
+    k_2=0
+    \qquad\longleftrightarrow\qquad
+    \operatorname{Re}(s)=\frac12.
+\end{equation}
+The first is the reciprocal-space fixed line of a Brillouin Klein bottle; the second is the critical line of the Riemann scale duality.  The chapter develops this spatial--spectral dictionary and connects it to Dirac resolvents, Fourier--Mellin transforms, Möbius parity, and Witten index stability.
+
+\section{The Dirac--Fourier--Mellin Factorization}
+
+The algebraic bridge from bulk differential geometry to boundary spectral theory is the Fourier--Mellin transform of the Dirac operator.  In the Pauli-biquaternion representation, the relevant resolvent takes the schematic form
+\begin{equation}
+    D_{FM}(s,X)=-\sigma_3(sI_2-X),
+\end{equation}
+where $X$ is a biquaternionic matrix coordinate and $s$ is the Mellin spectral parameter.
+
+The determinant of the resolvent detects poles and zero modes.  When the determinant vanishes, a boundary state is trapped:
+\begin{equation}
+    \det(sI_2-X)=0.
+\end{equation}
+In the nilpotent boundary limit, this condition collapses to the zero-momentum pole
+\begin{equation}
+    s=0,
+\end{equation}
+matching the square-zero sector discussed in Chapter 3.
+
+The corresponding formal components are verified in
+\begin{center}
+\texttt{DiracResolventZeroModeTripotent.lean},\quad
+\texttt{KANFourierMellinDirac.lean},\quad
+\texttt{DiracFourierMellin.lean}.
+\end{center}
+
+\section{The Brillouin Klein Bottle}
+
+A nonsymmorphic glide identifies momentum points by combining reflection with half-translation.  In reciprocal coordinates, the simplest fixed-line model is
+\begin{equation}
+    (k_1,k_2)\mapsto(k_1,-k_2).
+\end{equation}
+The fixed locus is therefore
+\begin{equation}
+    k_2=0.
+\end{equation}
+When this reflection is combined with reciprocal translations and orientation reversal, the Brillouin zone acquires Klein-bottle topology.  The boundary is nonorientable; excitations transported around the glide cycle return with twisted orientation.
+
+This formalizes the geometric side of the trap:
+\begin{equation}
+    \text{glide reflection}
+    \quad\Longrightarrow\quad
+    \text{Klein fixed line}
+    \quad\Longrightarrow\quad
+    \text{protected boundary modes}.
+\end{equation}
+
+Relevant Lean modules include
+\begin{center}
+\texttt{BrillouinKleinNilpotentAttractor.lean},\quad
+\texttt{FixedLineRiemannKlein.lean},\quad
+\texttt{GlideDiracSelectionRule.lean}.
+\end{center}
+
+\section{The Riemann Scale Reflection}
+
+The spectral analogue of the Klein reflection is the Riemann scale duality.  The completed zeta functional equation relates $s$ and $1-s$.  On the real coordinate, the reflection is
+\begin{equation}
+    x\mapsto 1-x.
+\end{equation}
+Its fixed point is
+\begin{equation}
+    x=\frac12.
+\end{equation}
+Thus the spectral fixed line is
+\begin{equation}
+    \operatorname{Re}(s)=\frac12.
+\end{equation}
+
+The Lean master certificate records this algebraic kernel as
+\begin{equation}
+    \texttt{riemannReflectReal}(1/2)=1/2.
+\end{equation}
+The Klein fixed coordinate is recorded as
+\begin{equation}
+    \texttt{kleinReflect}(0)=0.
+\end{equation}
+The affine recentering
+\begin{equation}
+    x\mapsto x-\frac12
+\end{equation}
+then sends the Riemann fixed coordinate to the Klein fixed coordinate:
+\begin{equation}
+    \frac12\mapsto0.
+\end{equation}
+This is formalized in \texttt{ThesisMaster.lean} as \texttt{riemann\_to\_klein\_fixed\_coordinate}.
+
+\section{Spatial--Spectral Duality}
+
+The dictionary is therefore:
+\begin{center}
+\begin{tabular}{c|c}
+\textbf{Spatial/Klein side} & \textbf{Spectral/Riemann side} \\
+\hline
+reciprocal coordinate $k_2$ & real spectral coordinate $\operatorname{Re}(s)-1/2$ \\
+glide reflection $k_2\mapsto-k_2$ & scale reflection $s\mapsto1-s$ \\
+fixed line $k_2=0$ & critical line $\operatorname{Re}(s)=1/2$ \\
+Klein nonorientability & functional-equation duality \\
+protected nodal modes & spectral zero-mode constraint
+\end{tabular}
+\end{center}
+
+This is not claimed as a proof of the Riemann Hypothesis.  Rather, it is a theorem-honest fixed-line equivalence: both structures are governed by the same $\mathbb{Z}_2$ reflection geometry after recentering.
+
+\section{Möbius Parity and Witten Index}
+
+The arithmetic parity layer enters through the Möbius function $\mu(n)$.  It behaves as a number-theoretic analogue of fermion parity:
+\begin{equation}
+    (-1)^F
+    \qquad\leftrightarrow\qquad
+    \mu(n).
+\end{equation}
+Square-free integers carry parity according to the number of prime factors; nonsquare-free integers vanish.  Thus the Möbius function naturally combines parity and nilpotent annihilation:
+\begin{equation}
+    \mu(n)=0
+    \quad\text{when}\quad
+    n\text{ contains a repeated prime factor}.
+\end{equation}
+
+The twisted Witten index is then the protected thermodynamic quantity:
+\begin{equation}
+    \mathcal{I}(\beta)=\operatorname{Tr}\left((-1)^F e^{-\beta H}\right).
+\end{equation}
+When supersymmetry is unbroken, this index is independent of $\beta$.  In the boundary architecture, this means thermal deformation does not destroy the protected topological count of zero modes.
+
+The corresponding formal modules include
+\begin{center}
+\texttt{MobiusWittenKleinIndex.lean},\quad
+\texttt{MobiusWittenIndex.lean},\quad
+\texttt{SuperchargeSquare.lean}.
+\end{center}
+
+\section{Glide Selection Rules and Nodal Protection}
+
+The nonsymmorphic glide imposes selection rules on boundary Dirac modes.  On glide-invariant lines, odd parity sectors can be extinguished while even sectors survive.  This mechanism explains why certain superconducting wallpaper-fermion pairings exhibit protected point or line nodes.
+
+The same algebraic pattern recurs:
+\begin{equation}
+    G^2=T,
+    \qquad
+    Q^2=H,
+    \qquad
+    q^2=0.
+\end{equation}
+A bulk glide or supercharge squares to a nontrivial even translation/Hamiltonian; at the boundary it degenerates into a nilpotent annihilator.  The trap is therefore simultaneously geometric, spectral, and supersymmetric.
+
+\section{The Non-Hermitian Nielsen--Ninomiya Loophole}
+
+The existence of unpaired chiral zero modes is traditionally obstructed by the Nielsen--Ninomiya theorem, which forces lattice fermions on an orientable Brillouin torus to appear in compensating pairs.  In the present architecture this obstruction is bypassed in two simultaneous ways: the boundary excitations are non-Hermitian exceptional points, whose invariants are non-Abelian braids, and the Brillouin parameter space is not an ordinary torus but a glide-identified Klein bottle.
+
+On the torus, the total exceptional charge is constrained by the braid commutator
+\begin{equation}
+    B_{\mathrm{total}}=B_xB_yB_x^{-1}B_y^{-1}.
+\end{equation}
+If the charges commute, this expression is trivial and the ordinary doubling intuition is recovered.  But braid charges need not commute.  This is the formal content of \texttt{ExceptionalBraidTopology.lean}:
+\begin{equation}
+    \operatorname{Commute}(B_x,B_y)
+    \Rightarrow
+    B_{\mathrm{total}}=1,
+\end{equation}
+whereas
+\begin{equation}
+    \neg\operatorname{Commute}(B_x,B_y)
+    \Rightarrow
+    B_{\mathrm{total}}\neq1.
+\end{equation}
+
+On the Klein bottle the situation is sharper.  The fundamental glide relation is
+\begin{equation}
+    g a g^{-1}=a^{-1},
+\end{equation}
+or equivalently
+\begin{equation}
+    g a g^{-1}a=1.
+\end{equation}
+Thus the topological partner required for cancellation is not an independent doubler.  It is the glide-reflected inverse of the same exceptional point.  This is formalized in \texttt{ExceptionalKleinGlideEP.lean} by the theorem
+\begin{equation}
+    \texttt{klein\_word\_trivial\_of\_glide\_inverse}.
+\end{equation}
+The boundary fermion therefore does not double; it glides.
+
+\section{Möbius--Majorana Self-Pairing}
+
+This glide identification is the non-Hermitian analogue of the Majorana condition.  In the Hermitian setting, a Majorana mode is its own charge conjugate.  On the Brillouin Klein bottle, an exceptional point is its own orientation-reversed glide partner:
+\begin{equation}
+    a\xrightarrow{\;g\;}gag^{-1}=a^{-1}.
+\end{equation}
+The anomaly-canceling partner exists, but it is not an additional bulk degree of freedom.  It is the same state after transport around the Möbius cycle.
+
+At the glide fixed line, an even stronger collapse occurs.  If the charge is fixed by the glide,
+\begin{equation}
+    gag^{-1}=a,
+\end{equation}
+and the Klein relation also holds,
+\begin{equation}
+    gag^{-1}=a^{-1},
+\end{equation}
+then
+\begin{equation}
+    a^2=1.
+\end{equation}
+This is proved in Lean as
+\begin{equation}
+    \texttt{square\_one\_of\_glide\_fixed\_and\_inverse}.
+\end{equation}
+Physically, the non-Abelian braid charge collapses on the fixed line to a $\mathbb{Z}_2$ involution.  This is the same square-root logic that appears in the projective glide and supercharge laws:
+\begin{equation}
+    G^2=T,
+    \qquad
+    Q^2=H,
+    \qquad
+    q^2=0.
+\end{equation}
+The bulk square-root symmetry survives as a glide involution, while the boundary degeneration becomes nilpotent.
+
+The resulting slogan is
+\begin{equation}
+    \boxed{
+    \text{EPs do not double on the Klein bottle; they glide.}
+    }
+\end{equation}
+
+\section{Chapter Summary}
+
+Chapter 4 identifies the topological trap governing boundary excitations.  The Brillouin Klein bottle supplies a spatial fixed line $k_2=0$; the Riemann scale reflection supplies a spectral fixed line $\operatorname{Re}(s)=1/2$; and an affine recentering identifies their algebraic fixed-coordinate structures.  Möbius parity and the Witten index then stabilize the trapped zero modes against thermal deformation.
+
+The chapter's central principle is
+\begin{equation}
+    \boxed{
+    k_2=0
+    \quad\longleftrightarrow\quad
+    \operatorname{Re}(s)=\frac12
+    }
+\end{equation}
+
+Chapter 5 will absorb all previous structures into the universal polynomial-operator framework, where rotations, glides, supercharges, tripotents, nilpotents, and Clifford anomaly cancellation become instances of one algebraic language.

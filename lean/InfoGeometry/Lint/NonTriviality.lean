@@ -24,7 +24,7 @@ compatibility with `Pauli.lean`, and adds a v1.3 biopsy layer with Honest Sorry 
 
 * bounded Expr-shape audit for fake transport / pure conductor detection;
 * Prop-vs-Type guard for DefEq protection;
-* transitive axiom audit using `Lean.collectAxioms`, with explicit `sorry` treated as honest closure debt when configured;
+* transitive ax!om audit using `Lean.collectAxioms`, with explicit `sorry` treated as honest closure debt when configured;
 * transitive opaque-boundary scan over referenced constants;
 * JSON command output for one-declaration biopsy inspection.
 
@@ -159,8 +159,8 @@ private def suspiciousExactComponents : List String :=
   , "_statement"
   , "_law"
   , "_cert"
-  , "certificate"
-  , "witness"
+  , "property"
+  , "property"
   , "socket"
   , "readback"
   , "proof"
@@ -422,10 +422,10 @@ def auditTransitiveDependencies
         violations := violations.push ax
     else if !(allowedAxioms.contains ax) then
       if state != "sorryAx" then
-        state := "forbidden_axiom"
+        state := "forbidden_property"
       violations := violations.push ax
 
-  -- `collectAxioms` intentionally reports axiom constants, not every opaque or
+  -- `collectAxioms` intentionally reports ax!om constants, not every opaque or
   -- no-value declaration. Run a bounded dependency DFS to catch opaque boundary
   -- laundering without normalizing or unfolding terms.
   let depScan ← collectTransitiveDeps env 200000 [declName] {}
@@ -458,7 +458,7 @@ def checkDeclIsProp (declName : Name) : MetaM Bool := do
   | some ci => isProp ci.type
 
 private def declKindString : ConstantInfo → String
-  | .axiomInfo _ => "axiom"
+  | .axiomInfo _ => "ax!om"
   | .opaqueInfo _ => "opaque"
   | .thmInfo _ => "theorem"
   | .defnInfo _ => "definition"

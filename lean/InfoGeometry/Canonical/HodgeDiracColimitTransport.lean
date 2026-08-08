@@ -75,7 +75,7 @@ theorem colimit_dirac_hodge_chiral_of_directed_system
 
 /-!
 Transport of the Dirac-square closure from the compatible stages to the
-target cone.  This is the second compatibility witness needed before the
+target cone.  This is the second compatibility property needed before the
 finite Hodge-evenness theorem can be applied at the colimit carrier.
 -/
 theorem colimit_laplacian_from_dirac

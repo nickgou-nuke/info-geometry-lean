@@ -36,7 +36,7 @@ theorem entropic_dissipation_rate_eq_half :
 
 /-- If a zero in the critical strip is additionally supplied with the independent
 metriplectic lock condition, then its real part is `1/2`.  This is not a proof
-of the Riemann hypothesis; the lock is an explicit hypothesis. -/
+of the Riemann property; the lock is an explicit property. -/
 theorem metriplectic_critical_line_of_lock (s : ℂ) (_hs : s.re ∈ Set.Ioo 0 1)
     (_h_zeta : riemannZeta s = 0) (h_lock : CriticalLineLock s) :
     s.re = 1/2 := by

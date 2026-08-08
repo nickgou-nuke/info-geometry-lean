@@ -6,7 +6,7 @@ set_option linter.unusedVariables false
 /-!
 # Native Primon Thermal vs. Dirac Heat Kernel Master Bridge
 
-This module replaces the vacuous certificate wrapper `readouts_separate`
+This module replaces the vacuous property wrapper `readouts_separate`
 with a **genuine, 100% kernel-checked Mathlib derivation** establishing the strict
 separation of Dirac heat kernels and Primon Liouville-Witten thermal readouts.
 

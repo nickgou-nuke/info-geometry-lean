@@ -20,7 +20,7 @@ This file records the real Hestenes--Krein translation:
 
 It does not construct quotient spaces, prove a full Hodge theorem, or assert
 that a Dirac lane is automatically a nilpotent chain differential. Those remain
-explicit witness/calibration layers.
+explicit property/calibration layers.
 -/
 
 namespace InfoGeometry.Canonical.RealIncidenceHomologyBridge
@@ -210,14 +210,14 @@ theorem rootDirac_sq_eq_hodge_loop_sum :
   rootDiracOddLane_sq_eq_chiralLaplacian_sum (E := E)
 
 /-!
-A nilpotent chiral complex witness.
+A nilpotent chiral complex property.
 
-Only with this witness should quotient-style chiral homology
+Only with this property should quotient-style chiral homology
 `ker D± / im D∓` be interpreted as an actual chain-complex homology lane.
 -/
 namespace ChiralNilpotentComplexWitness
 
-/-- With a nilpotent-complex witness, plus boundaries are plus cycles. -/
+/-- With a nilpotent-complex property, plus boundaries are plus cycles. -/
 @[rep_depth krein]
 theorem plus_boundary_is_cycle
     (W : (rootDiracPlus (E := E)).comp (rootDiracMinus (E := E)) = 0 ∧
@@ -229,7 +229,7 @@ theorem plus_boundary_is_cycle
   simpa [ContinuousLinearMap.comp_apply] using
     congrArg (fun F : EndH => F v) W.1
 
-/-- With a nilpotent-complex witness, minus boundaries are minus cycles. -/
+/-- With a nilpotent-complex property, minus boundaries are minus cycles. -/
 @[rep_depth krein]
 theorem minus_boundary_is_cycle
     (W : (rootDiracPlus (E := E)).comp (rootDiracMinus (E := E)) = 0 ∧

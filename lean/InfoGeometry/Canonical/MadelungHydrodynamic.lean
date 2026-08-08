@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.MadelungHydrodynamicPressureBridge
 import InfoGeometry.Canonical.MadelungTopologicalSpin
+import InfoGeometry.Canonical.MadelungNavierStokesClosure
 
 noncomputable section
 

@@ -115,7 +115,7 @@ theorem anomaly_packet_from_topological_socket
   exact five_graded_mobius_witten_globality_packet G A step s k
     chi_global_4 moebius_strip_4 witten_parity_factor h_chi_global h_moebius_chiral h_witten_parity
 
-/-- A ready-made concrete witness from the finite `2×2` Möbius model. -/
+/-- A ready-made concrete property from the finite `2×2` Möbius model. -/
 def concreteTopologicalSocket2 : TopologicalSpinSocket 2 :=
   { inv := concreteSpinTopologicalInvariants2
     parity_trace_zero := by

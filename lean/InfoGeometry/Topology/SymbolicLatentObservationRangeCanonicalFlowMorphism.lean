@@ -2,7 +2,7 @@ import InfoGeometry.Topology.SymbolicLatentFlowQuotientTransport
 import InfoGeometry.Topology.SymbolicLatentObservationRangeFlowMorphismBridge
 
 /-!
-# Canonical quotient witness for an observable modular flow
+# Canonical quotient property for an observable modular flow
 
 An observable modular flow has exactly the fields required by the existing
 `SymbolicLatentFlow` carrier.  This owner packages those fields and proves

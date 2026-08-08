@@ -1,0 +1,60 @@
+{
+  "title": "info-geometry-lean: Information Geometry of Quantum Gravity — Lean 4 and SymPy Formalization",
+  "description": "Lean 4 and SymPy formalization project for the information geometry of quantum gravity, featuring a maintained representation-depth theorem spine spanning projective geometry (PGA), operator algebras, and thermodynamic inference. The repository identifies a stable core centered on modular and spectral operator theory, Krein-Clifford doubled geometry, and Drazin/inverse-kernel anomaly analysis with Einstein-source bridges. Recent architectural extensions formalize the holographic boundary of Conformal Cyclic Cosmology (CCC) via Cuntz-Toeplitz noncommutative quasicrystals (Penrose tilings), where matter-field sockets are modeled by Golden Ratio q-deformed Canonical Commutation Relations (q-CCR). The framework links the E_{7(7)} Freudenthal black-hole entropy invariant to scalar microscopic entropy anchors on the fractal boundary. The master theorem compile : ChiralTripleSystem → SpacetimeGeometry establishes the 5-graded Tits-Kantor-Koecher closure as the generative mechanism for the Minkowski metric. Contains 376 Lean 4 modules and 329 SymPy verification scripts.",
+  "creators": [
+    {
+      "name": "Goutev, Nikolay",
+      "affiliation": "Institute for Nuclear Research and Nuclear Energy (INRNE-BAS), Bulgarian Academy of Sciences"
+    },
+    {
+      "name": "Tonev, Dimitar",
+      "affiliation": "Institute for Nuclear Research and Nuclear Energy (INRNE-BAS), Bulgarian Academy of Sciences"
+    }
+  ],
+  "license": "Apache-2.0",
+  "upload_type": "software",
+  "access_right": "open",
+  "version": "1.0.0",
+  "publication_date": "2026-06-17",
+  "keywords": [
+    "Lean 4",
+    "SymPy",
+    "information geometry",
+    "noncommutative geometry",
+    "Cuntz-Toeplitz algebras",
+    "q-CCR",
+    "Penrose tilings",
+    "Clifford algebras",
+    "Cramer-Rao bound",
+    "Itakura-Saito divergence",
+    "random matrix theory",
+    "Gaussian Unitary Ensemble",
+    "Wigner-Dyson distribution",
+    "Riemann zeta function",
+    "twistor geometry",
+    "Tomita-Takesaki theory",
+    "Tits-Kantor-Koecher construction",
+    "5-graded Lie algebras",
+    "Freudenthal magic square",
+    "Erlangen program",
+    "Bures metric",
+    "holographic principle",
+    "Jordan triple systems",
+    "nuclear physics",
+    "triaxial nuclei",
+    "Fibonacci anyons"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/nickgou-nuke/auto",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    },
+    {
+      "identifier": "https://github.com/leanprover-community/mathlib4",
+      "relation": "isRequiredBy",
+      "resource_type": "software"
+    }
+  ],
+  "notes": "v1.0.0 release. Master theorem: compile : ChiralTripleSystem → SpacetimeGeometry. 15/15 TKK grading conditions verified. The closed 6-node cartography from primes to spacetime to Bures metric is complete."
+}

@@ -26,7 +26,7 @@ Unlike the separate Hilbert--Schmidt owner, the construction here contains:
 * the modular interpolation `ρ^s A ρ^(1-s)`;
 * the interval integral over `s ∈ [0,1]`.
 
-No diagonalization or commutativity hypothesis is imposed on observables.
+No diagonalization or commutativity property is imposed on observables.
 -/
 
 /-- Finite complex Hilbert space carrying the operator algebra. -/
@@ -85,7 +85,7 @@ theorem finiteOperatorTrace_star
   exact Matrix.trace_conjTranspose _
 
 /-- Cyclicity of the finite operator trace for two arbitrary operators.  No
-commutativity hypothesis is imposed on the operator algebra. -/
+commutativity property is imposed on the operator algebra. -/
 theorem finiteOperatorTrace_mul_comm
     (A B : FiniteOperatorAlgebra n) :
     finiteOperatorTrace (A * B) =
@@ -296,7 +296,7 @@ def maximallyMixedFaithfulDensityTwo :
         exact matrixOfOp_id]
     simp [Matrix.trace]
 
-/-- Concrete noncommutativity witness in the operator carrier used by the BKM
+/-- Concrete noncommutativity property in the operator carrier used by the BKM
 construction. -/
 theorem exists_noncommuting_finiteOperators :
     ∃ A B : FiniteOperatorAlgebra 2, A * B ≠ B * A := by

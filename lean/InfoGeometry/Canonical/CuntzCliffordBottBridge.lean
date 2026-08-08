@@ -19,7 +19,7 @@ algebraic direct limit. Square-zero, idempotent, and involutive relations at
 stage zero are preserved in that limit.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-All bridge theorems depend on the explicit stage-compatibility hypothesis
+All bridge theorems depend on the explicit stage-compatibility property
 `hcompat`.
 
 #### BUCKET 3: OPEN CLOSURE DEBT

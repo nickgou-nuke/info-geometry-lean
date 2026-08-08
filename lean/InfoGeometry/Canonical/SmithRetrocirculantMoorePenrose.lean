@@ -112,7 +112,7 @@ theorem plus_is_retrocirculant
 
 end SmithMoorePenroseRetrocirculantCertificate
 
-/-- Block diagonal similarity/eigenvalue certificate from Smith Lemma 4 and
+/-- Block diagonal similarity/eigenvalue property from Smith Lemma 4 and
 Theorem 3. -/
 structure RetrocirculantSpectralBlockCertificate
     (K : Type u) [Field K] [StarRing K] {n : ℕ}
@@ -136,7 +136,7 @@ variable {A : Matrix (Fin n) (Fin n) K}
 variable (S : RetrocirculantSpectralBlockCertificate K A)
 
 /-- Historical similarity name, now the explicit unitary conjugation
-equality carried by the certificate. -/
+equality carried by the property. -/
 abbrev unitarilySimilarToBlocks : Prop :=
   A = S.unitary * S.blockMatrix * star S.unitary
 
@@ -157,7 +157,7 @@ theorem reciprocal_nonzero_readout {μ : K} (hμ : μ ≠ 0) (h : S.eigenvalueRe
 
 end RetrocirculantSpectralBlockCertificate
 
-/-- Algebraic closure certificate for Smith Theorems 4 and 5. -/
+/-- Algebraic closure property for Smith Theorems 4 and 5. -/
 structure RetrocirculantClosureCertificate
     (K : Type u) [Field K] {n : ℕ} where
   isCirculant : Matrix (Fin n) (Fin n) K → Prop

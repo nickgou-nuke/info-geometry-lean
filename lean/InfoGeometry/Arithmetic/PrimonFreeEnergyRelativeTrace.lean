@@ -156,7 +156,7 @@ theorem completedRiemannZeta_parity_identification (s : ℂ) :
 The uncompleted zeta functional equation, reexported from mathlib.
 
 This is the Mellin/Dirichlet symmetry lane in explicit form. The additional
-non-pole hypothesis is exactly the one required by mathlib's theorem, so this
+non-pole property is exactly the one required by mathlib's theorem, so this
 file reexports `riemannZeta_one_sub` rather than proving a fresh variant.
 -/
 theorem riemannZeta_functionalEquation_symmetry

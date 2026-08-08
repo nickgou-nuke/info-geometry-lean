@@ -122,7 +122,7 @@ def compIntertwiner
 /--
 Concrete nontrivial presentation on paired states.
 
-This gives a load-bearing witness that the intertwiner lane is not only identity
+This gives a load-bearing property that the intertwiner lane is not only identity
 scaffolding: the state map can be a genuine symmetry (swap) while preserving the
 typed action/support/generator contracts.
 -/

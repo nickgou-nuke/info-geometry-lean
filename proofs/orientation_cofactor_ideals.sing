@@ -1,0 +1,22 @@
+// Singular script to formulate the algebraic ideal linking determinant, cross product, and cofactor expansion
+
+ring r = 0, (xA, yA, xB, yB, xC, yC, D, Cx, Cy, Cz, E), dp;
+
+// D is the determinant of the orientation matrix
+poly det_poly = D - (xA*(yB - yC) - yA*(xB - xC) + (xB*yC - yB*xC));
+
+// E is the expanded form
+poly exp_poly = E - ((xB*yC + xA*yB + yA*xC) - (yA*xB + yB*xC + xA*yC));
+
+// Cross product of vectors AB = (xB - xA, yB - yA, 0) and AC = (xC - xA, yC - yA, 0)
+// AB x AC = (0, 0, (xB-xA)*(yC-yA) - (yB-yA)*(xC-xA))
+poly cross_z = Cz - ((xB - xA)*(yC - yA) - (yB - yA)*(xC - xA));
+
+// Define the ideal linking these properties
+ideal I = det_poly, exp_poly, cross_z;
+
+// Find the relation between D, E, and Cz by eliminating coordinate variables
+ideal eliminated = eliminate(I, xA*yA*xB*yB*xC*yC);
+
+print("The ideal linking D, E, and Cz after eliminating coordinates:");
+eliminated;

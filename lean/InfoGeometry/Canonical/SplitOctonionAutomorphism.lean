@@ -190,7 +190,7 @@ theorem realSplitOctonionLiePacket_readback :
     InfoGeometry.Lie.RealSplitOctonionG2Classification.canonical_split_octonion_derivation_finrank,
     InfoGeometry.Lie.RealSplitOctonionG2Classification.standard_split_octonion_derivations_span⟩
 
-/-- Canonical-chain readback into the native real derivation witness. -/
+/-- Canonical-chain readback into the native real derivation property. -/
 theorem realSplitOctonionDerivationWitness_readback :
     (∀ X Y : InfoGeometry.Lie.RealSplitOctonionDerivationWitness.SplitOctReal,
       InfoGeometry.Lie.RealSplitOctonionDerivationWitness.rot01Real (X + Y) =

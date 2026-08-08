@@ -3,7 +3,7 @@ import InfoGeometry.OperatorAlgebra.D4StarCrossedProductLinearRepresentation
 /-!
 # Continuous-linear packaging of the finite D₄ crossed-product action
 
-This is the bounded-operator-ready interface: a supplied continuity witness
+This is the bounded-operator-ready interface: a supplied continuity property
 turns each algebraic left-regular linear map into a `ContinuousLinearMap`.
 No norm estimate or C*-completion is asserted by this owner.
 -/

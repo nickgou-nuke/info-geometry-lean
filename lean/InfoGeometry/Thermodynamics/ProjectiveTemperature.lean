@@ -11,9 +11,9 @@ picture
 
 and the stereographic parametrization of the positive temperature ray on a
 circle.  It deliberately does not assert a Tomita theorem, a KMS existence
-theorem, a modular-form theorem, or the Riemann hypothesis.  The actual
+theorem, a modular-form theorem, or the Riemann property.  The actual
 change-of-variables statement for the objective integral is exposed as an
-explicit calibration witness.
+explicit calibration property.
 -/
 
 import Mathlib.Tactic

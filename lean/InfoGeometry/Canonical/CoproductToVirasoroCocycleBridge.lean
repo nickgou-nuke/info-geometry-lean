@@ -306,7 +306,7 @@ theorem splitChannelRelativeEntropy_offResonant
   simp [splitChannelRelativeEntropy, iteratedVirasoroCocycle, iteratedCentralCoefficient,
     hRes]
 
-/-- Minimal Casini bridge witness from split-channel profile matching.
+/-- Minimal Casini bridge property from split-channel profile matching.
 
 If the cocycle entropy potential increments match split-channel drops and those
 match the phase-aligned RN generator, we get a `MinimalCasiniIncrementBridge`

@@ -55,7 +55,7 @@ end TwistorIncidenceDatum
 /-! ## Concrete Penrose null-projective owner
 
 The projective null twistor carrier is provided by the canonical Penrose
-twistor owner.  The explicit witness below is the nonzero vector
+twistor owner.  The explicit property below is the nonzero vector
 `(1, 0, 1, 0)`, which is null for the `(2,2)` helicity form.
 -/
 

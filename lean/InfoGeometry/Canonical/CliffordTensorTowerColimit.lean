@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.SplitCliffordDirectLimit
 The finite tower is owned by `SplitCliffordTensorBridge` and
 `SplitCliffordDirectLimit`.
 This module deliberately does not introduce a second Clifford-algebra record or
-postulate a Bott isomorphism.  Its stages are native `CliffordAlgebra` stages
+postulat3 a Bott isomorphism.  Its stages are native `CliffordAlgebra` stages
 and its connecting maps are the native graded tensor embeddings.
 -/
 

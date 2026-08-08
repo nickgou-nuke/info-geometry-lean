@@ -55,7 +55,7 @@ theorem fierzAdmissibleState_true (ψ : H₂) :
 
 /--
 Conservative state-first admissibility gate:
-an operator is admissible at state `ψ` if it commutes with the certified
+an operator is admissible at state `ψ` if it commutes with the property
 spectral projector and `ψ` is Fierz-admissible.
 -/
 @[rep_depth transport]
@@ -118,7 +118,7 @@ theorem stateFirstAdmissibleOperator_modularFlow_state_stable
 
 /--
 State-first admissibility is stable under projector-compressed operator
-transport on the same certified lane.
+transport on the same property lane.
 -/
 @[rep_depth transport]
 theorem stateFirstAdmissibleOperator_projectorCompressed_stable

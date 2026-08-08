@@ -7,7 +7,7 @@ import Mathlib.Tactic
 Finite coefficient identities for vector torsion, the coefficient shadow of
 Cartan's first structure equation, contorsion, spinor covariant-derivative
 splitting, quaternion commutator torsion, and a `2x2` noncommuting-shift
-witness.
+property.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 The torsion-free and Cartan antisymmetry statements are conditional on explicit
@@ -209,7 +209,7 @@ def shiftL : Matrix (Fin 2) (Fin 2) ℝ :=
 def shiftR : Matrix (Fin 2) (Fin 2) ℝ :=
   !![0, 0; 1, 0]
 
-/-- The finite shift commutator is the diagonal obstruction witness. -/
+/-- The finite shift commutator is the diagonal obstruction property. -/
 theorem shift_commutator_eq_diag :
     shiftL * shiftR - shiftR * shiftL = !![1, 0; 0, -1] := by
   ext i j

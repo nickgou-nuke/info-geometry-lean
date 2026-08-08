@@ -31,7 +31,7 @@ namespace InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge
 open InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
-/-- A finite prime cutoff, using the existing certified prime register. -/
+/-- A finite prime cutoff, using the existing property prime register. -/
 abbrev PrimeCutoff := PrimeRegister
 
 /-- A prime mode inside a finite cutoff. -/

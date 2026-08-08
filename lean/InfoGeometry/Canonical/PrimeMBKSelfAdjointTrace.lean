@@ -16,7 +16,7 @@ identify a Mellin transform with the logarithmic derivative of completed `xi`.
 It records the finite/infinite MBK operator readouts together with later
 analytic socket fields for the unresolved spectral statements.
 
-In this cleanup cycle, the vacuous finite-volume law/certificate wrappers were
+In this cleanup cycle, the vacuous finite-volume law/property wrappers were
 removed rather than preserved as proof proxies.
 -/
 

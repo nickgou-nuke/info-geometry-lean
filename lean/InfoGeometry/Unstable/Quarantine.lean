@@ -55,7 +55,7 @@ namespace InfoGeometry
 # InfoGeometry.Unstable.Quarantine
 
 Quarantine surface for modules that are currently not accepted on the canonical
-publication path due to scaffold/assumption-vacuity concerns.
+publication path due to scaffold/property-vacuity concerns.
 
 Policy:
 - These modules are intentionally excluded from `InfoGeometry.Canonical.All`.

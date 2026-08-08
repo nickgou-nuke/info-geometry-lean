@@ -5,7 +5,7 @@ namespace InfoGeometry.Topology
 
 /-!
 Jointly continuous observed families.  Continuity of the observation map is
-an explicit hypothesis, so this layer remains valid for arbitrary symbolic
+an explicit property, so this layer remains valid for arbitrary symbolic
 latent systems whose readout regularity is supplied separately.
 -/
 

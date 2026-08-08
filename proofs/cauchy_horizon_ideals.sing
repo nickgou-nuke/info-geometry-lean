@@ -1,0 +1,20 @@
+// Singular script: Formulate algebraic ideals governing mass inflation 
+// singularity and its resolution at Cauchy Horizon.
+
+ring r = 0, (m, r_s, e, q), dp;
+
+// m: mass parameter, r_s: horizon radius, e: charge, q: scalar field
+
+// Ideal for the background geometry (e.g., Reissner-Nordstrom)
+ideal horizon = r_s^2 - 2*m*r_s + e^2;
+
+// Mass inflation ideal: mass diverges as r_s approaches inner horizon
+ideal inflation = m - e^2/(2*r_s) - q^2 / (r_s - m)^2;
+
+// Singularity resolution (e.g. quantum correction ideal)
+ideal resolution = horizon, inflation, q^2 - e^2*r_s;
+
+// Compute Groebner basis
+ideal gb_res = std(resolution);
+print("Groebner basis of the resolved Cauchy Horizon ideal:");
+print(gb_res);

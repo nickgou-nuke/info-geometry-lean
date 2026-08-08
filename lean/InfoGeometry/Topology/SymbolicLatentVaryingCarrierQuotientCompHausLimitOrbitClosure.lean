@@ -5,7 +5,7 @@ import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientCompHausLimitAc
 
 This owner keeps the orbit construction on the actual inverse-limit carrier.
 The action is the native `lim.map` action from the preceding owner; no flow
-structure or recurrence hypothesis is introduced here.
+structure or recurrence property is introduced here.
 -/
 
 noncomputable section

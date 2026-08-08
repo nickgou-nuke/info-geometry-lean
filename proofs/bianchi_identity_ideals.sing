@@ -1,0 +1,37 @@
+// bianchi_identity_ideals.sing
+// Formulate the algebraic ideals of the modified Bianchi identity (dG = \sum_P g_P \delta_5^{(P)})
+
+ring r = 0, (x1, x2, x3, x4, x5, g, dG, delta), dp;
+
+// Let x1..x5 be the transversal coordinates to the fixed planes.
+// The modified Bianchi identity in the bulk is dG = \sum_P g_P \delta_5^{(P)}
+// We represent the delta function mathematically as an ideal localization or source term equation.
+
+// We introduce multiple sources g1..g16 for the 16 twisted multiplets
+ring r = 0, (x1, x2, x3, x4, x5, dG, g(1..16), delta(1..16)), dp;
+
+// Sum of g_P * delta_5^(P)
+poly source_sum = 0;
+int i;
+for(i=1; i<=16; i++) {
+    source_sum = source_sum + g(i) * delta(i);
+}
+
+ideal bianchi = dG - source_sum;
+
+// We distribute the source over the fixed planes.
+// For a simplified algebraic formulation, consider a single plane source at the origin as an example:
+ideal plane_source_1 = x1, x2, x3, x4, x5;
+
+// The Bianchi identity ideal incorporating the boundary source:
+ideal modified_bianchi = intersect(bianchi, plane_source_1);
+
+print("Modified Bianchi Identity Ideal (dG = sum_P g_P * delta^(P)):");
+modified_bianchi;
+
+// Standard resolution to check singularities
+resolution res_bianchi = mres(modified_bianchi, 0);
+print("Resolution of the Modified Bianchi Identity:");
+res_bianchi;
+
+quit;

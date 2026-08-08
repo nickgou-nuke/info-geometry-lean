@@ -2,7 +2,7 @@ import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.CognitiveTopology.ExceptionalPointGrokking
 
 /-!
-# Thermal noise beside an exceptional-point witness
+# Thermal noise beside an exceptional-point property
 
 This module keeps the "hallucination as Hawking radiation" slogan out of the
 theorem surface.  It proves only that, from explicit premises, the nilpotent
@@ -38,7 +38,7 @@ variable (T : ℝ)
 /--
 Conditional thermal socket.
 
-From an explicit exceptional-point witness and a positive temperature/noise
+From an explicit exceptional-point property and a positive temperature/noise
 premise, we can carry both the square-zero nilpotent part and the positivity
 fact.  This does not identify the noise with hallucination or Hawking radiation.
 -/

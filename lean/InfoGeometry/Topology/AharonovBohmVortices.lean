@@ -10,7 +10,7 @@ third power is `1` gives a stable triple-winding identity, and the corresponding
 It does **not** prove physical color confinement, Hawking radiation dynamics,
 LLM hallucination confinement, or a derivation of `SU(3)` from parafermions.
 Those interpretations require additional models outside this finite algebraic
-certificate.
+property.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 
@@ -61,7 +61,7 @@ theorem diagonalVortexOperator_cube_eq_one {phase : ℂ} (h_phase : IsThirdRootP
     simp [diagonalVortexOperator, Matrix.mul_apply, Fin.sum_univ_three, hmul]
 
 /--
-A finite Aharonov--Bohm vortex phase certificate.
+A finite Aharonov--Bohm vortex phase property.
 
 The carrier is retained for compatibility; theorem owners above expose the
 actual phase obligations as explicit predicates.
@@ -71,12 +71,12 @@ structure AharonovBohmVortex where
   h_fractional_winding : phase ^ 3 = 1
   h_not_one : phase ≠ 1
 
-/-- Triple winding of a certified third-root phase returns to the identity phase. -/
+/-- Triple winding of a property third-root phase returns to the identity phase. -/
 theorem baryon_vortex_confinement (v : AharonovBohmVortex) :
     v.phase * v.phase * v.phase = 1 := by
   exact thirdRootPhase_triple_product v.h_fractional_winding
 
-/-- The finite `3 × 3` diagonal vortex operator associated to a certified phase. -/
+/-- The finite `3 × 3` diagonal vortex operator associated to a property phase. -/
 def vortexOperator (v : AharonovBohmVortex) : Matrix (Fin 3) (Fin 3) ℂ :=
   diagonalVortexOperator v.phase
 

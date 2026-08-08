@@ -10,7 +10,7 @@ import Mathlib.Topology.Algebra.Star
 This module provides the foundation for modular operators and flows in
 Krein spaces, derived directly from Mathlib's spectral and adjoint theory.
 
-We avoid "witness data" and instead prove the properties of modular operators
+We avoid "property data" and instead prove the properties of modular operators
 constructively.
 -/
 

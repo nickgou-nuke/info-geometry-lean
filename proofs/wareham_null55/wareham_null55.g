@@ -1,0 +1,13 @@
+q:=x->x[1]^2-x[2]^2;;
+b:=function(x,y) return x[1]*y[1]-x[2]*y[2]; end;;
+refl:=x->[-x[1],x[2]];;
+e:=[1,0];; eb:=[0,1];; n:=[1,1];; nb:=[1,-1];;
+if q(e)<>1 then Error("e"); fi;
+if q(eb)<>-1 then Error("eb"); fi;
+if b(e,eb)<>0 then Error("orth"); fi;
+if q(n)<>0 then Error("n"); fi;
+if q(nb)<>0 then Error("nb"); fi;
+if b(n,nb)<>2 then Error("dot"); fi;
+if refl(n)<>[-1,1] then Error("refln"); fi;
+if refl(nb)<>[-1,-1] then Error("reflnb"); fi;
+Display("OK");

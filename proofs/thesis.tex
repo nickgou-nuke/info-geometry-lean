@@ -1,0 +1,47 @@
+\documentclass[12pt,a4paper]{book}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\geometry{a4paper, margin=1in}
+\usepackage{hyperref}
+\usepackage{cite}
+
+\title{\textbf{Holographic Quasicrystals and Algebraic Spacetime}\\
+\Large A Formalized Synthesis of Clifford Monodromy, Non-Commutative Boundaries, and Nilpotent Defects}
+\author{A Dual-Witnessed Framework via Lean 4 and SymPy}
+\date{\today}
+
+\newtheorem{theorem}{Theorem}
+
+\begin{document}
+\maketitle
+
+\chapter*{Abstract}
+This thesis develops a theorem-honest holographic architecture linking relativistic kinematics, non-commutative boundary dynamics, information-geometric scaling, and topological defect protection.  Its mechanically checked core is a dual-witness stack: finite algebraic kernels are formalized in Lean 4 and independently mirrored by SymPy witnesses, while analytic, categorical, and physical interpretations are explicitly labeled as sockets rather than overclaimed as complete proofs.
+
+The construction begins with the Pauli/biquaternion model of Minkowski spacetime, where the determinant realizes the Lorentzian interval and $SL(2,\mathbb{C})$ acts by spin congruence.  Projecting this smooth bulk to a planar boundary encounters the crystallographic obstruction: exact fivefold order cannot preserve a periodic two-dimensional lattice.  The boundary is therefore driven toward Penrose/Fibonacci inflation, Cantor spectra, and Cuntz--Krieger symbolic dynamics.  The radial $KAN$ scaling flow is then interpreted information-geometrically: square-zero nilpotent modes truncate the normalized Itakura--Saito defect and act as terminal topological sinks.
+
+The later chapters organize the surviving boundary modes through nonsymmorphic/Klein geometry, Riemann-scale fixed-line analogies, non-Hermitian exceptional-point braids, polynomial symmetry operators, and split-octonionic or split-Clifford anomaly-cancellation sockets.  The final output is not a claim that all analytic or experimental physics has been proved, but a reproducible algebraic scaffold separating certified identities from interpretive bridges.
+
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+
+The pursuit of a unified theory of quantum gravity is often obstructed by the tension between continuous spacetime geometry and discrete quantum/topological structure.  This thesis approaches that tension algebraically.  Instead of treating geometry, thermodynamics, and topology as unrelated layers, it organizes them as sectors of a common polynomial-operator calculus: bulk operators are invertible and symmetry-preserving, while boundary operators become zero-divisors, nilpotents, projective glides, and braid defects.
+
+The formal strategy is deliberately conservative.  Whenever a statement is a finite algebraic identity---a determinant, trace, matrix factorization, nilpotency relation, braid relation, or polynomial annihilator---it is represented by a Lean certificate and a computational witness.  Whenever a statement depends on analytic limits, categorical completions, experimental realization, or physical interpretation, it is exposed as an interface/socket.  This separation is the main methodological contribution of the document.
+
+Chapter 1 establishes the biquaternionic bulk and the Pauli determinant dictionary for Minkowski spacetime.  Chapter 2 shows how discrete boundary sampling turns continuous symmetry into a crystallographic obstruction, leading to quasicrystalline and Cuntz--Krieger boundary dynamics.  Chapter 3 interprets the $KAN$ radial direction as information-geometric scale flow whose nilpotent endpoint has vanishing normalized Itakura--Saito defect.  Chapter 4 describes the topological trap: Klein/glide fixed lines, Riemann-scale reflection analogies, Möbius parity, Witten indices, and non-Hermitian braid protection.  Chapter 5 unifies the construction through polynomial symmetry operators, split-Clifford signatures, and split-octonionic non-associative boundary sockets.  Chapter 6 records the analytic psychology of discovery: how data fitting, information geometry, thermodynamic duality, and neuro-symbolic proof search led to the repository's theorem-honest methodology.
+
+\tableofcontents
+
+\include{chapters/chapter1_biquaternionic_bulk_relativistic_kinematics}
+\include{chapters/chapter2_holographic_boundary_fractal_crystallography}
+\include{chapters/chapter3_information_geometry_scale_thermodynamics}
+\include{chapters/chapter4_algebraic_trap_topological_excitations}
+\include{chapters/chapter5_grand_unification_polynomial_split_octonions}
+\include{chapters/chapter6_analytic_psychology_origin_story}
+
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

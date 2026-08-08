@@ -454,10 +454,10 @@ theorem packet
 
 end KarushKuhnTuckerThermodynamicData
 
-/-! ## Constructive KKT residual certificate -/
+/-! ## Constructive KKT residual property -/
 
 /--
-Dimension-agnostic residual certificate for the thermodynamic KKT packet.
+Dimension-agnostic residual property for the thermodynamic KKT packet.
 
 This replaces a bare proposition-only KKT package by explicit real residual
 readouts.  Exact KKT closure is obtained from the constructive equations
@@ -471,7 +471,7 @@ namespace KarushKuhnTuckerResidualCertificate
 
 variable (C : KarushKuhnTuckerResidualCertificate)
 
-/-- Compatibility map: the former residual certificate is now the KKT datum
+/-- Compatibility map: the former residual property is now the KKT datum
 itself, so no scalar residual shadow is introduced. -/
 @[rep_depth thermo]
 def toThermodynamicData : KarushKuhnTuckerThermodynamicData :=
@@ -570,7 +570,7 @@ variable {R Gauge Parameter Curvature G I X A S : Type*}
 variable (B : ConstructiveLiteratureWeylGrandCanonicalTKKKKTBridge
   R Gauge Parameter Curvature G I X A S)
 
-/-- The proposition-level KKT bridge induced by the residual certificate. -/
+/-- The proposition-level KKT bridge induced by the residual property. -/
 @[rep_depth thermo]
 def toKKTBridge :
     LiteratureWeylGrandCanonicalTKKKKTBridge
@@ -581,7 +581,7 @@ def toKKTBridge :
 
 /--
 Exact thermodynamic KKT closure obtained from the bridge's residual
-certificate, with no extra assumptions.
+property, with no extra assumptions.
 -/
 @[rep_depth thermo]
 theorem exactKKTOptimizationPacket :

@@ -8,7 +8,7 @@ namespace InfoGeometry.Canonical
 # Discrete split-`G₂` forms bundle
 
 This file packages the already verified finite split-`G₂` calibration,
-coframe pullback, and flat-curvature witness into one topological owner.
+coframe pullback, and flat-curvature property into one topological owner.
 It does not introduce a smooth Hodge star or a manifold torsion-free theorem.
 -/
 

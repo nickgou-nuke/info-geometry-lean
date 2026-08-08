@@ -52,7 +52,7 @@ theorem is the finite-stage readback authority.
   - `zorn_continuum_module`: The universal continuous module built from finite stages.
   - `zorn_scaling_covariance_colimit`: Scaling covariance maps naturally to the continuum.
 - **BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES**:
-  - `CompatibleBilinearMultiplication`: explicit witness for descended bilinear
+  - `CompatibleBilinearMultiplication`: explicit property for descended bilinear
     multiplication on the colimit.
   - `colimit_square_zero_of_stage`: finite square-zero relations transport
     through the witnessed colimit multiplication.
@@ -89,7 +89,7 @@ descent theorem has already been instantiated for a concrete Zorn tower.
 structure CompatibleBilinearMultiplication
     [HasColimit ZornSequence] where
   /-- Finite-stage bilinear multiplication. -/
-  stageMul : ∀ j : J, ZornSequence.obj j →ₗ[R] ZornSequence.obj j →ₗ[R] ZornSequence.obj j
+  stageMul : (j : J) → ZornSequence.obj j →ₗ[R] ZornSequence.obj j →ₗ[R] ZornSequence.obj j
   /-- Descended bilinear multiplication on the colimit carrier. -/
   colimitMul : ↑(colimit ZornSequence) →ₗ[R]
     ↑(colimit ZornSequence) →ₗ[R] ↑(colimit ZornSequence)
@@ -176,7 +176,7 @@ noncomputable def tensorLeftColimitIso
 
 Following the Colimit Continuum Mandate, this section projects finite
 square-zero seed elements into the `ModuleCat` colimit.  The result is stated
-relative to a `CompatibleBilinearMultiplication` witness; it does not install an
+relative to a `CompatibleBilinearMultiplication` property; it does not install an
 unproved global nonassociative algebra instance on the colimit.
 -/
 
@@ -189,7 +189,7 @@ variable (zornCuntzGenerator : ∀ j, ZornSequence.obj j)
 /--
 The colimit image of a finite nilpotent seed.  The name records the intended
 Cuntz/on-shell use case, while the theorem below only asserts the proved
-square-zero algebraic fact supplied by the witness `M`.
+square-zero algebraic fact supplied by the property `M`.
 -/
 noncomputable def continuumCuntzGenerator (j : J) : ↑(colimit ZornSequence) :=
   colimit.ι ZornSequence j (zornCuntzGenerator j)

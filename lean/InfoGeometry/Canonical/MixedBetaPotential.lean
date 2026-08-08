@@ -34,4 +34,40 @@ theorem D_V_self (c0 c1 c2 : ℝ) (μ : ℝ) : D_V c0 c1 c2 μ μ = 0 := by
   rw [intervalIntegral.integral_same]
   ring
 
+
+/-- Causal Adaptive EMA Step -/
+def causal_ema_step (μ_t x_t r_t ρ_N_t : ℝ) : ℝ :=
+  μ_t + (r_t / (ρ_N_t + r_t)) * (x_t - μ_t)
+
+/-- Property: If admission responsibility is 0, the background does not update. 
+    This protects the temporal background from transient anomalies or clipped pixels. -/
+theorem causal_ema_step_zero_resp (μ_t x_t ρ_N_t : ℝ) :
+    causal_ema_step μ_t x_t 0 ρ_N_t = μ_t := by
+  dsimp [causal_ema_step]
+  rw [zero_div, zero_mul, add_zero]
+
+/-- Admission responsibility evaluation, incorporating a sigmoid-like activation σ
+    and an exact fallback to 0 for invalid/clipped sensor measurements. -/
+def admission_responsibility (σ : ℝ → ℝ) (c_t D_V_val ε_t : ℝ) (is_valid : Bool) : ℝ :=
+  if is_valid then σ ((c_t - D_V_val) / ε_t) else 0
+
+/-- If the measurement is clipped or otherwise invalid, responsibility is strictly zero. -/
+theorem admission_responsibility_invalid (σ : ℝ → ℝ) (c_t D_V_val ε_t : ℝ) :
+    admission_responsibility σ c_t D_V_val ε_t false = 0 := by
+  rfl
+
+/-- The full temporal update step combining admission and causal EMA -/
+def full_temporal_update (σ : ℝ → ℝ) (c0 c1 c2 ρ_N_t c_t ε_t x_t μ_t : ℝ) (is_valid : Bool) : ℝ :=
+  let D_val := D_V c0 c1 c2 x_t μ_t
+  let r_t := admission_responsibility σ c_t D_val ε_t is_valid
+  causal_ema_step μ_t x_t r_t ρ_N_t
+
+/-- Background protection theorem: invalid measurements (like clipping) do not drift the background state. -/
+theorem full_temporal_update_background_protection 
+    (σ : ℝ → ℝ) (c0 c1 c2 ρ_N_t c_t ε_t x_t μ_t : ℝ) :
+    full_temporal_update σ c0 c1 c2 ρ_N_t c_t ε_t x_t μ_t false = μ_t := by
+  dsimp [full_temporal_update]
+  rw [admission_responsibility_invalid]
+  exact causal_ema_step_zero_resp μ_t x_t ρ_N_t
+
 end InfoGeometry.Canonical.MixedBeta

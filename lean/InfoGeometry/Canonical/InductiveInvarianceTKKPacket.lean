@@ -29,7 +29,7 @@ The packet assembles three layers:
 
 3. **Colimit Socket (explicit closure debt):**
    The topological completion `A_∞ = colim A_n` inheriting the invariant packet
-   is recorded as a proof-carrying socket, not as an axiom. The finite chain
+   is recorded as a proof-carrying socket, not as an ax!om. The finite chain
    theorems are unconditional; the colimit passage is gated.
 
 ## Relationship to existing files
@@ -55,7 +55,7 @@ open InfoGeometry.OperatorAlgebra.RecursiveSupercharge
 /-! ## 1. TKK grading extraction from supergraded invariant data -/
 
 /--
-A TKK-compatible grading witness at a finite stage.
+A TKK-compatible grading property at a finite stage.
 
 This records that the odd/even/central lanes of a `SupergradedInvariantAt`
 decompose into the TKK 3-grading structure:
@@ -265,7 +265,7 @@ theorem cross_bracket_even_along_chain
     (C.mirror_preserved_along_chain hy0 n)
 
 /--
-Projector/KKT witness is available at every stage of the TKK chain.
+Projector/KKT property is available at every stage of the TKK chain.
 -/
 @[rep_depth transport]
 theorem projector_exists_along_chain :
@@ -330,7 +330,7 @@ This records the topological completion passage `A_∞ = colim_n A_n` and the
 statement that the invariant packet survives into the completed algebra.
 
 Per repository mandate, this is a proof-carrying socket (explicit closure debt),
-not an axiom. The finite chain theorems above are unconditional; the colimit
+not an ax!om. The finite chain theorems above are unconditional; the colimit
 passage requires analytic input (completeness, continuity of the grading
 predicates, norm closure of the invariant lanes).
 -/

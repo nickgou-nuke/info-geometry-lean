@@ -85,7 +85,7 @@ theorem clifford_triality_decomposition {n : ℕ}
   exact hSplit.symm
 
 /--
-Noncommuting rotor witness: if two rotor channels do not commute, their
+Noncommuting rotor property: if two rotor channels do not commute, their
 commutator is nonzero.
 -/
 @[rep_depth transport]

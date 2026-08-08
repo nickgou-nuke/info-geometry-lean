@@ -82,7 +82,7 @@ theorem cramerRaoMetricVolumePotential_eq_zero_of_incompressible
   simp
 
 /--
-Anti-trivialization witness: a nonzero Cramer-Rao potential at any point rules out
+Anti-trivialization property: a nonzero Cramer-Rao potential at any point rules out
 incompressible Monge-Ampere globally.
 -/
 theorem not_incompressible_of_cramerRaoMetricVolumePotential_ne_zero

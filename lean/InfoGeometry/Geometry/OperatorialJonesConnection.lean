@@ -108,7 +108,7 @@ This packages a Jones-like unit `U` acting on polarization projectors by
 conjugation.
 
 For ordinary lossless optics, `U` may be unitary.  For the doubled Krein layer,
-one should supply a separate `J`-unitarity certificate.
+one should supply a separate `J`-unitarity property.
 -/
 abbrev OperatorialJonesTransport
     (Op : Type*) [Ring Op]

@@ -10,7 +10,7 @@ Target ledger for a proposed bridge connecting:
 3. The Yang-Baxter equation as the consistency condition
 4. The critical line Re(s) = 1/2 as the fixed point of the Julia iteration
 
-SymPy witness: `tools/sympy/zeta_julia_yang_baxter_bridge.py`.
+SymPy property: `tools/sympy/zeta_julia_yang_baxter_bridge.py`.
 The speculative Julia/zeta/Yang-Baxter identifications below are not proved in
 this file.
 -/

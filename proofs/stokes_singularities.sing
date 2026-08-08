@@ -1,0 +1,18 @@
+// stokes_singularities.sing
+// Jacobian determinant of the non-linear optical phase transition
+
+ring r = 0, (E_I, E_S, chi, P_S), dp;
+
+// Non-linear polarization equation: P_S - chi * E_I^2 * E_S = 0
+poly f = P_S - chi * E_I^2 * E_S;
+
+// Equations for singularities (gradient)
+poly d_E_I = diff(f, E_I);
+poly d_E_S = diff(f, E_S);
+poly d_chi = diff(f, chi);
+poly d_P_S = diff(f, P_S);
+
+ideal J = d_E_I, d_E_S, d_chi, d_P_S;
+
+print("Jacobian Ideal for non-linear optical phase transition:");
+print(J);

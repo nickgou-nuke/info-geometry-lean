@@ -10,7 +10,7 @@ open scoped InnerProductSpace
 # Drazin / Five-Graded TKK Anomaly Bridge
 
 This file bridges two already-owned anomaly languages through an explicit
-calibration witness:
+calibration property:
 
 * the operatorial/Drazin language, where the central-charge defect is the
   intrinsic `operatorialCentralDefectShadow`;
@@ -62,7 +62,7 @@ shadow to the geometric readout codomain of the TKK closure defect.  The core
 calibration field states that this readout is the supplied TKK anomaly readout.
 
 The second field aligns the anomaly datum's closure defect with the Ricci-flux
-datum's closure defect, so that the five-graded absorption witness applies to
+datum's closure defect, so that the five-graded absorption property applies to
 the same defect.
 -/
 @[rep_depth transport]
@@ -117,7 +117,7 @@ theorem operatorial_shadow_eq_closure_defect
 
 /--
 The operatorial Drazin shadow readout is the five-graded `g_+2` representative
-readout supplied by the absorption witness.
+readout supplied by the absorption property.
 -/
 @[rep_depth transport]
 theorem operatorial_shadow_eq_plusTwoReadout

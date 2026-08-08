@@ -172,7 +172,7 @@ structure ChiralLightConeAlgebraWitness
     IsGZero X (commutator (uPlus X A) (uMinus X B))
 
 /--
-Construct the causal self-dual chiral light-cone algebra witness from the
+Construct the causal self-dual chiral light-cone algebra property from the
 owner theorems in this file.
 -/
 @[rep_depth krein]
@@ -238,7 +238,7 @@ noncomputable def doubledUMinus (A : EndH) : EndH :=
     commutator_uPlus_uMinus_isGZero
       (X := InfoGeometry.Quantum.doubledSpaceCl11Action (E := E)) A B
 
-/-- Canonical doubled-space witness for the chiral light-cone algebra. -/
+/-- Canonical doubled-space property for the chiral light-cone algebra. -/
 @[rep_depth krein]
 def doubledChiralLightConeAlgebraWitness
     (A B : EndH) :

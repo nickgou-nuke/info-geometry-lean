@@ -49,7 +49,7 @@ theorem noncommutative_sector_CAR
     MajoranaCARWitness (S := S) (fun u v => inner ℝ u v) M.gamma := by
   simpa using M.car_realization_of_clifford
 
-/-- Bogoliubov transport preserves the full CAR witness. -/
+/-- Bogoliubov transport preserves the full CAR property. -/
 theorem noncommutative_sector_CAR_transport
     (M : RealMajoranaDatum (S := S))
     (T : RealBogoliubovTransform (S := S) M) :

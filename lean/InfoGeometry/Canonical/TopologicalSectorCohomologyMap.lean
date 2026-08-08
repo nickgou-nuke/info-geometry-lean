@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.GradedRationalSectorCohomologyTopological
 
 /-!
   Continuous cohomology maps for sector chain maps.  The quotient-invariance
-  hypothesis is explicit: it is the precise descent condition and is not
+  property is explicit: it is the precise descent condition and is not
   inferred merely from continuity.
 -/
 

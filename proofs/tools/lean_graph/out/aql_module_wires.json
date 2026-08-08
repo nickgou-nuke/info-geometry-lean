@@ -1,0 +1,758 @@
+[
+  {
+    "thick_wires": [
+      {
+        "edges": 114,
+        "from": "SupergradedCuntzBdG",
+        "to": "AlgebraicCuntzQuotient"
+      },
+      {
+        "edges": 101,
+        "from": "ChiralTensorRecoupling",
+        "to": "ChiralCausalCone"
+      },
+      {
+        "edges": 90,
+        "from": "BogoliubovSU3ParafermionProofChain",
+        "to": "GellMannSU3"
+      },
+      {
+        "edges": 74,
+        "from": "ComplexStarCuntzRedesign",
+        "to": "AlgebraicCuntzQuotient"
+      },
+      {
+        "edges": 63,
+        "from": "ColorCARStandardModel",
+        "to": "ChiralCausalCone"
+      },
+      {
+        "edges": 60,
+        "from": "CStarCuntzTensorQuotient",
+        "to": "AlgebraicCuntzQuotient"
+      },
+      {
+        "edges": 47,
+        "from": "NonIsoConf3DeRhamCooperad",
+        "to": "QuadraticConfiguration3"
+      },
+      {
+        "edges": 37,
+        "from": "BogoliubovSU3ParafermionWeld",
+        "to": "BogoliubovWeylChemicalPotential"
+      },
+      {
+        "edges": 34,
+        "from": "ChiralB3PresentedBridge",
+        "to": "B3PresentedGroup"
+      },
+      {
+        "edges": 34,
+        "from": "BogoliubovSU3ParafermionWeld",
+        "to": "SupergradedCuntzBdG"
+      },
+      {
+        "edges": 32,
+        "from": "ParafermionIdentityRealization",
+        "to": "AlgebraicCuntzQuotient"
+      },
+      {
+        "edges": 31,
+        "from": "WeylGaugeColimitWeld",
+        "to": "HestenesCuntzPhaseSpace"
+      },
+      {
+        "edges": 29,
+        "from": "GellMannParafermionSolder",
+        "to": "BogoliubovSU3ParafermionProofChain"
+      },
+      {
+        "edges": 28,
+        "from": "GellMannParafermionRealizationRoutesSynthesis",
+        "to": "BogoliubovSU3ParafermionProofChain"
+      },
+      {
+        "edges": 28,
+        "from": "BogoliubovWeylChemicalPotential",
+        "to": "SupergradedCuntzBdG"
+      },
+      {
+        "edges": 27,
+        "from": "GellMannParafermionRealizationRoutesSynthesis",
+        "to": "GellMannSU3"
+      },
+      {
+        "edges": 27,
+        "from": "CuntzBoundarySolderRealization",
+        "to": "CantorBoundaryCuntzFamily"
+      },
+      {
+        "edges": 25,
+        "from": "KreinCuntzShadow",
+        "to": "FiniteMatrixElementDuality"
+      },
+      {
+        "edges": 24,
+        "from": "ContinuumAsColimitCounting",
+        "to": "JaynesLDDPGNSColimit"
+      },
+      {
+        "edges": 24,
+        "from": "GellMannParafermionSolder",
+        "to": "GellMannSU3"
+      },
+      {
+        "edges": 22,
+        "from": "CuntzBoundarySolderRealization",
+        "to": "ParafermionIdentityRealization"
+      },
+      {
+        "edges": 22,
+        "from": "GellMannParafermionRealizationRoutesSynthesis",
+        "to": "AlgebraicCuntzQuotient"
+      },
+      {
+        "edges": 20,
+        "from": "QSuperCuntzRegularization",
+        "to": "SpectralSquashCayleyDKT"
+      },
+      {
+        "edges": 20,
+        "from": "RescaledPhaseVolumeCanonical",
+        "to": "BogoliubovWeylChemicalPotential"
+      },
+      {
+        "edges": 20,
+        "from": "CuntzBoundarySolderRealization",
+        "to": "GellMannSU3"
+      },
+      {
+        "edges": 20,
+        "from": "ChiralTLDescent",
+        "to": "BraidIdealDescent"
+      },
+      {
+        "edges": 20,
+        "from": "GellMannParafermionRealizationRoutesSynthesis",
+        "to": "ParafermionIdentityRealization"
+      },
+      {
+        "edges": 19,
+        "from": "ParafermionIdentityRealization",
+        "to": "BogoliubovSU3ParafermionProofChain"
+      },
+      {
+        "edges": 19,
+        "from": "BogoliubovSU3ParafermionProofChain",
+        "to": "BogoliubovWeylChemicalPotential"
+      },
+      {
+        "edges": 18,
+        "from": "GellMannParafermionRealizationRoutesSynthesis",
+        "to": "CantorBoundaryCuntzFamily"
+      },
+      {
+        "edges": 18,
+        "from": "CuntzBoundarySolderRealization",
+        "to": "BogoliubovSU3ParafermionProofChain"
+      },
+      {
+        "edges": 17,
+        "from": "BogoliubovSU3ParafermionProofChain",
+        "to": "AlgebraicCuntzQuotient"
+      },
+      {
+        "edges": 17,
+        "from": "ComplexStarCuntzRedesign",
+        "to": "CStarCuntzTensorQuotient"
+      },
+      {
+        "edges": 17,
+        "from": "WeylSolderedParafermionSymmetry",
+        "to": "WeylSU3ColorSymmetry"
+      },
+      {
+        "edges": 16,
+        "from": "ZornChiralBridge",
+        "to": "ZornParavectorNullspace"
+      },
+      {
+        "edges": 15,
+        "from": "WeakIsospinSU2",
+        "to": "ChiralCausalCone"
+      },
+      {
+        "edges": 15,
+        "from": "BogoliubovSU3ParafermionWeld",
+        "to": "GellMannSU3"
+      },
+      {
+        "edges": 15,
+        "from": "TopologicalColorCrystalFormal",
+        "to": "SU3LoopBraidCuntzBoundary"
+      },
+      {
+        "edges": 15,
+        "from": "WeylGaugeColimitWeld",
+        "to": "GaugeUHFLift"
+      },
+      {
+        "edges": 15,
+        "from": "GellMannParafermionSolder",
+        "to": "BogoliubovWeylChemicalPotential"
+      },
+      {
+        "edges": 14,
+        "from": "BogoliubovWeylChemicalPotential",
+        "to": "HestenesCuntzPhaseSpace"
+      },
+      {
+        "edges": 14,
+        "from": "ChiralB3PresentedBridge",
+        "to": "JonesBraidB3"
+      },
+      {
+        "edges": 14,
+        "from": "GellMannParafermionRealizationRoutesSynthesis",
+        "to": "BogoliubovWeylChemicalPotential"
+      },
+      {
+        "edges": 13,
+        "from": "SupergradedCuntzBdG",
+        "to": "ComplexStarCuntzRedesign"
+      },
+      {
+        "edges": 13,
+        "from": "CP3CantorGeometricObstruction",
+        "to": "CantorBoundaryCuntzFamily"
+      },
+      {
+        "edges": 13,
+        "from": "BogoliubovSU3ParafermionProofChain",
+        "to": "BogoliubovSU3ParafermionWeld"
+      },
+      {
+        "edges": 13,
+        "from": "WeylSolderedParafermionSymmetry",
+        "to": "GellMannParafermionSolder"
+      },
+      {
+        "edges": 13,
+        "from": "BogoliubovBraidGraphWeld",
+        "to": "BogoliubovWeylChemicalPotential"
+      },
+      {
+        "edges": 12,
+        "from": "WeylSolderedParafermionSymmetry",
+        "to": "BogoliubovSU3ParafermionProofChain"
+      },
+      {
+        "edges": 12,
+        "from": "WeylColimitCanonicalLimit",
+        "to": "HestenesCuntzPhaseSpace"
+      },
+      {
+        "edges": 12,
+        "from": "CuntzBoundarySolderRealization",
+        "to": "AlgebraicCuntzQuotient"
+      },
+      {
+        "edges": 12,
+        "from": "GaugeUHFLift",
+        "to": "ChiralCausalCone"
+      },
+      {
+        "edges": 12,
+        "from": "ParafermionIdentityRealization",
+        "to": "GellMannParafermionSolder"
+      },
+      {
+        "edges": 11,
+        "from": "GellMannParafermionRealizationRoutesSynthesis",
+        "to": "GellMannParafermionSolder"
+      },
+      {
+        "edges": 11,
+        "from": "KleinErlangenGrothendieckBridge",
+        "to": "TKKJordanPairSocket"
+      },
+      {
+        "edges": 11,
+        "from": "SU3LoopBraidDuality",
+        "to": "WeylSU3ColorSymmetry"
+      },
+      {
+        "edges": 11,
+        "from": "CuntzBoundarySolderRealization",
+        "to": "GellMannParafermionSolder"
+      },
+      {
+        "edges": 11,
+        "from": "BogoliubovBraidGraphWeld",
+        "to": "BogoliubovSU3ParafermionProofChain"
+      },
+      {
+        "edges": 11,
+        "from": "KreinCuntzShadow",
+        "to": "SolovievQPNMChiralCuntz"
+      },
+      {
+        "edges": 11,
+        "from": "SU3LoopBraidCuntzBoundary",
+        "to": "GellMannSU3"
+      },
+      {
+        "edges": 11,
+        "from": "ZornChiralBridge",
+        "to": "ChiralCausalCone"
+      },
+      {
+        "edges": 10,
+        "from": "ChiralCausalCone",
+        "to": "SplitClifford"
+      },
+      {
+        "edges": 10,
+        "from": "WeylColimitCanonicalLimit",
+        "to": "RescaledPhaseVolumeCanonical"
+      },
+      {
+        "edges": 10,
+        "from": "CurryHowardLambekColimit",
+        "to": "ContinuumAsColimitCounting"
+      },
+      {
+        "edges": 10,
+        "from": "CurryHowardLambekColimit",
+        "to": "JaynesLDDPGNSColimit"
+      },
+      {
+        "edges": 10,
+        "from": "CP3CantorGeometricObstruction",
+        "to": "TwistorParafermionBoundary"
+      },
+      {
+        "edges": 10,
+        "from": "GravitationalQuantumBraidDuality",
+        "to": "CantorBoundaryCuntzFamily"
+      },
+      {
+        "edges": 9,
+        "from": "ChiralTLDescent",
+        "to": "ChiralTensorRecoupling"
+      },
+      {
+        "edges": 9,
+        "from": "GellMannParafermionRealizationRoutesSynthesis",
+        "to": "WeylSU3ColorSymmetry"
+      },
+      {
+        "edges": 9,
+        "from": "WeylColimitCanonicalLimit",
+        "to": "WeylGaugeColimitWeld"
+      },
+      {
+        "edges": 9,
+        "from": "EuclideanNilpotentObstruction",
+        "to": "ChiralCausalCone"
+      },
+      {
+        "edges": 9,
+        "from": "TopologicalColorCrystalFormal",
+        "to": "GellMannSU3"
+      },
+      {
+        "edges": 9,
+        "from": "TKKJordanPairSocket",
+        "to": "SpectralSquashCayleyDKT"
+      },
+      {
+        "edges": 8,
+        "from": "WeylSolderedParafermionSymmetry",
+        "to": "GellMannSU3"
+      },
+      {
+        "edges": 8,
+        "from": "BogoliubovBraidGraphWeld",
+        "to": "BogoliubovSU3ParafermionWeld"
+      },
+      {
+        "edges": 8,
+        "from": "RescaledPhaseVolumeCanonical",
+        "to": "HestenesCuntzPhaseSpace"
+      },
+      {
+        "edges": 8,
+        "from": "RelativeModularStateDikin",
+        "to": "GoutevTonevPrinciple"
+      },
+      {
+        "edges": 8,
+        "from": "B3PresentedGroup",
+        "to": "JonesBraidB3"
+      },
+      {
+        "edges": 8,
+        "from": "JonesBraidB3",
+        "to": "TLChain"
+      },
+      {
+        "edges": 8,
+        "from": "HestenesCuntzSpacetimeAlgebra",
+        "to": "SupergradedCuntzBdG"
+      }
+    ],
+    "module_conductors": [
+      {
+        "score": 142.03520690307738,
+        "incoming": 131,
+        "outgoing": 154,
+        "decls": 43,
+        "module": "BogoliubovSU3ParafermionProofChain"
+      },
+      {
+        "score": 113.81564040148436,
+        "incoming": 102,
+        "outgoing": 127,
+        "decls": 148,
+        "module": "SupergradedCuntzBdG"
+      },
+      {
+        "score": 76.68115805072325,
+        "incoming": 140,
+        "outgoing": 42,
+        "decls": 20,
+        "module": "BogoliubovWeylChemicalPotential"
+      },
+      {
+        "score": 60,
+        "incoming": 45,
+        "outgoing": 80,
+        "decls": 24,
+        "module": "ParafermionIdentityRealization"
+      },
+      {
+        "score": 58.378078077305695,
+        "incoming": 48,
+        "outgoing": 71,
+        "decls": 17,
+        "module": "GellMannParafermionSolder"
+      },
+      {
+        "score": 50.24937810560445,
+        "incoming": 25,
+        "outgoing": 101,
+        "decls": 29,
+        "module": "ChiralTensorRecoupling"
+      },
+      {
+        "score": 48.579831205964474,
+        "incoming": 236,
+        "outgoing": 10,
+        "decls": 80,
+        "module": "ChiralCausalCone"
+      },
+      {
+        "score": 44.19275958796871,
+        "incoming": 21,
+        "outgoing": 93,
+        "decls": 28,
+        "module": "BogoliubovSU3ParafermionWeld"
+      },
+      {
+        "score": 34.39476704383968,
+        "incoming": 13,
+        "outgoing": 91,
+        "decls": 20,
+        "module": "ComplexStarCuntzRedesign"
+      },
+      {
+        "score": 32.18695387886216,
+        "incoming": 14,
+        "outgoing": 74,
+        "decls": 31,
+        "module": "ColorCARStandardModel"
+      },
+      {
+        "score": 31.937438845342623,
+        "incoming": 17,
+        "outgoing": 60,
+        "decls": 37,
+        "module": "CStarCuntzTensorQuotient"
+      },
+      {
+        "score": 30.59411708155671,
+        "incoming": 8,
+        "outgoing": 117,
+        "decls": 11,
+        "module": "CuntzBoundarySolderRealization"
+      },
+      {
+        "score": 26.832815729997478,
+        "incoming": 15,
+        "outgoing": 48,
+        "decls": 14,
+        "module": "BogoliubovBraidGraphWeld"
+      },
+      {
+        "score": 23.45207879911715,
+        "incoming": 22,
+        "outgoing": 25,
+        "decls": 25,
+        "module": "SU3LoopBraidCuntzBoundary"
+      },
+      {
+        "score": 22.80350850198276,
+        "incoming": 52,
+        "outgoing": 10,
+        "decls": 39,
+        "module": "WeylSU3ColorSymmetry"
+      },
+      {
+        "score": 21.071307505705477,
+        "incoming": 37,
+        "outgoing": 12,
+        "decls": 27,
+        "module": "B3PresentedGroup"
+      },
+      {
+        "score": 20.784609690826528,
+        "incoming": 9,
+        "outgoing": 48,
+        "decls": 25,
+        "module": "WeylGaugeColimitWeld"
+      },
+      {
+        "score": 17.60681686165901,
+        "incoming": 10,
+        "outgoing": 31,
+        "decls": 34,
+        "module": "RescaledPhaseVolumeCanonical"
+      },
+      {
+        "score": 16.492422502470642,
+        "incoming": 68,
+        "outgoing": 4,
+        "decls": 21,
+        "module": "CantorBoundaryCuntzFamily"
+      },
+      {
+        "score": 15.491933384829668,
+        "incoming": 10,
+        "outgoing": 24,
+        "decls": 24,
+        "module": "ContinuumAsColimitCounting"
+      },
+      {
+        "score": 14.2828568570857,
+        "incoming": 17,
+        "outgoing": 12,
+        "decls": 29,
+        "module": "GaugeUHFLift"
+      },
+      {
+        "score": 13.2664991614216,
+        "incoming": 22,
+        "outgoing": 8,
+        "decls": 3,
+        "module": "JonesBraidB3"
+      },
+      {
+        "score": 10.198039027185569,
+        "incoming": 8,
+        "outgoing": 13,
+        "decls": 17,
+        "module": "PrimonHilbertPolyaSeparation"
+      },
+      {
+        "score": 10,
+        "incoming": 2,
+        "outgoing": 50,
+        "decls": 7,
+        "module": "WeylSolderedParafermionSymmetry"
+      },
+      {
+        "score": 9.9498743710662,
+        "incoming": 11,
+        "outgoing": 9,
+        "decls": 39,
+        "module": "TKKJordanPairSocket"
+      },
+      {
+        "score": 8.366600265340756,
+        "incoming": 10,
+        "outgoing": 7,
+        "decls": 4,
+        "module": "MajoranaPrimonSpectralBridge"
+      },
+      {
+        "score": 7.416198487095663,
+        "incoming": 11,
+        "outgoing": 5,
+        "decls": 24,
+        "module": "GoutevTonevPrinciple"
+      },
+      {
+        "score": 6.928203230275509,
+        "incoming": 4,
+        "outgoing": 12,
+        "decls": 7,
+        "module": "ChiralTensorMatrixBridge"
+      },
+      {
+        "score": 6.928203230275509,
+        "incoming": 2,
+        "outgoing": 24,
+        "decls": 16,
+        "module": "SU3LoopBraidDuality"
+      },
+      {
+        "score": 6.708203932499369,
+        "incoming": 9,
+        "outgoing": 5,
+        "decls": 26,
+        "module": "HillWheelerUniversalProjection"
+      },
+      {
+        "score": 6.557438524302,
+        "incoming": 1,
+        "outgoing": 43,
+        "decls": 18,
+        "module": "ChiralTLDescent"
+      },
+      {
+        "score": 6.244997998398398,
+        "incoming": 13,
+        "outgoing": 3,
+        "decls": 12,
+        "module": "B3RepresentationBridge"
+      },
+      {
+        "score": 3.4641016151377544,
+        "incoming": 6,
+        "outgoing": 2,
+        "decls": 1,
+        "module": "RHStatement"
+      },
+      {
+        "score": 2.8284271247461903,
+        "incoming": 2,
+        "outgoing": 4,
+        "decls": 1,
+        "module": "rhCriticalLine_complexTemperature"
+      },
+      {
+        "score": 2.6457513110645907,
+        "incoming": 1,
+        "outgoing": 7,
+        "decls": 1,
+        "module": "rh_graded_supertrace_zero_at_zero"
+      },
+      {
+        "score": 2.449489742783178,
+        "incoming": 6,
+        "outgoing": 1,
+        "decls": 1,
+        "module": "arithmeticBoltzmannWeight"
+      },
+      {
+        "score": 2.449489742783178,
+        "incoming": 1,
+        "outgoing": 6,
+        "decls": 1,
+        "module": "rh_graded_index_singularity_iff_denominator_zero"
+      },
+      {
+        "score": 2.449489742783178,
+        "incoming": 1,
+        "outgoing": 6,
+        "decls": 1,
+        "module": "hilbert_polya_hamiltonian_implies_RH"
+      },
+      {
+        "score": 2.449489742783178,
+        "incoming": 3,
+        "outgoing": 2,
+        "decls": 8,
+        "module": "PrimonBosonFermionDuality"
+      },
+      {
+        "score": 2.449489742783178,
+        "incoming": 6,
+        "outgoing": 1,
+        "decls": 2,
+        "module": "rhGradedFermionicPrimonPartition"
+      },
+      {
+        "score": 2.23606797749979,
+        "incoming": 5,
+        "outgoing": 1,
+        "decls": 1,
+        "module": "rhGradedIndexSingularity"
+      },
+      {
+        "score": 2,
+        "incoming": 1,
+        "outgoing": 4,
+        "decls": 1,
+        "module": "rh_graded_partition_at_zero"
+      },
+      {
+        "score": 2,
+        "incoming": 4,
+        "outgoing": 1,
+        "decls": 2,
+        "module": "rhGradedArithmeticSupertrace"
+      },
+      {
+        "score": 2,
+        "incoming": 4,
+        "outgoing": 1,
+        "decls": 2,
+        "module": "rhMoebiusDirichletSeries"
+      },
+      {
+        "score": 1.7320508075688772,
+        "incoming": 1,
+        "outgoing": 3,
+        "decls": 3,
+        "module": "FierzIdentities"
+      },
+      {
+        "score": 1.7320508075688772,
+        "incoming": 1,
+        "outgoing": 3,
+        "decls": 1,
+        "module": "boltzmann_eq_dirichlet"
+      },
+      {
+        "score": 1.7320508075688772,
+        "incoming": 1,
+        "outgoing": 3,
+        "decls": 1,
+        "module": "rh_zeta_zero_implies_graded_index_pole"
+      },
+      {
+        "score": 1.7320508075688772,
+        "incoming": 1,
+        "outgoing": 3,
+        "decls": 1,
+        "module": "arithmeticBoltzmannWeight_mul"
+      },
+      {
+        "score": 1.4142135623730951,
+        "incoming": 2,
+        "outgoing": 1,
+        "decls": 1,
+        "module": "complexTemperature"
+      },
+      {
+        "score": 1.4142135623730951,
+        "incoming": 2,
+        "outgoing": 1,
+        "decls": 1,
+        "module": "criticalDampingLine"
+      }
+    ]
+  }
+]

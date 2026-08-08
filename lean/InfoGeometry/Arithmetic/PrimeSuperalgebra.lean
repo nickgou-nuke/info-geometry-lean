@@ -42,7 +42,7 @@ open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
 /-! ## 1. Finite exterior prime algebra -/
 
-/-- A finite prime cutoff is a certified finite register of primes. -/
+/-- A finite prime cutoff is a property finite register of primes. -/
 abbrev PrimeCutoff :=
   PrimeRegister
 

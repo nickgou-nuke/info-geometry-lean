@@ -5,7 +5,7 @@ Direct readback theorems for the finite split-octonion incidence model.
 
 The imported projective/Zorn modules own the algebraic statements.  This
 module deliberately contains no hardcoded dimension packet or global-status
-certificate; no global Cartan-geometry theorem is claimed here.
+property; no global Cartan-geometry theorem is claimed here.
 -/
 
 namespace InfoGeometry.Lie.SplitOctonion235Distribution

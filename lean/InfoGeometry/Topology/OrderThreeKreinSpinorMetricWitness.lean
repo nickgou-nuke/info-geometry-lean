@@ -2,10 +2,10 @@ import InfoGeometry.Topology.OrderThreeKreinSpinorMetricCompatibility
 import InfoGeometry.Topology.OrderThreeInvariantMetricAction
 
 /-!
-# Metric witness for the Krein-spinor kernel
+# Metric property for the Krein-spinor kernel
 
 The Krein quadratic form is indefinite, so it is not promoted to a metric by
-definition.  This owner accepts one explicit calibration witness identifying
+definition.  This owner accepts one explicit calibration property identifying
 the existing metric on `X` with the square root of the `J`-conjugated kernel.
 All metric laws below are then inherited from the native metric space.
 -/

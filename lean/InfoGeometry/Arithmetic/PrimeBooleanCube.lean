@@ -12,7 +12,7 @@ Canonical finite Boolean-cube owner for prime-register arithmetic.
 
 This file consolidates the finite square-free / Cantor-cube surface:
 
-* vertices are subsets of a certified prime register;
+* vertices are subsets of a property prime register;
 * the prime-axis move is the existing `majoranaFlip`;
 * local parity is `1 - 2N_p`;
 * global chirality is `(-1)^card`;
@@ -186,7 +186,7 @@ theorem localParity_eq_one_of_not_mem
     localParity p S = 1 := by
   simp [localParity, occupationInt, hp]
 
-/-- Global chirality over the ambient certified prime register. -/
+/-- Global chirality over the ambient property prime register. -/
 @[rep_depth thermo]
 def globalChirality (P : PrimeRegister) (S : Finset ℕ) : ℤ :=
   Finset.prod P.primes fun p => localParity p S

@@ -76,6 +76,10 @@ theorem coordinateReflection_det_ne_zero :
     coordinateReflection.det ≠ 0 := by
   norm_num [coordinateReflection, Matrix.det_diagonal, Finset.prod_ite]
 
+theorem coordinateReflection_det :
+    coordinateReflection.det = -1 := by
+  norm_num [coordinateReflection, Matrix.det_diagonal, Finset.prod_ite]
+
 def coordinateReflectionGL : GL10 :=
   Matrix.GeneralLinearGroup.mkOfDetNeZero coordinateReflection
     coordinateReflection_det_ne_zero
@@ -110,5 +114,14 @@ theorem coordinateReflection_mem_orthogonal55 :
         Matrix.transpose_apply, Matrix.diagonal_apply, hi]
   · simp [coordinateReflection, O55Form, Matrix.mul_apply,
       Matrix.transpose_apply, Matrix.diagonal_apply, h]
+
+theorem coordinateReflectionGL_mem_OrthogonalGroup55 :
+    coordinateReflectionGL ∈ OrthogonalGroup55 :=
+  coordinateReflection_mem_orthogonal55
+
+theorem coordinateReflectionGL_det :
+    ((coordinateReflectionGL : GL10) : O55Matrix).det = -1 := by
+  rw [coordinateReflectionGL_val]
+  exact coordinateReflection_det
 
 end InfoGeometry.Canonical.O55Representation

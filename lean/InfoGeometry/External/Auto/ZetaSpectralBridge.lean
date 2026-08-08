@@ -151,7 +151,7 @@ def criticalLineParam (t : ℝ) : ℂ :=
   simp [criticalLineParam]
 
 /--
-A conservative bridge certificate between a spectral determinant and a
+A conservative bridge property between a spectral determinant and a
 self-adjoint Hilbert-Pólya operator.
 -/
 structure BridgeCertificate
@@ -271,7 +271,7 @@ theorem deterministic_riemann_critical_line
 
 /--
 Bridge package for a concrete colimit Dirac operator with the stronger `hBridge`
-assumption made explicit.
+property made explicit.
 -/
 def bridgeOfDiracColimit
     (S : InfoGeometry.Canonical.DiracColimit.DiracTowerData)

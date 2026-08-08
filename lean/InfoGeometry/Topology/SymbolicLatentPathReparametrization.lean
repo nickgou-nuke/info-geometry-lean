@@ -6,7 +6,7 @@ namespace InfoGeometry.Topology
 /-!
 # Endpoint-preserving reparametrizations of symbolic-latent paths
 
-This owner isolates the reusable homotopy witness for a continuous change of
+This owner isolates the reusable homotopy property for a continuous change of
 the path parameter.  The parameter map is required to fix the two endpoints;
 the straight-line interpolation in the interval then gives an explicit
 endpoint-preserving homotopy.

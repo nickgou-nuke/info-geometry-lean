@@ -14,10 +14,10 @@ Vandermonde/cancellation corridor:
 * two-node `q`-collision factor `x - q y`,
 * three-node `A₂`-style product of `q`-collision factors,
 * exact zero-locus characterization,
-* norm preservation on the collision locus under the unit-phase hypothesis
+* norm preservation on the collision locus under the unit-phase property
   `‖q‖ = 1`.
 
-It does **not** claim anything about the Riemann hypothesis, Bost-Connes,
+It does **not** claim anything about the Riemann property, Bost-Connes,
 KMS spectra, or modular absorption lines.  It is only the finite
 `q`-Vandermonde phase-lock shadow.
 -/

@@ -131,7 +131,7 @@ noncomputable def doubledFierzReadout : FierzChannelReadout where
   hilbert_nonneg := InfoGeometry.Quantum.Fierz.infoHilbert_nonneg (E := E)
   fierzIdentity := information_fierz_identity (E := E)
 
-/-- Tagged presentation witness for the doubled/Krein Fierz lane. -/
+/-- Tagged presentation property for the doubled/Krein Fierz lane. -/
 @[rep_depth operator]
 noncomputable def taggedDoubledFierzPresentation : TaggedPresentation where
   lane := PresentationLane.doubledKrein

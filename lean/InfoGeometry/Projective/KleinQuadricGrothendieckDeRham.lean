@@ -11,7 +11,7 @@ multivalued-logarithm picture as explicit, kernel-checked Lean definitions:
 * 4-vector split potentials `Q(v) = v0^2 + v1^2 + v2^2 + v3^2`
 * the 3-factor Klein-chiral determinant `Q(a) Q(b) Q(a-b)`
 * zero-determinant factorization on `ℂ`
-* logarithmic 1-form witness (`1 / z`) and monodromy increments
+* logarithmic 1-form property (`1 / z`) and monodromy increments
 * Tomita-like parallel-transport neutrality on the universal cover
 
 This remains compatible with the existing `KleinQuadricMonodromy` theorems.
@@ -94,7 +94,7 @@ theorem chiralDetPotential_eq_zero_iff
     · simp [hB]
     · simp [hC]
 
-/-- The logarithmic 1-form witness used in the Grothendieck–de Rham stage. -/
+/-- The logarithmic 1-form property used in the Grothendieck–de Rham stage. -/
 def grothendieck_dlog (z : ℂ) : ℂ := (1 : ℂ) / z
 
 /-- The log-potential as a scalar field. -/
@@ -134,7 +134,7 @@ theorem grothendieckLog_deriv_neg_log (z : ℂ) (hz : z ∈ Complex.slitPlane) :
 
 /-- The derivative of a logarithm of a product, on the chosen logarithm
 branch, is the logarithmic derivative of that product.  The slit-plane
-hypothesis is kept explicit because no global branch of `Complex.log` exists
+property is kept explicit because no global branch of `Complex.log` exists
 on `ℂˣ`. -/
 theorem grothendieckLog_deriv_mul
     {f g : ℂ → ℂ} {f' g' z : ℂ}

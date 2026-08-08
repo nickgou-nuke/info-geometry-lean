@@ -94,7 +94,7 @@ def standardCoassociativePlane : Submodule ℚ imaginarySplitOctonion :=
 
 /-- Coordinate vanishing on every generator triple of the standard plane.
 
-This is deliberately a finite coordinate certificate.  It does not yet claim
+This is deliberately a finite coordinate property.  It does not yet claim
 vanishing on the whole span; that requires the trilinear extension lemmas for
 the canonical form and is a separate, explicit next step.
 -/

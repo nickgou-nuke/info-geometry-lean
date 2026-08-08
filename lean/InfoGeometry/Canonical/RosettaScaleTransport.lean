@@ -44,7 +44,7 @@ omit [CompleteSpace H] in
 /--
 If a Weyl scale-transport shadow acts injectively on the carrier and transports
 both chiral slices to the baseline through the Clifford label action, then it
-instantiates the modular/Clifford transport hypothesis used by the analytical
+instantiates the modular/Clifford transport property used by the analytical
 index layer.
 -/
 private theorem weylScaleTransportShadow_to_modularCliffordTransport
@@ -203,7 +203,7 @@ theorem weylScaleTransportScalarShadow_eq_jordanBregman_of_isJordanKKTGeometry
 /--
 Conversely, if the same Weyl scale-transport shadow reads both the dual-flat
 Divergence and the Jordan Bregman divergence, it furnishes the full
-Jordan/KKT geometry witness.
+Jordan/KKT geometry property.
 -/
 theorem isJordanKKTGeometry_of_weylScaleTransportShadow
     (Ξ : InfoGeometry.Canonical.ScaleEquivariantFlow I F A)

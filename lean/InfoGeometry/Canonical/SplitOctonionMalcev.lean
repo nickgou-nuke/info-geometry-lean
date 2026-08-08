@@ -28,18 +28,18 @@ theorem rawJacobiator_akivis (X Y Z : Carrier) :
           (associator Z X Y)) :=
   commutatorJacobiator_eq_associator_alternating X Y Z
 
-theorem rawJacobiator_upper_witness :
+theorem rawJacobiator_upper_property :
     rawJacobiator (U 0 : Carrier) (U 1) (U 2) =
       diagonal (6 : ℝ) (-6 : ℝ) :=
   commutator_jacobi_U_zero_U_one_U_two
 
-theorem rawJacobiator_upper_witness_ne_zero :
+theorem rawJacobiator_upper_property_ne_zero :
     rawJacobiator (U 0 : Carrier) (U 1) (U 2) ≠ zero := by
   apply commutator_jacobi_U_zero_U_one_U_two_ne_zero
   norm_num
 
 theorem raw_commutator_not_lie :
     rawJacobiator (U 0 : Carrier) (U 1) (U 2) ≠ zero :=
-  rawJacobiator_upper_witness_ne_zero
+  rawJacobiator_upper_property_ne_zero
 
 end InfoGeometry.Canonical.SplitOctonionMalcev

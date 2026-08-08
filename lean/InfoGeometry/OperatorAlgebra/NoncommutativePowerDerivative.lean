@@ -84,7 +84,7 @@ Termwise differentiation of the noncommutative exponential series.
 
 The hypotheses are exactly the convergence obligations required by Mathlib's
 `hasFDerivAt_tsum`: a summable derivative majorant and convergence at one
-base point.  They are explicit theorem assumptions, not fields hidden in an
+base point.  They are explicit theorem propertys, not fields hidden in an
 evidence record.
 -/
 theorem hasFDerivAt_exponentialSeries_of_bound

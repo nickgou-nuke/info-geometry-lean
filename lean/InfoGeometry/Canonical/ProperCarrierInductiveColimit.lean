@@ -20,7 +20,7 @@ and packages the stage-index readback as a theorem chain.
 The theorems are conditional on:
 * monotone stage inclusions;
 * stagewise self-duality; and
-* an explicit finite-stage witness for every ambient element.
+* an explicit finite-stage property for every ambient element.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 No Tomita--Takesaki theorem, Type III classification, or analytic completion is

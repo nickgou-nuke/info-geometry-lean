@@ -1,0 +1,20 @@
+% Section 4: Machine Verification in Lean 4
+
+A defining contribution of this work is the rigorous formalization of the underlying algebraic geometry using the Lean 4 interactive theorem prover. The non-associative topological boundaries and geometric invariants that empower the \textit{SplitOctonionPolarActivation} layer were mechanically verified, eliminating the risk of undetected phase-space corruptions during neural network state transitions.
+
+\subsection{Formalizing the Split-Octonion Carrier}
+To rigorously model the hyperbolic and chiral symmetries, we embedded the $8$-dimensional split-octonion algebra $\mathbb{O}_s$ into the dependent type theory of Lean 4 using the canonical Zorn vector-matrix representation. The verification sequence confirms that the split-octonion basis forms a strictly non-associative algebra, capturing the exact Cayley-Dickson multiplication rules.
+
+\subsection{Verification of the Exact $\mathfrak{sl}_2$ Kinematics}
+By constructing explicit unipotent mappings over the Zorn basis, we formally defined the Lie algebra generators $E$ and $F$ for the spatial (retarded) and temporal (advanced) null rays. The Lean kernel verified the perfect $M_2(\mathbb{R})$ closed-form relations without relying on the associative approximation:
+\begin{align}
+    [H, E] &= 2E \\
+    [H, F] &= -2F \\
+    [E, F] &= H
+\end{align}
+Furthermore, we proved the explicit nilpotent truncation $E^2 = F^2 = 0$, resulting in the exact formalization of the $SL(2, \mathbb{R})$ Gauss cell decomposition $\Phi(N_+) \Phi(A) \Phi(N_-)$.
+
+\subsection{Shattering the Malcev Boundary and $G_{2(2)}$ Symmetries}
+Because the full $8$-dimensional structure loses the Jacobi identity (forming a Malcev algebra rather than a Lie algebra), we ascended to the symmetries of the algebra via its derivation algebra $\operatorname{Der}(\mathbb{O}_s) \cong \mathfrak{g}_{2(2)}$. 
+
+We defined the standard inner derivation operator $D_{x,y}(z) = [[x,y], z] - 3(x,y,z)$, where $(x,y,z)$ is the associator. Lean's computational tactics executed a pointwise polynomial verification of the Malcev-Schafer identity, mechanically proving that $D_{x,y}$ obeys the Leibniz rule. The $\mathfrak{sl}_2$ generators were subsequently lifted into these derivations, mathematically locking the $G_{2(2)}$ exceptional geometry that perfectly aligns the $SE(3)$ invariances of our PyTorch implementation.

@@ -40,7 +40,7 @@ namespace TensorProduct
 open GradedTensorProduct
 end TensorProduct
 
-/-- The owned Albert split-doubling witness. -/
+/-- The owned Albert split-doubling property. -/
 theorem splitAlbert_zero_divisors :
     ∃ x y : AlbertStep ℝ (SplitQuaternion ℝ) (1 : ℝ),
       x ≠ 0 ∧ y ≠ 0 ∧ AlbertStep.mul x y = 0 := by

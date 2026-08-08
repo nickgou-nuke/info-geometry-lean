@@ -4,14 +4,14 @@ InfoGeometry/OperatorAlgebra/DIIICosmicCrossoverBridge.lean
 Constructive bridge from the DIII CPT branch to the cosmic Andreev crossover
 carrier.
 
-This file replaces the crossover swap hypothesis by the concrete DIII
+This file replaces the crossover swap property by the concrete DIII
 particle-hole/CPT conjugation:
 
   theta x = C * x * C.
 
 The existing DIII branch theorems prove that this closure swaps the two chiral
 half-projectors.  Therefore the diagonal survives and the chiral imbalance is
-anti-fixed without an additional reflection witness.
+anti-fixed without an additional reflection property.
 -/
 
 import Mathlib.Tactic
@@ -90,7 +90,7 @@ theorem cosmicCrossoverInterpretation_holds :
   ⟨D.cptClosure_theta_P_left, D.cptClosure_theta_P_right⟩
 
 /--
-The DIII CPT branch constructs a cosmic Andreev crossover witness whose old/new
+The DIII CPT branch constructs a cosmic Andreev crossover property whose old/new
 data are the left/right chiral projectors.
 -/
 def toCosmicCrossoverWitness : CosmicCrossoverWitness Op where

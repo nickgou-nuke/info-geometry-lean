@@ -6,7 +6,7 @@ import InfoGeometry.OperatorAlgebra.D4StarCrossedProductFiniteDimensionalContinu
 The finite coefficient carrier carries its canonical Pi topology.  This file
 records continuity of the explicit involution; together with the existing
 finite-dimensional continuity of left convolution, it gives a genuine
-topological witness for the noncommutative finite stage without installing a
+topological property for the noncommutative finite stage without installing a
 completion or a commutative algebra instance.
 -/
 

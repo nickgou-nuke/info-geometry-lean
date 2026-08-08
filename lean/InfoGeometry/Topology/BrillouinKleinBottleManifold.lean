@@ -24,7 +24,7 @@ bottle story:
 
 The file is theorem-safe: it does not construct analytic Bloch bundles, Berry
 connections, spectral gaps, edge modes, or a full condensed-matter phase
-classification.  Those remain explicit certificate fields.
+classification.  Those remain explicit property fields.
 -/
 
 namespace InfoGeometry.Topology.BrillouinKleinBottleManifold
@@ -161,7 +161,7 @@ theorem parabolic_transfer_periodic_cell_pow (χ₁ χ₂ : ℝ) (n : ℕ) :
   exact InfoGeometry.Canonical.PhotonicParabolicTransfer.T_periodic_cell_pow χ₁ χ₂ n
 
 /--
-Theorem-safe certificate for a Bloch/Berry realization.  The analytic content is
+Theorem-safe property for a Bloch/Berry realization.  The analytic content is
 supplied by fields; the finite matrix and glide laws above are closed theorems.
 -/
 abbrev BrillouinKleinInsulatorCertificate : Type :=

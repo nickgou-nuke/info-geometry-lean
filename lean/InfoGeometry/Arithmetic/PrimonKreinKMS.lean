@@ -15,7 +15,7 @@ It separates:
 * Möbius as square-free fermion parity;
 * the positive KMS normalizability guard `1 < β`;
 * the direct-sum real doubled Krein carrier;
-* a witness-gated KMS boundary law on the doubled Krein operator algebra.
+* a property-gated KMS boundary law on the doubled Krein operator algebra.
 
 It does not claim a Type III completion, a Tomita--Takesaki theorem for the
 finite model, an infinite zeta theorem, or that the Krein supertrace is a
@@ -136,8 +136,8 @@ The KMS law is supplied by the existing `ArithmeticKMSWitness` interface.
 -/
 structure NormalizableArithmeticKMSSocket
     (State : Type*) where
-  /-- Finite arithmetic KMS witness. -/
-  witness : ArithmeticKMSWitness State
+  /-- Finite arithmetic KMS property. -/
+  property : ArithmeticKMSWitness State
   /-- Finite arithmetic support. -/
   support : Finset ℕ
   /-- Inverse temperature. -/
@@ -151,7 +151,7 @@ variable {State : Type*}
 
 /-- Encoded finite arithmetic state. -/
 def encodedState (S : NormalizableArithmeticKMSSocket State) : State :=
-  S.witness.stateOfFinset S.support
+  S.property.stateOfFinset S.support
 
 end NormalizableArithmeticKMSSocket
 

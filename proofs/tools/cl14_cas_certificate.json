@@ -1,0 +1,19 @@
+{
+  "checks": {
+    "clifford": {
+      "note": "package import succeeded; matrix certificate above is authoritative",
+      "status": "AVAILABLE"
+    },
+    "galgebra": {
+      "note": "package import succeeded; matrix certificate above is authoritative",
+      "status": "AVAILABLE"
+    },
+    "sympy": {
+      "circular_CAR": "PASS",
+      "pseudoscalar_square": "Matrix([[-1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, -1]])",
+      "real_cl14_basis_dimension": 8,
+      "status": "PASS"
+    }
+  },
+  "status": "PASS"
+}

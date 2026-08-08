@@ -39,7 +39,7 @@ structure SupersymmetricStateSpace where
 
 /--
 Every state in a `SupersymmetricStateSpace` is classified as boson, fermion, or
-ghost, provided by the explicit hypothesis `grading_bound`.
+ghost, provided by the explicit property `grading_bound`.
 
 This theorem is a finite trichotomy readout from the assumed value range
 `{1,-1,0}`; it does not construct the grading from arithmetic data.

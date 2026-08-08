@@ -43,7 +43,7 @@ omit [CompleteSpace E] in
 theorem excitedStateSector_eq_orthogonal (Q : EndH) :
     ExcitedStateSector Q = (DrazinCore Q)ᗮ := rfl
 
-/-- The regulated heat kernel is exactly the vacuum-subtracted kernel witness. -/
+/-- The regulated heat kernel is exactly the vacuum-subtracted kernel property. -/
 theorem regulatedHeatKernel_eq_subtract_one
     (W : ZeroModeSubtractionWitness) (t : ℝ) :
     W.regulatedHeatKernel t = W.heatKernel t - W.vacuumMode := by

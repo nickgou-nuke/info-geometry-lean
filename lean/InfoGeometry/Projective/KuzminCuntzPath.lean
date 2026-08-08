@@ -11,7 +11,7 @@ Lean-readable socket.  It provides:
 * a local `q`-CCR presentation structure over a `CommRing` with `StarRing`;
 * endpoint extraction lemmas for CAR (`q=-1`) and CCR (`q=1`);
 * an explicit Toeplitz endpoint (`q=0`) readout;
-* a transmutation socket that assumes (as a hypothesis) a star-ring equivalence to
+* a transmutation socket that assumes (as a property) a star-ring equivalence to
   the algebraic Cuntz–Toeplitz algebra.
 
 No full C*-isomorphism theorem is proved in this file; those analytical claims are
@@ -37,7 +37,7 @@ structure QCCRSeed (R : Type*) [CommRing R] [StarRing R] where
 /--
 A conservative transmutation socket for Kuzmin's corridor.
 
-The `toCuntzToeplitz` field is intentionally explicit and assumption-only: it
+The `toCuntzToeplitz` field is intentionally explicit and property-only: it
 models the claimed algebraic bridge without asserting an analytic construction.
 -/
 structure QCCRToCuntzSocket (R : Type*) [CommRing R] [StarRing R] where
@@ -136,7 +136,7 @@ structure KuzminCuntzPathPacket (R : Type*) [CommRing R] [StarRing R] where
 
 /--
 Conservative specialization: a path packet is present exactly as an explicit
-hypothesis (no hidden completion).
+property (no hidden completion).
 -/
 theorem path_packet_is_explicit
     {R : Type*} [CommRing R] [StarRing R]

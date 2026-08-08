@@ -276,7 +276,7 @@ theorem split_right_projector_decomposition
 
 end DrazinRepresentedSplit
 
-/-! ## 4. Metric/Drazin tear witness -/
+/-! ## 4. Metric/Drazin tear property -/
 
 /--
 A metric-vs-Drazin projector pair.

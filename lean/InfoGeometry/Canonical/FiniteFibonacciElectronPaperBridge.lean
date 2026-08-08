@@ -13,7 +13,7 @@ Fibonacci channel do not depend on `r`.
 This file exposes only that finite algebraic content:
 
 * electron counts are multiples of three;
-* an explicit symmetric electron factor hypothesis is invariant under anyon permutations;
+* an explicit symmetric electron factor property is invariant under anyon permutations;
 * the `R`, `F`, and `B = F R F` readouts are independent of `r`;
 * a base-sector Artin matrix identity transports unchanged to every `r` sector.
 

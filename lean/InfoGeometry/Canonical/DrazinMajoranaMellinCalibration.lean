@@ -10,7 +10,7 @@ Thin calibration packet connecting the Drazin/Fierz centralizer surface to the
 Majorana/Mellin critical-line surface.
 
 This module does not claim a new analytic equivalence.  It packages an explicit
-compatibility witness between:
+compatibility property between:
 
 * the Drazin expectation readout carried by `FinalDrazinFierzLaw`;
 * the Majorana zero-mode normalizability packet;

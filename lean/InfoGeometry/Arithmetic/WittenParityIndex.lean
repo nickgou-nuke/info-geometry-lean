@@ -9,7 +9,7 @@ namespace InfoGeometry.Arithmetic.WittenParityIndex
 This module verifies the finite algebraic parity sequence `(+1, -1, +1, -1)`
 for the first four symbolic Ramanujan-defect shapes.
 
-It is intentionally finite: it does not assert the Riemann hypothesis, analytic
+It is intentionally finite: it does not assert the Riemann property, analytic
 continuation, convergence of Ramanujan's formula, or a physical Witten-index
 theorem.  It records the closed polynomial parity that can be checked by the
 Lean kernel and connects that parity to the verified finite Bernoulli readouts
@@ -25,7 +25,7 @@ None.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 Analytic Ramanujan odd-zeta transformation, thermodynamic/KMS interpretation,
-and any Riemann-hypothesis-level statement.
+and any Riemann-property-level statement.
 
 The mathematical objects correspond to:
 - n = 1 : ζ(3) defect => Even Parity (+1)

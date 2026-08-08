@@ -139,6 +139,12 @@ structure BosonicOscillatorSurface (Op : Type*) [Ring Op] where
   adag : Op
   commutator : a * adag - adag * a = 1
 
+/-- Trivial instance of BosonicOscillatorSurface on PUnit. -/
+def punitBosonicOscillatorSurface : BosonicOscillatorSurface PUnit where
+  a := ⟨⟩
+  adag := ⟨⟩
+  commutator := rfl
+
 /-- A fermionic CAR surface. -/
 structure FermionicCARSurface (Op : Type*) [Ring Op] where
   b : Op
@@ -146,6 +152,14 @@ structure FermionicCARSurface (Op : Type*) [Ring Op] where
   b_sq : b * b = 0
   bdag_sq : bdag * bdag = 0
   anticomm : b * bdag + bdag * b = 1
+
+/-- Trivial instance of FermionicCARSurface on PUnit. -/
+def punitFermionicCARSurface : FermionicCARSurface PUnit where
+  b := ⟨⟩
+  bdag := ⟨⟩
+  b_sq := rfl
+  bdag_sq := rfl
+  anticomm := rfl
 
 /-- The split `Cl(1,1)` ladder pair as a genuine CAR surface. -/
 def cl11FermionicCARSurface : FermionicCARSurface (CliffordAlgebra q11) where
@@ -165,6 +179,13 @@ structure BosonFermionInterface (Op : Type*) [Ring Op]
   adag_b : B.adag * F.b = F.b * B.adag
   a_bdag : B.a * F.bdag = F.bdag * B.a
   adag_bdag : B.adag * F.bdag = F.bdag * B.adag
+
+/-- Trivial instance of BosonFermionInterface on PUnit. -/
+def punitBosonFermionInterface : BosonFermionInterface PUnit punitBosonicOscillatorSurface punitFermionicCARSurface where
+  a_b := rfl
+  adag_b := rfl
+  a_bdag := rfl
+  adag_bdag := rfl
 
 variable {Op : Type*} [Ring Op]
 

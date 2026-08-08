@@ -168,7 +168,7 @@ noncomputable def toPlus
 end PolarizationOdd
 
 omit [CompleteSpace S] in
-/-- A nontrivial kernel yields an explicit nonzero zero-mode witness. -/
+/-- A nontrivial kernel yields an explicit nonzero zero-mode property. -/
 theorem exists_zeroMode_of_hasZeroMode
     {H : EndS (S := S)}
   (hH : HasZeroMode (S := S) H) :
@@ -178,7 +178,7 @@ theorem exists_zeroMode_of_hasZeroMode
   refine ⟨v, ?_, hv0⟩
   simpa using hv
 
-/-- An operator-level zero-mode witness certifies a nontrivial kernel. -/
+/-- An operator-level zero-mode property certifies a nontrivial kernel. -/
 theorem hasZeroMode_of_operatorZeroModeWitness
     {H : EndS (S := S)}
     (W : OperatorZeroModeWitness (S := S) H) :
@@ -189,7 +189,7 @@ theorem hasZeroMode_of_operatorZeroModeWitness
   refine ⟨v, ?_, hv0⟩
   simpa [LinearMap.mem_ker] using hv
 
-/-- Read the kernel witness directly from an operator-level zero-mode packet. -/
+/-- Read the kernel property directly from an operator-level zero-mode packet. -/
 theorem exists_zeroMode_of_operatorZeroModeWitness
     {H : EndS (S := S)}
     (W : OperatorZeroModeWitness (S := S) H) :
@@ -249,7 +249,7 @@ theorem hasZeroMode_of_dim_mismatch
 
   exact hdim (le_antisymm hle₁ hle₂)
 
-/-- Explicit witness form of `hasZeroMode_of_dim_mismatch`. -/
+/-- Explicit property form of `hasZeroMode_of_dim_mismatch`. -/
 theorem exists_zeroMode_of_dim_mismatch
     [FiniteDimensional ℝ S]
     (P0 : KPolarization (S := S) M)
@@ -299,7 +299,7 @@ theorem hasZeroMode_conjugate_of_hasZeroMode
   exact hBv_ne hBvZero
 
 /--
-Explicit witness form of `hasZeroMode_conjugate_of_hasZeroMode`.
+Explicit property form of `hasZeroMode_conjugate_of_hasZeroMode`.
 -/
 theorem exists_zeroMode_of_hasZeroMode_conjugate
     (T : RealBogoliubovTransform (S := S) M)
@@ -409,7 +409,7 @@ theorem dim_mismatch_of_topologicalIndexZ2_eq_one
     (chain := chain) hTopo
 
 /--
-Boundary-localized open-chain witness: there are nonzero zero modes in both
+Boundary-localized open-chain property: there are nonzero zero modes in both
 polarization sectors for the concrete Pfaffian-weighted chain operator.
 -/
 def BoundaryLocalizedZeroModePair
@@ -438,7 +438,7 @@ noncomputable def boundaryLocalizedZeroModeWitnessOfPair
 
 /--
 Forget the polarization support and keep only the plus-sector operator kernel
-witness.
+property.
 -/
 @[rep_depth operator]
 noncomputable def operatorZeroModeWitnessOfBoundaryLocalizedPlus
@@ -456,7 +456,7 @@ noncomputable def operatorZeroModeWitnessOfBoundaryLocalizedPlus
 
 /--
 Forget the polarization support and keep only the minus-sector operator kernel
-witness.
+property.
 -/
 @[rep_depth operator]
 noncomputable def operatorZeroModeWitnessOfBoundaryLocalizedMinus
@@ -473,7 +473,7 @@ noncomputable def operatorZeroModeWitnessOfBoundaryLocalizedMinus
     exact ⟨Classical.choose hPair1, hPair2.2.2.2.2.2, hPair2.2.1⟩
 
 /--
-Any boundary-localized plus/minus zero-mode witness already certifies a
+Any boundary-localized plus/minus zero-mode property already certifies a
 dimension-agnostic operator zero mode.
 -/
 theorem hasZeroMode_of_boundaryLocalizedZeroModeWitness
@@ -529,7 +529,7 @@ abbrev SimplifiedBoundaryModel
       Module.finrank ℝ P0.plus ≠ Module.finrank ℝ P0.minus)
 
 /--
-Structure-valued boundary witness extracted directly from a simplified boundary
+Structure-valued boundary property extracted directly from a simplified boundary
 model in the negative phase.
 -/
 @[rep_depth krein]
@@ -543,8 +543,8 @@ noncomputable def boundaryLocalizedZeroModeWitness_of_negativePhase_of_simplifie
     (M := M) (P0 := P0) localOp chain (hSimple.1 hNeg)
 
 /--
-Structure-valued boundary witness extracted from the turnkey `topologicalIndexZ2`
-phase assumption and a simplified boundary model.
+Structure-valued boundary property extracted from the turnkey `topologicalIndexZ2`
+phase property and a simplified boundary model.
 -/
 @[rep_depth krein]
 noncomputable def boundaryLocalizedZeroModeWitness_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
@@ -560,7 +560,7 @@ noncomputable def boundaryLocalizedZeroModeWitness_of_topologicalIndexZ2_eq_one_
     (M := M) (P0 := P0) localOp chain hNeg hSimple
 
 /--
-Dimension-agnostic operator zero-mode witness extracted from a simplified
+Dimension-agnostic operator zero-mode property extracted from a simplified
 boundary model in the negative phase.
 -/
 @[rep_depth operator]
@@ -578,8 +578,8 @@ noncomputable def operatorZeroModeWitness_of_negativePhase_of_simplifiedBoundary
       (M := M) (P0 := P0) localOp chain hNeg hSimple)
 
 /--
-Dimension-agnostic operator zero-mode witness extracted from the turnkey
-`topologicalIndexZ2 = 1` phase assumption and a simplified boundary model.
+Dimension-agnostic operator zero-mode property extracted from the turnkey
+`topologicalIndexZ2 = 1` phase property and a simplified boundary model.
 -/
 @[rep_depth operator]
 noncomputable def operatorZeroModeWitness_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
@@ -598,7 +598,7 @@ noncomputable def operatorZeroModeWitness_of_topologicalIndexZ2_eq_one_of_simpli
 /--
 Dimension-agnostic bulk-boundary consequence from a simplified boundary model:
 the operator has a nontrivial kernel directly from the explicit boundary
-zero-mode witness, without passing through a finite-dimensional mismatch
+zero-mode property, without passing through a finite-dimensional mismatch
 argument.
 -/
 theorem hasSurfaceZeroMode_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
@@ -728,7 +728,7 @@ abbrev WeylZeroModeWitnessUnderBogoliubov
 
 omit [FiniteDimensional ℝ S] in
 /--
-Structure-valued transported Weyl witness extracted from the existential
+Structure-valued transported Weyl property extracted from the existential
 Bogoliubov transport theorem.
 -/
 @[rep_depth krein]
@@ -745,7 +745,7 @@ noncomputable def weylZeroModeWitnessUnderBogoliubov_of_preservesChiralityPolari
 
 omit [FiniteDimensional ℝ S] in
 /--
-Structure-valued transported Weyl witness extracted directly from a simplified
+Structure-valued transported Weyl property extracted directly from a simplified
 boundary model in the negative phase.
 -/
 @[rep_depth krein]
@@ -828,7 +828,7 @@ def HasSurfaceZeroMode (chain : List KitaevCell) : Prop :=
 Bulk-boundary correspondence under explicit bridge hypotheses.
 
 `hOdd` encodes particle-hole-type spectral symmetry at the operator level,
-and `hDimFromIndex` is the index-to-dimension-mismatch bridge hypothesis.
+and `hDimFromIndex` is the index-to-dimension-mismatch bridge property.
 -/
 theorem bulk_boundary_correspondence
     (chain : List KitaevCell)
@@ -894,7 +894,7 @@ theorem bulk_boundary_correspondence_concrete
       (M := M) (P0 := P0) chain hTopo hNegPhaseDimMismatch)
 
 /--
-Concrete information-sink witness in the topological phase for the
+Concrete information-sink property in the topological phase for the
 Pfaffian-weighted finite open-chain operator.
 -/
 theorem zero_mode_is_information_sink_concrete
@@ -950,7 +950,7 @@ theorem bulk_boundary_correspondence_concrete_of_boundaryLocalization
       (M := M) (P0 := P0) (localOp := localOp) (chain := chain) hLoc)
 
 /--
-End-to-end concrete zero-mode witness from chain data plus
+End-to-end concrete zero-mode property from chain data plus
 boundary-localization assumptions.
 -/
 theorem zero_mode_is_information_sink_concrete_of_boundaryLocalization
@@ -993,7 +993,7 @@ theorem bulk_boundary_correspondence_concrete_of_boundaryLocalization_under_bogo
       (chain := chain) hTopo hPHS hLoc)
 
 /--
-Bogoliubov-stable concrete information-sink witness:
+Bogoliubov-stable concrete information-sink property:
 a boundary-localized zero mode persists under real Bogoliubov conjugation.
 -/
 theorem zero_mode_is_information_sink_concrete_of_boundaryLocalization_under_bogoliubov
@@ -1043,7 +1043,7 @@ theorem bulk_boundary_correspondence_concrete_of_simplifiedBoundaryModel
 /--
 Turnkey sibling theorem:
 from a simplified boundary model package, derive the concrete end-to-end
-zero-mode sink witness in one step.
+zero-mode sink property in one step.
 -/
 theorem zero_mode_is_information_sink_concrete_of_simplifiedBoundaryModel
     (localOp : KitaevCell → EndS (S := S))
@@ -1085,7 +1085,7 @@ theorem bulk_boundary_correspondence_concrete_of_simplifiedBoundaryModel_under_b
       (M := M) (P0 := P0) (localOp := localOp) (chain := chain) hSimple)
 
 /--
-Bogoliubov-stable simplified-boundary-model zero-mode witness.
+Bogoliubov-stable simplified-boundary-model zero-mode property.
 -/
 theorem zero_mode_is_information_sink_concrete_of_simplifiedBoundaryModel_under_bogoliubov
     (T : RealBogoliubovTransform (S := S) M)

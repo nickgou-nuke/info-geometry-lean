@@ -516,7 +516,7 @@ theorem goutev_tonev_principle_verified :
 
     The Wigner–Dyson P(S) ∝ S² is the r² radial volume element.
     The equality of formulas is algebraic. The physical interpretation is a
-    roadmap hypothesis, not a proved theorem. -/
+    roadmap property, not a proved theorem. -/
 ---------------------------------------------------------------
 -- Part 8:  Finite Verifications
 ---------------------------------------------------------------

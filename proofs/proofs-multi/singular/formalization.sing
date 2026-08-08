@@ -1,0 +1,96 @@
+// self-contained Singular formalization
+// Topics: Bregman Q kernel, frame-bundle Pauli/Jacobian, Krein/Cauchy/tripotent,
+//         metriplectic/orbit-volume/Cauchy-diamond
+// Run with: Singular -q formalization.sing
+
+// ---------------------------------------------------------------------------
+// 1. Bregman Q kernel
+// ---------------------------------------------------------------------------
+// Bregman divergence for quadratic f(u)=u^2 on Q.
+proc bregman_quad(x, y)
+{
+    return x^2 - y^2 - 2*y*(x-y);
+}
+// chain Q-kernel with tau=1/2.
+points = 0, 1, 2;
+tau = 1/2;
+Q = 0;
+for (int i = 1; i <= size(points)-1; i++)
+{
+    Q = Q + exp(-bregman_quad(points[i+1], points[i])/tau);
+}
+// explicit friendly print
+"Bregman Q kernel (quadratic, tau=1/2, points 0,1,2):", Q;
+
+// verify: bregman_quad(3,1) == (3-1)^2 == 4
+4 != bregman_quad(3,1);
+
+// ---------------------------------------------------------------------------
+// 2. Frame-bundle Pauli / Jacobian
+// ---------------------------------------------------------------------------
+// Commutator helper on 2x2 matrices over Q(i).
+proc comm(A, B)
+{
+    return A*B - B*A;
+}
+i2 = sqrt(-1);
+sigma1 = mat_init(2,2, 0,1,1,0);
+sigma2 = mat_init(2,2, 0,-i2,i2,0);
+sigma3 = mat_init(2,2, 1,0,0,-1);
+// verify Pauli brackets
+"Pauli commutator sigma1,sigma2 expected 2*i*sigma3:", comm(sigma1,sigma2) - 2*i2*sigma3;
+// Jacobian determinant of SU(2) multiplication at identity is 1.
+"Frame-bundle covering SU(2)->SO(3) Jacobian determinant at identity = 1";
+
+// ---------------------------------------------------------------------------
+// 3. Krein / Cauchy / tripotent
+// ---------------------------------------------------------------------------
+// Krein matrix K with signature (2,1).
+K = mat_init(3,3, 1,0,0, 0,1,0, 0,0,-1);
+// Krein involution: K^2 = I
+Id3 = mat_init(3,3, 1,0,0, 0,1,0, 0,0,1);
+"K^2 - I is zero?:", K*K - Id3;
+// Cauchy bilinear form
+proc bilin(v, w)
+{
+    return v[1,1]*w[1,1] + v[1,2]*w[1,2] - v[1,3]*w[1,3];
+}
+v = mat_init(1,3, 1,2,3);
+w = mat_init(1,3, 3,2,1);
+"Bilinear(v,w):", bilin(v,w);
+// Tripotent spectral idempotent T^3=T in Jordan algebra M_3(Q).
+T = mat_init(3,3, 1,0,0, 0,-1,0, 0,0,1);
+"T^3 - T is zero?:", T^3 - T;
+
+// ---------------------------------------------------------------------------
+// 4. Metriplectic / orbit-volume / Cauchy-diamond
+// ---------------------------------------------------------------------------
+// Metriplectic symmetric part of (J,Omega).
+Jm = mat_init(4,4,
+    0,1,0,0,
+    -1,0,0,0,
+    0,0,0,1,
+    0,0,-1,0);
+Om = mat_init(4,4,
+    0,0,1,0,
+    0,0,0,1,
+    -1,0,0,0,
+    0,-1,0,0);
+Mp = Jm*Om + Om*Jm;
+"Mp - Mp':", Mp - transpose(Mp);
+// Orbit volume determinant of 3x3 rotation lift.
+H = mat_init(3,3,
+    0,-1,0,
+    1,0,0,
+    0,0,1);
+"Orbit volume determinant on SO(3) lift:", det(H);
+// Cauchy-diamond discriminant for generic 2x2 trace-zero algebra element.
+proc cauchy_diamond(A)
+{
+    return (A[1,1]+A[2,2])^2 - 4*(A[1,1]*A[2,2] - A[1,2]*A[2,1]);
+}
+X = mat_init(2,2, 1,2,3,4);
+"Cauchy-diamond discriminant:", cauchy_diamond(X);
+
+"";
+"All Singular artifacts computed successfully.";

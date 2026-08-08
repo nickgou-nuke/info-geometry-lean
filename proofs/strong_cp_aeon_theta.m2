@@ -1,0 +1,15 @@
+R = QQ[q,dq,theta,a,F,Fdual,yQ,yu,yd,yL, WeylAlgebra => {q=>dq}];
+aeonCount=3; thetaAeonIndex=3; qDial=1/10; thetaSedimentWeight=1/1000; inverseThetaScale=1000;
+su3Rank=2; su3Roots=6; su3Cartan=2; su3Generators=8; su3WeylOrder=6; smRank=4; smGenerators=12;
+C2su3Fund=4/3; C2su3Adj=3;
+assert(aeonCount==3 and thetaAeonIndex==3 and thetaSedimentWeight==1/1000 and inverseThetaScale==1000);
+assert(su3Rank==2 and su3Roots==6 and su3Cartan==2 and su3Generators==8 and su3WeylOrder==6 and smRank==4 and smGenerators==12);
+assert(C2su3Fund==4/3 and C2su3Adj==3);
+topologicalChargePair=1-1; assert(topologicalChargePair==0);
+I = ideal(q*dq - dq*q - 1); assert(numgens I == 1);
+thetaIdeal = ideal(theta+a, 10*q-1); assert(numgens thetaIdeal == 2);
+pontryaginIdeal = ideal(F*Fdual); assert(numgens pontryaginIdeal == 1);
+anomalyIdeal = ideal(2*yQ-yu-yd, 3*yQ+yL); assert(numgens anomalyIdeal == 2);
+u1AxialAnomalyCoeff=8; generationAnomaly=0; assert(u1AxialAnomalyCoeff==8 and generationAnomaly==0);
+edges={"generates_theta","carries_su3","cp_flips","axion_cancels","closes"}; assert(#edges==5);
+print {"aeonCount",aeonCount,"thetaAeonIndex",thetaAeonIndex,"qDial",qDial,"thetaSedimentWeight",thetaSedimentWeight,"inverseThetaScale",inverseThetaScale,"su3Rank",su3Rank,"su3Roots",su3Roots,"su3Cartan",su3Cartan,"su3Generators",su3Generators,"su3WeylOrder",su3WeylOrder,"smRank",smRank,"smGenerators",smGenerators,"C2su3Fund",C2su3Fund,"C2su3Adj",C2su3Adj,"topologicalChargePair",topologicalChargePair,"dmoduleCCRGenerators",numgens I,"thetaIdealGenerators",numgens thetaIdeal,"pontryaginIdealGenerators",numgens pontryaginIdeal,"anomalyIdealGenerators",numgens anomalyIdeal,"u1AxialAnomalyCoeff",u1AxialAnomalyCoeff,"generationAnomaly",generationAnomaly,"graphEdges",#edges};

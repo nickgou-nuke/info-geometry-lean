@@ -10,7 +10,7 @@ conformal lane.
 
 The carrier is the five-dimensional coordinate space with basis
 `H, Ep, Em, G1, G2`.  The bracket is the table from the companion SymPy
-witness `tools/sympy/osp12_spinor_bridge.py`:
+property `tools/sympy/osp12_spinor_bridge.py`:
 
 * even sector: `H, Ep, Em`;
 * odd sector: `G1, G2`;

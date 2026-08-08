@@ -56,7 +56,7 @@ end ArnoldShapeScaleCost
 /--
 Pointwise approximation contract for the one-token Arnold generator lane.
 
-`costBound` is a certified uniform bound over the declared `domain`, measured
+`costBound` is a property uniform bound over the declared `domain`, measured
 by an explicitly supplied information-geometric shape/scale cost.
 -/
 @[rep_depth operator]
@@ -73,7 +73,7 @@ structure ArnoldGeneratorApproximationContract
           (arnoldNetworkOutput n net β (fun _ : Unit => ψ) ())
           (target ψ) ≤ costBound
 
-/-- Contract projection: nonnegativity of the certified cost bound. -/
+/-- Contract projection: nonnegativity of the property cost bound. -/
 @[rep_depth operator]
 theorem costBound_nonneg
     {n : Nat} {net : ArnoldMajoranaNetwork n E} {β : ℝ}

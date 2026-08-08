@@ -60,7 +60,7 @@ noncomputable def ownerTranslationCandidate : EndH :=
 The owner translation lane remains spectrally compact on the current Drazin
 slice.
 
-This is the direct owner witness showing that the doubled kinetic lane stays in
+This is the direct owner property showing that the doubled kinetic lane stays in
 the even/spectral-compact sector inherited from `Q_D²`.
 -/
 @[rep_depth transport]

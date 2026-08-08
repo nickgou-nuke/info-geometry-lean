@@ -264,6 +264,17 @@ theorem tkkHyperbolicLieEquiv_map_tkkBracket (d e : TKKCarrier) :
   rw [tkkHyperbolicLieEquiv, tkkBracket_eq_abstractTKKBracket]
   exact abstractTKKLieEquiv_map_lie d e
 
+/-- The finite noncommutative TKK equivalence and its dimension datum. -/
+theorem tkk_hyperbolic_lie_equivalence_packet :
+    Module.finrank ℝ TKKCarrier = 45 ∧
+      Module.finrank ℝ hyperbolicSkewSubmodule = 45 ∧
+      (∀ d e : TKKCarrier,
+        tkkHyperbolicLieEquiv (tkkBracket d e) =
+          hyperbolicSkewBracket
+            (tkkHyperbolicLieEquiv d) (tkkHyperbolicLieEquiv e)) := by
+  exact ⟨tkkCarrier_finrank_eq_45, hyperbolicSkewSubmodule_finrank,
+    tkkHyperbolicLieEquiv_map_tkkBracket⟩
+
 def spinFactorTriple (x y z : TKKMiddle) : TKKMiddle :=
   beta44 x y • z + beta44 z y • x - beta44 x z • y
 

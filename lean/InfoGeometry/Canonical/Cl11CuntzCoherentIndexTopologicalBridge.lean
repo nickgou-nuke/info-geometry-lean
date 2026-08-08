@@ -10,7 +10,7 @@ The generic `Fintype.equivFinOfCardEq` indexing used by the older matrix
 owners is intentionally opaque.  This owner supplies a recursive indexing
 equivalence whose successor is exactly the tensor-product indexing used by
 the UHF/Cuntz successor map.  The resulting complexification is therefore a
-genuine finite-stage natural transformation, with no coherence hypothesis.
+genuine finite-stage natural transformation, with no coherence property.
 -/
 
 noncomputable section
@@ -33,7 +33,7 @@ open InfoGeometry.Canonical.CuntzMatrixTraceTopologicalGNSBridge
 
 /-! The topological trace owners are parameterized by a successor family.
 Expose the native concrete successor as that family once, so every colimit
-readout below uses the same `Data` witness as `concrete_trace_compatible`. -/
+readout below uses the same `Data` property as `concrete_trace_compatible`. -/
 abbrev concreteData : CuntzMatrixTraceTower.Data :=
   fun n => CuntzMatrixTraceTower.concreteStep n
 

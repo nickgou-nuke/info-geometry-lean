@@ -26,7 +26,7 @@ fixed-readout laws, and transport through a real doubled Krein representation.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 The discrete modular step is identified with the Cuntz map only when its
-pointwise equality witness is supplied.
+pointwise equality property is supplied.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 Uniqueness, contractive convergence, CPTP positivity, and continuous modular

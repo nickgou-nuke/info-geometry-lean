@@ -5,7 +5,7 @@ import InfoGeometry.Analysis.SouriauThermodynamics
 
 Finite Souriau-Koszul metric hypotheses and debt lemmas.
 
-The deleted version attempted to postulate a directional Hessian.
+The deleted version attempted to postulat3 a directional Hessian.
 This repaired version keeps the mathematically honest part: a Hessian evaluator
 is supplied as data, and the metric is the corresponding bilinear readout.
 -/

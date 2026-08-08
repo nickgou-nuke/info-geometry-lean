@@ -110,7 +110,7 @@ def emergent_spacetime_ansatz : Prop :=
       (PauliZornTrifactor.pauliHermitian t x y z).det =
         (PauliZornTrifactor.minkowskiNorm t x y z : ℂ)
 
-theorem emergent_spacetime_ansatz_witness : emergent_spacetime_ansatz := by
+theorem emergent_spacetime_ansatz_property : emergent_spacetime_ansatz := by
   refine ⟨1, 0, 0, 0, ?_, ?_⟩
   · ext i j <;> fin_cases i <;> fin_cases j <;>
       simp [PauliZornTrifactor.pauliHermitian]

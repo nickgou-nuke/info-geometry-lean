@@ -80,7 +80,7 @@ end ModularFlowCarrier
 /--
 Standalone predicate: a modular-flow carrier is a one-parameter action.
 
-This is a predicate only, not a bundled assumption.
+This is a predicate only, not a bundled property.
 -/
 def IsOneParameterFlow
     {Frame : Type*}

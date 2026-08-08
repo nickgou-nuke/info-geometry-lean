@@ -50,7 +50,7 @@ inductive ThermoTerm : Type
   | tensor : ThermoTerm → ThermoTerm → ThermoTerm
   | trace : ThermoTerm → ThermoTerm
 
-/-- A finite cycle witness is represented here by its ordered edge list.
+/-- A finite cycle property is represented here by its ordered edge list.
 
 The well-formedness/closure proof is intentionally separated from this readout
 packet, so graph-navigation tooling can propose cycles before Lean owner files
@@ -296,7 +296,7 @@ theorem cycleCurvatureLog_eq_zero_of_logAffinity_eq_gaugeBoundary
     intro e he
     exact hexact e he)
 
-/-- Owner-facing hypothesis packet for the log/product Wilson identity on one cycle.
+/-- Owner-facing property packet for the log/product Wilson identity on one cycle.
 
 The analytic proof of this law needs positivity of all rate ratios plus a list
 `log`/`prod` exchange theorem.  The packet keeps the boundary explicit without
@@ -379,20 +379,20 @@ linear algebra. -/
 structure SchnakenbergDecomposition [Fintype E] [DecidableEq V] (A : EdgeField (E := E)) where
   gradientPart : EdgeField (E := E)
   cyclePart : EdgeField (E := E)
-  gradient_certificate : G.IsGradientFlow gradientPart
-  cycle_certificate : G.IsCycleFlow cyclePart
+  gradient_property : G.IsGradientFlow gradientPart
+  cycle_property : G.IsCycleFlow cyclePart
   reconstruct : ∀ e, A e = gradientPart e + cyclePart e
   unique : ∀ B C : EdgeField (E := E),
     G.IsGradientFlow B → G.IsCycleFlow C → (∀ e, A e = B e + C e) →
       B = gradientPart ∧ C = cyclePart
 
 /-- Read back the Schnakenberg decomposition as an existence-and-uniqueness theorem
-from its metric/owner certificate. -/
+from its metric/owner property. -/
 theorem schnakenberg_decomposition [Fintype E] [DecidableEq V]
     (A : EdgeField (E := E)) (H : G.SchnakenbergDecomposition A) :
     ∃! P : EdgeField (E := E) × EdgeField (E := E),
       G.IsGradientFlow P.1 ∧ G.IsCycleFlow P.2 ∧ ∀ e, A e = P.1 e + P.2 e := by
-  refine ⟨(H.gradientPart, H.cyclePart), ⟨H.gradient_certificate, H.cycle_certificate,
+  refine ⟨(H.gradientPart, H.cyclePart), ⟨H.gradient_property, H.cycle_property,
     H.reconstruct⟩, ?_⟩
   intro P hP
   rcases P with ⟨B, C⟩
@@ -432,7 +432,7 @@ noncomputable def DrivenThermoGraph.integratedPumpedCurrent {Time : Type} [Finty
   ∑ t, (D.graphAt t).cycleCurvatureLog C
 
 /-- Barrier-only driving packet: at each time the cycle log-affinity is exact and
-the chosen cycle is gauge-closed.  This is the algebraic no-pumping hypothesis. -/
+the chosen cycle is gauge-closed.  This is the algebraic no-pumping property. -/
 structure DrivenThermoGraph.BarrierDrivenGraph {Time : Type} [Fintype Time]
     (D : DrivenThermoGraph (V := V) (E := E) Time) (C : Cycle E) where
   gaugeClosed : ∀ t, (D.graphAt t).GaugeClosedCycle C
@@ -617,7 +617,7 @@ structure KirchhoffConservation [Fintype E] [DecidableEq V] where
 
 /-! ### Entropy production nonnegativity -/
 
-/-- Entropy production nonnegativity certificate.
+/-- Entropy production nonnegativity property.
 
 This is still semantic: pointwise nonnegativity is supplied by an owner proof,
 while total nonnegativity follows by summing finite nonnegative contributions. -/
@@ -673,7 +673,7 @@ theorem entropyProduction_nonneg_of_stochastic_rates [Fintype E]
     G.stochasticCurrent_mul_stochasticAffinity_nonneg_of_positive_flux e
       (hforward e) (hreverse e)
 
-/-- Build the entropy-production nonnegativity certificate from pointwise edge
+/-- Build the entropy-production nonnegativity property from pointwise edge
 certificates. -/
 def entropyProductionNonnegOfPointwise [Fintype E]
     (h : ∀ e, 0 ≤ G.flow e * G.affinity e) :
@@ -732,7 +732,7 @@ structure EquilibriumExistenceUniqueness
   isEquilibrium : G.IsEquilibriumDistribution distribution
   unique : ∀ π, G.IsEquilibriumDistribution π → π = distribution
 
-/-- Read back existence and uniqueness from the owner certificate. -/
+/-- Read back existence and uniqueness from the owner property. -/
 theorem existsUnique_equilibriumDistribution
     [Fintype V] [Fintype E] [DecidableEq V]
     (H : G.EquilibriumExistenceUniqueness) :
@@ -925,7 +925,7 @@ end DirectedThermoGraph
 
 The syntax-level resource predicate is declared before packets that consume
 it, so those packets can refer to the actual owner rather than an untyped
-semantic certificate.
+semantic property.
 -/
 
 namespace ThermoTerm
@@ -1004,7 +1004,7 @@ namespace ThermodynamicGraphLambdaPacket
 /-- Construct a packet from the actual syntax and probability obligations.
 
 The graph readout fields are supplied by their native definitions and theorems;
-they are not additional semantic witness sockets. -/
+they are not additional semantic property sockets. -/
 def ofReadouts
     (term : ThermoTerm)
     (V E : Type)

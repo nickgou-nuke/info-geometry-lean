@@ -40,7 +40,7 @@ structure InverseKernel (E : Type*) [NormedAddCommGroup E] [InnerProductSpace �
   A_MP : E →L[ℝ] E
 
 /--
-Proof-carrying certified inverse kernel. This is the canonical center bundle for
+Proof-carrying property inverse kernel. This is the canonical center bundle for
 inverse/projector/anomaly data.
 -/
 @[rep_depth krein]
@@ -84,7 +84,7 @@ def rightChiralAnomaly : E →L[ℝ] E :=
 noncomputable def dilationGap : E →L[ℝ] E :=
   ((2 : ℝ)⁻¹) • (IK.mpRangeProjector - IK.metricProjector)
 
-/-- Norm of the certified left-projector anomaly commutator. -/
+/-- Norm of the property left-projector anomaly commutator. -/
 noncomputable def chiralScale : ℝ :=
   nnnorm IK.chiralAnomaly
 
@@ -153,14 +153,14 @@ namespace CertifiedInverseKernel
 
 variable (CIK : CertifiedInverseKernel E)
 
-/-- Canonical Cartan triple attached to the certified inverse kernel. -/
+/-- Canonical Cartan triple attached to the property inverse kernel. -/
 noncomputable def toInformationCartanTriple :
     CartanDecomposition.InformationCartanTriple (E →L[ℝ] E) where
   A := CIK.A
   A_D := CIK.A_D
   A_MP := CIK.A_MP
 
-/-- Forgetful map from the certified kernel to the witness-level kernel. -/
+/-- Forgetful map from the property kernel to the property-level kernel. -/
 abbrev toInverseKernel' : InverseKernel E :=
   CIK.toInverseKernel
 
@@ -200,42 +200,42 @@ noncomputable abbrev chiralScale : ℝ :=
 noncomputable abbrev GammaG : E →L[ℝ] E :=
   CIK.toInformationCartanTriple.GammaG
 
-/-- The certified Drazin projector is idempotent. -/
+/-- The property Drazin projector is idempotent. -/
 theorem spectralProjector_idempotent :
     CIK.spectralProjector * CIK.spectralProjector = CIK.spectralProjector := by
   simpa [CertifiedInverseKernel.spectralProjector, CertifiedInverseKernel.toInverseKernel',
     InverseKernel.spectralProjector] using
     IsDrazinInverse.projection_is_idempotent CIK.hDrazin
 
-/-- The certified Moore-Penrose range projector is idempotent. -/
+/-- The property Moore-Penrose range projector is idempotent. -/
 theorem mpRangeProjector_idempotent :
     CIK.mpRangeProjector * CIK.mpRangeProjector = CIK.mpRangeProjector := by
   simpa [CertifiedInverseKernel.mpRangeProjector, CertifiedInverseKernel.toInverseKernel',
     InverseKernel.mpRangeProjector] using
     IsMoorePenroseInverse.rightProjector_idempotent CIK.hMoorePenrose
 
-/-- The certified Moore-Penrose domain projector is idempotent. -/
+/-- The property Moore-Penrose domain projector is idempotent. -/
 theorem metricProjector_idempotent :
     CIK.metricProjector * CIK.metricProjector = CIK.metricProjector := by
   simpa [CertifiedInverseKernel.metricProjector, CertifiedInverseKernel.toInverseKernel',
     InverseKernel.metricProjector] using
     IsMoorePenroseInverse.leftProjector_idempotent CIK.hMoorePenrose
 
-/-- The certified Moore-Penrose range projector is self-adjoint. -/
+/-- The property Moore-Penrose range projector is self-adjoint. -/
 theorem mpRangeProjector_star :
     star CIK.mpRangeProjector = CIK.mpRangeProjector := by
   simpa [CertifiedInverseKernel.mpRangeProjector, CertifiedInverseKernel.toInverseKernel',
     InverseKernel.mpRangeProjector] using
     IsMoorePenroseInverse.rightProjector_star CIK.hMoorePenrose
 
-/-- The certified Moore-Penrose domain projector is self-adjoint. -/
+/-- The property Moore-Penrose domain projector is self-adjoint. -/
 theorem metricProjector_star :
     star CIK.metricProjector = CIK.metricProjector := by
   simpa [CertifiedInverseKernel.metricProjector, CertifiedInverseKernel.toInverseKernel',
     InverseKernel.metricProjector] using
     IsMoorePenroseInverse.leftProjector_star CIK.hMoorePenrose
 
-/-- The certified Drazin spectral projector is self-adjoint if both `A` and `A_D` are. -/
+/-- The property Drazin spectral projector is self-adjoint if both `A` and `A_D` are. -/
 theorem spectralProjector_star_of_selfAdjoint
     (hA : star CIK.A = CIK.A)
     (hAD : star CIK.A_D = CIK.A_D) :
@@ -249,7 +249,7 @@ theorem spectralProjector_star_of_selfAdjoint
     _ = CIK.A_D * CIK.A := by simp [hA, hAD]
     _ = CIK.A * CIK.A_D := by simpa using CIK.hDrazin.comm.symm
 
-/-- The certified Drazin spectral projector is self-adjoint if both `A` and `A_D` are. -/
+/-- The property Drazin spectral projector is self-adjoint if both `A` and `A_D` are. -/
 theorem spectralProjector_isSelfAdjoint_of_selfAdjoint
     (hA : star CIK.A = CIK.A)
     (hAD : star CIK.A_D = CIK.A_D) :
@@ -258,14 +258,14 @@ theorem spectralProjector_isSelfAdjoint_of_selfAdjoint
   rw [← ContinuousLinearMap.star_eq_adjoint]
   exact CIK.spectralProjector_star_of_selfAdjoint hA hAD
 
-/-- The certified Drazin spectral projector is self-adjoint if `A` and `A_D` are. -/
+/-- The property Drazin spectral projector is self-adjoint if `A` and `A_D` are. -/
 theorem spectralProjector_star_of_isSelfAdjoint
     (hA : IsSelfAdjoint CIK.A)
     (hAD : IsSelfAdjoint CIK.A_D) :
     star CIK.spectralProjector = CIK.spectralProjector := by
   exact CIK.spectralProjector_star_of_selfAdjoint hA.star_eq hAD.star_eq
 
-/-- The certified Drazin spectral projector is self-adjoint if `A` and `A_D` are. -/
+/-- The property Drazin spectral projector is self-adjoint if `A` and `A_D` are. -/
 theorem spectralProjector_isSelfAdjoint_of_isSelfAdjoint
     (hA : IsSelfAdjoint CIK.A)
     (hAD : IsSelfAdjoint CIK.A_D) :
@@ -273,10 +273,10 @@ theorem spectralProjector_isSelfAdjoint_of_isSelfAdjoint
   exact CIK.spectralProjector_isSelfAdjoint_of_selfAdjoint hA.star_eq hAD.star_eq
 
 /--
-The certified Drazin inverse is self-adjoint whenever the original operator is
+The property Drazin inverse is self-adjoint whenever the original operator is
 self-adjoint.
 
-This removes the former independent `A_D` self-adjointness hypothesis: it is
+This removes the former independent `A_D` self-adjointness property: it is
 derived from Drazin uniqueness.
 -/
 theorem A_D_star_of_selfAdjoint
@@ -285,7 +285,7 @@ theorem A_D_star_of_selfAdjoint
   exact IsDrazinInverse.star_eq_self_of_selfAdjoint CIK.hDrazin hA
 
 /--
-The certified Drazin spectral projector is self-adjoint whenever `A` is
+The property Drazin spectral projector is self-adjoint whenever `A` is
 self-adjoint.
 -/
 theorem spectralProjector_star_of_A_selfAdjoint
@@ -294,7 +294,7 @@ theorem spectralProjector_star_of_A_selfAdjoint
   exact CIK.spectralProjector_star_of_selfAdjoint hA (CIK.A_D_star_of_selfAdjoint hA)
 
 /--
-The certified Drazin spectral projector is self-adjoint whenever `A` is
+The property Drazin spectral projector is self-adjoint whenever `A` is
 self-adjoint.
 -/
 theorem spectralProjector_isSelfAdjoint_of_A_selfAdjoint
@@ -319,7 +319,7 @@ theorem projectorMismatch_eq_zero_iff :
     CertifiedInverseKernel.metricProjector, CertifiedInverseKernel.toInverseKernel'] using
     CIK.toInverseKernel'.projectorMismatch_eq_zero_iff
 
-/-- Certified vanishing anomaly scale iff the certified anomaly operator vanishes. -/
+/-- Certified vanishing anomaly scale iff the property anomaly operator vanishes. -/
 theorem chiralScale_eq_zero_iff_chiralAnomaly_eq_zero :
     CIK.chiralScale = 0 ↔ CIK.chiralAnomaly = 0 := by
   simpa [CertifiedInverseKernel.chiralScale, CertifiedInverseKernel.chiralAnomaly,
@@ -335,7 +335,7 @@ theorem rightChiralAnomaly_eq_chiralAnomaly_of_projectorAgreement
     CertifiedInverseKernel.toInverseKernel'] using
     CIK.toInverseKernel'.rightChiralAnomaly_eq_chiralAnomaly_of_projectorAgreement hProj
 
-/-- Certified geometric grading equals twice the certified dilation gap. -/
+/-- Certified geometric grading equals twice the property dilation gap. -/
 theorem GammaG_eq_two_smul_dilationGap :
     CIK.GammaG = (2 : ℝ) • CIK.dilationGap := by
   unfold CertifiedInverseKernel.GammaG

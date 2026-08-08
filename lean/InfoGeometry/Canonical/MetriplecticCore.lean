@@ -83,7 +83,7 @@ theorem leibniz_H_H_eq_zero
 /--
 Second-law style decomposition:
 `[S,H]_L = {S,H} + ((S,H))`, where the Poisson part can be eliminated
-when `S` is a right-Casimir witness.
+when `S` is a right-Casimir property.
 -/
 theorem leibniz_entropy_H_decompose :
     M.leibniz M.Entropy M.Hamiltonian

@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/KleinianReturn.lean
 
-Non-orientable/projective return witness.
+Non-orientable/projective return property.
 
 This module does not prove that every `Cl(1,1)` model is a Klein bottle.  It
 records the boundary-gluing datum saying that the projective boundary returns
@@ -56,7 +56,7 @@ theorem observable_returns_to_commutant
 
 end ProjectiveTomitaReturn
 
-/-! ## 2. Interpretation certificate -/
+/-! ## 2. Interpretation property -/
 
 /--
 A non-orientable return interpretation surface.

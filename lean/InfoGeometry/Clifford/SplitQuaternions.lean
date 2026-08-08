@@ -7,7 +7,8 @@ import InfoGeometry.Quantum.TwinWaveCayleyDickson
 namespace InfoGeometry.Clifford.SplitQuaternions
 
 open InfoGeometry.Quantum.TwinWave
-open SplitOctonion
+open InfoGeometry.Clifford.SplitOctonionsDualProduct
+open InfoGeometry.Clifford.SplitOctonionsDualProduct.SplitOctonion
 open InfoGeometry.Clifford.Hestenes
 open InfoGeometry.Riemannian
 

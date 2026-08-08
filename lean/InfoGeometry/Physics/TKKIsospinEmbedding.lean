@@ -23,7 +23,7 @@ def TrialityProjector {R L : Type*} [CommRing R] [AddCommGroup L] [Module R L]
 /-- Concrete Zorn matrix type. -/
 abbrev ConcreteZorn := InfoGeometry.Canonical.ZornMatrix ℚ
 
-/-- Concrete triality witness on the canonical Zorn carrier: swap diagonal and spinor slots. -/
+/-- Concrete triality property on the canonical Zorn carrier: swap diagonal and spinor slots. -/
 def concreteTrialityProjector : ConcreteZorn →ₗ[ℚ] ConcreteZorn where
   toFun Z := { a := Z.b, b := Z.a, x := Z.y, y := Z.x }
   map_add' := by
@@ -33,16 +33,16 @@ def concreteTrialityProjector : ConcreteZorn →ₗ[ℚ] ConcreteZorn where
     intro c X
     ext <;> rfl
 
-/-- Positive-grade basis witness in the concrete Zorn lane. -/
+/-- Positive-grade basis property in the concrete Zorn lane. -/
 def ePlus : ConcreteZorn := { a := 1, b := 0, x := 0, y := 0 }
 
-/-- A concrete `g₁` spinor witness (up₀ = [0, e₁; 0, 0]). -/
+/-- A concrete `g₁` spinor property (up₀ = [0, e₁; 0, 0]). -/
 def up0 : ConcreteZorn := { a := 0, b := 0, x := ![1, 0, 0], y := 0 }
 
 /-- Commutator in the concrete Zorn algebra. -/
 def zornCommutator (X Y : ConcreteZorn) : ConcreteZorn := X * Y - Y * X
 
-/-- Concrete isospin-breaking witness: the triality projector does not commute
+/-- Concrete isospin-breaking property: the triality projector does not commute
 with the Zorn commutator on explicit generators. -/
 theorem triality_isospin_breaking :
     ∃ x y : ConcreteZorn,

@@ -17,7 +17,7 @@ namespace InfoGeometry.Canonical.DrazinExistenceBridge
 open Drazin
 
 /--
-Translate a singular-lane Drazin witness into the canonical Drazin predicate.
+Translate a singular-lane Drazin property into the canonical Drazin predicate.
 -/
 theorem canonical_isDrazinInverse_of_singular
     {R : Type*} [Ring R]
@@ -30,7 +30,7 @@ theorem canonical_isDrazinInverse_of_singular
   · exact h.pow_eq_pow_succ_mul.symm
 
 /--
-Translate a canonical Drazin witness into the singular-lane predicate.
+Translate a canonical Drazin property into the singular-lane predicate.
 -/
 theorem singular_isDrazinInverse_of_canonical
     {R : Type*} [Ring R]

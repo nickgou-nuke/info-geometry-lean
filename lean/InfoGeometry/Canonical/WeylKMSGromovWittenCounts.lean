@@ -32,7 +32,7 @@ This is the theorem-safe bridge:
 * KMS/Jaynes reproducing weights;
 * calibrated effective volume;
 * projective count coordinates;
-* witness-gated (Native Closure Mandated: Closure Debt) Fierz--Klein readout.
+* property-gated (Native Closure Mandated: Closure Debt) Fierz--Klein readout.
 
 The Gromov--Witten interpretation is explicitly calibration data.  The raw
 finite object is a real weighted zero-mode orbit count.

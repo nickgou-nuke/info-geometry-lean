@@ -1,0 +1,91 @@
+digraph CapstoneSpine {
+  rankdir=TB;
+  graph [fontsize=14, labelloc=t, label="Capstone Spine — v1.10.0-colimit-bridge-theorem
+June 2026 Session",
+         bgcolor="#FAFAFA"];
+  node [shape=box, style="rounded,filled", fontsize=9, penwidth=1.5];
+  edge [color="#555555", arrowsize=0.7, penwidth=1.2];
+
+  subgraph cluster_foundations {
+    label="Foundations"; style=filled; fillcolor="#E8EAF6"; color="#5C6BC0";
+    GUE2x2 [label="GUE 2×2
+Exponential Family", fillcolor="#C5CAE9"];
+    Riemann [label="Riemann Hypothesis
+IJIRT 172568", fillcolor="#C5CAE9"];
+  }
+
+  subgraph cluster_chiral {
+    label="Chiral Algebra"; style=filled; fillcolor="#E3F2FD"; color="#42A5F5";
+    ChiralGUE [label="Chiral GUE
+Wigner-Dyson", fillcolor="#BBDEFB"];
+  }
+
+  subgraph cluster_spacetime {
+    label="Spacetime Emergence"; style=filled; fillcolor="#E8F5E9"; color="#66BB6A";
+    Spacetime [label="Spacetime-GUE
+Isomorphism", fillcolor="#C8E6C9"];
+    Bures [label="Bures Metric
+Closed Cartography", fillcolor="#C8E6C9"];
+    TKK [label="TKK Closure
+Erlangen 2.0", fillcolor="#C8E6C9"];
+  }
+
+  subgraph cluster_bridges {
+    label="Bridges"; style=filled; fillcolor="#FFF3E0"; color="#FF9800";
+    Penrose [label="Penrose Spin Network
+Chiral Isomorphism", fillcolor="#FFE0B2"];
+    LQG [label="LQG Problems
+Chiral Resolution", fillcolor="#FFE0B2"];
+  }
+
+  subgraph cluster_motive {
+    label="Motive & Meta"; style=filled; fillcolor="#FCE4EC"; color="#E91E63";
+    Grothendieck [label="Grothendieck Motive
+GW Invariant", fillcolor="#F8BBD0"];
+    Cognitive [label="Cognitive Accretion
+Self-Referential", fillcolor="#F8BBD0"];
+  }
+
+  subgraph cluster_closure {
+    label="Empirical Closure"; style=filled; fillcolor="#EDE7F6"; color="#7E57C2";
+    Soloviev [label="Soloviev QPNM
+Chiral Cuntz", fillcolor="#D1C4E9"];
+    JaynesBridge [label="Jaynes-Lean
+Colimit Bridge", fillcolor="#D1C4E9"];
+    Poisson [label="Poisson→Gaussian
+GNS Colimit", fillcolor="#D1C4E9"];
+    JaynesPartition [label="Jaynes Finite
+Partition Colimit", fillcolor="#D1C4E9"];
+    JaynesSets [label="Jaynes Finite-Sets
+Colimit Bridge", fillcolor="#D1C4E9"];
+  }
+
+  # Edges — the logical dependency chain
+  GUE2x2 -> ChiralGUE;
+  Riemann -> ChiralGUE;
+  ChiralGUE -> Spacetime;
+  ChiralGUE -> TKK;
+  Spacetime -> Bures;
+  TKK -> Bures;
+  TKK -> Penrose;
+  ChiralGUE -> LQG;
+  Bures -> LQG;
+  Penrose -> Grothendieck;
+  LQG -> Grothendieck;
+  Bures -> Cognitive;
+  Grothendieck -> Cognitive;
+  Grothendieck -> Soloviev;
+  TKK -> Soloviev;
+  Soloviev -> JaynesBridge;
+  Cognitive -> JaynesBridge;
+  JaynesBridge -> Poisson;
+  JaynesBridge -> JaynesPartition;
+  JaynesBridge -> JaynesSets;
+  JaynesPartition -> JaynesSets;
+  Poisson -> JaynesSets;
+  Soloviev -> Poisson;
+
+  // Sockets — dashed
+  Soloviev -> Riemann [style=dashed, color="#999999", label="AFRODITE data"];
+  Poisson -> Riemann [style=dashed, color="#999999", label="empirical bridge"];
+}

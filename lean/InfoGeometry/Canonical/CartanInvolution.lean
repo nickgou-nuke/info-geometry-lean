@@ -15,16 +15,16 @@ open InfoGeometry.Clifford.DiracPauliGamma
 /-!
 # Quaternion Cartan Decomposition Witness
 
-This file records the finite matrix-side Cartan/involution witness for the
+This file records the finite matrix-side Cartan/involution property for the
 quaternion condensate lane.
 
 The intended reading is not a literal universal embedding theorem.  Instead,
-the explicit `4x4` matrices witness the compact / noncompact split induced by
+the explicit `4x4` matrices property the compact / noncompact split induced by
 the Cartan involution, and the associated finite projection layer is the
 matrix-side shadow of the `OP^3 = OP` decomposition story.
 
 The file only proves the quaternion basis relations and the finite matrix
-projection witness.  It does not prove a universal algebra equivalence
+projection property.  It does not prove a universal algebra equivalence
 `ℍ ≃ Cl(0,2)` and does not prove a full `Cl(1,3; ℂ)` embedding theorem.
 -/
 

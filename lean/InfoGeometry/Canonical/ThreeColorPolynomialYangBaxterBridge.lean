@@ -88,7 +88,7 @@ theorem colourR12_artin_relation {K : Type*} [Semiring K] :
     tripleSwap_artin_relation
   simpa [colourR12, colourR23, Matrix.permMatrix_mul, mul_assoc] using h
 
-theorem colourSwapR_polynomial_certificate {K : Type*} [CommRing K] :
+theorem colourSwapR_polynomial_property {K : Type*} [CommRing K] :
     matrixPolynomialEval (colourSwapPolynomial K) (colourSwapR (K := K)) = 0 := by
   calc
     matrixPolynomialEval (colourSwapPolynomial K) (colourSwapR (K := K))
@@ -103,7 +103,7 @@ noncomputable def colourSwapRDataQ : ThreeColorPolynomialRData ℚ where
     intro h
     have h0 := congrArg (fun p : Polynomial ℚ => p.eval 0) h
     simpa [colourSwapPolynomial] using h0
-  annihilates := colourSwapR_polynomial_certificate
+  annihilates := colourSwapR_polynomial_property
 
 theorem colourSwapR_artin_relation {K : Type*} [Semiring K] :
     colourR12 (K := K) * colourR23 (K := K) * colourR12 (K := K) =

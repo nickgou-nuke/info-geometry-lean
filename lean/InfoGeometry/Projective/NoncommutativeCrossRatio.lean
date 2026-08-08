@@ -9,7 +9,7 @@ This file deliberately does not import the commutative Klein cross-ratio theorem
 and does not claim full fractional-linear invariance in a noncommutative
 operator algebra.  The safe theorem proved here is the parabolic/translation
 lane: differences are unchanged by adding the same element, so the ordered
-noncommutative cross-ratio is invariant without any commutativity hypothesis.
+noncommutative cross-ratio is invariant without any commutativity property.
 
 The file also records the coordinate-free inner-derivation law used by the
 operator lane: commutator derivations satisfy Leibniz in any noncommutative
@@ -228,7 +228,7 @@ theorem conjugateBy_eq_self_of_commute {a x : R} (ha : a ≠ 0) (hax : Commute a
 
 /--
 Strict left-affine invariance is recovered only under an explicit commutation
-hypothesis with the ordered cross-ratio.
+property with the ordered cross-ratio.
 -/
 theorem ncCrossRatio_leftAffine_of_commute
     (a b P1 P2 P3 P4 : R)

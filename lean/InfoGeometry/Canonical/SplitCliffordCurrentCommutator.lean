@@ -333,7 +333,7 @@ theorem current_central_edge_correction_eq_zero_of_edge_occ_balance
       exact hterm a ha
 
 /--
-The "full `+m` shift inclusion on `W_N`" hypothesis is rigid: it forces
+The "full `+m` shift inclusion on `W_N`" property is rigid: it forces
 `m = 0`.
 -/
 theorem full_shift_membership_forces_zero_mode
@@ -373,7 +373,7 @@ theorem current_cutoff_commutator_eq_heisenberg_of_central_matched_and_full_shif
 /--
 Central branch closure from matched-window + edge-occupation balance.
 
-This removes the strong full-shift hypothesis and uses only:
+This removes the strong full-shift property and uses only:
 
 * `|m| ≤ N`;
 * matched cutoff membership for shifts `+m` and `-m` (bulk boundary vanishes);
@@ -393,7 +393,7 @@ theorem current_cutoff_commutator_eq_heisenberg_of_central_matched_and_edge_occ_
 
 /--
 For the concrete integer polarization `occ` and symmetric cutoff window, the
-edge-occupation balance hypothesis follows from `|m| ≤ N`.
+edge-occupation balance property follows from `|m| ≤ N`.
 -/
 theorem edge_occ_balance_of_natAbs_le
     (N : Nat) (m : Int) (hN : m.natAbs ≤ N) :
@@ -487,7 +487,7 @@ theorem matched_window_of_uniform_natAbs_margin
   exact matched_window_at_of_natAbs_sum_le N m a ha (hmargin a ha)
 
 /--
-Central commutator closure from a single uniform cutoff-margin hypothesis.
+Central commutator closure from a single uniform cutoff-margin property.
 
 If every `a ∈ W_N` satisfies `|a| + |m| ≤ N`, then the matched-window condition
 holds automatically; together with `|m| ≤ N`, this yields the finite central

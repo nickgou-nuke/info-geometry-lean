@@ -1,0 +1,3 @@
+session VarlamovKleinSpectral = HOL +
+  theories
+    VarlamovKleinSpectral

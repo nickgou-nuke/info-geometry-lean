@@ -395,7 +395,7 @@ namespace CelikKocakInfiniteHilbertCarrier
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
 
-/-- Construct the Hilbert carrier from a Hilbert basis witness. -/
+/-- Construct the Hilbert carrier from a Hilbert basis property. -/
 @[rep_depth operator]
 def ofHilbertBasis (b : HilbertBasis (List Bool) ℂ E) :
     CelikKocakInfiniteHilbertCarrier E :=
@@ -512,10 +512,10 @@ theorem cl11Rep_ι_zero_one_eq_structure_operator
   InfoGeometry.Clifford.Lift.cl11Rep_ι_zero_one (E := E)
 
 /--
-Finite-dimensional Cantor-Pauli witness over a real/doubled matrix carrier.
+Finite-dimensional Cantor-Pauli property over a real/doubled matrix carrier.
 
 The representation on endpoint functions agrees with the real Pauli tensor lane
-through an explicit witness.
+through an explicit property.
 -/
 theorem finite_cantor_pauli_generator_sq
     {n : ℕ} {Mat : Type*} [Ring Mat]
@@ -625,7 +625,7 @@ end CliffordToCARCalibration
 
 /--
 Calibration between repository Drazin/chiral arrows and the Cantor tilt/switch
-witness.
+property.
 
 This prevents identifying tilt/switch operators with `u_+`, `u_-`, or mirror
 operators without an explicit representation map.
@@ -677,7 +677,7 @@ def uMinus : Op :=
 def mirror : Op :=
   C.tiltSwitch.S C.mirrorIndex
 
-/-- Positive light-cone arrow is calibrated to a tilt witness by definition. -/
+/-- Positive light-cone arrow is calibrated to a tilt property by definition. -/
 @[rep_depth operator]
 theorem uPlus_calibrated :
     C.uPlus = C.tiltSwitch.T C.uPlusIndex :=
@@ -686,7 +686,7 @@ by
   | mk tiltSwitch uPlusIndex uMinusIndex mirrorIndex uMinusSide =>
       rfl
 
-/-- Negative light-cone arrow is calibrated to a tilt or switch witness by definition. -/
+/-- Negative light-cone arrow is calibrated to a tilt or switch property by definition. -/
 @[rep_depth operator]
 theorem uMinus_calibrated :
     C.uMinus = C.tiltSwitch.T C.uMinusIndex ∨
@@ -701,7 +701,7 @@ theorem uMinus_calibrated :
           right
           rfl
 
-/-- Mirror data is calibrated to a switch witness by definition. -/
+/-- Mirror data is calibrated to a switch property by definition. -/
 @[rep_depth operator]
 theorem mirror_calibrated :
     C.mirror = C.tiltSwitch.S C.mirrorIndex :=

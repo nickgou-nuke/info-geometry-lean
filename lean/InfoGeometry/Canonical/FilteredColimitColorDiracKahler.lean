@@ -9,7 +9,7 @@ namespace InfoGeometry.Canonical
 This file deliberately uses Mathlib linear maps rather than a custom
 "colimit" record.  The target `AInf` is a genuine cone target; when it is
 instantiated with a categorical colimit, `jointly_surjective` is the concrete
-representative hypothesis needed by the nilpotence transport theorem below.
+representative property needed by the nilpotence transport theorem below.
 -/
 
 section

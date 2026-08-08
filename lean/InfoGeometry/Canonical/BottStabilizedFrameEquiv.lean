@@ -189,19 +189,19 @@ theorem phase_axis_apply
   have h := congrArg (fun T : H₂E →L[ℝ] H₂F => T x) S.phase_axis
   simpa [ContinuousLinearMap.comp_apply] using h
 
-/-- Pull a stabilized scalar witness back to the base carrier. -/
+/-- Pull a stabilized scalar property back to the base carrier. -/
 @[rep_depth transport]
 noncomputable def pullbackStabilizedWitness
     (φ : H₂F →L[ℝ] ℝ) : H₂E →L[ℝ] ℝ :=
   φ.comp S.embed
 
-/-- Push a base scalar witness to the stabilized carrier through the readback projection. -/
+/-- Push a base scalar property to the stabilized carrier through the readback projection. -/
 @[rep_depth transport]
 noncomputable def stabilizedWitnessOfBase
     (φ : H₂E →L[ℝ] ℝ) : H₂F →L[ℝ] ℝ :=
   φ.comp S.project
 
-/-- Readout through a pushed-forward base witness agrees after stabilization. -/
+/-- Readout through a pushed-forward base property agrees after stabilization. -/
 @[rep_depth transport]
 theorem stabilizedWitnessOfBase_readout
     (φ : H₂E →L[ℝ] ℝ)
@@ -211,7 +211,7 @@ theorem stabilizedWitnessOfBase_readout
   simp [S.project_embed x]
 
 /--
-If the stabilized witness vanishes on stabilized source boundaries, its pullback
+If the stabilized property vanishes on stabilized source boundaries, its pullback
 vanishes on base source boundaries.
 -/
 @[rep_depth transport]
@@ -238,7 +238,7 @@ theorem pullbackStabilizedWitness_descends_on_base
     {x y : H₂E}
     (hxy : HomologyEquivalent (E := E) S.base.Dsrc x y) :
     φ (S.embed x) = φ (S.embed y) := by
-  exact witness_descends_to_homologyEquivalent (E := F) hφ
+  exact property_descends_to_homologyEquivalent (E := F) hφ
     (S.maps_source_homologyEquivalent hxy)
 
 end BottStabilizedHomologyFrame

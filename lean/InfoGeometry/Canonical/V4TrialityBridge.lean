@@ -26,7 +26,7 @@ The V₄ invariant projectors P⁺, P⁻ from the Clifford side are the
 images of the triality-permuted spinor representations under the
 V₄ → W(D₄) inclusion.
 
-## SymPy witness
+## SymPy property
 
 `tools/sympy/triality_v4_d4_bridge.py` verifies:
 - D₄ Cartan matrix [[2,-1,0,0],[-1,2,-1,-1],[0,-1,2,0],[0,-1,0,2]]

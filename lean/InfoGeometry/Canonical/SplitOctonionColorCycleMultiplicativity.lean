@@ -7,7 +7,7 @@ namespace InfoGeometry.Canonical
 
 This file packages the already constructed rational linear equivalences.  The
 carrier is the rational coordinate model, so this is deliberately a
-non-associative algebra-automorphism witness rather than a Mathlib `AlgEquiv`.
+non-associative algebra-automorphism property rather than a Mathlib `AlgEquiv`.
 It does not claim full `D₄` triality or a `G₂` Lie-group construction.
 -/
 

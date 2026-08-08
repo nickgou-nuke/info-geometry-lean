@@ -13,7 +13,7 @@ repository's KMS readout socket.
 
 It does not prove analytic strip continuation from bounded algebra alone.  The
 KMS boundary law, state invariance, and support-stability preservation are
-explicit witness fields.
+explicit property fields.
 -/
 
 namespace InfoGeometry.Canonical.KMSConditionBridge
@@ -82,7 +82,7 @@ structure BoundedKMSConditionBridge where
   /--
   Preservation of the Drazin regular-support commutation lane.
 
-  This is witness data: it does not follow from `flow_eq_exp_Ksur` unless the
+  This is property data: it does not follow from `flow_eq_exp_Ksur` unless the
   observable action is also known to preserve the commutant of the support
   projector.
   -/

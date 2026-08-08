@@ -32,7 +32,7 @@ namespace InfoGeometry.Arithmetic.PrimeCantorBerryKeatingOperator
 
 open InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
 
-/-- A finite certified prime cutoff. -/
+/-- A finite property prime cutoff. -/
 abbrev PrimeCutoff := PrimeCantorZetaDiracOperator.PrimeCutoff
 
 /-- Prime mode inside a finite cutoff. -/

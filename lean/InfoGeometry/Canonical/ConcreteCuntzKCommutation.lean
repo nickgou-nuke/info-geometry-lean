@@ -21,7 +21,7 @@ because S_left acts on the base (Cantor boundary) and K acts on the fiber
 The operator-level theorem below isolates the remaining concrete construction:
 once the actual Cuntz left branch is supplied as a continuous doubled operator
 with identical action on both real sheets, `concrete_S_left_KLinear` proves the
-`KLinear` hypothesis needed by `e2_isSelfAdjoint_of_left_KLinear`.
+`KLinear` property needed by `e2_isSelfAdjoint_of_left_KLinear`.
 -/
 
 section ConcreteCuntzKCommutation

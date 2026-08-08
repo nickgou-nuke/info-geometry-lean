@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.PrimeHurwitzLimit
 # Lee--Yang root limits
 
 The closed-set part of the Lee--Yang/Hurwitz passage does not require an
-analytic witness structure.  Once roots of finite approximants are supplied
+analytic property structure.  Once roots of finite approximants are supplied
 and converge, closedness of the unit circle puts the limiting root on the
 circle.  The genuinely analytic Hurwitz step is the preceding existence of
 such nearby roots.

@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.G2HolonomyGaugeConnections
 namespace InfoGeometry.Canonical
 
 /-!
-# Finite curvature witness for split-`G₂` transport
+# Finite curvature property for split-`G₂` transport
 
 The calibration and connection layers are independent finite structures.  This
 file packages the discrete flatness predicate for a connection: every chosen

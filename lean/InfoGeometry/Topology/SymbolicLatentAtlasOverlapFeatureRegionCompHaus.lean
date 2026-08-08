@@ -6,7 +6,7 @@ import Mathlib.Topology.Category.CompHaus.Basic
 
 The overlap feature-region owner already proves that the source and target
 subtypes are homeomorphic.  This file packages that homeomorphism in
-`CompHaus` under an explicit compactness witness for the source region.
+`CompHaus` under an explicit compactness property for the source region.
 -/
 
 noncomputable section

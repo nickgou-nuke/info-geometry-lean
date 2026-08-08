@@ -90,7 +90,7 @@ theorem criticalNormalProjector_eq_zero_of_complex_fixed
 
 /--
 A native completed-ξ anchor. The fixed-locus equation is part of the type,
-so downstream theorems consume an owner-level witness rather than a separate
+so downstream theorems consume an owner-level property rather than a separate
 evidence field.
 -/
 abbrev CompletedXiAnchor :=

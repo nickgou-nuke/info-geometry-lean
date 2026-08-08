@@ -6,7 +6,7 @@ import Mathlib.Topology.ContinuousMap.Basic
 
 The finite coupling space carries its product topology.  Its row and column
 marginals are continuous finite-sum readouts.  This is the topological layer
-needed before discussing any parameterized transport certificate; it does not
+needed before discussing any parameterized transport property; it does not
 assert existence or convergence of an optimizer.
 -/
 

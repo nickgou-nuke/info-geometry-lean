@@ -1,0 +1,8 @@
+[
+  {
+    "check": "artin_yang_baxter",
+    "tool": "sympy_b3_exact.py",
+    "verified": true,
+    "evidence": "LHS and RHS are exact algebraic equivalents over Q(q)"
+  }
+]

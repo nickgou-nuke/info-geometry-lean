@@ -25,7 +25,7 @@ Concrete N=2 instance of the Lee-Yang/RH bridge.
 This module provides:
 1. The concrete N=2 prime chain with explicit primes {2, 3}
 2. Explicit partition polynomial for N=2
-3. Concrete Lee-Yang witness structure for N=2
+3. Concrete Lee-Yang property structure for N=2
 4. Explicit connection to the RH bridge via Cayley transform
 -/
 
@@ -156,7 +156,7 @@ theorem leeYangStabilityN2 :
       nlinarith
   exact hnorm
 
-/-- Concrete instance of the Lee-Yang stability witness for N=2. -/
+/-- Concrete instance of the Lee-Yang stability property for N=2. -/
 noncomputable def leeYangStabilityWitnessN2 : LeeYangStabilityWitness (n := 2) :=
   { chain := (finitePrimeChainDataN2.toPrimeFerromagneticChain (1 : ℝ) (by norm_num)),
     partitionPolynomial := partitionPolyN2,
@@ -185,7 +185,7 @@ theorem partitionPolyN2_root_re_ne_neg_one
 /--
 Every root of the concrete two-site partition polynomial maps to the critical
 line under the Cayley temperature coordinate.  The theorem consumes neither a
-Lee--Yang witness structure nor an externally supplied root-location premise.
+Lee--Yang property structure nor an externally supplied root-location premise.
 -/
 theorem partitionPolyN2_root_mapsToCriticalLine
     {z : ℂ}

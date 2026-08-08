@@ -30,11 +30,11 @@ the coefficient antisymmetry of Cartan's first structure equation, the
 coordinate-basis reduction of Cartan's first structure equation, the
 zero-contorsion spin-connection reduction, contorsion-from-torsion zero
 reduction, Clifford-soldering commutator reduction, the flat quaternion torsion
-identities, and a finite noncommuting-shift witness.
+identities, and a finite noncommuting-shift property.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 The two-form antisymmetry theorem assumes an explicitly named antisymmetry
-witness for `de`.
+property for `de`.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 This file does not formalize smooth manifolds, exterior bundles, a full
@@ -298,7 +298,7 @@ theorem quaternionTorsionTwoFormCoeff_flat (e : QuaternionOneForm) (mu nu : Spac
     quaternionTorsionTwoFormCoeff (fun _ _ => 0) (fun _ => 0) e mu nu = 0 := by
   ext <;> simp [quaternionTorsionTwoFormCoeff]
 
-/-! ## 12.4 Finite noncommutative shift witness -/
+/-! ## 12.4 Finite noncommutative shift property -/
 
 /-- A two-site left shift matrix. -/
 def finiteShiftL : Matrix (Fin 2) (Fin 2) ℂ :=

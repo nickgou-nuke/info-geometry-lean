@@ -1,6 +1,8 @@
 import Mathlib.Tactic
 open Matrix
 
+namespace KreinSouriau
+
 /- THE KREIN-SOURIAU-FISHER-METRIPLECTIC COMPLEX
    
    Four layers formalized:
@@ -77,3 +79,5 @@ def metriplectic (H S F : ℝ → ℝ) (x : ℝ) : ℝ :=
   poisson_bracket F H x + diss_bracket F S x
 
 end
+
+end KreinSouriau

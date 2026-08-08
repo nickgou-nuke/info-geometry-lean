@@ -248,7 +248,7 @@ end RealFieldZeroFree
 
 /--
 A proof-carrying field coordinate whose zero boundary is the Riemann critical
-line. This is not a witness for analytic convergence; it is only the algebraic
+line. This is not a property for analytic convergence; it is only the algebraic
 boundary map.
 -/
 @[rep_depth operator]

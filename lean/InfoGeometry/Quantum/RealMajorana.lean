@@ -35,7 +35,7 @@ noncomputable def anticommutator (A B : EndS (S := S)) : EndS (S := S) :=
   A.comp B + B.comp A
 
 /--
-Constructive CAR witness for a real Majorana field `γ` with pairing `g`.
+Constructive CAR property for a real Majorana field `γ` with pairing `g`.
 -/
 def MajoranaCARWitness (g : S → S → ℝ) (γ : S → EndS (S := S)) : Prop :=
   ∀ u v : S,

@@ -64,7 +64,7 @@ theorem anomaly_eq_readout_variation
     A.anomaly x = A.readout (A.symmetryVariation x) :=
   rfl
 
-/-- The stored nonvanishing hypothesis gives a nonzero anomaly. -/
+/-- The stored nonvanishing property gives a nonzero anomaly. -/
 theorem exists_nonzero_anomaly :
     ∃ x : Op, A.anomaly x ≠ A.anomaly 0 := by
   simpa [AnomalyReadout.anomaly] using A.nonvanishing

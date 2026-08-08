@@ -8,7 +8,7 @@ This module proves the algebraic rescaling statement behind a proposed
 canonical phase-volume calibration.  It also reuses the existing finite Weyl
 pair and finite-dimensional obstruction to exact CCR.
 
-The rescaling theorem transports an explicit raw-commutator hypothesis through
+The rescaling theorem transports an explicit raw-commutator property through
 an explicit scalar calibration.
 -/
 
@@ -50,7 +50,7 @@ theorem cramerRaoPhaseActionC_ne_zero (cr : CramerRaoQuantumInequality) :
   exact_mod_cast ne_of_gt (cramerRaoPhaseAction_pos cr)
 
 /-- Explicitly calibrated scalar rescaling of a supplied raw commutator.  This
-is a conditional algebraic theorem, not an existence certificate for CCR. -/
+is a conditional algebraic theorem, not an existence property for CCR. -/
 theorem rescaled_canonical_commutator
     {A : Type*} [Ring A] [Algebra ℂ A]
     (cr : CramerRaoQuantumInequality)

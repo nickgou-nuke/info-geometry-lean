@@ -13,7 +13,7 @@ The generic owner algebraic theorem is in
 `InfoGeometry.Analysis.AxiomFreeGNS.branch_weight_one_half`. This file records
 the same transparent calculation on the concrete Cuntz range projections.
 
-No global postulate declarations are introduced here.
+No global postulat3 declarations are introduced here.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 `branch_weight_one_half_on_cuntz_projections` is closed by instantiating the

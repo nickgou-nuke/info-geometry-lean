@@ -8,7 +8,7 @@ import InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
 Finite supergraded readback for prime-bit arithmetic.
 
 This file does not prove an infinite zeta theorem, analytic continuation, the
-Riemann hypothesis, or a full DG-superalgebra of primes.
+Riemann property, or a full DG-superalgebra of primes.
 
 It exposes the existing finite Möbius/Witten arithmetic layer using
 superalgebra terminology:

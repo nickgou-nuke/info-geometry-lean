@@ -15,7 +15,7 @@ picture:
 * `Q² = H`;
 * therefore `H` is even: it commutes with `Γ`.
 
-The Hopf/CFT/BRST/Schroedinger/RH interpretations are represented as witness
+The Hopf/CFT/BRST/Schroedinger/RH interpretations are represented as property
 gates.  No RH theorem, zero-location theorem, or spectral-density theorem is
 asserted here.
 -/

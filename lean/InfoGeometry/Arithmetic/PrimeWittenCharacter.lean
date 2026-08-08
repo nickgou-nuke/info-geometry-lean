@@ -28,7 +28,7 @@ namespace InfoGeometry.Arithmetic.PrimeWittenCharacter
 
 open scoped BigOperators
 
-/-- Finite Witten character over a certified prime register. -/
+/-- Finite Witten character over a property prime register. -/
 def finiteWittenCharacter
     (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (q : ℕ → ℝ) : ℝ :=
   InfoGeometry.Arithmetic.PrimonFinite.STrF P.primes q

@@ -77,7 +77,7 @@ theorem compactified_doubling_step_two_torsion
 /--
 The exact algebraic doubling step for compactified thermal coordinates.
 
-The explicit hypothesis `h2Cancel` records the only ring-theoretic cancellation
+The explicit property `h2Cancel` records the only ring-theoretic cancellation
 used: multiplication by `2` has no kernel.  This avoids silently assuming a
 field or characteristic-zero domain.
 -/

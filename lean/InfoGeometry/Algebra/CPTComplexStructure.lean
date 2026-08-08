@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.Cl11Fermions
 
 /-!
@@ -56,12 +57,20 @@ structure Cl11Atom (K : Type*) [Ring K] where
   r5_sq : r5 * r5 = -1
   anticommute : r0 * r5 = -(r5 * r0)
 
+/-- Native Mathlib instantiation of the Cl(1,1) atom using 2x2 real matrices. -/
+def cl11MatrixAtom : Cl11Atom (Matrix (Fin 2) (Fin 2) ℝ) where
+  r0 := !![0, 1; 1, 0]
+  r5 := !![0, -1; 1, 0]
+  r0_sq := by ext i j; fin_cases i <;> fin_cases j <;> norm_num
+  r5_sq := by ext i j; fin_cases i <;> fin_cases j <;> norm_num
+  anticommute := by ext i j; fin_cases i <;> fin_cases j <;> norm_num
+
 variable {K : Type*} [Ring K] [Algebra ℝ K] (atom : Cl11Atom K)
 
 /-- The internal complex structure J = r5. -/
 abbrev ComplexStructure : K := atom.r5
 
-/-- J² = -1: the complex structure axiom. -/
+/-- J² = -1: the complex structure ax!om. -/
 theorem complex_structure_sq_neg_one :
     ComplexStructure atom * ComplexStructure atom = -1 :=
   atom.r5_sq

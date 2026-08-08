@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/TopologicalSuperconductorEdge.lean
 
-Topological-superconductor edge witness.
+Topological-superconductor edge property.
 
 This module separates ordinary Andreev electron/hole closure from the stronger
 claim that a superconducting boundary hosts Majorana-type edge modes.
@@ -20,10 +20,10 @@ namespace InfoGeometry.OperatorAlgebra.TopologicalSuperconductorEdge
 open InfoGeometry.OperatorAlgebra.AndreevBoundary
 open InfoGeometry.OperatorAlgebra.ClosureInvolution
 
-/-! ## 1. BdG edge-mode witness -/
+/-! ## 1. BdG edge-mode property -/
 
 /--
-BdG edge-mode witness.
+BdG edge-mode property.
 
 This is separate from ordinary Andreev reflection. It records the extra data
 usually needed to call a boundary mode Majorana-like in a topological

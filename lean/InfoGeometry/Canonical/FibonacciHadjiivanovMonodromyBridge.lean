@@ -111,7 +111,7 @@ finite matrix, and that matrix is identified with the Hadjiivanov logarithmic
 monodromy matrix, then the direct-limit class has the Hadjiivanov readout.
 
 The theorem deliberately keeps the analytic identification
-`R * B * R = hadjiivanovMonodromy weight` as an explicit hypothesis.  Proving
+`R * B * R = hadjiivanovMonodromy weight` as an explicit property.  Proving
 that equality from parafermion conformal blocks is the remaining paper-level
 owner debt, not something this transport lemma should fake.
 -/

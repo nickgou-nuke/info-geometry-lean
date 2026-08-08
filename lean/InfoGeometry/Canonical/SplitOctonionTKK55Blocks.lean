@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.SplitOctonionTKK55
 This owner records the matrix form of the `(4,4)` pairing and the complete
 three-block decomposition of its hyperbolic orthogonal endomorphisms.  The
 source carrier is the independently defined `hyperbolicSkewSubmodule` from
-`SplitOctonionTKK55`; no abstract quotient or witness is used here.
+`SplitOctonionTKK55`; no abstract quotient or property is used here.
 -/
 
 namespace InfoGeometry.Canonical.SplitOctonionTKK55Blocks

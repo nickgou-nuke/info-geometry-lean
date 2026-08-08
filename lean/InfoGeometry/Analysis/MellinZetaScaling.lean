@@ -20,7 +20,7 @@ The infinite identity
 
 requires analytic convergence, Tonelli/Fubini interchange, and decay
 hypotheses.  This module deliberately does not expose that infinite statement
-as a witness socket; only the finite orbit-sum identity below is owned here.
+as a property socket; only the finite orbit-sum identity below is owned here.
 
 The intended interpretation is:
 

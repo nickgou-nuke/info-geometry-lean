@@ -1,0 +1,12 @@
+R = frac(QQ[w,Z,phi,scale,g]);
+rho = w/Z;
+assert(Z*rho - w == 0);
+assert(sub(phi^2 - scale, {scale => phi^2}) == 0);
+metricComponent = scale*g;
+assert(metricComponent == scale*g);
+S = QQ[q,dq, WeylAlgebra => {q=>dq}];
+I = ideal(q*dq - dq*q - 1);
+assert(numgens I == 1);
+edges = {"has_leaflet","tangent_reversible_flow","parameterizes_scale_orthogonal_to_leaves","normalizes_by_partition_function","generates_orthogonal_entropy_transport"};
+assert(#edges == 5);
+print {partitionRescale=>0, dilatonSquareWeylScale=>0, dmoduleCCRGenerators=>numgens I, graphEdges=>#edges};

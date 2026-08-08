@@ -1,0 +1,14 @@
+R = QQ[ex,ey,u,z,lx,ly];
+modular = u - 1 - (lx-ly);
+expBregman = ex - ey - ey*(lx-ly);
+coordinateIdeal = ideal(ex - ey*u);
+assert(sub(expBregman - ey*modular, {ex => ey*u}) == 0);
+burg = z - (lx-ly) - 1;
+assert(burg - modular == z - u);
+assert(sub(burg - modular, {z => u}) == 0);
+S = QQ[q,dq, WeylAlgebra => {q=>dq}];
+I = ideal(q*dq - dq*q - 1);
+assert(numgens I == 1);
+edges = {"qft_modular_to_itakura_saito","bregman_coordinate_isomorphism","stabilizes_krein_entropy"};
+assert(#edges == 3);
+print {expBregmanFactor=>0, burgCoordinate=>0, dmoduleCCRGenerators=>numgens I, edges=>#edges};

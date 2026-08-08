@@ -25,7 +25,7 @@ None.
 #### BUCKET 3: OPEN CLOSURE DEBT
 
 * Curved tetrad-derived spin connection.
-* Curved tetrad postulate for arbitrary coframes.
+* Curved tetrad postulat3 for arbitrary coframes.
 * Global spinor-bundle/tangent-bundle equivalence.
 * A nonzero creator leg with full CAR/Fock dynamics identified with curved
   soldering data.

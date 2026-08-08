@@ -35,7 +35,7 @@ variable {E : Type}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
-Drazin / dilation / anomaly witness:
+Drazin / dilation / anomaly property:
 the owner-level bracket identity is exactly the `χ_R - χ_L` corridor.
 -/
 theorem drazin_dilation_anomaly_corridor
@@ -47,8 +47,8 @@ theorem drazin_dilation_anomaly_corridor
   simpa using K.drazinProjector_commutator_geometricCartanGenerator_eq_sub_anomalies
 
 /--
-Chiral anomaly gauge witness:
-the projector commutator is skew-adjoint when the certified inverse-kernel
+Chiral anomaly gauge property:
+the projector commutator is skew-adjoint when the property inverse-kernel
 projectors are self-adjoint.
 -/
 theorem chiral_anomaly_is_skew_adjoint
@@ -91,7 +91,7 @@ theorem anomaly_owner_packet
 Constructive de-dup packet for the projector/noncommutativity corridor.
 
 This theorem replaces repeated explicit wing hypotheses by a single canopy
-package witness and exposes the canonical corridor packet surfaces.
+package property and exposes the canonical corridor packet surfaces.
 -/
 theorem projector_noncommutativity_closure_packet
     (CCI : CertifiedConformalInference E)

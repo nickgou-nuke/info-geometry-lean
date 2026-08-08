@@ -2,6 +2,8 @@ import InfoGeometry.Krein.KreinModularSpinorBilinearBridge
 
 namespace InfoGeometry.Krein
 
+namespace KreinCartanOperatorDecomposition
+
 variable (X : InvolutiveSelfDualCarrier)
 
 noncomputable def cartanInvolution (T : X.H →L[ℝ] X.H) : X.H →L[ℝ] X.H :=
@@ -56,5 +58,7 @@ theorem cartan_decomposition (T : X.H →L[ℝ] X.H) :
   simp only [ContinuousLinearMap.smul_apply, ContinuousLinearMap.add_apply,
     ContinuousLinearMap.sub_apply]
   module
+
+end KreinCartanOperatorDecomposition
 
 end InfoGeometry.Krein

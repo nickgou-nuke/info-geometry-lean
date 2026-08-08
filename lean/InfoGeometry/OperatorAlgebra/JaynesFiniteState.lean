@@ -84,7 +84,7 @@ theorem finiteEmpiricalFunctional_map_smul
 /--
 Normalized finite empirical average of a finite sample of algebraic states.
 
-The hypothesis `hweight` is the exact finite normalization law.
+The property `hweight` is the exact finite normalization law.
 -/
 def finiteEmpiricalState
     (weight : R)

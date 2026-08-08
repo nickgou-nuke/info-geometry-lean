@@ -15,7 +15,7 @@ centrality field of `VerifiedCasimir`.
 The stationarity theorem is conditional on an explicit `VerifiedCasimir`.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
-No independent analytic construction of the modular flow or Casimir witness is
+No independent analytic construction of the modular flow or Casimir property is
 claimed here.
 -/
 

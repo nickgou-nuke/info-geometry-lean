@@ -2,11 +2,11 @@ import InfoGeometry.Canonical.SplitOctonionColorS3Automorphisms
 import InfoGeometry.Canonical.SplitOctonionCanonicalThreeForm
 
 /-!
-# Native cyclic colour automorphism witness
+# Native cyclic colour automorphism property
 
 The repository already owns the native order-three colour cycle.  This file
 packages its verified properties in one small structure.  The result is a
-finite rational witness preserving multiplication, the coordinate quadratic
+finite rational property preserving multiplication, the coordinate quadratic
 form, and the canonical trilinear form.  It is not a construction of the
 Lie group `G₂`, a `Spin (4,4)` representation, or a holonomy theorem.
 -/

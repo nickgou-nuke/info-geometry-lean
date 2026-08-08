@@ -1,0 +1,13 @@
+R = QQ[z,l,x];
+itakura = z - l - 1;
+modular = z - x - 1;
+assert(sub(itakura - modular, {l => x}) == 0);
+S = QQ[e,x];
+modularSymbol = e - 1 - x;
+assert(modularSymbol == e - 1 - x);
+W = QQ[q, dq, WeylAlgebra => {q=>dq}];
+I = ideal(q*dq - dq*q - 1);
+assert(numgens I == 1);
+edges = {"exp_coordinate_transform","bregman_dual","stabilizes_modular_flow"};
+assert(#edges == 3);
+print {coordinateDifference=>0, modularSymbol=>modularSymbol, dmoduleCCRGenerators=>numgens I, edges=>#edges};

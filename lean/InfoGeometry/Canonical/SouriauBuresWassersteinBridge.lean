@@ -59,7 +59,7 @@ theorem buresWasserstein_nonneg (sys : BuresWassersteinStructure n) (ρ₁ ρ₂
 /-- Normalized operator trace pairing.
 
 This is defined for arbitrary finite matrix observables; no commutativity or
-diagonalization hypothesis is part of the carrier.  It is a scalar readout of
+diagonalization property is part of the carrier.  It is a scalar readout of
 the noncommutative product, not the quantum root fidelity.
 -/
 noncomputable def normalizedTracePairing (rho1 rho2 : Matrix (Fin n) (Fin n) ℝ) : ℝ :=

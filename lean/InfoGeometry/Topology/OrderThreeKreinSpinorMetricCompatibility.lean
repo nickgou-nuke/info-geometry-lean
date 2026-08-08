@@ -109,7 +109,7 @@ theorem conjugatedPositiveKernel_action_invariant (x y : X) :
     _ = conjugatedPositiveKernel D x y := by
       rfl
 
-/-- The Krein adjoint is the correct conjugated-product witness. -/
+/-- The Krein adjoint is the correct conjugated-product property. -/
 theorem transport_pairing_via_kreinAdjoint (u v : H) :
     KreinSpace.kreinInner (D.transport u) v =
       KreinSpace.kreinInner u (KreinSpace.kreinAdjoint D.transport v) := by

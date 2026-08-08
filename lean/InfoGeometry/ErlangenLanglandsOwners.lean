@@ -17,7 +17,7 @@ Concrete constructive owner pipeline for the Erlangen/Langlands lane.
 
 The theorem below composes:
 
-1. a supplied projected automorphic L-witness, then arithmetic witnessing
+1. a supplied projected automorphic L-property, then arithmetic witnessing
    of Euler/product + completed functional-equation data,
 2. a supplied Langlands–Sugawara bridge, yielding hidden-memory calibrated
    completion data,
@@ -25,7 +25,7 @@ The theorem below composes:
    transport statements.
 
 This keeps each step explicit: every duality claim is produced by a supplied
-witness plus an owner-target constructor, not by hidden assumptions.
+property plus an owner-target constructor, not by hidden assumptions.
 -/
 abbrev constructRealisticErlangenLanglandsOwnerChainTarget
     {Bulk Boundary : Type*} [AddCommGroup Bulk] [Module ℝ Bulk]

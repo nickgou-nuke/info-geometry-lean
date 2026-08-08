@@ -69,7 +69,7 @@ lemma trace_affine_combo (A B : RealPauliOp) (p : ℝ) :
 /-- Mapping operators into the bounded affine space (Poincaré/Bloch geometry). -/
 def to_density (X : RealPauliOp) (c : ℝ) : RealPauliOp := smul c X
 
-/-- Explicit witness guaranteeing projection to Trace = 1. -/
+/-- Explicit property guaranteeing projection to Trace = 1. -/
 def NormalizedTrace (X : RealPauliOp) (c : ℝ) : Prop :=
   c * trace X = 1
 

@@ -38,15 +38,15 @@ theorem of_idempotent {p : R} (hp : p * p = p) :
   · exact hppp
   · simpa [pow_two] using hppp
 
-/-- Commutation law for a Drazin inverse witness. -/
+/-- Commutation law for a Drazin inverse property. -/
 @[rep_depth krein]
 theorem comm (h : IsDrazinInverse a b k) : a * b = b * a := h.1
 
-/-- Idempotent law for a Drazin inverse witness. -/
+/-- Idempotent law for a Drazin inverse property. -/
 @[rep_depth krein]
 theorem idempotent (h : IsDrazinInverse a b k) : b * a * b = b := h.2.1
 
-/-- Power law for a Drazin inverse witness. -/
+/-- Power law for a Drazin inverse property. -/
 @[rep_depth krein]
 theorem power (h : IsDrazinInverse a b k) : a^(k + 1) * b = a^k := h.2.2
 
@@ -238,14 +238,14 @@ theorem fittingNilpotentPart_pow_succ_eq_zero (h : IsDrazinInverse a b k) :
     _ = a^(k + 1) * complementaryProjection a b := by rw [hQpow]
     _ = 0 := hleft
 
-/-- Fixed-index uniqueness of the canonical Drazin inverse witness. -/
+/-- Fixed-index uniqueness of the canonical Drazin inverse property. -/
 @[rep_depth krein]
 theorem unique (hB : IsDrazinInverse a b k) (hC : IsDrazinInverse a c k) :
     b = c := by
   exact InfoGeometry.Singular.Drazin.Drazin_unique (toSingular hB) (toSingular hC)
 
 /--
-Index-independent uniqueness of the canonical Drazin inverse witness.
+Index-independent uniqueness of the canonical Drazin inverse property.
 -/
 @[rep_depth krein]
 theorem unique_of_indices {ℓ : ℕ}
@@ -317,7 +317,7 @@ If the base element is self-adjoint, the Drazin spectral projector `a*b` is a
 star projection.
 
 The self-adjointness of `b` is derived from the Drazin equations and uniqueness;
-it is not a separate hypothesis.
+it is not a separate property.
 -/
 @[rep_depth krein]
 theorem projection_isStarProjection_of_selfAdjoint
@@ -498,7 +498,7 @@ structure DrazinFittingDecomposition (a : R) where
 Construct a Drazin inverse from explicit Fitting block data.
 
 This theorem is the named target for the continuous/submodule Fitting
-construction. It contains no certificate shortcut: the proof reduces the block
+construction. It contains no property shortcut: the proof reduces the block
 data to the root algebraic theorem `of_core_nilpotent_split`.
 -/
 @[rep_depth krein]

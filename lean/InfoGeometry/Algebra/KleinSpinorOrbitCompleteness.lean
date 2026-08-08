@@ -5,7 +5,7 @@ import Mathlib.Tactic
 /-!
 # Orbit completeness: every non-zero Cs² spinor reaches (1,0) or (E,0) under SL(2,Cs)
 
-This file states the orbit completeness theorem. The SymPy witness at
+This file states the orbit completeness theorem. The SymPy property at
 `tools/sympy/orbit_completeness.py` provides the constructive verification.
 
 The proof strategy uses the E/Ē decomposition `Cs ≅ ℚ·E ⊕ ℚ·Ē` under which

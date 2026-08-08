@@ -1,0 +1,250 @@
+\documentclass[aps,prl,twocolumn,superscriptaddress,amsmath,amssymb]{revtex4-2}
+
+\usepackage{graphicx}
+\usepackage{dcolumn}
+\usepackage{bm}
+\usepackage{hyperref}
+\usepackage{physics}
+
+\begin{document}
+
+\preprint{APS/123-QED}
+
+\title{A KAN-Jones Representation Framework for Non-Hermitian LNOI Emulation of Braid-Phase Primitives}
+
+\author{Goutev}
+\email{author@institute.edu}
+\affiliation{Independent Research Program in Information Geometry and Topological Photonics}
+
+\date{\today}
+
+\begin{abstract}
+Topological quantum computation represents logical operations through exchange transformations acting on a protected degenerate subspace. This work presents a room-temperature photonic representation layer for selected finite braid-phase primitives using non-Hermitian integrated optics on thin-film lithium niobate on insulator (LNOI).
+
+Rather than relying on classical analogies, this framework identifies Jones calculus and non-Hermitian transfer matrices as a faithful physical representation of a pre-verified, formal algebraic stack. By mapping an underlying Clifford-Majorana group structure onto a restricted KAN factorization, we show that standard optical operations realize nontrivial subrepresentations of braid-phase algebras. The compact factor is mapped onto Mach-Zehnder rotations, the hyperbolic factor onto balanced dichroic gain/loss, and the nilpotent factor onto an asymmetric shear modeling an exceptional-point normal form.
+
+We provide the exact hardware dictionary, trace constraints, and nonlinear calibration conditions required to implement these primitives physically, backed by formal mechanical verification of the core algebraic identities.
+\end{abstract}
+
+\maketitle
+
+\section{1. Introduction}
+
+Non-Abelian exchange offers a geometric route to quantum information processing: operations are represented by transformations associated with particle exchange rather than by purely local dynamical phases. In topological quantum-computing proposals, such exchanges act within a protected degenerate subspace. Majorana and parafermionic platforms are prominent examples, but they typically require cryogenic operation and stringent material constraints.
+
+Integrated photonics provides a different route. It does not naturally supply intrinsic quasiparticle braiding, but it can emulate selected finite operator algebras using controllable linear and nonlinear optical elements. The starting point of this work is not classical polarization optics, but a formally verified finite topological-algebraic stack involving Clifford generators, Majorana exchange symmetries, Artin braid relations, KAN transfer factors, determinant-one scattering constraints, and exceptional-point Jordan collapse. The Jones-calculus and LNOI interpretation is then identified as a physical representation of this algebra, revealing that standard polarization optics realizes a nontrivial subrepresentation of the same spinor and braid-phase structure.
+
+The Jones basis is written in terms of right- and left-circular polarization states,
+\begin{equation}
+|R\rangle=\frac{1}{\sqrt{2}}
+\begin{pmatrix}
+1\\
+i
+\end{pmatrix},
+\qquad
+|L\rangle=\frac{1}{\sqrt{2}}
+\begin{pmatrix}
+1\\
+-i
+\end{pmatrix}.
+\end{equation}
+The horizontal state is the equatorial superposition
+\begin{equation}
+|H\rangle=\frac{1}{\sqrt{2}}(|R\rangle+|L\rangle),
+\end{equation}
+and therefore carries zero net circular spin in the $S_3$ basis. In this architecture, this equatorial sector plays the role of a zero-chirality optical boundary sector, while ellipticity activates axial and nonlinear responses. The paper proceeds as follows: Section 2 introduces the determinant-one KAN transfer-matrix cell; Section 3 describes the exceptional-point shear normal form and chirality inversion; Section 4 gives synthetic Zeeman splitting and Kerr-mediated braid-phase primitives; Section 5 exposes the deep spacetime symmetries mapping the Pauli algebra to the KAN factorization; Section 6 outlines the LNOI implementation path; and Section 7 details the formal verification stack.
+
+\section{2. KAN Transfer Matrices and Jones Hardware}
+
+One elementary cell is modeled by a determinant-one transfer matrix
+\begin{equation}
+M(k,\alpha,\gamma)=K(k)A(\alpha)N(\gamma)\in \mathrm{SL}(2,\mathbb{C})
+\end{equation}
+with
+\begin{equation}
+K(k)=
+\begin{pmatrix}
+\cos k & -\sin k\\
+\sin k & \cos k
+\end{pmatrix},
+\quad
+A(\alpha)=
+\begin{pmatrix}
+e^\alpha & 0\\
+0 & e^{-\alpha}
+\end{pmatrix},
+\quad
+N(\gamma)=
+\begin{pmatrix}
+1 & \gamma\\
+0 & 1
+\end{pmatrix}.
+\end{equation}
+Here $K(k)$ is a restricted compact rotation, physically represented by a Mach-Zehnder interferometer or polarization-rotation block. The factor $A(\alpha)$ represents a balanced dichroic or gain/loss section. The factor $N(\gamma)$ represents an asymmetric shear, with the limiting defective form serving as an exceptional-point normal form.
+
+Each factor has determinant one, so their product also satisfies $\det M(k,\alpha,\gamma)=1$. Under the chosen transfer-to-scattering convention, this determinant-one condition implies reciprocal transmission amplitudes. The non-Hermitian signature is therefore not transmission nonreciprocity in this model; it appears instead through reflection asymmetry, eigenvector nonorthogonality, and exceptional-point sensitivity.
+
+The selected connection $A_k=M^{-1}\partial_kM$ has a vanishing trace:
+\begin{equation}
+\operatorname{Tr}(A_k)=0.
+\end{equation}
+This follows directly from the identity $\operatorname{Tr}(M^{-1}\partial_kM)=\partial_k\log\det M$, given that $\det M=1$. Thus, the Abelian trace component of this connection vanishes as an algebraic consequence of the determinant-one sector representation, rather than an unearned assertion of global topological protection.
+
+\section{3. Exceptional-Point Shear and Chirality Inversion}
+
+The nilpotent endpoint is represented by the upper-triangular shear
+\begin{equation}
+N(x)=
+\begin{pmatrix}
+1 & x\\
+0 & 1
+\end{pmatrix}.
+\end{equation}
+Its characteristic polynomial is $(\lambda-1)^2$. For $x\neq0$, the equation $(N-I)v=0$ implies $xv_2=0$, forcing $v_2=0$. The eigenspace is therefore strictly one-dimensional even though the eigenvalue has an algebraic multiplicity of two. This is the finite-dimensional Jordan-block signature of exceptional-point collapse. A corresponding balanced non-Hermitian Hamiltonian witness is
+\begin{equation}
+H_{\mathrm{EP}}=
+\begin{pmatrix}
+i\gamma & \gamma\\
+\gamma & -i\gamma
+\end{pmatrix}.
+\end{equation}
+At the balance point, $H_{\mathrm{EP}}^2=0$, meaning the two eigenvalues collapse to zero and the matrix becomes defective for $\gamma\neq0$. In the hardware interpretation, this defective sector models the local algebra of an exceptional-point boundary defect.
+
+Chirality inversion is represented in Jones calculus by a determinant-one half-wave-plate representative,
+\begin{equation}
+HWP=
+\begin{pmatrix}
+-i & 0\\
+0 & i
+\end{pmatrix}.
+\end{equation}
+Acting on the circular basis, $HWP|R\rangle=-i|L\rangle$ and $HWP|L\rangle=-i|R\rangle$. Thus, the physical half-wave plate flips optical chirality up to a global phase, acting as the exact Jones-calculus analogue of a particle-hole or Andreev-like chirality inversion.
+
+\section{4. Synthetic Zeeman Splitting and Kerr Braid Phases}
+
+Circular birefringence can be combined with balanced gain/loss to form the complex boost $O(\alpha,\phi)=\exp[(\alpha+i\phi)\sigma_3]$. At the Brillouin-zone center, the trace evaluates cleanly as:
+\begin{equation}
+\operatorname{Tr}(M) = 2\cosh(\alpha + i\phi) = 2\cosh\alpha\cos\phi + 2i\sinh\alpha\sin\phi.
+\end{equation}
+The real part is modulated by the gain/loss parameter $\alpha$ and the circular-birefringence phase $\phi$. The imaginary part is nonzero if and only if \textit{both} $\alpha\neq0$ and $\phi\neq0$. If $\alpha=0$, the eigenvalues still acquire opposite circular phases, but the trace remains purely real. This distinction is vital for experimental extraction, as trace measurements and eigenvalue measurements probe distinct aspects of the complex spectrum.
+
+For two chiral photons, a Kerr cross-phase-modulation cell is modeled by $H_{\mathrm{int}}=\chi^{(3)}S_3^{(1)}\otimes S_3^{(2)}$. Using the convention that $S_3$ has eigenvalues $\pm1$, the calibrated interaction condition $\chi^{(3)}t=\frac{\pi}{4}$ yields the evolution
+\begin{equation}
+B=\operatorname{diag}\left(e^{-i\pi/4}, e^{i\pi/4}, e^{i\pi/4}, e^{-i\pi/4}\right)
+\end{equation}
+in the ordered basis $\{|RR\rangle, |RL\rangle, |LR\rangle, |LL\rangle\}$. Parallel chiralities acquire the phase $e^{-i\pi/4}$, while antiparallel chiralities acquire $e^{i\pi/4}$, yielding a relative phase of $e^{i\pi/2}=i$. This realizes a conditional braid-phase primitive. If a spin-$\frac{1}{2}$ normalization ($\pm\frac{1}{2}$) is preferred, the required interaction strength must scale by a factor of four.
+
+A single-particle exchange primitive is represented by
+\begin{equation}
+B_1=\frac{1}{\sqrt{2}}
+\begin{pmatrix}
+1 & -i\\
+-i & 1
+\end{pmatrix}
+= e^{-i\pi\sigma_x/4}
+\end{equation}
+up to a convention-dependent global phase. Compiled to a Mach-Zehnder interferometer layout, this corresponds to an internal phase of $-\pi/2$ and an external phase of $-\pi$.
+
+\section{5. Geometric Framework: Spacetime Symmetries and the Pauli Algebra}
+
+The KAN--Jones dictionary is not introduced as a superficial optical analogy. It is rooted in the standard spinor description of Lorentzian geometry. The proper orthochronous Lorentz group is double-covered by $SL(2,\mathbb{C})$, acting on Hermitian Pauli matrices that encode Minkowski four-vectors,
+\begin{equation}
+X=x^0 I+x^1\sigma_x+x^2\sigma_y+x^3\sigma_z,
+\qquad
+\det X=(x^0)^2-\mathbf{x}^2.
+\end{equation}
+Null directions are precisely the rank-one sector $\det X=0$. Thus Jones spinors, Pauli spinors, and null directions share a common two-component representation language. The broader conformal group is larger than $SL(2,\mathbb{C})$; the role of $SL(2,\mathbb{C})$ here is the spin representation of the Lorentz subgroup and its determinant-one transfer-matrix analogue.
+
+The finite operator constraint used in the formal stack separates the local algebra into three cases,
+\begin{equation}
+OP^2\in\{-1,1,0\},
+\end{equation}
+matching the elliptic, hyperbolic, and parabolic normal forms:
+\begin{itemize}
+\item $OP^2=-1$: elliptic rotations, represented in hardware by the compact $K$ block;
+\item $OP^2=1$: hyperbolic boosts, represented by the balanced gain/loss $A$ block;
+\item $OP^2=0$: parabolic nilpotent shear, represented by the $N$ block and its exceptional-point normal form.
+\end{itemize}
+This is the same trichotomy that appears in the classification of determinant-one two-by-two normal forms, here restricted to the finite matrix sectors used by the photonic emulator.
+
+When a rotation and a boost are applied along compatible axes, the resulting transfer action is loxodromic: a simultaneous phase rotation and hyperbolic amplification/attenuation. In the LNOI setting this has a direct optical interpretation. Circular birefringence supplies the rotational part, while dichroic gain/loss supplies the boost part. The parabolic endpoint is reached when the shear becomes defective, producing the exceptional-point Jordan collapse described above.
+
+This geometric layer explains why Jones calculus is a natural representation of the pre-existing Clifford--Majorana/KAN stack. Polarization spinors are not merely convenient two-component vectors; they are physical realizations of the same Pauli-spinor representation language that encodes Lorentzian null geometry. The claim remains representation-theoretic and finite-dimensional: the device emulates selected braid-phase and normal-form primitives rather than realizing the full conformal group or intrinsic spacetime topology.
+
+\section{6. LNOI Implementation Path}
+
+Thin-film lithium niobate on insulator is a well-suited candidate platform for this representation layer because it supports low-loss waveguiding, fast electro-optic modulation, tight confinement, and polarization engineering. The physical mapping maps the algebraic factors onto specific integrated optical components:
+\begin{itemize}
+\item \textbf{$K$ Factor Block:} Mach-Zehnder interferometer or electro-optic polarization-rotation block acting as the compact rotation sector.
+\item \textbf{$A$ Factor Block:} Balanced dichroic element, specialized segmented absorbers, or active hybrid-integrated gain/loss sections.
+\item \textbf{$N$ Factor Block:} Electrically or geometrically tuned asymmetric coupling shear approaching an exceptional-point normal form.
+\item \textbf{$\phi$ Phase Control:} Optical activity, structural circular birefringence, or synthetic polarization-dependent propagation delay.
+\item \textbf{$\chi^{(3)}$ Nonlinear Cell:} Dedicated Kerr or effective cross-phase-modulation waveguide section calibrated for conditional phase accumulation.
+\end{itemize}
+
+Several engineering challenges remain. Balanced gain/loss requires active hybrid integration or non-Hermitian reservoir engineering. Similarly, deterministic Kerr-mediated two-photon conditional phases are highly demanding in bare LNOI waveguides; practical deployment will require resonant enhancement structures, slow-light engineering, or alternative effective high-$\chi^{(3)}$ nonlinear mechanisms.
+
+\section{7. Theoretical Origin Layer: $O(5,5)$ Anomaly Cancellation and Zorn Matrices}
+
+The physical emulator proposed here is the final representation layer of a much deeper topological-algebraic origin. The deeper algebraic construction—involving Clifford atom identities, generalized geometry, and determinant-sector transfer constraints—was developed and mechanically verified in Lean 4 before the Jones-calculus interpretation was introduced. 
+
+In the formal mathematical theory of $\mathbb{Z}_N$ parafermionic boundary states, topological stability is threatened by the Witten global anomaly and chiral parity obstructions. Our formally verified codebase demonstrates that these chiral parity anomalies cancel exactly at an $O(5,5)$ split-orthogonal symmetry point. At this anomaly-free boundary, the system's symmetries are perfectly captured by split octonions ($\mathbb{O}'$), which are algebraically represented by $2 \times 2$ Zorn vector matrices:
+\begin{equation}
+\mathcal{Z} = \begin{pmatrix} a & \mathbf{x} \\ \mathbf{y} & b \end{pmatrix},
+\end{equation}
+where $a, b$ are scalars and $\mathbf{x}, \mathbf{y}$ are 3-vectors. When we project this 10-dimensional, non-associative framework onto the photonic layer, the vector cross-products nullify, and the system collapses into an associative scalar regime. The non-Hermitian $\mathrm{SL}(2,\mathbb{C})$ equations governing our Jones optics are therefore not an analogy, but the exact holographic scalar projection of the anomaly-free Zorn boundary matrices.
+
+The core algebraic identities—checked by the Lean 4 modules with native dot and cross product rules for the Zorn algebra—include:
+\begin{equation}
+\det K=\det A=\det N=\det(KAN)=1,
+\end{equation}
+\begin{equation}
+\operatorname{Tr}(M^{-1}\partial_kM)=0,
+\end{equation}
+\begin{equation}
+N(x) \text{ is defective for } x\neq0, \qquad H_{\mathrm{EP}}^2=0,
+\end{equation}
+\begin{equation}
+B=\operatorname{diag}\left(e^{-i\pi/4}, e^{i\pi/4}, e^{i\pi/4}, e^{-i\pi/4}\right).
+\end{equation}
+For complete reproducibility, the fully checked code components, including the Zorn matrix and $O(5,5)$ anomaly cancellation proofs, are hosted publicly \href{https://academia.stackexchange.com/questions/220517/anonymizing-a-submission-for-double-blind-review}{(anonymized for double-blind review)}.
+
+\section{8. Conclusion}
+
+This framework establishes a rigorous route from a formally verified topological-algebraic stack to an implementable physical representation layer in non-Hermitian photonics. By anchoring the physics in verified Clifford and Majorana exchange symmetries, the resulting LNOI architecture operates as a faithful, room-temperature algebraic emulator of selected finite braid-phase primitives. Further development requires verifying foundry-specific device tolerances, evaluating multi-cell braid-word compilation, and addressing the high-confinement nonlinear enhancement metrics necessary for multi-photon state validation.
+
+\begin{thebibliography}{99}
+
+\bibitem{Nayak2008}
+C. Nayak, S. H. Simon, A. Stern, M. Freedman, and S. Das Sarma, 
+``Non-Abelian anyons and topological quantum computation,'' 
+\textit{Rev. Mod. Phys.} \textbf{80}, 1083 (2008).
+
+\bibitem{Kitaev2003}
+A. Kitaev, 
+``Fault-tolerant quantum computation by anyons,'' 
+\textit{Ann. Phys.} \textbf{303}, 2-30 (2003).
+
+\bibitem{ElGanainy2018}
+R. El-Ganainy, K. G. Makris, M. Khajavikhan, Z. H. Musslimani, S. Rotter, and D. N. Christodoulides, 
+``Non-Hermitian physics and PT symmetry,'' 
+\textit{Nat. Phys.} \textbf{14}, 11-19 (2018).
+
+\bibitem{Miri2019}
+M. Miri and A. Alù, 
+``Exceptional points in optics and photonics,'' 
+\textit{Science} \textbf{363}, eaar7709 (2019).
+
+\bibitem{Jones1941}
+R. C. Jones, 
+``A New Calculus for the Treatment of Optical SystemsI. Description and Discussion of the Calculus,'' 
+\textit{J. Opt. Soc. Am.} \textbf{31}, 488-493 (1941).
+
+\bibitem{DeMoura2021}
+L. de Moura and S. Ullrich, 
+``The Lean 4 Theorem Prover and Programming Language,'' 
+\textit{Automated Deduction -- CADE 28}, 625-635 (2021).
+
+\end{thebibliography}
+
+\end{document}

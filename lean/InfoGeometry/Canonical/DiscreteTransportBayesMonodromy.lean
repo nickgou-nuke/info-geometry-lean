@@ -11,7 +11,7 @@ import InfoGeometry.Quantum.RealKCategory
 Thin bridge packet for the discrete transport / JKO / Bayesian evolution lane.
 
 This file does not create new analytic theory. It exposes, in one place, the
-already-owned finite readouts that witness the repo's discrete transport story:
+already-owned finite readouts that property the repo's discrete transport story:
 
 - deterministic JKO energy decay;
 - Bayesian update equals the selected JKO next state;
@@ -20,7 +20,7 @@ already-owned finite readouts that witness the repo's discrete transport story:
 - Bregman/monodromy finite-step collapse;
 - square-zero Jordan power law.
 
-This is the formal packet corresponding to the finite witness surface used in
+This is the formal packet corresponding to the finite property surface used in
 the SymPy scripts.
 -/
 

@@ -7,7 +7,7 @@ import InfoGeometry.Arithmetic.PrimeSuperalgebra
 
 Finite traces are explicit products.  Infinite traces are actual complex
 functions tied to Mathlib's Riemann-zeta Euler product; no arbitrary values or
-equality fields are stored in witness structures.
+equality fields are stored in property structures.
 -/
 
 noncomputable section
@@ -97,7 +97,7 @@ namespace InfiniteEulerProductConvergenceWitness
 /-- Compatibility accessor for the complex parameter of the half-plane subtype. -/
 abbrev s (W : InfiniteEulerProductConvergenceWitness) : ℂ := W.1
 
-/-- Compatibility accessor for its genuine half-plane hypothesis. -/
+/-- Compatibility accessor for its genuine half-plane property. -/
 abbrev halfPlane_Re_gt_one (W : InfiniteEulerProductConvergenceWitness) : 1 < W.s.re := W.2
 
 def zeta (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
@@ -170,7 +170,7 @@ theorem parityTrace_eq_inverse_zeta
 
 /-! The native equality relation identifying parity and supertrace readouts.
 
-The certified prime cutoff underlying a formal Boolean prime-root lattice.
+The property prime cutoff underlying a formal Boolean prime-root lattice.
 
 This is the concrete carrier conversion needed to compare the Weyl parity
 product with the exterior-prime-algebra supertrace.  Both owners retain their
@@ -183,7 +183,7 @@ def primeCutoffOfRootLattice (L : FormalPrimeRootLattice) : PrimeCutoff where
 /--
 The finite parity product is the genuine exterior-prime-algebra supertrace.
 
-This replaces the former equality-witness packet by a theorem between the
+This replaces the former equality-property packet by a theorem between the
 actual owners: the Boolean prime-root lattice on the left and the finite
 exterior prime superalgebra on the right.
 -/
@@ -199,7 +199,7 @@ theorem finiteParityTrace_eq_finitePrimeSupertrace
 Compatibility spelling for the recovered split parity/supertrace theorem.
 
 Unlike the historical record field, this statement has no freely supplied
-readouts: both sides are computed from the same certified prime modes.
+readouts: both sides are computed from the same property prime modes.
 -/
 @[rep_depth thermo]
 theorem parityTrace_eq_supertrace

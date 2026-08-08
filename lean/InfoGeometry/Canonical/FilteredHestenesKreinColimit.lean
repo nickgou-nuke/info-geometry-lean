@@ -80,7 +80,7 @@ def toFilteredPhaseCone : FilteredPhaseCone where
   ι_bond := C.ι_bond
 
 /-- Every finite Hestenes--Krein bonding map is Cauchy-analytic, without a
-power-series or scalar-complex analyticity hypothesis. -/
+power-series or scalar-complex analyticity property. -/
 def bondCauchyAnalyticAt (n : ℕ) (x : DoubledSpace (C.Base n)) :
     CauchyAnalyticAt
       (clockPhaseStructure (C.Base n))

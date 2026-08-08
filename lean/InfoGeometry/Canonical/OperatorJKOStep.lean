@@ -8,7 +8,7 @@ This module records a proof-carrying variational JKO update:
 * an energy functional;
 * a nonnegative transport/regularization penalty;
 * an objective `energy(next) + penalty(next, previous)`;
-* an explicit argmin witness.
+* an explicit argmin property.
 
 It proves only the deterministic consequences of the installed minimizer:
 energy decay, penalty control by energy drop, and objective control by the
@@ -75,12 +75,12 @@ theorem objective_previous
 
 end OperatorJKOPotential
 
-/-! ## 2. Argmin witness -/
+/-! ## 2. Argmin property -/
 
 /--
 Proof-carrying deterministic JKO argmin.
 
-The `minimizing` field is the only variational hypothesis. This structure does
+The `minimizing` field is the only variational property. This structure does
 not assert that minimizers exist automatically.
 -/
 structure OperatorJKOArgmin
@@ -147,13 +147,13 @@ end OperatorJKOArgmin
 /--
 Backend socket for selecting deterministic JKO argmins.
 
-This is a witness layer: a concrete compactness/convexity argument may fill it,
+This is a property layer: a concrete compactness/convexity argument may fill it,
 but no such existence theorem is proved here.
 -/
 structure OperatorJKOArgminBackend
     (Weight : Type*)
     (P : OperatorJKOPotential Weight) where
-  /-- Select an argmin witness for a previous state and step size. -/
+  /-- Select an argmin property for a previous state and step size. -/
   select :
     Weight → ℝ → OperatorJKOArgmin P
 
@@ -173,12 +173,12 @@ structure OperatorJKOArgminBackend
 Discrete deterministic JKO path.
 
 The path stores a sequence of argmin witnesses rather than raw states, so every
-step carries its own minimization certificate.
+step carries its own minimization property.
 -/
 structure OperatorJKOPath
     {Weight : Type*}
     (P : OperatorJKOPotential Weight) where
-  /-- Argmin witness at each step. -/
+  /-- Argmin property at each step. -/
   step :
     ℕ → OperatorJKOArgmin P
 
@@ -210,7 +210,7 @@ end OperatorJKOPath
 Bayesian calibration of a deterministic JKO step.
 
 This states that a supplied Bayesian/update map selects the same `next` state
-as a supplied deterministic JKO argmin witness.
+as a supplied deterministic JKO argmin property.
 -/
 structure JKOBayesianCalibration
     {Weight Evidence : Type*}
@@ -223,7 +223,7 @@ structure JKOBayesianCalibration
   stepSize :
     Evidence → ℝ
 
-  /-- Selected JKO argmin witness for each prior/evidence pair. -/
+  /-- Selected JKO argmin property for each prior/evidence pair. -/
   jkoStep :
     Weight → Evidence → OperatorJKOArgmin potential
 

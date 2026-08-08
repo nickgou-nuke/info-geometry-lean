@@ -6,7 +6,7 @@ import Mathlib
 This is the generic analytic layer below the existing chiral-Hodge owners.
 Fréchet jets and alternating forms are different carriers.  The exchange
 involution is therefore explicit data; no Hodge adjoint is identified with an
-opposite-algebra differential without a compatibility hypothesis.
+opposite-algebra differential without a compatibility property.
 -/
 
 noncomputable section

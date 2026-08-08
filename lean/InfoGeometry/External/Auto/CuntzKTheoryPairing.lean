@@ -30,13 +30,13 @@ theorem connesChernPairing_zero_of_trivial_K0
 Proof-carrying formal encoding of an already-established `K₀(𝒪₂)=0` theorem.
 
 This class is not itself a proof of the Cuntz-algebra K-theory calculation. It
-is the exact algebraic hypothesis needed by this finite Connes–Chern interface:
+is the exact algebraic property needed by this finite Connes–Chern interface:
 the chosen K₀ carrier is propositionally trivial.
 -/
 abbrev O2K0Trivial (K0 : Type*) [AddCommGroup K0] : Prop :=
   Subsingleton K0
 
-/-- Under the explicit `O2K0Trivial` proof-carrying hypothesis, every pairing vanishes. -/
+/-- Under the explicit `O2K0Trivial` proof-carrying property, every pairing vanishes. -/
 theorem connesChernPairing_zero_of_O2K0Trivial
     {K0 K1 : Type*} [AddCommGroup K0] [AddCommGroup K1]
     (hK0 : O2K0Trivial K0) [CP : ConnesChernPairing K0 K1] :
@@ -61,7 +61,7 @@ instance : Subsingleton TrivialK0Model := by
 instance : O2K0Trivial TrivialK0Model := inferInstance
 
 /-- Canonical zero pairing for the O₂ model.
-This models `⟨[C], [e]⟩ = 0` under the trivial K₀ assumption.
+This models `⟨[C], [e]⟩ = 0` under the trivial K₀ property.
 -/
 def O2ConnesChernPairing (K1 : Type*) [AddCommGroup K1] : TrivialK0Model → K1 → ℂ :=
   fun _ _ => 0

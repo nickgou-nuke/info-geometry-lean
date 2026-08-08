@@ -227,11 +227,11 @@ theorem rot01Linear_is_derivation :
     IsNonAssocDerivation (R := ℝ) (A := SplitCayley) rot01Linear :=
   InfoGeometry.Lie.RealSplitOctonionDerivation.rot01Linear_isLeibniz
 
-/-- A bundled concrete nonzero split-Cayley `𝔤₂`-type derivation witness. -/
+/-- A bundled concrete nonzero split-Cayley `𝔤₂`-type derivation property. -/
 def rot01G2Derivation : SplitCayleyG2Derivation :=
   ⟨rot01Linear, rot01Linear_is_derivation⟩
 
-/-- Nonzero readout inherited from the native split-Cayley witness. -/
+/-- Nonzero readout inherited from the native split-Cayley property. -/
 theorem rot01G2Derivation_nonzero : ∃ X : SplitCayley, rot01G2Derivation.1 X ≠ 0 := by
   exact ⟨up0, rot01Real_nonzero_on_up0⟩
 

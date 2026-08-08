@@ -15,7 +15,7 @@ import InfoGeometry.Inference.GibbsTemperatureSusceptibility
 
 This is the composition theorem for the selection layer: maximizing
 temperature susceptibility over an admissible finite schedule preserves the
-certificate attached to every admissible candidate.
+property attached to every admissible candidate.
 -/
 
 namespace InfoGeometry.Inference.FiniteGibbs
@@ -24,7 +24,7 @@ open scoped BigOperators
 
 variable {Data : Type*} [Fintype Data] [Nonempty Data]
 
-theorem exists_certified_schedule_max_susceptibility
+theorem exists_property_schedule_max_susceptibility
     (E : Data → ℝ) (S : Finset ℝ) (P : ℝ → Prop) [DecidablePred P]
     (I : ℝ → Matrix (Fin 2) (Fin 2) ℝ)
     (hP : (S.filter P).Nonempty)

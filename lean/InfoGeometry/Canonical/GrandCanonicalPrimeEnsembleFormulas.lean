@@ -11,7 +11,7 @@ Policy enforced here:
 * formulas are plain `def`s with explicit arguments;
 * theorem statements use explicit hypotheses;
 * no definitional formula is stored as a structure field;
-* no proof certificate fields are used.
+* no proof property fields are used.
 
 This file proves the finite grand-canonical normalization facts and a first
 finite Clifford/Majorana cancellation theorem directly.

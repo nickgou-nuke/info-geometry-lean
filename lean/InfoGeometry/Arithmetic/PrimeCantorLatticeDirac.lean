@@ -6,7 +6,7 @@ import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
 Finite prime-Cantor lattice Dirac skeleton.
 
-The finite cutoff is a certified prime register `P`. Its Cantor lattice is the
+The finite cutoff is a property prime register `P`. Its Cantor lattice is the
 Boolean cube of square-free occupancy states `S ⊆ P.primes`.
 
 The `p`-axis edge is the bit flip `S ↦ S △ {p}`. The Dirac operator is the

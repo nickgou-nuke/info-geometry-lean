@@ -578,7 +578,7 @@ end JaynesLists
 /-! ## 7. Algebraic Radon--Nikodym density witnesses -/
 
 /--
-An algebraic Radon--Nikodym density witness from `ω` to `φ`.
+An algebraic Radon--Nikodym density property from `ω` to `φ`.
 
 The density element `h` represents `φ` relative to `ω` by
 `φ(a) = ω(h * a)`.  This is an algebraic representation law, not the analytic
@@ -610,7 +610,7 @@ theorem density_normalized (D : AlgebraicRNDensity (R := R) (A := A) ω φ) :
 
 end AlgebraicRNDensity
 
-/-- Algebraic absolute continuity is carried by an explicit RN-density witness. -/
+/-- Algebraic absolute continuity is carried by an explicit RN-density property. -/
 abbrev AlgebraicAbsolutelyContinuous
     (ω φ : AlgebraicState (R := R) (A := A)) :=
   AlgebraicRNDensity (R := R) (A := A) ω φ
@@ -665,7 +665,7 @@ variable {K : Type uR} {B : Type uA}
 variable [Field K] [Ring B] [Algebra K B]
 
 /--
-An empirical Jaynes state equipped with an explicit algebraic RN-density witness
+An empirical Jaynes state equipped with an explicit algebraic RN-density property
 relative to a reference state.
 
 This is a finite, algebraic bridge from empirical averaging to density-state
@@ -716,7 +716,7 @@ end EmpiricalRN
 The algebraic Erlangen--Jaynes--Gromov packet.
 
 It bundles the operator-algebra symmetry system with a Gromov projection and
-state-level data.  The optional RN witness records when a target state is
+state-level data.  The optional RN property records when a target state is
 represented as a density over a reference state.  This packet is algebraic
 owner-side data only: it does not assert positivity, completion, modular-flow
 generation, or any general noncommutative Radon--Nikodym theorem.

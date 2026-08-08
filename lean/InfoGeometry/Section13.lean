@@ -178,7 +178,7 @@ theorem sameFiber_equivalence : Equivalence sameFiber where
   symm := by intro ψ φ h; exact sameFiber_symm h
   trans := by intro ψ φ χ hψφ hφχ; exact sameFiber_trans hψφ hφχ
 
-/-- Same-fiber states share normalization because the witness is norm-preserving. -/
+/-- Same-fiber states share normalization because the property is norm-preserving. -/
 theorem sameFiber_preserves_normalized {ψ φ : TwoQubitVec}
     (hFiber : sameFiber ψ φ) (hψ : IsNormalized ψ) :
     IsNormalized φ := by

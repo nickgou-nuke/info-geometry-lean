@@ -19,7 +19,7 @@ chronological convention `γₗ ... γ₁(f) = f Aₗ ... A₁`, a chronological
   `rohozhkin_invariant_under_far_commute_move`, and
   `rohozhkin_invariant_under_pentagon_move`: `rohozhkinMatrix` is invariant
   under the three explicitly witnessed replacement moves.
-- `rohozhkin_invariant_under_witnessed_move`: `rohozhkinMatrix` is invariant
+- `rohozhkin_invariant_under_propertyed_move`: `rohozhkinMatrix` is invariant
   under the generated one-step move relation.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
@@ -238,7 +238,7 @@ def DelaunayMove {n : ℕ} (kind : DelaunayMoveKind)
   DelaunayMoveList kind before.flips after.flips
 
 /-- Matrix invariance under a witnessed presentation move. -/
-theorem rohozhkin_invariant_under_witnessed_move {n : ℕ}
+theorem rohozhkin_invariant_under_propertyed_move {n : ℕ}
     {kind : DelaunayMoveKind} {before after : DelaunayFlipWord n}
     (h : DelaunayMove kind before after) :
     rohozhkinMatrix before = rohozhkinMatrix after :=
@@ -261,7 +261,7 @@ theorem rohozhkin_invariant_under_equiv {n : ℕ} {W₁ W₂ : DelaunayFlipWord 
   | refl => rfl
   | symm _ _ _ ih => exact ih.symm
   | trans _ _ _ _ _ ih1 ih2 => exact ih1.trans ih2
-  | step _ _ _ h_step => exact rohozhkin_invariant_under_witnessed_move h_step
+  | step _ _ _ h_step => exact rohozhkin_invariant_under_propertyed_move h_step
 
 /-- The presentation group socket is the quotient of words by the move equivalence. -/
 def DelaunayQuotient (n : ℕ) := Quot (@DelaunayEquiv n)

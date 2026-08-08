@@ -1,0 +1,28 @@
+\begin{thebibliography}{1}
+
+\bibitem{penrose_spinors}
+Roger Penrose and Wolfgang Rindler.
+\newblock {\em Spinors and Space-Time: Volume 1}.
+\newblock Cambridge University Press, 1984.
+
+\bibitem{riemann_zeta}
+Bernhard Riemann.
+\newblock On the number of primes less than a given magnitude.
+\newblock {\em Monatsberichte der Berliner Akademie}, 1859.
+
+\bibitem{sasse_wallpaper}
+Vivek Sasse.
+\newblock Classification of the 17 wallpaper groups.
+\newblock {\em Mathematics REU}, 2022.
+
+\bibitem{spector_supersymmetry}
+Donald Spector.
+\newblock Supersymmetry and the m{\"o}bius inversion function.
+\newblock {\em Communications in Mathematical Physics}, 127:239--252, 1990.
+
+\bibitem{witten_index}
+Edward Witten.
+\newblock Constraints on supersymmetry breaking.
+\newblock {\em Nuclear Physics B}, 202(2):253--316, 1982.
+
+\end{thebibliography}

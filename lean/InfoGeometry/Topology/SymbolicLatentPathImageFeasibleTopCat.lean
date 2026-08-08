@@ -9,9 +9,9 @@ open CategoryTheory
 /-!
 # Feasibility factorization of observed path images
 
-Under an explicit staying-feasible hypothesis, an observed path image maps
+Under an explicit staying-feasible property, an observed path image maps
 through the native feasible feature-region subtype.  The resulting
-factorization is recorded in `TopCat`; no feasibility hypothesis is hidden in
+factorization is recorded in `TopCat`; no feasibility property is hidden in
 the definitions.
 -/
 

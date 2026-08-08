@@ -10,7 +10,7 @@ genuinely nonassociative multiplication cannot be embedded injectively and
 multiplicatively into an associative matrix algebra.
 
 This file records that theorem in the split-octonion/Zorn lane by combining the
-generic obstruction lemma with the existing native nonassociativity witness for
+generic obstruction lemma with the existing native nonassociativity property for
 `ZornVectorMatrix`.
 -/
 
@@ -30,7 +30,7 @@ theorem no_injective_matrix_representation_of_zornMatrix
       ∀ x y z : ZornMatrix ℝ, (x * y) * z = x * (y * z) :=
     InfoGeometry.Algebra.associative_of_injective_mul_map_to_semigroup
       φ hinj hmul
-  exact ZornMatrix.nonassociative_witness
+  exact ZornMatrix.nonassociative_property
     (hassoc (ZornMatrix.U 0) (ZornMatrix.U 1) (ZornMatrix.U 2))
 
 end InfoGeometry.Algebra

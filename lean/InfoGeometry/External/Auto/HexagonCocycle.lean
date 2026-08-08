@@ -31,7 +31,7 @@ section HexagonAxiom
 variable (C : Type u) [Category.{v} C] [MonoidalCategory.{v} C] [BraidedCategory.{v} C]
 
 /--
-The first hexagon identity (hexagon_forward) is the axiom of a braided
+The first hexagon identity (hexagon_forward) is the ax!om of a braided
 monoidal category. It states that two ways to go from X⊗(Y⊗Z) to (Y⊗Z)⊗X
 are equal.
 

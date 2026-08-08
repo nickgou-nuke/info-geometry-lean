@@ -54,7 +54,7 @@ it does not assert new global identifications without explicit hypotheses.
 namespace InfoGeometry.Canonical.Rosetta
 
 -- Re-export stable entry points here as they mature.
--- Keep theorem statements assumption-driven (compatibility witnesses explicit).
+-- Keep theorem statements property-driven (compatibility witnesses explicit).
 
 export InfoGeometry.Canonical.GrandUnification (
   JordanKKTData

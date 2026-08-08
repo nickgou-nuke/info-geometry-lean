@@ -2,7 +2,7 @@ import Mathlib
 import InfoGeometry.Canonical.PoissonGibbsKANModuliCertificateTopological
 
 /-!
-# TopCat readouts for the continuous Poisson Gibbs certificate
+# TopCat readouts for the continuous Poisson Gibbs property
 
 The canonical KAN-moduli owner already proves continuity and positivity of
 the finite coupling and its marginal targets.  This file exposes those

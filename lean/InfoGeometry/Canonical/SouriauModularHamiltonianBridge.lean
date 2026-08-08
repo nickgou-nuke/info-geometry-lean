@@ -59,7 +59,7 @@ Hamiltonian surrogate to a Souriau/free-energy/negative-log operator readout.
 
 This carrier is deliberately weaker than the calibrated bridge structure: it
 only records the calibrated origin statement `K_sur = F_Souriau` as external
-witness data.
+property data.
 -/
 @[rep_depth operator]
 structure SouriauModularHamiltonianCarrier (BetaSource : Type*) where
@@ -318,7 +318,7 @@ end BoundedModularHamiltonianSurrogate
 /--
 Operator-level calibration.
 
-This witness is required before identifying the bounded Drazin surrogate with a
+This property is required before identifying the bounded Drazin surrogate with a
 Souriau operator-valued free-energy representative.
 -/
 @[rep_depth operator]
@@ -333,7 +333,7 @@ def IsOperatorCalibratedBySouriau
 /--
 Expectation-level calibration.
 
-This witness states that the compressed expectation of the Souriau operator
+This property states that the compressed expectation of the Souriau operator
 representative is the scalar Souriau free energy.
 -/
 @[rep_depth operator]
@@ -348,7 +348,7 @@ def IsSouriauFreeEnergyReadoutCalibrated
 /--
 Operator-level calibrated equality.
 
-This is not automatic.  It is exactly the supplied operator calibration witness.
+This is not automatic.  It is exactly the supplied operator calibration property.
 -/
 @[rep_depth operator]
 theorem surrogate_eq_souriau_freeEnergyObservable

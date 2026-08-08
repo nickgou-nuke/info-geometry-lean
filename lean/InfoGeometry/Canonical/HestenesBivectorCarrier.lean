@@ -38,6 +38,14 @@ def basisBivector (i : Fin 6) : CliffordAlgebra Q :=
 def Bivector13 : Submodule R (CliffordAlgebra Q) :=
   Submodule.span R (Set.range (basisBivector Q))
 
+theorem finrank_Bivector13_eq_six_of_linearIndependent
+    [StrongRankCondition R]
+    [Nontrivial R]
+    (hB : LinearIndependent R (basisBivector Q)) :
+    Module.finrank R (Bivector13 Q) = 6 := by
+  rw [Bivector13, finrank_span_eq_card hB]
+  simp
+
 omit [HasVolumeElement R M Q] [HasSpacetimeBasis Q] in
 lemma ι_mul_ι_swap_of_orthogonal {x y : M} (h : QuadraticMap.polar Q x y = 0) :
     ι Q y * ι Q x = - (ι Q x * ι Q y) := by
@@ -306,9 +314,16 @@ theorem hodge_sq_bivector (B : CliffordAlgebra Q) (_h : B ∈ Bivector13 Q) :
     (B * Omega (Q := Q)) * Omega (Q := Q) = - B := by
   rw [mul_assoc, omega_sq (Q := Q), mul_neg, mul_one]
 
-def hodgeBivector : Bivector13 Q →ₗ[R] Bivector13 Q where
+def hodgeBivector (Q : QuadraticForm R M) [HasVolumeElement R M Q]
+    [HasSpacetimeBasis Q] : Bivector13 Q →ₗ[R] Bivector13 Q where
   toFun B := ⟨(B : CliffordAlgebra Q) * Omega (Q := Q), hodge_preserves_bivector Q (B : CliffordAlgebra Q) B.property⟩
   map_add' x y := by ext; simp [add_mul]
   map_smul' c x := by ext; simp [Algebra.smul_mul_assoc]
+
+theorem hodgeBivector_comp_self :
+    hodgeBivector Q ∘ₗ hodgeBivector Q =
+      -(LinearMap.id : Bivector13 Q →ₗ[R] Bivector13 Q) := by
+  ext B
+  exact hodge_sq_bivector Q (B : CliffordAlgebra Q) B.property
 
 end InfoGeometry.Canonical.HestenesBivectorCarrier

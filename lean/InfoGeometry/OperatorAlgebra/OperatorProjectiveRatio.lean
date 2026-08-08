@@ -18,6 +18,12 @@ variable {A : Type*} [Ring A]
 def rightOperatorRatio (x y : Aˣ) : A :=
   (y : A) * (↑(x⁻¹) : A)
 
+theorem RingHom.map_rightOperatorRatio
+    {B : Type*} [Ring B] (φ : A →+* B) (x y : Aˣ) :
+    φ (rightOperatorRatio x y) =
+      rightOperatorRatio (Units.map φ x) (Units.map φ y) := by
+  simp [rightOperatorRatio, Units.coe_map, Units.coe_map_inv]
+
 theorem innerConjugation_map_rightOperatorRatio
     (u x y : Aˣ) :
     innerConjugation u (rightOperatorRatio x y) =

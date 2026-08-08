@@ -98,6 +98,20 @@ theorem matrixAction_one
   fin_cases i <;>
     simp [matrixAction_apply, Matrix.one_apply, Fin.sum_univ_two]
 
+section RingEquivalence
+
+variable {R W : Type*}
+variable [CommSemiring R] [Ring R] [AddCommGroup W] [Module R W]
+
+@[simp] theorem matrixAction_one_end :
+    matrixAction (1 : OperatorMatrix (R := R) (W := W)) =
+      (1 : Module.End R (Fin 2 → W)) := by
+  apply LinearMap.ext
+  intro v
+  simpa using matrixAction_one (R := R) (W := W) v
+
+end RingEquivalence
+
 theorem matrixAction_mul
     (A B : OperatorMatrix (R := R) (W := W)) (v : Fin 2 → W) :
     matrixAction (A * B) v = matrixAction A (matrixAction B v) := by

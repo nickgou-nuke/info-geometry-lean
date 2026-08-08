@@ -2244,6 +2244,8 @@ import InfoGeometry.Canonical.UHFBoundaryExactSequence
 import InfoGeometry.Canonical.UHFBoundaryOperatorTopology
 import InfoGeometry.Canonical.UHFBoundaryOperatorTopCat
 import InfoGeometry.Canonical.UHFColimitRepresentationBridge
+import InfoGeometry.Canonical.UHFColimitSuperchargeBridge
+import InfoGeometry.Canonical.ChiralModularFlowColimitBridge
 import InfoGeometry.Canonical.UHFCuntzGNSColimit
 import InfoGeometry.Canonical.UHFTomitaTakesakiColimitBridge
 import InfoGeometry.Canonical.UHFCantorConnesSpectralTriple

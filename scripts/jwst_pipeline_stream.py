@@ -14,18 +14,18 @@ async def process_stream(frame_generator):
     # 32x32 represents the Cℓ(5,5) operator algebra.
     A_operator = np.random.randn(32, 32).astype(np.float16)
 
+    # Initialize Continuous Stream Pipeline
+    stream = cl55_cuda.ContinuousStream(100) # 100 frames per batch
+    stream.set_operator(A_operator.view(np.uint16))
+
     frame_count = 0
     start_time = time.time()
     
     # Asynchronously process frames
     async for frame_batch in frame_generator:
-        # frame_batch has shape (N, 32, 32)
-        # Apply the Cℓ(5,5) engine via PyBind11 wrapper
-        output = cl55_cuda.apply_modular_flow(A_operator.view(np.uint16), frame_batch.view(np.uint16))
-        
-        # Here we would normally implement Goal 2 (Trace Projection) to extract the pixel intensity
-        # from the 32x32 output matrix `output`.
-        pixel_intensities = np.trace(output, axis1=1, axis2=2)
+        # Apply the Cℓ(5,5) engine via PyBind11 wrapper with hardware Trace Projection
+        # process_frame_async overlaps H2D, kernel, and D2H execution
+        pixel_intensities = stream.process_frame_async(frame_batch.view(np.uint16))
         
         frame_count += frame_batch.shape[0]
         if frame_count % 1000 == 0:

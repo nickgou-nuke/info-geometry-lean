@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.OperatorValuedJonesProduct
+import InfoGeometry.Optics.OperatorValuedCliffordJones
 import InfoGeometry.Optics.OperatorLiftCarrier
 import InfoGeometry.Optics.OperatorValuedConnection
 
@@ -23,6 +24,7 @@ open InfoGeometry.Clifford
 open InfoGeometry.Geometry.BilingualAnalyticity
 open InfoGeometry.Optics.OperatorValuedConnection
 open InfoGeometry.Optics.OperatorLiftCarrier
+open InfoGeometry.Optics.OperatorValuedCliffordJones
 
 variable {W : Type*} [AddCommGroup W] [Module ℂ W]
 
@@ -47,6 +49,111 @@ def operatorSoldering (v : OperatorFourVector W) :
 def operatorSolderingAction (v : OperatorFourVector W) :
     Module.End ℂ (Fin 2 → W) :=
   matrixAction (operatorSoldering v)
+
+/-! ## The represented `Cl(1,1)` packet on the doubled carrier -/
+
+abbrev CarrierEnd (W : Type*) [AddCommGroup W] [Module ℂ W] :=
+  Module.End ℂ (Fin 2 → W)
+
+/-- The sheet grading acting on the doubled carrier. -/
+def carrierGamma : CarrierEnd W :=
+  matrixAction (sheetGamma (B := EndW W))
+
+/-- The sheet exchange acting on the doubled carrier. -/
+def carrierJ : CarrierEnd W :=
+  matrixAction (sheetJ (B := EndW W))
+
+/-- The product `ΓJ`, which is the real phase-axis square-minus-one element. -/
+def carrierGammaJ : CarrierEnd W :=
+  matrixAction (sheetGammaJ (B := EndW W))
+
+theorem carrierGammaJ_eq :
+    carrierGammaJ (W := W) =
+      carrierGamma (W := W) * carrierJ (W := W) := by
+  calc
+    carrierGammaJ (W := W) =
+        matrixAction (sheetGammaJ (B := EndW W)) := rfl
+    _ = matrixAction
+        (sheetGamma (B := EndW W) * sheetJ (B := EndW W)) := by
+      rw [sheetGammaJ_eq]
+    _ = carrierGamma (W := W) * carrierJ (W := W) := by
+      exact matrixAction_mul_end _ _
+
+private theorem matrixAction_one_end :
+    matrixAction (1 : OperatorMatrix (R := ℂ) (W := W)) =
+      (1 : CarrierEnd W) := by
+  apply LinearMap.ext
+  intro ψ
+  exact matrixAction_one ψ
+
+@[simp] theorem carrierGamma_sq :
+    carrierGamma (W := W) * carrierGamma (W := W) = 1 := by
+  change matrixAction (sheetGamma (B := EndW W)) *
+      matrixAction (sheetGamma (B := EndW W)) = 1
+  calc
+    carrierGamma (W := W) * carrierGamma (W := W) =
+        matrixAction
+          (sheetGamma (B := EndW W) * sheetGamma (B := EndW W)) := by
+      exact (matrixAction_mul_end _ _).symm
+    _ = matrixAction (1 : OperatorMatrix (R := ℂ) (W := W)) := by
+      rw [sheetGamma_sq, sheetIdentity_eq_one]
+    _ = 1 := matrixAction_one_end (W := W)
+
+@[simp] theorem carrierJ_sq :
+    carrierJ (W := W) * carrierJ (W := W) = 1 := by
+  change matrixAction (sheetJ (B := EndW W)) *
+      matrixAction (sheetJ (B := EndW W)) = 1
+  calc
+    carrierJ (W := W) * carrierJ (W := W) =
+        matrixAction
+          (sheetJ (B := EndW W) * sheetJ (B := EndW W)) := by
+      exact (matrixAction_mul_end _ _).symm
+    _ = matrixAction (1 : OperatorMatrix (R := ℂ) (W := W)) := by
+      rw [sheetJ_sq, sheetIdentity_eq_one]
+    _ = 1 := matrixAction_one_end (W := W)
+
+theorem carrierJ_mul_carrierGamma :
+    carrierJ (W := W) * carrierGamma (W := W) =
+      -(carrierGamma (W := W) * carrierJ (W := W)) := by
+  change matrixAction (sheetJ (B := EndW W)) *
+      matrixAction (sheetGamma (B := EndW W)) =
+        -(matrixAction (sheetGamma (B := EndW W)) *
+          matrixAction (sheetJ (B := EndW W)))
+  calc
+    carrierJ (W := W) * carrierGamma (W := W) =
+        matrixAction
+          (sheetJ (B := EndW W) * sheetGamma (B := EndW W)) := by
+      exact (matrixAction_mul_end _ _).symm
+    _ = matrixAction
+          (-(sheetGamma (B := EndW W) * sheetJ (B := EndW W))) := by
+      rw [sheetJ_mul_sheetGamma]
+    _ = -(matrixAction
+          (sheetGamma (B := EndW W) * sheetJ (B := EndW W))) := by
+      exact matrixAction_neg _
+    _ = -(carrierGamma (W := W) * carrierJ (W := W)) := by
+      congr 1
+      exact matrixAction_mul_end _ _
+
+theorem carrierGamma_mul_carrierJ :
+    carrierGamma (W := W) * carrierJ (W := W) =
+      -(carrierJ (W := W) * carrierGamma (W := W)) := by
+  rw [carrierJ_mul_carrierGamma]
+  simp only [neg_neg]
+
+@[simp] theorem carrierGammaJ_sq :
+    carrierGammaJ (W := W) * carrierGammaJ (W := W) = -1 := by
+  change matrixAction (sheetGammaJ (B := EndW W)) *
+      matrixAction (sheetGammaJ (B := EndW W)) = -1
+  calc
+    carrierGammaJ (W := W) * carrierGammaJ (W := W) =
+        matrixAction
+          (sheetGammaJ (B := EndW W) * sheetGammaJ (B := EndW W)) := by
+      exact (matrixAction_mul_end _ _).symm
+    _ = matrixAction (-1 : OperatorMatrix (R := ℂ) (W := W)) := by
+      rw [sheetGammaJ_sq, sheetIdentity_eq_one]
+    _ = -matrixAction (1 : OperatorMatrix (R := ℂ) (W := W)) := by
+      exact matrixAction_neg _
+    _ = -1 := by rw [matrixAction_one_end]
 
 @[simp] theorem operatorSoldering_apply
     (v : OperatorFourVector W) :

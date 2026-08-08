@@ -7,13 +7,12 @@ import InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary
 /-!
 # Pin(5,5) Colimit Anomaly Bridge (TKK Anomaly Annihilation)
 
-This module formally executes the final colimit projection of the Pin(5,5)
-orthogonal reflections and the TKK anomaly annihilation. 
+This module transports algebraic Pin/TKK identities through a compatible
+algebra-homomorphism cone into a target algebra.
 
-By passing the discrete, finite-stage Clifford generators and compensation
-operators through the compatible sequence of algebraic inclusions into the 
-infinite inductive colimit `A_∞`, we rigorously establish that the anomaly 
-nullification strictly survives into the infinite macroscopic limit.
+The results establish exact preservation of brackets, nilpotent compensation,
+and reflections under the target map.  No universal property of a categorical
+colimit, analytic limit, or independent anomaly-index theorem is asserted.
 -/
 
 namespace InfoGeometry.Canonical.Pin55ColimitAnomalyBridge
@@ -40,10 +39,10 @@ theorem colimit_lie_bracket_transport (n : ℕ) (x y : A n) :
   rw [map_sub, map_mul, map_mul]
 
 /--
-**Macroscopic Anomaly Annihilation**
+**Target Anomaly Annihilation**
 If a TKK anomaly residual vanishes identically at the finite stage (e.g., via 
 the `minus_same_arrow_anomaly_eq_zero` exact nilpotent cancellation), it 
-vanishes rigorously at the $A_\infty$ macroscopic boundary.
+vanishes rigorously after transport to the target algebra.
 -/
 theorem macroscopic_anomaly_annihilation (n : ℕ) (x y : A n)
     (h_null : lie_bracket x y = 0) :
@@ -63,10 +62,10 @@ lemma macroscopic_projective_compensation_sq (n : ℕ)
     _ = 0 := map_zero (psi n)
 
 /-- 
-**The Continuum Anomaly Annihilation Theorem**
+**The Transported TKK Identity**
 The fundamental TKK zero-grade projection `[[a, c], a] = a + a` structurally 
-survives into the inductive limit `A_∞`. The Witten-Majorana anomaly is 
-permanently decoupled in the infinite continuum.
+survives under the algebra-homomorphism transport.  This is an algebraic
+identity, not a proof of a Witten anomaly-index theorem.
 -/
 theorem macroscopic_tkk_scale_symmetry (n : ℕ) 
     (e f : Fin 5 → A n) [OperatorCl55 e f] :
@@ -79,9 +78,8 @@ theorem macroscopic_tkk_scale_symmetry (n : ℕ)
   exact map_add (psi n) _ _
 
 /-- 
-**The Continuum Pin(5,5) Native Reflection**
-The exact Cartan-Dieudonné geometric reflection survives as a native inner 
-automorphism on the infinite continuum algebra.
+**The Transported Pin(5,5)-style Reflection**
+The exact algebraic reflection identity is preserved by the target map.
 -/
 theorem macroscopic_pin55_reflection (n : ℕ) 
     (e f : Fin 5 → A n) [OperatorCl55 e f]

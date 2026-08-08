@@ -1027,6 +1027,9 @@ lean_lib Cl55ProjectiveBoundary where
 lean_lib ProjectiveAffineConformalClosure55 where
   roots := #[`InfoGeometry.Canonical.ProjectiveAffineConformalClosure55]
 
+lean_lib Pin55ColimitAnomalyBridge where
+  roots := #[`InfoGeometry.Canonical.Pin55ColimitAnomalyBridge]
+
 lean_lib OperatorPin55Action where
   roots := #[`InfoGeometry.Canonical.OperatorPin55Action]
 

@@ -955,6 +955,12 @@ lean_lib ChiralGrandCanonicalFiniteKMS where
 lean_lib ChiralParitySuperalgebra where
   roots := #[`InfoGeometry.Canonical.ChiralParitySuperalgebra]
 
+lean_lib UHFColimitSuperchargeBridge where
+  roots := #[`InfoGeometry.Canonical.UHFColimitSuperchargeBridge]
+
+lean_lib ChiralModularFlowColimitBridge where
+  roots := #[`InfoGeometry.Canonical.ChiralModularFlowColimitBridge]
+
 lean_lib OperatorValuedJonesProduct where
   roots := #[`InfoGeometry.Clifford.OperatorValuedJonesProduct]
 
@@ -996,6 +1002,9 @@ lean_lib ModularZ2CubeGrading where
 
 lean_lib TomitaTakesakiInvolutions where
   roots := #[`InfoGeometry.Canonical.TomitaTakesakiInvolutions]
+
+lean_lib HestenesBivectorCarrier where
+  roots := #[`InfoGeometry.Canonical.HestenesBivectorCarrier]
 
 lean_lib InfoGeometryCanonical where
   roots := #[`InfoGeometry.Canonical.All, `InfoGeometry.Canonical.SplitOctonionTKK55,

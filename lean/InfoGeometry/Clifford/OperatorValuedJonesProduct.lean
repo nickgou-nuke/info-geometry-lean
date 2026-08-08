@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Ring.TransferInstance
 import InfoGeometry.Clifford.OperatorValuedJones
 import InfoGeometry.Canonical.CoordinateFreeConnectionChannels
+import InfoGeometry.OperatorAlgebra.OperatorProjectiveRatio
 
 /-!
 # The causal-coordinate carrier as an operator ring
@@ -17,6 +18,7 @@ noncomputable section
 namespace InfoGeometry.Clifford
 
 open InfoGeometry.Canonical.CoordinateFreeConnectionChannels
+open InfoGeometry.OperatorAlgebra
 
 variable {B : Type*} [Ring B] [Algebra ℂ B]
 
@@ -67,6 +69,18 @@ noncomputable def causalOperatorCoordinatesAlgEquiv :
         ((causalOperatorCoordinatesEquiv (B := B)).symm
           (algebraMap ℂ (Matrix (Fin 2) (Fin 2) B) c)) = _
     exact reconstruct_causalCoordinates _
+
+/-- The operator-valued right ratio is transported by causal reconstruction.
+This is projective transport in the unit group of the noncommutative operator
+algebra, not division of scalar coordinates. -/
+theorem reconstruct_causal_rightOperatorRatio
+    (x y : (CausalOperatorCoordinates B)ˣ) :
+    reconstruct_causal (rightOperatorRatio x y) =
+      rightOperatorRatio
+        (Units.map (causalOperatorCoordinatesRingEquiv (B := B)).toMonoidHom x)
+        (Units.map (causalOperatorCoordinatesRingEquiv (B := B)).toMonoidHom y) := by
+  exact RingHom.map_rightOperatorRatio
+    (causalOperatorCoordinatesRingEquiv (B := B)).toRingHom x y
 
 @[simp] theorem reconstruct_causal_zero :
     reconstruct_causal (0 : CausalOperatorCoordinates B) = 0 :=

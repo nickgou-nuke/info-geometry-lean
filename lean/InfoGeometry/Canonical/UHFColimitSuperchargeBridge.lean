@@ -10,10 +10,10 @@ This file bridges the finite algebraic super-geometry defined in
 inductive colimit structures from `TensorTowerColimit.lean`.
 
 By passing the discrete, finite-stage grading operators and supercharges 
-through the compatible sequence of algebraic inclusions into the 
-infinite inductive colimit `A_∞`, we rigorously establish that 
+through a compatible algebraic cone into a target algebra, we establish that
 the Lie superalgebra and the central supercharge condensation 
-survive into the continuum. 
+survive under that target map.  This file does not assert the universal
+property of a categorical colimit or any analytic/topological limit.
 -/
 
 variable {R : Type*} [CommRing R]
@@ -58,6 +58,11 @@ lemma colimit_even_survival (n : ℕ) (Γ_n : A n) (X : A n) (h_even : isEven Γ
     _ = psi n (X * Γ_n) := by rw [h_even]
     _ = psi n X * psi n Γ_n := map_mul (psi n) X Γ_n
 
+lemma anticommutator_map (n : ℕ) (Q Q' : A n) :
+    anticomm (psi n Q) (psi n Q') = psi n (anticomm Q Q') := by
+  unfold anticomm
+  rw [map_add, map_mul, map_mul]
+
 /-- 
 **The Continuum Condensation Theorem**
 If Q and Q' are finite-stage chiral supercharges, their anticommutator 
@@ -67,12 +72,7 @@ continuum boundary A_∞.
 theorem continuum_superalgebra_closure (n : ℕ) (Γ_n : A n) [OperatorChirality Γ_n]
     (Q Q' : A n) [hQ : IsChiralSupercharge Γ_n Q] [hQ' : IsChiralSupercharge Γ_n Q'] :
     isEven (psi n Γ_n) (anticomm (psi n Q) (psi n Q')) := by
-  -- Using the algebraic morphism property
-  have h_anticomm : anticomm (psi n Q) (psi n Q') = psi n (anticomm Q Q') := by
-    unfold anticomm
-    rw [map_add, map_mul, map_mul]
-  
-  rw [h_anticomm]
+  rw [anticommutator_map]
   -- We know from the finite stage that the anticommutator is Even
   have h_finite_even : isEven Γ_n (anticomm Q Q') := superalgebra_closure Γ_n Q Q'
   

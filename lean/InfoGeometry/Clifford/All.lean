@@ -20,8 +20,17 @@ import InfoGeometry.Clifford.CliffordTowerFunctor
 import InfoGeometry.Clifford.QuadraticPolarAnticommutator
 import InfoGeometry.Clifford.SplitCartanHopWittBridge
 import InfoGeometry.Clifford.Cl11Matrix
+import InfoGeometry.Clifford.OperatorValuedJones
+import InfoGeometry.Clifford.OperatorValuedJonesProduct
+import InfoGeometry.Clifford.ChiralLorentzCARLift
+import InfoGeometry.Clifford.ChiralLorentzFockQuadratic
+import InfoGeometry.Clifford.Cl55OperatorDiracSystem
+import InfoGeometry.Clifford.Cl55QuadraticSpinAction
+import InfoGeometry.Clifford.DiracLorentzQuadraticAction
+import InfoGeometry.Clifford.Cl55SpinBivectorImage
 import InfoGeometry.Clifford.Cl11OscillationBridge
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
+import InfoGeometry.Clifford.Cl44Spinors
 import InfoGeometry.Clifford.Cl11TensorTower
 import InfoGeometry.Clifford.Cl11TensorTowerKroneckerRangeRank
 import InfoGeometry.Clifford.Cl11TensorTowerNormalizedTrace
@@ -145,6 +154,22 @@ import InfoGeometry.Clifford.Cl55WittVectorCommutant
 import InfoGeometry.Clifford.Cl55WittCarrierFaithfulness
 import InfoGeometry.Clifford.Cl55WittPinReflections
 import InfoGeometry.Clifford.Cl55WittPinAction
+import InfoGeometry.Clifford.Cl55SpinOperatorAutomorphism
+import InfoGeometry.Clifford.Cl55CARSpinAutomorphism
+import InfoGeometry.Clifford.Cl55CAROperatorLift
+import InfoGeometry.Clifford.Cl55CARAutomorphism
+import InfoGeometry.Clifford.Cl55CAROperatorTransport
+import InfoGeometry.Clifford.Cl55ProjectiveOperatorAction
+import InfoGeometry.Clifford.Cl55OperatorConnectionLift
+import InfoGeometry.Clifford.Cl55WittCircularAxes
+import InfoGeometry.Clifford.Cl55WittProjectors
+import InfoGeometry.Clifford.Cl55OperatorZ2Grading
+import InfoGeometry.Clifford.Cl55ModularDerivation
+import InfoGeometry.Clifford.Cl55ChiralGrandCanonical
+import InfoGeometry.Clifford.Cl55ModularGrandCanonical
+import InfoGeometry.Clifford.Cl55HyperbolicWeights
+import InfoGeometry.Clifford.Cl55EllipticRotors
+import InfoGeometry.Clifford.Cl55SpinOperatorConnection
 import InfoGeometry.Clifford.Cl55WittQuadraticReflectionPin
 import InfoGeometry.Clifford.Cl55WittNegativeVectorPin
 import InfoGeometry.Clifford.Cl55WittPinParity
@@ -165,6 +190,10 @@ import InfoGeometry.Clifford.Cl55RealSplitPinKernelNative
 import InfoGeometry.Clifford.Clifford55AnomalyOSP
 import InfoGeometry.Clifford.D4Cl11Tripotent
 import InfoGeometry.Clifford.GogberashviliSplitOctonionBasis
+import InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry
+import InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry
+import InfoGeometry.Clifford.ChiralGrandCanonicalHestenesRotor
+import InfoGeometry.Clifford.ChiralGrandCanonicalLoxodromicRotor
 
 namespace InfoGeometry
 

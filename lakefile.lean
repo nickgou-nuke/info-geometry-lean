@@ -881,6 +881,13 @@ lean_lib Socratic where
 lean_lib Omega where
   globs := #[.andSubmodules `Omega]
 
+lean_lib proofs where
+  srcDir := ".."
+  -- Proofs folded in from external_refs/auto/proofs: single shared mathlib,
+  -- single build hash (no separate root / no cache thrash). Not a default
+  -- target so the main build stays green.
+  globs := #[.andSubmodules `proofs]
+
 @[default_target]
 lean_lib InfoGeometry where
   moreLinkArgs := #["-L./backend/cuda/build", "-L/usr/local/cuda/lib64", "-lzorn_cuda", "-lcudart", "-lcublas"]
@@ -921,6 +928,63 @@ lean_lib PrimitiveSetsAboveX where
 lean_lib InfoGeometryMeta where
   globs := #[.andSubmodules `InfoGeometry.Meta]
 
+lean_lib OperatorQGTSoldering where
+  roots := #[`InfoGeometry.Optics.OperatorQGTSoldering]
+
+lean_lib ChiralLorentzOperatorLift where
+  roots := #[`InfoGeometry.Optics.ChiralLorentzOperatorLift]
+
+lean_lib ChiralLorentzFockQuadratic where
+  roots := #[`InfoGeometry.Clifford.ChiralLorentzFockQuadratic]
+
+lean_lib ChiralGrandCanonicalOperatorGeometry where
+  roots := #[`InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry]
+
+lean_lib ChiralGrandCanonicalThermalGeometry where
+  roots := #[`InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry]
+
+lean_lib ChiralGrandCanonicalHestenesRotor where
+  roots := #[`InfoGeometry.Clifford.ChiralGrandCanonicalHestenesRotor]
+
+lean_lib ChiralGrandCanonicalLoxodromicRotor where
+  roots := #[`InfoGeometry.Clifford.ChiralGrandCanonicalLoxodromicRotor]
+
+lean_lib ChiralParitySuperalgebra where
+  roots := #[`InfoGeometry.Canonical.ChiralParitySuperalgebra]
+
+lean_lib OperatorValuedJonesProduct where
+  roots := #[`InfoGeometry.Clifford.OperatorValuedJonesProduct]
+
+lean_lib CliffordCARQuadraticClosure where
+  roots := #[`InfoGeometry.OperatorAlgebra.CliffordCARQuadraticClosure]
+
+lean_lib QuadraticNoncommutativeIdentity where
+  roots := #[`InfoGeometry.OperatorAlgebra.QuadraticNoncommutativeIdentity]
+
+lean_lib CliffordCARGrandCanonical where
+  roots := #[`InfoGeometry.OperatorAlgebra.CliffordCARGrandCanonical]
+
+lean_lib ThermalBogoliubovCAR where
+  roots := #[`InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR]
+
+lean_lib ThreeZ2OperatorGradings where
+  roots := #[`InfoGeometry.OperatorAlgebra.ThreeZ2OperatorGradings]
+
+lean_lib InnerConjugation where
+  roots := #[`InfoGeometry.OperatorAlgebra.InnerConjugation]
+
+lean_lib ColimitBracketTransport where
+  roots := #[`InfoGeometry.OperatorAlgebra.ColimitBracketTransport]
+
+lean_lib Z2ProjectorWeights where
+  roots := #[`InfoGeometry.OperatorAlgebra.Z2ProjectorWeights]
+
+lean_lib EmergentComplexStructure where
+  roots := #[`InfoGeometry.OperatorAlgebra.EmergentComplexStructure]
+
+lean_lib ModularZ2CubeGrading where
+  roots := #[`InfoGeometry.Canonical.ModularZ2CubeGrading]
+
 lean_lib InfoGeometryCanonical where
   roots := #[`InfoGeometry.Canonical.All, `InfoGeometry.Canonical.SplitOctonionTKK55,
     `InfoGeometry.Canonical.SplitOctonionTKK55Blocks,
@@ -936,9 +1000,40 @@ lean_lib InfoGeometryCanonical where
     `InfoGeometry.Canonical.TwoSheetOperatorCoordinates,
     `InfoGeometry.Canonical.TwoSheetStokesCoordinates]
 
+lean_lib Cl55ProjectiveBoundary where
+  roots := #[`InfoGeometry.Canonical.Cl55ProjectiveBoundary]
+
+lean_lib OperatorPin55Action where
+  roots := #[`InfoGeometry.Canonical.OperatorPin55Action]
+
+lean_lib OperatorTKKAnomalyAnnihilation where
+  roots := #[`InfoGeometry.Canonical.OperatorTKKAnomalyAnnihilation]
+
+-- Focused canonical owners also have independent Lake gates.  These roots are
+-- intentionally kept separate from the broad `InfoGeometryCanonical` bundle
+-- so their kernel checks can be replayed without rebuilding the umbrella.
+lean_lib SplitOctonionKleinFourTriality where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionKleinFourTriality]
+
+lean_lib D4Incidence where
+  roots := #[`InfoGeometry.Canonical.D4Incidence]
+
+lean_lib PauliJungTrialityD4Synthesis where
+  roots := #[`InfoGeometry.Canonical.PauliJungTrialityD4Synthesis]
+
+lean_lib TriColorModularBoundaryFlow where
+  roots := #[`InfoGeometry.Canonical.TriColorModularBoundaryFlow]
+
+lean_lib ZornVectorMatrixMobiusAction where
+  roots := #[`InfoGeometry.Canonical.ZornVectorMatrixMöbiusAction]
+
+lean_lib LocalZornProjectiveAction where
+  roots := #[`InfoGeometry.Canonical.LocalZornProjectiveAction]
+
 lean_lib HestenesPauliSheet where
   roots := #[`InfoGeometry.Canonical.ChiralStokesPauliBasis,
-    `InfoGeometry.Canonical.HestenesPauliSheetBridge]
+    `InfoGeometry.Canonical.HestenesPauliSheetBridge,
+    `InfoGeometry.Canonical.HestenesDiracAdjoint]
 
 lean_lib SixStateModularConjugation where
   roots := #[`InfoGeometry.Canonical.SixStateModularConjugationIdentification]
@@ -957,11 +1052,29 @@ lean_lib Clifford55PinFramework where
 lean_lib Clifford55ChiralHyperbolicStructure where
   roots := #[`InfoGeometry.Clifford.Clifford55ChiralHyperbolicStructure]
 
+lean_lib Clifford55QuadraticSpinAction where
+  roots := #[`InfoGeometry.Clifford.Cl55QuadraticSpinAction]
+
+lean_lib DiracLorentzQuadraticAction where
+  roots := #[`InfoGeometry.Clifford.DiracLorentzQuadraticAction]
+
+lean_lib Cl55CAROperatorLift where
+  roots := #[`InfoGeometry.Clifford.Cl55CAROperatorLift]
+
+lean_lib Cl55SpinOperatorConnection where
+  roots := #[`InfoGeometry.Clifford.Cl55SpinOperatorConnection]
+
+lean_lib Cl55CAROperatorTransport where
+  roots := #[`InfoGeometry.Clifford.Cl55CAROperatorTransport]
+
 lean_lib AffineOrthogonal55Semidirect where
   roots := #[`InfoGeometry.Canonical.AffineOrthogonal55Semidirect]
 
 lean_lib Orthogonal55Components where
   roots := #[`InfoGeometry.Canonical.Orthogonal55Components]
+
+lean_lib OrthogonalGroup55 where
+  roots := #[`InfoGeometry.Canonical.OrthogonalGroup55]
 
 lean_lib AffinePin55Cover where
   roots := #[`InfoGeometry.Canonical.AffinePin55Cover]
@@ -977,6 +1090,48 @@ lean_lib TwelveFoldSheetColorOmega where
 
 lean_lib SplitOctonionSixSectorBridge where
   roots := #[`InfoGeometry.Canonical.SplitOctonionSixSectorBridge]
+
+lean_lib SplitOctonionHyperbolicSpectralProjectors where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionHyperbolicSpectralProjectors]
+
+lean_lib Cl11ChiralOperatorProjectors where
+  roots := #[`InfoGeometry.Physics.Cl11ChiralOperatorProjectors]
+
+lean_lib SplitOctonionRegularOperators where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionRegularOperators]
+
+lean_lib SplitOctonionRegularProjectors where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionRegularProjectors]
+
+lean_lib SplitOctonionRegularNormOperators where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionRegularNormOperators]
+
+lean_lib SplitOctonionAlternativeLaws where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionAlternativeLaws]
+
+lean_lib SplitOctonionLoxodromicCircularBridge where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionLoxodromicCircularBridge]
+
+lean_lib SplitOctonionRegularEllipticOperators where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionRegularEllipticOperators]
+
+lean_lib SplitOctonionDoubledLoxodromic where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionDoubledLoxodromic]
+
+lean_lib SplitOctonionRegularParabolicOperators where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionRegularParabolicOperators]
+
+lean_lib Cl11SplitQuaternionMobiusBridge where
+  roots := #[`InfoGeometry.Canonical.Cl11SplitQuaternionMobiusBridge]
+
+lean_lib QutritMobiusTripotentOrientationBridge where
+  roots := #[`InfoGeometry.Quantum.QutritMobiusTripotentOrientationBridge]
+
+lean_lib TwelveFoldExplicitOperators where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldExplicitOperators]
+
+lean_lib SplitOctonionConjugation where
+  roots := #[`InfoGeometry.Canonical.SplitOctonionConjugation]
 
 lean_lib SplitOctonionChiralFrame where
   roots := #[`InfoGeometry.Canonical.SplitOctonionChiralFrame]

@@ -1287,6 +1287,7 @@ import InfoGeometry.Cocycle.SplitQuaternionicJacobian
 import InfoGeometry.Canonical.ZornComposition
 import InfoGeometry.Canonical.ZornBasisTable
 import InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
+import InfoGeometry.Canonical.Cl55ProjectiveBoundary
 import InfoGeometry.Canonical.Cl55OperatorProjectiveBoundary
 import InfoGeometry.Canonical.Cl55OperatorCl11Boundary
 import InfoGeometry.Canonical.OperatorPin55Action

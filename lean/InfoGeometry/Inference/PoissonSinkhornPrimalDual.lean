@@ -8,7 +8,7 @@ import InfoGeometry.Inference.PoissonSinkhornTCSBridge
 import InfoGeometry.Inference.GibbsUniqueMinimizer
 
 /-!
-# Row-wise primal-dual certificate for Poisson transport
+# Row-wise primal-dual property for Poisson transport
 
 The row Gibbs assignment is not merely a normalized heuristic: at positive
 temperature it is the unique minimizer of the finite entropy-regularized

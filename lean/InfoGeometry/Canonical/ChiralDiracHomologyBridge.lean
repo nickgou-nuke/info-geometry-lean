@@ -16,7 +16,7 @@ This file separates the chain-complex and Hodge/Dirac readings.
 * A nilpotent chiral differential pair gives cycle/boundary predicates.
 * A chiral Dirac pair gives Laplace/Hodge loops.
 * Identifying homology classes with harmonic representatives requires an
-  explicit Hodge witness/calibration.
+  explicit Hodge property/calibration.
 
 No full Hodge theorem or cohomology theorem is asserted here.
 -/

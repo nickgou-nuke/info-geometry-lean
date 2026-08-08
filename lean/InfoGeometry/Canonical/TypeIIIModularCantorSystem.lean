@@ -58,7 +58,7 @@ Closed finite binary cylinders split into the root word and the two one-step
 child cylinders.
 
 This is a concrete Cantor-combinatorics law proved from mathlib list/set
-case analysis, not a projection-tree witness field.
+case analysis, not a projection-tree property field.
 -/
 @[rep_depth projective]
 theorem closedCylinder_split (w : BinaryWord) :
@@ -210,7 +210,7 @@ theorem antiSelfDualCylinder_antiSelfDual (cylinder : BinaryWord → Left) (w : 
 /--
 The reflected cylinders inherit any supplied equality by `LinearMap.map_add`.
 
-The equality hypothesis is local to this theorem; it is not stored as a packet
+The equality property is local to this theorem; it is not stored as a packet
 law.
 -/
 @[rep_depth operator]

@@ -54,7 +54,7 @@ theorem inverse_mul_element_mul_inverse :
     D.drazinInverse * D.element * D.drazinInverse = D.drazinInverse :=
   D.inverse_element_inverse
 
-/-- Native Drazin witness obtained from the local support package. -/
+/-- Native Drazin property obtained from the local support package. -/
 theorem toIsDrazinInverse
     (k : ℕ)
     (hpow : D.element ^ k =
@@ -66,7 +66,7 @@ theorem toIsDrazinInverse
 
 end DrazinInverseData
 
-/-- Local support data reconstructed from a native Drazin witness. -/
+/-- Local support data reconstructed from a native Drazin property. -/
 def DrazinInverseData.fromIsDrazinInverse
     {A : Type*} [Ring A]
     {element drazinInverse : A} {k : ℕ}

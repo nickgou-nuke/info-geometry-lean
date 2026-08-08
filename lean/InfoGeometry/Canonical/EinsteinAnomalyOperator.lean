@@ -24,7 +24,7 @@ noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
 local instance : IsTopologicalRing EndH := inferInstance
 local instance : CompleteSpace EndH := inferInstance
 
-/-- The certified left-projector anomaly operator lifted to the doubled carrier. -/
+/-- The property left-projector anomaly operator lifted to the doubled carrier. -/
 noncomputable def liftedChiralAnomalyOperator : EndH :=
   dualSheetLift (E := E) CCI.chiralAnomalyOperator
 
@@ -34,12 +34,12 @@ noncomputable abbrev liftedLeftChiralAnomalyOperator : EndH :=
 
 /--
 Canonical lifted projector-obstruction operator on the doubled carrier.
-This is the certified owner alias used by transport/QGT closures.
+This is the property owner alias used by transport/QGT closures.
 -/
 noncomputable abbrev liftedProjectorObstructionOperator : EndH :=
   CCI.liftedLeftChiralAnomalyOperator
 
-/-- The certified right-projector anomaly operator lifted to the doubled carrier. -/
+/-- The property right-projector anomaly operator lifted to the doubled carrier. -/
 noncomputable def liftedRightChiralAnomalyOperator : EndH :=
   dualSheetLift (E := E) CCI.rightChiralAnomalyOperator
 
@@ -193,7 +193,7 @@ theorem liftedEinsteinAnomalyOperator_ne_zero_iff :
   simp [liftedEinsteinAnomalyOperator]
 
 /--
-On the certified conformal surface, the lifted singular Einstein anomaly is
+On the property conformal surface, the lifted singular Einstein anomaly is
 exactly the negative of the lifted right-projector anomaly.
 -/
 theorem liftedEinsteinAnomalyOperator_eq_neg_liftedRightChiralAnomalyOperator :
@@ -733,20 +733,20 @@ noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
 local instance : IsTopologicalRing EndH := inferInstance
 local instance : CompleteSpace EndH := inferInstance
 
-/-- Star-certified lifted left anomaly operator on the doubled carrier. -/
+/-- Star-property lifted left anomaly operator on the doubled carrier. -/
 noncomputable abbrev liftedLeftChiralAnomalyOperator : EndH :=
   SCI.toCertifiedConformalInference.liftedLeftChiralAnomalyOperator
 
-/-- Star-certified lifted right anomaly operator on the doubled carrier. -/
+/-- Star-property lifted right anomaly operator on the doubled carrier. -/
 noncomputable abbrev liftedRightChiralAnomalyOperator : EndH :=
   SCI.toCertifiedConformalInference.liftedRightChiralAnomalyOperator
 
-/-- Star-certified lifted singular Einstein anomaly operator on the doubled carrier. -/
+/-- Star-property lifted singular Einstein anomaly operator on the doubled carrier. -/
 noncomputable abbrev liftedEinsteinAnomalyOperator : EndH :=
   SCI.toCertifiedConformalInference.liftedEinsteinAnomalyOperator
 
 /--
-On the star-certified conformal surface, the lifted singular Einstein anomaly
+On the star-property conformal surface, the lifted singular Einstein anomaly
 is exactly the negative of the lifted right-projector anomaly.
 -/
 theorem liftedEinsteinAnomalyOperator_eq_neg_liftedRightChiralAnomalyOperator :
@@ -756,7 +756,7 @@ theorem liftedEinsteinAnomalyOperator_eq_neg_liftedRightChiralAnomalyOperator :
       SCI.toCertifiedConformalInference.liftedEinsteinAnomalyOperator_eq_neg_liftedRightChiralAnomalyOperator
 
 /--
-On the star-certified conformal surface, the lifted singular Einstein anomaly
+On the star-property conformal surface, the lifted singular Einstein anomaly
 commutes with the doubled-space phase axis `K = Jε`.
 -/
 theorem liftedEinsteinAnomalyOperator_isPhaseLinear :
@@ -766,7 +766,7 @@ theorem liftedEinsteinAnomalyOperator_isPhaseLinear :
 
 /--
 The lifted left-projector anomaly operator is skew-adjoint on the doubled
-carrier under star-certified conformal data.
+carrier under star-property conformal data.
 -/
 theorem liftedLeftChiralAnomalyOperator_star_eq_neg :
     star SCI.liftedLeftChiralAnomalyOperator = -SCI.liftedLeftChiralAnomalyOperator := by
@@ -798,7 +798,7 @@ theorem liftedLeftChiralAnomalyOperator_star_eq_neg :
 
 /--
 The lifted right-projector anomaly operator is skew-adjoint on the doubled
-carrier under star-certified conformal data.
+carrier under star-property conformal data.
 -/
 theorem liftedRightChiralAnomalyOperator_star_eq_neg :
     star SCI.liftedRightChiralAnomalyOperator = -SCI.liftedRightChiralAnomalyOperator := by
@@ -829,7 +829,7 @@ theorem liftedRightChiralAnomalyOperator_star_eq_neg :
 
 /--
 The lifted singular Einstein anomaly operator is skew-adjoint on the doubled
-carrier under star-certified conformal data.
+carrier under star-property conformal data.
 -/
 theorem liftedEinsteinAnomalyOperator_star_eq_neg :
     star SCI.liftedEinsteinAnomalyOperator = -SCI.liftedEinsteinAnomalyOperator := by

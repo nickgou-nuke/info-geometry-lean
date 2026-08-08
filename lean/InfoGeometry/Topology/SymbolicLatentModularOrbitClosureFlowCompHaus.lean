@@ -65,7 +65,7 @@ theorem SymbolicLatentModularFlow.orbitClosureFlowCompHausHom_comp_apply
 
 /-! A time slice restricts to a homeomorphism between the two native closed
 orbit subspaces.  The inverse is the negative-time restriction; no extra
-recurrence or minimality assumption is used. -/
+recurrence or minimality property is used. -/
 def SymbolicLatentModularFlow.orbitClosureFlowHomeomorph
     (Φ : SymbolicLatentModularFlow X) (x : X) (t : ℝ) :
     SymbolicLatentModularOrbitClosure Φ x ≃ₜ

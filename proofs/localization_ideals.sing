@@ -1,0 +1,18 @@
+// Singular: Algebraic localizations and pushout varieties
+
+ring R = 0, (x, y), dp;
+
+// Z -> Q localization can be seen as inverting elements.
+// In singular, we use field of fractions.
+ring Q = (0, t), (x, y), dp; // t is inverted
+poly f = x^2 + y^2 - t;
+ideal I = f;
+std(I);
+
+// Pushout to C
+// C = R[i] / (i^2 + 1)
+ring C = (0, i), (x, y), dp;
+minpoly = i^2 + 1;
+poly g = x^2 + y^2 - 1;
+ideal J = g;
+std(J);

@@ -65,14 +65,14 @@ theorem blochSpacetimePoint_det_eq_t_sq_residual (t r n1 n2 n3 : ℂ) :
   rw [blochSpacetimePoint_det]
   rfl
 
-/-- Residual zero gives the pure-density determinant-zero certificate. -/
+/-- Residual zero gives the pure-density determinant-zero property. -/
 theorem blochDensityAtRadius_det_zero_of_residual_zero (r n1 n2 n3 : ℂ)
     (hres : blochResidual r n1 n2 n3 = 0) :
     (blochDensityAtRadius r n1 n2 n3).det = 0 := by
   rw [blochDensityAtRadius_det_eq_residual, hres]
   ring
 
-/-- Residual zero gives the null-spacetime determinant-zero certificate. -/
+/-- Residual zero gives the null-spacetime determinant-zero property. -/
 theorem blochSpacetimePoint_det_zero_of_residual_zero (t r n1 n2 n3 : ℂ)
     (hres : blochResidual r n1 n2 n3 = 0) :
     (blochSpacetimePoint t r n1 n2 n3).det = 0 := by

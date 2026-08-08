@@ -4,6 +4,8 @@ open Matrix
 open Real
 open Set
 
+namespace LegacyRigorousProofs
+
 /- ══════════════════════════════════════════════════════════════════════
    RIGOROUS THEOREMS for the GNS→Tomita→KMS→V₄→Möbius→Legendre→Fisher bridge
    
@@ -258,3 +260,7 @@ theorem modFlow_group (K s t : ℝ) (A : ℂ) : modFlow K (s + t) A = modFlow K 
 /-- At time zero, the modular flow fixes every observable. -/
 theorem KMS_statement (K : ℝ) (A : ℂ) : modFlow K 0 A = A := by
   simp [modFlow]
+
+end
+
+end LegacyRigorousProofs

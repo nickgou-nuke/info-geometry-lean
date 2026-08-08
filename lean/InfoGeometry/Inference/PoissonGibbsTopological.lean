@@ -6,7 +6,7 @@ import InfoGeometry.Inference.PoissonBregmanTopological
 # Topology of the finite Poisson Gibbs layer
 
 This owner records continuity of the finite Gibbs weights in a model parameter
-and a nonzero temperature.  The positivity hypothesis on the model mean is
+and a nonzero temperature.  The positivity property on the model mean is
 kept explicit; no continuity claim is made at a vanishing mean or a zero
 temperature.
 -/

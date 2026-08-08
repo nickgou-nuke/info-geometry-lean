@@ -15,10 +15,10 @@ project:
 * hidden memory reservoir;
 * explicit attractor laws saying the selected readouts are determined by
   charge data;
-* optional recovery witness saying hidden memory is visible under a supplied
+* optional recovery property saying hidden memory is visible under a supplied
   decoding channel.
 
-Thermal/KMS readouts are kept separate from recovery: a thermal certificate by
+Thermal/KMS readouts are kept separate from recovery: a thermal property by
 itself does not decode hidden memory.
 -/
 
@@ -145,10 +145,10 @@ theorem attractorReadouts_eq_of_chargeReadout_eq
 
 end HorizonAttractorMicrostateLedger
 
-/-! ## 2. Recovery witness -/
+/-! ## 2. Recovery property -/
 
 /--
-Recovery witness for a horizon microstate ledger.
+Recovery property for a horizon microstate ledger.
 
 This is deliberately not derived from thermality or evaporation. A concrete
 model must supply the decoder/readout and the equality with hidden memory.
@@ -179,7 +179,7 @@ theorem recovery_law :
   change R.1 s = L.hiddenMemory s
   rw [R.2]
 
-/-- A supplied recovery witness decodes the hidden memory. -/
+/-- A supplied recovery property decodes the hidden memory. -/
 theorem recoveredMemory_eq_hiddenMemory
     (s : State) :
     R.recoveredMemory s = L.hiddenMemory s :=

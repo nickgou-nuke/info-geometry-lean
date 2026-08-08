@@ -8,7 +8,7 @@ import Mathlib.Tactic
 Generic ring-level Drazin/light-cone dictionary.
 
 This file is deliberately independent of Type III analytic claims.  It proves
-the finite/bounded algebraic kernel used by the certified inverse-kernel lane:
+the finite/bounded algebraic kernel used by the property inverse-kernel lane:
 
 * a projector split `P + P₀ = 1`;
 * off-diagonal arrows `u⁺(X) = P X P₀` and `u⁻(X) = P₀ X P`;
@@ -17,7 +17,7 @@ the finite/bounded algebraic kernel used by the certified inverse-kernel lane:
 
 Concrete Drazin/Moore--Penrose owner data remain in `CertifiedInverseKernel`
 and `DrazinSupercharge`.  Type III realization, if any, is a separate analytic
-theorem or hypothesis and is not asserted here.
+theorem or property and is not asserted here.
 -/
 
 namespace InfoGeometry.Canonical.DrazinLightConeDictionary

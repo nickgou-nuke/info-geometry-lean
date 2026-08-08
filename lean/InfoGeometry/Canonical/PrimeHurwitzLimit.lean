@@ -22,7 +22,7 @@ It formalizes the final theorem-safe reduction:
 3. the renormalized approximants converge through the repository's
    Hestenes--Krein/categorical colimit readout to the Cayley pullback of the
    completed `xi` function;
-4. the supplied zero-transfer witness moves zero-freeness from the finite
+4. the supplied zero-transfer property moves zero-freeness from the finite
    approximants to the colimit limit on the two connected components of the
    complement of the circle;
 5. the Cayley map sends the Lee--Yang unit circle to the Riemann critical line.
@@ -173,7 +173,7 @@ theorem cayley_reflection_to_inversion
   field_simp [hs0, hs1]
   ring
 
-/-- Native proof-carrying Cayley geometry witness. -/
+/-- Native proof-carrying Cayley geometry property. -/
 @[rep_depth operator]
 theorem canonicalCayleyCriticalWitness :
     (∀ s : ℂ, s ≠ 1 → cayleyInv (cayley s) = s) ∧
@@ -216,7 +216,7 @@ def LeeYangApproximants.renormZ
   A.R N z * A.Z N z
 
 /--
-Convergence witness for a renormalized approximant family.
+Convergence property for a renormalized approximant family.
 
 The current field is represented with Mathlib's compact-open/local-uniform
 predicate, but the intended owner is the repository's filtered
@@ -282,7 +282,7 @@ theorem zero_on_unit_of_inner_outer_zero_free
 end ZeroFreeDomainTransfer
 
 /--
-Hurwitz-style zero-transfer witness.
+Hurwitz-style zero-transfer property.
 
 This is the hard colimit-transfer part.  Mathematically it should be produced
 from filtered Hestenes--Krein/categorical convergence of the renormalized
@@ -351,13 +351,13 @@ theorem RH_of_Hurwitz_LeeYang_limit
   rcases C with ⟨_, _, critical_of_unit, _⟩
   exact critical_of_unit s hs_ne_one hcircle
 
-/-! ## Stronger split-domain witness -/
+/-! ## Stronger split-domain property -/
 
 /--
-Corrected Hurwitz-style witness with the colimit-convergence and zero-free
+Corrected Hurwitz-style property with the colimit-convergence and zero-free
 pieces split.
 
-This is the stronger future-facing form: the convergence witness is a
+This is the stronger future-facing form: the convergence property is a
 first-class field, and the zero-free complement transfer is explicitly carried
 by `ZeroFreeDomainTransfer`.
 -/
@@ -386,7 +386,7 @@ structure CorrectHurwitzZeroTransferWitness
   xi_zero_iff_limit_zero :
     ∀ s : ℂ, s ≠ 1 → (Ξ.XiZero s ↔ limitF (cayley s) = 0)
 
-/-- Zero-location transfer for the corrected split-domain Hurwitz witness. -/
+/-- Zero-location transfer for the corrected split-domain Hurwitz property. -/
 @[bridge_target_tag, rep_depth operator]
 theorem corrected_hurwitz_xiZeros_map_to_unit_circle
     {Ξ : CompletedXiZeroPredicate}

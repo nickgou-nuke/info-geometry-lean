@@ -34,7 +34,7 @@ structure ZetaHamiltonian
   pt_involutive : Function.Involutive pt
   /-- Concrete PT symmetry equation for `iH`. -/
   i_mul_pt_symmetric : pt (Complex.I • op) = Complex.I • op
-  /-- The spectral-reality owner hypothesis. -/
+  /-- The spectral-reality owner property. -/
   selfAdjoint : IsSelfAdjoint op
 
 /-- The spectrum of an operator-level zeta Hamiltonian is real. -/
@@ -131,7 +131,7 @@ theorem berry_keating_commutative_core
 /--
 Operator-level similarity cancellation for the Bender--Brody--Müller core.
 
-The first hypothesis is the classical commutation relation.  The second is the
+The first property is the classical commutation relation.  The second is the
 exact statement that the ordered product is fixed by conjugation with the
 chosen unit; no scalar or diagonal specialization is used.
 -/

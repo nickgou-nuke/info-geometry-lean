@@ -315,7 +315,7 @@ theorem annihilation_creation_anticomm_raw :
     (OneSlotTiltSwitch.raw_anticomm (T := T0) (S := S0) S0_sq majoranaD_sq)
 
 /-- The depth-one raw Cantor/Jordan-Wigner pair satisfies the CAR axioms. -/
-theorem depthOneCAR_axioms :
+theorem depthOneCAR_propertys :
     annihilationRaw * annihilationRaw = (0 : Op1) ∧
     creationRaw * creationRaw = (0 : Op1) ∧
     annihilationRaw * creationRaw + creationRaw * annihilationRaw = (4 : Op1) := by

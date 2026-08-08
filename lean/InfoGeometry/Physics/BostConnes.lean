@@ -12,6 +12,8 @@ theorem or any critical-temperature representation classification.
 
 namespace InfoGeometry.Physics.BostConnes
 
+namespace Legacy
+
 open Complex
 
 /-- The abstract C*-algebra analog for the Bost-Connes system. -/
@@ -49,5 +51,7 @@ noncomputable def evaluateObservableVacuum
     (A H : Type*) [Ring A] [Algebra ℂ A] [AddCommGroup H] [Module ℂ H]
     (rep : GNSRepresentation A H) (obs : A) : H :=
   rep.pi obs rep.vacuum
+
+end Legacy
 
 end InfoGeometry.Physics.BostConnes

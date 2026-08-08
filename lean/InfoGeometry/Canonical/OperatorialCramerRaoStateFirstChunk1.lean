@@ -37,7 +37,7 @@ noncomputable local instance : NormedRing EndH := inferInstance
 noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
 
 /--
-State-first witness bundle for Chunk-1:
+State-first property bundle for Chunk-1:
 modular calibration data plus operatorial Cramér-Rao channel response data.
 -/
 @[rep_depth transport]

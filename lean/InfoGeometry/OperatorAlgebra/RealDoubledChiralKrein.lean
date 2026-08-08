@@ -514,7 +514,7 @@ end HyperbolicPrimonFlow
 Regularized comparison between a chiral Liouvillean readout and a Möbius heat
 supertrace.
 
-This is deliberately a witness gate.  The expression
+This is deliberately a property gate.  The expression
 `Tr(J_chiral exp(-β L_chiral / 2))` is not automatically the positive-decay
 Möbius heat trace `Tr(Γ exp(-β H))`: the raw hyperbolic calculation contains
 growing `sinh(βH/2)` terms and requires a concrete regulator/projection before
@@ -559,7 +559,7 @@ theorem liouvillean_isOffBlock
 end ChiralMobiusSupertraceCalibration
 
 /--
-Analytic inverse-zeta witness for the positive-decay Möbius heat trace.
+Analytic inverse-zeta property for the positive-decay Möbius heat trace.
 
 This is separate from the chiral Liouvillean calibration.  The theorem
 `Σ μ(n)n^{-s} = 1 / ζ(s)` belongs to an analytic Dirichlet-series/Euler-product

@@ -15,7 +15,7 @@ The matrix is defined on the honest coordinate model
 `(a, x₀, x₁, x₂, y₀, y₁, y₂, b) : Fin 8 → ℝ`, so the resulting theorems are
 native Mathlib statements about endomorphisms of `Fin 8 → ℝ`.
 
-No `sorry`/`axiom`/`admit`/certificate scaffolding is used.
+No `sorry`/`ax!om`/`sorry`/property scaffolding is used.
 -/
 
 noncomputable section

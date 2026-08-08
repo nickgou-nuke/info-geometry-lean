@@ -1,0 +1,22 @@
+PR := [[1,0],[0,0]];
+PL := [[0,0],[0,1]];
+I2 := [[1,0],[0,1]];
+J := [[0,1],[1,0]];
+MatMul := function(A,B) return [[A[1][1]*B[1][1]+A[1][2]*B[2][1], A[1][1]*B[1][2]+A[1][2]*B[2][2]], [A[2][1]*B[1][1]+A[2][2]*B[2][1], A[2][1]*B[1][2]+A[2][2]*B[2][2]]]; end;
+MatAdd := function(A,B) return [[A[1][1]+B[1][1],A[1][2]+B[1][2]],[A[2][1]+B[2][1],A[2][2]+B[2][2]]]; end;
+Scale := function(m,A) return [[m*A[1][1],m*A[1][2]],[m*A[2][1],m*A[2][2]]]; end;
+if MatMul(PR,PL) <> [[0,0],[0,0]] then Error("orthogonal"); fi;
+if MatAdd(PR,PL) <> I2 then Error("sum"); fi;
+if MatMul(MatMul(J,PL),J) <> PR then Error("swapL"); fi;
+if MatMul(MatMul(J,PR),J) <> PL then Error("swapR"); fi;
+for m in [-3..3] do
+  M := Scale(m,J);
+  if M <> [[0,m],[m,0]] then Error("mass"); fi;
+  if [[M[1][1],0],[0,M[2][2]]] <> [[0,0],[0,0]] then Error("diag"); fi;
+  if [[0,M[1][2]],[M[2][1],0]] <> M then Error("off"); fi;
+od;
+for m in [-3..3] do for lam in [-3..3] do if m*m*lam*lam < 0 then Error("spring"); fi; od; od;
+edges := ["swapped_by","couples_to","generates","breaks_weyl_scale_by","realizes_as","drives_orthogonal_transport"];
+if Length(edges) <> 6 then Error("edges"); fi;
+Print(rec(projectors_orthogonal:=true,tomita_swap:=true,mass_offblock:=true,spring_sample_nonnegative:=true,edges:=Length(edges)));
+QUIT;

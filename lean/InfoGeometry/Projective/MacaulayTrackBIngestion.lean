@@ -61,7 +61,7 @@ def ingestedTrackBDataF3 : ExternalMacaulayTrackBData where
   primeField := 3
   volumeCount := 1296
 
-/-- A kernel-checkable arithmetic-volume certificate. -/
+/-- A kernel-checkable arithmetic-volume property. -/
 abbrev ArithmeticVolumeCertificate : Type :=
   Σ' _provenance : EvidenceProvenance,
     Σ' data : ExternalMacaulayTrackBData,
@@ -76,7 +76,7 @@ abbrev matchesCandidate (C : ArithmeticVolumeCertificate) :
 
 end ArithmeticVolumeCertificate
 
-/-- Candidate local Betti-rank certificate, kept separate from volume evidence. -/
+/-- Candidate local Betti-rank property, kept separate from volume evidence. -/
 abbrev BettiRankCertificate : Type :=
   Σ' _provenance : EvidenceProvenance,
     Σ' data : ExternalBettiData,
@@ -109,27 +109,27 @@ def candidateBettiRankProvenance : EvidenceProvenance where
   sha256 := "095d85555b40d82e7fc255a383d3854f1af0442ab30f98b39d4bba1280cda17e"
   status := EvidenceStatus.candidateFixture
 
-/-- Kernel-checked arithmetic certificate for the `F_3` Track B volume datum. -/
+/-- Kernel-checked arithmetic property for the `F_3` Track B volume datum. -/
 def arithmeticVolumeF3Certificate : ArithmeticVolumeCertificate :=
   ⟨arithmeticVolumeF3Provenance, ingestedTrackBDataF3, pointCount_F3_verified.symm⟩
 
-/-- Kernel-checked candidate Betti-rank certificate used by the spin-tiling layer. -/
+/-- Kernel-checked candidate Betti-rank property used by the spin-tiling layer. -/
 def candidateBettiRankCertificate : BettiRankCertificate :=
   ⟨candidateBettiRankProvenance, candidateLocalBettiData,
     rfl, candidateLocalBettiData_consistent, candidateLocalBettiData_totalRank⟩
 
-/-- The arithmetic certificate is currently a transcribed payload, not a backend proof. -/
+/-- The arithmetic property is currently a transcribed payload, not a backend proof. -/
 theorem arithmeticVolumeF3_status :
     arithmeticVolumeF3Certificate.provenance.status = EvidenceStatus.transcribed := by
   rfl
 
-/-- The arithmetic certificate has no positive external-run verification flag. -/
+/-- The arithmetic property has no positive external-run verification flag. -/
 theorem arithmeticVolumeF3_not_external_verified :
     ¬ arithmeticVolumeF3Certificate.provenance.isVerified := by
   change ¬ EvidenceStatus.transcribed = EvidenceStatus.verified
   decide
 
-/-- Read back the arithmetic certificate against the candidate Tate-motive polynomial. -/
+/-- Read back the arithmetic property against the candidate Tate-motive polynomial. -/
 theorem arithmeticVolumeF3_matches_tate_motive :
     arithmeticVolumeF3Certificate.data.volumeCount =
       tateMotivePolynomial arithmeticVolumeF3Certificate.data.primeField := by
@@ -143,12 +143,12 @@ theorem trackB_volume_verified_against_tate_motive :
     ingestedTrackBDataF3.volumeCount = tateMotivePolynomial ingestedTrackBDataF3.primeField := by
   exact arithmeticVolumeF3_matches_tate_motive
 
-/-- The candidate Betti certificate is explicitly marked as a fixture. -/
+/-- The candidate Betti property is explicitly marked as a fixture. -/
 theorem candidateBettiRank_status :
     candidateBettiRankCertificate.provenance.status = EvidenceStatus.candidateFixture := by
   rfl
 
-/-- The candidate Betti certificate has no positive external-run verification flag. -/
+/-- The candidate Betti property has no positive external-run verification flag. -/
 theorem candidateBettiRank_not_external_verified :
     ¬ candidateBettiRankCertificate.provenance.isVerified := by
   change ¬ EvidenceStatus.candidateFixture = EvidenceStatus.verified
@@ -159,7 +159,7 @@ theorem candidateBettiRank_local_rank :
     candidateBettiRankCertificate.data.totalRank = 8 := by
   exact candidateBettiRankCertificate.localRank8
 
-/-- Read back the spin-tiled rank-32 consequence from the candidate Betti certificate. -/
+/-- Read back the spin-tiled rank-32 consequence from the candidate Betti property. -/
 theorem candidateBettiRank_spin_tiled_rank32 :
     candidateBettiRankCertificate.data.totalRank * spinTilingMultiplicity = 32 := by
   exact spin_tiled_rank_from_external_data
@@ -168,7 +168,7 @@ theorem candidateBettiRank_spin_tiled_rank32 :
     candidateBettiRankCertificate.consistent
     candidateBettiRankCertificate.localRank8
 
-/-- Combined Track B certificate boundary consumed by downstream readout modules. -/
+/-- Combined Track B property boundary consumed by downstream readout modules. -/
 abbrev TrackBCertificateBoundary : Type :=
   ArithmeticVolumeCertificate × BettiRankCertificate
 

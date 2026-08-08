@@ -14,7 +14,7 @@ the precise conservative shadow:
 * the observable second-law statement is carried by a separate body/Fisher
   quadratic form;
 * positivity of the supertrace itself requires an additional domination or
-  restriction hypothesis.
+  restriction property.
 
 No concrete `Cl(4,4)` matrix representation, Zorn multiplication table, or
 Grassmann algebra is constructed here.
@@ -94,7 +94,7 @@ theorem supertrace_eq_body_minus_two_odd_of_nilpotent_zero
 
 /--
 Extra domination condition under which the signed supertrace readout is
-nonnegative.  This is deliberately a hypothesis: it is not a consequence of
+nonnegative.  This is deliberately a property: it is not a consequence of
 body Fisher positivity alone.
 -/
 theorem supertrace_nonnegative_of_odd_dominated

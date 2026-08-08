@@ -1,0 +1,137 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{hyperref}
+\usepackage{enumitem}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\dR}{\operatorname{dR}}
+\newcommand{\Conf}{\operatorname{Conf}}
+\newcommand{\Tr}{\operatorname{Tr}}
+\newcommand{\Ad}{\operatorname{Ad}}
+
+\title{A Finite\, Spine for Modular Time: de~Rham Monodromy, Radon--Nikodym Structure,
+and TKK Grade Preservation}
+\author{Nick Goutev (Lean/SymPy formalization team)}
+\date{June 2026}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present a theorem-honest Lean 4 formalization of the final modular-time bridge
+layer of a larger architecture relating non-isotropic configuration-space topology,
+operator-algebraic modular dynamics, and thermodynamic clock emergence.
+
+The finite algebraic core proves that the forbidden-cone de~Rham class for the
+three-point non-isotropic configuration is identified with the modular derivation
+sector compatible with the 5-graded Tits--Kantor--Koecher (TKK) decomposition.
+We isolate unresolved analytic ingredients as explicit interface sockets, and include
+independent SymPy witness scripts for the key local matrix identities.
+\end{abstract}
+
+\section{Introduction}
+The emergence of time from state-dependent modular flow (Connes--Rovelli thermal
+time) remains a central conceptual issue in quantum statistical mechanics and
+noncommutative geometry. Here we provide a finite, computation-first formulation
+where the main structural claims are implemented in Lean 4, and analytic completion
+is cleanly factorized.
+
+We focus on the final bridge layer:
+\[
+\text{de~Rham generator around }
+\{Q=0\} \,\rightsquigarrow\, \text{Tomita--Takesaki modular derivation}
+\rightarrow \text{parabolic clock}.
+\]
+
+\section{Topological finite core}
+Let $\Conf_3^Q(\mathbb C^D)$ be the 3-point non-isotropic configuration space of an
+ordered triple in $\mathbb C^D$ with forbidden light-cone factors $Q(x_i-x_j)=0$.
+The formal development proves finite combinatorial invariants in the four-dimensional
+case, including generator bookkeeping for the edge formalism and rank targets used in
+subsequent modular transport arguments.
+
+\begin{proposition}[Formal finite spine]
+In the compiled finite layer, the quadratic non-isotropic de~Rham skeleton and its
+cooperadic edge bookkeeping satisfy the expected degree assignments and rank targets
+for the targeted branch, including the 32-dimensional formal rank in the calibrated
+state.
+\end{proposition}
+
+\section{De~Rham form and parabolic contraction}
+In coordinates where the light-cone function is
+\[
+Q = E^2-p_x^2-p_y^2-p_z^2,
+\]
+we define the logarithmic form $\omega=d\log Q$.  A SymPy witness checks the local
+Euler contraction identity
+\[
+\iota_X \omega = 2,
+\]
+and vanishing differential of the clock one-form in this affine chart.
+
+\section{Radon--Nikodym and modular derivations}
+The central Lean bridge theorem identifies the de~Rham class with the modular
+flow generator:
+\begin{equation}
+\delta(A)=[K,A],
+\end{equation}
+for the modular Hamiltonian $K$ in the finite presentation.
+
+A set of theorems prove grade invariance of this flow:
+\[
+\delta \in \mathfrak g_0,\qquad
+\delta\,\mathfrak g_i \subset \mathfrak g_i,
+\]
+and compatibility with the parabolic clock equations used in the final
+identification layer.
+
+\section{Parabolic clock and unipotent group law}
+The parabolic clock is modeled by a nilpotent shear family
+\[ P(t)=I+tN,\quad N^2=0,\]
+so that
+\[P(t)\circ P(s)=P(t+s),\quad \det P(t)=1.\]
+This unipotent, volume-preserving law is verified by symbolic computation and
+matches the finite modular-time group law used by the Lean bridge declarations.
+
+\section{Layering and theorem-honesty policy}
+The project separates:
+\begin{itemize}[leftmargin=*]
+  \item\textbf{Lean-honest finite algebra/topology}: de~Rham formal spine,
+  cooperad combinatorics, TKK grading checks, and parabolic clock identities.
+  \item\textbf{Lean-to-socket transport}: finite-to-analytic comparison maps,
+  full Tomita--Takesaki realizability hypotheses, full Gysin/Dupont machinery,
+  and physical interpretation hypotheses.
+  \item\textbf{Computational audits}: SymPy scripts for local matrix and residue
+  identities.
+\end{itemize}
+
+\section{Artifacts and reproducibility}
+All key artifacts are version-controlled in the repository:
+\begin{itemize}[leftmargin=*]
+  \item Lean modules:
+  `ModularRadonNikodymJacobianBridge`, `ModularTimeDeRhamBridge`,
+  `ModularParabolicTimeBridge`.
+  \item Graph extraction:
+  `proofs/tools/ExtractGraph.lean` and generated `proof_graph.json`.
+  \item Symbolic scripts:
+  `proofs/modular_time_derivation_witness.py`,
+  `proofs/modular_parabolic_time_witness.py`,
+  `proofs/modular_radon_nikodym_jacobian_bridge.py`.
+\end{itemize}
+
+\section{Conclusion}
+This release does not claim a complete analytic realization of all physical
+hypotheses. It does provide a formally certified finite core in which the
+modular-time identification is expressed as a precise topological--algebraic map.
+This is, in particular, a concrete candidate for theorem-honest modular time
+authenticity in high-level mathematical physics.
+
+\end{document}

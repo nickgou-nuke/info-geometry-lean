@@ -14,7 +14,7 @@ This module formalizes only the conservative algebraic core:
 * probability weights can be supplied as squares of amplitude weights;
 * finite products of probability weights are squares of finite amplitude
   products;
-* Pfaffian and supercharge interpretations are witness gates.
+* Pfaffian and supercharge interpretations are property gates.
 
 No Riemann Hypothesis theorem, no zero-location theorem, no Super-Virasoro
 construction, and no infinite Pfaffian/determinant theorem is asserted here.

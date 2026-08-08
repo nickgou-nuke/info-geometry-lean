@@ -18,8 +18,8 @@ This module is intentionally conservative:
   `K_β(x) = ⟪J(x), β⟫`.
 - Metriplectic data keeps the reversible Poisson sector separate from the
   dissipative metric sector.
-- Optimal transport is carried by an explicit metric/cost/mobility witness.
-- JKO updates are recorded as a variational witness, not a convergence theorem.
+- Optimal transport is carried by an explicit metric/cost/mobility property.
+- JKO updates are recorded as a variational property, not a convergence theorem.
 - Metric transport of projector layers is imported as a compatibility gate,
   not conflated with transport on probability densities.
 
@@ -295,7 +295,7 @@ theorem freeEnergy_sublevel_closed
 
 end FreeEnergyFunctional
 
-/-- Dissipative Wasserstein/Onsager gradient-flow witness. -/
+/-- Dissipative Wasserstein/Onsager gradient-flow property. -/
 @[rep_depth thermo]
 structure WassersteinGradientFlow (State : Type*) where
   ot : OptimalTransportMetricWitness State
@@ -355,7 +355,7 @@ theorem freeEnergy_decay
 
 end WassersteinGradientFlow
 
-/-- JKO step recorded as a variational witness. -/
+/-- JKO step recorded as a variational property. -/
 @[rep_depth thermo]
 structure JKOTimeStep (State : Type*) where
   previous : Density State
@@ -401,7 +401,7 @@ end EquilibriumCandidate
 State-dynamics packet combining Souriau transport, metriplectic split, and
 optimal transport.
 
-The object is intentionally a witness container, not a global theorem.
+The object is intentionally a property container, not a global theorem.
 -/
 @[rep_depth thermo]
 structure SouriauMetriplecticOTFlow
@@ -713,7 +713,7 @@ end OperatorialLogPotentialLayer
 
 /--
 Finite bridge packet: a finite Souriau/Onsager shadow equipped with an
-optimal-transport metric witness and a metric-transport compatibility gate.
+optimal-transport metric property and a metric-transport compatibility gate.
 -/
 @[rep_depth thermo]
 structure FiniteSouriauMetriplecticOTBridge
@@ -791,7 +791,7 @@ theorem logPartitionDerivative_eq_deriv
   rfl
 
 /--
-A pointwise derivative certificate computes the thermodynamic force density.
+A pointwise derivative property computes the thermodynamic force density.
 -/
 theorem logPartitionDerivative_eq_of_hasDerivAt
     (G : GrandCanonicalPartitionFunction) {s force : ℝ}
@@ -976,7 +976,7 @@ theorem wasserstein_driven_by_riemann_weil
 
 end ExplicitFormulaVectorField
 
-/-- Data of an RG/free-energy flow, without a fabricated fixed-point witness. -/
+/-- Data of an RG/free-energy flow, without a fabricated fixed-point property. -/
 @[rep_depth transport]
 structure RGFlowData (State : Type*) where
   freeEnergy : State → ℝ
@@ -1129,7 +1129,7 @@ end RGFixedPointEquilibrium
 Conservative bridge packet connecting the installed grand-canonical, detailed-
 balance, optimal-transport, explicit-formula, and RG fixed-point owners.
 
-This is a witness container only: it records the intended alignment between the
+This is a property container only: it records the intended alignment between the
 owners without claiming the analytic identification itself.
 -/
 @[rep_depth transport]

@@ -12,7 +12,7 @@ this repository we keep only the finite algebra that the kernel can check:
   quaternion sign convention;
 * this file adds the conformal/Bloch-radius spacetime parametrization
   `t · (I + r n·σ)`, its density-matrix readback, determinant formula, null
-  boundary certificate, scalar conformal covariance, and a finite Lüders
+  boundary property, scalar conformal covariance, and a finite Lüders
   projection numerator identity.
 
 The informal claims that time, gravity, torsion, Einstein equations,
@@ -59,7 +59,7 @@ theorem blochSpacetimePoint_minkowski_readout (t r n1 n2 n3 : ℂ) :
   rw [blochSpacetimePoint, pauliPointRaw_det]
   ring
 
-/-- Unit direction and boundary radius give the finite null determinant certificate. -/
+/-- Unit direction and boundary radius give the finite null determinant property. -/
 theorem blochSpacetimePoint_det_zero_of_unit_boundary (t r n1 n2 n3 : ℂ)
     (hunit : n1 ^ 2 + n2 ^ 2 + n3 ^ 2 = 1) (hr : r ^ 2 = 1) :
     (blochSpacetimePoint t r n1 n2 n3).det = 0 := by

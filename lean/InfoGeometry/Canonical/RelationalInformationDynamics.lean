@@ -116,7 +116,7 @@ Primitive operatorial Massieu value.
 
 This file treats the normalized infinitesimal observable value `ω(A)` as the
 primitive functional quantity. Any analytic derivative statement about the
-log-partition potential is only a witness for this algebraic value.
+log-partition potential is only a property for this algebraic value.
 -/
 @[rep_depth operator]
 noncomputable def operatorMassieuExpectation
@@ -124,7 +124,7 @@ noncomputable def operatorMassieuExpectation
   ω A
 
 /--
-Normalized analytic witness for the primitive operatorial Massieu value.
+Normalized analytic property for the primitive operatorial Massieu value.
 
 Under normalization, the log-partition potential has infinitesimal value
 exactly equal to the observable expectation `ω(A)`.

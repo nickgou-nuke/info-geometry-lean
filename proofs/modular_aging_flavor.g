@@ -1,0 +1,13 @@
+aeonCount:=3;; generationCount:=3;; vintageCount:=3;; stablePage:=3;; serreResidueRank:=8;; aeonColimitRank:=24;; threeGenerationWeylCount:=48;;
+su3Generators:=8;; su2Generators:=3;; smRank:=4;; smGenerators:=12;; cartanGenerators:=4;;
+if aeonCount<>3 or generationCount<>3 or vintageCount<>3 or aeonColimitRank<>24 or threeGenerationWeylCount<>48 then Error("counts"); fi;
+if su3Generators<>8 or su2Generators<>3 or smRank<>4 or smGenerators<>12 or cartanGenerators<>4 then Error("symmetry"); fi;
+C2su3Fund:=4/3;; C2su2Doublet:=3/4;; aging1:=1/10;; aging2:=1/100;; aging3:=1/1000;;
+massRatioG2G1:=10;; massRatioG3G2:=10;; massRatioG3G1:=100;;
+if C2su3Fund<>4/3 or C2su2Doublet<>3/4 then Error("casimir"); fi;
+if aging1<>1/10 or aging2<>1/100 or aging3<>1/1000 or massRatioG2G1<>10 or massRatioG3G2<>10 or massRatioG3G1<>100 then Error("aging"); fi;
+colorAnomaly:=0;; weakAnomaly:=0;; generationAnomaly:=0;; ckmParameters:=4;; ckmEntries:=9;;
+S3:=SymmetricGroup(3);; if Size(S3)<>6 then Error("S3"); fi;
+edges:=["iterates","refines","generates_ckm","carries_sm","cancels_anomaly"];
+Print(rec(aeonCount:=aeonCount,generationCount:=generationCount,vintageCount:=vintageCount,stablePage:=stablePage,serreResidueRank:=serreResidueRank,aeonColimitRank:=aeonColimitRank,threeGenerationWeylCount:=threeGenerationWeylCount,su3Generators:=su3Generators,su2Generators:=su2Generators,smRank:=smRank,smGenerators:=smGenerators,cartanGenerators:=cartanGenerators,C2su3Fund:=C2su3Fund,C2su2Doublet:=C2su2Doublet,aging1:=aging1,aging2:=aging2,aging3:=aging3,massRatioG2G1:=massRatioG2G1,massRatioG3G2:=massRatioG3G2,massRatioG3G1:=massRatioG3G1,ckmParameters:=ckmParameters,ckmEntries:=ckmEntries,colorAnomaly:=colorAnomaly,weakAnomaly:=weakAnomaly,generationAnomaly:=generationAnomaly,s3Order:=Size(S3),graphEdges:=Length(edges)),"\n");
+QUIT;

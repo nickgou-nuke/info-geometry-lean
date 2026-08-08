@@ -13,11 +13,11 @@ The finite-dimensional `finrank` mismatch lane in `Quantum.BulkBoundary` still
 matters for index/regularization work, but the more primitive bulk-boundary
 payload is simpler:
 
-- an explicit boundary-localized zero-mode witness,
-- a resulting operator-level kernel witness,
+- an explicit boundary-localized zero-mode property,
+- a resulting operator-level kernel property,
 - hence a genuine nontrivial kernel of the open-chain operator.
 
-This file promotes that witness-first lane into a theorem-facing owner packet so
+This file promotes that property-first lane into a theorem-facing owner packet so
 downstream modules can depend on the dimension-agnostic operator statement
 without reconstructing it from local chain data each time.
 -/
@@ -128,7 +128,7 @@ theorem hasZeroMode_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
   exact owner_hasZeroMode O
 
 /--
-Promoted explicit witness theorem for the same dimension-agnostic lane.
+Promoted explicit property theorem for the same dimension-agnostic lane.
 -/
 theorem exists_zeroMode_of_topologicalIndexZ2_eq_one_of_simplifiedBoundaryModel
     (M : RealMajoranaDatum (S := S))

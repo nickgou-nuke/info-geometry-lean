@@ -387,14 +387,14 @@ variable {G : Type*} [Group G]
 variable {Op : Type uOp} [Ring Op]
 variable {Stage : ChiralStage Op}
 
-/-- The left sector is preserved exactly as recorded in the dynamics witness. -/
+/-- The left sector is preserved exactly as recorded in the dynamics property. -/
 theorem act_preserves_left_sector
     (D : ChiralDynamics G Op Stage)
     (g : G) (X : Op) :
     D.act g (Stage.Pleft * X) = Stage.Pleft * D.act g X :=
   D.preserves_left_sector g X
 
-/-- The right sector is preserved exactly as recorded in the dynamics witness. -/
+/-- The right sector is preserved exactly as recorded in the dynamics property. -/
 theorem act_preserves_right_sector
     (D : ChiralDynamics G Op Stage)
     (g : G) (X : Op) :
@@ -1310,7 +1310,7 @@ Tomita-Cartan split datum.
 This records the mirror operation, the factor-overlap condition, and the
 interpretive bridge from algebraic defects to a Krein isotropic cone.
 
-The null-cone statement is deliberately a witness field.  It is not a theorem
+The null-cone statement is deliberately a property field.  It is not a theorem
 of Tomita theory alone; it depends on the chosen Krein quadratic readout.
 -/
 structure TomitaCartanSplitDatum
@@ -1417,7 +1417,7 @@ namespace AlgebraCommutantDatum
 variable {Op : Type uOp} [Ring Op]
 variable (A : AlgebraCommutantDatum Op)
 
-/-- Any central element is scalar, via the stored overlap witness. -/
+/-- Any central element is scalar, via the stored overlap property. -/
 theorem center_is_scalar
     {x : Op}
     (hAlg : ∀ y : Op, y ∈ A.algebra → A.factorOverlap.inAlgebra y)

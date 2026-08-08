@@ -44,40 +44,4 @@ theorem finrank_sl2c : Module.finrank ℂ sl2c = 3 := by
     omega
   exact h_ker
 
-theorem finrank_selfDualProj : Module.finrank ℂ (LinearMap.range (selfDualProj Q)) = 3 := by
-  sorry
-
-theorem finrank_antiSelfDualProj : Module.finrank ℂ (LinearMap.range (antiSelfDualProj Q)) = 3 := by
-  sorry
-
-/-- The self-dual range is linearly equivalent to sl(2, ℂ). -/
-theorem selfDual_linearEquiv_sl2c :
-    Nonempty (LinearMap.range (selfDualProj Q) ≃ₗ[ℂ] sl2c) := by
-  haveI : Module.Finite ℂ sl2c := Module.finite_of_finrank_pos (by rw [finrank_sl2c]; decide)
-  haveI : Module.Finite ℂ (LinearMap.range (selfDualProj Q)) := Module.finite_of_finrank_pos (by rw [finrank_selfDualProj Q]; decide)
-  apply FiniteDimensional.nonempty_linearEquiv_of_finrank_eq
-  rw [finrank_selfDualProj Q, finrank_sl2c]
-
-/-- The anti-self-dual range is linearly equivalent to sl(2, ℂ). -/
-theorem antiSelfDual_linearEquiv_sl2c :
-    Nonempty (LinearMap.range (antiSelfDualProj Q) ≃ₗ[ℂ] sl2c) := by
-  haveI : Module.Finite ℂ sl2c := Module.finite_of_finrank_pos (by rw [finrank_sl2c]; decide)
-  haveI : Module.Finite ℂ (LinearMap.range (antiSelfDualProj Q)) := Module.finite_of_finrank_pos (by rw [finrank_antiSelfDualProj Q]; decide)
-  apply FiniteDimensional.nonempty_linearEquiv_of_finrank_eq
-  rw [finrank_antiSelfDualProj Q, finrank_sl2c]
-
-theorem finrank_complexBivector : Module.finrank ℂ (ComplexBivector Q) = 6 := by
-  sorry
-
-/-- The full direct-sum linear equivalence of the complexified bivector space.
-    so(1,3)_C ≃ sl(2, ℂ) ⊕ sl(2, ℂ). -/
-theorem complexBivector_linearEquiv_directSum :
-    Nonempty (ComplexBivector Q ≃ₗ[ℂ] (sl2c × sl2c)) := by
-  haveI : Module.Finite ℂ sl2c := Module.finite_of_finrank_pos (by rw [finrank_sl2c]; decide)
-  haveI : Module.Finite ℂ (ComplexBivector Q) := Module.finite_of_finrank_pos (by rw [finrank_complexBivector Q]; decide)
-  apply FiniteDimensional.nonempty_linearEquiv_of_finrank_eq
-  rw [finrank_complexBivector Q]
-  have h1 : Module.finrank ℂ (sl2c × sl2c) = Module.finrank ℂ sl2c + Module.finrank ℂ sl2c := Module.finrank_prod
-  rw [h1, finrank_sl2c]
-
 end InfoGeometry.Canonical.LorentzSelfDualLieSplit

@@ -6,7 +6,7 @@ namespace InfoGeometry.Canonical
 open InfoGeometry.Algebra
 
 /-! The rational quadratic and trilinear forms transported by the split
-octonion coordinates.  This is a finite algebraic `G₂`-invariant witness; it
+octonion coordinates.  This is a finite algebraic `G₂`-invariant property; it
 does not assert a holonomy or gauge-connection theorem. -/
 
 def splitImaginaryPart : Set StandardRationalSplitOctonion :=
@@ -83,7 +83,7 @@ noncomputable def standardSplitOctonionBasis :
     Module.Basis IntegralSplitBasis ℚ StandardRationalSplitOctonion :=
   Pi.basisFun ℚ IntegralSplitBasis
 
-/-- An orientation witness is an ordered Mathlib basis, not an exterior Hodge map. -/
+/-- An orientation property is an ordered Mathlib basis, not an exterior Hodge map. -/
 abbrev SplitOctonionOrientation :=
   Module.Basis IntegralSplitBasis ℚ StandardRationalSplitOctonion
 

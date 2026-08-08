@@ -18,7 +18,7 @@ binary profile / Cantor cylinder
 
 This file does not prove RH, analytic continuation, or infinite Euler-product
 claims.  Zero-location statements must be supplied by a separate spectral-zero
-witness.
+property.
 
 The theorem-owned finite identity remains in
 `PrimitiveBinarySuperZetaBridge.lean`:
@@ -58,9 +58,9 @@ def occ (b : Bool) : ℝ :=
 structure FinitePrimeProfile (k : ℕ) where
   /-- Prime label for each bit position. -/
   p : Fin k → ℕ
-  /-- Prime certificate for each label. -/
+  /-- Prime property for each label. -/
   prime_law : ∀ i, Nat.Prime (p i)
-  /-- Positive real base certificate for Mellin powers. -/
+  /-- Positive real base property for Mellin powers. -/
   p_pos : ∀ i, 0 < (p i : ℝ)
 
 /-- Profile energy `E(epsilon) = sum epsilon_i log p_i`. -/

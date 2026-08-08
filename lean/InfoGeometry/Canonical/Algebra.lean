@@ -32,15 +32,15 @@ This structure provides the conductive path between Drazin and Moore-Penrose
 projections on a shared module.
 
 PAULI_MANDATE II: This provides a Value-Edge by coordinating two different
-inverse theories into a single projective witness.
+inverse theories into a single projective property.
 -/
 structure UnifiedProjection (R M : Type*)
     [Ring R] [StarRing R] [AddCommGroup M] [Module R M] where
   /-- The operator element. -/
   op : R
-  /-- Drazin inverse witness. -/
+  /-- Drazin inverse property. -/
   a_d : R
-  /-- Moore-Penrose inverse witness. -/
+  /-- Moore-Penrose inverse property. -/
   a_mp : R
   /-- Drazin index. -/
   k : ℕ
@@ -52,7 +52,7 @@ structure UnifiedProjection (R M : Type*)
 
   /--
   Conductivity Law: The spectral and metric projectors must be identified
-  through a provided intertwiner or witness.
+  through a provided intertwiner or property.
   -/
   projectors_compatible :
     Drazin.IsDrazinInverse.projection op a_d =

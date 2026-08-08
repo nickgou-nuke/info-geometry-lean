@@ -1,10 +1,10 @@
 import InfoGeometry.Topology.WallpaperSymmetry
 
 /-!
-# Wallpaper `pg` Klein-bottle presentation witness
+# Wallpaper `pg` Klein-bottle presentation property
 
 This module packages the finite `pg` wallpaper relation into a theorem-safe
-presentation witness for the Klein-bottle relation.
+presentation property for the Klein-bottle relation.
 
 It does **not** prove that a topological quotient has been constructed, that the
 quotient is a manifold, or that the quotient is homeomorphic to the Klein
@@ -36,7 +36,7 @@ namespace InfoGeometry.Topology.WallpaperKleinBottlePresentation
 open InfoGeometry.Topology.Wallpaper
 
 /--
-Finite presentation witness for the pointwise Klein-bottle relation carried by a
+Finite presentation property for the pointwise Klein-bottle relation carried by a
 `pg` wallpaper action.
 -/
 structure KleinBottlePresentationWitness where
@@ -49,7 +49,7 @@ structure KleinBottlePresentationWitness where
 
 namespace WallpaperGroupPG
 
-/-- Any `pg` wallpaper package determines a finite Klein-bottle presentation witness. -/
+/-- Any `pg` wallpaper package determines a finite Klein-bottle presentation property. -/
 def kleinBottlePresentation (pg : WallpaperGroupPG) : KleinBottlePresentationWitness where
   xTranslation := pg.T_x
   yTranslation := pg.T_y
@@ -60,7 +60,7 @@ def kleinBottlePresentation (pg : WallpaperGroupPG) : KleinBottlePresentationWit
     have h := pg.h_commutation (pg.G.symm p)
     simpa using h
 
-/-- Read back the pointwise Klein-bottle presentation relation from the witness. -/
+/-- Read back the pointwise Klein-bottle presentation relation from the property. -/
 theorem kleinBottlePresentation_relation (pg : WallpaperGroupPG) (p : Lattice2D) :
     (WallpaperGroupPG.kleinBottlePresentation pg).glide
         ((WallpaperGroupPG.kleinBottlePresentation pg).yTranslation

@@ -93,7 +93,7 @@ def finiteHurwitzMellinTrace (N : ℕ) (a : ℝ) (s : ℂ) : ℂ :=
 /--
 Finite Mellin compatibility for shifted Hurwitz sectors.
 
-This is the axiom-free version of the proposed bridge: the Mellin atom is the
+This is the ax!om-free version of the proposed bridge: the Mellin atom is the
 concrete `exp (-s * log energy)` definition from `ZetaSpectralBridge`.
 -/
 theorem finite_mellin_compatibility (N : ℕ) (a : ℝ) (s : ℂ) :
@@ -128,7 +128,7 @@ def infiniteHurwitzTrace (a : ℝ) (s : ℂ) : ℂ :=
 /--
 Conservative Mellin bridge for the modeled infinite Hurwitz trace.
 
-This re-exports the assumption-explicit bridge from `HurwitzTwistedSector`.
+This re-exports the property-explicit bridge from `HurwitzTwistedSector`.
 -/
 theorem infiniteHurwitzTrace_mellin_bridge
     (M : InfoGeometry.Quantum.HurwitzTwistedSector.InfiniteHurwitzTraceModel)

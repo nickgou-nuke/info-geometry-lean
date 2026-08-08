@@ -1,0 +1,22 @@
+info-geometry-lean
+Copyright 2026 Nikolay Goutev and Dimitar Tonev
+
+Licensed under the Apache License, Version 2.0.
+
+This project is an open-source Lean 4 and SymPy formalization effort directed
+by Nikolay Goutev and Dimitar Tonev with institutional affiliation listed in
+CITATION.cff.
+
+AI Collaboration Notice
+-----------------------
+Portions of the code, documentation, proof refactoring, symbolic witnesses, and
+architecture notes were produced in collaboration with AI coding agents under
+human direction, review, and curation. The human authors retain responsibility
+for release decisions, licensing, theorem-honesty boundaries, and scientific
+claims. AI assistance is acknowledged here as part of the open research process.
+
+The repository intentionally separates:
+- Lean-proved finite algebraic/scalar/matrix anchors;
+- SymPy computational witnesses;
+- explicit sockets for analytic C*-algebra, von Neumann, infinite spectral, and
+  physical interpretation layers.

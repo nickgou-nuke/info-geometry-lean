@@ -9,7 +9,7 @@ noncomputable section
 /-!
 # InfoGeometry.Krein.HestenesCPTONNDualityBridge
 
-witness-gated (Native Closure Mandated: Closure Debt) CPT / `O(N,N)` duality socket for the Hestenes--Krein arithmetic
+property-gated (Native Closure Mandated: Closure Debt) CPT / `O(N,N)` duality socket for the Hestenes--Krein arithmetic
 closure lane.
 
 This file deliberately does **not** construct the full continuous `O(N,N)` group,

@@ -48,7 +48,7 @@ local instance : IsScalarTower ℝ EndH EndH :=
 Bounded KMS to Hestenes/Krein real-form bridge.
 
 The complex-valued bounded KMS state remains the owner of the abstract analytic
-certificate.  The Hestenes packet supplies the real phase axis, rotor
+property.  The Hestenes packet supplies the real phase axis, rotor
 implementation, and Krein-cone preservation.  The equality field identifies
 the Hestenes observable flow with the bounded modular flow datum.
 -/
@@ -77,10 +77,10 @@ structure BoundedKMSHestenesBridge where
     ∀ A : EndH, realState A = (boundedKMS.state.eval A).re
 
   /--
-  Hestenes real-form KMS boundary witness.
+  Hestenes real-form KMS boundary property.
 
-  This is intentionally explicit: the complex analytic certificate is a
-  witness-level proposition in the operator-thermodynamic API, not a concrete
+  This is intentionally explicit: the complex analytic property is a
+  property-level proposition in the operator-thermodynamic API, not a concrete
   formula from which the real boundary law can be unfolded automatically.
   -/
   hestenesKMS :
@@ -104,7 +104,7 @@ theorem realState_eq_eval_re_apply
     B.realState A = (B.boundedKMS.state.eval A).re :=
   B.realState_eq_eval_re A
 
-/-- Re-export the bounded complex KMS analytic certificate. -/
+/-- Re-export the bounded complex KMS analytic property. -/
 @[rep_depth krein]
 theorem bounded_kms_boundary_holds :
     B.boundedKMS.kms.boundaryCondition :=

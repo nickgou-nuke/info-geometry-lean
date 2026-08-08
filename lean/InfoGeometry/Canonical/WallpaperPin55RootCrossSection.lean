@@ -243,7 +243,7 @@ theorem weylD5CrossSection_action_projects_wallpaper (g r : Fin 8) :
       matVec2 (wallpaperD4 g) (wallpaperB2Root r) := by
   fin_cases g <;> fin_cases r <;> native_decide
 
-/-- Explicit `D₅` root witness data for the lifted `D₄` action. -/
+/-- Explicit `D₅` root property data for the lifted `D₄` action. -/
 structure D5RootData where
   i : Fin 5
   j : Fin 5
@@ -317,7 +317,7 @@ def d5ActionWitness : Fin 8 → Fin 8 → D5RootData
   | 7, 6 => ⟨0, 1, 0, 1⟩
   | 7, 7 => ⟨0, 1, 1, 0⟩
 
-/-- The witness table always chooses two distinct `D₅` coordinates. -/
+/-- The property table always chooses two distinct `D₅` coordinates. -/
 theorem d5ActionWitness_ne (g r : Fin 8) :
     (d5ActionWitness g r).i ≠ (d5ActionWitness g r).j := by
   fin_cases g <;> fin_cases r <;> decide

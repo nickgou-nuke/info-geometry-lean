@@ -3,8 +3,8 @@ import InfoGeometry.Algebra.Zorn.BasisTable
 /-!
 # Concrete Zorn associator obstruction
 
-This module gives a finite, coordinate-level nonassociativity witness for the
-repository's concrete Zorn product.  The witness is expressed in the standard
+This module gives a finite, coordinate-level nonassociativity property for the
+repository's concrete Zorn product.  The property is expressed in the standard
 8-basis table `E11,E22,U1,U2,U3,V1,V2,V3`.
 -/
 
@@ -101,19 +101,19 @@ theorem associator_e11_u1_u2_ne_zero :
     associatorZ (cell e11) (cell u1) (cell u2) ≠ SignedBasis.cell zero := by
   decide
 
-/-- The obstruction witness is exactly the lower off-diagonal basis direction `V3`. -/
-theorem associator_obstruction_witness_packet :
+/-- The obstruction property is exactly the lower off-diagonal basis direction `V3`. -/
+theorem associator_obstruction_property_packet :
     associatorZ (cell e11) (cell u1) (cell u2) = cell v3 ∧
       associatorZ (cell e11) (cell u1) (cell u2) ≠ SignedBasis.cell zero := by
   exact ⟨associator_e11_u1_u2_eq_v3, associator_e11_u1_u2_ne_zero⟩
 
-/-- The left-associated product in the witness is `V3`. -/
-theorem associator_witness_left_product :
+/-- The left-associated product in the property is `V3`. -/
+theorem associator_property_left_product :
     (cell e11 * cell u1) * cell u2 = cell v3 := by
   decide
 
-/-- The right-associated product in the witness is zero. -/
-theorem associator_witness_right_product :
+/-- The right-associated product in the property is zero. -/
+theorem associator_property_right_product :
     cell e11 * (cell u1 * cell u2) = SignedBasis.cell zero := by
   decide
 
@@ -129,13 +129,13 @@ theorem not_associative_concrete_zorn :
   intro h
   exact associator_e11_u1_u2_ne_zero (h (cell e11) (cell u1) (cell u2))
 
-/-- Concrete noncommutativity witness in the upper off-diagonal sector. -/
+/-- Concrete noncommutativity property in the upper off-diagonal sector. -/
 theorem commutator_u1_u2 :
     commutatorZ (cell u1) (cell u2) =
       ⟨0, 0, 0, 0, 0, 0, 0, 2⟩ := by
   decide
 
-/-- The concrete upper-sector commutator witness is nonzero. -/
+/-- The concrete upper-sector commutator property is nonzero. -/
 theorem commutator_u1_u2_ne_zero :
     commutatorZ (cell u1) (cell u2) ≠ SignedBasis.cell zero := by
   decide
@@ -170,22 +170,22 @@ theorem commutator_jacobi_v1_v2_v3 :
       ⟨6, -6, 0, 0, 0, 0, 0, 0⟩ := by
   decide
 
-/-- The upper-sector Jacobiator witness is nonzero. -/
+/-- The upper-sector Jacobiator property is nonzero. -/
 theorem commutator_jacobi_u1_u2_u3_ne_zero :
     commutatorJacobiatorZ (cell u1) (cell u2) (cell u3) ≠ SignedBasis.cell zero := by
   decide
 
-/-- The lower-sector Jacobiator witness is nonzero. -/
+/-- The lower-sector Jacobiator property is nonzero. -/
 theorem commutator_jacobi_v1_v2_v3_ne_zero :
     commutatorJacobiatorZ (cell v1) (cell v2) (cell v3) ≠ SignedBasis.cell zero := by
   decide
 
-/-- Determinant/norm readout of the upper-sector Jacobiator witness. -/
+/-- Determinant/norm readout of the upper-sector Jacobiator property. -/
 theorem detZ_commutator_jacobi_u1_u2_u3 :
     detZ (commutatorJacobiatorZ (cell u1) (cell u2) (cell u3)) = -36 := by
   decide
 
-/-- Determinant/norm readout of the lower-sector Jacobiator witness. -/
+/-- Determinant/norm readout of the lower-sector Jacobiator property. -/
 theorem detZ_commutator_jacobi_v1_v2_v3 :
     detZ (commutatorJacobiatorZ (cell v1) (cell v2) (cell v3)) = -36 := by
   decide

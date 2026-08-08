@@ -16,7 +16,7 @@ The finite `Cl(1,1)` atom is kept separate from the mode current:
 * the `CurrentHeisenbergRep` and Sugawara bridge live in
   `CurrentSugawaraBridge`;
 * this file only packages those owner theorems into the requested source-side
-  witness surface.
+  property surface.
 -/
 
 noncomputable section
@@ -66,8 +66,8 @@ variable (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜]
 variable (α : 𝕜)
 
 /--
-The concrete tensor-modular atom witness is the existing charged-Fock
-Heisenberg current packaged as a split-Clifford witness.
+The concrete tensor-modular atom property is the existing charged-Fock
+Heisenberg current packaged as a split-Clifford property.
 
 This is the exact current-side data required by the bridge:
 current modes, local truncation, and the Heisenberg commutator.
@@ -93,12 +93,12 @@ noncomputable def tensorModularAtomHeisenbergWitness :
       (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm :=
   rfl
 
-/-- The tensor modular atom witness yields the exact current interface. -/
+/-- The tensor modular atom property yields the exact current interface. -/
 noncomputable def tensorModularAtom_toCurrentHeisenbergRep :
     CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
   splitClifford_to_currentHeisenbergRep (tensorModularAtomHeisenbergWitness 𝕜 α)
 
-/-- The tensor modular atom witness yields the packaged Sugawara morphism. -/
+/-- The tensor modular atom property yields the packaged Sugawara morphism. -/
 noncomputable def tensorModularAtom_toCurrentSugawaraMorphism :
     CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
   splitClifford_to_currentSugawaraMorphism (tensorModularAtomHeisenbergWitness 𝕜 α)
@@ -112,7 +112,7 @@ noncomputable def tensorModularAtom_toCurrentSugawaraMorphism_and_current :
       CurrentHeisenbergRep 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
   splitClifford_currentSugawara_and_current (tensorModularAtomHeisenbergWitness 𝕜 α)
 
-/-- The tensor modular atom witness yields the downstream Sugawara representation. -/
+/-- The tensor modular atom property yields the downstream Sugawara representation. -/
 noncomputable def tensorModularAtom_to_sugawaraRepresentation :
     VirasoroAlgebra 𝕜 →ₗ⁅𝕜⁆
       (VirasoroProject.ChargedFockSpace 𝕜 α →ₗ[𝕜] VirasoroProject.ChargedFockSpace 𝕜 α) :=
@@ -130,8 +130,8 @@ noncomputable def tensorModularAtom_toCurrentAndSugawara
   splitClifford_current_and_sugawara (tensorModularAtomHeisenbergWitness 𝕜 α)
 
 /--
-The exact source-side bridge: the charged-Fock current witness is already a
-split-Clifford witness, so the current and Sugawara packages are immediate.
+The exact source-side bridge: the charged-Fock current property is already a
+split-Clifford property, so the current and Sugawara packages are immediate.
 -/
 theorem tensorModularAtom_current_readout
     :
@@ -149,7 +149,7 @@ theorem tensorModularAtom_current_readout
 
 /--
 Companion bridge surface exposing the packaged Sugawara morphism together with
-its current witness on the tensor modular-atom carrier.
+its current property on the tensor modular-atom carrier.
 -/
 theorem tensorModularAtom_currentSugawara_readout
     :

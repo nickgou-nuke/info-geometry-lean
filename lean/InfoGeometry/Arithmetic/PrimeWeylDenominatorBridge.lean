@@ -343,7 +343,7 @@ def finiteSignedDecayingTrace
 The raw hyperbolic trace splits as growing minus decaying terms.
 
 This is the finite warning theorem: without an extra normalization or
-regularization witness, the raw hyperbolic trace is not the Möbius heat trace.
+regularization property, the raw hyperbolic trace is not the Möbius heat trace.
 -/
 theorem finiteSignedRawHyperbolicTrace_eq_growing_sub_decaying
     {α R : Type*} [Field R]

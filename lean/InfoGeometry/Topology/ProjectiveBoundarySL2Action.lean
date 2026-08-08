@@ -8,7 +8,7 @@ namespace InfoGeometry.Topology
 
 The construction is written with the explicit 2-by-2 determinant.  This keeps
 the preservation proof elementary and makes the required invertibility
-hypothesis visible.
+property visible.
 -/
 
 def det2 {R : Type*} [CommRing R]

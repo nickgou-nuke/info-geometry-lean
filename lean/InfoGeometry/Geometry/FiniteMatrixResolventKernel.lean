@@ -108,7 +108,7 @@ end MatrixResolventKernel
 /-! ## 3. Construction from a unit -/
 
 /--
-Construct a matrix resolvent kernel from a unit witness for `zI - A`.
+Construct a matrix resolvent kernel from a unit property for `zI - A`.
 
 This is the finite constructive replacement for “the resolvent exists”.
 -/

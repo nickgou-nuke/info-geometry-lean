@@ -67,7 +67,7 @@ theorem curvature_action_zero_of_commuting {Γ Λ X : Mat2}
   rw [hcomm]
   simp [commutator]
 
-/-- Constant gauge conjugation preserves commutators, with an explicit inverse witness. -/
+/-- Constant gauge conjugation preserves commutators, with an explicit inverse property. -/
 theorem commutator_conjugation_covariant (U V Γ X : Mat2)
     (hVU : V * U = 1) :
     commutator (U * Γ * V) (U * X * V) = U * commutator Γ X * V := by

@@ -242,7 +242,7 @@ structure ReducedStructureSpinBoundary where
   q_val : q = 2 ∨ q = 4 ∨ q = 8
   reducedStructureGroup : Type*
   spinGroup : Type*
-  /-- The boundary carries an actual equivalence witness between its endpoints. -/
+  /-- The boundary carries an actual equivalence property between its endpoints. -/
   expectedIsomorphism : Nonempty (reducedStructureGroup ≃ spinGroup)
 
 /--

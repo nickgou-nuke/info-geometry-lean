@@ -9,7 +9,7 @@ namespace InfoGeometry.Topology
 
 These are direct instances of the generic continuous-map transport theorem.
 The chart intertwining law is retained by the existing chart owner; this file
-only transports the topological homotopy witness.
+only transports the topological homotopy property.
 -/
 
 def SymbolicLatentChartMorphism.continuousMap

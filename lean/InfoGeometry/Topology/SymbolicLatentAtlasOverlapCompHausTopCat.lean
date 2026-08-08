@@ -5,7 +5,7 @@ import Mathlib.Topology.Category.CompHaus.Basic
 # Compact-Hausdorff packaging of atlas overlaps
 
 Atlas domains are open and are not compact by default.  This owner therefore
-requires an explicit compactness witness for an overlap and packages only
+requires an explicit compactness property for an overlap and packages only
 the overlap carrier in `CompHaus`.  The feature transition maps remain
 `TopCat` morphisms, because the feature space is not assumed compact.
 -/

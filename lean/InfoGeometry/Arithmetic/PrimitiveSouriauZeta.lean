@@ -7,14 +7,14 @@ Witness-gated bridge between primitive-set arithmetic, finite Riemann-gas
 partition readouts, and Souriau-style thermodynamic calibration.
 
 This module does not prove the Erdős primitive-set theorem, the Riemann
-hypothesis, analytic continuation of `ζ`, or an infinite Euler product.  It
+property, analytic continuation of `ζ`, or an infinite Euler product.  It
 formalizes the conservative finite bridge:
 
 * energy level `E_n = log n`;
 * finite restricted partition `∑ n∈A, exp (-β log n)`;
 * primitive weight as the integral of that restricted partition over `β > 1`;
 * model-specific Souriau entropy/objective readouts calibrated to the
-  primitive arithmetic readouts by explicit witness fields.
+  primitive arithmetic readouts by explicit property fields.
 -/
 
 noncomputable section
@@ -111,7 +111,7 @@ theorem primitiveWeightSum_eq_integral_finiteZetaPartition
   simpa [primitiveFiniteZetaPartition] using
     primitiveWeightSum_eq_integral_mellinKernel A
 
-/-! ## 2. Primitive admissibility and MaxEnt witness -/
+/-! ## 2. Primitive admissibility and MaxEnt property -/
 
 /-- A finite primitive configuration supported above a threshold. -/
 structure PrimitiveAdmissibleFinset where
@@ -168,10 +168,10 @@ theorem objective_nonneg
 end PrimitiveAdmissibleFinset
 
 /--
-Finite MaxEnt-style optimizer witness for the primitive arithmetic objective.
+Finite MaxEnt-style optimizer property for the primitive arithmetic objective.
 
 This is proof-carrying optimization data.  It does not assert that primes are
-the optimizer unless such a witness is supplied.
+the optimizer unless such a property is supplied.
 -/
 structure FinitePrimitiveMaxEntWitness
     (threshold : ℕ)
@@ -197,7 +197,7 @@ theorem weight_le_candidate
     primitiveWeightSum A ≤ primitiveWeightSum candidate :=
   W.maximizes_weight A hPrim hSupp
 
-/-- The candidate of a finite MaxEnt witness is itself admissible finite data. -/
+/-- The candidate of a finite MaxEnt property is itself admissible finite data. -/
 def candidateAdmissible
     (W : FinitePrimitiveMaxEntWitness threshold candidate) :
     PrimitiveAdmissibleFinset where
@@ -397,7 +397,7 @@ theorem freeEnergy_le_iff_weight_le
   rw [C.freeEnergy_eq_primitiveWeightSum A, C.freeEnergy_eq_primitiveWeightSum B]
 
 /--
-A primitive MaxEnt witness calibrates to entropy maximality in any Souriau
+A primitive MaxEnt property calibrates to entropy maximality in any Souriau
 model satisfying `PrimitiveSouriauZetaCalibration`.
 -/
 theorem entropyReadout_le_candidate_of_maxEnt
@@ -412,7 +412,7 @@ theorem entropyReadout_le_candidate_of_maxEnt
   exact W.weight_le_candidate A hPrim hSupp
 
 /--
-A primitive MaxEnt witness calibrates to objective maximality in any
+A primitive MaxEnt property calibrates to objective maximality in any
 Souriau model satisfying `PrimitiveSouriauZetaCalibration`.
 -/
 theorem objectiveReadout_le_candidate_of_maxEnt

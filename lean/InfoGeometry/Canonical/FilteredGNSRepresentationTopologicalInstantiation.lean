@@ -7,7 +7,7 @@ import InfoGeometry.Canonical.FilteredGNSAlgebraicColimitRepresentation
 The generic representation cocone is instantiated for the global filtered GNS
 bounded-operator carrier.  Continuity of the observable-to-operator maps is
 kept as explicit data: this is the exact remaining analytic/topological input,
-not a hidden instance or an axiom.
+not a hidden instance or an ax!om.
 -/
 
 noncomputable section

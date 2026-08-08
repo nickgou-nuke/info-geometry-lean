@@ -37,7 +37,7 @@ def waveletAdmissible (ψHat : ℝ → ℂ) : Prop :=
   MellinConvergent (waveletEnergyDensity ψHat) 0
 
 /--
-Bundle a frequency profile with its admissibility witness.
+Bundle a frequency profile with its admissibility property.
 
 This is a theorem-safe owner packet: it records admissibility once, without
 claiming a derived inversion theorem.
@@ -51,7 +51,7 @@ namespace WaveletAdmissibilityPacket
 abbrev ψHat (P : WaveletAdmissibilityPacket) : ℝ → ℂ :=
   P.1
 
-/-- The admissibility witness carried by the native subtype. -/
+/-- The admissibility property carried by the native subtype. -/
 abbrev admissible (P : WaveletAdmissibilityPacket) : waveletAdmissible P.ψHat :=
   P.2
 

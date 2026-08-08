@@ -67,12 +67,12 @@ theorem particleProjector_add_antiparticleProjector (K : SpinorEnd S) :
   rw [particleProjector, antiparticleProjector, add_comm]
   exact InfoGeometry.Cartan.Pplus_add_Pminus_eq_id K
 
-/-- The particle projector is idempotent under the involution hypothesis. -/
+/-- The particle projector is idempotent under the involution property. -/
 theorem particleProjector_idempotent (K : SpinorEnd S) (hK : K * K = 1) :
     particleProjector S K * particleProjector S K = particleProjector S K := by
   exact InfoGeometry.Cartan.Pminus_idempotent K hK
 
-/-- The antiparticle projector is idempotent under the involution hypothesis. -/
+/-- The antiparticle projector is idempotent under the involution property. -/
 theorem antiparticleProjector_idempotent (K : SpinorEnd S) (hK : K * K = 1) :
     antiparticleProjector S K * antiparticleProjector S K = antiparticleProjector S K := by
   exact InfoGeometry.Cartan.Pplus_idempotent K hK

@@ -8,7 +8,7 @@ namespace InfoGeometry.Canonical
 The canonical owner is `SplitOctonionColorS3Automorphisms`.  This module keeps
 only theorem-level names for clients of the old file; it introduces no second
 coordinate map, no duplicate linear equivalence, and no proposition-valued
-multiplicativity certificate.
+multiplicativity property.
 -/
 
 theorem g2_triality_order_three

@@ -6,7 +6,7 @@ import InfoGeometry.OperatorAlgebra.D4StarCrossedProductContinuousLinearRepresen
 The existing generic spectral-triple owner is real-linear and requires a ring
 representation.  The finite D₄ carrier is not yet equipped with a proved
 ring instance, so this file records only the complex bounded-operator
-commutator that is already meaningful for the witness-gated left action.
+commutator that is already meaningful for the property-gated left action.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.D4StarCrossedProductComplexCommutator

@@ -14,7 +14,7 @@ This file deliberately separates the layers:
 
 * finite Euler products and Witten parity are arithmetic prime-register facts;
 * the fermionic ladder is the existing split-`Cl(1,1)` CAR pair;
-* the bosonic unit CCR is witness-gated by `ScaledCCRPair`, because a true
+* the bosonic unit CCR is property-gated by `ScaledCCRPair`, because a true
   unit Heisenberg CCR is not a finite-matrix identity;
 * the primitive supercharge CAR/CCR channel is the already-owned
   `J/ε/Q = Jε` doubled-Krein spine;

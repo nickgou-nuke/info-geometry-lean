@@ -433,7 +433,7 @@ end MetricIsotropicAlgebraBridge
 /-! ## 8. Drazin inverse and Drazin-nil support -/
 
 /--
-An element `a` has a Drazin inverse `x` with witness index `index`.
+An element `a` has a Drazin inverse `x` with property index `index`.
 
 The identities are:
 
@@ -441,7 +441,7 @@ The identities are:
 * `x * a * x = x`;
 * `a^(index + 1) * x = a^index`.
 
-The index is a witness, not asserted here to be minimal.
+The index is a property, not asserted here to be minimal.
 -/
 def HasDrazinInverse
     {A : Type*} [Ring A]
@@ -475,7 +475,7 @@ end HasDrazinInverse
 Drazin-nilpotent support.
 
 An element is Drazin-nilpotent if it has a Drazin inverse equal to zero, with a
-nonzero index witness.
+nonzero index property.
 -/
 def IsDrazinNilpotent
     {A : Type*} [Ring A]

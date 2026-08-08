@@ -1,0 +1,25 @@
+\section{Part IV: Computational Representations}
+\label{sec:part4}
+
+The geometric bounds and derivations map onto robust numerical optimizations. We instantiate these symmetries computationally.
+
+\subsection{Poisson-Sinkhorn Coincidence Factorization}
+
+\begin{mdefinition}[Physics-Constrained Entropic Transport Factorization]
+Given a set of measurements $X \sim \operatorname{Poisson}(\Lambda)$, we construct the forward model as:
+\begin{align}
+U &= \text{HPGeResponse}(E_A,\theta_A) + \delta U \\
+V &= \text{HPGeResponse}(E_B,\theta_B) + \delta V \\
+K &= M \odot \exp[-(C_{\rm physics} + C_\theta)/\varepsilon] \\
+P &= \operatorname{Sinkhorn}(K; r, c) \\
+\Lambda &= I_{\rm tot} U P V^\top + B_{\rm smooth} + B_{\rm ridge}.
+\end{align}
+\end{mdefinition}
+
+\begin{eresult}[Synthetic Truth Recovery]
+[TODO: Conduct an adversarial synthetic recovery experiment. Record held-out Poisson deviance, edge-support precision/recall, $|P-P_{\rm true}|_1$, and background leakage.]
+\end{eresult}
+
+\begin{phypothesis}[Cascade Equivariance]
+[TODO: Physical interpretations relating the factorization transport logic to advanced/retarded quantum transitions should remain isolated as hypothesis pending explicit representation maps to physical observables.]
+\end{phypothesis}

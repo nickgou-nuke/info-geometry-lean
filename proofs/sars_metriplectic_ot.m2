@@ -1,0 +1,12 @@
+R = QQ[ex,eu,u,x,r];
+modular = r - 1 - (x-u);
+fenchelGap = ex + eu*u - eu - x*eu;
+assert(sub(fenchelGap - eu*modular, {ex => eu*r}) == 0);
+burg = r - (x-u) - 1;
+assert(burg - modular == 0);
+S = QQ[q,dq, WeylAlgebra => {q=>dq}];
+I = ideal(q*dq - dq*q - 1);
+assert(numgens I == 1);
+edges = {"symplectic_part","metric_part","minimizes_distortion","generated_by","stabilizes_vacuum"};
+assert(#edges == 5);
+print {fenchelFactor=>0, burgModularDifference=>0, dmoduleCCRGenerators=>numgens I, graphEdges=>#edges};

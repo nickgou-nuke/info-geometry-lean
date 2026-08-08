@@ -17,7 +17,7 @@ This file follows the repository formula/function policy:
 
 * formulas are plain `def`s with explicit arguments;
 * theorems call the formula functions directly;
-* no sockets, no certificates, no witness fields.
+* no sockets, no certificates, no property fields.
 
 The mathematical move is simple: take the classical real thermodynamic formulas
 

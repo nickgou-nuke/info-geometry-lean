@@ -61,7 +61,7 @@ abbrev IsKreinSkewAdjointH
 
 /--
 Natural gradient operator on the singular boundary:
-`G⁺ grad_f` relative to a Moore-Penrose witness.
+`G⁺ grad_f` relative to a Moore-Penrose property.
 -/
 noncomputable def OperatorNaturalGradient
     (G G_pinv grad_f : HilbertDoubled E →L[ℝ] HilbertDoubled E)

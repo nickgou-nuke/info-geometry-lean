@@ -11,7 +11,7 @@ The concrete finite result is the signed-permutation point group `D₄` generate
 by the Brillouin twist `T² = -I` and glide `G T = - T G`.  These eight matrices
 are the wallpaper point symmetries which normalize the Klein-bottle momentum
 cell.  Full crystallographic wallpaper-group classification, Pin(5,5) bundle
-construction, and global Cartan geometry remain explicit certificate layers.
+construction, and global Cartan geometry remain explicit property layers.
 -/
 
 namespace InfoGeometry.Canonical.WallpaperKleinBottleCartan
@@ -116,7 +116,7 @@ theorem wallpaperD4_reflections_anticommute (i : Fin 4) :
   fin_cases i <;> ext a b <;> fin_cases a <;> fin_cases b <;>
     norm_num [wallpaperD4, brillouinTwist2, brillouinGlide2, Matrix.mul_apply, Fin.sum_univ_two]
 
-/-- A finite classification certificate: an owner can identify any wallpaper
+/-- A finite classification property: an owner can identify any wallpaper
 point symmetry satisfying the Klein compatibility predicates with one of the
 eight displayed `D₄` elements. -/
 structure WallpaperKleinClassificationCertificate where
@@ -130,7 +130,7 @@ namespace WallpaperKleinClassificationCertificate
 
 variable (C : WallpaperKleinClassificationCertificate)
 
-/-- Read out the explicit eight-element classification from the certificate. -/
+/-- Read out the explicit eight-element classification from the property. -/
 theorem classified_as_D4 {S : Mat2Q} (hS : C.candidate S) :
     ∃ i : Fin 8, S = wallpaperD4 i :=
   C.candidate_classified S hS

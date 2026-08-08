@@ -20,7 +20,7 @@ from becoming theorem-level shortcuts:
 
 * TFD tensor doubling is not the same object as Hestenes--Krein direct doubling;
 * Tomita antiunitary `J` is not a complex-linear Krein symmetry, but it may
-  realify to a Krein polarization after a witness is supplied;
+  realify to a Krein polarization after a property is supplied;
 * raw Möbius on all integers is not a global fundamental symmetry, because
   `μ²` is the square-free projection;
 * Type III modular theory is state/weight based, not a global trace theory;
@@ -77,7 +77,7 @@ end BosonicPrimonTFDModel
 Full-carrier Möbius readout guard.
 
 On the full integer carrier, Möbius is a partial parity/supertrace weight, not
-a fundamental symmetry.  The law `Γ_μ² = P_sf` is stored as witness data.
+a fundamental symmetry.  The law `Γ_μ² = P_sf` is stored as property data.
 -/
 structure FullMobiusPartialParity where
   FullState : Type*
@@ -134,7 +134,7 @@ Doubled Krein TFD sector.
 
 `KreinJ` is a real-linear fundamental symmetry.  It is not Tomita's
 antiunitary modular conjugation in the complex-linear category; the supplied
-realification witness records when the realified Tomita operator is identified
+realification property records when the realified Tomita operator is identified
 with this Krein polarization.
 -/
 structure DoubledKreinTFDSector where
@@ -194,7 +194,7 @@ end MobiusSupertraceReadout
 TFD/Krein readout duality socket.
 
 The formula comparing a TFD expectation with a Krein graded readout is valid
-only after a model supplies a translation and a certificate.
+only after a model supplies a translation and a property.
 -/
 structure TFDKreinSupertraceDuality where
   HilbertObservable : Type*
@@ -227,7 +227,7 @@ end HestenesKreinOrbitChannel
 Witness-gated zeta-zero socket.
 
 Riemann zero locations are not inferred from TFD, Krein parity, or Hestenes
-winding periodicity.  They require a separate analytic/spectral witness.
+winding periodicity.  They require a separate analytic/spectral property.
 -/
 @[socket_debt_tag]
 structure WitnessGatedZetaZeroSocket where

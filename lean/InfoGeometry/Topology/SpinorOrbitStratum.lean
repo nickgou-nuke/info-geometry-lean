@@ -42,7 +42,7 @@ theorem orbit_classify_trichotomy [DecidableEq R] [DecidableEq M]
     · exact Or.inl ⟨hx, hQ⟩
     · exact Or.inr hQ
 
-/-- Constructive stratum witness for any vector. -/
+/-- Constructive stratum property for any vector. -/
 def classifyOrbit [DecidableEq R] [DecidableEq M]
     (Q : QuadraticForm R M) (x : M) : OrbitStratum Q x := by
   by_cases hx : x = 0

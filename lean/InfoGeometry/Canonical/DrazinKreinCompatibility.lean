@@ -14,7 +14,7 @@ This file is intentionally structural:
 
 It packages the compatibility conditions with the fundamental symmetry and
 grading operators, then derives the defect-projector algebra (`P₀`) from the
-owner Drazin witness.
+owner Drazin property.
 
 Methodological note:
 - the Drazin split is spectral in origin (`0`-singular vs. regular sector);
@@ -110,7 +110,7 @@ def isCartanCompatible_T_of_compat
     IsCartanCompatible (E := E) hCompat.η T :=
   ⟨hCompat.η_comm_T, hCompat.ε_comm_T, hCompat.J_comm_T⟩
 
-/-- The Drazin witness operator is Cartan-compatible under a graded package. -/
+/-- The Drazin property operator is Cartan-compatible under a graded package. -/
 @[rep_depth operator]
 def isCartanCompatible_TD_of_compat
     (T TD : Op) (k : ℕ)

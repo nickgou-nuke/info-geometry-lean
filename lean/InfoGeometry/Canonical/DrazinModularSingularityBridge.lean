@@ -96,7 +96,7 @@ theorem canonicalKineticPart_singularity_package
 /--
 Functional-calculus seal on the Drazin regular lane.
 
-This package exposes, in the singularity bridge itself, the certified passage:
+This package exposes, in the singularity bridge itself, the property passage:
 `Δ|Preg -> log -> Kreg -> Kambient`, together with defect-lane exclusion.
 -/
 @[rep_depth transport, capstone]
@@ -119,7 +119,7 @@ theorem drazin_regular_functionalCalculus_seal
   have hNoLog :
       ¬ c.logAdmissible
         (compress (CertifiedModularReduction.Pzero c) c.Δ) :=
-    canonicalTomita_no_log_on_Pzero_of_certifiedReduction (V := E) c
+    canonicalTomita_no_log_on_Pzero_of_propertyReduction (V := E) c
   have hSupportPkg :
       (CertifiedModularReduction.Preg c * KambientCanonical = KambientCanonical)
         ∧ (KambientCanonical * CertifiedModularReduction.Preg c = KambientCanonical)
@@ -135,11 +135,11 @@ Operator-ratio regularization corridor.
 The finite RedLine owner represents the relative modular operator as the
 projective ratio `dμ / dν` and reads its modular Hamiltonian as
 `-log(dμ / dν)`. In the singular operator lane this global ratio must not be
-formed across the defect kernel. The certified Drazin/Penrose package instead
+formed across the defect kernel. The property Drazin/Penrose package instead
 separates:
 
-- `Preg`: the Drazin regular support on which the logarithm is certified;
-- `Pzero`: the Drazin defect/null lane on which no logarithm certificate exists;
+- `Preg`: the Drazin regular support on which the logarithm is property;
+- `Pzero`: the Drazin defect/null lane on which no logarithm property exists;
 - `Pmetric`: the Moore-Penrose metric lane used for physical compression.
 
 This theorem is the named algebraic seal for that corridor. It exposes only the
@@ -175,7 +175,7 @@ theorem operator_ratio_regularization_corridor
   ⟩
 
 @[rep_depth transport, capstone]
-theorem certified_operator_ratio_regularization_corridor
+theorem property_operator_ratio_regularization_corridor
     (c : CertifiedModularReduction (E := H₂)) :
     let KambientCanonical :=
       compress (CertifiedModularReduction.Preg c)
@@ -198,7 +198,7 @@ Drazin-regular logarithm has been formed on `Preg` and the Penrose metric lane
 is aligned with the Drazin support, the physical generator `Kphys` has no
 leakage through the defect/null projector `Pzero`.
 
-No finite diagonal model is used here. The proof runs only through the certified
+No finite diagonal model is used here. The proof runs only through the property
 regular-lane operator package and the Drazin/Penrose projector algebra.
 -/
 @[rep_depth transport, capstone]
@@ -217,7 +217,7 @@ theorem operator_ratio_regularization_kills_defect_of_alignment
   exact ⟨hCorridor.1, hKill.1, hKill.2⟩
 
 @[rep_depth transport, capstone]
-theorem certified_operator_ratio_regularization_kills_defect_of_alignment
+theorem property_operator_ratio_regularization_kills_defect_of_alignment
     (c : CertifiedModularReduction (E := H₂))
     (hAlign : CertifiedModularReduction.SpectralMetricAlignment (c := c)) :
     c.logAdmissible (CertifiedModularReduction.Δreg c)
@@ -245,7 +245,7 @@ theorem operator_ratio_regularization_kills_defect_of_inertial_lane
     (E := E) c hAlign
 
 @[rep_depth transport, capstone]
-theorem certified_operator_ratio_regularization_kills_defect_of_inertial_lane
+theorem property_operator_ratio_regularization_kills_defect_of_inertial_lane
     (c : CertifiedModularReduction (E := H₂))
     (hInertial : CertifiedModularReduction.InertialRegularLane (c := c)) :
     c.logAdmissible (CertifiedModularReduction.Δreg c)

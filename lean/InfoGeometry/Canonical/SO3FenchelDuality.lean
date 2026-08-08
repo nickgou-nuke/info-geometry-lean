@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.LieGeometricDuality
 /-!
 # InfoGeometry.Canonical.SO3FenchelDuality
 
-Concrete `SO(3)` primal/dual witness for the Lie/Fenchel dictionary.
+Concrete `SO(3)` primal/dual property for the Lie/Fenchel dictionary.
 
 Highlights:
 * `so3Action` is the coadjoint-adjoint action by matrix multiplication,
@@ -145,7 +145,7 @@ theorem dualBregman_eq_norm_sq (I : ℝ) (L1 L2 : V3) :
   rw [dotProduct_comm L2 L1]
   ring_nf
 
-/-- Conjugate coadjoint orbit converse (finite-dimensional witness): equal Casimir implies same `SO(3)` orbit. -/
+/-- Conjugate coadjoint orbit converse (finite-dimensional property): equal Casimir implies same `SO(3)` orbit. -/
 theorem so3_converse_equal_casimir (x y : V3) (h : casimir x = casimir y) :
     ∃ Q : SO3, so3Action Q x = y := by
   let xE : EuclideanSpace ℝ (Fin 3) := (EuclideanSpace.equiv (Fin 3) ℝ).symm x

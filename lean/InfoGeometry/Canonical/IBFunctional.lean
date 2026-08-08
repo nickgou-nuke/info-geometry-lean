@@ -15,7 +15,7 @@ variable (pX : ProbabilityMeasure X)
 variable (qT : ProbabilityMeasure T)
 variable (β : ℝ) (D : X → T → ℝ)
 
-/-- Pointwise finiteness witness for the encoder KL term against a reference measure. -/
+/-- Pointwise finiteness property for the encoder KL term against a reference measure. -/
 def FiniteKLFamily
     (ref : Measure T)
     (encoder : X → ProbabilityMeasure T) : Prop :=

@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.ZornChiralPeirceDecomposition
 
 The deformation below scales the two off-diagonal Peirce sectors by prescribed
 scalars and fixes the diagonal sectors.  The inverse relation between the two
-scalars is recorded as an explicit hypothesis for later multiplicative
+scalars is recorded as an explicit property for later multiplicative
 questions; the basis-action lemmas themselves are purely coordinate facts.
 -/
 

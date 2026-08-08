@@ -12,7 +12,7 @@ are closed under products, commutators, and anticommutators with the usual
 superalgebra parity table.
 
 No analytic continuation.
-No witness packet.
+No property packet.
 No wrapper namespace over another theorem surface.
 -/
 

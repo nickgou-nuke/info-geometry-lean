@@ -5,7 +5,7 @@ namespace InfoGeometry.Topology
 /-!
 Generic quotient descent for an additive modular flow.  The action is the
 native Mathlib `AddAction`; no representative is chosen and no continuity is
-claimed without the corresponding quotient-topology hypothesis.
+claimed without the corresponding quotient-topology property.
 -/
 
 def descendedModularFlow

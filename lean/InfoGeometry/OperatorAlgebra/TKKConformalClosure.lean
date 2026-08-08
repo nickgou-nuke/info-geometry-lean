@@ -11,7 +11,7 @@ where the plus/minus-one pieces encode Jordan translation/special-conformal dire
 and g_0 encodes the derivation/structure algebra.
 
 The conformal group-level interpretation, such as SO(5,5), Pin(5,5), or
-projective null-cone Mobius geometry, is kept as an explicit witness layer.
+projective null-cone Mobius geometry, is kept as an explicit property layer.
 
 Ricci flux is defined as a covariant readout of the variation of curvature /
 closure defect along TKK generators. It is not a bare Ricci tensor until a
@@ -270,7 +270,7 @@ end TKKClosureDatum
 A Lie-algebraic conformal action of the TKK algebra on a state space.
 
 This is the infinitesimal version. Group-level `SO(5,5)`/`Pin(5,5)` integration
-is a separate witness.
+is a separate property.
 -/
 structure TKKInfinitesimalAction
     (L State : Type*) [AddCommGroup L] [Module ℝ L]
@@ -313,7 +313,7 @@ theorem act_lie
 end TKKInfinitesimalAction
 
 /--
-A group-level conformal/Mobius lift witness.
+A group-level conformal/Mobius lift property.
 
 This is where `SO(5,5)`, `Pin(5,5)`, projective null-cone action, and discrete
 CPT/V4 components should be recorded.
@@ -354,10 +354,10 @@ theorem infinitesimalAction_lie_eq
 
 end ConformalGroupLiftWitness
 
-/-! ## 3A. Pin group lift witness -/
+/-! ## 3A. Pin group lift property -/
 
 /--
-Pin group lift witness for the TKK conformal double cover.
+Pin group lift property for the TKK conformal double cover.
 
 Certifies that the `so(5,5)` infinitesimal action on the ambient conformal
 module `W` lifts to a group-level `Pin(p,q)` action through the Clifford
@@ -532,7 +532,7 @@ def mk
     CurvatureReadout State Geometry :=
   curvature_linear
 
-/-- The curvature readout agrees with its linear witness. -/
+/-- The curvature readout agrees with its linear property. -/
 theorem curvature_eq
     (s : State) :
     C.curvature s = C.curvature_linear s :=

@@ -1,5 +1,7 @@
 import Mathlib.Tactic
 
+namespace SouriauComplexTemperature
+
 /-!
 # Souriau Complex Temperature and Modular Flow Vectors
 
@@ -145,3 +147,7 @@ theorem souriau_complex_temperature_theorem :
   exact ⟨complexTemperature_betaDirection, complexTemperature_phaseDirection,
     complexTemperature_add, riemannSphereChart_some, riemannSphereChart_none,
     souriauModularExp_add_eps, complexMasterDensity_zero⟩
+
+end
+
+end SouriauComplexTemperature

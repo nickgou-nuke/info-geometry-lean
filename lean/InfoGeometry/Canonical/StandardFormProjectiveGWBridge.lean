@@ -199,7 +199,7 @@ face-localization socket.
 
 This keeps the projective GW/Weyl cancellation layer separate from the
 standard-form natural-cone face layer.  The face bridge is supplied as an
-external witness; this file only transports its localization readback alongside
+external property; this file only transports its localization readback alongside
 the projective volume cancellation theorem.
 -/
 @[rep_depth projective]

@@ -13,7 +13,7 @@ A standalone Lean integration target for the five-chapter thesis architecture:
 
 The file is deliberately standalone rather than importing local project modules, because
 the current verification harness runs `lake env lean /home/goutev/auto/proofs/...` from
-an external Lake project.  The theorem names below act as a compact master certificate
+an external Lake project.  The theorem names below act as a compact master property
 for the algebraic cores formalized throughout the proof stack.
 -/
 

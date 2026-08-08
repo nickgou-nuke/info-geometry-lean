@@ -11,7 +11,7 @@ abstract self-dual-colimit transport:
 * a proper carrier is modeled as an increasing sequence of finite/staged
   carriers;
 * dual positivity on the directed union is detected by an explicit finite-stage
-  witness;
+  property;
 * the self-dual cone then extends to the whole algebraic colimit carrier.
 
 #### BUCKET 1: CLOSED FINITE/COLIMIT THEOREMS

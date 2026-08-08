@@ -23,7 +23,7 @@ support a filtered Hestenes--Krein colimit interface:
    fixed-locus characterization `s = 1 - star s ↔ s.re = 1/2`.
 
 These are kernel-checked algebraic lemmas. They do not prove analytic
-continuation, meromorphic continuation, or the Riemann hypothesis.
+continuation, meromorphic continuation, or the Riemann property.
 -/
 
 noncomputable section

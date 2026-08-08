@@ -14,7 +14,7 @@ This file keeps the layers separated:
 - the five-grade inversion is owned by `ConformalFiveGradeInversion`;
 - the classical twistor incidence equation is owned by `Twistor.Incidence`;
 - the real doubled phase axis is owned by `Krein.DoubledSpace`;
-- the boundary / Majorana / zero-mode readouts remain explicit witness data.
+- the boundary / Majorana / zero-mode readouts remain explicit property data.
 
 No current-algebra anomaly is introduced here.
 -/
@@ -107,7 +107,7 @@ theorem incident_iff_twistorEquation :
       P.twistor.1 = InfoGeometry.Twistor.Incidence.pointAction P.point P.twistor.2 :=
   Iff.rfl
 
-/-- The packet’s incidence witness recovers the classical incident predicate. -/
+/-- The packet’s incidence property recovers the classical incident predicate. -/
 theorem incident_of_incidenceEquation (h : P.incidenceEquation) :
     InfoGeometry.Twistor.Incidence.Incident P.twistor P.point := by
   simpa [InfoGeometry.Twistor.Incidence.Incident] using h

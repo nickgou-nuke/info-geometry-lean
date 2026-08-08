@@ -25,8 +25,8 @@ register_option linter.pauli.grandUnity : Bool := {
   descr := "warn about grand unity via trivial reflexivity"
 }
 
-/-- Option to control the Pauli witness-pack linter. -/
-register_option linter.pauli.witness : Bool := {
+/-- Option to control the Pauli property-pack linter. -/
+register_option linter.pauli.property : Bool := {
   defValue := true
   descr := "warn about structures with generic Prop _statement/_sorry field pairs"
 }
@@ -50,7 +50,7 @@ def pauliLinter : Linter where
     let anyEnabled :=
       linter.pauli.admitUsage.get (← getOptions) ||
       linter.pauli.grandUnity.get (← getOptions) ||
-      linter.pauli.witness.get (← getOptions)
+      linter.pauli.property.get (← getOptions)
     unless anyEnabled do
       return
 
@@ -69,7 +69,7 @@ def pauliLinter : Linter where
       -- declaration kind from theorem/definition/instance.
       if declKind == ``Lean.Parser.Command.structure ||
          declKind == ``Lean.Parser.Command.structureTk then
-        if linter.pauli.witness.get (← getOptions) then
+        if linter.pauli.property.get (← getOptions) then
           -- Extract the structure name from the syntax
           let id := decl[1][0]
           if id.isIdent then

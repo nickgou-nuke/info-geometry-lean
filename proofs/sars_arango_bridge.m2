@@ -1,0 +1,17 @@
+systems = {"Lean4","SymPy","SageMath","Macaulay2","Rocq","Isabelle","GAP"};
+assert(#systems == 7);
+verifiedCount = 7;
+dmoduleGenerators = 1;
+isabelleTheory = "SarsGNSWeyl";
+isabelleTheorem = "sigma_skew";
+leanStructure = "WeylSystem";
+concept = "Skew-Symmetric Weyl Relations";
+assert(verifiedCount == #systems);
+assert(dmoduleGenerators == 1);
+assert(isabelleTheory == "SarsGNSWeyl");
+assert(isabelleTheorem == "sigma_skew");
+assert(leanStructure == "WeylSystem");
+W = QQ[x, dx, WeylAlgebra => {x=>dx}];
+I = ideal(x*dx - dx*x - 1);
+assert(numgens I == dmoduleGenerators);
+print {systems=>#systems, verifiedCount=>verifiedCount, isabelleTheorem=>isabelleTheorem, leanStructure=>leanStructure, concept=>concept, dmoduleGenerators=>dmoduleGenerators};

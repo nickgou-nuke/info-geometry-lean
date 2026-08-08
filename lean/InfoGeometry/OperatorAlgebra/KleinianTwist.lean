@@ -3,7 +3,7 @@ InfoGeometry/OperatorAlgebra/KleinianTwist.lean
 
 Kleinian/projective Tomita twist.
 
-This module records a witness-gated boundary return:
+This module records a property-gated boundary return:
 
   observable boundary data return through the Tomita mirror into the commutant.
 

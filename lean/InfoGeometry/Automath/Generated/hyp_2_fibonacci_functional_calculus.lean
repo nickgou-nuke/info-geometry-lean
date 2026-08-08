@@ -13,6 +13,6 @@ Source: InfoGeometry.Algebra.CuntzFibonacciBraidInclusion.matrixToCuntz
 Objects: functional-calculus, fibonacci, exponential, holomorphic-functional-calculus, spectrum -/
 theorem hyp_2_fibonacci_functional_calculus (k : ℕ) :
     X ^ k = algebraMap ℂ (CuntzAlg 2) (fibA k) + algebraMap ℂ (CuntzAlg 2) (fibB k) * X :=
-  hypothesis2_power_calculus k
+  property2_power_calculus k
 
 end Automath.Generated

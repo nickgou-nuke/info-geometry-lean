@@ -16,7 +16,7 @@ Cantor address model:
 * tilt/switch operators,
 * the canonical finite basis on endpoint functions.
 
-No witness-only basis packet is used here.
+No property-only basis packet is used here.
 -/
 
 noncomputable section

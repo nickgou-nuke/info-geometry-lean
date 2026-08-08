@@ -36,7 +36,7 @@ local notation "EndH₂" => H₂ →L[ℝ] H₂
 
 /-- 
 Topological Finiteness: the singular Drazin defect is compact.
-This is the analytic assumption for the Fredholm closure.
+This is the analytic property for the Fredholm closure.
 -/
 def IsTopologicallyFinite (CIK : CertifiedInverseKernel H₂) : Prop :=
   IsCompactOperator (CIK.spectralComplementaryProjector : H₂ → H₂)
@@ -147,7 +147,7 @@ def drazinFredholmModule (CIK : CertifiedInverseKernel H₂)
   superComm_J_compact := W.2.2.2.2.2.2.2.2
 
 /--
-The topological central charge of a certified kernel is the analytical index
+The topological central charge of a property kernel is the analytical index
 of its native Drazin-Fredholm module.
 -/
 @[rep_depth transport]

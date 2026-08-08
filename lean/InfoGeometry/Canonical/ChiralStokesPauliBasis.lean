@@ -49,6 +49,68 @@ def sheetGradeSign : Fin 2 → ℂ
 def gradeConjugate (A : M6C) : M6C :=
   fun (s, i) (t, j) => sheetGradeSign s * sheetGradeSign t * A (s, i) (t, j)
 
+theorem gradeConjugate_involutive (A : M6C) :
+    gradeConjugate (gradeConjugate A) = A := by
+  ext s t
+  rcases s with ⟨s, i⟩
+  rcases t with ⟨t, j⟩
+  fin_cases s <;> fin_cases t <;>
+    simp [gradeConjugate, sheetGradeSign]
+
+theorem gradeConjugate_mul (A B : M6C) :
+    gradeConjugate (A * B) = gradeConjugate A * gradeConjugate B := by
+  ext s t
+  rcases s with ⟨s, i⟩
+  rcases t with ⟨t, j⟩
+  simp only [gradeConjugate, Matrix.mul_apply]
+  calc
+    _ = ∑ x : Fin 2 × Fin 3,
+        (sheetGradeSign s * sheetGradeSign t) *
+          (A (s, i) x * B x (t, j)) := by
+      exact (Finset.mul_sum Finset.univ
+        (fun x : Fin 2 × Fin 3 => A (s, i) x * B x (t, j))
+        (sheetGradeSign s * sheetGradeSign t))
+    _ = _ := by
+      apply Finset.sum_congr rfl
+      intro x hx
+      rcases x with ⟨xs, xi⟩
+      fin_cases xs <;> simp [sheetGradeSign] <;> ring
+
+theorem gradeConjugate_add (A B : M6C) :
+    gradeConjugate (A + B) = gradeConjugate A + gradeConjugate B := by
+  ext s t
+  simp [gradeConjugate, Matrix.add_apply, mul_add]
+
+theorem gradeConjugate_smul (c : ℂ) (A : M6C) :
+    gradeConjugate (c • A) = c • gradeConjugate A := by
+  ext s t
+  simp [gradeConjugate, Matrix.smul_apply, smul_eq_mul]
+  ring
+
+theorem gradeConjugate_one :
+    gradeConjugate (1 : M6C) = 1 := by
+  ext s t
+  rcases s with ⟨s, i⟩
+  rcases t with ⟨t, j⟩
+  fin_cases s <;> fin_cases t <;>
+    simp [gradeConjugate, sheetGradeSign, Matrix.one_apply]
+
+noncomputable def gradeConjugateAlgEquiv : M6C ≃ₐ[ℂ] M6C where
+  toFun := gradeConjugate
+  invFun := gradeConjugate
+  left_inv := gradeConjugate_involutive
+  right_inv := gradeConjugate_involutive
+  map_add' := gradeConjugate_add
+  map_mul' := gradeConjugate_mul
+  commutes' := by
+    intro c
+    ext s t
+    rcases s with ⟨s, i⟩
+    rcases t with ⟨t, j⟩
+    fin_cases s <;> fin_cases t <;>
+      simp [gradeConjugate, sheetGradeSign, Algebra.smul_def,
+        Matrix.algebraMap_matrix_apply, Matrix.one_apply]
+
 theorem assembleStokes_eq_block_reconstruction (q : StokesQuad) :
     assembleStokes q = blockLinearMapInv (stokesToBlocks q) := rfl
 

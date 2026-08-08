@@ -156,7 +156,7 @@ structure VectorCarrierPacket (K : Type*) [Semiring K] (n : Nat) where
   /-- The carrier is exactly the span of the concrete list. -/
   carrier_eq_span : carrier = listSpan K vectors
 
-/-- A basis-level finite-vector packet, witness-gated (Native Closure Mandated: Closure Debt) for downstream basis APIs. -/
+/-- A basis-level finite-vector packet, property-gated (Native Closure Mandated: Closure Debt) for downstream basis APIs. -/
 structure VectorBasisPacket (K : Type*) [Field K] (n : Nat) where
   /-- Index type for the basis. -/
   basisIndex : Type
@@ -166,9 +166,9 @@ structure VectorBasisPacket (K : Type*) [Field K] (n : Nat) where
   decidableIndex : DecidableEq basisIndex
   /-- Basis vectors indexed by `basisIndex`. -/
   basisVector : basisIndex → FiniteVector K n
-  /-- Predicate-level witness that the indexed vectors are linearly independent. -/
+  /-- Predicate-level property that the indexed vectors are linearly independent. -/
   independent : LinearIndependent K basisVector
-  /-- Predicate-level witness that the indexed vectors span the full space. -/
+  /-- Predicate-level property that the indexed vectors span the full space. -/
   spans_top : Submodule.span K (Set.range basisVector) = ⊤
 
 attribute [instance] VectorBasisPacket.finiteIndex

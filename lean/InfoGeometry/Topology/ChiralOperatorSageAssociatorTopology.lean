@@ -7,7 +7,7 @@ import InfoGeometry.Topology.ChiralOperatorSageChiralCoordinateMultiplication
 The displayed Zorn multiplication is not promoted to an associative algebra.
 Instead, this owner records its associator as a continuous map and transports
 it through the chiral coordinate chart.  Non-vanishing requires a separate
-coefficient-algebra witness and is intentionally not assumed here.
+coefficient-algebra property and is intentionally not assumed here.
 -/
 
 namespace InfoGeometry.Topology

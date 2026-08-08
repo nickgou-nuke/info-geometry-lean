@@ -48,7 +48,7 @@ local instance weylNormalizedCARCCRIsScalarTower : IsScalarTower ℝ EndH EndH :
 Weyl-normalized CAR/CCR calibration over the Drazin/Hodge chiral arrows.
 
 `ν` is the raw metric/core scale of the unnormalized arrow algebra.  The Weyl
-condition `λ²ν = 1` is explicit witness data.
+condition `λ²ν = 1` is explicit property data.
 -/
 @[rep_depth operator]
 structure WeylNormalizedCARCCRBridge where
@@ -308,11 +308,11 @@ theorem normalized_isCARPair :
 
 end ScaledCARPair
 
-/-! ## Concrete split-`Cl(1,1)` CAR witness -/
+/-! ## Concrete split-`Cl(1,1)` CAR property -/
 
 /--
 Canonical polarized Majorana object underlying the concrete split-`Cl(1,1)`
-Fock CAR witness.
+Fock CAR property.
 -/
 @[rep_depth krein]
 noncomputable abbrev concreteCl11CanonicalPolarizedMajorana :
@@ -331,10 +331,10 @@ theorem concreteCl11FockCAR_from_canonicalPolarizedMajorana :
   cliffordConcreteIsCARPair (E := E)
 
 /--
-Concrete split-`Cl(1,1)` Weyl-normalized CAR witness.
+Concrete split-`Cl(1,1)` Weyl-normalized CAR property.
 
 This packages the repo-owned concrete Fock CAR pair as a `ScaledCARPair` with
-unit Weyl gauge `λ = 1` and raw core `ν = 1`.  It is the safest direct witness
+unit Weyl gauge `λ = 1` and raw core `ν = 1`.  It is the safest direct property
 for downstream normalized CAR readouts.
 -/
 @[rep_depth krein]
@@ -434,7 +434,7 @@ local notation "EndH" => E →L[ℝ] E
 /--
 Adapter from calibrated Drazin/Hodge arrows to the Fock `ScaledCARPair` owner.
 
-The representation map and raw Fock CAR identities are explicit witness data.
+The representation map and raw Fock CAR identities are explicit property data.
 This prevents the invalid promotion of arbitrary projector arrows to genuine
 Fock CAR operators.
 -/
@@ -512,7 +512,7 @@ end DrazinHodgeFockCARAdapter
 /--
 Adapter from calibrated Drazin/Hodge arrows to the Fock `ScaledCCRPair` owner.
 
-As with the CAR adapter, this is witness-gated: the represented commutator law
+As with the CAR adapter, this is property-gated: the represented commutator law
 must be supplied by the backend model.
 -/
 @[rep_depth krein]

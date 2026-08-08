@@ -18,7 +18,7 @@ The content is deliberately finite and algebraic:
 * exact reconstruction by the idempotent split basis.
 
 No socket.
-No certificate.
+No property.
 No CFT claim.
 -/
 

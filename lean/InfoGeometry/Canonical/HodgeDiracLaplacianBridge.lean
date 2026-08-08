@@ -142,9 +142,9 @@ theorem laplacian_commutes_hodge_of_dirac_closure
   exact dirac_sq_commutes_hodge_of_chiral C hChiral
 
 /--
-Central readout remains witness-gated.
+Central readout remains property-gated.
 
-This is intentionally a witness-gated interface for downstream affine/Sugawara
+This is intentionally a property-gated interface for downstream affine/Sugawara
 calibration. No central-charge theorem is asserted in this Hodge/Dirac bridge.
 -/
 @[rep_depth operator]
@@ -154,7 +154,7 @@ abbrev CentralReadoutWitness
   ∀ A : Op, Commute (centralReadout C) A
 
 /--
-Owner-facing central-readout gate: the bridge exports only a supplied witness
+Owner-facing central-readout gate: the bridge exports only a supplied property
 whose readout is tied to the carrier readout.
 -/
 @[rep_depth operator]
@@ -163,9 +163,9 @@ def IsCentralReadoutFromLaplacianAnomaly
     (C : HodgeDiracLaplacianCarrier Op) : Prop :=
   ∀ A : Op, Commute (centralReadout C) A
 
-/-- Readback from a central/anomaly witness to the carrier readout. -/
+/-- Readback from a central/anomaly property to the carrier readout. -/
 @[rep_depth operator]
-theorem centralReadout_eq_carrier_of_witness
+theorem centralReadout_eq_carrier_of_property
     {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op)
     (W : CentralReadoutWitness C) :
@@ -173,9 +173,9 @@ theorem centralReadout_eq_carrier_of_witness
       IsCentralReadoutFromLaplacianAnomaly C :=
   ⟨rfl, W⟩
 
-/-- A genuine centrality witness transfers to the carrier readout. -/
+/-- A genuine centrality property transfers to the carrier readout. -/
 @[rep_depth operator]
-theorem centralReadout_isCentral_of_witness
+theorem centralReadout_isCentral_of_property
     {Op : Type*} [Ring Op]
     (C : HodgeDiracLaplacianCarrier Op)
     (W : CentralReadoutWitness C) :

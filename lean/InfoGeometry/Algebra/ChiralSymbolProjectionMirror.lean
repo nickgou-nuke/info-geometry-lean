@@ -27,6 +27,15 @@ structure SymbolProjectionMirrorData
   mirror_readout :
     mirrorSymbol.comp σ = σ.comp mirrorOperator
 
+/-- Trivial identity instance of SymbolProjectionMirrorData. -/
+def idSymbolProjectionMirrorData (ι : Z →ₗ[R] E) (σ : E →ₗ[R] Z) :
+    SymbolProjectionMirrorData ι σ where
+  mirrorOperator := LinearMap.id
+  mirrorSymbol := LinearMap.id
+  mirrorOperator_mul _ _ := rfl
+  mirror_inclusion := by ext; rfl
+  mirror_readout := by ext; rfl
+
 theorem mirror_symbolProjection
     {ι : Z →ₗ[R] E} {σ : E →ₗ[R] Z}
     (D : SymbolProjectionMirrorData ι σ) (X : E) :

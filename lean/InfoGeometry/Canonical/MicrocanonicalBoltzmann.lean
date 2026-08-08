@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.RenyiFromModularPowers
+import InfoGeometry.Canonical.ModularLogGenerating
 
 namespace InfoGeometry.Canonical
 
@@ -12,12 +13,6 @@ noncomputable def boltzmannEntropy (kB Ω : ℝ) : ℝ :=
 /-- Microcanonical state: uniform distribution over Ω states. -/
 noncomputable def microcanonicalState (Ω : ℕ) (i : Fin Ω) : ℝ :=
   1 / (Ω : ℝ)
-
-noncomputable def spectralPartition {Ω : ℕ} (P : Fin Ω → ℝ) (s : ℝ) : ℝ :=
-  ∑ i : Fin Ω, P i ^ s
-
-noncomputable def modularLogGenerating {Ω : ℕ} (P : Fin Ω → ℝ) (s : ℝ) : ℝ :=
-  Real.log (spectralPartition P s)
 
 noncomputable def renyiEntropy (kB : ℝ) {Ω : ℕ} (P : Fin Ω → ℝ) (s : ℝ) : ℝ :=
   kB / (1 - s) * modularLogGenerating P s

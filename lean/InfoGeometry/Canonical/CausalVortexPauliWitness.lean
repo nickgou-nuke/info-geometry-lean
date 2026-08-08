@@ -7,7 +7,7 @@ import InfoGeometry.Canonical.CausalVortexCooperPairing
 import InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
 
 /-!
-# Explicit finite Majorana witness
+# Explicit finite Majorana property
 
 The abstract Cooper-pair theorem is non-vacuous already in dimension two.
 This file instantiates its generators with the Pauli `σ1` and `σ3` matrices

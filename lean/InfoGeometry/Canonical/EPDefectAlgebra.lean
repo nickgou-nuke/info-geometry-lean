@@ -5,7 +5,7 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.Canonical.EPDefectAlgebra
 
-Operator-side defect algebra for the certified inverse-kernel package.
+Operator-side defect algebra for the property inverse-kernel package.
 
 This file packages the exact repo-native objects:
 

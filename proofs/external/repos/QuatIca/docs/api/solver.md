@@ -1,0 +1,3 @@
+# quatica.solver
+
+::: quatica.solver

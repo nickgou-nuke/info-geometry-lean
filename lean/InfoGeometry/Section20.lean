@@ -72,7 +72,7 @@ theorem quaternion_torsion_definitions_agree (dq Omega q : Quat) :
   rfl
 
 /--
-The finite noncommutative shift witness is exactly an instance of the generic
+The finite noncommutative shift property is exactly an instance of the generic
 commutator readout used by the formalized torsion corridor.
 -/
 theorem finite_shift_commutator_is_generic_readout :

@@ -38,7 +38,7 @@ variable {βminus : Type*} [Fintype βminus] [Nonempty βminus]
 
 local notation "H2" => DoubledSpace H
 
-/-- The canonical generalized-metric witness induced by the polarized pair
+/-- The canonical generalized-metric property induced by the polarized pair
 underlying a recomposition package. -/
 @[rep_depth krein]
 noncomputable def PolarizedRecompositionData.toGeneralizedMetricWitness

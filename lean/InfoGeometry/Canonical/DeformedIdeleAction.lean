@@ -177,7 +177,7 @@ theorem right_cuntz_branch_commutator_ne_zero_of_left_ne_zero
     (right_cuntz_rangeProjection_ne_one_of_left_ne_zero C h_left_nonzero)
 
 /-- Left Cuntz branch commutator is genuinely non-zero without an extra
-mismatch hypothesis in a nontrivial ring, because the left range projection cannot be the unit. -/
+mismatch property in a nontrivial ring, because the left range projection cannot be the unit. -/
 theorem left_cuntz_branch_commutator_ne_zero'
     [Nontrivial A] :
     C.S_left * star C.S_left - star C.S_left * C.S_left ≠ 0 := by
@@ -185,7 +185,7 @@ theorem left_cuntz_branch_commutator_ne_zero'
     (left_cuntz_rangeProjection_ne_one (C := C))
 
 /-- Right Cuntz branch commutator is genuinely non-zero without an extra
-mismatch hypothesis in a nontrivial ring, because the right range projection cannot be the unit. -/
+mismatch property in a nontrivial ring, because the right range projection cannot be the unit. -/
 theorem right_cuntz_branch_commutator_ne_zero'
     [Nontrivial A] :
     C.S_right * star C.S_right - star C.S_right * C.S_right ≠ 0 := by

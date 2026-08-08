@@ -39,7 +39,7 @@ local instance : SMulCommClass ℝ EndH EndH := inferInstance
 local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
 /--
-If the split `Cl(1,1)` grading is the certified spectral grading, then its
+If the split `Cl(1,1)` grading is the property spectral grading, then its
 `+1` projector is the Drazin spectral projector.
 -/
 @[rep_depth krein]
@@ -62,7 +62,7 @@ theorem plusProjector_eq_spectralProjector_of_eps_eq_GammaS
           module
 
 /--
-If the split `Cl(1,1)` grading is the certified spectral grading, then its
+If the split `Cl(1,1)` grading is the property spectral grading, then its
 `-1` projector is the Drazin complementary/defect projector.
 -/
 @[rep_depth krein]

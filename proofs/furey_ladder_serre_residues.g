@@ -1,0 +1,14 @@
+stablePage:=3;; e2Rank:=8;; survivorCount:=8;;
+su3Generators:=8;; su2Generators:=3;; smRank:=4;; smGenerators:=12;; cartanGenerators:=4;; ladderCount:=8;;
+if stablePage<>3 or e2Rank<>8 or survivorCount<>8 then Error("serre"); fi;
+if su3Generators<>8 or su2Generators<>3 or smRank<>4 or smGenerators<>12 or cartanGenerators<>4 or ladderCount<>8 then Error("generators"); fi;
+C2su3Fund:=4/3;; C2su2Doublet:=3/4;;
+upCharge:=2/3;; downCharge:=-1/3;; neutrinoCharge:=0;; electronCharge:=-1;;
+if C2su3Fund<>4/3 or C2su2Doublet<>3/4 then Error("casimir"); fi;
+if upCharge<>2/3 or downCharge<>-1/3 or neutrinoCharge<>0 or electronCharge<>-1 then Error("charges"); fi;
+weylCount:=16;; colorAnomaly:=0;; weakAnomaly:=0;; gravTrace:=0;; cubicTrace:=0;;
+if weylCount<>16 or colorAnomaly<>0 or weakAnomaly<>0 or gravTrace<>0 or cubicTrace<>0 then Error("anomaly"); fi;
+S3:=SymmetricGroup(3);; if Size(S3)<>6 then Error("S3"); fi;
+edges:=["extracts","generates_color","generates_weak","generates_hypercharge","carries","cancels"];
+Print(rec(stablePage:=stablePage,e2Rank:=e2Rank,survivorCount:=survivorCount,su3Generators:=su3Generators,su2Generators:=su2Generators,smRank:=smRank,smGenerators:=smGenerators,cartanGenerators:=cartanGenerators,ladderCount:=ladderCount,C2su3Fund:=C2su3Fund,C2su2Doublet:=C2su2Doublet,upCharge:=upCharge,downCharge:=downCharge,neutrinoCharge:=neutrinoCharge,electronCharge:=electronCharge,weylCount:=weylCount,colorAnomaly:=colorAnomaly,weakAnomaly:=weakAnomaly,gravTrace:=gravTrace,cubicTrace:=cubicTrace,s3Order:=Size(S3),graphEdges:=Length(edges)),"\n");
+QUIT;

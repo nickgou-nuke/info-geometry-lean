@@ -71,7 +71,7 @@ lemma switchMatrix_mem_rowStochastic (β : ℝ) (x : Fin n → V) :
     exact switchMatrix_row_sum_one (n := n) β x i
 
 /--
-Column-normalization hypothesis for the switch matrix.
+Column-normalization property for the switch matrix.
 
 When this holds together with the always-true row normalization, the switch is bistochastic.
 -/
@@ -121,7 +121,7 @@ structure SinkhornBalanceData (β : ℝ) (x : Fin n → V) where
       ∈ doublyStochastic ℝ (Fin n)
 
 omit [NormedSpace ℝ V] [Nonempty (Fin n)] in
-/-- Construct a certificate trivially when the switch is already bistochastic. -/
+/-- Construct a property trivially when the switch is already bistochastic. -/
 noncomputable def SinkhornBalanceData.ofBistochastic
     (β : ℝ) (x : Fin n → V) (hcol : IsBistochasticSwitch n β x) :
     SinkhornBalanceData (n := n) β x where
@@ -165,11 +165,11 @@ noncomputable def rowSum (M : SinkhornMatrix n) (i : Fin n) : ℝ :=
 noncomputable def colSum (M : SinkhornMatrix n) (j : Fin n) : ℝ :=
   ∑ i : Fin n, M i j
 
-/-- Positivity certificate for row sums (required for row normalization). -/
+/-- Positivity property for row sums (required for row normalization). -/
 def HasPositiveRowSums (M : SinkhornMatrix n) : Prop :=
   ∀ i : Fin n, 0 < rowSum n M i
 
-/-- Positivity certificate for column sums (required for column normalization). -/
+/-- Positivity property for column sums (required for column normalization). -/
 def HasPositiveColSums (M : SinkhornMatrix n) : Prop :=
   ∀ j : Fin n, 0 < colSum n M j
 

@@ -8,7 +8,7 @@ variable {H : Type*}
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 variable [KreinSpace H]
 
-/-- A witness that a modular flow is compatible with the native Cartan
+/-- A property that a modular flow is compatible with the native Cartan
 involution `ε` of an involutive self-dual carrier. -/
 structure ModularCartanCompatibility
     (X : InvolutiveSelfDualCarrier)

@@ -6,8 +6,8 @@ import InfoGeometry.Canonical.SplitG2StructureOnImaginaryOctonions
 This file stays on the already verified split-`G₂` owner:
 
 * the carrier is `imaginarySplitOctonion`;
-* the preserved trilinear witness is `canonicalSplitG2ThreeFormValue`;
-* an automorphism is a linear equivalence preserving that witness.
+* the preserved trilinear property is `canonicalSplitG2ThreeFormValue`;
+* an automorphism is a linear equivalence preserving that property.
 
 It packages finite edge-labelled transport and triangle curvature as
 compositions of those automorphisms.  It does not claim a smooth holonomy

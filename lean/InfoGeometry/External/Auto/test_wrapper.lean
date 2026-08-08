@@ -3,6 +3,8 @@ import Mathlib.Tactic
 open Matrix
 open Complex
 
+namespace TestWrapper
+
 section TemperleyLieb
 
 variable {F : Type*} [Field F]
@@ -73,3 +75,5 @@ lemma braid_comm (i j : ℕ) (h : i + 1 < j ∨ j + 1 < i) : σ A e i * σ A e j
     simp [hAAinv, hAinvA, add_comm, add_left_comm, add_assoc]
 
 end TemperleyLieb
+
+end TestWrapper

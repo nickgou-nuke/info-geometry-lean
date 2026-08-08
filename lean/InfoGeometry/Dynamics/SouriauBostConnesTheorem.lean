@@ -168,7 +168,7 @@ theorem souriau_bost_connes_transition :
     unfold phi
     rfl
 
-/-! ### Owner-backed transition certificate -/
+/-! ### Owner-backed transition property -/
 
 /-- Closed algebraic content of the bulk-to-boundary transition packet. -/
 def TransitionDictionary : Prop :=
@@ -177,7 +177,7 @@ def TransitionDictionary : Prop :=
     ‖Rtau_phase‖ = 1 ∧
     R1_phase * Rtau_phase = Complex.exp (Complex.I * (2 * Real.pi / 5))
 
-/-- The transition certificate is assembled from the existing Fibonacci owners. -/
+/-- The transition property is assembled from the existing Fibonacci owners. -/
 theorem transition_dictionary_nonempty : Nonempty TransitionDictionary := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · exact quantum_dimension_tau_eq_phi

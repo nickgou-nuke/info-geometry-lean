@@ -1,0 +1,404 @@
+[
+  {
+    "spine": {
+      "_key": "ColorParafermionCuntzBusSpine_closed_color_parafermion_cuntz_bus_spine",
+      "kind": "theorem",
+      "module": "ColorParafermionCuntzBusSpine",
+      "name": "ColorParafermionCuntzBusSpine.closed_color_parafermion_cuntz_bus_spine"
+    },
+    "deps_count": 78,
+    "users_count": 0,
+    "deps": [
+      {
+        "name": "AlgebraicCuntzQuotient.CuntzAlg",
+        "module": "AlgebraicCuntzQuotient",
+        "kind": null
+      },
+      {
+        "name": "AlgebraicCuntzQuotient.CuntzLetter",
+        "module": "AlgebraicCuntzQuotient",
+        "kind": null
+      },
+      {
+        "name": "AlgebraicCuntzQuotient.Gen",
+        "module": "AlgebraicCuntzQuotient",
+        "kind": null
+      },
+      {
+        "name": "AlgebraicCuntzQuotient.instAlgebraCuntzAlg",
+        "module": "AlgebraicCuntzQuotient",
+        "kind": null
+      },
+      {
+        "name": "AlgebraicCuntzQuotient.instSemiringCuntzAlg",
+        "module": "AlgebraicCuntzQuotient",
+        "kind": null
+      },
+      {
+        "name": "AlgebraicCuntzQuotient.partition_one",
+        "module": "AlgebraicCuntzQuotient",
+        "kind": null
+      },
+      {
+        "name": "AlgebraicCuntzQuotient.Rel",
+        "module": "AlgebraicCuntzQuotient",
+        "kind": null
+      },
+      {
+        "name": "AlgebraicCuntzQuotient.S",
+        "module": "AlgebraicCuntzQuotient",
+        "kind": null
+      },
+      {
+        "name": "AlgebraicCuntzQuotient.T",
+        "module": "AlgebraicCuntzQuotient",
+        "kind": null
+      },
+      {
+        "name": "AlgebraicCuntzQuotient.T_mul_S",
+        "module": "AlgebraicCuntzQuotient",
+        "kind": null
+      },
+      {
+        "name": "AlgebraicCuntzQuotient.TAlg",
+        "module": "AlgebraicCuntzQuotient",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionProofChain.bdgMajoranaPlusColorSpinor4",
+        "module": "BogoliubovSU3ParafermionProofChain",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionProofChain.bdgMajoranaPlusColorSpinor4._proof_1",
+        "module": "BogoliubovSU3ParafermionProofChain",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionProofChain.bogoliubov_su3_parafermion_proof_chain",
+        "module": "BogoliubovSU3ParafermionProofChain",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionProofChain.colorLieAction4",
+        "module": "BogoliubovSU3ParafermionProofChain",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionProofChain.ColorSpinor4",
+        "module": "BogoliubovSU3ParafermionProofChain",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionProofChain.frameBraid4",
+        "module": "BogoliubovSU3ParafermionProofChain",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionProofChain.ParafermionStage4",
+        "module": "BogoliubovSU3ParafermionProofChain",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionProofChain.qBraid4",
+        "module": "BogoliubovSU3ParafermionProofChain",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionProofChain.su3_color_action_all_commutators",
+        "module": "BogoliubovSU3ParafermionProofChain",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionProofChain.theoremBackedColorParafermionBraidingSocket",
+        "module": "BogoliubovSU3ParafermionProofChain",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionWeld.bdgParafermionPlus4",
+        "module": "BogoliubovSU3ParafermionWeld",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionWeld.bdgParafermionPlus4_sq",
+        "module": "BogoliubovSU3ParafermionWeld",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionWeld.bogoliubov_su3_parafermion_synthesis",
+        "module": "BogoliubovSU3ParafermionWeld",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionWeld.ColorParafermionBraidingSocket.braidUsesFramePhase",
+        "module": "BogoliubovSU3ParafermionWeld",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionWeld.ColorParafermionBraidingSocket.compatibleWithFureyColorCAR",
+        "module": "BogoliubovSU3ParafermionWeld",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionWeld.ColorParafermionBraidingSocket.preservesBdGMajoranaLane",
+        "module": "BogoliubovSU3ParafermionWeld",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionWeld.ColorParafermionBraidingSocket.respectsSU3Commutator",
+        "module": "BogoliubovSU3ParafermionWeld",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionWeld.ColorParafermionBraidingSocket.standardModelColor",
+        "module": "BogoliubovSU3ParafermionWeld",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionWeld.frame_affine_gl1_gl2",
+        "module": "BogoliubovSU3ParafermionWeld",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionWeld.frameBraidingPhase",
+        "module": "BogoliubovSU3ParafermionWeld",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovSU3ParafermionWeld.ParafermionStage4",
+        "module": "BogoliubovSU3ParafermionWeld",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovWeylChemicalPotential.BogoliubovInertialFrame.E",
+        "module": "BogoliubovWeylChemicalPotential",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovWeylChemicalPotential.BogoliubovInertialFrame.mk",
+        "module": "BogoliubovWeylChemicalPotential",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovWeylChemicalPotential.BogoliubovInertialFrame.Q",
+        "module": "BogoliubovWeylChemicalPotential",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovWeylChemicalPotential.BogoliubovInertialFrame.θ",
+        "module": "BogoliubovWeylChemicalPotential",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovWeylChemicalPotential.BogoliubovInertialFrame.θ",
+        "module": "BogoliubovWeylChemicalPotential",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovWeylChemicalPotential.BogoliubovInertialFrame.θ",
+        "module": "BogoliubovWeylChemicalPotential",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovWeylChemicalPotential.BogoliubovInertialFrame.θ",
+        "module": "BogoliubovWeylChemicalPotential",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovWeylChemicalPotential.frameWeylLogClock",
+        "module": "BogoliubovWeylChemicalPotential",
+        "kind": null
+      },
+      {
+        "name": "BogoliubovWeylChemicalPotential.frameWeylQ",
+        "module": "BogoliubovWeylChemicalPotential",
+        "kind": null
+      },
+      {
+        "name": "CantorBoundaryCuntzFamily.C4Boundary",
+        "module": "CantorBoundaryCuntzFamily",
+        "kind": null
+      },
+      {
+        "name": "CantorBoundaryCuntzFamily.c4CuntzFamily",
+        "module": "CantorBoundaryCuntzFamily",
+        "kind": null
+      },
+      {
+        "name": "CantorBoundaryCuntzFamily.C4Functions",
+        "module": "CantorBoundaryCuntzFamily",
+        "kind": null
+      },
+      {
+        "name": "CantorBoundaryCuntzFamily.c4Realization",
+        "module": "CantorBoundaryCuntzFamily",
+        "kind": null
+      },
+      {
+        "name": "CantorBoundaryCuntzFamily.cuntzS",
+        "module": "CantorBoundaryCuntzFamily",
+        "kind": null
+      },
+      {
+        "name": "CantorBoundaryCuntzFamily.cuntzT",
+        "module": "CantorBoundaryCuntzFamily",
+        "kind": null
+      },
+      {
+        "name": "ChiralCausalCone.M2C",
+        "module": "ChiralCausalCone",
+        "kind": null
+      },
+      {
+        "name": "ColorCARStandardModel.CAR3",
+        "module": "ColorCARStandardModel",
+        "kind": null
+      },
+      {
+        "name": "ColorCARStandardModel.fureyGeneration",
+        "module": "ColorCARStandardModel",
+        "kind": null
+      },
+      {
+        "name": "ColorCARStandardModel.StandardModelColorSocket.generation",
+        "module": "ColorCARStandardModel",
+        "kind": null
+      },
+      {
+        "name": "GellMannParafermionRealizationRoutesSynthesis.gellmann_parafermion_realization_routes_synthesis",
+        "module": "GellMannParafermionRealizationRoutesSynthesis",
+        "kind": null
+      },
+      {
+        "name": "GellMannParafermionSolder.frameSolderedBraid",
+        "module": "GellMannParafermionSolder",
+        "kind": null
+      },
+      {
+        "name": "GellMannParafermionSolder.gellMannParafermionSolder",
+        "module": "GellMannParafermionSolder",
+        "kind": null
+      },
+      {
+        "name": "GellMannParafermionSolder.realizedParafermionColorSpinor4",
+        "module": "GellMannParafermionSolder",
+        "kind": null
+      },
+      {
+        "name": "GellMannSU3.gl1",
+        "module": "GellMannSU3",
+        "kind": null
+      },
+      {
+        "name": "GellMannSU3.gl1_comm_gl2",
+        "module": "GellMannSU3",
+        "kind": null
+      },
+      {
+        "name": "GellMannSU3.gl2",
+        "module": "GellMannSU3",
+        "kind": null
+      },
+      {
+        "name": "GellMannSU3.gl3",
+        "module": "GellMannSU3",
+        "kind": null
+      },
+      {
+        "name": "GellMannSU3.gl4",
+        "module": "GellMannSU3",
+        "kind": null
+      },
+      {
+        "name": "GellMannSU3.gl5",
+        "module": "GellMannSU3",
+        "kind": null
+      },
+      {
+        "name": "GellMannSU3.gl6",
+        "module": "GellMannSU3",
+        "kind": null
+      },
+      {
+        "name": "GellMannSU3.gl7",
+        "module": "GellMannSU3",
+        "kind": null
+      },
+      {
+        "name": "GellMannSU3.gl8",
+        "module": "GellMannSU3",
+        "kind": null
+      },
+      {
+        "name": "ParafermionIdentityRealization.cuntzFamilyLift",
+        "module": "ParafermionIdentityRealization",
+        "kind": null
+      },
+      {
+        "name": "ParafermionIdentityRealization.CuntzFamilyOn.S",
+        "module": "ParafermionIdentityRealization",
+        "kind": null
+      },
+      {
+        "name": "ParafermionIdentityRealization.CuntzFamilyOn.T",
+        "module": "ParafermionIdentityRealization",
+        "kind": null
+      },
+      {
+        "name": "ParafermionIdentityRealization.idRealization",
+        "module": "ParafermionIdentityRealization",
+        "kind": null
+      },
+      {
+        "name": "ParafermionIdentityRealization.instRingParafermionStage4",
+        "module": "ParafermionIdentityRealization",
+        "kind": null
+      },
+      {
+        "name": "ParafermionIdentityRealization.ParafermionStage4",
+        "module": "ParafermionIdentityRealization",
+        "kind": null
+      },
+      {
+        "name": "SupergradedCuntzBdG.affineSuperBracket",
+        "module": "SupergradedCuntzBdG",
+        "kind": null
+      },
+      {
+        "name": "SupergradedCuntzBdG.hamiltonianAtom",
+        "module": "SupergradedCuntzBdG",
+        "kind": null
+      },
+      {
+        "name": "SupergradedCuntzBdG.qRapidity",
+        "module": "SupergradedCuntzBdG",
+        "kind": null
+      },
+      {
+        "name": "SupergradedCuntzBdG.unruhTemperature",
+        "module": "SupergradedCuntzBdG",
+        "kind": null
+      },
+      {
+        "name": "SupergradedCuntzBdG.Z2Parity.even",
+        "module": "SupergradedCuntzBdG",
+        "kind": null
+      },
+      {
+        "name": "WeylSU3ColorSymmetry.swap12",
+        "module": "WeylSU3ColorSymmetry",
+        "kind": null
+      },
+      {
+        "name": "WeylSU3ColorSymmetry.swap23",
+        "module": "WeylSU3ColorSymmetry",
+        "kind": null
+      },
+      {
+        "name": "WeylSU3ColorSymmetry.weylAct",
+        "module": "WeylSU3ColorSymmetry",
+        "kind": null
+      }
+    ]
+  }
+]

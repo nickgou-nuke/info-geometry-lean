@@ -550,7 +550,7 @@ For distinct Majorana modes `γ₁`, `γ₂`, `γ₃`, the elementary exchange o
 `U₁₂ * U₂₃ - U₂₃ * U₁₂ = (inv_sqrt2 * inv_sqrt2 * 2) • (γ₁ * γ₃)`.
 
 When `inv_sqrt2 = 1 / √2`, the scalar factor is `1`, yielding
-`[U₁₂, U₂₃] = γ₁ * γ₃`.  Non-vanishing requires a separate hypothesis on
+`[U₁₂, U₂₃] = γ₁ * γ₃`.  Non-vanishing requires a separate property on
 the chosen representation. -/
 theorem braid_non_abelian_commutator {A : Type*} [Ring A] {N : ℕ}
     (inv_sqrt2 : A) (h_comm : ∀ x : A, inv_sqrt2 * x = x * inv_sqrt2)
@@ -609,7 +609,7 @@ theorem braid_non_abelian_commutator {A : Type*} [Ring A] {N : ℕ}
 nonzero product of the two outer Majorana modes.
 
 The preceding formula is representation-independent.  This corollary keeps
-the required non-vanishing witness explicit instead of silently asserting it
+the required non-vanishing property explicit instead of silently asserting it
 for every abstract `MajoranaCliffordOperators` datum. -/
 theorem braid_commutator_ne_zero_of_outer_product_ne_zero
     {A : Type*} [Ring A] {N : ℕ}
@@ -628,7 +628,7 @@ theorem braid_commutator_ne_zero_of_outer_product_ne_zero
 
 Membership in `braidNormalizationLocus` supplies the scalar normalization;
 the only representation-specific input remains the explicit nonzero outer
-product witness. -/
+product property. -/
 theorem real_braid_commutator_eq_outer_product
     {N : ℕ} (r : ℝ) (hr : r ∈ braidNormalizationLocus (A := ℝ))
     (ops : MajoranaCliffordOperators N ℝ)

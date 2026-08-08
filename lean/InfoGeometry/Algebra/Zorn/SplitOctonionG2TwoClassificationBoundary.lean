@@ -31,7 +31,7 @@ variable {R : Type*} [CommRing R]
 /-- A candidate finite `G₂(2)`/split-octonion automorphism at the Zorn-coordinate level. -/
 structure G2TwoCandidate (R : Type*) [CommRing R] where
   map : ZornMatrix R → ZornMatrix R
-  /-- Product preservation is an explicit hypothesis, not inferred from the name. -/
+  /-- Product preservation is an explicit property, not inferred from the name. -/
   map_mulZ : ∀ X Y : ZornMatrix R, map (ZornMatrix.mulZ X Y) = ZornMatrix.mulZ (map X) (map Y)
   /-- The candidate fixes the upper OP projector. -/
   map_OP1 : map (OP1 : ZornMatrix R) = OP1
@@ -70,14 +70,14 @@ theorem isOPStabilizing_for_canonical_zMul :
   intro X Y
   exact C.map_mulZ X Y
 
-/-- Under the canonical-product hypothesis, the candidate preserves the color slot. -/
+/-- Under the canonical-product property, the candidate preserves the color slot. -/
 theorem preserves_colorPart_of_canonical_zMul
     (X : ZornMatrix R) :
     C.map (colorPart X) = colorPart (C.map X) := by
   exact op_stabilizer_preserves_colorPart C.map
     C.isOPStabilizing_for_canonical_zMul X
 
-/-- Under the canonical-product hypothesis, the candidate preserves the anticolor slot. -/
+/-- Under the canonical-product property, the candidate preserves the anticolor slot. -/
 theorem preserves_anticolorPart_of_canonical_zMul
     (X : ZornMatrix R) :
     C.map (anticolorPart X) = anticolorPart (C.map X) := by

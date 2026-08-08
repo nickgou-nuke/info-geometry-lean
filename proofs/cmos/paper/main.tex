@@ -1,0 +1,56 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+
+\begin{document}
+
+\title{Information-Geometric CMOS Filtering: A Kernel-Verified, SIMD-Accelerated Dual-Affine Bregman Estimator}
+
+\author{\IEEEauthorblockN{1\textsuperscript{st} Given Name Surname}
+\IEEEauthorblockA{\textit{dept. name of organization (of Aff.)} \\
+\textit{name of organization (of Aff.)}\\
+City, Country \\
+email address or ORCID}
+}
+
+\maketitle
+
+\begin{abstract}
+Modern CMOS sensors exhibit complex, heteroscedastic noise profiles transitioning continuously between read-noise (Gaussian), photon-shot-noise (Poisson), and multiplicative PRNU (Gamma/Itakura-Saito) regimes. Classical anomaly detection algorithms, such as L.A. Cosmic, rely on spatial Laplacian convolutions that are computationally expensive and statistically blind to this underlying geometric variance. In this paper, we introduce an Adaptive Recurrent Three-Expert Dual-Affine Bregman Estimator. By unifying the canonical noise geometries via a mixed-beta potential, we derive a fully causal, $O(1)$ temporal filtering architecture driven by Kullback-Leibler regularized Fermi-Dirac and Softmax gating.
+
+Furthermore, we formally verify the algebraic geometry and stability of the estimator's central-moment state updates using the Lean 4 theorem prover. Empirical benchmarks demonstrate that a PyTorch-based Recurrent Expert KAN implementation achieves a 5x inference speedup over baseline B-spline networks. Finally, a Struct-of-Arrays (SoA) C++ implementation utilizing AVX/SIMD auto-vectorization demonstrates real-time, zero-branching throughput on 20-Megapixel streaming environments, establishing a new hardware-optimal standard for unsupervised spatiotemporal anomaly detection.
+\end{abstract}
+
+\begin{IEEEkeywords}
+CMOS sensors, Bregman divergence, Lean 4, formal verification, SIMD, Kolmogorov-Arnold Networks, anomaly detection.
+\end{IEEEkeywords}
+
+\section{Introduction}
+% Content for Section 1 goes here
+Modern astronomical and high-speed imaging systems rely heavily on CMOS technology, which presents a continuous mixture of noise regimes...
+
+\section{Information Geometry of the Dual-Affine Potential}
+\input{section2.tex}
+
+\section{Thermodynamics of the Entropy-Regularized Selector}
+\input{section3.tex}
+
+\section{Machine Verification in Lean 4}
+\input{section4.tex}
+
+\section{Hardware \& Network Architecture}
+\input{section5.tex}
+
+\section{Empirical Benchmarks and Conclusion}
+\input{section6.tex}
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

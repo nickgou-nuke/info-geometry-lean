@@ -9,7 +9,7 @@ namespace InfoGeometry.Topology
 
 An ambient modular reversal descends through an observational quotient only
 when it preserves the observation map.  Continuity of the descended map is
-kept as an explicit quotient-topology hypothesis.
+kept as an explicit quotient-topology property.
 -/
 
 structure SymbolicLatentObservableModularReversal

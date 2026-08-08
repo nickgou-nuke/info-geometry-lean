@@ -22,6 +22,7 @@ namespace PrimonHilbertPolyaSeparation
 
 open PrimonFockTraceBridge
 open PrimonSuperThermo
+open RiemannHypothesis
 
 /-- The primon energy of an integer mode `n` is `log n`. -/
 def primonIntegerEnergy (n : ℕ) : ℝ :=

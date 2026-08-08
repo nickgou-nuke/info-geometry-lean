@@ -138,11 +138,11 @@ theorem kernelSpectralDivisor_of_spectralDivisor_kernelDiff
 end NoncommutativeCauchyKernel
 
 /--
-Completeness certificate for a noncommutative Cauchy kernel.
+Completeness property for a noncommutative Cauchy kernel.
 
 The kernel itself proves `admissible → invertible difference`.  This extra
-certificate is exactly the converse: every invertible difference lies in the
-admissible resolvent domain.  Only with this certificate do admissibility
+property is exactly the converse: every invertible difference lies in the
+admissible resolvent domain.  Only with this property do admissibility
 failure and ordinary spectral-divisor failure coincide.
 -/
 def KernelAdmissibilityComplete
@@ -169,7 +169,7 @@ noncomputable def scalarComplexKernelAdmissibilityComplete :
     exact hunit.ne_zero
 
 /--
-With a completeness certificate, kernel spectral divisors are exactly spectral
+With a completeness property, kernel spectral divisors are exactly spectral
 divisors of the difference function.
 -/
 theorem kernelSpectralDivisor_iff_spectralDivisor_kernelDiff
@@ -573,7 +573,7 @@ theorem boundaryIntegral_eq_iff_winding_eq
   · intro h
     rw [W.boundaryIntegral_eq_winding_smul Ω₁, W.boundaryIntegral_eq_winding_smul Ω₂, h]
 
-/-- Regions with the same certified winding have the same boundary residue. -/
+/-- Regions with the same property winding have the same boundary residue. -/
 theorem boundaryIntegral_eq_of_winding_eq
     {Ω₁ Ω₂ : Region}
     (hΩ : W.winding Ω₁ = W.winding Ω₂) :

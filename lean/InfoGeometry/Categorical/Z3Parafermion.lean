@@ -34,7 +34,7 @@ noncomputable def proj_vacancy (O : A) : A :=
 noncomputable def drazin_projector (O : A) : A :=
   InfoGeometry.Canonical.FibonacciParafermionAtoms.drazin_projector O
 
-/-- Exact power reduction for a `Z₃` parafermion witness. -/
+/-- Exact power reduction for a `Z₃` parafermion property. -/
 theorem O_pow_4 {O : A} (h : O ^ 3 = O) : O ^ 4 = O ^ 2 := by
   simpa using
     (InfoGeometry.Canonical.FibonacciParafermionAtoms.Z3Parafermion.O_pow_4 (A := A) (O := O) h)

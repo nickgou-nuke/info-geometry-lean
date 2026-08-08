@@ -77,7 +77,7 @@ section OmitEngineCapstoneVars
 omit [Fintype Tok] [DecidableEq Tok]
 
 /--
-Capstone engine witness:
+Capstone engine property:
 the all-top transformer lane satisfies per-layer scale/shape split,
 token-local thermodynamic free-energy identity, and stack-level defect quarantine.
 -/

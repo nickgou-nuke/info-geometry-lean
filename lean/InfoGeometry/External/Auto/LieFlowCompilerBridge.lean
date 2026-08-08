@@ -89,7 +89,7 @@ theorem batchLoss_eq_zero_if_exact (C : KMSCompiler G X V)
     (batchLoss_eq_zero_if_perfect (L := C.chart) v C.x1 C.g ts
       (by simpa [logGenerator] using h))
 
-/-- Surjectivity witness: exp has a right inverse by `hExpLog`; this is the
+/-- Surjectivity property: exp has a right inverse by `hExpLog`; this is the
     computational form of the theorem that reconstruction chart sees every bulk point. -/
 theorem exp_surjective (C : KMSCompiler G X V) : Function.Surjective C.chart.exp := by
   intro g

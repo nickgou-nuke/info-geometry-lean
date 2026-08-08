@@ -5,8 +5,8 @@ import Lean
 
 Macro infrastructure for socket-debt tracking.
 
-A **socket** is a deferred witness-gated interface: a structure carrying
-`law : Prop` + `certificate : law` fields where the `Prop` is opaque.
+A **socket** is a deferred property-gated interface: a structure carrying
+`law : Prop` + `property : law` fields where the `Prop` is opaque.
 This is architecturally legitimate scaffolding (the finite-only boundary
 does not have the analytic content to fill the socket), but it bypasses
 normal `sorry` detection because the law itself is a parameter.
@@ -40,7 +40,7 @@ namespace InfoGeometry.Meta
 /-- Tag attribute marking structures as socket-level closure debt. -/
 initialize socketDebtTagAttr : TagAttribute ←
   registerTagAttribute `socket_debt_tag
-    "Mark a structure as witness-gated socket debt for architecture auditing."
+    "Mark a structure as property-gated socket debt for architecture auditing."
 
 /--
 Audit all socket-debt declarations in the current environment.

@@ -1,0 +1,155 @@
+\begin{thebibliography}{CHKS06}
+
+\bibitem[Alu12]{aluffi}
+P.~Aluffi.
+\newblock Chern classes of free hypersurface arrangements.
+\newblock {\em J. Singul.}, 5:19--32, 2012.
+
+\bibitem[Arn69]{arnold}
+V.~I. Arnol'd.
+\newblock The cohomology ring of the group of dyed braids.
+\newblock {\em Mat. Zametki}, 5:227--231, 1969.
+
+\bibitem[BH14]{bibbyhilburnchordal}
+C.~Bibby and J.~Hilburn.
+\newblock Quadratic-linear duality and rational homotopy theory of chordal
+  arrangements.
+\newblock {\em preprint: ar{X}iv:1409.6748}, 2014.
+
+\bibitem[Bib13]{bibbyabelian}
+C.~Bibby.
+\newblock Cohomology of abelian arrangements.
+\newblock {\em preprint: ar{X}iv:1310.4866}, 2013.
+
+\bibitem[Blo12]{blochtreeterated}
+S.~Bloch.
+\newblock Motives, the fundamental group, and graphs.
+\newblock {\em preprint}, 2012.
+
+\bibitem[Bri73]{brieskorn}
+E.~Brieskorn.
+\newblock Sur les groupes de tresses [d'apr{\`e}s {V}. {I}. {A}rnol'd].
+\newblock In {\em S{\'e}minaire {B}ourbaki, 24{\`e}me ann{\'e}e (1971/1972),
+  {E}xp. {N}o. 401}, pages 21--44. Lecture Notes in Math., Vol. 317. Springer,
+  Berlin, 1973.
+
+\bibitem[CHKS06]{catanesehostenkhetansturmfels}
+F.~Catanese, S.~Hosten, A.~Khetan, and B.~Sturmfels.
+\newblock {The maximum likelihood degree.}
+\newblock {\em {Am. J. Math.}}, 128(3):671--697, 2006.
+
+\bibitem[DCP95]{deconciniprocesi}
+C.~De~Concini and C.~Procesi.
+\newblock Wonderful models of subspace arrangements.
+\newblock {\em Selecta Math. (N.S.)}, 1(3):459--494, 1995.
+
+\bibitem[Del71]{delignehodge2}
+P.~Deligne.
+\newblock Th{\'e}orie de {H}odge. {II}.
+\newblock {\em Inst. Hautes {\'E}tudes Sci. Publ. Math.}, (40):5--57, 1971.
+
+\bibitem[Del74]{delignehodge3}
+P.~Deligne.
+\newblock Th{\'e}orie de {H}odge. {III}.
+\newblock {\em Inst. Hautes {\'E}tudes Sci. Publ. Math.}, (44):5--77, 1974.
+
+\bibitem[{Dol}07]{dolgachevlogarithmic}
+I.~V. {Dolgachev}.
+\newblock {Logarithmic sheaves attached to arrangements of hyperplanes.}
+\newblock {\em {J. Math. Kyoto Univ.}}, 47(1):35--64, 2007.
+
+\bibitem[FM94]{fultonmcpherson}
+W.~Fulton and R.~MacPherson.
+\newblock A compactification of configuration spaces.
+\newblock {\em Ann. of Math. (2)}, 139(1):183--225, 1994.
+
+\bibitem[Get99]{getzlerresolvingmhm}
+E.~Getzler.
+\newblock Resolving mixed {H}odge modules on configuration spaces.
+\newblock {\em Duke Math. J.}, 96(1):175--203, 1999.
+
+\bibitem[Hu03]{hu}
+Y.~Hu.
+\newblock A compactification of open varieties.
+\newblock {\em Trans. Amer. Math. Soc.}, 355(12):4737--4753, 2003.
+
+\bibitem[Kri94]{kriz}
+I.~Kriz.
+\newblock On the rational homotopy type of configuration spaces.
+\newblock {\em Ann. of Math. (2)}, 139(2):227--237, 1994.
+
+\bibitem[Ler59]{leray}
+J.~Leray.
+\newblock Le calcul diff{\'e}rentiel et int{\'e}gral sur une vari{\'e}t{\'e}
+  analytique complexe. ({P}robl{\`e}me de {C}auchy. {III}).
+\newblock {\em Bull. Soc. Math. France}, 87:81--180, 1959.
+
+\bibitem[Li09]{li}
+L.~Li.
+\newblock Wonderful compactification of an arrangement of subvarieties.
+\newblock {\em Michigan Math. J.}, 58(2):535--563, 2009.
+
+\bibitem[Loo93]{looijenga}
+E.~Looijenga.
+\newblock Cohomology of {${\mathscr{M}}_3$} and {${\mathscr{M}}^1_3$}.
+\newblock In {\em Mapping class groups and moduli spaces of {R}iemann surfaces
+  ({G}{\"o}ttingen, 1991/{S}eattle, {WA}, 1991)}, volume 150 of {\em Contemp.
+  Math.}, pages 205--228. Amer. Math. Soc., Providence, RI, 1993.
+
+\bibitem[Mor78]{morganalgebraictopology}
+J.~W. Morgan.
+\newblock The algebraic topology of smooth algebraic varieties.
+\newblock {\em Inst. Hautes {\'E}tudes Sci. Publ. Math.}, (48):137--204, 1978.
+
+\bibitem[OS80]{orliksolomon}
+P.~Orlik and L.~Solomon.
+\newblock Combinatorics and topology of complements of hyperplanes.
+\newblock {\em Invent. Math.}, 56(2):167--189, 1980.
+
+\bibitem[OT92]{orlikterao}
+P.~Orlik and H.~Terao.
+\newblock {\em Arrangements of hyperplanes}, volume 300 of {\em Grundlehren der
+  Mathematischen Wissenschaften [Fundamental Principles of Mathematical
+  Sciences]}.
+\newblock Springer-Verlag, Berlin, 1992.
+
+\bibitem[PS08]{peterssteenbrink}
+C.~A.~M. Peters and J.~H.~M. Steenbrink.
+\newblock {\em Mixed {H}odge structures}, volume~52 of {\em Ergebnisse der
+  Mathematik und ihrer Grenzgebiete. 3. Folge. A Series of Modern Surveys in
+  Mathematics [Results in Mathematics and Related Areas. 3rd Series. A Series
+  of Modern Surveys in Mathematics]}.
+\newblock Springer-Verlag, Berlin, 2008.
+
+\bibitem[Sai80]{saitologarithmic}
+K.~Saito.
+\newblock Theory of logarithmic differential forms and logarithmic vector
+  fields.
+\newblock {\em J. Fac. Sci. Univ. Tokyo Sect. IA Math.}, 27(2):265--291, 1980.
+
+\bibitem[Ter78]{teraologarithmic}
+H.~Terao.
+\newblock Forms with logarithmic pole and the filtration by the order of the
+  pole.
+\newblock In {\em Proceedings of the {I}nternational {S}ymposium on {A}lgebraic
+  {G}eometry ({K}yoto {U}niv., {K}yoto, 1977)}, pages 673--685, Tokyo, 1978.
+  Kinokuniya Book Store.
+
+\bibitem[Tot96]{totaroconf}
+B.~Totaro.
+\newblock Configuration spaces of algebraic varieties.
+\newblock {\em Topology}, 35(4):1057--1067, 1996.
+
+\bibitem[Voi02]{voisin}
+C.~Voisin.
+\newblock {\em Hodge theory and complex algebraic geometry. {I}}, volume~76 of
+  {\em Cambridge Studies in Advanced Mathematics}.
+\newblock Cambridge University Press, Cambridge, 2002.
+\newblock Translated from the French original by Leila Schneps.
+
+\bibitem[Yuz01]{yuzvinskiorliksolomon}
+S.~Yuzvinski{\u\i}.
+\newblock Orlik-{S}olomon algebras in algebra and topology.
+\newblock {\em Uspekhi Mat. Nauk}, 56(2(338)):87--166, 2001.
+
+\end{thebibliography}

@@ -10,7 +10,7 @@ Closed here:
 
 * a theorem-level bridge carrying an explicit identification between boundary
   defects and BdG Majorana zero modes;
-* a bridge theorem safely isolating this assumption without asserting it as a
+* a bridge theorem safely isolating this property without asserting it as a
   proven index theorem in Lean.
 
 Not closed here:
@@ -25,7 +25,7 @@ open InfoGeometry.Physics.BoundaryMajoranaMassGap
 
 /-
 The bridge theorem separates the topological defect count from the BdG
-Majorana zero-mode count. The identification is an explicit hypothesis: the
+Majorana zero-mode count. The identification is an explicit property: the
 imported mass-gap owner does not, by itself, prove an index theorem relating
 these two numbers.
 -/

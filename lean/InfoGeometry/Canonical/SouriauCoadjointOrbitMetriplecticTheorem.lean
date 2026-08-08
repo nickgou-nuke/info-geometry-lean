@@ -68,10 +68,10 @@ structure InfiniteCoadjointOrbitMetriplecticContext
   /-- The metric/Onsager leg is a valid orbit-level state update. -/
 -- theorem-class: bridge
   metric_preserves_state : ∀ x : Orbit, isOnCoadjointOrbit (moment (metricVectorField x))
-  /-- Casimir hypothesis: the reversible leg produces no entropy. -/
+  /-- Casimir property: the reversible leg produces no entropy. -/
 -- theorem-class: bridge
   casimir_reversible : ∀ x : Orbit, reversibleEntropyRate x = 0
-  /-- Onsager positivity hypothesis for the noncommutative/operator metric leg. -/
+  /-- Onsager positivity property for the noncommutative/operator metric leg. -/
 -- theorem-class: bridge
   onsager_metric_nonnegative : ∀ x : Orbit, 0 ≤ metricEntropyRate x
   /-- Metriplectic split of the total entropy-production channel. -/
@@ -90,7 +90,7 @@ Canonical dimension-agnostic constructor where the selected coadjoint orbit is
 the image of the moment map.
 
 This removes the basic orbit-membership and flow-closure obligations from the
-hypothesis surface: for an arbitrary carrier `Orbit`, both the reversible and
+property surface: for an arbitrary carrier `Orbit`, both the reversible and
 metric updates still land in `Set.range moment` by construction.  The analytic
 content that cannot be derived from the image predicate alone remains explicit:
 Casimir reversibility, Onsager nonnegativity, and the metriplectic entropy split.
@@ -350,7 +350,7 @@ theorem reversibleEntropyRate_eq_zero (x : Orbit) :
   C.casimir_reversible x
 
 -- theorem-class: bridge
-/-- Metric/Onsager channel is nonnegative by the explicit operatorial positivity hypothesis. -/
+/-- Metric/Onsager channel is nonnegative by the explicit operatorial positivity property. -/
 @[rep_depth transport]
 theorem metricEntropyRate_nonnegative (x : Orbit) :
     0 ≤ C.metricEntropyRate x :=
@@ -787,7 +787,7 @@ variable {Feature : Type*}
 variable [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature]
 
 /--
-Analytic Gibbs-Souriau witness for the infinite/coordinateless lane.
+Analytic Gibbs-Souriau property for the infinite/coordinateless lane.
 
 This is not a finite state shadow and it does not hide differentiation under an
 integral behind prose.  A concrete model must supply the actual integration
@@ -800,7 +800,7 @@ dissipation route.
 structure GibbsSouriauGramAnalyticWitness
     (Orbit : Type u) (Θ : Type*) [NormedAddCommGroup Θ] [NormedSpace ℝ Θ]
     (Feature : Type*) [NormedAddCommGroup Feature] [InnerProductSpace ℝ Feature] where
-  /-- Distinguished geometric-temperature point where the analytic witness is valid. -/
+  /-- Distinguished geometric-temperature point where the analytic property is valid. -/
   beta : Θ
   /-- Coadjoint moment map. -/
   moment : Orbit → MomentCoord Θ
@@ -840,7 +840,7 @@ structure GibbsSouriauGramAnalyticWitness
 -- theorem-class: bridge
   entropyGradient_at_moment :
     entropyGradient (dualCoord massieu beta) = beta
-  /-- Second variation: Fisher is the Massieu Hessian at the witness point. -/
+  /-- Second variation: Fisher is the Massieu Hessian at the property point. -/
 -- theorem-class: bridge
   fisherEquiv_eq_massieuHessian :
     (fisherEquiv : Θ →L[ℝ] MomentCoord Θ) = hessian massieu beta
@@ -865,7 +865,7 @@ namespace GibbsSouriauGramAnalyticWitness
 
 variable {Orbit : Type u}
 
-/-- Convert the analytic witness into the repo-owned Legendre inverse data. -/
+/-- Convert the analytic property into the repo-owned Legendre inverse data. -/
 @[rep_depth transport]
 noncomputable def toLegendreContinuousLinearEquivInverseData
     (W : GibbsSouriauGramAnalyticWitness Orbit Θ Feature) :
@@ -880,9 +880,9 @@ noncomputable def toLegendreContinuousLinearEquivInverseData
 
 -- theorem-class: bridge
 /--
-The analytic Gibbs-Souriau witness discharges the previously prose-only
+The analytic Gibbs-Souriau property discharges the previously prose-only
 partition, first-variation, second-variation, Gram, and covariance claims at
-the witness point.
+the property point.
 -/
 @[rep_depth transport]
 theorem integral_covariance_gram_legendre_packet
@@ -1455,7 +1455,7 @@ variable
 
 -- theorem-class: bridge
 /--
-The smooth Legendre witness supplies the actual two-sided inverse laws for the
+The smooth Legendre property supplies the actual two-sided inverse laws for the
 temperature/moment Hessian pair.
 -/
 @[rep_depth thermo]
@@ -1469,7 +1469,7 @@ theorem two_sided_inverse_laws :
 -- theorem-class: bridge
 /--
 Discharge the Souriau infinite-context inverse-Fisher readout equality from a
-smooth Legendre inverse-Hessian witness.
+smooth Legendre inverse-Hessian property.
 -/
 @[rep_depth thermo]
 theorem legendre_entropy_hessian_eq_inverse_fisher_at
@@ -2224,7 +2224,7 @@ attribute [terminal] fisher_onsager_metriplectic_constructive_proof_packet
 /--
 Full analytic-to-metriplectic packet.
 
-This composes the explicit Gibbs-Souriau analytic witness
+This composes the explicit Gibbs-Souriau analytic property
 (`partition = integral`, first variation, second variation, Gram Fisher, and
 centered-moment covariance) with the already-owned infinite
 Legendre/Gram/square-dissipation theorem.  The result is still
@@ -2357,7 +2357,7 @@ attribute [infrastructure] operatorial_metric_gate_from_regular_cone
 -- theorem-class: bridge
 /--
 Square-response operatorial gate for the full coadjoint-orbit theorem
-interface.  This avoids a naked PSD hypothesis when the concrete operator model
+interface.  This avoids a naked PSD property when the concrete operator model
 proves the two diagonal responses are squares and the mixed response vanishes.
 -/
 @[rep_depth transport]

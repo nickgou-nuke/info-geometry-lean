@@ -96,27 +96,27 @@ We define two non-zero matrices whose product is exactly zero.
 These were derived via the symbolic external solver (SymPy).
 -/
 
-def witnessA : ZornMatrixReal :=
+def zeroDivisorA : ZornMatrixReal :=
   { a := 1, b := 0, u := (1, 0, 0), v := (0, 0, 0) }
 
-def witnessB : ZornMatrixReal :=
+def zeroDivisorB : ZornMatrixReal :=
   { a := 0, b := 1, u := (-1, 0, 0), v := (0, 0, 0) }
 
 theorem split_octonions_have_zero_divisors :
-    witnessA * witnessB = 0 ∧ witnessA ≠ 0 ∧ witnessB ≠ 0 := by
+    zeroDivisorA * zeroDivisorB = 0 ∧ zeroDivisorA ≠ 0 ∧ zeroDivisorB ≠ 0 := by
   refine ⟨?_, ?_, ?_⟩
-  · change ZornMatrixReal.mul witnessA witnessB = ZornMatrixReal.zero
+  · change ZornMatrixReal.mul zeroDivisorA zeroDivisorB = ZornMatrixReal.zero
     apply ZornMatrixReal.ext
-    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul, witnessA, witnessB, ZornMatrixReal.zero]; norm_num
-    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul, witnessA, witnessB, ZornMatrixReal.zero]; norm_num
-    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul, witnessA, witnessB, ZornMatrixReal.zero]; simp <;> norm_num
-    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul, witnessA, witnessB, ZornMatrixReal.zero]; simp <;> norm_num
+    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul, zeroDivisorA, zeroDivisorB, ZornMatrixReal.zero]; norm_num
+    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul, zeroDivisorA, zeroDivisorB, ZornMatrixReal.zero]; norm_num
+    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul, zeroDivisorA, zeroDivisorB, ZornMatrixReal.zero]; simp <;> norm_num
+    · dsimp [ZornMatrixReal.mul, dot, cross, add, sub, smul, zeroDivisorA, zeroDivisorB, ZornMatrixReal.zero]; simp <;> norm_num
   · intro h
-    have h1 : witnessA.a = (0 : ZornMatrixReal).a := by rw [h]
+    have h1 : zeroDivisorA.a = ZornMatrixReal.zero.a := by { rw [h]; rfl }
     change (1 : ℝ) = 0 at h1
     exact one_ne_zero h1
   · intro h
-    have h1 : witnessB.b = (0 : ZornMatrixReal).b := by rw [h]
+    have h1 : zeroDivisorB.b = ZornMatrixReal.zero.b := by { rw [h]; rfl }
     change (1 : ℝ) = 0 at h1
     exact one_ne_zero h1
 

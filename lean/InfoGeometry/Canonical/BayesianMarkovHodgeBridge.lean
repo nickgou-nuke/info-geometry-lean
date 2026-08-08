@@ -14,7 +14,7 @@ This file stays inside the existing owner surfaces:
   orthogonality to exact/coexact local errors.
 
 The bridge is deliberately explicit: a supplied stationary state is read out as
-an edge current, and that current is then certified as harmonic/protected in
+an edge current, and that current is then property as harmonic/protected in
 the finite Hodge layer.
 -/
 

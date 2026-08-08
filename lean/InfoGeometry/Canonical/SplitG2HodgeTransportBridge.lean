@@ -8,8 +8,8 @@ namespace InfoGeometry.Canonical
 
 This file deliberately keeps the Hodge operator as explicit data.  A
 `SplitG2Automorphism` preserves the algebraic three-form, but preservation of a
-chosen Hodge operator is an additional compatibility hypothesis.  Under that
-hypothesis the associated four-form is transported invariantly.
+chosen Hodge operator is an additional compatibility property.  Under that
+property the associated four-form is transported invariantly.
 -/
 
 abbrev SplitG2Form (k : ℕ) :=

@@ -6,7 +6,7 @@ import Mathlib.Topology.Category.CompHaus.Basic
 
 This owner packages the native quotient action in `CompHaus`.  The quotient
 map and the descended action are related by an actual naturality equality;
-the quotient action is not introduced as an abstract categorical witness.
+the quotient action is not introduced as an abstract categorical property.
 -/
 
 noncomputable section

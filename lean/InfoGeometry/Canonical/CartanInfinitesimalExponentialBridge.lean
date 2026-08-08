@@ -19,7 +19,7 @@ The theorem-safe translation is:
 * infinitesimal Cartan law: `ad_H X = [H,X] = λ • X`;
 * exponential adjoint readout: `Φ_t X = exp(tH) X exp(-tH) = exp(tλ) • X`.
 
-The integration step is witness-gated.  This file does not prove analytic ODE
+The integration step is property-gated.  This file does not prove analytic ODE
 existence, uniqueness, or noncommutative exponential calculus.
 -/
 

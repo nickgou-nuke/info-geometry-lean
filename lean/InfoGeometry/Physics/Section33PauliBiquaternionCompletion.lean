@@ -10,7 +10,7 @@ only finite algebraic content:
 * the Pauli matrices plus identity decompose every `2 × 2` complex matrix;
 * radius-`r` Bloch density matrices are idempotent under the algebraic unit
   condition `r²‖n‖² = 1`;
-* the same condition gives the determinant-zero/null-boundary certificate from
+* the same condition gives the determinant-zero/null-boundary property from
   Section 32;
 * a biquaternion is represented theorem-safely as a pair of finite Pauli
   matrices, with a checked dual-swap involution.

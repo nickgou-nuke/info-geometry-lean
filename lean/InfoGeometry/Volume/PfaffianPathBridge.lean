@@ -18,7 +18,7 @@ This file records the separate signed combinatorial owner surface:
 * Pfaffian² = determinant/even-volume shadow.
 
 The full Lindström--Gessel--Viennot and signed Pfaffian expansion theorems
-are witness-gated here.
+are property-gated here.
 -/
 
 noncomputable section
@@ -40,16 +40,16 @@ structure FinitePathMatrixPacket where
   /-- Source/sink labels. -/
   Index : Type*
 
-  /-- Finite index witness. -/
+  /-- Finite index property. -/
   indexFinite : Fintype Index
 
-  /-- Decidable equality witness. -/
+  /-- Decidable equality property. -/
   indexDecidableEq : DecidableEq Index
 
   /-- Path type from source `i` to sink `j`. -/
   Path : Index → Index → Type*
 
-  /-- Finite path-set witness. -/
+  /-- Finite path-set property. -/
   pathFinite : ∀ i j : Index, Fintype (Path i j)
 
   /-- Path amplitude. -/
@@ -83,7 +83,7 @@ structure FinitePathMatrixPacket where
   Witness that the determinant equals the signed path-family expansion.
 
   This is the determinant expansion owner.  The stronger LGV reduction to
-  nonintersecting paths should be a separate witness with graph hypotheses.
+  nonintersecting paths should be a separate property with graph hypotheses.
   -/
   det_eq_signedPathFamilyExpansion :
     (letI : Fintype Index := indexFinite
@@ -112,16 +112,16 @@ structure SkewPairingMatrixPacket where
   /-- Boundary endpoints / defects to be paired. -/
   Boundary : Type*
 
-  /-- Finite endpoint witness. -/
+  /-- Finite endpoint property. -/
   boundaryFinite : Fintype Boundary
 
-  /-- Decidable equality witness. -/
+  /-- Decidable equality property. -/
   boundaryDecidableEq : DecidableEq Boundary
 
   /-- Antisymmetric pair-weight matrix. -/
   W : Matrix Boundary Boundary ℝ
 
-  /-- Skewness witness. -/
+  /-- Skewness property. -/
   skew : ∀ i j : Boundary, W i j = - W j i
 
 /--
@@ -137,7 +137,7 @@ structure PfaffianMatchingExpansionPacket where
   /-- Perfect pairings/matchings of the boundary endpoints. -/
   PerfectPairing : Type*
 
-  /-- Finite perfect-pairing witness. -/
+  /-- Finite perfect-pairing property. -/
   pairingFinite : Fintype PerfectPairing
 
   /-- Sign of a perfect pairing. Usually ±1. -/
@@ -205,7 +205,7 @@ The existing file owns a nonnegative branch such as
 
   pf_pos(W)^2 = |det W|.
 
-This witness says that this positive branch is the absolute value of the
+This property says that this positive branch is the absolute value of the
 signed combinatorial Pfaffian.
 -/
 structure PositiveBranchPfaffianCompatibility
@@ -281,7 +281,7 @@ Owner-side bridge theorem currently available from explicit Pfaffian/path data:
 the Pfaffian matching packet carries the even-volume shadow identity.
 
 This is the honest theorem currently owed by the packet. Stronger signed path /
-chiral-word comparison theorems require witness terms, not just witness types.
+chiral-word comparison theorems require property terms, not just property types.
 -/
 theorem constructPfaffianPathBridgeTarget
     (P : PfaffianPathBridgePacket) :

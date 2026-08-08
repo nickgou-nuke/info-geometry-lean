@@ -42,7 +42,7 @@ theorem finite_motive_inputs {n : ℕ}
 
 /-!
 The arithmetic motive layer uses the actual additive Grothendieck completion,
-not a string-valued certificate.  The universal property below is the native
+not a string-valued property.  The universal property below is the native
 owner-level statement available without adding unsupported cohomological or
 Weil hypotheses.
 -/

@@ -17,6 +17,18 @@ structure BostConnesSystem (R : Type*) [CommRing R] where
   e_add : ∀ r s, e (r + s) = e r * e s
   e_periodic : ∀ r, e (r + 1) = e r
 
+/-- Trivial instance of BostConnesSystem on PUnit. -/
+def punitBostConnesSystem : BostConnesSystem PUnit where
+  x _ := ⟨⟩
+  x_star _ := ⟨⟩
+  e _ := ⟨⟩
+  x_star_x _ := rfl
+  x_mul _ _ := rfl
+  x_star_mul _ _ := rfl
+  e_zero := rfl
+  e_add _ _ := rfl
+  e_periodic _ := rfl
+
 /-- Time evolution flow σ_t on the Bost-Connes algebra for real parameter t.
     σ_t(x_n) = n^(i t) x_n. On formal elements with energy E_n = ln n,
     the scaling action scales by n^(-β) under Wick-rotated KMS thermal flow. -/

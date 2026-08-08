@@ -1,0 +1,9 @@
+\BOOKMARK [0][-]{section*.2}{Exact Clifford-Jones Isomorphism: Formal Verification of Majorana Spinor Algebra in Polarization Optics}{}% 2
+\BOOKMARK [1][-]{section*.1}{Abstract}{section*.2}% 1
+\BOOKMARK [1][-]{section*.3}{I. Introduction}{section*.2}% 3
+\BOOKMARK [1][-]{section*.4}{II. Clifford Algebra and SU\(2\) Spinors}{section*.2}% 4
+\BOOKMARK [1][-]{section*.5}{III. The KAN-Jones Isomorphism}{section*.2}% 5
+\BOOKMARK [1][-]{section*.9}{IV. The Defective Geometry of the Exceptional Point}{section*.2}% 6
+\BOOKMARK [1][-]{section*.10}{V. The Zero-Spin Equator and Nonlinear Activation}{section*.2}% 7
+\BOOKMARK [1][-]{section*.11}{VI. Formal Verification in Lean 4}{section*.2}% 8
+\BOOKMARK [1][-]{section*.12}{VII. Conclusion}{section*.2}% 9

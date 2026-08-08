@@ -8,7 +8,7 @@ This module does not claim a solution of the Clay Navier-Stokes problem.
 It formalizes a conditional operator-accounting statement:
 
   projected classical extreme shear / closure failure
-    + operator snap transition witness
+    + operator snap transition property
     + topological obstruction ledger
       => protected hidden/tubule sector.
 
@@ -78,7 +78,7 @@ A snap bridge from projected classical extreme behavior to hidden-sector
 operator resolution.
 
 This is the precise mathematical replacement for an informal statement like
-"the singularity snaps into a chiral tubule": it is a witness-gated routing
+"the singularity snaps into a chiral tubule": it is a property-gated routing
 law from a projected extreme event into a hidden/topological sector.
 -/
 structure NavierStokesOperatorSnapBridge
@@ -127,7 +127,7 @@ theorem not_projected_extreme_of_hidden_trivial
 
 end NavierStokesOperatorSnapBridge
 
-/-! ## 3. Chiral tubule snap witness -/
+/-! ## 3. Chiral tubule snap property -/
 
 /--
 Navier-Stokes snap data routed through the chiral tubule boundary API.
@@ -197,25 +197,25 @@ structure ClassicalExtremeTubuleRouting
     (H : BregmanHessianDatum Op)
     (G : DualFlatOperatorGeometry Op)
     (T : ThermalDriveDatum Op) where
-  witness :
+  property :
     NavierStokesTubuleSnapWitness Op Classical Charge Residue H G T
 
   /-- Projected classical extreme behavior implies topological snap boundary. -/
   extreme_implies_snap :
     ∀ U : Op,
-      witness.classical.ClassicalExtreme (witness.classical.project U) →
+      property.classical.ClassicalExtreme (property.classical.project U) →
         IsTopologicalSnapBoundary H U
 
   /-- Projected classical extreme behavior implies extreme shear. -/
   extreme_implies_shear :
     ∀ U : Op,
-      witness.classical.ClassicalExtreme (witness.classical.project U) →
-        IsExtremeShear G witness.transitionLaw.threshold U
+      property.classical.ClassicalExtreme (property.classical.project U) →
+        IsExtremeShear G property.transitionLaw.threshold U
 
   /-- Projected classical extreme behavior implies thermal criticality. -/
   extreme_implies_thermal :
     ∀ U : Op,
-      witness.classical.ClassicalExtreme (witness.classical.project U) →
+      property.classical.ClassicalExtreme (property.classical.project U) →
         IsThermallyCritical T U
 
 namespace ClassicalExtremeTubuleRouting
@@ -237,11 +237,11 @@ once the routing bridge supplies snap, shear, and thermal criticality.
 theorem classical_extreme_implies_tubule
     (U : Op)
     (hExtreme :
-      R.witness.classical.ClassicalExtreme
-        (R.witness.classical.project U)) :
+      R.property.classical.ClassicalExtreme
+        (R.property.classical.project U)) :
     ∃ C : ChiralTubuleCrystallization Op Charge Residue H,
       C.boundaryState = U :=
-  R.witness.transitionLaw.snap_implies_crystallization
+  R.property.transitionLaw.snap_implies_crystallization
     U
     (R.extreme_implies_snap U hExtreme)
     (R.extreme_implies_shear U hExtreme)
@@ -348,7 +348,7 @@ theorem projected_extreme_has_gradeTwo_memory
 
 /--
 If hidden grade-two memory is zero, then the projected classical extreme event
-does not occur under this five-grade resolution witness.
+does not occur under this five-grade resolution property.
 -/
 theorem not_projected_extreme_of_no_gradeTwo_memory
     (x y : J)

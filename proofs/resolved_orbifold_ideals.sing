@@ -1,0 +1,26 @@
+// resolved_orbifold_ideals.sing
+// Algebraic ideals of the resolved orbifold
+
+ring r = 0, (x, y, z, w, u, v), dp;
+
+// Singular orbifold equation, e.g., C^4 / V_4 type singularity
+// Let's model a basic hypersurface singularity and its blowup
+ideal singularity = x*y - z*w;
+print("Original Singularity Ideal:");
+singularity;
+
+// Blowup / Resolution
+// Introduce exceptional divisors u, v
+ideal resolution = x*y - z*w, x*u - z*v, y*v - w*u;
+
+print("Resolved Orbifold Ideal:");
+resolution;
+
+// Check dimension and singularity of resolved space
+ideal jac = jacob(resolution);
+ideal singular_locus = resolution + jac;
+print("Groebner basis of singular locus of resolution:");
+std(singular_locus);
+
+print("Resolved orbifold ideals modeled.");
+exit;

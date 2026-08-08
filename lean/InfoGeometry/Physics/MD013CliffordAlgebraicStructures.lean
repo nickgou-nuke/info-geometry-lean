@@ -16,7 +16,7 @@ This file formalizes the theorem-safe finite socket:
 
 * nontrivial idempotents give explicit left/right zero-divisor witnesses;
 * square-zero nilpotents give explicit zero-divisor witnesses;
-* a zero-divisor relation gives a nontrivial kernel witness for multiplication;
+* a zero-divisor relation gives a nontrivial kernel property for multiplication;
 * the existing `2 × 2` matrix-unit algebra gives a one-mode CAR shadow where
   `E12` and `E21` are nilpotent, their products are orthogonal projectors, and
   those projectors partition the identity.
@@ -37,7 +37,7 @@ open InfoGeometry.Physics.MD001MatrixQuantumGeometry
 open InfoGeometry.Physics.MD006OperatorEigenoperators
 open InfoGeometry.Physics.MD007QuantumEigenoperatorInterpretation
 
-/-- Explicit left zero-divisor witness data, represented as a subtype. -/
+/-- Explicit left zero-divisor property data, represented as a subtype. -/
 def LeftZeroDivisor (R : Type) [Mul R] [Zero R] :=
   { p : R × R // p.1 ≠ 0 ∧ p.2 ≠ 0 ∧ p.1 * p.2 = 0 }
 
@@ -51,7 +51,7 @@ abbrev hmul {R : Type} [Mul R] [Zero R] (w : LeftZeroDivisor R) : w.a * w.annihi
 
 end LeftZeroDivisor
 
-/-- Explicit right zero-divisor witness data, represented as a subtype. -/
+/-- Explicit right zero-divisor property data, represented as a subtype. -/
 def RightZeroDivisor (R : Type) [Mul R] [Zero R] :=
   { p : R × R // p.1 ≠ 0 ∧ p.2 ≠ 0 ∧ p.2 * p.1 = 0 }
 
@@ -65,7 +65,7 @@ abbrev hmul {R : Type} [Mul R] [Zero R] (w : RightZeroDivisor R) : w.annihilator
 
 end RightZeroDivisor
 
-/-- A nontrivial idempotent gives a left zero-divisor witness `e(1-e)=0`. -/
+/-- A nontrivial idempotent gives a left zero-divisor property `e(1-e)=0`. -/
 def leftZeroDivisor_of_nontrivial_idempotent {R : Type} [Ring R]
     (e : R) (hidem : e * e = e) (hne0 : e ≠ 0) (hne1 : e ≠ 1) :
     LeftZeroDivisor R := by
@@ -76,7 +76,7 @@ def leftZeroDivisor_of_nontrivial_idempotent {R : Type} [Ring R]
       e * (1 - e) = e - e * e := by noncomm_ring
       _ = 0 := by rw [hidem]; abel
 
-/-- A nontrivial idempotent gives a right zero-divisor witness `(1-e)e=0`. -/
+/-- A nontrivial idempotent gives a right zero-divisor property `(1-e)e=0`. -/
 def rightZeroDivisor_of_nontrivial_idempotent {R : Type} [Ring R]
     (e : R) (hidem : e * e = e) (hne0 : e ≠ 0) (hne1 : e ≠ 1) :
     RightZeroDivisor R := by
@@ -87,23 +87,23 @@ def rightZeroDivisor_of_nontrivial_idempotent {R : Type} [Ring R]
       (1 - e) * e = e - e * e := by noncomm_ring
       _ = 0 := by rw [hidem]; abel
 
-/-- A square-zero nonzero nilpotent gives a left zero-divisor witness. -/
+/-- A square-zero nonzero nilpotent gives a left zero-divisor property. -/
 def leftZeroDivisor_of_square_zero {R : Type} [Mul R] [Zero R]
     (n : R) (hne0 : n ≠ 0) (hsq : n * n = 0) : LeftZeroDivisor R :=
   ⟨(n, n), hne0, hne0, hsq⟩
 
-/-- A square-zero nonzero nilpotent gives a right zero-divisor witness. -/
+/-- A square-zero nonzero nilpotent gives a right zero-divisor property. -/
 def rightZeroDivisor_of_square_zero {R : Type} [Mul R] [Zero R]
     (n : R) (hne0 : n ≠ 0) (hsq : n * n = 0) : RightZeroDivisor R :=
   ⟨(n, n), hne0, hne0, hsq⟩
 
-/-- A right-zero-divisor relation is exactly a nontrivial kernel witness for right multiplication. -/
+/-- A right-zero-divisor relation is exactly a nontrivial kernel property for right multiplication. -/
 theorem rightKernelWitness_of_rightZeroDivisor {R : Type} [Mul R] [Zero R]
     (a b : R) (hb : b ≠ 0) (hba : b * a = 0) :
     ∃ x : R, x ≠ 0 ∧ x * a = 0 :=
   ⟨b, hb, hba⟩
 
-/-- A left-zero-divisor relation is exactly a nontrivial kernel witness for left multiplication. -/
+/-- A left-zero-divisor relation is exactly a nontrivial kernel property for left multiplication. -/
 theorem leftKernelWitness_of_leftZeroDivisor {R : Type} [Mul R] [Zero R]
     (a b : R) (hb : b ≠ 0) (hab : a * b = 0) :
     ∃ x : R, x ≠ 0 ∧ a * x = 0 :=

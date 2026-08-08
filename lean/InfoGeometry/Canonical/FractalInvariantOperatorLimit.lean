@@ -4,7 +4,7 @@ import Mathlib.Tactic
 # InfoGeometry.Canonical.FractalInvariantOperatorLimit
 
 Finite theorem packet for fractal-depth invariants, symmetry-adapted
-coordinates, and assumption-based compactified limits.
+coordinates, and property-based compactified limits.
 
 This file formalizes the safe algebraic core of the "fractal limit geometry"
 view:
@@ -15,7 +15,7 @@ view:
 * equivalence classes are induced by invariant readouts;
 * square-zero exponential/logarithmic coordinates are represented algebraically,
   without analytic continuation;
-* compactification and boundary-loop actions are assumption blocks preserving
+* compactification and boundary-loop actions are property blocks preserving
   sector labels;
 * any limit statement is stated through explicit embeddings and invariant
   compatibility.
@@ -207,7 +207,7 @@ theorem squareZeroCoordinate_freeEnergy_zero
     squareZeroFlux C.N - squareZeroLog C.N = 0 :=
   squareZero_freeEnergy_zero C.N
 
-/-! ## 5. Compactification as an invariant-preserving assumption block -/
+/-! ## 5. Compactification as an invariant-preserving property block -/
 
 /--
 An abstract compactification datum.

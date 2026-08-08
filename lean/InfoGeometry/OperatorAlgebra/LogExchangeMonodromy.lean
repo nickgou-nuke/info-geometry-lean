@@ -179,7 +179,7 @@ Concrete continuum closure for the repository-owned logarithmic parabolic
 generator.
 
 This is the owner-side specialization of the abstract rescaled-step theorem:
-the square-zero hypothesis is discharged by `logarithmic_partner_epsilon_sq`,
+the square-zero property is discharged by `logarithmic_partner_epsilon_sq`,
 and the resulting continuum flow is read back as the KAN `componentN` surface.
 -/
 theorem componentN_rescaled_parabolic_pow_exact
@@ -245,7 +245,7 @@ lemma commute_nat_cast (x : A) (n : ℕ) : Commute x (n : A) := by
 One unipotent Jordan multiplication step:
 `(1 + nε)(1 + ε) = 1 + (n+1)ε` when `ε² = 0`.
 
-The `lambda` and commutation hypothesis are included so this lemma has the
+The `lambda` and commutation property are included so this lemma has the
 same parameter surface as `monodromy_winding_formula`; the step itself only
 uses square-zero nilpotency.
 -/

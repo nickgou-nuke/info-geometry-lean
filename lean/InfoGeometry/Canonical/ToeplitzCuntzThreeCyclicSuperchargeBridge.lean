@@ -238,7 +238,7 @@ theorem cyclicSupercharge_defect_annihilation_left : g.P0 * cyclicSupercharge g 
     _ = 0 := by abel
 
 /-- **Theorem**: Nontrivial 3-ary Algebraic Vacuum Witness. -/
-theorem nontrivial_3ary_algebraic_vacuum_witness
+theorem nontrivial_3ary_algebraic_vacuum_property
     (hP0 : g.P0 ≠ 0) :
     ∃ p : A,
       p ≠ 0 ∧

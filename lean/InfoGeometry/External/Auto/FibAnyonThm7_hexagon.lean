@@ -3,6 +3,8 @@ open Matrix
 open Complex
 open Real
 
+namespace FibAnyonThm7Hexagon
+
 set_option maxHeartbeats 400000
 
 noncomputable def q : ℂ := Complex.exp (Real.pi * Complex.I / 5)
@@ -202,3 +204,5 @@ theorem hexagon_II : Ri_mat * F_mat * Ri_mat = F_mat * Rpi_mat * F_mat := by
       simp [Matrix.mul_apply, Fin.sum_univ_two, τ]
       rw [← h_calc]; ring_nf
   exact sub_eq_zero.mp h
+
+end FibAnyonThm7Hexagon

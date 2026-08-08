@@ -225,7 +225,7 @@ theorem c_d_holds (p q : Prime) :
 
 end SplitMajoranaCAR
 
-/-- witness-gated (Native Closure Mandated: Closure Debt) split-Majorana OPE datum. -/
+/-- property-gated (Native Closure Mandated: Closure Debt) split-Majorana OPE datum. -/
 structure SplitMajoranaOPEDatum
     (Prime Field Singular : Type*) [DecidableEq Prime] [Zero Singular] [One Singular]
     [Neg Singular] where
@@ -247,7 +247,7 @@ variable {Prime Field Singular : Type*}
 variable [DecidableEq Prime] [Zero Singular] [One Singular] [Neg Singular]
 
 /--
-Transport a concrete split-Majorana OPE owner datum to the arithmetic witness
+Transport a concrete split-Majorana OPE owner datum to the arithmetic property
 packet.
 
 This is an owner-side transport: the equalities live in the datum itself, and

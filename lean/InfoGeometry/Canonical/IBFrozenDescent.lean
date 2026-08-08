@@ -285,7 +285,7 @@ theorem ibFrozenFreeEnergy_eq_gap_minus_logPartition
           rw [Finset.sum_sub_distrib]
 
 /--
-Derived decomposition hypothesis for the Gibbs-slice frozen step.
+Derived decomposition property for the Gibbs-slice frozen step.
 -/
 lemma ibFrozenFreeEnergy_hStepDecomp
     (prob : IBProblem (X := X) (Y := Y))
@@ -311,7 +311,7 @@ lemma ibFrozenFreeEnergy_hStepDecomp
   simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using h
 
 /--
-Derived decomposition hypothesis for an arbitrary encoder policy `p`.
+Derived decomposition property for an arbitrary encoder policy `p`.
 -/
 lemma ibFrozenFreeEnergy_hPDecomp
     (prob : IBProblem (X := X) (Y := Y))

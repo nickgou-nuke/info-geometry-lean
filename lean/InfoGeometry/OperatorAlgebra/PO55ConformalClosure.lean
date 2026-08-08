@@ -723,7 +723,7 @@ end TKKPO55ClosedSymmetry
 /-! ## 7. Owner target -/
 
 /--
-Installed-owner target: once a `PO55ConformalClosure` witness is supplied, each
+Installed-owner target: once a `PO55ConformalClosure` property is supplied, each
 base affine point gives a compactified projective null state.
 -/
 def PO55ConformalClosureInstalledTarget : Prop :=

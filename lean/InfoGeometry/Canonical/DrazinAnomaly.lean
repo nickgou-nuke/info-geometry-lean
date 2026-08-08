@@ -7,7 +7,7 @@ import InfoGeometry.Singular.Drazin
 This module keeps the `32 × 32` split-spinor notation used by the transport
 lane, but it does not manufacture a kernel-dimension index.  The actual Drazin
 laws are carried by `InfoGeometry.Singular.Drazin.IsDrazinInverse`; the chiral
-anomaly index is an explicit readout attached to such a witness.
+anomaly index is an explicit readout attached to such a property.
 -/
 
 namespace InfoGeometry.Canonical.DrazinAnomaly
@@ -27,10 +27,10 @@ def Gamma_11 : SpinorOp :=
 
 /--
 An operator is Drazin-defective at index `k` when it has a Drazin inverse
-witness at that index.
+property at that index.
 
 This is intentionally not `True`: users must provide an actual Drazin inverse
-certificate from the singular/Drazin owner.
+property from the singular/Drazin owner.
 -/
 def is_drazin_defective (Op : SpinorOp) (k : ℕ) : Prop :=
   ∃ D : SpinorOp, IsDrazinInverse Op D k
@@ -39,7 +39,7 @@ def is_drazin_defective (Op : SpinorOp) (k : ℕ) : Prop :=
 Proof-carrying anomaly readout.
 
 `anomalyIndex` is a calibrated integer readout attached to an actual Drazin
-witness.  Computing it as a difference of chiral kernel dimensions is separate
+property.  Computing it as a difference of chiral kernel dimensions is separate
 closure debt; this packet prevents that missing construction from being hidden
 behind a fake definition.
 -/
@@ -50,7 +50,7 @@ structure DrazinAnomalyReadout (_Γ Op : SpinorOp) (k : ℕ) where
 
 namespace DrazinAnomalyReadout
 
-/-- A readout exposes the underlying Drazin-defect witness. -/
+/-- A readout exposes the underlying Drazin-defect property. -/
 theorem is_drazin_defective {Γ Op : SpinorOp} {k : ℕ}
     (R : DrazinAnomalyReadout Γ Op k) :
     InfoGeometry.Canonical.DrazinAnomaly.is_drazin_defective Op k :=

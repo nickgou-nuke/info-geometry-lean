@@ -59,7 +59,7 @@ alone cannot prove this — it requires the full tensor product.
 
 ## The closed chain
 
-The remaining KLinear S_left hypothesis cannot be proved on the abstract
+The remaining KLinear S_left property cannot be proved on the abstract
 EndH level.  It requires either:
 
 1. The concrete tensor product construction H = ℓ²(CantorBoundary) ⊗ ℂ²

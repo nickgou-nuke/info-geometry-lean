@@ -50,7 +50,7 @@ attribute [instance] HurwitzIntegerModel.instAdd
 attribute [instance] HurwitzIntegerModel.instMul
 attribute [instance] HurwitzIntegerModel.instInv
 
-/-- The owner packet carries a full quotient-remainder witness. -/
+/-- The owner packet carries a full quotient-remainder property. -/
 @[rep_depth operator]
 theorem HurwitzIntegerModel.exists_division_remainder (h : HurwitzIntegerModel)
     (a b : h.Point) (hb : b ≠ 0) :
@@ -178,7 +178,7 @@ variable {F : ParaunitaryCliffordFilterBank}
 def sumRuleWitness (C : CliffordCascadeSystem F) : F.sum_normSq_eq_one :=
   F.sum_normSq_eq_one_of_normalizedBranches C.branchNormalization
 
-/-- The explicit convergence witness carried by the cascade packet. -/
+/-- The explicit convergence property carried by the cascade packet. -/
 def convergenceWitness (C : CliffordCascadeSystem F) : Prop :=
   letI := C.signalNorm
   Filter.Tendsto C.scalingApproximation Filter.atTop (nhds C.cascadeLimit)

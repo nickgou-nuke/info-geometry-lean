@@ -21,7 +21,7 @@ old vacuous bridge surface that made the comparison automatically true.
 - Define the actual amplituhedron volume/integrand model used by this lane.
 - Prove any zeta/MZV/integrand comparison theorem through the
   Hestenes--Krein/categorical colimit owner.
-- Prove any compatibility with the Arnold, Rohozhkin, or D-module certificate
+- Prove any compatibility with the Arnold, Rohozhkin, or D-module property
   layers in separate owner modules.
 -/
 

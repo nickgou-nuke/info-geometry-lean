@@ -4,7 +4,7 @@ import Mathlib.Tactic
 # Riemann Hypothesis: Theorem-Honest Complex-Temperature Boundary
 
 This file records the partition-function dictionary without asserting the
-Riemann Hypothesis as a global axiom.
+Riemann Hypothesis as a global ax!om.
 
 The proved content is finite algebra:
 * `s = σ + i t` has damping coordinate `σ` and phase coordinate `t`;
@@ -14,6 +14,8 @@ The proved content is finite algebra:
 
 The RH-strength claim itself is a `Prop` parameter, not a theorem.
 -/
+
+namespace RiemannHypothesis
 
 noncomputable section
 
@@ -124,7 +126,7 @@ def complexTemperature (σ t : ℝ) : ℂ :=
 def hagedornTemperature : ℂ :=
   rhHagedornPole
 
-/-- Hilbert–Pólya Hamiltonian axiom schema:
+/-- Hilbert–Pólya Hamiltonian ax!om schema:
     nontrivial zeros of a chosen analytic continuation are represented as
     `1/2 + iγ`, with `γ` from a real spectrum. -/
 def hilbert_polya_hamiltonian (Z : ℂ → ℂ) : Type :=
@@ -238,4 +240,6 @@ theorem rh_zeta_zero_implies_graded_index_pole (Z : ℂ → ℂ) (s : ℂ) (hzer
     rhGradedIndexSingularity Z s :=
   rh_graded_supertrace_zero_at_zero Z hzero
 
-end noncomputable section
+end
+
+end RiemannHypothesis

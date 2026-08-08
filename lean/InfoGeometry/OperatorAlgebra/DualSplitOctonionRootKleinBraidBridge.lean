@@ -19,7 +19,7 @@ and wires them to existing owners:
 * the concrete tripotent diagonal operator has spectrum labels `{-1,0,1}` and
   satisfies `T^3 = T`;
 * a finite `Z₃` clock cycle returns after three steps;
-* a block Klein monodromy witness satisfies `M_y M_x M_y = M_x⁻¹` in the
+* a block Klein monodromy property satisfies `M_y M_x M_y = M_x⁻¹` in the
   exact sign case;
 * the `G₂` Coxeter/Artin braid word of length six is represented by two
   reflections of the six-cycle.
@@ -106,7 +106,7 @@ theorem z3Rotate_cube (s : Z3Sector) :
     z3Rotate (z3Rotate (z3Rotate s)) = s := by
   cases s <;> rfl
 
-/-! ## Finite Klein monodromy block witness -/
+/-! ## Finite Klein monodromy block property -/
 
 abbrev Mat8Z := Matrix (Fin 8) (Fin 8) ℤ
 
@@ -118,7 +118,7 @@ def Mx : Mat8Z :=
 def My : Mat8Z :=
   fun i j => if (i.val + 4 = j.val) ∨ (j.val + 4 = i.val) then 1 else 0
 
-/-- In the central-sign finite witness, `M_x` is its own inverse. -/
+/-- In the central-sign finite property, `M_x` is its own inverse. -/
 theorem Mx_sq : Mx * Mx = (1 : Mat8Z) := by
   ext i j
   fin_cases i <;> fin_cases j <;> decide
@@ -128,7 +128,7 @@ theorem My_sq : My * My = (1 : Mat8Z) := by
   ext i j
   fin_cases i <;> fin_cases j <;> decide
 
-/-- Exact Klein monodromy relation in the finite central-sign block witness. -/
+/-- Exact Klein monodromy relation in the finite central-sign block property. -/
 theorem klein_monodromy_relation :
     My * Mx * My = Mx := by
   ext i j

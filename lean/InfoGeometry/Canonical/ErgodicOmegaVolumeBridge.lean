@@ -44,7 +44,7 @@ local notation "VolEnd" => AlgebraEnd H
 Calibration bridge from operator ergodic fixed points to natural-cone
 `Ω`-localized face volumes.
 
-`toVolumeOperator` is explicit witness data because the ergodic observable
+`toVolumeOperator` is explicit property data because the ergodic observable
 carrier and the standard-form volume carrier need not be definitionally the
 same type in every model.
 -/

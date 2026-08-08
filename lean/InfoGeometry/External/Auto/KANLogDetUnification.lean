@@ -46,7 +46,7 @@ theorem real_doubled_hypercomplex_atom :
     superGrade_emergentK⟩
 
 /--
-The real log-determinant witness from `KreinDeterminantAnalyticity`:
+The real log-determinant property from `KreinDeterminantAnalyticity`:
 the explicit trace-zero hyperbolic scale flow has determinant one and
 therefore zero log-volume.
 -/

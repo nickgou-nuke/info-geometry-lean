@@ -1,0 +1,222 @@
+[
+  {
+    "isolated_count": 113,
+    "isolated_by_kind": [
+      {
+        "kind": "theorem",
+        "count": 85
+      },
+      {
+        "kind": "def",
+        "count": 28
+      }
+    ],
+    "isolated_top_modules": [
+      {
+        "module": "ChiralCausalCone",
+        "count": 15
+      },
+      {
+        "module": "ExceptionalBraid",
+        "count": 10
+      },
+      {
+        "module": "SupergradedCuntzBdG",
+        "count": 8
+      },
+      {
+        "module": "UnorientedS3KleinTQFT",
+        "count": 8
+      },
+      {
+        "module": "MellinWaveletScaleShiftDigest",
+        "count": 7
+      },
+      {
+        "module": "SplitOctonionMinkowski",
+        "count": 7
+      },
+      {
+        "module": "ZornScalingFlow",
+        "count": 7
+      },
+      {
+        "module": "JaynesLeanColimitBridge",
+        "count": 6
+      },
+      {
+        "module": "BashoreLQGReportExtraction",
+        "count": 5
+      },
+      {
+        "module": "B3PresentedGroup",
+        "count": 4
+      },
+      {
+        "module": "GoutevTonevPrinciple",
+        "count": 3
+      },
+      {
+        "module": "NonIsoConf3RankDecision",
+        "count": 3
+      },
+      {
+        "module": "SU3LoopBraidDuality",
+        "count": 3
+      },
+      {
+        "module": "CooperadEnvironmentalRank32",
+        "count": 2
+      },
+      {
+        "module": "GrothendieckGromovWittenYangBaxter",
+        "count": 2
+      },
+      {
+        "module": "NonIsoConf3DeRhamCooperad",
+        "count": 2
+      },
+      {
+        "module": "OctonionMatrixEncodings",
+        "count": 2
+      },
+      {
+        "module": "SouriauOperatorThermodynamics",
+        "count": 2
+      },
+      {
+        "module": "TwistorParafermionBoundary",
+        "count": 2
+      },
+      {
+        "module": "CantorBoundaryCuntzFamily",
+        "count": 1
+      },
+      {
+        "module": "CuntzP6MBoundary",
+        "count": 1
+      },
+      {
+        "module": "DikinGoutevTonevBridge",
+        "count": 1
+      },
+      {
+        "module": "GNSQuotientFinite",
+        "count": 1
+      },
+      {
+        "module": "IJIRTRiemannDigest",
+        "count": 1
+      },
+      {
+        "module": "JaynesLDDPGNSColimit",
+        "count": 1
+      }
+    ],
+    "zero_dep_theorem_count": 151,
+    "zero_dep_theorem_isolated_count": 85,
+    "zero_dep_theorem_used_count": 66,
+    "zero_dep_theorem_top_modules": [
+      {
+        "module": "ChiralCausalCone",
+        "count": 15
+      },
+      {
+        "module": "ExceptionalBraid",
+        "count": 14
+      },
+      {
+        "module": "MellinWaveletScaleShiftDigest",
+        "count": 8
+      },
+      {
+        "module": "SupergradedCuntzBdG",
+        "count": 8
+      },
+      {
+        "module": "B3PresentedGroup",
+        "count": 7
+      },
+      {
+        "module": "GoutevTonevPrinciple",
+        "count": 7
+      },
+      {
+        "module": "SplitOctonionMinkowski",
+        "count": 7
+      },
+      {
+        "module": "ZornScalingFlow",
+        "count": 7
+      },
+      {
+        "module": "UnorientedS3KleinTQFT",
+        "count": 6
+      },
+      {
+        "module": "CStarCuntzTensorQuotient",
+        "count": 4
+      },
+      {
+        "module": "HestenesCuntzSpacetimeAlgebra",
+        "count": 4
+      },
+      {
+        "module": "ContinuumAsColimitCounting",
+        "count": 3
+      },
+      {
+        "module": "NonIsoConf3RankDecision",
+        "count": 3
+      },
+      {
+        "module": "AmariChentsovFierzTorsion",
+        "count": 2
+      },
+      {
+        "module": "BashoreLQGReportExtraction",
+        "count": 2
+      },
+      {
+        "module": "BuresInformationGeodesicFlow",
+        "count": 2
+      },
+      {
+        "module": "FureyCharges",
+        "count": 2
+      },
+      {
+        "module": "GrothendieckGromovWittenYangBaxter",
+        "count": 2
+      },
+      {
+        "module": "JackiwRebbiCantorEdgeStates",
+        "count": 2
+      },
+      {
+        "module": "JaynesLDDPGNSColimit",
+        "count": 2
+      },
+      {
+        "module": "O55CartanPhononReduction",
+        "count": 2
+      },
+      {
+        "module": "OctonionMatrixEncodings",
+        "count": 2
+      },
+      {
+        "module": "ParafermionIdentityRealization",
+        "count": 2
+      },
+      {
+        "module": "SU3LoopBraidDuality",
+        "count": 2
+      },
+      {
+        "module": "BiquaternionLaplaceTripotent",
+        "count": 1
+      }
+    ]
+  }
+]

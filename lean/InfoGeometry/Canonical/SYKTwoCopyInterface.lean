@@ -198,7 +198,7 @@ theorem erEprInterpretationClaim_not_repo :
     (hExt := rfl)
 
 /--
-Closed finite protocol witness:
+Closed finite protocol property:
 normalized preparation plus an explicit open-window proof.
 -/
 @[rep_depth transport]
@@ -206,7 +206,7 @@ structure TraversableProtocolWitness where
   prep : TFDLikePreparation (H := H)
   openWindow : S.traversableWindowOpen
 
-/-- Repo-tier claim materialized from a closed finite protocol witness. -/
+/-- Repo-tier claim materialized from a closed finite protocol property. -/
 @[rep_depth transport]
 def traversableProtocolRepoClaim (_w : TraversableProtocolWitness (S := S)) :
     TaggedClaim S.traversableWindowOpen :=

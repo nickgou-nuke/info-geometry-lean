@@ -79,7 +79,7 @@ structure LatticeJKORGFlowBridge where
   scale : ℝ
   /-- Optimality from Bogoliubov Transport. -/
   optimality : IsOptimalBogoliubovFlow reduction (fun t => quasilatticeDirac gen.bundle gen.baseD t)
-  /-- Continuum emergence witness at the selected RG scale. -/
+  /-- Continuum emergence property at the selected RG scale. -/
   continuumEmergence : IsStationaryAtScale rg scale
 
 end Bridge

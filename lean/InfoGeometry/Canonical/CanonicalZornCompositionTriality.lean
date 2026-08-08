@@ -505,7 +505,7 @@ theorem zornAlternatingTripleTrace_scalar_right (r : ℂ) (X Y Z : Zorn) :
         rw [zornAlternatingTripleTrace_cyclic Z Y X, zornAlternatingTripleTrace_swap12 X Y Z]
 
 /-- Any multiplication-preserving, trace-preserving map preserves the
-six-term octonionic three-form.  In particular, this is the exact hypothesis
+six-term octonionic three-form.  In particular, this is the exact property
 needed to obtain the usual `G₂`/`G₂(2)` invariance statement; no unsupported
 identification of a coordinate permutation with an automorphism is made here. -/
 theorem zornAlternatingTripleTrace_map

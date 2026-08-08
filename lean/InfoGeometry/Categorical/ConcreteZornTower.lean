@@ -27,7 +27,7 @@ import InfoGeometry.Canonical.ZornSpinor
 /-!
 # Concrete Zorn Tower and Multiplication Witness
 
-This file instantiates the categorical `CompatibleBilinearMultiplication` witness
+This file instantiates the categorical `CompatibleBilinearMultiplication` property
 for the concrete sequence of `ZornMatrix ℚ` spaces.
 -/
 
@@ -150,7 +150,7 @@ theorem colimitIsoZorn_inv_eq_ι (j : ℕ) :
   exact h.symm
 
 /--
-The `CompatibleBilinearMultiplication` witness for the concrete Zorn tower,
+The `CompatibleBilinearMultiplication` property for the concrete Zorn tower,
 fulfilling the categorical consistency constraint for multiplication descent.
 -/
 noncomputable def concreteZornBilinearMultiplication : 

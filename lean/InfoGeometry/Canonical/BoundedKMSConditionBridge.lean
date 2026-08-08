@@ -69,7 +69,7 @@ structure Bridge where
   state :
     StateFunctional EndH
 
-  /-- KMS analytic certificate for the bounded surrogate modular flow. -/
+  /-- KMS analytic property for the bounded surrogate modular flow. -/
   kms :
     KMSAnalyticCertificate
       boundedFlow.modularFlow.toFlowDatum
@@ -131,7 +131,7 @@ theorem toBoundedKMSConditionBridge_state_eq :
 /--
 The integrated bounded KMS state also reconstructs the real-time invariance
 surface definitionally, so downstream users on the minimal branch no longer
-need to re-supply a separate `hInvariant` hypothesis.
+need to re-supply a separate `hInvariant` property.
 -/
 @[rep_depth thermo]
 theorem flow_invariant
@@ -192,7 +192,7 @@ theorem flow_add_apply
       B.flowDatum.flow s (B.flowDatum.flow t A) :=
   B.boundedFlow.modularFlow.flow_add s t A
 
-/-- Re-export the bounded KMS analytic boundary certificate. -/
+/-- Re-export the bounded KMS analytic boundary property. -/
 @[rep_depth thermo]
 theorem kms_boundary_holds :
     B.kms.boundaryCondition :=

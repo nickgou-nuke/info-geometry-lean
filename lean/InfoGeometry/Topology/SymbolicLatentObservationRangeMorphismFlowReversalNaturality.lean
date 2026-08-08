@@ -4,9 +4,9 @@ import InfoGeometry.Topology.SymbolicLatentObservationRangeFlowMorphismBridge
 /-!
 # Morphism-level flow/reversal naturality
 
-When concrete symbolic morphisms witness the quotient flow and reversal maps,
+When concrete symbolic morphisms property the quotient flow and reversal maps,
 the already established CompHaus flow/reversal law transports to their
-observation-range readouts.  The witness hypotheses are explicit: this file
+observation-range readouts.  The property hypotheses are explicit: this file
 does not manufacture latent morphisms from quotient actions.
 -/
 

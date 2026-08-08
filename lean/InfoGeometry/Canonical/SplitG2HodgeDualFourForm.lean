@@ -7,7 +7,7 @@ namespace InfoGeometry.Canonical
 # Explicit Hodge-dual data for the split `G₂` carrier
 
 The imaginary split-octonion carrier already supplies the finite rational
-vector space and a trilinear witness.  A Hodge star is additional data: it
+vector space and a trilinear property.  A Hodge star is additional data: it
 requires a metric, orientation, and degree reversal.  This owner therefore
 uses Mathlib's `AlternatingMap` carriers and packages the degree `3 ↔ 4`
 dual as a native `LinearEquiv`.  It does not claim that an arbitrary such

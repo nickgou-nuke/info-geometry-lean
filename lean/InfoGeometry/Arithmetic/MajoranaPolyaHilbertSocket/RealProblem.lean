@@ -12,7 +12,7 @@ This names the combined operator
 `D_Λ = H_BK ⊗ 1 + ρ ⊗ Q_Λ`
 
 without pretending to construct its analytic closure.  The square law is
-separate witness data; it depends on the anticommutation of `ρ` with the real
+separate property data; it depends on the anticommutation of `ρ` with the real
 Berry--Keating block and on the Dirac-square law for `Q_Λ`.
 -/
 structure RealMajoranaBerryKeatingProblem

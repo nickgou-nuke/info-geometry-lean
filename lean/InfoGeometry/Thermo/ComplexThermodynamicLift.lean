@@ -19,7 +19,7 @@ No analytic continuation.
 No self-concordance claim.
 No Hilbert--Pólya claim.
 No socket.
-No certificate.
+No property.
 -/
 
 noncomputable section

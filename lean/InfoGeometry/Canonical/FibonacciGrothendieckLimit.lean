@@ -288,7 +288,7 @@ def chargedFockHeisenbergMode (α : 𝕜) (k : Int) :
   ModuleOfModuleAlgebra.lsmul 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α)
     (ιUEA 𝕜 (VirasoroProject.HeisenbergAlgebra.jgen 𝕜 k))
 
-/-- The charged Fock Heisenberg current satisfies the Sugawara local truncation hypothesis. -/
+/-- The charged Fock Heisenberg current satisfies the Sugawara local truncation property. -/
 theorem chargedFockHeisenbergMode_eventually_eq_zero
     (α : 𝕜) (v : VirasoroProject.ChargedFockSpace 𝕜 α) :
     atTop.Eventually (fun k : Int => chargedFockHeisenbergMode (𝕜 := 𝕜) α k v = 0) := by

@@ -11,7 +11,7 @@ This module formalizes the dictionary:
 * anomaly residue       = projective obstruction;
 * Poincare height       = positive scale reconstructed from anomaly data.
 
-It does not prove GR, holography, or AdS/CFT.  It provides the witness layer
+It does not prove GR, holography, or AdS/CFT.  It provides the property layer
 where a concrete model may identify anomaly/capacity data with a geometric
 height.
 -/
@@ -235,7 +235,7 @@ end ExtendedAnomalyHeightDatum
 A protected anomaly/topological obstruction datum.
 
 The grading or Clifford charge alone does not imply a nonzero anomaly.  This
-structure records the model-specific theorem or hypothesis that an anomaly is
+structure records the model-specific theorem or property that an anomaly is
 protected by a topological charge.
 -/
 abbrev ProtectedAnomalyDatum
@@ -260,10 +260,10 @@ abbrev anomaly_protected_by_charge :
 end ProtectedAnomalyDatum
 
 /--
-A stabilization witness for the “flat membrane snaps into tubule” mechanism.
+A stabilization property for the “flat membrane snaps into tubule” mechanism.
 
 This is intentionally model-level.  Clifford grading plus anomaly data do not
-alone prove stability; a variational/energy certificate is required.
+alone prove stability; a variational/energy property is required.
 -/
 structure AnomalousTubuleStabilizationWitness
     (State : Type*) where
@@ -281,10 +281,10 @@ structure AnomalousTubuleStabilizationWitness
       topologicalCharge s ≠ 0 →
         ∃ y : State, stableNonflat y
 
-/-! ## 6. GR/Erlanger witness layer -/
+/-! ## 6. GR/Erlanger property layer -/
 
 /--
-An Erlanger-GR reconstruction witness.
+An Erlanger-GR reconstruction property.
 
 This says that effective geometric data are reconstructed from driven operator
 shear and anomaly-height data.  It does not assert the Einstein equations as a

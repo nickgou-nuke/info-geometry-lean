@@ -12,7 +12,7 @@ defines the canonical operation:
 where ℜ_P is the cuspidal projector from SiegelResonance.lean.
 
 The later Euler-product / completed L-function / zeta-potential layer should
-instantiate the witness structures defined here.
+instantiate the property structures defined here.
 -/
 
 import Mathlib.Tactic
@@ -334,10 +334,10 @@ structure LanglandsPrimeResonanceWitness
   completedFunctionalEquation :
     HasCompletedFunctionalEquation P.L completedL
 
-/-! ## 5A. Strong arithmetic witness packet (Native Closure Mandated: Closure Debt)s -/
+/-! ## 5A. Strong arithmetic property packet (Native Closure Mandated: Closure Debt)s -/
 
 /--
-Proof-carrying Euler-product witness for an automorphic L-function.
+Proof-carrying Euler-product property for an automorphic L-function.
 
 This refines the placeholder `HasEulerProduct` predicate without breaking the
 existing API. The Euler-product law remains model-specific arithmetic input,
@@ -354,7 +354,7 @@ structure EulerProductWitness
   /-- Region on which the Euler-product statement is calibrated. -/
   convergenceRegion : Set ℂ
 
-  /-- Proof/certificate of the Euler-product law. -/
+  /-- Proof/property of the Euler-product law. -/
   euler_product_law :
     HasEulerProduct L PrimeIndex localFactor convergenceRegion
 
@@ -366,7 +366,7 @@ variable (E : EulerProductWitness L)
 /--
 Forgetful adapter to the legacy placeholder `EulerProductData`.
 
-This preserves compatibility while keeping the stronger witness available.
+This preserves compatibility while keeping the stronger property available.
 -/
 def toEulerProductData :
     EulerProductData L where
@@ -383,7 +383,7 @@ theorem toEulerProductData_hasEulerProduct :
 end EulerProductWitness
 
 /--
-Proof-carrying completed-L-function witness.
+Proof-carrying completed-L-function property.
 
 This refines the placeholder `HasCompletedFunctionalEquation` predicate without
 claiming a functional equation from projector algebra alone.
@@ -393,7 +393,7 @@ structure CompletedLFunctionWitness
   /-- Completed L-function. -/
   completedL : ℂ → ℂ
 
-  /-- Proof/certificate of the completed-functional-equation law. -/
+  /-- Proof/property of the completed-functional-equation law. -/
   completed_functional_equation_law :
     HasCompletedFunctionalEquation L completedL
 
@@ -412,7 +412,7 @@ theorem toHasCompletedFunctionalEquation :
 end CompletedLFunctionWitness
 
 /--
-Strengthened Langlands-prime resonance witness.
+Strengthened Langlands-prime resonance property.
 
 Unlike `LanglandsPrimeResonanceWitness`, this carries proof-carrying Euler and
 completed-L-function packets. It does not turn those arithmetic statements into
@@ -444,7 +444,7 @@ variable
 variable (R : LanglandsPrimeResonanceStrongWitness P)
 
 /--
-The strong witness induces the legacy weak witness.
+The strong property induces the legacy weak property.
 -/
 def toWeakWitness :
     LanglandsPrimeResonanceWitness P where
@@ -516,7 +516,7 @@ theorem hiddenMemory_arithmetic_calibration
 Owner target for producing projected automorphic L-functions from a spectral
 functional and a bulk state.
 
-This target is the direct projected-evaluation law, not a witness wrapper.
+This target is the direct projected-evaluation law, not a property wrapper.
 -/
 @[owner_target_tag]
 def ProjectedAutomorphicLFunctionOwnerTarget : Prop :=
@@ -540,7 +540,7 @@ theorem projectedAutomorphicLFunctionOwnerTarget :
 /--
 Owner target for attaching Euler-product and completed-L-function data.
 
-This one is intentionally witness-gated: the Euler product and functional
+This one is intentionally property-gated: the Euler product and functional
 equation are arithmetic input, not consequences of the split-exact projector
 algebra alone.
 -/

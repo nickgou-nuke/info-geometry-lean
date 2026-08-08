@@ -61,7 +61,7 @@ A spectral ground-state packet for a physical Hamiltonian.
 
 The field `energy_nonnegative` is the concrete quadratic-form positivity
 condition used below.  The no-negative-eigenvectors statement is derived from
-that positivity theorem, not stored as a separate hypothesis socket.
+that positivity theorem, not stored as a separate property socket.
 -/
 structure SpectralGroundState
     (V : Type*) [NormedAddCommGroup V] [InnerProductSpace ℝ V] where
@@ -158,7 +158,7 @@ end EnergyMode
 def GroundStateUnique : Prop :=
   ∀ v : V, S.H v = 0 → ∃ c : ℝ, v = c • S.Omega
 
-/-- A ground vector is a scalar multiple of the vacuum under the uniqueness hypothesis. -/
+/-- A ground vector is a scalar multiple of the vacuum under the uniqueness property. -/
 theorem ground_vector_eq_smul_vacuum
     (U : S.GroundStateUnique)
     {v : V}

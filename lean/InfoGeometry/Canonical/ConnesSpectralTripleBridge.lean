@@ -5,7 +5,7 @@ import Mathlib.Tactic.Linarith
 # Native noncommutative spectral-triple algebra
 
 The commutator seminorm is derived from an actual Dirac element in a normed
-noncommutative algebra.  No independently supplied norm field or certificate
+noncommutative algebra.  No independently supplied norm field or property
 is accepted as a substitute for the commutator.
 -/
 

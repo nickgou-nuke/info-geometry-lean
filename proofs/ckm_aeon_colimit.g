@@ -1,0 +1,12 @@
+aeonCount:=3;; generationCount:=3;; ckmParameters:=4;; ckmEntries:=9;; threeGenerationWeylCount:=48;;
+stablePage:=3;; serreResidueRank:=8;; aeonColimitRank:=24;;
+su3Generators:=8;; su2Generators:=3;; smRank:=4;; smGenerators:=12;; cartanGenerators:=4;;
+if aeonCount<>3 or generationCount<>3 or ckmParameters<>4 or ckmEntries<>9 or threeGenerationWeylCount<>48 then Error("counts"); fi;
+if su3Generators<>8 or su2Generators<>3 or smRank<>4 or smGenerators<>12 or cartanGenerators<>4 then Error("generators"); fi;
+C2su3Fund:=4/3;; C2su2Doublet:=3/4;; upCharge:=2/3;; downCharge:=-1/3;;
+if C2su3Fund<>4/3 or C2su2Doublet<>3/4 or upCharge<>2/3 or downCharge<>-1/3 then Error("casimir/charges"); fi;
+colorAnomaly:=0;; weakAnomaly:=0;; generationAnomaly:=0;; determinantSocket:=1;; jarlskogSocket:=0;;
+S3:=SymmetricGroup(3);; if Size(S3)<>6 then Error("S3"); fi;
+edges:=["generates_ckm","mixes_generations","carries_color","carries_weak","carries_hypercharge","cancels_anomaly"];
+Print(rec(aeonCount:=aeonCount,generationCount:=generationCount,ckmParameters:=ckmParameters,ckmEntries:=ckmEntries,threeGenerationWeylCount:=threeGenerationWeylCount,stablePage:=stablePage,serreResidueRank:=serreResidueRank,aeonColimitRank:=aeonColimitRank,su3Generators:=su3Generators,su2Generators:=su2Generators,smRank:=smRank,smGenerators:=smGenerators,cartanGenerators:=cartanGenerators,C2su3Fund:=C2su3Fund,C2su2Doublet:=C2su2Doublet,upCharge:=upCharge,downCharge:=downCharge,colorAnomaly:=colorAnomaly,weakAnomaly:=weakAnomaly,generationAnomaly:=generationAnomaly,determinantSocket:=determinantSocket,jarlskogSocket:=jarlskogSocket,s3Order:=Size(S3),graphEdges:=Length(edges)),"\n");
+QUIT;

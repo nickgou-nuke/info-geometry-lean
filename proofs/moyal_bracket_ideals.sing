@@ -1,0 +1,27 @@
+// moyal_bracket_ideals.sing
+// Ideals defining non-commutative Moyal star-product and Poisson bracket limit
+
+ring r = 0, (x, p, hbar), dp;
+
+// Define functions f and g symbolically (using polynomials as proxies)
+poly f = x^2 + p^2;
+poly g = x*p;
+
+// Poisson bracket {f, g} = df/dx * dg/dp - df/dp * dg/dx
+poly dfdx = diff(f, x);
+poly dfdp = diff(f, p);
+poly dgdx = diff(g, x);
+poly dgdp = diff(g, p);
+
+poly poisson_fg = dfdx * dgdp - dfdp * dgdx;
+print("Poisson Bracket {f, g}:");
+print(poisson_fg);
+
+// Moyal bracket limit at O(hbar) is the Poisson bracket
+// The Moyal bracket is [f, g]_M = {f,g} + O(hbar^2)
+// Ideal representing the O(hbar^2) vanishing terms for the classical limit
+ideal classical_limit = hbar;
+qring classical_ring = classical_limit;
+
+// In this classical ring, the Moyal bracket reduces to the Poisson bracket
+print("In the classical limit (hbar -> 0), the Moyal bracket corresponds to the Poisson bracket.");

@@ -5,7 +5,7 @@ Witness-gated Kapustin-Witten / physical Langlands holonomy socket.
 
 This file does not prove geometric Langlands. It packages the operator-level
 data needed to compare Wilson and 't Hooft holonomy readouts under a supplied
-duality witness.
+duality property.
 
 The intended use is local and operator-theoretic:
 
@@ -65,10 +65,10 @@ structure LanglandsDualPair
   loopDual :
     GLoop → GdualLoop
 
-/-! ## 3. Kapustin-Witten physical duality witness -/
+/-! ## 3. Kapustin-Witten physical duality property -/
 
 /--
-Kapustin-Witten style physical duality witness.
+Kapustin-Witten style physical duality property.
 
 This states that Wilson readouts on one side match 't Hooft readouts on the
 dual side after the supplied state/loop duality maps.
@@ -94,7 +94,7 @@ variable
     {D : LanglandsDualPair GState GdualState GLoop GdualLoop}
 
 /--
-The supplied physical duality witness transports Wilson readouts to dual
+The supplied physical duality property transports Wilson readouts to dual
 't Hooft readouts.
 -/
 theorem wilson_readout_eq_dual_thooft
@@ -118,10 +118,10 @@ theorem dual_thooft_eq_wilson_readout
 
 end KWPhysicalDualityWitness
 
-/-! ## 3A. Relation-valued Kapustin-Witten witness -/
+/-! ## 3A. Relation-valued Kapustin-Witten property -/
 
 /--
-Relation-valued KW physical duality witness.
+Relation-valued KW physical duality property.
 
 Use this when Wilson and 't Hooft readouts are identified only up to a
 model-specific equivalence relation, such as gauge conjugacy, phase,
@@ -155,7 +155,7 @@ variable
     (K : RelationalKWPhysicalDualityWitness
       GState GdualState GLoop GdualLoop Scalar W T D)
 
-/-- The supplied relational KW witness relates Wilson and dual 't Hooft readouts. -/
+/-- The supplied relational KW property relates Wilson and dual 't Hooft readouts. -/
 theorem wilson_rel_dual_thooft
     (γ : GLoop)
     (s : GState) :
@@ -208,7 +208,7 @@ theorem electricKMS_eq_dualKMS
   C.kms_preserved s
 
 /--
-The supplied duality witness simultaneously identifies Wilson with dual
+The supplied duality property simultaneously identifies Wilson with dual
 't Hooft readout and preserves the calibrated KMS/modular readout.
 -/
 theorem holonomy_and_kms_payload
@@ -262,7 +262,7 @@ structure DualHolonomyRecoveryWitness
   recoveringLoop :
     GLoop → Prop
   /--
-  **Recovery axiom (Kapustin-Witten 2007):** For any recovery-calibrated loop `γ`,
+  **Recovery ax!om (Kapustin-Witten 2007):** For any recovery-calibrated loop `γ`,
   the dual 't Hooft holonomy readout recovers the hidden memory.
 
   This is the defining property of the electric-magnetic duality interface:
@@ -370,7 +370,7 @@ theorem dualHolonomy_ne_of_hiddenMemory_ne
 Faithful recovery separates hidden memories on the Wilson channel.
 
 This is the Wilson-side form of the same separation theorem, obtained by
-transporting the dual recovery law through the KW duality witness.
+transporting the dual recovery law through the KW duality property.
 -/
 theorem wilsonReadout_ne_of_hiddenMemory_ne
     (K : KWPhysicalDualityWitness
@@ -396,7 +396,7 @@ end DualHolonomyRecoveryWitness
 /-! ## 5A. Wilson-to-memory installed chain -/
 
 /--
-A supplied KW duality witness and a supplied dual-holonomy recovery witness
+A supplied KW duality property and a supplied dual-holonomy recovery property
 make hidden memory recoverable from Wilson readouts.
 
 This is the processed operator-level chain:
@@ -462,7 +462,7 @@ theorem holonomy_kms_recovery_payload
 /-! ## 6. Geometric Langlands interpretation socket -/
 
 /--
-Witness-gated geometric Langlands interpretation of a physical duality witness.
+Witness-gated geometric Langlands interpretation of a physical duality property.
 
 This is deliberately a socket. A concrete model must supply the curve,
 group/dual group, Hecke/eigenobject data, sheaf or D-module category, and the
@@ -506,7 +506,7 @@ end PhysicalGeometricLanglandsInterpretation
 /--
 Owner target for physical Langlands holonomy.
 
-A supplied KW physical duality witness identifies Wilson holonomy with the
+A supplied KW physical duality property identifies Wilson holonomy with the
 dual 't Hooft holonomy.
 -/
 @[owner_target_tag]
@@ -536,7 +536,7 @@ theorem physicalLanglandsHolonomyOwnerTarget :
 /--
 Owner target for relation-valued physical Langlands holonomy.
 
-A supplied relational KW witness relates Wilson holonomy with the dual
+A supplied relational KW property relates Wilson holonomy with the dual
 't Hooft holonomy under the supplied scalar relation.
 -/
 @[owner_target_tag]
@@ -570,7 +570,7 @@ theorem relationalPhysicalLanglandsHolonomyOwnerTarget :
 /--
 Owner target for hidden-memory recovery through physical Langlands holonomy.
 
-Given KW duality and a dual-holonomy recovery witness, hidden memory is
+Given KW duality and a dual-holonomy recovery property, hidden memory is
 recoverable from Wilson readouts along recovery-calibrated loops.
 -/
 @[owner_target_tag]
@@ -609,7 +609,7 @@ theorem physicalLanglandsRecoveryOwnerTarget :
 Installed owner target for hidden-memory recovery through admitted dual
 `t Hooft holonomy loops.
 
-This target does not require a KW witness, because it only processes the
+This target does not require a KW property, because it only processes the
 installed dual-holonomy recovery law.
 -/
 def DualHolonomyRecoveryInstalledTarget : Prop :=
@@ -628,7 +628,7 @@ def DualHolonomyRecoveryInstalledTarget : Prop :=
 
 /--
 The installed dual-holonomy recovery target follows from the supplied recovery
-witness.
+property.
 -/
 theorem dualHolonomyRecoveryInstalledTarget :
     DualHolonomyRecoveryInstalledTarget := by

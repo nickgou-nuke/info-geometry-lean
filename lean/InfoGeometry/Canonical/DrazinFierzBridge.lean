@@ -24,7 +24,7 @@ two projection chart W*(P,Q)
 ```
 
 Any statement that a Drazin-stable fiber lands on a Fierz quadric is explicitly
-a compatibility-assumption readout.
+a compatibility-property readout.
 -/
 
 noncomputable section
@@ -407,7 +407,7 @@ abbrev residual (r : FierzResidual) : NormalizedFierzCoordinates → ℝ :=
 end FierzResidual
 
 /--
-Compatibility assumption connecting trace-free Drazin-stable two-projection
+Compatibility property connecting trace-free Drazin-stable two-projection
 fibers to a chosen Fierz residual.
 
 This is not derived from the Böttcher--Spitkovsky criterion alone.

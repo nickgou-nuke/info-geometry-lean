@@ -20,7 +20,7 @@ and a residual-zero Ward constraint:
 * the global modes are the modes for which that residual vanishes.
 
 The role of the file is to make the "Virasoro constraints as equilibrium
-equations" interpretation explicit without turning it into an axiom.
+equations" interpretation explicit without turning it into an ax!om.
 -/
 
 namespace InfoGeometry.Canonical.VirasoroWardEquilibrium

@@ -328,8 +328,8 @@ def fiveGradingToCyclic (FG : FiveGrading L) : CyclicFiveGrading L where
 into the concrete named subspaces of `FiveGrading`.
 
 Since `CG.fiveGrading` already carries a valid `FiveGrading` whose subspaces
-match the `CG.cyclicGradeMap` entries by the matching axiom, we just return
-`CG.fiveGrading`.  The `cyclicGradeMap_matches_fiveGrading` axiom of `CG`
+match the `CG.cyclicGradeMap` entries by the matching ax!om, we just return
+`CG.fiveGrading`.  The `cyclicGradeMap_matches_fiveGrading` ax!om of `CG`
 provides the explicit equalities that identify the two representations. -/
 def cyclicFiveGradingToFive (CG : CyclicFiveGrading L) : FiveGrading L :=
   CG.fiveGrading

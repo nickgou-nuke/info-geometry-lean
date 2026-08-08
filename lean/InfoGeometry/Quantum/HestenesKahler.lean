@@ -69,7 +69,7 @@ def HasPhaseParity : PhaseParity → EndH → Prop
   | .odd, A => IsPhaseAntilinear (E := E) A
 
 /--
-Operator together with a certified Hestenes phase parity.
+Operator together with a property Hestenes phase parity.
 
 The phase grade is a genuine property of the noncommuting operator.
 -/
@@ -90,7 +90,7 @@ structure SuperGradedOperator where
 /--
 Operator carrying both the Hestenes phase grade and the super/Fock grade.
 
-The super label chooses the bracket sector; the phase witness certifies how the
+The super label chooses the bracket sector; the phase property certifies how the
 operator interacts with the internal axis `K = Jε`.
 -/
 structure BigradedOperator where
@@ -367,7 +367,7 @@ section AnomalyPlacement
 The canonical lifted projector obstruction is an even-even operator:
 phase-even on the Hestenes side and bosonic/even on the super side.
 -/
-noncomputable def certifiedProjectorObstructionAxis
+noncomputable def propertyProjectorObstructionAxis
     (CCI : CertifiedConformalInference E) :
     BigradedOperator (E := E) where
   op := CCI.liftedProjectorObstructionOperator
@@ -381,9 +381,9 @@ noncomputable def certifiedProjectorObstructionAxis
       CertifiedConformalInference.dualSheetLift_isPhaseLinear
         (E := E) (A := CCI.chiralAnomalyOperator)
 
-@[simp] theorem certifiedProjectorObstructionAxis_bidegree
+@[simp] theorem propertyProjectorObstructionAxis_bidegree
     (CCI : CertifiedConformalInference E) :
-    (certifiedProjectorObstructionAxis (E := E) CCI).bidegree
+    (propertyProjectorObstructionAxis (E := E) CCI).bidegree
       =
     (PhaseParity.even, SuperParity.even) := rfl
 
@@ -599,7 +599,7 @@ noncomputable def starCertifiedEinsteinAnomalyAxis
     (PhaseParity.even, SuperParity.even) := rfl
 
 /--
-On the star-certified conformal surface, the Hestenes-twisted QGT Berry sector
+On the star-property conformal surface, the Hestenes-twisted QGT Berry sector
 of the even-even lifted Einstein anomaly is exactly the metric readout of the
 lifted projector obstruction under projector agreement.
 -/
@@ -626,7 +626,7 @@ open InfoGeometry.Canonical.StateDependentTransport
 State-dependent modular datum obtained by freezing the lifted projector
 obstruction as the operator seed on every doubled state.
 -/
-noncomputable def certifiedProjectorObstructionStateDatum
+noncomputable def propertyProjectorObstructionStateDatum
     (CCI : CertifiedConformalInference E) :
     StateModularDatum E :=
   constantStateModularDatum (E := E) CCI.liftedProjectorObstructionOperator
@@ -640,10 +640,10 @@ noncomputable def starCertifiedEinsteinAnomalyStateDatum
     StateModularDatum E :=
   constantStateModularDatum (E := E) SCI.liftedEinsteinAnomalyOperator
 
-@[simp] theorem certifiedProjectorObstructionStateInducedDynamics_eq_relativeModularDeriv
+@[simp] theorem propertyProjectorObstructionStateInducedDynamics_eq_relativeModularDeriv
     (CCI : CertifiedConformalInference E) (ψ : H₂) (A : EndH) :
     stateInducedDynamics (E := E)
-      (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
+      (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A
       =
     relativeModularDeriv (E := E) CCI.liftedProjectorObstructionOperator A := by
   rfl
@@ -656,60 +656,60 @@ noncomputable def starCertifiedEinsteinAnomalyStateDatum
     relativeModularDeriv (E := E) SCI.liftedEinsteinAnomalyOperator A := by
   rfl
 
-@[simp] theorem certifiedProjectorObstructionStateMetricReadout_eq_hestenesMetricTwoForm
+@[simp] theorem propertyProjectorObstructionStateMetricReadout_eq_hestenesMetricTwoForm
     (CCI : CertifiedConformalInference E) (ψ : H₂) (A : EndH) :
     stateQGTMetricReadout (E := E)
-      (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
+      (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A
       =
     InfoGeometry.Canonical.BerryPhase.hestenesMetricTwoForm (E := E)
       CCI.liftedProjectorObstructionOperator A := rfl
 
-@[simp] theorem certifiedProjectorObstructionStatePhaseReadout_eq_hestenesBerryTwoForm
+@[simp] theorem propertyProjectorObstructionStatePhaseReadout_eq_hestenesBerryTwoForm
     (CCI : CertifiedConformalInference E) (ψ : H₂) (A : EndH) :
     stateQGTPhaseReadout (E := E)
-      (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
+      (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A
       =
     InfoGeometry.Canonical.BerryPhase.hestenesBerryTwoForm (E := E)
       CCI.liftedProjectorObstructionOperator A := rfl
 
-@[simp] theorem certifiedProjectorObstructionStatePhaseReadout_eq_metric_comp_complex_i
+@[simp] theorem propertyProjectorObstructionStatePhaseReadout_eq_metric_comp_complex_i
     (CCI : CertifiedConformalInference E) (ψ : H₂) (A : EndH) :
     stateQGTPhaseReadout (E := E)
-        (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
+        (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A
       =
     (stateQGTMetricReadout (E := E)
-        (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A).compLeft
+        (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A).compLeft
       (InfoGeometry.Krein.clockAxis (E := E)).toLinearMap := by
   calc
     stateQGTPhaseReadout (E := E)
-        (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
+        (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A
       =
     (stateQGTMetricReadout (E := E)
-        (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A).compLeft
+        (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A).compLeft
       (InfoGeometry.Krein.complex_i (E := E)).toLinearMap := by
         exact stateQGTPhaseReadout_eq_metric_comp_complex_i (E := E)
-          (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
+          (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A
     _ =
     (stateQGTMetricReadout (E := E)
-        (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A).compLeft
+        (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A).compLeft
       (InfoGeometry.Krein.clockAxis (E := E)).toLinearMap := by
         rw [InfoGeometry.Krein.complex_i_eq_clockAxis (E := E)]
 
-@[simp] theorem certifiedProjectorObstructionStatePhaseReadout_eq_metric_comp_K
+@[simp] theorem propertyProjectorObstructionStatePhaseReadout_eq_metric_comp_K
     (CCI : CertifiedConformalInference E) (ψ : H₂) (A : EndH) :
     stateQGTPhaseReadout (E := E)
-        (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
+        (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A
       =
     (stateQGTMetricReadout (E := E)
-        (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A).compLeft
+        (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A).compLeft
       (InfoGeometry.Krein.clockAxis (E := E)).toLinearMap := by
-  exact certifiedProjectorObstructionStatePhaseReadout_eq_metric_comp_complex_i
+  exact propertyProjectorObstructionStatePhaseReadout_eq_metric_comp_complex_i
     (E := E) CCI ψ A
 
 attribute
-  [deprecated certifiedProjectorObstructionStatePhaseReadout_eq_metric_comp_complex_i
+  [deprecated propertyProjectorObstructionStatePhaseReadout_eq_metric_comp_complex_i
     (since := "2026-04-11")]
-  certifiedProjectorObstructionStatePhaseReadout_eq_metric_comp_K
+  propertyProjectorObstructionStatePhaseReadout_eq_metric_comp_K
 
 @[simp] theorem starCertifiedEinsteinAnomalyStateMetricReadout_eq_hestenesMetricTwoForm
     (SCI : StarCertifiedConformalInference E) (ψ : H₂) (A : EndH) :
@@ -767,7 +767,7 @@ attribute
   starCertifiedEinsteinAnomalyStatePhaseReadout_eq_metric_comp_K
 
 /--
-State-indexed phase readout for the star-certified anomaly QGT.
+State-indexed phase readout for the star-property anomaly QGT.
 This is constant in the state parameter and keeps the readout operatorial.
 -/
 noncomputable def starCertifiedEinsteinAnomalyStatePhaseReadout
@@ -777,7 +777,7 @@ noncomputable def starCertifiedEinsteinAnomalyStatePhaseReadout
 
 /--
 State-dependent phase readout attached to the welded obstruction axis.
-This is inherited from the star-certified anomaly readout on the same surface.
+This is inherited from the star-property anomaly readout on the same surface.
 -/
 noncomputable def weldedProjectorObstructionStatePhaseReadout
     (SCI : StarCertifiedConformalInference E) (ψ : H₂) :
@@ -831,19 +831,19 @@ theorem weldedProjectorObstructionStatePhaseReadout_eq_projectorObstructionMetri
 Local split identity for the constant projector-obstruction state datum:
 the induced dynamics separates canonically into gauge and source branches.
 -/
-theorem certifiedProjectorObstructionStateInducedDynamics_eq_gauge_add_source
+theorem propertyProjectorObstructionStateInducedDynamics_eq_gauge_add_source
     (CCI : CertifiedConformalInference E) (ψ : H₂) (A : EndH) :
     stateInducedDynamics (E := E)
-      (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
+      (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A
       =
     stateGaugeDynamics (E := E)
-      (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
+      (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A
       +
     stateSourceDynamics (E := E)
-      (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A := by
+      (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A := by
   exact
     stateInducedDynamics_eq_gauge_add_source (E := E)
-      (certifiedProjectorObstructionStateDatum (E := E) CCI) ψ A
+      (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A
 
 /--
 Local split identity for the constant Einstein-anomaly state datum:

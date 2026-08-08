@@ -1,0 +1,33 @@
+\section{Thermodynamics of the Entropy-Regularized Selector}
+\label{sec:thermodynamics}
+
+The dual-affine Bregman geometries derived in Section \ref{sec:geometry} establish the kinematic arena for the estimator. However, a streaming architecture must dynamically route data through these geometries without introducing discontinuous phase transitions or relying on arbitrary thresholding heuristics. To achieve this, we formulate the filtering mechanism as a continuous-time active inference process, driven by Kullback-Leibler (KL) regularized free energy minimization.
+
+\subsection{Variational Free Energy and KL Regularization}
+Let $\Delta^K$ denote the standard probability simplex representing the allocation of belief over $K$ distinct geometric experts (e.g., Gaussian, Poisson, and Gamma/Itakura-Saito). For a given observation $x_t$ at time $t$, each expert yields a predictive Bregman divergence (energy) $C_{j,t} = d_{\nu_j}(x_t | \mu_t)$. 
+
+Standard hard-assignment algorithms (such as thresholded $L_2$ gating) minimize the unregularized energy, leading to unstable, chaotic switching in heteroscedastic streams. We instead introduce an entropy temperature $T_\beta > 0$ and a prior probability distribution $\pi \in \Delta^K$. The optimal state weight vector $w \in \Delta^K$ is defined as the unique minimizer of the KL-regularized free energy functional:
+\begin{equation}
+    \mathcal{F}(w) = \sum_{j} w_j C_{j,t} + T_\beta \mathrm{KL}(w || \pi)
+\end{equation}
+By invoking the fundamental Gibbs variational principle, the unique minimizer is exactly the canonical Softmax distribution:
+\begin{equation}
+    w_j^* = \frac{\pi_j \exp(-C_{j,t}/T_\beta)}{\sum_k \pi_k \exp(-C_{k,t}/T_\beta)}
+\end{equation}
+This mathematically guarantees that the network's geometry selection is not a heuristic activation function, but a strict thermodynamic equilibrium state, allowing the estimator's variance manifold $\Phi_w(\mu)$ to deform continuously as the noise regime shifts.
+
+\subsection{Fermi-Dirac Admission and Anomaly Rejection}
+The same variational principle governs the admission of new data. In astronomical imaging and raw CMOS streams, cosmic rays and sensor transient anomalies act as Dirac impulses (null-cone shockwaves) that violate the local harmonic background.
+
+We model the admission of a datum as a binary state lattice (inlier vs. outlier). Let $D_t = \sum_j w_{j,t-1} C_{j,t}$ be the mixed predictive energy of the incoming datum, and $c_t$ be the admissibility threshold energy. Regularizing the binary simplex via the Shannon entropy $H(r) = -r \log r - (1-r) \log (1-r)$ with temperature $\varepsilon_t$ yields the objective:
+\begin{equation}
+    \mathcal{G}(r) = r D_t + (1-r)c_t - \varepsilon_t H(r)
+\end{equation}
+The stationary point $\partial \mathcal{G} / \partial r = 0$ yields the exact Fermi-Dirac distribution (the logistic Sigmoid):
+\begin{equation}
+    r_t^* = \sigma \left( \frac{c_t - D_t}{\varepsilon_t} \right)
+\end{equation}
+Consequently, cosmic rays ($D_t \gg c_t$) receive exponentially vanishing responsibility $r_t \to 0$. Because the central-moment accumulators are scaled by $r_t$, anomalies are smoothly rejected from the pseudo-sufficient statistics without requiring computationally expensive spatial median filters (e.g., L.A. Cosmic).
+
+\subsection{Varentropy and Fluctuation-Dissipation}
+By viewing the log-partition function $\Psi(s) = \log Z(s)$ along the modular $s$-axis (the Rényi axis), the variance of the operator surprisal $\operatorname{Var}(\mathcal{K})$ emerges as the \textit{varentropy}. In our continuous-stream estimator, the fluctuations of the admission probability $r_t$ directly track this varentropy, providing a built-in, unsupervised diagnostic signal for phase transitions in the data stream. The ability to monitor this thermodynamic capacity allows the C++ and PyTorch architectures to dynamically anneal the temperature parameters $T_\beta$ and $\varepsilon_t$, ensuring convergence to the global minimum.

@@ -6,9 +6,9 @@ import Mathlib.Topology.Category.TopCat.Limits.Basic
 /-!
 # Cuntz-generator points on an upper-tail q-CCR colimit
 
-The finite Cuntz generator witness is now instantiated as a compatible point
+The finite Cuntz generator property is now instantiated as a compatible point
 family on the upper-tail index category.  The resulting map is obtained by
-the generic filtered `TopCat` colimit construction, so the endpoint witness
+the generic filtered `TopCat` colimit construction, so the endpoint property
 is connected to the same noncommutative colimit as the transition maps.
 -/
 

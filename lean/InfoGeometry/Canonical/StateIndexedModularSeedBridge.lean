@@ -14,7 +14,7 @@ This file is a translator/coherence surface:
 - it derives a state-indexed seed presentation from the owned KMS lane,
 - it does not replace canonical owners,
 - and it proves equality to `canonicalModularSeed` under an explicit bounded
-  compatibility witness.
+  compatibility property.
 -/
 
 namespace InfoGeometry.Canonical.StateIndexedModularSeedBridge
@@ -44,7 +44,7 @@ local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
 /--
 State-indexed input packet:
-- a certified inverse-kernel lane witness,
+- a property inverse-kernel lane property,
 - and a KMS-compatible state-functional packet on the owned Unruh lane.
 -/
 @[rep_depth transport]
@@ -98,7 +98,7 @@ theorem modularTransportGenerator_stateIndexedBivectorSeed
     _ = H := by simp
 
 /--
-Bounded witness class used to identify the state-indexed seed with the
+Bounded property class used to identify the state-indexed seed with the
 canonical projected-even seed:
 - normalized inverse-temperature (`β = 1`),
 - and generator calibration to the projected-even Drazin lane.

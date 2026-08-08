@@ -188,7 +188,7 @@ private lemma IBLocalFreeEnergy_eq_add_marginal_llr
   ring
 
 /--
-Analytic witness for the KL/Pythagorean marginal-descent step at fixed encoder.
+Analytic property for the KL/Pythagorean marginal-descent step at fixed encoder.
 
 This isolates the genuine measure-theoretic content away from the purely algebraic
 composition theorem in `IBMonotonicity`.
@@ -207,7 +207,7 @@ def IBMarginalPythagoreanWitness
       + klDiv (q_new : Measure T) (q_old : Measure T) hKL_marginal
 
 /--
-Analytic witness for the KL/Pythagorean marginal-descent step at fixed encoder.
+Analytic property for the KL/Pythagorean marginal-descent step at fixed encoder.
 
 This is the inequality-level corollary of the exact Pythagorean decomposition.
 -/
@@ -465,7 +465,7 @@ theorem IBMarginalDescentWitness.of_pythagorean
     (klDiv_nonneg (q_new : Measure T) (q_old : Measure T) h.1)
 
 omit [Nonempty T] in
-theorem IB_marginal_descent_from_witness
+theorem IB_marginal_descent_from_property
     (pX : ProbabilityMeasure X)
     (q_old q_new : ProbabilityMeasure T)
     (β : ℝ) (D : X → T → ℝ)
@@ -497,7 +497,7 @@ theorem IB_marginal_descent_of_pythagorean
     (β := β) (D := D) (encoder := encoder)
     (hKL_old := hKL_old) (hKL_new := hKL_new) h)
 
-theorem IB_next_marginal_descent_from_witness
+theorem IB_next_marginal_descent_from_property
     (pX : ProbabilityMeasure X)
     (q_n : ProbabilityMeasure T)
     (β : ℝ) (D : X → T → ℝ)

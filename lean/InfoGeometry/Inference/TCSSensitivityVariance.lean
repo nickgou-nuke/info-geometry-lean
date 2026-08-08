@@ -17,7 +17,7 @@ to the two-parameter TCS response. It provides a local sensitivity diagnostic,
 not a global or finite-sample confidence guarantee.
 -/
 
-namespace InfoGeometry.Inference
+namespace InfoGeometry.Inference.TCSSensitivityVariance
 
 noncomputable def tcsLocalVariance
     (I : Matrix (Fin 2) (Fin 2) ℝ)
@@ -32,4 +32,4 @@ theorem tcsLocalVariance_nonneg
     0 ≤ tcsLocalVariance I hI liveTime x := by
   exact localVariance_nonneg I hI (tcsSensitivity liveTime x)
 
-end InfoGeometry.Inference
+end InfoGeometry.Inference.TCSSensitivityVariance

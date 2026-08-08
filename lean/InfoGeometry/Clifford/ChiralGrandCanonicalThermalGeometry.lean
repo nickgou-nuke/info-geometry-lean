@@ -168,6 +168,11 @@ theorem rindlerOccupationOdds_eq
 def thermalAmplitudeRatio (β ξ : ℝ) : ℝ :=
   Real.exp (-(β * ξ) / 2)
 
+theorem thermalAmplitudeRatio_pos (β ξ : ℝ) :
+    0 < thermalAmplitudeRatio β ξ := by
+  unfold thermalAmplitudeRatio
+  exact Real.exp_pos _
+
 theorem thermalAmplitudeRatio_sq (β ξ : ℝ) :
     thermalAmplitudeRatio β ξ ^ 2 = occupationOdds β ξ := by
   rw [occupationOdds_eq_exp_neg]
@@ -285,6 +290,35 @@ theorem chiralThermalProbability_difference (η : ℝ) :
   have h2 : (Real.exp η + Real.exp (-η)) / 2 ≠ 0 := by
     positivity
   field_simp [h, h2]
+
+theorem chiralThermalProbabilityPlus_eq_half_add_tanh (η : ℝ) :
+    chiralThermalProbabilityPlus η = (1 + Real.tanh η) / 2 := by
+  have hsum := chiralThermalProbability_add η
+  have hdiff := chiralThermalProbability_difference η
+  linarith
+
+theorem chiralThermalProbabilityMinus_eq_half_sub_tanh (η : ℝ) :
+    chiralThermalProbabilityMinus η = (1 - Real.tanh η) / 2 := by
+  have hsum := chiralThermalProbability_add η
+  have hdiff := chiralThermalProbability_difference η
+  linarith
+
+theorem chiralThermalProbabilityPlus_nonneg (η : ℝ) :
+    0 ≤ chiralThermalProbabilityPlus η := by
+  unfold chiralThermalProbabilityPlus
+  positivity
+
+theorem chiralThermalProbabilityMinus_nonneg (η : ℝ) :
+    0 ≤ chiralThermalProbabilityMinus η := by
+  unfold chiralThermalProbabilityMinus
+  positivity
+
+theorem rindlerChiralThermalProbability_difference
+    (obs : RindlerObserver) (μχ : ℝ) :
+    chiralThermalProbabilityPlus (inverseTemperature obs * μχ) -
+        chiralThermalProbabilityMinus (inverseTemperature obs * μχ) =
+      Real.tanh (((2 * Real.pi) / obs.a) * μχ) := by
+  rw [chiralThermalProbability_difference, inverseTemperature_eq]
 
 /- The scalar effective energies above are readouts of the native CAR
 commutators, rather than an independent diagonal model. -/

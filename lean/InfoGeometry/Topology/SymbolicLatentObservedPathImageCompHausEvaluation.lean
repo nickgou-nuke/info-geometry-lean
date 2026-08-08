@@ -7,7 +7,7 @@ import Mathlib.Topology.Category.CompHaus.Basic
 
 The parameter interval is compact Hausdorff and the observed path image is a
 compact Hausdorff subtype.  Thus the existing `TopCat` evaluation and
-inclusion maps admit a genuine `CompHaus` source/target packaging.  The
+inclusion maps sorry a genuine `CompHaus` source/target packaging.  The
 ambient feature space is intentionally kept in `TopCat`, since it need not be
 compact.
 -/

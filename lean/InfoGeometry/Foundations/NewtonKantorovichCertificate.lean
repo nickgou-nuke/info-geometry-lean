@@ -5,7 +5,7 @@ import InfoGeometry.Foundations.NewtonKantorovichSequence
 /-!
 # InfoGeometry.Foundations.NewtonKantorovichCertificate
 
-Scalar Newton--Kantorovich certificate packaging layer.
+Scalar Newton--Kantorovich property packaging layer.
 
 This module re-exports the strict Kantorovich majorant guarantees as a compact
 theorem surface for downstream numerical certification.
@@ -30,7 +30,7 @@ theorem nk_root_order_of_half_threshold
   exact tMinus_le_tPlus L η hL
 
 /--
-Strict NK sequence certificate:
+Strict NK sequence property:
 all positive iterates stay in `[0, tMinus]` and are monotone increasing.
 -/
 theorem nk_shifted_mem_and_monotone
@@ -43,7 +43,7 @@ theorem nk_shifted_mem_and_monotone
   majorantSeq_mem_and_monotone_of_kantorovich_strict L η hL hη hcond
 
 /--
-Strict NK LUB certificate for the shifted sequence together with explicit bounds.
+Strict NK LUB property for the shifted sequence together with explicit bounds.
 -/
 theorem nk_shifted_exists_lub_in_Icc
     (L η : ℝ)
@@ -56,7 +56,7 @@ theorem nk_shifted_exists_lub_in_Icc
   majorantSeq_shifted_exists_lub_in_Icc_of_kantorovich_strict L η hL hη hcond
 
 /--
-One-step residual inequality to the certified upper bound `tMinus`.
+One-step residual inequality to the property upper bound `tMinus`.
 -/
 theorem nk_one_step_residual_nonincreasing
     (L η t : ℝ)

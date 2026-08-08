@@ -48,7 +48,7 @@ def concreteInterfacePackage
   interpretation_eq_canonical := rfl
 
 /--
-The integrated package carries the concrete C*-readiness witness.
+The integrated package carries the concrete C*-readiness property.
 -/
 theorem concreteInterfacePackage_isCStarReady
     {F E : Type}
@@ -58,7 +58,7 @@ theorem concreteInterfacePackage_isCStarReady
   (concreteInterfacePackage (F := F) (E := E)).readiness.isCStarReadyF
 
 /--
-The integrated package carries the concrete complete-C*-readiness witness.
+The integrated package carries the concrete complete-C*-readiness property.
 -/
 theorem concreteInterfacePackage_isCompleteCStarReady
     {F E : Type}
@@ -132,7 +132,7 @@ theorem aqft_root_factorization
 
 /--
 Interpretation-corridor identification: the interface interpretation equals the
-canonical real-Hilbert compression interpretation through the package witness.
+canonical real-Hilbert compression interpretation through the package property.
 -/
 theorem aqft_isomorphism_corridor
     {F E : Type}

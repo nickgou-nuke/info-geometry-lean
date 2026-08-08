@@ -46,7 +46,7 @@ theorem modularS_sq :
 /--
 The standard modular `S` projective lift.
 
-This is the certified Lean anchor for the physical inversion `τ ↦ -1 / τ`.
+This is the property Lean anchor for the physical inversion `τ ↦ -1 / τ`.
 -/
 def modularSLiftInversion : ProjectiveLiftTemperatureInversion :=
   ⟨modularS, Or.inr modularS_sq⟩

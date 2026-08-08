@@ -27,7 +27,7 @@ universe u
 /--
 Abstract trajectory data over a time index.
 
-`velocity` is a supplied first-variation witness; no analytic construction is
+`velocity` is a supplied first-variation property; no analytic construction is
 claimed in this file.
 -/
 structure TrajectoryData (Time State Vel : Type u) where

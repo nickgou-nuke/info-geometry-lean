@@ -52,7 +52,7 @@ lemma gns_vector_state_recovers_state (u : ℂ) :
 
 /-- Every vector in the one-dimensional Hilbert space is generated from the
 cyclic vector by some algebra element. -/
-lemma gns_cyclic_witness (x : GNSHilbert) :
+lemma gns_cyclic_property (x : GNSHilbert) :
     ∃ u : ℂ, pi u Omega = x := by
   refine ⟨x, ?_⟩
   simp [Omega, pi_apply]
@@ -65,7 +65,7 @@ lemma gns_cyclic_set_eq_univ :
   · intro _
     trivial
   · intro _
-    exact gns_cyclic_witness x
+    exact gns_cyclic_property x
 
 /-- `π` preserves addition. -/
 lemma gns_rep_add (a b : ℂ) :

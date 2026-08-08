@@ -362,12 +362,12 @@ theorem relativeEntropyGradient_eq_spinTwo
   C.gravityGradient.relativeEntropyGradient_eq_spinTwo A B
 
 /--
-Thermal-time hypothesis theorem:
+Thermal-time property theorem:
 the Souriau derivation and flow are the Tomita thermal-time derivation and
 flow, while the operatorial relative-entropy gradient extracts the spin-2
 linearized-gravity channel.
 -/
-theorem thermal_time_hypothesis_theorem
+theorem thermal_time_property_theorem
     {Op : Type*} (C : SouriauTomitaThermalTimeCapstone Op)
     (t : ℝ) (A B : Op) :
     C.derivation.souriauLieDerivation A =

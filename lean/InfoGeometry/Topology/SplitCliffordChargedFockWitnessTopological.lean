@@ -4,11 +4,11 @@ import InfoGeometry.Topology.HeisenbergBoundaryAtlasTopological
 import InfoGeometry.Topology.SplitCliffordHeisenbergTopological
 
 /-!
-# Concrete charged-Fock split-Clifford Heisenberg witness
+# Concrete charged-Fock split-Clifford Heisenberg property
 
 The source-current owner already proves truncation and the endomorphism-valued
 Heisenberg commutator for the represented charged-Fock current family.  This
-owner packages those proofs into the canonical witness structure and then
+owner packages those proofs into the canonical property structure and then
 places the dependent family of witnesses in a discrete topological packet.
 No existential choice or additional current law is introduced.
 -/
@@ -25,7 +25,7 @@ noncomputable section
 
 variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
-/-- The concrete witness carried by the represented charged-Fock current. -/
+/-- The concrete property carried by the represented charged-Fock current. -/
 def representedChargedFockWitness (α : 𝕜) :
     SplitCliffordHeisenbergWitness 𝕜
       (VirasoroProject.ChargedFockSpace 𝕜 α) where
@@ -66,7 +66,7 @@ instance chargedFockWitnessPacketTopologicalSpace :
 instance chargedFockWitnessPacketDiscreteTopology :
     DiscreteTopology (ChargedFockWitnessPacket 𝕜) := ⟨rfl⟩
 
-/-- The concrete witness family as a topological packet-valued readout. -/
+/-- The concrete property family as a topological packet-valued readout. -/
 def representedChargedFockWitnessPacket (α : 𝕜) :
     ChargedFockWitnessPacket 𝕜 :=
   ⟨α, representedChargedFockWitness (𝕜 := 𝕜) α⟩

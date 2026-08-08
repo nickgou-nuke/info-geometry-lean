@@ -1,0 +1,29 @@
+\section{Part I: Information Geometry}
+\label{sec:part1}
+
+The foundation of the statistical factorization model is the thermodynamics of information geometry, specifically the connection between Bregman divergences, the Gibbs variational principle, and Sinkhorn optimal transport.
+
+\subsection{Gibbs Variational Identity}
+
+\begin{ktheorem}[Entropy-Regularized Selector Identity]
+Let $C$ be a real-valued cost vector, $T > 0$ a temperature, and $p_0$ a strict prior distribution on a finite set $\iota$. For any strict probability distribution $w \in \mathcal{P}(\iota)$, we have the exact decomposition:
+\begin{equation}
+\mathbb{E}_w[C] + T \mathrm{KL}(w || p_0) = -T \log Z + T \mathrm{KL}(w || w^\star)
+\end{equation}
+where $Z = \sum_i p_0(i) e^{-C_i/T}$ is the partition function and $w^\star$ is the Softmax (Gibbs) distribution.
+\end{ktheorem}
+
+\begin{ktheorem}[Softmax Global Minimizer]
+Under the same assumptions, the expected cost penalized by the Kullback-Leibler divergence is bounded below by the free energy:
+\begin{equation}
+\mathbb{E}_w[C] + T \mathrm{KL}(w || p_0) \ge -T \log Z
+\end{equation}
+\end{ktheorem}
+
+\subsection{Sinkhorn Convergence and Optimal Transport}
+
+While the variational identity proves the thermodynamic minimum for a single projection, the convergence of the alternating row/column scaling algorithm (Sinkhorn-Knopp) requires an independent global equivalence layer.
+
+\begin{mtheorem}[Sinkhorn Projection]
+[TODO: Formalize existence, uniqueness under support feasibility, and convergence of alternating KL projections.]
+\end{mtheorem}

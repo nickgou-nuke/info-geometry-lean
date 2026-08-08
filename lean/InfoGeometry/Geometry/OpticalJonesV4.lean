@@ -95,7 +95,7 @@ def IsDiattenuating
 /-- Independent data determining a scaled-projector event.
 
 The realized matrix is derived rather than stored together with an equality
-certificate.
+property.
 -/
 abbrev ScaledProjectorEvent :=
   ℂ × JonesMat
@@ -219,7 +219,7 @@ def chiralJonesTransport
 
 /--
 Rough or depolarizing surfaces are marked explicitly as outside the pure Jones
-regime unless a concrete model supplies a coherence certificate.
+regime unless a concrete model supplies a coherence property.
 -/
 def depolarizingSurfaceTransport
     (M : JonesMat)
@@ -281,7 +281,7 @@ theorem operatorial_realization_preserves_projector
 
 /--
 Historical projector-preservation API, recovered as a direct corollary of the
-operatorial conjugation owner.  The realization hypothesis identifies the
+operatorial conjugation owner.  The realization property identifies the
 optical event with `T`; projector preservation itself is the native theorem
 carried by that noncommutative transport.
 -/

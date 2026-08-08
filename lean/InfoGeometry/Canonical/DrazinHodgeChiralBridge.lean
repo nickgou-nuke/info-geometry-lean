@@ -23,7 +23,7 @@ This file is not full Hodge theory.  It proves the finite algebraic dictionary:
 * `{D, Γ_S} = 0` implies `[D², Γ_S] = 0`.
 
 The bridge keeps the surrogate Hamiltonian lane separate.  It identifies Hodge
-chirality with the certified spectral grading, builds the corresponding Drazin
+chirality with the property spectral grading, builds the corresponding Drazin
 `ProjectorSplit`, and reads the two Dirac arrows through the existing
 `uPlus/uMinus` projector-arrow API.
 -/
@@ -51,9 +51,9 @@ local instance drazinHodgeChiralBridgeIsScalarTower : IsScalarTower ℝ EndH End
   inferInstance
 
 /--
-A calibrated Hodge/Dirac carrier over the certified inverse-kernel Drazin lane.
+A calibrated Hodge/Dirac carrier over the property inverse-kernel Drazin lane.
 
-`dirac_odd` is the algebraic hypothesis `D ∈ 𝔭`; equivalently,
+`dirac_odd` is the algebraic property `D ∈ 𝔭`; equivalently,
 `D * Γ_S = -(Γ_S * D)`.
 -/
 @[rep_depth krein]
@@ -88,7 +88,7 @@ noncomputable def drazinSplit : ProjectorSplit EndH where
   P_mul_P0 := B.CIK.spectralProjector_mul_spectralComplementaryProjector
   P0_mul_P := B.CIK.spectralComplementaryProjector_mul_spectralProjector
 
-/-- Hodge chirality calibrated to the certified spectral grading. -/
+/-- Hodge chirality calibrated to the property spectral grading. -/
 @[rep_depth krein]
 noncomputable def hodgeChirality : EndH :=
   B.CIK.GammaS
@@ -198,7 +198,7 @@ theorem hodgeHarmonicDefectRemnant_eq_drazinDefect :
   unfold hodgeHarmonicDefectRemnant
   exact hodgeASD_eq_drazinDefect (B := B)
 
-/-- Readback: the harmonic/defect remnant is the certified complementary projector. -/
+/-- Readback: the harmonic/defect remnant is the property complementary projector. -/
 @[rep_depth krein]
 theorem hodgeHarmonicDefectRemnant_eq_spectralComplementaryProjector :
     B.hodgeHarmonicDefectRemnant = B.CIK.spectralComplementaryProjector := by

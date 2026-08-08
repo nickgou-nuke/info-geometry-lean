@@ -67,7 +67,7 @@ def active_projector (A : DoubledSpace E →L[ℝ] DoubledSpace E)
   IsDrazinInverse A B k
 
 /-- 
-A graded Drazin compatibility package yields an active projector witness.
+A graded Drazin compatibility package yields an active projector property.
 -/
 theorem active_projector_of_compat
     (A B : DoubledSpace E →L[ℝ] DoubledSpace E) (k : ℕ)

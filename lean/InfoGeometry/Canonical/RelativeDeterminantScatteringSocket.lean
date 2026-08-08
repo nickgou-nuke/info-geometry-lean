@@ -49,7 +49,7 @@ namespace RelativeDeterminantScatteringPacket
 
 end RelativeDeterminantScatteringPacket
 
-/-- Owner target for the relative-determinant/scattering witness lane. -/
+/-- Owner target for the relative-determinant/scattering property lane. -/
 abbrev RelativeDeterminantScatteringTarget : Type (max (uH + 1) (uScat + 1)) :=
   RelativeDeterminantScatteringPacket.{uH, uScat}
 

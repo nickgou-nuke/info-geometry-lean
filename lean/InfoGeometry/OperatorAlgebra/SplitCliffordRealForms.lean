@@ -3,7 +3,7 @@ InfoGeometry/OperatorAlgebra/SplitCliffordRealForms.lean
 
 Finite constructive skeleton for split Clifford real forms.
 
-Raw witness source:
+Raw property source:
 
   Galina-Kaplan-Saal,
   "Split Clifford Modules over a Hilbert Space",
@@ -24,7 +24,7 @@ It extracts the constructive finite algebraic skeleton:
 * the induced closure involution on functions;
 * fixed and anti-fixed sectors as the finite real-form shadow.
 
-The analytic Garding-Wightman splitting criterion remains witness-gated.
+The analytic Garding-Wightman splitting criterion remains property-gated.
 -/
 
 import Mathlib.Tactic
@@ -289,11 +289,11 @@ theorem not_supportStable_of_complement_disjoint
 /--
 Abstract Garding-Wightman real-form criterion.
 
-This is the witness-gated analytic part of Galina-Kaplan-Saal Theorem 3.5.
+This is the property-gated analytic part of Galina-Kaplan-Saal Theorem 3.5.
 
 The finite algebraic operations above are constructive.  The measure equivalence,
 multiplicity symmetry, measurability, and anti-linear cocycle existence are
-kept as explicit witness fields because they are analytic/direct-integral data.
+kept as explicit property fields because they are analytic/direct-integral data.
 -/
 structure GWRealFormCriterion
     (X : Type*) where
@@ -308,7 +308,7 @@ structure GWRealFormCriterion
   /--
   Measure equivalence under complement: `mu equivalent to mu_tilde`.
 
-  This is a model-specific analytic witness.
+  This is a model-specific analytic property.
   -/
   measure_equivalent_under_complement :
     Prop
@@ -316,7 +316,7 @@ structure GWRealFormCriterion
   /--
   Multiplicity symmetry: `nu(x) = nu(1-x)` almost everywhere.
 
-  This is a model-specific direct-integral witness.
+  This is a model-specific direct-integral property.
   -/
   multiplicity_symmetric :
     Prop
@@ -325,7 +325,7 @@ structure GWRealFormCriterion
   Existence of a measurable anti-linear cocycle `r(x)` satisfying the
   Galina-Kaplan-Saal cocycle equations.
 
-  This is the remaining analytic witness.
+  This is the remaining analytic property.
   -/
   measurable_real_cocycle :
     Prop

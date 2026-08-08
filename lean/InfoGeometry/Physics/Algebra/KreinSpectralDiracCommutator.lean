@@ -5,7 +5,7 @@ import InfoGeometry.Physics.Algebra.LogCFTDiracCommutator
 # Conditional Krein and spectral-commutator interfaces
 
 The Krein adjoint is represented by an explicit fundamental symmetry and an
-explicit candidate adjoint.  Self-adjointness is therefore a witness-based
+explicit candidate adjoint.  Self-adjointness is therefore a property-based
 statement.  The monodromy theorem below is an ordinary bounded-operator
 identity; it is not a KMS or spectral-triple theorem.
 -/

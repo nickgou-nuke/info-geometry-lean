@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.SplitOctonionClassificationCore
 # InfoGeometry.Algebra.Zorn.Associator
 
 This file exposes the split-octonion associator defect in the algebra
-namespace and re-exports the canonical nonzero associator witness.
+namespace and re-exports the canonical nonzero associator property.
 
 It is the H^3 defect layer of the Zorn split-octonion shadow.
 -/
@@ -25,7 +25,7 @@ theorem associatorDefect_apply {R : Type*} [CommRing R]
   rfl
 
 /--
-A non-scalar Zorn element has a nonzero associator witness.
+A non-scalar Zorn element has a nonzero associator property.
 
 This is the local H^3 defect statement, imported from the canonical split
 octonion classification layer.

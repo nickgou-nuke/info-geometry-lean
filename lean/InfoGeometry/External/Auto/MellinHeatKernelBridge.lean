@@ -59,7 +59,7 @@ def primonSpectralAtom {n : ℕ} (i : Fin (n + 1)) (s : ℂ) : ℂ :=
 /--
 Specialized finite-stage statement for Primon-style logarithmic weights.
 
-The theorem is still assumption-explicit: it does not define the improper
+The theorem is still property-explicit: it does not define the improper
 Mellin integral.  It packages the exact finite consequence of the atom formula.
 -/
 theorem finite_primon_mellin_bridge

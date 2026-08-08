@@ -20,7 +20,7 @@ This file adds the theorem-safe zitter socket:
 * a Drazin frequency projector `1 - L * Lᴰ` for harmonic envelopes;
 * a horizon zitter mode whose raw observable may move, while its envelope is
   explicitly extracted by double-sided harmonic compression of the
-  Drazin-compressed raw observable and certified horizon-localized, harmonic,
+  Drazin-compressed raw observable and property horizon-localized, harmonic,
   and modular-zero;
 No claim is made that a raw modular-chiral orbit is itself physical.  Optional
 Fierz/channel readouts are isolated in `HorizonZitterFierzReadout`.
@@ -157,7 +157,7 @@ Drazin-compressed raw observable:
 
 `envelope = P_harm * (p * raw * p) * P_harm`.
 
-This is a definition-level link between the raw orbit and the certified
+This is a definition-level link between the raw orbit and the property
 envelope; it is not a proof that arbitrary raw observables have such envelopes.
 -/
 @[rep_depth operator]
@@ -173,7 +173,7 @@ A horizon zitter mode.
 
 The raw observable is allowed to tremble under modular-chiral flow.  The
 physical readout is its supplied envelope, explicitly extracted as the harmonic
-double compression of the Drazin-compressed raw observable and certified as a
+double compression of the Drazin-compressed raw observable and property as a
 harmonic zero mode localized on the Drazin horizon.
 -/
 @[rep_depth operator]
@@ -201,7 +201,7 @@ A horizon zitter mode with an explicit V₄-style symmetry action.
 The same safety boundary applies: the raw observable may move around the
 discrete-modular orbit, while the supplied envelope is explicitly extracted
 by double-sided harmonic compression from the Drazin-compressed raw observable
-and certified as the physical harmonic zero mode on the Drazin horizon.
+and property as the physical harmonic zero mode on the Drazin horizon.
 -/
 @[rep_depth operator]
 structure HorizonV4ZitterMode

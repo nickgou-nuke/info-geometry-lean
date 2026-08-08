@@ -10,7 +10,7 @@ namespace InfoGeometry.FermiGT
 The file records a finite algebraic version of the Fermi/Gamow--Teller
 distinction.  The metric and Lie action are explicit data; the main theorem
 reads back the carried Fermi isometry law and the carried GT non-isometry
-witness.  No differential-geometric manifold theorem is asserted here.
+property.  No differential-geometric manifold theorem is asserted here.
 -/
 
 /-! ## 1. D4-style algebraic carrier -/

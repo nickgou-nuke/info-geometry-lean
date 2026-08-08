@@ -28,12 +28,12 @@ def canonical
       unipotentMonodromyReadoutDatum M :=
   rfl
 
-/-- Compatibility alias for the positive inverse-temperature witness. -/
+/-- Compatibility alias for the positive inverse-temperature property. -/
 theorem beta_pos (T : LogCFTKMSModularTriple (H := H)) :
     0 < T.readout.beta :=
   InfoGeometry.Physics.Thermodynamics.logCFTKMS_beta_pos T
 
-/-- Compatibility alias for the flow invariance witness. -/
+/-- Compatibility alias for the flow invariance property. -/
 theorem flow_invariant (T : LogCFTKMSModularTriple (H := H)) :
     ∀ t : ℝ, ∀ X : H →L[ℝ] H,
       T.readout.state (T.readout.flow t X) = T.readout.state X :=

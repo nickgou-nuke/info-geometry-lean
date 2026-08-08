@@ -1,0 +1,2 @@
+session SarsArangoBridge = HOL +
+  theories SarsArangoBridge

@@ -166,7 +166,7 @@ The Nica meet law for positive-integer indexed range projections.  In a
 concrete Bost--Connes representation, the product of the `n` and `m` range
 projections is the range projection indexed by `lcm n m`.
 
-This is a predicate on a representation, not an additional owner axiom.
+This is a predicate on a representation, not an additional owner ax!om.
 -/
 def IsNicaCovariant (C : CuntzMultiplicativeIndexing Op) : Prop :=
   ∀ n m : ℕ+,

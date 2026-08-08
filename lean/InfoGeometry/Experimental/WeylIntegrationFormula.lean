@@ -192,7 +192,7 @@ Conditional readback of the Weyl integration formula:
   ∫_G f(g) dg = (1/|W|) ∫_T f(t) |δ(t)|² dt
 
 for any class function f on G, assuming the missing Haar/change-of-variables
-and Jacobian theorem as an explicit hypothesis.
+and Jacobian theorem as an explicit property.
 -/
 theorem weylIntegrationFormula_of_explicit_changeOfVariables
     {G T : Type*} [TopologicalSpace G] [Group G] [MeasureSpace G]
@@ -229,7 +229,7 @@ Conditional readback of the Weyl character formula:
   χ|_T(t) · δ(t) = A_{λ + ρ}(t)
 
 The actual rank-one constructive character identity is `a1CharacterFormula`
-above.  The general compact-group formula is kept as an explicit hypothesis.
+above.  The general compact-group formula is kept as an explicit property.
 -/
 theorem weylCharacterFormula_of_explicit_alternating_identity
     {G T : Type*} [TopologicalSpace G] [Group G] [MeasureSpace G]

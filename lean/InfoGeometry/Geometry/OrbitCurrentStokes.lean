@@ -149,7 +149,7 @@ The finite one-point defect model as an orbit-current Stokes datum.
 
 The orbit and surface pairings are the already-owned finite Stokes pairings.
 The `Form` parameter is `Unit`, because this readback exposes only the single
-certified finite defect form.
+property finite defect form.
 -/
 def finiteDefectOrbitCurrentStokesDatum :
     OrbitCurrentStokesDatum Unit Unit Unit Mat2 where

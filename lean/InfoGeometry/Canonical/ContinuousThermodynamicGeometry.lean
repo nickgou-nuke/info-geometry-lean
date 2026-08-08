@@ -50,7 +50,7 @@ gradient of the logarithmic potential.
 -/
 structure ThermodynamicGaugeField (P : LogarithmicPotential E) where
   dΨ : E → (E →L[ℝ] ℝ)
-  /-- Finite exactness certificate: along every chord from `β` to `γ`, the
+  /-- Finite exactness property: along every chord from `β` to `γ`, the
   supplied one-form reads the potential difference.  This is a genuine logical
   chain replacing the former vacuous exactness flag; analytic Fréchet
   differentiability remains an owner-side strengthening. -/

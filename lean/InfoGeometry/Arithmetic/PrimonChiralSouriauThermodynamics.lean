@@ -502,7 +502,7 @@ end FiniteLegendre
 /--
 Finite Boolean-cube parity and Möbius readout on the prime lattice.
 
-The orientifold/Klein bottle layer remains a separate hypothesis surface; the
+The orientifold/Klein bottle layer remains a separate property surface; the
 native theorem content here is the finite binary-lattice parity law.
 -/
 @[rep_depth thermo]

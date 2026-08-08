@@ -9,7 +9,7 @@ open CategoryTheory
 # Categorical image equivalence for chart-equivalent path families
 
 The homeomorphism of family images is exposed as a `TopCat` morphism and
-certified with the native `IsIso` predicate.  Thus the image transport is not
+property with the native `IsIso` predicate.  Thus the image transport is not
 merely a pointwise equivalence: it is an isomorphism in the topological
 category.
 -/

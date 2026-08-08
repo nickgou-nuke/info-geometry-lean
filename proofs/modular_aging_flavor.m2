@@ -1,0 +1,15 @@
+R = QQ[q,dq,theta12,theta23,theta13,delta,yQ,yu,yd,yL, WeylAlgebra => {q=>dq}];
+aeonCount=3; generationCount=3; vintageCount=3; stablePage=3; serreResidueRank=8; aeonColimitRank=24; threeGenerationWeylCount=48;
+su3Generators=8; su2Generators=3; smRank=4; smGenerators=12; cartanGenerators=4;
+assert(aeonCount==3 and generationCount==3 and vintageCount==3 and aeonColimitRank==24 and threeGenerationWeylCount==48);
+assert(su3Generators==8 and su2Generators==3 and smRank==4 and smGenerators==12 and cartanGenerators==4);
+C2su3Fund=4/3; C2su2Doublet=3/4; assert(C2su3Fund==4/3 and C2su2Doublet==3/4);
+aging1=1/10; aging2=1/100; aging3=1/1000; massRatioG2G1=10; massRatioG3G2=10; massRatioG3G1=100;
+assert(aging1==1/10 and aging2==1/100 and aging3==1/1000 and massRatioG2G1==10 and massRatioG3G2==10 and massRatioG3G1==100);
+colorAnomaly=2*(1/6)-(2/3)-(-1/3); weakAnomaly=3*(1/6)+(-1/2); generationAnomaly=3*colorAnomaly+3*weakAnomaly;
+assert(colorAnomaly==0 and weakAnomaly==0 and generationAnomaly==0);
+I = ideal(q*dq - dq*q - 1); assert(numgens I == 1);
+agingIdeal = ideal(10*q-1, theta12, theta23, theta13, delta); assert(numgens agingIdeal==5);
+anomalyIdeal = ideal(2*yQ-yu-yd, 3*yQ+yL); assert(numgens anomalyIdeal==2);
+edges={"iterates","refines","generates_ckm","carries_sm","cancels_anomaly"}; assert(#edges==5);
+print {"aeonCount",aeonCount,"generationCount",generationCount,"vintageCount",vintageCount,"stablePage",stablePage,"serreResidueRank",serreResidueRank,"aeonColimitRank",aeonColimitRank,"threeGenerationWeylCount",threeGenerationWeylCount,"su3Generators",su3Generators,"su2Generators",su2Generators,"smRank",smRank,"smGenerators",smGenerators,"cartanGenerators",cartanGenerators,"C2su3Fund",C2su3Fund,"C2su2Doublet",C2su2Doublet,"aging1",aging1,"aging2",aging2,"aging3",aging3,"massRatioG2G1",massRatioG2G1,"massRatioG3G2",massRatioG3G2,"massRatioG3G1",massRatioG3G1,"colorAnomaly",colorAnomaly,"weakAnomaly",weakAnomaly,"generationAnomaly",generationAnomaly,"dmoduleCCRGenerators",numgens I,"agingIdealGenerators",numgens agingIdeal,"anomalyIdealGenerators",numgens anomalyIdeal,"graphEdges",#edges};

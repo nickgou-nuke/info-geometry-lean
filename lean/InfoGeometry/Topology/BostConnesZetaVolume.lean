@@ -22,11 +22,11 @@ noncomputable def bost_connes_partition_function (β : ℝ) : ℝ :=
 
 /-- The regularized volume of the braided anyonic bulk.
 
-Positivity is represented by a genuine algebraic star-square witness rather
+Positivity is represented by a genuine algebraic star-square property rather
 than a vacuous `∀ x, True` field. -/
 structure BraidedBulkVolume where
   volume_operator : M
-  star_square_witness : ∃ y : M, volume_operator = star y * y
+  star_square_property : ∃ y : M, volume_operator = star y * y
 
 variable (vol : BraidedBulkVolume M)
 

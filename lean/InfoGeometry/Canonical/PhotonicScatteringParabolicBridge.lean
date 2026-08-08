@@ -65,7 +65,7 @@ structure ScatteringParabolicPacket where
   collapseWitness :
     Splus = ChiralChannel.Parabolic ∧ Sminus = ChiralChannel.Parabolic
 
-/-- Induced common transport class from the explicit witness packet. -/
+/-- Induced common transport class from the explicit property packet. -/
 def ScatteringParabolicPacket.commonTransportClass
     (_P : ScatteringParabolicPacket) : TransportClass :=
   TransportClass.Parabolic
@@ -79,7 +79,7 @@ theorem ScatteringParabolicPacket.both_channels_map_to_common_class
   · exact P.collapseWitness
   · rfl
 
-/-- Constructor from the local `Ω² = 0` witness into a packet witness. -/
+/-- Constructor from the local `Ω² = 0` property into a packet property. -/
 noncomputable def mk_packet_of_nilpotent (Ω : ParOp) (h_nilpotent : mul Ω Ω = zero) :
     ScatteringParabolicPacket := by
   refine
@@ -90,7 +90,7 @@ noncomputable def mk_packet_of_nilpotent (Ω : ParOp) (h_nilpotent : mul Ω Ω =
 
 /--
 Finite-slab interface packet:
-entry/exit channel readouts are explicit, and the collapse witness is local to
+entry/exit channel readouts are explicit, and the collapse property is local to
 this packet (no global claim).
 -/
 structure FiniteSlabParabolicPacket where
@@ -120,7 +120,7 @@ theorem FiniteSlabParabolicPacket.channels_map_to_parabolic_class
   · exact P.exitCollapseWitness
   · rfl
 
-/-- Build a finite-slab packet from a single local nilpotent witness `Ω² = 0`. -/
+/-- Build a finite-slab packet from a single local nilpotent property `Ω² = 0`. -/
 noncomputable def mk_finiteSlab_packet_of_nilpotent
     (Ω : ParOp) (h_nilpotent : mul Ω Ω = zero) : FiniteSlabParabolicPacket := by
   let S := scatteringOfOmega Ω
@@ -135,8 +135,8 @@ noncomputable def mk_finiteSlab_packet_of_nilpotent
   · exact scattering_channels_collapse Ω h_nilpotent
 
 /--
-Finite-slab interface packet with explicit boundary maps and a collapse witness.
-The witness asserts that entry/exit preserve the chiral lane labels used in the
+Finite-slab interface packet with explicit boundary maps and a collapse property.
+The property asserts that entry/exit preserve the chiral lane labels used in the
 scattering pair.
 -/
 structure FiniteSlabParabolicInterfacePacket where
@@ -169,7 +169,7 @@ theorem FiniteSlabParabolicInterfacePacket.single_parabolic_slab_transport_class
   simp [P.collapseWitness]
 
 /--
-Real owner-side implication (no witness field):
+Real owner-side implication (no property field):
 if slab boundary maps preserve the local scattering labels and both boundary
 readouts are parabolic, then the underlying carrier is nilpotent (`Ω² = 0`).
 -/

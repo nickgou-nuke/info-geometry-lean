@@ -14,6 +14,6 @@ Source: InfoGeometry.Algebra.CuntzFibonacciBraidInclusion.matrixToCuntz
 Objects: k-theory, cuntz-algebra, murray-von-neumann, projection, k0-group -/
 theorem hyp_5_k_theory :
     cuntzS 2 (0 : Fin 2) * cuntzSdag 2 (0 : Fin 2) = matrixToCuntz 2 !![1, 0; 0, 0] :=
-  hypothesis5_rank_one_projection_equivalence
+  property5_rank_one_projection_equivalence
 
 end Automath.Generated

@@ -1,0 +1,73 @@
+digraph GEPA_Active_Spine {
+  rankdir=LR;
+  node [shape=box, style=filled, fillcolor=lightyellow];
+  edge [fontsize=9];
+
+  subgraph cluster_B3PresentedGroup {
+    label="B3PresentedGroup";
+    color=lightblue;
+    "B3PresentedGroup.b3_relation_holds" [label="b3_relation_holds", shape=ellipse, fillcolor=lightgreen];
+    "B3PresentedGroup.s0_sq_eq_neg_one" [label="s0_sq_eq_neg_one", shape=ellipse, fillcolor=lightgreen];
+    "B3PresentedGroup.s1_sq_eq_neg_one" [label="s1_sq_eq_neg_one", shape=ellipse, fillcolor=lightgreen];
+  }
+  subgraph cluster_BraidIdealDescent {
+    label="BraidIdealDescent";
+    color=lightblue;
+    "BraidIdealDescent.CrossMap" [label="CrossMap", shape=ellipse, fillcolor=lightgreen];
+  }
+  subgraph cluster_ChiralB3PresentedBridge {
+    label="ChiralB3PresentedBridge";
+    color=lightblue;
+    "ChiralB3PresentedBridge.braid_generators_dont_commute" [label="braid_generators_dont_commute", shape=ellipse, fillcolor=lightgreen];
+  }
+  subgraph cluster_ChiralCausalCone {
+    label="ChiralCausalCone";
+    color=lightblue;
+    "ChiralCausalCone.M2C" [label="M2C", shape=ellipse, fillcolor=lightgreen];
+    "ChiralCausalCone.anti_σPlus_σMinus_split" [label="anti_σPlus_σMinus_split", shape=ellipse, fillcolor=lightgreen];
+    "ChiralCausalCone.cl11_atom_to_chiral_CAR_basis" [label="cl11_atom_to_chiral_CAR_basis", shape=ellipse, fillcolor=lightgreen];
+  }
+  subgraph cluster_ChiralTLDescent {
+    label="ChiralTLDescent";
+    color=lightblue;
+    "ChiralTLDescent.chiral_kernel_relation_is_left_tau_ideal" [label="chiral_kernel_relation_is_left_tau_ideal", shape=ellipse, fillcolor=lightgreen];
+  }
+  subgraph cluster_ChiralTensorMatrixBridge {
+    label="ChiralTensorMatrixBridge";
+    color=lightblue;
+    "ChiralTensorMatrixBridge.bridge_maps_R" [label="bridge_maps_R", shape=ellipse, fillcolor=lightgreen];
+  }
+  subgraph cluster_ChiralTensorRecoupling {
+    label="ChiralTensorRecoupling";
+    color=lightblue;
+    "ChiralTensorRecoupling.chiral_tl_recoupling_synthesis" [label="chiral_tl_recoupling_synthesis", shape=ellipse, fillcolor=lightgreen];
+  }
+  subgraph cluster_JonesBraidB3 {
+    label="JonesBraidB3";
+    color=lightblue;
+    "JonesBraidB3.artin_braid_relation" [label="artin_braid_relation", shape=ellipse, fillcolor=lightgreen];
+    "JonesBraidB3.s0" [label="s0", shape=ellipse, fillcolor=lightgreen];
+  }
+  subgraph cluster_SplitClifford {
+    label="SplitClifford";
+    color=lightblue;
+    "SplitClifford.antiComm" [label="antiComm", shape=ellipse, fillcolor=lightgreen];
+    "SplitClifford.antiComm.eq_1" [label="antiComm.eq_1", shape=ellipse, fillcolor=lightgreen];
+    "SplitClifford.carAnn" [label="carAnn", shape=ellipse, fillcolor=lightgreen];
+    "SplitClifford.carCre" [label="carCre", shape=ellipse, fillcolor=lightgreen];
+  }
+  subgraph cluster_TLChain {
+    label="TLChain";
+    color=lightblue;
+    "TLChain.e0" [label="e0", shape=ellipse, fillcolor=lightgreen];
+  }
+
+  "B3PresentedGroup" -> "JonesBraidB3" [label="5 thms", color=blue];
+  "ChiralB3PresentedBridge" -> "B3PresentedGroup" [label="2 thms", color=blue];
+  "ChiralB3PresentedBridge" -> "JonesBraidB3" [label="3 thms", color=blue];
+  "ChiralCausalCone" -> "SplitClifford" [label="5 thms", color=blue];
+  "ChiralTLDescent" -> "BraidIdealDescent" [label="5 thms", color=blue];
+  "ChiralTensorMatrixBridge" -> "ChiralCausalCone" [label="5 thms", color=blue];
+  "ChiralTensorRecoupling" -> "ChiralCausalCone" [label="5 thms", color=blue];
+  "JonesBraidB3" -> "TLChain" [label="5 thms", color=blue];
+}

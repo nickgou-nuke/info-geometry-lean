@@ -50,7 +50,7 @@ def pfaffian4 (A : Tensor2) : ℚ :=
   A 0 1 * A 2 3 - A 0 2 * A 1 3 + A 0 3 * A 1 2
 
 /-- Finite electromagnetic tensor from electric/magnetic triples.
-The sign convention is only a finite certificate convention. -/
+The sign convention is only a finite property convention. -/
 def emTensor (E B : Fin 3 → ℚ) : Tensor2 :=
   !![(0 : ℚ), E 0, E 1, E 2;
      -E 0, 0, -B 2, B 1;
@@ -145,7 +145,7 @@ theorem antisymmetric_power_zero (F : Tensor2) (p : Vec4) (hF : IsAntisymmetric 
   rw [h00, h11, h22, h33, h01, h02, h03, h12, h13, h23]
   ring
 
-/-- Mass shell for the unit rest momentum used as a finite sanity certificate. -/
+/-- Mass shell for the unit rest momentum used as a finite sanity property. -/
 theorem rest_momentum_mass_shell (m : ℚ) :
     massShell (fun i => if i = 0 then m else 0) m := by
   simp [massShell, minkowskiDot]
@@ -178,11 +178,11 @@ namespace FiniteSpinParticleCertificate
 
 variable (C : FiniteSpinParticleCertificate)
 
-/-- The certificate's decomposable spin bivector is antisymmetric. -/
+/-- The property's decomposable spin bivector is antisymmetric. -/
 theorem spin_antisym : IsAntisymmetric (wedge C.u C.v) :=
   wedge_antisymmetric C.u C.v
 
-/-- The certificate's decomposable spin bivector has zero Pfaffian. -/
+/-- The property's decomposable spin bivector has zero Pfaffian. -/
 theorem spin_plucker : pfaffian4 (wedge C.u C.v) = 0 :=
   pfaffian4_wedge_zero C.u C.v
 

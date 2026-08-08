@@ -168,7 +168,7 @@ theorem kasparov_krein_product_chain_contractibility_forbids
   exact hIn.elim chain.left
 
 /--
-If a conjectural anomaly hypothesis is forced through a contractible KK
+If a conjectural anomaly property is forced through a contractible KK
 boundary, the correct constructive conclusion is non-existence of that
 incoming/outgoing chain.  We do not manufacture anomaly-collapse theorems from
 inconsistent chain data.

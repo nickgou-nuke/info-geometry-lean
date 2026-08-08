@@ -10,7 +10,7 @@ Support-restricted bridge from the canonical doubled Tomita package to the
 `Preg/Pzero` execution lane.
 
 This file does not redefine the modular Hamiltonian. It only proves that the
-certified support-restricted lane is an explicit compression of the same
+property support-restricted lane is an explicit compression of the same
 canonical `Δ/δ` package.
 -/
 
@@ -36,7 +36,7 @@ local instance : IsScalarTower ℝ EndH EndH := inferInstance
 /--
 Support-restricted logarithm is defined on the regular Drazin lane `Preg Δ`.
 
-This is the certified bridge form of the usual analytic precondition for
+This is the property bridge form of the usual analytic precondition for
 `K := -log (Preg Δ)`.
 -/
 @[rep_depth operator]
@@ -47,7 +47,7 @@ theorem log_defined_on_Preg
   c.logDomain
 
 /--
-Equivalent regular-lane form of the same certificate:
+Equivalent regular-lane form of the same property:
 the logarithm is admitted on `Δreg = Preg Δ Preg`.
 -/
 @[rep_depth operator]
@@ -58,7 +58,7 @@ theorem log_defined_on_Δreg
     (log_defined_on_Preg (V := V) c)
 
 /--
-Regular-lane spectral positivity implies the same `Preg` log-domain certificate,
+Regular-lane spectral positivity implies the same `Preg` log-domain property,
 provided by the Hestenes--Krein bridge law encoded in
 `CertifiedModularReduction`.
 -/
@@ -74,7 +74,7 @@ theorem log_defined_on_Preg_of_regularSpectrumPositive
 
 /--
 Explicit support-restricted modular generator:
-`K := -log (Preg Δ)` in certified lane form.
+`K := -log (Preg Δ)` in property lane form.
 -/
 @[rep_depth operator]
 noncomputable def K_neg_log_PregDelta
@@ -82,7 +82,7 @@ noncomputable def K_neg_log_PregDelta
   -(c.logOn c.logDomain)
 
 /--
-`K_neg_log_PregDelta` is definitionally the certified regular generator `Kreg`.
+`K_neg_log_PregDelta` is definitionally the property regular generator `Kreg`.
 -/
 @[rep_depth operator]
 theorem K_neg_log_PregDelta_eq_Kreg
@@ -130,7 +130,7 @@ theorem K_neg_log_PregDelta_support_package
   · simpa [hEq] using hKill.2
 
 /--
-If the certified reduction is instantiated with the canonical Tomita `Δ`,
+If the property reduction is instantiated with the canonical Tomita `Δ`,
 its regular compression is exactly the `Preg`-compression of that `Δ`.
 -/
 @[rep_depth krein]
@@ -144,7 +144,7 @@ theorem Delta_reg_eq_compress_Preg_canonicalDelta
   simp [CertifiedModularReduction.Δreg, hDelta]
 
 /--
-Equivalent regular-lane form with explicit exponential witness `Δ = exp(δ)`.
+Equivalent regular-lane form with explicit exponential property `Δ = exp(δ)`.
 -/
 @[rep_depth krein]
 theorem Delta_reg_eq_compress_Preg_exp_canonicalDeltaLog
@@ -166,7 +166,7 @@ theorem Delta_reg_eq_compress_Preg_exp_canonicalDeltaLog
           rw [hDeltaExp]
 
 /--
-If the certified logarithm hook is instantiated by canonical Tomita `δ`, the
+If the property logarithm hook is instantiated by canonical Tomita `δ`, the
 ambient support-restricted generator is exactly the compressed `-δ`.
 -/
 @[rep_depth krein]
@@ -181,10 +181,10 @@ theorem Kambient_eq_compress_Preg_neg_canonicalDeltaLog
 
 /--
 `Preg/Pzero` support package specialized to canonical Tomita `δ` on the
-certified reduction lane.
+property reduction lane.
 -/
 @[rep_depth krein]
-theorem canonicalTomita_support_package_on_Preg_of_certifiedReduction
+theorem canonicalTomita_support_package_on_Preg_of_propertyReduction
     (c : CertifiedModularReduction (E := H₂))
     (δcanon : EndH)
     (hLog : c.logOn c.logDomain = δcanon) :
@@ -209,10 +209,10 @@ theorem canonicalTomita_support_package_on_Preg_of_certifiedReduction
   · simpa [hEq] using hKill.2
 
 /--
-Defect-lane logarithm exclusion specialized to the same certified reduction.
+Defect-lane logarithm exclusion specialized to the same property reduction.
 -/
 @[rep_depth krein]
-theorem canonicalTomita_no_log_on_Pzero_of_certifiedReduction
+theorem canonicalTomita_no_log_on_Pzero_of_propertyReduction
     (c : CertifiedModularReduction (E := H₂)) :
     ¬ c.logAdmissible
       (compress (CertifiedModularReduction.Pzero c) c.Δ) :=

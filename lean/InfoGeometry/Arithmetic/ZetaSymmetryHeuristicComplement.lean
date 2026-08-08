@@ -12,9 +12,9 @@ This module records the precise finite logic:
 * an even centered function reflects zeros in pairs;
 * evenness alone permits off-axis zeros;
 * a separate `NoOffAxisZeros` complement is the exact missing selection
-  hypothesis needed to conclude `re z = 0`.
+  property needed to conclude `re z = 0`.
 
-No theorem here asserts the Riemann hypothesis, analytic continuation, or that
+No theorem here asserts the Riemann property, analytic continuation, or that
 the completed zeta zeros satisfy the complement.
 -/
 
@@ -57,18 +57,18 @@ theorem even_zero_reflection {F : ℂ → ℂ} (hEven : EvenCentered F) {z : ℂ
 def evenOffAxisWitness (z : ℂ) : ℂ :=
   z ^ 2 - 1
 
-/-- The witness is centered-even. -/
+/-- The property is centered-even. -/
 theorem evenOffAxisWitness_even : EvenCentered evenOffAxisWitness := by
   intro z
   unfold evenOffAxisWitness
   ring
 
-/-- `z = 1` is a zero of the witness. -/
+/-- `z = 1` is a zero of the property. -/
 theorem evenOffAxisWitness_one_zero : ZeroAt evenOffAxisWitness (1 : ℂ) := by
   unfold ZeroAt evenOffAxisWitness
   norm_num
 
-/-- `z = -1` is the reflected zero of the witness. -/
+/-- `z = -1` is the reflected zero of the property. -/
 theorem evenOffAxisWitness_neg_one_zero : ZeroAt evenOffAxisWitness (-1 : ℂ) := by
   simpa using
     (even_zero_reflection evenOffAxisWitness_even evenOffAxisWitness_one_zero)

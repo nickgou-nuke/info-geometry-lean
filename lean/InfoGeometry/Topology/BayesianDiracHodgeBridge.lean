@@ -124,7 +124,7 @@ abbrev ExactDetailedBalanceSector
 Coexact Hodge current sector.
 
 Entropy production is derived below as the native squared Hodge norm; it is
-not supplied as an independent scalar together with an equality certificate.
+not supplied as an independent scalar together with an equality property.
 -/
 abbrev CoexactEntropySector
     {n1 n2 : ℕ}

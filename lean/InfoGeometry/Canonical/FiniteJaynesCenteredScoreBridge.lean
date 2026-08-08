@@ -13,7 +13,7 @@ to AF/direct-limit compatibility:
 * centered score `obsᵢ - refᵢ`;
 * zero total centered score under equal total mass;
 * relative-density centering `obsᵢ / refᵢ - 1`, with the nonzero reference
-  hypothesis explicit.
+  property explicit.
 
 No entropy theorem.
 No LDDS/measure limit.

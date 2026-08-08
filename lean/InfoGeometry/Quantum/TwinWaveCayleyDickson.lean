@@ -5,7 +5,8 @@ namespace InfoGeometry.Quantum.TwinWave
 
 open InfoGeometry.Clifford.Hestenes
 open InfoGeometry.Riemannian
-open SplitOctonion
+open InfoGeometry.Clifford.SplitOctonionsDualProduct
+open InfoGeometry.Clifford.SplitOctonionsDualProduct.SplitOctonion
 open CliffordAlgebra
 
 variable {R : Type*} [CommRing R] [Invertible (2 : R)]

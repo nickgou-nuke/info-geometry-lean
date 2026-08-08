@@ -1,0 +1,482 @@
+[
+  {
+    "deps": 60,
+    "kind": "theorem",
+    "module": "GellMannParafermionRealizationRoutesSynthesis",
+    "name": "GellMannParafermionRealizationRoutesSynthesis.gellmann_parafermion_realization_routes_synthesis"
+  },
+  {
+    "deps": 53,
+    "kind": "theorem",
+    "module": "TopologicalColorCrystalFormal",
+    "name": "TopologicalColorCrystalFormal.topological_color_crystal_formal_synthesis"
+  },
+  {
+    "deps": 49,
+    "kind": "theorem",
+    "module": "CurryHowardLambekColimit",
+    "name": "CurryHowardLambekColimit.curry_howard_lambek_colimit_synthesis"
+  },
+  {
+    "deps": 48,
+    "kind": "theorem",
+    "module": "HolographicGaugeSymmetryUniqueness",
+    "name": "HolographicGaugeSymmetryUniqueness.holographic_gauge_symmetry_uniqueness_synthesis"
+  },
+  {
+    "deps": 45,
+    "kind": "theorem",
+    "module": "BogoliubovSU3ParafermionWeld",
+    "name": "BogoliubovSU3ParafermionWeld.bogoliubov_su3_parafermion_synthesis"
+  },
+  {
+    "deps": 43,
+    "kind": "def",
+    "module": "BogoliubovSU3ParafermionProofChain",
+    "name": "BogoliubovSU3ParafermionProofChain.theoremBackedColorParafermionBraidingSocket"
+  },
+  {
+    "deps": 39,
+    "kind": "theorem",
+    "module": "CuntzBoundarySolderRealization",
+    "name": "CuntzBoundarySolderRealization.cuntz_boundary_solder_realization_synthesis"
+  },
+  {
+    "deps": 34,
+    "kind": "theorem",
+    "module": "BogoliubovSU3ParafermionProofChain",
+    "name": "BogoliubovSU3ParafermionProofChain.bogoliubov_su3_parafermion_proof_chain"
+  },
+  {
+    "deps": 34,
+    "kind": "theorem",
+    "module": "Clifford55AnomalyOSP",
+    "name": "Clifford55AnomalyOSP.clifford_55_anomaly_osp_synthesis"
+  },
+  {
+    "deps": 31,
+    "kind": "theorem",
+    "module": "ProjectiveAffineConformalClosure55",
+    "name": "ProjectiveAffineConformalClosure55.projective_affine_conformal_closure_55_synthesis"
+  },
+  {
+    "deps": 30,
+    "kind": "theorem",
+    "module": "GellMannParafermionSolder",
+    "name": "GellMannParafermionSolder.gellmann_parafermion_solder_synthesis"
+  },
+  {
+    "deps": 30,
+    "kind": "theorem",
+    "module": "WeylColimitCanonicalLimit",
+    "name": "WeylColimitCanonicalLimit.weyl_colimit_to_cramer_rao_canonical_socket"
+  },
+  {
+    "deps": 29,
+    "kind": "theorem",
+    "module": "ChiralCausalCone",
+    "name": "ChiralCausalCone.chiral_causal_cone_synthesis"
+  },
+  {
+    "deps": 29,
+    "kind": "theorem",
+    "module": "SplitOctonionBraidSU3",
+    "name": "SplitOctonionBraidSU3.split_octonion_braid_su3_synthesis"
+  },
+  {
+    "deps": 28,
+    "kind": "theorem",
+    "module": "SU3LoopBraidCuntzBoundary",
+    "name": "SU3LoopBraidCuntzBoundary.su3_loop_braid_cuntz_boundary_synthesis"
+  },
+  {
+    "deps": 27,
+    "kind": "theorem",
+    "module": "CP3CantorGeometricObstruction",
+    "name": "CP3CantorGeometricObstruction.cp3_cantor_geometric_obstruction_synthesis"
+  },
+  {
+    "deps": 27,
+    "kind": "theorem",
+    "module": "TripotentCliffordColimit",
+    "name": "TripotentCliffordColimit.tripotent_clifford_colimit_synthesis"
+  },
+  {
+    "deps": 27,
+    "kind": "theorem",
+    "module": "TwistorParafermionBoundary",
+    "name": "TwistorParafermionBoundary.twistor_parafermion_boundary_synthesis"
+  },
+  {
+    "deps": 27,
+    "kind": "theorem",
+    "module": "ZornScalingFlow",
+    "name": "ZornScalingFlow.zorn_scaling_flow_synthesis"
+  },
+  {
+    "deps": 26,
+    "kind": "theorem",
+    "module": "HestenesCuntzPhaseSpace",
+    "name": "HestenesCuntzPhaseSpace.hestenes_cuntz_phase_space_synthesis"
+  },
+  {
+    "deps": 26,
+    "kind": "theorem",
+    "module": "HestenesCuntzSpacetimeAlgebra",
+    "name": "HestenesCuntzSpacetimeAlgebra.hestenes_cuntz_spacetime_synthesis"
+  },
+  {
+    "deps": 25,
+    "kind": "theorem",
+    "module": "RescaledPhaseVolumeCanonical",
+    "name": "RescaledPhaseVolumeCanonical.rescaled_phase_volume_canonical_synthesis"
+  },
+  {
+    "deps": 25,
+    "kind": "theorem",
+    "module": "SUNQuantumBraidDuality",
+    "name": "SUNQuantumBraidDuality.sun_quantum_braid_duality_synthesis"
+  },
+  {
+    "deps": 24,
+    "kind": "theorem",
+    "module": "BashoreSpinNetworkQubit",
+    "name": "BashoreSpinNetworkQubit.bashore_spin_network_qubit_synthesis"
+  },
+  {
+    "deps": 24,
+    "kind": "theorem",
+    "module": "ChiralB3PresentedBridge",
+    "name": "ChiralB3PresentedBridge.complete_B3_representation_verified"
+  },
+  {
+    "deps": 24,
+    "kind": "theorem",
+    "module": "ParafermionIdentityRealization",
+    "name": "ParafermionIdentityRealization.parafermion_realization_synthesis"
+  },
+  {
+    "deps": 23,
+    "kind": "theorem",
+    "module": "BogoliubovWeylChemicalPotential",
+    "name": "BogoliubovWeylChemicalPotential.bogoliubov_weyl_chemical_potential_synthesis"
+  },
+  {
+    "deps": 23,
+    "kind": "theorem",
+    "module": "SpectralCPTKleinBottle",
+    "name": "SpectralCPTKleinBottle.spectral_cpt_klein_bottle_synthesis"
+  },
+  {
+    "deps": 22,
+    "kind": "theorem",
+    "module": "HillWheelerUniversalProjection",
+    "name": "HillWheelerUniversalProjection.hill_wheeler_universal_projection_synthesis"
+  },
+  {
+    "deps": 22,
+    "kind": "theorem",
+    "module": "MisraPrimeEntropyDigest",
+    "name": "MisraPrimeEntropyDigest.misra_prime_entropy_digest_synthesis"
+  },
+  {
+    "deps": 21,
+    "kind": "theorem",
+    "module": "KreinCuntzShadow",
+    "name": "KreinCuntzShadow.krein_cuntz_shadow_synthesis"
+  },
+  {
+    "deps": 21,
+    "kind": "theorem",
+    "module": "NonIsoConf3DeRhamCooperad",
+    "name": "NonIsoConf3DeRhamCooperad.non_iso_conf3_derham_cooperad_synthesis"
+  },
+  {
+    "deps": 20,
+    "kind": "theorem",
+    "module": "ContinuumAsColimitCounting",
+    "name": "ContinuumAsColimitCounting.continuum_as_four_lane_colimit_counting_synthesis"
+  },
+  {
+    "deps": 20,
+    "kind": "theorem",
+    "module": "KleinErlangenGrothendieckBridge",
+    "name": "KleinErlangenGrothendieckBridge.klein_erlangen_grothendieck_synthesis"
+  },
+  {
+    "deps": 20,
+    "kind": "theorem",
+    "module": "NonIsoConf3OrlikSolomon",
+    "name": "NonIsoConf3OrlikSolomon.non_iso_conf3_os_cooperad_synthesis"
+  },
+  {
+    "deps": 20,
+    "kind": "theorem",
+    "module": "QuadraticConfiguration3",
+    "name": "QuadraticConfiguration3.quadratic_configuration3_synthesis"
+  },
+  {
+    "deps": 19,
+    "kind": "theorem",
+    "module": "OctonionMatrixEncodings",
+    "name": "OctonionMatrixEncodings.octonion_matrix_encodings_synthesis"
+  },
+  {
+    "deps": 19,
+    "kind": "theorem",
+    "module": "SolovievQPNMChiralCuntz",
+    "name": "SolovievQPNMChiralCuntz.soloviev_qpnm_chiral_cuntz_synthesis"
+  },
+  {
+    "deps": 18,
+    "kind": "theorem",
+    "module": "BiquaternionCliffordIso",
+    "name": "BiquaternionCliffordIso.biquaternion_clifford_synthesis"
+  },
+  {
+    "deps": 18,
+    "kind": "theorem",
+    "module": "SupergradedCuntzBdG",
+    "name": "SupergradedCuntzBdG.complexStarCuntzBdGAffineEnsemble_zero_rapidity_bracket"
+  },
+  {
+    "deps": 18,
+    "kind": "theorem",
+    "module": "WeylColimitCanonicalLimit",
+    "name": "WeylColimitCanonicalLimit.finite_uhf_weyl_backbone"
+  },
+  {
+    "deps": 17,
+    "kind": "theorem",
+    "module": "BashoreLQGReportExtraction",
+    "name": "BashoreLQGReportExtraction.bashore_lqg_report_extraction_synthesis"
+  },
+  {
+    "deps": 17,
+    "kind": "theorem",
+    "module": "BogoliubovBraidGraphWeld",
+    "name": "BogoliubovBraidGraphWeld.frameColorSigma0_mu_shift"
+  },
+  {
+    "deps": 17,
+    "kind": "theorem",
+    "module": "GravitationalQuantumBraidDuality",
+    "name": "GravitationalQuantumBraidDuality.gravitational_quantum_braid_duality_synthesis"
+  },
+  {
+    "deps": 17,
+    "kind": "theorem",
+    "module": "IJIRTRiemannDigest",
+    "name": "IJIRTRiemannDigest.ijirt_riemann_digest_synthesis"
+  },
+  {
+    "deps": 17,
+    "kind": "theorem",
+    "module": "SpectralSquashCayleyDKT",
+    "name": "SpectralSquashCayleyDKT.spectral_squash_cayley_dkt_synthesis"
+  },
+  {
+    "deps": 17,
+    "kind": "theorem",
+    "module": "SupergradedCuntzBdG",
+    "name": "SupergradedCuntzBdG.complexStarCuntzBdGAffineEnsemble_logScale_bracket"
+  },
+  {
+    "deps": 16,
+    "kind": "theorem",
+    "module": "AmariChentsovFierzTorsion",
+    "name": "AmariChentsovFierzTorsion.amari_chentsov_fierz_torsion_synthesis"
+  },
+  {
+    "deps": 16,
+    "kind": "theorem",
+    "module": "ChiralTensorRecoupling",
+    "name": "ChiralTensorRecoupling.e_factors_through_cl11_atom"
+  },
+  {
+    "deps": 16,
+    "kind": "theorem",
+    "module": "ContinuumAsColimitCounting",
+    "name": "ContinuumAsColimitCounting.continuum_as_colimit_of_counting_synthesis"
+  },
+  {
+    "deps": 16,
+    "kind": "theorem",
+    "module": "PrimonCoarseGrainedHilbertPolyaPotential",
+    "name": "PrimonCoarseGrainedHilbertPolyaPotential.coarse_grained_hilbert_polya_potential_synthesis"
+  },
+  {
+    "deps": 16,
+    "kind": "theorem",
+    "module": "SupergradedCuntzBdG",
+    "name": "SupergradedCuntzBdG.cuntzBdGAffineEnsemble_zero_rapidity_bracket"
+  },
+  {
+    "deps": 16,
+    "kind": "theorem",
+    "module": "ZornParavectorNullspace",
+    "name": "ZornParavectorNullspace.zorn_paravector_nullspace_synthesis"
+  },
+  {
+    "deps": 15,
+    "kind": "theorem",
+    "module": "FiniteMatrixElementDuality",
+    "name": "FiniteMatrixElementDuality.finite_matrix_element_duality_synthesis"
+  },
+  {
+    "deps": 15,
+    "kind": "theorem",
+    "module": "ProjectiveAffineConformalClosure55",
+    "name": "ProjectiveAffineConformalClosure55.sameProjectiveLine55_refl"
+  },
+  {
+    "deps": 15,
+    "kind": "theorem",
+    "module": "RescaledPhaseVolumeCanonical",
+    "name": "RescaledPhaseVolumeCanonical.framePhaseActionGauge_mu_shift"
+  },
+  {
+    "deps": 15,
+    "kind": "theorem",
+    "module": "SouriauBiquaternionGaussian",
+    "name": "SouriauBiquaternionGaussian.souriau_biquaternion_gaussian_synthesis"
+  },
+  {
+    "deps": 15,
+    "kind": "theorem",
+    "module": "SupergradedCuntzBdG",
+    "name": "SupergradedCuntzBdG.cuntzBdGAffineEnsemble_logScale_bracket"
+  },
+  {
+    "deps": 15,
+    "kind": "theorem",
+    "module": "TKKJordanPairSocket",
+    "name": "TKKJordanPairSocket.tkk_jordan_pair_socket_synthesis"
+  },
+  {
+    "deps": 14,
+    "kind": "theorem",
+    "module": "BiquaternionLaplaceTripotent",
+    "name": "BiquaternionLaplaceTripotent.biquaternion_laplace_tripotent_synthesis"
+  },
+  {
+    "deps": 14,
+    "kind": "theorem",
+    "module": "ChiralCausalCone",
+    "name": "ChiralCausalCone.cl11_atom_to_chiral_CAR_basis"
+  },
+  {
+    "deps": 14,
+    "kind": "theorem",
+    "module": "JaynesLDDPGNSColimit",
+    "name": "JaynesLDDPGNSColimit.categorical_jaynes_lddp_colimit_carrier_synthesis"
+  },
+  {
+    "deps": 14,
+    "kind": "theorem",
+    "module": "QRootOfUnityTruncation",
+    "name": "QRootOfUnityTruncation.RootOfUnityStage.finite_root_of_unity_truncation_synthesis"
+  },
+  {
+    "deps": 14,
+    "kind": "theorem",
+    "module": "RescaledPhaseVolumeCanonical",
+    "name": "RescaledPhaseVolumeCanonical.finite_weyl_plus_abstract_rescaled_canonical"
+  },
+  {
+    "deps": 14,
+    "kind": "theorem",
+    "module": "SplitOctonionMinkowski",
+    "name": "SplitOctonionMinkowski.split_octonion_minkowski_synthesis"
+  },
+  {
+    "deps": 13,
+    "kind": "theorem",
+    "module": "BogoliubovBraidGraphWeld",
+    "name": "BogoliubovBraidGraphWeld.bogoliubov_braid_graph_synthesis"
+  },
+  {
+    "deps": 13,
+    "kind": "theorem",
+    "module": "BogoliubovWeylChemicalPotential",
+    "name": "BogoliubovWeylChemicalPotential.frame_grandCanonicalBracket_odd_odd"
+  },
+  {
+    "deps": 13,
+    "kind": "theorem",
+    "module": "ChiralTensorRecoupling",
+    "name": "ChiralTensorRecoupling.XY_add_YX"
+  },
+  {
+    "deps": 13,
+    "kind": "theorem",
+    "module": "ComplexStarCuntzRedesign",
+    "name": "ComplexStarCuntzRedesign.realLift_star_S"
+  },
+  {
+    "deps": 13,
+    "kind": "theorem",
+    "module": "ComplexStarCuntzRedesign",
+    "name": "ComplexStarCuntzRedesign.realLift_star_T"
+  },
+  {
+    "deps": 13,
+    "kind": "theorem",
+    "module": "GellMannParafermionRealizationRoutesSynthesis",
+    "name": "GellMannParafermionRealizationRoutesSynthesis.weyl_gl1_gl2_on_cantor"
+  },
+  {
+    "deps": 13,
+    "kind": "theorem",
+    "module": "MotivicHolographyGroebnerLFunction",
+    "name": "MotivicHolographyGroebnerLFunction.motivic_holography_groebner_lfunction_synthesis"
+  },
+  {
+    "deps": 13,
+    "kind": "theorem",
+    "module": "NonIsoConf3QuadricD4EPolynomial",
+    "name": "NonIsoConf3QuadricD4EPolynomial.e_polynomial_conditional_synthesis"
+  },
+  {
+    "deps": 13,
+    "kind": "theorem",
+    "module": "QSuperCuntzRegularization",
+    "name": "QSuperCuntzRegularization.q_super_cuntz_regularization_synthesis"
+  },
+  {
+    "deps": 12,
+    "kind": "theorem",
+    "module": "B3PresentedGroup",
+    "name": "B3PresentedGroup.b3_relation_holds"
+  },
+  {
+    "deps": 12,
+    "kind": "theorem",
+    "module": "BogoliubovSU3ParafermionProofChain",
+    "name": "BogoliubovSU3ParafermionProofChain.frame_colorAction_gl1_gl2"
+  },
+  {
+    "deps": 12,
+    "kind": "theorem",
+    "module": "BogoliubovWeylChemicalPotential",
+    "name": "BogoliubovWeylChemicalPotential.frame_kmsBoostFlow_eq_rindlerWeyl"
+  },
+  {
+    "deps": 12,
+    "kind": "theorem",
+    "module": "ChiralTensorRecoupling",
+    "name": "ChiralTensorRecoupling.chiral_tl_recoupling_synthesis"
+  },
+  {
+    "deps": 12,
+    "kind": "def",
+    "module": "ChiralTensorRecoupling",
+    "name": "ChiralTensorRecoupling.klein_classification"
+  },
+  {
+    "deps": 12,
+    "kind": "theorem",
+    "module": "CStarCuntzTensorQuotient",
+    "name": "CStarCuntzTensorQuotient.CStarCuntzFamily.lift_star_S"
+  }
+]

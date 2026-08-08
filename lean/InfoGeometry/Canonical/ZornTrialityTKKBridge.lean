@@ -97,7 +97,7 @@ theorem laneGrade_mirror_diagonal :
     laneGrade (laneMirror SplitOctonionLane.diagonalProjector) = z0 := by
   rfl
 
-/-- The associator witness stays in the extremal grade under the mirror. -/
+/-- The associator property stays in the extremal grade under the mirror. -/
 @[simp]
 theorem laneGrade_mirror_associator :
     laneGrade (laneMirror SplitOctonionLane.associatorWitness) = p2 := by

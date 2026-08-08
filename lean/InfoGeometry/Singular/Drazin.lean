@@ -48,7 +48,7 @@ namespace IsDrazinInverse
 variable {A D : R} {k ℓ : ℕ}
 
 /--
-Lift a Drazin witness from index `k` to any larger index `ℓ`.
+Lift a Drazin property from index `k` to any larger index `ℓ`.
 -/
 theorem lift (h : IsDrazinInverse A D k) (hkℓ : k ≤ ℓ) :
     IsDrazinInverse A D ℓ := by
@@ -120,7 +120,7 @@ lemma pow_succ_eq_of_idempotent {R : Type*} [Monoid R] {P : R}
         _ = P * P := by rw [ih]
         _ = P := hP
 
-/-- The Drazin projector attached to a Drazin witness is idempotent. -/
+/-- The Drazin projector attached to a Drazin property is idempotent. -/
 lemma drazin_projector_idempotent'
     {A D : R} {k : ℕ}
     (h : IsDrazinInverse A D k) :
@@ -130,7 +130,7 @@ lemma drazin_projector_idempotent'
     _ = A * D := by rw [h.dad_eq_d]
 
 /--
-For a positive-index Drazin witness, the mixed power collapses to the projector
+For a positive-index Drazin property, the mixed power collapses to the projector
 `A * D`.
 -/
 lemma mul_pow_eq_drazinProjector_of_pos
@@ -512,21 +512,21 @@ theorem drazinInverse_spec (A : Module.End K V) :
     IsDrazinInverse A (drazinInverse A) (drazinIndex A) :=
   (exists_drazinInverse_global A).choose_spec.choose_spec
 
-/-- Any witness at the chosen Drazin index equals the chosen Drazin inverse. -/
+/-- Any property at the chosen Drazin index equals the chosen Drazin inverse. -/
 theorem drazinInverse_eq_of_spec
     (A : Module.End K V) {D : Module.End K V}
     (hD : IsDrazinInverse A D (drazinIndex A)) :
     D = drazinInverse A := by
   exact Drazin_unique hD (drazinInverse_spec A)
 
-/-- Any Drazin witness at any index coincides with the chosen inverse. -/
+/-- Any Drazin property at any index coincides with the chosen inverse. -/
 theorem drazinInverse_eq_of_spec_any_index
     (A : Module.End K V) {D : Module.End K V} {k : ℕ}
     (hD : IsDrazinInverse A D k) :
     D = drazinInverse A := by
   exact Drazin_unique_of_indices hD (drazinInverse_spec A)
 
-/-- The chosen Drazin inverse is the unique witness at the chosen index. -/
+/-- The chosen Drazin inverse is the unique property at the chosen index. -/
 theorem drazinInverse_unique
     (A : Module.End K V) {D : Module.End K V} :
     IsDrazinInverse A D (drazinIndex A) ↔ D = drazinInverse A := by
@@ -537,7 +537,7 @@ theorem drazinInverse_unique
     rw [hD]
     exact drazinInverse_spec A
 
-/-- Existence of any Drazin witness is equivalent to equality with the chosen inverse. -/
+/-- Existence of any Drazin property is equivalent to equality with the chosen inverse. -/
 theorem drazinInverse_unique_any_index
     (A : Module.End K V) {D : Module.End K V} :
     (∃ k : ℕ, IsDrazinInverse A D k) ↔ D = drazinInverse A := by

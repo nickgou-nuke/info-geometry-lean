@@ -1,0 +1,23 @@
+[
+  {
+    "name": "ColorParafermionCuntzBusSpine.closed_color_parafermion_cuntz_bus_spine",
+    "module": "ColorParafermionCuntzBusSpine",
+    "kind": null,
+    "used_by": 1,
+    "deps": 78
+  },
+  {
+    "name": "FiniteSpinePublicationCertificate.finite_spine_publication_certificate",
+    "module": "FiniteSpinePublicationCertificate",
+    "kind": "theorem",
+    "used_by": 0,
+    "deps": 113
+  },
+  {
+    "name": "ThermodynamicNetworkSpine.closed_thermodynamic_network_spine",
+    "module": "ThermodynamicNetworkSpine",
+    "kind": null,
+    "used_by": 1,
+    "deps": 44
+  }
+]

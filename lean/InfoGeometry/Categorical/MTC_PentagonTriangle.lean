@@ -49,7 +49,7 @@ def MTC_BMatrix (q : Units ℂ) (τ s : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
 /--
 Bundled finite hypotheses for the finite Fibonacci shadow.
 
-This restores the historical input owner as a subtype: its certificate is the
+This restores the historical input owner as a subtype: its property is the
 actual square-root, fusion, and Artin equality, not a separate evidence field.
 -/
 def MTC_FiniteInput : Type _ :=

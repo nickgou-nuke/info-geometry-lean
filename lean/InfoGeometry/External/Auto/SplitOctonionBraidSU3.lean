@@ -447,7 +447,7 @@ theorem tripotentScaleDet_zero_mode :
 
 /--
 The cofactor multiplying the zero-mode factor is nonzero at `s = 0`.
-This is the algebraic certificate that the zero-mode root is simple.
+This is the algebraic property that the zero-mode root is simple.
 -/
 theorem tripotentScaleCofactor_zero :
     tripotentScaleCofactor 0 = -1 := by

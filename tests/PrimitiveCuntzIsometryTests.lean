@@ -14,16 +14,16 @@ noncomputable section
 #check P_L_mul_P_R_eq_zero
 
 example {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
-    [UHF : UHFAlgebra A] :
+    [UHF : CuntzIsometryData A] :
     P_L (A := A) + P_R (A := A) = 1 :=
   cuntz_partition_exactness (A := A)
 
 example {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
-    [UHF : UHFAlgebra A] :
+    [UHF : CuntzIsometryData A] :
     star (UHFAlgebra.S_L (A := A)) * UHFAlgebra.S_R (A := A) = 0 :=
   cuntz_orthogonality (A := A)
 
 example {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
-    [UHF : UHFAlgebra A] :
+    [UHF : CuntzIsometryData A] :
     P_L (A := A) * P_R (A := A) = 0 :=
   P_L_mul_P_R_eq_zero (A := A)

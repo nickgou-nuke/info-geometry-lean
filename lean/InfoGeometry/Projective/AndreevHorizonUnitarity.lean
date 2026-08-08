@@ -22,11 +22,11 @@ import InfoGeometry.Projective.BlackHoleUnitarityBridge
 - Construct a physical event-horizon scattering model from geometric hypotheses.
 - Prove that such a model is equivalent to a superconducting Andreev boundary.
 - Relate the finite condensate marker below to a genuine BEC/Cooper-pair field.
-- Connect boundary Majorana zero modes to a certified de Rham Betti computation.
+- Connect boundary Majorana zero modes to a property de Rham Betti computation.
 
 This module records the finite algebraic core of the Andreev-horizon analogy.
 The map `(e, h) ↦ (-h, e)` is the same two-coordinate particle-hole rotation
-used by the finite BdG/Andreev witness.  It squares to `-id`, has fourth power
+used by the finite BdG/Andreev property.  It squares to `-id`, has fourth power
 `id`, and matches the concrete `2 × 2` Möbius centralizer readout.
 
 No theorem here proves Hawking radiation, black-hole unitarity, or a literal

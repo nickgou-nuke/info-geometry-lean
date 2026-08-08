@@ -1,0 +1,68 @@
+import TwelveFoldCharacteristicPolynomial
+import Mathlib.RingTheory.Polynomial.Cyclotomic.Basic
+import Mathlib.RingTheory.RootsOfUnity.Complex
+import Mathlib.RingTheory.ZMod.UnitsCyclic
+
+/-!
+# Explicit twelfth cyclotomic arithmetic
+
+This owner keeps the scalar polynomial identities over `ℤ` separate from the
+noncommutative matrix carrier.  The explicit polynomials are the six divisor
+sectors of `X^12 - 1`; the matrix minimal polynomial is handled by the
+certified complex spectral owner.
+-/
+
+noncomputable section
+namespace TwelveFoldCyclotomicPolynomial
+
+open Polynomial
+
+def phiOne : ℤ[X] := X - 1
+def phiTwo : ℤ[X] := X + 1
+def phiThree : ℤ[X] := X ^ 2 + X + 1
+def phiFour : ℤ[X] := X ^ 2 + 1
+def phiSix : ℤ[X] := X ^ 2 - X + 1
+def phiTwelve : ℤ[X] := X ^ 4 - X ^ 2 + 1
+
+theorem X12_sub_one_factorization :
+    X ^ 12 - 1 = phiOne * phiTwo * phiThree * phiFour * phiSix * phiTwelve := by
+  simp only [phiOne, phiTwo, phiThree, phiFour, phiSix, phiTwelve]
+  ring
+
+theorem phiTwelve_eq_phiSix_comp_X_sq :
+    phiTwelve = phiSix.comp (X ^ 2) := by
+  simp [phiTwelve, phiSix]
+  ring
+
+theorem phiTwelve_eq_phiSix_X_sq :
+    phiTwelve = X ^ 4 - X ^ 2 + 1 := by
+  rfl
+
+/-- The certified complex minimal polynomial has the two six-state sheet factors. -/
+theorem masterTwelve_minpoly_factor (ω : ℂ)
+    (hω : ω ^ 2 + ω + 1 = 0) :
+    minpoly ℂ TwelveFoldSheetColorOmega.masterTwelve =
+      (X ^ 3 - C (1 : ℂ)) * (X ^ 3 - C Complex.I) := by
+  simpa using TwelveFoldCharacteristicPolynomial.masterTwelve_minpoly ω hω
+
+theorem masterTwelve_charpoly_factor (ω : ℂ)
+    (hω : ω ^ 2 + ω + 1 = 0) :
+    TwelveFoldSheetColorOmega.masterTwelve.charpoly =
+      (X ^ 3 - C (1 : ℂ)) * (X ^ 3 - C Complex.I) := by
+  simpa using TwelveFoldCharacteristicPolynomial.masterTwelve_charpoly ω hω
+
+theorem complex_conjugation_inverts_root_of_unity
+    {ζ : ℂˣ} {n : ℕ} [NeZero n]
+    (hζ : ζ ∈ rootsOfUnity n ℂ) :
+    (starRingEnd ℂ) ζ = ζ⁻¹ := by
+  exact Complex.conj_rootsOfUnity hζ
+
+theorem zmod12_units_card : Fintype.card (ZMod 12)ˣ = 4 := by
+  rw [ZMod.card_units_eq_totient 12]
+  decide
+
+theorem zmod12_unit_square_eq_one (u : (ZMod 12)ˣ) : u ^ 2 = 1 := by
+  native_decide +revert
+
+end TwelveFoldCyclotomicPolynomial
+end noncomputable section

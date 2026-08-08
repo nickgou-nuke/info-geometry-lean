@@ -77,7 +77,7 @@ abbrev SplitCliffordCurrentMorphism : Type :=
   AffineCurrentDatum SplitCliffordInfinity SplitCliffordInfinity
 
 /--
-Concrete witness of the split completion current boundary.
+Concrete property of the split completion current boundary.
 
 This is the actual owner object for the split completion current boundary. It is the maximal
 current-layer surface currently supported by the split completion file.

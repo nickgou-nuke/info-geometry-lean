@@ -1,0 +1,380 @@
+{
+  "declarations": 10725,
+  "modules": 238,
+  "kinds": {
+    "def": 5288,
+    "inductive": 267,
+    "other": 730,
+    "theorem": 4440
+  },
+  "duplicate_edges_removed": 0,
+  "auto_generated_hint_count": 4421,
+  "zero_dep_user_theorem_count": 167,
+  "files_scanned": 180,
+  "modules_scanned_for_vacuity": 238,
+  "modules_with_vacuity_reports": 180,
+  "top_modules_by_decl_count": [
+    {
+      "module": "CliffordAlgebra",
+      "decls": 448
+    },
+    {
+      "module": "SplitClifford",
+      "decls": 372
+    },
+    {
+      "module": "QuadraticConfiguration3",
+      "decls": 290
+    },
+    {
+      "module": "NonIsoConf3DeRhamCooperad",
+      "decls": 287
+    },
+    {
+      "module": "SupergradedCuntzBdG",
+      "decls": 256
+    },
+    {
+      "module": "PenroseSpinTilingConfig",
+      "decls": 237
+    },
+    {
+      "module": "ChemicalPotentialDeRhamG0Bridge",
+      "decls": 193
+    },
+    {
+      "module": "ThermodynamicTKKBridge",
+      "decls": 181
+    },
+    {
+      "module": "JaynesLeanColimitBridge",
+      "decls": 165
+    },
+    {
+      "module": "NonIsoConf3OrlikSolomon",
+      "decls": 159
+    },
+    {
+      "module": "TrainsumQuanticsTensorTrainsDigest",
+      "decls": 159
+    },
+    {
+      "module": "InfiniteLightConeConfColimit",
+      "decls": 149
+    },
+    {
+      "module": "TopologicalAndreevPump",
+      "decls": 145
+    },
+    {
+      "module": "LightConeConf3DeRhamCooperad",
+      "decls": 142
+    },
+    {
+      "module": "TripotentCliffordColimit",
+      "decls": 131
+    },
+    {
+      "module": "EntropicChiralDeRhamDictionary",
+      "decls": 130
+    },
+    {
+      "module": "TKKJordanPairSocket",
+      "decls": 129
+    },
+    {
+      "module": "QuaternionQuanticsBackendDigest",
+      "decls": 128
+    },
+    {
+      "module": "HillWheelerProjection",
+      "decls": 122
+    },
+    {
+      "module": "CooperadEnvironmentalRank32",
+      "decls": 121
+    },
+    {
+      "module": "Mirror31PSLnQFlowToy",
+      "decls": 115
+    },
+    {
+      "module": "Clifford55",
+      "decls": 114
+    },
+    {
+      "module": "SplitOctonionBraidSU3",
+      "decls": 108
+    },
+    {
+      "module": "StimulatedScatteringAmplituhedron",
+      "decls": 105
+    },
+    {
+      "module": "NonAbelianBrillouinKleinBottle",
+      "decls": 104
+    },
+    {
+      "module": "XanaduSpinNetworkCodeDigest",
+      "decls": 103
+    },
+    {
+      "module": "NonIsoConf3QuadricD4Model",
+      "decls": 99
+    },
+    {
+      "module": "NuclearWallpaperSpectraClassification",
+      "decls": 96
+    },
+    {
+      "module": "AlgebraicCuntzQuotient",
+      "decls": 95
+    },
+    {
+      "module": "HestenesCuntzPhaseSpace",
+      "decls": 93
+    }
+  ],
+  "top_vacuity_modules": [
+    {
+      "module": "NonIsoConf3QuadricD4Model",
+      "score": 0.55,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/NonIsoConf3QuadricD4Model.lean"
+      ]
+    },
+    {
+      "module": "ChiralB3PresentedBridge",
+      "score": 0.4,
+      "findings": 2,
+      "files": [
+        "/home/goutev/auto/proofs/ChiralB3PresentedBridge.lean"
+      ]
+    },
+    {
+      "module": "GellMannCartan",
+      "score": 0.4,
+      "findings": 2,
+      "files": [
+        "/home/goutev/auto/proofs/GellMannCartan.lean"
+      ]
+    },
+    {
+      "module": "KTheoryChernConfinementSignature",
+      "score": 0.4,
+      "findings": 2,
+      "files": [
+        "/home/goutev/auto/proofs/KTheoryChernConfinementSignature.lean"
+      ]
+    },
+    {
+      "module": "SupergradedCuntzBdG",
+      "score": 0.4,
+      "findings": 2,
+      "files": [
+        "/home/goutev/auto/proofs/SupergradedCuntzBdG.lean"
+      ]
+    },
+    {
+      "module": "TrainsumQuanticsTensorTrainsDigest",
+      "score": 0.4,
+      "findings": 2,
+      "files": [
+        "/home/goutev/auto/proofs/TrainsumQuanticsTensorTrainsDigest.lean"
+      ]
+    },
+    {
+      "module": "AlgebraicCuntzQuotient",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/AlgebraicCuntzQuotient.lean"
+      ]
+    },
+    {
+      "module": "AmariChentsovFierzTorsion",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/AmariChentsovFierzTorsion.lean"
+      ]
+    },
+    {
+      "module": "ArtinCentralizerMonodromy",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/ArtinCentralizerMonodromy.lean"
+      ]
+    },
+    {
+      "module": "B3PresentedGroup",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/B3PresentedGroup.lean"
+      ]
+    },
+    {
+      "module": "BogoliubovSU3ParafermionWeld",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/BogoliubovSU3ParafermionWeld.lean"
+      ]
+    },
+    {
+      "module": "BogoliubovWeylChemicalPotential",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/BogoliubovWeylChemicalPotential.lean"
+      ]
+    },
+    {
+      "module": "BraidedCocycleWilsonEntropy",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/BraidedCocycleWilsonEntropy.lean"
+      ]
+    },
+    {
+      "module": "BuresInformationGeodesicFlow",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/BuresInformationGeodesicFlow.lean"
+      ]
+    },
+    {
+      "module": "CP3CantorGeometricObstruction",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/CP3CantorGeometricObstruction.lean"
+      ]
+    },
+    {
+      "module": "CantorBoundaryCuntzFamily",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/CantorBoundaryCuntzFamily.lean"
+      ]
+    },
+    {
+      "module": "ChiralCausalCone",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/ChiralCausalCone.lean"
+      ]
+    },
+    {
+      "module": "ChiralTensorRecoupling",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/ChiralTensorRecoupling.lean"
+      ]
+    },
+    {
+      "module": "Clifford55",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/Clifford55.lean"
+      ]
+    },
+    {
+      "module": "ComplexStarCuntzRedesign",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/ComplexStarCuntzRedesign.lean"
+      ]
+    },
+    {
+      "module": "CooperadEnvironmentalRank32",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/CooperadEnvironmentalRank32.lean"
+      ]
+    },
+    {
+      "module": "CuntzP6MWallpaperBoundary",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/CuntzP6MWallpaperBoundary.lean"
+      ]
+    },
+    {
+      "module": "CurryHowardLambekColimit",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/CurryHowardLambekColimit.lean"
+      ]
+    },
+    {
+      "module": "DikinGoutevTonevBridge",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/DikinGoutevTonevBridge.lean"
+      ]
+    },
+    {
+      "module": "EntropicChiralDeRhamDictionary",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/EntropicChiralDeRhamDictionary.lean"
+      ]
+    },
+    {
+      "module": "EuclideanNilpotentObstruction",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/EuclideanNilpotentObstruction.lean"
+      ]
+    },
+    {
+      "module": "GNSQuotientFinite",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/GNSQuotientFinite.lean"
+      ]
+    },
+    {
+      "module": "GaugeUHFLift",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/GaugeUHFLift.lean"
+      ]
+    },
+    {
+      "module": "GoutevTonevPrinciple",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/GoutevTonevPrinciple.lean"
+      ]
+    },
+    {
+      "module": "HestenesCuntzPhaseSpace",
+      "score": 0.35,
+      "findings": 1,
+      "files": [
+        "/home/goutev/auto/proofs/HestenesCuntzPhaseSpace.lean"
+      ]
+    }
+  ]
+}

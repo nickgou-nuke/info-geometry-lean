@@ -43,7 +43,7 @@ def OnLeeYangCircle (z : ℂ) : Prop :=
 The Cayley maps are inverse away from the pole `s = 1`.
 
 Lean's field division is total, so the pole is recorded explicitly as a
-hypothesis.
+property.
 -/
 theorem cayleyToTemperature_cayleyToFugacity
     (s : ℂ)
@@ -57,7 +57,7 @@ theorem cayleyToTemperature_cayleyToFugacity
 The inverse Cayley maps are inverse away from the pole `z = -1`.
 
 Lean's field division is total, so the pole is recorded explicitly as a
-hypothesis.
+property.
 -/
 theorem cayleyToFugacity_cayleyToTemperature
     (z : ℂ)
@@ -132,7 +132,7 @@ theorem cayleyToFugacity_mem_unitCircle_iff_criticalLine
 The inverse Cayley transform maps the Lee--Yang unit circle back to the
 critical line.
 
-The hypothesis `z.re ≠ -1` excludes the point `z = -1`, where
+The property `z.re ≠ -1` excludes the point `z = -1`, where
 `s = z / (1 + z)` is singular. On the unit circle this is the same excluded
 endpoint of the Cayley chart.
 -/

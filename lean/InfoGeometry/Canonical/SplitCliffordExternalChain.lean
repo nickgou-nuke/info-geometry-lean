@@ -47,7 +47,7 @@ open VirasoroProject
 
 set_option synthInstance.maxHeartbeats 200000
 
-/-- The concrete split-`Cl(1,1)` datum already yields a primitive Majorana CAR witness. -/
+/-- The concrete split-`Cl(1,1)` datum already yields a primitive Majorana CAR property. -/
 theorem splitClifford_cl11_majorana_car
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     InfoGeometry.Quantum.RealMajoranaCategory.MajoranaCARWitness
@@ -318,7 +318,7 @@ theorem splitClifford_fiveGraded_witten_virasoro_chain
           Unit (fun _ _ => ())
     · constructor
       · exact finiteRealMajoranaWittenIndex_cancel P hP
-      · exact virasoro_project_is_certified
+      · exact virasoro_project_is_property
 
 /--
 Split-Clifford CAR anchor plus the external Heisenberg/Sugawara owner surface.
@@ -358,9 +358,9 @@ theorem splitClifford_externalHeisenbergSugawara_chain
 /--
 The literature-facing bosonization spine:
 
-- the split triality channels are the concrete CAR witness;
+- the split triality channels are the concrete CAR property;
 - the split supercharge lane already carries the CAR/CCR oscillator spine;
-- the external Heisenberg/Sugawara implementation is independently certified,
+- the external Heisenberg/Sugawara implementation is independently property,
   including the concrete Verma-to-Fock highest-weight map.
 
 This theorem is a theorem-only bundle of the already proved source and target

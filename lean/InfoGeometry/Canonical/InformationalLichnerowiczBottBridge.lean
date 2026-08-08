@@ -9,7 +9,7 @@ open scoped InnerProductSpace
 # InfoGeometry.Canonical.InformationalLichnerowiczBottBridge
 
 Thin descent bridge from the owned operatorial transport Lichnerowicz lane
-(`InformationalLichnerowicz`) to the Bott capstone closure witness
+(`InformationalLichnerowicz`) to the Bott capstone closure property
 `LichnerowiczBalancedCl11`.
 
 This file does not add a new ontology. It only packages the precise
@@ -38,7 +38,7 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 
 /--
 Compatibility data needed to descend the operatorial transport Lichnerowicz lane
-to the Bott `LichnerowiczBalancedCl11` witness.
+to the Bott `LichnerowiczBalancedCl11` property.
 -/
 @[rep_depth transport]
 def InformationalLichnerowiczBottCompatibility

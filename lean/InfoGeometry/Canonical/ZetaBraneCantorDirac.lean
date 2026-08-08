@@ -9,7 +9,7 @@ Lean skeleton for the Cantor/Dirac zeta-brane program.
 
 This file packages the architecture as a theorem-safe interface:
 * a generic `CantorDiracProgram` spine;
-* a finite Möbius/Fock toy carrier;
+* a non-commutative Operator Z_2-grading (Witten index);
 * a socketed finite-operator equivalence target.
 
 The actual Cantor--Dirac zeta-brane socket remains in
@@ -38,45 +38,28 @@ theorem RH_from_CantorDiracProgram
   exact (selfAdjoint_iff_critical s).1
     (zero_implies_selfAdjoint s hz)
 
-/-! ## Finite Möbius/Fock toy carrier -/
+/-! ## Non-commutative Operatorial Möbius Parity (Witten Index) -/
 
-/-- A finite Boolean Fock state. -/
-abbrev FockState (N : ℕ) := Fin N → Bool
+/--
+The classical commutative `Fin N → Bool` toy carrier has been eradicated.
+Möbius parity is now represented strictly by a non-commutative $\mathbb{Z}_2$-grading
+operator $\Gamma$ (the Witten index) on the Dirac sector.
+-/
+structure OperatorMobiusParity (Operator : Type*) [Monoid Operator] where
+  parity : Operator
+  is_involution : parity * parity = 1
 
-/-- Occupation number at a site. -/
-def occupationNumber {N : ℕ} (ε : FockState N) (i : Fin N) : ℕ :=
-  if ε i then 1 else 0
+/-- Möbius parity operator squares to the identity. -/
+theorem mobiusParity_sq {Operator : Type*} [Monoid Operator]
+    (Γ : OperatorMobiusParity Operator) :
+    Γ.parity * Γ.parity = 1 :=
+  Γ.is_involution
 
-theorem occupationNumber_eq_one_or_zero
-    {N : ℕ} (ε : FockState N) (i : Fin N) :
-    occupationNumber ε i = 1 ∨ occupationNumber ε i = 0 := by
-  by_cases h : ε i <;> simp [occupationNumber, h]
-
-theorem occupationNumber_le_one
-    {N : ℕ} (ε : FockState N) (i : Fin N) :
-    occupationNumber ε i ≤ 1 := by
-  by_cases h : ε i <;> simp [occupationNumber, h]
-
-/-- Total fermion number. -/
-def fermionNumber {N : ℕ} (ε : FockState N) : ℕ :=
-  ∑ i : Fin N, occupationNumber ε i
-
-/-- Möbius parity readout on the finite Fock cube. -/
-def mobiusParity {N : ℕ} (ε : FockState N) : ℤ :=
-  if Even (fermionNumber ε) then 1 else -1
-
-/-- Möbius parity squares to one. -/
-theorem mobiusParity_sq {N : ℕ} (ε : FockState N) :
-    mobiusParity ε * mobiusParity ε = 1 := by
-  unfold mobiusParity
-  by_cases h : Even (fermionNumber ε) <;> simp [h]
-
-theorem mobiusParity_ne_zero {N : ℕ} (ε : FockState N) :
-    mobiusParity ε ≠ 0 := by
-  intro h
-  have hs := mobiusParity_sq ε
-  rw [h, zero_mul] at hs
-  norm_num at hs
+/-- Möbius parity is invertible (and thus non-zero in non-trivial rings). -/
+theorem mobiusParity_isUnit {Operator : Type*} [Monoid Operator]
+    (Γ : OperatorMobiusParity Operator) :
+    IsUnit Γ.parity :=
+  ⟨⟨Γ.parity, Γ.parity, Γ.is_involution, Γ.is_involution⟩, rfl⟩
 
 /- Finite operator equivalence. -/
 

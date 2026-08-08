@@ -99,7 +99,7 @@ def RHScaleBoundary (D : MobiusMertensData) : Prop :=
 Finite or asymptotic entropy-defect readout for the Mertens lane.
 
 The fields are numerical readouts only; their analytic meaning is supplied by
-the witness fields in `MertensLDPBoundary`.
+the property fields in `MertensLDPBoundary`.
 -/
 structure MertensDefectReadout (D : MobiusMertensData) where
   entropyBarrier : ℝ
@@ -148,7 +148,7 @@ structure MertensLDPBoundary (D : MobiusMertensData) where
 
 namespace MertensLDPBoundary
 
-/-- Extract the RH-scale Mertens boundary from an LDP certificate. -/
+/-- Extract the RH-scale Mertens boundary from an LDP property. -/
 theorem RHScaleBoundary_of_entropyDominance
     {D : MobiusMertensData}
     (B : MertensLDPBoundary D)
@@ -169,7 +169,7 @@ structure MertensBoundaryPacket where
   mertensData : MobiusMertensData
   boundary : RHScaleBoundary mertensData
 
-/-- Build a boundary packet from an LDP witness. -/
+/-- Build a boundary packet from an LDP property. -/
 def MertensBoundaryPacket.ofLDP
     (D : MobiusMertensData)
     (B : MertensLDPBoundary D)

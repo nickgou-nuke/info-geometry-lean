@@ -10,7 +10,7 @@ This module is deliberately small.  It formalizes the statement:
 
 It does not identify the survivor with a center, horizon, winding number,
 natural cone, BPS charge, or any other model-specific invariant.  Those
-identifications require separate witness structures.
+identifications require separate property structures.
 -/
 
 import Mathlib.Tactic

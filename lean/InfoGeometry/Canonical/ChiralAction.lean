@@ -75,7 +75,7 @@ Proof-carrying unit-relative-volume route for the chiral Dirac collapse.
 
 This keeps the older equality-based theorem for compatibility, but the new
 branch accepts the constructive `UnitRelativeVolumeBit` packet instead of a bare
-`relativeVolumeChangeRN n M = 1` hypothesis.
+`relativeVolumeChangeRN n M = 1` property.
 -/
 theorem chiralDirac_eq_of_unitRelativeVolumeBit
     {n : Nat}

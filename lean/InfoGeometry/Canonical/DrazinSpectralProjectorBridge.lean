@@ -7,7 +7,7 @@ import InfoGeometry.Meta.Architecture
 Load-bearing downstream consumer of `DrazinSpectralBridge`.
 
 This file turns the bundled infinite-dimensional spectral package at `0` into
-explicit projector-level consequences for the recovered Drazin witness:
+explicit projector-level consequences for the recovered Drazin property:
 
 - idempotence of the regular projector `P`,
 - idempotence of the defect projector `P₀`,
@@ -25,7 +25,7 @@ variable {𝕂 E : Type*} [NormedField 𝕂] [NormedAddCommGroup E] [NormedSpace
 variable {T : E →L[𝕂] E}
 
 /--
-From isolation at `0` plus finite ascent/descent, recover a Drazin witness
+From isolation at `0` plus finite ascent/descent, recover a Drazin property
 together with the full regular/defect projector algebra.
 -/
 @[rep_depth operator]
@@ -57,8 +57,8 @@ theorem exists_drazinInverse_with_projector_split_of_zeroIsolatedInSpectrum_fini
   · exact IsDrazinInverse.projection_add_complementaryProjection (a := T.toLinearMap) (b := TD)
 
 /--
-From the bundled spectral package at `0`, recover a Drazin witness together
-with the full regular/defect projector algebra on the same witness.
+From the bundled spectral package at `0`, recover a Drazin property together
+with the full regular/defect projector algebra on the same property.
 -/
 @[rep_depth operator]
 theorem exists_drazinInverse_with_projector_split_of_zeroIsolatedInSpectrum_package
@@ -86,7 +86,7 @@ theorem exists_drazinInverse_with_projector_split_of_zeroIsolatedInSpectrum_pack
 
 /--
 Projection-only corollary of the spectral package:
-recover idempotence of the regular projector on the chosen Drazin witness.
+recover idempotence of the regular projector on the chosen Drazin property.
 -/
 @[rep_depth operator]
 theorem exists_drazin_projection_idempotent_of_zeroIsolatedInSpectrum_package

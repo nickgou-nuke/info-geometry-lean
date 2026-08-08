@@ -21,7 +21,7 @@ or evaluate the large-`N` central-charge anomaly.
 The finite algebraic content is:
 
 * split-Majorana OPE laws are supplied by `PrimeMajoranaOPE`;
-* current OPE/current-action laws are supplied as witness fields;
+* current OPE/current-action laws are supplied as property fields;
 * affine Kac--Moody and Virasoro brackets are supplied by
   `AffineVirasoroBridgeDatum`;
 * the Sugawara mode-sum identity is supplied by
@@ -49,7 +49,7 @@ carrier.  The repository now contains owner-side same-mode and off-diagonal
 current-action laws for `j_p = c_p d_p`, together with specialized transport of
 those laws into the symbolic `MobiusCurrentOPE` socket in a concrete owner
 corridor.  This file still keeps the symbolic current socket and the level-one
-current-current OPE as witness fields because it does not yet choose a
+current-current OPE as property fields because it does not yet choose a
 Laurent-series/OPE realization identifying this symbolic carrier with the
 concrete owner current and its level-one current-current law.
 -/
@@ -529,15 +529,15 @@ end PrimeSugawaraVirasoroPacket
 The canonical VirasoroProject realization is available to this prime bridge.
 
 This theorem does not instantiate the prime OPE packet.  It records that the
-Virasoro owner surface used downstream has a certified concrete realization.
+Virasoro owner surface used downstream has a property concrete realization.
 -/
 @[rep_depth operator]
-theorem virasoro_project_owner_certified :
+theorem virasoro_project_owner_property :
     ∃ V : VirasoroDatum (VirasoroProject.VirasoroAlgebra ℝ),
       InfoGeometry.OperatorAlgebra.VirasoroProjectBridge.VirasoroProjectRealizes V :=
-  InfoGeometry.OperatorAlgebra.VirasoroProjectBridge.virasoro_project_is_certified
+  InfoGeometry.OperatorAlgebra.VirasoroProjectBridge.virasoro_project_is_property
 
-/-- The certified Heisenberg Sugawara owner has central charge `1`. -/
+/-- The property Heisenberg Sugawara owner has central charge `1`. -/
 @[rep_depth operator]
 theorem heisenberg_sugawara_centralCharge_eq_one :
     InfoGeometry.OperatorAlgebra.VirasoroProjectBridge.heisenbergSugawaraDatum.centralCharge = 1 :=

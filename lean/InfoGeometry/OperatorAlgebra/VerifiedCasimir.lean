@@ -6,7 +6,7 @@ Eliminating the Dark Energy Shadow.
 
 Following the Erlangen Program for Operator Algebras, geometry is defined
 as the algebraic invariants of the symmetry action.  The Casimir element
-is the fundamental constructive witness for this geometry.
+is the fundamental constructive property for this geometry.
 -/
 
 import Mathlib.Algebra.Ring.Defs

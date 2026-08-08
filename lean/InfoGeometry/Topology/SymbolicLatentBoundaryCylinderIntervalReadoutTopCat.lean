@@ -5,7 +5,7 @@ import Mathlib
 # Interval-valued readout for the symbolic-latent boundary cylinder
 
 The interval readout is expressed directly over a native pushout cocone and
-its `IsColimit` witness.  No readout or pushout evidence packet is needed.
+its `IsColimit` property.  No readout or pushout evidence packet is needed.
 -/
 
 noncomputable section

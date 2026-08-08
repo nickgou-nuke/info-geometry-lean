@@ -20,7 +20,7 @@ paper's Section 7 abstracts:
 * the first explicit low-anyon templates (`n = 5,6,7,8`) as finite examples.
 
 The determinant recurrence from the paper is represented here only as an
-assumption-carrying schedule interface.  This file does not derive a general
+property-carrying schedule interface.  This file does not derive a general
 matrix family or a theorem that the paper's determinant schedule follows from
 repository-owned monodromy data.
 

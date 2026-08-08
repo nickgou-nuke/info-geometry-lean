@@ -86,7 +86,7 @@ theorem B_matrix_eq_FRF (q qInv τ sqrtτ : K) :
 
 /--
 The finite adjacent Artin relation for the Fibonacci `R` and `B` matrices,
-closed only from the explicit raw matrix equality supplied as a hypothesis.
+closed only from the explicit raw matrix equality supplied as a property.
 -/
 theorem fibonacci_artin_relation (q qInv τ sqrtτ : K)
     (hArtin :

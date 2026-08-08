@@ -1,0 +1,23 @@
+{
+  "github_links": [
+    "https://github.com/leanprover-community/mathlib",
+    "https://github.com/cmu-phil/Spectral",
+    "https://github.com/jeremyong/gal",
+    "https://github.com/eric-wieser/lean-matrix-cookbook",
+    "https://github.com/laffernandes/gatl",
+    "https://github.com/eric-wieser/lean-graded-rings",
+    "https://github.com/pygae/lean-ga"
+  ],
+  "concepts": [
+    "Spin Group",
+    "Universal property",
+    "universal property",
+    "Grade involution",
+    "Lipschitz group",
+    "grade involution",
+    "bilinear form",
+    "Bilinear Form"
+  ],
+  "total_pages": 217,
+  "char_count": 516478
+}

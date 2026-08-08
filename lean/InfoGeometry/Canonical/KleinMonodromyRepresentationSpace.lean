@@ -6,7 +6,7 @@ import InfoGeometry.Topology.ProjectiveKleinCompactification
 # Klein monodromy representation space
 
 Direct algebraic theorems for the Klein relation, projective central sign, and
-finite rational matrix model.  No finite witness or descent-contract packet is
+finite rational matrix model.  No finite property or descent-contract packet is
 used.
 -/
 

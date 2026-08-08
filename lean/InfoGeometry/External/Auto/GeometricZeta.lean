@@ -82,7 +82,7 @@ theorem geometric_lightcone_iff_det_zero (σ γ : ℝ) :
 def riemann_zeros_to_lightcones_model (Z : ℂ → ℂ) : Prop :=
   ∀ s, Z s = 0 → (paravector_temperature s.re s.im).parabolic
 
-/-- The core Layer-12 assertion, kept as a model-theoretic axiom field. -/
+/-- The core Layer-12 assertion, kept as a model-theoretic ax!om field. -/
 theorem riemann_zeros_are_lightcones {Z : ℂ → ℂ}
     (H : riemann_zeros_to_lightcones_model Z) :
     ∀ s, Z s = 0 → (paravector_temperature s.re s.im).parabolic := by

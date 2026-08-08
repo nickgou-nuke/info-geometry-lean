@@ -6,7 +6,7 @@ Chiral lightcone stage for the Stinespring-Tomita clinch.
 This module formalizes the statement:
 
   observed absorption/loss is a deficit in the visible chiral lightcone branch;
-  with a Stinespring-Tomita dilation witness, that deficit is accounted for by
+  with a Stinespring-Tomita dilation property, that deficit is accounted for by
   a mirrored hidden/environment/commutant component.
 
 The module does not claim that every absorbing process is automatically a

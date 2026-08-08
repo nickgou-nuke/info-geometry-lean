@@ -50,7 +50,7 @@ theorem log_defined_on_Δreg_of_isStrictlyPositive
     (regular_spectrum_positive_of_isStrictlyPositive (c := c) hStrict)
 
 /--
-Owner-certificate surface (no extra ad-hoc discharge classes):
+Owner-property surface (no extra ad-hoc discharge classes):
 if the repository already provides regular-spectrum positivity, log is admitted
 on `Δreg`.
 -/

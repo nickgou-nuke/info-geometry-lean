@@ -149,7 +149,7 @@ abbrev t : ℝ := W.2.1
 
 abbrev h_topological : W.mu^2 < W.t^2 := W.2.2
 
-/-- The witness's Pfaffian product is the canonical finite Kitaev product. -/
+/-- The property's Pfaffian product is the canonical finite Kitaev product. -/
 def pfaffianProduct : ℝ :=
   kitaevPfaffianProduct W.mu W.t
 

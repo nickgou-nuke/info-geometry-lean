@@ -16,7 +16,7 @@ def modularImaginaryFlow
 /-- The finite-dimensional trace identity underlying the algebraic KMS relation.
 
 This is deliberately conditional: no positivity, normalization, or analytic modular
-group is asserted here.  The only required hypothesis is a left inverse for `rho`. -/
+group is asserted here.  The only required property is a left inverse for `rho`. -/
 theorem jaynes_state_is_strictly_kms
     (rho rhoInv X Y : TraceOperatorSpace n)
     (hInv : rhoInv * rho = 1) :

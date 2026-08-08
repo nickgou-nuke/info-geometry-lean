@@ -14,7 +14,7 @@ The module keeps three claims separate:
 - super-moment/stress/supercurrent data are explicit projections;
 - grand-canonical Fock dynamics is the existing operator `H - mu N_B`, with an
   optional odd source term;
-- Fermi/Pauli behavior is carried only by a genuine CAR hypothesis or by the
+- Fermi/Pauli behavior is carried only by a genuine CAR property or by the
   concrete split-`Cl(1,1)` CAR construction.  It is not inferred from the
   doubled-projector super branch.
 -/
@@ -255,7 +255,7 @@ noncomputable def cliffordConcreteFermionicCAROperatorPair :
 /--
 Concrete CAR packet supplied by the split-`Cl(1,1)` construction.
 
-This replaces the abstract Pauli/Fermi hypothesis with the existing
+This replaces the abstract Pauli/Fermi property with the existing
 dimension-agnostic doubled real Krein construction.
 -/
 @[rep_depth krein]
@@ -358,8 +358,8 @@ end WeylSupertraceFreeStressContext
 /-! ## Constructive stress/supertrace packet from the identity-balanced lane -/
 
 /--
-Concrete scalar stress package used to expose a supertrace-free stress witness
-without a separate balance hypothesis.
+Concrete scalar stress package used to expose a supertrace-free stress property
+without a separate balance property.
 
 This is still dimension-agnostic: the scalars are readouts of a doubled-carrier
 moment object, not entries of a finite stress matrix.
@@ -484,7 +484,7 @@ def toContext (S : IdentityBalancedStressSeed G Gdual Orbit) :
     S.stressTensorProjection S.point
 
 /--
-The seed-backed context is supertrace-free without an extra hypothesis field.
+The seed-backed context is supertrace-free without an extra property field.
 -/
 @[rep_depth thermo]
 theorem toContext_superTrace_eq_zero (S : IdentityBalancedStressSeed G Gdual Orbit) :
@@ -512,7 +512,7 @@ Constructive readback from the identity-balanced seed to the full
 supertrace-free/Weyl-invariant stress packet.
 
 This removes the need to carry an explicit
-`WeylSupertraceFreeStressContext BalancedScalarStress` hypothesis on the
+`WeylSupertraceFreeStressContext BalancedScalarStress` property on the
 identity-balanced branch: both required fields are derived from the seed.
 -/
 @[rep_depth thermo]

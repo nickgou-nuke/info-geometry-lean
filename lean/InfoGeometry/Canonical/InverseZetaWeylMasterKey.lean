@@ -18,7 +18,7 @@ This file stays theorem-safe:
 * the finite Weyl-denominator/parity-supertrace identity is carried by the
   existing Weyl-supertrace owner;
 * the analytic inverse-zeta statement remains an explicit `GradedPartitionFunction`
-  witness rather than a global RH theorem.
+  property rather than a global RH theorem.
 
 It does not prove analytic continuation, the full Weyl character formula, or
 the continuum Hilbert-Polya conjecture.
@@ -28,7 +28,7 @@ the continuum Hilbert-Polya conjecture.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 `wittenIndex_eq_inverseZeta` depends on the explicit
-`GradedPartitionFunction` witness and the supplied equality between the local
+`GradedPartitionFunction` property and the supplied equality between the local
 Witten-index readout and its supertrace.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
@@ -77,7 +77,7 @@ theorem mobius_parity_eq_fermionParity :
       fermionParity P.primeRegister :=
   mobius_representedNat_eq_fermionParity P.primeRegister
 
-/-- The graded partition supertrace recovers the inverse-zeta witness. -/
+/-- The graded partition supertrace recovers the inverse-zeta property. -/
 @[rep_depth thermo]
 theorem wittenIndex_eq_inverseZeta :
     P.wittenIndex = P.gradedPartition.zeta_inverse := by
@@ -89,7 +89,7 @@ end MasterKeyPacket
 Finite theorem packet for the inverse-zeta / Witten / Weyl master key.
 
 The claims are exactly the already-owned finite theorem surfaces, conjoined so
-the boundary between finite proof and analytic witness stays explicit.
+the boundary between finite proof and analytic property stays explicit.
 -/
 @[rep_depth thermo]
 theorem master_key_summary (P : MasterKeyPacket) :

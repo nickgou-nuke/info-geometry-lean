@@ -246,7 +246,7 @@ theorem exists_internal_split_with_intrinsic_nonScalar_shadow
     hIdx⟩
 
 /--
-Strict non-scalarity witness for the intrinsic transported defect shadow.
+Strict non-scalarity property for the intrinsic transported defect shadow.
 
 This closes the remaining naming-vs-proof gap: the "intrinsic non-scalar"
 shadow is formally non-scalar whenever:
@@ -269,7 +269,7 @@ theorem intrinsic_nonScalar_shadow_nonScalar
       (A := A) (B := B) CIK X hX hCharge hQ0ne0 hQ0ne1
 
 /--
-Integrated intrinsic bridge + strict non-scalarity witness.
+Integrated intrinsic bridge + strict non-scalarity property.
 -/
 @[rep_depth transport]
 theorem exists_internal_split_with_intrinsic_nonScalar_shadow_and_nonScalar

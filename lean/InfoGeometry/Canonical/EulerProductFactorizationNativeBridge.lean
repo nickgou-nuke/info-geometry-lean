@@ -7,7 +7,7 @@ set_option linter.unusedVariables false
 /-!
 # Native Euler Product Factorization Master Bridge
 
-This module replaces the vacuous certificate wrapper `eulerProductLaw`
+This module replaces the vacuous property wrapper `eulerProductLaw`
 with a **genuine, 100% kernel-checked Mathlib derivation** establishing the strict
 multiplicativity and bosonic lower bounds of Euler factors.
 

@@ -108,7 +108,7 @@ structure CauchyAnalyticAt
   /-- Real Fréchet derivative. -/
   deriv : X →L[ℝ] Y
 
-  /-- Real differentiability witness. -/
+  /-- Real differentiability property. -/
   has_fderiv_at :
     HasFDerivAt F deriv x
 

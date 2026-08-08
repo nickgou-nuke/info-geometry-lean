@@ -1,7 +1,7 @@
 import InfoGeometry.OperatorAlgebra.D4StarFiniteCrossedProduct
 
 /-!
-# Covariance witness for the finite D₄ crossed-product carrier
+# Covariance property for the finite D₄ crossed-product carrier
 
 The finite crossed-product carrier retains the triality action through the
 covariance relation between a group unitary and an outer-vertex projection.

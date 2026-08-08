@@ -1,0 +1,18 @@
+R = QQ[q1,p1,r1,s1];
+sigma1 = q1*s1 - p1*r1;
+sigma2 = q1*s1 + 0 - p1*r1 - 0;
+assert(sigma2 - sigma1 == 0);
+block0 = 32^0;
+block1 = 32^1;
+block2 = 32^2;
+cl55Dim = 2^10;
+assert(block0 == 1);
+assert(block1 == 32);
+assert(block2 == 1024);
+assert(cl55Dim == block2);
+W = QQ[x, dx, WeylAlgebra => {x=>dx}];
+I = ideal(x*dx - dx*x - 1);
+M = W^1 / image matrix{{x*dx - dx*x - 1}};
+assert(numgens I == 1);
+assert(rank source presentation M == 1);
+print {sigmaPreserved=>sigma2-sigma1, block0=>block0, block1=>block1, block2=>block2, cl55Dim=>cl55Dim, dmoduleCCRGenerators=>numgens I};

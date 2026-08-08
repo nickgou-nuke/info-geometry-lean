@@ -29,7 +29,7 @@ def projectorPlucker (n0 n1 n2 n3 : ℕ+) : Plucker6 Op where
 /--
 The ordered difference-Plücker expression is the sum of three commutator
 defects.  Hence it vanishes when `e₁`, `e₂`, and `e₃` commute.  The base point
-`e₀` cancels without an additional hypothesis.
+`e₀` cancels without an additional property.
 -/
 theorem differencePlucker_on_klein_of_commute
     {A : Type*} [Ring A] (e0 e1 e2 e3 : A)

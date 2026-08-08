@@ -144,7 +144,7 @@ theorem tomita_odd_owner_readout
 /--
 Finite anomaly-cancellation readout from the Souriau/Dirac/Hodge owner.
 
-The statement keeps every nontrivial geometric assumption explicit.
+The statement keeps every nontrivial geometric property explicit.
 -/
 theorem finite_anomaly_cancellation_owner_readout
     (tilt D proj : Matrix (Fin 2) (Fin 2) ℂ)

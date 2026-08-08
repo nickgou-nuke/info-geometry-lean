@@ -164,7 +164,7 @@ theorem complementaryProjection_mapsTo_drazinCore
   simpa using congrArg (fun f : Module.End K V => f x) hPowMul
 
 /--
-For a Drazin witness, the complementary projector range equals the generalized
+For a Drazin property, the complementary projector range equals the generalized
 kernel `ker(A^k)`.
 
 This is the canonical operatorial form of the "Drazin core" split.

@@ -10,7 +10,7 @@ This module formalizes the algebraic core only:
 * the closure-fixed diagonal mode `electron + hole`;
 * the anti-fixed orthogonal mode `electron - hole`;
 * a BdG Hamiltonian ledger where particle-hole symmetry flips energy;
-* a witness-gated Majorana zero-mode and vortex-core memory layer.
+* a property-gated Majorana zero-mode and vortex-core memory layer.
 
 No Navier-Stokes regularity statement is asserted.
 No claim is made that every vortex hosts a Majorana zero mode.
@@ -218,7 +218,7 @@ end BdGHamiltonianLedger
 /-! ## 4. Majorana zero-mode witnesses -/
 
 /--
-A Majorana zero-mode witness.
+A Majorana zero-mode property.
 
 This is intentionally proof-bearing:
 
@@ -240,7 +240,7 @@ variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 variable {B : BdGHamiltonianLedger V}
 
 /--
-Construct a Majorana zero-mode witness from an Andreev pair, provided the
+Construct a Majorana zero-mode property from an Andreev pair, provided the
 diagonal mode is zero-energy for the supplied BdG Hamiltonian.
 -/
 def ofAndreevPair
@@ -259,10 +259,10 @@ theorem theta_mode_eq_mode
 
 end MajoranaZeroMode
 
-/-! ## 5. Vortex-core memory, witness-gated (Native Closure Mandated: Closure Debt) -/
+/-! ## 5. Vortex-core memory, property-gated (Native Closure Mandated: Closure Debt) -/
 
 /--
-A witness that a particular vortex core carries a Majorana zero mode.
+A property that a particular vortex core carries a Majorana zero mode.
 
 This is deliberately not derived from the mere existence of a vortex. In
 physical models, vortex-core Majorana modes require topological superconducting
@@ -294,12 +294,12 @@ variable
 
 variable (W : VortexCoreMajoranaWitness Core V B)
 
-/-- The vortex-core witness supplies a BdG zero mode. -/
+/-- The vortex-core property supplies a BdG zero mode. -/
 theorem core_mode_zero :
     B.IsZeroMode W.majorana.mode :=
   W.majorana.zero_energy
 
-/-- The vortex-core witness supplies particle-hole self-conjugacy. -/
+/-- The vortex-core property supplies particle-hole self-conjugacy. -/
 theorem core_mode_fixed :
     W.majorana.mode ∈ B.Fixed :=
   W.majorana.fixed

@@ -40,7 +40,7 @@ The key data are:
 * a Bayesian update map;
 * an equality saying the Bayesian update of the previous density is the JKO
   next density;
-* an explicit compatibility certificate;
+* an explicit compatibility property;
 * a dual-flat orthogonality law for feasible alternatives.
 -/
 structure MajoranaJKOErgoBridge
@@ -87,8 +87,8 @@ structure MajoranaJKOErgoBridge
   Compatibility law identifying the supplied JKO update with the supplied
   latent Bregman/Bayesian update.
 
-  This is the ergo-transfer certificate: continuous transport and discrete
-  projection are the same update only in models that provide this witness.
+  This is the ergo-transfer property: continuous transport and discrete
+  projection are the same update only in models that provide this property.
   -/
   jko_bayes_compatibility :
     bayesUpdate jko.previous = jko.next
@@ -96,7 +96,7 @@ structure MajoranaJKOErgoBridge
   /--
   Dual-flat projection orthogonality for feasible alternatives.
 
-  This is the exact hypothesis needed to turn the Bayes/JKO update into a
+  This is the exact property needed to turn the Bayes/JKO update into a
   Bregman Pythagorean identity.
   -/
   projection_orthogonality :
@@ -166,7 +166,7 @@ theorem bayesUpdate_minimizing
 The Souriau/metriplectic total flow is the sum of reversible and dissipative
 pieces.
 
-This is re-exported from the stored flow witness.
+This is re-exported from the stored flow property.
 -/
 theorem totalFlow_eq_add_at
     (ρ : Density State) :
@@ -328,7 +328,7 @@ the Majorana/Hestenes carrier lane.
 
 This does not create another density-level `MajoranaJKOErgoBridge`. It connects
 the already existing `OperatorJKOArgmin`/`JKOBayesianCalibration` layer to a
-dual-flat projection certificate and re-exports the Majorana phase-axis carrier.
+dual-flat projection property and re-exports the Majorana phase-axis carrier.
 -/
 structure OperatorJKOBayesMajoranaBridge
     (Weight Evidence : Type*)
@@ -404,7 +404,7 @@ theorem jko_penalty_le_energy_drop
       B.potential.energy (B.bayes.jkoStep prior evidence).next :=
   B.bayes.jko_penalty_le_energy_drop prior evidence
 
-/-- Projection orthogonality, re-exports from the adapter witness. -/
+/-- Projection orthogonality, re-exports from the adapter property. -/
 theorem projection_orthogonality_apply
     (prior alt : Weight)
     (evidence : Evidence)
@@ -652,7 +652,7 @@ theorem scalarJKOUniqueOwnerTarget :
   exact P.step_unique_minimizer hmin
 
 /--
-Owner target for the Majorana/JKO/Ergo bridge once a bridge witness is supplied.
+Owner target for the Majorana/JKO/Ergo bridge once a bridge property is supplied.
 
 This records the constructive payload of the bridge: JKO minimization,
 Bayesian/Bregman projection, and the installed Bayes/JKO compatibility law.

@@ -428,7 +428,7 @@ structure DissipativeChannel
   actual : Sys →L[ℝ] Sys
   ideal : Sys →L[ℝ] Sys
 
-/-! ## 9. Stinespring/Tomita dilation witness -/
+/-! ## 9. Stinespring/Tomita dilation property -/
 
 /--
 Stinespring/Tomita dilation of a dissipative channel.
@@ -685,7 +685,7 @@ variable
 
 /--
 Visible distinguishability cannot exceed the ideal budget once the contraction
-witness is supplied.
+property is supplied.
 -/
 theorem actual_distinguishability_le_ideal
     (L : VisibleDistinguishabilityLoss Sys C Dg)
@@ -916,7 +916,7 @@ end StinespringInformationDilation
 /--
 Owner target for the Stinespring/Tomita dilation layer.
 
-It is witness-gated: once the dilation is supplied, the visible deficit is
+It is property-gated: once the dilation is supplied, the visible deficit is
 identified with recovered hidden flow.
 -/
 def StinespringDilationOwnerTarget : Prop :=

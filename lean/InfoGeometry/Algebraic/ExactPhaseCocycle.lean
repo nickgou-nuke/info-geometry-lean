@@ -6,7 +6,7 @@ Exact phase formulation for the modular Berry cocycle.
 This file is intentionally contract-first:
 - it defines the automorphic factor and the phase rotor carrier;
 - it packages the exact phase lift as a cocycle only under an explicit
-  compatibility hypothesis;
+  compatibility property;
 - it does not claim a branch-cut theorem without hypotheses.
 -/
 
@@ -64,7 +64,7 @@ theorem exactBerryPhase_one
   unfold exactBerryPhase automorphicFactor
   simp [PhaseRotorGroup.phase_zero]
 
-/-- Compatibility hypothesis for the exact phase lift.
+/-- Compatibility property for the exact phase lift.
 
 This is the honest Lean boundary: branch-cut and additivity behavior are not
 asserted silently; they are packaged as an explicit condition.
@@ -72,7 +72,7 @@ asserted silently; they are packaged as an explicit condition.
 The explicit branch-compatible cocycle law for the exact phase readout.
 
 This is a direct proposition rather than a one-field evidence wrapper.  The
-law is not supplied by the bare `Complex.arg` API: it remains an assumption
+law is not supplied by the bare `Complex.arg` API: it remains an property
 until a branch-choice theorem for the automorphic factor is proved. -/
 def ExactPhaseCompatibility {R : Type*} [PhaseRotorGroup R] (k : ℤ) : Prop :=
   ∀ γ δ : ModularGroup, ∀ τ : UpperHalfPlane,
@@ -95,7 +95,7 @@ end ExactPhaseCompatibility
 /--
 Exact phase cocycle packaged as a `MulActionCocycle`.
 
-The cocycle structure is obtained from the explicit compatibility hypothesis.
+The cocycle structure is obtained from the explicit compatibility property.
 -/
 def exactModularBerryCocycle
     {R : Type*} [PhaseRotorGroup R] {k : ℤ}

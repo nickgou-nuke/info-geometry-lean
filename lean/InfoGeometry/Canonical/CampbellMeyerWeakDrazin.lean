@@ -105,7 +105,7 @@ def weakDrazinInverse : Mat3 ℚ :=
      0, 0, 0;
      0, 0, 0]
 
-/-- The Drazin witness satisfies the usual Drazin equations at index `2`. -/
+/-- The Drazin property satisfies the usual Drazin equations at index `2`. -/
 theorem weakDrazinInverse_isDrazin :
     Drazin.IsDrazinInverse weakA weakDrazinInverse 2 := by
   refine Drazin.IsDrazinInverse.mk ?_ ?_ ?_
@@ -113,7 +113,7 @@ theorem weakDrazinInverse_isDrazin :
   · native_decide
   · native_decide
 
-/-- The Drazin witness is therefore a weak Drazin inverse. -/
+/-- The Drazin property is therefore a weak Drazin inverse. -/
 theorem weakDrazinInverse_isWeak :
     IsWeakDrazin weakA weakDrazinInverse 2 :=
   Drazin_isWeakDrazin weakDrazinInverse_isDrazin

@@ -8,7 +8,7 @@ import InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 /-!
 # InfoGeometry.Canonical.PrimeCl11ModularAtom
 
-Prime-local `Cl(1,1)` modular atom and CPT wavelet witness surface.
+Prime-local `Cl(1,1)` modular atom and CPT wavelet property surface.
 
 This file formalizes the theorem-safe algebraic core of the proposed prime
 atom:
@@ -16,7 +16,7 @@ atom:
 * a local `Cl(1,1)`-style atom with generators `c` and `d`;
 * the Möbius parity element `c * d` and its involutive square;
 * a continuous CPT symmetry packet;
-* a Laplace--Mellin wavelet witness packet that keeps the CPT/Lee--Yang
+* a Laplace--Mellin wavelet property packet that keeps the CPT/Lee--Yang
   interface explicit.
 
 It does not prove any prime-to-`xi` convergence theorem, Lee--Yang stability,
@@ -99,9 +99,9 @@ def canonicalContinuousCPTSymmetry : ContinuousCPTSymmetry :=
     z_inversion := fun z => z⁻¹ }
 
 /--
-Laplace--Mellin discrete Hurwitz wavelet witness.
+Laplace--Mellin discrete Hurwitz wavelet property.
 
-The wavelet packet is deliberately witness-gated: paraunitarity is recorded as
+The wavelet packet is deliberately property-gated: paraunitarity is recorded as
 an analytic invariant, but the prime-to-`xi` convergence statement is not
 claimed here.
 -/

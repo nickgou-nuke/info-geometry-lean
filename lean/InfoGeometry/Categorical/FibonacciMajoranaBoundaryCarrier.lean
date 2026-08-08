@@ -12,7 +12,7 @@ Fibonacci braid observable with a boundary Majorana operator.  It records the
 safe combined readout currently supported by the repo:
 
 * the Fibonacci carrier has a Hilbert self-dual cone;
-* the installed boundary owner gives an actual nonzero kernel witness for the
+* the installed boundary owner gives an actual nonzero kernel property for the
   open-chain operator.
 -/
 

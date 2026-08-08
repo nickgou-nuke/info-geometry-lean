@@ -25,7 +25,7 @@ For the concrete split-`Cl(1,1)` CAR pair, Lean proves the Tomita swap
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 For an arbitrary vector space, the same even/odd conclusions require an
-explicit `TomitaLadderPair` witness saying that the supplied linear mirror
+explicit `TomitaLadderPair` property saying that the supplied linear mirror
 swaps the supplied creation and annihilation vectors.
 
 #### BUCKET 3: OPEN CLOSURE DEBT

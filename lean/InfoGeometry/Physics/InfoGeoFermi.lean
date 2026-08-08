@@ -51,7 +51,7 @@ theorem fermi_isometry_invariance (g0 : L)
   rfl
 
 /-- In the abstract zero-metric baseline there is no Gamow-Teller metric
-deformation witness.  Concrete nonzero deformation must use the Zorn metric. -/
+deformation property.  Concrete nonzero deformation must use the Zorn metric. -/
 theorem no_gt_metric_deformation_for_zero_metric
     (T : L →ₗ[R] L)
     (hT : ∀ ψ : TKKNuclearState L, T ψ.state_vector ≠ 0) :

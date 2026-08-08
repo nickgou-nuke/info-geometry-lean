@@ -66,7 +66,7 @@ theorem flowInvariantAtScale_of_invariantAtScale
 
 /--
 A Hurwitz-shell invariant flow yields a concrete modular/Clifford invariance
-witness by taking the modular transport to be the identity family.
+property by taking the modular transport to be the identity family.
 -/
 theorem modularCliffordFlowInvariantAtScale_of_invariantAtScale
     (flow : InformationFlow E) (scale0 : ℝ)

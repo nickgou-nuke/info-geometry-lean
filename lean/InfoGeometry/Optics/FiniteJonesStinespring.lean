@@ -9,7 +9,7 @@ This file proves the finite optical conservation identity:
       =>
   1 - R† R = V† V.
 
-The theorem is constructive and contains no physical witness socket.
+The theorem is constructive and contains no physical property socket.
 Physical interpretations such as "metal lattice", "heat", or "commutant" are
 added in later calibration layers.
 -/
@@ -57,7 +57,7 @@ Finite Stinespring isometry pair.
 `R` is the visible optical channel.
 `V` is the hidden/environment channel.
 
-The only hypothesis is the constructive conservation law
+The only property is the constructive conservation law
 `R†R + V†V = 1`.
 -/
 abbrev StinespringIsometry

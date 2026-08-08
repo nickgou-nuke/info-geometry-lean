@@ -3,7 +3,7 @@ import Mathlib.Tactic
 /-!
 # InfoGeometry.GromovWittenErlangen.LieOrbitCurveWitness
 
-Theorem-safe witness surface for the Klein--Gromov synthesis:
+Theorem-safe property surface for the Klein--Gromov synthesis:
 
 * homogeneous/projective targets with torus-fixed sectors;
 * one-dimensional torus-orbit curve edges;
@@ -11,7 +11,7 @@ Theorem-safe witness surface for the Klein--Gromov synthesis:
 * localization graph sectors for GW-style fixed-sector sums.
 
 This module does not assert a full Gromov--Witten localization theorem. It
-records explicit combinatorial/algebraic witness data used by later owner-level
+records explicit combinatorial/algebraic property data used by later owner-level
 constructions.
 -/
 
@@ -71,7 +71,7 @@ abbrev GKMOrbitCurveWitness (G T Target : Type*) :=
   LieOrbitCurveWitness G T Target
 
 /--
-Localization graph witness for fixed-sector contributions.
+Localization graph property for fixed-sector contributions.
 
 Vertices are fixed sectors; edges are orbit sectors between vertices.
 -/

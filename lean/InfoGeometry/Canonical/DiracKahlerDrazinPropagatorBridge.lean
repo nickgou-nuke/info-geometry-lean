@@ -7,7 +7,7 @@ import InfoGeometry.Canonical.Drazin
 Bridging the Hestenes-Krein real substrate with the Dirac-Kahler propagator
 using the Drazin generalized inverse.
 
-The Drazin witness supplies a commuting core projector and a generalized
+The Drazin property supplies a commuting core projector and a generalized
 inverse law. This file records those finite algebraic readouts only; it does
 not assert a QFT Green's-function, Feynman boundary-condition, or analytic
 propagator theorem.
@@ -40,7 +40,7 @@ theorem dirac_drazin_comm
     D * G = G * D :=
   hProp.comm
 
-/- The generalized inverse law supplied by the Drazin witness. -/
+/- The generalized inverse law supplied by the Drazin property. -/
 theorem dirac_drazin_idempotent
     (D G : Module.End ℝ C) (k : ℕ)
     (hProp : isDiracKahlerPropagator D G k) :

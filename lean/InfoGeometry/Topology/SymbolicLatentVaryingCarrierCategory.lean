@@ -337,7 +337,7 @@ theorem indexedQuotientAmbientReadout_viaRange_stage
   intro x
   rfl
 
-/-! A filtered-index witness layer.  The `IsFiltered` witness is kept as
+/-! A filtered-index property layer.  The `IsFiltered` property is kept as
 metadata; all colimit statements are inherited from the generic indexed
 bridge above, without adding any unsupported closure or convergence claim. -/
 structure FilteredIndexedSymbolicLatentDiagram (J : Type) [Category J]

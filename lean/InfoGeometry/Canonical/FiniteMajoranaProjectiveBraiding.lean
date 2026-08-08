@@ -13,7 +13,7 @@ This file adds a purely finite/projective wrapper around
 
 A projective gate is then `phase w • readout (evalBraidWord w)`.  The only
 invariance claims proved here are finite rewrite invariances, either under an
-explicit phase-invariance hypothesis or when the phase itself factors through
+explicit phase-invariance property or when the phase itself factors through
 `evalBraidWord`.
 
 No anyon category.

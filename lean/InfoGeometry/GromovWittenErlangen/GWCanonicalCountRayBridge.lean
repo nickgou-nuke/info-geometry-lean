@@ -58,11 +58,11 @@ structure GWCanonicalCountRayBridge
   ref :
     RelativeCounts n
 
-  /-- Positivity witness for the localized count profile. -/
+  /-- Positivity property for the localized count profile. -/
   counts_pos :
     ∀ i : Fin n, 0 < counts i
 
-  /-- Positivity witness for the reference count profile. -/
+  /-- Positivity property for the reference count profile. -/
   ref_pos :
     ∀ i : Fin n, 0 < ref i
 

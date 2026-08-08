@@ -91,8 +91,8 @@ structure FractalScaleProjectionData where
   stageProjection : ∀ n : ℕ, StageTotal n → StageBase n
   TotalLimit : Type w
   BaseLimit : Type z
-  stageToLimit : ∀ n : ℕ, StageTotal n → TotalLimit
-  baseToLimit : ∀ n : ℕ, StageBase n → BaseLimit
+  stageToLimit : (n : ℕ) → StageTotal n → TotalLimit
+  baseToLimit : (n : ℕ) → StageBase n → BaseLimit
   limitProjection : TotalLimit → BaseLimit
   projection_commutes :
     ∀ (n : ℕ) (x : StageTotal n),

@@ -5,7 +5,7 @@ import InfoGeometry.Topology.SymbolicLatentModularReversalOrbitClosureTopCat
 # `TopCat` surface for compatible-family reversal
 
 This is the categorical readout of the explicit reversal adapter.  It keeps
-the fixed-point hypothesis visible and does not assert existence of a
+the fixed-point property visible and does not assert existence of a
 canonical mirror or of a state space.
 -/
 

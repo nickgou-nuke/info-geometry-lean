@@ -6,7 +6,7 @@ import Mathlib.RingTheory.Derivation.Basic
 
 Coordinate-free Souriau beta-field seed.
 
-This file keeps the formalism index-free and witness-driven:
+This file keeps the formalism index-free and property-driven:
 
 * beta is a tangent-bundle section (`M → T`),
 * metric constraints are stated by bilinear pairings and bracket actions,

@@ -4,7 +4,7 @@ InfoGeometry/Topological/RealCuspLimitT.lean
 Boundary cusp theorem for the real modular readout.
 
 The theorem is intentionally small:
-- the algebraic lane provides the `T`-identity hypothesis;
+- the algebraic lane provides the `T`-identity property;
 - the topological lane reduces the cusp limit to `tendsto_const_nhds`.
 -/
 

@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.LieFenchelQuadratic
 /-!
 # InfoGeometry.Canonical.SO3RotationFenchelWitness
 
-Concrete `SO(3)`-style witness (z-axis rotations) on `Fin 3 → ℝ`.
+Concrete `SO(3)`-style property (z-axis rotations) on `Fin 3 → ℝ`.
 
 This module proves:
 * explicit rotation action formulas,

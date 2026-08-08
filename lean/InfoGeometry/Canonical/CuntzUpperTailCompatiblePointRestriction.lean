@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.CuntzCompatiblePointLimit
 /-!
 # Restriction of compatible Cuntz inverse-limit points to upper tails
 
-This owner connects the generic compatible Cuntz witness family on the full
+This owner connects the generic compatible Cuntz property family on the full
 inductive system to the corresponding family on an upper tail.  The result is
 an equality of actual `TopCat` inverse-limit readouts, obtained by the limit
 universal property.
@@ -35,7 +35,7 @@ variable [∀ n, PartialOrder (Stage n)]
 variable [∀ n, StarOrderedRing (Stage n)]
 variable (T : CuntzStarTower Stage)
 
-/-- Restrict a compatible Cuntz witness family to the stages at or above `m`. -/
+/-- Restrict a compatible Cuntz property family to the stages at or above `m`. -/
 def upperTailCompatibleCuntzPointFamily
     (family : CompatibleCuntzPointFamily T.toContinuousStarInductiveSystem)
     (m : ℕ) :

@@ -118,13 +118,13 @@ variable {State LieAlgebra LieDual Obs : Type*}
 
 /--
 Adapter tying the same Souriau partition/Massieu owner to an existing
-KL-as-Bregman witness.
+KL-as-Bregman property.
 -/
 @[rep_depth thermo]
 structure MassieuPlanckBregmanBridge extends
     MassieuPlanckWeylScalarCalibration (State := State) (LieAlgebra := LieAlgebra)
       (Obs := Obs) where
-  /-- Existing Souriau KL/Bregman owner witness. -/
+  /-- Existing Souriau KL/Bregman owner property. -/
   bregman : SouriauKLBregmanWitness State LieAlgebra LieDual
 
   /-- Calibration: both packets use the same Massieu potential. -/

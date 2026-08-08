@@ -34,7 +34,7 @@ variable (F : TwistedBerryCurvature gbz)
     ω (gbz.glide k) = - ω k :=
   hω k
 
-/-- The structure-field witness promotes to the explicit oddness predicate. -/
+/-- The structure-field property promotes to the explicit oddness predicate. -/
 theorem twistedBerryCurvature_isGlideOdd : IsGlideOddCurvature gbz F.curvature := by
   exact F.h_twisted
 
@@ -51,7 +51,7 @@ This forces the Nielsen-Ninomiya total chirality to be measured
 in twisted (co)homology (modulo 2) rather than Z.
 
 Mathlib root:
-* `glide_odd_curvature_strictly_odd` is the explicit oddness hypothesis readout;
+* `glide_odd_curvature_strictly_odd` is the explicit oddness property readout;
 * `Mathlib.Data.Real.Basic` supplies `add_neg_cancel`, closing the cancellation.
 -/
 theorem glide_odd_curvature_cancellation

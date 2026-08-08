@@ -44,7 +44,7 @@ noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
 Context surface for the claim that the zeta-regularized Casimir residual is the
 informational cosmological constant on the operatorial Drazin/Weyl lane.
 
-The equality is a hypothesis field.  The surrounding fields are the concrete
+The equality is a property field.  The surrounding fields are the concrete
 operatorial data needed to route the residual through the existing Drazin cut
 and sourced modular generator.
 -/
@@ -59,7 +59,7 @@ structure CasimirWeylDrazinData (CIK : CertifiedInverseKernel H₂) where
 
 namespace CasimirWeylDrazinData
 
-/-- Drazin-core projector on the certified inverse-kernel lane. -/
+/-- Drazin-core projector on the property inverse-kernel lane. -/
 @[rep_depth operator]
 noncomputable abbrev drazinCoreProjector (CIK : CertifiedInverseKernel H₂) : EndH :=
   CertifiedInverseKernel.spectralProjector CIK
@@ -205,7 +205,7 @@ theorem sourcedGenerator_eq_background_iff_observerDefectResidual_eq_zero
 Compressed-deviation-zero is exactly the Drazin-complement boundary-excitation
 background-collapse surface on the owner lane. This removes the intermediate
 `observerDefectResidual = 0` packet for callers that already own the smaller
-compressed commutator witness.
+compressed commutator property.
 -/
 @[rep_depth transport]
 theorem sourcedGenerator_boundary_excitation_eq_background_iff_compressedDeviation_eq_zero
@@ -355,7 +355,7 @@ theorem sourcedGenerator_boundary_excitation_eq_background_of_observerDefectResi
 
 /--
 Under zero central defect, Drazin-complement boundary excitation collapse is
-already equivalent to the smaller owner-side scalarized observer strain witness.
+already equivalent to the smaller owner-side scalarized observer strain property.
 This removes the larger explicit `ObserverDeviationControlledByZD` packet on the
 exact zero-`Z_D` lane.
 -/
@@ -395,7 +395,7 @@ theorem sourcedGenerator_boundary_excitation_eq_background_of_strain_eq_zero_of_
 Compressed-deviation-zero is exactly the sourced-generator/background-collapse
 surface on the owner lane. This removes the intermediate
 `observerDefectResidual = 0` packet for callers that already own the smaller
-compressed commutator witness.
+compressed commutator property.
 -/
 @[rep_depth transport]
 theorem sourcedGenerator_eq_background_iff_compressedDeviation_eq_zero
@@ -538,7 +538,7 @@ theorem sourcedGenerator_eq_background_of_observerDefectResidual_norm_le_ZD_of_Z
 /--
 Under zero central defect, sourced-generator collapse is equivalent to zero
 scalarized observer strain. This narrows the explicit `ObserverDeviationControlledByZD`
-packet to the smaller owner-side strain witness.
+packet to the smaller owner-side strain property.
 -/
 @[rep_depth transport]
 theorem sourcedGenerator_eq_background_iff_strain_eq_zero_of_ZD_eq_zero
@@ -570,7 +570,7 @@ theorem sourcedGenerator_eq_background_of_strain_eq_zero_of_ZD_eq_zero
 
 /--
 Under zero central defect, the existence of an explicit owner-side
-`ObserverDeviationControl` witness packet already forces sourced-generator
+`ObserverDeviationControl` property packet already forces sourced-generator
 collapse to the background flow. This removes the need for callers to reopen
 `observerOrientationStrain_eq_zero_iff_nonempty_control_of_ZD_eq_zero` or carry
 an intermediate bare strain equality on the exact zero-`Z_D` lane.
@@ -590,7 +590,7 @@ theorem sourcedGenerator_eq_background_iff_nonempty_control_of_ZD_eq_zero
 
 /--
 Under zero central defect, the existence of an explicit owner-side
-`ObserverDeviationControl` witness packet already forces sourced-generator
+`ObserverDeviationControl` property packet already forces sourced-generator
 collapse to the background flow. This removes the need for callers to reopen
 `observerOrientationStrain_eq_zero_iff_nonempty_control_of_ZD_eq_zero` or carry
 an intermediate bare strain equality on the exact zero-`Z_D` lane.

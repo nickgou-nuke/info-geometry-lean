@@ -17,7 +17,7 @@ It records:
 
 It does not identify the fixed boundary with a center, horizon, winding number,
 BPS charge, natural cone, or Shilov boundary unless a separate model supplies
-that witness.
+that property.
 -/
 
 import Mathlib.Tactic
@@ -34,7 +34,7 @@ set_option linter.dupNamespace false
 /-! ## 1. Self-dual chiral cone boundary datum -/
 
 /--
-A witness-gated self-dual chiral cone boundary.
+A property-gated self-dual chiral cone boundary.
 
 `cone = dualCone` records self-duality at the level of the chosen model.
 `boundaryOf` is the horizon/boundary predicate. The closure involution exchanges

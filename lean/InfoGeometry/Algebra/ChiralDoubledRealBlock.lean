@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.RealDoubledKreinMirror
 noncomputable section
 
 /-!
-# A doubled real Nambu--Gorkov block witness
+# A doubled real Nambu--Gorkov block property
 
 On `H × H`, the swap is a real-linear involution.  The diagonal sign is the
 Krein symmetry and half of it is the integer charge clock, so an off-diagonal

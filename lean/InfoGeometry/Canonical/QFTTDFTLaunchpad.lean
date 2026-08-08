@@ -10,7 +10,7 @@ This module now exposes only the primitives that still have real downstream
 consumers:
 
 - the Hohenberg-Kohn duality state predicate
-- the Runge-Gross stationary dual-map state predicate and its basic stationarity witness
+- the Runge-Gross stationary dual-map state predicate and its basic stationarity property
 -/
 
 namespace InfoGeometry.Canonical.QFTTDFTLaunchpad

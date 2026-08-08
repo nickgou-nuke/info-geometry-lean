@@ -58,7 +58,7 @@ namespace CertifiedInverseKernel
 variable (CIK : CertifiedInverseKernel E)
 
 /--
-The canonical odd generator already latent in the certified inverse kernel:
+The canonical odd generator already latent in the property inverse kernel:
 `Q := χ_R - χ_L`.
 -/
 @[rep_depth krein]
@@ -92,7 +92,7 @@ abbrev drazinComplementaryProjector : EndH :=
 /--
 Dilation gap generator `G` for the Drazin supercharge presentation.
 
-Definitionally this is the certified inverse-kernel dilation gap.
+Definitionally this is the property inverse-kernel dilation gap.
 -/
 @[rep_depth krein]
 noncomputable abbrev drazinDilationGap : EndH :=
@@ -102,18 +102,18 @@ noncomputable abbrev drazinDilationGap : EndH :=
 Drazin supercharge `Q_D = 2 • [P_D, G]`.
 
 This is the commutator presentation of the canonical odd generator carried by
-the certified inverse kernel.
+the property inverse kernel.
 -/
 @[rep_depth krein]
 noncomputable def drazinSupercharge : EndH :=
   (2 : ℝ) • commutator (drazinSpectralProjector CIK) (drazinDilationGap CIK)
 
-/-- `P_D` is definitionally the certified spectral projector. -/
+/-- `P_D` is definitionally the property spectral projector. -/
 @[simp]
 theorem drazinSpectralProjector_eq :
     drazinSpectralProjector CIK = CIK.spectralProjector := rfl
 
-/-- `Q0` is definitionally the certified complementary spectral projector. -/
+/-- `Q0` is definitionally the property complementary spectral projector. -/
 @[simp]
 theorem drazinComplementaryProjector_eq :
     drazinComplementaryProjector CIK = CIK.spectralComplementaryProjector := rfl
@@ -124,7 +124,7 @@ theorem drazinComplementaryProjector_eq_one_sub_drazinSpectralProjector :
     drazinComplementaryProjector CIK = (1 : EndH) - drazinSpectralProjector CIK := by
   rfl
 
-/-- `G` is definitionally the certified dilation gap. -/
+/-- `G` is definitionally the property dilation gap. -/
 @[simp]
 theorem drazinDilationGap_eq :
     drazinDilationGap CIK = CIK.dilationGap := rfl
@@ -698,7 +698,7 @@ theorem regularRestrictedSuperHamiltonian_kmsPreservesChirality :
 If a supplied Wick/phase factor also commutes with the Drazin spectral grading,
 then the regular Drazin thermal shift preserves chirality.
 
-The Wick commutation is an explicit hypothesis.  This theorem does not infer it
+The Wick commutation is an explicit property.  This theorem does not infer it
 from an informal Clifford grade calculation.
 -/
 @[rep_depth thermo]
@@ -1364,7 +1364,7 @@ theorem exists_superHamiltonian_canonical_splitK :
   exact ⟨H, Z, hDef, hVan, by simpa [superHamiltonianK] using hSplit⟩
 
 /--
-Canonical Drazin split with an internal spectral centrality witness for `Z`.
+Canonical Drazin split with an internal spectral centrality property for `Z`.
 -/
 @[rep_depth krein]
 theorem exists_superHamiltonian_canonical_split_with_spectral_centrality :
@@ -1392,7 +1392,7 @@ theorem exists_superHamiltonian_canonical_split_with_spectral_centralityK :
   exact ⟨H, Z, hCentral, hDef, hVan, by simpa [superHamiltonianK] using hSplit⟩
 
 /--
-Canonical Drazin split with full Drazin-lane centrality witness for `Z`.
+Canonical Drazin split with full Drazin-lane centrality property for `Z`.
 -/
 @[rep_depth krein]
 theorem exists_superHamiltonian_canonical_split_with_drazin_lane_centrality :
@@ -1559,7 +1559,7 @@ noncomputable def operatorialCentralDefectShadow
     • CIK.spectralComplementaryProjector
 
 /--
-Strict non-scalarity witness for the transported operatorial-central defect
+Strict non-scalarity property for the transported operatorial-central defect
 shadow.
 
 Under nonzero operatorial central charge and a nontrivial defect projector

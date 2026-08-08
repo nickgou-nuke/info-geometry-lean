@@ -86,8 +86,8 @@ open scoped Real
 /-- Conjugation of an invertible matrix is invertible. -/
 instance inv_conjug (P M : Matrix (Fin n) (Fin n) ℂ) [Invertible P] [Invertible M] :
     Invertible (conjug P M) :=
-  have h1 : Invertible (⅟P * M) := Invertible.mul invertibleInvOf (by assumption)
-  Invertible.mul h1 (by assumption)
+  have h1 : Invertible (⅟P * M) := Invertible.mul invertibleInvOf (inferInstance)
+  Invertible.mul h1 (inferInstance)
 
 /-- Conjugation commutes with Invertible.invOf. -/
 theorem invOf_conjug_eq (P M : Matrix (Fin n) (Fin n) ℂ) [Invertible P] [Invertible M] :

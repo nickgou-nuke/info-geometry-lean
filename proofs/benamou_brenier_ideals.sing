@@ -1,0 +1,32 @@
+// Benamou-Brenier Fluid Mechanics Formula
+// Minimizing kinetic action subject to continuity equation.
+
+ring r = 0, (rho1, rho2, rho3, v1, v2, m1, m2, lambda1, lambda2, lambda3), dp;
+
+// m_i = rho_{i, i+1} v_i is the momentum. We use average rho: rho12 = (rho1+rho2)/2
+// Action is \int |m|^2 / (2 rho). We form an ideal for the optimality conditions.
+// Constraint: d rho/dt + div(m) = 0
+// For stationary or discretized step, rho_new - rho_old + div(m) = 0
+// Let rho_old = (r1, r2, r3) constants, but we'll work symbolically.
+
+poly div1 = m1;
+poly div2 = m2 - m1;
+poly div3 = -m2;
+
+// Lagrange multipliers lambda for the continuity equation constraints
+// L = 1/2 m1^2/rho12 + 1/2 m2^2/rho23 + lambda1*(rho1 - r1 + div1) + ...
+// We clear denominators to formulate polynomial ideals.
+// m1^2 / (rho1 + rho2)  -> partial wrt m1 is 2 m1 / (rho1 + rho2) + lambda1*(1) + lambda2*(-1) = 0
+// So 2 m1 + (lambda1 - lambda2)*(rho1 + rho2) = 0
+
+ideal I = 
+    2 * m1 + (lambda1 - lambda2) * (rho1 + rho2), // dL/dm1 = 0
+    2 * m2 + (lambda2 - lambda3) * (rho2 + rho3), // dL/dm2 = 0
+    rho1 + m1 - 1, // continuity 1 (dummy r1=1)
+    rho2 + m2 - m1 - 1, // continuity 2 (dummy r2=1)
+    rho3 - m2 - 1; // continuity 3 (dummy r3=1)
+
+std(I); // Compute Groebner basis to solve the algebraic system
+
+print("Groebner basis of the Benamou-Brenier optimality conditions:");
+print(I);

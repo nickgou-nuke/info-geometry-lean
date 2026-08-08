@@ -7,7 +7,7 @@ This module records the finite theorem-backed fragment of the exposition
 "Supersymmetry and the Witten Index" (Arjun Kudinoor, 2023):
 
 * a finite graded spectrum has a boson count and a fermion count at each level;
-* nonzero levels are explicitly paired by the hypothesis `boson = fermion`;
+* nonzero levels are explicitly paired by the property `boson = fermion`;
 * zero levels carry weight `1`;
 * therefore the weighted supertrace collapses to the zero-energy Witten index;
 * two such weights give the same supertrace under the same hypotheses.

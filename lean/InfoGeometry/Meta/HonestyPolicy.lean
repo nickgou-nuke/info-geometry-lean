@@ -15,7 +15,7 @@ The rule is simple:
 - if it does not exist yet, expose the gap explicitly as `sorry` or an
   explicit zero-datum;
 - do not hide missing debt behind fake witnesses, empty shells, or banners
-  that claim certified readback when the file still contains debt markers.
+  that claim property readback when the file still contains debt markers.
 
 This module is descriptive. Enforcement lives in the existing policy and lint
 layers:
@@ -44,7 +44,7 @@ structure HonestyPolicy where
   explicitSorryVisible : Bool
   /-- Fake witnesses and empty closure shells are forbidden. -/
   fakeWitnessesForbidden : Bool
-  /-- Banner text must not claim certified readback when `sorry` remains. -/
+  /-- Banner text must not claim property readback when `sorry` remains. -/
   bannerClaimsMustMatchBody : Bool
   /-- Explicit zero-datum objects are allowed when they are declared as such. -/
   explicitZeroDatumAllowed : Bool

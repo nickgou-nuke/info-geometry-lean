@@ -60,7 +60,7 @@ theorem sectorV4_involution (s : TripotentState) :
     sectorV4 s * sectorV4 s = V4Group.I := by
   cases s <;> rfl
 
-/-- A finite witness bundling the tripotent/V₄ cycle with a `pg` Klein relation. -/
+/-- A finite property bundling the tripotent/V₄ cycle with a `pg` Klein relation. -/
 abbrev VarlamovTrifactorKleinWitness : Type :=
   Σ' _klein : KleinBottlePresentationWitness,
     (∀ s : TripotentState,
@@ -90,8 +90,8 @@ abbrev sector_nonidentity (W : VarlamovTrifactorKleinWitness) :
 
 end VarlamovTrifactorKleinWitness
 
-/-- Read back the finite Klein-bottle presentation relation from any bridge witness. -/
-theorem witness_klein_relation (W : VarlamovTrifactorKleinWitness) (p : Lattice2D) :
+/-- Read back the finite Klein-bottle presentation relation from any bridge property. -/
+theorem property_klein_relation (W : VarlamovTrifactorKleinWitness) (p : Lattice2D) :
     W.klein.glide (W.klein.yTranslation (W.klein.glide.symm p)) =
       W.klein.yTranslation.symm p :=
   W.klein.glide_conjugates_yTranslation_to_inverse p

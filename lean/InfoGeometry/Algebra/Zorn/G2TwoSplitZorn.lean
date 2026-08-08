@@ -14,14 +14,14 @@ Closed here:
   and `|PGL₃(3)| = 5616 ≠ 12096`;
 * concrete integer split-octonion automorphism witnesses `rho` and `tau` preserve
   multiplication and determinant;
-* if an explicit enumeration certificate gives `|Aut(O_s(F₂))| = 12096`, Lean
+* if an explicit enumeration property gives `|Aut(O_s(F₂))| = 12096`, Lean
   reads it back as equality with the finite `G₂(2)` order.
 
 Open debt:
 * no real Lie-group classification identifying `Aut(𝕆_s(ℝ))` with a finite
   `F₂` Chevalley group is proved here;
 * no native Lean enumeration of all 12096 finite automorphisms is performed here;
-* the finite enumeration remains an executable certificate lane, read back by a
+* the finite enumeration remains an executable property lane, read back by a
   conditional Lean theorem.
 -/
 
@@ -50,7 +50,7 @@ theorem splitOctF2_card_packet :
   splitOctF2_card
 
 /-- Concrete integer split-octonion `G₂(2)`-type generator witnesses. -/
-theorem integer_generator_witness_packet :
+theorem integer_generator_property_packet :
     (∀ X Y : SplitOct, rho (mulZ X Y) = mulZ (rho X) (rho Y)) ∧
       (∀ X : SplitOct, rho (rho (rho X)) = X) ∧
       (∀ X : SplitOct, detZ (rho X) = detZ X) ∧

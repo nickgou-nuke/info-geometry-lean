@@ -1,0 +1,27 @@
+// bregman_jacobian.sing
+// Formulation of the algebraic ideals of the Bregman kernel B tracking the phase space volume Q.
+
+LIB "primdec.lib";
+
+print("Initializing Bregman Jacobian...");
+
+// Define the polynomial ring for phase space and volume Q
+ring R = 0, (x, y, z, px, py, pz, Q), dp;
+
+// Define a symbolic Bregman kernel B related to Q
+// This represents the divergence metric on the phase space
+poly B = x^2 + y^2 + z^2 + px^2 + py^2 + pz^2 - Q;
+
+// Formulate the algebraic ideal of the Bregman kernel
+ideal I_B = B;
+
+// Compute the Jacobian ideal of the Bregman kernel
+ideal J_B = jacob(I_B);
+
+print("Bregman Jacobian Ideal (J_B):");
+J_B;
+
+// Calculate Groebner basis to analyze the singular locus
+ideal G_B = std(J_B);
+print("Groebner basis of the Jacobian ideal:");
+G_B;

@@ -8,7 +8,7 @@ namespace InfoGeometry.Topology.ContinuousQuotientDescent
 # Continuous descent of a discrete modular flow
 
 This file separates the set-theoretic representative choice from the
-topological statement.  The quotient map is the only descent hypothesis;
+topological statement.  The quotient map is the only descent property;
 continuity is obtained from its universal property.
 -/
 

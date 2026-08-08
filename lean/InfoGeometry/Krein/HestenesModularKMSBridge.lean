@@ -33,7 +33,7 @@ This is the theorem-safe real translation of the modular/KMS socket:
 * the modular dynamics is a repository-native `OperatorFlow` on bounded real
   endomorphisms;
 * Hestenes analyticity is stored as `σₜ(KA) = K σₜ(A)`;
-* null-cone preservation is a vector-rotor/Krein-isometry witness, not an
+* null-cone preservation is a vector-rotor/Krein-isometry property, not an
   unsupported consequence of the observable flow.
 -/
 @[rep_depth krein]
@@ -86,7 +86,7 @@ def hestenesExpectation (_P : HestenesKreinKMSPacket (E := E)) (Ω : E) (A : End
 KMS boundary condition in the real Hestenes language.
 
 The imaginary-time shift is represented by the supplied modular boundary at
-`β`; Hestenes real analyticity remains the separate phase-axis witness.
+`β`; Hestenes real analyticity remains the separate phase-axis property.
 -/
 @[rep_depth krein]
 def IsHestenesKMSCondition (β : ℝ) (φ : EndH → ℝ) : Prop :=
@@ -129,7 +129,7 @@ theorem modular_rotor_preserves_null_cone
   rw [P.rotor_preserves_kreinInner t ξ ξ]
   exact h_null
 
-/-- The stored KMS boundary certificate can be read as a theorem. -/
+/-- The stored KMS boundary property can be read as a theorem. -/
 @[rep_depth krein]
 theorem hestenes_kms_boundary
     {β : ℝ} {φ : EndH → ℝ}

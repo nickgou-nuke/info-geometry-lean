@@ -108,7 +108,7 @@ theorem trialityColorCycle_order_three :
   ext x b
   exact congrArg x (by cases b <;> rfl)
 
-/-- The missing multiplicativity statement, recorded without an axiom. -/
+/-- The missing multiplicativity statement, recorded without an ax!om. -/
 theorem trialityColorCycle_map_mul
     (x y : StandardRationalSplitOctonion) :
     trialityColorCycle (splitOctonionMulQ x y) =

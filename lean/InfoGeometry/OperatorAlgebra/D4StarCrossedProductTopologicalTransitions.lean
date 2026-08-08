@@ -5,8 +5,8 @@ import InfoGeometry.OperatorAlgebra.D4StarCrossedProductTransitions
 # Topological realization of equivariant crossed-product transitions
 
 The algebraic transition owner does not imply continuity.  This file adds the
-topological layer only through an explicit continuity witness for the
-observable map, then lifts that witness coefficientwise to the finite
+topological layer only through an explicit continuity property for the
+observable map, then lifts that property coefficientwise to the finite
 crossed-product carrier.
 -/
 

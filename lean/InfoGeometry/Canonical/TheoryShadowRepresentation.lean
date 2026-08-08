@@ -20,6 +20,8 @@ open InfoGeometry.Canonical.SouriauLieThermoKKTBridge
 open InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
 open InfoGeometry.Canonical.SouriauThermodynamics
 open InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
+open InfoGeometry.Quantum
+open InfoGeometry.Canonical.SouriauConformalKKT
 
 theorem exactKKT_translator_shadow_packet
     [Fintype α] [Nonempty α]
@@ -38,13 +40,19 @@ theorem splitCl44_TKK_shadow_bridge_packet
     [Fintype α] [Nonempty α]
     {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
     [CompleteSpace H]
-    (P : SplitCl44TKKJordanLiePacket (α := α) (H := H))
     (x : ℝ × ℝ)
-    (xs : InfoGeometry.Canonical.SplitCliffordTensorBridge.SplitClNNCarrier 3) :
-    P.closure.gibbs.SatisfiesOperatorTKKMasterRelation P.closure.tkkParameter ∧
-      P.closure.gibbs.IsOperatorAdmissible ∧
-      P.triality.informationalDiracSquare = LinearMap.id := by
-  have h := P.splitCl44_TKK_JordanLie_constructive_packet x xs
+    (xs : InfoGeometry.Canonical.SplitCliffordTensorBridge.SplitClNNCarrier 3)
+    (T : SplitTrialityKernel)
+    (C : @ConformalGibbsSouriauOperatorContext α H _ _ _)
+    (tkkParameter : ℝ)
+    (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
+    (hOperatorAdmissible : C.IsOperatorAdmissible)
+    (X Y : InfoGeometry.Krein.DoubledSpace H →L[ℝ] InfoGeometry.Krein.DoubledSpace H)
+    (weylGauge : WeylGaugeField (InfoGeometry.Krein.DoubledSpace H →L[ℝ] InfoGeometry.Krein.DoubledSpace H) (InfoGeometry.Krein.DoubledSpace H →L[ℝ] InfoGeometry.Krein.DoubledSpace H)) :
+    C.SatisfiesOperatorTKKMasterRelation tkkParameter ∧
+      C.IsOperatorAdmissible ∧
+      T.informationalDiracSquare = LinearMap.id := by
+  have h := splitCl44_TKK_JordanLie_constructive_packet x xs T C tkkParameter hTKK hOperatorAdmissible X Y weylGauge
   refine ⟨?_, ?_, ?_⟩
   · exact h.2.2.2.2.2.1
   · exact h.2.2.2.2.2.2.1

@@ -13,7 +13,7 @@ variable {R : Type*} [CommRing R]
 
 The raw Zorn Möbius formula is retained in its original owner.  This adapter
 connects its visible 2-by-2 block to the quotient-safe projective boundary,
-but only under an explicit determinant-one hypothesis.
+but only under an explicit determinant-one property.
 -/
 
 def zornBoundaryBlock (Z : ZornVectorMatrix R) :

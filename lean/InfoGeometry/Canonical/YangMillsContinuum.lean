@@ -463,7 +463,7 @@ theorem topologicalBekensteinBound_and_sinkhornClosure_of_sampledIB
 
 /--
 Sampled IB cocycle endpoint (closure form):
-Connes cocycle law plus sampled Sinkhorn KMS closure and a pairing witness
+Connes cocycle law plus sampled Sinkhorn KMS closure and a pairing property
 yield the topological Bekenstein bound.
 -/
 theorem topologicalBekensteinBound_of_connesCocycle_and_sinkhornClosure_of_sampledIB_pairingWitness
@@ -500,7 +500,7 @@ theorem topologicalBekensteinBound_of_connesCocycle_and_sinkhornClosure_of_sampl
 
 /--
 Sampled IB cocycle endpoint (control form):
-Connes cocycle law plus sampled Sinkhorn KMS control and a pairing witness
+Connes cocycle law plus sampled Sinkhorn KMS control and a pairing property
 yield the topological Bekenstein bound.
 -/
 theorem topologicalBekensteinBound_of_connesCocycle_and_sinkhornControl_of_sampledIB_pairingWitness
@@ -537,7 +537,7 @@ theorem topologicalBekensteinBound_of_connesCocycle_and_sinkhornControl_of_sampl
 
 /--
 Sampled IB cocycle endpoint (Tomita flow-unit specialization, closure form):
-the Connes cocycle witness is derived from the Tomita modular-sign flow and the
+the Connes cocycle property is derived from the Tomita modular-sign flow and the
 bridge is fixed to `unitScalarBridge`.
 -/
 theorem topologicalBekensteinBound_of_tomitaFlowUnitCocycle_and_sinkhornClosure_of_sampledIB_pairingWitness
@@ -579,7 +579,7 @@ theorem topologicalBekensteinBound_of_tomitaFlowUnitCocycle_and_sinkhornClosure_
 
 /--
 Sampled IB cocycle endpoint (Tomita flow-unit specialization, control form):
-the Connes cocycle witness is derived from the Tomita modular-sign flow and the
+the Connes cocycle property is derived from the Tomita modular-sign flow and the
 bridge is fixed to `unitScalarBridge`.
 -/
 theorem topologicalBekensteinBound_of_tomitaFlowUnitCocycle_and_sinkhornControl_of_sampledIB_pairingWitness

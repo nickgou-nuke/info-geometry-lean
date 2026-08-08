@@ -8,7 +8,7 @@ open scoped LinearAlgebra.Projectivization MatrixGroups
 /-!
 Affine and infinite representatives for the native real projective line.
 The definitions are homogeneous, so no denominator or affine chart
-assumption is introduced at this layer.
+property is introduced at this layer.
 -/
 
 noncomputable def affineRealProjectivePoint

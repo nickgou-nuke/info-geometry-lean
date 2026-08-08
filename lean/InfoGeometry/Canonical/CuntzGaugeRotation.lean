@@ -6,7 +6,7 @@ open ToeplitzCuntzVacuumBridge
 
 variable {R : Type*} [CommRing R] [StarRing R]
 
-/-- The currently certified gauge layer is the identity action.
+/-- The currently property gauge layer is the identity action.
 
 The existing carrier stores generators as elements of the coefficient ring,
 but has no scalar-action/centrality interface for a genuine `U(2)` mixing.

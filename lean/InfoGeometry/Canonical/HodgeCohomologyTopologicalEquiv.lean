@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.HodgeDecompositionHarmonicSurjectivityBridge
 # Conditional topological Hodge equivalence
 
 The algebraic Hodge owner supplies a `LinearEquiv` from harmonic forms to de
-Rham cohomology under an explicit decomposition hypothesis.  This file
+Rham cohomology under an explicit decomposition property.  This file
 promotes it to a `Homeomorph` when continuity of the inverse is supplied.
 The forward continuity is derived from the harmonic projection bridge.
 -/

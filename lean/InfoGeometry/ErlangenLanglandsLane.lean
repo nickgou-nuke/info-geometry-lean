@@ -54,7 +54,7 @@ open InfoGeometry.Quantum
 /--
 Arithmetic-and-duality packet for one step of the Erlangen/Langlands lane.
 
-This is the concrete witness payload that the lane uses to transport from
+This is the concrete property payload that the lane uses to transport from
 projected automorphic data to Sugawara calibration and duality transport.
 -/
 structure LanglandsLaneArithmeticPacket
@@ -179,7 +179,7 @@ non-toy owner-level outputs used by the broader owners module:
 
 * finite-Jones Erlanger owner target,
 * arithmetic package nonemptiness,
-* weak Langlands-prime resonance witness packaging,
+* weak Langlands-prime resonance property packaging,
 * Sugawara calibration statement,
 * S-duality transport of Wilson eigenconditions,
 * physical Langlands holonomy transport of Wilson readout to dual `'t Hooft` readout.
@@ -255,7 +255,7 @@ by
 /--
 Geometry-to-arithmetic correspondence for one lane step.
 
-This witness packages a geometric Möbius datum on the bilingual upper
+This property packages a geometric Möbius datum on the bilingual upper
 half-plane together with explicit arithmetic transports on
 `Bulk` and `Boundary`, together with Siegel projector compatibility.
 -/
@@ -280,7 +280,7 @@ abbrev LanglandsGeometryCorrespondence
 
 
 /--
-Second lane constructor with an explicit geometric witness.
+Second lane constructor with an explicit geometric property.
 
 This extends `constructLanglandsLanePacket` by exposing the geometric/
 arithmetic correspondence data alongside the core lane target.

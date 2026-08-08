@@ -5,7 +5,7 @@ import InfoGeometry.Topology.SymbolicLatentBoundaryCylinderColimitTopCat
 
 The carrier colimit is not compact in complete generality, so the readout
 cannot be promoted to a quotient map without an explicit compactness and
-surjectivity hypothesis.  Under those hypotheses, this owner delegates
+surjectivity property.  Under those hypotheses, this owner delegates
 directly to Mathlib's compact-to-Hausdorff quotient-map theorem.
 -/
 

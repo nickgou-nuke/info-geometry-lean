@@ -106,7 +106,7 @@ structure BulkGeometry
 /--
 Entanglement↔ER bridge calibration for a concrete model.
 
-This is intentionally a data contract, not a global axiom.
+This is intentionally a data contract, not a global ax!om.
 -/
 structure EREPRCalibration (BoundaryState Bulk : Type*) where
   /-- Entanglement predicate on boundary data. -/
@@ -149,7 +149,7 @@ end EREPRCalibration
 /--
 RT/HRT-style entropy-area calibration.
 
-This is a model-specific witness that must be supplied to use the law.
+This is a model-specific property that must be supplied to use the law.
 -/
 structure RyuTakayanagiCalibration (Region Surface : Type*) where
   entropy : Region → ℝ
@@ -168,7 +168,7 @@ namespace RyuTakayanagiCalibration
 variable {Region Surface : Type*}
 variable (R : RyuTakayanagiCalibration Region Surface)
 
-/-- Area calibration projection from a supplied calibration witness. -/
+/-- Area calibration projection from a supplied calibration property. -/
 theorem entropy_eq_area_over_fourG (A : Region) :
     R.entropy A = R.area (R.extremalSurfaceOf A) / (4 * R.NewtonConstant) :=
   R.entropy_eq_area_div A
@@ -192,7 +192,7 @@ namespace ExactERBridgeGrowth
 variable {Point : Type*} [TopologicalSpace Point]
 variable (G : ExactERBridgeGrowth Point)
 
-/-- Linear-in-time law is exactly the supplied bridge growth witness. -/
+/-- Linear-in-time law is exactly the supplied bridge growth property. -/
 theorem volume_difference_eq_rate_mul_time (t₁ t₂ : ℝ) :
     G.bulk.interiorVolume t₂ - G.bulk.interiorVolume t₁ = G.rate * (t₂ - t₁) :=
   G.linearGrowth t₁ t₂

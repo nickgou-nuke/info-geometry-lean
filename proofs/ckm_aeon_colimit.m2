@@ -1,0 +1,15 @@
+R = QQ[yQ,yu,yd,theta12,theta23,theta13,delta,q,dq, WeylAlgebra => {q=>dq}];
+aeonCount=3; generationCount=3; ckmParameters=4; ckmEntries=9; threeGenerationWeylCount=48;
+stablePage=3; serreResidueRank=8; aeonColimitRank=24;
+su3Generators=8; su2Generators=3; smRank=4; smGenerators=12; cartanGenerators=4;
+assert(aeonCount==3 and generationCount==3 and ckmParameters==4 and ckmEntries==9 and threeGenerationWeylCount==48);
+assert(su3Generators==8 and su2Generators==3 and smRank==4 and smGenerators==12 and cartanGenerators==4);
+C2su3Fund=4/3; C2su2Doublet=3/4; upCharge=2/3; downCharge=-1/3;
+assert(C2su3Fund==4/3 and C2su2Doublet==3/4 and upCharge==2/3 and downCharge==-1/3);
+colorAnomaly=2*(1/6)-(2/3)-(-1/3); weakAnomaly=3*(1/6)+(-1/2); generationAnomaly=3*colorAnomaly+3*weakAnomaly;
+assert(colorAnomaly==0 and weakAnomaly==0 and generationAnomaly==0);
+I = ideal(q*dq - dq*q - 1); assert(numgens I == 1);
+ckmParameterIdeal = ideal(theta12,theta23,theta13,delta); assert(numgens ckmParameterIdeal == 4);
+anomalyIdeal = ideal(2*yQ-yu-yd,3*yQ-1/2); assert(numgens anomalyIdeal == 2);
+edges={"generates_ckm","mixes_generations","carries_color","carries_weak","carries_hypercharge","cancels_anomaly"}; assert(#edges==6);
+print {"aeonCount",aeonCount,"generationCount",generationCount,"ckmParameters",ckmParameters,"ckmEntries",ckmEntries,"threeGenerationWeylCount",threeGenerationWeylCount,"stablePage",stablePage,"serreResidueRank",serreResidueRank,"aeonColimitRank",aeonColimitRank,"su3Generators",su3Generators,"su2Generators",su2Generators,"smRank",smRank,"smGenerators",smGenerators,"cartanGenerators",cartanGenerators,"C2su3Fund",C2su3Fund,"C2su2Doublet",C2su2Doublet,"upCharge",upCharge,"downCharge",downCharge,"colorAnomaly",colorAnomaly,"weakAnomaly",weakAnomaly,"generationAnomaly",generationAnomaly,"dmoduleCCRGenerators",numgens I,"ckmParameterIdealGenerators",numgens ckmParameterIdeal,"anomalyIdealGenerators",numgens anomalyIdeal,"graphEdges",#edges};

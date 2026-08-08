@@ -8,7 +8,7 @@ Linear Algebra Appl. 6, 241--248 (1973).
 
 The paper studies matrices `Pσ C`, where `C` is circulant and `Pσ` is a
 permutation matrix.  This file keeps the Fourier diagonalization theorem as an
-explicit finite certificate and proves the elementary block identities behind
+explicit finite property and proves the elementary block identities behind
 Chao's eigenvalue readout.
 -/
 
@@ -37,7 +37,7 @@ def IsTwoCycle {n : ℕ} (σ : FinPerm n) (i j : Fin n) : Prop :=
 An additive permutation of the cyclic index monoid `Fin n`.
 
 This is the concrete algebraic content of the additive-automorphism
-hypothesis in Chao's permutation theorem.  The additive equivalence is a
+property in Chao's permutation theorem.  The additive equivalence is a
 Mathlib owner of both the homomorphism law and bijectivity; the final equality
 identifies its underlying permutation with `σ`.
 -/
@@ -112,7 +112,7 @@ theorem twoCycle_root_of_sq_eq_mul {a b lam : ℂ} (h : lam ^ 2 = a * b) :
     twoCycleCharacteristic a b lam = 0 := by
   simp [twoCycleCharacteristic, h]
 
-/-- Fourier commutation certificate from Chao Theorem 1. -/
+/-- Fourier commutation property from Chao Theorem 1. -/
 structure FourierPermutationCommutationCertificate (n : ℕ) where
   σ : FinPerm n
   isAdditiveAutomorphism : IsAdditivePermutation σ
@@ -147,7 +147,7 @@ theorem commutes_of_automorphism_and_orderTwo
 
 end FourierPermutationCommutationCertificate
 
-/-- Chao spectral certificate for `Pσ C`/`C Pσ` after Fourier diagonalization. -/
+/-- Chao spectral property for `Pσ C`/`C Pσ` after Fourier diagonalization. -/
 structure ChaoRetrocirculantSpectralCertificate (n : ℕ) where
   σ : FinPerm n
   μ : Fin n → ℂ

@@ -535,7 +535,7 @@ structure BogoliubovCartanFrameEquiv
   /--
   The frame preserves the Krein pairing.
 
-  Kept as an abstract witness at this layer.  Concrete bilinear-form transport
+  Kept as an abstract property at this layer.  Concrete bilinear-form transport
   can be installed by a carrier-specific specialization without making the
   Cartan weight transport depend on that analytic backend.
   -/

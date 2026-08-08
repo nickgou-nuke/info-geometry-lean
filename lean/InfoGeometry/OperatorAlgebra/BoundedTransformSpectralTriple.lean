@@ -36,7 +36,7 @@ boundedTransform_eq_of_phase_resolvent
 
 boundedTransform_selfAdjoint_of_source
 
-boundedTransform_commutator_bounded_of_spectralTriple_hypothesis
+boundedTransform_commutator_bounded_of_spectralTriple_property
 
 boundedTransform_spectralTriple_packet
 

@@ -12,7 +12,7 @@ This module formalizes the rigorous connection between the local Clifford
 self-referential Möbius loop and the global conformal Virasoro algebra.
 
 Because an explicit $e^{i\pi L_0}$ functional calculus does not exist in the
-repository yet, this relationship is implemented as a witness-gated Socket
+repository yet, this relationship is implemented as a property-gated Socket
 and Bridge Target.
 -/
 
@@ -28,7 +28,7 @@ open InfoGeometry.Krein
 Witness-gated socket connecting the local algebraic Möbius twist of consciousness
 to the global conformal L₀ flow (Virasoro).
 
-Since the current repository does not expose a certified analytic `exp(i π L_0)`
+Since the current repository does not expose a property analytic `exp(i π L_0)`
 operator calculus, this connection is maintained as an explicit compiler boundary.
 -/
 @[socket_debt_tag, rep_depth operator]

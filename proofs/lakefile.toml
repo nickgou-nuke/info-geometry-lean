@@ -1,0 +1,1068 @@
+name = "FibAnyonProofs"
+defaultTargets = ["FibAnyonProofs"]
+
+
+[[require]]
+name = "mathlib"
+path = "/home/goutev/repos/info-geometry-lean/.lake/packages/mathlib"
+
+[[require]]
+name = "LeanArchitect"
+path = "/home/goutev/repos/info-geometry-lean/.lake/packages/LeanArchitect"
+
+[[lean_lib]]
+name = "FibAnyonProofs"
+roots = [
+  "CauchyHolography",
+  "InfinityFilteredColimits",
+  "LECM2022ElectroweakRadiiISB",
+  "HeavyIsospinMixingSystematics",
+  "GrandUnifiedTKK",
+  "CPTCausalCone",
+  "CPTDeRhamCohomology",
+  "VacuumTopology",
+  "VacuumCohomology",
+  "ConformalCGA",
+  "VacuumGroundstate",
+  "ThreeDMirrorSymmetry",
+  "TKKQQBridge",
+  "TPUAQLattice",
+  "A35MirrorNuclei",
+  "A27_A43MirrorNuclei",
+  "A47MirrorNuclei",
+  "BM1MirrorNuclei",
+  "A67MirrorE1",
+  "BizzetiA67IVGMR",
+  "BizzetiMirrorE1IVGMRFull",
+  "FarneaGe64IsospinMixing",
+  "LicataFinsterEMSpaces",
+  "YanevaPd94PnSymmetry",
+  "CasimirIsospinHamiltonian",
+  "SO55NullSU5KleinSpectral",
+  "O55CasimirIsospinHamiltonian",
+  "PinO55GlideReflection",
+  "NuclearPhononGenerators",
+  "NuclearPhononMetriplecticBridge",
+  "SplitOctonionZornKKS",
+  "VarlamovKleinSpectral",
+  "UthayakumaarMirrorKnockout",
+  "BisoiForbiddenE1Mixing",
+  "OrlandiA67Proceedings",
+  "KanekoA67HighSpinMED",
+  "SheikhIsospinSymmetryBreaking",
+  "CakirliPnInteractionIsospin",
+  "SarkarTwoLevelIsospinMixing",
+  "LlewellynZr79MED",
+  "SouriauCasimirEntropyLeaves",
+  "GuptaAdaptVQERandomHamiltonians",
+  "SymmetryReviewISB",
+  "IsospinTKK",
+  "QCDConfinementISDivergence",
+  "V16FockBdG",
+  "CartanTriality",
+  "D4Cl11Tripotent",
+  "TKKCartanDecomposition",
+  "AnomalousKMSFlow",
+  "ConnesSpectralAction",
+  "CuntzKTheoryPairing",
+  "AlgebraicCuntzQuotient",
+  "AlgebraicCuntzToeplitzInductive",
+  "AnomalyInverses",
+  "ChiralCuntzInductive",
+  "SuperCuntzGrading",
+  "ComplexStarCuntzRedesign",
+  "CStarCuntzTensorQuotient",
+  "SupergradedCuntzBdG",
+  "ChiralCausalConeTKKBridge",
+  "TwoSheetChiralClosure",
+  "TwoSheetChiralTKKDerivations",
+  "OneSheetChiralAlgebra",
+  "SplitOctonionTKK55",
+  "SplitOctonionCircularChiralClosure",
+  "SplitOctonionJordanCore",
+  "SplitOctonionJordanStructure",
+  "SplitOctonionJordanForm",
+  "PolarizedPeirceJordanMalcev",
+  "TwoSheetThreeColorWeyl",
+  "TwoSheetOperatorCoordinates",
+  "ChiralStokesCoordinates",
+  "ChiralStokesPauliBasis",
+  "ChiralStokesNamedAdapter",
+  "TwoSheetKreinStokesCoordinates",
+  "ChiralNambuBigrading",
+  "TwoSheetKreinAdjoint",
+  "FiniteKreinTomitaSixState",
+  "SixStateModularConjugationIdentification",
+  "FiniteAZCarrier",
+  "HestenesCircularSheetCAR",
+  "HestenesPhaseBoostRotors",
+  "HestenesLoxodromicRotor",
+  "HestenesLoxodromicCasimirs",
+  "HestenesClPlus14",
+  "HestenesKreinFramework",
+  "HestenesCliffordKrein",
+  "HestenesPauliSheetBridge",
+  "HestenesCliffordCenter",
+  "HestenesOmegaHyperbolic",
+  "HestenesSplitQuaternion",
+  "HestenesHermitianAdjoint",
+  "HestenesNativeKreinAdjoint",
+  "HestenesHermitianMatrixBridge",
+  "HestenesQuaternionCore",
+  "HestenesHyperbolicDoubling",
+  "QuaternionOmegaDoublingSquare",
+  "QuaternionOmegaDoublingLaws",
+  "ClPlus14DualProduct",
+  "HestenesSplitOctonionZornBridge",
+  "HestenesEvenPauliEquiv",
+  "HestenesKreinMatrixBridge",
+  "HestenesCircularCARTransport",
+  "FiniteHestenesTomitaBridge",
+  "FiniteHestenesModularOperator",
+  "KleinBottleSixfoldCyclotomic",
+  "KleinSixStateBundle",
+  "ProjectiveSheetV4",
+  "SplitOctonionTKK55Blocks",
+  "SplitOctonionTKK55LieEquivalence",
+  "HIndexFin10Reindex",
+  "SO55RationalDiagonalization",
+  "SO55MetricCongruence",
+  "SO55HyperbolicDiagonalLieEquiv",
+  "RealPin55Core",
+  "RealOrthogonalGroup55",
+  "RealPin55TwistedAction",
+  "RealPin55OrthogonalAction",
+  "RealPin55QuadraticRepresentation",
+  "V55Fin10Coordinates",
+  "RealPin55MatrixRepresentation",
+  "RealPin55Kernel",
+  "RealPin55KernelReduction",
+  "RealPin55ReflectionGenerators",
+  "RealO55CartanDieudonneStep",
+  "Q55OrthogonalGeometry",
+  "RealO55CartanDieudonne",
+  "OQ55MatrixEquiv",
+  "KleinBrillouinBase",
+  "HexagonalSixRootTiling",
+  "SixStateSpectralBridge",
+  "SixStateCharacteristicPolynomial",
+  "SixStateGeneralizedPauliBasis",
+  "SixStateGeneralizedCliffordAlgebra",
+  "CRTGeneralizedPauliSix",
+  "TwelveFoldExtendedWeylBridge",
+  "TwelveFoldGeneralizedCliffordExtension",
+  "KasparovKreinCategory",
+  "KasparovKreinDoubling",
+  "HilbertPolyaBivariant",
+  "DiracColimit",
+  "ConcreteCliffordDiracTower",
+  "PrimonCuntzTower",
+  "PrimeSupergradedPrimon",
+  "CuntzP6MBoundary",
+  "ZetaSpectralBridge",
+  "MellinHeatKernelBridge",
+  "HurwitzTwistedSector",
+  "HurwitzQuaternionSpectrum",
+  "KreinDeterminantAnalyticity",
+  "KreinVacuumPropagator",
+  "KreinVacuumKMSBridge",
+  "CPTKreinTowerBridge",
+  "HestenesKreinColimitBridge",
+  "ModularKreinReflectionColimit",
+  "KanCayley",
+  "KANTraceSectorization",
+  "DeterminantSupergrading",
+  "KANLogDetUnification",
+  "IwasawaKUnification",
+  "IwasawaAnalyticityLock",
+  "LieAlgebraColimit",
+  "LieFlowMatching",
+  "TrifactorGeometry",
+  "MobiusInversion",
+  "LieFlowCompilerBridge",
+  "Z2NonAbelianBraiding",
+  "DeterminantMoebiusFunctor",
+  "ProjectiveMobiusMatrix",
+  "ExceptionalPointNullSector",
+  "TraceSeparationFlow",
+  "ExceptionalPointMonodromy",
+  "InductiveAnalyticFlow",
+  "KleinBottleSymmetry",
+  "KleinFourAnomalyCancellation",
+  "KleinBottleKANCoordinates",
+  "KleinParafermionCohomology",
+  "KANFormalization",
+  "PrimonSuperThermodynamics",
+  "ZetaCoordinateSymmetry",
+  "UnifiedAnomalyArchitecture",
+  "FibAnyonThm1",
+  "FibAnyonThm2",
+  "FibAnyonThm3",
+  "FibAnyonThm4",
+  "FibAnyonThm5",
+  "HexagonCocycle",
+  "VertexAlgebraBraidingCocycle",
+  "ExtractBraid",
+  "ASTExtractor",
+  "FibAnyonThm7_hexagon",
+  "rigorous_proofs",
+  "KleinBottle",
+  "CanonicalSouriauPauliThermodynamics",
+  "goutev_principle",
+  "determinant_weyl_gauge",
+  "discrete_maxflow_mincut",
+  "ZornOPParavector",
+  "FureyZornFermionBridge",
+  "IsospinSymmetryBreaking",
+  "ChiralTwistedFibration",
+  "tomita_kms_v4",
+  "BogoliubovFrameTransport",
+  "SouriauMoebiusCoupling",
+  "AtomicCliffordKAN",
+  "FibonacciCliffordBridge",
+  "MajoranaBraidGroup",
+  "BraidCliffordIntegration",
+  "WaveguideEPBraidSpec",
+  "ScatteringSMatrix",
+  "NonHermitianSMatrixDefect",
+  "SiliconPhotonicChipCoefficients",
+  "TwoPortScatteringCoefficients",
+  "ArtinParityFlow",
+  "PhotonicCMTTMM",
+  "NonHermitianKitaevCuntzChain",
+  "TetronParityLifetimeBridge",
+  "Matrix2KANPauliChain",
+  "TransferMatrixScattering",
+  "PhotonicHardwareLayout",
+  "OpticalAndreevSpinor",
+  "ExceptionalPointCollapse",
+  "BiquaternionCliffordIso",
+  "BiquaternionExpClosure",
+  "CayleySchreierGauge",
+  "MinkowskiBiquaternion",
+  "PolynomialSymmetryOperators",
+  "DiracFourierMellin",
+  "BiquaternionKANnilpotent",
+  "CptFractalClosure",
+  "CptTensorFractal",
+  "GravitySoldering",
+  "WallpaperIsometry",
+  "KleinGeometrySupergraded",
+  "WallpaperCohomology",
+  "ZornParavectorNullspace",
+  "RiemannKleinDuality",
+  "MobiusWittenIndex",
+  "ExceptionalBraidTopology",
+  "NonOrientableBraid",
+  "FredholmRegularization",
+  "SquashingOperator",
+  "RegularizationCayleyPipeline",
+  "TKKCompileData",
+  "CPTAtom",
+  "SpacetimeIsSpin",
+  "GrandHolographicTheorem",
+  "BiquaternionNegativeRootsLog",
+  "BiquaternionLogarithmMonodromy",
+  "BraidNegativeIdentityMonodromy",
+  "ArtinMonodromyPin55",
+  "SpinorMonodromySteppingStone",
+  "ScratchSelfConcordant",
+  "PaperwallHolographicSUSY",
+  "PaperwallDiscreteSUSY",
+  "PaperwallSUSY",
+  "FractalKleinSUSYFramework",
+  "TitsBruhatBrillouinKlein",
+  "MorandiWallpaperCohomology",
+  "WallpaperCohomology",
+  "WallpaperSemidirectProduct",
+  "WallpaperBulkAnyonProjection",
+  "WallpaperMetamaterialDataset",
+  "ProjectiveWallpaperGaugePSA",
+  "ProjectiveSymmetryAlgebra",
+  "ProjectiveCrystalTopology",
+  "TwistedHeckeKleinBottle",
+  "WallpaperClassification",
+  "PentagonPenroseWallpaperFractal",
+  "UnifiedKleinHolographicArchitecture",
+  "CuntzKriegerFibonacciK",
+  "CuntzKriegerKTheory",
+  "PlatycosmKTheory",
+  "PenroseCuntzKriegerHolography",
+  "TripotentPenroseHolography",
+  "NonInvertiblePenroseCategoricalSymmetry",
+  "BiquaternionLaplaceTripotent",
+  "BiquaternionLaplaceResolvent",
+  "KANFourierMellinDirac",
+  "ModularItakuraBiquaternion",
+  "PenroseKMSSpectralDimension",
+  "ModularHolographicMetric",
+  "RGFixedPoint",
+  "RP3Octupole",
+  "VerberckWallpaperFourier",
+  "LiuCollinsAffineInvariance",
+  "DiracResolventZeroModeTripotent",
+  "DiracZeroModes",
+  "GlideDiracSelectionRule",
+  "RelativisticBiquaternionKAN",
+  "SplitOctonionBraidSU3",
+  "SplitOctonionTomitaTakesaki",
+  "SplitOctonionNilpotent",
+  "SplitOctonionMinkowski",
+  "TripotentCliffordColimit",
+  "SpinNetworkTwistorQuantization",
+  "RindlerWignerBogoliubovEquivalence",
+  "GraphLaplacianSpanningTree",
+  "TripotentTwistorDeRhamSynthesis",
+  "CliffordInductiveTripotent",
+  "ExceptionalNonorientableTopology",
+  "OctonionMatrixEncodings",
+  "OctonionMatrixObstruction",
+  "ZornScalingFlow",
+  "ZornBraidScalingCovariance",
+  "CanonicalZornProjectiveTKKBridge",
+  "IntegralZornII44Bridge",
+  "CanonicalZornFiveGradedClosure",
+  "CanonicalZornCompositionTriality",
+  "CanonicalZornCliffordRepresentation",
+  "CanonicalZornCliffordIsomorphism",
+  "ZornCliffordBasisMonomials",
+  "ZornCliffordIsomorphismClosure",
+  "ZornCliffordPBWFinrank",
+  "ZornCliffordTraceOrthogonality",
+  "ZornCliffordBijectivity",
+  "ZornCliffordParityAPI",
+  "ZornChiralLightcone",
+  "ZornLightconeCAR",
+  "ZornLightconeChannelOperator",
+  "ZornThreeChannelCAR",
+  "ZornChannelKernelMultiplication",
+  "ZornColorLieAction",
+  "ZornColorLieRepresentation",
+  "ZornChiralColorActions",
+  "ZornColorSectorWeights",
+  "ZornColorChargeConjugation",
+  "ZornChiralColorRepresentations",
+  "ZornQuasiHopfCocycle",
+  "ZornGromovWitten",
+  "ZornParabolicHolography",
+  "ZornMajoranaBraiding",
+  "TopologicalQuantumGates",
+  "WeylHamiltonianTopology",
+  "WittenMoebiusIndex",
+  "ZornRindlerHorizon",
+  "ZornRindlerKMSBridge",
+  "CanonicalZornRealSpin44",
+  "CanonicalZornTrialitySpinEquivariance",
+  "CanonicalZornOuterTrialityGroup",
+  "CanonicalZornSpinRelatedFiber",
+  "CanonicalZornSpinChirality",
+  "CanonicalZornSpinVectorAction",
+  "CanonicalZornRealSpinTrialityClosure",
+  "CanonicalZornRealComplexSpinBaseChange",
+  "CanonicalZornIntegralSpinTrialityClosure",
+  "CanonicalZornIntegralSpinSubgroup",
+  "CanonicalZornIntegralSpinRepresentation",
+  "CanonicalZornIntegralTrialityEquivariance",
+  "IntegralZornCompositionAlgebra",
+  "IntegralZornAlternativeAlgebra",
+  "IntegralZornBilinearComposition",
+  "CanonicalZornUnifiedClosure",
+  "ZornKleinGlideBridge",
+  "ZornParavectorNullspace",
+  "NilpotentItakuraSaito",
+  "KleinNilpotentThermo",
+  "BrillouinKleinNilpotentAttractor",
+  "FixedLineRiemannKlein",
+  "HolographicScaleExtinctions",
+  "HolographicErlangenCompletion",
+  "FinalHolographicThesisSeal",
+  "HolographicDictionarySynthesis",
+  "MobiusWittenKleinIndex",
+  "Clifford55AnomalyOSP",
+  "CliffordFiveFiveAnomaly",
+  "Clifford55",
+  "ZornCore",
+  "TrialityBridge",
+  "MasterUnification",
+  "D4MassSplitting",
+  "OctonionicStandardModel",
+  "SplitCliffordAlgebras",
+  "ProjectiveCuntzToeplitzCARCCR",
+  "ProjectivePenrosePGA",
+  "NoncommutativeTilingAlgebra",
+  "ConvexAlgebraicDuality",
+  "GoldenCCR",
+  "FractalHamiltonian",
+  "BlackHoleHolography",
+  "GoldenSpectralTriple",
+  "KreinMoorePenrose",
+  "InformationGeometricCutoff",
+  "EinsteinThermodynamicBridge",
+  "UnifiedGaugeField",
+  "DiracKreinMetriplectic",
+  "SuperBerezinianKlein",
+  "GlideSymmetricInvariant",
+  "CubicJordanPeirceDecomposition",
+  "BraidIdealDescent",
+  "GohbergKreinIndex",
+  "ArtinCentralizerMonodromy",
+  "InfoGeometry",
+  "GrandHolographicLoop",
+  "CompleteHolographicDictionary",
+  "ProjectiveCrystalSymmetry",
+  "SuperchargeSquare",
+  "GlideSuperchargeCasimir",
+  "ProjectiveCrystalKappa",
+  "ProjectiveGlideSuperchargeUnification",
+  "WallpaperFermionSuperconductingGap",
+  "KleinGrapheneTunneling",
+  "ThesisMaster",
+  "ThesisSplitCompositionAlgebraFamily",
+  "ExceptionalTopologicalBandStructures",
+  "ProjectiveCrystalMackeyDecomposition",
+  "ExceptionalKleinGlideEP",
+  "ModularAutomorphismGroup",
+  "GlideModularJ",
+  "ProjectiveKappaKleinMobius",
+  "LogDetSuperKahlerBarrier",
+  "ModularGlideCPT",
+  "FredholmModularRegularization",
+  "BiquaternionMobiusSquashing",
+  "CPTAtom",
+  "SpacetimeIsSpin",
+  "SouriauBiquaternionGaussian",
+  "SouriauGaussian",
+  "SouriauHestenesKrein",
+  "SolderingSpinConnectionBogoliubov",
+  "CartanWeylBogoliubovGravity",
+  "ChiralCausalCone",
+  "ChiralConeAlgebraFinality",
+  "GrothendieckMotiveFindimColimit",
+  "WallpaperHolographicSelectionRules",
+  "VacuumJonesKleinBirefringence",
+  "GoutevTonevNuclearHamiltonian",
+  "WallpaperNuclearSpectroscopyClassification",
+  "KleinBrillouinRamanDynamics",
+  "TrappedHarmonicModes",
+  "NuclearSpectroscopyEnergyLevels",
+  "NuclearWallpaperSpectraClassification",
+  "ClebschGordanPenroseNonequilibriumSpinGraph",
+  "SpectroscopicCapstone",
+  "FinalSpectroscopicSynthesisAudit",
+  "SmithHatIsingDuality",
+  "NMRQuantumSpacetimeSimulator",
+  "HameroffOrchORMicrotubule",
+  "CoherentOrbitalPrecession",
+  "HamiltonianCoriolisLieDynamics",
+  "ValencePairEnergyLevels",
+  "MirrorValencePairCalibration",
+  "NuclearChartSquareCalibration",
+  "SU2ValencePairVQE",
+  "FrozenPin55ManifoldFlow",
+  "O55GradedGeneratorBasis",
+  "O55CartanPhononReduction",
+  "WallpaperO55FrozenSelectionBridge",
+  "TorusKleinO55Bridge",
+  "TwistedTorusVacuumMachine",
+  "DoubledChargeLatticeKasparovKreinBridge",
+  "KasparovKreinKleinO55Kernel",
+  "JackiwRebbiCantorEdgeStates",
+  "StimulatedScatteringAmplituhedron",
+  "BuresInformationGeodesicFlow",
+  "TopologicalAndreevPump",
+  "PhaseConjugateVacuumMirror",
+  "MetamaterialQuasicrystalBloch",
+  "ConformalScaleRecurrence",
+  "CosmologicalSynthesis",
+  "SuperconductingHolographicResonator",
+  "TopologicalMetasurfaceSupercurrent",
+  "CuntzP6MWallpaperBoundary",
+  "ThermalBoostLorentzSuperalgebra",
+  "DiracCuntzCrystalDispersion",
+  "KTheoryChernConfinementSignature",
+  "NonAbelianBrillouinKleinBottle",
+  "ThermodynamicLorentzBoost",
+  "ThermodynamicNetworkSpine",
+  "BuresFisherAndreevGeodesicFlow",
+  "BashoreSpinNetworkQubit",
+  "BashoreLQGReportExtraction",
+  "TrainsumQuanticsTensorTrainsDigest",
+  "MellinWaveletScaleShiftDigest",
+  "EastSU2EquivariantSpinNetworkCircuits",
+  "QuaternionQuanticsBackendDigest",
+  "PenroseChiralNuclearTrainsumToy",
+  "BoltzmannLnQTensorFlowToy",
+  "Mirror31PSLnQFlowToy",
+  "GaugeLnQTensorNetworkToy",
+  "XanaduSpinNetworkCodeDigest",
+  "ChiralPoincareSouriauBridge",
+  "SuperPoincareOperatorCharges",
+  "CuntzDeformedSuperPoincare",
+  "LorentzChiralCuntzBridge",
+  "HestenesCuntzSpacetimeAlgebra",
+  "HestenesCuntzPhaseSpace",
+  "BogoliubovWeylChemicalPotential",
+  "BogoliubovSU3ParafermionWeld",
+  "BogoliubovSU3ParafermionProofChain",
+  "WeylSU3ColorSymmetry",
+  "GellMannParafermionSolder",
+  "ParafermionIdentityRealization",
+  "CantorBoundaryCuntzFamily",
+  "WeylSolderedParafermionSymmetry",
+  "CuntzBoundarySolderRealization",
+  "GellMannParafermionRealizationRoutesSynthesis",
+  "ColorParafermionCuntzBusSpine",
+  "FiniteSpinePublicationSummary",
+  "PrimonHilbertPolyaSeparation",
+  "IJIRTRiemannDigest",
+  "MisraPrimeEntropyDigest",
+  "PrimonBosonFermionDuality",
+  "PrimonCoarseGraining",
+  "PrimonCoarseGrainedHilbertPolyaPotential",
+  "JaynesLDDPGNSColimit",
+  "JaynesLeanColimitBridge",
+  "ContinuumAsColimitCounting",
+  "CurryHowardLambekColimit",
+  "TwistorParafermionBoundary",
+  "CP3CantorGeometricObstruction",
+  "ProjectiveAffineConformalClosure55",
+  "HillWheelerProjection",
+  "HillWheelerUniversalProjection",
+  "ItFromBitProjectiveHolographicSynthesis",
+  "SU3LoopBraidCuntzBoundary",
+  "SUNLoopBraidCuntzBoundary",
+  "SU3CorrelationExtraction",
+  "TopologicalColorCrystal",
+  "TopologicalColorCrystalFormal",
+  "MobiusCantorTKKClosure",
+  "SolovievQPNMChiralCuntz",
+  "SpectralSquashCayleyDKT",
+  "QSuperCuntzRegularization",
+  "QSuperRegularizationRosetta",
+  "QRootOfUnityTruncation",
+  "QuadraticConfiguration3",
+  "NonIsoConf3OrlikSolomon",
+  "AmariChentsovFierzTorsion",
+  "NonIsoConf3ThreePointDeRhamCooperad",
+  "NonIsoConf3DeRhamCooperad",
+  "NonIsoConf3LightConeQuadricSummary",
+  "NonIsoConf3DeRhamCohomologyFormula",
+  "NonIsoConf3LogWedgeObstruction",
+  "NonIsoConf3ProjectionQuotient",
+  "NonIsoConf3PointCountRankWarning",
+  "NonIsoConf3LiteratureLemmaChain",
+  "NonIsoConf3RankDecision",
+  "LogCFTGeneratingPotential",
+  "LogCFTPotentialBranchChoice",
+  "NonIsoConf3LogCFTLiteratureBridge",
+  "LightConeConf3DeRhamCooperad",
+  "InfiniteLightConeConfColimit",
+  "BraidedCocycleWilsonEntropy",
+  "QuadricConf3BraidingCooperadBridge",
+  "AnyonicBaryonGibbsWilsonBridge",
+  "PenroseQuadricTopologySynthesis",
+  "LightConeTripotentMatrixBridge",
+  "CooperadEnvironmentalRank32",
+  "ChemicalPotentialTKKGradeZero",
+  "ThermodynamicTKKBridge",
+  "ChemicalPotentialDeRhamG0Bridge",
+  "ModularRadonNikodymJacobianBridge",
+  "ModularTimeDeRhamBridge",
+  "ModularParabolicTimeBridge",
+  "EntropicChiralDeRhamDictionary",
+  "EntropicChiralDeRhamFormalization",
+  "ChemicalPotentialMetricBridge",
+  "NonIsoConf3LogCFTPotential",
+  "NonIsoConf3LogPotentialDecision",
+  "NonIsoConf3PairwiseNonisotropicCohomology",
+  "NonIsoConf3BraidedCocycleEntropy",
+  "NonIsoConf3VertexBraidingBridge",
+  "NonIsoConf3QuadricD4Model",
+  "NonIsoConf3QuadricD4PointCount",
+  "NonIsoConf3QuadricD4EPolynomial",
+  "GrothendieckGromovWittenYangBaxter",
+  "PenroseSpinTilingConfig",
+  "PenroseSpinIncidenceTessellation",
+  "PenroseSpinTilingCapstone",
+  "KleinErlangenGrothendieckBridge",
+  "MotivicHolographyGroebnerLFunction",
+  "DupontHypersurfaceOSModel",
+  "NonIsoConf3DupontGysinModel",
+  "NonIsoConf3QuadricCompactification",
+  "OakuTakayamaDModuleDeRham",
+  "TKKJordanPairData",
+  "UnorientedS3KleinTQFT",
+  "SpectralCPTKleinBottle",
+  "S3ColorSpinorDecomposition",
+  "ColorConfinementGNS",
+  "ChiralIsospinEOMSU2",
+  "PrimonFlavorCKM",
+  "DikinOnsagerCramerRaoOperator",
+  "QCDScaleExtraction",
+  "GNSModularObservables",
+  "CartanKleinBottleGeometry",
+  "Q8NuclearChirality",
+  "MirrorNucleiIsospinGNS",
+  "ModularEntropyPrimes",
+  "CurryHowardLambekPhysics",
+  "SymbolicFockLane",
+  "SymbolicLaneUHFBridge",
+  "inductive_colimit_uhf_group",
+  "uhf_ladder",
+  "J_duality_chain",
+  "krein_souriau",
+  "krein_souriau_full",
+  "penrose_wallpaper_colimit",
+  "SouriauHestenesKrein",
+  "UnorientedS3KleinTQFT",
+  "HolographicProxyQLimit",
+  "MillenniumRosettaStone",
+  "HolographicGaugeSymmetryUniqueness",
+  "HolographicGaugeSymmetryUniqueness20",
+  "SU3LoopBraidDuality",
+  "GravitationalQuantumBraidDuality",
+  "SUNQuantumBraidDuality",
+  "DischargeChain",
+  "BogoliubovBraidGraphWeld",
+  "RescaledPhaseVolumeCanonical",
+  "AssociativeCommutatorLie",
+  "LorentzBoostMinkowski",
+  "BPSPositiveEnergyBound",
+  "CuntzK0TorsionRelation",
+  "FiniteGNSConstruction",
+  "GNSQuotientFinite",
+  "FiniteMatrixElementDuality",
+  "KreinCuntzShadow",
+  "JordanBlock2",
+  "Cl11ChiralCARBridge",
+  "ChiralTensorRecoupling",
+  "TLChain",
+  "JonesBraidB3",
+  "SpectralYangBaxter",
+  "YangBaxterQSwap",
+  "YangBaxterZornBridge",
+  "B3PresentedGroup",
+  "BaxterAnchorManifest",
+  "B3RepresentationBridge",
+  "YangBaxterQuotientDescent",
+  "IdealDescentProof",
+  "ChiralTLDescent",
+  "ArangoBrainMetaprogram",
+  "ChiralTensorMatrixBridge",
+  "ChiralB3PresentedBridge",
+  "ColorCARStandardModel",
+  "FureyCharges",
+  "SouriauOperatorThermodynamics",
+  "GoutevTonevPrinciple",
+  "RelativeModularStateDikin",
+  "AffineDynkinGoutevTonev",
+  "GellMannCartan",
+  "DikinGoutevTonevBridge",
+  "FierzIdentities",
+  "EuclideanNilpotentObstruction",
+  "ZornChiralBridge",
+  "GellMannSU3",
+  "WeakIsospinSU2",
+  "MajoranaPrimonSpectralBridge",
+  "ArithmeticHamiltonianZeta",
+  "CanonicalSplitOctonionTKK",
+    "BosonicPrimonPartition",
+    "BostConnesDeformation",
+    "BraidInductiveColimitComplement",
+    "BraidInductiveColimitCategory",
+    "BraidVertexAlgebraCocycleBridge",
+    "CARCCRCantorFock",
+    "CausalityCondensate",
+    "ComplexTemperatureRH",
+    "CramerRaoFisher",
+    "Crystallographic",
+    "CuntzKriegerPrimon",
+    "EmergentSpacetimeAnsatz",
+    "FenchelSpacetime",
+    "FermiLevelGap",
+    "FermionicPrimonIndex",
+    "FermionicPrimonPartition",
+    "FibAnyonThm6_pentagon",
+    "FiniteArithmeticUHFTrace",
+    "FiniteDirichletOccupation",
+    "FiniteMobiusCoefficient",
+    "FinitePrimeFock",
+    "FiniteProjectorSpectralCalculus",
+    "FiniteUHFBooleanTrace",
+    "FockSpaceDerivation",
+    "FockUHFBridge",
+    "GaugeUHFLift",
+    "WeylGaugeColimitWeld",
+    "WeylColimitCanonicalLimit",
+    "ChiralAffineBogoliubovWeld",
+    "GeometricZeta",
+    "GrandCanonicalBerezinian",
+    "GrandCanonicalPrimon",
+    "KleinBottleParafermionInvariant",
+    "ModularMonodromy",
+    "PartitionPoleCriterion",
+    "PauliZornTrifactor",
+    "PenroseAF",
+    "PenroseArithmetic",
+    "PhaseTransition_SUSY",
+    "PrimonZetaMobius",
+    "PrimonFockTraceBridge",
+    "RiemannHypothesis",
+    "SolderingForms",
+    "SolderingRoundTrip",
+    "SouriauComplexTemperature",
+    "SouriauHestenesMobiusPole",
+    "SouriauThermoColimit",
+    "SuperPartitionBerezinian",
+    "TransformsAndScale",
+    "UHFInductiveColimit",
+  "ZornAssociatorSplitOctonion",
+  "ZornTrialityTKKBridge",
+  "master_equation",
+    "primon_system",
+    "thermo_gauge_flow",
+    "uhf_cantor_boundary",
+    "zeta_zeros_moebius_klein",
+    "CheckLimit",
+    "CheckPUnitAdd",
+    "TestAF",
+    "test_ring",
+    "test_simp",
+    "PrimaMateriaInformationGeometry",
+    "PublishedThesisArchitecture",
+    "WignerSU4SpinIsospin",
+  "Pin55CartanDecomposition",
+  "Pin55ChiralZornTKKBridge",
+  "PionChiralGoldstone",
+    "CuntzKTheoryMittagLeffler",
+    "WorldsheetCobordism",
+    "CapstoneCondensateLimits",
+    "FreedAnomalyCancellation",
+  "CuntzZornEntropy",
+  "MITFInvariant",
+  "MITFOrientability",
+  "MITFOrientabilityFlow",
+  "KaneMeleOrbifold",
+    "EinsteinStimulatedBoseCollapse",
+]
+
+[[lean_lib]]
+name = "iR"
+roots = [
+  "InfinityFilteredColimits","iR"]
+
+[[lean_exe]]
+name = "ExtractInfoTree"
+root = "tools.lean_graph.ExtractInfoTree"
+supportInterpreter = true
+[[lean_lib]]
+name = "Clifford55PBWFinrank"
+roots = ["Clifford55PBWFinrank"]
+
+[[lean_lib]]
+name = "Clifford55PBWMonomials"
+roots = ["Clifford55PBWMonomials"]
+
+[[lean_lib]]
+name = "Clifford55PBWTraceBasis"
+roots = ["Clifford55PBWTraceBasis"]
+
+[[lean_lib]]
+name = "Clifford55CenterAnticenter"
+roots = ["Clifford55CenterAnticenter"]
+
+[[lean_lib]]
+name = "RealPin55ExactKernel"
+roots = ["RealPin55ExactKernel"]
+
+[[lean_lib]]
+name = "RealPin55OrthogonalCover"
+roots = ["RealPin55OrthogonalCover"]
+
+[[lean_lib]]
+name = "CircularCARQuarticCapstone"
+roots = ["CircularCARQuarticCapstone"]
+
+[[lean_lib]]
+name = "TwelveFoldSheetColorOmega"
+roots = ["TwelveFoldSheetColorOmega"]
+
+[[lean_lib]]
+name = "SplitOctonionSixSectorBridge"
+roots = ["SplitOctonionSixSectorBridge"]
+
+[[lean_lib]]
+name = "TwelveFoldSpectralBridge"
+roots = ["TwelveFoldSpectralBridge"]
+
+[[lean_lib]]
+name = "SixStateGeneralizedPauliBasis"
+roots = ["SixStateGeneralizedPauliBasis"]
+
+[[lean_lib]]
+name = "SixStateGeneralizedCliffordAlgebra"
+roots = ["SixStateGeneralizedCliffordAlgebra"]
+
+[[lean_lib]]
+name = "CRTGeneralizedPauliSix"
+roots = ["CRTGeneralizedPauliSix"]
+
+[[lean_lib]]
+name = "TwelveFoldExtendedWeylBridge"
+roots = ["TwelveFoldExtendedWeylBridge"]
+
+[[lean_lib]]
+name = "TwelveFoldGeneralizedCliffordExtension"
+roots = ["TwelveFoldGeneralizedCliffordExtension"]
+
+[[lean_lib]]
+name = "SplitOctonionZornOmegaPhase"
+roots = ["SplitOctonionZornOmegaPhase"]
+
+[[lean_lib]]
+name = "HestenesDistinctHodge"
+roots = ["HestenesDistinctHodge"]
+
+[[lean_lib]]
+name = "HestenesHodgeParityBridge"
+roots = ["HestenesHodgeParityBridge"]
+
+[[lean_lib]]
+name = "HestenesHodgeBivector"
+roots = ["HestenesHodgeBivector"]
+
+[[lean_lib]]
+name = "HestenesHodgeEvenTransport"
+roots = ["HestenesHodgeEvenTransport"]
+
+[[lean_lib]]
+name = "TwelveFoldCharacteristicPolynomial"
+roots = ["TwelveFoldCharacteristicPolynomial"]
+
+[[lean_lib]]
+name = "TwelveFoldOrderHierarchy"
+roots = ["TwelveFoldOrderHierarchy"]
+
+[[lean_lib]]
+name = "TwelveFoldCyclicRepresentation"
+roots = ["TwelveFoldCyclicRepresentation"]
+
+[[lean_lib]]
+name = "HestenesBivectorCarrier"
+roots = ["HestenesBivectorCarrier"]
+
+[[lean_lib]]
+name = "HestenesBivectorSelfDuality"
+roots = ["HestenesBivectorSelfDuality"]
+
+[[lean_lib]]
+name = "HestenesMaxwellSelfDualField"
+roots = ["HestenesMaxwellSelfDualField"]
+
+[[lean_lib]]
+name = "HestenesBivectorBasis"
+roots = ["HestenesBivectorBasis"]
+
+[[lean_lib]]
+name = "HestenesTransportedOddHodge"
+roots = ["HestenesTransportedOddHodge"]
+
+[[lean_lib]]
+name = "HestenesParaComplexFinrank"
+roots = ["HestenesParaComplexFinrank"]
+
+[[lean_lib]]
+name = "HestenesBivectorSelfDualFinrank"
+roots = ["HestenesBivectorSelfDualFinrank"]
+
+[[lean_lib]]
+name = "FiniteHestenesHilbertSchmidtStandardForm"
+roots = ["FiniteHestenesHilbertSchmidtStandardForm"]
+
+[[lean_lib]]
+name = "HestenesHodgeSignArchitecture"
+roots = ["HestenesHodgeSignArchitecture"]
+
+[[lean_lib]]
+name = "HestenesStandardFormModularArchitecture"
+roots = ["HestenesStandardFormModularArchitecture"]
+
+[[lean_lib]]
+name = "HestenesCircularCARBridge"
+roots = ["HestenesCircularCARBridge"]
+
+[[lean_lib]]
+name = "ProjectiveUnitary6"
+roots = ["ProjectiveUnitary6"]
+
+[[lean_lib]]
+name = "KleinPresentedGroup"
+roots = ["KleinPresentedGroup"]
+
+[[lean_lib]]
+name = "A2WeylFin3Action"
+roots = ["A2WeylFin3Action"]
+
+[[lean_lib]]
+name = "AlgebraicOrbitQuotient"
+roots = ["AlgebraicOrbitQuotient"]
+
+[[lean_lib]]
+name = "D5IsotropicRootTransport"
+roots = ["D5IsotropicRootTransport"]
+
+[[lean_lib]]
+name = "KleinProjectiveSixState"
+roots = ["KleinProjectiveSixState"]
+
+[[lean_lib]]
+name = "ProjectiveRepresentation"
+roots = ["ProjectiveRepresentation"]
+
+[[lean_lib]]
+name = "TwelveFoldArithmetic"
+roots = ["TwelveFoldArithmetic"]
+
+[[lean_lib]]
+name = "TwelveFoldCyclotomicPolynomial"
+roots = ["TwelveFoldCyclotomicPolynomial"]
+
+[[lean_lib]]
+name = "KleinOperatorFiberBundle"
+roots = ["KleinOperatorFiberBundle"]
+
+[[lean_lib]]
+name = "KleinOperatorAlgebraQuotient"
+roots = ["KleinOperatorAlgebraQuotient"]
+
+[[lean_lib]]
+name = "A2InsideD5RootSubsystem"
+roots = ["A2InsideD5RootSubsystem"]
+
+[[lean_lib]]
+name = "HexIndexA2RootIntertwiner"
+roots = ["HexIndexA2RootIntertwiner"]
+
+[[lean_lib]]
+name = "A2SixStateSpectralIntertwiner"
+roots = ["A2SixStateSpectralIntertwiner"]
+
+[[lean_lib]]
+name = "KleinBottleOrbitQuotient"
+roots = ["KleinBottleOrbitQuotient"]
+
+[[lean_lib]]
+name = "KleinSixStateAssociatedQuotient"
+roots = ["KleinSixStateAssociatedQuotient"]
+
+[[lean_lib]]
+name = "KleinFlatBandHamiltonian"
+roots = ["KleinFlatBandHamiltonian"]
+
+[[lean_lib]]
+name = "D5ComplexMatrixRootSpaces"
+roots = ["D5ComplexMatrixRootSpaces"]
+
+[[lean_lib]]
+name = "A2SixStateMatrixRootBridge"
+roots = ["A2SixStateMatrixRootBridge"]
+
+[[lean_lib]]
+name = "KleinGlideCovering"
+roots = ["KleinGlideCovering"]
+
+[[lean_lib]]
+name = "KleinSixStateProjectiveMonodromy"
+roots = ["KleinSixStateProjectiveMonodromy"]
+
+[[lean_lib]]
+name = "TKK55Complexification"
+roots = ["TKK55Complexification"]
+
+[[lean_lib]]
+name = "D5IsotropicDiagonalLieEquiv"
+roots = ["D5IsotropicDiagonalLieEquiv"]
+
+[[lean_lib]]
+name = "D5DiagonalRootTransport"
+roots = ["D5DiagonalRootTransport"]
+
+[[lean_lib]]
+name = "D5DiagonalComplexification"
+roots = ["D5DiagonalComplexification"]
+
+[[lean_lib]]
+name = "D5TKKRootTransport"
+roots = ["D5TKKRootTransport"]
+
+[[lean_lib]]
+name = "KleinGlideCoveringAtlas"
+roots = ["KleinGlideCoveringAtlas"]
+
+[[lean_lib]]
+name = "KleinOperatorAlgebraAssociatedQuotient"
+roots = ["KleinOperatorAlgebraAssociatedQuotient"]
+
+[[lean_lib]]
+name = "KleinVectorLiftObstruction"
+roots = ["KleinVectorLiftObstruction"]
+
+[[lean_lib]]
+name = "KleinSixStateVectorBundleCore"
+roots = ["KleinSixStateVectorBundleCore"]
+
+[[lean_lib]]
+name = "KleinSixStateBundleOrbitEquiv"
+roots = ["KleinSixStateBundleOrbitEquiv"]
+
+[[lean_lib]]
+name = "KleinSixStateBundleOrbitHomeomorph"
+roots = ["KleinSixStateBundleOrbitHomeomorph"]
+
+[[lean_lib]]
+name = "KleinProjectiveSixStateAtlas"
+roots = ["KleinProjectiveSixStateAtlas"]
+
+[[lean_lib]]
+name = "KleinProjectiveAssociatedBundleCore"
+roots = ["KleinProjectiveAssociatedBundleCore"]
+
+[[lean_lib]]
+name = "KleinGlideMultiplicativeCovering"
+roots = ["KleinGlideMultiplicativeCovering"]
+
+[[lean_lib]]
+name = "KleinOperatorAlgebraBundleCore"
+roots = ["KleinOperatorAlgebraBundleCore"]
+
+[[lean_lib]]
+name = "KleinAffineDeckGroup"
+roots = ["KleinAffineDeckGroup"]
+
+[[lean_lib]]
+name = "KleinUniversalAffineAction"
+roots = ["KleinUniversalAffineAction"]
+
+[[lean_lib]]
+name = "KleinFundamentalGroup"
+roots = ["KleinFundamentalGroup"]
+
+[[lean_lib]]
+name = "KleinEquivariantHamiltonian"
+roots = ["KleinEquivariantHamiltonian"]
+
+[[lean_lib]]
+name = "BogoliubovQGTSoldering"
+roots = ["BogoliubovQGTSoldering"]
+
+[[lean_lib]]
+name = "SplitOctonionQGTSoldering"
+roots = ["SplitOctonionQGTSoldering"]
+
+[[lean_lib]]
+name = "SplitQuaternionCliffordConjugation"
+roots = ["SplitQuaternionCliffordConjugation"]
+
+[[lean_lib]]
+name = "Cl11PacketInCl44"
+roots = ["Cl11PacketInCl44"]

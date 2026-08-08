@@ -145,7 +145,7 @@ The braid group generator σ = F·R·F, expressed in the Pauli basis:
 
 This is the B-matrix = middle generator of the four-anyon braid group.
 The Artin relation for these finite matrices is handled below only under an
-explicit matrix-identity hypothesis or by importing a dedicated owner theorem.
+explicit matrix-identity property or by importing a dedicated owner theorem.
 -/
 theorem braid_generator_from_pauli (q : Units ℂ) (τ s : ℂ) :
     fibonacciBMatrix q τ s = fibonacciFusionMatrix τ s * fibonacciRMatrix q * fibonacciFusionMatrix τ s :=

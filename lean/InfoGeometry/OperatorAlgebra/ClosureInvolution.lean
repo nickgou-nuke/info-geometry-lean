@@ -14,7 +14,7 @@ decomposition induced by an involution.
 
 The projection formulas use division by `2`, so this module is intentionally
 over `ℝ`.  Generalizing to other scalar rings would require an explicit
-invertibility-of-two hypothesis.
+invertibility-of-two property.
 -/
 
 import Mathlib.Tactic

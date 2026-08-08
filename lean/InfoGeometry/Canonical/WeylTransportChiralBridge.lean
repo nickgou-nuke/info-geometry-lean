@@ -277,7 +277,7 @@ omit [Fintype I] [FiniteDimensional ℝ E] in
 Flat Weyl holonomy collapses to zero on the proof-carrying unit-relative-volume
 branch.
 
-This narrows the explicit hypothesis surface from the bare equality
+This narrows the explicit property surface from the bare equality
 `relativeVolumeChangeRN n M = 1` to the constructive `UnitRelativeVolumeBit`
 packet while preserving `holonomy_eq_zero_of_flat_of_unitRelativeVolume` as the
 compatibility theorem.

@@ -1,0 +1,27 @@
+// monodromy_ideals.sing
+// Construct the polynomial ideals for the conformal flow equations.
+
+ring r = 0, (x, y, z, u, v, w), dp;
+
+// Define polynomial equations for conformal flow
+poly f1 = x^2 + y^2 + z^2 - 1;
+poly f2 = u*x + v*y + w*z;
+poly f3 = x*w - z*u;
+
+ideal I = f1, f2, f3;
+
+print("Conformal flow ideal constructed:");
+print(I);
+
+// Compute the Groebner basis to evaluate the holonomy algebraically
+ideal G = groebner(I);
+
+print("Groebner basis computed for topological invariants:");
+print(G);
+
+// Evaluate topological invariant by checking dimension
+int d = dim(G);
+print("Dimension of the algebraic variety (quantized invariant):");
+print(d);
+
+quit;

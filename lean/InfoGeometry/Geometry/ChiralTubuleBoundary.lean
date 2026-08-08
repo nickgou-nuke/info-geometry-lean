@@ -4,7 +4,7 @@ InfoGeometry/Geometry/ChiralTubuleBoundary.lean
 Chiral tubule phase-transition boundary.
 
 This module formalizes the snap boundary where regular Bregman/Legendre
-geometry loses Hessian invertibility and a chiral phase-separation witness
+geometry loses Hessian invertibility and a chiral phase-separation property
 appears.
 
 The module does not assert that high temperature alone creates a tubule.
@@ -188,7 +188,7 @@ end MajoranaWeylResidueDatum
 /-! ## 5. Chiral tubule crystallization -/
 
 /--
-A chiral tubule crystallization witness.
+A chiral tubule crystallization property.
 
 At a snap boundary, the regular phase separates into two disjoint chiral phases
 and produces a nontrivial residue.
@@ -247,7 +247,7 @@ end ChiralTubuleCrystallization
 Transition law saying that snap-boundary plus extreme shear plus thermal drive
 forces chiral tubule crystallization.
 
-This is a physical/geometric bridge witness, not a theorem derivable from
+This is a physical/geometric bridge property, not a theorem derivable from
 abstract Hessian data alone.
 -/
 structure ChiralTubuleTransitionLaw
@@ -401,7 +401,7 @@ end ProtectedTubuleSector
 /--
 Chiral tubule boundary readout.
 
-It is intentionally witness-gated by thermal/shear calibration and a transition
+It is intentionally property-gated by thermal/shear calibration and a transition
 law.
 -/
 theorem chiralTubuleBoundaryOwnerTarget :

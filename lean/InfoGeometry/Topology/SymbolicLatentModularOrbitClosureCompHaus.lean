@@ -7,7 +7,7 @@ import Mathlib.Topology.Category.CompHaus.Basic
 The modular orbit-closure owner already supplies the native closed-subspace
 embedding and compactness theorem.  This bridge packages that same subtype in
 `CompHaus`, without introducing a second closure or a synthetic compactness
-axiom.
+ax!om.
 -/
 
 noncomputable section

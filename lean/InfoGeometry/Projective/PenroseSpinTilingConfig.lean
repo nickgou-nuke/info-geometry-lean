@@ -26,7 +26,7 @@ None.
   counting polynomial.
 - Compute or certify the actual algebraic de Rham cohomology of
   `C^8 \ V(q(a) q(b) q(a-b))`.
-- Relate the configured local Betti list to that certified de Rham computation.
+- Relate the configured local Betti list to that property de Rham computation.
 
 This module records the finite arithmetic checks and the rank configuration
 used by the Penrose spin tiling layer for the singular Klein-quadric

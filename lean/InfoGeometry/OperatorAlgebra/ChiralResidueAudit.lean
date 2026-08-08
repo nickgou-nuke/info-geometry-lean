@@ -6,7 +6,7 @@ Chiral residue audit for crossover data.
 This module formalizes the audit layer only.
 
 It does not prove Navier-Stokes regularity or singularity formation.
-It classifies chiral residues and exposes the witness boundary required to
+It classifies chiral residues and exposes the property boundary required to
 turn an audit verdict into a flow-regularity theorem.
 -/
 
@@ -324,7 +324,7 @@ theorem not_global_regular_of_obstructed
     (B.obstructing_of_obstructed R hR)
 
 /--
-A benign audit verdict gives global regularity, witness-gated by the installed
+A benign audit verdict gives global regularity, property-gated by the installed
 regularity bridge.
 -/
 theorem global_regular_of_audit_benign
@@ -336,7 +336,7 @@ theorem global_regular_of_audit_benign
   exact (B.context.audit_benign_iff R).mp hAudit
 
 /--
-An obstructed audit verdict gives non-regularity, witness-gated by the installed
+An obstructed audit verdict gives non-regularity, property-gated by the installed
 regularity bridge.
 -/
 theorem not_global_regular_of_audit_obstructed

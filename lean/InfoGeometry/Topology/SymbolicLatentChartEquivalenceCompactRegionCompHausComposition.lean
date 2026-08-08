@@ -4,8 +4,8 @@ import InfoGeometry.Topology.SymbolicLatentChartEquivalenceCompactRegionCompHaus
 # Composition of compact chart-equivalence transports
 
 The compact-region `CompHaus` isomorphism is functorial under composition of
-chart equivalences.  The intermediate compactness witness is transported by
-the first equivalence; no new compactness or gluing axiom is introduced.
+chart equivalences.  The intermediate compactness property is transported by
+the first equivalence; no new compactness or gluing ax!om is introduced.
 -/
 
 noncomputable section

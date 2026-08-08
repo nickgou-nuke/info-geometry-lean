@@ -1,0 +1,11 @@
+aeonCount:=3;; thetaAeonIndex:=3;; thetaSedimentWeight:=1/1000;; inverseThetaScale:=1000;;
+su3Rank:=2;; su3Roots:=6;; su3Cartan:=2;; su3Generators:=8;; su3WeylOrder:=6;; smRank:=4;; smGenerators:=12;;
+C2su3Fund:=4/3;; C2su3Adj:=3;;
+if aeonCount<>3 or thetaAeonIndex<>3 or thetaSedimentWeight<>1/1000 or inverseThetaScale<>1000 then Error("aeon theta"); fi;
+if su3Rank<>2 or su3Roots<>6 or su3Cartan<>2 or su3Generators<>8 or su3WeylOrder<>6 or smRank<>4 or smGenerators<>12 then Error("su3"); fi;
+if C2su3Fund<>4/3 or C2su3Adj<>3 then Error("casimir"); fi;
+topologicalChargePair:=0;; pontryaginGenerators:=1;; thetaIdealGenerators:=2;; dmoduleCCRGenerators:=1;; u1AxialAnomalyCoeff:=8;; generationAnomaly:=0;;
+S3:=SymmetricGroup(3);; if Size(S3)<>6 then Error("weyl"); fi;
+edges:=["generates_theta","carries_su3","cp_flips","axion_cancels","closes"];
+Print(rec(aeonCount:=aeonCount,thetaAeonIndex:=thetaAeonIndex,thetaSedimentWeight:=thetaSedimentWeight,inverseThetaScale:=inverseThetaScale,su3Rank:=su3Rank,su3Roots:=su3Roots,su3Cartan:=su3Cartan,su3Generators:=su3Generators,su3WeylOrder:=su3WeylOrder,smRank:=smRank,smGenerators:=smGenerators,C2su3Fund:=C2su3Fund,C2su3Adj:=C2su3Adj,topologicalChargePair:=topologicalChargePair,pontryaginGenerators:=pontryaginGenerators,thetaIdealGenerators:=thetaIdealGenerators,dmoduleCCRGenerators:=dmoduleCCRGenerators,u1AxialAnomalyCoeff:=u1AxialAnomalyCoeff,generationAnomaly:=generationAnomaly,s3Order:=Size(S3),graphEdges:=Length(edges)),"\n");
+QUIT;

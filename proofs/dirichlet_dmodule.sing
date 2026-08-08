@@ -1,0 +1,7 @@
+// Define the Mellin transform evaluation equations as a system of algebraic ideals and compute their syzygies
+ring r = 0, (x, y, z, w), dp;
+ideal I = x*y - z, x^2 + y^2 - w^2, x*y*z - w;
+ideal S = syz(I);
+print("Syzygies of the Mellin transform evaluation ideal:");
+print(S);
+exit;

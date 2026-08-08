@@ -8,7 +8,7 @@ This file is a small dictionary layer over `InfoGeometry.Algebra.ZornMatrix`.
 The symbols `uPlus`, `uMinus`, `sigmaPlus`, and `sigmaMinus` are native Zorn
 elements; no associative multiplication is added to the octonion carrier.
 The local two-generator packets record the matrix-unit relations available in
-each colour fibre, while the global associator witness remains explicit.
+each colour fibre, while the global associator property remains explicit.
 -/
 
 namespace InfoGeometry.Canonical.SplitOctonionCircularChiralClosure
@@ -136,9 +136,9 @@ theorem commutator_sigmaPlus_sigmaMinus (i j : Fin 3) :
       fin_cases k <;> simp [sub_w, zero, Vec3.sub]
     · simp [sub_b, zero]
 
-theorem nonassociative_circular_witness :
+theorem nonassociative_circular_property :
     ((sigmaPlus 0 * sigmaPlus 1) * sigmaPlus 2) ≠
       sigmaPlus 0 * (sigmaPlus 1 * sigmaPlus 2) := by
-  exact ZornMatrix.nonassociative_witness (R := ℝ)
+  exact ZornMatrix.nonassociative_property (R := ℝ)
 
 end InfoGeometry.Canonical.SplitOctonionCircularChiralClosure

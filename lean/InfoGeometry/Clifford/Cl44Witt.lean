@@ -80,6 +80,18 @@ private lemma aVec_adagVec_polar (i j : Fin 4) :
     simp [QuadraticMap.polar, aVec, adagVec, eVec, fVec, splitQ44_apply,
       Pi.single_eq_same, Pi.single_eq_of_ne, Fin.ext_iff] <;> norm_num
 
+private lemma aVec_aVec_polar (i j : Fin 4) :
+    QuadraticMap.polar splitQ44 (aVec i) (aVec j) = 0 := by
+  fin_cases i <;> fin_cases j <;>
+    simp [QuadraticMap.polar, aVec, eVec, fVec, splitQ44_apply,
+      Pi.single_eq_same, Pi.single_eq_of_ne, Fin.ext_iff]
+
+private lemma adagVec_adagVec_polar (i j : Fin 4) :
+    QuadraticMap.polar splitQ44 (adagVec i) (adagVec j) = 0 := by
+  fin_cases i <;> fin_cases j <;>
+    simp [QuadraticMap.polar, adagVec, eVec, fVec, splitQ44_apply,
+      Pi.single_eq_same, Pi.single_eq_of_ne, Fin.ext_iff] <;> norm_num
+
 /-- Positive basis generator squares to `+1`. -/
 theorem e_sq (i : Fin 4) :
     e i * e i = 1 := by
@@ -130,6 +142,18 @@ theorem witt_CAR_ne (i j : Fin 4) (hij : i ≠ j) :
 theorem witt_CAR_eq (i : Fin 4) :
     a i * adag i + adag i * a i = 1 := by
   simp [witt_CAR]
+
+theorem witt_annihilation_anticomm (i j : Fin 4) :
+    a i * a j + a j * a i = 0 := by
+  simpa [a, aVec_aVec_polar i j] using
+    (CliffordAlgebra.ι_mul_ι_add_swap
+      (Q := splitQ44) (aVec i) (aVec j))
+
+theorem witt_creation_anticomm (i j : Fin 4) :
+    adag i * adag j + adag j * adag i = 0 := by
+  simpa [adag, adagVec_adagVec_polar i j] using
+    (CliffordAlgebra.ι_mul_ι_add_swap
+      (Q := splitQ44) (adagVec i) (adagVec j))
 
 end InfoGeometry.Clifford.Cl44Witt
 

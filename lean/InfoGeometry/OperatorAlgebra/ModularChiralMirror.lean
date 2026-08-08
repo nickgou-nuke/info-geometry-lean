@@ -50,7 +50,7 @@ def rightChiralProjector
 /-! ## 2. Modular mirror sign datum -/
 
 /--
-A low-level modular mirror sign witness for fixed operators `J` and `chi`.
+A low-level modular mirror sign property for fixed operators `J` and `chi`.
 
 This is the pure sign relation.  It does not require scalar structure or
 projectors; those enter in `ModularChiralMirrorDatum`.
@@ -123,7 +123,7 @@ def P_left : Op :=
 def P_right : Op :=
   rightChiralProjector Op M.chi
 
-/-- The underlying low-level sign witness. -/
+/-- The underlying low-level sign property. -/
 def sign : ModularChiralMirrorSign Op M.J M.chi where
   J_square := M.J_square
   chi_square := M.chi_square
@@ -844,7 +844,7 @@ structure AlgebraCommutantChiralMirror
 
   /--
   Exact algebra/commutant routing law.  This is the predicate-level form of
-  `J M J = M'`, rather than a bare certificate that such a law exists.
+  `J M J = M'`, rather than a bare property that such a law exists.
   -/
   algebra_mirrors_to_commutant :
     ∀ x : Op, InCommutant (mirrorOp x) ↔ InAlgebra x

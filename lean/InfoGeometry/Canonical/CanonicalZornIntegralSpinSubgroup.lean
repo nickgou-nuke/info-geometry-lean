@@ -122,7 +122,7 @@ def integralSpin44 : Subgroup (spinGroup realQuadratic44) where
   mul_mem' hg hh := preservesIntegralZornLattice_mul hg hh
   inv_mem' hg := preservesIntegralZornLattice_inv hg
 
-/-- Integral image point selected from the forward preservation certificate. -/
+/-- Integral image point selected from the forward preservation property. -/
 def integralSpinAction (g : integralSpin44) (X : IntegralZorn) : IntegralZorn :=
   Classical.choose (g.2.1 X)
 

@@ -137,7 +137,7 @@ theorem quantumGeometryMetric_and_weldedProjectorPhase_eq_metricOfOperator_pair_
 /--
 Dynamic noncommutative owner pair:
 the metric operator is transported by relative-modular conjugation, while the
-phase-side anomaly operator is transported by the certified Bogoliubov
+phase-side anomaly operator is transported by the property Bogoliubov
 conjugation owner.
 -/
 noncomputable def quantumGeometryEinsteinTransportedOperatorPair

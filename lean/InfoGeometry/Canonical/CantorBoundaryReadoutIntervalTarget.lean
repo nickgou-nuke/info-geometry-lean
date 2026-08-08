@@ -8,7 +8,7 @@ import Mathlib.Topology.Homeomorph.Lemmas
 The kernel quotient has a continuous readout into `ℝ` whose values lie in
 `Set.Icc (0 : ℝ) 1`.  This file records the resulting subtype-valued map and
 isolates the remaining target-identification obligation as an explicit
-surjectivity hypothesis.
+surjectivity property.
 -/
 
 noncomputable section

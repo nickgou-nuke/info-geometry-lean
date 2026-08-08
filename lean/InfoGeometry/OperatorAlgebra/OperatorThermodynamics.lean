@@ -12,10 +12,10 @@ This module separates three facts:
 
 In particular, the KMS theorem is a Tomita-Takesaki theorem, not a theorem of
 `Cl(1,1)` non-orientability by itself.  At this layer we prove only
-witness-gated consequences: once an observer reduction is supplied together
+property-gated consequences: once an observer reduction is supplied together
 with a KMS state for the modular flow, the local observer readout is KMS.
 Horizon radiation interpretations require a separate boost/Killing-flow
-calibration witness.
+calibration property.
 -/
 
 import Mathlib.Tactic
@@ -159,7 +159,7 @@ def kms_boundary_condition : Prop :=
       K.correlation A B ((t : ℂ) + (beta : ℂ) * Complex.I) =
         K.state.eval (σ.flow t B * A))
 
-/-- Re-export the genuine analytic KMS boundary certificate. -/
+/-- Re-export the genuine analytic KMS boundary property. -/
 theorem kms_boundary_holds :
     K.kms_boundary_condition :=
   ⟨K.correlation_differentiableOn_openStrip,
@@ -356,7 +356,7 @@ theorem exists_kms_state_for_observer :
   intro A
   exact Θ.thermal_eq_reduction A
 
-/-- The observer-reduced state carries the named KMS boundary certificate. -/
+/-- The observer-reduced state carries the named KMS boundary property. -/
 def reduced_state_is_kms :
     KMSAnalyticBoundary Θ.reduction.observableEval σ beta where
   correlation := Θ.thermal.correlation
@@ -405,7 +405,7 @@ A boundary or transport layer that routes observable degrees of freedom
 toward the commutant.
 
 The boundary/twist does not by itself create a KMS state; it supplies boundary
-data to which a modular thermalization witness may be applied.
+data to which a modular thermalization property may be applied.
 -/
 structure HorizonCommutantBoundary
     (Op : Type*) [Ring Op]
@@ -425,7 +425,7 @@ structure HorizonCommutantBoundary
     {A : Op | boundary A ∈ T.Mcomm} = defectLocus
 
 /--
-Full thermodynamic horizon witness:
+Full thermodynamic horizon property:
 
 Tomita algebra/commutant routing, boundary data, observer reduction, and KMS
 thermalization of the reduced state.
@@ -462,7 +462,7 @@ theorem observer_sees_kms :
       ω.state.eval = H.thermalization.reduction.observableEval :=
   H.thermalization.exists_kms_state_for_observer
 
-/-- The reduced observer state carries a KMS boundary certificate. -/
+/-- The reduced observer state carries a KMS boundary property. -/
 def reduced_state_is_kms :
     KMSAnalyticBoundary
       H.thermalization.reduction.observableEval σ beta :=
@@ -675,7 +675,7 @@ abbrev StateFunctional (Op : Type*) [AddMonoid Op] :=
 /-! ## 2. KMS condition -/
 
 /--
-A proof-carrying KMS analytic certificate.
+A proof-carrying KMS analytic property.
 
 The true KMS condition is an analytic strip-boundary condition.  This algebraic
 layer records it as named data, not as an automatically true proposition.
@@ -724,7 +724,7 @@ def boundaryCondition
       K.correlation A B ((t : ℂ) + (β : ℂ) * Complex.I) =
         ω.eval (σ.flow t B * A))
 
-/-- A genuine analytic certificate proves its derived boundary predicate. -/
+/-- A genuine analytic property proves its derived boundary predicate. -/
 theorem boundaryCondition_holds
     (K : KMSAnalyticCertificate σ β ω) :
     K.boundaryCondition :=
@@ -806,7 +806,7 @@ Tomita-KMS datum.
 
 This is the abstract socket for the Tomita-Takesaki theorem: a faithful normal
 state is KMS with respect to its modular automorphism group.  The analytic
-theorem itself is supplied here as the `kms` certificate.
+theorem itself is supplied here as the `kms` property.
 -/
 structure TomitaKMSDatum
     (Op : Type*) [Ring Op] where
@@ -824,7 +824,7 @@ structure TomitaKMSDatum
     ∀ t : ℝ, ∀ A : Op,
       state.eval (modularFlow.flow t A) = state.eval A
 
-  /-- KMS analytic certificate. -/
+  /-- KMS analytic property. -/
   kms :
     KMSAnalyticCertificate modularFlow.toFlowDatum beta state
 
@@ -1037,7 +1037,7 @@ theorem exists_kms_state_for_observer :
   intro A
   exact Θ.thermal_eq_reduction A
 
-/-- The observer-reduced state carries the named KMS boundary certificate. -/
+/-- The observer-reduced state carries the named KMS boundary property. -/
 def reduced_state_is_kms :
     KMSAnalyticBoundary Θ.reduction.observableEval σ β where
   correlation := Θ.thermal.kms.correlation
@@ -1089,7 +1089,7 @@ A boundary or transport layer that routes observable degrees of freedom
 toward the commutant.
 
 The boundary/twist does not by itself create a KMS state; it supplies geometric
-partition data to which a modular thermalization witness may be applied.
+partition data to which a modular thermalization property may be applied.
 -/
 structure HorizonCommutantBoundary
     (Op : Type*) [Ring Op]
@@ -1109,7 +1109,7 @@ structure HorizonCommutantBoundary
     {A : Op | boundary A ∈ T.Mcomm} = defectLocus
 
 /--
-Full thermodynamic horizon witness:
+Full thermodynamic horizon property:
 
 Tomita algebra/commutant routing, horizon boundary, observer reduction, and KMS
 thermalization of the reduced state.
@@ -1148,7 +1148,7 @@ theorem observer_sees_kms :
       ω.state.eval = H.thermalization.reduction.observableEval :=
   H.thermalization.exists_kms_state_for_observer
 
-/-- The reduced observer state carries a KMS boundary certificate. -/
+/-- The reduced observer state carries a KMS boundary property. -/
 def reduced_state_is_kms :
     KMSAnalyticBoundary
       H.thermalization.reduction.observableEval σ β :=
@@ -1159,7 +1159,7 @@ end HorizonKMSThermodynamics
 /-! ## 5. Thermodynamic emergence across an observable/commutant split -/
 
 /--
-Thermalization witness for an observer restricted to the visible algebra.
+Thermalization property for an observer restricted to the visible algebra.
 
 The state seen by the observer is KMS with respect to the visible modular flow.
 This replaces the heuristic "tracing out the commutant produces a thermal
@@ -1180,7 +1180,7 @@ structure ObservableKMSReduction
   beta :
     ℝ
 
-  /-- KMS witness for the visible state. -/
+  /-- KMS property for the visible state. -/
   visibleKMS :
     KMSState Visible visibleFlow beta
 

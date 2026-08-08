@@ -5,12 +5,12 @@ import InfoGeometry.Canonical.SplitOctonionClassificationCore
 /-!
 # Split-octonion classification
 
-This file closes the concrete witness layer on the explicit Zorn carrier.
+This file closes the concrete property layer on the explicit Zorn carrier.
 
 The theorem surface is the existential one:
 
-* a non-scalar element has a nonzero commutator witness;
-* a non-scalar element has a nonzero associator witness.
+* a non-scalar element has a nonzero commutator property;
+* a non-scalar element has a nonzero associator property.
 
 The proofs are coordinate proofs on the explicit Zorn basis, not abstract
 associative-ring arguments.
@@ -91,7 +91,7 @@ theorem commutator_lower_e0_y0 (x : InfoGeometry.Canonical.ZornMatrix R) :
     InfoGeometry.Canonical.ZornMatrix.dot,
     InfoGeometry.Canonical.ZornMatrix.cross]
 
-/-- A non-scalar Zorn element has a nonzero commutator witness. -/
+/-- A non-scalar Zorn element has a nonzero commutator property. -/
 theorem exists_nonzero_commutator_of_not_scalar
     {x : InfoGeometry.Canonical.ZornMatrix R}
     (hx : ¬ ∃ r : R, x = r • (1 : InfoGeometry.Canonical.ZornMatrix R)) :
@@ -200,7 +200,7 @@ theorem exists_nonzero_commutator_of_not_scalar
         InfoGeometry.Canonical.ZornMatrix.cross] using hcoord'
     exact hAB (sub_eq_zero.mp hcoord'').symm
 
-/-- A non-scalar Zorn element has a nonzero associator witness. -/
+/-- A non-scalar Zorn element has a nonzero associator property. -/
 theorem exists_nonzero_associator_of_not_scalar
     {x : InfoGeometry.Canonical.ZornMatrix R}
     (hx : ¬ ∃ r : R, x = r • (1 : InfoGeometry.Canonical.ZornMatrix R)) :

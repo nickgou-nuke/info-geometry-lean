@@ -16,7 +16,7 @@ namespace InfoGeometry.Canonical.ZetaRegularizedBoundaryReadout
 open InfoGeometry.Canonical.KreinDrazinBoundarySupport
 
 /--
-Spectral zeta regularization witness.
+Spectral zeta regularization property.
 
 `SpecOp` is the positive/sectorial regular spectral operator supplied by a
 chosen spectral model, typically a regular-sector compression.
@@ -43,7 +43,7 @@ theorem det_zeta_eq_exp_neg_zeta_derivative
     Z.detZeta = Complex.exp (-Z.zetaDerivAtZero) :=
   Z.detZeta_def
 
-/- The derivative witness is exposed directly instead of through a semantic
+/- The derivative property is exposed directly instead of through a semantic
 label for analytic continuation. -/
 theorem zeta_has_derivative_at_zero
     {SpecOp : Type*}
@@ -68,7 +68,7 @@ structure DrazinRegularZetaReadout
 
 /--
 Calibration connecting `ζ(0)` or the zeta determinant to a topological boundary
-invariant.  This is an extra witness, not an automatic theorem.
+invariant.  This is an extra property, not an automatic theorem.
 -/
 structure ZetaTopologicalCalibration
     (SpecOp : Type*)
@@ -78,7 +78,7 @@ structure ZetaTopologicalCalibration
   /-- Calibration equating the index with `ζ(0)`. -/
   index_eq_zetaAtZero : topologicalIndex = Z.zetaAtZero
 
-/-- Under a calibration witness, the topological index equals `ζ(0)`. -/
+/-- Under a calibration property, the topological index equals `ζ(0)`. -/
 theorem calibrated_topological_index_eq_zeta_zero
     {SpecOp : Type*}
     (Z : ZetaRegularizable SpecOp)

@@ -119,12 +119,12 @@ theorem cold_phase_of_projective_Ioo
     PhaseAtProjectiveTemperature u ArithmeticKMSPhase.cold :=
   one_lt_beta_of_projective_cold hu
 
-/-! ## 3. witness-gated (Native Closure Mandated: Closure Debt) modular/KMS socket -/
+/-! ## 3. property-gated (Native Closure Mandated: Closure Debt) modular/KMS socket -/
 
 /--
-Finite arithmetic KMS witness.
+Finite arithmetic KMS property.
 
-`State` is an arbitrary model carrier. The witness stores only the state
+`State` is an arbitrary model carrier. The property stores only the state
 encoding and the modular-flow calibration; the finite KMS statement is derived
 as a separate theorem.
 -/
@@ -143,7 +143,7 @@ structure ArithmeticKMSWitness
         arithmeticGibbsPartition A β
 
 /--
-Native Mathlib construction of the finite arithmetic KMS witness.
+Native Mathlib construction of the finite arithmetic KMS property.
 This explicit model over `Finset ℕ` pays off the formal closure debt
 by providing a fully constructive proof that such a state encoding exists.
 -/
@@ -187,7 +187,7 @@ theorem modularFlowReadout_nonneg
 
 /-- The finite arithmetic Gibbs partition at `β = 0` is the cardinality of
 its support restricted to `n > 1`. This is a real calibration fact, not a
-certificate placeholder. -/
+property placeholder. -/
 theorem arithmeticGibbsPartition_zero_eq_card_filter (A : Finset ℕ) :
     arithmeticGibbsPartition A 0 = (A.filter fun n => 1 < n).card := by
   classical
@@ -233,7 +233,7 @@ theorem arithmeticGibbsPartition_zero_iff_forall_le_one (A : Finset ℕ) :
     intro n hn
     rw [primitiveMellinKernel_eq_zero_of_le_one (h n hn)]
 
-/-- KMS certificate implies the state is KMS at all temperatures. -/
+/-- KMS property implies the state is KMS at all temperatures. -/
 theorem kms_at_all_temperatures
     (K : ArithmeticKMSWitness State)
     (A : Finset ℕ)
@@ -243,7 +243,7 @@ theorem kms_at_all_temperatures
 
 /-- Two KMS witnesses with matching state encoding, modular flow, and KMS
 predicate are equal. -/
-theorem kms_witness_eq_of_flow_eq
+theorem kms_property_eq_of_flow_eq
     (K1 K2 : ArithmeticKMSWitness State)
     (hstate : ∀ A, K1.stateOfFinset A = K2.stateOfFinset A)
     (hflow : ∀ s β, K1.modularFlowReadout s β = K2.modularFlowReadout s β) :
@@ -263,13 +263,13 @@ theorem kms_witness_eq_of_flow_eq
 
 end ArithmeticKMSWitness
 
-/-! ## 4. Projective KMS witness -/
+/-! ## 4. Projective KMS property -/
 
 /--
-Projective-temperature version of the finite arithmetic KMS witness.
+Projective-temperature version of the finite arithmetic KMS property.
 
 The compact variable `u` is restricted by explicit hypotheses in the theorem
-payload. The witness stores only the state encoding and the projective-flow
+payload. The property stores only the state encoding and the projective-flow
 calibration. No global analytic continuation through the critical point is
 claimed.
 -/
@@ -333,12 +333,12 @@ end ProjectiveArithmeticKMSWitness
 /-! ## 5. Prime/projective-flow compatibility -/
 
 /--
-Compatibility between a projective KMS witness and the finite von Mangoldt
+Compatibility between a projective KMS property and the finite von Mangoldt
 prime-flow calibration.
 -/
 structure ProjectiveKMSPrimeCompatibility
     (State : Type*) where
-  /-- Projective arithmetic KMS witness. -/
+  /-- Projective arithmetic KMS property. -/
   kms : ProjectiveArithmeticKMSWitness State
 
   /-- Projective prime-flow calibration. -/

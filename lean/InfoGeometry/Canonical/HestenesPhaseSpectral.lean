@@ -153,10 +153,10 @@ theorem spectral_projector_isHestenesLinear
   simpa [IsHestenesLinear, IsPhaseLinear] using hProjComm
 
 /--
-Owner-certified bridge: a certified conformal/Drazin spectral projector on the doubled
-carrier is Hestenes-linear as soon as clock-axis commutation is certified.
+Owner-property bridge: a property conformal/Drazin spectral projector on the doubled
+carrier is Hestenes-linear as soon as clock-axis commutation is property.
 -/
-theorem certifiedConformal_spectralProjector_isHestenesLinear
+theorem propertyConformal_spectralProjector_isHestenesLinear
     (CCI : InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference H₂)
     (hProjComm :
       CCI.spectralProjector.comp (InfoGeometry.Krein.clockAxis (E := E)) =
@@ -165,19 +165,19 @@ theorem certifiedConformal_spectralProjector_isHestenesLinear
   exact spectral_projector_isHestenesLinear (E := E) CCI.spectralProjector hProjComm
 
 /--
-Equivalent owner-certified bridge in phase-linear form.
+Equivalent owner-property bridge in phase-linear form.
 -/
-theorem certifiedConformal_spectralProjector_isHestenesLinear_of_IsPhaseLinear
+theorem propertyConformal_spectralProjector_isHestenesLinear_of_IsPhaseLinear
     (CCI : InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference H₂)
     (hPhase : IsPhaseLinear (E := E) CCI.spectralProjector) :
     IsHestenesLinear (E := E) CCI.spectralProjector := by
   exact hPhase
 
 /--
-Owner-certified closure: if both `A` and `A_D` are phase-linear, then the certified
+Owner-property closure: if both `A` and `A_D` are phase-linear, then the property
 Drazin spectral projector `P = A * A_D` is phase-linear (hence Hestenes-linear).
 -/
-theorem certifiedConformal_spectralProjector_isHestenesLinear_of_IsPhaseLinear_factors
+theorem propertyConformal_spectralProjector_isHestenesLinear_of_IsPhaseLinear_factors
     (CCI : InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference H₂)
     (hA_phase : IsPhaseLinear (E := E) CCI.A)
     (hAD_phase : IsPhaseLinear (E := E) CCI.A_D) :
@@ -194,7 +194,7 @@ theorem certifiedConformal_spectralProjector_isHestenesLinear_of_IsPhaseLinear_f
 /--
 `A` is phase-linear under a compatible Drazin/Krein/chiral package on `(A, A_D)`.
 -/
-theorem certifiedConformal_A_isPhaseLinear_of_kreinCompat
+theorem propertyConformal_A_isPhaseLinear_of_kreinCompat
     (CCI : InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference H₂)
     (hCompat :
       InfoGeometry.Canonical.DrazinKreinCompatibility.KreinGradedDrazinCompatibility
@@ -217,7 +217,7 @@ theorem certifiedConformal_A_isPhaseLinear_of_kreinCompat
 /--
 `A_D` is phase-linear under a compatible Drazin/Krein/chiral package on `(A, A_D)`.
 -/
-theorem certifiedConformal_AD_isPhaseLinear_of_kreinCompat
+theorem propertyConformal_AD_isPhaseLinear_of_kreinCompat
     (CCI : InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference H₂)
     (hCompat :
       InfoGeometry.Canonical.DrazinKreinCompatibility.KreinGradedDrazinCompatibility
@@ -238,20 +238,20 @@ theorem certifiedConformal_AD_isPhaseLinear_of_kreinCompat
     _ = (InfoGeometry.Krein.complex_i (E := E)).comp CCI.A_D := by rfl
 
 /--
-Fully automatic owner-certified closure: once the certified conformal package is
+Fully automatic owner-property closure: once the property conformal package is
 upgraded with Drazin/Krein/chiral compatibility on `(A, A_D)`, phase-linearity
-of the certified spectral projector follows with no extra hypotheses.
+of the property spectral projector follows with no extra hypotheses.
 -/
-theorem certifiedConformal_spectralProjector_isHestenesLinear_of_kreinCompat
+theorem propertyConformal_spectralProjector_isHestenesLinear_of_kreinCompat
     (CCI : InfoGeometry.Canonical.ConformalUnification.CertifiedConformalInference H₂)
     (hCompat :
       InfoGeometry.Canonical.DrazinKreinCompatibility.KreinGradedDrazinCompatibility
         (E := E) CCI.A CCI.A_D CCI.drazinIndex) :
     IsHestenesLinear (E := E) CCI.spectralProjector := by
-  exact certifiedConformal_spectralProjector_isHestenesLinear_of_IsPhaseLinear_factors
+  exact propertyConformal_spectralProjector_isHestenesLinear_of_IsPhaseLinear_factors
     (E := E) CCI
-    (certifiedConformal_A_isPhaseLinear_of_kreinCompat (E := E) CCI hCompat)
-    (certifiedConformal_AD_isPhaseLinear_of_kreinCompat (E := E) CCI hCompat)
+    (propertyConformal_A_isPhaseLinear_of_kreinCompat (E := E) CCI hCompat)
+    (propertyConformal_AD_isPhaseLinear_of_kreinCompat (E := E) CCI hCompat)
 
 section FiniteProjector
 

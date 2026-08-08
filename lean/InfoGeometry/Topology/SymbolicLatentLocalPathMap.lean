@@ -5,7 +5,7 @@ namespace InfoGeometry.Topology
 
 /-!
 Continuous maps between selected chart domains and their action on local paths.
-The domain-preservation hypothesis is explicit; it is not inferred from
+The domain-preservation property is explicit; it is not inferred from
 continuity alone.
 -/
 

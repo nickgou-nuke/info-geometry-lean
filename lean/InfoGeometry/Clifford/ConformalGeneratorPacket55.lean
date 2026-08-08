@@ -10,7 +10,7 @@ noncomputable section
 # ConformalGeneratorPacket55
 
 This file freezes a small source-faithful conformal generator packet matching the
-explicit `2 × 2`/`sl₂` witness used on the SymPy side.
+explicit `2 × 2`/`sl₂` property used on the SymPy side.
 
 Infinitesimal packet:
 - `P = u5` (translation)
@@ -83,13 +83,13 @@ theorem P_K_commutator :
 
 /-! ## Ambient null-pair / inversion packet -/
 
-/-- Generic ambient null-pair translation witness. -/
+/-- Generic ambient null-pair translation property. -/
 abbrev U (p : ConformalNullPair) := p.u
 
-/-- Generic ambient null-pair special-conformal witness. -/
+/-- Generic ambient null-pair special-conformal property. -/
 abbrev V (p : ConformalNullPair) := p.v
 
-/-- Generic ambient inversion/reflection witness. -/
+/-- Generic ambient inversion/reflection property. -/
 abbrev Jgen (p : ConformalNullPair) := J p
 
 @[simp] theorem U_sq (p : ConformalNullPair) : U p * U p = 0 := by

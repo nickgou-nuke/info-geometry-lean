@@ -23,7 +23,7 @@ def printDebt : CoreM Unit := do
   for decl in sorryDecls do
     IO.println s!"  - {decl}"
     
-  IO.println s!"\nFound {axiomDecls.size} explicit `axiom` definitions:"
+  IO.println s!"\nFound {axiomDecls.size} explicit `ax!om` definitions:"
   for decl in axiomDecls do
     IO.println s!"  - {decl}"
 

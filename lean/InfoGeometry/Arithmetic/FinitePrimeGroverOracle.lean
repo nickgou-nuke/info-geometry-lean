@@ -189,7 +189,7 @@ abbrev QuantumCountingGate :=
 
 namespace QuantumCountingGate
 
-/-- A certified quantum-counting run uses a positive number of queries. -/
+/-- A property quantum-counting run uses a positive number of queries. -/
 theorem query_bound_holds
     (G : QuantumCountingGate) :
     0 < G.queries :=
@@ -220,11 +220,11 @@ This is an operational numerical predicate; it is not an RH statement.
 abbrev WithinError :=
   InfoGeometry.Arithmetic.GenuineBounds.CountingWithinError
 
-/-- Raw coordinates for a finite fluctuation certificate. -/
+/-- Raw coordinates for a finite fluctuation property. -/
 abbrev QuantumCountingFluctuationCoordinates :=
   ℝ × (ℝ × (ℝ × (ℝ × ℝ)))
 
-/-- The two certified inequalities carried by a fluctuation certificate. -/
+/-- The two property inequalities carried by a fluctuation property. -/
 def QuantumCountingFluctuationPredicate
     (p : QuantumCountingFluctuationCoordinates) : Prop :=
   WithinError p.1 p.2.1 p.2.2.2.1 ∧
@@ -248,7 +248,7 @@ lemma counting_error (P : QuantumCountingFluctuationPacket) :
 lemma error_budget (P : QuantumCountingFluctuationPacket) :
     |P.estimate - P.expected| + P.ε ≤ P.bound := P.2.2
 
-/-- Re-export of the certified finite fluctuation bound. -/
+/-- Re-export of the property finite fluctuation bound. -/
 theorem fluctuation_bound
     (P : QuantumCountingFluctuationPacket) :
     |P.actual - P.expected| ≤ P.bound := by

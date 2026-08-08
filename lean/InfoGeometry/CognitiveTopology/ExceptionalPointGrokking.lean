@@ -10,9 +10,9 @@ This file records a theorem-safe finite/operator shadow of the slogan
 It does **not** prove that trained LLMs grok, that hallucinations are impossible,
 or that black-hole horizons, SUSY charges, and neural attention operators are
 physically identical.  It proves only the common algebraic socket used by those
-finite bridges: a Jordan exceptional-point witness carries a square-zero
+finite bridges: a Jordan exceptional-point property carries a square-zero
 nilpotent part, and the concrete KAN wallpaper translation generator has the
-same square-zero certificate.
+same square-zero property.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 
@@ -37,7 +37,7 @@ namespace InfoGeometry.CognitiveTopology.Grokking
 open ContinuousLinearMap
 open InfoGeometry.Topology.KANWallpaper
 
-/- A continuous-linear attention-like operator at a supplied exceptional-point witness. -/
+/- A continuous-linear attention-like operator at a supplied exceptional-point property. -/
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 
 /--
@@ -50,7 +50,7 @@ network reaches such a point.
 def IsExceptionalPoint (A : H →L[ℂ] H) (N : H →L[ℂ] H) : Prop :=
   A = ContinuousLinearMap.id ℂ H + N ∧ N ∘L N = 0
 
-/-- Projection of the square-zero part from an explicit exceptional-point witness. -/
+/-- Projection of the square-zero part from an explicit exceptional-point property. -/
 theorem exceptionalPoint_nilpotent_part_square_zero (A N : H →L[ℂ] H)
     (h_ep : IsExceptionalPoint A N) :
     N ∘L N = 0 :=
@@ -59,7 +59,7 @@ theorem exceptionalPoint_nilpotent_part_square_zero (A N : H →L[ℂ] H)
 /--
 Compatibility name for the finite/operator grokking socket.
 
-Read this as: an explicitly supplied exceptional-point witness has the same
+Read this as: an explicitly supplied exceptional-point property has the same
 square-zero nilpotent shape used by the finite KAN horizon bridge.
 -/
 theorem grokking_is_event_horizon (A N : H →L[ℂ] H)
@@ -67,7 +67,7 @@ theorem grokking_is_event_horizon (A N : H →L[ℂ] H)
     N ∘L N = 0 :=
   exceptionalPoint_nilpotent_part_square_zero A N h_ep
 
-/-- The KAN wallpaper nilpotent generator carries the same square-zero certificate. -/
+/-- The KAN wallpaper nilpotent generator carries the same square-zero property. -/
 theorem KAN_nilpotent_generator_square_zero :
     n * n = 0 :=
   translation_is_nilpotent_horizon

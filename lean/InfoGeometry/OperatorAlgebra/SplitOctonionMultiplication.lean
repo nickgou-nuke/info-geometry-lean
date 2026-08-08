@@ -16,7 +16,7 @@ and a concrete nonassociative multiplication table:
 ```
 
 Theorems below lock the basis table, idempotent diagonal units, nilpotent
-upper/lower units, a concrete nonzero associator witness, and basis
+upper/lower units, a concrete nonzero associator property, and basis
 alternativity checks.  This is a multiplication layer only: it does not assert a
 `G₂(2)` automorphism theorem, an `SU(3)` stabilizer theorem, or a particle
 classification theorem.
@@ -340,10 +340,10 @@ theorem down1_mul_down0 : mulZ down1 down0 = up2 := by decide
 theorem down2_mul_down1 : mulZ down2 down1 = up0 := by decide
 theorem down0_mul_down2 : mulZ down0 down2 = up1 := by decide
 
-/-- Concrete nonassociativity witness: `(u₀u₁)v₁ - u₀(u₁v₁) = u₀`. -/
+/-- Concrete nonassociativity property: `(u₀u₁)v₁ - u₀(u₁v₁) = u₀`. -/
 theorem associator_up0_up1_down1 : associator up0 up1 down1 = up0 := by decide
 
-/-- The concrete associator witness is nonzero. -/
+/-- The concrete associator property is nonzero. -/
 theorem associator_up0_up1_down1_ne_zero : associator up0 up1 down1 ≠ zeroZ := by decide
 
 /-- The split-octonion multiplication is not associative. -/

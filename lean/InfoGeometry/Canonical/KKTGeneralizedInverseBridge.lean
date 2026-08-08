@@ -7,7 +7,7 @@ open scoped InnerProductSpace
 /-!
 # InfoGeometry.Canonical.KKTGeneralizedInverseBridge
 
-Generalized-inverse bridge from the split-operator KKT grading to the certified
+Generalized-inverse bridge from the split-operator KKT grading to the property
 inverse-kernel corridor.
 
 The hypotheses are explicit and representation-specific:

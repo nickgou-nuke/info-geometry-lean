@@ -4,7 +4,7 @@ InfoGeometry/Arithmetic/PrimitiveSouriauPipeline.lean
 Owner-target surface for the primitive/Souriau/projective arithmetic sidecar
 stack.
 
-This module bundles the already-installed witness-gated corridors:
+This module bundles the already-installed property-gated corridors:
 
 * primitive finite Mellin/Gibbs readouts;
 * Souriau zeta calibration;
@@ -42,10 +42,10 @@ open InfoGeometry.Arithmetic.ProjectiveWeylGauge
 open InfoGeometry.Arithmetic.WeylArithmeticDivergence
 open InfoGeometry.Thermodynamics.ProjectiveTemperature
 
-/-! ## 1. Bundled installed witness surface -/
+/-! ## 1. Bundled installed property surface -/
 
 /--
-Bundled witness surface for the finite primitive/Souriau/projective arithmetic
+Bundled property surface for the finite primitive/Souriau/projective arithmetic
 pipeline.
 
 All substantial mathematical claims remain in the supplied witnesses.  This
@@ -76,7 +76,7 @@ structure PrimitiveSouriauPipelineWitness
   /-- Projective Weyl-gauge calibration. -/
   weyl : ProjectiveWeylGaugeCalibration State
 
-  /-- Projective arithmetic KMS witness. -/
+  /-- Projective arithmetic KMS property. -/
   kms : ProjectiveArithmeticKMSWitness State
 
   /-- Compatibility between projective KMS flow and prime flow. -/
@@ -148,7 +148,7 @@ theorem itakura_shape_scale_right
 
 /-! ## 2. Owner target -/
 
-/-- The owner target follows directly from the supplied witness bundle. -/
+/-- The owner target follows directly from the supplied property bundle. -/
 theorem primitiveSouriauPipelineOwnerTarget :
     ∀ (State : Type*) (P : PrimitiveSouriauPipelineWitness State),
       1 < betaInvert P.u ∧

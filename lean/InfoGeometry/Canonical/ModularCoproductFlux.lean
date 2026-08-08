@@ -65,7 +65,7 @@ theorem liftFlux_eq_primitive_add_cross (N : A) :
 
 /--
 Linearized/vacuum primitive readout under an explicit cross-annihilation
-hypothesis.
+property.
 
 The primitive formula is not the exact coproduct formula; it is what a linear
 readout sees when it kills the cross term `N ⊗ N`.
@@ -83,7 +83,7 @@ If the cross-flux term itself vanishes, the exact group-like flux reduces to
 the primitive flux.
 
 This is still a finite algebraic statement: the primitive law is obtained only
-under the explicit hypothesis `N ⊗ N = 0`.
+under the explicit property `N ⊗ N = 0`.
 -/
 theorem liftFlux_eq_primitive_of_cross_zero
     (N : A)

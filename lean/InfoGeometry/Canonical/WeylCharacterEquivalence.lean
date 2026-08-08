@@ -170,7 +170,7 @@ theorem parityWitness_signature_eq_mobius
   exact P.parityWitness.mobius_eq_weyl_signature_on_squarefree n h
 
 @[rep_depth thermo]
-theorem parity_trace_from_squarefree_witness
+theorem parity_trace_from_squarefree_property
     (n : ℕ) (h : P.parityWitness.squareFree n) :
     P.parityWitness.signature (P.parityWitness.squareFreeToWeyl n h) =
       mobiusCoefficient n := by

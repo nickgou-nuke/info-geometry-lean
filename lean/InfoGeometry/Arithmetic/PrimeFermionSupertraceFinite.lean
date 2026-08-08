@@ -74,7 +74,7 @@ theorem exp_neg_mul_bitEnergy_eq_profile_product
 Finite unsigned fermionic Euler product.
 
 This is the finite square-free partition identity, the finite precursor of the
-`ζ(s) / ζ(2s)` channel after an analytic infinite-product witness is supplied.
+`ζ(s) / ζ(2s)` channel after an analytic infinite-product property is supplied.
 -/
 theorem fermionicPartition_eq_product
     (β : ℝ) :
@@ -98,7 +98,7 @@ theorem fermionicPartition_eq_product
 Finite signed fermionic Euler product.
 
 This is the finite Möbius/supertrace identity, the finite precursor of the
-`1 / ζ(s)` channel after an analytic infinite-product witness is supplied.
+`1 / ζ(s)` channel after an analytic infinite-product property is supplied.
 -/
 theorem fermionicSupertrace_eq_product
     (β : ℝ) :

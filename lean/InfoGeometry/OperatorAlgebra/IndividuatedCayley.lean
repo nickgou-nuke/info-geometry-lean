@@ -168,7 +168,7 @@ variable (R : VerifiedPhaseResolvent A K D)
 /--
 The denominator inverse is phase-linear.
 
-This is not an assumption.
+This is not an property.
 -/
 theorem denomInv_phase_linear :
     PhaseLinear K R.denomInv :=
@@ -190,7 +190,7 @@ end VerifiedPhaseResolvent
 /--
 Right Cayley transform relation.
 
-Let `U` be a right inverse witness for `1 - X` in the sense
+Let `U` be a right inverse property for `1 - X` in the sense
 
 `U * (1 - X) = 1`.
 
@@ -225,7 +225,7 @@ theorem operator_cayley_right_sub_relation
 /--
 Right Cayley denominator relation.
 
-Under the same hypothesis,
+Under the same property,
 
 `(((1 + X) * U) + 1) * (1 - X) = 2`.
 
@@ -410,7 +410,7 @@ variable (R : VerifiedUnitaryResolvent A K D)
 /--
 The adjoint of the denominator inverse is a left inverse for `D - K`.
 
-This was previously an explicit hypothesis. It is now proved by taking the
+This was previously an explicit property. It is now proved by taking the
 adjoint of `(D + K)(D + K)^(-1) = 1`.
 -/
 theorem star_denomInv_mul_num_eq_one :

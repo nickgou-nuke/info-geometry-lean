@@ -12,7 +12,7 @@ at a normal/superconducting boundary.
 The hole-like channel is a quasiparticle hole, not a physical positron.
 
 This file does not assert that every superconducting surface hosts Majorana
-modes. Topological edge protection is a separate witness.
+modes. Topological edge protection is a separate property.
 -/
 
 import Mathlib.Tactic
@@ -145,12 +145,12 @@ theorem finite_electron_hole_imbalance_anti_fixed :
     finiteClosure_theta_electron
     finiteClosure_theta_hole
 
-/-! ## 3. Boundary closure witness -/
+/-! ## 3. Boundary closure property -/
 
 /--
-The Andreev diagonal is fixed by electron/hole closure, given a swap witness.
+The Andreev diagonal is fixed by electron/hole closure, given a swap property.
 -/
-theorem electron_hole_diagonal_fixed_of_swap_witness
+theorem electron_hole_diagonal_fixed_of_swap_property
     {V : Type*} [AddCommGroup V] [Module ℝ V]
     (closure : LinearClosureInvolution V)
     (electron hole : V)
@@ -227,7 +227,7 @@ theorem theta_diagonal_eq_diagonal :
 A closure-fixed boundary mode is unchanged by the Andreev mirror.
 
 This is the formal “Majorana transparency” statement. It does not say this
-mode is physically unique; uniqueness/protection requires a separate witness.
+mode is physically unique; uniqueness/protection requires a separate property.
 -/
 theorem transparent_of_fixed
     {γ : V}
@@ -373,9 +373,9 @@ theorem charge_balance_holds :
   L.charge_balance
 
 /--
-The charge-balance equation is valid, given a witness.
+The charge-balance equation is valid, given a property.
 -/
-theorem charge_balance_valid_of_witness
+theorem charge_balance_valid_of_property
     (w : L.chargeOf L.boundary.electron =
       L.chargeOf L.boundary.hole + L.condensateTransfer) :
     L.chargeOf L.boundary.electron =
@@ -390,7 +390,7 @@ theorem diagonal_fixed :
 /--
 Witness-only surface for closure-fixed diagonal readout.
 -/
-theorem diagonal_fixed_of_boundary_witness
+theorem diagonal_fixed_of_boundary_property
     (W : AndreevBoundaryDatum V)
     (hboundary : W = L.boundary) :
     L.boundary.electron + L.boundary.hole ∈ L.boundary.closure.Fixed := by

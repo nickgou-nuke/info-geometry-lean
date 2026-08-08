@@ -113,7 +113,7 @@ theorem fermion_q_anticommutator (i j : Ferm) :
       if i = j then 1 else 0 :=
   A.fermion_q_relation i j
 
-/-- Readback: odd generators are nilpotent when the square-free-sector witness is supplied. -/
+/-- Readback: odd generators are nilpotent when the square-free-sector property is supplied. -/
 theorem fermion_nilpotent (i : Ferm) : A.fermion i * A.fermion i = 0 :=
   A.fermion_sq_zero i
 

@@ -19,7 +19,7 @@ namespace InfoGeometry.Canonical.SplitCliffordSourceCarrier
 open Filter
 
 /--
-Abstract split source carrier with a mode-indexed stabilization witness.
+Abstract split source carrier with a mode-indexed stabilization property.
 
 `stableCutoff v N` should mean: for the source vector `v`, all sufficiently
 large modes are inactive beyond cutoff `N`.

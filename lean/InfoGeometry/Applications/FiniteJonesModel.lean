@@ -220,7 +220,7 @@ def FiniteJonesEvent.IsBrewster
     (E : FiniteJonesEvent) : Prop :=
   E.r_p = 0
 
-/-- A Brewster witness is exactly the canonical collapse proposition. -/
+/-- A Brewster property is exactly the canonical collapse proposition. -/
 abbrev FiniteJonesEvent.BrewsterWitness
     (E : FiniteJonesEvent) : Prop :=
   E.IsBrewster
@@ -251,9 +251,9 @@ theorem operator_eq_s_core_of_brewster
   exact diagonalJones_brewster E.r_s E.r_p hE
 
 /--
-Constructive-witness variant of `operator_eq_s_core_of_brewster`.
+Constructive-property variant of `operator_eq_s_core_of_brewster`.
 -/
-theorem operator_eq_s_core_of_witness
+theorem operator_eq_s_core_of_property
     (E : FiniteJonesEvent)
     (w : BrewsterWitness E) :
     E.operator = E.r_s • Ps := by

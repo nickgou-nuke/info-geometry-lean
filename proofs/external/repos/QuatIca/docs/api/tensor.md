@@ -1,0 +1,3 @@
+# quatica.tensor
+
+::: quatica.tensor

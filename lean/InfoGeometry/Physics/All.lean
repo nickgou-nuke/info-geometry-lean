@@ -162,6 +162,7 @@ import InfoGeometry.Physics.Algebra.KreinBilinearCommutant
 import InfoGeometry.Physics.Thermodynamics.ChiralSimilarityWeightedSelfAdjointness
 import InfoGeometry.Physics.Thermodynamics.ChiralDiracWeightedSelfAdjointness
 import InfoGeometry.Physics.Thermodynamics.ChiralSimilarityKMSBridge
+import InfoGeometry.Physics.Thermodynamics.ChiralGrandCanonicalFiniteKMS
 import InfoGeometry.Physics.ZornMultiplicationOverBdG
 
 /-!

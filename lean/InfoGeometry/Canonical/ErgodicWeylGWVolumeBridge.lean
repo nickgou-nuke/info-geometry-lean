@@ -45,7 +45,7 @@ Fusion of an ergodic self-similar fixed-point readout with the already-owned
 standard-form face Weyl/GW physical-volume readout.
 
 `phaseVolume` is a determinant/phase-volume scalar readout only where the model
-supplies it.  Its modular-flow and renormalization invariance are witness
+supplies it.  Its modular-flow and renormalization invariance are property
 fields, not derived Type-III determinant claims.
 -/
 @[rep_depth projective]

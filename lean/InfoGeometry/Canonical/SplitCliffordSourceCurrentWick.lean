@@ -91,7 +91,7 @@ theorem completed_current_commutator_from_rawCAR
 Constructive cutoff-to-completed commutator limit exchange for
 `normalOrderedCurrent`.
 
-This is the explicit source-side infinite closure statement with no witness
+This is the explicit source-side infinite closure statement with no property
 packet: the completed current commutator is exactly the Heisenberg central term.
 -/
 theorem normalOrderedCurrent_commutator_limit_exchange
@@ -134,7 +134,7 @@ theorem represented_current_commutator_chargedFock
   exact ⟨H.J, H.trunc, H.comm⟩
 
 /--
-Constructive charged-Fock current closure with no existential witness packet.
+Constructive charged-Fock current closure with no existential property packet.
 
 This is the direct source-side theorem on the explicit current family.
 -/
@@ -490,7 +490,7 @@ theorem sourceJfin_constructive_window_J_trunc_comm_from_finiteCAR :
 /--
 Concrete two-mode source-side `J/trunc/comm` table from finite CAR data.
 
-This is the real constructed finite witness shape (table form), not an imported
+This is the real constructed finite property shape (table form), not an imported
 Heisenberg packet.
 -/
 theorem sourceJfin_constructed_table :
@@ -891,7 +891,7 @@ raw CAR owner surface:
 
 `J n := normalOrderedCurrent C n`.
 
-No external represented witness packet is used here.
+No external represented property packet is used here.
 -/
 theorem rawCAR_infinite_current_completion
     {A : Type*} [Ring A]

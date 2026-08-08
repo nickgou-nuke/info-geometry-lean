@@ -94,19 +94,19 @@ theorem packet
   ⟨hCone, hStationarity, hSlack, hFinite⟩
 
 /--
-Proof-carrying witness for the KKT stationarity shadow.
+Proof-carrying property for the KKT stationarity shadow.
 
-This narrows the old four-hypothesis packet to one constructive object carrying
+This narrows the old four-property packet to one constructive object carrying
 exactly the owned proofs needed to recover the original conjunction surface.
 -/
 @[rep_depth thermo]
-abbrev Witness := KKTEntropyStationarityShadow
+abbrev Property := KKTEntropyStationarityShadow
 
-namespace Witness
+namespace Property
 
-/-- Recover the full KKT stationarity packet from the proof-carrying witness. -/
+/-- Recover the full KKT stationarity packet from the proof-carrying property. -/
 @[rep_depth thermo]
-theorem packet (W : KKTEntropyStationarityShadow.Witness) :
+theorem packet (W : KKTEntropyStationarityShadow.Property) :
     W.coneAdmissible ∧ W.stationarity ∧
       W.complementarySlackness ∧ W.finitePartitionAdmissible :=
   ⟨⟨W.primalFeasible_proof, W.dualFeasible_proof⟩,
@@ -115,26 +115,26 @@ theorem packet (W : KKTEntropyStationarityShadow.Witness) :
     W.finitePartitionAdmissible_proof⟩
 
 /-- Historical cone proof projection, now derived from the KKT owner. -/
-theorem hCone (W : KKTEntropyStationarityShadow.Witness) :
+theorem hCone (W : KKTEntropyStationarityShadow.Property) :
     W.coneAdmissible :=
   W.packet.1
 
 /-- Historical stationarity proof projection. -/
-theorem hStationarity (W : KKTEntropyStationarityShadow.Witness) :
+theorem hStationarity (W : KKTEntropyStationarityShadow.Property) :
     W.stationarity :=
   W.packet.2.1
 
 /-- Historical complementary-slackness proof projection. -/
-theorem hSlack (W : KKTEntropyStationarityShadow.Witness) :
+theorem hSlack (W : KKTEntropyStationarityShadow.Property) :
     W.complementarySlackness :=
   W.packet.2.2.1
 
 /-- Historical finite-partition proof projection. -/
-theorem hFinite (W : KKTEntropyStationarityShadow.Witness) :
+theorem hFinite (W : KKTEntropyStationarityShadow.Property) :
     W.finitePartitionAdmissible :=
   W.packet.2.2.2
 
-end Witness
+end Property
 
 end KKTEntropyStationarityShadow
 
@@ -161,7 +161,7 @@ def toShadow : KKTEntropyStationarityShadow :=
   R
 
 /--
-Proof-carrying residual witness for the dimension-agnostic KKT lane.
+Proof-carrying residual property for the dimension-agnostic KKT lane.
 
 This removes the old explicit two-proof surface
 `(hStationarity, hComplementarity)` from downstream routes: the nontrivial zero
@@ -169,26 +169,26 @@ residuals are carried once, while cone/partition admissibility are recovered
 constructively from squares.
 -/
 @[rep_depth thermo]
-abbrev ConstructiveWitness := DimensionAgnosticKKTResiduals
+abbrev ConstructiveProperty := DimensionAgnosticKKTResiduals
 
-namespace ConstructiveWitness
+namespace ConstructiveProperty
 
-/-- Recover the full KKT shadow witness from the residual witness packet. -/
+/-- Recover the full KKT shadow property from the residual property packet. -/
 @[rep_depth thermo]
-def toShadowWitness (W : DimensionAgnosticKKTResiduals.ConstructiveWitness) :
-    KKTEntropyStationarityShadow.Witness :=
+def toShadowProperty (W : DimensionAgnosticKKTResiduals.ConstructiveProperty) :
+    KKTEntropyStationarityShadow.Property :=
   W.toShadow
 
-/-- Recover the old KKT conjunction from the constructive residual witness. -/
+/-- Recover the old KKT conjunction from the constructive residual property. -/
 @[rep_depth thermo]
-theorem packet (W : DimensionAgnosticKKTResiduals.ConstructiveWitness) :
+theorem packet (W : DimensionAgnosticKKTResiduals.ConstructiveProperty) :
     W.toShadow.coneAdmissible ∧
       W.toShadow.stationarity ∧
       W.toShadow.complementarySlackness ∧
       W.toShadow.finitePartitionAdmissible :=
-  W.toShadowWitness.packet
+  W.toShadowProperty.packet
 
-end ConstructiveWitness
+end ConstructiveProperty
 
 /-- Exact unconstrained equilibrium with a singleton finite partition.
 
@@ -254,7 +254,7 @@ theorem exact_stationarity_packet :
     let W := exact.toShadow
     W.coneAdmissible ∧ W.stationarity ∧
       W.complementarySlackness ∧ W.finitePartitionAdmissible := by
-  simpa using DimensionAgnosticKKTResiduals.ConstructiveWitness.packet exact
+  simpa using DimensionAgnosticKKTResiduals.ConstructiveProperty.packet exact
 
 attribute [terminal] exact_stationarity_packet
 
@@ -557,7 +557,7 @@ def ofIdentityBalancedSquareDissipation
 variable (C : FullCoadjointOrbitMetriplecticContext G Gdual Orbit)
 
 -- theorem-class: bridge
-/-- The reversible coadjoint-orbit channel is entropy-Casimir by hypothesis. -/
+/-- The reversible coadjoint-orbit channel is entropy-Casimir by property. -/
 @[rep_depth thermo]
 theorem reversible_channel_zero (x : Orbit) :
     C.reversibleEntropyRate x = 0 :=
@@ -982,7 +982,7 @@ noncomputable def finiteSouriauFisherMetricReadout : ℝ :=
 -- theorem-class: bridge
 /--
 The finite Souriau-Fisher metric/readout is nonnegative under the same PSD
-response hypothesis that drives the finite metriplectic second law.
+response property that drives the finite metriplectic second law.
 -/
 @[rep_depth thermo]
 theorem finiteSouriauFisherMetricReadout_nonneg :
@@ -1048,7 +1048,7 @@ This binds the calculation chain used in the proof narrative:
 * the mixed entries agree, giving Onsager reciprocity;
 * a PSD response gate gives nonnegative entropy production.
 
-The PSD hypothesis is explicit.  No positivity is inferred merely from the
+The PSD property is explicit.  No positivity is inferred merely from the
 symbolic Souriau/Fisher language.
 -/
 @[rep_depth thermo]
@@ -1103,7 +1103,7 @@ theorem finite_FisherOnsager_entropyProduction_nonneg_of_det_nonneg
 /-! ## Conformal/KKT operator projections -/
 
 -- theorem-class: bridge
-/-- The certified conformal dilation is the Drazin dilation-gap owner object. -/
+/-- The property conformal dilation is the Drazin dilation-gap owner object. -/
 @[rep_depth transport]
 theorem conformalD_eq_dilationGap :
     C.conformalKKT.CCI.toConformalInference.D =
@@ -1262,7 +1262,7 @@ theorem operatorialEntropyProduction_eq_quadratic
 -- theorem-class: bridge
 /--
 Operatorial second-law gate under the explicit scalar PSD response packet.
-The indefinite Krein lane is not globally positive without this hypothesis.
+The indefinite Krein lane is not globally positive without this property.
 -/
 @[rep_depth transport]
 theorem operatorialEntropyProduction_nonneg_of_metricResponsePSD
@@ -1274,10 +1274,10 @@ theorem operatorialEntropyProduction_nonneg_of_metricResponsePSD
 
 -- theorem-class: bridge
 /--
-Operatorial second-law gate from a constructive square-response witness.
+Operatorial second-law gate from a constructive square-response property.
 
-This narrows the bare `OperatorialMetricResponsePSD` hypothesis to the owned
-infinite-dimensional witness route already available on the operatorial
+This narrows the bare `OperatorialMetricResponsePSD` property to the owned
+infinite-dimensional property route already available on the operatorial
 metriplectic lane.
 -/
 @[rep_depth transport]
@@ -1323,7 +1323,7 @@ theorem operatorialFisherOnsager_entropyProduction_equation
 -- theorem-class: bridge
 /--
 Operatorial Fisher/Onsager entropy equation from a constructive square-response
-witness.
+property.
 
 This removes the naked scalar PSD input from the bridge when the concrete
 operatorial model proves orthogonal square response channels.  The carrier is
@@ -1358,8 +1358,8 @@ theorem operatorialFisherOnsager_entropyProduction_equation_of_squareResponse
 /--
 Operatorial second-law gate from regular Drazin/Krein cone positivity.
 
-This replaces the bare `OperatorialMetricResponsePSD` hypothesis by the owned
-regular-cone witness route on the infinite doubled-Krein operator lane.
+This replaces the bare `OperatorialMetricResponsePSD` property by the owned
+regular-cone property route on the infinite doubled-Krein operator lane.
 -/
 @[rep_depth transport]
 theorem operatorialEntropyProduction_nonneg_of_regularCone
@@ -1377,7 +1377,7 @@ theorem operatorialEntropyProduction_nonneg_of_regularCone
 Operatorial Fisher/Onsager entropy equation from regular Drazin/Krein cone
 positivity.
 
-This is the noncommutative replacement for a bare PSD scalar assumption:
+This is the noncommutative replacement for a bare PSD scalar property:
 diagonal Hessian representatives live in the regular operator cone and the
 probe is positive on that cone.
 -/
@@ -1411,7 +1411,7 @@ theorem operatorialFisherOnsager_entropyProduction_equation_of_regularCone
 Operatorial Fisher/Onsager entropy equation from a Cramer-Rao realization of
 the response packet.
 
-Here the two-channel determinant is not a hypothesis: the bridge delegates to
+Here the two-channel determinant is not a property: the bridge delegates to
 the comparison-state channel Cauchy-Schwarz theorem on the doubled Krein
 carrier through `CramerRaoOperatorialResponseContext`.
 -/
@@ -1447,7 +1447,7 @@ One-channel operatorial entropy production from the same Cramer-Rao realization.
 
 This is the scalar `Operators.entropyProduction` endpoint, but its positivity
 is still inherited from the doubled-carrier Cramer-Rao channel metric rather
-than from an explicit `probe_hessian_nonneg` assumption.
+than from an explicit `probe_hessian_nonneg` property.
 -/
 @[rep_depth transport]
 theorem operatorCanonicalEntropyProduction_nonneg_of_cramerRaoResponse
@@ -1550,7 +1550,7 @@ One-channel operatorial second-law closure from regular Drazin/Krein cone
 positivity.
 
 This is the first constructive infinite-lane replacement for a bare
-two-channel PSD/determinant hypothesis: for a pure `X` thermodynamic force, the
+two-channel PSD/determinant property: for a pure `X` thermodynamic force, the
 operatorial entropy production is controlled by the diagonal Hessian readout
 alone, and that readout is proved nonnegative by regular-cone positivity.
 -/
@@ -1567,7 +1567,7 @@ theorem operatorialXChannel_entropyProduction_nonneg_of_regularCone
 /-! ## KKT stationarity packet -/
 
 -- theorem-class: bridge
-/-- The KKT stationarity shadow remains an explicit assumption packet. -/
+/-- The KKT stationarity shadow remains an explicit property packet. -/
 @[rep_depth thermo]
 theorem kktStationarity_packet
     (hCone : C.kktStationarity.coneAdmissible)
@@ -1581,29 +1581,29 @@ theorem kktStationarity_packet
 
 -- theorem-class: bridge
 /--
-Proof-carrying witness route for the local KKT stationarity packet.
+Proof-carrying property route for the local KKT stationarity packet.
 
 This removes the four separate explicit KKT hypotheses in favor of one
-constructive witness object on the same theorem surface.
+constructive property object on the same theorem surface.
 -/
 @[rep_depth thermo]
-theorem kktStationarity_packet_of_witness
-    (W : ∃ witness : KKTEntropyStationarityShadow.Witness,
-      witness = C.kktStationarity) :
+theorem kktStationarity_packet_of_property
+    (W : ∃ property : KKTEntropyStationarityShadow.Property,
+      property = C.kktStationarity) :
     C.kktStationarity.coneAdmissible ∧ C.kktStationarity.stationarity ∧
       C.kktStationarity.complementarySlackness ∧
         C.kktStationarity.finitePartitionAdmissible :=
   by
-    rcases W with ⟨witness, shadow_eq⟩
+    rcases W with ⟨property, shadow_eq⟩
     rw [← shadow_eq]
-    exact witness.packet
+    exact property.packet
 
 -- theorem-class: bridge
 /--
 The native exact residual equality discharges the local KKT stationarity packet.
 -/
 @[rep_depth thermo]
-theorem kktStationarity_packet_of_exactWitness
+theorem kktStationarity_packet_of_exactProperty
     (W : C.kktStationarity =
       DimensionAgnosticKKTResiduals.toShadow DimensionAgnosticKKTResiduals.exact) :
     C.kktStationarity.coneAdmissible ∧ C.kktStationarity.stationarity ∧
@@ -1611,7 +1611,7 @@ theorem kktStationarity_packet_of_exactWitness
         C.kktStationarity.finitePartitionAdmissible :=
   by
     rw [W]
-    exact DimensionAgnosticKKTResiduals.ConstructiveWitness.packet
+    exact DimensionAgnosticKKTResiduals.ConstructiveProperty.packet
       DimensionAgnosticKKTResiduals.exact
 
 -- theorem-class: bridge
@@ -1625,7 +1625,7 @@ theorem kktStationarity_packet_of_exact
       C.kktStationarity.complementarySlackness ∧
         C.kktStationarity.finitePartitionAdmissible := by
   exact
-    kktStationarity_packet_of_exactWitness
+    kktStationarity_packet_of_exactProperty
       (C := C)
       hExact
 
@@ -1649,7 +1649,7 @@ theorem finite_and_operatorial_entropyProduction_nonneg
 -- theorem-class: bridge
 /--
 Combined finite/operatorial entropy production without a bare operatorial PSD
-hypothesis, using a constructive square-response witness on the infinite
+property, using a constructive square-response property on the infinite
 doubled-Krein operator lane.
 -/
 @[rep_depth thermo]
@@ -1666,7 +1666,7 @@ theorem finite_and_operatorial_entropyProduction_nonneg_of_squareResponse
 -- theorem-class: bridge
 /--
 Combined finite/operatorial entropy production without a bare operatorial PSD
-hypothesis, using regular Drazin/Krein cone positivity on the operatorial lane.
+property, using regular Drazin/Krein cone positivity on the operatorial lane.
 -/
 @[rep_depth thermo]
 theorem finite_and_operatorial_entropyProduction_nonneg_of_regularCone
@@ -1682,7 +1682,7 @@ theorem finite_and_operatorial_entropyProduction_nonneg_of_regularCone
 -- theorem-class: bridge
 /--
 Combined finite/operatorial entropy production without a bare operatorial PSD
-hypothesis, using a Cramer-Rao realization of the infinite doubled-Krein
+property, using a Cramer-Rao realization of the infinite doubled-Krein
 operator response packet.
 -/
 @[rep_depth thermo]
@@ -1704,7 +1704,7 @@ positivity on the infinite doubled-Krein operator lane.
 
 The finite lane still uses the already-owned finite Souriau-Fisher theorem; the
 operatorial lane does not use a finite response matrix, a scalar PSD packet, or
-a two-channel determinant hypothesis.
+a two-channel determinant property.
 -/
 @[rep_depth thermo]
 theorem finite_and_operatorial_xChannel_entropyProduction_nonneg_of_regularCone

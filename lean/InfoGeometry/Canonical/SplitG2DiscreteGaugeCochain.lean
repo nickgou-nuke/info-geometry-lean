@@ -7,7 +7,7 @@ namespace InfoGeometry.Canonical
 # Discrete gauge pullback of split-`G₂` forms
 
 This file connects the existing edge transport to the coframe pullback layer.
-Form invariance is an explicit hypothesis: the carrier automorphism preserves
+Form invariance is an explicit property: the carrier automorphism preserves
 the canonical three-form, but an arbitrary alternating form need not be fixed.
 -/
 

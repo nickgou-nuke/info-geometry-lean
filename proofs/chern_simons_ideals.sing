@@ -1,0 +1,28 @@
+// chern_simons_ideals.sing
+// Algebraic ideals corresponding to fractional Pontrjagin classes and Chern-Weil differential forms with denominators.
+
+LIB "primdec.lib";
+
+ring r = 0, (p1, c1, c2, c3, e), dp;
+
+// p1: first Pontrjagin class
+// c_i: Chern classes
+// e: Euler class
+
+// The condition for anomaly cancellation in heterotic strings is p1(M) = p1(V)
+// where V is the gauge bundle. In terms of Chern classes:
+// p1(V) = c1^2 - 2*c2
+// Since the bundle is usually SU(n) or E_8 x E_8, c1 = 0, so p1(V) = -2*c2.
+
+ideal anomaly_cancellation = p1 - (c1^2 - 2*c2);
+
+// We want to study the ideal of fractional classes, e.g., p1/2.
+// Let dp1 = p1 / 2, so p1 = 2*dp1.
+ring r_frac = 0, (dp1, p1, c1, c2), dp;
+ideal frac_rel = p1 - 2*dp1, p1 - (c1^2 - 2*c2);
+
+std(frac_rel);
+
+print("Fractional Pontrjagin ideal established.");
+print("Generators:");
+print(frac_rel);

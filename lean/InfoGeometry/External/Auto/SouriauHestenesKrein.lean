@@ -2,6 +2,8 @@ import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic
 
+namespace SouriauHestenesKrein
+
 /-!
 # Souriau Beta Vectors, Hestenes Bivectors, and Krein Determinant Sectors
 
@@ -128,4 +130,6 @@ theorem gradedSupertracePole_iff_denominator_zero (z : ℂ) :
     gradedSupertracePole z ↔ z = 0 := by
   rfl
 
-end noncomputable section
+end
+
+end SouriauHestenesKrein

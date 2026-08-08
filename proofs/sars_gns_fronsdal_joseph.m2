@@ -1,0 +1,17 @@
+R = QQ[q0,q1,p0,p1,hbar,eta];
+U00 = p0*q0;
+U01 = p0*q1;
+U10 = p1*q0;
+U11 = p1*q1;
+josephMinor = U00*U11 - U01*U10;
+assert(josephMinor == 0);
+starCorrection = -hbar^2*eta;
+assert(starCorrection + hbar^2*eta == 0);
+J = ideal(josephMinor);
+assert(numgens J == 1);
+W = QQ[x,dx, WeylAlgebra => {x=>dx}];
+I = ideal(x*dx - dx*x - 1);
+assert(numgens I == 1);
+edges = {"GNS_completion","defines_quantization","cut_out_by","annihilates","embeds_as"};
+assert(#edges == 5);
+print {josephMinor=>josephMinor, josephIdealGenerators=>numgens J, dmoduleCCRGenerators=>numgens I, graphEdges=>#edges};

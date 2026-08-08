@@ -14,7 +14,7 @@ Atiyah-Patodi-Singer style cylindrical-end picture used in the repository:
 * and an explicit boundary correction `η` is required to vanish.
 
 This is a socket, not a proof of the full APS index theorem.
-The boundary correction hypothesis is carried explicitly and then discharged by
+The boundary correction property is carried explicitly and then discharged by
 the theorem below.
 -/
 

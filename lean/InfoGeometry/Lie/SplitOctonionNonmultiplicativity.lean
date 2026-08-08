@@ -74,7 +74,7 @@ theorem associator_obstruction :
   have h_sub : ex_associator = 0 := sub_eq_zero.mpr h_eq
   exact ex_associator_ne_zero h_sub
 
-/-- Concrete obstruction witness using the idempotent basis:
+/-- Concrete obstruction property using the idempotent basis:
 Let e₊ = (1,0,0,0), e₋ = (0,1,0,0), u₁ = (0,0,1,0) in the Zorn model.
 Then `L_{e₊} L_{e₋}` and `L_{e₊*e₋}` differ when evaluated on `ex_Z.1`. -/
 theorem explicit_counterexample :

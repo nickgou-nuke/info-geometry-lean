@@ -45,7 +45,7 @@ E₈(8) split real form.
 
 The split real form of E₈ has maximal non-compact signature.
 Maximal compact subalgebra: so(8, 8) ≅ Spin(8,8) / ℤ₂
-TODO: replace this finite witness by a real split-form construction when available
+TODO: replace this finite property by a real split-form construction when available
 -/
 /- The finite carrier is the native triple of numerical readouts, restricted
 to the canonical values used by this owner. -/
@@ -73,7 +73,7 @@ def canonicalE8SplitForm : E8SplitForm :=
   ⟨(dim_E8, rank_E8, positive_roots_E8), by
     simp [dim_E8, rank_E8, positive_roots_E8]⟩
 
-/-- The canonical finite witness has the declared E₈ dimension and rank. -/
+/-- The canonical finite property has the declared E₈ dimension and rank. -/
 theorem canonicalE8SplitForm_isCanonical :
     canonicalE8SplitForm.IsCanonical := by
   simpa [E8SplitForm.IsCanonical] using canonicalE8SplitForm.property
@@ -105,7 +105,7 @@ theorem maximal_compact_dim_eq_120 (E : E8SplitForm)
 
 end E8SplitForm
 
-/-- Maximal compact witness carried by the canonical split form has dimension `120`. -/
+/-- Maximal compact property carried by the canonical split form has dimension `120`. -/
 theorem maximal_compact_dim : canonicalE8SplitForm.maximal_compact_dimension = 120 :=
   E8SplitForm.maximal_compact_dim_eq_120 canonicalE8SplitForm
     canonicalE8SplitForm_isCanonical

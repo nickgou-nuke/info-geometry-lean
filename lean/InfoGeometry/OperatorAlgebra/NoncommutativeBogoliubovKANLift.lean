@@ -43,7 +43,7 @@ structure NoncommutativeModularOperatorLift
     [One Deriv] [Mul Deriv]
     [Zero Ham]
     [One Phase] [Mul Phase] where
-  /-- Explicitly noncommutative carrier witness. -/
+  /-- Explicitly noncommutative carrier property. -/
   noncommutativeWitness : ∃ a b : A, a * b ≠ b * a
 
   /-- Modular integration on the base algebra is by weight, not bare trace. -/
@@ -123,7 +123,7 @@ theorem modularFlow_mul
       P.modularFlow.flow t x * P.modularFlow.flow t y :=
   P.modularFlow.flow_mul_apply t x y
 
-/-- The carrier is explicitly noncommutative; this is the owner-side witness. -/
+/-- The carrier is explicitly noncommutative; this is the owner-side property. -/
 theorem exists_noncommuting_pair
     (P : NoncommutativeModularOperatorLift A Weight Deriv Ham Phase Core) :
     ∃ a b : A, a * b ≠ b * a :=
@@ -167,7 +167,7 @@ structure BogoliubovKANShadowPacket
     (E : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (Bog Korth Asplit Nshear CartanDiag : Type*) where
-  /-- Real Bogoliubov implementer witness. -/
+  /-- Real Bogoliubov implementer property. -/
   bogoliubovTransform : Bog
 
   /-- `K`/compact sector of a KAN decomposition. -/
@@ -306,7 +306,7 @@ theorem diagonal_shadow_available :
     P.bogoliubovShadow = P.bogoliubovShadow := by
   rfl
 
-/-- The bridge exposes the noncommutative owner witness; the shadow does not replace it. -/
+/-- The bridge exposes the noncommutative owner property; the shadow does not replace it. -/
 theorem operator_owner_has_noncommuting_pair
     (P : NoncommutativeModularToBogoliubovKANPacket
       A Weight Deriv Ham Phase Core E Bog Korth Asplit Nshear CartanDiag) :

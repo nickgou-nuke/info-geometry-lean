@@ -232,7 +232,7 @@ variable {H : Type*}
   [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 
 /-! Tomita flow lemmas here remain on the surface/diagnostic layer for
-Connes-Araki consumers. The noncommutative owner witness remains external. -/
+Connes-Araki consumers. The noncommutative owner property remains external. -/
 
 /--
 Tomita flow carries a canonical derived cocycle by evaluating the flow on

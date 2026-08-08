@@ -1,4 +1,3 @@
-#exit
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.LinearAlgebra.CliffordAlgebra.Grading
 import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
@@ -11,21 +10,23 @@ import Mathlib.Algebra.Lie.OfAssociative
 import InfoGeometry.Canonical.CliffordParityBridge
 import InfoGeometry.Canonical.HestenesBivectorCarrier
 import InfoGeometry.Canonical.HestenesBivectorBracket
+import InfoGeometry.Canonical.HestenesBivectorSelfDuality
 
 namespace InfoGeometry.Canonical.LorentzSelfDualLieSplit
 
 open CliffordAlgebra TensorProduct
 open InfoGeometry.Canonical.HestenesBivectorCarrier
 
+open InfoGeometry.Canonical.HestenesBivectorSelfDuality
+
 variable {M : Type*} [AddCommGroup M] [Module ℝ M]
-variable (Q : QuadraticForm ℝ M) [HasVolumeElement ℝ M Q] [HasSpacetimeBasis Q]
+variable (Q : QuadraticForm ℝ M) [InfoGeometry.Canonical.CliffordParity.HasVolumeElement ℝ M Q] [HasSpacetimeBasis Q]
 
-abbrev ComplexClifford := CliffordAlgebra Q ⊗[ℝ] ℂ
+abbrev ComplexClifford := TensorProduct ℝ ℂ (CliffordAlgebra Q)
 
-instance : Ring (ComplexClifford Q) := TensorProduct.instRing
-instance : Algebra ℂ (ComplexClifford Q) := Algebra.TensorProduct.rightAlgebra
-
--- This is the lie ring and lie algebra on the full complexified Clifford algebra
+-- The tensor product of algebras over a commutative ring is an algebra.
+-- Mathlib provides this automatically, so we don't need manual instances.
+-- However, we may need to specify LieAlgebra instance using inferInstance.
 instance : LieRing (ComplexClifford Q) := inferInstance
 instance : LieAlgebra ℂ (ComplexClifford Q) := inferInstance
 
@@ -37,20 +38,14 @@ instance : LieAlgebra ℂ (ComplexClifford Q) := inferInstance
 -- Let's define the inclusion map.
 
 def complexBivectorInclusion : ComplexBivector Q →ₗ[ℂ] ComplexClifford Q :=
-  TensorProduct.map (Bivector13 Q).subtype LinearMap.id
+  TensorProduct.AlgebraTensorModule.map LinearMap.id (Bivector13 Q).subtype
 
 -- We need to prove this inclusion preserves the bracket, so its range is a LieSubalgebra.
 -- But wait, Bivector13 Q ⊗[ℝ] ℂ does not have a bracket yet!
 -- Instead of defining a bracket on Bivector13 Q ⊗[ℝ] ℂ and proving it maps over,
 -- we can just define the Lie subalgebra of ComplexClifford Q spanned by the image of this inclusion!
 
-def complexBivectorLieSubalgebra : LieSubalgebra ℂ (ComplexClifford Q) where
-  carrier := LinearMap.range (complexBivectorInclusion Q)
-  add_mem' := Submodule.add_mem _
-  zero_mem' := Submodule.zero_mem _
-  smul_mem' := Submodule.smul_mem _
-  lie_mem' := by
-    -- here we need to show that if x, y are in the range, their commutator is in the range
-    sorry
+def complexBivectorLieSubalgebra : LieSubalgebra ℂ (ComplexClifford Q) :=
+  LieSubalgebra.lieSpan ℂ (ComplexClifford Q) (LinearMap.range (complexBivectorInclusion Q))
 
 end InfoGeometry.Canonical.LorentzSelfDualLieSplit

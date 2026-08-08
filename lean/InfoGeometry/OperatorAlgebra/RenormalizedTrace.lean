@@ -206,7 +206,7 @@ structure ResidueTraceBridge
   constant : ℂ
   /-- Chosen complex readout of the extended nonnegative singular trace. -/
   singularTraceComplex : ℝ≥0∞ → ℂ
-  /-- Bridge formula certificate. -/
+  /-- Bridge formula property. -/
   residue_trace_formula :
     ∀ T : A,
       T ∈ singular.ideal →

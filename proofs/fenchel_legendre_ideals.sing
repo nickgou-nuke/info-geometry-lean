@@ -1,0 +1,25 @@
+// Singular script for Fenchel-Legendre transform ideals
+// Connects primal entropy manifold to dual observable manifold
+
+ring r = 0, (p, y, u, v), dp;
+
+// Primal variable p, dual variable y
+// F(p) = -ln(p) -> dF/dp = -1/p
+// Dual constraint: y = dF/dp => y = -1/p => y*p + 1 = 0
+
+// Ideal of the differential manifold relation
+ideal I = y*p + 1;
+
+// Convex duality connection
+// Let u = p (primal), v = y (dual)
+ideal J = v*u + 1;
+
+print("Ideal defining the convex duality (primal-dual relation):");
+J;
+
+// Compute Groebner basis
+ideal G = std(J);
+print("Groebner basis of the ideal:");
+G;
+
+// The geometry of the observable manifold is mapped by this algebraic ideal

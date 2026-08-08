@@ -6,7 +6,7 @@ import InfoGeometry.Topology.CuntzCantorSpectralTriple
 This module is an operator-level bridge over the existing
 `CuntzCantorSpectralTriple`.  It deliberately does not introduce a second
 spectral-triple carrier: the Dirac operator, represented action, cylinder
-operators, and certified commutators are taken from the native owner.
+operators, and property commutators are taken from the native owner.
 
 The distance predicate is stated on the represented cylinder observables.  It
 therefore retains the continuous-operator norm
@@ -29,7 +29,7 @@ def representedDifferential
   T.dirac.comp (T.representedAction a) -
     (T.representedAction a).comp T.dirac
 
-/-- The certified differential of a finite Cuntz cylinder observable. -/
+/-- The property differential of a finite Cuntz cylinder observable. -/
 def cylinderDifferential
     (T : CuntzCantorSpectralTriple Op H)
     (n : Nat) (word : BinaryCylinder n) : H →L[ℂ] H :=

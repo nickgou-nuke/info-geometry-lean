@@ -123,7 +123,7 @@ theorem lightrayFlowUnit_inv_val
 The lightray flow unit attached to a matrix incidence datum.
 
 The square-zero input is derived from the source/target support laws and
-directional orthogonality; it is not an extra field or hypothesis socket.
+directional orthogonality; it is not an extra field or property socket.
 -/
 def incidentLightrayFlowUnit
     {R : Type*} [CommRing R]

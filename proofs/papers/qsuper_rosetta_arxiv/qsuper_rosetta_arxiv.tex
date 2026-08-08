@@ -1,0 +1,343 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+
+\geometry{margin=1in}
+\setlength{\emergencystretch}{3em}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\On}{\mathcal{O}}
+\newcommand{\Weyl}{A_n}
+\newcommand{\dR}{\mathrm{dR}}
+\newcommand{\STr}{\mathrm{STr}}
+\newcommand{\Conf}{\mathrm{Conf}}
+
+\title{A Finite Rosetta Layer for q-Super-Cuntz Regularization,\\
+Configuration Complements, and D-Module de Rham Computation}
+
+\author{Formalization draft generated from the \texttt{/home/goutev/auto} Lean/SymPy repository}
+\date{June 18, 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We report a small formalization layer connecting four finite algebraic
+regularization mechanisms: the endogenous Krein signature, the supertrace
+pairing, hyperbolic spectral squashing, and Cayley unitary boundary
+coordinates.  The root object is a two-sector q-super-Cuntz socket
+\(\On_q(1|1)\), represented at finite level by a \(2\times2\) matrix model in
+which the superparity operator equals the Krein signature
+\(\eta=N_+-N_-\).  The work is formalized in Lean 4 as theorem-honest finite
+sockets and checked in SymPy by executable witnesses.  We further add a
+three-point Orlik--Solomon skeleton for non-isotropic configuration
+complements and a D-module de Rham computation socket based on the
+Oaku--Takayama algorithm for complements of affine hypersurfaces.  The paper
+does not claim a completed analytic q-to-1 colimit, full root-of-unity
+representation theory, or a physical spacetime reconstruction theorem.  Those
+claims are explicitly represented as sockets.
+\end{abstract}
+
+\section{Introduction}
+
+The repository formalizes a finite algebraic spine for a larger program in
+which metric signature, regularization, and complement cohomology are treated
+as outputs of algebraic structure rather than as external analytic choices.
+The central finite observation is the identity
+\[
+  \eta = N_+ - N_- = (-1)^F
+\]
+in a two-sector q-super-Cuntz model.  From this identity follow the finite
+supertrace
+\[
+  \STr(X)=\operatorname{Tr}(\eta X)=X_{00}-X_{11},
+\]
+the involutivity \(\eta^2=1\), and a bounded/unitary coordinate pipeline
+through hyperbolic squashing and the Cayley transform.
+
+This document describes exactly what has been implemented and verified:
+finite matrix identities, formal Orlik--Solomon relations, a finite
+root-of-unity truncation socket, and a Weyl-algebra witness for the
+Oaku--Takayama D-module algorithm.  The goal is not to oversell the analytic
+part of the program, but to isolate small objects that can be compiled,
+tested, and extended.
+
+\section{The q-Super-Cuntz Regularization Rosetta Layer}
+
+Let
+\[
+  N_+ =
+  \begin{pmatrix}
+  1&0\\0&0
+  \end{pmatrix},
+  \qquad
+  N_- =
+  \begin{pmatrix}
+  0&0\\0&1
+  \end{pmatrix},
+  \qquad
+  \eta=N_+-N_-.
+\]
+The finite q-super-Cuntz socket uses the two sectors as bosonic and fermionic
+projections:
+\[
+  P_B=N_+,\qquad P_F=N_-,\qquad (-1)^F=P_B-P_F.
+\]
+
+\begin{proposition}[Finite superparity signature]
+In the \(2\times2\) socket,
+\[
+  (-1)^F=\eta,\qquad \eta^2=1,\qquad \eta^\dagger=\eta.
+\]
+\end{proposition}
+
+\begin{proof}
+This is a direct matrix calculation.  In the repository the corresponding
+Lean module proves the three identities as named theorems:
+\[
+\texttt{superParity\_eq\_eta},\qquad
+\texttt{superParity\_sq},\qquad
+\texttt{superParity\_selfadjoint}.
+\]
+\end{proof}
+
+\begin{proposition}[Finite supertrace]
+For any \(2\times2\) matrix \(X\),
+\[
+  \STr(X)=\operatorname{Tr}((-1)^F X)=X_{00}-X_{11}.
+\]
+\end{proposition}
+
+\begin{proof}
+This is proved in Lean as \path{supertrace_apply}; the SymPy witness
+\path{q_super_regularization_rosetta.py} checks the same identity.
+\end{proof}
+
+\subsection{The four regularization roles}
+
+The Lean module \texttt{QSuperRegularizationRosetta.lean} packages the finite
+facts into four named projections.
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Role & q-super origin & finite contract\\
+\midrule
+Minkowski signature & \((-1)^F=P_B-P_F\) & \(\eta^2=1\), \(\eta^\dagger=\eta\)\\
+Lorentz bilinear & \(\STr(X)=\operatorname{Tr}(\eta X)\) & \(X_{00}-X_{11}\)\\
+Spectral squashing & q-integer shadow & \(-1<\tanh(1-\lambda^{-1})<1\)\\
+CUE/q-circle & Cayley coordinate & \(U U^\dagger=1\)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The analytic q-to-1 colimit, root-of-unity representation theory, and TKK
+spacetime recovery are represented as explicit propositions, not as proved
+theorems.
+
+\section{Finite Root-of-Unity Truncation}
+
+The module \texttt{QRootOfUnityTruncation.lean} isolates the finite content of
+the phrase ``root-of-unity truncation.''  A stage is a natural number \(k>0\),
+with state space \(\operatorname{Fin}(k)\).
+
+\begin{definition}
+At stage \(k\), a natural level \(n\) is admissible if \(n<k\).
+\end{definition}
+
+\begin{proposition}[Hard boundary cutoff]
+The first boundary level \(k\) is not admissible:
+\[
+  \neg(k<k).
+\]
+The finite state space has exactly \(k\) states.
+\end{proposition}
+
+The same module defines a parity sign on the finite ladder and proves
+\[
+  \operatorname{paritySign}(n)^2=1.
+\]
+This captures the finite combinatorial part of a root-of-unity cutoff without
+claiming the full analytic representation theorem for \(q=\exp(i\pi/k)\).
+
+\section{A Three-Point Orlik--Solomon Complement Skeleton}
+
+For three points in \(\C^D\), consider the non-isotropic complement where
+\[
+  q(x_i-x_j)\neq 0
+\]
+for all pairs \(i<j\).  The repository formalizes the finite
+Orlik--Solomon skeleton with generators
+\[
+  A_{12},\quad A_{23},\quad A_{13}
+\]
+and the Arnold--Orlik--Solomon relation
+\[
+  A_{12}A_{23}-A_{12}A_{13}+A_{23}A_{13}=0.
+\]
+
+\begin{proposition}
+After imposing the Arnold--Orlik--Solomon relation, the formal degree-two
+space has rank \(2\), with normal basis
+\[
+  A_{12}A_{23},\qquad A_{12}A_{13}.
+\]
+\end{proposition}
+
+The Lean theorem \texttt{arnold\_orlik\_solomon\_relation} proves that the
+relation reduces to zero in this normal form.  The SymPy witness
+\texttt{non\_iso\_conf3\_orlik\_solomon.py} checks the concrete \(D=4\)
+quadratic form
+\[
+  q(z)=z_0^2+z_1^2+z_2^2+z_3^2
+\]
+and verifies symbolically that the forms \(\mathrm{d}\log q(x_i-x_j)\) are
+closed.
+
+\begin{remark}
+Analytically, \(\mathrm{d}\log q\) is a one-form on the hypersurface
+complement.  The repository keeps the requested \(D-1\) grading as a formal
+socket rather than silently identifying it with the analytic de Rham degree.
+\end{remark}
+
+\subsection{Cooperad map}
+
+For the collapse \(\{1,2\}|3\), the formal cooperad map is
+\[
+  \Delta_{12}(A_{12})=1\otimes A_{12},\qquad
+  \Delta_{12}(A_{13})=A_{13}\otimes 1,\qquad
+  \Delta_{12}(A_{23})=A_{13}\otimes 1.
+\]
+This is implemented by the Lean function \texttt{delta12}.
+
+\section{D-Module de Rham Computation Socket}
+
+The paper \cite{OakuTakayama1998} gives an algorithm for computing
+\[
+  H^k(U,\C_U),\qquad U=\C^n\setminus V(f),
+\]
+for nonzero \(f\in\Q[x_1,\ldots,x_n]\).  The implemented Lean socket
+\texttt{OakuTakayamaDModuleDeRham.lean} records the algorithmic pipeline:
+\[
+  \Q[x,1/f]\simeq A_n/I,
+\]
+then a formal Fourier transform
+\[
+  x_i\mapsto -\partial_i,\qquad \partial_i\mapsto x_i,
+\]
+then a free resolution of \(A_n/J\), and finally the restriction/integration
+complex
+\[
+  A_n/(x_1A_n+\cdots+x_nA_n)\otimes_{A_n} A_n^{p_{-k}}.
+\]
+
+\subsection{The introductory Weyl algebra atom}
+
+In the one-variable Weyl algebra \(A_1=\Q\langle x,\partial\rangle\) with
+\[
+  \partial x=x\partial+1,
+\]
+the paper considers
+\[
+  p=(x-u)(x-v)\partial-a(x-v)-b(x-u).
+\]
+The SymPy witness implements normal ordering and verifies that the formal
+Fourier transform is
+\[
+  \widehat p
+  =
+  x\partial^2
+  +\bigl((u+v)x+2+a+b\bigr)\partial
+  +uvx+u+v+av+bu.
+\]
+The associated introductory b-polynomial atom is
+\[
+  b(s)=s(s-a-b),
+\]
+and Lean proves
+\[
+  b(0)=0,\qquad b(a+b)=0.
+\]
+
+\section{Implementation}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+File & Role\\
+\midrule
+\texttt{QSuperCuntzRegularization.lean} & finite q-super-Cuntz identities\\
+\texttt{QSuperRegularizationRosetta.lean} & four regularization projections\\
+\texttt{QRootOfUnityTruncation.lean} & finite root-of-unity cutoff socket\\
+\texttt{NonIsoConf3OrlikSolomon.lean} & three-point OS/cooperad skeleton\\
+\texttt{OakuTakayamaDModuleDeRham.lean} & D-module de Rham algorithm socket\\
+\texttt{q\_super\_regularization\_rosetta.py} & finite matrix witness\\
+\texttt{non\_iso\_conf3\_orlik\_solomon.py} & D=4 complement witness\\
+\texttt{oaku\_takayama\_dmodule\_de\_rham.py} & Weyl \(A_1\) Fourier witness\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The current verification commands are:
+\[
+\begin{aligned}
+&\texttt{lake build OakuTakayamaDModuleDeRham NonIsoConf3OrlikSolomon},\\
+&\texttt{python3 proofs/oaku\_takayama\_dmodule\_de\_rham.py},\\
+&\texttt{python3 proofs/non\_iso\_conf3\_orlik\_solomon.py}.
+\end{aligned}
+\]
+
+\section{Limitations and Next Steps}
+
+The present work is intentionally finite and modular.  It does not yet prove:
+\begin{itemize}[leftmargin=2em]
+\item the analytic q-to-1 colimit;
+\item full root-of-unity representation theory for \(\On_q(1|1)\);
+\item an analytic comparison theorem for the non-isotropic configuration
+  complement;
+\item a Lean implementation of Weyl algebra Gröbner bases;
+\item a full TKK reconstruction theorem for macroscopic spacetime.
+\end{itemize}
+
+The next mathematically conservative extension is to replace the D-module
+algorithm sockets by a computable Weyl algebra normal-form layer, then connect
+that layer to small explicit complement examples.
+
+\begin{thebibliography}{9}
+
+\bibitem{OakuTakayama1998}
+Toshinori Oaku and Nobuki Takayama.
+\newblock An algorithm for de Rham cohomology groups of the complement of an affine variety via D-module computation.
+\newblock \emph{arXiv:math/9801114}, 1998.
+
+\bibitem{OrlikTerao}
+Peter Orlik and Hiroaki Terao.
+\newblock \emph{Arrangements of Hyperplanes}.
+\newblock Springer, 1992.
+
+\bibitem{Bjork}
+Jan-Erik Bjork.
+\newblock \emph{Rings of Differential Operators}.
+\newblock North-Holland, 1979.
+
+\bibitem{Deligne}
+Pierre Deligne.
+\newblock Equations differentielles a points singuliers reguliers.
+\newblock \emph{Lecture Notes in Mathematics}, Vol. 163, Springer, 1970.
+
+\end{thebibliography}
+
+\end{document}

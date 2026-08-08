@@ -114,7 +114,7 @@ structure BlackHoleQubitDictionary
 /--
 An explicit tensor-factor carrier for a Drazin regular core.  The
 factorization is stored as a Mathlib linear equivalence, rather than as an
-uninterpreted proposition-valued certificate.
+uninterpreted proposition-valued property.
 -/
 structure DrazinBipartiteCore where
   Core : Type*
@@ -133,7 +133,7 @@ The algebraic correspondence of quantum decoherence to geometric surgery.
 If a GHZ state loses a qubit (e.g., Alice is traced out), the state drops 
 rank into the W-class horizon. 
 
-This structure requires a witness that the Drazin projector resolving 
+This structure requires a property that the Drazin projector resolving 
 the Small Black Hole singularity precisely yields the bipartite entanglement 
 subspace of the remaining qubits.
 -/

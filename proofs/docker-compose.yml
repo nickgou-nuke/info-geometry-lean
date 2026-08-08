@@ -1,0 +1,52 @@
+services:
+  llama-vulkan:
+    build:
+      dockerfile: Dockerfile.vulkan
+    container_name: llama-vulkan
+    restart: unless-stopped
+    ports:
+      - "11435:11435"
+    volumes:
+      - gguf_models:/models
+      - ./llama-vulkan-bin:/opt/llama-vulkan
+    devices:
+      - /dev/dri
+    group_add:
+      - "44"
+      - "109"
+    environment:
+      - LD_LIBRARY_PATH=/opt/llama-vulkan/lib
+    entrypoint: ["/opt/llama-vulkan/llama-server"]
+    command: [
+      "--model", "/models/Qwen2.5-Coder-3B-Instruct-Q4_K_M.gguf",
+      "--host", "0.0.0.0",
+      "--port", "11435",
+      "-ngl", "99",
+      "--ctx-size", "4096"
+    ]
+    networks:
+      - ai-net
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    restart: unless-stopped
+    ports:
+      - "3000:8080"
+    volumes:
+      - open-webui_data:/app/backend/data
+    environment:
+      - OPENAI_API_BASE_URL=http://llama-vulkan:11435/v1
+      - OPENAI_API_KEY=not-needed
+      - WEBUI_SECRET_KEY=auto-rag-secret-key-change-me
+    depends_on:
+      - llama-vulkan
+    networks:
+      - ai-net
+
+volumes:
+  gguf_models:
+  open-webui_data:
+
+networks:
+  ai-net:

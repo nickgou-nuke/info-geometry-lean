@@ -17,7 +17,7 @@ with a normalized positive state on `A∞`, induces:
 * compatibility of that universal map with every represented stage
   observable.
 
-No commutativity or diagonalization hypothesis is used.
+No commutativity or diagonalization property is used.
 -/
 
 noncomputable section

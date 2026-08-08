@@ -17,7 +17,7 @@ import InfoGeometry.AsanoRuelle.TopologicalEndpoint
 Native reduction of full Asano A.1 to the remaining nondegenerate
 topological branch.
 
-This file is not a witness packet.
+This file is not a property packet.
 
 It proves:
   full two-variable Asano contraction
@@ -161,7 +161,7 @@ theorem asanoNondegenerateTopologicalTheorem_of_asanoRuelleSource
 /--
 Full Asano contraction derived directly from the Asano-Ruelle source claim.
 
-This bypasses endpoint-certificate surfaces and routes through the single
+This bypasses endpoint-property surfaces and routes through the single
 source theorem bridge.
 -/
 @[rep_depth operator]
@@ -430,7 +430,7 @@ theorem asanoNondegenerateTopological_iff_asanoRuelleClosed :
   · exact asanoNondegenerateTopologicalTheorem_of_asanoRuelleClosed
 
 /--
-Closed-set Asano-Ruelle source claim from the endpoint-nondegenerate hypothesis.
+Closed-set Asano-Ruelle source claim from the endpoint-nondegenerate property.
 -/
 @[rep_depth operator]
 theorem asanoRuelleLemmaSourceClaimClosed_of_endpointNonDeg
@@ -451,7 +451,7 @@ theorem asanoRuelleLemmaSourceClaimClosed_of_endpointNonDeg
       hEndpointNonDeg
 
 /--
-Bounded closed-set Asano-Ruelle source claim from the endpoint-nondegenerate hypothesis.
+Bounded closed-set Asano-Ruelle source claim from the endpoint-nondegenerate property.
 -/
 @[rep_depth operator]
 theorem asanoRuelleLemmaSourceClaimClosedBounded_of_endpointNonDeg
@@ -699,7 +699,7 @@ theorem not_root_of_not_mem_negProductSet_of_nondegenerate_topology
 
 /--
 Full two-variable Asano contraction from a concrete nondegenerate endpoint
-alternative hypothesis.
+alternative property.
 
 This removes the abstract nondegenerate root-membership premise and replaces it
 with the endpoint alternative used by the native endpoint theorem.
@@ -810,7 +810,7 @@ theorem asano_contraction_full_of_topological_combined
 Contrapositive root-location form of endpoint-based full Asano contraction.
 
 If `A + D*z = 0`, then `z` lies in the contracted forbidden set, assuming the
-concrete nondegenerate endpoint alternative hypothesis.
+concrete nondegenerate endpoint alternative property.
 -/
 @[rep_depth operator]
 theorem asano_contraction_root_mem_negProductSet_of_endpoint_nondegenerate

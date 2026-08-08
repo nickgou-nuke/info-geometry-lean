@@ -1,0 +1,31 @@
+// Algebraic ideals of the metriplectic flow
+LIB "dmod.lib";
+
+ring R = 0, (x, y, z), dp;
+
+// Define the metriplectic potential function F
+// Modeling the intersection of the dissipative gradient and Hamiltonian flow
+poly F = x^2 + y^2 - z^2;
+
+// Compute the Jacobian ideal (singularities of the flow)
+ideal J = F, diff(F, x), diff(F, y), diff(F, z);
+
+// Standard basis for the Jacobian ideal
+ideal std_J = std(J);
+
+print("Standard Basis of the Metriplectic Flow Ideal:");
+print(std_J);
+
+// To find the D-module support, we consider the Annihilator in the Weyl algebra
+def W = Weyl();
+setring W;
+
+// Bring the polynomial F into the Weyl algebra
+poly F_weyl = imap(R, F);
+
+print("Computing D-module annihilator of F^s...");
+// Annihilator of F^s
+ideal ann_F = annfs(F_weyl);
+
+print("Annihilator ideal generators:");
+print(ann_F);

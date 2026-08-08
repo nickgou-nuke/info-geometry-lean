@@ -18,9 +18,9 @@ The bridge is equation-shape only:
 * Virasoro closure is a shifted mode plus an explicit central cocycle;
 * Heisenberg closure is a central cocycle on resonant modes;
 * affine Kac-Moody closure is a loop-current bracket plus residue cocycle;
-* Sugawara closure is available only under the local truncation hypothesis.
+* Sugawara closure is available only under the local truncation property.
 
-No wrappers. No witness fields. No completion claim.
+No wrappers. No property fields. No completion claim.
 -/
 
 namespace InfoGeometry.Algebra.FiniteInfiniteModeBridge
@@ -325,7 +325,7 @@ theorem affine_bracket_eq_loop_bracket_plus_cocycle
 /-! ## Sugawara closure under local truncation -/
 
 /--
-Sugawara Virasoro closure under the actual local truncation hypothesis.
+Sugawara Virasoro closure under the actual local truncation property.
 
 This is the allowed finite-to-infinite step for operator modes: the theorem
 uses `heiTrunc`, so the formal mode sums are locally finite on each vector.

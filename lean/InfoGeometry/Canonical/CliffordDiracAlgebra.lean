@@ -175,7 +175,7 @@ theorem hestenesJ_isInvolution [HestenesKreinSpace V] :
   simpa [Module.End.mul_eq_comp] using (HestenesKreinSpace.J_involution (V := V))
 
 -- `ε` in an involutive self-dual carrier is a Cartan involution.
--- (using only its defining involutivity axiom).
+-- (using only its defining involutivity ax!om).
 theorem involutiveSelfDualCarrier_ε_isInvolution (X : InvolutiveSelfDualCarrier) :
     IsInvolution (X.ε.toLinearMap) := by
   dsimp [IsInvolution, InfoGeometry.Cartan.IsCartanInvolution]

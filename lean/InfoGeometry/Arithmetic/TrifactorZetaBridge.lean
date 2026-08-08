@@ -70,7 +70,7 @@ theorem vacuum_sector_of_active_components_zero (T ρ : R)
 /--
 A zeta-facing tripotent mode.
 
-`activeSupportZero` is the explicit analytic/physical hypothesis.  Supplying it
+`activeSupportZero` is the explicit analytic/physical property.  Supplying it
 is exactly the nontrivial content; the theorem below only performs the finite
 trifactor projection once it is available.
 -/

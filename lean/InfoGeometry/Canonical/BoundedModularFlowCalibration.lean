@@ -15,7 +15,7 @@ Type-III modular logarithm.  It records the finite/bounded calibration layer:
 
 `K_sur` generates a supplied one-parameter bounded flow, and the Souriau bare
 operator `K̂_β` is the same calibrated generator.  KMS compatibility is carried
-by the repository's analytic strip/boundary certificate for that exact flow.
+by the repository's analytic strip/boundary property for that exact flow.
 -/
 
 namespace InfoGeometry.Canonical.BoundedModularFlowCalibration
@@ -73,7 +73,7 @@ structure Calibration where
 
   /--
   Calibration of the observable modular flow by the bounded adjoint action.
-  Concrete models may replace this witness by a stronger functional-calculus
+  Concrete models may replace this property by a stronger functional-calculus
   construction.
   -/
   modularFlow_eq_bounded_adjoint :
@@ -97,7 +97,7 @@ structure Calibration where
   state : StateFunctional EndH
 
   /--
-  Analytic KMS strip and boundary certificate for the calibrated observable
+  Analytic KMS strip and boundary property for the calibrated observable
   modular flow.
   -/
   kmsLikeCompatibility :

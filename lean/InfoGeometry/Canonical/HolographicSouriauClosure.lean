@@ -21,7 +21,7 @@ modular laser flow `σ_t(z) = e^{it} z` and prove that for any non-zero boundary
 the projected bulk orbit never hits the singularity.
 
 ## 3. SU(3) Color Darkness
-Instead of a structural axiom, we define the exact block-diagonal action of 
+Instead of a structural ax!om, we define the exact block-diagonal action of 
 spacetime modular flow versus internal color flow and prove their exact commutation.
 -/
 

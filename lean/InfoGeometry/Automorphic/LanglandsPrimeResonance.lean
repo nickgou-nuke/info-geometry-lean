@@ -282,10 +282,10 @@ theorem bulk_central_zero_boundaryProjector_iff
 
 end LanglandsSugawaraBridge
 
-/-! ## 4. Prime resonance witness package -/
+/-! ## 4. Prime resonance property package -/
 
 /--
-Langlands prime resonance witness.
+Langlands prime resonance property.
 
 This combines the existing automorphic L-resonance package with the new
 Sugawara/completed-L bridge.
@@ -327,21 +327,21 @@ variable
         (Bulk := Bulk) (Boundary := Boundary)
         (Stress := Stress) (Spectral := Spectral) (Scalar := Scalar) W)
 
-/-- Bulk central-zero iff bulk prime resonance for the witness. -/
+/-- Bulk central-zero iff bulk prime resonance for the property. -/
 theorem bulk_central_zero_iff_prime_resonance
     (F : Bulk) :
     HasBulkSugawaraCentralZero W R.sugawara F ↔
       IsBulkLanglandsPrimeResonance W R.completed F :=
   LanglandsSugawaraBridge.bulk_central_zero_iff_prime_resonance R.bridge F
 
-/-- Sugawara central-zero produces Langlands prime resonance for the witness. -/
+/-- Sugawara central-zero produces Langlands prime resonance for the property. -/
 theorem bulk_prime_resonance_of_central_zero
     (F : Bulk)
     (h : HasBulkSugawaraCentralZero W R.sugawara F) :
     IsBulkLanglandsPrimeResonance W R.completed F :=
   LanglandsSugawaraBridge.bulk_prime_resonance_of_central_zero R.bridge F h
 
-/-- The boundary projector preserves the witness's prime-resonance readout. -/
+/-- The boundary projector preserves the property's prime-resonance readout. -/
 theorem boundaryProjector_preserves_prime_resonance
     (F : Bulk) :
     IsBulkLanglandsPrimeResonance W R.completed (W.boundaryProjector F) ↔
@@ -353,7 +353,7 @@ end LanglandsPrimeResonanceWitness
 /-! ## 5. Admissibility and owner target -/
 
 /--
-Admissibility package for constructing a Langlands prime resonance witness.
+Admissibility package for constructing a Langlands prime resonance property.
 
 This keeps the owner target conditional: arbitrary Siegel splittings do not
 automatically carry completed L-functions or Sugawara stress readouts.
@@ -376,7 +376,7 @@ structure LanglandsPrimeResonanceAdmissible
   bridge :
     LanglandsSugawaraBridge W completed sugawara
 
-/-- A Langlands prime resonance witness from admissible data. -/
+/-- A Langlands prime resonance property from admissible data. -/
 def langlandsPrimeResonanceWitness_of_admissible
     {W : SiegelEisensteinWitness Bulk Boundary}
     {Stress : Type uStress}

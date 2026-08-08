@@ -1,0 +1,343 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{microtype}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!60!black,
+  citecolor=blue!60!black,
+  urlcolor=blue!60!black
+}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\Conf}{\operatorname{Conf}}
+\newcommand{\dR}{\operatorname{dR}}
+\newcommand{\Span}{\operatorname{Span}}
+
+\title{A Lean/SymPy Formal Skeleton for Three-Point Non-Isotropic Configurations over a Complex Quadric}
+\author{Nick Goutev \and Lean/SymPy formalization audit}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Let $V=\mathbb C^D$ with $D$ even, and let $q$ be a nondegenerate complex quadratic form.  We consider the configuration space of three ordered points whose pairwise separations are non-isotropic:
+\[
+F_3^{\mathrm{noniso}}(V,q)=
+\{(x_1,x_2,x_3)\in V^3: q(x_i-x_j)\neq 0\text{ for }i<j\}.
+\]
+This note records a theorem-honest finite formalization in Lean~4 and a supporting SymPy audit.  The Lean development proves the finite combinatorial target needed for the de Rham computation: translation-reduced coordinates, formal edge generators $\alpha_{ij}$ and $\beta_{ij}$ with degrees $1$ and $D-1$, the arity-three cooperad edge bookkeeping, and a degree-one Orlik--Solomon skeleton with the Arnold relation
+\[
+A_{12}A_{23}-A_{12}A_{13}+A_{23}A_{13}=0.
+\]
+The analytic comparison identifying this formal skeleton with the actual de Rham cohomology of the quadric-divisor complement is deliberately left as an explicit socket.
+\end{abstract}
+
+\section{Configuration Space}
+Let
+\[
+V=\mathbb C^D,
+\qquad
+q(x)=\sum_{a=1}^D x_a^2.
+\]
+Over $\mathbb C$, every nondegenerate quadratic form is linearly equivalent to this standard model.  The three-point non-isotropic configuration space is
+\[
+F_3^{\mathrm{noniso}}(V,q)=
+\left\{(x_1,x_2,x_3)\in V^3:
+q(x_1-x_2)q(x_1-x_3)q(x_2-x_3)\neq 0
+\right\}.
+\]
+The expected de Rham calculation is governed by the complement of the three quadratic divisors
+\[
+q(x_1-x_2)=0,
+\qquad
+q(x_1-x_3)=0,
+\qquad
+q(x_2-x_3)=0.
+\]
+
+\section{Translation Reduction}
+Choose $x_1$ as basepoint and write
+\[
+u=x_1-x_2,
+\qquad
+v=x_1-x_3.
+\]
+Then
+\[
+x_2=x_1-u,
+\qquad
+x_3=x_1-v,
+\]
+and the three non-isotropic conditions become
+\[
+q(u)\neq 0,
+\qquad
+q(v)\neq 0,
+\qquad
+q(v-u)\neq 0.
+\]
+Thus the configuration space splits, at the level of coordinates, into a translation factor and a reduced two-vector complement:
+\[
+F_3^{\mathrm{noniso}}(V,q)
+\simeq
+V\times
+\{(u,v)\in V^2:q(u)q(v)q(v-u)\neq 0\}.
+\]
+
+\begin{proposition}[Lean formalized translation bookkeeping]
+The Lean file \texttt{proofs/QuadraticConfiguration3.lean} defines structures
+\[
+\texttt{Config3}(D),
+\qquad
+\texttt{Reduced3}(D),
+\]
+with maps
+\[
+\texttt{Config3.toReduced},
+\qquad
+\texttt{Reduced3.toConfig},
+\]
+which preserve the three non-isotropic predicates.
+\end{proposition}
+
+\section{Formal Edge Generators}
+Let $K_3$ be the complete graph on vertices $\{1,2,3\}$, with edges
+\[
+12,
+\qquad
+13,
+\qquad
+23.
+\]
+The formal cohomology target uses two generator types on each edge:
+\[
+\alpha_{ij},
+\qquad
+\beta_{ij}.
+\]
+Their degrees are
+\[
+|\alpha_{ij}|=1,
+\qquad
+|\beta_{ij}|=D-1.
+\]
+The $\alpha$ classes correspond to logarithmic classes $d\log q(x_i-x_j)$, while the $\beta$ classes denote the additional quadric angular class expected in even complex dimension.  In the current Lean formalization, this is a formal generator/degrees layer; the analytic construction of $\beta$ is socketed.
+
+\begin{theorem}[Lean formalized generator degrees]
+For every edge $ij\in\{12,13,23\}$, the formal degree function satisfies
+\[
+\deg(\alpha_{ij})=1,
+\qquad
+\deg(\beta_{ij})=D-1.
+\]
+\end{theorem}
+
+\section{Arity-Three Cooperad Bookkeeping}
+The arity-three cooperad has three elementary decompositions:
+\[
+(12)|3,
+\qquad
+(13)|2,
+\qquad
+(23)|1.
+\]
+For such a decomposition, the unique edge internal to the two-point cluster maps to the internal factor.  The two remaining edges cross from the cluster to the outside vertex and map to the outer factor.
+
+For example, for $(23)|1$,
+\[
+23\longmapsto \mathrm{internal},
+\qquad
+12\longmapsto \mathrm{outer},
+\qquad
+13\longmapsto \mathrm{outer}.
+\]
+The generator label is preserved:
+\[
+\alpha\mapsto\alpha,
+\qquad
+\beta\mapsto\beta.
+\]
+
+\begin{theorem}[Lean formalized arity-three cooperad edge rule]
+For each block decomposition of type $(ij)|k$, there exists exactly one internal edge.  Every edge maps either to the internal factor or the outer factor, and the generator kind $\alpha/\beta$ is preserved.
+\end{theorem}
+
+\section{Orlik--Solomon Skeleton}
+The degree-one Orlik--Solomon-style skeleton uses three formal generators
+\[
+A_{12},
+\qquad
+A_{23},
+\qquad
+A_{13}.
+\]
+In quadratic degree, the formal Arnold--Orlik--Solomon relation is
+\[
+A_{12}A_{23}-A_{12}A_{13}+A_{23}A_{13}=0.
+\]
+Equivalently, in the normal-form basis
+\[
+A_{12}A_{23},
+\qquad
+A_{12}A_{13},
+\]
+one rewrites
+\[
+A_{23}A_{13}
+=
+-A_{12}A_{23}+A_{12}A_{13}.
+\]
+Substitution gives
+\[
+A_{12}A_{23}-A_{12}A_{13}
++
+\left(-A_{12}A_{23}+A_{12}A_{13}\right)=0.
+\]
+
+\begin{theorem}[Lean formalized OS normal form]
+The Lean file \texttt{proofs/NonIsoConf3OrlikSolomon.lean} proves that the above Arnold--Orlik--Solomon relation reduces to zero in a rank-two quadratic normal form.
+\end{theorem}
+
+The corresponding formal rank bookkeeping is
+\[
+\dim H^0_{\mathrm{formal}}=1,
+\qquad
+\dim H^{\mathrm{gen}}_{\mathrm{formal}}=3,
+\qquad
+\dim H^{\mathrm{quad}}_{\mathrm{formal}}=2.
+\]
+
+\begin{theorem}[Lean formalized rank skeleton]
+The formal slot-rank function satisfies
+\[
+\operatorname{rank}(0)=1,
+\qquad
+\operatorname{rank}(\mathrm{generator})=3,
+\qquad
+\operatorname{rank}(\mathrm{quadratic})=2,
+\qquad
+\operatorname{rank}(\mathrm{other})=0.
+\]
+\end{theorem}
+
+\section{SymPy Audit}
+For $D=4$, the SymPy witness uses
+\[
+q(z)=z_0^2+z_1^2+z_2^2+z_3^2.
+\]
+For each pair $ij$, it forms
+\[
+q_{ij}=q(x_i-x_j)
+\]
+and the logarithmic one-form
+\[
+d\log q_{ij}=\frac{dq_{ij}}{q_{ij}}.
+\]
+The script symbolically verifies
+\[
+d(d\log q_{ij})=0.
+\]
+It also verifies the Orlik--Solomon normal-form relation and the cooperad generator splitting for the cluster $(12)|3$.
+
+The audit files are:
+\begin{itemize}[leftmargin=2em]
+\item \texttt{proofs/quadratic\_configuration3.py},
+\item \texttt{proofs/non\_iso\_conf3\_orlik\_solomon.py}.
+\end{itemize}
+
+\section{Finite-Field Point-Count Fingerprint in Dimension Four}
+For the reduced dimension-four model over a finite field, define
+\[
+U_4(\mathbb F_p)=
+\{(a,b)\in \mathbb F_p^4\times \mathbb F_p^4:
+q(a)q(b)q(a-b)\neq 0\},
+\qquad
+q(z)=z_0^2+z_1^2+z_2^2+z_3^2.
+\]
+A finite-field audit computes this count by a cyclic convolution/FFT method rather than by a general D-module Groebner pipeline.  The observed and Lean-recorded polynomial is
+\[
+\#U_4(\mathbb F_p)
+=
+p^2(p-1)^2(p+1)(p^3-2p^2-p+3).
+\]
+Equivalently,
+\[
+\#U_4(\mathbb F_p)
+=
+p^8-3p^7+7p^5-4p^4-4p^3+3p^2.
+\]
+The Python witness verifies this formula for
+\[
+p=3,5,7,11,13,17,19,23,29,31.
+\]
+The Lean file \texttt{proofs/NonIsoConf3QuadricD4PointCount.lean} records the polynomial and proves the sample values
+\[
+\#U_4(\mathbb F_3)=1296,
+\qquad
+\#U_4(\mathbb F_5)=175200,
+\]
+\[
+\#U_4(\mathbb F_7)=3400992,
+\qquad
+\#U_4(\mathbb F_{11})=156961200.
+\]
+
+\begin{remark}[Interpretation]
+If one proves the required polynomial-count and purity or mixed-Tate comparison theorem, then the count polynomial becomes a candidate compactly supported $E$-polynomial by the substitution $p\mapsto uv$:
+\[
+E_c(U_4;u,v)
+=(uv)^2(uv-1)^2(uv+1)((uv)^3-2(uv)^2-uv+3).
+\]
+This bridge is not proved in the current Lean kernel.  It is recorded as a typed socket:
+\[
+\texttt{PointCountToCohomologySocket}.
+\]
+\end{remark}
+
+\section{Theorem-Honest Boundary}
+The current formalization proves the finite skeleton
+\[
+\boxed{
+\text{translation bookkeeping, edge generators, degrees, OS relation, rank slots, and cooperad edge maps.}
+}
+\]
+It does \emph{not} yet prove the analytic de Rham comparison theorem
+\[
+H^\bullet_{\dR}\!
+\left(F_3^{\mathrm{noniso}}(\mathbb C^D,q)\right)
+\cong
+\mathcal A_{\mathrm{formal}}(K_3,q).
+\]
+That comparison, together with the construction of the quadric angular class $\beta$, the Brieskorn/Orlik--Solomon comparison theorem for these quadric divisors, and the full cooperad theorem, remains socketed.
+
+\section{Lean Artifacts}
+The verified Lean artifacts are:
+\begin{itemize}[leftmargin=2em]
+\item \texttt{QuadraticConfiguration3.quadratic\_configuration3\_synthesis},
+\item \texttt{NonIsoConf3OrlikSolomon.arnold\_orlik\_solomon\_relation},
+\item \texttt{NonIsoConf3OrlikSolomon.cohomology\_rank\_synthesis},
+\item \texttt{NonIsoConf3OrlikSolomon.non\_iso\_conf3\_os\_cooperad\_synthesis},
+\item \texttt{NonIsoConf3QuadricD4PointCount.point\_count\_sample\_synthesis},
+\item \texttt{NonIsoConf3QuadricD4EPolynomial.countPolynomialZ\_expand},
+\item \texttt{NonIsoConf3QuadricD4EPolynomial.candidateEc\_expand},
+\item \texttt{NonIsoConf3QuadricD4EPolynomial.e\_polynomial\_conditional\_synthesis}.
+\end{itemize}
+
+The full repository build completed successfully with these files registered as Lean roots.
+
+\section*{Conclusion}
+We have formalized the finite algebraic target for the three-point non-isotropic configuration problem over a complex quadric.  The result is not a completed de Rham cohomology theorem; rather, it is a compiler-checked skeleton into which the analytic comparison theorem should land.  In the project terminology: the finite combinatorial spine compiles, while the analytic de Rham and cooperad comparison remains a typed socket.
+
+\end{document}

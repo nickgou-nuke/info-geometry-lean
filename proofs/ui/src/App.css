@@ -1,0 +1,244 @@
+.app-shell {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.overlay {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+  width: min(460px, calc(100vw - 24px));
+  pointer-events: none;
+}
+
+.panel {
+  pointer-events: auto;
+  background: rgba(12, 14, 24, 0.74);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 22px;
+  border-radius: 18px;
+  color: #fff;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.38);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 8px;
+  background: linear-gradient(90deg, #00ffaa, #00aaff 70%, #9b5cff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -0.6px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #9aa3b2;
+  margin-bottom: 14px;
+}
+
+.mode-switcher {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.mode-btn {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #d7deea;
+  border-radius: 999px;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.mode-btn:hover {
+  border-color: rgba(0, 255, 170, 0.35);
+  color: #fff;
+}
+
+.mode-btn.active {
+  background: linear-gradient(135deg, rgba(0, 255, 170, 0.22), rgba(0, 170, 255, 0.22));
+  border-color: rgba(0, 255, 170, 0.45);
+  color: #fff;
+}
+
+.search-form {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.search-input {
+  flex: 1 1 240px;
+  min-width: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #718096;
+}
+
+.search-input:focus {
+  border-color: rgba(0, 255, 170, 0.45);
+  box-shadow: 0 0 0 3px rgba(0, 255, 170, 0.12);
+}
+
+.btn {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  color: #d7deea;
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  border-color: rgba(0, 255, 170, 0.35);
+  color: #fff;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, rgba(0, 255, 170, 0.18), rgba(0, 170, 255, 0.18));
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.stat-box {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #00ffaa;
+}
+
+.stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #7c8798;
+  margin-top: 4px;
+}
+
+.kind-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 11px;
+  text-transform: lowercase;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.kind-theorem { color: #ff718e; }
+.kind-definition { color: #57f0b0; }
+.kind-structure { color: #75b8ff; }
+.kind-axiom { color: #ffd76a; }
+.kind-inductive { color: #d19cff; }
+.kind-opaque { color: #aaaaaa; }
+.kind-other { color: #aab0bc; }
+
+.node-info {
+  background: rgba(0, 0, 0, 0.42);
+  padding: 14px;
+  border-radius: 12px;
+  border-left: 3px solid #00aaff;
+  font-family: monospace;
+  min-height: 86px;
+}
+
+.node-name {
+  font-weight: 700;
+  margin-bottom: 6px;
+  word-break: break-word;
+}
+
+.node-meta {
+  color: #94a3b8;
+  font-size: 11px;
+  margin-top: 3px;
+  word-break: break-word;
+}
+
+.node-placeholder {
+  color: #6f7d91;
+}
+
+.legend {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+  font-size: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 10px currentColor;
+}
+
+.dot.theorem { color: #ff4d6d; background: #ff4d6d; }
+.dot.definition { color: #00ffaa; background: #00ffaa; }
+.dot.structure { color: #4dabf7; background: #4dabf7; }
+.dot.axiom { color: #ffd43b; background: #ffd43b; }
+
+.status-line {
+  margin-top: 14px;
+  font-size: 11px;
+  color: #6e7a8f;
+}
+
+@media (max-width: 720px) {
+  .overlay {
+    top: 12px;
+    left: 12px;
+    width: calc(100vw - 24px);
+  }
+
+  .panel {
+    padding: 16px;
+  }
+
+  .legend {
+    grid-template-columns: 1fr;
+  }
+}

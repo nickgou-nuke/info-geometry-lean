@@ -96,7 +96,7 @@ theorem carParity_readout_eq_one_of_not_mem
 /-! ## 2. Global CAR chirality readout -/
 
 /--
-Global CAR parity readout over a certified prime register.
+Global CAR parity readout over a property prime register.
 
 The local CAR pair is indexed by the underlying prime mode.
 The readout `χ` is an abstract ring-valued evaluation map into `ℤ`.

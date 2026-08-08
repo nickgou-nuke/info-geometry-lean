@@ -166,7 +166,7 @@ theorem imaginaryQuadratic_eq_kHeightQuadratic
   rfl
 
 /--
-The positivity axiom of the upper half-plane says exactly that
+The positivity ax!om of the upper half-plane says exactly that
 `imaginaryQuadratic Z` is strictly positive away from zero.
 -/
 theorem imaginaryQuadratic_pos
@@ -366,7 +366,7 @@ theorem moebiusActionOperator_phaseLinear
 /--
 The proof-carrying Mobius action on the bilingual upper half-plane.
 
-The positivity proof is supplied as a hypothesis. A later group-level theorem
+The positivity proof is supplied as a property. A later group-level theorem
 should prove it from the appropriate Krein/symplectic block conditions.
 -/
 def moebiusAction
@@ -576,7 +576,7 @@ theorem isPoincareMobiusBlock_of_phaseLinear
 /--
 An invariant Poincare metric datum on the bilingual upper half-plane.
 
-The construction is witness-based.  A later file can instantiate `innerAt`
+The construction is property-based.  A later file can instantiate `innerAt`
 using the operator height, inverse height operator, and trace/Hilbert-Schmidt
 or renormalized-trace pairing.
 -/

@@ -1,0 +1,114 @@
+repo,path,role,note,tags
+auto,proofs/ASTExtractor.lean,lean-info-tree-export,Lean-native environment/syntax extraction entrypoint.,Lean;InfoTree;syntax;environment
+auto,proofs/ExtractBraid.lean,lean-extraction,Lean extraction helper used for braid/graph export.,Lean;syntax;graph
+auto,proofs/RunExtractor.lean,lean-extraction,Wrapper for running the Lean extractor.,Lean;InfoTree;CLI
+auto,proofs/fast_extract.py,lean-extraction,Fast Python-side extractor/runner.,Python;extractor
+auto,proofs/python_arango_ingest.py,arango-ingest,Python ingest bridge into ArangoDB.,Python;Arango;ingest
+auto,proofs/scripts/gepa_optimize.py,graph-optimization,GEPA optimization layer for the graph pipeline.,Python;GEPA;graph
+auto,proofs/scripts/ingest_to_arango.py,arango-ingest,Legacy ingest-to-Arango wrapper.,Python;Arango;ingest
+auto,proofs/tools/ExtractGraph.lean,lean-info-tree-export,Authoritative Lean module-graph extractor.,Lean;graph;environment
+auto,proofs/tools/lean_graph/DumpLeanGraph.lean,lean-info-tree-export,Lean syntax/env dump for JSONL graph ingestion.,Lean;syntax;InfoTree
+auto,proofs/tools/lean_graph/aql_query.py,aql-query,Small stdlib AQL client for live queries.,Python;AQL;Arango
+auto,proofs/tools/lean_graph/bridge_syntax_env.py,syntax-env-bridge,Builds syntax/env bridge records.,Python;bridge;syntax;environment
+auto,proofs/tools/lean_graph/check_dump_shape.py,validation,Validates Lean dump shapes before ingest.,Python;validation;syntax
+auto,proofs/tools/lean_graph/export_bdg_kms_certificate.py,graph-export,Exports BDG/KMS audit certificate from graph data.,Python;Arango;certificate
+auto,proofs/tools/lean_graph/export_chiral_certificate.py,graph-export,Exports chiral certificate from graph data.,Python;Arango;certificate
+auto,proofs/tools/lean_graph/export_spine_dot.py,graph-export,Exports subgraph/spine DOT visualizations.,Python;graph;DOT
+auto,proofs/tools/lean_graph/import_arango.py,arango-ingest,Imports syntax/env bridge records into ArangoDB.,Python;Arango;graph;ingest
+auto,proofs/tools/lean_graph/import_module_graph_arango.py,graph-import,Imports the Lean module import graph into ArangoDB.,Python;Arango;module-graph
+auto,proofs/tools/lean_graph/ingest_bridge_to_arango.py,arango-ingest,Bridge-record ingest into ArangoDB.,Python;Arango;bridge
+auto,proofs/tools/lean_graph/ingest_syntax_to_arango.py,arango-ingest,Syntax-tree ingest into ArangoDB.,Python;Arango;syntax
+auto,proofs/tools/lean_graph/join_syntax_env.py,syntax-env-bridge,Joins syntax JSONL and environment JSON.,Python;bridge;join
+auto,proofs/tools/lean_graph/normalize_syntax_index.py,validation,Normalizes syntax indexing for downstream ingest.,Python;syntax;normalization
+auto,ui/dump_graph.py,graph-visualization,Frontend graph dump/loader helper.,Python;UI;graph
+info-geometry-lean,find_scc.py,graph-analysis,Strongly connected components on the graph.,Python;graph;SCC
+info-geometry-lean,lean/DAG/BlockExport.lean,lean-arango-export,Block-level export for the DAG pipeline.,Lean;graph;export
+info-geometry-lean,lean/DAG/ExprArangoExport.lean,lean-arango-export,Exports Lean expressions to Arango-shaped data.,Lean;Arango;Expr
+info-geometry-lean,lean/DAG/GroundTruthHarvester.lean,lean-graph-harvest,Harvester for ground-truth graph facts.,Lean;graph;harvest
+info-geometry-lean,lean/DAG/HolonomyExporter.lean,lean-graph-export,Holonomy-oriented export layer for the DAG.,Lean;graph;export
+info-geometry-lean,lean/DAG/Indexer.lean,lean-indexer,Index builder for graph/export artifacts.,Lean;index;graph
+info-geometry-lean,lean/DAG/RawInfoTreeExport.lean,lean-info-tree-export,Raw InfoTree export layer.,Lean;InfoTree;export
+info-geometry-lean,lean/DAG/ServerExport.lean,lean-graph-export,Server-side export layer for graph serving.,Lean;server;graph
+info-geometry-lean,lean/InfoGeometry/Meta/Architecture.lean,lean-meta,Repository architecture/graph meta layer.,Lean;meta;architecture
+info-geometry-lean,lean/InfoGeometry/Meta/HiveLogos.lean,lean-meta,Hive/logos metadata tied to the graph pipeline.,Lean;meta;hive
+info-geometry-lean,list_collections.py,arango-admin,Lists Arango collections.,Python;Arango;admin
+info-geometry-lean,query_arango.py,arango-query,ArangoDB query helper.,Python;Arango;query
+info-geometry-lean,query_dag.py,graph-query,DAG query helper.,Python;graph;query
+info-geometry-lean,run_arango_query.py,arango-query,AQL query runner.,Python;Arango;AQL
+info-geometry-lean,run_arango_query2.py,arango-query,Alternate AQL query runner.,Python;Arango;AQL
+info-geometry-lean,src/igf/cli.py,pipeline-cli,Top-level CLI for the IGF pipeline.,Python;CLI;pipeline
+info-geometry-lean,src/igf/config/env_aliases.py,arango-config,Environment alias normalization for Arango creds.,Python;Arango;env
+info-geometry-lean,src/igf/config/loader.py,pipeline-config,Configuration loader for the ingest stack.,Python;config
+info-geometry-lean,src/igf/config/model.py,pipeline-config,Config model definitions.,Python;config
+info-geometry-lean,src/igf/config/preflight.py,pipeline-config,Preflight checks for pipeline execution.,Python;config
+info-geometry-lean,src/igf/graph/arango_client.py,arango-client,ArangoDB client wrapper.,Python;Arango;client
+info-geometry-lean,src/igf/graph/arango_http.py,arango-client,HTTP-level Arango access helpers.,Python;Arango;HTTP
+info-geometry-lean,src/igf/graph/query_registry.py,graph-query,Registry of graph queries.,Python;graph;query
+info-geometry-lean,src/igf/graph/query_runner.py,graph-query,Query runner abstraction.,Python;graph;query
+info-geometry-lean,src/igf/pipeline/build.py,pipeline,Build orchestration for graph artifacts.,Python;pipeline;graph
+info-geometry-lean,src/igf/pipeline/ingest.py,pipeline,Ingest orchestration for graph/Infotree data.,Python;pipeline;ingest
+info-geometry-lean,src/igf/pipeline/orchestrator.py,pipeline,Main pipeline orchestrator.,Python;pipeline;orchestrator
+info-geometry-lean,tests/infra/test_igf_greenfield_suite.py,test,IGF end-to-end greenfield suite.,test;pipeline
+info-geometry-lean,tests/infra/test_igf_ingest_cli_contract.py,test,Ingest CLI contract tests.,test;CLI;ingest
+info-geometry-lean,tests/infra/test_igf_orchestrator_run.py,test,Orchestrator run contract tests.,test;orchestrator
+info-geometry-lean,tests/infra/test_igf_verify_cli_contract.py,test,Verify CLI contract tests.,test;CLI;verify
+info-geometry-lean,tests/test_arango_dag_algorithms.py,test,Tests Arango DAG algorithms.,test;graph;algorithms
+info-geometry-lean,tests/test_arango_env_wrappers.py,test,Tests Arango env-wrapper behavior.,test;Arango;env
+info-geometry-lean,tests/test_arango_raw_infotree_ingest.py,test,Tests raw InfoTree ingest into ArangoDB.,test;InfoTree;Arango
+info-geometry-lean,tests/test_hive_arango_queue.py,test,Tests the hive/Arango queue.,test;Arango;queue
+info-geometry-lean,tests/test_hive_bee.py,test,Tests bee worker behavior.,test;worker
+info-geometry-lean,tests/test_hive_json_ingestor.py,test,Tests JSON ingestor behavior.,test;ingest
+info-geometry-lean,tests/test_hive_swarm.py,test,Tests swarm orchestration.,test;orchestrator
+info-geometry-lean,tests/test_hydrate_arango_topology.py,test,Tests topology hydration.,test;graph;topology
+info-geometry-lean,tools/alexandria/arango_ingest.py,arango-ingest,Alexandria-specific Arango ingest.,Python;Arango;ingest
+info-geometry-lean,tools/alexandria/repair_lineage.py,repair,Lineage repair helper for graph data.,Python;graph;repair
+info-geometry-lean,tools/alexandria/semantic_ingest.py,ingest,Semantic ingest layer for Alexandria.,Python;ingest;semantic
+info-geometry-lean,tools/infra/arango_dag_algorithms.py,graph-algorithms,Graph/DAG algorithms over Arango data.,Python;graph;algorithms
+info-geometry-lean,tools/infra/arango_env.py,arango-config,Arango env loading/alias helpers.,Python;Arango;env
+info-geometry-lean,tools/infra/arango_fidelity_audit.py,audit,Audits Arango fidelity against source data.,Python;Arango;audit
+info-geometry-lean,tools/infra/arango_gravity_context.py,analysis,Arango gravity/context analysis helpers.,Python;Arango;analysis
+info-geometry-lean,tools/infra/arango_layered_ingest.py,arango-ingest,Layered Arango ingest pipeline.,Python;Arango;ingest
+info-geometry-lean,tools/infra/arango_raw_infotree_graph.py,raw-infotree-graph,Builds the raw InfoTree graph representation.,Python;InfoTree;graph
+info-geometry-lean,tools/infra/arango_raw_infotree_ingest.py,raw-infotree-ingest,Ingests raw InfoTree data into ArangoDB.,Python;InfoTree;Arango
+info-geometry-lean,tools/infra/arango_structural_vacuity_audit.py,audit,Checks structural vacuity in Arango graph data.,Python;Arango;audit
+info-geometry-lean,tools/infra/batch_raw_infotree_export.py,raw-infotree-export,Batch exporter for raw InfoTree data.,Python;InfoTree;export
+info-geometry-lean,tools/infra/claim_promote.py,promotion,Claim/promotion workflow helper.,Python;workflow
+info-geometry-lean,tools/infra/debug_gravity.py,debug,Debugging support for graph/gravity context.,Python;debug
+info-geometry-lean,tools/infra/decl_graph_support.py,graph-support,Helpers for declaration-graph operations.,Python;graph;support
+info-geometry-lean,tools/infra/extract_expr_fingerprints.py,graph-analysis,Expression fingerprint extraction.,Python;Expr;graph
+info-geometry-lean,tools/infra/generate_causal_report.py,report,Causal report generation from graph data.,Python;report;graph
+info-geometry-lean,tools/infra/generate_expr_alpha_dedup.py,graph-analysis,Alpha-dedup for expression graphs.,Python;Expr;dedup
+info-geometry-lean,tools/infra/generate_replacement_frontier.py,analysis,Replacement-frontier generation helper.,Python;analysis
+info-geometry-lean,tools/infra/generate_sorry_equivalence.py,graph-analysis,Tracks sorry-equivalence artifacts.,Python;Lean;graph
+info-geometry-lean,tools/infra/generate_theory_spire_viz.py,visualization,Visualization of theory spires from graph data.,Python;viz;graph
+info-geometry-lean,tools/infra/graph_hodge_spectrum.py,analysis,Hodge-spectrum analysis on graph data.,Python;graph;analysis
+info-geometry-lean,tools/infra/gravitational_retrieval.py,analysis,Retrieval logic over graph-derived context.,Python;graph;retrieval
+info-geometry-lean,tools/infra/hermes_bounded_runner.py,runner,Bounded runner used by the graph pipeline.,Python;runner
+info-geometry-lean,tools/infra/hive_arango_queue.py,worker,Queue layer for Arango-backed hive jobs.,Python;Arango;queue
+info-geometry-lean,tools/infra/hive_audit_worker.py,worker,Audit worker over graph artifacts.,Python;worker;audit
+info-geometry-lean,tools/infra/hive_bee.py,worker,Bee worker for hive orchestration.,Python;worker
+info-geometry-lean,tools/infra/hive_build_worker.py,worker,Build worker for pipeline jobs.,Python;worker;build
+info-geometry-lean,tools/infra/hive_leansearch_bee.py,worker,Lean search worker tied to the graph.,Python;worker;Lean
+info-geometry-lean,tools/infra/hive_packet_path_runner.py,worker,Packet/path runner for graph jobs.,Python;worker;path
+info-geometry-lean,tools/infra/hive_promotion_worker.py,worker,Promotion worker for graph/theorem states.,Python;worker
+info-geometry-lean,tools/infra/hive_qi_heartbeat.py,worker,Heartbeat worker for the hive graph stack.,Python;worker;heartbeat
+info-geometry-lean,tools/infra/hive_swarm.py,worker,Swarm coordinator for hive tasks.,Python;worker;orchestrator
+info-geometry-lean,tools/infra/hollow_semantic_auditor.py,audit,Semantic hollowness auditor.,Python;audit;semantic
+info-geometry-lean,tools/infra/hydrate_arango_topology.py,graph-topology,Hydrates topology data into graph form.,Python;graph;topology
+info-geometry-lean,tools/infra/ingest_chiral_sidecars.py,ingest,Ingests sidecar graph artifacts.,Python;ingest;graph
+info-geometry-lean,tools/infra/materialize_lossless_infotree.py,raw-infotree-materialize,Materializes a lossless InfoTree representation.,Python;InfoTree;materialize
+info-geometry-lean,tools/infra/pauli_authority_bridge.py,bridge,Bridge layer for authority/graph semantics.,Python;bridge
+info-geometry-lean,tools/infra/prima_materia_ingest.py,ingest,Ingest of raw material into graph storage.,Python;ingest
+info-geometry-lean,tools/infra/representation_depth_from_graph.py,analysis,Computes representation depth from the graph.,Python;graph;analysis
+info-geometry-lean,tools/infra/rerank_arango_links.py,ranking,Re-ranks Arango graph links.,Python;Arango;ranking
+info-geometry-lean,tools/infra/research_digest_worker.py,worker,Research digest worker over graph artifacts.,Python;worker;digest
+info-geometry-lean,tools/infra/run_full_dag_toolchain.py,pipeline,End-to-end DAG toolchain runner.,Python;pipeline;DAG
+info-geometry-lean,tools/infra/validate_raw_infotree_export.py,validation,Validates raw InfoTree exports.,Python;InfoTree;validation
+info-geometry-lean,tools/infra/verify_layered_arango_descent.py,validation,Verifies layered Arango descent invariants.,Python;Arango;validation
+info-geometry-lean,tools/infra/verify_raw_infotree_arango_descent.py,validation,Verifies Arango descent for raw InfoTree data.,Python;InfoTree;Arango;validation
+info-geometry-lean,tools/leantrail/adapters.py,bridge,Adapters for Leantrail/Arango interop.,Python;bridge
+info-geometry-lean,tools/leantrail/arango_ingest.py,arango-ingest,Leantrail ingest into ArangoDB.,Python;Arango;ingest
+info-geometry-lean,tools/leantrail/arango_physics_evaluator.py,analysis,Physics-style evaluator over Arango graph data.,Python;Arango;analysis
+info-geometry-lean,tools/leantrail/conformance.py,validation,Leantrail conformance checks.,Python;validation
+info-geometry-lean,tools/leantrail/export.py,export,Leantrail export helper.,Python;export
+info-geometry-lean,tools/leantrail/path_lock_registry.py,registry,Path-lock registry for Leantrail graph workflows.,Python;registry

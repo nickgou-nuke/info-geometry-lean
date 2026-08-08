@@ -146,7 +146,7 @@ theorem exists_drazinInverse_of_idempotent
 
 /--
 Joint constructive generalized-inverse package in the projector case.
-For self-adjoint idempotent `a`, the same witness `a` satisfies both
+For self-adjoint idempotent `a`, the same property `a` satisfies both
 Moore-Penrose and Drazin (`k = 1`) axioms.
 -/
 theorem exists_regularization_pair_of_selfAdjoint_idempotent
@@ -185,7 +185,7 @@ theorem exists_regularization_pair_of_selfAdjoint_idempotent
 
 /--
 Joint constructive generalized-inverse package in the nondegenerate case.
-The same inverse witness simultaneously satisfies Moore-Penrose and Drazin (`k=0`).
+The same inverse property simultaneously satisfies Moore-Penrose and Drazin (`k=0`).
 -/
 theorem exists_regularization_pair_of_isUnit
     (a : R) (ha : IsUnit a) :

@@ -7,7 +7,7 @@ import InfoGeometry.Capstone.ZornOrderCapstone
 # Hestenes--Krein critical-line statement sockets
 
 This file does **not** prove the Riemann Hypothesis.  It packages conditional
-finite Hestenes--Krein readouts: if a supplied spectral chart/certificate says
+finite Hestenes--Krein readouts: if a supplied spectral chart/property says
 that the declared zero sector is represented by finite stages or by a
 Zorn-maximal subsystem with no leakage, then the chart's own throat predicate
 contains that declared zero sector.
@@ -114,7 +114,7 @@ At every finite excited stage `n ≥ 2`, the primon weight is a strict
 contraction for `Re(s) > 1/2`.
 
 This is the finite-stage estimate used before passing to an inductive-colimit
-support certificate.
+support property.
 -/
 theorem finite_stage_spectral_contraction
     (s : ℂ) (hs : (1 / 2 : ℝ) < s.re) (n : ℕ) (hn : 2 ≤ n) :
@@ -169,7 +169,7 @@ def orderSurfaces
 end KreinRHColimitZornClosure
 
 /--
-An explicit `J`-odd obstruction certificate proves the chart-local no-leakage
+An explicit `J`-odd obstruction property proves the chart-local no-leakage
 statement.
 -/
 theorem translated_krein_rh_from_odd_obstruction
@@ -207,7 +207,7 @@ theorem translated_krein_rh_from_zorn_maximal_subsystem
 Full capstone via the inductive-colimit branch of the closure package.
 
 This is the pure colimit formulation: finite-stage no-leakage is transported
-through the support certificate to the real doubled Krein zero sector.
+through the support property to the real doubled Krein zero sector.
 -/
 theorem translated_krein_rh_completion_colimit
     {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]

@@ -4,7 +4,7 @@ import InfoGeometry.Clifford.Cl55RealSplitPinImage
 namespace InfoGeometry.Clifford.Clifford55
 
 /-!
-# Kernel-certified native split-Pin orthogonal action
+# Kernel-property native split-Pin orthogonal action
 
 This owner packages the native corrected split-Pin action together with its
 exact sign kernel.  It deliberately does not promote the explicit image

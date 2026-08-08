@@ -19,7 +19,7 @@ abbrev DIII_TimeReversal : Fin2Matrix := mobiusParity2
 def DIII_ParticleHole : Fin2Matrix :=
   Matrix.diagonal fun i : Fin 2 => if i = (0 : Fin 2) then (1 : ℝ) else -1
 
-/-- Chiral grading `S = T*C` in the finite DIII certificate. -/
+/-- Chiral grading `S = T*C` in the finite DIII property. -/
 def DIII_Chiral : Fin2Matrix :=
   DIII_TimeReversal * DIII_ParticleHole
 

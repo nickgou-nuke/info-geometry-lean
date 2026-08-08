@@ -1,0 +1,12 @@
+LIB "dmod.lib";
+ring r = 0,(x,y,z,Dx,Dy,Dz),dp;
+def D = Weyl();
+setring D;
+
+// D-module for Modular Hamiltonian K = -ln(Delta)
+// Approximated by formal differential operators acting as Operator Boltzmann Entropy
+poly K = - (Dx*x + Dy*y + Dz*z); 
+ideal I = K;
+print("Modular Hamiltonian D-module generator K:");
+print(I);
+print("Acting as Operator Boltzmann Entropy");

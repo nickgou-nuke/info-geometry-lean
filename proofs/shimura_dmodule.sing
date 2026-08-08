@@ -1,0 +1,17 @@
+// shimura_dmodule.sing
+LIB "dmod.lib";
+
+// Construct algebraic coordinate rings and formalize K-theoretic direct image as D-modules
+ring r = 0, (x, y, z), dp;
+
+// Define Shimura ideal
+ideal I = x^2 + y^2 - z^3, x*y - z;
+
+// D-module for K-theoretic direct image
+def D = Weyl();
+setring D;
+
+ideal I_D = imap(r, I);
+module M = D * I_D; // Direct image transfer module
+
+print("K-theoretic direct image mapped to D-module successfully");

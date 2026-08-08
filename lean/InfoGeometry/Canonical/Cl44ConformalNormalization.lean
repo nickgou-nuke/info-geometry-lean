@@ -256,7 +256,7 @@ theorem freudenthal_e8_count :
 /--
 Triality belongs to the `D₄` Levi layer of the quadratic route.
 
-This is a dimension-normalized witness saying that the triality package lives
+This is a dimension-normalized property saying that the triality package lives
 over the `so(4,4)` rotation sector, not as an outer symmetry of the full
 `D₅` conformal closure.
 -/
@@ -294,7 +294,10 @@ end TrialityLeviPlacement
 
 /-! ## 6. Native operatorial conformal route -/
 
-open InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
+open InfoGeometry.Canonical.PhaseSpaceConformalKKTBridge
+open InfoGeometry.Canonical.SouriauConformalKKT
+open ConformalGibbsSouriauOperatorContext
+open InfoGeometry.Quantum
 
 section NativeOperatorRoute
 
@@ -311,12 +314,13 @@ closure owner.  This predicate records the actual master relation,
 operator-admissibility gate, Jordan--Lie closure, and triality-supercharge law.
 -/
 def NativeCl44ConformalRoute
-    (P : SplitCl44TKKJordanLiePacket (α := α) (H := H)) : Prop :=
+    (T : SplitTrialityKernel)
+    (C : ConformalGibbsSouriauOperatorContext (α := α) (H := H))
+    (tkkParameter : ℝ) : Prop :=
   QuadraticLightConeConformalRoute
-    ∧ P.closure.gibbs.SatisfiesOperatorTKKMasterRelation P.closure.tkkParameter
-    ∧ P.closure.gibbs.IsOperatorAdmissible
-    ∧ P.closure.SatisfiesKKT_TKK_Weyl_JordanLieClosure
-    ∧ P.triality.trialitySupercharge.comp P.triality.trialitySupercharge =
+    ∧ C.SatisfiesOperatorTKKMasterRelation tkkParameter
+    ∧ C.IsOperatorAdmissible
+    ∧ T.trialitySupercharge.comp T.trialitySupercharge =
         LinearMap.id
 
 /--
@@ -326,14 +330,16 @@ compatibility component.
 -/
 @[rep_depth transport]
 theorem nativeCl44ConformalRoute
-    (P : SplitCl44TKKJordanLiePacket (α := α) (H := H)) :
-    NativeCl44ConformalRoute P :=
+    (T : SplitTrialityKernel)
+    (C : ConformalGibbsSouriauOperatorContext (α := α) (H := H))
+    (tkkParameter : ℝ)
+    (hTKK : C.SatisfiesOperatorTKKMasterRelation tkkParameter)
+    (hOperatorAdmissible : C.IsOperatorAdmissible) :
+    NativeCl44ConformalRoute T C tkkParameter :=
   ⟨QuadraticLightConeConformalRoute.canonical,
-    P.tkkMasterRelation,
-    P.operatorAdmissible,
-    P.satisfiesKKT_TKK_Weyl_JordanLieClosure,
-    P.triality.trialitySupercharge_sq_eq_id⟩
-
+    hTKK,
+    hOperatorAdmissible,
+    SplitTrialityKernel.trialitySupercharge_sq_eq_id T⟩
 end NativeOperatorRoute
 
 /-! ## 7. Compatibility owner target -/

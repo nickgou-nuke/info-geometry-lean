@@ -34,7 +34,7 @@ The local Cartan/chiral involution is defined as
 
 `Hᵢ = eᵢ fᵢ`.
 
-The commutation of the `Hᵢ` is included as a witness field.  This is deliberate:
+The commutation of the `Hᵢ` is included as a property field.  This is deliberate:
 it is the representation-level statement that the even local Cartan products
 from distinct atoms commute.
 -/
@@ -310,7 +310,7 @@ end LocalToGlobalAnomalyDatum
 Owner target for a concrete model connecting four split Clifford atoms to a
 global anomaly class.
 
-This carries the actual witness data directly:
+This carries the actual property data directly:
 - the four-atom chirality package,
 - the hypercube action on states,
 - the local-to-global anomaly datum.

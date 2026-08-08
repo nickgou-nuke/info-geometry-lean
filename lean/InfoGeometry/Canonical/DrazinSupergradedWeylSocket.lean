@@ -15,7 +15,7 @@ The intended dictionary is:
 
 * `Δ₀` and `Δ₁₀` are killed by the Drazin filter;
 * `Δ₁₀` may be interpreted as ghost/nilpotent noise only through an explicit
-  supergraded compatibility assumption;
+  supergraded compatibility property;
 * `Δ₁₁` is the stable scaled-projector sector;
 * a Weyl/KMS/Jaynes state assigns physical scale by expectation values, not
   traces.
@@ -137,16 +137,16 @@ namespace PrimitiveFermion
 
 variable {Obs : Type*} [Ring Obs]
 
-/-- A primitive fermion carries its nilpotent/noise witness without requiring a
-separate square-zero hypothesis at the call site. -/
+/-- A primitive fermion carries its nilpotent/noise property without requiring a
+separate square-zero property at the call site. -/
 @[rep_depth operator]
 theorem nilpotentNoise
     (F : PrimitiveFermion Obs) :
     IsNilpotentNoise F.op :=
   F.nilpotent
 
-/-- A primitive fermion carries its oddness witness without requiring a separate
-supergrading hypothesis at the call site. -/
+/-- A primitive fermion carries its oddness property without requiring a separate
+supergrading property at the call site. -/
 @[rep_depth operator]
 theorem odd_readback
     (F : PrimitiveFermion Obs) :
@@ -199,10 +199,10 @@ inductive SupergradedRole where
   deriving DecidableEq, Repr
 
 /--
-Compatibility assumption connecting a supergraded interpretation to algebraic
+Compatibility property connecting a supergraded interpretation to algebraic
 fiber strata.
 
-This is an assumption packet: it says which fibers are to be read as ghosts,
+This is an property packet: it says which fibers are to be read as ghosts,
 stable fermion bilinears, or bosonic kernels in a concrete model.
 -/
 @[rep_depth operator]
@@ -323,7 +323,7 @@ def drazinFilteredScale
 Model-specific compatibility between Drazin-stabilized data and CAR/CCR
 readouts.
 
-This is intentionally an assumption structure.  The Drazin filter supplies
+This is intentionally an property structure.  The Drazin filter supplies
 operator stabilization; a concrete representation must still prove that its
 surviving sector satisfies the desired CAR/CCR laws.
 -/
@@ -382,7 +382,7 @@ namespace DrazinCARCCRCompatibilityAssumption
 variable {Obs : Type*} [Ring Obs] [Star Obs]
 variable (K : DrazinCARCCRCompatibilityAssumption Obs)
 
-/-- Ghost observables are square-zero by the supplied compatibility assumption. -/
+/-- Ghost observables are square-zero by the supplied compatibility property. -/
 @[rep_depth operator]
 theorem ghost_is_square_zero
     (x : Obs)

@@ -9,7 +9,7 @@ open Matrix
 /-!
 # E7(7) Finite Generator Witness
 
-This module provides a finite algebraic witness for the E7(7) generators 
+This module provides a finite algebraic property for the E7(7) generators 
 acting on the fundamental 56-dimensional representation. It constructs
 the decomposition of the 56-plet under the maximal subgroup E6(6) × GL(1, ℝ)
 and formalizes the symplectic generator constraints.
@@ -31,7 +31,7 @@ structure E77Charge56 where
 
 /-- A simplified symplectic form Ω for the 56-dimensional space.
     Ω(A, B) = A.electric * B.magnetic - A.magnetic * B.electric + A.phi * B.psi - A.psi * B.phi 
-    We model this as a finite sum to provide a structurally faithful witness. -/
+    We model this as a finite sum to provide a structurally faithful property. -/
 def symplectic_form (A B : E77Charge56) : ℝ :=
   (∑ i : Fin 27, A.electric i * B.magnetic i) - 
   (∑ i : Fin 27, A.magnetic i * B.electric i) + 

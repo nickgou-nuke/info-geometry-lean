@@ -14,7 +14,7 @@ This module connects the kinematic mechanism isolated in
   doubled Krein carrier.
 
 The file deliberately keeps the analytic convergence/limit statement as a
-witness field.  The algebraic theorem proved here is the composition of those
+property field.  The algebraic theorem proved here is the composition of those
 witnesses.
 -/
 
@@ -92,10 +92,10 @@ end CartanTomitaGenerator
 /-! ## 2. Cartan flow socket hitting the algebra/commutant overlap -/
 
 /--
-A Cartan dynamics witness saying that noncompact directions reach the
+A Cartan dynamics property saying that noncompact directions reach the
 algebra/commutant overlap at a supplied hitting time.
 
-This is intentionally a witness socket.  Analytic statements such as convergence
+This is intentionally a property socket.  Analytic statements such as convergence
 of a noncompact one-parameter group to a projective boundary should be proved in
 concrete models and then supplied through `noncompact_hits_overlap`.
 -/
@@ -179,7 +179,7 @@ end CartanDynamicsToOverlap
 /-! ## 3. Cartan flow socket hitting a Tomita/Drazin defect locus -/
 
 /--
-A Cartan dynamics witness saying that noncompact directions hit an already
+A Cartan dynamics property saying that noncompact directions hit an already
 specified Tomita defect locus in a split source.
 
 This is the defect-locus version of `CartanDynamicsToOverlap`.
@@ -267,7 +267,7 @@ end CartanDynamicsToDefect
 /--
 Bundled datum connecting Cartan dynamics to the doubled Krein null mechanism.
 
-This is the canonical witness package:
+This is the canonical property package:
 
 `noncompact Cartan flow → overlap → scalar collapse → isotropic carrier`.
 -/

@@ -52,7 +52,7 @@ def splitSignature55Model : QuadraticForm ℝ (Fin 10 → ℝ) :=
 /--
 A real quadratic carrier intended to have split signature `(4,4)`.
 
-The signature assertion is carried as a certificate so this file can remain
+The signature assertion is carried as a property so this file can remain
 independent of a concrete matrix model.
 -/
 structure SplitQuadratic44

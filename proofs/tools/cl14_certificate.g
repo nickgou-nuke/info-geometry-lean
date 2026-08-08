@@ -1,0 +1,26 @@
+F := GaussianRationals;
+I := E(4);
+s1 := [[0,1],[1,0]];
+s2 := [[0,-I],[I,0]];
+s3 := [[1,0],[0,-1]];
+id := [[1,0],[0,1]];
+g0 := KroneckerProduct(s3,id);
+g1 := I * KroneckerProduct(s2,s1);
+g2 := I * KroneckerProduct(s2,s2);
+g3 := I * KroneckerProduct(s2,s3);
+g := [g0,g1,g2,g3];
+zero := NullMat(4,4,F);
+one := IdentityMat(4,F);
+for x in g do
+  if Position(g,x)=1 then Assert(1,x*x=one); else Assert(1,x*x=-one); fi;
+od;
+for i in [1..4] do for j in [i+1..4] do Assert(1,g[i]*g[j]+g[j]*g[i]=zero); od; od;
+P := g[1]*g[2]*g[3]*g[4];
+Assert(1,P*P=-one);
+sigma := [g[2]*g[1],g[3]*g[1],g[4]*g[1]];
+uplus := (one+sigma[3])/2; uminus := (one-sigma[3])/2;
+cplus := (sigma[1]+P*sigma[2])/2; cminus := (sigma[1]-P*sigma[2])/2;
+Assert(1,cplus*cplus=zero); Assert(1,cminus*cminus=zero);
+Assert(1,cplus*cminus=uplus); Assert(1,cminus*cplus=uminus);
+Print("GAP_CL14=PASS\n");
+QUIT;

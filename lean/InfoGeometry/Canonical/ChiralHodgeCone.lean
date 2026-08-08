@@ -47,7 +47,7 @@ witnesses, certificates, or renamed placeholders.]
 * Construct the infinite-dimensional standard-form natural cone.
 * Prove that the selected boundary state belongs to that natural cone.
 * Prove the orientation-reversing sewing law for the concrete Klein/V₄
-  boundary action rather than supplying it as an explicit hypothesis.
+  boundary action rather than supplying it as an explicit property.
 -/
 
 /-- Finite complex matrix carrier. -/

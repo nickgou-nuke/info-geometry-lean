@@ -39,7 +39,7 @@ theorem induction_essence {P : Nat → Prop}
   | zero => exact h0
   | succ n ih => exact hstep n ih
 
-/-- Packaged ordinary induction from an inductive-predicate hypothesis. -/
+/-- Packaged ordinary induction from an inductive-predicate property. -/
 theorem IsInductivePredicate.forall {P : Nat → Prop}
     (hP : IsInductivePredicate P) :
     ∀ n : Nat, P n :=

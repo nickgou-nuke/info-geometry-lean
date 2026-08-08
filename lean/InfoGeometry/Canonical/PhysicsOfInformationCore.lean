@@ -250,7 +250,7 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
 Optional spectral hook surface for the corpus:
-the bridge can carry an external certified chiral package without altering the
+the bridge can carry an external property chiral package without altering the
 routing-side invariants.
 -/
 abbrev SpectralHookDatum := CertifiedChiralSpectralTriple E

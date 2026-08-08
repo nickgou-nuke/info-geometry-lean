@@ -1,6 +1,8 @@
 import Mathlib.Tactic
 
 open Matrix
+
+namespace TestTL
 open Complex
 
 section TemperleyLieb
@@ -73,3 +75,5 @@ lemma sigma_mul_sigma_inv (i : ℕ) (hA : A ≠ 0) : σ A e i * σ_inv A e i = 1
   simpa [add_assoc] using congrArg (fun x : A_alg => (1 : A_alg) + x) h_sum
 
 end TemperleyLieb
+
+end TestTL

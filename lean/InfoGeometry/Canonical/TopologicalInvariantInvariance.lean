@@ -496,7 +496,7 @@ theorem operatorialCentralChargeParity_ne_zero_boundaryScale_ne_zero_of_kernelSe
 Parity-to-localized-vortex bridge:
 if the `Z₂` shadow of the operatorial central charge is nonzero, then under
 identified transported polarization the singular boundary package carries a
-localized boundary vortex witness.
+localized boundary vortex property.
 -/
 @[rep_depth transport]
 theorem operatorialCentralChargeParity_ne_zero_exists_localizedBoundaryVortex_of_identifiedTransportedPolarization
@@ -565,7 +565,7 @@ theorem operatorialCentralChargeParity_ne_zero_exists_localizedBoundaryVortex_of
 /--
 Topological-to-boundary package (source side): if the transported analytical
 index is nonzero, then under source boundary identification we obtain both a
-localized source/sink seed witness and source-seed derivative readout
+localized source/sink seed property and source-seed derivative readout
 anchor-invariance.
 -/
 @[rep_depth transport]
@@ -631,7 +631,7 @@ theorem quasilatticeAnalyticalIndex_ne_zero_sourceBoundaryReadout_package
 /--
 Topological-to-boundary package (sink side): if the transported analytical
 index is nonzero, then under sink boundary identification we obtain both a
-localized source/sink seed witness and sink-seed derivative readout
+localized source/sink seed property and sink-seed derivative readout
 anchor-invariance.
 -/
 @[rep_depth transport]

@@ -82,4 +82,19 @@ theorem realPin55SignQuotientEquiv_mk
       realPin55OrthogonalAction g :=
   realSplitPinNativeSignQuotientEquiv_mk g
 
+/-- The native real split `Pin(5,5)` cover as one reusable theorem packet. -/
+theorem real_pin55_native_cover_packet :
+    Function.Surjective realPin55OrthogonalAction ∧
+      (realPin55OrthogonalAction).ker = realSplitPinSignSubgroup ∧
+      (∀ g : RealPin55,
+        g ∈ (realPin55OrthogonalAction).ker ↔
+          (g : Cl55ˣ) = 1 ∨ (g : Cl55ˣ) = -1) ∧
+      Nonempty ((RealPin55 ⧸
+        (realSplitPinSignSubgroup : Subgroup RealPin55)) ≃*
+          Q55.IsometryEquiv Q55) := by
+  exact ⟨realPin55OrthogonalAction_surjective,
+    realPin55OrthogonalAction_kernel_eq_signSubgroup,
+    realPin55OrthogonalAction_mem_kernel_iff_pm_one,
+    ⟨realPin55SignQuotientEquiv⟩⟩
+
 end InfoGeometry.Clifford.Clifford55

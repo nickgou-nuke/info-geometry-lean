@@ -227,7 +227,7 @@ theorem susyHamiltonian_defect_annihilation_left : g.P0 * g.susyHamiltonian = 0 
     _ = 0 := by abel
 
 /-- A nonzero defect prevents the excitation Hamiltonian from being the unit. -/
-theorem nontrivial_vacuum_witness (hP0 : g.P0 ≠ 0) : g.susyHamiltonian ≠ 1 := by
+theorem nontrivial_vacuum_property (hP0 : g.P0 ≠ 0) : g.susyHamiltonian ≠ 1 := by
   intro hH
   apply hP0
   rw [susyHamiltonian_eq_one_sub_defect g] at hH

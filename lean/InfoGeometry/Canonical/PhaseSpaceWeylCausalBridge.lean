@@ -82,7 +82,7 @@ below, where this norm statement is used as the last step. -/
 
 omit [FiniteDimensional ℝ E] in
 /-- Flat Weyl transport collapses to the conformal chiral scale coming from the
-certified conformal inference.
+property conformal inference.
 
 This is a compatibility corollary; the primary bridge target is the
 projector-obstruction norm. -/
@@ -258,7 +258,7 @@ conformal inference lane; this is the norm-first anomaly-source identity. -/
   simpa [hObs] using hHol
 
 /-- General-case Weyl bridge through the explicit obstruction operator alias:
-no vanishing assumption is used. -/
+no vanishing property is used. -/
 @[rep_depth krein] theorem holonomy_eq_projectorObstruction_nnnorm_of_flat_from_conformal_doubled
     (CCI : CertifiedConformalInference (DoubledSpace E))
     (Δ : WeylDifferentialOperator ℝ X A)
@@ -278,7 +278,7 @@ no vanishing assumption is used. -/
 
 omit [Nontrivial E] in
 /-- Dilation/anomaly driver from the conformal operator lane: under the
-right-projector commutation hypothesis, the spectral-projector/dilation
+right-projector commutation property, the spectral-projector/dilation
 commutator is exactly minus one half of the projector obstruction. -/
 @[rep_depth krein] theorem
     spectralProjector_commutator_dilation_eq_neg_half_projectorObstruction_from_conformal
@@ -382,7 +382,7 @@ and flat Weyl transport lands on the obstruction norm. -/
 
 /-- Certified-projector-agreement route:
 the same dilation/holonomy package with projector agreement carried by the
-input certified surface. -/
+input property surface. -/
 @[rep_depth krein] theorem
     projectorAgreementCertified_metricProjector_commute_dilation_driver_and_holonomy_eq_projectorObstruction_nnnorm_of_flat_from_conformal
     (PCCI : ProjectorAgreementCertifiedConformalInference (DoubledSpace E))
@@ -566,7 +566,7 @@ Bogoliubov frame keeps it nonzero. -/
         hMod t hComm).2 hEinNe
 
 /-- Strong nontrivial-frame obstruction theorem (no separate Einstein-nonzero
-hypothesis):
+property):
 noncommuting spectral/metric projectors force nonzero flat Weyl holonomy; when
 left/right Moore-Penrose projectors agree, that same noncommutativity forces
 nonzero lifted Einstein anomaly, and any commuting relative-modular Bogoliubov
@@ -888,11 +888,10 @@ source spine package. -/
       (B := B)
       hFlat
 
-/-- Finite-dimensional end-to-end witness along the primary structured route:
+/-- Finite-dimensional end-to-end property along the primary structured route:
 dilation source, grade-zero obstruction, and flat-holonomy endpoint hold
 simultaneously. -/
-@[rep_depth krein] theorem
-    finiteDimensional_end_to_end_witness_of_projectorAgreement_metricProjector_commute
+@[rep_depth krein] theorem finiteDimensional_end_to_end_property_of_projectorAgreement_metricProjector_commute
     (CCI : CertifiedConformalInference (DoubledSpace E))
     (hProj :
       InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.rightProjector CCI.A CCI.A_MP =
@@ -929,9 +928,8 @@ simultaneously. -/
   exact ⟨pkg.dilation_source, pkg.obstruction_isGZero, pkg.holonomy_eq_projectorObstruction_nnnorm⟩
 
 /-- Certified-projector-agreement route to the finite-dimensional end-to-end
-witness (dilation source + grade-zero obstruction + flat-holonomy endpoint). -/
-@[rep_depth krein] theorem
-    finiteDimensional_end_to_end_witness_of_projectorAgreementCertified_metricProjector_commute
+property (dilation source + grade-zero obstruction + flat-holonomy endpoint). -/
+@[rep_depth krein] theorem finiteDimensional_end_to_end_property_of_projectorAgreementCertified_metricProjector_commute
     (PCCI : ProjectorAgreementCertifiedConformalInference (DoubledSpace E))
     (hLeft :
       PCCI.toConformalInference.P_D * PCCI.toConformalInference.P_MP

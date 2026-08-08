@@ -89,7 +89,7 @@ theorem modularVelocityOperator_totalCost_le_of_contract
 
 /--
 Readout-level bridge for the modular-velocity operator under a shape/scale-cost
-dominance hypothesis.
+dominance property.
 -/
 @[rep_depth operator]
 theorem modularVelocityOperator_readoutError_le_of_contract

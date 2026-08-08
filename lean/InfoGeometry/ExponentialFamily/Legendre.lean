@@ -5,7 +5,7 @@ import InfoGeometry.Convex.Legendre
 # Exponential Family to Legendre Potential
 
 Bridge from finite log-sum-exp potentials to the 1D Legendre potential
-package, given a strict-convexity witness.
+package, given a strict-convexity property.
 -/
 
 namespace InfoGeometry.ExponentialFamily

@@ -13,7 +13,7 @@ The file proves the checkable core:
 * the dual Hessian is the reciprocal Fisher curvature;
 * inversion of a positive partition function flips the log-potential.
 
-This is a finite real model.  It does not prove the Riemann hypothesis or
+This is a finite real model.  It does not prove the Riemann property or
 analytic properties of the Riemann zeta function.
 -/
 

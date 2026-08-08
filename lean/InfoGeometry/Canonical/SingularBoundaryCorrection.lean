@@ -30,7 +30,7 @@ This module deliberately avoids asserting a direct-sum decomposition of the
 ambient carrier. The first abstraction level is instead:
 
 - quotient/ray data for the Weyl-projective mode
-- certified Moore-Penrose/Drazin regularization data
+- property Moore-Penrose/Drazin regularization data
 - the canonical boundary commutator obstruction
 - a minimal transport-closure interface
 
@@ -69,7 +69,7 @@ deriving DecidableEq, Repr
 Canonical singular-boundary correction package.
 
 The boundary generator is not stored as independent data: it is canonically
-derived from the certified inverse kernel as the left-projector anomaly
+derived from the property inverse kernel as the left-projector anomaly
 commutator.
 -/
 structure SingularBoundaryCorrection (E : Type*)
@@ -96,15 +96,15 @@ namespace SingularBoundaryCorrection
 
 variable (S : SingularBoundaryCorrection E)
 
-/-- The certified Drazin spectral projector. -/
+/-- The property Drazin spectral projector. -/
 abbrev spectralProjector : E →L[ℝ] E :=
   S.kernel.spectralProjector
 
-/-- The certified Moore-Penrose left/domain projector. -/
+/-- The property Moore-Penrose left/domain projector. -/
 abbrev leftProjector : E →L[ℝ] E :=
   S.kernel.metricProjector
 
-/-- The certified Moore-Penrose right/range projector. -/
+/-- The property Moore-Penrose right/range projector. -/
 abbrev rightProjector : E →L[ℝ] E :=
   S.kernel.mpRangeProjector
 
@@ -124,7 +124,7 @@ noncomputable abbrev boundaryScale : ℝ :=
 abbrev dilationOperator : E →L[ℝ] E :=
   S.dilation
 
-/-- The boundary generator is exactly the certified projector commutator. -/
+/-- The boundary generator is exactly the property projector commutator. -/
 theorem boundaryGenerator_eq_projector_commutator :
     S.boundaryGenerator =
       S.spectralProjector * S.leftProjector - S.leftProjector * S.spectralProjector := by

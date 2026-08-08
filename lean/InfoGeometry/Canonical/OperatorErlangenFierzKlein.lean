@@ -20,7 +20,7 @@ observables satisfy Fierz identities.  It records:
 * modular fixedness of that horizon;
 * operator-valued Fierz channel maps;
 * explicit zero-mode certificates for those channel observables;
-* an explicit Fierz-admissibility witness.
+* an explicit Fierz-admissibility property.
 
 With those witnesses, the Fierz--Klein conclusion is derived from the existing
 foundation theorem.

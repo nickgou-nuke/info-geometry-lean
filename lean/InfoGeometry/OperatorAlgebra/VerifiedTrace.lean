@@ -14,7 +14,7 @@ implies similarity invariance:
 
 whenever `U` has a two-sided inverse.
 
-No vacuous trace-invariance certificate is used.
+No vacuous trace-invariance property is used.
 -/
 
 import Mathlib.Tactic

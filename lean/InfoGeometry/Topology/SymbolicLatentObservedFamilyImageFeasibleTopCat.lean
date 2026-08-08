@@ -10,7 +10,7 @@ open CategoryTheory
 # Feasibility factorization for the observed symbolic-latent family image
 
 The jointly observed family image already lives as a subtype of the feature
-space. Under an explicit pointwise feasibility hypothesis, it factors through
+space. Under an explicit pointwise feasibility property, it factors through
 the native feasible feature-region subtype.
 -/
 

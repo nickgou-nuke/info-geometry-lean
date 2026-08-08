@@ -5,7 +5,7 @@ import InfoGeometry.Topology.SymbolicLatentVaryingCarrierQuotientRangeOrbitClosu
 
 The canonical quotient-range Homeomorph transports a jointly continuous
 time action in both directions.  The proof uses the already established
-pointwise action naturality; no joint-continuity axiom is manufactured.
+pointwise action naturality; no joint-continuity ax!om is manufactured.
 -/
 
 noncomputable section

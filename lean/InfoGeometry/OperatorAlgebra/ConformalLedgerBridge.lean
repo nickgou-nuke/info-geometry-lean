@@ -11,7 +11,7 @@ This file connects:
 * TKK Ricci flux;
 * closure defect / anomaly readout.
 
-It remains witness-gated. The bridge does not assert that every heat loss is
+It remains property-gated. The bridge does not assert that every heat loss is
 Ricci flux. It says that once a scalar Ricci-flux calibration is supplied, the
 ledger identity is available.
 
@@ -256,7 +256,7 @@ and the bridge asserts:
   `scalar(closureDefect(generatorOf x)(stateOf x)) = anomalyReadout x`
 
 for all visible states `x`, **without** requiring curvature stationarity as
-a hypothesis.
+a property.
 
 This is the direct Fradkin–Tseytlin identification: the conformal anomaly
 equals the TKK closure-defect scalar readout.

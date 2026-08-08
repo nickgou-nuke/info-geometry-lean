@@ -31,7 +31,7 @@ The theorem-safe doctrine is:
 
 * determinant = even/bosonic source--sink path-volume readout;
 * Pfaffian = oriented fermionic pairing amplitude;
-* `Pf^2 = det` is supplied as a skew-kernel witness;
+* `Pf^2 = det` is supplied as a skew-kernel property;
 * Drazin data separates regular determinant support from harmonic zero modes;
 * Weyl/KMS projectivization and Fierz--Klein geometry are calibration/readout
   layers, not automatic identities.
@@ -285,7 +285,7 @@ def ProjectivePfaffianKleinLaw.coords
     (K : ProjectivePfaffianKleinLaw Γ) : ProjectiveCountChannel → ℝ :=
   fun ch => K.readout ch (fun γ => projectiveDeterminantCoordinate K.Ω K.φ γ)
 
-/-- Read back the witness-gated (Native Closure Mandated: Closure Debt) Klein residual law. -/
+/-- Read back the property-gated (Native Closure Mandated: Closure Debt) Klein residual law. -/
 theorem projective_pfaffian_counts_lie_on_klein
     {Γ : Type*}
     [Fintype Γ]

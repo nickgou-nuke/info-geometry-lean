@@ -15,7 +15,7 @@ This file keeps the construction strictly in bounded endomorphism algebra:
 - left/right operatorial Maurer forms,
 - bi-Maurer volume drift,
 - active/apex projector quarantine for drift blocks,
-- and a Krein-isometric Bogoliubov transport closure witness.
+- and a Krein-isometric Bogoliubov transport closure property.
 -/
 
 namespace InfoGeometry.Canonical.OperatorialVolumePreservation

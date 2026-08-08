@@ -18,14 +18,14 @@ local notation "EndH" => H₂ →L[ℝ] H₂
 open InfoGeometry.Canonical.BogoliubovCartanEigenOperator
 
 /--
-Drazin witness for a Cartan eigen-operator in the doubled-real bounded operator lane.
+Drazin property for a Cartan eigen-operator in the doubled-real bounded operator lane.
 -/
 def IsDrazinCartanEigenOperator
     (H A B : EndH) (k : ℕ) (lam : ℝ) : Prop :=
   InfoGeometry.Canonical.Drazin.IsDrazinInverse A B k ∧
     IsCartanEigenOperator (E := E) H A lam
 
-/-- Accessor: Drazin witness component. -/
+/-- Accessor: Drazin property component. -/
 theorem isDrazinInverse_of_isDrazinCartanEigenOperator
     {H A B : EndH} {k : ℕ} {lam : ℝ}
     (h : IsDrazinCartanEigenOperator (E := E) H A B k lam) :
@@ -39,11 +39,11 @@ theorem isCartanEigenOperator_of_isDrazinCartanEigenOperator
     IsCartanEigenOperator (E := E) H A lam :=
   h.2
 
-/-- Drazin projection readback for a witness pair `(A,B)`. -/
+/-- Drazin projection readback for a property pair `(A,B)`. -/
 def drazinProjection (A B : EndH) : EndH :=
   InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection A B
 
-/-- Complementary Drazin projection readback for a witness pair `(A,B)`. -/
+/-- Complementary Drazin projection readback for a property pair `(A,B)`. -/
 def drazinComplementaryProjection (A B : EndH) : EndH :=
   InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection A B
 
@@ -55,7 +55,7 @@ theorem drazinProjection_add_complementaryProjection (A B : EndH) :
     (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_add_complementaryProjection
       (a := A) (b := B))
 
-/-- Readback: Drazin projection is idempotent under a Drazin-Cartan witness. -/
+/-- Readback: Drazin projection is idempotent under a Drazin-Cartan property. -/
 theorem drazinProjection_is_idempotent_of_isDrazinCartanEigenOperator
     {H A B : EndH} {k : ℕ} {lam : ℝ}
     (h : IsDrazinCartanEigenOperator (E := E) H A B k lam) :
@@ -69,7 +69,7 @@ theorem drazinProjection_is_idempotent_of_isDrazinCartanEigenOperator
     InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_is_idempotent
       (a := A) (b := B) h.1
 
-/-- Readback: Drazin projection commutes with the owner operator under witness. -/
+/-- Readback: Drazin projection commutes with the owner operator under property. -/
 theorem drazinProjection_comm_self_of_isDrazinCartanEigenOperator
     {H A B : EndH} {k : ℕ} {lam : ℝ}
     (h : IsDrazinCartanEigenOperator (E := E) H A B k lam) :
@@ -83,7 +83,7 @@ theorem drazinProjection_comm_self_of_isDrazinCartanEigenOperator
 
 /--
 Frame-transport statement schema: if a frame transports Cartan adjoint on `A`,
-then Drazin-Cartan witness transports to the framed operator.
+then Drazin-Cartan property transports to the framed operator.
 -/
 theorem isDrazinCartanEigenOperator_conjugate
     {Hsrc Htgt U Uinv A B : EndH} {k : ℕ} {lam : ℝ}
@@ -148,7 +148,7 @@ namespace EquivalentBogoliubovFrames
 variable {P : ChiralDrazinKreinPackage (E := E)}
 variable {F G : BogoliubovFrameOver (E := E) P}
 
-/-- Readback: frame equivalence carries a certified Drazin-projector commutation witness. -/
+/-- Readback: frame equivalence carries a property Drazin-projector commutation property. -/
 theorem preserves_drazinProjection_comm
     (hEq : EquivalentBogoliubovFrames (E := E) P F G) :
     ∃ U : EndH,
@@ -157,7 +157,7 @@ theorem preserves_drazinProjection_comm
   rcases hEq with ⟨U, hP, _hJ, _hEps, _hK, _hFrame⟩
   exact ⟨U, hP⟩
 
-/-- Readback: equivalent frames are linked by a certified representative action on frame maps. -/
+/-- Readback: equivalent frames are linked by a property representative action on frame maps. -/
 theorem frame_action
     (hEq : EquivalentBogoliubovFrames (E := E) P F G) :
     ∃ U : EndH, U.comp F.U = G.U := by
@@ -166,7 +166,7 @@ theorem frame_action
 
 /--
 Projected frame readout is invariant under equivalent Bogoliubov frames,
-assuming the readout is invariant under certified Drazin-projector-preserving
+assuming the readout is invariant under property Drazin-projector-preserving
 representative actions.
 -/
 theorem projected_frame_readout_invariant

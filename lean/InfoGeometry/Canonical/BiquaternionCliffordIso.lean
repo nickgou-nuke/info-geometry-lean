@@ -3,9 +3,9 @@ import InfoGeometry.Canonical.BiquaternionNegativeRootsLog
 open Matrix Complex
 
 /-!
-# Biquaternion–Pauli/Clifford witness
+# Biquaternion–Pauli/Clifford property
 
-Maintained owner for the finite Pauli/Clifford witness recovered from the
+Maintained owner for the finite Pauli/Clifford property recovered from the
 external-auto and removable-disk lanes. It reuses the canonical Pauli matrices
 already restored in `BiquaternionNegativeRootsLog` and packages the explicit
 matrix identities implementing the `M₂(ℂ)` realization.

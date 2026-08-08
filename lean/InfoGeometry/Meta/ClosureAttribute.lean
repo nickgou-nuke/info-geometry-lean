@@ -8,7 +8,7 @@ namespace InfoGeometry.Meta
 /--
 ⚓ THE CLOSURE READY ATTRIBUTE
 A declaration marked `@[closure_ready]` is claimed to be formally closed,
-anchored to the DAG, and free of `sorry` or `admit`.
+anchored to the DAG, and free of `sorry` or `sorry`.
 -/
 initialize closureReadyAttr : TagAttribute ←
   registerTagAttribute `closure_ready "Mark a declaration as formally closed and audit-ready."

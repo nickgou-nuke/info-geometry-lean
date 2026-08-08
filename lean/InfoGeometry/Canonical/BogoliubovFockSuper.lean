@@ -607,8 +607,8 @@ theorem projectorSuperPair_of_chiralityPolarization
   exact projectorSuperPair_of_ladderOfPolarization (E := E) M M.chiralityPolarization
 
 /--
-Adapter from the algebraic real-Majorana CAR witness to the continuous Fock-side
-CAR pair witness on doubled space.
+Adapter from the algebraic real-Majorana CAR property to the continuous Fock-side
+CAR pair property on doubled space.
 -/
 theorem isCARPair_of_linear_CARWitness
     (a adag : FockEnd E)

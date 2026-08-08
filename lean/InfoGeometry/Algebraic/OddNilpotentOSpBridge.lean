@@ -14,7 +14,7 @@ locally in Lean:
 
 It deliberately does not package an `osp(1|2)` embedding, a super
 Jacobson--Morozov theorem, a CAR inductive-limit construction, a Cantor
-homeomorphism, or an AQFT representation theorem as witness fields.  Those
+homeomorphism, or an AQFT representation theorem as property fields.  Those
 claims need their own constructive owner modules.
 -/
 

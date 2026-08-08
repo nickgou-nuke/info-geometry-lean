@@ -12,7 +12,7 @@ The verified layer is finite algebra:
 * finite swap/tau parity through `ζ(9)`.
 
 The analytic Ramanujan odd-zeta identity remains a transparent side-supplied
-`Prop` target; no axiom, placeholder, or analytic proof is introduced here.
+`Prop` target; no ax!om, placeholder, or analytic proof is introduced here.
 -/
 
 noncomputable section

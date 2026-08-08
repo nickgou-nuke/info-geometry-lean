@@ -15,7 +15,7 @@ This file keeps the hyperbolic/Dirac picture theorem-safe:
 * the raw two-branch hyperbolic readout is a finite difference
   `stable - unstable`;
 * projecting or regularizing away the unstable branch is represented by an
-  explicit witness packet.
+  explicit property packet.
 
 No infinite Euler product, reciprocal-zeta theorem, analytic continuation,
 Type III trace statement, or Riemann-zero statement is asserted here.
@@ -106,7 +106,7 @@ Finite two-branch Liouville/Witten readout.
 
 The raw hyperbolic chiral index contains the stable branch minus the unstable
 branch. Any identification with a purely stable readout must be supplied by a
-separate regularization/projection witness.
+separate regularization/projection property.
 -/
 def directSumLiouvilleWittenIndex
     [DecidableEq PrimeLabel] [CommRing R]
@@ -189,7 +189,7 @@ end StableBranchRegularization
 Finite projected hyperbolic chiral index packet.
 
 This connects a raw two-branch readout to its stable and unstable finite lanes.
-Any inverse-zeta or analytic interpretation is deliberately only a witness
+Any inverse-zeta or analytic interpretation is deliberately only a property
 field, not a theorem in this file.
 -/
 structure ProjectedHyperbolicChiralIndexPacket

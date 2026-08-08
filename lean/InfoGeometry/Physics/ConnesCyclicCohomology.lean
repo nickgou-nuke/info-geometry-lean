@@ -8,7 +8,7 @@ namespace InfoGeometry.Physics
 This owner keeps the scope honest.  It records the basic Hochschild
 operators in degrees 0 and 1, proves the low-degree identity
 `b₁ ∘ b₀ = 0`, and packages the trace-as-0-cocycle statement under an
-explicit cyclicity hypothesis.
+explicit cyclicity property.
 
 It does not claim a full cyclic complex, periodicity operator, or a global
 cyclic-cohomology theorem.

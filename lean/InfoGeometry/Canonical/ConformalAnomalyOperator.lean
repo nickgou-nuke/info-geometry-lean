@@ -44,7 +44,7 @@ the operator remains grade-zero and block-diagonal in the same KKT split.
 /--
 Canonical operator-owner constructor:
 explicit KKT wing witnesses force the obstruction into the grade-zero diagonal
-block form, without any vanishing assumption.
+block form, without any vanishing property.
 -/
 @[rep_depth krein] theorem obstructionOperatorOwner_of_kkt_wings
     (X : InfoGeometry.Quantum.RealSplitCl11Action E)

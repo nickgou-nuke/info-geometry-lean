@@ -298,7 +298,7 @@ include hleft hright in
 /--
 The standard endomorphism `D_{a,b}` obeys the Leibniz rule in every alternative
 ring.  This is the derivation construction used in the octonionic model of
-`g₂`; no coordinate expansion or external certificate is used.
+`g₂`; no coordinate expansion or external property is used.
 -/
 theorem stanDerMap_isLeibniz (a b : A) :
     ∀ x y : A,

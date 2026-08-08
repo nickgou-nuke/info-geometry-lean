@@ -1,0 +1,37 @@
+% Section 2: Information Geometry of the Dual-Affine Potential
+
+The behavior of CMOS sensor noise fundamentally traverses three distinct statistical domains as photon flux increases: the read-noise floor (governed by Gaussian statistics), the intermediate shot-noise regime (governed by Poisson statistics), and the high-flux multiplicative non-uniformities (best captured by Gamma or Itakura-Saito metrics). While standard filtering techniques often apply a static variance homogenization step, this fails to capture the continuous geometric transition of the underlying distributions.
+
+\subsection{The Unified Variance Exponent Function}
+In the framework of Tweedie distributions and exponential families, the variance $V(\mu)$ scales with the mean $\mu$ according to a power law $V(\mu) \propto \mu^\nu$. The three canonical regimes correspond directly to integer values of the variance exponent $\nu \in \{0, 1, 2\}$:
+\begin{itemize}
+    \item \textbf{Gaussian (Read Noise):} $\nu = 0 \implies V(\mu) \propto 1$
+    \item \textbf{Poisson (Shot Noise):} $\nu = 1 \implies V(\mu) \propto \mu$
+    \item \textbf{Gamma (PRNU Speckle):} $\nu = 2 \implies V(\mu) \propto \mu^2$
+\end{itemize}
+
+Instead of treating these as discrete, disconnected models, we embed them into a single affine variance geometry. Let $c_0, c_1, c_2 \ge 0$ denote the physical sensor coefficients corresponding to read noise, shot noise, and proportional pixel-response non-uniformity (PRNU) respectively. The unified variance function is precisely modeled as:
+\begin{equation}
+    V_w(\mu) = c_0 + c_1 \mu + c_2 \mu^2
+\end{equation}
+
+\subsection{Derivation of the Mixed-Beta Potential}
+Every such variance function $V(\mu)$ in an exponential family uniquely defines a strictly convex potential $\Phi(\mu)$ whose corresponding Bregman divergence acts as the natural geometric distance for the statistical manifold. The fundamental relationship linking the variance function to the dual potential is given by:
+\begin{equation}
+    \Phi''(\mu) = \frac{1}{V(\mu)}
+\end{equation}
+
+Integrating this relation twice for our specific $V_w(\mu)$ yields the \textit{Mixed-Beta Potential} $\Phi_w(\mu)$. Because $V_w(\mu) > 0$ strictly holds for all physical parameters $\mu \ge 0$ (assuming $c_0 > 0$ for non-zero read noise), $\Phi_w(\mu)$ is globally strictly convex. The corresponding Bregman divergence:
+\begin{equation}
+    D_{\Phi_w}(x \parallel \mu) = \Phi_w(x) - \Phi_w(\mu) - \Phi_w'(\mu)(x - \mu)
+\end{equation}
+forms the exact maximum-likelihood objective function for filtering causal pixel streams without ad-hoc approximations.
+
+\subsection{The Universal Generalized Cumulant Recursion Formula}
+The elegance of mapping the sensor variance to a dual-affine structure is that the higher-order central moments (which dictate the shape and heavy-tails of the noise, crucial for separating cosmic rays from sensor artifacts) obey a closed-form differential recurrence. 
+
+By differentiating the moment-generating function of the mixed exponential family, we derive the universal generalized cumulant recursion formula:
+\begin{equation}
+    \kappa_{n+1} = V_w(\mu) \frac{d\kappa_n}{d\mu}
+\end{equation}
+This recurrence allows us to compute the exact theoretical skewness ($C_3$) and kurtosis ($C_4$) of the mixed noise profile at any given flux level $\mu$ in $O(1)$ time, forming the basis for our causal streaming updates.

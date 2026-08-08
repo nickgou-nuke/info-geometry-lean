@@ -62,7 +62,7 @@ noncomputable def chiralAnomalyIndex (CST : ChiralSpectralTriple E) : ℝ :=
 
 omit [FiniteDimensional ℝ E] in
 /--
-If the witness-level spectral and metric projectors commute, the chiral anomaly
+If the property-level spectral and metric projectors commute, the chiral anomaly
 index vanishes exactly.
 -/
 theorem chiralAnomalyIndex_eq_zero_of_projectors_commute

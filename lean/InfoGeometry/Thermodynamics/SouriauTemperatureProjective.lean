@@ -157,7 +157,7 @@ theorem negIdSL2R_smul
 A projective/closure temperature inversion supplied by an involutive `SL2R`
 element.
 
-This is deliberately witness-gated: the sidecar does not assert which matrix is
+This is deliberately property-gated: the sidecar does not assert which matrix is
 the physical inversion unless a model supplies it.
 -/
 abbrev ProjectiveTemperatureInversion :=
@@ -219,7 +219,7 @@ theorem read_theta
 A positive Souriau temperature is stationary for a supplied projective
 temperature inversion when it is fixed by the associated closure involution.
 
-This is deliberately relative to the supplied inversion witness.  In
+This is deliberately relative to the supplied inversion property.  In
 particular, no specific matrix such as the modular `S` element is asserted here.
 -/
 def StationaryTemperature

@@ -11,8 +11,8 @@ Investigating the modular representations of so(1,4).
 This file records only finite algebraic interfaces inspired by Felix M. Lev,
 "Why is quantum physics based on complex numbers?", arXiv:hep-th/0309003v2.
 It does not formalize Lev's full spinless modular representation theorem.
-The certified layer below is the explicit quadratic-pair algebra `a + bI` with
-`I² = -1`, together with a concrete `ZMod 3` base-field witness that `-1` is
+The property layer below is the explicit quadratic-pair algebra `a + bI` with
+`I² = -1`, together with a concrete `ZMod 3` base-field property that `-1` is
 not already a square.
 -/
 
@@ -115,7 +115,7 @@ end QuadraticPair
 
 section ConcreteBaseFieldWitness
 
-/-- Concrete base-field witness: in `ZMod 3`, the element `-1` is not a square. -/
+/-- Concrete base-field property: in `ZMod 3`, the element `-1` is not a square. -/
 theorem zmod_three_no_square_minus_one (x : ZMod 3) : x * x ≠ -1 := by
   fin_cases x <;> decide
 

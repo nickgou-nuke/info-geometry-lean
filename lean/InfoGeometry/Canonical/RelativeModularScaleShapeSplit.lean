@@ -33,7 +33,7 @@ noncomputable local instance : NormedRing EndH := inferInstance
 noncomputable local instance : NormedAlgebra ℝ EndH := inferInstance
 
 /--
-Compatibility witness for the operator-lane scale/shape split.
+Compatibility property for the operator-lane scale/shape split.
 -/
 def LiftedScaleShapeCompatibility
     (CIK : CertifiedInverseKernel H₂)
@@ -116,7 +116,7 @@ theorem mixed_blocks_vanish_of_commute_spectralProjector
 /--
 CP-002 operator-level block diagonalization:
 the relative modular lane decouples across active/apex projectors when the
-generator commutes with the certified spectral projector.
+generator commutes with the property spectral projector.
 -/
 @[rep_depth transport]
 -- theorem-class: closure
@@ -130,7 +130,7 @@ theorem relativeModular_block_diagonal
   exact mixed_blocks_vanish_of_commute_spectralProjector (E := E) (CIK := CIK) (H_gen := R) hComm
 
 /--
-CP-002 capstone split: under the same commutation witness, the operator
+CP-002 capstone split: under the same commutation property, the operator
 decomposes into the apex-supported scale block and active-supported shape block.
 -/
 @[rep_depth transport, capstone]
@@ -170,7 +170,7 @@ theorem relativeModular_scaleShapeSplit
 
 /--
 CP-002 ↔ CP-003 bridge:
-from a single commutation witness, expose both split surfaces
+from a single commutation property, expose both split surfaces
 (nested projector form and projector-compressed surrogate form).
 -/
 @[rep_depth transport, capstone]
@@ -235,7 +235,7 @@ noncomputable def canonicalRelativeModularOperator
   (canonicalTomitaLogData (E := E) CIK).flow τ
 
 /--
-Commutation witness for CP-002 Phase A:
+Commutation property for CP-002 Phase A:
 on a wedge-calibrated canonical lane, the bounded relative modular
 representative commutes with the active Drazin projector.
 -/

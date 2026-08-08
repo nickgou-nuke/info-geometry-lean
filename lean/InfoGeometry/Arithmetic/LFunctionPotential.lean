@@ -10,7 +10,7 @@ doubled carrier H₂ equipped with the Hestenes phase axis K = Jε.
 
 The file is intentionally conservative:
 * finite logarithmic potentials are stated only away from singular divisors;
-* exact horizon/divisor identification is a proof field of the witness;
+* exact horizon/divisor identification is a proof field of the property;
 * no theorem tries to infer an exact zero from an informal divergence argument.
 -/
 
@@ -102,10 +102,10 @@ def ArithmeticBarrierDivergesAt
     (nhdsWithin s₀ {s | s ≠ s₀})
     atTop
 
-/-! ### 4. Unified Jordan/L-function horizon witness -/
+/-! ### 4. Unified Jordan/L-function horizon property -/
 
 /--
-The unified horizon witness in the real-doubled language.
+The unified horizon property in the real-doubled language.
 
 `potentialEquivalence` is stated on the NonzeroNormPoint locus.
 The correspondence is between the Jordan rank-collapse and the 

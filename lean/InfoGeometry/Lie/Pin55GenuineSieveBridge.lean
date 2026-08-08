@@ -24,7 +24,7 @@ theorem conformal_sieve_duality
     (x : ℕ) (hx : x ≥ 55) :
     ∃ (pkg : Pin55KreinConformalPackage),
       (Nat.primeCounting x : ℝ) ≤ (x : ℝ) + 1 := by
-  -- Obtain the Krein conformal package from the compatibility hypothesis
+  -- Obtain the Krein conformal package from the compatibility property
   rcases exists_pin55_krein_conformal_package hcompat with ⟨pkg, _⟩
   use pkg
   -- Apply the arithmetical prime counting bound proven in GenuineBounds

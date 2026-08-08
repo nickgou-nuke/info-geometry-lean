@@ -22,7 +22,7 @@ Zeta vacuum transitions into an Automorphic L-Function vacuum.
 The Langlands Functoriality is physically realized as the thermodynamic 
 equivalence of partition functions across dual gauge configurations.
 
-UTMOST MANDATE: No witness-gating. The twisted Euler product is derived directly 
+UTMOST MANDATE: No property-gating. The twisted Euler product is derived directly 
 from the twisted Weyl denominator.
 -/
 

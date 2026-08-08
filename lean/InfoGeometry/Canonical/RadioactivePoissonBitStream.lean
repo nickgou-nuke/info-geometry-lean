@@ -22,7 +22,7 @@ radioactive decay
 ```
 
 The stochastic laws are not proved here.  They are stored as explicit
-calibration/assumption packets.  In particular, independence of time windows
+calibration/property packets.  In particular, independence of time windows
 and the Poisson odd-count formula are not silently converted into theorems.
 -/
 
@@ -186,10 +186,10 @@ def idealOddProbability : ℝ :=
 end RadioactiveDecayChannel
 
 /--
-Calibration assumption that a channel's parity bit has the ideal Poisson
+Calibration property that a channel's parity bit has the ideal Poisson
 odd-count probability.
 
-This is assumption data, not a theorem derived from `counts`.
+This is property data, not a theorem derived from `counts`.
 -/
 @[rep_depth projective]
 structure ParityPoissonCalibrationAssumption

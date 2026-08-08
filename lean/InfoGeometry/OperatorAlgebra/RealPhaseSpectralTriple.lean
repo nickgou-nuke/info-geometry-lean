@@ -167,7 +167,7 @@ structure RepresentedAlgebra
     [NormedAddCommGroup H] [NormedSpace ℝ H] where
   rep : A →+* RealEnd H
 
-/-- Order-one condition, kept as a witness at the abstract layer. -/
+/-- Order-one condition, kept as a property at the abstract layer. -/
 def OrderOneCondition
     {A H : Type*} [Ring A]
     [NormedAddCommGroup H] [NormedSpace ℝ H]

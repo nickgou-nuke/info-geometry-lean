@@ -35,7 +35,7 @@ theorem clifford_orthogonal_anticommute (v w : M) (h : Q.IsOrtho v w) :
       -(CliffordAlgebra.ι Q w * CliffordAlgebra.ι Q v) :=
   CliffordAlgebra.ι_mul_ι_comm_of_isOrtho h
 
-/-- The same anticommutation conclusion from an explicit polar-zero hypothesis. -/
+/-- The same anticommutation conclusion from an explicit polar-zero property. -/
 theorem clifford_anticommute_of_polar_eq_zero
     (v w : M) (h : QuadraticMap.polar Q v w = 0) :
     CliffordAlgebra.ι Q v * CliffordAlgebra.ι Q w =
@@ -129,7 +129,7 @@ theorem clifford_anticommute_listProduct
                 simp [pow_succ, mul_assoc]
 
 /--
-A `List.Pairwise` orthogonality hypothesis on `v :: vectors` supplies the
+A `List.Pairwise` orthogonality property on `v :: vectors` supplies the
 head-to-tail hypotheses needed to move `ι Q v` through the volume element.
 -/
 theorem clifford_anticommute_listProduct_of_pairwise_cons
@@ -140,6 +140,65 @@ theorem clifford_anticommute_listProduct_of_pairwise_cons
         (cliffordVolumeElement Q vectors * CliffordAlgebra.ι Q v) :=
   clifford_anticommute_listProduct v vectors
     (fun _ hw => List.rel_of_pairwise_cons h hw)
+
+/--
+Adjoining a vector orthogonal to every factor gives the recursive square law
+for an ordered Clifford volume element.  The sign records the number of
+factors crossed before the two copies of the new generator meet.
+-/
+theorem cliffordVolumeElement_cons_sq
+    (v : M) (vectors : List M) (h : ∀ w ∈ vectors, Q.IsOrtho v w) :
+    cliffordVolumeElement Q (v :: vectors) * cliffordVolumeElement Q (v :: vectors) =
+      (-1 : R) ^ vectors.length •
+        (algebraMap R (CliffordAlgebra Q) (Q v) *
+          (cliffordVolumeElement Q vectors * cliffordVolumeElement Q vectors)) := by
+  let V := cliffordVolumeElement Q vectors
+  let s : R := (-1 : R) ^ vectors.length
+  have hmove : CliffordAlgebra.ι Q v * V = s • (V * CliffordAlgebra.ι Q v) := by
+    exact clifford_anticommute_listProduct v vectors h
+  have hs : s * s = 1 := by
+    simp [s, ← pow_add]
+  have hmove' : V * CliffordAlgebra.ι Q v = s • (CliffordAlgebra.ι Q v * V) := by
+    calc
+      V * CliffordAlgebra.ι Q v = (1 : R) • (V * CliffordAlgebra.ι Q v) := by simp
+      _ = (s * s) • (V * CliffordAlgebra.ι Q v) := by rw [hs]
+      _ = s • (s • (V * CliffordAlgebra.ι Q v)) := by simp [mul_smul]
+      _ = s • (CliffordAlgebra.ι Q v * V) := by rw [← hmove]
+  rw [cliffordVolumeElement_cons]
+  calc
+    (CliffordAlgebra.ι Q v * V) * (CliffordAlgebra.ι Q v * V) =
+        CliffordAlgebra.ι Q v * (V * CliffordAlgebra.ι Q v) * V := by
+          simp only [mul_assoc]
+    _ = CliffordAlgebra.ι Q v * (s • (CliffordAlgebra.ι Q v * V)) * V := by
+          rw [hmove']
+    _ = s • ((CliffordAlgebra.ι Q v * CliffordAlgebra.ι Q v) * (V * V)) := by
+          rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc]
+          congr 1
+          simp only [mul_assoc]
+    _ = s • (algebraMap R (CliffordAlgebra Q) (Q v) * (V * V)) := by
+          rw [CliffordAlgebra.ι_sq_scalar]
+
+/-- Scalar obtained by recursively collecting the signed generator squares. -/
+def cliffordVolumeSquareScalar (Q : QuadraticForm R M) : List M → R
+  | [] => 1
+  | v :: vectors =>
+      (-1 : R) ^ vectors.length * Q v * cliffordVolumeSquareScalar Q vectors
+
+/--
+The square of a pairwise-orthogonal ordered Clifford product is the scalar
+obtained from the generator squares and the Koszul crossing signs.
+-/
+theorem cliffordVolumeElement_sq_of_pairwise
+    (vectors : List M) (h : vectors.Pairwise (fun v w => Q.IsOrtho v w)) :
+    cliffordVolumeElement Q vectors * cliffordVolumeElement Q vectors =
+      algebraMap R (CliffordAlgebra Q) (cliffordVolumeSquareScalar Q vectors) := by
+  induction vectors with
+  | nil => simp [cliffordVolumeElement, cliffordVolumeSquareScalar]
+  | cons v vectors ih =>
+      rw [cliffordVolumeElement_cons_sq v vectors
+        (fun w hw => List.rel_of_pairwise_cons h hw)]
+      rw [ih (List.pairwise_cons.mp h).2]
+      simp [cliffordVolumeSquareScalar, Algebra.smul_def, mul_assoc]
 
 /-- Even-length ordered Clifford products are fixed by the grade involution. -/
 theorem clifford_involute_volumeElement_of_even_length

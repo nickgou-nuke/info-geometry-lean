@@ -14,7 +14,7 @@ currently proved lower surfaces:
 
 - raw relative counts and their diagonal modular-potential lift,
 - the scalar Tomita-Takesaki-style operator on the doubled router carrier,
-- the spectral-root witness `D² = H.metricOp x₀`.
+- the spectral-root property `D² = H.metricOp x₀`.
 
 The key point is the narrow diagonal specialization:
 
@@ -200,7 +200,7 @@ noncomputable def countDiagonalHessianGeometry
 omit [Nonempty (Fin n)] in
 /--
 The concrete count-driven diagonal Hessian geometry realizes the diagonal raw
-count operator slice without any extra metric witness.
+count operator slice without any extra metric property.
 -/
 theorem countDiagonalHessianGeometry_isDiagonalRelativeCountMetricSlice
     (counts ref : RelativeCounts n)

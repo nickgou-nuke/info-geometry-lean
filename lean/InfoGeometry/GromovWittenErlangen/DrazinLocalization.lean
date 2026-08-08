@@ -125,8 +125,8 @@ end GWDrazinLocalizationPacket
 /--
 Divisor-weight data for a localization graph.
 
-This does not prove the GW divisor axiom; it only stores finite edge/degree
-weights that a model may use as input to a future theorem-facing divisor axiom.
+This does not prove the GW divisor ax!om; it only stores finite edge/degree
+weights that a model may use as input to a future theorem-facing divisor ax!om.
 -/
 structure LocalizationDivisorWeightData
     (G T Target Coeff : Type*) where

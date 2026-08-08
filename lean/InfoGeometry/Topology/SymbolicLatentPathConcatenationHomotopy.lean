@@ -7,7 +7,7 @@ namespace InfoGeometry.Topology
 /-!
 # Midpoint gluing of endpoint-preserving path homotopies
 
-This owner supplies the missing witness needed for concatenation on homotopy
+This owner supplies the missing property needed for concatenation on homotopy
 classes.  The two homotopies are glued in the path coordinate, while their
 homotopy coordinate is left untouched.
 -/

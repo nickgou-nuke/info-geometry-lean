@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 # Noncommutative orthogonal-projector calculus
 
 This module contains the reusable algebraic lemma that remains after the
-former evidence packet was audited.  Tautological witness projections and
+former evidence packet was audited.  Tautological property projections and
 finite diagonal/scalar readouts are intentionally not exported here.
 -/
 

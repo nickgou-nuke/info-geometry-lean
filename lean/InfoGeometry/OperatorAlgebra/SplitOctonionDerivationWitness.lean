@@ -1,7 +1,7 @@
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
 
 /-!
-# Split-octonion derivation witness layer
+# Split-octonion derivation property layer
 
 This module is the Lean twin of the theorem-safe part of
 `tools/sympy/split_octonion_derivation_classification.py`.
@@ -11,7 +11,7 @@ the Zorn split-octonion algebra and checks, with SymPy and Sage, that the
 solution space has dimension `14`, matching the Lie algebra dimension of split
 `G₂`.
 
-This Lean file does **not** package that computational rank certificate as a
+This Lean file does **not** package that computational rank property as a
 proof of the global real split classification `Aut(𝕆_s)=G_{2(2)}`.  Instead it
 adds a native finite owner theorem: an explicit nonzero infinitesimal coordinate
 rotation is a real derivation of the formalized split-octonion multiplication.

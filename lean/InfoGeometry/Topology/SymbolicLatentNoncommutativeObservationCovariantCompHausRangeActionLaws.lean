@@ -3,7 +3,7 @@ import InfoGeometry.Topology.SymbolicLatentNoncommutativeObservationCovariantCom
 /-!
 # Flow laws for the compact operator-observation range action
 
-The range action is defined with an explicit continuity hypothesis because an
+The range action is defined with an explicit continuity property because an
 arbitrary `StarAlgEquiv` is not assumed continuous by the observable-system
 API.  Its algebraic flow laws, however, follow directly from the covariant
 flow's zero and addition laws.

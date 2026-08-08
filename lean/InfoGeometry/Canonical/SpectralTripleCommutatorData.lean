@@ -23,7 +23,7 @@ an explicit continuous-operator-valued readout.
 
 The field is oriented as
 `D * representation(a) - representation(a) * D = bounded_commutator(a)`.
-This makes the compatibility hypothesis reusable without introducing an
+This makes the compatibility property reusable without introducing an
 unjustified commutator construction for an unbounded operator.
 -/
 structure SpectralTripleCommutatorData where

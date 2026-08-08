@@ -9,7 +9,7 @@ zeta zeros.
 For `s = β + i t`, `β` is damping and `t` is an oscillatory phase parameter.
 Zeros of an analytically continued zeta-like function are represented as exact
 cancellations (destructive interference).  The Riemann Hypothesis is not proved
-here; it is represented as an explicit axiom field of a model.
+here; it is represented as an explicit ax!om field of a model.
 -/
 
 noncomputable section
@@ -54,7 +54,7 @@ def finiteComplexArithmeticTraceComplex (s : ℂ) (N : ℕ) : ℂ :=
 def bosonicPoleModel (β : ℂ) : ℂ :=
   (β - 1)⁻¹
 
-/-- RH model: we keep RH-strength assumptions explicit as an axiom block. -/
+/-- RH model: we keep RH-strength assumptions explicit as an ax!om block. -/
 structure RHModel where
   zeta : ℂ → ℂ
   h_nontrivial_zero_on_line :
@@ -92,11 +92,11 @@ theorem gradedFermionicIndexPole_of_zeta_zero
   exact hzero
 
 
-/-- Hilbert–Pólya shape hypothesis in a minimal form: zeros lie on `Re(s)=1/2`. -/
+/-- Hilbert–Pólya shape property in a minimal form: zeros lie on `Re(s)=1/2`. -/
 def HilbertPólya_shape (Z : ℂ → ℂ) : Prop :=
   ∀ ρ : ℂ, Z ρ = 0 → ∃ γ : ℝ, ρ = (1 / 2 : ℂ) + γ * Complex.I
 
-/-- Projection from the shape hypothesis to RH-style critical-line localization. -/
+/-- Projection from the shape property to RH-style critical-line localization. -/
 theorem hp_shape_implies_rh {
     M : RHModel
   } (hHP : HilbertPólya_shape M.zeta) {s : ℂ}

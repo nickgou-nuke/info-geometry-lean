@@ -170,7 +170,7 @@ abbrev SupervolumePacket (Algebra : Type*) [Ring Algebra] : Type _ :=
 /--
 Dissipative KMS-compatible flow skeleton (GKSL-style container).
 
-This remains a witness-level wrapper of a generator and entropy/energy
+This remains a property-level wrapper of a generator and entropy/energy
 functional decay shadow.
 -/
 abbrev GKSLPacket (n : ℕ) : Type _ :=
@@ -210,7 +210,7 @@ end GKSLPacket
 /-!
 Finite spectral-thermal normalization schema.
 
-These structures model the modular spectral partition function at the witness level:
+These structures model the modular spectral partition function at the property level:
 `Z = Σ e^{-βE} dν_H(E)` on a finite spectrum index.
 -/
 /-- Spectral data with explicit modular tilt. -/

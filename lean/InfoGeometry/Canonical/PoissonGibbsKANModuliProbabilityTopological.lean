@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.PoissonGibbsKANModuliTopological
 
 An unordered family of experts has a canonical probability readout obtained
 by averaging the normalized finite Gibbs vectors.  The nonzero-cardinality
-assumption is explicit because the average divides by `K`.
+property is explicit because the average divides by `K`.
 -/
 
 open scoped BigOperators

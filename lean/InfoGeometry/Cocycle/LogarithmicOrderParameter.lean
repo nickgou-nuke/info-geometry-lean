@@ -161,7 +161,7 @@ def logPotential (ρ : Γ → X → ℝ) (γ : Γ) (x : X) : ℝ :=
 /--
 The chain rule for the negative logarithm of a positive scalar density cocycle.
 
-The hypothesis `hmul` is the transformation-space density law
+The property `hmul` is the transformation-space density law
 `ρ (γδ) x = ρ γ (δ • x) * ρ δ x`.
 -/
 theorem logPotential_chain

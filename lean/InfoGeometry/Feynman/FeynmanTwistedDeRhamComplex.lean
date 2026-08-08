@@ -21,7 +21,7 @@ variable {M : Type*} [AddCommGroup M] [Module R M]
 abbrev Forms (R : Type*) [CommRing R] (M : Type*) [AddCommGroup M]
     [Module R M] := ExteriorAlgebra R M
 
-/-- A twist together with the square-zero hypothesis needed for `d_ω² = 0`. -/
+/-- A twist together with the square-zero property needed for `d_ω² = 0`. -/
 structure TwistedOneForm (R : Type*) [CommRing R]
     (M : Type*) [AddCommGroup M] [Module R M] where
   carrier : Forms R M

@@ -54,7 +54,7 @@ structure KRShadowClass (X : Type*) [TopologicalSpace X]
 /--
 Finite Buscher shadow: reverse the degree and both local chiral charges.
 
-This captures the algebraic involution used by the finite cascade witness.
+This captures the algebraic involution used by the finite cascade property.
 -/
 def buscher_shift {X : Type*} [TopologicalSpace X]
     {Inv : RealInvolutionSpace X} (cl : KRShadowClass X Inv) :

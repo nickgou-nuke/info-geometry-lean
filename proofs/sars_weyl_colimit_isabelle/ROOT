@@ -1,0 +1,2 @@
+session SarsWeylColimit = HOL +
+  theories SarsWeylColimit

@@ -14,7 +14,7 @@ Jaynes data.  The key point is deliberately modest:
 * then it sends the additive centered score to the next additive centered
   score.
 
-With an additional explicit mass-preservation hypothesis, equal-mass Jaynes
+With an additional explicit mass-preservation property, equal-mass Jaynes
 pairs transport to equal-mass Jaynes pairs.
 
 No probability measure limit.

@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 
 /-!
-# Fixed-point incidence ledger for the `G₂(2)` outer `C₂` witness
+# Fixed-point incidence ledger for the `G₂(2)` outer `C₂` property
 
 This module is the Lean twin of
 `tools/sympy/g2_2_fixed_point_incidence.py`.

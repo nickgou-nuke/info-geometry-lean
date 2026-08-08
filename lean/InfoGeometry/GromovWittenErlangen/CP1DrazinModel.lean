@@ -51,7 +51,7 @@ def rootShadow : HomogeneousRootShadow G where
   CurveDegree := Degree
   rootDegree := fun _ => Degree.line
 
-/-- Minimal orbit-curve witness. -/
+/-- Minimal orbit-curve property. -/
 def orbitWitness : LieOrbitCurveWitness G T Target where
   rootShadow := rootShadow
   fixedSector := fun x => x

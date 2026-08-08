@@ -9,7 +9,7 @@ This is the local real two-state Fock mode behind the prime-axis split-Majorana
 picture. It is purely finite and real.
 
 No infinite product, zeta identity, OPE, Pfaffian determinant theorem, or
-Riemann-hypothesis statement is asserted here.
+Riemann-property statement is asserted here.
 -/
 
 noncomputable section

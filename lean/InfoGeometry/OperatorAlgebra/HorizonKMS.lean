@@ -13,7 +13,7 @@ This module connects:
 It does not claim that `E8`, a five-grading, or a Clifford algebra alone proves
 Hawking radiation. The KMS and horizon/boost identifications are separate
 theorem-level obligations, and recovery/Page-curve/holographic reconstruction
-statements remain separate certified structures.
+statements remain separate property structures.
 -/
 
 import Mathlib.Tactic
@@ -549,7 +549,7 @@ theorem nonzero_memory_heat_readout
   (H.observed_heat_ne_zero_iff_gradeTwo_memory_heat_ne_zero x y).mpr hmem
 
 /--
-The bridge preserves the lower ledger's certified memory-storage implication.
+The bridge preserves the lower ledger's property memory-storage implication.
 
 This is intentionally weaker than a Page-curve or holographic recovery theorem:
 the five-graded ledger only proves that nonzero memory readout stores a
@@ -565,7 +565,7 @@ theorem full_ledger_recovery_holds :
 Exterior KMS flow calibration as an explicit equation.
 
 This is the local equation-level replacement for the removed
-`exterior_kms_flow_calibration` witness: the KMS flow supplied by the bridge is
+`exterior_kms_flow_calibration` property: the KMS flow supplied by the bridge is
 identified with a designated horizon modular flow.
 -/
 def exterior_kms_flow_calibration
@@ -760,10 +760,10 @@ This is the stronger socket tying the five-grade ledger to:
 
 * a Tomita algebra/commutant split;
 * a ring-level modular flow;
-* a `HorizonKMSThermodynamics` KMS witness;
+* a `HorizonKMSThermodynamics` KMS property;
 * horizon temperature normalization.
 
-The implication remains one-way and witness-gated: hidden grade-two memory is
+The implication remains one-way and property-gated: hidden grade-two memory is
 routed to the commutant and the reduced observer sees KMS thermality. This does
 not assert information recovery.
 -/
@@ -793,7 +793,7 @@ structure HorizonKMSThermodynamicMemoryBridge
   beta :
     ℝ
 
-  /-- Horizon/KMS thermodynamic witness. -/
+  /-- Horizon/KMS thermodynamic property. -/
   horizonKMS :
     InfoGeometry.OperatorAlgebra.Thermodynamics.HorizonKMSThermodynamics
       Op tomita modularFlow beta
@@ -870,7 +870,7 @@ theorem observer_sees_kms :
       ω.state.eval = H.horizonKMS.thermalization.reduction.observableEval :=
   H.horizonKMS.observer_sees_kms
 
-/-- The reduced observer state carries a KMS boundary certificate. -/
+/-- The reduced observer state carries a KMS boundary property. -/
 def reduced_state_is_kms :
     InfoGeometry.OperatorAlgebra.Thermodynamics.KMSAnalyticBoundary
       H.horizonKMS.thermalization.reduction.observableEval
@@ -949,7 +949,7 @@ abbrev HorizonKMSFiveGradeBridgeInstalledTarget
   HorizonKMSFiveGradeBridgeOwnerTarget J L Obs Memory
 
 /--
-The installed-owner target follows from the supplied bridge witness.
+The installed-owner target follows from the supplied bridge property.
 -/
 theorem horizonKMSFiveGradeBridgeInstalledTarget
     (J L Obs Memory : Type*)

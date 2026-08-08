@@ -1,0 +1,20 @@
+// jaynes_maxent_ideals.sing
+// Formulate the algebraic ideals defining Jaynes' Maximum Entropy Principle as a convex optimization boundary over the unnormalized phase space.
+
+ring r = 0, (x1, x2, x3, l1, l2), dp;
+
+// x1, x2, x3 represent unnormalized probabilities / state variables
+// l1, l2 represent Lagrange multipliers for the observable constraints
+
+// The critical points of the Maximum Entropy Lagrangian form an algebraic ideal
+// Representing the boundary of the convex optimization problem
+ideal I = 
+    x1 + x2 + x3 - l1,     // Sum constraint (or unnormalized total)
+    x1*x2 - l2,            // Non-linear observable constraint
+    x1^2 + x2^2 + x3^2 - 1 // Phase space boundary
+;
+
+// Compute the Groebner basis to resolve the geometry of the MaxEnt variety
+ideal G = std(I);
+
+print("Groebner basis for Jaynes' Maximum Entropy Principle ideal computed.");

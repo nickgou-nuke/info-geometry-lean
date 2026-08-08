@@ -172,7 +172,7 @@ theorem gradedFockStage_add_prime
   simp [gradedFockStageObservable, constantStageObservable,
     cylinder, diagEmbedSucc, gradedFockSupertrace_snoc]
 
-/-- Bosonic and graded stage observables cancel pointwise under the finite hypothesis. -/
+/-- Bosonic and graded stage observables cancel pointwise under the finite property. -/
 theorem fock_stage_cancellation_observable
     (xs : List ℂ) (hxs : ∀ x ∈ xs, x ≠ 1) :
     bosonicFockStageObservable xs * gradedFockStageObservable xs =

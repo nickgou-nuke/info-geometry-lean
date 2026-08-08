@@ -37,7 +37,7 @@ def IsRicciFlat (R : RicciTensor E) : Prop :=
 
 /--
 Constructive closure state for the Monge-Ampere-to-Ricci layer:
-constant Monge-Ampere density together with an explicit Ricci-flat witness.
+constant Monge-Ampere density together with an explicit Ricci-flat property.
 -/
 def MongeAmpereRicciState
     (R : RicciTensor E) (K : KaehlerInformationGeometry E) : Prop :=
@@ -306,7 +306,7 @@ private theorem vacuumEinsteinEquation_zeroScalar_of_isAdSLikeEinsteinAt
     hEin (by ring)
 
 omit [FiniteDimensional ℝ E] in
-/-- Projection: a `MongeAmpereRicciState` carries the constant-density witness. -/
+/-- Projection: a `MongeAmpereRicciState` carries the constant-density property. -/
 private theorem hasConstantMongeAmpereDensity_of_mongeAmpereRicciState
     (R : RicciTensor E) (K : KaehlerInformationGeometry E)
     (hState : MongeAmpereRicciState R K) :
@@ -348,7 +348,7 @@ theorem ricciTensor_unique_of_mongeAmpereRicciState
 
 omit [FiniteDimensional ℝ E] in
 /--
-Constructive vacuum Einstein closure from an explicit Ricci-flat witness
+Constructive vacuum Einstein closure from an explicit Ricci-flat property
 (non-bridge form).
 -/
 private theorem vacuumEinsteinEquation_of_isRicciFlat

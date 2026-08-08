@@ -127,7 +127,7 @@ theorem N_tau_real_mulVec_goldenEigenvector :
 Owner-backed readout for the finite Fibonacci braiding data:
 `F² = 1`, `det F = -1`, `B = F R F`, and the supplied Artin relation.
 
-The Artin equality is intentionally an explicit matrix hypothesis. This avoids
+The Artin equality is intentionally an explicit matrix property. This avoids
 claiming an analytic hexagon/phase proof before the cyclotomic computation is
 formalized in Lean.
 -/

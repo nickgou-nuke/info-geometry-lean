@@ -1,0 +1,21 @@
+// twistor_dmodule.sing
+// Define ALE orbifold metric as algebraic ideals and compute D-module support
+
+ring r = 0, (x, y, z), dp;
+
+// ALE space of A_n type (e.g. A_1 surface xy = z^2)
+ideal ALE = x*y - z^2;
+
+// Singular locus (Riemann zeroes)
+ideal jacob = jacob(ALE);
+ideal sing_locus = ALE + jacob;
+
+// Compute Groebner basis to find the support
+ideal G = std(sing_locus);
+
+print("ALE space of type A_1 ideal:");
+print(ALE);
+print("Jacobian ideal:");
+print(jacob);
+print("Singular locus Groebner basis (D-module support):");
+print(G);

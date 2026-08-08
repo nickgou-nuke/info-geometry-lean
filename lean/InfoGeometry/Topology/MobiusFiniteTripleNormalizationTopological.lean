@@ -31,7 +31,7 @@ instance riemannSphereTopologicalSpace : TopologicalSpace RiemannSphere := ⊥
 
 instance riemannSphereDiscreteTopology : DiscreteTopology RiemannSphere := ⟨rfl⟩
 
-/-- A canonical normalization witness selected from the finite `0,1,∞` theorem. -/
+/-- A canonical normalization property selected from the finite `0,1,∞` theorem. -/
 noncomputable def finiteTripleNormalizationWitness (p : FiniteTriple) :
     MobiusTransform :=
   Classical.choose
@@ -59,7 +59,7 @@ def finiteTripleNormalizationPacket (p : FiniteTriple) :
     (finiteTripleNormalizationPacket p).2.2.2 = (none : RiemannSphere) := by
   rfl
 
-/-- The selected witness satisfies the concrete `0,1,∞` normalization. -/
+/-- The selected property satisfies the concrete `0,1,∞` normalization. -/
 theorem finiteTripleNormalizationWitness_spec (p : FiniteTriple) :
     (finiteTripleNormalizationWitness p).eval (some p.1.1) = some 0 ∧
     (finiteTripleNormalizationWitness p).eval (some p.1.2.1) = some 1 ∧

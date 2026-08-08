@@ -8,7 +8,7 @@ import InfoGeometry.External.Virasoro.VirasoroVerma
 # InfoGeometry.Bridge.ModularVirasoro
 
 Finite bridge readouts between low Virasoro modes and Verma-module interfaces.
-This file is theorem-safe and witness-gated.
+This file is theorem-safe and property-gated.
 -/
 
 noncomputable section
@@ -61,7 +61,7 @@ structure modularVirasoroHighestWeightData
   map : VirasoroVerma 𝕜 c h →ₗ[𝓤 𝕜 (VirasoroAlgebra 𝕜)] M
   hwVec_map : map (VirasoroVerma.hwVec 𝕜 c h) = omega
 
-/-- Re-export the witness map with bridge naming. -/
+/-- Re-export the property map with bridge naming. -/
 def modularToLieVermaMap
     {M : Type*} [AddCommGroup M] [Module 𝕜 M] [Module (𝓤 𝕜 (VirasoroAlgebra 𝕜)) M]
     {c h : 𝕜}
@@ -69,7 +69,7 @@ def modularToLieVermaMap
     VirasoroVerma 𝕜 c h →ₗ[𝓤 𝕜 (VirasoroAlgebra 𝕜)] M :=
   D.map
 
-/-- The map sends the Verma highest-weight vector to the witness vacuum. -/
+/-- The map sends the Verma highest-weight vector to the property vacuum. -/
 theorem modularToLieVermaMap_hwVec
     {M : Type*} [AddCommGroup M] [Module 𝕜 M] [Module (𝓤 𝕜 (VirasoroAlgebra 𝕜)) M]
     {c h : 𝕜}

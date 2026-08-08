@@ -9,7 +9,7 @@ dissipative JKO-style step is supplied as a transverse law.
 
 It does not construct coadjoint orbits, symplectic forms, KMS states, Tomita-
 Takesaki modular groups, or global Souriau thermodynamics. Those claims remain
-behind explicit witness fields or the existing canonical coadjoint-orbit
+behind explicit property fields or the existing canonical coadjoint-orbit
 theorem packets.
 -/
 

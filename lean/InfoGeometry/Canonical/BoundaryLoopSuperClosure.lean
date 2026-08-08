@@ -13,7 +13,7 @@ properties one expects from loop-word composition and double-cover lifting:
 * boundary preservation is stable under composed loop words;
 * lifted boundary braid actions on the double cover also compose;
 * Cayley--Möbius inversion commutes with a boundary braid action under an
-  explicit finite commutation hypothesis on labels.
+  explicit finite commutation property on labels.
 
 No analytic loop group.
 No Poincaré-ball topology.

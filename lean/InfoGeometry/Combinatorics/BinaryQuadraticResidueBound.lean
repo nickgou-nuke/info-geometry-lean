@@ -9,7 +9,7 @@ The numerical square-root inequality is the cardinality conclusion of the
 standard QR counting argument.  The argument constructs an injection from
 the `p` cyclic positions into the set of `d^2 - d + 1` admissible difference
 classes.  This lemma records that final counting step without hiding it in a
-certificate field or a finite search.
+property field or a finite search.
 -/
 
 theorem square_root_bound_of_injective

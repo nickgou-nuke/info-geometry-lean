@@ -218,7 +218,7 @@ theorem superHamiltonian_canonical_split_exists
 
 /--
 CP-002/CP-003 bridge clause:
-one commutation witness yields both split surfaces
+one commutation property yields both split surfaces
 (nested projector form and projector-compressed form).
 -/
 @[rep_depth transport]
@@ -296,7 +296,7 @@ theorem cp003_singular_polar_kan_package_of_commute
 
 /--
 CP-003 extracted commutator clause:
-from one commutation witness, recover the Drazin-vs-dilation commutator law.
+from one commutation property, recover the Drazin-vs-dilation commutator law.
 -/
 @[rep_depth transport, capstone]
 theorem singular_decomposition_surrogate_commutator_of_commute

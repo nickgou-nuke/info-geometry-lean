@@ -183,7 +183,7 @@ structure CliffordFractalWaveletSocket
   coords : CliffordFractalWaveletFierzChannel → ℝ
 
 -- ============================================================================
--- witness-gated (Native Closure Mandated: Closure Debt) Admissibility
+-- property-gated (Native Closure Mandated: Closure Debt) Admissibility
 -- ============================================================================
 
 /--
@@ -269,14 +269,14 @@ structure ProjectiveWeylClosureAdmissible
     [Ring Op] [Star Op] [SMul ℝ Op]
     (S : CliffordFractalWaveletSocket Op) where
 
-/-- Backwards-compatible name for the former Drazin--Hodge envelope witness. -/
+/-- Backwards-compatible name for the former Drazin--Hodge envelope property. -/
 abbrev DrazinHodgeEnvelopeAdmissible
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
     (S : CliffordFractalWaveletSocket Op) : Prop :=
   KreinDrazinNullDefectAdmissible S
 
-/-- Backwards-compatible short name for the Krein-Drazin null-defect witness. -/
+/-- Backwards-compatible short name for the Krein-Drazin null-defect property. -/
 abbrev EnvelopeAdmissible
     {Op : Type*}
     [Ring Op] [Star Op] [SMul ℝ Op]
@@ -364,13 +364,13 @@ structure CliffordFractalWaveletFierzKleinLaw
   -/
   quadric_zero_property : CliffordFractalWaveletFierzKleinResidual socket.coords = 0
 
-  /-- Fierz--Pauli--Kofink witness; separate from Clifford anticommutation. -/
+  /-- Fierz--Pauli--Kofink property; separate from Clifford anticommutation. -/
   fierz_admissible : FierzPauliKofinkAdmissible socket.coords
 
-  /-- Tilt/switch Clifford witness; separate from Fierz admissibility. -/
+  /-- Tilt/switch Clifford property; separate from Fierz admissibility. -/
   clifford_admissible : TiltSwitchCliffordAdmissible socket
 
-  /-- Krein-Drazin null-defect witness; separate from Fierz admissibility. -/
+  /-- Krein-Drazin null-defect property; separate from Fierz admissibility. -/
   drazin_admissible : KreinDrazinNullDefectAdmissible socket
 
 -- ============================================================================

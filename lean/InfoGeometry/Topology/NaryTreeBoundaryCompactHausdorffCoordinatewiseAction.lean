@@ -5,7 +5,7 @@ import InfoGeometry.Topology.NaryTreeBoundaryCompactHausdorffCylinderSeparation
 
 An alphabet homeomorphism acts on the native boundary coordinatewise.  The
 action transports a compact prefix cylinder to the cylinder with the
-transformed finite word; no discreteness assumption is used.
+transformed finite word; no discreteness property is used.
 -/
 
 noncomputable section

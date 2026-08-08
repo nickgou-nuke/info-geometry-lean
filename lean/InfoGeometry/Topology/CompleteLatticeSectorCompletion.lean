@@ -24,7 +24,7 @@ The kernel-checked content lives in:
 
 Importing this file gives the topology corridor the same direct access to the
 canonical definitions and proved theorems, without restating them through
-additional witness records.
+additional property records.
 -/
 
 namespace InfoGeometry.Topology.CompleteLatticeSectorCompletion

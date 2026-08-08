@@ -67,7 +67,7 @@ theorem kms_stationarity :
 Stationarity for an explicitly supplied KMS/reference functional.
 
 The analytic assertion that `kms_state` is the KMS state is represented by the
-identification hypothesis `h_kms`; this theorem only transports the installed
+identification property `h_kms`; this theorem only transports the installed
 Markov stationarity law through that identification.
 -/
 theorem kms_reference_stationarity

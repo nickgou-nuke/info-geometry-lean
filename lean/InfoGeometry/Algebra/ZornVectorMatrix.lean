@@ -396,7 +396,7 @@ def norm (X : ZornVectorMatrix R) : R :=
 def conj (X : ZornVectorMatrix R) : ZornVectorMatrix R :=
   ⟨X.b, fun i => -X.v i, fun i => -X.w i, X.a⟩
 
-/-- Associator `(XY)Z - X(YZ)`, used to witness non-associativity. -/
+/-- Associator `(XY)Z - X(YZ)`, used to property non-associativity. -/
 def associator (X Y Z : ZornVectorMatrix R) : ZornVectorMatrix R :=
   sub (mul (mul X Y) Z) (mul X (mul Y Z))
 
@@ -1153,7 +1153,7 @@ theorem associator_flexible (X Y : ZornVectorMatrix R) :
       Fin.sum_univ_three]
     ring
 
-theorem nonassociative_witness [Nontrivial R] :
+theorem nonassociative_property [Nontrivial R] :
     mul (mul (U 0 : ZornVectorMatrix R) (U 1)) (U 2) ≠
       mul (U 0) (mul (U 1) (U 2)) := by
   intro h
@@ -1385,7 +1385,7 @@ theorem commutatorJacobiator_eq_associator_alternating
   ext i <;> simp [sub, add, neg] <;> abel_nf
 
 /--
-Concrete Jacobiator witness for the element commutator.
+Concrete Jacobiator property for the element commutator.
 
 This theorem is intentionally a computation, not a Lie-algebra wrapper: the
 Zorn product is non-associative, and its element commutator does not satisfy
@@ -1418,7 +1418,7 @@ theorem commutator_jacobi_U_zero_U_one_U_two_ne_zero (h6 : (6 : R) ≠ 0) :
   simp [diagonal, zero] at ha
   exact h6 ha
 
-/-- Norm readout of the upper-sector Jacobiator witness. -/
+/-- Norm readout of the upper-sector Jacobiator property. -/
 theorem norm_commutator_jacobi_U_zero_U_one_U_two :
     norm (commutatorJacobiator (U 0 : ZornVectorMatrix R) (U 1) (U 2)) =
       -(36 : R) := by
@@ -1454,7 +1454,7 @@ theorem commutator_jacobi_V_zero_V_one_V_two_ne_zero (h6 : (6 : R) ≠ 0) :
   simp [diagonal, zero] at ha
   exact h6 ha
 
-/-- Norm readout of the lower-sector Jacobiator witness. -/
+/-- Norm readout of the lower-sector Jacobiator property. -/
 theorem norm_commutator_jacobi_V_zero_V_one_V_two :
     norm (commutatorJacobiator (V 0 : ZornVectorMatrix R) (V 1) (V 2)) =
       -(36 : R) := by

@@ -91,7 +91,7 @@ theorem kSplit_reconstruction_eq_phaseSplit
   simp [kLinearPart_eq_phaseLinearPart, kAntilinearPart_eq_phaseAntilinearPart]
 
 /--
-Intertwiner certificate for neural/operator encoders:
+Intertwiner property for neural/operator encoders:
 if an operator commutes with the relative-modular `K`-generator, its relative-modular
 derivation vanishes.
 -/
@@ -120,7 +120,7 @@ theorem projectedEvenGenerator_lorentzTransportFixed
     DrazinSupercharge.CertifiedInverseKernel.superHamiltonianK CIK := by
   exact projectedEvenGenerator_fixed_under_lorentzChiralConeOrbit (E := E) CIK τ
 
-/-- Wedge-parametrized form of the Lorentz-transport fixedness certificate. -/
+/-- Wedge-parametrized form of the Lorentz-transport fixedness property. -/
 theorem projectedEvenGenerator_lorentzWedgeTransportFixed
     (CIK : CertifiedInverseKernel H₂) (τwedge : ℝ) :
     lorentzChiralConeOrbit (E := E) CIK
@@ -188,7 +188,7 @@ theorem weightedNonequilibrium_rnBudget_pos
 
 /--
 Weighted nonequilibrium residual domination by the explicit positive RN budget.
-This is the stepwise certificate used before Sinkhorn/KMS closure promotion.
+This is the stepwise property used before Sinkhorn/KMS closure promotion.
 -/
 theorem weightedNonequilibrium_residual_le_rnBudget
     (K : AlgebraEnd F) (β : ℝ)

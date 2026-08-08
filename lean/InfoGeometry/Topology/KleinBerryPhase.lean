@@ -5,7 +5,7 @@ namespace InfoGeometry.Topology
 /-!
 # Local Berry Phase Invariant around Non-Orientable Exceptional Points
 
-This module natively formalizes the SymPy exact-rational certificate 
+This module natively formalizes the SymPy exact-rational property 
 for the Berry phase cancellation on the Klein Bottle manifold.
 
 ## Physics Context

@@ -88,7 +88,7 @@ missing native layer:
 * forgetting multiplication and star recovers the existing
   `FilteredColimit.DirectInductiveSystem` and `InductiveCocone` owners.
 
-No commutativity or diagonalization hypothesis is imposed.
+No commutativity or diagonalization property is imposed.
 -/
 
 namespace CStarStateColimit.Native

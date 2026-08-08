@@ -14,7 +14,7 @@ import InfoGeometry.Projective.FiveGradedCentralizer
 
 #### BUCKET 2: CONDITIONAL INTERFACE
 
-- `ModularTimeFlow.conserves_information` is an explicit witness field.
+- `ModularTimeFlow.conserves_information` is an explicit property field.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 
@@ -23,12 +23,12 @@ import InfoGeometry.Projective.FiveGradedCentralizer
   the selected representation.
 - Prove any Hayden-Preskill or fast-scrambling estimate from that
   representation.
-- Connect the rank-32 Betti certificate to protected Majorana/Fibonacci boundary
+- Connect the rank-32 Betti property to protected Majorana/Fibonacci boundary
   modes.
 
 This module is an interface layer.  It records the finite Fibonacci register
 cardinality already present in the repo and packages a supplied unitary
-braiding/conservation witness.  It does not prove density of a braid-group
+braiding/conservation property.  It does not prove density of a braid-group
 image, a fast-scrambling bound, or existence of Majorana zero modes on a
 physical horizon.
 -/
@@ -55,7 +55,7 @@ def InformationConservationEquation {n : ℕ}
       (braidOperator * state.state_vector) =
     state.state_vector.conjTranspose * state.state_vector
 
-/-- A supplied finite unitary braiding operator with an explicit conservation certificate. -/
+/-- A supplied finite unitary braiding operator with an explicit conservation property. -/
 structure ModularTimeFlow (n : ℕ) where
   braid_operator : Matrix (Fin n) (Fin n) ℂ
   is_unitary : braid_operator.conjTranspose * braid_operator = 1
@@ -83,7 +83,7 @@ theorem horizonFibonacciRegister_card (N : ℕ) :
 
 /--
 Finite unitary-braiding packet: supplied unitarity plus a supplied conservation
-certificate.
+property.
 -/
 theorem finite_unitary_braiding_packet {n : ℕ}
     (flow : ModularTimeFlow n) (state : HorizonMicrostates n) :

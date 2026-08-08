@@ -5,7 +5,7 @@ import Mathlib
 
 Each stage has its own semiring and topology.  Equivariant ring-homomorphisms
 induce coefficientwise crossed-product maps; continuity is carried by an
-explicit witness.  No direct-limit or completion theorem is asserted here.
+explicit property.  No direct-limit or completion theorem is asserted here.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.FiniteGroupCrossedProductTopologicalFamily

@@ -9,8 +9,8 @@ import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 Finite Boolean/exterior-state bridge between prime subsets and parity
 coefficients.  The Weyl sign is attached only to square-free subset states; the
 zero value on nonsquare-free integers records the absence of any Boolean
-subset-state witness and is projected from Mathlib's arithmetic Möbius theorem,
-not stored as a witness field.
+subset-state property and is projected from Mathlib's arithmetic Möbius theorem,
+not stored as a property field.
 -/
 
 namespace InfoGeometry.Canonical.ParityTraceWitness

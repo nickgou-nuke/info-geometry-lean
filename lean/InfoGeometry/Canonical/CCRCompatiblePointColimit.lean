@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.FilteredQCCRCompatiblePointColimit
 /-!
 # Compatible CCR witnesses in the filtered q-CCR zero-fiber colimit
 
-This is the commutator-sign counterpart of the CAR witness descent.  The
+This is the commutator-sign counterpart of the CAR property descent.  The
 finite relation and its transition compatibility are carried into the common
 noncommutative q-CCR zero-fiber colimit through the generic `TopCat` map.
 -/

@@ -29,9 +29,9 @@ deriving Repr, BEq, Inhabited
 inductive ContaminationState where
   | clean
   | honest_sorry
-  | forbidden_axiom
+  | forbidden_property
   | opaque_boundary
-  | local_axiom
+  | local_property
   | contaminated
 deriving Repr, BEq, Inhabited
 

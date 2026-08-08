@@ -105,7 +105,7 @@ theorem twoLevelPartition_pos (r β : ℝ) : 0 < partitionQ r β :=
   partitionQ_pos r β
 
 /--
-The scalar two-level packet gives a concrete witness that the capstone surface is
+The scalar two-level packet gives a concrete property that the capstone surface is
 nonempty: there exists a partition function with positive values and a well-defined
 Boltzmann potential.
 -/

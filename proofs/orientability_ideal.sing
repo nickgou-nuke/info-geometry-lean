@@ -1,0 +1,17 @@
+// orientability_ideal.sing
+// Formulate the algebraic ideals where the determinant of the transition map is strictly positive (preserving orientation) versus negative.
+
+ring r = 0, (u, v, d), dp;
+
+// Example determinant function
+poly det_J = u^2 + v^2 - 1; 
+
+ideal I_zero = det_J;
+
+print("Ideal separating positive and negative orientations:");
+I_zero;
+
+ideal I_std = std(I_zero);
+print("Standard basis of the ideal:");
+I_std;
+quit;

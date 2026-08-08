@@ -4,7 +4,7 @@ import InfoGeometry.Topology.SplitCliffordChargedFockWitnessTopological
 /-!
 # Topological packet for the charged-Fock Sugawara output
 
-The concrete charged-Fock witness already supplies the canonical
+The concrete charged-Fock property already supplies the canonical
 `CurrentSugawaraMorphism`.  This owner packages the dependent family of
 those morphisms and exposes its two defining generator readouts.  The
 topological statement is deliberately discrete; it does not claim a
@@ -22,7 +22,7 @@ noncomputable section
 
 variable {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
 
-/-- Sugawara morphism attached to the concrete charged-Fock witness. -/
+/-- Sugawara morphism attached to the concrete charged-Fock property. -/
 def representedChargedFockSugawaraMorphism (α : 𝕜) :
     CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
   (representedChargedFockWitness (𝕜 := 𝕜) α).toCurrentSugawaraMorphism

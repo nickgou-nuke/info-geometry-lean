@@ -19,7 +19,7 @@ with `2` invertible.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 The Drazin inverse and projector claims depend only on the explicit tripotent
-hypothesis `hT : T ^ 3 = T`.
+property `hT : T ^ 3 = T`.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 No theorem here asserts a KMS state, a critical-line theorem, Riemann-zero

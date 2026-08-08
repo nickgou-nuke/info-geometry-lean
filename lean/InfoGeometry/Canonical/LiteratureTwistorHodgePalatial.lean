@@ -19,7 +19,7 @@ This module records the literature-facing surface connecting:
 The file is intentionally conservative.  It does not identify the repo's graph
 Hodge operator with smooth exterior-calculus Hodge star, and it does not claim a
 full analytic Penrose transform.  Those analytic facts enter only as explicit
-witness fields.
+property fields.
 -/
 
 namespace InfoGeometry.Canonical.LiteratureTwistorHodgePalatial
@@ -127,7 +127,7 @@ theorem contourReadout_eq_field :
         P.contour.field :=
   P.contour.contourReadout_eq
 
-/-- The represented form lies in one of the two Hodge sectors by hypothesis. -/
+/-- The represented form lies in one of the two Hodge sectors by property. -/
 @[rep_depth krein]
 theorem representedForm_mem_hodge_sector :
     P.hodge.selfDual P.representedForm ∨ P.hodge.antiSelfDual P.representedForm :=
@@ -172,7 +172,7 @@ Bridge package from palatial noncommutative twistors to the Penrose-Hodge
 contour lane.
 
 This is the legitimate place to assert that a particular operator realization
-respects the contour/Hodge field.  The compatibility is an explicit hypothesis,
+respects the contour/Hodge field.  The compatibility is an explicit property,
 not a theorem derived from graph proximity or prose.
 -/
 @[rep_depth transport]

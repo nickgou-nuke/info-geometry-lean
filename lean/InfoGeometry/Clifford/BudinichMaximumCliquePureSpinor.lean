@@ -22,7 +22,7 @@ maximum-clique formulation:
 The file is intentionally conservative:
 
 * it does not claim a universal theorem that every graph admits a specific
-  complex factorization witness;
+  complex factorization property;
 * it packages factorization witnesses explicitly when they are supplied;
 * it reuses the already-proved clique/Gram and null-action results from the
   existing Budinich owner files.
@@ -41,16 +41,16 @@ variable {α : Type*}
 /-! ## 1. Graph side: explicit square-root packet -/
 
 /--
-An explicit complex symmetric adjacency square-root witness.
+An explicit complex symmetric adjacency square-root property.
 
 This is the paper's `A = B²` layer, represented as an explicit packet.
 No existence theorem is claimed here.
 -/
 structure GraphAdjacencySquareRoot (G : SimpleGraph α) [Fintype α]
     [DecidableRel G.Adj] [DecidableEq α] where
-  /-- Complex matrix witness. -/
+  /-- Complex matrix property. -/
   B : Matrix α α ℂ
-  /-- Symmetry of the witness. -/
+  /-- Symmetry of the property. -/
   symmetric : Matrix.transpose B = B
   /-- The square recovers the adjacency matrix. -/
   square_eq : B * B = G.adjMatrix ℂ
@@ -140,17 +140,17 @@ Paper-safe bundle of the graph Gram side and the pure-spinor null side.
 
 This packages the two constructive ingredients the paper uses:
 
-* a graph witness with a complex symmetric square-root packet;
-* a maximum-clique witness, read either as clique or Gram-clique;
+* a graph property with a complex symmetric square-root packet;
+* a maximum-clique property, read either as clique or Gram-clique;
 * a concrete pure-spinor null line in the split `2 × 2` seed.
 -/
 structure BudinichCliqueSpinorPacket (G : SimpleGraph α) [Fintype α]
     [DecidableEq α] [DecidableRel G.Adj] where
-  /-- Complex symmetric square-root witness for the adjacency matrix. -/
+  /-- Complex symmetric square-root property for the adjacency matrix. -/
   squareRoot : GraphAdjacencySquareRoot G
-  /-- Maximum clique cardinality witness. -/
+  /-- Maximum clique cardinality property. -/
   cliqueCard : ℕ
-  /-- Maximum clique witness. -/
+  /-- Maximum clique property. -/
   maximumClique : IsMaximumCliqueCard G cliqueCard
   /-- Concrete pure spinor carrier. -/
   spinor : Spinor2
@@ -177,10 +177,10 @@ theorem pureSpinor_on_line
 
 end BudinichCliqueSpinorPacket
 
-/-! ## 4. Finite maximum-clique witness -/
+/-! ## 4. Finite maximum-clique property -/
 
 /--
-An explicit maximum-clique finset witness.
+An explicit maximum-clique finset property.
 
 This is the finite combinatorial normalization used by the paper:
 it packages the existence of a maximum clique as an explicit finset and its

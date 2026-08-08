@@ -97,7 +97,7 @@ theorem conjugate_eq_self_iff_commute
 If the square of the Hopf antipode is implemented by conjugation by a unit
 `u`, then its fixed elements are exactly the elements commuting with `u`.
 
-The innerness hypothesis is explicit: it is not a consequence of
+The innerness property is explicit: it is not a consequence of
 `HopfAlgebra R A` alone.
 -/
 theorem antipode_sq_eq_self_iff_commute_of_conjugation
@@ -118,7 +118,7 @@ If an inner implementer of the antipode square acts noncentrally on `x`, then
 the antipode is not involutive on `x`.
 
 No implication from entropy production or from `HopfAlgebra R A` alone is
-used; the inner-implementation law and the noncommutation witness are explicit.
+used; the inner-implementation law and the noncommutation property are explicit.
 -/
 theorem antipode_sq_ne_self_of_not_commute_of_conjugation
     {R : Type u} {A : Type v}
@@ -135,7 +135,7 @@ theorem antipode_sq_ne_self_of_not_commute_of_conjugation
     ((antipode_sq_eq_self_iff_commute_of_conjugation u hconj x).mp hfix)
 
 /--
-A noncentral inner implementer supplies an explicit witness that the antipode
+A noncentral inner implementer supplies an explicit property that the antipode
 square is not the identity.
 -/
 theorem exists_antipode_sq_ne_self_of_exists_not_commute

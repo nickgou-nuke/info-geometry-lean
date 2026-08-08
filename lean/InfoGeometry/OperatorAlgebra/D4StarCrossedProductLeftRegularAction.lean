@@ -6,7 +6,7 @@ import InfoGeometry.OperatorAlgebra.D4StarFiniteCrossedProduct
 
 Left multiplication gives an honest noncommutative operator action.  Since
 the finite carrier is not yet equipped with a proved topological algebra
-structure, continuity is carried by an explicit witness rather than inferred
+structure, continuity is carried by an explicit property rather than inferred
 or postulated.
 -/
 

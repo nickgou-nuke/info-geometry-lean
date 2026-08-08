@@ -1,0 +1,49 @@
+cff-version: 1.2.0
+message: "If you use this software, its formalized theorems, or architectural concepts, please cite it using the metadata from this file."
+title: "info-geometry-lean"
+type: software
+license: Apache-2.0
+date-released: 2026-06-15
+repository-code: "https://github.com/nickgou-nuke/auto"
+url: "https://github.com/nickgou-nuke/auto"
+abstract: >
+  Lean 4 and SymPy formalization project for the information geometry of
+  quantum gravity, featuring a maintained representation-depth theorem spine
+  spanning projective geometry (PGA), operator algebras, and thermodynamic
+  inference. The repository identifies a stable core centered on modular and
+  spectral operator theory, Krein-Clifford doubled geometry, and
+  Drazin/inverse-kernel anomaly analysis with Einstein-source bridges.
+
+  Recent architectural extensions formalize the holographic boundary of
+  Conformal Cyclic Cosmology (CCC) via Cuntz-Toeplitz noncommutative
+  quasicrystals (Penrose tilings), where matter-field sockets are modeled by
+  Golden Ratio q-deformed Canonical Commutation Relations (q-CCR). The framework
+  links the E_{7(7)} Freudenthal black-hole entropy invariant (J_4) to scalar
+  microscopic entropy anchors on the fractal boundary. It also institutes an
+  information-geometric UV cutoff: the self-concordant Massieu-Planck vacuum
+  flow, measured by the Itakura-Saito divergence, terminates at a positive
+  minimal phase-space pixel bounded by the Cramer-Rao information metric.
+
+  The workflow couples hypothesis-first black-book research with theorem-target
+  promotion. Directed by human architectural vision and executed in open
+  collaboration with AI coding agents, the codebase is secured under Lean-native
+  architecture audits, DAG diagnostics, SymPy witnesses, theorem-honesty
+  sockets, and strict zero-debt vacuity checks.
+authors:
+  - family-names: Goutev
+    given-names: Nikolay
+    affiliation: "Institute for Nuclear Research and Nuclear Energy (INRNE-BAS), Bulgarian Academy of Sciences"
+  - family-names: Tonev
+    given-names: Dimitar
+    affiliation: "Institute for Nuclear Research and Nuclear Energy (INRNE-BAS), Bulgarian Academy of Sciences"
+keywords:
+  - Lean 4
+  - SymPy
+  - information geometry
+  - noncommutative geometry
+  - Cuntz-Toeplitz algebras
+  - q-CCR
+  - Penrose tilings
+  - Clifford algebras
+  - Cramer-Rao bound
+  - Itakura-Saito divergence

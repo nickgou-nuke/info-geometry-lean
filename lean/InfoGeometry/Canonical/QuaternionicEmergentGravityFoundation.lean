@@ -9,7 +9,7 @@ Finite theorem-safe quaternionic foundations for an emergent-gravity lane, built
 only from the committed Dirac-Pauli gamma owner surface.
 
 This file formalizes:
-- the finite Cartan-decomposition witness inside the explicit `4 × 4` gamma
+- the finite Cartan-decomposition property inside the explicit `4 × 4` gamma
   matrices;
 - the corrected quaternion multiplication laws;
 - a finite quaternion-field norm identity;

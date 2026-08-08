@@ -6,7 +6,7 @@ import InfoGeometry.Physics.SolderingSpinConnectionBogoliubov
 
 The soldering owner supplies a concrete matrix metric, while the Ricci owner
 uses the abstract `SplitVielbein` structure.  This file is the small typed
-interface between them.  The metric agreement is an explicit hypothesis:
+interface between them.  The metric agreement is an explicit property:
 the matrix soldering construction does not by itself identify an arbitrary
 information-geometry metric with that matrix.
 -/

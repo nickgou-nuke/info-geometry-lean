@@ -200,7 +200,7 @@ structure JonesFromMaterialCalibration
 /--
 Canonical material-to-Jones calibration induced by Fresnel coefficients.
 
-The remaining witness is the Fresnel boundary law itself, carried by `F`; the
+The remaining property is the Fresnel boundary law itself, carried by `F`; the
 Jones event, basis, and diagonal coefficient equalities are constructed.
 -/
 def jonesFromMaterialCalibrationOfFresnel

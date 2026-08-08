@@ -1,0 +1,1070 @@
+[
+  {
+    "cl11_rows": [
+      {
+        "name": "SplitClifford.Q11",
+        "module": "SplitClifford",
+        "kind": null,
+        "used_by": 32,
+        "deps_count": 2,
+        "users": [
+          {
+            "name": "SplitClifford.chiralProjMinus11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.chiralProjMinus11_idempotent",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.chiralProjPlus11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.chiralProjPlus11_add_minus",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.chiralProjPlus11_idempotent",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.chiralProjPlus11_mul_minus",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.Cl11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.cl11_from_cl00_step",
+            "module": "SplitClifford",
+            "kind": "def"
+          },
+          {
+            "name": "SplitClifford.cl22_as_cl11_gTensor_cl11",
+            "module": "SplitClifford",
+            "kind": "def"
+          },
+          {
+            "name": "SplitClifford.cl22_from_cl11_step",
+            "module": "SplitClifford",
+            "kind": "def"
+          },
+          {
+            "name": "SplitClifford.cl33_from_cl22_step",
+            "module": "SplitClifford",
+            "kind": "def"
+          },
+          {
+            "name": "SplitClifford.cl55_from_cl44_step",
+            "module": "SplitClifford",
+            "kind": "def"
+          },
+          {
+            "name": "SplitClifford.clnn_succ_factor",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.embedPrev",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.eNeg",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.eNeg_jordan_self",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.eNeg_sq",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.ePos",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.ePos_eNeg_jordan_zero",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.ePos_eNeg_lie_eq_mul",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.ePos_jordan_self",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.ePos_mul_eNeg",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.ePos_sq",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.gamma11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.gamma11_sq",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          }
+        ],
+        "deps": [
+          {
+            "name": "SplitClifford.Qneg",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Qpos",
+            "module": "SplitClifford",
+            "kind": null
+          }
+        ]
+      },
+      {
+        "name": "SplitClifford.Cl11",
+        "module": "SplitClifford",
+        "kind": null,
+        "used_by": 18,
+        "deps_count": 1,
+        "users": [
+          {
+            "name": "SplitClifford.chiralProjMinus11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.chiralProjMinus11_idempotent",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.chiralProjPlus11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.chiralProjPlus11_add_minus",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.chiralProjPlus11_idempotent",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.chiralProjPlus11_mul_minus",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.eNeg",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.eNeg_jordan_self",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.eNeg_sq",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.ePos",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.ePos_eNeg_jordan_zero",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.ePos_eNeg_lie_eq_mul",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.ePos_jordan_self",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.ePos_mul_eNeg",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.ePos_sq",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.gamma11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.gamma11_sq",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.jordanR_add_lieR_clifford",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          }
+        ],
+        "deps": [
+          {
+            "name": "SplitClifford.Q11",
+            "module": "SplitClifford",
+            "kind": null
+          }
+        ]
+      },
+      {
+        "name": "SplitClifford.gamma11",
+        "module": "SplitClifford",
+        "kind": null,
+        "used_by": 7,
+        "deps_count": 4,
+        "users": [
+          {
+            "name": "SplitClifford.chiralProjMinus11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.chiralProjMinus11_idempotent",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.chiralProjPlus11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.chiralProjPlus11_add_minus",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.chiralProjPlus11_idempotent",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.chiralProjPlus11_mul_minus",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.gamma11_sq",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          }
+        ],
+        "deps": [
+          {
+            "name": "SplitClifford.Cl11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.eNeg",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.ePos",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Q11",
+            "module": "SplitClifford",
+            "kind": null
+          }
+        ]
+      },
+      {
+        "name": "SplitClifford.eNeg",
+        "module": "SplitClifford",
+        "kind": null,
+        "used_by": 7,
+        "deps_count": 2,
+        "users": [
+          {
+            "name": "SplitClifford.eNeg_jordan_self",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.eNeg_sq",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.ePos_eNeg_jordan_zero",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.ePos_eNeg_lie_eq_mul",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.ePos_mul_eNeg",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.gamma11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.gamma11_sq",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          }
+        ],
+        "deps": [
+          {
+            "name": "SplitClifford.Cl11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Q11",
+            "module": "SplitClifford",
+            "kind": null
+          }
+        ]
+      },
+      {
+        "name": "SplitClifford.ePos",
+        "module": "SplitClifford",
+        "kind": null,
+        "used_by": 7,
+        "deps_count": 2,
+        "users": [
+          {
+            "name": "SplitClifford.ePos_eNeg_jordan_zero",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.ePos_eNeg_lie_eq_mul",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.ePos_jordan_self",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.ePos_mul_eNeg",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.ePos_sq",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.gamma11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.gamma11_sq",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          }
+        ],
+        "deps": [
+          {
+            "name": "SplitClifford.Cl11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Q11",
+            "module": "SplitClifford",
+            "kind": null
+          }
+        ]
+      },
+      {
+        "name": "SplitClifford.ePos_mul_eNeg",
+        "module": "SplitClifford",
+        "kind": null,
+        "used_by": 3,
+        "deps_count": 5,
+        "users": [
+          {
+            "name": "SplitClifford.ePos_eNeg_jordan_zero",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.ePos_eNeg_lie_eq_mul",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.gamma11_sq",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          }
+        ],
+        "deps": [
+          {
+            "name": "SplitClifford.Cl11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.eNeg",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.ePos",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.pos_ortho_neg",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Q11",
+            "module": "SplitClifford",
+            "kind": null
+          }
+        ]
+      },
+      {
+        "name": "SplitClifford.chiralProjMinus11",
+        "module": "SplitClifford",
+        "kind": null,
+        "used_by": 3,
+        "deps_count": 4,
+        "users": [
+          {
+            "name": "SplitClifford.chiralProjMinus11_idempotent",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.chiralProjPlus11_add_minus",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.chiralProjPlus11_mul_minus",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          }
+        ],
+        "deps": [
+          {
+            "name": "SplitClifford.Cl11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.gamma11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.jordanR._proof_1",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Q11",
+            "module": "SplitClifford",
+            "kind": null
+          }
+        ]
+      },
+      {
+        "name": "SplitClifford.chiralProjPlus11",
+        "module": "SplitClifford",
+        "kind": null,
+        "used_by": 3,
+        "deps_count": 4,
+        "users": [
+          {
+            "name": "SplitClifford.chiralProjPlus11_add_minus",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.chiralProjPlus11_idempotent",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.chiralProjPlus11_mul_minus",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          }
+        ],
+        "deps": [
+          {
+            "name": "SplitClifford.Cl11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.gamma11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.jordanR._proof_1",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Q11",
+            "module": "SplitClifford",
+            "kind": null
+          }
+        ]
+      },
+      {
+        "name": "SplitClifford.eNeg_sq",
+        "module": "SplitClifford",
+        "kind": null,
+        "used_by": 2,
+        "deps_count": 8,
+        "users": [
+          {
+            "name": "SplitClifford.eNeg_jordan_self",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.gamma11_sq",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          }
+        ],
+        "deps": [
+          {
+            "name": "SplitClifford.Cl11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.eNeg",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.eNeg.eq_1",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Q11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Qneg",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Qpos",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Qpos._proof_1",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Qpos._proof_2",
+            "module": "SplitClifford",
+            "kind": null
+          }
+        ]
+      },
+      {
+        "name": "SplitClifford.ePos_sq",
+        "module": "SplitClifford",
+        "kind": null,
+        "used_by": 2,
+        "deps_count": 8,
+        "users": [
+          {
+            "name": "SplitClifford.ePos_jordan_self",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          },
+          {
+            "name": "SplitClifford.gamma11_sq",
+            "module": "SplitClifford",
+            "kind": "theorem"
+          }
+        ],
+        "deps": [
+          {
+            "name": "SplitClifford.Cl11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.ePos",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.ePos.eq_1",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Q11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Qneg",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Qpos",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Qpos._proof_1",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Qpos._proof_2",
+            "module": "SplitClifford",
+            "kind": null
+          }
+        ]
+      },
+      {
+        "name": "SplitClifford.pos_ortho_neg",
+        "module": "SplitClifford",
+        "kind": null,
+        "used_by": 1,
+        "deps_count": 0,
+        "users": [
+          {
+            "name": "SplitClifford.ePos_mul_eNeg",
+            "module": "SplitClifford",
+            "kind": null
+          }
+        ],
+        "deps": []
+      },
+      {
+        "name": "SplitClifford.gamma11_sq",
+        "module": "SplitClifford",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 8,
+        "users": [],
+        "deps": [
+          {
+            "name": "SplitClifford.Cl11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.eNeg",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.eNeg_sq",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.ePos",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.ePos_mul_eNeg",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.ePos_sq",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.gamma11",
+            "module": "SplitClifford",
+            "kind": null
+          },
+          {
+            "name": "SplitClifford.Q11",
+            "module": "SplitClifford",
+            "kind": null
+          }
+        ]
+      }
+    ],
+    "top_split_theorems": [
+      {
+        "name": "SplitClifford.trifactorValue_is_OP_root",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 10
+      },
+      {
+        "name": "SplitClifford.chiralProjPlus11_mul_minus",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 9
+      },
+      {
+        "name": "SplitClifford.splitVolume_succ",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 9
+      },
+      {
+        "name": "SplitClifford.gamma11_sq",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 8
+      },
+      {
+        "name": "SplitClifford.lastNeg_sq",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 8
+      },
+      {
+        "name": "SplitClifford.lastPos_mul_lastNeg",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 8
+      },
+      {
+        "name": "SplitClifford.lastPos_sq",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 8
+      },
+      {
+        "name": "SplitClifford.chiralProjMinus11_idempotent",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 7
+      },
+      {
+        "name": "SplitClifford.chiralProjPlus11_idempotent",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 7
+      },
+      {
+        "name": "SplitClifford.ePos_eNeg_jordan_zero",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 7
+      },
+      {
+        "name": "SplitClifford.ePos_eNeg_lie_eq_mul",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 7
+      },
+      {
+        "name": "SplitClifford.chiralProjPlus11_add_minus",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 6
+      },
+      {
+        "name": "SplitClifford.eNeg_jordan_self",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 6
+      },
+      {
+        "name": "SplitClifford.ePos_jordan_self",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 6
+      },
+      {
+        "name": "SplitClifford.splitVolume_zero",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 6
+      },
+      {
+        "name": "SplitClifford.jordanR_add_lieR_clifford",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 5
+      },
+      {
+        "name": "SplitClifford.blochCenter_mixed",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 4
+      },
+      {
+        "name": "SplitClifford.finite_two_level_not_exact_CCR",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 4
+      },
+      {
+        "name": "SplitClifford.affineSuperBracket_alpha_one",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 3
+      },
+      {
+        "name": "SplitClifford.affineSuperBracket_alpha_zero",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 3
+      },
+      {
+        "name": "SplitClifford.blochMix_one_left",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 3
+      },
+      {
+        "name": "SplitClifford.blochMix_zero_left",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 3
+      },
+      {
+        "name": "SplitClifford.jordanC_add_lieC_matrix",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 3
+      },
+      {
+        "name": "SplitClifford.Q11_neg",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 3
+      },
+      {
+        "name": "SplitClifford.Q11_pos",
+        "kind": "theorem",
+        "used_by": 0,
+        "deps_count": 3
+      }
+    ],
+    "top_split_all": [
+      {
+        "name": "SplitClifford.Q11",
+        "kind": null,
+        "used_by": 32,
+        "deps_count": 2
+      },
+      {
+        "name": "SplitClifford.Cl11",
+        "kind": null,
+        "used_by": 18,
+        "deps_count": 1
+      },
+      {
+        "name": "SplitClifford.SplitSpace",
+        "kind": null,
+        "used_by": 18,
+        "deps_count": 1
+      },
+      {
+        "name": "SplitClifford.instAddCommGroupSplitSpace",
+        "kind": null,
+        "used_by": 18,
+        "deps_count": 0
+      },
+      {
+        "name": "SplitClifford.instModuleRealSplitSpace",
+        "kind": null,
+        "used_by": 18,
+        "deps_count": 0
+      },
+      {
+        "name": "SplitClifford.Qsplit",
+        "kind": null,
+        "used_by": 17,
+        "deps_count": 5
+      },
+      {
+        "name": "SplitClifford.Clnn",
+        "kind": null,
+        "used_by": 16,
+        "deps_count": 4
+      },
+      {
+        "name": "SplitClifford.OP",
+        "kind": null,
+        "used_by": 9,
+        "deps_count": 0
+      },
+      {
+        "name": "SplitClifford.carAnn",
+        "kind": null,
+        "used_by": 8,
+        "deps_count": 0
+      },
+      {
+        "name": "SplitClifford.carCre",
+        "kind": null,
+        "used_by": 8,
+        "deps_count": 0
+      },
+      {
+        "name": "SplitClifford.gamma11",
+        "kind": null,
+        "used_by": 7,
+        "deps_count": 4
+      },
+      {
+        "name": "SplitClifford.eNeg",
+        "kind": null,
+        "used_by": 7,
+        "deps_count": 2
+      },
+      {
+        "name": "SplitClifford.ePos",
+        "kind": null,
+        "used_by": 7,
+        "deps_count": 2
+      },
+      {
+        "name": "SplitClifford.BlochVector",
+        "kind": null,
+        "used_by": 7,
+        "deps_count": 0
+      },
+      {
+        "name": "SplitClifford.superBracket",
+        "kind": null,
+        "used_by": 5,
+        "deps_count": 1
+      },
+      {
+        "name": "SplitClifford.clnn_succ_factor",
+        "kind": null,
+        "used_by": 4,
+        "deps_count": 6
+      },
+      {
+        "name": "SplitClifford.lastNeg",
+        "kind": null,
+        "used_by": 4,
+        "deps_count": 5
+      },
+      {
+        "name": "SplitClifford.lastPos",
+        "kind": null,
+        "used_by": 4,
+        "deps_count": 5
+      },
+      {
+        "name": "SplitClifford.Qneg",
+        "kind": null,
+        "used_by": 4,
+        "deps_count": 2
+      },
+      {
+        "name": "SplitClifford.Qpos",
+        "kind": null,
+        "used_by": 4,
+        "deps_count": 2
+      },
+      {
+        "name": "SplitClifford.trifactorValue",
+        "kind": null,
+        "used_by": 4,
+        "deps_count": 2
+      },
+      {
+        "name": "SplitClifford.blochCenter",
+        "kind": null,
+        "used_by": 4,
+        "deps_count": 1
+      },
+      {
+        "name": "SplitClifford.blochNormSq",
+        "kind": null,
+        "used_by": 4,
+        "deps_count": 1
+      },
+      {
+        "name": "SplitClifford.jordanR",
+        "kind": null,
+        "used_by": 4,
+        "deps_count": 1
+      },
+      {
+        "name": "SplitClifford.OP_charpoly_cubic",
+        "kind": null,
+        "used_by": 4,
+        "deps_count": 1
+      }
+    ]
+  }
+]

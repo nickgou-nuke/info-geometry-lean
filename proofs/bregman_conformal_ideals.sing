@@ -1,0 +1,13 @@
+// bregman_conformal_ideals.sing
+LIB "primdec.lib";
+print("Formulating Algebraic Equivalence: Bregman Jacobian = Conformal Factor Squared...");
+
+ring R = 0, (x, y, z, t, B, Omega), dp;
+ideal I_equiv = B - Omega^2;
+
+print("Ideal representing B = Omega^2:");
+I_equiv;
+
+ideal G_equiv = std(I_equiv);
+print("Groebner basis of the equivalence ideal:");
+G_equiv;

@@ -133,12 +133,12 @@ theorem dyadicEntropyBits_nonneg (n : ℕ) :
   exact mul_nonneg (Nat.cast_nonneg n) (le_of_lt dyadicEntropyQuantum_pos)
 
 /--
-Finite Witten-cancelled dyadic horizon certificate.
+Finite Witten-cancelled dyadic horizon property.
 
 For a nonempty finite prime register, the owned Möbius/Witten supertrace cancels,
 and under the scalar area calibration `A = 4G log 2`, the Bekenstein--Hawking
 readout matches the two-branch dyadic Massieu entropy.  This is a finite
-synchronized certificate, not a thermodynamic-limit theorem.
+synchronized property, not a thermodynamic-limit theorem.
 -/
 theorem finiteWittenCancel_and_bekensteinHawkingDyadic
     (P : PrimeRegister) (hP : P.primes.Nonempty)
@@ -168,7 +168,7 @@ theorem finiteWittenCancel_and_bekensteinHawkingDyadicBits
 
 /--
 State-level Möbius/Fermion parity plus finite Witten cancellation and dyadic
-Bekenstein--Hawking calibration, bundled as one finite certificate.
+Bekenstein--Hawking calibration, bundled as one finite property.
 -/
 theorem primeBitState_mobiusParity_wittenCancel_bhDyadic
     (P : PrimeRegister) (hP : P.primes.Nonempty) (ψ : PrimeBitState P)

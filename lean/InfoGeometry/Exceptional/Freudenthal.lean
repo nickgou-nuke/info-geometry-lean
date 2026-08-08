@@ -3,7 +3,7 @@ InfoGeometry/Exceptional/Freudenthal.lean
 
 Freudenthal phase-space and TKK closure signatures.
 
-This file is intentionally witness-gated. It does not construct `E₇(7)`.
+This file is intentionally property-gated. It does not construct `E₇(7)`.
 It defines the algebraic operations needed to form the Freudenthal charge
 space over an abstract cubic Jordan datum, and proves only consequences of
 those stored operations.

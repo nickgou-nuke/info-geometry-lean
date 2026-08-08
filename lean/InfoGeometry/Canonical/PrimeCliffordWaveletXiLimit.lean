@@ -12,7 +12,7 @@ This file connects the Clifford-wavelet reconstruction machinery to the
 renormalized prime Lee--Yang approximants.
 
 It does not prove RH.  It formulates the exact Hestenes--Krein/filtered-colimit
-wavelet theorem that would replace the raw Hurwitz-style convergence witness.
+wavelet theorem that would replace the raw Hurwitz-style convergence property.
 -/
 
 noncomputable section
@@ -104,7 +104,7 @@ structure PrimeCliffordWaveletRealization
   locallyUniformRenormalizedLimit :
     TendstoLocallyUniformly waveletPartial waveletLimit Filter.atTop
 
-/-- Extract the Hurwitz-ready convergence witness from the Clifford wavelet
+/-- Extract the Hurwitz-ready convergence property from the Clifford wavelet
 realization. -/
 @[rep_depth operator]
 def locallyUniformLimit_of_cliffordWaveletRealization

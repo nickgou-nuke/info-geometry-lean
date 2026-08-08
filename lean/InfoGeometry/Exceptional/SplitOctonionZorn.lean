@@ -91,21 +91,21 @@ We define two non-zero matrices whose product is exactly zero.
 These were derived via the symbolic external solver (SymPy).
 -/
 
-def witnessA : ZornMatrix :=
+def zeroDivisorA : ZornMatrix :=
   { a := 1, b := 0, u := (1, 0, 0), v := (0, 0, 0) }
 
-def witnessB : ZornMatrix :=
+def zeroDivisorB : ZornMatrix :=
   { a := 0, b := 1, u := (-1, 0, 0), v := (0, 0, 0) }
 
 theorem split_octonions_have_zero_divisors :
-    witnessA * witnessB = 0 ∧ witnessA ≠ 0 ∧ witnessB ≠ 0 := by
+    zeroDivisorA * zeroDivisorB = 0 ∧ zeroDivisorA ≠ 0 ∧ zeroDivisorB ≠ 0 := by
   refine ⟨rfl, ?_, ?_⟩
   · intro h
-    have h1 : witnessA.a = (0 : ZornMatrix).a := by rw [h]
+    have h1 : zeroDivisorA.a = ZornMatrix.zero.a := by { rw [h]; rfl }
     change (1 : ℤ) = 0 at h1
     exact one_ne_zero h1
   · intro h
-    have h1 : witnessB.b = (0 : ZornMatrix).b := by rw [h]
+    have h1 : zeroDivisorB.b = ZornMatrix.zero.b := by { rw [h]; rfl }
     change (1 : ℤ) = 0 at h1
     exact one_ne_zero h1
 

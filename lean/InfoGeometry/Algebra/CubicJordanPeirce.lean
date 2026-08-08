@@ -201,7 +201,7 @@ Witnessed by the nonassociative basis case:
 is a non-zero element but it cancels in the full Freudenthal identity
 via the octonion trace term `octTrace(mulZ(mulZ z₁ z₂) z₃)`.
 -/
-theorem associator_peirce_witness :
+theorem associator_peirce_property :
     associator up0 up1 down1 = up0 :=
   associator_up0_up1_down1
 
@@ -211,7 +211,7 @@ theorem associator_peirce_witness :
 The non-prose closure statement available in this file: the split-octonion
 basis operations used by the Peirce reduction close by explicit multiplication,
 nilpotence, trace-orthogonality, determinant-zero, diagonal adjoint, and a
-nonassociative associator witness.
+nonassociative associator property.
 -/
 theorem penrose_global_closure :
     mulZ up0 up1 = down2 ∧
@@ -232,6 +232,6 @@ theorem penrose_global_closure :
     trace_peirce_orthogonal_basis,
     det_peirce_half_basis,
     adjoint_peirce_mapping_diagonal,
-    associator_peirce_witness⟩
+    associator_peirce_property⟩
 
 end InfoGeometry.Algebra.CubicJordanPeirce

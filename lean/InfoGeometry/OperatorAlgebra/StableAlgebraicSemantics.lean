@@ -72,11 +72,11 @@ stage-zero representative satisfies the local relation.
 structure SquareZeroTower
     (bond : ∀ n : Nat, Stage n →+* Stage (n + 1)) where
   /-- Compatible finite-stage representatives. -/
-  witness : ∀ n : Nat, Stage n
+  property : ∀ n : Nat, Stage n
   /-- The representatives are preserved by one-step transition maps. -/
-  transport : ∀ n : Nat, bond n (witness n) = witness (n + 1)
+  transport : ∀ n : Nat, bond n (property n) = property (n + 1)
   /-- The local relation at the initial stage. -/
-  squareZero_zero : witness 0 * witness 0 = 0
+  squareZero_zero : property 0 * property 0 = 0
 
 namespace SquareZeroTower
 
@@ -85,18 +85,18 @@ variable (T : SquareZeroTower (Stage := Stage) bond)
 
 /-- The square-zero relation holds at every finite stage. -/
 theorem squareZero_stage (n : Nat) :
-    T.witness n * T.witness n = 0 :=
+    T.property n * T.property n = 0 :=
   InfoGeometry.Algebra.InductiveSuperClosureLemmas.squareZero_all
-    bond T.witness T.squareZero_zero T.transport n
+    bond T.property T.squareZero_zero T.transport n
 
 /-- Canonical image of the stable generator at a finite stage. -/
 def colimitWitness (n : Nat) : DirectLimitSuperClosure bond :=
-  directLimitOf bond n (T.witness n)
+  directLimitOf bond n (T.property n)
 
 /-- All compatible finite representatives define the same direct-limit element. -/
 theorem colimitWitness_eq_zeroStage (n : Nat) :
     T.colimitWitness n = T.colimitWitness 0 := by
-  exact directLimitOf_eq_zero_stage bond T.witness T.transport n
+  exact directLimitOf_eq_zero_stage bond T.property T.transport n
 
 /-- The direct-limit stable generator is square-zero. -/
 theorem colimitWitness_squareZero (n : Nat) :
@@ -117,7 +117,7 @@ square-zero element in the realization algebra.
 theorem realization_squareZero
     (toLimit : ∀ n : Nat, Stage n →+* Limit)
     (n : Nat) :
-    toLimit n (T.witness n) * toLimit n (T.witness n) = 0 := by
+    toLimit n (T.property n) * toLimit n (T.property n) = 0 := by
   exact map_squareZero (toLimit n) (T.squareZero_stage n)
 
 /--
@@ -129,21 +129,21 @@ identifying different finite representatives as the same realized stable datum.
 theorem realization_parabolic_pow
     (toLimit : ∀ n : Nat, Stage n →+* Limit)
     (n k : Nat) :
-    (1 + toLimit n (T.witness n)) ^ k = 1 + k • toLimit n (T.witness n) := by
+    (1 + toLimit n (T.property n)) ^ k = 1 + k • toLimit n (T.property n) := by
   exact one_add_squareZero_pow
-    (toLimit n (T.witness n)) (T.realization_squareZero toLimit n) k
+    (toLimit n (T.property n)) (T.realization_squareZero toLimit n) k
 
 /-- A compatible realization reads all finite witnesses as the same stable element. -/
 theorem realization_stage_constant
     (toLimit : ∀ n : Nat, Stage n →+* Limit)
     (hcone : CompatibleCone bond toLimit)
     (n : Nat) :
-    toLimit n (T.witness n) = toLimit 0 (T.witness 0) := by
+    toLimit n (T.property n) = toLimit 0 (T.property 0) := by
   induction n with
   | zero =>
       rfl
   | succ n ih =>
-      rw [← T.transport n, hcone n (T.witness n), ih]
+      rw [← T.transport n, hcone n (T.property n), ih]
 
 end SquareZeroTower
 

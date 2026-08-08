@@ -892,7 +892,7 @@ theorem modularDeriv_eq_modularGaugeDeriv_of_commute_scalePart
 
 omit [CompleteSpace E] in
 /-- If the scaling part vanishes, the full modular derivation reduces to its
-gauge channel without a separate scaling-commutation hypothesis. -/
+gauge channel without a separate scaling-commutation property. -/
 theorem modularDeriv_eq_modularGaugeDeriv_of_scalePart_eq_zero
     (hMod : EndH)
     (A : EndH)

@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.GolayLeechStabilizerCode
 # Quantum stabilizer readout of the extended binary Golay code
 
 This module exports the actual finite code and its isotropic Pauli carrier.
-It contains no parameter witness structure.
+It contains no parameter property structure.
 -/
 
 namespace InfoGeometry.Quantum.GolayLeechStabilizerCode

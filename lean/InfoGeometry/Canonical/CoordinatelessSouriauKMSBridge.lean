@@ -163,9 +163,9 @@ def toIdentityKMSState (beta : ℝ) :
 
 While the `toIdentityKMSState` constructor is sufficient for the identity
 modular flow, downstream code often expects a more generically named theorem
-`toKMSState`.  Providing this thin wrapper does not introduce any new hypothesis
+`toKMSState`.  Providing this thin wrapper does not introduce any new property
 or proof burden—it simply forwards to the existing construction.  This reduces
-the explicit hypothesis surface by allowing callers to use `toKMSState` without
+the explicit property surface by allowing callers to use `toKMSState` without
 referring to the concrete flow name.
 -/
 @[rep_depth operator]
@@ -251,7 +251,7 @@ variable (ω : CyclicAlgebraicState (H := H))
 /--
 Construct the coordinate-free SLD/Fisher metric from a cyclic algebraic state.
 
-The metric symmetry is not another hypothesis: it is derived from cyclicity.
+The metric symmetry is not another property: it is derived from cyclicity.
 -/
 @[rep_depth operator]
 def sldQuantumFisherMetric (sld : Tangent → Obs) :
@@ -397,7 +397,7 @@ theorem toModularTimeKMSContext_sigma_eq :
     C.toModularTimeKMSContext.sigma = C.sigma :=
   rfl
 
-/-- On the adapter, the KMS state is definitionally the cyclic identity-flow KMS witness. -/
+/-- On the adapter, the KMS state is definitionally the cyclic identity-flow KMS property. -/
 @[rep_depth operator]
 theorem toModularTimeKMSContext_kms_eq :
     C.toModularTimeKMSContext.kms = C.state.toIdentityKMSState C.beta :=
@@ -433,7 +433,7 @@ theorem toModularTimeKMSContext_sigma_eq (beta : ℝ) :
       identityAdditiveModularFlow (H := H) :=
   rfl
 
-/-- On the direct constructive adapter, the KMS witness is the cyclic identity-flow one. -/
+/-- On the direct constructive adapter, the KMS property is the cyclic identity-flow one. -/
 @[rep_depth operator]
 theorem toModularTimeKMSContext_kms_eq (beta : ℝ) :
     (ω.toModularTimeKMSContext beta).kms = ω.toIdentityKMSState beta :=
@@ -522,7 +522,7 @@ namespace MinimalIdentityWeylCoordinatelessSouriauContext
 variable {Symmetry : Type v} {Tangent : Type w}
 variable (C : MinimalIdentityWeylCoordinatelessSouriauContext (H := H) Symmetry Tangent)
 
-/-- The algebraic state is read directly from the KMS witness. -/
+/-- The algebraic state is read directly from the KMS property. -/
 @[rep_depth operator]
 def state : AlgebraicState (H := H) :=
   C.kms.state
@@ -535,7 +535,7 @@ def weylGauge : WeylAlgebraGauge (H := H) C.state :=
 /--
 Constructor theorem for the narrowed identity-Weyl KMS/Fisher lane.
 
-This removes the explicit `weylGauge` hypothesis by constructing the canonical
+This removes the explicit `weylGauge` property by constructing the canonical
 identity gauge definitionally on the minimal identity-Weyl branch.
 -/
 @[rep_depth operator]
@@ -598,7 +598,7 @@ namespace MinimalCoordinatelessSouriauFisherContext
 variable {Symmetry : Type v} {Tangent : Type w}
 variable (C : MinimalCoordinatelessSouriauFisherContext (H := H) Symmetry Tangent)
 
-/-- The algebraic state is read directly from the KMS witness. -/
+/-- The algebraic state is read directly from the KMS property. -/
 @[rep_depth operator]
 def state : AlgebraicState (H := H) :=
   C.kms.state
@@ -625,7 +625,7 @@ theorem mk_of_kms
 
 /--
 Constructor theorem for the narrowed KMS/Fisher lane when the Weyl gauge is the
-canonical identity gauge.  This eliminates the explicit `weylGauge` hypothesis
+canonical identity gauge.  This eliminates the explicit `weylGauge` property
 by constructing it definitionally via `identityWeylAlgebraGauge`.
 -/
 @[rep_depth operator]
@@ -683,7 +683,7 @@ Constructor theorem routing the broad compatibility packet through the narrowed
 minimal coordinateless KMS/Fisher lane.
 
 This removes the explicit `state` and `kms_state_eq` constructor surface when
-callers already own a `MinimalCoordinatelessSouriauFisherContext` witness.
+callers already own a `MinimalCoordinatelessSouriauFisherContext` property.
 -/
 @[rep_depth operator]
 theorem mk_broad_of_minimal
@@ -694,7 +694,7 @@ theorem mk_broad_of_minimal
 
 /--
 Constructor theorem exposing the broad compatibility packet directly from the
-narrowed minimal coordinateless KMS/Fisher witness.
+narrowed minimal coordinateless KMS/Fisher property.
 
 This keeps the legacy broad surface available while removing the explicit
 `state` and `kms_state_eq` theorem arguments from the constructor route.
@@ -724,7 +724,7 @@ Project a broad coordinateless Souriau/KMS/Fisher packet onto the narrowed
 minimal branch.
 
 This removes the explicit `state` and `kms_state_eq` fields for downstream
-consumers that only need the KMS witness itself.
+consumers that only need the KMS property itself.
 -/
 @[rep_depth operator]
 def toMinimalCoordinatelessSouriauFisherContext :
@@ -1017,7 +1017,7 @@ Constructor theorem routing the observable-minimal identity-SLD packet through
  the minimal constructive cyclic branch.
 
 This removes the explicit `sld` constructor surface for callers that already own
-an `ObservableMinimalCyclicCoordinatelessSouriauContext` witness and only need
+an `ObservableMinimalCyclicCoordinatelessSouriauContext` property and only need
 `MinimalCyclicCoordinatelessSouriauContext` on the same constructive lane.
 -/
 @[rep_depth operator]
@@ -1145,10 +1145,10 @@ theorem ofObservableMinimal_weylGauge_eq
   rfl
 
 /--
-Constructive KMS witness on the observable-tangent cyclic identity-flow lane.
+Constructive KMS property on the observable-tangent cyclic identity-flow lane.
 
 This removes the need for callers on this branch to carry an explicit `kms`
-packet: the KMS witness is computed directly from cyclicity and the owned
+packet: the KMS property is computed directly from cyclicity and the owned
 identity modular flow.
 -/
 @[rep_depth operator]
@@ -1156,7 +1156,7 @@ def toIdentityKMSState :
     KMSState (H := H) (identityAdditiveModularFlow (H := H)) C.beta :=
   C.state.toIdentityKMSState C.beta
 
-/-- The constructive observable-cyclic KMS witness records the same underlying state. -/
+/-- The constructive observable-cyclic KMS property records the same underlying state. -/
 @[rep_depth operator]
 theorem toIdentityKMSState_state_eq :
     C.toIdentityKMSState.state = C.state.state :=
@@ -1202,7 +1202,7 @@ theorem toObservableCyclicCoordinatelessSouriauFisherContext_weylGauge_eq :
   rfl
 
 /--
-Constructive KMS witness on the observable-minimal cyclic identity-flow lane.
+Constructive KMS property on the observable-minimal cyclic identity-flow lane.
 
 This removes the remaining explicit `kms` surface for callers that already live
 on the observable-minimal branch.
@@ -1239,7 +1239,7 @@ theorem toModularTimeKMSContext_sigma_eq :
     C.toModularTimeKMSContext.sigma = C.sigma :=
   rfl
 
-/-- On the observable-minimal modular-time adapter, the KMS witness is definitionally the constructive identity-flow one. -/
+/-- On the observable-minimal modular-time adapter, the KMS property is definitionally the constructive identity-flow one. -/
 @[rep_depth operator]
 theorem toModularTimeKMSContext_kms_eq :
     C.toModularTimeKMSContext.kms = C.toIdentityKMSState :=
@@ -1274,7 +1274,7 @@ through the observable-minimal cyclic constructive branch.
 
 This removes the explicit `sigma`, `kms`, `fisherMetric`, and `weylGauge`
 constructor surface for callers that already own an
-`ObservableMinimalCyclicCoordinatelessSouriauContext` witness and only need the
+`ObservableMinimalCyclicCoordinatelessSouriauContext` property and only need the
 identity-Weyl branch.
 -/
 @[rep_depth operator]
@@ -1313,7 +1313,7 @@ through the observable-minimal cyclic constructive branch.
 
 This removes the explicit `sigma`, `kms`, `fisherMetric`, and `weylGauge`
 constructor surface for callers that already own an
-`ObservableMinimalCyclicCoordinatelessSouriauContext` witness.
+`ObservableMinimalCyclicCoordinatelessSouriauContext` property.
 -/
 @[rep_depth operator]
 theorem mk_observable_minimal_of_cyclic :
@@ -1360,7 +1360,7 @@ Fully constructive coordinateless Souriau/KMS/Fisher context on the cyclic
 identity-modular branch.
 
 Unlike `CoordinatelessSouriauFisherContext`, this branch carries no explicit
-`KMSState` packet and no state-equality witness.  The KMS identity is derived
+`KMSState` packet and no state-equality property.  The KMS identity is derived
 from cyclicity together with the owned identity modular flow.
 -/
 @[rep_depth operator]
@@ -1514,7 +1514,7 @@ theorem toModularTimeKMSContext_sigma_eq :
     C.toModularTimeKMSContext.sigma = C.sigma :=
   rfl
 
-/-- On the modular-time adapter, the KMS witness is definitionally the constructive identity-flow one. -/
+/-- On the modular-time adapter, the KMS property is definitionally the constructive identity-flow one. -/
 @[rep_depth operator]
 theorem toModularTimeKMSContext_kms_eq :
     C.toModularTimeKMSContext.kms = C.state.toIdentityKMSState C.beta :=
@@ -1525,7 +1525,7 @@ Constructor theorem routing the modular-time KMS packet directly through the
 minimal cyclic constructive branch.
 
 This removes the explicit `sigma` and `kms` constructor surface for callers
-that already own a `MinimalCyclicCoordinatelessSouriauContext` witness.
+that already own a `MinimalCyclicCoordinatelessSouriauContext` property.
 -/
 @[rep_depth operator]
 theorem mk_modularTime_of_cyclic :
@@ -1568,7 +1568,7 @@ the minimal cyclic constructive branch.
 
 This removes the explicit `sigma`, `kms`, `fisherMetric`, and `weylGauge`
 constructor surface for callers that already own a
-`MinimalCyclicCoordinatelessSouriauContext` witness and only need the identity
+`MinimalCyclicCoordinatelessSouriauContext` property and only need the identity
 Weyl-gauge branch.
 -/
 @[rep_depth operator]
@@ -1607,7 +1607,7 @@ minimal cyclic constructive branch.
 
 This removes the explicit `sigma`, `kms`, `fisherMetric`, and `weylGauge`
 constructor surface for callers that already own a
-`MinimalCyclicCoordinatelessSouriauContext` witness.
+`MinimalCyclicCoordinatelessSouriauContext` property.
 -/
 @[rep_depth operator]
 theorem mk_minimal_of_cyclic :

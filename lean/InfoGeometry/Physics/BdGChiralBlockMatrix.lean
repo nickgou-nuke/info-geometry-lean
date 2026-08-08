@@ -122,7 +122,7 @@ theorem star_connesDifferential_of_selfAdjoint
       -connesDifferential D (star a) := by
   rw [star_connesDifferential, hD]
 
-/-! A compact certificate collecting the finite matrix identities above. -/
+/-! A compact property collecting the finite matrix identities above. -/
 theorem bdg_chiral_block_matrix_synthesis (Delta : A) (D a b : BdGBlock A) :
     (chiralGrading * chiralGrading = (1 : BdGBlock A)) ∧
     (bdgStar (diracOperator Delta) = diracOperator Delta) ∧

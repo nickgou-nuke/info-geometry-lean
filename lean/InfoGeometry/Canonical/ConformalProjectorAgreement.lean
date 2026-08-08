@@ -19,13 +19,13 @@ open InfoGeometry.Canonical.MetricTransport
 
 variable {R : Type*} [Ring R]
 
--- Conformal witness layer: explicit one-way transport bridges for diagnostic tests.
+-- Conformal property layer: explicit one-way transport bridges for diagnostic tests.
 -- - DrazinSimilarityTransportWitness: similarity transport of the Drazin projector.
 -- - MoorePenroseMetricTransportWitness: metric transport of the Moore--Penrose projector.
 -- - ConformalMismatchTransportWitness: mismatch transport decomposition.
 
 
-/-- Drazin projector similarity transport witness. -/
+/-- Drazin projector similarity transport property. -/
 structure DrazinSimilarityTransportWitness (P P' : ProjectorPair R) where
   g : R
   gInv : R
@@ -33,7 +33,7 @@ structure DrazinSimilarityTransportWitness (P P' : ProjectorPair R) where
   rightInv : g * gInv = 1
   drazinProjector_transport : P'.PD = g * P.PD * gInv
 
-/-- Moore--Penrose projector metric transport witness. -/
+/-- Moore--Penrose projector metric transport property. -/
 structure MoorePenroseMetricTransportWitness (P P' : ProjectorPair R) where
   g : R
   gInv : R
@@ -41,7 +41,7 @@ structure MoorePenroseMetricTransportWitness (P P' : ProjectorPair R) where
   rightInv : g * gInv = 1
   moorePenroseProjector_transport : P'.PMP = g * P.PMP * gInv
 
-/-- Conformal mismatch transport witness. -/
+/-- Conformal mismatch transport property. -/
 structure ConformalMismatchTransportWitness (P P' : ProjectorPair R) where
   transport : SimilarityTransport P P'
   mismatch_fixedMetric_decomposition :
@@ -81,7 +81,7 @@ theorem mismatch_fixedMetric_decomposition
   simpa [MPFixedMetricTear] using mismatch_transport_decomposition (W := W)
 
 /-
-The concrete `2×2` witness remains the negative boundary counterexample for fixed
+The concrete `2×2` property remains the negative boundary counterexample for fixed
 Euclidean similarity-naturality/metric-naturality mismatch.
 
 Tags in this section include `similarity-natural` and `metric-natural`.

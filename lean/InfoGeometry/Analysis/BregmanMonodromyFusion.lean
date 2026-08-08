@@ -320,7 +320,7 @@ theorem unified_bregman_monodromy_hodge
   -- The strong monodromy-vanishing statement still requires an upstream theorem
   -- identifying harmonic 1-chains with monodromy carriers.  The theorem below
   -- keeps the β₁=0 specialization honest: it records the supplied vanishing
-  -- hypothesis together with the kernel-checked Laplacian-nullity definition.
+  -- property together with the kernel-checked Laplacian-nullity definition.
   constructor
   · exact h_betti1_zero
   · simp [DAG.betti1Hodge]

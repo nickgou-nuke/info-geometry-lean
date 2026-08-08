@@ -15,7 +15,7 @@ import InfoGeometry.Projective.FiveGradedTopologicalBridge
 - `finite_andreev_diii_signature_packet`
 - `canonical_diii_proxy_sign_readback`
 - `canonical_diii_proxy_root_readback`
-- `krein_kasparov_grade_split_from_witness`
+- `krein_kasparov_grade_split_from_property`
 - `krein_kasparov_mixed_commutator_gZero`
 - `klein_bottle_trace_absorption`
 
@@ -31,8 +31,8 @@ import InfoGeometry.Projective.FiveGradedTopologicalBridge
   boundary.
 - Replace the `KleinBottleTopology` trace interface by a full KO-theoretic
   anomaly theorem.
-- Relate any Betti/rank certificate to protected Majorana modes only after the
-  external de Rham computation is genuinely certified.
+- Relate any Betti/rank property to protected Majorana modes only after the
+  external de Rham computation is genuinely property.
 
 This module deliberately avoids asserting a physical DIII theorem for spacetime.
 It records the finite algebraic
@@ -40,7 +40,7 @@ compatibilities currently available in the repo:
 
 1. finite Andreev particle-hole rotation;
 2. canonical DIII symmetry laws on the doubled real BdG carrier;
-3. split-Krein KKT decomposition for a supplied Kasparov cycle witness;
+3. split-Krein KKT decomposition for a supplied Kasparov cycle property;
 4. matrix-level Klein-bottle trace absorption under explicit orthogonality and
    trace-zero hypotheses.
 -/
@@ -146,10 +146,10 @@ variable [InfoGeometry.Krein.KreinSpace H]
 variable [InfoGeometry.Krein.KreinGradedModule H]
 
 /--
-Given the explicit `gradeCLM = eps` witness, the odd phase of the real
+Given the explicit `gradeCLM = eps` property, the odd phase of the real
 split-Krein Kasparov cycle splits into `g₁ ⊕ g₋₁`.
 -/
-theorem krein_kasparov_grade_split_from_witness
+theorem krein_kasparov_grade_split_from_property
     (X : RealSplitKreinKasparovCycle A B H)
     (hGrade : InfoGeometry.Krein.KreinGradedModule.gradeCLM (H := H) =
       X.cl11.eps) :

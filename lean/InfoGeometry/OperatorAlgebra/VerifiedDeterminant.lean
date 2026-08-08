@@ -13,7 +13,7 @@ by proving constructively, for finite matrices,
 
 from determinant multiplicativity and an explicit inverse law.
 
-No vacuous determinant-invariance certificate is used.
+No vacuous determinant-invariance property is used.
 -/
 
 import Mathlib.Tactic

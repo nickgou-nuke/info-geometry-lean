@@ -130,7 +130,7 @@ structure BitFockPacket (n : ℕ) (OperatorAlgebra : Type*) [Ring OperatorAlgebr
 
 namespace BitFockPacket
 
-/-- GENUINE LEMMA: The CAR/Clifford law is exactly the provided witness. -/
+/-- GENUINE LEMMA: The CAR/Clifford law is exactly the provided property. -/
 @[rep_depth operator]
 theorem car_clifford_law
     {n : ℕ} {OperatorAlgebra : Type*} [Ring OperatorAlgebra]
@@ -269,7 +269,7 @@ def bitEntropyRate {n : ℕ}
 /-! ## 3. Stabilized readout -/
 
 /--
-Drazin/KMS/Fierz stabilization witness.
+Drazin/KMS/Fierz stabilization property.
 
 This is the final guard: a raw bit process becomes a physical object only after
 stabilization and invariant readout are supplied.

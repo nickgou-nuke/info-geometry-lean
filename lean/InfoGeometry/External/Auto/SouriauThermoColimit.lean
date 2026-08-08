@@ -98,7 +98,7 @@ theorem souriau_cubic_operator_roots {q : ℝ} (hq : souriauCubicOperator q) :
     · exact Or.inr (Or.inr (by linarith [h1]))
   · exact Or.inl (by linarith [h11])
 
--- (Optional) witness that the cubic mapping is total on roots of `OP^3=OP`.
+-- (Optional) property that the cubic mapping is total on roots of `OP^3=OP`.
 -- theorem OPStateFromCubicValue_of_cubic ...
 -- omitted here to avoid additional branch normalization obligations.
 

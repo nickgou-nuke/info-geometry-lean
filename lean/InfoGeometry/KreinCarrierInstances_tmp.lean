@@ -9,6 +9,8 @@ open InfoGeometry.Canonical.HestenesKreinModularGeometry
 
 noncomputable section
 
+namespace InfoGeometry.KreinCarrierInstancesTmp
+
 /-!
 # Concrete Klein-carrier Hestenes/Krein datum
 
@@ -323,4 +325,4 @@ theorem concreteBridgeKlein_traceZero_of_padicValNat_137 :
     concreteBridgeKlein.relativeFredholm.fredholm.kreinTrace = 0 :=
   concreteBridgeKlein_traceZeroAnomalyResolution_137 padicValNat_two_137
 
-end
+end InfoGeometry.KreinCarrierInstancesTmp

@@ -266,9 +266,9 @@ def IsRegularFierz (F : FierzBilinears) : Prop :=
   F.sigma ^ 2 + F.omega ^ 2 ≠ 0
 
 /--
-Normalization witness for a Fierz package.
+Normalization property for a Fierz package.
 
-The witness avoids burying division-by-zero obligations in definitions.
+The property avoids burying division-by-zero obligations in definitions.
 -/
 @[rep_depth operator]
 structure FierzNormalization (F : FierzBilinears) where

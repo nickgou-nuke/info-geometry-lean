@@ -121,7 +121,7 @@ def BoundaryFluxEqualsDefectSum
   ∀ p : P, R.resolvent p * A - A * R.resolvent p = 0
 
 /--
-Stokes witness for the Clifford resolvent field.
+Stokes property for the Clifford resolvent field.
 
 The fields are proofs of named predicates, not arbitrary `Prop` slots.
 -/
@@ -166,7 +166,7 @@ def CommutesStatement
   Pcore * A = A * Pcore
 
 /--
-Admissibility certificate for a geometric Stokes projector.
+Admissibility property for a geometric Stokes projector.
 
 Projection laws require analytic/topological hypotheses; they are not true for
 an arbitrary boundary and arbitrary resolvent family.

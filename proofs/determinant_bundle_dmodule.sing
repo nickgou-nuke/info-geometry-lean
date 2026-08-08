@@ -1,0 +1,42 @@
+// determinant_bundle_dmodule.sing
+LIB "dmod.lib";
+
+ring r = 0, (x, y, z), dp;
+// Define the Weyl algebra (D-module)
+def D = Weyl();
+setring D;
+
+// Variables in the Weyl algebra
+// x, y, z are coordinates, dx, dy, dz are derivations
+
+// Levi-Civita superconnection representation
+// We create an ideal representing the differential operators
+// associated with the superconnection
+poly d_x = dx;
+poly d_y = dy;
+poly d_z = dz;
+
+// Connections with some Christoffel symbols (simplified as polynomials)
+poly Gamma_x = x^2 * y;
+poly Gamma_y = x * y^2;
+poly Gamma_z = z^2;
+
+poly nabla_x = d_x + Gamma_x;
+poly nabla_y = d_y + Gamma_y;
+poly nabla_z = d_z + Gamma_z;
+
+// D-module ideal representing the connections
+ideal I = nabla_x, nabla_y, nabla_z;
+
+// Curvature ideal (commutators [nabla_i, nabla_j])
+ideal Curv;
+Curv[1] = nabla_x * nabla_y - nabla_y * nabla_x;
+Curv[2] = nabla_y * nabla_z - nabla_z * nabla_y;
+Curv[3] = nabla_z * nabla_x - nabla_x * nabla_z;
+
+// Groebner basis for the D-module to study the system
+ideal stdI = groebner(I);
+ideal stdCurv = groebner(Curv);
+
+print("Curvature Ideal:");
+print(stdCurv);

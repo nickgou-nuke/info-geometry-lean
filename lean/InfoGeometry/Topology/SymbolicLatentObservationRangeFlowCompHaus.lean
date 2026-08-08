@@ -9,7 +9,7 @@ The quotient-flow owner already provides a continuous time slice on the
 observational quotient.  For compact symbolic-latent systems, this file
 transports that flow through the canonical quotient-range homeomorphism and
 packages the result as a genuine `CompHaus` endomorphism of the observation
-range.  No extra dynamical hypothesis is added.
+range.  No extra dynamical property is added.
 -/
 
 noncomputable section

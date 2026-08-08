@@ -222,7 +222,7 @@ theorem descendedOperatorObservationFlowTopCatHom_add_canonical
 /-! A time slice on the operator-valued quotient is a homeomorphism.
 
 The inverse is the negative-time slice.  This is a topological consequence
-of the already-proved group laws and joint continuity witness; it does not
+of the already-proved group laws and joint continuity property; it does not
 collapse the operator-valued quotient to a scalar observable. -/
 def descendedOperatorObservationFlowHomeomorph
     {S : NoncommutativeObservableSystem X A ι}

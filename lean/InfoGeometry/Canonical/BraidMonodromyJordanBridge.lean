@@ -7,7 +7,7 @@ For a two-by-two matrix over a commutative ring, the trace and determinant
 conditions for a repeated scalar root imply that the shifted matrix is
 square-zero.  This is the finite Cayley--Hamilton bridge only; it does not
 identify a particular braid word with a Jordan matrix without an additional
-equality hypothesis.
+equality property.
 -/
 
 namespace InfoGeometry.Canonical

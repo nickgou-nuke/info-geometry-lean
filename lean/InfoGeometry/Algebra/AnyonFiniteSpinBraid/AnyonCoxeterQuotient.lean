@@ -11,11 +11,11 @@ def gapD5Order : ℕ := 1920
 
 namespace CoxeterDQuotientCertificate
 
-/-- The GAP witness records `|W(D₄)| = 192`. -/
+/-- The GAP property records `|W(D₄)| = 192`. -/
 theorem D4_order_readout : gapD4Order = 192 :=
   rfl
 
-/-- The GAP witness records `|W(D₅)| = 1920`. -/
+/-- The GAP property records `|W(D₅)| = 1920`. -/
 theorem D5_order_readout : gapD5Order = 1920 :=
   rfl
 

@@ -2,12 +2,12 @@ import Mathlib
 import InfoGeometry.Canonical.SplitCliffordHeisenbergBridge
 
 /-!
-# Topological readout for the split-Clifford Heisenberg witness
+# Topological readout for the split-Clifford Heisenberg property
 
-This file packages the existing source-side split-Clifford Heisenberg witness
+This file packages the existing source-side split-Clifford Heisenberg property
 as a discrete topological readout.  It does not claim that every current
-representation comes from such a witness; it only records the continuity and
-local constancy of the witness-to-current / witness-to-Sugawara maps under the
+representation comes from such a property; it only records the continuity and
+local constancy of the property-to-current / property-to-Sugawara maps under the
 discrete topology.
 -/
 
@@ -40,7 +40,7 @@ instance currentSugawaraMorphismTopologicalSpace :
 instance currentSugawaraMorphismDiscreteTopology :
     DiscreteTopology (CurrentSugawaraMorphism 𝕜 V) := ⟨rfl⟩
 
-/-- The split-Clifford witness read as a topological current representation. -/
+/-- The split-Clifford property read as a topological current representation. -/
 def topologicalSplitCliffordToCurrentHeisenbergRep
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
     CurrentHeisenbergRep 𝕜 V :=
@@ -67,7 +67,7 @@ theorem isLocallyConstant_topologicalSplitCliffordToCurrentHeisenbergRep :
     (IsLocallyConstant.of_discrete
       (f := topologicalSplitCliffordToCurrentHeisenbergRep (𝕜 := 𝕜) (V := V)))
 
-/-- The split-Clifford witness read as a topological Sugawara morphism package. -/
+/-- The split-Clifford property read as a topological Sugawara morphism package. -/
 def topologicalSplitCliffordToCurrentSugawaraMorphism
     (W : SplitCliffordHeisenbergWitness 𝕜 V) :
     CurrentSugawaraMorphism 𝕜 V :=

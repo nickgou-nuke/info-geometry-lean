@@ -1,0 +1,70 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz-cd}
+
+\geometry{margin=1in}
+
+% --- Theorem Environments with Status Tags ---
+\newtheoremstyle{kerneltheorem}% name
+  {3pt}% Space above
+  {3pt}% Space below
+  {\itshape}% Body font
+  {}% Indent amount
+  {\bfseries\color{blue!80!black}}% Theorem head font
+  {.}% Punctuation after theorem head
+  {.5em}% Space after theorem head
+  {\thmname{#1}\thmnumber{ #2} [Kernel Certified]\thmnote{: #3}}% Theorem head spec
+
+\newtheoremstyle{mathconstruction}%
+  {3pt}{3pt}{\itshape}{}{\bfseries\color{green!60!black}}{.}{.5em}%
+  {\thmname{#1}\thmnumber{ #2} [Mathematical Construction]\thmnote{: #3}}
+
+\newtheoremstyle{empiricalresult}%
+  {3pt}{3pt}{\normalfont}{}{\bfseries\color{orange!80!black}}{.}{.5em}%
+  {\thmname{#1}\thmnumber{ #2} [Empirical Result]\thmnote{: #3}}
+
+\newtheoremstyle{physicalhypothesis}%
+  {3pt}{3pt}{\normalfont}{}{\bfseries\color{purple!80!black}}{.}{.5em}%
+  {\thmname{#1}\thmnumber{ #2} [Physical Hypothesis]\thmnote{: #3}}
+
+\theoremstyle{kerneltheorem}
+\newtheorem{ktheorem}{Theorem}[section]
+\newtheorem{klemma}[ktheorem]{Lemma}
+
+\theoremstyle{mathconstruction}
+\newtheorem{mdefinition}{Definition}[section]
+\newtheorem{mproposition}[mdefinition]{Proposition}
+
+\theoremstyle{empiricalresult}
+\newtheorem{eresult}{Result}[section]
+
+\theoremstyle{physicalhypothesis}
+\newtheorem{phypothesis}{Hypothesis}[section]
+\newtheorem{pinterpretation}[phypothesis]{Interpretation}
+
+\title{\textbf{Physics-Constrained Exceptional Factorization:\\From Split-Octonions to Optimal Transport}}
+\author{A Unified Framework}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This monograph establishes a rigorous, unified framework bridging exceptional Lie algebras, information geometry, and differentiable inverse problems for nuclear spectroscopy. We cleanly distinguish between theorems verified in the Lean 4 kernel, mathematical constructions, empirical results, and physical interpretations. The architecture proceeds from the thermodynamic foundations of Gibbs variational geometry and Optimal Transport (Sinkhorn), ascends into the algebraic classification of the split-octonion derivation algebra ($\mathfrak{g}_{2(2)}$) and its Triality ($\mathfrak{so}(4,4)$), embeds into the Tits-Kantor-Koecher construction, and finally maps these mathematical symmetries onto a high-performance PyTorch factorization engine for $\gamma-\gamma$ coincidence spectrometry.
+\end{abstract}
+
+\tableofcontents
+\newpage
+
+\input{part1_info_geometry}
+\input{part2_split_octonions}
+\input{part3_triality_jordan}
+\input{part4_computational}
+
+\end{document}

@@ -80,7 +80,7 @@ variable (B : DrazinHodgeFierzBridge (E := E))
 def physicalEnvelope (x : E) : E :=
   B.residue.HarmonicProjector x
 
-/-- The Drazin envelope is the certified Drazin complementary projector. -/
+/-- The Drazin envelope is the property Drazin complementary projector. -/
 @[rep_depth operator]
 def drazinEnvelope (x : E) : E :=
   B.residue.CIK.spectralComplementaryProjector x
@@ -174,10 +174,10 @@ theorem fierzIdentity_on_drazinEnvelope
   exact B.fierz.fierzIdentity (B.toFierzState (B.drazinEnvelope x))
 
 /--
-The geometric predicate is certified on the physical envelope.
+The geometric predicate is property on the physical envelope.
 
 This is the theorem-safe replacement for a raw claim like
-`IsOnKleinQuadric (...)`: the predicate is supplied as a witness field.
+`IsOnKleinQuadric (...)`: the predicate is supplied as a property field.
 -/
 @[rep_depth operator]
 theorem geometricPredicate_on_physicalEnvelope
@@ -186,7 +186,7 @@ theorem geometricPredicate_on_physicalEnvelope
   B.geometricPredicate_on_envelope x
 
 /--
-The geometric predicate is also certified on the Drazin envelope, because the
+The geometric predicate is also property on the Drazin envelope, because the
 Drazin envelope equals the harmonic/physical envelope.
 -/
 @[rep_depth operator]

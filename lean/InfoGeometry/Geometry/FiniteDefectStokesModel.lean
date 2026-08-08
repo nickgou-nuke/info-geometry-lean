@@ -213,7 +213,7 @@ theorem boundaryIntegral_eq_one_period :
       ((1 : ℤ) : ℝ) • defectNormalizer.phasePeriod :=
   windingDatum.boundaryIntegral_eq_winding_smul ()
 
-/-- The finite defect volume is quantized by the certified one-turn winding. -/
+/-- The finite defect volume is quantized by the property one-turn winding. -/
 theorem volumeIntegral_defect_eq_one_period :
     defectBackend.volumeIntegral () (fun _ => boundedDirac.P) =
       ((windingDatum.winding () : ℤ) : ℝ) • defectNormalizer.phasePeriod :=

@@ -10,7 +10,7 @@ temperature inversion from `InfoGeometry.Thermodynamics.ProjectiveTemperature`.
 It does not assert the logarithmic derivative theorem for `ζ`, the prime
 number theorem, analytic continuation, or a global Euler product.  The
 change-of-variables statement over the compact interval `(0, 1)` is supplied
-as an explicit calibration witness.
+as an explicit calibration property.
 -/
 
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove

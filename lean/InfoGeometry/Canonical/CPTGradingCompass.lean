@@ -109,7 +109,7 @@ theorem cpt_grading_alignment :
     peirce_half_composition_basis
       InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.up0
       InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.up1 rfl rfl,
-    associator_peirce_witness,
+    associator_peirce_property,
     by norm_num⟩
 
 /-! ## 3. Witten-Möbius chiral parity cancellation -/

@@ -104,7 +104,7 @@ def UpdateOrderHysteresis
 
 variable {n}
 
-/-- Concrete `2 × 2` witness matrix for update-order noncommutation. -/
+/-- Concrete `2 × 2` property matrix for update-order noncommutation. -/
 noncomputable def weylOrderWitnessMatrix2 : Coupling 2 :=
   fun i j =>
     match (i : Nat), (j : Nat) with
@@ -141,11 +141,11 @@ lemma weylOrderWitnessMatrix2_positiveRows_afterCol :
   fin_cases i <;> norm_num [rowSum, colNormalize, colSum, weylOrderWitnessMatrix2]
 
 /--
-Concrete noncommutation witness:
+Concrete noncommutation property:
 for the explicit `2 × 2` matrix `[[1,2],[3,4]]`, row→col and col→row
 two-step updates are different.
 -/
-private theorem weylOrderHysteresis_on_witnessMatrix2 :
+private theorem weylOrderHysteresis_on_propertyMatrix2 :
     UpdateOrderHysteresis 2
       weylOrderWitnessMatrix2
       weylOrderWitnessMatrix2_positiveRows
@@ -172,7 +172,7 @@ private theorem exists_updateOrderHysteresis_n2 :
     weylOrderWitnessMatrix2_positiveCols_afterRow,
     weylOrderWitnessMatrix2_positiveCols,
     weylOrderWitnessMatrix2_positiveRows_afterCol,
-    weylOrderHysteresis_on_witnessMatrix2⟩
+    weylOrderHysteresis_on_propertyMatrix2⟩
 
 end OrderHysteresis
 
@@ -182,7 +182,7 @@ variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 /--
-Path-dependence witness encoded by nonzero information torsion.
+Path-dependence property encoded by nonzero information torsion.
 -/
 def UpdateOrderPathDependent (conn : Connection E) : Prop :=
   ∃ u v : E, informationTorsion conn u v ≠ 0

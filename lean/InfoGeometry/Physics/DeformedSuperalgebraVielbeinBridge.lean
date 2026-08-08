@@ -7,14 +7,14 @@ namespace InfoGeometry.Physics
 # Algebraic transport of chiral relations
 
 This owner supplies the missing, theorem-honest transport layer.  A parameter
-indexed `AlgEquiv` is the actual hypothesis needed for an operator vielbein:
+indexed `AlgEquiv` is the actual property needed for an operator vielbein:
 it preserves addition, zero, multiplication, and the scalar algebra
 structure.  An arbitrary multiplicative function is not enough to transport
 an anticommutator.
 
 No claim is made here that an existing Bogoliubov/Pauli frame is already such
 an equivalence on the native split-octonion colour core.  That requires a
-separate explicit witness.
+separate explicit property.
 -/
 
 variable {R A : Type*} [CommSemiring R] [Semiring A] [Algebra R A]

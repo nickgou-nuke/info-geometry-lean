@@ -30,7 +30,7 @@ order-theoretic ultrafilter/Boolean-homomorphism equivalence for powersets.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 `CantorStoneUltrafilter` assumes unique finite cylinder atoms at every depth;
-from that witness it reconstructs a coherent Cantor boundary point.
+from that property it reconstructs a coherent Cantor boundary point.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 No analytic C*-completion, compact Hausdorff classification, or full MDPA Stone

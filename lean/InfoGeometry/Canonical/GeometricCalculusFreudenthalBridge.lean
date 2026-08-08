@@ -7,7 +7,7 @@ import InfoGeometry.Canonical.GeometricCalculusSurgery
 Structural bridge from Stokes/Clifford boundary flux to Freudenthal charge
 horizons.
 
-The bridge is witness-gated. It does not assert that every Stokes flux equals
+The bridge is property-gated. It does not assert that every Stokes flux equals
 black-hole entropy. Instead, it records the exact data needed for such a
 statement:
 
@@ -373,7 +373,7 @@ observer and arbitrary Freudenthal charge geometry, the scalar flux/entropy
 equality is not constructible; it must be supplied by the concrete
 Clifford/Stokes/Freudenthal model.
 -/
-def operatorFreudenthalBoundaryFluxBridge_from_witnesses
+def operatorFreudenthalBoundaryFluxBridge_from_propertyes
     {E : Type uE} {P : Type uP} {Q : Type uQ}
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup P] [NormedSpace ℝ P]

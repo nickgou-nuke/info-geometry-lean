@@ -1,0 +1,238 @@
+{
+  "description": "Prima materia registry — local shallow clones of external knowledge repositories for the agentic system. These repos serve as the 'collective unconscious' that the agent can read, index, and reference during knowledge forging. Organized by domain: lean/ (formal verification), python/ (symbolic computation), math/ (reference implementations).",
+  "last_updated": "2026-06-05",
+  "total_size_mb": 379,
+  "agent_start_here": "Read this file first to understand what external knowledge is available. Each repo entry includes: url, size, description, topics, key files to read, and usage hints.",
+  "repositories": {
+
+    "lean/mathlib4": {
+      "url": "https://github.com/leanprover-community/mathlib4.git",
+      "version": "v4.28.0",
+      "commit": "8f9d9cff6bd728b17a24e163c9402775d9e6a365",
+      "size_mb": 9500,
+      "type": "symlink",
+      "source": "/home/goutev/info-geometry-lean/.lake/packages/mathlib",
+      "description": "The canonical mathematical library for Lean 4. Formalizations of algebra, analysis, number theory, topology, category theory, and more. Already fully built with olean cache.",
+      "topics": ["lean4", "formal-verification", "mathematics", "theorem-proving", "mathlib"],
+      "key_files": ["Mathlib/Algebra/", "Mathlib/Analysis/", "Mathlib/LinearAlgebra/"],
+      "usage": "Import with `import Mathlib` in Lean code. Compile via the lake project at /home/goutev/info-geometry-lean/."
+    },
+
+    "lean/atlas-lean": {
+      "url": "https://github.com/facebookresearch/atlas-lean",
+      "version": "latest (main)",
+      "size_mb": 68,
+      "type": "git clone",
+      "description": "Meta's ATLAS dataset: 183B tokens used to auto-formalize 26 graduate-level math textbooks into Lean 4. Contains 45,000+ machine-checked mathematical declarations across algebra, analysis, geometry, and more.",
+      "topics": ["lean4", "formal-verification", "atlas", "auto-formalization", "mathematics", "meta"],
+      "key_files": ["ATLAS/"],
+      "usage": "Browse ATLAS/ for patterns of formalized theorems. Each .lean file contains machine-generated proofs that can guide your own formalizations."
+    },
+
+    "lean/repoprover": {
+      "url": "https://github.com/facebookresearch/repoprover",
+      "version": "latest (main)",
+      "size_mb": 14,
+      "type": "git clone",
+      "description": "Meta's multi-agent framework for automated theorem proving. Three agents (Sketcher, Prover, Reviewer) communicate via a shared Git repository to iteratively write Lean 4 proofs. The architecture directly mirrors this system's epistemic pipeline.",
+      "topics": ["lean4", "multi-agent", "theorem-proving", "auto-formalization", "meta"],
+      "key_files": ["src/", "config/"],
+      "usage": "Reference the multi-agent orchestration pattern. The Sketcher/Prover/Reviewer roles correspond to the SymPy/Lean/Oracle tools in this system."
+    },
+
+    "lean/lean-auto": {
+      "url": "https://github.com/leanprover-community/lean-auto",
+      "version": "latest (main)",
+      "size_mb": 4,
+      "type": "git clone",
+      "description": "Lean 4 automation bridge that interfaces Lean with external SMT solvers (Z3, CVC5) and automated theorem provers (Zipperposition, E, Vampire). Provides the `auto` tactic for subgoal automation.",
+      "topics": ["lean4", "smt-solver", "automation", "theorem-proving", "z3"],
+      "key_files": ["Auto/", "examples/"],
+      "usage": "Use the `auto` tactic inside Lean proofs when stuck on subgoals. Reference Auto/ for implementation details of the SMT bridge."
+    },
+
+    "lean/atlas-embeddings": {
+      "url": "https://github.com/The-UOR-Foundation-Archive/atlas-embeddings",
+      "version": "latest (main)",
+      "size_mb": 3,
+      "type": "git clone",
+      "description": "Embedding models and vector representations for the ATLAS formal mathematics dataset. Provides pre-computed embeddings that can be used for semantic search over formal math content.",
+      "topics": ["lean4", "embeddings", "vector-search", "atlas", "machine-learning"],
+      "key_files": ["*.py", "*.json"],
+      "usage": "Use embedding vectors for semantic similarity search over formal math theorems. Complements the query_graph_rag tool."
+    },
+
+    "lean/VirasoroProject": {
+      "url": "https://github.com/kkytola/VirasoroProject",
+      "version": "latest (main)",
+      "size_mb": 1.6,
+      "type": "git clone",
+      "description": "Formalization of Virasoro algebra and related structures in Lean 4. Virasoro algebra is central to conformal field theory, string theory, and infinite-dimensional Lie theory.",
+      "topics": ["lean4", "lie-algebras", "virasoro", "conformal-field-theory", "physics"],
+      "key_files": ["*.lean"],
+      "usage": "Reference for formalizing infinite-dimensional Lie algebras in Lean. Pattern for algebraic structures beyond semisimple Lie theory."
+    },
+
+    "python/sympy": {
+      "url": "https://github.com/sympy/sympy.git",
+      "version": "latest (master)",
+      "size_mb": 46,
+      "type": "git clone",
+      "description": "Official SymPy source code — the canonical Python library for symbolic mathematics. Covers symbolic algebra, calculus, differential equations, matrix operations, physics, and more.",
+      "topics": ["python", "sympy", "symbolic-computation", "mathematics", "cas"],
+      "key_files": ["sympy/", "sympy/physics/", "sympy/liealgebras/"],
+      "usage": "Reference source for understanding SymPy internals. The sympy/liealgebras/ module is directly relevant to Lie algebra computations."
+    },
+
+    "python/PauLie": {
+      "url": "https://github.com/QPauLie/PauLie",
+      "version": "latest (main)",
+      "size_mb": 2.2,
+      "type": "git clone",
+      "description": "Lie theory computations in Python. Implements Lie algebra operations, representation theory calculations, and structure constant computations.",
+      "topics": ["python", "lie-algebras", "representation-theory", "symbolic"],
+      "key_files": ["*.py"],
+      "usage": "Reference for Lie algebra Python implementations. Useful when verify_sympy_witness needs Lie-theoretic computations."
+    },
+
+    "python/SymPy-LieAlgebras": {
+      "url": "https://github.com/tomaszcib/SymPy-LieAlgebras",
+      "version": "latest (main)",
+      "size_mb": 0.4,
+      "type": "git clone",
+      "description": "Lie algebra computations built on top of SymPy. Implements root systems, Cartan matrices, Weyl groups, and representation calculations for semisimple Lie algebras.",
+      "topics": ["python", "sympy", "lie-algebras", "root-systems", "weyl-groups"],
+      "key_files": ["*.py"],
+      "usage": "Directly usable as a SymPy extension for Lie algebra work. A model for how to structure verify_sympy_witness code."
+    },
+
+    "python/get-physics-done": {
+      "url": "https://github.com/psi-oss/get-physics-done",
+      "version": "latest (main)",
+      "size_mb": 31,
+      "type": "git clone",
+      "description": "Symbolic physics computation library built on SymPy. Covers classical mechanics, quantum mechanics, electromagnetism, relativity, and statistical physics with automated derivation pipelines.",
+      "topics": ["python", "sympy", "physics", "symbolic-computation", "mechanics", "quantum"],
+      "key_files": ["*.py"],
+      "usage": "Reference for physics-domain symbolic computations. The derivation pipeline patterns are applicable to automated theorem proving in physics contexts."
+    },
+
+    "math/affine-charform": {
+      "url": "https://github.com/deehzee/affine-charform",
+      "version": "latest (main)",
+      "size_mb": 1.5,
+      "type": "git clone",
+      "description": "Affine character formula computations for Lie algebras. Implements the Weyl character formula and its affine generalizations for computing characters of representations.",
+      "topics": ["python", "lie-algebras", "characters", "weyl-formula", "representation-theory"],
+      "key_files": ["*.py", "*.sage"],
+      "usage": "Reference for character formula computations. Useful when formalizing representation theory in Lean — the SymPy witness can validate character formulas."
+    },
+
+    "math/Semisimple-Lie-Algebras": {
+      "url": "https://github.com/lkpetrich/Semisimple-Lie-Algebras",
+      "version": "latest (main)",
+      "size_mb": 8.5,
+      "type": "git clone",
+      "description": "Comprehensive implementation of semisimple Lie algebra theory. Covers classification, root systems, Dynkin diagrams, Cartan matrices, Weyl groups, and representation theory for all classical and exceptional Lie algebras.",
+      "topics": ["python", "lie-algebras", "root-systems", "dynkin-diagrams", "classification", "representation-theory"],
+      "key_files": ["*.py", "*.sage"],
+      "usage": "Primary reference for Lie algebra computations. Covers A-G series — directly usable for SymPy witnesses in Lie-theoretic Lean proofs."
+    },
+
+    "math/geoalg": {
+      "url": "https://github.com/GPWilmot/geoalg",
+      "version": "latest (main)",
+      "size_mb": 4.3,
+      "type": "git clone",
+      "description": "Geometric algebra library. Implements Clifford algebras, multivectors, and geometric calculus operations. Geometric algebra unifies complex numbers, quaternions, and exterior algebra.",
+      "topics": ["python", "geometric-algebra", "clifford-algebras", "multivectors", "grassmann"],
+      "key_files": ["*.py"],
+      "usage": "Reference for geometric/Clifford algebra computations. Useful for formalizing geometric algebra in Lean."
+    },
+
+    "math/SplitOct": {
+      "url": "https://github.com/EQUINOX24/SplitOct",
+      "version": "latest (main)",
+      "size_mb": 0.8,
+      "type": "git clone",
+      "description": "Split octonion algebra implementation. Split octonions are a non-associative algebra important in theoretical physics, particularly in exceptional Lie groups and string theory.",
+      "topics": ["python", "octonions", "non-associative", "lie-groups", "exceptional"],
+      "key_files": ["*.py"],
+      "usage": "Reference for non-associative algebra computations. Split octonions relate to G2 and other exceptional Lie groups."
+    },
+
+    "math/RIA_EISA": {
+      "url": "https://github.com/csoftxyz/RIA_EISA",
+      "version": "latest (main)",
+      "size_mb": 195,
+      "type": "git clone",
+      "description": "Reproducible Inference Algebra and Evolutionary Inference Statement Architecture. A framework for reproducible algebraic inference with evolutionary computation patterns.",
+      "topics": ["python", "inference", "algebra", "evolutionary", "reproducible-research"],
+      "key_files": ["*.py"],
+      "usage": "Reference for inference algebra patterns. Large repository — explore selectively."
+    },
+
+    "python/quantum/QuAIRKit": {
+      "url": "https://github.com/QuAIR/QuAIRKit",
+      "version": "latest (main)",
+      "size_mb": 16,
+      "type": "git clone",
+      "description": "Quantum AI Toolkit. Provides quantum computing primitives, quantum circuit simulation, and quantum machine learning algorithms built on PyTorch.",
+      "topics": ["python", "quantum", "quantum-computing", "machine-learning", "pytorch"],
+      "key_files": ["*.py"],
+      "usage": "Reference for quantum computing Python code. Useful for formalizing quantum algorithms in Lean — SymPy witnesses can validate quantum circuit identities."
+    },
+
+    "python/quantum/qutip": {
+      "url": "https://github.com/qutip/qutip",
+      "version": "latest (main)",
+      "size_mb": 12,
+      "type": "git clone",
+      "description": "QuTiP: Quantum Toolbox in Python. The leading open-source library for quantum mechanics simulations — quantum states, operators, dynamics, and open quantum systems.",
+      "topics": ["python", "quantum", "quantum-mechanics", "simulation", "open-quantum-systems"],
+      "key_files": ["*.py"],
+      "usage": "Primary reference for quantum mechanics Python computations. SymPy witnesses for quantum mechanical proofs should reference qutip patterns."
+    },
+
+    "python/pyw": {
+      "url": "https://github.com/panyw5/pyw",
+      "version": "latest (main)",
+      "size_mb": 2.5,
+      "type": "git clone",
+      "description": "Python utility library. General-purpose Python tools and utilities.",
+      "topics": ["python", "utilities"],
+      "key_files": ["*.py"],
+      "usage": "General Python utility reference."
+    },
+
+    "python/sage": {
+      "url": "https://github.com/sagemath/sage",
+      "version": "latest (main)",
+      "size_mb": 190,
+      "type": "git clone",
+      "description": "SageMath — the comprehensive open-source computer algebra system. Covers algebra, combinatorics, graph theory, number theory, calculus, and more. Built on top of SymPy, NumPy, and many other libraries.",
+      "topics": ["python", "sage", "computer-algebra", "mathematics", "cas"],
+      "key_files": ["src/sage/", "src/sage/algebras/", "src/sage/combinat/", "src/sage/graphs/"],
+      "usage": "Reference for advanced computer algebra. Sage's algebras/ module contains Lie algebra implementations that complement SymPy. Heavier dependency — use selectively."
+    },
+
+    "formal/isabelle/afp-devel": {
+      "url": "https://github.com/isabelle-prover/mirror-afp-devel",
+      "version": "latest (main)",
+      "size_mb": 692,
+      "type": "git clone",
+      "description": "Isabelle Archive of Formal Proofs (AFP) development mirror. The largest collection of formalized mathematics after mathlib — contains thousands of formal proofs in Isabelle/HOL across all areas of mathematics and computer science.",
+      "topics": ["isabelle", "formal-proofs", "theorem-proving", "afp", "archive-of-formal-proofs"],
+      "key_files": ["thys/"],
+      "usage": "Reference for formal proofs in Isabelle/HOL. While this system uses Lean 4, the AFP provides alternative formalization patterns that can inspire Lean proofs. Browse thys/ by topic."
+    }
+  },
+  "agent_instructions": {
+    "start_here": "Read external/.structure for a quick overview, then external/index.json for full metadata.",
+    "reading": "Use the `read` tool to explore key_files listed in each entry.",
+    "rag_indexing": "Run `source .venv/bin/activate && python3 scripts/index-external-repos.py` to index all repos into knowledge_base.json for query_graph_rag.",
+    "lean_compilation": "For Lean code needing mathlib, write into /home/goutev/info-geometry-lean/src/ and run `lake build` from that directory.",
+    "sympy_witness": "For SymPy witness code, reference python/sympy/ for API patterns, python/SymPy-LieAlgebras/ for Lie algebra specifics.",
+    "discovery": "Use `find external -name '*.lean' | head -20` to discover Lean files, or `find external -name '*.py' | head -20` for Python files."
+  }
+}

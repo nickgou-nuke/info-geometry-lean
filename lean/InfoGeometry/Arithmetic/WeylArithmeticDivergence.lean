@@ -7,7 +7,7 @@ projective temperature coordinate.
 This module is a narrow sidecar over `ProjectiveWeylGauge` and
 `ProjectivePrimePartition`.  It does not assert that KL, IS, or any zeta
 readout is automatically invariant under temperature inversion.  Invariance
-and covariance are supplied as witness fields and re-exported as theorem
+and covariance are supplied as property fields and re-exported as theorem
 payload.
 -/
 
@@ -188,7 +188,7 @@ Pointwise Itakura-Saito divergence.
 
 For spectral densities `x` and `y`, this is `x / y - log (x / y) - 1`.
 No nonnegativity theorem is asserted here; the positivity hypotheses and proof
-belong to a concrete model witness.
+belong to a concrete model property.
 -/
 def itakuraSaito (x y : ℝ) : ℝ :=
   x / y - Real.log (x / y) - 1
@@ -196,7 +196,7 @@ def itakuraSaito (x y : ℝ) : ℝ :=
 /-- The scalar Itakura--Saito divergence is nonnegative on positive inputs.
 
 This is the native convexity inequality `log t ≤ t - 1`, applied to
-`t = x / y`; no model-specific witness or wrapper is involved.
+`t = x / y`; no model-specific property or wrapper is involved.
 -/
 theorem itakuraSaito_nonneg {x y : ℝ} (hx : 0 < x) (hy : 0 < y) :
     0 ≤ itakuraSaito x y := by
@@ -235,10 +235,10 @@ def weylThermalScale
     (A : Finset ℕ) (countsP countsQ : ℕ → ℝ) : ℝ :=
   arithmeticTotalMass A countsP / arithmeticTotalMass A countsQ
 
-/-! ## 6. Finite Weyl gauge decomposition witness -/
+/-! ## 6. Finite Weyl gauge decomposition property -/
 
 /--
-A calibration witness asserting that a model's total divergence readout
+A calibration property asserting that a model's total divergence readout
 factorizes into a Weyl thermal scale and a scale-invariant Itakura-Saito shape
 core.
 

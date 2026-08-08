@@ -22,7 +22,7 @@ representation-theoretic claims.  Finite prime supertrace facts are owned by
 the arithmetic Witten-index and Majorana character files; categorical
 Fibonacci facts are owned by `InfoGeometry.Categorical.FibonacciBraiding`.
 
-SymPy witness: `tools/sympy/primon_fib_boundary_bridge.py`
+SymPy property: `tools/sympy/primon_fib_boundary_bridge.py`
 -/
 
 namespace InfoGeometry.Canonical.PrimonFibBoundaryBridge

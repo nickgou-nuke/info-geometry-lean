@@ -175,7 +175,7 @@ theorem denominator_phase_linear :
 /--
 The supplied inverse commutes with the phase axis.
 
-This is not a hypothesis: it follows from denominator phase-linearity and the
+This is not a property: it follows from denominator phase-linearity and the
 left/right inverse laws.
 -/
 theorem denomInv_phase_linear :
@@ -260,7 +260,7 @@ end OperatorAdjointDatum
 /--
 Bounded Kasparov/Fredholm-cycle socket.
 
-This is intentionally witness-gated.  Compactness, Fredholmness, and
+This is intentionally property-gated.  Compactness, Fredholmness, and
 commutator compactness are not consequences of the bounded transform alone.
 -/
 structure BoundedKasparovCycle

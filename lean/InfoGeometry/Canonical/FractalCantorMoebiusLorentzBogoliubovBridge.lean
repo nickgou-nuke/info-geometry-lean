@@ -55,7 +55,7 @@ structure FractalCantorMoebiusLorentzBogoliubovBridge
   bogoliubov :
     InfoGeometry.Quantum.RealMajorana.RealBogoliubovTransform (S := Spin) majorana
 
-  /-- The source polarization certificate for the Bogoliubov transport. -/
+  /-- The source polarization property for the Bogoliubov transport. -/
   polarization :
     InfoGeometry.Quantum.RealMajorana.KPolarization (S := Spin) majorana
 
@@ -63,14 +63,14 @@ structure FractalCantorMoebiusLorentzBogoliubovBridge
   lorentz :
     InfoGeometry.Quantum.RealSplitCl11Action Spin
 
-  /-- Hyperbolic mixing angle used as a normalized tilt witness. -/
+  /-- Hyperbolic mixing angle used as a normalized tilt property. -/
   tiltAngle : ℝ
 
   /-- Hyperbolic mixing parameters of the tilt operator. -/
   tilt :
     InfoGeometry.Canonical.BogoliubovFockSuper.HyperbolicMixingParams
 
-  /-- The tilt witness is normalized as an actual hyperbolic angle. -/
+  /-- The tilt property is normalized as an actual hyperbolic angle. -/
   tilt_eq_ofAngle :
     tilt = InfoGeometry.Canonical.BogoliubovFockSuper.HyperbolicMixingParams.ofAngle tiltAngle
 
@@ -87,7 +87,7 @@ variable
 
 variable (B : FractalCantorMoebiusLorentzBogoliubovBridge E Op Hilb Spin Finite Alg)
 
-/-- The normalized hyperbolic tilt witness is exactly `ofAngle`. -/
+/-- The normalized hyperbolic tilt property is exactly `ofAngle`. -/
 @[rep_depth operator]
 theorem tilt_normalized_holds :
     B.tilt = InfoGeometry.Canonical.BogoliubovFockSuper.HyperbolicMixingParams.ofAngle

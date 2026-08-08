@@ -46,7 +46,7 @@ variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 def quadratic (L : OnsagerMetricData V) (x : V) : ℝ :=
   L.pairing x (L.onsager x)
 
-/-- The Onsager quadratic form is nonnegative by packet assumption. -/
+/-- The Onsager quadratic form is nonnegative by packet property. -/
 theorem quadratic_nonnegative (L : OnsagerMetricData V) (x : V) :
     0 ≤ L.quadratic x :=
   L.metric_nonnegative x

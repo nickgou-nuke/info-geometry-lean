@@ -7,7 +7,7 @@ import InfoGeometry.Topology.SymbolicLatentObservationQuotientReversalCompHaus
 The quotient-side actions are transported through the existing natural
 isomorphism between observational quotients and their compact observation
 ranges.  This owner therefore introduces no second range action and no new
-readout covariance axiom.
+readout covariance ax!om.
 -/
 
 noncomputable section

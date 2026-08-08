@@ -1,0 +1,35 @@
+// quantum_electronics_ideals.sing
+// Algebraic ideals governing non-linear optical activity and population inversion
+
+system("--no-warn", 1);
+ring r = 0, (x, y, z, E, P), dp;
+// x, y, z: system state variables (e.g., density matrix elements)
+// E: Electric field
+// P: Polarization
+
+// Define the ideal for the non-linear optical equations
+// For example, simplified Maxwell-Bloch equations at steady state
+ideal I = 
+  y * E - z,         // Polarization driven by field and inversion
+  x * P - E^2,       // Non-linear coupling
+  x^2 + y^2 + z^2 - 1; // Conservation of probability / Bloch sphere constraint
+
+print("Ideal of Quantum Electronics (Maxwell-Bloch steady state):");
+print(I);
+
+// Compute the Groebner basis to find the variety of steady states (phase transitions)
+ideal G = std(I);
+
+print("Groebner Basis for the steady state manifold:");
+print(G);
+
+// Dimension of the variety
+int d = dim(G);
+print("Dimension of the phase space variety:");
+print(d);
+
+// Primary decomposition (requires primdec.lib)
+LIB "primdec.lib";
+list decomp = primdecGTZ(I);
+print("Primary Decomposition (Phase Transitions):");
+print(decomp);

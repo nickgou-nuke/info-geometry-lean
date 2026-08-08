@@ -1,5 +1,7 @@
 -- Tomita-Takesaki Theory and Projective Relative Entropy
 
+namespace TomitaTakesakiRelativeEntropy
+
 class VonNeumannAlgebra (M : Type) where
   commutant : Type
 
@@ -22,3 +24,5 @@ namespace ProjectiveState
 abbrev ray {H : Type} (x : ProjectiveState H) : H := x
 
 end ProjectiveState
+
+end TomitaTakesakiRelativeEntropy

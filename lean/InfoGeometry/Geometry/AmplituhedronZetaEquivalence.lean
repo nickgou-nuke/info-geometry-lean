@@ -11,7 +11,7 @@ open scoped Manifold
 
 namespace InfoGeometry.Geometry
 
-/-- The readouts and nonzero-pole certificate of a canonical volume form.
+/-- The readouts and nonzero-pole property of a canonical volume form.
 
 This is a subtype rather than a wrapper record: the carrier is the native
 product of the three readouts, and the only extra datum is its predicate.
@@ -41,7 +41,7 @@ end CanonicalVolumeForm
 /-- The zeta-volume comparison predicate. -/
 def AmplituhedronZetaComparison {k n : ℕ}
     (Ω : CanonicalVolumeForm k n) (Z : ℝ → ℝ) (β_critical : ℝ) : Prop :=
-  -- Explicit comparison hypothesis between a geometric volume readout and a
+  -- Explicit comparison property between a geometric volume readout and a
   -- partition readout at the chosen inverse temperature.
   Ω.omega Set.univ = Z β_critical
 
@@ -87,7 +87,7 @@ theorem isClosedGaugeConnection_constant (c : ℝ) :
 /-- The geometric-thermodynamic comparison carrier. -/
 def AmplituhedronGaugeComparison {k n : ℕ} (Ω : CanonicalVolumeForm k n)
     (Potential : ThermodynamicPotential M) (β_critical : ℝ) : Prop :=
-  -- Explicit comparison hypothesis between the volume readout and the gauge
+  -- Explicit comparison property between the volume readout and the gauge
   -- readout at the chosen inverse temperature.
   IsClosedGaugeConnection Potential ∧ Ω.omega Set.univ = β_critical
 

@@ -8,7 +8,7 @@ Dual-vector pairing bridge for modular expectation updates.
 
 This file stays theorem-safe: it does not build a von Neumann algebra,
 construct a predual, or derive a genuine Radon--Nikodym cocycle.  Instead, it
-packages the exact witness form needed to express how a recursive modular
+packages the exact property form needed to express how a recursive modular
 scaling engine updates the expectation readout through the cone-vector carrier.
 -/
 

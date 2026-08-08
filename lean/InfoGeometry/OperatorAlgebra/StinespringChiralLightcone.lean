@@ -4,7 +4,7 @@ InfoGeometry/OperatorAlgebra/StinespringChiralLightcone.lean
 Stinespring/Tomita clinch on the chiral lightcone.
 
 Apparent absorption/loss from the visible chiral lightcone is represented as
-hidden flow into a commutant/environment sector, once a dilation witness and
+hidden flow into a commutant/environment sector, once a dilation property and
 lightcone calibration are supplied.
 -/
 

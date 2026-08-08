@@ -16,7 +16,7 @@ pure-braid matrix audit does not carry:
 
 The proved content here is intentionally minimal:
 
-* `DelaunayFlipMorphism` transports the existing move witness;
+* `DelaunayFlipMorphism` transports the existing move property;
 * `matrix_of_morphism_well_defined` is exactly the already-proved Rohozhkin
   matrix invariance under `DelaunayEquiv`;
 * the compensation field carries concrete Cl(1,1) relations.

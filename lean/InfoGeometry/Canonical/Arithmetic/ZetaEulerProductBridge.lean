@@ -67,7 +67,7 @@ namespace AnalyticGate
 /-- Compatibility accessor for the gated complex parameter. -/
 abbrev β (G : AnalyticGate P) : ℂ := G.1
 
-/-- Compatibility accessor for the half-plane hypothesis. -/
+/-- Compatibility accessor for the half-plane property. -/
 abbrev re_gt_one (G : AnalyticGate P) : 1 < G.β.re := G.2.1
 
 /-- Compatibility accessor for membership in the declared domain. -/

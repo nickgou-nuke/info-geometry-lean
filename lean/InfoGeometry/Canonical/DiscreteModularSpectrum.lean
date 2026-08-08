@@ -192,7 +192,7 @@ theorem modularTransportGenerator_commutes_drazin :
 /--
 The Drazin projector is invariant under the sampled modular boost.
 Constructed from finite exponential transport and commutation, not carried as
-a raw invariance hypothesis.
+a raw invariance property.
 -/
 @[rep_depth operator]
 theorem drazin_projector_invariant (k : ℤ) :

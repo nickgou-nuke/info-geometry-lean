@@ -1,0 +1,906 @@
+[
+  {
+    "name": "B3PresentedGroup.b3_relation_holds._simp_1_10",
+    "module": "B3PresentedGroup",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "B3PresentedGroup.b3_relation_holds._simp_1_6",
+    "module": "B3PresentedGroup",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "B3PresentedGroup.b3_relation_holds._simp_1_7",
+    "module": "B3PresentedGroup",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "B3PresentedGroup.b3_relation_holds._simp_1_9",
+    "module": "B3PresentedGroup",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "BashoreLQGReportExtraction.holstBFAction",
+    "module": "BashoreLQGReportExtraction",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "BashoreLQGReportExtraction.reggeAction",
+    "module": "BashoreLQGReportExtraction",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "BashoreLQGReportExtraction.spinFoamAmplitude",
+    "module": "BashoreLQGReportExtraction",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "BashoreLQGReportExtraction.tetrahedron_bookkeeping",
+    "module": "BashoreLQGReportExtraction",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "BashoreLQGReportExtraction.yGammaMatch",
+    "module": "BashoreLQGReportExtraction",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "CantorBoundaryCuntzFamily.cuntz_partition._simp_1_1",
+    "module": "CantorBoundaryCuntzFamily",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ChiralCausalCone.causal_cone_iff_solder_det_zero",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ChiralCausalCone.chiral_decomposition_unique._simp_1_10",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ChiralCausalCone.chiral_decomposition_unique._simp_1_11",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ChiralCausalCone.chiral_decomposition_unique._simp_1_12",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ChiralCausalCone.chiral_decomposition_unique._simp_1_13",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ChiralCausalCone.chiral_decomposition_unique._simp_1_14",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ChiralCausalCone.chiral_decomposition_unique._simp_1_8",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ChiralCausalCone.chiral_decomposition_unique._simp_1_9",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ChiralCausalCone.solder_chiral_coeffs._simp_1_10",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ChiralCausalCone.solder_chiral_coeffs._simp_1_11",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ChiralCausalCone.solder_chiral_coeffs._simp_1_12",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ChiralCausalCone.solder_chiral_coeffs._simp_1_13",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ChiralCausalCone.solder_chiral_coeffs._simp_1_14",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ChiralCausalCone.solder_chiral_coeffs._simp_1_8",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ChiralCausalCone.solder_chiral_coeffs._simp_1_9",
+    "module": "ChiralCausalCone",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "CooperadEnvironmentalRank32.InnerPhaseBasis.proxyType",
+    "module": "CooperadEnvironmentalRank32",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "CooperadEnvironmentalRank32.OuterPhaseBasis.proxyType",
+    "module": "CooperadEnvironmentalRank32",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "CuntzP6MBoundary.p6m_projective_counts",
+    "module": "CuntzP6MBoundary",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "DikinGoutevTonevBridge.dikinCoreQuadratic_eq",
+    "module": "DikinGoutevTonevBridge",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ExceptionalBraid.hermitian_doubling._simp_1_2",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ExceptionalBraid.hermitian_doubling._simp_1_3",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ExceptionalBraid.hermitian_doubling._simp_1_4",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ExceptionalBraid.hermitian_doubling._simp_1_5",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ExceptionalBraid.hermitian_doubling._simp_1_6",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ExceptionalBraid.non_hermitian_unpaired._simp_1_2",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ExceptionalBraid.non_hermitian_unpaired._simp_1_3",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ExceptionalBraid.non_hermitian_unpaired._simp_1_5",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ExceptionalBraid.non_hermitian_unpaired._simp_1_6",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ExceptionalBraid.non_hermitian_unpaired._simp_1_7",
+    "module": "ExceptionalBraid",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "GNSQuotientFinite.V2C",
+    "module": "GNSQuotientFinite",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "GoutevTonevPrinciple.algebra_linear_selfmap_determined_by_one",
+    "module": "GoutevTonevPrinciple",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "GoutevTonevPrinciple.minimal_pixel_from_information_geometry",
+    "module": "GoutevTonevPrinciple",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "GoutevTonevPrinciple.quantum_cutoff_from_information_geometry",
+    "module": "GoutevTonevPrinciple",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "GrothendieckGromovWittenYangBaxter.braid_relation_from_yang_baxter",
+    "module": "GrothendieckGromovWittenYangBaxter",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "GrothendieckGromovWittenYangBaxter.yang_baxter_from_braid_relation",
+    "module": "GrothendieckGromovWittenYangBaxter",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "IJIRTRiemannDigest.ZetaDirichletSeriesDomain",
+    "module": "IJIRTRiemannDigest",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "JaynesLDDPGNSColimit.cut_equals_fractal_one_step",
+    "module": "JaynesLDDPGNSColimit",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "JaynesLeanColimitBridge.ColimitBridge.bridgeSlogan._default",
+    "module": "JaynesLeanColimitBridge",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "JaynesLeanColimitBridge.ColimitBridge.mechanismSlogan._default",
+    "module": "JaynesLeanColimitBridge",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "JaynesLeanColimitBridge.ThreeLineagesConverge.categoryLine._default",
+    "module": "JaynesLeanColimitBridge",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "JaynesLeanColimitBridge.ThreeLineagesConverge.commonPrinciple._default",
+    "module": "JaynesLeanColimitBridge",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "JaynesLeanColimitBridge.ThreeLineagesConverge.jaynesLine._default",
+    "module": "JaynesLeanColimitBridge",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "JaynesLeanColimitBridge.ThreeLineagesConverge.leanKernelLine._default",
+    "module": "JaynesLeanColimitBridge",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "MellinWaveletScaleShiftDigest.waveletStdCore_as_freq._simp_1_1",
+    "module": "MellinWaveletScaleShiftDigest",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "MellinWaveletScaleShiftDigest.waveletStdCore_as_freq._simp_1_2",
+    "module": "MellinWaveletScaleShiftDigest",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "MellinWaveletScaleShiftDigest.waveletStdCore_as_freq._simp_1_3",
+    "module": "MellinWaveletScaleShiftDigest",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "MellinWaveletScaleShiftDigest.waveletStdCore_as_freq._simp_1_4",
+    "module": "MellinWaveletScaleShiftDigest",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "MellinWaveletScaleShiftDigest.waveletStdCore_as_freq._simp_1_5",
+    "module": "MellinWaveletScaleShiftDigest",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "MellinWaveletScaleShiftDigest.waveletStdCore_as_freq._simp_1_6",
+    "module": "MellinWaveletScaleShiftDigest",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "MellinWaveletScaleShiftDigest.waveletStdCore_as_freq._simp_1_7",
+    "module": "MellinWaveletScaleShiftDigest",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "MetamaterialQuasicrystalBloch.primon_cuntz_isometric_step",
+    "module": "MetamaterialQuasicrystalBloch",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "MobiusWittenIndex.chiralParity",
+    "module": "MobiusWittenIndex",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "MotivicHolographyGroebnerLFunction.NormalForm32.proxyType",
+    "module": "MotivicHolographyGroebnerLFunction",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "NonIsoConf3DeRhamCooperad.FluxBasis.proxyType",
+    "module": "NonIsoConf3DeRhamCooperad",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "NonIsoConf3DeRhamCooperad.ProductBasis.proxyType",
+    "module": "NonIsoConf3DeRhamCooperad",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "NonIsoConf3RankDecision.independent_alpha_flux_rank",
+    "module": "NonIsoConf3RankDecision",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "NonIsoConf3RankDecision.independent_alpha_rank",
+    "module": "NonIsoConf3RankDecision",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "NonIsoConf3RankDecision.two_flux_rank",
+    "module": "NonIsoConf3RankDecision",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "OctonionMatrixEncodings.no_faithful_assoc_rep_of_nonassoc",
+    "module": "OctonionMatrixEncodings",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "OctonionMatrixEncodings.ordinary_matrix_mul_assoc",
+    "module": "OctonionMatrixEncodings",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "PenroseSpinTilingConfig.Config3PoincareSignature.proxyType",
+    "module": "PenroseSpinTilingConfig",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "PhaseConjugateVacuumMirror.glide_phase_conjugate_skeleton",
+    "module": "PhaseConjugateVacuumMirror",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.FiniteSouriauSystem.legendreFenchel",
+    "module": "SouriauOperatorThermodynamics",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SouriauOperatorThermodynamics.OperatorSouriauSystem.identityOp",
+    "module": "SouriauOperatorThermodynamics",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SplitOctonionMinkowski.octBoostClosed_nonzero._simp_1_2",
+    "module": "SplitOctonionMinkowski",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SplitOctonionMinkowski.octBoostClosed_nonzero._simp_1_3",
+    "module": "SplitOctonionMinkowski",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SplitOctonionMinkowski.octBoostClosed_nonzero._simp_1_4",
+    "module": "SplitOctonionMinkowski",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SplitOctonionMinkowski.octBoostClosed_nonzero._simp_1_5",
+    "module": "SplitOctonionMinkowski",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SplitOctonionMinkowski.octBoostClosed_nonzero._simp_1_6",
+    "module": "SplitOctonionMinkowski",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SplitOctonionMinkowski.octBoostClosed_nonzero._simp_1_7",
+    "module": "SplitOctonionMinkowski",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SplitOctonionMinkowski.octBoostClosed_nonzero._simp_1_8",
+    "module": "SplitOctonionMinkowski",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SU3LoopBraidDuality.braid_acts_on_cuntz_via_weyl",
+    "module": "SU3LoopBraidDuality",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SU3LoopBraidDuality.braid_to_weyl_projection_socket",
+    "module": "SU3LoopBraidDuality",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SU3LoopBraidDuality.M3C",
+    "module": "SU3LoopBraidDuality",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature._simp_1_1",
+    "module": "SupergradedCuntzBdG",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature._simp_1_2",
+    "module": "SupergradedCuntzBdG",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature._simp_1_3",
+    "module": "SupergradedCuntzBdG",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature._simp_1_4",
+    "module": "SupergradedCuntzBdG",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature._simp_1_5",
+    "module": "SupergradedCuntzBdG",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature._simp_1_6",
+    "module": "SupergradedCuntzBdG",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature._simp_1_7",
+    "module": "SupergradedCuntzBdG",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature._simp_1_8",
+    "module": "SupergradedCuntzBdG",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "TorusKleinO55Bridge.affine_torus_to_klein_generator_witness",
+    "module": "TorusKleinO55Bridge",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "TrainsumQuanticsTensorTrainsDigest.shiftSupport",
+    "module": "TrainsumQuanticsTensorTrainsDigest",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "TwistedTorusVacuumMachine.twisted_torus_generator_relations",
+    "module": "TwistedTorusVacuumMachine",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "TwistorParafermionBoundary.CuntzTwistorSocket.twistorComponent._default",
+    "module": "TwistorParafermionBoundary",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "TwistorParafermionBoundary.TwistorCantorBoundary",
+    "module": "TwistorParafermionBoundary",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "UnorientedS3KleinTQFT.bloch_modes_match_cuntz_generators",
+    "module": "UnorientedS3KleinTQFT",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "UnorientedS3KleinTQFT.chi_orthogonality_dimensions",
+    "module": "UnorientedS3KleinTQFT",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "UnorientedS3KleinTQFT.chi_sign",
+    "module": "UnorientedS3KleinTQFT",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "UnorientedS3KleinTQFT.chi_trivial",
+    "module": "UnorientedS3KleinTQFT",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "UnorientedS3KleinTQFT.cpt_fixes_s3_center",
+    "module": "UnorientedS3KleinTQFT",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "UnorientedS3KleinTQFT.klein_bottle_partition_function_s3",
+    "module": "UnorientedS3KleinTQFT",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "UnorientedS3KleinTQFT.mobius_trace_vanishes",
+    "module": "UnorientedS3KleinTQFT",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "UnorientedS3KleinTQFT.mobius_twist_from_tkk",
+    "module": "UnorientedS3KleinTQFT",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "YangBaxterQSwap.C_q",
+    "module": "YangBaxterQSwap",
+    "kind": "def",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ZornScalingFlow.diagConj_formula._simp_1_10",
+    "module": "ZornScalingFlow",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ZornScalingFlow.diagConj_formula._simp_1_11",
+    "module": "ZornScalingFlow",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ZornScalingFlow.diagConj_formula._simp_1_5",
+    "module": "ZornScalingFlow",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ZornScalingFlow.diagConj_formula._simp_1_6",
+    "module": "ZornScalingFlow",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ZornScalingFlow.diagConj_formula._simp_1_7",
+    "module": "ZornScalingFlow",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ZornScalingFlow.diagConj_formula._simp_1_8",
+    "module": "ZornScalingFlow",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  },
+  {
+    "name": "ZornScalingFlow.diagConj_formula._simp_1_9",
+    "module": "ZornScalingFlow",
+    "kind": "theorem",
+    "incoming": 0,
+    "outgoing": 0,
+    "graph_role": "isolated_vacuous_in_reference_graph"
+  }
+]

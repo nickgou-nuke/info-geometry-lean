@@ -176,7 +176,7 @@ structure KreinOddObstructionData
     ∀ ψ : H, C.zeroSector ψ → ¬ oddObstruction ψ
 
 /--
-Inductive-colimit support certificate for the zero sector.
+Inductive-colimit support property for the zero sector.
 
 The intended use is finite-stage arithmetic/Fredholm/Krein data transported
 through a direct-limit carrier.  It says every zero-state has a finite-stage
@@ -199,7 +199,7 @@ structure KreinFiniteStageSupportData
     ∀ n : Stage, ∀ ψ : H, stageMember n ψ → C.zeroSector ψ → C.throat ψ
 
 /--
-Zorn-maximal subsystem certificate for the zero sector.
+Zorn-maximal subsystem property for the zero sector.
 
 This mirrors the repository's boundary Zorn theorems: choose an admissible
 subsystem between a seed and an ambient boundary, make it maximal by Zorn's
@@ -254,7 +254,7 @@ theorem hestenesKreinTranslatedRH_iff_kreinRH
 
 /--
 The real doubled Krein RH/no-leakage statement follows from an explicit
-`J`-odd obstruction certificate.
+`J`-odd obstruction property.
 
 This avoids the invalid shortcut "`J`-odd trace vanishes, therefore all poles
 are on the throat" unless the chart supplies the separation statement that an

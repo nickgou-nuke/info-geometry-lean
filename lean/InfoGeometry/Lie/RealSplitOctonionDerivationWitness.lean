@@ -4,9 +4,9 @@ import Mathlib.Tactic
 import InfoGeometry.Lie.RealSplitOctonionG2Classification
 
 /-!
-# Real split-octonion derivation witness
+# Real split-octonion derivation property
 
-This file provides the native computer-algebra derivation witness on the real
+This file provides the native computer-algebra derivation property on the real
 canonical Zorn carrier.
 -/
 
@@ -87,7 +87,7 @@ theorem realSplitOctonionDerivationPacket_packet :
           rot01Real (X * Y) = rot01Real X * Y + X * rot01Real Y := by
   exact rot01Real_deriv
 
-/-- A concrete `up0` input for the real rotation witness. -/
+/-- A concrete `up0` input for the real rotation property. -/
 abbrev up0 : SplitOctReal := { a := 0, b := 0, x := ![1, 0, 0], y := 0 }
 
 /-- Coordinate readout: the real `0-1` rotation on `up0`. -/

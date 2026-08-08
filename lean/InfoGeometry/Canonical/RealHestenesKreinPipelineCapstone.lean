@@ -78,28 +78,28 @@ local notation "H₂" => DoubledSpace E
 A theorem-safe real Hestenes-Krein pipeline packet.
 
 The fields are exactly the calibrated data used by the already-owned layers:
-frame equivalence, Drazin/Hodge residue calibration, and a scalar witness that
+frame equivalence, Drazin/Hodge residue calibration, and a scalar property that
 vanishes on source boundaries.
 -/
 @[rep_depth krein]
 structure RealHestenesKreinPipeline where
   frame : HomologyFrameEquiv (E := E)
   residue : DrazinHodgeResidueCalibration (E := H₂)
-  witness : H₂ →L[ℝ] ℝ
-  witness_vanishes :
-    PairsTriviallyOnBoundaries (E := E) frame.Dsrc witness
+  property : H₂ →L[ℝ] ℝ
+  property_vanishes :
+    PairsTriviallyOnBoundaries (E := E) frame.Dsrc property
 
 namespace RealHestenesKreinPipeline
 
 variable (P : RealHestenesKreinPipeline (E := E))
 
-/-- The supplied boundary-vanishing witness descends to source homology classes. -/
+/-- The supplied boundary-vanishing property descends to source homology classes. -/
 @[rep_depth krein]
-theorem witness_descends
+theorem property_descends
     {x y : H₂}
     (hxy : HomologyEquivalent (E := E) P.frame.Dsrc x y) :
-    P.witness x = P.witness y :=
-  witness_descends_to_homologyEquivalent (E := E) P.witness_vanishes hxy
+    P.property x = P.property y :=
+  property_descends_to_homologyEquivalent (E := E) P.property_vanishes hxy
 
 /-- The supplied frame preserves source homology equivalence in the target frame. -/
 @[rep_depth transport]
@@ -163,8 +163,8 @@ local notation "H₂F" => DoubledSpace F
 /--
 A Bott-stabilized pipeline packet.
 
-The stabilization itself is supplied as a witness. This packet only exposes
-the readbacks forced by that witness.
+The stabilization itself is supplied as a property. This packet only exposes
+the readbacks forced by that property.
 -/
 @[rep_depth krein]
 abbrev BottStabilizedPipeline :=
@@ -176,7 +176,7 @@ variable (P : BottStabilizedPipeline (E := E) (F := F))
 
 abbrev stabilization : BottStabilizedHomologyFrame (E := E) (F := F) := P
 
-/-- Bott stabilization preserves source homology equivalence by the supplied witness. -/
+/-- Bott stabilization preserves source homology equivalence by the supplied property. -/
 @[rep_depth transport]
 theorem maps_source_homologyEquivalent
     {x y : H₂E}
@@ -209,7 +209,7 @@ theorem pullbackStabilizedWitness_descends_on_base
     φ (P.stabilization.embed x) = φ (P.stabilization.embed y) :=
   P.stabilization.pullbackStabilizedWitness_descends_on_base hφ hxy
 
-/-- Bott stabilization transports Drazin-defect representatives by explicit witness. -/
+/-- Bott stabilization transports Drazin-defect representatives by explicit property. -/
 @[rep_depth operator]
 theorem maps_drazinDefectState
     {x : H₂E}
@@ -218,7 +218,7 @@ theorem maps_drazinDefectState
       (P.stabilization.embed x) :=
   P.stabilization.maps_drazinDefectState hx
 
-/-- Bott stabilization transports harmonic-projector fixed representatives by witness. -/
+/-- Bott stabilization transports harmonic-projector fixed representatives by property. -/
 @[rep_depth operator]
 theorem maps_harmonicProjectorFixed
     {x : H₂E}

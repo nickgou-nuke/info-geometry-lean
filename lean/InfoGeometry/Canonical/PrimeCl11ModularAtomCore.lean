@@ -13,7 +13,7 @@ This file proves the elementary Clifford/Majorana parity facts directly.
 No Lee--Yang theorem.
 No Hurwitz limit theorem.
 No Clifford wavelet convergence claim.
-No RH-level witness.
+No RH-level property.
 -/
 
 noncomputable section

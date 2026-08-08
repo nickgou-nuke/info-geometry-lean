@@ -109,7 +109,7 @@ theorem carParity_readout_eq_one_of_not_mem
 
 /-! ## 2. Global CAR readout preserves Boolean chirality and Möbius -/
 
-/-- Global CAR parity readout over a certified finite prime register. -/
+/-- Global CAR parity readout over a property finite prime register. -/
 @[rep_depth thermo]
 def carGlobalChiralityReadout
     {Op : Type*} [Ring Op]

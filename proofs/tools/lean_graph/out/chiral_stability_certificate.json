@@ -1,0 +1,520 @@
+{
+  "certificate": "chiral-tau-ideal-stability",
+  "generated_at": "2026-06-16T11:40:41.808989+00:00",
+  "database": "info_geometry",
+  "four_cell_matrix": [
+    {
+      "name": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "kind": null,
+      "referenced_by": 1,
+      "depends_on": 9
+    },
+    {
+      "name": "ChiralTLDescent.chiral_left_tau_ideal",
+      "kind": null,
+      "referenced_by": 1,
+      "depends_on": 10
+    },
+    {
+      "name": "ChiralTLDescent.chiral_right_kernel_tau_ideal",
+      "kind": "theorem",
+      "referenced_by": 0,
+      "depends_on": 9
+    },
+    {
+      "name": "ChiralTLDescent.chiral_right_tau_ideal",
+      "kind": "theorem",
+      "referenced_by": 0,
+      "depends_on": 10
+    }
+  ],
+  "dependency_spine": [
+    {
+      "name": "BraidIdealDescent.CrossMap",
+      "depth": null
+    },
+    {
+      "name": "BraidIdealDescent.IsLeftTauIdeal",
+      "depth": null
+    },
+    {
+      "name": "BraidIdealDescent.leftTarget",
+      "depth": null
+    },
+    {
+      "name": "BraidIdealDescent.leftTarget._proof_1",
+      "depth": null
+    },
+    {
+      "name": "BraidIdealDescent.qCrossMap",
+      "depth": null
+    },
+    {
+      "name": "BraidIdealDescent.qCrossMap._proof_2",
+      "depth": null
+    },
+    {
+      "name": "BraidIdealDescent.tauL",
+      "depth": null
+    },
+    {
+      "name": "BraidIdealDescent.tauL._proof_1",
+      "depth": null
+    },
+    {
+      "name": "BraidIdealDescent.tauL._proof_2",
+      "depth": null
+    },
+    {
+      "name": "ChiralCausalCone.M2C",
+      "depth": null
+    },
+    {
+      "name": "ChiralCausalCone.\u03c33c",
+      "depth": null
+    },
+    {
+      "name": "ChiralCausalCone.\u03c3Minus",
+      "depth": null
+    },
+    {
+      "name": "ChiralCausalCone.\u03c3Plus",
+      "depth": null
+    },
+    {
+      "name": "ChiralTensorMatrixBridge.R_chiral_tensor",
+      "depth": null
+    },
+    {
+      "name": "ChiralTensorRecoupling.e",
+      "depth": null
+    },
+    {
+      "name": "ChiralTensorRecoupling.SpinPair",
+      "depth": null
+    },
+    {
+      "name": "ChiralTensorRecoupling.X",
+      "depth": null
+    },
+    {
+      "name": "ChiralTensorRecoupling.Y",
+      "depth": null
+    },
+    {
+      "name": "ChiralTensorRecoupling.Z",
+      "depth": null
+    },
+    {
+      "name": "ChiralTensorRecoupling.Z._proof_1",
+      "depth": null
+    },
+    {
+      "name": "ChiralTLDescent.e_tmul_eta_mem_leftTarget",
+      "depth": null
+    },
+    {
+      "name": "ChiralTLDescent.tauL_qCrossMap_on_e",
+      "depth": null
+    }
+  ],
+  "top_lemmas": [
+    {
+      "name": "ChiralCausalCone.M2C",
+      "used_by": 120
+    },
+    {
+      "name": "AlgebraicCuntzQuotient.CuntzAlg",
+      "used_by": 77
+    },
+    {
+      "name": "AlgebraicCuntzQuotient.instSemiringCuntzAlg",
+      "used_by": 74
+    },
+    {
+      "name": "AlgebraicCuntzQuotient.instAlgebraCuntzAlg",
+      "used_by": 62
+    },
+    {
+      "name": "ChiralCausalCone.\u03c3Minus",
+      "used_by": 59
+    },
+    {
+      "name": "ChiralCausalCone.\u03c3Plus",
+      "used_by": 59
+    },
+    {
+      "name": "ChiralCausalCone.\u03c33c",
+      "used_by": 42
+    },
+    {
+      "name": "AlgebraicCuntzQuotient.T",
+      "used_by": 37
+    },
+    {
+      "name": "AlgebraicCuntzQuotient.S",
+      "used_by": 37
+    },
+    {
+      "name": "SupergradedCuntzBdG.Z2Parity",
+      "used_by": 36
+    },
+    {
+      "name": "ChiralTensorRecoupling.SpinPair",
+      "used_by": 32
+    },
+    {
+      "name": "SplitClifford.Q11",
+      "used_by": 32
+    },
+    {
+      "name": "AlgebraicCuntzQuotient.CuntzLetter",
+      "used_by": 27
+    },
+    {
+      "name": "SupergradedCuntzBdG.Z2Parity.odd",
+      "used_by": 27
+    },
+    {
+      "name": "SupergradedCuntzBdG.qRapidity",
+      "used_by": 27
+    },
+    {
+      "name": "SplitOctonionMinkowski.M2C",
+      "used_by": 25
+    },
+    {
+      "name": "AlgebraicCuntzQuotient.Gen",
+      "used_by": 25
+    },
+    {
+      "name": "CStarCuntzTensorQuotient.CStarCuntzFamily.S",
+      "used_by": 22
+    },
+    {
+      "name": "CStarCuntzTensorQuotient.CStarCuntzFamily",
+      "used_by": 22
+    },
+    {
+      "name": "SupergradedCuntzBdG.Z2Parity.even",
+      "used_by": 21
+    }
+  ],
+  "socket_inventory": [
+    {
+      "module": "BiquaternionKANnilpotent",
+      "name": "BiquaternionKANnilpotent.exp_K_N",
+      "kind": "def"
+    },
+    {
+      "module": "ChiralB3PresentedBridge",
+      "name": "ChiralB3PresentedBridge.canonical_parameter_correspondence",
+      "kind": "def"
+    },
+    {
+      "module": "ChiralCausalCone",
+      "name": "ChiralCausalCone.chiral_CAR_pair",
+      "kind": "def"
+    },
+    {
+      "module": "ChiralTensorMatrixBridge",
+      "name": "ChiralTensorMatrixBridge.e_matrix",
+      "kind": "def"
+    },
+    {
+      "module": "ChiralTensorRecoupling",
+      "name": "ChiralTensorRecoupling.klein_classification",
+      "kind": "def"
+    },
+    {
+      "module": "ChiralTLDescent",
+      "name": "ChiralTLDescent.R_chiral",
+      "kind": "def"
+    },
+    {
+      "module": "ColorCARStandardModel",
+      "name": "ColorCARStandardModel.fureyGeneration",
+      "kind": "def"
+    },
+    {
+      "module": "CStarCuntzTensorQuotient",
+      "name": "CStarCuntzTensorQuotient.UniversalCStarCompletionSocket",
+      "kind": "def"
+    },
+    {
+      "module": "MobiusWittenIndex",
+      "name": "MobiusWittenIndex.chiralParity",
+      "kind": "def"
+    },
+    {
+      "module": "SplitClifford",
+      "name": "SplitClifford.carPair_matrix",
+      "kind": "def"
+    },
+    {
+      "module": "SplitClifford",
+      "name": "SplitClifford.Cl00",
+      "kind": "def"
+    },
+    {
+      "module": "SplitClifford",
+      "name": "SplitClifford.cl11_from_cl00_step",
+      "kind": "def"
+    },
+    {
+      "module": "SplitClifford",
+      "name": "SplitClifford.cl22_as_cl11_gTensor_cl11",
+      "kind": "def"
+    },
+    {
+      "module": "SplitClifford",
+      "name": "SplitClifford.cl22_from_cl11_step",
+      "kind": "def"
+    },
+    {
+      "module": "SplitClifford",
+      "name": "SplitClifford.cl33_from_cl22_step",
+      "kind": "def"
+    },
+    {
+      "module": "SplitClifford",
+      "name": "SplitClifford.Cl44",
+      "kind": "def"
+    },
+    {
+      "module": "SplitClifford",
+      "name": "SplitClifford.cl55_from_cl44_step",
+      "kind": "def"
+    },
+    {
+      "module": "SplitClifford",
+      "name": "SplitClifford.grandCanonicalExponent",
+      "kind": "def"
+    },
+    {
+      "module": "SplitClifford",
+      "name": "SplitClifford.IsPureBloch",
+      "kind": "def"
+    },
+    {
+      "module": "SplitClifford",
+      "name": "SplitClifford.rindlerBeta",
+      "kind": "def"
+    },
+    {
+      "module": "SplitClifford",
+      "name": "SplitClifford.scaledJordanC",
+      "kind": "def"
+    },
+    {
+      "module": "SplitClifford",
+      "name": "SplitClifford.scaledLieC",
+      "kind": "def"
+    },
+    {
+      "module": "SplitClifford",
+      "name": "SplitClifford.unruhTemperature",
+      "kind": "def"
+    },
+    {
+      "module": "TrifactorGeometry",
+      "name": "TrifactorGeometry.sectorBySquare",
+      "kind": "def"
+    },
+    {
+      "module": "YangBaxterQSwap",
+      "name": "YangBaxterQSwap.C_q",
+      "kind": "def"
+    }
+  ],
+  "vacuity_scan": {
+    "sorry_admit_count": 0
+  },
+  "module_inventory": [
+    {
+      "module": "B3PresentedGroup",
+      "theorems": 1,
+      "defs": 0
+    },
+    {
+      "module": "BraidIdealDescent",
+      "theorems": 3,
+      "defs": 0
+    },
+    {
+      "module": "ChiralB3PresentedBridge",
+      "theorems": 6,
+      "defs": 1
+    },
+    {
+      "module": "ChiralCausalCone",
+      "theorems": 22,
+      "defs": 1
+    },
+    {
+      "module": "ChiralTensorMatrixBridge",
+      "theorems": 1,
+      "defs": 1
+    },
+    {
+      "module": "ChiralTensorRecoupling",
+      "theorems": 11,
+      "defs": 1
+    },
+    {
+      "module": "ChiralTLDescent",
+      "theorems": 5,
+      "defs": 1
+    },
+    {
+      "module": "JonesBraidB3",
+      "theorems": 1,
+      "defs": 0
+    },
+    {
+      "module": "TLChain",
+      "theorems": 2,
+      "defs": 0
+    },
+    {
+      "module": "YangBaxterQSwap",
+      "theorems": 1,
+      "defs": 1
+    },
+    {
+      "module": "YangBaxterQuotientDescent",
+      "theorems": 2,
+      "defs": 0
+    }
+  ],
+  "graph_counts": {
+    "lean_decls": 1075,
+    "syntax_nodes": 35161,
+    "references": 3272,
+    "ast_child": 34395,
+    "has_syntax": 766
+  },
+  "transitive_users": [
+    "ChiralTLDescent.chiral_relation_is_left_tau_ideal"
+  ],
+  "cross_module_paths": [
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.CrossMap",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.leftTarget",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.leftTarget",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.tauL",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.IsLeftTauIdeal",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.leftTarget._proof_1",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.CrossMap",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.tauL._proof_2",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.tauL._proof_1",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.tauL._proof_1",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.CrossMap",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.tauL",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.leftTarget._proof_1",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.tauL._proof_2",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.tauL._proof_1",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.CrossMap",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.qCrossMap",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "to": "BraidIdealDescent.qCrossMap._proof_2",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_relation_is_left_tau_ideal",
+      "to": "BraidIdealDescent.CrossMap",
+      "path_length": 5
+    },
+    {
+      "from": "ChiralTLDescent.chiral_kernel_relation_is_left_tau_ideal",
+      "to": "BraidIdealDescent.CrossMap",
+      "path_length": 5
+    }
+  ],
+  "proof_complexity": [
+    {
+      "name": "ChiralTLDescent.chiral_kernel_is_left_tau_ideal",
+      "ast_nodes": 71
+    },
+    {
+      "name": "ChiralTLDescent.chiral_left_tau_ideal",
+      "ast_nodes": 71
+    },
+    {
+      "name": "ChiralTLDescent.chiral_right_kernel_tau_ideal",
+      "ast_nodes": 71
+    },
+    {
+      "name": "ChiralTLDescent.chiral_right_tau_ideal",
+      "ast_nodes": 71
+    }
+  ]
+}

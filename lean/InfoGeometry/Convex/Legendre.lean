@@ -12,7 +12,7 @@ This file provides an abstract convex-duality layer on real inner product spaces
 - gradient map (`grad`)
 - Fenchel conjugate (`legendre`)
 - Fenchel-Young inequality
-- equality case under a supporting-hyperplane hypothesis
+- equality case under a supporting-hyperplane property
 - gradient injectivity under strict monotonicity
 
 The file is intentionally abstract and separates assumptions from derived theorems.
@@ -111,7 +111,7 @@ theorem supporting_ineq_of_convex_differentiable
       _ = Φ.F z - Φ.F x := hslopeEval
   linarith
 
-/-- Equality case in Fenchel-Young under a supporting-hyperplane hypothesis. -/
+/-- Equality case in Fenchel-Young under a supporting-hyperplane property. -/
 theorem fenchel_young_eq_of_supporting
     (Φ : ConvexFunctional V)
     (x : V)

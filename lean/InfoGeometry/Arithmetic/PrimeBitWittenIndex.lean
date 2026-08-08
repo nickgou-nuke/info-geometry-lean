@@ -24,7 +24,7 @@ open InfoGeometry.Canonical.FormalPrimeRootSystem
 open scoped BigOperators
 open scoped ArithmeticFunction.Moebius
 
-/-- A finite certified prime register. -/
+/-- A finite property prime register. -/
 @[rep_depth thermo]
 abbrev PrimeRegister :=
   {P : Finset ℕ // ∀ p ∈ P, Nat.Prime p}
@@ -37,7 +37,7 @@ abbrev prime_mem (P : PrimeRegister) : ∀ p ∈ P.primes, Nat.Prime p := P.2
 end PrimeRegister
 
 /--
-A prime-bit state: each certified prime mode is either unoccupied or occupied.
+A prime-bit state: each property prime mode is either unoccupied or occupied.
 
 This is the explicit finite Fock/occupancy surface from Spector's construction.
 The subset-register API below remains the proof-efficient form.
@@ -125,7 +125,7 @@ theorem mobius_prime_product_eq_parity
           simp
 
 /--
-Constructive Spector theorem for a certified prime register.
+Constructive Spector theorem for a property prime register.
 
 The Möbius value of the squarefree integer represented by a finite prime-bit
 state is the fermion parity `(-1)^F`.
@@ -156,7 +156,7 @@ theorem mobius_representedNatOfState_eq_fermionParity
 
 /--
 The zero clause for nonsquarefree integers is ordinary arithmetic, not a
-physics witness.
+physics property.
 -/
 @[rep_depth thermo]
 theorem mobius_eq_zero_of_not_squarefree

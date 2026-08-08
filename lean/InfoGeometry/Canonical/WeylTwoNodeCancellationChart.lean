@@ -6,7 +6,7 @@ import InfoGeometry.Canonical.WeylLocalCancellationShadow
 
 Concrete two-node cancellation chart for the finite Weyl/Vandermonde corridor.
 
-This is the first non-hypothetical cancellation witness in the current repo:
+This is the first non-hypothetical cancellation property in the current repo:
 
 * denominator: the 2x2 Vandermonde factor `y - x`,
 * numerator: the alternating Gibbs difference `exp x - exp y`,
@@ -41,7 +41,7 @@ def nodes : Fin 2 → ℝ
   | 0 => C.x
   | 1 => C.y
 
-/-- The finite Vandermonde witness for the two-node chart. -/
+/-- The finite Vandermonde property for the two-node chart. -/
 @[rep_depth thermo]
 def denominatorWitness : Fin 2 → ℝ :=
   C.nodes

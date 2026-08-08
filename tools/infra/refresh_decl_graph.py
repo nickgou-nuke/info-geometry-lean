@@ -88,21 +88,11 @@ def stream_to_arango(root: Path, import_root: str, namespace: str, database: str
         print("Error: python-arango not installed. Install with: pip install python-arango", file=sys.stderr)
         return 1
 
-    client = ArangoClient(hosts=arango_endpoint())
+    # Full `InfoGeometry.All` streams currently emit millions of dependency
+    # edges.  Final endpoint validation is intentionally global and can exceed
+    # the python-arango default 60-second HTTP timeout.
+    client = ArangoClient(hosts=arango_endpoint(), request_timeout=3600)
     db = client.db(database, username=arango_username(), password=arango_password())
-
-    def valid_edge_batch(edges: list[dict]) -> list[dict]:
-        """Keep only edges whose two declaration endpoints exist."""
-        if not edges:
-            return []
-        query = """
-        FOR e IN @edges
-          LET from_doc = DOCUMENT(e._from)
-          LET to_doc = DOCUMENT(e._to)
-          FILTER from_doc != null AND to_doc != null
-          RETURN e
-        """
-        return list(db.aql.execute(query, bind_vars={"edges": edges}))
 
     # Ensure collections exist
     collections = {
@@ -113,6 +103,9 @@ def stream_to_arango(root: Path, import_root: str, namespace: str, database: str
         if not db.has_collection(coll_name):
             db.create_collection(coll_name, edge=is_edge)
             print(f"[refresh-decl-graph] Created collection: {coll_name}")
+        else:
+            db.collection(coll_name).truncate()
+            print(f"[refresh-decl-graph] Truncated collection: {coll_name}")
 
     # Stream JSONL to ArangoDB
     proc = subprocess.Popen(cmd, cwd=root, stdout=subprocess.PIPE, stderr=None, text=True)
@@ -122,15 +115,9 @@ def stream_to_arango(root: Path, import_root: str, namespace: str, database: str
     batch_size = 5000
     decl_batch = []
     edge_batch = []
-    decl_first_batch = True
-    edge_first_batch = True
-
-    def import_batch(collection_name: str, batch: list[dict], first_batch: bool) -> None:
-        """Clear once, then replace duplicate keys without clearing prior batches."""
-        if first_batch:
-            db[collection_name].import_bulk(batch, overwrite=True)
-        else:
-            db[collection_name].import_bulk(batch, overwrite=False, on_duplicate="replace")
+    def import_batch(collection_name: str, batch: list[dict]) -> None:
+        """Append one stream batch to a collection truncated before this run."""
+        db[collection_name].import_bulk(batch, overwrite=False, on_duplicate="replace")
 
     try:
         for line in proc.stdout:
@@ -153,11 +140,11 @@ def stream_to_arango(root: Path, import_root: str, namespace: str, database: str
                     doc["kind"] = doc.get("kind", "type")
                 edge_batch.append(doc)
                 if len(edge_batch) >= batch_size:
-                    valid_edges = valid_edge_batch(edge_batch)
-                    if valid_edges:
-                        import_batch("edges", valid_edges, edge_first_batch)
-                        edge_first_batch = False
-                        edge_count += len(valid_edges)
+                    # Endpoint declarations may occur later in the alphabetical
+                    # declaration stream.  Preserve every emitted edge now and
+                    # validate endpoints only after the declaration stream ends.
+                    import_batch("edges", edge_batch)
+                    edge_count += len(edge_batch)
                     edge_batch = []
             else:
                 # Ensure _key exists
@@ -165,20 +152,17 @@ def stream_to_arango(root: Path, import_root: str, namespace: str, database: str
                     doc["_key"] = "d_" + hashlib.sha256(doc["name"].encode()).hexdigest()[:40]
                 decl_batch.append(doc)
                 if len(decl_batch) >= batch_size:
-                    import_batch("decls", decl_batch, decl_first_batch)
-                    decl_first_batch = False
+                    import_batch("decls", decl_batch)
                     decl_count += len(decl_batch)
                     decl_batch = []
 
         # Flush remaining batches
         if decl_batch:
-            import_batch("decls", decl_batch, decl_first_batch)
+            import_batch("decls", decl_batch)
             decl_count += len(decl_batch)
         if edge_batch:
-            valid_edges = valid_edge_batch(edge_batch)
-            if valid_edges:
-                import_batch("edges", valid_edges, edge_first_batch)
-                edge_count += len(valid_edges)
+            import_batch("edges", edge_batch)
+            edge_count += len(edge_batch)
             edge_batch = []
 
         proc.wait()
@@ -190,7 +174,26 @@ def stream_to_arango(root: Path, import_root: str, namespace: str, database: str
         print(f"[refresh-decl-graph] Streaming import failed: {e}", file=sys.stderr)
         return 1
 
-    print(f"[refresh-decl-graph] Imported {decl_count} declarations and {edge_count} edges to {database}")
+    # Now every declaration is present, so endpoint validation cannot discard a
+    # forward reference merely because its target appeared later in the stream.
+    remove_orphans = """
+    FOR e IN edges
+      LET from_doc = DOCUMENT(e._from)
+      LET to_doc = DOCUMENT(e._to)
+      FILTER from_doc == null OR to_doc == null
+      REMOVE e IN edges
+      COLLECT WITH COUNT INTO removed
+      RETURN removed
+    """
+    removed_rows = list(db.aql.execute(remove_orphans))
+    removed_edges = removed_rows[0] if removed_rows else 0
+    valid_edge_count = db.collection("edges").count()
+
+    print(
+        f"[refresh-decl-graph] Imported {decl_count} declarations and "
+        f"{edge_count} emitted edges to {database}; removed {removed_edges} "
+        f"orphaned edges, retained {valid_edge_count} valid edges"
+    )
     return 0
 
 

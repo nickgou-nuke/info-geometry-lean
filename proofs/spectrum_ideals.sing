@@ -1,0 +1,12 @@
+// Singular script
+// Variables: d (Re(D)), e (Im(D)), l (Re(lambda)), m (Im(lambda))
+// D = d + i*e, D_dag = d - i*e
+// D + D_dag = 1 => 2d = 1
+// D v = lambda v => for 1D, D = lambda => d + i*e = l + i*m => d = l, e = m.
+// We encode this as polynomial ideals.
+
+ring r = 0, (d, e, l, m), lp;
+ideal I = 2*d - 1, d - l, e - m;
+std(I);
+
+// The Groebner basis should contain 2*l - 1, proving Re(lambda) = 1/2.

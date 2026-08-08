@@ -1,0 +1,211 @@
+{
+  "certificate": "bdg-kms-thermodynamic-layer",
+  "generated_at": "2026-06-16T10:54:35.955816+00:00",
+  "proved_theorems": [
+    {
+      "name": "SupergradedCuntzBdG.affineSuperBracket_lie_super_split",
+      "deps": 6
+    },
+    {
+      "name": "SupergradedCuntzBdG.affineSuperBracket_odd_odd_jordan_lie_split",
+      "deps": 7
+    },
+    {
+      "name": "SupergradedCuntzBdG.affineSuperBracket_odd_odd_one",
+      "deps": 4
+    },
+    {
+      "name": "SupergradedCuntzBdG.affineSuperBracket_zero",
+      "deps": 5
+    },
+    {
+      "name": "SupergradedCuntzBdG.algebraicCuntzBdGSocket_projectors",
+      "deps": 3
+    },
+    {
+      "name": "SupergradedCuntzBdG.algebraicCuntzBdGSocket_square_law",
+      "deps": 3
+    },
+    {
+      "name": "SupergradedCuntzBdG.bdgMajoranaMinus_is_odd",
+      "deps": 10
+    },
+    {
+      "name": "SupergradedCuntzBdG.bdgMajoranaPlus_sq_eq_hamiltonianAtom",
+      "deps": 4
+    },
+    {
+      "name": "SupergradedCuntzBdG.boostedGrandCanonicalQ_eq_qRapidity_add",
+      "deps": 4
+    },
+    {
+      "name": "SupergradedCuntzBdG.boostedGrandCanonicalRealWeight_pos",
+      "deps": 3
+    },
+    {
+      "name": "SupergradedCuntzBdG.CAR_iff",
+      "deps": 4
+    },
+    {
+      "name": "SupergradedCuntzBdG.CCR_iff",
+      "deps": 4
+    },
+    {
+      "name": "SupergradedCuntzBdG.complexStarCuntzBdG_RindlerWeylFlow_add",
+      "deps": 6
+    },
+    {
+      "name": "SupergradedCuntzBdG.complexStarCuntzBdG_star_S",
+      "deps": 9
+    },
+    {
+      "name": "SupergradedCuntzBdG.complexStarCuntzBdG_star_smul",
+      "deps": 7
+    },
+    {
+      "name": "SupergradedCuntzBdG.complexStarCuntzBdG_star_T",
+      "deps": 9
+    },
+    {
+      "name": "SupergradedCuntzBdG.complexStarCuntzBdGAffineEnsemble_logScale_bracket",
+      "deps": 17
+    },
+    {
+      "name": "SupergradedCuntzBdG.complexStarCuntzBdGAffineEnsemble_zero_rapidity_bracket",
+      "deps": 18
+    },
+    {
+      "name": "SupergradedCuntzBdG.cuntzBdGAffineEnsemble_logScale_bracket",
+      "deps": 15
+    },
+    {
+      "name": "SupergradedCuntzBdG.cuntzBdGAffineEnsemble_zero_rapidity_bracket",
+      "deps": 16
+    },
+    {
+      "name": "SupergradedCuntzBdG.grandCanonicalBracket_odd_odd",
+      "deps": 6
+    },
+    {
+      "name": "SupergradedCuntzBdG.grandCanonicalQ_ne_zero",
+      "deps": 4
+    },
+    {
+      "name": "SupergradedCuntzBdG.grandCanonicalQ_ofReal",
+      "deps": 2
+    },
+    {
+      "name": "SupergradedCuntzBdG.grandCanonicalWeightedBracket_even_left",
+      "deps": 8
+    },
+    {
+      "name": "SupergradedCuntzBdG.grandCanonicalWeightedBracket_even_right",
+      "deps": 8
+    },
+    {
+      "name": "SupergradedCuntzBdG.grandCanonicalWeightedBracket_odd_odd",
+      "deps": 8
+    },
+    {
+      "name": "SupergradedCuntzBdG.hole_particle_orthogonal",
+      "deps": 8
+    },
+    {
+      "name": "SupergradedCuntzBdG.holeProj_idempotent",
+      "deps": 6
+    },
+    {
+      "name": "SupergradedCuntzBdG.kmsBoostFlow_comp",
+      "deps": 7
+    },
+    {
+      "name": "SupergradedCuntzBdG.kmsBoostFlow_eq_rapidity_after_kms",
+      "deps": 7
+    },
+    {
+      "name": "SupergradedCuntzBdG.KMSStateSocket.pullback_omega_apply",
+      "deps": 3
+    },
+    {
+      "name": "SupergradedCuntzBdG.logScale_boostedGrandCanonicalRealWeight",
+      "deps": 3
+    },
+    {
+      "name": "SupergradedCuntzBdG.logScale_grandCanonicalRealWeight",
+      "deps": 3
+    },
+    {
+      "name": "SupergradedCuntzBdG.parityMul_even_left",
+      "deps": 5
+    },
+    {
+      "name": "SupergradedCuntzBdG.parityMul_even_right",
+      "deps": 5
+    },
+    {
+      "name": "SupergradedCuntzBdG.parityMul_odd_odd",
+      "deps": 4
+    },
+    {
+      "name": "SupergradedCuntzBdG.particle_hole_orthogonal",
+      "deps": 8
+    },
+    {
+      "name": "SupergradedCuntzBdG.particleProj_idempotent",
+      "deps": 6
+    },
+    {
+      "name": "SupergradedCuntzBdG.qAffineSuperBracket_zero",
+      "deps": 7
+    },
+    {
+      "name": "SupergradedCuntzBdG.qRapidity_log_grandCanonicalWeight",
+      "deps": 5
+    },
+    {
+      "name": "SupergradedCuntzBdG.qRapidity_ne_zero",
+      "deps": 1
+    },
+    {
+      "name": "SupergradedCuntzBdG.RindlerWeylFlow_zero",
+      "deps": 3
+    },
+    {
+      "name": "SupergradedCuntzBdG.star_bdgMajoranaPlus",
+      "deps": 9
+    },
+    {
+      "name": "SupergradedCuntzBdG.superBracket_even_left",
+      "deps": 5
+    },
+    {
+      "name": "SupergradedCuntzBdG.superSign_even_left",
+      "deps": 5
+    },
+    {
+      "name": "SupergradedCuntzBdG.superSign_even_right",
+      "deps": 5
+    },
+    {
+      "name": "SupergradedCuntzBdG.superSign_odd_odd",
+      "deps": 2
+    },
+    {
+      "name": "SupergradedCuntzBdG.two_pi_mul_unruhTemperature",
+      "deps": 2
+    }
+  ],
+  "sockets": [],
+  "hilbert_polya_prerequisites": {
+    "gamma1_self_adjoint": true,
+    "gamma1_sq_eq_H": true,
+    "gamma2_classified": "finite_algebraic_blocked_on_Cuntz_T_mul_S",
+    "eigenvalues_real": "guaranteed_by_gamma1_self_adjoint_and_square_law"
+  },
+  "graph_counts": {
+    "lean_decls": 1044,
+    "references": 3128,
+    "syntax_nodes": 34212,
+    "has_syntax": 740
+  }
+}

@@ -38,7 +38,7 @@ structure KMSBoundaryData (A : Type*) [Monoid A] where
     omega_eval a (ModularAutomorphismFamily.sigma modular t b) = omega_eval (ModularAutomorphismFamily.sigma modular (t + beta) b) a
 
 /--
-Thermal state data anchored by an observable and a KMS boundary witness.
+Thermal state data anchored by an observable and a KMS boundary property.
 -/
 structure ModularThermalState (A : Type*) [Monoid A] where
   casimir : A

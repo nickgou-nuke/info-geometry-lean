@@ -5,7 +5,7 @@ Native algebraic pieces of the Asano contraction lemma.
 
 This file deliberately proves only kernel-checkable algebraic cases of the
 Asano contraction argument.  It does not package the full Ruelle/Asano theorem
-as a witness and it does not claim the Möbius/Riemann-sphere case.
+as a property and it does not claim the Möbius/Riemann-sphere case.
 
 The sign convention used here is the standard signed product obstruction:
 if the contraction `A + D z` vanishes, then the zero lies in `-K₁K₂`.
@@ -793,7 +793,7 @@ Nondegenerate contracted Asano closure under the explicit Asano-Ruelle root
 membership premise.
 
 This theorem isolates the exact remaining geometric debt in the nondegenerate
-branch (`D ≠ 0`, `AD - BC ≠ 0`) as a single input hypothesis:
+branch (`D ≠ 0`, `AD - BC ≠ 0`) as a single input property:
 every contracted zero belongs to the signed product obstruction set.
 -/
 theorem asanoContract_ne_zero_outside_signedProduct_of_nonDegenerate
@@ -988,7 +988,7 @@ theorem contracted_zero_mem_signedProduct_of_endpoint_nonDeg
         h0₁ h0₂ hzf hD (hEndpointNonDeg hD hdet) hzero
 
 /--
-Contrapositive full closure under the endpoint-nondegenerate hypothesis:
+Contrapositive full closure under the endpoint-nondegenerate property:
 outside the signed-product obstruction, there is no contracted zero.
 -/
 theorem not_isContractedZero_of_not_mem_signedProduct_of_endpoint_nonDeg

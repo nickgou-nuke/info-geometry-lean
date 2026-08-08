@@ -53,7 +53,7 @@ theorem metricProjectorOf_idempotent
 Certified modular reduction package for projector-controlled logarithmic lane
 execution.
 
-This is an interface object: support and anomaly laws are carried as certified
+This is an interface object: support and anomaly laws are carried as property
 fields so downstream modules cannot apply `log`/`inverse`/entropy formulas to a
 bare operator.
 -/
@@ -81,7 +81,7 @@ structure CertifiedModularReduction where
   metricSide : MetricSide
   hPmetricKrein : Commute (metricProjectorOf (E := E) metricSide cik) cik.GammaS
 
-  -- certified execution laws
+  -- property execution laws
   hKambient_supported_on_Preg :
     let Kreg := -(logOn logDomain)
     let Kambient := compress cik.spectralProjector Kreg
@@ -153,7 +153,7 @@ def anomaly : EndH :=
 def SpectralMetricAlignment : Prop :=
   Commute (Preg c) (Pmetric c)
 
-/-- Spectral commutation certificate for `Preg` and `Δ`. -/
+/-- Spectral commutation property for `Preg` and `Δ`. -/
 @[rep_depth operator]
 theorem Preg_commutes :
     Commute (Preg c) c.Δ :=
@@ -161,7 +161,7 @@ theorem Preg_commutes :
 
 /--
 Functional-calculus readiness on the regular Drazin lane:
-the logarithm domain certificate is available on `Δreg = Preg Δ Preg`.
+the logarithm domain property is available on `Δreg = Preg Δ Preg`.
 -/
 @[rep_depth operator]
 theorem log_defined_on_Δreg :
@@ -199,7 +199,7 @@ theorem Kambient_kills_Pzero :
     Pzero c * Kambient c = 0 ∧ Kambient c * Pzero c = 0 := by
   simpa [Pzero, Kambient, Kreg, compress] using c.hKambient_kills_Pzero
 
-/-- No analytic logarithm certificate is available on the pure defect compression. -/
+/-- No analytic logarithm property is available on the pure defect compression. -/
 @[rep_depth operator]
 theorem no_log_on_zero_sector :
     ¬ c.logAdmissible (compress (Pzero c) c.Δ) :=

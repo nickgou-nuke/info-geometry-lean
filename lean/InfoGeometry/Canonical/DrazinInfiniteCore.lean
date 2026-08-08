@@ -12,7 +12,7 @@ Infinite-dimensional operator core for the canonical Drazin lane.
 
 This file separates:
 - algebraic owner predicate: `InfoGeometry.Canonical.Drazin.IsDrazinInverse`,
-- spectral/ascent-descent/Riesz interfaces (assumption surfaces),
+- spectral/ascent-descent/Riesz interfaces (property surfaces),
 - constructive finite-dimensional bridge into a Riesz-style package.
 -/
 
@@ -35,7 +35,7 @@ def AscentAtZero (T : Module.End K V) (k : ℕ) : Prop :=
 def DescentAtZero (T : Module.End K V) (k : ℕ) : Prop :=
   InfoGeometry.Algebraic.Fitting.DescentStabilized T k
 
-/-- Finite ascent/descent witness at the spectral point `0`. -/
+/-- Finite ascent/descent property at the spectral point `0`. -/
 @[rep_depth operator]
 structure HasFiniteAscentDescentAtZero (T : Module.End K V) where
   k : ℕ
@@ -47,7 +47,7 @@ structure HasFiniteAscentDescentAtZero (T : Module.End K V) where
 variable {T TD : Module.End K V} {k m : ℕ}
 
 /--
-Descent stabilization from a canonical Drazin witness at any step `m ≥ k`.
+Descent stabilization from a canonical Drazin property at any step `m ≥ k`.
 -/
 @[rep_depth operator]
 theorem descentAtZero_of_isDrazinInverse_le
@@ -67,7 +67,7 @@ theorem descentAtZero_of_isDrazinInverse_le
     simp [pow_succ]
 
 /--
-Ascent stabilization from a canonical Drazin witness at any step `m ≥ k`.
+Ascent stabilization from a canonical Drazin property at any step `m ≥ k`.
 -/
 @[rep_depth operator]
 theorem ascentAtZero_of_isDrazinInverse_le
@@ -119,7 +119,7 @@ theorem ascentAtZero_of_isDrazinInverse
   ascentAtZero_of_isDrazinInverse_le (T := T) (TD := TD) (k := k) (m := k) hD le_rfl
 
 /--
-Canonical Drazin witness induces a finite ascent/descent witness at zero.
+Canonical Drazin property induces a finite ascent/descent property at zero.
 -/
 @[rep_depth operator]
 def finiteAscentDescentAtZero_of_isDrazinInverse
@@ -132,7 +132,7 @@ def finiteAscentDescentAtZero_of_isDrazinInverse
   hIsDrazin := hD
 
 /--
-Finite ascent/descent interface yields a canonical Drazin witness.
+Finite ascent/descent interface yields a canonical Drazin property.
 -/
 @[rep_depth operator]
 theorem exists_drazinInverse_of_finiteAscentDescent
@@ -142,7 +142,7 @@ theorem exists_drazinInverse_of_finiteAscentDescent
 
 /--
 Compatibility readback theorem for finite ascent/descent packages that already
-store a witness.
+store a property.
 -/
 @[rep_depth operator]
 theorem exists_drazinInverse_of_finiteAscentDescent_readback
@@ -330,8 +330,8 @@ theorem exists_drazinInverse_of_fitting {T : Module.End K V} {k : ℕ}
 
 /--
 Constructive finite ascent/descent bridge:
-recover a Drazin witness from stabilization fields only (without using any
-stored witness field from the interface package).
+recover a Drazin property from stabilization fields only (without using any
+stored property field from the interface package).
 -/
 @[rep_depth operator]
 theorem exists_drazinInverse_of_finiteAscentDescent_constructive
@@ -402,7 +402,7 @@ structure HasGeneralizedRieszDecompositionAtZero (T : E →L[𝕂] E) where
 Witness-free constructive Riesz decomposition surface at `0`.
 
 This owner carries only projector/splitting data and does not store a
-preconstructed Drazin witness.
+preconstructed Drazin property.
 -/
 @[rep_depth operator]
 structure ConstructiveRieszDecompositionAtZero (T : E →L[𝕂] E) where
@@ -522,7 +522,7 @@ theorem constructiveDrazinCandidate_power
     _ = T ^ hR.k := by simp
 
 /--
-Foundational constructive Drazin data already carries a canonical Drazin witness
+Foundational constructive Drazin data already carries a canonical Drazin property
 for its stored inverse, without first re-expanding through the Riesz package.
 -/
 @[rep_depth operator]
@@ -549,7 +549,7 @@ theorem isDrazinInverse_of_constructiveDrazinData
 
 /--
 Foundational constructive Drazin data yields a canonical existential Drazin
-witness without first converting to a constructive Riesz package.
+property without first converting to a constructive Riesz package.
 -/
 @[rep_depth operator]
 theorem exists_drazinInverse_of_constructiveDrazinData
@@ -559,7 +559,7 @@ theorem exists_drazinInverse_of_constructiveDrazinData
   ⟨h.k, h.inverse, isDrazinInverse_of_constructiveDrazinData (𝕂 := 𝕂) h⟩
 
 /--
-Constructive Riesz decomposition at `0` yields a canonical Drazin witness.
+Constructive Riesz decomposition at `0` yields a canonical Drazin property.
 -/
 @[rep_depth operator]
 theorem exists_drazinInverse_of_constructiveRieszDecompositionAtZero
@@ -574,7 +574,7 @@ theorem exists_drazinInverse_of_constructiveRieszDecompositionAtZero
 
 /--
 Compatibility adapter: recover constructive Riesz data from the legacy
-classical witness-bearing interface.
+classical property-bearing interface.
 -/
 @[rep_depth operator]
 def constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero
@@ -632,9 +632,9 @@ structure DrazinInfiniteAssumptions (T : E →L[𝕂] E) where
 
 /--
 The bundled infinite-dimensional Drazin assumptions already carry a classical
-Riesz packet, so they recover the witness-free constructive Riesz surface
+Riesz packet, so they recover the property-free constructive Riesz surface
 without reintroducing a separate `HasClassicalRieszDecompositionAtZero`
-hypothesis.
+property.
 -/
 @[rep_depth operator]
 def constructiveRieszDecompositionAtZero_of_drazinInfiniteAssumptions
@@ -646,7 +646,7 @@ def constructiveRieszDecompositionAtZero_of_drazinInfiniteAssumptions
 
 /--
 The bundled infinite-dimensional Drazin assumptions already determine the
-canonical Drazin witness attached to their classical Riesz field.
+canonical Drazin property attached to their classical Riesz field.
 -/
 @[rep_depth operator]
 theorem isDrazinInverse_of_drazinInfiniteAssumptions
@@ -670,7 +670,7 @@ theorem exists_drazinInverse_of_drazinInfiniteAssumptions
       (𝕂 := 𝕂) h)
 
 /--
-Classical Riesz decomposition immediately yields the canonical Drazin witness.
+Classical Riesz decomposition immediately yields the canonical Drazin property.
 -/
 @[rep_depth operator]
 theorem isDrazinInverse_of_hasClassicalRieszDecompositionAtZero
@@ -680,7 +680,7 @@ theorem isDrazinInverse_of_hasClassicalRieszDecompositionAtZero
   h.hIsDrazin
 
 /--
-Classical Riesz decomposition interface yields a canonical Drazin witness.
+Classical Riesz decomposition interface yields a canonical Drazin property.
 -/
 @[rep_depth operator]
 theorem exists_drazinInverse_of_rieszDecomposition
@@ -699,7 +699,7 @@ variable {R : Type*} [Ring R]
 /--
 Riesz-style Drazin package on an operator ring.
 
-The load-bearing field remains the canonical algebraic witness.
+The load-bearing field remains the canonical algebraic property.
 -/
 @[rep_depth operator]
 structure RieszDrazinData (T : R) where
@@ -711,7 +711,7 @@ structure RieszDrazinData (T : R) where
 
 variable {T : R}
 
-/-- Extract canonical Drazin witness from a Riesz package. -/
+/-- Extract canonical Drazin property from a Riesz package. -/
 @[rep_depth operator]
 theorem isDrazinInverse_of_riesz
     (h : RieszDrazinData T) :

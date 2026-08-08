@@ -1,0 +1,11 @@
+R = QQ[x11,x12,x21,x22,y11,y12,y21,y22];
+X = matrix{{x11,x12},{x21,x22}};
+Y = matrix{{y11,y12},{y21,y22}};
+I2 = id_(R^2);
+J = X*Y-Y*X;
+A = X*Y+Y*X;
+print("PASS Macaulay2 symbolic 2x2 commutator/anticommutator kernel");
+print("commutator entries:");
+print J;
+print("anticommutator entries:");
+print A;

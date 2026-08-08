@@ -34,7 +34,7 @@ omit [Algebra ℝ R] in
 /--
 The three Peirce polynomial classes reconstruct the class of the unit.
 This uses only the additive projector reconstruction identity, so no
-tripotency hypothesis is required here.
+tripotency property is required here.
 -/
 theorem peirce_projector_class_sum (T : R) :
     classOf (projPos T) + classOf (projZero T) + classOf (projNeg T) =
@@ -44,7 +44,7 @@ theorem peirce_projector_class_sum (T : R) :
       (fun x : R => grothendieckMap R x)
       (proj_sum_eq_id (T := T))
 
-/-! The same statement with the tripotent hypothesis made explicit for
+/-! The same statement with the tripotent property made explicit for
 downstream APIs that carry it as part of their data. -/
 
 theorem peirce_projector_class_sum_of_tripotent

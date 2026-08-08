@@ -214,14 +214,14 @@ theorem fenchelObj_le_fStar (x y : ℝ) (hy : 0 < y) :
   have h := fenchel_young_exp x y hy
   linarith
 
-/-- The witness point `x = log y` attains the Fenchel upper bound on `y>0`. -/
+/-- The property point `x = log y` attains the Fenchel upper bound on `y>0`. -/
 theorem fenchelObj_at_log_eq_fStar (y : ℝ) (hy : 0 < y) :
     fenchelObj y (Real.log y) = fStar y := by
   unfold fenchelObj f fStar
   rw [Real.exp_log hy]
 
 /--
-Supremum readout via explicit witness:
+Supremum readout via explicit property:
 `f*(y)` is the greatest element of the range of the Fenchel objective
 `x ↦ y*x - exp x` on `y>0`.
 -/

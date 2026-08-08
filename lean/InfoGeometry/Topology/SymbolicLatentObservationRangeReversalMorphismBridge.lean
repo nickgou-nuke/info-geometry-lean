@@ -5,10 +5,10 @@ import InfoGeometry.Topology.SymbolicLatentObservationRangeReversalCompHaus
 # Conditional morphism bridge for observation-range reversal
 
 The modular reversal is a quotient-side action.  This owner records the
-additional hypothesis needed to identify it with a morphism of the original
+additional property needed to identify it with a morphism of the original
 finite symbolic systems: the induced quotient map must agree pointwise with
 the descended reversal.  No reversal morphism is inferred without that
-hypothesis.
+property.
 -/
 
 noncomputable section

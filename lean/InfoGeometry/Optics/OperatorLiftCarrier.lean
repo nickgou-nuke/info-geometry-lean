@@ -120,6 +120,27 @@ theorem matrixAction_mul_end
   funext i
   exact congrFun (matrixAction_mul A B v) i
 
+section Brackets
+
+variable {R W : Type*}
+variable [CommSemiring R] [Ring R] [AddCommGroup W] [Module R W]
+
+/-- The doubled carrier transports the associative commutator of operator matrices. -/
+theorem matrixAction_commutator
+    (A B : OperatorMatrix (R := R) (W := W)) :
+    matrixAction (A * B - B * A) =
+      matrixAction A * matrixAction B - matrixAction B * matrixAction A := by
+  rw [matrixAction_sub, matrixAction_mul_end, matrixAction_mul_end]
+
+/-- The doubled carrier transports the CAR anticommutator of operator matrices. -/
+theorem matrixAction_anticommutator
+    (A B : OperatorMatrix (R := R) (W := W)) :
+    matrixAction (A * B + B * A) =
+      matrixAction A * matrixAction B + matrixAction B * matrixAction A := by
+  rw [matrixAction_add, matrixAction_mul_end, matrixAction_mul_end]
+
+end Brackets
+
 theorem matrixAction_injective :
     Function.Injective (matrixAction (R := R) (W := W)) := by
   intro A B h

@@ -69,6 +69,26 @@ theorem causal_mul_action
         matrixAction (reconstruct_causal C) := by
   rw [reconstruct_causal_mul, matrixAction_mul_end]
 
+/-- The causal operator coordinates transport the noncommutative commutator
+to the doubled carrier. -/
+theorem causal_commutator_action
+    (A C : CausalOperatorCoordinates (EndW W)) :
+    matrixAction (reconstruct_causal (A * C - C * A)) =
+      matrixAction (reconstruct_causal A) * matrixAction (reconstruct_causal C) -
+        matrixAction (reconstruct_causal C) * matrixAction (reconstruct_causal A) := by
+  rw [reconstruct_causal_sub, reconstruct_causal_mul, reconstruct_causal_mul,
+    matrixAction_commutator]
+
+/-- The causal operator coordinates transport the CAR anticommutator to the
+doubled carrier without commuting the internal operator coefficients. -/
+theorem causal_anticommutator_action
+    (A C : CausalOperatorCoordinates (EndW W)) :
+    matrixAction (reconstruct_causal (A * C + C * A)) =
+      matrixAction (reconstruct_causal A) * matrixAction (reconstruct_causal C) +
+        matrixAction (reconstruct_causal C) * matrixAction (reconstruct_causal A) := by
+  rw [reconstruct_causal_add, reconstruct_causal_mul, reconstruct_causal_mul,
+    matrixAction_anticommutator]
+
 section Connection
 
 variable {Point Tangent : Type*}

@@ -207,4 +207,59 @@ theorem matrixActionEquiv_symm_apply
   rw [(matrixActionEquiv (R := R) (W := W)).apply_symm_apply]
   exact (matrixAction_matrixOfAction T).symm
 
+section RingEquivalence
+
+variable {R W : Type*}
+variable [CommSemiring R] [Ring R] [AddCommGroup W] [Module R W]
+
+/-- The finite doubled carrier is a genuine ring representation of the
+operator-entry matrix algebra.  Its inverse is the matrix of operator entries
+recovered from the action on the two basis-supported vectors. -/
+noncomputable def matrixActionRingEquiv :
+    OperatorMatrix (R := R) (W := W) ≃+*
+      Module.End R (Fin 2 → W) where
+  toFun := matrixAction
+  invFun := matrixOfAction
+  left_inv := by
+    intro A
+    exact (matrixAction_injective (R := R) (W := W))
+      (matrixAction_matrixOfAction (matrixAction A))
+  right_inv := by
+    intro T
+    exact matrixAction_matrixOfAction T
+  map_add' := matrixAction_add
+  map_mul' := matrixAction_mul_end
+
+@[simp] theorem matrixActionRingEquiv_apply
+    (A : OperatorMatrix (R := R) (W := W)) :
+    matrixActionRingEquiv (R := R) (W := W) A = matrixAction A :=
+  rfl
+
+@[simp] theorem matrixActionRingEquiv_symm_apply
+    (T : Module.End R (Fin 2 → W)) :
+    (matrixActionRingEquiv (R := R) (W := W)).symm T = matrixOfAction T :=
+  rfl
+
+/-- The same carrier equivalence is compatible with the scalar algebra maps.
+This is the algebraic scalar-extension bridge used by operator-valued thermal
+transport; it does not make the operator coefficients commute. -/
+noncomputable def matrixActionAlgEquiv :
+    OperatorMatrix (R := R) (W := W) ≃ₐ[R]
+      Module.End R (Fin 2 → W) where
+  toEquiv := matrixActionEquiv (R := R) (W := W)
+  map_mul' := matrixAction_mul_end
+  map_add' := matrixAction_add
+  commutes' := by
+    intro r
+    change matrixAction (algebraMap R (OperatorMatrix (R := R) (W := W)) r) =
+      algebraMap R (Module.End R (Fin 2 → W)) r
+    simp [Algebra.smul_def, matrixAction_smul, matrixAction_one_end]
+
+@[simp] theorem matrixActionAlgEquiv_apply
+    (A : OperatorMatrix (R := R) (W := W)) :
+    matrixActionAlgEquiv (R := R) (W := W) A = matrixAction A :=
+  rfl
+
+end RingEquivalence
+
 end InfoGeometry.Optics.OperatorLiftCarrier

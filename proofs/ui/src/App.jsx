@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ForceGraph3D from 'react-force-graph-3d';
+import HolographicView from './HolographicView';
 import './App.css';
 
 const KIND_COLORS = {
@@ -28,6 +29,10 @@ const SOURCE_MODES = {
     label: 'NonAbelian/Thermodynamic',
     files: ['/proof_graph.json'],
     prefixFilter: ['NonAbelian', 'Thermodynamic'],
+  },
+  holographic: {
+    label: 'Holographic JWST Stream',
+    isHolographic: true,
   },
 };
 
@@ -106,6 +111,8 @@ function App() {
   useEffect(() => {
     let cancelled = false;
     const mode = SOURCE_MODES[sourceMode] ?? SOURCE_MODES.lean;
+    
+    if (mode.isHolographic) return;
 
     const load = async () => {
       for (const endpoint of mode.files) {
@@ -435,6 +442,7 @@ function App() {
         backgroundColor="#00000000"
         enableNodeDrag={false}
       />
+      {sourceModeMeta.isHolographic && <HolographicView />}
     </div>
   );
 }

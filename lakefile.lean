@@ -1024,6 +1024,9 @@ lean_lib InfoGeometryCanonical where
 lean_lib Cl55ProjectiveBoundary where
   roots := #[`InfoGeometry.Canonical.Cl55ProjectiveBoundary]
 
+lean_lib ProjectiveAffineConformalClosure55 where
+  roots := #[`InfoGeometry.Canonical.ProjectiveAffineConformalClosure55]
+
 lean_lib OperatorPin55Action where
   roots := #[`InfoGeometry.Canonical.OperatorPin55Action]
 

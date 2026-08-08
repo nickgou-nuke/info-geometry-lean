@@ -1,0 +1,83 @@
+.holo-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at center, #0a1128 0%, #000000 100%);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.holo-canvas {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 20px rgba(0, 255, 170, 0.4));
+}
+
+.holo-hud {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(0, 255, 170, 0.3);
+  padding: 20px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  color: #aab0bc;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 8px 32px rgba(0, 255, 170, 0.1);
+  z-index: 20;
+}
+
+.holo-hud h2 {
+  margin: 0 0 15px 0;
+  color: #00ffaa;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.holo-status {
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.holo-status.online {
+  background: rgba(0, 255, 170, 0.1);
+  color: #00ffaa;
+  border: 1px solid rgba(0, 255, 170, 0.3);
+}
+
+.holo-status.offline {
+  background: rgba(255, 77, 109, 0.1);
+  color: #ff4d6d;
+  border: 1px solid rgba(255, 77, 109, 0.3);
+}
+
+.holo-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.holo-stats div {
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.holo-stats span {
+  color: #fff;
+  font-weight: bold;
+}

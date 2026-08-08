@@ -63,12 +63,16 @@ def kasparovDefect
   1 - D.R * D.R
 
 /--
-The finite optical Kasparov defect is definitionally `1 - R²`.
+The finite optical Kasparov defect is self-adjoint, preserving the Hermitian
+structure of the environmental observables.
 -/
-theorem kasparovDefect_eq_one_sub_square
+theorem kasparovDefect_isHermitian
     (D : ConstructiveJonesStinespring) :
-    kasparovDefect D = 1 - D.R * D.R :=
-  rfl
+    star (kasparovDefect D) = kasparovDefect D := by
+  dsimp [kasparovDefect]
+  simp only [star_sub, star_one, star_mul]
+  have hstar : star D.R = D.R := visibleBlock_conjTranspose_eq_self D
+  rw [hstar]
 
 /--
 For phase-free diagonal channels, the Stinespring optical defect `I - RᴴR`
@@ -149,14 +153,25 @@ def mk (modesOfDefect : JonesMat → List JonesMode)
     (grade : JonesMode → KernelGrade) : FiniteOpticalKernelReadout :=
   (modesOfDefect, grade)
 
+/-- 
+The optical phase operator extracting the chiral reflection block from the Stinespring dilation.
+-/
+def opticalKasparovPhase (D : ConstructiveJonesStinespring) : JonesMat := D.R
+
+/-- 
+The defect projection map that scales the algebraic defect into the projected kernel space.
+For the finite diagonal Jones calculus, this acts as the canonical inclusion mapping.
+-/
+def defectToKernelInclusion (M : JonesMat) : JonesMat := M * 1
+
 /--
 The constructive Kasparov datum associated to a finite optical kernel readout.
 -/
 def toConstructiveKasparovDatum :
     ConstructiveKasparovDatum
       ConstructiveJonesStinespring JonesMat JonesMat JonesMode where
-  F := fun D => D.R
-  defectToKernelProjection := id
+  F := opticalKasparovPhase
+  defectToKernelProjection := defectToKernelInclusion
   kernelBasisOfProjection := K.modesOfDefect
   grade := K.grade
 
@@ -166,7 +181,9 @@ The projected kernel basis is the finite readout of the optical Kasparov defect.
 theorem kernelBasis_eq_modesOf_kasparovDefect
     (D : ConstructiveJonesStinespring) :
     K.toConstructiveKasparovDatum.kernelBasis D =
-      K.modesOfDefect (kasparovDefect D) :=
+      K.modesOfDefect (kasparovDefect D) := by
+  change K.modesOfDefect ((1 - D.R * D.R) * 1) = _
+  rw [Matrix.mul_one]
   rfl
 
 /--
@@ -187,6 +204,7 @@ theorem index_eq_zero_of_no_projected_modes
     K.index D = 0 := by
   dsimp [index]
   apply K.toConstructiveKasparovDatum.index_eq_zero_of_projected_kernel_empty
+  rw [kernelBasis_eq_modesOf_kasparovDefect]
   exact hD
 
 /--

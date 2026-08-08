@@ -251,9 +251,16 @@ noncomputable def matrixActionAlgEquiv :
   map_add' := matrixAction_add
   commutes' := by
     intro r
-    change matrixAction (algebraMap R (OperatorMatrix (R := R) (W := W)) r) =
-      algebraMap R (Module.End R (Fin 2 → W)) r
-    simp [Algebra.smul_def, matrixAction_smul, matrixAction_one_end]
+    calc
+      matrixAction (algebraMap R (OperatorMatrix (R := R) (W := W)) r) =
+          matrixAction (r • (1 : OperatorMatrix (R := R) (W := W))) := by
+            rw [Algebra.algebraMap_eq_smul_one]
+      _ = r • matrixAction (1 : OperatorMatrix (R := R) (W := W)) :=
+        matrixAction_smul r 1
+      _ = r • (1 : Module.End R (Fin 2 → W)) := by
+        rw [matrixAction_one_end]
+      _ = algebraMap R (Module.End R (Fin 2 → W)) r := by
+        rw [Algebra.algebraMap_eq_smul_one]
 
 @[simp] theorem matrixActionAlgEquiv_apply
     (A : OperatorMatrix (R := R) (W := W)) :

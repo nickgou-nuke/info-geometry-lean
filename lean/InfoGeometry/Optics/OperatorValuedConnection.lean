@@ -18,7 +18,7 @@ namespace InfoGeometry.Optics.OperatorValuedConnection
 open InfoGeometry.Geometry.BilingualAnalyticity
 
 variable {Point Tangent Value : Type*}
-variable [Ring Value] [Algebra ℝ Value]
+variable [Ring Value]
 
 /-- The commutator wedge square of an operator-valued one-form.
 
@@ -86,5 +86,37 @@ theorem curvature_eq_zero_of_flat
     (hflat : IsFlat C) (p : Point) (X Y : Tangent) :
     curvature C p X Y = 0 :=
   hflat p X Y
+
+section RingChannels
+
+variable {Value' : Type*} [Ring Value']
+
+/-- Transport an operator-valued connection through a multiplicative and
+additive representation channel.  The channel is deliberately only a
+`RingHom`: no commutativity or coordinate representation is introduced. -/
+def mapConnection (ρ : Value →+* Value')
+    (C : Connection (Point := Point) (Tangent := Tangent) (Value := Value)) :
+    Connection (Point := Point) (Tangent := Tangent) (Value := Value') where
+  form := fun p X => ρ (C.form p X)
+  derivative := fun p X Y => ρ (C.derivative p X Y)
+  derivative_swap := by
+    intro p X Y
+    calc
+      ρ (C.derivative p Y X) = ρ (-C.derivative p X Y) := by
+        rw [C.derivative_swap]
+      _ = -ρ (C.derivative p X Y) := by rw [map_neg]
+  derivative_same := by
+    intro p X
+    rw [C.derivative_same, map_zero]
+
+/-- Curvature commutes with the operator representation channel. -/
+theorem mapConnection_curvature
+    (ρ : Value →+* Value')
+    (C : Connection (Point := Point) (Tangent := Tangent) (Value := Value))
+    (p : Point) (X Y : Tangent) :
+    ρ (curvature C p X Y) = curvature (mapConnection ρ C) p X Y := by
+  simp [curvature, wedgeSquare, mapConnection]
+
+end RingChannels
 
 end InfoGeometry.Optics.OperatorValuedConnection

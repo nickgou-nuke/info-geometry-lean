@@ -233,25 +233,6 @@ structure Cl11Modulator where
     bridge_action (gamma_sq g) D = D
 
 /-!
-## 5. The Full Algebra: (D₄ ⊕ D₄) ⋊ Cl(1,1)
--/
-
-/-- 
-The full Lie algebra structure:
-𝔤 = (D₄⁽ᵉ⁾ ⊕ D₄⁽ᵖ⁾) ⋊ Cl(1,1)
-
-This is isomorphic to so(5,5) but the structure is clearer
-in the cloned D₄ form.
--/
-structure FullAlgebraD4Cl11 where
-  /-- The cloned D₄ algebras -/
-  clonedD4 : ClonedD4Algebra
-  /-- The Cl(1,1) modulator -/
-  modulator : Cl11Modulator
-  /-- Semidirect product structure -/
-  semidirect : Prop
-
-/-!
 ## 6. 5-Grading from the Modulator Eigenvalues
 -/
 
@@ -324,37 +305,6 @@ theorem varlamov_pct_theorem (v : V4) :
 PCT combined symmetry is always preserved.
 -/
 theorem pct_preserved : V4.J_e * V4.J_p * V4.J_ep = V4.I := by rfl
-
-/-!
-## 8. Main Synthesis Theorem
--/
-
-/-- 
-Main theorem: The Standard Model emerges from the (D₄ ⊕ D₄) ⋊ Cl(1,1) structure.
-
-Given:
-- Two D₄ copies cloned by V₄
-- Cl(1,1) modulator bridge
-- Tripotent splitting of M₂(ℝ)
-- 5-grading from modulator eigenvalues
-- Anomaly cancellation (5 - 5 = 0)
-
-Then:
-- su(2) subalgebras exist in each D₄
-- su(3) subalgebras embed in D₄
-- Three generations from embedding choices
-- Electron/positron from V₄ eigenvalues
-- Mass from determinant sign
-
-This proves the Standard Model is the geometric structure of
-the cloned D₄ algebra with tripotent M₂(ℝ) splitting.
--/
-theorem standard_model_from_D4_tripotent
-    (D4 : ClonedD4Algebra)
-    (modulator : Cl11Modulator)
-    (tripotent : M2TripotentDecomposition)
-    (graded : FiveGradedD4Cl11Algebra)
-    (h_anomaly : anomalyIndex 5 5 = 0) : anomalyIndex 5 5 = 0 := h_anomaly
 
 end D4Cl11Tripotent
 

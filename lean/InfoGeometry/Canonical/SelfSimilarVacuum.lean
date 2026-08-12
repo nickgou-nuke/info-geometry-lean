@@ -68,6 +68,54 @@ def IsSelfSimilarVacuum (s : StateSpace) : Prop :=
 abbrev VacuumLattice : Type :=
   Function.fixedPoints R_hom
 
+/-! ## 3a. Classification of the exact-refinement fixed points -/
+
+def stateFromSeed (x : Sector 0) : StateSpace
+  | 0 => x
+  | n + 1 => refineSector (stateFromSeed x n)
+
+theorem stateFromSeed_fixed (x : Sector 0) :
+    R (stateFromSeed x) = stateFromSeed x := by
+  funext n
+  cases n <;> rfl
+
+def vacuumSeed (v : VacuumLattice) : Sector 0 :=
+  v.1 0
+
+theorem vacuum_eq_stateFromSeed (v : VacuumLattice) :
+    v.1 = stateFromSeed (vacuumSeed v) := by
+  funext n
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      rw [stateFromSeed]
+      have h := congrFun v.2 (n + 1)
+      change refineSector (v.1 n) = v.1 (n + 1) at h
+      rw [← h, ih]
+
+def exactVacuumOrderIso : VacuumLattice ≃o Sector 0 where
+  toFun := vacuumSeed
+  invFun x := ⟨stateFromSeed x, stateFromSeed_fixed x⟩
+  left_inv v := by
+    apply Subtype.ext
+    exact (vacuum_eq_stateFromSeed v).symm
+  right_inv x := rfl
+  map_rel_iff' := by
+    intro v w
+    change vacuumSeed v ≤ vacuumSeed w ↔ v ≤ w
+    constructor
+    · intro h
+      change v.1 ≤ w.1
+      rw [vacuum_eq_stateFromSeed v, vacuum_eq_stateFromSeed w]
+      intro n
+      induction n with
+      | zero => exact h
+      | succ n ih =>
+          exact (sector_galois_connection n).monotone_l ih
+    · intro h
+      change v.1 0 ≤ w.1 0
+      exact h 0
+
 /-- By Knaster-Tarski, the set of self-similar vacua forms a complete lattice. -/
 noncomputable instance completeLatticeVacuum : CompleteLattice VacuumLattice :=
   inferInstance
@@ -87,7 +135,9 @@ The stronger projector state space records a complete finite projection assignme
 every Cantor level.
 -/
 def ProjectionStateSpace :=
-  ∀ n : ℕ, InfoGeometry.Canonical.CompletionPathway.ProjectionAssignment n
+  ∀ n : ℕ,
+    (Fin n → Bool) →
+      InfoGeometry.Canonical.KreinProjectorLattice.KreinSector
 
 /-- The pointwise projector state space is a complete lattice. -/
 noncomputable instance completeLatticeProjectionStateSpace :

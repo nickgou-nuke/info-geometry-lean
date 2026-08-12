@@ -1,7 +1,6 @@
 import proofs.ZornOPParavector
 import proofs.GrandUnifiedTKK
 import proofs.CartanTriality
-
 /-!
 # Zorn triality to TKK grading bridge
 

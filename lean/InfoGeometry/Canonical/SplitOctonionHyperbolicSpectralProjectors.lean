@@ -57,14 +57,14 @@ lemma smul_mul_smul_SO (r s : ℝ) (X Y : SplitOctonion) :
 lemma smul_mul_SO (r : ℝ) (X Y : SplitOctonion) :
     (r • X) * Y = r • (X * Y) := by
   apply SplitOctonion.ext
-  · ext <;> simp <;> ring_nf
-  · ext <;> simp <;> ring_nf
+  · ext <;> simp
+  · ext <;> simp
 
 lemma mul_smul_SO (r : ℝ) (X Y : SplitOctonion) :
     X * (r • Y) = r • (X * Y) := by
   apply SplitOctonion.ext
-  · ext <;> simp <;> ring_nf
-  · ext <;> simp <;> ring_nf
+  · ext <;> simp
+  · ext <;> simp
 
 theorem hyperbolicProjPlus_sq (g : H) (hg : Quaternion.normSq g = 1) :
     hyperbolicProjPlus g * hyperbolicProjPlus g = hyperbolicProjPlus g := by
@@ -84,38 +84,38 @@ theorem hyperbolicProjPlus_mul_minus (g : H) (hg : Quaternion.normSq g = 1) :
     hyperbolicProjPlus g * hyperbolicProjMinus g = 0 := by
   unfold hyperbolicProjPlus hyperbolicProjMinus
   apply SplitOctonion.ext
-  · ext <;> simp [hg] <;> ring_nf
-  · ext <;> simp [hg] <;> ring_nf
+  · ext <;> simp [hg]
+  · ext <;> simp [hg]
 
 theorem hyperbolicProjMinus_mul_plus (g : H) (hg : Quaternion.normSq g = 1) :
     hyperbolicProjMinus g * hyperbolicProjPlus g = 0 := by
   unfold hyperbolicProjPlus hyperbolicProjMinus
   apply SplitOctonion.ext
-  · ext <;> simp [hg] <;> ring_nf
-  · ext <;> simp [hg] <;> ring_nf
+  · ext <;> simp [hg]
+  · ext <;> simp [hg]
 
 theorem hyperbolicProjPlus_add_minus (g : H) :
     hyperbolicProjPlus g + hyperbolicProjMinus g = 1 := by
   unfold hyperbolicProjPlus hyperbolicProjMinus
   apply SplitOctonion.ext
   · ext <;> simp <;> ring_nf
-  · ext <;> simp <;> ring_nf
+  · ext <;> simp
 
 theorem J_g_mul_projPlus (g : H) (hg : Quaternion.normSq g = 1) :
     J_g g * hyperbolicProjPlus g = hyperbolicProjPlus g := by
   unfold hyperbolicProjPlus
   apply SplitOctonion.ext
-  · ext <;> simp [hg] <;> ring_nf
-  · ext <;> simp [hg] <;> ring_nf
+  · ext <;> simp [hg]
+  · ext <;> simp [hg]
 
 theorem J_g_mul_projMinus (g : H) (hg : Quaternion.normSq g = 1) :
     J_g g * hyperbolicProjMinus g = -hyperbolicProjMinus g := by
   unfold hyperbolicProjMinus
   apply SplitOctonion.ext
-  · ext <;> simp [hg] <;> ring_nf
-  · ext <;> simp [hg] <;> ring_nf
+  · ext <;> simp [hg]
+  · ext <;> simp [hg]
 
-theorem expHyperbolic_projector_decomposition (g : H) (hg : Quaternion.normSq g = 1) (η : ℝ) :
+theorem expHyperbolic_projector_decomposition (g : H) (_hg : Quaternion.normSq g = 1) (η : ℝ) :
     expHyperbolic 1 η (J_g g) =
       Real.exp η • hyperbolicProjPlus g +
       Real.exp (-η) • hyperbolicProjMinus g := by
@@ -123,9 +123,9 @@ theorem expHyperbolic_projector_decomposition (g : H) (hg : Quaternion.normSq g 
   apply SplitOctonion.ext
   · have h1 : Real.cosh η = (Real.exp η + Real.exp (-η)) / 2 := Real.cosh_eq η
     rw [h1]
-    ext <;> simp [hg] <;> ring_nf
+    ext <;> simp [_hg] <;> ring_nf
   · have h1 : Real.sinh η = (Real.exp η - Real.exp (-η)) / 2 := Real.sinh_eq η
     rw [h1]
-    ext <;> simp [hg] <;> ring_nf
+    ext <;> simp [_hg] <;> ring_nf
 
 end SplitOctonion

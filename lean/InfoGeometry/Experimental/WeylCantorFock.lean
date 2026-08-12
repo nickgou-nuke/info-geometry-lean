@@ -72,20 +72,74 @@ def weylDenominator (t : ℕ → ℝ) : ℂ :=
   Finset.prod (Finset.range 0) fun j : ℕ =>
     (Real.exp (t j / 2) - Real.exp (-(t j / 2) : ℝ) : ℂ)
 
+theorem weylDenominator_eq_one (t : ℕ → ℝ) :
+    weylDenominator t = 1 := by
+  simp [weylDenominator]
+
+theorem weylDenominator_ne_zero (t : ℕ → ℝ) :
+    weylDenominator t ≠ 0 := by
+  rw [weylDenominator_eq_one]
+  exact one_ne_zero
+
 /--
 The Weyl denominator is nonzero when all tilt eigenvalues are nonzero.
 -/
 theorem weylDenominator_nonzero_on_regular (t : ℕ → ℝ)
     (hreg : ∀ j : ℕ, t j ≠ 0) : weylDenominator t ≠ 0 := by
+  exact weylDenominator_ne_zero t
+
+/-! The finite-stage denominator is the nontrivial truncation of the
+infinite notation above.  Keeping the stage explicit prevents the empty
+product `Finset.range 0` from being mistaken for an infinite product. -/
+
+def finiteWeylDenominator (N : ℕ) (t : ℕ → ℝ) : ℂ :=
+  ∏ j ∈ Finset.range N,
+    (Real.exp (t j / 2) - Real.exp (-(t j / 2) : ℝ) : ℂ)
+
+theorem finiteWeylDenominator_succ (N : ℕ) (t : ℕ → ℝ) :
+    finiteWeylDenominator (N + 1) t =
+      finiteWeylDenominator N t *
+        (Real.exp (t N / 2) - Real.exp (-(t N / 2) : ℝ) : ℂ) := by
+  rw [finiteWeylDenominator, finiteWeylDenominator, Finset.prod_range_succ]
+
+theorem finiteWeylDenominator_add (N M : ℕ) (t : ℕ → ℝ) :
+    finiteWeylDenominator (N + M) t =
+      finiteWeylDenominator N t *
+        (∏ j ∈ Finset.range M,
+          (Real.exp (t (N + j) / 2) -
+            Real.exp (-(t (N + j) / 2) : ℝ) : ℂ)) := by
+  rw [finiteWeylDenominator, finiteWeylDenominator, Finset.prod_range_add]
+
+theorem finiteWeylDenominator_nonzero_on_regular
+    (N : ℕ) (t : ℕ → ℝ)
+    (hreg : ∀ j < N, t j ≠ 0) :
+    finiteWeylDenominator N t ≠ 0 := by
   intro hzero
-  unfold weylDenominator at hzero
-  have : Finset.prod (Finset.range 0) (fun j : ℕ => (Real.exp (t j / 2) - Real.exp (-(t j / 2)) : ℂ)) = 0 := hzero
-  rcases Finset.prod_eq_zero_iff.mp this with ⟨j, hj, hzeroj⟩
-  have : Real.exp (t j / 2) = Real.exp (-(t j / 2)) := by
-    exact_mod_cast sub_eq_zero.mp hzeroj
-  have : t j / 2 = -(t j / 2) := Real.exp_injective this
-  have : t j = 0 := by linarith
-  exact hreg j this
+  unfold finiteWeylDenominator at hzero
+  have hprod :
+      ∏ j ∈ Finset.range N,
+          (Real.exp (t j / 2) - Real.exp (-(t j / 2) : ℝ) : ℂ) = 0 :=
+    hzero
+  rcases Finset.prod_eq_zero_iff.mp hprod with ⟨j, hj, hfactor⟩
+  have hjN : j < N := Finset.mem_range.mp hj
+  have hexp : Real.exp (t j / 2) = Real.exp (-(t j / 2)) := by
+    exact_mod_cast sub_eq_zero.mp hfactor
+  have hhalf : t j / 2 = -(t j / 2) := Real.exp_injective hexp
+  have hzero_weight : t j = 0 := by
+    linarith
+  exact hreg j hjN hzero_weight
+
+theorem finiteWeylDenominator_ne_zero_iff
+    (N : ℕ) (t : ℕ → ℝ) :
+    finiteWeylDenominator N t ≠ 0 ↔ ∀ j < N, t j ≠ 0 := by
+  constructor
+  · intro h j hj hjzero
+    apply h
+    unfold finiteWeylDenominator
+    apply Finset.prod_eq_zero
+    · exact Finset.mem_range.mpr hj
+    · simp [hjzero]
+  · exact finiteWeylDenominator_nonzero_on_regular N t
 
 /-! ## 2. Finite denominator algebra -/
 
@@ -146,16 +200,16 @@ theorem finiteRawHyperbolicDenominator_eq_halfRootProduct_mul_weylDenominator
 The split Dirac operator D(t) = Σ_j t_j · splitAtom_j on the Cantor
 boundary function space.
 -/
-def splitDirac (t : ℕ → ℝ) (f : CantorBoundaryFunctionSpace) (x : CantorBoundary) : ℝ :=
+def splitDirac (t : ℕ → ℝ) (f : (ℕ → Bool) → ℝ) (x : ℕ → Bool) : ℝ :=
   t 0 * f x
 
 @[simp]
-theorem splitDirac_apply (t : ℕ → ℝ) (f : CantorBoundaryFunctionSpace) (x : CantorBoundary) :
+theorem splitDirac_apply (t : ℕ → ℝ) (f : (ℕ → Bool) → ℝ) (x : ℕ → Bool) :
     splitDirac t f x = t 0 * f x := rfl
 
 @[simp]
-theorem splitDirac_zero_weight (t : ℕ → ℝ) (f : CantorBoundaryFunctionSpace)
-    (x : CantorBoundary) (ht : t 0 = 0) :
+theorem splitDirac_zero_weight (t : ℕ → ℝ) (f : (ℕ → Bool) → ℝ)
+    (x : ℕ → Bool) (ht : t 0 = 0) :
     splitDirac t f x = 0 := by
   simp [splitDirac, ht]
 

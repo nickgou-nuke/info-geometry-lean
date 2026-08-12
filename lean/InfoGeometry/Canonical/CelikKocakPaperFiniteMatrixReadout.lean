@@ -15,10 +15,10 @@ namespace InfoGeometry.Canonical.CelikKocakPaperFormalism
 open FunctionSpace
 
 abbrev EndpointMatrix (n : ℕ) :=
-  Matrix (CantorAddress n) (CantorAddress n) ℂ
+  Matrix (((Fin n) → Bool)) (((Fin n) → Bool)) ℂ
 
 abbrev EndpointOperator (n : ℕ) :=
-  FunctionSpace n →ₗ[ℂ] FunctionSpace n
+  (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)
 
 noncomputable def endpointMatrixAlgEquiv (n : ℕ) :
     EndpointMatrix n ≃ₐ[ℂ] EndpointOperator n :=

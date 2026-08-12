@@ -33,6 +33,7 @@ noncomputable section
 open InfoGeometry.Clifford.LogCftMonodromy
 open InfoGeometry.Clifford.MonodromyFlowAdapter
 open InfoGeometry.Canonical.HadjiivanovRindlerModularBridge
+open InfoGeometry.Canonical.FiniteFibonacciFusionMatrix
 
 namespace InfoGeometry.Canonical.HadjiivanovMonodromyProjection
 
@@ -157,5 +158,55 @@ theorem virasoro_L0_trace (h : ℂ) : (virasoroL0Cell h).trace = 2 * h := by
 
 theorem virasoro_L0_det (h : ℂ) : (virasoroL0Cell h).det = h ^ 2 := by
   simp [virasoroL0Cell, upperJordan, Matrix.det_fin_two]; ring
+
+/-!
+The full twist of the finite Fibonacci braid generator is the conjugate of
+the squared diagonal `R` matrix.  This is the theorem-level replacement for
+the historical, over-strong identification with the Hadjiivanov logarithmic
+monodromy: no LCFT normalization is implicit here.
+-/
+theorem fibonacciBMatrix_sq_eq_conjugate_R_sq
+    (q : Units ℂ) (τ s : ℂ)
+    (hF : fibonacciFusionMatrix τ s * fibonacciFusionMatrix τ s = 1) :
+    (fibonacciBMatrix q τ s) ^ 2 =
+      fibonacciFusionMatrix τ s * (fibonacciRMatrix q) ^ 2 *
+        fibonacciFusionMatrix τ s := by
+  rw [pow_two]
+  simp only [fibonacciBMatrix]
+  calc
+    (fibonacciFusionMatrix τ s * fibonacciRMatrix q * fibonacciFusionMatrix τ s) *
+        (fibonacciFusionMatrix τ s * fibonacciRMatrix q * fibonacciFusionMatrix τ s) =
+        fibonacciFusionMatrix τ s * fibonacciRMatrix q *
+          (fibonacciFusionMatrix τ s * fibonacciFusionMatrix τ s) *
+            fibonacciRMatrix q * fibonacciFusionMatrix τ s := by
+              simp only [mul_assoc]
+    _ = fibonacciFusionMatrix τ s * fibonacciRMatrix q * 1 *
+          fibonacciRMatrix q * fibonacciFusionMatrix τ s := by rw [hF]
+    _ = fibonacciFusionMatrix τ s * fibonacciRMatrix q * fibonacciRMatrix q *
+          fibonacciFusionMatrix τ s := by simp
+    _ = fibonacciFusionMatrix τ s * (fibonacciRMatrix q) ^ 2 *
+          fibonacciFusionMatrix τ s := by
+      rw [pow_two]
+      simp only [mul_assoc]
+
+/-!
+The historical generic diagonalization claim is too strong: conjugation by an
+involutive matrix preserves the determinant of the Hadjiivanov monodromy.
+This is the invariant replacement used by the owner layer.
+-/
+theorem hadjiivanov_conjugation_det
+    (F : Matrix (Fin 2) (Fin 2) ℂ)
+    (hF_sq : F * F = 1)
+    (h : ℂ) :
+    (F * hadjiivanovMonodromy h * F).det = lcftPhase h ^ 2 := by
+  calc
+    (F * hadjiivanovMonodromy h * F).det =
+        F.det * (hadjiivanovMonodromy h).det * F.det := by
+          rw [Matrix.det_mul, Matrix.det_mul]
+    _ = (hadjiivanovMonodromy h).det * (F.det * F.det) := by ring
+    _ = (hadjiivanovMonodromy h).det * (F * F).det := by
+          rw [Matrix.det_mul]
+    _ = (hadjiivanovMonodromy h).det := by rw [hF_sq]; simp
+    _ = lcftPhase h ^ 2 := monodromy_is_parabolic h
 
 end InfoGeometry.Canonical.HadjiivanovMonodromyProjection

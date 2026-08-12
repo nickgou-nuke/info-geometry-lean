@@ -14,7 +14,7 @@ Theorem-honest finite layer:
 
 namespace KleinErlangenGrothendieckBridge
 
-open TKKJordanPairData
+open TKKJordanPairData.Legacy
 open PenroseSpinIncidenceTessellation
 open PenroseSpinTilingConfig
 
@@ -95,7 +95,7 @@ theorem k3_generators_remain_six : Fintype.card SpinTileGenerator = 6 :=
 /-- The TKK five-grade arithmetic still exposes the conformal pairing
 `g₋₁ × g₁ → g₀`. -/
 theorem tkk_conformal_pairing_grade : gradeAdd TKKGrade.m1 TKKGrade.p1 = some TKKGrade.z0 :=
-  TKKJordanPairData.gradeAdd_m1_p1
+  TKKJordanPairData.Legacy.gradeAdd_m1_p1
 
 /-- Capstone: finite Klein/Plucker, TKK-grade, and K3-incidence facts compile. -/
 theorem klein_erlangen_grothendieck_synthesis :

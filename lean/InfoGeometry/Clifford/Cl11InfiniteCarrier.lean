@@ -108,6 +108,19 @@ theorem carrier_ringCommutator_isDerivation
     ringCommutator K (X * Y) = ringCommutator K X * Y + X * ringCommutator K Y :=
   ringCommutator_isDerivation K X Y
 
+/-!
+The chiral `plus/minus` generator difference is itself an inner derivation.  This is
+proved directly on the algebraic colimit carrier; it does not introduce an
+analytic completion or identify the generators with an unrelated finite model.
+-/
+theorem carrier_difference_ringCommutator_isDerivation
+    (Kplus Kminus X Y : CompatibleCarrier) :
+    ringCommutator (Kplus - Kminus) (X * Y) =
+      ringCommutator (Kplus - Kminus) X * Y +
+        X * ringCommutator (Kplus - Kminus) Y := by
+  unfold ringCommutator
+  noncomm_ring
+
 /-- Difference of finite generators survives as difference of carrier commutators. -/
 theorem carrier_ringCommutator_sub_left
     (K₁ K₂ X : CompatibleCarrier) :
@@ -124,6 +137,24 @@ theorem finiteAdvance_ringCommutator_derivation
   rw [map_mul]
   exact ringCommutator_isDerivation (finiteAdvance m k K) (finiteAdvance m k X)
     (finiteAdvance m k Y)
+
+/-!
+The same Leibniz law is preserved when the finite-stage generator is a
+plus/minus difference.  This is the stagewise statement needed before passing
+to the compatible colimit cone.
+-/
+theorem finiteAdvance_difference_ringCommutator_derivation
+    (m k : ℕ) (Kplus Kminus X Y : Stage m) :
+    ringCommutator (finiteAdvance m k (Kplus - Kminus))
+        (finiteAdvance m k (X * Y)) =
+      ringCommutator (finiteAdvance m k (Kplus - Kminus))
+          (finiteAdvance m k X) * finiteAdvance m k Y +
+        finiteAdvance m k X *
+          ringCommutator (finiteAdvance m k (Kplus - Kminus))
+            (finiteAdvance m k Y) := by
+  simp only [finiteAdvance, map_sub, map_mul]
+  unfold ringCommutator
+  noncomm_ring
 
 /-- The Markov trace readout is stable along every finite stage embedding chain. -/
 theorem compatibleMarkovTrace_stable

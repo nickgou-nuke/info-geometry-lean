@@ -39,11 +39,9 @@ We explicitly mark functions returning exterior algebra generators as `noncomput
 noncomputable def fermiGenerators (i j : ι) : ExteriorAlgebra R ((ι × ι) →₀ R) :=
   ExteriorAlgebra.ι R (arithmeticGenerators R ι i j)
 
-/--
-The conceptual placeholder for the Riemann Zeta partition function evaluated by the Bost-Connes KMS state.
-This will serve as the equivalent to the Amplituhedron Volume / All-Loop Integrand.
--/
-noncomputable def bostConnesPartitionFunction (β : ℝ) : ℝ :=
+/-- Formal zeta readout at a real inverse-temperature parameter.  This is not
+    a KMS state or a partition-function theorem. -/
+noncomputable def formalBostConnesZetaReadout (β : ℝ) : ℝ :=
   (riemannZeta (β : ℂ)).re
 
 end InfoGeometry.Arithmetic.BostConnes

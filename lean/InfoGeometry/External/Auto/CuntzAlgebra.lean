@@ -2,7 +2,7 @@ import Mathlib.Algebra.Star.Basic
 import Mathlib.Algebra.Ring.Basic
 
 /-!
-# Cuntz Algebra 𝒪₂ and Cantor Space Isometries
+# Cuntz Algebra 𝒪₂ and ℕ → Bool Space Isometries
 Strict formalization of the Cuntz superalgebra representations, 
 orthogonality of generators, and their actions on infinite binary qubit words.
 -/
@@ -76,40 +76,38 @@ theorem cuntz_ortho_21 (S₁ S₂ : A) [hC : CuntzO2 S₁ S₂] : star S₂ * S�
 end CuntzAlgebra
 
 /-!
-# Cantor Set Dynamics
+# ℕ → Bool Set Dynamics
 Infinite binary qubit words represented via functions from ℕ → Bool.
 -/
 
 section CantorSpace
 
-/-- The Cantor set of infinite binary words. -/
-def Cantor := ℕ → Bool
 
 /-- The left Cuntz isometry S₁: injects 0 (false) at the root. -/
-def S1_action (x : Cantor) : Cantor
+def S1_action (x : ℕ → Bool) : ℕ → Bool
   | 0 => false
   | n + 1 => x n
 
 /-- The right Cuntz isometry S₂: injects 1 (true) at the root. -/
-def S2_action (x : Cantor) : Cantor
+def S2_action (x : ℕ → Bool) : ℕ → Bool
   | 0 => true
   | n + 1 => x n
 
 /-- The topological shift operator: acts as the left inverse (annihilator). -/
-def shift (x : Cantor) : Cantor := fun n => x (n + 1)
+def shift (x : ℕ → Bool) : ℕ → Bool := fun n => x (n + 1)
 
 /-- Formal proof that the shift operator perfectly annihilates the S₁ injection. -/
-theorem shift_S1_eq_id (x : Cantor) : shift (S1_action x) = x := by
+theorem shift_S1_eq_id (x : ℕ → Bool) : shift (S1_action x) = x := by
   funext n
   rfl
 
 /-- Formal proof that the shift operator perfectly annihilates the S₂ injection. -/
-theorem shift_S2_eq_id (x : Cantor) : shift (S2_action x) = x := by
+theorem shift_S2_eq_id (x : ℕ → Bool) : shift (S2_action x) = x := by
   funext n
   rfl
 
-/-- Disjointness of the topological ranges of S₁ and S₂ on the Cantor set. -/
-theorem S1_neq_S2 (x y : Cantor) : S1_action x ≠ S2_action y := by
+/-- Disjointness of the topological ranges of S₁ and S₂ on the ℕ → Bool set. -/
+theorem S1_neq_S2 (x y : ℕ → Bool) : S1_action x ≠ S2_action y := by
   intro h
   have h0 : S1_action x 0 = S2_action y 0 := congrFun h 0
   contradiction

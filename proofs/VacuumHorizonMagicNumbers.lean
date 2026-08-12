@@ -73,7 +73,6 @@ theorem horizon_forces_spherical_symmetry (N : ℕ) :
   dsimp [structural_deformation]
   split_ifs with h_1
   · rfl
-  · contradiction
 
 end VacuumHorizon
 end noncomputable section

@@ -71,25 +71,25 @@ theorem gamma12_eq :
 theorem gammaPlus_gammaMinus_anticomm :
     gammaPlus * gammaMinus + gammaMinus * gammaPlus =
       (0 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [gammaPlus, gammaMinus, Cl11Matrix.Eplus,
-      Cl11Matrix.Eminus, Matrix.mul_apply, Matrix.add_apply,
-      Fin.sum_univ_two]
+      Cl11Matrix.Eminus, Matrix.add_apply]
 
 theorem gamma12_gammaPlus_anticomm :
     gamma12 * gammaPlus + gammaPlus * gamma12 =
       (0 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [gamma12, gammaPlus, Cl11Matrix.J1,
-      Cl11Matrix.Eplus, Matrix.mul_apply, Matrix.add_apply,
-      Fin.sum_univ_two]
+      Cl11Matrix.Eplus, Matrix.add_apply]
 
 theorem gamma12_gammaMinus_anticomm :
     gamma12 * gammaMinus + gammaMinus * gamma12 =
       (0 : Matrix (Fin 2) (Fin 2) ℝ) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [gamma12, gammaMinus, Cl11Matrix.J1,
-      Cl11Matrix.Eminus, Matrix.mul_apply, Matrix.add_apply,
-      Fin.sum_univ_two]
+      Cl11Matrix.Eminus, Matrix.add_apply]
 
 end InfoGeometry.Clifford.GammaMatrices

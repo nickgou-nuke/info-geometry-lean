@@ -34,6 +34,11 @@ def wordComplementEquiv (n : ℕ) : BitWord n ≃ BitWord n where
     wordComplementEquiv n w = wordComplement w :=
   rfl
 
+theorem wordComplement_involutive (n : ℕ) (w : BitWord n) :
+    wordComplement (wordComplement w) = w := by
+  funext i
+  cases h : w i <;> simp [wordComplement, h]
+
 def complementPullback {n : ℕ} (f : DiagAlg n) : DiagAlg n :=
   fun w => f (wordComplement w)
 
@@ -45,6 +50,22 @@ def complementPullback {n : ℕ} (f : DiagAlg n) : DiagAlg n :=
     complementPullback (1 : DiagAlg n) = 1 := by
   rfl
 
+theorem wordComplement_prefixSucc (n : ℕ) (w : BitWord (n + 1)) :
+    wordComplement (prefixSucc n w) =
+      prefixSucc n (wordComplement w) := by
+  funext i
+  rfl
+
+theorem complementPullback_diagEmbedSucc
+    (n : ℕ) (f : DiagAlg n) :
+    complementPullback (diagEmbedSucc n f) =
+      diagEmbedSucc n (complementPullback f) := by
+  ext w
+  unfold complementPullback diagEmbedSucc
+  change f (prefixSucc n (wordComplement w)) =
+    f (wordComplement (prefixSucc n w))
+  rw [wordComplement_prefixSucc]
+
 theorem complementPullback_add {n : ℕ} (f g : DiagAlg n) :
     complementPullback (f + g) =
       complementPullback f + complementPullback g := by
@@ -55,6 +76,10 @@ theorem complementPullback_mul {n : ℕ} (f g : DiagAlg n) :
       complementPullback f * complementPullback g := by
   rfl
 
+theorem complementPullback_star {n : ℕ} (f : DiagAlg n) :
+    complementPullback (star f) = star (complementPullback f) := by
+  rfl
+
 theorem complementPullback_involutive {n : ℕ} (f : DiagAlg n) :
     complementPullback (complementPullback f) = f := by
   funext w
@@ -62,6 +87,24 @@ theorem complementPullback_involutive {n : ℕ} (f : DiagAlg n) :
   congr 1
   funext i
   cases h : w i <;> simp [wordComplement, h]
+
+theorem complementPullback_cylinderIndicator
+    (n : ℕ) (w : BitWord n) :
+    complementPullback (cylinderIndicator n w) =
+      cylinderIndicator n (wordComplement w) := by
+  ext v
+  unfold complementPullback cylinderIndicator
+  by_cases h : wordComplement v = w
+  · have hw : wordComplement w = v := by
+      rw [← h]
+      exact wordComplement_involutive n v
+    simp [h, hw]
+  · have hw : v ≠ wordComplement w := by
+      intro hv
+      apply h
+      rw [hv]
+      exact wordComplement_involutive n w
+    simp [h, hw]
 
 theorem DiagTrace_complement_invariant (n : ℕ) (f : DiagAlg n) :
     DiagTrace n (complementPullback f) = DiagTrace n f := by
@@ -76,5 +119,18 @@ theorem DiagTrace_state_complement_invariant (n : ℕ) (f : DiagAlg n) :
     (DiagTrace_state n).val (complementPullback f) =
       (DiagTrace_state n).val f := by
   exact DiagTrace_complement_invariant n f
+
+theorem DiagTrace_complementPullback_cylinderIndicator
+    (n : ℕ) (w : BitWord n) :
+    DiagTrace n (complementPullback (cylinderIndicator n w)) =
+      DiagTrace n (cylinderIndicator n w) := by
+  exact DiagTrace_complement_invariant n (cylinderIndicator n w)
+
+theorem DiagTrace_state_complementPullback_cylinderIndicator
+    (n : ℕ) (w : BitWord n) :
+    (DiagTrace_state n).val
+        (complementPullback (cylinderIndicator n w)) =
+      (DiagTrace_state n).val (cylinderIndicator n w) := by
+  exact DiagTrace_state_complement_invariant n (cylinderIndicator n w)
 
 end InfoGeometry.Canonical.CantorKMSFiniteTomitaBridge

@@ -184,6 +184,40 @@ def solderedBasis : Fin 8 → SplitZornC
     chiralSigmaMinus i * chiralSigmaMinus i = 0 := by
   exact V_mul_self_zero i
 
+@[simp] theorem chiralSigmaMinus_zero_mul_one :
+    chiralSigmaMinus 0 * chiralSigmaMinus 1 = -(chiralSigmaPlus 2) := by
+  exact V_zero_mul_V_one
+
+@[simp] theorem chiralSigmaMinus_one_mul_two :
+    chiralSigmaMinus 1 * chiralSigmaMinus 2 = -(chiralSigmaPlus 0) := by
+  exact V_one_mul_V_two
+
+@[simp] theorem chiralSigmaMinus_two_mul_zero :
+    chiralSigmaMinus 2 * chiralSigmaMinus 0 = -(chiralSigmaPlus 1) := by
+  exact V_two_mul_V_zero
+
+@[simp] theorem chiralSigmaMinus_one_mul_zero :
+    chiralSigmaMinus 1 * chiralSigmaMinus 0 = chiralSigmaPlus 2 := by
+  exact V_one_mul_V_zero
+
+@[simp] theorem chiralSigmaMinus_two_mul_one :
+    chiralSigmaMinus 2 * chiralSigmaMinus 1 = chiralSigmaPlus 0 := by
+  exact V_two_mul_V_one
+
+@[simp] theorem chiralSigmaMinus_zero_mul_two :
+    chiralSigmaMinus 0 * chiralSigmaMinus 2 = chiralSigmaPlus 1 := by
+  exact V_zero_mul_V_two
+
+@[simp] theorem chiralSigmaPlus_mul_minus (i j : Fin 3) :
+    chiralSigmaPlus i * chiralSigmaMinus j =
+      if i = j then chiralUPlus else 0 := by
+  exact U_mul_V i j
+
+@[simp] theorem chiralSigmaMinus_mul_plus (i j : Fin 3) :
+    chiralSigmaMinus i * chiralSigmaPlus j =
+      if i = j then chiralUMinus else 0 := by
+  exact V_mul_U i j
+
 /-
 The chiral Peirce basis reconstructs every split-Zorn element from the two
 diagonal idempotents and the three upper/lower chiral coordinate families.

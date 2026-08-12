@@ -11,44 +11,38 @@ Galois connection that are actually owned in the repository.
 
 namespace InfoGeometry.Canonical.CompletionPathway
 
-abbrev BinaryWord (n : ℕ) := CantorCylinderLattice.BinaryWord n
-abbrev KreinSector := KreinProjectorLattice.KreinSector
-abbrev ProjectionAssignment (n : ℕ) := BinaryWord n → KreinSector
-
-/-- The finite completed projection lattice at level `n`. -/
-abbrev FiniteProjectionCompletion (n : ℕ) : Type :=
-  ProjectionAssignment n
-
 /-- The finite completed projection lattice is complete. -/
 noncomputable instance finiteProjectionCompletion_complete (n : ℕ) :
-    CompleteLattice (FiniteProjectionCompletion n) :=
+    CompleteLattice
+      ((Fin n → Bool) → KreinProjectorLattice.KreinSector) :=
   inferInstance
 
 /-- Every set of finite projection sectors has a canonical least upper bound. -/
 theorem finiteProjectionCompletion_sSup_isLUB
-    (n : ℕ) (S : Set (FiniteProjectionCompletion n)) :
+    (n : ℕ)
+    (S : Set
+      ((Fin n → Bool) → KreinProjectorLattice.KreinSector)) :
     IsLUB S (sSup S) :=
   isLUB_sSup S
 
 /-- Every set of finite projection sectors has a canonical greatest lower bound. -/
 theorem finiteProjectionCompletion_sInf_isGLB
-    (n : ℕ) (S : Set (FiniteProjectionCompletion n)) :
+    (n : ℕ)
+    (S : Set
+      ((Fin n → Bool) → KreinProjectorLattice.KreinSector)) :
     IsGLB S (sInf S) :=
   isGLB_sInf S
 
-/-- Canonical Sigma-form for an order adjunction. -/
-abbrev OrderAdjunction (L : Type) (R : Type) [Preorder L] [Preorder R] :
-    Type :=
-  Σ lower : L → R, { upper : R → L // GaloisConnection lower upper }
-
 /-- Refinement shifts a projection assignment to the next Cantor level. -/
 def refineProjectionAssignment {n : ℕ}
-    (P : ProjectionAssignment n) : ProjectionAssignment (n + 1) :=
+    (P : (Fin n → Bool) → KreinProjectorLattice.KreinSector) :
+    (Fin (n + 1) → Bool) → KreinProjectorLattice.KreinSector :=
   fun v => P (CantorCylinderLattice.truncateWord v)
 
 /-- Coarse-graining meets the two child sectors above each parent. -/
 def coarseProjectionAssignment {n : ℕ}
-    (Q : ProjectionAssignment (n + 1)) : ProjectionAssignment n :=
+    (Q : (Fin (n + 1) → Bool) → KreinProjectorLattice.KreinSector) :
+    (Fin n → Bool) → KreinProjectorLattice.KreinSector :=
   fun w => Q (CantorCylinderLattice.leftChild w) ⊓
     Q (CantorCylinderLattice.rightChild w)
 
@@ -95,7 +89,13 @@ theorem projectionAssignment_galoisConnection (n : ℕ) :
 
 /-- Refinement/coarse-graining as a concrete Galois connection between adjacent levels. -/
 def refinementCoAdjunction (n : ℕ) :
-    OrderAdjunction (FiniteProjectionCompletion n) (FiniteProjectionCompletion (n + 1)) :=
+    Σ lower :
+      ((Fin n → Bool) → KreinProjectorLattice.KreinSector) →
+        ((Fin (n + 1) → Bool) → KreinProjectorLattice.KreinSector),
+      { upper :
+          ((Fin (n + 1) → Bool) → KreinProjectorLattice.KreinSector) →
+            ((Fin n → Bool) → KreinProjectorLattice.KreinSector) //
+        GaloisConnection lower upper } :=
   ⟨refineProjectionAssignment, coarseProjectionAssignment,
     projectionAssignment_galoisConnection n⟩
 
@@ -108,14 +108,16 @@ theorem refinementCoAdjunction_galoisConnection (n : ℕ) :
 
 /-- The projection refinement map preserves arbitrary joins. -/
 theorem refinementCoAdjunction_lower_iSup
-    (n : ℕ) {ι : Sort*} (P : ι → FiniteProjectionCompletion n) :
+    (n : ℕ) {ι : Sort*}
+    (P : ι → (Fin n → Bool) → KreinProjectorLattice.KreinSector) :
     refineProjectionAssignment (⨆ i, P i) =
       ⨆ i, refineProjectionAssignment (P i) :=
   (projectionAssignment_galoisConnection n).l_iSup
 
 /-- The projection coarse-graining map preserves arbitrary meets. -/
 theorem refinementCoAdjunction_upper_iInf
-    (n : ℕ) {ι : Sort*} (Q : ι → FiniteProjectionCompletion (n + 1)) :
+    (n : ℕ) {ι : Sort*}
+    (Q : ι → (Fin (n + 1) → Bool) → KreinProjectorLattice.KreinSector) :
     coarseProjectionAssignment (⨅ i, Q i) =
       ⨅ i, coarseProjectionAssignment (Q i) :=
   (projectionAssignment_galoisConnection n).u_iInf

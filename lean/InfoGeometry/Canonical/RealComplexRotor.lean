@@ -33,14 +33,14 @@ theorem realRotorAction_add
   module
 
 theorem realRotorAction_add_zero
-    (I : V →ₗ[ℝ] V) (hI : IsRealComplexStructure I)
+    (I : V →ₗ[ℝ] V) (_hI : IsRealComplexStructure I)
     (θ : ℝ) (v : V) :
     realRotorAction I θ (realRotorAction I 0 v) =
       realRotorAction I θ v := by
   rw [realRotorAction_zero]
 
 theorem realRotorAction_zero_add
-    (I : V →ₗ[ℝ] V) (hI : IsRealComplexStructure I)
+    (I : V →ₗ[ℝ] V) (_hI : IsRealComplexStructure I)
     (θ : ℝ) (v : V) :
     realRotorAction I 0 (realRotorAction I θ v) =
       realRotorAction I θ v := by

@@ -8,10 +8,3 @@ The Cuntz algebra data and its proved relations are owned by
 second algebra structure; it preserves the historical module path for
 downstream owners that only need the generic Cuntz API.
 -/
-
-namespace InfoGeometry.Algebra.CuntzAlgebra
-
-abbrev CuntzIsometries (n : ℕ) (A : Type*) [Ring A] [StarRing A] :=
-  Cuntz.CuntzNAlgebra (N := n) A
-
-end InfoGeometry.Algebra.CuntzAlgebra

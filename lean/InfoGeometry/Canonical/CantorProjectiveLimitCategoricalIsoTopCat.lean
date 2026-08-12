@@ -2,6 +2,7 @@ import InfoGeometry.Canonical.CantorProjectiveLimitTopCat
 import InfoGeometry.Canonical.CantorProjectiveLimitFiniteReadoutTopCat
 import InfoGeometry.Canonical.CantorBoundaryReadoutTopCat
 import InfoGeometry.Canonical.UHFInductiveColimitBoundaryInverseLimit
+import Mathlib.Topology.Category.CompHaus.Basic
 
 /-!
 # Identifying the two native prefix-limit carriers
@@ -30,6 +31,20 @@ def projectiveToCategoricalLimitTopCatIso :
     TopCat.of PrefixProjectiveLimit ≅
       TopCat.of (↑(limit prefixDiagram)) :=
   cantorProjectiveLimitTopCatIso.symm.trans prefixBoundaryLimitIso
+
+def projectiveToCategoricalLimitCompHausIso :
+    CompHaus.of PrefixProjectiveLimit ≅
+      CompHaus.of (↑(limit prefixDiagram)) where
+  hom := CompHausLike.ofHom _
+    projectiveToCategoricalLimitTopCatIso.hom.hom
+  inv := CompHausLike.ofHom _
+    projectiveToCategoricalLimitTopCatIso.inv.hom
+  hom_inv_id := by
+    apply InducedCategory.hom_ext
+    exact projectiveToCategoricalLimitTopCatIso.hom_inv_id
+  inv_hom_id := by
+    apply InducedCategory.hom_ext
+    exact projectiveToCategoricalLimitTopCatIso.inv_hom_id
 
 def categoricalLimitFinitePrefixReadoutTopCatHom (n : ℕ) :
     TopCat.of (↑(limit prefixDiagram)) ⟶ TopCat.of ℝ :=

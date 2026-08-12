@@ -249,6 +249,19 @@ def first_identifier(expr: str) -> str | None:
     return None
 
 
+def first_relation_head(expr: str) -> str | None:
+    """Return a declaration head, not a theorem-local binder.
+
+    Equality statements frequently have a variable-only side (`a`, `X`, …).
+    Treating that variable as a global naming surface creates thousands of
+    spurious ambiguity records in a repo-wide scan.
+    """
+    head = first_identifier(expr)
+    if head is not None and is_probable_local_head(head):
+        return None
+    return head
+
+
 def short_name(name: str) -> str:
     return name.split(".")[-1]
 
@@ -463,8 +476,8 @@ def scan_lean_files(lean_src_root: Path, max_header_lines: int) -> dict[str, Any
                             "relationKind": relation_kind,
                             "lhsExpr": lhs_expr,
                             "rhsExpr": rhs_expr,
-                            "lhsHeadRaw": first_identifier(lhs_expr),
-                            "rhsHeadRaw": first_identifier(rhs_expr),
+                            "lhsHeadRaw": first_relation_head(lhs_expr),
+                            "rhsHeadRaw": first_relation_head(rhs_expr),
                             "file": rel_path,
                             "line": i + 1,
                             "source": "auto",
@@ -522,7 +535,11 @@ def enrich_relations(
             key = str(lhs_raw)
             unresolved_all[key] += 1
             if lhs_status == "ambiguous":
-                unresolved_ambiguous[key] += 1
+                # Short local binders (`x`, `a`, `A`, `n`, …) are expected to
+                # be ambiguous across declarations.  They are not unresolved
+                # naming surfaces and must not inflate the release gate.
+                if not is_probable_local_head(key):
+                    unresolved_ambiguous[key] += 1
             elif lhs_status == "missing":
                 unresolved_missing[key] += 1
                 if not is_probable_local_head(key):
@@ -531,7 +548,8 @@ def enrich_relations(
             key = str(rhs_raw)
             unresolved_all[key] += 1
             if rhs_status == "ambiguous":
-                unresolved_ambiguous[key] += 1
+                if not is_probable_local_head(key):
+                    unresolved_ambiguous[key] += 1
             elif rhs_status == "missing":
                 unresolved_missing[key] += 1
                 if not is_probable_local_head(key):

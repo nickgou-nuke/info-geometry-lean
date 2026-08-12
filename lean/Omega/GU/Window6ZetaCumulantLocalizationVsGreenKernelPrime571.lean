@@ -10,16 +10,24 @@ def Rzeta : Set ℚ := {q | ∃ a : ℤ, ∃ k : ℕ, q = (a : ℚ) / (6 : ℚ) 
 def kappaInfinity (r : ℕ) : ℚ := (r : ℚ) / 6
 
 /-- The Green-kernel audit obstruction at the distinguished prime `571`. -/
-def window6GreenKernelEntriesInRzeta : Prop := False
+structure Window6GreenKernelData where
+  entriesInRzeta : Prop
+
+def window6GreenKernelEntriesInRzeta (W : Window6GreenKernelData) : Prop :=
+  W.entriesInRzeta
 
 /-- Paper label: `thm:window6-zeta-cumulant-localization-vs-green-kernel-prime571`. -/
 theorem paper_window6_zeta_cumulant_localization_vs_green_kernel_prime571 :
-    (∀ r : ℕ, 1 ≤ r → kappaInfinity r ∈ Rzeta) ∧ ¬ window6GreenKernelEntriesInRzeta := by
+    ∀ (W : Window6GreenKernelData),
+      ¬ window6GreenKernelEntriesInRzeta W →
+        (∀ r : ℕ, 1 ≤ r → kappaInfinity r ∈ Rzeta) ∧
+          ¬ window6GreenKernelEntriesInRzeta W := by
+  intro W hNoEntries
   constructor
   · intro r hr
     let _ := hr
     refine ⟨(r : ℤ), 1, ?_⟩
     simp [Rzeta, kappaInfinity]
-  · simp [window6GreenKernelEntriesInRzeta]
+  · exact hNoEntries
 
 end Omega.GU

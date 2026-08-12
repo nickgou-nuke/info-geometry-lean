@@ -1,5 +1,5 @@
 import Mathlib
-import proofs.tomita_kms_v4
+import InfoGeometry.External.Auto.tomita_kms_v4
 
 noncomputable section
 

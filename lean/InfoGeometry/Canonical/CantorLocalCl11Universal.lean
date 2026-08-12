@@ -131,8 +131,11 @@ theorem representationLocalCl11Relation
   · apply mul_sq_neg_one_of_sq_one_of_anticomm
     · exact R.gamma_sq 0
     · exact R.gamma_sq 1
-    · exact R.generator_anticomm (by decide)
-  · have h := R.generator_anticomm (i := 0) (j := 1) (by decide)
+    · rw [R.gamma_anticomm 0 1 (by decide)]
+      simp
+  · have h : R.gamma 0 * R.gamma 1 + R.gamma 1 * R.gamma 0 = 0 := by
+      rw [R.gamma_anticomm 0 1 (by decide)]
+      simp
     have hrev : R.gamma 1 * R.gamma 0 =
         -(R.gamma 0 * R.gamma 1) := eq_neg_of_add_eq_zero_right h
     change R.gamma 0 * (R.gamma 0 * R.gamma 1) +

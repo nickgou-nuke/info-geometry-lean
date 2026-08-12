@@ -115,26 +115,21 @@ structure PenroseInflationData where
     Those claims require a concrete diagram, a native colimit object, and a
     separately verified equivalence. -/
 def penroseFiniteLevelDim (n : ℕ) : ℕ := 2 ^ n
-def penroseBoundary : Type := ℕ → Bool
-def penroseCantorCode : penroseBoundary ≃ (ℕ → Bool) := Equiv.refl (ℕ → Bool)
+def penroseCantorCode : (ℕ → Bool) ≃ (ℕ → Bool) := Equiv.refl (ℕ → Bool)
 
 theorem penrose_uhf_equivalence :
     (∀ n, penroseFiniteLevelDim n = 2 ^ n) ∧
-    Nonempty (penroseBoundary ≃ (ℕ → Bool)) := by
+    Nonempty ((ℕ → Bool) ≃ (ℕ → Bool)) := by
   exact ⟨by intro n; rfl, ⟨penroseCantorCode⟩⟩
 
 /-══════════════════════════════════════════════════════════════════════
   LAYER 3 : THE CANTOR HORIZON — holographic boundary
   ═════════════════════════════════════════════════════════════════════-/
 
-/-- The Cantor set C = {0,1}^ℕ is the projective limit of finite
-    sets {0,1}^n under projection maps. It's the universal
-    totally disconnected compact metric space. -/
-abbrev CantorSet := ℕ → Bool
 
 namespace CantorSet
 
-abbrev points (c : CantorSet) : ℕ → Bool := c
+abbrev points (c : ℕ → Bool) : ℕ → Bool := c
 
 end CantorSet
 

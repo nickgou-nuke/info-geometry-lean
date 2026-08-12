@@ -81,7 +81,7 @@ theorem tripotent_spectrum_diagonal (d : Fin 3 → ℂ)
 
 /-! ## Twistor incidence -/
 
-theorem twistor_incidence (t x y z : ℂ) (_h : t^2 - x^2 - y^2 - z^2 = 0) :
+theorem twistor_coordinate_factorization (t z : ℂ) :
     ∃ a b c d : ℂ, a * c = t + z ∧ b * d = t - z := by
   use 1, 1, t + z, t - z
   constructor
@@ -91,14 +91,6 @@ theorem twistor_incidence (t x y z : ℂ) (_h : t^2 - x^2 - y^2 - z^2 = 0) :
     all_goals simp
 
 /-! ## Klein quadric -/
-
-theorem klein_quadric_twistor (omega0 omega1 pi0 pi1 : ℂ) :
-    omega0 * pi1 - omega1 * pi0 = 0 →
-      ∃ L1 L2 : Matrix (Fin 2) (Fin 2) ℂ,
-        omega0 = L1 0 0 * L2 0 0 + L1 0 1 * L2 1 0 := by
-  intro _
-  refine ⟨!![omega0, 0; 0, 0], !![1, 0; 0, 0], ?_⟩
-  simp
 
 /-! ## Entropy potential and Itakura-Saito -/
 
@@ -229,25 +221,12 @@ theorem spin_network_twistor_quantization_finite_kernel :
     intro p q hp hq
     exact itakuraSaito_nonneg p q hp hq
 
-/-! ## Open analytic targets -/
-
-/-- The entropy potential `-log` satisfies the one-dimensional
-self-concordance inequality on the positive half-line. -/
-theorem neg_log_self_concordant_target (x : ℝ) (hx : 0 < x) :
-    abs (deriv (deriv (deriv (fun y => - Real.log y))) x) ≤
-      2 * (deriv (deriv (fun y => - Real.log y)) x) ^ (3 / 2 : ℝ) := by
-  exact neg_log_self_concordant_proof x hx
-/-- Target: de Rham cohomology of entropy 1-form is trivial. -/
-theorem de_rham_entropy_cohomology_trivial_target :
-    ∃ φ : ℝ → ℝ, ∀ x : ℝ, x > 0 → deriv φ x = entropyOneForm x := by
-  exact de_rham_d_lnQ_exact
-/-- Target: Klein quadric classifies twistor lines. -/
-theorem klein_quadric_twistor_classification_target :
-    ∀ (p12 p13 p14 p23 p24 p34 : ℂ),
-      p12 * p34 - p13 * p24 + p14 * p23 = 0 →
-        ∃ L1 L2 : Matrix (Fin 2) (Fin 2) ℂ,
-          p12 = L1 0 0 * L2 0 0 + L1 0 1 * L2 1 0 := by
-  intro p12 _ _ _ _ _ _
+/- The former target theorem only projected one coordinate and ignored the
+   quadric equation.  The genuine result available at this layer is the
+   following explicit rank-one factorization of that coordinate. -/
+theorem klein_quadric_coordinate_factorization (p12 : ℂ) :
+    ∃ L1 L2 : Matrix (Fin 2) (Fin 2) ℂ,
+      p12 = L1 0 0 * L2 0 0 + L1 0 1 * L2 1 0 := by
   refine ⟨!![p12, 0; 0, 0], !![1, 0; 0, 0], ?_⟩
   simp
 

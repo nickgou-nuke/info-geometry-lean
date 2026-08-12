@@ -1,7 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.CantorCuntzCliffordBridge
 import InfoGeometry.Canonical.BogoliubovFockSuper
-import InfoGeometry.Canonical.FractalCantorMoebiusLorentzBogoliubovBridge
 import InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge
 import InfoGeometry.Meta.Architecture
 
@@ -27,7 +26,6 @@ namespace InfoGeometry.Canonical.MoebiusBogoliubovVirasoro
 
 open InfoGeometry.Canonical.BogoliubovFockSuper
 open InfoGeometry.Canonical
-open InfoGeometry.Canonical.FractalCantorMoebiusLorentzBogoliubov
 open InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge
 open InfoGeometry.Canonical.TypeIIIModularCantorSystem
 
@@ -71,17 +69,17 @@ nontrivial commutation readouts are stored as property fields in
 @[rep_depth operator]
 def tiltedCARFromCuntz
     {Op : Type*} [Ring Op] [StarRing Op] [Module ℝ Op]
-    (C : InfoGeometry.Topology.CuntzO2Carrier Op)
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op)
     (B : BogoliubovMixingParams) : Op :=
-  B.u • (C.S_left * star C.S_right) + B.v • (C.S_right * star C.S_left)
+  B.u • ((InfoGeometry.Topology.CuntzO2Carrier.S_left C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_right C)) + B.v • ((InfoGeometry.Topology.CuntzO2Carrier.S_right C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_left C))
 
 /-- The tilted CAR generator reduces to the untitled Cuntz CAR channel at zero tilt. -/
 @[rep_depth operator]
 theorem tiltedCARFromCuntz_zero_tilt
     {Op : Type*} [Ring Op] [StarRing Op] [Module ℝ Op]
-    (C : InfoGeometry.Topology.CuntzO2Carrier Op) :
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
     tiltedCARFromCuntz C (HyperbolicMixingParams.ofAngle 0)
-      = C.S_left * star C.S_right := by
+      = (InfoGeometry.Topology.CuntzO2Carrier.S_left C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_right C) := by
   simp [tiltedCARFromCuntz, HyperbolicMixingParams.ofAngle]
 
 /--
@@ -94,7 +92,7 @@ instantiate when they have a concrete representation.
 @[rep_depth operator]
 structure TiltedCuntzCARPacket
     (Op : Type*) [Ring Op] [StarRing Op] [Module ℝ Op] where
-  cuntz : InfoGeometry.Topology.CuntzO2Carrier Op
+  cuntz : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op
   tilt : BogoliubovMixingParams
   tiltedCAR : Op
   tiltedCAR_eq :
@@ -127,31 +125,31 @@ theorem moebius_to_bogoliubov_mapping
 
 /-! ## 2. Virasoro `L₀` as a binary-depth dilation readout -/
 
-/-- Re-export of the repo-owned finite binary-word carrier. -/
-@[rep_depth operator]
-abbrev FiniteBinaryWord :=
-  InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge.FiniteBinaryWord
-
 /-- Depth of a finite binary path. -/
 @[rep_depth operator]
-def wordDepth (w : FiniteBinaryWord) : ℕ :=
+def wordDepth
+    (w : List Bool) : ℕ :=
   w.length
 
 /-- Hyperbolic `L₀`-style dilation on a binary word. -/
 @[rep_depth operator]
-def virasoroL0Dilation (L0 : ℝ) (w : FiniteBinaryWord) : ℝ :=
+def virasoroL0Dilation
+    (L0 : ℝ)
+    (w : List Bool) : ℝ :=
   Real.exp L0 * (wordDepth w : ℝ)
 
 /-- One child step increases the binary depth by one. -/
 @[rep_depth operator]
-theorem wordDepth_child (w : FiniteBinaryWord) (b : Bool) :
-    wordDepth (BinaryWord.child w b) = wordDepth w + 1 := by
-  simp [wordDepth, BinaryWord.child]
+theorem wordDepth_child
+    (w : List Bool) (b : Bool) :
+    wordDepth (TypeIIIModularCantorSystem.child w b) = wordDepth w + 1 := by
+  simp [wordDepth, TypeIIIModularCantorSystem.child]
 
 /-- `L₀` dilation on a child word is one exponential step larger. -/
 @[rep_depth operator]
-theorem virasoroL0Dilation_child (L0 : ℝ) (w : FiniteBinaryWord) (b : Bool) :
-    virasoroL0Dilation L0 (BinaryWord.child w b)
+theorem virasoroL0Dilation_child
+    (L0 : ℝ) (w : List Bool) (b : Bool) :
+    virasoroL0Dilation L0 (TypeIIIModularCantorSystem.child w b)
       = virasoroL0Dilation L0 w + Real.exp L0 := by
   rw [virasoroL0Dilation, wordDepth_child, virasoroL0Dilation]
   rw [Nat.cast_add, Nat.cast_one]
@@ -176,8 +174,8 @@ structure MoebiusBogoliubovVirasoroBridge
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg] where
   /-- The binary Cantor / Cuntz / CAR / Kac--Moody / Virasoro backbone. -/
   fractal :
-    FractalCantorMoebiusLorentzBogoliubovBridge
-      E Op Hilb Spin Finite Alg
+    FractalCantorCuntzKacMoodyVirasoroBridge
+      E Op Hilb Finite Alg
 
   /-- The diagonal Möbius boost readout. -/
   moebiusMatrix : MoebiusMatrix ℝ
@@ -204,11 +202,12 @@ structure MoebiusBogoliubovVirasoroBridge
   virasoroL0 : ℝ
 
   /-- The `L₀` dilation readout on finite binary words. -/
-  virasoroDilation : FiniteBinaryWord → ℝ
+  virasoroDilation : List Bool → ℝ
 
   /-- The dilation readout is exactly the exponential depth scale. -/
   virasoroDilation_eq :
-    ∀ w : FiniteBinaryWord, virasoroDilation w = virasoroL0Dilation virasoroL0 w
+    ∀ w : List Bool,
+      virasoroDilation w = virasoroL0Dilation virasoroL0 w
 
 variable
     {E Op Hilb Spin Finite Alg : Type}
@@ -237,7 +236,8 @@ theorem tilt_normalized_holds :
 /-- The Virasoro dilation readout is exactly the exponential depth scale. -/
 @[rep_depth operator]
 theorem virasoroDilation_eq_holds :
-    ∀ w : FiniteBinaryWord, B.virasoroDilation w = virasoroL0Dilation B.virasoroL0 w :=
+    ∀ w : List Bool,
+      B.virasoroDilation w = virasoroL0Dilation B.virasoroL0 w :=
   B.virasoroDilation_eq
 
 end InfoGeometry.Canonical.MoebiusBogoliubovVirasoro

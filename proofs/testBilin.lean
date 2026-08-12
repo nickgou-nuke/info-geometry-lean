@@ -4,7 +4,7 @@ import proofs.SplitOctonionNorm44
 open SplitOctonion
 open SplitOctonionNorm44
 
-def splitBilinForm : LinearMap.BilinForm ℝ SplitOct where
+noncomputable def splitBilinForm : LinearMap.BilinForm ℝ SplitOct where
   toFun x := {
     toFun := fun y => splitBilinear x y
     map_add' := by intros y1 y2; dsimp [splitBilinear, splitNorm, add_def, sub_def]; ring
@@ -17,4 +17,4 @@ def splitBilinForm : LinearMap.BilinForm ℝ SplitOct where
     intros c x; ext y
     dsimp [splitBilinear, splitNorm, smul_def, add_def, sub_def]; ring
 
-abbrev SO44 := skewAdjointLieSubalgebra splitBilinForm
+noncomputable abbrev SO44 := skewAdjointLieSubalgebra splitBilinForm

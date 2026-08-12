@@ -48,24 +48,21 @@ theorem generalized_det_via_spanning_trees {n : ℕ} (L : Matrix (Fin n) (Fin n)
     generalizedDet L = (-1)^(n-1) * L.charpoly.coeff 1 := by
   rfl
 
-/-! ## Critical Group (Sandpile Group) -/
+/-! ## Critical Group order datum -/
 
-/-- The critical group (sandpile group) of a graph is the cokernel of the
-reduced Laplacian: K(G) = Z^{n-1} / im(L̃).
-Its order equals the number of spanning trees τ(G). -/
+/-- A finite order datum associated with a stage.  The actual cokernel
+construction and its spanning-tree cardinality are not asserted here. -/
 structure CriticalGroup (n : ℕ) where
   order : ℕ
-  h_order : order ≥ 0
 
-/-- The order of the critical group equals the number of spanning trees.
-|K(G)| = τ(G) = det(L̃) -/
+/-- Every natural-number order datum is nonnegative. -/
 theorem critical_group_order_nonneg {n : ℕ} (G : CriticalGroup n) :
     G.order ≥ 0 := by
   exact Nat.zero_le G.order
 
 /-! ## Ratio of Laplacian Determinants -/
 
-theorem laplacian_determinant_ratio {n : ℕ}
+theorem generalizedDet_mul_one {n : ℕ}
     (L : Matrix (Fin n) (Fin n) ℤ) :
     generalizedDet L * 1 = generalizedDet L := by
   exact mul_one (generalizedDet L)
@@ -79,41 +76,22 @@ theorem laplacian_ratio_same_vertices {n : ℕ}
 
 /-! ## Tensor Products and Kronecker Sums -/
 
-/-- The Laplacian of a Cartesian product of graphs is given by the Kronecker sum. -/
-theorem cartesian_product_laplacian {n : ℕ}
+/-- Identity law for the matrix parameter used by the Cartesian-product layer. -/
+theorem cartesian_product_laplacian_identity {n : ℕ}
     (L : Matrix (Fin n) (Fin n) ℤ) :
     L = L := by
   rfl
 
-/-- The eigenvalues of the Cartesian product Laplacian are pairwise sums. -/
-theorem cartesian_product_eigenvalues {n : ℕ}
+/-- Subtracting a Laplacian from itself gives the zero matrix. -/
+theorem laplacian_sub_self {n : ℕ}
     (L : Matrix (Fin n) (Fin n) ℤ) :
     L - L = 0 := by
   exact sub_self L
 
-/-- The generalized determinant of the Cartesian product Laplacian. -/
-theorem cartesian_product_generalized_det {n : ℕ}
+/-- Identity law for the generalized determinant parameter. -/
+theorem cartesian_product_generalized_det_identity {n : ℕ}
     (L : Matrix (Fin n) (Fin n) ℤ) :
     generalizedDet L = generalizedDet L := by
-  rfl
-
-/-! ## Connection to Tripotent Operators -/
-
-/-- A tripotent operator T³ = T on a graph induces a trifurcation of the
-vertex set into three sectors: V₊, V₀, V₋. -/
-theorem tripotent_graph_trifurcation {n : ℕ}
-    (T : Matrix (Fin n) (Fin n) ℂ)
-    (hT : T * T * T = T) :
-    T * T * T = T := by
-  exact hT
-
-/-! ## Spanning Trees and the de Rham Complex -/
-
-/-- The number of spanning trees τ(G) can be computed from the Laplacian
-determinant. -/
-theorem spanning_trees_via_de_rham {n : ℕ}
-    (L : Matrix (Fin n) (Fin n) ℤ) :
-    L = L := by
   rfl
 
 end GraphLaplacianSpanningTree

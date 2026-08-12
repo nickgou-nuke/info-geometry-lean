@@ -1,6 +1,7 @@
 import Mathlib.Algebra.Lie.Matrix
 import Mathlib.Data.Matrix.Basis
 import proofs.ZornColorLieAction
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-!
 # Bundled faithful color Lie representation
@@ -17,7 +18,7 @@ namespace ZornColorLieRepresentation
 
 open CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 open ZornThreeChannelCAR ZornColorLieAction
 
 /-- Linear extension of the color matrix-unit operators. -/
@@ -124,7 +125,7 @@ theorem colorEvenOp_probe_u (r s i j : Fin 3) :
   rw [colorEvenOp_fst_exact]
   by_cases hsj : s = j <;> by_cases hir : i = r <;>
     simp [positiveUProbe, colorPlusZorn, mixedPlusZorn, colorDelta,
-      hsj, hir, zornSmul]
+      hsj, hir, InfoGeometry.Physics.SplitOctonionBraidSU3.zornSmul]
 
 /-- Evaluation on the positive-`u` probes recovers every matrix coefficient. -/
 theorem colorLieActionLinear_probe_u (A : Matrix (Fin 3) (Fin 3) ℂ)

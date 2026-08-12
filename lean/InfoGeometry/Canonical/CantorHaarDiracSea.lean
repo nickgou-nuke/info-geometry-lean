@@ -54,9 +54,8 @@ theorem HaarPsi_mul_HaarPhi : HaarPsi * HaarPhi = HaarPsi := by
 
 /-- `ψ² = 1` (involution). -/
 theorem HaarPsi_involution : HaarPsi * HaarPsi = (1 : M2R) := by
-  rw [HaarPsi_eq_K, InfoGeometry.Canonical.ModularLorentzBoost.K_eval]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [Matrix.mul_apply, Fin.sum_univ_two]
+  rw [HaarPsi_eq_K]
+  exact K_sq_eq_one
 
 /-- Boundary regularization: `traceForm ψ N = 0`. -/
 theorem HaarPsi_boundary_regularization :

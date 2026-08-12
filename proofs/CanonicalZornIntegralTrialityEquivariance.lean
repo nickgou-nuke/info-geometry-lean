@@ -144,7 +144,7 @@ theorem integral_axis_triality_clifford_fivegrade_projective_closure
         (realSplit44ToVector8
           (integralZornToRealSplit44 (integralAxisCycle X)))
         (diracAxisCycle Ψ) ∧
-    vectorGradePlus
+    CanonicalZornCompositionFiveGradeBridge.vectorGradePlus
         (realSplit44ToVector8
           (integralZornToRealSplit44 (integralAxisCycle X))) ∈
       conformalGrade TKKJordanPairData.TKKGrade.p1 ∧

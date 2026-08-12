@@ -24,6 +24,83 @@ abbrev operatorDot (U V : OperatorVector A) : A :=
 abbrev operatorCross (U V : OperatorVector A) : OperatorVector A :=
   NCZornElement.zornCross U V
 
+/-! ### Operator-valued bivectors and their three-dimensional readout -/
+
+/-- The ordered operator-valued alternating two-tensor. -/
+def operatorWedge2 (U V : OperatorVector A) : Fin 3 → Fin 3 → A :=
+  fun j k => U j * V k - U k * V j
+
+theorem operatorWedge2_swap_indices
+    (U V : OperatorVector A) (j k : Fin 3) :
+    operatorWedge2 U V k j = -operatorWedge2 U V j k := by
+  simp [operatorWedge2, sub_eq_add_neg, add_comm]
+
+/-- The oriented three-dimensional Hodge readout of a bivector.
+
+For an alternating two-tensor this is the component form of
+`(1/2) εᵢⱼₖ Bⱼₖ`, written without division so it works over every ring. -/
+def operatorHodgeDual2 (B : Fin 3 → Fin 3 → A) : OperatorVector A :=
+  fun i => match i with
+  | 0 => B 1 2
+  | 1 => B 2 0
+  | 2 => B 0 1
+
+theorem operatorHodgeDual2_wedge_eq_operatorCross
+    (U V : OperatorVector A) :
+    operatorHodgeDual2 (operatorWedge2 U V) = operatorCross U V := by
+  funext i
+  fin_cases i <;> rfl
+
+/-! ### Explicit integer Levi--Civita readout
+
+The sign tensor is integer-valued, so the adapter remains valid over every
+coefficient ring.  Its cast into `A` is the only scalar action used below. -/
+
+def epsilon3 (i j k : Fin 3) : ℤ :=
+  if i = 0 ∧ j = 1 ∧ k = 2 then 1 else
+  if i = 0 ∧ j = 2 ∧ k = 1 then -1 else
+  if i = 1 ∧ j = 2 ∧ k = 0 then 1 else
+  if i = 1 ∧ j = 0 ∧ k = 2 then -1 else
+  if i = 2 ∧ j = 0 ∧ k = 1 then 1 else
+  if i = 2 ∧ j = 1 ∧ k = 0 then -1 else 0
+
+def leviCivitaOperatorCross (U V : OperatorVector A) : OperatorVector A :=
+  fun i => ∑ j : Fin 3, ∑ k : Fin 3,
+    (epsilon3 i j k : A) * (U j * V k)
+
+theorem leviCivitaOperatorCross_eq_operatorCross
+    (U V : OperatorVector A) :
+    leviCivitaOperatorCross U V = operatorCross U V := by
+  funext i
+  fin_cases i <;>
+    simp [leviCivitaOperatorCross, epsilon3, operatorCross,
+      NCZornElement.zornCross, Fin.sum_univ_succ, sub_eq_add_neg, add_comm]
+
+theorem leviCivitaOperatorCross_eq_hodgeDual2_wedge
+    (U V : OperatorVector A) :
+    leviCivitaOperatorCross U V =
+      operatorHodgeDual2 (operatorWedge2 U V) := by
+  rw [leviCivitaOperatorCross_eq_operatorCross,
+    operatorHodgeDual2_wedge_eq_operatorCross]
+
+def operatorBivectorChannel (U V : OperatorVector A) :
+    Fin 3 → Fin 3 → A :=
+  operatorWedge2 U V - operatorWedge2 V U
+
+theorem operatorBivectorChannel_swap
+    (U V : OperatorVector A) :
+    operatorBivectorChannel V U = -operatorBivectorChannel U V := by
+  funext j k
+  simp [operatorBivectorChannel, sub_eq_add_neg, add_comm, add_left_comm,
+    add_assoc]
+
+theorem operatorHodgeDual2_bivectorChannel_eq_cross_difference
+    (U V : OperatorVector A) :
+    operatorHodgeDual2 (operatorBivectorChannel U V) =
+      operatorCross U V - operatorCross V U := by
+  funext i
+  fin_cases i <;> rfl
+
 @[simp] theorem operatorCross_self_red (U : OperatorVector A) :
     operatorCross U U 0 = U 1 * U 2 - U 2 * U 1 := rfl
 
@@ -101,6 +178,92 @@ def sigmaMinus (U : OperatorVector A) : OperatorZornMatrix A :=
   cases X
   cases Y
   simp_all
+
+/-! ### Two-sheet operator coordinates
+
+`operatorZornCoordinates` is only the native four-field presentation of the
+existing `NCZornElement`; it does not introduce a second carrier or a second
+multiplication. -/
+
+def operatorZornCoordinates (a b : A) (u v : OperatorVector A) :
+    OperatorZornMatrix A :=
+  ⟨a, b, u, v⟩
+
+@[simp] theorem operatorZornCoordinates_nPlus (a b : A)
+    (u v : OperatorVector A) :
+    (operatorZornCoordinates a b u v).n_plus = a := rfl
+
+@[simp] theorem operatorZornCoordinates_nMinus (a b : A)
+    (u v : OperatorVector A) :
+    (operatorZornCoordinates a b u v).n_minus = b := rfl
+
+@[simp] theorem operatorZornCoordinates_sigmaPlus (a b : A)
+    (u v : OperatorVector A) :
+    (operatorZornCoordinates a b u v).sigma_plus = u := rfl
+
+@[simp] theorem operatorZornCoordinates_sigmaMinus (a b : A)
+    (u v : OperatorVector A) :
+    (operatorZornCoordinates a b u v).sigma_minus = v := rfl
+
+theorem operatorZornMul_coordinates
+    (a b c d : A) (u v x y : OperatorVector A) :
+    operatorZornMul (operatorZornCoordinates a b u v)
+      (operatorZornCoordinates c d x y) =
+      operatorZornCoordinates
+        (a * c + operatorDot u y)
+        (b * d + operatorDot v x)
+      (fun i => a * x i + u i * d - operatorCross v y i)
+        (fun i => v i * c + b * y i + operatorCross u x i) := by
+  apply operatorZornMatrix_ext
+  · simp [operatorZornMul, operatorZornCoordinates, NCZornElement.mul,
+      operatorDot, NCZornElement.zornDot]
+  · simp [operatorZornMul, operatorZornCoordinates, NCZornElement.mul,
+      operatorDot, NCZornElement.zornDot]
+  · funext i
+    simp [operatorZornMul, operatorZornCoordinates, NCZornElement.mul,
+      operatorCross, NCZornElement.zornCross, add_comm]
+  · funext i
+    simp [operatorZornMul, operatorZornCoordinates, NCZornElement.mul,
+      operatorCross, NCZornElement.zornCross, add_comm]
+
+def chiralOperatorZorn (u v : OperatorVector A) : OperatorZornMatrix A :=
+  operatorZornCoordinates 0 0 u v
+
+theorem operatorZornMul_chiralOperatorZorn
+    (u v : OperatorVector A) :
+    operatorZornMul (chiralOperatorZorn u v) (chiralOperatorZorn u v) =
+      operatorZornCoordinates
+        (operatorDot u v)
+        (operatorDot v u)
+        (-operatorCross v v)
+        (operatorCross u u) := by
+  apply operatorZornMatrix_ext
+  · simp [chiralOperatorZorn, operatorZornCoordinates,
+      operatorZornMul, NCZornElement.mul, operatorDot,
+      NCZornElement.zornDot]
+  · simp [chiralOperatorZorn, operatorZornCoordinates,
+      operatorZornMul, NCZornElement.mul, operatorDot,
+      NCZornElement.zornDot]
+  · funext i
+    simp [chiralOperatorZorn, operatorZornCoordinates,
+      operatorZornMul, NCZornElement.mul, operatorCross,
+      NCZornElement.zornCross]
+  · funext i
+    simp [chiralOperatorZorn, operatorZornCoordinates,
+      operatorZornMul, NCZornElement.mul, operatorCross,
+      NCZornElement.zornCross]
+
+theorem operatorZornMul_chiralOperatorZorn_hodge
+    (u v : OperatorVector A) :
+    operatorZornMul (chiralOperatorZorn u v) (chiralOperatorZorn u v) =
+      operatorZornCoordinates
+        (operatorDot u v)
+        (operatorDot v u)
+      (-(operatorHodgeDual2 (operatorWedge2 v v)))
+        (operatorHodgeDual2 (operatorWedge2 u u)) := by
+  rw [operatorZornMul_chiralOperatorZorn]
+  rw [operatorHodgeDual2_wedge_eq_operatorCross,
+    operatorHodgeDual2_wedge_eq_operatorCross]
 
 @[simp] theorem nPlus_mul_nPlus (a b : A) :
     operatorZornMul (nPlus a) (nPlus b) = nPlus (a * b) := by

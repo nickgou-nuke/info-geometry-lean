@@ -27,8 +27,8 @@ theorem beta44Matrix_eq (x y : Middle) :
     beta44Matrix x y = beta44 x y := by
   have h : beta44 x y =
       eta44Matrix.mulVec x ⬝ᵥ y := by
-    simp [beta44, eta44Matrix, eta44, Matrix.mulVec, Matrix.mul_apply,
-      Matrix.diagonal_apply, Finset.sum_ite_eq', dotProduct,
+    simp [beta44, eta44Matrix, eta44, Matrix.mulVec,
+      Matrix.diagonal_apply, dotProduct,
       Fin.sum_univ_succ]
   exact h.symm
 
@@ -94,13 +94,11 @@ theorem D_bracket_P_apply_verified (a : ℝ) (K : OrthogonalMiddle)
   have hK := SplitOctonionSkew28.orthogonal44_beta_skew K x u
   dsimp [D, P]
   apply Prod.ext
-  · simp [D, P]
+  · simp
   · apply Prod.ext
-    · simp only [Prod.fst, Prod.snd]
-      simp only [Matrix.mulVec_smul]
+    · simp only [Matrix.mulVec_smul]
       module
-    · simp only [Prod.fst, Prod.snd]
-      simp only [sub_eq_add_neg, beta44_add_left]
+    · simp only [sub_eq_add_neg, beta44_add_left]
       have hneg : beta44 (-(a • x)) u = -a * beta44 x u := by
         rw [← neg_smul, beta44_smul_left]
       rw [hneg]
@@ -114,14 +112,12 @@ theorem D_bracket_N_apply (a : ℝ) (K : OrthogonalMiddle)
   have hK := SplitOctonionSkew28.orthogonal44_beta_skew K y u
   dsimp [D, N]
   apply Prod.ext
-  · simp only [Prod.fst, Prod.snd]
-    simp only [beta44_add_left, beta44_smul_left, smul_eq_mul]
+  · simp only [beta44_add_left, beta44_smul_left]
     linear_combination hK
   · apply Prod.ext
-    · simp only [Prod.fst, Prod.snd]
-      simp only [Matrix.mulVec_smul]
+    · simp only [Matrix.mulVec_smul]
       module
-    · simp [D, N]
+    · simp
 
 theorem D_bracket_D_apply (a b : ℝ) (K L : OrthogonalMiddle)
     (z : Carrier) :
@@ -137,8 +133,7 @@ theorem D_bracket_D_apply (a b : ℝ) (K L : OrthogonalMiddle)
   apply Prod.ext
   · ring
   · apply Prod.ext
-    · simp only [Prod.fst, Prod.snd]
-      rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, Matrix.sub_mulVec]
+    · rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, Matrix.sub_mulVec]
     · ring
 
 def rankTwoMatrix (x y : Middle) : Matrix (Fin 8) (Fin 8) ℝ :=
@@ -163,7 +158,7 @@ theorem rankTwoOrthogonal_apply (x y z : Middle) :
       beta44 x z • y - beta44 y z • x := by
   ext i
   simp [rankTwoOrthogonal, rankTwoMatrix, beta44, eta44Matrix,
-    eta44, Matrix.mul_apply, Matrix.mulVec, dotProduct,
+    eta44, Matrix.mulVec, dotProduct,
     Fin.sum_univ_succ]
   ring
 

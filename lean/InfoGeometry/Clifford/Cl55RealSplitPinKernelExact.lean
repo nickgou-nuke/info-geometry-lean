@@ -33,20 +33,20 @@ def realSplitPinSignSubgroup : Subgroup realSplitPin55 where
     intro g h hg hh
     rcases hg with hg | hg <;> rcases hh with hh | hh
     · left
-      simpa [hg, hh]
+      simp [hg, hh]
     · right
-      simpa [hg, hh]
+      simp [hg, hh]
     · right
-      simpa [hg, hh]
+      simp [hg, hh]
     · left
-      simpa [hg, hh]
+      simp [hg, hh]
   inv_mem' := by
     intro g hg
     rcases hg with hg | hg
     · left
-      simpa [hg]
+      simp [hg]
     · right
-      simpa [hg]
+      simp [hg]
 
 instance realSplitPinSignSubgroup_normal :
     realSplitPinSignSubgroup.Normal where
@@ -79,7 +79,6 @@ theorem realSplitPinSignSubgroup_inclusion_mulExact :
     exact ⟨⟨g, hsign⟩, rfl⟩
   · intro hg
     rcases hg with ⟨h, hh⟩
-    change realSplitPinOrthogonalAction g = 1
     rw [← hh]
     change realSplitPinOrthogonalAction (h : realSplitPin55) = 1
     exact (realSplitPinOrthogonalAction_mem_kernel_iff_pm_one

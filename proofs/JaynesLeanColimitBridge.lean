@@ -150,25 +150,19 @@ structure ColimitBridge where
             Real.exp (- β * (finiteSide.stages n).finiteIntegralOfMotion ω')) =
         Real.exp (- β * (finiteSide.stages n).finiteIntegralOfMotion x)
   finitePropertiesLift_proof : finitePropertiesLift
-  bridgeSlogan : String :=
-    "The continuum is not the domain of integration; it is what survives all finite refinements compatibly."
-  mechanismSlogan : String :=
-    "succ is the microscopic mechanism; colimit is the bookkeeping; Jaynes is the finite-information rule."
 
 /-- If the bridge includes a proof that finite compatible properties lift, then
 the recorded lifting statement is available. -/
 theorem bridge_lifting (B : ColimitBridge) : B.finitePropertiesLift := B.finitePropertiesLift_proof
 
-/-- The three-lineage slogan as explicit data. -/
+/-- A finite, checkable summary of the three constructions in this file. -/
 structure ThreeLineagesConverge where
-  leanKernelLine : String := "infinity is controlled by inductive closure / successor"
-  categoryLine : String := "infinity is represented by directed colimit bookkeeping"
-  jaynesLine : String := "continuum probability is the stable limit of finite-set calculations"
-  commonPrinciple : String :=
-    "finite generation + compatible refinement + universal colimit completion"
-
-/-- A canonical inhabitant of the slogan package. -/
-def threeLineagesConverge : ThreeLineagesConverge := {}
+  finite_normalization : ∀ S : FiniteJaynesSide,
+    finiteExpectation S (fun _ => 1) = 1
+  kolmogorov_step : ∀ (D : JaynesDirectedSystem) (n : ℕ),
+    StageKolmogorov (D.stages n) → StageKolmogorov (D.stages (n + 1))
+  kms_step : ∀ (D : JaynesDirectedSystem) (n : ℕ),
+    StageKMS (D.stages n) → StageKMS (D.stages (n + 1))
 
 /-- Synthesis: the file closes the finite packaging and exposes the continuum as
 explicit colimit data. -/

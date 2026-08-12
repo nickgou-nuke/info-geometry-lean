@@ -1,6 +1,7 @@
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Fin.Basic
 import Mathlib.Data.Fintype.Basic
+import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.Tactic.NormNum
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Ring
@@ -195,6 +196,97 @@ def cross3 (u v : Fin 3 → ℂ) : Fin 3 → ℂ := fun i =>
   | ⟨0, _⟩ => u 1 * v 2 - u 2 * v 1
   | ⟨1, _⟩ => u 2 * v 0 - u 0 * v 2
   | ⟨2, _⟩ => u 0 * v 1 - u 1 * v 0
+
+/-! The Zorn cross product is the oriented three-dimensional volume pairing. -/
+theorem dot3_cross3_eq_det (u v w : Fin 3 → ℂ) :
+    dot3 u (cross3 v w) =
+      Matrix.det (fun (i : Fin 3) (j : Fin 3) =>
+        match i with
+        | ⟨0, _⟩ => u j
+        | ⟨1, _⟩ => v j
+        | ⟨2, _⟩ => w j) := by
+  rw [Matrix.det_fin_three]
+  simp [dot3, cross3]
+  ring
+
+theorem dot3_cross3_cyclic (u v w : Fin 3 → ℂ) :
+    dot3 (cross3 u v) w = dot3 u (cross3 v w) := by
+  simp [dot3, cross3]
+  ring
+
+theorem dot3_cross3_self_left (u v : Fin 3 → ℂ) :
+    dot3 u (cross3 u v) = 0 := by
+  simp [dot3, cross3]
+  ring
+
+theorem dot3_cross3_swap_left (u v w : Fin 3 → ℂ) :
+    dot3 (cross3 u v) w = -dot3 (cross3 v u) w := by
+  simp [dot3, cross3]
+  ring
+
+theorem dot3_cross3_self_right (u v : Fin 3 → ℂ) :
+    dot3 (cross3 u v) u = 0 := by
+  simp [dot3, cross3]
+  ring
+
+theorem dot3_cross3_swap_right (u v w : Fin 3 → ℂ) :
+    dot3 u (cross3 v w) = -dot3 u (cross3 w v) := by
+  simp [dot3, cross3]
+  ring
+
+theorem cross3_eq_of_dot3_eq
+    {u v x : Fin 3 → ℂ}
+    (h : ∀ w, dot3 w x = dot3 w (cross3 u v)) :
+    x = cross3 u v := by
+  funext i
+  fin_cases i
+  · simpa [dot3, cross3] using h ![1, 0, 0]
+  · simpa [dot3, cross3] using h ![0, 1, 0]
+  · simpa [dot3, cross3] using h ![0, 0, 1]
+
+/-! ## The native alternating volume pairing -/
+
+/-- The scalar triple product determined by the native Zorn cross product. -/
+def scalarTriple3 (u v w : Fin 3 → ℂ) : ℂ :=
+  dot3 u (cross3 v w)
+
+theorem scalarTriple3_eq_det (u v w : Fin 3 → ℂ) :
+    scalarTriple3 u v w =
+      Matrix.det (fun (i : Fin 3) (j : Fin 3) =>
+        match i with
+        | ⟨0, _⟩ => u j
+        | ⟨1, _⟩ => v j
+        | ⟨2, _⟩ => w j) := by
+  exact dot3_cross3_eq_det u v w
+
+theorem scalarTriple3_cyclic (u v w : Fin 3 → ℂ) :
+    scalarTriple3 u v w = scalarTriple3 v w u := by
+  simp [scalarTriple3, dot3, cross3]
+  ring
+
+theorem scalarTriple3_swap_left (u v w : Fin 3 → ℂ) :
+    scalarTriple3 u v w = -scalarTriple3 v u w := by
+  simp [scalarTriple3, dot3, cross3]
+  ring
+
+theorem scalarTriple3_swap_right (u v w : Fin 3 → ℂ) :
+    scalarTriple3 u v w = -scalarTriple3 u w v := by
+  simp [scalarTriple3, dot3, cross3]
+  ring
+
+theorem scalarTriple3_self_left (u w : Fin 3 → ℂ) :
+    scalarTriple3 u u w = 0 := by
+  simp [scalarTriple3, dot3, cross3]
+  ring
+
+theorem scalarTriple3_self_right (u v : Fin 3 → ℂ) :
+    scalarTriple3 u v v = 0 := by
+  simp [scalarTriple3, dot3, cross3]
+  ring
+
+theorem scalarTriple3_cross3 (u v w : Fin 3 → ℂ) :
+    dot3 (cross3 u v) w = scalarTriple3 u v w := by
+  exact dot3_cross3_cyclic u v w
 
 /-- Zorn multiplication for split octonions. -/
 def zornMul (X Y : Zorn) : Zorn where

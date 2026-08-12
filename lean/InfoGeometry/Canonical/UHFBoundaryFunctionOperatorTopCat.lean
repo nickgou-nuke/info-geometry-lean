@@ -19,53 +19,51 @@ open InfoGeometry.Canonical.UHFBoundaryOperatorTopology
 open InfoGeometry.Canonical.UHFColimitRepresentationBridge
 open InfoGeometry.Canonical.UHFBoundaryExactSequence
 
-abbrev BoundaryFunction := CantorBoundary → ℂ
-
-def S_L_topCatHom : TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
+def S_L_topCatHom : TopCat.of ((ℕ → Bool) → ℂ) ⟶ TopCat.of ((ℕ → Bool) → ℂ) :=
   TopCat.ofHom
     { toFun := S_L_op
       continuous_toFun := continuous_S_L_op }
 
-def S_R_topCatHom : TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
+def S_R_topCatHom : TopCat.of ((ℕ → Bool) → ℂ) ⟶ TopCat.of ((ℕ → Bool) → ℂ) :=
   TopCat.ofHom
     { toFun := S_R_op
       continuous_toFun := continuous_S_R_op }
 
-def star_S_L_topCatHom : TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
+def star_S_L_topCatHom : TopCat.of ((ℕ → Bool) → ℂ) ⟶ TopCat.of ((ℕ → Bool) → ℂ) :=
   TopCat.ofHom
     { toFun := star_S_L_op
       continuous_toFun := continuous_star_S_L_op }
 
-def star_S_R_topCatHom : TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
+def star_S_R_topCatHom : TopCat.of ((ℕ → Bool) → ℂ) ⟶ TopCat.of ((ℕ → Bool) → ℂ) :=
   TopCat.ofHom
     { toFun := star_S_R_op
       continuous_toFun := continuous_star_S_R_op }
 
-def UHF_boundary_topCatHom : TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
+def UHF_boundary_topCatHom : TopCat.of ((ℕ → Bool) → ℂ) ⟶ TopCat.of ((ℕ → Bool) → ℂ) :=
   TopCat.ofHom
     { toFun := UHF_boundary_op
       continuous_toFun := continuous_UHF_boundary_op }
 
 def star_UHF_boundary_topCatHom :
-    TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
+    TopCat.of ((ℕ → Bool) → ℂ) ⟶ TopCat.of ((ℕ → Bool) → ℂ) :=
   TopCat.ofHom
     { toFun := star_UHF_boundary_op
       continuous_toFun := continuous_star_UHF_boundary_op }
 
 def UHF_laplacian_topCatHom :
-    TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
+    TopCat.of ((ℕ → Bool) → ℂ) ⟶ TopCat.of ((ℕ → Bool) → ℂ) :=
   TopCat.ofHom
     { toFun := UHF_Laplacian_op
       continuous_toFun := continuous_UHF_Laplacian_op }
 
 def zeroBoundaryFunctionTopCatHom :
-    TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
+    TopCat.of ((ℕ → Bool) → ℂ) ⟶ TopCat.of ((ℕ → Bool) → ℂ) :=
   TopCat.ofHom
     { toFun := fun _ => 0
       continuous_toFun := continuous_const }
 
 def cuntzPartitionTopCatHom :
-    TopCat.of BoundaryFunction ⟶ TopCat.of BoundaryFunction :=
+    TopCat.of ((ℕ → Bool) → ℂ) ⟶ TopCat.of ((ℕ → Bool) → ℂ) :=
   TopCat.ofHom
     { toFun := fun f =>
         S_L_op (star_S_L_op f) + S_R_op (star_S_R_op f)
@@ -73,31 +71,31 @@ def cuntzPartitionTopCatHom :
         exact (continuous_S_L_op.comp continuous_star_S_L_op).add
           (continuous_S_R_op.comp continuous_star_S_R_op) }
 
-theorem star_S_L_topCatHom_S_L (f : BoundaryFunction) :
+theorem star_S_L_topCatHom_S_L (f : (ℕ → Bool) → ℂ) :
     (S_L_topCatHom ≫ star_S_L_topCatHom) f = f := by
   rw [TopCat.comp_app]
   change star_S_L_op (S_L_op f) = f
   exact star_S_L_op_S_L_op f
 
-theorem star_S_R_topCatHom_S_R (f : BoundaryFunction) :
+theorem star_S_R_topCatHom_S_R (f : (ℕ → Bool) → ℂ) :
     (S_R_topCatHom ≫ star_S_R_topCatHom) f = f := by
   rw [TopCat.comp_app]
   change star_S_R_op (S_R_op f) = f
   exact star_S_R_op_S_R_op f
 
-theorem star_S_L_topCatHom_S_R (f : BoundaryFunction) :
+theorem star_S_L_topCatHom_S_R (f : (ℕ → Bool) → ℂ) :
     (S_R_topCatHom ≫ star_S_L_topCatHom) f = 0 := by
   rw [TopCat.comp_app]
   change star_S_L_op (S_R_op f) = 0
   exact star_S_L_op_S_R_op f
 
-theorem star_S_R_topCatHom_S_L (f : BoundaryFunction) :
+theorem star_S_R_topCatHom_S_L (f : (ℕ → Bool) → ℂ) :
     (S_L_topCatHom ≫ star_S_R_topCatHom) f = 0 := by
   rw [TopCat.comp_app]
   change star_S_R_op (S_L_op f) = 0
   exact star_S_R_op_S_L_op f
 
-theorem UHF_boundary_topCatHom_sq_zero (f : BoundaryFunction) :
+theorem UHF_boundary_topCatHom_sq_zero (f : (ℕ → Bool) → ℂ) :
     (UHF_boundary_topCatHom ≫ UHF_boundary_topCatHom) f = 0 := by
   rw [TopCat.comp_app]
   change UHF_boundary_op (UHF_boundary_op f) = 0
@@ -113,11 +111,12 @@ theorem UHF_boundary_topCatHom_comp_eq_zero :
   change UHF_boundary_op (UHF_boundary_op f) = 0
   exact UHF_boundary_op_sq_zero f
 
-theorem star_UHF_boundary_topCatHom_sq_zero (f : BoundaryFunction) :
+theorem star_UHF_boundary_topCatHom_sq_zero (f : (ℕ → Bool) → ℂ) :
     (star_UHF_boundary_topCatHom ≫ star_UHF_boundary_topCatHom) f = 0 := by
   rw [TopCat.comp_app]
   change star_UHF_boundary_op (star_UHF_boundary_op f) = 0
-  exact star_UHF_boundary_op_sq_zero f
+  exact
+    InfoGeometry.Canonical.UHFBoundaryExactSequence.star_UHF_boundary_op_sq_zero f
 
 theorem star_UHF_boundary_topCatHom_comp_eq_zero :
     star_UHF_boundary_topCatHom ≫ star_UHF_boundary_topCatHom =
@@ -127,9 +126,10 @@ theorem star_UHF_boundary_topCatHom_comp_eq_zero :
   intro f
   rw [TopCat.comp_app]
   change star_UHF_boundary_op (star_UHF_boundary_op f) = 0
-  exact star_UHF_boundary_op_sq_zero f
+  exact
+    InfoGeometry.Canonical.UHFBoundaryExactSequence.star_UHF_boundary_op_sq_zero f
 
-theorem UHF_laplacian_topCatHom_apply (f : BoundaryFunction) :
+theorem UHF_laplacian_topCatHom_apply (f : (ℕ → Bool) → ℂ) :
     UHF_laplacian_topCatHom f = f := by
   change UHF_Laplacian_op f = f
   exact UHF_Laplacian_op_eq_id f

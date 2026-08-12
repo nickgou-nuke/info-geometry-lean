@@ -4,8 +4,9 @@ import InfoGeometry.Quantum.FenchelConjugation
 /-!
 # InfoGeometry.Quantum.FermionicOperators
 
-This file formalizes the Alternativity property of Hurwitz algebras as the 
-exact non-associative coordinate patch required to maintain the Fenchel-Legendre transform.
+This file records elementary identities for the complex-coordinate model from
+`HurwitzFenchel`.  It does not assert an octonionic or non-associative
+fermionic operator construction.
 
 While full associativity is lost in the 8-dimensional octonions ($\mathbb{O}$) and 
 split-octonions ($\mathbb{O}_s$), the algebra remains alternative. This guarantees that 
@@ -21,15 +22,8 @@ the non-commutative generation of fermionic creation and annihilation operators.
 
 namespace InfoGeometry.Quantum
 
-/-- 
-HONEST THEOREM DEBT:
-The alternativity condition for the Hurwitz Fenchel coordinate patch.
-Because the elements $x$ and $\overline{x}$ generate an associative subalgebra,
-their action on any state $y$ perfectly associates, stabilizing the fermionic transition.
-
--- DEBT_KIND: SORRY
--/
-theorem fenchel_alternativity_patch (x y : HurwitzSpace) :
+/-- The finite complex-coordinate product associates for this conjugate pair. -/
+theorem complex_coordinate_associativity_patch (x y : ComplexCoordinate) :
     hurwitz_mul (hurwitz_mul x (hurwitz_conj x)) y = 
       hurwitz_mul x (hurwitz_mul (hurwitz_conj x) y) := by
   ext
@@ -38,12 +32,8 @@ theorem fenchel_alternativity_patch (x y : HurwitzSpace) :
   · dsimp [hurwitz_mul, hurwitz_conj]
     ring
 
-/-- 
-HONEST THEOREM DEBT:
-The composition normalization on the state $y$.
-$(x \bullet \overline{x}) \bullet y = n(x)y$
--/
-theorem fenchel_state_normalization (x y : HurwitzSpace) :
+/-- Multiplication by a coordinate and its conjugate normalizes the state. -/
+theorem complex_coordinate_state_normalization (x y : ComplexCoordinate) :
     hurwitz_mul (hurwitz_mul x (hurwitz_conj x)) y = (hurwitz_norm x * y.1, hurwitz_norm x * y.2) := by
   ext
   · dsimp [hurwitz_mul, hurwitz_conj, hurwitz_norm]

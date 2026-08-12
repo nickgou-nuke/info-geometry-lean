@@ -40,19 +40,19 @@ positive rank and monotonicity data recorded here. -/
 structure LogGeneratingPotential where
   branch : Branch
   rank : ℕ
-  logZSymbol : String
+  logZ : ℝ
   rankMatchesBranch : rank = branchRank branch
 
-def productPotential : LogGeneratingPotential where
+noncomputable def productPotential : LogGeneratingPotential where
   branch := Branch.productLeray
   rank := 32
-  logZSymbol := "log 32"
+  logZ := Real.log 32
   rankMatchesBranch := rfl
 
-def osAlphaPotential : LogGeneratingPotential where
+noncomputable def osAlphaPotential : LogGeneratingPotential where
   branch := Branch.osAlpha
   rank := 24
-  logZSymbol := "log 24"
+  logZ := Real.log 24
   rankMatchesBranch := rfl
 
 theorem product_branch_rank :

@@ -83,27 +83,7 @@ theorem itakuraSaito_is_bregman_entropy (p q : ℝ) (hp : 0 < p) (hq : 0 < q) :
     _ = p * (1 / q) - Real.log p + Real.log q - q * (1 / q) := by rw [h_q_inv]
     _ = -Real.log p - -Real.log q - (-1 / q) * (p - q) := by ring
 
--- 5. Klein quadric Plücker relation
-theorem klein_quadric_plucker (omega0 omega1 pi0 pi1 : ℂ) :
-    omega0 * pi1 - omega1 * pi0 = 0 →
-      ∃ L1 L2 : Matrix (Fin 2) (Fin 2) ℂ,
-        omega0 = L1 0 0 * L2 0 0 + L1 0 1 * L2 1 0 := by
-  intro _
-  exact ⟨!![omega0, 0; 0, 0], !![1, 0; 0, 0], by simp⟩
-
--- 6. Deformed Cuntz relation existence
-theorem deformed_cuntz_relation (_q : ℂ) :
-    ∃ S : ℕ → Matrix (Fin 2) (Fin 2) ℂ, S 0 = 0 := by
-  exact ⟨fun _ => 0, rfl⟩
-
-structure DeRhamSynthesisProperties where
-  bogoliubov_preserves : Prop
-  spin_flatness : Prop
-
--- 7. Bogoliubov transport preserves chiral relations
-theorem bogoliubov_preserves_chiral (D : DeRhamSynthesisProperties) (h : D.bogoliubov_preserves) : D.bogoliubov_preserves := h
-
--- 8. Modular mirror exchanges L ↔ R
+-- Modular mirror exchanges L ↔ R
 structure DualFrameBundle where
   leftFrame : Quaternion ℝ
   rightFrame : Quaternion ℝ
@@ -119,10 +99,7 @@ theorem modular_mirror_exchanges_frames (b : DualFrameBundle) :
     exact mul_eq_one_comm.mp h
   refine ⟨{ leftFrame := b.rightFrame, rightFrame := b.leftFrame, pairing := h2 }, by simp⟩
 
--- 9. Spin connection flatness ↔ curvature vanishes
-theorem spin_connection_flatness (D : DeRhamSynthesisProperties) (h : D.spin_flatness) : D.spin_flatness := h
-
--- 10. Quaternion reflection
+-- Quaternion reflection
 def quaternionReflection (q v : Quaternion ℝ) : Quaternion ℝ :=
   - (q * v * q⁻¹)
 

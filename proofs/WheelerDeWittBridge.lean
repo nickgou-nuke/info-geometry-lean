@@ -5,7 +5,8 @@ noncomputable section
 
 namespace WheelerDeWitt
 
-open ZornCore ZornPeirceBridge
+open ZornCore
+variable {V : Type*} [AddCommGroup V] [Module ℂ V]
 
 structure DeWittCoordinates where
   time : ℝ
@@ -21,7 +22,7 @@ def deWittSymmetricMatrix (q : DeWittCoordinates) : Matrix (Fin 2) (Fin 2) ℝ :
 
 theorem det_deWittSymmetricMatrix (q : DeWittCoordinates) :
     Matrix.det (deWittSymmetricMatrix q) = deWittQuadratic q := by
-  dsimp [deWittSymmetricMatrix, deWittQuadratic, Matrix.det_fin_two]
+  simp [deWittSymmetricMatrix, deWittQuadratic, Matrix.det_fin_two]
   ring
 
 def AlgebraicWheelerDeWittConstraint (q : DeWittCoordinates) : Prop :=
@@ -50,15 +51,8 @@ theorem projected_state_satisfies_constraint
   have hp := congrArg (fun T : Module.End ℂ V => T ψ) hcomm
   simpa [PreservesConstraintSector, Module.End.mul_apply, hψ] using hp
 
-/--
-Tomita-Takesaki Modular Formulation of the Wheeler-DeWitt Constraint.
-In the infinite colimit (inductive limit) of the Cuntz/Zorn system, 
-the Hamiltonian emerges as the shifted modular operator Δ - I.
--/
-variable (ModularDelta : Module.End ℂ V)
-
 /-- The Tomita-Takesaki Wheeler-DeWitt Hamiltonian H = Δ - I -/
-def tomitaWheelerDeWittHamiltonian : Module.End ℂ V :=
+def tomitaWheelerDeWittHamiltonian (ModularDelta : Module.End ℂ V) : Module.End ℂ V :=
   ModularDelta - 1
 
 /-- 
@@ -68,7 +62,7 @@ annihilated by Δ - I, which means it is invariant under the modular operator.
 theorem tomita_wdw_iff_invariant (Ψ : V) :
     tomitaWheelerDeWittHamiltonian ModularDelta Ψ = 0 ↔ ModularDelta Ψ = Ψ := by
   dsimp [tomitaWheelerDeWittHamiltonian]
-  rw [LinearMap.sub_apply, LinearMap.one_apply, sub_eq_zero]
+  simp [tomitaWheelerDeWittHamiltonian, sub_eq_zero]
 
 /--
 If the modular operator commutes with the QEC code projector P_C,
@@ -79,9 +73,9 @@ theorem tomita_preserves_code_sector (P_C : Module.End ℂ V)
     (Ψ : V) (h_phys : ModularDelta Ψ = Ψ) :
     ModularDelta (P_C Ψ) = P_C Ψ := by
   have h_zero : tomitaWheelerDeWittHamiltonian ModularDelta Ψ = 0 := 
-    (tomita_wdw_iff_invariant ModularDelta Ψ).mpr h_phys
+    (tomita_wdw_iff_invariant (ModularDelta := ModularDelta) Ψ).mpr h_phys
   have h_proj_zero := projected_state_satisfies_constraint 
     (tomitaWheelerDeWittHamiltonian ModularDelta) P_C h_comm Ψ h_zero
-  exact (tomita_wdw_iff_invariant ModularDelta (P_C Ψ)).mp h_proj_zero
+  exact (tomita_wdw_iff_invariant (ModularDelta := ModularDelta) (P_C Ψ)).mp h_proj_zero
 
 end WheelerDeWitt

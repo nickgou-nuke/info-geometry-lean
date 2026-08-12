@@ -1,5 +1,5 @@
 import Mathlib.LinearAlgebra.FreeModule.Finite.Matrix
-import proofs.CanonicalZornCliffordRepresentation
+import InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
 
 /-!
 # First finite-dimensional certificates for the Zorn Clifford isomorphism

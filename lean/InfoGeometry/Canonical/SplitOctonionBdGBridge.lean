@@ -30,6 +30,18 @@ def bdgNMinus : BdGBlock ℚ := !![0, 0; 0, 1]
 def bdgSigmaPlus : BdGBlock ℚ := !![0, 1; 0, 0]
 def bdgSigmaMinus : BdGBlock ℚ := !![0, 0; 1, 0]
 
+/-! The native two-sheet/Nambu operators.  These are ordinary matrices, not
+Zorn matrices; the split-Cayley multiplication is a separate transported
+product on the eight-dimensional carrier. -/
+
+def bdgTau1 : BdGBlock ℚ := !![0, 1; 1, 0]
+def bdgTau3 : BdGBlock ℚ := !![1, 0; 0, -1]
+def bdgTauPlus : BdGBlock ℚ := bdgSigmaPlus
+def bdgTauMinus : BdGBlock ℚ := bdgSigmaMinus
+def bdgNullMetric : BdGBlock ℚ := bdgTau1
+def bdgDiagonalMetric : BdGBlock ℚ := bdgTau3
+def bdgHadamard : BdGBlock ℚ := !![1, 1; 1, -1]
+
 
 @[simp] theorem colorCoreToBdGLinear_nPlus :
     colorCoreToBdGLinear c (colorPolarizedGenerator c 0) = bdgNPlus := by
@@ -77,6 +89,85 @@ def bdgSigmaMinus : BdGBlock ℚ := !![0, 0; 1, 0]
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [diracOperator, Matrix.stdBasis, Matrix.add_apply]
+
+@[simp] theorem bdgTau1_sq : bdgTau1 * bdgTau1 = (1 : BdGBlock ℚ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [bdgTau1, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem bdgTau3_sq : bdgTau3 * bdgTau3 = (1 : BdGBlock ℚ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [bdgTau3, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem bdgTau1_tau3_anticommute :
+    bdgTau1 * bdgTau3 + bdgTau3 * bdgTau1 = (0 : BdGBlock ℚ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [bdgTau1, bdgTau3, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem bdgTauPlus_sq : bdgTauPlus * bdgTauPlus = (0 : BdGBlock ℚ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [bdgTauPlus, bdgSigmaPlus, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem bdgTauMinus_sq : bdgTauMinus * bdgTauMinus = (0 : BdGBlock ℚ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [bdgTauMinus, bdgSigmaMinus, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem bdgTauPlus_mul_tauMinus :
+    bdgTauPlus * bdgTauMinus = bdgNPlus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [bdgTauPlus, bdgTauMinus, bdgSigmaPlus, bdgSigmaMinus,
+      bdgNPlus, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem bdgTauMinus_mul_tauPlus :
+    bdgTauMinus * bdgTauPlus = bdgNMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [bdgTauPlus, bdgTauMinus, bdgSigmaPlus, bdgSigmaMinus,
+      bdgNMinus, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem bdgTau3_eq_nPlus_sub_nMinus :
+    bdgTau3 = bdgNPlus - bdgNMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [bdgTau3, bdgNPlus, bdgNMinus]
+
+@[simp] theorem bdgTau1_flip_nPlus :
+    bdgTau1 * bdgNPlus * bdgTau1 = bdgNMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [bdgTau1, bdgNPlus, bdgNMinus, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem bdgTau1_flip_tauPlus :
+    bdgTau1 * bdgTauPlus * bdgTau1 = bdgTauMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [bdgTau1, bdgTauPlus, bdgTauMinus, bdgSigmaPlus, bdgSigmaMinus,
+      Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem bdgTau1_flip_tau3 :
+    bdgTau1 * bdgTau3 * bdgTau1 = -bdgTau3 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [bdgTau1, bdgTau3, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem bdgHadamard_sq :
+    bdgHadamard * bdgHadamard = (2 : ℚ) • (1 : BdGBlock ℚ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [bdgHadamard, Matrix.mul_apply, Fin.sum_univ_two] <;> norm_num
+
+@[simp] theorem bdgHadamard_nullMetric_hadamard :
+    bdgHadamard * bdgNullMetric * bdgHadamard =
+      (2 : ℚ) • bdgDiagonalMetric := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [bdgHadamard, bdgNullMetric, bdgDiagonalMetric, bdgTau1,
+      bdgTau3, Matrix.mul_apply, Fin.sum_univ_two] <;> norm_num
 
 end
 end InfoGeometry.Physics.Bridge

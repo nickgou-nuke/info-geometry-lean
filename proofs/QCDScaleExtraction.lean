@@ -54,9 +54,6 @@ structure OptimalTransportEngine where
   uvFixedPointIsS3Topology : Prop             -- downstream UV proposition
   onSagerCPTReciprocity : Prop                -- downstream reciprocity proposition
 
-/-- Projection of the `minimizesAraki` field from the supplied hypothesis. -/
-theorem gradient_flow_is_trust_region (O : OptimalTransportEngine) (h : O.minimizesAraki) : O.minimizesAraki := h
-
 /-! ## 3. Synthesis — QCD scale + optimal transport engine -/
 
 theorem qcd_scale_extraction_synthesis :

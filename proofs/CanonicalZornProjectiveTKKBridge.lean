@@ -1,7 +1,7 @@
 import proofs.SplitOctonionBraidSU3
-import proofs.ZornCore
-import proofs.ZornTrialityTKKBridge
-import proofs.ProjectiveAffineConformalClosure55
+import InfoGeometry.Canonical.ZornCore
+import InfoGeometry.Canonical.ZornTrialityTKKBridge
+import InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
 
 /-!
 # Canonical Zorn, triality, five-grade, and projective closure bridge
@@ -25,7 +25,6 @@ namespace CanonicalZornProjectiveTKKBridge
 open SplitOctonionBraidSU3
 open ProjectiveAffineConformalClosure55
 open ZornTrialityTKKBridge
-open GrandUnifiedTKK
 
 /-! ## Real split coordinates and the real Zorn carrier -/
 
@@ -252,8 +251,10 @@ theorem canonical_triality_projective_five_grade_bridge (X : ZornCore.Zorn) :
     Q55 (zornConformalEmbed X) = 0 ∧
     coreToCanonical (ZornCore.triality X) =
       canonicalTriality (coreToCanonical X) ∧
-    (canonicalGradedLane .upperNilpotent).2.grade = TKK_Grade.g_1 ∧
-    (canonicalGradedLane .lowerNilpotent).2.grade = TKK_Grade.g_neg1 := by
+    (canonicalGradedLane .upperNilpotent).2.grade =
+      TKKJordanPairData.TKKGrade.p1 ∧
+    (canonicalGradedLane .lowerNilpotent).2.grade =
+      TKKJordanPairData.TKKGrade.m1 := by
   exact ⟨coreToCanonical_norm X, zornConformalEmbed_null X,
     coreToCanonical_triality X, canonicalGradedLane_grade _,
     canonicalGradedLane_grade _⟩

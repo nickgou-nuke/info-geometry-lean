@@ -29,14 +29,12 @@ private lemma paperOdd_mul_even_eq_pairTerm {n j : ℕ} (hj : j < n) :
   let T := FunctionSpace.tilt (n := n) ⟨j, hj⟩
   let U := FunctionSpace.switch (n := n) ⟨j, hj⟩
   let Q := FunctionSpace.pairPrefix (n := n) j
-  have hTQ : Commute T Q := by
-    exact tilt_comm_pairPrefix (n := n) (m := j) (j := j) (Nat.le_refl j) hj
   have hUQ : Commute U Q := by
     exact switch_comm_pairPrefix (n := n) (m := j) (j := j) (Nat.le_refl j) hj
   have hfactor : (T * Q) * (U * Q) = (T * U) * (Q * Q) := by
     simpa [mul_assoc] using hUQ.symm.mul_mul_mul_comm T Q
   have hpair : Q * Q = ((-1 : ℂ) ^ j) •
-      (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n) :=
+      (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)) :=
     pairPrefix_sq (n := n) (m := j) (Nat.le_of_lt hj)
   rw [paperOddGenerator, paperEvenGenerator,
     InfoGeometry.Canonical.CelikKocakPaperFormalism.FunctionSpace.pairTerm_of_lt hj]
@@ -49,7 +47,7 @@ private lemma paperOdd_mul_even_eq_pairTerm {n j : ℕ} (hj : j < n) :
           rw [paperPhase_sq, hfactor]
     _ = ((-1 : ℂ) ^ j) •
           ((T * U) * (((-1 : ℂ) ^ j) •
-            (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n))) := by
+            (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)))) := by
           rw [hpair]
     _ = T * U := by
           simp [smul_smul]
@@ -91,7 +89,7 @@ theorem paperTilt_mem_adjoin {n j : ℕ} (hj : j < n) :
     exact Algebra.subset_adjoin ⟨Sum.inl ⟨j, hj⟩, rfl⟩
   have hprod := S.mul_mem ho hQ
   have hpair : Q * Q = ((-1 : ℂ) ^ j) •
-      (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n) :=
+      (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)) :=
     pairPrefix_sq (n := n) (m := j) (Nat.le_of_lt hj)
   have hscaled :
       (paperPhase j * ((-1 : ℂ) ^ j)) • T =
@@ -104,7 +102,7 @@ theorem paperTilt_mem_adjoin {n j : ℕ} (hj : j < n) :
           paperPhase j • (((-1 : ℂ) ^ j) • T) := by rw [smul_smul]
       _ = paperPhase j •
           (T * (((-1 : ℂ) ^ j) •
-            (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n))) := by
+            (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)))) := by
           simp
       _ = (paperPhase j • (T * Q)) * Q := by
           rw [← hpair]
@@ -130,7 +128,7 @@ theorem paperSwitch_mem_adjoin {n j : ℕ} (hj : j < n) :
     exact Algebra.subset_adjoin ⟨Sum.inr ⟨j, hj⟩, rfl⟩
   have hprod := S.mul_mem he hQ
   have hpair : Q * Q = ((-1 : ℂ) ^ j) •
-      (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n) :=
+      (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)) :=
     pairPrefix_sq (n := n) (m := j) (Nat.le_of_lt hj)
   have hscaled :
       (paperPhase j * ((-1 : ℂ) ^ j)) • U =
@@ -143,7 +141,7 @@ theorem paperSwitch_mem_adjoin {n j : ℕ} (hj : j < n) :
           paperPhase j • (((-1 : ℂ) ^ j) • U) := by rw [smul_smul]
       _ = paperPhase j •
           (U * (((-1 : ℂ) ^ j) •
-            (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n))) := by
+            (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)))) := by
           simp
       _ = (paperPhase j • (U * Q)) * Q := by
           rw [← hpair]

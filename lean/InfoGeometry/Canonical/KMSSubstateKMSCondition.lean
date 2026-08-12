@@ -63,14 +63,11 @@ theorem kms_condition_beta_one
   rw [h3]
   rw [Matrix.mul_assoc ρ B A]
 
-/-- Embed the matrix KMS condition into the Cuntz generator KMS condition.
-When n = 3 and β = log 3, the matrix algebra embeds into the Cuntz algebra. -/
-theorem matrix_kms_embeds_cuntz_kms
+/-- The finite-dimensional matrix KMS identity for an invertible density matrix. -/
+theorem matrix_kms_condition_from_inverse
     (ρ ρ_inv : Matrix (Fin 3) (Fin 3) ℂ)
     (h_inv_left : ρ_inv * ρ = 1)
-    (h_inv_right : ρ * ρ_inv = 1)
-    (φ : CuntzThree →ₗ[ℂ] ℂ)
-    (h_kms : GeneratorKMSAt φ (Real.log 3)) :
+    (h_inv_right : ρ * ρ_inv = 1) :
     ∀ (A B : Matrix (Fin 3) (Fin 3) ℂ),
     thermalState ρ (A * modularAutomorphism_i ρ ρ_inv B) = thermalState ρ (B * A) := by
   intro A B
@@ -79,25 +76,11 @@ theorem matrix_kms_embeds_cuntz_kms
 /-- The substate KMS condition: if the full system satisfies KMS,
 then the restriction to the diagonal subalgebra also satisfies KMS. -/
 theorem substate_kms_condition
-    (ρ ρ_inv : Matrix (Fin 3) (Fin 3) ℂ)
-    (h_inv_left : ρ_inv * ρ = 1)
-    (h_inv_right : ρ * ρ_inv = 1)
-    (φ : CuntzThree →ₗ[ℂ] ℂ)
+    (φ : InfoGeometry.Algebra.CuntzTensorQuotient.CuntzAlg 3 →ₗ[ℂ] ℂ)
     (h_kms : GeneratorKMSAt φ (Real.log 3)) :
     ∀ (i j : Fin 3),
     φ (cuntzS 3 i * cuntzSdag 3 j) = if i = j then (1 / 3 : ℂ) else 0 := by
   intro i j
   exact generatorKMS_twoPoint_at_log_three φ h_kms i j
-
-/-- The braid action commutes with the modular automorphism on the Cuntz level.
-This lifts the matrix-level commutation to the algebraic level. -/
-theorem braid_modular_commutes_cuntz
-    (w_word : CuntzWord3)
-    (ρ ρ_inv : Matrix (Fin 3) (Fin 3) ℂ)
-    (h_inv_left : ρ_inv * ρ = 1)
-    (h_inv_right : ρ * ρ_inv = 1)
-    (A B : Matrix (Fin 3) (Fin 3) ℂ) :
-    thermalState ρ (A * modularAutomorphism_i ρ ρ_inv B) = thermalState ρ (B * A) := by
-  exact kms_condition_beta_one ρ ρ_inv A B h_inv_left h_inv_right
 
 end InfoGeometry.Canonical

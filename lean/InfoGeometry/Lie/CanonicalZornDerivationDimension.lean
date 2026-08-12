@@ -13,7 +13,7 @@ abbrev Params := Fin 14 → ℝ
 abbrev VZ := ZornVectorMatrix ℝ
 abbrev VDer := ZornVectorMatrix.Derivation (R := ℝ)
 
-private def parameterAction (p : Params) (X : VZ) : VZ :=
+def parameterAction (p : Params) (X : VZ) : VZ :=
   ⟨p 0 * X.v 0 + p 3 * X.v 1 + p 8 * X.v 2 - p 10 * X.w 0 + p 9 * X.w 1 - p 4 * X.w 2,
    fun i => if i = 0 then
       p 10 * X.a - p 10 * X.b + (p 6 + p 13) * X.v 0 - p 5 * X.v 1 - p 11 * X.v 2 + p 8 * X.w 1 - p 3 * X.w 2
@@ -29,7 +29,7 @@ private def parameterAction (p : Params) (X : VZ) : VZ :=
       -p 8 * X.a + p 8 * X.b + p 9 * X.v 0 + p 10 * X.v 1 + p 11 * X.w 0 + p 12 * X.w 1 + p 13 * X.w 2,
    -(p 0 * X.v 0 + p 3 * X.v 1 + p 8 * X.v 2 - p 10 * X.w 0 + p 9 * X.w 1 - p 4 * X.w 2)⟩
 
-private noncomputable def parameterDerivation (p : Params) : VDer where
+noncomputable def parameterDerivation (p : Params) : VDer where
   toFun := parameterAction p
   map_add' X Y := by
     ext i <;> try { funext i }

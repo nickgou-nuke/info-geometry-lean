@@ -1,4 +1,4 @@
-import Mathlib.Tactic
+import Mathlib
 
 open Matrix Complex
 
@@ -65,5 +65,12 @@ theorem logBranchShift_add (m n : ℤ) :
   unfold logBranchShift
   norm_num
   ring
+
+/-- Scalar and traceless square roots of the negative identity coexist in `M₂(ℂ)`. -/
+theorem negative_identity_root_synthesis :
+    ((I • (1 : Matrix (Fin 2) (Fin 2) ℂ)) * (I • (1 : Matrix (Fin 2) (Fin 2) ℂ)) =
+      -(1 : Matrix (Fin 2) (Fin 2) ℂ)) ∧
+    ((I • σ₂) * (I • σ₂) = -(1 : Matrix (Fin 2) (Fin 2) ℂ)) := by
+  exact ⟨scalar_i_square_root_neg_one, iσ₂_square_root_neg_one⟩
 
 end BiquaternionNegativeRootsLog

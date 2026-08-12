@@ -29,14 +29,14 @@ private theorem volume_anticommutes_of_even_pairwise
   have hodd : Odd (s.length + t.length) := by
     rcases heven with ⟨k, hk⟩
     refine ⟨k - 1, ?_⟩
-    simp only [List.length_append, List.length_cons, List.length_nil] at hk
+    simp only [List.length_append, List.length_cons] at hk
     omega
   have hpow : (-1 : R) ^ (s.length + t.length) = -1 := by
     rcases hodd with ⟨k, hk⟩
     rw [hk]
     simp [pow_add]
   simp only [cliffordVolumeElement, List.map_append, List.prod_append,
-    List.map_cons, List.prod_cons, List.prod_nil]
+    List.map_cons, List.prod_cons]
   calc
     _ = ((CliffordAlgebra.ι Q v) *
         (List.map (CliffordAlgebra.ι Q) s).prod) *
@@ -168,7 +168,7 @@ theorem cl55WittVolume_anticommutes
       _ = r • (ι55 x * cl55WittVolume) := by rw [smul_mul_assoc]
       _ = r • (-(cl55WittVolume * ι55 x)) := by rw [hx]
       _ = -(cl55WittVolume * ι55 (r • x)) := by
-        simp [map_smul, mul_smul, smul_neg]
+        simp [map_smul, smul_neg]
 
 theorem realSplitPin_kernel_pm_one
     (g : realSplitPin55)

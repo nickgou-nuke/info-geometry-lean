@@ -37,10 +37,12 @@ structure of the structural tensors.
 -/
 theorem kreinDoubling_is_krein_hermitian (M : Patch2x2) :
     kreinAdjoint (kreinDoubling M) = kreinDoubling M := by
-  dsimp [kreinAdjoint, kreinDoubling, kreinMetric, fromBlocks, symmPart, skewPart]
+  dsimp [kreinAdjoint, kreinDoubling, kreinMetric]
   ext i j
-  fin_cases i <;> fin_cases j
-  all_goals { simp; ring }
+  rcases i with i | i <;> rcases j with j | j <;>
+    fin_cases i <;> fin_cases j <;>
+    simp [fromBlocks, symmPart, skewPart, Matrix.mul_apply, Fin.sum_univ_two] <;>
+    ring
 
 /-- 
 The indefinite Krein inner product between two Nambu-Gorkov spinors.

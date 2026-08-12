@@ -36,9 +36,26 @@ theorem Phi_mul_eq_matrix_mul (x y : SQCoord) :
   fin_cases i <;> fin_cases j <;>
     simp [Phi, coordMul, Matrix.mul_apply] <;> ring
 
-theorem Phi_injective : Function.Injective Phi := by sorry
+theorem Phi_injective : Function.Injective Phi := by
+  intro x y h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h
+  have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 1) h
+  have h10 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 1 0) h
+  have h11 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 1 1) h
+  simp [Phi] at h00 h01 h10 h11
+  ext <;> linarith
 
-theorem Phi_surjective : Function.Surjective Phi := by sorry
+theorem Phi_surjective : Function.Surjective Phi := by
+  intro M
+  let x : SQCoord :=
+    ⟨(M 0 0 + M 1 1) / 2,
+      (M 1 0 - M 0 1) / 2,
+      (M 0 0 - M 1 1) / 2,
+      (M 1 0 + M 0 1) / 2⟩
+  refine ⟨x, ?_⟩
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [x, Phi] <;> ring
 
 /-- Exact unipotent matrix exponentials for aE and bF in the selected basis -/
 theorem Phi_exp_aE (a : ℝ) :
@@ -51,7 +68,7 @@ theorem Phi_exp_bF (b : ℝ) :
     Phi ⟨1, -b / 2, 0, -b / 2⟩ = !![1, 0; -b, 1] := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [Phi] <;> ring
+    simp [Phi]
 
 /-- Full exact open Gauss cell decomposition -/
 theorem gauss_cell_decomposition (a η b : ℝ) :
@@ -66,9 +83,9 @@ theorem gauss_cell_det_one (a η b : ℝ) :
     Matrix.det !![Real.exp η + a * b * Real.exp (-η), -a * Real.exp (-η);
                   -b * Real.exp (-η), Real.exp (-η)] = 1 := by
   simp [Matrix.det_fin_two]
-  -- (e^η + ab e^-η)(e^-η) - (-a e^-η)(-b e^-η) = 1 + ab e^-2η - ab e^-2η = 1
-  -- using Real.exp_add and Real.exp_zero
-  sorry
+  rw [Real.exp_neg]
+  field_simp [Real.exp_ne_zero η]
+  ring
 
 end SplitQuaternionMatrixSlice
 end noncomputable section

@@ -3,16 +3,15 @@ import proofs.CubicJordanPeirceDecomposition
 import proofs.SplitCliffordAlgebras
 import proofs.TKKJordanPairData
 import proofs.TripotentCliffordColimit
-import proofs.ZornCore
+import InfoGeometry.Canonical.ZornCore
 import proofs.ZornOPParavector
-import proofs.ZornTrialityTKKBridge
+import InfoGeometry.Canonical.ZornTrialityTKKBridge
 import proofs.ZornAssociatorSplitOctonion
 
 noncomputable section
 
 namespace InfoGeometry.Canonical.SplitOctonionTKK
 
-open GrandUnifiedTKK
 open TKKJordanPairData
 
 /-!
@@ -193,13 +192,13 @@ def canonicalCarrierWitness : CanonicalCarrierWitness := by
 /-- The canonical carrier lands in the expected Zorn / TKK lanes. -/
 theorem canonicalCarrier_route :
     (ZornTrialityTKKBridge.canonicalRouting
-      ZornTrialityTKKBridge.SplitOctonionLane.diagonalProjector).grade = TKK_Grade.g_0 ∧
+      ZornTrialityTKKBridge.SplitOctonionLane.diagonalProjector).grade = TKKGrade.z0 ∧
     (ZornTrialityTKKBridge.canonicalRouting
-      ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent).grade = TKK_Grade.g_1 ∧
+      ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent).grade = TKKGrade.p1 ∧
     (ZornTrialityTKKBridge.canonicalRouting
-      ZornTrialityTKKBridge.SplitOctonionLane.lowerNilpotent).grade = TKK_Grade.g_neg1 ∧
+      ZornTrialityTKKBridge.SplitOctonionLane.lowerNilpotent).grade = TKKGrade.m1 ∧
     (ZornTrialityTKKBridge.canonicalRouting
-      ZornTrialityTKKBridge.SplitOctonionLane.associatorWitness).grade = TKK_Grade.g_2 := by
+      ZornTrialityTKKBridge.SplitOctonionLane.associatorWitness).grade = TKKGrade.p2 := by
   have hDiag :=
     ZornTrialityTKKBridge.canonicalRouting_grade
       ZornTrialityTKKBridge.SplitOctonionLane.diagonalProjector
@@ -214,49 +213,49 @@ theorem canonicalCarrier_route :
       ZornTrialityTKKBridge.SplitOctonionLane.associatorWitness
   have hDiag' :
       (ZornTrialityTKKBridge.canonicalRouting
-        ZornTrialityTKKBridge.SplitOctonionLane.diagonalProjector).grade = TKK_Grade.g_0 := by
+        ZornTrialityTKKBridge.SplitOctonionLane.diagonalProjector).grade = TKKGrade.z0 := by
     rw [hDiag]
     simp [ZornTrialityTKKBridge.laneGrade_diagonalProjector]
   have hUpper' :
       (ZornTrialityTKKBridge.canonicalRouting
-        ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent).grade = TKK_Grade.g_1 := by
+        ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent).grade = TKKGrade.p1 := by
     rw [hUpper]
     simp [ZornTrialityTKKBridge.laneGrade_upperNilpotent]
   have hLower' :
       (ZornTrialityTKKBridge.canonicalRouting
-        ZornTrialityTKKBridge.SplitOctonionLane.lowerNilpotent).grade = TKK_Grade.g_neg1 := by
+        ZornTrialityTKKBridge.SplitOctonionLane.lowerNilpotent).grade = TKKGrade.m1 := by
     rw [hLower]
     simp [ZornTrialityTKKBridge.laneGrade_lowerNilpotent]
   have hAssoc' :
       (ZornTrialityTKKBridge.canonicalRouting
-        ZornTrialityTKKBridge.SplitOctonionLane.associatorWitness).grade = TKK_Grade.g_2 := by
+        ZornTrialityTKKBridge.SplitOctonionLane.associatorWitness).grade = TKKGrade.p2 := by
     rw [hAssoc]
     simp [ZornTrialityTKKBridge.laneGrade_associatorWitness]
   exact ⟨hDiag', hUpper', hLower', hAssoc'⟩
 
 /-- The canonical split-octonion lanes are bracket-compatible in the five-grade window. -/
 theorem canonicalCarrier_bracket_compatibility :
-    GrandUnifiedTKK.add_grade
+    TKKJordanPairData.gradeAdd
       (ZornTrialityTKKBridge.laneGrade
         ZornTrialityTKKBridge.SplitOctonionLane.diagonalProjector)
       (ZornTrialityTKKBridge.laneGrade
         ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent) =
         some (ZornTrialityTKKBridge.laneGrade
           ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent) ∧
-    GrandUnifiedTKK.add_grade
+    TKKJordanPairData.gradeAdd
       (ZornTrialityTKKBridge.laneGrade
         ZornTrialityTKKBridge.SplitOctonionLane.lowerNilpotent)
       (ZornTrialityTKKBridge.laneGrade
         ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent) =
         some (ZornTrialityTKKBridge.laneGrade
           ZornTrialityTKKBridge.SplitOctonionLane.diagonalProjector) ∧
-    GrandUnifiedTKK.add_grade
+    TKKJordanPairData.gradeAdd
       (ZornTrialityTKKBridge.laneGrade
         ZornTrialityTKKBridge.SplitOctonionLane.associatorWitness)
       (ZornTrialityTKKBridge.laneGrade
         ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent) = none := by
   have h01 :
-      GrandUnifiedTKK.add_grade
+      TKKJordanPairData.gradeAdd
         (ZornTrialityTKKBridge.laneGrade
           ZornTrialityTKKBridge.SplitOctonionLane.diagonalProjector)
         (ZornTrialityTKKBridge.laneGrade
@@ -265,7 +264,7 @@ theorem canonicalCarrier_bracket_compatibility :
             ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent) := by
     rfl
   have h10 :
-      GrandUnifiedTKK.add_grade
+      TKKJordanPairData.gradeAdd
         (ZornTrialityTKKBridge.laneGrade
           ZornTrialityTKKBridge.SplitOctonionLane.lowerNilpotent)
         (ZornTrialityTKKBridge.laneGrade
@@ -274,7 +273,7 @@ theorem canonicalCarrier_bracket_compatibility :
             ZornTrialityTKKBridge.SplitOctonionLane.diagonalProjector) := by
     rfl
   have h20 :
-      GrandUnifiedTKK.add_grade
+      TKKJordanPairData.gradeAdd
         (ZornTrialityTKKBridge.laneGrade
           ZornTrialityTKKBridge.SplitOctonionLane.associatorWitness)
         (ZornTrialityTKKBridge.laneGrade
@@ -284,21 +283,21 @@ theorem canonicalCarrier_bracket_compatibility :
 
 /-- The canonical carrier record version of the same bracket compatibility. -/
 theorem canonicalRouting_bracket_compatibility :
-    GrandUnifiedTKK.add_grade
+    TKKJordanPairData.gradeAdd
       (ZornTrialityTKKBridge.canonicalRouting
         ZornTrialityTKKBridge.SplitOctonionLane.diagonalProjector).grade
       (ZornTrialityTKKBridge.canonicalRouting
         ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent).grade =
         some (ZornTrialityTKKBridge.canonicalRouting
           ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent).grade ∧
-    GrandUnifiedTKK.add_grade
+    TKKJordanPairData.gradeAdd
       (ZornTrialityTKKBridge.canonicalRouting
         ZornTrialityTKKBridge.SplitOctonionLane.lowerNilpotent).grade
       (ZornTrialityTKKBridge.canonicalRouting
         ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent).grade =
         some (ZornTrialityTKKBridge.canonicalRouting
           ZornTrialityTKKBridge.SplitOctonionLane.diagonalProjector).grade ∧
-    GrandUnifiedTKK.add_grade
+    TKKJordanPairData.gradeAdd
       (ZornTrialityTKKBridge.canonicalRouting
         ZornTrialityTKKBridge.SplitOctonionLane.associatorWitness).grade
       (ZornTrialityTKKBridge.canonicalRouting
@@ -316,13 +315,13 @@ theorem canonicalCarrier_synthesis :
     canonicalCarrierWitness.lowerNilpotent * canonicalCarrierWitness.lowerNilpotent = 0 ∧
     canonicalCarrierWitness.associatorDefect ≠ 0 ∧
     (ZornTrialityTKKBridge.canonicalRouting
-      ZornTrialityTKKBridge.SplitOctonionLane.diagonalProjector).grade = TKK_Grade.g_0 ∧
+      ZornTrialityTKKBridge.SplitOctonionLane.diagonalProjector).grade = TKKGrade.z0 ∧
     (ZornTrialityTKKBridge.canonicalRouting
-      ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent).grade = TKK_Grade.g_1 ∧
+      ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent).grade = TKKGrade.p1 ∧
     (ZornTrialityTKKBridge.canonicalRouting
-      ZornTrialityTKKBridge.SplitOctonionLane.lowerNilpotent).grade = TKK_Grade.g_neg1 ∧
+      ZornTrialityTKKBridge.SplitOctonionLane.lowerNilpotent).grade = TKKGrade.m1 ∧
     (ZornTrialityTKKBridge.canonicalRouting
-      ZornTrialityTKKBridge.SplitOctonionLane.associatorWitness).grade = TKK_Grade.g_2 ∧
+      ZornTrialityTKKBridge.SplitOctonionLane.associatorWitness).grade = TKKGrade.p2 ∧
     ZornCore.associator (ZornCore.U ZornCore.e1)
       (ZornCore.L ZornCore.e1) (ZornCore.U ZornCore.e2) ≠ 0 := by
   have hRoute := canonicalCarrier_route

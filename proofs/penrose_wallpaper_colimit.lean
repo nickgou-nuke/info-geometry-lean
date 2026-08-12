@@ -107,10 +107,13 @@ def penroseFiniteLevelDim (n : ℕ) : ℕ := 2 ^ n
 def penroseBoundary : Type := ℕ → Bool
 def penroseCantorCode : penroseBoundary ≃ (ℕ → Bool) := Equiv.refl (ℕ → Bool)
 
-theorem penrose_uhf_equivalence :
-    (∀ n, penroseFiniteLevelDim n = 2 ^ n) ∧
-    Nonempty (penroseBoundary ≃ (ℕ → Bool)) := by
-  exact ⟨by intro n; rfl, ⟨penroseCantorCode⟩⟩
+theorem penrose_finite_level_dimension :
+    ∀ n, penroseFiniteLevelDim n = 2 ^ n := by
+  intro n
+  rfl
+
+@[simp] theorem penroseCantorCode_apply (x : penroseBoundary) :
+    penroseCantorCode x = x := rfl
 
 /-══════════════════════════════════════════════════════════════════════
   LAYER 3 : THE CANTOR HORIZON — holographic boundary
@@ -177,9 +180,9 @@ theorem goutev_penrose_synthesis :
     (5 : ℕ) ∉ ({1,2,3,4,6} : Set ℕ) ∧
     identityYangBaxterBypass.pentagon_root ^ 5 = 1 ∧
     (∀ n, penroseFiniteLevelDim n = 2 ^ n) ∧
-    Nonempty (penroseBoundary ≃ (ℕ → Bool)) := by
+    (∀ x : penroseBoundary, penroseCantorCode x = x) := by
   exact ⟨pentagon_forbidden, identityYangBaxterBypass.h_pentagon,
-    by intro n; rfl, ⟨penroseCantorCode⟩⟩
+    penrose_finite_level_dimension, penroseCantorCode_apply⟩
 
 /-══════════════════════════════════════════════════════════════════════
   BRIDGES TO PRE-PROVED THEOREMS
@@ -213,7 +216,7 @@ def bridge_uhf_ladder : BridgeArtifact where
 def bridge_goutev_principle : BridgeArtifact where
   name := "Goutev principle"
   artifact := "proofs/goutev_principle.lean"
-  exported_symbols := ["goutev_cycle_closes", "bridge_registry"]
+  exported_symbols := ["vacuumLayer", "holographicBoundaryLayer"]
 
 def bridge_clifford_seed : BridgeArtifact where
   name := "Clifford seed"

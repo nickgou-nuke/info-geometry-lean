@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.TensorTowerColimit
 import InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry
+import InfoGeometry.OperatorAlgebra.OperatorMobiusAction
 
 /-!
 # Chiral Modular Flow Colimit Bridge
@@ -51,5 +52,127 @@ theorem colimit_modular_flow_transport (n : ℕ) (U : (A n)ˣ) (x : A n) :
     psi n (modularFlow n U x) = continuumModularFlow psi n U (psi n x) := by
   dsimp [modularFlow, continuumModularFlow, mapUnit]
   rw [map_mul, map_mul]
+
+/-! The same compatible cone transports the operator-valued thermal
+Bogoliubov readout.  The coefficients are mapped through the `AlgHom`; they
+are not replaced by scalar diagonal data. -/
+
+theorem colimit_thermal_annihilator_transport
+    (n : ℕ) (a d : A n) (u v : ℂ) :
+    psi n (InfoGeometry.OperatorAlgebra.operatorMobiusAction
+      (InfoGeometry.OperatorAlgebra.thermalBogoliubovMatrix (A := A n) u v)
+      ![a, d] 0) =
+      InfoGeometry.OperatorAlgebra.operatorMobiusAction
+        (InfoGeometry.OperatorAlgebra.thermalBogoliubovMatrix
+          (A := A_inf) u v) ![psi n a, psi n d] 0 := by
+  exact InfoGeometry.OperatorAlgebra.AlgHom.map_thermalAnnihilator_operatorMobiusAction
+    (psi n) a d u v
+
+theorem colimit_thermal_creator_transport
+    (n : ℕ) (c b : A n) (u v : ℂ) :
+    psi n (InfoGeometry.OperatorAlgebra.operatorMobiusAction
+      (InfoGeometry.OperatorAlgebra.thermalBogoliubovMatrix (A := A n) u v)
+      ![b, c] 1) =
+      InfoGeometry.OperatorAlgebra.operatorMobiusAction
+        (InfoGeometry.OperatorAlgebra.thermalBogoliubovMatrix
+          (A := A_inf) u v) ![psi n b, psi n c] 1 := by
+  exact InfoGeometry.OperatorAlgebra.AlgHom.map_thermalCreator_operatorMobiusAction
+    (psi n) c b u v
+
+theorem colimit_thermal_bogoliubov_anticommutator_transport
+    (n : ℕ) (a c b d : A n) (u v : ℂ) :
+    psi n (InfoGeometry.OperatorAlgebra.thermalAnticommutator
+      (InfoGeometry.OperatorAlgebra.thermalAnnihilator a d u v)
+      (InfoGeometry.OperatorAlgebra.thermalCreator c b u v)) =
+      InfoGeometry.OperatorAlgebra.thermalAnticommutator
+        (InfoGeometry.OperatorAlgebra.thermalAnnihilator (psi n a) (psi n d) u v)
+        (InfoGeometry.OperatorAlgebra.thermalCreator (psi n c) (psi n b) u v) := by
+  calc
+    psi n (InfoGeometry.OperatorAlgebra.thermalAnticommutator
+        (InfoGeometry.OperatorAlgebra.thermalAnnihilator a d u v)
+        (InfoGeometry.OperatorAlgebra.thermalCreator c b u v)) =
+        InfoGeometry.OperatorAlgebra.thermalAnticommutator
+          (psi n (InfoGeometry.OperatorAlgebra.thermalAnnihilator a d u v))
+          (psi n (InfoGeometry.OperatorAlgebra.thermalCreator c b u v)) := by
+      exact InfoGeometry.OperatorAlgebra.thermalAnticommutator_map
+        (psi n).toRingHom _ _
+    _ = InfoGeometry.OperatorAlgebra.thermalAnticommutator
+          (InfoGeometry.OperatorAlgebra.thermalAnnihilator (psi n a) (psi n d) u v)
+          (InfoGeometry.OperatorAlgebra.thermalCreator (psi n c) (psi n b) u v) := by
+      rw [InfoGeometry.OperatorAlgebra.thermalAnnihilator_map,
+        InfoGeometry.OperatorAlgebra.thermalCreator_map]
+
+theorem colimit_thermal_bogoliubov_car_preserved
+    (n : ℕ) (a c b d : A n) (u v : ℂ)
+    (huv : u ^ 2 + v ^ 2 = 1)
+    (hac : InfoGeometry.OperatorAlgebra.thermalAnticommutator a c = 1)
+    (hbd : InfoGeometry.OperatorAlgebra.thermalAnticommutator b d = 1)
+    (hab : InfoGeometry.OperatorAlgebra.thermalAnticommutator a b = 0)
+    (hcd : InfoGeometry.OperatorAlgebra.thermalAnticommutator c d = 0) :
+    InfoGeometry.OperatorAlgebra.thermalAnticommutator
+        (InfoGeometry.OperatorAlgebra.thermalAnnihilator (psi n a) (psi n d) u v)
+        (InfoGeometry.OperatorAlgebra.thermalCreator (psi n c) (psi n b) u v) = 1 := by
+  exact InfoGeometry.OperatorAlgebra.AlgHom.map_thermal_bogoliubov_car_preserved
+    (psi n) a c b d u v huv hac hbd hab hcd
+
+/-! The same colimit transport for operator-valued thermal coefficients. -/
+
+theorem colimit_operator_thermal_annihilator_transport
+    (n : ℕ) (a d u v : A n) :
+    psi n (InfoGeometry.OperatorAlgebra.operatorThermalAnnihilator a d u v) =
+      InfoGeometry.OperatorAlgebra.operatorThermalAnnihilator
+        (psi n a) (psi n d) (psi n u) (psi n v) := by
+  exact InfoGeometry.OperatorAlgebra.RingHom.map_operatorThermalAnnihilator
+    (psi n).toRingHom a d u v
+
+theorem colimit_operator_thermal_creator_transport
+    (n : ℕ) (c b u v : A n) :
+    psi n (InfoGeometry.OperatorAlgebra.operatorThermalCreator c b u v) =
+      InfoGeometry.OperatorAlgebra.operatorThermalCreator
+        (psi n c) (psi n b) (psi n u) (psi n v) := by
+  exact InfoGeometry.OperatorAlgebra.RingHom.map_operatorThermalCreator
+    (psi n).toRingHom c b u v
+
+theorem colimit_operator_thermal_bogoliubov_anticommutator_transport
+    (n : ℕ) (a c b d u v : A n) :
+    psi n (InfoGeometry.OperatorAlgebra.thermalAnticommutator
+      (InfoGeometry.OperatorAlgebra.operatorThermalAnnihilator a d u v)
+      (InfoGeometry.OperatorAlgebra.operatorThermalCreator c b u v)) =
+      InfoGeometry.OperatorAlgebra.thermalAnticommutator
+        (InfoGeometry.OperatorAlgebra.operatorThermalAnnihilator
+          (psi n a) (psi n d) (psi n u) (psi n v))
+        (InfoGeometry.OperatorAlgebra.operatorThermalCreator
+          (psi n c) (psi n b) (psi n u) (psi n v)) := by
+  calc
+    psi n (InfoGeometry.OperatorAlgebra.thermalAnticommutator
+        (InfoGeometry.OperatorAlgebra.operatorThermalAnnihilator a d u v)
+        (InfoGeometry.OperatorAlgebra.operatorThermalCreator c b u v)) =
+        InfoGeometry.OperatorAlgebra.thermalAnticommutator
+          (psi n (InfoGeometry.OperatorAlgebra.operatorThermalAnnihilator a d u v))
+          (psi n (InfoGeometry.OperatorAlgebra.operatorThermalCreator c b u v)) := by
+      exact InfoGeometry.OperatorAlgebra.thermalAnticommutator_map
+        (psi n).toRingHom _ _
+    _ = InfoGeometry.OperatorAlgebra.thermalAnticommutator
+          (InfoGeometry.OperatorAlgebra.operatorThermalAnnihilator
+            (psi n a) (psi n d) (psi n u) (psi n v))
+          (InfoGeometry.OperatorAlgebra.operatorThermalCreator
+            (psi n c) (psi n b) (psi n u) (psi n v)) := by
+      have hA := InfoGeometry.OperatorAlgebra.RingHom.map_operatorThermalAnnihilator
+        (psi n).toRingHom a d u v
+      have hC := InfoGeometry.OperatorAlgebra.RingHom.map_operatorThermalCreator
+        (psi n).toRingHom c b u v
+      change InfoGeometry.OperatorAlgebra.thermalAnticommutator
+        ((psi n).toRingHom
+          (InfoGeometry.OperatorAlgebra.operatorThermalAnnihilator a d u v))
+        ((psi n).toRingHom
+          (InfoGeometry.OperatorAlgebra.operatorThermalCreator c b u v)) =
+        InfoGeometry.OperatorAlgebra.thermalAnticommutator
+          (InfoGeometry.OperatorAlgebra.operatorThermalAnnihilator
+            ((psi n).toRingHom a) ((psi n).toRingHom d)
+            ((psi n).toRingHom u) ((psi n).toRingHom v))
+          (InfoGeometry.OperatorAlgebra.operatorThermalCreator
+            ((psi n).toRingHom c) ((psi n).toRingHom b)
+            ((psi n).toRingHom u) ((psi n).toRingHom v))
+      rw [hA, hC]
 
 end InfoGeometry.Canonical.ChiralModularFlowColimitBridge

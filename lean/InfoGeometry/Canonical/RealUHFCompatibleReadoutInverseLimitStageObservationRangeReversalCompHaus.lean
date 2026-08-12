@@ -39,11 +39,23 @@ noncomputable def stageObservationRangeReversalCompHausIso
     (ρ : inverseLimitCarrier) (n : ℕ) (X : MatStage n) :
     stageObservationRangeCompHaus ρ n X ≅
       stageObservationRangeCompHaus (R.involution ρ) n X :=
-  CompHausLike.isoOfHomeo
-    (P := fun _ : TopCat => True)
-    (X := stageObservationRangeCompHaus ρ n X)
-    (Y := stageObservationRangeCompHaus (R.involution ρ) n X)
-    (stageObservationRangeReversalHomeomorph R hreadout ρ n X)
+  let e := stageObservationRangeReversalHomeomorph R hreadout ρ n X
+  { hom := ⟨TopCat.ofHom
+      { toFun := e
+        continuous_toFun := e.continuous }⟩
+    inv := ⟨TopCat.ofHom
+      { toFun := e.symm
+        continuous_toFun := e.symm.continuous }⟩
+    hom_inv_id := by
+      apply ConcreteCategory.hom_ext
+      intro z
+      change e.symm (e z) = z
+      exact e.symm_apply_apply z
+    inv_hom_id := by
+      apply ConcreteCategory.hom_ext
+      intro z
+      change e (e.symm z) = z
+      exact e.apply_symm_apply z }
 
 @[simp] theorem stageObservationRangeReversalCompHausIso_hom_apply
     (R : SymbolicLatentModularReversal flow)

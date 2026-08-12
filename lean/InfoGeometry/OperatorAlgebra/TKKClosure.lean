@@ -203,7 +203,8 @@ def toLieRing : LieRing L where
     rw [𝔤.bracket_skew z x, bracket_neg_right,
       𝔤.bracket_skew z (𝔤.bracket x y)] at h
     apply eq_of_sub_eq_zero
-    convert h using 1 <;> abel
+    convert h using 1
+    all_goals abel
 
 end LieSocket
 

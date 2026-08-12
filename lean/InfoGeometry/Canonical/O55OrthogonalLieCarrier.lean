@@ -62,7 +62,7 @@ theorem orthogonal55Predicate_commutator {A B : O55Matrix}
   rw [← Matrix.mul_assoc Bᵀ O55Form A,
     ← Matrix.mul_assoc Aᵀ O55Form B]
   rw [hB', hA']
-  simp only [neg_mul, sub_eq_add_neg]
+  simp only [neg_mul]
   simp only [neg_neg]
   have h₁ : (-1 : ℝ) • (O55Form * A * B) = -(O55Form * A * B) := by
     exact neg_one_smul ℝ (O55Form * A * B)

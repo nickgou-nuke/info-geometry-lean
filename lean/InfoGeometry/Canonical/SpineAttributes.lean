@@ -82,6 +82,10 @@ def spineTagsOf (env : Environment) (declName : Name) : Array Name :=
       tags := tags.push `spine_functor_responder
     tags
 
+/-- String readout of the ordered semantic tags attached to a declaration. -/
+def spineTagStringsOf (env : Environment) (declName : Name) : Array String :=
+  (spineTagsOf env declName).map Name.toString
+
 /-- Test whether a declaration is marked as a canonical spine object. -/
 def isSpineObject (env : Environment) (declName : Name) : Bool :=
   spineObjectAttr.hasTag env declName

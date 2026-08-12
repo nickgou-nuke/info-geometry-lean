@@ -14,17 +14,17 @@ namespace InfoGeometry.Canonical.CantorBoundaryReadoutBounds
 
 open InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 
-def realBinaryTerm (w : InfiniteBinaryWordSpace) (n : ℕ) : ℝ :=
+def realBinaryTerm (w : (ℕ → Bool)) (n : ℕ) : ℝ :=
   (if w n then 1 else 0) * (1 / 2 : ℝ) ^ (n + 1)
 
 theorem realBinaryTerm_complement_add
-    (w : InfiniteBinaryWordSpace) (n : ℕ) :
+    (w : (ℕ → Bool)) (n : ℕ) :
     realBinaryTerm (fun k => !w k) n + realBinaryTerm w n =
       (1 / 2 : ℝ) ^ (n + 1) := by
   dsimp [realBinaryTerm]
   cases h : w n <;> simp [h]
 
-theorem realBinaryTerm_summable (w : InfiniteBinaryWordSpace) :
+theorem realBinaryTerm_summable (w : (ℕ → Bool)) :
     Summable (realBinaryTerm w) := by
   apply Summable.of_norm_bounded (f := realBinaryTerm w)
     (g := fun n : ℕ => (1 / 2 : ℝ) ^ (n + 1))
@@ -37,17 +37,46 @@ theorem realBinaryTerm_summable (w : InfiniteBinaryWordSpace) :
     dsimp [realBinaryTerm]
     split <;> simp [norm_pow]
 
-noncomputable def realBinaryReadout (w : InfiniteBinaryWordSpace) : ℝ :=
+noncomputable def realBinaryReadout (w : (ℕ → Bool)) : ℝ :=
   ∑' n : ℕ, realBinaryTerm w n
 
-theorem realBinaryReadout_nonnegative (w : InfiniteBinaryWordSpace) :
+theorem realBinaryReadout_nonnegative (w : (ℕ → Bool)) :
     0 ≤ realBinaryReadout w := by
   apply tsum_nonneg
   intro n
   dsimp [realBinaryTerm]
   positivity
 
-theorem realBinaryReadout_le_one (w : InfiniteBinaryWordSpace) :
+theorem realBinaryReadout_eq_zero_iff (w : ℕ → Bool) :
+    realBinaryReadout w = 0 ↔ ∀ n, w n = false := by
+  constructor
+  · intro h n
+    cases hbit : w n with
+    | false => rfl
+    | true =>
+        have hterm_pos : 0 < realBinaryTerm w n := by
+          simp [realBinaryTerm, hbit]
+        have hterm_le : realBinaryTerm w n ≤ realBinaryReadout w := by
+          exact (realBinaryTerm_summable w).le_tsum n (fun m _ => by
+            dsimp [realBinaryTerm]
+            positivity)
+        have hterm_zero : realBinaryTerm w n = 0 := by
+          apply le_antisymm
+          · simpa [h] using hterm_le
+          · dsimp [realBinaryTerm]
+            positivity
+        linarith
+  · intro h
+    have hzero : realBinaryTerm w = 0 := by
+      funext n
+      dsimp [realBinaryTerm]
+      rw [h n]
+      simp
+    change (∑' n : ℕ, realBinaryTerm w n) = 0
+    rw [hzero]
+    simp
+
+theorem realBinaryReadout_le_one (w : (ℕ → Bool)) :
     realBinaryReadout w ≤ 1 := by
   have hgeom : Summable (fun n : ℕ => (1 / 2 : ℝ) ^ n) := by
     exact summable_geometric_of_norm_lt_one (by norm_num)
@@ -79,11 +108,11 @@ theorem realBinaryReadout_le_one (w : InfiniteBinaryWordSpace) :
         hshift
     _ = 1 := hsum
 
-theorem realBinaryReadout_mem_unitInterval (w : InfiniteBinaryWordSpace) :
+theorem realBinaryReadout_mem_unitInterval (w : (ℕ → Bool)) :
     realBinaryReadout w ∈ Set.Icc (0 : ℝ) 1 := by
   exact ⟨realBinaryReadout_nonnegative w, realBinaryReadout_le_one w⟩
 
-theorem realBinaryReadout_complement (w : InfiniteBinaryWordSpace) :
+theorem realBinaryReadout_complement (w : (ℕ → Bool)) :
     realBinaryReadout (fun n => !w n) + realBinaryReadout w = 1 := by
   have hcomp : Summable (realBinaryTerm (fun n => !w n)) :=
     realBinaryTerm_summable (fun n => !w n)
@@ -122,8 +151,28 @@ theorem realBinaryReadout_complement (w : InfiniteBinaryWordSpace) :
       cases h : w n <;> simp [h]
     _ = 1 := hsum
 
+theorem realBinaryReadout_eq_one_iff (w : ℕ → Bool) :
+    realBinaryReadout w = 1 ↔ ∀ n, w n = true := by
+  constructor
+  · intro h n
+    have hzero : realBinaryReadout (fun k => !w k) = 0 := by
+      linarith [realBinaryReadout_complement w]
+    have hfalse : ∀ k, (!w k) = false :=
+      (realBinaryReadout_eq_zero_iff (fun k => !w k)).mp hzero
+    cases hbit : w n with
+    | false =>
+        have := hfalse n
+        simp [hbit] at this
+    | true => rfl
+  · intro h
+    have hzero : realBinaryReadout (fun k => !w k) = 0 := by
+      apply (realBinaryReadout_eq_zero_iff (fun k => !w k)).mpr
+      intro n
+      simp [h n]
+    linarith [realBinaryReadout_complement w]
+
 theorem realBinaryReadout_complement_eq_one_sub
-    (w : InfiniteBinaryWordSpace) :
+    (w : (ℕ → Bool)) :
     realBinaryReadout (fun n => !w n) = 1 - realBinaryReadout w := by
   linarith [realBinaryReadout_complement w]
 

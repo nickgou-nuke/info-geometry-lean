@@ -34,7 +34,7 @@ theorem finite_car_qccr_anticommutator :
 
 theorem cuntz_derived_car_qccr_minus_one
     {Op : Type*} [Ring Op] [StarRing Op]
-    (C : InfoGeometry.Topology.CuntzO2Carrier Op) :
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
     qCcrRelation (carFromCuntz C) (star (carFromCuntz C)) (-1) = 0 := by
   exact (qccr_fermionic_limit (carFromCuntz C) (star (carFromCuntz C))).2
     (by simpa [cantorAnticommutator] using
@@ -43,7 +43,7 @@ theorem cuntz_derived_car_qccr_minus_one
 /-! ### Cuntz isometries as the `q = 0` boundary relation -/
 
 theorem cuntz_generator_qccr_zero {R : Type*} [Ring R] [StarRing R]
-    (C : _root_.CuntzAlgebra.Cuntz2Isometries R) :
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) R) :
     qCcrRelation (star (_root_.CuntzAlgebra.S1 C))
       (_root_.CuntzAlgebra.S1 C) 0 = 0 := by
   rw [qccr_to_cuntz_limit]
@@ -54,7 +54,7 @@ fermionic endpoint would force its range projection to vanish, while the
 Cuntz isometry then forces `1 = 0`. -/
 theorem cuntz_generator_not_car
     {R : Type*} [Ring R] [StarRing R] [Nontrivial R]
-    (C : _root_.CuntzAlgebra.Cuntz2Isometries R) :
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) R) :
     ¬ qCcrRelation (star (_root_.CuntzAlgebra.S1 C))
         (_root_.CuntzAlgebra.S1 C) (-1) = 0 := by
   intro hcar

@@ -27,7 +27,7 @@ theorem glide_phase_conjugate_skeleton {G : Type*} [Group G]
     GlideModularJ.GlideInverts J Δ ∧
     J * Δ * J = Δ⁻¹ := by
   constructor
-  · exact GlideModularJ.modularJ_is_glide hInv
+  · exact hInv
   · exact GlideModularJ.modularJ_tomita_form hJ hInv
 
 /-- The active mirror carries an Andreev reflection law. -/

@@ -15,8 +15,8 @@ continuous modular flow.
 Unitality, one-step fixed readout, iterated fixed readout, and finite orbit-sum
 readout under explicit half-branch hypotheses.
 
-#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-The Cuntz map is exposed as a witnessed `DiscreteCuntzModularStep`.
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT MAP EQUALITY
+The modular-step readout is used only through an explicit pointwise equality.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 Uniqueness, contraction, complete positivity, and continuous modular-flow
@@ -38,18 +38,126 @@ variable {Op : Type*} [Ring Op] [StarRing Op]
 def cuntzMap (S_left S_right : Op) (X : Op) : Op :=
   CuntzMapKreinBridge.cuntzMapTwo S_left S_right X
 
+theorem cuntzMap_add
+    (S_left S_right X Y : Op) :
+    cuntzMap S_left S_right (X + Y) =
+      cuntzMap S_left S_right X + cuntzMap S_left S_right Y := by
+  exact CuntzMapKreinBridge.cuntzMapTwo_additive S_left S_right X Y
+
+theorem cuntzMap_zero (S_left S_right : Op) :
+    cuntzMap S_left S_right 0 = 0 := by
+  exact CuntzMapKreinBridge.cuntzMapTwo_zero S_left S_right
+
+theorem cuntzMap_iterate_add
+    (S_left S_right X Y : Op) (n : ℕ) :
+    Nat.iterate (cuntzMap S_left S_right) n (X + Y) =
+      Nat.iterate (cuntzMap S_left S_right) n X +
+        Nat.iterate (cuntzMap S_left S_right) n Y := by
+  revert X Y
+  induction n with
+  | zero => intro X Y; rfl
+  | succ n ih =>
+      intro X Y
+      rw [Function.iterate_succ_apply, Function.iterate_succ_apply,
+        Function.iterate_succ_apply]
+      rw [cuntzMap_add]
+      rw [ih]
+
 theorem cuntzMap_unital (S_left S_right : Op) (h_range : S_left * star S_left + S_right * star S_right = 1) :
     cuntzMap S_left S_right 1 = 1 := by
   exact CuntzMapKreinBridge.cuntzMapTwo_one_of_partition
     (S_left := S_left) (S_right := S_right) h_range
 
-/-! ### 2. KMS Symmetric State — the Jaynes Maxent Point -/
+theorem cuntzMap_iterate_mul_of_cuntz_relations
+    (S_left S_right X Y : Op)
+    (hLL : star S_left * S_left = 1)
+    (hRR : star S_right * S_right = 1)
+    (hLR : star S_left * S_right = 0)
+    (hRL : star S_right * S_left = 0)
+    (n : ℕ) :
+    Nat.iterate (cuntzMap S_left S_right) n (X * Y) =
+      Nat.iterate (cuntzMap S_left S_right) n X *
+        Nat.iterate (cuntzMap S_left S_right) n Y := by
+  revert X Y
+  induction n with
+  | zero => intro X Y; rfl
+  | succ n ih =>
+      intro X Y
+      rw [Function.iterate_succ_apply, Function.iterate_succ_apply,
+        Function.iterate_succ_apply]
+      have hmul :
+          cuntzMap S_left S_right (X * Y) =
+            cuntzMap S_left S_right X * cuntzMap S_left S_right Y := by
+        have hLL' :
+            S_left * X * star S_left * S_left * Y * star S_left =
+              S_left * X * Y * star S_left := by
+          rw [mul_assoc (S_left * X) (star S_left) S_left, hLL]
+          simp [mul_assoc]
+        have hLR' :
+            S_left * X * star S_left * S_right * Y * star S_right = 0 := by
+          rw [mul_assoc (S_left * X) (star S_left) S_right, hLR]
+          simp
+        have hRL' :
+            S_right * X * star S_right * S_left * Y * star S_left = 0 := by
+          rw [mul_assoc (S_right * X) (star S_right) S_left, hRL]
+          simp
+        have hRR' :
+            S_right * X * star S_right * S_right * Y * star S_right =
+              S_right * X * Y * star S_right := by
+          rw [mul_assoc (S_right * X) (star S_right) S_right, hRR]
+          simp [mul_assoc]
+        simp only [cuntzMap, CuntzMapKreinBridge.cuntzMapTwo,
+          add_mul, mul_add]
+        simp only [← mul_assoc]
+        rw [hLL', hRL', hLR', hRR']
+        simp
+      rw [hmul]
+      rw [ih]
+
+theorem cuntzMap_iterate_star
+    (S_left S_right X : Op) (n : ℕ) :
+    Nat.iterate (cuntzMap S_left S_right) n (star X) =
+      star (Nat.iterate (cuntzMap S_left S_right) n X) := by
+  have hstar : ∀ Y : Op,
+      cuntzMap S_left S_right (star Y) =
+        star (cuntzMap S_left S_right Y) := by
+    intro Y
+    simp [cuntzMap, CuntzMapKreinBridge.cuntzMapTwo,
+      star_add, star_mul, mul_assoc]
+  revert X
+  induction n with
+  | zero => intro X; rfl
+  | succ n ih =>
+      intro X
+      rw [Function.iterate_succ_apply, Function.iterate_succ_apply,
+        hstar, ih]
+
+theorem cuntzMap_iterate_zero
+    (S_left S_right : Op) (n : ℕ) :
+    Nat.iterate (cuntzMap S_left S_right) n 0 = 0 := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      rw [Function.iterate_succ_apply, cuntzMap_zero S_left S_right, ih]
+
+theorem cuntzMap_iterate_one_of_partition
+    (S_left S_right : Op)
+    (h_range : S_left * star S_left + S_right * star S_right = 1)
+    (n : ℕ) :
+    Nat.iterate (cuntzMap S_left S_right) n 1 = 1 := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      rw [Function.iterate_succ_apply,
+        cuntzMap_unital S_left S_right h_range, ih]
+
+/-! ### 2. Symmetric additive readout -/
 
 namespace KMSSymmetricState
 
 variable {S_left S_right : Op}
 
-/-- φ(Φ(X)) = φ(X) — the KMS state is the Cuntz map fixed point. -/
+/-- `φ (Φ X) = φ X` under the explicit symmetric branch-scaling laws. -/
 theorem cuntzMap_fixed_point
     (φ : Op →+ ℝ)
     (half_L : ∀ X, φ (S_left * X * star S_left) = (1 / 2 : ℝ) * φ X)
@@ -61,7 +169,7 @@ theorem cuntzMap_fixed_point
       (φ := φ) (S_left := S_left) (S_right := S_right) (X := X)
       (half_L X) (half_R X)
 
-/-- φ(Φ^n(X)) = φ(X) — the full RG flow preserves expectations. -/
+/-- Every finite iterate of the transfer map preserves the readout. -/
 theorem cuntzMap_iterate_fixed_point
     (φ : Op →+ ℝ)
     (half_L : ∀ X, φ (S_left * X * star S_left) = (1 / 2 : ℝ) * φ X)
@@ -96,21 +204,6 @@ theorem cuntzMap_sum_iterate_fixed_point
       ih,
       cuntzMap_iterate_fixed_point φ half_L half_R X n]
     push_cast; ring
-
-/--
-Witnessed discrete modular step carried by the Cuntz map.
-
-This is the honest theorem surface behind the slogan that the Cuntz map is the
-clock tick: the supplied `sigma` is definitionally the two-branch Cuntz map.
--/
-def discreteCuntzStep (S_left S_right : Op) :
-    DiscreteCuntzModularStep Op :=
-  (S_left, S_right)
-
-theorem discreteCuntzStep_apply (X : Op) :
-    (discreteCuntzStep S_left S_right).sigma X =
-      cuntzMap S_left S_right X := by
-  rfl
 
 end KMSSymmetricState
 

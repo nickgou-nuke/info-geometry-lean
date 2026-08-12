@@ -1,15 +1,10 @@
-import Lean
+/-!
+# Twisted-orbifold vacuum boundary
 
--- Definitions
-def RiemannZero : Prop := (0 : Nat) = 0
-def TwistorSingularity : Prop := (0 : Nat) + 1 = 1
-
-def VacuumTopology : Prop := List.length ([] : List Nat) = 0
-def TwistedKTheory : Prop := ([] : List Nat).reverse = []
-
--- Theorems
-theorem riemann_zeroes_are_twistor_singularities : RiemannZero ↔ TwistorSingularity := by
-  simp [RiemannZero, TwistorSingularity]
-
-theorem vacuum_topology_is_twisted_k_theory : VacuumTopology ↔ TwistedKTheory := by
-  simp [VacuumTopology, TwistedKTheory]
+This historical intake file contained names equating unrelated physical
+notions with closed arithmetic propositions.  Those declarations were
+removed: the equalities were tautologies and supplied no mathematical
+connection.  A genuine orbifold or K-theory bridge must introduce the
+corresponding spaces, actions, and maps explicitly before any theorem is
+stated.
+-/

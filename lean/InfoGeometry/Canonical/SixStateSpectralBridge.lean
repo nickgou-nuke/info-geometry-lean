@@ -34,13 +34,10 @@ theorem colorEigenvector_shift (zeta : ℂ) (hzeta : zeta ^ 3 = 1) :
     colorShift *ᵥ colorEigenvector zeta = zeta • colorEigenvector zeta := by
   funext i
   fin_cases i
-  · simp [colorShift, colorEigenvector, Matrix.mulVec,
-      Matrix.mul_apply, Fin.sum_univ_three, pow_two, pow_three]
-  · simp [colorShift, colorEigenvector, Matrix.mulVec,
-      Matrix.mul_apply, Fin.sum_univ_three, pow_two, pow_three]
+  · simp [colorShift, colorEigenvector, Matrix.mulVec, pow_two]
+  · simp [colorShift, colorEigenvector, Matrix.mulVec, pow_two]
     simpa [pow_three] using hzeta.symm
-  · simp [colorShift, colorEigenvector, Matrix.mulVec,
-      Matrix.mul_apply, Fin.sum_univ_three, pow_two]
+  · simp [colorShift, colorEigenvector, Matrix.mulVec, pow_two]
 
 theorem positiveSpectralVector_triality (zeta : ℂ) (hzeta : zeta ^ 3 = 1) :
     sixTriality *ᵥ positiveSpectralVector zeta =
@@ -54,8 +51,7 @@ theorem positiveSpectralVector_triality (zeta : ℂ) (hzeta : zeta ^ 3 = 1) :
     ext i j
     fin_cases i <;> fin_cases j <;>
       simp [colorShift, positiveColorMatrix, sheetParity, uPlus, uMinus,
-        Matrix.mul_apply, Fin.sum_univ_three, Fin.sum_univ_two,
-        pow_two, pow_three, hzeta] <;> ring
+        Matrix.mul_apply, Fin.sum_univ_two, pow_two] ; ring
     all_goals exact hzeta.symm
   rw [h]
   rfl
@@ -72,11 +68,11 @@ theorem negativeSpectralVector_triality (zeta : ℂ) (hzeta : zeta ^ 3 = 1) :
     ext i j
     fin_cases i <;> fin_cases j <;>
       simp [colorShift, negativeColorMatrix, sheetParity, uPlus, uMinus,
-        Matrix.mul_apply, Fin.sum_univ_three, Fin.sum_univ_two,
-        pow_two, pow_three, hzeta] <;> ring
+        Matrix.mul_apply, Fin.sum_univ_two, pow_two] ; ring
     all_goals exact hzeta.symm
   rw [h]
-  ext ⟨i, j⟩ <;> simp [Matrix.vec, Matrix.smul_apply]
+  ext ⟨i, j⟩
+  simp [Matrix.vec, Matrix.smul_apply]
 
 theorem spectralVector_triality
     (zeta : HexColor → ℂ) (hzeta : ∀ a, zeta a ^ 3 = 1)
@@ -88,23 +84,21 @@ theorem spectralVector_triality
   dsimp [spectralVector]
   cases h : (sheetColorEquiv n).1 with
   | positive =>
-      simp only [h, ↓reduceIte]
       exact positiveSpectralVector_triality _ (hzeta _)
   | negative =>
-      simp only [h, ↓reduceIte]
       exact negativeSpectralVector_triality _ (hzeta _)
 
 theorem positiveSpectralVector_ne_zero (zeta : ℂ) :
     positiveSpectralVector zeta ≠ 0 := by
   intro h
   have h0 := congrFun h (0, 0)
-  simpa [positiveSpectralVector, positiveColorMatrix, Matrix.vec] using h0
+  simp [positiveSpectralVector, positiveColorMatrix, Matrix.vec] at h0
 
 theorem negativeSpectralVector_ne_zero (zeta : ℂ) :
     negativeSpectralVector zeta ≠ 0 := by
   intro h
   have h0 := congrFun h (1, 0)
-  simpa [negativeSpectralVector, negativeColorMatrix, Matrix.vec] using h0
+  simp [negativeSpectralVector, negativeColorMatrix, Matrix.vec] at h0
 
 theorem spectralVector_ne_zero
     (zeta : HexColor → ℂ) (n : HexIndex) :
@@ -112,10 +106,8 @@ theorem spectralVector_ne_zero
   dsimp [spectralVector]
   cases h : (sheetColorEquiv n).1 with
   | positive =>
-      simp only [h, ↓reduceIte]
       exact positiveSpectralVector_ne_zero _
   | negative =>
-      simp only [h, ↓reduceIte]
       exact negativeSpectralVector_ne_zero _
 
 theorem positiveSpectralVector_parity (zeta : ℂ) :
@@ -130,8 +122,7 @@ theorem positiveSpectralVector_parity (zeta : ℂ) :
     positiveColorMatrix zeta i j
   fin_cases i <;> fin_cases j <;>
       simp [positiveColorMatrix, sheetParity, uPlus, uMinus,
-      Matrix.mul_apply, Matrix.vec, Function.comp_def, flip,
-      Fin.sum_univ_two, Fin.sum_univ_three]
+      Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem negativeSpectralVector_parity (zeta : ℂ) :
     sixParity *ᵥ negativeSpectralVector zeta =
@@ -145,8 +136,7 @@ theorem negativeSpectralVector_parity (zeta : ℂ) :
     -negativeColorMatrix zeta i j
   fin_cases i <;> fin_cases j <;>
       simp [negativeColorMatrix, sheetParity, uPlus, uMinus,
-      Matrix.mul_apply, Matrix.vec, Function.comp_def, flip,
-      Fin.sum_univ_two, Fin.sum_univ_three]
+      Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem spectralVector_parity
     (zeta : HexColor → ℂ) (n : HexIndex) :
@@ -157,10 +147,8 @@ theorem spectralVector_parity
   dsimp [spectralVector]
   cases h : (sheetColorEquiv n).1 with
   | positive =>
-      simp only [h, ↓reduceIte]
       exact positiveSpectralVector_parity _
   | negative =>
-      simp only [h, ↓reduceIte]
       exact negativeSpectralVector_parity _
 
 theorem positiveVertex_triality

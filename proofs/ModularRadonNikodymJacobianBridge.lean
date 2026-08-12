@@ -33,7 +33,7 @@ noncomputable section
 
 namespace ModularRadonNikodymJacobianBridge
 
-open TKKJordanPairData
+open TKKJordanPairData.Legacy
 open ChemicalPotentialTKKGradeZero
 open ChemicalPotentialDeRhamG0Bridge
 open ThermodynamicTKKBridge
@@ -80,7 +80,8 @@ theorem negLogJacobian_inv (F : LogJacobianFlow) :
 /-- Finite Radon--Nikodym density datum.  We store `negLogDensity` directly,
 matching the information/modular potential convention. -/
 structure RadonNikodymDensity where
-  densityPositive : Prop
+  density : ℝ
+  density_pos : 0 < density
   negLogDensity : ℝ
 
 /-- Relative modular potential as negative log RN density. -/
@@ -88,7 +89,8 @@ def relativeModularPotential (D : RadonNikodymDensity) : ℝ := D.negLogDensity
 
 /-- Product of RN densities at the logarithmic-potential level. -/
 def RadonNikodymDensity.mul (D E : RadonNikodymDensity) : RadonNikodymDensity where
-  densityPositive := D.densityPositive ∧ E.densityPositive
+  density := D.density * E.density
+  density_pos := mul_pos D.density_pos E.density_pos
   negLogDensity := D.negLogDensity + E.negLogDensity
 
 /-- Negative log RN densities add under multiplication of densities. -/

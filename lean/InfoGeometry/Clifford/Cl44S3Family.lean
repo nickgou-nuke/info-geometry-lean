@@ -48,13 +48,8 @@ def LinearlyIndependentFamilies {V : Type*} [AddCommGroup V] [Module ℝ V]
     (D : SplitS3FamilyDatum V) : Prop :=
   LinearIndependent ℝ D.family
 
-/--
-Adapted three-generation theorem target.
-
-This is the split-real analogue of the paper's main construction.
-
--- DEBT_KIND: SORRY
--/
+/-- The supplied finite family datum satisfies its four advertised laws.  This
+    is an unpacking theorem, not a construction of the split-real model. -/
 theorem splitCl44_three_generation_model
     {V : Type*} [AddCommGroup V] [Module ℝ V]
     (D : SplitS3FamilyDatum V) :

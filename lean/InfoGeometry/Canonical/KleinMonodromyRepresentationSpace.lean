@@ -45,6 +45,14 @@ theorem relation_mul_inv_right :
     rho.a * rho.b * rho.a⁻¹ * rho.b = 1 := by
   rw [rho.relation, inv_mul_cancel]
 
+/-- The orientation-reversing conjugation has order two on the second
+monodromy generator.  This is the algebraic two-cycle law behind the Klein
+presentation; it does not assume a topological mapping-torus realization. -/
+theorem two_cycle_on_b :
+    rho.a * rho.b⁻¹ * rho.a⁻¹ = rho.b := by
+  have h := congrArg Inv.inv rho.relation
+  simpa [mul_inv_rev, mul_assoc] using h
+
 end KleinMonodromyPair
 
 /-- Owner-backed `SL(2,ℝ)` central-kernel descent datum. -/

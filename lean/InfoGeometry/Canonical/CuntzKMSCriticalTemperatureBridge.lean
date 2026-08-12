@@ -14,10 +14,8 @@ an actual complex-linear functional on the quotient together with the
 generator-level KMS relation.
 -/
 
-abbrev NativeCuntzTwo := CuntzAlg 2
-
 def GeneratorKMSAtTwo
-    (φ : NativeCuntzTwo →ₗ[ℂ] ℂ) (β : ℝ) : Prop :=
+    (φ : CuntzAlg 2 →ₗ[ℂ] ℂ) (β : ℝ) : Prop :=
   φ 1 = 1 ∧
     ∀ i j : Fin 2,
       φ (cuntzS 2 i * cuntzSdag 2 j) =
@@ -25,7 +23,7 @@ def GeneratorKMSAtTwo
           φ (cuntzSdag 2 j * cuntzS 2 i)
 
 theorem native_o2_generator_two_point
-    (φ : NativeCuntzTwo →ₗ[ℂ] ℂ) (β : ℝ)
+    (φ : CuntzAlg 2 →ₗ[ℂ] ℂ) (β : ℝ)
     (hKMS : GeneratorKMSAtTwo φ β) (i j : Fin 2) :
     φ (cuntzS 2 i * cuntzSdag 2 j) =
       ((Real.exp (-β) : ℝ) : ℂ) * (if i = j then 1 else 0) := by
@@ -36,7 +34,7 @@ theorem native_o2_generator_two_point
   · simp [h, Ne.symm h]
 
 theorem native_o2_generator_partition_equation
-    (φ : NativeCuntzTwo →ₗ[ℂ] ℂ) (β : ℝ)
+    (φ : CuntzAlg 2 →ₗ[ℂ] ℂ) (β : ℝ)
     (hKMS : GeneratorKMSAtTwo φ β) :
     (2 : ℂ) * ((Real.exp (-β) : ℝ) : ℂ) = 1 := by
   have hsum :
@@ -58,7 +56,7 @@ theorem native_o2_generator_partition_equation
     _ = 1 := hsum
 
 theorem native_o2_generator_exp_neg_eq_half
-    (φ : NativeCuntzTwo →ₗ[ℂ] ℂ) (β : ℝ)
+    (φ : CuntzAlg 2 →ₗ[ℂ] ℂ) (β : ℝ)
     (hKMS : GeneratorKMSAtTwo φ β) :
     Real.exp (-β) = (1 / 2 : ℝ) := by
   have h := native_o2_generator_partition_equation φ β hKMS
@@ -67,7 +65,7 @@ theorem native_o2_generator_exp_neg_eq_half
   linarith
 
 theorem native_o2_generator_beta_eq_log_two
-    (φ : NativeCuntzTwo →ₗ[ℂ] ℂ) (β : ℝ)
+    (φ : CuntzAlg 2 →ₗ[ℂ] ℂ) (β : ℝ)
     (hKMS : GeneratorKMSAtTwo φ β) :
     β = Real.log 2 := by
   have hexp := native_o2_generator_exp_neg_eq_half φ β hKMS
@@ -81,7 +79,7 @@ theorem native_o2_generator_beta_eq_log_two
   linarith
 
 theorem native_o2_generator_two_point_at_log_two
-    (φ : NativeCuntzTwo →ₗ[ℂ] ℂ)
+    (φ : CuntzAlg 2 →ₗ[ℂ] ℂ)
     (hKMS : GeneratorKMSAtTwo φ (Real.log 2)) (i j : Fin 2) :
     φ (cuntzS 2 i * cuntzSdag 2 j) =
       if i = j then (1 / 2 : ℂ) else 0 := by

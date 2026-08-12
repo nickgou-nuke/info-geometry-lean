@@ -168,6 +168,58 @@ theorem carrierGamma_mul_carrierJ :
       ∑ j : Fin 2, operatorSoldering v i j (ψ j) :=
   matrixAction_apply (operatorSoldering v) ψ i
 
+theorem operatorSolderingAction_injective :
+    Function.Injective (operatorSolderingAction (W := W)) := by
+  intro v w h
+  have hm : operatorSoldering v = operatorSoldering w :=
+    matrixAction_injective h
+  have hc : causalCoordinatesOfFourVector v =
+      causalCoordinatesOfFourVector w := by
+    exact (causalOperatorCoordinatesRingEquiv (B := EndW W)).injective hm
+  funext i
+  fin_cases i
+  · simpa [causalCoordinatesOfFourVector] using
+      congrArg CausalOperatorCoordinates.scalar hc
+  · simpa [causalCoordinatesOfFourVector] using
+      congrArg CausalOperatorCoordinates.exchange hc
+  · simpa [causalCoordinatesOfFourVector] using
+      congrArg CausalOperatorCoordinates.circular hc
+  · simpa [causalCoordinatesOfFourVector] using
+      congrArg CausalOperatorCoordinates.chiral hc
+
+@[simp] theorem operatorSoldering_zero :
+    operatorSoldering (W := W) 0 = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [operatorSoldering, causalCoordinatesOfFourVector, reconstruct_causal]
+@[simp] theorem operatorSolderingAction_zero :
+    operatorSolderingAction (W := W) 0 = 0 := by
+  change matrixAction (operatorSoldering (W := W) 0) = 0
+  rw [operatorSoldering_zero]
+  apply LinearMap.ext
+  intro ψ
+  exact matrixAction_zero (R := ℂ) (W := W) ψ
+
+theorem operatorSoldering_eq_zero_iff (v : OperatorFourVector W) :
+    operatorSoldering v = 0 ↔ v = 0 := by
+  constructor
+  · intro h
+    apply operatorSolderingAction_injective (W := W)
+    change matrixAction (operatorSoldering v) =
+      matrixAction (operatorSoldering (W := W) 0)
+    rw [h, operatorSoldering_zero]
+  · intro h
+    rw [h, operatorSoldering_zero]
+
+theorem operatorSolderingAction_eq_zero_iff (v : OperatorFourVector W) :
+    operatorSolderingAction v = 0 ↔ v = 0 := by
+  constructor
+  · intro h
+    apply operatorSolderingAction_injective (W := W)
+    exact h.trans (operatorSolderingAction_zero (W := W)).symm
+  · intro h
+    rw [h, operatorSolderingAction_zero]
+
 /-- Multiplication of causal operator coordinates is composition on the doubled carrier. -/
 theorem causal_mul_action
     (A C : CausalOperatorCoordinates (EndW W)) :

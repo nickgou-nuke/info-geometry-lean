@@ -87,6 +87,21 @@ theorem chiral_projector_complete_idempotent :
     ext i j <;> fin_cases i <;> fin_cases j <;>
       norm_num [Matrix.mul_apply, Fin.sum_univ_two]
 
+theorem K_sq_eq_one :
+    K * K = (1 : M2R) := by
+  have hK : K = P_L - P_R := by
+    rw [P_L_spec, P_R_spec]
+    exact K_eq_chiral_difference
+  obtain ⟨hSum, hL, hR⟩ := chiral_projector_complete_idempotent
+  obtain ⟨hLR, hRL⟩ := chiral_projector_orthogonal
+  rw [hK]
+  calc
+    (P_L - P_R) * (P_L - P_R) =
+        P_L * P_L - (P_L * P_R + P_R * P_L) + P_R * P_R := by
+          noncomm_ring
+    _ = P_L + P_R := by rw [hL, hR, hLR, hRL]; simp
+    _ = 1 := hSum
+
 /-- `P_L` and `P_R` are `±1` eigenprojectors for the modular generator `K`. -/
 theorem K_mul_chiral_projectors :
     K * P_L = P_L ∧ K * P_R = -P_R := by

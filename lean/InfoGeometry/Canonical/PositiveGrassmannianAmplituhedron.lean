@@ -52,6 +52,57 @@ theorem positiveGrassmannianInterior_subset_chart :
   intro C hC s hs
   exact le_of_lt (hC s hs)
 
+/-- Left multiplication changes every maximal minor by the determinant of the
+row-operation matrix.  This is the finite matrix form of the `GL(k)` gauge
+weight of Plücker coordinates. -/
+theorem maximalMinor_left_mul
+    (A : Matrix (Fin k) (Fin k) ℝ)
+    (C : Matrix (Fin k) (Fin n) ℝ)
+    (s : Fin k → Fin n) :
+    maximalMinor (A * C) s = Matrix.det A * maximalMinor C s := by
+  unfold maximalMinor
+  let B : Matrix (Fin k) (Fin k) ℝ := fun i j => C i (s j)
+  have hmat : (fun i j => (A * C) i (s j)) = A * B := by
+    ext i j
+    simp [B, Matrix.mul_apply]
+  rw [hmat, Matrix.det_mul]
+
+theorem hasPositiveMaximalMinors_left_mul
+    (A : Matrix (Fin k) (Fin k) ℝ)
+    (C : Matrix (Fin k) (Fin n) ℝ)
+    (hA : 0 < Matrix.det A)
+    (hC : HasPositiveMaximalMinors C) :
+    HasPositiveMaximalMinors (A * C) := by
+  intro s hs
+  rw [maximalMinor_left_mul]
+  exact mul_pos hA (hC s hs)
+
+theorem hasNonnegativeMaximalMinors_left_mul
+    (A : Matrix (Fin k) (Fin k) ℝ)
+    (C : Matrix (Fin k) (Fin n) ℝ)
+    (hA : 0 ≤ Matrix.det A)
+    (hC : HasNonnegativeMaximalMinors C) :
+    HasNonnegativeMaximalMinors (A * C) := by
+  intro s hs
+  rw [maximalMinor_left_mul]
+  exact mul_nonneg hA (hC s hs)
+
+theorem positiveGrassmannianInterior_left_mul
+    (A : Matrix (Fin k) (Fin k) ℝ)
+    (C : Matrix (Fin k) (Fin n) ℝ)
+    (hA : 0 < Matrix.det A)
+    (hC : C ∈ positiveGrassmannianInterior (k := k) (n := n)) :
+    A * C ∈ positiveGrassmannianInterior (k := k) (n := n) :=
+  hasPositiveMaximalMinors_left_mul A C hA hC
+
+theorem positiveGrassmannianChart_left_mul
+    (A : Matrix (Fin k) (Fin k) ℝ)
+    (C : Matrix (Fin k) (Fin n) ℝ)
+    (hA : 0 ≤ Matrix.det A)
+    (hC : C ∈ positiveGrassmannianChart (k := k) (n := n)) :
+    A * C ∈ positiveGrassmannianChart (k := k) (n := n) :=
+  hasNonnegativeMaximalMinors_left_mul A C hA hC
+
 /-- The finite amplituhedron map associated with external-data matrix `Z`. -/
 def amplituhedronMap
     (Z : Matrix (Fin n) (Fin m) ℝ)
@@ -67,6 +118,76 @@ theorem amplituhedronMap_apply
     (Z : Matrix (Fin n) (Fin m) ℝ)
     (C : Matrix (Fin k) (Fin n) ℝ) :
     amplituhedronMap Z C = C * Z := rfl
+
+/-- The amplituhedron map is equivariant for left row operations. -/
+theorem amplituhedronMap_left_mul
+    (Z : Matrix (Fin n) (Fin m) ℝ)
+    (A : Matrix (Fin k) (Fin k) ℝ)
+    (C : Matrix (Fin k) (Fin n) ℝ) :
+    amplituhedronMap Z (A * C) = A * amplituhedronMap Z C := by
+  simp [amplituhedronMap, Matrix.mul_assoc]
+
+theorem amplituhedronImage_left_mul_mem
+    (Z : Matrix (Fin n) (Fin m) ℝ)
+    (A : Matrix (Fin k) (Fin k) ℝ)
+    (hA : 0 ≤ Matrix.det A)
+    {Y : Matrix (Fin k) (Fin m) ℝ}
+    (hY : Y ∈ amplituhedronImage (k := k) (n := n) (m := m) Z) :
+    A * Y ∈ amplituhedronImage (k := k) (n := n) (m := m) Z := by
+  rcases hY with ⟨C, hC, rfl⟩
+  refine ⟨A * C, hasNonnegativeMaximalMinors_left_mul A C hA hC, ?_⟩
+  exact amplituhedronMap_left_mul Z A C
+
+theorem amplituhedronImage_left_mul_eq_of_left_inverse
+    (Z : Matrix (Fin n) (Fin m) ℝ)
+    (A B : Matrix (Fin k) (Fin k) ℝ)
+    (hA : 0 ≤ Matrix.det A)
+    (hB : 0 ≤ Matrix.det B)
+    (hAB : A * B = 1) :
+    (fun Y : Matrix (Fin k) (Fin m) ℝ => A * Y) ''
+        amplituhedronImage (k := k) (n := n) (m := m) Z =
+      amplituhedronImage (k := k) (n := n) (m := m) Z := by
+  ext Y
+  constructor
+  · rintro ⟨Y₀, hY₀, rfl⟩
+    exact amplituhedronImage_left_mul_mem Z A hA hY₀
+  · intro hY
+    refine ⟨B * Y, amplituhedronImage_left_mul_mem Z B hB hY, ?_⟩
+    change A * (B * Y) = Y
+    rw [← Matrix.mul_assoc, hAB, Matrix.one_mul]
+
+/-- Right multiplication of the external data commutes with the finite
+amplituhedron map. -/
+theorem amplituhedronMap_right_mul
+    (Z : Matrix (Fin n) (Fin m) ℝ)
+    (B : Matrix (Fin m) (Fin m) ℝ)
+    (C : Matrix (Fin k) (Fin n) ℝ) :
+    amplituhedronMap (Z * B) C = amplituhedronMap Z C * B := by
+  simp [amplituhedronMap, Matrix.mul_assoc]
+
+theorem amplituhedronImage_right_mul_mem
+    (Z : Matrix (Fin n) (Fin m) ℝ)
+    (B : Matrix (Fin m) (Fin m) ℝ)
+    {Y : Matrix (Fin k) (Fin m) ℝ}
+    (hY : Y ∈ amplituhedronImage (k := k) (n := n) (m := m) Z) :
+    Y * B ∈ amplituhedronImage (k := k) (n := n) (m := m) (Z * B) := by
+  rcases hY with ⟨C, hC, rfl⟩
+  refine ⟨C, hC, ?_⟩
+  exact amplituhedronMap_right_mul Z B C
+
+theorem amplituhedronImage_right_mul_eq
+    (Z : Matrix (Fin n) (Fin m) ℝ)
+    (B : Matrix (Fin m) (Fin m) ℝ) :
+    amplituhedronImage (k := k) (n := n) (m := m) (Z * B) =
+      (fun Y : Matrix (Fin k) (Fin m) ℝ => Y * B) ''
+        amplituhedronImage (k := k) (n := n) (m := m) Z := by
+  ext Y
+  constructor
+  · rintro ⟨C, hC, hCY⟩
+    refine ⟨amplituhedronMap Z C, ⟨C, hC, rfl⟩, ?_⟩
+    rw [← hCY, amplituhedronMap_right_mul]
+  · rintro ⟨Y₀, ⟨C, hC, rfl⟩, rfl⟩
+    exact amplituhedronImage_right_mul_mem Z B ⟨C, hC, rfl⟩
 
 theorem amplituhedronMap_add
     (Z : Matrix (Fin n) (Fin m) ℝ)

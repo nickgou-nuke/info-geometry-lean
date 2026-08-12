@@ -236,34 +236,35 @@ end InfinitesimalDictionaryPacket
 
 section CoadjointConnes
 
-variable {Orbit LieCoalg Alg : Type*} [Ring Alg] [CommSemiring Alg]
-variable (ctx : ConnesCocycle.CocycleOverCoadjointOrbit Orbit Alg LieCoalg)
-variable (flow : CausalNonequilibriumFlow Alg)
+variable (H1 H2 : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator)
+variable (beta1 μ1 μχ1 beta2 μ2 μχ2 : ℝ)
+variable (flow : CausalNonequilibriumFlow InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator)
 
 /-- The Connes cocycle derivative is definitionally the modular-Hamiltonian difference. -/
-theorem coadjoint_cocycleDerivative_eq_modularHamiltonianDifference
-    (X : Alg) :
-    ConnesCocycle.CocycleOverCoadjointOrbit.cocycleDerivative ctx X =
-      ctx.H₂ - ctx.H₁ :=
-  ConnesCocycle.CocycleOverCoadjointOrbit.cocycleDerivative_eq_hamiltonian_diff ctx X
+theorem coadjoint_cocycleDerivative_eq_modularHamiltonianDifference :
+    ConnesCocycle.connesRadonNikodymDerivative H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2 =
+      InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.grandCanonicalModularGenerator H2 beta2 μ2 μχ2 -
+      InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.grandCanonicalModularGenerator H1 beta1 μ1 μχ1 :=
+  rfl
 
 /-- If the modular-Hamiltonian difference is calibrated to `d log Q`, so is the RN infinitesimal. -/
 theorem coadjoint_cocycleDerivative_eq_dlnQ_of_modularDifference
-    (X : Alg)
-    (hmod : ctx.H₂ - ctx.H₁ = flow.d_ln_Q) :
-    ConnesCocycle.CocycleOverCoadjointOrbit.cocycleDerivative ctx X =
+    (hmod : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.grandCanonicalModularGenerator H2 beta2 μ2 μχ2 -
+      InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.grandCanonicalModularGenerator H1 beta1 μ1 μχ1 = flow.d_ln_Q) :
+    ConnesCocycle.connesRadonNikodymDerivative H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2 =
       flow.d_ln_Q := by
-  rw [coadjoint_cocycleDerivative_eq_modularHamiltonianDifference (ctx := ctx) X, hmod]
+  rw [coadjoint_cocycleDerivative_eq_modularHamiltonianDifference H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2]
+  exact hmod
 
 /-- If the modular-Hamiltonian difference is calibrated to entropy production, so is the RN infinitesimal. -/
 theorem coadjoint_cocycleDerivative_eq_entropyProduction_of_modularDifference
-    (X : Alg)
-    (hmod : ctx.H₂ - ctx.H₁ = flow.d_ln_Q)
+    (hmod : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.grandCanonicalModularGenerator H2 beta2 μ2 μχ2 -
+      InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.grandCanonicalModularGenerator H1 beta1 μ1 μχ1 = flow.d_ln_Q)
     (hentropy : entropy_production flow = flow.d_ln_Q) :
-    ConnesCocycle.CocycleOverCoadjointOrbit.cocycleDerivative ctx X =
+    ConnesCocycle.connesRadonNikodymDerivative H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2 =
       entropy_production flow := by
   rw [coadjoint_cocycleDerivative_eq_dlnQ_of_modularDifference
-    (ctx := ctx) (flow := flow) X hmod, ← hentropy]
+    H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2 flow hmod, ← hentropy]
 
 end CoadjointConnes
 

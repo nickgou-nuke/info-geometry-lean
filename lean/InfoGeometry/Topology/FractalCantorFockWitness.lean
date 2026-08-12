@@ -34,24 +34,6 @@ set_option linter.dupNamespace false
 
 namespace InfoGeometry.Topology.FractalCantorFockWitness
 
-/-- Symbolic Cantor boundary: infinite binary address space. -/
-abbrev CantorBoundary := ℕ → Bool
-
-/-- Finite Cantor address of depth `n`. -/
-abbrev CantorAddress (n : ℕ) := Fin n → Bool
-
-/-- Finite real/doubled function space over the depth-`n` Cantor endpoint set. -/
-abbrev FiniteCantorFunctionSpace (n : ℕ) (Value : Type*) :=
-  CantorAddress n → Value
-
-/-- Infinite real/doubled Cantor function-space socket, modeled as `L²` on binary words. -/
-instance : MeasurableSpace (List Bool) := ⊤
-
-/-- Infinite real/doubled Cantor function-space socket, modeled as `L²` over binary words. -/
-@[rep_depth operator]
-abbrev RealDoubledCantorFunctionSpace :=
-  MeasureTheory.Lp ℂ 2 (MeasureTheory.Measure.count : MeasureTheory.Measure (List Bool))
-
 /-
 Tilt/switch operator system.
 
@@ -139,46 +121,30 @@ namespace RealDoubledCantorCliffordRepresentation
 variable {Op : Type*} [Ring Op]
 variable (C : RealDoubledCantorCliffordRepresentation Op)
 
-/-- Clifford square law readback. -/
-@[rep_depth operator]
-theorem generator_sq (i : ℕ) :
-    C.gamma i * C.gamma i = 1 :=
-  C.gamma_sq i
-
-/-- Clifford anticommutator readback. -/
-@[rep_depth operator]
-theorem generator_anticomm {i j : ℕ} (hij : i ≠ j) :
-    C.gamma i * C.gamma j + C.gamma j * C.gamma i = 0 := by
-  rw [C.gamma_anticomm i j hij]
-  simp
-
 end RealDoubledCantorCliffordRepresentation
-
-/-- Real-valued functions on the infinite Cantor boundary. -/
-abbrev CantorBoundaryFunctionSpace := CantorBoundary → ℝ
 
 namespace CantorBoundary
 
 variable {j : ℕ}
 
 /-- Flip the bit at a chosen boundary slot. -/
-def flipAt (j : ℕ) (x : CantorBoundary) : CantorBoundary :=
+def flipAt (j : ℕ) (x : ℕ → Bool) : ℕ → Bool :=
   fun k => if k = j then ! (x k) else x k
 
-@[simp] theorem flipAt_apply_eq (j : ℕ) (x : CantorBoundary) :
+@[simp] theorem flipAt_apply_eq (j : ℕ) (x : ℕ → Bool) :
     flipAt j x j = ! (x j) := by
   simp [flipAt]
 
-@[simp] theorem flipAt_apply_ne {j k : ℕ} (h : k ≠ j) (x : CantorBoundary) :
+@[simp] theorem flipAt_apply_ne {j k : ℕ} (h : k ≠ j) (x : ℕ → Bool) :
     flipAt j x k = x k := by
   simp [flipAt, h]
 
-theorem flipAt_involutive (j : ℕ) (x : CantorBoundary) :
+theorem flipAt_involutive (j : ℕ) (x : ℕ → Bool) :
     flipAt j (flipAt j x) = x := by
   funext k
   by_cases hk : k = j <;> simp [flipAt, hk, Bool.not_not]
 
-theorem flipAt_comm {i j : ℕ} (hij : i ≠ j) (x : CantorBoundary) :
+theorem flipAt_comm {i j : ℕ} (hij : i ≠ j) (x : ℕ → Bool) :
     flipAt i (flipAt j x) = flipAt j (flipAt i x) := by
   funext k
   by_cases hki : k = i
@@ -202,7 +168,7 @@ open CantorBoundary
 variable {j : ℕ}
 
 /-- Tilt operator on infinite boundary functions. -/
-def tilt (j : ℕ) : CantorBoundaryFunctionSpace →ₗ[ℝ] CantorBoundaryFunctionSpace where
+def tilt (j : ℕ) : ((ℕ → Bool) → ℝ) →ₗ[ℝ] ((ℕ → Bool) → ℝ) where
   toFun f := fun x => if x j then -f x else f x
   map_add' := by
     intro f g
@@ -214,7 +180,7 @@ def tilt (j : ℕ) : CantorBoundaryFunctionSpace →ₗ[ℝ] CantorBoundaryFunct
     by_cases hx : x j <;> simp [hx]
 
 /-- Switch operator on infinite boundary functions. -/
-def switch (j : ℕ) : CantorBoundaryFunctionSpace →ₗ[ℝ] CantorBoundaryFunctionSpace where
+def switch (j : ℕ) : ((ℕ → Bool) → ℝ) →ₗ[ℝ] ((ℕ → Bool) → ℝ) where
   toFun f := fun x => f (CantorBoundary.flipAt j x)
   map_add' := by
     intro f g
@@ -225,11 +191,11 @@ def switch (j : ℕ) : CantorBoundaryFunctionSpace →ₗ[ℝ] CantorBoundaryFun
     ext x
     rfl
 
-@[simp] theorem tilt_apply (j : ℕ) (f : CantorBoundaryFunctionSpace) (x : CantorBoundary) :
+@[simp] theorem tilt_apply (j : ℕ) (f : (ℕ → Bool) → ℝ) (x : ℕ → Bool) :
     tilt j f x = if x j then -f x else f x :=
   rfl
 
-@[simp] theorem switch_apply (j : ℕ) (f : CantorBoundaryFunctionSpace) (x : CantorBoundary) :
+@[simp] theorem switch_apply (j : ℕ) (f : (ℕ → Bool) → ℝ) (x : ℕ → Bool) :
     switch j f x = f (CantorBoundary.flipAt j x) :=
   rfl
 
@@ -274,6 +240,10 @@ theorem tilt_switch_comm_of_ne {i j : ℕ} (hij : i ≠ j) :
   by_cases hxi : x i <;>
     simp [tilt, switch, CantorBoundary.flipAt_apply_ne hij, hxi]
 
+theorem switch_tilt_comm_of_ne {i j : ℕ} (hij : i ≠ j) :
+    (switch i) * (tilt j) = (tilt j) * (switch i) := by
+  exact (tilt_switch_comm_of_ne (i := j) (j := i) hij.symm).symm
+
 /-- Tilt and switch anticommute at the same slot. -/
 theorem tilt_switch_anticomm (j : ℕ) :
     (tilt j) * (switch j) = - ((switch j) * (tilt j)) := by
@@ -292,9 +262,70 @@ theorem switch_tilt_anticomm (j : ℕ) :
   rw [tilt_switch_anticomm]
   simp
 
+theorem tilt_switch_product_sq (j : ℕ) :
+    ((tilt j) * (switch j)) * ((tilt j) * (switch j)) = -1 := by
+  apply LinearMap.ext
+  intro f
+  ext x
+  by_cases hx : x j <;>
+    simp [tilt, switch, CantorBoundary.flipAt, hx,
+      CantorBoundary.flipAt_involutive]
+
+theorem switch_conj_tilt_same (j : ℕ) :
+    (switch j) * (tilt j) * (switch j) = -(tilt j) := by
+  calc
+    (switch j) * (tilt j) * (switch j) =
+        -((tilt j) * (switch j)) * (switch j) := by
+          rw [switch_tilt_anticomm]
+    _ = -(((tilt j) * (switch j)) * (switch j)) := by
+          exact neg_mul ((tilt j) * (switch j)) (switch j)
+    _ = -((tilt j) * ((switch j) * (switch j))) := by
+          rw [mul_assoc]
+    _ = -(tilt j) := by
+          rw [switch_sq]
+          simp
+
+theorem switch_conj_tilt_ne {i j : ℕ} (hij : i ≠ j) :
+    (switch i) * (tilt j) * (switch i) = tilt j := by
+  calc
+    (switch i) * (tilt j) * (switch i) =
+        (tilt j) * (switch i) * (switch i) := by
+          rw [switch_tilt_comm_of_ne hij]
+    _ = (tilt j) * ((switch i) * (switch i)) := by
+          rw [← mul_assoc]
+    _ = tilt j := by
+          rw [switch_sq]
+          simp
+
+theorem tilt_conj_switch_same (j : ℕ) :
+    (tilt j) * (switch j) * (tilt j) = -(switch j) := by
+  calc
+    (tilt j) * (switch j) * (tilt j) =
+        -((switch j) * (tilt j)) * (tilt j) := by
+          rw [tilt_switch_anticomm]
+    _ = -(((switch j) * (tilt j)) * (tilt j)) := by
+          exact neg_mul ((switch j) * (tilt j)) (tilt j)
+    _ = -((switch j) * ((tilt j) * (tilt j))) := by
+          rw [mul_assoc]
+    _ = -(switch j) := by
+          rw [tilt_sq]
+          simp
+
+theorem tilt_conj_switch_ne {i j : ℕ} (hij : i ≠ j) :
+    (tilt i) * (switch j) * (tilt i) = switch j := by
+  calc
+    (tilt i) * (switch j) * (tilt i) =
+        (switch j) * (tilt i) * (tilt i) := by
+          rw [tilt_switch_comm_of_ne hij]
+    _ = (switch j) * ((tilt i) * (tilt i)) := by
+          rw [← mul_assoc]
+    _ = switch j := by
+          rw [tilt_sq]
+          simp
+
 /-- The canonical infinite Cantor tilt/switch system. -/
 def canonicalTiltSwitchSystem :
-    TiltSwitchSystem (CantorBoundaryFunctionSpace →ₗ[ℝ] CantorBoundaryFunctionSpace) where
+    TiltSwitchSystem (((ℕ → Bool) → ℝ) →ₗ[ℝ] ((ℕ → Bool) → ℝ)) where
   T := tilt
   S := switch
   T_sq := tilt_sq
@@ -315,6 +346,32 @@ def canonicalTiltSwitchSystem :
     intro j
     exact tilt_switch_anticomm j
 
+/-! ## Canonical local `Cl(1,1)` product -/
+
+theorem canonical_tilt_switch_product_sq (j : ℕ) :
+    ((tilt j) * (switch j)) * ((tilt j) * (switch j)) = -1 := by
+  exact tilt_switch_product_sq j
+
+theorem canonical_tilt_switch_product_right_inverse (j : ℕ) :
+    (tilt j) * (switch j) * (-((tilt j) * (switch j))) = 1 := by
+  calc
+    (tilt j) * (switch j) * (-((tilt j) * (switch j))) =
+        -(((tilt j) * (switch j)) * ((tilt j) * (switch j))) := by
+          exact mul_neg ((tilt j) * (switch j)) ((tilt j) * (switch j))
+    _ = 1 := by
+      rw [canonical_tilt_switch_product_sq]
+      simp
+
+theorem canonical_tilt_switch_product_left_inverse (j : ℕ) :
+    (-((tilt j) * (switch j))) * ((tilt j) * (switch j)) = 1 := by
+  calc
+    (-((tilt j) * (switch j))) * ((tilt j) * (switch j)) =
+        -(((tilt j) * (switch j)) * ((tilt j) * (switch j))) := by
+          exact neg_mul ((tilt j) * (switch j)) ((tilt j) * (switch j))
+    _ = 1 := by
+      rw [canonical_tilt_switch_product_sq]
+      simp
+
 end CantorBoundaryFunctionSpace
 
 /--
@@ -328,7 +385,7 @@ with a recursively defined orbit.
 structure CelikKocakInfiniteFockCarrier
     (Op : Type*) [Ring Op] [StarRing Op]
     [NormedAddCommGroup Op] [NormedSpace ℂ Op] [CompleteSpace Op] where
-  cuntz : InfoGeometry.Topology.CuntzO2Carrier Op
+  cuntz : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op
   seedVector : Op
   leftBranch : Op →L[ℂ] Op
   rightBranch : Op →L[ℂ] Op
@@ -370,6 +427,31 @@ theorem orbit_action (C : CelikKocakInfiniteFockCarrier Op) (b : Bool) (w : List
     C.orbit (b :: w) =
       (if b then C.rightBranch else C.leftBranch) (C.orbit w) := by
   cases b <;> simp [C.orbit_cons_false, C.orbit_cons_true]
+
+@[rep_depth operator]
+theorem orbit_eq_foldr (C : CelikKocakInfiniteFockCarrier Op) (w : List Bool) :
+    C.orbit w =
+      List.foldr
+        (fun b x => if b then C.rightBranch x else C.leftBranch x)
+        C.seedVector w := by
+  induction w with
+  | nil => simp [C.orbit_root]
+  | cons b w ih =>
+      rw [C.orbit_action b w, ih]
+      cases b <;> rfl
+
+@[rep_depth operator]
+theorem orbit_append (C : CelikKocakInfiniteFockCarrier Op)
+    (w v : List Bool) :
+    C.orbit (w ++ v) =
+      List.foldr
+        (fun b x => if b then C.rightBranch x else C.leftBranch x)
+        (C.orbit v) w := by
+  induction w with
+  | nil => simp
+  | cons b w ih =>
+      rw [List.cons_append, C.orbit_action b (w ++ v), ih]
+      cases b <;> rfl
 
 /-- Root seed readback. -/
 @[rep_depth operator]
@@ -434,60 +516,40 @@ theorem orbit_basis_repr_apply (x : E) (w : List Bool) :
 
 end CelikKocakInfiniteHilbertCarrier
 
-/--
-Theorem-backed carrier data for the infinite Cantor/Fock lane.
-
-This records the explicit Hilbert carrier together with the deferred Fock
-socket.  The Hilbert basis is the actual analytic object; the Fock-space names
-remain as ambient targets for later bridge files.
--/
-abbrev CelikKocakInfiniteFockCarrierData
-    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] :=
-  CelikKocakInfiniteHilbertCarrier E
-
 namespace CelikKocakInfiniteFockCarrierData
 
 variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E]
-variable (D : CelikKocakInfiniteFockCarrierData E)
-
-/-- Compatibility accessor for the native Hilbert carrier owner. -/
-abbrev hilbertCarrier : CelikKocakInfiniteHilbertCarrier E :=
-  D
+variable (D : CelikKocakInfiniteHilbertCarrier E)
 
 /-- The analytic Cantor orbit basis is orthonormal. -/
 @[rep_depth operator]
 theorem orbit_orthonormal :
-    Orthonormal ℂ D.hilbertCarrier.orbitBasis :=
-  D.hilbertCarrier.orbit_orthonormal
+    Orthonormal ℂ D.orbitBasis :=
+  CelikKocakInfiniteHilbertCarrier.orbit_orthonormal D
 
 /-- The analytic Cantor orbit basis is complete. -/
 @[rep_depth operator]
 theorem orbit_complete :
-    (Submodule.span ℂ (Set.range D.hilbertCarrier.orbitBasis)).topologicalClosure = ⊤ :=
-  D.hilbertCarrier.orbit_complete
+    (Submodule.span ℂ (Set.range D.orbitBasis)).topologicalClosure = ⊤ :=
+  CelikKocakInfiniteHilbertCarrier.orbit_complete D
 
 /-- The analytic Cantor orbit basis is cyclic. -/
 @[rep_depth operator]
 theorem orbit_cyclic :
-    ⊤ ≤ (Submodule.span ℂ (Set.range D.hilbertCarrier.orbitBasis)).topologicalClosure := by
+    ⊤ ≤ (Submodule.span ℂ (Set.range D.orbitBasis)).topologicalClosure := by
   exact le_of_eq (D.orbit_complete.symm)
-
-/-- The analytic Cantor orbit basis as a Lean value. -/
-@[rep_depth operator]
-def orbit_isHilbertBasis : HilbertBasis (List Bool) ℂ E :=
-  D.hilbertCarrier.orbitBasis
 
 /-- Distinct words are orthogonal in the carrier data. -/
 @[rep_depth operator]
 theorem orbit_orthogonal_of_distinct_words {w v : List Bool} (h : w ≠ v) :
-    ⟪D.hilbertCarrier.orbitBasis w, D.hilbertCarrier.orbitBasis v⟫_ℂ = 0 :=
-  D.hilbertCarrier.orbit_orthogonal_of_distinct_words h
+    ⟪D.orbitBasis w, D.orbitBasis v⟫_ℂ = 0 :=
+  CelikKocakInfiniteHilbertCarrier.orbit_orthogonal_of_distinct_words D h
 
 /-- Basis coefficient readback on the carrier data. -/
 @[rep_depth operator]
 theorem orbit_basis_repr_apply (x : E) (w : List Bool) :
-    D.hilbertCarrier.orbitBasis.repr x w = ⟪D.hilbertCarrier.orbitBasis w, x⟫_ℂ :=
-  D.hilbertCarrier.orbit_basis_repr_apply x w
+    D.orbitBasis.repr x w = ⟪D.orbitBasis w, x⟫_ℂ :=
+  CelikKocakInfiniteHilbertCarrier.orbit_basis_repr_apply D x w
 
 end CelikKocakInfiniteFockCarrierData
 
@@ -578,7 +640,133 @@ theorem anticommutator_eq_one :
     C.annihilation * C.creation + C.creation * C.annihilation = 1 :=
   C.car
 
+theorem annihilation_creation_idempotent :
+    (C.annihilation * C.creation) *
+      (C.annihilation * C.creation) =
+      C.annihilation * C.creation := by
+  have hca : C.creation * C.annihilation =
+      1 - C.annihilation * C.creation := by
+    apply eq_sub_iff_add_eq.mpr
+    simpa [add_comm] using C.car
+  calc
+    (C.annihilation * C.creation) *
+        (C.annihilation * C.creation) =
+        C.annihilation * (C.creation * C.annihilation) * C.creation := by
+          simp [mul_assoc]
+    _ = C.annihilation * (1 - C.annihilation * C.creation) * C.creation := by
+          rw [hca]
+    _ = C.annihilation * C.creation := by
+          simp [mul_assoc, sub_mul, mul_sub, C.nilpotent_creation]
+
+theorem creation_annihilation_idempotent :
+    (C.creation * C.annihilation) *
+      (C.creation * C.annihilation) =
+      C.creation * C.annihilation := by
+  have hac : C.annihilation * C.creation =
+      1 - C.creation * C.annihilation := by
+    apply eq_sub_iff_add_eq.mpr
+    simpa [add_comm] using C.car
+  calc
+    (C.creation * C.annihilation) *
+        (C.creation * C.annihilation) =
+        C.creation * (C.annihilation * C.creation) * C.annihilation := by
+          simp [mul_assoc]
+    _ = C.creation * (1 - C.creation * C.annihilation) * C.annihilation := by
+          rw [hac]
+    _ = C.creation * C.annihilation := by
+          simp [mul_assoc, sub_mul, mul_sub, C.nilpotent_annihilation]
+
+theorem annihilation_creation_orthogonal :
+    (C.annihilation * C.creation) *
+      (C.creation * C.annihilation) = 0 := by
+  calc
+    (C.annihilation * C.creation) *
+        (C.creation * C.annihilation) =
+        C.annihilation * (C.creation * C.creation) * C.annihilation := by
+          simp [mul_assoc]
+    _ = 0 := by simp [C.nilpotent_creation]
+
+theorem creation_annihilation_orthogonal :
+    (C.creation * C.annihilation) *
+      (C.annihilation * C.creation) = 0 := by
+  calc
+    (C.creation * C.annihilation) *
+        (C.annihilation * C.creation) =
+        C.creation * (C.annihilation * C.annihilation) * C.creation := by
+          simp [mul_assoc]
+    _ = 0 := by simp [C.nilpotent_annihilation]
+
+theorem creation_annihilation_eq_one_sub_annihilation_creation :
+    C.creation * C.annihilation =
+      1 - C.annihilation * C.creation := by
+  apply eq_sub_iff_add_eq.mpr
+  simpa [add_comm] using C.car
+
+theorem annihilation_creation_eq_one_sub_creation_annihilation :
+    C.annihilation * C.creation =
+      1 - C.creation * C.annihilation := by
+  apply eq_sub_iff_add_eq.mpr
+  simpa [add_comm] using C.car
+
 end RealCARPair
+
+namespace CantorBoundaryFunctionSpace
+
+abbrev Operator := ((ℕ → Bool) → ℝ) →ₗ[ℝ] ((ℕ → Bool) → ℝ)
+
+noncomputable def canonicalAnnihilation (j : ℕ) : Operator :=
+  (1 / 2 : ℝ) • (tilt j + (tilt j) * (switch j))
+
+noncomputable def canonicalCreation (j : ℕ) : Operator :=
+  (1 / 2 : ℝ) • (tilt j - (tilt j) * (switch j))
+
+private theorem tilt_mul_tilt_switch (j : ℕ) :
+    (tilt j) * ((tilt j) * (switch j)) = switch j := by
+  rw [← mul_assoc, tilt_sq]
+  simp
+
+private theorem tilt_switch_mul_tilt (j : ℕ) :
+    ((tilt j) * (switch j)) * (tilt j) = -(switch j) := by
+  calc
+    ((tilt j) * (switch j)) * (tilt j) =
+        (tilt j) * ((switch j) * (tilt j)) := by rw [mul_assoc]
+    _ = (tilt j) * (-((tilt j) * (switch j))) := by
+      rw [switch_tilt_anticomm]
+    _ = -((tilt j) * ((tilt j) * (switch j))) := by
+      exact @mul_neg Operator _ _ (tilt j) ((tilt j) * (switch j))
+    _ = -(switch j) := by rw [tilt_mul_tilt_switch]
+
+theorem canonicalAnnihilation_sq (j : ℕ) :
+    canonicalAnnihilation j * canonicalAnnihilation j = 0 := by
+  simp only [canonicalAnnihilation, smul_mul_assoc, mul_smul_comm,
+    mul_add, add_mul, tilt_sq, tilt_switch_product_sq,
+    tilt_mul_tilt_switch, tilt_switch_mul_tilt]
+  module
+
+theorem canonicalCreation_sq (j : ℕ) :
+    canonicalCreation j * canonicalCreation j = 0 := by
+  simp only [canonicalCreation, smul_mul_assoc, mul_smul_comm,
+    mul_sub, sub_mul, tilt_sq, tilt_switch_product_sq,
+    tilt_mul_tilt_switch, tilt_switch_mul_tilt]
+  module
+
+theorem canonicalCAR_anticommutator (j : ℕ) :
+    canonicalAnnihilation j * canonicalCreation j +
+      canonicalCreation j * canonicalAnnihilation j = 1 := by
+  simp only [canonicalAnnihilation, canonicalCreation, smul_mul_assoc,
+    mul_smul_comm, mul_add, add_mul, mul_sub, sub_mul,
+    tilt_sq, tilt_switch_product_sq, tilt_mul_tilt_switch,
+    tilt_switch_mul_tilt]
+  module
+
+noncomputable def canonicalCARPair (j : ℕ) : RealCARPair Operator where
+  annihilation := canonicalAnnihilation j
+  creation := canonicalCreation j
+  nilpotent_annihilation := canonicalAnnihilation_sq j
+  nilpotent_creation := canonicalCreation_sq j
+  car := canonicalCAR_anticommutator j
+
+end CantorBoundaryFunctionSpace
 
 /--
 Clifford-to-CAR calibration.
@@ -588,15 +776,15 @@ representation supplies the CAR pair required by the light-cone/Fock socket.
 -/
 @[rep_depth operator]
 structure CliffordToCARCalibration
-    (Op : Type*) [Ring Op] where
+    (Op : Type*) [Ring Op] [Algebra ℝ Op] where
   clifford : RealDoubledCantorCliffordRepresentation Op
   gammaAIndex : ℕ
   gammaBIndex : ℕ
-  carPair : RealCARPair Op
+  gamma_indices_ne : gammaAIndex ≠ gammaBIndex
 
 namespace CliffordToCARCalibration
 
-variable {Op : Type*} [Ring Op]
+variable {Op : Type*} [Ring Op] [Algebra ℝ Op]
 variable (W : CliffordToCARCalibration Op)
 
 /-- The first selected CAR seed is a Clifford generator image. -/
@@ -620,6 +808,104 @@ theorem gammaA_generator :
 theorem gammaB_generator :
     W.gammaB = W.clifford.gamma W.gammaBIndex :=
   rfl
+
+private theorem gammaA_sq :
+    W.gammaA * W.gammaA = 1 :=
+  W.clifford.gamma_sq W.gammaAIndex
+
+private theorem gammaB_sq :
+    W.gammaB * W.gammaB = 1 :=
+  W.clifford.gamma_sq W.gammaBIndex
+
+private theorem gammaA_gammaB_anticomm :
+    W.gammaA * W.gammaB = -(W.gammaB * W.gammaA) :=
+  W.clifford.gamma_anticomm W.gammaAIndex W.gammaBIndex W.gamma_indices_ne
+
+private theorem gammaB_gammaA_anticomm :
+    W.gammaB * W.gammaA = -(W.gammaA * W.gammaB) := by
+  calc
+    W.gammaB * W.gammaA = -(- (W.gammaB * W.gammaA)) := by simp
+    _ = -(W.gammaA * W.gammaB) := by rw [gammaA_gammaB_anticomm]
+
+/-- The product of the two selected Clifford generators is the real phase axis. -/
+@[rep_depth operator]
+def phase : Op :=
+  W.gammaA * W.gammaB
+
+private theorem phase_sq :
+    W.phase * W.phase = -1 := by
+  calc
+    W.phase * W.phase =
+        W.gammaA * (W.gammaB * W.gammaA) * W.gammaB := by
+          simp only [phase, mul_assoc]
+    _ = W.gammaA * (-(W.gammaA * W.gammaB)) * W.gammaB := by
+          rw [gammaB_gammaA_anticomm]
+    _ = -((W.gammaA * W.gammaA) * (W.gammaB * W.gammaB)) := by
+          noncomm_ring
+    _ = -1 := by
+          rw [gammaA_sq, gammaB_sq]
+          simp
+
+private theorem gammaA_phase_anticomm :
+    W.gammaA * W.phase = -(W.phase * W.gammaA) := by
+  have hleft : W.gammaA * W.phase = W.gammaB := by
+    simp only [phase]
+    rw [← mul_assoc, gammaA_sq]
+    simp
+  have hright : W.phase * W.gammaA = -W.gammaB := by
+    calc
+      W.phase * W.gammaA =
+          W.gammaA * (W.gammaB * W.gammaA) := by
+            simp only [phase, mul_assoc]
+      _ = W.gammaA * (-(W.gammaA * W.gammaB)) := by
+            rw [gammaB_gammaA_anticomm]
+      _ = -((W.gammaA * W.gammaA) * W.gammaB) := by
+            noncomm_ring
+      _ = -W.gammaB := by
+            rw [gammaA_sq]
+            simp
+  rw [hleft, hright]
+  simp
+
+/-- The CAR annihilation operator obtained from the real Clifford pair. -/
+@[rep_depth operator]
+noncomputable def annihilation : Op :=
+  (1 / 2 : ℝ) • (W.gammaA + W.phase)
+
+/-- The CAR creation operator obtained from the real Clifford pair. -/
+@[rep_depth operator]
+noncomputable def creation : Op :=
+  (1 / 2 : ℝ) • (W.gammaA - W.phase)
+
+@[rep_depth operator]
+theorem annihilation_sq :
+    W.annihilation * W.annihilation = 0 := by
+  simp only [annihilation, smul_mul_assoc, mul_smul_comm, mul_add, add_mul,
+    gammaA_sq, phase_sq, gammaA_phase_anticomm]
+  module
+
+@[rep_depth operator]
+theorem creation_sq :
+    W.creation * W.creation = 0 := by
+  simp only [creation, smul_mul_assoc, mul_smul_comm, mul_sub, sub_mul,
+    gammaA_sq, phase_sq, gammaA_phase_anticomm]
+  module
+
+@[rep_depth operator]
+theorem car_anticommutator :
+    W.annihilation * W.creation + W.creation * W.annihilation = 1 := by
+  simp only [annihilation, creation, smul_mul_assoc, mul_smul_comm,
+    mul_add, add_mul, mul_sub, sub_mul, gammaA_sq, phase_sq,
+    gammaA_phase_anticomm]
+  module
+
+/-- The CAR pair is derived from the calibrated Clifford generators. -/
+noncomputable def carPair : RealCARPair Op where
+  annihilation := W.annihilation
+  creation := W.creation
+  nilpotent_annihilation := W.annihilation_sq
+  nilpotent_creation := W.creation_sq
+  car := W.car_anticommutator
 
 end CliffordToCARCalibration
 
@@ -677,46 +963,14 @@ def uMinus : Op :=
 def mirror : Op :=
   C.tiltSwitch.S C.mirrorIndex
 
-/-- Positive light-cone arrow is calibrated to a tilt property by definition. -/
-@[rep_depth operator]
-theorem uPlus_calibrated :
-    C.uPlus = C.tiltSwitch.T C.uPlusIndex :=
-by
-  cases C with
-  | mk tiltSwitch uPlusIndex uMinusIndex mirrorIndex uMinusSide =>
-      rfl
-
-/-- Negative light-cone arrow is calibrated to a tilt or switch property by definition. -/
-@[rep_depth operator]
-theorem uMinus_calibrated :
-    C.uMinus = C.tiltSwitch.T C.uMinusIndex ∨
-      C.uMinus = C.tiltSwitch.S C.uMinusIndex := by
-  cases C with
-  | mk tiltSwitch uPlusIndex uMinusIndex mirrorIndex uMinusSide =>
-      cases uMinusSide with
-      | tilt =>
-          left
-          rfl
-      | switch =>
-          right
-          rfl
-
-/-- Mirror data is calibrated to a switch property by definition. -/
-@[rep_depth operator]
-theorem mirror_calibrated :
-    C.mirror = C.tiltSwitch.S C.mirrorIndex :=
-by
-  cases C with
-  | mk tiltSwitch uPlusIndex uMinusIndex mirrorIndex uMinusSide =>
-      rfl
-
 end DrazinArrowTiltSwitchCalibration
 
 @[rep_depth operator]
 structure FractalCantorFockWitness
     (Op E : Type*) [Ring Op]
+    [Algebra ℝ Op]
     [NormedAddCommGroup E] [InnerProductSpace ℂ E] [CompleteSpace E] where
-  celikKocak : CelikKocakInfiniteFockCarrierData E
+  celikKocak : CelikKocakInfiniteHilbertCarrier E
   cliffordToCAR : CliffordToCARCalibration Op
   drazinCalibration : DrazinArrowTiltSwitchCalibration Op
 

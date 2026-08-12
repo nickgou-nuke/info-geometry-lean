@@ -1,4 +1,4 @@
-import proofs.CanonicalZornOuterTrialityGroup
+import InfoGeometry.Canonical.CanonicalZornOuterTrialityGroup
 
 /-!
 # Spin/related-triples representation fiber

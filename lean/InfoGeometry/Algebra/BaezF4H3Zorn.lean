@@ -37,6 +37,13 @@ namespace H3ZornJordanAut
 instance : CoeFun H3ZornJordanAut (fun _ => H3Zorn ℝ → H3Zorn ℝ) where
   coe A := A.toLinearEquiv
 
+@[ext] theorem ext {A B : H3ZornJordanAut}
+    (h : A.toLinearEquiv = B.toLinearEquiv) : A = B := by
+  cases A
+  cases B
+  cases h
+  rfl
+
 /-- A Jordan automorphism fixes the unit. -/
 @[simp] theorem map_one (A : H3ZornJordanAut) : A 1 = 1 :=
   A.map_one'
@@ -82,6 +89,47 @@ def inv (A : H3ZornJordanAut) : H3ZornJordanAut where
 @[simp] theorem apply_inv_apply (A : H3ZornJordanAut) (X : H3Zorn ℝ) :
     inv A (A X) = X := by
   exact A.toLinearEquiv.symm_apply_apply X
+
+instance : One H3ZornJordanAut := ⟨id⟩
+
+/-- Group multiplication is ordinary composition: `(A * B) X = A (B X)`. -/
+instance : Mul H3ZornJordanAut := ⟨fun A B => comp B A⟩
+
+instance : Inv H3ZornJordanAut := ⟨inv⟩
+
+@[simp] theorem one_apply (X : H3Zorn ℝ) : (1 : H3ZornJordanAut) X = X :=
+  rfl
+
+@[simp] theorem mul_apply (A B : H3ZornJordanAut) (X : H3Zorn ℝ) :
+    (A * B) X = A (B X) :=
+  rfl
+
+@[simp] theorem inv_apply (A : H3ZornJordanAut) (X : H3Zorn ℝ) :
+    A⁻¹ X = A.toLinearEquiv.symm X :=
+  rfl
+
+/-- The multiplication-preserving linear equivalences form an actual group. -/
+instance : Group H3ZornJordanAut where
+  mul_assoc A B C := by
+    apply H3ZornJordanAut.ext
+    apply LinearEquiv.ext
+    intro X
+    rfl
+  one_mul A := by
+    apply H3ZornJordanAut.ext
+    apply LinearEquiv.ext
+    intro X
+    rfl
+  mul_one A := by
+    apply H3ZornJordanAut.ext
+    apply LinearEquiv.ext
+    intro X
+    rfl
+  inv_mul_cancel A := by
+    apply H3ZornJordanAut.ext
+    apply LinearEquiv.ext
+    intro X
+    exact apply_inv_apply A X
 
 end H3ZornJordanAut
 

@@ -34,77 +34,74 @@ open InfoGeometry.Canonical.CelikKocakCantorOperators
 open InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
 open InfoGeometry.Clifford.Cl11Matrix
 
-/--
-Concrete `n = 1` Çelik--Koçak owner packet.
-
-This bundles the already-exported finite tilt/switch source and the already-
-exported `Cl(1,1)` matrix bridge without asserting any new identification
-between them.
--/
-@[rep_depth operator]
-structure CelikKocakCl11ConcretePacket where
-  tiltSwitch : CelikKocakCantorOperators.FunctionSpace.TiltSwitchSystem (n := 1)
-  pauliBridge : CantorTiltSwitchCliffordBridge.FiniteCantorPauliBridge 1 Mat2
-
 namespace CelikKocakCl11ConcretePacket
 
 /-- The canonical theorem-backed finite tilt/switch system at depth `1`. -/
 @[rep_depth operator]
-def canonical : CelikKocakCl11ConcretePacket where
-  tiltSwitch := CelikKocakCantorOperators.FunctionSpace.canonicalTiltSwitchSystem (n := 1)
-  pauliBridge := InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge
+def canonicalTiltSwitch :
+    CelikKocakCantorOperators.FunctionSpace.TiltSwitchSystem (n := 1) :=
+  CelikKocakCantorOperators.FunctionSpace.canonicalTiltSwitchSystem (n := 1)
+
+@[rep_depth operator]
+def canonicalPauliGamma : Fin 2 → Mat2 :=
+  InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge
 
 /-- In the canonical base case, the first Clifford generator is `Eplus`. -/
 @[rep_depth operator]
 theorem canonical_psiGamma_zero :
-    canonical.pauliBridge.psiGamma ⟨0, by decide⟩ = Eplus :=
-  InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge_psiGamma_zero
+    canonicalPauliGamma ⟨0, by decide⟩ = Eplus :=
+  rfl
 
 /-- In the canonical base case, the second Clifford generator is `J1`. -/
 @[rep_depth operator]
 theorem canonical_psiGamma_one :
-    canonical.pauliBridge.psiGamma ⟨1, by decide⟩ = J1 :=
-  InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge_psiGamma_one
+    canonicalPauliGamma ⟨1, by decide⟩ = J1 :=
+  rfl
 
 /-- The first canonical generator squares to one. -/
 @[rep_depth operator]
 theorem canonical_psiGamma_zero_sq :
-    canonical.pauliBridge.psiGamma ⟨0, by decide⟩ *
-      canonical.pauliBridge.psiGamma ⟨0, by decide⟩ = 1 := by
-  exact canonical.pauliBridge.clifford_sq ⟨0, by decide⟩
+    canonicalPauliGamma ⟨0, by decide⟩ *
+      canonicalPauliGamma ⟨0, by decide⟩ = 1 := by
+  exact InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge_sq
+    ⟨0, by decide⟩
 
 /-- The second canonical generator squares to one. -/
 @[rep_depth operator]
 theorem canonical_psiGamma_one_sq :
-    canonical.pauliBridge.psiGamma ⟨1, by decide⟩ *
-      canonical.pauliBridge.psiGamma ⟨1, by decide⟩ = 1 := by
-  exact canonical.pauliBridge.clifford_sq ⟨1, by decide⟩
+    canonicalPauliGamma ⟨1, by decide⟩ *
+      canonicalPauliGamma ⟨1, by decide⟩ = 1 := by
+  exact InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge_sq
+    ⟨1, by decide⟩
 
 /-- The two canonical generators anticommute. -/
 @[rep_depth operator]
 theorem canonical_psiGamma_anticomm :
-    canonical.pauliBridge.psiGamma ⟨0, by decide⟩ * canonical.pauliBridge.psiGamma ⟨1, by decide⟩ +
-      canonical.pauliBridge.psiGamma ⟨1, by decide⟩ * canonical.pauliBridge.psiGamma ⟨0, by decide⟩ = 0 := by
-  exact canonical.pauliBridge.gamma_anticomm (i := ⟨0, by decide⟩) (j := ⟨1, by decide⟩) (by decide)
+    canonicalPauliGamma ⟨0, by decide⟩ * canonicalPauliGamma ⟨1, by decide⟩ +
+      canonicalPauliGamma ⟨1, by decide⟩ * canonicalPauliGamma ⟨0, by decide⟩ = 0 := by
+  unfold canonicalPauliGamma
+  rw [InfoGeometry.Canonical.FiniteCantorPauliMatrixBridge.cl11PauliBridge_anticomm
+    (by decide : (⟨0, by decide⟩ : Fin 2) ≠ ⟨1, by decide⟩)]
+  simp
 
 /-- The canonical finite tilt at slot `0` squares to one. -/
 @[rep_depth operator]
 theorem canonical_tilt_sq :
-    canonical.tiltSwitch.T ⟨0, by decide⟩ * canonical.tiltSwitch.T ⟨0, by decide⟩ = 1 := by
-  exact canonical.tiltSwitch.T_sq ⟨0, by decide⟩
+    canonicalTiltSwitch.T ⟨0, by decide⟩ * canonicalTiltSwitch.T ⟨0, by decide⟩ = 1 := by
+  exact canonicalTiltSwitch.T_sq ⟨0, by decide⟩
 
 /-- The canonical finite switch at slot `0` squares to one. -/
 @[rep_depth operator]
 theorem canonical_switch_sq :
-    canonical.tiltSwitch.S ⟨0, by decide⟩ * canonical.tiltSwitch.S ⟨0, by decide⟩ = 1 := by
-  exact canonical.tiltSwitch.S_sq ⟨0, by decide⟩
+    canonicalTiltSwitch.S ⟨0, by decide⟩ * canonicalTiltSwitch.S ⟨0, by decide⟩ = 1 := by
+  exact canonicalTiltSwitch.S_sq ⟨0, by decide⟩
 
 /-- The canonical finite tilt/switch pair anticommutes at slot `0`. -/
 @[rep_depth operator]
 theorem canonical_tilt_switch_anticomm :
-    canonical.tiltSwitch.T ⟨0, by decide⟩ * canonical.tiltSwitch.S ⟨0, by decide⟩ =
-      - (canonical.tiltSwitch.S ⟨0, by decide⟩ * canonical.tiltSwitch.T ⟨0, by decide⟩) := by
-  exact canonical.tiltSwitch.T_S_anticomm ⟨0, by decide⟩
+    canonicalTiltSwitch.T ⟨0, by decide⟩ * canonicalTiltSwitch.S ⟨0, by decide⟩ =
+      - (canonicalTiltSwitch.S ⟨0, by decide⟩ * canonicalTiltSwitch.T ⟨0, by decide⟩) := by
+  exact canonicalTiltSwitch.T_S_anticomm ⟨0, by decide⟩
 
 end CelikKocakCl11ConcretePacket
 

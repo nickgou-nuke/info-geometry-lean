@@ -1,7 +1,7 @@
 import Mathlib.LinearAlgebra.StdBasis
 import Mathlib.LinearAlgebra.Eigenspace.Basic
 import Mathlib.Combinatorics.Colex
-import proofs.CanonicalZornCliffordIsomorphism
+import InfoGeometry.Canonical.CanonicalZornCliffordIsomorphism
 
 /-!
 # Cayley--Dickson Zorn basis and Clifford monomials
@@ -32,8 +32,7 @@ namespace ZornCliffordBasisMonomials
 
 open CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation
-open CanonicalZornFiveGradedClosure
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 open Module
 
 /-! ## The null coordinate basis -/

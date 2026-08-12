@@ -17,16 +17,16 @@ The apex (the compiled theory) is the filtered colimit of this diagram.
 
 universe v u
 
--- Let `TheoryStage` represent the category of formalization stages.
--- For now, we stub this out as an arbitrary category that is filtered.
+-- `TheoryStage` is an explicit abstract category of formalization stages;
+-- concrete stage data are supplied by an importing owner.
 variable {TheoryStage : Type u} [Category.{v} TheoryStage] [IsFiltered TheoryStage]
 
 -- The functor mapping each stage to its formalized content (e.g., types, rings, operators)
 variable {C : Type u} [Category.{v} C]
 variable (F : TheoryStage ⥤ C)
 
--- If the target category has filtered colimits, we can construct the apex of our theory.
-variable [HasFilteredColimits C]
+-- The apex is available when this particular filtered diagram has a colimit.
+variable [HasColimit F]
 
 /-- 
 The apex of the confabulation process. 

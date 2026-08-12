@@ -3,6 +3,8 @@ import proofs.NambuGorkovSpinor
 
 open Matrix
 
+noncomputable section
+
 /-!
 # Bogoliubov-Rindler Flow and Thermo Field Dynamics
 
@@ -14,7 +16,7 @@ as a one-parameter Lie group acting on the Cartan-Krein doubled space.
 A Bogoliubov transformation parameterized by the hyperbolic angle (rapidity) θ.
 This operator mixes the creation (signal) and annihilation (thermal dual) spaces.
 -/
-def bogoliubovTransform (θ : ℝ) : Matrix4x4 :=
+noncomputable def bogoliubovTransform (θ : ℝ) : Matrix4x4 :=
   fromBlocks 
     (Real.cosh θ • (1 : Patch2x2)) 
     (Real.sinh θ • (1 : Patch2x2))
@@ -27,16 +29,12 @@ indefinite Krein metric. It acts as an O(2,2) isometry.
 -/
 theorem bogoliubov_preserves_kreinMetric (θ : ℝ) :
     kreinAdjoint (bogoliubovTransform θ) * bogoliubovTransform θ = 1 := by
-  dsimp [kreinAdjoint, bogoliubovTransform, kreinMetric, fromBlocks]
+  dsimp [kreinAdjoint, bogoliubovTransform, kreinMetric]
   ext i j
-  fin_cases i <;> fin_cases j
-  all_goals {
-    simp
-    try {
-      have h := Real.cosh_sq_sub_sinh_sq θ
-      nlinarith
-    }
-  }
+  rcases i with i | i <;> rcases j with j | j <;>
+    fin_cases i <;> fin_cases j <;>
+    simp [fromBlocks, Matrix.mul_apply, Fin.sum_univ_two] <;>
+    nlinarith [Real.cosh_sq_sub_sinh_sq θ]
 
 theorem bogoliubov_preserves_kreinInnerProduct
     (θ : ℝ)
@@ -45,9 +43,13 @@ theorem bogoliubov_preserves_kreinInnerProduct
         (bogoliubovTransform θ *ᵥ Ψ)
         (bogoliubovTransform θ *ᵥ Φ) =
       kreinInnerProduct Ψ Φ := by
-  dsimp [kreinInnerProduct, bogoliubovTransform, kreinMetric, fromBlocks, dotProduct, mulVec]
-  have h := Real.cosh_sq_sub_sinh_sq θ
-  nlinarith
+  dsimp [kreinInnerProduct, bogoliubovTransform, kreinMetric]
+  simp [fromBlocks_mulVec, Matrix.mul_apply, Matrix.mulVec, dotProduct,
+    vecMul, Fintype.sum_sum_type, fromBlocks]
+  linear_combination
+    (Real.cosh_sq_sub_sinh_sq θ) *
+      (Ψ (Sum.inl 0) * Φ (Sum.inl 0) - Ψ (Sum.inr 0) * Φ (Sum.inr 0) +
+       Ψ (Sum.inl 1) * Φ (Sum.inl 1) - Ψ (Sum.inr 1) * Φ (Sum.inr 1))
 
 /--
 A vector is Krein-null when its indefinite quadratic norm vanishes.
@@ -106,9 +108,12 @@ theorem kreinAdjoint_bogoliubov
     kreinAdjoint (bogoliubovTransform θ) =
       bogoliubovTransform (-θ) := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [kreinAdjoint, kreinMetric,
-      bogoliubovTransform, fromBlocks]
+  rcases i with i | i <;> rcases j with j | j <;>
+    fin_cases i <;> fin_cases j <;>
+    simp [kreinAdjoint, kreinMetric, bogoliubovTransform, fromBlocks,
+      Matrix.mul_apply, Matrix.conjTranspose, Fin.sum_univ_two,
+      Real.sinh_neg, Real.cosh_neg] <;>
+    ring
 
 theorem bogoliubov_krein_unitary
     (θ : ℝ) :
@@ -135,9 +140,10 @@ theorem kreinAdjoint_bogoliubovGenerator :
     kreinAdjoint bogoliubovGenerator =
       -bogoliubovGenerator := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [kreinAdjoint, kreinMetric,
-      bogoliubovGenerator, fromBlocks]
+  rcases i with i | i <;> rcases j with j | j <;>
+    fin_cases i <;> fin_cases j <;>
+    simp [kreinAdjoint, kreinMetric, bogoliubovGenerator, fromBlocks,
+      Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem bogoliubovTransform_eq
     (θ : ℝ) :
@@ -179,3 +185,5 @@ def canonicalBogoliubovRindlerFlow :
   generator_krein_skew :=
     kreinAdjoint_bogoliubovGenerator
   closed_form := bogoliubovTransform_eq
+
+end

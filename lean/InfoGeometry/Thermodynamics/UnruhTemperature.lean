@@ -75,6 +75,12 @@ theorem inverseTemperature_eq (obs : RindlerObserver) :
   dsimp [inverseTemperature, properTime_of_modularTime, modularPeriod]
   ring
 
+/-- The Unruh inverse temperature is positive for positive acceleration. -/
+theorem inverseTemperature_pos (obs : RindlerObserver) :
+    0 < inverseTemperature obs := by
+  rw [inverseTemperature_eq]
+  exact div_pos (by positivity : 0 < (2 * Real.pi : ℝ)) obs.ha
+
 /--
 The Unruh temperature (T_U = 1 / β) in natural units where k_B = 1.
 -/
@@ -90,5 +96,11 @@ theorem unruhTemperature_eq (obs : RindlerObserver) :
   dsimp [unruhTemperature]
   rw [inverseTemperature_eq]
   exact inv_div (2 * Real.pi) obs.a
+
+/-- The Unruh temperature is positive for positive acceleration. -/
+theorem unruhTemperature_pos (obs : RindlerObserver) :
+    0 < unruhTemperature obs := by
+  rw [unruhTemperature_eq]
+  exact div_pos obs.ha (by positivity : 0 < (2 * Real.pi : ℝ))
 
 end InfoGeometry.Thermodynamics.UnruhTemperature

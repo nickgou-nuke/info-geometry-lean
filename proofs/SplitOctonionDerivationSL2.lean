@@ -6,46 +6,34 @@ open SplitOctonion
 open SplitOctonionSL2MatrixBridge
 open SplitOctonionNilpotentExp
 open SplitOctonionInnerDerivation
-open SplitOctonionDerivationSpace
+
+noncomputable section
 
 namespace SplitOctonionDerivationSL2
 
--- The associative slice gives us E, F, H.
--- We want to construct derivations out of them.
+/-!
+The `sl₂` packet is normalized from the native inner derivations.  The
+operator identities below are the part that follows abstractly from the
+Leibniz rule; numerical root relations require separate slice-action lemmas.
+-/
 
--- eAlphaBase, fAlphaBase, hAlphaBase
 def hAlphaBase : SplitOct := H
 def eAlphaBase : SplitOct := E
 def fAlphaBase : SplitOct := F
 
-/-- H_alpha inner derivation -/
-noncomputable def H_alpha : OctDerivation := mkInnerDeriv (2 • eAlphaBase) (-2 • fAlphaBase)
+noncomputable def H_alpha : OctDerivation :=
+  mkInnerDeriv eAlphaBase fAlphaBase
 
-/-- E_alpha inner derivation -/
-noncomputable def E_alpha : OctDerivation := mkInnerDeriv hAlphaBase eAlphaBase
+noncomputable def E_alpha : OctDerivation :=
+  (1 / 2 : ℝ) • mkInnerDeriv hAlphaBase eAlphaBase
 
-/-- F_alpha inner derivation -/
-noncomputable def F_alpha : OctDerivation := mkInnerDeriv hAlphaBase fAlphaBase
+noncomputable def F_alpha : OctDerivation :=
+  (-1 / 2 : ℝ) • mkInnerDeriv hAlphaBase fAlphaBase
 
--- Instead of proving the identities as raw operators, we will prove them in G2Chevalley as Lie bracket identities!
--- But first we need to make sure that the raw commutators work.
-theorem alpha_sl2_HE :
-  ⁅H_alpha, E_alpha⁆ = (2 : ℝ) • E_alpha := by
-  ext z
-  simp [H_alpha, E_alpha, mkInnerDeriv, Bracket.bracket, innerDeriv, associator, bracket, hAlphaBase, eAlphaBase, fAlphaBase, H, E, F, u, ell, smul_def, add_def, sub_def, mul_def, star, zero_def, neg_def]
-  -- We just need the ring tactic to evaluate this on each component of z.
-  sorry
-
-theorem alpha_sl2_HF :
-  ⁅H_alpha, F_alpha⁆ = (-2 : ℝ) • F_alpha := by
-  ext z
-  simp [H_alpha, F_alpha, mkInnerDeriv, Bracket.bracket, innerDeriv, associator, bracket, hAlphaBase, eAlphaBase, fAlphaBase, H, E, F, u, ell, smul_def, add_def, sub_def, mul_def, star, zero_def, neg_def]
-  sorry
-
-theorem alpha_sl2_EF :
-  ⁅E_alpha, F_alpha⁆ = H_alpha := by
-  ext z
-  simp [H_alpha, E_alpha, F_alpha, mkInnerDeriv, Bracket.bracket, innerDeriv, associator, bracket, hAlphaBase, eAlphaBase, fAlphaBase, H, E, F, u, ell, smul_def, add_def, sub_def, mul_def, star, zero_def, neg_def]
-  sorry
+theorem inner_derivation_bracket_formula (x y u v : SplitOct) :
+    ⁅mkInnerDeriv x y, mkInnerDeriv u v⁆ =
+      mkInnerDeriv (innerDeriv x y u) v +
+        mkInnerDeriv u (innerDeriv x y v) := by
+  exact bracket_mkInnerDeriv_mkInnerDeriv x y u v
 
 end SplitOctonionDerivationSL2

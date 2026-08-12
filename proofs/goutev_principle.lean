@@ -159,8 +159,6 @@ def uhfHorizonLayer : String := "UHF 2^infty noncommutative bulk"
 def holographicBoundaryLayer : String := "diagonal MASA Cantor boundary"
 def restartVacuumLayer : String := "diagonal MASA Cantor boundary"
 
-theorem goutev_cycle_closes : restartVacuumLayer = holographicBoundaryLayer := rfl
-
 /-══════════════════════════════════════════════════════════════════════
   BRIDGES — connections to pre-proved theorems
   ═════════════════════════════════════════════════════════════════════-/

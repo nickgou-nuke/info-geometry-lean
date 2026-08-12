@@ -17,6 +17,7 @@ namespace CosmologicalSynthesis
 
 open ConformalScaleRecurrence
 open GNSModularObservables
+open KleinBottle
 
 
 /-- Combined finite CPT and glide identities. -/
@@ -24,15 +25,16 @@ theorem cartan_klein_hinge_skeleton (s : ℂ) :
     MajoranaPrimonSpectralBridge.cptSpectralMap
         (MajoranaPrimonSpectralBridge.cptSpectralMap s) = s ∧
     (MajoranaPrimonSpectralBridge.cptSpectralMap s = s ↔ s.re = 1/2) ∧
-    (∀ z : ℂ, G (T z) = T_inv (G z)) ∧
-    (∀ z : ℂ, G (G z) = z + 2) := by
+    (∀ z : ℂ, KleinBottle.G (KleinBottle.T z) =
+      KleinBottle.T_inv (KleinBottle.G z)) ∧
+    (∀ z : ℂ, KleinBottle.G (KleinBottle.G z) = z + 2) := by
   constructor
   · exact CartanKleinBottleGeometry.cpt_is_involution s
   · constructor
     · exact CartanKleinBottleGeometry.cpt_fixed_locus_is_critical_line s
     · constructor
-      · exact TorusKleinO55Bridge.klein_glide_twists_torus_translation
-      · exact TorusKleinO55Bridge.klein_glide_square_is_translation
+      · exact fun z => TorusKleinO55Bridge.klein_glide_twists_torus_translation z
+      · exact fun z => TorusKleinO55Bridge.klein_glide_square_is_translation z
 
 /-- Finite aggregate theorem for scale-flip, CPT, Möbius, and trace identities. -/
 theorem cosmological_synthesis

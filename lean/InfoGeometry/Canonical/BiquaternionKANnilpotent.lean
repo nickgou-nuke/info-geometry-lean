@@ -1,4 +1,4 @@
-import Mathlib.Tactic
+import Mathlib
 
 /-!
 # Biquaternion KAN nilpotent atom
@@ -23,6 +23,8 @@ theorem K_N_is_nilpotent : K_N * K_N = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;> norm_num [K_N, Matrix.mul_apply]
 
+theorem K_N_sq : K_N * K_N = 0 := K_N_is_nilpotent
+
 /-- Truncated exponential for a square-zero nilpotent: `exp₂ N = I + N`. -/
 def exp_K_N : M2C := 1 + K_N
 
@@ -34,5 +36,12 @@ theorem scaled_K_N_is_nilpotent (ε : ℂ) :
       rw [smul_mul_smul]
     _ = (ε * ε) • (0 : M2C) := by rw [K_N_is_nilpotent]
     _ = 0 := by simp
+
+theorem scalar_K_N_sq (ε : ℂ) :
+    (ε • K_N) * (ε • K_N) = 0 := scaled_K_N_is_nilpotent ε
+
+theorem kan_nilpotent_identities :
+    K_N * K_N = 0 ∧ (∀ ε : ℂ, (ε • K_N) * (ε • K_N) = 0) := by
+  exact ⟨K_N_is_nilpotent, scaled_K_N_is_nilpotent⟩
 
 end BiquaternionKANnilpotent

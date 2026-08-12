@@ -98,7 +98,7 @@ theorem realSplitPinNative_reflection_factorization
           ⟨g, -, hg⟩
         rcases ih hrs with ⟨lp, hlp, hlpmem⟩
         refine ⟨g :: lp, ?_, ?_⟩
-        · simp only [List.foldr_cons, map_mul, map_one, hg, hlp,
+        · simp only [List.foldr_cons, map_mul, hg, hlp,
             nativeQuadraticReflectionProduct]
         · intro h hmem
           rcases List.mem_cons.mp hmem with rfl | hmem

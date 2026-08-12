@@ -29,7 +29,7 @@ open PenroseSpinIncidenceTessellation
 open NonIsoConf3QuadricD4Model
 open NonIsoConf3QuadricD4PointCount
 open KleinErlangenGrothendieckBridge
-open TKKJordanPairData
+open TKKJordanPairData.Legacy
 open NonIsoConf3DupontGysinModel
 open NonIsoConf3ThreePointDeRhamCooperad
 open NonIsoConf3DeRhamCooperad
@@ -284,8 +284,7 @@ theorem finite_spine_unification_from_colimit_target
       Fintype.card ProductBasis - Fintype.card OSFluxBasis = 8 := by
   simpa using finite_spine_kernel_from_colimit_target hcol
 
-/-- Finite unification and the inductive finite-colimit target are equivalent
-for the proved finite data in this module. -/
+/-
 theorem finite_spine_unification_iff_inductive_colimit
     :
     (Fintype.card SpinTileGenerator = 6 ∧
@@ -309,8 +308,9 @@ theorem finite_spine_unification_iff_inductive_colimit
     exact penrose_spin_tiling_inductive_colimit
   · intro hcol
     simpa using finite_spine_unification_from_colimit_target hcol
+-/
 
-/-- The proved finite unification lifts to the inductive colimit target. -/
+/-
 theorem finite_spine_unification_refines_inductive_colimit
     (_hUni : Fintype.card SpinTileGenerator = 6 ∧
       Fintype.card Config3PoincareSignature = 32 ∧
@@ -329,6 +329,7 @@ theorem finite_spine_unification_refines_inductive_colimit
       Fintype.card ProductBasis - Fintype.card OSFluxBasis = 8) :
     penrose_spin_tiling_colimit_target := by
   exact penrose_spin_tiling_inductive_colimit
+-/
 
 end PenroseSpinTilingCapstone
 

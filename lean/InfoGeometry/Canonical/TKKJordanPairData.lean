@@ -153,6 +153,28 @@ theorem bracket_grade_outside_zero {R : Type*} [CommRing R] (G : FiveGradedLieAl
     ⁅x, y⁆ = 0 :=
   G.bracket_eq_zero_none hij hx hy
 
+theorem gradeAdd_none_iff_natAbs_weight_sum_gt_two
+    (i j : TKKGrade) :
+    gradeAdd i j = none ↔
+      2 < Int.natAbs (weight i + weight j) := by
+  cases i <;> cases j <;> decide
+
+theorem gradeAdd_some_weight_eq_sum
+    {i j k : TKKGrade}
+    (hijk : gradeAdd i j = some k) :
+    weight k = weight i + weight j := by
+  cases i <;> cases j <;> cases k <;>
+    simp [gradeAdd, ofWeight, weight] at hijk ⊢
+
+theorem bracket_grade_outside_window_zero
+    {R : Type*} [CommRing R] (G : FiveGradedLieAlgebra R)
+    {i j : TKKGrade}
+    (hij : 2 < Int.natAbs (weight i + weight j))
+    {x y : G.L} (hx : x ∈ G.grade i) (hy : y ∈ G.grade j) :
+    ⁅x, y⁆ = 0 := by
+  exact bracket_grade_outside_zero G
+    ((gradeAdd_none_iff_natAbs_weight_sum_gt_two i j).2 hij) hx hy
+
 /-- Core definitional readout preserved from the archived lane. -/
 theorem tkk_jordan_pair_data_synthesis :
     gradeAdd z0 p1 = some p1 ∧

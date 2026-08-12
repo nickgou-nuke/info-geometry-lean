@@ -81,7 +81,7 @@ witnesses, certificates, or renamed placeholders.]
   `exp (ε • K) = cos ε • 1 + sin ε • K` from `K ^ 2 = -1`.
 * Prove `‖K‖ = 1` for the concrete phase-axis matrix from its chosen C*-norm,
   not merely from the algebraic relation `K ^ 2 = -1`.
-* Build the full `ℓ²(BinaryCantorBoundary) ⊗ DoubledSpace ℝ` completion and
+* Build the full `ℓ²((ℕ → BinarySector)) ⊗ DoubledSpace ℝ` completion and
   derive uniform continuity of the diagonal Cuntz shift from boundedness of
   the base shift and the fiber phase axis.
 -/

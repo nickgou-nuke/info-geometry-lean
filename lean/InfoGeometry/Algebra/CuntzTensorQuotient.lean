@@ -272,6 +272,12 @@ theorem star_cuntzMk (n : ℕ) (x : CuntzTensor n) :
   simp [RingQuot.mkAlgHom_def, RingQuot.mkRingHom_def]
   rfl
 
+@[simp] theorem star_cuntzAlg_algebraMap (n : ℕ) (c : ℂ) :
+    star (algebraMap ℂ (CuntzAlg n) c) = algebraMap ℂ (CuntzAlg n) c := by
+  rw [← (cuntzMk n).commutes c, star_cuntzMk]
+  change cuntzMk n (dagger n (algebraMap ℂ (CuntzTensor n) c)) = _
+  rw [dagger_algebraMap]
+
 /-- Star swaps the quotient generator `Sᵢ` with its formal adjoint. -/
 theorem star_cuntzS (n : ℕ) (i : Fin n) :
     star (cuntzS n i) = cuntzSdag n i := by

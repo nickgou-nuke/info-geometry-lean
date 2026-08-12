@@ -86,7 +86,7 @@ Required gate sequence:
    - python3 tools/infra/dag_doctor.py
    - require fail=0 for closure
 5) Pauli seal gate (mandatory):
-   - python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json
+   - python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry --json-out reports/pauli-seal-audit.json
    - require zero findings for closure
 
 If any gate fails:

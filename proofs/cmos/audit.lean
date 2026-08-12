@@ -1,8 +1,0 @@
-import proofs.SplitOctonionDerivationSkew44
-import InfoGeometry.Canonical.EntropyRegularizedSelector
-
-#print axioms InfoGeometry.Canonical.entropy_regularized_selector_identity
-#print axioms InfoGeometry.Canonical.softmax_global_minimizer
-
-#print axioms OctDerivation.derivation_is_skew_splitBilinear
-#print axioms OctDerivation.derivationToSO44LieHom

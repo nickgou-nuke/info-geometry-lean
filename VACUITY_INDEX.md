@@ -1,6 +1,6 @@
 # Vacuity Index
 
-Generated: `2026-07-22 00:07:00`
+Generated: `2026-08-10 19:51:40`
 
 This report tracks alias-driven and identity-transport surfaces, prioritized by whether they are actually graph-active in the exported declaration graph.
 

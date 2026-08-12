@@ -1,7 +1,9 @@
 import Mathlib
+import InfoGeometry.Canonical.FiniteMatrixGibbsFunctional
 
 open Matrix
 open scoped ComplexConjugate
+open scoped MatrixOrder ComplexOrder
 
 noncomputable section
 
@@ -14,7 +16,7 @@ abbrev FiniteObservable (n : Type*) [Fintype n] := Matrix n n ℂ
 structure DensityMatrix (n : Type*) [Fintype n] [DecidableEq n] where
   val : Matrix n n ℂ
   hermitian : valᴴ = val
-  pos : ∀ v : n → ℂ, 0 ≤ (star v ⬝ᵥ (val *ᵥ v)).re
+  pos : 0 ≤ val
   trace_one : trace val = 1
 
 def matrixState (ρ : DensityMatrix n) : Matrix n n ℂ →ₗ[ℂ] ℂ where
@@ -39,9 +41,9 @@ theorem trace_mul_comm_lem (A B : Matrix n n ℂ) :
 omit [DecidableEq n] in
 theorem trace_mul_cycle_three (A B C : Matrix n n ℂ) :
     trace (A * B * C) = trace (B * C * A) := by
-  rw [Matrix.trace_mul_comm (A * B) C, Matrix.mul_assoc]
+  simpa [Matrix.mul_assoc] using Matrix.trace_mul_comm A (B * C)
 
-theorem trace_conjugation (A U U_inv : Matrix n n ℂ) (hU_inv_U : U_inv * U = 1) (hU_U_inv : U * U_inv = 1) :
+theorem trace_conjugation (A U U_inv : Matrix n n ℂ) (hU_U_inv : U * U_inv = 1) :
     trace (U_inv * A * U) = trace A := by
   calc
     trace (U_inv * A * U) = trace (U * (U_inv * A)) := by rw [Matrix.trace_mul_comm]
@@ -56,9 +58,10 @@ theorem matrixState_star (ρ : DensityMatrix n) (A : Matrix n n ℂ) :
     exact (Matrix.trace_conjTranspose (ρ.val * A)).symm
   rw [ht, Matrix.conjTranspose_mul, ρ.hermitian, Matrix.trace_mul_comm]
 
-theorem matrixState_positive (ρ : DensityMatrix n) (A : Matrix n n ℂ) :
+theorem matrixState_positive [Nonempty n] (ρ : DensityMatrix n) (A : Matrix n n ℂ) :
     0 ≤ (matrixState ρ (Aᴴ * A)).re := by
-  sorry
+  exact InfoGeometry.Canonical.FiniteMatrixGibbsFunctional.weightedTrace_nonneg
+    ρ.val (Matrix.nonneg_iff_posSemidef.mp ρ.pos) A
 
 /-- Finite-Dimensional Dynamics -/
 structure FiniteStarDynamics (n : Type*) [Fintype n] [DecidableEq n] where
@@ -71,26 +74,30 @@ def IsInvariantState (ω : Matrix n n ℂ →ₗ[ℂ] ℂ) (dyn : FiniteStarDyna
 
 /-- Finite Gibbs Specialization & KMS Identity -/
 
--- Abstract stub for matrix exponential
-opaque matrixExp : Matrix n n ℂ → Matrix n n ℂ
-
-def imaginaryTimeEvolution (H : Matrix n n ℂ) (β : ℝ) (B : Matrix n n ℂ) : Matrix n n ℂ :=
-  matrixExp ((-β) • H) * B * matrixExp (β • H)
-
--- Explicit stub for Gibbs density
-axiom gibbsDensity (H : Matrix n n ℂ) (hH : Hᴴ = H) (β : ℝ) : DensityMatrix n
-
-/-- 
-The finite-dimensional KMS identity.
-Reduces exactly to e^{-βH} e^{βH} = I and trace cyclicity.
--/
-theorem finite_gibbs_kms
-    (H : Matrix n n ℂ)
-    (hH : Hᴴ = H)
-    (β : ℝ)
+/- Finite weighted KMS identity.  The density and the imaginary-time
+evolution are explicit inputs; no exponential or unproved existence claim is
+introduced here. -/
+theorem finite_weighted_kms
+    (ρ : DensityMatrix n) (c : ℂ)
+    (U U_inv : Matrix n n ℂ)
+    (hρ : ρ.val = c • U)
+    (hU_inv_U : U_inv * U = 1)
     (A B : Matrix n n ℂ) :
-    matrixState (gibbsDensity H hH β) (A * imaginaryTimeEvolution H β B) =
-    matrixState (gibbsDensity H hH β) (B * A) := by
-  sorry
+    matrixState ρ (A * (U * B * U_inv)) =
+      matrixState ρ (B * A) := by
+  rw [matrixState_apply, matrixState_apply, hρ]
+  simp only [smul_mul_assoc, Matrix.trace_smul]
+  congr 1
+  calc
+    Matrix.trace (U * (A * (U * B * U_inv))) =
+        Matrix.trace (A * (U * B * U_inv) * U) := by
+      simpa [Matrix.mul_assoc] using Matrix.trace_mul_comm U (A * (U * B * U_inv))
+    _ = Matrix.trace (A * U * B * (U_inv * U)) := by
+      simp only [Matrix.mul_assoc]
+    _ = Matrix.trace (A * U * B) := by
+      rw [hU_inv_U]
+      simp
+    _ = Matrix.trace (U * (B * A)) := by
+      simpa [Matrix.mul_assoc] using Matrix.trace_mul_comm A (U * B)
 
 end FiniteMatrixKMS

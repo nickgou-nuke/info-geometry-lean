@@ -125,6 +125,55 @@ lemma Z_pos [Nonempty ι] (θ : ι → ℝ) : 0 < Z θ := by
         exact Real.exp_pos _)
       Finset.univ_nonempty
 
+/-- A common additive shift of all natural parameters translates the
+log-partition potential by the same amount. -/
+theorem Phi_add_const [Nonempty ι] (θ : ι → ℝ) (c : ℝ) :
+    Phi (fun i => θ i + c) = Phi θ + c := by
+  have hZ : 0 < Z θ := Z_pos θ
+  have hscale :
+      Z (fun i => θ i + c) = Real.exp c * Z θ := by
+    unfold Z
+    calc
+      ∑ i, Real.exp (θ i + c) = ∑ i, (Real.exp (θ i) * Real.exp c) := by
+        apply Finset.sum_congr rfl
+        intro i hi
+        rw [Real.exp_add]
+      _ = (∑ i, Real.exp (θ i)) * Real.exp c := by
+        rw [Finset.sum_mul]
+      _ = Real.exp c * Z θ := by
+        simp [Z, mul_comm]
+  unfold Phi
+  rw [hscale, Real.log_mul (Real.exp_ne_zero c) hZ.ne']
+  simp
+  ring
+
+/-- The normalized finite Gibbs probabilities are invariant under a common
+additive shift of all natural parameters. -/
+theorem prob_add_const [Nonempty ι] (θ : ι → ℝ) (c : ℝ) (i : ι) :
+    prob (fun j => θ j + c) i = prob θ i := by
+  have hZ : 0 < Z θ := Z_pos θ
+  have hscale :
+      Z (fun j => θ j + c) = Real.exp c * Z θ := by
+    unfold Z
+    calc
+      ∑ j, Real.exp (θ j + c) = ∑ j, (Real.exp (θ j) * Real.exp c) := by
+        apply Finset.sum_congr rfl
+        intro j hj
+        rw [Real.exp_add]
+      _ = (∑ j, Real.exp (θ j)) * Real.exp c := by
+        rw [Finset.sum_mul]
+      _ = Real.exp c * Z θ := by simp [Z, mul_comm]
+  unfold prob
+  rw [Real.exp_add, hscale]
+  field_simp [Real.exp_ne_zero c, hZ.ne']
+
+/-- The algebraic log-density is likewise unchanged by a common shift. -/
+theorem logDensity_add_const [Nonempty ι] (θ : ι → ℝ) (c : ℝ) (i : ι) :
+    logDensity (fun j => θ j + c) i = logDensity θ i := by
+  unfold logDensity
+  rw [Phi_add_const θ c]
+  ring
+
 lemma prob_pos (θ : ι → ℝ) (hZ : 0 < Z θ) (i : ι) :
     0 < prob θ i := by
   unfold prob

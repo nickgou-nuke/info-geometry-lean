@@ -176,17 +176,17 @@ inductive BetaEdge where
   deriving DecidableEq, Fintype, Repr
 
 /-- Named Arnold triangle relation in degree two. -/
-structure ArnoldRelation where
-  name : String
-  degree : ℕ
-  deriving Repr
+inductive ArnoldRelation
+  | alphaTriangle
+  deriving DecidableEq, Repr
 
 /-- The alpha Arnold relation in degree two. -/
-def alphaArnold : ArnoldRelation where
-  name := "alpha12*alpha23 - alpha12*alpha13 + alpha23*alpha13 = 0"
-  degree := 2
+def alphaArnold : ArnoldRelation := .alphaTriangle
 
-@[simp] theorem alphaArnold_degree : alphaArnold.degree = 2 := rfl
+def arnoldRelationDegree : ArnoldRelation → ℕ
+  | .alphaTriangle => 2
+
+@[simp] theorem alphaArnold_degree : arnoldRelationDegree alphaArnold = 2 := rfl
 
 /-- Reuse the arity-three cooperad edge bookkeeping from `QuadraticConfiguration3`. -/
 def cooperadOnAlpha (b : BlockDecomp3) (e : Edge3) : TargetFactor × GenKind :=

@@ -100,7 +100,7 @@ def leftRegular (x : SplitOctonion) : Module.End ℝ SplitOctonion :=
     map_add' := by
       intro y z
       apply SplitOctonion.ext <;>
-        simp [mul_a, mul_b, add_a, add_b, add_mul, mul_add] <;> abel
+        simp [mul_a, mul_b, add_a, add_b, mul_add]
     map_smul' := by
       intro r y
       apply SplitOctonion.ext <;>
@@ -111,7 +111,7 @@ def rightRegular (x : SplitOctonion) : Module.End ℝ SplitOctonion :=
     map_add' := by
       intro y z
       apply SplitOctonion.ext <;>
-        simp [mul_a, mul_b, add_a, add_b, add_mul, mul_add] <;> abel
+        simp [mul_a, mul_b, add_a, add_b, add_mul]
     map_smul' := by
       intro r y
       apply SplitOctonion.ext <;>

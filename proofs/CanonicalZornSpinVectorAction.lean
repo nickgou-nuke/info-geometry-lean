@@ -1,4 +1,5 @@
-import proofs.CanonicalZornSpinChirality
+import InfoGeometry.Canonical.CanonicalZornSpinChirality
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-!
 # Vector action induced by canonical Zorn spin conjugation
@@ -15,7 +16,7 @@ noncomputable section
 
 namespace CanonicalZornSpinVectorAction
 
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 open CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation
 open CanonicalZornSpinChirality

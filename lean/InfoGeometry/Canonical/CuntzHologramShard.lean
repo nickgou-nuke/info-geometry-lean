@@ -28,24 +28,27 @@ namespace InfoGeometry.Canonical.CuntzHologramShard
 open InfoGeometry.Topology
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
-variable (C : InfoGeometry.Topology.CuntzO2Carrier Op)
+variable (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op)
 
 /-- The left branch is an isometric copy of the whole observable lane. -/
 theorem left_branch_recovers_whole (X : Op) :
-    star C.S_left * (C.S_left * X) = X := by
-  rw [← mul_assoc, C.left_isometry, one_mul]
+    star (InfoGeometry.Topology.CuntzO2Carrier.S_left C) *
+        (InfoGeometry.Topology.CuntzO2Carrier.S_left C * X) = X := by
+  rw [← mul_assoc, InfoGeometry.Topology.CuntzO2Carrier.left_isometry, one_mul]
 
 /-- The right branch is an isometric copy of the whole observable lane. -/
 theorem right_branch_recovers_whole (X : Op) :
-    star C.S_right * (C.S_right * X) = X := by
-  rw [← mul_assoc, C.right_isometry, one_mul]
+    star (InfoGeometry.Topology.CuntzO2Carrier.S_right C) *
+        (InfoGeometry.Topology.CuntzO2Carrier.S_right C * X) = X := by
+  rw [← mul_assoc, InfoGeometry.Topology.CuntzO2Carrier.right_isometry, one_mul]
 
 /-- The two branch range projections reconstruct the identity exactly. -/
 theorem branch_projections_sum_identity :
-    C.leftRangeProjection + C.rightRangeProjection = 1 :=
-  C.range_sum
+    InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C +
+        InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C = 1 :=
+  InfoGeometry.Topology.CuntzO2Carrier.range_sum C
 
-/-- The Cuntz canonical endomorphism is unital: the whole is redistributed across the shards. -/
+/-- The Cuntz canonical transfer map is unital: the whole is redistributed across the shards. -/
 theorem whole_redistributed_across_shards :
     InfoGeometry.Topology.CuntzMap.map Op C 1 = 1 :=
   InfoGeometry.Topology.CuntzMap.map_unital Op C
@@ -54,8 +57,10 @@ theorem whole_redistributed_across_shards :
 theorem hologram_readout_fixed
     (φ : Op →+ ℝ)
     (X : Op)
-    (hleft : φ (C.S_left * X * star C.S_left) = (1 / 2 : ℝ) * φ X)
-    (hright : φ (C.S_right * X * star C.S_right) = (1 / 2 : ℝ) * φ X) :
+    (hleft : φ (InfoGeometry.Topology.CuntzO2Carrier.S_left C * X *
+      star (InfoGeometry.Topology.CuntzO2Carrier.S_left C)) = (1 / 2 : ℝ) * φ X)
+    (hright : φ (InfoGeometry.Topology.CuntzO2Carrier.S_right C * X *
+      star (InfoGeometry.Topology.CuntzO2Carrier.S_right C)) = (1 / 2 : ℝ) * φ X) :
     φ (InfoGeometry.Topology.CuntzMap.map Op C X) = φ X :=
   InfoGeometry.Topology.CuntzMap.map_real_fixed_point_of_half_branch_scaling Op C φ X hleft hright
 

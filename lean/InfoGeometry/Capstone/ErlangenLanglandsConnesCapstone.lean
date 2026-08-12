@@ -133,7 +133,7 @@ def ConnesAnomalyDikinStatement
     (tilt proj : Matrix (Fin 2) (Fin 2) ℂ)
     (hProj : proj * proj = proj)
     (ε : ℝ) : Prop :=
-    index_pairing tilt (⟨proj, hProj⟩ : KTheoryProjection 2) = 0 ∧
+    CyclicCocycleCantor.finiteIndexPairing tilt (⟨proj, hProj⟩ : CyclicCocycleCantor.KTheoryProjection 2) = 0 ∧
     Real.sqrt (2 * ((Real.cos ε - 1) ^ 2 + (Real.sin ε - ε) ^ 2)) ≤
       (2 * Real.sqrt 2) * ε ^ 2
 

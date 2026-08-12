@@ -102,8 +102,8 @@ theorem log_partition_eq (β : ℝ) : Real.log (partitionFn β) = β^2/2 := by
   dsimp [partitionFn]
   rw [Real.log_exp]
 
-/-- The Souriau cocycle: θ(g) = J_M(g·x) - Ad*_g(J_M(x)) -/
-def souriauCocycle (g : ℝ) (J_M x : ℝ) : ℝ := 0
+/-- A named zero cocycle for the degenerate finite toy model. -/
+def zeroSouriauCocycle (g : ℝ) (J_M x : ℝ) : ℝ := 0
 
 /-- The Gibbs state as a function of the thermodynamic covector -/
 def gibbsState (J_M β : ℝ) : ℝ := Real.exp (-J_M * β) / partitionFn β
@@ -135,35 +135,37 @@ theorem souriau_pairing_energy_eq_inner {M 𝔤 : Type} [NormedAddCommGroup 𝔤
    BLOCK 3: INFORMATION GEOMETRY AND METRIPLECTIC DYNAMICS
    ═════════════════════════════════════════════════════════════════════-/
 
-/-- Fisher metric as the Hessian of log partition: g_F = ∇² log Z -/
-noncomputable def fisherMetric (β : ℝ) : ℝ := 1
-
-/-- Fisher information = Fisher metric for 1-parameter family -/
-noncomputable def fisherInfo : ℝ := 1
-
 /-- Cramér-Rao bound: Var(θ̂) · I(θ) ≥ 1 -/
 def cramerRao (variance I : ℝ) : Prop := variance * I ≥ 1
 
-/-- Poisson bracket (antisymmetric, generates Hamiltonian flow) -/
-def poissonBracket (F G : ℝ → ℝ) (x : ℝ) : ℝ := 0
+/-- Zero Poisson bracket for the degenerate finite toy model. -/
+def zeroPoissonBracket (F G : ℝ → ℝ) (x : ℝ) : ℝ := 0
 
-/-- Dissipative bracket (symmetric, produces entropy) -/
-def dissipativeBracket (F S : ℝ → ℝ) (x : ℝ) : ℝ := 0
+/-- Zero dissipative bracket for the degenerate finite toy model. -/
+def zeroDissipativeBracket (F S : ℝ → ℝ) (x : ℝ) : ℝ := 0
 
-/-- Metriplectic generator: Ḟ = {F, H} + (F, S) -/
-def metriplectic (H S F : ℝ → ℝ) (x : ℝ) : ℝ :=
+/-- Metriplectic generator for explicitly supplied bracket operations. -/
+def metriplectic
+    (poissonBracket dissipativeBracket : (ℝ → ℝ) → (ℝ → ℝ) → ℝ → ℝ)
+    (H S F : ℝ → ℝ) (x : ℝ) : ℝ :=
   poissonBracket F H x + dissipativeBracket F S x
 
-/-- Energy conservation: {H, H} = 0 (antisymmetry of Poisson bracket) -/
-theorem energy_conservation (H : ℝ → ℝ) (x : ℝ) : poissonBracket H H x = 0 := by
-  rfl
+/-- Energy conservation from diagonal vanishing of the supplied bracket. -/
+theorem energy_conservation
+    (poissonBracket : (ℝ → ℝ) → (ℝ → ℝ) → ℝ → ℝ)
+    (hskew : ∀ F x, poissonBracket F F x = 0)
+    (H : ℝ → ℝ) (x : ℝ) : poissonBracket H H x = 0 :=
+  hskew H x
 
-/-- Entropy production: (S, S) ≥ 0 (positivity of metric bracket) -/
-theorem entropy_production (S : ℝ → ℝ) (x : ℝ) : dissipativeBracket S S x ≥ 0 := by
-  simp [dissipativeBracket]
+/-- Entropy production from positivity of the supplied dissipative bracket. -/
+theorem entropy_production
+    (dissipativeBracket : (ℝ → ℝ) → (ℝ → ℝ) → ℝ → ℝ)
+    (hpositive : ∀ F x, 0 ≤ dissipativeBracket F F x)
+    (S : ℝ → ℝ) (x : ℝ) : 0 ≤ dissipativeBracket S S x :=
+  hpositive S x
 
-/-- The Onsager operator L = -d²S/dX² (from T25 tri-projector) -/
-noncomputable def onsagerOperator : ℝ := 0
+/-- Zero Onsager operator for the degenerate finite toy model. -/
+noncomputable def zeroOnsagerOperator : ℝ := 0
 
 /-══════════════════════════════════════════════════════════════════════
    THE UNIFIED FORMULA
@@ -200,13 +202,13 @@ structure NonequilibriumQuantumThermodynamics where
 #check ThermodynamicCovector
 #check partitionFn
 #check log_partition_eq
-#check souriauCocycle
+#check zeroSouriauCocycle
 #check gibbsState
-#check fisherMetric
 #check cramerRao
-#check poissonBracket
-#check dissipativeBracket
+#check zeroPoissonBracket
+#check zeroDissipativeBracket
 #check metriplectic
 #check energy_conservation
 #check entropy_production
+#check zeroOnsagerOperator
 #check NonequilibriumQuantumThermodynamics

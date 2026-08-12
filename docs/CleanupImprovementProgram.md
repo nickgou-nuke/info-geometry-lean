@@ -74,7 +74,7 @@ Actions:
 6. Keep this gate mandatory in `scripts/audit_surrogates.sh`.
 
 Exit criteria:
-1. `python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical` exits `0`.
+1. `python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry` exits `0`.
 
 ### W1. Gate Stabilization
 
@@ -222,7 +222,7 @@ python3 tools/quality/check_translation_registry.py \
   --required-anchor InfoGeometry.Canonical.KKTCore.uPlus_eq_gOnePart \
   --required-anchor InfoGeometry.Canonical.KKTCore.uPlus_mul_uPlus_eq_zero \
   --required-anchor InfoGeometry.Canonical.KKTCore.commutator_uPlus_uMinus_isGZero
-python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json
+python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry --json-out reports/pauli-seal-audit.json
 python3 tools/infra/module_keyword_theory_program.py --module InfoGeometry.Canonical.AQFTOperatorInterface --module InfoGeometry.Canonical.CalabiYauBridge --module InfoGeometry.Canonical.ConformalUnification --module InfoGeometry.Canonical.GrandSynthesis --json-out reports/dag/module-theory-program.json --md-out reports/dag/module-theory-program.md
 /bin/bash -lc "PYTHONPATH=. lake script run strictCheck"
 ```

@@ -130,7 +130,7 @@ def fundamentalCocycle : Matrix (Fin 2) (Fin 2) ℂ :=
 def catalanNumber (n : ℕ) : ℕ :=
   Nat.choose (2*n) n / (n+1)
 
-theorem cocycle_count_is_catalan : catalanNumber 0 = 1 := by rfl
+theorem catalanNumber_zero : catalanNumber 0 = 1 := by rfl
 
 ---------------------------------------------------------------
 -- 2. The Gromov-Witten Generating Function = GUE Tau Function
@@ -153,7 +153,7 @@ theorem cocycle_count_is_catalan : catalanNumber 0 = 1 := by rfl
 /-- The GW partition function at genus 0:
     Z_GW_g0(t) = Σ_{n≥0} C_n t^{2n+2} where C_n is the n-th Catalan number.
     = t² + 2t⁴ + 5t⁶ + 14t⁸ + 42t¹⁰ + ... -/
-theorem gw_partition_function_genus_zero : catalanNumber 1 = 1 := by rfl
+theorem catalanNumber_one : catalanNumber 1 = 1 := by rfl
 
 /-- **Okounkov's Theorem (2002, Fields Medal 2006):**
     The Gromov-Witten partition function of a target space X is the
@@ -167,7 +167,7 @@ theorem gw_partition_function_genus_zero : catalanNumber 1 = 1 := by rfl
 
     where Z_GUE(t) = ⟨det(t−H)⟩_{GUE} is the expectation of the
     characteristic polynomial in the Gaussian Unitary Ensemble. -/
-theorem okounkov_theorem_chiral : catalanNumber 2 = 2 := by rfl
+theorem catalanNumber_two : catalanNumber 2 = 2 := by rfl
 
 ---------------------------------------------------------------
 -- 3. The Grothendieck Motive of Spacetime
@@ -206,17 +206,28 @@ theorem okounkov_theorem_chiral : catalanNumber 2 = 2 := by rfl
     cohomologies. The chiral algebra IS the motive. -/
 
 structure SpacetimeMotive where
-  underlyingAlgebra : String := "M₂(ℂ) = span{N₊, N₋, S₊, S₋}"
-  tkkGrading : String := "5-graded TKK closure → so(1,3) ≅ sl(2,ℂ)"
-  modularEquivalence : String := "Δ^{it} equivalence (KMS condition)"
-  bettiRealization : String := "Cocycle count = Catalan numbers C_n"
-  deRhamRealization : String := "Bures metric ds² = (dx²+dy²+dz²)/(1−r²)"
-  lAdicRealization : String := "Prime gap statistics = Montgomery-Odlyzko"
-  crystallineRealization : String := "GUE eigenvalue repulsion S² = 4r²"
-  hodgeRealization : String := "Kantor triple {x,y,z} = x·y†·z + z·y†·x"
-  gwRealization : String := "GW invariants = volume in Planck units"
-  masterIdentity : String :=
-    "All realizations compute the same integers.\n     The motive is the Rosetta Stone of mathematics."
+  /-- Dimension of the finite carrier recorded by this data object. -/
+  carrierDimension : ℕ
+  /-- A finite cocycle count. -/
+  cocycleCount : ℕ
+  /-- A second finite realization of the same count. -/
+  realizationCount : ℕ
+  /-- The equality relating the two recorded finite realizations. -/
+  realization_agrees : cocycleCount = realizationCount
+
+/-- A concrete finite datum, with no implicit geometric or cohomological claims. -/
+def canonicalSpacetimeMotive : SpacetimeMotive :=
+  { carrierDimension := 4
+    cocycleCount := catalanNumber 0
+    realizationCount := catalanNumber 0
+    realization_agrees := rfl }
+
+theorem canonicalSpacetimeMotive_dimension :
+    canonicalSpacetimeMotive.carrierDimension = 4 := by rfl
+
+theorem canonicalSpacetimeMotive_realization :
+    canonicalSpacetimeMotive.cocycleCount = canonicalSpacetimeMotive.realizationCount := by
+  exact canonicalSpacetimeMotive.realization_agrees
 
 /-- The master theorem of enumerative geometry for the chiral framework:
     Volume IS the Gromov-Witten invariant of the chiral Klein boundary.
@@ -228,7 +239,7 @@ structure SpacetimeMotive where
     This is the statement that space is pixelated at the Planck scale,
     with each Planck volume corresponding to one fundamental chiral
     tunneling loop. -/
-theorem volume_is_gromov_witten_invariant : catalanNumber 3 = 5 := by rfl
+theorem catalanNumber_three : catalanNumber 3 = 5 := by rfl
 
 ---------------------------------------------------------------
 -- 4. The Coincidence Matrix as a GW Counter
@@ -255,7 +266,7 @@ theorem volume_is_gromov_witten_invariant : catalanNumber 3 = 5 := by rfl
 
     This is a length-4 word: S₊ S₋ S₋ S₊ = N₊ (using the
     appropriate projectors for states i and j). -/
-theorem coincidence_is_cocycle : catalanNumber 4 = 14 := by rfl
+theorem catalanNumber_four : catalanNumber 4 = 14 := by rfl
 
 ---------------------------------------------------------------
 -- 5. The Full Equivalence Chain
@@ -279,7 +290,7 @@ theorem coincidence_is_cocycle : catalanNumber 4 = 14 := by rfl
     Every arrow is an isomorphism. The motive is invariant
     under all arrows. The chiral algebra M₂(ℂ) = span{N₊, N₋, S₊, S₋}
     is the underlying object whose TKK closure generates the whole chain. -/
-theorem full_equivalence_chain : catalanNumber 5 = 42 := by rfl
+theorem catalanNumber_five : catalanNumber 5 = 42 := by rfl
 
 ---------------------------------------------------------------
 -- 6. Connection to Existing Codebase Infrastructure
@@ -305,6 +316,6 @@ theorem full_equivalence_chain : catalanNumber 5 = 42 := by rfl
     TKKClosureErlangenGeometry.lean               5-graded TKK → Minkowski metric
     LQGProblemsResolvedByChiralFramework.lean     GUE S² → Volume
     PenroseSpinNetworkChiralIsomorphism.lean      Spin network → Chiral algebra -/
-theorem codebase_synthesis : catalanNumber 6 = 132 := by rfl
+theorem catalanNumber_six : catalanNumber 6 = 132 := by rfl
 
 end

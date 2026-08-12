@@ -42,15 +42,19 @@ def blocksToStokes : OperatorBlocks →ₗ[ℂ] StokesQuad where
   map_smul' c A := by
     apply Prod.ext
     · ext i j
-      simp [Matrix.smul_apply] <;> ring
+      simp [Matrix.smul_apply]
+      ring
     · apply Prod.ext
       · ext i j
-        simp [Matrix.smul_apply] <;> ring
+        simp [Matrix.smul_apply]
+        ring
       · apply Prod.ext
         · ext i j
-          simp [Matrix.smul_apply] <;> ring
+          simp [Matrix.smul_apply]
+          ring
         · ext i j
-          simp [Matrix.smul_apply] <;> ring
+          simp [Matrix.smul_apply]
+          ring
 
 def stokesToBlocks : StokesQuad →ₗ[ℂ] OperatorBlocks where
   toFun q :=
@@ -78,53 +82,77 @@ def stokesToBlocks : StokesQuad →ₗ[ℂ] OperatorBlocks where
   map_smul' c A := by
     apply Prod.ext
     · ext i j
-      simp [Matrix.smul_apply] <;> ring
+      simp [Matrix.smul_apply]
     · apply Prod.ext
       · ext i j
-        simp [Matrix.smul_apply] <;> ring
+        simp [Matrix.smul_apply]
+        ring
       · apply Prod.ext
         · ext i j
-          simp [Matrix.smul_apply] <;> ring
+          simp [Matrix.smul_apply]
+          ring
         · ext i j
-          simp [Matrix.smul_apply] <;> ring
+          simp [Matrix.smul_apply]
+          ring
 
 theorem stokesToBlocks_blocksToStokes (b : OperatorBlocks) :
     stokesToBlocks (blocksToStokes b) = b := by
   rcases b with ⟨pp, pn, np, nn⟩
   apply Prod.ext
   · ext i j
-    simp [blocksToStokes, stokesToBlocks] <;>
-      field_simp <;> ring_nf <;> simp [Complex.I_mul_I] <;> ring
+    simp [blocksToStokes, stokesToBlocks]
+    all_goals field_simp
+    all_goals ring_nf
   · apply Prod.ext
     · ext i j
-      simp [blocksToStokes, stokesToBlocks] <;>
-        field_simp <;> ring_nf <;> simp [Complex.I_mul_I] <;> ring
+      simp [blocksToStokes, stokesToBlocks]
+      all_goals field_simp
+      all_goals ring_nf
+      all_goals ring_nf
+      all_goals simp [Complex.I_mul_I]
+      all_goals ring
     · apply Prod.ext
       · ext i j
-        simp [blocksToStokes, stokesToBlocks] <;>
-          field_simp <;> ring_nf <;> simp [Complex.I_mul_I] <;> ring
+        simp [blocksToStokes, stokesToBlocks]
+        all_goals field_simp
+        all_goals ring_nf
+        all_goals simp [Complex.I_mul_I]
+        all_goals ring
       · ext i j
-        simp [blocksToStokes, stokesToBlocks] <;>
-          field_simp <;> ring_nf <;> simp [Complex.I_mul_I] <;> ring
+        simp [blocksToStokes, stokesToBlocks]
+        all_goals field_simp
+        all_goals ring_nf
+        all_goals simp [Complex.I_mul_I]
+        all_goals ring
 
 theorem blocksToStokes_stokesToBlocks (q : StokesQuad) :
     blocksToStokes (stokesToBlocks q) = q := by
   rcases q with ⟨a0, a1, a2, a3⟩
   apply Prod.ext
   · ext i j
-    simp [blocksToStokes, stokesToBlocks] <;>
-      field_simp <;> ring_nf <;> simp [Complex.I_mul_I] <;> ring
+    simp [blocksToStokes, stokesToBlocks]
+    all_goals field_simp
+    all_goals ring_nf
   · apply Prod.ext
     · ext i j
-      simp [blocksToStokes, stokesToBlocks] <;>
-        field_simp <;> ring_nf <;> simp [Complex.I_mul_I] <;> ring
+      simp [blocksToStokes, stokesToBlocks]
+      all_goals field_simp
+      all_goals ring_nf
+      all_goals simp [Complex.I_mul_I]
+      all_goals ring
     · apply Prod.ext
       · ext i j
-        simp [blocksToStokes, stokesToBlocks] <;>
-          field_simp <;> ring_nf <;> simp [Complex.I_mul_I] <;> ring
+        simp [blocksToStokes, stokesToBlocks]
+        all_goals field_simp
+        all_goals ring_nf
+        all_goals simp [Complex.I_mul_I]
+        all_goals ring
       · ext i j
-        simp [blocksToStokes, stokesToBlocks] <;>
-          field_simp <;> ring_nf <;> simp [Complex.I_mul_I] <;> ring
+        simp [blocksToStokes, stokesToBlocks]
+        all_goals field_simp
+        all_goals ring_nf
+        all_goals simp [Complex.I_mul_I]
+        all_goals ring
 
 def stokesLinearEquiv : OperatorBlocks ≃ₗ[ℂ] StokesQuad where
   toLinearMap := blocksToStokes

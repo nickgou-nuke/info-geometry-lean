@@ -1,7 +1,10 @@
 import InfoGeometry.Clifford.BottPeriodicity
 import InfoGeometry.Clifford.OpSignatureBridge
 import InfoGeometry.Clifford.OctonionParavectorBridge
+import InfoGeometry.Clifford.ProjectedCliffordAssociatorDefect
+import InfoGeometry.Clifford.ProjectedShadowAkivisDefect
 import InfoGeometry.Clifford.FanoOctonionParavector
+import InfoGeometry.Clifford.FanoProjectedAssociatorWitness
 import InfoGeometry.Clifford.BottSupergradedCartanBridge
 import InfoGeometry.Clifford.BudinichCliqueSpinor
 import InfoGeometry.Clifford.BudinichMaximumCliquePureSpinor
@@ -22,6 +25,12 @@ import InfoGeometry.Clifford.SplitCartanHopWittBridge
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Clifford.OperatorValuedJones
 import InfoGeometry.Clifford.OperatorValuedJonesProduct
+import InfoGeometry.Clifford.TwistedChiralLinking
+import InfoGeometry.Clifford.TwistedChiralProjectionAlgebra
+import InfoGeometry.Clifford.OperatorValuedChiralCliffordFrame
+import InfoGeometry.Clifford.ChiralProjectorBerryCurvature
+import InfoGeometry.Clifford.CommutantSpinConnectionCPT
+import InfoGeometry.Clifford.CliffordAxialCommutantImage
 import InfoGeometry.Clifford.ChiralLorentzCARLift
 import InfoGeometry.Clifford.ChiralLorentzFockQuadratic
 import InfoGeometry.Clifford.Cl55OperatorDiracSystem
@@ -31,10 +40,13 @@ import InfoGeometry.Clifford.Cl55SpinBivectorImage
 import InfoGeometry.Clifford.Cl11OscillationBridge
 import InfoGeometry.Clifford.Cl11CoordinateAlgebra
 import InfoGeometry.Clifford.Cl44Spinors
+import InfoGeometry.Clifford.Cl44SplitQuaternionSector
 import InfoGeometry.Clifford.Cl11TensorTower
 import InfoGeometry.Clifford.Cl11TensorTowerKroneckerRangeRank
 import InfoGeometry.Clifford.Cl11TensorTowerNormalizedTrace
 import InfoGeometry.Clifford.SplitCliffordNativeTensorFinrank
+import InfoGeometry.Clifford.SplitCliffordFourPlaneWittClosure
+import InfoGeometry.Clifford.SplitRealNullTetrad
 import InfoGeometry.Clifford.JordanWignerBridge
 import InfoGeometry.Clifford.JordanWignerCAR
 import InfoGeometry.Clifford.MatToCantorOperator
@@ -52,6 +64,12 @@ import InfoGeometry.Clifford.FiniteTiltDiracShell
 import InfoGeometry.Clifford.FiniteTiltDiracShellChiralSplit
 import InfoGeometry.Clifford.GammaMatrices
 import InfoGeometry.Clifford.SpinorRep
+import InfoGeometry.Clifford.FiniteExteriorSpinorAction
+import InfoGeometry.Clifford.LorentzianBivectorSignatureBridge
+import InfoGeometry.Clifford.BivectorPairConditionalClosure
+import InfoGeometry.Clifford.TwistedBivectorInteraction
+import InfoGeometry.Clifford.Cl55ConcreteBivectorSignature
+import InfoGeometry.Clifford.B45R10CommutingLoxodromicBridge
 import InfoGeometry.Clifford.Cl55SpinorDimensionReadout
 import InfoGeometry.Clifford.Cl55SpinorZornReadout
 import InfoGeometry.Clifford.SpinorRep_REAL
@@ -61,6 +79,8 @@ import InfoGeometry.Clifford.SplitQuaternion
 import InfoGeometry.Clifford.SplitBiquaternion
 import InfoGeometry.Clifford.SplitBiquaternionExponential
 import InfoGeometry.Clifford.SplitQuaternionNilpotentFlow
+import InfoGeometry.Clifford.SplitQuaternionNilpotentMobiusBridge
+import InfoGeometry.Clifford.SplitQuaternionNilpotentChiralCARBridge
 import InfoGeometry.Clifford.SplitQuaternionFlowCoordinates
 import InfoGeometry.Clifford.MonodromyFlowAdapter
 import InfoGeometry.Clifford.ModularCftBridge
@@ -87,6 +107,7 @@ import InfoGeometry.Clifford.NeutralPhaseSpaceCore
 import InfoGeometry.Clifford.NeutralPhaseSpaceRankOne
 import InfoGeometry.Clifford.Relations
 import InfoGeometry.Clifford.Soldering
+import InfoGeometry.Clifford.QuaternionPauliRealForm
 import InfoGeometry.Clifford.Spacetime
 import InfoGeometry.Clifford.STAOperators
 import InfoGeometry.Clifford.SplitQ11
@@ -164,12 +185,16 @@ import InfoGeometry.Clifford.Cl55OperatorConnectionLift
 import InfoGeometry.Clifford.Cl55WittCircularAxes
 import InfoGeometry.Clifford.Cl55WittProjectors
 import InfoGeometry.Clifford.Cl55OperatorZ2Grading
+import InfoGeometry.Clifford.Cl55OperatorFiveGradeClosure
+import InfoGeometry.Clifford.Cl55ThreeColorChiralGenerators
+import InfoGeometry.Clifford.Cl55ThreeColorChiralSums
 import InfoGeometry.Clifford.Cl55ModularDerivation
 import InfoGeometry.Clifford.Cl55ChiralGrandCanonical
 import InfoGeometry.Clifford.Cl55ModularGrandCanonical
 import InfoGeometry.Clifford.Cl55HyperbolicWeights
 import InfoGeometry.Clifford.Cl55EllipticRotors
 import InfoGeometry.Clifford.Cl55SpinOperatorConnection
+import InfoGeometry.Clifford.Cl55GrandCanonicalSouriauBridge
 import InfoGeometry.Clifford.Cl55WittQuadraticReflectionPin
 import InfoGeometry.Clifford.Cl55WittNegativeVectorPin
 import InfoGeometry.Clifford.Cl55WittPinParity
@@ -190,10 +215,20 @@ import InfoGeometry.Clifford.Cl55RealSplitPinKernelNative
 import InfoGeometry.Clifford.Clifford55AnomalyOSP
 import InfoGeometry.Clifford.D4Cl11Tripotent
 import InfoGeometry.Clifford.GogberashviliSplitOctonionBasis
+import InfoGeometry.Clifford.SplitQuaternionMatrixReadout
+import InfoGeometry.Clifford.SplitQuaternionMatrixModel
+import InfoGeometry.Clifford.SplitQuaternionChiralCone
+import InfoGeometry.Clifford.SplitOctonionChiralMatrixReadout
+import InfoGeometry.Clifford.SplitOctonionChiralMatrixProduct
+import InfoGeometry.Clifford.SplitOctonionChiralOperatorMatrix
+import InfoGeometry.Clifford.SplitOctonionChiralHadamard
+import InfoGeometry.Clifford.SplitOctonionQuaternionEllBridge
 import InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry
+import InfoGeometry.Clifford.ChiralGrandCanonicalModularGenerator
 import InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry
 import InfoGeometry.Clifford.ChiralGrandCanonicalHestenesRotor
 import InfoGeometry.Clifford.ChiralGrandCanonicalLoxodromicRotor
+import InfoGeometry.Clifford.ChiralGrandCanonicalLoxodromicThermalBridge
 
 namespace InfoGeometry
 

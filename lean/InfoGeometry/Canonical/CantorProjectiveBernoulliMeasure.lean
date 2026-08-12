@@ -133,6 +133,27 @@ theorem projectiveLimitMeasure_prefix_successor_additive
     rw [← two_mul, mul_comm 2 (2 : ℝ≥0∞)⁻¹, h2]
   rw [h, mul_one]
 
+theorem projectiveLimitMeasure_apply_prefix_successor_fiber
+    (N : ℕ) (b : BitWord N) (c : Bool) :
+    projectiveLimitMeasure
+        {q : PrefixProjectiveLimit |
+          q.π (N + 1) = extendSucc N b c} =
+      (1 / 2) ^ (N + 1) := by
+  exact projectiveLimitMeasure_apply_prefix_fiber
+    (N + 1) (extendSucc N b c)
+
+theorem projectiveLimitMeasure_prefix_successor_half_parent
+    (N : ℕ) (b : BitWord N) (c : Bool) :
+    projectiveLimitMeasure
+        {q : PrefixProjectiveLimit |
+          q.π (N + 1) = extendSucc N b c} =
+      (1 / 2 : ℝ≥0∞) *
+        projectiveLimitMeasure
+          {q : PrefixProjectiveLimit | q.π N = b} := by
+  rw [projectiveLimitMeasure_apply_prefix_successor_fiber,
+    projectiveLimitMeasure_apply_prefix_fiber, pow_succ]
+  ring
+
 theorem projectiveLimit_prefix_fiber_successor_union
     (N : ℕ) (b : BitWord N) :
     {q : PrefixProjectiveLimit | q.π N = b} =
@@ -188,6 +209,59 @@ theorem projectiveLimit_prefix_successor_fibers_disjoint
   have hcoord := congrFun h ⟨N, Nat.lt_succ_self N⟩
   simpa [extendSucc] using hcoord
 
+theorem projectiveLimit_prefix_successor_measure_union
+    (N : ℕ) (b : BitWord N) :
+    projectiveLimitMeasure
+        ({q : PrefixProjectiveLimit |
+            q.π (N + 1) = extendSucc N b false} ∪
+          {q : PrefixProjectiveLimit |
+            q.π (N + 1) = extendSucc N b true}) =
+      projectiveLimitMeasure
+        {q : PrefixProjectiveLimit |
+          q.π (N + 1) = extendSucc N b false} +
+      projectiveLimitMeasure
+        {q : PrefixProjectiveLimit |
+          q.π (N + 1) = extendSucc N b true} := by
+  have hnonempty : ∀ c : Bool, ∃ p : PrefixProjectiveLimit,
+      p.π (N + 1) = extendSucc N b c := by
+    intro c
+    exact projectiveLimit_prefix_fiber_nonempty (N + 1)
+      (extendSucc N b c)
+  have hclosed : ∀ c : Bool, IsClosed
+      {q : PrefixProjectiveLimit |
+        q.π (N + 1) = extendSucc N b c} := by
+    intro c
+    obtain ⟨p, hp⟩ := hnonempty c
+    rw [← hp]
+    exact projectiveLimit_prefix_fiber_isClosed p (N + 1)
+  exact MeasureTheory.measure_union
+    (projectiveLimit_prefix_successor_fibers_disjoint N b)
+    (hclosed true).measurableSet
+
+theorem projectiveLimitMeasure_prefix_successor_union_eq_parent
+    (N : ℕ) (b : BitWord N) :
+    projectiveLimitMeasure
+        ({q : PrefixProjectiveLimit |
+            q.π (N + 1) = extendSucc N b false} ∪
+          {q : PrefixProjectiveLimit |
+            q.π (N + 1) = extendSucc N b true}) =
+      projectiveLimitMeasure {q : PrefixProjectiveLimit | q.π N = b} := by
+  calc
+    projectiveLimitMeasure
+          ({q : PrefixProjectiveLimit |
+              q.π (N + 1) = extendSucc N b false} ∪
+            {q : PrefixProjectiveLimit |
+              q.π (N + 1) = extendSucc N b true}) =
+        projectiveLimitMeasure
+            {q : PrefixProjectiveLimit |
+              q.π (N + 1) = extendSucc N b false} +
+          projectiveLimitMeasure
+            {q : PrefixProjectiveLimit |
+              q.π (N + 1) = extendSucc N b true} :=
+      projectiveLimit_prefix_successor_measure_union N b
+    _ = projectiveLimitMeasure {q : PrefixProjectiveLimit | q.π N = b} :=
+      (projectiveLimitMeasure_prefix_successor_additive N b).symm
+
 def projectiveLimitReadoutMeasure : Measure ℝ :=
   Measure.map
     (fun p : PrefixProjectiveLimit => realBinaryReadout (toCantor p))
@@ -216,6 +290,23 @@ theorem projectiveLimitReadoutMeasure_apply_compl_unitInterval :
     · intro hp
       exact False.elim (by simpa using hp)
   rw [hpre, measure_empty]
+
+theorem projectiveLimitReadoutMeasure_apply_unitInterval :
+    projectiveLimitReadoutMeasure (Set.Icc (0 : ℝ) 1) = 1 := by
+  have hcompl := measure_compl (μ := projectiveLimitReadoutMeasure)
+    (s := Set.Icc (0 : ℝ) 1) measurableSet_Icc (measure_ne_top _ _)
+  rw [projectiveLimitReadoutMeasure_apply_compl_unitInterval] at hcompl
+  have hcompl' : (1 : ℝ≥0∞) -
+      projectiveLimitReadoutMeasure (Set.Icc (0 : ℝ) 1) = 0 := by
+    simpa [MeasureTheory.IsProbabilityMeasure.measure_univ] using hcompl.symm
+  have hlower : (1 : ℝ≥0∞) ≤
+      projectiveLimitReadoutMeasure (Set.Icc (0 : ℝ) 1) :=
+    (tsub_eq_zero_iff_le.mp hcompl')
+  have hupper : projectiveLimitReadoutMeasure (Set.Icc (0 : ℝ) 1) ≤ 1 := by
+    have h := measure_mono (μ := projectiveLimitReadoutMeasure)
+      (Set.subset_univ (Set.Icc (0 : ℝ) 1))
+    simpa [MeasureTheory.IsProbabilityMeasure.measure_univ] using h
+  exact le_antisymm hupper hlower
 
 /-- The projective-limit readout regarded as a map into the closed unit interval. -/
 def projectiveLimitUnitIntervalReadout
@@ -384,6 +475,23 @@ theorem tomitaSymmetrizedReadoutMeasure_apply_compl_unitInterval :
       exact False.elim (by simpa using hp)
   rw [hpre, measure_empty]
 
+theorem tomitaSymmetrizedReadoutMeasure_apply_unitInterval :
+    tomitaSymmetrizedReadoutMeasure (Set.Icc (0 : ℝ) 1) = 1 := by
+  have hcompl := measure_compl (μ := tomitaSymmetrizedReadoutMeasure)
+    (s := Set.Icc (0 : ℝ) 1) measurableSet_Icc (measure_ne_top _ _)
+  rw [tomitaSymmetrizedReadoutMeasure_apply_compl_unitInterval] at hcompl
+  have hcompl' : (1 : ℝ≥0∞) -
+      tomitaSymmetrizedReadoutMeasure (Set.Icc (0 : ℝ) 1) = 0 := by
+    simpa [MeasureTheory.IsProbabilityMeasure.measure_univ] using hcompl.symm
+  have hlower : (1 : ℝ≥0∞) ≤
+      tomitaSymmetrizedReadoutMeasure (Set.Icc (0 : ℝ) 1) :=
+    (tsub_eq_zero_iff_le.mp hcompl')
+  have hupper : tomitaSymmetrizedReadoutMeasure (Set.Icc (0 : ℝ) 1) ≤ 1 := by
+    have h := measure_mono (μ := tomitaSymmetrizedReadoutMeasure)
+      (Set.subset_univ (Set.Icc (0 : ℝ) 1))
+    simpa [MeasureTheory.IsProbabilityMeasure.measure_univ] using h
+  exact le_antisymm hupper hlower
+
 theorem tomitaSymmetrizedReadoutMeasure_integrable_id :
     Integrable (fun x : ℝ => x) tomitaSymmetrizedReadoutMeasure := by
   have hstrong : AEStronglyMeasurable (fun x : ℝ => x)
@@ -429,5 +537,17 @@ theorem tomitaSymmetrizedReadoutMeasure_integral_id_eq_half :
   have hhalf : (∫ x : ℝ, x ∂μ) = 1 / 2 := by
     linarith
   simpa [μ] using hhalf
+
+theorem tomitaSymmetrizedReadoutMeasure_integral_one_sub_id_eq_half :
+    ∫ x : ℝ, (1 - x) ∂tomitaSymmetrizedReadoutMeasure = 1 / 2 := by
+  have hconst : Integrable (fun _ : ℝ => (1 : ℝ))
+      tomitaSymmetrizedReadoutMeasure := integrable_const 1
+  have hid : Integrable (fun x : ℝ => x)
+      tomitaSymmetrizedReadoutMeasure :=
+    tomitaSymmetrizedReadoutMeasure_integrable_id
+  rw [integral_sub hconst hid]
+  simp [MeasureTheory.IsProbabilityMeasure.measure_univ,
+    tomitaSymmetrizedReadoutMeasure_integral_id_eq_half]
+  norm_num
 
 end InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure

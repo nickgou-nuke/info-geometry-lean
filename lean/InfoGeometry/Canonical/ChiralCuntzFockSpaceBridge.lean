@@ -6,7 +6,8 @@ namespace InfoGeometry.Canonical.ChiralCuntzFockSpaceBridge
 
 open ChiralCuntzSuperchargeBridge
 
-variable {R : Type*} [Ring R] [StarRing R] (sys : Cuntz2System R)
+variable {R : Type*} [Ring R] [StarRing R]
+  (sys : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) R)
 
 /-- **Definition**: Right Lightcone Momentum P+ = Q+ Q- = S1 S1*. -/
 def P_plus : R := Q_plus sys * Q_minus sys

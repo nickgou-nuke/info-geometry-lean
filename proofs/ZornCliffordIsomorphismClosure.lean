@@ -1,7 +1,7 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
-import proofs.CanonicalZornCliffordRepresentation
-import proofs.CanonicalZornCliffordIsomorphism
+import InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
+import InfoGeometry.Canonical.CanonicalZornCliffordIsomorphism
 import proofs.ZornCliffordBasisMonomials
 
 noncomputable section

@@ -1,5 +1,5 @@
 import Mathlib
-import proofs.TransformsAndScale
+import InfoGeometry.External.Auto.TransformsAndScale
 
 /-!
 # Mellin, Laplace, and wavelet scale-shift digest
@@ -77,7 +77,7 @@ def logMellinKernel (s : ℂ) (t : ℝ) : ℂ :=
 /-- The Mellin kernel is the Fourier kernel on the logarithmic axis. -/
 theorem mellinKernel_as_log_fourier (omega t : ℝ) :
     logMellinKernel (Complex.I * omega + 1) t = Complex.exp (Complex.I * omega * t) := by
-  exact mellin_is_log_fourier omega t
+  exact TransformsAndScale.mellin_is_log_fourier omega t
 
 /-- Multiplicative scale becomes additive translation after the logarithm. -/
 theorem log_mul_as_add (a x : ℝ) (ha : 0 < a) (hx : 0 < x) :

@@ -317,14 +317,6 @@ theorem canonical_pair_mul_mem
   have h5 := hb 5
   have h6 := hb 6
   have h7 := hb 7
-  have hn0 := fullCanonicalSpan.neg_mem h0
-  have hn1 := fullCanonicalSpan.neg_mem h1
-  have hn2 := fullCanonicalSpan.neg_mem h2
-  have hn3 := fullCanonicalSpan.neg_mem h3
-  have hn4 := fullCanonicalSpan.neg_mem h4
-  have hn5 := fullCanonicalSpan.neg_mem h5
-  have hn6 := fullCanonicalSpan.neg_mem h6
-  have hn7 := fullCanonicalSpan.neg_mem h7
   fin_cases i <;> fin_cases j <;> fin_cases k
   all_goals
     simp [fullCanonicalBasis, fullCanonicalSpan, mul_assoc,
@@ -333,7 +325,7 @@ theorem canonical_pair_mul_mem
       cliffordGenerator_zero_one, cliffordGenerator_zero_two,
       cliffordGenerator_zero_three, cliffordGenerator_one_two,
       cliffordGenerator_one_three, cliffordGenerator_two_three,
-      cliffordGenerator_zero_nested, cliffordGenerator_one_nested,
+      cliffordGenerator_one_nested,
       cliffordGenerator_two_nested, cliffordGenerator_three_nested,
       cliffordGenerator_zero_one_nested, cliffordGenerator_zero_two_nested,
       cliffordGenerator_zero_three_nested, cliffordGenerator_one_two_nested,
@@ -346,15 +338,7 @@ theorem canonical_pair_mul_mem
       simpa [fullCanonicalBasis, fullCanonicalSpan, mul_assoc] using h4 |
       simpa [fullCanonicalBasis, fullCanonicalSpan, mul_assoc] using h5 |
       simpa [fullCanonicalBasis, fullCanonicalSpan, mul_assoc] using h6 |
-      simpa [fullCanonicalBasis, fullCanonicalSpan, mul_assoc] using h7 |
-      simpa [fullCanonicalBasis, fullCanonicalSpan, mul_assoc] using hn0 |
-      simpa [fullCanonicalBasis, fullCanonicalSpan, mul_assoc] using hn1 |
-      simpa [fullCanonicalBasis, fullCanonicalSpan, mul_assoc] using hn2 |
-      simpa [fullCanonicalBasis, fullCanonicalSpan, mul_assoc] using hn3 |
-      simpa [fullCanonicalBasis, fullCanonicalSpan, mul_assoc] using hn4 |
-      simpa [fullCanonicalBasis, fullCanonicalSpan, mul_assoc] using hn5 |
-      simpa [fullCanonicalBasis, fullCanonicalSpan, mul_assoc] using hn6 |
-      simpa [fullCanonicalBasis, fullCanonicalSpan, mul_assoc] using hn7
+      simpa [fullCanonicalBasis, fullCanonicalSpan, mul_assoc] using h7
 
 def vecCoord (v : Vec13) : Fin 4 → ℝ
   | 0 => v.1
@@ -443,8 +427,8 @@ theorem even_mem_fullCanonicalSpan (x : ClPlus14) :
 
 def clPlusVal : ClPlus14 →ₗ[ℝ] CliffordAlgebra q14 where
   toFun x := x.1
-  map_add' x y := rfl
-  map_smul' c x := rfl
+  map_add' _ _ := rfl
+  map_smul' _ _ := rfl
 
 theorem clPlusVal_injective : Function.Injective clPlusVal := by
   intro x y hxy
@@ -498,10 +482,12 @@ def rho : Vec13 →ₗ[ℝ] M2C where
       (v.2.2.1 : ℂ) • sheetPhase +
       (v.2.2.2 : ℂ) • sheetParity
   map_add' u v := by
-    ext i j <;> fin_cases i <;> fin_cases j <;>
+    ext i j
+    fin_cases i <;> fin_cases j <;>
       simp [sheetFlip, sheetPhase, sheetParity] <;> ring
   map_smul' c v := by
-    ext i j <;> fin_cases i <;> fin_cases j <;>
+    ext i j
+    fin_cases i <;> fin_cases j <;>
       simp [sheetFlip, sheetPhase, sheetParity] <;> ring
 
 def rhoBar : Vec13 →ₗ[ℝ] M2C where
@@ -511,19 +497,22 @@ def rhoBar : Vec13 →ₗ[ℝ] M2C where
       (v.2.2.1 : ℂ) • sheetPhase -
       (v.2.2.2 : ℂ) • sheetParity
   map_add' u v := by
-    ext i j <;> fin_cases i <;> fin_cases j <;>
+    ext i j
+    fin_cases i <;> fin_cases j <;>
       simp [sheetFlip, sheetPhase, sheetParity] <;> ring
   map_smul' c v := by
-    ext i j <;> fin_cases i <;> fin_cases j <;>
+    ext i j
+    fin_cases i <;> fin_cases j <;>
       simp [sheetFlip, sheetPhase, sheetParity] <;> ring
 
 lemma rho_mul_rhoBar (v : Vec13) :
     rho v * rhoBar v = algebraMap ℝ M2C (q14 v) := by
   rcases v with ⟨t, x, y, z⟩
   have hI : (Complex.I : ℂ) ^ 2 = -1 := by norm_num [Complex.ext_iff]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [rho, rhoBar, q14, InfoGeometry.Clifford.Spacetime.minkiQ,
-      sheetIdentity, sheetFlip, sheetPhase, sheetParity,
+      sheetFlip, sheetPhase, sheetParity,
       Matrix.mul_apply, Fin.sum_univ_two,
       Algebra.algebraMap_eq_smul_one, Matrix.smul_apply]
   all_goals ring_nf
@@ -534,9 +523,10 @@ lemma rhoBar_mul_rho (v : Vec13) :
     rhoBar v * rho v = algebraMap ℝ M2C (q14 v) := by
   rcases v with ⟨t, x, y, z⟩
   have hI : (Complex.I : ℂ) ^ 2 = -1 := by norm_num [Complex.ext_iff]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [rho, rhoBar, q14, InfoGeometry.Clifford.Spacetime.minkiQ,
-      sheetIdentity, sheetFlip, sheetPhase, sheetParity,
+      sheetFlip, sheetPhase, sheetParity,
       Matrix.mul_apply, Fin.sum_univ_two,
       Algebra.algebraMap_eq_smul_one, Matrix.smul_apply]
   all_goals ring_nf
@@ -563,8 +553,7 @@ noncomputable def evenHom : EvenHom q14 M2C where
         simp [Algebra.algebraMap_eq_smul_one]
       _ = q14 v₂ • (rho v₁ * rhoBar v₃) := by
         ext i j
-        simp [Algebra.algebraMap_eq_smul_one, Matrix.mul_apply,
-          Fin.sum_univ_two, Matrix.smul_apply] <;> ring
+        simp [Matrix.mul_apply, Fin.sum_univ_two] ; ring
 
 noncomputable def clPlusToPauli : CliffordAlgebra.even q14 →ₐ[ℝ] M2C :=
   CliffordAlgebra.even.lift q14 evenHom
@@ -572,14 +561,13 @@ noncomputable def clPlusToPauli : CliffordAlgebra.even q14 →ₐ[ℝ] M2C :=
 @[simp] theorem clPlusToPauli_pair (v w : Vec13) :
     clPlusToPauli ((CliffordAlgebra.even.ι q14).bilin v w) =
       rho v * rhoBar w := by
-  simpa [clPlusToPauli, evenHom] using
-    (CliffordAlgebra.even.lift_ι q14 evenHom v w)
+  simp [clPlusToPauli, evenHom]
 
 @[simp] theorem clPlusToPauli_e0e0 :
     clPlusToPauli ((CliffordAlgebra.even.ι q14).bilin e0 e0) =
       (1 : M2C) := by
   rw [clPlusToPauli_pair]
-  simp [e0, rho, rhoBar, sheetIdentity]
+  simp [e0, rho, rhoBar]
 
 theorem finrank_M2C_real : Module.finrank ℝ M2C = 8 := by
   rw [Module.finrank_matrix]
@@ -597,17 +585,17 @@ noncomputable def sigma3 : ClPlus14 :=
 @[simp] theorem clPlusToPauli_sigma1 :
     clPlusToPauli sigma1 = sheetFlip := by
   rw [sigma1, clPlusToPauli_pair]
-  simp [e0, e1, rho, rhoBar, sheetIdentity]
+  simp [e0, e1, rho, rhoBar]
 
 @[simp] theorem clPlusToPauli_sigma2 :
     clPlusToPauli sigma2 = sheetPhase := by
   rw [sigma2, clPlusToPauli_pair]
-  simp [e0, e2, rho, rhoBar, sheetIdentity]
+  simp [e0, e2, rho, rhoBar]
 
 @[simp] theorem clPlusToPauli_sigma3 :
     clPlusToPauli sigma3 = sheetParity := by
   rw [sigma3, clPlusToPauli_pair]
-  simp [e0, e3, rho, rhoBar, sheetIdentity]
+  simp [e0, e3, rho, rhoBar]
 
 noncomputable def spacetimePseudoscalar : ClPlus14 :=
   sigma1 * sigma2 * sigma3
@@ -617,34 +605,37 @@ theorem clPlusToPauli_pseudoscalar :
       Complex.I • (1 : M2C) := by
   rw [spacetimePseudoscalar, map_mul, map_mul,
     clPlusToPauli_sigma1, clPlusToPauli_sigma2, clPlusToPauli_sigma3]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [sheetIdentity, sheetFlip, sheetPhase, sheetParity,
-      Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply,
-      Complex.ext_iff] <;> ring
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [sheetFlip, sheetPhase, sheetParity,
+      Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply]
 
 @[simp] theorem clPlusToPauli_pseudoscalar_mul_sigma1 :
     clPlusToPauli (spacetimePseudoscalar * sigma1) =
       Complex.I • sheetFlip := by
   rw [map_mul, clPlusToPauli_pseudoscalar, clPlusToPauli_sigma1]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [sheetFlip, Matrix.mul_apply, Fin.sum_univ_two,
-      Matrix.smul_apply, Complex.ext_iff] <;> ring
+      Matrix.smul_apply]
 
 @[simp] theorem clPlusToPauli_pseudoscalar_mul_sigma2 :
     clPlusToPauli (spacetimePseudoscalar * sigma2) =
       Complex.I • sheetPhase := by
   rw [map_mul, clPlusToPauli_pseudoscalar, clPlusToPauli_sigma2]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [sheetPhase, Matrix.mul_apply, Fin.sum_univ_two,
-      Matrix.smul_apply, Complex.ext_iff] <;> ring
+      Matrix.smul_apply]
 
 @[simp] theorem clPlusToPauli_pseudoscalar_mul_sigma3 :
     clPlusToPauli (spacetimePseudoscalar * sigma3) =
       Complex.I • sheetParity := by
   rw [map_mul, clPlusToPauli_pseudoscalar, clPlusToPauli_sigma3]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [sheetParity, Matrix.mul_apply, Fin.sum_univ_two,
-      Matrix.smul_apply, Complex.ext_iff] <;> ring
+      Matrix.smul_apply]
 
 noncomputable def pauliPreimage (A : M2C) : ClPlus14 :=
   let a := A 0 0
@@ -673,8 +664,9 @@ theorem clPlusToPauli_pauliPreimage (A : M2C) :
     clPlusToPauli_pseudoscalar_mul_sigma1,
     clPlusToPauli_pseudoscalar_mul_sigma2,
     clPlusToPauli_pseudoscalar_mul_sigma3]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [a, b, c, d, sheetIdentity, sheetFlip, sheetPhase, sheetParity,
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [sheetFlip, sheetPhase, sheetParity,
       Matrix.add_apply, Matrix.smul_apply, Complex.ext_iff] <;> ring
   all_goals simp
 
@@ -740,21 +732,19 @@ theorem chiralPlus_sq : chiralPlus * chiralPlus = 0 := by
   apply clPlusToPauli_injective
   simp only [chiralPlus, map_mul, map_smul, map_add,
     clPlusToPauli_sigma1, clPlusToPauli_sigma2,
-    clPlusToPauli_pseudoscalar,
-    clPlusToPauli_pseudoscalar_mul_sigma2]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [sheetFlip, sheetPhase, Matrix.mul_apply, Fin.sum_univ_two,
-      Matrix.smul_apply] <;> ring
+    clPlusToPauli_pseudoscalar]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [sheetFlip, sheetPhase, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem chiralMinus_sq : chiralMinus * chiralMinus = 0 := by
   apply clPlusToPauli_injective
-  simp only [chiralMinus, map_mul, map_smul, map_sub, map_add,
+  simp only [chiralMinus, map_mul, map_smul, map_sub,
     clPlusToPauli_sigma1, clPlusToPauli_sigma2,
-    clPlusToPauli_pseudoscalar,
-    clPlusToPauli_pseudoscalar_mul_sigma2]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [sheetFlip, sheetPhase, Matrix.mul_apply, Fin.sum_univ_two,
-      Matrix.smul_apply] <;> ring
+    clPlusToPauli_pseudoscalar]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [sheetFlip, sheetPhase, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem chiralPlus_mul_chiralMinus :
     chiralPlus * chiralMinus = sheetIdempotentPlus := by
@@ -763,11 +753,11 @@ theorem chiralPlus_mul_chiralMinus :
     map_mul, map_smul, map_sub, map_add, map_one,
     clPlusToPauli_sigma1, clPlusToPauli_sigma2,
     clPlusToPauli_sigma3,
-    clPlusToPauli_pseudoscalar,
-    clPlusToPauli_pseudoscalar_mul_sigma2]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+    clPlusToPauli_pseudoscalar]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [sheetFlip, sheetPhase, sheetParity, Matrix.mul_apply,
-      Fin.sum_univ_two, Matrix.smul_apply] <;> ring
+      Fin.sum_univ_two, Matrix.smul_apply] ; ring
 
 theorem chiralMinus_mul_chiralPlus :
     chiralMinus * chiralPlus = sheetIdempotentMinus := by
@@ -776,9 +766,9 @@ theorem chiralMinus_mul_chiralPlus :
     map_mul, map_smul, map_sub, map_add, map_one,
     clPlusToPauli_sigma1, clPlusToPauli_sigma2,
     clPlusToPauli_sigma3,
-    clPlusToPauli_pseudoscalar,
-    clPlusToPauli_pseudoscalar_mul_sigma2]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+    clPlusToPauli_pseudoscalar]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [sheetFlip, sheetPhase, sheetParity, Matrix.mul_apply,
-      Fin.sum_univ_two, Matrix.smul_apply] <;> ring
+      Fin.sum_univ_two, Matrix.smul_apply] ; ring
 end InfoGeometry.Canonical.HestenesPauliEvenClifford

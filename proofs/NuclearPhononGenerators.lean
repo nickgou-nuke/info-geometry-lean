@@ -36,20 +36,25 @@ def kineticQuadrupoleCount3 : ℕ := symmetricPairCount spaceDim3
 def collectiveTensorComponentCount : ℕ :=
   angularMomentumCount3 + shearDilationCount3 + coordinateQuadrupoleCount3 + kineticQuadrupoleCount3
 
+inductive IBMMode
+  | s
+  | d
+  deriving DecidableEq, Repr
+
 structure IBMPhononGenerator where
-  sourceMode : String
-  targetMode : String
+  sourceMode : IBMMode
+  targetMode : IBMMode
   angularMomentum : ℕ
   magneticSubstate : Int
 
 def quadrupolePhonon (m : Int) : IBMPhononGenerator where
-  sourceMode := "s"
-  targetMode := "d"
+  sourceMode := IBMMode.s
+  targetMode := IBMMode.d
   angularMomentum := 2
   magneticSubstate := m
 
 def isQuadrupolePhonon (g : IBMPhononGenerator) : Prop :=
-  g.sourceMode = "s" ∧ g.targetMode = "d" ∧ g.angularMomentum = 2
+  g.sourceMode = IBMMode.s ∧ g.targetMode = IBMMode.d ∧ g.angularMomentum = 2
 
 structure Sp6PhononRaising where
   Qcoeff : Q

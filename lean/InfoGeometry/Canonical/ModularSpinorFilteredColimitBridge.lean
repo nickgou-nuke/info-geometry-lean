@@ -106,21 +106,6 @@ noncomputable def modularSpinor_filteredColimit_gelfandSpectrumDescend
     GelfandSpectrum F ⟶ GelfandSpectrum F :=
   modularSpinor_gelfandSpectrumDescend F B.spectrumBridge
 
-/-- The categorical spectrum identification from the sheaf/spectrum bridge
-remains available. -/
-noncomputable def modularSpinor_filteredColimit_gelfandSpectrumIsoTarget
-  {E Sections BoundarySections Gr Open : Type*}
-  [AddCommGroup Sections] [Module ℝ Sections]
-  [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
-  {J : Type u} [Category.{u, u} J]
-  (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorFilteredColimitBridge
-    (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
-    (Gr := Gr) (Open := Open) F) :
-    GelfandSpectrum F ≅ GelfandSpectrum F :=
-  modularSpinor_gelfandSpectrumIsoTarget F B.spectrumBridge
-
 @[reassoc (attr := simp)]
 theorem modularSpinor_filteredColimit_gelfandSpectrum_stage
   {E Sections BoundarySections Gr Open : Type*}

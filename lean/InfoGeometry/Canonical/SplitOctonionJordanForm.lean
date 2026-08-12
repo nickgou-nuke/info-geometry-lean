@@ -127,8 +127,7 @@ theorem W_apply (xi eta z : MiddleCarrier) :
 
 theorem W_skew (xi eta z w : MiddleCarrier) :
     beta44 (W xi eta z) w + beta44 z (W xi eta w) = 0 := by
-  simp [W, beta44, Fin.sum_univ_succ, Finset.sum_add_distrib,
-    Finset.sum_sub_distrib]
+  simp [W, beta44, Fin.sum_univ_succ]
   ring
 
 end InfoGeometry.Canonical.SplitOctonionJordanForm

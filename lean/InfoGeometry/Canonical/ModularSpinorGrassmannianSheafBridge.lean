@@ -80,16 +80,6 @@ noncomputable def modularSpinor_gelfandSpectrumDescend
     (Gr := Gr) (Open := Open) F) :
     GelfandSpectrum F ⟶ GelfandSpectrum F :=
   𝟙 _
-
-/-- The categorical spectrum identification remains available on the spectrum side. -/
-noncomputable def modularSpinor_gelfandSpectrumIsoTarget
-    (F : J ⥤ TopCat.{u})
-    (B : ModularSpinorGrassmannianSpectrumBridge
-    (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
-    (Gr := Gr) (Open := Open) F) :
-    GelfandSpectrum F ≅ GelfandSpectrum F :=
-  Iso.refl _
-
 @[reassoc (attr := simp)]
 theorem modularSpinor_gelfandSpectrum_stage
     (F : J ⥤ TopCat.{u})

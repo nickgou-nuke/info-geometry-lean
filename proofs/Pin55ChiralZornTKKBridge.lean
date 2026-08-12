@@ -5,7 +5,7 @@ import proofs.PinO55GlideReflection
 import proofs.ChiralCausalConeTKKBridge
 import proofs.ZornChiralBridge
 import proofs.ZornParavectorNullspace
-import proofs.ZornTrialityTKKBridge
+import InfoGeometry.Canonical.ZornTrialityTKKBridge
 
 noncomputable section
 
@@ -18,7 +18,6 @@ open ZornTrialityTKKBridge
 open Clifford55AnomalyOSP
 open ArtinCentralizerMonodromy
 open PinO55GlideReflection
-open GrandUnifiedTKK
 
 /-- Local carrier map from the canonical Zorn paravector coordinates to the
 chiral `2×2` matrix carrier.  This is the concrete bridge object used in the
@@ -180,13 +179,13 @@ structure BridgeSummary where
       Prod.swap (outerCarrierMap (bridgeCanonicalUpper, bridgeCanonicalLower))
   tkk_lane_grade :
     ZornTrialityTKKBridge.laneGrade ZornTrialityTKKBridge.SplitOctonionLane.diagonalProjector =
-      TKK_Grade.g_0 ∧
+      TKKJordanPairData.TKKGrade.z0 ∧
     ZornTrialityTKKBridge.laneGrade ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent =
-      TKK_Grade.g_1 ∧
+      TKKJordanPairData.TKKGrade.p1 ∧
     ZornTrialityTKKBridge.laneGrade ZornTrialityTKKBridge.SplitOctonionLane.lowerNilpotent =
-      TKK_Grade.g_neg1 ∧
+      TKKJordanPairData.TKKGrade.m1 ∧
     ZornTrialityTKKBridge.laneGrade ZornTrialityTKKBridge.SplitOctonionLane.associatorWitness =
-      TKK_Grade.g_2 ∧
+      TKKJordanPairData.TKKGrade.p2 ∧
     ZornTrialityTKKBridge.laneMirror
         (ZornTrialityTKKBridge.laneMirror
           ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent) =

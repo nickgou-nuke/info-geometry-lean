@@ -383,9 +383,6 @@ def holographicBoundary : Set (ℝ × ℝ × ℝ) :=
 def bulkInterior : Set (ℝ × ℝ × ℝ) :=
   { (x, y, z) | x^2 + y^2 + z^2 < 1 }
 
-theorem ads_cft_from_two_by_two (x y z : ℝ) (h : isPureState x y z) : 
-    (x, y, z) ∈ holographicBoundary := h
-
 ---------------------------------------------------------------
 -- Part 5:  The Erlangen-Langlands Program for Operator Algebras
 ---------------------------------------------------------------

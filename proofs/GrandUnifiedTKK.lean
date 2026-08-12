@@ -103,7 +103,7 @@ theorem Spin8Rep_representations_distinct :
     ([Spin8Rep.vector, Spin8Rep.spinorPlus, Spin8Rep.spinorMinus] : List Spin8Rep).length = 3 := by
   rfl
 
-theorem theory_of_everything
+theorem theory_of_everything_from_supplied_tkk_data
     {L : Type} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     (TKK : TKK_Algebra ℝ L)
     (U : TheUniverse TKK) :
@@ -247,12 +247,14 @@ def framedMirrorInstanton (VertexFunctions Quasimaps : Type) (k : ℕ) : Instant
   VertexFunctions := VertexFunctions
   Quasimaps := Quasimaps
 
-theorem MirrorMap_Synthesis {L : Type} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] (TKK : TKK_Algebra ℝ L) (_U : TheUniverse TKK) :
-  ∃ (M : InstantonModuliSpace), Nonempty (ℝ ≃ M.VertexFunctions) ∧ Nonempty (Submodule ℝ L ≃ M.Quasimaps) := by
-  use framedMirrorInstanton ℝ (Submodule ℝ L) 1
-  refine ⟨?_, ?_⟩
-  · exact ⟨Equiv.refl ℝ⟩
-  · exact ⟨Equiv.refl (Submodule ℝ L)⟩
+theorem mirror_map_synthesis {L : Type} [AddCommGroup L] [Module ℝ L]
+    [LieRing L] [LieAlgebra ℝ L] (TKK : TKK_Algebra ℝ L)
+    (_U : TheUniverse TKK) :
+    ∃ M : InstantonModuliSpace,
+      M.VertexFunctions = ℝ ∧
+        M.Quasimaps = Submodule ℝ L ∧ M.HilbertSchemeSelfDual := by
+  refine ⟨framedMirrorInstanton ℝ (Submodule ℝ L) 1, rfl, rfl, ?_⟩
+  exact (framedMirrorInstanton ℝ (Submodule ℝ L) 1).selfDualEvidence
 
 theorem KZ_mirror_bispectral_duality :
   Nonempty MirrorMap ∧ Nonempty BispectralDual := by
@@ -272,14 +274,9 @@ def trivialQuantumKTheoryGen : QuantumKTheoryGen where
   Lambda := fun _ => 1
   hLambda0 := rfl
 
-theorem KZ_quantum_k_ring_isomorphism :
-  Nonempty (QuantumKTheoryGen ≃ QuantumKTheoryGen) := by
-  refine ⟨?_⟩
-  exact Equiv.refl QuantumKTheoryGen
-
-theorem quantum_k_ring_isomorphism :
-  Nonempty (QuantumKTheoryGen ≃ QuantumKTheoryGen) :=
-  KZ_quantum_k_ring_isomorphism
+def quantum_k_theory_generator_refl_equiv :
+  QuantumKTheoryGen ≃ QuantumKTheoryGen :=
+  Equiv.refl QuantumKTheoryGen
 
 theorem KZ_instanton_moduli_self_dual (k _N : ℕ) :
   ∃ (hilb : HilbertSchemeQuiver) (mirror_map : MirrorMap),
@@ -321,26 +318,22 @@ theorem TKK_mirror_nuclear_unification {L : Type} [AddCommGroup L] [Module ℝ L
 def ShellModel_Projection {L : Type} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] (TKK : TKK_Algebra ℝ L) (U : TheUniverse TKK) :=
   U.matter_g1 ⊕ U.antimatter_gneg1
 
-theorem shell_model_is_adiabatic_artifact {L : Type} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] (TKK : TKK_Algebra ℝ L) (U : TheUniverse TKK) :
-  ∃ (effective_forces : Type), Nonempty (ShellModel_Projection TKK U ≃ (Spin8Rep × effective_forces)) → False := by
-  use Empty
-  intro ⟨h⟩
-  have zero_in : ShellModel_Projection TKK U := Sum.inl 0
-  cases (h zero_in).2
-
-theorem gravitational_confinement {L : Type} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] (TKK : TKK_Algebra ℝ L) (U : TheUniverse TKK) :
-  ∀ x ∈ U.gravity_g2, x ∈ U.gravity_g2 := by
-  intro x hx
-  simpa using hx
+theorem shell_model_projection_not_equiv_empty_product
+    {L : Type} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    (TKK : TKK_Algebra ℝ L) (U : TheUniverse TKK) :
+    ¬ Nonempty (ShellModel_Projection TKK U ≃ (Spin8Rep × Empty)) := by
+  intro h
+  rcases h with ⟨e⟩
+  have hx : Spin8Rep × Empty := e (Sum.inl 0)
+  exact Empty.elim hx.2
 
 /-! ## 6. Instantons, the 't Hooft Vertex, and Color Superconductivity -/
 
-theorem tHooft_is_S3_Triality {L : Type} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] (TKK : TKK_Algebra ℝ L) (_U : TheUniverse TKK) :
-  ∃ (tHooft_interaction : Type),
-    Nonempty (tHooft_interaction ≃ Equiv.Perm (Fin 3)) :=
-  ⟨Equiv.Perm (Fin 3), ⟨Equiv.refl _⟩⟩
+theorem tHooft_triality_permutation_card :
+    Fintype.card (Equiv.Perm (Fin 3)) = 6 := by
+  decide
 
-theorem Color_Superconductivity_is_Cl11_Pairing {L : Type} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] (TKK : TKK_Algebra ℝ L) (U : TheUniverse TKK) :
+theorem color_superconductivity_from_graviton_emergence {L : Type} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] (TKK : TKK_Algebra ℝ L) (U : TheUniverse TKK) :
   ∀ (quark1 quark2 : L),
     quark1 ∈ U.matter_g1 → quark2 ∈ U.matter_g1 →
     ⁅quark1, quark2⁆ ∈ TKK.grades g_0 ∨ ⁅quark1, quark2⁆ ∈ U.gravity_g2 := by
@@ -350,7 +343,7 @@ theorem Color_Superconductivity_is_Cl11_Pairing {L : Type} [AddCommGroup L] [Mod
 
 /-! ## 7. The Strangeness Theorem: Vacuum as a Topological Superconductor -/
 
-theorem Strangeness_is_Topological_Phase_Transition {L : Type} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] (TKK : TKK_Algebra ℝ L) (U : TheUniverse TKK) :
+theorem superconductive_null_volume_commutes {L : Type} [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] (TKK : TKK_Algebra ℝ L) (U : TheUniverse TKK) :
   ∀ x : L, U.is_superconductive x ∧ U.is_null_volume x →
     U.is_null_volume x ∧ U.is_superconductive x := by
   intro x hx

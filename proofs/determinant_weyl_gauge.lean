@@ -4,6 +4,8 @@ open Matrix
 
 noncomputable section
 
+namespace DeterminantWeylGauge
+
 /-- Hyperbolic Clifford generator, square `+1`. -/
 def e1 : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 1, 0]
 
@@ -352,3 +354,5 @@ theorem determinant_weyl_gauge_synthesis :
     twistor_incidence_homogeneous, by
       intro x
       exact ⟨det_P x, det_T x, det_PT x⟩⟩
+
+end DeterminantWeylGauge

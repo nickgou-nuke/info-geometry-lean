@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Analysis.Normed.Algebra.MatrixExponential
-import InfoGeometry.Canonical.ChiralAnomalyCantor
+import InfoGeometry.Canonical.CyclicCocycleCantor
 import InfoGeometry.Canonical.BregmanAnalyticBound
 import InfoGeometry.Canonical.BostConnesHeckeCuntzCapstone
 import InfoGeometry.Canonical.GradedTraceBridge
@@ -12,6 +12,8 @@ open Matrix
 open scoped Matrix
 
 noncomputable section
+
+set_option synthInstance.maxHeartbeats 100000
 
 universe u
 
@@ -35,11 +37,21 @@ It does not assert a continuum limit or a new spectral ground-state theorem.
 * `projector_swap_by_definition` — `J * N_left * J = N_right`
 * `kms_symmetric` — symmetry readout under the stated partition and balance hypotheses
 * `chiral_charge_zero` — the symmetric difference vanishes
-* `anomaly_vanishes` — `index_pairing(tilt, proj) = 0` from `ChiralAnomalyCantor`
+* `anomaly_vanishes` — `CyclicCocycleCantor.finiteIndexPairing(tilt, proj) = 0` from `ChiralAnomalyCantor`
 * `dikin_bound` — the explicit quadratic norm bound from `BregmanAnalyticBound`
 -/
 
 namespace InfoGeometry.Canonical.SouriauDiracHodgeCoupling
+
+local instance realMulAction
+    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] :
+    MulAction ℝ H :=
+  Module.toDistribMulAction.toMulAction
+
+local instance complexMulAction
+    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℂ H] :
+    MulAction ℂ H :=
+  Module.toDistribMulAction.toMulAction
 
 open InfoGeometry.Arithmetic.BostConnesSystem
 open InfoGeometry.Canonical.BostConnesGalois
@@ -141,7 +153,7 @@ theorem chiral_charge_zero
 
 /--
 At the flat Cantor boundary, the chiral anomaly vanishes:
-  index_pairing(tilt, proj) = 0.
+  CyclicCocycleCantor.finiteIndexPairing(tilt, proj) = 0.
 
 Requires: proj idempotent, D anticommutes with tilt, proj commutes with D,
 and D is invertible.
@@ -152,9 +164,11 @@ theorem anomaly_vanishes
     (h_anticomm : D * tilt + tilt * D = 0)
     (h_comm : D * proj = proj * D)
     (h_Dinv : ∃ D_inv, D * D_inv = 1 ∧ D_inv * D = 1) :
-    index_pairing tilt (⟨proj, h_proj_idem⟩ : KTheoryProjection 2) = 0 :=
-  chiral_anomaly_vanishes_at_flat_boundary
-    tilt D h_anticomm ⟨proj, h_proj_idem⟩ h_comm h_Dinv
+    CyclicCocycleCantor.finiteIndexPairing tilt (⟨proj, h_proj_idem⟩ : CyclicCocycleCantor.KTheoryProjection 2) = 0 :=
+  by
+    rcases h_Dinv with ⟨D_inv, h_Dleft, h_Dright⟩
+    exact CyclicCocycleCantor.chiral_anomaly_vanishes_at_flat_boundary
+      tilt D D_inv ⟨proj, h_proj_idem⟩ h_anticomm h_comm h_Dleft h_Dright
 
 /-! ### 5. Dikin-type norm bound — proved in BregmanAnalyticBound -/
 
@@ -183,7 +197,8 @@ theorem krein_operator_hodge_dual_definition
 Operator-level twisted index vanishing in the real Hestenes/Krein lane.
 -/
 theorem krein_operator_twisted_index_vanishing
-    (H : Type u) [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    (H : Type u) [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H]
     [KreinSpace H]
     (D : KreinOperatorData H)
     (trace : (H →L[ℝ] H) → ℝ)
@@ -265,7 +280,8 @@ promoted to a positive Hilbert state.
 -/
 structure BostConnesKreinDiracHodgeTrace
     {Op : Type u} [Ring Op] [StarRing Op]
-    {H : Type u} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
+    {H : Type u} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H]
     [KreinSpace H]
     {C : BostConnesCuntzSystem Op}
     {D : KreinOperatorData H}
@@ -667,7 +683,7 @@ structure CouplingPacket where
       D * tilt + tilt * D = 0 →
       D * proj = proj * D →
       (∃ D_inv, D * D_inv = 1 ∧ D_inv * D = 1) →
-      index_pairing tilt (⟨proj, h_proj_idem⟩ : KTheoryProjection 2) = 0
+      CyclicCocycleCantor.finiteIndexPairing tilt (⟨proj, h_proj_idem⟩ : CyclicCocycleCantor.KTheoryProjection 2) = 0
   dikin_ellipsoid :
     ∀ (ε : ℝ), |ε| ≤ 1 →
       Real.sqrt (2 * ((Real.cos ε - 1) ^ 2 + (Real.sin ε - ε) ^ 2)) ≤

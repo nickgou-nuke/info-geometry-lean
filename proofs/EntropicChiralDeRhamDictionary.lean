@@ -30,7 +30,7 @@ noncomputable section
 
 namespace EntropicChiralDeRhamDictionary
 
-open TKKJordanPairData
+open TKKJordanPairData.Legacy
 open ChemicalPotentialDeRhamG0Bridge
 open ModularRadonNikodymJacobianBridge
 open ModularTimeDeRhamBridge

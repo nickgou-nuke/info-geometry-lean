@@ -134,8 +134,7 @@ theorem p_n_comm (x v : TKKMiddle) :
     D (beta44 x v) (rankTwoOrthogonal x v) z
   rcases z with ⟨s, w, t⟩
   rw [P_bracket_N_apply]
-  simp [D, rankTwoOrthogonal_apply, beta44_smul_left,
-    beta44_smul_right, smul_eq_mul]
+  simp [D, rankTwoOrthogonal_apply, smul_eq_mul]
   constructor
   · ring
   · constructor
@@ -231,8 +230,7 @@ theorem blockOperator_tkkBracket (d e : TKKCarrier) :
   simp only [tkkBracket, LinearMap.map_sub, LinearMap.map_add,
     LinearMap.map_smul, LinearMap.add_apply, LinearMap.sub_apply,
     LinearMap.smul_apply, LinearMap.zero_apply, LinearMap.neg_apply,
-    dMap_apply, pMap_apply, nMap_apply, D, P, N,
-    Matrix.add_mulVec, Matrix.sub_mulVec, Matrix.smul_mulVec]
+    dMap_apply, pMap_apply, nMap_apply, D, P, N]
   rw [hM]
   simp
   constructor
@@ -296,7 +294,7 @@ theorem spinFactorTriple_eq_doubleBracket (x y z : TKKMiddle)
             pMap z * (-dMap (beta44 x y) (rankTwoOrthogonal x y))) q =
           (-(dMap (beta44 x y) (rankTwoOrthogonal x y) * pMap z -
             pMap z * dMap (beta44 x y) (rankTwoOrthogonal x y))) q := by
-              simp [Module.End.mul_apply, map_neg] <;> ring
+              simp [Module.End.mul_apply, map_neg] ; ring
       _ = (-pMap
           ((rankTwoOrthogonal x y).1.mulVec z - beta44 x y • z)) q := by
             rw [d_p_comm]
@@ -311,7 +309,7 @@ theorem spinFactorTriple_eq_doubleBracket (x y z : TKKMiddle)
         spinFactorTriple x y z := by
     ext i
     fin_cases i <;>
-      simp [spinFactorTriple, beta44, eta44Matrix, eta44,
+      simp [spinFactorTriple, beta44,
         Fin.sum_univ_succ, smul_eq_mul]
       <;> ring
   have hmap :

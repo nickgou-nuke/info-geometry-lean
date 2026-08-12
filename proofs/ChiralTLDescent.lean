@@ -55,8 +55,7 @@ lemma tauL_qCrossMap_on_pure_tmul (eta a b : M2C) :
     Complex.I • ((a ⊗ₜ[ℂ] b) ⊗ₜ[ℂ] eta) := by
   unfold tauL qCrossMap
   dsimp
-  simp [TensorProduct.map_tmul, TensorProduct.comm_tmul, LinearMap.id_apply,
-    TensorProduct.smul_tmul, TensorProduct.assoc_tmul, TensorProduct.assoc_symm_tmul]
+  simp [TensorProduct.smul_tmul, TensorProduct.assoc_tmul]
 
 /-- Extension to the TL generator `e = X + Y + Z` (sum of pure tensors). -/
 lemma tauL_qCrossMap_on_e (eta : M2C) :
@@ -136,8 +135,6 @@ def R_kernel : Submodule ℂ SpinPair :=
 Uses `LinearMap.mem_ker` to extract the kernel condition. -/
 lemma ker_tmul_eta_mem_leftTarget (eta : M2C) {v : SpinPair} (hv : v ∈ R_kernel) :
     v ⊗ₜ[ℂ] eta ∈ leftTarget (H := M2C) (H_dual := M2C) R_kernel := by
-  -- v ∈ ker(e), so v ∈ R_kernel as a Submodule element
-  have hv_sub : (⟨v, hv⟩ : R_kernel) = (⟨v, hv⟩ : R_kernel) := rfl
   unfold leftTarget
   apply LinearMap.mem_range.mpr
   refine ⟨⟨v, hv⟩ ⊗ₜ[ℂ] eta, ?_⟩
@@ -191,8 +188,7 @@ lemma tauR_qCrossMap_on_pure_tmul (eta a b : M2C) :
     Complex.I • (eta ⊗ₜ[ℂ] (a ⊗ₜ[ℂ] b)) := by
   unfold tauR qCrossMap
   dsimp
-  simp [TensorProduct.map_tmul, TensorProduct.comm_tmul, LinearMap.id_apply,
-    TensorProduct.smul_tmul, TensorProduct.assoc_tmul, TensorProduct.assoc_symm_tmul]
+  simp [TensorProduct.smul_tmul, TensorProduct.assoc_tmul]
 
 /-- `tauR (qCrossMap i)` acts on `s ⊗ η` for ANY `s : SpinPair` as `i • (η ⊗ s)`. -/
 lemma tauR_qCrossMap_on_any (eta : M2C) (s : SpinPair) :

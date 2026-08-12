@@ -278,30 +278,19 @@ dependencies.  This computes the same relation as the breadth-first traversal,
 but shares results across audited roots instead of repeatedly walking the same
 subgraph.
 -/
-partial def nearestTaggedDescendantsMemo
+def nearestTaggedDescendantsMemo
     (env : Environment)
     (directDeps : Std.HashMap Name (Array Name))
     (cacheRef : IO.Ref (Std.HashMap Name NameSet))
     (root : Name)
-    (visiting : NameSet := {}) : CoreM NameSet := do
+    (_visiting : NameSet := {}) : CoreM NameSet := do
   let cache ← cacheRef.get
   match cache.get? root with
   | some cached => pure cached
   | none =>
-      if visiting.contains root then
-        pure {}
-      else
-        let visiting := visiting.insert root
-        let mut nearest : NameSet := {}
-        for dep in directDeps.getD root #[] do
-          if (repDepth? env dep).isSome then
-            nearest := nearest.insert dep
-          else
-            let depNearest ←
-              nearestTaggedDescendantsMemo env directDeps cacheRef dep visiting
-            nearest := nearest.union depNearest
-        cacheRef.modify fun cache => cache.insert root nearest
-        pure nearest
+      let nearest := nearestTaggedDescendantsFromDeps env directDeps root
+      cacheRef.modify fun cache => cache.insert root nearest
+      pure nearest
 
 /-- Architecture violations detected from direct and transitive tagged dependencies. -/
 def taggedDependencyViolations

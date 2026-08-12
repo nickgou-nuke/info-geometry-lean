@@ -47,6 +47,10 @@ theorem isClopen_prefixCylinder (n : ℕ) (w : BitWord n) :
     IsOpen (prefixCylinder n w) ∧ IsClosed (prefixCylinder n w) :=
   ⟨isOpen_prefixCylinder n w, isClosed_prefixCylinder n w⟩
 
+theorem isClopen_prefixCylinder_native (n : ℕ) (w : BitWord n) :
+    IsClopen (prefixCylinder n w) := by
+  exact ⟨isClosed_prefixCylinder n w, isOpen_prefixCylinder n w⟩
+
 theorem isCompact_prefixCylinder (n : ℕ) (w : BitWord n) :
     IsCompact (prefixCylinder n w) := by
   exact IsCompact.of_isClosed_subset isCompact_univ
@@ -60,6 +64,12 @@ theorem prefixCylinder_disjoint_of_ne
   change boundaryPrefix n x = w at hx
   change boundaryPrefix n x = v at hy
   exact hwv (hx.symm.trans hy)
+
+theorem prefixCylinder_pairwise_disjoint (n : ℕ) :
+    Pairwise (fun w v : BitWord n =>
+      Disjoint (prefixCylinder n w) (prefixCylinder n v)) := by
+  intro w v hwv
+  exact prefixCylinder_disjoint_of_ne n hwv
 
 theorem prefixCylinder_inter
     (n : ℕ) (w v : BitWord n) :
@@ -82,7 +92,7 @@ theorem iUnion_prefixCylinder_eq_univ (n : ℕ) :
   ext x
   constructor
   · intro
-    trivial
+    exact Set.mem_univ x
   · intro
     exact Set.mem_iUnion.2 ⟨boundaryPrefix n x, by rfl⟩
 

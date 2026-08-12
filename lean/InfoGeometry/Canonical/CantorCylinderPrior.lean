@@ -15,13 +15,13 @@ namespace InfoGeometry.Canonical.CantorCylinderPrior
 open InfoGeometry.Canonical.CantorKMSCylinderState
 open InfoGeometry.Canonical.CantorCuntzBasis
 
-abbrev BinaryWord := InfoGeometry.Canonical.CantorCuntzBasis.BinaryWord
-
-theorem cylinderKMSWeight_nonnegative (w : BinaryWord) :
+theorem cylinderKMSWeight_nonnegative
+    (w : List Bool) :
     0 ≤ cylinderKMSWeight w :=
   cylinderKMSWeight_nonneg w
 
-theorem cylinderKMSWeight_finitely_additive (w : BinaryWord) :
+theorem cylinderKMSWeight_finitely_additive
+    (w : List Bool) :
     cylinderKMSWeight w =
       cylinderKMSWeight (false :: w) + cylinderKMSWeight (true :: w) := by
   symm

@@ -87,4 +87,22 @@ theorem localCl11NegativeUnit_conj_positive
     localCl11Switch_mul_negative]
   simp
 
+theorem localCl11SwitchUnit_conj_positiveUnit
+    {Op : Type*} [Ring Op] [IsDedekindFiniteMonoid Op]
+    (P : BinaryWordTiltReadout Op) :
+    (localCl11SwitchUnit P : Op) *
+        (localCl11PositiveUnit P : Op) *
+        ↑(localCl11SwitchUnit P)⁻¹ =
+      -(localCl11PositiveUnit P : Op) := by
+  simpa only [localCl11PositiveUnit_coe, localCl11SwitchUnit_conj_positive]
+
+theorem localCl11SwitchUnit_conj_negativeUnit
+    {Op : Type*} [Ring Op] [IsDedekindFiniteMonoid Op]
+    (P : BinaryWordTiltReadout Op) :
+    (localCl11SwitchUnit P : Op) *
+        (localCl11NegativeUnit P : Op) *
+        ↑(localCl11SwitchUnit P)⁻¹ =
+      -(localCl11NegativeUnit P : Op) := by
+  simpa only [localCl11NegativeUnit_coe, localCl11SwitchUnit_conj_negative]
+
 end InfoGeometry.Canonical.CantorLocalCl11Units

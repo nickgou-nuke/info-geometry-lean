@@ -14,6 +14,8 @@ fiber sectors, and transport/monodromy data.
 
 noncomputable section
 
+namespace ChiralTwistedFibration
+
 abbrev R2 := ℝ × ℝ
 
 def T (p : R2) : R2 := (p.1, p.2 + 1)
@@ -330,3 +332,5 @@ theorem chiral_twisted_fibration_theorem :
     glideTransport.sign = -1 ∧
     chiralTransport.sign = 1 := by
   exact ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
+
+end ChiralTwistedFibration

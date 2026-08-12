@@ -30,6 +30,7 @@ import InfoGeometry.Exceptional.Freudenthal
 import InfoGeometry.Exceptional.STUDatum
 import InfoGeometry.Exceptional.VectorSpinorQuartic
 import InfoGeometry.Exceptional.SplitOctonionZorn
+import InfoGeometry.Algebraic.SymmetricSplitSignatureBridge
 import InfoGeometry.Canonical.GeometricCalculusFreudenthalBridge
 import InfoGeometry.Canonical.DiracSouriauDecoupledDrazin
 import InfoGeometry.Canonical.LogarithmicCFTModularDecomposition
@@ -72,6 +73,7 @@ import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus
 import InfoGeometry.OperatorAlgebra.RealPhaseSpectralTriple
 import InfoGeometry.OperatorAlgebra.RealKreinModularSpectralTriple
+import InfoGeometry.Spectral.All
 import InfoGeometry.OperatorAlgebra.SplitCliffordZ2Four
 import InfoGeometry.OperatorAlgebra.StinespringDilation
 import InfoGeometry.OperatorAlgebra.StinespringChiralLightcone

@@ -32,6 +32,26 @@ theorem zornMatrixToVector_toMatrix
     zornMatrixToVector (zornVectorToMatrix X) = X := by
   rfl
 
+/-- The literal linear equivalence between the two native Zorn coordinate
+carriers.  Multiplicativity remains a separate theorem below. -/
+def zornMatrixVectorLinearEquiv :
+    ZornMatrix R ≃ₗ[R] InfoGeometry.Algebra.ZornVectorMatrix R where
+  toFun := zornMatrixToVector
+  invFun := zornVectorToMatrix
+  left_inv := zornVectorToMatrix_toVector
+  right_inv := zornMatrixToVector_toMatrix
+  map_add' X Y := by
+    apply InfoGeometry.Algebra.ZornVectorMatrix.ext <;> rfl
+  map_smul' r X := by
+    apply InfoGeometry.Algebra.ZornVectorMatrix.ext <;> rfl
+
+@[simp] theorem zornMatrixVectorLinearEquiv_apply (X : ZornMatrix R) :
+    zornMatrixVectorLinearEquiv X = zornMatrixToVector X := rfl
+
+@[simp] theorem zornMatrixVectorLinearEquiv_symm_apply
+    (X : InfoGeometry.Algebra.ZornVectorMatrix R) :
+    zornMatrixVectorLinearEquiv.symm X = zornVectorToMatrix X := rfl
+
 theorem zornMatrixToVector_mul (X Y : ZornMatrix R) :
     zornMatrixToVector (ZornMatrix.mul X Y) =
       InfoGeometry.Algebra.ZornVectorMatrix.mul

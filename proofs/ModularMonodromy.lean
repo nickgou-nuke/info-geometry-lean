@@ -94,7 +94,7 @@ theorem det_bogoliubovBoost (t : ℝ) : (bogoliubovBoost t).det = 1 := by
 
 def quadraticPotential (θ : ℝ) : ℝ := θ ^ 2 / 2
 
-theorem quadratic_gradient (θ : ℝ) :
+theorem modularQuadraticPotential_gradient (θ : ℝ) :
     deriv quadraticPotential θ = θ := by
   unfold quadraticPotential
   have hsq : HasDerivAt (fun x : ℝ => x ^ 2) (2 * θ) θ := by

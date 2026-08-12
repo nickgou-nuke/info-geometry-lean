@@ -8,7 +8,11 @@ import InfoGeometry.Clifford.Cl11CoordinateAlgebra
 /-!
 # InfoGeometry.Physics.BostConnesThermalTime
 
-**Bost-Connes System and Modular Flow**
+**Finite Cl(1,1) Thermal-Flow Readout**
+
+This owner proves only the finite coordinate flow identities below.  The
+Bost--Connes C*-algebra, KMS states, and arithmetic partition function are
+documented context, not constructions supplied by this file.
 
 This file connects the Cl(1,1) grading structure to the Bost-Connes
 quantum statistical mechanical system, where:
@@ -496,7 +500,8 @@ Full formalization awaits:
 - Tomita-Takesaki theory
 - Riemann zeta function formalization
 
-Current status: conceptual bridge with placeholder definitions.
+Current status: finite Cl(1,1) flow identities only; the C*-algebraic and KMS
+constructions listed above are not asserted by this owner.
 -/
 
 end InfoGeometry.Physics.BostConnesThermalTime

@@ -18,11 +18,8 @@ noncomputable section
 
 namespace SymbolicLaneUHFBridge
 
-abbrev CantorBoundary : Type :=
-  ℕ → Bool
-
 /-- Boundary coordinate projection, valued as a complex idempotent. -/
-def coordinateIdempotent (i : ℕ) (b : CantorBoundary) : ℂ :=
+def coordinateIdempotent (i : ℕ) (b : (ℕ → Bool)) : ℂ :=
   if b i then 1 else 0
 
 /-- Symbolic local occupation lane. -/
@@ -38,10 +35,10 @@ def gradedLane (e x : ℂ) : ℂ :=
   parityLane e * occupationLane e x
 
 /-- Local graded lane as a UHF diagonal boundary observable. -/
-def boundaryGradedLane (i : ℕ) (x : ℂ) : CantorBoundary → ℂ :=
+def boundaryGradedLane (i : ℕ) (x : ℂ) : (ℕ → Bool) → ℂ :=
   fun b => gradedLane (coordinateIdempotent i b) x
 
-theorem coordinateIdempotent_sq (i : ℕ) (b : CantorBoundary) :
+theorem coordinateIdempotent_sq (i : ℕ) (b : (ℕ → Bool)) :
     coordinateIdempotent i b * coordinateIdempotent i b =
       coordinateIdempotent i b := by
   by_cases h : b i
@@ -73,7 +70,7 @@ theorem gradedLane_occupied (x : ℂ) :
   norm_num [gradedLane, parityLane, occupationLane]
 
 /-- Pointwise selector form of the local UHF graded lane. -/
-theorem boundaryGradedLane_apply (i : ℕ) (x : ℂ) (b : CantorBoundary) :
+theorem boundaryGradedLane_apply (i : ℕ) (x : ℂ) (b : (ℕ → Bool)) :
     boundaryGradedLane i x b = if b i then -x else 1 := by
   by_cases h : b i
   · simp [boundaryGradedLane, coordinateIdempotent, h, gradedLane_occupied]

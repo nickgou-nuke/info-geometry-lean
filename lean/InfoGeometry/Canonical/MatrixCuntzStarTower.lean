@@ -43,7 +43,8 @@ theorem matrixEmbedId_law (n : ℕ) : matrixEmbedId n = StarAlgHom.id ℂ (Matri
 /-- **Theorem**: Obstruction to Stagewise Cuntz Family at Finite Matrix Stages:
     No finite matrix stage MatrixStage n (n > 0) can hold a stagewise Cuntz O₂ family. -/
 theorem matrixStage_cuntz_obstruction {n : ℕ} (hn : 0 < n)
-    (C : CuntzAlgebra.Cuntz2Isometries (Matrix (Fin n) (Fin n) ℂ)) : False := by
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra
+      (N := 2) (Matrix (Fin n) (Fin n) ℂ)) : False := by
   exact no_cuntz2_matrix hn C
 
 end InfoGeometry.Canonical.MatrixCuntzStarTower

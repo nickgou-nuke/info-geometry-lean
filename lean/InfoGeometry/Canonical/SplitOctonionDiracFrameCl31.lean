@@ -35,76 +35,73 @@ theorem gamma0_sq : gamma0 * gamma0 = -(1 : ZornMatrix ℝ) := by
     ZornMatrix.neg_def]
   apply ZornMatrix.ext
   · simp [gamma0, chiralLowerBasis, chiralUpperBasis, mul_def, mul, dot, cross,
-      sub_eq_add_neg, ZornMatrix.neg_def, Pi.single_apply, fin_zero_ne_two,
-      fin_one_ne_two, fin_two_eq_two]
+      sub_eq_add_neg, ZornMatrix.neg_def, fin_zero_ne_two,
+      fin_one_ne_two]
   · simp [gamma0, chiralLowerBasis, chiralUpperBasis, mul_def, mul, dot, cross,
-      sub_eq_add_neg, ZornMatrix.neg_def, Pi.single_apply, fin_zero_ne_two,
-      fin_one_ne_two, fin_two_eq_two]
+      sub_eq_add_neg, ZornMatrix.neg_def, fin_zero_ne_two,
+      fin_one_ne_two]
   · funext i
     fin_cases i <;> simp [gamma0, chiralLowerBasis, chiralUpperBasis,
       mul_def, mul, dot, cross, sub_eq_add_neg, ZornMatrix.neg_def,
-      Pi.single_apply, fin_zero_ne_two, fin_one_ne_two, fin_two_eq_two]
+      fin_zero_ne_two, fin_one_ne_two]
   · funext i
     fin_cases i <;> simp [gamma0, chiralLowerBasis, chiralUpperBasis,
       mul_def, mul, dot, cross, sub_eq_add_neg, ZornMatrix.neg_def,
-      Pi.single_apply, fin_zero_ne_two, fin_one_ne_two, fin_two_eq_two]
+      fin_zero_ne_two, fin_one_ne_two]
 
 theorem gamma1_sq : gamma1 * gamma1 = (1 : ZornMatrix ℝ) := by
   change gamma1 * gamma1 = { a := 1, b := 1, x := 0, y := 0 }
   apply ZornMatrix.ext <;>
     simp [gamma1, chiralLowerBasis, chiralUpperBasis, mul_def, mul, dot, cross,
-      sub_eq_add_neg, add_comm, add_left_comm, add_assoc] <;>
-    try { funext i; fin_cases i <;> simp }
+      sub_eq_add_neg, add_comm]
 
 theorem gamma2_sq : gamma2 * gamma2 = (1 : ZornMatrix ℝ) := by
   change gamma2 * gamma2 = { a := 1, b := 1, x := 0, y := 0 }
   apply ZornMatrix.ext <;>
     simp [gamma2, chiralLowerBasis, chiralUpperBasis, mul_def, mul, dot, cross,
-      sub_eq_add_neg, add_comm, add_left_comm, add_assoc] <;>
-    try { funext i; fin_cases i <;> simp }
+      sub_eq_add_neg, add_comm]
 
 theorem gamma3_sq : gamma3 * gamma3 = (1 : ZornMatrix ℝ) := by
   change gamma3 * gamma3 = { a := 1, b := 1, x := 0, y := 0 }
   apply ZornMatrix.ext <;>
     simp [gamma3, zornPlus, zornMinus, mul_def, mul, dot, cross,
-      sub_eq_add_neg, add_comm, add_left_comm, add_assoc] <;>
-    try { funext i; fin_cases i <;> simp }
+      sub_eq_add_neg, add_comm]
 
 theorem gamma0_gamma1_anticommute : anticommutator gamma0 gamma1 = 0 := by
   change anticommutator gamma0 gamma1 = { a := 0, b := 0, x := 0, y := 0 }
   apply ZornMatrix.ext <;> simp [anticommutator, gamma0, gamma1,
     chiralLowerBasis, chiralUpperBasis, mul_def, mul, dot, cross,
-    sub_eq_add_neg] <;> try { funext i; fin_cases i <;> simp }
+    sub_eq_add_neg]
 
 theorem gamma0_gamma2_anticommute : anticommutator gamma0 gamma2 = 0 := by
   change anticommutator gamma0 gamma2 = { a := 0, b := 0, x := 0, y := 0 }
   apply ZornMatrix.ext <;> simp [anticommutator, gamma0, gamma2,
     chiralLowerBasis, chiralUpperBasis, mul_def, mul, dot, cross,
-    sub_eq_add_neg] <;> try { funext i; fin_cases i <;> simp }
+    sub_eq_add_neg]
 
 theorem gamma0_gamma3_anticommute : anticommutator gamma0 gamma3 = 0 := by
   change anticommutator gamma0 gamma3 = { a := 0, b := 0, x := 0, y := 0 }
   apply ZornMatrix.ext <;> simp [anticommutator, gamma0, gamma3,
     chiralLowerBasis, chiralUpperBasis, zornPlus, zornMinus, mul_def, mul,
-    dot, cross, sub_eq_add_neg] <;> try { funext i; fin_cases i <;> simp }
+    dot, cross, sub_eq_add_neg]
 
 theorem gamma1_gamma2_anticommute : anticommutator gamma1 gamma2 = 0 := by
   change anticommutator gamma1 gamma2 = { a := 0, b := 0, x := 0, y := 0 }
   apply ZornMatrix.ext <;> simp [anticommutator, gamma1, gamma2,
     chiralLowerBasis, chiralUpperBasis, mul_def, mul, dot, cross,
-    sub_eq_add_neg] <;> try { funext i; fin_cases i <;> simp }
+    sub_eq_add_neg]
 
 theorem gamma1_gamma3_anticommute : anticommutator gamma1 gamma3 = 0 := by
   change anticommutator gamma1 gamma3 = { a := 0, b := 0, x := 0, y := 0 }
   apply ZornMatrix.ext <;> simp [anticommutator, gamma1, gamma3,
     chiralLowerBasis, chiralUpperBasis, zornPlus, zornMinus, mul_def, mul,
-    dot, cross, sub_eq_add_neg] <;> try { funext i; fin_cases i <;> simp }
+    dot, cross, sub_eq_add_neg]
 
 theorem gamma2_gamma3_anticommute : anticommutator gamma2 gamma3 = 0 := by
   change anticommutator gamma2 gamma3 = { a := 0, b := 0, x := 0, y := 0 }
   apply ZornMatrix.ext <;> simp [anticommutator, gamma2, gamma3,
     chiralLowerBasis, chiralUpperBasis, zornPlus, zornMinus, mul_def, mul,
-    dot, cross, sub_eq_add_neg] <;> try { funext i; fin_cases i <;> simp }
+    dot, cross, sub_eq_add_neg]
 
 end
 end InfoGeometry.Canonical.SplitOctonionDiracFrameCl31

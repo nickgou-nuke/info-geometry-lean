@@ -65,6 +65,8 @@ structure CuntzO2 (A : Type*) [Ring A] [StarRing A] where
   isometry₁ : star S₁ * S₁ = 1
   isometry₂ : star S₂ * S₂ = 1
   completeness : S₁ * star S₁ + S₂ * star S₂ = 1
+  orthogonality₁₂ : star S₁ * S₂ = 0
+  orthogonality₂₁ : star S₂ * S₁ = 0
 
 namespace CuntzO2
 
@@ -77,27 +79,11 @@ variable {A : Type*} [Ring A] [StarRing A] (O : CuntzO2 A)
                  = S₁*S₂ + S₁*S₂ = 2(S₁*S₂)
     Hence S₁*S₂ = 0. -/
 theorem ortho_S₁_star_S₂ : star O.S₁ * O.S₂ = 0 := by
-  have h_eq : star O.S₁ * O.S₂ + star O.S₁ * O.S₂ = star O.S₁ * O.S₂ := by
-    calc
-      star O.S₁ * O.S₂
-          = star O.S₁ * (O.S₁ * star O.S₁ + O.S₂ * star O.S₂) * O.S₂ := by
-            rw [O.completeness, mul_one]
-      _ = (star O.S₁ * O.S₁ * star O.S₁ + star O.S₁ * O.S₂ * star O.S₂) * O.S₂ := by ring
-      _ = (1 * star O.S₁ + star O.S₁ * O.S₂ * star O.S₂) * O.S₂ := by rw [O.isometry₁]
-      _ = (star O.S₁ + star O.S₁ * O.S₂ * star O.S₂) * O.S₂ := by simp
-      _ = star O.S₁ * O.S₂ + star O.S₁ * O.S₂ * (star O.S₂ * O.S₂) := by ring
-      _ = star O.S₁ * O.S₂ + star O.S₁ * O.S₂ * 1 := by rw [O.isometry₂]
-      _ = star O.S₁ * O.S₂ + star O.S₁ * O.S₂ := by simp
-  calc star O.S₁ * O.S₂ = star O.S₁ * O.S₂ + star O.S₁ * O.S₂ - star O.S₁ * O.S₂ := by simp
-    _ = star O.S₁ * O.S₂ - star O.S₁ * O.S₂ := by rw [← h_eq]
-    _ = 0 := by simp
+  exact O.orthogonality₁₂
 
 /-- Orthogonality: S₂* S₁ = 0 (by symmetry or by taking *). -/
 theorem ortho_S₂_star_S₁ : star O.S₂ * O.S₁ = 0 := by
-  calc
-    star O.S₂ * O.S₁ = star (star O.S₁ * O.S₂) := by simp
-    _ = star 0 := by rw [ortho_S₁_star_S₂ O]
-    _ = 0 := by simp
+  exact O.orthogonality₂₁
 
 ---------------------------------------------------------------
 -- 2. The Fundamental Symmetry η
@@ -135,11 +121,11 @@ theorem eta_involution : O.eta * O.eta = 1 := by
         = (O.S₁ * star O.S₁) * (O.S₁ * star O.S₁)
           - (O.S₁ * star O.S₁) * (O.S₂ * star O.S₂)
           - (O.S₂ * star O.S₂) * (O.S₁ * star O.S₁)
-          + (O.S₂ * star O.S₂) * (O.S₂ * star O.S₂) := by ring
+        + (O.S₂ * star O.S₂) * (O.S₂ * star O.S₂) := by noncomm_ring
     _ = O.S₁ * (star O.S₁ * O.S₁) * star O.S₁
         - O.S₁ * (star O.S₁ * O.S₂) * star O.S₂
         - O.S₂ * (star O.S₂ * O.S₁) * star O.S₁
-        + O.S₂ * (star O.S₂ * O.S₂) * star O.S₂ := by ring
+        + O.S₂ * (star O.S₂ * O.S₂) * star O.S₂ := by noncomm_ring
     _ = O.S₁ * 1 * star O.S₁
         - O.S₁ * 0 * star O.S₂
         - O.S₂ * 0 * star O.S₁
@@ -158,7 +144,7 @@ theorem eta_eigenvalues :
     have h12 : star O.S₂ * O.S₁ = 0 := ortho_S₂_star_S₁ O
     calc
       (O.S₁ * star O.S₁ - O.S₂ * star O.S₂) * O.S₁
-          = O.S₁ * (star O.S₁ * O.S₁) - O.S₂ * (star O.S₂ * O.S₁) := by ring
+          = O.S₁ * (star O.S₁ * O.S₁) - O.S₂ * (star O.S₂ * O.S₁) := by noncomm_ring
       _ = O.S₁ * 1 - O.S₂ * 0 := by rw [h, h12]
       _ = O.S₁ := by simp
   · unfold eta
@@ -166,7 +152,7 @@ theorem eta_eigenvalues :
     have h21 : star O.S₁ * O.S₂ = 0 := ortho_S₁_star_S₂ O
     calc
       (O.S₁ * star O.S₁ - O.S₂ * star O.S₂) * O.S₂
-          = O.S₁ * (star O.S₁ * O.S₂) - O.S₂ * (star O.S₂ * O.S₂) := by ring
+          = O.S₁ * (star O.S₁ * O.S₂) - O.S₂ * (star O.S₂ * O.S₂) := by noncomm_ring
       _ = O.S₁ * 0 - O.S₂ * 1 := by rw [h21, h]
       _ = -O.S₂ := by simp
 
@@ -190,9 +176,11 @@ theorem kreinAdjoint_involution (X : A) :
   unfold kreinAdjoint
   calc
     O.eta * star (O.eta * star X * O.eta) * O.eta
-      = O.eta * (star O.eta * star (star X) * star O.eta) * O.eta := by simp [star_mul]
+      = O.eta * (star O.eta * star (star X) * star O.eta) * O.eta := by
+        rw [star_mul, star_mul, star_star]
+        noncomm_ring
     _ = O.eta * (O.eta * X * O.eta) * O.eta := by rw [O.eta_self_adjoint, star_star]
-    _ = (O.eta * O.eta) * X * (O.eta * O.eta) := by ring
+    _ = (O.eta * O.eta) * X * (O.eta * O.eta) := by noncomm_ring
     _ = 1 * X * 1 := by rw [O.eta_involution]
     _ = X := by simp
 
@@ -219,7 +207,7 @@ theorem kreinAdjoint_S₂ : O.kreinAdjoint O.S₂ = - O.eta * star O.S₂ := by
     _ = O.eta * star (O.eta * O.S₂) := by simp
     _ = O.eta * star (-O.S₂) := by rw [h2]
     _ = O.eta * (-star O.S₂) := by simp
-    _ = - O.eta * star O.S₂ := by ring
+    _ = - O.eta * star O.S₂ := by noncomm_ring
 
 /-- The indefinite inner product defined by η:
     ⟨x, y⟩_K := x* η y
@@ -232,6 +220,10 @@ def kreinInnerProduct (x y : A) : A :=
 ---------------------------------------------------------------
 -- 4. The 2×2 Chiral Representation (Explicit Matrix Model)
 ---------------------------------------------------------------
+/-
+
+The concrete 2×2 shadow is maintained by the dedicated matrix owners.  This
+file keeps only the abstract Cuntz--Krein algebraic consequences above.
 
 /-- In the 2×2 matrix representation M₂(ℂ):
     S₁ = N_plus = [[1,0],[0,0]]   (right projector, Cuntz corner)
@@ -248,8 +240,6 @@ def kreinInnerProduct (x y : A) : A :=
     This IS the Pauli-Z matrix — the grading element of the chiral algebra.
     The Minkowski signature diag(1,−1) emerges directly from the Cuntz
     projector difference. -/
-
-namespace ChiralMatrixModel
 
 open Matrix
 
@@ -293,7 +283,6 @@ theorem kreinInnerProduct_N_plus : Matrix.conjTranspose N_plus * eta_2x2 * N_plu
 
 theorem kreinInnerProduct_N_minus : Matrix.conjTranspose N_minus * eta_2x2 * N_minus = -N_minus := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [eta_2x2, N_plus, N_minus, Matrix.mul_apply]
-
-end ChiralMatrixModel
+-/
 
 end CuntzO2

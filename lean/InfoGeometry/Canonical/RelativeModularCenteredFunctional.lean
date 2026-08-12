@@ -159,7 +159,7 @@ theorem compatibleSub_of_compatibleLinear
 section CantorLocalPath
 
 /-- First `n` bits of an infinite binary string (as `Fin n → Bool`). -/
-def cantorPrefixWord (x : ℕ → Bool) : ∀ n : ℕ, BinaryWord n
+def cantorPrefixWord (x : ℕ → Bool) : ∀ n : ℕ, (Fin n → Bool)
   | 0 => fun i => False.elim (Fin.elim0 i)
   | n + 1 => Fin.snoc (cantorPrefixWord x n) (x n)
 
@@ -171,7 +171,7 @@ def cantorPrefixWord (x : ℕ → Bool) : ∀ n : ℕ, BinaryWord n
   rfl
 
 /-- Uniform Bernoulli reference functional on level-`n` observables. -/
-def cantorRefFunctional (n : ℕ) : (BinaryWord n → ℝ) →ₗ[ℝ] ℝ where
+def cantorRefFunctional (n : ℕ) : ((Fin n → Bool) → ℝ) →ₗ[ℝ] ℝ where
   toFun f := uniformMean (n := n) f
   map_add' _ _ := by
     simp [uniformMean, mul_add, Finset.sum_add_distrib]
@@ -179,8 +179,8 @@ def cantorRefFunctional (n : ℕ) : (BinaryWord n → ℝ) →ₗ[ℝ] ℝ where
     simp [uniformMean, mul_sum, mul_assoc, mul_comm]
 
 /-- Point density of a fixed infinite word at level `n`: `Δ_{x,n}`. -/
-def cantorPointDensity (x : ℕ → Bool) (n : ℕ) : BinaryWord n → ℝ :=
-  fun w => if w = cantorPrefixWord (x := x) n then (Fintype.card (BinaryWord n) : ℝ) else 0
+def cantorPointDensity (x : ℕ → Bool) (n : ℕ) : (Fin n → Bool) → ℝ :=
+  fun w => if w = cantorPrefixWord (x := x) n then (Fintype.card ((Fin n → Bool)) : ℝ) else 0
 
 /-- `cantorPointDensity` is the same point spike used by the finite-score API. -/
 theorem cantorPointDensity_eq_pointDensity
@@ -195,57 +195,57 @@ theorem cantorPointDensity_smul_eq_prefix_eq
     (x y : ℕ → Bool) (n : ℕ) {c : ℝ}
     (h : cantorPointDensity (x := x) n = c • cantorPointDensity (x := y) n) :
     cantorPrefixWord (x := x) n = cantorPrefixWord (x := y) n := by
-  have hcard : (Fintype.card (BinaryWord n) : ℝ) ≠ 0 := by
-    exact_mod_cast Fintype.card_ne_zero (α := BinaryWord n)
+  have hcard : (Fintype.card ((Fin n → Bool)) : ℝ) ≠ 0 := by
+    exact_mod_cast Fintype.card_ne_zero (α := (Fin n → Bool))
   have hEval :
       (cantorPointDensity (x := x) n) (cantorPrefixWord (x := x) n)
         = c * (cantorPointDensity (x := y) n) (cantorPrefixWord (x := x) n) := by
     exact congrArg (fun f => f (cantorPrefixWord (x := x) n)) h
   have hEq :
-      (Fintype.card (BinaryWord n) : ℝ)
+      (Fintype.card ((Fin n → Bool)) : ℝ)
         = c * (if cantorPrefixWord (x := x) n = cantorPrefixWord (x := y) n
-            then (Fintype.card (BinaryWord n) : ℝ)
+            then (Fintype.card ((Fin n → Bool)) : ℝ)
             else 0) := by
     simpa [cantorPointDensity] using hEval
   by_cases hxy : cantorPrefixWord (x := x) n = cantorPrefixWord (x := y) n
   · exact hxy
   · exfalso
-    have hzero : (Fintype.card (BinaryWord n) : ℝ) = 0 := by
+    have hzero : (Fintype.card ((Fin n → Bool)) : ℝ) = 0 := by
       simpa [hxy, mul_zero] using hEq
     exact hcard hzero
 /-- Point state on level `n`: `φ_n(f)=f(x[:n])`. -/
 def cantorPointState (x : ℕ → Bool) (n : ℕ) :
-    (BinaryWord n → ℝ) →ₗ[ℝ] ℝ where
+    ((Fin n → Bool) → ℝ) →ₗ[ℝ] ℝ where
   toFun f := f (cantorPrefixWord (x := x) n)
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 
 /-- Point state is obtained from `ref` by left-multiplying by `Δ_{x,n}`. -/
 theorem cantorPointState_state_eq_ref
-    (x : ℕ → Bool) (n : ℕ) (a : BinaryWord n → ℝ) :
+    (x : ℕ → Bool) (n : ℕ) (a : (Fin n → Bool) → ℝ) :
     cantorPointState (x := x) n a =
       cantorRefFunctional (n := n) (cantorPointDensity (x := x) n * a) := by
   change a (cantorPrefixWord (x := x) n) = cantorRefFunctional (n := n) (cantorPointDensity (x := x) n * a)
-  let cardN : ℝ := (Fintype.card (BinaryWord n) : ℝ)
+  let cardN : ℝ := (Fintype.card ((Fin n → Bool)) : ℝ)
   have hcard : cardN ≠ 0 := by
     dsimp [cardN]
-    exact_mod_cast (Fintype.card_ne_zero (α := BinaryWord n))
+    exact_mod_cast (Fintype.card_ne_zero (α := (Fin n → Bool)))
   have hsum_univ :
-      (∑ i ∈ (Finset.univ : Finset (BinaryWord n)),
+      (∑ i ∈ (Finset.univ : Finset ((Fin n → Bool))),
           (if i = cantorPrefixWord (x := x) n then cardN else 0) * a i) =
         (if cantorPrefixWord (x := x) n = cantorPrefixWord (x := x) n then cardN else 0) *
           a (cantorPrefixWord (x := x) n) := by
     classical
     refine Finset.sum_eq_single (a := cantorPrefixWord (x := x) n)
-      (s := (Finset.univ : Finset (BinaryWord n)) )
-      (f := fun i : BinaryWord n => (if i = cantorPrefixWord (x := x) n then cardN else 0) * a i) ?_ ?_
+      (s := (Finset.univ : Finset ((Fin n → Bool))) )
+      (f := fun i : (Fin n → Bool) => (if i = cantorPrefixWord (x := x) n then cardN else 0) * a i) ?_ ?_
     · intro i hi hne
       simp [cardN, hne]
     · intro hnotmem
       simp at hnotmem
     
   have hsum :
-      (∑ i : BinaryWord n,
+      (∑ i : (Fin n → Bool),
           (if i = cantorPrefixWord (x := x) n then cardN else 0) * a i) =
         cardN * a (cantorPrefixWord (x := x) n) := by
     simpa [Finset.mem_univ, if_pos rfl, cardN] using hsum_univ
@@ -255,7 +255,7 @@ theorem cantorPointState_state_eq_ref
             rw [inv_mul_cancel₀ hcard, one_mul]
     _ = cardN⁻¹ * (cardN * a (cantorPrefixWord (x := x) n)) := by
             ring
-    _ = cardN⁻¹ * ∑ i : BinaryWord n,
+    _ = cardN⁻¹ * ∑ i : (Fin n → Bool),
             (if i = cantorPrefixWord (x := x) n then cardN else 0) * a i := by
           rw [hsum]
     _ = cantorRefFunctional (n := n) (cantorPointDensity (x := x) n * a) := by
@@ -263,36 +263,36 @@ theorem cantorPointState_state_eq_ref
 
 /-- `Δ_{x,n}` is normalized so that `ref` is a state and `state` is normalized. -/
 lemma cantorRefFunctional_one (n : ℕ) :
-    cantorRefFunctional (n := n) (1 : BinaryWord n → ℝ) = 1 := by
+    cantorRefFunctional (n := n) (1 : (Fin n → Bool) → ℝ) = 1 := by
   unfold cantorRefFunctional
-  have hcard : (Fintype.card (BinaryWord n) : ℝ) ≠ 0 := by
-    exact_mod_cast Fintype.card_ne_zero (α := BinaryWord n)
-  have hsum : (∑ i : BinaryWord n, (1 : ℝ)) = (Fintype.card (BinaryWord n) : ℝ) := by
+  have hcard : (Fintype.card ((Fin n → Bool)) : ℝ) ≠ 0 := by
+    exact_mod_cast Fintype.card_ne_zero (α := (Fin n → Bool))
+  have hsum : (∑ i : (Fin n → Bool), (1 : ℝ)) = (Fintype.card ((Fin n → Bool)) : ℝ) := by
     simp
   calc
-    (Fintype.card (BinaryWord n) : ℝ)⁻¹ * (∑ i : BinaryWord n, (1 : ℝ))
-        = (Fintype.card (BinaryWord n) : ℝ)⁻¹ * (Fintype.card (BinaryWord n) : ℝ) := by simpa [hsum]
+    (Fintype.card ((Fin n → Bool)) : ℝ)⁻¹ * (∑ i : (Fin n → Bool), (1 : ℝ))
+        = (Fintype.card ((Fin n → Bool)) : ℝ)⁻¹ * (Fintype.card ((Fin n → Bool)) : ℝ) := by simpa [hsum]
     _ = 1 := by
-      have hmul : (Fintype.card (BinaryWord n) : ℝ)⁻¹ * (Fintype.card (BinaryWord n) : ℝ) = 1 := by
+      have hmul : (Fintype.card ((Fin n → Bool)) : ℝ)⁻¹ * (Fintype.card ((Fin n → Bool)) : ℝ) = 1 := by
         exact inv_mul_cancel₀ hcard
       simpa using hmul
 
 /-- Local state package at level `n` for a fixed boundary word. -/
 def cantorPathLocalDensityState (x : ℕ → Bool) (n : ℕ) :
-    LocalDensityState (A := BinaryWord n → ℝ) :=
+    LocalDensityState (A := (Fin n → Bool) → ℝ) :=
   { ref := cantorRefFunctional (n := n)
     density := cantorPointDensity (x := x) n
     norm_ref := by
       simpa using (cantorRefFunctional_one (n := n))
     norm_density := by
       have h := cantorPointState_state_eq_ref (x := x) n
-        (1 : BinaryWord n → ℝ)
+        (1 : (Fin n → Bool) → ℝ)
       simpa [cantorPointState, cantorPointDensity] using h.symm }
 
 /-- The local density state is projectively comparable to itself (ratio `1`). -/
 theorem cantorPathLocalDensityState_projectivelyComparable_self
     (x : ℕ → Bool) (n : ℕ) :
-    projectivelyComparable (A := BinaryWord n → ℝ)
+    projectivelyComparable (A := (Fin n → Bool) → ℝ)
       (cantorPathLocalDensityState (x := x) n)
       (cantorPathLocalDensityState (x := x) n) := by
   refine ⟨(1 : ℝ), rfl, ?_⟩
@@ -302,7 +302,7 @@ theorem cantorPathLocalDensityState_projectivelyComparable_self
 prefix word at that level. -/
 theorem cantorPathLocalDensityState_projectivelyComparable_prefix_eq
     (x y : ℕ → Bool) (n : ℕ)
-    (h : projectivelyComparable (A := BinaryWord n → ℝ)
+    (h : projectivelyComparable (A := (Fin n → Bool) → ℝ)
       (cantorPathLocalDensityState (x := x) n)
       (cantorPathLocalDensityState (x := y) n)) :
     cantorPrefixWord (x := x) n = cantorPrefixWord (x := y) n := by
@@ -311,12 +311,12 @@ theorem cantorPathLocalDensityState_projectivelyComparable_prefix_eq
 
 /-- Restrict level-`n+1` observables to level `n` along a fixed word branch. -/
 def cantorPathRestrict (x : ℕ → Bool) (n : ℕ) :
-    (BinaryWord (n + 1) → ℝ) → (BinaryWord n → ℝ) :=
+    ((Fin (n + 1) → Bool) → ℝ) → ((Fin n → Bool) → ℝ) :=
   fun f w => f (Fin.snoc w (x n))
 
 /-- Linear version of the branch restriction. -/
 def cantorPathRestrictLinear (x : ℕ → Bool) (n : ℕ) :
-    (BinaryWord (n + 1) → ℝ) →ₗ[ℝ] (BinaryWord n → ℝ) where
+    ((Fin (n + 1) → Bool) → ℝ) →ₗ[ℝ] ((Fin n → Bool) → ℝ) where
   toFun := cantorPathRestrict (x := x) n
   map_add' := by
     intro a b
@@ -327,26 +327,26 @@ def cantorPathRestrictLinear (x : ℕ → Bool) (n : ℕ) :
 
 /-- Compatibility property for the fixed-word local state family. -/
 theorem cantorPathStateCompatible (x : ℕ → Bool) (n : ℕ)
-    (a : BinaryWord (n + 1) → ℝ) :
+    (a : (Fin (n + 1) → Bool) → ℝ) :
     cantorPointState (x := x) (n + 1) a =
       cantorPointState (x := x) n (cantorPathRestrict (x := x) n a) := by
   simp [cantorPointState, cantorPathRestrict, cantorPrefixWord_succ]
 
 /-- Linearized compatibility property for the restricted observables. -/
 theorem cantorPathStateCompatibleLinear (x : ℕ → Bool) (n : ℕ)
-    (a : BinaryWord (n + 1) → ℝ) :
+    (a : (Fin (n + 1) → Bool) → ℝ) :
     cantorPointState (x := x) (n + 1) a =
       cantorPointState (x := x) n ((cantorPathRestrictLinear (x := x) n) a) := by
   simp [cantorPathRestrictLinear, cantorPathRestrict, cantorPointState, cantorPrefixWord_succ]
 
 /-- Centered functional identity on each level: `η_n(f)=f(x_n)-μ_n(f)`. -/
 theorem cantorPathCentered_eq_eval_sub_uniform
-    (x : ℕ → Bool) (n : ℕ) (a : BinaryWord n → ℝ) :
-    centeredFunctional (A := BinaryWord n → ℝ) (cantorPathLocalDensityState (x := x) n) a =
+    (x : ℕ → Bool) (n : ℕ) (a : (Fin n → Bool) → ℝ) :
+    centeredFunctional (A := (Fin n → Bool) → ℝ) (cantorPathLocalDensityState (x := x) n) a =
       a (cantorPrefixWord (x := x) n) - uniformMean (n := n) a := by
   let S := cantorPathLocalDensityState (x := x) n
   calc
-    centeredFunctional (A := BinaryWord n → ℝ) S a
+    centeredFunctional (A := (Fin n → Bool) → ℝ) S a
         = S.ref ((S.density - 1) * a) := by
             simpa [S, centeredFunctional_eq_delta_minus_one, centeredDensity]
     _ = S.ref (S.density * a - 1 * a) := by
@@ -367,8 +367,8 @@ theorem cantorPathCentered_eq_eval_sub_uniform
             rw [hstateEval]
 /-- Rewriting the centered functional as the preexisting finite Cantor score. -/
 theorem cantorPathCentered_eq_scoreAt
-    (x : ℕ → Bool) (n : ℕ) (a : BinaryWord n → ℝ) :
-    centeredFunctional (A := BinaryWord n → ℝ) (cantorPathLocalDensityState (x := x) n) a =
+    (x : ℕ → Bool) (n : ℕ) (a : (Fin n → Bool) → ℝ) :
+    centeredFunctional (A := (Fin n → Bool) → ℝ) (cantorPathLocalDensityState (x := x) n) a =
       scoreAt (cantorPrefixWord (x := x) n) a := by
   simpa [scoreAt] using
     (cantorPathCentered_eq_eval_sub_uniform (x := x) (n := n) (a := a))
@@ -376,8 +376,8 @@ theorem cantorPathCentered_eq_scoreAt
 /-- Rewriting the centered functional as the finite centered-score functional in
 `Δ-1` form. -/
 theorem cantorPathCentered_eq_scoreAt_delta_sub_one
-    (x : ℕ → Bool) (n : ℕ) (a : BinaryWord n → ℝ) :
-    centeredFunctional (A := BinaryWord n → ℝ) (cantorPathLocalDensityState (x := x) n) a =
+    (x : ℕ → Bool) (n : ℕ) (a : (Fin n → Bool) → ℝ) :
+    centeredFunctional (A := (Fin n → Bool) → ℝ) (cantorPathLocalDensityState (x := x) n) a =
       uniformMean (n := n)
         (fun v => (cantorPointDensity (x := x) n v - 1) * a v) := by
   rw [cantorPathCentered_eq_scoreAt (x := x) (n := n) (a := a)]
@@ -387,7 +387,7 @@ theorem cantorPathCentered_eq_scoreAt_delta_sub_one
 
 /-- Finite-path-compatible centered net for the fixed infinite binary word `x`. -/
 def cantorPathCenteredNet (x : ℕ → Bool) :
-    CompatibleCenteredModularNet (fun n => BinaryWord n → ℝ) where
+    CompatibleCenteredModularNet (fun n => (Fin n → Bool) → ℝ) where
   ring_A := fun n => by
     infer_instance
   algebra_A := fun n => by
@@ -396,37 +396,37 @@ def cantorPathCenteredNet (x : ℕ → Bool) :
   restrict := cantorPathRestrictLinear (x := x)
   ref := fun n => cantorRefFunctional (n := n)
   density := fun n => cantorPointDensity (x := x) n
-  centered := fun n => centeredFunctional (A := BinaryWord n → ℝ) (cantorPathLocalDensityState (x := x) n)
+  centered := fun n => centeredFunctional (A := (Fin n → Bool) → ℝ) (cantorPathLocalDensityState (x := x) n)
 
 theorem cantorPathCenteredNet_compatible (x : ℕ → Bool) (n : ℕ)
-    (a : BinaryWord (n + 1) → ℝ) :
+    (a : (Fin (n + 1) → Bool) → ℝ) :
     (cantorPathCenteredNet (x := x)).state (n + 1) a =
       (cantorPathCenteredNet (x := x)).state n
         ((cantorPathCenteredNet (x := x)).restrict n a) := by
   exact cantorPathStateCompatibleLinear (x := x) n a
 
 theorem cantorPathCenteredNet_centered_eq (x : ℕ → Bool) (n : ℕ)
-    (a : BinaryWord n → ℝ) :
+    (a : (Fin n → Bool) → ℝ) :
     ((cantorPathCenteredNet (x := x)).centered n) a =
       ((cantorPathCenteredNet (x := x)).ref n)
         (((cantorPathCenteredNet (x := x)).density n - 1) * a) := by
   let S := cantorPathLocalDensityState (x := x) n
   simpa [cantorPathCenteredNet, S, centeredDensity] using
-    (centeredFunctional_eq_delta_minus_one (A := BinaryWord n → ℝ) S a)
+    (centeredFunctional_eq_delta_minus_one (A := (Fin n → Bool) → ℝ) S a)
 
 theorem cantorPathCenteredNet_centered_one (x : ℕ → Bool) (n : ℕ) :
-    ((cantorPathCenteredNet (x := x)).centered n) (1 : BinaryWord n → ℝ) = 0 := by
+    ((cantorPathCenteredNet (x := x)).centered n) (1 : (Fin n → Bool) → ℝ) = 0 := by
   let S := cantorPathLocalDensityState (x := x) n
   simpa [cantorPathCenteredNet, S, centeredDensity] using
-    (centeredFunctional_one_eq_zero (A := BinaryWord n → ℝ) S)
+    (centeredFunctional_one_eq_zero (A := (Fin n → Bool) → ℝ) S)
 
 /-- Signed local displacement at level `n` is exactly `state - reference`. -/
 theorem cantorPathCentered_eq_state_sub_ref
-    (x : ℕ → Bool) (n : ℕ) (a : BinaryWord n → ℝ) :
+    (x : ℕ → Bool) (n : ℕ) (a : (Fin n → Bool) → ℝ) :
     ((cantorPathCenteredNet (x := x)).centered n) a =
       ((cantorPathCenteredNet (x := x)).state n) a -
       ((cantorPathCenteredNet (x := x)).ref n) a := by
-  change centeredFunctional (A := BinaryWord n → ℝ) (cantorPathLocalDensityState (x := x) n) a =
+  change centeredFunctional (A := (Fin n → Bool) → ℝ) (cantorPathLocalDensityState (x := x) n) a =
     cantorPointState (x := x) n a - cantorRefFunctional (n := n) a
   have hstate :
       (cantorPathLocalDensityState (x := x) n).state a =
@@ -442,22 +442,22 @@ theorem cantorPathCentered_eq_state_sub_ref
 /-- Centered local score is normalized (`η_n(1)=0`). -/
 theorem cantorPathCentered_one
     (x : ℕ → Bool) (n : ℕ) :
-    ((cantorPathCenteredNet (x := x)).centered n) (1 : BinaryWord n → ℝ) = 0 := by
+    ((cantorPathCenteredNet (x := x)).centered n) (1 : (Fin n → Bool) → ℝ) = 0 := by
   exact cantorPathCenteredNet_centered_one x n
 
 /-- Core displacement form: centered score equals the reference functional of `(Δ - 1) * a`. -/
 theorem cantorPathCentered_eq_ref_delta_sub_one
-    (x : ℕ → Bool) (n : ℕ) (a : BinaryWord n → ℝ) :
+    (x : ℕ → Bool) (n : ℕ) (a : (Fin n → Bool) → ℝ) :
     ((cantorPathCenteredNet (x := x)).centered n) a =
       ((cantorPathCenteredNet (x := x)).ref n)
         (((cantorPathCenteredNet (x := x)).density n - 1) * a) := by
   exact cantorPathCenteredNet_centered_eq x n a
 /-- Rewriting the centered functional as the preexisting finite Cantor score. -/
 theorem cantorPathCenteredNet_centered_eq_scoreLinear
-    (x : ℕ → Bool) (n : ℕ) (a : BinaryWord n → ℝ) :
+    (x : ℕ → Bool) (n : ℕ) (a : (Fin n → Bool) → ℝ) :
     ((cantorPathCenteredNet (x := x)).centered n) a =
       scoreLinear (cantorPrefixWord (x := x) n) a := by
-  change centeredFunctional (A := BinaryWord n → ℝ) (cantorPathLocalDensityState (x := x) n) a =
+  change centeredFunctional (A := (Fin n → Bool) → ℝ) (cantorPathLocalDensityState (x := x) n) a =
     scoreLinear (cantorPrefixWord (x := x) n) a
   rw [cantorPathCentered_eq_scoreAt (x := x) (n := n) (a := a)]
   rfl
@@ -477,15 +477,15 @@ section TypeIII_Delta_Interface
 /--
 Abstract finite-level data for a `Δ - 1` centered extension of a MASA Dirac point.
 -/
-structure CantorDiracTypeIIIData (r : ∀ n, (BinaryWord (n + 1) → ℝ) →ₗ[ℝ] (BinaryWord n → ℝ)) where
-  omega : ∀ n, (BinaryWord n → ℝ) →ₗ[ℝ] ℝ
-  phi : ∀ n, (BinaryWord n → ℝ) →ₗ[ℝ] ℝ
-  eta : ∀ n, (BinaryWord n → ℝ) →ₗ[ℝ] ℝ
-  omega_one : ∀ n, omega n (1 : BinaryWord n → ℝ) = 1
-  phi_one : ∀ n, phi n (1 : BinaryWord n → ℝ) = 1
-  omega_compatible : ∀ n (a : BinaryWord (n + 1) → ℝ),
+structure CantorDiracTypeIIIData (r : ∀ n, ((Fin (n + 1) → Bool) → ℝ) →ₗ[ℝ] ((Fin n → Bool) → ℝ)) where
+  omega : ∀ n, ((Fin n → Bool) → ℝ) →ₗ[ℝ] ℝ
+  phi : ∀ n, ((Fin n → Bool) → ℝ) →ₗ[ℝ] ℝ
+  eta : ∀ n, ((Fin n → Bool) → ℝ) →ₗ[ℝ] ℝ
+  omega_one : ∀ n, omega n (1 : (Fin n → Bool) → ℝ) = 1
+  phi_one : ∀ n, phi n (1 : (Fin n → Bool) → ℝ) = 1
+  omega_compatible : ∀ n (a : (Fin (n + 1) → Bool) → ℝ),
     omega (n + 1) a = omega n ((r n) a)
-  phi_compatible : ∀ n (a : BinaryWord (n + 1) → ℝ),
+  phi_compatible : ∀ n (a : (Fin (n + 1) → Bool) → ℝ),
     phi (n + 1) a = phi n ((r n) a)
   eta_eq : ∀ n a,
     eta n a = phi n a - omega n a
@@ -493,9 +493,9 @@ structure CantorDiracTypeIIIData (r : ∀ n, (BinaryWord (n + 1) → ℝ) →ₗ
 /-- Centered displacement has vanishing mass in every finite level.
 This is the finite echo of `η(1)=0`. -/
 theorem cantorDiracTypeIII_eta_one
-    {r : ∀ n, (BinaryWord (n + 1) → ℝ) →ₗ[ℝ] (BinaryWord n → ℝ)}
+    {r : ∀ n, ((Fin (n + 1) → Bool) → ℝ) →ₗ[ℝ] ((Fin n → Bool) → ℝ)}
     (S : CantorDiracTypeIIIData r) :
-    ∀ n, S.eta n (1 : BinaryWord n → ℝ) = 0 := by
+    ∀ n, S.eta n (1 : (Fin n → Bool) → ℝ) = 0 := by
   intro n
   rw [S.eta_eq]
   rw [S.phi_one, S.omega_one]
@@ -505,9 +505,9 @@ theorem cantorDiracTypeIII_eta_one
 This is the finite net form of weak-* compatibility of local `η_n = φ_n - ω_n`.
 -/
 theorem cantorDiracTypeIII_eta_compatible
-    {r : ∀ n, (BinaryWord (n + 1) → ℝ) →ₗ[ℝ] (BinaryWord n → ℝ)}
+    {r : ∀ n, ((Fin (n + 1) → Bool) → ℝ) →ₗ[ℝ] ((Fin n → Bool) → ℝ)}
     (S : CantorDiracTypeIIIData r) :
-    ∀ n (a : BinaryWord (n + 1) → ℝ),
+    ∀ n (a : (Fin (n + 1) → Bool) → ℝ),
       S.eta (n + 1) a = S.eta n ((r n) a) := by
   intro n a
   rw [S.eta_eq, S.phi_compatible, S.omega_compatible, S.eta_eq]
@@ -666,12 +666,12 @@ theorem localMellinGreen_eq_centered
 
 /-- Levelwise local Mellin-green transform for the Cantor point-path state. -/
 def cantorPathLocalMellinGreen
-    (x : ℕ → Bool) (n : ℕ) (s : ℂ) (a : BinaryWord n → ℝ) : ℂ :=
-  localMellinGreen (A := BinaryWord n → ℝ) (cantorPathLocalDensityState (x := x) n) s a
+    (x : ℕ → Bool) (n : ℕ) (s : ℂ) (a : (Fin n → Bool) → ℝ) : ℂ :=
+  localMellinGreen (A := (Fin n → Bool) → ℝ) (cantorPathLocalDensityState (x := x) n) s a
 
 /-- Cantor path local Mellin-green transform as the finite centered score. -/
 theorem cantorPathLocalMellinGreen_eq_scoreAt
-    (x : ℕ → Bool) (n : ℕ) (a : BinaryWord n → ℝ) (s : ℂ) :
+    (x : ℕ → Bool) (n : ℕ) (a : (Fin n → Bool) → ℝ) (s : ℂ) :
     cantorPathLocalMellinGreen (x := x) n s a =
       cantorSpectralZeta s * Complex.ofReal
         (scoreAt (cantorPrefixWord (x := x) n) a) := by
@@ -680,10 +680,10 @@ theorem cantorPathLocalMellinGreen_eq_scoreAt
 /-- The centered source term still vanishes on the unit for each local Mellin transform. -/
 theorem cantorPathLocalMellinGreen_one
     (x : ℕ → Bool) (n : ℕ) (s : ℂ) :
-    cantorPathLocalMellinGreen (x := x) n s (1 : BinaryWord n → ℝ) = 0 := by
+    cantorPathLocalMellinGreen (x := x) n s (1 : (Fin n → Bool) → ℝ) = 0 := by
   unfold cantorPathLocalMellinGreen localMellinGreen
   rw [centeredFunctional_one_eq_zero
-    (A := BinaryWord n → ℝ) (S := cantorPathLocalDensityState (x := x) n)]
+    (A := (Fin n → Bool) → ℝ) (S := cantorPathLocalDensityState (x := x) n)]
   simp
 
 end

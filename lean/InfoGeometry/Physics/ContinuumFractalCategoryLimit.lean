@@ -21,8 +21,8 @@ def stageToContinuum
     [AddCommGroup V] [Module ℚ V]
     [AddCommGroup VInf] [Module ℚ VInf]
     (map : V →ₗ[ℚ] VInf)
-    (continuum : VInf → InfiniteBinaryWordSpace) :
-    V → InfiniteBinaryWordSpace :=
+    (continuum : VInf → (ℕ → Bool)) :
+    V → (ℕ → Bool) :=
   continuum ∘ map
 
 theorem stageToContinuum_surjective
@@ -30,7 +30,7 @@ theorem stageToContinuum_surjective
     [AddCommGroup V] [Module ℚ V]
     [AddCommGroup VInf] [Module ℚ VInf]
     (map : V →ₗ[ℚ] VInf)
-    (continuum : VInf → InfiniteBinaryWordSpace)
+    (continuum : VInf → (ℕ → Bool))
     (map_surjective : Function.Surjective map)
     (continuum_surjective : Function.Surjective continuum) :
     Function.Surjective (stageToContinuum map continuum) := by
@@ -41,13 +41,13 @@ theorem stageToContinuum_surjective
 
 def continuumPrefix
     {VInf : Type*} [AddCommGroup VInf] [Module ℚ VInf]
-    (continuum : VInf → InfiniteBinaryWordSpace)
+    (continuum : VInf → (ℕ → Bool))
     (n : ℕ) (z : VInf) : List Bool :=
   boundaryPrefix n (continuum z)
 
 @[simp] theorem continuumPrefix_length
     {VInf : Type*} [AddCommGroup VInf] [Module ℚ VInf]
-    (continuum : VInf → InfiniteBinaryWordSpace)
+    (continuum : VInf → (ℕ → Bool))
     (n : ℕ) (z : VInf) :
     (continuumPrefix continuum n z).length = n := by
   simp [continuumPrefix, boundaryPrefix_length]

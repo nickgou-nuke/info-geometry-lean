@@ -1,4 +1,4 @@
-import proofs.CanonicalZornRealSpin44
+import InfoGeometry.Canonical.CanonicalZornRealSpin44
 
 /-!
 # Triality covariance of the canonical Zorn Clifford and spin actions
@@ -20,7 +20,7 @@ noncomputable section
 
 namespace CanonicalZornTrialitySpinEquivariance
 
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 open CanonicalZornProjectiveTKKBridge
 open CanonicalZornFiveGradedClosure
 open CanonicalZornCompositionTriality
@@ -40,7 +40,7 @@ def axisCycleCopy (sector : TrialitySector) :
 
 theorem axisCycleCopy_val {sector : TrialitySector} (X : ZornCopy sector) :
     (axisCycleCopy sector X).val = canonicalTriality X.val := by
-  apply zornCoordinates_injective
+  apply CanonicalZornCompositionTriality.zornCoordinates_injective
   funext i
   fin_cases i <;> rfl
 

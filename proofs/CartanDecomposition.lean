@@ -1,10 +1,9 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Data.Real.Basic
+import proofs.PatchRepresentation
 
 open Matrix
-
-abbrev Patch2x2 := Matrix (Fin 2) (Fin 2) ℝ
 
 /-- Cartan Decomposition: Symmetric Part (Even under transposition) -/
 noncomputable def symmPart (M : Patch2x2) : Patch2x2 :=

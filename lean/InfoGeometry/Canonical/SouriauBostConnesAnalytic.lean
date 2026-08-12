@@ -74,7 +74,7 @@ We now construct the global colimit trace on the infinite Cantor Boundary.
 
 /-- The all-zero vacuum word on the infinite Cantor boundary.
     This exactly matches `canonicalCrystallisedReadout.boundaryWord`. -/
-def cantorVacuumBoundary : CantorBoundary :=
+def cantorVacuumBoundary : ℕ → Bool :=
   fun _ => false
 
 /-- 
@@ -94,8 +94,12 @@ through the UHF colimit, fulfilling the zero-temperature limit algebraically.
 -/
 theorem phase_space_shattering_to_cantor_boundary (n : ℕ) (f : DiagAlg n) :
     colimitZeroTempState n f = finiteZeroTempState n f := by
-  dsimp [colimitZeroTempState, cylinder, finiteZeroTempState]
-  congr
+  dsimp [colimitZeroTempState, cylinder, finiteZeroTempState,
+    cantorVacuumBoundary, boundaryPrefix, finiteVacuumWord]
+  have hprefix : boundaryPrefix n cantorVacuumBoundary = finiteVacuumWord n := by
+    funext i
+    rfl
+  rw [hprefix]
 
 /-!
 ### 3. Analytic Bost-Connes Partition Limit Compatibility

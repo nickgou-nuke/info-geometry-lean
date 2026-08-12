@@ -57,6 +57,33 @@ theorem criticalLine_iff_cayleyCircle_native
     norm_num at hsq
     nlinarith
 
+theorem cayleyCriticalCircle_native : CayleyCriticalCircle := by
+  intro s hs
+  exact criticalLine_iff_cayleyCircle_native s hs
+
+theorem cayleyZetaCoordinate_one_sub
+    (s : ℂ) (hs0 : s ≠ 0) (hs1 : s ≠ 1) :
+    cayleyZetaCoordinate (1 - s) =
+      (cayleyZetaCoordinate s)⁻¹ := by
+  unfold cayleyZetaCoordinate
+  rw [inv_div]
+  calc
+    (1 - s - 1) / (1 - s) = (-s) / (1 - s) := by
+      congr 1
+      ring
+    _ = s / (s - 1) := by
+      simp only [div_eq_mul_inv]
+      have hden : (s - 1)⁻¹ = -(1 - s)⁻¹ := by
+        rw [show s - 1 = -(1 - s) by ring, inv_neg]
+      rw [hden]
+      ring
+
+theorem cayleyZetaCoordinate_one_sub_norm
+    (s : ℂ) (hs0 : s ≠ 0) (hs1 : s ≠ 1) :
+    ‖cayleyZetaCoordinate (1 - s)‖ =
+      ‖cayleyZetaCoordinate s‖⁻¹ := by
+  rw [cayleyZetaCoordinate_one_sub s hs0 hs1, norm_inv]
+
 namespace CayleyCriticalCircle
 
 theorem criticalLine_iff_cayleyCircle
@@ -83,5 +110,18 @@ theorem zetaPeriod_zero_implies_criticalLine
     (hz : centralCharge s = 0) :
     CriticalLine s := by
   exact (hSelfAdjoint s).mp (hVanish s hz)
+
+theorem zetaPeriod_zero_implies_cayleyCircle
+    (centralCharge : ℂ → ℂ)
+    (selfAdjoint : ℂ → Prop)
+    (hSelfAdjoint : SelfAdjointOnCriticalLine selfAdjoint)
+    (hVanish : ∀ s : ℂ, centralCharge s = 0 → selfAdjoint s)
+    (s : ℂ)
+    (hs : s ≠ 0)
+    (hz : centralCharge s = 0) :
+    ‖cayleyZetaCoordinate s‖ = 1 := by
+  exact (criticalLine_iff_cayleyCircle_native s hs).mp
+    (zetaPeriod_zero_implies_criticalLine centralCharge selfAdjoint
+      hSelfAdjoint hVanish s hz)
 
 end InfoGeometry.Canonical.CantorDiracZetaBraneSocket

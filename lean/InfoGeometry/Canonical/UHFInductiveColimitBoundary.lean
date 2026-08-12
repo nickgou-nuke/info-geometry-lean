@@ -38,10 +38,6 @@ abbrev BitWord (n : ℕ) : Type :=
 abbrev DiagAlg (n : ℕ) : Type :=
   BitWord n → ℂ
 
-/-- Cantor boundary carrier for the diagonal cylinder model. -/
-abbrev CantorBoundary : Type :=
-  ℕ → Bool
-
 /-- Prefix a word of length `n + 1` down to length `n`. -/
 def prefixSucc (n : ℕ) (w : BitWord (n + 1)) : BitWord n :=
   fun i => w ⟨i.1, Nat.lt_trans i.2 (Nat.lt_succ_self n)⟩
@@ -91,17 +87,17 @@ theorem diagEmbedSucc_injective (n : ℕ) :
   simpa [diagEmbedSucc_apply, prefixSucc_extendSucc] using happ
 
 /-- Restrict a boundary point to its first `n` bits. -/
-def boundaryPrefix (n : ℕ) (b : CantorBoundary) : BitWord n :=
+def boundaryPrefix (n : ℕ) (b : (ℕ → Bool)) : BitWord n :=
   fun i => b i.1
 
 /-- Finite-cylinder realization of a stage-`n` diagonal observable. -/
-def cylinder (n : ℕ) (f : DiagAlg n) : CantorBoundary → ℂ :=
+def cylinder (n : ℕ) (f : DiagAlg n) : (ℕ → Bool) → ℂ :=
   fun b => f (boundaryPrefix n b)
 
-theorem cylinder_apply (n : ℕ) (f : DiagAlg n) (b : CantorBoundary) :
+theorem cylinder_apply (n : ℕ) (f : DiagAlg n) (b : (ℕ → Bool)) :
     cylinder n f b = f (boundaryPrefix n b) := rfl
 
-theorem boundaryPrefix_succ_eq_prefixSucc (n : ℕ) (b : CantorBoundary) :
+theorem boundaryPrefix_succ_eq_prefixSucc (n : ℕ) (b : (ℕ → Bool)) :
     prefixSucc n (boundaryPrefix (n + 1) b) = boundaryPrefix n b := by
   ext i
   rfl
@@ -123,12 +119,12 @@ theorem cylinder_mul (n : ℕ) (f g : DiagAlg n) :
   rfl
 
 theorem cylinder_one (n : ℕ) :
-    cylinder n 1 = (1 : CantorBoundary → ℂ) := by
+    cylinder n 1 = (1 : (ℕ → Bool) → ℂ) := by
   ext b
   rfl
 
 /-- Finite-cylinder functions: the concrete algebraic diagonal colimit carrier. -/
-def CylinderColimit : Set (CantorBoundary → ℂ) :=
+def CylinderColimit : Set ((ℕ → Bool) → ℂ) :=
   Set.range (fun p : Sigma DiagAlg => cylinder p.1 p.2)
 
 theorem cylinder_mem_colimit (n : ℕ) (f : DiagAlg n) :

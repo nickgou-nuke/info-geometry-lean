@@ -25,7 +25,7 @@ theorem mul_assoc (x y z : V4) : mul x (mul y z) = mul (mul x y) z := by
 
 end V4
 
-/-- A dummy topological manifold on which V4 acts. -/
+/- An abstract carrier on which the supplied V4 action is defined. -/
 class KleinAction (M : Type) where
   act : V4 → M → M
   act_e : ∀ x, act V4.e x = x
@@ -34,11 +34,9 @@ class KleinAction (M : Type) where
 /-- Spinor and Vector state representations on the resolved manifold. -/
 structure SpinorState (M : Type) where
   val : M
-  is_spinor : True
 
 structure VectorState (M : Type) where
   val : M
-  is_vector : True
 
 /-- The equivalence relation mapping spinor states to vector states 
     (duality on resolved orbifolds). -/
@@ -49,8 +47,8 @@ structure IsoEquiv (A B : Type) where
   right_inv : ∀ b, toFun (invFun b) = b
 
 def SpinorVectorEquiv (M : Type) : IsoEquiv (SpinorState M) (VectorState M) where
-  toFun s := ⟨s.val, trivial⟩
-  invFun v := ⟨v.val, trivial⟩
+  toFun s := ⟨s.val⟩
+  invFun v := ⟨v.val⟩
   left_inv s := by cases s; rfl
   right_inv v := by cases v; rfl
 

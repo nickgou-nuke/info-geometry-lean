@@ -5,12 +5,12 @@ import InfoGeometry.Canonical.OmegaBoundaryRepresentation
 import InfoGeometry.Canonical.CantorDiracPropagation
 
 /-!
-# Emergent Time and Tomita-Takesaki Modular Dynamics
+# Phase-Scaled Cantor Branch Generators
 
-This module formalizes the emergence of time evolution from the thermodynamic KMS state.
-We define the 1-parameter automorphism time scale factor `timeScale t` (representing $2^{-it}$),
-define the modular time evolution action on the boundary Cuntz isometries, and prove that
-it preserves all Cuntz algebra relations at all times `t`.
+This module defines a multiplicative complex phase and scales the explicit
+binary branch generators by that phase. It proves the resulting algebraic
+relations. It does not construct a KMS state, a strongly continuous
+automorphism group, or a Tomita--Takesaki modular flow.
 -/
 
 noncomputable section
@@ -22,13 +22,18 @@ open InfoGeometry.Canonical.UHFColimitRepresentationBridge
 open InfoGeometry.Canonical.OmegaBoundaryRepresentation
 open InfoGeometry.Canonical.CantorDiracPropagation
 
-/-- The modular time-scale factor $2^{-it}$ represented as a complex number. -/
+/-- The phase factor `exp (-I * t * log 2)` used by the finite readout. -/
 def timeScale (t : ℝ) : ℂ :=
   Complex.exp (-Complex.I * (t * Real.log 2))
 
 theorem timeScale_zero : timeScale 0 = 1 := by
   dsimp [timeScale]
   simp
+
+theorem norm_timeScale (t : ℝ) : ‖timeScale t‖ = 1 := by
+  rw [timeScale]
+  convert Complex.norm_exp_ofReal_mul_I (-(t * Real.log 2)) using 1 <;>
+    push_cast <;> ring
 
 theorem timeScale_mul (t1 t2 : ℝ) : timeScale (t1 + t2) = timeScale t1 * timeScale t2 := by
   dsimp [timeScale]
@@ -44,20 +49,20 @@ theorem timeScale_inv (t : ℝ) : timeScale (-t) = (timeScale t)⁻¹ := by
   push_cast
   ring
 
-/-- The modular time evolution of the left Cuntz isometry. -/
-def sigma_L (t : ℝ) : CantorOp :=
+/-- The phase-scaled left branch generator. -/
+def sigma_L (t : ℝ) : (Module.End ℂ ((ℕ → Bool) → ℂ)) :=
   timeScale t • S_L_linear
 
-/-- The modular time evolution of the left Cuntz adjoint. -/
-def star_sigma_L (t : ℝ) : CantorOp :=
+/-- The inverse-phase-scaled left adjoint generator. -/
+def star_sigma_L (t : ℝ) : (Module.End ℂ ((ℕ → Bool) → ℂ)) :=
   (timeScale t)⁻¹ • star_S_L_linear
 
-/-- The modular time evolution of the right Cuntz isometry. -/
-def sigma_R (t : ℝ) : CantorOp :=
+/-- The phase-scaled right branch generator. -/
+def sigma_R (t : ℝ) : (Module.End ℂ ((ℕ → Bool) → ℂ)) :=
   timeScale t • S_R_linear
 
-/-- The modular time evolution of the right Cuntz adjoint. -/
-def star_sigma_R (t : ℝ) : CantorOp :=
+/-- The inverse-phase-scaled right adjoint generator. -/
+def star_sigma_R (t : ℝ) : (Module.End ℂ ((ℕ → Bool) → ℂ)) :=
   (timeScale t)⁻¹ • star_S_R_linear
 
 theorem sigma_L_add (s t : ℝ) :
@@ -68,7 +73,15 @@ theorem sigma_R_add (s t : ℝ) :
     sigma_R (s + t) = timeScale s • sigma_R t := by
   simp [sigma_R, timeScale_mul, smul_smul, mul_comm]
 
-/-- The modular time evolution preserves the left isometry relation `s* s = 1`. -/
+theorem star_sigma_L_add (s t : ℝ) :
+    star_sigma_L (s + t) = (timeScale s)⁻¹ • star_sigma_L t := by
+  simp [star_sigma_L, timeScale_mul, smul_smul, mul_comm]
+
+theorem star_sigma_R_add (s t : ℝ) :
+    star_sigma_R (s + t) = (timeScale s)⁻¹ • star_sigma_R t := by
+  simp [star_sigma_R, timeScale_mul, smul_smul, mul_comm]
+
+/-- The phase-scaled left pair preserves `s* s = 1`. -/
 theorem sigma_L_star_sigma_L (t : ℝ) :
     star_sigma_L t * sigma_L t = 1 := by
   ext f x
@@ -80,7 +93,7 @@ theorem sigma_L_star_sigma_L (t : ℝ) :
     exact Complex.exp_ne_zero _
   rw [← mul_assoc, inv_mul_cancel₀ h_nonzero, one_mul]
 
-/-- The modular time evolution preserves the right isometry relation `s* s = 1`. -/
+/-- The phase-scaled right pair preserves `s* s = 1`. -/
 theorem sigma_R_star_sigma_R (t : ℝ) :
     star_sigma_R t * sigma_R t = 1 := by
   ext f x
@@ -92,7 +105,7 @@ theorem sigma_R_star_sigma_R (t : ℝ) :
     exact Complex.exp_ne_zero _
   rw [← mul_assoc, inv_mul_cancel₀ h_nonzero, one_mul]
 
-/-- The modular time evolution preserves the orthogonal branch relation `sL* sR = 0`. -/
+/-- The phase-scaled branches remain orthogonal. -/
 theorem sigma_L_star_sigma_R (t : ℝ) :
     star_sigma_L t * sigma_R t = 0 := by
   ext f x
@@ -102,7 +115,16 @@ theorem sigma_L_star_sigma_R (t : ℝ) :
   rw [star_S_L_op_S_R_op]
   simp
 
-/-- The modular time evolution preserves the Cuntz partition of unity `sL sL* + sR sR* = 1`. -/
+theorem sigma_R_star_sigma_L (t : ℝ) :
+    star_sigma_R t * sigma_L t = 0 := by
+  ext f x
+  dsimp [star_sigma_R, sigma_L]
+  rw [LinearMap.map_smul]
+  dsimp [star_S_R_linear, S_L_linear]
+  rw [star_S_R_op_S_L_op]
+  simp
+
+/-- The phase-scaled branches preserve the partition relation. -/
 theorem sigma_Cuntz_partition (t : ℝ) :
     sigma_L t * star_sigma_L t + sigma_R t * star_sigma_R t = 1 := by
   ext f x
@@ -115,11 +137,11 @@ theorem sigma_Cuntz_partition (t : ℝ) :
   rw [← mul_assoc, mul_inv_cancel₀ h_nonzero, one_mul]
   exact congrFun (cuntz_partition_op f) x
 
-/-- The modular time evolved boundary Dirac operator. -/
-def sigma_Dirac (t : ℝ) : CantorOp :=
+/-- The cross-branch operator formed from the phase-scaled generators. -/
+def sigma_Dirac (t : ℝ) : (Module.End ℂ ((ℕ → Bool) → ℂ)) :=
   sigma_L t * star_sigma_R t + sigma_R t * star_sigma_L t
 
-/-- Time-invariance of the boundary Dirac operator (Conservation of Energy). -/
+/-- The inverse phase cancels in the cross-branch operator. -/
 theorem sigma_Dirac_eq_DiracOp (t : ℝ) :
     sigma_Dirac t = DiracOp := by
   ext f x

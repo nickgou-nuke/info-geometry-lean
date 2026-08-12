@@ -10,10 +10,16 @@ corresponding reconstruction proof.
 -/
 
 import Mathlib.Tactic
+import Mathlib.Algebra.Algebra.Equiv
+import InfoGeometry.Canonical.ModularZ2CubeGrading
+import InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR
+import InfoGeometry.OperatorAlgebra.OperatorProjectiveRatio
 
 noncomputable section
 
 namespace InfoGeometry.Optics.OperatorLiftCarrier
+
+open InfoGeometry.OperatorAlgebra
 
 variable {R W : Type*}
 variable [CommSemiring R] [AddCommMonoid W] [Module R W]
@@ -266,6 +272,224 @@ noncomputable def matrixActionAlgEquiv :
     (A : OperatorMatrix (R := R) (W := W)) :
     matrixActionAlgEquiv (R := R) (W := W) A = matrixAction A :=
   rfl
+
+section ThermalCarrier
+
+variable {W : Type*} [AddCommGroup W] [Module ℂ W]
+
+theorem matrixAction_operatorThermalAnnihilator
+    (A D U V : OperatorMatrix (R := ℂ) (W := W)) :
+    matrixAction (R := ℂ) (W := W)
+        (operatorThermalAnnihilator A D U V) =
+      operatorThermalAnnihilator
+        (matrixAction (R := ℂ) (W := W) A)
+        (matrixAction (R := ℂ) (W := W) D)
+        (matrixAction (R := ℂ) (W := W) U)
+        (matrixAction (R := ℂ) (W := W) V) := by
+  change matrixActionRingEquiv (R := ℂ) (W := W)
+      (U * A + V * D) = _
+  rw [map_add, map_mul, map_mul]
+  rfl
+
+theorem matrixAction_operatorThermalCreator
+    (C B U V : OperatorMatrix (R := ℂ) (W := W)) :
+    matrixAction (R := ℂ) (W := W)
+        (operatorThermalCreator C B U V) =
+      operatorThermalCreator
+        (matrixAction (R := ℂ) (W := W) C)
+        (matrixAction (R := ℂ) (W := W) B)
+        (matrixAction (R := ℂ) (W := W) U)
+        (matrixAction (R := ℂ) (W := W) V) := by
+  change matrixActionRingEquiv (R := ℂ) (W := W)
+      (U * C + V * B) = _
+  rw [map_add, map_mul, map_mul]
+  rfl
+
+theorem matrixAction_thermalAnticommutator
+    (A C : OperatorMatrix (R := ℂ) (W := W)) :
+    matrixAction (R := ℂ) (W := W) (thermalAnticommutator A C) =
+      thermalAnticommutator
+        (matrixAction (R := ℂ) (W := W) A)
+        (matrixAction (R := ℂ) (W := W) C) := by
+  change matrixActionAlgEquiv (R := ℂ) (W := W)
+      (thermalAnticommutator A C) =
+    thermalAnticommutator
+      (matrixActionAlgEquiv (R := ℂ) (W := W) A)
+      (matrixActionAlgEquiv (R := ℂ) (W := W) C)
+  exact thermalAnticommutator_map
+    (matrixActionAlgEquiv (R := ℂ) (W := W)).toRingHom A C
+
+theorem matrixAction_thermalAnnihilator
+    (A D : OperatorMatrix (R := ℂ) (W := W)) (u v : ℂ) :
+    matrixAction (R := ℂ) (W := W) (thermalAnnihilator A D u v) =
+      thermalAnnihilator
+        (matrixAction (R := ℂ) (W := W) A)
+        (matrixAction (R := ℂ) (W := W) D) u v := by
+  change matrixActionAlgEquiv (R := ℂ) (W := W)
+      (thermalAnnihilator A D u v) =
+    thermalAnnihilator
+      (matrixActionAlgEquiv (R := ℂ) (W := W) A)
+      (matrixActionAlgEquiv (R := ℂ) (W := W) D) u v
+  exact thermalAnnihilator_map
+    (matrixActionAlgEquiv (R := ℂ) (W := W)).toAlgHom A D u v
+
+theorem matrixAction_thermalCreator
+    (C B : OperatorMatrix (R := ℂ) (W := W)) (u v : ℂ) :
+    matrixAction (R := ℂ) (W := W) (thermalCreator C B u v) =
+      thermalCreator
+        (matrixAction (R := ℂ) (W := W) C)
+        (matrixAction (R := ℂ) (W := W) B) u v := by
+  change matrixActionAlgEquiv (R := ℂ) (W := W)
+      (thermalCreator C B u v) =
+    thermalCreator
+      (matrixActionAlgEquiv (R := ℂ) (W := W) C)
+      (matrixActionAlgEquiv (R := ℂ) (W := W) B) u v
+  exact thermalCreator_map
+    (matrixActionAlgEquiv (R := ℂ) (W := W)).toAlgHom C B u v
+
+theorem matrixAction_thermal_bogoliubov_car_preserved
+    (A C B D : OperatorMatrix (R := ℂ) (W := W)) (u v : ℂ)
+    (huv : u ^ 2 + v ^ 2 = 1)
+    (hac : thermalAnticommutator A C = 1)
+    (hbd : thermalAnticommutator B D = 1)
+    (hab : thermalAnticommutator A B = 0)
+    (hcd : thermalAnticommutator C D = 0) :
+    thermalAnticommutator
+        (thermalAnnihilator (matrixAction (R := ℂ) (W := W) A)
+          (matrixAction (R := ℂ) (W := W) D) u v)
+        (thermalCreator (matrixAction (R := ℂ) (W := W) C)
+          (matrixAction (R := ℂ) (W := W) B) u v) = 1 := by
+  exact AlgHom.map_thermal_bogoliubov_car_preserved
+    (matrixActionAlgEquiv (R := ℂ) (W := W)).toAlgHom A C B D u v
+      huv hac hbd hab hcd
+
+theorem matrixAction_operator_thermal_bogoliubov_car_preserved
+    (A C B D U V : OperatorMatrix (R := ℂ) (W := W))
+    (hU : ∀ Z : OperatorMatrix (R := ℂ) (W := W), Z * U = U * Z)
+    (hV : ∀ Z : OperatorMatrix (R := ℂ) (W := W), Z * V = V * Z)
+    (hUV : U * U + V * V = 1)
+    (hAC : thermalAnticommutator A C = 1)
+    (hBD : thermalAnticommutator B D = 1)
+    (hAB : thermalAnticommutator A B = 0)
+    (hCD : thermalAnticommutator C D = 0) :
+    thermalAnticommutator
+        (operatorThermalAnnihilator
+          (matrixAction (R := ℂ) (W := W) A)
+          (matrixAction (R := ℂ) (W := W) D)
+          (matrixAction (R := ℂ) (W := W) U)
+          (matrixAction (R := ℂ) (W := W) V))
+        (operatorThermalCreator
+          (matrixAction (R := ℂ) (W := W) C)
+          (matrixAction (R := ℂ) (W := W) B)
+          (matrixAction (R := ℂ) (W := W) U)
+          (matrixAction (R := ℂ) (W := W) V)) = 1 := by
+  have hzero : matrixAction (R := ℂ) (W := W)
+      (0 : OperatorMatrix (R := ℂ) (W := W)) = 0 := by
+    apply LinearMap.ext
+    intro v
+    exact matrixAction_zero (R := ℂ) (W := W) v
+  apply operator_thermal_bogoliubov_car_preserved
+  · intro Z
+    obtain ⟨Z, rfl⟩ :=
+      (matrixActionRingEquiv (R := ℂ) (W := W)).surjective Z
+    simpa only [matrixAction_mul_end] using
+      congrArg (matrixAction (R := ℂ) (W := W)) (hU Z)
+  · intro Z
+    obtain ⟨Z, rfl⟩ :=
+      (matrixActionRingEquiv (R := ℂ) (W := W)).surjective Z
+    simpa only [matrixAction_mul_end] using
+      congrArg (matrixAction (R := ℂ) (W := W)) (hV Z)
+  · simpa only [matrixAction_add, matrixAction_mul_end, matrixAction_one_end] using
+      congrArg (matrixAction (R := ℂ) (W := W)) hUV
+  · simpa only [matrixAction_thermalAnticommutator, matrixAction_one_end] using
+      congrArg (matrixAction (R := ℂ) (W := W)) hAC
+  · simpa only [matrixAction_thermalAnticommutator, matrixAction_one_end] using
+      congrArg (matrixAction (R := ℂ) (W := W)) hBD
+  · simpa only [matrixAction_thermalAnticommutator, hzero] using
+      congrArg (matrixAction (R := ℂ) (W := W)) hAB
+  · simpa only [matrixAction_thermalAnticommutator, hzero] using
+      congrArg (matrixAction (R := ℂ) (W := W)) hCD
+
+end ThermalCarrier
+
+section GradingCarrier
+
+variable {W : Type*} [AddCommGroup W] [Module ℂ W]
+
+/-- The three independent operator gradings and their odd--odd closure are
+    preserved by the faithful doubled-carrier algebra equivalence. -/
+theorem matrixAction_fully_odd_anticommutator_even
+    (Γ_R Γ_χ Γ_N X Y : OperatorMatrix (R := ℂ) (W := W))
+    (hX : ModularZ2CubeGrading.isFullyOdd Γ_R Γ_χ Γ_N X)
+    (hY : ModularZ2CubeGrading.isFullyOdd Γ_R Γ_χ Γ_N Y) :
+    ModularZ2CubeGrading.isFullyEven
+      (matrixAction (R := ℂ) (W := W) Γ_R)
+      (matrixAction (R := ℂ) (W := W) Γ_χ)
+      (matrixAction (R := ℂ) (W := W) Γ_N)
+      (matrixAction (R := ℂ) (W := W) X * matrixAction (R := ℂ) (W := W) Y +
+        matrixAction (R := ℂ) (W := W) Y * matrixAction (R := ℂ) (W := W) X) := by
+  have map_odd {Γ X : OperatorMatrix (R := ℂ) (W := W)}
+      (h : ModularZ2CubeGrading.hasGrading Γ X true) :
+      ModularZ2CubeGrading.hasGrading
+        (matrixAction (R := ℂ) (W := W) Γ)
+        (matrixAction (R := ℂ) (W := W) X) true := by
+    change matrixAction (R := ℂ) (W := W) Γ *
+        matrixAction (R := ℂ) (W := W) X +
+        matrixAction (R := ℂ) (W := W) X *
+          matrixAction (R := ℂ) (W := W) Γ = 0
+    rw [← matrixAction_mul_end, ← matrixAction_mul_end,
+      ← matrixAction_add, h]
+    apply LinearMap.ext
+    intro v
+    exact matrixAction_zero (R := ℂ) (W := W) v
+  unfold ModularZ2CubeGrading.isFullyOdd at hX hY
+  rcases hX with ⟨hXR, hXχ, hXN⟩
+  rcases hY with ⟨hYR, hYχ, hYN⟩
+  apply ModularZ2CubeGrading.anticommutator_of_fully_odd_is_fully_even
+  · exact ⟨map_odd hXR, map_odd hXχ, map_odd hXN⟩
+  · exact ⟨map_odd hYR, map_odd hYχ, map_odd hYN⟩
+
+end GradingCarrier
+
+section ProjectiveCarrier
+
+variable {W : Type*} [AddCommGroup W] [Module ℂ W]
+
+/-- Inner operator geometry is transported faithfully from the matrix algebra
+to the doubled carrier. -/
+theorem matrixAction_innerConjugation
+    (u : (OperatorMatrix (R := ℂ) (W := W))ˣ)
+    (A : OperatorMatrix (R := ℂ) (W := W)) :
+    matrixAction (R := ℂ) (W := W) (innerConjugation u A) =
+      innerConjugation
+        (Units.map
+          (matrixActionRingEquiv (R := ℂ) (W := W)).toMonoidHom u)
+        (matrixAction (R := ℂ) (W := W) A) := by
+  change (matrixActionRingEquiv (R := ℂ) (W := W))
+      (innerConjugation u A) = _
+  change (matrixActionRingEquiv (R := ℂ) (W := W))
+      ((u : OperatorMatrix (R := ℂ) (W := W)) * A *
+        (↑(u⁻¹) : OperatorMatrix (R := ℂ) (W := W))) = _
+  rw [map_mul, map_mul]
+  rfl
+
+/-- Projective right-ratios of invertible operator matrices are read out on the
+doubled carrier without replacing operator right-division by scalar division. -/
+theorem matrixAction_rightOperatorRatio
+    (x y : (OperatorMatrix (R := ℂ) (W := W))ˣ) :
+    matrixAction (R := ℂ) (W := W)
+        (rightOperatorRatio x y) =
+      rightOperatorRatio
+        (Units.map
+          (matrixActionRingEquiv (R := ℂ) (W := W)).toMonoidHom x)
+        (Units.map
+          (matrixActionRingEquiv (R := ℂ) (W := W)).toMonoidHom y) := by
+  change (matrixActionRingEquiv (R := ℂ) (W := W))
+      (rightOperatorRatio x y) = _
+  exact RingHom.map_rightOperatorRatio
+    (matrixActionRingEquiv (R := ℂ) (W := W)).toRingHom x y
+
+end ProjectiveCarrier
 
 end RingEquivalence
 

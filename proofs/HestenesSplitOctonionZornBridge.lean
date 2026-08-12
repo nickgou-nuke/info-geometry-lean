@@ -1,5 +1,5 @@
 import proofs.ClPlus14DualProduct
-import proofs.ZornCore
+import InfoGeometry.Canonical.ZornCore
 
 /-!
 # Quaternionic split doubling to the canonical real Zorn carrier

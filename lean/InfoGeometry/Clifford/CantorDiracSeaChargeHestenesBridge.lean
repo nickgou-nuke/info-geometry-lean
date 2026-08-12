@@ -79,9 +79,9 @@ theorem owner_left_charge
     (chargeDatum : Tessellation.CantorDiracSeaChargeDatum Op)
     (walk : Tessellation.CantorDiracSeaWalkDatum Op (Z2Charge Bool))
     (walk_eq : walk = chargeDatum.walk)
-    (w : FiniteBinaryWord) :
+    (w : List Bool) :
     walk.charge
-        (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w false) =
+        (InfoGeometry.Canonical.TypeIIIModularCantorSystem.child w false) =
       flipBit false (walk.charge w) := by
   rw [walk_eq]
   exact chargeDatum.left_charge_law w
@@ -91,9 +91,9 @@ theorem owner_right_charge
     (chargeDatum : Tessellation.CantorDiracSeaChargeDatum Op)
     (walk : Tessellation.CantorDiracSeaWalkDatum Op (Z2Charge Bool))
     (walk_eq : walk = chargeDatum.walk)
-    (w : FiniteBinaryWord) :
+    (w : List Bool) :
     walk.charge
-        (InfoGeometry.Canonical.TypeIIIModularCantorSystem.BinaryWord.child w true) =
+        (InfoGeometry.Canonical.TypeIIIModularCantorSystem.child w true) =
       flipBit true (walk.charge w) := by
   rw [walk_eq]
   exact chargeDatum.right_charge_law w

@@ -391,6 +391,12 @@ def theorem_has_weak_graph_support(theorem: PublicTheorem) -> bool:
 def main() -> int:
     parser = argparse.ArgumentParser(description='Canonical policy linter')
     parser.add_argument('--json-out', type=Path, help='Output report as JSON')
+    parser.add_argument(
+        '--fail-on',
+        choices=('new', 'none'),
+        default='new',
+        help='Fail on unbaselined heuristic surfaces, or emit a review report only.',
+    )
     args = parser.parse_args()
 
     baseline = load_json(BASELINE_PATH)
@@ -445,6 +451,7 @@ def main() -> int:
             {'file': s.file, 'name': s.name, 'line': s.line, 'reasons': s.reasons}
             for s in new_suspect_theorems
         ],
+        'gate_mode': args.fail_on,
     }
 
     if args.json_out:
@@ -456,7 +463,7 @@ def main() -> int:
     print(f"[canonical-policy] new suspect theorem surfaces {len(new_suspect_theorems)}")
     print(f"[canonical-policy] new proposition surfaces {len(new_prop_surfaces)}")
 
-    if new_suspect_theorems or new_prop_surfaces:
+    if args.fail_on == 'new' and (new_suspect_theorems or new_prop_surfaces):
         return 1
     return 0
 

@@ -17,15 +17,6 @@ variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSp
 local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
 
-variable (𝕆' : Type*) [NonUnitalNonAssocRing 𝕆'] [Module ℝ 𝕆']
-variable (Spinor32 : Type*) [AddCommGroup Spinor32] [Module ℝ Spinor32]
-
-/-- 
-Функтор, който трансформира октонионния елемент в ендоморфизъм над 32D 
-спинорно пространство (Cole-Fury Embedding).
--/
-def coleFuryEmbedding (o : 𝕆') : EndH := 0
-
 /-- 1. БРСТ оператор Q_B, произтичащ от симетриите на разцепените октониони. -/
 def brstCharge (X A : EndH) : EndH :=
   transportCommutator X A
@@ -39,18 +30,14 @@ def kugoOjimaConfinementCondition (ω : EndH →L[ℝ] ℝ) (X A : EndH) : Prop 
   ω (transportCommutator X (brstCharge X A)) = 0
 
 /-- 
-**Grand Unification Master Theorem**: 
-From Metriplectic Phase Mirror Barrier to Kugo-Ojima Color Confinement.
-Доказва, че фазовото отразяване от самосъгласуваната бариера (нулирането на Хесиана)
-машинно активира Критерия на Куго-Оджима за Цветно Удържане!
+**Finite readout theorem**:
+an explicit vanishing Hessian readout is sufficient for the
+Kugo--Ojima confinement condition.  No octonion-to-spinor representation is
+claimed here; that representation requires a separate, nonzero owner.
 -/
 @[rep_depth transport]
-theorem octonion_to_kugoOjima_confinement_bridge
-    (ω : EndH →L[ℝ] ℝ) (X A : EndH) (o : 𝕆')
-    (hNonzero : ∀ t : ℝ, scalarTransportReadout (E := E) ω X A t ≠ 0)
-    (hNorm : ω A = 1)
-    (hStationary : ω (operatorInformationFirstVariation (E := E) X A) = 0)
-    (hOctonionic : X = coleFuryEmbedding 𝕆' o)
+theorem kugoOjima_confinement_of_hessian_barrier
+    (ω : EndH →L[ℝ] ℝ) (X A : EndH)
     (hHessian : deriv (fun t : ℝ => deriv (fun s : ℝ => scalarLogReadout (E := E) ω X A s) t) 0 =
                 ω (transportCommutator X (transportCommutator X A)))
     (hBarrier : deriv (fun t : ℝ => deriv (fun s : ℝ => scalarLogReadout (E := E) ω X A s) t) 0 = 0) :

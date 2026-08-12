@@ -1,15 +1,13 @@
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.Topology.Basic
+import Mathlib.NumberTheory.LSeries.RiemannZeta
 
 open Complex
 
 namespace InfoGeometry.Spectral
 
 noncomputable section
-
-/-- Placeholder for the Riemann Zeta function in this logical module. -/
-def riemannZeta (_s : ℂ) : ℂ := 0
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 

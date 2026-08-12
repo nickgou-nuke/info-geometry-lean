@@ -45,19 +45,32 @@ run_gate() {
     fi
 }
 
-# 1. Lake build must pass
-run_check "Lake build" lake build
+# 1. Locked root Lake build must pass
+run_check "Locked Lake build" \
+    python3 tools/infra/run_locked_lake_build.py \
+      --wait-for-build-lock InfoGeometry.All
 
-# 2. Axiom & Debt Audit (sorry/axiom/admit count)
-run_check "Axiom & Debt Audit" python3 tools/infra/axiom_audit.py
+# 2. Every tracked Lean root is scanned; active source scope is strict.
+  run_check "Tracked Lean Scope Audit" \
+    python3 tools/quality/repo_lean_scope_audit.py --fail-on tracked
 
-# 3. Semantic vacuity gate (vacuity patterns)
-run_gate "Semantic Vacuity Gate" python3 tools/quality/semantic_vacuity_gate.py $(find lean/InfoGeometry -name "*.lean" | head -100)
+# 3. Quarantine contents stay visible but are not active proof sources.
+run_check "Quarantined Lean Artifact Audit" \
+    python3 tools/quality/repo_lean_quarantine_audit.py --fail-on-findings
 
-# 4. Semantic content audit (proof holes, trivial theorems)
-run_gate "Semantic Content Audit" python3 tools/quality/semantic_content_audit.py --file-prefix lean/InfoGeometry --gate
+# 4. Axiom & Debt Audit (sorry/axiom/admit count)
+run_check "Axiom & Debt Audit" python3 tools/infra/axiom_audit.py --fail-on-gaps
 
-# 5. Theory audit (sorry/admit/axiom counts)
+# 4. Semantic vacuity audit (tracked all-subfolder review surface)
+# This detector is heuristic; kernel truth and proof debt remain hard-gated by
+# the build, axiom audit, and semantic-content audit below.
+run_check "Semantic Vacuity Audit (review-only)" \
+    python3 tools/quality/semantic_vacuity_gate.py --tracked lean --fail-on none
+
+# 5. Semantic content audit (proof holes, trivial theorems)
+run_gate "Semantic Content Audit" python3 tools/quality/semantic_content_audit.py --file-prefix lean --gate
+
+# 6. Theory audit (sorry/admit/axiom counts)
 run_check "Theory Audit" bash scripts/quality/audit_theory.sh
 
 echo

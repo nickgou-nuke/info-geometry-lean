@@ -70,6 +70,6 @@ theorem entwined_causal_cones_force_majorana_neutrality
     rw [h_majorana]
   dsimp [kleinChargeConjugation] at h_charge
   -- We have -ψ.charge = ψ.charge, meaning 2 * ψ.charge = 0
-  exact Int.eq_zero_of_neg_eq h_charge
+  omega
 
 end WeylMajoranaKleinBrillouin

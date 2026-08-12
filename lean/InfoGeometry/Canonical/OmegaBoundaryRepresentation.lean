@@ -26,17 +26,12 @@ open InfoGeometry.Canonical.UHFBoundaryExactSequence
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Canonical.UHFColimitRepresentationBridge
 
-/-- The Hilbert space of boundary functions. -/
-abbrev CantorSpace := CantorBoundary → ℂ
-
-/-- The Ring of Bounded Operators on the Cantor Space. -/
-abbrev CantorOp := Module.End ℂ CantorSpace
 
 /-- A boundary representation maps the abstract algebra into operators on the Cantor space,
     perfectly translating supergraded parities into Cuntz boundary differentials. -/
 class SupergradedBoundaryRepresentation {A : Type*} [Ring A] (Inv : SupergradedClosureAt A) where
   /-- The ring homomorphism from the abstract algebra into Cantor boundary operators. -/
-  rep : A →+* CantorOp
+  rep : A →+* (Module.End ℂ ((ℕ → Bool) → ℂ))
 
   /-- The odd (fermionic) elements must map into the span of the nilpotent boundary differentials. -/
   odd_maps_to_differential : ∀ x, Inv.is_odd x →
@@ -57,7 +52,7 @@ def omegaAutomath_boundary_representation
     (GlobalInvariants : SupergradedClosureAt A_infty)
     (global_embed : ∀ n, CausalBondingIntertwiner (Invariants n) GlobalInvariants)
     (LocalReps : ∀ n, SupergradedBoundaryRepresentation (Invariants n))
-    (rep_infty : A_infty →+* CantorOp)
+    (rep_infty : A_infty →+* (Module.End ℂ ((ℕ → Bool) → ℂ)))
     -- Compatibility condition: The local representations commute with the causal bonding
     (RepCompat : ∀ n (x : Chain n), rep_infty ((global_embed n).map x) = (LocalReps n).rep x)
     -- Colimit grading properties

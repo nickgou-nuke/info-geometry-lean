@@ -1,5 +1,6 @@
-import proofs.IntegralZornII44Bridge
+import InfoGeometry.Canonical.IntegralZornII44Bridge
 import proofs.CanonicalZornRealComplexSpinBaseChange
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-!
 # Integral Zorn, real spin, triality, and projective closure
@@ -63,7 +64,7 @@ theorem realVector_integralZornToRealSplit44 (X : IntegralZorn) :
 by the triality and Clifford layers. -/
 theorem integral_coreToCanonical_mul (X Y : IntegralZorn) :
     coreToCanonical (integralToCoreZorn X * integralToCoreZorn Y) =
-      SplitOctonionBraidSU3.zornMul
+      _root_.InfoGeometry.Physics.SplitOctonionBraidSU3.zornMul
         (coreToCanonical (integralToCoreZorn X))
         (coreToCanonical (integralToCoreZorn Y)) :=
   coreToCanonical_mul _ _
@@ -82,11 +83,11 @@ theorem integral_spin44_triality_fivegrade_projective_closure
     (g : spinGroup realQuadratic44) (X Y : IntegralZorn)
     (S : SpinorPlus8) (C : SpinorMinus8) :
     ii44Quadratic (integralZornToII44 X) = integralZornNorm X ∧
-    SplitOctonionBraidSU3.zornNorm
+    _root_.InfoGeometry.Physics.SplitOctonionBraidSU3.zornNorm
         (coreToCanonical (integralToCoreZorn X)) =
       (integralZornNorm X : ℂ) ∧
     coreToCanonical (integralToCoreZorn X * integralToCoreZorn Y) =
-      SplitOctonionBraidSU3.zornMul
+      _root_.InfoGeometry.Physics.SplitOctonionBraidSU3.zornMul
         (coreToCanonical (integralToCoreZorn X))
         (coreToCanonical (integralToCoreZorn Y)) ∧
     coreToCanonical (ZornCore.triality (integralToCoreZorn X)) =

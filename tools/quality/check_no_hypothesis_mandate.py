@@ -17,11 +17,46 @@ ROOT = repo_root()
 DEFAULT_ROOT = ROOT / "lean" / "InfoGeometry"
 
 DECL_RE = re.compile(r"^\s*(theorem|lemma|def|structure)\s+([A-Za-z0-9_'.]+)")
+# Concrete `witness` and `certificate` names can describe honest, proved
+# constructions.  The hard gate targets names that advertise injected
+# assumptions or placeholder proofs.
 BAD_NAME_RE = re.compile(
-    r"(?:^|_)(?:of_witness|with_witness|witness|certificate|certified|hypothesis|assumption|axiom|postulate)(?:_|$)"
+    r"(?:^|_)(?:hypothesis|assumption|axiom|postulate)(?:_|$)"
 )
 # Honest open debt is allowed via `sorry`; non-honest placeholders remain banned.
 BAD_BODY_RE = re.compile(r"\b(admit|axiom|postulate)\b")
+
+
+def strip_lean_comments(text: str) -> str:
+    """Remove Lean line/block comments before checking proof-hole tokens."""
+    out: list[str] = []
+    i = 0
+    depth = 0
+    while i < len(text):
+        if depth:
+            if text.startswith("/-", i):
+                depth += 1
+                out.extend("  ")
+                i += 2
+            elif text.startswith("-/", i):
+                depth -= 1
+                out.extend("  ")
+                i += 2
+            else:
+                out.append("\n" if text[i] == "\n" else " ")
+                i += 1
+        elif text.startswith("/-", i):
+            depth = 1
+            out.extend("  ")
+            i += 2
+        elif text.startswith("--", i):
+            while i < len(text) and text[i] != "\n":
+                out.append(" ")
+                i += 1
+        else:
+            out.append(text[i])
+            i += 1
+    return "".join(out)
 
 
 def parse_args() -> argparse.Namespace:
@@ -47,7 +82,8 @@ def main() -> int:
         if any(x in str(path) for x in ["/lake-packages/", "/.lake/", "/archive/"]):
             continue
         text = path.read_text(encoding="utf-8")
-        if BAD_BODY_RE.search(text):
+        code = strip_lean_comments(text)
+        if BAD_BODY_RE.search(code):
             failures.append(f"{path}: banned proof-hole token found")
         for i, line in enumerate(text.splitlines(), start=1):
             m = DECL_RE.match(line)

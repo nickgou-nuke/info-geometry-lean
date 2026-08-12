@@ -72,6 +72,17 @@ def profileEnergy
     (fun i : Fin k =>
       occ (ε i) * Real.log ((P.p i : ℕ) : ℝ))
 
+theorem profileEnergy_eq_zero_of_all_false
+    {k : ℕ}
+    (P : FinitePrimeProfile k)
+    (ε : BinaryProfile k)
+    (hε : ∀ i, ε i = false) :
+    profileEnergy P ε = 0 := by
+  unfold profileEnergy
+  apply Finset.sum_eq_zero
+  intro i hi
+  simp [occ, hε i]
+
 theorem occ_nonnegative (b : Bool) : 0 ≤ occ b := by
   cases b <;> simp [occ]
 
@@ -95,6 +106,25 @@ def profileNat
   Finset.univ.prod
     (fun i : Fin k =>
       if ε i then P.p i else 1)
+
+theorem profileNat_pos
+    {k : ℕ}
+    (P : FinitePrimeProfile k)
+    (ε : BinaryProfile k) :
+    0 < profileNat P ε := by
+  unfold profileNat
+  apply Finset.prod_pos
+  intro i hi
+  by_cases hε : ε i
+  · simpa [hε] using P.prime_law i |>.pos
+  · simp [hε]
+
+theorem profileNat_ne_zero
+    {k : ℕ}
+    (P : FinitePrimeProfile k)
+    (ε : BinaryProfile k) :
+    profileNat P ε ≠ 0 :=
+  ne_of_gt (profileNat_pos P ε)
 
 theorem profileNat_cast
     {k : ℕ}

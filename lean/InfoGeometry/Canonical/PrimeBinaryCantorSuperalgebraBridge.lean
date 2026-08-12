@@ -25,38 +25,6 @@ open InfoGeometry.Canonical.TypeIIIModularCantorSystem
 open InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
 open InfoGeometry.Quantum.Hurwitz
 
-/-! ## Binary Cantor lattice -/
-
-/-- Binary Cantor lattice carrier: the repo's finite binary words. -/
-@[rep_depth operator]
-abbrev BinaryCantorLattice := BinaryWord
-
-/-- Binary Cantor child map, re-exported from the modular Cantor system. -/
-@[rep_depth operator]
-def binaryChild (w : BinaryCantorLattice) (b : Bool) : BinaryCantorLattice :=
-  BinaryWord.child w b
-
-/-- Binary Cantor closed cylinder, re-exported from the modular Cantor system. -/
-@[rep_depth operator]
-def binaryClosedCylinder (w : BinaryCantorLattice) : Set BinaryCantorLattice :=
-  BinaryWord.closedCylinder w
-
-/-- The Cantor cylinder split into root, false child, and true child. -/
-@[rep_depth operator]
-theorem binaryClosedCylinder_split (w : BinaryCantorLattice) :
-    binaryClosedCylinder w =
-      ({w} : Set BinaryCantorLattice)
-        ∪ binaryClosedCylinder (binaryChild w false)
-        ∪ binaryClosedCylinder (binaryChild w true) := by
-  simpa [binaryChild, binaryClosedCylinder] using
-    (BinaryWord.closedCylinder_split w)
-
-/-- Every binary word lies in its own closed Cantor cylinder. -/
-@[rep_depth operator]
-theorem mem_binaryClosedCylinder_self (w : BinaryCantorLattice) :
-    w ∈ binaryClosedCylinder w := by
-  simpa [binaryClosedCylinder] using (BinaryWord.mem_closedCylinder_self w)
-
 /-! ## Supergraded prime labels -/
 
 /-- The finite supergrade used for the prime label convention. -/
@@ -83,19 +51,17 @@ theorem primeSectorGrade_prime_ne_two
     primeSectorGrade p = PrimeSectorGrade.fermionic := by
   simp [primeSectorGrade, h2]
 
-/-- A finite supergraded prime-label readout. -/
-@[rep_depth operator]
-structure PrimeSupergradedReadout where
-  grade : ℕ → PrimeSectorGrade
-  grade_two : grade 2 = PrimeSectorGrade.bosonic
-  grade_prime_ne_two : ∀ p, Nat.Prime p → p ≠ 2 → grade p = PrimeSectorGrade.fermionic
+@[simp]
+theorem primeSectorGrade_bosonic_iff
+    {p : ℕ} :
+    primeSectorGrade p = PrimeSectorGrade.bosonic ↔ p = 2 := by
+  simp [primeSectorGrade]
 
-/-- Canonical supergrade readout: `2` is bosonic, primes `≠ 2` are fermionic. -/
-@[rep_depth operator]
-def canonicalPrimeSupergradedReadout : PrimeSupergradedReadout where
-  grade := primeSectorGrade
-  grade_two := primeSectorGrade_two
-  grade_prime_ne_two := fun p hp h2 => primeSectorGrade_prime_ne_two (p := p) hp h2
+@[simp]
+theorem primeSectorGrade_fermionic_iff
+    {p : ℕ} :
+    primeSectorGrade p = PrimeSectorGrade.fermionic ↔ p ≠ 2 := by
+  simp [primeSectorGrade]
 
 /-- Möbius parity readback on represented squarefree prime-bit states. -/
 @[rep_depth operator]

@@ -169,13 +169,10 @@ def ZornMatrixReal.sub_mat (A B : ZornMatrixReal) : ZornMatrixReal :=
 
 instance : Sub ZornMatrixReal := ⟨ZornMatrixReal.sub_mat⟩
 
-/-- 
-Майорановото подпространство в Zorn матриците:
-Антикомутиращи самоадюнгнати генератори.
--/
+/-- A finite Zorn carrier for a Majorana-labelled generator.  This real
+    carrier has no involution, so self-adjointness is not asserted. -/
 structure MajoranaOperator where
   val : ZornMatrixReal
-  is_self_adjoint : true -- placeholder for structural property
   
 /-- Прожекторите на Китаев върху топологичните сектори: P_plus и P_minus. -/
 def KitaevProjectorPlus (γ1 γ2 : MajoranaOperator) : ZornMatrixReal :=

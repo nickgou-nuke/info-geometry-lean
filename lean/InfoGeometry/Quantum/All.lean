@@ -11,6 +11,7 @@ import InfoGeometry.Quantum.GeneralizedPauli
 import InfoGeometry.Quantum.GeneralizedPauliPowers
 import InfoGeometry.Quantum.GeometricTensor
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
+import InfoGeometry.Quantum.ComplexPureStateQGT
 import InfoGeometry.Quantum.GeometricTensorTransport
 import InfoGeometry.Quantum.HestenesKahler
 import InfoGeometry.Quantum.Hurwitz
@@ -40,6 +41,17 @@ import InfoGeometry.Quantum.QutritPrimitiveWeyl
 import InfoGeometry.Quantum.RealKCategory
 import InfoGeometry.Quantum.RealKMonodromy
 import InfoGeometry.Quantum.RealMajorana
+import InfoGeometry.Quantum.MajoranaPfaffianNaturalClosure
+import InfoGeometry.Quantum.MajoranaPfaffianBridge
+import InfoGeometry.Quantum.NeutralKreinMajoranaFrame
+import InfoGeometry.Quantum.FiniteSemiRiemannianKreinBridge
+import InfoGeometry.Quantum.NeutralKreinKleinAction
+import InfoGeometry.Quantum.DualFlatKreinGraph
+import InfoGeometry.Quantum.MobiusRealCotangentLift
+import InfoGeometry.Quantum.PACKreinEquivalence
+import InfoGeometry.Quantum.GradedQuantumTetradFrame
+import InfoGeometry.Quantum.FiniteMajoranaPairingBlocks
+import InfoGeometry.Quantum.FiniteMajoranaPerfectMatching
 import InfoGeometry.Quantum.RealMajoranaCategory
 import InfoGeometry.Quantum.RealSplitClifford
 import InfoGeometry.Quantum.RosettaSynthesis

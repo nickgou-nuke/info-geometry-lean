@@ -61,7 +61,10 @@ theorem cantorCylinder_refines (n : ℕ) :
 
 def PenroseCantorSpace : Type := ℕ → Bool
 
-theorem penroseCantorSpace_equiv : Nonempty (PenroseCantorSpace ≃ (ℕ → Bool)) := by
-  exact ⟨Equiv.refl _⟩
+def penroseCantorSpaceCode : PenroseCantorSpace ≃ (ℕ → Bool) :=
+  Equiv.refl _
+
+@[simp] theorem penroseCantorSpaceCode_apply (x : PenroseCantorSpace) :
+    penroseCantorSpaceCode x = x := rfl
 
 end PenroseCuntzKriegerHolography

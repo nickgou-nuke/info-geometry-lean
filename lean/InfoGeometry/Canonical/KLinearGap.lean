@@ -11,7 +11,7 @@ open InfoGeometry.Analysis.L2CantorCommutation
 # KLinear S_left — status
 
 The commutation S_left ∘ K = K ∘ S_left is proved on the concrete
-Hilbert space H = ℓ²(BinaryCantorBoundary, ℝ²) in L2CantorCommutation.
+Hilbert space H = ℓ²((ℕ → BinarySector), ℝ²) in L2CantorCommutation.
 
 The fiber-only KLinear predicate in CuntzCantorSpectralTriple is a
 different type; the concrete proof lives on the full Hilbert space.
@@ -23,7 +23,7 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 
 /--
 The commutation S_left · K = K · S_left on the full Hilbert space
-H = ℓ²(BinaryCantorBoundary, ℝ²) is proved in L2CantorCommutation.
+H = ℓ²((ℕ → BinarySector), ℝ²) is proved in L2CantorCommutation.
 
 This is the last analytic step for closing the e₂ self-adjointness
 chain in CuntzCantorSpectralTriple.lean.

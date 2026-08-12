@@ -12,11 +12,11 @@ namespace CuntzAlgebra
 variable {n : ℕ} {A : Type*} [Ring A] [StarRing A]
 
 /-- Matrix Unit Generator e_(α,β) = S_α S_β* in the core algebra -/
-def matrixUnit (c : CuntzIsometries n A) (α β : List (Fin n)) : A :=
+def matrixUnit (c : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := n) A) (α β : List (Fin n)) : A :=
   wordS c α * wordSStar c β
 
 /-- Lemma: Adjoint of wordS is wordSStar -/
-theorem star_wordS (c : CuntzIsometries n A) (w : List (Fin n)) :
+theorem star_wordS (c : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := n) A) (w : List (Fin n)) :
     star (wordS c w) = wordSStar c w := by
   induction w with
   | nil =>
@@ -27,7 +27,7 @@ theorem star_wordS (c : CuntzIsometries n A) (w : List (Fin n)) :
     rw [star_mul, ih]
 
 /-- 🏆 THEOREM 1: Adjoint Relation for Matrix Units: (e_(α,β))* = e_(β,α) -/
-theorem star_matrixUnit (c : CuntzIsometries n A) (α β : List (Fin n)) :
+theorem star_matrixUnit (c : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := n) A) (α β : List (Fin n)) :
     star (matrixUnit c α β) = matrixUnit c β α := by
   dsimp [matrixUnit]
   rw [star_mul]
@@ -42,7 +42,7 @@ theorem star_matrixUnit (c : CuntzIsometries n A) (α β : List (Fin n)) :
   rw [h_star_star, star_wordS]
 
 /-- Lemma: Orthogonality of distinct words of equal length: S_w1* S_w2 = 0 for w1 ≠ w2 -/
-theorem word_reduction_ne_of_length (c : CuntzIsometries n A) :
+theorem word_reduction_ne_of_length (c : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := n) A) :
     ∀ (w1 w2 : List (Fin n)), w1.length = w2.length → w1 ≠ w2 →
     wordSStar c w1 * wordS c w2 = 0 := by
   intro w1
@@ -80,7 +80,7 @@ theorem word_reduction_ne_of_length (c : CuntzIsometries n A) :
 
 /-- 🏆 THEOREM 2: Canonical Matrix Unit Algebra Law
     e_(α,β) * e_(γ,δ) = δ_(β,γ) e_(α,δ) for equal-length words |β| = |γ|. -/
-theorem matrixUnit_mul (c : CuntzIsometries n A) (α β γ δ : List (Fin n))
+theorem matrixUnit_mul (c : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := n) A) (α β γ δ : List (Fin n))
     (hlen : β.length = γ.length) :
     matrixUnit c α β * matrixUnit c γ δ = if β = γ then matrixUnit c α δ else 0 := by
   dsimp [matrixUnit]

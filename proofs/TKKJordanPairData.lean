@@ -11,7 +11,7 @@ from `SpectralSquashCayleyDKT`.
 
 noncomputable section
 
-namespace TKKJordanPairData
+namespace TKKJordanPairData.Legacy
 
 /-- The five formal TKK grades. -/
 inductive TKKGrade where
@@ -149,4 +149,4 @@ theorem tkk_jordan_pair_data_synthesis :
     gradeAdd p2 p1 = none := by
   exact ⟨rfl, rfl, rfl, rfl, rfl⟩
 
-end TKKJordanPairData
+end TKKJordanPairData.Legacy

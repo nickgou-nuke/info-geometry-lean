@@ -96,13 +96,6 @@ structure SU3QuantumToCuntz where
   loopGroupRepresentation : Prop            -- L(SU(3)) DHR sectors ≅ O₄ modules
   conformalNetData : Prop                   -- Wassermann conformal net on S¹
 
-/-- The braid group B₃ acts on the Cuntz algebra O₄ by automorphisms.
-These automorphisms permute the 4 Cuntz generators according to the
-S₃ Weyl group action on the parafermion color lanes:
-  σ₁ ↔ swap12: permutes color lanes 1↔2, leaves singlet invariant
-  σ₂ ↔ swap23: permutes color lanes 2↔3, leaves singlet invariant -/
-theorem braid_acts_on_cuntz_via_weyl (braidAction : Prop) (h : braidAction) : braidAction := h
-
 /-! ## Cantor-loop gauge steps and braid covariance -/
 
 /-- A finite-stage Cantor-loop gauge step on the `3+1` parafermion lanes:

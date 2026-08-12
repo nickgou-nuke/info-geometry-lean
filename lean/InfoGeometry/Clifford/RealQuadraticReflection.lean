@@ -39,7 +39,7 @@ generation.
 
 noncomputable def realQuadraticReflectionLinear
     {V : Type*} [AddCommGroup V] [Module ℝ V]
-    (Q : QuadraticForm ℝ V) (v : V) (hv : Q v ≠ 0) : V →ₗ[ℝ] V where
+    (Q : QuadraticForm ℝ V) (v : V) (_hv : Q v ≠ 0) : V →ₗ[ℝ] V where
   toFun x := x - (QuadraticMap.polar (⇑Q) x v / Q v) • v
   map_add' x y := by
     rw [QuadraticMap.polar_add_left, add_div]

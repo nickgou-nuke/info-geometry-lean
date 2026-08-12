@@ -38,6 +38,12 @@ jobs:
             
       - name: Build Lean project
         run: lake build
+
+      - name: Repository-wide active Lean scope audit
+        run: python3 tools/quality/repo_lean_scope_audit.py --fail-on tracked
+
+      - name: Repository-wide quarantine debt audit
+        run: python3 tools/quality/repo_lean_quarantine_audit.py --fail-on-findings
         
       - name: Axiom & Debt Audit
         run: python3 tools/infra/axiom_audit.py

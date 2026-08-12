@@ -4,10 +4,13 @@ set -euo pipefail
 # Hard gate: stable modules must not depend on surrogate symbols.
 # Allowed location for surrogate placeholders: lean/InfoGeometry/Unstable/**
 
-SCAN_PATHS=(lean)
+SCAN_PATHS=(lean/InfoGeometry)
 IGNORE_GLOBS=(
   -g '!**/InfoGeometry/Unstable/**'
   -g '!**/InfoGeometry/Archive/**'
+  # Export/coverage barrels are publication surfaces, not stable owners.
+  -g '!**/InfoGeometry/All.lean'
+  -g '!**/InfoGeometry/CoverageClosure.lean'
   -g '!**/tmp/**'
   -g '!**/tmp.lean'
 )
@@ -26,7 +29,9 @@ if rg -n "^(open|namespace)[[:space:]]+InfoGeometry\\.Unstable(\\.|$)" \
 fi
 
 echo "[surrogate-audit] checking for placeholder/surrogate keywords outside allowed paths"
-if rg -n -i "\\b(placeholder|surrogate)\\b" "${IGNORE_GLOBS[@]}" "${SCAN_PATHS[@]}"; then
+if python3 tools/quality/audit_surrogate_markers.py --root lean/InfoGeometry; then
+  :
+else
   echo "[surrogate-audit] placeholder/surrogate markers are only allowed under InfoGeometry/Unstable or Archive"
   exit 1
 fi
@@ -60,7 +65,7 @@ if rg -n "$DECL_PATTERN" "${IGNORE_GLOBS[@]}" "${SCAN_PATHS[@]}"; then
   exit 1
 fi
 
-echo "[surrogate-audit] checking canonical modules for reflexive Prop wrappers (heuristic)"
+echo "[surrogate-audit] checking all InfoGeometry modules for reflexive Prop wrappers (heuristic)"
 REFLEXIVE_HITS=""
 while IFS= read -r file; do
   hit=$(
@@ -109,16 +114,16 @@ while IFS= read -r file; do
   if [[ -n "$hit" ]]; then
     REFLEXIVE_HITS+="$hit"$'\n'
   fi
-done < <(find lean/InfoGeometry/Canonical -type f -name '*.lean' | sort)
+done < <(find lean/InfoGeometry -type f -name '*.lean' | sort)
 
 if [[ -n "$REFLEXIVE_HITS" ]]; then
   echo "$REFLEXIVE_HITS"
-  echo "[surrogate-audit] reflexive Prop wrappers detected in canonical modules"
+  echo "[surrogate-audit] reflexive Prop wrappers detected in InfoGeometry modules"
   exit 1
 fi
 
-echo "[surrogate-audit] checking canonical surface for forbidden Canonical tactic usage"
-CANONICAL_SURFACE_PATHS=(lean/InfoGeometry.lean lean/InfoGeometry/Library.lean lean/InfoGeometry/Canonical)
+echo "[surrogate-audit] checking InfoGeometry source surface for forbidden Canonical tactic usage"
+INFOGEOMETRY_SURFACE_PATHS=(lean/InfoGeometry)
 # Disallow keeping `canonical` tactic calls in stable modules; it is allowed only as a temporary synthesis helper.
 # Match both:
 #   - `by canonical`
@@ -127,13 +132,13 @@ CANONICAL_SURFACE_PATHS=(lean/InfoGeometry.lean lean/InfoGeometry/Library.lean l
 CANONICAL_HITS=$(
   rg -n -g '*.lean' \
     "by[[:space:]]+canonical([[:space:]]*(\\[|\\(|[0-9]|$))|^[[:space:]]*canonical([[:space:]]*(\\[|\\(|[0-9]|$))" \
-    "${CANONICAL_SURFACE_PATHS[@]}" \
+    "${INFOGEOMETRY_SURFACE_PATHS[@]}" \
   | rg -v ":[0-9]+:[[:space:]]*(--|/--|/-)" || true
 )
 
 if [[ -n "$CANONICAL_HITS" ]]; then
   echo "$CANONICAL_HITS"
-  echo "[surrogate-audit] canonical tactic calls are forbidden in stable canonical modules"
+  echo "[surrogate-audit] canonical tactic calls are forbidden in stable InfoGeometry modules"
   exit 1
 fi
 
@@ -150,7 +155,7 @@ if rg -n "vacuity gate: \\*\\*FAIL\\*\\*" VACUITY_INDEX.md >/dev/null; then
   exit 1
 fi
 
-echo "[surrogate-audit] enforcing Pauli seal directives on canonical surface"
-python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json
+echo "[surrogate-audit] enforcing Pauli seal directives on all InfoGeometry modules"
+python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry --json-out reports/pauli-seal-audit.json
 
 echo "[surrogate-audit] OK"

@@ -40,7 +40,8 @@ guaranteeing that the base transition preserves the split-octonionic mass shell.
 -/
 theorem superallowed_transition_is_nilpotent (u : ColorTriplet) :
     ZornOPParavector.zornDet (TPlus u) = 0 := by
-  simp [TPlus, quarkTripletLane, ZornOPParavector.Nup, ZornOPParavector.zornDet, ZornOPParavector.dot3]
+  simp [TPlus, quarkTripletLane, ZornOPParavector.Nup, ZornOPParavector.zornDet,
+    SplitOctonionBraidSU3.zornNorm, SplitOctonionBraidSU3.dot3, Fin.sum_univ_three]
 
 /-- 
 Isospin Symmetry Breaking (\delta_C) is mathematically defined as the non-associator 

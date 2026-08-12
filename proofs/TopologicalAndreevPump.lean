@@ -1,5 +1,5 @@
 import proofs.StimulatedScatteringAmplituhedron
-import proofs.BuresInformationGeodesicFlow
+import InfoGeometry.External.Auto.BuresInformationGeodesicFlow
 import proofs.OpticalAndreevSpinor
 import proofs.UHFInductiveColimit
 import proofs.ChiralConeAlgebraFinality

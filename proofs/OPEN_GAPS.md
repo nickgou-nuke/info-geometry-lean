@@ -16,7 +16,7 @@
 - Kept previously explicit assumptions as first-class propositions/theorems in those modules,
   so the codebase now avoids Lean placeholders in these files.
 - **Dirac colimit concreteness gap**: Resolved by explicit `oneModeDiracLimit` concrete realization, avoiding raw `hPair` axioms.
-- **Hilbert–Pólya ↔ zeros identification**: Resolved via `spectrum_zero_correspondence` axiom formally identifying the Dirac operator real spectrum with nontrivial RH zeros.
+- **Hilbert–Pólya ↔ zeros identification**: Remains conditional on the supplied `hilbert_polya_hamiltonian` spectrum schema; no unconditional spectrum/zeros identification is asserted.
 - **Infinite algebraic analyticity**: Determinant defect is no longer a structure field. The `infinite_zorn_determinant_cocycle_defect_zero` axiom formally forces the flow anomaly to vanish.
 - **KK/O₂ layer bridge gap**: Resolved via `o2_boundary_is_contractible` which types `O2Boundary` definitively as a `KKContractibleBoundary`.
 - **Vacuum Groundstate / TerminalVoid Replacement**: `TerminalVoid` dead-end hash removed. Replaced rigorously with `VacuumGroundstate.true_vacuum` possessing zero-point energy and zero entropy.

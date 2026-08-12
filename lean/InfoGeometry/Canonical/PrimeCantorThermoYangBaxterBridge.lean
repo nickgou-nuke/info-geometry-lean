@@ -35,6 +35,7 @@ open InfoGeometry.Canonical.PrimeLeeYangRHBridge
 open InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 open InfoGeometry.Canonical.PrimeGasSuperKMS
 open InfoGeometry.Canonical.PrimeBinaryCantorSuperalgebraBridge
+open InfoGeometry.Canonical.TypeIIIModularCantorSystem
 open InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
 open InfoGeometry.Tessellation
 open InfoGeometry.Canonical.HodgeDiracLaplacianBridge
@@ -86,12 +87,12 @@ theorem primeGas_superKMS_zeroOdd_and_detailedBalance
 
 /-- The binary Cantor cylinder splits into root, left child, and right child. -/
 theorem cantorCylinder_binarySplit
-    (w : BinaryCantorLattice) :
-    binaryClosedCylinder w =
-      ({w} : Set BinaryCantorLattice)
-        ∪ binaryClosedCylinder (binaryChild w false)
-        ∪ binaryClosedCylinder (binaryChild w true) :=
-  binaryClosedCylinder_split w
+    (w : List Bool) :
+    TypeIIIModularCantorSystem.closedCylinder w =
+      ({w} : Set (List Bool))
+        ∪ TypeIIIModularCantorSystem.closedCylinder (TypeIIIModularCantorSystem.child w false)
+        ∪ TypeIIIModularCantorSystem.closedCylinder (TypeIIIModularCantorSystem.child w true) :=
+  TypeIIIModularCantorSystem.closedCylinder_split w
 
 /-- Finite prime supertrace readback equals the finite inverse Euler product. -/
 theorem primeSupertrace_eq_inverseEulerProduct
@@ -107,11 +108,6 @@ theorem mobiusParity_eq_fermionParity
     ArithmeticFunction.moebius (representedSquarefreeNat P ψ) =
       fermionParity P ψ :=
   mobiusParity_readback P ψ
-
-/-- The Cantor binary Dirac-sea operator-geometry packet is already discharged. -/
-theorem cantorDiracSea_operatorGeometry :
-    CantorDiracSeaOperatorGeometryOwnerTarget :=
-  cantorDiracSeaOperatorGeometryOwnerTarget
 
 /-! ## Hodge--Dirac and Yang--Baxter owner readouts -/
 

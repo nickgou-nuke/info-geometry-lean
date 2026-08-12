@@ -52,7 +52,7 @@ noncomputable def vec55SplitEquiv :
 
 theorem splitQ_vec55SplitEquiv (v : Fin 10 → ℝ) :
     Qsplit 5 (vec55SplitEquiv v) = q55Real v := by
-  simp [vec55SplitEquiv, Qsplit, q55Real, CliffordTower.Q11_apply]
+  simp [vec55SplitEquiv, Qsplit, q55Real]
   ring
 
 def castVec55 (v : Fin 10 → ℚ) : Fin 10 → ℝ :=
@@ -139,7 +139,7 @@ theorem gammaBasis55_pair05 :
   rw [vec55SplitEquiv_basis0, vec55SplitEquiv_basis5]
   rw [recursiveGammaTensor_headPair, recursiveGammaTensor_headPair]
   rw [appendAtom_mul]
-  simpa [gradingAtom, InfoGeometry.Clifford.GammaMatrices.gamma12_eq]
+  simp [gradingAtom, InfoGeometry.Clifford.GammaMatrices.gamma12_eq]
 
 theorem recursiveGammaTensor_basis1 :
     recursiveGammaTensor 5 (vec55SplitEquiv (vec55Basis 1)) =
@@ -393,7 +393,7 @@ theorem pairedGammaProduct_two :
   rw [InfoGeometry.Clifford.SpinorRep.appendAtom_mul_assoc_left]
   rw [recursiveGammaTensor_splitHeadPlus,
     recursiveGammaTensor_splitHeadMinus]
-  simp [gradingTensor, gamma12_sq, mul_assoc]
+  simp [gradingTensor, mul_assoc]
   rw [appendAtom_mul, ← gamma12_eq]
   simp [gradingAtom]
 
@@ -463,14 +463,15 @@ theorem pairedGammaProduct_succ (n : ℕ) :
         appendAtom (1 : SplitGammaMatrix n) gammaMinusAtom =
       appendAtom (1 : SplitGammaMatrix n) gradingAtom := by
     rw [appendAtom_mul]
-    simpa [gradingAtom, gamma12_eq]
+    simp [gradingAtom, gamma12_eq]
   rw [hpm]
   rw [pairedGammaTailFold_lifted]
   have hpow :
       gradingAtom * gradingAtom ^ (pairedSplitVectors n).length = gradingAtom := by
     rw [pairedSplitVectors_length_even]
     have hsq : gradingAtom ^ 2 = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
-      simpa [pow_two] using gradingAtom_sq
+      rw [pow_two]
+      exact gradingAtom_sq
     rw [pow_mul]
     simp [hsq]
   rw [hpow]
@@ -532,7 +533,7 @@ private theorem gamma55_anticomm_of_polar_zero
   rw [hpolar, map_zero] at h
   exact eq_neg_of_add_eq_zero_left h
 
-private theorem gammaBasis55_anticomm_45 :
+theorem gammaBasis55_anticomm_45 :
     gammaBasis55 4 * gammaBasis55 5 = -(gammaBasis55 5 * gammaBasis55 4) := by
   have hpolar : QuadraticMap.polar (Qsplit 5)
       (vec55SplitEquiv (vec55Basis 4)) (vec55SplitEquiv (vec55Basis 5)) = 0 := by
@@ -1017,7 +1018,9 @@ theorem toVec55Q_jordanNullMinus :
     toVec55Q jordanNullMinus =
       fun i => if i = 0 then 1 / 2 else if i = 5 then -(1 / 2) else 0 := by
   funext i
-  fin_cases i <;> simp [jordanNullMinus, toVec55Q, Algebra.SplitOctonionQ.SplitO.zero] <;> ring
+  fin_cases i
+  all_goals simp [jordanNullMinus, toVec55Q, Algebra.SplitOctonionQ.SplitO.zero]
+  all_goals ring
 
 noncomputable def gammaJordanNullPlus : SpinorMatrix 5 :=
   hermitianGamma jordanNullPlus
@@ -1135,9 +1138,8 @@ noncomputable def cl55Atom : Cl11Atom (SpinorMatrix 5) where
     have h := gammaGenerator_anticomm 5 cl55R0Vec cl55R5Vec
     have hm := congrArg (spinorRepresentation 5) h
     have hp : QuadraticMap.polar (SplitQuad 5) cl55R0Vec cl55R5Vec = 0 := by
-      simpa [cl55R0Vec, cl55R5Vec, headPair, SplitQuad, Qsplit,
-        QuadraticMap.polar, InfoGeometry.Clifford.splitB11_apply,
-        CliffordTower.Q11]
+      simp [cl55R0Vec, cl55R5Vec, headPair, SplitQuad, Qsplit,
+        QuadraticMap.polar, CliffordTower.Q11]
     rw [map_add, map_mul, map_mul] at hm
     rw [spinorRepresentation_ι, spinorRepresentation_ι] at hm
     rw [hp, map_zero] at hm

@@ -59,6 +59,11 @@ jobs:
         run: |
           lake build
 
+      - name: Repository-wide Lean debt gate
+        run: |
+          python3 tools/quality/repo_lean_scope_audit.py --fail-on tracked
+          python3 tools/quality/repo_lean_quarantine_audit.py --fail-on-findings
+
       - name: Extract LeanArchitect blueprint
         run: |
           lake build :blueprint

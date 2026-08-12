@@ -295,7 +295,7 @@ theorem paperEven_odd_anticommute (n i : ℕ) (hi : i < n) (j : ℕ) (hj : j < n
       _ = 0 := by abel
   · exact paperEven_odd_anticommute_of_ne hi hj h
 
-def paperGamma (n : ℕ) : Fin n ⊕ Fin n → FunctionSpace n →ₗ[ℂ] FunctionSpace n :=
+def paperGamma (n : ℕ) : Fin n ⊕ Fin n → (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ) :=
   Sum.elim
     (fun i => paperOddGenerator (n := n) i i.isLt)
     (fun i => paperEvenGenerator (n := n) i i.isLt)

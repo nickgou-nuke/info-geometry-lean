@@ -1,6 +1,5 @@
 import Mathlib
 import proofs.CartanDecomposition
-import proofs.RankOneEigenvectors
 
 open Matrix
 
@@ -22,7 +21,7 @@ and null spaces to the 8-dimensional Split Octonions.
 The Krein Doubling embeds a 2x2 patch into a 4x4 block matrix 
 using its symmetric (M_+) and skew-symmetric (M_-) Cartan components.
 -/
-def kreinDoubling (M : Patch2x2) : Matrix4x4 :=
+noncomputable def kreinDoubling (M : Patch2x2) : Matrix4x4 :=
   fromBlocks (symmPart M) (skewPart M) (skewPart M) (symmPart M)
 
 /-- The Cartan symmetric part linearly preserves addition. -/
@@ -41,7 +40,9 @@ theorem kreinDoubling_add (A B : Patch2x2) :
     kreinDoubling (A + B) = kreinDoubling A + kreinDoubling B := by
   dsimp [kreinDoubling]
   rw [symmPart_add, skewPart_add]
-  exact (fromBlocks_add (symmPart A) (symmPart B) (skewPart A) (skewPart B) (skewPart A) (skewPart B) (symmPart A) (symmPart B)).symm
+  ext i j
+  rcases i with i | i <;> rcases j with j | j <;>
+    simp [fromBlocks]
 
 theorem symmPart_of_transpose (M : Patch2x2) : symmPart (Mᵀ) = symmPart M := by
   ext i j; dsimp [symmPart]; ring

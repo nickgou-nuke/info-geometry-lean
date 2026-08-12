@@ -38,21 +38,64 @@ class CuntzIsometryData (A : Type*) [NormedRing A] [StarRing A] [CompleteSpace A
 variable {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
 variable [UHF : CuntzIsometryData A]
 
-/-- THEOREM: Vacuum Stability under the Cuntz-Weyl Duality.
-    The action of the Cuntz isometries is strictly compatible with the
-    infinite-dimensional Weyl Chamber stability. -/
-theorem cuntz_vacuum_stability : 
-    CuntzIsometryData.S_L (A := A) * star (CuntzIsometryData.S_L (A := A)) +
-        CuntzIsometryData.S_R (A := A) * star (CuntzIsometryData.S_R (A := A)) = 1 := by
-  exact CuntzIsometryData.cuntz_relation (A := A)
+theorem cuntz_cross_term_zero :
+    star (CuntzIsometryData.S_L (A := A)) *
+        CuntzIsometryData.S_R (A := A) = 0 := by
+  let x : A := star (CuntzIsometryData.S_L (A := A)) *
+    CuntzIsometryData.S_R (A := A)
+  have h := congrArg
+    (fun y : A => star (CuntzIsometryData.S_L (A := A)) * y *
+      CuntzIsometryData.S_R (A := A))
+    (CuntzIsometryData.cuntz_relation (A := A))
+  have hL :
+      star (CuntzIsometryData.S_L (A := A)) *
+          (CuntzIsometryData.S_L (A := A) *
+            star (CuntzIsometryData.S_L (A := A))) *
+          CuntzIsometryData.S_R (A := A) = x := by
+    calc
+      _ = (star (CuntzIsometryData.S_L (A := A)) *
+          CuntzIsometryData.S_L (A := A)) *
+          (star (CuntzIsometryData.S_L (A := A)) *
+            CuntzIsometryData.S_R (A := A)) := by simp [mul_assoc]
+      _ = x := by simp [x, CuntzIsometryData.isometry_L (A := A)]
+  have hR :
+      star (CuntzIsometryData.S_L (A := A)) *
+          (CuntzIsometryData.S_R (A := A) *
+            star (CuntzIsometryData.S_R (A := A))) *
+          CuntzIsometryData.S_R (A := A) = x := by
+    calc
+      _ = (star (CuntzIsometryData.S_L (A := A)) *
+          CuntzIsometryData.S_R (A := A)) *
+          (star (CuntzIsometryData.S_R (A := A)) *
+            CuntzIsometryData.S_R (A := A)) := by simp [mul_assoc]
+      _ = x := by simp [x, CuntzIsometryData.isometry_R (A := A)]
+  have hsum :
+      (star (CuntzIsometryData.S_L (A := A)) *
+          (CuntzIsometryData.S_L (A := A) *
+            star (CuntzIsometryData.S_L (A := A))) *
+          CuntzIsometryData.S_R (A := A)) +
+        (star (CuntzIsometryData.S_L (A := A)) *
+          (CuntzIsometryData.S_R (A := A) *
+            star (CuntzIsometryData.S_R (A := A))) *
+          CuntzIsometryData.S_R (A := A)) =
+      star (CuntzIsometryData.S_L (A := A)) * 1 *
+        CuntzIsometryData.S_R (A := A) := by
+    simpa only [mul_add, add_mul] using h
+  have hxx : x + x = x := by
+    rw [hL, hR] at hsum
+    simpa [x] using hsum
+  have hxx' : x + x = x + 0 := by simpa using hxx
+  exact add_left_cancel hxx'
 
-/-- THEOREM: The Weyl Group Commutator.
-    The infinite sequence of primes dictates that disjoint reflections commute,
-    establishing the abelian nature of the Cantor Quasilattice roots. -/
-def weyl_disjoint_commute (p q : ℕ) (h_neq : p ≠ q) : Prop :=
-  ∀ (x : A), CuntzIsometryData.weyl_reflection (A := A) p
-      (CuntzIsometryData.weyl_reflection (A := A) q x) =
-    CuntzIsometryData.weyl_reflection (A := A) q
-      (CuntzIsometryData.weyl_reflection (A := A) p x)
+theorem cuntz_cross_term_zero_star :
+    star (CuntzIsometryData.S_R (A := A)) *
+        CuntzIsometryData.S_L (A := A) = 0 := by
+  have h := congrArg star (cuntz_cross_term_zero (A := A))
+  simpa only [star_zero, star_mul, star_star] using h
+
+theorem weyl_reflection_involutive (p : ℕ) (x : A) :
+    CuntzIsometryData.weyl_reflection (A := A) p
+        (CuntzIsometryData.weyl_reflection (A := A) p x) = x :=
+  CuntzIsometryData.is_involution (A := A) p x
 
 end InfoGeometry.GrandUnification.UHF

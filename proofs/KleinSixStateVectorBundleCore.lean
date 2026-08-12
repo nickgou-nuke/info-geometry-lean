@@ -26,7 +26,7 @@ value at zero. -/
 theorem injective_deck2_eq_add_apply_zero (f : Deck2 → Deck2)
     (hf : Function.Injective f) (g : Deck2) :
     f g = g + f 0 := by
-  have h11 : (1 + 1 : Deck2) = 0 := by native_decide
+  have h11 : (1 + 1 : Deck2) = 0 := by decide
   fin_cases g
   · simp
   · generalize h0 : f 0 = a
@@ -96,7 +96,7 @@ theorem deckFiberMap_add (omega : ℂ)
     (homega : omega ^ 2 + omega + 1 = 0)
     (g h : Deck2) (v : State) :
     deckFiberMap (g + h) v = deckFiberMap h (deckFiberMap g v) := by
-  have h11 : (1 + 1 : Deck2) = 0 := by native_decide
+  have h11 : (1 + 1 : Deck2) = 0 := by decide
   fin_cases g <;> fin_cases h
   · simp [deckFiberMap]
   · simp [deckFiberMap]

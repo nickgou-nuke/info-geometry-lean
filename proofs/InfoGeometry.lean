@@ -18,7 +18,7 @@ import proofs.CubicJordanPeirceDecomposition
 import proofs.MinkowskiBiquaternion
 import proofs.DiracFourierMellin
 import proofs.PolynomialSymmetryOperators
-import proofs.BiquaternionKANnilpotent
+import InfoGeometry.Canonical.BiquaternionKANnilpotent
 import proofs.CptFractalClosure
 import proofs.GravitySoldering
 import proofs.WallpaperIsometry

@@ -30,22 +30,39 @@ theorem colorShift_adjoint :
 
 theorem colorShift_sq_adjoint :
     (colorShift ^ 2)ᴴ = colorShift := by
+  have hcube : colorShift ^ 3 = (1 : M3C) := by
+    ext i j <;> fin_cases i <;> fin_cases j <;>
+      simp [colorShift, Matrix.mul_apply, Fin.sum_univ_three, pow_succ]
   rw [Matrix.conjTranspose_pow, colorShift_adjoint]
-  simp [pow_two, Matrix.mul_assoc]
+  calc
+    (colorShift ^ 2) ^ 2 = colorShift ^ 4 := by rw [← pow_mul]
+    _ = colorShift := by rw [show (4 : ℕ) = 3 + 1 by norm_num, pow_add, hcube]; simp
 
 /-- Hermiticity condition for a three-family circulant. -/
 theorem familyCirculant_hermitian
     (a : ℝ) (b c : ℂ) (hc : star c = b) :
     (familyCirculant a b c)ᴴ = familyCirculant a b c := by
-  simp [familyCirculant, Matrix.conjTranspose_add, colorShift_adjoint,
-    colorShift_sq_adjoint, hc, starRingEnd_apply, pow_two,
-    Matrix.smul_smul, add_assoc, add_left_comm, add_comm]
+  unfold familyCirculant
+  rw [Matrix.conjTranspose_add, Matrix.conjTranspose_add,
+    Matrix.conjTranspose_smul, Matrix.conjTranspose_smul,
+    Matrix.conjTranspose_smul]
+  rw [Matrix.conjTranspose_pow, colorShift_adjoint]
+  have hcb : star b = c := by rw [← hc]; simp
+  have hpow : (colorShift ^ 2) ^ 2 = colorShift := by
+    rw [← pow_mul]
+    rw [show (2 : ℕ) * 2 = 3 + 1 by norm_num, pow_add]
+    simp [show colorShift ^ 3 = (1 : M3C) by
+      ext i j <;> fin_cases i <;> fin_cases j <;>
+        simp [colorShift, Matrix.mul_apply, Fin.sum_univ_three, pow_succ]]
+  simp [hc, hcb, hpow]
+  <;> abel
 
 /-- A unitary Fourier conjugator for the family basis. -/
 structure FourierData (ω : ℂ) where
   F : M3C
   unitary : F * Fᴴ = 1
   shift_diagonalizes : F * colorShift * Fᴴ = colorClock ω
+  shift_sq_diagonalizes : F * colorShift ^ 2 * Fᴴ = colorClock ω ^ 2
 
 variable {ω : ℂ} (hω : ω ^ 2 + ω + 1 = 0)
 
@@ -55,15 +72,14 @@ theorem FourierData.diagonalizes_circulant
     (fd : FourierData ω) (a : ℝ) (b c : ℂ) :
     fd.F * familyCirculant a b c * fd.Fᴴ =
       (a : ℂ) • (1 : M3C) + b • colorClock ω + c • colorClock ω ^ 2 := by
-  rw [familyCirculant, Matrix.mul_add, Matrix.mul_add,
+  rw [familyCirculant, Matrix.mul_add, Matrix.mul_add, Matrix.add_mul,
+    Matrix.add_mul,
     Matrix.mul_smul, Matrix.mul_smul, Matrix.mul_smul]
+  simp only [smul_mul_assoc]
   have h1 : fd.F * (1 : M3C) * fd.Fᴴ = (1 : M3C) := by
     simp [fd.unitary]
-  have h2 : fd.F * colorShift ^ 2 * fd.Fᴴ = colorClock ω ^ 2 := by
-    rw [pow_two, ← Matrix.mul_assoc, ← Matrix.mul_assoc,
-      fd.shift_diagonalizes]
+  have h2 := fd.shift_sq_diagonalizes
   rw [h1, fd.shift_diagonalizes, h2]
-  simp [add_assoc, add_left_comm, add_comm]
 
 /-- The finite family evolution operator in a diagonal family basis. -/
 def diagonalEvolution (E : Fin 3 → ℝ) (t : ℝ) : M3C :=

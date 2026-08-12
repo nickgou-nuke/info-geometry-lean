@@ -59,18 +59,30 @@ theorem atomProjection_idempotent (n : ℕ) (w : BitWord n) :
   intro v
   by_cases h : v = w <;> simp [atomProjection, h]
 
+theorem atomProjection_mul_of_ne
+    (n : ℕ) {w₁ w₂ : BitWord n} (h : w₁ ≠ w₂) (v : BitWord n) :
+    atomProjection n w₁ v * atomProjection n w₂ v = 0 := by
+  have h' : w₂ ≠ w₁ := Ne.symm h
+  by_cases h₁ : v = w₁ <;> by_cases h₂ : v = w₂ <;>
+    simp [atomProjection, h₁, h₂, h, h']
+
+theorem atomProjection_sum_univ (n : ℕ) (v : BitWord n) :
+    ∑ w : BitWord n, atomProjection n w v = 1 := by
+  classical
+  simp [atomProjection]
+
 /-- Atomic projections as elements of the finite Boolean projection lattice. -/
 def atomBooleanProjection (n : ℕ) (w : BitWord n) : BooleanProjection n :=
   ⟨atomProjection n w, atomProjection_idempotent n w⟩
 
 /-- The atom indexed by the boundary prefix evaluates to one on that boundary point. -/
-theorem cylinder_atom_boundaryPrefix_self (n : ℕ) (x : CantorBoundary) :
+theorem cylinder_atom_boundaryPrefix_self (n : ℕ) (x : (ℕ → Bool)) :
     cylinder n (atomProjection n (boundaryPrefix n x)) x = 1 := by
   simp [cylinder, atomProjection]
 
 /-- An atom evaluates to zero away from its prefix cylinder. -/
 theorem cylinder_atom_eq_zero_of_prefix_ne
-    (n : ℕ) (w : BitWord n) (x : CantorBoundary)
+    (n : ℕ) (w : BitWord n) (x : (ℕ → Bool))
     (h : boundaryPrefix n x ≠ w) :
     cylinder n (atomProjection n w) x = 0 := by
   simp [cylinder, atomProjection, h]
@@ -81,12 +93,12 @@ structure CoherentBitPath where
   coherent : ∀ n : ℕ, prefixSucc n (word (n + 1)) = word n
 
 /-- A Cantor boundary point determines a coherent family of finite prefixes. -/
-def boundaryToCoherentPath (x : CantorBoundary) : CoherentBitPath where
+def boundaryToCoherentPath (x : (ℕ → Bool)) : CoherentBitPath where
   word := fun n => boundaryPrefix n x
   coherent := fun n => boundaryPrefix_succ_eq_prefixSucc n x
 
 /-- A coherent Bratteli path determines an infinite Cantor word by reading the new bit at each level. -/
-def coherentPathToBoundary (p : CoherentBitPath) : CantorBoundary :=
+def coherentPathToBoundary (p : CoherentBitPath) : (ℕ → Bool) :=
   fun n => p.word (n + 1) ⟨n, Nat.lt_succ_self n⟩
 
 /-- Values in a coherent path are stable when passing to deeper levels. -/
@@ -120,7 +132,7 @@ theorem boundaryPrefix_coherentPathToBoundary (p : CoherentBitPath) (n : ℕ) :
   exact (coherent_value_eq_terminal p i.2).symm
 
 /-- Cantor boundary to Bratteli path and back is the identity. -/
-theorem coherentPathToBoundary_boundaryToCoherentPath (x : CantorBoundary) :
+theorem coherentPathToBoundary_boundaryToCoherentPath (x : (ℕ → Bool)) :
     coherentPathToBoundary (boundaryToCoherentPath x) = x := by
   funext n
   rfl
@@ -136,7 +148,7 @@ theorem boundaryToCoherentPath_coherentPathToBoundary (p : CoherentBitPath) :
       exact boundaryPrefix_coherentPathToBoundary ⟨word, coherent⟩ n
 
 /-- The Boolean-projection Bratteli path space is equivalent to the Cantor boundary. -/
-def coherentPathEquivCantorBoundary : CoherentBitPath ≃ CantorBoundary where
+def coherentPathEquivCantorBoundary : CoherentBitPath ≃ (ℕ → Bool) where
   toFun := coherentPathToBoundary
   invFun := boundaryToCoherentPath
   left_inv := boundaryToCoherentPath_coherentPathToBoundary
@@ -149,7 +161,7 @@ theorem witt_bits_eq_cantor_prefix (p : CoherentBitPath) (n : ℕ) :
 
 /-- A Cantor boundary point is recovered from all of its finite UHF Boolean projection bits. -/
 theorem cantor_boundary_ext_of_all_witt_bits
-    {x y : CantorBoundary}
+    {x y : (ℕ → Bool)}
     (h : ∀ n : ℕ, boundaryPrefix n x = boundaryPrefix n y) :
     x = y := by
   funext n
@@ -166,10 +178,10 @@ def prefixPullback (n : ℕ) (A : FiniteBooleanAlgebra n) : FiniteBooleanAlgebra
   {w | prefixSucc n w ∈ A}
 
 /-- Cantor cylinder determined by a finite Boolean event. -/
-def cantorCylinder (n : ℕ) (A : FiniteBooleanAlgebra n) : Set CantorBoundary :=
+def cantorCylinder (n : ℕ) (A : FiniteBooleanAlgebra n) : Set (ℕ → Bool) :=
   {x | boundaryPrefix n x ∈ A}
 
-@[simp] theorem mem_cantorCylinder (n : ℕ) (A : FiniteBooleanAlgebra n) (x : CantorBoundary) :
+@[simp] theorem mem_cantorCylinder (n : ℕ) (A : FiniteBooleanAlgebra n) (x : (ℕ → Bool)) :
     x ∈ cantorCylinder n A ↔ boundaryPrefix n x ∈ A :=
   Iff.rfl
 
@@ -198,12 +210,12 @@ theorem cantorCylinder_compl (n : ℕ) (A : FiniteBooleanAlgebra n) :
   rfl
 
 /-- The principal Stone ultrafilter at a Cantor point, stage by stage. -/
-def pointStoneFilter (x : CantorBoundary) (n : ℕ) : Set (FiniteBooleanAlgebra n) :=
+def pointStoneFilter (x : (ℕ → Bool)) (n : ℕ) : Set (FiniteBooleanAlgebra n) :=
   {A | boundaryPrefix n x ∈ A}
 
 /-- Point ultrafilters are compatible with the Boolean-algebra pullback maps. -/
 theorem pointStoneFilter_prefixPullback
-    (x : CantorBoundary) (n : ℕ) (A : FiniteBooleanAlgebra n) :
+    (x : (ℕ → Bool)) (n : ℕ) (A : FiniteBooleanAlgebra n) :
     prefixPullback n A ∈ pointStoneFilter x (n + 1) ↔ A ∈ pointStoneFilter x n := by
   simp [pointStoneFilter, prefixPullback, boundaryPrefix_succ_eq_prefixSucc]
 
@@ -257,19 +269,19 @@ theorem boolEvalAt_compl
     simp [boolEvalAt, hA, hc]
 
 /-- A Cantor boundary point evaluates every finite Boolean cylinder event to a bit. -/
-def cantorBooleanEvaluation (x : CantorBoundary) (n : ℕ) :
+def cantorBooleanEvaluation (x : (ℕ → Bool)) (n : ℕ) :
     FiniteBooleanAlgebra n → Bool :=
   boolEvalAt n (boundaryPrefix n x)
 
 /-- The Cantor evaluation is exactly the principal Stone filter membership test. -/
 theorem cantorBooleanEvaluation_eq_true_iff_pointStoneFilter
-    (x : CantorBoundary) (n : ℕ) (A : FiniteBooleanAlgebra n) :
+    (x : (ℕ → Bool)) (n : ℕ) (A : FiniteBooleanAlgebra n) :
     cantorBooleanEvaluation x n A = true ↔ A ∈ pointStoneFilter x n := by
   simp [cantorBooleanEvaluation, pointStoneFilter]
 
 /-- Cantor Boolean evaluation is compatible with the finite prefix bonding maps. -/
 theorem cantorBooleanEvaluation_prefixPullback
-    (x : CantorBoundary) (n : ℕ) (A : FiniteBooleanAlgebra n) :
+    (x : (ℕ → Bool)) (n : ℕ) (A : FiniteBooleanAlgebra n) :
     cantorBooleanEvaluation x (n + 1) (prefixPullback n A) =
       cantorBooleanEvaluation x n A := by
   classical
@@ -316,6 +328,22 @@ theorem eventMass_nonnegative {n : ℕ}
     by_cases hw : w ∈ A
     · simp [hw, P.nonnegative w]
     · simp [hw])
+
+theorem eventMass_union_of_disjoint {n : ℕ}
+    (P : FiniteBayesianState n)
+    (A B : FiniteBooleanAlgebra n)
+    (hAB : Disjoint A B) :
+    P.eventMass (A ∪ B) = P.eventMass A + P.eventMass B := by
+  classical
+  unfold eventMass
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_congr rfl
+  intro w hw
+  by_cases hA : w ∈ A <;> by_cases hB : w ∈ B
+  · exact (Set.disjoint_left.mp hAB hA hB).elim
+  · simp [hA, hB]
+  · simp [hA, hB]
+  · simp [hA, hB]
 
 /-- The mass of an atomic cylinder is the weight of its unique finite word. -/
 theorem eventMass_singleton {n : ℕ}
@@ -450,7 +478,7 @@ theorem successor_persistence_eventMass_singleton
 end FiniteBayesianState
 
 /-- The finite Stone point at a prefix word is the principal ultrafilter on words. -/
-noncomputable def pointStoneUltrafilter (x : CantorBoundary) (n : ℕ) :
+noncomputable def pointStoneUltrafilter (x : (ℕ → Bool)) (n : ℕ) :
     Ultrafilter (BitWord n) :=
   pure (boundaryPrefix n x)
 
@@ -467,33 +495,33 @@ noncomputable def finiteStoneSpectrumEquivBitWord (n : ℕ) :
 
 /-- The Stone point at a Cantor boundary reads back the same prefix word. -/
 theorem pointStoneUltrafilter_readback
-    (x : CantorBoundary) (n : ℕ) :
+    (x : (ℕ → Bool)) (n : ℕ) :
     finiteStoneSpectrumEquivBitWord n (pointStoneUltrafilter x n) =
       boundaryPrefix n x := by
   exact (finiteStoneSpectrumEquivBitWord n).right_inv (boundaryPrefix n x)
 
 /-- Membership in the Stone point is exactly membership of the prefix word. -/
 theorem pointStoneUltrafilter_mem_iff
-    (x : CantorBoundary) (n : ℕ) (A : FiniteBooleanAlgebra n) :
+    (x : (ℕ → Bool)) (n : ℕ) (A : FiniteBooleanAlgebra n) :
     A ∈ pointStoneUltrafilter x n ↔ boundaryPrefix n x ∈ A := by
   rfl
 
 /-- The finite Stone spectrum is compatible with the UHF pullback maps. -/
 theorem finiteStoneSpectrum_prefixPullback
-    (x : CantorBoundary) (n : ℕ) (A : FiniteBooleanAlgebra n) :
+    (x : (ℕ → Bool)) (n : ℕ) (A : FiniteBooleanAlgebra n) :
     A ∈ pointStoneUltrafilter x n ↔ prefixPullback n A ∈ pointStoneUltrafilter x (n + 1) := by
   simp [pointStoneUltrafilter, prefixPullback, boundaryPrefix_succ_eq_prefixSucc]
 
 /-- Atomic cylinder sets are exactly prefix equality classes. -/
-def atomCylinder (n : ℕ) (w : BitWord n) : Set CantorBoundary :=
+def atomCylinder (n : ℕ) (w : BitWord n) : Set (ℕ → Bool) :=
   cantorCylinder n {w}
 
-@[simp] theorem mem_atomCylinder (n : ℕ) (w : BitWord n) (x : CantorBoundary) :
+@[simp] theorem mem_atomCylinder (n : ℕ) (w : BitWord n) (x : (ℕ → Bool)) :
     x ∈ atomCylinder n w ↔ boundaryPrefix n x = w := by
   simp [atomCylinder, cantorCylinder]
 
 /-- Atomic cylinders separate Cantor boundary points. -/
-theorem atomCylinders_separate_points {x y : CantorBoundary}
+theorem atomCylinders_separate_points {x y : (ℕ → Bool)}
     (h : ∀ n (w : BitWord n), x ∈ atomCylinder n w ↔ y ∈ atomCylinder n w) :
     x = y := by
   apply cantor_boundary_ext_of_all_witt_bits
@@ -507,13 +535,13 @@ theorem atomCylinders_separate_points {x y : CantorBoundary}
 
 /-- A Stone ultrafilter on the Cantor boundary whose finite cylinder atoms are unique at each depth. -/
 structure CantorStoneUltrafilter where
-  filter : Ultrafilter CantorBoundary
+  filter : Ultrafilter (ℕ → Bool)
   atom_exists_unique : ∀ n : ℕ, ∃! w : BitWord n, atomCylinder n w ∈ filter
 
 namespace CantorStoneUltrafilter
 
 /-- The principal Cantor Stone ultrafilter associated to a boundary point. -/
-def principal (x : CantorBoundary) : CantorStoneUltrafilter where
+def principal (x : (ℕ → Bool)) : CantorStoneUltrafilter where
   filter := pure x
   atom_exists_unique := by
     intro n
@@ -557,7 +585,7 @@ noncomputable def toCoherentPath (U : CantorStoneUltrafilter) : CoherentBitPath 
   coherent := U.selectedWord_coherent
 
 /-- Convert a Cantor Stone ultrafilter to its Cantor boundary point. -/
-noncomputable def toBoundary (U : CantorStoneUltrafilter) : CantorBoundary :=
+noncomputable def toBoundary (U : CantorStoneUltrafilter) : (ℕ → Bool) :=
   coherentPathToBoundary U.toCoherentPath
 
 /-- The boundary extracted from a Stone ultrafilter has exactly the selected finite atoms. -/
@@ -566,7 +594,7 @@ theorem boundaryPrefix_toBoundary (U : CantorStoneUltrafilter) (n : ℕ) :
   boundaryPrefix_coherentPathToBoundary U.toCoherentPath n
 
 /-- Principal Stone ultrafilters recover the original Cantor boundary point. -/
-theorem toBoundary_principal (x : CantorBoundary) :
+theorem toBoundary_principal (x : (ℕ → Bool)) :
     (principal x).toBoundary = x := by
   apply cantor_boundary_ext_of_all_witt_bits
   intro n
@@ -640,7 +668,7 @@ end CantorStoneUltrafilter
 
 /-- The real ultrafilter Stone layer recovers Cantor points from unique cylinder atoms. -/
 theorem cantor_stone_ultrafilter_layer :
-    (∀ x : CantorBoundary, (CantorStoneUltrafilter.principal x).toBoundary = x) ∧
+    (∀ x : (ℕ → Bool), (CantorStoneUltrafilter.principal x).toBoundary = x) ∧
       (∀ U : CantorStoneUltrafilter, ∀ n w,
         atomCylinder n w ∈ U.filter ↔ boundaryPrefix n U.toBoundary = w) := by
   exact ⟨CantorStoneUltrafilter.toBoundary_principal,
@@ -652,35 +680,47 @@ vertices in the UHF Bratteli diagram is the established Cantor bitword carrier,
 the finite Boolean projection algebra maps contravariantly to Cantor cylinders,
 and the Stone ultrafilter layer recovers Cantor points from their atom filters.
 -/
-structure BooleanProjectionBratteliCantorData where
-  pathEquiv : CoherentBitPath ≃ CantorBoundary
-  pathEquiv_eq_owner : pathEquiv = coherentPathEquivCantorBoundary
-  pathEquiv_prefix :
-    ∀ p n, boundaryPrefix n (pathEquiv p) = p.word n
-  boundary_right_inv :
-    ∀ x : CantorBoundary, pathEquiv (boundaryToCoherentPath x) = x
-  cylinder_prefixPullback :
-    ∀ n (A : FiniteBooleanAlgebra n),
-      cantorCylinder (n + 1) (prefixPullback n A) = cantorCylinder n A
-  booleanEvaluation_prefixPullback :
-    ∀ x n (A : FiniteBooleanAlgebra n),
-      cantorBooleanEvaluation x (n + 1) (prefixPullback n A) =
-        cantorBooleanEvaluation x n A
-  principal_toBoundary :
-    ∀ x : CantorBoundary, (CantorStoneUltrafilter.principal x).toBoundary = x
+theorem boolean_projection_bratteli_path_space_is_cantor :
+    (∀ p n,
+      boundaryPrefix n (coherentPathEquivCantorBoundary p) = p.word n) ∧
+      (∀ x : (ℕ → Bool),
+        coherentPathEquivCantorBoundary (boundaryToCoherentPath x) = x) ∧
+      (∀ n (A : FiniteBooleanAlgebra n),
+        cantorCylinder (n + 1) (prefixPullback n A) = cantorCylinder n A) ∧
+      (∀ x n (A : FiniteBooleanAlgebra n),
+        cantorBooleanEvaluation x (n + 1) (prefixPullback n A) =
+          cantorBooleanEvaluation x n A) ∧
+      (∀ x : (ℕ → Bool),
+        (CantorStoneUltrafilter.principal x).toBoundary = x) := by
+  exact ⟨witt_bits_eq_cantor_prefix,
+    coherentPathToBoundary_boundaryToCoherentPath,
+    cantorCylinder_prefixPullback,
+    cantorBooleanEvaluation_prefixPullback,
+    CantorStoneUltrafilter.toBoundary_principal⟩
 
-/--
-Rosetta theorem as concrete owner data, not an existential equivalence wrapper.
--/
-noncomputable def boolean_projection_bratteli_path_space_is_cantor :
-    BooleanProjectionBratteliCantorData where
-  pathEquiv := coherentPathEquivCantorBoundary
-  pathEquiv_eq_owner := rfl
-  pathEquiv_prefix := witt_bits_eq_cantor_prefix
-  boundary_right_inv := coherentPathToBoundary_boundaryToCoherentPath
-  cylinder_prefixPullback := cantorCylinder_prefixPullback
-  booleanEvaluation_prefixPullback := cantorBooleanEvaluation_prefixPullback
-  principal_toBoundary := CantorStoneUltrafilter.toBoundary_principal
+theorem cantorBooleanEvaluation_eq_false_iff_pointStoneFilter
+    (x : (ℕ → Bool)) (n : ℕ) (A : FiniteBooleanAlgebra n) :
+    cantorBooleanEvaluation x n A = false ↔
+      A ∉ pointStoneFilter x n := by
+  cases he : cantorBooleanEvaluation x n A with
+  | false =>
+      constructor
+      · intro _ hmem
+        have htrue :=
+          (cantorBooleanEvaluation_eq_true_iff_pointStoneFilter x n A).mpr hmem
+        rw [he] at htrue
+        cases htrue
+      · intro _
+        simpa using he
+  | true =>
+      constructor
+      · intro hfalse
+        cases hfalse
+      · intro hnot
+        exfalso
+        apply hnot
+        exact
+          (cantorBooleanEvaluation_eq_true_iff_pointStoneFilter x n A).mp he
 
 end InfoGeometry.Canonical.UHFBooleanProjectionCantorBridge
 

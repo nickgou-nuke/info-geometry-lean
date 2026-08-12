@@ -36,12 +36,6 @@ theorem flow_null
     Null model x y := by
   simpa [Null] using h
 
-theorem cauchy_surface_measure_zero
-    (Volume : (M → Prop) → ℝ) (CauchySurface : M → Prop)
-    (h_zero_volume : Volume CauchySurface = 0) :
-    Volume CauchySurface = 0 := by
-  simpa using h_zero_volume
-
 theorem model_cauchy_surface_measure_zero
     (model : MetriplecticCausality M) :
     model.volume model.cauchySurface = 0 := by

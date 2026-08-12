@@ -1,4 +1,5 @@
 import InfoGeometry.Canonical.CantorBoundaryReadoutRefinement
+import InfoGeometry.Canonical.CantorBoundaryReadoutIntervalApproximation
 import Mathlib.Topology.Instances.Real.Lemmas
 
 /-!
@@ -17,6 +18,7 @@ open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Canonical.CantorBoundaryReadoutBounds
 open InfoGeometry.Canonical.CantorBoundaryFiniteReadout
 open InfoGeometry.Canonical.CantorBoundaryReadoutRefinement
+open InfoGeometry.Canonical.CantorBoundaryReadoutIntervalApproximation
 open InfoGeometry.Canonical.CantorCylinderTopology
 open InfoGeometry.Canonical.StoneCantorMathlib
 
@@ -58,5 +60,74 @@ theorem readout_image_prefixCylinder_subset_dyadicInterval
   rw [← range_prefixExtend_eq_prefixCylinder] at hy
   rcases hy with ⟨x, rfl⟩
   exact realBinaryReadout_prefixExtend_mem_dyadicInterval n w x
+
+theorem readout_image_prefixCylinder_eq_affine_image
+    (n : ℕ) (w : BitWord n) :
+    realBinaryReadout '' prefixCylinder n w =
+      (fun t : ℝ =>
+        finitePrefixReadout (List.ofFn w) + (1 / 2 : ℝ) ^ n * t) ''
+        Set.range realBinaryReadout := by
+  rw [← range_prefixExtend_eq_prefixCylinder]
+  ext z
+  constructor
+  · rintro ⟨y, hy, rfl⟩
+    rcases hy with ⟨x, rfl⟩
+    refine ⟨realBinaryReadout x, ⟨x, rfl⟩, ?_⟩
+    exact (realBinaryReadout_prefixExtend n w x).symm
+  · rintro ⟨t, ⟨x, rfl⟩, rfl⟩
+    refine ⟨prefixExtend w x, ?_, ?_⟩
+    · exact ⟨x, rfl⟩
+    · exact realBinaryReadout_prefixExtend n w x
+
+theorem readout_image_prefixCylinder_eq_affine_unitInterval
+    (n : ℕ) (w : BitWord n) :
+    realBinaryReadout '' prefixCylinder n w =
+      (fun t : ℝ =>
+        finitePrefixReadout (List.ofFn w) + (1 / 2 : ℝ) ^ n * t) ''
+        Set.Icc (0 : ℝ) 1 := by
+  rw [readout_image_prefixCylinder_eq_affine_image,
+    realBinaryReadout_range_eq_unitInterval]
+
+theorem readout_image_prefixCylinder_eq_dyadicInterval
+    (n : ℕ) (w : BitWord n) :
+    realBinaryReadout '' prefixCylinder n w =
+      Set.Icc (finitePrefixReadout (List.ofFn w))
+        (finitePrefixReadout (List.ofFn w) + (1 / 2 : ℝ) ^ n) := by
+  rw [readout_image_prefixCylinder_eq_affine_unitInterval]
+  ext z
+  constructor
+  · rintro ⟨t, ht, rfl⟩
+    constructor
+    · have hc : 0 ≤ (1 / 2 : ℝ) ^ n := by positivity
+      nlinarith [mul_nonneg hc ht.1]
+    · have hc : 0 ≤ (1 / 2 : ℝ) ^ n := by positivity
+      nlinarith [mul_le_mul_of_nonneg_left ht.2 hc]
+  · intro hz
+    have hc : 0 < (1 / 2 : ℝ) ^ n := by positivity
+    refine ⟨(z - finitePrefixReadout (List.ofFn w)) / (1 / 2 : ℝ) ^ n, ?_, ?_⟩
+    · constructor
+      · exact div_nonneg (sub_nonneg.mpr hz.1) (le_of_lt hc)
+      · apply (div_le_iff₀ hc).2
+        linarith [hz.2]
+    · field_simp
+      ring
+
+theorem finitePrefixReadout_mem_readout_image_prefixCylinder
+    (n : ℕ) (w : BitWord n) :
+    finitePrefixReadout (List.ofFn w) ∈
+      realBinaryReadout '' prefixCylinder n w := by
+  rw [readout_image_prefixCylinder_eq_dyadicInterval]
+  constructor
+  · exact le_rfl
+  · linarith [show 0 ≤ (1 / 2 : ℝ) ^ n by positivity]
+
+theorem finitePrefixReadout_plus_tail_mem_readout_image_prefixCylinder
+    (n : ℕ) (w : BitWord n) :
+    finitePrefixReadout (List.ofFn w) + (1 / 2 : ℝ) ^ n ∈
+      realBinaryReadout '' prefixCylinder n w := by
+  rw [readout_image_prefixCylinder_eq_dyadicInterval]
+  constructor
+  · linarith [show 0 ≤ (1 / 2 : ℝ) ^ n by positivity]
+  · exact le_rfl
 
 end InfoGeometry.Canonical.CantorBoundaryReadoutCompact

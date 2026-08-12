@@ -53,7 +53,9 @@ def FiniteLatticeCurrentHierarchyPacket
         (heiOper m).commutator (heiOper q) =
           if m + q = 0 then (m : ℝ) • (1 : DoubledSpace E →ₗ[ℝ] DoubledSpace E) else 0) :
     Prop :=
-  (∀ T : Set (FiniteProjectionCompletion n), IsLUB T (sSup T) ∧ IsGLB T (sInf T)) ∧
+  (∀ T : Set
+      ((Fin n → Bool) → KreinProjectorLattice.KreinSector),
+      IsLUB T (sSup T) ∧ IsGLB T (sInf T)) ∧
   GaloisConnection (@refineProjectionAssignment n) (@coarseProjectionAssignment n) ∧
   ((concreteCARCreation (E := E)).comp (concreteCARCreation (E := E)) = 0
       ∧ (concreteCARAnnihilation (E := E)).comp

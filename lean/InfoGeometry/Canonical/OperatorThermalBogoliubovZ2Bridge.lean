@@ -21,11 +21,10 @@ private lemma hasGrading_smul
     {Γ X : A} {b : Bool}
     (hX : ModularZ2CubeGrading.hasGrading Γ X b) (r : ℂ) :
     ModularZ2CubeGrading.hasGrading Γ (r • X) b := by
-  letI : ModularZ2CubeGrading.Central (algebraMap ℂ A r) :=
-    ⟨fun Y => Algebra.commutes r Y⟩
   simpa only [Algebra.smul_def] using
-    (ModularZ2CubeGrading.hasGrading_mul_central
-      (Γ := Γ) (X := X) (c := algebraMap ℂ A r) hX)
+    (ModularZ2CubeGrading.hasGrading_mul_of_commute
+      (Γ := Γ) (X := X) (c := algebraMap ℂ A r) hX
+      (Algebra.commutes r Γ))
 
 private lemma isHomogeneous_smul
     {Γ_R Γ_χ Γ_N X : A}
@@ -124,6 +123,91 @@ theorem thermal_creator_is_homogeneous
       (thermalCreator c b u v) bR bχ bN := by
   unfold thermalCreator
   exact isHomogeneous_add (isHomogeneous_smul hc u) (isHomogeneous_smul hb v)
+
+/-! ## Operator-valued coefficients
+
+The coefficient operators are not assumed commutative.  Their grading is an
+explicit input: fully-even coefficients preserve the degree of the CAR
+generators under multiplication.  The CAR identity itself additionally
+requires the centrality hypotheses used by the operator-valued expansion.
+-/
+
+omit [Algebra ℂ A] in
+theorem operator_thermal_annihilator_is_homogeneous
+    {Γ_R Γ_χ Γ_N a d u v : A}
+    (hu : ModularZ2CubeGrading.isFullyEven Γ_R Γ_χ Γ_N u)
+    (hv : ModularZ2CubeGrading.isFullyEven Γ_R Γ_χ Γ_N v)
+    (ha : ModularZ2CubeGrading.isHomogeneous Γ_R Γ_χ Γ_N a bR bχ bN)
+    (hd : ModularZ2CubeGrading.isHomogeneous Γ_R Γ_χ Γ_N d bR bχ bN) :
+    ModularZ2CubeGrading.isHomogeneous Γ_R Γ_χ Γ_N
+      (operatorThermalAnnihilator a d u v) bR bχ bN := by
+  unfold operatorThermalAnnihilator
+  unfold ModularZ2CubeGrading.isFullyEven at hu hv
+  simpa using isHomogeneous_add
+    (ModularZ2CubeGrading.isHomogeneous_mul hu ha)
+    (ModularZ2CubeGrading.isHomogeneous_mul hv hd)
+
+omit [Algebra ℂ A] in
+theorem operator_thermal_creator_is_homogeneous
+    {Γ_R Γ_χ Γ_N c b u v : A}
+    (hu : ModularZ2CubeGrading.isFullyEven Γ_R Γ_χ Γ_N u)
+    (hv : ModularZ2CubeGrading.isFullyEven Γ_R Γ_χ Γ_N v)
+    (hc : ModularZ2CubeGrading.isHomogeneous Γ_R Γ_χ Γ_N c bR bχ bN)
+    (hb : ModularZ2CubeGrading.isHomogeneous Γ_R Γ_χ Γ_N b bR bχ bN) :
+    ModularZ2CubeGrading.isHomogeneous Γ_R Γ_χ Γ_N
+      (operatorThermalCreator c b u v) bR bχ bN := by
+  unfold operatorThermalCreator
+  unfold ModularZ2CubeGrading.isFullyEven at hu hv
+  simpa using isHomogeneous_add
+    (ModularZ2CubeGrading.isHomogeneous_mul hu hc)
+    (ModularZ2CubeGrading.isHomogeneous_mul hv hb)
+
+omit [Algebra ℂ A] in
+theorem operator_thermal_bogoliubov_car_is_fully_even
+    {Γ_R Γ_χ Γ_N a c b d u v : A}
+    (hu : ModularZ2CubeGrading.isFullyEven Γ_R Γ_χ Γ_N u)
+    (hv : ModularZ2CubeGrading.isFullyEven Γ_R Γ_χ Γ_N v)
+    (ha : ModularZ2CubeGrading.isFullyOdd Γ_R Γ_χ Γ_N a)
+    (hc : ModularZ2CubeGrading.isFullyOdd Γ_R Γ_χ Γ_N c)
+    (hb : ModularZ2CubeGrading.isFullyOdd Γ_R Γ_χ Γ_N b)
+    (hd : ModularZ2CubeGrading.isFullyOdd Γ_R Γ_χ Γ_N d) :
+    ModularZ2CubeGrading.isFullyEven Γ_R Γ_χ Γ_N
+      (thermalAnticommutator
+        (operatorThermalAnnihilator a d u v)
+        (operatorThermalCreator c b u v)) := by
+  unfold ModularZ2CubeGrading.isFullyOdd at ha hc hb hd
+  exact ModularZ2CubeGrading.anticommutator_of_same_homogeneous_is_fully_even
+    (X := operatorThermalAnnihilator a d u v)
+    (Y := operatorThermalCreator c b u v)
+    (hX := operator_thermal_annihilator_is_homogeneous hu hv ha hd)
+    (hY := operator_thermal_creator_is_homogeneous hu hv hc hb)
+
+omit [Algebra ℂ A] in
+theorem operator_thermal_bogoliubov_car_eq_one_and_fully_even
+    {Γ_R Γ_χ Γ_N a c b d u v : A}
+    (hu : ModularZ2CubeGrading.isFullyEven Γ_R Γ_χ Γ_N u)
+    (hv : ModularZ2CubeGrading.isFullyEven Γ_R Γ_χ Γ_N v)
+    (ha : ModularZ2CubeGrading.isFullyOdd Γ_R Γ_χ Γ_N a)
+    (hc : ModularZ2CubeGrading.isFullyOdd Γ_R Γ_χ Γ_N c)
+    (hb : ModularZ2CubeGrading.isFullyOdd Γ_R Γ_χ Γ_N b)
+    (hd : ModularZ2CubeGrading.isFullyOdd Γ_R Γ_χ Γ_N d)
+    (huc : ∀ z : A, z * u = u * z)
+    (hvc : ∀ z : A, z * v = v * z)
+    (huv : u * u + v * v = 1)
+    (hac : thermalAnticommutator a c = 1)
+    (hbd : thermalAnticommutator b d = 1)
+    (hab : thermalAnticommutator a b = 0)
+    (hcd : thermalAnticommutator c d = 0) :
+    thermalAnticommutator
+        (operatorThermalAnnihilator a d u v)
+        (operatorThermalCreator c b u v) = 1 ∧
+      ModularZ2CubeGrading.isFullyEven Γ_R Γ_χ Γ_N
+        (thermalAnticommutator
+          (operatorThermalAnnihilator a d u v)
+          (operatorThermalCreator c b u v)) := by
+  exact ⟨operator_thermal_bogoliubov_car_preserved a c b d u v
+      huc hvc huv hac hbd hab hcd,
+    operator_thermal_bogoliubov_car_is_fully_even hu hv ha hc hb hd⟩
 
 theorem thermal_bogoliubov_anticommutator_is_fully_even_of_same_degree
     {Γ_R Γ_χ Γ_N a c b d : A}

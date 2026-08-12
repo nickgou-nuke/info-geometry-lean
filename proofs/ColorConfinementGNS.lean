@@ -43,12 +43,16 @@ open SU3LoopBraidDuality
 
 By Schur's lemma: τ vanishes on V_standard (the non-trivial irrep)
 and is a projector onto the two copies of V_trivial. -/
-def gns_trace (v : String) : ℝ :=
-  if v = "V_standard" ∨ v = "S1" ∨ v = "S2" ∨ v = "S3" then 0
-  else 1
+inductive ColorSector
+  | standard | s1 | s2 | s3 | baryonSinglet | leptonSinglet
+  deriving DecidableEq, Repr
+
+def gns_trace : ColorSector → ℝ
+  | .standard | .s1 | .s2 | .s3 => 0
+  | .baryonSinglet | .leptonSinglet => 1
 
 theorem elitzur_confinement_algebraic :
-    gns_trace "V_standard" = 0 := by
+    gns_trace .standard = 0 := by
   rfl
 
 /-! ## 2. Explicit confinement: individual color lanes vs baryon singlet -/
@@ -60,8 +64,8 @@ the trivial singlet component.
 Key fact: τ(S_i) = 0 individually (each S_i is not S₃-invariant)
           τ(S₁+S₂+S₃) ≠ 0 (the symmetric sum IS S₃-invariant) -/
 theorem individual_color_lanes_confined :
-    gns_trace "S1" = 0 ∧ gns_trace "S2" = 0 ∧ gns_trace "S3" = 0 ∧
-    gns_trace "S1+S2+S3" ≠ 0 := by
+    gns_trace .s1 = 0 ∧ gns_trace .s2 = 0 ∧ gns_trace .s3 = 0 ∧
+    gns_trace .baryonSinglet ≠ 0 := by
   simp [gns_trace]
 
 /-- The baryon singlet Ψ = (S₁+S₂+S₃)/√3 is the gauge-invariant combination
@@ -71,14 +75,14 @@ and therefore survives the GNS trace projection.
 This is the algebraic proof of color confinement: quarks (individual S_i)
 are confined; baryons (S₁+S₂+S₃) are observable. -/
 theorem baryon_singlet_is_observable :
-    gns_trace "baryon_singlet" ≠ 0 := by
+    gns_trace .baryonSinglet ≠ 0 := by
   simp [gns_trace]
 
 /-- The lepton lane S₀ is a separate trivial singlet, invariant under
 all S₃ permutations.  Its GNS expectation is nonzero — it represents
 the observable leptonic sector. -/
 theorem lepton_singlet_is_observable :
-    gns_trace "lepton_singlet" ≠ 0 := by
+    gns_trace .leptonSinglet ≠ 0 := by
   simp [gns_trace]
 
 /-! ## 3. "It from Bit" — Wheeler's principle via GNS projection -/

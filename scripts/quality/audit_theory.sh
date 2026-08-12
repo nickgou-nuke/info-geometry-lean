@@ -31,19 +31,19 @@ mkdir -p reports
   echo "## Placeholder proof debt (sorry/admit)"
   echo
   echo '```text'
-  rg -n "\\b(sorry|admit)\\b" lean/InfoGeometry -g '*.lean' || true
+  rg -n "\\b(sorry|admit)\\b" lean -g '*.lean' || true
   echo '```'
   echo
-  SCOUNT=$(rg -n "\\b(sorry|admit)\\b" lean/InfoGeometry -g '*.lean' | wc -l || true)
-  echo "- Total placeholder occurrences in canonical tree: ${SCOUNT}"
+  SCOUNT=$(rg -n "\\b(sorry|admit)\\b" lean -g '*.lean' | wc -l || true)
+  echo "- Total placeholder occurrences in tracked Lean tree: ${SCOUNT}"
   echo
 
   echo "## Axiom declarations"
   echo
   echo '```text'
-  rg -n "^\\s*axiom\\b" lean/InfoGeometry -g '*.lean' || true
+  rg -n "^\\s*axiom\\b" lean -g '*.lean' || true
   echo '```'
-  ACOUNT=$(rg -n "^\\s*axiom\\b" lean/InfoGeometry -g '*.lean' | wc -l || true)
+  ACOUNT=$(rg -n "^\\s*axiom\\b" lean -g '*.lean' | wc -l || true)
   echo "- Total explicit axiom declarations: ${ACOUNT}"
   echo
 
@@ -85,7 +85,7 @@ echo
 echo "## Mathless Proposition Audit"
 echo
 echo '```text'
-python3 scripts/quality/mathless_proof_audit.py --root lean/InfoGeometry --format text || true
+python3 scripts/quality/mathless_proof_audit.py --root lean --format text || true
 echo '```'
 echo
 

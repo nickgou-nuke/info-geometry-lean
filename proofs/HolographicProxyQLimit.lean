@@ -91,11 +91,6 @@ theorem bandgap_at_q_neq_1 :
     σPlus * σMinus - σMinus * σPlus = σ3c :=
   comm_σPlus_σMinus
 
-/-- At q = 1 (β = 0, zero rapidity), the same commutator identity holds.
-The question is whether this algebraic σ₃ survives as a physical mass gap
-in the flat-space 4D continuum — the classical Yang-Mills Millennium problem. -/
-theorem commutator_gives_sigma3_at_q1 (M : MassGapStability) (h : M.atQeq1) : M.atQeq1 := h
-
 /-! ## 3. Riemann zeros stability: Lee-Yang condensation at q→1 -/
 
 /-- The CPT fixed locus Re(s) = ½ is proved for all q (the CPT involution
@@ -144,10 +139,6 @@ structure HodgeCyclesStability where
   colimitIsContinuous : Prop               -- colimit n→∞ = continuous boundary
   qDeformationIndependent : Prop           -- colimit independent of q
   geometricIdentificationAtQ1 : Prop       -- ℂℙ³ ≅ Cantor as q→1?
-
-/-- The direct colimit is defined purely algebraically (by universal
-property) and does not depend on the deformation parameter q. -/
-theorem colimit_independent_of_q (H : HodgeCyclesStability) (h : H.qDeformationIndependent) : H.qDeformationIndependent := h
 
 /-! ## 5. Synthesis — stability analysis of the holographic proxy -/
 

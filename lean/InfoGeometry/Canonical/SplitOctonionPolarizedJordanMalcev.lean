@@ -45,8 +45,7 @@ theorem plusJordan_comm (x y : PPlus) :
   ext <;> simp [plusJordan] <;> ring
 
 theorem plusJordan_sheet_closed (x y : PPlus) :
-    plusJordan x y ∈ Set.univ := by
-  trivial
+    plusJordan x y ∈ Set.univ := Set.mem_univ _
 
 theorem plusJordan_vector_square_zero (u v : Vec) :
     plusJordan (0, u) (0, v) = (0, 0) := by

@@ -1,5 +1,5 @@
 import proofs.OctonionMatrixEncodings
-import proofs.IntegralZornII44Bridge
+import InfoGeometry.Canonical.IntegralZornII44Bridge
 
 /-!
 # Split-octonion Peirce Involutions and Para-Hermitian Geometry

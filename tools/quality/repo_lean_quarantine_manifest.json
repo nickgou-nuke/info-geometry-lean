@@ -1,0 +1,597 @@
+{
+  "schema": 2,
+  "scope": "repository-wide tracked Lean quarantine",
+  "generated_from": "git ls-files '*.lean.disabled' plus the quarantine auditor token/comment scanner",
+  "audit_command": "python3 tools/quality/repo_lean_quarantine_audit.py --fail-on-findings",
+  "active_scope_status": {
+    "tracked_lean_files": 19393,
+    "debt_files": 0,
+    "debt_findings": 0
+  },
+  "quarantine_status": {
+    "files": 51,
+    "debt_findings": 418
+  },
+  "records": [
+    {
+      "file": ".spectral-sandbox/LocalityPrinciple.lean.disabled",
+      "finding_count": 5,
+      "category": "scratch_or_negative_fixture",
+      "reason": "Scratch/test fixture; contains intentional, exploratory, or negative debt and is not a maintained owner.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Spectral/Cohomology/LocalityPrinciple.lean"
+      ],
+      "replacement_status": "topic_owner_exists"
+    },
+    {
+      "file": "Test.lean.disabled",
+      "finding_count": 1,
+      "category": "scratch_or_negative_fixture",
+      "reason": "Scratch/test fixture; contains intentional, exploratory, or negative debt and is not a maintained owner.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/Test.lean"
+      ],
+      "replacement_status": "test_driver_only_not_semantic_replacement"
+    },
+    {
+      "file": "agent_memory_recovery/AmbroseSinger.lean/2026-07-01_03-11-13_a1dcc981.lean.disabled",
+      "finding_count": 2,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Kaehler/AmbroseSinger.lean"
+      ],
+      "replacement_status": "safe_owner_exists_not_equivalent_to_snapshot"
+    },
+    {
+      "file": "agent_memory_recovery/AmbroseSinger.lean/2026-07-01_03-11-50_de48bcb2.lean.disabled",
+      "finding_count": 1,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Kaehler/AmbroseSinger.lean"
+      ],
+      "replacement_status": "safe_owner_exists_not_equivalent_to_snapshot"
+    },
+    {
+      "file": "agent_memory_recovery/AmbroseSinger.lean/2026-07-01_03-13-36_a1dcc981.lean.disabled",
+      "finding_count": 1,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Kaehler/AmbroseSinger.lean"
+      ],
+      "replacement_status": "safe_owner_exists_not_equivalent_to_snapshot"
+    },
+    {
+      "file": "agent_memory_recovery/AnomalyTubuleStability.lean/2026-07-06_19-33-23_e77d5adf.lean.disabled",
+      "finding_count": 4,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/OperatorAlgebra/AnomalyTubuleStability.lean"
+      ],
+      "replacement_status": "topic_owner_exists"
+    },
+    {
+      "file": "agent_memory_recovery/AnyonFiniteSpinBraid.lean/2026-07-06_03-41-05_da7ef78e.lean.disabled",
+      "finding_count": 2,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Algebra/AnyonFiniteSpinBraid.lean",
+        "lean/InfoGeometry/Algebra/AnyonFiniteSpinBraid/AnyonArtinBraidOperators.lean"
+      ],
+      "replacement_status": "topic_owner_exists"
+    },
+    {
+      "file": "agent_memory_recovery/HadjiivanovMonodromyProjection.lean/2026-07-05_18-26-39_56f34cca.lean.disabled",
+      "finding_count": 2,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Canonical/HadjiivanovMonodromyProjection.lean"
+      ],
+      "replacement_status": "topic_owner_exists"
+    },
+    {
+      "file": "agent_memory_recovery/KinematicLieAlgebra.lean/2026-07-06_02-59-11_1a22bff9.lean.disabled",
+      "finding_count": 1,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Algebra/KinematicLieAlgebra.lean"
+      ],
+      "replacement_status": "safe_owner_exists_not_equivalent_to_snapshot"
+    },
+    {
+      "file": "agent_memory_recovery/KinematicLieAlgebra.lean/2026-07-06_03-06-36_1a22bff9.lean.disabled",
+      "finding_count": 1,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Algebra/KinematicLieAlgebra.lean"
+      ],
+      "replacement_status": "safe_owner_exists_not_equivalent_to_snapshot"
+    },
+    {
+      "file": "agent_memory_recovery/MajoranaPolyaHilbertSocket.lean/2026-07-06_04-06-15_3503088e.lean.disabled",
+      "finding_count": 3,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Arithmetic/MajoranaPolyaHilbertSocket.lean",
+        "lean/InfoGeometry/Arithmetic/MajoranaPolyaHilbertSocket/Bridge.lean"
+      ],
+      "replacement_status": "topic_owner_exists"
+    },
+    {
+      "file": "agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-06-11_6aadb3be.lean.disabled",
+      "finding_count": 27,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Topology/MobiusGeometry.lean",
+        "lean/InfoGeometry/Topology/MobiusFiniteTripleNormalization.lean",
+        "lean/Experimental/Sandbox/Mobius"
+      ],
+      "replacement_status": "topic_owners_exist_split_across_modules"
+    },
+    {
+      "file": "agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-09-01_088a60ea.lean.disabled",
+      "finding_count": 27,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Topology/MobiusGeometry.lean",
+        "lean/InfoGeometry/Topology/MobiusFiniteTripleNormalization.lean",
+        "lean/Experimental/Sandbox/Mobius"
+      ],
+      "replacement_status": "topic_owners_exist_split_across_modules"
+    },
+    {
+      "file": "agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-11-03_9b2a1430.lean.disabled",
+      "finding_count": 27,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Topology/MobiusGeometry.lean",
+        "lean/InfoGeometry/Topology/MobiusFiniteTripleNormalization.lean",
+        "lean/Experimental/Sandbox/Mobius"
+      ],
+      "replacement_status": "topic_owners_exist_split_across_modules"
+    },
+    {
+      "file": "agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-18-24_3cd8ebee.lean.disabled",
+      "finding_count": 27,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Topology/MobiusGeometry.lean",
+        "lean/InfoGeometry/Topology/MobiusFiniteTripleNormalization.lean",
+        "lean/Experimental/Sandbox/Mobius"
+      ],
+      "replacement_status": "topic_owners_exist_split_across_modules"
+    },
+    {
+      "file": "agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-20-55_9d1295ea.lean.disabled",
+      "finding_count": 27,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Topology/MobiusGeometry.lean",
+        "lean/InfoGeometry/Topology/MobiusFiniteTripleNormalization.lean",
+        "lean/Experimental/Sandbox/Mobius"
+      ],
+      "replacement_status": "topic_owners_exist_split_across_modules"
+    },
+    {
+      "file": "agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-23-07_2a79680d.lean.disabled",
+      "finding_count": 27,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Topology/MobiusGeometry.lean",
+        "lean/InfoGeometry/Topology/MobiusFiniteTripleNormalization.lean",
+        "lean/Experimental/Sandbox/Mobius"
+      ],
+      "replacement_status": "topic_owners_exist_split_across_modules"
+    },
+    {
+      "file": "agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-25-49_16aca7e0.lean.disabled",
+      "finding_count": 27,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Topology/MobiusGeometry.lean",
+        "lean/InfoGeometry/Topology/MobiusFiniteTripleNormalization.lean",
+        "lean/Experimental/Sandbox/Mobius"
+      ],
+      "replacement_status": "topic_owners_exist_split_across_modules"
+    },
+    {
+      "file": "agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-28-39_cdf24636.lean.disabled",
+      "finding_count": 27,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Topology/MobiusGeometry.lean",
+        "lean/InfoGeometry/Topology/MobiusFiniteTripleNormalization.lean",
+        "lean/Experimental/Sandbox/Mobius"
+      ],
+      "replacement_status": "topic_owners_exist_split_across_modules"
+    },
+    {
+      "file": "agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-33-44_ffca5b56.lean.disabled",
+      "finding_count": 27,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Topology/MobiusGeometry.lean",
+        "lean/InfoGeometry/Topology/MobiusFiniteTripleNormalization.lean",
+        "lean/Experimental/Sandbox/Mobius"
+      ],
+      "replacement_status": "topic_owners_exist_split_across_modules"
+    },
+    {
+      "file": "agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-39-29_239faf15.lean.disabled",
+      "finding_count": 27,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Topology/MobiusGeometry.lean",
+        "lean/InfoGeometry/Topology/MobiusFiniteTripleNormalization.lean",
+        "lean/Experimental/Sandbox/Mobius"
+      ],
+      "replacement_status": "topic_owners_exist_split_across_modules"
+    },
+    {
+      "file": "agent_memory_recovery/MobiusGeometry.lean/2026-07-01_03-35-02_070fe0d3.lean.disabled",
+      "finding_count": 20,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Topology/MobiusGeometry.lean",
+        "lean/InfoGeometry/Topology/MobiusFiniteTripleNormalization.lean",
+        "lean/Experimental/Sandbox/Mobius"
+      ],
+      "replacement_status": "topic_owners_exist_split_across_modules"
+    },
+    {
+      "file": "agent_memory_recovery/SusceptibilityHessian.lean/2026-07-06_04-06-49_63048b67.lean.disabled",
+      "finding_count": 17,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Thermo/SusceptibilityHessian.lean",
+        "lean/InfoGeometry/OperatorAlgebra/SusceptibilityHessian"
+      ],
+      "replacement_status": "topic_owners_exist_split_across_modules"
+    },
+    {
+      "file": "agent_memory_recovery/SusceptibilityHessian.lean/2026-07-06_04-07-28_63048b67.lean.disabled",
+      "finding_count": 4,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Thermo/SusceptibilityHessian.lean",
+        "lean/InfoGeometry/OperatorAlgebra/SusceptibilityHessian"
+      ],
+      "replacement_status": "topic_owners_exist_split_across_modules"
+    },
+    {
+      "file": "agent_memory_recovery/TestMobiusGeometry.lean/2026-07-06_04-07-59_376f2747.lean.disabled",
+      "finding_count": 1,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Topology/MobiusGeometry.lean",
+        "lean/InfoGeometry/Topology/MobiusFiniteTripleNormalization.lean",
+        "lean/Experimental/Sandbox/Mobius"
+      ],
+      "replacement_status": "topic_owners_exist_split_across_modules"
+    },
+    {
+      "file": "agent_memory_recovery/VirasoroAlgebra.lean/2026-07-01_02-36-00_ffdcad14.lean.disabled",
+      "finding_count": 5,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/VirasoroProject/VirasoroAlgebra.lean",
+        "lean/InfoGeometry/External/Virasoro/VirasoroAlgebra.lean"
+      ],
+      "replacement_status": "topic_owners_exist"
+    },
+    {
+      "file": "agent_memory_recovery/VirasoroAlgebra.lean/2026-07-01_02-44-38_22888e20.lean.disabled",
+      "finding_count": 5,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/VirasoroProject/VirasoroAlgebra.lean",
+        "lean/InfoGeometry/External/Virasoro/VirasoroAlgebra.lean"
+      ],
+      "replacement_status": "topic_owners_exist"
+    },
+    {
+      "file": "agent_memory_recovery/ZetaBraneCantorDirac.lean/2026-07-06_03-35-24_3cf06cd9.lean.disabled",
+      "finding_count": 1,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Canonical/ZetaBraneCantorDirac.lean",
+        "lean/InfoGeometry/Canonical/CantorDiracZetaBraneSocket.lean"
+      ],
+      "replacement_status": "topic_owners_exist"
+    },
+    {
+      "file": "agent_memory_recovery/untracked_lean/AmbroseSinger.lean.disabled",
+      "finding_count": 1,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Kaehler/AmbroseSinger.lean"
+      ],
+      "replacement_status": "safe_owner_exists_not_equivalent_to_snapshot"
+    },
+    {
+      "file": "agent_memory_recovery/untracked_lean/KinematicLieAlgebra.lean.disabled",
+      "finding_count": 1,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Algebra/KinematicLieAlgebra.lean"
+      ],
+      "replacement_status": "safe_owner_exists_not_equivalent_to_snapshot"
+    },
+    {
+      "file": "agent_memory_recovery/untracked_lean/VirasoroAlgebra.lean.disabled",
+      "finding_count": 5,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/VirasoroProject/VirasoroAlgebra.lean",
+        "lean/InfoGeometry/External/Virasoro/VirasoroAlgebra.lean"
+      ],
+      "replacement_status": "topic_owners_exist"
+    },
+    {
+      "file": "agent_memory_recovery_stitched/AmbroseSinger.lean.disabled",
+      "finding_count": 2,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Kaehler/AmbroseSinger.lean"
+      ],
+      "replacement_status": "safe_owner_exists_not_equivalent_to_snapshot"
+    },
+    {
+      "file": "agent_memory_recovery_stitched/HadjiivanovMonodromyProjection.lean.disabled",
+      "finding_count": 2,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Canonical/HadjiivanovMonodromyProjection.lean"
+      ],
+      "replacement_status": "topic_owner_exists"
+    },
+    {
+      "file": "agent_memory_recovery_stitched/KinematicLieAlgebra.lean.disabled",
+      "finding_count": 1,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Algebra/KinematicLieAlgebra.lean"
+      ],
+      "replacement_status": "safe_owner_exists_not_equivalent_to_snapshot"
+    },
+    {
+      "file": "agent_memory_recovery_stitched/TestMobiusGeometry.lean.disabled",
+      "finding_count": 1,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Topology/MobiusGeometry.lean",
+        "lean/InfoGeometry/Topology/MobiusFiniteTripleNormalization.lean",
+        "lean/Experimental/Sandbox/Mobius"
+      ],
+      "replacement_status": "topic_owners_exist_split_across_modules"
+    },
+    {
+      "file": "agent_memory_recovery_stitched/VirasoroAlgebra.lean.disabled",
+      "finding_count": 5,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/VirasoroProject/VirasoroAlgebra.lean",
+        "lean/InfoGeometry/External/Virasoro/VirasoroAlgebra.lean"
+      ],
+      "replacement_status": "topic_owners_exist"
+    },
+    {
+      "file": "agent_memory_recovery_stitched/ZetaBraneCantorDirac.lean.disabled",
+      "finding_count": 1,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Canonical/ZetaBraneCantorDirac.lean",
+        "lean/InfoGeometry/Canonical/CantorDiracZetaBraneSocket.lean"
+      ],
+      "replacement_status": "topic_owners_exist"
+    },
+    {
+      "file": "agent_writes_recovery_v4/lean/InfoGeometry/Kaehler/AmbroseSinger.lean.disabled",
+      "finding_count": 1,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Kaehler/AmbroseSinger.lean"
+      ],
+      "replacement_status": "safe_owner_exists_not_equivalent_to_snapshot"
+    },
+    {
+      "file": "archive/scratch_recovery/debug_ite.lean.disabled",
+      "finding_count": 1,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [],
+      "replacement_status": "no_maintained_replacement_found"
+    },
+    {
+      "file": "archive/scratch_recovery/sandbox_fredholm_verification.lean.disabled",
+      "finding_count": 10,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [],
+      "replacement_status": "no_maintained_replacement_found"
+    },
+    {
+      "file": "archive/scratch_recovery/test4.lean.disabled",
+      "finding_count": 3,
+      "category": "historical_recovery_snapshot",
+      "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "test4.lean",
+        "proofs/test4.lean",
+        "lean/InfoGeometry/External/Auto/test4.lean"
+      ],
+      "replacement_status": "other_test4_variants_exist_not_equivalent_verified"
+    },
+    {
+      "file": "lean_sandbox/su3_formalization/Phase4_GellMannBridge.lean.disabled",
+      "finding_count": 26,
+      "category": "experimental_sandbox",
+      "reason": "Experimental sandbox owner with unresolved claims; superseded or not in the maintained import graph.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [
+        "lean/InfoGeometry/Algebra/GellMannBridge.lean",
+        "lean/InfoGeometry/Algebra/GellMannBasis.lean",
+        "lean/InfoGeometry/Canonical/QutritGellMannBasis.lean"
+      ],
+      "replacement_status": "reduced_topic_owners_exist_not_equivalent_to_sandbox"
+    },
+    {
+      "file": "sandbox_assoc.lean.disabled",
+      "finding_count": 1,
+      "category": "scratch_or_negative_fixture",
+      "reason": "Scratch/test fixture; contains intentional, exploratory, or negative debt and is not a maintained owner.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [],
+      "replacement_status": "no_maintained_replacement_found"
+    },
+    {
+      "file": "sandbox_cross_ratio_full.lean.disabled",
+      "finding_count": 1,
+      "category": "scratch_or_negative_fixture",
+      "reason": "Scratch/test fixture; contains intentional, exploratory, or negative debt and is not a maintained owner.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [],
+      "replacement_status": "no_maintained_replacement_found"
+    },
+    {
+      "file": "sandbox_error.lean.disabled",
+      "finding_count": 1,
+      "category": "scratch_or_negative_fixture",
+      "reason": "Scratch/test fixture; contains intentional, exploratory, or negative debt and is not a maintained owner.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [],
+      "replacement_status": "no_maintained_replacement_found"
+    },
+    {
+      "file": "sandbox_proof.lean.disabled",
+      "finding_count": 1,
+      "category": "scratch_or_negative_fixture",
+      "reason": "Scratch/test fixture; contains intentional, exploratory, or negative debt and is not a maintained owner.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [],
+      "replacement_status": "no_maintained_replacement_found"
+    },
+    {
+      "file": "sandbox_test.lean.disabled",
+      "finding_count": 2,
+      "category": "scratch_or_negative_fixture",
+      "reason": "Scratch/test fixture; contains intentional, exploratory, or negative debt and is not a maintained owner.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [],
+      "replacement_status": "no_maintained_replacement_found"
+    },
+    {
+      "file": "temp_check_lseries5.lean.disabled",
+      "finding_count": 1,
+      "category": "scratch_or_negative_fixture",
+      "reason": "Scratch/test fixture; contains intentional, exploratory, or negative debt and is not a maintained owner.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [],
+      "replacement_status": "no_maintained_replacement_found"
+    },
+    {
+      "file": "temp_proof.lean.disabled",
+      "finding_count": 1,
+      "category": "scratch_or_negative_fixture",
+      "reason": "Scratch/test fixture; contains intentional, exploratory, or negative debt and is not a maintained owner.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [],
+      "replacement_status": "no_maintained_replacement_found"
+    },
+    {
+      "file": "tests/lean/InfoGeometry/Lint/PauliTest.lean.disabled",
+      "finding_count": 2,
+      "category": "scratch_or_negative_fixture",
+      "reason": "Scratch/test fixture; contains intentional, exploratory, or negative debt and is not a maintained owner.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [],
+      "replacement_status": "no_maintained_replacement_found"
+    },
+    {
+      "file": "tmp_scratch_qms_eq.lean.disabled",
+      "finding_count": 2,
+      "category": "scratch_or_negative_fixture",
+      "reason": "Scratch/test fixture; contains intentional, exploratory, or negative debt and is not a maintained owner.",
+      "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
+      "replacement_paths": [],
+      "replacement_status": "no_maintained_replacement_found"
+    }
+  ]
+}
+

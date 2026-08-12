@@ -16,59 +16,50 @@ namespace InfoGeometry.Topology
 open InfoGeometry.Krein
 
 /-!
-# Cuntz/Cantor spectral triple socket
+# Cuntz/Cantor bounded resolvent packet
 
-This file gives a theorem-safe analytic socket for turning the symbolic binary
-boundary of `ErlangenNet` into an operator-algebraic carrier.
+This file gives a bounded operator packet for the symbolic binary boundary of
+`ErlangenNet`.
 
 The module deliberately separates four layers:
 
 * a binary symbolic boundary `N -> BinarySector`;
 * Cuntz `O_2`-style isometry data on an abstract star algebra;
 * candidate Majorana/Clifford operators built from shifts;
-* a property-gated Cantor spectral-triple packet.
+* a property-gated bounded resolvent packet.
 
 Guardrail: the Cuntz relations alone do not prove that `S + S*` is a Clifford
-unitary. The CAR/Clifford laws are therefore carried by explicit witnesses.
-Likewise, the Dirac operator and Hausdorff-dimension readout are supplied as
-spectral-triple data, not derived from the Cuntz carrier alone.
+unitary. The CAR/Clifford laws therefore require explicit hypotheses.
+Likewise, the bounded operator, resolvent identities, compactness property,
+and dimension readout are supplied as data, not derived from the Cuntz carrier
+alone. The compact-resolvent theorem below records the resulting
+finite-dimensional obstruction.
 -/
 
 open InfoGeometry.OperatorAlgebra.ErlangenNet
 
-/-- Binary Cantor boundary used by the operator-Erlangen net. -/
-abbrev BinaryCantorBoundary := SectorBoundary BinarySector
-
-/-- Finite binary cylinder word of depth `n`. -/
-abbrev BinaryCylinder (n : Nat) := FiniteSectorWord BinarySector n
-
 /-- Prefixing a binary symbol to an infinite Cantor code. -/
 @[rep_depth operator]
-def prefixBoundary (s : BinarySector) (x : BinaryCantorBoundary) : BinaryCantorBoundary
+def prefixBoundary (s : BinarySector) (x : (ℕ → BinarySector)) : (ℕ → BinarySector)
     | 0 => s
     | n + 1 => x n
 
 @[rep_depth operator]
 theorem prefixBoundary_zero
-    (s : BinarySector) (x : BinaryCantorBoundary) :
+    (s : BinarySector) (x : (ℕ → BinarySector)) :
     prefixBoundary s x 0 = s :=
   rfl
 
 @[rep_depth operator]
 theorem prefixBoundary_succ
-    (s : BinarySector) (x : BinaryCantorBoundary) (n : Nat) :
+    (s : BinarySector) (x : (ℕ → BinarySector)) (n : Nat) :
     prefixBoundary s x (n + 1) = x n :=
   rfl
-
-/-! The Cuntz `O₂` carrier is the `N := 2` instance of the generic owner. -/
-abbrev CuntzO2Carrier
-    (Op : Type*) [Ring Op] [StarRing Op] :=
-  InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op
 
 namespace CuntzO2Carrier
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
-variable (C : CuntzO2Carrier Op)
+variable (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op)
 
 /-- The left branch is the canonical zero-indexed Cuntz generator. -/
 @[rep_depth operator]
@@ -78,48 +69,62 @@ def S_left : Op := C.S 0
 @[rep_depth operator]
 def S_right : Op := C.S 1
 
-theorem left_isometry : star C.S_left * C.S_left = 1 := by
+theorem left_isometry : star (CuntzO2Carrier.S_left C) * (CuntzO2Carrier.S_left C) = 1 := by
   simpa [S_left] using C.isometry 0 0
 
-theorem right_isometry : star C.S_right * C.S_right = 1 := by
+theorem right_isometry : star (CuntzO2Carrier.S_right C) * (CuntzO2Carrier.S_right C) = 1 := by
   simpa [S_right] using C.isometry 1 1
 
 theorem orthogonal_ranges :
-    star C.S_left * C.S_right = 0 ∧ star C.S_right * C.S_left = 0 := by
+    star (CuntzO2Carrier.S_left C) * (CuntzO2Carrier.S_right C) = 0 ∧ star (CuntzO2Carrier.S_right C) * (CuntzO2Carrier.S_left C) = 0 := by
   constructor
   · simpa [S_left, S_right] using C.isometry 0 1
   · simpa [S_left, S_right] using C.isometry 1 0
 
 theorem range_sum :
-    C.S_left * star C.S_left + C.S_right * star C.S_right = 1 := by
+    (CuntzO2Carrier.S_left C) * star (CuntzO2Carrier.S_left C) + (CuntzO2Carrier.S_right C) * star (CuntzO2Carrier.S_right C) = 1 := by
   simpa [S_left, S_right] using
-    InfoGeometry.Algebra.Cuntz.CuntzNAlgebra.range_sum C
+    C.range_sum
 
 /-- Left range projection `S_1 S_1*`. -/
 @[rep_depth operator]
 def leftRangeProjection : Op :=
-  C.S_left * star C.S_left
+  (CuntzO2Carrier.S_left C) * star (CuntzO2Carrier.S_left C)
 
 /-- Right range projection `S_2 S_2*`. -/
 @[rep_depth operator]
 def rightRangeProjection : Op :=
-  C.S_right * star C.S_right
+  (CuntzO2Carrier.S_right C) * star (CuntzO2Carrier.S_right C)
 
 /-- The two range projections sum to the identity by the Cuntz relation. -/
 @[rep_depth operator]
 theorem rangeProjection_sum_one :
-    C.leftRangeProjection + C.rightRangeProjection = 1 := by
+    (leftRangeProjection C) + (rightRangeProjection C) = 1 := by
   exact range_sum C
 
 theorem leftRangeProjection_star :
-    star C.leftRangeProjection = C.leftRangeProjection := by
+    star (leftRangeProjection C) = (leftRangeProjection C) := by
   unfold leftRangeProjection
   rw [star_mul, star_star]
 
 theorem rightRangeProjection_star :
-    star C.rightRangeProjection = C.rightRangeProjection := by
+    star (rightRangeProjection C) = (rightRangeProjection C) := by
   unfold rightRangeProjection
   rw [star_mul, star_star]
+
+theorem leftRangeProjection_murray_von_neumann_one :
+    ∃ v : Op,
+      star v * v = 1 ∧
+        v * star v = leftRangeProjection C := by
+  refine ⟨CuntzO2Carrier.S_left C, left_isometry C, ?_⟩
+  rfl
+
+theorem rightRangeProjection_murray_von_neumann_one :
+    ∃ v : Op,
+      star v * v = 1 ∧
+        v * star v = rightRangeProjection C := by
+  refine ⟨CuntzO2Carrier.S_right C, right_isometry C, ?_⟩
+  rfl
 
 section ProjectionSubequiv
 
@@ -129,26 +134,26 @@ variable {Op : Type*} [Ring Op]
 Projection subequivalence on the current Cuntz carrier.
 
 This is the smallest order-theoretic relation we can state without building a
-full Cuntz semigroup quotient.
+an analytic Cuntz semigroup quotient.
 -/
 @[rep_depth operator]
-def projectionSubequiv (p q : Op) : Prop :=
+def idempotentAbsorption (p q : Op) : Prop :=
   p * q = p
 
 /-- A projection is subequivalent to itself when it is idempotent. -/
 @[rep_depth operator]
-theorem projectionSubequiv_refl
+theorem idempotentAbsorption_refl
     (p : Op) (hp : p * p = p) :
-    projectionSubequiv p p := by
+    idempotentAbsorption p p := by
   exact hp
 
 /-- Transitivity of projection subequivalence. -/
 @[rep_depth operator]
-theorem projectionSubequiv_trans
+theorem idempotentAbsorption_trans
     {p q r : Op}
-    (hpq : projectionSubequiv p q)
-    (hqr : projectionSubequiv q r) :
-    projectionSubequiv p r := by
+    (hpq : idempotentAbsorption p q)
+    (hqr : idempotentAbsorption q r) :
+    idempotentAbsorption p r := by
   calc
     p * r = (p * q) * r := by
       rw [hpq]
@@ -164,43 +169,43 @@ end ProjectionSubequiv
 /-- The left Cuntz range projection is subequivalent to the unit. -/
 @[rep_depth operator]
 theorem leftRangeProjection_subequiv_one :
-    projectionSubequiv C.leftRangeProjection 1 := by
-  unfold projectionSubequiv
+    idempotentAbsorption (leftRangeProjection C) 1 := by
+  unfold idempotentAbsorption
   simp
 
 /-- The right Cuntz range projection is subequivalent to the unit. -/
 @[rep_depth operator]
 theorem rightRangeProjection_subequiv_one :
-    projectionSubequiv C.rightRangeProjection 1 := by
-  unfold projectionSubequiv
+    idempotentAbsorption (rightRangeProjection C) 1 := by
+  unfold idempotentAbsorption
   simp
 
 /-- The left range projection is subequivalent to itself. -/
 @[rep_depth operator]
 theorem leftRangeProjection_subequiv_self :
-    projectionSubequiv C.leftRangeProjection C.leftRangeProjection := by
-  unfold projectionSubequiv leftRangeProjection
+    idempotentAbsorption (leftRangeProjection C) (leftRangeProjection C) := by
+  unfold idempotentAbsorption leftRangeProjection
   calc
-    (C.S_left * star C.S_left) * (C.S_left * star C.S_left)
-        = C.S_left * (star C.S_left * C.S_left) * star C.S_left := by
+    ((CuntzO2Carrier.S_left C) * star (CuntzO2Carrier.S_left C)) * ((CuntzO2Carrier.S_left C) * star (CuntzO2Carrier.S_left C))
+        = (CuntzO2Carrier.S_left C) * (star (CuntzO2Carrier.S_left C) * (CuntzO2Carrier.S_left C)) * star (CuntzO2Carrier.S_left C) := by
             noncomm_ring
-    _ = C.S_left * 1 * star C.S_left := by
-          rw [C.left_isometry]
-    _ = C.S_left * star C.S_left := by
+    _ = (CuntzO2Carrier.S_left C) * 1 * star (CuntzO2Carrier.S_left C) := by
+          rw [left_isometry C]
+    _ = (CuntzO2Carrier.S_left C) * star (CuntzO2Carrier.S_left C) := by
           simp
 
 /-- The right range projection is subequivalent to itself. -/
 @[rep_depth operator]
 theorem rightRangeProjection_subequiv_self :
-    projectionSubequiv C.rightRangeProjection C.rightRangeProjection := by
-  unfold projectionSubequiv rightRangeProjection
+    idempotentAbsorption (rightRangeProjection C) (rightRangeProjection C) := by
+  unfold idempotentAbsorption rightRangeProjection
   calc
-    (C.S_right * star C.S_right) * (C.S_right * star C.S_right)
-        = C.S_right * (star C.S_right * C.S_right) * star C.S_right := by
+    ((CuntzO2Carrier.S_right C) * star (CuntzO2Carrier.S_right C)) * ((CuntzO2Carrier.S_right C) * star (CuntzO2Carrier.S_right C))
+        = (CuntzO2Carrier.S_right C) * (star (CuntzO2Carrier.S_right C) * (CuntzO2Carrier.S_right C)) * star (CuntzO2Carrier.S_right C) := by
             noncomm_ring
-    _ = C.S_right * 1 * star C.S_right := by
-          rw [C.right_isometry]
-    _ = C.S_right * star C.S_right := by
+    _ = (CuntzO2Carrier.S_right C) * 1 * star (CuntzO2Carrier.S_right C) := by
+          rw [right_isometry C]
+    _ = (CuntzO2Carrier.S_right C) * star (CuntzO2Carrier.S_right C) := by
           simp
 
 /--
@@ -210,13 +215,13 @@ This is the first order-theoretic readout for the Cuntz carrier.
 -/
 @[rep_depth operator]
 theorem leftRangeProjection_absorb_sum_one :
-    C.leftRangeProjection * (C.leftRangeProjection + C.rightRangeProjection)
-      = C.leftRangeProjection := by
+    (leftRangeProjection C) * (leftRangeProjection C + (rightRangeProjection C))
+      = (leftRangeProjection C) := by
   calc
-    C.leftRangeProjection * (C.leftRangeProjection + C.rightRangeProjection)
-        = C.leftRangeProjection * 1 := by
-            rw [C.rangeProjection_sum_one]
-    _ = C.leftRangeProjection := by
+    (leftRangeProjection C) * (leftRangeProjection C + (rightRangeProjection C))
+        = (leftRangeProjection C) * 1 := by
+            rw [rangeProjection_sum_one C]
+    _ = (leftRangeProjection C) := by
           rw [mul_one]
 
 /--
@@ -226,13 +231,13 @@ This is the symmetric order-theoretic readout for the Cuntz carrier.
 -/
 @[rep_depth operator]
 theorem rightRangeProjection_absorb_sum_one :
-    C.rightRangeProjection * (C.leftRangeProjection + C.rightRangeProjection)
-      = C.rightRangeProjection := by
+    (rightRangeProjection C) * (leftRangeProjection C + (rightRangeProjection C))
+      = (rightRangeProjection C) := by
   calc
-    C.rightRangeProjection * (C.leftRangeProjection + C.rightRangeProjection)
-        = C.rightRangeProjection * 1 := by
-            rw [C.rangeProjection_sum_one]
-    _ = C.rightRangeProjection := by
+    (rightRangeProjection C) * (leftRangeProjection C + (rightRangeProjection C))
+        = (rightRangeProjection C) * 1 := by
+            rw [rangeProjection_sum_one C]
+    _ = (rightRangeProjection C) := by
           rw [mul_one]
 
 /--
@@ -243,13 +248,13 @@ range projections.
 -/
 @[rep_depth operator]
 theorem rangeProjection_decomposition (x : Op) :
-    C.leftRangeProjection * x + C.rightRangeProjection * x = x := by
+    (leftRangeProjection C) * x + (rightRangeProjection C) * x = x := by
   calc
-    C.leftRangeProjection * x + C.rightRangeProjection * x
-        = (C.leftRangeProjection + C.rightRangeProjection) * x := by
+    (leftRangeProjection C) * x + (rightRangeProjection C) * x
+        = (leftRangeProjection C + (rightRangeProjection C)) * x := by
             rw [add_mul]
     _ = x := by
-          rw [C.rangeProjection_sum_one, one_mul]
+          rw [rangeProjection_sum_one C, one_mul]
 
 /--
 Right-first decomposition of the operator carrier by the Cuntz range
@@ -257,126 +262,135 @@ projections.
 -/
 @[rep_depth operator]
 theorem rangeProjection_decomposition_right (x : Op) :
-    x * C.leftRangeProjection + x * C.rightRangeProjection = x := by
+    x * (leftRangeProjection C) + x * (rightRangeProjection C) = x := by
   calc
-    x * C.leftRangeProjection + x * C.rightRangeProjection
-        = x * (C.leftRangeProjection + C.rightRangeProjection) := by
+    x * (leftRangeProjection C) + x * (rightRangeProjection C)
+        = x * (leftRangeProjection C + (rightRangeProjection C)) := by
             rw [mul_add]
     _ = x := by
-          rw [C.rangeProjection_sum_one, mul_one]
+          rw [rangeProjection_sum_one C, mul_one]
 
 /-- Left range projection is idempotent. -/
 @[rep_depth operator]
 theorem leftRangeProjection_idempotent :
-    C.leftRangeProjection * C.leftRangeProjection = C.leftRangeProjection := by
+    (leftRangeProjection C) * (leftRangeProjection C) = (leftRangeProjection C) := by
   unfold leftRangeProjection
   calc
-    (C.S_left * star C.S_left) * (C.S_left * star C.S_left)
-        = C.S_left * (star C.S_left * C.S_left) * star C.S_left := by
+    ((CuntzO2Carrier.S_left C) * star (CuntzO2Carrier.S_left C)) * ((CuntzO2Carrier.S_left C) * star (CuntzO2Carrier.S_left C))
+        = (CuntzO2Carrier.S_left C) * (star (CuntzO2Carrier.S_left C) * (CuntzO2Carrier.S_left C)) * star (CuntzO2Carrier.S_left C) := by
           noncomm_ring
-    _ = C.S_left * 1 * star C.S_left := by
-          rw [C.left_isometry]
-    _ = C.S_left * star C.S_left := by
+    _ = (CuntzO2Carrier.S_left C) * 1 * star (CuntzO2Carrier.S_left C) := by
+          rw [left_isometry C]
+    _ = (CuntzO2Carrier.S_left C) * star (CuntzO2Carrier.S_left C) := by
           simp
 
 /-- Right range projection is idempotent. -/
 @[rep_depth operator]
 theorem rightRangeProjection_idempotent :
-    C.rightRangeProjection * C.rightRangeProjection = C.rightRangeProjection := by
+    (rightRangeProjection C) * (rightRangeProjection C) = (rightRangeProjection C) := by
   unfold rightRangeProjection
   calc
-    (C.S_right * star C.S_right) * (C.S_right * star C.S_right)
-        = C.S_right * (star C.S_right * C.S_right) * star C.S_right := by
+    ((CuntzO2Carrier.S_right C) * star (CuntzO2Carrier.S_right C)) * ((CuntzO2Carrier.S_right C) * star (CuntzO2Carrier.S_right C))
+        = (CuntzO2Carrier.S_right C) * (star (CuntzO2Carrier.S_right C) * (CuntzO2Carrier.S_right C)) * star (CuntzO2Carrier.S_right C) := by
           noncomm_ring
-    _ = C.S_right * 1 * star C.S_right := by
-          rw [C.right_isometry]
-    _ = C.S_right * star C.S_right := by
+    _ = (CuntzO2Carrier.S_right C) * 1 * star (CuntzO2Carrier.S_right C) := by
+          rw [right_isometry C]
+    _ = (CuntzO2Carrier.S_right C) * star (CuntzO2Carrier.S_right C) := by
           simp
+
+theorem leftRangeProjection_is_star_projection :
+    (leftRangeProjection C) * (leftRangeProjection C) = leftRangeProjection C ∧
+      star (leftRangeProjection C) = leftRangeProjection C := by
+  exact ⟨leftRangeProjection_idempotent (C := C),
+    leftRangeProjection_star (C := C)⟩
+
+theorem rightRangeProjection_is_star_projection :
+    (rightRangeProjection C) * (rightRangeProjection C) = rightRangeProjection C ∧
+      star (rightRangeProjection C) = rightRangeProjection C := by
+  exact ⟨rightRangeProjection_idempotent (C := C),
+    rightRangeProjection_star (C := C)⟩
 
 /--
 Idempotent elements of the Cuntz carrier, packaged as a concrete subtype.
 
-This is the first honest carrier for a Cuntz-style projection theory.
+This carrier does not require self-adjointness. Star projections are handled
+by the separate `IsStarProjection` theorems below.
 -/
 @[rep_depth operator]
-def CuntzProjection := { p : Op // p * p = p }
+def CuntzIdempotent := { p : Op // p * p = p }
 
-namespace CuntzProjection
+namespace CuntzIdempotent
 
 variable {Op : Type*} [Ring Op]
 
-/-- A Cuntz projection remembers its underlying operator. -/
+/-- The idempotence proof of a Cuntz idempotent. -/
 @[rep_depth operator]
-abbrev val (p : CuntzProjection (Op := Op)) : Op := p.1
+theorem isIdempotent (p : CuntzIdempotent (Op := Op)) :
+    p.1 * p.1 = p.1 := p.2
 
-/-- The idempotence proof of a Cuntz projection. -/
-@[rep_depth operator]
-theorem isIdempotent (p : CuntzProjection (Op := Op)) :
-    p.val * p.val = p.val := p.2
-
-end CuntzProjection
+end CuntzIdempotent
 
 /-- Lift a Cuntz carrier range projection to the projection subtype. -/
 @[rep_depth operator]
-def leftCuntzProjection :
-    CuntzProjection (Op := Op) where
-  val := C.leftRangeProjection
-  property := C.leftRangeProjection_idempotent
+def leftCuntzIdempotent :
+    CuntzIdempotent (Op := Op) where
+  val := (leftRangeProjection C)
+  property := leftRangeProjection_idempotent (C := C)
 
 /-- Lift the right Cuntz range projection to the projection subtype. -/
 @[rep_depth operator]
-def rightCuntzProjection :
-    CuntzProjection (Op := Op) where
-  val := C.rightRangeProjection
-  property := C.rightRangeProjection_idempotent
+def rightCuntzIdempotent :
+    CuntzIdempotent (Op := Op) where
+  val := (rightRangeProjection C)
+  property := rightRangeProjection_idempotent (C := C)
 
-section ProjectionPreorder
+section IdempotentPreorder
 
 variable {Op : Type*} [Ring Op]
 
 /--
-Subequivalence between Cuntz projections.
+Absorption between Cuntz idempotents.
 
-This is the relation we can safely use as the seed of a Cuntz-style semigroup
-development.
+This relation is not Murray--von Neumann equivalence and does not define the
+analytic Cuntz semigroup.
 -/
 @[rep_depth operator]
-def projectionPreorder (p q : CuntzProjection (Op := Op)) : Prop :=
-  projectionSubequiv p.val q.val
+def idempotentPreorder (p q : CuntzIdempotent (Op := Op)) : Prop :=
+  idempotentAbsorption p.1 q.1
 
-/-- Reflexivity of the projection preorder. -/
+/-- Reflexivity of the idempotent absorption preorder. -/
 @[rep_depth operator]
-theorem projectionPreorder_refl (p : CuntzProjection (Op := Op)) :
-    projectionPreorder p p := by
-  exact projectionSubequiv_refl p.val p.2
+theorem idempotentPreorder_refl (p : CuntzIdempotent (Op := Op)) :
+    idempotentPreorder p p := by
+  exact idempotentAbsorption_refl p.1 p.2
 
-/-- Transitivity of the projection preorder. -/
+/-- Transitivity of the idempotent absorption preorder. -/
 @[rep_depth operator]
-theorem projectionPreorder_trans
-    {p q r : CuntzProjection (Op := Op)}
-    (hpq : projectionPreorder p q)
-    (hqr : projectionPreorder q r) :
-    projectionPreorder p r := by
-  exact projectionSubequiv_trans hpq hqr
+theorem idempotentPreorder_trans
+    {p q r : CuntzIdempotent (Op := Op)}
+    (hpq : idempotentPreorder p q)
+    (hqr : idempotentPreorder q r) :
+    idempotentPreorder p r := by
+  exact idempotentAbsorption_trans hpq hqr
 
-end ProjectionPreorder
+end IdempotentPreorder
 
-/-- The projection preorder is the native preorder on Cuntz projections. -/
+/-- The idempotent absorption relation is the native preorder here. -/
 @[rep_depth operator]
-instance instLE : LE (CuntzProjection (Op := Op)) where
-  le p q := projectionPreorder p q
+instance instLE : LE (CuntzIdempotent (Op := Op)) where
+  le p q := idempotentPreorder p q
 
-/-- The projection preorder is reflexive and transitive. -/
+/-- The idempotent absorption relation is reflexive and transitive. -/
 @[rep_depth operator]
-instance instPreorder : Preorder (CuntzProjection (Op := Op)) where
-  le_refl := projectionPreorder_refl
+instance instPreorder : Preorder (CuntzIdempotent (Op := Op)) where
+  le_refl := idempotentPreorder_refl
   le_trans := by
     intro a b c hab hbc
-    exact projectionPreorder_trans (p := a) (q := b) (r := c) hab hbc
+    exact idempotentPreorder_trans (p := a) (q := b) (r := c) hab hbc
 
-/-- The unit element as a Cuntz projection. -/
+/-- The unit element as a Cuntz idempotent. -/
 @[rep_depth operator]
-def unitCuntzProjection : CuntzProjection (Op := Op) where
+def unitCuntzIdempotent : CuntzIdempotent (Op := Op) where
   val := 1
   property := by
     simp
@@ -385,115 +399,129 @@ section ProjectionOrthogonal
 
 variable {Op : Type*} [Ring Op]
 
-/-- The zero element as a Cuntz projection. -/
+/-- The zero element as a Cuntz idempotent. -/
 @[rep_depth operator]
-def zeroCuntzProjection : CuntzProjection (Op := Op) where
+def zeroCuntzIdempotent : CuntzIdempotent (Op := Op) where
   val := 0
   property := by
     simp
 
 /--
-Orthogonality of Cuntz projections.
+Orthogonality of Cuntz idempotents.
 
 This is the compatibility property needed to form an additive projection sum.
 -/
 @[rep_depth operator]
-def projectionOrthogonal (p q : CuntzProjection (Op := Op)) : Prop :=
-  p.val * q.val = 0 ∧ q.val * p.val = 0
+def idempotentOrthogonal (p q : CuntzIdempotent (Op := Op)) : Prop :=
+  p.1 * q.1 = 0 ∧ q.1 * p.1 = 0
 
-/-- Zero is orthogonal to every Cuntz projection on the left. -/
+/-- Zero is orthogonal to every Cuntz idempotent on the left. -/
 @[rep_depth operator]
-theorem zeroProjectionOrthogonal_left (p : CuntzProjection (Op := Op)) :
-    projectionOrthogonal (zeroCuntzProjection (Op := Op)) p := by
+theorem zeroIdempotentOrthogonal_left (p : CuntzIdempotent (Op := Op)) :
+    idempotentOrthogonal (zeroCuntzIdempotent (Op := Op)) p := by
   constructor
-  · change (0 : Op) * p.val = 0
+  · change (0 : Op) * p.1 = 0
     simp
-  · change p.val * (0 : Op) = 0
+  · change p.1 * (0 : Op) = 0
     simp
 
-/-- Zero is orthogonal to every Cuntz projection on the right. -/
+/-- Zero is orthogonal to every Cuntz idempotent on the right. -/
 @[rep_depth operator]
-theorem zeroProjectionOrthogonal_right (p : CuntzProjection (Op := Op)) :
-    projectionOrthogonal p (zeroCuntzProjection (Op := Op)) := by
+theorem zeroIdempotentOrthogonal_right (p : CuntzIdempotent (Op := Op)) :
+    idempotentOrthogonal p (zeroCuntzIdempotent (Op := Op)) := by
   constructor
-  · change p.val * (0 : Op) = 0
+  · change p.1 * (0 : Op) = 0
     simp
-  · change (0 : Op) * p.val = 0
+  · change (0 : Op) * p.1 = 0
     simp
 
 /--
-Orthogonal sum of Cuntz projections.
+Orthogonal sum of Cuntz idempotents.
 
 This is the first theorem-backed additive operation on the projection carrier.
 -/
 @[rep_depth operator]
 def orthogonalSum
-    (p q : CuntzProjection (Op := Op))
-    (h : projectionOrthogonal p q) : CuntzProjection (Op := Op) where
-  val := p.val + q.val
+    (p q : CuntzIdempotent (Op := Op))
+    (h : idempotentOrthogonal p q) : CuntzIdempotent (Op := Op) where
+  val := p.1 + q.1
   property := by
-    unfold projectionOrthogonal at h
-    have hpq : p.val * q.val = 0 := h.1
-    have hqp : q.val * p.val = 0 := h.2
+    unfold idempotentOrthogonal at h
+    have hpq : p.1 * q.1 = 0 := h.1
+    have hqp : q.1 * p.1 = 0 := h.2
     calc
-      (p.val + q.val) * (p.val + q.val)
-          = p.val * p.val + p.val * q.val + q.val * p.val + q.val * q.val := by
+      (p.1 + q.1) * (p.1 + q.1)
+          = p.1 * p.1 + p.1 * q.1 + q.1 * p.1 + q.1 * q.1 := by
               noncomm_ring
-      _ = p.val * p.val + q.val * q.val := by simp [hpq, hqp]
-      _ = p.val + q.val := by
-            have hp : p.val * p.val = p.val := p.2
-            have hq : q.val * q.val = q.val := q.2
+      _ = p.1 * p.1 + q.1 * q.1 := by simp [hpq, hqp]
+      _ = p.1 + q.1 := by
+            have hp : p.1 * p.1 = p.1 := p.2
+            have hq : q.1 * q.1 = q.1 := q.2
             simp [hp, hq]
+
+theorem orthogonalSum_is_star_projection
+    {Op : Type*} [Ring Op] [StarRing Op]
+    (p q : CuntzIdempotent (Op := Op))
+    (h : idempotentOrthogonal p q)
+    (hp : star p.1 = p.1)
+    (hq : star q.1 = q.1) :
+    (orthogonalSum p q h).1 * (orthogonalSum p q h).1 =
+        (orthogonalSum p q h).1 ∧
+      star (orthogonalSum p q h).1 = (orthogonalSum p q h).1 := by
+  constructor
+  · exact (orthogonalSum p q h).2
+  · change star (p.1 + q.1) = p.1 + q.1
+    rw [star_add, hp, hq]
 
 /-- Orthogonal sum is commutative when the orthogonality data is swapped. -/
 @[rep_depth operator]
 theorem orthogonalSum_comm
-    (p q : CuntzProjection (Op := Op))
-    (h : projectionOrthogonal p q) :
+    (p q : CuntzIdempotent (Op := Op))
+    (h : idempotentOrthogonal p q) :
     orthogonalSum p q h = orthogonalSum q p ⟨h.2, h.1⟩ := by
   apply Subtype.ext
-  change p.val + q.val = q.val + p.val
+  change p.1 + q.1 = q.1 + p.1
   simp [add_comm]
 
 /-- Orthogonal sum with zero on the left is the original projection. -/
 @[rep_depth operator]
 theorem orthogonalSum_zero_left
-    (p : CuntzProjection (Op := Op)) :
-    orthogonalSum (zeroCuntzProjection (Op := Op)) p
-      (zeroProjectionOrthogonal_left (p := p)) = p := by
+    (p : CuntzIdempotent (Op := Op)) :
+      orthogonalSum (zeroCuntzIdempotent (Op := Op)) p
+      (zeroIdempotentOrthogonal_left (p := p)) = p := by
   apply Subtype.ext
-  change (0 : Op) + p.val = p.val
+  change (0 : Op) + p.1 = p.1
   simp
 
 /-- Orthogonal sum with zero on the right is the original projection. -/
 @[rep_depth operator]
 theorem orthogonalSum_zero_right
-    (p : CuntzProjection (Op := Op)) :
-    orthogonalSum p (zeroCuntzProjection (Op := Op))
-      (zeroProjectionOrthogonal_right (p := p)) = p := by
+    (p : CuntzIdempotent (Op := Op)) :
+      orthogonalSum p (zeroCuntzIdempotent (Op := Op))
+      (zeroIdempotentOrthogonal_right (p := p)) = p := by
   apply Subtype.ext
-  change p.val + (0 : Op) = p.val
+  change p.1 + (0 : Op) = p.1
   simp
 
 /-- The sum of an orthogonal pair is orthogonal to a third projection if each summand is. -/
 @[rep_depth operator]
 theorem orthogonalSum_right_orthogonal
-    (p q r : CuntzProjection (Op := Op))
-    (hpq : projectionOrthogonal p q)
-    (hpr : projectionOrthogonal p r)
-    (hqr : projectionOrthogonal q r) :
-    projectionOrthogonal (orthogonalSum p q hpq) r := by
+    (p q r : CuntzIdempotent (Op := Op))
+    (hpq : idempotentOrthogonal p q)
+    (hpr : idempotentOrthogonal p r)
+    (hqr : idempotentOrthogonal q r) :
+    idempotentOrthogonal (orthogonalSum p q hpq) r := by
   constructor
-  · change (p.val + q.val) * r.val = 0
+  · change (p.1 + q.1) * r.1 = 0
     calc
-      (p.val + q.val) * r.val = p.val * r.val + q.val * r.val := by
+      (p.1 + q.1) * r.1 = p.1 * r.1 + q.1 * r.1 := by
         rw [add_mul]
       _ = 0 := by
         rw [hpr.1, hqr.1]
         simp
-  · change r.val * (p.val + q.val) = 0
+  · change r.1 * (p.1 + q.1) = 0
     calc
-      r.val * (p.val + q.val) = r.val * p.val + r.val * q.val := by
+      r.1 * (p.1 + q.1) = r.1 * p.1 + r.1 * q.1 := by
         rw [mul_add]
       _ = 0 := by
         rw [hpr.2, hqr.2]
@@ -502,22 +530,22 @@ theorem orthogonalSum_right_orthogonal
 /-- The sum of a third projection with an orthogonal pair is orthogonal if each summand is. -/
 @[rep_depth operator]
 theorem orthogonalSum_left_orthogonal
-    (p q r : CuntzProjection (Op := Op))
-    (hpq : projectionOrthogonal p q)
-    (hpr : projectionOrthogonal p r)
-    (hqr : projectionOrthogonal q r) :
-    projectionOrthogonal p (orthogonalSum q r hqr) := by
+    (p q r : CuntzIdempotent (Op := Op))
+    (hpq : idempotentOrthogonal p q)
+    (hpr : idempotentOrthogonal p r)
+    (hqr : idempotentOrthogonal q r) :
+    idempotentOrthogonal p (orthogonalSum q r hqr) := by
   constructor
-  · change p.val * (q.val + r.val) = 0
+  · change p.1 * (q.1 + r.1) = 0
     calc
-      p.val * (q.val + r.val) = p.val * q.val + p.val * r.val := by
+      p.1 * (q.1 + r.1) = p.1 * q.1 + p.1 * r.1 := by
         rw [mul_add]
       _ = 0 := by
         rw [hpq.1, hpr.1]
         simp
-  · change (q.val + r.val) * p.val = 0
+  · change (q.1 + r.1) * p.1 = 0
     calc
-      (q.val + r.val) * p.val = q.val * p.val + r.val * p.val := by
+      (q.1 + r.1) * p.1 = q.1 * p.1 + r.1 * p.1 := by
         rw [add_mul]
       _ = 0 := by
         rw [hpq.2, hpr.2]
@@ -526,14 +554,14 @@ theorem orthogonalSum_left_orthogonal
 /-- Orthogonal sum is associative on pairwise orthogonal triples. -/
 @[rep_depth operator]
 theorem orthogonalSum_assoc
-    (p q r : CuntzProjection (Op := Op))
-    (hpq : projectionOrthogonal p q)
-    (hpr : projectionOrthogonal p r)
-    (hqr : projectionOrthogonal q r) :
+    (p q r : CuntzIdempotent (Op := Op))
+    (hpq : idempotentOrthogonal p q)
+    (hpr : idempotentOrthogonal p r)
+    (hqr : idempotentOrthogonal q r) :
     orthogonalSum (orthogonalSum p q hpq) r (orthogonalSum_right_orthogonal p q r hpq hpr hqr) =
       orthogonalSum p (orthogonalSum q r hqr) (orthogonalSum_left_orthogonal p q r hpq hpr hqr) := by
   apply Subtype.ext
-  change (p.val + q.val) + r.val = p.val + (q.val + r.val)
+  change (p.1 + q.1) + r.1 = p.1 + (q.1 + r.1)
   abel
 
 end ProjectionOrthogonal
@@ -541,361 +569,376 @@ end ProjectionOrthogonal
 /- The left and right range projections are orthogonal on the left product. -/
 @[rep_depth operator]
 theorem leftRangeProjection_mul_rightRangeProjection_eq_zero :
-    C.leftRangeProjection * C.rightRangeProjection = 0 := by
+    (leftRangeProjection C) * (rightRangeProjection C) = 0 := by
   unfold leftRangeProjection rightRangeProjection
   calc
-    (C.S_left * star C.S_left) * (C.S_right * star C.S_right)
-        = C.S_left * (star C.S_left * C.S_right) * star C.S_right := by
+    ((CuntzO2Carrier.S_left C) * star (CuntzO2Carrier.S_left C)) * ((CuntzO2Carrier.S_right C) * star (CuntzO2Carrier.S_right C))
+        = (CuntzO2Carrier.S_left C) * (star (CuntzO2Carrier.S_left C) * (CuntzO2Carrier.S_right C)) * star (CuntzO2Carrier.S_right C) := by
           noncomm_ring
-    _ = C.S_left * 0 * star C.S_right := by
-          rw [C.orthogonal_ranges.1]
+    _ = (CuntzO2Carrier.S_left C) * 0 * star (CuntzO2Carrier.S_right C) := by
+          rw [(orthogonal_ranges C).1]
     _ = 0 := by
           simp
 
 /-- The left and right range projections are orthogonal on the right product. -/
 @[rep_depth operator]
 theorem rightRangeProjection_mul_leftRangeProjection_eq_zero :
-    C.rightRangeProjection * C.leftRangeProjection = 0 := by
+    (rightRangeProjection C) * (leftRangeProjection C) = 0 := by
   unfold leftRangeProjection rightRangeProjection
   calc
-    (C.S_right * star C.S_right) * (C.S_left * star C.S_left)
-        = C.S_right * (star C.S_right * C.S_left) * star C.S_left := by
+    ((CuntzO2Carrier.S_right C) * star (CuntzO2Carrier.S_right C)) * ((CuntzO2Carrier.S_left C) * star (CuntzO2Carrier.S_left C))
+        = (CuntzO2Carrier.S_right C) * (star (CuntzO2Carrier.S_right C) * (CuntzO2Carrier.S_left C)) * star (CuntzO2Carrier.S_left C) := by
           noncomm_ring
-    _ = C.S_right * 0 * star C.S_left := by
-          rw [C.orthogonal_ranges.2]
+    _ = (CuntzO2Carrier.S_right C) * 0 * star (CuntzO2Carrier.S_left C) := by
+          rw [(orthogonal_ranges C).2]
     _ = 0 := by
           simp
 
-/-- The left and right Cuntz projections are orthogonal. -/
+/-- The left and right Cuntz idempotents are orthogonal. -/
 @[rep_depth operator]
-theorem leftRightCuntzProjection_orthogonal :
-    projectionOrthogonal (leftCuntzProjection (C := C)) (rightCuntzProjection (C := C)) := by
+theorem leftRightCuntzIdempotent_orthogonal :
+    idempotentOrthogonal (leftCuntzIdempotent C) (rightCuntzIdempotent C) := by
   constructor
   · exact leftRangeProjection_mul_rightRangeProjection_eq_zero (C := C)
   · exact rightRangeProjection_mul_leftRangeProjection_eq_zero (C := C)
 
-/-- The left and right Cuntz projections sum orthogonally to the unit. -/
+/-- The left and right Cuntz idempotents sum orthogonally to the unit. -/
 @[rep_depth operator]
 theorem leftRightOrthogonalSum_eq_unit :
-    orthogonalSum (leftCuntzProjection (C := C)) (rightCuntzProjection (C := C))
-      (leftRightCuntzProjection_orthogonal (C := C)) = unitCuntzProjection (Op := Op) := by
+    orthogonalSum (leftCuntzIdempotent C) (rightCuntzIdempotent C)
+      (leftRightCuntzIdempotent_orthogonal (C := C)) = unitCuntzIdempotent (Op := Op) := by
   apply Subtype.ext
-  change C.leftRangeProjection + C.rightRangeProjection = 1
-  simpa [leftCuntzProjection, rightCuntzProjection, unitCuntzProjection] using
-    C.rangeProjection_sum_one
+  change (leftRangeProjection C) + (rightRangeProjection C) = 1
+  simpa [leftCuntzIdempotent, rightCuntzIdempotent, unitCuntzIdempotent] using
+    rangeProjection_sum_one C
 
-section ProjectionEquivalence
+section IdempotentEquivalence
 
 variable {Op : Type*} [Ring Op]
 
 /-- The left summand lies below its orthogonal sum. -/
 @[rep_depth operator]
 theorem left_le_orthogonalSum
-    (p q : CuntzProjection (Op := Op))
-    (h : projectionOrthogonal p q) :
+    (p q : CuntzIdempotent (Op := Op))
+    (h : idempotentOrthogonal p q) :
     p ≤ orthogonalSum p q h := by
-  change p.val * (p.val + q.val) = p.val
-  have hp : p.val * p.val = p.val := p.2
-  have hq : p.val * q.val = 0 := h.1
+  change p.1 * (p.1 + q.1) = p.1
+  have hp : p.1 * p.1 = p.1 := p.2
+  have hq : p.1 * q.1 = 0 := h.1
   calc
-    p.val * (p.val + q.val) = p.val * p.val + p.val * q.val := by
+    p.1 * (p.1 + q.1) = p.1 * p.1 + p.1 * q.1 := by
       rw [mul_add]
-    _ = p.val := by
+    _ = p.1 := by
       rw [hp, hq]
       simp
 
 /-- The right summand lies below its orthogonal sum. -/
 @[rep_depth operator]
 theorem right_le_orthogonalSum
-    (p q : CuntzProjection (Op := Op))
-    (h : projectionOrthogonal p q) :
+    (p q : CuntzIdempotent (Op := Op))
+    (h : idempotentOrthogonal p q) :
     q ≤ orthogonalSum p q h := by
-  change q.val * (p.val + q.val) = q.val
-  have hq : q.val * q.val = q.val := q.2
-  have hpq : q.val * p.val = 0 := h.2
+  change q.1 * (p.1 + q.1) = q.1
+  have hq : q.1 * q.1 = q.1 := q.2
+  have hpq : q.1 * p.1 = 0 := h.2
   calc
-    q.val * (p.val + q.val) = q.val * p.val + q.val * q.val := by
+    q.1 * (p.1 + q.1) = q.1 * p.1 + q.1 * q.1 := by
       rw [mul_add]
-    _ = q.val := by
+    _ = q.1 := by
       rw [hpq, hq]
       simp
 
-end ProjectionEquivalence
+end IdempotentEquivalence
 
 /-- The left range projection lies below the unit in the projection preorder. -/
 @[rep_depth operator]
 theorem leftRangeProjection_le_unit :
-    leftCuntzProjection (C := C) ≤ unitCuntzProjection (Op := Op) := by
+    leftCuntzIdempotent C ≤ unitCuntzIdempotent (Op := Op) := by
   exact leftRangeProjection_subequiv_one (C := C)
 
 /-- The right range projection lies below the unit in the projection preorder. -/
 @[rep_depth operator]
 theorem rightRangeProjection_le_unit :
-    rightCuntzProjection (C := C) ≤ unitCuntzProjection (Op := Op) := by
+    rightCuntzIdempotent C ≤ unitCuntzIdempotent (Op := Op) := by
   exact rightRangeProjection_subequiv_one (C := C)
 
-section ProjectionEquivalence
+section IdempotentEquivalence
 
 variable {Op : Type*} [Ring Op]
 
 /--
-Projection equivalence on the Cuntz carrier.
+Absorption equivalence on Cuntz idempotents.
 
-This is the mutual subequivalence relation used as the next Cuntz-style
-quotient candidate.
+This is the mutual absorption relation used for the algebraic quotient.
 -/
 @[rep_depth operator]
-def projectionEquivalent (p q : Op) : Prop :=
-  projectionSubequiv p q ∧ projectionSubequiv q p
+def idempotentEquivalent (p q : Op) : Prop :=
+  idempotentAbsorption p q ∧ idempotentAbsorption q p
 
-/-- Reflexivity of projection equivalence on a projection. -/
+/-- Reflexivity of absorption equivalence on an idempotent. -/
 @[rep_depth operator]
-theorem projectionEquivalent_refl
+theorem idempotentEquivalent_refl
     (p : Op) (hp : p * p = p) :
-    projectionEquivalent p p := by
+    idempotentEquivalent p p := by
   constructor
-  · exact projectionSubequiv_refl p hp
-  · exact projectionSubequiv_refl p hp
+  · exact idempotentAbsorption_refl p hp
+  · exact idempotentAbsorption_refl p hp
 
-/-- Symmetry of projection equivalence. -/
+/-- Symmetry of absorption equivalence. -/
 @[rep_depth operator]
-theorem projectionEquivalent_symm
+theorem idempotentEquivalent_symm
     {p q : Op}
-    (hpq : projectionEquivalent p q) :
-    projectionEquivalent q p := by
+    (hpq : idempotentEquivalent p q) :
+    idempotentEquivalent q p := by
   constructor
   · exact hpq.2
   · exact hpq.1
 
-/-- Transitivity of projection equivalence. -/
+/-- Transitivity of absorption equivalence. -/
 @[rep_depth operator]
-theorem projectionEquivalent_trans
+theorem idempotentEquivalent_trans
     {p q r : Op}
-    (hpq : projectionEquivalent p q)
-    (hqr : projectionEquivalent q r) :
-    projectionEquivalent p r := by
+    (hpq : idempotentEquivalent p q)
+    (hqr : idempotentEquivalent q r) :
+    idempotentEquivalent p r := by
   constructor
-  · exact projectionSubequiv_trans hpq.1 hqr.1
-  · exact projectionSubequiv_trans hqr.2 hpq.2
+  · exact idempotentAbsorption_trans hpq.1 hqr.1
+  · exact idempotentAbsorption_trans hqr.2 hpq.2
 
 /-- The orthogonal sum does not depend on the chosen orthogonality proof. -/
 @[rep_depth operator]
 theorem orthogonalSum_proof_irrel
-    (p q : CuntzProjection (Op := Op))
-    (h h' : projectionOrthogonal p q) :
+    (p q : CuntzIdempotent (Op := Op))
+    (h h' : idempotentOrthogonal p q) :
     orthogonalSum p q h = orthogonalSum p q h' := by
   apply Subtype.ext
   rfl
 
 /--
-Setoid of Cuntz projections under projection equivalence.
-
-This is the honest quotient relation for the current projection carrier.
+Setoid of Cuntz idempotents under the absorption equivalence relation.
 -/
 @[rep_depth operator]
-def CuntzProjectionSetoid : Setoid (CuntzProjection (Op := Op)) where
-  r p q := projectionEquivalent p.val q.val
+def CuntzIdempotentSetoid : Setoid (CuntzIdempotent (Op := Op)) where
+  r p q := idempotentEquivalent p.1 q.1
   iseqv := by
     constructor
     · intro p
-      exact projectionEquivalent_refl p.val p.2
+      exact idempotentEquivalent_refl p.1 p.2
     · intro p q h
-      exact projectionEquivalent_symm h
+      exact idempotentEquivalent_symm h
     · intro p q r hpq hqr
-      exact projectionEquivalent_trans hpq hqr
+      exact idempotentEquivalent_trans hpq hqr
 
-/-- The Cuntz quotient carrier generated by the projection setoid. -/
+/-- The algebraic quotient carrier generated by the idempotent absorption setoid. -/
 @[rep_depth operator]
-abbrev CuntzCu := Quotient (CuntzProjectionSetoid (Op := Op))
+abbrev IdempotentOrderQuotient := Quotient (CuntzIdempotentSetoid (Op := Op))
 
 /-- The quotient class of an orthogonal sum is independent of the orthogonality property. -/
 @[rep_depth operator]
-theorem CuntzCu_orthogonalSum_proof_irrel
-    (p q : CuntzProjection (Op := Op))
-    (h h' : projectionOrthogonal p q) :
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op)) (orthogonalSum p q h) : CuntzCu) =
-      Quotient.mk (CuntzProjectionSetoid (Op := Op)) (orthogonalSum p q h') := by
+theorem IdempotentOrderQuotient_orthogonalSum_proof_irrel
+    (p q : CuntzIdempotent (Op := Op))
+    (h h' : idempotentOrthogonal p q) :
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op)) (orthogonalSum p q h) : IdempotentOrderQuotient) =
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op)) (orthogonalSum p q h') := by
   rw [orthogonalSum_proof_irrel p q h h']
 
 /--
-The projection preorder is invariant under projection equivalence on both sides.
+The idempotent absorption preorder is invariant under absorption equivalence on both sides.
 This is the key descent lemma for the quotient carrier.
 -/
 @[rep_depth operator]
-theorem projectionPreorder_congr
-    {p p' q q' : CuntzProjection (Op := Op)}
-    (hpp' : projectionEquivalent p.val p'.val)
-    (hqq' : projectionEquivalent q.val q'.val) :
-    projectionPreorder p q ↔ projectionPreorder p' q' := by
+theorem idempotentPreorder_congr
+    {p p' q q' : CuntzIdempotent (Op := Op)}
+    (hpp' : idempotentEquivalent p.1 p'.val)
+    (hqq' : idempotentEquivalent q.1 q'.val) :
+    idempotentPreorder p q ↔ idempotentPreorder p' q' := by
   constructor
   · intro hpq
-    exact projectionPreorder_trans (projectionPreorder_trans hpp'.2 hpq) hqq'.1
+    exact idempotentPreorder_trans (idempotentPreorder_trans hpp'.2 hpq) hqq'.1
   · intro hpq
-    exact projectionPreorder_trans (projectionPreorder_trans hpp'.1 hpq) hqq'.2
+    exact idempotentPreorder_trans (idempotentPreorder_trans hpp'.1 hpq) hqq'.2
 
-end ProjectionEquivalence
+end IdempotentEquivalence
 
-section CuntzCuOrder
+section SelfAdjointIdempotentEquivalence
+
+variable {Op : Type*} [Ring Op] [StarRing Op]
+
+theorem idempotentEquivalent_eq_of_selfAdjoint
+    {p q : Op}
+    (hps : star p = p)
+    (hqs : star q = q)
+    (hpq : idempotentEquivalent p q) :
+    p = q := by
+  have hqp_eq_p : q * p = p := by
+    have h := congrArg star hpq.1
+    simpa [star_mul, hps, hqs] using h
+  have hqp_eq_q : q * p = q := hpq.2
+  exact (hqp_eq_q.symm.trans hqp_eq_p).symm
+
+end SelfAdjointIdempotentEquivalence
+
+section IdempotentOrderQuotientOrder
 
 variable {Op : Type*} [Ring Op]
 
-/-- The quotient map to `CuntzCu` is monotone. -/
+/-- The quotient map to `IdempotentOrderQuotient` is monotone. -/
 @[rep_depth operator]
-theorem CuntzCu_mk_monotone :
-    Monotone (Quotient.mk (CuntzProjectionSetoid (Op := Op))) :=
-  Quotient.mk_monotone (s := CuntzProjectionSetoid (Op := Op))
+theorem IdempotentOrderQuotient_mk_monotone :
+    Monotone (Quotient.mk (CuntzIdempotentSetoid (Op := Op))) :=
+  Quotient.mk_monotone (s := CuntzIdempotentSetoid (Op := Op))
 
 /-- The quotient order respects projection preorder on representatives. -/
 @[rep_depth operator]
-theorem CuntzCu_mk_le
-    (p q : CuntzProjection (Op := Op))
-    (hpq : projectionPreorder p q) :
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op)) p : CuntzCu) ≤
-      Quotient.mk (CuntzProjectionSetoid (Op := Op)) q :=
-  CuntzCu_mk_monotone hpq
+theorem IdempotentOrderQuotient_mk_le
+    (p q : CuntzIdempotent (Op := Op))
+    (hpq : idempotentPreorder p q) :
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op)) p : IdempotentOrderQuotient) ≤
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op)) q :=
+  IdempotentOrderQuotient_mk_monotone hpq
 
 /-- Equivalent Cuntz projections define the same quotient class. -/
 @[rep_depth operator]
-theorem CuntzCu_mk_eq
-    {p q : CuntzProjection (Op := Op)}
-    (hpq : projectionEquivalent p.val q.val) :
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op)) p : CuntzCu) =
-      Quotient.mk (CuntzProjectionSetoid (Op := Op)) q := by
+theorem IdempotentOrderQuotient_mk_eq
+    {p q : CuntzIdempotent (Op := Op)}
+    (hpq : idempotentEquivalent p.1 q.1) :
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op)) p : IdempotentOrderQuotient) =
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op)) q := by
   exact Quotient.sound hpq
 
 /-- Equality of quotient classes descends back to projection equivalence. -/
 @[rep_depth operator]
-theorem CuntzCu_mk_eq_iff
-    {p q : CuntzProjection (Op := Op)} :
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op)) p : CuntzCu) =
-      Quotient.mk (CuntzProjectionSetoid (Op := Op)) q ↔
-      projectionEquivalent p.val q.val := by
+theorem IdempotentOrderQuotient_mk_eq_iff
+    {p q : CuntzIdempotent (Op := Op)} :
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op)) p : IdempotentOrderQuotient) =
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op)) q ↔
+      idempotentEquivalent p.1 q.1 := by
   constructor
   · exact Quotient.exact
-  · exact CuntzCu_mk_eq
+  · exact IdempotentOrderQuotient_mk_eq
 
 /-- The left summand class lies below the orthogonal sum class. -/
 @[rep_depth operator]
-theorem CuntzCu_left_le_orthogonalSum
-    (p q : CuntzProjection (Op := Op))
-    (h : projectionOrthogonal p q) :
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op)) p : CuntzCu) ≤
-      Quotient.mk (CuntzProjectionSetoid (Op := Op)) (orthogonalSum p q h) := by
-  exact CuntzCu_mk_le p (orthogonalSum p q h) (left_le_orthogonalSum p q h)
+theorem IdempotentOrderQuotient_left_le_orthogonalSum
+    (p q : CuntzIdempotent (Op := Op))
+    (h : idempotentOrthogonal p q) :
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op)) p : IdempotentOrderQuotient) ≤
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op)) (orthogonalSum p q h) := by
+  exact IdempotentOrderQuotient_mk_le p (orthogonalSum p q h) (left_le_orthogonalSum p q h)
 
 /-- The right summand class lies below the orthogonal sum class. -/
 @[rep_depth operator]
-theorem CuntzCu_right_le_orthogonalSum
-    (p q : CuntzProjection (Op := Op))
-    (h : projectionOrthogonal p q) :
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op)) q : CuntzCu) ≤
-      Quotient.mk (CuntzProjectionSetoid (Op := Op)) (orthogonalSum p q h) := by
-  exact CuntzCu_mk_le q (orthogonalSum p q h) (right_le_orthogonalSum p q h)
+theorem IdempotentOrderQuotient_right_le_orthogonalSum
+    (p q : CuntzIdempotent (Op := Op))
+    (h : idempotentOrthogonal p q) :
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op)) q : IdempotentOrderQuotient) ≤
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op)) (orthogonalSum p q h) := by
+  exact IdempotentOrderQuotient_mk_le q (orthogonalSum p q h) (right_le_orthogonalSum p q h)
 
-end CuntzCuOrder
+end IdempotentOrderQuotientOrder
 
 /-- The left/right orthogonal sum class is the unit class. -/
 @[rep_depth operator]
-theorem CuntzCu_leftRightOrthogonalSum_eq_unit :
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op))
-      (orthogonalSum (leftCuntzProjection (C := C)) (rightCuntzProjection (C := C))
-        (leftRightCuntzProjection_orthogonal (C := C))) : CuntzCu) =
-      Quotient.mk (CuntzProjectionSetoid (Op := Op)) (unitCuntzProjection (Op := Op)) := by
+theorem IdempotentOrderQuotient_leftRightOrthogonalSum_eq_unit :
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op))
+      (orthogonalSum (leftCuntzIdempotent C) (rightCuntzIdempotent C)
+        (leftRightCuntzIdempotent_orthogonal (C := C))) : IdempotentOrderQuotient) =
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op)) (unitCuntzIdempotent (Op := Op)) := by
   rw [leftRightOrthogonalSum_eq_unit]
 
 /-- The left/right orthogonal sum class lies below the unit class. -/
 @[rep_depth operator]
-theorem CuntzCu_leftRightOrthogonalSum_le_unit :
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op))
-      (orthogonalSum (leftCuntzProjection (C := C)) (rightCuntzProjection (C := C))
-        (leftRightCuntzProjection_orthogonal (C := C))) : CuntzCu) ≤
-      Quotient.mk (CuntzProjectionSetoid (Op := Op)) (unitCuntzProjection (Op := Op)) := by
-  rw [CuntzCu_leftRightOrthogonalSum_eq_unit]
+theorem IdempotentOrderQuotient_leftRightOrthogonalSum_le_unit :
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op))
+      (orthogonalSum (leftCuntzIdempotent C) (rightCuntzIdempotent C)
+        (leftRightCuntzIdempotent_orthogonal (C := C))) : IdempotentOrderQuotient) ≤
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op)) (unitCuntzIdempotent (Op := Op)) := by
+  rw [IdempotentOrderQuotient_leftRightOrthogonalSum_eq_unit]
 
-section CuntzCuOrthogonalSumOrder
+section IdempotentOrderQuotientOrthogonalSumOrder
 
 variable {Op : Type*} [Ring Op]
 
 /-- The orthogonal sum class lies between the summands and the unit class. -/
 @[rep_depth operator]
-theorem CuntzCu_orthogonalSum_bounds
-    (p q : CuntzProjection (Op := Op))
-    (h : projectionOrthogonal p q) :
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op)) p : CuntzCu) ≤
-      Quotient.mk (CuntzProjectionSetoid (Op := Op)) (orthogonalSum p q h) ∧
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op)) q : CuntzCu) ≤
-      Quotient.mk (CuntzProjectionSetoid (Op := Op)) (orthogonalSum p q h) ∧
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op)) (orthogonalSum p q h) : CuntzCu) ≤
-      Quotient.mk (CuntzProjectionSetoid (Op := Op)) (unitCuntzProjection (Op := Op)) := by
+theorem IdempotentOrderQuotient_orthogonalSum_bounds
+    (p q : CuntzIdempotent (Op := Op))
+    (h : idempotentOrthogonal p q) :
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op)) p : IdempotentOrderQuotient) ≤
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op)) (orthogonalSum p q h) ∧
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op)) q : IdempotentOrderQuotient) ≤
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op)) (orthogonalSum p q h) ∧
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op)) (orthogonalSum p q h) : IdempotentOrderQuotient) ≤
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op)) (unitCuntzIdempotent (Op := Op)) := by
   constructor
-  · exact CuntzCu_left_le_orthogonalSum p q h
+  · exact IdempotentOrderQuotient_left_le_orthogonalSum p q h
   constructor
-  · exact CuntzCu_right_le_orthogonalSum p q h
-  · exact CuntzCu_mk_le (orthogonalSum p q h) (unitCuntzProjection (Op := Op)) (by
+  · exact IdempotentOrderQuotient_right_le_orthogonalSum p q h
+  · exact IdempotentOrderQuotient_mk_le (orthogonalSum p q h) (unitCuntzIdempotent (Op := Op)) (by
       change (orthogonalSum p q h).val * 1 = (orthogonalSum p q h).val
       simp)
 
 /-- The quotient class of an orthogonal sum is independent of the order. -/
 @[rep_depth operator]
-theorem CuntzCu_orthogonalSum_comm
-    (p q : CuntzProjection (Op := Op))
-    (h : projectionOrthogonal p q) :
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op)) (orthogonalSum p q h) : CuntzCu) =
-      Quotient.mk (CuntzProjectionSetoid (Op := Op))
+theorem IdempotentOrderQuotient_orthogonalSum_comm
+    (p q : CuntzIdempotent (Op := Op))
+    (h : idempotentOrthogonal p q) :
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op)) (orthogonalSum p q h) : IdempotentOrderQuotient) =
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op))
         (orthogonalSum q p ⟨h.2, h.1⟩) := by
   rw [orthogonalSum_comm p q h]
 
 /-- The quotient class of an orthogonal sum with zero on the left is the original class. -/
 @[rep_depth operator]
-theorem CuntzCu_orthogonalSum_zero_left
-    (p : CuntzProjection (Op := Op)) :
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op))
-      (orthogonalSum (zeroCuntzProjection (Op := Op)) p
-        (zeroProjectionOrthogonal_left (p := p))) : CuntzCu) =
-      Quotient.mk (CuntzProjectionSetoid (Op := Op)) p := by
+theorem IdempotentOrderQuotient_orthogonalSum_zero_left
+    (p : CuntzIdempotent (Op := Op)) :
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op))
+      (orthogonalSum (zeroCuntzIdempotent (Op := Op)) p
+        (zeroIdempotentOrthogonal_left (p := p))) : IdempotentOrderQuotient) =
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op)) p := by
   rw [orthogonalSum_zero_left]
 
 /-- The quotient class of an orthogonal sum with zero on the right is the original class. -/
 @[rep_depth operator]
-theorem CuntzCu_orthogonalSum_zero_right
-    (p : CuntzProjection (Op := Op)) :
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op))
-      (orthogonalSum p (zeroCuntzProjection (Op := Op))
-        (zeroProjectionOrthogonal_right (p := p))) : CuntzCu) =
-      Quotient.mk (CuntzProjectionSetoid (Op := Op)) p := by
+theorem IdempotentOrderQuotient_orthogonalSum_zero_right
+    (p : CuntzIdempotent (Op := Op)) :
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op))
+      (orthogonalSum p (zeroCuntzIdempotent (Op := Op))
+        (zeroIdempotentOrthogonal_right (p := p))) : IdempotentOrderQuotient) =
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op)) p := by
   rw [orthogonalSum_zero_right]
 
 /-- The quotient class of a pairwise orthogonal triple sum is independent of association. -/
 @[rep_depth operator]
-theorem CuntzCu_orthogonalSum_assoc
-    (p q r : CuntzProjection (Op := Op))
-    (hpq : projectionOrthogonal p q)
-    (hpr : projectionOrthogonal p r)
-    (hqr : projectionOrthogonal q r) :
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op))
+theorem IdempotentOrderQuotient_orthogonalSum_assoc
+    (p q r : CuntzIdempotent (Op := Op))
+    (hpq : idempotentOrthogonal p q)
+    (hpr : idempotentOrthogonal p r)
+    (hqr : idempotentOrthogonal q r) :
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op))
       (orthogonalSum (orthogonalSum p q hpq) r
-        (orthogonalSum_right_orthogonal p q r hpq hpr hqr)) : CuntzCu) =
-      Quotient.mk (CuntzProjectionSetoid (Op := Op))
+        (orthogonalSum_right_orthogonal p q r hpq hpr hqr)) : IdempotentOrderQuotient) =
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op))
         (orthogonalSum p (orthogonalSum q r hqr)
           (orthogonalSum_left_orthogonal p q r hpq hpr hqr)) := by
   rw [orthogonalSum_assoc p q r hpq hpr hqr]
 
-end CuntzCuOrthogonalSumOrder
+end IdempotentOrderQuotientOrthogonalSumOrder
 
 
 /-- The left Cuntz projection class lies below the unit class. -/
 @[rep_depth operator]
-theorem leftCuntzCu_le_unit :
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op)) (leftCuntzProjection (C := C))) ≤
-      Quotient.mk (CuntzProjectionSetoid (Op := Op)) (unitCuntzProjection (Op := Op)) := by
-  exact CuntzCu_mk_monotone (leftRangeProjection_le_unit (C := C))
+theorem leftIdempotentOrderQuotient_le_unit :
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op)) (leftCuntzIdempotent C)) ≤
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op)) (unitCuntzIdempotent (Op := Op)) := by
+  exact IdempotentOrderQuotient_mk_monotone (leftRangeProjection_le_unit (C := C))
 
 /-- The right Cuntz projection class lies below the unit class. -/
 @[rep_depth operator]
-theorem rightCuntzCu_le_unit :
-    (Quotient.mk (CuntzProjectionSetoid (Op := Op)) (rightCuntzProjection (C := C))) ≤
-      Quotient.mk (CuntzProjectionSetoid (Op := Op)) (unitCuntzProjection (Op := Op)) := by
-  exact CuntzCu_mk_monotone (rightRangeProjection_le_unit (C := C))
+theorem rightIdempotentOrderQuotient_le_unit :
+    (Quotient.mk (CuntzIdempotentSetoid (Op := Op)) (rightCuntzIdempotent C)) ≤
+      Quotient.mk (CuntzIdempotentSetoid (Op := Op)) (unitCuntzIdempotent (Op := Op)) := by
+  exact IdempotentOrderQuotient_mk_monotone (rightRangeProjection_le_unit (C := C))
 
 end CuntzO2Carrier
 
@@ -1004,55 +1047,45 @@ section CompleteLatticeSectorCompletion
 
 universe u v w
 
-/-- A finite Cantor/Krein sector is a binary cylinder address together with a chirality bit. -/
-@[rep_depth operator]
-abbrev FiniteCantorKreinSector (n : Nat) :=
-  BinaryCylinder n × Bool
-
-/-- Completed finite-sector selections form the powerset lattice of concrete sectors. -/
-@[rep_depth operator]
-abbrev FiniteCantorKreinSectorSet (n : Nat) :=
-  Set (FiniteCantorKreinSector n)
-
 /-- Join of finite Cantor/Krein sector selections is union. -/
 @[rep_depth operator]
 theorem finiteCantorKreinSectorSet_sup_eq_union
-    {n : Nat} (P Q : FiniteCantorKreinSectorSet n) :
+    {n : Nat} (P Q : Set ((Fin n → BinarySector) × Bool)) :
     P ⊔ Q = P ∪ Q := by
   rfl
 
 /-- Meet of finite Cantor/Krein sector selections is intersection. -/
 @[rep_depth operator]
 theorem finiteCantorKreinSectorSet_inf_eq_inter
-    {n : Nat} (P Q : FiniteCantorKreinSectorSet n) :
+    {n : Nat} (P Q : Set ((Fin n → BinarySector) × Bool)) :
     P ⊓ Q = P ∩ Q := by
   rfl
 
 /-- Arbitrary join of finite Cantor/Krein sector selections is set union. -/
 @[rep_depth operator]
 theorem finiteCantorKreinSectorSet_sSup_eq_sUnion
-    {n : Nat} (S : Set (FiniteCantorKreinSectorSet n)) :
+    {n : Nat} (S : Set (Set ((Fin n → BinarySector) × Bool))) :
     sSup S = ⋃₀ S := by
   rfl
 
 /-- Arbitrary meet of finite Cantor/Krein sector selections is set intersection. -/
 @[rep_depth operator]
 theorem finiteCantorKreinSectorSet_sInf_eq_sInter
-    {n : Nat} (S : Set (FiniteCantorKreinSectorSet n)) :
+    {n : Nat} (S : Set (Set ((Fin n → BinarySector) × Bool))) :
     sInf S = ⋂₀ S := by
   rfl
 
 /-- Indexed join of finite Cantor/Krein sector selections is indexed union. -/
 @[rep_depth operator]
 theorem finiteCantorKreinSectorSet_iSup_eq_iUnion
-    {ι : Sort u} {n : Nat} (S : ι → FiniteCantorKreinSectorSet n) :
+    {ι : Sort u} {n : Nat} (S : ι → Set ((Fin n → BinarySector) × Bool)) :
     (⨆ i, S i) = ⋃ i, S i := by
   rfl
 
 /-- Indexed meet of finite Cantor/Krein sector selections is indexed intersection. -/
 @[rep_depth operator]
 theorem finiteCantorKreinSectorSet_iInf_eq_iInter
-    {ι : Sort u} {n : Nat} (S : ι → FiniteCantorKreinSectorSet n) :
+    {ι : Sort u} {n : Nat} (S : ι → Set ((Fin n → BinarySector) × Bool)) :
     (⨅ i, S i) = ⋂ i, S i := by
   rfl
 
@@ -1091,22 +1124,17 @@ theorem sectorCoarse_iInf
     sectorCoarse f (⨅ i, Q i) = ⨅ i, sectorCoarse f (Q i) := by
   exact (sectorRefine_sectorCoarse_galoisConnection f).u_iInf
 
-/-- Self-similar sectors are fixed points of a monotone refinement operator. -/
-@[rep_depth operator]
-abbrev SelfSimilarSectors {L : Type u} [CompleteLattice L] (R : L →o L) :=
-  Function.fixedPoints R
-
 /-- Knaster--Tarski: fixed sectors of a monotone map form a complete lattice. -/
 @[rep_depth operator]
 noncomputable def selfSimilarSectorsCompleteLattice
     {L : Type u} [CompleteLattice L] (R : L →o L) :
-    CompleteLattice (SelfSimilarSectors R) :=
+    CompleteLattice (Function.fixedPoints R) :=
   fixedPoints.completeLattice R
 
 /-- Membership in the self-similar sector type is exactly the fixed-point equation. -/
 @[rep_depth operator]
 theorem selfSimilarSector_isFixed
-    {L : Type u} [CompleteLattice L] (R : L →o L) (P : SelfSimilarSectors R) :
+    {L : Type u} [CompleteLattice L] (R : L →o L) (P : Function.fixedPoints R) :
     R P.1 = P.1 :=
   P.2
 
@@ -1124,227 +1152,116 @@ theorem selfSimilarSector_gfp_isFixed
     R R.gfp = R.gfp :=
   R.map_gfp
 
-/-- Sector selections over the existing concrete Cuntz projection subtype. -/
-@[rep_depth operator]
-abbrev CuntzProjectionSectorSet
-    {Op : Type u} [Ring Op] [StarRing Op] :=
-  Set (CuntzO2Carrier.CuntzProjection (Op := Op))
-
 /-- Arbitrary joins in the Cuntz projection sector powerset are unions. -/
 @[rep_depth operator]
-theorem CuntzProjectionSectorSet_iSup_eq_iUnion
+theorem CuntzIdempotentSectorSet_iSup_eq_iUnion
     {Op : Type u} [Ring Op] [StarRing Op] {ι : Sort v}
-    (S : ι → CuntzProjectionSectorSet (Op := Op)) :
+    (S : ι → Set (CuntzO2Carrier.CuntzIdempotent (Op := Op))) :
     (⨆ i, S i) = ⋃ i, S i := by
   rfl
 
 /-- Arbitrary meets in the Cuntz projection sector powerset are intersections. -/
 @[rep_depth operator]
-theorem CuntzProjectionSectorSet_iInf_eq_iInter
+theorem CuntzIdempotentSectorSet_iInf_eq_iInter
     {Op : Type u} [Ring Op] [StarRing Op] {ι : Sort v}
-    (S : ι → CuntzProjectionSectorSet (Op := Op)) :
+    (S : ι → Set (CuntzO2Carrier.CuntzIdempotent (Op := Op))) :
     (⨅ i, S i) = ⋂ i, S i := by
   rfl
 
 end CompleteLatticeSectorCompletion
 
-/-- Candidate Majorana/Clifford operators generated from a Cuntz shift. -/
+/-- The self-adjoint Majorana operator obtained from the left Cuntz generator. -/
 @[rep_depth operator]
-class PhaseAxisCarrier (Op : Type*) where
-  phaseAxis : Op
+def cuntzMajoranaE1
+    {Op : Type*} [Ring Op] [StarRing Op]
+    (M : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) : Op :=
+  (CuntzO2Carrier.S_left M) + star (CuntzO2Carrier.S_left M)
 
-
-/-- Canonical phase-axis instance for the doubled real operator carrier. -/
-instance doubledSpaceEndPhaseAxis
-    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    PhaseAxisCarrier (DoubledSpace E →L[ℝ] DoubledSpace E) where
-  phaseAxis := clockAxis (E := E)
-
+/-- The phase-twisted skew part of the left Cuntz generator. -/
 @[rep_depth operator]
-abbrev CuntzMajoranaCandidates
-    (Op : Type*) [Ring Op] [StarRing Op] [PhaseAxisCarrier Op] :=
-  CuntzO2Carrier Op
-
-namespace CuntzMajoranaCandidates
-
-variable {Op : Type*} [Ring Op] [StarRing Op] [PhaseAxisCarrier Op]
-variable (M : CuntzMajoranaCandidates Op)
-
-abbrev cuntz (M : CuntzMajoranaCandidates Op) : CuntzO2Carrier Op := M
-
-/-- Canonical phase axis supplied by the carrier instance. -/
-@[rep_depth operator]
-def carrierPhaseAxis : Op :=
-  PhaseAxisCarrier.phaseAxis (Op := Op)
-
-/-- Candidate `e_1 = S_1 + S_1*`. -/
-@[rep_depth operator]
-def e1 : Op :=
-  M.cuntz.S_left + star M.cuntz.S_left
-
-/-- Candidate `e_2 = phaseAxis * (S_1 - S_1*)`. -/
-@[rep_depth operator]
-def e2 : Op :=
-  carrierPhaseAxis (Op := Op) * (M.cuntz.S_left - star M.cuntz.S_left)
+def cuntzMajoranaE2
+    {Op : Type*} [Ring Op] [StarRing Op]
+    (phaseAxis : Op) (M : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) : Op :=
+  phaseAxis * ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M))
 
 @[rep_depth operator]
-theorem e1_eq :
-    M.e1 = M.cuntz.S_left + star M.cuntz.S_left :=
+theorem cuntzMajoranaE1_eq
+    {Op : Type*} [Ring Op] [StarRing Op]
+    (M : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
+    cuntzMajoranaE1 M = (CuntzO2Carrier.S_left M) + star (CuntzO2Carrier.S_left M) :=
   rfl
 
 @[rep_depth operator]
-theorem e2_eq :
-    M.e2 = carrierPhaseAxis (Op := Op) * (M.cuntz.S_left - star M.cuntz.S_left) :=
+theorem cuntzMajoranaE2_eq
+    {Op : Type*} [Ring Op] [StarRing Op]
+    (phaseAxis : Op) (M : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
+    cuntzMajoranaE2 phaseAxis M = phaseAxis * ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M)) :=
   rfl
 
-/-- The first Cuntz Majorana candidate `e₁ = S + S*` is self-adjoint. -/
 @[rep_depth operator]
-theorem e1_star_eq_self :
-    star M.e1 = M.e1 := by
-  simp [e1, add_comm]
+theorem cuntzMajoranaE1_star_eq_self
+    {Op : Type*} [Ring Op] [StarRing Op]
+    (M : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
+    star (cuntzMajoranaE1 M) = cuntzMajoranaE1 M := by
+  simp [cuntzMajoranaE1, add_comm]
 
-/-- The first Cuntz Majorana candidate is self-adjoint in Mathlib's `IsSelfAdjoint` API. -/
 @[rep_depth operator]
-theorem e1_isSelfAdjoint :
-    IsSelfAdjoint M.e1 := by
-  simpa [IsSelfAdjoint] using M.e1_star_eq_self
+theorem cuntzMajoranaE1_isSelfAdjoint
+    {Op : Type*} [Ring Op] [StarRing Op]
+    (M : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
+    IsSelfAdjoint (cuntzMajoranaE1 M) := by
+  simpa [IsSelfAdjoint] using cuntzMajoranaE1_star_eq_self M
 
-/-- The skew part `S - S*` used in the second Cuntz Majorana candidate is skew-adjoint. -/
 @[rep_depth operator]
-theorem leftShiftSkewPart_star_eq_neg :
-    star (M.cuntz.S_left - star M.cuntz.S_left) =
-      -(M.cuntz.S_left - star M.cuntz.S_left) := by
+theorem cuntzMajoranaSkewPart_star_eq_neg
+    {Op : Type*} [Ring Op] [StarRing Op]
+    (M : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
+    star ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M)) = -((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M)) := by
   simp [sub_eq_add_neg, add_comm]
 
-/--
-The second Cuntz Majorana candidate is self-adjoint once the chosen phase axis is
-skew-adjoint and commutes with the skew shift part.
--/
 @[rep_depth operator]
-theorem e2_star_eq_self_of_phaseAxis
-    (hPhaseStar :
-      star (carrierPhaseAxis (Op := Op)) = -(carrierPhaseAxis (Op := Op)))
+theorem cuntzMajoranaE2_star_eq_self_of_phaseAxis
+    {Op : Type*} [Ring Op] [StarRing Op]
+    (phaseAxis : Op) (M : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op)
+    (hPhaseStar : star phaseAxis = -phaseAxis)
     (hPhaseComm :
-      (M.cuntz.S_left - star M.cuntz.S_left) * carrierPhaseAxis (Op := Op) =
-        carrierPhaseAxis (Op := Op) * (M.cuntz.S_left - star M.cuntz.S_left)) :
-    star M.e2 = M.e2 := by
-  unfold e2
+      ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M)) * phaseAxis =
+        phaseAxis * ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M))) :
+    star (cuntzMajoranaE2 phaseAxis M) = cuntzMajoranaE2 phaseAxis M := by
+  unfold cuntzMajoranaE2
   calc
-    star (carrierPhaseAxis (Op := Op) * (M.cuntz.S_left - star M.cuntz.S_left))
-        = star (M.cuntz.S_left - star M.cuntz.S_left) *
-            star (carrierPhaseAxis (Op := Op)) := by
-          rw [star_mul]
-    _ = (-(M.cuntz.S_left - star M.cuntz.S_left)) *
-          (-(carrierPhaseAxis (Op := Op))) := by
-          rw [M.leftShiftSkewPart_star_eq_neg, hPhaseStar]
-    _ = (M.cuntz.S_left - star M.cuntz.S_left) * carrierPhaseAxis (Op := Op) := by
-          noncomm_ring
-    _ = carrierPhaseAxis (Op := Op) * (M.cuntz.S_left - star M.cuntz.S_left) := by
-          exact hPhaseComm
+    star (phaseAxis * ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M))) =
+        star ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M)) * star phaseAxis := by
+      rw [star_mul]
+    _ = (-((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M))) * (-phaseAxis) := by
+      rw [cuntzMajoranaSkewPart_star_eq_neg M, hPhaseStar]
+    _ = ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M)) * phaseAxis := by
+      noncomm_ring
+    _ = phaseAxis * ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M)) := hPhaseComm
 
-/--
-`IsSelfAdjoint` readback for the second Cuntz Majorana candidate under the same
-phase-axis hypotheses.
--/
 @[rep_depth operator]
-theorem e2_isSelfAdjoint_of_phaseAxis
-    (hPhaseStar :
-      star (carrierPhaseAxis (Op := Op)) = -(carrierPhaseAxis (Op := Op)))
+theorem cuntzMajoranaE2_isSelfAdjoint_of_phaseAxis
+    {Op : Type*} [Ring Op] [StarRing Op]
+    (phaseAxis : Op) (M : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op)
+    (hPhaseStar : star phaseAxis = -phaseAxis)
     (hPhaseComm :
-      (M.cuntz.S_left - star M.cuntz.S_left) * carrierPhaseAxis (Op := Op) =
-        carrierPhaseAxis (Op := Op) * (M.cuntz.S_left - star M.cuntz.S_left)) :
-    IsSelfAdjoint M.e2 := by
-  simpa [IsSelfAdjoint] using M.e2_star_eq_self_of_phaseAxis hPhaseStar hPhaseComm
+      ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M)) * phaseAxis =
+        phaseAxis * ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M))) :
+    IsSelfAdjoint (cuntzMajoranaE2 phaseAxis M) := by
+  simpa [IsSelfAdjoint] using
+    cuntzMajoranaE2_star_eq_self_of_phaseAxis phaseAxis M hPhaseStar hPhaseComm
 
-end CuntzMajoranaCandidates
-
-/-- Anticommutator in an abstract ring. -/
 @[rep_depth operator]
-def anticommutator
-    {Op : Type*} [Add Op] [Mul Op]
-    (x y : Op) : Op :=
-  x * y + y * x
-
-/--
-The three Clifford/CAR equations for the Cuntz Majorana candidates.
-
-This is a proposition, not a proof-carrying property structure.  It remains
-explicitly conditional because these equations are not consequences of the
-Cuntz relations alone.
--/
-@[rep_depth operator]
-def MajoranaCARWitness
-    (Op : Type*) [Ring Op] [StarRing Op] [PhaseAxisCarrier Op]
-    (M : CuntzMajoranaCandidates Op) : Prop :=
-  M.e1 * M.e1 = 1 ∧
-    M.e2 * M.e2 = 1 ∧
-      anticommutator M.e1 M.e2 = 0
-
-namespace MajoranaCARWitness
-
-variable {Op : Type*} [Ring Op] [StarRing Op] [PhaseAxisCarrier Op]
-variable {M : CuntzMajoranaCandidates Op}
-
-/-- The first Clifford equation extracted from the conjunction. -/
-@[rep_depth operator]
-theorem e1_square (h : MajoranaCARWitness Op M) :
-    M.e1 * M.e1 = 1 :=
-  h.1
-
-/-- The second Clifford equation extracted from the conjunction. -/
-@[rep_depth operator]
-theorem e2_square (h : MajoranaCARWitness Op M) :
-    M.e2 * M.e2 = 1 :=
-  h.2.1
-
-/-- The anticommutation equation extracted from the conjunction. -/
-@[rep_depth operator]
-theorem anticommute (h : MajoranaCARWitness Op M) :
-    anticommutator M.e1 M.e2 = 0 :=
-  h.2.2
-
-/-- Prove the CAR proposition from the three component equations. -/
-@[rep_depth operator]
-theorem ofProofs (h1 : M.e1 * M.e1 = 1) (h2 : M.e2 * M.e2 = 1)
-    (h3 : anticommutator M.e1 M.e2 = 0) : MajoranaCARWitness Op M :=
-  ⟨h1, h2, h3⟩
-
-end MajoranaCARWitness
-
-/-- Canonical real doubled phase-axis readout for the Cuntz/Majorana lane. -/
-@[rep_depth operator]
-noncomputable def canonicalRealDoubledPhaseAxis
+theorem doubledClockAxis_sq_eq_neg_id
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    DoubledSpace E →L[ℝ] DoubledSpace E :=
-  clockAxis (E := E)
-
-@[rep_depth operator, simp]
-theorem canonicalRealDoubledPhaseAxis_eq_clockAxis
-    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    canonicalRealDoubledPhaseAxis (E := E) = clockAxis (E := E) :=
-  rfl
-
-@[rep_depth operator, simp]
-theorem canonicalRealDoubledPhaseAxis_eq_complex_i
-    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    canonicalRealDoubledPhaseAxis (E := E) = complex_i (E := E) := by
-  rw [canonicalRealDoubledPhaseAxis]
-  exact InfoGeometry.Canonical.BilingualRealHestenesDictionary.realPhaseAxis_eq_complex_i (E := E)
-
-@[rep_depth operator]
-theorem canonicalRealDoubledPhaseAxis_sq_eq_neg_id
-    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    (canonicalRealDoubledPhaseAxis (E := E)).comp (canonicalRealDoubledPhaseAxis (E := E))
-      = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
-  rw [canonicalRealDoubledPhaseAxis]
+    (clockAxis (E := E)).comp (clockAxis (E := E)) =
+      -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
   exact InfoGeometry.Canonical.BilingualRealHestenesDictionary.realPhaseAxis_sq (E := E)
 
-/-- The canonical doubled real phase axis is Hilbert-skew-adjoint. -/
 @[rep_depth operator]
-theorem canonicalRealDoubledPhaseAxis_star_eq_neg
+theorem doubledClockAxis_star_eq_neg
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    star (canonicalRealDoubledPhaseAxis (E := E)) =
-      -(canonicalRealDoubledPhaseAxis (E := E)) := by
+    star (clockAxis (E := E)) = -(clockAxis (E := E)) := by
   rw [ContinuousLinearMap.star_eq_adjoint]
   apply ContinuousLinearMap.ext
   intro u
@@ -1352,245 +1269,142 @@ theorem canonicalRealDoubledPhaseAxis_star_eq_neg
   intro v
   rw [ContinuousLinearMap.adjoint_inner_right]
   change
-    ⟪canonicalRealDoubledPhaseAxis (E := E) v, u⟫_ℝ =
-      ⟪v, -(canonicalRealDoubledPhaseAxis (E := E) u)⟫_ℝ
+    ⟪clockAxis (E := E) v, u⟫_ℝ =
+      ⟪v, -(clockAxis (E := E) u)⟫_ℝ
   rw [inner_neg_right]
-  rw [canonicalRealDoubledPhaseAxis]
   exact InfoGeometry.Canonical.TomitaTakesaki.clockAxis_inner_skew (E := E) v u
 
-/-- The generic carrier readout specializes to the canonical clock axis on the doubled carrier. -/
-@[rep_depth operator, simp]
-theorem doubledSpace_carrierPhaseAxis_eq_clockAxis
-    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    CuntzMajoranaCandidates.carrierPhaseAxis (Op := DoubledSpace E →L[ℝ] DoubledSpace E)
-      = clockAxis (E := E) :=
+@[rep_depth operator]
+theorem doubledCuntzMajoranaE2_eq_clockAxis
+    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (M : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) (Op := DoubledSpace E →L[ℝ] DoubledSpace E)) :
+    cuntzMajoranaE2 (clockAxis (E := E)) M =
+      clockAxis (E := E) * ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M)) :=
   rfl
 
-/-- Real-doubled specialization of the Cuntz/Majorana lane. -/
-abbrev RealDoubledCuntzMajoranaPacket
-    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
-  CuntzO2Carrier (Op := DoubledSpace E →L[ℝ] DoubledSpace E)
-
-namespace RealDoubledCuntzMajoranaPacket
-
-variable {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
-variable (M : RealDoubledCuntzMajoranaPacket (E := E))
-
-/-- Compatibility accessor for the native Cuntz carrier. -/
-abbrev cuntz : CuntzO2Carrier (Op := DoubledSpace E →L[ℝ] DoubledSpace E) :=
-  M
-
-local notation "EndH" => DoubledSpace E →L[ℝ] DoubledSpace E
-
-/-- The phase axis is derived from the canonical real doubled lane. -/
 @[rep_depth operator]
-noncomputable def realDoubledPhaseAxis : EndH :=
-  canonicalRealDoubledPhaseAxis (E := E)
-
-/-- The phase axis readout is the canonical clock axis. -/
-@[rep_depth operator, simp]
-theorem realDoubledPhaseAxis_eq_clockAxis :
-    realDoubledPhaseAxis (E := E) = clockAxis (E := E) := by
-  rw [realDoubledPhaseAxis]
-  exact canonicalRealDoubledPhaseAxis_eq_clockAxis (E := E)
-
-/-- The phase axis readout is the canonical real doubled complex structure. -/
-@[rep_depth operator, simp]
-theorem realDoubledPhaseAxis_eq_complex_i :
-    realDoubledPhaseAxis (E := E) = complex_i (E := E) := by
-  rw [realDoubledPhaseAxis]
-  exact canonicalRealDoubledPhaseAxis_eq_complex_i (E := E)
-
-/-- Convert the specialized packet to the generic Cuntz/Majorana candidate. -/
-@[rep_depth operator]
-noncomputable def toCuntzMajoranaCandidates :
-    CuntzMajoranaCandidates (Op := EndH) :=
-  M.cuntz
-
-/-- The specialized packet uses the canonical `e₂` construction. -/
-@[rep_depth operator, simp]
-theorem e2_eq_canonical :
-    (M.toCuntzMajoranaCandidates).e2 =
-      canonicalRealDoubledPhaseAxis (E := E) *
-        (M.cuntz.S_left - star M.cuntz.S_left) := by
-  rfl
-
-/--
-The real-doubled Cuntz `e₂` candidate is self-adjoint once the Cuntz skew part
-commutes with the canonical doubled real phase axis.
--/
-@[rep_depth operator]
-theorem e2_isSelfAdjoint_of_commutes_canonicalPhase
+theorem doubledCuntzMajoranaE2_isSelfAdjoint_of_commutes_clockAxis
+    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (M : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) (Op := DoubledSpace E →L[ℝ] DoubledSpace E))
     (hComm :
-      (M.cuntz.S_left - star M.cuntz.S_left) * canonicalRealDoubledPhaseAxis (E := E) =
-        canonicalRealDoubledPhaseAxis (E := E) * (M.cuntz.S_left - star M.cuntz.S_left)) :
-    IsSelfAdjoint (M.toCuntzMajoranaCandidates).e2 := by
-  exact CuntzMajoranaCandidates.e2_isSelfAdjoint_of_phaseAxis
-    (M := M.toCuntzMajoranaCandidates)
-    (by
-      simpa [CuntzMajoranaCandidates.carrierPhaseAxis, canonicalRealDoubledPhaseAxis] using
-        (canonicalRealDoubledPhaseAxis_star_eq_neg (E := E)))
-    (by
-      simpa [CuntzMajoranaCandidates.carrierPhaseAxis, canonicalRealDoubledPhaseAxis] using hComm)
+      ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M)) * clockAxis (E := E) =
+        clockAxis (E := E) * ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M))) :
+    IsSelfAdjoint (cuntzMajoranaE2 (clockAxis (E := E)) M) := by
+  exact cuntzMajoranaE2_isSelfAdjoint_of_phaseAxis
+    (clockAxis (E := E)) M
+    (doubledClockAxis_star_eq_neg (E := E)) hComm
 
-/--
-If the left Cuntz branch commutes with the canonical doubled phase axis, then its
-adjoint also commutes with that phase axis.  This is the algebraic propagation
-needed in AF/Cantor filtration models where phase-linearity is supplied at the
-finite branch level.
--/
 @[rep_depth operator]
-theorem star_left_commutes_canonicalPhase_of_left_commutes
+theorem doubledCuntzStarLeft_commutes_clockAxis_of_commutes
+    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (M : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) (Op := DoubledSpace E →L[ℝ] DoubledSpace E))
     (hComm :
-      M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) =
-        canonicalRealDoubledPhaseAxis (E := E) * M.cuntz.S_left) :
-    star M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) =
-      canonicalRealDoubledPhaseAxis (E := E) * star M.cuntz.S_left := by
+      (CuntzO2Carrier.S_left M) * clockAxis (E := E) = clockAxis (E := E) * (CuntzO2Carrier.S_left M)) :
+    star (CuntzO2Carrier.S_left M) * clockAxis (E := E) = clockAxis (E := E) * star (CuntzO2Carrier.S_left M) := by
   have hStar :
-      star (canonicalRealDoubledPhaseAxis (E := E)) * star M.cuntz.S_left =
-        star M.cuntz.S_left * star (canonicalRealDoubledPhaseAxis (E := E)) := by
+      star (clockAxis (E := E)) * star (CuntzO2Carrier.S_left M) =
+        star (CuntzO2Carrier.S_left M) * star (clockAxis (E := E)) := by
     simpa only [star_mul] using congrArg star hComm
-  rw [canonicalRealDoubledPhaseAxis_star_eq_neg] at hStar
+  rw [doubledClockAxis_star_eq_neg (E := E)] at hStar
   have hK :
-      canonicalRealDoubledPhaseAxis (E := E) * star M.cuntz.S_left =
-        star M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) := by
+      clockAxis (E := E) * star (CuntzO2Carrier.S_left M) =
+        star (CuntzO2Carrier.S_left M) * clockAxis (E := E) := by
     apply ContinuousLinearMap.ext
     intro x
-    have hx := congrArg (fun T : EndH => T x) hStar
+    have hx := congrArg (fun T : DoubledSpace E →L[ℝ] DoubledSpace E => T x) hStar
     change
-      (-(canonicalRealDoubledPhaseAxis (E := E))) (star M.cuntz.S_left x) =
-        star M.cuntz.S_left ((-(canonicalRealDoubledPhaseAxis (E := E))) x) at hx
+      (-(clockAxis (E := E))) (star (CuntzO2Carrier.S_left M) x) =
+        star (CuntzO2Carrier.S_left M) ((-(clockAxis (E := E))) x) at hx
     simp only [ContinuousLinearMap.neg_apply, map_neg] at hx
     exact neg_inj.mp hx
   exact hK.symm
 
-/--
-If the left Cuntz branch commutes with the canonical doubled phase axis, then the
-skew Majorana branch `S - S*` commutes with that phase axis.
--/
 @[rep_depth operator]
-theorem leftShiftSkewPart_commutes_canonicalPhase_of_left_commutes
+theorem doubledCuntzSkewLeft_commutes_clockAxis_of_commutes
+    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (M : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) (Op := DoubledSpace E →L[ℝ] DoubledSpace E))
     (hComm :
-      M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) =
-        canonicalRealDoubledPhaseAxis (E := E) * M.cuntz.S_left) :
-    (M.cuntz.S_left - star M.cuntz.S_left) * canonicalRealDoubledPhaseAxis (E := E) =
-      canonicalRealDoubledPhaseAxis (E := E) *
-        (M.cuntz.S_left - star M.cuntz.S_left) := by
+      (CuntzO2Carrier.S_left M) * clockAxis (E := E) = clockAxis (E := E) * (CuntzO2Carrier.S_left M)) :
+    ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M)) * clockAxis (E := E) =
+      clockAxis (E := E) * ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M)) := by
   have hStarComm :
-      star M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) =
-        canonicalRealDoubledPhaseAxis (E := E) * star M.cuntz.S_left :=
-    M.star_left_commutes_canonicalPhase_of_left_commutes hComm
+      star (CuntzO2Carrier.S_left M) * clockAxis (E := E) =
+        clockAxis (E := E) * star (CuntzO2Carrier.S_left M) :=
+    doubledCuntzStarLeft_commutes_clockAxis_of_commutes M hComm
   calc
-    (M.cuntz.S_left - star M.cuntz.S_left) * canonicalRealDoubledPhaseAxis (E := E)
-        = M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) -
-            star M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) := by
-          rw [sub_mul]
-    _ = canonicalRealDoubledPhaseAxis (E := E) * M.cuntz.S_left -
-          canonicalRealDoubledPhaseAxis (E := E) * star M.cuntz.S_left := by
-          rw [hComm, hStarComm]
-    _ = canonicalRealDoubledPhaseAxis (E := E) *
-          (M.cuntz.S_left - star M.cuntz.S_left) := by
-          rw [mul_sub]
+    ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M)) * clockAxis (E := E) =
+        (CuntzO2Carrier.S_left M) * clockAxis (E := E) - star (CuntzO2Carrier.S_left M) * clockAxis (E := E) := by
+      rw [sub_mul]
+    _ = clockAxis (E := E) * (CuntzO2Carrier.S_left M) -
+          clockAxis (E := E) * star (CuntzO2Carrier.S_left M) := by
+      rw [hComm, hStarComm]
+    _ = clockAxis (E := E) * ((CuntzO2Carrier.S_left M) - star (CuntzO2Carrier.S_left M)) := by
+      rw [mul_sub]
 
-/--
-The real-doubled `e₂` Majorana candidate is self-adjoint from the single
-phase-linearity property that the left Cuntz branch commutes with the
-canonical doubled phase axis.
--/
 @[rep_depth operator]
-theorem e2_isSelfAdjoint_of_left_commutes_canonicalPhase
+theorem doubledCuntzE2_isSelfAdjoint_of_commutes_clockAxis
+    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (M : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) (Op := DoubledSpace E →L[ℝ] DoubledSpace E))
     (hComm :
-      M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) =
-        canonicalRealDoubledPhaseAxis (E := E) * M.cuntz.S_left) :
-    IsSelfAdjoint (M.toCuntzMajoranaCandidates).e2 := by
-  exact M.e2_isSelfAdjoint_of_commutes_canonicalPhase
-    (M.leftShiftSkewPart_commutes_canonicalPhase_of_left_commutes hComm)
+      (CuntzO2Carrier.S_left M) * clockAxis (E := E) = clockAxis (E := E) * (CuntzO2Carrier.S_left M)) :
+    IsSelfAdjoint (cuntzMajoranaE2 (clockAxis (E := E)) M) := by
+  exact doubledCuntzMajoranaE2_isSelfAdjoint_of_commutes_clockAxis M
+    (doubledCuntzSkewLeft_commutes_clockAxis_of_commutes M hComm)
 
-/--
-Hestenes `KLinear` readback for the left Cuntz branch.
-
-This converts the repo-native phase-linearity predicate into the raw
-canonical phase-axis commutation used by the Cuntz/Majorana lane.
--/
 @[rep_depth operator]
-theorem left_commutes_canonicalPhase_of_KLinear
+theorem doubledCuntzLeft_commutes_clockAxis_of_KLinear
+    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (M : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) (Op := DoubledSpace E →L[ℝ] DoubledSpace E))
     (hKLinear :
-      InfoGeometry.Canonical.HestenesRealStructures.KLinear (E := E) M.cuntz.S_left) :
-    M.cuntz.S_left * canonicalRealDoubledPhaseAxis (E := E) =
-      canonicalRealDoubledPhaseAxis (E := E) * M.cuntz.S_left := by
+      InfoGeometry.Canonical.HestenesRealStructures.KLinear (E := E) (CuntzO2Carrier.S_left M)) :
+    (CuntzO2Carrier.S_left M) * clockAxis (E := E) = clockAxis (E := E) * (CuntzO2Carrier.S_left M) := by
   change
-    M.cuntz.S_left.comp (canonicalRealDoubledPhaseAxis (E := E)) =
-      (canonicalRealDoubledPhaseAxis (E := E)).comp M.cuntz.S_left
+    (CuntzO2Carrier.S_left M).comp (clockAxis (E := E)) =
+      (clockAxis (E := E)).comp (CuntzO2Carrier.S_left M)
   simpa [InfoGeometry.Canonical.HestenesRealStructures.KLinear,
-    InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear,
-    canonicalRealDoubledPhaseAxis] using hKLinear
+    InfoGeometry.Canonical.BogoliubovTransport.IsPhaseLinear] using hKLinear
 
-/--
-The real-doubled `e₂` Majorana candidate is self-adjoint from the owner
-Hestenes phase-linearity predicate on the left Cuntz branch.
--/
 @[rep_depth operator]
-theorem e2_isSelfAdjoint_of_left_KLinear
+theorem doubledCuntzE2_isSelfAdjoint_of_KLinear
+    {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (M : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) (Op := DoubledSpace E →L[ℝ] DoubledSpace E))
     (hKLinear :
-      InfoGeometry.Canonical.HestenesRealStructures.KLinear (E := E) M.cuntz.S_left) :
-    IsSelfAdjoint (M.toCuntzMajoranaCandidates).e2 := by
-  exact M.e2_isSelfAdjoint_of_left_commutes_canonicalPhase
-    (M.left_commutes_canonicalPhase_of_KLinear hKLinear)
+      InfoGeometry.Canonical.HestenesRealStructures.KLinear (E := E) (CuntzO2Carrier.S_left M)) :
+    IsSelfAdjoint (cuntzMajoranaE2 (clockAxis (E := E)) M) := by
+  exact doubledCuntzE2_isSelfAdjoint_of_commutes_clockAxis M
+    (doubledCuntzLeft_commutes_clockAxis_of_KLinear M hKLinear)
 
-end RealDoubledCuntzMajoranaPacket
-
-/-- Native compact-resolvent data for a complex-linear bounded Dirac operator. -/
-@[rep_depth operator]
-structure ComplexCompactResolventData
-    (H : Type*) [NormedAddCommGroup H] [NormedSpace ℂ H] [MulAction ℂ H]
-    (D : H →L[ℂ] H) where
-  spectralParameter : ℂ
-  resolvent : H →L[ℂ] H
-  resolvent_comp_shift :
-    resolvent.comp
-        (D - spectralParameter • ContinuousLinearMap.id ℂ H) =
-      ContinuousLinearMap.id ℂ H
-  shift_comp_resolvent :
-    (D - spectralParameter • ContinuousLinearMap.id ℂ H).comp resolvent =
-      ContinuousLinearMap.id ℂ H
-  resolvent_compact : IsCompactOperator resolvent
-
-/-- A bounded spectral-triple-style socket over a Cuntz/Cantor carrier. -/
+/-- A bounded resolvent packet over a Cuntz/Cantor carrier. -/
 @[rep_depth operator]
 structure CuntzCantorSpectralTriple
     (Op H : Type*) [Ring Op] [StarRing Op] [NormedAddCommGroup H] [NormedSpace ℂ H]
     [MulAction ℂ H]
     [SMul Op H] where
-  cuntz : CuntzO2Carrier Op
+  cuntz : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op
 
   /-- Representation of the binary Cantor cylinder algebra in the operator carrier. -/
-  cylinderRepresentation : (n : Nat) -> BinaryCylinder n -> Op
+  cylinderRepresentation : (n : Nat) -> (Fin n → BinarySector) -> Op
 
-  /-- Bounded placeholder for a Dirac/supercharge operator. -/
+  /-- Bounded Dirac datum; unbounded spectral-triple structure is not asserted. -/
   dirac : H →L[ℂ] H
 
   /-- Representation action used to state bounded commutator data. -/
   representedAction : Op -> H →L[ℂ] H
 
-  /-- Explicit bounded commutator for every represented cylinder operator. -/
-  boundedCommutatorWitness :
-    (n : Nat) → BinaryCylinder n → H →L[ℂ] H
-  /-- The supplied bounded map is the actual Dirac commutator. -/
-  boundedCommutatorCertified :
-    ∀ (n : Nat) (word : BinaryCylinder n),
-      boundedCommutatorWitness n word =
-        dirac.comp (representedAction (cylinderRepresentation n word)) -
-          (representedAction (cylinderRepresentation n word)).comp dirac
-
-  /-- Native complex compact-resolvent data for the Dirac operator. -/
-  compactResolventOrSummability : ComplexCompactResolventData H dirac
+  spectralParameter : ℂ
+  resolvent : H →L[ℂ] H
+  resolvent_comp_shift :
+    resolvent.comp
+        (dirac - spectralParameter • ContinuousLinearMap.id ℂ H) =
+      ContinuousLinearMap.id ℂ H
+  shift_comp_resolvent :
+    (dirac - spectralParameter • ContinuousLinearMap.id ℂ H).comp resolvent =
+      ContinuousLinearMap.id ℂ H
+  resolvent_compact : IsCompactOperator resolvent
 
   /-- Spectral dimension readout supplied by the concrete model. -/
   spectralDimension : ℝ
 
-  /-- Optional calibration to the middle-thirds Cantor dimension. -/
-  cantorDimensionCalibration :
-    spectralDimension = Real.log 2 / Real.log 3
 
 namespace CuntzCantorSpectralTriple
 
@@ -1598,66 +1412,238 @@ variable {Op H : Type*} [Ring Op] [StarRing Op]
 variable [NormedAddCommGroup H] [NormedSpace ℂ H] [MulAction ℂ H] [SMul Op H]
 variable (T : CuntzCantorSpectralTriple Op H)
 
+theorem shifted_dirac_injective :
+    Function.Injective
+      (T.dirac - T.spectralParameter • ContinuousLinearMap.id ℂ H) := by
+  intro x y hxy
+  have hleft := congrArg (fun U : H →L[ℂ] H => U x) T.resolvent_comp_shift
+  have hright := congrArg (fun U : H →L[ℂ] H => U y) T.resolvent_comp_shift
+  calc
+    x = T.resolvent ((T.dirac - T.spectralParameter •
+        ContinuousLinearMap.id ℂ H) x) := by simpa using hleft.symm
+    _ = T.resolvent ((T.dirac - T.spectralParameter •
+        ContinuousLinearMap.id ℂ H) y) := by rw [hxy]
+    _ = y := by simpa using hright
+
+theorem shifted_dirac_surjective :
+    Function.Surjective
+      (T.dirac - T.spectralParameter • ContinuousLinearMap.id ℂ H) := by
+  intro y
+  refine ⟨T.resolvent y, ?_⟩
+  have hright := congrArg (fun U : H →L[ℂ] H => U y) T.shift_comp_resolvent
+  simpa using hright
+
+theorem shifted_dirac_bijective :
+    Function.Bijective
+      (T.dirac - T.spectralParameter • ContinuousLinearMap.id ℂ H) :=
+  ⟨T.shifted_dirac_injective, T.shifted_dirac_surjective⟩
+
+theorem resolvent_apply_shifted_dirac (x : H) :
+    T.resolvent
+        ((T.dirac - T.spectralParameter • ContinuousLinearMap.id ℂ H) x) = x := by
+  have h := congrArg (fun U : H →L[ℂ] H => U x) T.resolvent_comp_shift
+  simpa using h
+
+theorem shifted_dirac_apply_resolvent (x : H) :
+    (T.dirac - T.spectralParameter • ContinuousLinearMap.id ℂ H)
+        (T.resolvent x) = x := by
+  have h := congrArg (fun U : H →L[ℂ] H => U x) T.shift_comp_resolvent
+  simpa using h
+
+theorem shifted_dirac_resolvent_commutes :
+    (T.dirac - T.spectralParameter • ContinuousLinearMap.id ℂ H).comp
+        T.resolvent =
+      T.resolvent.comp
+        (T.dirac - T.spectralParameter • ContinuousLinearMap.id ℂ H) := by
+  rw [T.shift_comp_resolvent, T.resolvent_comp_shift]
+
+theorem shifted_dirac_resolvent_unique_right
+    (R : H →L[ℂ] H)
+    (hright :
+      (T.dirac - T.spectralParameter • ContinuousLinearMap.id ℂ H).comp R =
+        ContinuousLinearMap.id ℂ H) :
+    R = T.resolvent := by
+  calc
+    R = (ContinuousLinearMap.id ℂ H).comp R := by simp
+    _ = (T.resolvent.comp
+        (T.dirac - T.spectralParameter • ContinuousLinearMap.id ℂ H)).comp R := by
+      rw [T.resolvent_comp_shift]
+    _ = T.resolvent.comp
+        ((T.dirac - T.spectralParameter • ContinuousLinearMap.id ℂ H).comp R) := by
+      rfl
+    _ = T.resolvent.comp (ContinuousLinearMap.id ℂ H) := by rw [hright]
+    _ = T.resolvent := by simp
+
+theorem shifted_dirac_resolvent_unique
+    (R : H →L[ℂ] H)
+    (hleft : R.comp
+        (T.dirac - T.spectralParameter • ContinuousLinearMap.id ℂ H) =
+      ContinuousLinearMap.id ℂ H) :
+    R = T.resolvent := by
+  calc
+    R = R.comp (ContinuousLinearMap.id ℂ H) := by simp
+    _ = R.comp ((T.dirac - T.spectralParameter •
+        ContinuousLinearMap.id ℂ H).comp T.resolvent) := by
+      rw [T.shift_comp_resolvent]
+    _ = (R.comp (T.dirac - T.spectralParameter •
+        ContinuousLinearMap.id ℂ H)).comp T.resolvent := by
+      rfl
+    _ = (ContinuousLinearMap.id ℂ H).comp T.resolvent := by
+      rw [hleft]
+    _ = T.resolvent := by simp
+
+theorem resolvent_bijective :
+    Function.Bijective T.resolvent := by
+  constructor
+  · intro x y hxy
+    calc
+      x = (T.dirac - T.spectralParameter • ContinuousLinearMap.id ℂ H)
+          (T.resolvent x) :=
+        (T.shifted_dirac_apply_resolvent x).symm
+      _ = (T.dirac - T.spectralParameter • ContinuousLinearMap.id ℂ H)
+          (T.resolvent y) := by
+        exact congrArg
+          (fun z : H =>
+            (T.dirac - T.spectralParameter • ContinuousLinearMap.id ℂ H) z)
+          hxy
+      _ = y := T.shifted_dirac_apply_resolvent y
+  · intro y
+    refine ⟨(T.dirac - T.spectralParameter • ContinuousLinearMap.id ℂ H) y, ?_⟩
+    exact T.resolvent_apply_shifted_dirac y
+
+theorem finiteDimensional_of_compact_resolvent
+    (T : CuntzCantorSpectralTriple Op H) :
+    FiniteDimensional ℂ H := by
+  let A : H →L[ℂ] H :=
+    T.dirac - T.spectralParameter • ContinuousLinearMap.id ℂ H
+  have hcompact_comp : IsCompactOperator (A.comp T.resolvent) := by
+    simpa [Function.comp_def, ContinuousLinearMap.comp_apply, A] using
+      T.resolvent_compact.clm_comp A
+  have hcompact_id : IsCompactOperator (ContinuousLinearMap.id ℂ H) := by
+    rw [← T.shift_comp_resolvent]
+    exact hcompact_comp
+  rcases hcompact_id.image_closedBall_subset_compact 1 with ⟨K, hK, hsub⟩
+  have hball : IsCompact (Metric.closedBall (0 : H) 1) :=
+    hK.of_isClosed_subset Metric.isClosed_closedBall (by
+      intro x hx
+      exact hsub ⟨x, hx, rfl⟩)
+  exact FiniteDimensional.of_isCompact_closedBall₀ ℂ zero_lt_one hball
+
+theorem no_infiniteDimensional_cuntzCantorSpectralTriple
+    (T : CuntzCantorSpectralTriple Op H)
+    (hH : ¬ FiniteDimensional ℂ H) : False := by
+  exact hH (finiteDimensional_of_compact_resolvent T)
+
 /-- The left Cuntz range projection of the spectral-triple carrier. -/
 @[rep_depth operator]
 def leftCylinderProjection : Op :=
-  T.cuntz.leftRangeProjection
+  CuntzO2Carrier.leftRangeProjection T.cuntz
 
 /-- The right Cuntz range projection of the spectral-triple carrier. -/
 @[rep_depth operator]
 def rightCylinderProjection : Op :=
-  T.cuntz.rightRangeProjection
+  CuntzO2Carrier.rightRangeProjection T.cuntz
 
 /-- Cylinder projections cover the binary boundary at the first level. -/
 @[rep_depth operator]
 theorem firstLevelCylinder_sum_one :
-    T.leftCylinderProjection + T.rightCylinderProjection = 1 := by
-  exact T.cuntz.rangeProjection_sum_one
+    leftCylinderProjection T + rightCylinderProjection T = 1 := by
+  exact CuntzO2Carrier.rangeProjection_sum_one T.cuntz
 
-/-- The supplied spectral dimension equals the middle-thirds Cantor dimension. -/
-@[rep_depth operator]
-theorem spectralDimension_eq_middleThirdsCantor :
-    T.spectralDimension = Real.log 2 / Real.log 3 :=
-  T.cantorDimensionCalibration
+theorem leftCylinderProjection_idempotent :
+    leftCylinderProjection T * leftCylinderProjection T =
+      leftCylinderProjection T := by
+  unfold leftCylinderProjection CuntzO2Carrier.leftRangeProjection
+  calc
+    (CuntzO2Carrier.S_left T.cuntz * star (CuntzO2Carrier.S_left T.cuntz)) *
+        (CuntzO2Carrier.S_left T.cuntz * star (CuntzO2Carrier.S_left T.cuntz)) =
+      CuntzO2Carrier.S_left T.cuntz *
+        (star (CuntzO2Carrier.S_left T.cuntz) *
+          CuntzO2Carrier.S_left T.cuntz) *
+        star (CuntzO2Carrier.S_left T.cuntz) := by
+          noncomm_ring
+    _ = CuntzO2Carrier.S_left T.cuntz * 1 *
+        star (CuntzO2Carrier.S_left T.cuntz) := by
+          rw [CuntzO2Carrier.left_isometry T.cuntz]
+    _ = leftCylinderProjection T := by
+          simp [leftCylinderProjection, CuntzO2Carrier.leftRangeProjection]
 
-/-- Re-export the bounded-commutator formula. -/
-@[rep_depth operator]
-theorem boundedCommutator_holds
-    (n : Nat) (word : BinaryCylinder n) :
-    T.boundedCommutatorWitness n word =
-      T.dirac.comp (T.representedAction (T.cylinderRepresentation n word)) -
-        (T.representedAction (T.cylinderRepresentation n word)).comp T.dirac :=
-  T.boundedCommutatorCertified n word
+theorem rightCylinderProjection_idempotent :
+    rightCylinderProjection T * rightCylinderProjection T =
+      rightCylinderProjection T := by
+  unfold rightCylinderProjection CuntzO2Carrier.rightRangeProjection
+  calc
+    (CuntzO2Carrier.S_right T.cuntz * star (CuntzO2Carrier.S_right T.cuntz)) *
+        (CuntzO2Carrier.S_right T.cuntz * star (CuntzO2Carrier.S_right T.cuntz)) =
+      CuntzO2Carrier.S_right T.cuntz *
+        (star (CuntzO2Carrier.S_right T.cuntz) *
+          CuntzO2Carrier.S_right T.cuntz) *
+        star (CuntzO2Carrier.S_right T.cuntz) := by
+          noncomm_ring
+    _ = CuntzO2Carrier.S_right T.cuntz * 1 *
+        star (CuntzO2Carrier.S_right T.cuntz) := by
+          rw [CuntzO2Carrier.right_isometry T.cuntz]
+    _ = rightCylinderProjection T := by
+          simp [rightCylinderProjection, CuntzO2Carrier.rightRangeProjection]
+
+theorem leftCylinderProjection_star :
+    star (leftCylinderProjection T) = leftCylinderProjection T := by
+  exact CuntzO2Carrier.leftRangeProjection_star T.cuntz
+
+theorem rightCylinderProjection_star :
+    star (rightCylinderProjection T) = rightCylinderProjection T := by
+  exact CuntzO2Carrier.rightRangeProjection_star T.cuntz
+
+theorem leftCylinderProjection_isStarProjection :
+    IsStarProjection (leftCylinderProjection T) := by
+  rw [isStarProjection_iff]
+  exact ⟨leftCylinderProjection_idempotent T,
+    leftCylinderProjection_star T⟩
+
+theorem rightCylinderProjection_isStarProjection :
+    IsStarProjection (rightCylinderProjection T) := by
+  rw [isStarProjection_iff]
+  exact ⟨rightCylinderProjection_idempotent T,
+    rightCylinderProjection_star T⟩
+
+theorem leftCylinderProjection_mul_rightCylinderProjection :
+    leftCylinderProjection T * rightCylinderProjection T = 0 := by
+  unfold leftCylinderProjection rightCylinderProjection
+    CuntzO2Carrier.leftRangeProjection CuntzO2Carrier.rightRangeProjection
+  calc
+    (CuntzO2Carrier.S_left T.cuntz * star (CuntzO2Carrier.S_left T.cuntz)) *
+        (CuntzO2Carrier.S_right T.cuntz * star (CuntzO2Carrier.S_right T.cuntz)) =
+      CuntzO2Carrier.S_left T.cuntz *
+        (star (CuntzO2Carrier.S_left T.cuntz) *
+          CuntzO2Carrier.S_right T.cuntz) *
+        star (CuntzO2Carrier.S_right T.cuntz) := by
+          noncomm_ring
+    _ = 0 := by
+      rw [CuntzO2Carrier.orthogonal_ranges T.cuntz |>.1]
+      simp
+
+theorem rightCylinderProjection_mul_leftCylinderProjection :
+    rightCylinderProjection T * leftCylinderProjection T = 0 := by
+  unfold rightCylinderProjection leftCylinderProjection
+    CuntzO2Carrier.rightRangeProjection CuntzO2Carrier.leftRangeProjection
+  calc
+    (CuntzO2Carrier.S_right T.cuntz * star (CuntzO2Carrier.S_right T.cuntz)) *
+        (CuntzO2Carrier.S_left T.cuntz * star (CuntzO2Carrier.S_left T.cuntz)) =
+      CuntzO2Carrier.S_right T.cuntz *
+        (star (CuntzO2Carrier.S_right T.cuntz) *
+          CuntzO2Carrier.S_left T.cuntz) *
+        star (CuntzO2Carrier.S_left T.cuntz) := by
+          noncomm_ring
+    _ = 0 := by
+      rw [CuntzO2Carrier.orthogonal_ranges T.cuntz |>.2]
+      simp
 
 /-- The installed resolvent representative is compact. -/
 @[rep_depth operator]
 theorem compactResolventOrSummability_holds :
-    IsCompactOperator T.compactResolventOrSummability.resolvent :=
-  T.compactResolventOrSummability.resolvent_compact
+    IsCompactOperator T.resolvent :=
+  T.resolvent_compact
 
 end CuntzCantorSpectralTriple
-theorem erlangen_net_left_prefix_realization
-    {Alg Frame Sym Label Op H : Type*} [Ring Op] [StarRing Op]
-    [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H]
-    (net : IteratedObservableSectorization Alg Frame Sym BinarySector Label)
-    (triple : CuntzCantorSpectralTriple Op H)
-    (hLeft :
-      triple.cylinderRepresentation 1 (fun _ => BinarySector.plus) =
-        triple.cuntz.S_left) :
-    triple.cylinderRepresentation 1 (fun _ => BinarySector.plus) =
-      triple.cuntz.S_left :=
-  hLeft
-
-theorem erlangen_net_right_prefix_realization
-    {Alg Frame Sym Label Op H : Type*} [Ring Op] [StarRing Op]
-    [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H]
-    (net : IteratedObservableSectorization Alg Frame Sym BinarySector Label)
-    (triple : CuntzCantorSpectralTriple Op H)
-    (hRight :
-      triple.cylinderRepresentation 1 (fun _ => BinarySector.minus) =
-        triple.cuntz.S_right) :
-    triple.cylinderRepresentation 1 (fun _ => BinarySector.minus) =
-      triple.cuntz.S_right :=
-  hRight
 
 end InfoGeometry.Topology

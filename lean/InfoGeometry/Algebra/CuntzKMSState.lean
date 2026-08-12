@@ -38,4 +38,20 @@ theorem kmsWeight_eq_boltzmann_div_partition
       (primes i : ℂ) ^ (-β) / primonPartition n primes β := by
   rfl
 
+theorem kmsWeight_sum_eq_one
+    (n : ℕ) (primes : Fin n → ℕ) (β : ℂ)
+    (hZ : primonPartition n primes β ≠ 0) :
+    ∑ i : Fin n, kmsWeight n primes β i = 1 := by
+  unfold kmsWeight
+  rw [← Finset.sum_div]
+  exact div_self hZ
+
+theorem kmsWeight_mul_partition
+    (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) (i : Fin n)
+    (hZ : primonPartition n primes β ≠ 0) :
+    kmsWeight n primes β i * primonPartition n primes β =
+      boltzmannFactor (primes i) β := by
+  unfold kmsWeight
+  exact div_mul_cancel₀ _ hZ
+
 end InfoGeometry.Algebra.CuntzKMSState

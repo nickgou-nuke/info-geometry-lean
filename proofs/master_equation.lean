@@ -47,12 +47,6 @@ theorem masterOp_is_IS (K : ℝ) : masterOpReal K = itakuraSaito (Real.exp K) 1 
 noncomputable def arakiUmegakiGen (traceOmega traceEta arakiEntropy : ℝ) : ℝ :=
   traceEta - traceOmega + arakiEntropy
 
-theorem arakiUmegakiGen_unnormalized_correction
-    (traceOmega traceEta arakiEntropy : ℝ) :
-    arakiUmegakiGen traceOmega traceEta arakiEntropy =
-      traceEta - traceOmega + arakiEntropy := by
-  rfl
-
 -- LAYER 4: THE CONNES COCYCLE CONNECTION
 
 /-- The Connes cocycle [Dω : Dσ]_t = exp(itK) where K = log Δ_{ω,σ}.
@@ -99,23 +93,3 @@ theorem master_equation_nonnegative_relations (K : ℝ) :
     masterOpReal K = Real.exp K - 1 - K ∧
     masterOpReal 0 = 0 := by
   exact ⟨masterOp_nonneg K, rfl, by simp [masterOpReal]⟩
-
--- Bridges
-structure BridgeArtifact where
-  name : String
-  artifact : String
-
-def bridge_thermo_gauge_flow : BridgeArtifact where
-  name := "thermodynamic gauge flow"
-  artifact := "thermo_gauge_flow.lean"
-
-def bridge_tomita_kms : BridgeArtifact where
-  name := "Tomita KMS modular flow"
-  artifact := "tomita_kms_v4.lean"
-
-def master_equation_bridge_registry : List BridgeArtifact :=
-  [bridge_thermo_gauge_flow, bridge_tomita_kms]
-
-theorem master_equation_bridge_registry_length :
-    master_equation_bridge_registry.length = 2 := by
-  norm_num [master_equation_bridge_registry]

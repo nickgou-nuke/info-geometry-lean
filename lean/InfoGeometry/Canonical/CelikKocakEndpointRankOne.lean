@@ -16,17 +16,17 @@ namespace InfoGeometry.Canonical.CelikKocakPaperFormalism
 open FunctionSpace
 
 noncomputable def endpointRankOne {n : ℕ}
-    (x y : CantorAddress n) : EndpointOperator n :=
-  (LinearMap.single ℂ (fun _ : CantorAddress n => ℂ) x).comp
+    (x y : ((Fin n) → Bool)) : EndpointOperator n :=
+  (LinearMap.single ℂ (fun _ : ((Fin n) → Bool) => ℂ) x).comp
     (LinearMap.proj y)
 
 @[simp] theorem endpointRankOne_apply {n : ℕ}
-    (x y z : CantorAddress n) (f : FunctionSpace n) :
+    (x y z : ((Fin n) → Bool)) (f : (((Fin n) → Bool) → ℂ)) :
     endpointRankOne x y f z = if z = x then f y else 0 := by
   simp [endpointRankOne, Pi.single_apply]
 
 @[simp] theorem endpointRankOne_basis_apply {n : ℕ}
-    (x y z : CantorAddress n) :
+    (x y z : ((Fin n) → Bool)) :
     endpointRankOne x y (endpointBasis (n := n) z) =
       if y = z then endpointBasis (n := n) x else 0 := by
   apply funext
@@ -41,33 +41,33 @@ noncomputable def endpointRankOne {n : ℕ}
   · simp [endpointRankOne_apply, hyz]
 
 private theorem endpointOperator_sum_apply {n : ℕ}
-    (g : CantorAddress n → EndpointOperator n) (f : FunctionSpace n) :
+    (g : ((Fin n) → Bool) → EndpointOperator n) (f : (((Fin n) → Bool) → ℂ)) :
     (∑ i, g i) f = ∑ i, g i f := by
   classical
-  change (Finset.univ.sum (fun i : CantorAddress n => g i)) f = _
-  induction (Finset.univ : Finset (CantorAddress n)) using Finset.induction_on with
+  change (Finset.univ.sum (fun i : ((Fin n) → Bool) => g i)) f = _
+  induction (Finset.univ : Finset (((Fin n) → Bool))) using Finset.induction_on with
   | empty => simp
   | @insert a s ha ih =>
       simp only [Finset.sum_insert ha, LinearMap.add_apply, ih]
 
 theorem endpointOperator_eq_rankOne_sum {n : ℕ} (A : EndpointOperator n) :
-    A = ∑ y : CantorAddress n, ∑ x : CantorAddress n,
+    A = ∑ y : ((Fin n) → Bool), ∑ x : ((Fin n) → Bool),
       ((endpointBasis (n := n)).repr (A (endpointBasis (n := n) y))) x •
         endpointRankOne x y := by
   apply (endpointBasis (n := n)).ext
   intro y
   change A (endpointBasis (n := n) y) =
-    (∑ y' : CantorAddress n, ∑ x : CantorAddress n,
+    (∑ y' : ((Fin n) → Bool), ∑ x : ((Fin n) → Bool),
       ((endpointBasis (n := n)).repr
         (A (endpointBasis (n := n) y'))) x • endpointRankOne x y')
       (endpointBasis (n := n) y)
   have houter :
-      (∑ y' : CantorAddress n, ∑ x : CantorAddress n,
+      (∑ y' : ((Fin n) → Bool), ∑ x : ((Fin n) → Bool),
         ((endpointBasis (n := n)).repr
           (A (endpointBasis (n := n) y'))) x • endpointRankOne x y')
           (endpointBasis (n := n) y) =
-        ∑ y' : CantorAddress n,
-          (∑ x : CantorAddress n,
+        ∑ y' : ((Fin n) → Bool),
+          (∑ x : ((Fin n) → Bool),
             ((endpointBasis (n := n)).repr
               (A (endpointBasis (n := n) y'))) x • endpointRankOne x y')
             (endpointBasis (n := n) y) :=
@@ -75,11 +75,11 @@ theorem endpointOperator_eq_rankOne_sum {n : ℕ} (A : EndpointOperator n) :
   rw [houter]
   rw [Fintype.sum_eq_single y]
   · have hinner :
-        (∑ x : CantorAddress n,
+        (∑ x : ((Fin n) → Bool),
           ((endpointBasis (n := n)).repr
             (A (endpointBasis (n := n) y))) x • endpointRankOne x y)
             (endpointBasis (n := n) y) =
-          ∑ x : CantorAddress n,
+          ∑ x : ((Fin n) → Bool),
             ((endpointBasis (n := n)).repr
               (A (endpointBasis (n := n) y))) x •
               endpointRankOne x y (endpointBasis (n := n) y) :=
@@ -90,11 +90,11 @@ theorem endpointOperator_eq_rankOne_sum {n : ℕ} (A : EndpointOperator n) :
       (A (endpointBasis (n := n) y))).symm
   · intro y' hy'
     have hzero :
-        (∑ x : CantorAddress n,
+        (∑ x : ((Fin n) → Bool),
           ((endpointBasis (n := n)).repr
             (A (endpointBasis (n := n) y'))) x • endpointRankOne x y')
             (endpointBasis (n := n) y) =
-          ∑ x : CantorAddress n,
+          ∑ x : ((Fin n) → Bool),
             ((endpointBasis (n := n)).repr
               (A (endpointBasis (n := n) y'))) x •
               endpointRankOne x y' (endpointBasis (n := n) y) := by

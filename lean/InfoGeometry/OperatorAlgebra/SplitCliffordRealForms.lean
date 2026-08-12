@@ -73,6 +73,34 @@ theorem complement_involutive
   funext i
   simp [complement]
 
+/-- The occupation complement as a native `Equiv`.
+
+Packaging the involution as an equivalence lets downstream closure and
+spectral constructions use Mathlib's inverse/equivalence API instead of
+repeating pointwise double-complement rewrites. -/
+def complementEquiv (m : Nat) : Occupation m ≃ Occupation m where
+  toFun := complement
+  invFun := complement
+  left_inv := complement_involutive
+  right_inv := complement_involutive
+
+@[simp] theorem complementEquiv_apply (m : Nat) (x : Occupation m) :
+    complementEquiv m x = complement x := rfl
+
+@[simp] theorem complementEquiv_symm_apply (m : Nat) (x : Occupation m) :
+    (complementEquiv m).symm x = complement x := rfl
+
+@[simp] theorem complementEquiv_symm :
+    (complementEquiv m).symm = complementEquiv m := by
+  ext x
+  rfl
+
+@[simp] theorem complementEquiv_involutive
+    (m : Nat) (x : Occupation m) :
+    complementEquiv m (complementEquiv m x) = x := by
+  simpa only [complementEquiv_symm] using
+    (complementEquiv m).symm_apply_apply x
+
 /--
 Toggling a bit is involutive.
 -/
@@ -132,9 +160,9 @@ Closure involution on finite occupation functions induced by complement:
 -/
 def occupationComplementClosure
     (m : Nat) :
-    LinearClosureInvolution (OccupationFunction m) where
-  theta :=
-    { toFun := fun f => fun x => f (Occupation.complement x)
+    LinearClosureInvolution (OccupationFunction m) := by
+  let θ : OccupationFunction m →ₗ[ℝ] OccupationFunction m :=
+    { toFun := fun f => fun x => f (Occupation.complementEquiv m x)
       map_add' := by
         intro f g
         funext x
@@ -143,10 +171,19 @@ def occupationComplementClosure
         intro a f
         funext x
         simp }
-  theta_involutive := by
-    intro f
-    funext x
-    simp [Occupation.complement_involutive]
+  refine { theta := θ, theta_involutive := ?_ }
+  dsimp [θ]
+  intro f
+  funext x
+  change f (Occupation.complementEquiv m
+    (Occupation.complementEquiv m x)) = f x
+  have hcomp := Occupation.complementEquiv_involutive m x
+  rw [hcomp]
+
+@[simp] theorem occupationComplementClosure_theta_apply
+    (m : Nat) (f : OccupationFunction m) (x : Occupation m) :
+    (occupationComplementClosure m).theta f x =
+      f (Occupation.complementEquiv m x) := rfl
 
 namespace occupationComplementClosure
 

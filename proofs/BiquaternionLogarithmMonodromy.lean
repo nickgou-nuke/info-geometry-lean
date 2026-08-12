@@ -1,4 +1,4 @@
-import proofs.BiquaternionNegativeRootsLog
+import InfoGeometry.Canonical.BiquaternionNegativeRootsLog
 
 /-!
 # Biquaternion logarithm monodromy

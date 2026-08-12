@@ -1,4 +1,4 @@
-import proofs.CanonicalZornRealSpin44
+import InfoGeometry.Canonical.CanonicalZornRealSpin44
 
 /-!
 # Real `(4,4)` form of the full split-octonion Jordan carrier
@@ -15,7 +15,7 @@ namespace SplitOctonionJordanForm
 
 open CanonicalZornRealSpin44
 open CanonicalZornCompositionTriality
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 
 abbrev RealJordan := CanonicalZornRealSpin44.RealSplit44
 abbrev quadratic44 := CanonicalZornRealSpin44.realQuadratic44
@@ -105,7 +105,8 @@ theorem normPolar_signature_4_4 :
 
 /-! ## Compatibility with the existing canonical Zorn real locus -/
 
-def realZorn (x : RealJordan) : Zorn := (realSplit44ToVector8 x).val
+def realZorn (x : RealJordan) : InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn :=
+  (realSplit44ToVector8 x).val
 
 theorem realZorn_injective : Function.Injective realZorn := by
   intro x y h

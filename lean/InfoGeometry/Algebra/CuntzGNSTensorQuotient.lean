@@ -78,4 +78,12 @@ theorem leftRepresentation_mul (F : CuntzGNSState n)
     Quotient.mk (gnsSetoid F) (a * (b * x))
   rw [mul_assoc]
 
+theorem leftRepresentation_cuntz_isometry (F : CuntzGNSState n)
+    (i : Fin n) (q : GNSQuotient F) :
+    leftRepresentation F (cuntzSdag n i)
+        (leftRepresentation F (cuntzS n i) q) = q := by
+  rw [← leftRepresentation_mul F (cuntzSdag n i) (cuntzS n i) q]
+  rw [cuntz_isometry]
+  simpa using congrArg (fun f => f q) (leftRepresentation_one F)
+
 end InfoGeometry.Algebra.CuntzGNSTensorQuotient

@@ -32,24 +32,19 @@ open StandardFormCore
 
 universe u v w
 
-/-- Finite binary words indexing cylinder projections. -/
-abbrev BinaryWord : Type := List Bool
-
-namespace BinaryWord
-
 /-- Append one binary branch to a finite word. -/
-def child (w : BinaryWord) (b : Bool) : BinaryWord :=
+def child (w : List Bool) (b : Bool) : List Bool :=
   w ++ [b]
 
 @[simp] theorem child_nil (b : Bool) : child [] b = [b] := rfl
 
 /-- Finite closed cylinder of all finite words extending `w`. -/
-def closedCylinder (w : BinaryWord) : Set BinaryWord :=
-  {u | ∃ t : BinaryWord, u = w ++ t}
+def closedCylinder (w : List Bool) : Set (List Bool) :=
+  {u | ∃ t : List Bool, u = w ++ t}
 
 /-- Every word lies in its own closed cylinder. -/
 @[rep_depth projective]
-theorem mem_closedCylinder_self (w : BinaryWord) :
+theorem mem_closedCylinder_self (w : List Bool) :
     w ∈ closedCylinder w := by
   exact ⟨[], by simp⟩
 
@@ -61,9 +56,9 @@ This is a concrete Cantor-combinatorics law proved from mathlib list/set
 case analysis, not a projection-tree property field.
 -/
 @[rep_depth projective]
-theorem closedCylinder_split (w : BinaryWord) :
+theorem closedCylinder_split (w : List Bool) :
     closedCylinder w =
-      ({w} : Set BinaryWord)
+      ({w} : Set (List Bool))
         ∪ closedCylinder (child w false)
         ∪ closedCylinder (child w true) := by
   ext u
@@ -84,8 +79,6 @@ theorem closedCylinder_split (w : BinaryWord) :
         exact ⟨false :: t, by simp [child, List.append_assoc]⟩
     · rcases hTrue with ⟨t, rfl⟩
       exact ⟨true :: t, by simp [child, List.append_assoc]⟩
-
-end BinaryWord
 
 /-! ## Modular mirror / Cartan twin split -/
 
@@ -186,24 +179,24 @@ variable [AddCommGroup Right] [Module ℝ Right]
 variable (T : ModularMirror Left Right)
 
 /-- Right/reflected cylinder obtained by applying a real-linear mirror. -/
-def rightCylinder (cylinder : BinaryWord → Left) (w : BinaryWord) : Right :=
+def rightCylinder (cylinder : List Bool → Left) (w : List Bool) : Right :=
   T.mirror (cylinder w)
 
 /-- Self-dual doubled cylinder `(p_w,p_w^R)`. -/
-def selfDualCylinder (cylinder : BinaryWord → Left) (w : BinaryWord) : T.Doubled :=
+def selfDualCylinder (cylinder : List Bool → Left) (w : List Bool) : T.Doubled :=
   T.diagonal (cylinder w)
 
 /-- Anti-self-dual doubled cylinder `(p_w,-p_w^R)`. -/
-def antiSelfDualCylinder (cylinder : BinaryWord → Left) (w : BinaryWord) : T.Doubled :=
+def antiSelfDualCylinder (cylinder : List Bool → Left) (w : List Bool) : T.Doubled :=
   T.antiDiagonal (cylinder w)
 
 @[rep_depth operator, simp]
-theorem selfDualCylinder_selfDual (cylinder : BinaryWord → Left) (w : BinaryWord) :
+theorem selfDualCylinder_selfDual (cylinder : List Bool → Left) (w : List Bool) :
     T.IsSelfDual (selfDualCylinder T cylinder w) := by
   simp [selfDualCylinder]
 
 @[rep_depth operator, simp]
-theorem antiSelfDualCylinder_antiSelfDual (cylinder : BinaryWord → Left) (w : BinaryWord) :
+theorem antiSelfDualCylinder_antiSelfDual (cylinder : List Bool → Left) (w : List Bool) :
     T.IsAntiSelfDual (antiSelfDualCylinder T cylinder w) := by
   simp [antiSelfDualCylinder]
 
@@ -215,14 +208,14 @@ law.
 -/
 @[rep_depth operator]
 theorem rightCylinder_split_of_eq
-    (cylinder : BinaryWord → Left)
-    (w : BinaryWord)
+    (cylinder : List Bool → Left)
+    (w : List Bool)
     (h :
       cylinder w =
-        cylinder (BinaryWord.child w false) + cylinder (BinaryWord.child w true)) :
+        cylinder (child w false) + cylinder (child w true)) :
     rightCylinder T cylinder w =
-      rightCylinder T cylinder (BinaryWord.child w false)
-        + rightCylinder T cylinder (BinaryWord.child w true) := by
+      rightCylinder T cylinder (child w false)
+        + rightCylinder T cylinder (child w true) := by
   unfold rightCylinder
   rw [h]
   exact map_add T.mirror _ _
@@ -235,40 +228,52 @@ section CylinderWeights
 
 /-- Negative logarithmic cylinder potential `-log μ([w])`. -/
 @[rep_depth thermo]
-noncomputable def cylinderPotential (weight : BinaryWord → ℝ) (w : BinaryWord) : ℝ :=
+noncomputable def cylinderPotential (weight : List Bool → ℝ) (w : List Bool) : ℝ :=
   -Real.log (weight w)
 
 /-- Local branch cost `-log( μ([wi]) / μ([w]) )`. -/
 @[rep_depth thermo]
-noncomputable def branchIncrement (weight : BinaryWord → ℝ) (w : BinaryWord) (b : Bool) : ℝ :=
-  -Real.log (weight (BinaryWord.child w b) / weight w)
+noncomputable def branchIncrement (weight : List Bool → ℝ) (w : List Bool) (b : Bool) : ℝ :=
+  -Real.log (weight (child w b) / weight w)
 
 /-- Logarithmic chain rule along one dyadic branch. -/
 @[rep_depth thermo]
 theorem cylinderPotential_child
-    (weight : BinaryWord → ℝ)
+    (weight : List Bool → ℝ)
     (hpos : ∀ w, 0 < weight w)
-    (w : BinaryWord) (b : Bool) :
-    cylinderPotential weight (BinaryWord.child w b)
+    (w : List Bool) (b : Bool) :
+    cylinderPotential weight (child w b)
       = cylinderPotential weight w + branchIncrement weight w b := by
-  have hchild : weight (BinaryWord.child w b) ≠ 0 :=
-    ne_of_gt (hpos (BinaryWord.child w b))
+  have hchild : weight (TypeIIIModularCantorSystem.child w b) ≠ 0 :=
+    ne_of_gt (hpos (TypeIIIModularCantorSystem.child w b))
   have hparent : weight w ≠ 0 :=
     ne_of_gt (hpos w)
   unfold cylinderPotential branchIncrement
   rw [Real.log_div hchild hparent]
   ring
 
+@[rep_depth thermo]
+theorem cylinderPotential_grandchild
+    (weight : List Bool → ℝ)
+    (hpos : ∀ w, 0 < weight w)
+    (w : List Bool) (b c : Bool) :
+    cylinderPotential weight (child (child w b) c) =
+      cylinderPotential weight w +
+        branchIncrement weight w b +
+          branchIncrement weight (child w b) c := by
+  rw [cylinderPotential_child weight hpos (child w b) c]
+  rw [cylinderPotential_child weight hpos w b]
+
 /-- Finite-level determinant-barrier shadow on a supplied finite cylinder set. -/
 @[rep_depth thermo]
-noncomputable def finiteBarrierOn (weight : BinaryWord → ℝ) (s : Finset BinaryWord) : ℝ :=
+noncomputable def finiteBarrierOn (weight : List Bool → ℝ) (s : Finset (List Bool)) : ℝ :=
   -(Finset.sum s (fun w => Real.log (weight w)))
 
 /-- Finite-depth KL/relative-entropy readout on a supplied cylinder set. -/
 @[rep_depth thermo]
 noncomputable def relativeEntropyOn
-    (targetWeight referenceWeight : BinaryWord → ℝ)
-    (s : Finset BinaryWord) : ℝ :=
+    (targetWeight referenceWeight : List Bool → ℝ)
+    (s : Finset (List Bool)) : ℝ :=
   Finset.sum s
     (fun w => targetWeight w * Real.log (targetWeight w / referenceWeight w))
 

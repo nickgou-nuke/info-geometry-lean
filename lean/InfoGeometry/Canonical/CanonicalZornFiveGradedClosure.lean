@@ -327,6 +327,33 @@ theorem zorn_mixed_bracket_mem_grade_zero (X Y : Zorn) :
   exact bracket_grade_closed canonicalFiveGradedLieAlgebra gradeAdd_m1_p1
     (zornNegative_mem X) (zornPositive_mem Y)
 
+/-- The two independent positive grade-one Zorn lanes bracket into the
+positive extremal grade.  This is a direct consequence of the concrete
+matrix five-grading, not an additional realization hypothesis. -/
+theorem zorn_positive_positive_bracket_mem_grade_two (X Y : Zorn) :
+    ⁅zornPositive X, zornPositiveSource Y⁆ ∈ conformalGrade p2 := by
+  exact bracket_grade_closed canonicalFiveGradedLieAlgebra
+    (show gradeAdd p1 p1 = some p2 by rfl)
+    (zornPositive_mem X) (zornPositiveSource_mem Y)
+
+/-- The two independent negative grade-one Zorn lanes bracket into the
+negative extremal grade. -/
+theorem zorn_negative_negative_bracket_mem_grade_minus_two (X Y : Zorn) :
+    ⁅zornNegativeTarget X, zornNegative Y⁆ ∈ conformalGrade m2 := by
+  exact bracket_grade_closed canonicalFiveGradedLieAlgebra
+    (show gradeAdd m1 m1 = some m2 by rfl)
+    (zornNegativeTarget_mem X) (zornNegative_mem Y)
+
+/-- The concrete Zorn lanes expose all three nontrivial grade channels of the
+five-grade closure: positive same-grade, negative same-grade, and mixed. -/
+theorem zorn_grade_channel_membership (X Y : Zorn) :
+    ⁅zornPositive X, zornPositiveSource Y⁆ ∈ conformalGrade p2 ∧
+    ⁅zornNegativeTarget X, zornNegative Y⁆ ∈ conformalGrade m2 ∧
+    ⁅zornNegative X, zornPositive Y⁆ ∈ conformalGrade z0 := by
+  exact ⟨zorn_positive_positive_bracket_mem_grade_two X Y,
+    zorn_negative_negative_bracket_mem_grade_minus_two X Y,
+    zorn_mixed_bracket_mem_grade_zero X Y⟩
+
 /-- The concrete closure simultaneously realizes the five grade window and
 injects both canonical Zorn lanes into the corresponding odd grades. -/
 theorem canonical_zorn_five_grade_closure (X Y : Zorn) :

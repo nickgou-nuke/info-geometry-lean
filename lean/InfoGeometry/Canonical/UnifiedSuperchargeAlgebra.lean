@@ -44,7 +44,7 @@ theorem square_transport_preserved
     {A B : Type*} [Ring A] [Ring B]
     (e : A ≃+* B) (x : A) :
     e (x * x) = e x * e x := by
-  simpa using (map_mul e x x).symm
+  exact map_mul e x x
 
 /--
 Similarity/conjugation transports squares covariantly:
@@ -344,13 +344,13 @@ theorem hasHyperbolic_transport
   constructor
   · intro hx
     calc
-      e x * e x = e (x * x) := by symm; simpa using (map_mul e x x)
+      e x * e x = e (x * x) := (map_mul e x x).symm
       _ = e 1 := by rw [hx]
       _ = (1 : B) := by simp
   · intro hx
     have hmap : e (x * x) = (1 : B) := by
       calc
-        e (x * x) = e x * e x := by simpa using (map_mul e x x)
+        e (x * x) = e x * e x := map_mul e x x
         _ = 1 := hx
     exact e.injective (by simpa using hmap)
 
@@ -365,13 +365,13 @@ theorem hasParabolic_transport
   constructor
   · intro hx
     calc
-      e x * e x = e (x * x) := by symm; simpa using (map_mul e x x)
+      e x * e x = e (x * x) := (map_mul e x x).symm
       _ = e 0 := by rw [hx]
       _ = (0 : B) := by simp
   · intro hx
     have hmap : e (x * x) = (0 : B) := by
       calc
-        e (x * x) = e x * e x := by simpa using (map_mul e x x)
+        e (x * x) = e x * e x := map_mul e x x
         _ = 0 := hx
     exact e.injective (by simpa using hmap)
 
@@ -386,13 +386,13 @@ theorem hasElliptic_transport
   constructor
   · intro hx
     calc
-      e x * e x = e (x * x) := by symm; simpa using (map_mul e x x)
+      e x * e x = e (x * x) := (map_mul e x x).symm
       _ = e (-(1 : A)) := by rw [hx]
       _ = (-(1 : B)) := by simp
   · intro hx
     have hmap : e (x * x) = (-(1 : B)) := by
       calc
-        e (x * x) = e x * e x := by simpa using (map_mul e x x)
+        e (x * x) = e x * e x := map_mul e x x
         _ = (-(1 : B)) := hx
     exact e.injective (by simpa using hmap)
 
@@ -731,7 +731,7 @@ theorem wick_twist_hyperbolic_to_elliptic
     (ω * B) * (ω * B) = -(1 : A) := by
   calc
     (ω * B) * (ω * B) = -(B * B) := wick_twist_square_flip ω B hω hcomm
-    _ = -(1 : A) := by simpa [hB]
+    _ = -(1 : A) := by rw [hB]
 
 /--
 Wick specialization in the reverse direction:
@@ -748,7 +748,7 @@ theorem wick_twist_elliptic_to_hyperbolic
     (ω * B) * (ω * B) = (1 : A) := by
   calc
     (ω * B) * (ω * B) = -(B * B) := wick_twist_square_flip ω B hω hcomm
-    _ = (1 : A) := by simpa [hB]
+    _ = (1 : A) := by rw [hB]; simp
 
 /--
 Transport/conjugation corollary: if `x² = κ` then transported element keeps
@@ -761,8 +761,8 @@ theorem square_class_transport
     (hx : x * x = κ) :
     e x * e x = e κ := by
   calc
-    e x * e x = e (x * x) := by simpa using (map_mul e x x)
-    _ = e κ := by simpa [hx]
+    e x * e x = e (x * x) := (map_mul e x x).symm
+    _ = e κ := by rw [hx]
 
 /--
 Transport cannot flip `+1` to `-1` when the codomain is not characteristic `2`.
@@ -1600,7 +1600,7 @@ def nambuTau3 {A : Type*} [AddCommGroup A] : NambuSpinor A →+ NambuSpinor A wh
   toFun v := (v.1, -v.2)
   map_zero' := by simp
   map_add' x y := by
-    ext <;> simp [add_comm, add_left_comm, add_assoc]
+    ext <;> simp [add_comm]
 
 /--
 Particle-hole swap on the doubled Nambu-Gorkov carrier.
@@ -1610,7 +1610,7 @@ def nambuSwap {A : Type*} [AddCommGroup A] : NambuSpinor A →+ NambuSpinor A wh
   toFun v := (v.2, v.1)
   map_zero' := by simp
   map_add' x y := by
-    ext <;> simp [add_comm, add_left_comm, add_assoc]
+    ext <;> simp
 
 /--
 `τ₃` is involutive.
@@ -1639,7 +1639,7 @@ def nambuBlockDiag {A : Type*} [AddCommGroup A]
   toFun v := (a v.1, d v.2)
   map_zero' := by simp
   map_add' x y := by
-    ext <;> simp [add_comm, add_left_comm, add_assoc]
+    ext <;> simp
 
 /--
 Off-block-diagonal operator on doubled Nambu-Gorkov carrier.
@@ -1650,7 +1650,7 @@ def nambuBlockOffDiag {A : Type*} [AddCommGroup A]
   toFun v := (b v.2, c v.1)
   map_zero' := by simp
   map_add' x y := by
-    ext <;> simp [add_comm, add_left_comm, add_assoc]
+    ext <;> simp
 
 /--
 Full `2×2` Nambu-Gorkov block operator in component form.
@@ -1661,7 +1661,7 @@ def nambuBlockFull {A : Type*} [AddCommGroup A]
   toFun v := (a v.1 + b v.2, c v.1 + d v.2)
   map_zero' := by simp
   map_add' x y := by
-    ext <;> simp [add_comm, add_left_comm, add_assoc]
+    ext <;> simp [add_comm, add_left_comm]
 
 /--
 Any finite Nambu block operator decomposes into diagonal + off-diagonal lanes.
@@ -1671,7 +1671,7 @@ theorem nambuBlock_decomposition
     {A : Type*} [AddCommGroup A]
     (a b c d : A →+ A) (v : NambuSpinor A) :
     nambuBlockFull a b c d v = nambuBlockDiag a d v + nambuBlockOffDiag b c v := by
-  ext <;> simp [nambuBlockFull, nambuBlockDiag, nambuBlockOffDiag, add_comm, add_left_comm, add_assoc]
+  ext <;> simp [nambuBlockFull, nambuBlockDiag, nambuBlockOffDiag, add_comm]
 
 /--
 Pure diagonal specialization of the full Nambu block.
@@ -1707,7 +1707,7 @@ theorem nambuBlockFull_sq_expansion
       =
     (a (a v.1) + a (b v.2) + (b (c v.1) + b (d v.2)),
       c (a v.1) + c (b v.2) + (d (c v.1) + d (d v.2))) := by
-  ext <;> simp [nambuBlockFull, add_assoc, add_comm, add_left_comm]
+  ext <;> simp [nambuBlockFull, add_comm, add_left_comm]
 
 /--
 If the pairing channels are pairwise-zero (`b ∘ c = 0`, `c ∘ b = 0`), the full
@@ -1733,7 +1733,7 @@ theorem nambuBlockFull_sq_of_offdiag_pairwise_zero
     _ =
       (a (a v.1) + a (b v.2) + b (d v.2),
         c (a v.1) + d (c v.1) + d (d v.2)) := by
-          simp [hbc, hcb, add_assoc, add_comm, add_left_comm]
+          simp [hbc, hcb, add_comm, add_left_comm]
 
 /--
 If all mixed couplings and off-diagonal round-trips vanish, the full Nambu
@@ -1759,7 +1759,7 @@ theorem nambuBlockFull_sq_pure_diag_of_cross_zero
         c (a v.1) + d (c v.1) + d (d v.2)) := by
           exact nambuBlockFull_sq_of_offdiag_pairwise_zero a b c d hbc hcb v
     _ = (a (a v.1), d (d v.2)) := by
-          simp [hab, hbd, hca, hdc, add_assoc]
+          simp [hab, hbd, hca, hdc]
 
 /--
 Operator-form collapse of the full Nambu square to a diagonal square under
@@ -1831,7 +1831,7 @@ theorem nambuTau3_offDiag_anticomm
     (b c : A →+ A) (v : NambuSpinor A) :
     nambuTau3 (nambuBlockOffDiag b c v) =
       - (nambuBlockOffDiag b c (nambuTau3 v)) := by
-  ext <;> simp [nambuTau3, nambuBlockOffDiag, add_comm, add_left_comm, add_assoc]
+  ext <;> simp [nambuTau3, nambuBlockOffDiag]
 
 /--
 `τ₃` commutes with diagonal Nambu blocks:
@@ -1856,7 +1856,7 @@ theorem nambuTau3_full_split
     nambuTau3 (nambuBlockFull a b c d v) =
       nambuBlockDiag a d (nambuTau3 v) - nambuBlockOffDiag b c (nambuTau3 v) := by
   ext <;> simp [nambuTau3, nambuBlockFull, nambuBlockDiag, nambuBlockOffDiag,
-    sub_eq_add_neg, add_assoc, add_comm, add_left_comm]
+    sub_eq_add_neg, add_comm]
 
 /--
 Square of an off-diagonal Nambu block is diagonal in the doubled carrier.
@@ -1962,7 +1962,7 @@ theorem endo_add_sq_pointwise
     {A : Type*} [AddCommGroup A]
     (b c : A →+ A) (x : A) :
     (b + c) ((b + c) x) = b (b x) + (b (c x) + (c (b x) + c (c x))) := by
-  simp [add_assoc, add_comm, add_left_comm]
+  simp [add_comm, add_left_comm]
 
 /--
 If two endomorphisms are square-zero and satisfy CAR anticommutation
@@ -2175,7 +2175,7 @@ theorem nambu_offdiag_car_sum_sq_id
     ∀ v : NambuSpinor A,
       ((b + c) ((b + c) v.1), (b + c) ((b + c) v.2)) = v := by
   intro v
-  ext <;> simp [endo_car_sum_sq_id, hbb, hcc, hcar]
+  ext <;> simp [hbb, hcc, hcar]
 
 /--
 Concrete Cantor/prime CAR bridge:
@@ -2499,7 +2499,7 @@ each added local `Cl(1,1) ≃ M₂(ℝ)` cell doubles the linear size.
 @[rep_depth thermo]
 theorem bott_tensor_size_step (N : ℕ) :
     2 ^ (N + 1) = 2 ^ N * 2 := by
-  simpa [pow_succ, Nat.mul_comm] using (pow_succ 2 N)
+  exact pow_succ 2 N
 
 /--
 `N` local `Cl(1,1)` cells correspond to matrix size `2^N`.
@@ -2594,7 +2594,7 @@ theorem finite_central_lane_cutoff_succ
             _ =
                 Finset.sum (Finset.Icc (i + 1) N) (fun j => z i j) + z i (N + 1) := by
                   rw [Finset.sum_insert hnotMem]
-                  simp [add_comm, add_left_comm, add_assoc]
+                  simp [add_comm]
     _ =
         (Finset.sum (Finset.range (N + 1))
           (fun i => Finset.sum (Finset.Icc (i + 1) N) (fun j => z i j)))
@@ -3623,7 +3623,7 @@ theorem matsubaraFrequency_neg
   calc
     (2 * Real.pi * ((-n : ℤ) : ℝ)) / β
         = (-(2 * Real.pi * ((n : ℤ) : ℝ))) / β := by
-            simp [mul_assoc, mul_comm, mul_left_comm]
+            simp [mul_comm, mul_left_comm]
     _ = -((2 * Real.pi * ((n : ℤ) : ℝ)) / β) := by ring
     _ = -matsubaraFrequency β n := by rfl
 

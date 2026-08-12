@@ -61,6 +61,9 @@ theorem A47_Tonev_asymmetry_match :
   unfold O55CasimirIsospinHamiltonian.activeGenerators O55CasimirIsospinHamiltonian.totalGenerators
   unfold O55GradedGeneratorBasis.activeGradedGeneratorCount
   unfold SO55NullSU5KleinSpectral.so55NullBlock_dim
+  unfold SO55NullSU5KleinSpectral.diagonalA_dim SO55NullSU5KleinSpectral.Bskew_dim
+    SO55NullSU5KleinSpectral.Cskew_dim SO55NullSU5KleinSpectral.matrixDim
+    SO55NullSU5KleinSpectral.skewDim SO55NullSU5KleinSpectral.n5
   unfold A47MirrorNuclei.BE2_ratio_TKK_prediction
   norm_num
 
@@ -80,6 +83,9 @@ theorem A43_prediction_value :
   unfold O55CasimirIsospinHamiltonian.activeGenerators O55CasimirIsospinHamiltonian.totalGenerators
   unfold O55GradedGeneratorBasis.activeGradedGeneratorCount
   unfold SO55NullSU5KleinSpectral.so55NullBlock_dim
+  unfold SO55NullSU5KleinSpectral.diagonalA_dim SO55NullSU5KleinSpectral.Bskew_dim
+    SO55NullSU5KleinSpectral.Cskew_dim SO55NullSU5KleinSpectral.matrixDim
+    SO55NullSU5KleinSpectral.skewDim SO55NullSU5KleinSpectral.n5
   norm_num
 
 /--
@@ -94,6 +100,9 @@ theorem asymmetry_increases_with_valence :
   unfold O55CasimirIsospinHamiltonian.activeGenerators O55CasimirIsospinHamiltonian.totalGenerators
   unfold O55GradedGeneratorBasis.activeGradedGeneratorCount
   unfold SO55NullSU5KleinSpectral.so55NullBlock_dim
+  unfold SO55NullSU5KleinSpectral.diagonalA_dim SO55NullSU5KleinSpectral.Bskew_dim
+    SO55NullSU5KleinSpectral.Cskew_dim SO55NullSU5KleinSpectral.matrixDim
+    SO55NullSU5KleinSpectral.skewDim SO55NullSU5KleinSpectral.n5
   norm_num
 
 end F72ShellSystematicsBE2

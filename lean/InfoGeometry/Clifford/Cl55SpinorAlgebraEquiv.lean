@@ -61,6 +61,19 @@ theorem splitClNNAlg_finrank_one :
   rw [hq]
   exact InfoGeometry.Clifford.Cl11Matrix.finrank_cl11
 
+theorem splitClNNAlg_finrank_four :
+    Module.finrank ℝ (SplitClNNAlg 4) = 256 := by
+  calc
+    Module.finrank ℝ (SplitClNNAlg 4) =
+        4 * Module.finrank ℝ (SplitClNNAlg 3) := by
+      simpa using splitClNNAlg_finrank_succ 3
+    _ = 4 * (4 * Module.finrank ℝ (SplitClNNAlg 2)) := by
+      rw [splitClNNAlg_finrank_succ 2]
+    _ = 4 * (4 * (4 * Module.finrank ℝ (SplitClNNAlg 1))) := by
+      rw [splitClNNAlg_finrank_succ 1]
+    _ = 256 := by
+      rw [splitClNNAlg_finrank_one]
+
 theorem splitClNNAlg_finrank_five :
     Module.finrank ℝ (SplitClNNAlg 5) = 1024 := by
   calc

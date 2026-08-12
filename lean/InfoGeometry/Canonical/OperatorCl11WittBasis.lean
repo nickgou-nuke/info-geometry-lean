@@ -57,6 +57,21 @@ lemma phase_sq : phase Γ J * phase Γ J = -1 := by
     _ = -((J * J) * (Γ * Γ)) := by congr 1; noncomm_ring
     _ = -1 := by rw [hCl.exchange_sq, hCl.gamma_sq, one_mul]
 
+/-! The reverse product is the hyperbolic (product-structure) direction. -/
+omit [Algebra ℚ A] in
+lemma gamma_phase_sq :
+    (Γ * phase Γ J) * (Γ * phase Γ J) = 1 := by
+  unfold phase
+  have hGJ : Γ * J = -(J * Γ) := gamma_mul_exchange (Γ := Γ) (J := J)
+  calc
+    (Γ * (J * Γ)) * (Γ * (J * Γ)) =
+        Γ * J * (Γ * Γ) * J * Γ := by simp only [mul_assoc]
+    _ = Γ * J * 1 * J * Γ := by rw [hCl.gamma_sq]
+    _ = Γ * J * J * Γ := by simp
+    _ = Γ * (J * J) * Γ := by simp only [mul_assoc]
+    _ = Γ * 1 * Γ := by rw [hCl.exchange_sq]
+    _ = 1 := by simp [hCl.gamma_sq]
+
 omit [Algebra ℚ A] in
 lemma gamma_phase_anticomm : Γ * phase Γ J = -(phase Γ J * Γ) := by
   unfold phase

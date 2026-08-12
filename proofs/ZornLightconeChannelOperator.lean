@@ -1,5 +1,6 @@
 import Mathlib.LinearAlgebra.Matrix.Rank
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
+import Mathlib.LinearAlgebra.Charpoly.ToMatrix
 import Mathlib.LinearAlgebra.Basis.Prod
 import Mathlib.LinearAlgebra.StdBasis
 import Mathlib.LinearAlgebra.Projection
@@ -20,7 +21,7 @@ noncomputable section
 
 namespace ZornLightconeChannelOperator
 
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 open CanonicalZornFiveGradedClosure
 open CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation
@@ -157,31 +158,35 @@ def diracCoordinateBasis : Basis (Fin 8 ⊕ Fin 8) ℂ DiracSpinor16 :=
 
 @[simp] theorem spinorPlusCoordinateBasis_repr
     (S : SpinorPlus8) (i : Fin 8) :
-    spinorPlusCoordinateBasis.repr S i = zornCoordinates S.val i := by
+    spinorPlusCoordinateBasis.repr S i =
+      CanonicalZornCompositionTriality.zornCoordinates S.val i := by
   rfl
 
 @[simp] theorem spinorMinusCoordinateBasis_repr
     (C : SpinorMinus8) (i : Fin 8) :
-    spinorMinusCoordinateBasis.repr C i = zornCoordinates C.val i := by
+    spinorMinusCoordinateBasis.repr C i =
+      CanonicalZornCompositionTriality.zornCoordinates C.val i := by
   rfl
 
 @[simp] theorem spinorPlusCoordinateBasis_val (i : Fin 8) :
     (spinorPlusCoordinateBasis i).val =
       coordinatesToZorn (Pi.single i 1) := by
-  apply zornCoordinates_injective
+  apply CanonicalZornCompositionTriality.zornCoordinates_injective
   change copyLinearEquivCoordinates TrialitySector.spinorPlus
       (spinorPlusCoordinateBasis i) =
-    zornCoordinates (coordinatesToZorn (Pi.single i 1))
+      CanonicalZornCompositionTriality.zornCoordinates
+        (coordinatesToZorn (Pi.single i 1))
   rw [zornCoordinates_coordinatesToZorn]
   simp [spinorPlusCoordinateBasis, Basis.coe_ofEquivFun]
 
 @[simp] theorem spinorMinusCoordinateBasis_val (i : Fin 8) :
     (spinorMinusCoordinateBasis i).val =
       coordinatesToZorn (Pi.single i 1) := by
-  apply zornCoordinates_injective
+  apply CanonicalZornCompositionTriality.zornCoordinates_injective
   change copyLinearEquivCoordinates TrialitySector.spinorMinus
       (spinorMinusCoordinateBasis i) =
-    zornCoordinates (coordinatesToZorn (Pi.single i 1))
+      CanonicalZornCompositionTriality.zornCoordinates
+        (coordinatesToZorn (Pi.single i 1))
   rw [zornCoordinates_coordinatesToZorn]
   simp [spinorMinusCoordinateBasis, Basis.coe_ofEquivFun]
 

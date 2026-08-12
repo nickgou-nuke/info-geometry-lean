@@ -1,4 +1,5 @@
 import proofs.ZornThreeChannelCAR
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-!
 # Multiplication of the color-resolved CAR kernel
@@ -12,15 +13,19 @@ noncomputable section
 
 namespace ZornChannelKernelMultiplication
 
+open InfoGeometry.Physics.SplitOctonionBraidSU3
+open InfoGeometry.Physics
 open SplitOctonionBraidSU3
 open CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation
 open ZornChiralLightcone ZornThreeChannelCAR
 open ZornLightconeCAR ZornLightconeChannelOperator
 
+abbrev Zorn := _root_.InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn
+
 private theorem copy_val_zero (q : TrialitySector) :
     (0 : ZornCopy q).val = zornZero := by
-  apply zorn_ext
+  apply _root_.InfoGeometry.Physics.SplitOctonionBraidSU3.zorn_ext
   · rfl
   · funext i
     fin_cases i <;> rfl
@@ -54,7 +59,7 @@ def mixedMinusProductZorn (r s t u : Fin 3) (X : Zorn) : Zorn where
 theorem mixedPlusZorn_comp (r s t u : Fin 3) (X : Zorn) :
     mixedPlusZorn r s (mixedPlusZorn t u X) =
       mixedPlusProductZorn r s t u X := by
-  apply zorn_ext
+  apply _root_.InfoGeometry.Physics.SplitOctonionBraidSU3.zorn_ext
   · simp [mixedPlusZorn, mixedPlusProductZorn, colorDelta]
     split_ifs <;> ring
   · funext i
@@ -69,7 +74,7 @@ theorem mixedPlusZorn_comp (r s t u : Fin 3) (X : Zorn) :
 theorem mixedMinusZorn_comp (r s t u : Fin 3) (X : Zorn) :
     mixedMinusZorn r s (mixedMinusZorn t u X) =
       mixedMinusProductZorn r s t u X := by
-  apply zorn_ext
+  apply InfoGeometry.Physics.SplitOctonionBraidSU3.zorn_ext
   · rfl
   · funext i
     simp [mixedMinusZorn, mixedMinusProductZorn, colorDelta]
@@ -102,7 +107,7 @@ private theorem mixedPlusProductZorn_offdiag_sq
   fin_cases r <;> fin_cases s
   all_goals try contradiction
   all_goals
-    apply zorn_ext <;>
+    apply _root_.InfoGeometry.Physics.SplitOctonionBraidSU3.zorn_ext <;>
       simp [mixedPlusProductZorn, colorDelta, zornZero]
 
 private theorem mixedMinusProductZorn_offdiag_sq
@@ -111,7 +116,7 @@ private theorem mixedMinusProductZorn_offdiag_sq
   fin_cases r <;> fin_cases s
   all_goals try contradiction
   all_goals
-    apply zorn_ext <;>
+    apply _root_.InfoGeometry.Physics.SplitOctonionBraidSU3.zorn_ext <;>
       simp [mixedMinusProductZorn, colorDelta, zornZero]
 
 /-- All six off-diagonal mixed kernel entries are square-zero. -/

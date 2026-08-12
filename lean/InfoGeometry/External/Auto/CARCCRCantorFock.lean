@@ -32,17 +32,10 @@ open Matrix
 abbrev CARWord (n : ℕ) : Type :=
   Fin n → Bool
 
-/-- Infinite CAR diagonal readout: Cantor boundary. -/
-abbrev CantorBoundary : Type :=
-  ℕ → Bool
-
 /-- Finite CCR/Boson Fock words: one natural occupation per mode. -/
 abbrev CCRWord (n : ℕ) : Type :=
   Fin n → ℕ
 
-/-- Infinite CCR occupation readout. -/
-abbrev BaireBoundary : Type :=
-  ℕ → ℕ
 
 /-- Finite CCR cutoff words with occupations `0,...,K`. -/
 abbrev CCRCutoffWord (n K : ℕ) : Type :=

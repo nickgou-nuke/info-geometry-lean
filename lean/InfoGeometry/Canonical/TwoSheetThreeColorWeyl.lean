@@ -30,36 +30,44 @@ def sheetParity : Mat2C := uPlus - uMinus
 def sheetExchange : Mat2C := !![(0 : ℂ), 1; 1, 0]
 
 @[simp] theorem uPlus_sq : uPlus * uPlus = uPlus := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [uPlus, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp] theorem uMinus_sq : uMinus * uMinus = uMinus := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [uMinus, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp] theorem uPlus_add_uMinus : uPlus + uMinus = 1 := by
-  ext i j <;> fin_cases i <;> fin_cases j <;> simp [uPlus, uMinus]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [uPlus, uMinus]
 
 @[simp] theorem uPlus_mul_uMinus : uPlus * uMinus = 0 := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [uPlus, uMinus, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp] theorem sigmaPlus_sq : sigmaPlus * sigmaPlus = 0 := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [sigmaPlus, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp] theorem sigmaMinus_sq : sigmaMinus * sigmaMinus = 0 := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [sigmaMinus, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp] theorem sigmaPlus_mul_sigmaMinus :
     sigmaPlus * sigmaMinus = uPlus := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [sigmaPlus, sigmaMinus, uPlus, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp] theorem sigmaMinus_mul_sigmaPlus :
     sigmaMinus * sigmaPlus = uMinus := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [sigmaPlus, sigmaMinus, uMinus, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp] theorem sigmaPlus_anticomm_sigmaMinus :
@@ -67,21 +75,25 @@ def sheetExchange : Mat2C := !![(0 : ℂ), 1; 1, 0]
   rw [sigmaPlus_mul_sigmaMinus, sigmaMinus_mul_sigmaPlus, uPlus_add_uMinus]
 
 @[simp] theorem sheetParity_sq : sheetParity * sheetParity = 1 := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [sheetParity, uPlus, uMinus, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp] theorem sheetExchange_sq : sheetExchange * sheetExchange = 1 := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [sheetExchange, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem sheetExchange_uPlus_sheetExchange :
     sheetExchange * uPlus * sheetExchange = uMinus := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [sheetExchange, uPlus, uMinus, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem sheetExchange_parity_sheetExchange :
     sheetExchange * sheetParity * sheetExchange = -sheetParity := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [sheetExchange, sheetParity, uPlus, uMinus, Matrix.mul_apply,
       Fin.sum_univ_two]
 
@@ -89,7 +101,8 @@ def colorShift : Mat3C := !![(0 : ℂ), 0, 1; 1, 0, 0; 0, 1, 0]
 def colorClock (ω : ℂ) : Mat3C := !![(1 : ℂ), 0, 0; 0, ω, 0; 0, 0, ω ^ 2]
 
 theorem colorShift_cubed : colorShift ^ 3 = 1 := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [colorShift, pow_succ, Matrix.mul_apply, Fin.sum_univ_three]
 
 theorem colorClock_cubed (ω : ℂ) (hω : ω ^ 3 = 1) :
@@ -102,10 +115,10 @@ theorem colorClock_cubed (ω : ℂ) (hω : ω ^ 3 = 1) :
     calc
       ω ^ 6 = (ω ^ 3) ^ 2 := by ring
       _ = 1 := by rw [hω]; norm_num
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [colorClock, pow_succ, Matrix.mul_apply, Fin.sum_univ_three,
-      hω, hωmul, hωsq, hω6] <;> ring_nf <;>
-      first | exact hω | exact hω.symm | exact hω6 | ring
+      hωmul, hωsq] ; (ring_nf; exact hω6)
 
 theorem color_weyl_relation (ω : ℂ) (hω : ω ^ 3 = 1) :
     colorClock ω * colorShift = ω • (colorShift * colorClock ω) := by
@@ -113,10 +126,10 @@ theorem color_weyl_relation (ω : ℂ) (hω : ω ^ 3 = 1) :
     simpa [pow_three, mul_assoc] using hω
   have hωsq : ω ^ 2 = ω * ω := by
     simp [pow_two]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [colorClock, colorShift, Matrix.mul_apply, Fin.sum_univ_three,
-      hω, hωmul, hωsq] <;> ring_nf <;>
-      first | exact hω | exact hω.symm | ring
+      hωsq] ; (ring_nf; exact hω.symm)
 
 theorem kronecker_mul
     (A C : Mat2C) (B D : Mat3C) :
@@ -137,11 +150,11 @@ theorem kronecker_pow_three (A : Mat2C) (B : Mat3C) :
   calc
     (Matrix.kronecker A B) ^ 3 =
         (Matrix.kronecker A B) ^ 2 * Matrix.kronecker A B := by
-          simp [pow_succ, pow_two, mul_assoc]
+          simp [pow_succ, mul_assoc]
     _ = Matrix.kronecker (A ^ 2 * A) (B ^ 2 * B) := by
           rw [kronecker_pow_two, kronecker_mul]
     _ = Matrix.kronecker (A ^ 3) (B ^ 3) := by
-          simp [pow_succ, pow_two, mul_assoc]
+          simp [pow_succ, mul_assoc]
 
 @[simp] theorem kronecker_one_one :
     Matrix.kronecker (1 : Mat2C) (1 : Mat3C) = (1 : Mat23C) := by
@@ -158,7 +171,8 @@ def twistedShift : Mat23C :=
 
 theorem sheetExchange_uMinus_sheetExchange :
     sheetExchange * uMinus * sheetExchange = uPlus := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [sheetExchange, uMinus, uPlus, Matrix.mul_apply,
       Fin.sum_univ_two]
 
@@ -198,7 +212,7 @@ theorem sixParity_squared :
     _ = 1 := by rw [sheetParity_sq]; simp
 
 theorem sheetParity_cube : sheetParity ^ 3 = sheetParity := by
-  simp [pow_succ, pow_two, sheetParity_sq]
+  simp [pow_succ, sheetParity_sq]
 
 theorem sixTriality_cube : sixTriality ^ 3 = sixParity := by
   calc
@@ -207,10 +221,10 @@ theorem sixTriality_cube : sixTriality ^ 3 = sixParity := by
       kronecker_pow_three sheetParity colorShift
     _ = sixParity := by
       rw [sheetParity_cube, colorShift_cubed]
-      simp [sixTriality, sixParity]
+      simp [sixParity]
 
 theorem sixTriality_sixth : sixTriality ^ 6 = 1 := by
-  rw [show (6 : ℕ) = 3 * 2 by norm_num, pow_mul,
+    rw [show (6 : ℕ) = 3 * 2 by norm_num, pow_mul,
     sixTriality_cube, sixParity_squared]
 
 theorem sixSheetExchange_involutive :
@@ -233,8 +247,9 @@ theorem sixSheetExchange_flips_parity :
             rw [kronecker_mul, kronecker_mul]
     _ = -sixParity := by
       rw [sheetExchange_parity_sheetExchange]
-      ext i j <;> fin_cases i <;> fin_cases j <;>
-        simp [sixParity, Matrix.kroneckerMap_apply, Matrix.smul_apply]
+      ext i j
+      fin_cases i <;> fin_cases j <;>
+        simp [sixParity, Matrix.kroneckerMap_apply]
 
 def projectiveTriality : Mat3C := -colorShift
 

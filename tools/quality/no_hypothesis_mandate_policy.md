@@ -8,15 +8,20 @@ This repository policy is mandatory:
    - `postulate`
    - `sorry` is allowed only as explicit open-debt marker.
 
-2. No witness/certificate/assumption declaration naming for promoted surfaces:
-   - `*_of_witness*`
-   - `*witness*`
-   - `*certificate*`
-   - `*certified*`
+2. No placeholder-assumption declaration naming for promoted surfaces:
    - `*hypothesis*`
    - `*assumption*`
+   - `*axiom*`
+   - `*postulate*`
+   Concrete `witness` and `certificate` names are allowed when they denote
+   kernel-proved constructions; proof-only and semantic-content gates audit
+   whether those constructions are substantive.
 
-3. Every closure claim must be either:
+3. Documentation comments are not source debt.  The checker strips Lean line
+   and block comments before looking for proof-hole tokens, while the kernel,
+   axiom audit, and proof-only gates remain authoritative for actual code.
+
+4. Every closure claim must be either:
    - fully kernel-proved in Lean, or
    - explicitly tracked as open closure debt.
 

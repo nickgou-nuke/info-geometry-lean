@@ -1,4 +1,5 @@
 import proofs.CanonicalZornIntegralSpinTrialityClosure
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-!
 # The integral-lattice-preserving real spin subgroup
@@ -175,7 +176,7 @@ theorem integralSpin44_arithmetic_triality_projective_closure
     integralZornNorm (integralSpinAction g X) = integralZornNorm X ∧
     ii44Quadratic (integralZornToII44 (integralSpinAction g X)) =
       integralZornNorm X ∧
-    SplitOctonionBraidSU3.zornNorm
+    _root_.InfoGeometry.Physics.SplitOctonionBraidSU3.zornNorm
         (CanonicalZornProjectiveTKKBridge.coreToCanonical
           (integralToCoreZorn (integralSpinAction g X))) =
       (integralZornNorm X : ℂ) ∧

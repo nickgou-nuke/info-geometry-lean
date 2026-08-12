@@ -1,4 +1,0 @@
-import proofs.SplitOctonionDerivationG2Bridge
-
-#check SplitOctonionSL2MatrixBridge.E
-#check SplitOctonionDerivation.innerDeriv

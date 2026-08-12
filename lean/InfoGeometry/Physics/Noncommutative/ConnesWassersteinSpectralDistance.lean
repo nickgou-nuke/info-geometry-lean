@@ -32,28 +32,24 @@ def representedDifferential
 /-- The property differential of a finite Cuntz cylinder observable. -/
 def cylinderDifferential
     (T : CuntzCantorSpectralTriple Op H)
-    (n : Nat) (word : BinaryCylinder n) : H →L[ℂ] H :=
-  T.boundedCommutatorWitness n word
-
-@[simp] theorem cylinderDifferential_eq_representedDifferential
-    (T : CuntzCantorSpectralTriple Op H)
-    (n : Nat) (word : BinaryCylinder n) :
-    cylinderDifferential T n word =
-      representedDifferential T (T.cylinderRepresentation n word) :=
-  T.boundedCommutatorCertified n word
+    (n : Nat)
+    (word : Fin n → InfoGeometry.OperatorAlgebra.ErlangenNet.BinarySector) : H →L[ℂ] H :=
+  representedDifferential T (T.cylinderRepresentation n word)
 
 /-- A cylinder observable is Dirac-Lipschitz when its operator differential has
 operator norm at most one. -/
 def isCylinderDiracLipschitz
     (T : CuntzCantorSpectralTriple Op H)
-    (n : Nat) (word : BinaryCylinder n) : Prop :=
+    (n : Nat)
+    (word : Fin n → InfoGeometry.OperatorAlgebra.ErlangenNet.BinarySector) : Prop :=
   ‖cylinderDifferential T n word‖ ≤ 1
 
 /-- A finite-cylinder version of the Connes state-distance bound. -/
 def cylinderStateDistanceBound
     (T : CuntzCantorSpectralTriple Op H)
     (μ ν : Op → ℝ) (d : ℝ) : Prop :=
-  (∀ (n : Nat) (word : BinaryCylinder n),
+  (∀ (n : Nat)
+    (word : Fin n → InfoGeometry.OperatorAlgebra.ErlangenNet.BinarySector),
     isCylinderDiracLipschitz T n word →
       |μ (T.cylinderRepresentation n word) -
         ν (T.cylinderRepresentation n word)| ≤ d) ∧
@@ -87,14 +83,6 @@ theorem cylinderStateDistanceBound_self
   refine ⟨?_, le_rfl⟩
   intro n word hLip
   simp
-
-theorem representedDifferential_leibniz_on_cylinder
-    (T : CuntzCantorSpectralTriple Op H)
-    (n : Nat) (word : BinaryCylinder n) :
-    cylinderDifferential T n word =
-      T.dirac.comp (T.representedAction (T.cylinderRepresentation n word)) -
-        (T.representedAction (T.cylinderRepresentation n word)).comp T.dirac := by
-  exact T.boundedCommutatorCertified n word
 
 theorem connes_wasserstein_operator_synthesis
     (T : CuntzCantorSpectralTriple Op H)

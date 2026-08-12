@@ -14,19 +14,17 @@ the gauge KMS relation.  Positivity, C*-completion, and analytic-strip KMS
 continuation remain separate analytic layers.
 -/
 
-abbrev CuntzThree := CuntzAlg 3
-
 def uniformPrimes3 : Fin 3 → ℕ := fun _ => 3
 
 /-- Unital generator-level KMS data for the standard gauge normalization. -/
-def GeneratorKMSAt (φ : CuntzThree →ₗ[ℂ] ℂ) (β : ℝ) : Prop :=
+def GeneratorKMSAt (φ : CuntzAlg 3 →ₗ[ℂ] ℂ) (β : ℝ) : Prop :=
   φ 1 = 1 ∧
     ∀ i j : Fin 3,
       φ (cuntzS 3 i * cuntzSdag 3 j) =
         if i = j then (Real.exp (-β) : ℂ) else 0
 
 theorem generatorKMS_partitionEquation
-    {φ : CuntzThree →ₗ[ℂ] ℂ} {β : ℝ}
+    {φ : CuntzAlg 3 →ₗ[ℂ] ℂ} {β : ℝ}
     (hKMS : GeneratorKMSAt φ β) :
     (3 : ℂ) * Real.exp (-β) = 1 := by
   have hsum : φ 1 = ∑ i : Fin 3, φ (cuntzS 3 i * cuntzSdag 3 i) := by
@@ -43,7 +41,7 @@ theorem generatorKMS_partitionEquation
     _ = 1 := hKMS.1
 
 theorem generatorKMS_beta_eq_log_three
-    {φ : CuntzThree →ₗ[ℂ] ℂ} {β : ℝ}
+    {φ : CuntzAlg 3 →ₗ[ℂ] ℂ} {β : ℝ}
     (hKMS : GeneratorKMSAt φ β) :
     β = Real.log 3 := by
   have hEq := generatorKMS_partitionEquation hKMS
@@ -60,7 +58,7 @@ theorem generatorKMS_beta_eq_log_three
   linarith
 
 theorem generatorKMS_twoPoint_at_log_three
-    (φ : CuntzThree →ₗ[ℂ] ℂ)
+    (φ : CuntzAlg 3 →ₗ[ℂ] ℂ)
     (hKMS : GeneratorKMSAt φ (Real.log 3)) (i j : Fin 3) :
     φ (cuntzS 3 i * cuntzSdag 3 j) =
       if i = j then (1 / 3 : ℂ) else 0 := by
@@ -71,7 +69,7 @@ theorem generatorKMS_twoPoint_at_log_three
   · simpa [hij] using hKMS.2 i j
 
 theorem cuntzGeneratorKMS_log_three_synthesis
-    {φ : CuntzThree →ₗ[ℂ] ℂ} {β : ℝ}
+    {φ : CuntzAlg 3 →ₗ[ℂ] ℂ} {β : ℝ}
     (hKMS : GeneratorKMSAt φ β) :
     (β = Real.log 3) ∧
       (∀ i j : Fin 3,

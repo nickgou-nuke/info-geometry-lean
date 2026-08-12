@@ -1,4 +1,5 @@
 import proofs.ZornChannelKernelMultiplication
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-!
 # Chirality-twisted color Lie action
@@ -12,18 +13,21 @@ noncomputable section
 
 namespace ZornColorLieAction
 
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 open CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation
 open ZornCliffordParityAPI ZornChiralLightcone
 open ZornThreeChannelCAR ZornChannelKernelMultiplication
 
+abbrev Zorn := _root_.InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn
+
 /-- Sign of chirality: `(-S,C)` on the two semispinor blocks. -/
-def chiralitySign : Module.End ℂ DiracSpinor16 := -chiralityOperator
+def chiralitySign : Module.End ℂ DiracSpinor16 :=
+  -ZornCliffordParityAPI.chiralityOperator
 
 @[simp] theorem chiralitySign_apply (S : SpinorPlus8) (C : SpinorMinus8) :
     chiralitySign (S, C) = (-S, C) := by
-  simp [chiralitySign]
+  simp [chiralitySign, ZornCliffordParityAPI.chiralityOperator_apply]
 
 /-- Chirality-twisted mixed CAR entry. -/
 def colorEvenOp (r s : Fin 3) : Module.End ℂ DiracSpinor16 :=

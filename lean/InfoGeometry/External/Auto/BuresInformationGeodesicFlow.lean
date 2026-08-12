@@ -1,4 +1,4 @@
-import Mathlib.Tactic
+import Mathlib
 import InfoGeometry.External.Auto.tomita_kms_v4
 import InfoGeometry.External.Auto.CramerRaoFisher
 
@@ -83,6 +83,30 @@ theorem bures_metric_at_origin (dx dy dz : ℝ) :
     buresMetric 0 0 0 dx dy dz (by norm_num) =
       dx ^ 2 + dy ^ 2 + dz ^ 2 := by
   simp [buresMetric]
+
+/-- Consolidated finite path theorem for the information-geodesic branch. -/
+theorem bures_information_geodesic_flow_synthesis
+    (I variance Z : ℝ)
+    (hI : 0 < I)
+    (hprod : 1 ≤ I * variance)
+    (hZ : 0 < Z) :
+    let _zPositive : 0 < Z := hZ
+    cramerRaoBound I ≤ variance ∧
+    (∀ θ E, θ * E ≤ fisherQuadratic I θ + dualFisherQuadratic I E) ∧
+    (∀ θ E, deriv (fun x : ℝ => deriv (fisherQuadratic I) x) θ *
+      deriv (fun x : ℝ => deriv (dualFisherQuadratic I) x) E = 1) ∧
+    (∀ K A, modularFlow K 0 A = A) ∧
+    buresDistance 0 0 0 0 0 0 = 0 ∧
+    (∀ dx dy dz,
+      buresMetric 0 0 0 dx dy dz (by norm_num) =
+        dx ^ 2 + dy ^ 2 + dz ^ 2) := by
+  dsimp
+  exact ⟨cramerRao_from_information_product hI hprod,
+    fun θ E => fisher_legendre_geodesic_cost I θ E hI,
+    fun θ E => fisher_curvature_inverse I θ E (ne_of_gt hI),
+    fun K A => modularFlow_zero_time K A,
+    bures_center_distance_zero,
+    fun dx dy dz => bures_metric_at_origin dx dy dz⟩
 
 end BuresInformationGeodesicFlow
 

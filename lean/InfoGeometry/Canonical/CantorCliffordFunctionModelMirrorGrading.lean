@@ -16,91 +16,88 @@ namespace InfoGeometry.Canonical.CantorCliffordFunctionModelMirrorGrading
 open InfoGeometry.Canonical.CantorCliffordFunctionModel
 open InfoGeometry.Canonical.ChiralLightConeTensorTower
 
-abbrev BoundaryFunction :=
-  InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ
-
-def mirrorEvenProjector (f : BoundaryFunction) : BoundaryFunction :=
+def mirrorEvenProjector (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ :=
   (1 / 2 : ℝ) • (f + boundaryMirrorPullback f)
 
-def mirrorOddProjector (f : BoundaryFunction) : BoundaryFunction :=
+def mirrorOddProjector (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ :=
   (1 / 2 : ℝ) • (f - boundaryMirrorPullback f)
 
-def IsMirrorEven (f : BoundaryFunction) : Prop :=
+def IsMirrorEven (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) : Prop :=
   boundaryMirrorPullback f = f
 
-def IsMirrorOdd (f : BoundaryFunction) : Prop :=
+def IsMirrorOdd (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) : Prop :=
   boundaryMirrorPullback f = -f
 
-@[simp] theorem mirrorEvenProjector_apply (f : BoundaryFunction)
+@[simp] theorem mirrorEvenProjector_apply (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ)
     (ξ : ChiralBoundary) :
     mirrorEvenProjector f ξ =
       (1 / 2 : ℝ) * (f ξ + f (boundaryMirror ξ)) := by
   rfl
 
-@[simp] theorem mirrorOddProjector_apply (f : BoundaryFunction)
+@[simp] theorem mirrorOddProjector_apply (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ)
     (ξ : ChiralBoundary) :
     mirrorOddProjector f ξ =
       (1 / 2 : ℝ) * (f ξ - f (boundaryMirror ξ)) := by
   rfl
 
-theorem boundaryMirrorPullback_mul (f g : BoundaryFunction) :
+theorem boundaryMirrorPullback_mul (f g : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) :
     boundaryMirrorPullback (f * g) =
       boundaryMirrorPullback f * boundaryMirrorPullback g := by
   ext ξ
   rfl
 
-theorem boundaryMirrorPullback_add (f g : BoundaryFunction) :
+theorem boundaryMirrorPullback_add (f g : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) :
     boundaryMirrorPullback (f + g) =
       boundaryMirrorPullback f + boundaryMirrorPullback g := by
   ext ξ
   rfl
 
-theorem boundaryMirrorPullback_sub (f g : BoundaryFunction) :
+theorem boundaryMirrorPullback_sub (f g : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) :
     boundaryMirrorPullback (f - g) =
       boundaryMirrorPullback f - boundaryMirrorPullback g := by
   ext ξ
   rfl
 
-theorem boundaryMirrorPullback_smul (c : ℝ) (f : BoundaryFunction) :
+theorem boundaryMirrorPullback_smul (c : ℝ) (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) :
     boundaryMirrorPullback (c • f) = c • boundaryMirrorPullback f := by
   ext ξ
   rfl
 
-theorem mirrorEvenProjector_add_mirrorOddProjector (f : BoundaryFunction) :
+theorem mirrorEvenProjector_add_mirrorOddProjector (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) :
     mirrorEvenProjector f + mirrorOddProjector f = f := by
   ext ξ
   simp [mirrorEvenProjector, mirrorOddProjector]
   ring
 
-@[simp] theorem mirrorEvenProjector_mirrorEvenProjector (f : BoundaryFunction) :
+@[simp] theorem mirrorEvenProjector_mirrorEvenProjector (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) :
     mirrorEvenProjector (mirrorEvenProjector f) = mirrorEvenProjector f := by
   ext ξ
   simp [mirrorEvenProjector, boundaryMirrorPullback,
     boundaryMirror_boundaryMirror]
   ring
 
-@[simp] theorem mirrorOddProjector_mirrorOddProjector (f : BoundaryFunction) :
+@[simp] theorem mirrorOddProjector_mirrorOddProjector (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) :
     mirrorOddProjector (mirrorOddProjector f) = mirrorOddProjector f := by
   ext ξ
   simp [mirrorOddProjector, boundaryMirrorPullback,
     boundaryMirror_boundaryMirror]
   ring
 
-@[simp] theorem mirrorEvenProjector_mirrorOddProjector (f : BoundaryFunction) :
+@[simp] theorem mirrorEvenProjector_mirrorOddProjector (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) :
     mirrorEvenProjector (mirrorOddProjector f) = 0 := by
   ext ξ
   simp [mirrorEvenProjector, mirrorOddProjector, boundaryMirrorPullback,
     boundaryMirror_boundaryMirror]
   ring
 
-@[simp] theorem mirrorOddProjector_mirrorEvenProjector (f : BoundaryFunction) :
+@[simp] theorem mirrorOddProjector_mirrorEvenProjector (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) :
     mirrorOddProjector (mirrorEvenProjector f) = 0 := by
   ext ξ
   simp [mirrorEvenProjector, mirrorOddProjector, boundaryMirrorPullback,
     boundaryMirror_boundaryMirror]
   ring
 
-theorem mirrorEvenProjector_isMirrorEven (f : BoundaryFunction) :
+theorem mirrorEvenProjector_isMirrorEven (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) :
     IsMirrorEven (mirrorEvenProjector f) := by
   unfold IsMirrorEven
   ext ξ
@@ -108,7 +105,7 @@ theorem mirrorEvenProjector_isMirrorEven (f : BoundaryFunction) :
     boundaryMirror_boundaryMirror]
   ring
 
-theorem mirrorOddProjector_isMirrorOdd (f : BoundaryFunction) :
+theorem mirrorOddProjector_isMirrorOdd (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) :
     IsMirrorOdd (mirrorOddProjector f) := by
   unfold IsMirrorOdd
   ext ξ
@@ -117,16 +114,16 @@ theorem mirrorOddProjector_isMirrorOdd (f : BoundaryFunction) :
   ring
 
 theorem mirror_even_odd_decomposition_unique
-    {f e o : BoundaryFunction}
+    {f e o : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ}
     (he : IsMirrorEven e) (ho : IsMirrorOdd o) (h : e + o = f) :
     e = mirrorEvenProjector f ∧ o = mirrorOddProjector f := by
   constructor
   · unfold mirrorEvenProjector
     ext ξ
-    have heξ := congrArg (fun q : BoundaryFunction => q ξ) he
-    have hoξ := congrArg (fun q : BoundaryFunction => q ξ) ho
-    have hξ := congrArg (fun q : BoundaryFunction => q ξ) h
-    have hξm := congrArg (fun q : BoundaryFunction => q (boundaryMirror ξ)) h
+    have heξ := congrArg (fun q : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ => q ξ) he
+    have hoξ := congrArg (fun q : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ => q ξ) ho
+    have hξ := congrArg (fun q : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ => q ξ) h
+    have hξm := congrArg (fun q : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ => q (boundaryMirror ξ)) h
     have hξ' : e ξ + o ξ = f ξ := by simpa using hξ
     have hξm' : e (boundaryMirror ξ) + o (boundaryMirror ξ) =
         f (boundaryMirror ξ) := by simpa using hξm
@@ -135,10 +132,10 @@ theorem mirror_even_odd_decomposition_unique
     linarith [hξ', hξm']
   · unfold mirrorOddProjector
     ext ξ
-    have heξ := congrArg (fun q : BoundaryFunction => q ξ) he
-    have hoξ := congrArg (fun q : BoundaryFunction => q ξ) ho
-    have hξ := congrArg (fun q : BoundaryFunction => q ξ) h
-    have hξm := congrArg (fun q : BoundaryFunction => q (boundaryMirror ξ)) h
+    have heξ := congrArg (fun q : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ => q ξ) he
+    have hoξ := congrArg (fun q : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ => q ξ) ho
+    have hξ := congrArg (fun q : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ => q ξ) h
+    have hξm := congrArg (fun q : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ => q (boundaryMirror ξ)) h
     have hξ' : e ξ + o ξ = f ξ := by simpa using hξ
     have hξm' : e (boundaryMirror ξ) + o (boundaryMirror ξ) =
         f (boundaryMirror ξ) := by simpa using hξm
@@ -146,7 +143,7 @@ theorem mirror_even_odd_decomposition_unique
     simp [boundaryMirrorPullback]
     linarith [hξ', hξm']
 
-theorem isMirrorEven_iff_evenProjector_eq (f : BoundaryFunction) :
+theorem isMirrorEven_iff_evenProjector_eq (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) :
     IsMirrorEven f ↔ mirrorEvenProjector f = f := by
   constructor
   · intro hf
@@ -163,7 +160,7 @@ theorem isMirrorEven_iff_evenProjector_eq (f : BoundaryFunction) :
       _ = mirrorEvenProjector f := mirrorEvenProjector_isMirrorEven f
       _ = f := hf
 
-theorem isMirrorOdd_iff_oddProjector_eq (f : BoundaryFunction) :
+theorem isMirrorOdd_iff_oddProjector_eq (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) :
     IsMirrorOdd f ↔ mirrorOddProjector f = f := by
   constructor
   · intro hf
@@ -181,13 +178,13 @@ theorem isMirrorOdd_iff_oddProjector_eq (f : BoundaryFunction) :
         exact mirrorOddProjector_isMirrorOdd f
       _ = -f := by rw [hf]
 
-theorem isMirrorEven_iff_oddProjector_eq_zero (f : BoundaryFunction) :
+theorem isMirrorEven_iff_oddProjector_eq_zero (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) :
     IsMirrorEven f ↔ mirrorOddProjector f = 0 := by
   constructor
   · intro hf
     unfold mirrorOddProjector
     ext ξ
-    have hξ := congrArg (fun q : BoundaryFunction => q ξ) hf
+    have hξ := congrArg (fun q : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ => q ξ) hf
     have hξ' : f (boundaryMirror ξ) = f ξ := by
       simpa [IsMirrorEven, boundaryMirrorPullback] using hξ
     simp [boundaryMirrorPullback, hξ']
@@ -197,13 +194,13 @@ theorem isMirrorEven_iff_oddProjector_eq_zero (f : BoundaryFunction) :
     rw [hf, add_zero] at hrec
     exact hrec
 
-theorem isMirrorOdd_iff_evenProjector_eq_zero (f : BoundaryFunction) :
+theorem isMirrorOdd_iff_evenProjector_eq_zero (f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) :
     IsMirrorOdd f ↔ mirrorEvenProjector f = 0 := by
   constructor
   · intro hf
     unfold mirrorEvenProjector
     ext ξ
-    have hξ := congrArg (fun q : BoundaryFunction => q ξ) hf
+    have hξ := congrArg (fun q : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ => q ξ) hf
     have hξ' : f (boundaryMirror ξ) = -f ξ := by
       simpa [IsMirrorOdd, boundaryMirrorPullback] using hξ
     simp [boundaryMirrorPullback, hξ']
@@ -214,30 +211,45 @@ theorem isMirrorOdd_iff_evenProjector_eq_zero (f : BoundaryFunction) :
     exact hrec
 
 theorem mirrorEven_mul_mirrorEven
-    {f g : BoundaryFunction} (hf : IsMirrorEven f) (hg : IsMirrorEven g) :
+    {f g : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ} (hf : IsMirrorEven f) (hg : IsMirrorEven g) :
     IsMirrorEven (f * g) := by
   unfold IsMirrorEven at *
   rw [boundaryMirrorPullback_mul, hf, hg]
 
 theorem mirrorEven_mul_mirrorOdd
-    {f g : BoundaryFunction} (hf : IsMirrorEven f) (hg : IsMirrorOdd g) :
+    {f g : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ} (hf : IsMirrorEven f) (hg : IsMirrorOdd g) :
     IsMirrorOdd (f * g) := by
   unfold IsMirrorOdd at *
   rw [boundaryMirrorPullback_mul, hf, hg]
   simp
 
 theorem mirrorOdd_mul_mirrorEven
-    {f g : BoundaryFunction} (hf : IsMirrorOdd f) (hg : IsMirrorEven g) :
+    {f g : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ} (hf : IsMirrorOdd f) (hg : IsMirrorEven g) :
     IsMirrorOdd (f * g) := by
   unfold IsMirrorOdd at *
   rw [boundaryMirrorPullback_mul, hf, hg]
   simp
 
 theorem mirrorOdd_mul_mirrorOdd
-    {f g : BoundaryFunction} (hf : IsMirrorOdd f) (hg : IsMirrorOdd g) :
+    {f g : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ} (hf : IsMirrorOdd f) (hg : IsMirrorOdd g) :
     IsMirrorEven (f * g) := by
   unfold IsMirrorEven at *
   rw [boundaryMirrorPullback_mul, hf, hg]
+  simp
+
+theorem mirrorEven_smul
+    (c : ℝ) {f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ}
+    (hf : IsMirrorEven f) :
+    IsMirrorEven (c • f) := by
+  unfold IsMirrorEven at *
+  rw [boundaryMirrorPullback_smul, hf]
+
+theorem mirrorOdd_smul
+    (c : ℝ) {f : InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ}
+    (hf : IsMirrorOdd f) :
+    IsMirrorOdd (c • f) := by
+  unfold IsMirrorOdd at *
+  rw [boundaryMirrorPullback_smul, hf]
   simp
 
 end InfoGeometry.Canonical.CantorCliffordFunctionModelMirrorGrading

@@ -2,13 +2,18 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Canonical.BostConnesSuperalgebra
 import InfoGeometry.Canonical.BostConnesSuperalgebraConstructive
+import InfoGeometry.Canonical.KMSTraceColimit
 
 /-!
-# Cantor KMS State and Thermodynamic Time
+# Cantor Finite Diagonal Tracial State
 
-This module formalizes the canonical tracial KMS state on the diagonal UHF algebra stages.
-We define the normalized trace on `DiagAlg n`, prove its compatibility with the inductive
-morphisms, and establish the thermodynamic trace partition function.
+This module formalizes the canonical normalized tracial state on the diagonal UHF algebra
+stages.  We define the normalized trace on `DiagAlg n`, prove its compatibility with the
+inductive morphisms, and establish the finite cylinder weights and positivity statements.
+
+The file does not assert a nontrivial modular flow or a general KMS theorem: the diagonal
+finite state is tracial, so its finite modular dynamics are trivial.  Thermodynamic time and
+nontrivial relative modular evolution belong to downstream state-dependent owners.
 -/
 
 noncomputable section
@@ -53,6 +58,13 @@ theorem card_BitWord (n : ℕ) : Fintype.card (BitWord n) = 2^n := by
 /-- The canonical normalized tracial state on `DiagAlg n`. -/
 def DiagTrace (n : ℕ) (f : DiagAlg n) : ℂ :=
   (2 : ℂ)⁻¹ ^ n * Finset.sum Finset.univ f
+
+theorem DiagTrace_eq_normalizedTrace (n : ℕ) (f : DiagAlg n) :
+    DiagTrace n f =
+      InfoGeometry.Canonical.KMSTraceColimit.normalizedTrace n f := by
+  unfold DiagTrace InfoGeometry.Canonical.KMSTraceColimit.normalizedTrace
+  rw [inv_pow]
+  ring
 
 /-- Linear map implementation of the trace. -/
 def DiagTrace_addMonoidHom (n : ℕ) : DiagAlg n →+ ℂ where
@@ -104,10 +116,90 @@ theorem DiagTrace_compat (n : ℕ) (f : DiagAlg n) :
   rw [h_pow_succ]
   ring
 
+theorem DiagTrace_compat_two (n : ℕ) (f : DiagAlg n) :
+    DiagTrace (n + 2) (diagEmbedSucc (n + 1) (diagEmbedSucc n f)) =
+      DiagTrace n f := by
+  rw [DiagTrace_compat (n + 1) (diagEmbedSucc n f)]
+  exact DiagTrace_compat n f
+
 theorem DiagTrace_const (n : ℕ) (z : ℂ) :
     DiagTrace n (fun _ : BitWord n => z) = z := by
   simp [DiagTrace, Finset.sum_const, Finset.card_univ, card_BitWord,
     Nat.cast_pow, inv_pow]
+
+def cylinderIndicator (n : ℕ) (w : BitWord n) : DiagAlg n :=
+  fun v => if v = w then 1 else 0
+
+theorem cylinderIndicator_mul_self (n : ℕ) (w : BitWord n) :
+    cylinderIndicator n w * cylinderIndicator n w =
+      cylinderIndicator n w := by
+  classical
+  ext v
+  simp [cylinderIndicator]
+
+theorem cylinderIndicator_mul_eq_zero_of_ne
+    (n : ℕ) {w v : BitWord n} (hwv : w ≠ v) :
+    cylinderIndicator n w * cylinderIndicator n v = 0 := by
+  classical
+  have hvw : v ≠ w := Ne.symm hwv
+  ext u
+  by_cases huw : u = w <;> by_cases huv : u = v <;>
+    simp [cylinderIndicator, huw, huv, hwv, hvw]
+
+theorem cylinderIndicator_star (n : ℕ) (w : BitWord n) :
+    star (cylinderIndicator n w) = cylinderIndicator n w := by
+  ext v
+  simp [cylinderIndicator]
+
+theorem cylinderIndicator_sum (n : ℕ) :
+    ∑ w : BitWord n, cylinderIndicator n w = (1 : DiagAlg n) := by
+  classical
+  ext v
+  simp [cylinderIndicator]
+
+theorem DiagTrace_cylinderIndicator_sum (n : ℕ) :
+    DiagTrace n (∑ w : BitWord n, cylinderIndicator n w) = 1 := by
+  rw [cylinderIndicator_sum]
+  exact DiagTrace_one n
+
+theorem DiagTrace_cylinderIndicator (n : ℕ) (w : BitWord n) :
+    DiagTrace n (cylinderIndicator n w) = (2 : ℂ)⁻¹ ^ n := by
+  classical
+  unfold DiagTrace cylinderIndicator
+  rw [Finset.sum_eq_single w]
+  · simp
+  · intro b hb hbw
+    simp [hbw]
+  · simp
+
+def extendBitWord (n : ℕ) (w : BitWord n) (b : Bool) : BitWord (n + 1) :=
+  (bitWordEquiv n).symm (w, b)
+
+theorem cylinderIndicator_refines
+    (n : ℕ) (w : BitWord n) :
+    diagEmbedSucc n (cylinderIndicator n w) =
+      cylinderIndicator (n + 1) (extendBitWord n w false) +
+        cylinderIndicator (n + 1) (extendBitWord n w true) := by
+  classical
+  ext v
+  let p := bitWordEquiv n v
+  have hv : v = (bitWordEquiv n).symm p := by
+    simpa [p] using (bitWordEquiv n).symm_apply_apply v |>.symm
+  rcases p with ⟨u, b⟩
+  have hpref : prefixSucc n ((bitWordEquiv n).symm (u, b)) = u := by
+    simpa [bitWordEquiv] using
+      congrArg Prod.fst ((bitWordEquiv n).apply_symm_apply (u, b))
+  cases b <;>
+    simp [diagEmbedSucc, cylinderIndicator, extendBitWord, hv, hpref]
+
+theorem DiagTrace_cylinderIndicator_refines
+    (n : ℕ) (w : BitWord n) :
+    DiagTrace (n + 1)
+        (cylinderIndicator (n + 1) (extendBitWord n w false) +
+          cylinderIndicator (n + 1) (extendBitWord n w true)) =
+      DiagTrace n (cylinderIndicator n w) := by
+  rw [← cylinderIndicator_refines n w]
+  exact DiagTrace_compat n (cylinderIndicator n w)
 
 theorem DiagTrace_smul (n : ℕ) (z : ℂ) (f : DiagAlg n) :
     DiagTrace n (z • f) = z * DiagTrace n f := by
@@ -117,6 +209,18 @@ theorem DiagTrace_smul (n : ℕ) (z : ℂ) (f : DiagAlg n) :
   rw [← Finset.mul_sum]
   ring
 
+theorem DiagTrace_star (n : ℕ) (f : DiagAlg n) :
+    DiagTrace n (star f) = star (DiagTrace n f) := by
+  unfold DiagTrace
+  change (2 : ℂ)⁻¹ ^ n * (∑ w : BitWord n, star (f w)) =
+    star ((2 : ℂ)⁻¹ ^ n * ∑ w : BitWord n, f w)
+  rw [star_mul, star_sum]
+  rw [star_pow]
+  have hstar : star ((2 : ℂ)⁻¹) = (2 : ℂ)⁻¹ := by
+    norm_num
+  rw [hstar]
+  ring
+
 theorem DiagTrace_mul_comm (n : ℕ) (f g : DiagAlg n) :
     DiagTrace n (f * g) = DiagTrace n (g * f) := by
   unfold DiagTrace
@@ -124,6 +228,69 @@ theorem DiagTrace_mul_comm (n : ℕ) (f g : DiagAlg n) :
   apply Finset.sum_congr rfl
   intro w hw
   exact mul_comm (f w) (g w)
+
+theorem DiagTrace_star_mul_self_star (n : ℕ) (f : DiagAlg n) :
+    star (DiagTrace n (star f * f)) =
+      DiagTrace n (star f * f) := by
+  rw [← DiagTrace_star]
+  simp only [star_mul, star_star]
+
+theorem DiagTrace_star_mul_self_re_nonneg (n : ℕ) (f : DiagAlg n) :
+    0 ≤ (DiagTrace n (star f * f)).re := by
+  unfold DiagTrace
+  have hscalar : (2 : ℂ)⁻¹ ^ n =
+      (((2 : ℝ)⁻¹ ^ n : ℝ) : ℂ) := by
+    norm_num
+  rw [hscalar]
+  have hsum :
+      (∑ w : BitWord n, (star f * f) w).re =
+        ∑ w : BitWord n, Complex.normSq (f w) := by
+    let s : Finset (BitWord n) := Finset.univ
+    have hsum_re : ∀ u : Finset (BitWord n),
+        (Finset.sum u (fun w => (star f * f) w)).re =
+          Finset.sum u (fun w => Complex.normSq (f w)) := by
+      intro u
+      induction u using Finset.induction_on with
+      | empty => simp
+      | @insert w u hw ih =>
+          simp only [Finset.sum_insert hw, Complex.add_re, ih]
+          simp only [Pi.mul_apply, Pi.star_apply]
+          have hpoint :
+              (f w * star (f w)).re = Complex.normSq (f w) := by
+            change (f w * (starRingEnd ℂ) (f w)).re = Complex.normSq (f w)
+            rw [Complex.mul_re, Complex.conj_re, Complex.conj_im,
+              Complex.normSq_apply]
+            ring
+          rw [show star (f w) * f w = f w * star (f w) by ac_rfl, hpoint]
+    simpa [s] using hsum_re Finset.univ
+  change 0 ≤
+    ((((2 : ℝ)⁻¹ ^ n : ℝ) : ℂ) *
+      (∑ w : BitWord n, (star f * f) w)).re
+  rw [Complex.mul_re, Complex.ofReal_re, Complex.ofReal_im, hsum]
+  have hscalar_nonneg : 0 ≤ (2 : ℝ)⁻¹ ^ n := by
+    exact pow_nonneg (by norm_num) n
+  have hsum_nonneg :
+      0 ≤ ∑ w : BitWord n, Complex.normSq (f w) := by
+    exact Finset.sum_nonneg (fun w hw => Complex.normSq_nonneg (f w))
+  simpa using mul_nonneg hscalar_nonneg hsum_nonneg
+
+theorem DiagTrace_star_mul_self_im_zero (n : ℕ) (f : DiagAlg n) :
+    (DiagTrace n (star f * f)).im = 0 := by
+  have hstar := DiagTrace_star_mul_self_star n f
+  have him := congrArg Complex.im hstar
+  have him' : -(DiagTrace n (star f * f)).im =
+      (DiagTrace n (star f * f)).im := by
+    simpa only [Complex.star_def, Complex.conj_im] using him
+  linarith
+
+theorem DiagTrace_star_mul_self_eq_ofReal_nonneg (n : ℕ) (f : DiagAlg n) :
+    ∃ r : ℝ, 0 ≤ r ∧
+      DiagTrace n (star f * f) = (r : ℂ) := by
+  refine ⟨(DiagTrace n (star f * f)).re,
+    DiagTrace_star_mul_self_re_nonneg n f, ?_⟩
+  apply Complex.ext
+  · rfl
+  · exact DiagTrace_star_mul_self_im_zero n f
 
 end InfoGeometry.Canonical.CantorKMSState
 

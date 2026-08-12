@@ -39,7 +39,7 @@ for module in "${QUARANTINED_MODULES[@]}"; do
     fi
   done < <(
     rg -n "^[[:space:]]*import[[:space:]]+${escaped_module}(\\b|$)" \
-      lean/InfoGeometry \
+      lean \
       --no-heading || true
   )
 done

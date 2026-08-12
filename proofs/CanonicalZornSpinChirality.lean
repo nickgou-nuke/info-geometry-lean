@@ -1,4 +1,4 @@
-import proofs.CanonicalZornSpinRelatedFiber
+import InfoGeometry.Canonical.CanonicalZornSpinRelatedFiber
 
 /-!
 # Chirality preservation of the canonical Zorn spin representation

@@ -30,7 +30,7 @@ def imaginaryPart (x : SpinCarrier) : MiddleCarrier := x.2
     x * y = jordanMul x y := rfl
 
 theorem jordanMul_comm (x y : SpinCarrier) : x * y = y * x := by
-  ext <;> simp [jordanMul, beta44_symmetric, mul_comm, add_comm]
+  ext <;> simp [jordanMul, mul_comm, add_comm]
 
 @[simp] theorem jordanMul_unit_left (x : SpinCarrier) :
     spinUnit * x = x := by
@@ -72,8 +72,7 @@ theorem jordanMul_jordan_identity (x y : SpinCarrier) :
   rcases x with ⟨a, u⟩
   rcases y with ⟨b, v⟩
   ext i <;>
-    simp [jordanMul, beta44_apply, Fin.sum_univ_succ,
-      Finset.sum_add_distrib, Finset.sum_sub_distrib] <;>
+    simp [jordanMul, beta44_apply] <;>
     ring
 
 theorem trace_free_square_zero (u v : MiddleCarrier) :

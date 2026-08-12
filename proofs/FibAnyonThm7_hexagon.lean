@@ -44,7 +44,7 @@ lemma q_cyclo : q^4 - q^3 + q^2 - q + 1 = 0 := by
     exact absurd hq h_q_ne_neg_one
   · exact hrest
 
-noncomputable def τ : ℂ := q^2 - q^3
+noncomputable def tauHexagon : ℂ := q^2 - q^3
 noncomputable def s : ℂ := Real.sqrt ((Real.sqrt 5 - 1) / 2)
 
 lemma h_s_sq : s^2 - (q^2 - q^3) = 0 := by
@@ -137,7 +137,7 @@ lemma inv_neg_q_2 : (-q^2 : ℂ)⁻¹ = q^3 := by
     _ = -(-1) := by rw [q_pow_5]
     _ = 1 := by ring
 
-noncomputable def F_mat : Matrix (Fin 2) (Fin 2) ℂ := !![τ, s; s, -τ]
+noncomputable def F_mat : Matrix (Fin 2) (Fin 2) ℂ := !![tauHexagon, s; s, -tauHexagon]
 noncomputable def R_mat : Matrix (Fin 2) (Fin 2) ℂ := !![q^4, 0; 0, -q^2]
 noncomputable def Rp_mat : Matrix (Fin 2) (Fin 2) ℂ := !![1, 0; 0, -q^2]
 noncomputable def Ri_mat : Matrix (Fin 2) (Fin 2) ℂ := !![-q, 0; 0, q^3]
@@ -154,22 +154,22 @@ theorem hexagon_I : R_mat * F_mat * R_mat = F_mat * Rp_mat * F_mat := by
     · have h_calc : (q^2) * (s^2 - (q^2 - q^3)) + (-q^7 + q^5) * (q^4 - q^3 + q^2 - q + 1) = 0 := by
         rw [h_s_sq, q_cyclo]; ring
       dsimp [hex_I_def, R_mat, F_mat, Rp_mat]
-      simp [Matrix.mul_apply, Fin.sum_univ_two, τ]
+      simp [Matrix.mul_apply, Fin.sum_univ_two, tauHexagon]
       rw [← h_calc]; ring_nf
     · have h_calc : (0) * (s^2 - (q^2 - q^3)) + (-q^2 * s) * (q^4 - q^3 + q^2 - q + 1) = 0 := by
         rw [h_s_sq, q_cyclo]; ring
       dsimp [hex_I_def, R_mat, F_mat, Rp_mat]
-      simp [Matrix.mul_apply, Fin.sum_univ_two, τ]
+      simp [Matrix.mul_apply, Fin.sum_univ_two, tauHexagon]
       rw [← h_calc]; ring_nf
     · have h_calc : (0) * (s^2 - (q^2 - q^3)) + (-q^2 * s) * (q^4 - q^3 + q^2 - q + 1) = 0 := by
         rw [h_s_sq, q_cyclo]; ring
       dsimp [hex_I_def, R_mat, F_mat, Rp_mat]
-      simp [Matrix.mul_apply, Fin.sum_univ_two, τ]
+      simp [Matrix.mul_apply, Fin.sum_univ_two, tauHexagon]
       rw [← h_calc]; ring_nf
     · have h_calc : (-1) * (s^2 - (q^2 - q^3)) + (q^4 - q^2) * (q^4 - q^3 + q^2 - q + 1) = 0 := by
         rw [h_s_sq, q_cyclo]; ring
       dsimp [hex_I_def, R_mat, F_mat, Rp_mat]
-      simp [Matrix.mul_apply, Fin.sum_univ_two, τ]
+      simp [Matrix.mul_apply, Fin.sum_univ_two, tauHexagon]
       rw [← h_calc]; ring_nf
   exact sub_eq_zero.mp h
 
@@ -184,21 +184,21 @@ theorem hexagon_II : Ri_mat * F_mat * Ri_mat = F_mat * Rpi_mat * F_mat := by
     · have h_calc : (-q^3) * (s^2 - (q^2 - q^3)) + (0) * (q^4 - q^3 + q^2 - q + 1) = 0 := by
         rw [h_s_sq, q_cyclo]; ring
       dsimp [hex_II_def, Ri_mat, F_mat, Rpi_mat]
-      simp [Matrix.mul_apply, Fin.sum_univ_two, τ]
+      simp [Matrix.mul_apply, Fin.sum_univ_two, tauHexagon]
       rw [← h_calc]; ring_nf
     · have h_calc : (0) * (s^2 - (q^2 - q^3)) + (-q^2 * s) * (q^4 - q^3 + q^2 - q + 1) = 0 := by
         rw [h_s_sq, q_cyclo]; ring
       dsimp [hex_II_def, Ri_mat, F_mat, Rpi_mat]
-      simp [Matrix.mul_apply, Fin.sum_univ_two, τ]
+      simp [Matrix.mul_apply, Fin.sum_univ_two, tauHexagon]
       rw [← h_calc]; ring_nf
     · have h_calc : (0) * (s^2 - (q^2 - q^3)) + (-q^2 * s) * (q^4 - q^3 + q^2 - q + 1) = 0 := by
         rw [h_s_sq, q_cyclo]; ring
       dsimp [hex_II_def, Ri_mat, F_mat, Rpi_mat]
-      simp [Matrix.mul_apply, Fin.sum_univ_two, τ]
+      simp [Matrix.mul_apply, Fin.sum_univ_two, tauHexagon]
       rw [← h_calc]; ring_nf
     · have h_calc : (-1) * (s^2 - (q^2 - q^3)) + (q^4 - q^2) * (q^4 - q^3 + q^2 - q + 1) = 0 := by
         rw [h_s_sq, q_cyclo]; ring
       dsimp [hex_II_def, Ri_mat, F_mat, Rpi_mat]
-      simp [Matrix.mul_apply, Fin.sum_univ_two, τ]
+      simp [Matrix.mul_apply, Fin.sum_univ_two, tauHexagon]
       rw [← h_calc]; ring_nf
   exact sub_eq_zero.mp h

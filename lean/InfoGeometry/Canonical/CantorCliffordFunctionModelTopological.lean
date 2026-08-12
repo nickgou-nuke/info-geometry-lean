@@ -316,6 +316,17 @@ def appendCausalWord
       have harith : k - (n + m) = k - n - m := by omega
       simp [prefixWordBoundary, hkn, hknm, hsub, harith]
 
+theorem prefixWordPullback_comp_append
+    {Value : Type*} {n m : ℕ}
+    (u : CausalWord n)
+    (v : CausalWord m)
+    (f : ChiralBoundary → Value) :
+    prefixWordPullback u (prefixWordPullback v f) =
+      prefixWordPullback (appendCausalWord v u) f := by
+  funext ξ
+  unfold prefixWordPullback
+  rw [prefixWordBoundary_append]
+
 theorem prefixWordBoundary_mem_appendCylinder
     {n m : ℕ} (u : CausalWord n) (v : CausalWord m)
     {ξ : ChiralBoundary} (hξ : ξ ∈ prefixCylinder v) :
@@ -489,6 +500,48 @@ theorem prefixCylinderIndicator_sum_eq_one (n : ℕ) :
       ((mem_prefixCylinder_iff_prefixReadout_eq w ξ).1 hξ).symm
   · simp
 
+theorem prefixCylinderIndicator_oneStep_partition :
+    prefixCylinderIndicator (fun _ : Fin 1 => ChiralArrow.plus) +
+        prefixCylinderIndicator (fun _ : Fin 1 => ChiralArrow.minus) =
+      1 := by
+  ext ξ
+  cases h : ξ 0 with
+  | plus =>
+      have hp : ξ ∈ prefixCylinder (fun _ : Fin 1 => ChiralArrow.plus) := by
+        intro k
+        fin_cases k
+        exact h
+      have hm : ξ ∉ prefixCylinder (fun _ : Fin 1 => ChiralArrow.minus) := by
+        intro hm
+        have hminus := hm ⟨0, by decide⟩
+        simpa [h] using hminus
+      rw [ContinuousMap.add_apply, ContinuousMap.one_apply,
+        prefixCylinderIndicator_of_mem _ hp,
+        prefixCylinderIndicator_of_not_mem _ hm]
+      norm_num
+  | minus =>
+      have hp : ξ ∉ prefixCylinder (fun _ : Fin 1 => ChiralArrow.plus) := by
+        intro hp
+        have hplus := hp ⟨0, by decide⟩
+        simpa [h] using hplus
+      have hm : ξ ∈ prefixCylinder (fun _ : Fin 1 => ChiralArrow.minus) := by
+        intro k
+        fin_cases k
+        exact h
+      rw [ContinuousMap.add_apply, ContinuousMap.one_apply,
+        prefixCylinderIndicator_of_not_mem _ hp,
+        prefixCylinderIndicator_of_mem _ hm]
+      norm_num
+
+theorem prefixCylinderIndicator_oneStep_orthogonal :
+    prefixCylinderIndicator (fun _ : Fin 1 => ChiralArrow.plus) *
+        prefixCylinderIndicator (fun _ : Fin 1 => ChiralArrow.minus) =
+      0 := by
+  apply prefixCylinderIndicator_mul_eq_zero_of_ne
+  intro h
+  have h0 := congrFun h ⟨0, by decide⟩
+  cases h0
+
 theorem prefixCylinderIndicator_eq_sum_truncated
     {n m : ℕ} (h : n ≤ m) (w : CausalWord n) :
     prefixCylinderIndicator w =
@@ -648,6 +701,30 @@ theorem prefixPullbackContinuous_apply
     (ξ : ChiralBoundary) :
     prefixPullbackContinuous a f ξ = f (consBoundary a ξ) := rfl
 
+theorem prefixPullbackContinuous_oneStep_indicator_self
+    (a : ChiralArrow) :
+    prefixPullbackContinuous a
+        (prefixCylinderIndicator (fun _ : Fin 1 => a)) =
+      1 := by
+  ext ξ
+  rw [prefixPullbackContinuous_apply, ContinuousMap.one_apply]
+  apply prefixCylinderIndicator_of_mem
+  intro k
+  fin_cases k
+  rfl
+
+theorem prefixPullbackContinuous_oneStep_indicator_flip
+    (a : ChiralArrow) :
+    prefixPullbackContinuous a
+        (prefixCylinderIndicator (fun _ : Fin 1 => ChiralArrow.flip a)) =
+      0 := by
+  ext ξ
+  rw [prefixPullbackContinuous_apply]
+  apply prefixCylinderIndicator_of_not_mem
+  intro hξ
+  have hhead := hξ ⟨0, by decide⟩
+  cases a <;> simp [ChiralArrow.flip] at hhead
+
 @[simp]
 theorem tailPullbackContinuous_apply
     {Value : Type*} [TopologicalSpace Value]
@@ -768,35 +845,16 @@ theorem prefixWordPullbackContinuous_cylinderIndicator
   ext ξ
   simp [prefixWordBoundary_append]
 
-/-- Continuous analogue of the canonical pre-Cuntz boundary action. -/
-structure ContinuousPrefixBoundaryAction
-    (Value : Type*) [TopologicalSpace Value] where
-  plusPullback : ContinuousBoundaryFunction Value →
-    ContinuousBoundaryFunction Value
-  minusPullback : ContinuousBoundaryFunction Value →
-    ContinuousBoundaryFunction Value
-  tail : ContinuousBoundaryFunction Value →
-    ContinuousBoundaryFunction Value
-
-def canonicalContinuousPrefixBoundaryAction
-    (Value : Type*) [TopologicalSpace Value] :
-    ContinuousPrefixBoundaryAction Value where
-  plusPullback := prefixPullbackContinuous ChiralArrow.plus
-  minusPullback := prefixPullbackContinuous ChiralArrow.minus
-  tail := tailPullbackContinuous
-
 @[simp] theorem canonicalContinuousPrefixBoundaryAction_plus_tail
     {Value : Type*} [TopologicalSpace Value]
     (f : ContinuousBoundaryFunction Value) :
-    (canonicalContinuousPrefixBoundaryAction Value).plusPullback
-      ((canonicalContinuousPrefixBoundaryAction Value).tail f) = f := by
+    prefixPullbackContinuous ChiralArrow.plus (tailPullbackContinuous f) = f := by
   exact prefixPullbackContinuous_tailPullbackContinuous ChiralArrow.plus f
 
 @[simp] theorem canonicalContinuousPrefixBoundaryAction_minus_tail
     {Value : Type*} [TopologicalSpace Value]
     (f : ContinuousBoundaryFunction Value) :
-    (canonicalContinuousPrefixBoundaryAction Value).minusPullback
-      ((canonicalContinuousPrefixBoundaryAction Value).tail f) = f := by
+    prefixPullbackContinuous ChiralArrow.minus (tailPullbackContinuous f) = f := by
   exact prefixPullbackContinuous_tailPullbackContinuous ChiralArrow.minus f
 
 @[simp] theorem restrictToCylinderContinuous_mul

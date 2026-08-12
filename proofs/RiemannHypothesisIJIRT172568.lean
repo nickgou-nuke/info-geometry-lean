@@ -331,15 +331,6 @@ structure RiemannHypothesisPaper where
     "First 10^13 zeros verified on critical line"
   wignerDysonFormula : ℝ → ℝ := wignerDysonPDF
 
-/-- The paper's central insight: prime distribution, ζ-zeros, and
-    random matrix spectra are manifestations of a single underlying
-    structure. -/
-theorem paper_central_insight :
-  "The surprising link between prime numbers and Random Matrix Theory
-   shows that math is full of connections across different areas."
-    = "The surprising link between prime numbers and Random Matrix Theory
-   shows that math is full of connections across different areas." := rfl
-
 ---------------------------------------------------------------
 -- Part 8:  Concrete numerical verification (finite checks)
 ---------------------------------------------------------------

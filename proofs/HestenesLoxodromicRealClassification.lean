@@ -80,8 +80,4 @@ namespace HestenesLoxodromicRealClassification
       exact hθ hs
     · exact hθ hzero
 
- theorem loxodromic_of_pseudoscalar_ne_zero {η θ : ℝ}
-    (h : pseudoscalarCasimir η θ ≠ 0) :
-    IsLoxodromic η θ := h
-
 end HestenesLoxodromicRealClassification

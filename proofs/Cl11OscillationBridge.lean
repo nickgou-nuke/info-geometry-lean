@@ -1,5 +1,6 @@
 import Mathlib.Data.Real.Basic
 import Mathlib.Data.Matrix.Basic
+import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Algebra.Module.Basic
 
 namespace Cl11OscillationBridge
@@ -29,22 +30,26 @@ def I_2 : M2R := 1
 /-- Theorem: γ₀ is timelike and squares to the positive Identity (γ₀² = 1) -/
 theorem gamma_0_sq_eq_I : gamma_0 * gamma_0 = I_2 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> rfl
+  fin_cases i <;> fin_cases j <;>
+    norm_num [gamma_0, gamma_1, delta_bdg, I_2, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Theorem: γ₁ is spacelike and squares to the negative Identity (γ₁² = -1) -/
 theorem gamma_1_sq_eq_neg_I : gamma_1 * gamma_1 = -I_2 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> rfl
+  fin_cases i <;> fin_cases j <;>
+    norm_num [gamma_0, gamma_1, delta_bdg, I_2, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Theorem: γ₀ and γ₁ anti-commute (γ₀γ₁ + γ₁γ₀ = 0) -/
 theorem gamma_0_gamma_1_anticommute : gamma_0 * gamma_1 + gamma_1 * gamma_0 = 0 := by
   ext i j
-  fin_cases i <;> fin_cases j <;> rfl
+  fin_cases i <;> fin_cases j <;>
+    norm_num [gamma_0, gamma_1, delta_bdg, I_2, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Theorem: The product of γ₀ and γ₁ is exactly the BdG Inversion operator Δ (γ₀γ₁ = Δ) -/
 theorem gamma_0_mul_gamma_1_eq_delta : gamma_0 * gamma_1 = delta_bdg := by
   ext i j
-  fin_cases i <;> fin_cases j <;> rfl
+  fin_cases i <;> fin_cases j <;>
+    norm_num [gamma_0, gamma_1, delta_bdg, I_2, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-!
 ### Mapping to the Three Aeon Colimit
@@ -69,7 +74,8 @@ exactly generates the right-handed state.
 theorem bdg_inverts_chirality :
     (delta_bdg *ᵥ nu_L) = nu_R := by
   ext i
-  fin_cases i <;> rfl
+  fin_cases i <;>
+    norm_num [delta_bdg, nu_L, nu_R, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
 
 /--
 The topological winding function mapping the neutrino state 

@@ -48,10 +48,6 @@ abbrev FourWord (n : ℕ) : Type :=
 abbrev FourDiagAlg (n : ℕ) : Type :=
   FourWord n → ℂ
 
-/-- Four-symbol Cantor boundary. -/
-abbrev FourCantorBoundary : Type :=
-  ℕ → Fin 4
-
 /-- Stage `n` in the four-lane boundary has `4^n` finite counting cells. -/
 theorem fourword_count (n : ℕ) :
     Fintype.card (FourWord n) = 4 ^ n := by
@@ -72,15 +68,15 @@ def diagEmbedSucc4 (n : ℕ) : FourDiagAlg n → FourDiagAlg (n + 1) :=
   fun f w => f (prefixSucc4 n w)
 
 /-- Restrict a four-symbol boundary point to its first `n` symbols. -/
-def boundaryPrefix4 (n : ℕ) (b : FourCantorBoundary) : FourWord n :=
+def boundaryPrefix4 (n : ℕ) (b : ℕ → Fin 4) : FourWord n :=
   fun i => b i.1
 
 /-- Four-lane finite-cylinder realization of a stage-`n` diagonal observable. -/
-def cylinder4 (n : ℕ) (f : FourDiagAlg n) : FourCantorBoundary → ℂ :=
+def cylinder4 (n : ℕ) (f : FourDiagAlg n) : (ℕ → Fin 4) → ℂ :=
   fun b => f (boundaryPrefix4 n b)
 
 theorem boundaryPrefix4_succ_eq_prefixSucc4
-    (n : ℕ) (b : FourCantorBoundary) :
+    (n : ℕ) (b : ℕ → Fin 4) :
     prefixSucc4 n (boundaryPrefix4 (n + 1) b) = boundaryPrefix4 n b := by
   ext i
   rfl

@@ -1,4 +1,4 @@
-import proofs.ProjectiveAffineConformalClosure55
+import InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
 import proofs.SO55NullSU5KleinSpectral
 
 /-!

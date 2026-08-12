@@ -49,24 +49,24 @@ theorem mirrorConjugate_mul (T U : Operator V) :
     mirrorConjugate K (T.comp U) =
       (mirrorConjugate K T).comp (mirrorConjugate K U) := by
   ext v
-  simp [mirrorConjugate, LinearMap.comp_apply]
+  simp [mirrorConjugate]
 
 theorem mirrorConjugate_id :
     mirrorConjugate K (LinearMap.id) = LinearMap.id := by
   ext v
-  simp [mirrorConjugate, LinearMap.comp_apply]
+  simp [mirrorConjugate]
 
 theorem mirrorConjugate_sub (T U : Operator V) :
     mirrorConjugate K (T - U) =
       mirrorConjugate K T - mirrorConjugate K U := by
   ext v
-  simp [mirrorConjugate, LinearMap.comp_apply]
+  simp [mirrorConjugate]
 
 theorem mirrorConjugate_add (T U : Operator V) :
     mirrorConjugate K (T + U) =
       mirrorConjugate K T + mirrorConjugate K U := by
   ext v
-  simp [mirrorConjugate, LinearMap.comp_apply]
+  simp [mirrorConjugate]
 
 theorem mirrorConjugate_smul (a : ℝ) (T : Operator V) :
     mirrorConjugate K (a • T) = a • mirrorConjugate K T := by

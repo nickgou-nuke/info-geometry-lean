@@ -60,12 +60,9 @@ theorem polar_factorization (q1 q2 : H) (hq : q1 ≠ 0) :
 def N (O : SplitOctonion) : ℝ :=
   (Quaternion.normSq O.q1 : ℝ) - (Quaternion.normSq O.q2 : ℝ)
 
--- The existence of the Principal Logarithm for non-null Split-Octonions
--- O = |O| e^(u phi) e^(v l lambda) -> ln(O) = ln|O| + u phi + v l lambda
--- We state this as a conditional existence theorem over the non-null domain.
-theorem exists_principal_logarithm (O : SplitOctonion) (h_not_null : N O ≠ 0) :
-    ∃ (log_O : SplitOctonion), true := by
-  use one
+/- A principal logarithm is intentionally not declared here: the file has
+   no split-octonion multiplication or exponential, so such an existence
+   theorem would be an unsupported wrapper rather than a native result. -/
 
 end SplitOctonion
 end SplitOctonionPolarDecomposition

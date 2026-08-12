@@ -158,13 +158,10 @@ def ZornMatrix.sub_mat (A B : ZornMatrix) : ZornMatrix :=
 
 instance : Sub ZornMatrix := ⟨ZornMatrix.sub_mat⟩
 
-/-- 
-Майорановото подпространство в Zorn матриците:
-Антикомутиращи самоадюнгнати генератори.
--/
+/-- A finite Zorn carrier for a Majorana-labelled generator.  This carrier
+    does not provide an involution, so self-adjointness is not asserted. -/
 structure MajoranaOperator where
   val : ZornMatrix
-  is_self_adjoint : true -- placeholder for structural property
   
 /-- Прожекторите на Китаев върху топологичните сектори: P_plus и P_minus. -/
 def KitaevProjectorPlus (γ1 γ2 : MajoranaOperator) : ZornMatrix :=

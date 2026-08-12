@@ -34,14 +34,12 @@
     "spectral_constructive": {
       "files": [
         "lean/InfoGeometry/Canonical/DrazinInfiniteCore.lean",
-        "lean/InfoGeometry/Canonical/DrazinWitnessElimination.lean",
         "lean/InfoGeometry/Canonical/DrazinSpectralBridge.lean",
         "lean/InfoGeometry/Canonical/DrazinSpectralProjectorBridge.lean",
         "lean/InfoGeometry/Canonical/DrazinSupercharge.lean"
       ],
       "buildTargets": [
         "InfoGeometry.Canonical.DrazinInfiniteCore",
-        "InfoGeometry.Canonical.DrazinWitnessElimination",
         "InfoGeometry.Canonical.DrazinSpectralBridge",
         "InfoGeometry.Canonical.DrazinSpectralProjectorBridge",
         "InfoGeometry.Canonical.DrazinSupercharge"

@@ -20,7 +20,7 @@ example {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
 
 example {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]
     [UHF : CuntzIsometryData A] :
-    star (UHFAlgebra.S_L (A := A)) * UHFAlgebra.S_R (A := A) = 0 :=
+    star (CuntzIsometryData.S_L (A := A)) * CuntzIsometryData.S_R (A := A) = 0 :=
   cuntz_orthogonality (A := A)
 
 example {A : Type*} [NormedRing A] [StarRing A] [CompleteSpace A]

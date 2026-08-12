@@ -6,4 +6,4 @@ variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
 variable (Q : QuadraticForm R M) [HasVolumeElement R M Q] [HasSpacetimeBasis Q]
 
 lemma basisBivector_mul_omega (i : Fin 6) : basisBivector Q i * Omega (Q := Q) ∈ Bivector13 Q := by
-  exact InfoGeometry.Canonical.HestenesBivectorCarrier.basisBivector_mul_omega Q i
+  exact hodge_preserves_bivector Q (basisBivector Q i) (Submodule.subset_span ⟨i, rfl⟩)

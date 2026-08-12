@@ -37,8 +37,6 @@ structure ChiralTriaxialConfiguration where
   core_momentum : ℝ
   proton_momentum : ℝ
   neutron_momentum : ℝ
-  /-- The configuration maps to the Cartan Triality vectors. -/
-  maps_to_D4_triality : Prop
 
 /-- 
 The Hamiltonian of the chiral bands, where the twin bands (Band 1 and Band 2) 

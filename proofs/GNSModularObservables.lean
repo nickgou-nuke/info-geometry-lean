@@ -49,7 +49,7 @@ theorem gnsTrace_sigma3 : gnsTrace σ3c = 0 := by
 
 /-- The trace of the identity: τ(I) = 1.  Vacuum is normalized. -/
 theorem gnsTrace_identity : gnsTrace (1 : M2C) = 1 := by
-  simp [gnsTrace, Matrix.trace_fin_two]
+  simp [gnsTrace]
 
 /-- Chiral projector expectations: τ(N₊) = τ(N₋) = ½.
 The vacuum has equal particle and hole occupation. -/
@@ -88,21 +88,11 @@ This is the Tomita-Takesaki modular theory for the tracial state:
 Hence J·a·J = a* (Dirac conjugation). -/
 structure ModularJInvolution where
   J : M2C → M2C
-  antihomomorphism : Prop                  -- J(a·b) = J(b)·J(a)
+  antihomomorphism : ∀ a b : M2C, J (a * b) = J b * J a
   diracConjugation : ∀ a, J (J a) = a      -- J² = id
   particleHoleSwap : J σPlus = σMinus ∧ J σMinus = σPlus
   selfAdjointFix : J σ3c = σ3c
   traceInvariant : ∀ a, gnsTrace (J a) = gnsTrace a
-
-/-- Modular J squares to the identity: J(J(a)) = a. -/
-theorem modular_J_is_involution (M : ModularJInvolution) (a : M2C) : M.J (M.J a) = a :=
-  M.diracConjugation a
-
-/-- The Dirac conjugate under modular J:
-  a† = J·a*·J where a* is the Hermitian adjoint.
-  For the tracial state, J·a*·J = a*† = a → J = complex conjugation. -/
-theorem dirac_conjugate_via_modular_J (M : ModularJInvolution) (a : M2C) : M.J (M.J a) = a :=
-  M.diracConjugation a
 
 /-! ## 3. Fierz identity = soldering form: operators → spinors -/
 

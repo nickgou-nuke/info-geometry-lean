@@ -96,7 +96,6 @@ Jaynes' LDDP: the continuum limit is the colimit of this diagram. -/
 structure CountableDirectDiagram where
   stage : ℕ → Type                       -- F(n) = algebra at resolution n
   embed : ∀ n, stage n → stage (n + 1)   -- inclusion F(n) ↪ F(n+1)
-  embed_id : ∀ n x, embed n x = embed n x := by intro n x; rfl  -- reflexivity
 
 /-- The UHF diagonal algebra `DiagAlg n` with `diagEmbedSucc` inclusions
 is the prototypical countable direct diagram — the Jaynes LDDP counting ladder. -/
@@ -126,42 +125,6 @@ def uhfCylinderCocone : Cocone uhfDiagonalDiagram (CantorBoundary → ℂ) := {
   map := cylinder
   compatible := embedded_cylinder_same_point
 }
-
-/-- The colimit induction principle (categorical Jaynes LDDP):
-To define a function from the colimit CantorBoundary (as represented by
-cylinder functions), it suffices to define compatible functions at each
-finite stage n.
-
-This is the categorical statement: the Cantor boundary IS the colimit,
-so any compatible family of finite-stage maps factors uniquely through it. -/
-theorem colimit_induction (D : CountableDirectDiagram) (T : Type)
-    (_c : Cocone D T) (x : T) : x = x := rfl
-
-/-- Jaynes' categorical LDDP principle:
-The continuum observable is the unique compatible extension of finite-stage
-counting measurements.  Any two finite-stage families that agree on all
-cylinder embeddings define the same continuum observable.
-
-  "The continuum is the colimit of counting — it carries no
-   additional information beyond the compatible finite measurements."
-
-This is formalized as: the colimit cocone is the carrier of the
-universal property. -/
-theorem jaynes_categorical_lddp_principle
-    (D : CountableDirectDiagram) (T : Type)
-    (c₁ c₂ : Cocone D T)
-    (h : ∀ n x, c₁.map n x = c₂.map n x) :
-    ∀ n x, c₁.map n x = c₂.map n x := h
-
-/-- Concrete instance: the UHF cylinder cocone is the canonical colimit
-carrier on `CantorBoundary → ℂ`.  Any compatible family into this type
-that agrees with `cylinder` at all finite stages is identical to it
-(Jaynes' LDDP: the continuum observable is uniquely determined by the
-finite counting ladder). -/
-theorem uhf_cylinder_cocone_is_canonical
-    (c : Cocone uhfDiagonalDiagram (CantorBoundary → ℂ))
-    (h : ∀ n f, c.map n f = cylinder n f) :
-    ∀ n f, c.map n f = cylinder n f := h
 
 /-- Capstone: categorical Jaynes LDDP + colimit carrier.
 The continuum emerges as the colimit of a countable direct diagram of

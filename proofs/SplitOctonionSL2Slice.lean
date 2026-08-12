@@ -17,4 +17,10 @@ theorem sliceToOct_mul (a b c d A B C D : ℝ) :
     (a*D + d*A + b*C - c*B) := by
   ext1 <;> ext1 <;> simp [sliceToOct, u, ell, star] <;> ring
 
+theorem sliceToOct_assoc (a b c d A B C D p q r s : ℝ) :
+    (sliceToOct a b c d * sliceToOct A B C D) * sliceToOct p q r s =
+      sliceToOct a b c d * (sliceToOct A B C D * sliceToOct p q r s) := by
+  simp only [sliceToOct_mul]
+  ext1 <;> ext1 <;> simp [sliceToOct] <;> ring
+
 end SplitOctonionSL2Slice

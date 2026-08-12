@@ -1,5 +1,6 @@
 import proofs.ZornColorChargeConjugation
 import proofs.ZornColorLieRepresentation
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-!
 # Bundled chiral color representations
@@ -15,7 +16,7 @@ namespace ZornChiralColorRepresentations
 
 open CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 open ZornThreeChannelCAR ZornColorLieAction
 open ZornColorLieRepresentation ZornChiralColorActions
 open ZornColorChargeConjugation

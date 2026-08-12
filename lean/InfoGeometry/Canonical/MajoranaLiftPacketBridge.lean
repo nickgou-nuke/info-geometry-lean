@@ -110,8 +110,8 @@ theorem packetOfCanonicalDIIIProxy_eps_eq_neg_S :
     canonicalMajoranaEps (E := E) =
       -((canonicalDIIIProxy (E := E)).S) := by
   symm
-  simpa using congrArg Neg.neg
-    (canonicalDIIIProxy_S_eq_neg_spectral_epsilon (E := E))
+  rw [canonicalDIIIProxy_S_eq_neg_spectral_epsilon]
+  simp
 
 /-- The canonical Majorana phase axis is the DIII time-reversal operator. -/
 @[rep_depth transport]

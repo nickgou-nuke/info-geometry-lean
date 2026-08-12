@@ -33,6 +33,42 @@ def modularPhaseComplex (p : ℕ) (z : ℂ) : ℂ := Complex.exp (I * z * (Real.
 /-- Inverse complex phase: exp(-i·z·log(p)). -/
 def modularPhaseComplexInv (p : ℕ) (z : ℂ) : ℂ := Complex.exp (-(I * z * (Real.log (p : ℝ) : ℂ)))
 
+@[simp] lemma modularPhaseComplex_add (p : ℕ) (z w : ℂ) :
+    modularPhaseComplex p (z + w) =
+      modularPhaseComplex p z * modularPhaseComplex p w := by
+  dsimp [modularPhaseComplex]
+  have h : I * (z + w) * (Real.log (p : ℝ) : ℂ) =
+      I * z * (Real.log (p : ℝ) : ℂ) +
+        I * w * (Real.log (p : ℝ) : ℂ) := by
+    ring
+  rw [h, Complex.exp_add]
+
+@[simp] lemma modularPhaseComplexInv_add (p : ℕ) (z w : ℂ) :
+    modularPhaseComplexInv p (z + w) =
+      modularPhaseComplexInv p z * modularPhaseComplexInv p w := by
+  dsimp [modularPhaseComplexInv]
+  have h : -(I * (z + w) * (Real.log (p : ℝ) : ℂ)) =
+      -(I * z * (Real.log (p : ℝ) : ℂ)) +
+        -(I * w * (Real.log (p : ℝ) : ℂ)) := by
+    ring
+  rw [h, Complex.exp_add]
+
+lemma modularPhaseComplex_mul_inv (p : ℕ) (z : ℂ) :
+    modularPhaseComplex p z * modularPhaseComplexInv p z = 1 := by
+  dsimp [modularPhaseComplex, modularPhaseComplexInv]
+  rw [← Complex.exp_add]
+  have h : I * z * (Real.log (p : ℝ) : ℂ) +
+      -(I * z * (Real.log (p : ℝ) : ℂ)) = 0 := by ring
+  rw [h, Complex.exp_zero]
+
+lemma modularPhaseComplex_inv_mul (p : ℕ) (z : ℂ) :
+    modularPhaseComplexInv p z * modularPhaseComplex p z = 1 := by
+  dsimp [modularPhaseComplexInv, modularPhaseComplex]
+  rw [← Complex.exp_add]
+  have h : -(I * z * (Real.log (p : ℝ) : ℂ)) +
+      I * z * (Real.log (p : ℝ) : ℂ) = 0 := by ring
+  rw [h, Complex.exp_zero]
+
 @[simp] lemma modularPhaseComplex_real (p : ℕ) (t : ℝ) : modularPhaseComplex p (t : ℂ) = modularPhase p t := by
   simp [modularPhaseComplex, modularPhase]
 
@@ -117,6 +153,62 @@ lemma modularOnFreeComplex_single (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) (
 /-- Modular automorphism σ_z on the free tensor algebra for complex time z. -/
 noncomputable def sigmaTensorComplex (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) : CuntzTensor n →ₐ[ℂ] CuntzTensor n :=
   TensorAlgebra.lift ℂ (modularOnFreeComplex n primes z)
+
+lemma sigmaTensorComplex_add_aux (n : ℕ) (primes : Fin n → ℕ)
+    (z w : ℂ) (x : CuntzTensor n) :
+    sigmaTensorComplex n primes (z + w) x =
+      (sigmaTensorComplex n primes z).comp
+        (sigmaTensorComplex n primes w) x := by
+  induction x using TensorAlgebra.induction with
+  | algebraMap r =>
+      dsimp [sigmaTensorComplex]
+      simp [modularPhaseComplex_add, modularPhaseComplexInv_add]
+  | ι v =>
+      refine Finsupp.induction_linear v (by simp [sigmaTensorComplex, AlgHom.comp_apply]) ?_ ?_
+      · intro v₁ v₂ hv₁ hv₂
+        dsimp [sigmaTensorComplex, AlgHom.comp_apply] at *
+        simp [map_add, hv₁, hv₂]
+      · intro g c
+        rcases g with ⟨i, b⟩
+        cases b with
+        | false =>
+            dsimp [sigmaTensorComplex, AlgHom.comp_apply, gen]
+            simp_rw [TensorAlgebra.lift_ι_apply]
+            rw [modularOnFreeComplex_single, modularOnFreeComplex_single]
+            rw [map_smul (TensorAlgebra.lift ℂ (modularOnFreeComplex n primes z))]
+            dsimp [gen]
+            rw [TensorAlgebra.lift_ι_apply, modularOnFreeComplex_single]
+            simp [gen, modularPhaseComplex_add, smul_smul,
+              mul_comm, mul_left_comm, mul_assoc]
+        | true =>
+            dsimp [sigmaTensorComplex, AlgHom.comp_apply, gen]
+            simp_rw [TensorAlgebra.lift_ι_apply]
+            rw [modularOnFreeComplex_single, modularOnFreeComplex_single]
+            rw [map_smul (TensorAlgebra.lift ℂ (modularOnFreeComplex n primes z))]
+            dsimp [gen]
+            rw [TensorAlgebra.lift_ι_apply, modularOnFreeComplex_single]
+            simp [gen, modularPhaseComplexInv_add, smul_smul,
+              mul_comm, mul_left_comm, mul_assoc]
+  | mul x y hx hy =>
+      dsimp [sigmaTensorComplex, AlgHom.comp_apply] at *
+      simp [map_mul, hx, hy]
+  | add x y hx hy =>
+      dsimp [sigmaTensorComplex, AlgHom.comp_apply] at *
+      simp [map_add, hx, hy]
+
+@[simp] lemma sigmaTensorComplex_zero (n : ℕ) (primes : Fin n → ℕ) :
+    sigmaTensorComplex n primes 0 = AlgHom.id ℂ (CuntzTensor n) := by
+  ext v
+  rcases v with ⟨i, b⟩
+  cases b with
+  | false =>
+      dsimp [sigmaTensorComplex, gen]
+      rw [TensorAlgebra.lift_ι_apply, modularOnFreeComplex_single]
+      simp [modularPhaseComplex, gen]
+  | true =>
+      dsimp [sigmaTensorComplex, gen]
+      rw [TensorAlgebra.lift_ι_apply, modularOnFreeComplex_single]
+      simp [modularPhaseComplexInv, gen]
 
 lemma sigmaTensorComplex_S (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) (i : Fin n) :
     sigmaTensorComplex n primes z (S n i) = modularPhaseComplex (primes i) z • S n i := by
@@ -204,6 +296,62 @@ lemma sigmaComplex_mk (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) (x : CuntzTen
     (RingQuot.mkAlgHom ℂ (CuntzRel n)) (sigmaTensorComplex n primes z x) := by
   dsimp [sigmaComplex, cuntzMk]
   simp [RingQuot.liftAlgHom_mkAlgHom_apply, AlgHom.comp_apply]
+
+@[simp] theorem sigmaComplex_add (n : ℕ) (primes : Fin n → ℕ) (z w : ℂ) :
+    sigmaComplex n primes (z + w) =
+      (sigmaComplex n primes z).comp (sigmaComplex n primes w) := by
+  apply DFunLike.ext
+  intro x
+  rcases RingQuot.mkAlgHom_surjective ℂ (CuntzRel n) x with ⟨y, rfl⟩
+  rw [AlgHom.comp_apply, sigmaComplex_mk,
+    sigmaComplex_mk n primes w y,
+    sigmaComplex_mk n primes z (sigmaTensorComplex n primes w y),
+    sigmaTensorComplex_add_aux n primes z w y, AlgHom.comp_apply]
+
+@[simp] theorem sigmaComplex_zero (n : ℕ) (primes : Fin n → ℕ) :
+    sigmaComplex n primes (0 : ℂ) = AlgHom.id ℂ (CuntzAlg n) := by
+  apply DFunLike.ext
+  intro x
+  rcases RingQuot.mkAlgHom_surjective ℂ (CuntzRel n) x with ⟨y, rfl⟩
+  rw [sigmaComplex_mk, sigmaTensorComplex_zero]
+  rfl
+
+theorem sigmaComplex_comp_neg (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) :
+    (sigmaComplex n primes z).comp (sigmaComplex n primes (-z)) =
+      AlgHom.id ℂ (CuntzAlg n) := by
+  calc
+    (sigmaComplex n primes z).comp (sigmaComplex n primes (-z)) =
+        sigmaComplex n primes (z + (-z)) :=
+      (sigmaComplex_add n primes z (-z)).symm
+    _ = AlgHom.id ℂ (CuntzAlg n) := by simp
+
+theorem sigmaComplex_neg_comp (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) :
+    (sigmaComplex n primes (-z)).comp (sigmaComplex n primes z) =
+      AlgHom.id ℂ (CuntzAlg n) := by
+  calc
+    (sigmaComplex n primes (-z)).comp (sigmaComplex n primes z) =
+        sigmaComplex n primes ((-z) + z) :=
+      (sigmaComplex_add n primes (-z) z).symm
+    _ = AlgHom.id ℂ (CuntzAlg n) := by simp
+
+theorem sigmaComplex_bijective (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) :
+    Function.Bijective (sigmaComplex n primes z) := by
+  constructor
+  · intro x y hxy
+    have h' := congrArg (fun F : CuntzAlg n →ₐ[ℂ] CuntzAlg n => F x)
+      (sigmaComplex_neg_comp n primes z)
+    have h'' := congrArg (fun F : CuntzAlg n →ₐ[ℂ] CuntzAlg n => F y)
+      (sigmaComplex_neg_comp n primes z)
+    have hx : sigmaComplex n primes (-z) (sigmaComplex n primes z x) = x := by
+      simpa [AlgHom.comp_apply] using h'
+    have hy : sigmaComplex n primes (-z) (sigmaComplex n primes z y) = y := by
+      simpa [AlgHom.comp_apply] using h''
+    exact hx.symm.trans (congrArg (sigmaComplex n primes (-z)) hxy |>.trans hy)
+  · intro y
+    refine ⟨sigmaComplex n primes (-z) y, ?_⟩
+    have h := congrArg (fun F : CuntzAlg n →ₐ[ℂ] CuntzAlg n => F y)
+      (sigmaComplex_comp_neg n primes z)
+    simpa [AlgHom.comp_apply] using h
 
 /-- For real t, σ_t^ℂ = σ_t. -/
 @[simp] lemma sigmaComplex_real (n : ℕ) (primes : Fin n → ℕ) (t : ℝ) :

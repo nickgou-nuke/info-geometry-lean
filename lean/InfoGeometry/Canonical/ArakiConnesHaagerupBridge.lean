@@ -96,19 +96,19 @@ structure StandardFormCantorConeSystem
 
   /-- Dyadic cylinder projection carrier. -/
   cylinderProjection :
-    BinaryWord → Alg
+    List Bool → Alg
 
   /-- Reflected/right cylinder carrier. -/
   reflectedCylinder :
-    BinaryWord → Alg
+    List Bool → Alg
 
   /-- Positive reference cylinder weight. -/
   referenceWeight :
-    BinaryWord → ℝ
+    List Bool → ℝ
 
   /-- Positivity of cylinder weights. -/
   referenceWeight_pos :
-    ∀ w : BinaryWord, 0 < referenceWeight w
+    ∀ w : List Bool, 0 < referenceWeight w
 
 namespace StandardFormCantorConeSystem
 
@@ -117,20 +117,20 @@ variable (C : StandardFormCantorConeSystem Alg Hilb NormalPositive)
 
 /-- Cylinder logarithmic potential `-log μ(w)`. -/
 @[rep_depth thermo]
-def cylinderPotential (w : BinaryWord) : ℝ :=
+def cylinderPotential (w : List Bool) : ℝ :=
   TypeIIIModularCantorSystem.cylinderPotential C.referenceWeight w
 
 /-- Branch logarithmic increment `-log(μ(wb)/μ(w))`. -/
 @[rep_depth thermo]
-def branchIncrement (w : BinaryWord) (b : Bool) : ℝ :=
+def branchIncrement (w : List Bool) (b : Bool) : ℝ :=
   TypeIIIModularCantorSystem.branchIncrement C.referenceWeight w b
 
 /-- One-step logarithmic chain rule along the dyadic tree. -/
 @[rep_depth thermo]
 theorem cylinderPotential_child
-    (w : BinaryWord)
+    (w : List Bool)
     (b : Bool) :
-    C.cylinderPotential (BinaryWord.child w b) =
+    C.cylinderPotential (TypeIIIModularCantorSystem.child w b) =
       C.cylinderPotential w + C.branchIncrement w b :=
   TypeIIIModularCantorSystem.cylinderPotential_child C.referenceWeight C.referenceWeight_pos w b
 

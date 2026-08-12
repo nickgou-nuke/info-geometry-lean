@@ -1,4 +1,4 @@
-import proofs.CanonicalZornRealSpin44
+import InfoGeometry.Canonical.CanonicalZornRealSpin44
 import Mathlib.Algebra.Star.Basic
 
 /-!

@@ -1,9 +1,10 @@
 import proofs.ZornLightconeCAR
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 noncomputable section
 
 open CliffordAlgebra LinearMap
-open SplitOctonionBraidSU3 CanonicalZornCompositionTriality
+open InfoGeometry.Physics.SplitOctonionBraidSU3 CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation ZornCliffordParityAPI
 open ZornChiralLightcone ZornLightconeCAR
 
@@ -15,7 +16,7 @@ This is `χ`, not the complex structure `J = iχ`. The module proves grading
 and CAR identities; it does not construct a boost flow or a KMS state.
 -/
 def rindlerModularHamiltonian : Module.End ℂ DiracSpinor16 :=
-  chiralityOperator
+  ZornCliffordParityAPI.chiralityOperator
 
 /-- 2. Хоризонтното усукано CAR условие за невакуозност. -/
 theorem rindler_horizon_anticommutator (r : Fin 3) :
@@ -31,8 +32,10 @@ theorem causal_order_proof (r : Fin 3) :
   rintro ⟨S, C⟩
   rw [LinearMap.sub_apply, Module.End.mul_apply, Module.End.mul_apply,
     LinearMap.smul_apply]
-  rw [rindlerModularHamiltonian, chiralityOperator_apply,
-    lightconeSigmaPlus_apply, chiralityOperator_apply,
+  rw [rindlerModularHamiltonian,
+    ZornCliffordParityAPI.chiralityOperator_apply,
+    lightconeSigmaPlus_apply,
+    ZornCliffordParityAPI.chiralityOperator_apply,
     lightconeSigmaPlus_apply,
     CanonicalZornSpinChirality.cliffordMinus_neg]
   apply Prod.ext <;> simp [two_smul, sub_eq_add_neg]
@@ -46,8 +49,10 @@ theorem causal_order_minus_proof (r : Fin 3) :
   rintro ⟨S, C⟩
   rw [LinearMap.sub_apply, Module.End.mul_apply, Module.End.mul_apply,
     LinearMap.smul_apply]
-  rw [rindlerModularHamiltonian, chiralityOperator_apply,
-    lightconeSigmaMinus_apply, chiralityOperator_apply,
+  rw [rindlerModularHamiltonian,
+    ZornCliffordParityAPI.chiralityOperator_apply,
+    lightconeSigmaMinus_apply,
+    ZornCliffordParityAPI.chiralityOperator_apply,
     lightconeSigmaMinus_apply]
   apply Prod.ext <;> simp [two_smul, sub_eq_add_neg]
 

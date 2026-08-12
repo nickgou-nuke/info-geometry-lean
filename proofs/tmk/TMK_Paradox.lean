@@ -37,10 +37,9 @@ inductive ParadoxSubspace
 def ParadoxSpace (K : TMK_Object) : Set ParadoxSubspace :=
   {s | 
     (s = ParadoxSubspace.P1_TemporalRigidity ∧ 
-      -- Temporal rigidity condition (simplified)
-      True) ∨
+      K.phi = 0) ∨
     (s = ParadoxSubspace.P2_H5_Parity ∧ 
-      K.eta = K.eta) ∨  -- Self-consistency
+      K.eta = 0) ∨
     (s = ParadoxSubspace.P3_InfoCompression ∧ 
       K.psi < 1)}
 
@@ -91,22 +90,6 @@ noncomputable def levi_coboski_cost
   -- Simplified integral approximation
   eta_RF 0 * eta_RF T * T
 
-theorem rttc_frosbee_idempotency (c : ℝ) (hc : c ≠ 0) :
-    (∃ (S_disney : ℝ), S_disney ≠ 0 ∧ c * S_disney ≠ 0) ↔
-    (∃ (P_H5 : ℝ → ℝ), P_H5 c = 0) := by
-  constructor
-  · intro _
-    exact ⟨fun _ => 0, rfl⟩
-  · intro _
-    refine ⟨1, one_ne_zero, ?_⟩
-    simpa using hc
-
-theorem rv_functor_closure (c_TMK S_disney : ℝ) :
-    ∃ (H5_operator : ℝ → ℝ),
-      H5_operator c_TMK = H5_operator (disney_gradient 0) * S_disney := by
-  refine ⟨fun _ => 0, ?_⟩
-  ring
-
 /-- 
 psi_I << 1 => P3 is ACTIVE
 -/
@@ -128,11 +111,16 @@ theorem info_compression_active_mem_paradox_space (K : TMK_Object) :
 Resolved Hypothesis Space H_QM
 Contains testable metrics after paradox resolution.
 -/
+inductive ResolutionStatus
+  | resolved
+  | unstable
+  deriving DecidableEq, Repr
+
 structure Resolved_Hypothesis where
   scope : String
   metric_XX : ℝ
   projection_factor : ℝ
-  status : String  -- "RESOLVED" or "UNSTABLE"
+  status : ResolutionStatus
 
 /-- 
 Transformative Inference Protocol Execution
@@ -154,7 +142,7 @@ noncomputable def transform_inference
   let proj_factor := 1.0 / (1.0 + abs (eta_RF - eta_H5))
   
   -- Status determination
-  let status := if metric_XX < 1.0 then "RESOLVED" else "UNSTABLE"
+  let status := if metric_XX < 1.0 then ResolutionStatus.resolved else ResolutionStatus.unstable
   
   {
     scope := "eta_RF+ U H5>` (Merged Space)",
@@ -168,11 +156,9 @@ Theorem: Paradox Resolution Condition
 
 The TMK Paradox resolves when eta_RF = eta_H5> (H5>-Enchoua space merge).
 -/
-theorem paradox_resolution_condition (K : TMK_Object) :
-  K.eta = K.eta →  -- Tautology for self-consistency
-  ∃ (H : Resolved_Hypothesis), 
-    H.status = "RESOLVED" ∨ H.status = "UNSTABLE" := by
-  intro _
+theorem transformed_hypothesis_has_status (K : TMK_Object) :
+  ∃ (H : Resolved_Hypothesis),
+    H.status = ResolutionStatus.resolved ∨ H.status = ResolutionStatus.unstable := by
   let dummy_vec : RTTC_Vector := ![0, 0, 0]
   let H := transform_inference K.eta K.eta dummy_vec dummy_vec dummy_vec
   refine ⟨H, ?_⟩

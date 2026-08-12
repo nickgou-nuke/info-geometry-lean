@@ -236,6 +236,34 @@ theorem limitKFromOne_wellDefined (k : ℕ) :
     ofStage (k + 1) (stageKFromOne k) = limitKFromOne :=
   limitElementFromOne_eq_stage stageKFromOne stageKFromOne_commutes_bond k
 
+@[rep_depth operator]
+theorem stageKFromOne_sq (k : ℕ) :
+    stageKFromOne k * stageKFromOne k =
+      -(1 : TowerStage (k + 1)) := by
+  induction k with
+  | zero =>
+      change localPhaseAxis * localPhaseAxis = -(1 : TowerStage 1)
+      change ((1 : TowerStage 0) ⊗ₖ phaseAxisMatrix) *
+        ((1 : TowerStage 0) ⊗ₖ phaseAxisMatrix) =
+        -(1 : TowerStage 1)
+      rw [← Matrix.mul_kronecker_mul]
+      rw [phaseAxisMatrix_sq]
+      ext i j
+      fin_cases i <;> fin_cases j <;> simp
+  | succ k ih =>
+      change stageEmbed (k + 1) (stageKFromOne k) *
+        stageEmbed (k + 1) (stageKFromOne k) =
+        -(1 : TowerStage (k + 2))
+      rw [← map_mul]
+      rw [ih]
+      simpa only [map_neg, map_one]
+
+@[rep_depth operator]
+theorem limitKFromOne_sq :
+    limitKFromOne * limitKFromOne = -(1 : TowerLimit) := by
+  rw [← limitKFromOne_wellDefined 0]
+  rw [← ofStage_mul, stageKFromOne_sq, ofStage_neg, ofStage_one]
+
 /--
 Compatible offset finite-stage representatives that commute at every stage have
 commuting images in the direct limit.

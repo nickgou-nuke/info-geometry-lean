@@ -109,11 +109,11 @@ theorem coordinateReflection_mem_orthogonal55 :
     by_cases hi : i = 0
     · subst i
       simp [coordinateReflection, O55Form, Matrix.mul_apply,
-        Matrix.transpose_apply, Matrix.diagonal_apply]
+        Matrix.diagonal_apply]
     · simp [coordinateReflection, O55Form, Matrix.mul_apply,
-        Matrix.transpose_apply, Matrix.diagonal_apply, hi]
+        Matrix.diagonal_apply, hi]
   · simp [coordinateReflection, O55Form, Matrix.mul_apply,
-      Matrix.transpose_apply, Matrix.diagonal_apply, h]
+      Matrix.diagonal_apply, h]
 
 theorem coordinateReflectionGL_mem_OrthogonalGroup55 :
     coordinateReflectionGL ∈ OrthogonalGroup55 :=

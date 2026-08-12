@@ -49,16 +49,16 @@ theorem eta_involution : O.eta * O.eta = 1 := by
   have h12 : star O.S₁ * O.S₂ = 0 := ortho_S₁_star_S₂ O
   have h21 : star O.S₂ * O.S₁ = 0 := ortho_S₂_star_S₁ O
   have h1 : O.S₁ * star O.S₁ * (O.S₁ * star O.S₁) = O.S₁ * star O.S₁ := by
-    rw [mul_assoc, ← mul_assoc (star O.S₁), O.S₁_isometry, one_mul]
+    rw [mul_assoc, ← mul_assoc (star O.S₁), O.isometry₁, one_mul]
   have h2 : O.S₁ * star O.S₁ * (O.S₂ * star O.S₂) = 0 := by
     rw [mul_assoc, ← mul_assoc (star O.S₁), h12, zero_mul, mul_zero]
   have h3 : O.S₂ * star O.S₂ * (O.S₁ * star O.S₁) = 0 := by
     rw [mul_assoc, ← mul_assoc (star O.S₂), h21, zero_mul, mul_zero]
   have h4 : O.S₂ * star O.S₂ * (O.S₂ * star O.S₂) = O.S₂ * star O.S₂ := by
-    rw [mul_assoc, ← mul_assoc (star O.S₂), O.S₂_isometry, one_mul]
+    rw [mul_assoc, ← mul_assoc (star O.S₂), O.isometry₂, one_mul]
   simp only [sub_mul, mul_sub]
   rw [h1, h2, h3, h4]
   simp only [sub_zero, zero_sub, sub_neg_eq_add]
-  exact O.cuntz_relation
+  exact O.completeness
 
 end CuntzO2

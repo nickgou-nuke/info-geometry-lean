@@ -1,9 +1,0 @@
-import Mathlib.GroupTheory.SpecificGroups.KleinFour
-#check Monoid.exponent
-#check Monoid.exponent_eq_two_iff
-#check Monoid.exponent_eq_prime_iff
-#check Monoid.pow_exponent_eq_one
-#check IsKleinFour.nonempty_mulEquiv
-#check IsCyclotomicExtension.Rat.galEquivZMod
-#check CyclotomicField
-#check Gal

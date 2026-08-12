@@ -72,7 +72,8 @@ The odd grading space where the Dirac Spinors live.
 -- The Projectors P+ and P- split this space into the Electron and Positron sheets.
 -/
 
-/-- A dummy Cartan Involution operator representing the P+ / P- split -/
+/- Coordinate sign maps used only as a finite carrier-level split.  They are
+   not claimed to be a Cartan involution of the TKK Lie algebra. -/
 def CartanInvolution_P_plus (v : L) : L := v
 def CartanInvolution_P_minus (v : L) : L := -v
 
@@ -81,7 +82,7 @@ COMMUTATION RELATIONS (Theorem Skeleton)
 The SU(3) strong interaction generators commute with the SU(2) electroweak/Cartan generators,
 since color is independent of flavor in the Standard Model tensor product architecture!
 -/
-theorem su3_commutes_with_isospin
+theorem su3_and_isospin_membership
     (su2_sub : LieSubalgebra ℂ tkk.g_0) (su3_sub : LieSubalgebra ℂ tkk.g_0)
     (x : su3_sub) (y : su2_sub) :
     -- In a strict formalization, the Lie bracket [x, y] evaluates to 0.

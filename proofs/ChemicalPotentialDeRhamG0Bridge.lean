@@ -29,7 +29,7 @@ noncomputable section
 
 namespace ChemicalPotentialDeRhamG0Bridge
 
-open TKKJordanPairData
+open TKKJordanPairData.Legacy
 open ChemicalPotentialTKKGradeZero
 open ThermodynamicTKKBridge
 open NonIsoConf3DeRhamCooperad

@@ -1,8 +1,7 @@
 import Mathlib.LinearAlgebra.Trace
-import proofs.CanonicalZornCliffordRepresentation
-import proofs.DiracCrystalNarainO55
+import Mathlib.NumberTheory.ArithmeticFunction.Moebius
+import InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
 import proofs.WeylHamiltonianTopology
-import proofs.NarainMajoranaZeroModes
 import proofs.ZornMajoranaBraiding
 
 /-!
@@ -19,22 +18,25 @@ noncomputable section
 namespace WittenMoebiusIndex
 
 open LinearMap
+open ArithmeticFunction
+open scoped ArithmeticFunction.Moebius
 open CanonicalZornCliffordRepresentation
 open WeylHamiltonianTopology
-open NarainMajoranaZeroModes
 open ZornMajoranaBraiding
 
-/-- The arithmetic Möbius function filter. -/
+/-- The arithmetic Möbius function, embedded from `ℤ` into `ℂ`. -/
 def moebius_mu (n : ℕ) : ℂ :=
-  -- Placeholder for the standard Möbius function implemented over ℂ
-  sorry
+  ((μ n : ℤ) : ℂ)
 
-/-- 
-The Fermion Parity Operator (-1)^F defined via the chiral Γ₅ operator.
-Because of the 5-graded structure, it acts as +I on SpinorPlus8 and -I on SpinorMinus8.
--/
-def fermionParityOperator : Module.End ℂ CanonicalZornCliffordRepresentation.DiracSpinor16 :=
-  sorry
+/-- Fermion parity acts by `+1` on `SpinorPlus8` and by `-1` on
+`SpinorMinus8`. -/
+def fermionParityOperator :
+    Module.End ℂ CanonicalZornCliffordRepresentation.DiracSpinor16 where
+  toFun Ψ := (Ψ.1, -Ψ.2)
+  map_add' Ψ Φ := by
+    ext <;> simp [add_comm]
+  map_smul' c Ψ := by
+    ext <;> simp
 
 /-- 
 The Supertrace in the 16-dimensional Zorn space. 

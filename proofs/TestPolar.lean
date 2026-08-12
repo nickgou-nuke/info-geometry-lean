@@ -35,8 +35,7 @@ theorem polar_factorization (q1 q2 : H) (hq : q1 ≠ 0) :
 def N (O : SplitOctonion) : ℝ :=
   (Quaternion.normSq O.q1 : ℝ) - (Quaternion.normSq O.q2 : ℝ)
 
-theorem exists_principal_logarithm (O : SplitOctonion) (h_not_null : N O ≠ 0) :
-    ∃ (log_O : SplitOctonion), True := by
-  exact ⟨one, trivial⟩
+/- A principal logarithm is not claimed: this test carrier has no
+   multiplication/exponential from which such a theorem could follow. -/
 
 end SplitOctonion

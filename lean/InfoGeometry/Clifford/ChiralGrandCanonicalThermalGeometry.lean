@@ -1,6 +1,7 @@
 import InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry
 import InfoGeometry.Thermodynamics.UnruhTemperature
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Arctan
 
 /-!
 # Thermal readouts of the native two-sheet CAR geometry
@@ -87,6 +88,14 @@ theorem grandCanonicalDerivation_totalNumber_zero
   simp only [smul_mul_assoc, mul_smul_comm]
   rw [← smul_sub, hG, smul_zero]
 
+theorem grandCanonicalModularGenerator_commutator_totalNumber
+    (H : Operator) (beta μ μχ : ℝ)
+    (hH : algebraCommutator H totalNumber = 0) :
+    algebraCommutator
+        (grandCanonicalModularGenerator H beta μ μχ) totalNumber = 0 := by
+  change grandCanonicalDerivation H beta μ μχ totalNumber = 0
+  exact grandCanonicalDerivation_totalNumber_zero H beta μ μχ hH
+
 theorem rindlerGrandCanonicalDerivation_chiralCharge_zero
     (obs : RindlerObserver) (H : Operator) (μ μχ : ℝ)
     (hH : algebraCommutator H chiralCharge = 0) :
@@ -102,6 +111,17 @@ theorem rindlerGrandCanonicalDerivation_totalNumber_zero
   unfold rindlerGrandCanonicalDerivation
   exact grandCanonicalDerivation_totalNumber_zero
     H (inverseTemperature obs) μ μχ hH
+
+theorem grandCanonicalModularGenerator_conserves_number_and_chiral_charge
+    (H : Operator) (beta μ μχ : ℝ)
+    (hN : algebraCommutator H totalNumber = 0)
+    (hχ : algebraCommutator H chiralCharge = 0) :
+    algebraCommutator
+        (grandCanonicalModularGenerator H beta μ μχ) totalNumber = 0 ∧
+      algebraCommutator
+        (grandCanonicalModularGenerator H beta μ μχ) chiralCharge = 0 := by
+  exact ⟨grandCanonicalModularGenerator_commutator_totalNumber H beta μ μχ hN,
+    grandCanonicalModularGenerator_commutator_chiralCharge H beta μ μχ hχ⟩
 
 /-- Effective one-particle energy on sheet `σ`. -/
 def effectiveEnergy (E μ μχ σ : ℝ) : ℝ := E - μ - σ * μχ
@@ -180,6 +200,22 @@ theorem thermalAmplitudeRatio_sq (β ξ : ℝ) :
   rw [pow_two, ← Real.exp_add]
   congr 1
   ring
+
+/-! The Bogoliubov angle is a readout of the native CAR thermal odds. -/
+
+def thermalBogoliubovAngle (β ξ : ℝ) : ℝ :=
+  Real.arctan (thermalAmplitudeRatio β ξ)
+
+theorem tan_thermalBogoliubovAngle (β ξ : ℝ) :
+    Real.tan (thermalBogoliubovAngle β ξ) =
+      thermalAmplitudeRatio β ξ := by
+  unfold thermalBogoliubovAngle
+  exact Real.tan_arctan _
+
+theorem thermalBogoliubovAngle_tan_sq (β ξ : ℝ) :
+    Real.tan (thermalBogoliubovAngle β ξ) ^ 2 =
+      occupationOdds β ξ := by
+  rw [tan_thermalBogoliubovAngle, thermalAmplitudeRatio_sq]
 
 theorem relative_occupationOdds
     (β Eplus Eminus μ μχ : ℝ) :
@@ -261,6 +297,12 @@ theorem equal_energy_thermal_rapidity (β μχ : ℝ) :
   rw [Real.log_exp]
   ring
 
+theorem rindler_equal_energy_thermal_rapidity
+    (obs : RindlerObserver) (μχ : ℝ) :
+    Real.log (Real.exp (2 * inverseTemperature obs * μχ)) / 2 =
+      ((2 * Real.pi) / obs.a) * μχ := by
+  rw [equal_energy_thermal_rapidity, inverseTemperature_eq]
+
 /-! ## Normalized chiral thermal polarization readouts -/
 
 def chiralThermalProbabilityPlus (η : ℝ) : ℝ :=
@@ -319,6 +361,25 @@ theorem rindlerChiralThermalProbability_difference
         chiralThermalProbabilityMinus (inverseTemperature obs * μχ) =
       Real.tanh (((2 * Real.pi) / obs.a) * μχ) := by
   rw [chiralThermalProbability_difference, inverseTemperature_eq]
+
+theorem rindler_equal_energy_relative_occupationOdds
+    (obs : RindlerObserver) (E μ μχ : ℝ) :
+    occupationOdds (inverseTemperature obs)
+        (effectiveEnergy E μ μχ 1) /
+        occupationOdds (inverseTemperature obs)
+        (effectiveEnergy E μ μχ (-1)) =
+      Real.exp (((4 * Real.pi) / obs.a) * μχ) := by
+  rw [equal_energy_relative_occupationOdds, inverseTemperature_eq]
+  congr 1
+  ring
+
+theorem rindler_thermalAmplitudeRatio_sq
+    (obs : RindlerObserver) (E μ μχ σ : ℝ) :
+    thermalAmplitudeRatio (inverseTemperature obs)
+        (effectiveEnergy E μ μχ σ) ^ 2 =
+      Real.exp (-((2 * Real.pi) / obs.a) *
+        effectiveEnergy E μ μχ σ) := by
+  rw [thermalAmplitudeRatio_sq, rindlerOccupationOdds_eq]
 
 /- The scalar effective energies above are readouts of the native CAR
 commutators, rather than an independent diagonal model. -/

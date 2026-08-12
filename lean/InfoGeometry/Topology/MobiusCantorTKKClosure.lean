@@ -58,25 +58,25 @@ theorem mobiusGammaJ_involutive (z : ℂ) :
 /-! ## Cantor fractal self-similarity -/
 
 /-- The 4-ary Cantor boundary is exactly recovered from head plus tail. -/
-theorem cantor_head_tail_self_similarity (b : C4Boundary) :
+theorem cantor_head_tail_self_similarity (b : (ℕ → Fin 4)) :
     prependN (headN b) (tailN b) = b :=
   prependN_headN_tailN b
 
 /-- Prepending a symbol creates a cylinder whose head and tail are known. -/
-theorem cantor_prepend_head_tail (i : Fin 4) (b : C4Boundary) :
+theorem cantor_prepend_head_tail (i : Fin 4) (b : (ℕ → Fin 4)) :
     headN (prependN i b) = i ∧ tailN (prependN i b) = b := by
   exact ⟨headN_prependN i b, tailN_prependN i b⟩
 
 /-- Cuntz operators implement the four self-similar Cantor branches. -/
 theorem cantor_cuntz_branch_orthogonality (i j : Fin 4) :
     cuntzT i * cuntzS j =
-      if i = j then (1 : C4Functions →ₗ[ℂ] C4Functions) else 0 :=
+      if i = j then (1 : ((ℕ → Fin 4) → ℂ) →ₗ[ℂ] ((ℕ → Fin 4) → ℂ)) else 0 :=
   cuntz_ortho i j
 
 /-- The four Cantor/Cuntz branches partition the boundary. -/
 theorem cantor_cuntz_branch_partition :
     (∑ i : Fin 4, cuntzS i * cuntzT i) =
-      (1 : C4Functions →ₗ[ℂ] C4Functions) :=
+      (1 : ((ℕ → Fin 4) → ℂ) →ₗ[ℂ] ((ℕ → Fin 4) → ℂ)) :=
   cuntz_partition
 
 /-- UHF cylinder compatibility: one more finite cut represents the same boundary
@@ -106,7 +106,7 @@ theorem tkk_pin55_anomaly_zero :
 /-- Capstone: Möbius symmetry, Cantor fractal recursion, and TKK centralizer
 closure are the same finite involutive/recursive closure pattern. -/
 theorem mobius_cantor_tkk_closure_synthesis
-    (z : ℂ) (b : C4Boundary) (i j : Fin 4)
+    (z : ℂ) (b : (ℕ → Fin 4)) (i j : Fin 4)
     (n : ℕ) (f : DiagAlg n) :
     mobiusJ (mobiusJ z) = z ∧
     mobiusGamma (mobiusGamma z) = z ∧
@@ -115,9 +115,9 @@ theorem mobius_cantor_tkk_closure_synthesis
     headN (prependN i b) = i ∧
     tailN (prependN i b) = b ∧
     cuntzT i * cuntzS j =
-      (if i = j then (1 : C4Functions →ₗ[ℂ] C4Functions) else 0) ∧
+      (if i = j then (1 : ((ℕ → Fin 4) → ℂ) →ₗ[ℂ] ((ℕ → Fin 4) → ℂ)) else 0) ∧
     (∑ k : Fin 4, cuntzS k * cuntzT k) =
-      (1 : C4Functions →ₗ[ℂ] C4Functions) ∧
+      (1 : ((ℕ → Fin 4) → ℂ) →ₗ[ℂ] ((ℕ → Fin 4) → ℂ)) ∧
     cylinder (n + 1) (diagEmbedSucc n f) = cylinder n f ∧
     (∀ c : CentralizerAtom,
       centralizerValue c * centralizerValue c = (1 : ArtinMonodromyPin55.M2C)) ∧

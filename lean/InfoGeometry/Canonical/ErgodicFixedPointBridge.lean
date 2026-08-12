@@ -167,16 +167,16 @@ children and the renormalization law are supplied as operator data.
 @[rep_depth projective]
 structure CantorDyadicRenormalization (Op : Type*) [AddCommMonoid Op] where
   /-- Cylinder/operator attached to a finite binary word. -/
-  cylinder : BinaryWord → Op
+  cylinder : List Bool → Op
 
   /-- Abstract dyadic renormalization map. -/
   renorm : Op → Op
 
   /-- Supplied dyadic self-similarity law. -/
   renorm_cylinder :
-    ∀ w : BinaryWord,
+    ∀ w : List Bool,
       renorm (cylinder w) =
-        cylinder (BinaryWord.child w false) + cylinder (BinaryWord.child w true)
+        cylinder (TypeIIIModularCantorSystem.child w false) + cylinder (TypeIIIModularCantorSystem.child w true)
 
 
 end Cantor

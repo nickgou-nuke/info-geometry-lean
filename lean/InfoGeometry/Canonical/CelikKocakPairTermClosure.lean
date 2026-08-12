@@ -44,7 +44,7 @@ theorem tilt_pairTerm_anticomm {n j : ℕ} (hj : j < n) :
             tilt (n := n) ⟨j, hj⟩ *
               (switch (n := n) ⟨j, hj⟩ * tilt (n := n) ⟨j, hj⟩) := by
                 noncomm_ring
-      _ = (1 : FunctionSpace n →ₗ[ℂ] FunctionSpace n) * switch (n := n) ⟨j, hj⟩ +
+      _ = (1 : (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)) * switch (n := n) ⟨j, hj⟩ +
             tilt (n := n) ⟨j, hj⟩ *
               (-(tilt (n := n) ⟨j, hj⟩ * switch (n := n) ⟨j, hj⟩)) := by
                 rw [tilt_sq, tilt_switch_reverse_anticomm]

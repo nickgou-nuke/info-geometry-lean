@@ -152,7 +152,7 @@ theorem finite_anomaly_cancellation_owner_readout
     (h_anticomm : D * tilt + tilt * D = 0)
     (h_comm : D * proj = proj * D)
     (h_Dinv : ∃ D_inv, D * D_inv = 1 ∧ D_inv * D = 1) :
-    index_pairing tilt (⟨proj, h_proj_idem⟩ : KTheoryProjection 2) = 0 :=
+    CyclicCocycleCantor.finiteIndexPairing tilt (⟨proj, h_proj_idem⟩ : CyclicCocycleCantor.KTheoryProjection 2) = 0 :=
   InfoGeometry.Canonical.SouriauDiracHodgeCoupling.anomaly_vanishes
     tilt D proj h_proj_idem h_anticomm h_comm h_Dinv
 
@@ -163,8 +163,9 @@ theorem finite_anomaly_cancellation_readout
     (h_anticomm : D * tilt + tilt * D = 0)
     (h_comm : D * proj = proj * D)
     (h_Dinv : ∃ D_inv, D * D_inv = 1 ∧ D_inv * D = 1) :
-    index_pairing tilt (⟨proj, h_proj_idem⟩ : KTheoryProjection 2) = 0 :=
-  finite_anomaly_cancellation_owner_readout tilt D proj h_proj_idem h_anticomm h_comm h_Dinv
+    CyclicCocycleCantor.finiteIndexPairing tilt (⟨proj, h_proj_idem⟩ : CyclicCocycleCantor.KTheoryProjection 2) = 0 :=
+  InfoGeometry.Canonical.SouriauDiracHodgeCoupling.anomaly_vanishes
+    tilt D proj h_proj_idem h_anticomm h_comm h_Dinv
 
 /-- Finite Çelik/Fibonacci phase readout: conjugating `V` by `R` gives a scalar phase. -/
 theorem finite_braid_phase_owner_readout (q : Units ℂ) :
@@ -178,7 +179,7 @@ theorem finite_braid_phase_readout (q : Units ℂ) :
     fibonacciRMatrix q * InfoGeometry.Canonical.CelikCantorClifford.V * fibonacciRMatrix q =
       (((q ^ (-4 : ℤ) : Units ℂ) : ℂ) * ((q ^ (3 : ℤ) : Units ℂ) : ℂ)) •
         InfoGeometry.Canonical.CelikCantorClifford.V :=
-  finite_braid_phase_owner_readout q
+  fibonacci_R_anticomm_with_V q
 
 /-- Closed finite `Z₃` braid-owner readout from the Çelik--Erlangen bridge. -/
 theorem finite_z3_braid_owner_readout :
@@ -201,25 +202,25 @@ theorem finite_z3_braid_owner_readout :
 /-- The `U`-channel of the finite `Z₃` braid owner readout is explicit. -/
 theorem finite_z3_braid_U_readout :
     InfoGeometry.Canonical.CelikCantorClifford.U = fibonacciFusionMatrix (1 : ℂ) (0 : ℂ) :=
-  (finite_z3_braid_owner_readout).1.1.1
+  (celik_erlangen_z3_concrete_braid_bridge).1.1.1
 
 /-- The `V`-channel of the finite `Z₃` braid owner readout is explicit. -/
 theorem finite_z3_braid_V_readout :
     InfoGeometry.Canonical.CelikCantorClifford.V = fibonacciFusionMatrix (0 : ℂ) (1 : ℂ) :=
-  (finite_z3_braid_owner_readout).1.1.2
+  (celik_erlangen_z3_concrete_braid_bridge).1.1.2
 
 /-- The spanning-law channel of the finite `Z₃` braid owner readout is explicit. -/
 theorem finite_z3_braid_span_readout :
     ∀ τ s : ℂ, fibonacciFusionMatrix τ s =
       τ • InfoGeometry.Canonical.CelikCantorClifford.U +
         s • InfoGeometry.Canonical.CelikCantorClifford.V :=
-  (finite_z3_braid_owner_readout).1.2.1
+  (celik_erlangen_z3_concrete_braid_bridge).1.2.1
 
 /-- The braid-compatibility channel of the finite `Z₃` braid owner readout is explicit. -/
 theorem finite_z3_braid_commute_readout :
     ∀ q : Units ℂ, fibonacciRMatrix q * InfoGeometry.Canonical.CelikCantorClifford.U =
       InfoGeometry.Canonical.CelikCantorClifford.U * fibonacciRMatrix q :=
-  (finite_z3_braid_owner_readout).1.2.2
+  (celik_erlangen_z3_concrete_braid_bridge).1.2.2
 
 /-- The finite `Z₃` braid relation itself is explicit. -/
 theorem finite_z3_braid_relation_readout :
@@ -230,7 +231,7 @@ theorem finite_z3_braid_relation_readout :
       InfoGeometry.Canonical.FibonacciParafermionAtoms.z3BMatrix *
         InfoGeometry.Canonical.FibonacciParafermionAtoms.z3RMatrix *
           InfoGeometry.Canonical.FibonacciParafermionAtoms.z3BMatrix :=
-  (finite_z3_braid_owner_readout).2
+  (celik_erlangen_z3_concrete_braid_bridge).2
 
 /-- The finite `Z₃` braid-owner readout is explicit. -/
 theorem finite_z3_braid_readout :
@@ -248,7 +249,7 @@ theorem finite_z3_braid_readout :
       InfoGeometry.Canonical.FibonacciParafermionAtoms.z3BMatrix *
         InfoGeometry.Canonical.FibonacciParafermionAtoms.z3RMatrix *
           InfoGeometry.Canonical.FibonacciParafermionAtoms.z3BMatrix) :=
-  finite_z3_braid_owner_readout
+  celik_erlangen_z3_concrete_braid_bridge
 
 end InfoGeometry.Canonical.CantorPhenomenologyReadout
 

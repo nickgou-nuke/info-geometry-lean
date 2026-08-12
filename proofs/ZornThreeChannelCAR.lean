@@ -1,4 +1,5 @@
 import proofs.ZornLightconeChannelOperator
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-!
 # Full three-channel Zorn CAR
@@ -12,7 +13,7 @@ noncomputable section
 
 namespace ZornThreeChannelCAR
 
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 open CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation
 open ZornChiralLightcone ZornLightconeCAR

@@ -1,4 +1,4 @@
-import proofs.CanonicalZornCliffordRepresentation
+import InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
 import proofs.WeylHamiltonianTopology
 
 /-!

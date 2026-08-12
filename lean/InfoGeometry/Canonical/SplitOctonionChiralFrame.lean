@@ -29,9 +29,27 @@ def chiralFrameCoordinate (z : StandardRationalSplitOctonion) : Fin 8 → ℚ
   | 6 => z .j + z .jl
   | 7 => z .k + z .kl
 
+def chiralFrameCoordinateLinear (i : Fin 8) :
+    StandardRationalSplitOctonion →ₗ[ℚ] ℚ where
+  toFun z := chiralFrameCoordinate z i
+  map_add' x y := by
+    fin_cases i <;> simp [chiralFrameCoordinate] <;> ring
+  map_smul' a x := by
+    fin_cases i <;> simp [chiralFrameCoordinate] <;> ring
+
+@[simp] theorem chiralFrameCoordinateLinear_apply
+    (i : Fin 8) (z : StandardRationalSplitOctonion) :
+    chiralFrameCoordinateLinear i z = chiralFrameCoordinate z i :=
+  rfl
+
 @[simp] theorem chiralFrameCoordinate_frame (i j : Fin 8) :
     chiralFrameCoordinate (chiralFrame i) j = if i = j then 1 else 0 := by
   fin_cases i <;> fin_cases j <;> native_decide
+
+@[simp] theorem chiralFrameCoordinateLinear_frame (i j : Fin 8) :
+    chiralFrameCoordinateLinear i (chiralFrame j) = if i = j then 1 else 0 := by
+  simpa [chiralFrameCoordinateLinear_apply, eq_comm] using
+    (chiralFrameCoordinate_frame j i)
 
 theorem chiralFrame_injective : Function.Injective chiralFrame := by
   intro i j h

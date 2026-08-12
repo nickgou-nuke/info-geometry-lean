@@ -109,11 +109,6 @@ theorem finiteToInfinite_castSucc {n : ℕ} (i : Fin n) :
     finiteToInfinite (Fin.castSucc i) = finiteToInfinite i := by
   rfl
 
-/-- Finite adjacent relation embeds as infinite adjacent relation. -/
-theorem finite_adjacent_to_infinite {n : ℕ} {i j : Fin n}
-    (h : i.1 + 1 = j.1) :
-    finiteToInfinite i + 1 = finiteToInfinite j := h
-
 /-- The finite Majorana braid matrix used as the first nondegenerate adjacent generator. -/
 def majoranaGate12 : InfoGeometry.GrandUnification.MajoranaBraidGroup.M8Z :=
   InfoGeometry.GrandUnification.MajoranaBraidGroup.braid12

@@ -34,6 +34,16 @@ def sectorAdd : ChiralSector → ChiralSector → ChiralSector
   | .minus, .plus => .diagonal
   | .minus, .minus => .plus
 
+/-- The native sheet routing is a three-sector Peirce table, not a binary
+    even/odd multiplication table: same-sheet products cross sheets, while
+    opposite-sheet products return to the diagonal sector. -/
+theorem chiralPeirceRouting_packet :
+    sectorAdd .plus .plus = .minus ∧
+      sectorAdd .minus .minus = .plus ∧
+      sectorAdd .plus .minus = .diagonal ∧
+      sectorAdd .minus .plus = .diagonal := by
+  decide
+
 @[simp] theorem chiralDegree_sectorAdd (p q : ChiralSector) :
     chiralDegree (sectorAdd p q) = chiralDegree p + chiralDegree q := by
   cases p <;> cases q <;> rfl

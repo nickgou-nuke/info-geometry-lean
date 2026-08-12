@@ -1,4 +1,5 @@
 import proofs.CanonicalZornIntegralTrialityEquivariance
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-!
 # Integral Zorn composition algebra
@@ -22,7 +23,7 @@ open CanonicalZornCompositionTriality
 open CanonicalZornIntegralTrialityEquivariance
 open CanonicalZornIntegralSpinTrialityClosure
 open CanonicalZornCliffordRepresentation
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 
 def integralDot3 (u v : Fin 3 → ℤ) : ℤ :=
   ∑ i, u i * v i
@@ -163,7 +164,7 @@ theorem integralZornOne_mul (X : IntegralZorn) :
 theorem integralZornNorm_mul (X Y : IntegralZorn) :
     integralZornNorm (integralZornMul X Y) =
       integralZornNorm X * integralZornNorm Y := by
-  have h := zornNorm_mul
+  have h := _root_.InfoGeometry.Physics.SplitOctonionBraidSU3.zornNorm_mul
     (coreToCanonical (integralToCoreZorn X))
     (coreToCanonical (integralToCoreZorn Y))
   rw [← coreToCanonical_integralZornMul,
@@ -220,7 +221,7 @@ theorem integral_zorn_composition_triality_fivegrade_projective_closure
     integralAxisCycle (integralZornMul X Y) =
       integralZornMul (integralAxisCycle X) (integralAxisCycle Y) ∧
     integralZornNorm (integralAxisCycle X) = integralZornNorm X ∧
-    vectorGradePlus
+    CanonicalZornCompositionFiveGradeBridge.vectorGradePlus
         (CanonicalZornRealSpin44.realSplit44ToVector8
           (integralZornToRealSplit44 (integralAxisCycle X))) ∈
       CanonicalZornFiveGradedClosure.conformalGrade

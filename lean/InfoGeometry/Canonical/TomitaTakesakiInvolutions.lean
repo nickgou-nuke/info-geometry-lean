@@ -3,13 +3,13 @@ import Mathlib.LinearAlgebra.CliffordAlgebra.Conjugation
 import InfoGeometry.Clifford.SplitQ44
 import InfoGeometry.Clifford.Cl44Witt
 import InfoGeometry.Canonical.TopologicalKMSFlow
+import InfoGeometry.Canonical.CoordinateFreeConnectionChannels
 
 /-!
 # Tomita-Takesaki Involutions
 
-This file constructs the $\mathbb{Z}_2^3$ physical involutions ($\Gamma_R, \Gamma_\chi, \Gamma_N$) 
-and proves the fundamental Tomita-Takesaki modular conjugation identity natively
-for the 55-dimensional split representation.
+This file constructs the real Clifford involutions used by the modular mirror
+and proves their order-reversing action on the `Cl(4,4)` operator algebra.
 -/
 
 namespace InfoGeometry.Canonical.TomitaTakesakiInvolutions
@@ -88,11 +88,56 @@ noncomputable def GammaChi : Cl44 ≃ₐ[ℝ] Cl44 :=
 noncomputable def GammaR : Cl44 →ₗ[ℝ] Cl44 :=
   reverse
 
-/-- The Tomita-Takesaki Modular Conjugation J.
-It is an anti-linear operator (represented over R as an anti-automorphism)
-composed of Time Reversal and Charge Conjugation. -/
+/-- The Tomita-Takesaki modular mirror on the real Clifford carrier.
+
+`J_Tomita` is real-linear and anti-multiplicative.  Any complex
+anti-linearity must be supplied separately by a chosen real phase-axis
+structure; it is not silently asserted by this definition. -/
 noncomputable def J_Tomita : Cl44 →ₗ[ℝ] Cl44 :=
   GammaR.comp GammaN.toLinearMap
+
+/-! `J_Tomita` is real-linear and reverses operator order.  This is the
+    algebraic content used below; no scalar complex conjugation is introduced. -/
+theorem J_Tomita_reverse_mul (x y : Cl44) :
+    J_Tomita (x * y) = J_Tomita y * J_Tomita x := by
+  change reverse (GammaN (x * y)) =
+    reverse (GammaN y) * reverse (GammaN x)
+  rw [map_mul, reverse.map_mul]
+
+theorem J_Tomita_thermalAnticommutator (x y : Cl44) :
+    J_Tomita (x * y + y * x) =
+      J_Tomita x * J_Tomita y + J_Tomita y * J_Tomita x := by
+  calc
+    J_Tomita (x * y + y * x) =
+        J_Tomita (x * y) + J_Tomita (y * x) := by
+          exact map_add _ _ _
+    _ = J_Tomita y * J_Tomita x + J_Tomita x * J_Tomita y := by
+          rw [J_Tomita_reverse_mul, J_Tomita_reverse_mul]
+    _ = J_Tomita x * J_Tomita y + J_Tomita y * J_Tomita x := by
+          exact add_comm _ _
+
+theorem J_Tomita_quadraticCommutator (x y : Cl44) :
+    J_Tomita (x * y - y * x) =
+      -(J_Tomita x * J_Tomita y - J_Tomita y * J_Tomita x) := by
+  calc
+    J_Tomita (x * y - y * x) =
+        J_Tomita (x * y) - J_Tomita (y * x) := by
+          exact map_sub _ _ _
+    _ = J_Tomita y * J_Tomita x - J_Tomita x * J_Tomita y := by
+          rw [J_Tomita_reverse_mul, J_Tomita_reverse_mul]
+    _ = -(J_Tomita x * J_Tomita y - J_Tomita y * J_Tomita x) := by
+          noncomm_ring
+
+theorem J_Tomita_twoSlotCurvature
+    (dXY dYX AX AY : Cl44) :
+    J_Tomita
+        (InfoGeometry.Canonical.CoordinateFreeConnectionChannels.twoSlotCurvature
+          dXY dYX AX AY) =
+      InfoGeometry.Canonical.CoordinateFreeConnectionChannels.twoSlotCurvature
+        (J_Tomita dXY) (J_Tomita dYX) (J_Tomita AY) (J_Tomita AX) := by
+  unfold InfoGeometry.Canonical.CoordinateFreeConnectionChannels.twoSlotCurvature
+    InfoGeometry.Canonical.CoordinateFreeConnectionChannels.commutator
+  simp only [map_add, map_sub, J_Tomita_reverse_mul]
 
 variable (E μ : Fin 4 → ℝ)
 
@@ -128,6 +173,50 @@ theorem J_Tomita_reverses_flow (t : ℝ) (x : Fin 8 → ℝ) :
   congr 1
   ext j
   fin_cases j <;> simp [GammaNFun, boostFun, Real.cosh_neg, Real.sinh_neg] <;> ring
+
+/-! The generator calculation extends to the whole Clifford algebra by the
+    additive/multiplicative induction principle.  The multiplicative case is
+    deliberately written with the reversed order supplied by `J_Tomita`. -/
+theorem J_Tomita_reverses_flow_all (t : ℝ) (z : Cl44) :
+    J_Tomita (modularFlow E μ t (J_Tomita z)) =
+      modularFlow E μ (-t) z := by
+  induction z using CliffordAlgebra.induction with
+  | algebraMap r =>
+      simp [J_Tomita, GammaN, GammaR, modularFlow]
+  | ι x =>
+      exact J_Tomita_reverses_flow E μ t x
+  | mul x y hx hy =>
+      calc
+        J_Tomita (modularFlow E μ t (J_Tomita (x * y))) =
+            J_Tomita (modularFlow E μ t (J_Tomita y * J_Tomita x)) := by
+              rw [J_Tomita_reverse_mul]
+        _ = J_Tomita (modularFlow E μ t (J_Tomita y) *
+              modularFlow E μ t (J_Tomita x)) := by
+              congr 1
+              exact (modularFlow E μ t).map_mul _ _
+        _ = J_Tomita (modularFlow E μ t (J_Tomita x)) *
+              J_Tomita (modularFlow E μ t (J_Tomita y)) := by
+              rw [J_Tomita_reverse_mul]
+        _ = modularFlow E μ (-t) x * modularFlow E μ (-t) y := by
+              rw [hx, hy]
+        _ = modularFlow E μ (-t) (x * y) := by
+              exact ((modularFlow E μ (-t)).map_mul _ _).symm
+  | add x y hx hy =>
+      calc
+        J_Tomita (modularFlow E μ t (J_Tomita (x + y))) =
+            J_Tomita (modularFlow E μ t (J_Tomita x + J_Tomita y)) := by
+              rw [map_add, map_add]
+        _ = J_Tomita (modularFlow E μ t (J_Tomita x) +
+              modularFlow E μ t (J_Tomita y)) := by
+              congr 1
+              exact (modularFlow E μ t).map_add _ _
+        _ = J_Tomita (modularFlow E μ t (J_Tomita x)) +
+              J_Tomita (modularFlow E μ t (J_Tomita y)) := by
+              rw [map_add]
+        _ = modularFlow E μ (-t) x + modularFlow E μ (-t) y := by
+              rw [hx, hy]
+        _ = modularFlow E μ (-t) (x + y) := by
+              exact ((modularFlow E μ (-t)).map_add _ _).symm
 
 /-- The Clifford reversion commutes with the charge-conjugation automorphism. -/
 theorem reverse_commutes_GammaN (z : Cl44) :

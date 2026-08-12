@@ -249,38 +249,44 @@ noncomputable def NSourceProj : Mat2 :=
 @[simp]
 theorem N_mul_Nmp :
     N * Nmp = NRangeProj := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [N, Nmp, NRangeProj, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j
+  fin_cases i <;> fin_cases j
+  all_goals norm_num [N, Nmp, NRangeProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem Nmp_mul_N :
     Nmp * N = NSourceProj := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [N, Nmp, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j
+  fin_cases i <;> fin_cases j
+  all_goals norm_num [N, Nmp, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem NRangeProj_idempotent :
     NRangeProj * NRangeProj = NRangeProj := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [NRangeProj, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j
+  fin_cases i <;> fin_cases j
+  all_goals norm_num [NRangeProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem NSourceProj_idempotent :
     NSourceProj * NSourceProj = NSourceProj := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j
+  fin_cases i <;> fin_cases j
+  all_goals norm_num [NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem NRangeProj_mul_NSourceProj :
     NRangeProj * NSourceProj = 0 := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [NRangeProj, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j
+  fin_cases i <;> fin_cases j
+  all_goals norm_num [NRangeProj, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp]
 theorem NSourceProj_mul_NRangeProj :
     NSourceProj * NRangeProj = 0 := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [NRangeProj, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j
+  fin_cases i <;> fin_cases j
+  all_goals norm_num [NRangeProj, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 /-! ## Chiral circular-polarized projector corridor -/
 
@@ -302,10 +308,12 @@ Nilpotent boundary channel is isolated by chiral projectors:
 theorem chiral_nilpotent_isolation_left_right :
     Pminus * N = (0 : Mat2) ∧ N * Pplus = (0 : Mat2) := by
   constructor
-  · ext i j <;> fin_cases i <;> fin_cases j <;>
-      norm_num [Pminus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
-  · ext i j <;> fin_cases i <;> fin_cases j <;>
-      norm_num [Pplus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j
+    fin_cases i <;> fin_cases j
+    all_goals norm_num [Pminus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j
+    fin_cases i <;> fin_cases j
+    all_goals norm_num [Pplus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
 Complementary nilpotent channel survives exactly in the opposite chirality:
@@ -314,10 +322,12 @@ Complementary nilpotent channel survives exactly in the opposite chirality:
 theorem chiral_nilpotent_survives_complement :
     Pplus * N = N ∧ N * Pminus = N := by
   constructor
-  · ext i j <;> fin_cases i <;> fin_cases j <;>
-      norm_num [Pplus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
-  · ext i j <;> fin_cases i <;> fin_cases j <;>
-      norm_num [Pminus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j
+    fin_cases i <;> fin_cases j
+    all_goals norm_num [Pplus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j
+    fin_cases i <;> fin_cases j
+    all_goals norm_num [Pminus, N, E, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
 Owner-side closure packet for the `Op² = -1, +1, 0` corridor with chiral isolation.
@@ -344,8 +354,9 @@ First Moore--Penrose equation:
 theorem N_moore_penrose_1 :
     N * Nmp * N = N := by
   rw [N_mul_Nmp]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [N, NRangeProj, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j
+  fin_cases i <;> fin_cases j
+  all_goals norm_num [N, NRangeProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
 Second Moore--Penrose equation:
@@ -355,8 +366,9 @@ Second Moore--Penrose equation:
 theorem N_moore_penrose_2 :
     Nmp * N * Nmp = Nmp := by
   rw [Nmp_mul_N]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    norm_num [Nmp, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
+  ext i j
+  fin_cases i <;> fin_cases j
+  all_goals norm_num [Nmp, NSourceProj, Matrix.mul_apply, Fin.sum_univ_two]
 
 /--
 Third Moore--Penrose equation in concrete real form:

@@ -40,6 +40,16 @@ theorem realBinaryReadout_allFalse :
     realBinaryReadout (fun _ : ℕ => false) = 0 := by
   simp [realBinaryReadout, realBinaryTerm]
 
+theorem realBinaryReadout_allTrue :
+    realBinaryReadout (fun _ : ℕ => true) = 1 := by
+  have h := realBinaryReadout_complement (fun _ : ℕ => false)
+  simpa [realBinaryReadout_allFalse] using h
+
+theorem realBinaryReadout_range_reflection (w : ℕ → Bool) :
+    1 - realBinaryReadout w ∈ Set.range realBinaryReadout := by
+  refine ⟨fun n => !w n, ?_⟩
+  exact realBinaryReadout_complement_eq_one_sub w
+
 theorem finitePrefixReadout_mem_realBinaryReadout_range
     (bs : List Bool) :
     finitePrefixReadout bs ∈ Set.range realBinaryReadout := by
@@ -48,7 +58,7 @@ theorem finitePrefixReadout_mem_realBinaryReadout_range
   simp
 
 theorem exists_finitePrefixReadout_close
-    (w : InfiniteBinaryWordSpace) {ε : ℝ} (hε : 0 < ε) :
+    (w : (ℕ → Bool)) {ε : ℝ} (hε : 0 < ε) :
   ∃ bs : List Bool,
       |realBinaryReadout w - finitePrefixReadout bs| < ε := by
   have hpow : Filter.Tendsto (fun N : ℕ => (1 / 2 : ℝ) ^ N)
@@ -83,5 +93,54 @@ theorem exists_finitePrefixReadout_close
     linarith
   rw [abs_of_nonneg hdiff_nonneg]
   linarith
+
+theorem realBinaryReadout_mem_closure_finitePrefixReadout
+    (w : ℕ → Bool) :
+    realBinaryReadout w ∈ closure (Set.range finitePrefixReadout) := by
+  rw [Metric.mem_closure_iff]
+  intro ε hε
+  obtain ⟨bs, hbs⟩ := exists_finitePrefixReadout_close w hε
+  refine ⟨finitePrefixReadout bs, ⟨bs, rfl⟩, ?_⟩
+  simpa [Real.dist_eq] using hbs
+
+theorem tendsto_finitePrefixReadout_boundaryPrefix
+    (w : ℕ → Bool) :
+    Filter.Tendsto
+      (fun n => finitePrefixReadout (boundaryPrefix n w))
+      Filter.atTop (𝓝 (realBinaryReadout w)) := by
+  apply (Metric.tendsto_atTop.2)
+  intro ε hε
+  have hpow : Filter.Tendsto (fun n : ℕ => (1 / 2 : ℝ) ^ n)
+      Filter.atTop (𝓝 0) :=
+    tendsto_pow_atTop_nhds_zero_of_lt_one (by norm_num) (by norm_num)
+  obtain ⟨N, hN⟩ := (Metric.tendsto_atTop.1 hpow) ε hε
+  refine ⟨N, fun n hn => ?_⟩
+  have hdecomp := realBinaryReadout_prefix_tail_decomposition n w
+  have htail := realBinaryReadout_mem_unitInterval (boundaryIterateTail n w)
+  have hp : 0 ≤ (1 / 2 : ℝ) ^ n := by positivity
+  have hprod_nonneg :
+      0 ≤ (1 / 2 : ℝ) ^ n * realBinaryReadout (boundaryIterateTail n w) :=
+    mul_nonneg hp htail.1
+  have hprod_le :
+      (1 / 2 : ℝ) ^ n * realBinaryReadout (boundaryIterateTail n w)
+        ≤ (1 / 2 : ℝ) ^ n := by
+    calc
+      (1 / 2 : ℝ) ^ n * realBinaryReadout (boundaryIterateTail n w)
+          ≤ (1 / 2 : ℝ) ^ n * 1 :=
+        mul_le_mul_of_nonneg_left htail.2 hp
+      _ = (1 / 2 : ℝ) ^ n := by ring
+  have hpow_lt : (1 / 2 : ℝ) ^ n < ε := by
+    have h := hN n hn
+    rw [Real.dist_eq] at h
+    simpa [abs_of_nonneg hp] using h
+  rw [Real.dist_eq, hdecomp]
+  have hdiff :
+      finitePrefixReadout (boundaryPrefix n w) -
+          (finitePrefixReadout (boundaryPrefix n w) +
+            (1 / 2 : ℝ) ^ n * realBinaryReadout (boundaryIterateTail n w)) =
+        -((1 / 2 : ℝ) ^ n * realBinaryReadout (boundaryIterateTail n w)) := by
+    ring
+  rw [hdiff, abs_neg, abs_of_nonneg hprod_nonneg]
+  exact lt_of_le_of_lt hprod_le hpow_lt
 
 end InfoGeometry.Canonical.CantorBoundaryReadoutDyadicRange

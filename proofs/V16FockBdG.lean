@@ -73,8 +73,6 @@ structure STA_Spinor (STA : STA) where
   ψ : Type*
   [addCommGroup : AddCommGroup ψ]
   [module : Module ℝ ψ]
-  /-- ψ is an even multivector -/
-  even_grade : Prop
   /-- Dirac adjoint: ψ̄ = ψ†γ₀ -/
   dirac_adjoint : ψ → ψ
   /-- Adjoint property -/
@@ -104,7 +102,6 @@ This couples particles and holes (antiparticles).
 structure BdGStructure (STA : STA) where
   H : ℝ
   Delta : ℝ
-  cl11_origin : True
 
 /-! ## 4. V16 Fock Space -/
 
@@ -117,8 +114,9 @@ structure V16_FockSpace where
   V16 : Type*
   [addCommGroup : AddCommGroup V16]
   [module : Module ℝ V16]
+  [fintype : Fintype V16]
   /-- Dimension is 16 -/
-  dim : True
+  dim : Fintype.card V16 = 16
   /-- Particle sector 16⁺ -/
   V16_pos : Submodule ℝ V16
   /-- Antiparticle sector 16⁻ -/
@@ -194,7 +192,6 @@ structure BdG_DiracEquation (STA_obj : STA) (Spinor : STA_Spinor STA_obj)
     (J : ModularConjugation STA_obj Spinor) (V16 : V16_FockSpace) where
   mass : ℝ
   E : ℝ
-  dirac_eq : True
 
 /-! ## 6. Three Generations from D4 Triality -/
 
@@ -213,10 +210,6 @@ structure ThreeGenerationsFock where
   distinct12 : gen1 ≠ gen2
   distinct23 : gen2 ≠ gen3
   distinct13 : gen1 ≠ gen3
-  /-- Related by S3 triality -/
-  triality_related : ∃ (σ₁ σ₂ σ₃ : Equiv.Perm (Fin 3)),
-    -- S3 permutes the three generations
-    True  -- formal statement requires explicit construction
   /-- Full Fock space is direct sum -/
   total_Fock : V16_FockSpace
 

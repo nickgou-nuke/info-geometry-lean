@@ -21,9 +21,14 @@ This file keeps three lanes separate.
 * `nilpotent_exp T N = 1 + T • N` is the algebraic truncation forced by
   `N * N = 0`; it is not a Taylor-series or analytic-completion definition.
 * `finite_to_infinite_limit` is a topological `Tendsto` statement for a sequence
-  that is eventually constant.  It does not claim any external Virasoro/Dirac
-  completion, functional calculus, or convergence of a nontrivial infinite
-  product.
+  indexed by `ℕ`; `atTop` is a filter of tails, not a natural number called
+  infinity.  It does not claim any external Virasoro/Dirac completion,
+  functional calculus, or convergence of a nontrivial infinite product.
+
+No completed infinity is used as a primitive operation here.  A genuine
+analytic/completed object would require an explicit categorical Ind/Pro
+construction (for example, a filtered colimit or an inverse limit of finite
+quotients) and its universal-property data.
 -/
 
 namespace InfoGeometry.Algebra.NilpotentFiniteProductLimit
@@ -60,6 +65,16 @@ theorem nilpotent_exp_mul (S T : ℝ) (N : A) (hN : N * N = 0) :
     rw [smul_mul_assoc, mul_smul_comm, smul_smul]
   rw [h_smul_mul, hN, smul_zero, add_zero, add_smul]
   abel
+
+theorem nilpotent_exp_mul_neg (T : ℝ) (N : A) (hN : N * N = 0) :
+    nilpotent_exp T N * nilpotent_exp (-T) N = 1 := by
+  rw [nilpotent_exp_mul T (-T) N hN]
+  simp [nilpotent_exp]
+
+theorem nilpotent_exp_neg_mul (T : ℝ) (N : A) (hN : N * N = 0) :
+    nilpotent_exp (-T) N * nilpotent_exp T N = 1 := by
+  rw [nilpotent_exp_mul (-T) T N hN]
+  simp [nilpotent_exp]
 
 /-- Recursive sum evaluation for a constant sequence. -/
 lemma recursive_sum_const (T : ℝ) (n : ℕ) :
@@ -126,17 +141,31 @@ lemma finite_prod_seq_val (T : ℝ) (N : A) (hN : N * N = 0) (n : ℕ) (hn : n >
 The normalized finite nilpotent products tend to the algebraic nilpotent
 truncation because the sequence is eventually constant.
 -/
+theorem finite_prod_seq_eventually_constant (T : ℝ) (N : A) (hN : N * N = 0) :
+    Filter.EventuallyEq atTop
+      (fun n : ℕ => finite_prod_seq T N n)
+      (fun _ => nilpotent_exp T N) := by
+  unfold nilpotent_exp
+  rw [Filter.EventuallyEq, eventually_atTop]
+  use 1
+  intro n hn
+  have hn_gt : n > 0 := by linarith
+  exact finite_prod_seq_val T N hN n hn_gt
+
+/-
+The legacy name is retained for downstream compatibility.  Its conclusion
+is a `Tendsto` statement along the tail filter `atTop`, not an operation at a
+natural number called infinity.
+-/
 theorem finite_to_infinite_limit (T : ℝ) (N : A) (hN : N * N = 0) :
     Tendsto (fun n : ℕ => finite_prod_seq T N n) atTop (nhds (nilpotent_exp T N)) := by
-  unfold nilpotent_exp
-  have h_eventually :
-      Filter.EventuallyEq atTop (fun n : ℕ => finite_prod_seq T N n) (fun _ => 1 + T • N) := by
-    rw [Filter.EventuallyEq, eventually_atTop]
-    use 1
-    intro n hn
-    have hn_gt : n > 0 := by linarith
-    exact finite_prod_seq_val T N hN n hn_gt
-  exact Filter.tendsto_congr' h_eventually |>.mpr tendsto_const_nhds
+  exact Filter.tendsto_congr'
+    (finite_prod_seq_eventually_constant T N hN) |>.mpr tendsto_const_nhds
+
+/- A terminology-safe alias for the universal/topological readout. -/
+theorem finite_to_universal_readout (T : ℝ) (N : A) (hN : N * N = 0) :
+    Tendsto (fun n : ℕ => finite_prod_seq T N n) atTop (nhds (nilpotent_exp T N)) := by
+  exact finite_to_infinite_limit T N hN
 
 end InfoGeometry.Algebra.NilpotentFiniteProductLimit
 

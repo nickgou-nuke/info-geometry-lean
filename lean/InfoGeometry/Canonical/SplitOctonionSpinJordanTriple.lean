@@ -22,19 +22,19 @@ theorem triple_outer_symm (x y z : Carrier) :
 
 theorem triple_add_left (u v x y : Carrier) :
     triple (u + v) x y = triple u x y + triple v x y := by
-  simp only [triple, beta44_add_left, add_smul, sub_smul]
+  simp only [triple, beta44_add_left, add_smul]
   module
 
 theorem triple_smul_left (c : ℝ) (x y z : Carrier) :
     triple (c • x) y z = c • triple x y z := by
-  simp only [triple, beta44_smul_left, smul_smul, smul_eq_mul]
+  simp only [triple, beta44_smul_left, smul_smul]
   module
 
 theorem triple_identity (u v x y z : Carrier) :
     triple u v (triple x y z) - triple x y (triple u v z) =
       triple (triple u v x) y z - triple x (triple v u y) z := by
   simp only [triple, beta44_symmetric]
-  simp [beta44_add_left, beta44_smul_left, smul_smul, smul_eq_mul]
+  simp [smul_eq_mul]
   module
 
 noncomputable def jordanTripleSystem :

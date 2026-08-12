@@ -23,13 +23,13 @@ open InfoGeometry.Canonical.CantorCylinderTopology
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 
 def readoutTopCatHom :
-    TopCat.of CantorBoundary ⟶ TopCat.of ℝ :=
+    TopCat.of (ℕ → Bool) ⟶ TopCat.of ℝ :=
   TopCat.ofHom
     { toFun := realBinaryReadout
       continuous_toFun := continuous_realBinaryReadout }
 
 def prefixTopCatHom (b : Bool) :
-    TopCat.of CantorBoundary ⟶ TopCat.of CantorBoundary :=
+    TopCat.of (ℕ → Bool) ⟶ TopCat.of (ℕ → Bool) :=
   TopCat.ofHom
     { toFun := prefixBit b
       continuous_toFun := continuous_prefixBit b }
@@ -41,7 +41,7 @@ def branchAffineTopCatHom (b : Bool) :
       continuous_toFun := by fun_prop }
 
 def prefixExtendTopCatHom {n : ℕ} (w : BitWord n) :
-    TopCat.of CantorBoundary ⟶ TopCat.of CantorBoundary :=
+    TopCat.of (ℕ → Bool) ⟶ TopCat.of (ℕ → Bool) :=
   TopCat.ofHom
     { toFun := prefixExtend w
       continuous_toFun := continuous_prefixExtend w }
@@ -53,11 +53,11 @@ def finitePrefixAffineTopCatHom (n : ℕ) (w : BitWord n) :
         finitePrefixReadout (List.ofFn w) + (1 / 2 : ℝ) ^ n * x
       continuous_toFun := by fun_prop }
 
-@[simp] theorem readoutTopCatHom_apply (x : CantorBoundary) :
+@[simp] theorem readoutTopCatHom_apply (x : (ℕ → Bool)) :
     readoutTopCatHom x = realBinaryReadout x :=
   rfl
 
-@[simp] theorem prefixTopCatHom_apply (b : Bool) (x : CantorBoundary) :
+@[simp] theorem prefixTopCatHom_apply (b : Bool) (x : (ℕ → Bool)) :
     prefixTopCatHom b x = prefixBit b x :=
   rfl
 
@@ -67,7 +67,7 @@ def finitePrefixAffineTopCatHom (n : ℕ) (w : BitWord n) :
   rfl
 
 @[simp] theorem prefixExtendTopCatHom_apply {n : ℕ} (w : BitWord n)
-    (x : CantorBoundary) :
+    (x : (ℕ → Bool)) :
     prefixExtendTopCatHom w x = prefixExtend w x :=
   rfl
 
@@ -98,6 +98,43 @@ theorem prefixExtend_readoutTopCat_square {n : ℕ} (w : BitWord n) :
     finitePrefixReadout (List.ofFn w) + (1 / 2 : ℝ) ^ n *
       realBinaryReadout x
   exact realBinaryReadout_prefixExtend n w x
+
+theorem prefixExtend_nested_readoutTopCat_square
+    {n m : ℕ} (w : BitWord n) (v : BitWord m) :
+    prefixExtendTopCatHom v ≫ prefixExtendTopCatHom w ≫
+        readoutTopCatHom =
+      readoutTopCatHom ≫ finitePrefixAffineTopCatHom m v ≫
+        finitePrefixAffineTopCatHom n w := by
+  calc
+    prefixExtendTopCatHom v ≫ prefixExtendTopCatHom w ≫
+        readoutTopCatHom =
+        prefixExtendTopCatHom v ≫
+          (readoutTopCatHom ≫ finitePrefixAffineTopCatHom n w) := by
+      rw [prefixExtend_readoutTopCat_square]
+    _ = (prefixExtendTopCatHom v ≫ readoutTopCatHom) ≫
+        finitePrefixAffineTopCatHom n w := by
+      rw [Category.assoc]
+    _ = (readoutTopCatHom ≫ finitePrefixAffineTopCatHom m v) ≫
+        finitePrefixAffineTopCatHom n w := by
+      rw [prefixExtend_readoutTopCat_square]
+    _ = readoutTopCatHom ≫ finitePrefixAffineTopCatHom m v ≫
+        finitePrefixAffineTopCatHom n w := by
+      rw [Category.assoc]
+
+theorem finitePrefixAffineTopCatHom_extendSucc {n : ℕ}
+    (w : BitWord n) (b : Bool) :
+    finitePrefixAffineTopCatHom (n + 1) (extendSucc n w b) =
+      branchAffineTopCatHom b ≫ finitePrefixAffineTopCatHom n w := by
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro x
+  change finitePrefixReadout (List.ofFn (extendSucc n w b)) +
+      (1 / 2 : ℝ) ^ (n + 1) * x =
+    finitePrefixReadout (List.ofFn w) +
+      (1 / 2 : ℝ) ^ n *
+        ((if b then (1 / 2 : ℝ) else 0) + (1 / 2 : ℝ) * x)
+  rw [finitePrefixReadout_extendSucc]
+  cases b <;> simp <;> ring
 
 theorem readout_prefixTopCat_square (b : Bool) :
     prefixTopCatHom b ≫ readoutTopCatHom =

@@ -50,6 +50,14 @@ theorem bernoulliWeight_extendSucc {n : ℕ} (p : ℝ) (w : BitWord n) (b : Bool
     cases b <;> simp [Nat.lt_irrefl]
   rw [hlast]
 
+theorem bernoulliWeight_extendSucc_child_sum {n : ℕ} (p : ℝ) (w : BitWord n) :
+    bernoulliWeight p (extendSucc n w false) +
+        bernoulliWeight p (extendSucc n w true) =
+      bernoulliWeight p w := by
+  rw [bernoulliWeight_extendSucc, bernoulliWeight_extendSucc]
+  simp
+  ring
+
 /-- 🏆 THEOREM 1: Positivity of Bernoulli Cylinder Measure for p ∈ (0, 1) -/
 theorem bernoulliWeight_pos {n : ℕ} {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) (w : BitWord n) :
     0 < bernoulliWeight p w := by

@@ -21,7 +21,7 @@ noncomputable section
 
 namespace ChemicalPotentialTKKGradeZero
 
-open TKKJordanPairData
+open TKKJordanPairData.Legacy
 open VertexAlgebraBraidingCocycle
 open VertexAlgebraBraidingCocycle.EdgeSystem
 open QuadricConf3BraidingCooperadBridge

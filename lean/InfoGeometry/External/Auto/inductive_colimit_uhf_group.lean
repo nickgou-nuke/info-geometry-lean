@@ -38,17 +38,14 @@ def uHFColimit : Type := colimit diagonalDiagram
 theorem finite_stage_card (n : ℕ) : Fintype.card (DiagonalLevel n) = 2 ^ n := by
   simp [DiagonalLevel]
 
-/-- Projective limit boundary object (Cantor space). -/
-def CantorBoundary : Type := ℕ → Bool
-
-def finiteToBoundary (n : ℕ) : DiagonalLevel n → CantorBoundary :=
+def finiteToBoundary (n : ℕ) : DiagonalLevel n → (ℕ → Bool) :=
   fun b k => if h : k < n then b ⟨k, h⟩ else false
 
 /-- Cocone from each finite level into the boundary.
     This is the usual consistency condition for the colimit.
 -/
 def boundaryCocone : Cocone diagonalDiagram where
-  pt := CantorBoundary
+  pt := (ℕ → Bool)
   ι := NatTrans.ofSequence
     (app := finiteToBoundary)
     (naturality := by
@@ -66,7 +63,7 @@ def boundaryCocone : Cocone diagonalDiagram where
         · simp [finiteToBoundary, hkn, hk])
 
 /-- Universal map from bulk colimit to boundary. -/
-noncomputable def fromColimitBoundary : colimit diagonalDiagram → CantorBoundary :=
+noncomputable def fromColimitBoundary : colimit diagonalDiagram → (ℕ → Bool) :=
   colimit.desc (F := diagonalDiagram) (c := boundaryCocone)
 
 -- Number-theory inductive picture (dyadic rationals = union of 2-power denominators).

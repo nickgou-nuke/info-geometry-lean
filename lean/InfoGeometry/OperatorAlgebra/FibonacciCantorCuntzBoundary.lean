@@ -77,4 +77,38 @@ theorem fibonacciPathCount_initial :
     fibonacciPathCount 0 = 1 ∧ fibonacciPathCount 1 = 1 := by
   simp [fibonacciPathCount]
 
+theorem admissiblePathSpace_nonempty : Nonempty AdmissiblePathSpace := by
+  refine ⟨⟨fun _ => 1, ?_⟩⟩
+  intro i
+  simp [fibonacciAdjacency]
+
+theorem admissiblePathSpace_tail
+    (x : AdmissiblePathSpace) :
+    ∃ y : AdmissiblePathSpace, ∀ n : ℕ, y.1 n = x.1 (n + 1) := by
+  refine ⟨⟨fun n => x.1 (n + 1), ?_⟩, ?_⟩
+  · intro n
+    exact x.2 (n + 1)
+  · intro n
+    rfl
+
+theorem admissiblePath_next_eq_one_of_head_zero
+    (x : AdmissiblePathSpace) (hx : x.1 0 = 0) :
+    x.1 1 = 1 := by
+  have hstep := x.2 0
+  have hcases : x.1 1 = 0 ∨ x.1 1 = 1 := by
+    generalize hy : x.1 1 = y
+    fin_cases y <;> simp [hy]
+  rcases hcases with hzero | hone
+  · simp [fibonacciAdjacency, hx, hzero] at hstep
+  · exact hone
+
+theorem fibonacciPathCount_pos : ∀ n : ℕ, 0 < fibonacciPathCount n
+  | 0 => by simp [fibonacciPathCount]
+  | 1 => by simp [fibonacciPathCount]
+  | n + 2 => by
+      rw [fibonacciPathCount_recursion]
+      have h₁ := fibonacciPathCount_pos (n + 1)
+      have h₂ := fibonacciPathCount_pos n
+      omega
+
 end InfoGeometry.OperatorAlgebra.FibonacciCantorCuntzBoundary

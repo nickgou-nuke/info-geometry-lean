@@ -56,7 +56,8 @@ theorem kitaev_yang_baxter_braiding_algebra (N : KitaevLGCFTPfaffianNetwork) :
     B (B N.chain) = parafermionBraid (N.q_phase * N.q_phase) N.chain := by
   dsimp [parafermionBraid]
   ext i
-  simp [mul_smul]
+  change N.q_phase • (N.q_phase • N.chain i) = (N.q_phase * N.q_phase) • N.chain i
+  rw [smul_smul]
 
 /--
 Capstone Synthesis: The Kitaev-YangBaxter-LGCFT-Pfaffian Bridge.
@@ -69,7 +70,7 @@ theorem pfaffian_lgcft_parafermion_synthesis
     (h_braid : N.q_phase = 1) : 
     parafermionBraid N.q_phase N.chain = N.chain ∧ 
     parafermionBraid N.q_phase (parafermionBraid N.q_phase N.chain) = N.chain := by
-  subst h_braid
+  rw [h_braid]
   have h1 : parafermionBraid 1 N.chain = N.chain := parafermionBraid_one N.chain
   constructor
   · exact h1
@@ -104,7 +105,6 @@ theorem pfaffian_invariant_is_nontrivial_homology
     IsCycle (network_to_1_chain N) ∧ ¬ IsBoundary (network_to_1_chain N) := by
   constructor
   · dsimp [IsCycle, higher_boundary, network_to_1_chain]
-    rfl
   · intro h_bound
     rcases h_bound with ⟨C2, hC2⟩
     have h_spec : (network_to_1_chain N).spectrum 0 = 0 := by

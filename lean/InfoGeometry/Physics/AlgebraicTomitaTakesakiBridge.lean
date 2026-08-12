@@ -1,5 +1,7 @@
 import InfoGeometry.Physics.ThermodynamicAlgebraicCenter
+import InfoGeometry.OperatorAlgebra.TwoSheetedAlgebra
 import Mathlib.Data.Set.Basic
+import Mathlib.Algebra.Ring.Equiv
 
 namespace InfoGeometry.Physics
 
@@ -11,6 +13,53 @@ structure AntiAutomorphism (A : Type*) [Ring A] where
   map_add : ∀ x y, toFun (x + y) = toFun x + toFun y
   map_mul : ∀ x y, toFun (x * y) = toFun y * toFun x
   inv : ∀ x, toFun (toFun x) = x
+
+open MulOpposite
+
+/-! The anti-automorphism becomes an honest ring equivalence after passing to
+the opposite ring.  This is the typed algebraic core of the right/opposite
+frame; no commutant or Morita hypothesis is used here. -/
+def antiOppositeRingEquiv
+    {A : Type*} [Ring A]
+    (J : AntiAutomorphism A) : Aᵐᵒᵖ ≃+* A where
+  toFun := fun x => J.toFun (unop x)
+  invFun := fun x => op (J.toFun x)
+  left_inv := by
+    intro x
+    apply op_injective
+    simp [J.inv]
+  right_inv := by
+    intro x
+    simp [J.inv]
+  map_add' := by
+    intro x y
+    simp [J.map_add]
+  map_mul' := by
+    intro x y
+    simp [J.map_mul]
+
+@[simp] theorem antiOppositeRingEquiv_apply
+    {A : Type*} [Ring A]
+    (J : AntiAutomorphism A) (x : Aᵐᵒᵖ) :
+    antiOppositeRingEquiv J x = J.toFun (unop x) :=
+  rfl
+
+@[simp] theorem antiOppositeRingEquiv_symm_apply
+    {A : Type*} [Ring A]
+    (J : AntiAutomorphism A) (x : A) :
+    (antiOppositeRingEquiv J).symm x = op (J.toFun x) :=
+  rfl
+
+/-! The existing two-sheet carrier can now be instantiated from the native
+opposite-ring equivalence.  This is the algebraic Morita-side witness; an
+analytic Hilbert-bimodule Morita theorem still requires its own module data. -/
+def AntiAutomorphism.toTwoSheetedAlgebra
+    {K A : Type*} [CommRing K] [Ring A] [Algebra K A]
+    (J : AntiAutomorphism A) :
+    InfoGeometry.OperatorAlgebra.TwoSheetedAlgebra K where
+  L := A
+  R_alg := A
+  commutant := (antiOppositeRingEquiv J).symm
 
 /-- The algebraic content of the Tomita relation `J(S) = S'`. -/
 def IsTomitaConjugation (J : AntiAutomorphism A) (S : Set A) : Prop :=

@@ -29,7 +29,7 @@ open InfoGeometry.Canonical.CantorChirality
 open InfoGeometry.Canonical.CantorDiracPropagation
 
 /-- The Velocity Operator on the Rindler Horizon. -/
-def VelocityOp (D Γ : CantorOp) : CantorOp :=
+def VelocityOp (D Γ : (Module.End ℂ ((ℕ → Bool) → ℂ))) : (Module.End ℂ ((ℕ → Bool) → ℂ)) :=
   D * Γ - Γ * D
 
 /-- The Trembling Motion (Zitterbewegung) Theorem.
@@ -48,12 +48,12 @@ theorem zitterbewegung_oscillation :
   simp only [sub_neg_eq_add, two_smul]
 
 /-- The Anyonic Braiding Operator at the Null Space. -/
-def BraidingOp (c : ℂ) (ψ_L ψ_R : CantorOp) : CantorOp :=
+def BraidingOp (c : ℂ) (ψ_L ψ_R : (Module.End ℂ ((ℕ → Bool) → ℂ))) : (Module.End ℂ ((ℕ → Bool) → ℂ)) :=
   c • (1 + ψ_L * ψ_R)
 
 /-- The Non-Abelian Majorana Exchange (Braiding) Theorem.
     Exchanging the Majoranas twice yields a topological phase, proving they are Anyons. -/
-theorem majorana_anyon_exchange (ψ_L ψ_R : CantorOp)
+theorem majorana_anyon_exchange (ψ_L ψ_R : (Module.End ℂ ((ℕ → Bool) → ℂ)))
     (hL_sq : ψ_L * ψ_L = 1)
     (hR_sq : ψ_R * ψ_R = 1)
     (h_anticomm : ψ_L * ψ_R + ψ_R * ψ_L = 0)

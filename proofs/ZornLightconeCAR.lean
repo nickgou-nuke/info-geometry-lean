@@ -1,10 +1,12 @@
 import proofs.ZornChiralLightcone
-import proofs.CanonicalZornCliffordRepresentation
+import InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
+import InfoGeometry.Physics.SplitOctonionBraidSU3
+import proofs.ZornCliffordParityAPI
 
 noncomputable section
 
 open CliffordAlgebra LinearMap
-open SplitOctonionBraidSU3 CanonicalZornCompositionTriality
+open InfoGeometry.Physics.SplitOctonionBraidSU3 CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation ZornCliffordParityAPI
 open ZornChiralLightcone
 
@@ -17,9 +19,13 @@ theorem peirceProjectorMinus_mul_diracGamma (V : Vector8) :
   rw [peirceProjectorMinus, peirceProjectorPlus]
   have hodd := diracGamma_odd V
   rw [IsOddOperator] at hodd
+  have hodd' : ZornChiralLightcone.chiralityOperator * diracGamma V =
+      -(diracGamma V * ZornChiralLightcone.chiralityOperator) := by
+    simpa [ZornChiralLightcone.chiralityOperator,
+      ZornCliffordParityAPI.chiralityOperator] using hodd
   simp only [smul_mul_assoc, mul_smul_comm, sub_mul, one_mul, mul_add,
     mul_one]
-  rw [hodd]
+  rw [hodd']
   module
 
 /-- The companion projector-exchange identity for an odd gamma operator. -/
@@ -29,9 +35,13 @@ theorem peirceProjectorPlus_mul_diracGamma (V : Vector8) :
   rw [peirceProjectorMinus, peirceProjectorPlus]
   have hodd := diracGamma_odd V
   rw [IsOddOperator] at hodd
+  have hodd' : ZornChiralLightcone.chiralityOperator * diracGamma V =
+      -(diracGamma V * ZornChiralLightcone.chiralityOperator) := by
+    simpa [ZornChiralLightcone.chiralityOperator,
+      ZornCliffordParityAPI.chiralityOperator] using hodd
   simp only [smul_mul_assoc, mul_smul_comm, add_mul, one_mul, mul_sub,
     mul_one]
-  rw [hodd]
+  rw [hodd']
   module
 
 /-- 1. Смесено произведение на операторите на светлинния конус (плюс-минус) -/
@@ -127,17 +137,17 @@ theorem lightconeChannelProjector_eq_gamma (r : Fin 3) :
 theorem lightconeChannelProjector_ne_zero (r : Fin 3) :
     lightconeChannelProjector r ≠ 0 := by
   intro hzero
-  have h := LinearMap.congr_fun hzero (spinorPlusOne, 0)
+  let S : SpinorPlus8 := ⟨E_k r⟩
+  have h := LinearMap.congr_fun hzero (S, 0)
   have hfirst := congrArg Prod.fst h
   have hfirst' :
-      (lightconeChannelProjector r (spinorPlusOne, 0)).1 =
+      (lightconeChannelProjector r (S, 0)).1 =
         (0 : SpinorPlus8) := by
     simpa using hfirst
-  have ha := congrArg (fun X : SpinorPlus8 =>
-    (copyLinearEquivCoordinates .spinorPlus X) 0) hfirst'
+  have ha := congrArg (fun X : SpinorPlus8 => X.val.u r) hfirst'
   simp only [map_zero, Pi.zero_apply] at ha
   fin_cases r <;>
-    simp [spinorPlusOne, cliffordMinus, cliffordPlus,
+    simp [S, cliffordMinus, cliffordPlus,
       upperLightconeVector, lowerLightconeVector, zornConj, zornMul,
       E_k, F_k, I_zorn, e_k, dot3, cross3,
       copyLinearEquivCoordinates, copyEquivCoordinates,

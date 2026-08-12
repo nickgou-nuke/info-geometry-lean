@@ -39,6 +39,18 @@ theorem represented_cuntz_state_expectation_recovery
         (gnsVacuum E.phi)⟫_ℂ = E.omega x := by
   exact represented_cuntz_expectation_recovery E x
 
+theorem represented_cuntz_state_expectation_recovery_of
+    {n : ℕ} {A : Type*} [CStarAlgebra A] [PartialOrder A]
+    [StarOrderedRing A] (φ : A →ₚ[ℂ] ℂ)
+    (ρ : CuntzStarRepresentation n A)
+    (omega : CuntzAlg n →ₗ[ℂ] ℂ)
+    (h_extension : ∀ x, φ (ρ.toAlgHom x) = omega x)
+    (x : CuntzAlg n) :
+    ⟪gnsVacuum φ,
+      cuntzGNSRepresentation φ (ρ.toAlgHom x) (gnsVacuum φ)⟫_ℂ = omega x := by
+  exact InfoGeometry.Algebra.CuntzNativeGNSBridge.represented_cuntz_expectation_recovery_of
+    φ ρ omega h_extension x
+
 theorem represented_cuntz_state_cyclic
     {n : ℕ} {A : Type*} [CStarAlgebra A] [PartialOrder A]
     [StarOrderedRing A] (E : CuntzPositiveExtension n A) :

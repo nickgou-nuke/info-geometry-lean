@@ -72,9 +72,18 @@ abbrev BottPhase (kind : BottKind) : Type :=
 abbrev BottBlock (kind : BottKind) : Type :=
   BottPhase kind → Bool
 
+theorem bottBlock_card (kind : BottKind) :
+    Fintype.card (BottBlock kind) = 2 ^ bottPeriod kind := by
+  simp [BottBlock, BottPhase, Fintype.card_fun]
+
 /-- A finite Bott-periodic Cantor word of depth `n`. -/
 abbrev BottWord (kind : BottKind) (n : ℕ) : Type :=
   Fin n → BottBlock kind
+
+theorem bottWord_card (kind : BottKind) (n : ℕ) :
+    Fintype.card (BottWord kind n) =
+      2 ^ (bottPeriod kind * n) := by
+  simp [BottWord, Fintype.card_fun, bottBlock_card, pow_mul]
 
 /-- The infinite Bott-periodic Cantor boundary. -/
 abbrev BottBoundary (kind : BottKind) : Type :=
@@ -184,12 +193,53 @@ theorem localBlockEntropy_nonnegative
     exact mul_nonpos_of_nonneg_of_nonpos hnonneg
       (Real.log_nonpos hnonneg hle)
 
+theorem localBlockEntropy_eq_zero_of_zero_or_one
+    {kind : BottKind}
+    (transitionWeight :
+      ∀ n : ℕ, BottWord kind n → BottBlock kind → ℝ)
+    (n : ℕ) (word : BottWord kind n)
+    (hdeterministic :
+      ∀ block : BottBlock kind,
+        transitionWeight n word block = 0 ∨
+          transitionWeight n word block = 1) :
+    localBlockEntropy transitionWeight n word = 0 := by
+  unfold localBlockEntropy
+  apply neg_eq_zero.mpr
+  apply Finset.sum_eq_zero
+  intro block hblock
+  dsimp
+  split_ifs with hp
+  · rfl
+  · rcases hdeterministic block with hzero | hone
+    · exact False.elim (hp hzero)
+    · rw [hone]
+      simp
+
 def couplingReadout
     {kind : BottKind}
     (jointEntropy : ℝ)
     (streamEntropy : BottPhase kind → ℝ) : ℝ :=
   jointEntropy -
     Finset.univ.sum (fun phase : BottPhase kind => streamEntropy phase)
+
+theorem couplingReadout_nonnegative
+    {kind : BottKind}
+    (jointEntropy : ℝ)
+    (streamEntropy : BottPhase kind → ℝ)
+    (h : Finset.univ.sum (fun phase : BottPhase kind => streamEntropy phase) ≤
+      jointEntropy) :
+    0 ≤ couplingReadout jointEntropy streamEntropy := by
+  exact sub_nonneg.mpr h
+
+theorem couplingReadout_eq_zero_iff
+    {kind : BottKind}
+    (jointEntropy : ℝ)
+    (streamEntropy : BottPhase kind → ℝ) :
+    couplingReadout jointEntropy streamEntropy = 0 ↔
+      jointEntropy =
+        Finset.univ.sum (fun phase : BottPhase kind => streamEntropy phase) := by
+  unfold couplingReadout
+  exact sub_eq_zero
 
 def IsBottPeriodicCantorEntropy
     {kind : BottKind}

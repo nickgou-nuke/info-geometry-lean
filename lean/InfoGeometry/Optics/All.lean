@@ -7,6 +7,10 @@ import InfoGeometry.Optics.ChiralCircularTransport
 import InfoGeometry.Optics.OperatorLoxodromicFiniteReadout
 import InfoGeometry.Optics.Cl55PolarizationBridge
 import InfoGeometry.Optics.OperatorValuedConnection
+import InfoGeometry.Optics.AbelianOperatorValuedConnection
+import InfoGeometry.Optics.OperatorValuedSuperconnection
+import InfoGeometry.Optics.CircularPolarizationSuperconnectionBridge
+import InfoGeometry.Canonical.ChiralSuperconnectionCurvatureBridge
 import InfoGeometry.Optics.OperatorDerivationForms
 import InfoGeometry.Optics.OperatorLiftCarrier
 import InfoGeometry.Optics.RealHestenesOperatorLift

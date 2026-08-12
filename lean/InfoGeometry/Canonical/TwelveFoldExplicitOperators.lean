@@ -23,16 +23,17 @@ def omegaChi : Mat2C :=
 
 theorem omegaChi_sq : omegaChi ^ 2 = sheetParity := by
   rw [pow_two]
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [omegaChi, uPlus, uMinus, sheetParity,
-      Matrix.mul_apply, Fin.sum_univ_two, Complex.I_mul_I] <;> ring
+      Matrix.mul_apply, Fin.sum_univ_two, Complex.I_mul_I]
 
 theorem omegaChi_four : omegaChi ^ 4 = (1 : Mat2C) := by
   calc
     omegaChi ^ 4 = (omegaChi ^ 2) ^ 2 := by
       rw [← pow_mul]
     _ = sheetParity ^ 2 := by rw [omegaChi_sq]
-    _ = 1 := by simpa [pow_two] using sheetParity_sq
+    _ = 1 := by rw [pow_two, sheetParity_sq]
 
 def omegaHat : Mat23C :=
   Matrix.kronecker omegaChi (1 : Mat3C)
@@ -47,7 +48,7 @@ theorem omegaHat_four : omegaHat ^ 4 = (1 : Mat23C) := by
   calc
     omegaHat ^ 4 = (omegaHat ^ 2) ^ 2 := by rw [← pow_mul]
     _ = sixParity ^ 2 := by rw [omegaHat_sq]
-    _ = 1 := by simpa [pow_two] using sixParity_squared
+    _ = 1 := by exact sixParity_squared
 
 def masterTwelve : Mat23C :=
   omegaHat ^ 3 * sixShift ^ 2
@@ -55,7 +56,7 @@ def masterTwelve : Mat23C :=
 theorem omegaHat_mul_sixShift :
     omegaHat * sixShift = sixShift * omegaHat := by
   rw [omegaHat, sixShift, kronecker_mul, kronecker_mul]
-  simp [mul_comm]
+  simp
 
 theorem masterTwelve_eq_kronecker :
     masterTwelve = Matrix.kronecker (omegaChi ^ 3) (colorShift ^ 2) := by
@@ -144,7 +145,7 @@ theorem sixShift_ne_one : sixShift ≠ (1 : Mat23C) := by
   intro h
   have hentry := congrArg (fun A : Mat23C => A (0, 0) (0, 2)) h
   have hzero : (0 : ℂ) = 1 := by
-    simpa [sixShift, colorShift, Matrix.kroneckerMap_apply] using hentry
+    simp [sixShift, colorShift, Matrix.kroneckerMap_apply] at hentry
   norm_num at hzero
 
 theorem masterTwelve_order_exact : orderOf masterTwelve = 12 := by
@@ -173,7 +174,7 @@ theorem masterTwelve_order_exact : orderOf masterTwelve = 12 := by
   · have hW : masterTwelve = 1 := by
       have hord : orderOf masterTwelve = 1 := hk.trans h
       simpa only [hord, pow_one] using pow_orderOf_eq_one masterTwelve
-    exact False.elim (hnot6 (by simpa [hW]))
+    exact False.elim (hnot6 (by rw [hW]; simp))
   · have hW2 : masterTwelve ^ 2 = (1 : Mat23C) := by
       have hord : orderOf masterTwelve = 2 := hk.trans h
       simpa only [hord] using pow_orderOf_eq_one masterTwelve

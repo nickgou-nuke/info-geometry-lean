@@ -1,4 +1,4 @@
-import Mathlib.Tactic
+import Mathlib
 
 /-!
 # Biquaternion Laplace resolvent and tripotent scale boundary
@@ -98,13 +98,20 @@ theorem scale_det_at_neg_one : (scaleMatrix (-1)).det = 0 := by simp [scaleMatri
 /-- The determinant vanishes at the non-invertible zero-mode pole `s=0`. -/
 theorem scale_det_at_zero : (scaleMatrix 0).det = 0 := by simp [scaleMatrix_det]
 
-/-- Abstract socket for the conformal scale limit of the resolvent. -/
-structure ResolventScaleLimit where
-  resolvent : ℂ → M2C
-  resolventVanishesAtInfinity :
-    Filter.Tendsto resolvent (Filter.cocompact ℂ) (nhds 0)
-  monodromy : ℂ → ℂ
-  zeroMonodromyOnlyAsLimit :
-    Filter.Tendsto monodromy (nhdsWithin 0 ({0}ᶜ : Set ℂ)) (nhds 0)
+/-! The finite algebraic identities collected above are the complete owner. -/
+theorem biquaternion_laplace_tripotent_synthesis :
+    (∀ s a₀ a₁ a₂ a₃ : ℂ,
+      (s • (1 : M2C) - biquatX a₀ a₁ a₂ a₃) * resolventNumerator s a₀ a₁ a₂ a₃ =
+        resolventDenominator s a₀ a₁ a₂ a₃ • (1 : M2C)) ∧
+    (∀ s a₀ a₁ a₂ a₃ : ℂ,
+      resolventNumerator s a₀ a₁ a₂ a₃ * (s • (1 : M2C) - biquatX a₀ a₁ a₂ a₃) =
+        resolventDenominator s a₀ a₁ a₂ a₃ • (1 : M2C)) ∧
+    (∀ z : ℂ, Complex.exp z ≠ 0) ∧
+    Trip * Trip * Trip = Trip ∧
+    (∀ s : ℂ, (scaleMatrix s).det = (s - 1) * (s + 1) * s) ∧
+    (scaleMatrix 1).det = 0 ∧ (scaleMatrix (-1)).det = 0 ∧ (scaleMatrix 0).det = 0 := by
+  exact ⟨biquat_resolvent_left, biquat_resolvent_right, complex_exp_ne_zero,
+    Trip_tripotent, scaleMatrix_det, scale_det_at_one, scale_det_at_neg_one,
+    scale_det_at_zero⟩
 
 end BiquaternionLaplaceTripotent

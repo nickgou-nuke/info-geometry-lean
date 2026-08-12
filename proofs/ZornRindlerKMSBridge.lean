@@ -72,41 +72,45 @@ def diracTraceKMSSector (β : ℝ) : CyclicKMSSector DiracSpinor16 where
       (LinearMap.trace_mul_comm (R := ℂ) (M := DiracSpinor16) A B)
 
 theorem sigmaPlus_chirality_anticommute (r : Fin 3) :
-    lightconeSigmaPlus r * chiralityOperator =
-      -(chiralityOperator * lightconeSigmaPlus r) := by
+    lightconeSigmaPlus r * ZornCliffordParityAPI.chiralityOperator =
+      -(ZornCliffordParityAPI.chiralityOperator * lightconeSigmaPlus r) := by
   apply LinearMap.ext
   rintro ⟨S, C⟩
-  change lightconeSigmaPlus r (chiralityOperator (S, C)) =
-    -chiralityOperator (lightconeSigmaPlus r (S, C))
-  rw [chiralityOperator_apply, lightconeSigmaPlus_apply,
-    lightconeSigmaPlus_apply, chiralityOperator_apply,
+  change lightconeSigmaPlus r (ZornCliffordParityAPI.chiralityOperator (S, C)) =
+    -ZornCliffordParityAPI.chiralityOperator (lightconeSigmaPlus r (S, C))
+  rw [ZornCliffordParityAPI.chiralityOperator_apply, lightconeSigmaPlus_apply,
+    lightconeSigmaPlus_apply, ZornCliffordParityAPI.chiralityOperator_apply,
     CanonicalZornSpinChirality.cliffordMinus_neg]
   apply Prod.ext <;> simp
 
 theorem sigmaMinus_chirality_anticommute (r : Fin 3) :
-    lightconeSigmaMinus r * chiralityOperator =
-      -(chiralityOperator * lightconeSigmaMinus r) := by
+    lightconeSigmaMinus r * ZornCliffordParityAPI.chiralityOperator =
+      -(ZornCliffordParityAPI.chiralityOperator * lightconeSigmaMinus r) := by
   apply LinearMap.ext
   rintro ⟨S, C⟩
-  change lightconeSigmaMinus r (chiralityOperator (S, C)) =
-    -chiralityOperator (lightconeSigmaMinus r (S, C))
-  rw [chiralityOperator_apply, lightconeSigmaMinus_apply,
-    lightconeSigmaMinus_apply, chiralityOperator_apply]
+  change lightconeSigmaMinus r (ZornCliffordParityAPI.chiralityOperator (S, C)) =
+    -ZornCliffordParityAPI.chiralityOperator (lightconeSigmaMinus r (S, C))
+  rw [ZornCliffordParityAPI.chiralityOperator_apply, lightconeSigmaMinus_apply,
+    lightconeSigmaMinus_apply, ZornCliffordParityAPI.chiralityOperator_apply]
   apply Prod.ext <;> simp
 
 /-- The finite trace state annihilates the upper odd Zorn block. -/
 theorem diracTraceKMS_sigmaPlus_zero (β : ℝ) (r : Fin 3) :
     (diracTraceKMSSector β).omega (lightconeSigmaPlus r) = 0 := by
   exact kms_vacuum_is_finite
-    (diracTraceKMSSector β) chiralityOperator (lightconeSigmaPlus r)
-    chiralityOperator_sq (sigmaPlus_chirality_anticommute r)
+    (diracTraceKMSSector β) ZornCliffordParityAPI.chiralityOperator
+      (lightconeSigmaPlus r)
+    ZornCliffordParityAPI.chiralityOperator_sq
+      (sigmaPlus_chirality_anticommute r)
 
 /-- The finite trace state annihilates the lower odd Zorn block. -/
 theorem diracTraceKMS_sigmaMinus_zero (β : ℝ) (r : Fin 3) :
     (diracTraceKMSSector β).omega (lightconeSigmaMinus r) = 0 := by
   exact kms_vacuum_is_finite
-    (diracTraceKMSSector β) chiralityOperator (lightconeSigmaMinus r)
-    chiralityOperator_sq (sigmaMinus_chirality_anticommute r)
+    (diracTraceKMSSector β) ZornCliffordParityAPI.chiralityOperator
+      (lightconeSigmaMinus r)
+    ZornCliffordParityAPI.chiralityOperator_sq
+      (sigmaMinus_chirality_anticommute r)
 
 /-- Trace cancellation is non-vacuous: the upper operator is nonzero. -/
 theorem diracTraceKMS_sigmaPlus_nonvacuous (β : ℝ) (r : Fin 3) :
@@ -127,16 +131,18 @@ theorem deltaRegularizedKMS_sigmaPlus_zero
     (K : DeltaRegularizedKMSContext DiracSpinor16) (r : Fin 3) :
     K.omega (lightconeSigmaPlus r) = 0 := by
   exact deltaRegularized_kms_vacuum_is_finite
-    K chiralityOperator (lightconeSigmaPlus r)
-    chiralityOperator_sq (sigmaPlus_chirality_anticommute r)
+    K ZornCliffordParityAPI.chiralityOperator (lightconeSigmaPlus r)
+    ZornCliffordParityAPI.chiralityOperator_sq
+      (sigmaPlus_chirality_anticommute r)
 
 /-- Existing delta-regularized KMS data annihilate the lower Zorn block. -/
 theorem deltaRegularizedKMS_sigmaMinus_zero
     (K : DeltaRegularizedKMSContext DiracSpinor16) (r : Fin 3) :
     K.omega (lightconeSigmaMinus r) = 0 := by
   exact deltaRegularized_kms_vacuum_is_finite
-    K chiralityOperator (lightconeSigmaMinus r)
-    chiralityOperator_sq (sigmaMinus_chirality_anticommute r)
+    K ZornCliffordParityAPI.chiralityOperator (lightconeSigmaMinus r)
+    ZornCliffordParityAPI.chiralityOperator_sq
+      (sigmaMinus_chirality_anticommute r)
 
 end ZornRindlerKMSBridge
 

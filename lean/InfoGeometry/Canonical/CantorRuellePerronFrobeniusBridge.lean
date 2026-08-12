@@ -39,6 +39,19 @@ theorem rpf_operator_positivity (f g : CantorStream → ℝ) (hg : ∀ y, 0 ≤ 
     mul_nonneg (le_of_lt (Real.exp_pos _)) (hg _)
   linarith
 
+theorem rpf_operator_add (f g h : CantorStream → ℝ) (x : CantorStream) :
+    ruellePerronFrobeniusOp f (fun y => g y + h y) x =
+      ruellePerronFrobeniusOp f g x + ruellePerronFrobeniusOp f h x := by
+  dsimp [ruellePerronFrobeniusOp]
+  ring
+
+theorem rpf_operator_smul (f : CantorStream → ℝ) (c : ℝ)
+    (g : CantorStream → ℝ) (x : CantorStream) :
+    ruellePerronFrobeniusOp f (fun y => c * g y) x =
+      c * ruellePerronFrobeniusOp f g x := by
+  dsimp [ruellePerronFrobeniusOp]
+  ring
+
 /-- 🏆 THEOREM 2: Shift Preimage Involution Identity: σ(b ⌢ x) = x -/
 theorem shift_prependedStream (b : Fin 2) (x : CantorStream) :
     cantorShiftMap (prependedStream b x) = x := by

@@ -68,14 +68,18 @@ components have opposite signs.
 structure E1Transition where
   M_diagonal : ℝ
   M_off_diagonal : ℝ
-  
-  /-- Transition matrix element for 35Ar (reinforced) -/
-  M_35Ar (i f : IsospinMixedState) : ℝ :=
-    (i.alpha * f.alpha * M_diagonal) + (i.beta * f.alpha * M_off_diagonal) + (i.alpha * f.beta * M_off_diagonal)
-    
-  /-- Transition matrix element for 35Cl (quenched) -/
-  M_35Cl (i f : IsospinMixedState) : ℝ :=
-    (i.alpha * f.alpha * M_diagonal) - (i.beta * f.alpha * M_off_diagonal) - (i.alpha * f.beta * M_off_diagonal)
+
+/-- Transition matrix element for 35Ar (reinforced). -/
+def E1Transition.M_35Ar (trans : E1Transition) (i f : IsospinMixedState) : ℝ :=
+  (i.alpha * f.alpha * trans.M_diagonal) +
+    (i.beta * f.alpha * trans.M_off_diagonal) +
+    (i.alpha * f.beta * trans.M_off_diagonal)
+
+/-- Transition matrix element for 35Cl (quenched). -/
+def E1Transition.M_35Cl (trans : E1Transition) (i f : IsospinMixedState) : ℝ :=
+  (i.alpha * f.alpha * trans.M_diagonal) -
+    (i.beta * f.alpha * trans.M_off_diagonal) -
+    (i.alpha * f.beta * trans.M_off_diagonal)
 
 /--
 Theorem: Topological Quenching.
@@ -91,9 +95,23 @@ theorem A35_E1_topological_quenching
   trans.M_35Cl i f = 0 ∧ trans.M_35Ar i f = 2 * (i.alpha * f.alpha * trans.M_diagonal) := by
   constructor
   · unfold E1Transition.M_35Cl
-    linarith
+    change i.alpha * f.alpha * trans.M_diagonal - i.beta * f.alpha * trans.M_off_diagonal -
+      i.alpha * f.beta * trans.M_off_diagonal = 0
+    calc
+      i.alpha * f.alpha * trans.M_diagonal - i.beta * f.alpha * trans.M_off_diagonal -
+          i.alpha * f.beta * trans.M_off_diagonal =
+          i.alpha * f.alpha * trans.M_diagonal -
+            (i.beta * f.alpha + i.alpha * f.beta) * trans.M_off_diagonal := by ring
+      _ = 0 := by rw [h_cancel]; ring
   · unfold E1Transition.M_35Ar
-    linarith
+    change i.alpha * f.alpha * trans.M_diagonal + i.beta * f.alpha * trans.M_off_diagonal +
+      i.alpha * f.beta * trans.M_off_diagonal = 2 * (i.alpha * f.alpha * trans.M_diagonal)
+    calc
+      i.alpha * f.alpha * trans.M_diagonal + i.beta * f.alpha * trans.M_off_diagonal +
+          i.alpha * f.beta * trans.M_off_diagonal =
+          i.alpha * f.alpha * trans.M_diagonal +
+            (i.beta * f.alpha + i.alpha * f.beta) * trans.M_off_diagonal := by ring
+      _ = 2 * (i.alpha * f.alpha * trans.M_diagonal) := by rw [← h_cancel]; ring
 
 end IsospinMixingA35
 end noncomputable section

@@ -77,7 +77,7 @@ theorem skewCoordinateMap_skewCoordinates (A : Skew8) :
   ext i j
   by_cases hij : i < j
   · have hji : ¬ j < i := by omega
-    simp [skewCoordinateMap, skewCoordinates, skewMatrix, hij, hji]
+    simp [skewCoordinateMap, skewCoordinates, skewMatrix, hij]
   · by_cases hji : j < i
     · have h' : ¬ i < j := by omega
       have hA := (mem_skewAdjointMatricesSubmodule (1 : Matrix8) A.1).mp A.2
@@ -118,7 +118,7 @@ theorem skewBasis_coordinate_decomposition (A : Skew8) :
 
 theorem finrank_skew8 : Module.finrank ℝ Skew8 = 28 := by
   rw [← LinearEquiv.finrank_eq skewCoordinateEquiv]
-  simp [Module.finrank_pi, index_card, Fintype.card_congr]
+  simp [index_card]
 
 def eta44 : Matrix8 :=
   Matrix.diagonal (fun i => if i.val < 4 then 1 else -1)
@@ -194,7 +194,7 @@ theorem orthogonal44_beta_skew (A : Orthogonal44) (x y : MiddleCarrier) :
   simp only [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair] at hA
   have hbeta (u v : MiddleCarrier) :
       beta44 u v = eta44.mulVec u ⬝ᵥ v := by
-    simp [beta44, eta44, Matrix.mulVec, Matrix.mul_apply,
+    simp [beta44, eta44, Matrix.mulVec,
       dotProduct, Fin.sum_univ_succ]
   have hskew : eta44 * A.1 = -(A.1ᵀ * eta44) := by
     have h := congrArg Neg.neg hA

@@ -39,17 +39,18 @@ namespace InfoGeometry.Algebra.CuntzCantorSupergradedBridge
 
 open InfoGeometry.Canonical.CantorCuntzBasis
 open InfoGeometry.Algebra.SupergradedSUSY
+open InfoGeometry.Algebra.CuntzSuperalgebra
 
 /-- Binary Cuntz/Cantor word parity, read in `ZMod 2`. -/
-def wordParityZ2 (w : BinaryWord) : ZMod 2 :=
+def wordParityZ2 (w : List Bool) : ZMod 2 :=
   (w.length : ZMod 2)
 
 /-- A single Cuntz branch step. -/
-def oddStep (b : Bool) : BinaryWord :=
+def oddStep (b : Bool) : List Bool :=
   [b]
 
 /-- A two-step Cuntz branch word. -/
-def evenTwoStep (a b : Bool) : BinaryWord :=
+def evenTwoStep (a b : Bool) : List Bool :=
   [a, b]
 
 /-- A one-bit Cuntz branch word is odd. -/
@@ -64,7 +65,7 @@ theorem evenTwoStep_parity (a b : Bool) :
   native_decide
 
 /-- Word parity is additive under concatenation. -/
-theorem wordParityZ2_append (u v : BinaryWord) :
+theorem wordParityZ2_append (u v : List Bool) :
     wordParityZ2 (u ++ v) = wordParityZ2 u + wordParityZ2 v := by
   simp [wordParityZ2, List.length_append, Nat.cast_add]
 
@@ -76,7 +77,7 @@ theorem odd_odd_concat_even (a b : Bool) :
 
 theorem cuntz_odd_odd_generates_even_translation_packet
     (n : ℕ) (i : Fin n) :
-    CuntzSuperalgebra.parity n (cuntzSuperMomentum n i) = cuntzSuperMomentum n i ∧
+    parity n (cuntzSuperMomentum n i) = cuntzSuperMomentum n i ∧
       algebraicAnticommutator
           (cuntzMajoranaSupercharge n i)
           (cuntzMajoranaSupercharge n i) =

@@ -147,10 +147,8 @@ roots = [
   "SixStateSpectralBridge",
   "SixStateCharacteristicPolynomial",
   "SixStateGeneralizedPauliBasis",
-  "SixStateGeneralizedCliffordAlgebra",
   "CRTGeneralizedPauliSix",
   "TwelveFoldExtendedWeylBridge",
-  "TwelveFoldGeneralizedCliffordExtension",
   "KasparovKreinCategory",
   "KasparovKreinDoubling",
   "HilbertPolyaBivariant",
@@ -242,7 +240,6 @@ roots = [
   "MinkowskiBiquaternion",
   "PolynomialSymmetryOperators",
   "DiracFourierMellin",
-  "BiquaternionKANnilpotent",
   "CptFractalClosure",
   "CptTensorFractal",
   "GravitySoldering",
@@ -800,20 +797,12 @@ name = "SixStateGeneralizedPauliBasis"
 roots = ["SixStateGeneralizedPauliBasis"]
 
 [[lean_lib]]
-name = "SixStateGeneralizedCliffordAlgebra"
-roots = ["SixStateGeneralizedCliffordAlgebra"]
-
-[[lean_lib]]
 name = "CRTGeneralizedPauliSix"
 roots = ["CRTGeneralizedPauliSix"]
 
 [[lean_lib]]
 name = "TwelveFoldExtendedWeylBridge"
 roots = ["TwelveFoldExtendedWeylBridge"]
-
-[[lean_lib]]
-name = "TwelveFoldGeneralizedCliffordExtension"
-roots = ["TwelveFoldGeneralizedCliffordExtension"]
 
 [[lean_lib]]
 name = "SplitOctonionZornOmegaPhase"

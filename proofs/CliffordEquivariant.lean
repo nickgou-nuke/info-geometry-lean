@@ -29,7 +29,11 @@ def forward_pass (layer : EquivariantLayer Q n) (x : Fin n → (PGA3D Q)) : Fin 
 -- Theorem: The layer is affine and preserves multivector additions.
 theorem forward_pass_affine (layer : EquivariantLayer Q n) (x y : Fin n → (PGA3D Q)) :
     forward_pass Q layer (x + y) = forward_pass Q layer x + forward_pass Q layer y - layer.bias := by
-  sorry -- Affine linearity proof
+  funext i
+  dsimp [forward_pass]
+  simp_rw [mul_add]
+  rw [Finset.sum_add_distrib]
+  simp [sub_eq_add_neg, add_assoc, add_left_comm, add_comm]
 
 -- This lays the foundation for verifying that our PyTorch GA-Net
 -- preserves SE(3) isometry invariance via true multivector products.

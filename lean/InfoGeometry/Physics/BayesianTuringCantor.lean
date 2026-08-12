@@ -32,7 +32,7 @@ open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 open InfoGeometry.Canonical.UHFBooleanProjectionCantorBridge
 
 /-- The deterministic infinite Turing tape is the Cantor boundary. -/
-abbrev TuringTape := CantorBoundary
+abbrev TuringTape := ℕ → Bool
 
 /-- A finite program/decidable observation at stage `n`: a set of accepted prefixes. -/
 abbrev FiniteProgram (n : ℕ) := Set (BitWord n)
@@ -198,7 +198,7 @@ theorem logResidue_self {Q : ℚ} (hQ : Q ≠ 0) :
   field_simp [hQ]
 
 /-- The tape carrier is definitionally the repository's Cantor boundary. -/
-theorem tape_carrier_eq : CantorBoundary = TuringTape :=
+theorem tape_carrier_eq : (ℕ → Bool) = TuringTape :=
   rfl
 
 

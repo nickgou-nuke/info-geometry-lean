@@ -62,7 +62,7 @@ theorem pointPrior_expectation_boolEvalAt
 
 /-- Successor compatibility of the point prior readout along prefix pullback. -/
 theorem pointPrior_prefixPullback
-    (x : CantorBoundary) (n : ℕ) (A : FiniteBooleanAlgebra n) :
+    (x : (ℕ → Bool)) (n : ℕ) (A : FiniteBooleanAlgebra n) :
     InfoGeometry.expectation
         (pointPrior (n + 1) (boundaryPrefix (n + 1) x))
         (indicator (prefixPullback n A)) =

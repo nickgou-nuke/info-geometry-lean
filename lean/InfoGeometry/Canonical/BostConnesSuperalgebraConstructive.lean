@@ -149,9 +149,11 @@ is model data, not derived from bare Cuntz relations.
 structure ParityEquivariantCuntzCarrier
     (Op : Type*) [Ring Op] [StarRing Op] where
   parity : StarWittenParity Op
-  cuntz : InfoGeometry.Topology.CuntzO2Carrier Op
-  left_even : ParityEven parity cuntz.S_left
-  right_odd : ParityOdd parity cuntz.S_right
+  cuntz : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op
+  left_even : ParityEven parity
+    (InfoGeometry.Topology.CuntzO2Carrier.S_left cuntz)
+  right_odd : ParityOdd parity
+    (InfoGeometry.Topology.CuntzO2Carrier.S_right cuntz)
 
 namespace ParityEquivariantCuntzCarrier
 

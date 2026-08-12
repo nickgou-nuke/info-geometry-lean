@@ -46,6 +46,6 @@ theorem levelZero_action_add (a : ExteriorAlgebra R V) (Z1 Z2 : GunaydinGurseySp
 /-- **Master Synthesis**: Günaydin-Gürsey Supertwistor & Level-Zero Action Synthesis -/
 theorem master_split_octonion_supertwistor_synthesis
     (_a : ExteriorAlgebra R V) (_Z1 _Z2 : GunaydinGurseySplitBasis R V) :
-    True := trivial
+    True := ⟨⟩
 
 end InfoGeometry.Canonical

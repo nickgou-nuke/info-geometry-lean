@@ -7,14 +7,6 @@ import Mathlib.Tactic
 variable {A : Type*} [Ring A]
 variable (Γ_R Γ_χ Γ_N : A)
 
-class ModularZ2CubeGrading (Γ_R Γ_χ Γ_N : A) where
-  inv_R : Γ_R * Γ_R = 1
-  inv_χ : Γ_χ * Γ_χ = 1
-  inv_N : Γ_N * Γ_N = 1
-  comm_R_χ : Γ_R * Γ_χ = Γ_χ * Γ_R
-  comm_R_N : Γ_R * Γ_N = Γ_N * Γ_R
-  comm_χ_N : Γ_χ * Γ_N = Γ_N * Γ_χ
-
 namespace ModularZ2CubeGrading
 
 def hasGrading (Γ X : A) (is_odd : Bool) : Prop :=
@@ -44,11 +36,6 @@ def isNambuPairingLike (P : A) : Prop :=
 variable {H_R N_op Q_χ : A}
 variable {β_U μ μ_χ : A}
 
-class Central (c : A) where
-  commutes (X : A) : c * X = X * c
-
-variable [Central β_U] [Central μ] [Central μ_χ]
-
 lemma hasGrading_add {Γ X Y : A} {b : Bool} (hx : hasGrading Γ X b) (hy : hasGrading Γ Y b) :
     hasGrading Γ (X + Y) b := by
   cases b
@@ -68,15 +55,15 @@ lemma hasGrading_add {Γ X Y : A} {b : Bool} (hx : hasGrading Γ X b) (hy : hasG
       _ = 0 + 0 := by rw [hx, hy]
       _ = 0 := add_zero 0
 
-lemma hasGrading_mul_central {Γ X c : A} {b : Bool} [Central c] (hx : hasGrading Γ X b) :
+lemma hasGrading_mul_of_commute {Γ X c : A} {b : Bool}
+    (hx : hasGrading Γ X b) (hc : Commute c Γ) :
     hasGrading Γ (c * X) b := by
-  have hc : c * Γ = Γ * c := Central.commutes Γ
   cases b
   · change Γ * X = X * Γ at hx
     change Γ * (c * X) = (c * X) * Γ
     calc
       Γ * (c * X) = (Γ * c) * X := by simp only [mul_assoc]
-      _ = (c * Γ) * X := by rw [hc]
+      _ = (c * Γ) * X := by rw [hc.eq]
       _ = c * (Γ * X) := by simp only [mul_assoc]
       _ = c * (X * Γ) := by rw [hx]
       _ = (c * X) * Γ := by simp only [mul_assoc]
@@ -84,7 +71,7 @@ lemma hasGrading_mul_central {Γ X c : A} {b : Bool} [Central c] (hx : hasGradin
     change Γ * (c * X) + (c * X) * Γ = 0
     calc
       Γ * (c * X) + (c * X) * Γ = (Γ * c) * X + c * (X * Γ) := by simp only [mul_assoc]
-      _ = (c * Γ) * X + c * (X * Γ) := by rw [hc]
+      _ = (c * Γ) * X + c * (X * Γ) := by rw [hc.eq]
       _ = c * (Γ * X) + c * (X * Γ) := by simp only [mul_assoc]
       _ = c * (Γ * X + X * Γ) := (mul_add c (Γ * X) (X * Γ)).symm
       _ = c * 0 := by rw [hx]
@@ -111,6 +98,78 @@ lemma hasGrading_sub {Γ X Y : A} {b : Bool} (hx : hasGrading Γ X b) (hy : hasG
     hasGrading Γ (X - Y) b := by
   rw [sub_eq_add_neg]
   exact hasGrading_add hx (hasGrading_neg hy)
+
+lemma hasGrading_mul {Γ X Y : A} {b c : Bool}
+    (hx : hasGrading Γ X b) (hy : hasGrading Γ Y c) :
+    hasGrading Γ (X * Y) (b != c) := by
+  cases b <;> cases c
+  · change Γ * X = X * Γ at hx
+    change Γ * Y = Y * Γ at hy
+    change Γ * (X * Y) = (X * Y) * Γ
+    calc
+      Γ * (X * Y) = (Γ * X) * Y := by rw [mul_assoc]
+      _ = (X * Γ) * Y := by rw [hx]
+      _ = X * (Γ * Y) := by rw [← mul_assoc]
+      _ = X * (Y * Γ) := by rw [hy]
+      _ = (X * Y) * Γ := by rw [mul_assoc]
+  · change Γ * X = X * Γ at hx
+    change Γ * Y + Y * Γ = 0 at hy
+    change Γ * (X * Y) + (X * Y) * Γ = 0
+    calc
+      Γ * (X * Y) + (X * Y) * Γ = (Γ * X) * Y + (X * Y) * Γ := by
+        rw [← mul_assoc]
+      _ = (X * Γ) * Y + (X * Y) * Γ := by rw [hx]
+      _ = X * (Γ * Y) + X * (Y * Γ) := by simp only [mul_assoc]
+      _ = X * (Γ * Y + Y * Γ) := (mul_add X (Γ * Y) (Y * Γ)).symm
+      _ = X * 0 := by rw [hy]
+      _ = 0 := mul_zero X
+  · change Γ * X + X * Γ = 0 at hx
+    change Γ * Y = Y * Γ at hy
+    change Γ * (X * Y) + (X * Y) * Γ = 0
+    calc
+      Γ * (X * Y) + (X * Y) * Γ = (Γ * X) * Y + (X * Y) * Γ := by
+        rw [← mul_assoc]
+      _ = (-(X * Γ)) * Y + (X * Y) * Γ := by
+        have hx' : Γ * X = -(X * Γ) := by
+          calc
+            Γ * X = (Γ * X + X * Γ) - X * Γ := by noncomm_ring
+            _ = 0 - X * Γ := by rw [hx]
+            _ = -(X * Γ) := by rw [zero_sub]
+        rw [hx']
+      _ = -(X * (Γ * Y)) + (X * Y) * Γ := by
+        rw [neg_mul, mul_assoc]
+      _ = -(X * (Y * Γ)) + (X * Y) * Γ := by rw [hy]
+      _ = 0 := by noncomm_ring
+  · change Γ * X + X * Γ = 0 at hx
+    change Γ * Y + Y * Γ = 0 at hy
+    change Γ * (X * Y) = (X * Y) * Γ
+    have hx' : Γ * X = -(X * Γ) := by
+      calc
+        Γ * X = (Γ * X + X * Γ) - X * Γ := by noncomm_ring
+        _ = 0 - X * Γ := by rw [hx]
+        _ = -(X * Γ) := by rw [zero_sub]
+    have hy' : Γ * Y = -(Y * Γ) := by
+      calc
+        Γ * Y = (Γ * Y + Y * Γ) - Y * Γ := by noncomm_ring
+        _ = 0 - Y * Γ := by rw [hy]
+        _ = -(Y * Γ) := by rw [zero_sub]
+    calc
+      Γ * (X * Y) = (Γ * X) * Y := by rw [mul_assoc]
+      _ = (-(X * Γ)) * Y := by rw [hx']
+      _ = -(X * (Γ * Y)) := by rw [neg_mul, mul_assoc]
+      _ = -(X * (-(Y * Γ))) := by rw [hy']
+      _ = (X * Y) * Γ := by simp only [mul_neg, neg_neg, mul_assoc]
+
+lemma isHomogeneous_mul
+    {Γ_R Γ_χ Γ_N X Y : A} {b_R b_χ b_N c_R c_χ c_N : Bool}
+    (hX : isHomogeneous Γ_R Γ_χ Γ_N X b_R b_χ b_N)
+    (hY : isHomogeneous Γ_R Γ_χ Γ_N Y c_R c_χ c_N) :
+    isHomogeneous Γ_R Γ_χ Γ_N (X * Y)
+      (b_R != c_R) (b_χ != c_χ) (b_N != c_N) := by
+  rcases hX with ⟨hXR, hXχ, hXN⟩
+  rcases hY with ⟨hYR, hYχ, hYN⟩
+  exact ⟨hasGrading_mul hXR hYR, hasGrading_mul hXχ hYχ,
+    hasGrading_mul hXN hYN⟩
 
 lemma hasGrading_anticomm_of_odd {Γ X Y : A}
     (hx : hasGrading Γ X true) (hy : hasGrading Γ Y true) :
@@ -224,30 +283,30 @@ The Grand Canonical Modular Generator K_GC rigorously preserves the ℤ₂³ gra
 theorem grand_canonical_generator_is_fully_even
     (hH : isWedgeHamiltonianLike Γ_R Γ_χ Γ_N H_R)
     (hN : isTotalNumberLike Γ_R Γ_χ Γ_N N_op)
-    (hQ : isChiralChargeLike Γ_R Γ_χ Γ_N Q_χ) :
+    (hQ : isChiralChargeLike Γ_R Γ_χ Γ_N Q_χ)
+    (hβ : ∀ Γ : A, Commute β_U Γ)
+    (hμ : ∀ Γ : A, Commute μ Γ)
+    (hμχ : ∀ Γ : A, Commute μ_χ Γ) :
     isFullyEven Γ_R Γ_χ Γ_N (β_U * (H_R - μ * N_op - μ_χ * Q_χ)) := by
   unfold isFullyEven isWedgeHamiltonianLike isTotalNumberLike isChiralChargeLike isHomogeneous at *
   rcases hH with ⟨hH_R, hH_χ, hH_N⟩
   rcases hN with ⟨hN_R, hN_χ, hN_N⟩
   rcases hQ with ⟨hQ_R, hQ_χ, hQ_N⟩
   refine ⟨?_, ?_, ?_⟩
-  · apply hasGrading_mul_central
-    apply hasGrading_sub
-    · apply hasGrading_sub
-      · exact hH_R
-      · exact hasGrading_mul_central hN_R
-    · exact hasGrading_mul_central hQ_R
-  · apply hasGrading_mul_central
-    apply hasGrading_sub
-    · apply hasGrading_sub
-      · exact hH_χ
-      · exact hasGrading_mul_central hN_χ
-    · exact hasGrading_mul_central hQ_χ
-  · apply hasGrading_mul_central
-    apply hasGrading_sub
-    · apply hasGrading_sub
-      · exact hH_N
-      · exact hasGrading_mul_central hN_N
-    · exact hasGrading_mul_central hQ_N
+  · exact hasGrading_mul_of_commute
+      (hasGrading_sub
+        (hasGrading_sub hH_R (hasGrading_mul_of_commute hN_R (hμ Γ_R)))
+        (hasGrading_mul_of_commute hQ_R (hμχ Γ_R)))
+      (hβ Γ_R)
+  · exact hasGrading_mul_of_commute
+      (hasGrading_sub
+        (hasGrading_sub hH_χ (hasGrading_mul_of_commute hN_χ (hμ Γ_χ)))
+        (hasGrading_mul_of_commute hQ_χ (hμχ Γ_χ)))
+      (hβ Γ_χ)
+  · exact hasGrading_mul_of_commute
+      (hasGrading_sub
+        (hasGrading_sub hH_N (hasGrading_mul_of_commute hN_N (hμ Γ_N)))
+        (hasGrading_mul_of_commute hQ_N (hμχ Γ_N)))
+      (hβ Γ_N)
 
 end ModularZ2CubeGrading

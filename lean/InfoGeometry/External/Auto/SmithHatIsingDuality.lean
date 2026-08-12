@@ -88,25 +88,9 @@ def energyDualitySum (J Tc TcDual eps epsDual : ℝ) : ℝ :=
 def nearestNeighborCorrelation (energy : ℝ) (spinNumber : ℝ) : ℝ :=
   -energy / (2 * spinNumber)
 
-/-- The temperature-duality equation is exactly the statement that the product is `1`. -/
-theorem kramers_wannier_temperature_duality
-    {J Tc TcDual : ℝ}
-    (h : temperatureDualityProduct J Tc TcDual = 1) :
-    Real.sinh (2 * J / Tc) * Real.sinh (2 * J / TcDual) = 1 := by
-  exact h
-
-/-- The energy-duality equation is exactly the statement that the normalized sum is `1`. -/
-theorem kramers_wannier_energy_duality
-    {J Tc TcDual eps epsDual : ℝ}
-    (h : energyDualitySum J Tc TcDual eps epsDual = 1) :
-    eps / coth (2 * J / Tc) + epsDual / coth (2 * J / TcDual) = 1 := by
-  exact h
-
 /-- The original and dual Smith-kite labels are distinct. -/
 theorem original_ne_dual : SmithKiteLattice.original ≠ SmithKiteLattice.dual := by
   decide
 
-#check kramers_wannier_temperature_duality
-#check kramers_wannier_energy_duality
 
 end SmithHatIsingDuality

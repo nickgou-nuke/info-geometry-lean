@@ -22,6 +22,7 @@ open SplitOctonionBraidSU3
 open ZornBraidScalingCovariance
 open NonAbelianBrillouinKleinBottle
 open ZornKleinGlideBridge
+open YangBaxterZornBridge
 
 /-!
 ## 1. The O(5,5) String Duality Charge Lattice
@@ -48,10 +49,21 @@ def embedZornToO55 (p : ℂˣ) (X : Zorn) : O55ChargeLattice where
   scale_minus := (p⁻¹ : ℂ)
 
 /-- Apply an SU(3) color permutation to a Zorn matrix. -/
+def finOfColor : Color → Fin 3
+  | Color.red => 0
+  | Color.green => 1
+  | Color.blue => 2
+
+def colorOfFin (c : Fin 3) : Color :=
+  match c.1 with
+  | 0 => Color.red
+  | 1 => Color.green
+  | _ => Color.blue
+
 def zornPermute (σ : SU3ColorWeylModel) (X : Zorn) : Zorn where
   a := X.a
-  u := fun c => X.u (σ⁻¹ c)
-  v := fun c => X.v (σ⁻¹ c)
+  u := fun c => X.u (finOfColor (σ⁻¹ (colorOfFin c)))
+  v := fun c => X.v (finOfColor (σ⁻¹ (colorOfFin c)))
   b := X.b
 
 /-- The SU(3) color symmetry acts on the 10D O(5,5) charge lattice by permuting the color basis. -/
@@ -82,7 +94,7 @@ The flat non-abelian gauge connection (Wilson Loop) over the Klein Bottle,
 assigned to the scaled Zorn braid representation. 
 -/
 def brillouinWilsonLoop (p : ℂˣ) (hp : (p : ℂ) ^ 6 = 1) : 
-    B3PresentedGroup.B3 →* GL8 :=
+    B3PresentedGroup.B3 →* YangBaxterZornBridge.GL8 :=
   scaledZornPhi p
 
 /--
@@ -92,8 +104,8 @@ are preserved across all momentum scales, representing continuous topological pr
 theorem brillouinWilsonLoop_character_invariant 
     (p : ℂˣ) (hp : (p : ℂ) ^ 6 = 1) (β : B3PresentedGroup.B3) :
     Matrix.trace (brillouinWilsonLoop p hp β).val = 
-      Matrix.trace (zornPhi β).val := by
-  change Matrix.trace (scaledZornPhi p β).val = Matrix.trace (zornPhi β).val
+      Matrix.trace (YangBaxterZornBridge.zornPhi β).val := by
+  change Matrix.trace (scaledZornPhi p β).val = Matrix.trace (YangBaxterZornBridge.zornPhi β).val
   exact scaledZornPhi_trace p β
 
 /-!

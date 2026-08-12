@@ -1,4 +1,6 @@
 import proofs.IntegralZornCompositionAlgebra
+import InfoGeometry.Physics.SplitOctonionBraidSU3
+import InfoGeometry.Canonical.CanonicalZornCompositionFiveGradeBridge
 
 /-!
 # Alternativity and nonassociativity of the integral Zorn algebra
@@ -23,7 +25,8 @@ open CanonicalZornProjectiveTKKBridge
 open CanonicalZornIntegralSpinTrialityClosure
 open CanonicalZornIntegralTrialityEquivariance
 open CanonicalZornCliffordRepresentation
-open SplitOctonionBraidSU3
+open _root_.InfoGeometry.Physics.SplitOctonionBraidSU3
+open CanonicalZornCompositionFiveGradeBridge
 
 /-! ## Canonical alternativity -/
 
@@ -170,7 +173,7 @@ theorem integral_octonion_triality_fivegrade_projective_closure
         integralZornMul A (integralZornMul B C)) ∧
     integralAxisCycle (integralZornMul X Y) =
       integralZornMul (integralAxisCycle X) (integralAxisCycle Y) ∧
-    CanonicalZornCompositionTriality.vectorGradePlus
+    CanonicalZornCompositionFiveGradeBridge.vectorGradePlus
         (CanonicalZornRealSpin44.realSplit44ToVector8
           (integralZornToRealSplit44 (integralAxisCycle X))) ∈
       CanonicalZornFiveGradedClosure.conformalGrade

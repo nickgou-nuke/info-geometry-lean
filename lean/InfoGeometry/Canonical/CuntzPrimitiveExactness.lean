@@ -50,19 +50,63 @@ For an explicit `CuntzO2Carrier`, the left and right range projections form an
 orthogonal partition of the unit and split every operator.
 -/
 theorem cuntz_projection_exactness
-    (C : CuntzO2Carrier Op) :
-    C.leftRangeProjection * C.leftRangeProjection = C.leftRangeProjection ∧
-    C.rightRangeProjection * C.rightRangeProjection = C.rightRangeProjection ∧
-    C.leftRangeProjection * C.rightRangeProjection = 0 ∧
-    C.rightRangeProjection * C.leftRangeProjection = 0 ∧
-    C.leftRangeProjection + C.rightRangeProjection = 1 ∧
-    ∀ x : Op, C.leftRangeProjection * x + C.rightRangeProjection * x = x := by
-  exact ⟨C.leftRangeProjection_idempotent,
-    C.rightRangeProjection_idempotent,
-    C.leftRangeProjection_mul_rightRangeProjection_eq_zero,
-    C.rightRangeProjection_mul_leftRangeProjection_eq_zero,
-    C.rangeProjection_sum_one,
-    C.rangeProjection_decomposition⟩
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
+    (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) = (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) ∧
+    (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) = (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) ∧
+    (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) = 0 ∧
+    (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) = 0 ∧
+    (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) + (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) = 1 ∧
+    ∀ x : Op, (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * x + (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * x = x := by
+  exact ⟨InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection_idempotent C,
+    InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection_idempotent C,
+    InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection_mul_rightRangeProjection_eq_zero C,
+    InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection_mul_leftRangeProjection_eq_zero C,
+    InfoGeometry.Topology.CuntzO2Carrier.rangeProjection_sum_one C,
+    InfoGeometry.Topology.CuntzO2Carrier.rangeProjection_decomposition C⟩
+
+theorem cuntz_projection_decomposition_unique
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op)
+    {x y : Op}
+    (hxy :
+      (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * x +
+          (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * x =
+        (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * y +
+          (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * y) :
+    (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * x =
+        (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * y ∧
+      (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * x =
+        (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * y := by
+  constructor
+  · have hleft := congrArg
+      (fun z : Op =>
+        (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * z) hxy
+    simpa [← mul_assoc, mul_add,
+      InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection_idempotent,
+      InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection_mul_rightRangeProjection_eq_zero]
+      using hleft
+  · have hright := congrArg
+      (fun z : Op =>
+        (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * z) hxy
+    simpa [← mul_assoc, mul_add,
+      InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection_idempotent,
+      InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection_mul_leftRangeProjection_eq_zero]
+      using hright
+
+theorem cuntz_projection_decomposition_eq_iff
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op)
+    {x y : Op} :
+    (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * x +
+          (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * x =
+        (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * y +
+          (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * y ↔
+      ((InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * x =
+          (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * y ∧
+        (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * x =
+          (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * y) := by
+  constructor
+  · exact cuntz_projection_decomposition_unique C
+  · rintro ⟨hleft, hright⟩
+    rw [hleft, hright]
 
 /--
 Primitive exactness and Cuntz projection exactness, stated without collapsing
@@ -75,14 +119,14 @@ by the explicit `CuntzO2Carrier`.
 theorem primitiveExactOn_with_cuntz_projection_exactness
     {U : Set ℂ} {f : ℂ → ℂ}
     (hU : IsOpen U) (hExact : IsExactOn f U)
-    (C : CuntzO2Carrier Op) :
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
     ZeroRectangularHolonomyOn f U ∧
-    C.leftRangeProjection * C.leftRangeProjection = C.leftRangeProjection ∧
-    C.rightRangeProjection * C.rightRangeProjection = C.rightRangeProjection ∧
-    C.leftRangeProjection * C.rightRangeProjection = 0 ∧
-    C.rightRangeProjection * C.leftRangeProjection = 0 ∧
-    C.leftRangeProjection + C.rightRangeProjection = 1 ∧
-    ∀ x : Op, C.leftRangeProjection * x + C.rightRangeProjection * x = x := by
+    (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) = (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) ∧
+    (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) = (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) ∧
+    (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) = 0 ∧
+    (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) = 0 ∧
+    (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) + (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) = 1 ∧
+    ∀ x : Op, (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * x + (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * x = x := by
   exact ⟨primitiveExactOn_to_zeroRectangularHolonomyOn hU hExact,
     (cuntz_projection_exactness C).1,
     (cuntz_projection_exactness C).2.1,
@@ -98,14 +142,14 @@ and an explicit Cuntz carrier gives the lossless left/right projection split.
 theorem differentiableOn_ball_with_cuntz_projection_exactness
     {f : ℂ → ℂ} {c : ℂ} {r : ℝ}
     (hf : DifferentiableOn ℂ f (Metric.ball c r))
-    (C : CuntzO2Carrier Op) :
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) :
     ZeroRectangularHolonomyOn f (Metric.ball c r) ∧
-    C.leftRangeProjection * C.leftRangeProjection = C.leftRangeProjection ∧
-    C.rightRangeProjection * C.rightRangeProjection = C.rightRangeProjection ∧
-    C.leftRangeProjection * C.rightRangeProjection = 0 ∧
-    C.rightRangeProjection * C.leftRangeProjection = 0 ∧
-    C.leftRangeProjection + C.rightRangeProjection = 1 ∧
-    ∀ x : Op, C.leftRangeProjection * x + C.rightRangeProjection * x = x := by
+    (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) = (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) ∧
+    (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) = (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) ∧
+    (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) = 0 ∧
+    (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) = 0 ∧
+    (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) + (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) = 1 ∧
+    ∀ x : Op, (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C) * x + (InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C) * x = x := by
   exact primitiveExactOn_with_cuntz_projection_exactness
     Metric.isOpen_ball (differentiableOn_ball_to_isExactOn hf) C
 

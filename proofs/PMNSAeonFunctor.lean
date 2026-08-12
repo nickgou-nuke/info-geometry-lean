@@ -15,7 +15,7 @@ def I_2 : M2R := 1
 def delta_bdg : M2R := !![0, 1; 1, 0]
 
 /-- The continuous hyperbolic boost derived in Cl11OscillationBridge -/
-def bdg_boost (θ : ℝ) : M2R :=
+noncomputable def bdg_boost (θ : ℝ) : M2R :=
   (Real.cosh θ) • I_2 + (Real.sinh θ) • delta_bdg
 
 /-!
@@ -49,7 +49,7 @@ inductive Aeon
 The topological phase slip between two Aeons is exactly the 
 Itakura-Saito divergence of their local Zorn vacuum states.
 -/
-noncomputable def phase_slip (a b : Aeon) (detA detB : ℝ) : ℝ :=
+noncomputable def phase_slip (_a _b : Aeon) (detA detB : ℝ) : ℝ :=
   itakura_saito_divergence detA detB
 
 /-!
@@ -74,9 +74,8 @@ theorem functorial_composition (θ₁ θ₂ : ℝ) :
     bdg_boost θ₁ * bdg_boost θ₂ = bdg_boost (θ₁ + θ₂) := by
   ext i j
   fin_cases i <;> fin_cases j <;> (
-    simp [bdg_boost, Matrix.mul_apply, Fin.sum_univ_two, 
-          Real.cosh_add, Real.sinh_add, I_2, delta_bdg]
-    ring
+    simp [bdg_boost, Matrix.mul_apply, Fin.sum_univ_two,
+      Real.cosh_add, Real.sinh_add, I_2, delta_bdg] <;> ring
   )
 
 end PMNSAeonFunctor

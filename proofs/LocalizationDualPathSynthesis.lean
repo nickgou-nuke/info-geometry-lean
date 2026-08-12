@@ -1,4 +1,4 @@
-import proofs.BuresInformationGeodesicFlow
+import InfoGeometry.External.Auto.BuresInformationGeodesicFlow
 import proofs.StimulatedScatteringAmplituhedron
 
 /-!

@@ -82,6 +82,23 @@ def lean_files(roots: list[Path]) -> list[Path]:
     return sorted(set(files))
 
 
+def tracked_lean_files() -> list[Path]:
+    """Return tracked/nonignored Lean sources for release audits."""
+    import subprocess
+
+    result = subprocess.run(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "*.lean"],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    return sorted(
+        Path(line)
+        for line in result.stdout.splitlines()
+        if line.startswith("lean/") and line.endswith(".lean")
+    )
+
+
 def theorem_window(lines: list[str], start: int) -> str:
     chunk: list[str] = []
     for line in lines[start : min(start + 18, len(lines))]:
@@ -159,7 +176,10 @@ def strip_comments(text: str) -> str:
             continue
         if ch == "\"":
             in_string = True
-        elif ch == "'":
+        # Apostrophes are valid in Lean identifiers.  Only enter char-literal
+        # mode for the syntactic `'x'` shape, otherwise doc comments such as
+        # `foo'` can hide the remainder of the file from this scanner.
+        elif ch == "'" and i + 2 < len(text) and text[i + 2] == "'":
             in_char = True
         out.append(ch)
         i += 1
@@ -328,6 +348,7 @@ def main() -> int:
     ap.add_argument("roots", nargs="*", default=["lean"], help="Lean files/directories to audit")
     ap.add_argument("--patterns", type=Path, default=DEFAULT_PATTERNS)
     ap.add_argument("--json-out", type=Path)
+    ap.add_argument("--tracked", action="store_true", help="use tracked/nonignored Lean sources")
     ap.add_argument("--fail-on", choices=["none", "error", "warning"], default="error")
     ap.add_argument("--top", type=int, default=80)
     args = ap.parse_args()
@@ -335,7 +356,8 @@ def main() -> int:
     policy = load_patterns(args.patterns)
     categories = policy["categories"]
     findings: list[Finding] = []
-    for path in lean_files([Path(r) for r in args.roots]):
+    paths = tracked_lean_files() if args.tracked else lean_files([Path(r) for r in args.roots])
+    for path in paths:
         findings.extend(audit_file(path, categories))
 
     counts: dict[str, int] = {}

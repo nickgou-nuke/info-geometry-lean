@@ -163,7 +163,7 @@ theorem E_creation (i j k : Fin 5) :
       (if i = j then (1 / 2 : ℝ) • (1 : MatStage 5) else 0) * creation k -
         creation k * (if i = j then (1 / 2 : ℝ) • (1 : MatStage 5) else 0) = 0 := by
     by_cases hij : i = j <;>
-      simp [hij, Matrix.smul_mul, Matrix.mul_smul]
+      simp [hij]
   rw [E, bracket]
   calc
     (creation i * annihilation j -
@@ -278,21 +278,19 @@ theorem numberOperator_E (i j : Fin 5) :
   unfold E
   by_cases hij : i = j
   · subst j
-    simp only [if_pos rfl]
+    simp only [eq_self, ↓reduceIte]
     change bracket numberOperator
       (creation i * annihilation i - (1 / 2 : ℝ) • (1 : MatStage 5)) = 0
     rw [sub_eq_add_neg, bracket_add_right, numberOperator_mixed]
     have hscalar :
         bracket numberOperator ((1 / 2 : ℝ) • (1 : MatStage 5)) = 0 := by
       unfold bracket
-      simp [Matrix.smul_mul, Matrix.mul_smul]
+      simp
     rw [show -((1 / 2 : ℝ) • (1 : MatStage 5)) =
         (-1 : ℝ) • ((1 / 2 : ℝ) • (1 : MatStage 5)) by simp,
       bracket_smul_right, hscalar]
     simp
   · simp only [if_neg hij]
-    change bracket numberOperator
-      (creation i * annihilation j - 0) = 0
     rw [sub_zero]
     exact numberOperator_mixed i j
 
@@ -324,33 +322,33 @@ def gradeSubmodule (k : ℤ) : Submodule ℝ (MatStage 5) :=
 theorem numberOperator_mem_grade_zero :
     numberOperator ∈ gradeSubmodule 0 := by
   apply LinearMap.mem_ker.mpr
-  simp [gradeSubmodule, numberAdjoint, bracket]
+  simp [numberAdjoint, bracket]
 
 theorem creation_mem_gradeSubmodule (i : Fin 5) :
     creation i ∈ gradeSubmodule 1 := by
   apply LinearMap.mem_ker.mpr
-  simp [gradeSubmodule, numberAdjoint, numberOperator_creation]
+  simp [numberAdjoint, numberOperator_creation]
 
 theorem annihilation_mem_gradeSubmodule (i : Fin 5) :
     annihilation i ∈ gradeSubmodule (-1) := by
   apply LinearMap.mem_ker.mpr
-  simp [gradeSubmodule, numberAdjoint, numberOperator_annihilation]
+  simp [numberAdjoint, numberOperator_annihilation]
 
 theorem E_mem_gradeSubmodule (i j : Fin 5) :
     E i j ∈ gradeSubmodule 0 := by
   apply LinearMap.mem_ker.mpr
-  simp [gradeSubmodule, numberAdjoint, numberOperator_E]
+  simp [numberAdjoint, numberOperator_E]
 
 theorem creation_quadratic_mem_gradeSubmodule (i j : Fin 5) :
     creation i * creation j ∈ gradeSubmodule 2 := by
   apply LinearMap.mem_ker.mpr
-  simp [gradeSubmodule, numberAdjoint,
+  simp [numberAdjoint,
     numberOperator_creation_quadratic]
 
 theorem annihilation_quadratic_mem_gradeSubmodule (i j : Fin 5) :
     annihilation i * annihilation j ∈ gradeSubmodule (-2) := by
   apply LinearMap.mem_ker.mpr
-  simp [gradeSubmodule, numberAdjoint,
+  simp [numberAdjoint,
     numberOperator_annihilation_quadratic]
 
 theorem creation_E (i j k : Fin 5) :
@@ -416,12 +414,11 @@ theorem E_bracket (i j k l : Fin 5) :
           (creation k * annihilation l) by
             unfold bracket
             by_cases hij : i = j <;> by_cases hkl : k = l <;>
-              simp [hij, hkl, sub_mul, mul_sub,
-                Matrix.smul_mul, Matrix.mul_smul] <;>
+              simp [hij, hkl, sub_mul, mul_sub] <;>
               (try noncomm_ring) <;> module]
   rw [hraw]
   by_cases h₁ : j = k <;> by_cases h₂ : i = l <;>
-    simp [h₁, h₂, E, eq_comm] <;> noncomm_ring
+    simp [h₁, h₂, eq_comm]
 
 theorem creation_bracket (i j : Fin 5) :
     bracket (creation i) (creation j) = 2 • (creation i * creation j) := by
@@ -544,9 +541,9 @@ theorem creation_quadratic_bracket_annihilation (i j k : Fin 5) :
             creation_E, creation_E]
           by_cases hik : i = k
           · by_cases hjk : j = k <;>
-            simp [smul_sub, smul_smul, hik, hjk, eq_comm]
+            simp [smul_smul, hik, hjk, eq_comm]
           · by_cases hjk : j = k <;>
-            simp [smul_sub, smul_smul, hik, hjk, eq_comm]
+            simp [smul_smul, hik, hjk, eq_comm]
 
 /-! ### Lie-only obstruction routing
 
@@ -619,9 +616,9 @@ theorem annihilation_quadratic_bracket_creation (i j k : Fin 5) :
               annihilation_E, annihilation_E]
             by_cases hik : i = k
             · by_cases hjk : j = k <;>
-                simp [smul_sub, smul_smul, hik, hjk, eq_comm]
+                simp [smul_smul, hik, hjk, eq_comm]
             · by_cases hjk : j = k <;>
-                simp [smul_sub, smul_smul, hik, hjk, eq_comm]
+                simp [smul_smul, hik, hjk, eq_comm]
 
 theorem annihilation_creation_reorder (i j : Fin 5) :
     annihilation i * creation j =
@@ -671,9 +668,6 @@ theorem creation_quadratic_bracket_annihilation_quadratic
     | exact Ne.symm hil
     | exact Ne.symm hkl
     | module
-    | abel
-    | norm_num [smul_eq_mul]
-    | (noncomm_ring <;> module)
 
 /-! ### Native Lie-generated Witt sectors
 
@@ -991,14 +985,14 @@ theorem wittPosTwo_bracket_mem_wittZero
             (hif ij.1 kl.1 (E ij.2 kl.2) (hE _ _)))
           (hif ij.2 kl.2 (E ij.1 kl.1) (hE _ _)))
         (hif ij.1 kl.2 (E ij.2 kl.1) (hE _ _))
-    · simpa [bracket] using wittZero.zero_mem
+    · simp [bracket]
     · intro y₁ y₂ _ _ hy₁ hy₂
       rw [hadd_right]
       exact wittZero.add_mem hy₁ hy₂
     · intro c y _ hy
       rw [bracket_smul_right]
       exact wittZero.smul_mem c hy
-  · simpa [bracket] using wittZero.zero_mem
+  · simp [bracket]
   · intro x₁ x₂ _ _ hx₁ hx₂
     rw [hadd_left]
     exact wittZero.add_mem hx₁ hx₂
@@ -1030,12 +1024,12 @@ theorem wittPosTwo_bracket_eq_zero
     · intro y hy
       rcases hy with ⟨k, rfl⟩
       exact creation_quadratic_bracket_creation ij.1 ij.2 k
-    · simpa [bracket]
+    · simp [bracket]
     · intro y₁ y₂ _ _ hy₁ hy₂
       rw [hadd_right, hy₁, hy₂, add_zero]
     · intro c y _ hy
       rw [bracket_smul_right, hy, smul_zero]
-  · simpa [bracket]
+  · simp [bracket]
   · intro x₁ x₂ _ _ hx₁ hx₂
     rw [hadd_left, hx₁, hx₂, add_zero]
   · intro c x _ hx
@@ -1065,12 +1059,12 @@ theorem wittNegTwo_bracket_eq_zero
     · intro y hy
       rcases hy with ⟨k, rfl⟩
       exact annihilation_quadratic_bracket_annihilation ij.1 ij.2 k
-    · simpa [bracket]
+    · simp [bracket]
     · intro y₁ y₂ _ _ hy₁ hy₂
       rw [hadd_right, hy₁, hy₂, add_zero]
     · intro c y _ hy
       rw [bracket_smul_right, hy, smul_zero]
-  · simpa [bracket]
+  · simp [bracket]
   · intro x₁ x₂ _ _ hx₁ hx₂
     rw [hadd_left, hx₁, hx₂, add_zero]
   · intro c x _ hx
@@ -1101,12 +1095,12 @@ theorem wittPosTwo_bracket_eq_zero_quadratic
       rcases hy with ⟨kl, rfl⟩
       exact creation_quadratic_bracket_creation_quadratic
         ij.1 ij.2 kl.1 kl.2
-    · simpa [bracket]
+    · simp [bracket]
     · intro y₁ y₂ _ _ hy₁ hy₂
       rw [hadd_right, hy₁, hy₂, add_zero]
     · intro c y _ hy
       rw [bracket_smul_right, hy, smul_zero]
-  · simpa [bracket]
+  · simp [bracket]
   · intro x₁ x₂ _ _ hx₁ hx₂
     rw [hadd_left, hx₁, hx₂, add_zero]
   · intro c x _ hx
@@ -1137,12 +1131,12 @@ theorem wittNegTwo_bracket_eq_zero_quadratic
       rcases hy with ⟨kl, rfl⟩
       exact annihilation_quadratic_bracket_annihilation_quadratic
         ij.1 ij.2 kl.1 kl.2
-    · simpa [bracket]
+    · simp [bracket]
     · intro y₁ y₂ _ _ hy₁ hy₂
       rw [hadd_right, hy₁, hy₂, add_zero]
     · intro c y _ hy
       rw [bracket_smul_right, hy, smul_zero]
-  · simpa [bracket]
+  · simp [bracket]
   · intro x₁ x₂ _ _ hx₁ hx₂
     rw [hadd_left, hx₁, hx₂, add_zero]
   · intro c x _ hx
@@ -1158,9 +1152,7 @@ theorem E_creation_quadratic_bracket
     by_cases hjl : j = l <;>
     by_cases hkl : k = l <;>
     simp [hjk, hjl, hkl, eq_comm, creation_anticomm] <;>
-    first
-    | exact eq_neg_of_add_eq_zero_right (creation_anticomm i k)
-    | noncomm_ring
+    exact eq_neg_of_add_eq_zero_right (creation_anticomm i k)
 
 theorem wittZero_bracket_mem_wittPosTwo
     {X Y : MatStage 5}
@@ -1196,14 +1188,14 @@ theorem wittZero_bracket_mem_wittPosTwo
           (hquad _ _))
         (hif ij.2 kl.2 (creation ij.1 * creation kl.1)
           (hquad _ _))
-    · simpa [bracket] using wittPosTwo.zero_mem
+    · simp [bracket]
     · intro y₁ y₂ _ _ hy₁ hy₂
       rw [hadd_right]
       exact wittPosTwo.add_mem hy₁ hy₂
     · intro c y _ hy
       rw [bracket_smul_right]
       exact wittPosTwo.smul_mem c hy
-  · simpa [bracket] using wittPosTwo.zero_mem
+  · simp [bracket]
   · intro x₁ x₂ _ _ hx₁ hx₂
     rw [hadd_left]
     exact wittPosTwo.add_mem hx₁ hx₂
@@ -1283,14 +1275,14 @@ theorem wittZero_bracket_mem_wittNegTwo
       exact wittNegTwo.add_mem hleft
         (hif ij.1 kl.2 (annihilation ij.2 * annihilation kl.1)
           (hquad _ _))
-    · simpa [bracket] using wittNegTwo.zero_mem
+    · simp [bracket]
     · intro y₁ y₂ _ _ hy₁ hy₂
       rw [hadd_right]
       exact wittNegTwo.add_mem hy₁ hy₂
     · intro c y _ hy
       rw [bracket_smul_right]
       exact wittNegTwo.smul_mem c hy
-  · simpa [bracket] using wittNegTwo.zero_mem
+  · simp [bracket]
   · intro x₁ x₂ _ _ hx₁ hx₂
     rw [hadd_left]
     exact wittNegTwo.add_mem hx₁ hx₂
@@ -1323,14 +1315,14 @@ theorem wittPosTwo_bracket_mem_wittPosOne
     · intro y hy
       rcases hy with ⟨k, rfl⟩
       exact creation_quadratic_bracket_annihilation_mem i j k
-    · simpa [bracket] using wittPosOne.zero_mem
+    · simp [bracket]
     · intro y₁ y₂ _ _ hy₁ hy₂
       rw [hadd_right]
       exact wittPosOne.add_mem hy₁ hy₂
     · intro c y _ hy
       rw [bracket_smul_right]
       exact wittPosOne.smul_mem c hy
-  · simpa [bracket] using wittPosOne.zero_mem
+  · simp [bracket]
   · intro x₁ x₂ _ _ hx₁ hx₂
     rw [hadd_left]
     exact wittPosOne.add_mem hx₁ hx₂
@@ -1363,14 +1355,14 @@ theorem wittNegTwo_bracket_mem_wittNegOne
     · intro y hy
       rcases hy with ⟨k, rfl⟩
       exact annihilation_quadratic_bracket_creation_mem i j k
-    · simpa [bracket] using wittNegOne.zero_mem
+    · simp [bracket]
     · intro y₁ y₂ _ _ hy₁ hy₂
       rw [hadd_right]
       exact wittNegOne.add_mem hy₁ hy₂
     · intro c y _ hy
       rw [bracket_smul_right]
       exact wittNegOne.smul_mem c hy
-  · simpa [bracket] using wittNegOne.zero_mem
+  · simp [bracket]
   · intro x₁ x₂ _ _ hx₁ hx₂
     rw [hadd_left]
     exact wittNegOne.add_mem hx₁ hx₂
@@ -1444,14 +1436,14 @@ theorem wittPosOne_bracket_mem_wittPosTwo
       rw [creation_bracket_real]
       exact wittPosTwo.smul_mem (2 : ℝ)
         (Submodule.subset_span (Set.mem_range_self (i, j)))
-    · simpa [bracket] using (Submodule.zero_mem wittPosTwo)
+    · simp [bracket]
     · intro y₁ y₂ _ _ hy₁ hy₂
       rw [hadd_right]
       exact wittPosTwo.add_mem hy₁ hy₂
     · intro c y _ hy
       rw [bracket_smul_right]
       exact wittPosTwo.smul_mem c hy
-  · simpa [bracket] using (Submodule.zero_mem wittPosTwo)
+  · simp [bracket]
   · intro x₁ x₂ _ _ hx₁ hx₂
     rw [hadd_left]
     exact wittPosTwo.add_mem hx₁ hx₂
@@ -1485,14 +1477,14 @@ theorem wittNegOne_bracket_mem_wittNegTwo
       rw [annihilation_bracket_real]
       exact wittNegTwo.smul_mem (2 : ℝ)
         (Submodule.subset_span (Set.mem_range_self (i, j)))
-    · simpa [bracket] using (Submodule.zero_mem wittNegTwo)
+    · simp [bracket]
     · intro y₁ y₂ _ _ hy₁ hy₂
       rw [hadd_right]
       exact wittNegTwo.add_mem hy₁ hy₂
     · intro c y _ hy
       rw [bracket_smul_right]
       exact wittNegTwo.smul_mem c hy
-  · simpa [bracket] using (Submodule.zero_mem wittNegTwo)
+  · simp [bracket]
   · intro x₁ x₂ _ _ hx₁ hx₂
     rw [hadd_left]
     exact wittNegTwo.add_mem hx₁ hx₂
@@ -1517,15 +1509,15 @@ theorem wittZero_bracket_mem_wittPosOne
       by_cases h : j = k
       · simpa [h] using
         (Submodule.subset_span (Set.mem_range_self i))
-      · simp [h, bracket]
-    · simpa [bracket] using wittPosOne.zero_mem
+      · simp [h]
+    · simp [bracket]
     · intro y₁ y₂ _ _ hy₁ hy₂
       rw [bracket_add_right]
       exact wittPosOne.add_mem hy₁ hy₂
     · intro c y _ hy
       rw [bracket_smul_right]
       exact wittPosOne.smul_mem c hy
-  · simpa [bracket] using wittPosOne.zero_mem
+  · simp [bracket]
   · intro x₁ x₂ _ _ hx₁ hx₂
     rw [bracket_add_left]
     exact wittPosOne.add_mem hx₁ hx₂
@@ -1550,15 +1542,15 @@ theorem wittZero_bracket_mem_wittNegOne
       by_cases h : i = k
       · simpa [h] using wittNegOne.neg_mem
           (Submodule.subset_span (Set.mem_range_self j))
-      · simp [h, bracket]
-    · simpa [bracket] using wittNegOne.zero_mem
+      · simp [h]
+    · simp [bracket]
     · intro y₁ y₂ _ _ hy₁ hy₂
       rw [bracket_add_right]
       exact wittNegOne.add_mem hy₁ hy₂
     · intro c y _ hy
       rw [bracket_smul_right]
       exact wittNegOne.smul_mem c hy
-  · simpa [bracket] using wittNegOne.zero_mem
+  · simp [bracket]
   · intro x₁ x₂ _ _ hx₁ hx₂
     rw [bracket_add_left]
     exact wittNegOne.add_mem hx₁ hx₂
@@ -1578,7 +1570,7 @@ theorem creation_linearIndependent :
     simp only [Matrix.mul_smul, Matrix.smul_mul]
     rw [← Finset.sum_add_distrib]
     simp_rw [← smul_add, annihilation_creation_anticomm]
-    simp [eq_comm]
+    simp
   have hz : g j • (1 : MatStage 5) = 0 := by
     rw [← hcalc, h]
     simp
@@ -1596,7 +1588,7 @@ theorem annihilation_linearIndependent :
     simp only [Matrix.mul_smul, Matrix.smul_mul]
     rw [← Finset.sum_add_distrib]
     simp_rw [← smul_add, creation_annihilation_anticomm]
-    simp [eq_comm]
+    simp
   have hz : g j • (1 : MatStage 5) = 0 := by
     rw [← hcalc, h]
     simp
@@ -1630,15 +1622,15 @@ theorem wittZero_bracket_mem_wittZero
       · simpa [hjk, hil] using wittZero.sub_mem (he i l) (he k j)
       · simpa [hjk, hil] using wittZero.sub_mem (he i l) wittZero.zero_mem
       · simpa [hjk, hil] using wittZero.sub_mem wittZero.zero_mem (he k j)
-      · simpa [hjk, hil] using wittZero.zero_mem
-    · simpa [bracket] using wittZero.zero_mem
+      · simp [hjk, hil]
+    · simp [bracket]
     · intro y₁ y₂ _ _ hy₁ hy₂
       rw [hadd_right]
       exact wittZero.add_mem hy₁ hy₂
     · intro c y _ hy
       rw [bracket_smul_right]
       exact wittZero.smul_mem c hy
-  · simpa [bracket] using wittZero.zero_mem
+  · simp [bracket]
   · intro x₁ x₂ _ _ hx₁ hx₂
     rw [hadd_left]
     exact wittZero.add_mem hx₁ hx₂
@@ -1663,14 +1655,14 @@ theorem wittPosOne_bracket_mem_wittZero
       rcases hy with ⟨j, rfl⟩
       rw [creation_annihilation_bracket_real]
       simpa [two_smul] using wittZero.smul_mem (2 : ℝ) (he i j)
-    · simpa [bracket] using wittZero.zero_mem
+    · simp [bracket]
     · intro y₁ y₂ _ _ hy₁ hy₂
       rw [bracket_add_right]
       exact wittZero.add_mem hy₁ hy₂
     · intro c y _ hy
       rw [bracket_smul_right]
       exact wittZero.smul_mem c hy
-  · simpa [bracket] using wittZero.zero_mem
+  · simp [bracket]
   · intro x₁ x₂ _ _ hx₁ hx₂
     rw [bracket_add_left]
     exact wittZero.add_mem hx₁ hx₂
@@ -1695,14 +1687,14 @@ theorem wittNegOne_bracket_mem_wittZero
       rcases hy with ⟨j, rfl⟩
       rw [annihilation_creation_bracket_real]
       exact wittZero.smul_mem (-2) (he j i)
-    · simpa [bracket] using wittZero.zero_mem
+    · simp [bracket]
     · intro y₁ y₂ _ _ hy₁ hy₂
       rw [bracket_add_right]
       exact wittZero.add_mem hy₁ hy₂
     · intro c y _ hy
       rw [bracket_smul_right]
       exact wittZero.smul_mem c hy
-  · simpa [bracket] using wittZero.zero_mem
+  · simp [bracket]
   · intro x₁ x₂ _ _ hx₁ hx₂
     rw [bracket_add_left]
     exact wittZero.add_mem hx₁ hx₂
@@ -1828,7 +1820,7 @@ theorem creation_quadratic_linearIndependent :
           (if x.1.2 = p.1.1 then (1 : MatStage 5) else 0) else 0) := by
     by_cases h2 : x.1.2 = p.1.2
     · by_cases h1 : x.1.1 = p.1.2
-      · simp [h2, h1, annihilation_creation_anticomm]
+      · simp [h2, h1]
       · simp [h2, h1, annihilation_creation_anticomm, eq_comm]
     · by_cases h1 : x.1.1 = p.1.2
       · have hlt : p.1.1 < x.1.2 := by
@@ -1837,7 +1829,7 @@ theorem creation_quadratic_linearIndependent :
           exact lt_trans (by simpa [h1] using hp_lt) hx_lt
         have hnot : x.1.2 ≠ p.1.1 := by
           intro h
-          exact (not_lt_of_ge (by simpa [h] using le_refl p.1.1)) hlt
+          exact (not_lt_of_ge (by simp [h])) hlt
         have hnot' : p.1.1 ≠ x.1.2 := by
           intro h
           exact hnot h.symm
@@ -1849,7 +1841,7 @@ theorem creation_quadratic_linearIndependent :
         simp only [h2, h1, if_false, if_true, zero_sub]
         rw [mul_neg, neg_mul, ← neg_add, hac, neg_zero]
         simp [hnot]
-      · simp [h2, h1, annihilation_creation_anticomm]
+      · simp [h2, h1]
   have hba := congrArg
     (fun X => annihilation p.1.1 * X + X * annihilation p.1.1) hb
   dsimp at hba
@@ -1867,7 +1859,7 @@ theorem creation_quadratic_linearIndependent :
     by_cases hx : x = p
     · subst x
       have hne : p.1.1 ≠ p.1.2 := ne_of_lt p.2
-      simp [hne, eq_comm]
+      simp [hne]
     · by_cases h2 : x.1.2 = p.1.2
       · by_cases h1 : x.1.1 = p.1.1
         · exfalso
@@ -1952,7 +1944,7 @@ theorem annihilation_quadratic_linearIndependent :
           (if x.1.2 = p.1.1 then (1 : MatStage 5) else 0) else 0) := by
     by_cases h2 : x.1.2 = p.1.2
     · by_cases h1 : x.1.1 = p.1.2
-      · simp [h2, h1, creation_annihilation_anticomm]
+      · simp [h2, h1]
       · simp [h2, h1, creation_annihilation_anticomm, eq_comm]
     · by_cases h1 : x.1.1 = p.1.2
       · have hlt : p.1.1 < x.1.2 := by
@@ -1961,7 +1953,7 @@ theorem annihilation_quadratic_linearIndependent :
           exact lt_trans (by simpa [h1] using hp_lt) hx_lt
         have hnot : x.1.2 ≠ p.1.1 := by
           intro h
-          exact (not_lt_of_ge (by simpa [h] using le_refl p.1.1)) hlt
+          exact (not_lt_of_ge (by simp [h])) hlt
         have hnot' : p.1.1 ≠ x.1.2 := by
           intro h
           exact hnot h.symm
@@ -1973,7 +1965,7 @@ theorem annihilation_quadratic_linearIndependent :
         simp only [h2, h1, if_false, if_true, zero_sub]
         rw [mul_neg, neg_mul, ← neg_add, hac, neg_zero]
         simp [hnot]
-      · simp [h2, h1, creation_annihilation_anticomm]
+      · simp [h2, h1]
   have hba := congrArg
     (fun X => creation p.1.1 * X + X * creation p.1.1) hb
   dsimp at hba
@@ -1991,7 +1983,7 @@ theorem annihilation_quadratic_linearIndependent :
     by_cases hx : x = p
     · subst x
       have hne : p.1.1 ≠ p.1.2 := ne_of_lt p.2
-      simp [hne, eq_comm]
+      simp [hne]
     · by_cases h2 : x.1.2 = p.1.2
       · by_cases h1 : x.1.1 = p.1.1
         · exfalso
@@ -2082,7 +2074,7 @@ theorem zero_packet_linearIndependent :
         have hx : x ≠ p := by
           intro h
           exact h1 (congrArg Prod.fst h)
-        simp [h2, h1, h1', hx, annihilation_creation_anticomm]
+        simp [h2, h1', hx, annihilation_creation_anticomm]
     · have hx : x ≠ p := by
         intro h
         exact h2 (congrArg Prod.snd h)

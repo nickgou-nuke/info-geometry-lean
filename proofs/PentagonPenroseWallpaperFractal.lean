@@ -90,8 +90,11 @@ theorem cantorCylinder_refines (n : ℕ) :
 /-- Penrose symbolic edge code as infinite binary choices. -/
 def PenroseFractalEdge : Type := ℕ → Bool
 
-/-- The symbolic Penrose/Cantor edge code is definitionally binary sequence space. -/
-theorem penroseEdge_cantor : Nonempty (PenroseFractalEdge ≃ (ℕ → Bool)) := by
-  exact ⟨Equiv.refl _⟩
+/- The symbolic Penrose/Cantor edge code is an explicit equivalence, not an
+existential wrapper around an identity map. -/
+def penroseEdgeCode : PenroseFractalEdge ≃ (ℕ → Bool) := Equiv.refl _
+
+@[simp] theorem penroseEdgeCode_apply (x : PenroseFractalEdge) :
+    penroseEdgeCode x = x := rfl
 
 end PentagonPenroseWallpaperFractal

@@ -1,4 +1,5 @@
 import proofs.ZornColorLieRepresentation
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-!
 # Chirally separated color Lie actions
@@ -14,7 +15,7 @@ namespace ZornChiralColorActions
 
 open CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 open ZornThreeChannelCAR ZornColorLieAction
 
 private theorem copy_neg_val {q : TrialitySector} (X : ZornCopy q) :

@@ -1,6 +1,6 @@
 import proofs.CantorBoundaryCuntzFamily
 import proofs.GellMannParafermionSolder
-import proofs.ProjectiveAffineConformalClosure55
+import InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
 
 /-!
 # Finite twistor matrix identities

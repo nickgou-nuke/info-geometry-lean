@@ -8,12 +8,11 @@ import Mathlib.Tactic
 /-!
 # Raw matrix trace tower interface
 
-The matrix stages have a canonical normalized trace and positivity lemmas, but
-the repository does not yet contain a proved successor embedding between the
-different matrix sizes.  This owner records that missing input explicitly and
-derives the filtered maps and trace compatibility from it.  It does not invent
-an order on matrix algebras in order to coerce the raw functional into the
-`State` type.
+The matrix stages have a canonical normalized trace, positivity lemmas, and a
+native successor embedding between the different matrix sizes.  This owner
+derives the filtered maps and trace compatibility from that embedding.  It does
+not invent an order on matrix algebras in order to coerce the raw functional
+into the `State` type.
 -/
 
 noncomputable section

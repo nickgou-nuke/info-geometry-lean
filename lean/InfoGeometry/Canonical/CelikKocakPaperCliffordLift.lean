@@ -19,7 +19,7 @@ namespace InfoGeometry.Canonical.CelikKocakPaperFormalism
 open InfoGeometry.Canonical.CelikKocakCantorOperators
 open FunctionSpace
 
-abbrev PaperOperator (n : ℕ) := FunctionSpace n →ₗ[ℂ] FunctionSpace n
+abbrev PaperOperator (n : ℕ) := (((Fin n) → Bool) → ℂ) →ₗ[ℂ] (((Fin n) → Bool) → ℂ)
 
 noncomputable def paperQuadratic (n : ℕ) :
     QuadraticForm ℂ (Fin n ⊕ Fin n → ℂ) :=

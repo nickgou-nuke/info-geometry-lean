@@ -1,5 +1,5 @@
 import proofs.MobiusCantorTKKClosure
-import proofs.ProjectiveAffineConformalClosure55
+import InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
 import proofs.Clifford55AnomalyOSP
 import proofs.MajoranaPrimonSpectralBridge
 

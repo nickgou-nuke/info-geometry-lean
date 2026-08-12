@@ -212,7 +212,7 @@ private def isNontrivialExternalConst
     | some info => isProofConst info
     | none => false
 
-partial def auditExprTrivialityDetailed
+def auditExprTrivialityDetailed
     (cfg : AuditConfig)
     (env : Environment)
     (seen : List Name)
@@ -225,7 +225,7 @@ partial def auditExprTrivialityDetailed
       (containsSorry := true)
       (suspiciousConsts := [``sorryAx])
 
-  match e.consumeMData with
+  match e with
   | Expr.app fn arg =>
       let fnAudit ← auditExprTrivialityDetailed cfg env seen depth fn
       let argAudit ← auditExprTrivialityDetailed cfg env seen depth arg
@@ -307,8 +307,12 @@ partial def auditExprTrivialityDetailed
   | Expr.sort _ => return AuditResult.mk (termNodeCount := 1)
   | Expr.lit _ => return AuditResult.mk (termNodeCount := 1)
 
+termination_by (depth, e.sizeWithoutSharing)
+decreasing_by
+  all_goals first | (apply Prod.Lex.left; omega) | (simp_all [Expr.sizeWithoutSharing] <;> omega)
+
 /-- Legacy compatibility wrapper used by `InfoGeometry.Lint.Pauli`. -/
-partial def auditExprTriviality (e : Expr) : MetaM Bool := do
+def auditExprTriviality (e : Expr) : MetaM Bool := do
   let env ← getEnv
   let cfg := AuditConfig.default
   let audit ← auditExprTrivialityDetailed cfg env [] (AuditConfig.maxLocalUnfoldDepth cfg) e
@@ -348,7 +352,7 @@ def hitFuelLimit : DependencyScanResult → Bool
 
 end DependencyScanResult
 
-partial def collectTransitiveDeps
+def collectTransitiveDeps
     (env : Environment) (fuel : Nat) (frontier : List Name) (seen : Std.HashSet Name)
     : CoreM DependencyScanResult := do
   match fuel, frontier with
@@ -365,6 +369,7 @@ partial def collectTransitiveDeps
         | some ci =>
             let deps := directDepsOfConstantInfo ci |>.toList
             collectTransitiveDeps env fuel (deps ++ rest) seen
+termination_by fuel
 
 /-- Product-backed dependency contamination result, avoiding a proof-carrier structure. -/
 abbrev ContaminationResult :=

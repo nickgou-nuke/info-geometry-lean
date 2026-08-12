@@ -43,7 +43,7 @@ def matrixTraceRealAlgebraicState (n : ℕ) :
   positive := by
     intro A
     rw [matrixTraceRealLinearMap_apply]
-    exact matrixTraceState_nonneg n A
+    exact matrixTraceState_realPart_star_mul_self_nonneg n A
   symmetric := by
     intro A B
     rw [matrixTraceRealLinearMap_apply, matrixTraceRealLinearMap_apply]
@@ -96,7 +96,7 @@ def compatibleRealStateNet (T : Data)
   CompatibleAlgebraicStateNet.ofMarkovTraceNet
     (realTraceNet T hT) (by
       intro n A
-      exact matrixTraceState_nonneg n A)
+      exact matrixTraceState_realPart_star_mul_self_nonneg n A)
 
 theorem compatibleRealStateNet_state (T : Data)
     (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)

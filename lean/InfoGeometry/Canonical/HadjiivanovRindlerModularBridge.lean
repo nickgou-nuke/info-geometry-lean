@@ -44,6 +44,40 @@ theorem hadjiivanovMonodromy_pow_is_modularParabolicFlow (h : ℂ) (n : ℕ) :
   simpa [lcftParabolicFlowStep] using
     (monodromy_pow_is_compounded_flow h n)
 
+/-!
+The scalar parameter bridge is the actual interoperability statement between
+the two carrier lanes.  It identifies the LCFT parabolic shear parameter with
+the Wick-rotated wedge boost parameter, without identifying the operators.
+-/
+def lcftParabolicParameterOfModularTime (τmod : ℝ) : ℂ :=
+  (τmod : ℂ) * logShearBase
+
+theorem lcftParabolicParameter_eq_wickRotatedWedgeBoost
+    (τmod : ℝ) :
+    lcftParabolicParameterOfModularTime τmod =
+      -Complex.I * (RealTomitaCore.wedgeBoostParameter τmod : ℂ) := by
+  simp [lcftParabolicParameterOfModularTime,
+    logShearBase, RealTomitaCore.wedgeBoostParameter]
+  ring
+
+theorem discrete_lcftParabolicParameter_eq_wickRotatedWedgeBoost
+    (n : ℕ) :
+    (n : ℂ) * logShearBase =
+      -Complex.I *
+        (RealTomitaCore.wedgeBoostParameter (n : ℝ) : ℂ) := by
+  simpa [lcftParabolicParameterOfModularTime] using
+    lcftParabolicParameter_eq_wickRotatedWedgeBoost (τmod := (n : ℝ))
+
+theorem hadjiivanovMonodromy_pow_is_wickRotatedWedgeFlow
+    (h : ℂ) (n : ℕ) :
+    hadjiivanovMonodromy h ^ n =
+      lcftPhase h ^ n •
+        lcftParabolicFlowStep
+          (-Complex.I *
+            (RealTomitaCore.wedgeBoostParameter (n : ℝ) : ℂ)) := by
+  rw [hadjiivanovMonodromy_pow_is_modularParabolicFlow]
+  rw [discrete_lcftParabolicParameter_eq_wickRotatedWedgeBoost]
+
 /-! ## Wedge side: modular time is boost rapidity -/
 
 variable {E : Type 0}

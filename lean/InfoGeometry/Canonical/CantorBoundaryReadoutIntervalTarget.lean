@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.CantorBoundaryReadoutKernelQuotientTopCat
 import InfoGeometry.Canonical.CantorBoundaryDyadicCover
 import Mathlib.Topology.Homeomorph.Lemmas
+import Mathlib.Topology.Category.CompHaus.Basic
 
 /-!
 # Interval-valued target for the binary readout quotient
@@ -15,6 +16,7 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.CantorBoundaryReadoutIntervalTarget
 
+open CategoryTheory
 open InfoGeometry.Canonical.CantorBoundaryReadoutKernelQuotientTopCat
 open InfoGeometry.Canonical.CantorBoundaryReadoutBounds
 open InfoGeometry.Canonical.CantorBoundaryDyadicCover
@@ -47,6 +49,13 @@ theorem isCompact_quotientReadoutInterval_range :
 theorem isClosed_quotientReadoutInterval_range :
     IsClosed (Set.range quotientReadoutInterval) := by
   exact isCompact_quotientReadoutInterval_range.isClosed
+
+theorem quotientReadoutInterval_isClosedEmbedding :
+    Topology.IsClosedEmbedding quotientReadoutInterval := by
+  letI : CompactSpace ReadoutQuotient :=
+    ⟨by simpa using quotient_compact⟩
+  exact continuous_quotientReadoutInterval.isClosedEmbedding
+    quotientReadoutInterval_injective
 
 theorem quotientReadoutInterval_surjective_of_metric_approximation
     (happrox : ∀ y : UnitInterval, ∀ ε : ℝ, 0 < ε →
@@ -82,6 +91,12 @@ theorem quotientReadoutInterval_surjective :
     Function.Surjective quotientReadoutInterval := by
   exact quotientReadoutInterval_surjective_of_metric_approximation
     quotientReadoutInterval_metric_approximation
+
+theorem quotientReadoutInterval_range_eq_univ :
+    Set.range quotientReadoutInterval = Set.univ := by
+  apply Set.eq_univ_of_forall
+  intro x
+  exact quotientReadoutInterval_surjective x
 
 noncomputable def quotientReadoutIntervalEquiv
     (h_surjective : Function.Surjective quotientReadoutInterval) :
@@ -132,6 +147,43 @@ theorem canonicalQuotientReadoutIntervalHomeomorph_apply
       quotientReadoutInterval q := by
   exact quotientReadoutIntervalHomeomorph_apply
     quotientReadoutInterval_metric_approximation q
+
+noncomputable def canonicalQuotientReadoutIntervalSourceCompHaus : CompHaus := by
+  letI : CompactSpace ReadoutQuotient :=
+    ⟨by simpa using quotient_compact⟩
+  let e := canonicalQuotientReadoutIntervalHomeomorph
+  letI : T2Space ReadoutQuotient := e.symm.t2Space
+  exact CompHaus.of ReadoutQuotient
+
+noncomputable def canonicalQuotientReadoutIntervalCompHausIso :
+    canonicalQuotientReadoutIntervalSourceCompHaus ≅ CompHaus.of UnitInterval := by
+  letI : CompactSpace ReadoutQuotient :=
+    ⟨by simpa using quotient_compact⟩
+  let e := canonicalQuotientReadoutIntervalHomeomorph
+  letI : T2Space ReadoutQuotient := e.symm.t2Space
+  exact
+    { hom := ⟨TopCat.ofHom
+        { toFun := e
+          continuous_toFun := e.continuous_toFun }⟩
+      inv := ⟨TopCat.ofHom
+        { toFun := e.symm
+          continuous_toFun := e.symm.continuous_toFun }⟩
+      hom_inv_id := by
+        apply ConcreteCategory.hom_ext
+        intro q
+        change e.symm (e q) = q
+        exact e.symm_apply_apply q
+      inv_hom_id := by
+        apply ConcreteCategory.hom_ext
+        intro y
+        change e (e.symm y) = y
+        exact e.apply_symm_apply y }
+
+theorem canonicalQuotientReadoutIntervalCompHausIso_hom_apply
+    (q : ReadoutQuotient) :
+    (canonicalQuotientReadoutIntervalCompHausIso).hom q =
+      canonicalQuotientReadoutIntervalHomeomorph q :=
+  rfl
 
 theorem quotientReadoutInterval_isQuotientMap :
     Topology.IsQuotientMap quotientReadoutInterval := by

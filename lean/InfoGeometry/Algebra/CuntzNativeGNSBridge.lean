@@ -74,6 +74,18 @@ theorem gns_state_expectation_recovery (a : A) :
   simpa [cuntzGNSRepresentation, gnsVacuum] using
     (InfoGeometry.OperatorAlgebra.PositiveLinearMapGNSVacuum.gns_state_expectation_recovery φ a)
 
+theorem positiveFunctional_star_mul_self_re (a : A) :
+    0 ≤ (φ (star a * a)).re :=
+  (Complex.nonneg_iff.mp
+    (PositiveLinearMap.map_nonneg φ
+      (CStarAlgebra.nonneg_iff_eq_star_mul_self.mpr ⟨a, rfl⟩))).1
+
+theorem positiveFunctional_star_mul_self_im (a : A) :
+    (φ (star a * a)).im = 0 := by
+  exact (Complex.nonneg_iff.mp
+    (PositiveLinearMap.map_nonneg φ
+      (CStarAlgebra.nonneg_iff_eq_star_mul_self.mpr ⟨a, rfl⟩))).2.symm
+
 theorem gnsVacuum_cyclic :
     DenseRange (fun a : A => cuntzGNSRepresentation φ a (gnsVacuum φ)) := by
   rw [show (fun a : A => cuntzGNSRepresentation φ a (gnsVacuum φ)) =
@@ -97,6 +109,20 @@ theorem represented_cuntz_expectation_recovery
         E.phi (E.representation.toAlgHom x) :=
       gns_state_expectation_recovery E.phi (E.representation.toAlgHom x)
     _ = E.omega x := E.extension x
+
+theorem represented_cuntz_expectation_recovery_of
+    {n : ℕ} (ρ : CuntzStarRepresentation n A)
+    (omega : CuntzAlg n →ₗ[ℂ] ℂ)
+    (h_extension : ∀ x, φ (ρ.toAlgHom x) = omega x)
+    (x : CuntzAlg n) :
+    ⟪gnsVacuum φ,
+      cuntzGNSRepresentation φ (ρ.toAlgHom x) (gnsVacuum φ)⟫_ℂ = omega x := by
+  calc
+    ⟪gnsVacuum φ,
+        cuntzGNSRepresentation φ (ρ.toAlgHom x) (gnsVacuum φ)⟫_ℂ =
+        φ (ρ.toAlgHom x) :=
+      gns_state_expectation_recovery φ (ρ.toAlgHom x)
+    _ = omega x := h_extension x
 
 /-! ### Explicit representation and pullback extension -/
 

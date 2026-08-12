@@ -29,7 +29,7 @@ theorem coordinateProjector_mem_paperTiltSwitchSubalgebra
   apply S.smul_mem (paperTilt_mem_paperTiltSwitchSubalgebra i)
 
 @[simp] theorem coordinateProjector_basis_apply
-    {n : ℕ} (i : Fin n) (b : Bool) (z : CantorAddress n) :
+    {n : ℕ} (i : Fin n) (b : Bool) (z : ((Fin n) → Bool)) :
     coordinateProjector i b
         (InfoGeometry.Canonical.CelikKocakCantorOperators.endpointBasis (n := n) z) =
       if z i = b then
@@ -69,7 +69,7 @@ private theorem orderedOperatorProduct_mem
           exact h T (by simp [hT])))
 
 private theorem orderedCoordinateProduct_basis_apply {n : ℕ}
-    (l : List (Fin n)) (x z : CantorAddress n) :
+    (l : List (Fin n)) (x z : ((Fin n) → Bool)) :
     orderedOperatorProduct
         (l.map (fun i => coordinateProjector i (x i)))
         (InfoGeometry.Canonical.CelikKocakCantorOperators.endpointBasis (n := n) z) =
@@ -125,13 +125,13 @@ private theorem orderedCoordinateProduct_basis_apply {n : ℕ}
           simp
 
 noncomputable def diagonalProjector {n : ℕ}
-    (x : CantorAddress n) : EndpointOperator n :=
+    (x : ((Fin n) → Bool)) : EndpointOperator n :=
   orderedOperatorProduct
     ((Finset.univ : Finset (Fin n)).toList.map
       (fun i => coordinateProjector i (x i)))
 
 theorem diagonalProjector_mem_paperTiltSwitchSubalgebra
-    {n : ℕ} (x : CantorAddress n) :
+    {n : ℕ} (x : ((Fin n) → Bool)) :
     diagonalProjector x ∈ paperTiltSwitchSubalgebra n := by
   classical
   let S := paperTiltSwitchSubalgebra n
@@ -141,7 +141,7 @@ theorem diagonalProjector_mem_paperTiltSwitchSubalgebra
   exact coordinateProjector_mem_paperTiltSwitchSubalgebra i (x i)
 
 theorem diagonalProjector_basis_apply
-    {n : ℕ} (x z : CantorAddress n) :
+    {n : ℕ} (x z : ((Fin n) → Bool)) :
     diagonalProjector x
         (InfoGeometry.Canonical.CelikKocakCantorOperators.endpointBasis (n := n) z) =
       if z = x then
@@ -169,7 +169,7 @@ theorem diagonalProjector_basis_apply
         ((Finset.univ : Finset (Fin n)).toList) x z)
 
 theorem diagonalProjector_mul
-    {n : ℕ} (x y : CantorAddress n) :
+    {n : ℕ} (x y : ((Fin n) → Bool)) :
     diagonalProjector x * diagonalProjector y =
       if x = y then diagonalProjector x else 0 := by
   classical
@@ -206,7 +206,7 @@ theorem diagonalProjector_mul
     · rw [if_neg hxy]
       simp
 
-theorem switch_basis_apply {n : ℕ} (i : Fin n) (z : CantorAddress n) :
+theorem switch_basis_apply {n : ℕ} (i : Fin n) (z : ((Fin n) → Bool)) :
     InfoGeometry.Canonical.CelikKocakCantorOperators.FunctionSpace.switch i
         (InfoGeometry.Canonical.CelikKocakCantorOperators.endpointBasis (n := n) z) =
       InfoGeometry.Canonical.CelikKocakCantorOperators.endpointBasis
@@ -238,14 +238,14 @@ theorem switch_basis_apply {n : ℕ} (i : Fin n) (z : CantorAddress n) :
     simp [InfoGeometry.Canonical.CelikKocakCantorOperators.endpointBasis_apply,
       hzw, hnot]
 
-def orderedFlip {n : ℕ} : List (Fin n) → CantorAddress n → CantorAddress n
+def orderedFlip {n : ℕ} : List (Fin n) → ((Fin n) → Bool) → ((Fin n) → Bool)
   | [], z => z
   | i :: l, z =>
       InfoGeometry.Canonical.CelikKocakCantorOperators.CantorAddress.flipAt i
         (orderedFlip l z)
 
 theorem orderedSwitchProduct_basis_apply {n : ℕ}
-    (l : List (Fin n)) (z : CantorAddress n) :
+    (l : List (Fin n)) (z : ((Fin n) → Bool)) :
     orderedOperatorProduct
         (l.map (fun i =>
           InfoGeometry.Canonical.CelikKocakCantorOperators.FunctionSpace.switch i))
@@ -265,7 +265,7 @@ theorem orderedSwitchProduct_basis_apply {n : ℕ}
       rfl
 
 private theorem orderedFlip_apply_of_nodup {n : ℕ}
-    (l : List (Fin n)) (hl : l.Nodup) (z : CantorAddress n) (k : Fin n) :
+    (l : List (Fin n)) (hl : l.Nodup) (z : ((Fin n) → Bool)) (k : Fin n) :
     orderedFlip l z k = if k ∈ l then ! (z k) else z k := by
   induction l with
   | nil => simp [orderedFlip]
@@ -292,14 +292,14 @@ private theorem orderedFlip_apply_of_nodup {n : ℕ}
           simp [hkl', hki]
 
 noncomputable def switchWord {n : ℕ}
-    (x y : CantorAddress n) : EndpointOperator n :=
+    (x y : ((Fin n) → Bool)) : EndpointOperator n :=
   orderedOperatorProduct
     (((Finset.univ : Finset (Fin n)).filter
       (fun i => decide (x i ≠ y i))).toList.map
       (fun i => InfoGeometry.Canonical.CelikKocakCantorOperators.FunctionSpace.switch i))
 
 theorem switchWord_basis_apply {n : ℕ}
-    (x y : CantorAddress n) :
+    (x y : ((Fin n) → Bool)) :
     switchWord x y
         (InfoGeometry.Canonical.CelikKocakCantorOperators.endpointBasis (n := n) y) =
       InfoGeometry.Canonical.CelikKocakCantorOperators.endpointBasis (n := n) x := by
@@ -324,7 +324,7 @@ theorem switchWord_basis_apply {n : ℕ}
   rw [orderedSwitchProduct_basis_apply, haddr]
 
 theorem switchWord_mem_paperTiltSwitchSubalgebra
-    {n : ℕ} (x y : CantorAddress n) :
+    {n : ℕ} (x y : ((Fin n) → Bool)) :
     switchWord x y ∈ paperTiltSwitchSubalgebra n := by
   classical
   apply orderedOperatorProduct_mem (paperTiltSwitchSubalgebra n)
@@ -333,7 +333,7 @@ theorem switchWord_mem_paperTiltSwitchSubalgebra
   exact paperSwitch_mem_paperTiltSwitchSubalgebra i
 
 theorem diagonalSwitchDiagonal_eq_rankOne
-    {n : ℕ} (x y : CantorAddress n) :
+    {n : ℕ} (x y : ((Fin n) → Bool)) :
     diagonalProjector x * switchWord x y * diagonalProjector y =
       endpointRankOne x y := by
   apply (InfoGeometry.Canonical.CelikKocakCantorOperators.endpointBasis

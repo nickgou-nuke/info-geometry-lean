@@ -87,6 +87,23 @@ def mul (X Y : NCZornElement A) : NCZornElement A where
 
 instance : Mul (NCZornElement A) := ⟨mul⟩
 
+instance : Add (NCZornElement A) :=
+  ⟨fun X Y =>
+    { n_plus := X.n_plus + Y.n_plus
+      n_minus := X.n_minus + Y.n_minus
+      sigma_plus := fun c => X.sigma_plus c + Y.sigma_plus c
+      sigma_minus := fun c => X.sigma_minus c + Y.sigma_minus c }⟩
+
+instance : Neg (NCZornElement A) :=
+  ⟨fun X =>
+    { n_plus := -X.n_plus
+      n_minus := -X.n_minus
+      sigma_plus := fun c => -X.sigma_plus c
+      sigma_minus := fun c => -X.sigma_minus c }⟩
+
+instance : Sub (NCZornElement A) :=
+  ⟨fun X Y => X + (-Y)⟩
+
 def pureNPlus (a : A) : NCZornElement A :=
   ⟨a, 0, fun _ => 0, fun _ => 0⟩
 

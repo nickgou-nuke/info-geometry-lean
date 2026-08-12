@@ -63,6 +63,18 @@ private lemma eVec_fVec_ortho (i j : Fin 4) :
   fin_cases i <;> fin_cases j <;>
     simp [eVec, fVec, splitQ44_apply]
 
+private lemma eVec_eVec_ortho_of_ne (i j : Fin 4) (hij : i ≠ j) :
+    QuadraticMap.IsOrtho splitQ44 (eVec i) (eVec j) := by
+  unfold QuadraticMap.IsOrtho
+  fin_cases i <;> fin_cases j <;>
+    simp [eVec, splitQ44_apply, Fin.ext_iff] at hij ⊢
+
+private lemma fVec_fVec_ortho_of_ne (i j : Fin 4) (hij : i ≠ j) :
+    QuadraticMap.IsOrtho splitQ44 (fVec i) (fVec j) := by
+  unfold QuadraticMap.IsOrtho
+  fin_cases i <;> fin_cases j <;>
+    simp [fVec, splitQ44_apply, Fin.ext_iff] at hij ⊢
+
 private lemma aVec_null (i : Fin 4) :
     splitQ44 (aVec i) = 0 := by
   fin_cases i <;>
@@ -110,6 +122,31 @@ theorem e_mul_f_add_swap (i j : Fin 4) :
   simpa [e, f] using
     (CliffordAlgebra.ι_mul_ι_add_swap_of_isOrtho
       (Q := splitQ44) (a := eVec i) (b := fVec j) (eVec_fVec_ortho i j))
+
+/-- Distinct positive basis generators anticommute. -/
+theorem e_mul_e_add_swap (i j : Fin 4) (hij : i ≠ j) :
+    e i * e j + e j * e i = 0 := by
+  simpa [e] using
+    (CliffordAlgebra.ι_mul_ι_add_swap_of_isOrtho
+      (Q := splitQ44) (a := eVec i) (b := eVec j)
+      (eVec_eVec_ortho_of_ne i j hij))
+
+/-- Distinct negative basis generators anticommute. -/
+theorem f_mul_f_add_swap (i j : Fin 4) (hij : i ≠ j) :
+    f i * f j + f j * f i = 0 := by
+  simpa [f] using
+    (CliffordAlgebra.ι_mul_ι_add_swap_of_isOrtho
+      (Q := splitQ44) (a := fVec i) (b := fVec j)
+      (fVec_fVec_ortho_of_ne i j hij))
+
+/-- The complete orthogonal `Cl(4,4)` generator packet. -/
+theorem cl44_generator_packet :
+    (∀ i : Fin 4, e i * e i = 1) ∧
+    (∀ i : Fin 4, f i * f i = -(1 : Cl44)) ∧
+    (∀ i j : Fin 4, i ≠ j → e i * e j + e j * e i = 0) ∧
+    (∀ i j : Fin 4, i ≠ j → f i * f j + f j * f i = 0) ∧
+    (∀ i j : Fin 4, e i * f j + f j * e i = 0) := by
+  exact ⟨e_sq, f_sq, e_mul_e_add_swap, f_mul_f_add_swap, e_mul_f_add_swap⟩
 
 /-- Nilpotency of split annihilation generators.
 -/

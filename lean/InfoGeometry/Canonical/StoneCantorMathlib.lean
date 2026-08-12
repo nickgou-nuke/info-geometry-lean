@@ -28,23 +28,23 @@ open Set
 open UHFInductiveColimitBoundary
 
 /-- The Cantor cylinder determined by a finite bitword. -/
-def prefixCylinder (n : ℕ) (w : BitWord n) : Set CantorBoundary :=
+def prefixCylinder (n : ℕ) (w : BitWord n) : Set (ℕ → Bool) :=
   {x | boundaryPrefix n x = w}
 
-@[simp] theorem mem_prefixCylinder (n : ℕ) (w : BitWord n) (x : CantorBoundary) :
+@[simp] theorem mem_prefixCylinder (n : ℕ) (w : BitWord n) (x : (ℕ → Bool)) :
     x ∈ prefixCylinder n w ↔ boundaryPrefix n x = w :=
   Iff.rfl
 
 /-- Principal Stone evaluation of a cylinder is exactly prefix equality. -/
 theorem principalUltrafilter_prefixCylinder_eval
-    (x : CantorBoundary) (n : ℕ) (w : BitWord n) :
-    prefixCylinder n w ∈ (pure x : Ultrafilter CantorBoundary) ↔
+    (x : (ℕ → Bool)) (n : ℕ) (w : BitWord n) :
+    prefixCylinder n w ∈ (pure x : Ultrafilter (ℕ → Bool)) ↔
       boundaryPrefix n x = w := by
   simp [prefixCylinder]
 
 /-- The depth-`n+1` prefix is the old prefix extended by the next bit. -/
 theorem boundaryPrefix_succ_eq_extend
-    (x : CantorBoundary) (n : ℕ) :
+    (x : (ℕ → Bool)) (n : ℕ) :
     boundaryPrefix (n + 1) x = extendSucc n (boundaryPrefix n x) (x n) := by
   ext i
   by_cases hi : i.1 < n
@@ -94,12 +94,12 @@ theorem prefixCylinder_successor_disjoint (n : ℕ) (w : BitWord n) :
 
 /-- Principal Stone evaluation is successor coherent on Cantor cylinders. -/
 theorem principalUltrafilter_successor_coherence
-    (x : CantorBoundary) (n : ℕ) (w : BitWord n) :
-    prefixCylinder n w ∈ (pure x : Ultrafilter CantorBoundary) ↔
+    (x : (ℕ → Bool)) (n : ℕ) (w : BitWord n) :
+    prefixCylinder n w ∈ (pure x : Ultrafilter (ℕ → Bool)) ↔
       prefixCylinder (n + 1) (extendSucc n w false) ∈
-          (pure x : Ultrafilter CantorBoundary) ∨
+          (pure x : Ultrafilter (ℕ → Bool)) ∨
         prefixCylinder (n + 1) (extendSucc n w true) ∈
-          (pure x : Ultrafilter CantorBoundary) := by
+          (pure x : Ultrafilter (ℕ → Bool)) := by
   rw [principalUltrafilter_prefixCylinder_eval,
     principalUltrafilter_prefixCylinder_eval,
     principalUltrafilter_prefixCylinder_eval]
@@ -120,20 +120,20 @@ theorem principalUltrafilter_successor_coherence
     · exact prefixSucc_extendSucc n w true ▸ congrArg (prefixSucc n) hx
 
 /-- Sharp `0/1` cylinder expectation for a principal Stone point. -/
-def sharpCylinderExpectation (x : CantorBoundary) (n : ℕ) (w : BitWord n) : ℚ :=
+def sharpCylinderExpectation (x : (ℕ → Bool)) (n : ℕ) (w : BitWord n) : ℚ :=
   if boundaryPrefix n x = w then 1 else 0
 
 /-- Sharp expectation is one exactly on the cylinder containing the point. -/
 theorem sharpCylinderExpectation_eq_one_iff
-    (x : CantorBoundary) (n : ℕ) (w : BitWord n) :
+    (x : (ℕ → Bool)) (n : ℕ) (w : BitWord n) :
     sharpCylinderExpectation x n w = 1 ↔
-      prefixCylinder n w ∈ (pure x : Ultrafilter CantorBoundary) := by
+      prefixCylinder n w ∈ (pure x : Ultrafilter (ℕ → Bool)) := by
   rw [principalUltrafilter_prefixCylinder_eval]
   by_cases h : boundaryPrefix n x = w <;> simp [sharpCylinderExpectation, h]
 
 /-- Sharp expectations obey successor persistence. -/
 theorem sharpCylinderExpectation_successor
-    (x : CantorBoundary) (n : ℕ) (w : BitWord n) :
+    (x : (ℕ → Bool)) (n : ℕ) (w : BitWord n) :
     sharpCylinderExpectation x n w =
       sharpCylinderExpectation x (n + 1) (extendSucc n w false) +
         sharpCylinderExpectation x (n + 1) (extendSucc n w true) := by

@@ -130,6 +130,19 @@ theorem grothendieckLog_deriv_neg_log (z : ℂ) (hz : z ∈ Complex.slitPlane) :
     HasDerivAt (fun w : ℂ => -grothendieckLog w) (-(1 / z)) z := by
   simpa [grothendieckLog] using (Complex.hasDerivAt_log hz).neg
 
+/-! The local pullback theorem for the logarithmic form.  This is the
+    coefficient-level form of `Q^*(dz / z)` and does not introduce a
+    manifold differential-form carrier. -/
+
+theorem grothendieckLog_deriv_comp
+    {f : ℂ → ℂ} {f' z : ℂ}
+    (hf : HasDerivAt f f' z)
+    (hbranch : f z ∈ Complex.slitPlane) :
+    HasDerivAt (fun w => grothendieckLog (f w)) (f' / f z) z := by
+  have hlog := (Complex.hasDerivAt_log hbranch).comp z hf
+  simpa [grothendieckLog, Function.comp_def, div_eq_mul_inv,
+    mul_comm, mul_left_comm, mul_assoc] using hlog
+
 /-! ## Native logarithmic product rule -/
 
 /-- The derivative of a logarithm of a product, on the chosen logarithm
@@ -165,6 +178,24 @@ theorem circleIntegral_grothendieck_dlog (R : ℝ) (hR : 0 < R) :
 /-- The Grothendieck–de Rham class of the `n`-winding log-form around the pole. -/
 def grothendieckWindingClass (n : ℤ) : ℂ :=
   (n : ℂ) * (2 * Real.pi * Complex.I : ℂ)
+
+@[simp] theorem grothendieckWindingClass_zero :
+    grothendieckWindingClass 0 = 0 := by
+  simp [grothendieckWindingClass]
+
+theorem grothendieckWindingClass_add (m n : ℤ) :
+    grothendieckWindingClass (m + n) =
+      grothendieckWindingClass m + grothendieckWindingClass n := by
+  unfold grothendieckWindingClass
+  push_cast
+  ring
+
+theorem grothendieckWindingClass_neg (n : ℤ) :
+    grothendieckWindingClass (-n) =
+      -grothendieckWindingClass n := by
+  unfold grothendieckWindingClass
+  push_cast
+  ring
 
 /-- The de Rham period computes the named Grothendieck winding class. -/
 theorem grothendieckWindingClass_eq_circleIntegral

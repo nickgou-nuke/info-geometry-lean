@@ -33,11 +33,7 @@ theorem divergence_vanishes (K : Mat2) : ItakuraSaitoDivergence K = 0 := by
 theorem divergence_vanishes_on_nilpotent : ItakuraSaitoDivergence KNil = 0 := by
   exact divergence_vanishes KNil
 
-/-- Nilpotency kills the quadratic Fisher term. -/
-theorem nilpotent_quadratic_zero {Z : Mat2} (hZ : IsNilpotent2 Z) : Z * Z = 0 := hZ
-
 #check KNil_sq_zero
 #check divergence_vanishes_on_nilpotent
-#check nilpotent_quadratic_zero
 
 end HolographicThermo

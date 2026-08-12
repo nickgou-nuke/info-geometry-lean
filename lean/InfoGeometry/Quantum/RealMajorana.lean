@@ -554,6 +554,11 @@ theorem car_realization_of_clifford :
 noncomputable def transportP (P0 : KPolarization (S := S) M) : EndS (S := S) :=
   T.B.comp (P0.P.comp T.Binv)
 
+@[simp] lemma transportP_apply_B
+    (P0 : KPolarization (S := S) M) (x : S) :
+    T.transportP P0 (T.B x) = T.B (P0.P x) := by
+  simp [transportP, ContinuousLinearMap.comp_assoc]
+
 /--
 `T` preserves polarization iff it commutes with the polarization involution.
 -/
@@ -587,6 +592,12 @@ theorem preserves_or_mixes (P0 : KPolarization (S := S) M) :
   by_cases h : T.preservesPolarization P0
   · exact Or.inl h
   · exact Or.inr h
+
+theorem mixesPolarization_iff_transportP_ne
+    (P0 : KPolarization (S := S) M) :
+    T.mixesPolarization P0 ↔ T.transportP P0 ≠ P0.P := by
+  simpa [mixesPolarization, ne_eq] using
+    not_congr (T.preservesPolarization_iff_transportP_eq P0)
 
 /-- If polarization is preserved, `B` maps `plus` into `plus`. -/
 lemma map_plus_of_preserves

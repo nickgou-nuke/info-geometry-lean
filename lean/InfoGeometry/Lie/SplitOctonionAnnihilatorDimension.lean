@@ -1,5 +1,6 @@
 import InfoGeometry.Lie.SplitOctonionImaginaryAction
 import InfoGeometry.Algebra.ZornAlternativeLaws
+import InfoGeometry.Algebra.Zorn.CanonicalConjugation
 
 /-!
 # Dimension of null split-octonion annihilators
@@ -47,22 +48,6 @@ theorem canonicalPolar_nondegenerate (X : CanonicalZorn)
     norm_num)
   apply kingdonCanonicalLinearEquiv.symm.injective
   simpa [x] using hx
-
-/-- Canonical conjugation transported from the native Zorn owner. -/
-def canonicalConj (X : CanonicalZorn) : CanonicalZorn :=
-  canonicalVectorEquiv.symm
-    (InfoGeometry.Algebra.ZornVectorMatrix.conj (canonicalVectorEquiv X))
-
-@[simp] theorem canonicalVectorEquiv_canonicalConj (X : CanonicalZorn) :
-    canonicalVectorEquiv (canonicalConj X) =
-      InfoGeometry.Algebra.ZornVectorMatrix.conj (canonicalVectorEquiv X) := by
-  simp [canonicalConj]
-
-@[simp] theorem canonicalConj_add (X Z : CanonicalZorn) :
-    canonicalConj (X + Z) = canonicalConj X + canonicalConj Z := by
-  apply canonicalVectorEquiv.injective
-  simp only [canonicalVectorEquiv_canonicalConj, canonicalVectorEquiv_add,
-    InfoGeometry.Algebra.ZornVectorMatrix.conj_add]
 
 /-- The native Zorn norm agrees with the canonical determinant. -/
 theorem vector_norm_eq_canonical_det (X : CanonicalZorn) :

@@ -28,7 +28,7 @@ noncomputable section
 
 namespace ThermodynamicTKKBridge
 
-open TKKJordanPairData
+open TKKJordanPairData.Legacy
 open ChemicalPotentialTKKGradeZero
 open BogoliubovWeylChemicalPotential
 open SupergradedCuntzBdG

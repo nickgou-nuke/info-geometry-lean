@@ -57,8 +57,7 @@ theorem innerJordanDerivation_traceFree_apply
       (0, W xi eta z) := by
   ext i <;>
     simp [innerJordanDerivation, leftJordanMul, jordanMul, W,
-      beta44_add_left, beta44_add_right, beta44_smul_left,
-      beta44_smul_right, smul_eq_mul] <;>
+      smul_eq_mul] ;
     ring
 
 theorem innerJordanDerivation_traceFree_form_skew
@@ -97,7 +96,7 @@ theorem rankTwoOperator_swap (xi eta : MiddleCarrier) :
     rankTwoOperator eta xi = -rankTwoOperator xi eta := by
   apply LinearMap.ext
   intro z
-  simp [rankTwoOperator, beta44_symmetric, sub_eq_add_neg, add_comm]
+  simp [rankTwoOperator, sub_eq_add_neg, add_comm]
 
 /-! The coordinate generators are the genuine skew-basis generators. -/
 
@@ -137,24 +136,21 @@ theorem skewMatrix_single_mulVec
     · subst l
       by_cases hkj : k = j
       · subst k
-        simp [skewMatrix, hij, hji, hijne, hjine]
+        simp [skewMatrix, hij]
       · by_cases hki : k = i
         · subst k
-          simp [skewMatrix, Pi.single_apply, hij, hji, hijne, hjine, hkj]
-        · simp [skewMatrix, Pi.single_apply, hij, hji, hijne, hjine, hkj, hki]
-          <;> omega
+          simp [skewMatrix, hijne]
+        · simp [skewMatrix, hijne, hkj, hki]
     · by_cases hlj : l = j
       · subst l
         by_cases hki : k = i
         · subst k
-          simp [skewMatrix, hij, hji, hijne, hjine]
-        · simp [skewMatrix, Pi.single_apply, hij, hji, hijne, hjine, hki]
-          <;> omega
-      · simp [skewMatrix, Pi.single_apply, hij, hji, hijne, hjine, hli, hlj]
-        <;> omega
+          simp [skewMatrix, hij, hji, hjine]
+        · simp [skewMatrix, hjine, hki]
+      · simp [skewMatrix, hli, hlj]
   simp_rw [hentry]
   by_cases hli : l = i <;> by_cases hlj : l = j <;>
-    simp [Finset.sum_ite_eq', coordinateVector, Pi.single_apply,
+    simp [Finset.sum_ite_eq', coordinateVector,
       hijne, hjine, hli, hlj]
 
 theorem eta44_skewMatrix_single_mulVec
@@ -174,8 +170,7 @@ theorem eta44_skewMatrix_single_eq_rankTwo
   ext l
   fin_cases i <;> fin_cases j <;> fin_cases l <;>
     simp [rankTwoBasisOperator, rankTwoOperator, coordinateVector,
-      beta44_coordinateVector, eta44, etaSign, Matrix.mulVec,
-      Fin.sum_univ_succ] <;> ring
+      eta44, etaSign, Matrix.mulVec]
 
 def orthogonalAction : Orthogonal44 →ₗ[ℝ] Module.End ℝ MiddleCarrier where
   toFun D :=
@@ -361,10 +356,14 @@ def structureAction (a : ℝ) (D : Orthogonal44) : Module.End ℝ Carrier where
   map_add' x y := by
     rcases x with ⟨x₁, x₂⟩
     rcases y with ⟨y₁, y₂⟩
-    ext <;> simp [Matrix.mulVec_add, add_mul] <;> ring
+    ext
+    all_goals simp [Matrix.mulVec_add]
+    all_goals ring
   map_smul' r x := by
     rcases x with ⟨x₁, x₂⟩
-    ext <;> simp [Matrix.mulVec_smul, mul_assoc] <;> ring
+    ext
+    all_goals simp [Matrix.mulVec_smul]
+    all_goals ring
 
 @[simp] theorem structureAction_apply (a : ℝ) (D : Orthogonal44)
     (x : Carrier) :
@@ -377,7 +376,7 @@ def structureActionLinear : StructureCarrier →ₗ[ℝ] Module.End ℝ Carrier 
     intro x
     rcases p with ⟨a, D⟩
     rcases q with ⟨b, E⟩
-    simp [structureAction, Matrix.mulVec_add, Matrix.add_mulVec, add_mul]
+    simp [structureAction, Matrix.add_mulVec, add_mul]
   map_smul' r p := by
     apply LinearMap.ext
     intro x
@@ -394,7 +393,7 @@ theorem structureActionLinear_bracket (p q : StructureCarrier) :
   rcases q with ⟨b, E⟩
   rcases x with ⟨s, u⟩
   apply Prod.ext
-  · simp [structureBracket, structureActionLinear, structureAction,
+  · simp [structureActionLinear, structureAction,
       Module.End.mul_apply]
     change (0 : ℝ) * s = a * (b * s) - b * (a * s)
     ring

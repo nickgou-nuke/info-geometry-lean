@@ -232,7 +232,7 @@ open InfoGeometry.Topology InfoGeometry.Algebra in
 /-- The recursive fermion generators from KawamuraCuntzCAR.
     aₙ = ζ^{n-1}(s₁ s₂*) -/
 noncomputable def RFS_fermion {Op : Type*} [Ring Op] [StarRing Op]
-    (C : CuntzO2Carrier Op) (n : ℕ) : Op :=
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) (n : ℕ) : Op :=
   kawamuraCARSequence C n
 
 end InfoGeometry.Algebra.CuntzRecursiveFermionSystem

@@ -23,16 +23,16 @@ def σ₃ : M2C := BiquaternionNegativeRootsLog.σ₃
 
 lemma σ₁_sq : σ₁ * σ₁ = (1 : M2C) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [σ₁, BiquaternionNegativeRootsLog.σ₁, Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_two]
+    simp [σ₁, BiquaternionNegativeRootsLog.σ₁, Matrix.mul_apply, Fin.sum_univ_two]
 
 lemma σ₂_sq : σ₂ * σ₂ = (1 : M2C) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [σ₂, BiquaternionNegativeRootsLog.σ₂, Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_two,
+    simp [σ₂, BiquaternionNegativeRootsLog.σ₂, Matrix.mul_apply, Fin.sum_univ_two,
       Complex.I_mul_I]
 
 lemma σ₃_sq : σ₃ * σ₃ = (1 : M2C) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [σ₃, BiquaternionNegativeRootsLog.σ₃, Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_two]
+    simp [σ₃, BiquaternionNegativeRootsLog.σ₃, Matrix.mul_apply, Fin.sum_univ_two]
 
 lemma σ₁σ₂_anti : σ₁ * σ₂ = -(σ₂ * σ₁) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
@@ -98,7 +98,7 @@ lemma ω_eq_iI : ω = I • (1 : M2C) := by
       BiquaternionNegativeRootsLog.σ₁,
       BiquaternionNegativeRootsLog.σ₂,
       BiquaternionNegativeRootsLog.σ₃,
-      Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply, Matrix.one_apply]
+      Matrix.mul_apply, Fin.sum_univ_two, Matrix.smul_apply]
 
 lemma ω_sq : ω * ω = -(1 : M2C) := by
   rw [ω_eq_iI]
@@ -108,19 +108,19 @@ lemma ω_comm_σ₁ : ω * σ₁ = σ₁ * ω := by
   rw [ω_eq_iI]
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [σ₁, BiquaternionNegativeRootsLog.σ₁,
-      Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply, Fin.sum_univ_two]
+      Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply]
 
 lemma ω_comm_σ₂ : ω * σ₂ = σ₂ * ω := by
   rw [ω_eq_iI]
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [σ₂, BiquaternionNegativeRootsLog.σ₂,
-      Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply, Fin.sum_univ_two]
+      Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply]
 
 lemma ω_comm_σ₃ : ω * σ₃ = σ₃ * ω := by
   rw [ω_eq_iI]
   ext i j <;> fin_cases i <;> fin_cases j <;>
     simp [σ₃, BiquaternionNegativeRootsLog.σ₃,
-      Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply, Fin.sum_univ_two]
+      Matrix.mul_apply, Matrix.smul_apply, Matrix.one_apply]
 
 theorem M2C_pauli_decompose (M : M2C) :
     M = ((M 0 0 + M 1 1) / 2) • (1 : M2C) +
@@ -132,7 +132,7 @@ theorem M2C_pauli_decompose (M : M2C) :
       BiquaternionNegativeRootsLog.σ₁,
       BiquaternionNegativeRootsLog.σ₂,
       BiquaternionNegativeRootsLog.σ₃,
-      Matrix.smul_apply, Matrix.add_apply, Matrix.one_apply] <;>
+      Matrix.smul_apply, Matrix.add_apply] <;>
     (ring_nf; try simp [Complex.I_mul_I]; try ring)
 
 theorem pauli_det (α x y z : ℂ) :
@@ -142,7 +142,7 @@ theorem pauli_det (α x y z : ℂ) :
     BiquaternionNegativeRootsLog.σ₁,
     BiquaternionNegativeRootsLog.σ₂,
     BiquaternionNegativeRootsLog.σ₃,
-    Matrix.det_fin_two, Matrix.smul_apply, Matrix.add_apply, Matrix.one_apply]
+    Matrix.det_fin_two, Matrix.smul_apply, Matrix.add_apply]
   ring_nf
   simp [Complex.I_mul_I]
   ring

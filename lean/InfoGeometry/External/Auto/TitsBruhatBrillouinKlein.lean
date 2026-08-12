@@ -23,7 +23,7 @@ maximal torus/Brillouin torus is replaced by a Klein bottle.
 
 noncomputable section
 
-namespace TitsBruhatBrillouinKlein
+namespace InfoGeometry.External.Auto.TitsBruhatBrillouinKlein
 
 /-! ## 1. Concrete affine homogeneous matrix model over ℚ -/
 
@@ -126,4 +126,4 @@ theorem parity_survives_reversal (O : OrientationReversalZ2) :
     O.charge % 2 = (-O.charge) % 2 := by
   exact (Int.neg_emod_two O.charge).symm
 
-end TitsBruhatBrillouinKlein
+end InfoGeometry.External.Auto.TitsBruhatBrillouinKlein

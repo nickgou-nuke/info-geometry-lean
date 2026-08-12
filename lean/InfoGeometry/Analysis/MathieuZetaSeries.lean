@@ -16,9 +16,10 @@ namespace InfoGeometry.Analysis.EulerZetaSeries
 
 open Real
 
-/-- A dummy for Riemann Zeta for real arguments > 1 in this context, 
-since full complex zeta might be scattered in Mathlib. -/
-def riemann_zeta (s : ℝ) : ℝ := ∑' (n : ℕ), if n = 0 then 0 else 1 / (n : ℝ)^s
+/-- The formal Dirichlet-series expression used by this interface.  No
+    convergence or identification with `riemannZeta` is asserted here. -/
+def formalRiemannZetaSeries (s : ℝ) : ℝ :=
+  ∑' (n : ℕ), if n = 0 then 0 else 1 / (n : ℝ)^s
 
 /-- The Mathieu Series defined for τ > 0 (Eq 94). -/
 def mathieu_series (τ : ℝ) : ℝ :=
@@ -30,7 +31,8 @@ for |τ| < 1 (Eq 98 in the paper).
 -/
 def mathieu_zeta_expansion_prop (τ : ℝ) : Prop :=
   (|τ| < 1) → mathieu_series τ = 2 * ∑' (n : ℕ), if n = 0 then 0 else
-    (-1)^(n - 1) * (n : ℝ) * (riemann_zeta (2 * n + 1)) * τ^(2 * (n - 1))
+    (-1)^(n - 1) * (n : ℝ) * (formalRiemannZetaSeries (2 * n + 1)) *
+      τ^(2 * (n - 1))
 
 /-- 
 Wallis's infinite product formula evaluates to π / 2.
@@ -38,6 +40,6 @@ Taking the logarithm yields an expansion in terms of Zeta functions (Eq 89).
 -/
 def wallis_log_zeta_expansion_prop : Prop :=
   Real.log (Real.pi / 2) = ∑' (τ : ℕ), if τ = 0 then 0 else
-    (riemann_zeta (2 * τ)) / ((τ : ℝ) * 2^(2 * τ))
+    (formalRiemannZetaSeries (2 * τ)) / ((τ : ℝ) * 2^(2 * τ))
 
 end InfoGeometry.Analysis.EulerZetaSeries

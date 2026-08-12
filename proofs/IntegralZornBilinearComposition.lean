@@ -1,4 +1,6 @@
 import proofs.IntegralZornAlternativeAlgebra
+import InfoGeometry.Physics.SplitOctonionBraidSU3
+import InfoGeometry.Canonical.CanonicalZornCompositionFiveGradeBridge
 
 /-!
 # Bilinear integral Zorn composition package
@@ -22,7 +24,8 @@ open CanonicalZornProjectiveTKKBridge
 open CanonicalZornIntegralTrialityEquivariance
 open CanonicalZornIntegralSpinTrialityClosure
 open CanonicalZornCliffordRepresentation
-open SplitOctonionBraidSU3
+open _root_.InfoGeometry.Physics.SplitOctonionBraidSU3
+open CanonicalZornCompositionFiveGradeBridge
 
 theorem integralToCanonical_add (X Y : IntegralZorn) :
     coreToCanonical (integralToCoreZorn (X + Y)) =
@@ -149,7 +152,7 @@ theorem integral_bilinear_octonion_fivegrade_projective_closure
     integralAxisCycle (integralZornCompositionLaws.mul X Y) =
       integralZornCompositionLaws.mul
         (integralAxisCycle X) (integralAxisCycle Y) ∧
-    CanonicalZornCompositionTriality.vectorGradePlus
+    CanonicalZornCompositionFiveGradeBridge.vectorGradePlus
         (CanonicalZornRealSpin44.realSplit44ToVector8
           (integralZornToRealSplit44 (integralAxisCycle X))) ∈
       CanonicalZornFiveGradedClosure.conformalGrade

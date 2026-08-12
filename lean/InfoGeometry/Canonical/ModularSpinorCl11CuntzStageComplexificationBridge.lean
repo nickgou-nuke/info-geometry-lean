@@ -42,93 +42,54 @@ variable [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
 variable [TopologicalSpace Gr] [Category Open]
 variable {J : Type u} [Category.{u, u} J]
 
-/-- A joint owner for the modular-spinor Cuntz-stage exchange bridge and the
-finite-stage Cl(1,1)-to-Cuntz complexification bridge. -/
-abbrev ModularSpinorCl11CuntzStageComplexificationBridge
-  {E Sections BoundarySections Gr Open : Type*}
-  [AddCommGroup Sections] [Module ℝ Sections]
-  [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
-  {J : Type u} [Category.{u, u} J]
-  (F : J ⥤ TopCat.{u}) :=
-  ModularSpinorCuntzStageExchangeTopologicalBridge
-    (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
-    (Gr := Gr) (Open := Open) F
-
-namespace ModularSpinorCl11CuntzStageComplexificationBridge
-
-/-- Compatibility projection for the former one-field wrapper. -/
-abbrev exchangeBridge
-  {E Sections BoundarySections Gr Open : Type*}
-  [AddCommGroup Sections] [Module ℝ Sections]
-  [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
-  {J : Type u} [Category.{u, u} J]
-  {F : J ⥤ TopCat.{u}}
-  (B : ModularSpinorCl11CuntzStageComplexificationBridge
-    (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
-    (Gr := Gr) (Open := Open) F) := B
-
-end ModularSpinorCl11CuntzStageComplexificationBridge
-
 /-- The sheaf cover condition remains available inside the complexification bridge. -/
 theorem modularSpinor_Cl11CuntzStageComplexification_monogenicSheaf_isSheafFor
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCl11CuntzStageComplexificationBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F) :
     Presieve.IsSheafFor
-      B.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.sheafData.sections
-      B.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.sheafData.cover :=
-  modularSpinor_CuntzStageExchangeTopological_monogenicSheaf_isSheafFor F B.exchangeBridge
+      B.spectrumBridge.sheafData.sections
+      B.spectrumBridge.sheafData.cover :=
+  modularSpinor_CuntzStageExchangeTopological_monogenicSheaf_isSheafFor F B
 
 /-- The monogenic section membership theorem remains available inside the
 complexification bridge. -/
 theorem modularSpinor_Cl11CuntzStageComplexification_monogenicSection_mem
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCl11CuntzStageComplexificationBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F)
   (U : Open)
-  (s : B.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.sheafData.monogenicSections U) :
-    (s : B.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.sheafData.sections.obj (Opposite.op U))
-      ∈ B.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.sheafData.monogenicSections U :=
-  modularSpinor_CuntzStageExchangeTopological_monogenicSection_mem F B.exchangeBridge U s
+  (s : B.spectrumBridge.sheafData.monogenicSections U) :
+    (s : B.spectrumBridge.sheafData.sections.obj (Opposite.op U))
+      ∈ B.spectrumBridge.sheafData.monogenicSections U :=
+  modularSpinor_CuntzStageExchangeTopological_monogenicSection_mem F B U s
 
 /-- The DN-kernel identity remains available inside the complexification bridge. -/
 theorem modularSpinor_Cl11CuntzStageComplexification_boundary_kernel_eq_traceMonogenic
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCl11CuntzStageComplexificationBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F) :
     LinearMap.ker
-      B.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.boundaryBridge.boundaryData.dirichletToNeumann =
-      traceMonogenic B.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.boundaryBridge.boundaryData :=
-  modularSpinor_CuntzStageExchangeTopological_boundary_kernel_eq_traceMonogenic F B.exchangeBridge
+      B.spectrumBridge.boundaryBridge.boundaryData.dirichletToNeumann =
+      traceMonogenic B.spectrumBridge.boundaryBridge.boundaryData :=
+  modularSpinor_CuntzStageExchangeTopological_boundary_kernel_eq_traceMonogenic F B
 
 /-- The Gelfand-spectrum descent map remains available inside the complexification bridge. -/
 noncomputable def modularSpinor_Cl11CuntzStageComplexification_gelfandSpectrumDescend
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCl11CuntzStageComplexificationBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F) :
     GelfandSpectrum F ⟶ GelfandSpectrum F :=
-  modularSpinor_CuntzStageExchangeTopological_gelfandSpectrumDescend F B.exchangeBridge
-
-/-- The Gelfand-spectrum target identification remains available inside the
-complexification bridge. -/
-noncomputable def modularSpinor_Cl11CuntzStageComplexification_gelfandSpectrumIsoTarget
-  (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCl11CuntzStageComplexificationBridge
-    (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
-    (Gr := Gr) (Open := Open) F) :
-    GelfandSpectrum F ≅ GelfandSpectrum F :=
-  modularSpinor_CuntzStageExchangeTopological_gelfandSpectrumIsoTarget F B.exchangeBridge
+  modularSpinor_CuntzStageExchangeTopological_gelfandSpectrumDescend F B
 
 @[reassoc (attr := simp)]
 theorem modularSpinor_Cl11CuntzStageComplexification_gelfandSpectrum_stage
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCl11CuntzStageComplexificationBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F)
   (j : J) :
@@ -136,51 +97,51 @@ theorem modularSpinor_Cl11CuntzStageComplexification_gelfandSpectrum_stage
       modularSpinor_Cl11CuntzStageComplexification_gelfandSpectrumDescend F B =
       colimit.ι F j := by
   dsimp only [modularSpinor_Cl11CuntzStageComplexification_gelfandSpectrumDescend] at *
-  exact modularSpinor_CuntzStageExchangeTopological_gelfandSpectrum_stage F B.exchangeBridge j
+  exact modularSpinor_CuntzStageExchangeTopological_gelfandSpectrum_stage F B j
 
 /-- The filtered-colimit stage injections remain available inside the
 complexification bridge. -/
 noncomputable def modularSpinor_Cl11CuntzStageComplexification_stageInjection
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCl11CuntzStageComplexificationBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F)
   (j : J) :
-    B.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.stageDiagram.obj j ⟶
-      colimit B.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.stageDiagram :=
-  modularSpinor_CuntzStageExchangeTopological_stageInjection F B.exchangeBridge j
+    B.stageDiagram.obj j ⟶
+      colimit B.stageDiagram :=
+  modularSpinor_CuntzStageExchangeTopological_stageInjection F B j
 
 /-- Naturality of the filtered-colimit stage injections remains available inside the
 complexification bridge. -/
 theorem modularSpinor_Cl11CuntzStageComplexification_stageInjection_naturality
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCl11CuntzStageComplexificationBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F)
   {j j' : J} (f : j ⟶ j') :
-    B.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.stageDiagram.map f ≫
+    B.stageDiagram.map f ≫
       modularSpinor_Cl11CuntzStageComplexification_stageInjection F B j' =
       modularSpinor_Cl11CuntzStageComplexification_stageInjection F B j := by
   dsimp only [modularSpinor_Cl11CuntzStageComplexification_stageInjection] at *
-  exact modularSpinor_CuntzStageExchangeTopological_stageInjection_naturality F B.exchangeBridge f
+  exact modularSpinor_CuntzStageExchangeTopological_stageInjection_naturality F B f
 
 /-- Modular-spinor transport still preserves the canonical three-form inside the
 full complexification bridge. -/
 theorem modularSpinor_Cl11CuntzStageComplexification_transport_preserves_threeForm
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCl11CuntzStageComplexificationBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F)
   (path : List E) (x y z : ModularSpinorCarrier) :
     canonicalSplitG2ThreeFormValue
         ((modularSpinorTransport
-          B.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.boundaryBridge.connection path) x)
+          B.spectrumBridge.boundaryBridge.connection path) x)
         ((modularSpinorTransport
-          B.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.boundaryBridge.connection path) y)
+          B.spectrumBridge.boundaryBridge.connection path) y)
         ((modularSpinorTransport
-          B.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.boundaryBridge.connection path) z) =
+          B.spectrumBridge.boundaryBridge.connection path) z) =
       canonicalSplitG2ThreeFormValue x y z := by
-  have h := modularSpinor_CuntzStageExchangeTopological_transport_preserves_threeForm F B.exchangeBridge path x y z
+  have h := modularSpinor_CuntzStageExchangeTopological_transport_preserves_threeForm F B path x y z
   simp_all [modularSpinorTransport]
   <;> exact h
 

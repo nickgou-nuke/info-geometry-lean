@@ -38,86 +38,57 @@ variable [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
 variable [TopologicalSpace Gr] [Category Open]
 variable {J : Type u} [Category.{u, u} J]
 
-/-- A joint owner for the modular-spinor/Cl(1,1) topological star bridge and
-the finite sequential colimit consequences. -/
-abbrev ModularSpinorCl11SequentialColimitBridge
-  {E Sections BoundarySections Gr Open : Type*}
-  [AddCommGroup Sections] [Module ℝ Sections]
-  [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
-  {J : Type u} [Category.{u, u} J]
-  (F : J ⥤ TopCat.{u}) :=
-  ModularSpinorCl11CuntzTopologicalStarBridge
-    (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
-    (Gr := Gr) (Open := Open) F
-
-namespace ModularSpinorCl11SequentialColimitBridge
-
-/-- Compatibility projection for the former one-field wrapper. -/
-abbrev starBridge
-  {E Sections BoundarySections Gr Open : Type*}
-  [AddCommGroup Sections] [Module ℝ Sections]
-  [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
-  {J : Type u} [Category.{u, u} J]
-  {F : J ⥤ TopCat.{u}}
-  (B : ModularSpinorCl11SequentialColimitBridge
-    (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
-    (Gr := Gr) (Open := Open) F) := B
-
-end ModularSpinorCl11SequentialColimitBridge
-
 /-- The sheaf cover condition remains available inside the sequential colimit
 bridge. -/
 theorem modularSpinor_Cl11SequentialColimit_monogenicSheaf_isSheafFor
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCl11SequentialColimitBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F) :
     Presieve.IsSheafFor
-      B.starBridge.cyclicBridge.colimitBridge.complexificationBridge.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.sheafData.sections
-      B.starBridge.cyclicBridge.colimitBridge.complexificationBridge.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.sheafData.cover :=
-  modularSpinor_Cl11CuntzTopologicalStar_monogenicSheaf_isSheafFor F B.starBridge
+      B.spectrumBridge.sheafData.sections
+      B.spectrumBridge.sheafData.cover :=
+  modularSpinor_filteredColimit_monogenicSheaf_isSheafFor F B
 
 /-- Monogenic section membership remains available inside the sequential colimit
 bridge. -/
 theorem modularSpinor_Cl11SequentialColimit_monogenicSection_mem
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCl11SequentialColimitBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F)
   (U : Open)
-  (s : B.starBridge.cyclicBridge.colimitBridge.complexificationBridge.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.sheafData.monogenicSections U) :
-    (s : B.starBridge.cyclicBridge.colimitBridge.complexificationBridge.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.sheafData.sections.obj (Opposite.op U))
-      ∈ B.starBridge.cyclicBridge.colimitBridge.complexificationBridge.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.sheafData.monogenicSections U :=
-  modularSpinor_Cl11CuntzTopologicalStar_monogenicSection_mem F B.starBridge U s
+  (s : B.spectrumBridge.sheafData.monogenicSections U) :
+    (s : B.spectrumBridge.sheafData.sections.obj (Opposite.op U))
+      ∈ B.spectrumBridge.sheafData.monogenicSections U :=
+  modularSpinor_filteredColimit_monogenicSection_mem F B U s
 
 /-- The DN-kernel identity remains available inside the sequential colimit
 bridge. -/
 theorem modularSpinor_Cl11SequentialColimit_boundary_kernel_eq_traceMonogenic
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCl11SequentialColimitBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F) :
     LinearMap.ker
-      B.starBridge.cyclicBridge.colimitBridge.complexificationBridge.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.boundaryBridge.boundaryData.dirichletToNeumann =
-      traceMonogenic B.starBridge.cyclicBridge.colimitBridge.complexificationBridge.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.boundaryBridge.boundaryData :=
-  modularSpinor_Cl11CuntzTopologicalStar_boundary_kernel_eq_traceMonogenic F B.starBridge
+      B.spectrumBridge.boundaryBridge.boundaryData.dirichletToNeumann =
+      traceMonogenic B.spectrumBridge.boundaryBridge.boundaryData :=
+  modularSpinor_filteredColimit_boundary_kernel_eq_traceMonogenic F B
 
 /-- Gelfand-spectrum descent remains available inside the sequential colimit
 bridge. -/
 noncomputable def modularSpinor_Cl11SequentialColimit_gelfandSpectrumDescend
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCl11SequentialColimitBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F) :
     GelfandSpectrum F ⟶ GelfandSpectrum F :=
-  modularSpinor_Cl11CuntzTopologicalStar_gelfandSpectrumDescend F B.starBridge
+  modularSpinor_filteredColimit_gelfandSpectrumDescend F B
 
 @[reassoc (attr := simp)]
 theorem modularSpinor_Cl11SequentialColimit_gelfandSpectrum_stage
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCl11SequentialColimitBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F)
   (j : J) :
@@ -125,25 +96,25 @@ theorem modularSpinor_Cl11SequentialColimit_gelfandSpectrum_stage
       modularSpinor_Cl11SequentialColimit_gelfandSpectrumDescend F B =
       colimit.ι F j := by
   dsimp only [modularSpinor_Cl11SequentialColimit_gelfandSpectrumDescend] at *
-  exact modularSpinor_Cl11CuntzTopologicalStar_gelfandSpectrum_stage F B.starBridge j
+  exact modularSpinor_filteredColimit_gelfandSpectrum_stage F B j
 
 /-- Modular-spinor transport still preserves the canonical three-form inside the
 full sequential colimit bridge. -/
 theorem modularSpinor_Cl11SequentialColimit_transport_preserves_threeForm
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCl11SequentialColimitBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F)
   (path : List E) (x y z : ModularSpinorCarrier) :
     canonicalSplitG2ThreeFormValue
         ((modularSpinorTransport
-          B.starBridge.cyclicBridge.colimitBridge.complexificationBridge.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.boundaryBridge.connection path) x)
+          B.spectrumBridge.boundaryBridge.connection path) x)
         ((modularSpinorTransport
-          B.starBridge.cyclicBridge.colimitBridge.complexificationBridge.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.boundaryBridge.connection path) y)
+          B.spectrumBridge.boundaryBridge.connection path) y)
         ((modularSpinorTransport
-          B.starBridge.cyclicBridge.colimitBridge.complexificationBridge.exchangeBridge.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.boundaryBridge.connection path) z) =
+          B.spectrumBridge.boundaryBridge.connection path) z) =
       canonicalSplitG2ThreeFormValue x y z := by
-  have h := modularSpinor_Cl11CuntzTopologicalStar_transport_preserves_threeForm F B.starBridge path x y z
+  have h := modularSpinor_filteredColimit_transport_preserves_threeForm F B path x y z
   simp_all [modularSpinorTransport]
   <;> exact h
 

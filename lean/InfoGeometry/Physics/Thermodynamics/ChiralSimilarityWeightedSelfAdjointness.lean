@@ -37,7 +37,17 @@ noncomputable def chiralKreinMetric (μ : ℝ) : BdGBlock ℝ :=
   fin_cases i <;> fin_cases j <;>
     simp [gibbsFactor]
 
-/-- The deformed Dirac block is self-adjoint for the weighted metric. -/
+/- The weighted metric is the pullback of the reference identity by the
+   inverse positive chiral frame. -/
+theorem chiralKreinMetric_eq_inverse_frame_pullback (μ : ℝ) :
+    chiralKreinMetric μ =
+      star (gibbsFactor (-μ)) * gibbsFactor (-μ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [chiralKreinMetric, gibbsFactor, Matrix.star_apply,
+      Matrix.mul_apply, Fin.sum_univ_two]
+
+/- The deformed Dirac block is self-adjoint for the weighted metric. -/
 theorem chemicalPotentialDiracFlow_weighted_selfAdjoint
     (μ Δ : ℝ) :
     star (chemicalPotentialDiracFlow μ Δ) * chiralKreinMetric μ =

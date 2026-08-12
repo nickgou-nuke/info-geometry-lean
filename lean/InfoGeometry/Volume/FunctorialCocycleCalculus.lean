@@ -4,6 +4,7 @@ import InfoGeometry.Canonical.ProjectiveFoundation
 import InfoGeometry.Volume.RadonNikodym
 import InfoGeometry.Volume.ConnesCocycle
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.RepresentationTheory.Homological.GroupCohomology.LowDegree
 import Mathlib.Tactic
 
@@ -67,6 +68,22 @@ theorem matrix_logAbs_det_chain_rule (A B : Matrix n n ℝ)
     Real.log |(A * B).det| = Real.log |A.det| + Real.log |B.det| := by
   rw [Matrix.det_mul, abs_mul]
   exact Real.log_mul (abs_ne_zero.mpr hA) (abs_ne_zero.mpr hB)
+
+/-- On the positive-determinant component, the logarithmic determinant is an
+additive coordinate without the absolute-value readout. -/
+theorem matrix_log_det_chain_rule_pos (A B : Matrix n n ℝ)
+    (hA : 0 < A.det) (hB : 0 < B.det) :
+    Real.log ((A * B).det) = Real.log A.det + Real.log B.det := by
+  rw [Matrix.det_mul]
+  exact Real.log_mul hA.ne' hB.ne'
+
+/-- A positive scalar dilation has logarithmic volume coordinate equal to its
+dimension times the scalar logarithm. -/
+theorem matrix_log_det_scalar_dilation
+    (Ω : ℝ) :
+    Real.log ((Ω • (1 : Matrix n n ℝ)).det) =
+      (Fintype.card n : ℝ) * Real.log Ω := by
+  rw [Matrix.det_smul, Matrix.det_one, mul_one, Real.log_pow]
 
 end RealLogDeterminant
 

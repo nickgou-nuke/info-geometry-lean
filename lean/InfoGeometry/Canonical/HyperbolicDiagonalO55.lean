@@ -126,7 +126,7 @@ theorem hyperbolicPredicate_commutator {A B : HMatrix}
   rw [← Matrix.mul_assoc Bᵀ hyperbolicMetricMatrix A,
     ← Matrix.mul_assoc Aᵀ hyperbolicMetricMatrix B]
   rw [hB', hA']
-  simp only [neg_mul, sub_eq_add_neg, neg_neg]
+  simp only [neg_mul, neg_neg]
   rw [← Matrix.mul_assoc hyperbolicMetricMatrix A B,
     ← Matrix.mul_assoc hyperbolicMetricMatrix B A]
   abel
@@ -154,7 +154,7 @@ theorem endpointChangeInv_metric_congruence :
           (endpointChange * endpointChangeInv) := by
             noncomm_ring
     _ = hyperbolicMetricMatrix := by
-      simp only [Matrix.mul_assoc, endpointChangeInv_mul,
+      simp only [endpointChangeInv_mul,
         endpointChange_mul_inv, Matrix.one_mul, Matrix.mul_one]
 
 theorem hyperbolicToDiagonal_preserves_constraint {A : HMatrix}
@@ -185,7 +185,7 @@ theorem hyperbolicToDiagonal_preserves_constraint {A : HMatrix}
             _ = endpointChange * (Aᵀ * hyperbolicMetricMatrix) * endpointChange +
                 endpointChange * hyperbolicMetricMatrix * A * endpointChange := by
                   simp only [Matrix.mul_assoc, endpointChangeInv_mul,
-                    endpointChange_mul_inv, Matrix.one_mul, Matrix.mul_one]
+                    endpointChange_mul_inv, Matrix.mul_one]
             _ = endpointChange * (Aᵀ * hyperbolicMetricMatrix +
                 hyperbolicMetricMatrix * A) * endpointChange := by
                   noncomm_ring
@@ -219,7 +219,7 @@ theorem diagonalToHyperbolic_preserves_constraint {A : HMatrix}
             _ = endpointChangeInv * (Aᵀ * O55Form) * endpointChangeInv +
                 endpointChangeInv * O55Form * A * endpointChangeInv := by
                   simp only [Matrix.mul_assoc, endpointChange_mul_inv,
-                    endpointChangeInv_mul, Matrix.one_mul, Matrix.mul_one]
+                    endpointChangeInv_mul, Matrix.mul_one]
             _ = endpointChangeInv * (Aᵀ * O55Form +
                 O55Form * A) * endpointChangeInv := by
                   noncomm_ring
@@ -237,7 +237,7 @@ noncomputable def hyperbolicToDiagonalMap :
     map_smul' := by
       intro r A
       apply Subtype.ext
-      simp [hyperbolicToDiagonal, Matrix.smul_mul, Matrix.mul_smul] }
+      simp [hyperbolicToDiagonal] }
 
 noncomputable def diagonalToHyperbolicMap :
     Orthogonal55 →ₗ[ℝ] HyperbolicOrthogonalLie :=
@@ -251,7 +251,7 @@ noncomputable def diagonalToHyperbolicMap :
     map_smul' := by
       intro r A
       apply Subtype.ext
-      simp [diagonalToHyperbolic, Matrix.smul_mul, Matrix.mul_smul] }
+      simp [diagonalToHyperbolic] }
 
 noncomputable def hyperbolicDiagonalLinearEquiv :
     HyperbolicOrthogonalLie ≃ₗ[ℝ] Orthogonal55 :=
@@ -269,7 +269,7 @@ noncomputable def hyperbolicDiagonalLinearEquiv :
               (endpointChange * endpointChangeInv) := by
                 noncomm_ring
         _ = A.1 := by
-          simp only [Matrix.mul_assoc, endpointChange_mul_inv,
+          simp only [endpointChange_mul_inv,
             Matrix.one_mul, Matrix.mul_one]
     right_inv := by
       intro A
@@ -283,7 +283,7 @@ noncomputable def hyperbolicDiagonalLinearEquiv :
               (endpointChangeInv * endpointChange) := by
                 noncomm_ring
         _ = A.1 := by
-          simp only [Matrix.mul_assoc, endpointChangeInv_mul,
+          simp only [endpointChangeInv_mul,
             Matrix.one_mul, Matrix.mul_one]
     map_add' := by intro A B; exact hyperbolicToDiagonalMap.map_add A B
     map_smul' := by intro r A; exact hyperbolicToDiagonalMap.map_smul r A }
@@ -313,7 +313,7 @@ theorem hyperbolicToDiagonal_bracket (A B : HyperbolicOrthogonalLie) :
       _ = endpointChangeInv * X *
             (((endpointChange * endpointChangeInv) * Y) * endpointChange) := by
           rw [endpointChange_mul_inv]
-          simp only [Matrix.one_mul, Matrix.mul_one, Matrix.mul_assoc]
+          simp only [Matrix.one_mul, Matrix.mul_assoc]
       _ = (endpointChangeInv * X * endpointChange) *
             (endpointChangeInv * Y * endpointChange) := by
           simp only [Matrix.mul_assoc]
@@ -348,7 +348,7 @@ theorem diagonalToHyperbolic_bracket (A B : Orthogonal55) :
       _ = endpointChange * X *
             (((endpointChangeInv * endpointChange) * Y) * endpointChangeInv) := by
           rw [endpointChangeInv_mul]
-          simp only [Matrix.one_mul, Matrix.mul_one, Matrix.mul_assoc]
+          simp only [Matrix.one_mul, Matrix.mul_assoc]
       _ = (endpointChange * X * endpointChangeInv) *
             (endpointChange * Y * endpointChangeInv) := by
           simp only [Matrix.mul_assoc]
@@ -381,7 +381,7 @@ noncomputable def hyperbolicDiagonalLieEquiv :
             (endpointChange * endpointChangeInv) := by
               noncomm_ring
       _ = A.1 := by
-        simp only [Matrix.mul_assoc, endpointChange_mul_inv,
+        simp only [endpointChange_mul_inv,
           Matrix.one_mul, Matrix.mul_one]
   · intro A
     apply Subtype.ext
@@ -394,7 +394,7 @@ noncomputable def hyperbolicDiagonalLieEquiv :
             (endpointChangeInv * endpointChange) := by
               noncomm_ring
       _ = A.1 := by
-        simp only [Matrix.mul_assoc, endpointChangeInv_mul,
+        simp only [endpointChangeInv_mul,
           Matrix.one_mul, Matrix.mul_one]
 
 theorem hyperbolicDiagonalLieEquiv_apply

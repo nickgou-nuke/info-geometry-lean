@@ -1,7 +1,8 @@
 import Mathlib.Topology.Basic
+import Mathlib.Topology.Instances.Real.Lemmas
 import Mathlib.Algebra.Group.Basic
 import Mathlib.Data.Real.Basic
-import Mathlib.LinearAlgebra.Basic
+import Mathlib.LinearAlgebra.Basis.Basic
 
 -- Formalization of the Green-Schwarz Mechanism Structure
 -- An abstract mathematical representation of anomaly cancellation
@@ -40,6 +41,6 @@ theorem green_schwarz_mechanism_exact
   intro x _
   have h1 : inflow.bulk_kr.variation x = - inflow.boundary_anomaly.localized_value x := h_exact x
   rw [h1]
-  exact add_left_neg (inflow.boundary_anomaly.localized_value x)
+  exact neg_add_cancel _
 
 end GreenSchwarz

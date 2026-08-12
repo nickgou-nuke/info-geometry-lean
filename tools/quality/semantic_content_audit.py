@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import subprocess
 import sys
 from collections import Counter, defaultdict
 from dataclasses import asdict, dataclass
@@ -186,7 +187,7 @@ def in_scope(
     return True
 
 
-def all_infogeometry_files(
+def all_lean_files(
     *,
     scope: str = "all",
     file_prefixes: list[str] | None = None,
@@ -199,8 +200,37 @@ def all_infogeometry_files(
     elif scope == "quarantine":
         roots = [ROOT / "lean" / "InfoGeometry" / "Unstable"]
     else:
-        roots = [ROOT / "lean" / "InfoGeometry"]
-    files = sorted(path for root in roots for path in root.rglob("*.lean") if path.is_file())
+        # The semantic gate is repo-wide, but its authoritative source set is
+        # the tracked/non-ignored Lean tree.  Ignored scratch fixtures (for
+        # example `lean/test_axiom.lean`) remain available to forensic audits
+        # without poisoning the release gate.
+        try:
+            result = subprocess.run(
+                [
+                    "git",
+                    "ls-files",
+                    "--cached",
+                    "--others",
+                    "--exclude-standard",
+                    "--",
+                    "*.lean",
+                ],
+                cwd=ROOT,
+                check=True,
+                capture_output=True,
+                text=True,
+            )
+            files = sorted(
+                path
+                for raw in result.stdout.splitlines()
+                if (path := ROOT / raw).is_file()
+                and path.is_relative_to(ROOT / "lean")
+            )
+        except (OSError, subprocess.CalledProcessError):
+            roots = [ROOT / "lean"]
+            files = sorted(path for root in roots for path in root.rglob("*.lean") if path.is_file())
+    if scope in {"canonical", "quarantine"}:
+        files = sorted(path for root in roots for path in root.rglob("*.lean") if path.is_file())
     if scope == "quarantine" and manifest_modules:
         for module in sorted(manifest_modules):
             path = module_to_path(module)
@@ -226,6 +256,10 @@ def all_infogeometry_files(
             continue
         out.append(path)
     return out
+
+
+# Compatibility name for older callers inside this tool and external reports.
+all_infogeometry_files = all_lean_files
 
 
 def importers_by_module(files: list[Path] | None = None) -> dict[str, list[str]]:

@@ -107,11 +107,6 @@ theorem finiteToInfinite_castSucc {n : ℕ} (i : Fin n) :
     finiteToInfinite (Fin.castSucc i) = finiteToInfinite i := by
   rfl
 
-/-- Finite adjacent relation embeds as infinite adjacent relation. -/
-theorem finite_adjacent_to_infinite {n : ℕ} {i j : Fin n}
-    (h : i.1 + 1 = j.1) :
-    finiteToInfinite i + 1 = finiteToInfinite j := h
-
 end InfoGeometry.GrandUnification.BraidCliffordIntegration
 
 end noncomputable section

@@ -101,7 +101,7 @@ theorem cl11ToMat_iota_pos_neg_anticomm :
   rw [cl11ToMat_iota_pos, cl11ToMat_iota_neg]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [Eplus, Eminus, Matrix.mul_apply, Fin.sum_univ_two]
+    simp [Eplus, Eminus]
 
 -- Decomposition of any 2x2 matrix into the Pauli basis
 noncomputable def alpha (M : Mat2) : ℝ := (M 0 0 + M 1 1) / 2

@@ -20,33 +20,33 @@ abbrev Carrier := ℝ × (Middle × ℝ)
 
 theorem carrier_finrank :
     Module.finrank ℝ Carrier = 10 := by
-  simp [Middle, Carrier, Module.finrank_fin_fun]
+  simp [Middle, Carrier]
 
 def hyperbolicBeta (x y : Carrier) : ℝ :=
   x.1 * y.2.2 + beta44 x.2.1 y.2.1 + x.2.2 * y.1
 
 theorem hyperbolicBeta_symmetric (x y : Carrier) :
     hyperbolicBeta x y = hyperbolicBeta y x := by
-  simp [hyperbolicBeta, beta44_symmetric, mul_comm, add_comm, add_left_comm]
+  simp [hyperbolicBeta, mul_comm, add_comm, add_left_comm]
 
 theorem hyperbolicBeta_add_left (x y z : Carrier) :
     hyperbolicBeta (x + y) z = hyperbolicBeta x z + hyperbolicBeta y z := by
-  simp [hyperbolicBeta, beta44_add_left]
+  simp [hyperbolicBeta]
   ring
 
 theorem hyperbolicBeta_add_right (x y z : Carrier) :
     hyperbolicBeta x (y + z) = hyperbolicBeta x y + hyperbolicBeta x z := by
-  simp [hyperbolicBeta, beta44_add_right]
+  simp [hyperbolicBeta]
   ring
 
 theorem hyperbolicBeta_smul_left (r : ℝ) (x y : Carrier) :
     hyperbolicBeta (r • x) y = r * hyperbolicBeta x y := by
-  simp [hyperbolicBeta, beta44_smul_left, smul_eq_mul]
+  simp [hyperbolicBeta, smul_eq_mul]
   ring
 
 theorem hyperbolicBeta_smul_right (r : ℝ) (x y : Carrier) :
     hyperbolicBeta x (r • y) = r * hyperbolicBeta x y := by
-  simp [hyperbolicBeta, beta44_smul_right, smul_eq_mul]
+  simp [hyperbolicBeta, smul_eq_mul]
   ring
 
 def P (x : Middle) (z : Carrier) : Carrier :=
@@ -80,7 +80,7 @@ def pMap : Middle →ₗ[ℝ] Module.End ℝ Carrier where
       · simp
       · apply Prod.ext
         · change (r * a) • x = r • (a • x)
-          simp [smul_smul, smul_eq_mul]
+          simp [smul_smul]
         · change -beta44 x (r • u) = r • (-beta44 x u)
           rw [beta44_smul_right]
           simp [smul_eq_mul]
@@ -110,7 +110,7 @@ def pMap : Middle →ₗ[ℝ] Module.End ℝ Carrier where
     · simp
     · apply Prod.ext
       · change a • (r • x) = r • (a • x)
-        simp [smul_smul, smul_eq_mul, mul_comm]
+        simp [smul_smul, mul_comm]
       · change -beta44 (r • x) u = r • (-beta44 x u)
         rw [beta44_smul_left]
         simp [smul_eq_mul]
@@ -143,7 +143,7 @@ def nMap : Middle →ₗ[ℝ] Module.End ℝ Carrier where
         ring
       · apply Prod.ext
         · change (r * c) • y = r • (c • y)
-          simp [smul_smul, smul_eq_mul]
+          simp [smul_smul]
         · norm_num
   }
   map_add' x y := by
@@ -176,7 +176,7 @@ def nMap : Middle →ₗ[ℝ] Module.End ℝ Carrier where
       ring
     · apply Prod.ext
       · change c • (r • y) = r • (c • y)
-        simp [smul_smul, smul_eq_mul, mul_comm]
+        simp [smul_smul, mul_comm]
       · norm_num
 
 @[simp] theorem pMap_apply (x : Middle) (z : Carrier) : pMap x z = P x z := rfl
@@ -187,14 +187,14 @@ theorem P_hyperbolic_skew (x : Middle) (u v : Carrier) :
     hyperbolicBeta (P x u) v + hyperbolicBeta u (P x v) = 0 := by
   rcases u with ⟨a, u, c⟩
   rcases v with ⟨b, v, d⟩
-  simp [P, hyperbolicBeta, beta44_symmetric]
+  simp [P, hyperbolicBeta]
   ring
 
 theorem N_hyperbolic_skew (y : Middle) (u v : Carrier) :
     hyperbolicBeta (N y u) v + hyperbolicBeta u (N y v) = 0 := by
   rcases u with ⟨a, u, c⟩
   rcases v with ⟨b, v, d⟩
-  simp [N, hyperbolicBeta, beta44_symmetric]
+  simp [N, hyperbolicBeta]
   ring
 
 theorem hyperbolicBeta_P_zero (x : Middle) :
@@ -210,13 +210,13 @@ theorem hyperbolicBeta_N_zero (y : Middle) :
 theorem P_commutator_zero (x y : Middle) (z : Carrier) :
     P x (P y z) - P y (P x z) = 0 := by
   rcases z with ⟨a, u, c⟩
-  simp [P, beta44_symmetric]
+  simp [P]
   ring
 
 theorem N_commutator_zero (x y : Middle) (z : Carrier) :
     N x (N y z) - N y (N x z) = 0 := by
   rcases z with ⟨a, u, c⟩
-  simp [N, beta44_symmetric]
+  simp [N]
   ring
 
 theorem pMap_lie_commute (x y : Middle) :
@@ -415,9 +415,9 @@ theorem blockOperator_hyperbolic_skew (d : BlockData) (z w : Carrier) :
       hyperbolicBeta (s, (u, t))
         (a * r - beta44 y v,
         (r • x + D.1.mulVec v + q • y, -beta44 x v - a * q)) = 0
-  simp only [hyperbolicBeta, Prod.fst, Prod.snd,
+  simp only [hyperbolicBeta,
     beta44_add_left, beta44_add_right, beta44_smul_left,
-    beta44_smul_right, smul_eq_mul]
+    beta44_smul_right]
   rw [beta44_symmetric u y, beta44_symmetric u x]
   linear_combination hD
 
@@ -429,7 +429,7 @@ def hyperbolicSkewSubmodule :
   carrier := {T | hyperbolicSkewPredicate T}
   zero_mem' := by
     intro z w
-    simp [hyperbolicSkewPredicate, hyperbolicBeta]
+    simp [hyperbolicBeta]
   add_mem' := by
     intro T S hT hS z w
     change hyperbolicBeta ((T + S) z) w + hyperbolicBeta z ((T + S) w) = 0
@@ -491,7 +491,7 @@ noncomputable def blockDataOf (T : hyperbolicSkewSubmodule) : BlockData :=
             LinearMap.toMatrix'_apply, middleBlockMap, beta44,
             SplitOctonionSkew28.eta44, Matrix.transpose_apply,
             Fin.sum_univ_succ, Matrix.diagonal_apply,
-            Pi.single_apply, Finset.sum_ite_irrel] at h ⊢ <;>
+            Pi.single_apply] at h ⊢ <;>
           linarith⟩,
       (teMinus.2.1, tePlus.2.1)))
 
@@ -662,8 +662,6 @@ theorem hyperbolicSkew_smul_mem
     (r : ℝ) (A : hyperbolicSkewSubmodule) :
     hyperbolicSkewPredicate (r • A.1) := by
   intro z w
-  change hyperbolicBeta ((r • A.1) z) w +
-      hyperbolicBeta z ((r • A.1) w) = 0
   rw [LinearMap.smul_apply, LinearMap.smul_apply,
     hyperbolicBeta_smul_left, hyperbolicBeta_smul_right]
   linear_combination r * A.2 z w
@@ -698,7 +696,7 @@ noncomputable instance : LieAlgebra ℝ hyperbolicSkewSubmodule where
     change ⁅A.1, r • B.1⁆ = r • ⁅A.1, B.1⁆
     change A.1 * (r • B.1) - (r • B.1) * A.1 =
       r • (A.1 * B.1 - B.1 * A.1)
-    simp [sub_eq_add_neg, mul_smul, smul_mul_assoc]
+    simp [sub_eq_add_neg]
 
 noncomputable def hyperbolicSkewSubalgebraLieEquiv :
     hyperbolicSkewSubmodule ≃ₗ⁅ℝ⁆ hyperbolicSkewLieSubalgebra := by
@@ -829,12 +827,11 @@ noncomputable instance : LieRing AbstractTKKCarrier where
     apply blockOperatorLinearSubmoduleEquiv.injective
     rw [abstractTKKBracket_equiv]
     apply Subtype.ext
-    simpa [hyperbolicSkewBracket] using
-      (lie_self (blockOperatorLinearSubmoduleEquiv d))
+    simp [hyperbolicSkewBracket]
   leibniz_lie := by
     intro d e f
     apply blockOperatorLinearSubmoduleEquiv.injective
-    simp only [abstractTKKBracket_equiv, map_add, map_zero]
+    simp only [abstractTKKBracket_equiv, map_add]
     apply Subtype.ext
     simp only [hyperbolicSkewBracket, Subtype.coe_mk]
     exact leibniz_lie _ _ _

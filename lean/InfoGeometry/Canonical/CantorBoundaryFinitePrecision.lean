@@ -16,14 +16,14 @@ open InfoGeometry.Canonical.CantorBoundaryComplexReadout
 
 /-- Real readout is stable under `N`-prefix agreement. -/
 theorem real_readout_prefix_stability
-    (N : ℕ) (w v : InfiniteBinaryWordSpace)
+    (N : ℕ) (w v : (ℕ → Bool))
     (hprefix : ∀ n < N, w n = v n) :
     |realBinaryReadout w - realBinaryReadout v| ≤ (1 / 2 : ℝ) ^ N := by
   exact abs_realBinaryReadout_sub_le_of_prefix N w v hprefix
 
 /-- Complex readout is stable under `N`-prefix agreement, with the same precision bound. -/
 theorem complex_readout_prefix_stability
-    (N : ℕ) (w v : InfiniteBinaryWordSpace)
+    (N : ℕ) (w v : (ℕ → Bool))
     (hprefix : ∀ n < N, w n = v n) :
     ‖binaryReadout w - binaryReadout v‖ ≤ (1 / 2 : ℝ) ^ N := by
   have hreal :
@@ -39,7 +39,7 @@ theorem complex_readout_prefix_stability
     _ ≤ (1 / 2 : ℝ) ^ N := hreal
 
 theorem complex_readout_prefix_closedBall_mem
-    (N : ℕ) (w v : InfiniteBinaryWordSpace)
+    (N : ℕ) (w v : (ℕ → Bool))
     (hprefix : ∀ n < N, w n = v n) :
     binaryReadout v ∈
       Metric.closedBall (binaryReadout w) ((1 / 2 : ℝ) ^ N) := by
@@ -50,7 +50,7 @@ theorem complex_readout_prefix_closedBall_mem
 
 /-- Prefix agreement puts values into a dyadic closed interval around the limit. -/
 theorem real_readout_prefix_ball_mem
-    (N : ℕ) (w v : InfiniteBinaryWordSpace)
+    (N : ℕ) (w v : (ℕ → Bool))
     (hprefix : ∀ n < N, w n = v n) :
     realBinaryReadout v ∈ Set.Icc (realBinaryReadout w - (1 / 2 : ℝ) ^ N)
       (realBinaryReadout w + (1 / 2 : ℝ) ^ N) := by
@@ -62,7 +62,7 @@ theorem real_readout_prefix_ball_mem
 
 /-- Same as `real_readout_prefix_stability` but via finite prefix approximants. -/
 theorem readout_stability_via_partial_prefix
-    (N : ℕ) (w v : InfiniteBinaryWordSpace)
+    (N : ℕ) (w v : (ℕ → Bool))
     (hprefix : ∀ n < N, w n = v n) :
     |realBinaryReadout w - realBinaryPartialReadout N v| ≤
       (1 / 2 : ℝ) ^ N + |realBinaryPartialReadout N w - realBinaryPartialReadout N v| := by

@@ -1,6 +1,7 @@
 import proofs.TwoSheetChiralClosure
 import proofs.SplitOctonionChiralClosure
-import proofs.CanonicalZornFiveGradedClosure
+import InfoGeometry.Canonical.CanonicalZornFiveGradedClosure
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-!
 # Derivation and five-graded sectors of the two-sheet chiral algebra
@@ -17,9 +18,10 @@ namespace TwoSheetChiralTKKDerivations
 
 open TKKJordanPairData TKKJordanPairData.TKKGrade
 open CanonicalZornFiveGradedClosure
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 
 abbrev L := CanonicalZornFiveGradedClosure.ConformalMatrix
-abbrev Zorn := SplitOctonionBraidSU3.Zorn
+abbrev Zorn := _root_.InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn
 
 /-- A common coordinate seed; the different conformal blocks distinguish the
 two-sheet and chiral copies and make their extremal bracket nonzero. -/

@@ -51,7 +51,11 @@ theorem q8_pauli_squares :
     sigma1 * sigma1 = (1 : M2C) ∧
     sigma2 * sigma2 = (1 : M2C) ∧
     sigma3 * sigma3 = (1 : M2C) := by
-  ext i j <;> fin_cases i <;> fin_cases j <;> rfl
+  constructor
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [sigma1, Matrix.mul_apply]
+  constructor
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [sigma2, Matrix.mul_apply]
+  · ext i j; fin_cases i <;> fin_cases j <;> simp [sigma3, Matrix.mul_apply]
 
 /-! ## 2. Modular J involution — chiral operator -/
 
@@ -91,16 +95,17 @@ theorem modular_J_commutes_with_spin_hamiltonian :
       P_plus * P_plus = P_plus ∧
       P_minus * P_minus = P_minus ∧
       P_plus * P_minus = 0 ∧
-      P_plus + P_minus = (1 : M2C) := by
+    P_plus + P_minus = (1 : M2C) := by
     dsimp [P_plus, P_minus, modular_J, sigma2]
+    have hI : (Complex.I : ℂ)^2 = -1 := by norm_num [pow_two, Complex.I_mul_I]
     have h1 : P_plus * P_plus = P_plus := by
-      ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+      ext i j; fin_cases i <;> fin_cases j <;> norm_num [P_plus, P_minus, modular_J, sigma2, Matrix.mul_apply, Fin.sum_univ_two] <;> ring_nf <;> norm_num [Complex.I_mul_I]
     have h2 : P_minus * P_minus = P_minus := by
-      ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+      ext i j; fin_cases i <;> fin_cases j <;> norm_num [P_plus, P_minus, modular_J, sigma2, Matrix.mul_apply, Fin.sum_univ_two] <;> ring_nf <;> norm_num [Complex.I_mul_I]
     have h3 : P_plus * P_minus = 0 := by
-      ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+      ext i j; fin_cases i <;> fin_cases j <;> norm_num [P_plus, P_minus, modular_J, sigma2, Matrix.mul_apply, Fin.sum_univ_two] <;> ring_nf <;> norm_num [Complex.I_mul_I]
     have h4 : P_plus + P_minus = (1 : M2C) := by
-      ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.add_apply] <;> ring
+      ext i j; fin_cases i <;> fin_cases j <;> norm_num [P_plus, P_minus, modular_J, sigma2, Matrix.add_apply]
     exact ⟨h1, h2, h3, h4⟩
 
   /-- The total CPT-conformant Hamiltonian including oscillator, spin, and Coriolis terms.

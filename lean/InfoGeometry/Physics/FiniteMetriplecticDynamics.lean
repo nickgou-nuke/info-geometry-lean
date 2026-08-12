@@ -105,4 +105,41 @@ theorem entropy_nondecreasing
   rw [hJ, zero_add]
   exact onsager_nonnegative ρ (entropyGradient ρ)
 
+theorem casimir_conserved
+    (pairing : ∀ ρ, Tangent ρ →ₗ[ℝ] Tangent ρ →ₗ[ℝ] ℝ)
+    (poissonOperator onsagerOperator :
+      ∀ ρ, Tangent ρ →ₗ[ℝ] Tangent ρ)
+    (energyGradient entropyGradient casimirGradient : ∀ ρ, Tangent ρ)
+    (poisson_casimir : ∀ ρ,
+      poissonOperator ρ (casimirGradient ρ) = 0)
+    (onsager_casimir : ∀ ρ,
+      onsagerOperator ρ (casimirGradient ρ) = 0)
+    (pairing_symm : ∀ ρ X Y, pairing ρ X Y = pairing ρ Y X)
+    (poisson_skew : ∀ ρ X Y,
+      pairing ρ (poissonOperator ρ X) Y =
+        -pairing ρ X (poissonOperator ρ Y))
+    (onsager_symmetric : ∀ ρ X Y,
+      pairing ρ (onsagerOperator ρ X) Y =
+        pairing ρ X (onsagerOperator ρ Y))
+    (ρ : State) :
+    pairing ρ (casimirGradient ρ)
+      (metriplecticVelocity poissonOperator onsagerOperator
+        energyGradient entropyGradient ρ) = 0 := by
+  dsimp [metriplecticVelocity]
+  rw [LinearMap.map_add]
+  have hJ :
+      pairing ρ (casimirGradient ρ)
+        (poissonOperator ρ (energyGradient ρ)) = 0 := by
+    rw [pairing_symm]
+    rw [poisson_skew]
+    rw [poisson_casimir]
+    simp
+  have hM :
+      pairing ρ (casimirGradient ρ)
+        (onsagerOperator ρ (entropyGradient ρ)) = 0 := by
+    rw [← onsager_symmetric]
+    rw [onsager_casimir]
+    simp
+  simp [hJ, hM]
+
 end InfoGeometry.Physics

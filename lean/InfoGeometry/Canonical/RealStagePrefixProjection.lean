@@ -15,7 +15,7 @@ Conjugation by the native tensor-index equivalence then gives the same
 construction on `RealStageVector n`.
 -/
 
-def prefixProjection (r N : ℕ) (hr : r ≤ N) :
+def prefixProjection (r N : ℕ) (_hr : r ≤ N) :
     (Fin N → ℝ) →ₗ[ℝ] (Fin N → ℝ) where
   toFun x i := if i.1 < r then x i else 0
   map_add' x y := by
@@ -56,7 +56,7 @@ noncomputable def prefixRangeEquiv
     · have hi : Fin.castLE hr ⟨i.1, h⟩ = i := by
         apply Fin.ext
         rfl
-      simp [hy, prefixProjection_apply, h, hi]
+      simp [h, hi]
     · have hi := congrFun hy i
       simp [prefixProjection_apply, h] at hi
       simpa [h] using hi
@@ -71,7 +71,7 @@ theorem prefixProjection_rank
     projectionRank (prefixProjection r N hr) = r := by
   change Module.finrank ℝ (LinearMap.range (prefixProjection r N hr)) = r
   rw [(prefixRangeEquiv r N hr).finrank_eq]
-  simp [Module.finrank_pi]
+  simp
 
 noncomputable def stageVectorFinEquiv (n : ℕ) :
     RealStageVector n ≃ₗ[ℝ] (Fin (2 ^ n) → ℝ) :=

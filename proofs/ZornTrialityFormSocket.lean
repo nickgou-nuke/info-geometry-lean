@@ -1,7 +1,7 @@
-import proofs.ZornCore
+import InfoGeometry.Canonical.ZornCore
 import proofs.ZornAssociatorSplitOctonion
 import proofs.GrandUnifiedTKK
-import proofs.ZornTrialityTKKBridge
+import InfoGeometry.Canonical.ZornTrialityTKKBridge
 
 /-!
 # Zorn triality defect bridge
@@ -27,6 +27,7 @@ open ZornCore
 open ZornAssociatorSplitOctonion
 open GrandUnifiedTKK
 open ZornTrialityTKKBridge
+open TKKJordanPairData
 
 /-- The finite trilinear defect bridge available in the current repository. -/
 def trialityDefect (Φ X Ψ : ZornCore.Zorn) : ZornCore.Zorn :=
@@ -45,13 +46,13 @@ theorem canonical_trialityDefect_nonzero :
 
 /-- The canonical defect lane routes to the extremal TKK grade. -/
 theorem canonical_trialityDefect_grade :
-    laneGrade SplitOctonionLane.associatorWitness = TKK_Grade.g_2 := by
-  rfl
+    laneGrade SplitOctonionLane.associatorWitness = TKKGrade.p2 := by
+  exact laneGrade_associatorWitness
 
 /-- The finite triality bridge summary used by the bridge layer. -/
 theorem trialityDefect_socket_synthesis :
     trialityDefect (U e1) (L e1) (U e2) ≠ 0 ∧
-    laneGrade SplitOctonionLane.associatorWitness = TKK_Grade.g_2 := by
+    laneGrade SplitOctonionLane.associatorWitness = TKKGrade.p2 := by
   have hNonzero := canonical_trialityDefect_nonzero
   have hGrade := canonical_trialityDefect_grade
   exact ⟨hNonzero, hGrade⟩

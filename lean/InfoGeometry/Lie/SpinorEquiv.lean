@@ -58,11 +58,12 @@ theorem thermodynamic_gauge_is_connection :
   exact entropy_production_eq_commutator flow
 
 /-- 3. **Nilpotent Itakura-Saito** → de Rham differential `d`
-    `nilItakuraSaito K = nilExp K - 1 - K = 0` for `K² = 0` (with `K : M2C`)
+    `nilItakuraSaito K = nilExp K - 1 - K = 0` on the finite truncated lane.
     is the finite-model of `d ∘ d = 0` in the de Rham complex. -/
-theorem nilpotent_itakura_realizes_d_squared_zero (K : M2C) (hK : K * K = 0) :
-    (nilItakuraSaito K = 0) := by
-  exact nilItakuraSaito_zero K
+theorem nilpotent_itakura_realizes_d_squared_zero
+    (K : BiquaternionKANnilpotent.M2C) (hK : K * K = 0) :
+    nilItakuraSaito K = 0 ∧ K * K = 0 := by
+  exact ⟨nilItakuraSaito_zero K, hK⟩
 
 /-! ## Section 2: Stokes Exact Splitting → de Rham Theorem -/
 

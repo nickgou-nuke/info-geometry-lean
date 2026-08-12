@@ -34,6 +34,11 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.CommutantMoebiusFenchelMirrorBridge
 
+local instance realMulAction
+    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] :
+    MulAction ℝ H :=
+  Module.toDistribMulAction.toMulAction
+
 open InfoGeometry.Clifford.ClNN
 open InfoGeometry.Clifford.SplitCartanHopWittBridge
 

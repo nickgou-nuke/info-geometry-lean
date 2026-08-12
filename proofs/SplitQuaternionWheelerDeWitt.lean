@@ -216,26 +216,21 @@ theorem deWittBox_commutes_bogoliubovVectorField (ψ : WavePolynomial) :
 
   rw [h02, h03, h00, h01, h12, h13, h10, h11, h22, h23, h20, h21, h32, h33, h30, h31]
 
-  have c00 : pderiv 0 (pderiv 0 (pderiv 0 ψ)) = pderiv 0 (pderiv 0 (pderiv 0 ψ)) := rfl
   have c01 : pderiv 0 (pderiv 1 (pderiv 1 ψ)) = pderiv 1 (pderiv 1 (pderiv 0 ψ)) := pderiv_comm_sq 0 1 ψ
   have c02 : pderiv 0 (pderiv 2 (pderiv 2 ψ)) = pderiv 2 (pderiv 2 (pderiv 0 ψ)) := pderiv_comm_sq 0 2 ψ
   have c03 : pderiv 0 (pderiv 3 (pderiv 3 ψ)) = pderiv 3 (pderiv 3 (pderiv 0 ψ)) := pderiv_comm_sq 0 3 ψ
 
   have c10 : pderiv 1 (pderiv 0 (pderiv 0 ψ)) = pderiv 0 (pderiv 0 (pderiv 1 ψ)) := pderiv_comm_sq 1 0 ψ
-  have c11 : pderiv 1 (pderiv 1 (pderiv 1 ψ)) = pderiv 1 (pderiv 1 (pderiv 1 ψ)) := rfl
   have c12 : pderiv 1 (pderiv 2 (pderiv 2 ψ)) = pderiv 2 (pderiv 2 (pderiv 1 ψ)) := pderiv_comm_sq 1 2 ψ
   have c13 : pderiv 1 (pderiv 3 (pderiv 3 ψ)) = pderiv 3 (pderiv 3 (pderiv 1 ψ)) := pderiv_comm_sq 1 3 ψ
 
   have c20 : pderiv 2 (pderiv 0 (pderiv 0 ψ)) = pderiv 0 (pderiv 0 (pderiv 2 ψ)) := pderiv_comm_sq 2 0 ψ
   have c21 : pderiv 2 (pderiv 1 (pderiv 1 ψ)) = pderiv 1 (pderiv 1 (pderiv 2 ψ)) := pderiv_comm_sq 2 1 ψ
-  have c22 : pderiv 2 (pderiv 2 (pderiv 2 ψ)) = pderiv 2 (pderiv 2 (pderiv 2 ψ)) := rfl
   have c23 : pderiv 2 (pderiv 3 (pderiv 3 ψ)) = pderiv 3 (pderiv 3 (pderiv 2 ψ)) := pderiv_comm_sq 2 3 ψ
 
   have c30 : pderiv 3 (pderiv 0 (pderiv 0 ψ)) = pderiv 0 (pderiv 0 (pderiv 3 ψ)) := pderiv_comm_sq 3 0 ψ
   have c31 : pderiv 3 (pderiv 1 (pderiv 1 ψ)) = pderiv 1 (pderiv 1 (pderiv 3 ψ)) := pderiv_comm_sq 3 1 ψ
   have c32 : pderiv 3 (pderiv 2 (pderiv 2 ψ)) = pderiv 2 (pderiv 2 (pderiv 3 ψ)) := pderiv_comm_sq 3 2 ψ
-  have c33 : pderiv 3 (pderiv 3 (pderiv 3 ψ)) = pderiv 3 (pderiv 3 (pderiv 3 ψ)) := rfl
-
   rw [c01, c02, c03, c10, c12, c13, c20, c21, c23, c30, c31, c32]
 
   have c02' : pderiv 0 (pderiv 2 ψ) = pderiv 2 (pderiv 0 ψ) := pderiv_comm 0 2 ψ

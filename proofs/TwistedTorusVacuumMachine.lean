@@ -2,6 +2,8 @@ import proofs.TorusKleinO55Bridge
 import proofs.SupergradedCuntzBdG
 import proofs.ChiralConeAlgebraFinality
 
+open KleinBottle
+
 /-!
 # Twisted torus vacuum machine
 
@@ -89,11 +91,12 @@ theorem twisted_torus_machine_counts :
 translation to its inverse and squares to a translation in the orientable double
 cover. -/
 theorem twisted_torus_generator_relations :
-    (∀ z : ℂ, G (T z) = T_inv (G z)) ∧
-    (∀ z : ℂ, G (G z) = z + 2) := by
+    (∀ z : ℂ, KleinBottle.G (KleinBottle.T z) =
+      KleinBottle.T_inv (KleinBottle.G z)) ∧
+    (∀ z : ℂ, KleinBottle.G (KleinBottle.G z) = z + 2) := by
   constructor
-  · exact klein_bottle_relation
-  · exact glide_reflection_sq
+  · exact KleinBottle.klein_bottle_relation
+  · exact KleinBottle.glide_reflection_sq
 
 end TwistedTorusVacuumMachine
 

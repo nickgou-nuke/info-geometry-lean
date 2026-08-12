@@ -79,14 +79,6 @@ theorem rot01Real_deriv :
         ∀ X Y : SplitOctReal, rot01Real (X * Y) = rot01Real X * Y + X * rot01Real Y := by
   exact ⟨rot01Real_add, rot01Real_neg, rot01Real_mul⟩
 
-/-- Direct owner theorem for the native real derivation. -/
-theorem realSplitOctonionDerivationPacket_packet :
-    (∀ X Y : SplitOctReal, rot01Real (X + Y) = rot01Real X + rot01Real Y) ∧
-      (∀ X : SplitOctReal, rot01Real (-X) = -rot01Real X) ∧
-        ∀ X Y : SplitOctReal,
-          rot01Real (X * Y) = rot01Real X * Y + X * rot01Real Y := by
-  exact rot01Real_deriv
-
 /-- A concrete `up0` input for the real rotation property. -/
 abbrev up0 : SplitOctReal := { a := 0, b := 0, x := ![1, 0, 0], y := 0 }
 

@@ -11,9 +11,8 @@ This file keeps only a very small theorem-honest core:
 
 - a concrete 2×2 causal matrix model,
 - a null-cone predicate via determinant zero,
-- an abstract record carrying a chosen winding number,
-- the tautological fact that one may read that chosen winding number back as an
-  integer-valued time label.
+- a finite algebraic record carrying a winding-number readout,
+- the exact equality between that readout and its stored integer label.
 
 It does not prove that physical time is de Rham cohomology, nor that the
 Klein-quadric complement has already been computed globally.
@@ -55,7 +54,7 @@ noncomputable def LogBarrierPotential (X : Matrix (Fin 2) (Fin 2) ℝ) : ℝ :=
   - Real.log (X.det)
 
 /-- 
-Minimal package carrying a chosen winding-number label.
+Finite algebraic carrier for a winding-number readout.
 
 No analytic de Rham form, holonomy theorem, or modular-flow identification is
 constructed in this file.
@@ -74,14 +73,9 @@ The integer time readout associated with a chosen winding-number packet.
 def time_readout (M : MonodromyWinding) : ℤ :=
   M.winding_number
 
-/--
-Tautological existence of an integer time label equal to the recorded winding.
-
-This is an exact readback theorem about the packaged data, not a global theorem
-about physical time.
--/
+/-- The time readout is exactly the winding number stored by the carrier. -/
 theorem time_is_cohomology_of_winding (M : MonodromyWinding) :
-  ∃ (Time : ℤ), Time = M.winding_number := by
-  exact ⟨M.winding_number, rfl⟩
+  time_readout M = M.winding_number := by
+  rfl
 
 end InfoGeometry.Motives

@@ -1,6 +1,6 @@
 import proofs.HillWheelerProjection
 import proofs.JaynesLDDPGNSColimit
-import proofs.ProjectiveAffineConformalClosure55
+import InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
 
 /-!
 # Universal Hill--Wheeler projection theorem

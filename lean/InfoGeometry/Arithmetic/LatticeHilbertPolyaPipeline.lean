@@ -48,7 +48,7 @@ def H (M : FiniteMajoranaLattice Op) : Op :=
 
 theorem D_selfAdjoint (M : FiniteMajoranaLattice Op) :
     IsSelfAdjoint M.D := by
-  exact InfoGeometry.Arithmetic.CantorDiracOperator.cantorDirac_selfAdjoint_of_generator_selfAdjoint
+  exact InfoGeometry.Arithmetic.CantorDiracOperator.cantorDirac_is_selfAdjoint
     M.register M.gamma M.gamma_selfAdjoint
 
 theorem D_sq_eq_H (M : FiniteMajoranaLattice Op) :

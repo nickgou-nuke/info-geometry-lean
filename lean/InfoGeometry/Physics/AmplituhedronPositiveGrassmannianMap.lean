@@ -27,6 +27,14 @@ theorem PhiZ_entrywise_nonnegative
   rw [Matrix.mul_apply]
   exact Finset.sum_nonneg fun t _ => mul_nonneg (C.2 i t) (Z.2 t j)
 
+theorem PhiZ_entrywise_positive
+    (hn : 0 < n) (C : PositiveGrassmannian k n)
+    (Z : PositiveMomentumTwistors k n m)
+    (hC : ∀ i j, 0 < C.1 i j)
+    (hZ : ∀ i j, 0 < Z.1 i j) :
+    ∀ i j, 0 < PhiZ k n m C Z i j := by
+  exact Amplituhedron.matrix_mul_entrywise_positive k n m hn C.1 Z.1 hC hZ
+
 /-- The amplituhedron map is computed by matrix multiplication. -/
 theorem PhiZ_eq_amplituhedron_space
     (C : PositiveGrassmannian k n) (Z : PositiveMomentumTwistors k n m) :

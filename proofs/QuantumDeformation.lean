@@ -3,6 +3,8 @@ import proofs.BogoliubovRindler
 
 open Matrix
 
+noncomputable section
+
 /-!
 # Quantum Deformation of the Rindler Flow
 
@@ -62,6 +64,29 @@ theorem scaledBogoliubov_preserves_standard_metric
   fin_cases i <;> fin_cases j <;>
     simp [qWeightedKreinMetric, kreinMetric, fromBlocks, hq]
 
+/-- Conjugation transports a bilinear metric through an explicitly supplied
+    two-sided inverse.  This is the noncommutative core of the q-flow proof. -/
+theorem conjugation_pullback_metric
+    (D Dinv B J : Matrix4x4)
+    (hleft : Dinv * D = 1) (hright : D * Dinv = 1)
+    (hB : Bᵀ * J * B = J) :
+    (Dinv * B * D)ᵀ * (Dᵀ * J * D) * (Dinv * B * D) = Dᵀ * J * D := by
+  have ht : Dinvᵀ * Dᵀ = (1 : Matrix4x4) := by
+    rw [← Matrix.transpose_mul, hright, Matrix.transpose_one]
+  calc
+    (Dinv * B * D)ᵀ * (Dᵀ * J * D) * (Dinv * B * D) =
+        Dᵀ * Bᵀ * (Dinvᵀ * Dᵀ) * J * (D * Dinv) * B * D := by
+          simp only [Matrix.transpose_mul]
+          noncomm_ring
+    _ = Dᵀ * Bᵀ * J * B * D := by
+          rw [ht, hright]
+          simp
+    _ = Dᵀ * J * D := by
+          calc
+            Dᵀ * Bᵀ * J * B * D = Dᵀ * (Bᵀ * J * B) * D := by
+              noncomm_ring
+            _ = Dᵀ * J * D := by rw [hB]
+
 /-!
 ## True q-Deformation (Conjugated Flow)
 -/
@@ -78,11 +103,7 @@ theorem qDeformedBogoliubovTransform_zero (q : ℝ) (hq : q ≠ 0) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [qDeformedBogoliubovTransform, sectorScaling, bogoliubovTransform, fromBlocks, Matrix.mul_apply]
-  all_goals {
-    have hinv : q⁻¹ * q = 1 := inv_mul_cancel₀ hq
-    have hinv2 : q * q⁻¹ = 1 := mul_inv_cancel₀ hq
-    nlinarith
-  }
+  all_goals field_simp [hq] <;> ring
 
 theorem qDeformedBogoliubovTransform_add (q θ φ : ℝ) (hq : q ≠ 0) :
     qDeformedBogoliubovTransform q (θ + φ) = 
@@ -90,16 +111,12 @@ theorem qDeformedBogoliubovTransform_add (q θ φ : ℝ) (hq : q ≠ 0) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [qDeformedBogoliubovTransform, sectorScaling, bogoliubovTransform, fromBlocks, Matrix.mul_apply, Real.cosh_add, Real.sinh_add]
-  all_goals {
-    have hinv : q⁻¹ * q = 1 := inv_mul_cancel₀ hq
-    have hinv2 : q * q⁻¹ = 1 := mul_inv_cancel₀ hq
-    nlinarith
-  }
+  all_goals field_simp [hq] <;> ring
 
 theorem qDeformedBogoliubovTransform_neg_mul (q θ : ℝ) (hq : q ≠ 0) :
     qDeformedBogoliubovTransform q (-θ) * qDeformedBogoliubovTransform q θ = 1 := by
   rw [← qDeformedBogoliubovTransform_add q (-θ) θ hq]
-  have hz : -θ + θ = 0 := add_left_neg θ
+  have hz : -θ + θ = 0 := neg_add_cancel θ
   rw [hz, qDeformedBogoliubovTransform_zero q hq]
 
 theorem qDeformedBogoliubov_pullback_metric (q θ : ℝ) (hq : q ≠ 0) :
@@ -107,12 +124,36 @@ theorem qDeformedBogoliubov_pullback_metric (q θ : ℝ) (hq : q ≠ 0) :
       qWeightedKreinMetric q * 
       qDeformedBogoliubovTransform q θ = 
     qWeightedKreinMetric q := by
-  ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [qDeformedBogoliubovTransform, qWeightedKreinMetric, sectorScaling, bogoliubovTransform, fromBlocks, Matrix.mul_apply]
-  all_goals {
-    have h_cosh_sinh := Real.cosh_sq_sub_sinh_sq θ
-    have hinv : q⁻¹ * q = 1 := inv_mul_cancel₀ hq
-    have hinv2 : q * q⁻¹ = 1 := mul_inv_cancel₀ hq
-    nlinarith
-  }
+  have hDleft : sectorScaling q⁻¹ * sectorScaling q = (1 : Matrix4x4) := by
+    ext i j
+    rcases i with i | i <;> rcases j with j | j <;>
+      fin_cases i <;> fin_cases j <;>
+      simp [sectorScaling, fromBlocks, Matrix.mul_apply, Fin.sum_univ_two,
+        inv_mul_cancel₀ hq]
+  have hDright : sectorScaling q * sectorScaling q⁻¹ = (1 : Matrix4x4) := by
+    ext i j
+    rcases i with i | i <;> rcases j with j | j <;>
+      fin_cases i <;> fin_cases j <;>
+      simp [sectorScaling, fromBlocks, Matrix.mul_apply, Fin.sum_univ_two,
+        mul_inv_cancel₀ hq]
+  have hB : (bogoliubovTransform θ)ᵀ * kreinMetric * bogoliubovTransform θ =
+      kreinMetric := by
+    dsimp [bogoliubovTransform, kreinMetric]
+    ext i j
+    rcases i with i | i <;> rcases j with j | j <;>
+      fin_cases i <;> fin_cases j <;>
+      simp [fromBlocks, Matrix.mul_apply, Fin.sum_univ_two] <;>
+      nlinarith [Real.cosh_sq_sub_sinh_sq θ]
+  have hmetric : (sectorScaling q)ᵀ * kreinMetric * sectorScaling q =
+      qWeightedKreinMetric q := by
+    ext i j
+    rcases i with i | i <;> rcases j with j | j <;>
+      fin_cases i <;> fin_cases j <;>
+      simp [sectorScaling, qWeightedKreinMetric, kreinMetric, fromBlocks,
+        Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  rw [qDeformedBogoliubovTransform, ← hmetric]
+  exact conjugation_pullback_metric (D := sectorScaling q)
+    (Dinv := sectorScaling q⁻¹) (B := bogoliubovTransform θ)
+    (J := kreinMetric) hDleft hDright hB
+
+end

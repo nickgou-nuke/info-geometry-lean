@@ -29,10 +29,8 @@ separate amplituhedron owner.
   relation kernel-annihilation theorem.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-- `amplituhedron_boundary_readout_of_comparison`: an amplituhedron boundary
-  readout follows only from an explicit comparison map and equality.
-- `bcfw_readout_of_cooperad_comparison`: a BCFW-style readout follows only from
-  an explicit comparison premise.
+No conditional theorem is exported here until an explicit comparison carries
+mathematical content beyond returning its own equality hypothesis.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 - Formalize the Grassmannian/Klein-quadric line correspondence used by
@@ -113,36 +111,5 @@ theorem arnold_mixed_relation_kernel_readout
     φ (arnoldMixedRelation R M w12 w23 w31) = 0 :=
   arnold_mixed_relation_vanishes_under_kernel_membership
     R M w12 w23 w31 φ hKer
-
-/--
-The only theorem-safe amplituhedron boundary bridge in this module.
-
-If a separate owner identifies a local null-boundary event with an
-amplituhedron boundary datum, this theorem reads that datum back.  No such
-comparison is proved here.
--/
-theorem amplituhedron_boundary_readout_of_comparison
-    {Boundary : Type*}
-    (boundaryOfNullEvent : Prop → Boundary)
-    (targetBoundary : Boundary)
-    (nullEvent : Prop)
-    (hComparison : boundaryOfNullEvent nullEvent = targetBoundary) :
-    boundaryOfNullEvent nullEvent = targetBoundary :=
-  hComparison
-
-/--
-The only theorem-safe BCFW/cooperad bridge in this module.
-
-The premise `hComparison` is where a future amplituhedron owner must prove that
-the selected cooperad relation is represented by the selected BCFW readout.
--/
-theorem bcfw_readout_of_cooperad_comparison
-    {CooperadRelation BCFWReadout : Type*}
-    (toBCFW : CooperadRelation → BCFWReadout)
-    (relation : CooperadRelation)
-    (target : BCFWReadout)
-    (hComparison : toBCFW relation = target) :
-    toBCFW relation = target :=
-  hComparison
 
 end InfoGeometry.Projective.TwistorAmplituhedronBridge

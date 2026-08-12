@@ -21,34 +21,20 @@ namespace InfoGeometry.Canonical.CantorGoldenMeanBitwordBridge
 
 open InfoGeometry.Cantor.CantorRandomWalk
 
-abbrev L2BinarySector : Type :=
-  InfoGeometry.Analysis.L2CantorCommutation.BinarySector
-
-abbrev L2BaseIndex : Type :=
-  InfoGeometry.Analysis.L2CantorCommutation.BaseIndex
-
-/-- The full dyadic Cantor boundary used by the repo's bit models. -/
-abbrev CantorBoundary : Type :=
-  CantorWord
-
 /-- The Omega/golden-mean admissibility predicate: no adjacent occupied bits. -/
-def NoAdjacentOnes (x : CantorBoundary) : Prop :=
+def NoAdjacentOnes (x : ℕ → Bool) : Prop :=
   ∀ n : Nat, ¬ (x n = true ∧ x (n + 1) = true)
 
 /-- The golden-mean subshift as a subtype of the full Cantor boundary. -/
 abbrev GoldenMeanBoundary : Type :=
-  {x : CantorBoundary // NoAdjacentOnes x}
-
-/-- Fixed-length binary readout of an infinite Cantor boundary point. -/
-abbrev FiniteBitword (n : Nat) : Type :=
-  Fin n -> Bool
+  {x : ℕ → Bool // NoAdjacentOnes x}
 
 /-- The length-`n` prefix of an infinite Cantor boundary point. -/
-def prefixWord (x : CantorBoundary) (n : Nat) : FiniteBitword n :=
+def prefixWord (x : ℕ → Bool) (n : Nat) : Fin n → Bool :=
   fun i => x i.1
 
 /-- Finite no-adjacent-ones predicate on a fixed-length bitword. -/
-def NoAdjacentFinite {n : Nat} (w : FiniteBitword n) : Prop :=
+def NoAdjacentFinite {n : Nat} (w : Fin n → Bool) : Prop :=
   ∀ i : Fin n, ∀ hnext : i.1 + 1 < n,
     ¬ (w i = true ∧ w ⟨i.1 + 1, hnext⟩ = true)
 
@@ -65,13 +51,13 @@ This is the repo-native counterpart of Omega's inverse-limit determinacy
 statement for stable addresses.
 -/
 theorem eq_of_prefix_eq
-    (x y : CantorBoundary)
+    (x y : ℕ → Bool)
     (h : ∀ n : Nat, prefixWord x n = prefixWord y n) :
     x = y := by
   funext k
   have hk :=
     congrArg
-      (fun w : FiniteBitword (k + 1) => w ⟨k, Nat.lt_succ_self k⟩)
+      (fun w : Fin (k + 1) → Bool => w ⟨k, Nat.lt_succ_self k⟩)
       (h (k + 1))
   simpa [prefixWord] using hk
 
@@ -86,12 +72,12 @@ theorem goldenMean_ext
 /-! ## Boolean boundary versus plus/minus Cuntz boundary -/
 
 /-- Boolean `false/true` as the `plus/minus` branch alphabet of `L2CantorCommutation`. -/
-def sectorOfBool : Bool -> L2BinarySector
+def sectorOfBool : Bool -> InfoGeometry.Analysis.L2CantorCommutation.BinarySector
   | false => InfoGeometry.Analysis.L2CantorCommutation.BinarySector.plus
   | true => InfoGeometry.Analysis.L2CantorCommutation.BinarySector.minus
 
 /-- Inverse alphabet map from `plus/minus` sectors to Boolean bits. -/
-def boolOfSector : L2BinarySector -> Bool
+def boolOfSector : InfoGeometry.Analysis.L2CantorCommutation.BinarySector -> Bool
   | InfoGeometry.Analysis.L2CantorCommutation.BinarySector.plus => false
   | InfoGeometry.Analysis.L2CantorCommutation.BinarySector.minus => true
 
@@ -99,50 +85,50 @@ def boolOfSector : L2BinarySector -> Bool
     boolOfSector (sectorOfBool b) = b := by
   cases b <;> rfl
 
-@[simp] theorem sectorOfBool_boolOfSector (s : L2BinarySector) :
+@[simp] theorem sectorOfBool_boolOfSector (s : InfoGeometry.Analysis.L2CantorCommutation.BinarySector) :
     sectorOfBool (boolOfSector s) = s := by
   cases s <;> rfl
 
 /-- Convert a Boolean Cantor boundary point to the `plus/minus` Cuntz boundary. -/
-def toBaseIndex (x : CantorBoundary) : L2BaseIndex :=
+def toBaseIndex (x : ℕ → Bool) : InfoGeometry.Analysis.L2CantorCommutation.BaseIndex :=
   fun n => sectorOfBool (x n)
 
 /-- Convert the `plus/minus` Cuntz boundary back to Boolean bits. -/
-def ofBaseIndex (x : L2BaseIndex) : CantorBoundary :=
+def ofBaseIndex (x : InfoGeometry.Analysis.L2CantorCommutation.BaseIndex) : ℕ → Bool :=
   fun n => boolOfSector (x n)
 
-@[simp] theorem ofBaseIndex_toBaseIndex (x : CantorBoundary) :
+@[simp] theorem ofBaseIndex_toBaseIndex (x : ℕ → Bool) :
     ofBaseIndex (toBaseIndex x) = x := by
   funext n
   simp [ofBaseIndex, toBaseIndex]
 
-@[simp] theorem toBaseIndex_ofBaseIndex (x : L2BaseIndex) :
+@[simp] theorem toBaseIndex_ofBaseIndex (x : InfoGeometry.Analysis.L2CantorCommutation.BaseIndex) :
     toBaseIndex (ofBaseIndex x) = x := by
   funext n
   simp [ofBaseIndex, toBaseIndex]
 
 /-- The full Boolean Cantor boundary is equivalent to the repo's `plus/minus` Cuntz boundary. -/
-def cantorBoundaryEquivBaseIndex : CantorBoundary ≃ L2BaseIndex where
+def cantorBoundaryEquivBaseIndex : (ℕ → Bool) ≃ InfoGeometry.Analysis.L2CantorCommutation.BaseIndex where
   toFun := toBaseIndex
   invFun := ofBaseIndex
   left_inv := ofBaseIndex_toBaseIndex
   right_inv := toBaseIndex_ofBaseIndex
 
 /-- Prepend a Boolean bit to an infinite boundary point. -/
-def consBit (b : Bool) (x : CantorBoundary) : CantorBoundary
+def consBit (b : Bool) (x : ℕ → Bool) : ℕ → Bool
   | 0 => b
   | n + 1 => x n
 
-@[simp] theorem consBit_zero (b : Bool) (x : CantorBoundary) :
+@[simp] theorem consBit_zero (b : Bool) (x : ℕ → Bool) :
     consBit b x 0 = b := by
   rfl
 
-@[simp] theorem consBit_succ (b : Bool) (x : CantorBoundary) (n : Nat) :
+@[simp] theorem consBit_succ (b : Bool) (x : ℕ → Bool) (n : Nat) :
     consBit b x (n + 1) = x n := by
   rfl
 
 /-- Boolean prepend is transported to `L2.prepend` under the alphabet equivalence. -/
-theorem toBaseIndex_consBit (b : Bool) (x : CantorBoundary) :
+theorem toBaseIndex_consBit (b : Bool) (x : ℕ → Bool) :
     toBaseIndex (consBit b x) =
       InfoGeometry.Analysis.L2CantorCommutation.prepend (sectorOfBool b) (toBaseIndex x) := by
   funext n

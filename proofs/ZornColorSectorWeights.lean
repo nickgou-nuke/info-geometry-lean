@@ -1,4 +1,5 @@
 import proofs.ZornColorLieRepresentation
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-!
 # Color-center sector weights
@@ -12,10 +13,12 @@ noncomputable section
 
 namespace ZornColorSectorWeights
 
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 open CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation
 open ZornThreeChannelCAR ZornColorLieAction
+
+abbrev Zorn := _root_.InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn
 
 /-- Central matrix-unit sum in the proved color action. -/
 def colorCenter : Module.End ℂ DiracSpinor16 :=

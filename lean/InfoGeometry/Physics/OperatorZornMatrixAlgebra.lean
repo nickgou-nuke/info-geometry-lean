@@ -46,6 +46,72 @@ def equivMatrix : OperatorZornMatrix A ≃ Mat2 A where
 noncomputable instance : Ring (OperatorZornMatrix A) :=
   Equiv.ring (equivMatrix (A := A))
 
+/-! ### Entrywise Nambu--Gorkov/Zorn multiplication
+
+The product is the transported ordinary `2 × 2` matrix product.  These
+lemmas expose its four operator-coordinate formulas without introducing a
+second multiplication on the carrier.
+-/
+
+@[simp] theorem mul_n_plus_op (M N : OperatorZornMatrix A) :
+    (M * N).n_plus_op =
+      M.n_plus_op * N.n_plus_op + M.sigma_plus_op * N.sigma_minus_op := by
+  change (ofMatrix (toMatrix M * toMatrix N)).n_plus_op = _
+  simp [ofMatrix, toMatrix, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem mul_sigma_plus_op (M N : OperatorZornMatrix A) :
+    (M * N).sigma_plus_op =
+      M.n_plus_op * N.sigma_plus_op + M.sigma_plus_op * N.n_minus_op := by
+  change (ofMatrix (toMatrix M * toMatrix N)).sigma_plus_op = _
+  simp [ofMatrix, toMatrix, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem mul_sigma_minus_op (M N : OperatorZornMatrix A) :
+    (M * N).sigma_minus_op =
+      M.sigma_minus_op * N.n_plus_op + M.n_minus_op * N.sigma_minus_op := by
+  change (ofMatrix (toMatrix M * toMatrix N)).sigma_minus_op = _
+  simp [ofMatrix, toMatrix, Matrix.mul_apply, Fin.sum_univ_two]
+
+@[simp] theorem mul_n_minus_op (M N : OperatorZornMatrix A) :
+    (M * N).n_minus_op =
+      M.sigma_minus_op * N.sigma_plus_op + M.n_minus_op * N.n_minus_op := by
+  change (ofMatrix (toMatrix M * toMatrix N)).n_minus_op = _
+  simp [ofMatrix, toMatrix, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-! ### The concrete Nambu--Gorkov square
+
+The following is an identity in the transported matrix algebra.  It is kept
+here, rather than in the non-associative canonical Zorn owner, because the
+right-hand side uses the ordinary associative product on the four-entry
+carrier.
+-/
+
+@[simp] theorem dirac_mul_dirac (Delta : A) :
+    InfoGeometry.Physics.NCG.diracOperator Delta *
+        InfoGeometry.Physics.NCG.diracOperator Delta =
+      (⟨Delta * star Delta, star Delta * Delta, 0, 0⟩ :
+        OperatorZornMatrix A) := by
+  apply (equivMatrix (A := A)).injective
+  change toMatrix (_ * _) = toMatrix
+    (⟨Delta * star Delta, star Delta * Delta, 0, 0⟩ :
+      OperatorZornMatrix A)
+  rw [Equiv.mul_def]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [InfoGeometry.Physics.NCG.diracOperator, toMatrix,
+      Matrix.mul_apply, Fin.sum_univ_two, equivMatrix, ofMatrix]
+
+@[simp] theorem dirac_square_n_plus (Delta : A) :
+    (InfoGeometry.Physics.NCG.diracOperator Delta *
+      InfoGeometry.Physics.NCG.diracOperator Delta).n_plus_op =
+      Delta * star Delta := by
+  simp [dirac_mul_dirac]
+
+@[simp] theorem dirac_square_n_minus (Delta : A) :
+    (InfoGeometry.Physics.NCG.diracOperator Delta *
+      InfoGeometry.Physics.NCG.diracOperator Delta).n_minus_op =
+      star Delta * Delta := by
+  simp [dirac_mul_dirac]
+
 @[simp] theorem ofMatrix_toMatrix (M : OperatorZornMatrix A) :
     ofMatrix (toMatrix M) = M := (equivMatrix (A := A)).left_inv M
 

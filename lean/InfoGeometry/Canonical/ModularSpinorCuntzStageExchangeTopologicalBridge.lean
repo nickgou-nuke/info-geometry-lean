@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.ModularSpinorCuntzStageTopologicalRepresentationBridge
+import InfoGeometry.Canonical.ModularSpinorFilteredColimitBridge
 import InfoGeometry.Canonical.CuntzStageExchangeTopologicalColimit
 
 namespace InfoGeometry.Canonical
@@ -17,7 +17,7 @@ universe u
 # Modular-spinor / Cuntz-stage exchange topological colimit bridge
 
 This file adds the next honest node after
-`ModularSpinorCuntzStageTopologicalRepresentationBridge`. The current repository already owns:
+`ModularSpinorFilteredColimitBridge`. The current repository already owns:
 
 * a modular-spinor / Cuntz-stage topological representation bridge;
 * a genuine Cuntz-stage exchange topological colimit (`exchangeTopologicalColimitMap`,
@@ -36,19 +36,6 @@ variable [TopologicalSpace Gr] [Category Open]
 variable {J : Type u} [Category.{u, u} J]
 variable {F : J ⥤ TopCat.{u}}
 
-/-- A joint owner for the modular-spinor Cuntz-stage topological representation bridge and the
-Cuntz-stage exchange topological colimit. -/
-structure ModularSpinorCuntzStageExchangeTopologicalBridge
-  {E Sections BoundarySections Gr Open : Type*}
-  [AddCommGroup Sections] [Module ℝ Sections]
-  [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
-  {J : Type u} [Category.{u, u} J]
-  (F : J ⥤ TopCat.{u}) where
-  topologicalRepresentationBridge : ModularSpinorCuntzStageTopologicalRepresentationBridge
-    (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
-    (Gr := Gr) (Open := Open) F
-
 /-- The sheaf cover condition remains available inside the exchange topological bridge. -/
 theorem modularSpinor_CuntzStageExchangeTopological_monogenicSheaf_isSheafFor
   {E Sections BoundarySections Gr Open : Type*}
@@ -57,13 +44,13 @@ theorem modularSpinor_CuntzStageExchangeTopological_monogenicSheaf_isSheafFor
   [TopologicalSpace Gr] [Category Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCuntzStageExchangeTopologicalBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F) :
     Presieve.IsSheafFor
-      B.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.sheafData.sections
-      B.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.sheafData.cover :=
-  modularSpinor_CuntzStageTopologicalRepresentation_monogenicSheaf_isSheafFor F B.topologicalRepresentationBridge
+      B.spectrumBridge.sheafData.sections
+      B.spectrumBridge.sheafData.cover :=
+  modularSpinor_filteredColimit_monogenicSheaf_isSheafFor F B
 
 /-- The monogenic section membership theorem remains available inside the
 exchange topological bridge. -/
@@ -74,13 +61,13 @@ theorem modularSpinor_CuntzStageExchangeTopological_monogenicSection_mem
   [TopologicalSpace Gr] [Category Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCuntzStageExchangeTopologicalBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F)
-  (U : Open) (s : B.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.sheafData.monogenicSections U) :
-    (s : B.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.sheafData.sections.obj (Opposite.op U))
-      ∈ B.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.sheafData.monogenicSections U :=
-  modularSpinor_CuntzStageTopologicalRepresentation_monogenicSection_mem F B.topologicalRepresentationBridge U s
+  (U : Open) (s : B.spectrumBridge.sheafData.monogenicSections U) :
+  (s : B.spectrumBridge.sheafData.sections.obj (Opposite.op U))
+      ∈ B.spectrumBridge.sheafData.monogenicSections U :=
+  modularSpinor_filteredColimit_monogenicSection_mem F B U s
 
 /-- The boundary DN kernel theorem remains available inside the
 exchange topological bridge. -/
@@ -91,13 +78,13 @@ theorem modularSpinor_CuntzStageExchangeTopological_boundary_kernel_eq_traceMono
   [TopologicalSpace Gr] [Category Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCuntzStageExchangeTopologicalBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F) :
     LinearMap.ker
-      B.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.boundaryBridge.boundaryData.dirichletToNeumann =
-      traceMonogenic B.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.boundaryBridge.boundaryData :=
-  modularSpinor_CuntzStageTopologicalRepresentation_boundary_kernel_eq_traceMonogenic F B.topologicalRepresentationBridge
+      B.spectrumBridge.boundaryBridge.boundaryData.dirichletToNeumann =
+      traceMonogenic B.spectrumBridge.boundaryBridge.boundaryData :=
+  modularSpinor_filteredColimit_boundary_kernel_eq_traceMonogenic F B
 
 /-- The categorical spectrum descent map from the sheaf/spectrum bridge
 remains available inside the exchange topological bridge. -/
@@ -108,26 +95,11 @@ noncomputable def modularSpinor_CuntzStageExchangeTopological_gelfandSpectrumDes
   [TopologicalSpace Gr] [Category Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCuntzStageExchangeTopologicalBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F) :
     GelfandSpectrum F ⟶ GelfandSpectrum F :=
-  modularSpinor_CuntzStageTopologicalRepresentation_gelfandSpectrumDescend F B.topologicalRepresentationBridge
-
-/-- The categorical spectrum identification from the sheaf/spectrum bridge
-remains available inside the exchange topological bridge. -/
-noncomputable def modularSpinor_CuntzStageExchangeTopological_gelfandSpectrumIsoTarget
-  {E Sections BoundarySections Gr Open : Type*}
-  [AddCommGroup Sections] [Module ℝ Sections]
-  [AddCommGroup BoundarySections] [Module ℝ BoundarySections]
-  [TopologicalSpace Gr] [Category Open]
-  {J : Type u} [Category.{u, u} J]
-  (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCuntzStageExchangeTopologicalBridge
-    (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
-    (Gr := Gr) (Open := Open) F) :
-    GelfandSpectrum F ≅ GelfandSpectrum F :=
-  modularSpinor_CuntzStageTopologicalRepresentation_gelfandSpectrumIsoTarget F B.topologicalRepresentationBridge
+  modularSpinor_filteredColimit_gelfandSpectrumDescend F B
 
 @[reassoc (attr := simp)]
 theorem modularSpinor_CuntzStageExchangeTopological_gelfandSpectrum_stage
@@ -137,7 +109,7 @@ theorem modularSpinor_CuntzStageExchangeTopological_gelfandSpectrum_stage
   [TopologicalSpace Gr] [Category Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCuntzStageExchangeTopologicalBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F)
   (j : J) :
@@ -146,7 +118,7 @@ theorem modularSpinor_CuntzStageExchangeTopological_gelfandSpectrum_stage
       colimit.ι F j :=
   by
   dsimp only [modularSpinor_CuntzStageExchangeTopological_gelfandSpectrumDescend] at *
-  exact modularSpinor_CuntzStageTopologicalRepresentation_gelfandSpectrum_stage F B.topologicalRepresentationBridge j
+  exact modularSpinor_filteredColimit_gelfandSpectrum_stage F B j
 
 /-- The filtered topological direct colimit stage maps remain available
 inside the exchange topological bridge. -/
@@ -157,11 +129,11 @@ noncomputable def modularSpinor_CuntzStageExchangeTopological_stageInjection
   [TopologicalSpace Gr] [Category Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCuntzStageExchangeTopologicalBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F)
-  (j : J) : B.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.stageDiagram.obj j ⟶ colimit B.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.stageDiagram :=
-  modularSpinor_CuntzStageTopologicalRepresentation_stageInjection F B.topologicalRepresentationBridge j
+  (j : J) : B.stageDiagram.obj j ⟶ colimit B.stageDiagram :=
+  modularSpinor_filteredColimit_stageInjection F B j
 
 /-- Naturality of the filtered colimit stage maps remains available
 inside the exchange topological bridge. -/
@@ -172,16 +144,16 @@ theorem modularSpinor_CuntzStageExchangeTopological_stageInjection_naturality
   [TopologicalSpace Gr] [Category Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCuntzStageExchangeTopologicalBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F)
   {j j' : J} (f : j ⟶ j') :
-    B.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.stageDiagram.map f ≫
+    B.stageDiagram.map f ≫
       modularSpinor_CuntzStageExchangeTopological_stageInjection F B j' =
       modularSpinor_CuntzStageExchangeTopological_stageInjection F B j :=
   by
   dsimp only [modularSpinor_CuntzStageExchangeTopological_stageInjection] at *
-  exact modularSpinor_CuntzStageTopologicalRepresentation_stageInjection_naturality F B.topologicalRepresentationBridge f
+  exact modularSpinor_filteredColimit_stageInjection_naturality F B f
 
 /-- Modular-spinor transport still preserves the canonical three-form
 inside the full exchange topological bridge. -/
@@ -192,19 +164,19 @@ theorem modularSpinor_CuntzStageExchangeTopological_transport_preserves_threeFor
   [TopologicalSpace Gr] [Category Open]
   {J : Type u} [Category.{u, u} J]
   (F : J ⥤ TopCat.{u})
-  (B : ModularSpinorCuntzStageExchangeTopologicalBridge
+  (B : ModularSpinorFilteredColimitBridge
     (E := E) (Sections := Sections) (BoundarySections := BoundarySections)
     (Gr := Gr) (Open := Open) F)
   (path : List E) (x y z : ModularSpinorCarrier) :
     canonicalSplitG2ThreeFormValue
         ((modularSpinorTransport
-          B.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.boundaryBridge.connection path) x)
+          B.spectrumBridge.boundaryBridge.connection path) x)
         ((modularSpinorTransport
-          B.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.boundaryBridge.connection path) y)
+          B.spectrumBridge.boundaryBridge.connection path) y)
         ((modularSpinorTransport
-          B.topologicalRepresentationBridge.topologicalIsoBridge.cuntzStageColimitBridge.filteredColimitBridge.spectrumBridge.boundaryBridge.connection path) z) =
+          B.spectrumBridge.boundaryBridge.connection path) z) =
       canonicalSplitG2ThreeFormValue x y z := by
-  have h := modularSpinor_CuntzStageTopologicalRepresentation_transport_preserves_threeForm F B.topologicalRepresentationBridge path x y z
+  have h := modularSpinor_filteredColimit_transport_preserves_threeForm F B path x y z
   simp_all [modularSpinorTransport]
   <;>
   exact h

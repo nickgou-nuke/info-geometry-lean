@@ -33,16 +33,16 @@ class Pin55_5GradedClosure (A : Type*) [Ring A] where
   grade_plus2  : A → Prop
 
 /-- The Witten Index of the Dirac-Chirality system with a kernel projector `K`. -/
-def WittenIndex (Γ : CantorOp) (K : CantorOp) (trace : CantorOp →ₗ[ℂ] ℂ) : ℂ :=
+def WittenIndex (Γ : (Module.End ℂ ((ℕ → Bool) → ℂ))) (K : (Module.End ℂ ((ℕ → Bool) → ℂ))) (trace : (Module.End ℂ ((ℕ → Bool) → ℂ)) →ₗ[ℂ] ℂ) : ℂ :=
   trace (Γ * K)
 
 /-- **Witten Index Anomaly Cancellation**
     Because the boundary Dirac operator `D` squares to 1, any projector/operator `K` mapping into the
     kernel of `D` (i.e. `D * K = 0`) must vanish. Consequently, the Witten Index exactly cancels to 0. -/
 theorem witten_index_cancellation
-    (D : CantorOp) (hD_sq : D * D = 1)
-    (Γ : CantorOp) (K : CantorOp) (h_ker : D * K = 0)
-    (trace : CantorOp →ₗ[ℂ] ℂ) :
+    (D : (Module.End ℂ ((ℕ → Bool) → ℂ))) (hD_sq : D * D = 1)
+    (Γ : (Module.End ℂ ((ℕ → Bool) → ℂ))) (K : (Module.End ℂ ((ℕ → Bool) → ℂ))) (h_ker : D * K = 0)
+    (trace : (Module.End ℂ ((ℕ → Bool) → ℂ)) →ₗ[ℂ] ℂ) :
     WittenIndex Γ K trace = 0 := by
   have h_K_zero : K = 0 := by
     calc
@@ -55,7 +55,7 @@ theorem witten_index_cancellation
   rw [h_K_zero, mul_zero, LinearMap.map_zero]
 
 /-- The Majorana Bose-Einstein Condensate is the product of two nilpotent zero modes. -/
-def MajoranaCondensate (ψ_L ψ_R : CantorOp) : CantorOp :=
+def MajoranaCondensate (ψ_L ψ_R : (Module.End ℂ ((ℕ → Bool) → ℂ))) : (Module.End ℂ ((ℕ → Bool) → ℂ)) :=
   ψ_L * ψ_R
 
 /-- A coherent state minimum-uncertainty certification.

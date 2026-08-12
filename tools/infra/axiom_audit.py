@@ -14,12 +14,37 @@ import os
 import re
 import subprocess
 import sys
+import argparse
 from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 LEAN_DIR = REPO_ROOT / "lean"
 OUTPUT_REPORT = REPO_ROOT / "artifacts" / "axiom_audit_report.json"
+
+
+def lean_source_files(include_ignored: bool) -> list[Path]:
+    """Return repo source files, excluding ignored fixtures by default."""
+    if include_ignored:
+        return sorted(LEAN_DIR.glob("**/*.lean"))
+
+    try:
+        result = subprocess.run(
+            ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "*.lean"],
+            cwd=REPO_ROOT,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return sorted(LEAN_DIR.glob("**/*.lean"))
+
+    paths = []
+    for raw_path in result.stdout.splitlines():
+        path = REPO_ROOT / raw_path
+        if path.is_file() and path.is_relative_to(LEAN_DIR):
+            paths.append(path)
+    return sorted(paths)
 
 
 def scan_file(filepath: Path) -> dict[str, Any] | None:
@@ -45,11 +70,15 @@ def scan_file(filepath: Path) -> dict[str, Any] | None:
         stripped = line.strip()
         if not stripped:
             continue
-        if re.search(r"\bsorry\b", stripped):
+        # A qualified identifier such as `DAG.Morphism.admit` is metadata,
+        # not the Lean `admit` command.  Only standalone proof-debt tokens
+        # count; this keeps the repo-wide audit honest without rejecting
+        # legitimate trace-class names.
+        if re.search(r"(?<![A-Za-z0-9_.])sorry(?![A-Za-z0-9_.])", stripped):
             sorries.append(idx)
-        if re.search(r"\baxiom\b", stripped):
+        if re.search(r"(?<![A-Za-z0-9_.])axiom(?![A-Za-z0-9_.])", stripped):
             axioms.append(idx)
-        if re.search(r"\badmit\b", stripped):
+        if re.search(r"(?<![A-Za-z0-9_.])admit(?![A-Za-z0-9_.])", stripped):
             admits.append(idx)
 
     rel_path = str(filepath.relative_to(REPO_ROOT))
@@ -98,8 +127,28 @@ def run_lean_check(filepath: Path) -> dict[str, Any]:
 
 
 def main() -> int:
-    print("🔍 Running info-geometry-lean Axiom & Debt Audit...")
-    lean_files = sorted(LEAN_DIR.glob("**/*.lean"))
+    parser = argparse.ArgumentParser(
+        description="Scan Lean source for sorry/admit/axiom closure debt."
+    )
+    parser.add_argument(
+        "--fail-on-gaps",
+        action="store_true",
+        help="Return a nonzero status when any open gap is found.",
+    )
+    parser.add_argument(
+        "--format",
+        choices=("text", "json"),
+        default="text",
+        help="Choose human-readable text or machine-readable JSON stdout.",
+    )
+    parser.add_argument(
+        "--include-ignored",
+        action="store_true",
+        help="Scan ignored Lean fixtures too (forensic mode).",
+    )
+    args = parser.parse_args()
+
+    lean_files = lean_source_files(args.include_ignored)
 
     results = []
     clean_count = 0
@@ -120,6 +169,7 @@ def main() -> int:
     OUTPUT_REPORT.parent.mkdir(parents=True, exist_ok=True)
     report = {
         "timestamp": os.popen("date -u +'%Y-%m-%dT%H:%M:%SZ'").read().strip(),
+        "include_ignored": args.include_ignored,
         "total_files": len(lean_files),
         "clean_files": clean_count,
         "debt_files": debt_count,
@@ -128,12 +178,24 @@ def main() -> int:
     }
 
     OUTPUT_REPORT.write_text(json.dumps(report, indent=2), encoding="utf-8")
-    print(f"✅ Audit complete!")
-    print(f"   Total Lean Files: {len(lean_files)}")
-    print(f"   Clean Files (0 sorries): {clean_count}")
-    print(f"   Files with Debt: {debt_count}")
-    print(f"   Total Open Gaps (sorry/axiom/admit): {total_sorries}")
-    print(f"   Report saved to: {OUTPUT_REPORT}")
+    if args.format == "json":
+        print(json.dumps(report, indent=2))
+    else:
+        print("🔍 Running info-geometry-lean Axiom & Debt Audit...")
+        print("✅ Audit complete!")
+        print(f"   Total Lean Files: {len(lean_files)}")
+        print(f"   Clean Files (0 sorries): {clean_count}")
+        print(f"   Files with Debt: {debt_count}")
+        print(f"   Total Open Gaps (sorry/axiom/admit): {total_sorries}")
+        print(f"   Report saved to: {OUTPUT_REPORT}")
+
+    if args.fail_on_gaps and total_sorries:
+        print(
+            "❌ Axiom & Debt Audit failed: open closure debt is present "
+            "(--fail-on-gaps).",
+            file=sys.stderr,
+        )
+        return 1
 
     return 0
 

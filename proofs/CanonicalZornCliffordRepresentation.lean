@@ -1,6 +1,6 @@
 import Mathlib.LinearAlgebra.CliffordAlgebra.SpinGroup
-import proofs.CanonicalZornCompositionTriality
-import proofs.IntegralZornII44Bridge
+import InfoGeometry.Canonical.CanonicalZornCompositionFiveGradeBridge
+import InfoGeometry.Canonical.IntegralZornII44Bridge
 
 /-!
 # Canonical Clifford representation from Zorn composition triality
@@ -18,9 +18,10 @@ noncomputable section
 
 namespace CanonicalZornCliffordRepresentation
 
-open SplitOctonionBraidSU3
-open CanonicalZornFiveGradedClosure
+open InfoGeometry.Physics.SplitOctonionBraidSU3
+open CanonicalZornCompositionFiveGradeBridge
 open CanonicalZornCompositionTriality
+open CanonicalZornFiveGradedClosure
 
 /-! ## The quadratic form on the typed vector carrier -/
 
@@ -56,33 +57,35 @@ theorem coordinateQuadratic_apply (x : Fin 8 → ℂ) :
 
 theorem vectorQuadratic_apply (V : Vector8) :
     vectorQuadratic V = vectorNorm V := by
-  change coordinateQuadraticFun (zornCoordinates V.val) = zornNorm V.val
-  simp [coordinateQuadraticFun, zornCoordinates, zornNorm, dot3]
+  change coordinateQuadraticFun
+      (CanonicalZornCompositionTriality.zornCoordinates V.val) = zornNorm V.val
+  simp [coordinateQuadraticFun, CanonicalZornCompositionTriality.zornCoordinates,
+    zornNorm, dot3]
   ring
 
 /-! ## Linear structure of the two typed semispinor copies -/
 
 theorem copy_add_val {s : TrialitySector} (X Y : ZornCopy s) :
     (X + Y).val = zornAdd X.val Y.val := by
-  apply zornCoordinates_injective
+  apply CanonicalZornCompositionTriality.zornCoordinates_injective
   change (copyLinearEquivCoordinates s) (X + Y) =
-    zornCoordinates (zornAdd X.val Y.val)
+    CanonicalZornCompositionTriality.zornCoordinates (zornAdd X.val Y.val)
   rw [(copyLinearEquivCoordinates s).map_add]
   funext i
   fin_cases i <;>
     simp [copyLinearEquivCoordinates, copyEquivCoordinates,
-      zornCoordinates, zornAdd]
+      CanonicalZornCompositionTriality.zornCoordinates, zornAdd]
 
 theorem copy_smul_val {s : TrialitySector} (c : ℂ) (X : ZornCopy s) :
     (c • X).val = zornSmul c X.val := by
-  apply zornCoordinates_injective
+  apply CanonicalZornCompositionTriality.zornCoordinates_injective
   change (copyLinearEquivCoordinates s) (c • X) =
-    zornCoordinates (zornSmul c X.val)
+    CanonicalZornCompositionTriality.zornCoordinates (zornSmul c X.val)
   rw [(copyLinearEquivCoordinates s).map_smul]
   funext i
   fin_cases i <;>
     simp [copyLinearEquivCoordinates, copyEquivCoordinates,
-      zornCoordinates, zornSmul]
+      CanonicalZornCompositionTriality.zornCoordinates, zornSmul]
 
 /-- Direct sum of the two chiral eight-dimensional carriers. -/
 abbrev DiracSpinor16 := SpinorPlus8 × SpinorMinus8

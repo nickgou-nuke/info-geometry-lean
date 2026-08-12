@@ -16,16 +16,18 @@ def triality : Mat23C := Matrix.kronecker sheetParity colorShift
 theorem sheetParity_cube : sheetParity ^ 3 = sheetParity := by
   calc
     sheetParity ^ 3 = (sheetParity * sheetParity) * sheetParity := by
-      simp [pow_two, pow_succ, Matrix.mul_assoc]
+      simp [pow_succ]
     _ = sheetParity := by rw [sheetParity_sq]; simp
 
 @[simp] theorem colorReflection_sq : colorReflection ^ 2 = 1 := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [pow_two, colorReflection, Matrix.mul_apply, Fin.sum_univ_three]
 
 theorem colorReflection_shift_colorReflection :
     colorReflection * colorShift * colorReflection = colorShift ^ 2 := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
+  ext i j
+  fin_cases i <;> fin_cases j <;>
     simp [colorReflection, colorShift, Matrix.mul_apply, Fin.sum_univ_three,
       pow_two]
 
@@ -54,7 +56,7 @@ theorem triality_fifth_formula :
       rw [show sheetParity ^ 3 = sheetParity by
         exact sheetParity_cube,
         colorShift_cubed,
-        show sheetParity ^ 2 = 1 by simpa [pow_two] using sheetParity_sq]
+        show sheetParity ^ 2 = 1 by rw [pow_two, sheetParity_sq]]
       simpa using kronecker_mul sheetParity 1 (1 : Mat3C) (colorShift ^ 2)
 
 theorem theta_triality_theta :

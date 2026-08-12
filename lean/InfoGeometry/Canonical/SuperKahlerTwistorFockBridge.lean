@@ -25,15 +25,16 @@ open InfoGeometry.Canonical.SpinorMixedCARBridge
 variable {R : Type*} [Ring R] [StarRing R]
 
 /-- The finite Cuntz chiral number expression `Q₊ Q₋`. -/
-def particleNumberOp (sys : Cuntz2System R) : R :=
+def particleNumberOp
+    (sys : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) R) : R :=
   Q_plus sys * Q_minus sys
 
 @[simp] theorem particleNumberOp_eq_chiralProjection
-    (sys : Cuntz2System R) :
+    (sys : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) R) :
     particleNumberOp sys = P_plus sys := rfl
 
 theorem particleNumberOp_isProjection
-    (sys : Cuntz2System R) :
+    (sys : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) R) :
     IsSelfAdjoint (particleNumberOp sys) ∧
       particleNumberOp sys * particleNumberOp sys = particleNumberOp sys := by
   simpa [particleNumberOp] using P_plus_isProjection sys

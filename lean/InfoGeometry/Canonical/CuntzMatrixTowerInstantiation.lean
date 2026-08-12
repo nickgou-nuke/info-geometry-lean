@@ -15,13 +15,13 @@ noncomputable section
 namespace InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
 
 /-!
-# Concrete Matrix-Tower Instantiation of the Cuntz GNS Colimit
+# Concrete Matrix-Tower Normalized Trace Functionals
 
-This module provides the concrete instantiation of the finite $C^*$-matrix algebra stage tower
-`MatrixStage n := Matrix (Fin (2^n)) (Fin (2^n)) ℂ` together with the normalized matrix trace
-KMS state family `ω_n(A) = 2⁻ⁿ · Tr(A)`.
-
-This replaces abstract parameters with concrete data for the non-commutative C* GNS Hilbert space.
+This module provides the finite complex matrix stages
+`MatrixStage n := Matrix (Fin (2^n)) (Fin (2^n)) ℂ` and their normalized
+linear trace functionals `A ↦ 2⁻ⁿ · Tr(A)`. It proves their finite algebraic
+normalization, trace symmetry, star compatibility, and real-part positivity.
+It does not construct a C*-completion, KMS state, or GNS Hilbert space.
 -/
 
 /-- Stage n of the matrix UHF tower is the 2ⁿ × 2ⁿ complex matrix algebra. -/
@@ -34,7 +34,7 @@ not a new evidence structure. -/
 def matrixTraceFunctional (n : ℕ) : MatrixStage n →ₗ[ℂ] ℂ :=
   (1 / (2 ^ n : ℂ)) • Matrix.traceLinearMap (Fin (2 ^ n)) ℂ ℂ
 
-/-- Normalized matrix trace state at stage n: ωₙ(A) = 2⁻ⁿ · Tr(A). -/
+/-- Normalized matrix trace functional at stage n: `2⁻ⁿ · Tr(A)`. -/
 def matrixTraceState (n : ℕ) (A : MatrixStage n) : ℂ :=
   matrixTraceFunctional n A
 
@@ -59,6 +59,24 @@ theorem matrixTraceState_one (n : ℕ) : matrixTraceState n 1 = 1 := by
     simp only [Fintype.card_fin, Nat.cast_pow, Nat.cast_ofNat]
   rw [h_tr]
   exact one_div_mul_cancel h_pos
+
+theorem matrixTraceState_mul_comm (n : ℕ)
+    (A B : MatrixStage n) :
+    matrixTraceState n (A * B) = matrixTraceState n (B * A) := by
+  rw [matrixTraceState_apply, matrixTraceState_apply, Matrix.trace_mul_comm]
+
+theorem matrixTraceState_star (n : ℕ) (A : MatrixStage n) :
+    star (matrixTraceState n A) = matrixTraceState n (star A) := by
+  rw [matrixTraceState_apply, matrixTraceState_apply]
+  calc
+    star ((1 / (2 ^ n : ℂ)) * Matrix.trace A) =
+        star (Matrix.trace A) * star (1 / (2 ^ n : ℂ)) := by
+          rw [StarMul.star_mul]
+    _ = Matrix.trace (star A) * (1 / (2 ^ n : ℂ)) := by
+          rw [← Matrix.trace_conjTranspose A]
+          congr 1
+          simp only [star_div₀, star_one, star_pow, star_ofNat]
+    _ = (1 / (2 ^ n : ℂ)) * Matrix.trace (star A) := by ring
 
 /-- **Theorem**: Trace of star A * A is a non-negative real scalar. -/
 theorem matrixTrace_star_mul_self_nonneg (n : ℕ) (A : MatrixStage n) :
@@ -91,8 +109,9 @@ theorem matrixTrace_star_mul_self_im_zero (n : ℕ) (A : MatrixStage n) :
     exact congrArg Matrix.trace hself
   exact Complex.conj_eq_iff_im.mp (by simpa [Complex.star_def] using hconj)
 
-/-- **Theorem**: Positivity of normalized matrix trace state: 0 ≤ (ωₙ(A* A)).re -/
-theorem matrixTraceState_nonneg (n : ℕ) (A : MatrixStage n) :
+/-- The real part of the normalized trace on `A* A` is nonnegative. -/
+theorem matrixTraceState_realPart_star_mul_self_nonneg
+    (n : ℕ) (A : MatrixStage n) :
     0 ≤ (matrixTraceState n (star A * A)).re := by
   rw [matrixTraceState_apply]
   have h_cast : (1 / (2 ^ n : ℂ)) = ↑(1 / (2 ^ n : ℝ)) := by push_cast; rfl

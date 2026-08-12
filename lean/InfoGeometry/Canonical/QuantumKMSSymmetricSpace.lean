@@ -48,22 +48,17 @@ theorem finiteKMSState_kms {n : Type*} [Fintype n] [DecidableEq n]
       finiteKMSState ρ (B * A) := by
   exact kms_condition_beta_one ρ ρ_inv A B h_inv_left h_inv_right
 
-/-- Native Cuntz carrier for the three-colour gauge/KMS branch. -/
-abbrev CuntzThreeKMSAlgebra := CuntzThree
-
 /-- The already-defined native generator-level KMS condition at `log 3`. -/
-abbrev CuntzThreeGeneratorKMS := GeneratorKMSAt
-
 theorem cuntz_three_generator_temperature
-    (φ : CuntzThreeKMSAlgebra →ₗ[ℂ] ℂ)
+    (φ : InfoGeometry.Algebra.CuntzTensorQuotient.CuntzAlg 3 →ₗ[ℂ] ℂ)
     (β : ℝ)
-    (hKMS : CuntzThreeGeneratorKMS φ β) :
+    (hKMS : GeneratorKMSAt φ β) :
     β = Real.log 3 := by
   exact generatorKMS_beta_eq_log_three hKMS
 
 theorem cuntz_three_generator_two_point
-    (φ : CuntzThreeKMSAlgebra →ₗ[ℂ] ℂ)
-    (hKMS : CuntzThreeGeneratorKMS φ (Real.log 3))
+    (φ : InfoGeometry.Algebra.CuntzTensorQuotient.CuntzAlg 3 →ₗ[ℂ] ℂ)
+    (hKMS : GeneratorKMSAt φ (Real.log 3))
     (i j : Fin 3) :
     φ (cuntzS 3 i * cuntzSdag 3 j) =
       if i = j then (1 / 3 : ℂ) else 0 := by

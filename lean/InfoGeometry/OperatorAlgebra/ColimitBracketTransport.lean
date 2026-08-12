@@ -5,6 +5,8 @@ import InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR
 import InfoGeometry.OperatorAlgebra.InnerConjugation
 import InfoGeometry.OperatorAlgebra.OperatorProjectiveRatio
 import InfoGeometry.OperatorAlgebra.OperatorMobiusAction
+import InfoGeometry.Canonical.ModularZ2CubeGrading
+import InfoGeometry.Optics.OperatorValuedConnection
 
 /-!
 # Commutator transport to algebraic colimits
@@ -82,6 +84,19 @@ theorem colimit_ι_map_operatorMobiusAction
         (fun i => (colimit.ι F j).hom (v i)) := by
   exact operatorMobiusAction_map (colimit.ι F j).hom g v
 
+theorem colimit_ι_map_operatorConnection_curvature
+    {Point Tangent : Type*} (j : J)
+    (C : InfoGeometry.Optics.OperatorValuedConnection.Connection
+      (Point := Point) (Tangent := Tangent) (Value := F.obj j))
+    (p : Point) (X Y : Tangent) :
+    (colimit.ι F j).hom
+        (InfoGeometry.Optics.OperatorValuedConnection.curvature C p X Y) =
+      InfoGeometry.Optics.OperatorValuedConnection.curvature
+        (InfoGeometry.Optics.OperatorValuedConnection.mapConnection
+          (colimit.ι F j).hom C) p X Y := by
+  exact InfoGeometry.Optics.OperatorValuedConnection.mapConnection_curvature
+    (colimit.ι F j).hom C p X Y
+
 theorem colimit_ι_map_triZ2Parity
     (j : J) (gW gχ gN x : F.obj j)
     (εW εχ εN : Fin 2)
@@ -93,6 +108,75 @@ theorem colimit_ι_map_triZ2Parity
       ((colimit.ι F j).hom x) εW εχ εN := by
   exact RingHom.map_triZ2Parity (colimit.ι F j).hom
     gW gχ gN x εW εχ εN hx
+
+theorem colimit_ι_map_fully_even
+    (j : J)
+    (Γ_R Γ_χ Γ_N X : F.obj j)
+    (hX : ModularZ2CubeGrading.isFullyEven Γ_R Γ_χ Γ_N X) :
+    ModularZ2CubeGrading.isFullyEven
+      ((colimit.ι F j).hom Γ_R)
+      ((colimit.ι F j).hom Γ_χ)
+      ((colimit.ι F j).hom Γ_N)
+      ((colimit.ι F j).hom X) := by
+  have map_even {Γ X : F.obj j}
+      (h : ModularZ2CubeGrading.hasGrading Γ X false) :
+      ModularZ2CubeGrading.hasGrading
+        ((colimit.ι F j).hom Γ) ((colimit.ι F j).hom X) false := by
+    change (colimit.ι F j).hom Γ * (colimit.ι F j).hom X =
+      (colimit.ι F j).hom X * (colimit.ι F j).hom Γ
+    rw [← map_mul, ← map_mul, h]
+  unfold ModularZ2CubeGrading.isFullyEven at hX ⊢
+  rcases hX with ⟨hXR, hXχ, hXN⟩
+  exact ⟨map_even hXR, map_even hXχ, map_even hXN⟩
+
+theorem colimit_ι_map_fully_odd
+    (j : J)
+    (Γ_R Γ_χ Γ_N X : F.obj j)
+    (hX : ModularZ2CubeGrading.isFullyOdd Γ_R Γ_χ Γ_N X) :
+    ModularZ2CubeGrading.isFullyOdd
+      ((colimit.ι F j).hom Γ_R)
+      ((colimit.ι F j).hom Γ_χ)
+      ((colimit.ι F j).hom Γ_N)
+      ((colimit.ι F j).hom X) := by
+  have map_odd {Γ X : F.obj j}
+      (h : ModularZ2CubeGrading.hasGrading Γ X true) :
+      ModularZ2CubeGrading.hasGrading
+        ((colimit.ι F j).hom Γ) ((colimit.ι F j).hom X) true := by
+    change (colimit.ι F j).hom Γ * (colimit.ι F j).hom X +
+        (colimit.ι F j).hom X * (colimit.ι F j).hom Γ = 0
+    rw [← map_mul, ← map_mul, ← map_add, h]
+    exact map_zero (colimit.ι F j).hom
+  unfold ModularZ2CubeGrading.isFullyOdd at hX ⊢
+  rcases hX with ⟨hXR, hXχ, hXN⟩
+  exact ⟨map_odd hXR, map_odd hXχ, map_odd hXN⟩
+
+/-! The three independent parity sectors survive the colimit together with
+    the odd--odd anticommutator closure. -/
+theorem colimit_ι_map_fully_odd_anticommutator_even
+    (j : J)
+    (Γ_R Γ_χ Γ_N X Y : F.obj j)
+    (hX : ModularZ2CubeGrading.isFullyOdd Γ_R Γ_χ Γ_N X)
+    (hY : ModularZ2CubeGrading.isFullyOdd Γ_R Γ_χ Γ_N Y) :
+    ModularZ2CubeGrading.isFullyEven
+      ((colimit.ι F j).hom Γ_R)
+      ((colimit.ι F j).hom Γ_χ)
+      ((colimit.ι F j).hom Γ_N)
+      ((colimit.ι F j).hom X * (colimit.ι F j).hom Y +
+        (colimit.ι F j).hom Y * (colimit.ι F j).hom X) := by
+  have map_odd {Γ X : F.obj j}
+      (h : ModularZ2CubeGrading.hasGrading Γ X true) :
+      ModularZ2CubeGrading.hasGrading
+        ((colimit.ι F j).hom Γ) ((colimit.ι F j).hom X) true := by
+    change (colimit.ι F j).hom Γ * (colimit.ι F j).hom X +
+        (colimit.ι F j).hom X * (colimit.ι F j).hom Γ = 0
+    rw [← map_mul, ← map_mul, ← map_add, h]
+    exact map_zero (colimit.ι F j).hom
+  unfold ModularZ2CubeGrading.isFullyOdd at hX hY
+  rcases hX with ⟨hXR, hXχ, hXN⟩
+  rcases hY with ⟨hYR, hYχ, hYN⟩
+  apply ModularZ2CubeGrading.anticommutator_of_fully_odd_is_fully_even
+  · exact ⟨map_odd hXR, map_odd hXχ, map_odd hXN⟩
+  · exact ⟨map_odd hYR, map_odd hYχ, map_odd hYN⟩
 
 omit [HasColimit F] in
 theorem limit_π_map_quadraticCommutator
@@ -168,6 +252,21 @@ theorem limit_π_map_operatorMobiusAction
         (fun i k => (limit.π F j).hom (g i k))
         (fun i => (limit.π F j).hom (v i)) := by
   exact operatorMobiusAction_map (limit.π F j).hom g v
+
+omit [HasColimit F] in
+theorem limit_π_map_operatorConnection_curvature
+    [HasLimit F] {Point Tangent : Type*} (j : J)
+    (C : InfoGeometry.Optics.OperatorValuedConnection.Connection
+      (Point := Point) (Tangent := Tangent)
+      (Value := ((limit F : RingCat.{u}) : Type u)))
+    (p : Point) (X Y : Tangent) :
+    (limit.π F j).hom
+        (InfoGeometry.Optics.OperatorValuedConnection.curvature C p X Y) =
+      InfoGeometry.Optics.OperatorValuedConnection.curvature
+        (InfoGeometry.Optics.OperatorValuedConnection.mapConnection
+          (limit.π F j).hom C) p X Y := by
+  exact InfoGeometry.Optics.OperatorValuedConnection.mapConnection_curvature
+    (limit.π F j).hom C p X Y
 
 omit [HasColimit F] in
 theorem limit_π_map_triZ2Parity

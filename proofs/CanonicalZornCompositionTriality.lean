@@ -1,4 +1,4 @@
-import proofs.CanonicalZornFiveGradedClosure
+import InfoGeometry.Canonical.CanonicalZornFiveGradedClosure
 
 /-!
 # Composition-algebra triality on the canonical Zorn carrier
@@ -24,7 +24,7 @@ noncomputable section
 
 namespace CanonicalZornCompositionTriality
 
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 open CanonicalZornFiveGradedClosure
 
 /-! ## Canonical conjugation and quadratic action identities -/

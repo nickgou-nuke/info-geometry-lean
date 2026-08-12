@@ -8,9 +8,6 @@ noncomputable section
 open scoped ENNReal
 open MeasureTheory ProbabilityTheory
 
-/-- Cantor space as the countable product of two-point discrete spaces. -/
-abbrev CantorSpace : Type :=
-  ℕ → Bool
 
 /-- The fair one-bit probability measure, implemented by mathlib's finite uniform measure. -/
 def bernoulliHalf : Measure Bool :=
@@ -29,7 +26,7 @@ theorem bernoulliHalf_singleton (b : Bool) :
   norm_num [Fintype.card_bool]
 
 /-- The canonical Bernoulli product measure on Cantor space. -/
-def fractalMeasure : Measure CantorSpace :=
+def fractalMeasure : Measure (ℕ → Bool) :=
   Measure.infinitePi (fun _ : ℕ => bernoulliHalf)
 
 instance fractalMeasure_isProbabilityMeasure :
@@ -38,7 +35,7 @@ instance fractalMeasure_isProbabilityMeasure :
   infer_instance
 
 /-- A finite-coordinate cylinder in Cantor space. -/
-def cylinderSet (s : Finset ℕ) (f : ℕ → Bool) : Set CantorSpace :=
+def cylinderSet (s : Finset ℕ) (f : ℕ → Bool) : Set (ℕ → Bool) :=
   {x | ∀ i ∈ s, x i = f i}
 
 /--

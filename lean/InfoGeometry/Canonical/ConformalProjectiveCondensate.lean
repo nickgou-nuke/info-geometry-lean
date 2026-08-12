@@ -51,7 +51,7 @@ structure ProjectiveCondensate (E : Type*)
   heisenberg_saturation : VarX * VarP = 1 / 4
 
 /-- The nilpotent boundary differential represents the parabolic nilpotent radical generator. -/
-theorem nilpotent_radical_generator (f : CantorBoundary → ℂ) :
+theorem nilpotent_radical_generator (f : (ℕ → Bool) → ℂ) :
     UHF_boundary_op (UHF_boundary_op f) = 0 :=
   UHF_boundary_op_sq_zero f
 

@@ -158,13 +158,13 @@ structure RealDoubledKreinCuntzTransferPacket
     (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (α) [BEq α] [Hashable α] where
   graph : RealDoubledKreinGraphHodgePacket E α
-  cuntz : CuntzO2Carrier (RealDoubledKreinDAGEnd E)
+  cuntz : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) (RealDoubledKreinDAGEnd E)
   state : RealDoubledKreinDAGEnd E → ℝ
   state_add : ∀ A B, state (A + B) = state A + state B
   state_left_half :
-    ∀ A, state (cuntz.S_left * A * star cuntz.S_left) = (1 / 2 : ℝ) * state A
+    ∀ A, state (InfoGeometry.Topology.CuntzO2Carrier.S_left cuntz * A * star InfoGeometry.Topology.CuntzO2Carrier.S_left cuntz) = (1 / 2 : ℝ) * state A
   state_right_half :
-    ∀ A, state (cuntz.S_right * A * star cuntz.S_right) = (1 / 2 : ℝ) * state A
+    ∀ A, state (InfoGeometry.Topology.CuntzO2Carrier.S_right cuntz * A * star InfoGeometry.Topology.CuntzO2Carrier.S_right cuntz) = (1 / 2 : ℝ) * state A
 
 namespace RealDoubledKreinCuntzTransferPacket
 
@@ -176,8 +176,10 @@ variable
 noncomputable def canonicalEndomorphism
     (P : RealDoubledKreinCuntzTransferPacket E α)
     (A : RealDoubledKreinDAGEnd E) : RealDoubledKreinDAGEnd E :=
-  P.cuntz.S_left * A * star P.cuntz.S_left +
-    P.cuntz.S_right * A * star P.cuntz.S_right
+  InfoGeometry.Topology.CuntzO2Carrier.S_left P.cuntz * A *
+      star (InfoGeometry.Topology.CuntzO2Carrier.S_left P.cuntz) +
+    InfoGeometry.Topology.CuntzO2Carrier.S_right P.cuntz * A *
+      star (InfoGeometry.Topology.CuntzO2Carrier.S_right P.cuntz)
 
 /--
 The discrete modular step used by this packet.
@@ -201,7 +203,8 @@ theorem discreteModularStep_eq_canonicalEndomorphism
 theorem canonicalEndomorphism_one
     (P : RealDoubledKreinCuntzTransferPacket E α) :
     canonicalEndomorphism P 1 = 1 := by
-  simpa [canonicalEndomorphism] using P.cuntz.range_sum
+  simpa [canonicalEndomorphism] using
+    InfoGeometry.Topology.CuntzO2Carrier.range_sum P.cuntz
 
 /-- The packet's discrete modular step is unital. -/
 theorem discreteModularStep_one
@@ -219,8 +222,16 @@ theorem state_fixed_by_canonicalEndomorphism
     (P : RealDoubledKreinCuntzTransferPacket E α)
     (A : RealDoubledKreinDAGEnd E) :
     P.state (canonicalEndomorphism P A) = P.state A := by
-  rw [canonicalEndomorphism, P.state_add, P.state_left_half, P.state_right_half]
-  ring
+  rw [canonicalEndomorphism, P.state_add]
+  calc
+    P.state (InfoGeometry.Topology.CuntzO2Carrier.S_left P.cuntz * A *
+        star (InfoGeometry.Topology.CuntzO2Carrier.S_left P.cuntz)) +
+        P.state (InfoGeometry.Topology.CuntzO2Carrier.S_right P.cuntz * A *
+          star (InfoGeometry.Topology.CuntzO2Carrier.S_right P.cuntz)) =
+        (1 / 2 : ℝ) * P.state A + (1 / 2 : ℝ) * P.state A := by
+          exact congrArg₂ (fun x y : ℝ => x + y)
+            (P.state_left_half A) (P.state_right_half A)
+    _ = P.state A := by ring
 
 /-- Fixed-point law for the packet's discrete modular step. -/
 theorem state_fixed_by_discreteModularStep

@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -203,6 +204,81 @@ def resolve_authoritative_decls(
         """,
         {"@decls": decls, "names": names},
     )
+
+
+def resolve_syntax_decls(
+    target: ArangoTarget, *, syntax_decls: str, names: list[str]
+) -> list[dict[str, Any]]:
+    """Resolve exact names in the syntax index for stale-index diagnostics.
+
+    Syntax declarations are not causal vertices.  They are deliberately never
+    used as seeds for `edges`; they only prove that a requested name is known
+    to the syntax index while the compiler-backed declaration index is stale.
+    """
+    return run_aql(
+        target,
+        """
+        FOR name IN @names
+          LET row = FIRST(
+            FOR n IN @@syntax_decls
+              FILTER n.name == name
+              LIMIT 1
+              RETURN n
+          )
+          FILTER row != null
+          RETURN row
+        """,
+        {"@syntax_decls": syntax_decls, "names": names},
+    )
+
+
+_NAMESPACE_RE = re.compile(r"^\s*namespace\s+([A-Za-z_][A-Za-z0-9_'.]*)")
+_END_RE = re.compile(r"^\s*end(?:\s+[A-Za-z_][A-Za-z0-9_'.]*)?\s*$")
+_DECL_RE = re.compile(
+    r"^\s*(?:(?:private|protected)\s+)?"
+    r"(?:theorem|lemma|def|abbrev|structure|class|inductive)\s+"
+    r"([A-Za-z_][A-Za-z0-9_'.]*)"
+)
+
+
+def resolve_source_decls(repo_root: Path, names: list[str]) -> list[dict[str, Any]]:
+    """Find exact declaration names in current Lean source.
+
+    This is a stale-index diagnostic only.  Source rows intentionally do not
+    receive graph IDs and are never used as causal traversal seeds.
+    """
+    wanted = set(names)
+    found: dict[str, dict[str, Any]] = {}
+    for path in sorted((repo_root / "lean").rglob("*.lean")):
+        namespace_stack: list[str] = []
+        try:
+            lines = path.read_text(encoding="utf-8", errors="ignore").splitlines()
+        except OSError:
+            continue
+        for line_no, line in enumerate(lines, start=1):
+            namespace_match = _NAMESPACE_RE.match(line)
+            if namespace_match:
+                namespace_stack.append(namespace_match.group(1))
+                continue
+            if _END_RE.match(line):
+                if namespace_stack:
+                    namespace_stack.pop()
+                continue
+            declaration_match = _DECL_RE.match(line)
+            if not declaration_match:
+                continue
+            local_name = declaration_match.group(1)
+            full_name = local_name if "." in local_name else ".".join(
+                [*namespace_stack, local_name]
+            )
+            if full_name in wanted and full_name not in found:
+                found[full_name] = {
+                    "name": full_name,
+                    "file": str(path),
+                    "line": line_no,
+                    "authority": "source_only",
+                }
+    return [found[name] for name in names if name in found]
 
 
 def traverse_cone(
@@ -392,36 +468,76 @@ def add_source_excerpts(
 
 def render_markdown(packet: dict[str, Any]) -> str:
     lines: list[str] = []
-    apex = packet["apex"]
     lines.append("# Causal Chiral Cone Prompt Packet")
     lines.append("")
-    lines.append("## Apex")
-    lines.append("")
-    lines.append(f"- Declaration: `{apex['name']}`")
-    lines.append(f"- Raw node: `{apex['raw_node_id']}`")
-    lines.append(f"- SCC component: `{apex['component_key']}`")
+    if packet.get("mode") == "multi-apex-multi-cone":
+        lines.append("## Apices")
+        lines.append("")
+        for apex in packet.get("apices", []):
+            node = apex.get("node") or {}
+            lines.append(f"- Declaration: `{apex.get('name')}`")
+            lines.append(f"  - Authority: `{apex.get('authority', 'decls')}`")
+            lines.append(f"  - Raw node: `{node.get('_id')}`")
+        lines.append("")
+        lines.append("## Multi-apex incidence")
+        lines.append("")
+        lines.append(
+            f"- Shared nodes: `{packet.get('shared_node_count', 0)}`"
+        )
+        for row in packet.get("shared_nodes", [])[:100]:
+            node = row.get("node") or {}
+            seeds = ", ".join(f"`{seed}`" for seed in row.get("seeds", []))
+            lines.append(
+                f"- `{node.get('name') or node.get('_id')}` "
+                f"(shared by {row.get('seed_count', 0)} apices: {seeds})"
+            )
+        if not packet.get("shared_nodes"):
+            lines.append("- none")
+    else:
+        apex = packet["apex"]
+        lines.append("## Apex")
+        lines.append("")
+        lines.append(f"- Declaration: `{apex['name']}`")
+        lines.append(f"- Raw node: `{apex['raw_node_id']}`")
+        lines.append(f"- SCC component: `{apex['component_key']}`")
     lines.append("")
     lines.append("## Graph semantics")
     lines.append("")
     lines.append("- DAG orientation: `declaration -> dependency`.")
-    lines.append("- Backward cone: `OUTBOUND` from apex SCC, i.e. prerequisites.")
-    lines.append("- Forward cone: `INBOUND` to apex SCC, i.e. users/consequences.")
+    if packet.get("mode") == "multi-apex-multi-cone":
+        lines.append("- Multi-apex cone: `ANY` over authoritative declaration edges.")
+    else:
+        lines.append("- Backward cone: `OUTBOUND` from apex SCC, i.e. prerequisites.")
+        lines.append("- Forward cone: `INBOUND` to apex SCC, i.e. users/consequences.")
     lines.append("- Hodge/chiral/Dirac rows are navigation priors, not proof.")
     lines.append("- Every mathematical claim must descend back to Lean source.")
     lines.append("")
-    for label in ["backward_cone", "forward_cone"]:
-        rows = packet[label]
-        lines.append(f"## {label.replace('_', ' ').title()}")
+    if packet.get("mode") == "multi-apex-multi-cone":
+        lines.append("## Combined Cone")
         lines.append("")
-        for row in rows[:50]:
+        for row in packet.get("cone", [])[:100]:
             component = row.get("component") or {}
             lines.append(
-                f"- depth `{row.get('depth')}` component `{component.get('_key')}` "
-                f"rep `{component.get('representative')}`"
+                f"- seed `{row.get('seed')}` depth `{row.get('depth')}` "
+                f"node `{component.get('name') or component.get('_key')}`"
             )
-        if not rows:
+        if not packet.get("cone"):
             lines.append("- empty")
         lines.append("")
+    else:
+        for label in ["backward_cone", "forward_cone"]:
+            rows = packet[label]
+            lines.append(f"## {label.replace('_', ' ').title()}")
+            lines.append("")
+            for row in rows[:50]:
+                component = row.get("component") or {}
+                lines.append(
+                    f"- depth `{row.get('depth')}` component `{component.get('_key')}` "
+                    f"rep `{component.get('representative')}`"
+                )
+            if not rows:
+                lines.append("- empty")
+            lines.append("")
     lines.append("## Source excerpts")
     lines.append("")
     for item in packet.get("source_excerpts", [])[:40]:
@@ -576,7 +692,40 @@ def build_multi_packet(args: argparse.Namespace, names: list[str]) -> dict[str, 
     found = {str(row.get("name")): row for row in apices}
     missing = [name for name in names if name not in found]
     if missing:
-        raise SystemExit(f"declarations not found in {args.decls_collection}: {missing}")
+        syntax_rows = resolve_syntax_decls(
+            target, syntax_decls=args.syntax_decls_collection, names=missing
+        )
+        syntax_found = {str(row.get("name")): row for row in syntax_rows}
+        source_rows = resolve_source_decls(repo_root, missing)
+        source_found = {str(row.get("name")): row for row in source_rows}
+        indexed_only = [name for name in missing if name in syntax_found]
+        source_only = [name for name in missing if name in source_found]
+        not_found = [
+            name for name in missing
+            if name not in syntax_found and name not in source_found
+        ]
+        return {
+            "schema": SCHEMA,
+            "mode": "multi-apex-resolution-diagnostic",
+            "status": "unindexed" if (syntax_found or source_found) else "not_found",
+            "requested_names": names,
+            "compiler_backed_apices": [
+                {"name": name, "authority": "decls", "node": found[name]}
+                for name in names if name in found
+            ],
+            "syntax_only_names": indexed_only,
+            "source_only_names": source_only,
+            "source_declarations": [source_found[name] for name in source_only],
+            "not_found_names": not_found,
+            "diagnosis": (
+                "Requested names exist in current syntax/source index data but are "
+                "absent from compiler-backed decls; refresh the authoritative DAG "
+                "index before requesting a causal cone."
+                if syntax_found or source_found else
+                "Requested names are absent from both compiler-backed and syntax indexes."
+            ),
+            "graph_is_navigation_not_proof": True,
+        }
     seed_ids = [str(found[name]["_id"]) for name in names]
     cone = traverse_multi_decl_cone(
         target, seed_ids=seed_ids, edge_collection=args.edges_collection,
@@ -627,6 +776,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--repo-root", type=Path, default=Path.cwd())
     parser.add_argument("--decls-collection", default="decls",
                         help="Authoritative compiler-backed declaration collection.")
+    parser.add_argument("--syntax-decls-collection", default="syntax_decls",
+                        help="Syntax declaration collection used only for stale-index diagnostics.")
     parser.add_argument("--edges-collection", default="edges",
                         help="Authoritative compiler-backed declaration edge collection.")
     parser.add_argument("--raw-nodes-collection", default="raw_info_nodes")

@@ -1,5 +1,5 @@
 import Mathlib.LinearAlgebra.Trace
-import proofs.CanonicalZornCliffordRepresentation
+import InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
 
 /-!
 # Weyl Hamiltonian Topology in Zorn Matrices

@@ -147,11 +147,11 @@ theorem cantor_cuntz_boundary_shift_closed :
     Function.Injective (prependBit false) ∧
     Function.Injective (prependBit true) ∧
     Disjoint (Set.range (prependBit false)) (Set.range (prependBit true)) ∧
-    (∀ x : InfoGeometry.Canonical.UHFInductiveColimitBoundary.CantorBoundary,
+    (∀ x : (ℕ → Bool),
       x ∈ Set.range (prependBit false) ∪ Set.range (prependBit true)) ∧
     (∀ n : ℕ, ∀ b : Bool,
       ∀ f : InfoGeometry.Canonical.UHFInductiveColimitBoundary.DiagAlg (n + 1),
-      (fun x : InfoGeometry.Canonical.UHFInductiveColimitBoundary.CantorBoundary =>
+      (fun x : (ℕ → Bool) =>
           InfoGeometry.Canonical.UHFInductiveColimitBoundary.cylinder (n + 1) f
             (prependBit b x)) =
         InfoGeometry.Canonical.UHFInductiveColimitBoundary.cylinder n (branchPullback n b f)) ∧

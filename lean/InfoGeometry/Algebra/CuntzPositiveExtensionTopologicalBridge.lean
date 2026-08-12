@@ -44,7 +44,20 @@ theorem representedCuntz_expectation_recovery
     {n : ℕ} (E : CuntzPositiveExtension n A) (x : CuntzAlg n) :
     ⟪gnsVacuum E.phi,
       representedCuntzOperatorTopCat E x (gnsVacuum E.phi)⟫_ℂ = E.omega x := by
-  simpa [representedCuntzOperatorTopCat] using
-    (represented_cuntz_expectation_recovery E x)
+  rw [representedCuntzOperatorTopCat_apply]
+  exact InfoGeometry.Algebra.CuntzNativeGNSBridge.represented_cuntz_expectation_recovery_of
+    E.phi E.representation E.omega E.extension x
+
+theorem gnsOperatorTopCat_expectation_recovery_of
+    {n : ℕ} (φ : A →ₚ[ℂ] ℂ)
+    (ρ : CuntzStarRepresentation n A)
+    (omega : CuntzAlg n →ₗ[ℂ] ℂ)
+    (h_extension : ∀ x, φ (ρ.toAlgHom x) = omega x)
+    (x : CuntzAlg n) :
+    ⟪gnsVacuum φ,
+      gnsOperatorTopCat φ (ρ.toAlgHom x) (gnsVacuum φ)⟫_ℂ = omega x := by
+  rw [gnsOperatorTopCat_apply]
+  exact InfoGeometry.Algebra.CuntzNativeGNSBridge.represented_cuntz_expectation_recovery_of
+    φ ρ omega h_extension x
 
 end InfoGeometry.Algebra.CuntzPositiveExtensionTopologicalBridge

@@ -33,6 +33,33 @@ def kmsInner
     (a b : CuntzAlg n) : ℂ :=
   φ (star b * a)
 
+theorem star_smul_cuntzAlg (c : ℂ) (a : CuntzAlg n) :
+    star (c • a) = c • star a := by
+  obtain ⟨x, rfl⟩ := RingQuot.mkAlgHom_surjective ℂ (CuntzRel n) a
+  change star (c • cuntzMk n x) = c • star (cuntzMk n x)
+  rw [← map_smul, star_cuntzMk, star_cuntzMk]
+  rw [show star (c • x) = c • star x by
+    rw [Algebra.smul_def]
+    change dagger n ((algebraMap ℂ (CuntzTensor n)) c * x) = c • dagger n x
+    rw [dagger_mul, dagger_algebraMap]
+    exact (Algebra.commutes c (dagger n x)).symm]
+  simp
+
+def gnsNull (φ : CuntzAlg n →ₗ[ℂ] ℂ) (a : CuntzAlg n) : Prop :=
+  kmsInner φ a a = 0
+
+theorem gnsNull_zero (φ : CuntzAlg n →ₗ[ℂ] ℂ) :
+    gnsNull φ 0 := by
+  simp [gnsNull, kmsInner]
+
+theorem gnsNull_smul (φ : CuntzAlg n →ₗ[ℂ] ℂ)
+    (c : ℂ) {a : CuntzAlg n} (ha : gnsNull φ a) :
+    gnsNull φ (c • a) := by
+  simp only [gnsNull, kmsInner] at ha ⊢
+  rw [star_smul_cuntzAlg, smul_mul_assoc, mul_smul_comm,
+    smul_smul, map_smul, ha]
+  simp
+
 /-- Hermiticity of the induced form under the exact native *-functional law. -/
 theorem kmsInner_hermitian
     (φ : CuntzAlg n →ₗ[ℂ] ℂ)
@@ -52,11 +79,33 @@ noncomputable def leftMultiplication
     leftMultiplication n a x = a * x := by
   rfl
 
+theorem leftMultiplication_one (n : ℕ) :
+    leftMultiplication n (1 : CuntzAlg n) = LinearMap.id := by
+  apply LinearMap.ext
+  intro x
+  simp [leftMultiplication]
+
+theorem leftMultiplication_comp
+    (n : ℕ) (a b : CuntzAlg n) :
+    (leftMultiplication n a).comp (leftMultiplication n b) =
+      leftMultiplication n (a * b) := by
+  apply LinearMap.ext
+  intro x
+  simp [leftMultiplication, LinearMap.comp_apply]
+
 theorem leftMultiplication_mul
-    (n : ℕ) (a b : CuntzAlg n) (x : CuntzAlg n) :
-    leftMultiplication n a (leftMultiplication n b x) =
-      leftMultiplication n (a * b) x := by
-  simp [leftMultiplication, LinearMap.mulLeft_apply, mul_assoc]
+  (n : ℕ) (a b : CuntzAlg n) (x : CuntzAlg n) :
+      leftMultiplication n a (leftMultiplication n b x) =
+        leftMultiplication n (a * b) x := by
+    simp [leftMultiplication, LinearMap.mulLeft_apply]
+
+theorem kmsInner_leftMultiplication_star
+    (φ : CuntzAlg n →ₗ[ℂ] ℂ)
+    (a x y : CuntzAlg n) :
+    kmsInner φ (leftMultiplication n a x) y =
+      kmsInner φ x (leftMultiplication n (star a) y) := by
+  simp [kmsInner, leftMultiplication, star_mul]
+  rw [mul_assoc]
 
 theorem leftMultiplication_cuntz_isometry
     (n : ℕ) (i : Fin n) (x : CuntzAlg n) :

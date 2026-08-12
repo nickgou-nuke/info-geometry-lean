@@ -95,32 +95,34 @@ theorem V_sq : V * V = (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
 theorem UV_anticomm : U * V = -(V * U) := by
   ext i j; fin_cases i <;> fin_cases j <;> simp [U, V, Matrix.mul_apply]
 
-def celikPauliFiniteBridge :
-    FiniteCantorPauliBridge 1 (Matrix (Fin 2) (Fin 2) ℂ) where
-  psiGamma := ![U, V]
-  clifford_sq := by
-    intro i
-    fin_cases i
-    · simpa using U_sq
-    · simpa using V_sq
-  clifford_anticomm := by
-    intro i j hij
-    fin_cases i <;> fin_cases j
-    · exact False.elim (hij rfl)
-    · change U * V = -(V * U)
-      exact UV_anticomm
-    · change V * U = -(U * V)
-      apply eq_neg_of_add_eq_zero_right
+def celikPauliFiniteBridge : Fin 2 → Matrix (Fin 2) (Fin 2) ℂ := ![U, V]
+
+theorem celikPauliFiniteBridge_sq (i : Fin 2) :
+    celikPauliFiniteBridge i * celikPauliFiniteBridge i = 1 := by
+  fin_cases i
+  · simpa [celikPauliFiniteBridge] using U_sq
+  · simpa [celikPauliFiniteBridge] using V_sq
+
+theorem celikPauliFiniteBridge_anticomm
+    {i j : Fin 2} (hij : i ≠ j) :
+    celikPauliFiniteBridge i * celikPauliFiniteBridge j =
+      -(celikPauliFiniteBridge j * celikPauliFiniteBridge i) := by
+  fin_cases i <;> fin_cases j
+  · exact False.elim (hij rfl)
+  · simpa [celikPauliFiniteBridge] using UV_anticomm
+  · apply eq_neg_of_add_eq_zero_right
+    have h : U * V + V * U = 0 := by
       rw [UV_anticomm]
       simp
-    · exact False.elim (hij rfl)
+    simpa [celikPauliFiniteBridge, add_comm] using h
+  · exact False.elim (hij rfl)
 
 theorem celikPauliFiniteBridge_gamma_zero :
-    celikPauliFiniteBridge.psiGamma 0 = U := by
+    celikPauliFiniteBridge 0 = U := by
   rfl
 
 theorem celikPauliFiniteBridge_gamma_one :
-    celikPauliFiniteBridge.psiGamma 1 = V := by
+    celikPauliFiniteBridge 1 = V := by
   rfl
 
 /-! ### 3. Base Pauli Clifford Relations -/
@@ -140,6 +142,40 @@ theorem celik_pauli_clifford_base :
       V * V = (1 : Matrix (Fin 2) (Fin 2) ℂ) ∧
       U * V = -(V * U) := by
   exact ⟨U_sq, V_sq, UV_anticomm⟩
+
+/-! ### 4. Explicit rank-one matrix closure -/
+
+def matrixUnit : Fin 4 → Matrix (Fin 2) (Fin 2) ℂ
+  | ⟨0, _⟩ => !![1, 0; 0, 0]
+  | ⟨1, _⟩ => !![0, 1; 0, 0]
+  | ⟨2, _⟩ => !![0, 0; 1, 0]
+  | ⟨3, _⟩ => !![0, 0; 0, 1]
+  | _ => 0
+
+theorem matrix_unit_decomposition
+    (A : Matrix (Fin 2) (Fin 2) ℂ) :
+    A = A 0 0 • matrixUnit 0 +
+      A 0 1 • matrixUnit 1 +
+      A 1 0 • matrixUnit 2 +
+      A 1 1 • matrixUnit 3 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [matrixUnit]
+
+theorem matrix_units_span_eq_top :
+    Submodule.span ℂ (Set.range matrixUnit) = ⊤ := by
+  apply top_unique
+  intro A hA
+  rw [matrix_unit_decomposition A]
+  repeat' apply Submodule.add_mem
+  · exact Submodule.smul_mem _ _
+      (Submodule.subset_span (Set.mem_range_self (0 : Fin 4)))
+  · exact Submodule.smul_mem _ _
+      (Submodule.subset_span (Set.mem_range_self (1 : Fin 4)))
+  · exact Submodule.smul_mem _ _
+      (Submodule.subset_span (Set.mem_range_self (2 : Fin 4)))
+  · exact Submodule.smul_mem _ _
+      (Submodule.subset_span (Set.mem_range_self (3 : Fin 4)))
 
 /-!
 #### BUCKET 3: OPEN ISOMORPHISM DEBT

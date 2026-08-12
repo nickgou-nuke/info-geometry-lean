@@ -171,6 +171,42 @@ def mirrorCausalWord {n : ℕ} (w : CausalWord n) : CausalWord n :=
   ext ξ
   simp [boundaryMirrorPullback, boundaryMirror_prefixWordBoundary]
 
+@[simp] theorem boundaryMirrorPullback_prefixCylinderIndicator
+    {n : ℕ} (w : CausalWord n) :
+    boundaryMirrorPullback (prefixCylinderIndicator w) =
+      prefixCylinderIndicator (mirrorCausalWord w) := by
+  ext ξ
+  have hread :
+      prefixReadout (n := n) (boundaryMirror ξ) =
+        mirrorCausalWord (prefixReadout (n := n) ξ) := by
+    funext i
+    rfl
+  by_cases hξ : ξ ∈ prefixCylinder (mirrorCausalWord w)
+  · have hξw : prefixReadout (n := n) ξ = mirrorCausalWord w :=
+      (mem_prefixCylinder_iff_prefixReadout_eq (mirrorCausalWord w) ξ).1 hξ
+    have hmirror : boundaryMirror ξ ∈ prefixCylinder w := by
+      apply (mem_prefixCylinder_iff_prefixReadout_eq w (boundaryMirror ξ)).2
+      calc
+        prefixReadout (n := n) (boundaryMirror ξ) =
+            mirrorCausalWord (prefixReadout (n := n) ξ) := hread
+        _ = mirrorCausalWord (mirrorCausalWord w) := by rw [hξw]
+        _ = w := mirrorCausalWord_mirrorCausalWord w
+    rw [boundaryMirrorPullback_apply,
+      prefixCylinderIndicator_of_mem w hmirror,
+      prefixCylinderIndicator_of_mem (mirrorCausalWord w) hξ]
+  · have hmirror : boundaryMirror ξ ∉ prefixCylinder w := by
+      intro hmirror
+      apply hξ
+      apply (mem_prefixCylinder_iff_prefixReadout_eq (mirrorCausalWord w) ξ).2
+      have hmirrorRead :=
+        (mem_prefixCylinder_iff_prefixReadout_eq w (boundaryMirror ξ)).1 hmirror
+      have hread' := congrArg mirrorCausalWord hmirrorRead
+      rw [hread, mirrorCausalWord_mirrorCausalWord] at hread'
+      exact hread'
+    rw [boundaryMirrorPullback_apply,
+      prefixCylinderIndicator_of_not_mem w hmirror,
+      prefixCylinderIndicator_of_not_mem (mirrorCausalWord w) hξ]
+
 @[simp] theorem boundaryMirrorPullback_conjugates_prefixWord
     {Value : Type*} [TopologicalSpace Value]
     {n : ℕ} (w : CausalWord n)

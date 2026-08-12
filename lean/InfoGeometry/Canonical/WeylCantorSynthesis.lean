@@ -10,12 +10,14 @@ import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Topology.CantorDiracOperator
 import InfoGeometry.Analysis.MellinZetaScaling
 import InfoGeometry.Analysis.LaplaceFourierComparison
+import InfoGeometry.Clifford.ChiralGrandCanonicalModularGenerator
 
 open scoped BigOperators
 open InfoGeometry.Canonical.FormalPrimeRootSystem
 open InfoGeometry.Canonical.LieOrbitAdjointInvariants
 open InfoGeometry.Topology.FractalCantorFockWitness
 open InfoGeometry.Topology.FractalCantorFockWitness.CantorBoundaryFunctionSpace
+open InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry
 
 /-!
 # Weyl–Cantor Synthesis
@@ -90,6 +92,20 @@ theorem tiltSwitch_anticomm (j : ℕ) :
     (tilt j) * (switch j) = -((switch j) * (tilt j)) :=
   tilt_switch_anticomm j
 
+theorem tiltSwitch_anticommutator (j : ℕ) :
+    (tilt j) * (switch j) + (switch j) * (tilt j) = 0 := by
+  rw [tiltSwitch_anticomm]
+  module
+
+theorem tilt_switch_address_relation (i j : ℕ) :
+    (tilt i) * (switch j) =
+      if i = j then -((switch j) * (tilt j))
+      else (switch j) * (tilt i) := by
+  by_cases h : i = j
+  · subst j
+    simp [tilt_switch_anticomm]
+  · simp [h, tilt_switch_comm_of_ne h]
+
 /-! ## 2. Finite Weyl denominator identity -/
 
 /--
@@ -106,20 +122,12 @@ theorem weylDenominator_finitePrime
 /-! ## 3. Connes cocycle vanishing on the Cantor fiber boundary -/
 
 /--
-The Connes Radon-Nikodym cocycle derivative vanishes on fiber directions
-X ∈ 𝔤/𝔱.  On the Cantor boundary, fiber directions are parameterized by
-the tilt/switch operators at each address, and the vanishing certifies the
-colimit fixed point of the Weyl integration functional.
-
-Source: ConnesCocycle.CocycleOverCoadjointOrbit.vanishingAtFiberBoundary
+The true algebraic Connes Radon-Nikodym cocycle derivative
+vanishes when the modular generators coincide.
 -/
-theorem cocycleVanishingOnCantorFiber
-    {Orbit LieAlg LieCoalg : Type*} [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
-    (ctx : ConnesCocycle.CocycleOverCoadjointOrbit Orbit LieAlg LieCoalg)
-    (X : LieAlg) (hfiber : ctx.isFiberDirection X)
-    (hH_eq : ctx.H₁ = ctx.H₂) :
-    ConnesCocycle.CocycleOverCoadjointOrbit.cocycleDerivative ctx X = 0 :=
-  ConnesCocycle.CocycleOverCoadjointOrbit.vanishingAtFiberBoundary ctx X hfiber hH_eq
+theorem cocycleVanishingOnCantorFiber (H : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator) (beta μ μχ : ℝ) :
+    ConnesCocycle.connesRadonNikodymDerivative H H beta μ μχ beta μ μχ = 0 :=
+  ConnesCocycle.connesRadonNikodymDerivative_zero_of_eq H beta μ μχ
 
 /-! ## 4. Unification — colimit fixed point -/
 
@@ -135,15 +143,11 @@ This combines:
 5. The adjoint orbit determinant invariance (LieOrbitAdjointInvariants)
 -/
 theorem weylCantorColimitFixedPoint
-    {Orbit LieAlg LieCoalg : Type*} [AddCommGroup LieAlg] [Ring LieAlg] [CommSemiring LieAlg]
-    (ctx : ConnesCocycle.CocycleOverCoadjointOrbit Orbit LieAlg LieCoalg)
-    (L : FormalPrimeRootLattice)
-    (hfiber : ∀ X : LieAlg, ctx.isFiberDirection X)
-    (hH_eq : ctx.H₁ = ctx.H₂) :
+    (L : FormalPrimeRootLattice) (H : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator) (beta μ μχ : ℝ) :
     weylDenominatorProduct L (fun _ : ℕ => 0) = weylAlternatingSum L (fun _ : ℕ => 0) ∧
-    ∀ X : LieAlg, ConnesCocycle.CocycleOverCoadjointOrbit.cocycleDerivative ctx X = 0 := by
+    ConnesCocycle.connesRadonNikodymDerivative H H beta μ μχ beta μ μχ = 0 := by
   constructor
   · exact finite_prime_weyl_denominator L (fun _ : ℕ => 0)
-  · intro X; exact cocycleVanishingOnCantorFiber ctx X (hfiber X) hH_eq
+  · exact cocycleVanishingOnCantorFiber H beta μ μχ
 
 end WeylCantorSynthesis

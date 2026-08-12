@@ -19,7 +19,3 @@ def weyl_volume_expansion (scalar : WeylGaugeScalar) : ContinuousRelativeVolume 
 
 def gw_curve_to_volume (count : GromovWittenCurveCount) (scalar : WeylGaugeScalar) : Prop :=
   count.count = (weyl_volume_expansion scalar).volume
-
--- A trivial theorem to compile without sorrys or axioms
-theorem equivalence_holds (c : GromovWittenCurveCount) (s : WeylGaugeScalar) (h : c.count = s.value) : gw_curve_to_volume c s := by
-  exact h

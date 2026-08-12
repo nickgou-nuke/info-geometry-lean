@@ -1,4 +1,4 @@
-import proofs.BiquaternionLaplaceTripotent
+import InfoGeometry.Canonical.BiquaternionLaplaceTripotent
 
 /-!
 # Biquaternion Laplace resolvent

@@ -1,69 +1,146 @@
-import Mathlib.GroupTheory.Subgroup.Basic
-import Mathlib.GroupTheory.Subgroup.Center
-import Mathlib.GroupTheory.QuotientGroup.Basic
+import InfoGeometry.Canonical.KleinPresentedGroup
+import InfoGeometry.Canonical.KleinSixStateBundle
 
 /-!
-# Projective Klein Monodromy
+# Concrete projective Klein representation on the six-state fibre
 
-This file establishes the algebraic basis for the projective monodromy 
-of the Klein bottle. The fundamental group of the Klein bottle has the 
-presentation:
-  `π₁(K) = ⟨ a, b | a b a⁻¹ = b⁻¹ ⟩`
-
-At the operator level, this relation is satisfied up to a central sign `z = ±1`,
-yielding the lift:
-  `Θ T Θ⁻¹ = z T⁻¹`
-
-When quotienting by the center (projectivization), this projects to the exact
-Klein relation.
+This file instantiates the abstract presented Klein group with the concrete
+sheet--colour glide and triality matrices.  The matrices are reindexed from
+`Fin 2 × Fin 3` to `Fin 6`; no choice of basis is hidden in the quotient.
 -/
 
+noncomputable section
 namespace InfoGeometry.Canonical.KleinProjectiveMonodromy
 
-variable {G : Type*} [Group G]
+open TwoSheetThreeColorWeyl
+open KleinSixStateBundle
+open ProjectiveUnitary6
+open KleinPresentedGroup
 
-/-- A lift of the Klein monodromy operators, where the commutation 
-    holds up to a central element `z` of order dividing 2. -/
-def IsKleinMonodromyLift (Theta T z : G) : Prop :=
-  z ∈ Subgroup.center G ∧
-  z * z = 1 ∧
-  Theta * T * Theta⁻¹ = z * T⁻¹
+abbrev sixEquiv : (Fin 2 × Fin 3) ≃ Fin 6 := finProdFinEquiv
 
-/-- The projective relation holds exactly in the central quotient `G / Z(G)`. -/
-theorem projective_klein_relation (Theta T z : G)
-    (h : IsKleinMonodromyLift Theta T z) :
-    (QuotientGroup.mk' (Subgroup.center G) Theta) *
-    (QuotientGroup.mk' (Subgroup.center G) T) *
-    (QuotientGroup.mk' (Subgroup.center G) Theta)⁻¹ =
-    (QuotientGroup.mk' (Subgroup.center G) T)⁻¹ := by
-  -- Let Z = Z(G)
-  let Z := Subgroup.center G
-  let Q := G ⧸ Z
-  let mk : G →* Q := QuotientGroup.mk' Z
-  
-  -- We want to prove mk(Θ) * mk(T) * mk(Θ)⁻¹ = mk(T)⁻¹
-  -- This is mk(Θ * T * Θ⁻¹) = mk(T⁻¹)
-  calc mk Theta * mk T * (mk Theta)⁻¹
-    _ = mk (Theta * T * Theta⁻¹) := by simp only [map_mul, map_inv]
-    _ = mk (z * T⁻¹) := by rw [h.2.2]
-    _ = mk z * mk (T⁻¹) := by rw [map_mul]
-    _ = 1 * mk (T⁻¹) := by
-      have hz : mk z = 1 := QuotientGroup.eq.mpr (by
-        simp only [inv_one, mul_one, Subgroup.inv_mem_iff]
-        exact h.1)
-      rw [hz]
-    _ = (mk T)⁻¹ := by simp only [one_mul, map_inv]
+def reindexSix : TwoSheetThreeColorWeyl.Mat23C ≃ₐ[ℂ] Matrix (Fin 6) (Fin 6) ℂ :=
+  Matrix.reindexAlgEquiv ℂ ℂ sixEquiv
 
-/-- The projective dihedral/hexagon symmetry shadow. 
-    Projectively, if T has order 6, the generated subgroup is dihedral. -/
-theorem projective_dihedral_shadow (Theta T z : G)
-    (h : IsKleinMonodromyLift Theta T z)
-    (hT6 : (QuotientGroup.mk' (Subgroup.center G) T) ^ 6 = 1)
-    (hTheta2 : (QuotientGroup.mk' (Subgroup.center G) Theta) ^ 2 = 1) :
-    let mk := QuotientGroup.mk' (Subgroup.center G)
-    (mk Theta * mk T * (mk Theta)⁻¹ = (mk T)⁻¹) ∧
-    (mk T) ^ 6 = 1 ∧
-    (mk Theta) ^ 2 = 1 := by
-  exact ⟨projective_klein_relation Theta T z h, hT6, hTheta2⟩
+@[simp] theorem reindexSix_conjTranspose (A : TwoSheetThreeColorWeyl.Mat23C) :
+    reindexSix (Matrix.conjTranspose A) =
+      Matrix.conjTranspose (reindexSix A) := by
+  ext i j
+  rfl
+
+theorem theta_conjTranspose :
+    Matrix.conjTranspose theta = theta := by
+  ext ⟨s, a⟩ ⟨t, b⟩
+  fin_cases s <;> fin_cases a <;> fin_cases t <;> fin_cases b <;>
+    simp [theta, sheetExchange, colorReflection,
+      Matrix.conjTranspose, Matrix.kroneckerMap_apply]
+
+theorem triality_conjTranspose :
+    Matrix.conjTranspose triality = triality ^ 5 := by
+  rw [triality_fifth_formula]
+  ext ⟨s, a⟩ ⟨t, b⟩
+  fin_cases s <;> fin_cases a <;> fin_cases t <;> fin_cases b <;>
+    simp [triality, sheetParity, uPlus,
+      uMinus, colorShift, Matrix.conjTranspose,
+      Matrix.kroneckerMap_apply, pow_two]
+
+def thetaU6 (ω : ℂ) (_hω : ω ^ 2 + ω + 1 = 0) : U6 :=
+  ⟨reindexSix theta, by
+    rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose,
+      ← reindexSix_conjTranspose]
+    rw [← map_mul, theta_conjTranspose]
+    have h2 : theta * theta = 1 := by
+      calc
+        theta * theta = theta ^ 2 := by simp [pow_two]
+        _ = 1 := theta_sq
+    rw [h2]
+    exact map_one reindexSix⟩
+
+def trialityU6 (ω : ℂ) (_hω : ω ^ 2 + ω + 1 = 0) : U6 :=
+  ⟨reindexSix triality, by
+    rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose,
+      ← reindexSix_conjTranspose]
+    rw [← map_mul, triality_conjTranspose]
+    have h6 : triality * triality ^ 5 = 1 := by
+      calc
+        triality * triality ^ 5 = triality ^ 6 := by rw [← pow_succ']
+        _ = sixTriality ^ 6 := rfl
+        _ = 1 := sixTriality_sixth
+    rw [h6]
+    exact map_one reindexSix⟩
+
+def centralSignU6 : U6 :=
+  ⟨-(1 : Matrix (Fin 6) (Fin 6) ℂ), by
+    rw [Matrix.mem_unitaryGroup_iff, Matrix.star_eq_conjTranspose]
+    simp⟩
+
+theorem centralSign_mem_center : centralSignU6 ∈ centerU6 := by
+  rw [Subgroup.mem_center_iff]
+  intro A
+  apply Subtype.ext
+  simp [centralSignU6]
+
+theorem concrete_pin_relation (ω : ℂ) (hω : ω ^ 2 + ω + 1 = 0) :
+    thetaU6 ω hω * trialityU6 ω hω * (thetaU6 ω hω)⁻¹ =
+      centralSignU6 * (trialityU6 ω hω)⁻¹ := by
+  apply Subtype.ext
+  change reindexSix theta * reindexSix triality *
+      ((thetaU6 ω hω)⁻¹ : U6).1 =
+    (centralSignU6 : Matrix (Fin 6) (Fin 6) ℂ) *
+      ((trialityU6 ω hω)⁻¹ : U6).1
+  have hThetaInv :
+      ((thetaU6 ω hω)⁻¹ : U6).1 = reindexSix theta := by
+    have hu : (thetaU6 ω hω)⁻¹ = thetaU6 ω hω := by
+      apply inv_eq_of_mul_eq_one_right
+      apply Subtype.ext
+      have hmul : ((thetaU6 ω hω) * (thetaU6 ω hω)).1 = reindexSix theta * reindexSix theta := rfl
+      rw [hmul, ← map_mul]
+      have h2 : theta * theta = 1 := by
+        calc
+          theta * theta = theta ^ 2 := by simp [pow_two]
+          _ = 1 := theta_sq
+      rw [h2, map_one]
+      rfl
+    exact congrArg Subtype.val hu
+  have hTInv :
+      ((trialityU6 ω hω)⁻¹ : U6).1 =
+        reindexSix (triality ^ 5) := by
+    have hu : (trialityU6 ω hω)⁻¹ = (trialityU6 ω hω) ^ 5 := by
+      apply inv_eq_of_mul_eq_one_right
+      apply Subtype.ext
+      have hmul : ((trialityU6 ω hω) * (trialityU6 ω hω) ^ 5).1 = reindexSix triality * reindexSix (triality ^ 5) := by
+        simp [trialityU6, pow_succ]
+      rw [hmul, ← map_mul]
+      have h6 : triality * triality ^ 5 = 1 := by
+        calc
+          triality * triality ^ 5 = triality ^ 6 := by rw [← pow_succ']
+          _ = sixTriality ^ 6 := rfl
+          _ = 1 := sixTriality_sixth
+      rw [h6, map_one]
+      rfl
+    have hpow : ((trialityU6 ω hω) ^ 5).1 = reindexSix (triality ^ 5) := by
+      change (reindexSix triality) ^ 5 = reindexSix (triality ^ 5)
+      rw [← map_pow]
+    rw [hu, hpow]
+  rw [hThetaInv, hTInv]
+  change reindexSix (theta * triality * theta) =
+    -(1 : Matrix (Fin 6) (Fin 6) ℂ) * reindexSix (triality ^ 5)
+  rw [theta_triality_theta]
+  simp
+
+/-- The concrete algebraic projective representation of the presented Klein
+group on the six-state fibre. -/
+def concreteKleinProjectiveRep (ω : ℂ) (_hω : ω ^ 2 + ω + 1 = 0) :
+    KleinGroup →* PU6 :=
+  kleinProjectiveRep (thetaU6 ω _hω) (trialityU6 ω _hω) centralSignU6
+    centralSign_mem_center (concrete_pin_relation ω _hω)
+
+theorem concreteKleinProjectiveRep_generators
+    (ω : ℂ) (_hω : ω ^ 2 + ω + 1 = 0) :
+    concreteKleinProjectiveRep ω _hω (toKlein genA) = toPU6 (thetaU6 ω _hω) ∧
+    concreteKleinProjectiveRep ω _hω (toKlein genB) = toPU6 (trialityU6 ω _hω) := by
+  exact klein_projective_rep_generators _ _ _ centralSign_mem_center
+    (concrete_pin_relation ω _hω)
 
 end InfoGeometry.Canonical.KleinProjectiveMonodromy
+end noncomputable section

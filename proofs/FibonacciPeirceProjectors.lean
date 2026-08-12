@@ -5,20 +5,24 @@ open Matrix Real Complex
 
 namespace FibonacciPeirceProjectors
 
+variable {A : Type*} [Ring A] [StarRing A] [Algebra ℂ A] [StarModule ℂ A]
+  [Nontrivial A] [NoZeroSMulDivisors ℂ A]
+variable (S : Fin 2 → A) [CuntzO2 (S 0) (S 1)]
+
 /-- The real local Fibonacci matrix -/
 def fibonacciMatrixReal : Matrix (Fin 2) (Fin 2) ℝ :=
   ![![0, 1],
     ![1, 1]]
 
 /-- Eigenvalues: Golden ratio and its conjugate -/
-def phi : ℝ := (1 + Real.sqrt 5) / 2
-def tau : ℝ := (Real.sqrt 5 - 1) / 2
+noncomputable def phi : ℝ := (1 + Real.sqrt 5) / 2
+noncomputable def tau : ℝ := (Real.sqrt 5 - 1) / 2
 
 /-- Spectral Peirce Projectors -/
-def fibonacciPeircePlus : Matrix (Fin 2) (Fin 2) ℝ :=
+noncomputable def fibonacciPeircePlus : Matrix (Fin 2) (Fin 2) ℝ :=
   (Real.sqrt 5)⁻¹ • (fibonacciMatrixReal + tau • (1 : Matrix (Fin 2) (Fin 2) ℝ))
 
-def fibonacciPeirceMinus : Matrix (Fin 2) (Fin 2) ℝ :=
+noncomputable def fibonacciPeirceMinus : Matrix (Fin 2) (Fin 2) ℝ :=
   (Real.sqrt 5)⁻¹ • (phi • (1 : Matrix (Fin 2) (Fin 2) ℝ) - fibonacciMatrixReal)
 
 lemma sqrt5_sq : (Real.sqrt 5) ^ 2 = 5 := Real.sq_sqrt (by norm_num)
@@ -38,9 +42,10 @@ macro "fib_simp" : tactic =>
 -- Now we can prove everything by letting ring_nf expand and then substituting sqrt 5 ^ 2 = 5
 macro "fib_proof" : tactic =>
   `(tactic| (
-    fib_simp
-    have h : (Real.sqrt 5) ^ 2 = 5 := sqrt5_sq
-    try nlinarith [h]
+    fib_simp <;>
+      (have hs : Real.sqrt 5 ≠ 0 := by positivity
+       field_simp [hs]
+       nlinarith [sqrt5_sq])
   ))
 
 theorem fibonacciPeircePlus_idempotent :
@@ -53,11 +58,16 @@ theorem fibonacciPeirceMinus_idempotent :
 
 theorem fibonacciPeircePlus_selfAdjoint :
     fibonacciPeircePlusᵀ = fibonacciPeircePlus := by
-  fib_proof
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [fibonacciPeircePlus, fibonacciMatrixReal, tau, Matrix.transpose_apply];
+    ring
 
 theorem fibonacciPeirceMinus_selfAdjoint :
     fibonacciPeirceMinusᵀ = fibonacciPeirceMinus := by
-  fib_proof
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [fibonacciPeirceMinus, fibonacciMatrixReal, phi, Matrix.transpose_apply]
 
 theorem fibonacciPeirce_orthogonal :
     fibonacciPeircePlus * fibonacciPeirceMinus = 0 := by
@@ -73,19 +83,19 @@ theorem fibonacciMatrix_mul_peircePlus :
 
 theorem fibonacciMatrix_mul_peirceMinus :
     fibonacciMatrixReal * fibonacciPeirceMinus = (-tau) • fibonacciPeirceMinus := by
-  fib_proof
+  fib_simp <;>
+    (have hs : Real.sqrt 5 ≠ 0 := by positivity
+     field_simp [hs]
+     nlinarith [sqrt5_sq])
 
 /-- Cuntz images of the Peirce projectors -/
-variable {A : Type*} [Ring A] [StarRing A] [Algebra ℂ A] [StarModule ℂ A]
-variable (S : Fin 2 → A) [CuntzMatrixCorner.CuntzO2 (S 0) (S 1)]
-
 def ofRealMatrix (M : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℂ :=
   fun i j => (M i j : ℂ)
 
-def CuntzPeircePlus : A :=
+noncomputable def CuntzPeircePlus : A :=
   CuntzMatrixCorner.cuntzCornerMap S (ofRealMatrix fibonacciPeircePlus)
 
-def CuntzPeirceMinus : A :=
+noncomputable def CuntzPeirceMinus : A :=
   CuntzMatrixCorner.cuntzCornerMap S (ofRealMatrix fibonacciPeirceMinus)
 
 theorem ofRealMatrix_mul (M N : Matrix (Fin 2) (Fin 2) ℝ) :

@@ -21,25 +21,13 @@ abbrev «g₋₂» (G : TKKGrading E) : Set E := G 4
 
 end TKKGrading
 
--- Placeholder for Cartan subalgebra of 𝔰𝔬(8)
-def cartan_subalgebra_so8 : Set (Matrix (Fin 8) (Fin 8) ℝ) := {M | False}
-
--- Placeholder for isospin operator
+/-- Finite diagonal isospin operator on the two four-dimensional sectors. -/
 def isospin_operator (c : Fin 4 → ℝ) : Matrix (Fin 8) (Fin 8) ℝ :=
   Matrix.diagonal fun i : Fin 8 =>
     if h : i.1 < 4 then c ⟨i.1, h⟩ else 0
 
--- Placeholder for Casimir
-def casimir_so8 : Matrix (Fin 8) (Fin 8) ℝ := 0
-
--- Placeholder for mass squared
-def mass_squared (ψ : ℝ → ℝ) : ℝ := 0
-
--- Placeholder for mirror map
+/-- Exchange the two marked points and leave all other inputs unchanged. -/
 noncomputable def mirror_map (ψ : ℝ → ℝ) : ℝ → ℝ := fun x => if x = 0 then ψ 1 else if x = 1 then ψ 0 else ψ x
-
--- Placeholder for instanton charge
-def instanton_charge (ψ : ℝ → ℝ) : ℤ := 2
 
 -- Key lemma: isospin asymmetry ↔ N≠Z
 theorem isospin_asymmetry_eq_NZ (ψ : ℝ → ℝ) (c : Fin 4 → ℝ) :
@@ -64,10 +52,6 @@ theorem isospin_asymmetry_eq_NZ (ψ : ℝ → ℝ) (c : Fin 4 → ℝ) :
     have hentry := congrArg (fun M : Matrix (Fin 8) (Fin 8) ℝ => M i8 i8) hzero
     simp [isospin_operator, i8] at hentry
     exact hi hentry
-
--- Placeholder for TKK Hamiltonian
-noncomputable def TKK_hamiltonian (ψ : ℝ → ℝ) (ω A Δ : ℝ) : ℝ → ℝ :=
-  fun x => ω * ψ x + A * (0 : ℝ) + Δ * (mirror_map ψ x)
 
 def D4Lattice := Fin 4 → ℤ
 

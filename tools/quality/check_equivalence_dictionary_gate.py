@@ -64,6 +64,15 @@ def compute_report_metrics(report: dict[str, Any]) -> dict[str, int]:
     metrics: dict[str, int] = {}
     metrics["unresolved_head_token_total"] = int(summary.get("unresolved_head_token_total", unresolved_total))
     metrics["unresolved_head_unique_count"] = int(summary.get("unresolved_head_unique_count", unresolved_unique))
+    # Ambiguous short heads are expected in a large Lean development (`star`,
+    # `trace`, overloaded algebraic operations).  The growth gate tracks the
+    # narrower missing-nonlocal surface instead of treating overloads as debt.
+    metrics["unresolved_missing_nonlocal_token_total"] = int(
+        summary.get("unresolved_missing_nonlocal_token_total", 0)
+    )
+    metrics["unresolved_missing_nonlocal_unique_count"] = int(
+        summary.get("unresolved_missing_nonlocal_unique_count", 0)
+    )
     return metrics
 
 

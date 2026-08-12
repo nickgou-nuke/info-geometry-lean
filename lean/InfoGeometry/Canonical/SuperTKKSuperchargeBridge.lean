@@ -83,4 +83,58 @@ structure SuperchargeFromChiralZorn
       ∃ Q : ChiralZornMatrix A, ∃ R : ChiralZornMatrix A,
         Q ∈ qRight ∧ R ∈ qRight ∧ superAnticommutator Q R = Z
 
+/--
+The concrete chiral-Zorn packet is the canonical five-graded supercharge
+packet.  This is the owner-level fusion point: no relations are reproved and
+no new carrier is introduced; the fields are transported into the existing
+`SuperchargeSquareRoot` interface.
+-/
+def SuperchargeFromChiralZorn.toSuperchargeSquareRoot
+    {X : ChiralZornMatrix A}
+    (S : SuperchargeFromChiralZorn X L G)
+    (hSymm : ∀ Q R : ChiralZornMatrix A,
+      S.superAnticommutator Q R = S.superAnticommutator R Q) :
+    SuperchargeSquareRoot L (ChiralZornMatrix A) G where
+  qLeft := S.qLeft
+  qRight := S.qRight
+  superAnticommutator := S.superAnticommutator
+  superAnticommutator_symm := hSymm
+  mixed_chirality_mem_translation := by
+    intro Q Qbar hQ hQbar
+    exact S.mixed_chirality_mem_translation Q Qbar hQ hQbar
+  left_left_mem_pos_two := by
+    intro Q R hQ hR
+    exact S.left_left_mem_pos_two Q R hQ hR
+  right_right_mem_neg_two := by
+    intro Q R hQ hR
+    exact S.right_right_mem_neg_two Q R hQ hR
+  mixed_translation_surjective := S.mixed_translation_surjective
+  left_left_pos_two_surjective := S.left_left_pos_two_surjective
+  right_right_neg_two_surjective := S.right_right_neg_two_surjective
+
+@[simp] theorem SuperchargeFromChiralZorn.toSuperchargeSquareRoot_qLeft
+    {X : ChiralZornMatrix A}
+    (S : SuperchargeFromChiralZorn X L G)
+    (hSymm : ∀ Q R : ChiralZornMatrix A,
+      S.superAnticommutator Q R = S.superAnticommutator R Q) :
+    (S.toSuperchargeSquareRoot G hSymm).qLeft = S.qLeft :=
+  rfl
+
+@[simp] theorem SuperchargeFromChiralZorn.toSuperchargeSquareRoot_qRight
+    {X : ChiralZornMatrix A}
+    (S : SuperchargeFromChiralZorn X L G)
+    (hSymm : ∀ Q R : ChiralZornMatrix A,
+      S.superAnticommutator Q R = S.superAnticommutator R Q) :
+    (S.toSuperchargeSquareRoot G hSymm).qRight = S.qRight :=
+  rfl
+
+@[simp] theorem SuperchargeFromChiralZorn.toSuperchargeSquareRoot_anticommutator
+    {X : ChiralZornMatrix A}
+    (S : SuperchargeFromChiralZorn X L G)
+    (hSymm : ∀ Q R : ChiralZornMatrix A,
+      S.superAnticommutator Q R = S.superAnticommutator R Q) :
+    (S.toSuperchargeSquareRoot G hSymm).superAnticommutator =
+      S.superAnticommutator :=
+  rfl
+
 end InfoGeometry.Canonical.SuperTKKSuperchargeBridge

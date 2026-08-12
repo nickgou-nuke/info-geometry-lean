@@ -33,30 +33,19 @@ open SixStateGeneralizedPauliBasis
 open CRTGeneralizedPauliSix
 
 /-- 1. Finite Colour Shift: The pure 3-cycle permutation, X_3. -/
-def finiteColourShift : M3C := colorShift
+def finiteColourShift : InfoGeometry.Canonical.TwoSheetThreeColorWeyl.Mat3C :=
+  InfoGeometry.Canonical.TwoSheetThreeColorWeyl.colorShift
 
 /-- 2. Finite Six Shift: The pure 6-cycle permutation, X_6. -/
-def finiteSixShift : Matrix (ZMod 6) (ZMod 6) ℂ := shift6
+def finiteSixShift : InfoGeometry.Canonical.TwoSheetThreeColorWeyl.Mat23C :=
+  InfoGeometry.Canonical.TwoSheetThreeColorWeyl.sixShift
 
-/-- 3. Bilateral Shift Model: The reversible, unitary translation over ℤ.
-(Conceptual placeholder for the ℓ²(ℤ) dynamics.) -/
-def bilateralShiftModel : Prop := True
-
-/-- 4. Unilateral Compression: The Toeplitz isometry over ℕ.
-The boundary projector `P_0 = I - S S^*` emerges here. -/
-def unilateralCompression : Prop := True
-
-/-- 5. Cuntz Branch Shift: Branched unilateral shifts.
-`S_i^* S_j = \delta_{ij} I` and `\sum S_i S_i^* = I`. -/
-def cuntzBranchShift : Prop := True
-
-/-- 6. Glide Square Shift: The Klein geometry affine glide.
-`\tau^2 = t_x`, linking translation to an orientation-reversing square root. -/
-def glideSquareShift : Prop := True
-
-/-- 7. Nilpotent Corner Shift: Split-octonion local arrows.
-`(\sigma_a^\pm)^2 = 0`, acting as one-way directed shifts. -/
-def nilpotentCornerShift : Prop := True
+/-!
+The bilateral, unilateral, Cuntz-branch, glide, and nilpotent-corner
+realisations are intentionally not introduced here: their carriers and
+operators are not present in this owner.  The finite shifts above are the
+only concrete constructions certified by this file.
+-/
 
 end SixStateShiftHierarchy
 end noncomputable section

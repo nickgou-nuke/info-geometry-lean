@@ -80,21 +80,20 @@ structure GNSWeylState (V A H : Type*) [AddCommGroup V] [One A] [Mul A] [Star A]
   omega : A → ℂ
   pi : A → H → H
   Omega : H
-  vacuum_expectation : ∀ u : V, omega (𝓦.W u) = omega (𝓦.W u)
-  cyclic : Prop
+  vacuum_expectation : omega (𝓦.W 0) = omega 1
+  normalized : omega 1 = 1
+  cyclic : ∀ h : H, ∃ u : V, pi (𝓦.W u) Omega = h
 
 structure RegularWeylGNS (V A H Generator : Type*)
     [AddCommGroup V] [One A] [Mul A] [Star A] [SMul ℂ A]
     (𝓦 : WeylSystem V A) extends GNSWeylState V A H 𝓦 where
   R : V → Generator
-  exp_generator_matches_weyl : Prop
-  identity_trace_status : String := "not_trace_class_in_infinite_GNS"
 
 @[simp] theorem gns_vacuum_expectation
     {V A H : Type*} [AddCommGroup V] [One A] [Mul A] [Star A] [SMul ℂ A]
-    {𝓦 : WeylSystem V A} (G : GNSWeylState V A H 𝓦) (u : V) :
-    G.omega (𝓦.W u) = G.omega (𝓦.W u) :=
-  G.vacuum_expectation u
+    {𝓦 : WeylSystem V A} (G : GNSWeylState V A H 𝓦) :
+    G.omega (𝓦.W 0) = G.omega 1 :=
+  G.vacuum_expectation
 
 theorem gns_weyl_colimit_kernel :
     (∀ u v : RPhaseSpace 1,

@@ -43,7 +43,8 @@ FALSE_PROP_RE = re.compile(
 )
 TRIVIAL_THEOREM_RE = re.compile(
     r"(?ms)^\s*(?:theorem|lemma)\s+[A-Za-z0-9_']+\b"
-    r"[\s\S]{0,500}?:=\s*(?:by\s*)?(?:exact\s+)?trivial\b"
+    r"[\s\S]{0,500}?:=\s*by[ \t]*(?:\n[ \t]*)?"
+    r"(?:exact[ \t]+)?trivial[ \t]*(?:--[^\n]*)?(?=\n|$)"
 )
 UNIVERSAL_TRUE_FIELD_RE = re.compile(
     r"(?m)^\s*[A-Za-z0-9_']+\s*:\s*∀ .*?,\s*True\s*$"
@@ -284,6 +285,21 @@ def scan_file(path: Path, *, include_review: bool = False) -> list[Finding]:
     text = path.read_text()
     scan_text = strip_comments(text)
     proof_hole_text = strip_comments(text, strip_strings=True, strip_quoted_identifiers=True)
+    # Trace-class names may legitimately contain the token `admit` (for
+    # example `DAG.Morphism.admit`).  They are diagnostics, not proof terms;
+    # do not report the registration declaration as closure debt.
+    proof_hole_text = re.sub(
+        r"^\s*(?:initialize\s+)?registerTraceClass\b[^\n]*$",
+        "",
+        proof_hole_text,
+        flags=re.MULTILINE,
+    )
+    proof_hole_text = re.sub(
+        r"^\s*trace\[[^\]]*\.admit\][^\n]*$",
+        "",
+        proof_hole_text,
+        flags=re.MULTILINE,
+    )
     rpath = rel(path)
     findings: list[Finding] = []
 

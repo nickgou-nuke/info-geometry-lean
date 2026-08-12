@@ -15,7 +15,7 @@ namespace ZornGromovWitten
 
 open CliffordAlgebra LinearMap
 open ZornChiralLightcone CanonicalZornCompositionTriality
-  CanonicalZornCliffordRepresentation ZornCliffordParityAPI
+  CanonicalZornCliffordRepresentation
 
 /-- The complex structure `i · χ` induced by the chiral grading. -/
 def gromovJStructure : Module.End ℂ DiracSpinor16 :=

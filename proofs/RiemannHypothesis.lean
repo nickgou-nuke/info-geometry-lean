@@ -127,9 +127,6 @@ def criticalDamping : ℝ := 1 / 2
 def criticalDampingLine (s : ℂ) : Prop :=
   s.re = criticalDamping
 
-def complexTemperature (σ t : ℝ) : ℂ :=
-  rhComplexTemperature σ t
-
 def hagedornTemperature : ℂ :=
   rhHagedornPole
 
@@ -139,11 +136,6 @@ def hagedornTemperature : ℂ :=
 def hilbert_polya_hamiltonian (Z : ℂ → ℂ) : Type :=
   { spectrum : Set ℝ // { s : ℂ | 0 < s.re ∧ s.re < 1 ∧ Z s = 0 } =
     { s : ℂ | ∃ γ : ℝ, γ ∈ spectrum ∧ s = (1 / 2 : ℂ) + γ * Complex.I } }
-
-theorem spectrum_zero_correspondence (Z : ℂ → ℂ) (H : hilbert_polya_hamiltonian Z)
-    (Dlim_spec : Set ℝ) (h_spec : H.val = Dlim_spec) :
-    H.val = Dlim_spec :=
-  h_spec
 
 /-- If the Hilbert–Pólya Hamiltonian schema is realized, the RH statement follows. -/
 theorem hilbert_polya_hamiltonian_implies_RH {Z : ℂ → ℂ} (H : hilbert_polya_hamiltonian Z) :
@@ -162,12 +154,12 @@ theorem hilbert_polya_hamiltonian_implies_RH {Z : ℂ → ℂ} (H : hilbert_poly
 /-- Concise synthesis of the three key dictionary elements. -/
 theorem rh_hagedorn_critical_dictionary :
     hagedornTemperature = 1 ∧
-    (∀ σ t, criticalDampingLine (complexTemperature σ t) ↔ σ = 1 / 2) := by
+    (∀ σ t, criticalDampingLine (rhComplexTemperature σ t) ↔ σ = 1 / 2) := by
   constructor
   · rfl
   · intro σ t
     change rhCriticalLine (rhComplexTemperature σ t) ↔ σ = (1 / 2 : ℝ)
-    simpa [criticalDampingLine, criticalDamping, complexTemperature] using
+    simpa [criticalDampingLine, criticalDamping, rhComplexTemperature] using
       (rhCriticalLine_complexTemperature σ t)
 
 /-- Primon partition dictionary at complex temperature (formal algebraic core). -/
@@ -194,7 +186,7 @@ theorem rh_graded_partition_at_zero (Z : ℂ → ℂ) {s : ℂ} (hzero : Z s = 0
 theorem rh_layer11_capstone :
     hagedornTemperature = 1 ∧
     (∀ s, s ≠ hagedornTemperature → rhPoleModel s * (s - hagedornTemperature) = 1) ∧
-    (∀ σ t, criticalDampingLine (complexTemperature σ t) ↔ σ = 1 / 2) ∧
+    (∀ σ t, criticalDampingLine (rhComplexTemperature σ t) ↔ σ = 1 / 2) ∧
     (∀ Z : ℂ → ℂ, ∀ s,
       rhOrdinaryFermionicPrimonPartition Z s =
         (rhBosonicPrimonPartition Z s) / (rhBosonicPrimonPartition Z (2 * s))) ∧
@@ -209,7 +201,7 @@ theorem rh_layer11_capstone :
   constructor
   · intro σ t
     change rhCriticalLine (rhComplexTemperature σ t) ↔ σ = (1 / 2 : ℝ)
-    simpa [criticalDampingLine, criticalDamping, complexTemperature] using
+    simpa [criticalDampingLine, criticalDamping, rhComplexTemperature] using
       (rhCriticalLine_complexTemperature σ t)
   constructor
   · intro Z s

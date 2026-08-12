@@ -16,9 +16,8 @@ We rigorously prove the Heisenberg-picture equations of motion:
   d/dt α_t(a) = -ω a
   d/dt α_t(a†) = ω a†
 
-These derivatives are established natively and constructively over the 
-split-signature `Cl(4,4)` Lorentz boost representation, strictly using `HasDerivAt`
-without a single `sorry`.
+These derivatives are established natively and constructively over the
+split-signature `Cl(4,4)` Lorentz boost representation, strictly using `HasDerivAt`.
 -/
 
 open InfoGeometry.Canonical.TopologicalKMSFlow

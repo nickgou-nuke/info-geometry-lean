@@ -25,7 +25,7 @@ open InfoGeometry.Canonical.CantorBoundaryCuntzShift
 open InfoGeometry.Canonical.CantorCylinderTopology
 
 def complexBinaryReadoutTopCatHom :
-    TopCat.of InfiniteBinaryWordSpace ⟶ TopCat.of ℂ :=
+    TopCat.of (ℕ → Bool) ⟶ TopCat.of ℂ :=
   TopCat.ofHom
     { toFun := binaryReadout
       continuous_toFun := by
@@ -49,7 +49,7 @@ def complexOfRealTopCatHom :
       continuous_toFun := Complex.continuous_ofReal }
 
 @[simp] theorem complexBinaryReadoutTopCatHom_apply
-    (w : InfiniteBinaryWordSpace) :
+    (w : (ℕ → Bool)) :
     complexBinaryReadoutTopCatHom w = binaryReadout w := rfl
 
 @[simp] theorem complexBranchAffineTopCatHom_apply
@@ -67,9 +67,19 @@ theorem complexBinaryReadoutTopCatHom_factorization :
   change binaryReadout w = Complex.ofReal (realBinaryReadout w)
   exact complex_binaryReadout_eq_ofReal w
 
+theorem complexOfRealTopCatHom_branchAffine_naturality (b : Bool) :
+    complexOfRealTopCatHom ≫ complexBranchAffineTopCatHom b =
+      branchAffineTopCatHom b ≫ complexOfRealTopCatHom := by
+  ext x
+  rw [TopCat.comp_app, TopCat.comp_app]
+  cases b <;>
+    simp [complexBranchAffineTopCatHom, complexOfRealTopCatHom,
+      branchAffineTopCatHom, TopCat.ofHom,
+      Complex.ofReal_add, Complex.ofReal_mul, Complex.ofReal_ofNat]
+
 theorem complex_binaryReadout_prefixExtend
     (n : ℕ) (w : InfoGeometry.Canonical.UHFInductiveColimitBoundary.BitWord n)
-    (x : InfiniteBinaryWordSpace) :
+    (x : (ℕ → Bool)) :
     binaryReadout (prefixExtend w x) =
       (finitePrefixReadout (List.ofFn w) : ℂ) +
         (1 / 2 : ℂ) ^ n * binaryReadout x := by
@@ -78,6 +88,27 @@ theorem complex_binaryReadout_prefixExtend
   have h := congrArg Complex.ofReal
     (realBinaryReadout_prefixExtend n w x)
   simpa [Complex.ofReal_add, Complex.ofReal_mul, Complex.ofReal_pow] using h
+
+theorem complex_binaryReadout_nested_prefixExtend
+    (n m : ℕ)
+    (w : InfoGeometry.Canonical.UHFInductiveColimitBoundary.BitWord n)
+    (v : InfoGeometry.Canonical.UHFInductiveColimitBoundary.BitWord m)
+    (x : (ℕ → Bool)) :
+    binaryReadout (prefixExtend w (prefixExtend v x)) =
+      (finitePrefixReadout (List.ofFn w) : ℂ) +
+        (1 / 2 : ℂ) ^ n *
+          ((finitePrefixReadout (List.ofFn v) : ℂ) +
+            (1 / 2 : ℂ) ^ m * binaryReadout x) := by
+  calc
+    binaryReadout (prefixExtend w (prefixExtend v x)) =
+        (finitePrefixReadout (List.ofFn w) : ℂ) +
+          (1 / 2 : ℂ) ^ n * binaryReadout (prefixExtend v x) :=
+      complex_binaryReadout_prefixExtend n w (prefixExtend v x)
+    _ = (finitePrefixReadout (List.ofFn w) : ℂ) +
+          (1 / 2 : ℂ) ^ n *
+            ((finitePrefixReadout (List.ofFn v) : ℂ) +
+              (1 / 2 : ℂ) ^ m * binaryReadout x) := by
+      rw [complex_binaryReadout_prefixExtend m v x]
 
 theorem complexBinaryReadout_prefixTopCat_square (b : Bool) :
     prefixTopCatHom b ≫ complexBinaryReadoutTopCatHom =

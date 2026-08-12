@@ -2,12 +2,15 @@ import InfoGeometry.Thermal.FiniteMatrix
 import InfoGeometry.Thermo.BuresWassersteinKMSCost
 import InfoGeometry.Thermo.FiniteDiagonal
 import InfoGeometry.Thermo.FiniteMatrix
+import InfoGeometry.Thermo.CantorGibbsModularBridge
 import InfoGeometry.Thermo.ComplexCircularPolarizationBasis
 import InfoGeometry.Thermo.SplitChiralPolarizationBasis
 import InfoGeometry.Thermo.FromBregman
 import InfoGeometry.Thermo.FromLogDet
 import InfoGeometry.Thermo.JacobianBregmanBridge
 import InfoGeometry.Thermo.Gibbs
+import InfoGeometry.Thermo.JaynesFiniteState
+import InfoGeometry.Thermo.LogarithmicDeformationCoordinate
 import InfoGeometry.Thermo.KMSDetailedBalance
 import InfoGeometry.Thermo.MetalMirror
 import InfoGeometry.Thermo.ArakiItakuraSaitoCollapse

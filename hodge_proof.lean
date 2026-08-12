@@ -12,5 +12,8 @@ open InfoGeometry.Canonical.HestenesBivectorCarrier
 variable {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
 variable (Q : QuadraticForm R M) [HasVolumeElement R M Q] [HasSpacetimeBasis Q]
 
--- Assuming we add omega_eq back
-axiom omega_eq : Omega (R := R) (M := M) (Q := Q) = ι Q (gamma Q 0) * ι Q (gamma Q 1) * ι Q (gamma Q 2) * ι Q (gamma Q 3)
+theorem omega_eq_native :
+    Omega (R := R) (M := M) (Q := Q) =
+      ι Q (gamma Q 0) * ι Q (gamma Q 1) *
+        ι Q (gamma Q 2) * ι Q (gamma Q 3) := by
+  exact HasSpacetimeBasis.omega_eq (Q := Q)

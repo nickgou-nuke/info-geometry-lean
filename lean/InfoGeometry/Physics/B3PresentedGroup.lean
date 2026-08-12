@@ -173,6 +173,67 @@ theorem phi_sig1 : phi (PresentedGroup.of sig1 : B3) = s1_unit := by
   rw [PresentedGroup.toGroup.of]
   simp [braidMap]
 
+/-- Two homomorphisms out of the presented braid group `B₃` are equal when
+they agree on its two Artin generators. -/
+theorem b3_hom_ext {G : Type*} [Group G]
+    (f g : B3 →* G)
+    (h0 : f (PresentedGroup.of sig0 : B3) =
+      g (PresentedGroup.of sig0 : B3))
+    (h1 : f (PresentedGroup.of sig1 : B3) =
+      g (PresentedGroup.of sig1 : B3)) :
+    f = g := by
+  apply MonoidHom.ext
+  intro x
+  obtain ⟨w, rfl⟩ := PresentedGroup.mk_surjective b3Relations x
+  induction w using FreeGroup.induction_on with
+  | C1 => simp
+  | of a =>
+      cases a with
+      | sig0 => exact h0
+      | sig1 => exact h1
+  | inv_of a ih => simp [ih]
+  | mul x y hx hy => simp [hx, hy]
+
+/-! ## Universal construction from an Artin pair -/
+
+/-- Assignment of the two presented `B₃` generators to a pair of elements in
+an arbitrary group. -/
+def artinPairMap {G : Type*} [Group G] (g0 g1 : G) : B3Gen → G
+  | sig0 => g0
+  | sig1 => g1
+
+/-- The defining `B₃` relation is killed whenever the chosen pair satisfies
+the adjacent Artin relation. -/
+theorem artinPairMap_relation_holds {G : Type*} [Group G]
+    (g0 g1 : G) (hArtin : g0 * g1 * g0 = g1 * g0 * g1) :
+    FreeGroup.lift (artinPairMap g0 g1) b3Relation = 1 := by
+  simp only [b3Relation, map_mul, map_inv, FreeGroup.lift_apply_of]
+  simp only [artinPairMap]
+  rw [hArtin]
+  group
+
+/-- The universal homomorphism from presented `B₃` determined by two group
+elements satisfying the adjacent Artin relation. -/
+def homOfArtinPair {G : Type*} [Group G]
+    (g0 g1 : G) (hArtin : g0 * g1 * g0 = g1 * g0 * g1) : B3 →* G :=
+  PresentedGroup.toGroup (f := artinPairMap g0 g1) (rels := b3Relations) (by
+    intro r hr
+    simp [b3Relations] at hr
+    subst r
+    exact artinPairMap_relation_holds g0 g1 hArtin)
+
+@[simp] theorem homOfArtinPair_sig0 {G : Type*} [Group G]
+    (g0 g1 : G) (hArtin : g0 * g1 * g0 = g1 * g0 * g1) :
+    homOfArtinPair g0 g1 hArtin (PresentedGroup.of sig0 : B3) = g0 := by
+  rw [homOfArtinPair, PresentedGroup.toGroup.of]
+  rfl
+
+@[simp] theorem homOfArtinPair_sig1 {G : Type*} [Group G]
+    (g0 g1 : G) (hArtin : g0 * g1 * g0 = g1 * g0 * g1) :
+    homOfArtinPair g0 g1 hArtin (PresentedGroup.of sig1 : B3) = g1 := by
+  rw [homOfArtinPair, PresentedGroup.toGroup.of]
+  rfl
+
 #check s0_sq_eq_neg_one
 #check s1_sq_eq_neg_one
 #check s0_unit

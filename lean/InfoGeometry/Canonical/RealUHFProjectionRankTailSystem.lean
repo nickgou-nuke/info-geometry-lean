@@ -75,8 +75,8 @@ theorem normalizedReadout_add
       calc
         S.normalizedReadout (n.add (Nat.succ k)) =
             S.normalizedReadout (n.add k).succ := by
-              simpa [RealUHFProjectionRankTailIndex.add,
-                RealUHFProjectionRankTailIndex.succ, Nat.add_assoc] using hstep
+              simp [RealUHFProjectionRankTailIndex.add,
+                RealUHFProjectionRankTailIndex.succ, Nat.add_assoc] at hstep ⊢
         _ = S.normalizedReadout (n.add k) := hstep
         _ = S.normalizedReadout n := ih
 

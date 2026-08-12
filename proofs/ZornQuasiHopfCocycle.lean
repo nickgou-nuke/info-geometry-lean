@@ -1,4 +1,4 @@
-import proofs.CanonicalZornCompositionTriality
+import InfoGeometry.Canonical.CanonicalZornCompositionTriality
 
 /-!
 # The canonical Zorn associator defect
@@ -12,7 +12,7 @@ noncomputable section
 
 namespace ZornQuasiHopfCocycle
 
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-- The associator defect `(X * Y) * Z - X * (Y * Z)`. -/
 def zorn3Cocycle (X Y Z : Zorn) : Zorn :=
@@ -32,11 +32,10 @@ def upperNilpotent (u : Fin 3 → ℂ) : Zorn where
 /-- Diagonal Zorn elements associate. -/
 theorem cocycle_vanishes_on_diagonal (X Y Z : Zorn)
     (hX : IsDiagonal X) (hY : IsDiagonal Y) (hZ : IsDiagonal Z) :
-    zorn3Cocycle X Y Z = 0 := by
+    zorn3Cocycle X Y Z = zornZero := by
   rcases hX with ⟨hx_u, hx_v⟩
   rcases hY with ⟨hy_u, hy_v⟩
   rcases hZ with ⟨hz_u, hz_v⟩
-  change zorn3Cocycle X Y Z = zornZero
   apply zorn_ext
   · simp [zorn3Cocycle, zornSub, zornMul, dot3, cross3,
       hx_u, hx_v, hy_u, hy_v, hz_u, hz_v, zornZero]

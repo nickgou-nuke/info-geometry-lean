@@ -1,4 +1,4 @@
-import proofs.CanonicalZornSpinChirality
+import InfoGeometry.Canonical.CanonicalZornSpinChirality
 import proofs.ZornCliffordBasisMonomials
 
 /-!

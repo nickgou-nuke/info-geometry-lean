@@ -104,6 +104,121 @@ theorem loxodromic_discriminant : loxodromic.discriminant = 4 + 4 * Complex.I :=
 theorem loxodromic_discriminant_im_ne_zero : loxodromic.discriminant.im ≠ 0 := by
   norm_num [loxodromic_discriminant]
 
+/-! ## Native Cartan--Weyl root packet -/
+
+def H : ComplexMat2 := !![(1 : ℂ), 0; 0, -1]
+
+def NPlus : ComplexMat2 := !![(0 : ℂ), 1; 0, 0]
+
+def NMinus : ComplexMat2 := !![(0 : ℂ), 0; 1, 0]
+
+def R : ComplexMat2 := NPlus + NMinus
+
+def J : ComplexMat2 := NPlus - NMinus
+
+def X (h x y : ℂ) : ComplexMat2 := h • H + x • NPlus + y • NMinus
+
+theorem NPlus_sq : NPlus * NPlus = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [NPlus, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem NMinus_sq : NMinus * NMinus = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [NMinus, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem H_mul_NPlus_sub_NPlus_mul_H :
+    H * NPlus - NPlus * H = 2 • NPlus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [H, NPlus, Matrix.mul_apply, Matrix.sub_apply,
+      Matrix.smul_apply, Fin.sum_univ_two] <;> ring
+
+theorem H_mul_NMinus_sub_NMinus_mul_H :
+    H * NMinus - NMinus * H = -(2 : ℂ) • NMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [H, NMinus, Matrix.mul_apply, Matrix.sub_apply,
+      Matrix.smul_apply, Fin.sum_univ_two] <;> ring
+
+theorem NPlus_mul_NMinus :
+    NPlus * NMinus = (1 / 2 : ℂ) • ((1 : ComplexMat2) + H) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [H, NPlus, NMinus, Matrix.mul_apply, Matrix.add_apply,
+      Matrix.smul_apply, Fin.sum_univ_two] <;> norm_num
+
+theorem NMinus_mul_NPlus :
+    NMinus * NPlus = (1 / 2 : ℂ) • ((1 : ComplexMat2) - H) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [H, NPlus, NMinus, Matrix.mul_apply, Matrix.sub_apply,
+      Matrix.smul_apply, Fin.sum_univ_two] <;> norm_num
+
+theorem NPlus_NMinus_anticomm :
+    NPlus * NMinus + NMinus * NPlus = (1 : ComplexMat2) := by
+  rw [NPlus_mul_NMinus, NMinus_mul_NPlus]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [H, Matrix.add_apply, Matrix.smul_apply] <;> norm_num
+
+theorem NPlus_mul_NMinus_sub_NMinus_mul_NPlus :
+    NPlus * NMinus - NMinus * NPlus = H := by
+  rw [NPlus_mul_NMinus, NMinus_mul_NPlus]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [H, Matrix.sub_apply, Matrix.smul_apply] <;> norm_num
+
+theorem R_sq : R * R = (1 : ComplexMat2) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [R, NPlus, NMinus, Matrix.mul_apply, Matrix.add_apply,
+      Fin.sum_univ_two]
+
+theorem R_mul_H_mul_R : R * H * R = -H := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [R, H, NPlus, NMinus, Matrix.mul_apply, Matrix.add_apply,
+      Fin.sum_univ_two]
+
+theorem R_mul_NPlus_mul_R : R * NPlus * R = NMinus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [R, NPlus, NMinus, Matrix.mul_apply, Matrix.add_apply,
+      Fin.sum_univ_two]
+
+theorem R_mul_NMinus_mul_R : R * NMinus * R = NPlus := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [R, NPlus, NMinus, Matrix.mul_apply, Matrix.add_apply,
+      Fin.sum_univ_two]
+
+theorem J_sq : J * J = -(1 : ComplexMat2) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [J, NPlus, NMinus, Matrix.mul_apply, Matrix.sub_apply,
+      Fin.sum_univ_two]
+
+theorem H_mul_R_add_R_mul_H : H * R + R * H = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [R, H, NPlus, NMinus, Matrix.mul_apply, Matrix.add_apply,
+      Fin.sum_univ_two]
+
+theorem X_sq (h x y : ℂ) :
+    X h x y * X h x y = (h ^ 2 + x * y) • (1 : ComplexMat2) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [X, H, NPlus, NMinus, Matrix.mul_apply, Matrix.add_apply,
+      Matrix.smul_apply, Fin.sum_univ_two] <;> ring
+
+theorem X_det (h x y : ℂ) :
+    (X h x y).det = -(h ^ 2 + x * y) := by
+  simp [X, H, NPlus, NMinus, Matrix.det_fin_two,
+    Matrix.add_apply, Matrix.smul_apply]
+  ring
+
 end sl2C
 
 end InfoGeometry.Geometry

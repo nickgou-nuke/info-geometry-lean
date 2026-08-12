@@ -110,7 +110,6 @@ theorem finitePrefixReadout_eq_listBinaryNumerator_div
       rw [ih]
       by_cases hb : b <;> simp [hb, pow_succ]
       <;> field_simp
-      <;> ring
 
 theorem listBinaryNumerator_le_pow_length (bs : List Bool) :
     listBinaryNumerator bs ≤ 2 ^ bs.length := by

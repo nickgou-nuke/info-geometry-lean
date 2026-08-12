@@ -155,12 +155,12 @@ theorem raw_commutator_jacobi_defect :
   zorn_coords
 
 theorem tkk_grade_window :
-    TKKJordanPairData.gradeAdd TKKJordanPairData.TKKGrade.p1
-        TKKJordanPairData.TKKGrade.m1 = some TKKJordanPairData.TKKGrade.z0 ∧
-    TKKJordanPairData.gradeAdd TKKJordanPairData.TKKGrade.z0
-        TKKJordanPairData.TKKGrade.p1 = some TKKJordanPairData.TKKGrade.p1 ∧
-    TKKJordanPairData.gradeAdd TKKJordanPairData.TKKGrade.p2
-        TKKJordanPairData.TKKGrade.p1 = none := by
+    TKKJordanPairData.Legacy.gradeAdd TKKJordanPairData.Legacy.TKKGrade.p1
+        TKKJordanPairData.Legacy.TKKGrade.m1 = some TKKJordanPairData.Legacy.TKKGrade.z0 ∧
+    TKKJordanPairData.Legacy.gradeAdd TKKJordanPairData.Legacy.TKKGrade.z0
+        TKKJordanPairData.Legacy.TKKGrade.p1 = some TKKJordanPairData.Legacy.TKKGrade.p1 ∧
+    TKKJordanPairData.Legacy.gradeAdd TKKJordanPairData.Legacy.TKKGrade.p2
+        TKKJordanPairData.Legacy.TKKGrade.p1 = none := by
   exact ⟨rfl, rfl, rfl⟩
 
 theorem split_octonion_chiral_closure_synthesis :
@@ -171,8 +171,8 @@ theorem split_octonion_chiral_closure_synthesis :
     (∀ u v, antiComm (sigmaPlus u) (sigmaMinus v) = smul (dot u v) one) ∧
     (∀ u v, comm (sigmaPlus u) (sigmaMinus v) = smul (dot u v) kreinParity) ∧
     add uPlus uMinus = one ∧ kreinParity = ell ∧
-    TKKJordanPairData.gradeAdd TKKJordanPairData.TKKGrade.p1
-      TKKJordanPairData.TKKGrade.m1 = some TKKJordanPairData.TKKGrade.z0 := by
+    TKKJordanPairData.Legacy.gradeAdd TKKJordanPairData.Legacy.TKKGrade.p1
+      TKKJordanPairData.Legacy.TKKGrade.m1 = some TKKJordanPairData.Legacy.TKKGrade.z0 := by
   exact ⟨plus_plus_comm, plus_plus_anti, minus_minus_comm, minus_minus_anti,
     mixed_anti, mixed_comm, projector_sum, projector_difference, rfl⟩
 

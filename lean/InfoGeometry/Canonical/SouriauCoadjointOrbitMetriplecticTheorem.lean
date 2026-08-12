@@ -27,6 +27,8 @@ coadjoint-orbit metriplectic second law.
 
 namespace InfoGeometry.Canonical.SouriauCoadjointOrbitMetriplectic
 
+open InfoGeometry.Canonical.SouriauKreinMetriplectic
+
 universe u v w
 
 /--
@@ -164,6 +166,70 @@ def ofMomentImageSquareDissipation
     (total_entropy_split := by
       intro x
       simp)
+
+/-!
+## Native operatorial closure
+
+The generic context above correctly asks for Casimir, Onsager, and entropy
+splitting laws as data.  This constructor discharges those obligations in the
+owned operatorial Cramer--Rao lane: its metric channel is the operatorial
+entropy-production quadratic form, whose positivity follows from the native
+comparison-state Cauchy--Schwarz theorem.
+-/
+
+noncomputable def ofMomentImageOperatorialCramerRao
+    {E : Type}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (moment : Orbit → LieCoalg)
+    (geometricTemperature : LieAlg)
+    (reversibleVectorField metricVectorField : Orbit → Orbit)
+    (entropy : Orbit → ℝ)
+    (C : OperatorialMetriplecticContext (E := E))
+    (R : OperatorialMetriplecticContext.CramerRaoOperatorialResponseContext C)
+    (xForce yForce : Orbit → ℝ) :
+    InfiniteCoadjointOrbitMetriplecticContext Orbit LieAlg LieCoalg :=
+  ofMomentImage
+    (moment := moment)
+    (geometricTemperature := geometricTemperature)
+    (reversibleVectorField := reversibleVectorField)
+    (metricVectorField := metricVectorField)
+    (entropy := entropy)
+    (reversibleEntropyRate := fun _ => 0)
+    (metricEntropyRate := fun x =>
+      C.operatorialEntropyProduction (xForce x) (yForce x))
+    (totalEntropyRate := fun x =>
+      C.operatorialEntropyProduction (xForce x) (yForce x))
+    (casimir_reversible := by
+      intro x
+      rfl)
+    (onsager_metric_nonnegative := by
+      intro x
+      exact
+        C.operatorialEntropyProduction_nonneg_of_cramerRaoResponse
+          R (xForce x) (yForce x))
+    (total_entropy_split := by
+      intro x
+      simp)
+
+theorem operatorialCramerRao_totalEntropyRate_nonnegative
+    {E : Type}
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (moment : Orbit → LieCoalg)
+    (geometricTemperature : LieAlg)
+    (reversibleVectorField metricVectorField : Orbit → Orbit)
+    (entropy : Orbit → ℝ)
+    (C : OperatorialMetriplecticContext (E := E))
+    (R : OperatorialMetriplecticContext.CramerRaoOperatorialResponseContext C)
+    (xForce yForce : Orbit → ℝ)
+    (x : Orbit) :
+    0 ≤ (ofMomentImageOperatorialCramerRao
+      (Orbit := Orbit) (LieAlg := LieAlg) (LieCoalg := LieCoalg)
+      moment geometricTemperature reversibleVectorField metricVectorField
+      entropy C R xForce yForce).totalEntropyRate x := by
+  change 0 ≤ C.operatorialEntropyProduction (xForce x) (yForce x)
+  exact
+    C.operatorialEntropyProduction_nonneg_of_cramerRaoResponse
+      R (xForce x) (yForce x)
 
 namespace SquareDissipation
 

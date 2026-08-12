@@ -59,7 +59,7 @@ def kmsCompatibleFunctionalFamily : CompatibleFunctionalFamily (A := DiagAlg) di
   fun n => normalizedTraceLinear n
 
 /-- The cylinder map as an algebra homomorphism over `ℂ`. -/
-noncomputable def cylinderAlg (n : ℕ) : DiagAlg n →ₐ[ℂ] (CantorBoundary → ℂ) where
+noncomputable def cylinderAlg (n : ℕ) : DiagAlg n →ₐ[ℂ] ((ℕ → Bool) → ℂ) where
   toFun := cylinder n
   map_one' := cylinder_one n
   map_mul' f g := cylinder_mul n f g
@@ -71,7 +71,7 @@ noncomputable def cylinderAlg (n : ℕ) : DiagAlg n →ₐ[ℂ] (CantorBoundary 
     The diagonal algebra tower with successor embeddings and cylinder maps
     forms a valid algebraic tensor inductive limit carrier. -/
 noncomputable def diagonalUHFInductiveLimit : TensorInductiveLimit (R := ℂ) (A := DiagAlg) diagBondAlg where
-  AInf := CantorBoundary → ℂ
+  AInf := (ℕ → Bool) → ℂ
   instSemiring := inferInstance
   instAlgebra := inferInstance
   inj n := cylinderAlg n

@@ -56,8 +56,10 @@ structure TopologicalCEDHamiltonian where
   /-- The spatial alignment function is strictly monotonically decreasing. -/
   alignment_antitone : StrictAnti alignment_function
   
-  /-- Theoretical prediction for CED. -/
-  predicted_CED (J : ℝ) : ℝ := delta_tripotent * alignment_function J
+
+/-- Theoretical prediction for CED. -/
+def TopologicalCEDHamiltonian.predicted_CED (H : TopologicalCEDHamiltonian) (J : ℝ) : ℝ :=
+  H.delta_tripotent * H.alignment_function J
 
 /--
 Theorem: At low and intermediate spins, the alignment function is of order 1,

@@ -23,7 +23,8 @@ structure DiracHodgeOperator (M : Type) (R : Type) [RiemannianManifold M R] wher
 structure BenamouBrenierFluid (M : Type) (R : Type) [RiemannianManifold M R] where
   density : R → M → R
   velocity : R → M → R
-  continuity_eq : ∀ t x, density t x = velocity t x -- Simplified algebraic continuity for formal structure
+  /-- Residual of the continuity equation; analytic transport is supplied separately. -/
+  continuityResidual : R → M → R
   kinetic_energy : R
 
 /-- The Otto-Villani Wasserstein gradient flow entropy formulation -/
@@ -31,18 +32,8 @@ structure WassersteinGradientFlow (M : Type) (R : Type) [RiemannianManifold M R]
   entropy_functional : (M → R) → R
   gradient_descent : (R → M → R) → Prop
 
-/-- The Metriplectic flow equivalence -/
+/-! Finite data for a metriplectic flow. -/
 structure MetriplecticFlow (M : Type) (R : Type) [RiemannianManifold M R] where
   hamiltonian_part : (M → R) → R
   dissipative_part : (M → R) → R
   entropy_prod : R
-
-/-- Formal structure of the equivalence where metriplectic continuous flow 
-    acts as the gradient descent of the entropy functional. -/
-theorem metriplectic_is_wasserstein_gradient_flow
-  {M : Type} {R : Type} [RiemannianManifold M R] 
-  (W : WassersteinGradientFlow M R) 
-  (MF : MetriplecticFlow M R) 
-  (equiv_condition : W.entropy_functional = MF.dissipative_part) :
-  W.entropy_functional = MF.dissipative_part := by
-  exact equiv_condition

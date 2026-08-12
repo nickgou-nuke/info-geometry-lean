@@ -3,6 +3,7 @@ import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import InfoGeometry.Physics.SplitCliffordAlgebras
 
 /-!
 # Split Clifford algebras `Cl(n,n)`
@@ -35,6 +36,8 @@ open scoped TensorProduct
 open Matrix Polynomial
 
 namespace SplitClifford
+
+namespace Legacy
 
 /-- The positive one-dimensional real quadratic form `x ↦ x^2`. -/
 abbrev Qpos : QuadraticForm ℝ ℝ := QuadraticMap.sq (R := ℝ)
@@ -338,7 +341,7 @@ def grandCanonicalExponent (β μ E q : ℝ) : ℝ :=
 
 /-- Souriau/Gibbs affine bracket data: thermodynamic weights drive the bracket
 mixture and a chemical potential shifts the excitation energy. -/
-structure SouriauAffineBracket where
+structure LegacySouriauAffineBracket where
   α : ℝ
   β : ℝ
   μ : ℝ
@@ -363,17 +366,6 @@ theorem bogoliubov_preserves_krein {c s : ℝ} (h : c * c - s * s = 1) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [bogoliubovMix, kreinJ, Matrix.mul_apply, Fin.sum_univ_two] <;> nlinarith [h]
-
-/-- The projective-affine-conformal closure is represented as an interface:
-from a split Clifford carrier, through normalized Jordan/Lie/super brackets, to a
-structure group action and TKK-style closure. -/
-structure ProjectiveAffineConformalClosure where
-  cliffordCarrier : Prop
-  jordanLieSplit : Prop
-  supergradedAlgebra : Prop
-  structureGroupAction : Prop
-  tkkClosure : Prop
-  closes : cliffordCarrier → jordanLieSplit → supergradedAlgebra → structureGroupAction → tkkClosure
 
 /-! ## Chiral operator, projectors, and split pseudoscalar
 
@@ -787,4 +779,5 @@ def blochMix (t : ℝ) (v w : BlochVector) : BlochVector :=
   funext i
   simp [blochMix, blochCenter]
 
+end Legacy
 end SplitClifford

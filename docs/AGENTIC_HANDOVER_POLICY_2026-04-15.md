@@ -178,7 +178,7 @@ directives are mandatory:
 Machine gate:
 
 ```bash
-python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry/Canonical --json-out reports/pauli-seal-audit.json
+python3 tools/quality/pauli_seal_audit.py --root lean/InfoGeometry --json-out reports/pauli-seal-audit.json
 ```
 
 Any nonzero finding count blocks Lane B -> Lane C promotion.

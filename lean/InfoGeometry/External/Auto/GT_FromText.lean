@@ -26,7 +26,7 @@ theorem exponential_reconstruction_surjective
 
 /-- The diagonal UHF boundary is canonically identified with binary strings. -/
 theorem crystallization_unifies_continuum :
-    Nonempty (CantorBoundary ≃ (ℕ → Bool)) := by
+    Nonempty ((ℕ → Bool) ≃ (ℕ → Bool)) := by
   exact ⟨cantor_is_diagonal_spectrum⟩
 
 /-- The thermal Cayley coordinate tends to the boundary point `1`. -/

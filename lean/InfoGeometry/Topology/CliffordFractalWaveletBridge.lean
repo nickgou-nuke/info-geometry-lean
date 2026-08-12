@@ -29,16 +29,12 @@ open InfoGeometry.Topology.FractalCantorFockWitness
 
 /-! ## 1. Binary addresses and fractal wavelet modes -/
 
-/-- Binary words of length `n`, used as Cantor cylinder addresses. -/
-abbrev BinaryWord (n : ℕ) : Type :=
-  Fin n → Bool
-
 /-- Fractal wavelet modes indexed by finite binary words. -/
 @[rep_depth transport]
 structure FractalWaveletAddress where
   depth : ℕ
   WaveletMode : Type
-  waveletOfWord : BinaryWord depth → WaveletMode
+  waveletOfWord : Fin depth → Bool → WaveletMode
 
 /--
 Abstract Clifford fractal wavelet socket.
@@ -50,33 +46,7 @@ This is the primitive socket for the corrected slogan:
 structure CliffordFractalWaveletSocket
     (Op : Type*) [Ring Op] where
   address : FractalWaveletAddress
-
-  /-- Tilt/sign/Rademacher operators. -/
-  T : ℕ → Op
-
-  /-- Switch/bit-flip operators. -/
-  S : ℕ → Op
-
-  T_sq :
-    ∀ j, T j * T j = 1
-
-  S_sq :
-    ∀ j, S j * S j = 1
-
-  T_S_anticomm :
-    ∀ j, T j * S j = - (S j * T j)
-
-  T_S_comm_ne :
-    ∀ i j, i ≠ j → T i * S j = S j * T i
-
-  /-- Clifford generators acting on fractal wavelet modes. -/
-  gamma : ℕ → Op
-
-  gamma_sq :
-    ∀ i, gamma i * gamma i = 1
-
-  gamma_anticomm :
-    ∀ i j, i ≠ j → gamma i * gamma j = - (gamma j * gamma i)
+  representation : RealDoubledCantorCliffordRepresentation Op
 
 namespace CliffordFractalWaveletSocket
 
@@ -86,36 +56,103 @@ variable (C : CliffordFractalWaveletSocket Op)
 /-- Tilt squares to one. -/
 @[rep_depth operator]
 theorem tilt_sq (j : ℕ) :
-    C.T j * C.T j = 1 :=
-  C.T_sq j
+    C.representation.tiltSwitch.T j * C.representation.tiltSwitch.T j = 1 :=
+  C.representation.tiltSwitch.T_sq j
 
 /-- Switch squares to one. -/
 @[rep_depth operator]
 theorem switch_sq (j : ℕ) :
-    C.S j * C.S j = 1 :=
-  C.S_sq j
+    C.representation.tiltSwitch.S j * C.representation.tiltSwitch.S j = 1 :=
+  C.representation.tiltSwitch.S_sq j
 
 /-- Tilt and switch anticommute at the same address slot. -/
 @[rep_depth operator]
 theorem tilt_switch_anticomm (j : ℕ) :
-    C.T j * C.S j + C.S j * C.T j = 0 := by
-  rw [C.T_S_anticomm j]
+    C.representation.tiltSwitch.T j * C.representation.tiltSwitch.S j +
+        C.representation.tiltSwitch.S j * C.representation.tiltSwitch.T j = 0 := by
+  rw [C.representation.tiltSwitch.T_S_anticomm j]
   simp
+
+theorem tilt_switch_commutator_ne {i j : ℕ} (hij : i ≠ j) :
+    C.representation.tiltSwitch.T i * C.representation.tiltSwitch.S j -
+        C.representation.tiltSwitch.S j * C.representation.tiltSwitch.T i = 0 := by
+  rw [C.representation.tiltSwitch.T_S_comm_ne i j hij]
+  exact sub_self _
 
 /-- Clifford generator square law. -/
 @[rep_depth operator]
 theorem gamma_square (i : ℕ) :
-    C.gamma i * C.gamma i = 1 :=
-  C.gamma_sq i
+    C.representation.gamma i * C.representation.gamma i = 1 :=
+  C.representation.gamma_sq i
 
 /-- Clifford generator anticommutator law. -/
 @[rep_depth operator]
 theorem gamma_anticommutator {i j : ℕ} (hij : i ≠ j) :
-    C.gamma i * C.gamma j + C.gamma j * C.gamma i = 0 := by
-  rw [C.gamma_anticomm i j hij]
+    C.representation.gamma i * C.representation.gamma j +
+        C.representation.gamma j * C.representation.gamma i = 0 := by
+  rw [C.representation.gamma_anticomm i j hij]
   simp
 
+theorem gamma_commutator {i j : ℕ} (hij : i ≠ j) :
+    C.representation.gamma i * C.representation.gamma j -
+        C.representation.gamma j * C.representation.gamma i =
+      2 * (C.representation.gamma i * C.representation.gamma j) := by
+  rw [C.representation.gamma_anticomm i j hij]
+  simpa [sub_eq_add_neg] using
+    (two_mul (-(C.representation.gamma j * C.representation.gamma i))).symm
+
 end CliffordFractalWaveletSocket
+
+/-! ## Direct relation for the Clifford fractal wavelet generators -/
+
+def IsCliffordFractalWaveletSystem
+    {Op : Type*} [Ring Op]
+    (T S gamma : ℕ → Op) : Prop :=
+  (∀ j, T j * T j = 1) ∧
+  (∀ j, S j * S j = 1) ∧
+  (∀ j, T j * S j = -(S j * T j)) ∧
+  (∀ i j, i ≠ j → T i * S j = S j * T i) ∧
+  (∀ i, gamma i * gamma i = 1) ∧
+  (∀ i j, i ≠ j → gamma i * gamma j = -(gamma j * gamma i))
+
+theorem CliffordFractalWaveletSocket.isSystem
+    {Op : Type*} [Ring Op]
+    (C : CliffordFractalWaveletSocket Op) :
+    IsCliffordFractalWaveletSystem
+      C.representation.tiltSwitch.T C.representation.tiltSwitch.S
+      C.representation.gamma := by
+  exact ⟨C.representation.tiltSwitch.T_sq,
+    C.representation.tiltSwitch.S_sq,
+    C.representation.tiltSwitch.T_S_anticomm,
+    C.representation.tiltSwitch.T_S_comm_ne,
+    C.representation.gamma_sq, C.representation.gamma_anticomm⟩
+
+theorem CliffordFractalWaveletSocket.tilt_switch_product_sq
+    {Op : Type*} [Ring Op]
+    (C : CliffordFractalWaveletSocket Op) (j : ℕ) :
+    (C.representation.tiltSwitch.T j * C.representation.tiltSwitch.S j) *
+        (C.representation.tiltSwitch.T j * C.representation.tiltSwitch.S j) = -1 := by
+  have hrev : C.representation.tiltSwitch.S j * C.representation.tiltSwitch.T j =
+      -(C.representation.tiltSwitch.T j * C.representation.tiltSwitch.S j) := by
+    rw [C.representation.tiltSwitch.T_S_anticomm j]
+    simp
+  calc
+    (C.representation.tiltSwitch.T j * C.representation.tiltSwitch.S j) *
+        (C.representation.tiltSwitch.T j * C.representation.tiltSwitch.S j) =
+        C.representation.tiltSwitch.T j *
+          (C.representation.tiltSwitch.S j * C.representation.tiltSwitch.T j) *
+          C.representation.tiltSwitch.S j := by
+          simp [mul_assoc]
+    _ = C.representation.tiltSwitch.T j *
+          (-(C.representation.tiltSwitch.T j * C.representation.tiltSwitch.S j)) *
+          C.representation.tiltSwitch.S j := by rw [hrev]
+    _ = -(C.representation.tiltSwitch.T j * C.representation.tiltSwitch.T j) *
+          (C.representation.tiltSwitch.S j * C.representation.tiltSwitch.S j) := by
+      noncomm_ring
+    _ = -1 := by
+      rw [C.representation.tiltSwitch.T_sq j,
+        C.representation.tiltSwitch.S_sq j]
+      simp
 
 /-! ## 2. Drazin-Hodge scaling/detail split -/
 
@@ -251,20 +288,5 @@ theorem quadric_zero :
   L.quadric_zero_property
 
 end CliffordFractalWaveletFierzKleinLaw
-
-/-! ## 5. Owner target -/
-
-/-- Owner target for the Clifford fractal wavelet bridge over a fixed algebra. -/
-def CliffordFractalWaveletBridgeTarget
-    (Op : Type*) [Ring Op] : Prop :=
-  Nonempty (CliffordFractalWaveletFierzKleinLaw Op)
-
-/-- Constructor for the Clifford fractal wavelet bridge target. -/
-@[bridge_target_tag]
-theorem constructCliffordFractalWaveletBridgeTarget
-    {Op : Type*} [Ring Op]
-    (L : CliffordFractalWaveletFierzKleinLaw Op) :
-    CliffordFractalWaveletBridgeTarget Op := by
-  exact ⟨L⟩
 
 end InfoGeometry.Topology.CliffordFractalWaveletBridge

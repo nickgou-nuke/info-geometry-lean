@@ -26,11 +26,6 @@ theorem su2_isospin_from_s3_weyl_standard_rep :
     Matrix.trace sigma1 = 0 ∧ Matrix.trace sigma2 = 0 ∧ Matrix.trace sigma3 = 0 := by
   refine ⟨?_, ?_, ?_⟩ <;> simp [sigma1, sigma2, sigma3, Matrix.trace_fin_two]
 
-theorem hill_wheeler_is_gns_colimit :
-    ∀ (Ψ : M2C), ∃ (Φ : M2C), Ψ = Φ := by
-  intro Ψ
-  exact ⟨Ψ, rfl⟩
-
 theorem gns_projection_yields_physical_nucleon :
     Matrix.trace (PPlus + PMinus) = 2 := by
   -- PPlus and PMinus are complementary projectors summing to identity

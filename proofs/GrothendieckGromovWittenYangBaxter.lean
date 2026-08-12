@@ -46,18 +46,6 @@ theorem U4Class_to_candidateEc (u v : ℤ) :
       NonIsoConf3QuadricD4EPolynomial.candidateEc u v := by
   rfl
 
-/-- Abstract braid/Yang--Baxter theorem in any monoid: the braid relation is the
-Yang--Baxter word equality. -/
-theorem yang_baxter_from_braid_relation {M : Type} [Monoid M] (σ₁ σ₂ : M)
-    (h : σ₁ * σ₂ * σ₁ = σ₂ * σ₁ * σ₂) :
-    σ₁ * σ₂ * σ₁ = σ₂ * σ₁ * σ₂ := h
-
-/-- Conversely, in this arity-three presentation, a Yang--Baxter word equality is
-exactly the braid relation. -/
-theorem braid_relation_from_yang_baxter {M : Type} [Monoid M] (R12 R23 : M)
-    (h : R12 * R23 * R12 = R23 * R12 * R23) :
-    R12 * R23 * R12 = R23 * R12 * R23 := h
-
 /-- Capstone: the finite polynomial and abstract braid facts are proved. -/
 theorem grothendieck_gw_yang_baxter_synthesis :
     (∀ L : ℤ, U4ClassInclusionExclusion L = U4ClassFactorized L) ∧

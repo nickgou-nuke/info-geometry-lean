@@ -35,16 +35,13 @@ def diagonalDiagram : ℕ ⥤ Type := Functor.ofSequence diagonalEmbed
 /-- The `2`-adic/UHF-bulk colimit over diagonal finite levels (as a type-level colimit). -/
 def uHFColimit : Type := colimit diagonalDiagram
 
-/-- Infinite binary strings: `CantorBoundary = {0,1}^ℕ`. -/
-def CantorBoundary : Type := ℕ → Bool
-
 /-- Finite-to-infinite readout (zero padding beyond stage). -/
-def finiteToBoundary (n : ℕ) : DiagonalLevel n → CantorBoundary :=
+def finiteToBoundary (n : ℕ) : DiagonalLevel n → (ℕ → Bool) :=
   fun b k => if h : k < n then b ⟨k, h⟩ else false
 
-/-- Cocone from finite levels into `CantorBoundary`. -/
+/-- Cocone from finite levels into `(ℕ → Bool)`. -/
 def boundaryCocone : Cocone diagonalDiagram where
-  pt := CantorBoundary
+  pt := (ℕ → Bool)
   ι := NatTrans.ofSequence
     (app := finiteToBoundary)
     (naturality := by
@@ -63,17 +60,17 @@ def boundaryCocone : Cocone diagonalDiagram where
         · simp [finiteToBoundary, hkn, hk])
 
 /-- Map from the colimit to the Cantor boundary (projective readout). -/
-noncomputable def fromColimitBoundary : colimit diagonalDiagram → CantorBoundary :=
+noncomputable def fromColimitBoundary : colimit diagonalDiagram → (ℕ → Bool) :=
   colimit.desc (F := diagonalDiagram) (c := boundaryCocone)
 
 /-- Canonical identification of the boundary type. -/
-def cantor_boundary_identification : CantorBoundary ≃ (ℕ → Bool) :=
+def cantor_boundary_identification : (ℕ → Bool) ≃ (ℕ → Bool) :=
   Equiv.refl _
 
 /-- Correction statement (for comments/theory):
 `Spec(UHF_{2^∞})` is not used here;
-`Spec(D_{2^∞})` (diagonal MASA) is realized as CantorBoundary. -/
-def cantor_is_diagonal_spectrum : CantorBoundary ≃ (ℕ → Bool) :=
+`Spec(D_{2^∞})` (diagonal MASA) is realized as (ℕ → Bool). -/
+def cantor_is_diagonal_spectrum : (ℕ → Bool) ≃ (ℕ → Bool) :=
   cantor_boundary_identification
 
 /-- General Zorn pattern (nonempty chain property ⇒ maximal extension). -/

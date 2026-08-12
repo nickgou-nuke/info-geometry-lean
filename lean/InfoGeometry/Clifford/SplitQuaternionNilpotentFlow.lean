@@ -67,6 +67,24 @@ def sq_nilpotent_exp (T : ℝ) : SplitQuaternion :=
 theorem N_nil_sq : N_nil * N_nil = 0 := by
   ext <;> simp [N_nil, sqMul, sqZero]
 
+theorem N_nil_toMatrix :
+    toMatrix N_nil = !![(0 : ℝ), 0; -2, 0] := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [toMatrix, N_nil]
+
+theorem N_nil_toMatrix_sq :
+    toMatrix N_nil * toMatrix N_nil = 0 := by
+  rw [N_nil_toMatrix]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem N_nil_toMatrix_det :
+    (toMatrix N_nil).det = 0 := by
+  rw [N_nil_toMatrix]
+  simp [Matrix.det_fin_two]
+
 /-- Closed coordinate form of the algebraic nilpotent truncation. -/
 theorem sq_nilpotent_exp_eq (T : ℝ) :
     sq_nilpotent_exp T = ⟨1, T, -T, 0⟩ := by

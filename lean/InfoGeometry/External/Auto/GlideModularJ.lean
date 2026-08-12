@@ -35,9 +35,6 @@ theorem inv_eq_self_of_modularJ {J : G} (hJ : IsModularJ J) : J⁻¹ = J := by
     J⁻¹ = J⁻¹ * (J * J) := by rw [hJ]; simp
     _ = J := by group
 
-/-- Modular conjugation is literally a glide-inversion relation. -/
-theorem modularJ_is_glide {J Δ : G} (h : ModularJInverts J Δ) : GlideInverts J Δ := h
-
 /-- With `J²=1`, the Tomita form `J Δ J = Δ⁻¹` follows. -/
 theorem modularJ_tomita_form {J Δ : G} (hJ : IsModularJ J) (hInv : ModularJInverts J Δ) :
     J * Δ * J = Δ⁻¹ := by

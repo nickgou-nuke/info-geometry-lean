@@ -214,7 +214,7 @@ structure FaceBridge where
     BinaryWordModularFaceBridge (H := H)
 
   /-- Binary word indexing the localized natural-cone face used by the bridge. -/
-  faceWord : TypeIIIModularCantorSystem.BinaryWord
+  faceWord : List Bool
 
   /-- Typed readout from the projective state carrier to the doubled Hilbert carrier. -/
   faceStateOf : State → InfoGeometry.Krein.DoubledSpace H
@@ -254,7 +254,7 @@ theorem localizationOp_fixes_face_state :
 /-- Binary-word localization operator inherited from the standard-form face bridge. -/
 @[rep_depth projective]
 noncomputable def localizationOp
-    (w : TypeIIIModularCantorSystem.BinaryWord) :
+    (w : List Bool) :
     InfoGeometry.Krein.DoubledSpace H →L[ℝ] InfoGeometry.Krein.DoubledSpace H :=
   BinaryWordModularFaceBridge.localizationOp B.faceBridge w
 
@@ -266,7 +266,7 @@ Tomita--Takesaki theorem.
 -/
 @[rep_depth projective]
 theorem cone_face_localization
-    (w : TypeIIIModularCantorSystem.BinaryWord)
+    (w : List Bool)
     {ξ : InfoGeometry.Krein.DoubledSpace H}
     (hξ : ξ ∈ B.faceBridge.naturalCone) :
     FaceBridge.localizationOp B w ξ ∈

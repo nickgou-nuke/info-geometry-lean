@@ -29,6 +29,8 @@ set_option linter.unusedTactic false
 set_option linter.unusedVariables false
 set_option linter.unusedSimpArgs false
 
+namespace JDualityChainProofs
+
 /-══════════════════════════════════════════════════════════════════════
    LAYER 1: MODULAR CONJUGATION J (Tomita–Takesaki)
    ═════════════════════════════════════════════════════════════════════-/
@@ -258,3 +260,5 @@ theorem J_Γ_anticomm' : J_mod * Γ = -(ΓJ) := by
 #check JDualityChain_holds
 #check fenchel_J_closure
 #check J_Γ_anticomm'
+
+end JDualityChainProofs

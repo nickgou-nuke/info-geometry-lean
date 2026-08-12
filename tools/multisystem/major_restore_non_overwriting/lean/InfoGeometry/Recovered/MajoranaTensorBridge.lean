@@ -60,16 +60,24 @@ def gamma3_maj : MajoranaMatrix :=
 /-! ## The (2,2) Neutral Metric Signature -/
 
 theorem gamma0_maj_sq : gamma0_maj * gamma0_maj = 1 := by
-  ext i j; fin_cases i <;> fin_cases j <;> rfl
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [gamma0_maj, Matrix.mul_apply, Fin.sum_univ_succ]
 
 theorem gamma1_maj_sq : gamma1_maj * gamma1_maj = 1 := by
-  ext i j; fin_cases i <;> fin_cases j <;> rfl
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [gamma1_maj, Matrix.mul_apply, Fin.sum_univ_succ]
 
 theorem gamma2_maj_sq : gamma2_maj * gamma2_maj = -1 := by
-  ext i j; fin_cases i <;> fin_cases j <;> rfl
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [gamma2_maj, Matrix.mul_apply, Fin.sum_univ_succ]
 
 theorem gamma3_maj_sq : gamma3_maj * gamma3_maj = -1 := by
-  ext i j; fin_cases i <;> fin_cases j <;> rfl
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [gamma3_maj, Matrix.mul_apply, Fin.sum_univ_succ]
 
 /-- The unified mixed rotation-boost Lorentz generator `Σᵘᵛ = [γᵘ, γᵛ]`. -/
 noncomputable def realLorentzGenerator (gamma_u gamma_v : MajoranaMatrix) : MajoranaMatrix :=
@@ -104,7 +112,10 @@ noncomputable def gamma5_maj : MajoranaMatrix :=
   gamma0_maj * gamma1_maj * gamma2_maj * gamma3_maj
 
 theorem gamma5_maj_sq : gamma5_maj * gamma5_maj = 1 := by
-  sorry
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [gamma5_maj, gamma0_maj, gamma1_maj, gamma2_maj, gamma3_maj,
+      Matrix.mul_apply, Fin.sum_univ_succ]
 
 /-- 
 Chiral Supercharge Projectors: P_L and P_R.
@@ -134,17 +145,22 @@ balanced between Left and Right chiral states.
 -/
 theorem chiralSupertrace_identity_eq_zero :
   chiralSupertrace 1 = 0 := by
-  sorry
+  simp [chiralSupertrace, gamma5_maj, gamma0_maj, gamma1_maj, gamma2_maj,
+    gamma3_maj, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_succ]
 
 /-- The trace of the Left chiral projector natively splits the 4D space. -/
 theorem trace_chiralProjectorL_eq_two :
   Matrix.trace chiralProjectorL = 2 := by
-  sorry
+  simp [chiralProjectorL, gamma5_maj, gamma0_maj, gamma1_maj, gamma2_maj,
+    gamma3_maj, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_succ]
+  <;> ring
 
 /-- The trace of the Right chiral projector natively splits the 4D space. -/
 theorem trace_chiralProjectorR_eq_two :
   Matrix.trace chiralProjectorR = 2 := by
-  sorry
+  simp [chiralProjectorR, gamma5_maj, gamma0_maj, gamma1_maj, gamma2_maj,
+    gamma3_maj, Matrix.trace, Matrix.mul_apply, Fin.sum_univ_succ]
+  <;> ring
 
 /-! ## Nilpotent Cuntz Generators and the Klein Quadric Boundary -/
 
@@ -172,13 +188,17 @@ This enforces the Plücker geometric relation Q = 0.
 -/
 theorem cuntzGeneratorPlus_nilpotent :
   cuntzGeneratorPlus * cuntzGeneratorPlus = 0 := by
-  -- Proof expands (γ⁰ + γ²)(γ⁰ + γ²) = γ⁰² + γ²² + {γ⁰, γ²} 
-  -- = 1 - 1 + 0 = 0
-  sorry
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [cuntzGeneratorPlus, gamma0_maj, gamma2_maj,
+      Matrix.mul_apply, Fin.sum_univ_succ]
 
 theorem cuntzGeneratorMinus_nilpotent :
   cuntzGeneratorMinus * cuntzGeneratorMinus = 0 := by
-  sorry
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [cuntzGeneratorMinus, gamma0_maj, gamma2_maj,
+      Matrix.mul_apply, Fin.sum_univ_succ]
 
 /-- 
 The Cuntz Algebraic Identity.
@@ -188,7 +208,9 @@ function state for Bost-Connes.
 -/
 theorem cuntzGenerator_anticommutator_identity :
   cuntzGeneratorPlus * cuntzGeneratorMinus + cuntzGeneratorMinus * cuntzGeneratorPlus = 1 := by
-  -- Proof expands to 1/4 * (2γ⁰² - 2γ²²) = 1/4 * (2 - (-2)) = 1
-  sorry
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [cuntzGeneratorPlus, cuntzGeneratorMinus, gamma0_maj, gamma2_maj,
+      Matrix.mul_apply, Fin.sum_univ_succ]
 
 end InfoGeometry.MajoranaTensorBridge

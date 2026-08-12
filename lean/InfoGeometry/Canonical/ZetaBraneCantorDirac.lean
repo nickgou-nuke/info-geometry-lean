@@ -40,26 +40,42 @@ theorem RH_from_CantorDiracProgram
 
 /-! ## Non-commutative Operatorial Möbius Parity (Witten Index) -/
 
-/--
-The classical commutative `Fin N → Bool` toy carrier has been eradicated.
-Möbius parity is now represented strictly by a non-commutative $\mathbb{Z}_2$-grading
-operator $\Gamma$ (the Witten index) on the Dirac sector.
--/
-structure OperatorMobiusParity (Operator : Type*) [Monoid Operator] where
-  parity : Operator
-  is_involution : parity * parity = 1
-
-/-- Möbius parity operator squares to the identity. -/
+/-- An involutive parity acts as an involution on every element. -/
 theorem mobiusParity_sq {Operator : Type*} [Monoid Operator]
-    (Γ : OperatorMobiusParity Operator) :
-    Γ.parity * Γ.parity = 1 :=
-  Γ.is_involution
+    (parity : Operator) (hparity : parity * parity = 1)
+    (x : Operator) :
+    parity * (parity * x) = x := by
+  rw [← mul_assoc, hparity, one_mul]
+
+theorem mobiusParity_right_action_sq {Operator : Type*} [Monoid Operator]
+    (parity : Operator) (hparity : parity * parity = 1)
+    (x : Operator) :
+    (x * parity) * parity = x := by
+  rw [mul_assoc, hparity, mul_one]
+
+theorem mobiusParity_left_cancel {Operator : Type*} [Monoid Operator]
+    (parity : Operator) (hparity : parity * parity = 1)
+    {x y : Operator} (hxy : parity * x = parity * y) :
+    x = y := by
+  calc
+    x = parity * (parity * x) := (mobiusParity_sq parity hparity x).symm
+    _ = parity * (parity * y) := by rw [hxy]
+    _ = y := mobiusParity_sq parity hparity y
+
+theorem mobiusParity_right_cancel {Operator : Type*} [Monoid Operator]
+    (parity : Operator) (hparity : parity * parity = 1)
+    {x y : Operator} (hxy : x * parity = y * parity) :
+    x = y := by
+  calc
+    x = (x * parity) * parity := (mobiusParity_right_action_sq parity hparity x).symm
+    _ = (y * parity) * parity := by rw [hxy]
+    _ = y := mobiusParity_right_action_sq parity hparity y
 
 /-- Möbius parity is invertible (and thus non-zero in non-trivial rings). -/
 theorem mobiusParity_isUnit {Operator : Type*} [Monoid Operator]
-    (Γ : OperatorMobiusParity Operator) :
-    IsUnit Γ.parity :=
-  ⟨⟨Γ.parity, Γ.parity, Γ.is_involution, Γ.is_involution⟩, rfl⟩
+    (parity : Operator) (hparity : parity * parity = 1) :
+    IsUnit parity :=
+  ⟨⟨parity, parity, hparity, hparity⟩, rfl⟩
 
 /- Finite operator equivalence. -/
 
@@ -69,12 +85,21 @@ Finite Cantor-Dirac self-adjointness / unitarity calibration.
 This is the exact gap the skeleton leaves open.  It is recorded as a socket
 interface instead of being turned into a fake theorem.
 -/
+theorem finiteCantorDirac_calibration_predicates_eq
+    {Operator : Type*}
+    (IsSelfAdjoint IsUnitary : Operator → Prop)
+    (hEquiv : ∀ x : Operator, IsSelfAdjoint x ↔ IsUnitary x) :
+    IsSelfAdjoint = IsUnitary := by
+  funext x
+  apply propext
+  exact hEquiv x
+
 theorem finiteCantorDirac_selfAdjoint_iff_unitary_holds
     {Operator : Type*}
     (finiteCantorDirac : Operator)
     (IsSelfAdjoint IsUnitary : Operator → Prop)
     (hEquiv : ∀ x : Operator, IsSelfAdjoint x ↔ IsUnitary x) :
-    IsSelfAdjoint finiteCantorDirac ↔ IsUnitary finiteCantorDirac :=
-  hEquiv finiteCantorDirac
+    IsSelfAdjoint finiteCantorDirac ↔ IsUnitary finiteCantorDirac := by
+  rw [finiteCantorDirac_calibration_predicates_eq IsSelfAdjoint IsUnitary hEquiv]
 
 end InfoGeometry.Canonical.ZetaBraneCantorDirac

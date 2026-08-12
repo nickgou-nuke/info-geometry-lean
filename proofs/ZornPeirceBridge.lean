@@ -1,5 +1,5 @@
 import Mathlib
-import proofs.ZornCore
+import InfoGeometry.Canonical.ZornCore
 import proofs.StructureTensor
 
 noncomputable section

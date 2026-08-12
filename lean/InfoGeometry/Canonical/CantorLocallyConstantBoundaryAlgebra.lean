@@ -16,10 +16,8 @@ namespace InfoGeometry.Canonical.CantorLocallyConstantBoundaryAlgebra
 open InfoGeometry.Canonical.CantorCylinderFunctionStages
 open InfoGeometry.Canonical.CantorCliffordFunctionModel
 
-abbrev BoundaryFunction := ContinuousBoundaryFunction ℝ
-
 def IsLocallyConstantBoundaryFunction
-    (f : BoundaryFunction) : Prop :=
+    (f : (InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ)) : Prop :=
   ∃ (n : ℕ) (g : CylinderFunction n), liftCylinder g = f
 
 @[simp] theorem isLocallyConstantBoundaryFunction_liftCylinder
@@ -28,30 +26,40 @@ def IsLocallyConstantBoundaryFunction
   exact ⟨n, g, rfl⟩
 
 theorem isLocallyConstantBoundaryFunction_zero :
-    IsLocallyConstantBoundaryFunction (0 : BoundaryFunction) := by
+    IsLocallyConstantBoundaryFunction (0 : (InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ)) := by
   refine ⟨0, 0, ?_⟩
   simpa using (map_zero (liftCylinderAlgHom 0))
 
 theorem isLocallyConstantBoundaryFunction_one :
-    IsLocallyConstantBoundaryFunction (1 : BoundaryFunction) := by
+    IsLocallyConstantBoundaryFunction (1 : (InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ)) := by
   refine ⟨0, 1, ?_⟩
   simpa using (map_one (liftCylinderAlgHom 0))
 
 theorem isLocallyConstantBoundaryFunction_algebraMap (r : ℝ) :
-    IsLocallyConstantBoundaryFunction (algebraMap ℝ BoundaryFunction r) := by
+    IsLocallyConstantBoundaryFunction (algebraMap ℝ (InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) r) := by
   refine ⟨0, algebraMap ℝ (CylinderFunction 0) r, ?_⟩
   exact (liftCylinderAlgHom 0).commutes r
 
 theorem isLocallyConstantBoundaryFunction_neg
-    {f : BoundaryFunction}
+    {f : (InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ)}
     (hf : IsLocallyConstantBoundaryFunction f) :
     IsLocallyConstantBoundaryFunction (-f) := by
   rcases hf with ⟨n, f, rfl⟩
   refine ⟨n, -f, ?_⟩
   simpa using (map_neg (liftCylinderAlgHom n) f)
 
+theorem isLocallyConstantBoundaryFunction_smul
+    (r : ℝ)
+    {f : (InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ)}
+    (hf : IsLocallyConstantBoundaryFunction f) :
+    IsLocallyConstantBoundaryFunction (r • f) := by
+  rcases hf with ⟨n, f, rfl⟩
+  refine ⟨n, r • f, ?_⟩
+  change (liftCylinderAlgHom n) (r • f) = r • (liftCylinderAlgHom n) f
+  exact (liftCylinderAlgHom n).toLinearMap.map_smul r f
+
 noncomputable def locallyConstantBoundaryAlgebra :
-    Subalgebra ℝ BoundaryFunction :=
+    Subalgebra ℝ (InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ) :=
   Algebra.adjoin ℝ
     (Set.range fun p : Σ n : ℕ, CylinderFunction n => liftCylinder p.2)
 
@@ -80,7 +88,7 @@ theorem isLocallyConstantBoundaryFunction_liftCylinder_mul
   simpa using (map_mul (liftCylinderAlgHom n) f g)
 
 theorem isLocallyConstantBoundaryFunction_add
-    {f g : BoundaryFunction}
+    {f g : (InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ)}
     (hf : IsLocallyConstantBoundaryFunction f)
     (hg : IsLocallyConstantBoundaryFunction g) :
     IsLocallyConstantBoundaryFunction (f + g) := by
@@ -102,7 +110,7 @@ theorem isLocallyConstantBoundaryFunction_add
           simp [liftCylinder_stageEmbedOfLe]
 
 theorem isLocallyConstantBoundaryFunction_mul
-    {f g : BoundaryFunction}
+    {f g : (InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ)}
     (hf : IsLocallyConstantBoundaryFunction f)
     (hg : IsLocallyConstantBoundaryFunction g) :
     IsLocallyConstantBoundaryFunction (f * g) := by
@@ -124,7 +132,7 @@ theorem isLocallyConstantBoundaryFunction_mul
       simp [liftCylinder_stageEmbedOfLe]
 
 theorem isLocallyConstantBoundaryFunction_sub
-    {f g : BoundaryFunction}
+    {f g : (InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ)}
     (hf : IsLocallyConstantBoundaryFunction f)
     (hg : IsLocallyConstantBoundaryFunction g) :
     IsLocallyConstantBoundaryFunction (f - g) := by
@@ -133,7 +141,7 @@ theorem isLocallyConstantBoundaryFunction_sub
       (isLocallyConstantBoundaryFunction_neg hg)
 
 theorem mem_locallyConstantBoundaryAlgebra_iff
-    {f : BoundaryFunction} :
+    {f : (InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ)} :
     f ∈ locallyConstantBoundaryAlgebra ↔
       IsLocallyConstantBoundaryFunction f := by
   constructor
@@ -154,14 +162,14 @@ theorem mem_locallyConstantBoundaryAlgebra_iff
     exact liftCylinder_mem_locallyConstantBoundaryAlgebra g
 
 theorem isLocallyConstantBoundaryFunction_boundaryMirrorPullback
-    {f : BoundaryFunction}
+    {f : (InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ)}
     (hf : IsLocallyConstantBoundaryFunction f) :
     IsLocallyConstantBoundaryFunction (boundaryMirrorPullback f) := by
   rcases hf with ⟨n, g, rfl⟩
   exact ⟨n, mirrorCylinderFunction g, boundaryMirrorPullback_liftCylinder g⟩
 
 theorem boundaryMirrorPullback_mem_locallyConstantBoundaryAlgebra
-    {f : BoundaryFunction}
+    {f : (InfoGeometry.Canonical.CantorCliffordFunctionModel.ContinuousBoundaryFunction ℝ)}
     (hf : f ∈ locallyConstantBoundaryAlgebra) :
     boundaryMirrorPullback f ∈ locallyConstantBoundaryAlgebra := by
   rw [mem_locallyConstantBoundaryAlgebra_iff] at hf ⊢

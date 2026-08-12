@@ -33,11 +33,24 @@ noncomputable def stageObservationRangeFlowCompHausIso
     (ρ : inverseLimitCarrier) (n : ℕ) (X : MatStage n) (t : ℝ) :
     stageObservationRangeCompHaus ρ n X ≅
       stageObservationRangeCompHaus (flow.act t ρ) n X := by
-  exact CompHausLike.isoOfHomeo
-    (P := fun _ : TopCat => True)
-    (X := stageObservationRangeCompHaus ρ n X)
-    (Y := stageObservationRangeCompHaus (flow.act t ρ) n X)
-    (stageObservationRangeFlowHomeomorph ρ n X t)
+  let e := stageObservationRangeFlowHomeomorph ρ n X t
+  exact
+    { hom := ⟨TopCat.ofHom
+        { toFun := e
+          continuous_toFun := e.continuous }⟩
+      inv := ⟨TopCat.ofHom
+        { toFun := e.symm
+          continuous_toFun := e.symm.continuous }⟩
+      hom_inv_id := by
+        apply ConcreteCategory.hom_ext
+        intro z
+        change e.symm (e z) = z
+        exact e.symm_apply_apply z
+      inv_hom_id := by
+        apply ConcreteCategory.hom_ext
+        intro z
+        change e (e.symm z) = z
+        exact e.apply_symm_apply z }
 
 @[simp] theorem stageObservationRangeFlowCompHausIso_hom_apply
     (ρ : inverseLimitCarrier) (n : ℕ) (X : MatStage n) (t : ℝ)

@@ -103,7 +103,7 @@
     },
     {
       "path": "lean/InfoGeometry/Canonical/PhaseAxisCartanSymmetricLie.lean",
-      "pattern": "noncomputable def scaleClockCartanForcingData"
+      "pattern": "noncomputable def phaseAxisCartanMap"
     },
     {
       "path": "lean/InfoGeometry/Canonical/PhaseAxisCartanSymmetricLie.lean",
@@ -159,7 +159,7 @@
     },
     {
       "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
-      "pattern": "structure LocalClockGaugeSymmetryCertificate"
+      "pattern": "structure LocalClockGaugeSymmetryData"
     },
     {
       "path": "lean/InfoGeometry/Canonical/WindingOrbitClosure.lean",
@@ -463,15 +463,15 @@
     },
     {
       "path": "lean/InfoGeometry/Canonical/DrazinModularSingularityBridge.lean",
-      "pattern": "theorem certified_operator_ratio_regularization_corridor"
+      "pattern": "theorem operator_ratio_regularization_corridor"
     },
     {
       "path": "lean/InfoGeometry/Canonical/DrazinModularSingularityBridge.lean",
-      "pattern": "theorem certified_operator_ratio_regularization_kills_defect_of_alignment"
+      "pattern": "theorem operator_ratio_regularization_kills_defect_of_alignment"
     },
     {
       "path": "lean/InfoGeometry/Canonical/DrazinModularSingularityBridge.lean",
-      "pattern": "theorem certified_operator_ratio_regularization_kills_defect_of_inertial_lane"
+      "pattern": "theorem operator_ratio_regularization_kills_defect_of_inertial_lane"
     },
     {
       "path": "lean/InfoGeometry/Canonical/RelationalInformationDynamics.lean",
@@ -607,7 +607,7 @@
     },
     {
       "path": "lean/InfoGeometry/Canonical/SouriauLieThermoKKTBridge.lean",
-      "pattern": "structure KKTEntropyStationarityShadow"
+      "pattern": "abbrev KKTEntropyStationarityShadow"
     },
     {
       "path": "lean/InfoGeometry/Canonical/SouriauThermodynamics.lean",

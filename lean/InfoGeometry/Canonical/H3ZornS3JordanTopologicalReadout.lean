@@ -85,7 +85,7 @@ theorem s23_preserve_h3zorn_adjointQuad (X : H3Zorn ℝ) :
   apply H3Zorn.ext_h3 <;>
     simp [H3Zorn.adjointQuad, S3OnH3Zorn, S3OnH3ZornPeirce,
       h3zornFromPeirce, h3zornPeirce, ZornVectorMatrix.conj_mul,
-      ZornVectorMatrix.norm_conj] <;> ring
+      ZornVectorMatrix.norm_conj] ; ring
 
 theorem s31_preserve_h3zorn_adjointQuad (X : H3Zorn ℝ) :
     S3OnH3Zorn S3Perm.s31 X.adjointQuad =
@@ -102,20 +102,17 @@ theorem s12_s23_preserve_h3zorn_adjointQuad (X : H3Zorn ℝ) :
   cases X
   apply H3Zorn.ext_h3
   · simp [H3Zorn.adjointQuad, S3OnH3Zorn, S3OnH3ZornPeirce,
-      h3zornFromPeirce, h3zornPeirce, ZornVectorMatrix.norm_conj] <;> ring
+      h3zornFromPeirce, h3zornPeirce]
   · simp [H3Zorn.adjointQuad, S3OnH3Zorn, S3OnH3ZornPeirce,
-      h3zornFromPeirce, h3zornPeirce, ZornVectorMatrix.norm_conj] <;> ring
+      h3zornFromPeirce, h3zornPeirce] ; ring
   · simp [H3Zorn.adjointQuad, S3OnH3Zorn, S3OnH3ZornPeirce,
-      h3zornFromPeirce, h3zornPeirce, ZornVectorMatrix.norm_conj] <;> ring
+      h3zornFromPeirce, h3zornPeirce] ; ring
   · simp [H3Zorn.adjointQuad, S3OnH3Zorn, S3OnH3ZornPeirce,
-      h3zornFromPeirce, h3zornPeirce, ZornVectorMatrix.conj_mul,
-      ZornVectorMatrix.norm_conj]
+      h3zornFromPeirce, h3zornPeirce]
   · simp [H3Zorn.adjointQuad, S3OnH3Zorn, S3OnH3ZornPeirce,
-      h3zornFromPeirce, h3zornPeirce, ZornVectorMatrix.conj_mul,
-      ZornVectorMatrix.norm_conj]
+      h3zornFromPeirce, h3zornPeirce]
   · simp [H3Zorn.adjointQuad, S3OnH3Zorn, S3OnH3ZornPeirce,
-      h3zornFromPeirce, h3zornPeirce, ZornVectorMatrix.conj_mul,
-      ZornVectorMatrix.norm_conj]
+      h3zornFromPeirce, h3zornPeirce]
 
 theorem s23_s12_preserve_h3zorn_adjointQuad (X : H3Zorn ℝ) :
     S3OnH3Zorn S3Perm.s23_s12 X.adjointQuad =
@@ -123,20 +120,17 @@ theorem s23_s12_preserve_h3zorn_adjointQuad (X : H3Zorn ℝ) :
   cases X
   apply H3Zorn.ext_h3
   · simp [H3Zorn.adjointQuad, S3OnH3Zorn, S3OnH3ZornPeirce,
-      h3zornFromPeirce, h3zornPeirce, ZornVectorMatrix.norm_conj] <;> ring
+      h3zornFromPeirce, h3zornPeirce] ; ring
   · simp [H3Zorn.adjointQuad, S3OnH3Zorn, S3OnH3ZornPeirce,
-      h3zornFromPeirce, h3zornPeirce, ZornVectorMatrix.norm_conj] <;> ring
+      h3zornFromPeirce, h3zornPeirce] ; ring
   · simp [H3Zorn.adjointQuad, S3OnH3Zorn, S3OnH3ZornPeirce,
-      h3zornFromPeirce, h3zornPeirce, ZornVectorMatrix.norm_conj] <;> ring
+      h3zornFromPeirce, h3zornPeirce]
   · simp [H3Zorn.adjointQuad, S3OnH3Zorn, S3OnH3ZornPeirce,
-      h3zornFromPeirce, h3zornPeirce, ZornVectorMatrix.conj_mul,
-      ZornVectorMatrix.norm_conj]
+      h3zornFromPeirce, h3zornPeirce]
   · simp [H3Zorn.adjointQuad, S3OnH3Zorn, S3OnH3ZornPeirce,
-      h3zornFromPeirce, h3zornPeirce, ZornVectorMatrix.conj_mul,
-      ZornVectorMatrix.norm_conj]
+      h3zornFromPeirce, h3zornPeirce]
   · simp [H3Zorn.adjointQuad, S3OnH3Zorn, S3OnH3ZornPeirce,
-      h3zornFromPeirce, h3zornPeirce, ZornVectorMatrix.conj_mul,
-      ZornVectorMatrix.norm_conj]
+      h3zornFromPeirce, h3zornPeirce]
 
 theorem S3OnH3Zorn_preserve_crossProduct_of_adjoint
     (σ : S3Perm)
@@ -185,8 +179,7 @@ theorem S3OnH3Zorn_preserve_traceBilin (σ : S3Perm)
   rcases σ <;> cases X <;> cases Y
   all_goals
     simp [H3Zorn.traceBilin, S3OnH3Zorn, S3OnH3ZornPeirce,
-      h3zornFromPeirce, h3zornPeirce, ZornVectorMatrix.conj_mul,
-      ZornVectorMatrix.trace_conj, ZornVectorMatrix.trace_mul_comm,
+      h3zornFromPeirce, h3zornPeirce, ZornVectorMatrix.trace_mul_comm,
       ZornVectorMatrix.trace_mul_conj_comm]
     try ring
 

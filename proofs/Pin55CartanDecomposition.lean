@@ -8,7 +8,7 @@ noncomputable section
 
 namespace Pin55CartanDecomposition
 
-open TKKJordanPairData
+open TKKJordanPairData.Legacy
 open ArtinCentralizerMonodromy
 open Clifford55AnomalyOSP
 

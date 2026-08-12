@@ -51,11 +51,6 @@ theorem fibonacci_anyon_dimension_is_phi : phi > 1 := by
       _ = 2 := by norm_num
   nlinarith
 
-structure FibonacciAnyonBraiding where
-  real_part_braid : Prop
-  s3_weyl_fibonacci : Prop
-  pnt_unity : Prop
-
 /-- Fibonacci braiding phase: R_ττ = e^{4πi/5}.
 The real part is cos(4π/5) = -cos(π/5) = -φ/2.
 The absolute value |Re(R_ττ)| = φ/2 ≈ 0.809.
@@ -75,10 +70,17 @@ and generate the Fibonacci category via the Q₈ double cover.
 The braid eigenvalues are ±1 (trivial) and e^{±4πi/5} (Fibonacci).
 The quantum dimension d_τ = φ = 2cos(π/5) is the largest eigenvalue
 of the fusion matrix N_τ. -/
-def quantum_dimension (tau : String) : ℝ := if tau = "tau" then phi else 1
+inductive FibonacciObject
+  | unit
+  | tau
+  deriving DecidableEq, Repr
+
+def quantum_dimension : FibonacciObject → ℝ
+  | .unit => 1
+  | .tau => phi
 theorem s3_weyl_to_fibonacci_braiding :
-    quantum_dimension "tau" = phi := by
-  dsimp [quantum_dimension]
+    quantum_dimension .tau = phi := by
+  rfl
 
 /-- The prime encoding entropy S_c/ln(N) at N=200 equals 0.821,
 within 1.5% of |Re(R_ττ)| = φ/2 ≈ 0.809.

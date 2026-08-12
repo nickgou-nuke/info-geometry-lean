@@ -43,10 +43,10 @@ STATEMENT_RE = re.compile(
 
 # Broader: also catches `foo_statement : Prop` with type annotations
 # like `(hFoo : ...)` before the colon — rare but possible.
-STATEMENT_SIMPLE_RE = re.compile(r"\b(\w+_statement)\s*:\s*Prop\b")
+STATEMENT_SIMPLE_RE = re.compile(r"^\s{2,}(\w+_statement)\s*:\s*Prop\b")
 
 # Matches:  someField_witness : Prop
-BARE_WITNESS_PROP_RE = re.compile(r"\b(\w+_witness)\s*:\s*Prop\b")
+BARE_WITNESS_PROP_RE = re.compile(r"^\s{2,}(\w+_witness)\s*:\s*Prop\b")
 
 # Matches:  someField_witness :
 WITNESS_RE = re.compile(r"^\s+(\w+_witness)\s*:", re.MULTILINE)

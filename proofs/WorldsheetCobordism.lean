@@ -19,14 +19,14 @@ open Clifford55
 abbrev Cl11_5 := Cl55
 
 -- 2. Structure the Pin(5,5) duality groups acting over the CleanVacuum
--- We define CleanVacuum as a structure representing a defect-free vacuum state.
+-- The vacuum carrier stores only the state value; defect-freeness is supplied
+-- separately as the hypothesis required by the anomaly theorem below.
 structure CleanVacuum where
   state : ℝ
-  defect_free : True
 
 -- Action of Pin(5,5) on CleanVacuum
 def pin_action (_g : Pin55) (v : CleanVacuum) : CleanVacuum :=
-  ⟨v.state, trivial⟩
+  ⟨v.state⟩
 
 -- 3. A conservative proof-carrying model of the Möbius-Witten anomaly
 

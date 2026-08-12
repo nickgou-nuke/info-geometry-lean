@@ -44,9 +44,6 @@ open InfoGeometry.Spectral.Colimit
 /-- A bit is a Boolean datum. -/
 abbrev Bit : Type := Bool
 
-/-- A finite binary word of length `n`. -/
-abbrev BinaryWord (n : ℕ) : Type :=
-  Fin n → Bit
 
 /-- An infinite binary stream, used as the symbolic Cantor boundary model. -/
 abbrev BinaryStream : Type :=
@@ -58,7 +55,7 @@ A finite Cantor cylinder represented by a binary word.
 The word specifies all infinite bitstreams with that prefix.
 -/
 @[rep_depth transport]
-abbrev CantorCylinder (n : ℕ) := BinaryWord n
+abbrev CantorCylinder (n : ℕ) := Fin n → Bool
 
 /--
 A Boolean event projection associated to a finite binary address.
@@ -68,7 +65,7 @@ projection lattice, C*-algebra, or matrix algebra in downstream files.
 -/
 @[rep_depth transport]
 structure BitProjectionPacket (n : ℕ) (ProjectionAlgebra : Type*) [Mul ProjectionAlgebra] where
-  word : BinaryWord n
+  word : Fin n → Bool
   projection : ProjectionAlgebra
   projection_idem : projection * projection = projection
 
@@ -77,20 +74,6 @@ namespace BitProjectionPacket
 /-- The projection law is the native idempotence relation of the carried algebra. -/
 @[rep_depth transport]
 theorem cylinder_projection_law
-    {n : ℕ} {ProjectionAlgebra : Type*} [Mul ProjectionAlgebra]
-    (P : BitProjectionPacket n ProjectionAlgebra) :
-    P.projection * P.projection = P.projection :=
-  P.projection_idem
-
-/-- The binary address carried by the projection packet is explicit. -/
-theorem word_readout
-    {n : ℕ} {ProjectionAlgebra : Type*} [Mul ProjectionAlgebra]
-    (P : BitProjectionPacket n ProjectionAlgebra) :
-    P.word = P.word :=
-  rfl
-
-/-- The ambient algebra carried by the projection packet is explicit. -/
-theorem projection_idempotent
     {n : ℕ} {ProjectionAlgebra : Type*} [Mul ProjectionAlgebra]
     (P : BitProjectionPacket n ProjectionAlgebra) :
     P.projection * P.projection = P.projection :=
@@ -109,7 +92,7 @@ A binary word is interpreted as an occupation vector.
 structure BitFockPacket (n : ℕ) (OperatorAlgebra : Type*) [Ring OperatorAlgebra] where
 
   Basis : Type
-  basisEquiv : Basis ≃ BinaryWord n
+  basisEquiv : Basis ≃ Fin n → Bool
 
   creation : Fin n → OperatorAlgebra
   annihilation : Fin n → OperatorAlgebra
@@ -148,28 +131,14 @@ theorem car_clifford_law
   ⟨F.annihilation_square_zero, F.creation_square_zero,
     F.annihilation_anticomm, F.creation_anticomm, F.car_anticomm⟩
 
-/-- The basis readout on the finite Fock packet is explicit. -/
-theorem basisEquiv_readout
-    {n : ℕ} {OperatorAlgebra : Type*} [Ring OperatorAlgebra]
-    (F : BitFockPacket n OperatorAlgebra) :
-    F.basisEquiv = F.basisEquiv :=
-  rfl
-
-/-- The operator algebra readout on the finite Fock packet is explicit. -/
-theorem operatorAlgebra_readout
-    {n : ℕ} {OperatorAlgebra : Type*} [Ring OperatorAlgebra]
-    (_F : BitFockPacket n OperatorAlgebra) :
-    OperatorAlgebra = OperatorAlgebra :=
-  rfl
-
 end BitFockPacket
 
 /-- Flip the `i`-th bit of a binary word. -/
-def flipBit {n : ℕ} (i : Fin n) (w : BinaryWord n) : BinaryWord n :=
+def flipBit {n : ℕ} (i : Fin n) (w : Fin n → Bool) : Fin n → Bool :=
   fun j => if j = i then !w j else w j
 
 /-- Bit flip is involutive. -/
-theorem flipBit_involutive {n : ℕ} (i : Fin n) (w : BinaryWord n) :
+theorem flipBit_involutive {n : ℕ} (i : Fin n) (w : Fin n → Bool) :
     flipBit i (flipBit i w) = w := by
   funext j
   by_cases h : j = i <;> simp [flipBit, h]
@@ -179,36 +148,36 @@ Hypercube adjacency on finite binary words.
 
 This is the finite Clifford transition graph.
 -/
-def HypercubeAdjacent {n : ℕ} (w v : BinaryWord n) : Prop :=
+def HypercubeAdjacent {n : ℕ} (w v : Fin n → Bool) : Prop :=
   ∃ i : Fin n, v = flipBit i w
 
 /-- Every single bit flip is a hypercube edge. -/
-theorem hypercubeAdjacent_flipBit {n : ℕ} (i : Fin n) (w : BinaryWord n) :
+theorem hypercubeAdjacent_flipBit {n : ℕ} (i : Fin n) (w : Fin n → Bool) :
     HypercubeAdjacent w (flipBit i w) := by
   exact ⟨i, rfl⟩
 
 /-- Hypercube adjacency is symmetric because bit flips are involutive. -/
-theorem hypercubeAdjacent_symm {n : ℕ} {w v : BinaryWord n} :
+theorem hypercubeAdjacent_symm {n : ℕ} {w v : Fin n → Bool} :
     HypercubeAdjacent w v → HypercubeAdjacent v w := by
   rintro ⟨i, rfl⟩
   exact ⟨i, (flipBit_involutive i w).symm⟩
 
 /-- Hypercube adjacency can be read in either direction. -/
-theorem hypercubeAdjacent_comm {n : ℕ} {w v : BinaryWord n} :
+theorem hypercubeAdjacent_comm {n : ℕ} {w v : Fin n → Bool} :
     HypercubeAdjacent w v ↔ HypercubeAdjacent v w := by
   exact ⟨hypercubeAdjacent_symm, hypercubeAdjacent_symm⟩
 
 /-- A finite random walk on binary words. -/
 @[rep_depth transport]
 structure BitRandomWalk (n : ℕ) where
-  P : BinaryWord n → BinaryWord n → ℝ
+  P : (Fin n → Bool) → (Fin n → Bool) → ℝ
 
   nonnegative :
     ∀ w v, 0 ≤ P w v
 
   row_sum :
     ∀ w,
-      Finset.univ.sum (fun v : BinaryWord n => P w v) = 1
+      Finset.univ.sum (fun v : Fin n → Bool => P w v) = 1
 
 namespace BitRandomWalk
 
@@ -217,14 +186,14 @@ variable (R : BitRandomWalk n)
 
 /-- Transition nonnegativity readback. -/
 @[rep_depth transport]
-theorem transition_nonnegative (w v : BinaryWord n) :
+theorem transition_nonnegative (w v : Fin n → Bool) :
     0 ≤ R.P w v :=
   R.nonnegative w v
 
 /-- Row normalization readback. -/
 @[rep_depth transport]
-theorem transition_row_sum (w : BinaryWord n) :
-    Finset.univ.sum (fun v : BinaryWord n => R.P w v) = 1 :=
+theorem transition_row_sum (w : Fin n → Bool) :
+    Finset.univ.sum (fun v : Fin n → Bool => R.P w v) = 1 :=
   R.row_sum w
 
 end BitRandomWalk
@@ -237,34 +206,34 @@ def IsCliffordBitWalk {n : ℕ} (R : BitRandomWalk n) : Prop :=
   ∀ w v, R.P w v ≠ 0 → (v = w ∨ HypercubeAdjacent w v)
 
 /-- Local Shannon entropy of one transition row. -/
-def localBitEntropy {n : ℕ} (R : BitRandomWalk n) (w : BinaryWord n) : ℝ :=
+def localBitEntropy {n : ℕ} (R : BitRandomWalk n) (w : Fin n → Bool) : ℝ :=
   - Finset.univ.sum
-      (fun v : BinaryWord n =>
+      (fun v : Fin n → Bool =>
         let p := R.P w v
         if p = 0 then 0 else p * Real.log p)
 
 /-- A stationary distribution for a bit random walk. -/
 @[rep_depth transport]
 structure StationaryBitDistribution {n : ℕ} (R : BitRandomWalk n) where
-  π : BinaryWord n → ℝ
+  π : (Fin n → Bool) → ℝ
 
   nonnegative :
     ∀ w, 0 ≤ π w
 
   sum_eq_one :
-    Finset.univ.sum (fun w : BinaryWord n => π w) = 1
+    Finset.univ.sum (fun w : Fin n → Bool => π w) = 1
 
   stationary :
     ∀ v,
       π v =
-        Finset.univ.sum (fun w : BinaryWord n => π w * R.P w v)
+        Finset.univ.sum (fun w : Fin n → Bool => π w * R.P w v)
 
 /-- Entropy rate of a stationary finite bit random walk. -/
 def bitEntropyRate {n : ℕ}
     (R : BitRandomWalk n)
     (S : StationaryBitDistribution R) : ℝ :=
   Finset.univ.sum
-    (fun w : BinaryWord n => S.π w * localBitEntropy R w)
+    (fun w : Fin n → Bool => S.π w * localBitEntropy R w)
 
 /-! ## 3. Stabilized readout -/
 
@@ -303,26 +272,11 @@ theorem filtered_readout_law (S : BitToItStabilizationPacket n) :
     S.filteredReadout.residual S.filteredReadout.coords = 0 :=
   S.filteredReadout.quadric_zero
 
-/-- The walk component of the stabilization packet is explicit. -/
-theorem walk_readout (S : BitToItStabilizationPacket n) :
-    S.walk = S.walk :=
-  rfl
-
 /-- The Drazin/Hodge filter obeys its Green-projector defining law. -/
 theorem drazinHodgeFilter_readout (S : BitToItStabilizationPacket n) :
     S.drazinHodgeFilter.H =
       1 - S.drazinHodgeFilter.L * S.drazinHodgeFilter.LD :=
   S.drazinHodgeFilter.H_def
-
-/-- The KMS/Weyl weight component is explicit. -/
-theorem kmsWeylWeight_readout (S : BitToItStabilizationPacket n) :
-    S.kmsWeylWeight = S.kmsWeylWeight :=
-  rfl
-
-/-- The invariant readout component is explicit. -/
-theorem invariantReadout_readout (S : BitToItStabilizationPacket n) :
-    S.invariantReadout = S.invariantReadout :=
-  rfl
 
 end BitToItStabilizationPacket
 
@@ -338,7 +292,7 @@ It records the chain:
 structure ItFromBitPacket where
   n : ℕ
 
-  word : BinaryWord n
+  word : Fin n → Bool
   cantorCylinder : CantorCylinder n
   projection : BitProjectionPacket n (CuntzAlg n)
   fock : BitFockPacket n (Clnn n)
@@ -363,11 +317,6 @@ theorem it_invariant (P : ItFromBitPacket) :
     P.stabilization.walk = P.walk :=
   P.itInvariant
 
-/-- The finite word readout is explicit. -/
-theorem word_readout (P : ItFromBitPacket) :
-    P.word = P.cantorCylinder :=
-  P.sameAddress
-
 /-- The Cantor cylinder readout is explicit. -/
 theorem cantorCylinder_readout (P : ItFromBitPacket) :
     P.cantorCylinder = P.word :=
@@ -384,14 +333,9 @@ theorem fock_readout (P : ItFromBitPacket) (i : Fin P.n) :
   P.fock.annihilation_square_zero i
 
 /-- The random-walk readout is explicit. -/
-theorem walk_readout (P : ItFromBitPacket) (w v : BinaryWord P.n) :
+theorem walk_readout (P : ItFromBitPacket) (w v : Fin P.n → Bool) :
     0 ≤ P.walk.P w v :=
   P.walk.nonnegative w v
-
-/-- The stabilization packet readout is explicit. -/
-theorem stabilization_readout (P : ItFromBitPacket) :
-    P.stabilization.walk = P.walk :=
-  P.itInvariant
 
 end ItFromBitPacket
 
@@ -442,28 +386,7 @@ theorem bitToIt_cuntz_relations (n : ℕ) :
   · simpa [bitToItQuotient, ItObservableAlgebra, cuntzS, cuntzSdag, map_mul] using
       (cuntz_ranges_sum_one n)
 
-/--
-Finite algebraic "it from bit" target:
-
-* tensor words are read into the Cuntz quotient;
-* star feedback is preserved by the quotient map;
-* the Cuntz orthogonality and partition laws hold in the readout algebra.
--/
-def CuntzItFromBitFiniteTarget (n : ℕ) : Prop :=
-  (∀ x : BitWordAlgebra n,
-    star (bitToItQuotient n x) = bitToItQuotient n (star x)) ∧
-  (∀ i j : Fin n,
-    bitToItQuotient n (Sdag n i * S n j) =
-      if i = j then (1 : ItObservableAlgebra n) else 0) ∧
-  (∑ i : Fin n, bitToItQuotient n (S n i * Sdag n i)) =
-    (1 : ItObservableAlgebra n)
-
-/-- Constructor for the finite Cuntz quotient realization. -/
-theorem constructCuntzItFromBitFiniteTarget (n : ℕ) :
-    CuntzItFromBitFiniteTarget n := by
-  exact ⟨bitToIt_star_feedback n,
-    (bitToIt_cuntz_relations n).1,
-    (bitToIt_cuntz_relations n).2⟩
+ 
 
 /-! ## 5. Explicit induction and colimit hypotheses -/
 
@@ -531,17 +454,5 @@ theorem transition_compatible (n : ℕ) (x : I.Stage n) :
     Functor.ofSequence_map_homOfLE_succ, Function.comp_def] using h'
 
 end ItFromBitColimitHypotheses
-
-/-! ## 6. Owner target -/
-
-/-- Owner target for the It-from-Bit doctrine. -/
-abbrev ItFromBitTarget : Prop :=
-  Nonempty ItFromBitPacket
-
-/-- Constructor from explicit It-from-Bit data. -/
-theorem constructItFromBitTarget
-    (P : ItFromBitPacket) :
-    ItFromBitTarget := by
-  exact ⟨P⟩
 
 end InfoGeometry.Canonical.ItFromBit

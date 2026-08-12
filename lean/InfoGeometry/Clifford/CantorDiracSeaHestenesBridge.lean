@@ -67,9 +67,9 @@ theorem owner_leftHop_square_zero
     {Op Charge : Type*} [Ring Op]
     (walk : Tessellation.CantorDiracSeaWalkDatum Op Charge)
     (leftHop_square_zero :
-      ∀ w : FiniteBinaryWord,
+      ∀ w : List Bool,
         (walk.leftHop w).N * (walk.leftHop w).N = 0)
-    (w : FiniteBinaryWord) :
+    (w : List Bool) :
     (walk.leftHop w).N * (walk.leftHop w).N = 0 :=
   leftHop_square_zero w
 
@@ -77,9 +77,9 @@ theorem owner_rightHop_square_zero
     {Op Charge : Type*} [Ring Op]
     (walk : Tessellation.CantorDiracSeaWalkDatum Op Charge)
     (rightHop_square_zero :
-      ∀ w : FiniteBinaryWord,
+      ∀ w : List Bool,
         (walk.rightHop w).N * (walk.rightHop w).N = 0)
-    (w : FiniteBinaryWord) :
+    (w : List Bool) :
     (walk.rightHop w).N * (walk.rightHop w).N = 0 :=
   rightHop_square_zero w
 

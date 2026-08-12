@@ -1,4 +1,5 @@
-import proofs.CanonicalZornProjectiveTKKBridge
+import InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-!
 # Integral Zorn coordinates and the split even lattice of signature `(4,4)`
@@ -149,7 +150,7 @@ real and canonical complex Zorn coordinates. -/
 theorem integral_ii44_real_complex_norm_bridge (X : IntegralZorn) :
     ii44Quadratic (integralZornToII44 X) = integralZornNorm X ∧
     ZornCore.det (integralToCoreZorn X) = (integralZornNorm X : ℝ) ∧
-    SplitOctonionBraidSU3.zornNorm
+    _root_.InfoGeometry.Physics.SplitOctonionBraidSU3.zornNorm
         (coreToCanonical (integralToCoreZorn X)) =
       (integralZornNorm X : ℂ) := by
   refine ⟨ii44Quadratic_integralZornToII44 X,

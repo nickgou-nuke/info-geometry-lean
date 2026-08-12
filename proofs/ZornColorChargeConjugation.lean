@@ -1,4 +1,5 @@
 import proofs.ZornChiralColorActions
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-!
 # Conjugate-linear exchange of the chiral color sectors
@@ -14,8 +15,10 @@ namespace ZornColorChargeConjugation
 
 open CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 open ZornThreeChannelCAR ZornColorLieAction ZornChiralColorActions
+
+abbrev Zorn := _root_.InfoGeometry.Physics.SplitOctonionBraidSU3.Zorn
 
 abbrev complexConjHom : ℂ →+* ℂ :=
   Complex.conjAe.toRingEquiv.toRingHom

@@ -159,6 +159,29 @@ instance : Module R (ZornMatrix R) :=
 
 @[simp] theorem mul_eq_mul (X Y : ZornMatrix R) : X * Y = mul X Y := rfl
 
+@[simp] theorem mul_a (X Y : ZornMatrix R) :
+    (X * Y).a = X.a * Y.a + Vec3.dot X.v Y.w := rfl
+
+@[simp] theorem mul_v (X Y : ZornMatrix R) :
+    (X * Y).v =
+      Vec3.sub
+        (Vec3.add (Vec3.smul X.a Y.v) (Vec3.smul Y.b X.v))
+        (Vec3.cross X.w Y.w) := rfl
+
+@[simp] theorem mul_w (X Y : ZornMatrix R) :
+    (X * Y).w =
+      Vec3.add
+        (Vec3.add (Vec3.smul Y.a X.w) (Vec3.smul X.b Y.w))
+        (Vec3.cross X.v Y.v) := rfl
+
+@[simp] theorem mul_b (X Y : ZornMatrix R) :
+    (X * Y).b = Vec3.dot X.w Y.v + X.b * Y.b := rfl
+
+theorem zornNorm_mul (X Y : ZornMatrix R) :
+    zornNorm (X * Y) = zornNorm X * zornNorm Y := by
+  simp [zornNorm, mul, Vec3.dot, Vec3.cross, Vec3.add, Vec3.sub, Vec3.smul] <;>
+    ring
+
 @[simp] theorem add_a (X Y : ZornMatrix R) : (X + Y).a = X.a + Y.a := rfl
 
 @[simp] theorem add_v (X Y : ZornMatrix R) : (X + Y).v = Vec3.add X.v Y.v := rfl

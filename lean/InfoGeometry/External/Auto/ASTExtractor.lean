@@ -28,17 +28,23 @@ structure ASTGraphData where
   edges : Array ASTEdge
   deriving ToJson
 
-/-- Recursively collects all constant names used within an expression -/
-partial def collectConstants (e : Expr) (acc : NameSet := {}) : NameSet :=
-  match e with
-  | Expr.const n _ => acc.insert n
-  | Expr.app f a   => collectConstants a (collectConstants f acc)
-  | Expr.lam _ d b _ => collectConstants b (collectConstants d acc)
-  | Expr.forallE _ d b _ => collectConstants b (collectConstants d acc)
-  | Expr.letE _ t v b _ => collectConstants b (collectConstants v (collectConstants t acc))
-  | Expr.mdata _ e => collectConstants e acc
-  | Expr.proj _ _ e => collectConstants e acc
-  | _ => acc
+/-- Collect all constant names using an executable explicit worklist. -/
+def collectConstants (e : Expr) (acc : NameSet := {}) : NameSet := Id.run do
+  let mut pending : Array Expr := #[e]
+  let mut names := acc
+  while h : pending.size > 0 do
+    let current := pending.back!
+    pending := pending.pop
+    match current with
+    | Expr.const n _ => names := names.insert n
+    | Expr.app f a => pending := pending.push f |>.push a
+    | Expr.lam _ d b _ => pending := pending.push d |>.push b
+    | Expr.forallE _ d b _ => pending := pending.push d |>.push b
+    | Expr.letE _ t v b _ => pending := pending.push t |>.push v |>.push b
+    | Expr.mdata _ body => pending := pending.push body
+    | Expr.proj _ _ struct => pending := pending.push struct
+    | _ => pure ()
+  return names
 
 /-- Command to extract the dependency graph of a specific module prefix -/
 elab "#extract_graph " prefixName:ident : command => do

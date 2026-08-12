@@ -40,26 +40,14 @@ open InfoGeometry.Clifford.ClNN
 
 /-! ## 1. Boundary and cylinder carriers -/
 
-/-- Infinite binary word space used as the symbolic Cantor boundary. -/
-@[rep_depth operator]
-abbrev InfiniteBinaryWordSpace := CantorBoundary
-
-/-- Finite binary path codes used as Cantor cylinders. -/
-@[rep_depth operator]
-abbrev FiniteBinaryWord := TypeIIIModularCantorSystem.BinaryWord
-
-/-- A canonical infinite binary boundary carrier. -/
-@[rep_depth operator]
-abbrev CantorBoundarySpace := InfiniteBinaryWordSpace
-
 /-- The first boundary symbol readout. -/
 @[rep_depth operator]
-def boundaryHead (ξ : InfiniteBinaryWordSpace) : Bool :=
+def boundaryHead (ξ : (ℕ → Bool)) : Bool :=
   ξ 0
 
 /-- Prepend one binary symbol to an infinite boundary code. -/
 @[rep_depth operator]
-def boundaryCons (a : Bool) (ξ : InfiniteBinaryWordSpace) : InfiniteBinaryWordSpace :=
+def boundaryCons (a : Bool) (ξ : (ℕ → Bool)) : (ℕ → Bool) :=
   fun n =>
     match n with
     | 0 => a
@@ -67,18 +55,18 @@ def boundaryCons (a : Bool) (ξ : InfiniteBinaryWordSpace) : InfiniteBinaryWordS
 
 /-- Remove the first binary symbol from an infinite boundary code. -/
 @[rep_depth operator]
-def boundaryTail (ξ : InfiniteBinaryWordSpace) : InfiniteBinaryWordSpace :=
+def boundaryTail (ξ : (ℕ → Bool)) : (ℕ → Bool) :=
   fun n => ξ (n + 1)
 
 @[simp, rep_depth operator]
 theorem boundaryHead_boundaryCons
-    (a : Bool) (ξ : InfiniteBinaryWordSpace) :
+    (a : Bool) (ξ : (ℕ → Bool)) :
     boundaryHead (boundaryCons a ξ) = a := by
   rfl
 
 @[simp, rep_depth operator]
 theorem boundaryTail_boundaryCons
-    (a : Bool) (ξ : InfiniteBinaryWordSpace) :
+    (a : Bool) (ξ : (ℕ → Bool)) :
     boundaryTail (boundaryCons a ξ) = ξ := by
   funext n
   rfl
@@ -90,52 +78,52 @@ its tail.
 This is the symbolic `n → ∞` carrier used by the Cantor/Fock lane.
 -/
 @[rep_depth operator]
-theorem boundary_recursive_decomposition (ξ : InfiniteBinaryWordSpace) :
+theorem boundary_recursive_decomposition (ξ : (ℕ → Bool)) :
     ξ = boundaryCons (boundaryHead ξ) (boundaryTail ξ) := by
   funext n
   cases n <;> rfl
 
 /-- Iterated tail extraction on the infinite binary boundary. -/
 @[rep_depth operator]
-def boundaryIterateTail : ℕ → InfiniteBinaryWordSpace → InfiniteBinaryWordSpace
+def boundaryIterateTail : ℕ → (ℕ → Bool) → (ℕ → Bool)
   | 0, ξ => ξ
   | Nat.succ n, ξ => boundaryIterateTail n (boundaryTail ξ)
 
 /-- Finite prefix extraction on the infinite binary boundary. -/
 @[rep_depth operator]
-def boundaryPrefix : ℕ → InfiniteBinaryWordSpace → List Bool
+def boundaryPrefix : ℕ → (ℕ → Bool) → List Bool
   | 0, _ => []
   | Nat.succ n, ξ => boundaryHead ξ :: boundaryPrefix n (boundaryTail ξ)
 
 /-- Rebuild an infinite binary word from a finite prefix and a tail. -/
 @[rep_depth operator]
-def boundaryConsList : List Bool → InfiniteBinaryWordSpace → InfiniteBinaryWordSpace
+def boundaryConsList : List Bool → (ℕ → Bool) → (ℕ → Bool)
   | [], ξ => ξ
   | b :: bs, ξ => boundaryCons b (boundaryConsList bs ξ)
 
 @[simp, rep_depth operator]
-theorem boundaryIterateTail_zero (ξ : InfiniteBinaryWordSpace) :
+theorem boundaryIterateTail_zero (ξ : (ℕ → Bool)) :
     boundaryIterateTail 0 ξ = ξ := by
   rfl
 
 @[simp, rep_depth operator]
-theorem boundaryIterateTail_succ (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
+theorem boundaryIterateTail_succ (n : ℕ) (ξ : (ℕ → Bool)) :
     boundaryIterateTail (Nat.succ n) ξ = boundaryIterateTail n (boundaryTail ξ) := by
   rfl
 
 @[simp, rep_depth operator]
-theorem boundaryPrefix_zero (ξ : InfiniteBinaryWordSpace) :
+theorem boundaryPrefix_zero (ξ : (ℕ → Bool)) :
     boundaryPrefix 0 ξ = [] := by
   rfl
 
 @[simp, rep_depth operator]
-theorem boundaryPrefix_succ (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
+theorem boundaryPrefix_succ (n : ℕ) (ξ : (ℕ → Bool)) :
     boundaryPrefix (Nat.succ n) ξ = boundaryHead ξ :: boundaryPrefix n (boundaryTail ξ) := by
   rfl
 
 /-- Finite boundary prefixes have the expected length. -/
 @[simp, rep_depth operator]
-theorem boundaryPrefix_length (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
+theorem boundaryPrefix_length (n : ℕ) (ξ : (ℕ → Bool)) :
     (boundaryPrefix n ξ).length = n := by
   induction n generalizing ξ with
   | zero => rfl
@@ -145,31 +133,41 @@ theorem boundaryPrefix_length (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
 /-- Prefixing a head symbol shifts the boundary prefix by one step. -/
 @[simp, rep_depth operator]
 theorem boundaryPrefix_succ_boundaryCons
-    (a : Bool) (ξ : InfiniteBinaryWordSpace) (n : ℕ) :
+    (a : Bool) (ξ : (ℕ → Bool)) (n : ℕ) :
     boundaryPrefix (Nat.succ n) (boundaryCons a ξ) = a :: boundaryPrefix n ξ := by
   simp [boundaryPrefix]
 
 /-- Tail extraction after prefixing recovers the original boundary tail. -/
 @[simp, rep_depth operator]
 theorem boundaryIterateTail_succ_boundaryCons
-    (a : Bool) (ξ : InfiniteBinaryWordSpace) (n : ℕ) :
+    (a : Bool) (ξ : (ℕ → Bool)) (n : ℕ) :
     boundaryIterateTail (Nat.succ n) (boundaryCons a ξ) = boundaryIterateTail n ξ := by
   simp [boundaryIterateTail]
 
 @[simp, rep_depth operator]
-theorem boundaryConsList_nil (ξ : InfiniteBinaryWordSpace) :
+theorem boundaryConsList_nil (ξ : (ℕ → Bool)) :
     boundaryConsList [] ξ = ξ := by
   rfl
 
 @[simp, rep_depth operator]
-theorem boundaryConsList_cons (b : Bool) (bs : List Bool) (ξ : InfiniteBinaryWordSpace) :
+theorem boundaryConsList_cons (b : Bool) (bs : List Bool) (ξ : (ℕ → Bool)) :
     boundaryConsList (b :: bs) ξ = boundaryCons b (boundaryConsList bs ξ) := by
   rfl
+
+@[rep_depth operator]
+theorem boundaryConsList_append
+    (pre post : List Bool) (ξ : (ℕ → Bool)) :
+    boundaryConsList (pre ++ post) ξ =
+      boundaryConsList pre (boundaryConsList post ξ) := by
+  induction pre with
+  | nil => rfl
+  | cons b bs ih =>
+      simp [boundaryConsList, ih]
 
 /-- Iterated boundary reconstruction from a finite prefix and the remaining tail. -/
 @[rep_depth operator]
 theorem boundary_iterated_decomposition :
-    ∀ n (ξ : InfiniteBinaryWordSpace),
+    ∀ n (ξ : (ℕ → Bool)),
       ξ = boundaryConsList (boundaryPrefix n ξ) (boundaryIterateTail n ξ)
   | 0, ξ => by
       rfl
@@ -195,11 +193,11 @@ claiming a new analytic infinite tensor product.
 @[rep_depth operator]
 theorem cantorCuntz_root_branching
     {Op : Type*} [Ring Op] [StarRing Op]
-    (C : CuntzO2Carrier Op)
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op)
     (seed : Op)
-    (ξ : InfiniteBinaryWordSpace) :
-    (C.leftRangeProjection * seed +
-      C.rightRangeProjection * seed = seed) ∧
+    (ξ : (ℕ → Bool)) :
+    (InfoGeometry.Topology.CuntzO2Carrier.leftRangeProjection C * seed +
+      InfoGeometry.Topology.CuntzO2Carrier.rightRangeProjection C * seed = seed) ∧
       (ξ = boundaryCons (boundaryHead ξ) (boundaryTail ξ)) := by
   constructor
   · exact InfoGeometry.Canonical.CantorCuntzBasis.seed_branch_decomposition (C := C) (seed := seed)
@@ -208,55 +206,9 @@ theorem cantorCuntz_root_branching
 /-- Finite boundary reconstruction is the theorem-backed crossing point into the limit carrier. -/
 @[rep_depth operator]
 theorem boundary_finite_reconstruction
-    (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
+    (n : ℕ) (ξ : (ℕ → Bool)) :
     ξ = boundaryConsList (boundaryPrefix n ξ) (boundaryIterateTail n ξ) :=
   boundary_iterated_decomposition n ξ
-
-/-- Boundary crossing property with explicit prefix/tail fields. -/
-@[rep_depth operator]
-def BoundaryCrossingWitness (n : ℕ) (ξ : InfiniteBinaryWordSpace) : Prop :=
-  ξ = boundaryConsList (boundaryPrefix n ξ) (boundaryIterateTail n ξ)
-
-namespace BoundaryCrossingWitness
-
-def pre {n : ℕ} {ξ : InfiniteBinaryWordSpace}
-    (_ : BoundaryCrossingWitness n ξ) : List Bool :=
-  boundaryPrefix n ξ
-
-def suf {n : ℕ} {ξ : InfiniteBinaryWordSpace}
-    (_ : BoundaryCrossingWitness n ξ) : InfiniteBinaryWordSpace :=
-  boundaryIterateTail n ξ
-
-@[simp] theorem pre_eq {n : ℕ} {ξ : InfiniteBinaryWordSpace}
-    (W : BoundaryCrossingWitness n ξ) :
-    W.pre = boundaryPrefix n ξ := rfl
-
-@[simp] theorem suf_eq {n : ℕ} {ξ : InfiniteBinaryWordSpace}
-    (W : BoundaryCrossingWitness n ξ) :
-    W.suf = boundaryIterateTail n ξ := rfl
-
-end BoundaryCrossingWitness
-
-/-- Canonical boundary crossing property at depth `n`. -/
-@[rep_depth operator]
-def boundaryCrossingWitness
-    (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
-    BoundaryCrossingWitness n ξ := boundary_finite_reconstruction n ξ
-
-/-- Boundary crossing readout: the canonical property is exactly prefix/tail reconstruction. -/
-@[rep_depth operator]
-theorem boundary_crossing
-    (n : ℕ) (ξ : InfiniteBinaryWordSpace) :
-    ξ =
-      boundaryConsList
-        (boundaryCrossingWitness n ξ).pre
-        (boundaryCrossingWitness n ξ).suf
-      ∧ (boundaryCrossingWitness n ξ).pre = boundaryPrefix n ξ
-      ∧ (boundaryCrossingWitness n ξ).suf = boundaryIterateTail n ξ := by
-  exact
-    ⟨boundaryCrossingWitness n ξ,
-      (boundaryCrossingWitness n ξ).pre_eq,
-      (boundaryCrossingWitness n ξ).suf_eq⟩
 
 /-! ## 2. Zorn boundary subsystem for the infinite Cantor carrier -/
 
@@ -269,14 +221,14 @@ finite head extensions stay inside the subsystem, and the tail map keeps the
 system on the same boundary.
 -/
 @[rep_depth operator]
-def BoundarySubsystem (S : Set InfiniteBinaryWordSpace) : Prop :=
+def BoundarySubsystem (S : Set (ℕ → Bool)) : Prop :=
   (∀ ξ, ξ ∈ S → boundaryTail ξ ∈ S) ∧
     (∀ a ξ, ξ ∈ S → boundaryCons a ξ ∈ S)
 
 /-- Boundary subsystems are closed under any finite number of tail steps. -/
 @[rep_depth operator]
 theorem boundarySubsystem_boundaryIterateTail_mem
-    {S : Set InfiniteBinaryWordSpace}
+    {S : Set (ℕ → Bool)}
     (hS : BoundarySubsystem S) :
     ∀ n ξ, ξ ∈ S → boundaryIterateTail n ξ ∈ S
   | 0, _ξ, hξ => hξ
@@ -286,7 +238,7 @@ theorem boundarySubsystem_boundaryIterateTail_mem
 /-- Boundary subsystems are closed under adding any finite binary prefix. -/
 @[rep_depth operator]
 theorem boundarySubsystem_boundaryConsList_mem
-    {S : Set InfiniteBinaryWordSpace}
+    {S : Set (ℕ → Bool)}
     (hS : BoundarySubsystem S) :
     ∀ pre ξ, ξ ∈ S → boundaryConsList pre ξ ∈ S
   | [], _ξ, hξ => hξ
@@ -300,10 +252,10 @@ stays in that subsystem.
 -/
 @[rep_depth operator]
 theorem boundarySubsystem_finite_reconstruction_mem
-    {S : Set InfiniteBinaryWordSpace}
+    {S : Set (ℕ → Bool)}
     (hS : BoundarySubsystem S)
     (n : ℕ)
-    {ξ : InfiniteBinaryWordSpace}
+    {ξ : (ℕ → Bool)}
     (hξ : ξ ∈ S) :
     boundaryConsList (boundaryPrefix n ξ) (boundaryIterateTail n ξ) ∈ S :=
   boundarySubsystem_boundaryConsList_mem hS
@@ -314,7 +266,7 @@ theorem boundarySubsystem_finite_reconstruction_mem
 /-- The union of a chain of Cantor boundary subsystems is again a subsystem. -/
 @[rep_depth operator]
 theorem boundarySubsystem_sUnion_of_chain
-    (chain : Set (Set InfiniteBinaryWordSpace))
+    (chain : Set (Set (ℕ → Bool)))
     (hchain_subsystem : ∀ S ∈ chain, BoundarySubsystem S) :
     BoundarySubsystem (⋃₀ chain) := by
   constructor
@@ -331,10 +283,10 @@ subsystem has an upper bound, namely the union of the chain.
 -/
 @[rep_depth operator]
 theorem boundarySubsystem_chain_has_upper_bound
-    (seed U : Set InfiniteBinaryWordSpace)
+    (seed U : Set (ℕ → Bool))
     (hseedU : seed ⊆ U)
     (hseed : BoundarySubsystem seed)
-    (chain : Set (Set InfiniteBinaryWordSpace))
+    (chain : Set (Set (ℕ → Bool)))
     (hchain_member :
       chain ⊆ {S | seed ⊆ S ∧ S ⊆ U ∧ BoundarySubsystem S}) :
     ∃ B ∈ {S | seed ⊆ S ∧ S ⊆ U ∧ BoundarySubsystem S},
@@ -367,20 +319,20 @@ symbolic Cantor boundary only; it does not assert an analytic Fock completion.
 -/
 @[rep_depth operator]
 theorem zorn_maximal_boundarySubsystem
-    (seed U : Set InfiniteBinaryWordSpace)
+    (seed U : Set (ℕ → Bool))
     (hseedU : seed ⊆ U)
     (hseed : BoundarySubsystem seed) :
-    ∃ M : Set InfiniteBinaryWordSpace,
+    ∃ M : Set (ℕ → Bool),
       seed ⊆ M ∧
         M ⊆ U ∧
           BoundarySubsystem M ∧
-            ∀ N : Set InfiniteBinaryWordSpace,
+            ∀ N : Set (ℕ → Bool),
               seed ⊆ N →
                 N ⊆ U →
                   BoundarySubsystem N →
                     M ⊆ N →
                       N = M := by
-  let P : Set (Set InfiniteBinaryWordSpace) :=
+  let P : Set (Set (ℕ → Bool)) :=
     {S | seed ⊆ S ∧ S ⊆ U ∧ BoundarySubsystem S}
   have hchain :
       ∀ c ⊆ P, IsChain (· ⊆ ·) c → ∃ ub ∈ P, ∀ s ∈ c, s ⊆ ub := by
@@ -404,9 +356,9 @@ point has arbitrarily deep algebraic representatives.
 @[rep_depth operator]
 theorem splitCliffordInfinity_boundarySubsystem_package
     (z : SplitCliffordInfinity)
-    (S : Set InfiniteBinaryWordSpace)
+    (S : Set (ℕ → Bool))
     (hS : BoundarySubsystem S)
-    {ξ : InfiniteBinaryWordSpace}
+    {ξ : (ℕ → Bool)}
     (hξ : ξ ∈ S) :
     (∀ n : ℕ, boundaryConsList (boundaryPrefix n ξ) (boundaryIterateTail n ξ) ∈ S)
       ∧
@@ -429,10 +381,10 @@ Connes/KMS regularity.
 @[rep_depth operator]
 theorem splitCliffordInfinity_zornBoundarySubsystem_package
     (z : SplitCliffordInfinity)
-    (seed U : Set InfiniteBinaryWordSpace)
+    (seed U : Set (ℕ → Bool))
     (hseedU : seed ⊆ U)
     (hseed : BoundarySubsystem seed) :
-    ∃ M : Set InfiniteBinaryWordSpace,
+    ∃ M : Set (ℕ → Bool),
       seed ⊆ M ∧
         M ⊆ U ∧
           BoundarySubsystem M ∧
@@ -441,7 +393,7 @@ theorem splitCliffordInfinity_zornBoundarySubsystem_package
             (∀ N : ℕ, ∃ n ≥ N, ∃ x : SplitClNNAlg n,
               DirectLimit.Module.of ℝ ℕ SplitClNNAlg
                 (fun m n h => splitCliffordMap m n h) n x = z) ∧
-            ∀ N : Set InfiniteBinaryWordSpace,
+            ∀ N : Set (ℕ → Bool),
               seed ⊆ N →
                 N ⊆ U →
                   BoundarySubsystem N →
@@ -454,34 +406,6 @@ theorem splitCliffordInfinity_zornBoundarySubsystem_package
     exact boundarySubsystem_finite_reconstruction_mem hMsubsystem n hξ
   · exact splitCliffordInfinity_unbounded_representatives z
 
-/-- Re-export of the binary child map. -/
-@[rep_depth operator]
-def binaryChild (w : FiniteBinaryWord) (b : Bool) : FiniteBinaryWord :=
-  BinaryWord.child w b
-
-/-- Re-export of the binary closed cylinder. -/
-@[rep_depth operator]
-def binaryClosedCylinder (w : FiniteBinaryWord) : Set FiniteBinaryWord :=
-  BinaryWord.closedCylinder w
-
-@[simp, rep_depth operator]
-theorem binaryWord_child_length (w : FiniteBinaryWord) (b : Bool) :
-    (binaryChild w b).length = w.length + 1 := by
-  simp [binaryChild, TypeIIIModularCantorSystem.BinaryWord.child]
-
-@[simp, rep_depth operator]
-theorem binaryWord_mem_closedCylinder_self (w : FiniteBinaryWord) :
-    w ∈ binaryClosedCylinder w := by
-  simpa [binaryClosedCylinder] using (TypeIIIModularCantorSystem.BinaryWord.mem_closedCylinder_self w)
-
-@[rep_depth operator]
-theorem binaryWord_closedCylinder_split (w : FiniteBinaryWord) :
-    binaryClosedCylinder w =
-      ({w} : Set FiniteBinaryWord)
-        ∪ binaryClosedCylinder (binaryChild w false)
-        ∪ binaryClosedCylinder (binaryChild w true) := by
-  simpa [binaryClosedCylinder, binaryChild] using
-    (TypeIIIModularCantorSystem.BinaryWord.closedCylinder_split w)
 
 /-! ## 2. Hausdorff / spectral calibration readout -/
 
@@ -502,70 +426,13 @@ def cantorHausdorffReadout
 theorem cantorHausdorffReadout_eq_middleThirdsCantor
     {Op H : Type*} [Ring Op] [StarRing Op]
     [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H]
-    (T : CuntzCantorSpectralTriple Op H) :
+    (T : CuntzCantorSpectralTriple Op H)
+    (hT : T.spectralDimension = Real.log 2 / Real.log 3) :
     cantorHausdorffReadout T = Real.log 2 / Real.log 3 := by
-  simp [cantorHausdorffReadout, T.spectralDimension_eq_middleThirdsCantor]
+  simp [cantorHausdorffReadout, hT]
 
 /-! ## 3. Cuntz / CAR / Clifford readouts -/
 
-/-- Re-export of the Cuntz range-projection partition of unity. -/
-@[rep_depth operator]
-theorem cuntz_rangeProjection_sum_one
-    {Op : Type*} [Ring Op] [StarRing Op]
-    (C : CuntzO2Carrier Op) :
-    C.leftRangeProjection + C.rightRangeProjection = 1 :=
-  C.rangeProjection_sum_one
-
-/-- Re-export of the derived CAR nilpotency law. -/
-@[rep_depth operator]
-theorem carFromCuntz_sq_eq_zero
-    {Op : Type*} [Ring Op] [StarRing Op]
-    (C : InfoGeometry.Topology.CuntzO2Carrier Op) :
-    carFromCuntz C * carFromCuntz C = 0 :=
-  InfoGeometry.Canonical.carFromCuntz_sq_eq_zero C
-
-/-- Re-export of the derived CAR anticommutator law. -/
-@[rep_depth operator]
-theorem carFromCuntz_anticommutator_star_eq_one
-    {Op : Type*} [Ring Op] [StarRing Op]
-    (C : InfoGeometry.Topology.CuntzO2Carrier Op) :
-    cantorAnticommutator (carFromCuntz C) (star (carFromCuntz C)) = 1 :=
-  InfoGeometry.Canonical.carFromCuntz_anticommutator_star_eq_one C
-
-/-- Re-export of the infinite Clifford square law from the paper property. -/
-@[rep_depth operator]
-theorem infiniteClifford_generator_sq
-    {Op : Type*} [Ring Op]
-    (C : RealDoubledCantorCliffordRepresentation Op) (i : ℕ) :
-    C.gamma i * C.gamma i = 1 :=
-  C.gamma_sq i
-
-/-- Re-export of the infinite Clifford anticommutation law from the paper property. -/
-@[rep_depth operator]
-theorem infiniteClifford_generator_anticomm
-    {Op : Type*} [Ring Op]
-    (C : RealDoubledCantorCliffordRepresentation Op) {i j : ℕ} (hij : i ≠ j) :
-    C.gamma i * C.gamma j +
-      C.gamma j * C.gamma i = 0 := by
-  rw [C.gamma_anticomm (i := i) (j := j) hij]
-  simp
-
-/-- Re-export of the Hestenes/Krein structure-operator anticommutation law. -/
-@[rep_depth operator]
-theorem hestenes_structure_operator_anticommute
-    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    (InfoGeometry.Krein.modular_j (E := E)).comp (InfoGeometry.Krein.complex_i (E := E)) =
-      -((InfoGeometry.Krein.complex_i (E := E)).comp (InfoGeometry.Krein.modular_j (E := E))) :=
-  InfoGeometry.Topology.FractalCantorFockWitness.hestenes_structure_operator_anticommute
-
-/-- Re-export of the infinite `Cl(1,1)` generator readout as the structure operator. -/
-@[rep_depth operator]
-theorem cl11Rep_ι_zero_one_eq_structure_operator
-    {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    InfoGeometry.Krein.cl11Rep (E := E)
-      (CliffordAlgebra.ι InfoGeometry.Clifford.splitQ11 (0, 1))
-      = InfoGeometry.Krein.complex_i (E := E) :=
-  InfoGeometry.Topology.FractalCantorFockWitness.cl11Rep_ι_zero_one_eq_structure_operator
 
 /-! ## 4. Theorem surfaces -/
 

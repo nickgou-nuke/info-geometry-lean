@@ -1,4 +1,6 @@
-import proofs.ZornCliffordParityAPI
+import InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
+import InfoGeometry.Canonical.CanonicalZornCompositionFiveGradeBridge
+import InfoGeometry.Canonical.CanonicalZornSpinChirality
 
 /-!
 # Canonical Zorn chiral lightcone operators
@@ -12,10 +14,24 @@ noncomputable section
 
 namespace ZornChiralLightcone
 
-open SplitOctonionBraidSU3
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 open CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation
-open ZornCliffordParityAPI
+
+/-- The chiral grading on the canonical Dirac carrier. -/
+def chiralityOperator : Module.End ℂ DiracSpinor16 :=
+  CanonicalZornSpinChirality.diracChirality.toLinearMap
+
+@[simp] theorem chiralityOperator_apply (S : SpinorPlus8) (C : SpinorMinus8) :
+    chiralityOperator (S, C) = (S, -C) := rfl
+
+theorem chiralityOperator_sq :
+    chiralityOperator * chiralityOperator = 1 := by
+  apply LinearMap.ext
+  intro Ψ
+  change CanonicalZornSpinChirality.diracChirality
+      (CanonicalZornSpinChirality.diracChirality Ψ) = Ψ
+  exact CanonicalZornSpinChirality.diracChirality_sq Ψ
 
 @[ext] lemma Zorn.ext_chiral (X Y : Zorn) (ha : X.a = Y.a) (hu : X.u = Y.u) (hv : X.v = Y.v) (hb : X.b = Y.b) : X = Y := by
   cases X

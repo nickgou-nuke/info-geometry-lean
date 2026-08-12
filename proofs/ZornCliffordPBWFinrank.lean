@@ -21,7 +21,6 @@ open scoped DirectSum
 
 open CanonicalZornCompositionTriality
 open CanonicalZornCliffordRepresentation
-open CanonicalZornFiveGradedClosure
 open ZornCliffordBasisMonomials
 
 /-- The dependent union of subsets of each fixed cardinality is canonically

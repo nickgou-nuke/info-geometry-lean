@@ -1,11 +1,11 @@
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Real.Basic
 import Mathlib
+import proofs.PatchRepresentation
+import proofs.StructureTensor
 
 open Matrix
 open scoped BigOperators
-
-abbrev Patch2x2 := Matrix (Fin 2) (Fin 2) ℝ
 
 /-!
 # Subpixel Contours and Eigenvectors of Rank-1 Tensors
@@ -15,10 +15,6 @@ structure tensor J = v vᵀ. It proves that the gradient direction (v)
 is the dominant eigenvector, while the contour tangent (orthogonal to v) 
 strictly lies in the null space (kernel) of J.
 -/
-
-/-- Външно произведение (J = v vᵀ), представляващо ранг-1 структурен тензор -/
-def outer2 (u : Fin 2 → ℝ) : Patch2x2 :=
-  vecMulVec u u
 
 /-- 
 Теорема 1: Доминантен собствен вектор.
@@ -34,6 +30,7 @@ theorem rank_one_eigenvector (v : Fin 2 → ℝ) :
     ∑ j, (v i * v j) * v j 
       = ∑ j, v i * (v j * v j) := by congr 1; ext j; ring
     _ = v i * ∑ j, v j * v j := by rw [Finset.mul_sum]
+    _ = (∑ j, v j * v j) * v i := by ring
 
 /-- 
 Теорема 2: Тангенциалният контур лежи в нулевото пространство.

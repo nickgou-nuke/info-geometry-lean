@@ -1,4 +1,4 @@
-import proofs.KleinBottle
+import InfoGeometry.External.Auto.KleinBottle
 import proofs.TitsBruhatBrillouinKlein
 import proofs.WallpaperO55FrozenSelectionBridge
 import proofs.O55CartanPhononReduction
@@ -30,6 +30,8 @@ Machine Code of the Vacuum:
 -/
 
 noncomputable section
+
+open KleinBottle
 
 namespace TorusKleinO55Bridge
 
@@ -66,14 +68,14 @@ def doubledCartanCarrierDimension : ℕ :=
 /-- Concrete Klein relation already present in `KleinBottle.lean`: the glide
 conjugates one torus translation to its inverse. -/
 theorem klein_glide_twists_torus_translation (z : ℂ) :
-    G (T z) = T_inv (G z) := by
-  rw [klein_bottle_relation z]
+    KleinBottle.G (KleinBottle.T z) = KleinBottle.T_inv (KleinBottle.G z) := by
+  exact KleinBottle.klein_bottle_relation z
 
 /-- The Klein glide squares to an ordinary translation, exhibiting the torus as
 orientable double-cover data. -/
 theorem klein_glide_square_is_translation (z : ℂ) :
-    G (G z) = z + 2 := by
-  rw [glide_reflection_sq z]
+    KleinBottle.G (KleinBottle.G z) = z + 2 := by
+  exact KleinBottle.glide_reflection_sq z
 
 /-- Rational affine identities for the same torus-to-Klein generator:
 `F² = Tₓ` and `F Tᵧ F⁻¹ = Tᵧ⁻¹`. -/

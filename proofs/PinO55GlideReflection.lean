@@ -113,9 +113,11 @@ theorem crosscap_reflects_nbar_to_neg_n :
 conjugates the torus translation to its inverse and has square a translation in
 the orientable double cover. -/
 theorem mandatory_glide_relation :
-    (∀ z : ℂ, G (T z) = T_inv (G z)) ∧
-    (∀ z : ℂ, G (G z) = z + 2) :=
-  ⟨klein_bottle_relation, glide_reflection_sq⟩
+    (∀ z : ℂ, KleinBottle.G (KleinBottle.T z) =
+      KleinBottle.T_inv (KleinBottle.G z)) ∧
+    (∀ z : ℂ, KleinBottle.G (KleinBottle.G z) = z + 2) :=
+  ⟨TorusKleinO55Bridge.klein_glide_twists_torus_translation,
+    TorusKleinO55Bridge.klein_glide_square_is_translation⟩
 
 /-- The O(5,5)-derived structural Hamiltonian inherits the mandatory
 orientation reversal as the odd mirror sign. -/
@@ -144,8 +146,9 @@ theorem pin_o55_glide_reflection_kernel :
       -ι55 (nbar_pair crosscapIndex) ∧
     reflect_in_e crosscapIndex (ι55 (nbar_pair crosscapIndex)) =
       -ι55 (n_pair crosscapIndex) ∧
-    (∀ z : ℂ, G (T z) = T_inv (G z)) ∧
-    (∀ z : ℂ, G (G z) = z + 2) ∧
+    (∀ z : ℂ, KleinBottle.G (KleinBottle.T z) =
+      KleinBottle.T_inv (KleinBottle.G z)) ∧
+    (∀ z : ℂ, KleinBottle.G (KleinBottle.G z) = z + 2) ∧
     (∀ m2 J Tiso v t : Q,
       CasimirIsospinHamiltonian.mirrorDifference
         (fun Tz =>
@@ -169,9 +172,9 @@ theorem pin_o55_glide_reflection_kernel :
   constructor
   · exact crosscap_reflects_nbar_to_neg_n
   constructor
-  · exact klein_bottle_relation
+  · exact TorusKleinO55Bridge.klein_glide_twists_torus_translation
   constructor
-  · exact glide_reflection_sq
+  · exact TorusKleinO55Bridge.klein_glide_square_is_translation
   · exact mandatory_glide_sets_positive_structural_mirror
 
 end PinO55GlideReflection

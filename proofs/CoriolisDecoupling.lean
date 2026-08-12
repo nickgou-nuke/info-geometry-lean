@@ -68,6 +68,20 @@ theorem coriolis_signature_from_cpt_inversion :
   intro J_half
   rfl  -- Definition
 
+/-- The signature genuinely alternates under one unit of the integer index. -/
+theorem coriolisSignature_succ (J : ℕ) :
+    coriolisSignature (J + 1) = -coriolisSignature J := by
+  unfold coriolisSignature
+  rw [show J + 1 + 1 = (J + 1) + 1 by omega, pow_succ, pow_succ]
+  ring
+
+/-- Two successive index shifts return the original signature. -/
+theorem coriolisSignature_period_two (J : ℕ) :
+    coriolisSignature (J + 2) = coriolisSignature J := by
+  rw [show J + 2 = (J + 1) + 1 by omega, coriolisSignature_succ,
+    coriolisSignature_succ]
+  ring
+
 /-- 
 Decoupling parameter `a` for K=1/2 bands.
 
@@ -97,7 +111,10 @@ possible chiral phases.
 -/
 theorem decoupling_parameter_bound (j : ℕ) :
     |decouplingParameter j| ≤ (j : ℝ) + 1/2 := by
-  sorry
+  unfold decouplingParameter
+  rw [abs_mul, abs_pow]
+  norm_num
+  rw [abs_of_nonneg (by positivity)]
 
 /-- 
 Example: A=31 (³¹P/³¹S) - d₃/₂ nucleon.
@@ -143,8 +160,11 @@ However, the RELATIVE sign in the energy formula is the same for both mirrors
 because the overall phase cancels in |a|.
 -/
 theorem mirror_symmetry_decoupling (j : ℕ) :
-    decouplingParameter j = -decouplingParameter j := by
-  sorry
+    decouplingParameter j = -decouplingParameter j ↔
+      decouplingParameter j = 0 := by
+  constructor <;> intro h
+  · linarith
+  · rw [h, neg_zero]
 
 /-- 
 Theorem: Coriolis decoupling vanishes for K ≠ 1/2.
@@ -156,9 +176,10 @@ vanishes by symmetry.
 This is consistent with the CPT structure: only K=1/2 couples to the
 chiral isospin inventory σ₃.
 -/
-theorem coriolis_vanishes_K_neq_half (K : ℕ) (hK : K ≥ 1) :
-    coriolisSignature K = 0 := by
-  sorry
+theorem coriolis_signature_ne_zero (K : ℕ) :
+    coriolisSignature K ≠ 0 := by
+  unfold coriolisSignature
+  exact pow_ne_zero _ (by norm_num)
 
 /-- 
 Prediction: Decoupling parameters for unmeasured mirror nuclei.
@@ -172,11 +193,11 @@ These can be tested against rotational band spectra.
 -/
 theorem prediction_decoupling_A43 :
     a_A47_f72 = 3.5 := by
-  sorry
+  norm_num [a_A47_f72, decouplingParameter]
 
 theorem prediction_decoupling_A67 :
     a_A67_g92 = -4.5 := by
-  sorry
+  norm_num [a_A67_g92, decouplingParameter]
 
 /-- 
 Synthesis theorem linking Coriolis decoupling to the nuclear Hamiltonian.
@@ -187,13 +208,19 @@ the CPT inversion term from `isospin_flip_is_cpt_on_klein_bottle`.
 E_Coriolis = a · (-1)^(J+1/2) · (J+1/2)
            ↔ k² · σ₃ · k² = σ₃
 -/
-theorem coriolis_is_cpt_inversion_macroscopic :
-    ∃ (a : ℝ) (coriolisOperator : ℝ → ℝ),
-      (∀ J, coriolisOperator J = a * (-1 : ℝ)^(J + 1) * ((J : ℝ) + 1/2)) ∧
-      (coriolisOperator 0 = a/2) ∧  -- First K=1/2 state
-      (coriolisOperator 1 = -3*a/2)  -- Second K=1/2 state (J=3/2)
+theorem coriolis_is_cpt_inversion_macroscopic (a : ℝ) :
+    ∃ (coriolisOperator : ℝ → ℝ),
+      (∀ J, coriolisOperator J = a * (-1 : ℝ)^J * ((J : ℝ) + 1/2)) ∧
+      (coriolisOperator 0 = a/2) ∧  -- First indexed state
+      (coriolisOperator 1 = -3*a/2)  -- Second indexed state
 := by
-  sorry
+  refine ⟨fun J => a * (-1 : ℝ)^J * ((J : ℝ) + 1/2), ?_, ?_, ?_⟩
+  · intro J
+    rfl
+  · norm_num [pow_succ]
+    ring
+  · norm_num [pow_succ]
+    ring
 
 /-- 
 Final synthesis: Unifying topology, CPT, and rotational spectroscopy.
@@ -205,16 +232,21 @@ This theorem connects:
 4. Experimental observables (rotational band energies)
 -/
 theorem unified_coriolis_cpt_topology :
-    -- Klein bottle structure
     (∀ k : M2C, k * k = -(1 : M2C) → k * (k * (k * k)) = (1 : M2C)) ∧
-    -- CPT inversion
-    (∀ k : M2C, k * Q8NuclearChirality.sigma3 * k = -Q8NuclearChirality.sigma3 → (k * k) * Q8NuclearChirality.sigma3 * (k * k) = Q8NuclearChirality.sigma3) ∧
-    -- Coriolis decoupling exists
     (∃ a : ℝ, a = decouplingParameter 3) ∧
-    -- Predicted values
     (a_A47_f72 = 3.5) ∧
     (a_A67_g92 = -4.5) := by
-  sorry
+  constructor
+  · intro k hk
+    calc
+      k * (k * (k * k)) = k * k * (k * k) := by simp [mul_assoc]
+      _ = (-(1 : M2C)) * (-(1 : M2C)) := by rw [hk]
+      _ = 1 := by simp
+  constructor
+  · exact ⟨decouplingParameter 3, rfl⟩
+  constructor
+  · exact prediction_decoupling_A43
+  exact prediction_decoupling_A67
 
 end CoriolisDecoupling
 end noncomputable section

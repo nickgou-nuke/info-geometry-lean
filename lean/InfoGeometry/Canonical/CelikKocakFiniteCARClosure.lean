@@ -16,7 +16,7 @@ namespace InfoGeometry.Canonical.JordanWignerCelikKocakBridgeNDepth
 open InfoGeometry.Canonical.CelikKocakCantorOperators
 
 private lemma address_two_ext
-    (x : CantorAddress 2)
+    (x : ((Fin 2) → Bool))
     (h0 : x 0 = b0) (h1 : x 1 = b1) :
     x = fun k => if k = 0 then b0 else b1 := by
   funext k
@@ -25,8 +25,8 @@ private lemma address_two_ext
   · simpa using h1
 
 private lemma two_site_pointwise_zero
-    (op : CantorOp 2)
-    (f : FunctionSpace 2) (x : CantorAddress 2)
+    (op : (((Fin 2 → Bool) → ℂ) →ₗ[ℂ] ((Fin 2 → Bool) → ℂ)))
+    (f : (((Fin 2) → Bool) → ℂ)) (x : ((Fin 2) → Bool))
     (h : ∀ b0 b1 : Bool,
       op f (fun k => if k = 0 then b0 else b1) = 0) :
     op f x = 0 := by
@@ -40,7 +40,7 @@ private lemma two_site_pointwise_zero
   · rw [address_two_ext x h0 h1]
     exact h true true
 
-private lemma address_flip_comm (x : CantorAddress 2) :
+private lemma address_flip_comm (x : ((Fin 2) → Bool)) :
     CantorAddress.flipAt (1 : Fin 2)
         (CantorAddress.flipAt (0 : Fin 2) x) =
       CantorAddress.flipAt (0 : Fin 2)

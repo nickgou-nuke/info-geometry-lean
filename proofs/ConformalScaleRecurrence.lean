@@ -2,6 +2,8 @@ import proofs.MetamaterialQuasicrystalBloch
 import proofs.TwistedTorusVacuumMachine
 import proofs.BuresFisherAndreevGeodesicFlow
 
+open KleinBottle
+
 /-!
 # Conformal scale recurrence on the Klein--Cartan interface
 
@@ -96,9 +98,9 @@ theorem conformal_scale_recurrence_synthesis
   constructor
   · exact conformalPairProduct_eq_one hΩ
   constructor
-  · exact TorusKleinO55Bridge.klein_glide_twists_torus_translation
+  · exact fun z => TorusKleinO55Bridge.klein_glide_twists_torus_translation z
   constructor
-  · exact TorusKleinO55Bridge.klein_glide_square_is_translation
+  · exact fun z => TorusKleinO55Bridge.klein_glide_square_is_translation z
   constructor
   · exact O55CartanPhononReduction.o55_cartan_rank_eq
   constructor

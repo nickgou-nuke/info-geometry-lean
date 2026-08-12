@@ -940,6 +940,9 @@ lean_lib ChiralLorentzFockQuadratic where
 lean_lib ChiralGrandCanonicalOperatorGeometry where
   roots := #[`InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry]
 
+lean_lib ChiralGrandCanonicalModularGenerator where
+  roots := #[`InfoGeometry.Clifford.ChiralGrandCanonicalModularGenerator]
+
 lean_lib ChiralGrandCanonicalThermalGeometry where
   roots := #[`InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry]
 
@@ -948,6 +951,9 @@ lean_lib ChiralGrandCanonicalHestenesRotor where
 
 lean_lib ChiralGrandCanonicalLoxodromicRotor where
   roots := #[`InfoGeometry.Clifford.ChiralGrandCanonicalLoxodromicRotor]
+
+lean_lib ChiralGrandCanonicalLoxodromicThermalBridge where
+  roots := #[`InfoGeometry.Clifford.ChiralGrandCanonicalLoxodromicThermalBridge]
 
 lean_lib ChiralGrandCanonicalFiniteKMS where
   roots := #[`InfoGeometry.Physics.Thermodynamics.ChiralGrandCanonicalFiniteKMS]
@@ -1006,6 +1012,15 @@ lean_lib TomitaTakesakiInvolutions where
 lean_lib HestenesBivectorCarrier where
   roots := #[`InfoGeometry.Canonical.HestenesBivectorCarrier]
 
+lean_lib A2WeylPermutationAction where
+  roots := #[`InfoGeometry.Canonical.A2WeylPermutationAction]
+
+lean_lib CuntzMatrixCompatibleStateNet where
+  roots := #[`InfoGeometry.Canonical.CuntzMatrixCompatibleStateNet]
+
+lean_lib KleinSixStateAssociatedBundle where
+  roots := #[`InfoGeometry.Canonical.KleinSixStateAssociatedBundle]
+
 lean_lib InfoGeometryCanonical where
   roots := #[`InfoGeometry.Canonical.All, `InfoGeometry.Canonical.SplitOctonionTKK55,
     `InfoGeometry.Canonical.SplitOctonionTKK55Blocks,
@@ -1029,6 +1044,12 @@ lean_lib ProjectiveAffineConformalClosure55 where
 
 lean_lib Pin55ColimitAnomalyBridge where
   roots := #[`InfoGeometry.Canonical.Pin55ColimitAnomalyBridge]
+
+lean_lib TopologicalKMSFlow where
+  roots := #[`InfoGeometry.Canonical.TopologicalKMSFlow]
+
+lean_lib HeisenbergDerivative where
+  roots := #[`InfoGeometry.Canonical.HeisenbergDerivative]
 
 lean_lib OperatorPin55Action where
   roots := #[`InfoGeometry.Canonical.OperatorPin55Action]
@@ -1156,6 +1177,172 @@ lean_lib QutritMobiusTripotentOrientationBridge where
 
 lean_lib TwelveFoldExplicitOperators where
   roots := #[`InfoGeometry.Canonical.TwelveFoldExplicitOperators]
+
+lean_lib TwelveFoldArithmeticNative where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldArithmeticNative]
+
+lean_lib TwelveFoldGaloisCharacterSets where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldGaloisCharacterSets]
+
+lean_lib TwelveFoldGaloisPowerAction where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldGaloisPowerAction]
+
+lean_lib TwelveFoldCyclotomicNative where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldCyclotomicNative]
+
+lean_lib TwelveFoldAdditiveCharacter where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldAdditiveCharacter]
+
+lean_lib TwelveFoldDirichletCharacters where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldDirichletCharacters]
+
+lean_lib TwelveFoldCircleCyclotomic where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldCircleCyclotomic]
+
+lean_lib TwelveFoldGaussSum where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldGaussSum]
+
+lean_lib SixStateGeneralizedCliffordAlgebra where
+  roots := #[`InfoGeometry.Canonical.SixStateGeneralizedCliffordAlgebra]
+
+lean_lib SixStateWeylReflection where
+  roots := #[`InfoGeometry.Canonical.SixStateWeylReflection]
+
+lean_lib TwelveFoldGeneralizedCliffordExtension where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldGeneralizedCliffordExtension]
+
+lean_lib TwelveFoldMasterCharpoly where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldMasterCharpoly]
+
+lean_lib TwelveFoldCyclotomicBridge where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldCyclotomicBridge]
+
+lean_lib TwelveFoldProjectiveReflection where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldProjectiveReflection]
+
+lean_lib SixStateShiftHierarchy where
+  roots := #[`InfoGeometry.Canonical.SixStateShiftHierarchy]
+
+lean_lib A2QutritTransitionRootBridge where
+  roots := #[`InfoGeometry.Canonical.A2QutritTransitionRootBridge]
+
+lean_lib QutritFourierBasisChange where
+  roots := #[`InfoGeometry.Canonical.QutritFourierBasisChange]
+
+lean_lib TwelveFoldCyclicGroupStructure where
+  roots := #[`InfoGeometry.Canonical.TwelveFoldCyclicGroupStructure]
+
+lean_lib QutritWeylOperatorBasis where
+  roots := #[`InfoGeometry.Canonical.QutritWeylOperatorBasis]
+
+lean_lib QutritGellMannOperatorBasis where
+  roots := #[`InfoGeometry.Canonical.QutritGellMannOperatorBasis]
+
+lean_lib QutritGellMannCasimir where
+  roots := #[`InfoGeometry.Canonical.QutritGellMannCasimir]
+
+lean_lib QutritGellMannFierz where
+  roots := #[`InfoGeometry.Canonical.QutritGellMannFierz]
+
+lean_lib QutritLieJordanCoordinateLayer where
+  roots := #[`InfoGeometry.Canonical.QutritLieJordanCoordinateLayer]
+
+lean_lib QutritGellMannBasis where
+  roots := #[`InfoGeometry.Canonical.QutritGellMannBasis]
+
+lean_lib QutritGellMannRootCoordinates where
+  roots := #[`InfoGeometry.Canonical.QutritGellMannRootCoordinates]
+
+lean_lib QutritWeylCommutingLines where
+  roots := #[`InfoGeometry.Canonical.QutritWeylCommutingLines]
+
+
+lean_lib StokesQutritChannelBasis where
+  roots := #[`InfoGeometry.Canonical.StokesQutritChannelBasis]
+
+lean_lib StokesGellMannChannelBasis where
+  roots := #[`InfoGeometry.Canonical.StokesGellMannChannelBasis]
+
+lean_lib QutritPositiveCone where
+  roots := #[`InfoGeometry.Canonical.QutritPositiveCone]
+
+lean_lib A2QutritWeylAdjoint where
+  roots := #[`InfoGeometry.Canonical.A2QutritWeylAdjoint]
+
+lean_lib KleinSixStateC12Compatibility where
+  roots := #[`InfoGeometry.Canonical.KleinSixStateC12Compatibility]
+
+lean_lib KleinUnitaryLiftAssociatedBundle where
+  roots := #[`InfoGeometry.Canonical.KleinUnitaryLiftAssociatedBundle]
+
+lean_lib KleinUnitaryOperatorIntertwining where
+  roots := #[`InfoGeometry.Canonical.KleinUnitaryOperatorIntertwining]
+
+lean_lib CuntzCantorKMSColimitBridge where
+  roots := #[`InfoGeometry.Categorical.CuntzCantorKMSColimitBridge]
+
+lean_lib CuntzMatrixAlgebraicStarColimit where
+  roots := #[`InfoGeometry.Canonical.CuntzMatrixAlgebraicStarColimit]
+
+lean_lib CuntzMatrixAlgebraicTraceFunctional where
+  roots := #[`InfoGeometry.Canonical.CuntzMatrixAlgebraicTraceFunctional]
+
+lean_lib CuntzMatrixTraceModularInvariance where
+  roots := #[`InfoGeometry.Canonical.CuntzMatrixTraceModularInvariance]
+
+lean_lib AlgebraicKMSStateColimit where
+  roots := #[`InfoGeometry.Canonical.AlgebraicKMSStateColimit]
+
+lean_lib RindlerChiralLoxodromicBridge where
+  roots := #[`InfoGeometry.Canonical.RindlerChiralLoxodromicBridge]
+
+
+lean_lib CuntzMatrixStarColimitState where
+  roots := #[`InfoGeometry.Canonical.CuntzMatrixStarColimitState]
+
+lean_lib FiniteGibbsState where
+  roots := #[`InfoGeometry.Canonical.FiniteGibbsState]
+
+lean_lib FiniteMatrixGibbsFunctional where
+  roots := #[`InfoGeometry.Canonical.FiniteMatrixGibbsFunctional]
+
+lean_lib CuntzMatrixZeroHamiltonianGibbs where
+  roots := #[`InfoGeometry.Canonical.CuntzMatrixZeroHamiltonianGibbs]
+
+lean_lib FiniteThermalTraceState where
+  roots := #[`InfoGeometry.Canonical.FiniteThermalTraceState]
+
+lean_lib AlgebraicStarEnvelope where
+  roots := #[`InfoGeometry.Canonical.AlgebraicStarEnvelope]
+
+lean_lib CuntzAlgebraicStarEnvelope where
+  roots := #[`InfoGeometry.Canonical.CuntzAlgebraicStarEnvelope]
+
+lean_lib FilteredGNSFaithfulAlgebraicQuotient where
+  roots := #[`InfoGeometry.Canonical.FilteredGNSFaithfulAlgebraicQuotient]
+
+lean_lib FilteredGNSFaithfulCStarRepresentation where
+  roots := #[`InfoGeometry.Canonical.FilteredGNSFaithfulCStarRepresentation]
+
+lean_lib FilteredGNSNormPullbackBinding where
+  roots := #[`InfoGeometry.Canonical.FilteredGNSNormPullbackBinding]
+
+lean_lib ModularFlowIsometry where
+  roots := #[`InfoGeometry.Canonical.ModularFlowIsometry]
+
+lean_lib FilteredGNSCompletionKMSState where
+  roots := #[`InfoGeometry.Canonical.FilteredGNSCompletionKMSState]
+
+lean_lib OperatorFierzReadoutCorrespondence where
+  roots := #[`InfoGeometry.Canonical.OperatorFierzReadoutCorrespondence]
+
+lean_lib ModularFlowGeneratorDerivative where
+  roots := #[`InfoGeometry.Canonical.ModularFlowGeneratorDerivative]
+
+lean_lib ModularFlowExponentialGenerator where
+  roots := #[`InfoGeometry.Canonical.ModularFlowExponentialGenerator]
+
+
 
 lean_lib SplitOctonionConjugation where
   roots := #[`InfoGeometry.Canonical.SplitOctonionConjugation]

@@ -19,7 +19,7 @@ noncomputable section
 
 namespace ModularParabolicTimeBridge
 
-open TKKJordanPairData
+open TKKJordanPairData.Legacy
 open ChemicalPotentialDeRhamG0Bridge
 open ThermodynamicTKKBridge
 open ModularTimeDeRhamBridge

@@ -71,6 +71,80 @@ def kronecker
     OperatorValuedMatrix W :=
   fun ia jb => S ia.1 jb.1 * A ia.2 jb.2
 
+@[simp] theorem kronecker_apply
+    (S : Matrix (Fin 2) (Fin 2) ℂ) (A : Matrix W W ℂ)
+    (i j : Fin 2) (a b : W) :
+    kronecker S A (i, a) (j, b) = S i j * A a b :=
+  rfl
+
+theorem kronecker_add_left
+    (S T : Matrix (Fin 2) (Fin 2) ℂ) (A : Matrix W W ℂ) :
+    kronecker (S + T) A = kronecker S A + kronecker T A := by
+  ext ⟨i, a⟩ ⟨j, b⟩
+  simp [kronecker, add_mul]
+
+theorem kronecker_add_right
+    (S : Matrix (Fin 2) (Fin 2) ℂ) (A B : Matrix W W ℂ) :
+    kronecker S (A + B) = kronecker S A + kronecker S B := by
+  ext ⟨i, a⟩ ⟨j, b⟩
+  simp [kronecker, mul_add]
+
+theorem kronecker_sheet_mul
+    (S T : Matrix (Fin 2) (Fin 2) ℂ) :
+    kronecker S (1 : Matrix W W ℂ) * kronecker T (1 : Matrix W W ℂ) =
+      kronecker (S * T) (1 : Matrix W W ℂ) := by
+  ext ⟨i, a⟩ ⟨j, b⟩
+  simp [kronecker, Matrix.mul_apply, Matrix.one_apply,
+    Fintype.sum_prod_type, Fin.sum_univ_two, Finset.sum_ite_eq']
+
+@[simp] theorem kronecker_identity :
+    kronecker I_mat (1 : Matrix W W ℂ) = (1 : OperatorValuedMatrix W) := by
+  ext ⟨i, a⟩ ⟨j, b⟩
+  fin_cases i <;> fin_cases j <;>
+    simp [kronecker, I_mat, Matrix.one_apply]
+
+theorem kronecker_neg_left
+    (S : Matrix (Fin 2) (Fin 2) ℂ) (A : Matrix W W ℂ) :
+    kronecker (-S) A = -kronecker S A := by
+  ext ⟨i, a⟩ ⟨j, b⟩
+  simp [kronecker]
+
+theorem kronecker_Gamma_sq :
+    kronecker (Gamma_mat (B := ℂ)) (1 : Matrix W W ℂ) *
+        kronecker (Gamma_mat (B := ℂ)) (1 : Matrix W W ℂ) =
+      (1 : OperatorValuedMatrix W) := by
+  rw [kronecker_sheet_mul, Gamma_sq, kronecker_identity]
+
+theorem kronecker_J_sq :
+    kronecker (J_mat (B := ℂ)) (1 : Matrix W W ℂ) *
+        kronecker (J_mat (B := ℂ)) (1 : Matrix W W ℂ) =
+      (1 : OperatorValuedMatrix W) := by
+  rw [kronecker_sheet_mul, J_sq, kronecker_identity]
+
+theorem kronecker_K_sq :
+    kronecker (K_mat (B := ℂ)) (1 : Matrix W W ℂ) *
+        kronecker (K_mat (B := ℂ)) (1 : Matrix W W ℂ) =
+      -(1 : OperatorValuedMatrix W) := by
+  rw [kronecker_sheet_mul, K_sq, kronecker_neg_left, kronecker_identity]
+
+theorem kronecker_J_Gamma_anticomm :
+    kronecker (J_mat (B := ℂ)) (1 : Matrix W W ℂ) *
+        kronecker (Gamma_mat (B := ℂ)) (1 : Matrix W W ℂ) =
+      -(kronecker (Gamma_mat (B := ℂ)) (1 : Matrix W W ℂ) *
+        kronecker (J_mat (B := ℂ)) (1 : Matrix W W ℂ)) := by
+  rw [kronecker_sheet_mul, kronecker_sheet_mul, J_Gamma]
+  rw [kronecker_neg_left]
+
+@[simp] theorem kronecker_identity_mul (M : OperatorValuedMatrix W) :
+    kronecker I_mat (1 : Matrix W W ℂ) * M = M := by
+  rw [kronecker_identity]
+  exact one_mul M
+
+@[simp] theorem kronecker_mul_identity (M : OperatorValuedMatrix W) :
+    M * kronecker I_mat (1 : Matrix W W ℂ) = M := by
+  rw [kronecker_identity]
+  exact mul_one M
+
 /-- The complex circular axis `-i ΓJ` used by `reconstruct_causal`. -/
 def circularMatrix : Matrix (Fin 2) (Fin 2) ℂ :=
   (-Complex.I) • K_mat

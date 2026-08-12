@@ -1,4 +1,16 @@
-/-- The Klein four-group V_4 represented abstractly. -/
+/-!
+# Finite predicate-state copy
+
+The former owner called two copies of the same predicate a spinor/vector
+duality without providing a manifold, a representation, or an action that
+could justify that interpretation.  This file keeps the genuine finite
+content: a Klein-four multiplication law and an explicit equivalence between
+two copies of one admissibility predicate.  A geometric spinor/vector bridge
+requires a separate representation owner.
+-/
+
+/-! ## The Klein-four multiplication table -/
+
 inductive V4
 | e : V4
 | a : V4
@@ -25,41 +37,35 @@ theorem mul_assoc (x y z : V4) : mul x (mul y z) = mul (mul x y) z := by
 
 end V4
 
-/-- A dummy topological manifold on which V4 acts. -/
+/-! ## A concrete action contract -/
+
 class KleinAction (M : Type) where
   act : V4 → M → M
   act_e : ∀ x, act V4.e x = x
   act_mul : ∀ g h x, act (V4.mul g h) x = act g (act h x)
 
-/-- A spinor predicate supplied by the geometric/Clifford owner. -/
-abbrev SpinorPredicate (M : Type) := M → Prop
+/-! ## Two copies of one predicate carrier -/
 
-/-- Spinor states satisfying the supplied admissibility predicate. -/
-structure SpinorState (M : Type) (P : SpinorPredicate M) where
+abbrev AdmissiblePredicate (M : Type) := M → Prop
+
+structure PredicateState (M : Type) (P : AdmissiblePredicate M) where
   val : M
-  is_spinor : P val
+  admissible : P val
 
-/-- Vector states satisfying the same carrier predicate. -/
-structure VectorState (M : Type) (P : SpinorPredicate M) where
+structure PredicateStateCopy (M : Type) (P : AdmissiblePredicate M) where
   val : M
-  is_vector : P val
+  admissible : P val
 
-/-- The equivalence relation mapping spinor states to vector states 
-    (duality on resolved orbifolds). -/
-structure IsoEquiv (A B : Type) where
+structure StateCopyEquivalence (A B : Type) where
   toFun : A → B
   invFun : B → A
-  left_inv : ∀ a, invFun (toFun a) = a
-  right_inv : ∀ b, toFun (invFun b) = b
+  inverseOnLeft : ∀ a, invFun (toFun a) = a
+  inverseOnRight : ∀ b, toFun (invFun b) = b
 
-def SpinorVectorEquiv (M : Type) (P : SpinorPredicate M) :
-    IsoEquiv (SpinorState M P) (VectorState M P) where
-  toFun s := ⟨s.val, s.is_spinor⟩
-  invFun v := ⟨v.val, v.is_vector⟩
-  left_inv s := by cases s; rfl
-  right_inv v := by cases v; rfl
-
-/-- Formal statement of the exact isomorphism between spinor and vector states. -/
-def spinor_vector_duality (M : Type) [KleinAction M] (P : SpinorPredicate M) :
-  IsoEquiv (SpinorState M P) (VectorState M P) :=
-  SpinorVectorEquiv M P
+/-- The canonical equivalence between two explicitly identical predicate copies. -/
+def predicateStateCopyEquiv (M : Type) (P : AdmissiblePredicate M) :
+    StateCopyEquivalence (PredicateState M P) (PredicateStateCopy M P) where
+  toFun s := ⟨s.val, s.admissible⟩
+  invFun v := ⟨v.val, v.admissible⟩
+  inverseOnLeft s := by cases s; rfl
+  inverseOnRight v := by cases v; rfl

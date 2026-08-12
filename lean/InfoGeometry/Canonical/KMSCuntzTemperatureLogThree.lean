@@ -26,14 +26,14 @@ owner file.
 
 /-- Generator-level temperature consequence for the algebraic Cuntz quotient. -/
 theorem cuntz3_generator_temperature_log_three
-    (φ : CuntzThree →ₗ[ℂ] ℂ) (β : ℝ)
+    (φ : InfoGeometry.Algebra.CuntzTensorQuotient.CuntzAlg 3 →ₗ[ℂ] ℂ) (β : ℝ)
     (hKMS : GeneratorKMSAt φ β) :
     β = Real.log 3 :=
   generatorKMS_beta_eq_log_three hKMS
 
 /-- The normalized generator two-point function at the critical temperature. -/
 theorem cuntz3_generator_temperature_two_point
-    (φ : CuntzThree →ₗ[ℂ] ℂ)
+    (φ : InfoGeometry.Algebra.CuntzTensorQuotient.CuntzAlg 3 →ₗ[ℂ] ℂ)
     (hKMS : GeneratorKMSAt φ (Real.log 3)) (i j : Fin 3) :
     φ (cuntzS 3 i * cuntzSdag 3 j) =
       if i = j then (1 / 3 : ℂ) else 0 :=

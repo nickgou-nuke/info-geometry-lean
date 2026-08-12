@@ -1,6 +1,7 @@
 import Mathlib
 import proofs.CuntzPeirceLogicalQubit
 import proofs.CuntzWordSpaceQEC
+import proofs.LogicalCliffordHamiltonian
 
 noncomputable section
 
@@ -22,9 +23,13 @@ def logicalSigmaZ : A :=
 def logicalSigmaX : A :=
   cuntzLogicalMatrixUnit S 0 1 + cuntzLogicalMatrixUnit S 1 0
 
-axiom cuntzLogicalMatrixUnit_mul_eq (a b c d : Fin 2) :
+theorem cuntzLogicalMatrixUnit_mul_eq (a b c d : Fin 2) :
     cuntzLogicalMatrixUnit S a b * cuntzLogicalMatrixUnit S c d =
-      if b = c then cuntzLogicalMatrixUnit S a d else 0
+      if b = c then cuntzLogicalMatrixUnit S a d else 0 := by
+  simpa [CuntzPeirceLogicalCorner.cuntzLogicalMatrixUnit,
+    CuntzPeirceLogicalCorner.logicalMatrixUnit,
+    CuntzWordSpaceQEC.logicalMatrixUnit] using
+    (CuntzWordSpaceQEC.logicalMatrixUnit_mul S a b c d)
 
 theorem logicalCodeUnit_idempotent :
     logicalCodeUnit S * logicalCodeUnit S = logicalCodeUnit S := by
@@ -39,22 +44,11 @@ theorem logicalCodeUnit_idempotent :
   have h4 : cuntzLogicalMatrixUnit S 1 1 * cuntzLogicalMatrixUnit S 1 1 = cuntzLogicalMatrixUnit S 1 1 := by
     rw [cuntzLogicalMatrixUnit_mul_eq]; simp
   rw [h1, h2, h3, h4]
-  simp
+  abel
 
 theorem logicalCodeUnit_mul_logicalSigmaZ :
     logicalCodeUnit S * logicalSigmaZ S = logicalSigmaZ S := by
-  unfold logicalCodeUnit logicalSigmaZ
-  rw [add_mul, mul_sub, mul_sub]
-  have h1 : cuntzLogicalMatrixUnit S 0 0 * cuntzLogicalMatrixUnit S 0 0 = cuntzLogicalMatrixUnit S 0 0 := by
-    rw [cuntzLogicalMatrixUnit_mul_eq]; simp
-  have h2 : cuntzLogicalMatrixUnit S 0 0 * cuntzLogicalMatrixUnit S 1 1 = 0 := by
-    rw [cuntzLogicalMatrixUnit_mul_eq]; simp
-  have h3 : cuntzLogicalMatrixUnit S 1 1 * cuntzLogicalMatrixUnit S 0 0 = 0 := by
-    rw [cuntzLogicalMatrixUnit_mul_eq]; simp
-  have h4 : cuntzLogicalMatrixUnit S 1 1 * cuntzLogicalMatrixUnit S 1 1 = cuntzLogicalMatrixUnit S 1 1 := by
-    rw [cuntzLogicalMatrixUnit_mul_eq]; simp
-  rw [h1, h2, h3, h4]
-  simp
+  exact LogicalCliffordHamiltonian.logicalCodeUnit_mul_logicalSigmaZ S
 
 theorem logicalSigmaZ_mul_logicalCodeUnit :
     logicalSigmaZ S * logicalCodeUnit S = logicalSigmaZ S := by
@@ -114,12 +108,12 @@ theorem logicalSigmaZ_sq :
   have h4 : cuntzLogicalMatrixUnit S 1 1 * cuntzLogicalMatrixUnit S 1 1 = cuntzLogicalMatrixUnit S 1 1 := by
     rw [cuntzLogicalMatrixUnit_mul_eq]; simp
   rw [h1, h2, h3, h4]
-  ring
+  abel
 
 theorem logicalSigmaX_sq :
     logicalSigmaX S * logicalSigmaX S = logicalCodeUnit S := by
   unfold logicalSigmaX logicalCodeUnit
-  rw [add_mul, mul_add, add_mul]
+  rw [add_mul, mul_add, mul_add]
   have h1 : cuntzLogicalMatrixUnit S 0 1 * cuntzLogicalMatrixUnit S 0 1 = 0 := by
     rw [cuntzLogicalMatrixUnit_mul_eq]; simp
   have h2 : cuntzLogicalMatrixUnit S 0 1 * cuntzLogicalMatrixUnit S 1 0 = cuntzLogicalMatrixUnit S 0 0 := by
@@ -129,7 +123,7 @@ theorem logicalSigmaX_sq :
   have h4 : cuntzLogicalMatrixUnit S 1 0 * cuntzLogicalMatrixUnit S 1 0 = 0 := by
     rw [cuntzLogicalMatrixUnit_mul_eq]; simp
   rw [h1, h2, h3, h4]
-  ring
+  abel
 
 theorem logicalSigmaZ_anticommute_logicalSigmaX :
     logicalSigmaZ S * logicalSigmaX S + logicalSigmaX S * logicalSigmaZ S = 0 := by
@@ -152,7 +146,7 @@ theorem logicalSigmaZ_anticommute_logicalSigmaX :
   have h8 : cuntzLogicalMatrixUnit S 1 0 * cuntzLogicalMatrixUnit S 1 1 = 0 := by
     rw [cuntzLogicalMatrixUnit_mul_eq]; simp
   rw [h1, h2, h3, h4, h5, h6, h7, h8]
-  ring
+  abel
 
 def logicalWDWHamiltonian (t x y : ℝ) : A :=
   (t : ℂ) • logicalCodeUnit S +
@@ -194,16 +188,37 @@ theorem logicalWDWConjugate_right_support (t x y : ℝ) :
 
 theorem logicalSigmaZ_star : star (logicalSigmaZ S) = logicalSigmaZ S := by
   unfold logicalSigmaZ
-  rw [star_sub, cuntzLogicalMatrixUnit_star, cuntzLogicalMatrixUnit_star]
+  rw [star_sub]
+  have hstar (a b : Fin 2) :
+      star (cuntzLogicalMatrixUnit S a b) = cuntzLogicalMatrixUnit S b a := by
+    simpa [CuntzPeirceLogicalCorner.cuntzLogicalMatrixUnit,
+      CuntzPeirceLogicalCorner.logicalMatrixUnit,
+      CuntzWordSpaceQEC.logicalMatrixUnit] using
+      (CuntzWordSpaceQEC.logicalMatrixUnit_star S a b)
+  rw [hstar, hstar]
 
 theorem logicalSigmaX_star : star (logicalSigmaX S) = logicalSigmaX S := by
   unfold logicalSigmaX
-  rw [star_add, cuntzLogicalMatrixUnit_star, cuntzLogicalMatrixUnit_star]
+  rw [star_add]
+  have hstar (a b : Fin 2) :
+      star (cuntzLogicalMatrixUnit S a b) = cuntzLogicalMatrixUnit S b a := by
+    simpa [CuntzPeirceLogicalCorner.cuntzLogicalMatrixUnit,
+      CuntzPeirceLogicalCorner.logicalMatrixUnit,
+      CuntzWordSpaceQEC.logicalMatrixUnit] using
+      (CuntzWordSpaceQEC.logicalMatrixUnit_star S a b)
+  rw [hstar, hstar]
   rw [add_comm]
 
 theorem logicalCodeUnit_star : star (logicalCodeUnit S) = logicalCodeUnit S := by
   unfold logicalCodeUnit
-  rw [star_add, cuntzLogicalMatrixUnit_star, cuntzLogicalMatrixUnit_star]
+  rw [star_add]
+  have hstar (a b : Fin 2) :
+      star (cuntzLogicalMatrixUnit S a b) = cuntzLogicalMatrixUnit S b a := by
+    simpa [CuntzPeirceLogicalCorner.cuntzLogicalMatrixUnit,
+      CuntzPeirceLogicalCorner.logicalMatrixUnit,
+      CuntzWordSpaceQEC.logicalMatrixUnit] using
+      (CuntzWordSpaceQEC.logicalMatrixUnit_star S a b)
+  rw [hstar, hstar]
 
 theorem logicalWDWHamiltonian_selfAdjoint (t x y : ℝ) :
     star (logicalWDWHamiltonian S t x y) = logicalWDWHamiltonian S t x y := by
@@ -229,44 +244,12 @@ private theorem smul_mul_smul_assoc (r s : ℂ) (u v : A) :
 theorem logicalWDWHamiltonian_mul_conjugate (t x y : ℝ) :
     logicalWDWHamiltonian S t x y * logicalWDWConjugate S t x y =
       algebraMap ℂ A ((t ^ 2 - x ^ 2 - y ^ 2 : ℝ) : ℂ) * logicalCodeUnit S := by
-  unfold logicalWDWHamiltonian logicalWDWConjugate
-  rw [add_mul, add_mul]
-  rw [mul_sub, mul_sub, mul_sub, mul_sub, mul_sub, mul_sub]
-  simp only [smul_mul_smul_assoc, smul_add, smul_sub, add_smul, sub_smul]
-  rw [logicalSigmaZ_sq S, logicalSigmaX_sq S, logicalCodeUnit_idempotent S]
-  rw [logicalCodeUnit_mul_logicalSigmaZ S, logicalSigmaZ_mul_logicalCodeUnit S]
-  rw [logicalCodeUnit_mul_logicalSigmaX S, logicalSigmaX_mul_logicalCodeUnit S]
-  simp [mul_comm]
-  rw [← sub_smul, ← sub_smul]
-  have h_zx_xz : ((y:ℂ) * (x:ℂ)) • (logicalSigmaZ S * logicalSigmaX S + logicalSigmaX S * logicalSigmaZ S) = 0 := by
-    rw [logicalSigmaZ_anticommute_logicalSigmaX S, smul_zero]
-  rw [← add_assoc, ← add_assoc]
-  simp [h_zx_xz]
-  rw [← Algebra.smul_def]
-  congr 1
-  push_cast
-  ring
+  exact LogicalCliffordHamiltonian.logicalWDWHamiltonian_mul_conjugate S t x y
 
 theorem logicalWDWConjugate_mul_hamiltonian (t x y : ℝ) :
     logicalWDWConjugate S t x y * logicalWDWHamiltonian S t x y =
       algebraMap ℂ A ((t ^ 2 - x ^ 2 - y ^ 2 : ℝ) : ℂ) * logicalCodeUnit S := by
-  unfold logicalWDWHamiltonian logicalWDWConjugate
-  rw [sub_mul, sub_mul]
-  rw [mul_add, mul_add, mul_add, mul_add, mul_add, mul_add]
-  simp only [smul_mul_smul_assoc, smul_add, smul_sub, add_smul, sub_smul]
-  rw [logicalSigmaZ_sq S, logicalSigmaX_sq S, logicalCodeUnit_idempotent S]
-  rw [logicalCodeUnit_mul_logicalSigmaZ S, logicalSigmaZ_mul_logicalCodeUnit S]
-  rw [logicalCodeUnit_mul_logicalSigmaX S, logicalSigmaX_mul_logicalCodeUnit S]
-  simp [mul_comm]
-  rw [← sub_smul, ← sub_smul]
-  have h_zx_xz : ((y:ℂ) * (x:ℂ)) • (logicalSigmaZ S * logicalSigmaX S + logicalSigmaX S * logicalSigmaZ S) = 0 := by
-    rw [logicalSigmaZ_anticommute_logicalSigmaX S, smul_zero]
-  rw [← add_assoc, ← add_assoc]
-  simp [h_zx_xz]
-  rw [← Algebra.smul_def]
-  congr 1
-  push_cast
-  ring
+  exact LogicalCliffordHamiltonian.logicalWDWConjugate_mul_hamiltonian S t x y
 
 theorem logicalWDWHamiltonian_mul_conjugate_of_null (t x y : ℝ)
     (hnull : t ^ 2 - x ^ 2 - y ^ 2 = 0) :
@@ -293,14 +276,12 @@ theorem logicalWDWHamiltonian_inverse_in_corner
     rw [logicalWDWHamiltonian_mul_conjugate]
     rw [Algebra.smul_def]
     rw [← mul_assoc]
-    rw [inv_mul_cancel hq_c]
-    rw [one_mul]
+    rw [← map_mul, inv_mul_cancel₀ hq_c, map_one, one_mul]
   · rw [smul_mul_assoc]
     rw [logicalWDWConjugate_mul_hamiltonian]
     rw [Algebra.smul_def]
     rw [← mul_assoc]
-    rw [inv_mul_cancel hq_c]
-    rw [one_mul]
+    rw [← map_mul, inv_mul_cancel₀ hq_c, map_one, one_mul]
 
 def IsNonzeroMutualZeroDivisor (a b : A) : Prop :=
   a ≠ 0 ∧ b ≠ 0 ∧ a * b = 0 ∧ b * a = 0
@@ -374,7 +355,7 @@ theorem logicalWDWMatrix_eq_zero_iff (t x y : ℝ) :
     exact ⟨ht, hx, hy⟩
   · rintro ⟨rfl, rfl, rfl⟩
     ext i j
-    fin_cases i <;> fin_cases j <;> rfl
+    fin_cases i <;> fin_cases j <;> norm_num [logicalWDWMatrix]
 
 theorem logicalWDWConjugateMatrix_eq_zero_iff (t x y : ℝ) :
     logicalWDWConjugateMatrix t x y = 0 ↔ t = 0 ∧ x = 0 ∧ y = 0 := by
@@ -395,23 +376,29 @@ theorem logicalWDWConjugateMatrix_eq_zero_iff (t x y : ℝ) :
     exact ⟨ht, hx, hy⟩
   · rintro ⟨rfl, rfl, rfl⟩
     ext i j
-    fin_cases i <;> fin_cases j <;> rfl
+    fin_cases i <;> fin_cases j <;> norm_num [logicalWDWConjugateMatrix]
 
 theorem logicalWDWHamiltonian_eq_matrix_embedding (t x y : ℝ) :
     logicalWDWHamiltonian S t x y = logicalMatrixEmbedding S (logicalWDWMatrix t x y) := by
   unfold logicalWDWHamiltonian logicalMatrixEmbedding logicalWDWMatrix
-  unfold logicalCodeUnit logicalSigmaZ logicalSigmaX
-  dsimp
-  rw [smul_add, smul_sub, smul_add, add_smul, sub_smul]
-  abel
+    logicalCodeUnit logicalSigmaZ logicalSigmaX
+  simp [logicalWDWHamiltonian, logicalMatrixEmbedding, logicalWDWMatrix,
+    logicalCodeUnit, logicalSigmaZ, logicalSigmaX, Matrix.cons_val_zero,
+    Matrix.cons_val_one, Matrix.head_cons, Matrix.tail_cons]
+  have hreal (r : ℝ) (z : A) : r • z = (r : ℂ) • z := rfl
+  simp_rw [hreal]
+  module
 
 theorem logicalWDWConjugate_eq_matrix_embedding (t x y : ℝ) :
     logicalWDWConjugate S t x y = logicalMatrixEmbedding S (logicalWDWConjugateMatrix t x y) := by
   unfold logicalWDWConjugate logicalMatrixEmbedding logicalWDWConjugateMatrix
-  unfold logicalCodeUnit logicalSigmaZ logicalSigmaX
-  dsimp
-  rw [smul_add, smul_sub, smul_sub, sub_smul, add_smul, smul_add, smul_neg, smul_neg]
-  abel
+    logicalCodeUnit logicalSigmaZ logicalSigmaX
+  simp [logicalWDWConjugate, logicalMatrixEmbedding, logicalWDWConjugateMatrix,
+    logicalCodeUnit, logicalSigmaZ, logicalSigmaX, Matrix.cons_val_zero,
+    Matrix.cons_val_one, Matrix.head_cons, Matrix.tail_cons]
+  have hreal (r : ℝ) (z : A) : r • z = (r : ℂ) • z := rfl
+  simp_rw [hreal]
+  module
 
 theorem logicalWDWHamiltonian_ne_zero
     (t x y : ℝ)

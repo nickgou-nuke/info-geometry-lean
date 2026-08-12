@@ -92,7 +92,7 @@ theorem celikCl2AlgebraHom_surjective :
     · exact hV
   have : A ∈ Algebra.adjoin ℂ ({U, V} : Set Mat2C) := by
     rw [algebra_adjoin_U_V_eq_top]
-    trivial
+    exact Set.mem_univ A
   exact hgen this
 
 theorem finrank_celikCl2 :

@@ -42,8 +42,9 @@ theorem primeBitMellinCharacter_eq_laplaceLogCharacter
   have hlog :
       Complex.log (primeBitInteger L ε : ℂ) =
         (Real.log (primeBitInteger L ε : ℝ) : ℂ) := by
-    simp using (Complex.ofReal_log (show (0 : ℝ) ≤ primeBitInteger L ε from
-      le_of_lt hn))
+    have hnreal : (0 : ℝ) ≤ (primeBitInteger L ε : ℝ) := by
+      exact_mod_cast (Nat.zero_le (primeBitInteger L ε))
+    exact (Complex.ofReal_log hnreal).symm
   rw [primeBitMellinCharacter, primeBitLaplaceLogCharacter]
   rw [Complex.cpow_def_of_ne_zero hn0]
   rw [hlog]

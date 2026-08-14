@@ -73,20 +73,21 @@ theorem circularCartanScaling_mul_basis (L : Fin 3 → ℝ) (hL : L 0 * L 1 * L 
       circularCartanScaling L (circularPeirceBasis i) * circularCartanScaling L (circularPeirceBasis j) := by
   fin_cases i <;> fin_cases j <;>
     simp [circularCartanScaling_apply_basis, circularCartanScalingDiag,
-      circularPeirceBasis_apply, frame, uPlus, uMinus, rootPlus, rootMinus,
-      smul_smul, hL]
+      circularPeirceBasis_apply, frame, rootPlus, rootMinus, uPlus, uMinus,
+      chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit,
+      lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross,
+      InfoGeometry.Canonical.ZornMatrix.coordEquiv, Equiv.smul_def,
+      Pi.single_apply, Function.update] at * <;> ring_nf at *
 
 theorem circularCartanScaling_mul (L : Fin 3 → ℝ) (hL : L 0 * L 1 * L 2 = 1) (X Y : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalZorn) :
     circularCartanScaling L (X * Y) = circularCartanScaling L X * circularCartanScaling L Y := by
   rw [← circularPeirceBasis_sum_repr X, ← circularPeirceBasis_sum_repr Y]
-  rw [map_sum, map_sum]
-  simp only [Finset.sum_mul_sum, map_sum]
+  simp only [map_sum, map_smul, Finset.sum_mul, mul_sum, smul_mul_smul]
   apply Finset.sum_congr rfl
   intro i hi
   apply Finset.sum_congr rfl
   intro j hj
-  rw [smul_mul, map_smul, circularCartanScaling_mul_basis]
-  rw [smul_mul, smul_mul]
-  module
+  rw [circularCartanScaling_mul_basis L hL i j]
 
 end InfoGeometry.Lie.SplitOctonionCircularCartanScaling

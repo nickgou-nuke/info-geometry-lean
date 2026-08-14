@@ -59,6 +59,37 @@ noncomputable def canonicalNeutralFormUnscaled : QuadraticForm ℝ (PhaseSpaceCa
   rcases Y with ⟨y, η⟩
   simp [canonicalNeutralBilin, add_comm]
 
+theorem canonicalNeutralBilin_nondegenerate :
+    (canonicalNeutralBilin (E := E)).Nondegenerate := by
+  let B := canonicalNeutralBilin (E := E)
+  constructor
+  · intro x hx
+    rcases x with ⟨v, φ⟩
+    have hvall : ∀ g : Module.Dual ℝ E, g v = 0 := by
+      intro g
+      have h := hx (0, g)
+      simpa [B, canonicalNeutralBilin_apply] using h
+    have hv : v = 0 := (Module.forall_dual_apply_eq_zero_iff ℝ v).mp hvall
+    have hφ : φ = 0 := by
+      apply LinearMap.ext
+      intro u
+      have h := hx (u, 0)
+      simpa [B, canonicalNeutralBilin_apply] using h
+    simp [hv, hφ]
+  · intro y hy
+    rcases y with ⟨v, φ⟩
+    have hvall : ∀ g : Module.Dual ℝ E, g v = 0 := by
+      intro g
+      have h := hy (0, g)
+      simpa [B, canonicalNeutralBilin_apply, add_comm] using h
+    have hv : v = 0 := (Module.forall_dual_apply_eq_zero_iff ℝ v).mp hvall
+    have hφ : φ = 0 := by
+      apply LinearMap.ext
+      intro u
+      have h := hy (u, 0)
+      simpa [B, canonicalNeutralBilin_apply, add_comm] using h
+    simp [hv, hφ]
+
 @[rep_depth krein, simp] theorem canonicalNeutralForm_apply
     (X : PhaseSpaceCarrier E) :
     canonicalNeutralForm (E := E) X = 2 * X.2 X.1 := by

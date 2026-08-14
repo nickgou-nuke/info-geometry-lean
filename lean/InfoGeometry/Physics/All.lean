@@ -152,6 +152,7 @@ import InfoGeometry.Physics.ThermodynamicAlgebraicCenter
 import InfoGeometry.Physics.TomitaTakesakiModularFlow
 import InfoGeometry.Physics.AlgebraicTomitaTakesakiBridge
 import InfoGeometry.Physics.HestenesKreinBilingualCarrier
+import InfoGeometry.Physics.HestenesKreinOperatorCalculus
 import InfoGeometry.Physics.CPTOppositeMoritaEquivalence
 import InfoGeometry.Physics.RegularBimoduleCommutant
 import InfoGeometry.Physics.CPTGlobalPinKleinDescent

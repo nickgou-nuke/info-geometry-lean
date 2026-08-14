@@ -130,6 +130,30 @@ lemma expected_charge_transformation (g : G) (beta v : Fin 2 → ℝ) :
           _ = v i * ∑ x : State, realGibbsWeight D beta x * D.momentMap x i := by
               rw [Finset.mul_sum]
 
+theorem heatVector_pairing_covariance (g : G) (beta v : Fin 2 → ℝ) :
+    (toSouriauThermodynamicAction D sys).heatVector (sys.Ad g beta)
+        (sys.Ad g v) =
+      (toSouriauThermodynamicAction D sys).heatVector beta v -
+        sys.cocycle g (sys.Ad g v) := by
+  change souriauChargeMeanFunctional D (sys.Ad g beta) (sys.Ad g v) =
+    souriauChargeMeanFunctional D beta v - sys.cocycle g (sys.Ad g v)
+  rw [souriauChargeMeanFunctional_apply]
+  rw [souriauChargeMeanFunctional_apply]
+  calc
+    (∑ i : Fin 2, souriauChargeMean D (sys.Ad g beta) i * (sys.Ad g v) i) =
+        ∑ i : Fin 2, (sys.Ad g v) i * souriauChargeMean D (sys.Ad g beta) i := by
+      apply Finset.sum_congr rfl
+      intro i _
+      ring
+    _ = (∑ i : Fin 2, v i * souriauChargeMean D beta i) -
+        sys.cocycle g (sys.Ad g v) := expected_charge_transformation D sys g beta v
+    _ = (∑ i : Fin 2, souriauChargeMean D beta i * v i) -
+        sys.cocycle g (sys.Ad g v) := by
+      congr 1
+      apply Finset.sum_congr rfl
+      intro i _
+      ring
+
 /-- The Fisher metric (directional variance) transforms exactly tensorially under the group action,
 without any anomaly, because the cocycle term cancels out of the squared difference. -/
 theorem fisherSouriauQuadratic_covariance (g : G) (beta v : Fin 2 → ℝ) :
@@ -161,5 +185,86 @@ theorem fisherSouriauQuadratic_covariance (g : G) (beta v : Fin 2 → ℝ) :
   apply Finset.sum_congr rfl
   intro i _
   ring
+
+/-!
+## Bilinear Fisher--Souriau readout
+
+The quadratic covariance theorem above is the primary finite result.  The
+bilinear form is recovered by polarization, so its covariance does not need a
+second probabilistic reindexing proof.
+-/
+
+def souriauFisherBilinear (beta u v : Fin 2 → ℝ) : ℝ :=
+  (fisherSouriauQuadratic D beta (u + v) -
+    fisherSouriauQuadratic D beta u -
+    fisherSouriauQuadratic D beta v) / 2
+
+theorem fisherSouriauQuadratic_smul
+    (beta v : Fin 2 → ℝ) (c : ℝ) :
+    fisherSouriauQuadratic D beta (c • v) =
+      c ^ (2 : ℕ) * fisherSouriauQuadratic D beta v := by
+  unfold fisherSouriauQuadratic
+  simp only [Pi.smul_apply]
+  simp only [smul_eq_mul]
+  calc
+    (∑ x, ∑ x_1, c * v x * fisherSouriauMatrix D beta x x_1 *
+        (c * v x_1)) =
+        ∑ x, ∑ x_1, c ^ 2 *
+          (v x * fisherSouriauMatrix D beta x x_1 * v x_1) := by
+      apply Finset.sum_congr rfl
+      intro x _
+      apply Finset.sum_congr rfl
+      intro x_1 _
+      ring
+    _ = ∑ x, c ^ 2 * ∑ x_1,
+        v x * fisherSouriauMatrix D beta x x_1 * v x_1 := by
+      apply Finset.sum_congr rfl
+      intro x _
+      rw [Finset.mul_sum]
+    _ = c ^ 2 * ∑ x, ∑ x_1,
+        v x * fisherSouriauMatrix D beta x x_1 * v x_1 := by
+      rw [Finset.mul_sum]
+
+theorem souriauFisherBilinear_diag (beta v : Fin 2 → ℝ) :
+    souriauFisherBilinear D beta v v = fisherSouriauQuadratic D beta v := by
+  unfold souriauFisherBilinear
+  rw [show v + v = (2 : ℝ) • v by
+    ext i
+    simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
+    ring]
+  rw [fisherSouriauQuadratic_smul]
+  ring
+
+theorem souriauFisherBilinear_symmetric (beta u v : Fin 2 → ℝ) :
+    souriauFisherBilinear D beta u v = souriauFisherBilinear D beta v u := by
+  unfold souriauFisherBilinear
+  rw [add_comm]
+  ring
+
+theorem souriauFisherBilinear_covariance
+    (g : G) (beta u v : Fin 2 → ℝ) :
+    souriauFisherBilinear D (sys.Ad g beta) (sys.Ad g u) (sys.Ad g v) =
+      souriauFisherBilinear D beta u v := by
+  unfold souriauFisherBilinear
+  rw [← map_add]
+  rw [fisherSouriauQuadratic_covariance D sys g beta (u + v)]
+  rw [fisherSouriauQuadratic_covariance D sys g beta u]
+  rw [fisherSouriauQuadratic_covariance D sys g beta v]
+
+/-!
+## Massieu/Fisher coherence
+
+The directional Massieu Hessian is already owned by the finite Cartan
+Fisher--Souriau metric layer.  This theorem packages that analytic readout
+with the concrete polarized bilinear form above, without differentiating the
+Weyl or state action again.
+-/
+
+theorem souriauFisher_massieu_coherence (beta v : Fin 2 → ℝ) :
+    deriv (fun t => deriv
+      (fun t' => souriauMassieu D (betaLine beta v t')) t) 0 =
+      souriauFisherBilinear D beta v v := by
+  rw [souriauMassieu_directionalSecondDeriv_eq_fisherSouriauQuadratic]
+  exact (souriauFisherBilinear_diag D beta v).symm
 
 end InfoGeometry.Canonical

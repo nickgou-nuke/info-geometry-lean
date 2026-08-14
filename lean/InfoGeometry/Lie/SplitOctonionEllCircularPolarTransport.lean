@@ -31,6 +31,23 @@ noncomputable def ellCircularQuadratic : QuadraticForm ℝ Coordinate :=
       canonicalDetQuadratic (coordinateEquiv.symm x) :=
   rfl
 
+/-- The polar form is transported by the same circular coordinate map. -/
+theorem ellCircularPolar_apply (x y : Coordinate) :
+    QuadraticMap.polar ellCircularQuadratic x y =
+      QuadraticMap.polar canonicalDetQuadratic
+        (coordinateEquiv.symm x) (coordinateEquiv.symm y) := by
+  simp [ellCircularQuadratic, QuadraticMap.polar]
+
+/-- Pulling the transported polar form back to the native carrier recovers the
+native determinant polar form. -/
+@[simp] theorem ellCircularPolar_coordinateEquiv
+    (X Y : CanonicalZorn) :
+    QuadraticMap.polar ellCircularQuadratic
+        (coordinateEquiv X) (coordinateEquiv Y) =
+      QuadraticMap.polar canonicalDetQuadratic X Y := by
+  rw [ellCircularPolar_apply]
+  simp
+
 /-- The coordinate equivalence is an isometry for the pulled-back form. -/
 noncomputable def ellCircularQuadraticIsometry :
     canonicalDetQuadratic.IsometryEquiv ellCircularQuadratic :=

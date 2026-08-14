@@ -84,10 +84,10 @@ If the Grand Riemann Exceptional Expansion holds, all nontrivial Riemann zeros
 projectively lie on the Lee-Yang unit circle (the Hurwitz limit).
 -/
 theorem nontrivial_zeros_on_lee_yang_circle
+    (G : GrandRiemannExceptionalExpansion)
     (s : ℂ) (hs : IsNontrivialZero s) :
     OnLeeYangCircle (cayleyToFugacity s) := by
-  let ⟨rh, _⟩ := G
-  exact rh s hs
+  exact G.rh_hypothesis s hs
 
 end GrandRiemannExceptionalExpansion
 

@@ -111,4 +111,13 @@ theorem AffineMomentMap.moment_eq_affineAction
       affineAction D g (A.moment x) :=
   A.moment_affine_equivariant g x
 
+/- The affine cocycle disappears from differences of moment-map charges. -/
+theorem AffineMomentMap.moment_sub_eq_dualAction
+    (D : Datum (G := G) (M := M)) (X : Type*)
+    (A : AffineMomentMap D X) (g : G) (x y : X) :
+    A.moment (A.stateAction g x) - A.moment (A.stateAction g y) =
+      D.dualAction g (A.moment x - A.moment y) := by
+  rw [A.moment_eq_affineAction, A.moment_eq_affineAction]
+  exact affineAction_sub D g (A.moment x) (A.moment y)
+
 end InfoGeometry.Algebraic.CartanSouriauAffineCocycle

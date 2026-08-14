@@ -9,6 +9,7 @@ import InfoGeometry.Analysis.MellinWaveletConformalMapping
 import InfoGeometry.Analysis.MellinInversePositiveAxis
 import InfoGeometry.Analysis.WaveletAdmissibilityCondition
 import InfoGeometry.Analysis.MellinZetaScaling
+import InfoGeometry.Analysis.FiniteDirichletShiftOperatorBridge
 import InfoGeometry.Analysis.FiniteSpectralMellinTaylor
 import InfoGeometry.Analysis.FiniteSpectralHeatMellin
 import InfoGeometry.Analysis.FiniteSpectralHeatMellinTopological

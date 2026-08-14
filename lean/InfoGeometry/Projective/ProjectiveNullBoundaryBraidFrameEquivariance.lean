@@ -70,6 +70,25 @@ theorem markedConfigAction_underlyingPoints {S : BoundarySurface}
       underlyingPoints x ((braidPermutation g).symm i) := by
   rfl
 
+theorem markedConfigAction_eq_of_braidPermutation_eq {S : BoundarySurface}
+    {g h : BoundaryBraidGroup}
+    (hperm : braidPermutation g = braidPermutation h)
+    (x : MarkedConfiguration S 3) :
+    markedConfigAction g x = markedConfigAction h x := by
+  unfold markedConfigAction
+  rw [hperm]
+
+theorem markedConfigAction_eq_self_of_mem_kernel {S : BoundarySurface}
+    {g : BoundaryBraidGroup}
+    (hg : braidPermutation g = 1)
+    (x : MarkedConfiguration S 3) :
+    markedConfigAction g x = x := by
+  unfold markedConfigAction
+  rw [hg]
+  apply Subtype.ext
+  funext i
+  rfl
+
 theorem markedConfigAction_pairwiseDistinct {S : BoundarySurface}
     (g : BoundaryBraidGroup) (x : MarkedConfiguration S 3) :
     PairwiseDistinct (underlyingPoints (markedConfigAction g x)) := by

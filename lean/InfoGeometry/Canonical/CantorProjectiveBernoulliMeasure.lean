@@ -1,6 +1,7 @@
 import Mathlib.MeasureTheory.Measure.Map
 import InfoGeometry.Analysis.FractalMeasure.Basic
 import InfoGeometry.Canonical.RindlerMobiusCantorFiniteBridge
+import InfoGeometry.Canonical.UHFInductiveColimitBoundaryInverseLimit
 
 /-!
 # Bernoulli measure on the Cantor projective limit
@@ -16,13 +17,18 @@ namespace InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure
 
 open scoped ENNReal
 open MeasureTheory
+open CategoryTheory CategoryTheory.Limits
 open InfoGeometry.Analysis.FractalMeasure.Basic
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
+open InfoGeometry.Canonical.UHFInductiveColimitBoundaryInverseLimit
 open InfoGeometry.Canonical.CantorProjectiveLimit
 open InfoGeometry.Canonical.CantorProjectiveLimit.PrefixProjectiveLimit
+open InfoGeometry.Canonical.UHFInductiveColimitBoundaryInverseLimit
+open InfoGeometry.Canonical.CuntzCantorBoundaryShift
 open InfoGeometry.Canonical.RindlerMobiusCantorFiniteBridge
 open InfoGeometry.Canonical.CantorBoundaryFiniteReadout
 open InfoGeometry.Canonical.CantorBoundaryReadoutBounds
+open InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology
 
 instance : MeasurableSpace PrefixProjectiveLimit :=
   borel PrefixProjectiveLimit
@@ -33,11 +39,109 @@ instance : BorelSpace PrefixProjectiveLimit :=
 def projectiveLimitMeasure : Measure PrefixProjectiveLimit :=
   Measure.map PrefixProjectiveLimit.ofCantor fractalMeasure
 
+/-! An explicit interface for the native categorical prefix limit.  The
+measurable structure is kept local to the measure definition rather than
+installed as a global wrapper instance. -/
+abbrev NativePrefixLimit := PrefixProjectiveLimit
+
+noncomputable def boundaryNativeLimitHomeomorph :
+    (ℕ → Bool) ≃ₜ NativePrefixLimit :=
+  cantorHomeomorphPrefixProjectiveLimit
+
+noncomputable def nativeProjectiveBernoulliMeasure :
+    Measure NativePrefixLimit :=
+  projectiveLimitMeasure
+
 instance projectiveLimitMeasure_isProbabilityMeasure :
     IsProbabilityMeasure projectiveLimitMeasure := by
   unfold projectiveLimitMeasure
   exact Measure.isProbabilityMeasure_map
     PrefixProjectiveLimit.continuous_ofCantor.measurable.aemeasurable
+
+theorem boundaryNativeLimitHomeomorph_measurePreserving :
+    MeasurePreserving boundaryNativeLimitHomeomorph
+      fractalMeasure nativeProjectiveBernoulliMeasure := by
+  refine ⟨boundaryNativeLimitHomeomorph.continuous.measurable, ?_⟩
+  rfl
+
+/-! The prepend branch is a depth-one cylinder for the native Bernoulli
+measure. -/
+theorem fractalMeasure_prependBit_range (b : Bool) :
+    fractalMeasure (Set.range (prependBit b)) = (1 / 2 : ℝ≥0∞) := by
+  have hrange :
+      Set.range (prependBit b) =
+        InfoGeometry.Analysis.FractalMeasure.Basic.cylinderSet
+          (Finset.range 1) (fun _ : ℕ => b) := by
+    ext x
+    constructor
+    · rintro ⟨y, rfl⟩ i hi
+      have hi' : i < 1 := Finset.mem_range.mp hi
+      have hi0 : i = 0 := by omega
+      subst i
+      simp [prependBit]
+    · intro hx
+      refine ⟨tail x, ?_⟩
+      apply prependBit_tail_of_head
+      have hx0 := hx 0 (by simp)
+      simpa [prependBit] using hx0
+  rw [hrange, measure_cylinderSet]
+  simp
+
+theorem topologyCylinderSet_eq_coordinateCylinder
+    (n : ℕ) (w : BitWord n) :
+    InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.cylinderSet n w =
+      InfoGeometry.Analysis.FractalMeasure.Basic.cylinderSet
+        (Finset.range n)
+        (fun i => if hi : i < n then w ⟨i, hi⟩ else false) := by
+  let f : ℕ → Bool := fun i => if hi : i < n then w ⟨i, hi⟩ else false
+  ext x
+  constructor
+  · intro hx
+    change InfoGeometry.Canonical.UHFInductiveColimitBoundary.boundaryPrefix n x = w at hx
+    intro i hi
+    have hiN : i < n := Finset.mem_range.mp hi
+    have hxi := congrFun hx ⟨i, hiN⟩
+    simpa [f, hiN,
+      InfoGeometry.Canonical.UHFInductiveColimitBoundary.boundaryPrefix] using hxi
+  · intro hx
+    change InfoGeometry.Canonical.UHFInductiveColimitBoundary.boundaryPrefix n x = w
+    funext i
+    have hiN : i < n := i.isLt
+    have hxi := hx i.1 (Finset.mem_range.mpr hiN)
+    simpa [f, hiN,
+      InfoGeometry.Canonical.UHFInductiveColimitBoundary.boundaryPrefix] using hxi
+
+theorem fractalMeasure_topologyCylinderSet
+    (n : ℕ) (w : BitWord n) :
+    fractalMeasure
+        (InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.cylinderSet n w) =
+      (1 / 2 : ℝ≥0∞) ^ n := by
+  rw [topologyCylinderSet_eq_coordinateCylinder]
+  simpa using measure_cylinderSet (Finset.range n)
+    (fun i => if hi : i < n then w ⟨i, hi⟩ else false)
+
+theorem fractalMeasure_prependBit_image_cylinder
+    (n : ℕ) (b : Bool) (w : BitWord n) :
+    fractalMeasure
+        (prependBit b ''
+          InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.cylinderSet n w) =
+      (1 / 2 : ℝ≥0∞) ^ (n + 1) := by
+  rw [InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.cylinderSet_prependBit_image]
+  exact fractalMeasure_topologyCylinderSet (n + 1)
+    (InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.prependWord n b w)
+
+theorem fractalMeasure_prependBit_image_cylinder_eq_half_mul
+    (n : ℕ) (b : Bool) (w : BitWord n) :
+    fractalMeasure
+        (prependBit b ''
+          InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.cylinderSet n w) =
+      (1 / 2 : ℝ≥0∞) *
+        fractalMeasure
+          (InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.cylinderSet n w) := by
+  rw [fractalMeasure_prependBit_image_cylinder,
+    fractalMeasure_topologyCylinderSet]
+  rw [pow_succ]
+  ring
 
 theorem projectiveLimitMeasure_apply_prefix_fiber
     (N : ℕ) (b : BitWord N) :
@@ -47,7 +151,8 @@ theorem projectiveLimitMeasure_apply_prefix_fiber
   have hfiber :
       PrefixProjectiveLimit.ofCantor ⁻¹'
           {q : PrefixProjectiveLimit | q.π N = b} =
-        cylinderSet (Finset.range N) f := by
+        InfoGeometry.Analysis.FractalMeasure.Basic.cylinderSet
+          (Finset.range N) f := by
     ext x
     constructor
     · intro hx

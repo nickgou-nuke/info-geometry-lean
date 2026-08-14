@@ -134,10 +134,11 @@ theorem fibRightUnitor_hom_inv_id (X : FibCat) :
     (fibRightUnitor X).hom ≫ (fibRightUnitor X).inv = 𝟙 _ := by
   exact (fibRightUnitor X).hom_inv_id
 
-/-- 
-Open Debt: The MonoidalCategory instance.
-The tensor product of objects is defined via `fusionMultiplicity`.
-The associator `α_` is constructed from the verified `MTC_FusionMatrix` (F-matrix).
+/--
+The remaining categorical closure debt is the bundled `MonoidalCategory`
+instance.  The finite tensor bifunctor and the skeletal equality-transport
+coherence laws are already proved below; the nontrivial Fibonacci `F`-matrix
+associator remains a separate representation-level construction.
 -/
 noncomputable def blockDiag2 {α : Type} [Zero α] {m₁ n₁ m₂ n₂ : ℕ} (A : Matrix (Fin m₁) (Fin n₁) α) (B : Matrix (Fin m₂) (Fin n₂) α) :
   Matrix (Fin (m₁ + m₂)) (Fin (n₁ + n₂)) α :=
@@ -225,6 +226,58 @@ theorem fibTensorHom_comp
       FibHom.comp (fibTensorHom f₁ g₁) (fibTensorHom f₂ g₂) := by
   ext <;>
     simp [fibTensorHom, FibHom.comp]
+
+/-! ## Skeletal pentagon and triangle coherence -/
+
+/-- Tensoring equality transport on the left is equality transport of the
+tensor-object equality. -/
+theorem fibTensorHom_left_eqToHom
+    {X₁ X₂ Y : FibCat} (hX : X₁ = X₂) :
+    fibTensorHom (CategoryTheory.eqToHom hX) (FibHom.id Y) =
+      CategoryTheory.eqToHom (congrArg (fun X => fibTensorObj X Y) hX) := by
+  cases hX
+  change fibTensorHom (FibHom.id X₁) (FibHom.id Y) =
+    FibHom.id (fibTensorObj X₁ Y)
+  exact fibTensorHom_id X₁ Y
+
+/-- Tensoring equality transport on the right is equality transport of the
+tensor-object equality. -/
+theorem fibTensorHom_right_eqToHom
+    {X Y₁ Y₂ : FibCat} (hY : Y₁ = Y₂) :
+    fibTensorHom (FibHom.id X) (CategoryTheory.eqToHom hY) =
+      CategoryTheory.eqToHom (congrArg (fun Y => fibTensorObj X Y) hY) := by
+  cases hY
+  change fibTensorHom (FibHom.id X) (FibHom.id Y₁) =
+    FibHom.id (fibTensorObj X Y₁)
+  exact fibTensorHom_id X Y₁
+
+/-- The skeletal equality-transport associator satisfies Mac Lane's pentagon.
+
+This is the strict skeletal coherence packet supplied by the verified fusion
+object equalities. It does not identify the nontrivial Fibonacci `F`-matrix
+with the associator. -/
+theorem fibAssociator_pentagon (W X Y Z : FibCat) :
+    (fibAssociator (fibTensorObj W X) Y Z).hom ≫
+        (fibAssociator W X (fibTensorObj Y Z)).hom =
+      (fibTensorHom (fibAssociator W X Y).hom (FibHom.id Z)) ≫
+        (fibAssociator W (fibTensorObj X Y) Z).hom ≫
+        (fibTensorHom (FibHom.id W) (fibAssociator X Y Z).hom) := by
+  rw [fibAssociator_hom, fibAssociator_hom, fibAssociator_hom,
+    fibAssociator_hom, fibAssociator_hom]
+  rw [fibTensorHom_left_eqToHom (fibTensorObj_assoc W X Y)]
+  rw [fibTensorHom_right_eqToHom (fibTensorObj_assoc X Y Z)]
+  simp
+
+/-- The skeletal equality-transport associator and unitors satisfy Mac Lane's
+triangle. -/
+theorem fibAssociator_triangle (X Y : FibCat) :
+    (fibAssociator X fibTensorUnit Y).hom ≫
+        (fibTensorHom (FibHom.id X) (fibLeftUnitor Y).hom) =
+      fibTensorHom (fibRightUnitor X).hom (FibHom.id Y) := by
+  rw [fibAssociator_hom, fibLeftUnitor_hom, fibRightUnitor_hom]
+  rw [fibTensorHom_right_eqToHom (fibTensorObj_unit_left Y)]
+  rw [fibTensorHom_left_eqToHom (fibTensorObj_unit_right X)]
+  simp
 
 noncomputable def fibWhiskerLeft (X : FibCat) {Y₁ Y₂ : FibCat} (f : FibHom Y₁ Y₂) : FibHom (fibTensorObj X Y₁) (fibTensorObj X Y₂) :=
   fibTensorHom (FibHom.id X) f
@@ -347,13 +400,10 @@ noncomputable def fibTensorBifunctor : FibCat ⥤ (FibCat ⥤ FibCat) where
 ## Remaining closure debt
 
 This file is verified scaffolding only; no `MonoidalCategory`/`BraidedCategory`
-instance is declared.
-
-Exact kernel-checked lemmas still owed before full monoidal closure:
-- TODO: associator unit/tau block lemmas from `MTC_FusionMatrix`
-- TODO: pentagon/triangle proofs as `FibHom.ext` calc chains
-- TODO: braiding naturality `right/left` as `FibHom.ext` simp calc
-- TODO: hexagon forward/reverse as `FibHom.ext` block calc
+instance is declared.  The remaining debt is specifically the
+representation-level Fibonacci `F`/`R` associator and braiding natural
+isomorphisms, together with their block-level hexagon readouts.  The skeletal
+object tensor, tensor bifunctor, pentagon, and triangle are kernel-closed.
 -/
 
 end InfoGeometry.Categorical.FibonacciBraidedCategory

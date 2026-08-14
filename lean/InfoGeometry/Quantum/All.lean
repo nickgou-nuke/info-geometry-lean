@@ -49,6 +49,7 @@ import InfoGeometry.Quantum.NeutralKreinKleinAction
 import InfoGeometry.Quantum.DualFlatKreinGraph
 import InfoGeometry.Quantum.MobiusRealCotangentLift
 import InfoGeometry.Quantum.PACKreinEquivalence
+import InfoGeometry.Quantum.PACKreinNeutralFormBridge
 import InfoGeometry.Quantum.GradedQuantumTetradFrame
 import InfoGeometry.Quantum.FiniteMajoranaPairingBlocks
 import InfoGeometry.Quantum.FiniteMajoranaPerfectMatching

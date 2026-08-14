@@ -70,7 +70,8 @@ theorem axialFlowCoordinate_oppositePair_invariant
     (x ⟨i.val + 1, by omega⟩)
     (x ⟨i.val + 5, by omega⟩) t
 
-theorem circularWittNorm_axialFlow_reciprocal (t : ℝ) (x : Coordinate) :
+theorem circularWittNorm_axialFlow_from_reciprocalPair
+    (t : ℝ) (x : Coordinate) :
     circularWittNorm (axialFlowCoordinate t x) = circularWittNorm x := by
   rw [circularWittNorm]
   rw [axialFlowCoordinate_zeroChannel, axialFlowCoordinate_fourChannel]
@@ -82,10 +83,5 @@ theorem circularWittNorm_axialFlow_reciprocal (t : ℝ) (x : Coordinate) :
     simpa using axialFlowCoordinate_oppositePair_invariant t x 2
   rw [h₀, h₁, h₂]
   rfl
-
-theorem circularWittNorm_axialFlow_from_reciprocalPair
-    (t : ℝ) (x : Coordinate) :
-    circularWittNorm (axialFlowCoordinate t x) = circularWittNorm x :=
-  circularWittNorm_axialFlow_reciprocal t x
 
 end InfoGeometry.Lie.SplitOctonionCircularReciprocalWittBridge

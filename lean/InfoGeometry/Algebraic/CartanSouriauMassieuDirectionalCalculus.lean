@@ -31,10 +31,10 @@ theorem energy_add_direction
     energy F (directionalParameter β v t) m =
       energy F β m + t * directionalCharge F v m := by
   unfold energy directionalParameter directionalCharge
-  rw [Finset.sum_add_distrib]
-  apply Finset.sum_congr rfl
-  intro a _ha
-  ring
+  simp_rw [add_mul, mul_assoc]
+  rw [sum_add_distrib]
+  congr 1
+  rw [← mul_sum]
 
 theorem unnormalizedWeight_add_direction
     (F : Family ι) (β v : Fin 2 → ℝ) (t : ℝ) (m : ι) :
@@ -62,8 +62,9 @@ theorem hasDerivAt_unnormalizedWeight_add_direction_zero
       (fun t : ℝ => -(t * directionalCharge F v m))
       (-(directionalCharge F v m)) 0 := by
     convert (hasDerivAt_id (x := (0 : ℝ))).mul_const
-      (-(directionalCharge F v m)) using 1 <;> ring
-  have hexp := (Real.hasDerivAt_exp 0).comp hlin
+      (-(directionalCharge F v m)) using 1 <;> simp <;> ring
+  have hexp :=
+    (Real.hasDerivAt_exp (-(0 * directionalCharge F v m))).comp 0 hlin
   have hmul := hexp.const_mul (unnormalizedWeight F β m)
   convert hmul using 1 <;> simp <;> ring
 
@@ -83,11 +84,43 @@ theorem massieu_directional_deriv
     deriv (directionalMassieu F β v) 0 =
       -(∑ m : ι, probability F β m * directionalCharge F v m) := by
   have hpart := hasDerivAt_partition_add_direction_zero F β v
-  have hlog := (Real.hasDerivAt_log (partition_pos F β).ne').comp hpart
+  have hdir0 : directionalParameter β v 0 = β := by
+    funext a
+    simp [directionalParameter]
+  have hne0 : partition F (directionalParameter β v 0) ≠ 0 := by
+    rw [hdir0]
+    exact (partition_pos F β).ne'
+  have hlog :=
+    (Real.hasDerivAt_log hne0).comp 0 hpart
   have hderiv := hlog.deriv
-  unfold directionalMassieu at hderiv
-  rw [directionalParameter] at hderiv
-  simpa [probability, partition, unnormalizedWeight, mul_div_assoc,
-    div_eq_mul_inv, mul_assoc, mul_comm, mul_left_comm] using hderiv
+  rw [hdir0] at hderiv
+  simp only [Function.comp_def] at hderiv
+  change deriv (fun t => Real.log
+      (partition F (directionalParameter β v t))) 0 = _
+  have hfactor :
+      -(∑ m : ι, probability F β m * directionalCharge F v m) =
+        (partition F β)⁻¹ *
+          ∑ m : ι, -(unnormalizedWeight F β m * directionalCharge F v m) := by
+    unfold probability
+    calc
+      -(∑ m : ι,
+          (unnormalizedWeight F β m / partition F β) *
+            directionalCharge F v m) =
+          -(∑ m : ι,
+            (partition F β)⁻¹ *
+              (unnormalizedWeight F β m * directionalCharge F v m)) := by
+            congr 1
+            apply Finset.sum_congr rfl
+            intro m _hm
+            field_simp
+      _ = -((partition F β)⁻¹ *
+            ∑ m : ι, unnormalizedWeight F β m * directionalCharge F v m) := by
+            rw [Finset.mul_sum]
+      _ = (partition F β)⁻¹ *
+            ∑ m : ι, -(unnormalizedWeight F β m * directionalCharge F v m) := by
+            rw [Finset.sum_neg_distrib]
+            ring
+  rw [hfactor] at ⊢
+  exact hderiv
 
 end InfoGeometry.Algebraic.CartanSouriauMassieuDirectionalCalculus

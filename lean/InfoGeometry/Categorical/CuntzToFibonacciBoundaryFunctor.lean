@@ -31,8 +31,8 @@ thereby closing the finite/symbolic part of the categorical bridge.
 * `canonicalAlgebraicMap_eval`
 
 #### BUCKET 3: OPEN CLOSURE DEBT
-* Analytic extension of the algebraic boundary functor to a full continuous
-  C*-algebraic or braided monoidal functor over the completed Hilbert spaces.
+* Extension of the algebraic boundary functor to the continuum limit natively
+  through categorical directed inductive colimits (e.g., via TensorColimit or ZornUHFColimit).
 -/
 
 /-- Mapping from binary Cuntz branch labels to skeletal Fibonacci simple objects.
@@ -85,10 +85,10 @@ theorem canonicalAlgebraicMap_eval :
 
 /--
 Open debt recording the need to lift the discrete symbolic Cuntz-to-Fibonacci
-functor to a fully continuous analytic braided monoidal functor acting on
-completed Hilbert spaces.
+functor to the continuum limit natively through categorical directed inductive
+colimits (e.g., via ZornUHFColimit or TensorColimit), avoiding analytical continuations.
 -/
-def analyticOperatorFunctorDebt : String :=
-  "Lift the discrete CuntzToFibonacciFunctor to an analytic C*-algebraic or braided monoidal functor on the Hilbert boundary."
+def categoricalColimitFunctorDebt : String :=
+  "Lift the discrete CuntzToFibonacciFunctor to the continuum using categorical filtered inductive colimits."
 
 end InfoGeometry.Categorical.CuntzToFibonacciBoundaryFunctor

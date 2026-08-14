@@ -59,6 +59,18 @@ def wordWeight {R : Type*} [CommMonoid R]
     (r : Fin n → R) (w : Word n k) : R :=
   ∏ i, r (w i)
 
+/-- A successor-depth path weight splits into its prefix weight and terminal
+letter weight.  This is the finite tree-composition law used by the level
+recurrence below; it makes no claim about an infinite boundary or a tensor
+category. -/
+theorem wordWeight_wordSuccEquiv {R : Type*} [CommMonoid R]
+    (r : Fin n → R) (w : Word n (k + 1)) :
+    wordWeight r w =
+      wordWeight r (wordSuccEquiv n k w).1 * r (wordSuccEquiv n k w).2 := by
+  unfold wordWeight
+  rw [Fin.prod_univ_castSucc]
+  rfl
+
 /-- The total weight of all words at a fixed finite depth. -/
 def levelWeightSum {R : Type*} [CommSemiring R]
     (r : Fin n → R) (k : ℕ) : R :=
@@ -78,6 +90,30 @@ theorem levelWeightSum_succ {R : Type*} [CommSemiring R]
     levelWeightSum r (k + 1) =
       levelWeightSum r k * ∑ a : Fin n, r a := by
   rw [levelWeightSum_eq_pow, levelWeightSum_eq_pow, pow_succ]
+
+/-- The successor-level partition sum is the explicit finite tree reindexing
+of prefix weights times terminal-letter weights. -/
+theorem levelWeightSum_succ_wordSuccEquiv {R : Type*} [CommSemiring R]
+    (r : Fin n → R) (k : ℕ) :
+    levelWeightSum r (k + 1) =
+      ∑ w : Word n k, ∑ a : Fin n, wordWeight r w * r a := by
+  calc
+    levelWeightSum r (k + 1) =
+        ∑ p : Word n k × Fin n,
+          wordWeight r ((wordSuccEquiv n k).symm p) := by
+      unfold levelWeightSum
+      rw [← (wordSuccEquiv n k).sum_comp]
+      simp
+    _ = ∑ w : Word n k, ∑ a : Fin n,
+          wordWeight r ((wordSuccEquiv n k).symm (w, a)) := by
+      rw [Fintype.sum_prod_type]
+    _ = ∑ w : Word n k, ∑ a : Fin n, wordWeight r w * r a := by
+      apply Finset.sum_congr rfl
+      intro w _
+      apply Finset.sum_congr rfl
+      intro a _
+      simpa using
+        (wordWeight_wordSuccEquiv r ((wordSuccEquiv n k).symm (w, a)))
 
 end FiniteLevelWeights
 

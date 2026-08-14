@@ -293,6 +293,7 @@ import InfoGeometry.Topology.CantorDiracOperator
 import InfoGeometry.Topology.CliffordFractalWaveletBridge
 import InfoGeometry.Topology.ConnesSpectralTriple
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
+import InfoGeometry.Topology.CuntzCantorTreeWordOperators
 import InfoGeometry.Topology.BinaryCantorCuntzSuperchargeBridge
 import InfoGeometry.Topology.CantorBoundaryCuntzLengthTwoSector
 import InfoGeometry.Topology.D4StarColimitDynamics

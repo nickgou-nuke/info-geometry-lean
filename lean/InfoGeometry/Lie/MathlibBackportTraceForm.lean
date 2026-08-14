@@ -24,9 +24,11 @@ theorem traceForm_baseChange_tmul (x y : L) :
     (LieModule.traceForm A (A ⊗[R] L) (A ⊗[R] M))
       (1 ⊗ₜ[R] x) (1 ⊗ₜ[R] y) =
       algebraMap R A ((LieModule.traceForm R L M) x y) := by
-  change LinearMap.trace A (A ⊗[R] M)
+  have H : ((LieModule.traceForm A (A ⊗[R] L) (A ⊗[R] M)) (1 ⊗ₜ[R] x) (1 ⊗ₜ[R] y)) = 
+    LinearMap.trace A (A ⊗[R] M)
       (((LieModule.toEnd A (A ⊗[R] L) (A ⊗[R] M)) (1 ⊗ₜ[R] x)) *
-        ((LieModule.toEnd A (A ⊗[R] L) (A ⊗ₜ[R] M)) (1 ⊗ₜ[R] y))) = _
+        ((LieModule.toEnd A (A ⊗[R] L) (A ⊗[R] M)) (1 ⊗ₜ[R] y))) := rfl
+  rw [H]
   rw [LieModule.toEnd_baseChange, LieModule.toEnd_baseChange]
   rw [← LinearMap.baseChange_mul]
   rw [LinearMap.trace_baseChange]

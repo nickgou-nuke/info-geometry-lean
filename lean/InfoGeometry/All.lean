@@ -502,6 +502,10 @@ import InfoGeometry.Arithmetic.HoradamIonSummationSlice
 import InfoGeometry.Arithmetic.IdeleClassZetaSymmetry
 import InfoGeometry.Arithmetic.IdeleClassDirichletCharacterBridge
 import InfoGeometry.Arithmetic.IdeleSouriauZetaThermodynamics
+import InfoGeometry.Arithmetic.ConnesFiniteTraceBridge
+import InfoGeometry.Arithmetic.ConnesWeightedFiniteTraceBridge
+import InfoGeometry.Arithmetic.FiniteWeilMangoldtQuadraticFormBridge
+import InfoGeometry.Arithmetic.FiniteWeilRankOnePerturbationBridge
 import InfoGeometry.Arithmetic.IndexTheorem
 import InfoGeometry.Arithmetic.InfinitePrimonGasBostConnes
 import InfoGeometry.Arithmetic.JordanAlgebraZeta
@@ -3207,6 +3211,7 @@ import InfoGeometry.Canonical.SouriauDiracHodgeCoupling
 import InfoGeometry.Canonical.SouriauDiracHodgeIntegration
 import InfoGeometry.Canonical.SouriauFenchelOnsagerBridge
 import InfoGeometry.Canonical.SouriauFisherRaoMetric
+import InfoGeometry.Canonical.SouriauFisherCovariance
 import InfoGeometry.Canonical.SouriauFlowCliffordBridge
 import InfoGeometry.Canonical.SouriauGWCountOTBridge
 import InfoGeometry.Canonical.SouriauHellingerSquareRootBridge
@@ -3722,6 +3727,7 @@ import InfoGeometry.Canonical.UHFBoundaryOperatorTopology
 import InfoGeometry.Canonical.UHFCantorConnesSpectralTriple
 import InfoGeometry.Canonical.UHFCohomologyColimit
 import InfoGeometry.Canonical.UHFColimitRepresentationBridge
+import InfoGeometry.Canonical.CantorBoundaryProjectiveOperatorTransport
 import InfoGeometry.Canonical.UHFCuntzGNSColimit
 import InfoGeometry.Canonical.UHFDirectColimitRealization
 import InfoGeometry.Canonical.UHFDirectLimitCARAlgebra

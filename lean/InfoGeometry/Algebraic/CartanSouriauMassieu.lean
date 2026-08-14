@@ -119,21 +119,43 @@ theorem chargeCovariance_self_eq_expect_sq_sub_sq
         (chargeMean F β a) ^ 2 := by
   have hsum : ∑ m, probability F β m = 1 := probability_sum_one F β
   unfold chargeCovariance chargeMean
-  simp_rw [mul_sub]
-  rw [Finset.sum_add_distrib, Finset.sum_sub_distrib]
-  have hcross :
-      (∑ m, 2 * (∑ n, probability F β n * F.charge n a) *
-        (probability F β m * F.charge m a)) =
-      2 * (∑ n, probability F β n * F.charge n a) ^ 2 := by
-    rw [Finset.mul_sum, ← Finset.sum_mul]
-  have hlast :
-      (∑ m, (∑ n, probability F β n * F.charge n a) ^ 2 *
-        probability F β m) =
-      (∑ n, probability F β n * F.charge n a) ^ 2 := by
-    rw [← Finset.mul_sum, hsum]
-    ring
-  rw [hcross, hlast]
-  ring
+  calc
+    ∑ m, probability F β m *
+        (F.charge m a - ∑ n, probability F β n * F.charge n a) *
+        (F.charge m a - ∑ n, probability F β n * F.charge n a) =
+      ∑ m, (probability F β m * (F.charge m a)^2 -
+        2 * (∑ n, probability F β n * F.charge n a) *
+          (probability F β m * F.charge m a) +
+        (∑ n, probability F β n * F.charge n a)^2 *
+          probability F β m) := by
+      apply Finset.sum_congr rfl
+      intro m _hm
+      ring
+    _ = (∑ m, probability F β m * (F.charge m a)^2) -
+        (∑ n, probability F β n * F.charge n a)^2 := by
+      rw [Finset.sum_add_distrib, Finset.sum_sub_distrib]
+      have hcross :
+          (∑ m, 2 * (∑ n, probability F β n * F.charge n a) *
+            (probability F β m * F.charge m a)) =
+          2 * (∑ n, probability F β n * F.charge n a) ^ 2 := by
+        calc
+          (∑ m, 2 * (∑ n, probability F β n * F.charge n a) *
+              (probability F β m * F.charge m a)) =
+              (2 * (∑ n, probability F β n * F.charge n a)) *
+                (∑ m, probability F β m * F.charge m a) := by
+            exact (Finset.mul_sum (s := (Finset.univ : Finset ι))
+              (a := 2 * (∑ n, probability F β n * F.charge n a))
+              (f := fun m => probability F β m * F.charge m a)).symm
+          _ = 2 * (∑ n, probability F β n * F.charge n a) ^ 2 := by
+            ring
+      have hlast :
+          (∑ m, (∑ n, probability F β n * F.charge n a) ^ 2 *
+            probability F β m) =
+          (∑ n, probability F β n * F.charge n a) ^ 2 := by
+        rw [← Finset.mul_sum, hsum]
+        ring
+      rw [hcross, hlast]
+      ring
 
 theorem chargeCovariance_self_nonneg
     (F : Family ι) (β : Fin 2 → ℝ) (a : Fin 2) :
@@ -167,21 +189,175 @@ theorem chargeCovariance_quadratic_eq_expect_sq
     (∑ a : Fin 2, ∑ b : Fin 2,
       v a * chargeCovariance F β a b * v b) =
       ∑ m : ι, probability F β m *
-        (∑ a : Fin 2, v a * centeredCharge F β m a) ^ (2 : ℕ) := sorry
+        (∑ a : Fin 2, v a * centeredCharge F β m a) ^ (2 : ℕ) := by
+  unfold chargeCovariance centeredCharge
+  simp_rw [pow_two]
+  calc
+    (∑ a : Fin 2, ∑ b : Fin 2,
+      v a * (∑ m : ι, probability F β m *
+        (F.charge m a - chargeMean F β a) *
+        (F.charge m b - chargeMean F β b)) * v b) =
+      ∑ a : Fin 2, ∑ b : Fin 2, ∑ m : ι,
+        probability F β m *
+          (v a * (F.charge m a - chargeMean F β a)) *
+          (v b * (F.charge m b - chargeMean F β b)) := by
+      apply Finset.sum_congr rfl
+      intro a _ha
+      apply Finset.sum_congr rfl
+      intro b _hb
+      rw [Finset.mul_sum, Finset.sum_mul]
+      apply Finset.sum_congr rfl
+      intro m _hm
+      ring
+    _ = ∑ a : Fin 2, ∑ m : ι, ∑ b : Fin 2,
+        probability F β m *
+          (v a * (F.charge m a - chargeMean F β a)) *
+          (v b * (F.charge m b - chargeMean F β b)) := by
+      apply Finset.sum_congr rfl
+      intro a _ha
+      rw [Finset.sum_comm]
+    _ = ∑ m : ι, ∑ a : Fin 2, ∑ b : Fin 2,
+        probability F β m *
+          (v a * (F.charge m a - chargeMean F β a)) *
+          (v b * (F.charge m b - chargeMean F β b)) := by
+      rw [Finset.sum_comm]
+    _ = ∑ m : ι, probability F β m *
+        ((∑ a : Fin 2, v a * (F.charge m a - chargeMean F β a)) *
+          (∑ a : Fin 2, v a * (F.charge m a - chargeMean F β a))) := by
+      apply Finset.sum_congr rfl
+      intro m _hm
+      calc
+        ∑ a : Fin 2, ∑ b : Fin 2,
+            probability F β m *
+              (v a * (F.charge m a - chargeMean F β a)) *
+              (v b * (F.charge m b - chargeMean F β b)) =
+            ∑ a : Fin 2,
+              probability F β m *
+                (v a * (F.charge m a - chargeMean F β a)) *
+                (∑ b : Fin 2, v b * (F.charge m b - chargeMean F β b)) := by
+          apply Finset.sum_congr rfl
+          intro a _ha
+          exact (Finset.mul_sum (s := (Finset.univ : Finset (Fin 2)))
+            (a := probability F β m *
+              (v a * (F.charge m a - chargeMean F β a)))
+            (f := fun b => v b * (F.charge m b - chargeMean F β b))).symm
+        _ = ∑ a : Fin 2,
+              probability F β m *
+                ((∑ b : Fin 2, v b * (F.charge m b - chargeMean F β b)) *
+                  (v a * (F.charge m a - chargeMean F β a))) := by
+          apply Finset.sum_congr rfl
+          intro a _ha
+          ring
+        _ = probability F β m *
+              ((∑ b : Fin 2, v b * (F.charge m b - chargeMean F β b)) *
+                (∑ b : Fin 2, v b * (F.charge m b - chargeMean F β b))) := by
+          calc
+            (∑ a : Fin 2, probability F β m *
+                ((∑ b : Fin 2, v b *
+                  (F.charge m b - chargeMean F β b)) *
+                  (v a * (F.charge m a - chargeMean F β a)))) =
+                probability F β m *
+                  (∑ a : Fin 2,
+                    (∑ b : Fin 2, v b *
+                      (F.charge m b - chargeMean F β b)) *
+                      (v a * (F.charge m a - chargeMean F β a))) := by
+              exact (Finset.mul_sum (s := (Finset.univ : Finset (Fin 2)))
+                (a := probability F β m)
+                (f := fun a =>
+                  (∑ b : Fin 2, v b *
+                    (F.charge m b - chargeMean F β b)) *
+                    (v a * (F.charge m a - chargeMean F β a)))).symm
+            _ = probability F β m *
+                ((∑ b : Fin 2, v b *
+                    (F.charge m b - chargeMean F β b)) *
+                  (∑ a : Fin 2, v a *
+                    (F.charge m a - chargeMean F β a))) := by
+              congr 1
+              calc
+                (∑ a : Fin 2,
+                    (∑ b : Fin 2, v b *
+                      (F.charge m b - chargeMean F β b)) *
+                      (v a * (F.charge m a - chargeMean F β a))) =
+                    ∑ a : Fin 2,
+                      (v a * (F.charge m a - chargeMean F β a)) *
+                        (∑ b : Fin 2, v b *
+                          (F.charge m b - chargeMean F β b)) := by
+                  apply Finset.sum_congr rfl
+                  intro a _ha
+                  ring
+                _ = (∑ a : Fin 2, v a *
+                    (F.charge m a - chargeMean F β a)) *
+                      (∑ b : Fin 2, v b *
+                        (F.charge m b - chargeMean F β b)) := by
+                  rw [Finset.sum_mul]
+            _ = probability F β m *
+                ((∑ b : Fin 2, v b *
+                  (F.charge m b - chargeMean F β b)) *
+                  (∑ b : Fin 2, v b *
+                    (F.charge m b - chargeMean F β b))) := by
+              ring
 
 theorem centeredCharge_mean_zero
     (F : Family ι) (β : Fin 2 → ℝ) (a : Fin 2) :
-    ∑ m : ι, probability F β m * centeredCharge F β m a = 0 := sorry
+    ∑ m : ι, probability F β m * centeredCharge F β m a = 0 := by
+  unfold centeredCharge chargeMean
+  simp_rw [mul_sub]
+  rw [Finset.sum_sub_distrib]
+  have hfactor :
+      (∑ m, probability F β m * (∑ n, probability F β n * F.charge n a)) =
+        (∑ m, probability F β m) *
+          (∑ n, probability F β n * F.charge n a) := by
+    rw [Finset.sum_mul]
+  rw [hfactor, probability_sum_one]
+  ring
 
 theorem directionalCenteredCharge_mean_zero
     (F : Family ι) (β v : Fin 2 → ℝ) :
-    ∑ m : ι, probability F β m * directionalCenteredCharge F β v m = 0 := sorry
+    ∑ m : ι, probability F β m * directionalCenteredCharge F β v m = 0 := by
+  unfold directionalCenteredCharge
+  simp_rw [Finset.mul_sum]
+  rw [Finset.sum_comm]
+  apply Finset.sum_eq_zero
+  intro a _ha
+  calc
+    ∑ x : ι, probability F β x * (v a * centeredCharge F β x a) =
+      v a * (∑ x : ι, probability F β x * centeredCharge F β x a) := by
+        calc
+          ∑ x : ι, probability F β x * (v a * centeredCharge F β x a) =
+              ∑ x : ι, (probability F β x * centeredCharge F β x a) * v a := by
+                apply Finset.sum_congr rfl
+                intro x _hx
+                ring
+          _ = (∑ x : ι, probability F β x * centeredCharge F β x a) * v a := by
+                rw [Finset.sum_mul]
+          _ = v a * (∑ x : ι, probability F β x * centeredCharge F β x a) := by ring
+    _ = 0 := by rw [centeredCharge_mean_zero]; ring
 
 theorem covariance_quadratic_eq_zero_iff
     (F : Family ι) (β v : Fin 2 → ℝ) :
     (∑ a : Fin 2, ∑ b : Fin 2,
       v a * chargeCovariance F β a b * v b = 0) ↔
-      ∀ m : ι, directionalCenteredCharge F β v m = 0 := sorry
+      ∀ m : ι, directionalCenteredCharge F β v m = 0 := by
+  rw [chargeCovariance_quadratic_eq_expect_sq]
+  constructor
+  · intro h m
+    have hnonneg : ∀ x : ι, 0 ≤ probability F β x *
+        (directionalCenteredCharge F β v x) ^ (2 : ℕ) := by
+      intro x
+      exact mul_nonneg (le_of_lt (probability_pos F β x)) (sq_nonneg _)
+    have hz := (Finset.sum_eq_zero_iff_of_nonneg
+      (fun x _hx => hnonneg x)).mp h
+    have hterm := hz m (Finset.mem_univ m)
+    have hprob : probability F β m ≠ 0 := (probability_pos F β m).ne'
+    have hsq : (directionalCenteredCharge F β v m) ^ (2 : ℕ) = 0 :=
+      (mul_eq_zero.mp hterm).resolve_left hprob
+    exact sq_eq_zero_iff.mp hsq
+  · intro h
+    apply Finset.sum_eq_zero
+    intro m _hm
+    change probability F β m * (directionalCenteredCharge F β v m) ^ (2 : ℕ) = 0
+    rw [h m]
+    simp
 
 theorem covariance_quadratic_eq_zero_iff_charge_differences
     (F : Family ι) (β v : Fin 2 → ℝ) :

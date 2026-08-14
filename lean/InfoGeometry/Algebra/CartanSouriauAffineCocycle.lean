@@ -83,4 +83,58 @@ structure AffineMomentMap (State : Type*) [MulAction G State] where
   momentMap_affine_equivariant : ∀ (g : G) (m : State),
     momentMap (g • m) = affineCoadjointAction G V Θ g (momentMap m)
 
+def coadjointEquiv (g : G) : LieDual V ≃+ LieDual V where
+  toFun := coadjoint (Ad V g)
+  invFun := coadjoint (Ad V g⁻¹)
+  map_add' := by
+    intro μ ν
+    unfold coadjoint
+    ext x
+    simp
+  left_inv := by
+    intro μ
+    have h_ad : Ad V (g⁻¹ * g) = Ad V g⁻¹ * Ad V g :=
+      MonoidHom.map_mul (LinearGroupAction.action (G := G) (V := V)) g⁻¹ g
+    have h_coad : coadjoint (Ad V g⁻¹ * Ad V g) μ = coadjoint (Ad V g⁻¹) (coadjoint (Ad V g) μ) := rfl
+    have inv_g : g⁻¹ * g = 1 := inv_mul_cancel g
+    rw [← h_coad, ← h_ad, inv_g]
+    have h_ad_one : Ad V (1 : G) = 1 := MonoidHom.map_one (LinearGroupAction.action (G := G) (V := V))
+    rw [h_ad_one]
+    rfl
+  right_inv := by
+    intro μ
+    have h_ad : Ad V (g * g⁻¹) = Ad V g * Ad V g⁻¹ :=
+      MonoidHom.map_mul (LinearGroupAction.action (G := G) (V := V)) g g⁻¹
+    have h_coad : coadjoint (Ad V g * Ad V g⁻¹) μ = coadjoint (Ad V g) (coadjoint (Ad V g⁻¹) μ) := rfl
+    have mul_inv : g * g⁻¹ = 1 := mul_inv_cancel g
+    rw [← h_coad, ← h_ad, mul_inv]
+    have h_ad_one : Ad V (1 : G) = 1 := MonoidHom.map_one (LinearGroupAction.action (G := G) (V := V))
+    rw [h_ad_one]
+    rfl
+
+def affineCoadjointEquiv (g : G) : LieDual V ≃ LieDual V where
+  toFun := affineCoadjointAction G V Θ g
+  invFun := affineCoadjointAction G V Θ g⁻¹
+  left_inv := by
+    intro μ
+    rw [← affineCoadjointAction_mul G V Θ, inv_mul_cancel, affineCoadjointAction_one]
+  right_inv := by
+    intro μ
+    rw [← affineCoadjointAction_mul G V Θ, mul_inv_cancel, affineCoadjointAction_one]
+
+theorem affineCoadjointAction_sub (g : G) (μ ν : LieDual V) :
+    affineCoadjointAction G V Θ g μ - affineCoadjointAction G V Θ g ν =
+      coadjoint (Ad V g) (μ - ν) := by
+  unfold affineCoadjointAction
+  have h_add : ∀ A B C : LieDual V, (A + C) - (B + C) = A - B := by intro A B C; abel
+  rw [h_add]
+  unfold coadjoint
+  ext x
+  simp
+
+theorem AffineMomentMap.momentMap_eq_affineCoadjointAction
+    {State : Type*} [MulAction G State] (A : AffineMomentMap G V Θ State) (g : G) (x : State) :
+    A.momentMap (g • x) = affineCoadjointAction G V Θ g (A.momentMap x) :=
+  A.momentMap_affine_equivariant g x
+
 end InfoGeometry.Algebra

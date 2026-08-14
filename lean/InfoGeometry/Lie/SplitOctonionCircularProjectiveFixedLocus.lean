@@ -32,15 +32,44 @@ def negativeWeightSubmodule : Submodule ℝ Coord :=
 
 theorem hyperbolicFlow_on_zeroWeight (t : ℝ) (x : Coord) (hx : x ∈ zeroWeightSubmodule) :
     hyperbolicFlowCoordinate t x = x := by
-  sorry
+  refine Submodule.span_induction (p := fun y _ => hyperbolicFlowCoordinate t y = y)
+    ?_ ?_ ?_ ?_ hx
+  · intro y hy
+    rcases hy with rfl | rfl <;> ext i <;> fin_cases i <;>
+      simp [hyperbolicFlowCoordinate, hyperbolicScale, axialWeight, Pi.smul_apply]
+  · simp
+  · intro y z _ _ hy hz
+    rw [map_add, hy, hz]
+  · intro a y _ hy
+    simpa [map_smul, hy]
 
 theorem hyperbolicFlow_on_positiveWeight (t : ℝ) (x : Coord) (hx : x ∈ positiveWeightSubmodule) :
     hyperbolicFlowCoordinate t x = Real.exp t • x := by
-  sorry
+  refine Submodule.span_induction (p := fun y _ => hyperbolicFlowCoordinate t y = Real.exp t • y)
+    ?_ ?_ ?_ ?_ hx
+  · intro y hy
+    rcases hy with rfl | rfl | rfl <;>
+      rw [hyperbolicFlowCoordinate_basis_action]
+      simp [axialWeight, smul_eq_mul]
+  · simp
+  · intro y z _ _ hy hz
+    rw [map_add, hy, hz, smul_add]
+  · intro a y _ hy
+    simpa [map_smul, hy, smul_smul, mul_comm]
 
 theorem hyperbolicFlow_on_negativeWeight (t : ℝ) (x : Coord) (hx : x ∈ negativeWeightSubmodule) :
     hyperbolicFlowCoordinate t x = Real.exp (-t) • x := by
-  sorry
+  refine Submodule.span_induction (p := fun y _ => hyperbolicFlowCoordinate t y = Real.exp (-t) • y)
+    ?_ ?_ ?_ ?_ hx
+  · intro y hy
+    rcases hy with rfl | rfl | rfl <;>
+      rw [hyperbolicFlowCoordinate_basis_action]
+      simp [axialWeight, smul_eq_mul]
+  · simp
+  · intro y z _ _ hy hz
+    rw [map_add, hy, hz, smul_add]
+  · intro a y _ hy
+    simpa [map_smul, hy, smul_smul, mul_comm]
 
 theorem positiveWeight_totallyNull (x : Coord) (hx : x ∈ positiveWeightSubmodule) :
     circularPeirceQuadratic x = 0 := by
@@ -75,8 +104,9 @@ theorem circularNullBoundaryFlow_fixed_iff_of_ne_zero (t : ℝ) (ht : t ≠ 0)
   sorry
 
 theorem circularNullBoundaryFlow_preserves_incidence (t : ℝ) (p q : CircularNullBoundary) :
-    NullPolarIncident circularPeirceQuadratic (circularNullBoundaryFlow t p) (circularNullBoundaryFlow t q) ↔
-      NullPolarIncident circularPeirceQuadratic p q := by
-  sorry
+    NullPolarIncident SplitOctonionEllCircularQuadraticCoordinates.circularPeirceQuadratic (circularNullBoundaryFlow t p) (circularNullBoundaryFlow t q) ↔
+      NullPolarIncident SplitOctonionEllCircularQuadraticCoordinates.circularPeirceQuadratic p q := by
+  exact InfoGeometry.Twistor.ProjectiveNullIsometryIncidence.nullIsometryEquiv_preserves_incidence
+    (circularFlowQuadraticIsometry t) p q
 
 end InfoGeometry.Lie.SplitOctonionCircularProjectiveFixedLocus

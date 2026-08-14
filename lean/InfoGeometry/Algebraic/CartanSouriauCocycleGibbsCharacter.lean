@@ -31,16 +31,18 @@ structure GibbsDatum (G M B : Type*) [Group G] [AddCommGroup M] [AddCommGroup B]
 noncomputable def gibbsMultiplier (D : GibbsDatum G M B) (g : G) (β : B) : ℝ :=
   Real.exp (-(D.pairing (D.affine.theta g) β))
 
+theorem pairing_zero_left (D : GibbsDatum G M B) (β : B) :
+    D.pairing (0 : M) β = 0 := by
+  have hzero : D.pairing (0 : M) β =
+      D.pairing (0 : M) β + D.pairing (0 : M) β := by
+    simpa using D.pairing_add_left (0 : M) 0 β
+  linarith
+
 theorem gibbsMultiplier_one (D : GibbsDatum G M B) (β : B) :
     gibbsMultiplier D 1 β = 1 := by
   unfold gibbsMultiplier
   rw [D.affine.theta_one]
-  have hzero : D.pairing (0 : M) β =
-      D.pairing (0 : M) β + D.pairing (0 : M) β := by
-    simpa using D.pairing_add_left (0 : M) 0 β
-  have hpzero : D.pairing (0 : M) β = 0 := by
-    linarith
-  rw [hpzero]
+  rw [pairing_zero_left D β]
   simp
 
 theorem gibbsMultiplier_mul (D : GibbsDatum G M B) (g h : G) (β : B) :
@@ -52,9 +54,21 @@ theorem gibbsMultiplier_mul (D : GibbsDatum G M B) (g h : G) (β : B) :
     D.pairing_transport]
   rw [neg_add, Real.exp_add]
 
+theorem gibbsMultiplier_pos (D : GibbsDatum G M B) (g : G) (β : B) :
+    0 < gibbsMultiplier D g β := by
+  unfold gibbsMultiplier
+  exact Real.exp_pos _
+
 theorem gibbsMultiplier_ne_zero (D : GibbsDatum G M B) (g : G) (β : B) :
     gibbsMultiplier D g β ≠ 0 := by
-  unfold gibbsMultiplier
-  exact Real.exp_ne_zero _
+  exact ne_of_gt (gibbsMultiplier_pos D g β)
+
+theorem gibbsMultiplier_inv_transported (D : GibbsDatum G M B)
+    (g : G) (β : B) :
+    gibbsMultiplier D g⁻¹ (D.parameterAction g β) =
+      (gibbsMultiplier D g β)⁻¹ := by
+  have hmul := gibbsMultiplier_mul D g g⁻¹ β
+  rw [mul_inv_cancel, gibbsMultiplier_one] at hmul
+  exact eq_inv_of_mul_eq_one_right hmul.symm
 
 end InfoGeometry.Algebraic.CartanSouriauCocycleGibbsCharacter

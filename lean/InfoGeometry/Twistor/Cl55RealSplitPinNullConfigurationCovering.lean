@@ -1,5 +1,6 @@
 import InfoGeometry.Twistor.Cl55ProjectivizationTopology
 import InfoGeometry.Twistor.ProjectiveNullConfigurationCovering
+import InfoGeometry.Twistor.ProjectiveNullConfigurationCoveringLocalSystem
 
 /-!
 # Concrete covering reduction for the `Cl(5,5)` projective-null carrier
@@ -26,6 +27,7 @@ open InfoGeometry.Twistor.Cl55ProjectivizationTopology
 open InfoGeometry.Twistor.ProjectiveNullBoundaryTopology
 open InfoGeometry.Twistor.ProjectiveNullConfiguration
 open InfoGeometry.Twistor.ProjectiveNullConfigurationCovering
+open InfoGeometry.Twistor.ProjectiveNullConfigurationCoveringLocalSystem
 open InfoGeometry.Twistor.ProjectiveNullConfigurationTopology
 open InfoGeometry.Twistor.ProjectiveNullUnorderedConfiguration
 
@@ -73,5 +75,14 @@ theorem q55UnorderedProjection_isQuotientCoveringMap
   exact unorderedProjection_isQuotientCoveringMap_of_projectivization
     Q55 n continuous_Q55 q55Projectivization_locallyCompactSpace
       q55Projectivization_t2Space
+
+/-! The finite fiber cardinality of the concrete `Q55` covering. -/
+theorem q55OrderedConfigurationFiber_finrank
+    {F : Type*} [Field F] (n : ℕ) (p : Ordered Q55 n) :
+    Module.finrank F
+        ({q : Ordered Q55 n //
+          Quotient.mk' q = (Quotient.mk' p : Unordered Q55 n)} →₀ F) =
+      n.factorial := by
+  exact unorderedConfigurationCoveringFiber_finrank Q55 n p
 
 end InfoGeometry.Twistor.Cl55RealSplitPinNullConfigurationCovering

@@ -13,6 +13,38 @@ This owner fixes the sign convention from the pasted construction:
 With that convention the two families map respectively to the native upper
 and lower Zorn Peirce bases.  In particular, this lower-root convention is the
 negative of owners that define a Witt-minus vector as `(eᵢ-ell eᵢ)/2`.
+
+## The Circular Polarized Basis
+
+The circular polarized basis $\{u_+, \sigma_+^a, u_-, \sigma_-^a\}$ is the
+natural Peirce/Witt basis for the split-octonion chiral cone.
+
+Its fundamental properties and roles are:
+
+* **Complementary Idempotents**: $u_\pm$ are complementary idempotents satisfying
+  $u_\pm^2 = u_\pm$, $u_+ u_- = 0$, and $u_+ + u_- = 1$. The axial grading
+  operator is precisely their difference $\ell = u_+ - u_-$.
+* **Opposite Peirce Corners**: The polarized null directions occupy opposite
+  Peirce corners: $\sigma_+^a \in u_+ A u_-$ and $\sigma_-^a \in u_- A u_+$.
+* **Cone Generators**: They are square-zero cone generators: $(\sigma_\pm^a)^2 = 0$.
+* **Color Selection (Inner Products)**: Their opposite products implement color selection:
+  $\sigma_+^a \sigma_-^b = \delta_{ab} u_+$ and $\sigma_-^b \sigma_+^a = \delta_{ab} u_-$.
+
+From these, the CAR (Canonical Anticommutation Relations) and Witt commutator
+relations immediately follow:
+$$ \{\sigma_+^a, \sigma_-^b\} = \delta_{ab} 1, \qquad [\sigma_+^a, \sigma_-^b] = \delta_{ab} \ell $$
+
+Geometrically, $u_+$ and $u_-$ represent the two chiral cone sheets, while the
+$\sigma_\pm^a$ are circularly polarized null channels connecting them.
+Algebraically, they behave identically to creation/annihilation or off-diagonal
+matrix-unit operators, but all reassociation remains governed strictly by the
+alternative split-octonion laws rather than full associativity.
+
+This basis therefore simultaneously exposes the deep equivalence between:
+$$ \text{Cone Geometry} \longleftrightarrow \text{Peirce Decomposition} \longleftrightarrow \text{CAR/Witt Relations} \longleftrightarrow \text{Axial Grading} $$
+
+It is the distinguished sparse basis in which the chiral multiplication,
+grading, and derivation/root actions become completely transparent.
 -/
 
 noncomputable section
@@ -106,6 +138,19 @@ theorem circularFrame_reconstruct (qr : CartesianCoordinates) :
           rootPlus, rootMinus, quaternionScalar, ellScalar, quaternionAxis,
           ellAxis, axis, Fin.sum_univ_succ, smul_eq_mul]
         <;> ring
+
+/-- Every native canonical Zorn element has the same eight global circular
+    coordinates after transport from the quaternion-pair coordinates.  This
+    is a linear reconstruction theorem in the full carrier; it makes no
+    associativity claim about the Zorn product. -/
+theorem cartesianZorn_circularFrame_reconstruct
+    (X : InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.CanonicalZorn) :
+    ∑ i : Fin 8,
+      circularCoordinate (cartesianZornLinearEquiv.symm X) i •
+        cartesianZornLinearEquiv (circularFrame i) = X := by
+  have h := circularFrame_reconstruct (cartesianZornLinearEquiv.symm X)
+  have h' := congrArg cartesianZornLinearEquiv h
+  convert h' using 1 <;> ext <;> simp <;> ring
 
 @[simp] theorem circularCoordinate_frame (i j : Fin 8) :
     circularCoordinate (circularFrame i) j = if i = j then 1 else 0 := by

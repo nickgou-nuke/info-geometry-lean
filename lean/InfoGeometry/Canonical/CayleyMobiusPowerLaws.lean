@@ -92,10 +92,9 @@ theorem cayley_partition_invariant_under_reflection
     (Z : ℂ → ℂ)
     (hZ : ∀ z : ℂ, Z (z⁻¹) = Z z)
     (s : ℂ)
-    (hs0 : s ≠ 0)
-    (hs1 : s ≠ 1) :
+    (hs0 : s ≠ 0) :
     Z (PrimeHurwitzLimit.cayley (1 - s)) = Z (PrimeHurwitzLimit.cayley s) := by
-  rw [PrimeHurwitzLimit.CayleyCriticalWitness.cayley_reflection_to_inversion s hs0 hs1]
+  rw [PrimeHurwitzLimit.CayleyCriticalWitness.cayley_reflection_to_inversion s hs0]
   exact hZ (PrimeHurwitzLimit.cayley s)
 
 end InfoGeometry.Canonical.CayleyMobiusPowerLaws

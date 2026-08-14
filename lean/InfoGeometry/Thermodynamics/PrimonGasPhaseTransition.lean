@@ -39,12 +39,13 @@ theorem primon_partition_eq_zeta (gas : PrimonGas) :
     gas.partitionFunction = zetaPartitionReadout gas.β :=
   rfl
 
-/-- 
-  The Burg Entropy / Free Energy of the Primon Gas.
-  Φ = -(1/β) * ln(Ξ(β)).
-  This thermodynamic potential generates the barrier function that 
-  shapes the macroscopic volume of spacetime.
--/
+theorem primon_partition_eq_riemannZeta (gas : PrimonGas) :
+    gas.partitionFunction = riemannZeta gas.β := by
+  rfl
+
+/-- A scalar negation of the carried partition readout.
+This definition is only an algebraic finite-model readout; no entropy,
+variational, or phase-transition theorem is inferred from it. -/
 noncomputable def primonFreeEnergy (gas : PrimonGas) : ℂ :=
   -- This finite phase-transition layer keeps only the algebraic readout.
   -gas.partitionFunction
@@ -78,6 +79,12 @@ theorem phase_transition_zero_transfer_holds :
     phase_transition_zero_transfer := by
   intro gas hzero
   rw [← primon_partition_eq_zeta gas]
+  exact hzero
+
+theorem phase_transition_zero_to_riemannZeta
+    (gas : PrimonGas) (hzero : IsPartitionZero gas) :
+    riemannZeta gas.β = 0 := by
+  rw [← primon_partition_eq_riemannZeta gas]
   exact hzero
 
 /-- Statement shape for any later random-matrix comparison.  It is deliberately

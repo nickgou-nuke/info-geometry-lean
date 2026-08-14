@@ -6,13 +6,6 @@ noncomputable section
 
 namespace ZetaInformationGeometry
 
-/--
-Proof-carrying data for the zeta thermodynamic identities used by this file.
-
-The functions are model parameters.  The analytic claim identifying the free
-energy gradient with the von Mangoldt series is carried explicitly by
-`energyGradient`.
--/
 structure ZetaThermodynamicModel where
   zeta : ℝ → ℝ
   zetaDeriv : ℝ → ℝ
@@ -30,12 +23,19 @@ def partitionFunction (M : ZetaThermodynamicModel) (β : ℝ) : ℝ :=
 def freeEnergy (M : ZetaThermodynamicModel) (β : ℝ) : ℝ :=
   -Real.log (partitionFunction M β)
 
+@[simp] theorem partitionFunction_eq_zeta
+    (M : ZetaThermodynamicModel) (β : ℝ) :
+    partitionFunction M β = M.zeta β := rfl
+
+@[simp] theorem freeEnergy_eq_neg_log_partition
+    (M : ZetaThermodynamicModel) (β : ℝ) :
+    freeEnergy M β = -Real.log (partitionFunction M β) := rfl
+
 theorem energy_gradient (M : ZetaThermodynamicModel) (β : ℝ) :
     - (M.zetaDeriv β / M.zeta β) =
       M.seriesSum (fun n : ℕ => M.vonMangoldt n * M.weight n (-β)) :=
   M.energyGradient β
 
-/-- Data for a concrete KMS-state model and its relative entropy functional. -/
 structure KMSModel where
   State : Type
   kmsState : ℝ → State
@@ -44,12 +44,6 @@ structure KMSModel where
 def itakuraSaitoAnalogue (M : KMSModel) (β1 β2 : ℝ) : ℝ :=
   M.relativeEntropy (M.kmsState β1) (M.kmsState β2)
 
-/--
-Proof-carrying data for the Lee-Yang/Fisher-zero correspondence.
-
-The correspondence and phase-transition determination are fields of the
-selected model, so downstream theorems are conditional on concrete evidence.
--/
 structure LeeYangModel where
   isNonTrivialZero : ℂ → Prop
   complexEffectivePotential : ℂ → ℝ
@@ -68,5 +62,11 @@ theorem lee_yang_fisher_zeros (M : LeeYangModel) (s : ℂ) :
 theorem phase_transitions_determined (M : LeeYangModel) :
     M.determinesPhaseTransitions M.isNonTrivialZero :=
   M.phaseTransitionsDetermined
+
+theorem leeYangModel_chain (M : LeeYangModel) (s : ℂ) :
+    (M.isNonTrivialZero s ↔
+      M.isGlobalMinimum s M.complexEffectivePotential) ∧
+    M.determinesPhaseTransitions M.isNonTrivialZero := by
+  exact ⟨M.leeYangFisherZeros s, M.phaseTransitionsDetermined⟩
 
 end ZetaInformationGeometry

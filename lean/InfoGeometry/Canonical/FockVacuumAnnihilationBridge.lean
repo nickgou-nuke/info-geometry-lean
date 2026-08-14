@@ -21,5 +21,7 @@ def vacuumState (R U : Type*) [CommRing R] [AddCommGroup U] [Module R U] : Exter
 theorem annihilation_vacuum_zero (u : U) :
     (contractionOp (evaluationLinear u)) (vacuumState R U) = 0 := by
   dsimp [vacuumState, contractionOp]
+  exact CliffordAlgebra.contractLeft_one
+    (Q := (0 : QuadraticForm R (U →ₗ[R] R))) (evaluationLinear u)
 
 end InfoGeometry.Canonical.FockVacuumAnnihilationBridge

@@ -3,24 +3,6 @@ import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Arithmetic.PrimeMajoranaInfiniteCAR
 
-/-!
-# InfoGeometry.Arithmetic.PrimeInfiniteArithmeticDictionary
-
-Image-local arithmetic dictionary for the infinite transported prime-Majorana CAR lane.
-
-This module consumes the owner-side image theorem corridor from
-`PrimeMajoranaInfiniteCAR` and proves only readout facts for explicit stage images
-inside a target ring.
-
-Safe content:
-- image-local CAR parity readout equals Boolean local parity;
-- occupied local mode reads back as `-1`;
-- vacant local mode reads back as `+1`.
-
-No analytic continuation.
-No Euler product.
-No global infinite-state chirality theorem.
--/
 
 noncomputable section
 
@@ -30,11 +12,6 @@ open InfoGeometry.Arithmetic.PrimeBooleanCube
 open InfoGeometry.Arithmetic.PrimeMajoranaCAR (ExteriorCARPair)
 open InfoGeometry.Arithmetic.PrimeMajoranaInfiniteCAR
 
-/--
-If the stage-`n` image of the transported number operator reads out as Boolean
-occupation, then the stage-`n` image of the transported parity operator reads
-out as the Boolean local parity `1 - 2N_p`.
--/
 @[bridge_target_tag, rep_depth thermo]
 theorem carParity_limit_readout_eq_booleanLocalParity
     {A : ℕ → Type*} [∀ n : ℕ, Ring (A n)]
@@ -65,7 +42,6 @@ theorem carParity_limit_readout_eq_booleanLocalParity
     rw [hpar', hOcc]
     norm_num
 
-/-- Occupied local mode: the transported CAR parity image reads back as `-1`. -/
 @[bridge_target_tag, rep_depth thermo]
 theorem carParity_limit_readout_eq_neg_one_of_mem
     {A : ℕ → Type*} [∀ n : ℕ, Ring (A n)]
@@ -81,7 +57,6 @@ theorem carParity_limit_readout_eq_neg_one_of_mem
   rw [carParity_limit_readout_eq_booleanLocalParity ι P χ n p S hN]
   exact localParity_eq_neg_one_of_mem hp
 
-/-- Vacant local mode: the transported CAR parity image reads back as `+1`. -/
 @[bridge_target_tag, rep_depth thermo]
 theorem carParity_limit_readout_eq_one_of_not_mem
     {A : ℕ → Type*} [∀ n : ℕ, Ring (A n)]

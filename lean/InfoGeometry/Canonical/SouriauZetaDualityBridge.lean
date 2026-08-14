@@ -4,11 +4,7 @@ import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Canonical.SelfConcordantZetaBarrier
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
-/-!
-# InfoGeometry.Canonical.SouriauZetaDualityBridge
-
-Conditional Souriau/Legendre zeta-duality hypotheses and debt lemmas.
--/
+/-! Typed conditional bridge from supplied zero data to a finite barrier. -/
 
 noncomputable section
 
@@ -17,31 +13,26 @@ namespace InfoGeometry.Canonical.SouriauZetaDualityBridge
 open InfoGeometry.Canonical.SelfConcordantZetaBarrier
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
-/--
-Explicit hypotheses for the Souriau-Legendre zeta-barrier debt lemma.
--/
+/-- A supplied zero readout together with its finite-barrier realization. -/
 @[rep_depth thermo]
 structure SouriauZetaDualityHypotheses where
-  /-- The completed Riemann xi function. -/
+  /-- The supplied complex-valued readout. -/
   xi : ℂ → ℂ
 
-  /-- The functional equation for the supplied xi function. -/
+  /-- Reflection symmetry of the supplied readout. -/
   xi_reflection : ∀ s, xi s = xi (1 - s)
 
-  /-- The primal surprisal potential, nominally `-log |ξ(s)|`. -/
+  /-- A real-valued potential attached to the readout. -/
   surprisal : ℂ → ℝ
 
-  /-- Supplied Hestenes--Krein/colimit predicate: `s` is a singularity of the surprisal readout. -/
+  /-- Predicate identifying the supplied singular points. -/
   isSurprisalSingularity : ℂ → Prop
 
-  /-- The singularities of the surprisal potential are exactly the zeros of `ξ`. -/
+  /-- The singular predicate agrees with vanishing of the readout. -/
   surprisal_singularity_iff_zero :
     ∀ s : ℂ, isSurprisalSingularity s ↔ xi s = 0
 
-  /--
-  Conditional Legendre-duality bridge: a supplied singularity maps to a global
-  minimum of every finite prime spectral barrier.
-  -/
+  /-- A supplied singularity minimizes every selected finite barrier. -/
   duality_singularity_to_minimum :
     ∀ s : ℂ, isSurprisalSingularity s →
       ∀ (S : Finset ℕ) (_hS : ∀ p ∈ S, 1 < p) (σ : ℝ),
@@ -52,9 +43,7 @@ namespace SouriauZetaDualityHypotheses
 
 variable (D : SouriauZetaDualityHypotheses)
 
-/--
-Debt lemma: under the explicit duality hypotheses, zeros of `ξ` minimize the finite prime barrier.
--/
+/-- Vanishing of the readout implies the supplied finite-barrier inequality. -/
 @[bridge_target_tag, rep_depth thermo]
 theorem zeros_are_barrier_critical
     (s₀ : ℂ) (hz : D.xi s₀ = 0)
@@ -64,7 +53,7 @@ theorem zeros_are_barrier_critical
     (D.surprisal_singularity_iff_zero s₀).mpr hz
   exact D.duality_singularity_to_minimum s₀ hSingularity S _hS σ
 
-/-- Construct the variational RH target from the supplied conditional hypotheses. -/
+/-- Package the supplied data in the variational target structure. -/
 @[bridge_target_tag, rep_depth operator]
 def toVariationalRHTarget : VariationalRHTarget where
   xi := D.xi
@@ -74,9 +63,7 @@ def toVariationalRHTarget : VariationalRHTarget where
   zeros_are_barrier_critical := fun s₀ hz S hS σ =>
     D.zeros_are_barrier_critical s₀ hz S hS σ
 
-/--
-Debt lemma: if the supplied duality hypotheses hold for `D`, then any zero of the supplied `xi` lies on the critical line.
--/
+/-- The supplied barrier target implies the critical-line predicate. -/
 @[bridge_target_tag, rep_depth thermo]
 theorem RH_of_SouriauDuality
     (s₀ : ℂ) (hz : D.xi s₀ = 0) :

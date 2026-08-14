@@ -7,25 +7,23 @@ set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
 
 /-!
-# Metriplectic Spinor Free Energy Minimization & Critical Locus Convergence Bridge
+# Metriplectic quadratic and fixed-locus readouts
 
-This module formalizes in native Lean 4 / Mathlib with 100% genuine constructive proofs:
+This module packages a finite Onsager quadratic form and an affine fixed-locus
+readout.  It does not define a time-dependent flow or a convergence theorem.
 
-1. **Helmholtz Free Energy Functional**:
-   $$F(\psi) = H(\psi) - T \cdot S(\psi)$$
+1. A force vector obtained from the supplied energy and entropy force data.
 
-2. **Onsager Dissipative Free Energy Decay Theorem**:
-   Proves natively that for a positive-semidefinite Onsager metric tensor $\mathbf{L} \ge 0$, free energy along the dissipative flow decreases monotonically:
-   $$\frac{\mathrm{d}F}{\mathrm{d}t} = -\left\langle \frac{\delta F}{\delta \psi}, \mathbf{L} \frac{\delta F}{\delta \psi} \right\rangle \le 0.$$
+2. A negative quadratic dissipation readout, nonpositive by the supplied
+   Onsager nonnegativity premise.
 
-3. **Critical Equilibrium Characterization Theorem**:
-   Proves natively that free energy dissipation halts $\frac{\mathrm{d}F}{\mathrm{d}t} = 0$ if and only if the thermodynamic force lies in the null space of the Onsager metric tensor.
+3. An exact equivalence between vanishing of that readout and vanishing of
+   the quadratic form.
 
-4. **Spinor Fixed Locus Alignment Theorem**:
-   Proves natively that at critical thermodynamic equilibrium, the spinor state on the real doubled carrier space $H_2(\mathbb{R})$ aligns with the antiunitary fixed locus $\operatorname{Re}(s) = 1/2$.
+4. A fixed-locus consequence for the affine reflection on `ℝ × ℝ`.
 
-5. **Grand Metriplectic Spinor Free Energy Master Duality**:
-   Unifies free energy decay $\frac{\mathrm{d}F}{\mathrm{d}t} \le 0$, equilibrium kernel characterization, and antiunitary fixed locus alignment into a 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
+No analytic free-energy functional, flow, or spinor identification is
+inferred from these definitions.
 -/
 
 namespace InfoGeometry.Canonical.MetriplecticSpinorFreeEnergyBridge
@@ -52,8 +50,8 @@ def freeEnergyDissipationRate {V : Type*} [AddCommGroup V] [Module ℝ V]
   - data.onsagerData.quadratic (freeEnergyForce data)
 
 /--
-**Main Theorem 1: Monotonic Free Energy Dissipation**
-Proves natively that the free energy rate along the metriplectic flow is non-positive:
+**Nonpositive quadratic dissipation readout.**
+The defined negative quadratic form is nonpositive:
 $$\frac{\mathrm{d}F}{\mathrm{d}t} \le 0.$$
 -/
 theorem free_energy_dissipation_nonpos {V : Type*} [AddCommGroup V] [Module ℝ V]
@@ -64,8 +62,8 @@ theorem free_energy_dissipation_nonpos {V : Type*} [AddCommGroup V] [Module ℝ 
   linarith
 
 /--
-**Main Theorem 2: Free Energy Equilibrium Characterization**
-Proves natively that free energy dissipation halts $\frac{\mathrm{d}F}{\mathrm{d}t} = 0$ when the quadratic Onsager form vanishes.
+**Vanishing readout equivalence.**
+The dissipation readout vanishes exactly when the quadratic form vanishes.
 -/
 theorem free_energy_equilibrium_iff_zero_quadratic {V : Type*} [AddCommGroup V] [Module ℝ V]
     (data : MetriplecticFreeEnergyData V) :
@@ -76,8 +74,8 @@ theorem free_energy_equilibrium_iff_zero_quadratic {V : Type*} [AddCommGroup V] 
   · intro h; linarith
 
 /--
-**Main Theorem 3: Spinor Fixed Locus Equilibrium Alignment**
-Proves natively that at critical thermodynamic equilibrium, the spinor state on the real doubled carrier space $H_2(\mathbb{R})$ aligns with the antiunitary fixed locus $\operatorname{Re}(s) = 1/2$.
+**Affine fixed-locus consequence.**
+An assumed fixed point of the affine reflection has first coordinate `1/2`.
 -/
 theorem spinor_fixed_locus_equilibrium_alignment (v : ℝ × ℝ) (h_eq : realAntiunitaryReflection v = v) :
     v.1 = 1 / 2 :=

@@ -726,16 +726,7 @@ structure FiniteSouriauMetriplecticOTBridge
   finiteFreeEnergy : FreeEnergyFunctional α
   equilibrium : EquilibriumCandidate α
 
-/--
-The Thermodynamic Engine (Grand Canonical Partition & Free Energy Gradient).
-
-The Grand Canonical Ensemble of Ensembles: we sum over all possible lengths of
-binary words, i.e., all possible combinations of prime numbers.
-
-The unnormalized partition function is Z(s) = Π_p (1 - p^{-s})^{-1} (Euler product).
-The Free Energy potential Φ(s) = log Z(s).
-The Thermodynamic Force driving optimal transport is F = ∇Φ = ∇ log Z(s).
--/
+/-! A typed partition readout and its regularity/positivity data. -/
 @[rep_depth transport, capstone]
 structure GrandCanonicalPartitionFunction where
   /-- The logarithm of the partition function (free energy potential). -/
@@ -918,15 +909,7 @@ theorem balanceDefect_eq_zero_of_entropyProduction_eq_zero
 
 end BrokenDetailedBalanceWitness
 
-/--
-Riemann-Weil Explicit Formula as a Wasserstein Vector Field.
-
-The explicit formula ∑_{n} Λ(n) n^{-s} (sum over prime powers with von Mangoldt weights)
-is precisely the logarithmic derivative of the Euler product: d/ds log Π(1 - p^{-s})^{-1}.
-
-This means the explicit formula IS the Wasserstein gradient vector field that drives
-optimal transport through the Cantor crystal.
--/
+/-! A supplied scalar readout and its realization as a state-space field. -/
 @[rep_depth transport, capstone]
 structure ExplicitFormulaVectorField (State : Type*) where
   /-- The supplied Riemann-Weil explicit formula sum. -/
@@ -973,6 +956,12 @@ theorem wasserstein_driven_by_riemann_weil
     E.wassersteinField x =
       riemannWeilExplicitFormula E.explicitFormula (E.coordinate x) := by
   exact E.wasserstein_from_explicit x
+
+theorem wassersteinField_eq_zero_iff_explicitFormula_eq_zero
+    (E : ExplicitFormulaVectorField State) (x : State) :
+    E.wassersteinField x = 0 ↔
+      E.explicitFormula (E.coordinate x) = 0 := by
+  rw [E.wasserstein_from_explicit]
 
 end ExplicitFormulaVectorField
 
@@ -1125,13 +1114,6 @@ theorem continuum_emergence_via_equilibration
 
 end RGFixedPointEquilibrium
 
-/--
-Conservative bridge packet connecting the installed grand-canonical, detailed-
-balance, optimal-transport, explicit-formula, and RG fixed-point owners.
-
-This is a property container only: it records the intended alignment between the
-owners without claiming the analytic identification itself.
--/
 @[rep_depth transport]
 structure GrandCanonicalThermodynamicBridge (State : Type*) where
   grandCanonical : GrandCanonicalPartitionFunction
@@ -1153,13 +1135,15 @@ theorem thermodynamicForce_eq_explicitFormula
     B.logForce.thermodynamicForce x = B.explicitFormula.wassersteinField x :=
   B.force_matches_explicitFormula x
 
+theorem thermodynamicForce_eq_zero_iff_explicitFormula_eq_zero
+    (B : GrandCanonicalThermodynamicBridge State) (x : State) :
+    B.logForce.thermodynamicForce x = 0 ↔
+      B.explicitFormula.explicitFormula (B.explicitFormula.coordinate x) = 0 := by
+  rw [B.thermodynamicForce_eq_explicitFormula x]
+  exact B.explicitFormula.wassersteinField_eq_zero_iff_explicitFormula_eq_zero x
+
 end GrandCanonicalThermodynamicBridge
 
-/--
-The Driving Force of the Metriplectic Optimal Transport.
-In the Grand Canonical Ensemble of the prime gas, the gradient flow 
-is driven by the logarithmic derivative of the Souriau partition function.
--/
 @[rep_depth transport]
 theorem optimal_transport_driven_by_log_partition_gradient
     (State : Type*) (B : GrandCanonicalThermodynamicBridge State) :
@@ -1167,10 +1151,6 @@ theorem optimal_transport_driven_by_log_partition_gradient
   funext x
   exact B.force_matches_explicitFormula x
 
-/--
-THE RIEMANN-WEIL EXPLICIT FORMULA AS A WASSERSTEIN VECTOR FIELD.
-Because Z(s) is the Euler product, ∇ log Z is the explicit formula.
--/
 @[rep_depth transport]
 theorem riemann_weil_is_wasserstein_gradient
     (State : Type*) (F : LogPartitionGradientField State) (E : ExplicitFormulaVectorField State)
@@ -1180,11 +1160,6 @@ theorem riemann_weil_is_wasserstein_gradient
   funext x
   rw [hEquiv]
 
-/--
-THE CONTINUUM EMERGENCE VIA THERMODYNAMIC EQUILIBRATION.
-The informational manifold reaches its smooth Calabi-Yau state at the RG fixed point,
-where the Riemann-Weil driving force (broken detailed balance) is equilibrated.
--/
 theorem continuum_emergence_via_equilibration
     (State : Type*) [NormedAddCommGroup State]
     (E : RGFlowData State) (x : State)

@@ -1,5 +1,6 @@
 import InfoGeometry.Lie.SplitOctonionEllNativeClosedFlow
 import InfoGeometry.Algebra.Zorn.Incidence
+import InfoGeometry.Lie.SplitOctonionErlangenInvariant
 
 /-!
 # Quadratic isometry of the native split-octonion ell flow
@@ -22,6 +23,7 @@ open InfoGeometry.Algebra.Zorn
 open InfoGeometry.Algebra.Zorn.G2TrifactorSU3
 open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 open InfoGeometry.Algebra.Zorn.SplitQuaternionCore
+open InfoGeometry.Lie.SplitOctonionErlangenInvariant
 open InfoGeometry.Lie.SplitOctonionEllNativeClosedFlow
 open InfoGeometry.Lie.SplitOctonionEllNativeTrifactor
 open InfoGeometry.Lie.SplitOctonionEllOperatorTrifactor
@@ -63,6 +65,23 @@ theorem detZ_ellNativeFlow (t : ℝ) (Z : CZ) :
 @[simp] theorem detZ_ellNativeFlowLinearEquiv (t : ℝ) (Z : CZ) :
     ZornMatrix.detZ (ellNativeFlowLinearEquiv t Z) = ZornMatrix.detZ Z :=
   detZ_ellNativeFlow t Z
+
+/-- The native closed flow as a Mathlib quadratic isometry. -/
+def ellNativeFlowQuadraticIsometry (t : ℝ) :
+    canonicalDetQuadratic.IsometryEquiv canonicalDetQuadratic :=
+  { ellNativeFlowLinearEquiv t with
+    map_app' := fun Z => by
+      simpa [canonicalDetQuadratic] using detZ_ellNativeFlowLinearEquiv t Z }
+
+@[simp] theorem ellNativeFlowQuadraticIsometry_apply (t : ℝ) (Z : CZ) :
+    ellNativeFlowQuadraticIsometry t Z = ellNativeFlow t Z :=
+  rfl
+
+@[simp] theorem ellNativeFlowQuadraticIsometry_preserves_form
+    (t : ℝ) (Z : CZ) :
+    canonicalDetQuadratic (ellNativeFlowQuadraticIsometry t Z) =
+      canonicalDetQuadratic Z :=
+  QuadraticMap.IsometryEquiv.map_app (ellNativeFlowQuadraticIsometry t) Z
 
 /-- Polarization of the Zorn determinant is invariant under the same flow. -/
 theorem polarZ_ellNativeFlow (t : ℝ) (X Y : CZ) :

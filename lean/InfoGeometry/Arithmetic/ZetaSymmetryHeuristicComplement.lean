@@ -30,6 +30,20 @@ def criticalCentered (z : ℂ) : ℂ :=
 def centeredCriticalLine (z : ℂ) : Prop :=
   z.re = 0
 
+theorem criticalCentered_re (z : ℂ) :
+    (criticalCentered z).re = (1 / 2 : ℝ) + z.re := by
+  simp [criticalCentered]
+
+theorem criticalCentered_mem_line_iff (z : ℂ) :
+    centeredCriticalLine z ↔ (criticalCentered z).re = (1 / 2 : ℝ) := by
+  rw [centeredCriticalLine, criticalCentered_re]
+  constructor <;> intro h <;> linarith
+
+theorem centeredCriticalLine_neg {z : ℂ}
+    (hz : centeredCriticalLine z) :
+    centeredCriticalLine (-z) := by
+  simpa [centeredCriticalLine] using congrArg Neg.neg hz
+
 /-- A function is even in centered coordinates when it is invariant under `z ↦ -z`. -/
 def EvenCentered (F : ℂ → ℂ) : Prop :=
   ∀ z, F (-z) = F z
@@ -118,4 +132,3 @@ theorem zero_reflection_and_confinement_of_even_and_complement {F : ℂ → ℂ}
   exact ⟨even_zero_reflection hEven hz, centeredCriticalLine_of_noOffAxisZeros hNo hz⟩
 
 end InfoGeometry.Arithmetic.ZetaSymmetryHeuristicComplement
-

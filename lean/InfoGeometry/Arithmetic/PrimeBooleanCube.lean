@@ -5,25 +5,6 @@ import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeWittenCharacter
 import InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 
-/-!
-# InfoGeometry.Arithmetic.PrimeBooleanCube
-
-Canonical finite Boolean-cube owner for prime-register arithmetic.
-
-This file consolidates the finite square-free / Cantor-cube surface:
-
-* vertices are subsets of a property prime register;
-* the prime-axis move is the existing `majoranaFlip`;
-* local parity is `1 - 2N_p`;
-* global chirality is `(-1)^card`;
-* Möbius readout is delegated to the existing finite Witten-index owner;
-* finite Witten character is delegated to the existing finite Witten-character owner.
-
-No infinite Euler product.
-No analytic continuation.
-No Hilbert--Polya/RH claim.
-No Pfaffian placeholder.
--/
 
 noncomputable section
 
@@ -35,37 +16,28 @@ namespace InfoGeometry.Arithmetic.PrimeBooleanCube
 open InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
-/-! ## 1. Canonical finite prime Boolean cube -/
 
-/-- A vertex of the finite prime Boolean/Cantor cube. -/
 @[rep_depth thermo]
 abbrev Vertex (P : PrimeRegister) :=
   {S : Finset ℕ // S ⊆ P.primes}
 
-/-- Occupied prime set of a vertex. -/
 @[rep_depth thermo]
 def occupied {P : PrimeRegister} (v : Vertex P) : Finset ℕ :=
   v.val
 
-/-- The represented square-free integer. -/
 @[rep_depth thermo]
 def representedNat {P : PrimeRegister} (v : Vertex P) : ℕ :=
   Finset.prod v.val fun p => p
 
-/-- Fermion number of a vertex. -/
 @[rep_depth thermo]
 def fermionNumber {P : PrimeRegister} (v : Vertex P) : ℕ :=
   v.val.card
 
-/-- Fermion parity of a vertex. -/
 @[rep_depth thermo]
 def fermionParity {P : PrimeRegister} (v : Vertex P) : ℤ :=
   (-1 : ℤ) ^ v.val.card
 
 
-/-! ## 2. Prime-axis flip -/
-
-/-- Existing Majorana bit flip preserves the ambient prime register. -/
 @[rep_depth thermo]
 theorem majoranaFlip_subset_of_subset
     {P : PrimeRegister}
@@ -80,7 +52,6 @@ theorem majoranaFlip_subset_of_subset
     exact hp
   · exact hS ((mem_majoranaFlip_of_ne hqp S).mp hq)
 
-/-- Prime-axis graph move on the Boolean cube. -/
 @[rep_depth thermo]
 def flipVertex
     {P : PrimeRegister}
@@ -91,7 +62,6 @@ def flipVertex
   val := majoranaFlip p v.val
   property := majoranaFlip_subset_of_subset hp v.property
 
-/-- Prime-axis flip is involutive. -/
 @[simp, rep_depth thermo]
 theorem flipVertex_involutive
     {P : PrimeRegister}
@@ -102,7 +72,6 @@ theorem flipVertex_involutive
   apply Subtype.ext
   simp [flipVertex, majoranaFlip_involutive]
 
-/-- The flipped mode is occupied iff it was previously unoccupied. -/
 @[simp, rep_depth thermo]
 theorem mem_flipVertex_self
     {P : PrimeRegister}
@@ -112,7 +81,6 @@ theorem mem_flipVertex_self
     p ∈ (flipVertex p hp v).val ↔ p ∉ v.val := by
   simp [flipVertex]
 
-/-- Other modes are unaffected by the prime-axis flip. -/
 @[simp, rep_depth thermo]
 theorem mem_flipVertex_of_ne
     {P : PrimeRegister}
@@ -123,7 +91,6 @@ theorem mem_flipVertex_of_ne
     q ∈ (flipVertex p hp v).val ↔ q ∈ v.val := by
   simp [flipVertex, mem_majoranaFlip_of_ne hqp]
 
-/-- Cardinality increases by one when the flipped mode was absent. -/
 @[rep_depth thermo]
 theorem card_flipVertex_of_not_mem
     {P : PrimeRegister}
@@ -134,7 +101,6 @@ theorem card_flipVertex_of_not_mem
     (flipVertex p hp v).val.card = v.val.card + 1 := by
   simpa [flipVertex] using card_majoranaFlip_of_not_mem (p := p) (S := v.val) h
 
-/-- Cardinality decreases by one when the flipped mode was present. -/
 @[rep_depth thermo]
 theorem card_flipVertex_add_one_of_mem
     {P : PrimeRegister}
@@ -146,14 +112,10 @@ theorem card_flipVertex_add_one_of_mem
   simpa [flipVertex] using card_majoranaFlip_add_one_of_mem (p := p) (S := v.val) h
 
 
-/-! ## 3. Occupation, local parity, global chirality -/
-
-/-- Integer-valued occupation number. -/
 @[rep_depth thermo]
 def occupationInt (p : ℕ) (S : Finset ℕ) : ℤ :=
   if p ∈ S then 1 else 0
 
-/-- Local Majorana/Möbius parity `1 - 2N_p`. -/
 @[rep_depth thermo]
 def localParity (p : ℕ) (S : Finset ℕ) : ℤ :=
   1 - (2 : ℤ) * occupationInt p S
@@ -186,14 +148,10 @@ theorem localParity_eq_one_of_not_mem
     localParity p S = 1 := by
   simp [localParity, occupationInt, hp]
 
-/-- Global chirality over the ambient property prime register. -/
 @[rep_depth thermo]
 def globalChirality (P : PrimeRegister) (S : Finset ℕ) : ℤ :=
   Finset.prod P.primes fun p => localParity p S
 
-/--
-Global chirality equals fermion parity for a subset of the prime register.
--/
 @[rep_depth thermo]
 theorem globalChirality_eq_neg_one_pow_card
     (P : PrimeRegister)
@@ -223,7 +181,6 @@ theorem globalChirality_eq_neg_one_pow_card
     _ = (-1 : ℤ) ^ S.card := by
             simp
 
-/-- Vertex form of the chirality theorem. -/
 @[rep_depth thermo]
 theorem globalChirality_vertex_eq_fermionParity
     (P : PrimeRegister)
@@ -233,11 +190,7 @@ theorem globalChirality_vertex_eq_fermionParity
   exact globalChirality_eq_neg_one_pow_card P v.property
 
 
-/-! ## 4. Möbius readout -/
 
-/--
-Möbius value of the represented square-free integer equals global chirality.
--/
 @[rep_depth thermo]
 theorem mobius_representedNat_eq_globalChirality
     (P : PrimeRegister)
@@ -261,7 +214,6 @@ theorem mobius_representedNat_eq_globalChirality
     _ = globalChirality P v.val := by
             exact (globalChirality_eq_neg_one_pow_card P v.property).symm
 
-/-- Möbius value equals the fermion parity of the vertex. -/
 @[rep_depth thermo]
 theorem mobius_representedNat_eq_fermionParity
     (P : PrimeRegister)
@@ -272,19 +224,11 @@ theorem mobius_representedNat_eq_fermionParity
   exact globalChirality_vertex_eq_fermionParity P v
 
 
-/-! ## 5. Finite Witten character: delegate to existing owner -/
 
-/--
-Canonical finite Witten character over the prime register.
-
-This is deliberately delegated to `PrimeWittenCharacter`, avoiding duplicate
-Euler-product proofs.
--/
 @[rep_depth thermo]
 def finiteWittenCharacter (P : PrimeRegister) (q : ℕ → ℝ) : ℝ :=
   InfoGeometry.Arithmetic.PrimeWittenCharacter.finiteWittenCharacter P q
 
-/-- The finite Witten character equals the existing finite Euler product owner. -/
 @[rep_depth thermo]
 theorem finiteWittenCharacter_eq_eulerProduct
     (P : PrimeRegister)
@@ -293,10 +237,6 @@ theorem finiteWittenCharacter_eq_eulerProduct
       InfoGeometry.Arithmetic.SplitMajoranaPrimon.finiteEulerProduct P q := by
   exact InfoGeometry.Arithmetic.PrimeWittenCharacter.finiteWittenCharacter_eq_eulerProduct P q
 
-/--
-The finite Witten character agrees with the existing finite Dirichlet Witten
-character.
--/
 @[rep_depth thermo]
 theorem finiteWittenCharacter_eq_dirichletWittenCharacter
     (P : PrimeRegister)

@@ -13,9 +13,6 @@ support is introduced.
 
 noncomputable section
 
-set_option synthInstance.maxHeartbeats 100000
-set_option maxHeartbeats 800000
-
 namespace InfoGeometry.Lie.SplitOctonionImaginaryEllLagrangianDimension
 
 open InfoGeometry.Lie.SplitOctonionImaginaryEllSupport
@@ -26,9 +23,33 @@ abbrev Support := SplitOctonionImaginaryEllSupport.Support
 abbrev Plus := SplitOctonionImaginaryEllSupport.SupportPlus
 abbrev Minus := SplitOctonionImaginaryEllSupport.SupportMinus
 
+local instance : AddCommGroup Plus := SupportPlus.addCommGroup
+local instance : AddCommGroup Minus := SupportMinus.addCommGroup
+
 local instance : FiniteDimensional ℝ
     SplitOctonionImaginaryAction.Imaginary :=
   LinearEquiv.finiteDimensional imaginaryCoordLinearEquiv.symm
+
+local instance : FiniteDimensional ℝ Support :=
+  FiniteDimensional.of_injective (Submodule.subtype Support) (by
+    intro X Y h
+    exact Subtype.ext h)
+
+local instance : FiniteDimensional ℝ Plus :=
+  FiniteDimensional.of_injective (Submodule.subtype Plus) (by
+    intro X Y h
+    exact Subtype.ext h)
+
+local instance : FiniteDimensional ℝ Minus :=
+  FiniteDimensional.of_injective (Submodule.subtype Minus) (by
+    intro X Y h
+    exact Subtype.ext h)
+
+local instance : Module.Finite ℝ (Module.Dual ℝ Plus) :=
+  (Module.finite_dual_iff ℝ).2 inferInstance
+
+local instance : Module.Finite ℝ (Module.Dual ℝ Minus) :=
+  (Module.finite_dual_iff ℝ).2 inferInstance
 
 /-- Pair a positive eigenvector against the negative eigenspace. -/
 def plusToMinusDual : Plus →ₗ[ℝ] Module.Dual ℝ Minus where

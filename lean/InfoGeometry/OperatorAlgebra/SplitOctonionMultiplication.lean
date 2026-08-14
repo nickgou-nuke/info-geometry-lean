@@ -108,6 +108,24 @@ instance : Zero SplitOct := ⟨zeroZ⟩
 instance : Neg SplitOct := ⟨negZ⟩
 instance : Sub SplitOct := ⟨subZ⟩
 
+@[simp] theorem zero_a : (0 : SplitOct).a = 0 := rfl
+@[simp] theorem zero_b : (0 : SplitOct).b = 0 := rfl
+@[simp] theorem zero_x0 : (0 : SplitOct).x0 = 0 := rfl
+@[simp] theorem zero_x1 : (0 : SplitOct).x1 = 0 := rfl
+@[simp] theorem zero_x2 : (0 : SplitOct).x2 = 0 := rfl
+@[simp] theorem zero_y0 : (0 : SplitOct).y0 = 0 := rfl
+@[simp] theorem zero_y1 : (0 : SplitOct).y1 = 0 := rfl
+@[simp] theorem zero_y2 : (0 : SplitOct).y2 = 0 := rfl
+
+@[simp] theorem neg_a (X : SplitOct) : (-X).a = -X.a := rfl
+@[simp] theorem neg_b (X : SplitOct) : (-X).b = -X.b := rfl
+@[simp] theorem neg_x0 (X : SplitOct) : (-X).x0 = -X.x0 := rfl
+@[simp] theorem neg_x1 (X : SplitOct) : (-X).x1 = -X.x1 := rfl
+@[simp] theorem neg_x2 (X : SplitOct) : (-X).x2 = -X.x2 := rfl
+@[simp] theorem neg_y0 (X : SplitOct) : (-X).y0 = -X.y0 := rfl
+@[simp] theorem neg_y1 (X : SplitOct) : (-X).y1 = -X.y1 := rfl
+@[simp] theorem neg_y2 (X : SplitOct) : (-X).y2 = -X.y2 := rfl
+
 @[simp] theorem add_a (X Y : SplitOct) : (X + Y).a = X.a + Y.a := rfl
 @[simp] theorem add_b (X Y : SplitOct) : (X + Y).b = X.b + Y.b := rfl
 @[simp] theorem add_x0 (X Y : SplitOct) : (X + Y).x0 = X.x0 + Y.x0 := rfl
@@ -116,6 +134,37 @@ instance : Sub SplitOct := ⟨subZ⟩
 @[simp] theorem add_y0 (X Y : SplitOct) : (X + Y).y0 = X.y0 + Y.y0 := rfl
 @[simp] theorem add_y1 (X Y : SplitOct) : (X + Y).y1 = X.y1 + Y.y1 := rfl
 @[simp] theorem add_y2 (X Y : SplitOct) : (X + Y).y2 = X.y2 + Y.y2 := rfl
+
+instance : AddCommGroup SplitOct where
+  add := (· + ·)
+  add_assoc := by
+    intro a b c
+    ext <;>
+      simp [add_a, add_b, add_x0, add_x1, add_x2, add_y0, add_y1, add_y2]
+    <;> ring
+  zero := 0
+  zero_add := by
+    intro a
+    ext <;> simp [add_a, add_b, add_x0, add_x1, add_x2, add_y0, add_y1, add_y2]
+  add_zero := by
+    intro a
+    ext <;> simp [add_a, add_b, add_x0, add_x1, add_x2, add_y0, add_y1, add_y2]
+  neg := Neg.neg
+  neg_add_cancel := by
+    intro a
+    ext <;> simp [add_a, add_b, add_x0, add_x1, add_x2, add_y0, add_y1, add_y2]
+  add_comm := by
+    intro a b
+    ext <;>
+      simp [add_a, add_b, add_x0, add_x1, add_x2, add_y0, add_y1, add_y2]
+    <;> ring
+  nsmul := nsmulRec
+  nsmul_zero := by intro a; rfl
+  nsmul_succ := by intro n a; rfl
+  zsmul := zsmulRec
+  zsmul_zero' := by intro a; rfl
+  zsmul_succ' := by intro n a; rfl
+  zsmul_neg' := by intro n a; rfl
 
 /-- The associative backbone of the split-octonion product. -/
 def assocMul (X Y : SplitOct) : SplitOct :=

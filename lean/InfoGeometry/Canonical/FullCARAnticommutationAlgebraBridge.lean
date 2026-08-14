@@ -39,7 +39,9 @@ theorem creation_creation_car_anticommute (alpha beta : U →ₗ[R] R) (omega : 
 theorem annihilation_annihilation_car_anticommute (u v : U) (omega : ExteriorAlgebra R (U →ₗ[R] R)) :
     (contractionOp (evaluationLinear u)) ((contractionOp (evaluationLinear v)) omega) +
     (contractionOp (evaluationLinear v)) ((contractionOp (evaluationLinear u)) omega) = 0 :=
-  contraction_op_anticommute (evaluationLinear u) (evaluationLinear v) omega
+  by
+    exact contraction_op_anticommute (R := R) (V := U →ₗ[R] R)
+      (evaluationLinear u) (evaluationLinear v) omega
 
 
 end InfoGeometry.Canonical.FullCARAnticommutationAlgebraBridge

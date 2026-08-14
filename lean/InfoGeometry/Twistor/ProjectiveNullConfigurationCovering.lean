@@ -88,6 +88,13 @@ noncomputable def orderedPermutationHomeomorph
     orderedPermutationHomeomorph Q n σ p = permute Q n σ p :=
   rfl
 
+@[simp] theorem orderedPermutation_smul_eq_homeomorph
+    [TopologicalSpace V]
+    (Q : QuadraticForm K V) (n : ℕ) (σ : Equiv.Perm (Fin n))
+    (p : Ordered Q n) :
+    σ • p = orderedPermutationHomeomorph Q n σ.symm p := by
+  rfl
+
 /-- Composition of deck homeomorphisms follows the native permutation
 composition convention (`σ.trans τ` acts as `τ` after `σ`). -/
 theorem orderedPermutationHomeomorph_comp
@@ -172,8 +179,10 @@ theorem orderedConfiguration_locallyCompactSpace
   exact (pairwiseDistinct_isOpen n).locallyCompactSpace
 
 /-- Under the precise local hypotheses required by Mathlib, the canonical
-ordered-to-unordered projection is a finite quotient covering map with deck
-group `Equiv.Perm (Fin n)`. -/
+ordered-to-unordered projection is a finite quotient covering map with the
+canonical quotient action of `Equiv.Perm (Fin n)`.  This does not identify
+the full deck-transformation group without an additional classification
+theorem. -/
 theorem unorderedProjection_isQuotientCoveringMap
     [TopologicalSpace V]
     (Q : QuadraticForm K V) (n : ℕ)

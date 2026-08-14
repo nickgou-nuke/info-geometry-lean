@@ -107,10 +107,21 @@ theorem finiteWeightedSupertrace_weight_independent
       finiteWeightedSupertrace_eq_finiteWittenIndex
         levels zero boson fermion weight₂ hzero₂ hpair]
 
-/--
-Finite capstone: the weighted supertrace collapses to the Witten index and is
-independent of a second normalized weight.
--/
+/-- If every finite level is paired, the supplied weighted supertrace vanishes. -/
+theorem finiteWeightedSupertrace_eq_zero_of_all_paired
+    (levels : Finset ι) (zero : ι → Prop) [DecidablePred zero]
+    (boson fermion : ι → Nat) (weight : ι → Int)
+    (hpair : ∀ i ∈ levels, ¬ zero i → boson i = fermion i)
+    (hnozero : ∀ i ∈ levels, ¬ zero i) :
+    finiteWeightedSupertrace levels boson fermion weight = 0 := by
+  unfold finiteWeightedSupertrace
+  apply Finset.sum_eq_zero
+  intro i hi
+  have hbf : boson i = fermion i := hpair i hi (hnozero i hi)
+  simp [levelSuperdimension, hbf]
+
+/-- Finite capstone: the weighted supertrace collapses to the Witten index and is
+independent of a second normalized weight. -/
 theorem kudinoor_finite_witten_index_capstone
     (levels : Finset ι) (zero : ι → Prop) [DecidablePred zero]
     (boson fermion : ι → Nat) (weight₁ weight₂ : ι → Int)

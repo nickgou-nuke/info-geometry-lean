@@ -22,8 +22,7 @@ theorem reflection_involutive : reflection ∘ reflection = id := by
 theorem reflection_translation_reflection (a : ℝ) :
     reflection ∘ translation a ∘ reflection = translation (-a) := by
   funext x
-  simp [reflection, translation, Function.comp_def]
-  ring
+  simp [reflection, translation, Function.comp_def, add_comm]
 
 theorem translation_add (a b : ℝ) :
     translation a ∘ translation b = translation (a + b) := by
@@ -39,14 +38,12 @@ theorem translation_zero :
 theorem reflection_translation (a : ℝ) :
     reflection ∘ translation a = translation (-a) ∘ reflection := by
   funext x
-  simp [reflection, translation, Function.comp_def]
-  ring
+  simp [reflection, translation, Function.comp_def, add_comm]
 
 theorem klein_relation (a : ℝ) :
     reflection ∘ translation a ∘ reflection ∘ translation a = id := by
   funext x
   simp [reflection, translation, Function.comp_def]
-  ring
 
 theorem translation_inverse (a : ℝ) :
     translation (-a) ∘ translation a = id := by

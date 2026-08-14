@@ -39,6 +39,12 @@ def OnCriticalLine (s : ℂ) : Prop :=
 def OnLeeYangCircle (z : ℂ) : Prop :=
   Complex.normSq z = 1
 
+def criticalLineSet : Set ℂ :=
+  {s | OnCriticalLine s}
+
+def unitCircleSet : Set ℂ :=
+  {z | OnLeeYangCircle z}
+
 /--
 The Cayley maps are inverse away from the pole `s = 1`.
 
@@ -120,6 +126,38 @@ theorem criticalLine_iff_cayley_unitCircle
     rw [Complex.normSq_apply, Complex.normSq_apply] at hnorm
     simp only [Complex.sub_re, Complex.one_re, Complex.sub_im, Complex.one_im] at hnorm
     nlinarith
+
+theorem subset_cayley_unitCircle_iff_subset_criticalLine
+    (Z : Set ℂ) :
+    (∀ s ∈ Z, OnLeeYangCircle (cayleyToFugacity s)) ↔
+      (∀ s ∈ Z, OnCriticalLine s) := by
+  constructor
+  · intro h s hs
+    exact (criticalLine_iff_cayley_unitCircle s).2 (h s hs)
+  · intro h s hs
+    exact (criticalLine_iff_cayley_unitCircle s).1 (h s hs)
+
+def cayleyImage (Z : Set ℂ) : Set ℂ :=
+  cayleyToFugacity '' Z
+
+theorem cayleyImage_subset_unitCircle_iff
+    (Z : Set ℂ) :
+    cayleyImage Z ⊆ {z | OnLeeYangCircle z} ↔
+      Z ⊆ {s | OnCriticalLine s} := by
+  constructor
+  · intro h s hs
+    exact (criticalLine_iff_cayley_unitCircle s).2
+      (h ⟨s, hs, rfl⟩)
+  · intro h z hz
+    rcases hz with ⟨s, hs, rfl⟩
+    exact (criticalLine_iff_cayley_unitCircle s).1 (h hs)
+
+theorem cayleyImage_subset_unitCircleSet_iff
+    (Z : Set ℂ) :
+    cayleyImage Z ⊆ unitCircleSet ↔
+      Z ⊆ criticalLineSet := by
+  simpa [unitCircleSet, criticalLineSet] using
+    (cayleyImage_subset_unitCircle_iff Z)
 
 /-- The Lee--Yang unit circle condition is equivalent to the critical line after Cayley. -/
 @[simp]

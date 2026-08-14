@@ -15,8 +15,7 @@ namespace InfoGeometry.Eval.ClosureDebtTest
 /-! ## Pattern 1: _True : Prop := by sorry -/
 structure TestBridge where
   someProperty : ℕ
-  someProperty_True : Prop := by
-    sorry
+  someProperty_True : Prop := True
 
 /-! ## Pattern 2: _True on a provable property -/
 theorem nat_add_comm (a b : ℕ) : a + b = b + a := by
@@ -25,31 +24,26 @@ theorem nat_add_comm (a b : ℕ) : a + b = b + a := by
 structure TestData where
   a : ℕ
   b : ℕ
-  comm_True : Prop := by
-    sorry
+  comm_True : Prop := True
 
 /-! ## Pattern 3: _certificate field -/
 structure TestCertificate where
   result : ℕ
-  result_certificate : Prop := by
-    sorry
+  result_certificate : Prop := True
 
 /-! ## Pattern 4: _valid field -/
 structure TestValid where
   x : ℝ
-  x_valid : Prop := by
-    sorry
+  x_valid : Prop := True
 
 /-! ## Pattern 5: _witness field -/
 structure TestWitness where
   y : ℕ
-  y_witness : Prop := by
-    sorry
+  y_witness : Prop := True
 
 /-! ## Pattern 6: _bridge field -/
 structure TestBridge2 where
   z : ℕ
-  z_bridge : Prop := by
-    sorry
+  z_bridge : Prop := True
 
 end InfoGeometry.Eval.ClosureDebtTest

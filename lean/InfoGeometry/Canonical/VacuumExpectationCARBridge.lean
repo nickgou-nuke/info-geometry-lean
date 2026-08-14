@@ -25,8 +25,7 @@ variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]
 theorem mixed_car_on_vacuum (u : U) (alpha : U →ₗ[R] R) :
     mixedCARAnticommutator u alpha (vacuumState R U) =
     (contractionOp (evaluationLinear u)) (creationOp alpha (vacuumState R U)) := by
-  dsimp [mixedCARAnticommutator, creationOp, vacuumState, contractionOp]
-  rw [mul_zero, add_zero]
+  simp [mixedCARAnticommutator, annihilation_vacuum_zero, creationOp]
 
 
 end InfoGeometry.Canonical.VacuumExpectationCARBridge

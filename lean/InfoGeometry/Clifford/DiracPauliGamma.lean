@@ -21,7 +21,6 @@ namespace InfoGeometry.Clifford.DiracPauliGamma
 
 open scoped Matrix
 
-set_option maxHeartbeats 800000
 set_option linter.unusedSimpArgs false
 set_option linter.unnecessarySimpa false
 

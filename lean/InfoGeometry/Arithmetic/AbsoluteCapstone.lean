@@ -29,13 +29,13 @@ import DAG.GraphHodge
 import InfoGeometry.Meta.FiniteToInfiniteTransitionSOP
 
 /-!
-# The Absolute Capstone — Tensor Induction to Monge-Ampère
+# Finite algebraic readout packet
 
-The complete architectural unification of all six lanes through a single
-inductive chain. Every mathematical object in the repo is connected by
-the same underlying structure: the **inductive colimit**.
+This owner collects a finite conjunction of readouts imported from the
+specialized algebraic owners below. It does not assert analytic limits or
+cross-domain equivalences beyond the displayed hypotheses.
 
-## The Unified Chain
+## Imported owner graph
 
 ```
 TensorAlgebraInduction          (finite-stage algebra)
@@ -112,38 +112,28 @@ GrothendieckMotive               (Spec ℤ as Cuntz algebra)
          ∎
 ```
 
-## The Five Pillars
+## Available finite readouts
 
-1. **Induction = Colimit**: Every step in the chain is an inductive limit.
-   The tensor algebra → SUSY → Clifford → UHF → Cantor boundary chain
-   is a single poset of finite stages under inclusion.
+1. **Finite induction readouts**: the first conjunct records finite
+   identities supplied by the induction owners.
 
-2. **Determinant = Radon-Nikodym**: The Fredholm determinant on the UHF
-   algebra equals the Radon-Nikodym derivative of the volume change under
-   modular flow. Proved in LogDetRadonNikodymMechanism.lean.
+2. **Radon--Nikodym readouts**: the second conjunct records supplied
+   determinant and chain-rule identities.
 
-3. **Monge-Ampère = Modular Operator**: The Monge-Ampère density is the
-   RN-induced relative volume factor. The modular operator is the Hessian
-   of the Monge-Ampère potential. Proved in CalabiYauRNMongeAmpere.lean
-   and MongeAmpereCramerRao.lean.
+3. **Monge--Ampère readouts**: the third conjunct records explicit density
+   and Hessian premises used by this owner.
 
-4. **Weyl Character = Inverse Zeta**: The Weyl denominator of the Boolean
-   A₁^P root system equals the inverse of the primon partition function.
-   The character limit is the zeta function. Proved in
-   WeylCharacterEquivalence.lean.
+4. **Finite Weyl/primon readouts**: the fourth conjunct records finite
+   character and partition identities.
 
-5. **Symmetry Group = Ẑ^×**: The symmetry group of the primon colimit is
-   the group of units of the profinite completion of ℤ. All partition
-   functions are characters of this group evaluated at inverse temperature β.
-   Proved in PrimonGasPartition.lean and UResRepresentations.lean.
+5. **Finite Boolean Weyl sign**: the fifth conjunct records the finite sign
+   identity used by the arithmetic owner.
 
-## The Absolute Colimit
+## Scope
 
-The single unified colimit: SplitCliffordInfinity = UHF algebra = Cantor
-boundary = spectrum of the arithmetic site. Every object in the chain is
-a representation of this colimit. The capstone is the statement that all
-five pillars are equivalent — they are different readings of the same
-inductive limit.
+The capstone below is a conjunction of these finite readouts. Any colimit,
+analytic, or cross-domain theorem must be supplied by its own owner and is
+not inferred from this conjunction alone.
 -/
 
 namespace InfoGeometry.Arithmetic.AbsoluteCapstone
@@ -161,16 +151,9 @@ open InfoGeometry.Volume.RadonNikodym
 open DAG
 
 /--
-**Pillar 1: Induction = Colimit.**
+**Pillar 1: finite induction readouts.**
 
-The tensor algebra induction, Bott periodicity, Kitaev chain,
-Jordan-Wigner mapping, and Cantor boundary are ALL the same
-inductive limit — the poset of finite stages under inclusion.
-
-  FiniteInductiveSUSY → SplitCliffordDirectLimit → AnalyticBridge
-
-Every theorem is a statement about the universal property of
-this colimit.
+The theorem below packages the finite identities used by this owner.
 -/
 def inductionColimitPillar : Prop :=
         InfoGeometry.Canonical.SplitCliffordJordanWigner.P *
@@ -201,14 +184,9 @@ theorem pillar_induction_is_colimit : inductionColimitPillar := by
   · exact DAG.AnalyticBridge.analytic_completion_has_nilpotent_lift
 
 /--
-**Pillar 2: Determinant = Radon-Nikodym.**
+**Pillar 2: supplied Radon--Nikodym readouts.**
 
-  det(1 - e^{-sH}) = exp(Tr(log(1 - e^{-sH})))
-                   = exp(Σ_k (-1)^{k+1} Tr(e^{-ksH}) / k)
-                   = Radon-Nikodym derivative of volume under modular flow
-
-The Fredholm determinant is the RN derivative. Proved in
-LogDetRadonNikodymMechanism.lean.
+The theorem below states the supplied chain rule and invariant readout.
 -/
 theorem pillar_determinant_is_radon_nikodym
     {A : Type*} [Monoid A] (vol : A →* ℝˣ) :
@@ -226,17 +204,9 @@ theorem pillar_determinant_is_radon_nikodym
     exact InfoGeometry.Volume.RadonNikodym.rn_eq_additiveInvariant vol f
 
 /--
-**Pillar 3: Monge-Ampère = Modular Operator.**
+**Pillar 3: supplied Monge--Ampère readouts.**
 
-The Monge-Ampère density Ψ = det(Hess(φ)) is the volume of the
-Hessian metric. The modular operator Δ = exp(K) acts on the RN
-derivative by conjugation. The Monge-Ampère equation ΔΨ = 0 is
-the harmonic condition on the Monge-Ampère potential.
-
-RN → Monge-Ampère density (CalabiYauRNMongeAmpere.lean)
-Monge-Ampère → Cramér-Rao bound (MongeAmpereCramerRao.lean)
-Cramér-Rao → Fisher information (information geometry)
-Fisher → Bregman divergence (SouriauModularBregmanOperator.lean)
+The theorem below derives the stated readouts from explicit premises.
 -/
 theorem pillar_monge_ampere_is_modular
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
@@ -257,16 +227,7 @@ theorem pillar_monge_ampere_is_modular
         (n := n) (Kgeo := Kgeo) (M := M) hSource hUnit x⟩
 
 /--
-**Pillar 4: Weyl Character = Inverse Zeta.**
-
-  Weyl denominator of Boolean A₁^P root system
-    = ∏_p (1 - e^{-β log p})
-    = ∏_p (1 - p^{-β})
-    = det(1 - e^{-βH})
-    = 1 / ζ(β)
-
-Proved in WeylCharacterEquivalence.lean and
-FormalPrimeRootSystem.lean.
+**Pillar 4: finite Weyl/primon readouts.**
 -/
 theorem pillar_weyl_character_is_inverse_zeta
     (L : FormalPrimeRootLattice) (β : ℝ) :
@@ -278,17 +239,7 @@ theorem pillar_weyl_character_is_inverse_zeta
       finitePrimonPartition_eq_rpowProduct L β⟩
 
 /--
-**Pillar 5: Symmetry Group = Ẑ^×.**
-
-The symmetry group of the primon colimit is the group of units
-of the profinite completion of ℤ:
-
-  Ẑ^× = ∏_p ℤ_p^×  ≅  Gal(ℚ^{cycl}/ℚ)
-
-Acting on the Cantor boundary {0,1}^ℕ via the Cuntz isometries S_p.
-
-All partition functions Z_B, Z_F, Z_μ, Z_λ are characters of Ẑ^×
-evaluated at inverse temperature β. Proved in PrimonGasPartition.lean.
+**Pillar 5: finite Boolean Weyl sign.**
 -/
 def primonColimitIdeleSymmetryFormalizationDebt : String :=
   "No Lean owner currently exposes an idèle/profinite-unit group action on the primon colimit; the available kernel-backed symmetry is finite Boolean Weyl data."
@@ -298,24 +249,7 @@ theorem pillar_symmetry_available_boolean_weyl
     weylSign w = (-1 : ℝ) ^ w.support.card :=
   rfl
 
-/--
-**The Absolute Capstone Theorem.**
-
-All five pillars are equivalent — they are different readings of
-the same inductive colimit SplitCliffordInfinity. The architecture
-is sealed.
-
-  Induction = Colimit = Determinant = Radon-Nikodym
-  = Monge-Ampère = Modular Operator
-  = Weyl Character = Inverse Zeta
-  = Symmetry Group = Ẑ^×
-  = Spec ℤ as Cuntz algebra representation
-  = ζ·1/ζ = 1 = Lefschetz trace formula
-  = ΓD + DΓ = 0 = Poincaré duality
-  = ω(t) > 0 = Dikin sandwich open
-
-All proved or structurally wired across 8,443 jobs.
--/
+/-- A finite conjunction of the four supplied pillar readouts used below. -/
 theorem absolute_capstone
     {A : Type*} [Monoid A] (vol : A →* ℝˣ)
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]

@@ -92,6 +92,18 @@ theorem carParity_readout_eq_one_of_not_mem
   rw [carParity_readout_eq_booleanLocalParity E χ p S hN]
   exact localParity_eq_one_of_not_mem hp
 
+/-- The evaluated local parity is an involution. -/
+theorem carParity_readout_sq
+    {Op : Type*} [Ring Op]
+    (E : ExteriorCARPair Op)
+    (χ : Op →+* ℤ)
+    (p : ℕ)
+    (S : Finset ℕ)
+    (hN : χ E.numberOp = occupationInt p S) :
+    χ E.parityOp * χ E.parityOp = 1 := by
+  rw [carParity_readout_eq_booleanLocalParity E χ p S hN]
+  by_cases hp : p ∈ S <;> simp [localParity, hp]
+
 
 /-! ## 2. Global CAR chirality readout -/
 

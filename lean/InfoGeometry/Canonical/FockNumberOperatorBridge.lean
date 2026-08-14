@@ -26,8 +26,10 @@ def singleModeNumberOp (alpha : U →ₗ[R] R) (u : U) (omega : ExteriorAlgebra 
 /-- **Theorem**: Single-Mode Number Operator Annihilates Vacuum State (N_{α, u} |0⟩ = 0). -/
 theorem number_op_vacuum_zero (alpha : U →ₗ[R] R) (u : U) :
     singleModeNumberOp alpha u (vacuumState R U) = 0 := by
-  dsimp [singleModeNumberOp, creationOp, vacuumState, contractionOp]
-  rw [mul_zero]
+  change creationOp alpha
+      (contractionOp (evaluationLinear u) (vacuumState R U)) = 0
+  rw [annihilation_vacuum_zero]
+  simp [creationOp]
 
 /-- **Theorem**: Single-Mode Number Operator on Single-Particle State (N_{α, u} |β⟩ = ε_α (a_u |β⟩)). -/
 theorem number_op_single_particle_action (alpha beta : U →ₗ[R] R) (u : U) :

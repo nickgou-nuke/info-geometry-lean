@@ -1,26 +1,3 @@
-/-
-# Explicit Formula for Riemann Zeta Zeros
-
-This module formalizes the explicit formula connecting the zeros of the Riemann zeta function
-to the von Mangoldt function Λ(n).
-
-The explicit formula states:
-```
-ψ₀(x) = x - ∑_ρ x^ρ/ρ - log(2π) - ½ log(1 - x⁻²)
-```
-where the sum is over all non-trivial zeros ρ of ζ(s), and ψ₀(x) is the Chebyshev function
-smoothed at discontinuities.
-
-This is a foundational result connecting:
-- Zeros of ζ(s) (analytic data)
-- Prime number distribution via Λ(n) (arithmetic data)
-- Contour integration and residue calculus
-
-References:
-- Davenport, "Multiplicative Number Theory", Chapter 17
-- Edwards, "Riemann's Zeta Function", Chapter 3
-- Montgomery-Vaughan, "Multiplicative Number Theory", Chapter 12
--/
 import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
 import Mathlib.NumberTheory.LSeries.RiemannZeta
 import Mathlib.Analysis.Complex.Basic
@@ -28,6 +5,8 @@ import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.Complex.CauchyIntegral
+
+/-! Finite explicit-formula data and arithmetic readouts. -/
 
 open Complex
 open Real
@@ -49,12 +28,7 @@ noncomputable def smoothedChebyshevPsi (x : ℝ) : ℝ :=
   else
     chebyshevPsi x
 
-/-- The zero sum term in the explicit formula:
-  S(x) = ∑_ρ x^ρ/ρ
-  where the sum is over all non-trivial zeros ρ of ζ(s).
-  
-  Note: This is a conditional definition; the full explicit formula requires
-  assuming RH for convergence and ordering of the sum. -/
+/-! Finite zero-sum readout. -/
 noncomputable def zeroSum (x : ℝ) (zeros : Finset ℂ) : ℂ :=
   zeros.sum (fun ρ => (x : ℂ) ^ ρ / ρ)
 
@@ -62,12 +36,7 @@ noncomputable def zeroSum (x : ℝ) (zeros : Finset ℂ) : ℂ :=
 noncomputable def explicitConstantTerm (x : ℝ) : ℝ :=
   Real.log (2 * Real.pi) + (1 / 2 : ℝ) * Real.log (1 - x ^ (-2 : ℝ))
 
-/-- Main explicit formula statement (conditional on RH and zero ordering).
-  
-  The formula: ψ₀(x) = x - ∑_ρ x^ρ/ρ - log(2π) - ½ log(1 - x⁻²)
-  
-  In Lean, we formalize it as a structure that can be instantiated when
-  the zeros are known and RH is assumed. -/
+/-! A finite certificate carrying zero metadata and a supplied equality. -/
 structure ExplicitFormula (x : ℝ) (zeros : Finset ℂ) (hx : 1 < x) where
   -- All zeros are non-trivial: 0 < Re(ρ) < 1
   zeros_nontrivial : ∀ ρ ∈ zeros, 0 < ρ.re ∧ ρ.re < 1
@@ -76,23 +45,12 @@ structure ExplicitFormula (x : ℝ) (zeros : Finset ℂ) (hx : 1 < x) where
   -- All zeros come in conjugate pairs (from functional equation)
   zeros_conjugate_pairs : ∀ ρ ∈ zeros, star ρ ∈ zeros
 
-/-- Theorem: Assuming RH, the explicit formula holds with zeros ordered by |Im(ρ)|.
-  
-  This is the main analytic result connecting zeros to primes. The proof requires:
-  1. Contour integration of -ζ'(s)/ζ(s) * x^s/s
-  2. Residue theorem at poles: s=1 (x), s=ρ (x^ρ/ρ), s=-2k (trivial)
-  3. Estimation of horizontal contour integrals
-  3. RH ensures convergence and ordering by |Im(ρ)|
-  
-  This is a skeleton theorem; the full proof is extremely long and involves
-  complex analysis not yet fully formalized in mathlib. -/
+/-! Construct the finite certificate from explicit inputs. -/
 theorem explicitFormulaFromRH
     (x : ℝ) (hx : 1 < x)
     (zeros : Finset ℂ)
     (hzeros : ∀ ρ ∈ zeros, 0 < ρ.re ∧ ρ.re < 1)
     (hconj : ∀ ρ ∈ zeros, star ρ ∈ zeros)
-    (horder : ∀ (ρ₁ ρ₂ : ℂ), ρ₁ ∈ zeros → ρ₂ ∈ zeros →
-      ρ₁.re = ρ₂.re → |ρ₁.im| ≤ |ρ₂.im| → ρ₁ = ρ₂)
     (hformula :
       (smoothedChebyshevPsi x : ℂ) =
         (x : ℂ) - zeroSum x zeros - (explicitConstantTerm x : ℂ)) :
@@ -120,11 +78,7 @@ theorem riemann_von_mangoldt_formula (T : ℝ) (hT : T ≥ 2) :
   simp only [if_neg (not_le.mpr hTpos), sub_self, abs_zero]
   positivity
 
-/-- Zero-free region from Dirichlet series bounds.
-If ζ(s) ≠ 0 for Re(s) = 1, then there exists c > 0 such that
-ζ(s) ≠ 0 for Re(s) ≥ 1 - c/log(|t|+2).
-
-This is the classical Korobov-Vinogradov zero-free region. -/
+/-! A supplied zero-free region readout. -/
 theorem zero_free_region_from_dirichlet_bounds :
   (∀ (t : ℝ), riemannZeta (1 + Complex.I * t) ≠ 0) →
   (∃ (c : ℝ), c > 0 ∧
@@ -136,29 +90,21 @@ theorem zero_free_region_from_dirichlet_bounds :
   intro _ hregion
   exact hregion
 
-/-- The Riemann xi function: ξ(s) = ½ s(s-1) π^(-s/2) Γ(s/2) ζ(s). -/
+/-! A completed-zeta-style function. -/
 noncomputable def xi (s : ℂ) : ℂ :=
   (1 / 2 : ℂ) * s * (s - 1) * Complex.exp (-(s / 2) * Complex.log (Real.pi)) *
     Complex.Gamma (s / 2) * riemannZeta s
 
-/-- Hadamard product (Weierstrass factorization) for ξ(s).
-ξ(s) = ξ(0) ∏_ρ (1 - s/ρ) exp(s/ρ)
-where the product is over all non-trivial zeros ρ of ζ(s).
-
-This expresses ξ as an entire function of order 1 via its zeros. -/
+/-! A finite product equality supplied as an explicit hypothesis. -/
 theorem hadamard_product_xi (s : ℂ) (zeros : Finset ℂ)
-    (hzeros : ∀ ρ ∈ zeros, riemannZeta ρ = 0 ∧ 0 < ρ.re ∧ ρ.re < 1)
     (hproduct :
       xi s =
         xi 0 * zeros.prod (fun ρ => (1 - s / ρ) * Complex.exp (s / ρ))) :
   xi s = xi 0 * zeros.prod (fun ρ => (1 - s / ρ) * Complex.exp (s / ρ)) := by
   exact hproduct
 
-/-- The logarithmic derivative of ξ(s) gives the sum over zeros:
-ξ'(s)/ξ(s) = ∑_ρ 1/(s - ρ) + 1/ρ
-This is the key identity connecting the explicit formula to the zero set. -/
-theorem log_derivative_xi (s : ℂ) (hs : s ≠ 0 ∧ s ≠ 1) (zeros : Finset ℂ)
-    (hzeros : ∀ ρ ∈ zeros, riemannZeta ρ = 0 ∧ 0 < ρ.re ∧ ρ.re < 1)
+/-! A finite logarithmic-derivative equality supplied as an explicit hypothesis. -/
+theorem log_derivative_xi (s : ℂ) (zeros : Finset ℂ)
     (hlog :
       deriv xi s / xi s =
         zeros.sum (fun ρ => (1 / (s - ρ) + 1 / ρ))) :

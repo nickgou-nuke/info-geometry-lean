@@ -120,6 +120,7 @@ import InfoGeometry.Algebra.ScaleCocycleInvariant
 import InfoGeometry.Algebra.FractalScaleTransport
 import InfoGeometry.Algebra.IdempotentProjector
 import InfoGeometry.Algebra.NonCommutativeIsometry
+import InfoGeometry.Algebra.NoncommutativePlaneWaveKernel
 import InfoGeometry.Algebra.HessianThermodynamicManifold
 import InfoGeometry.Algebra.RealPauliCausalCone
 import InfoGeometry.Algebra.PauliQuaternionSplitComparison
@@ -222,9 +223,12 @@ import InfoGeometry.Algebra.CyclicTraceStokes
 import InfoGeometry.Algebra.HyperrotorKMSBridge
 import InfoGeometry.Algebra.InvPairHolomorphicity
 import InfoGeometry.Algebra.SplitOctonionColeFurySpinorBridge
+import InfoGeometry.Algebra.ColeFuryQuadrantMatrixUnits
+import InfoGeometry.Algebra.ColeFuryCornerAmplification
 import InfoGeometry.Algebra.MaximalSplitOrder
 import InfoGeometry.Algebra.ZornNullCone
 import InfoGeometry.Algebra.LogarithmicDeformationCoordinate
+import InfoGeometry.Algebra.SplitCliffordTransformKernel
 /-!
 # InfoGeometry.Algebra.All
 

@@ -4,17 +4,12 @@ import Mathlib.Analysis.Analytic.Basic
 import Mathlib.Order.Filter.Basic
 
 /-!
-# InfoGeometry.Arithmetic.ZetaSupertraceBridge
+# Conditional analytic and kernel data
 
-Witness-gated infinite Euler product and analytic continuation bridge.
-This module strictly isolates the infinite limit $\Lambda \to \infty$ and the
-Riemann Zeta function analytic continuation from the finite, algebraic CAR
-and Pfaffian structures.
-
-The core physics slogan is preserved:
-"zeta zeros as Majorana zero modes" is a physical spectral property, 
-not a theorem, until a self-adjoint real operator and analytic Pfaffian 
-determinant identity are fully constructed.
+This module records explicit hypotheses for a convergent family of finite
+Euler-product readouts and for a zero of a linear operator.  It proves no
+convergence, analytic continuation, determinant identity, or zero-spectrum
+correspondence on its own.
 -/
 
 noncomputable section
@@ -23,51 +18,43 @@ namespace InfoGeometry.Arithmetic.ZetaSupertraceBridge
 
 open scoped BigOperators
 
-/--
-Witness for the infinite Euler product evaluating to $1/\zeta(s)$.
-This is an external analytic fact, explicitly gated here as a structural
-property so it does not pollute the algebraic layers.
--/
+/-- Data witnessing convergence of finite readouts to a supplied function. -/
 structure InfiniteEulerProductWitness (s : ℂ) where
-  /-- Finite Euler-product readouts indexed by the cutoff. -/
+  /-- Finite readouts indexed by a cutoff. -/
   finiteEulerProduct : ℕ → ℂ → ℂ
 
-  /-- The limiting zeta readout on the spectral parameter. -/
+  /-- The target function on the spectral parameter. -/
   zeta : ℂ → ℂ
 
-  /-- The finite products converge to the supplied zeta readout at `s`. -/
+  /-- The readouts converge to the target value at `s`. -/
   euler_limit :
     Filter.Tendsto
       (fun N => finiteEulerProduct N s)
       Filter.atTop (nhds (zeta s))
 
-  /-- The Zeta function is analytically continued to the region of interest. -/
+  /-- The target function is analytic on the supplied domain. -/
   analyticDomain : Set ℂ
   analytic_continuation :
     AnalyticOnNhd ℂ zeta analyticDomain
 
-/--
-Analytic Spectral Hypothesis: Zeta zeros correspond to Majorana zero modes.
-This is the ultimate target of the thermodynamic bridge, maintained here
-as an unproved physical property pending the infinite-dimensional Pfaffian.
--/
+/-- Data relating a specified function zero to a nontrivial operator kernel. -/
 structure MajoranaZeroModeHypothesis
     (s : ℂ) (H : Type*)
     [AddCommGroup H] [Module ℂ H] where
-  /-- The supplied completed-zeta readout. -/
+  /-- The supplied complex-valued function. -/
   zeta : ℂ → ℂ
 
-  /-- `s` is a zero of the supplied zeta readout. -/
+  /-- The function vanishes at `s`. -/
   is_zeta_zero : zeta s = 0
 
-  /-- The operator whose kernel carries the Majorana zero mode. -/
+  /-- The linear operator whose kernel is being tested. -/
   operator : H →ₗ[ℂ] H
 
-  /-- The infinite-dimensional operator possesses a zero mode at $s$. -/
+  /-- The operator has a nonzero vector in its kernel. -/
   has_zero_mode :
     ∃ v : H, v ≠ 0 ∧ operator v = 0
 
-  /-- The correspondence holds. -/
+  /-- The supplied function zero is equivalent to the kernel condition. -/
   zero_correspondence :
     zeta s = 0 ↔ ∃ v : H, v ≠ 0 ∧ operator v = 0
 

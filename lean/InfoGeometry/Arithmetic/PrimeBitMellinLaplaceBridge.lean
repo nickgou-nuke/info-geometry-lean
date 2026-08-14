@@ -42,11 +42,21 @@ theorem primeBitMellinCharacter_eq_laplaceLogCharacter
   have hlog :
       Complex.log (primeBitInteger L ε : ℂ) =
         (Real.log (primeBitInteger L ε : ℝ) : ℂ) := by
-    simpa using (Complex.ofReal_log (show (0 : ℝ) ≤ primeBitInteger L ε from
+    simp using (Complex.ofReal_log (show (0 : ℝ) ≤ primeBitInteger L ε from
       le_of_lt hn))
   rw [primeBitMellinCharacter, primeBitLaplaceLogCharacter]
   rw [Complex.cpow_def_of_ne_zero hn0]
   rw [hlog]
+  congr 1
   ring
+
+/-- The Mellin character is the Laplace character of the named finite energy. -/
+theorem primeBitMellinCharacter_eq_primeBitEnergy_character
+    {L : PrimeBitLattice} (s : ℂ) (ε : PrimeBitState L) :
+    primeBitMellinCharacter s ε =
+      Complex.exp (-s * (primeBitEnergy L ε.1 : ℂ)) := by
+  rw [primeBitMellinCharacter_eq_laplaceLogCharacter]
+  rw [primeBitEnergy_eq_log_primeBitInteger]
+  rfl
 
 end InfoGeometry.Arithmetic.PrimeBitMellinLaplaceBridge

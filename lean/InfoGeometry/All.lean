@@ -176,6 +176,7 @@ import InfoGeometry.Algebraic.CartanExponentialFamily
 import InfoGeometry.Algebraic.CartanSouriauAffineCocycle
 import InfoGeometry.Algebraic.CartanSouriauCocycleGibbsCharacter
 import InfoGeometry.Algebraic.CartanSouriauMassieu
+import InfoGeometry.Algebraic.CartanSouriauMassieuDirectionalCalculus
 import InfoGeometry.Algebraic.ChiralOperatorAlgebra
 import InfoGeometry.Algebraic.ChiralOperatorCarrier
 import InfoGeometry.Algebraic.CliffordSymmetryLift
@@ -7265,3 +7266,4 @@ import InfoGeometry.Arithmetic.PrimeCutoffFiniteFock
 import InfoGeometry.Arithmetic.PrimonFockPrimeEnergy
 import InfoGeometry.Arithmetic.PrimonFockLinearTrace
 import InfoGeometry.Arithmetic.PrimeOccupationAlgebra
+import InfoGeometry.Lie.SplitOctonionCircularProjectiveFixedLocus

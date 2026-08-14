@@ -37,7 +37,7 @@ theorem hyperbolicFlow_on_zeroWeight (t : ℝ) (x : Coord) (hx : x ∈ zeroWeigh
   · intro y hy
     rcases hy with rfl | rfl <;> ext i <;> fin_cases i <;>
       simp [hyperbolicFlowCoordinate, hyperbolicScale, axialWeight, Pi.smul_apply]
-  · simp
+  · simpa [hyperbolicFlowCoordinate, hyperbolicScale]
   · intro y z _ _ hy hz
     rw [map_add, hy, hz]
   · intro a y _ hy
@@ -49,13 +49,14 @@ theorem hyperbolicFlow_on_positiveWeight (t : ℝ) (x : Coord) (hx : x ∈ posit
     ?_ ?_ ?_ ?_ hx
   · intro y hy
     rcases hy with rfl | rfl | rfl <;>
-      rw [hyperbolicFlowCoordinate_basis_action]
+      rw [hyperbolicFlowCoordinate_basis_action] <;>
       simp [axialWeight, smul_eq_mul]
-  · simp
+  · simpa [hyperbolicFlowCoordinate, hyperbolicScale]
   · intro y z _ _ hy hz
     rw [map_add, hy, hz, smul_add]
   · intro a y _ hy
-    simpa [map_smul, hy, smul_smul, mul_comm]
+    rw [map_smul, hy, smul_smul]
+    ring
 
 theorem hyperbolicFlow_on_negativeWeight (t : ℝ) (x : Coord) (hx : x ∈ negativeWeightSubmodule) :
     hyperbolicFlowCoordinate t x = Real.exp (-t) • x := by
@@ -63,37 +64,113 @@ theorem hyperbolicFlow_on_negativeWeight (t : ℝ) (x : Coord) (hx : x ∈ negat
     ?_ ?_ ?_ ?_ hx
   · intro y hy
     rcases hy with rfl | rfl | rfl <;>
-      rw [hyperbolicFlowCoordinate_basis_action]
+      rw [hyperbolicFlowCoordinate_basis_action] <;>
       simp [axialWeight, smul_eq_mul]
-  · simp
+  · simpa [hyperbolicFlowCoordinate, hyperbolicScale]
   · intro y z _ _ hy hz
     rw [map_add, hy, hz, smul_add]
   · intro a y _ hy
-    simpa [map_smul, hy, smul_smul, mul_comm]
+    rw [map_smul, hy, smul_smul]
+    ring
 
 theorem positiveWeight_totallyNull (x : Coord) (hx : x ∈ positiveWeightSubmodule) :
     circularPeirceQuadratic x = 0 := by
-  sorry
+  rw [circularPeirceQuadratic_formula]
+  have h0 : x 0 = 0 := by
+    exact Submodule.span_induction (p := fun y _ => y 0 = 0)
+      (fun y hy => by rcases hy with rfl | rfl | rfl <;> simp)
+      (by simp) (fun y z _ _ hy hz => by simp [hy, hz])
+      (fun a y _ hy => by simp [hy]) hx
+  have h4 : x 4 = 0 := by
+    exact Submodule.span_induction (p := fun y _ => y 4 = 0)
+      (fun y hy => by rcases hy with rfl | rfl | rfl <;> simp)
+      (by simp) (fun y z _ _ hy hz => by simp [hy, hz])
+      (fun a y _ hy => by simp [hy]) hx
+  have h5 : x 5 = 0 := by
+    exact Submodule.span_induction (p := fun y _ => y 5 = 0)
+      (fun y hy => by rcases hy with rfl | rfl | rfl <;> simp)
+      (by simp) (fun y z _ _ hy hz => by simp [hy, hz])
+      (fun a y _ hy => by simp [hy]) hx
+  have h6 : x 6 = 0 := by
+    exact Submodule.span_induction (p := fun y _ => y 6 = 0)
+      (fun y hy => by rcases hy with rfl | rfl | rfl <;> simp)
+      (by simp) (fun y z _ _ hy hz => by simp [hy, hz])
+      (fun a y _ hy => by simp [hy]) hx
+  have h7 : x 7 = 0 := by
+    exact Submodule.span_induction (p := fun y _ => y 7 = 0)
+      (fun y hy => by rcases hy with rfl | rfl | rfl <;> simp)
+      (by simp) (fun y z _ _ hy hz => by simp [hy, hz])
+      (fun a y _ hy => by simp [hy]) hx
+  simp [h0, h4, h5, h6, h7]
 
 theorem negativeWeight_totallyNull (x : Coord) (hx : x ∈ negativeWeightSubmodule) :
     circularPeirceQuadratic x = 0 := by
-  sorry
+  rw [circularPeirceQuadratic_formula]
+  have h0 : x 0 = 0 := by
+    exact Submodule.span_induction (p := fun y _ => y 0 = 0)
+      (fun y hy => by rcases hy with rfl | rfl | rfl <;> simp)
+      (by simp) (fun y z _ _ hy hz => by simp [hy, hz])
+      (fun a y _ hy => by simp [hy]) hx
+  have h1 : x 1 = 0 := by
+    exact Submodule.span_induction (p := fun y _ => y 1 = 0)
+      (fun y hy => by rcases hy with rfl | rfl | rfl <;> simp)
+      (by simp) (fun y z _ _ hy hz => by simp [hy, hz])
+      (fun a y _ hy => by simp [hy]) hx
+  have h2 : x 2 = 0 := by
+    exact Submodule.span_induction (p := fun y _ => y 2 = 0)
+      (fun y hy => by rcases hy with rfl | rfl | rfl <;> simp)
+      (by simp) (fun y z _ _ hy hz => by simp [hy, hz])
+      (fun a y _ hy => by simp [hy]) hx
+  have h3 : x 3 = 0 := by
+    exact Submodule.span_induction (p := fun y _ => y 3 = 0)
+      (fun y hy => by rcases hy with rfl | rfl | rfl <;> simp)
+      (by simp) (fun y z _ _ hy hz => by simp [hy, hz])
+      (fun a y _ hy => by simp [hy]) hx
+  simp [h0, h1, h2, h3]
 
 theorem projective_positiveWeight_fixed (t : ℝ) (x : Coord) (hx_ne : x ≠ 0)
     (hx : x ∈ positiveWeightSubmodule) :
     circularNullBoundaryFlow t (twistorMk circularPeirceQuadratic x hx_ne (positiveWeight_totallyNull x hx)) =
       twistorMk circularPeirceQuadratic x hx_ne (positiveWeight_totallyNull x hx) := by
-  sorry
+  rw [circularNullBoundaryFlow_mk_axialFlow]
+  apply Subtype.ext
+  apply (Projectivization.mk_eq_mk_iff' ℝ _ _ _ _).2
+  refine ⟨Units.mk0 (Real.exp t) (Real.exp_ne_zero t), ?_⟩
+  rw [axialFlowCoordinate_eq_hyperbolicFlowCoordinate,
+    hyperbolicFlow_on_positiveWeight t x hx]
+  simp [Units.smul_def]
 
 theorem projective_negativeWeight_fixed (t : ℝ) (x : Coord) (hx_ne : x ≠ 0)
     (hx : x ∈ negativeWeightSubmodule) :
     circularNullBoundaryFlow t (twistorMk circularPeirceQuadratic x hx_ne (negativeWeight_totallyNull x hx)) =
       twistorMk circularPeirceQuadratic x hx_ne (negativeWeight_totallyNull x hx) := by
-  sorry
+  rw [circularNullBoundaryFlow_mk_axialFlow]
+  apply Subtype.ext
+  apply (Projectivization.mk_eq_mk_iff' ℝ _ _ _ _).2
+  refine ⟨Units.mk0 (Real.exp (-t)) (Real.exp_ne_zero (-t)), ?_⟩
+  rw [axialFlowCoordinate_eq_hyperbolicFlowCoordinate,
+    hyperbolicFlow_on_negativeWeight t x hx]
+  simp [Units.smul_def]
 
 theorem zeroWeight_null_iff (x : Coord) (hx : x ∈ zeroWeightSubmodule) :
     circularPeirceQuadratic x = 0 ↔ (x 0 = 0 ∨ x 4 = 0) := by
-  sorry
+  rw [circularPeirceQuadratic_formula]
+  have h1 : x 1 = 0 := by
+    exact Submodule.span_induction (p := fun y _ => y 1 = 0)
+      (fun y hy => by rcases hy with rfl | rfl <;> simp)
+      (by simp) (fun y z _ _ hy hz => by simp [hy, hz])
+      (fun a y _ hy => by simp [hy]) hx
+  have h2 : x 2 = 0 := by
+    exact Submodule.span_induction (p := fun y _ => y 2 = 0)
+      (fun y hy => by rcases hy with rfl | rfl <;> simp)
+      (by simp) (fun y z _ _ hy hz => by simp [hy, hz])
+      (fun a y _ hy => by simp [hy]) hx
+  have h3 : x 3 = 0 := by
+    exact Submodule.span_induction (p := fun y _ => y 3 = 0)
+      (fun y hy => by rcases hy with rfl | rfl <;> simp)
+      (by simp) (fun y z _ _ hy hz => by simp [hy, hz])
+      (fun a y _ hy => by simp [hy]) hx
+  simp [h1, h2, h3]
 
 theorem circularNullBoundaryFlow_fixed_iff_of_ne_zero (t : ℝ) (ht : t ≠ 0)
     (p : CircularNullBoundary) :

@@ -2,6 +2,8 @@ import InfoGeometry.Lie.CanonicalZornG2CartanFisherSouriauMetric
 import Mathlib.Analysis.Convex.Deriv
 import Mathlib.Analysis.Convex.Function
 import Mathlib.Analysis.Calculus.Deriv.Comp
+import Mathlib.Analysis.Calculus.ContDiff.Deriv
+import Mathlib.Analysis.Calculus.Deriv.Shift
 import InfoGeometry.Analytic.LogSumExp
 
 open InfoGeometry.Analytic
@@ -23,6 +25,45 @@ theorem betaLine_add (beta v : Fin 2 → ℝ) (t s : ℝ) :
   ext i
   unfold betaLine
   ring
+
+
+theorem deriv_shift_zero {f : ℝ → ℝ} (t : ℝ) (hf : DifferentiableAt ℝ f t) :
+    deriv (fun s => f (t + s)) 0 = deriv f t := by
+  have hd1 : HasDerivAt f (deriv f t) (t + 0) := by
+    rw [add_zero]
+    exact hf.hasDerivAt
+  have hd2 : HasDerivAt (fun s => t + s) 1 0 := by
+    apply HasDerivAt.const_add
+    exact hasDerivAt_id 0
+  have hc := HasDerivAt.comp 0 hd1 hd2
+  rw [mul_one] at hc
+  exact hc.deriv
+
+theorem deriv_shift {f : ℝ → ℝ} (t : ℝ) (s : ℝ) (hf : DifferentiableAt ℝ f (t + s)) :
+    deriv (fun s' => f (t + s')) s = deriv f (t + s) := by
+  have hd1 : HasDerivAt f (deriv f (t + s)) (t + s) := hf.hasDerivAt
+  have hd2 : HasDerivAt (fun s' => t + s') 1 s := by
+    apply HasDerivAt.const_add
+    exact hasDerivAt_id s
+  have hc := HasDerivAt.comp s hd1 hd2
+  rw [mul_one] at hc
+  exact hc.deriv
+
+theorem second_deriv_shift {f : ℝ → ℝ} (t : ℝ)
+    (hf : ContDiff ℝ 2 f) :
+    deriv^[2] f t = deriv (fun s => deriv (fun s' => f (t + s')) s) 0 := by
+  change deriv (deriv f) t = deriv (fun s => deriv (fun s' => f (t + s')) s) 0
+  have h_inner (s : ℝ) : deriv (fun s' => f (t + s')) s = deriv f (t + s) := by
+    apply deriv_shift
+    have h1 := hf.differentiable (by norm_num)
+    exact h1 (t + s)
+  have h_outer : (fun s => deriv (fun s' => f (t + s')) s) = (fun s => deriv f (t + s)) := by
+    ext s
+    exact h_inner s
+  rw [h_outer]
+  apply (deriv_shift_zero t _).symm
+  have hd := hf.differentiable_deriv_two
+  exact hd t
 
 theorem souriauMassieu_strictlyConvex_along_lines
     (h_nondeg : chargeAffineNondegenerate D)
@@ -47,7 +88,27 @@ theorem souriauMassieu_strictlyConvex_along_lines
   apply strictConvexOn_of_deriv2_pos' convex_univ hf_cont
   intro t _
   have hs2 : deriv^[2] (logSumExp w a) t = deriv (fun s => deriv (fun s' => logSumExp w a (t + s')) s) 0 := by
-    sorry -- Mathlib analysis deriv shift
+    let f := logSumExp w a
+    have hfd : DifferentiableAt ℝ (deriv f) t := by
+      have hfr := (hf_contDiff.contDiffAt (x := t)).fderiv_right
+        (m := (1 : WithTop ℕ∞)) (n := (2 : WithTop ℕ∞)) (by norm_num)
+      have hfrapp := hfr.clm_apply
+        (contDiffAt_const (x := t) (n := (1 : WithTop ℕ∞)) (c := (1 : ℝ)))
+      have hfrd := hfrapp.differentiableAt
+        (by norm_num : (1 : WithTop ℕ∞) ≠ 0)
+      convert hfrd using 1
+    have hg : HasDerivAt (deriv f) (deriv (deriv f) t) t := hfd.hasDerivAt
+    have hg0 : HasDerivAt (deriv f) (deriv (deriv f) t) (t + 0) := by
+      simpa using hg
+    have hs := hg0.comp_const_add t 0
+    have hsd : deriv (fun s => deriv f (t + s)) 0 = deriv (deriv f) t := hs.deriv
+    have hinner :
+        (fun s => deriv (fun s' => f (t + s')) s) =
+          (fun s => deriv f (t + s)) := by
+      funext s
+      exact deriv_comp_const_add f t s
+    rw [hinner]
+    simpa [f, Function.iterate_succ_apply, Function.iterate_zero_apply] using hsd.symm
   rw [hs2]
   have hline_ts : (fun s' => logSumExp w a (t + s')) = (fun s' => souriauMassieu D (betaLine (betaLine beta v t) v s')) := by
     ext s'

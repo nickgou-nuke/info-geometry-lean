@@ -71,4 +71,19 @@ theorem gibbsMultiplier_inv_transported (D : GibbsDatum G M B)
   rw [mul_inv_cancel, gibbsMultiplier_one] at hmul
   exact eq_inv_of_mul_eq_one_right hmul.symm
 
+theorem parameterAction_one (D : GibbsDatum G M B) (β : B)
+    (h_sep : ∀ x y : B, (∀ μ : M, D.pairing μ x = D.pairing μ y) → x = y) :
+    D.parameterAction 1 β = β := by
+  apply h_sep
+  intro μ
+  rw [← D.pairing_transport, D.affine.dualAction_one, AddMonoidHom.id_apply]
+
+theorem parameterAction_mul (D : GibbsDatum G M B) (g h : G) (β : B)
+    (h_sep : ∀ x y : B, (∀ μ : M, D.pairing μ x = D.pairing μ y) → x = y) :
+    D.parameterAction (g * h) β = D.parameterAction h (D.parameterAction g β) := by
+  apply h_sep
+  intro μ
+  rw [← D.pairing_transport, D.affine.dualAction_mul, AddMonoidHom.comp_apply,
+    D.pairing_transport, D.pairing_transport]
+
 end InfoGeometry.Algebraic.CartanSouriauCocycleGibbsCharacter

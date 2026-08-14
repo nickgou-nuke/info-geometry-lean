@@ -1,7 +1,13 @@
 import Mathlib.Tactic
-import Mathlib.LinearAlgebra.Matrix.Trace
-import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Algebra.CuntzTensorQuotient
+
+/-!
+# Conjugation invariance for cyclic Cuntz-valued functionals
+
+The scalar-valued `trace` arguments below are abstract cyclic functionals.
+This owner asserts no positivity, normalization, continuity, faithfulness, or
+existence theorem for a canonical tracial state on a Cuntz algebra.
+-/
 
 namespace InfoGeometry.Algebra.CuntzTraceSocketConjugation
 
@@ -10,34 +16,11 @@ open Matrix
 
 variable {n : ℕ}
 
-open scoped Real BigOperators Matrix
-
 noncomputable section
 
 def conjug (P M : Matrix (Fin n) (Fin n) ℂ) [Invertible P] :
     Matrix (Fin n) (Fin n) ℂ :=
   ⅟P * M * P
-
-def logPotential
-    (trace : CuntzAlg n → ℝ)
-    (image : Matrix (Fin n) (Fin n) ℂ → CuntzAlg n)
-    (M : Matrix (Fin n) (Fin n) ℂ) : ℝ :=
-  Real.log (trace (image M))
-
-def invPairing
-    (trace : CuntzAlg n → ℝ)
-    (image : Matrix (Fin n) (Fin n) ℂ → CuntzAlg n)
-    (S T : Matrix (Fin n) (Fin n) ℂ) : ℝ :=
-  trace (image (S⁻¹ * T))
-
-def isDivergence
-    (trace : CuntzAlg n → ℝ)
-    (image : Matrix (Fin n) (Fin n) ℂ → CuntzAlg n)
-    (S T : Matrix (Fin n) (Fin n) ℂ) : ℝ :=
-  invPairing trace image S T
-    - logPotential trace image S
-    + logPotential trace image T
-    - (n : ℕ)
 
 end
 
@@ -89,21 +72,6 @@ theorem trace_conjug
     rw [← congrArg image h_raw]
   exact (h_lhs_norm.trans h_cycle).trans h_rhs_norm
 
-theorem conjug_preserves_log
-    (trace : CuntzAlg n → ℝ)
-    (image : Matrix (Fin n) (Fin n) ℂ → CuntzAlg n)
-    (image_cyclic : ∀ {A B : Matrix (Fin n) (Fin n) ℂ},
-      trace (image (A * B)) = trace (image (B * A)))
-    (P M : Matrix (Fin n) (Fin n) ℂ) [Invertible P] [Invertible M] :
-    Real.log (trace (image (M⁻¹))) =
-      Real.log (trace (image ((conjug P M)⁻¹))) := by
-  have h_eq : (conjug P M)⁻¹ = conjug P (M⁻¹) := by
-    rw [← invOf_eq_inv_matrix (conjug P M)]
-    rw [invOf_conjug_eq P M]
-    rw [invOf_eq_inv_matrix M]
-  rw [h_eq]
-  exact (congrArg Real.log (trace_conjug trace image image_cyclic P (M⁻¹))).symm
-
 theorem conjug_preserves_inv_pair
     (trace : CuntzAlg n → ℝ)
     (image : Matrix (Fin n) (Fin n) ℂ → CuntzAlg n)
@@ -130,21 +98,6 @@ theorem conjug_preserves_inv_pair
   rw [h_prod]
   exact (trace_conjug trace image image_cyclic P (S⁻¹ * T)).symm
 
-theorem isDivergence_conj
-    (trace : CuntzAlg n → ℝ)
-    (image : Matrix (Fin n) (Fin n) ℂ → CuntzAlg n)
-    (image_cyclic : ∀ {A B : Matrix (Fin n) (Fin n) ℂ},
-      trace (image (A * B)) = trace (image (B * A)))
-    (P S T : Matrix (Fin n) (Fin n) ℂ)
-    [Invertible P] [Invertible S] [Invertible T] :
-    isDivergence trace image (conjug P S) (conjug P T) =
-      isDivergence trace image S T := by
-  unfold isDivergence invPairing logPotential
-  have h_invpair := conjug_preserves_inv_pair trace image image_cyclic P S T
-  have h_logS := trace_conjug trace image image_cyclic P S
-  have h_logT := trace_conjug trace image image_cyclic P T
-  rw [h_invpair, h_logS, h_logT]
-
 end MatrixConjugation
 
 section OperatorConjugation
@@ -164,28 +117,6 @@ theorem opConj_trace_conserved
   have h2 : ι * (⅟ι * X) = X := by
     rw [← mul_assoc, mul_invOf_self, one_mul]
   rw [h1, h2]
-
-theorem opConj_logPotential_invariant
-    (trace : CuntzAlg n → ℝ)
-    (image : Matrix (Fin n) (Fin n) ℂ → CuntzAlg n)
-    (trace_cyclic : ∀ X Y : CuntzAlg n, trace (X * Y) = trace (Y * X))
-    (ι : CuntzAlg n) [Invertible ι]
-    (M : Matrix (Fin n) (Fin n) ℂ) :
-    logPotential trace image M =
-      Real.log (trace (opConj ι (image M))) := by
-  unfold logPotential
-  rw [opConj_trace_conserved trace trace_cyclic]
-
-theorem lifted_isDivergence_invariant
-    (trace : CuntzAlg n → ℝ)
-    (image : Matrix (Fin n) (Fin n) ℂ → CuntzAlg n)
-    (image_cyclic : ∀ {A B : Matrix (Fin n) (Fin n) ℂ},
-      trace (image (A * B)) = trace (image (B * A)))
-    (P S T : Matrix (Fin n) (Fin n) ℂ)
-    [Invertible P] [Invertible S] [Invertible T] :
-    isDivergence trace image (conjug P S) (conjug P T) =
-      isDivergence trace image S T :=
-  isDivergence_conj trace image image_cyclic P S T
 
 end OperatorConjugation
 

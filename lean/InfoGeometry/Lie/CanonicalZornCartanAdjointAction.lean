@@ -152,8 +152,163 @@ an equality of `Fin 14 → ℝ`; no root-space or `G₂` identification is folde
 into the coordinate computation.
 -/
 
-open InfoGeometry.Algebra.ZornVectorMatrix in
-set_option maxHeartbeats 1000000 in
+open InfoGeometry.Algebra.ZornVectorMatrix
+
+private theorem adCartanCoordinates_component_0 (k : TracelessWeight) (p : Params) :
+    adCartanCoordinates k p 0 = -(k.1 0) * p 0 := by
+  simp [adCartanCoordinates_apply, derivationParameters,
+      canonicalParameterLinearEquiv, parameterLinearEquiv, parameterDerivation,
+      vectorCanonicalLinearEquiv, vectorToCanonicalDerivation,
+      vectorToCanonicalEnd, parameterAction, E22, U, V, ZornVec3.basis,
+      axialCartanEnd, axialCartanLieEquiv, axialCartanDerivationIntoLie,
+      axialCartanDerivationLinear, axialCartanDerivation,
+      LieRing.of_associative_ring_bracket, Module.End.mul_apply,
+      ZornVectorMatrix.mul] <;> ring
+
+private theorem adCartanCoordinates_component_1 (k : TracelessWeight) (p : Params) :
+    adCartanCoordinates k p 1 = (k.1 1 - k.1 0) * p 1 := by
+  simp [adCartanCoordinates_apply, derivationParameters,
+      canonicalParameterLinearEquiv, parameterLinearEquiv, parameterDerivation,
+      vectorCanonicalLinearEquiv, vectorToCanonicalDerivation,
+      vectorToCanonicalEnd, parameterAction, E22, U, V, ZornVec3.basis,
+      axialCartanEnd, axialCartanLieEquiv, axialCartanDerivationIntoLie,
+      axialCartanDerivationLinear, axialCartanDerivation,
+      LieRing.of_associative_ring_bracket, Module.End.mul_apply,
+      ZornVectorMatrix.mul] <;> ring
+
+private theorem adCartanCoordinates_component_2 (k : TracelessWeight) (p : Params) :
+    adCartanCoordinates k p 2 = (k.1 2 - k.1 0) * p 2 := by
+  simp [adCartanCoordinates_apply, derivationParameters,
+      canonicalParameterLinearEquiv, parameterLinearEquiv, parameterDerivation,
+      vectorCanonicalLinearEquiv, vectorToCanonicalDerivation,
+      vectorToCanonicalEnd, parameterAction, E22, U, V, ZornVec3.basis,
+      axialCartanEnd, axialCartanLieEquiv, axialCartanDerivationIntoLie,
+      axialCartanDerivationLinear, axialCartanDerivation,
+      LieRing.of_associative_ring_bracket, Module.End.mul_apply,
+      ZornVectorMatrix.mul] <;> ring
+
+private theorem adCartanCoordinates_component_3 (k : TracelessWeight) (p : Params) :
+    adCartanCoordinates k p 3 = -(k.1 1) * p 3 := by
+  simp [adCartanCoordinates_apply, derivationParameters,
+      canonicalParameterLinearEquiv, parameterLinearEquiv, parameterDerivation,
+      vectorCanonicalLinearEquiv, vectorToCanonicalDerivation,
+      vectorToCanonicalEnd, parameterAction, E22, U, V, ZornVec3.basis,
+      axialCartanEnd, axialCartanLieEquiv, axialCartanDerivationIntoLie,
+      axialCartanDerivationLinear, axialCartanDerivation,
+      LieRing.of_associative_ring_bracket, Module.End.mul_apply,
+      ZornVectorMatrix.mul] <;> ring
+
+private theorem adCartanCoordinates_component_4 (k : TracelessWeight) (p : Params) :
+    adCartanCoordinates k p 4 = -(k.1 0 + k.1 1) * p 4 := by
+  simp [adCartanCoordinates_apply, derivationParameters,
+      canonicalParameterLinearEquiv, parameterLinearEquiv, parameterDerivation,
+      vectorCanonicalLinearEquiv, vectorToCanonicalDerivation,
+      vectorToCanonicalEnd, parameterAction, E22, U, V, ZornVec3.basis,
+      axialCartanEnd, axialCartanLieEquiv, axialCartanDerivationIntoLie,
+      axialCartanDerivationLinear, axialCartanDerivation,
+      LieRing.of_associative_ring_bracket, Module.End.mul_apply,
+      ZornVectorMatrix.mul] <;> ring
+
+private theorem adCartanCoordinates_component_5 (k : TracelessWeight) (p : Params) :
+    adCartanCoordinates k p 5 = (k.1 0 - k.1 1) * p 5 := by
+  simp [adCartanCoordinates_apply, derivationParameters,
+      canonicalParameterLinearEquiv, parameterLinearEquiv, parameterDerivation,
+      vectorCanonicalLinearEquiv, vectorToCanonicalDerivation,
+      vectorToCanonicalEnd, parameterAction, E22, U, V, ZornVec3.basis,
+      axialCartanEnd, axialCartanLieEquiv, axialCartanDerivationIntoLie,
+      axialCartanDerivationLinear, axialCartanDerivation,
+      LieRing.of_associative_ring_bracket, Module.End.mul_apply,
+      ZornVectorMatrix.mul] <;> ring
+
+private theorem adCartanCoordinates_component_6 (k : TracelessWeight) (p : Params) :
+    adCartanCoordinates k p 6 = 0 := by
+  simp [adCartanCoordinates_apply, derivationParameters,
+      canonicalParameterLinearEquiv, parameterLinearEquiv, parameterDerivation,
+      vectorCanonicalLinearEquiv, vectorToCanonicalDerivation,
+      vectorToCanonicalEnd, parameterAction, E22, U, V, ZornVec3.basis,
+      axialCartanEnd, axialCartanLieEquiv, axialCartanDerivationIntoLie,
+      axialCartanDerivationLinear, axialCartanDerivation,
+      LieRing.of_associative_ring_bracket, Module.End.mul_apply,
+      ZornVectorMatrix.mul] <;> ring
+
+private theorem adCartanCoordinates_component_7 (k : TracelessWeight) (p : Params) :
+    adCartanCoordinates k p 7 = (k.1 2 - k.1 1) * p 7 := by
+  simp [adCartanCoordinates_apply, derivationParameters,
+      canonicalParameterLinearEquiv, parameterLinearEquiv, parameterDerivation,
+      vectorCanonicalLinearEquiv, vectorToCanonicalDerivation,
+      vectorToCanonicalEnd, parameterAction, E22, U, V, ZornVec3.basis,
+      axialCartanEnd, axialCartanLieEquiv, axialCartanDerivationIntoLie,
+      axialCartanDerivationLinear, axialCartanDerivation,
+      LieRing.of_associative_ring_bracket, Module.End.mul_apply,
+      ZornVectorMatrix.mul] <;> ring
+
+private theorem adCartanCoordinates_component_8 (k : TracelessWeight) (p : Params) :
+    adCartanCoordinates k p 8 = -(k.1 2) * p 8 := by
+  simp [adCartanCoordinates_apply, derivationParameters,
+      canonicalParameterLinearEquiv, parameterLinearEquiv, parameterDerivation,
+      vectorCanonicalLinearEquiv, vectorToCanonicalDerivation,
+      vectorToCanonicalEnd, parameterAction, E22, U, V, ZornVec3.basis,
+      axialCartanEnd, axialCartanLieEquiv, axialCartanDerivationIntoLie,
+      axialCartanDerivationLinear, axialCartanDerivation,
+      LieRing.of_associative_ring_bracket, Module.End.mul_apply,
+      ZornVectorMatrix.mul] <;> ring
+
+private theorem adCartanCoordinates_component_9 (k : TracelessWeight) (p : Params) :
+    adCartanCoordinates k p 9 = -(k.1 0 + k.1 2) * p 9 := by
+  simp [adCartanCoordinates_apply, derivationParameters,
+      canonicalParameterLinearEquiv, parameterLinearEquiv, parameterDerivation,
+      vectorCanonicalLinearEquiv, vectorToCanonicalDerivation,
+      vectorToCanonicalEnd, parameterAction, E22, U, V, ZornVec3.basis,
+      axialCartanEnd, axialCartanLieEquiv, axialCartanDerivationIntoLie,
+      axialCartanDerivationLinear, axialCartanDerivation,
+      LieRing.of_associative_ring_bracket, Module.End.mul_apply,
+      ZornVectorMatrix.mul] <;> ring
+
+private theorem adCartanCoordinates_component_10 (k : TracelessWeight) (p : Params) :
+    adCartanCoordinates k p 10 = -(k.1 1 + k.1 2) * p 10 := by
+  simp [adCartanCoordinates_apply, derivationParameters,
+      canonicalParameterLinearEquiv, parameterLinearEquiv, parameterDerivation,
+      vectorCanonicalLinearEquiv, vectorToCanonicalDerivation,
+      vectorToCanonicalEnd, parameterAction, E22, U, V, ZornVec3.basis,
+      axialCartanEnd, axialCartanLieEquiv, axialCartanDerivationIntoLie,
+      axialCartanDerivationLinear, axialCartanDerivation,
+      LieRing.of_associative_ring_bracket, Module.End.mul_apply,
+      ZornVectorMatrix.mul] <;> ring
+
+private theorem adCartanCoordinates_component_11 (k : TracelessWeight) (p : Params) :
+    adCartanCoordinates k p 11 = (k.1 0 - k.1 2) * p 11 := by
+  simp [adCartanCoordinates_apply, derivationParameters,
+      canonicalParameterLinearEquiv, parameterLinearEquiv, parameterDerivation,
+      vectorCanonicalLinearEquiv, vectorToCanonicalDerivation,
+      vectorToCanonicalEnd, parameterAction, E22, U, V, ZornVec3.basis,
+      axialCartanEnd, axialCartanLieEquiv, axialCartanDerivationIntoLie,
+      axialCartanDerivationLinear, axialCartanDerivation,
+      LieRing.of_associative_ring_bracket, Module.End.mul_apply,
+      ZornVectorMatrix.mul] <;> ring
+
+private theorem adCartanCoordinates_component_12 (k : TracelessWeight) (p : Params) :
+    adCartanCoordinates k p 12 = (k.1 1 - k.1 2) * p 12 := by
+  simp [adCartanCoordinates_apply, derivationParameters,
+      canonicalParameterLinearEquiv, parameterLinearEquiv, parameterDerivation,
+      vectorCanonicalLinearEquiv, vectorToCanonicalDerivation,
+      vectorToCanonicalEnd, parameterAction, E22, U, V, ZornVec3.basis,
+      axialCartanEnd, axialCartanLieEquiv, axialCartanDerivationIntoLie,
+      axialCartanDerivationLinear, axialCartanDerivation,
+      LieRing.of_associative_ring_bracket, Module.End.mul_apply,
+      ZornVectorMatrix.mul] <;> ring
+
+private theorem adCartanCoordinates_component_13 (k : TracelessWeight) (p : Params) :
+    adCartanCoordinates k p 13 = 0 := by
+  simp [adCartanCoordinates_apply, derivationParameters,
+      canonicalParameterLinearEquiv, parameterLinearEquiv, parameterDerivation,
+      vectorCanonicalLinearEquiv, vectorToCanonicalDerivation,
+      vectorToCanonicalEnd, parameterAction, E22, U, V, ZornVec3.basis,
+      axialCartanEnd, axialCartanLieEquiv, axialCartanDerivationIntoLie,
+      axialCartanDerivationLinear, axialCartanDerivation,
+      LieRing.of_associative_ring_bracket, Module.End.mul_apply,
+      ZornVectorMatrix.mul] <;> ring
+
+
 theorem adCartanCoordinates_apply_explicit
     (k : TracelessWeight) (p : Params) :
     adCartanCoordinates k p = ![
@@ -172,16 +327,26 @@ theorem adCartanCoordinates_apply_explicit
       (k.1 1 - k.1 2) * p 12,
       0] := by
   funext i
-  fin_cases i <;>
-    simp [adCartanCoordinates_apply, derivationParameters,
-      canonicalParameterLinearEquiv, parameterLinearEquiv, parameterDerivation,
-      vectorCanonicalLinearEquiv, vectorToCanonicalDerivation,
-      vectorToCanonicalEnd, parameterAction, E22, U, V, ZornVec3.basis,
-      axialCartanEnd, axialCartanLieEquiv, axialCartanDerivationIntoLie,
-      axialCartanDerivationLinear, axialCartanDerivation,
-      LieRing.of_associative_ring_bracket, Module.End.mul_apply,
-      ZornVectorMatrix.mul] <;>
-    ring
+  have hi :
+      i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 ∨ i = 4 ∨ i = 5 ∨ i = 6 ∨
+      i = 7 ∨ i = 8 ∨ i = 9 ∨ i = 10 ∨ i = 11 ∨ i = 12 ∨ i = 13 := by
+    omega
+  rcases hi with h | h | h | h | h | h | h | h | h | h | h | h | h | h <;>
+    subst i
+  · exact adCartanCoordinates_component_0 k p
+  · exact adCartanCoordinates_component_1 k p
+  · exact adCartanCoordinates_component_2 k p
+  · exact adCartanCoordinates_component_3 k p
+  · exact adCartanCoordinates_component_4 k p
+  · exact adCartanCoordinates_component_5 k p
+  · exact adCartanCoordinates_component_6 k p
+  · exact adCartanCoordinates_component_7 k p
+  · exact adCartanCoordinates_component_8 k p
+  · exact adCartanCoordinates_component_9 k p
+  · exact adCartanCoordinates_component_10 k p
+  · exact adCartanCoordinates_component_11 k p
+  · exact adCartanCoordinates_component_12 k p
+  · exact adCartanCoordinates_component_13 k p
 
 /-- The diagonal coefficient function exposed by the explicit adjoint
 coordinate formula. -/
@@ -334,5 +499,72 @@ theorem adCartanMatrix_det_eq_zero (k : TracelessWeight) :
   intro i
   rw [adCartanMatrix_apply_diagonal]
   simp [adCartanDiagonalCoefficient]
+
+theorem cartan_traceForm_apply_apply (k l : TracelessWeight) :
+    (LieModule.traceForm ℝ
+        (axialCartanLieSubalgebra : LieSubalgebra ℝ Der) Der)
+        (axialCartanLieEquiv k) (axialCartanLieEquiv l) =
+      ∑ j : Fin 14,
+        adCartanDiagonalCoefficient k j * adCartanDiagonalCoefficient l j := by
+  rw [LieModule.traceForm_apply_apply]
+  change (LinearMap.trace ℝ Der) ((adCartan k) ∘ₗ (adCartan l)) = _
+  let e := canonicalParameterLinearEquiv.symm
+  rw [← LinearMap.trace_conj' ((adCartan k) ∘ₗ (adCartan l)) e]
+  rw [LinearEquiv.conj_comp]
+  change (LinearMap.trace ℝ Params)
+      (adCartanCoordinates k ∘ₗ adCartanCoordinates l) = _
+  rw [LinearMap.trace_eq_matrix_trace ℝ (Pi.basisFun ℝ (Fin 14))]
+  let b := Pi.basisFun ℝ (Fin 14)
+  have hcomp := LinearMap.toMatrix_comp b b b
+      (adCartanCoordinates k) (adCartanCoordinates l)
+  rw [show (LinearMap.toMatrix b b)
+      (adCartanCoordinates k ∘ₗ adCartanCoordinates l) =
+      (LinearMap.toMatrix b b) (adCartanCoordinates k) *
+        (LinearMap.toMatrix b b) (adCartanCoordinates l) by exact hcomp]
+  change (adCartanMatrix k * adCartanMatrix l).trace = _
+  rw [adCartanMatrix_eq_diagonal, adCartanMatrix_eq_diagonal]
+  simp [Matrix.trace]
+
+theorem cartan_traceForm_left_nondegenerate
+    (k : TracelessWeight)
+    (h : ∀ l : TracelessWeight,
+      (LieModule.traceForm ℝ
+        (axialCartanLieSubalgebra : LieSubalgebra ℝ Der) Der)
+        (axialCartanLieEquiv k) (axialCartanLieEquiv l) = 0) :
+    k = 0 := by
+  have hk := h k
+  rw [cartan_traceForm_apply_apply] at hk
+  simp [adCartanDiagonalCoefficient, Fin.sum_univ_succ] at hk
+  have h0 : k.1 0 = 0 := by
+    nlinarith [sq_nonneg (k.1 0), sq_nonneg (k.1 1),
+      sq_nonneg (k.1 2), sq_nonneg (k.1 1 - k.1 0),
+      sq_nonneg (k.1 2 - k.1 0), sq_nonneg (k.1 2 - k.1 1)]
+  have h1 : k.1 1 = 0 := by
+    nlinarith [sq_nonneg (k.1 0), sq_nonneg (k.1 1),
+      sq_nonneg (k.1 2), sq_nonneg (k.1 1 - k.1 0),
+      sq_nonneg (k.1 2 - k.1 0), sq_nonneg (k.1 2 - k.1 1)]
+  apply Subtype.ext
+  funext i
+  fin_cases i
+  · exact h0
+  · exact h1
+  · have hs := k.2
+    change ∑ i, k.1 i = 0 at hs
+    simpa [Fin.sum_univ_three, h0, h1] using hs
+
+theorem axialCartan_traceForm_nondegenerate :
+    (LieModule.traceForm ℝ
+      (axialCartanLieSubalgebra : LieSubalgebra ℝ Der) Der).Nondegenerate := by
+  apply (LinearMap.IsRefl.nondegenerate_iff_separatingLeft
+    (LieModule.traceForm_isSymm ℝ
+      (axialCartanLieSubalgebra : LieSubalgebra ℝ Der) Der).isRefl).mpr
+  intro H hH
+  obtain ⟨k, rfl⟩ := axialCartanLieEquiv.surjective H
+  have hk : k = 0 := by
+    apply cartan_traceForm_left_nondegenerate k
+    intro l
+    exact hH (axialCartanLieEquiv l)
+  subst k
+  simp [map_zero]
 
 end InfoGeometry.Lie.CanonicalZornCartanAdjointAction

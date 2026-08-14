@@ -43,23 +43,38 @@ def circularChannel (n : HexIndex) : ZornMatrix ℝ :=
       cartesianZornLinearEquiv (rootMinus i) := by
   fin_cases i <;> rfl
 
-set_option maxHeartbeats 1000000 in
+def circularChannelFrameIndex : HexIndex → Fin 8
+  | 0 => 1
+  | 1 => 7
+  | 2 => 2
+  | 3 => 5
+  | 4 => 3
+  | 5 => 6
+
+@[simp] theorem circularChannel_eq_circularFrame (n : HexIndex) :
+    circularChannel n =
+      cartesianZornLinearEquiv (circularFrame (circularChannelFrameIndex n)) := by
+  fin_cases n <;> rfl
+
+theorem circularChannelFrameIndex_injective :
+    Function.Injective circularChannelFrameIndex := by
+  intro m n h
+  fin_cases m <;> fin_cases n <;> simp [circularChannelFrameIndex] at h ⊢
+
 theorem circularChannel_injective :
     Function.Injective circularChannel := by
   intro m n h
-  fin_cases m <;> fin_cases n
-  all_goals
-    first
-    | rfl
-    | (have hx0 := congrArg (fun z : ZornMatrix ℝ => z.x 0) h
-       have hx1 := congrArg (fun z : ZornMatrix ℝ => z.x 1) h
-       have hx2 := congrArg (fun z : ZornMatrix ℝ => z.x 2) h
-       have hy0 := congrArg (fun z : ZornMatrix ℝ => z.y 0) h
-       have hy1 := congrArg (fun z : ZornMatrix ℝ => z.y 1) h
-       have hy2 := congrArg (fun z : ZornMatrix ℝ => z.y 2) h
-       simp [circularChannel, sheetColorEquiv, sheetOf, colorOf, hexSheetFin2,
-         cartesianZornLinearEquiv, rootPlus, rootMinus, quaternionAxis, ellAxis,
-         axis] at hx0 hx1 hx2 hy0 hy1 hy2)
+  have hframe :
+      circularFrame (circularChannelFrameIndex m) =
+        circularFrame (circularChannelFrameIndex n) := by
+    apply cartesianZornLinearEquiv.injective
+    simpa only [circularChannel_eq_circularFrame] using h
+  have hcoordinates := congrArg circularCoordinate hframe
+  have hindex : circularChannelFrameIndex m = circularChannelFrameIndex n := by
+    by_contra hne
+    have he := congrFun hcoordinates (circularChannelFrameIndex m)
+    simp [circularCoordinate_frame, hne, Ne.symm hne] at he
+  exact circularChannelFrameIndex_injective hindex
 
 theorem circularChannel_sheetReflection (n : HexIndex) :
     circularChannel (sheetReflection n) =

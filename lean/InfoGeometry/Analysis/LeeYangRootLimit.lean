@@ -1,15 +1,5 @@
 import InfoGeometry.Canonical.PrimeHurwitzLimit
 
-/-!
-# Lee--Yang root limits
-
-The closed-set part of the Lee--Yang/Hurwitz passage does not require an
-analytic property structure.  Once roots of finite approximants are supplied
-and converge, closedness of the unit circle puts the limiting root on the
-circle.  The genuinely analytic Hurwitz step is the preceding existence of
-such nearby roots.
--/
-
 noncomputable section
 
 namespace InfoGeometry.Analysis.LeeYangRootLimit
@@ -23,6 +13,14 @@ theorem norm_eq_one_of_onUnitCircle
     ‖z‖ = 1 := by
   rw [OnUnitCircle, Complex.normSq_eq_norm_sq] at hz
   nlinarith [norm_nonneg z]
+
+theorem onUnitCircle_iff_norm_eq_one {z : ℂ} :
+    OnUnitCircle z ↔ ‖z‖ = 1 := by
+  constructor
+  · exact norm_eq_one_of_onUnitCircle
+  · intro hz
+    rw [OnUnitCircle, Complex.normSq_eq_norm_sq, hz]
+    norm_num
 
 /-- Unit-circle membership is closed under sequential limits. -/
 theorem onUnitCircle_of_tendsto
@@ -43,13 +41,7 @@ theorem onUnitCircle_of_tendsto
   rw [hnorm]
   norm_num
 
-/--
-A limit of actual zeros of Lee--Yang approximants lies on the unit circle.
-
-This is the native filtered-stage root-limit theorem.  It assumes the root
-family produced by the analytic Hurwitz argument instead of storing the final
-circle conclusion in an evidence field.
--/
+/-- A convergent family of filtered-stage roots has a unit-circle limit. -/
 theorem approximant_root_limit_onUnitCircle
     (A : LeeYangApproximants)
     (root : ℕ → ℂ)
@@ -62,10 +54,8 @@ theorem approximant_root_limit_onUnitCircle
     exact A.renormZ_lee_yang n (root n) (hroot n)
   · exact hlim
 
-/--
-Zero predicates map to the Lee--Yang circle when each limiting zero is
-realized by a convergent family of finite-stage roots.
--/
+/-- A supplied zero predicate maps to the unit circle when each selected point
+is realized by a convergent family of finite-stage roots. -/
 theorem zeroPredicate_maps_to_unitCircle_of_root_limit
     (XiZero : ℂ → Prop)
     (A : LeeYangApproximants)
@@ -82,4 +72,3 @@ theorem zeroPredicate_maps_to_unitCircle_of_root_limit
     (hroot s hs) (hlim s hs)
 
 end InfoGeometry.Analysis.LeeYangRootLimit
-

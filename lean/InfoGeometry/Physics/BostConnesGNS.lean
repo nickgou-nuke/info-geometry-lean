@@ -3,35 +3,35 @@ import Mathlib.NumberTheory.LSeries.RiemannZeta
 import Mathlib.Algebra.Algebra.Basic
 
 /-!
-# Bost-Connes/GNS carrier interface
+# Abstract cyclic representation and zeta readout
 
-This file contains a small abstract GNS representation record and a zeta-valued
-partition readout.  It does not construct the Bost--Connes C*-dynamical system
-or prove a phase-transition theorem.
+This file contains a small algebraic representation record and a scalar zeta
+readout.  The assumptions are only those displayed below; no C*-algebra,
+state, or phase-transition structure is constructed here.
 -/
 
 namespace InfoGeometry.Physics.BostConnes
 
 open Complex
 
-/-- The abstract C*-algebra analog for the Bost-Connes system. -/
+/-- A ring carrying a complex algebra structure. -/
 class BostConnesAlgebra (A : Type*) [Ring A] [Algebra ℂ A]
 
-/-- The Gelfand-Naimark-Segal (GNS) representation mapping for a state. -/
+/-- An algebra representation with a chosen cyclic vector. -/
 structure GNSRepresentation (A H : Type*) [Ring A] [Algebra ℂ A] [AddCommGroup H] [Module ℂ H] where
   pi : A →ₐ[ℂ] (H →ₗ[ℂ] H)
   vacuum : H
   cyclic : ∀ h : H, ∃ a : A, pi a vacuum = h
 
-/-- The Bost-Connes partition function mapping to the Riemann Zeta function. -/
+/-- The declared scalar partition readout. -/
 noncomputable def partitionFunction (β : ℂ) : ℂ :=
   riemannZeta β
 
-/-- The abstract KMS state functional parameterized by inverse temperature β. -/
+/-- A scalar readout named by the temperature parameter. -/
 noncomputable def kmsState (β : ℂ) : ℂ :=
   partitionFunction β
 
-/-- Reference inverse temperature used by the readout. -/
+/-- Reference parameter used by the readout. -/
 def criticalBeta : ℂ := 1
 
 /-- Definitional readout of the chosen value at `β = 1`. -/

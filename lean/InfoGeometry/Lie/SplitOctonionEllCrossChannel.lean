@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllPolarization
+import InfoGeometry.Lie.SplitOctonionCrossTensor
 
 /-!
 # Cross-channel products for the distinguished split-octonion axis
@@ -11,11 +12,14 @@ Kantor, or exceptional-group interpretation is asserted.
 
 noncomputable section
 
+set_option maxHeartbeats 1000000
+
 namespace InfoGeometry.Lie.SplitOctonionEllCrossChannel
 
 open InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge
 open InfoGeometry.Algebra.Zorn.SplitQuaternionCore
 open InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes
+open InfoGeometry.Algebra.Zorn.ParityTwistedLeviCivita
 open InfoGeometry.Lie.SplitOctonionEllPolarization
 
 abbrev CZ := CanonicalZorn
@@ -196,6 +200,57 @@ theorem rootMinus_mul_uMinus (a : Fin 3) :
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
+
+/-! ## Direct axial action from the Peirce routing packet
+
+These are binary product identities.  They are deliberately proved from the
+two complementary idempotents and the routing lemmas above; no reassociation
+or associativity of the split-octonion product is used.
+-/
+
+theorem lUnit_mul_rootPlus (a : Fin 3) :
+    lUnit * rootPlus a = rootPlus a := by
+  rw [← uPlus_sub_uMinus]
+  change InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul
+    (uPlus - uMinus) (rootPlus a) = rootPlus a
+  rw [zMul_sub_left]
+  rw [show InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul uPlus (rootPlus a) =
+      rootPlus a from uPlus_mul_rootPlus a,
+    show InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul uMinus (rootPlus a) =
+      0 from uMinus_mul_rootPlus a, sub_zero]
+
+theorem rootPlus_mul_lUnit (a : Fin 3) :
+    rootPlus a * lUnit = -rootPlus a := by
+  rw [← uPlus_sub_uMinus]
+  change InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul
+    (rootPlus a) (uPlus - uMinus) = -rootPlus a
+  rw [zMul_sub_right]
+  rw [show InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul (rootPlus a) uPlus =
+      0 from rootPlus_mul_uPlus a,
+    show InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul (rootPlus a) uMinus =
+      rootPlus a from rootPlus_mul_uMinus a, zero_sub]
+
+theorem lUnit_mul_rootMinus (a : Fin 3) :
+    lUnit * rootMinus a = -rootMinus a := by
+  rw [← uPlus_sub_uMinus]
+  change InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul
+    (uPlus - uMinus) (rootMinus a) = -rootMinus a
+  rw [zMul_sub_left]
+  rw [show InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul uPlus (rootMinus a) =
+      0 from uPlus_mul_rootMinus a,
+    show InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul uMinus (rootMinus a) =
+      rootMinus a from uMinus_mul_rootMinus a, zero_sub]
+
+theorem rootMinus_mul_lUnit (a : Fin 3) :
+    rootMinus a * lUnit = rootMinus a := by
+  rw [← uPlus_sub_uMinus]
+  change InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul
+    (rootMinus a) (uPlus - uMinus) = rootMinus a
+  rw [zMul_sub_right]
+  rw [show InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul (rootMinus a) uPlus =
+      rootMinus a from rootMinus_mul_uPlus a,
+    show InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul (rootMinus a) uMinus =
+      0 from rootMinus_mul_uMinus a, sub_zero]
 
 /-- The commutator of the paired root channels recovers the axial generator. -/
 theorem root_commutator (a : Fin 3) :

@@ -9,25 +9,11 @@ set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
 
 /-!
-# Filtered Inductive Colimit & Inverse Limit Master Bridge:
-## Categorical Lee-Yang, Asano Contraction, and Virasoro LogCFT Resolution
+# Finite contraction root readout
 
-This module reformulates parts of the Lee--Yang / LogCFT proof plan within the
-**categorical filtered direct/inductive colimit and inverse-limit framework**.
-It proves native algebraic facts only; analytic continuation, meromorphic
-continuation, and the Riemann property are not proved here.
-
-1. **Multiaffine Support & Separate Affine Direct System**:
-   degree-one monomial bounds imply separate linearity in each variable.
-2. **Asano Contraction Inverse Limit System**:
-   a quadratic bilinear contraction reduces to a linear root equation.
-3. **Virasoro LogCFT Jordan-Krein Filtered Colimit**:
-   the rank-two LogCFT Krein form `x1*y2 + x2*y1` is symmetric.
-4. **Direct Limit Topological Zero-Mode Protection**:
-   injective transition maps `ι` guarantee `ι v ≠ 0` for `v ≠ 0`.
-5. **Grand Unified Filtered Colimit Master Theorem**:
-   combines the above algebraic facts with the Cayley critical-line map and
-   the antiunitary fixed-locus characterization.
+This module contains one elementary complex-algebra statement.  The imported
+colimit, Lee--Yang, and Virasoro modules are not turned into a combined
+analytic theorem here.
 -/
 
 noncomputable section
@@ -42,8 +28,9 @@ open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
 /--
-**Main Theorem 2: Asano Contraction Quadratic Bilinear Zero-Free Preservation**
-Proves natively that for two linear functions $f(z_1, z_2) = a z_1 z_2 + b z_1 + c z_2 + d$ with $a d - b c \neq 0$, the contracted polynomial $\mathcal{A}(f)(z) = a z + d$ preserves non-vanishing under non-zero determinant bounds.
+**Finite contracted-root equation.**
+If `a*z + d = 0` and `a ≠ 0`, then `z = -d/a`; the determinant premise is
+retained as part of the supplied contraction data.
 -/
 theorem asano_contraction_quadratic_preserved (a b c d z : ℂ) (h_det : a * d - b * c ≠ 0) (h_root : a * z + d = 0) (ha : a ≠ 0) :
     z = - d / a := by

@@ -39,6 +39,13 @@ def fromSymmetryAdapted (z : ℂ) : ℂ :=
 def symmetryAdaptedXi (z : ℂ) : ℂ :=
   riemannXi (fromSymmetryAdapted z)
 
+/-- The completed `riemannXi` readout is invariant under `s ↦ 1 - s`. -/
+theorem riemannXi_one_sub (s : ℂ) :
+    riemannXi (1 - s) = riemannXi s := by
+  unfold riemannXi
+  rw [completedRiemannZeta_one_sub]
+  ring
+
 /-- `Ξ` is strictly even: `Ξ(z) = Ξ(-z)`. -/
 theorem symmetryAdaptedXi_is_even (z : ℂ) :
     symmetryAdaptedXi z = symmetryAdaptedXi (-z) := by

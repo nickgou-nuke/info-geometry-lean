@@ -44,8 +44,7 @@ noncomputable def eval (M : MobiusTransform) (z : RiemannSphere) : RiemannSphere
       let denom := M.c * z' + M.d
       if denom = 0 then none else some ((M.a * z' + M.b) / denom)
 
-/-- Two Möbius transformations are equivalent if they define the same function on the Riemann sphere.
-    Equivalently, their matrices are proportional. -/
+/-- Extensional equivalence of two transformations on the represented sphere. -/
 def equiv (M1 M2 : MobiusTransform) : Prop :=
   ∀ z : RiemannSphere, M1.eval z = M2.eval z
 
@@ -432,14 +431,13 @@ lemma mobius_unique_01inf (M : MobiusTransform) (h0 : M.eval (some 0) = some 0)
 def MobiusTransform.is_fixed_point (M : MobiusTransform) (z : RiemannSphere) : Prop :=
   M.eval z = z
 
-/-- Every non-identity Möbius transformation has one or two fixed points (with multiplicity).
-    The discriminant of the transformation is Δ = (a+d)^2 - 4(ad-bc). -/
+/-- The quadratic discriminant associated with a Möbius matrix. -/
 def MobiusTransform.discriminant (M : MobiusTransform) : ℂ :=
   (M.a + M.d) ^ 2 - 4 * (M.a * M.d - M.b * M.c)
 
 /-- If c ≠ 0, a finite point γ is a fixed point if and only if
     c * γ^2 - (a - d) * γ - b = 0. -/
-theorem fixed_point_quadratic (M : MobiusTransform) (hc : M.c ≠ 0) (γ : ℂ) :
+theorem fixed_point_quadratic (M : MobiusTransform) (γ : ℂ) :
     M.is_fixed_point (some γ) ↔ M.c * γ^2 - (M.a - M.d) * γ - M.b = 0 := by
   dsimp [MobiusTransform.is_fixed_point]
   dsimp [MobiusTransform.eval]
@@ -573,10 +571,8 @@ theorem fixed_point_translation (M : MobiusTransform) (hc : M.c = 0) (had : M.a 
       · intro hz
         cases hz
 
-/-- Topologically, the projective linear group acts on the sphere which has Euler characteristic 2.
-    Therefore, by Lefschetz-Hopf, any non-identity Möbius transformation has 2 fixed points
-    (counted with algebraic multiplicity). We express this as:
-    If a transformation fixes at least 3 distinct points, it must be the identity. -/
+/-- Algebraic rigidity: fixing three pairwise distinct sphere points forces
+    a nonsingular Möbius transformation to be the identity map. -/
 theorem three_fixed_points_implies_identity (M : MobiusTransform)
     (z1 z2 z3 : RiemannSphere) (h12 : z1 ≠ z2) (h23 : z2 ≠ z3) (h13 : z1 ≠ z3)
     (f1 : M.is_fixed_point z1) (f2 : M.is_fixed_point z2) (f3 : M.is_fixed_point z3) :
@@ -643,9 +639,9 @@ theorem three_fixed_points_implies_identity (M : MobiusTransform)
           have hγ23 : γ2 ≠ γ3 := by
             intro h
             exact h23 (by rw [h])
-          have hp1 := (fixed_point_quadratic M hc γ1).mp f1
-          have hp2 := (fixed_point_quadratic M hc γ2).mp f2
-          have hp3 := (fixed_point_quadratic M hc γ3).mp f3
+          have hp1 := (fixed_point_quadratic M γ1).mp f1
+          have hp2 := (fixed_point_quadratic M γ2).mp f2
+          have hp3 := (fixed_point_quadratic M γ3).mp f3
           have hsum12 : M.c * (γ1 + γ2) = M.a - M.d := by
             have hfactor : (M.c * (γ1 + γ2) - (M.a - M.d)) * (γ1 - γ2) = 0 := by
               calc
@@ -794,8 +790,8 @@ theorem characteristic_parallelogram (M : MobiusTransform) (hc : M.c ≠ 0)
     (γ1 γ2 : ℂ) (h_distinct : γ1 ≠ γ2)
     (f1 : M.is_fixed_point (some γ1)) (f2 : M.is_fixed_point (some γ2)) :
     γ1 + γ2 = M.pole + M.inv_pole := by
-  have h1 := (fixed_point_quadratic M hc γ1).mp f1
-  have h2 := (fixed_point_quadratic M hc γ2).mp f2
+  have h1 := (fixed_point_quadratic M γ1).mp f1
+  have h2 := (fixed_point_quadratic M γ2).mp f2
   have hfactor : (M.c * (γ1 + γ2) - (M.a - M.d)) * (γ1 - γ2) = 0 := by
     calc
       (M.c * (γ1 + γ2) - (M.a - M.d)) * (γ1 - γ2)
@@ -822,7 +818,7 @@ theorem characteristic_parallelogram (M : MobiusTransform) (hc : M.c ≠ 0)
 lemma fixed_point_ne_inv_pole (M : MobiusTransform) (hc : M.c ≠ 0) (γ : ℂ)
     (f : M.is_fixed_point (some γ)) : γ ≠ M.inv_pole := by
   intro hγ
-  have hpoly := (fixed_point_quadratic M hc γ).mp f
+  have hpoly := (fixed_point_quadratic M γ).mp f
   rw [hγ] at hpoly
   dsimp [MobiusTransform.inv_pole] at hpoly
   have hdet : M.a * M.d - M.b * M.c = 0 := by
@@ -876,12 +872,12 @@ lemma eigenvalue_mapping (a b c d lam γ : ℂ) (h_fixed : c * γ^2 + (d - a) * 
     _ = 0 := by ring
 
 /-- The roots of the characteristic polynomial det(lamI - H) are exactly lam_i = c*γ_i + d. -/
-theorem eigenvalue_roots (M : MobiusTransform) (hc : M.c ≠ 0)
+theorem eigenvalue_roots (M : MobiusTransform)
     (γ : ℂ) (f : M.is_fixed_point (some γ)) :
     let lam := M.c * γ + M.d;
     lam ^ 2 - (M.a + M.d) * lam + (M.a * M.d - M.b * M.c) = 0 := by
   have h_fixed : M.c * γ^2 + (M.d - M.a) * γ - M.b = 0 := by
-    have h1 := (fixed_point_quadratic M hc γ).mp f
+    have h1 := (fixed_point_quadratic M γ).mp f
     have h2 : M.c * γ^2 + (M.d - M.a) * γ - M.b = M.c * γ^2 - (M.a - M.d) * γ - M.b := by ring
     rwa [h2]
   exact eigenvalue_mapping M.a M.b M.c M.d (M.c * γ + M.d) γ h_fixed rfl
@@ -1487,7 +1483,7 @@ theorem parabolic_normal_form (M : MobiusTransform) (z1 : RiemannSphere)
         by_cases h : N.c = 0
         · exact h
         · have hbad : some (N.a / N.c) = none := by
-            simpa [MobiusTransform.eval, h] using hNnone
+            simp [MobiusTransform.eval, h] at hNnone
           cases hbad
       have hNaEq : N.a = N.d := by
         by_contra hne
@@ -1502,7 +1498,7 @@ theorem parabolic_normal_form (M : MobiusTransform) (z1 : RiemannSphere)
           have hNa : N.a ≠ 0 := by
             intro hA
             have hdet : N.a * N.d - N.b * N.c = 0 := by
-              simp [hA, hNc, hNaEq]
+              simp [hA, hNc]
             exact N.det_ne_zero hdet
           simpa [MobiusTransform.is_fixed_point, hb] using
             (translation_like_eval N hNc hNaEq hNa 0)
@@ -1511,7 +1507,7 @@ theorem parabolic_normal_form (M : MobiusTransform) (z1 : RiemannSphere)
       have hNa : N.a ≠ 0 := by
         intro hA
         have hdet : N.a * N.d - N.b * N.c = 0 := by
-          simp [hA, hNc, hNaEq]
+          simp [hA, hNc]
         exact N.det_ne_zero hdet
       let β : ℂ := N.b / N.a
       have hβ : β ≠ 0 := by
@@ -1800,7 +1796,7 @@ The available `h_map` property transports circle membership only; it does not
 yet provide the intersection-property and harmonic-cross-ratio transport needed
 for a theorem. Keep the intended equivalence as an explicit open proposition. -/
 def conjugation_preserving (M : MobiusTransform) (z1 z2 : RiemannSphere) (circ : GenCircle)
-    (circ' : GenCircle) (h_map : ∀ z, circ.containsExt z ↔ circ'.containsExt (M.eval z)) : Prop :=
+    (circ' : GenCircle) : Prop :=
   is_conjugate_wrt_circle z1 z2 circ ↔
     is_conjugate_wrt_circle (M.eval z1) (M.eval z2) circ'
 
@@ -2175,7 +2171,7 @@ theorem real_mobius_can_have_no_fixed_points :
 
 noncomputable def circle_inversion (z z0 : ℂ) (r : ℝ) : ℂ := (r^2 : ℂ) / conj (z - z0) + z0
 
-theorem circle_inversion_involution (z z0 : ℂ) (r : ℝ) (h_r : r ≠ 0) (h_z : z ≠ z0) : 
+theorem circle_inversion_involution (z z0 : ℂ) (r : ℝ) (h_r : r ≠ 0) :
     circle_inversion (circle_inversion z z0 r) z0 r = z := by
   dsimp [circle_inversion]
   have h1 : (r^2 : ℂ) / conj (z - z0) + z0 - z0 = (r^2 : ℂ) / conj (z - z0) := by ring
@@ -2201,7 +2197,7 @@ theorem circle_inversion_involution (z z0 : ℂ) (r : ℝ) (h_r : r ≠ 0) (h_z 
   rw [h_div]
   ring
 
-theorem pgl2_homogenous_action (a b c d z1 z2 : ℂ) (hz2 : z2 ≠ 0) (hden : c*z1 + d*z2 ≠ 0) (hden_frac : c*(z1/z2) + d ≠ 0) :
+theorem pgl2_homogenous_action (a b c d z1 z2 : ℂ) (hz2 : z2 ≠ 0) :
     (a*z1 + b*z2) / (c*z1 + d*z2) = (a*(z1/z2) + b) / (c*(z1/z2) + d) := by
   have h_num : z2 * (a * (z1 / z2) + b) = a * z1 + b * z2 := by
     calc z2 * (a * (z1 / z2) + b) = a * (z2 * (z1 / z2)) + b * z2 := by ring
@@ -2213,7 +2209,7 @@ theorem pgl2_homogenous_action (a b c d z1 z2 : ℂ) (hz2 : z2 ≠ 0) (hden : c*
     rw [mul_div_mul_left (a * (z1 / z2) + b) (c * (z1 / z2) + d) hz2]
   rw [← h_eq, h_num, h_den]
 
-theorem mobius_scaling_equivalence (a b c d z L : ℂ) (hL : L ≠ 0) (hden : c*z + d ≠ 0) :
+theorem mobius_scaling_equivalence (a b c d z L : ℂ) (hL : L ≠ 0) :
     (L*a*z + L*b) / (L*c*z + L*d) = (a*z + b) / (c*z + d) := by
   have hnum : L * a * z + L * b = L * (a * z + b) := by ring
   have hden_eq : L * c * z + L * d = L * (c * z + d) := by ring
@@ -2221,7 +2217,7 @@ theorem mobius_scaling_equivalence (a b c d z L : ℂ) (hL : L ≠ 0) (hden : c*
 
 noncomputable def map_to_01inf (z1 z2 z3 z : ℂ) : ℂ := ((z - z1)*(z2 - z3)) / ((z - z3)*(z2 - z1))
 
-theorem map_to_01inf_z1 (z1 z2 z3 : ℂ) (h1 : z1 - z3 ≠ 0) (h2 : z2 - z1 ≠ 0) : map_to_01inf z1 z2 z3 z1 = 0 := by
+theorem map_to_01inf_z1 (z1 z2 z3 : ℂ) : map_to_01inf z1 z2 z3 z1 = 0 := by
   dsimp [map_to_01inf]
   have h : z1 - z1 = 0 := by ring
   rw [h, zero_mul, zero_div]
@@ -2240,7 +2236,7 @@ theorem disk_to_half_plane_zero : disk_to_half_plane 0 = I := by
 
 def trace_sq (a d : ℂ) : ℂ := (a + d)^2
 
-theorem loxodromic_trace (L : ℂ) (h : L ≠ 0) : trace_sq L (L⁻¹) = (L + L⁻¹)^2 := by rfl
+theorem loxodromic_trace (L : ℂ) : trace_sq L (L⁻¹) = (L + L⁻¹)^2 := by rfl
 
 theorem real_trace_sq_nonneg (a d : ℝ) : 0 ≤ (a + d)^2 := by exact sq_nonneg (a + d)
 

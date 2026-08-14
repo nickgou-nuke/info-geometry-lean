@@ -99,6 +99,42 @@ theorem canonicalStandardEnd_transport_eq_direct (x y : CanonicalZorn) :
   simp [stanDerMap, L_map, R_map, directCanonicalStanDerMap, canonicalL, canonicalR,
     kingdonCanonicalLinearEquiv_mul, zMul_eq_canonical_mul]
 
+/-! The normal form below is the structural replacement for expanding the
+standard derivation into six coordinate products. -/
+
+theorem directCanonicalStanDerMap_apply_normal_form (x y z : CanonicalZorn) :
+    directCanonicalStanDerMap x y z =
+      ((x * y - y * x) * z - z * (x * y - y * x)) -
+        3 • ((x * y) * z - x * (y * z)) := by
+  have ht := congrArg (fun F : EndCZ => F z)
+    (canonicalStandardEnd_transport_eq_direct x y)
+  change kingdonCanonicalLinearEquiv
+      ((kingdonStandardDerivation (kingdonCanonicalLinearEquiv.symm x)
+          (kingdonCanonicalLinearEquiv.symm y))
+        (kingdonCanonicalLinearEquiv.symm z)) = directCanonicalStanDerMap x y z at ht
+  let X := kingdonCanonicalLinearEquiv.symm x
+  let Y := kingdonCanonicalLinearEquiv.symm y
+  let Z := kingdonCanonicalLinearEquiv.symm z
+  have hinner :
+      (kingdonStandardDerivation X Y) Z =
+      ((X * Y - Y * X) * Z - Z * (X * Y - Y * X)) -
+        3 • ((X * Y) * Z - X * (Y * Z)) := by
+    change stanDerMap _ _ _ = _
+    rw [stanDerMap_apply_normal_form
+      (InfoGeometry.Algebra.Kingdon.Algebra.alternative_left formedBilin)
+      (InfoGeometry.Algebra.Kingdon.Algebra.alternative_right formedBilin)]
+    rw [associator_apply]
+  calc
+    directCanonicalStanDerMap x y z =
+        kingdonCanonicalLinearEquiv ((kingdonStandardDerivation X Y) Z) := ht.symm
+    _ = kingdonCanonicalLinearEquiv
+        (((X * Y - Y * X) * Z - Z * (X * Y - Y * X)) -
+          3 • ((X * Y) * Z - X * (Y * Z))) := congrArg _ hinner
+    _ = ((x * y - y * x) * z - z * (x * y - y * x)) -
+        3 • ((x * y) * z - x * (y * z)) := by
+      simp only [X, Y, Z, map_sub, map_nsmul, zMul_eq_canonical_mul,
+        kingdonCanonicalLinearEquiv_mul, LinearEquiv.apply_symm_apply]
+
 /-- Baez's standard derivation with canonical split-octonion inputs. -/
 noncomputable def canonicalStandardDerivationOfCanonical (x y : CanonicalZorn) :
     canonicalZornDerivations :=
@@ -129,7 +165,7 @@ def parameterUnit (j : Fin 14) (r : ℝ := 1) : Params :=
 @[simp] private theorem neg_one_add_neg_one :
     (-1 : ℝ) + -1 = -2 := by norm_num
 
-private theorem standardColumn_E11_U0 :
+theorem standardColumn_E11_U0 :
     canonicalParameterLinearEquiv.symm
       (canonicalStandardDerivationOfCanonical canonicalE11 (canonicalU 0)) =
         parameterUnit 10 (-1) := by
@@ -144,7 +180,7 @@ private theorem standardColumn_E11_U0 :
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross, canonicalVectorEquiv]
 
-private theorem standardColumn_E11_U1 :
+theorem standardColumn_E11_U1 :
     canonicalParameterLinearEquiv.symm
       (canonicalStandardDerivationOfCanonical canonicalE11 (canonicalU 1)) =
         parameterUnit 9 := by
@@ -159,7 +195,7 @@ private theorem standardColumn_E11_U1 :
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross, canonicalVectorEquiv]
 
-private theorem standardColumn_E11_U2 :
+theorem standardColumn_E11_U2 :
     canonicalParameterLinearEquiv.symm
       (canonicalStandardDerivationOfCanonical canonicalE11 (canonicalU 2)) =
         parameterUnit 4 (-1) := by
@@ -174,7 +210,7 @@ private theorem standardColumn_E11_U2 :
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross, canonicalVectorEquiv]
 
-private theorem standardColumn_E11_V0 :
+theorem standardColumn_E11_V0 :
     canonicalParameterLinearEquiv.symm
       (canonicalStandardDerivationOfCanonical canonicalE11 (canonicalV 0)) =
         parameterUnit 0 := by
@@ -189,7 +225,7 @@ private theorem standardColumn_E11_V0 :
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross, canonicalVectorEquiv]
 
-private theorem standardColumn_E11_V1 :
+theorem standardColumn_E11_V1 :
     canonicalParameterLinearEquiv.symm
       (canonicalStandardDerivationOfCanonical canonicalE11 (canonicalV 1)) =
         parameterUnit 3 := by
@@ -204,7 +240,7 @@ private theorem standardColumn_E11_V1 :
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross, canonicalVectorEquiv]
 
-private theorem standardColumn_E11_V2 :
+theorem standardColumn_E11_V2 :
     canonicalParameterLinearEquiv.symm
       (canonicalStandardDerivationOfCanonical canonicalE11 (canonicalV 2)) =
         parameterUnit 8 := by
@@ -219,7 +255,7 @@ private theorem standardColumn_E11_V2 :
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross, canonicalVectorEquiv]
 
-private theorem standardColumn_U0_V0 :
+theorem standardColumn_U0_V0 :
     canonicalParameterLinearEquiv.symm
       (canonicalStandardDerivationOfCanonical (canonicalU 0) (canonicalV 0)) =
         parameterUnit 6 + parameterUnit 13 := by
@@ -234,7 +270,7 @@ private theorem standardColumn_U0_V0 :
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross, canonicalVectorEquiv, h6, h13] ; omega
 
-private theorem standardColumn_U0_V1 :
+theorem standardColumn_U0_V1 :
     canonicalParameterLinearEquiv.symm
       (canonicalStandardDerivationOfCanonical (canonicalU 0) (canonicalV 1)) =
         parameterUnit 5 (-3) := by
@@ -249,7 +285,7 @@ private theorem standardColumn_U0_V1 :
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross, canonicalVectorEquiv]
 
-private theorem standardColumn_U0_V2 :
+theorem standardColumn_U0_V2 :
     canonicalParameterLinearEquiv.symm
       (canonicalStandardDerivationOfCanonical (canonicalU 0) (canonicalV 2)) =
         parameterUnit 11 (-3) := by
@@ -264,7 +300,7 @@ private theorem standardColumn_U0_V2 :
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross, canonicalVectorEquiv]
 
-private theorem standardColumn_U1_V0 :
+theorem standardColumn_U1_V0 :
     canonicalParameterLinearEquiv.symm
       (canonicalStandardDerivationOfCanonical (canonicalU 1) (canonicalV 0)) =
         parameterUnit 1 (-3) := by
@@ -279,7 +315,7 @@ private theorem standardColumn_U1_V0 :
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross, canonicalVectorEquiv]
 
-private theorem standardColumn_U1_V1 :
+theorem standardColumn_U1_V1 :
     canonicalParameterLinearEquiv.symm
       (canonicalStandardDerivationOfCanonical (canonicalU 1) (canonicalV 1)) =
         parameterUnit 6 (-2) + parameterUnit 13 := by
@@ -294,7 +330,7 @@ private theorem standardColumn_U1_V1 :
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross, canonicalVectorEquiv, h6, h13] ; omega
 
-private theorem standardColumn_U1_V2 :
+theorem standardColumn_U1_V2 :
     canonicalParameterLinearEquiv.symm
       (canonicalStandardDerivationOfCanonical (canonicalU 1) (canonicalV 2)) =
         parameterUnit 12 (-3) := by
@@ -309,7 +345,7 @@ private theorem standardColumn_U1_V2 :
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross, canonicalVectorEquiv]
 
-private theorem standardColumn_U2_V0 :
+theorem standardColumn_U2_V0 :
     canonicalParameterLinearEquiv.symm
       (canonicalStandardDerivationOfCanonical (canonicalU 2) (canonicalV 0)) =
         parameterUnit 2 (-3) := by
@@ -324,7 +360,7 @@ private theorem standardColumn_U2_V0 :
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross, canonicalVectorEquiv]
 
-private theorem standardColumn_U2_V1 :
+theorem standardColumn_U2_V1 :
     canonicalParameterLinearEquiv.symm
       (canonicalStandardDerivationOfCanonical (canonicalU 2) (canonicalV 1)) =
         parameterUnit 7 (-3) := by
@@ -348,7 +384,7 @@ private theorem canonicalStandardDerivation_mem_span (x y : CanonicalZorn) :
     canonicalStandardDerivationOfCanonical x y ∈ standardDerivationSpan :=
   Submodule.subset_span ⟨(x, y), rfl⟩
 
-private theorem parameterUnit_eq_smul (j : Fin 14) (r : ℝ) :
+theorem parameterUnit_eq_smul (j : Fin 14) (r : ℝ) :
     parameterUnit j r = r • parameterUnit j := by
   funext i
   by_cases h : i = j <;> simp [parameterUnit, h]
@@ -368,7 +404,7 @@ private theorem scaledParameterUnit_mem
     simp [smul_smul, hr]
   rwa [heq] at hm
 
-private theorem parameterUnit_six_mem :
+theorem parameterUnit_six_mem :
     canonicalParameterLinearEquiv (parameterUnit 6) ∈ standardDerivationSpan := by
   let A := canonicalStandardDerivationOfCanonical (canonicalU 0) (canonicalV 0)
   let B := canonicalStandardDerivationOfCanonical (canonicalU 1) (canonicalV 1)
@@ -391,7 +427,7 @@ private theorem parameterUnit_six_mem :
       norm_num [parameterUnit, h6, h13, Fin.ext_iff]
   rwa [heq] at hm
 
-private theorem parameterUnit_thirteen_mem :
+theorem parameterUnit_thirteen_mem :
     canonicalParameterLinearEquiv (parameterUnit 13) ∈ standardDerivationSpan := by
   let A := canonicalStandardDerivationOfCanonical (canonicalU 0) (canonicalV 0)
   let B := canonicalStandardDerivationOfCanonical (canonicalU 1) (canonicalV 1)
@@ -415,7 +451,7 @@ private theorem parameterUnit_thirteen_mem :
       norm_num [parameterUnit, h6, h13, Fin.ext_iff]
   rwa [heq] at hm
 
-private noncomputable def parameterUnitsInSpan : Fin 14 → standardDerivationSpan := ![
+noncomputable def parameterUnitsInSpan : Fin 14 → standardDerivationSpan := ![
   ⟨canonicalParameterLinearEquiv (parameterUnit 0),
     scaledParameterUnit_mem canonicalE11 (canonicalV 0) 0 1 (by norm_num)
       standardColumn_E11_V0⟩,
@@ -456,13 +492,13 @@ private noncomputable def parameterUnitsInSpan : Fin 14 → standardDerivationSp
   ⟨canonicalParameterLinearEquiv (parameterUnit 13), parameterUnit_thirteen_mem⟩
 ]
 
-private theorem parameterUnitsInSpan_coe (j : Fin 14) :
+theorem parameterUnitsInSpan_coe (j : Fin 14) :
     (parameterUnitsInSpan j : canonicalZornDerivations) =
       canonicalParameterLinearEquiv (parameterUnit j) := by
   revert j
   simp [Fin.forall_iff_succ, parameterUnitsInSpan]
 
-private theorem parameterUnit_mem (j : Fin 14) :
+theorem parameterUnit_mem (j : Fin 14) :
     canonicalParameterLinearEquiv (parameterUnit j) ∈ standardDerivationSpan := by
   rw [← parameterUnitsInSpan_coe j]
   exact (parameterUnitsInSpan j).property

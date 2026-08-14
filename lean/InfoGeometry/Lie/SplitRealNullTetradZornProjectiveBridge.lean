@@ -90,12 +90,6 @@ theorem tetradActiveProjectiveMap_intertwines
   congr 1
   exact toActive_intertwines_ellFlow t X
 
-theorem tetradActiveProjectiveEquiv_intertwines
-    (t : ℝ) (p : TetradProjective) :
-    tetradActiveProjectiveMap (doubleWittBoostProjectiveMap t p) =
-      ellFlowActiveProjectiveMap t (tetradActiveProjectiveMap p) := by
-  exact tetradActiveProjectiveMap_intertwines t p
-
 /-- The projective tetrad flow inherits the additive rapidity law. -/
 theorem doubleWittBoostProjectiveMap_add (s t : ℝ)
     (p : TetradProjective) :
@@ -169,5 +163,45 @@ theorem doubleWittBoostProjectiveEquiv_add
     doubleWittBoostProjectiveMap s
       (doubleWittBoostProjectiveMap t p)
   exact doubleWittBoostProjectiveMap_add s t p
+
+theorem doubleWittBoostProjective_causalMinus_fixed (t : ℝ) :
+    doubleWittBoostProjectiveMap t
+        (Projectivization.mk ℝ causalMinus causalMinus_ne_zero) =
+      Projectivization.mk ℝ causalMinus causalMinus_ne_zero := by
+  rw [doubleWittBoostProjectiveMap, Projectivization.map_mk]
+  apply (Projectivization.mk_eq_mk_iff ℝ _ _ _ _).2
+  exact ⟨Units.mk0 (Real.exp t) (Real.exp_ne_zero t), by
+    change Real.exp t • causalMinus = doubleWittBoost t causalMinus
+    rw [doubleWittBoost_causalMinus]⟩
+
+theorem doubleWittBoostProjective_causalPlus_fixed (t : ℝ) :
+    doubleWittBoostProjectiveMap t
+        (Projectivization.mk ℝ causalPlus causalPlus_ne_zero) =
+      Projectivization.mk ℝ causalPlus causalPlus_ne_zero := by
+  rw [doubleWittBoostProjectiveMap, Projectivization.map_mk]
+  apply (Projectivization.mk_eq_mk_iff ℝ _ _ _ _).2
+  exact ⟨Units.mk0 (Real.exp (-t)) (Real.exp_ne_zero (-t)), by
+    change Real.exp (-t) • causalPlus = doubleWittBoost t causalPlus
+    rw [doubleWittBoost_causalPlus]⟩
+
+theorem doubleWittBoostProjective_entropyMinus_fixed (t : ℝ) :
+    doubleWittBoostProjectiveMap t
+        (Projectivization.mk ℝ entropyMinus entropyMinus_ne_zero) =
+      Projectivization.mk ℝ entropyMinus entropyMinus_ne_zero := by
+  rw [doubleWittBoostProjectiveMap, Projectivization.map_mk]
+  apply (Projectivization.mk_eq_mk_iff ℝ _ _ _ _).2
+  exact ⟨Units.mk0 (Real.exp t) (Real.exp_ne_zero t), by
+    change Real.exp t • entropyMinus = doubleWittBoost t entropyMinus
+    rw [doubleWittBoost_entropyMinus]⟩
+
+theorem doubleWittBoostProjective_entropyPlus_fixed (t : ℝ) :
+    doubleWittBoostProjectiveMap t
+        (Projectivization.mk ℝ entropyPlus entropyPlus_ne_zero) =
+      Projectivization.mk ℝ entropyPlus entropyPlus_ne_zero := by
+  rw [doubleWittBoostProjectiveMap, Projectivization.map_mk]
+  apply (Projectivization.mk_eq_mk_iff ℝ _ _ _ _).2
+  exact ⟨Units.mk0 (Real.exp (-t)) (Real.exp_ne_zero (-t)), by
+    change Real.exp (-t) • entropyPlus = doubleWittBoost t entropyPlus
+    rw [doubleWittBoost_entropyPlus]⟩
 
 end InfoGeometry.Lie.SplitRealNullTetradZornProjectiveBridge

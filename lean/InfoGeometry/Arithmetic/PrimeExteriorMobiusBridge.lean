@@ -7,19 +7,6 @@ import InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeCantorLatticeDirac
 
-/-!
-# InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge
-
-Native bridge from the canonical finite exterior carrier to the existing
-Möbius/Witten parity theorem.
-
-This file closes the finite arithmetic parity readout for the canonical
-prime-cube surfaces.
-
-No infinite Euler product.
-No analytic continuation.
-No Hilbert--Polya/RH claim.
--/
 
 noncomputable section
 
@@ -31,28 +18,22 @@ namespace InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge
 open InfoGeometry.Arithmetic.PrimeExteriorRepresentation
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
 
-/-- A finite prime cutoff, using the existing property prime register. -/
 abbrev PrimeCutoff := PrimeRegister
 
-/-- A prime mode inside a finite cutoff. -/
 abbrev PrimeMode (P : PrimeCutoff) :=
   {p : ℕ // p ∈ P.primes}
 
-/-- A prime mode embedding into `ℕ`. -/
 def primeModeEmbedding (P : PrimeCutoff) : PrimeMode P ↪ ℕ :=
   ⟨Subtype.val, by
     intro a b h
     exact Subtype.ext h⟩
 
-/-- The canonical finite exterior carrier over a prime cutoff. -/
 abbrev SquareFreeState (P : PrimeCutoff) :=
   SquareFreePrimeState (PrimeMode P)
 
-/-- Underlying natural-number set of a square-free exterior state. -/
 def natSetOfState {P : PrimeCutoff} (S : SquareFreeState P) : Finset ℕ :=
   S.map (primeModeEmbedding P)
 
-/-- Elements of `natSetOfState` are prime. -/
 theorem natSetOfState_prime_mem
     {P : PrimeCutoff}
     (S : SquareFreeState P) :
@@ -62,11 +43,9 @@ theorem natSetOfState_prime_mem
   rcases Finset.mem_map.mp hn with ⟨p, _hp, rfl⟩
   exact P.prime_mem p.1 p.property
 
-/-- The product defining `stateNat` is the product over the underlying nat set. -/
 def stateNat {P : PrimeCutoff} (S : SquareFreeState P) : ℕ :=
   ∏ n ∈ natSetOfState S, n
 
-/-- The cardinality of the underlying nat set is the fermion number. -/
 theorem card_natSetOfState
     {P : PrimeCutoff}
     (S : SquareFreeState P) :
@@ -74,10 +53,27 @@ theorem card_natSetOfState
   unfold natSetOfState
   exact Finset.card_map (primeModeEmbedding P)
 
-/--
-The Möbius value of the represented square-free integer is exactly the
-fermion parity of the finite exterior state.
--/
+theorem stateNat_squarefree
+    {P : PrimeCutoff}
+    (S : SquareFreeState P) :
+    Squarefree (stateNat S) := by
+  unfold stateNat
+  refine Finset.squarefree_prod_of_pairwise_isCoprime ?_ ?_
+  · intro x hx y hy hxy
+    have hx' : Nat.Prime x := natSetOfState_prime_mem S x hx
+    have hy' : Nat.Prime y := natSetOfState_prime_mem S y hy
+    simpa [Nat.coprime_iff_isRelPrime] using
+      ((Nat.coprime_primes hx' hy').2 hxy)
+  · intro x hx
+    exact (natSetOfState_prime_mem S x hx).squarefree
+
+theorem stateNat_pos
+    {P : PrimeCutoff}
+    (S : SquareFreeState P) :
+    0 < stateNat S := by
+  unfold stateNat
+  exact Finset.prod_pos (fun n hn => (natSetOfState_prime_mem S n hn).pos)
+
 theorem mobius_stateNat_eq_fermionParitySign
     {P : PrimeCutoff}
     (S : SquareFreeState P) :
@@ -88,7 +84,6 @@ theorem mobius_stateNat_eq_fermionParitySign
   simpa [stateNat, SquareFreePrimeState.fermionParitySign, card_natSetOfState] using
     (PrimeBitWittenIndex.mobius_prime_product_eq_parity (natSetOfState S) hprime)
 
-/-- The global chirality is the Möbius readout of the represented integer. -/
 theorem mobius_stateNat_eq_Gamma
     {P : PrimeCutoff}
     (S : SquareFreeState P) :

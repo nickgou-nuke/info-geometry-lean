@@ -5,53 +5,26 @@ import InfoGeometry.BostConnes.BostConnesParity
 import InfoGeometry.Physics.PellisFineStructure
 
 /-!
-# Golden Ratio Approximation to the Inverse Fine-Structure Constant
+# Pellis numerical readout
 
-This file formalizes the Pellis combinatorial numerical readout:
+This file defines and bounds the following real expression:
 
   α⁻¹ ≈ 360·φ⁻² - 2·φ⁻³ + (3·φ)⁻⁵
 
 where φ = (1 + √5)/2 is the golden ratio.
 
-## Mathematical Content
-
-The theorem `pellis_alpha_inv_bounds` proves that the Pellis formula evaluates
-to a real number strictly between 137.0359991 and 137.0359992.
-
-## Interpretation Firewall
-
-This file does NOT claim:
-- That this formula IS the fine-structure constant
-- That QED is derived from pentagonal geometry
-- Any physical mechanism linking φ to electromagnetism
-
-This file DOES prove:
-- The exact real number defined by this formula
-- That this number falls within the CODATA empirical window for α⁻¹
-- The arithmetic relationship between φ and the displayed approximation
-- Only separate, already-proved Bost--Connes parity facts when explicitly cited
-
-Reference: Pellis, "Fine-structure constant from the golden angle", 2022
+The remaining declarations are arithmetic identities and interval estimates;
+they do not identify the readout with a physical constant.
 -/
 
 namespace InfoGeometry.Physics.GoldenAlphaApproximation
 
 open InfoGeometry.BostConnes
 
-/-- The golden ratio φ, the algebraic signature of pentagonal symmetry. -/
+/-- The scalar `(1 + √5) / 2`. -/
 noncomputable def goldenRatio : ℝ := (1 + Real.sqrt 5) / 2
 
-/-- 
-  Pellis combinatorial readout for α⁻¹.
-  
-  This is an algebraic construction from:
-  - 360° (complete circle, hexagonal vacuum)
-  - φ⁻², φ⁻³, φ⁻⁵ (pentagonal defect terms)
-  - Prime Fibonacci exponents 2, 3, 5
-  
-  The formula is compared numerically with the inverse fine-structure constant;
-  no physical coupling-running theorem is asserted here.
--/
+/-- The displayed real rational expression in `goldenRatio`. -/
 noncomputable def pellis_alpha_inv : ℝ :=
   360 / goldenRatio^2 - 2 / goldenRatio^3 + 1 / (3 * goldenRatio)^5
 

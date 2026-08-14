@@ -157,7 +157,7 @@ theorem finiteParafermionLocalFactor_two_eq_quotient
     (hx : x ≠ 1) :
     finiteParafermionLocalFactor 2 x = (1 - x ^ 2) / (1 - x) := by
   rw [finiteParafermionLocalFactor_two]
-  have h1 : 1 - x ≠ 0 := sub_ne_zero.mpr hx.symm
+  have h1 : 1 - x ≠ 0 := sub_ne_zero.mpr (Ne.symm hx)
   rw [eq_div_iff h1]
   ring_nf
 
@@ -166,11 +166,10 @@ theorem finiteParafermionLocalFactor_three_eq_quotient
     (hx : x ≠ 1) :
     finiteParafermionLocalFactor 3 x = (1 - x ^ 3) / (1 - x) := by
   rw [finiteParafermionLocalFactor_three]
-  have h1 : 1 - x ≠ 0 := sub_ne_zero.mpr hx.symm
+  have h1 : 1 - x ≠ 0 := sub_ne_zero.mpr (Ne.symm hx)
   rw [eq_div_iff h1]
   ring_nf
 
-/-- Finite geometric-series quotient form of the order-`κ` parafermion factor. -/
 theorem finiteParafermionLocalFactor_eq_quotient
     (κ : ℕ) (x : ℂ) (hx : x ≠ 1) :
     finiteParafermionLocalFactor κ x = (1 - x ^ κ) / (1 - x) := by
@@ -178,9 +177,10 @@ theorem finiteParafermionLocalFactor_eq_quotient
   have h := geom_sum_eq (x := x) hx κ
   rw [h]
   have hx1 : x - 1 ≠ 0 := sub_ne_zero.mpr hx
-  have h1x : 1 - x ≠ 0 := sub_ne_zero.mpr hx.symm
+  have h1x : 1 - x ≠ 0 := sub_ne_zero.mpr (Ne.symm hx)
   field_simp [hx1, h1x]
   ring
+
 
 @[simp]
 theorem finiteGrandParafermionPartition_empty
@@ -262,6 +262,7 @@ theorem finiteGrandParafermionPartition_eq_quotientProduct
   refine Finset.prod_congr rfl ?_
   intro p hp
   exact finiteParafermionLocalFactor_eq_quotient κ (grandComplexPrimeWeight z s p) (h p hp)
+
 
 theorem finiteGrandParafermionPartition_two_eq_fermionPartition
     (S : Finset Nat.Primes)

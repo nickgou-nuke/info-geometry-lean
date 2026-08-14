@@ -117,6 +117,28 @@ theorem souriau_entropy_linear_invariance
   rw [Psi_linear_invariance sys g h_Psi_cov h_zero_cocycle β]
   rw [dual_pairing_invariance sys.action g (sys.heatVector β) β]
 
+/-- 🏆 THEOREM 5: Full Affine Invariance of Souriau Entropy
+    S(Ad_g β) = S(β) unconditionally, because the symplectic cocycle anomalies
+    in the Massieu potential and the heat vector exactly cancel. -/
+theorem souriau_entropy_affine_invariance
+    (sys : SouriauThermodynamicAction G V)
+    (g : G)
+    (h_Psi_cov : ∀ (g : G) (β : V),
+      sys.Psi (sys.action.Ad g β) = sys.Psi β - sys.cocycle g (sys.action.Ad g β))
+    (h_heat_cov : ∀ (g : G) (β : V),
+      sys.heatVector (sys.action.Ad g β) =
+        coadjoint (sys.action.Ad g) (sys.heatVector β) + sys.cocycle g)
+    (β : V) :
+    souriauEntropy sys (sys.action.Ad g β) = souriauEntropy sys β := by
+  dsimp [souriauEntropy]
+  rw [h_heat_cov g β]
+  rw [h_Psi_cov g β]
+  have h_eval : (coadjoint (sys.action.Ad g) (sys.heatVector β) + sys.cocycle g) (sys.action.Ad g β) =
+      coadjoint (sys.action.Ad g) (sys.heatVector β) (sys.action.Ad g β) + sys.cocycle g (sys.action.Ad g β) := rfl
+  rw [h_eval]
+  rw [dual_pairing_invariance sys.action g (sys.heatVector β) β]
+  ring
+
 /- The finite-dimensional linear action maps are continuous in the product
   topology on `n → ℝ`; this is the topological action edge underlying the
   algebraic covariance identities above. -/

@@ -113,6 +113,36 @@ def representation_attrs(decl: dict[str, Any] | None) -> dict[str, Any]:
     return out
 
 
+EDGE_KINDS = {
+    "theorem",
+    "equivalence",
+    "representation",
+    "analogy",
+    "conjectural_bridge",
+}
+
+
+def semantic_edge_attrs(decl: dict[str, Any] | None) -> dict[str, Any]:
+    """Normalize Lean ``@[edge_kind ...]`` tags for graph consumers.
+
+    This is metadata projection only: it never upgrades a dependency edge into
+    a proved theorem or changes Lean's authority status.
+    """
+    values = [
+        attr.split(":", 1)[1]
+        for attr in decl_attr_strings(decl)
+        if attr.startswith("edge_kind:")
+    ]
+    values = sorted({value for value in values if value in EDGE_KINDS})
+    if not values:
+        return {}
+    return {
+        "edge_kind": values[0] if len(values) == 1 else values,
+        "edge_kinds": values,
+        "edge_kind_tags": [f"edge_kind:{value}" for value in values],
+    }
+
+
 def representation_labels(name: str, decl: dict[str, Any] | None, ns_prefix: str) -> list[str]:
     labels = {
         "lossless:raw_dag",
@@ -239,6 +269,10 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
 
     decls = load_decl_map(decls_path)
     raw_edges = load_raw_edges(raw_edges_path)
+    semantic_by_name = {
+        name: semantic_edge_attrs(decl)
+        for name, decl in decls.items()
+    }
 
     endpoint_names = set(decls)
     for edge in raw_edges:
@@ -261,10 +295,12 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         key = key_of[name]
         scc_id = scc_of[key]
         rep_attrs = representation_attrs(decl)
+        edge_attrs = semantic_edge_attrs(decl)
         attrs = {
             "decl_kind": str((decl or {}).get("kind") or "endpoint_stub"),
             "doc": str((decl or {}).get("doc") or ""),
             **rep_attrs,
+            **edge_attrs,
         }
         row = {
             "_key": key,
@@ -279,6 +315,8 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
             "rep_depth": rep_attrs.get("rep_depth_nat"),
             "rep_depth_slug": rep_attrs.get("rep_depth_slug"),
             "rep_layer": rep_attrs.get("rep_layer"),
+            "edge_kind": edge_attrs.get("edge_kind"),
+            "edge_kinds": edge_attrs.get("edge_kinds", []),
             "decl": decl,
             "scc_id": scc_id,
             "scc_key": scc_key_of[scc_id],
@@ -322,6 +360,8 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
     for edge in raw_edges:
         src_key = key_of[edge.src]
         dst_key = key_of[edge.dst]
+        src_semantic = semantic_by_name.get(edge.src, {})
+        semantic_kinds = src_semantic.get("edge_kinds", [])
         raw_edge_docs.append(
             {
                 "_key": edge_key("rawedge", edge.index, edge.src, edge.dst, edge.kind),
@@ -334,6 +374,8 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
                 "src": edge.src,
                 "dst": edge.dst,
                 "kind": edge.kind,
+                "semantic_kind": src_semantic.get("edge_kind"),
+                "semantic_kinds": semantic_kinds,
                 "src_scc": scc_of[src_key],
                 "dst_scc": scc_of[dst_key],
                 "labels": [
@@ -341,7 +383,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
                     "layer:raw_dag",
                     "lossless:raw_dag_edge",
                     "topology:base",
-                ],
+                ] + [f"semantic_edge:{kind}" for kind in semantic_kinds],
             }
         )
 

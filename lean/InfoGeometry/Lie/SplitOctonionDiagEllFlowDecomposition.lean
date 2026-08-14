@@ -76,20 +76,21 @@ def zeroSectorEquiv : zeroSector ≃ₗ[ℝ] (ℝ × ℝ) where
   toFun X := (X.1.a, X.1.b)
   invFun ab :=
     ⟨{ a := ab.1, b := ab.2, x := 0, y := 0 },
-      Subtype.of_mem_range (by
+      by
         rw [LinearMap.mem_range]
         refine ⟨{ a := ab.1, b := ab.2, x := 0, y := 0 }, ?_⟩
-        rw [ellFlowPZero_apply])⟩
+        rw [ellFlowPZero_apply, diagEllGrading_sq_coord]
+        ext <;> simp⟩
   map_add' X Y := rfl
   map_smul' r X := rfl
   left_inv X := by
     apply Subtype.ext
     rcases X with ⟨X, Y, hY⟩
     dsimp
-    rw [← ellFlowPZero_coord] at hY
-    rw [← hY]
+    cases hY
+    rw [ellFlowPZero_coord]
   right_inv ab := by
-    simp [ellFlowPZero_coord]
+    simp
 
 @[simp] theorem positiveSector_finrank :
     Module.finrank ℝ positiveSector = 3 := by
@@ -132,7 +133,7 @@ theorem splitOctonion_ell_decomposition :
     Module.finrank ℝ (⊤ : Submodule ℝ CZ) = 8 := by
   -- The full carrier `⊤ : Submodule ℝ CZ` has the same dimension as
   -- `CanonicalZorn` itself.  `canonicalZorn_finrank` gives the latter.
-  rw [Module.finrank_top]
+  rw [finrank_top]
   exact canonicalZorn_finrank
 
 
@@ -157,11 +158,11 @@ theorem ellFlow_direct_sum :
     ellFlowPPlus_coord Z
   have hm : ellFlowPMinus Z = { a := 0, b := 0, x := 0, y := Z.y } :=
     ellFlowPMinus_coord Z
+  change ellFlowPZero Z + ellFlowPPlus Z + ellFlowPMinus Z = Z
   rw [h0, hp, hm]
   -- Now the goal is `{a:=Z.a,b:=Z.b,x:=0,y:=0} + {a:=0,b:=0,x:=Z.x,y:=0}
   --   + {a:=0,b:=0,x:=0,y:=Z.y} = Z`
-  rw [← ZornMatrix.ext]
-  ext i
-  fin_cases i <;> simp [ZornMatrix.add_def, coordComponent, smul_eq_mul]
+  apply InfoGeometry.Canonical.ZornMatrix.ext <;>
+    simp
 
 end InfoGeometry.Lie.SplitOctonionDiagEllFlowDecomposition

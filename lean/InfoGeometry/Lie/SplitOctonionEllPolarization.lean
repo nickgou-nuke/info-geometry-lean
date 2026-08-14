@@ -98,31 +98,70 @@ noncomputable def ellCommutator : EndCZ where
     ellCommutator X = lUnit * X - X * lUnit :=
   rfl
 
+private theorem chiralNull_right_ell_eigenvector
+    (a : Fin 3) (ε : ℝ) (hε : ε ^ 2 = 1) :
+    InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul
+        (chiralNull a.succ ε) lUnit =
+      -ε • chiralNull a.succ ε := by
+  have hsmul (r : ℝ) (Z : CZ) :
+      r • Z = { a := r * Z.a, b := r * Z.b, x := r • Z.x, y := r • Z.y } := by
+    rw [Equiv.smul_def InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+    rfl
+  have hmem : chiralNull a.succ ε ∈ Imaginary := by
+    rw [mem_imaginary_iff]
+    fin_cases a <;>
+      simp [chiralNull, realZornTrace, ellBasis, quaternionBasis,
+        iUnit, jUnit, kQuaternionUnit, lUnit,
+        InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul, hsmul,
+        InfoGeometry.Canonical.ZornMatrix.dot,
+        InfoGeometry.Canonical.ZornMatrix.cross, smul_eq_mul]
+  let X : Imaginary := ⟨chiralNull a.succ ε, hmem⟩
+  let L : Imaginary := ⟨lUnit, by
+    simp [mem_imaginary_iff, realZornTrace, lUnit]⟩
+  have hanti := imaginary_anticommutator_eq L X
+  have hpol : imaginaryPolar L X = 0 := by
+    unfold L X imaginaryPolar
+    fin_cases a <;>
+      simp [chiralNull, ellBasis, quaternionBasis, iUnit, jUnit,
+        kQuaternionUnit, lUnit,
+        InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul, hsmul,
+        InfoGeometry.Algebra.Zorn.ZornMatrix.detZ,
+        InfoGeometry.Canonical.ZornMatrix.dot,
+        InfoGeometry.Canonical.ZornMatrix.cross,
+        smul_eq_mul] <;>
+      nlinarith [hε]
+  rw [hpol, neg_zero, zero_smul] at hanti
+  rw [show L.1 = lUnit by rfl,
+    show X.1 = chiralNull a.succ ε by rfl,
+    chiralNull_left_ell_eigenvector a.succ ε hε] at hanti
+  simpa only [one_smul, neg_smul] using
+    eq_neg_of_add_eq_zero_right hanti
+
 /-- Every positive channel has adjoint weight `+2`. -/
 theorem ellCommutator_rootPlus (a : Fin 3) :
     ellCommutator (rootPlus a) = (2 : ℝ) • rootPlus a := by
-  fin_cases a <;>
-    ext i <;>
-    simp [ellCommutator, rootPlus, chiralNull, ellBasis, quaternionBasis,
-      iUnit, jUnit, kQuaternionUnit, lUnit,
-      InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-      InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross]
-  all_goals (try fin_cases i) <;> norm_num
+  change InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul lUnit
+      (chiralNull a.succ 1) -
+      InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul
+        (chiralNull a.succ 1) lUnit =
+      (2 : ℝ) • chiralNull a.succ 1
+  rw [chiralNull_left_ell_eigenvector a.succ 1 (by norm_num),
+    chiralNull_right_ell_eigenvector a 1 (by norm_num)]
+  module
 
 /-- Every negative channel has adjoint weight `-2`. -/
 theorem ellCommutator_rootMinus (a : Fin 3) :
     ellCommutator (rootMinus a) = (-2 : ℝ) • rootMinus a := by
-  fin_cases a <;>
-    ext i <;>
-    simp [ellCommutator, rootMinus, chiralNull, ellBasis, quaternionBasis,
-      iUnit, jUnit, kQuaternionUnit, lUnit,
-      InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-      InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross]
-  all_goals (try fin_cases i) <;> norm_num
+  change InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul lUnit
+      (-chiralNull a.succ (-1)) -
+      InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul
+        (-chiralNull a.succ (-1)) lUnit =
+      (-2 : ℝ) • (-chiralNull a.succ (-1))
+  rw [show -chiralNull a.succ (-1) = (-1 : ℝ) • chiralNull a.succ (-1) by module,
+    zMul_smul_left, zMul_smul_right,
+    chiralNull_left_ell_eigenvector a.succ (-1) (by norm_num),
+    chiralNull_right_ell_eigenvector a (-1) (by norm_num)]
+  module
 
 /-- Positive root channels are square-zero in the split-octonion product. -/
 theorem rootPlus_sq (a : Fin 3) : rootPlus a * rootPlus a = 0 := by
@@ -136,16 +175,15 @@ theorem rootPlus_sq (a : Fin 3) : rootPlus a * rootPlus a = 0 := by
 /-- Negative root channels are square-zero in the split-octonion product. -/
 theorem rootMinus_sq (a : Fin 3) : rootMinus a * rootMinus a = 0 := by
   change InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul
-    (rootMinus a) (rootMinus a) = 0
-  fin_cases a <;>
-    ext i <;>
-    simp [rootMinus, chiralNull, ellBasis, quaternionBasis,
-      iUnit, jUnit, kQuaternionUnit, lUnit,
-      InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-      InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross]
-  all_goals (try fin_cases i) <;> norm_num
+    (-chiralNull a.succ (-1)) (-chiralNull a.succ (-1)) = 0
+  rw [show -chiralNull a.succ (-1) = (-1 : ℝ) • chiralNull a.succ (-1) by module,
+    zMul_smul_left, zMul_smul_right]
+  norm_num
+  have hc : chiralNull a.succ (-1) = imaginarySplitPlaneNullMinus a := by
+    unfold chiralNull imaginarySplitPlaneNullMinus
+    module
+  rw [hc]
+  exact imaginarySplitPlaneNullMinus_sq a
 
 /-! ## The complete real weight basis -/
 
@@ -160,31 +198,54 @@ theorem rootMinus_sq (a : Fin 3) : rootMinus a * rootMinus a = 0 := by
   | 7 => rootPlus 2
   | _ => 0
 
-set_option maxHeartbeats 1500000 in
+private theorem canonicalZorn_smul_coordinates (r : ℝ) (Z : CZ) :
+    r • Z = { a := r * Z.a, b := r * Z.b, x := r • Z.x, y := r • Z.y } := by
+  rw [Equiv.smul_def InfoGeometry.Canonical.ZornMatrix.coordEquiv]
+  rfl
+
 theorem ellWeightBasis_linearIndependent :
     LinearIndependent ℝ ellWeightBasis := by
   rw [Fintype.linearIndependent_iff]
   intro g h i
-  have ha := congrArg (fun X : CZ => X.a) h
-  have hb := congrArg (fun X : CZ => X.b) h
-  have hx0 := congrArg (fun X : CZ => X.x 0) h
-  have hy0 := congrArg (fun X : CZ => X.y 0) h
-  have hx1 := congrArg (fun X : CZ => X.x 1) h
-  have hy1 := congrArg (fun X : CZ => X.y 1) h
-  have hx2 := congrArg (fun X : CZ => X.x 2) h
-  have hy2 := congrArg (fun X : CZ => X.y 2) h
-  fin_cases i <;>
-    simp [ellWeightBasis, rootPlus, rootMinus, chiralNull, ellBasis,
-      quaternionBasis, iUnit, jUnit, kQuaternionUnit, lUnit,
-      InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
+  let e : CZ ≃ₗ[ℝ] (ℝ × ℝ × (Fin 3 → ℝ) × (Fin 3 → ℝ)) :=
+    InfoGeometry.Canonical.ZornMatrix.coordEquiv.linearEquiv ℝ
+  have he : ∑ j, g j • e (ellWeightBasis j) = 0 := by
+    simpa [e] using congrArg e h
+  have ha := congrArg (fun C => C.1) he
+  have hb := congrArg (fun C => C.2.1) he
+  have hx0 := congrArg (fun C => C.2.2.1 0) he
+  have hy0 := congrArg (fun C => C.2.2.2 0) he
+  have hx1 := congrArg (fun C => C.2.2.1 1) he
+  have hy1 := congrArg (fun C => C.2.2.2 1) he
+  have hx2 := congrArg (fun C => C.2.2.1 2) he
+  have hy2 := congrArg (fun C => C.2.2.2 2) he
+  all_goals try
+    simp [e, Equiv.linearEquiv, ellWeightBasis, rootPlus, rootMinus,
+      chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit,
+      lUnit, InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross,
-      Equiv.smul_def,
-      InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-      Fin.sum_univ_succ] at ha hb hx0 hy0 hx1 hy1 hx2 hy2 ⊢ <;>
-    linarith [ha, hb, hx0, hy0, hx1, hy1, hx2, hy2]
+      canonicalZorn_smul_coordinates,
+      InfoGeometry.Canonical.ZornMatrix.coordEquiv, Fin.sum_univ_succ]
+      at ha hb hx0 hy0 hx1 hy1 hx2 hy2
+  fin_cases i
+  · have hg : g 0 = 0 := by linarith [ha, hb, hx0, hy0]
+    exact hg
+  · have hg : g 1 = 0 := by linarith [hx1, hy1, hx2, hy2]
+    exact hg
+  · have hg : g 2 = 0 := by linarith [hx1, hy1, hx2, hy2]
+    exact hg
+  · have hg : g 3 = 0 := by linarith [ha, hb, hx0, hy0]
+    exact hg
+  · have hg : g 4 = 0 := by linarith [ha, hb, hx0, hy0]
+    exact hg
+  · have hg : g 5 = 0 := by linarith [ha, hb, hx0, hy0]
+    exact hg
+  · have hg : g 6 = 0 := by linarith [hx1, hy1, hx2, hy2]
+    exact hg
+  · have hg : g 7 = 0 := by linarith [hx1, hy1, hx2, hy2]
+    exact hg
 
-set_option maxHeartbeats 1500000 in
 noncomputable def ellWeightBasisReal : Module.Basis (Fin 8) ℝ CZ :=
   Module.Basis.mk ellWeightBasis_linearIndependent (by
     have hcard : Fintype.card (Fin 8) = Module.finrank ℝ CZ := by

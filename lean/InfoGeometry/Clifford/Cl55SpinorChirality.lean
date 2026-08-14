@@ -673,7 +673,6 @@ private theorem gammaBasis55_anticomm_48 :
   simpa [gammaBasis55] using
     (gamma55_anticomm_of_polar_zero (v := vec55Basis 4) (w := vec55Basis 8) hpolar)
 
-set_option maxHeartbeats 1000000 in
 theorem orderedGammaVolume55_eq_chiralityMatrix :
     orderedGammaVolume55 = chiralityMatrix := by
   have hswap1 :

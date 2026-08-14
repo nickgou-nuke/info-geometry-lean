@@ -1,5 +1,10 @@
 import InfoGeometry.Canonical.TomitaTakesakiInvolutions
 import InfoGeometry.Canonical.SplitOctonionHyperbolicFunctionalCalculus
+import InfoGeometry.Canonical.SplitOctonionQuaternionZornPolarBridge
+import InfoGeometry.Canonical.SplitOctonionGogberashviliCircularNormBridge
+import InfoGeometry.Canonical.SplitOctonionPolarTransport
+import InfoGeometry.Canonical.SplitOctonionGogberashviliCarrierBridge
+import InfoGeometry.Canonical.SplitOctonionAppendixECircularBridge
 import InfoGeometry.Canonical.SplitOctonionDoubledLoxodromicSpectral
 import InfoGeometry.Canonical.SplitOctonionSkew28
 import InfoGeometry.Canonical.SplitOctonionJordanForm
@@ -584,6 +589,7 @@ import InfoGeometry.Canonical.BostConnesSymmetryBreaking
 import InfoGeometry.Canonical.BostConnesProjectiveGeometry
 import InfoGeometry.Canonical.BostConnesHeckeCuntzCapstone
 import InfoGeometry.Canonical.IdeleSymmetries
+import InfoGeometry.Canonical.CartanSouriauCocycleGibbsCharacter
 import InfoGeometry.Canonical.ZetaChiralConeAlgebra
 import InfoGeometry.Canonical.CliffordToVirasoro
 import InfoGeometry.Canonical.BerryConnection
@@ -1620,7 +1626,7 @@ import InfoGeometry.Canonical.EmpiricalChecks
 import InfoGeometry.Canonical.EntanglementResidualOwner
 import InfoGeometry.Canonical.HolographicEntanglementSymmetry
 import InfoGeometry.Canonical.RosettaTimeClock
-import InfoGeometry.Canonical.PrimeParafermionGrandCanonicalClock
+
 import InfoGeometry.Canonical.ErgodicFixedPointBridge
 import InfoGeometry.Canonical.ErgodicOmegaVolumeBridge
 import InfoGeometry.Canonical.ErgodicWeylGWVolumeBridge
@@ -2256,6 +2262,7 @@ import InfoGeometry.Canonical.RindlerWeylPositiveDiagonalEquiv
 import InfoGeometry.Canonical.RealRindlerProjectiveLogBridge
 import InfoGeometry.Canonical.SemilinearFunctionalAnalysisOwners
 import InfoGeometry.Canonical.SplitOctonionGogberashviliNormBridge
+import InfoGeometry.Canonical.SplitOctonionGogberashviliCanonicalBridge
 import InfoGeometry.Canonical.RealStageProjectionMurrayVonNeumann
 import InfoGeometry.Canonical.RealBoundaryHomologyQuotient
 import InfoGeometry.Canonical.DyadicDimensionGroupUniversalProperty
@@ -2890,6 +2897,7 @@ import InfoGeometry.Canonical.ZornMaxwellSquareReadout
 import InfoGeometry.Canonical.ZornLeftRegularRepresentation
 import InfoGeometry.Canonical.ZornComplexifiedSpectralRepresentation
 import InfoGeometry.Canonical.ZornChiralLightConeCoordinates
+import InfoGeometry.Canonical.SplitOctonionQuaternionCalibratedZornBridge
 
 namespace InfoGeometry
 

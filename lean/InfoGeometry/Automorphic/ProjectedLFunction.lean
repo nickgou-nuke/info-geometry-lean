@@ -227,6 +227,12 @@ theorem mem_automorphicResonanceSet_iff
     s ∈ AutomorphicResonanceSet L ↔ IsAutomorphicResonance L s := by
   rfl
 
+theorem automorphicResonanceSet_eq_of_pointwise
+    {L₁ L₂ : ℂ → ℂ} (hL : ∀ s, L₁ s = L₂ s) :
+    AutomorphicResonanceSet L₁ = AutomorphicResonanceSet L₂ := by
+  ext s
+  simp [AutomorphicResonanceSet, IsAutomorphicResonance, hL s]
+
 /-! ## 4. Projected automorphic L-function witnesses -/
 
 /--

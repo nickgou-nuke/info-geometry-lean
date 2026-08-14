@@ -32,6 +32,23 @@ Important boundary:
   still contain hard-coded Arango settings; prefer the repo env loader and
   `hash_owner_map.py` / direct AQL snippets below.
 
+### Typed semantic-edge metadata
+
+Declaration owners may optionally carry `@[edge_kind <identifier>]`. Supported
+identifiers are `equivalence`, `representation`, `analogy`,
+`conjectural_bridge`, and `proof`; `proof` is exported as the canonical
+semantic kind `theorem`, since `theorem` is a Lean command keyword and cannot
+be parsed as an attribute identifier. This metadata classifies the declaration
+that owns a bridge. It does not change compiler dependency kinds (`type` and
+`value`) and never promotes a conjectural bridge to a proof.
+
+The streaming declaration records preserve `edge_kind:<kind>` in `attrs`.
+`materialize_lossless_infotree.py` projects it onto raw nodes as
+`edge_kind`/`edge_kinds` and onto dependency edges as
+`semantic_kind`/`semantic_kinds`, while retaining AST/value/shape hashes.
+Thus AQL/hash queries can filter semantic role and still resolve the owner by
+`valueFingerprint.shapeHash`; Lean source and kernel checking remain authority.
+
 ## Authoritative causal-cone graph path
 
 The compiler-backed declaration graph is the primary graph authority for causal-cone prompt construction:

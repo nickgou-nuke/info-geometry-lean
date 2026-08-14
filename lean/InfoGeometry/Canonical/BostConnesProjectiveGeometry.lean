@@ -2,17 +2,12 @@ import InfoGeometry.Canonical.BostConnesGalois
 import InfoGeometry.Quantum.FibonacciFusionCategory
 
 /-!
-# Bost-Connes Projective Ray Geometry
+# Algebraic Galois and Fibonacci readouts
 
-The phase transition at beta -> infinity crystallizes the continuous thermal
-bulk into discrete projective rays at the Bost-Connes boundary. The Fibonacci
-golden ratio phi emerges as the projective invariant governing the anyon fusion.
-
-## What This File Proves
-
-1. The golden ratio is a projective invariant (phi^2 = phi + 1)
-2. The Galois group acts on cyclotomic generators by transport
-3. The Fibonacci quantum dimension bounds the boundary capacity
+This file records a golden-ratio identity, transport of supplied cyclotomic
+generators by supplied Galois automorphisms, and the corresponding scalar
+Fibonacci inequalities. It does not construct a phase transition, a boundary
+ray space, or a quantum-capacity theorem.
 -/
 
 set_option linter.unusedVariables false
@@ -27,9 +22,8 @@ open FibonacciFusion
 /-! ### 1. Golden Ratio as Projective Invariant -/
 
 /--
-The golden ratio phi = (1 + sqrt 5)/2 is the quantum dimension of the
-Fibonacci anyon tau. It satisfies phi^2 = phi + 1 and 1 < phi < 2.
-These are projective invariants: independent of basis, ray, or representation.
+The constant `phi` satisfies its defining quadratic identity and the bounds
+`1 < phi < 2`.
 -/
 theorem golden_ratio_projective_invariant :
     phi = (1 + Real.sqrt 5) / 2 ∧ phi ^ 2 = phi + 1 ∧ phi > 1 ∧ phi < 2 := by
@@ -46,12 +40,8 @@ theorem golden_ratio_projective_invariant :
 /-! ### 2. Galois Transport of Cyclotomic Generator Values -/
 
 /--
-**Theorem**: The Galois group G acts on the cyclotomic generators e(r)
-by algebra automorphisms: galoisAut(g)(e(r)) = e(g·r).
-
-This is the structural heart of the Bost-Connes symmetry breaking:
-each Galois automorphism transports the expectation value of the
-"position" observable e(r) to e(g·r), labeling a distinct boundary ray.
+Transport of a supplied cyclotomic generator under a supplied Galois
+automorphism.
 -/
 theorem galois_transport_of_generator
     {C_comm : Type u} [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
@@ -63,8 +53,7 @@ theorem galois_transport_of_generator
   galoisAut.galoisAut_on_generator g r
 
 /--
-**Corollary**: The Galois action preserves the periodicity of the generators:
-  galoisAut(g)(e(r+1)) = galoisAut(g)(e(r))
+The transported generator inherits the supplied period-one relation.
 -/
 theorem galois_preserves_periodicity
     {C_comm : Type u} [CommRing C_comm] [StarRing C_comm] [Algebra ℂ C_comm]
@@ -84,18 +73,8 @@ theorem galois_preserves_periodicity
 /-! ### 3. Fibonacci Dimension at the Bost-Connes Boundary -/
 
 /--
-**Theorem**: At the absolute zero Bost-Connes boundary, the Fibonacci
-fusion category governs the boundary excitations. The golden ratio phi
-is the quantum dimension of the Fibonacci anyon tau:
-
-  tau * tau = 1 + tau  (fusion rule)
-  dim(tau) = phi, dim(1) = 1
-  phi^2 = phi + 1  (defining equation)
-  1 < phi < 2  (dimension bounds)
-
-The non-integer value phi ~ 1.618 is the projective invariant
-controlling the boundary capacity — it is the ratio of fusion
-multiplicities, independent of the choice of boundary ray.
+The Fibonacci scalar `phi` satisfies its defining quadratic equation and the
+bounds `1 < phi < 2`.
 -/
 theorem fibonacci_quantum_dimension_at_boundary :
     let tau_dim := phi

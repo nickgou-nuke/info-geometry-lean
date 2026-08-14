@@ -4,24 +4,6 @@ import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.LeeYangAsanoEndpointNative
 import InfoGeometry.Canonical.LeeYangAsanoFullReduction
 
-/-!
-# InfoGeometry.Canonical.LeeYangAsanoKleinV4Compactification
-
-Klein-four / Möbius-CPT compactification socket for the remaining
-nondegenerate Asano topological branch.
-
-This file does not prove the Riemann-sphere covering theorem.
-
-It packages the expected finite symmetry mechanism:
-
-* four-element Klein orbit carrier;
-* Möbius/CPT endpoint representatives;
-* endpoint alternative extraction;
-* reduction from that extraction to `AsanoNondegenerateTopologicalTheorem`.
-
-The actual global covering proof must instantiate this property.
--/
-
 noncomputable section
 
 namespace InfoGeometry.Canonical.LeeYangAsanoNativeCore
@@ -34,6 +16,10 @@ inductive KleinV4AsanoSymmetry where
   | cpt
   | mobiusCpt
 deriving DecidableEq, Repr, Fintype
+
+theorem card_KleinV4AsanoSymmetry :
+    Fintype.card KleinV4AsanoSymmetry = 4 := by
+  decide
 
 /--
 The two endpoint alternatives already consumed by
@@ -50,6 +36,10 @@ inductive AsanoEndpointAlternative where
   | poleInK₁
   | infinityValueInK₂
 deriving DecidableEq, Repr, Fintype
+
+theorem card_AsanoEndpointAlternative :
+    Fintype.card AsanoEndpointAlternative = 2 := by
+  decide
 
 /-- Interprets an endpoint label as the actual endpoint proposition. -/
 @[rep_depth operator]

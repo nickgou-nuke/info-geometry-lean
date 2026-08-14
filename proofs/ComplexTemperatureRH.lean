@@ -1,16 +1,5 @@
 import Mathlib
 
-/-!
-# Complex Temperature and Riemann-Hypothesis Finite Models
-
-Finite definitional layer for complex-temperature coordinates, truncated
-arithmetic traces, and a conditional Hilbert-Pólya-style localization shape.
-
-For `s = β + i t`, `β` is damping and `t` is an oscillatory phase parameter.
-Zeros of an analytically continued zeta-like function are represented as exact
-cancellations (destructive interference).
--/
-
 noncomputable section
 
 /-- Complex inverse temperature from damping + phase coordinates. -/

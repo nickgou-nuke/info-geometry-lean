@@ -11,6 +11,8 @@ coordinates.  No Kantor identity or closure structure is assumed.
 
 noncomputable section
 
+set_option maxHeartbeats 1000000
+
 namespace InfoGeometry.Lie.SplitOctonionEllKantorRankOne
 
 open InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge
@@ -115,7 +117,6 @@ theorem K_rootPlus_rootMinus_rootMinus (a : Fin 3) :
 /- The mixed channel vanishes for distinct root labels.  These concrete
 instances are intentionally kept finite: they expose the cross-color
 calculation without introducing a contract or a symbolic delta wrapper. -/
-set_option maxHeartbeats 600000 in
 theorem K_rootPlus_zero_rootMinus_one_rootPlus (c : Fin 3) :
     K (rootPlus 0) (rootMinus 1) (rootPlus c) = 0 := by
   fin_cases c <;>
@@ -128,7 +129,6 @@ theorem K_rootPlus_zero_rootMinus_one_rootPlus (c : Fin 3) :
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
-set_option maxHeartbeats 600000 in
 theorem K_rootMinus_zero_rootPlus_one_rootMinus (c : Fin 3) :
     K (rootMinus 0) (rootPlus 1) (rootMinus c) = 0 := by
   fin_cases c <;>
@@ -143,7 +143,6 @@ theorem K_rootMinus_zero_rootPlus_one_rootMinus (c : Fin 3) :
   all_goals (try fin_cases i) <;> norm_num
 
 /- The mixed same-polarity tails vanish for the same distinct labels. -/
-set_option maxHeartbeats 600000 in
 theorem K_rootPlus_zero_rootMinus_one_rootMinus (c : Fin 3) :
     K (rootPlus 0) (rootMinus 1) (rootMinus c) = 0 := by
   fin_cases c <;>
@@ -155,7 +154,6 @@ theorem K_rootPlus_zero_rootMinus_one_rootMinus (c : Fin 3) :
       Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
       InfoGeometry.Canonical.ZornMatrix.dot,
       InfoGeometry.Canonical.ZornMatrix.cross]
-set_option maxHeartbeats 600000 in
 theorem K_rootMinus_zero_rootPlus_one_rootPlus (c : Fin 3) :
     K (rootMinus 0) (rootPlus 1) (rootPlus c) = 0 := by
   fin_cases c <;>
@@ -171,7 +169,6 @@ theorem K_rootMinus_zero_rootPlus_one_rootPlus (c : Fin 3) :
 
 /- For equal first two labels the mixed tails reproduce the third root
 channel, as predicted by the same-color matrix-unit atom. -/
-set_option maxHeartbeats 600000 in
 theorem K_rootPlus_zero_rootMinus_zero_rootMinus (c : Fin 3) :
     K (rootPlus 0) (rootMinus 0) (rootMinus c) = rootMinus c := by
   fin_cases c <;>
@@ -185,7 +182,6 @@ theorem K_rootPlus_zero_rootMinus_zero_rootMinus (c : Fin 3) :
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
 
-set_option maxHeartbeats 600000 in
 theorem K_rootMinus_zero_rootPlus_zero_rootPlus (c : Fin 3) :
     K (rootMinus 0) (rootPlus 0) (rootPlus c) = rootPlus c := by
   fin_cases c <;>
@@ -199,11 +195,43 @@ theorem K_rootMinus_zero_rootPlus_zero_rootPlus (c : Fin 3) :
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
 
+private theorem K_rootPlus_one_rootMinus_one_rootMinus (c : Fin 3) :
+    K (rootPlus 1) (rootMinus 1) (rootMinus c) = rootMinus c := by
+  fin_cases c <;>
+    ext i <;>
+    simp [K, V, canonicalConj, canonicalVectorEquiv, rootPlus, rootMinus,
+      chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit,
+      lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Algebra.ZornVectorMatrix.conj,
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross]
+  all_goals (try fin_cases i) <;> norm_num
+
+private theorem K_rootPlus_two_rootMinus_two_rootMinus (c : Fin 3) :
+    K (rootPlus 2) (rootMinus 2) (rootMinus c) = rootMinus c := by
+  fin_cases c <;>
+    ext i <;>
+    simp [K, V, canonicalConj, canonicalVectorEquiv, rootPlus, rootMinus,
+      chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit,
+      lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Algebra.ZornVectorMatrix.conj,
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross]
+  all_goals (try fin_cases i) <;> norm_num
+
 /- The same-color tail identity for every quaternionic root label. -/
-set_option maxHeartbeats 2000000 in
 theorem K_rootPlus_rootMinus_rootMinus_all (a c : Fin 3) :
     K (rootPlus a) (rootMinus a) (rootMinus c) = rootMinus c := by
-  fin_cases a <;> fin_cases c <;>
+  fin_cases a
+  · exact K_rootPlus_zero_rootMinus_zero_rootMinus c
+  · exact K_rootPlus_one_rootMinus_one_rootMinus c
+  · exact K_rootPlus_two_rootMinus_two_rootMinus c
+
+private theorem K_rootMinus_one_rootPlus_one_rootPlus (c : Fin 3) :
+    K (rootMinus 1) (rootPlus 1) (rootPlus c) = rootPlus c := by
+  fin_cases c <;>
     ext i <;>
     simp [K, V, canonicalConj, canonicalVectorEquiv, rootPlus, rootMinus,
       chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit,
@@ -214,28 +242,30 @@ theorem K_rootPlus_rootMinus_rootMinus_all (a c : Fin 3) :
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
 
-set_option maxHeartbeats 2000000 in
+private theorem K_rootMinus_two_rootPlus_two_rootPlus (c : Fin 3) :
+    K (rootMinus 2) (rootPlus 2) (rootPlus c) = rootPlus c := by
+  fin_cases c <;>
+    ext i <;>
+    simp [K, V, canonicalConj, canonicalVectorEquiv, rootPlus, rootMinus,
+      chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit,
+      lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Algebra.ZornVectorMatrix.conj,
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross]
+  all_goals (try fin_cases i) <;> norm_num
+
 theorem K_rootMinus_rootPlus_rootPlus_all (a c : Fin 3) :
     K (rootMinus a) (rootPlus a) (rootPlus c) = rootPlus c := by
-  fin_cases a <;> fin_cases c <;>
-    ext i <;>
-    simp [K, V, canonicalConj, canonicalVectorEquiv, rootPlus, rootMinus,
-      chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit,
-      lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.mul,
-      InfoGeometry.Algebra.ZornVectorMatrix.conj,
-      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
-      InfoGeometry.Canonical.ZornMatrix.dot,
-      InfoGeometry.Canonical.ZornMatrix.cross]
-  all_goals (try fin_cases i) <;> norm_num
+  fin_cases a
+  · exact K_rootMinus_zero_rootPlus_zero_rootPlus c
+  · exact K_rootMinus_one_rootPlus_one_rootPlus c
+  · exact K_rootMinus_two_rootPlus_two_rootPlus c
 
-/- The native `V` operator already sees the same root-channel contraction:
-the middle label is returned by the third argument while the first label is
-retained in the output. -/
-set_option maxHeartbeats 2000000 in
-theorem V_rootPlus_rootMinus_rootPlus_channel (a b : Fin 3) :
-    V (rootPlus a) (rootMinus b) (rootPlus b) =
-      (-2 : ℝ) • rootPlus a := by
-  fin_cases a <;> fin_cases b <;>
+private theorem V_rootPlus_zero_rootMinus_rootPlus (b : Fin 3) :
+    V (rootPlus 0) (rootMinus b) (rootPlus b) =
+      (-2 : ℝ) • rootPlus 0 := by
+  fin_cases b <;>
     ext i <;>
     simp [V, canonicalConj, canonicalVectorEquiv, rootPlus, rootMinus,
       chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit,
@@ -246,11 +276,46 @@ theorem V_rootPlus_rootMinus_rootPlus_channel (a b : Fin 3) :
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
 
-set_option maxHeartbeats 2000000 in
-theorem V_rootMinus_rootPlus_rootMinus_channel (a b : Fin 3) :
-    V (rootMinus a) (rootPlus b) (rootMinus b) =
-      (-2 : ℝ) • rootMinus a := by
-  fin_cases a <;> fin_cases b <;>
+private theorem V_rootPlus_one_rootMinus_rootPlus (b : Fin 3) :
+    V (rootPlus 1) (rootMinus b) (rootPlus b) =
+      (-2 : ℝ) • rootPlus 1 := by
+  fin_cases b <;>
+    ext i <;>
+    simp [V, canonicalConj, canonicalVectorEquiv, rootPlus, rootMinus,
+      chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit,
+      lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Algebra.ZornVectorMatrix.conj,
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross]
+  all_goals (try fin_cases i) <;> norm_num
+
+private theorem V_rootPlus_two_rootMinus_rootPlus (b : Fin 3) :
+    V (rootPlus 2) (rootMinus b) (rootPlus b) =
+      (-2 : ℝ) • rootPlus 2 := by
+  fin_cases b <;>
+    ext i <;>
+    simp [V, canonicalConj, canonicalVectorEquiv, rootPlus, rootMinus,
+      chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit,
+      lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.mul,
+      InfoGeometry.Algebra.ZornVectorMatrix.conj,
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross]
+  all_goals (try fin_cases i) <;> norm_num
+
+theorem V_rootPlus_rootMinus_rootPlus_channel (a b : Fin 3) :
+    V (rootPlus a) (rootMinus b) (rootPlus b) =
+      (-2 : ℝ) • rootPlus a := by
+  fin_cases a
+  · exact V_rootPlus_zero_rootMinus_rootPlus b
+  · exact V_rootPlus_one_rootMinus_rootPlus b
+  · exact V_rootPlus_two_rootMinus_rootPlus b
+
+private theorem V_rootMinus_zero_rootPlus_rootMinus (b : Fin 3) :
+    V (rootMinus 0) (rootPlus b) (rootMinus b) =
+      (-2 : ℝ) • rootMinus 0 := by
+  fin_cases b <;>
     ext i <;>
     simp [V, canonicalConj, canonicalVectorEquiv, rootPlus, rootMinus,
       chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit,
@@ -260,6 +325,42 @@ theorem V_rootMinus_rootPlus_rootMinus_channel (a b : Fin 3) :
       InfoGeometry.Canonical.ZornMatrix.cross,
       InfoGeometry.Algebra.ZornVectorMatrix.conj]
   all_goals (try fin_cases i) <;> norm_num
+
+private theorem V_rootMinus_one_rootPlus_rootMinus (b : Fin 3) :
+    V (rootMinus 1) (rootPlus b) (rootMinus b) =
+      (-2 : ℝ) • rootMinus 1 := by
+  fin_cases b <;>
+    ext i <;>
+    simp [V, canonicalConj, canonicalVectorEquiv, rootPlus, rootMinus,
+      chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit,
+      lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.mul,
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross,
+      InfoGeometry.Algebra.ZornVectorMatrix.conj]
+  all_goals (try fin_cases i) <;> norm_num
+
+private theorem V_rootMinus_two_rootPlus_rootMinus (b : Fin 3) :
+    V (rootMinus 2) (rootPlus b) (rootMinus b) =
+      (-2 : ℝ) • rootMinus 2 := by
+  fin_cases b <;>
+    ext i <;>
+    simp [V, canonicalConj, canonicalVectorEquiv, rootPlus, rootMinus,
+      chiralNull, ellBasis, quaternionBasis, iUnit, jUnit, kQuaternionUnit,
+      lUnit, zMul, InfoGeometry.Canonical.ZornMatrix.mul,
+      Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv,
+      InfoGeometry.Canonical.ZornMatrix.dot,
+      InfoGeometry.Canonical.ZornMatrix.cross,
+      InfoGeometry.Algebra.ZornVectorMatrix.conj]
+  all_goals (try fin_cases i) <;> norm_num
+
+theorem V_rootMinus_rootPlus_rootMinus_channel (a b : Fin 3) :
+    V (rootMinus a) (rootPlus b) (rootMinus b) =
+      (-2 : ℝ) • rootMinus a := by
+  fin_cases a
+  · exact V_rootMinus_zero_rootPlus_rootMinus b
+  · exact V_rootMinus_one_rootPlus_rootMinus b
+  · exact V_rootMinus_two_rootPlus_rootMinus b
 
 /- The native `V` channel identities are homogeneous for the axial
 commutator grading. -/
@@ -294,7 +395,6 @@ theorem ellCommutator_K_rootMinus_rootPlus_rootPlus_all
 
 /- The rank-one `K(E,F)` operator also acts diagonally on the two Peirce
 idempotents. -/
-set_option maxHeartbeats 1000000 in
 theorem K_rootPlus_rootMinus_uPlus (a : Fin 3) :
     K (rootPlus a) (rootMinus a) uPlus = -uPlus := by
   fin_cases a <;>
@@ -308,7 +408,6 @@ theorem K_rootPlus_rootMinus_uPlus (a : Fin 3) :
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
 
-set_option maxHeartbeats 1000000 in
 theorem K_rootPlus_rootMinus_uMinus (a : Fin 3) :
     K (rootPlus a) (rootMinus a) uMinus = uMinus := by
   fin_cases a <;>
@@ -322,7 +421,6 @@ theorem K_rootPlus_rootMinus_uMinus (a : Fin 3) :
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
 
-set_option maxHeartbeats 1000000 in
 theorem K_rootPlus_rootMinus_one (a : Fin 3) :
     K (rootPlus a) (rootMinus a) (1 : CZ) = -lUnit := by
   fin_cases a <;>
@@ -336,7 +434,6 @@ theorem K_rootPlus_rootMinus_one (a : Fin 3) :
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
 
-set_option maxHeartbeats 1000000 in
 theorem K_rootPlus_rootMinus_ell (a : Fin 3) :
     K (rootPlus a) (rootMinus a) lUnit = -(1 : CZ) := by
   fin_cases a <;>
@@ -350,7 +447,6 @@ theorem K_rootPlus_rootMinus_ell (a : Fin 3) :
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
 
-set_option maxHeartbeats 1000000 in
 theorem ellCommutator_K_rootPlus_rootMinus_one (a : Fin 3) :
     ellCommutator (K (rootPlus a) (rootMinus a) (1 : CZ)) = 0 := by
   rw [K_rootPlus_rootMinus_one]
@@ -361,7 +457,6 @@ theorem ellCommutator_K_rootPlus_rootMinus_one (a : Fin 3) :
       InfoGeometry.Canonical.ZornMatrix.cross]
   all_goals (try fin_cases i) <;> norm_num
 
-set_option maxHeartbeats 1000000 in
 theorem ellCommutator_K_rootPlus_rootMinus_ell (a : Fin 3) :
     ellCommutator (K (rootPlus a) (rootMinus a) lUnit) = 0 := by
   rw [K_rootPlus_rootMinus_ell]

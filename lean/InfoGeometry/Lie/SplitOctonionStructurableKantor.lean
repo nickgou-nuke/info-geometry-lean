@@ -4,8 +4,6 @@ import InfoGeometry.Algebra.Zorn.CanonicalKantorOperators
 import Mathlib.Tactic.FinCases
 import Mathlib.Tactic.Ring
 
-set_option maxHeartbeats 3000000
-
 /-!
 # Native structurable/Kantor polynomial operators on the Zorn carrier
 

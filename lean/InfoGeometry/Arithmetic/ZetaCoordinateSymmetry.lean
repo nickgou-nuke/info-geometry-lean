@@ -748,6 +748,22 @@ theorem toCentered_chartCriticalMirror (z : ZetaAffineChart) :
     ring
   · simp [toCentered, centeredSigma, chartCriticalMirror, ZetaCenteredChart.criticalMirror]
 
+/-! ## Critical-line transport through the centered chart -/
+
+/-- The affine critical line is exactly vanishing of the centered normal coordinate. -/
+theorem chartCriticalLine_iff_toCentered_u_eq_zero (z : ZetaAffineChart) :
+    chartCriticalLine z ↔ (toCentered z).u = 0 := by
+  simp only [chartCriticalLine, toCentered, ZetaCenteredChart.u,
+    centeredSigma]
+  constructor <;> intro h <;> linarith
+
+/-- The affine critical mirror fixes precisely the points with zero centered normal coordinate. -/
+theorem chartCriticalMirror_eq_self_iff_toCentered_u_eq_zero
+    (z : ZetaAffineChart) :
+    chartCriticalMirror z = z ↔ (toCentered z).u = 0 := by
+  rw [fixed_chartCriticalMirror_iff_criticalLine,
+    chartCriticalLine_iff_toCentered_u_eq_zero]
+
 /-! ## The generated finite symmetry frame -/
 
 /--

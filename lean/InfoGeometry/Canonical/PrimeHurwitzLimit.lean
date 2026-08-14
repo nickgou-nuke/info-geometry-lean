@@ -167,10 +167,10 @@ theorem cayley_critical_of_unit
 /-- Reflection across the critical line corresponds to inversion on the circle. -/
 @[rep_depth operator]
 theorem cayley_reflection_to_inversion
-    (s : ℂ) (hs0 : s ≠ 0) (hs1 : s ≠ 1) :
+    (s : ℂ) (hs0 : s ≠ 0) :
     cayley (1 - s) = (cayley s)⁻¹ := by
   unfold cayley
-  field_simp [hs0, hs1]
+  field_simp [hs0]
   ring
 
 /-- Native proof-carrying Cayley geometry property. -/
@@ -183,7 +183,7 @@ theorem canonicalCayleyCriticalWitness :
   ⟨cayleyInv_cayley_eq,
     cayley_unit_of_critical,
       cayley_critical_of_unit,
-        cayley_reflection_to_inversion⟩
+        (fun s hs0 _hs1 => cayley_reflection_to_inversion s hs0)⟩
 
 end CayleyCriticalWitness
 
@@ -351,6 +351,16 @@ theorem RH_of_Hurwitz_LeeYang_limit
   rcases C with ⟨_, _, critical_of_unit, _⟩
   exact critical_of_unit s hs_ne_one hcircle
 
+/-- The Hurwitz/Lee--Yang conclusion with the canonical Cayley witness. -/
+@[bridge_target_tag, rep_depth operator]
+theorem RH_of_Hurwitz_LeeYang_limit_cayley
+    (Ξ : CompletedXiZeroPredicate)
+    (A : LeeYangApproximants)
+    (H : HurwitzZeroTransferWitness Ξ A) :
+    RiemannHypothesis Ξ := by
+  exact RH_of_Hurwitz_LeeYang_limit
+    Ξ CayleyCriticalWitness.canonicalCayleyCriticalWitness A H
+
 /-! ## Stronger split-domain property -/
 
 /--
@@ -385,6 +395,29 @@ structure CorrectHurwitzZeroTransferWitness
   -/
   xi_zero_iff_limit_zero :
     ∀ s : ℂ, s ≠ 1 → (Ξ.XiZero s ↔ limitF (cayley s) = 0)
+
+/-- The corrected split-domain witness contains the original transfer data. -/
+@[rep_depth operator]
+def CorrectHurwitzZeroTransferWitness.toHurwitzZeroTransferWitness
+    {Ξ : CompletedXiZeroPredicate}
+    {A : LeeYangApproximants}
+    (H : CorrectHurwitzZeroTransferWitness Ξ A) :
+    HurwitzZeroTransferWitness Ξ A :=
+  { zeroFreeTransfer := H.transfer
+    locallyUniformRenormalizedLimit := by
+      simpa [H.transfer_limitF] using H.locallyUniformRenormalizedLimit
+    nontrivialLimitOnComplement := by
+      constructor
+      · simpa [H.transfer_limitF] using H.nontrivial_in
+      · simpa [H.transfer_limitF] using H.nontrivial_out
+    noSpuriousZeros := by
+      intro z hz
+      apply H.noSpuriousZeros z
+      simpa [H.transfer_limitF] using hz
+    xiZero_to_limitZero := by
+      intro s hs
+      rw [H.transfer_limitF]
+      exact (H.xi_zero_iff_limit_zero s (Ξ.zero_ne_one s hs)).mp hs }
 
 /-- Zero-location transfer for the corrected split-domain Hurwitz property. -/
 @[bridge_target_tag, rep_depth operator]
@@ -425,5 +458,15 @@ theorem RH_from_Correct_Hurwitz_LeeYang
     corrected_hurwitz_xiZeros_map_to_unit_circle H s hs_ne_one hs
   rcases C with ⟨_, _, critical_of_unit, _⟩
   exact critical_of_unit s hs_ne_one hcircle
+
+/-- The corrected split-domain conclusion with the canonical Cayley witness. -/
+@[bridge_target_tag, rep_depth operator]
+theorem RH_from_Correct_Hurwitz_LeeYang_cayley
+    (Ξ : CompletedXiZeroPredicate)
+    (A : LeeYangApproximants)
+    (H : CorrectHurwitzZeroTransferWitness Ξ A) :
+    RiemannHypothesis Ξ := by
+  exact RH_from_Correct_Hurwitz_LeeYang
+    Ξ CayleyCriticalWitness.canonicalCayleyCriticalWitness A H
 
 end InfoGeometry.Canonical.PrimeHurwitzLimit

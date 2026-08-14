@@ -110,37 +110,73 @@ theorem leviCivita3_swap_last (k i j : Fin 3) :
     norm_num [leviCivita3]
   all_goals apply Fin.ext <;> rfl
 
-set_option maxHeartbeats 1000000 in
 theorem cartesianZorn_rootPlus_mul_rootPlus_leviCivita (i j : Fin 3) :
     cartesianZornLinearEquiv (rootPlus i) *
         cartesianZornLinearEquiv (rootPlus j) =
       ∑ k : Fin 3, (leviCivita3 k i j : ℝ) •
         cartesianZornLinearEquiv (rootMinus k) := by
   rw [cartesianZorn_rootPlus_mul_rootPlus_cross]
-  fin_cases i <;> fin_cases j <;> apply ZornMatrix.ext
-  all_goals try funext k
-  all_goals simp only [cross_axis_apply]
-  all_goals try fin_cases k
-  all_goals simp [cartesianZorn_rootMinus, rootMinus, quaternionAxis,
-    ellAxis, axis, leviCivita3, Fin.sum_univ_three, Pi.single_apply,
-    Equiv.smul_def, ZornMatrix.coordEquiv, ZornMatrix.cross]
-  all_goals norm_num
+  simp_rw [cartesianZorn_rootMinus]
+  have hsum :
+      (∑ k : Fin 3, (leviCivita3 k i j : ℝ) •
+          InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis k) =
+        (let Z : InfoGeometry.Canonical.ZornMatrix ℝ :=
+          { a := 0, b := 0, x := 0,
+            y := InfoGeometry.Canonical.ZornMatrix.cross (axis i) (axis j) }
+         Z) := by
+    let Z : InfoGeometry.Canonical.ZornMatrix ℝ :=
+      { a := 0, b := 0, x := 0,
+        y := InfoGeometry.Canonical.ZornMatrix.cross (axis i) (axis j) }
+    have h := InfoGeometry.Canonical.ZornMatrix.anticolorProject_eq_chiralLower_sum Z
+    rw [InfoGeometry.Canonical.ZornMatrix.anticolorProject_apply] at h
+    calc
+      (∑ k : Fin 3, (leviCivita3 k i j : ℝ) •
+          InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis k) =
+          ∑ k : Fin 3, (InfoGeometry.Canonical.ZornMatrix.cross
+            (axis i) (axis j) k) •
+            InfoGeometry.Canonical.ZornMatrix.chiralLowerBasis k := by
+        apply Finset.sum_congr rfl
+        intro k hk
+        rw [cross_axis_apply]
+      _ = Z := by
+        simpa [Z] using h.symm
+  rw [hsum]
 
-set_option maxHeartbeats 1000000 in
 theorem cartesianZorn_rootMinus_mul_rootMinus_leviCivita (i j : Fin 3) :
     cartesianZornLinearEquiv (rootMinus i) *
         cartesianZornLinearEquiv (rootMinus j) =
       -∑ k : Fin 3, (leviCivita3 k i j : ℝ) •
         cartesianZornLinearEquiv (rootPlus k) := by
   rw [cartesianZorn_rootMinus_mul_rootMinus_cross]
-  fin_cases i <;> fin_cases j <;> apply ZornMatrix.ext
-  all_goals try funext k
-  all_goals simp only [cross_axis_apply]
-  all_goals try fin_cases k
-  all_goals simp [cartesianZorn_rootPlus, rootPlus, quaternionAxis,
-    ellAxis, axis, leviCivita3, Fin.sum_univ_three, Pi.single_apply,
-    Equiv.smul_def, ZornMatrix.coordEquiv, ZornMatrix.cross]
-  all_goals norm_num
+  simp_rw [cartesianZorn_rootPlus]
+  have hsum :
+      (∑ k : Fin 3, (leviCivita3 k i j : ℝ) •
+          InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis k) =
+        (let Z : InfoGeometry.Canonical.ZornMatrix ℝ :=
+          { a := 0, b := 0,
+            x := InfoGeometry.Canonical.ZornMatrix.cross (axis i) (axis j),
+            y := 0 }
+         Z) := by
+    let Z : InfoGeometry.Canonical.ZornMatrix ℝ :=
+      { a := 0, b := 0,
+        x := InfoGeometry.Canonical.ZornMatrix.cross (axis i) (axis j),
+        y := 0 }
+    have h := InfoGeometry.Canonical.ZornMatrix.colorProject_eq_chiralUpper_sum Z
+    rw [InfoGeometry.Canonical.ZornMatrix.colorProject_apply] at h
+    calc
+      (∑ k : Fin 3, (leviCivita3 k i j : ℝ) •
+          InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis k) =
+          ∑ k : Fin 3, (InfoGeometry.Canonical.ZornMatrix.cross
+            (axis i) (axis j) k) •
+            InfoGeometry.Canonical.ZornMatrix.chiralUpperBasis k := by
+        apply Finset.sum_congr rfl
+        intro k hk
+        rw [cross_axis_apply]
+      _ = Z := by
+        simpa [Z] using h.symm
+  rw [hsum]
+  apply InfoGeometry.Canonical.ZornMatrix.ext <;>
+    simp
 
 theorem cartesianZorn_rootPlus_commutator_leviCivita (i j : Fin 3) :
     cartesianZornLinearEquiv (rootPlus i) *

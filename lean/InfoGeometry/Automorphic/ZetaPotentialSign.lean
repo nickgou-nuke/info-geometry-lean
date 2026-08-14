@@ -55,12 +55,40 @@ The geometric Jordan pseudo-barrier:
 def potential (x : X) : ℝ :=
   - Real.log (J.jordanNorm x)
 
+theorem potential_nonnegative_iff_norm_le_one
+    {x : X} (hx : J.admissible x) :
+    0 ≤ J.potential x ↔ J.jordanNorm x ≤ 1 := by
+  have hpos : 0 < J.jordanNorm x := J.jordanNorm_pos x hx
+  constructor
+  · intro h
+    change 0 ≤ -Real.log (J.jordanNorm x) at h
+    by_contra hnot
+    have hgt : 1 < J.jordanNorm x := lt_of_not_ge hnot
+    have hlog : 0 < Real.log (J.jordanNorm x) := Real.log_pos hgt
+    linarith
+  · intro hle
+    exact neg_nonneg.mpr (Real.log_nonpos (le_of_lt hpos) hle)
+
 @[simp]
 theorem potential_eq_zero_of_norm_eq_one
     {x : X}
     (h : J.jordanNorm x = 1) :
     J.potential x = 0 := by
   simp [potential, h]
+
+theorem potential_eq_zero_iff_norm_eq_one
+    {x : X} (hx : J.admissible x) :
+    J.potential x = 0 ↔ J.jordanNorm x = 1 := by
+  have hpos : 0 < J.jordanNorm x := J.jordanNorm_pos x hx
+  constructor
+  · intro h
+    have hlog : Real.log (J.jordanNorm x) = 0 := by
+      simpa [potential] using neg_eq_zero.mp h
+    rcases (Real.log_eq_zero).mp hlog with hzero | hone | hneg
+    · exact (ne_of_gt hpos hzero).elim
+    · exact hone
+    · linarith
+  · exact potential_eq_zero_of_norm_eq_one J
 
 end JordanBarrierDatum
 
@@ -110,12 +138,40 @@ The arithmetic divisor barrier / prime surprisal potential:
 def potential (s : S) : ℝ :=
   - Real.log (L.absValue s)
 
+theorem potential_nonnegative_iff_absValue_le_one
+    {s : S} (hs : L.admissible s) :
+    0 ≤ L.potential s ↔ L.absValue s ≤ 1 := by
+  have hpos : 0 < L.absValue s := L.absValue_pos s hs
+  constructor
+  · intro h
+    change 0 ≤ -Real.log (L.absValue s) at h
+    by_contra hnot
+    have hgt : 1 < L.absValue s := lt_of_not_ge hnot
+    have hlog : 0 < Real.log (L.absValue s) := Real.log_pos hgt
+    linarith
+  · intro hle
+    exact neg_nonneg.mpr (Real.log_nonpos (le_of_lt hpos) hle)
+
 @[simp]
 theorem potential_eq_zero_of_absValue_eq_one
     {s : S}
     (h : L.absValue s = 1) :
     L.potential s = 0 := by
   simp [potential, h]
+
+theorem potential_eq_zero_iff_absValue_eq_one
+    {s : S} (hs : L.admissible s) :
+    L.potential s = 0 ↔ L.absValue s = 1 := by
+  have hpos : 0 < L.absValue s := L.absValue_pos s hs
+  constructor
+  · intro h
+    have hlog : Real.log (L.absValue s) = 0 := by
+      simpa [potential] using neg_eq_zero.mp h
+    rcases (Real.log_eq_zero).mp hlog with hzero | hone | hneg
+    · exact (ne_of_gt hpos hzero).elim
+    · exact hone
+    · linarith
+  · exact potential_eq_zero_of_absValue_eq_one L
 
 end EulerProductDatum
 
@@ -189,6 +245,18 @@ theorem potentials_match
     JordanBarrierDatum.potential,
     C.norm_match x hx
   ]
+
+theorem potential_zero_iff
+    (C : ZetaJordanPotentialCorrespondence J L)
+    {x : X} (hx : J.admissible x) :
+    L.potential (C.toSpectral x) = 0 ↔ J.potential x = 0 := by
+  rw [C.potentials_match hx]
+
+theorem potential_nonnegative_iff
+    (C : ZetaJordanPotentialCorrespondence J L)
+    {x : X} (hx : J.admissible x) :
+    0 ≤ L.potential (C.toSpectral x) ↔ 0 ≤ J.potential x := by
+  rw [C.potentials_match hx]
 
 end ZetaJordanPotentialCorrespondence
 

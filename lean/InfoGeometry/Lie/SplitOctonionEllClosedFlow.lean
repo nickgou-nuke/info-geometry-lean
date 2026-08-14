@@ -1,4 +1,5 @@
 import InfoGeometry.Lie.SplitOctonionEllTrifactor
+import InfoGeometry.Lie.SplitOctonionEllOperatorTrifactor
 import InfoGeometry.Lie.SplitOctonionEllFlowDecomposition
 import InfoGeometry.Lie.SplitOctonionEllPolarization
 import InfoGeometry.Algebra.Zorn.Incidence
@@ -274,126 +275,10 @@ theorem ellFlowPhi_on_PMinus (t : ℝ) (Z : CZ) :
   rw [ellFlowPMinus_coord, ellFlowPhi_coord]
   ext i <;> simp [Equiv.smul_def, coordEquiv]
 
-set_option maxHeartbeats 2000000 in
-theorem diagEllGrading_ellWeightBasisReal (i : Fin 8) :
-    diagEllGrading (ellWeightBasisReal i) =
+theorem ellGrading_ellWeightBasisReal_native (i : Fin 8) :
+    InfoGeometry.Lie.SplitOctonionEllOperatorTrifactor.ellGrading
+        (ellWeightBasisReal i) =
       ellWeight i • ellWeightBasisReal i := by
-  rw [ellWeightBasisReal_apply]
-  fin_cases i
-  · change diagEllGrading (rootMinus 0) = (-1 : ℝ) • rootMinus 0
-    rw [diagEllGrading_coord]
-    ext i <;>
-      simp [rootMinus, chiralNull, ellBasis, quaternionBasis,
-        iUnit, jUnit, kQuaternionUnit, lUnit,
-        Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-    all_goals (try fin_cases i) <;> ring
-  · change diagEllGrading (rootMinus 1) = (-1 : ℝ) • rootMinus 1
-    rw [diagEllGrading_coord]
-    ext i <;>
-      simp [rootMinus, chiralNull, ellBasis, quaternionBasis,
-        iUnit, jUnit, kQuaternionUnit, lUnit,
-        Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-    all_goals (try fin_cases i) <;> ring
-  · change diagEllGrading (rootMinus 2) = (-1 : ℝ) • rootMinus 2
-    rw [diagEllGrading_coord]
-    ext i <;>
-      simp [rootMinus, chiralNull, ellBasis, quaternionBasis,
-        iUnit, jUnit, kQuaternionUnit, lUnit,
-        Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-    all_goals (try fin_cases i) <;> ring
-  · simp [ellWeightBasis, ellWeight, diagEllGrading_coord]
-  · simp [ellWeightBasis, ellWeight, diagEllGrading_coord, lUnit]
-  · change diagEllGrading (rootPlus 0) = (1 : ℝ) • rootPlus 0
-    rw [diagEllGrading_coord]
-    ext i <;>
-      simp [rootPlus, chiralNull, ellBasis, quaternionBasis,
-        iUnit, jUnit, kQuaternionUnit, lUnit,
-        Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-    all_goals (try fin_cases i) <;> ring
-  · change diagEllGrading (rootPlus 1) = (1 : ℝ) • rootPlus 1
-    rw [diagEllGrading_coord]
-    ext i <;>
-      simp [rootPlus, chiralNull, ellBasis, quaternionBasis,
-        iUnit, jUnit, kQuaternionUnit, lUnit,
-        Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-    all_goals (try fin_cases i) <;> ring
-  · change diagEllGrading (rootPlus 2) = (1 : ℝ) • rootPlus 2
-    rw [diagEllGrading_coord]
-    ext i <;>
-      simp [rootPlus, chiralNull, ellBasis, quaternionBasis,
-        iUnit, jUnit, kQuaternionUnit, lUnit,
-        Equiv.smul_def, InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-    all_goals (try fin_cases i) <;> ring
-
-set_option maxHeartbeats 2000000 in
-theorem ellFlowPhi_ellWeightBasisReal (t : ℝ) (i : Fin 8) :
-    ellFlowPhi t (ellWeightBasisReal i) =
-      (if i < 3 then exp (-t) else if i < 5 then 1 else exp t) •
-        ellWeightBasisReal i := by
-  rw [ellWeightBasisReal_apply, ellFlowPhi_coord]
-  fin_cases i <;>
-    simp [ellWeightBasis, rootPlus, rootMinus, chiralNull, ellBasis,
-      quaternionBasis, iUnit, jUnit, kQuaternionUnit, lUnit, Equiv.smul_def,
-      InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-  all_goals ring
-
-set_option maxHeartbeats 2000000 in
-theorem ellQ_ellWeightBasisReal (i : Fin 8) :
-    ellQ (ellWeightBasisReal i) =
-      (if i < 3 then 1 else if i < 5 then 0 else 1) • ellWeightBasisReal i := by
-  rw [ellWeightBasisReal_apply, ellQ_coord]
-  fin_cases i <;>
-    simp [ellWeightBasis, rootPlus, rootMinus, chiralNull, ellBasis,
-      quaternionBasis, iUnit, jUnit, kQuaternionUnit, lUnit, Equiv.smul_def,
-      InfoGeometry.Canonical.ZornMatrix.coordEquiv]
-
-theorem trace_basis_smul (f : EndCZ) (w : Fin 8 → ℝ)
-    (h : ∀ i, f (ellWeightBasisReal i) = w i • ellWeightBasisReal i) :
-    LinearMap.trace ℝ CZ f = ∑ i, w i := by
-  rw [LinearMap.trace_eq_matrix_trace ℝ ellWeightBasisReal]
-  simp only [Matrix.trace, Matrix.diag, LinearMap.toMatrix_apply]
-  simp_rw [h]
-  simp
-
-/-- The trace of the normalized axial grading is zero. -/
-theorem trace_ellGrading : LinearMap.trace ℝ CZ (diagEllGrading : EndCZ) = 0 := by
-  calc
-    LinearMap.trace ℝ CZ (diagEllGrading : EndCZ) =
-        ∑ i, ellWeight i :=
-      trace_basis_smul _ _ diagEllGrading_ellWeightBasisReal
-    _ = 0 := by
-      norm_num [Fin.sum_univ_succ, ellWeight]
-
-/-- The trace of the closed flow Φ(t) is the activity partition trace. -/
-theorem trace_ellFlowPhi (t : ℝ) :
-    LinearMap.trace ℝ CZ (ellFlowPhi t : EndCZ) = 2 + 3 * Real.exp t + 3 * Real.exp (-t) := by
-  calc
-    LinearMap.trace ℝ CZ (ellFlowPhi t : EndCZ) =
-        ∑ i, (if i < 3 then exp (-t) else if i < 5 then 1 else exp t) :=
-      trace_basis_smul _ _ (ellFlowPhi_ellWeightBasisReal t)
-    _ = 2 + 3 * Real.exp t + 3 * Real.exp (-t) := by
-      norm_num [Fin.sum_univ_succ]
-      ring
-
-/- The scalar-multiple trace is the active rank multiplied by the scalar. -/
-theorem trace_exp_neg_beta_Q (β : ℝ) :
-    LinearMap.trace ℝ CZ ((Real.exp (-β) : ℝ) • ellQ : EndCZ) =
-      6 * Real.exp (-β) := by
-  let c : ℝ := Real.exp (-β)
-  have hQ : ∀ i, ((Real.exp (-β) : ℝ) • ellQ : EndCZ)
-      (ellWeightBasisReal i) =
-        (c * (if i < 3 then 1 else if i < 5 then 0 else 1)) •
-          ellWeightBasisReal i := by
-    intro i
-    change (Real.exp (-β) : ℝ) • ellQ (ellWeightBasisReal i) = _
-    rw [ellQ_ellWeightBasisReal]
-    module
-  calc
-    LinearMap.trace ℝ CZ ((Real.exp (-β) : ℝ) • ellQ : EndCZ) =
-        ∑ i, c * (if i < 3 then 1 else if i < 5 then 0 else 1) :=
-      trace_basis_smul _ _ hQ
-    _ = 6 * Real.exp (-β) := by
-      norm_num [Fin.sum_univ_succ, c]
-      ring
+  exact InfoGeometry.Lie.SplitOctonionEllFlowDecomposition.ellGrading_ellWeightBasisReal i
 
 end InfoGeometry.Lie.SplitOctonionEllClosedFlow

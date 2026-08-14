@@ -64,6 +64,17 @@ def markedConfigAction {S : BoundarySurface}
     MarkedConfiguration S 3 :=
   permuteMarkedConfiguration (braidPermutation g) x
 
+theorem markedConfigAction_underlyingPoints {S : BoundarySurface}
+    (g : BoundaryBraidGroup) (x : MarkedConfiguration S 3) (i : Fin 3) :
+    underlyingPoints (markedConfigAction g x) i =
+      underlyingPoints x ((braidPermutation g).symm i) := by
+  rfl
+
+theorem markedConfigAction_pairwiseDistinct {S : BoundarySurface}
+    (g : BoundaryBraidGroup) (x : MarkedConfiguration S 3) :
+    PairwiseDistinct (underlyingPoints (markedConfigAction g x)) := by
+  exact (markedConfigAction g x).2
+
 def colorReadout {S : BoundarySurface}
     (x : MarkedConfiguration S 3) : Fin 3 → Fin 3 :=
   fun i => (x.1 i).2
@@ -114,5 +125,11 @@ theorem markedConfig_action_mul {S : BoundarySurface}
       markedConfigAction g (markedConfigAction h x) := by
   rw [markedConfigAction, braidPermutation_mul]
   exact permuteMarkedConfiguration_mul _ _ x
+
+instance markedConfigurationMulAction {S : BoundarySurface} :
+    MulAction BoundaryBraidGroup (MarkedConfiguration S 3) where
+  smul := markedConfigAction
+  one_smul := markedConfig_action_one
+  mul_smul := markedConfig_action_mul
 
 end InfoGeometry.Projective.ProjectiveNullBoundaryBraidEquivariance

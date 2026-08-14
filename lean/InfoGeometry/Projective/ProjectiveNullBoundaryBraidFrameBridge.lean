@@ -23,6 +23,7 @@ abbrev BoundaryPoint := SplitCl44ProjectiveNullSpace
 structure BoundarySurface where
   Point : Type*
   embed : Point → BoundaryPoint
+  embed_injective : Function.Injective embed
 
 def PairwiseDistinct {S : Type*} {N : ℕ} (x : Fin N → S) : Prop :=
   ∀ i j, i ≠ j → x i ≠ x j
@@ -33,7 +34,7 @@ def OrderedConfiguration (S : Type*) (N : ℕ) :=
 def MarkedPoint (S : BoundarySurface) := S.Point × Fin 3
 
 def MarkedConfiguration (S : BoundarySurface) (N : ℕ) :=
-  OrderedConfiguration (MarkedPoint S) N
+  {x : Fin N → MarkedPoint S // PairwiseDistinct (fun i => (x i).1)}
 
 def underlyingPoints {S : BoundarySurface} {N : ℕ}
     (x : MarkedConfiguration S N) : Fin N → S.Point :=
@@ -41,8 +42,47 @@ def underlyingPoints {S : BoundarySurface} {N : ℕ}
 
 theorem markedConfiguration_pairwiseDistinct {S : BoundarySurface} {N : ℕ}
     (x : MarkedConfiguration S N) :
-    PairwiseDistinct x.1 :=
+    PairwiseDistinct (fun i => (x.1 i).1) :=
   x.2
+
+theorem boundarySurface_embed_eq_of_eq
+    (S : BoundarySurface) {p q : S.Point}
+    (h : S.embed p = S.embed q) : p = q :=
+  S.embed_injective h
+
+def relabelMarks {S : BoundarySurface} {N : ℕ}
+    (π : Equiv.Perm (Fin 3)) (x : MarkedConfiguration S N) :
+    MarkedConfiguration S N :=
+  ⟨fun i => ((x.1 i).1, π (x.1 i).2), by
+    intro i j hij hpoints
+    exact x.2 i j hij hpoints
+  ⟩
+
+theorem relabelMarks_underlyingPoints {S : BoundarySurface} {N : ℕ}
+    (π : Equiv.Perm (Fin 3)) (x : MarkedConfiguration S N) :
+    underlyingPoints (relabelMarks π x) = underlyingPoints x := by
+  rfl
+
+theorem relabelMarks_pairwiseDistinct {S : BoundarySurface} {N : ℕ}
+    (π : Equiv.Perm (Fin 3)) (x : MarkedConfiguration S N) :
+    PairwiseDistinct (underlyingPoints (relabelMarks π x)) := by
+  rw [relabelMarks_underlyingPoints]
+  exact x.2
+
+theorem relabelMarks_one {S : BoundarySurface} {N : ℕ}
+    (x : MarkedConfiguration S N) :
+    relabelMarks (1 : Equiv.Perm (Fin 3)) x = x := by
+  apply Subtype.ext
+  funext i
+  rfl
+
+theorem relabelMarks_mul {S : BoundarySurface} {N : ℕ}
+    (π σ : Equiv.Perm (Fin 3)) (x : MarkedConfiguration S N) :
+    relabelMarks (π * σ) x =
+      relabelMarks π (relabelMarks σ x) := by
+  apply Subtype.ext
+  funext i
+  rfl
 
 structure BoundaryBraidFrameRepresentation where
   representation : BoundaryBraidGroup →* BoundaryBraidCarrier

@@ -7,13 +7,11 @@ import InfoGeometry.Arithmetic.PrimonFinite
 import InfoGeometry.Algebra.InfiniteInductiveSUSY
 
 /-!
-# Infinite Primon Gas Bost-Connes Tower
+# Compatible-cone transport of finite prime products
 
-This module formalizes the infinite-dimensional extension of finite-mode Primon gas
-thermodynamics using compatible algebraic cones and direct-limit transports.
-
-We prove that the finite partition products (`ZF_eq_prod` and `STrF_eq_prod`)
-and local cancellations are natively preserved in the infinite target ring under any compatible cone.
+This module transports finite product identities through compatible ring maps.
+It does not construct an infinite-dimensional partition function, a direct
+limit, or an analytic Bost--Connes system.
 -/
 
 set_option linter.unusedSectionVars false
@@ -48,10 +46,7 @@ theorem primon_partition_step
   intro p _hp
   exact h_q n p
 
-/--
-Infinite-dimensional Bost-Connes partition theorem.
-Every compatible cone maps the finite stage partition identities cleanly into the target ring.
--/
+/-- A compatible cone transports the finite partition product identity. -/
 theorem infinite_primon_partition_preservation
     (modes : Finset ι) (q : ι → L)
     (q_stage : ∀ n : ℕ, ι → A n)
@@ -67,7 +62,7 @@ theorem infinite_primon_partition_preservation
   intro p _hp
   rw [hq_compat n p]
 
-/-- Infinite-dimensional Bost-Connes supertrace theorem. -/
+/-- A compatible cone transports the finite signed product identity. -/
 theorem infinite_primon_supertrace_preservation
     (modes : Finset ι) (q : ι → L)
     (q_stage : ∀ n : ℕ, ι → A n)
@@ -83,7 +78,7 @@ theorem infinite_primon_supertrace_preservation
   intro p _hp
   rw [hq_compat n p]
 
-/-- Infinite-dimensional local supersymmetric cancellation. -/
+/-- Local cancellation after transport through a field-valued cone. -/
 theorem infinite_primon_susy_cancellation
     {K : ℕ → Type*} [∀ n, Field (K n)]
     {KL : Type*} [Field KL]

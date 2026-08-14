@@ -113,7 +113,6 @@ mapping `(p, q) ↦ (Z * q, - (zornConj Z * p))`.
 def zornBiAction (Z : CanonicalZorn) (pq : BiSplitOctonions) : BiSplitOctonions :=
   (Z * pq.2, - (zornConj Z * pq.1))
 
-set_option maxHeartbeats 1000000 in
 /--
 **The Clifford Square Law on Bi-Split-Octonions:**
 Proves natively that the chiral action of any Zorn matrix Z squares to the scalar

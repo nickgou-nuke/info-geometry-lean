@@ -279,6 +279,7 @@ def processConstant (env : Environment) (sp : SearchPath) (name : Name) (nameStr
   let attrStrs : Array String := Id.run do
     let mut attrs := InfoGeometry.Meta.vacuityRoleTagStringsOf env name
     attrs := attrs ++ InfoGeometry.Meta.repDepthTagStringsOf env name
+    attrs := attrs ++ InfoGeometry.Meta.edgeKindTagStringsOf env name
     if InfoGeometry.Meta.capstoneAttr.hasTag env name then
       attrs := attrs.push "capstone"
     attrs
@@ -653,6 +654,7 @@ def processConstantStreaming (env : Environment) (sp : SearchPath) (name : Name)
   let attrStrs : Array String := Id.run do
     let mut attrs := InfoGeometry.Meta.vacuityRoleTagStringsOf env name
     attrs := attrs ++ InfoGeometry.Meta.repDepthTagStringsOf env name
+    attrs := attrs ++ InfoGeometry.Meta.edgeKindTagStringsOf env name
     if InfoGeometry.Meta.capstoneAttr.hasTag env name then
       attrs := attrs.push "capstone"
     attrs

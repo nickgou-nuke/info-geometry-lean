@@ -31,45 +31,14 @@ def numberOp0 : CAR3 := carAnn0 * carCre0
 def numberOp1 : CAR3 := carAnn1 * carCre1
 def numberOp2 : CAR3 := carAnn2 * carCre2
 
-private theorem numberOp_idem (i : Fin 3) :
-    (chiralPlus55 i * chiralMinus55 i) *
-        (chiralPlus55 i * chiralMinus55 i) =
-      chiralPlus55 i * chiralMinus55 i := by
-  have hplus := chiralPlus55_sq i
-  have hminus := chiralMinus55_sq i
-  have hcar :
-      chiralMinus55 i * chiralPlus55 i +
-          chiralPlus55 i * chiralMinus55 i = 1 := by
-    simpa [add_comm] using
-      (chiralPlus55_minus55_anticommutator i i)
-  have hswap : chiralMinus55 i * chiralPlus55 i =
-      1 - chiralPlus55 i * chiralMinus55 i := by
-    exact eq_sub_of_add_eq hcar
-  calc
-    (chiralPlus55 i * chiralMinus55 i) *
-        (chiralPlus55 i * chiralMinus55 i) =
-      chiralPlus55 i *
-        (chiralMinus55 i * chiralPlus55 i) * chiralMinus55 i := by
-          simp only [mul_assoc]
-    _ = chiralPlus55 i *
-        (1 - chiralPlus55 i * chiralMinus55 i) * chiralMinus55 i := by
-          rw [hswap]
-    _ = chiralPlus55 i * chiralMinus55 i -
-        (chiralPlus55 i * chiralPlus55 i) *
-          (chiralMinus55 i * chiralMinus55 i) := by
-          noncomm_ring
-    _ = chiralPlus55 i * chiralMinus55 i := by
-          rw [hplus, hminus]
-          simp
-
 theorem numberOp0_idem : numberOp0 * numberOp0 = numberOp0 :=
-  numberOp_idem 0
+  chiralNumber55_idem 0
 
 theorem numberOp1_idem : numberOp1 * numberOp1 = numberOp1 :=
-  numberOp_idem 1
+  chiralNumber55_idem 1
 
 theorem numberOp2_idem : numberOp2 * numberOp2 = numberOp2 :=
-  numberOp_idem 2
+  chiralNumber55_idem 2
 
 theorem color_car_native_closure :
     chiralPlusSum * chiralPlusSum = 0 ∧

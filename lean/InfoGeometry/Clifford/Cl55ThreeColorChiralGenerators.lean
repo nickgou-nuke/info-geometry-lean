@@ -99,6 +99,38 @@ theorem chiralMinus55_plus55_commutator_mem_grade_zero (i j : Fin 3) :
   simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using
     (Submodule.neg_mem (cl55GradeSubmodule 0) h)
 
+/-- The native colour number operator is an idempotent. -/
+theorem chiralNumber55_idem (i : Fin 3) :
+    (chiralPlus55 i * chiralMinus55 i) *
+        (chiralPlus55 i * chiralMinus55 i) =
+      chiralPlus55 i * chiralMinus55 i := by
+  have hplus := chiralPlus55_sq i
+  have hminus := chiralMinus55_sq i
+  have hcar :
+      chiralMinus55 i * chiralPlus55 i +
+          chiralPlus55 i * chiralMinus55 i = 1 := by
+    simpa [add_comm] using
+      (chiralPlus55_minus55_anticommutator i i)
+  have hswap : chiralMinus55 i * chiralPlus55 i =
+      1 - chiralPlus55 i * chiralMinus55 i := by
+    exact eq_sub_of_add_eq hcar
+  calc
+    (chiralPlus55 i * chiralMinus55 i) *
+        (chiralPlus55 i * chiralMinus55 i) =
+      chiralPlus55 i *
+        (chiralMinus55 i * chiralPlus55 i) * chiralMinus55 i := by
+          simp only [mul_assoc]
+    _ = chiralPlus55 i *
+        (1 - chiralPlus55 i * chiralMinus55 i) * chiralMinus55 i := by
+          rw [hswap]
+    _ = chiralPlus55 i * chiralMinus55 i -
+        (chiralPlus55 i * chiralPlus55 i) *
+          (chiralMinus55 i * chiralMinus55 i) := by
+          noncomm_ring
+    _ = chiralPlus55 i * chiralMinus55 i := by
+          rw [hplus, hminus]
+          simp
+
 theorem chiralPlus55_commutator_mem_grade_two
     (i j : Fin 3) :
     chiralPlus55 i * chiralPlus55 j -

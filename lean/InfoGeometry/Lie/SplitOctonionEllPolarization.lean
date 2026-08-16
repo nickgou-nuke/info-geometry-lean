@@ -203,6 +203,7 @@ private theorem canonicalZorn_smul_coordinates (r : ℝ) (Z : CZ) :
   rw [Equiv.smul_def InfoGeometry.Canonical.ZornMatrix.coordEquiv]
   rfl
 
+set_option maxHeartbeats 1000000 in
 theorem ellWeightBasis_linearIndependent :
     LinearIndependent ℝ ellWeightBasis := by
   rw [Fintype.linearIndependent_iff]

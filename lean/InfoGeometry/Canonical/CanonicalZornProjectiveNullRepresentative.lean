@@ -37,7 +37,8 @@ theorem projectiveRepresentative_null {X : Imaginary}
 
 theorem projectiveRepresentative_nonzero {X : Imaginary}
     (Y : NonzeroAnnihilator (X := X)) :
-    (annihilatorProjectiveRepresentative Y.1).1 ≠ pacSplit55Zero :=
+    (annihilatorProjectiveRepresentative Y.1).1 ≠
+      ProjectiveAffineConformalClosure55.pacSplit55Zero :=
   (annihilatorProjectiveRepresentative Y.1).2.1
 
 end InfoGeometry.Canonical.CanonicalZornProjectiveNullRepresentative

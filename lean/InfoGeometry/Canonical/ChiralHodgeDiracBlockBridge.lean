@@ -349,6 +349,26 @@ theorem dirac_sq_eq_chiral_sum (hΓ : Γ * Γ = 1) (hodd : Γ * D = - (D * Γ)) 
   rw [chiralDiracPlus_sq_zero Γ D hΓ hodd, chiralDiracMinus_sq_zero Γ D hΓ hodd]
   simp only [zero_add, add_zero]
 
+/-! The square of an odd Dirac operator is even. -/
+
+theorem dirac_sq_commutes_grading
+    (hodd : Γ * D = - (D * Γ)) :
+    Γ * (D * D) = (D * D) * Γ := by
+  calc
+    Γ * (D * D) = (Γ * D) * D := by rw [mul_assoc]
+    _ = (-(D * Γ)) * D := by rw [hodd]
+    _ = -((D * Γ) * D) := by rw [neg_mul]
+    _ = -(D * (Γ * D)) := by rw [mul_assoc]
+    _ = -(D * (-(D * Γ))) := by rw [hodd]
+    _ = D * (D * Γ) := by simp
+    _ = (D * D) * Γ := by rw [← mul_assoc]
+
+theorem dirac_sq_grading_commutator_zero
+    (hodd : Γ * D = - (D * Γ)) :
+    Γ * (D * D) - (D * D) * Γ = 0 := by
+  rw [dirac_sq_commutes_grading Γ D hodd]
+  exact sub_self _
+
 theorem laplacian_plus_eq_minus_plus (hΓ : Γ * Γ = 1) (hodd : Γ * D = - (D * Γ)) :
     chiralProjectorPlus Γ * (D * D) * chiralProjectorPlus Γ =
       chiralDiracMinus D Γ * chiralDiracPlus D Γ := by

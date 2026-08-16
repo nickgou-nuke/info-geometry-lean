@@ -60,6 +60,34 @@ theorem realSplitPinNullAction_fNegRealPin_nbarPairProjective
   simp only [one_smul]
   exact (realSplitPinNativeOrthogonalAction_fNegRealPin_nbar_pair i).symm
 
+theorem realSplitPinNullAction_globalSheet_nPairProjective
+    (i : Fin 5) :
+    realSplitPinNullAction globalSheetRealSplitPin (nPairProjective i) =
+      nbarPairProjective i := by
+  apply Subtype.ext
+  change projectiveIsometryMap
+      (realSplitPinNativeOrthogonalAction globalSheetRealSplitPin)
+      (Projectivization.mk ℝ (n_pair i) (n_pair_ne_zero i)) = _
+  rw [projectiveIsometryMap_mk]
+  apply (Projectivization.mk_eq_mk_iff ℝ _ _ _ _).2
+  refine ⟨1, ?_⟩
+  simp only [one_smul]
+  exact (realSplitPinNativeOrthogonalAction_globalSheet_n_pair i).symm
+
+theorem realSplitPinNullAction_globalSheet_nbarPairProjective
+    (i : Fin 5) :
+    realSplitPinNullAction globalSheetRealSplitPin (nbarPairProjective i) =
+      nPairProjective i := by
+  apply Subtype.ext
+  change projectiveIsometryMap
+      (realSplitPinNativeOrthogonalAction globalSheetRealSplitPin)
+      (Projectivization.mk ℝ (nbar_pair i) (nbar_pair_ne_zero i)) = _
+  rw [projectiveIsometryMap_mk]
+  apply (Projectivization.mk_eq_mk_iff ℝ _ _ _ _).2
+  refine ⟨1, ?_⟩
+  simp only [one_smul]
+  exact (realSplitPinNativeOrthogonalAction_globalSheet_nbar_pair i).symm
+
 end
 
 end InfoGeometry.Clifford.Clifford55

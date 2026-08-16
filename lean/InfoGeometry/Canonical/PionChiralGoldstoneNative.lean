@@ -5,6 +5,7 @@ import InfoGeometry.Core.SymmetricLieSpaces
 import InfoGeometry.Physics.ChiralCausalCone
 import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
 import InfoGeometry.Canonical.Cl11PolarizedBasis
+import InfoGeometry.Canonical.Cl11PolarizedBasis
 
 /-!
 # Native chiral Lie/CAR closure

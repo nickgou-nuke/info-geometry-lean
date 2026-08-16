@@ -192,16 +192,11 @@ structure D4Algebra where
   rank : ∃ (𝔥 : Submodule ℝ L),
     Module.finrank ℝ 𝔥 = 4 ∧
     (∀ x y : L, x ∈ 𝔥 → y ∈ 𝔥 → ⁅x, y⁆ = 0)
-  /-- D₄ inherently contains su(2) embeddings (isospin) -/
-  has_su2 : ∃ (s : LieSubalgebra ℝ L), Module.finrank ℝ s = 3
-  /-- D₄ inherently contains su(3) embeddings (color) -/
-  has_su3 : ∃ (s : LieSubalgebra ℝ L), Module.finrank ℝ s = 8
-  /-- The triality of D₄ ensures three distinct su(3) embeddings (generations) -/
-  has_three_generations : ∃ (g1 g2 g3 : LieSubalgebra ℝ L),
-    g1 ≠ g2 ∧ g2 ≠ g3 ∧ g1 ≠ g3 ∧
-    Module.finrank ℝ g1 = 8 ∧
-    Module.finrank ℝ g2 = 8 ∧
-    Module.finrank ℝ g3 = 8
+  /-
+  No `su(2)`/`su(3)` or generation fields are stored here.  A finrank-
+  existential is not an embedding or an isomorphism to either Lie algebra;
+  those belong to a separate, representation-specific owner.
+  -/
 
 /--
 Two copies of D₄: one for electrons, one for positrons.

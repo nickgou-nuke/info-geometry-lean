@@ -18,15 +18,12 @@ theorem klein_bottle_is_two_mobius :
 -- 2. Define the "throat" of the Klein bottle as the geometric UV cut-off.
 structure UV_Cutoff where
   value : Nat
-  is_geometric : Prop
 
 structure Throat where
   cutoff : UV_Cutoff
-  is_klein_throat : Prop
 
 def KleinBottleThroat : Throat :=
-  { cutoff := { value := 0, is_geometric := True },
-    is_klein_throat := True }
+  { cutoff := { value := 0 } }
 
 -- 3. Construct the explicit cobordism map from the Pin(5,5) worldsheet geometry through this throat.
 inductive Geometry
@@ -35,10 +32,10 @@ inductive Geometry
 
 structure Worldsheet where
   geom : Geometry
-  has_defect : Prop
+  has_defect : Bool
 
 def pin55_worldsheet : Worldsheet :=
-  { geom := Geometry.Pin55, has_defect := False }
+  { geom := Geometry.Pin55, has_defect := false }
 
 def explicit_cobordism_map (w : Worldsheet) (_t : Throat) : Worldsheet :=
   w
@@ -47,10 +44,10 @@ def explicit_cobordism_map (w : Worldsheet) (_t : Throat) : Worldsheet :=
 -- due to the underlying defect-free K-theory vacuum.
 
 def has_anomalous_twist (w : Worldsheet) : Prop :=
-  w.has_defect
+  w.has_defect = true
 
 def defect_free_vacuum (w : Worldsheet) : Prop :=
-  ¬ w.has_defect
+  w.has_defect = false
 
 theorem vacuum_is_defect_free : defect_free_vacuum pin55_worldsheet :=
   by simp [defect_free_vacuum, pin55_worldsheet]

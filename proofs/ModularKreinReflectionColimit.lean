@@ -92,7 +92,7 @@ theorem J_involutive_iterated (n k : ℕ) (x : T.stage n) :
 
 end KreinTower
 
-variable {R : Type*} [Semiring R]
+variable {R : Type*} [Ring R]
 
 /-- A very small concrete model: constant stage and identity reflection.
 
@@ -100,7 +100,7 @@ This is not the modular/Krein geometry itself.  It is the minimal witness that
 the abstract tower interface is constructible by an actual Lean object.
 -/
 def trivialKreinTower : KreinTower (R := R) where
-  stage := fun _ => PUnit
+  stage := fun _ => R
   stageAdd := by intro n; infer_instance
   stageModule := by intro n; infer_instance
   emb := fun _ => LinearMap.id
@@ -113,7 +113,7 @@ def trivialKreinTower : KreinTower (R := R) where
     rfl
 
 /-- The trivial tower satisfies the iterated-compatibility theorem. -/
-theorem trivial_J_commutes_with_embIter (n k : ℕ) (x : PUnit) :
+theorem trivial_J_commutes_with_embIter (n k : ℕ) (x : R) :
     trivialKreinTower (R := R).J (n + k)
       (KreinTower.embIter (T := trivialKreinTower (R := R)) n k x) =
       KreinTower.embIter (T := trivialKreinTower (R := R)) n k

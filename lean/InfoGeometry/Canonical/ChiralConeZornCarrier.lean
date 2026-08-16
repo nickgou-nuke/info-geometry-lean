@@ -4,9 +4,11 @@ import InfoGeometry.Physics.ZornScalingFlow
 /-!
 # Chiral cone quartet in the Zorn carrier
 
-The definitions below are elements of the nonassociative Zorn carrier.  They
-are not yet operators on a module; an operator-level lift requires a separate
-left-regular representation.
+The definitions below remain elements of the nonassociative Zorn carrier.
+`leftRegular` gives their action by explicit left multiplication.  Since this
+carrier intentionally has custom operations rather than native module
+instances, the operator laws are recorded with those operations rather than
+being misrepresented as a `LinearMap`.
 -/
 
 namespace InfoGeometry.Canonical.ChiralConeZornCarrier
@@ -32,6 +34,16 @@ def leftRegular (X : Zorn) : Zorn → Zorn := fun Y => zornMul X Y
 
 @[simp] theorem leftRegular_apply (X Y : Zorn) :
     leftRegular X Y = zornMul X Y := rfl
+
+theorem leftRegular_zornAdd (X Y Z : Zorn) :
+    leftRegular X (zornAdd Y Z) =
+      zornAdd (leftRegular X Y) (leftRegular X Z) := by
+  exact zornMul_add X Y Z
+
+theorem leftRegular_zornSmul (c : ℂ) (X Y : Zorn) :
+    leftRegular X (zornSmul c Y) =
+      zornSmul c (leftRegular X Y) := by
+  exact zornMul_smul c X Y
 
 /-- The four left-regular operators associated with a fixed colour. -/
 def nPosOperator : Zorn → Zorn := leftRegular nPos

@@ -1,64 +1,66 @@
 import Mathlib
+import InfoGeometry.Physics.SplitOctonionBraidSU3
 
 /-!
-# Itakura--Saito divergence on nilpotent boundary modes
+# Itakura--Saito remainder on the native Zorn nilpotent
 
-For a square-zero/nilpotent boundary mode `K²=0`, the exponential truncates
-formally to `exp(K)=1+K`.  Therefore the operator-valued Itakura--Saito
-remainder
-
-`D_IS(K)=exp(K)-1-K`
-
-vanishes.  This is the information-geometric version of the massless
-nullspace collapse: the nilpotent parafermion defect has zero quadratic
-Fisher/Bures remainder.
+This compatibility owner keeps the historical theorem names while using the
+repository's native split-octonion/Zorn carrier.  No auxiliary `2 × 2`
+matrix carrier is introduced here.
 -/
 
 noncomputable section
 
 namespace NilpotentItakuraSaito
 
-open Matrix
+open InfoGeometry.Physics.SplitOctonionBraidSU3
 
-abbrev M2C := Matrix (Fin 2) (Fin 2) ℂ
+/-- Compatibility name for the native complexified Zorn carrier. -/
+abbrev M2C := Zorn
 
-/-- A concrete nilpotent Jordan boundary mode. -/
-def KNil : M2C := !![0, 1; 0, 0]
+/-- The native nonzero square-zero Zorn boundary mode. -/
+abbrev KNil : M2C := zornNilpotent
 
-/-- The concrete boundary mode is nilpotent. -/
-theorem KNil_sq_zero : KNil * KNil = 0 := by
-  ext i j <;> fin_cases i <;> fin_cases j <;>
-    simp [KNil, Matrix.mul_apply, Fin.sum_univ_two]
+/-- Native Zorn square-zero predicate. -/
+def IsNilpotent2 (Z : M2C) : Prop := zornMul Z Z = zornZero
 
-/-- Formal exponential truncation for a square-zero element. -/
-def nilExp (K : M2C) : M2C := 1 + K
+theorem KNil_sq_zero : IsNilpotent2 KNil := by
+  exact zornNilpotent_sq_zero
 
-/-- Itakura--Saito remainder using the nilpotent-truncated exponential. -/
-def nilItakuraSaito (K : M2C) : M2C := nilExp K - 1 - K
+/-- Truncated exponential in the native Zorn algebra. -/
+def nilExp (K : M2C) : M2C := zornAdd I_zorn K
 
-/-- The nilpotent Itakura--Saito remainder vanishes algebraically. -/
-theorem nilItakuraSaito_zero (K : M2C) : nilItakuraSaito K = 0 := by
-  ext i j
-  simp [nilItakuraSaito, nilExp, Matrix.sub_apply, Matrix.add_apply]
+/-- Operator-valued Itakura--Saito remainder in the native Zorn algebra. -/
+def nilItakuraSaito (K : M2C) : M2C :=
+  zornSub (zornSub (nilExp K) I_zorn) K
 
-/-- In particular, the concrete nilpotent has zero divergence. -/
-theorem KNil_itakura_zero : nilItakuraSaito KNil = 0 := nilItakuraSaito_zero KNil
+/-- The truncated remainder cancels for every native Zorn element. -/
+theorem nilItakuraSaito_zero (K : M2C) :
+    nilItakuraSaito K = zornZero := by
+  apply zorn_ext <;>
+    simp [nilItakuraSaito, nilExp, zornAdd, zornSub, I_zorn, zornZero]
 
-/-- Scaled nilpotents also have zero truncated Itakura--Saito remainder. -/
+theorem KNil_itakura_zero : nilItakuraSaito KNil = zornZero :=
+  nilItakuraSaito_zero KNil
+
+/-- Scalar transport of the cancellation through the native Zorn module law. -/
 theorem scaled_nilItakuraSaito_zero (eps : ℂ) (K : M2C) :
-    nilItakuraSaito (eps • K) = 0 :=
-  nilItakuraSaito_zero (eps • K)
+    nilItakuraSaito (zornSmul eps K) = zornZero :=
+  nilItakuraSaito_zero (zornSmul eps K)
 
-/-- Main synthesis theorem. -/
-theorem nilpotent_itakura_saito_synthesis :
-    KNil * KNil = 0 ∧
-    nilItakuraSaito KNil = 0 ∧
-    (∀ eps : ℂ, nilItakuraSaito (eps • KNil) = 0) := by
-  exact ⟨KNil_sq_zero, KNil_itakura_zero, fun eps => scaled_nilItakuraSaito_zero eps KNil⟩
-
-#check KNil_sq_zero
-#check nilItakuraSaito_zero
-#check scaled_nilItakuraSaito_zero
-#check nilpotent_itakura_saito_synthesis
+theorem nilpotent_itakura_saito_synthesis
+    (K : M2C) (hK : zornMul K K = zornZero)
+    (hMassless : K.a = 0)
+    (hPara : K ≠ zornZero) :
+    IsNilpotent2 KNil ∧
+    nilItakuraSaito KNil = zornZero ∧
+    (∀ eps : ℂ, nilItakuraSaito (zornSmul eps K) = zornZero) ∧
+    zornMul K K = zornZero ∧
+    K.a = 0 ∧ K ≠ zornZero := by
+  exact ⟨KNil_sq_zero, KNil_itakura_zero,
+    fun eps => scaled_nilItakuraSaito_zero eps K,
+    hK, hMassless, hPara⟩
 
 end NilpotentItakuraSaito
+
+end noncomputable section

@@ -14,7 +14,9 @@ namespace HolographicThermo
 
 abbrev Mat2 := NilpotentItakuraSaito.M2C
 
-def IsNilpotent2 (Z : Mat2) : Prop := Z * Z = 0
+def IsNilpotent2 (Z : Mat2) : Prop :=
+  InfoGeometry.Physics.SplitOctonionBraidSU3.zornMul Z Z =
+    InfoGeometry.Physics.SplitOctonionBraidSU3.zornZero
 
 /-- Concrete nilpotent boundary mode. -/
 def KNil : Mat2 := NilpotentItakuraSaito.KNil
@@ -26,11 +28,15 @@ theorem KNil_sq_zero : IsNilpotent2 KNil := NilpotentItakuraSaito.KNil_sq_zero
 def ItakuraSaitoDivergence (K : Mat2) : Mat2 := NilpotentItakuraSaito.nilItakuraSaito K
 
 /-- The truncated divergence vanishes for every matrix by algebraic cancellation. -/
-theorem divergence_vanishes (K : Mat2) : ItakuraSaitoDivergence K = 0 := by
+theorem divergence_vanishes (K : Mat2) :
+    ItakuraSaitoDivergence K =
+      InfoGeometry.Physics.SplitOctonionBraidSU3.zornZero := by
   exact NilpotentItakuraSaito.nilItakuraSaito_zero K
 
 /-- In particular, the concrete nilpotent mode has zero truncated divergence. -/
-theorem divergence_vanishes_on_nilpotent : ItakuraSaitoDivergence KNil = 0 := by
+theorem divergence_vanishes_on_nilpotent :
+    ItakuraSaitoDivergence KNil =
+      InfoGeometry.Physics.SplitOctonionBraidSU3.zornZero := by
   exact divergence_vanishes KNil
 
 #check KNil_sq_zero

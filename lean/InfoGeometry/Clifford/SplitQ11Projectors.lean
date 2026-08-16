@@ -215,4 +215,116 @@ noncomputable def epsPlusProjector : Alg :=
   rw [epsPlusProjector_eq_half_one_add_eps, epsMinusProjector_eq_half_one_sub_eps]
   simp [phaseFlip_apply_epsGen, sub_eq_add_neg, smul_add]
 
+/-! ### The native nilpotent ladder basis
+
+The null generators are the real nilpotent basis
+`(jGen - kGen) / 2` and `(jGen + kGen) / 2`.  These lemmas expose their
+ladder relations without introducing a second matrix or operator carrier.
+-/
+
+@[rep_depth krein, simp] theorem nullPlus_mul_nullMinus_eq_epsPlusProjector :
+    nullPlus * nullMinus = epsPlusProjector := by
+  rfl
+
+@[rep_depth krein, simp] theorem nullMinus_mul_nullPlus_eq_epsMinusProjector :
+    nullMinus * nullPlus = epsMinusProjector := by
+  rfl
+
+@[rep_depth krein, simp] theorem epsGen_mul_nullPlus :
+    epsGen * nullPlus = nullPlus := by
+  calc
+    epsGen * nullPlus =
+        (1 / 2 : ℝ) • (epsGen * jGen - epsGen * kGen) := by
+      rw [nullPlus_eq_half_jGen_sub_kGen, mul_smul_comm]
+      simp only [smul_sub, mul_sub]
+    _ = (1 / 2 : ℝ) • (-kGen - (-jGen)) := by
+      rw [epsGen_mul_jGen, epsGen_mul_kGen]
+    _ = nullPlus := by
+      rw [nullPlus_eq_half_jGen_sub_kGen]
+      module
+
+@[rep_depth krein, simp] theorem nullPlus_mul_epsGen :
+    nullPlus * epsGen = -nullPlus := by
+  calc
+    nullPlus * epsGen =
+        (1 / 2 : ℝ) • (jGen * epsGen - kGen * epsGen) := by
+      rw [nullPlus_eq_half_jGen_sub_kGen, smul_mul_assoc]
+      simp only [smul_sub, sub_mul]
+    _ = (1 / 2 : ℝ) • (kGen - jGen) := by
+      rw [jGen_mul_epsGen, kGen_mul_epsGen]
+    _ = -nullPlus := by
+      rw [nullPlus_eq_half_jGen_sub_kGen]
+      module
+
+@[rep_depth krein, simp] theorem epsGen_mul_nullMinus :
+    epsGen * nullMinus = -nullMinus := by
+  calc
+    epsGen * nullMinus =
+        (1 / 2 : ℝ) • (epsGen * jGen + epsGen * kGen) := by
+      rw [nullMinus_eq_half_jGen_add_kGen]
+      change epsGen * ((1 / 2 : ℝ) • (jGen + kGen)) =
+        (1 / 2 : ℝ) • (epsGen * jGen + epsGen * kGen)
+      simp only [Algebra.mul_smul_comm, mul_add, smul_add]
+    _ = (1 / 2 : ℝ) • (-kGen + (-jGen)) := by
+      rw [epsGen_mul_jGen, epsGen_mul_kGen]
+    _ = -nullMinus := by
+      rw [nullMinus_eq_half_jGen_add_kGen]
+      module
+
+@[rep_depth krein, simp] theorem nullMinus_mul_epsGen :
+    nullMinus * epsGen = nullMinus := by
+  calc
+    nullMinus * epsGen =
+        (1 / 2 : ℝ) • (jGen * epsGen + kGen * epsGen) := by
+      rw [nullMinus_eq_half_jGen_add_kGen]
+      change ((1 / 2 : ℝ) • (jGen + kGen)) * epsGen =
+        (1 / 2 : ℝ) • (jGen * epsGen + kGen * epsGen)
+      simp only [smul_mul_assoc, add_mul, smul_add]
+    _ = (1 / 2 : ℝ) • (kGen + jGen) := by
+      rw [jGen_mul_epsGen, kGen_mul_epsGen]
+    _ = nullMinus := by
+      rw [nullMinus_eq_half_jGen_add_kGen]
+      module
+
+@[rep_depth krein, simp] theorem epsGen_mul_nullPlus_sub_nullPlus_mul_epsGen :
+    epsGen * nullPlus - nullPlus * epsGen = (2 : ℝ) • nullPlus := by
+  rw [epsGen_mul_nullPlus, nullPlus_mul_epsGen]
+  module
+
+@[rep_depth krein, simp] theorem epsGen_mul_nullMinus_sub_nullMinus_mul_epsGen :
+    epsGen * nullMinus - nullMinus * epsGen = (-2 : ℝ) • nullMinus := by
+  rw [epsGen_mul_nullMinus, nullMinus_mul_epsGen]
+  module
+
+@[rep_depth krein, simp] theorem nullPlus_mul_nullMinus_sub_nullMinus_mul_nullPlus :
+    nullPlus * nullMinus - nullMinus * nullPlus = epsGen := by
+  rw [nullPlus_eq_half_jGen_sub_kGen, nullMinus_eq_half_jGen_add_kGen]
+  simp [epsGen, sub_eq_add_neg, add_mul, mul_add,
+    smul_mul_assoc, mul_smul_comm]
+  module
+
+@[rep_depth krein, simp] theorem nullPlus_add_nullMinus_eq_jGen :
+    nullPlus + nullMinus = jGen := by
+  rw [nullPlus_eq_half_jGen_sub_kGen, nullMinus_eq_half_jGen_add_kGen]
+  module
+
+@[rep_depth krein, simp] theorem nullMinus_sub_nullPlus_eq_kGen :
+    nullMinus - nullPlus = kGen := by
+  rw [nullMinus_eq_half_jGen_add_kGen, nullPlus_eq_half_jGen_sub_kGen]
+  module
+
+@[rep_depth krein, simp] theorem half_epsGen_comm_nullPlus :
+    ((1 / 2 : ℝ) • epsGen) * nullPlus -
+        nullPlus * ((1 / 2 : ℝ) • epsGen) = nullPlus := by
+  simp only [smul_mul_assoc, mul_smul_comm, ← smul_sub]
+  rw [epsGen_mul_nullPlus_sub_nullPlus_mul_epsGen]
+  module
+
+@[rep_depth krein, simp] theorem half_epsGen_comm_nullMinus :
+    ((1 / 2 : ℝ) • epsGen) * nullMinus -
+        nullMinus * ((1 / 2 : ℝ) • epsGen) = -nullMinus := by
+  simp only [smul_mul_assoc, mul_smul_comm, ← smul_sub]
+  rw [epsGen_mul_nullMinus_sub_nullMinus_mul_epsGen]
+  module
+
 end InfoGeometry.Clifford.SplitQ11Projectors

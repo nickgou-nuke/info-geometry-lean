@@ -1,3 +1,4 @@
+import Mathlib.Algebra.Lie.SkewAdjoint
 import InfoGeometry.Canonical.SplitCliffordO55TKKClosure
 
 /-!
@@ -18,6 +19,30 @@ abbrev O55Matrix := Matrix (Fin 10) (Fin 10) ℝ
 
 def orthogonal55Predicate (A : O55Matrix) : Prop :=
   Aᵀ * O55Form + O55Form * A = 0
+
+/-! ## Native Mathlib Lie-subalgebra owner -/
+
+/--
+The canonical noncommutative infinitesimal `O(5,5)` carrier is Mathlib's
+skew-adjoint matrix Lie subalgebra for the split form.  The older subtype
+`Orthogonal55` below remains only as a compatibility representation.
+-/
+noncomputable def so55LieSubalgebra : LieSubalgebra ℝ O55Matrix :=
+  skewAdjointMatricesLieSubalgebra O55Form
+
+theorem mem_so55LieSubalgebra_iff (A : O55Matrix) :
+    A ∈ so55LieSubalgebra ↔ orthogonal55Predicate A := by
+  rw [so55LieSubalgebra, mem_skewAdjointMatricesLieSubalgebra,
+    mem_skewAdjointMatricesSubmodule]
+  change Aᵀ * O55Form = O55Form * (-A) ↔ _
+  constructor
+  · intro h
+    change Aᵀ * O55Form + O55Form * A = 0
+    rw [h]
+    simp
+  · intro h
+    rw [orthogonal55Predicate] at h
+    simpa [mul_neg] using eq_neg_of_add_eq_zero_left h
 
 theorem orthogonal55Predicate_smul (r : ℝ) {A : O55Matrix}
     (hA : orthogonal55Predicate A) :
@@ -140,5 +165,41 @@ noncomputable instance : LieAlgebra ℝ Orthogonal55 where
       r • ((A : O55Matrix) * (B : O55Matrix) -
         (B : O55Matrix) * (A : O55Matrix))
     rw [Matrix.mul_smul, Matrix.smul_mul, smul_sub]
+
+/-! ## Compatibility equivalence with the native Lie owner -/
+
+/--
+The historical subtype and Mathlib's skew-adjoint Lie subalgebra carry the
+same matrices and are Lie-equivalent.  This is the migration theorem for
+downstream O(5,5) code.
+-/
+noncomputable def orthogonal55NativeLieEquiv :
+    Orthogonal55 ≃ₗ⁅ℝ⁆ so55LieSubalgebra where
+  toFun := fun A =>
+    ⟨A.1, (mem_so55LieSubalgebra_iff A.1).2 A.2⟩
+  invFun := fun A =>
+    ⟨A.1, (mem_so55LieSubalgebra_iff A.1).1 A.2⟩
+  left_inv := by
+    intro A
+    apply Subtype.ext
+    rfl
+  right_inv := by
+    intro A
+    apply Subtype.ext
+    rfl
+  map_add' := by
+    intro A B
+    rfl
+  map_smul' := by
+    intro r A
+    rfl
+  map_lie' := by
+    intro A B
+    rfl
+
+@[simp]
+theorem orthogonal55NativeLieEquiv_apply (A : Orthogonal55) :
+    orthogonal55NativeLieEquiv A = A.1 :=
+  rfl
 
 end InfoGeometry.Canonical.O55Representation

@@ -1,5 +1,6 @@
 import InfoGeometry.Canonical.ChiralHodgeDecomposition
 import InfoGeometry.Canonical.DiscreteDiracHodgeChiral
+import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
 import InfoGeometry.Topology.DiscreteHodgeDiracBridge
 
 namespace InfoGeometry.Canonical.ChiralModularTomitaBridge
@@ -9,6 +10,7 @@ open InfoGeometry.Krein
 open InfoGeometry.Krein.PolarizedSector
 open InfoGeometry.Krein.SplitQuadraticSheets
 open InfoGeometry.Canonical.ChiralHodgeDecomposition
+open InfoGeometry.Canonical.TomitaKreinNilpotentAtom
 
 noncomputable section
 
@@ -112,6 +114,66 @@ theorem root_chiral_minus_eq_arrow_difference
       (rootDiracPlus (E := E)).toLinearMap -
         (rootDiracMinus (E := E)).toLinearMap :=
   rfl
+
+theorem root_tomita_conj_plus_eq_minus
+    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] :
+    tomitaConjOp (rootDiracPlus (E := E)) =
+      rootDiracMinus (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  change modular_j (E := E)
+      (rootDiracPlus (E := E) (modular_j (E := E) u)) =
+    rootDiracMinus (E := E) u
+  rw [rootDiracPlus_apply, rootDiracMinus_apply, modular_j_apply]
+  simp [plusPoint, minusPoint]
+
+theorem root_tomita_conj_minus_eq_plus
+    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] :
+    tomitaConjOp (rootDiracMinus (E := E)) =
+      rootDiracPlus (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  change modular_j (E := E)
+      (rootDiracMinus (E := E) (modular_j (E := E) u)) =
+    rootDiracPlus (E := E) u
+  rw [rootDiracMinus_apply, rootDiracPlus_apply, modular_j_apply]
+  simp [plusPoint, minusPoint]
+
+theorem root_tomita_conj_chiral_sum_fixed
+    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] :
+    tomitaConjOp
+        (rootDiracPlus (E := E) + rootDiracMinus (E := E)) =
+      rootDiracPlus (E := E) + rootDiracMinus (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  change modular_j (E := E)
+      ((rootDiracPlus (E := E) + rootDiracMinus (E := E))
+        (modular_j (E := E) u)) =
+    (rootDiracPlus (E := E) + rootDiracMinus (E := E)) u
+  apply DoubledSpace.ext <;>
+    simp [ContinuousLinearMap.add_apply, rootDiracPlus_apply,
+      rootDiracMinus_apply, modular_j_apply, plusPoint, minusPoint,
+      InfoGeometry.Krein.to_doubled]
+
+theorem root_tomita_conj_chiral_difference_anti_fixed
+    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] :
+    tomitaConjOp
+        (rootDiracPlus (E := E) - rootDiracMinus (E := E)) =
+      -(rootDiracPlus (E := E) - rootDiracMinus (E := E)) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  change modular_j (E := E)
+      ((rootDiracPlus (E := E) - rootDiracMinus (E := E))
+        (modular_j (E := E) u)) =
+    -((rootDiracPlus (E := E) - rootDiracMinus (E := E)) u)
+  apply DoubledSpace.ext <;>
+    simp [ContinuousLinearMap.sub_apply, rootDiracPlus_apply,
+      rootDiracMinus_apply, modular_j_apply, plusPoint, minusPoint,
+      InfoGeometry.Krein.to_doubled]
 
 /-! The derived Krein fundamental symmetry has its own parity law.  It is
 not the assumed PT socket above: for the native root arrows, `ε` is odd for

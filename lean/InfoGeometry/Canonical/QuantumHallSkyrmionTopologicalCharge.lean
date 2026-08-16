@@ -22,9 +22,6 @@ abbrev SkyrmionFieldStrength (n : ℕ) [DecidableEq (Fin n)] :=
 
 namespace SkyrmionFieldStrength
 
-/-- Compatibility accessor for the native field-strength matrix. -/
-abbrev field_tensor (F : SkyrmionFieldStrength n) : Matrix (Fin n) (Fin n) ℂ := F
-
 variable {n : ℕ} [DecidableEq (Fin n)] (F F1 F2 : SkyrmionFieldStrength n)
 
 /-- Second Chern Class Skyrmion Charge Density: Tr(F * F). -/

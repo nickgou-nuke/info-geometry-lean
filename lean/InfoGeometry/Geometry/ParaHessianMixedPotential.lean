@@ -131,6 +131,20 @@ theorem symplectic_grading (U V : Doubled E) :
   simp [symplectic, metric_apply, grading_apply, real_inner_comm]
   ring
 
+/-! ### Explicit para-Hermitian compatibility readouts -/
+
+theorem symplectic_grading_left (U V : Doubled E) :
+    symplectic (grading U) V = metric U V := by
+  simp [symplectic, grading_apply, metric_apply]
+
+theorem symplectic_grading_right (U V : Doubled E) :
+    symplectic U (grading V) = -metric U V := by
+  simpa [symplectic] using grading_anti_isometry U V
+
+theorem symplectic_grading_grading (U V : Doubled E) :
+    symplectic (grading U) (grading V) = -symplectic U V :=
+  symplectic_grading U V
+
 /-- First derivative of the mixed potential at `X`. -/
 def potentialDerivative (X : Doubled E) : Doubled E →L[ℝ] ℝ :=
   (fderivInnerCLM ℝ (X.1, X.2)).comp

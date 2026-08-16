@@ -16,13 +16,11 @@ abbrev SkyrmionState := ℤ
 
 namespace SkyrmionState
 
-abbrev topologicalCharge (skyrmion : SkyrmionState) : ℤ := skyrmion
-
 variable (skyrmion : SkyrmionState)
 
 /-- Skyrmion Bound Fractional Electric Charge q = e * Q -/
 def skyrmionElectricCharge (e : ℝ) : ℝ :=
-  e * (skyrmion.topologicalCharge : ℝ)
+  e * (skyrmion : ℝ)
 
 /-- **Theorem**: Skyrmion Electric Charge Linearity under topological charge addition. -/
 theorem skyrmion_charge_add (e : ℝ) (Q1 Q2 : ℤ) :
@@ -31,9 +29,9 @@ theorem skyrmion_charge_add (e : ℝ) (Q1 Q2 : ℤ) :
   ring
 
 /-- **Theorem**: Trivial Ferromagnetic Ground State (Q = 0) carries zero Skyrmion charge. -/
-theorem skyrmion_zero_charge (e : ℝ) (h_zero : skyrmion.topologicalCharge = 0) :
+theorem skyrmion_zero_charge (e : ℝ) (h_zero : skyrmion = 0) :
     skyrmion.skyrmionElectricCharge e = 0 := by
-  dsimp [skyrmionElectricCharge]
+  dsimp [skyrmionElectricCharge] at *
   rw [h_zero]
   ring
 

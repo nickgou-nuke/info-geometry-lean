@@ -474,6 +474,82 @@ theorem nativeAffineChartRetract_lift (x : PACSplit44) :
       pacSplit55ToV55, conformalEmbed44to55]
     <;> ring
 
+/-! ### The converse quotient-level chart identity -/
+
+theorem nativeAffineChartLift_retract_rep
+    (w : V55) (hw : w ≠ 0)
+    (hQ : InfoGeometry.Clifford.Clifford55.Q55 w = 0)
+    (hGauge : chartCoordinate55 w ≠ 0) :
+    pac44NativeProjectivePoint (affineChartRetractRep w) =
+      Projectivization.mk ℝ w hw := by
+  let X : PACSplit55 := v55ToPacSplit55 w
+  have hXQ : Q55 X = 0 := by
+    rw [← nativeQ55_pacSplit55ToV55 X]
+    simpa [X] using hQ
+  have hFactor :
+      Q44 (pacSplit55Base44 X) +
+          affineDifference55 X * affineGauge55 X = 0 := by
+    rw [← pacSplit55_Q55_factorization X, hXQ]
+  have hBase :
+      Q44 (pacSplit55Base44 X) =
+        -affineDifference55 X * affineGauge55 X := by
+    linarith
+  have hGaugeX : affineGauge55 X = chartCoordinate55 w := by
+    simp [X, affineGauge55, chartCoordinate55, v55ToPacSplit55]
+  have hDiffX : affineDifference55 X = w.1 4 - w.2 4 := by
+    simp [X, v55ToPacSplit55, affineDifference55]
+  have hQRetract :
+      Q44 (affineChartRetractRep w) =
+        -affineDifference55 X / chartCoordinate55 w := by
+    rw [hGaugeX] at hBase
+    rw [hDiffX] at hBase ⊢
+    simp [X, v55ToPacSplit55, pacSplit55Base44, affineDifference55,
+      Q44] at hBase
+    simp [X, v55ToPacSplit55, affineDifference55] at hBase ⊢
+    unfold affineChartRetractRep Q44 chartCoordinate55 at *
+    field_simp [hGauge]
+    nlinarith [hBase]
+  unfold pac44NativeProjectivePoint pacProjectivize
+  have hvec :
+      pacSplit55ToV55
+          (conformalEmbed44to55 (affineChartRetractRep w)) =
+        (chartCoordinate55 w)⁻¹ • w := by
+    apply Prod.ext <;> funext i
+    · fin_cases i
+      · simp [conformalEmbed44to55, affineChartRetractRep,
+          pacSplit55ToV55, chartCoordinate55]
+      · simp [conformalEmbed44to55, affineChartRetractRep,
+          pacSplit55ToV55, chartCoordinate55]
+      · simp [conformalEmbed44to55, affineChartRetractRep,
+          pacSplit55ToV55, chartCoordinate55]
+      · simp [conformalEmbed44to55, affineChartRetractRep,
+          pacSplit55ToV55, chartCoordinate55]
+      · change (1 - Q44 (affineChartRetractRep w)) / 2 =
+          (chartCoordinate55 w)⁻¹ * w.1 4
+        rw [hQRetract]
+        field_simp [hGauge]
+        rw [hDiffX]
+        simp [chartCoordinate55, affineDifference55]
+        ring
+    · fin_cases i
+      · simp [conformalEmbed44to55, affineChartRetractRep,
+          pacSplit55ToV55, chartCoordinate55]
+      · simp [conformalEmbed44to55, affineChartRetractRep,
+          pacSplit55ToV55, chartCoordinate55]
+      · simp [conformalEmbed44to55, affineChartRetractRep,
+          pacSplit55ToV55, chartCoordinate55]
+      · simp [conformalEmbed44to55, affineChartRetractRep,
+          pacSplit55ToV55, chartCoordinate55]
+      · change (1 + Q44 (affineChartRetractRep w)) / 2 =
+          (chartCoordinate55 w)⁻¹ * w.2 4
+        rw [hQRetract]
+        field_simp [hGauge]
+        rw [hDiffX]
+        simp [chartCoordinate55, affineDifference55]
+        ring
+  apply (Projectivization.mk_eq_mk_iff' ℝ _ _ _ _).2
+  exact ⟨(chartCoordinate55 w)⁻¹, hvec.symm⟩
+
 theorem nativeAffineChartLift_retract
     (p : {p : ℙ ℝ V55 // nativeNullAffineChart55 p}) :
     nativeAffineChartLift (nativeAffineChartRetract p) = p := by
@@ -482,18 +558,16 @@ theorem nativeAffineChartLift_retract
   revert hp
   refine Quotient.inductionOn' p ?_
   intro w hp
-  simp only [nativeAffineChartLift, nativeAffineChartRetract,
-    nativeAffineChartRetractRaw]
+  have hpNull := hp.1
+  have hpChart := hp.2
+  have hwQ : InfoGeometry.Clifford.Clifford55.Q55 w.1 = 0 := by
+    change InfoGeometry.Clifford.Clifford55.Q55 w.1 = 0 at hpNull
+    exact hpNull
+  have hwGauge : chartCoordinate55 w.1 ≠ 0 := by
+    change chartCoordinate55 w.1 ≠ 0 at hpChart
+    exact hpChart
   change pac44NativeProjectivePoint
-      (affineChartRetractRep w.val) = Projectivization.mk ℝ w.val w.property
-  unfold pac44NativeProjectivePoint pacProjectivize
-  apply (Projectivization.mk_eq_mk_iff' ℝ _ _ _ _).2
-  refine ⟨Units.mk0 (chartCoordinate55 w.val) ?_, ?_⟩
-  · exact (show (chartCoordinate55 w.val : ℝ) ≠ 0 from
-      (show nativeAffineChart55 (Projectivization.mk ℝ w.val w.property) from hp.2))
-  · apply Prod.ext <;> funext i <;> fin_cases i <;>
-      simp [affineChartRetractRep, chartCoordinate55, smul_eq_mul,
-        pacSplit55ToV55, conformalEmbed44to55]
-      <;> field_simp
+      (affineChartRetractRep w.1) = Quotient.mk'' w
+  exact nativeAffineChartLift_retract_rep w.1 w.2 hwQ hwGauge
 
 end InfoGeometry.Canonical.PACSplit55Cl55CoordinateBridge

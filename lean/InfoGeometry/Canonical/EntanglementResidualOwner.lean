@@ -384,30 +384,6 @@ theorem mismatch_zero_kills_correlation
     C.crossCorrelation = 0 := by
   rw [C.factorsThrough, h, C.transfer_zero]
 
-/-- Restricted Gaussian covariance on the Drazin-null sector. -/
-@[rep_depth transport]
-abbrev GaussianCovarianceOwner (Scalar : Type*) [Zero Scalar] := Scalar
-
-namespace GaussianCovarianceOwner
-
-/-- Compatibility accessor for the native restricted covariance carrier. -/
-abbrev restrictedCovariance (G : GaussianCovarianceOwner Scalar) : Scalar := G
-
-end GaussianCovarianceOwner
-
-/-- No Drazin-null-supported Gaussian covariance when the restricted covariance vanishes. -/
-def HasDrazinNullSupportedGaussianCovariance
-    {Scalar : Type*} [Zero Scalar] (G : GaussianCovarianceOwner Scalar) : Prop :=
-  G.restrictedCovariance ≠ 0
-
-theorem restrictedCovariance_zero_implies_no_support
-    {Scalar : Type*} [Zero Scalar]
-    (G : GaussianCovarianceOwner Scalar)
-    (h : G.restrictedCovariance = 0) :
-    ¬ HasDrazinNullSupportedGaussianCovariance (G := G) := by
-  intro hSupp
-  exact hSupp h
-
 /-- Lorentzian lightcone property: null rays need a dedicated Dirac property. -/
 @[rep_depth transport]
 structure LightconeReadoutBoundary

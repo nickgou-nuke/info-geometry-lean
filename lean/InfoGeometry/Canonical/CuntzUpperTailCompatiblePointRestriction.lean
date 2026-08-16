@@ -44,11 +44,11 @@ def upperTailCompatibleCuntzPointFamily
   c := fun j => family.c j.1
   cstar := fun j => family.cstar j.1
   relation := fun j => family.relation j.1
-  compatible_c := by
+  map_c := by
     intro j k hjk
     simpa [upperTailContinuousStarSystem] using
       family.map_c (show j.1 ≤ k.1 from hjk)
-  compatible_cstar := by
+  map_cstar := by
     intro j k hjk
     simpa [upperTailContinuousStarSystem] using
       family.map_cstar (show j.1 ≤ k.1 from hjk)

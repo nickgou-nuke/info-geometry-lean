@@ -45,8 +45,6 @@ abbrev Cl11ModularAtom (E : Type*)
 
 namespace Cl11ModularAtom
 
-abbrev atom (A : Cl11ModularAtom E) : ModularCPTChiralAtom E := A
-
 /-- The axis is derived from the canonical modular atom, not stored as a
 separate evidence field. -/
 abbrev axis (A : Cl11ModularAtom E) : KAxis E :=

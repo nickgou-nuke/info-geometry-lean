@@ -31,6 +31,14 @@ noncomputable def delta (κ a : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
 noncomputable def operatorDefect (κ a : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   delta κ a - 1 + surprisal κ a
 
+/-- Isotropic volume contribution to the finite defect trace. -/
+noncomputable def volumeDefect (κ : ℝ) : ℝ :=
+  2 * (Real.exp (-κ) - 1 + κ)
+
+/-- Volume-weighted traceless affinity contribution to the finite defect trace. -/
+noncomputable def shapeDefect (κ a : ℝ) : ℝ :=
+  2 * Real.exp (-κ) * (Real.cosh a - 1)
+
 lemma surprisal_val (κ a : ℝ) :
     surprisal κ a = !![κ + a, 0; 0, κ - a] := by
   ext i j
@@ -90,6 +98,23 @@ theorem unimodular_defect_trace (a : ℝ) :
     trace2 (operatorDefect 0 a) = 2 * (Real.cosh a - 1) := by
   rw [defect_trace]
   simp only [neg_zero, Real.exp_zero, mul_one]
+  ring
+
+/-!
+The defect separates into an isotropic volume contribution and a
+volume-weighted traceless affinity contribution.
+-/
+theorem defect_trace_volume_shape_split (κ a : ℝ) :
+    trace2 (operatorDefect κ a) =
+      2 * (Real.exp (-κ) - 1 + κ) +
+        2 * Real.exp (-κ) * (Real.cosh a - 1) := by
+  rw [defect_trace]
+  ring
+
+theorem defect_trace_eq_volumeDefect_add_shapeDefect (κ a : ℝ) :
+    trace2 (operatorDefect κ a) = volumeDefect κ + shapeDefect κ a := by
+  rw [defect_trace]
+  unfold volumeDefect shapeDefect
   ring
 
 end

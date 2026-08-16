@@ -2775,7 +2775,6 @@ import InfoGeometry.Canonical.OperatorJKOStep
 import InfoGeometry.Canonical.OperatorLightconeCoordinates
 import InfoGeometry.Canonical.OperatorModularTemperatureDuality
 import InfoGeometry.Canonical.OperatorPartitionSupervolumeBridge
-import InfoGeometry.Canonical.OperatorPenroseUnification
 import InfoGeometry.Canonical.OperatorProjectorMismatch
 import InfoGeometry.Canonical.Operators
 import InfoGeometry.Canonical.OperatorSpacetimeObservables

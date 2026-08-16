@@ -69,12 +69,6 @@ theorem det_exp_diagonal_eq_exp_trace (v : Fin n → ℝ) :
       NormedSpace.exp (Matrix.trace (Matrix.diagonal v)) :=
   det_exp_diagonal_eq_exp_trace_explicit v
 
-/-- Compatibility alias for existing downstream imports. -/
-theorem det_exp_diagonal_eq_exp_trace_shadow (v : Fin n → ℝ) :
-    Matrix.det (NormedSpace.exp (Matrix.diagonal v)) =
-      NormedSpace.exp (Matrix.trace (Matrix.diagonal v)) :=
-  det_exp_diagonal_eq_exp_trace v
-
 /-- Complex diagonal shadow of the determinant/trace law. -/
 theorem det_exp_diagonal_eq_exp_trace_complex (v : Fin n → ℂ) :
     Matrix.det (NormedSpace.exp (Matrix.diagonal v)) =

@@ -48,47 +48,44 @@ abbrev LogicalOperator (g : AnyonStabilizerGenerator n) :=
 
 namespace LogicalOperator
 
-/-- Compatibility accessor for the native logical-operator matrix. -/
-abbrev L_val (L : LogicalOperator g) : Matrix (Fin n) (Fin n) ℂ := L
-
 
 variable {g : AnyonStabilizerGenerator n} (L : LogicalOperator g)
 
 /-- **Theorem**: Logical Operator Commutator Identity [g, L] = 0. -/
 theorem logical_operator_commute
     (h_comm :
-      (g : Matrix (Fin n) (Fin n) ℂ) * L.L_val =
-        L.L_val * (g : Matrix (Fin n) (Fin n) ℂ)) :
-    (g : Matrix (Fin n) (Fin n) ℂ) * L.L_val -
-        L.L_val * (g : Matrix (Fin n) (Fin n) ℂ) = 0 := by
+      (g : Matrix (Fin n) (Fin n) ℂ) * L =
+        L * (g : Matrix (Fin n) (Fin n) ℂ)) :
+    (g : Matrix (Fin n) (Fin n) ℂ) * L -
+        L * (g : Matrix (Fin n) (Fin n) ℂ) = 0 := by
   have h := h_comm
   rw [h, sub_self]
 
 /-- **Theorem**: Logical Operator Conjugation Invariance g * L * g† = L. -/
 theorem logical_operator_conjugation_invariant
     (h_comm :
-      (g : Matrix (Fin n) (Fin n) ℂ) * L.L_val =
-        L.L_val * (g : Matrix (Fin n) (Fin n) ℂ)) :
-    (g : Matrix (Fin n) (Fin n) ℂ) * L.L_val *
-        (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose = L.L_val := by
+      (g : Matrix (Fin n) (Fin n) ℂ) * L =
+        L * (g : Matrix (Fin n) (Fin n) ℂ)) :
+    (g : Matrix (Fin n) (Fin n) ℂ) * L *
+        (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose = L := by
   calc
-    (g : Matrix (Fin n) (Fin n) ℂ) * L.L_val *
+        (g : Matrix (Fin n) (Fin n) ℂ) * L *
         (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose =
-        L.L_val * (g : Matrix (Fin n) (Fin n) ℂ) *
+        L * (g : Matrix (Fin n) (Fin n) ℂ) *
           (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose := by
             rw [h_comm]
-    _ = L.L_val * ((g : Matrix (Fin n) (Fin n) ℂ) *
+    _ = L * ((g : Matrix (Fin n) (Fin n) ℂ) *
           (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose) := by noncomm_ring
-    _ = L.L_val * 1 := by rw [h_unitary g]
-    _ = L.L_val := by noncomm_ring
+    _ = L * 1 := by rw [h_unitary g]
+    _ = L := by noncomm_ring
 
 /-- **Theorem**: Logical Operator Trace Protection Invariance: Tr(g * L * g†) = Tr(L). -/
 theorem logical_operator_trace_protected
     (h_comm :
-      (g : Matrix (Fin n) (Fin n) ℂ) * L.L_val =
-        L.L_val * (g : Matrix (Fin n) (Fin n) ℂ)) :
-    trace ((g : Matrix (Fin n) (Fin n) ℂ) * L.L_val *
-      (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose) = trace L.L_val := by
+      (g : Matrix (Fin n) (Fin n) ℂ) * L =
+        L * (g : Matrix (Fin n) (Fin n) ℂ)) :
+    trace ((g : Matrix (Fin n) (Fin n) ℂ) * L *
+      (g : Matrix (Fin n) (Fin n) ℂ).conjTranspose) = trace L := by
   rw [L.logical_operator_conjugation_invariant h_comm]
 
 end LogicalOperator

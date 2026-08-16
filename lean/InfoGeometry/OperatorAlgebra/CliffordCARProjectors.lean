@@ -141,17 +141,17 @@ theorem cre_mul_modeParity (n : ℕ) (i : Fin n) :
     _ = 0 * ann n i - (1 - ann n i * cre n i) * cre n i := by
       rw [cre_sq_zero, hcar]
     _ = -(cre n i) := by
-      simp [mul_sub, ← mul_assoc, cre_sq_zero]
+      noncomm_ring
 
 theorem modeParity_ann_anticomm (n : ℕ) (i : Fin n) :
     modeParity n i * ann n i + ann n i * modeParity n i = 0 := by
   rw [modeParity_mul_ann, ann_mul_modeParity]
-  ring
+  abel
 
 theorem modeParity_cre_anticomm (n : ℕ) (i : Fin n) :
     modeParity n i * cre n i + cre n i * modeParity n i = 0 := by
   rw [modeParity_mul_cre, cre_mul_modeParity]
-  ring
+  abel
 
 theorem centeredNumberOperator_commutator_occupationProjector
     (n : ℕ) (i : Fin n) :

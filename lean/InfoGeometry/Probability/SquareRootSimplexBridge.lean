@@ -24,7 +24,7 @@ open InfoGeometry.Probability.Homological
 
 /-! ## Fisher coordinates -/
 
-def squareRootTangent {n : ℕ} (p v : Fin n → ℝ) : Fin n → ℝ :=
+noncomputable def squareRootTangent {n : ℕ} (p v : Fin n → ℝ) : Fin n → ℝ :=
   fun i => v i / Real.sqrt (p i)
 
 theorem fisherMetricDiagonal_mul_sq_eq_squareRootTangent_sq
@@ -105,7 +105,7 @@ theorem squareRootEmbedding_injective_on_nonnegative
   simpa [Real.sq_sqrt (hp i), Real.sq_sqrt (hq i)] using hsquares
 
 /-- The inverse probability coordinate on the radius-two sphere. -/
-def amplitudeToProbability {n : ℕ} (xi : Fin n → ℝ) : Fin n → ℝ :=
+noncomputable def amplitudeToProbability {n : ℕ} (xi : Fin n → ℝ) : Fin n → ℝ :=
   fun i => (xi i / 2) ^ 2
 
 theorem amplitudeToProbability_nonneg
@@ -136,7 +136,7 @@ theorem squareRootEmbedding_amplitudeToProbability
   funext i
   unfold squareRootEmbedding amplitudeToProbability
   have hi : 0 ≤ xi i / 2 := by positivity
-  rw [Real.sqrt_sq_eq_abs, abs_of_nonneg hi]
+  rw [pow_two, Real.sqrt_sq hi]
   ring
 
 theorem squareRootEmbedding_image_iff

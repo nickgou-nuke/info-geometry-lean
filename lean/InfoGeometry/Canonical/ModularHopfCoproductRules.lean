@@ -29,11 +29,8 @@ section
 variable {R A : Type*}
 variable [CommRing R] [Ring A] [Algebra R A]
 
-/-- `Φ` is the nilpotent/modular flux generator (`Φ := N`). -/
-abbrev Phi (N : A) : A := N
-
 /-- `Δ := 1 + Φ` on the finite algebraic lane. -/
-def modularDelta (N : A) : A := 1 + Phi N
+def modularDelta (N : A) : A := 1 + N
 
 /-- Group-like coproduct on the restricted modular generator lane: `hatDelta(Δ) = Δ ⊗ Δ`. -/
 def hatDeltaDelta (N : A) : A ⊗[R] A :=
@@ -48,7 +45,7 @@ theorem hatDeltaPhi_eq_primitive_plus_cross
     (N : A) :
     hatDeltaPhi (R := R) N =
       primitiveFlux (R := R) N + crossFlux (R := R) N := by
-  simpa [hatDeltaPhi, hatDeltaDelta, modularDelta, Phi, liftFlux] using
+  simpa [hatDeltaPhi, hatDeltaDelta, modularDelta, liftFlux] using
     one_add_tmul_one_add_sub_one_eq_liftFlux (R := R) N
 
 /-- Equivalent expansion in explicit tensor terms. -/
@@ -70,7 +67,7 @@ theorem hatDeltaPhi_eq_primitive_of_cross_zero
     (N : A)
     (hcross : crossFlux (R := R) N = 0) :
     hatDeltaPhi (R := R) N = primitiveFlux (R := R) N := by
-  simpa [hatDeltaPhi, hatDeltaDelta, modularDelta, Phi] using
+  simpa [hatDeltaPhi, hatDeltaDelta, modularDelta] using
     one_add_tmul_one_add_sub_one_eq_primitive_of_cross_zero (R := R) N hcross
 
 end

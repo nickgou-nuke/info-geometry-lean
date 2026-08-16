@@ -92,4 +92,21 @@ theorem wittNegTwo_le_wittGeneratorLieSpan :
   rintro _ ⟨⟨i, j⟩, rfl⟩
   exact annihilation_quadratic_mem_wittGeneratorLieSpan i j
 
+/-! The five displayed Witt channels are contained in one genuine Lie
+subalgebra.  We do not identify this finite generating-sector span with the
+whole Lie subalgebra: that would require a separate finite-dimensional basis
+or bracket-routing theorem. -/
+theorem wittFiveGrade_le_wittGeneratorLieSpan :
+    wittFiveGrade ≤ (wittGeneratorLieSpan : Submodule ℝ (MatStage 5)) := by
+  unfold wittFiveGrade
+  apply sup_le
+  · apply sup_le
+    · apply sup_le
+      · apply sup_le
+        · exact wittNegTwo_le_wittGeneratorLieSpan
+        · exact wittNegOne_le_wittGeneratorLieSpan
+      · exact wittZero_le_wittGeneratorLieSpan
+    · exact wittPosOne_le_wittGeneratorLieSpan
+  · exact wittPosTwo_le_wittGeneratorLieSpan
+
 end InfoGeometry.Canonical.Cl55WittLieRouting

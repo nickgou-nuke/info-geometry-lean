@@ -110,6 +110,30 @@ theorem normalizationCliffordEquiv_dualGenerator (ξ : Module.Dual ℝ E) :
   simp [normalizationEquiv_apply,
     InfoGeometry.Canonical.NeutralDualPair.generator]
 
+theorem normalizationCliffordEquiv_symm_primalGenerator (u : E) :
+    (normalizationCliffordEquiv (E := E)).symm
+        (InfoGeometry.Canonical.NeutralDualPair.generator (u, 0)) =
+      CliffordAlgebra.ι (canonicalNeutralForm (E := E)) (u, 0) := by
+  change (normalizationCliffordEquiv (E := E)).symm
+      (CliffordAlgebra.ι (canonicalNeutralFormUnscaled (E := E)) (u, 0)) = _
+  rw [normalizationCliffordEquiv_symm_ι]
+  change CliffordAlgebra.ι (canonicalNeutralForm (E := E))
+      (u, (1 / 2 : ℝ) • (0 : Module.Dual ℝ E)) = _
+  simp
+
+theorem normalizationCliffordEquiv_symm_dualGenerator
+    (ξ : Module.Dual ℝ E) :
+    (normalizationCliffordEquiv (E := E)).symm
+        (InfoGeometry.Canonical.NeutralDualPair.generator (0, ξ)) =
+      CliffordAlgebra.ι
+        (canonicalNeutralForm (E := E)) (0, (1 / 2 : ℝ) • ξ) := by
+  change (normalizationCliffordEquiv (E := E)).symm
+      (CliffordAlgebra.ι (canonicalNeutralFormUnscaled (E := E)) (0, ξ)) = _
+  rw [normalizationCliffordEquiv_symm_ι]
+  change CliffordAlgebra.ι (canonicalNeutralForm (E := E))
+      (0, (1 / 2 : ℝ) • ξ) = _
+  rfl
+
 theorem normalizationCliffordEquiv_mixed_CAR
     (u : E) (ξ : Module.Dual ℝ E) :
     normalizationCliffordEquiv
@@ -118,9 +142,7 @@ theorem normalizationCliffordEquiv_mixed_CAR
           CliffordAlgebra.ι (canonicalNeutralForm (E := E)) (0, ξ) *
           CliffordAlgebra.ι (canonicalNeutralForm (E := E)) (u, 0)) =
       algebraMap ℝ (UnscaledClifford E) (((2 : ℝ) • ξ) u) := by
-  rw [map_add, map_mul, map_mul,
-    normalizationCliffordEquiv_ι, normalizationCliffordEquiv_ι,
-    normalizationCliffordEquiv_ι, normalizationCliffordEquiv_ι]
+  simp only [map_add, map_mul, normalizationCliffordEquiv_ι]
   simpa [normalizationEquiv_apply,
     InfoGeometry.Canonical.NeutralDualPair.vectorGenerator,
     InfoGeometry.Canonical.NeutralDualPair.covectorGenerator] using
@@ -135,9 +157,7 @@ theorem normalizationCliffordEquiv_reverse_mixed_CAR
           CliffordAlgebra.ι (canonicalNeutralForm (E := E)) (u, 0) *
           CliffordAlgebra.ι (canonicalNeutralForm (E := E)) (0, ξ)) =
       algebraMap ℝ (UnscaledClifford E) (((2 : ℝ) • ξ) u) := by
-  rw [map_add, map_mul, map_mul,
-    normalizationCliffordEquiv_ι, normalizationCliffordEquiv_ι,
-    normalizationCliffordEquiv_ι, normalizationCliffordEquiv_ι]
+  simp only [map_add, map_mul, normalizationCliffordEquiv_ι]
   simpa [normalizationEquiv_apply,
     InfoGeometry.Canonical.NeutralDualPair.vectorGenerator,
     InfoGeometry.Canonical.NeutralDualPair.covectorGenerator] using
@@ -148,7 +168,7 @@ theorem normalizationCliffordEquiv_primal_square_zero (u : E) :
     normalizationCliffordEquiv
         (CliffordAlgebra.ι (canonicalNeutralForm (E := E)) (u, 0) *
           CliffordAlgebra.ι (canonicalNeutralForm (E := E)) (u, 0)) = 0 := by
-  rw [map_mul, normalizationCliffordEquiv_ι, normalizationCliffordEquiv_ι]
+  simp only [map_mul, normalizationCliffordEquiv_ι]
   simpa [normalizationEquiv_apply,
     InfoGeometry.Canonical.NeutralDualPair.vectorGenerator] using
     (InfoGeometry.Canonical.NeutralDualPair.vectorGenerator_sq_zero
@@ -159,7 +179,7 @@ theorem normalizationCliffordEquiv_dual_square_zero
     normalizationCliffordEquiv
         (CliffordAlgebra.ι (canonicalNeutralForm (E := E)) (0, ξ) *
           CliffordAlgebra.ι (canonicalNeutralForm (E := E)) (0, ξ)) = 0 := by
-  rw [map_mul, normalizationCliffordEquiv_ι, normalizationCliffordEquiv_ι]
+  simp only [map_mul, normalizationCliffordEquiv_ι]
   simpa [normalizationEquiv_apply,
     InfoGeometry.Canonical.NeutralDualPair.covectorGenerator] using
     (InfoGeometry.Canonical.NeutralDualPair.covectorGenerator_sq_zero

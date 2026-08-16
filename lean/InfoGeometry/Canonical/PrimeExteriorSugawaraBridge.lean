@@ -1,7 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge
 import InfoGeometry.Canonical.PrimeBooleanCubeSugawara
 
@@ -91,26 +90,5 @@ theorem centralCharge_eq_card (B : PrimeExteriorSugawaraPacket P) :
       rw [vertexOfState_card_eq]
 
 end PrimeExteriorSugawaraPacket
-
-/-- Canonical owner target for the finite exterior-to-Sugawara bridge. -/
-@[owner_target_tag]
-def PrimeExteriorSugawaraOwnerTarget : Prop :=
-  ∀ {P : PrimeCutoff} (S : SquareFreeState P),
-    ArithmeticFunction.moebius (stateNat S) =
-      InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.Gamma S ∧
-    (booleanCubeSugawaraPacket P (vertexOfState S)).bridge.centralCharge = S.card
-
-/-- The finite exterior-to-Sugawara owner target is witnessed by the bridge lemmas. -/
-theorem primeExteriorSugawaraOwnerTarget :
-    ∀ {P : PrimeCutoff} (S : SquareFreeState P),
-      ArithmeticFunction.moebius (stateNat S) =
-        InfoGeometry.Arithmetic.PrimeExteriorRepresentation.SquareFreePrimeState.Gamma S ∧
-      (booleanCubeSugawaraPacket P (vertexOfState S)).bridge.centralCharge = S.card := by
-  intro P S
-  constructor
-  · exact PrimeExteriorSugawaraPacket.mobius_eq_Gamma
-      (S : PrimeExteriorSugawaraPacket P)
-  · exact PrimeExteriorSugawaraPacket.centralCharge_eq_card
-      (S : PrimeExteriorSugawaraPacket P)
 
 end InfoGeometry.Canonical.PrimeExteriorSugawaraBridge

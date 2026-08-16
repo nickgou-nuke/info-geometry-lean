@@ -80,4 +80,60 @@ theorem laplacian_commutes_hodge (d : V →ₗ[ℝ] V) (x : V) :
   simp [hodgeLaplacian, hodgeStar, LinearMap.comp_apply, LinearMap.add_apply,
     hodgeCodifferential, hK.J_invol, add_comm]
 
+/-! ### Self-dual and anti-self-dual projectors -/
+
+/-- The `+1` eigenspace projector of the Krein-induced involution. -/
+noncomputable def hodgeProjectorPlus : V →ₗ[ℝ] V :=
+  (1 / 2 : ℝ) • (LinearMap.id + hodgeStar V)
+
+/-- The `-1` eigenspace projector of the Krein-induced involution. -/
+noncomputable def hodgeProjectorMinus : V →ₗ[ℝ] V :=
+  (1 / 2 : ℝ) • (LinearMap.id - hodgeStar V)
+
+theorem hodgeProjectorPlus_sq :
+    hodgeProjectorPlus V ∘ₗ hodgeProjectorPlus V = hodgeProjectorPlus V := by
+  ext x
+  simp [hodgeProjectorPlus, LinearMap.comp_apply, hodge_star_involutive V]
+  module
+
+theorem hodgeProjectorMinus_sq :
+    hodgeProjectorMinus V ∘ₗ hodgeProjectorMinus V = hodgeProjectorMinus V := by
+  ext x
+  simp [hodgeProjectorMinus, LinearMap.comp_apply, hodge_star_involutive V]
+  module
+
+theorem hodgeProjectorPlus_comp_minus :
+    hodgeProjectorPlus V ∘ₗ hodgeProjectorMinus V = 0 := by
+  ext x
+  simp [hodgeProjectorPlus, hodgeProjectorMinus,
+    LinearMap.comp_apply, hodge_star_involutive V]
+  module
+
+theorem hodgeProjectorMinus_comp_plus :
+    hodgeProjectorMinus V ∘ₗ hodgeProjectorPlus V = 0 := by
+  ext x
+  simp [hodgeProjectorPlus, hodgeProjectorMinus,
+    LinearMap.comp_apply, hodge_star_involutive V]
+  module
+
+theorem hodgeProjectorPlus_add_minus :
+    hodgeProjectorPlus V + hodgeProjectorMinus V = LinearMap.id := by
+  ext x
+  simp [hodgeProjectorPlus, hodgeProjectorMinus]
+  module
+
+theorem hodgeLaplacian_commutes_hodgeProjectorPlus (d : V →ₗ[ℝ] V) :
+    hodgeLaplacian V d ∘ₗ hodgeProjectorPlus V =
+      hodgeProjectorPlus V ∘ₗ hodgeLaplacian V d := by
+  ext x
+  simp [hodgeProjectorPlus, LinearMap.comp_apply,
+    laplacian_commutes_hodge V d]
+
+theorem hodgeLaplacian_commutes_hodgeProjectorMinus (d : V →ₗ[ℝ] V) :
+    hodgeLaplacian V d ∘ₗ hodgeProjectorMinus V =
+      hodgeProjectorMinus V ∘ₗ hodgeLaplacian V d := by
+  ext x
+  simp [hodgeProjectorMinus, LinearMap.comp_apply,
+    laplacian_commutes_hodge V d]
+
 end InfoGeometry.Krein.HodgeStarOperator

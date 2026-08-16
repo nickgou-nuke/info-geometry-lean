@@ -182,5 +182,24 @@ theorem mem_fullPinToO55_kernel_iff (g : FullPin55) :
     g ∈ MonoidHom.ker fullPinToO55 ↔ g = 1 ∨ g = pinNegOne := by
   rw [fullPinToO55_kernel_exact, mem_centralSignSubgroup_iff]
 
+/-- Pointwise form of the exact kernel theorem. -/
+@[simp] theorem fullPinToO55_eq_one_iff (g : FullPin55) :
+    fullPinToO55 g = 1 ↔ g = 1 ∨ g = pinNegOne := by
+  simpa only [MonoidHom.mem_ker] using
+    mem_fullPinToO55_kernel_iff g
+
+/-- The central-sign inclusion is exactly the kernel of the representation. -/
+theorem centralSignSubgroup_fullPinToO55_mulExact :
+    Function.MulExact centralSignSubgroup.subtype fullPinToO55 := by
+  rw [MonoidHom.mulExact_iff, Subgroup.range_subtype,
+    fullPinToO55_kernel_exact]
+
+/-- The quotient equivalence sends a class to the corresponding orthogonal
+image. -/
+@[simp] theorem fullPin55QuotientEquivRange_mk (g : FullPin55) :
+    fullPin55QuotientEquivRange (QuotientGroup.mk g) =
+      fullPinToO55.rangeRestrict g :=
+  rfl
+
 end RealPin55ExactKernel
 end noncomputable section

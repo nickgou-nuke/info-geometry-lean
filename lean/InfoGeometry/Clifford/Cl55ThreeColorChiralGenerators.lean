@@ -79,6 +79,12 @@ theorem chiralMinus55_plus55_anticommutator (i j : Fin 3) :
       (annihilation55_creation55_anticommutator_eq
       (Fin.castAdd 2 i) (Fin.castAdd 2 j))
 
+theorem chiralPlus55_minus55_anticommutator (i j : Fin 3) :
+    chiralPlus55 i * chiralMinus55 j +
+        chiralMinus55 j * chiralPlus55 i =
+      if i = j then 1 else 0 := by
+  simpa [add_comm, eq_comm] using chiralMinus55_plus55_anticommutator j i
+
 theorem chiralPlus55_minus55_commutator_mem_grade_zero (i j : Fin 3) :
     chiralPlus55 i * chiralMinus55 j -
         chiralMinus55 j * chiralPlus55 i ∈ cl55GradeSubmodule 0 := by

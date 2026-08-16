@@ -142,7 +142,8 @@ theorem centralFromWinding_add (m n : ℕ) :
 theorem artinCentralMonodromy_append (w₁ w₂ : ArtinWord) :
     artinCentralMonodromy (w₁ ++ w₂) =
       artinCentralMonodromy w₁ * artinCentralMonodromy w₂ := by
-  simp [artinCentralMonodromy, centralFromWinding_add, List.length_append]
+  rw [artinCentralMonodromy, artinCentralMonodromy, artinCentralMonodromy,
+    List.length_append, centralFromWinding_add]
 
 @[simp] theorem artinParitySign_append (w₁ w₂ : ArtinWord) :
     artinParitySign (w₁ ++ w₂) =

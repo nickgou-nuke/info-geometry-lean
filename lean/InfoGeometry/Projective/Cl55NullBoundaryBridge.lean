@@ -129,4 +129,22 @@ theorem pinBoundaryAction_mul (g h : Pin55) (Z : NullRep) :
   rw [pinConjAction_mul]
   rfl
 
+/-- The native Pin action on the projective `Q55` null boundary. -/
+noncomputable def pinBoundaryRepresentation :
+    Pin55 →* Function.End Boundary where
+  toFun := pinBoundaryAction
+  map_one' := by
+    funext x
+    refine Quotient.inductionOn (s := ProjectiveNullBoundaryDatum.nullRepSetoid datum) x ?_
+    intro Z
+    exact pinBoundaryAction_one Z
+  map_mul' := by
+    intro g h
+    funext x
+    refine Quotient.inductionOn (s := ProjectiveNullBoundaryDatum.nullRepSetoid datum) x ?_
+    intro Z
+    change pinBoundaryAction (g * h) (mk Z) =
+      pinBoundaryAction g (pinBoundaryAction h (mk Z))
+    exact pinBoundaryAction_mul g h Z
+
 end InfoGeometry.Projective.Cl55NullBoundaryBridge

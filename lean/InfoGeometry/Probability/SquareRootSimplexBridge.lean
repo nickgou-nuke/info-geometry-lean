@@ -135,8 +135,9 @@ theorem squareRootEmbedding_amplitudeToProbability
     squareRootEmbedding n (amplitudeToProbability xi) = xi := by
   funext i
   unfold squareRootEmbedding amplitudeToProbability
-  have hi : 0 ≤ xi i / 2 := by positivity
-  rw [pow_two, Real.sqrt_sq hi]
+  have hi : 0 ≤ xi i / 2 := by
+    exact div_nonneg (hxi i) (by norm_num)
+  rw [Real.sqrt_sq hi]
   ring
 
 theorem squareRootEmbedding_image_iff

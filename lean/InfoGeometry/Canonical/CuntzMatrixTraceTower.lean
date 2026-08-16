@@ -170,7 +170,10 @@ theorem concreteMap_injective {i j : ℕ} (hij : i ≤ j) :
   induction hij with
   | refl =>
       intro A B hAB
-      simpa using hAB
+      change (map concreteStep (le_refl _)) A =
+        (map concreteStep (le_refl _)) B at hAB
+      rw [map_id concreteStep] at hAB
+      exact hAB
   | step hjm ih =>
       intro A B hAB
       apply ih

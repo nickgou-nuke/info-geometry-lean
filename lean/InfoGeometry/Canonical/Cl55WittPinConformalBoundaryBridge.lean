@@ -127,6 +127,38 @@ theorem pinInfinityStabilizerProjectivizationAction_preserves_boundary
   rw [pinInfinityStabilizerProjectivizationAction_apply]
   exact pinInfinityStabilizer_preserves_nativeConformalBoundary g p hp
 
+/-! ## Native action on the full projective carrier -/
+
+noncomputable instance pinInfinityStabilizerProjectiveMulAction :
+    MulAction pinInfinityStabilizer (ℙ ℝ V55) where
+  smul := fun g p => pinInfinityStabilizerProjectivizationAction g p
+  one_smul := by
+    intro p
+    exact congrFun
+      pinInfinityStabilizerProjectivizationAction.map_one p
+  mul_smul := by
+    intro g h p
+    change
+      pinInfinityStabilizerProjectivizationAction (g * h) p =
+        pinInfinityStabilizerProjectivizationAction g
+          (pinInfinityStabilizerProjectivizationAction h p)
+    have hmul := congrFun
+      (pinInfinityStabilizerProjectivizationAction.map_mul g h) p
+    simpa [Function.comp_def] using hmul
+
+@[simp]
+theorem pinInfinityStabilizerProjective_smul_eq
+    (g : pinInfinityStabilizer) (p : ℙ ℝ V55) :
+    g • p = pinInfinityStabilizerProjectivizationAction g p :=
+  rfl
+
+theorem pinInfinityStabilizerProjective_smul_preserves_boundary
+    (g : pinInfinityStabilizer) (p : ℙ ℝ V55)
+    (hp : nativeConformalBoundary55 p) :
+    nativeConformalBoundary55 (g • p) := by
+  rw [pinInfinityStabilizerProjective_smul_eq]
+  exact pinInfinityStabilizerProjectivizationAction_preserves_boundary g p hp
+
 /-! ## Restricted action on the native null affine chart -/
 
 abbrev nativeNullAffineChart55Carrier : Type :=
@@ -167,6 +199,29 @@ noncomputable def pinInfinityStabilizerNativeNullAffineChartActionHom :
     (p : nativeNullAffineChart55Carrier) :
     pinInfinityStabilizerNativeNullAffineChartActionHom g p =
       pinInfinityStabilizerNativeNullAffineChartAction g p :=
+  rfl
+
+/-! ## Native action on the null affine chart -/
+
+noncomputable instance pinInfinityStabilizerNativeNullAffineChartMulAction :
+    MulAction pinInfinityStabilizer nativeNullAffineChart55Carrier where
+  smul := fun g p =>
+    pinInfinityStabilizerNativeNullAffineChartActionHom g p
+  one_smul := by
+    intro p
+    exact congrFun
+      pinInfinityStabilizerNativeNullAffineChartActionHom.map_one p
+  mul_smul := by
+    intro g h p
+    have hmul := congrFun
+      (pinInfinityStabilizerNativeNullAffineChartActionHom.map_mul g h) p
+    simpa [Function.comp_def] using hmul
+
+@[simp]
+theorem pinInfinityStabilizerNativeNullAffineChart_smul_eq
+    (g : pinInfinityStabilizer)
+    (p : nativeNullAffineChart55Carrier) :
+    g • p = pinInfinityStabilizerNativeNullAffineChartActionHom g p :=
   rfl
 
 /-! ## Induced action on the affine `PACSplit44` chart -/
@@ -225,6 +280,26 @@ noncomputable def pinInfinityStabilizerAffinePACActionHom :
     (x : ProjectiveAffineConformalClosure55.PACSplit44) :
     pinInfinityStabilizerAffinePACActionHom g x =
       pinInfinityStabilizerAffinePACAction g x :=
+  rfl
+
+noncomputable instance pinInfinityStabilizerAffinePACMulAction :
+    MulAction pinInfinityStabilizer
+      ProjectiveAffineConformalClosure55.PACSplit44 where
+  smul := fun g x => pinInfinityStabilizerAffinePACActionHom g x
+  one_smul := by
+    intro x
+    exact congrFun pinInfinityStabilizerAffinePACActionHom.map_one x
+  mul_smul := by
+    intro g h x
+    have hmul := congrFun
+      (pinInfinityStabilizerAffinePACActionHom.map_mul g h) x
+    simpa [Function.comp_def] using hmul
+
+@[simp]
+theorem pinInfinityStabilizerAffinePAC_smul_eq
+    (g : pinInfinityStabilizer)
+    (x : ProjectiveAffineConformalClosure55.PACSplit44) :
+    g • x = pinInfinityStabilizerAffinePACActionHom g x :=
   rfl
 
 /-! The affine and projective actions form a genuine commuting square. -/

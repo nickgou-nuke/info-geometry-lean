@@ -40,6 +40,18 @@ def fullPinToOQ55 : FullPin55 →* OQ55 where
 @[simp] theorem fullPinToOQ55_apply (g : FullPin55) (v : V55) :
     ((fullPinToOQ55 g : OQ55) : V55 ≃ₗ[ℝ] V55) v = twistedVector g v := rfl
 
+/-- The native `FullPin55` action is exactly the orthogonal linear action
+returned by `fullPinToOQ55`. -/
+theorem fullPinToOQ55_smul_eq
+    (g : FullPin55) (v : V55) :
+    ((fullPinToOQ55 g : OQ55) : V55 ≃ₗ[ℝ] V55) v =
+      @SMul.smul FullPin55 V55
+        ((fullPin55VectorMulActionData :
+            MulAction FullPin55 V55).toSMul) g v := by
+  rw [fullPinToOQ55_apply]
+  change twistedVector g v = twistedVector g v
+  rfl
+
 /-- The representation of every normalized vector generator is its explicit
 split-signature reflection. -/
 theorem fullPinToOQ55_generator {u : Cl55ˣ} {a : V55}

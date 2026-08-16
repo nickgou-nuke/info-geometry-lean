@@ -369,7 +369,7 @@ theorem tauCoord_actCartan
 
   field_simp [hq, hExpNeg]
   rw [hScaleC]
-  ring
+  ring_nf
 
 /-! ## 4. Existing native Cayley critical-circle theorem -/
 
@@ -606,7 +606,7 @@ theorem deckTranslation_add
         (deckTranslation L₂ x) =
       deckTranslation (L₁ + L₂) x := by
   ext <;>
-    simp [deckTranslation] <;>
+    simp [deckTranslation];
     ring
 
 @[simp]
@@ -640,7 +640,7 @@ theorem kleinGlide_sq
     kleinGlide L (kleinGlide L x) =
       deckTranslation L x := by
   ext <;>
-    simp [kleinGlide, deckTranslation] <;>
+    simp [kleinGlide, deckTranslation];
     ring
 
 /-- The Klein glide commutes with translation along its glide axis. -/
@@ -652,7 +652,7 @@ theorem kleinGlide_deckTranslation
       deckTranslation a
         (kleinGlide L x) := by
   ext <;>
-    simp [kleinGlide, deckTranslation] <;>
+    simp [kleinGlide, deckTranslation];
     ring
 
 /-- The Klein glide reverses the transverse translation direction:
@@ -668,7 +668,7 @@ theorem kleinGlide_transverseTranslation
     simp [
       kleinGlide,
       transverseTranslation
-    ] <;>
+    ];
     ring
 
 /-- The Klein glide preserves the critical seam setwise. -/

@@ -11,10 +11,8 @@ open RealPin55TwistedAction
 open RealPin55MatrixRepresentation
 open V55Fin10Coordinates
 
-theorem negOne_mem_fullPin55 : (-1 : Cl55ˣ) ∈ FullPin55 := by
-  exact RealPin55Core.neg_one_mem_fullPin55
-
-def pinNegOne : FullPin55 := ⟨-1, negOne_mem_fullPin55⟩
+def pinNegOne : FullPin55 :=
+  ⟨-1, RealPin55Core.neg_one_mem_fullPin55⟩
 
 @[simp] theorem pinNegOne_coe : (pinNegOne : Cl55ˣ) = -1 := rfl
 

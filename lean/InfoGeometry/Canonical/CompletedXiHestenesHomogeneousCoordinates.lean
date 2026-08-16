@@ -280,6 +280,56 @@ theorem matH_conjugates_matEpsilon :
       Fin.sum_univ_two
     ]
 
+/-! ## Scalar extension and matrix action -/
+
+/-- Entrywise extension of the real two-lane matrices to complex scalars. -/
+def complexify (A : M2R) : Matrix (Fin 2) (Fin 2) ℂ :=
+  fun i j => (A i j : ℂ)
+
+@[simp]
+theorem complexify_apply (A : M2R) (i j : Fin 2) :
+    complexify A i j = (A i j : ℂ) :=
+  rfl
+
+/-- The real matrix atom acting on the complex homogeneous pair. -/
+def actMatrix (A : M2R) (v : HomogeneousPair) : HomogeneousPair :=
+  ( ((complexify A).mulVec ![v.1, v.2]) 0,
+    ((complexify A).mulVec ![v.1, v.2]) 1 )
+
+@[simp]
+theorem actMatrix_matH (v : HomogeneousPair) :
+    actMatrix matH v = (v.2, v.1) := by
+  rcases v with ⟨p, q⟩
+  apply Prod.ext <;>
+    simp [actMatrix, complexify, matH, Matrix.mulVec,
+      dotProduct, Fin.sum_univ_succ]
+
+@[simp]
+theorem actMatrix_matEpsilon (v : HomogeneousPair) :
+    actMatrix matEpsilon v = (v.1, -v.2) := by
+  rcases v with ⟨p, q⟩
+  apply Prod.ext <;>
+    simp [actMatrix, complexify, matEpsilon, Matrix.mulVec,
+      dotProduct, Fin.sum_univ_succ]
+
+@[simp]
+theorem actMatrix_matK (v : HomogeneousPair) :
+    actMatrix matK v = (-v.2, v.1) := by
+  rcases v with ⟨p, q⟩
+  apply Prod.ext <;>
+    simp [actMatrix, complexify, matK, Matrix.mulVec,
+      dotProduct, Fin.sum_univ_succ]
+
+theorem actMatrix_matH_involutive :
+    Function.Involutive (actMatrix matH) := by
+  intro v
+  simpa using actMatrix_matH (actMatrix matH v)
+
+theorem actMatrix_matK_sq (v : HomogeneousPair) :
+    actMatrix matK (actMatrix matK v) = -v := by
+  rcases v with ⟨p, q⟩
+  simp [actMatrix_matK]
+
 /-! ## 3. Split-Cartan flow -/
 
 /-- Diagonal Cartan exponential `diag(exp t, exp(-t))`. -/
@@ -294,6 +344,60 @@ def actCartan
     HomogeneousPair :=
   ((Real.exp t : ℂ) * v.1,
    (Real.exp (-t) : ℂ) * v.2)
+
+/-- The matrix Cartan action is the previously defined coordinate action. -/
+theorem actMatrix_cartanMatrix_apply
+    (t : ℝ) (v : HomogeneousPair) :
+    actMatrix (cartanMatrix t) v = actCartan t v := by
+  rcases v with ⟨p, q⟩
+  apply Prod.ext <;>
+    simp [actMatrix, actCartan, complexify, cartanMatrix,
+      Matrix.mulVec, dotProduct, Fin.sum_univ_succ]
+
+/-! ## Matrix action readback -/
+
+@[simp]
+theorem actMatrix_matH_homogeneousPsi (s : ℂ) :
+    actMatrix matH (homogeneousPsi s) =
+      homogeneousPsi (1 - s) := by
+  rw [actMatrix_matH]
+  simp [homogeneousPsi]
+
+theorem actMatrix_matH_cartan_conjugacy
+    (t : ℝ) (v : HomogeneousPair) :
+    actMatrix matH
+        (actMatrix (cartanMatrix t) (actMatrix matH v)) =
+      actCartan (-t) v := by
+  rcases v with ⟨p, q⟩
+  apply Prod.ext <;>
+    simp [actMatrix, complexify, matH, cartanMatrix, actCartan,
+      Matrix.mulVec, dotProduct, Fin.sum_univ_succ, Real.exp_neg]
+
+theorem projectiveS_actMatrix_matH
+    (v : HomogeneousPair)
+    (hsum : v.1 + v.2 ≠ 0) :
+    projectiveS (actMatrix matH v) =
+      1 - projectiveS v := by
+  rw [actMatrix_matH]
+  change v.2 / (v.2 + v.1) = 1 - v.1 / (v.1 + v.2)
+  have hsum' : v.2 + v.1 ≠ 0 := by
+    simpa [add_comm] using hsum
+  field_simp [hsum, hsum'] <;> ring
+
+theorem tauCoord_actMatrix_matH (v : HomogeneousPair) :
+    tauCoord (actMatrix matH v) =
+      (tauCoord v)⁻¹ := by
+  rw [actMatrix_matH]
+  change v.2 / v.1 = (v.1 / v.2)⁻¹
+  rw [inv_div]
+
+theorem tauCoord_actMatrix_matK (v : HomogeneousPair) :
+    tauCoord (actMatrix matK v) =
+      -(tauCoord v)⁻¹ := by
+  rw [actMatrix_matK]
+  change (-v.2) / v.1 = -(v.1 / v.2)⁻¹
+  rw [inv_div]
+  ring
 
 @[simp]
 theorem actCartan_zero (v : HomogeneousPair) :

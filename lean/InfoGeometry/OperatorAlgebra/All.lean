@@ -74,6 +74,7 @@ import InfoGeometry.OperatorAlgebra.CuntzWordPrefixKMSBridge
 import InfoGeometry.OperatorAlgebra.Cl55ChiralSuperchargeBridge
 import InfoGeometry.OperatorAlgebra.Cl55ChiralSuperchargeCARBridge
 import InfoGeometry.OperatorAlgebra.CliffordCARProjectors
+import InfoGeometry.OperatorAlgebra.CuntzTomitaQuadraticReadout
 
 namespace InfoGeometry.OperatorAlgebra
 
@@ -85,4 +86,3 @@ and represented Drazin splitting.
 -/
 
 end InfoGeometry.OperatorAlgebra
-import InfoGeometry.OperatorAlgebra.CuntzTomitaQuadraticReadout

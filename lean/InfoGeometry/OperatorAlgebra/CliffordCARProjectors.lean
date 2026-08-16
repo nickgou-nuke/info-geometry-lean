@@ -10,37 +10,45 @@ complementary finite algebraic projectors.  This file stays inside the native
 
 namespace InfoGeometry.OperatorAlgebra.CliffordCAR
 
-def occupationProjector (n : ℕ) (i : Fin n) : Clnn n :=
+noncomputable def occupationProjector (n : ℕ) (i : Fin n) : Clnn n :=
   cre n i * ann n i
 
-def vacancyProjector (n : ℕ) (i : Fin n) : Clnn n :=
+noncomputable def vacancyProjector (n : ℕ) (i : Fin n) : Clnn n :=
   ann n i * cre n i
 
-def modeParity (n : ℕ) (i : Fin n) : Clnn n :=
+noncomputable def modeParity (n : ℕ) (i : Fin n) : Clnn n :=
   occupationProjector n i - vacancyProjector n i
 
 theorem occupationProjector_add_vacancyProjector
     (n : ℕ) (i : Fin n) :
     occupationProjector n i + vacancyProjector n i = 1 := by
-  exact car_identity n i i
+  simpa [occupationProjector, vacancyProjector, add_comm] using car_identity n i i
+
+private theorem car_same (n : ℕ) (i : Fin n) :
+    ann n i * cre n i + cre n i * ann n i = 1 := by
+  simpa [if_pos rfl] using car_identity n i i
 
 theorem occupationProjector_idempotent (n : ℕ) (i : Fin n) :
     occupationProjector n i * occupationProjector n i = occupationProjector n i := by
   unfold occupationProjector
   have hcar : ann n i * cre n i = 1 - cre n i * ann n i := by
-    exact eq_sub_of_add_eq (car_identity n i i)
+    exact eq_sub_of_add_eq (car_same n i)
   calc
     (cre n i * ann n i) * (cre n i * ann n i) =
         cre n i * (ann n i * cre n i) * ann n i := by noncomm_ring
     _ = cre n i * (1 - cre n i * ann n i) * ann n i := by rw [hcar]
     _ = cre n i * ann n i := by
-      simp [mul_sub, ← mul_assoc, cre_sq_zero]
+      calc
+        cre n i * (1 - cre n i * ann n i) * ann n i =
+            cre n i * ann n i - (cre n i * cre n i) *
+              (ann n i * ann n i) := by noncomm_ring
+        _ = cre n i * ann n i := by simp
 
 theorem vacancyProjector_idempotent (n : ℕ) (i : Fin n) :
     vacancyProjector n i * vacancyProjector n i = vacancyProjector n i := by
   unfold vacancyProjector
   have hcar : cre n i * ann n i = 1 - ann n i * cre n i := by
-    have h := car_identity n i i
+    have h := car_same n i
     rw [add_comm] at h
     exact eq_sub_of_add_eq h
   calc
@@ -48,7 +56,11 @@ theorem vacancyProjector_idempotent (n : ℕ) (i : Fin n) :
         ann n i * (cre n i * ann n i) * cre n i := by noncomm_ring
     _ = ann n i * (1 - ann n i * cre n i) * cre n i := by rw [hcar]
     _ = ann n i * cre n i := by
-      simp [mul_sub, ← mul_assoc, ann_sq_zero]
+      calc
+        ann n i * (1 - ann n i * cre n i) * cre n i =
+            ann n i * cre n i - (ann n i * ann n i) *
+              (cre n i * cre n i) := by noncomm_ring
+        _ = ann n i * cre n i := by simp
 
 theorem occupationProjector_mul_vacancyProjector (n : ℕ) (i : Fin n) :
     occupationProjector n i * vacancyProjector n i = 0 := by
@@ -80,14 +92,14 @@ theorem modeParity_sq (n : ℕ) (i : Fin n) :
       rw [occupationProjector_idempotent, vacancyProjector_idempotent,
         occupationProjector_mul_vacancyProjector,
         vacancyProjector_mul_occupationProjector]
-      ring
+      noncomm_ring
     _ = 1 := occupationProjector_add_vacancyProjector n i
 
 theorem modeParity_mul_ann (n : ℕ) (i : Fin n) :
     modeParity n i * ann n i = -(ann n i) := by
   unfold modeParity occupationProjector vacancyProjector
   have hcar : ann n i * cre n i = 1 - cre n i * ann n i := by
-    exact eq_sub_of_add_eq (car_identity n i i)
+    exact eq_sub_of_add_eq (car_same n i)
   calc
     (cre n i * ann n i - ann n i * cre n i) * ann n i =
         cre n i * (ann n i * ann n i) -
@@ -95,13 +107,23 @@ theorem modeParity_mul_ann (n : ℕ) (i : Fin n) :
     _ = cre n i * 0 - (1 - cre n i * ann n i) * ann n i := by
       rw [ann_sq_zero, hcar]
     _ = -(ann n i) := by
-      simp [mul_sub, ← mul_assoc, ann_sq_zero]
+      calc
+        cre n i * 0 - (1 - cre n i * ann n i) * ann n i =
+            -(ann n i) + (cre n i * ann n i) * ann n i := by
+              noncomm_ring
+        _ = -(ann n i) := by
+          rw [show (cre n i * ann n i) * ann n i = 0 by
+            calc
+              (cre n i * ann n i) * ann n i =
+                  cre n i * (ann n i * ann n i) := by noncomm_ring
+              _ = 0 := by simp]
+          simp
 
 theorem ann_mul_modeParity (n : ℕ) (i : Fin n) :
     ann n i * modeParity n i = ann n i := by
   unfold modeParity occupationProjector vacancyProjector
   have hcar : ann n i * cre n i = 1 - cre n i * ann n i := by
-    exact eq_sub_of_add_eq (car_identity n i i)
+    exact eq_sub_of_add_eq (car_same n i)
   calc
     ann n i * (cre n i * ann n i - ann n i * cre n i) =
         (ann n i * cre n i) * ann n i -
@@ -109,29 +131,39 @@ theorem ann_mul_modeParity (n : ℕ) (i : Fin n) :
     _ = (1 - cre n i * ann n i) * ann n i - 0 * cre n i := by
       rw [hcar, ann_sq_zero]
     _ = ann n i := by
-      simp [mul_sub, ← mul_assoc, ann_sq_zero]
+      calc
+        (1 - cre n i * ann n i) * ann n i - 0 * cre n i =
+            ann n i - (cre n i * ann n i) * ann n i := by noncomm_ring
+        _ = ann n i := by
+          rw [show (cre n i * ann n i) * ann n i = 0 by
+            calc
+              (cre n i * ann n i) * ann n i =
+                  cre n i * (ann n i * ann n i) := by noncomm_ring
+              _ = 0 := by simp]
+          simp
 
 theorem modeParity_mul_cre (n : ℕ) (i : Fin n) :
     modeParity n i * cre n i = cre n i := by
   unfold modeParity occupationProjector vacancyProjector
-  have hcar : cre n i * ann n i = 1 - ann n i * cre n i := by
-    have h := car_identity n i i
-    rw [add_comm] at h
-    exact eq_sub_of_add_eq h
+  have hcar : ann n i * cre n i = 1 - cre n i * ann n i := by
+    exact eq_sub_of_add_eq (car_same n i)
   calc
     (cre n i * ann n i - ann n i * cre n i) * cre n i =
         cre n i * (ann n i * cre n i) -
           ann n i * (cre n i * cre n i) := by noncomm_ring
-    _ = cre n i * (1 - ann n i * cre n i) - ann n i * 0 := by
+    _ = cre n i * (1 - cre n i * ann n i) - ann n i * 0 := by
       rw [hcar, cre_sq_zero]
     _ = cre n i := by
-      simp [mul_sub, ← mul_assoc, cre_sq_zero]
+      calc
+        cre n i * (1 - cre n i * ann n i) - ann n i * 0 =
+            cre n i - (cre n i * cre n i) * ann n i := by noncomm_ring
+        _ = cre n i := by simp
 
 theorem cre_mul_modeParity (n : ℕ) (i : Fin n) :
     cre n i * modeParity n i = -(cre n i) := by
   unfold modeParity occupationProjector vacancyProjector
   have hcar : cre n i * ann n i = 1 - ann n i * cre n i := by
-    have h := car_identity n i i
+    have h := car_same n i
     rw [add_comm] at h
     exact eq_sub_of_add_eq h
   calc
@@ -141,7 +173,14 @@ theorem cre_mul_modeParity (n : ℕ) (i : Fin n) :
     _ = 0 * ann n i - (1 - ann n i * cre n i) * cre n i := by
       rw [cre_sq_zero, hcar]
     _ = -(cre n i) := by
-      noncomm_ring
+      calc
+        0 * ann n i - (1 - ann n i * cre n i) * cre n i =
+            -(cre n i) + (ann n i * cre n i) * cre n i := by noncomm_ring
+        _ = -(cre n i) := by
+          calc
+            -(cre n i) + (ann n i * cre n i) * cre n i =
+                -(cre n i) + ann n i * (cre n i * cre n i) := by noncomm_ring
+            _ = -(cre n i) := by simp
 
 theorem modeParity_ann_anticomm (n : ℕ) (i : Fin n) :
     modeParity n i * ann n i + ann n i * modeParity n i = 0 := by

@@ -166,6 +166,71 @@ noncomputable def neutralOmega :
   rcases Y with ⟨y, η⟩
   simp [neutralOmega_apply]
 
+theorem neutralOmega_nondegenerate :
+    (neutralOmega (E := E)).Nondegenerate := by
+  constructor
+  · intro x hx
+    rcases x with ⟨v, φ⟩
+    have hvall : ∀ g : Module.Dual ℝ E, g v = 0 := by
+      intro g
+      have h := hx (0, g)
+      simpa [neutralOmega_apply] using h
+    have hv : v = 0 := (Module.forall_dual_apply_eq_zero_iff ℝ v).mp hvall
+    have hφall : ∀ u : E, φ u = 0 := by
+      intro u
+      have h := hx (u, 0)
+      have hneg : -φ u = 0 := by
+        simpa [neutralOmega_apply] using h
+      exact neg_eq_zero.mp hneg
+    have hφ : φ = 0 := by
+      apply LinearMap.ext
+      intro u
+      exact hφall u
+    simp [hv, hφ]
+  · intro y hy
+    rcases y with ⟨v, φ⟩
+    have hvall : ∀ g : Module.Dual ℝ E, g v = 0 := by
+      intro g
+      have h := hy (0, g)
+      have hneg : -g v = 0 := by
+        simpa [neutralOmega_apply] using h
+      exact neg_eq_zero.mp hneg
+    have hv : v = 0 := (Module.forall_dual_apply_eq_zero_iff ℝ v).mp hvall
+    have hφall : ∀ u : E, φ u = 0 := by
+      intro u
+      have h := hy (u, 0)
+      simpa [neutralOmega_apply] using h
+    have hφ : φ = 0 := by
+      apply LinearMap.ext
+      intro u
+      exact hφall u
+    simp [hv, hφ]
+
+theorem neutralOmega_paraK_left (X Y : PhaseSpaceCarrier E) :
+    neutralOmega (E := E) (neutralParaInvolution X) Y =
+      canonicalNeutralBilin (E := E) X Y := by
+  rcases X with ⟨x, ξ⟩
+  rcases Y with ⟨y, η⟩
+  simp [neutralOmega_apply, canonicalNeutralBilin_apply]
+  ring
+
+theorem neutralOmega_paraK_right (X Y : PhaseSpaceCarrier E) :
+    neutralOmega (E := E) X (neutralParaInvolution Y) =
+      -canonicalNeutralBilin (E := E) X Y := by
+  rcases X with ⟨x, ξ⟩
+  rcases Y with ⟨y, η⟩
+  simp [neutralOmega_apply, canonicalNeutralBilin_apply]
+  abel
+
+theorem neutralOmega_paraK_paraK (X Y : PhaseSpaceCarrier E) :
+    neutralOmega (E := E)
+        (neutralParaInvolution X) (neutralParaInvolution Y) =
+      -neutralOmega (E := E) X Y := by
+  rcases X with ⟨x, ξ⟩
+  rcases Y with ⟨y, η⟩
+  simp [neutralOmega_apply]
+  ring
+
 @[rep_depth krein] theorem canonicalNeutralFormUnscaled_polar
     (X Y : PhaseSpaceCarrier E) :
     QuadraticMap.polar

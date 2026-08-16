@@ -44,7 +44,8 @@ theorem chiralRelativeSurprisal_comm_qPlus (κ a : ℝ) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [chiralDiracCommutator, chiralRelativeSurprisal,
-      chiralParity, chiralQPlus, Matrix.mul_apply, Fin.sum_univ_two]
+      chiralParity, chiralQPlus, Matrix.mul_apply, Matrix.vecMul,
+      dotProduct, Fin.sum_univ_two]
   <;> ring
 
 theorem chiralRelativeSurprisal_comm_qMinus (κ a : ℝ) :
@@ -54,7 +55,8 @@ theorem chiralRelativeSurprisal_comm_qMinus (κ a : ℝ) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [chiralDiracCommutator, chiralRelativeSurprisal,
-      chiralParity, chiralQMinus, Matrix.mul_apply, Fin.sum_univ_two]
+      chiralParity, chiralQMinus, Matrix.mul_apply, Matrix.vecMul,
+      dotProduct, Fin.sum_univ_two]
   <;> ring
 
 theorem chiralPhaseAxis_relativeSurprisal_commutator (κ a : ℝ) :

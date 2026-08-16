@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.Matrix.PosDef
+import Mathlib.Data.Complex.Basic
 import InfoGeometry.OperatorAlgebra.CuntzTomitaTakesaki
 
 /-!
@@ -87,6 +88,12 @@ theorem tomitaQuadratic_trace_left_unitary_invariant
     _ = Matrix.trace (tomitaQuadratic δ X) := by
       rw [← mul_assoc, hU, one_mul]
 
+noncomputable def normalizedTomitaQuadratic
+    (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ)
+    (hTrace : Matrix.trace (tomitaQuadratic δ X) ≠ 0) :
+    Matrix (Fin 2) (Fin 2) ℂ :=
+  (Matrix.trace (tomitaQuadratic δ X))⁻¹ • tomitaQuadratic δ X
+
 /-- Normalized readouts transform by unitary conjugation on the left. -/
 theorem normalizedTomitaQuadratic_left_unitary_covariant
     (δ : ℝ) (X U : Matrix (Fin 2) (Fin 2) ℂ)
@@ -123,36 +130,59 @@ theorem normalizedTomitaQuadratic_right_unitary_invariant_of_trace_ne_zero
         (tomitaQuadratic_trace_right_unitary_ne_zero δ X U hU hTraceX) =
       normalizedTomitaQuadratic δ X hTraceX := by
   exact normalizedTomitaQuadratic_right_unitary_invariant δ X U hU
-    (tomitaQuadratic_trace_right_unitary_ne_zero δ X U hU hTraceX) hTraceX
-
-theorem tomitaQuadratic_posSemidef
-    (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
-    Matrix.PosSemidef (tomitaQuadratic δ X) := by
-  rw [tomitaQuadratic_eq_observable_mul_conjTranspose]
-  exact Matrix.posSemidef_self_mul_conjTranspose X
+    hTraceX (tomitaQuadratic_trace_right_unitary_ne_zero δ X U hU hTraceX)
 
 theorem tomitaQuadratic_isHermitian
     (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
     (tomitaQuadratic δ X).IsHermitian :=
-  (tomitaQuadratic_posSemidef δ X).isHermitian
+  by
+    rw [tomitaQuadratic_eq_observable_mul_conjTranspose]
+    exact Matrix.isHermitian_mul_conjTranspose_self X
 
-theorem tomitaQuadratic_trace_nonneg
+noncomputable def tomitaQuadraticRealTrace
+    (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) : ℝ :=
+  (Matrix.trace (tomitaQuadratic δ X)).re
+
+theorem tomitaQuadraticRealTrace_eq_frobenius
     (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
-    0 ≤ Matrix.trace (tomitaQuadratic δ X) :=
-  (tomitaQuadratic_posSemidef δ X).trace_nonneg
+    tomitaQuadraticRealTrace δ X = ∑ i, ∑ j, Complex.normSq (X i j) := by
+  simp [tomitaQuadraticRealTrace, tomitaQuadratic_eq_observable_mul_conjTranspose,
+    Matrix.trace_fin_two, Matrix.mul_apply, Fin.sum_univ_two,
+    Complex.normSq_apply, Complex.mul_re, Complex.conj_re, Complex.conj_im]
 
-noncomputable def normalizedTomitaQuadratic
-    (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ)
-    (hTrace : Matrix.trace (tomitaQuadratic δ X) ≠ 0) :
-    Matrix (Fin 2) (Fin 2) ℂ :=
-  (Matrix.trace (tomitaQuadratic δ X))⁻¹ • tomitaQuadratic δ X
+theorem tomitaQuadraticRealTrace_pos_of_ne_zero
+    (δ : ℝ) {X : Matrix (Fin 2) (Fin 2) ℂ} (hX : X ≠ 0) :
+    0 < tomitaQuadraticRealTrace δ X := by
+  rw [tomitaQuadraticRealTrace_eq_frobenius]
+  apply Finset.sum_pos'
+  · intro i hi
+    apply Finset.sum_nonneg
+    intro j hj
+    exact Complex.normSq_nonneg _
+  · obtain ⟨i, j, hij⟩ : ∃ i j, X i j ≠ 0 := by
+      by_contra h
+      apply hX
+      funext i j
+      by_contra hzero
+      exact h ⟨i, j, hzero⟩
+    exact ⟨i, Finset.mem_univ _,
+      Finset.sum_pos' (fun j hj => Complex.normSq_nonneg _)
+        ⟨j, Finset.mem_univ _, Complex.normSq_pos.mpr hij⟩⟩
 
 /-- The quadratic trace vanishes exactly for the zero factor. -/
 theorem tomitaQuadratic_trace_eq_zero_iff
     (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
     Matrix.trace (tomitaQuadratic δ X) = 0 ↔ X = 0 := by
-  rw [tomitaQuadratic_eq_observable_mul_conjTranspose]
-  exact Matrix.trace_mul_conjTranspose_self_eq_zero_iff
+  constructor
+  · intro hTrace
+    by_contra hX
+    have hpos := tomitaQuadraticRealTrace_pos_of_ne_zero δ hX
+    have hreal : tomitaQuadraticRealTrace δ X = 0 := by
+      simp [tomitaQuadraticRealTrace, hTrace]
+    linarith
+  · intro hX
+    subst hX
+    simp [tomitaQuadratic]
 
 /-- Nonzero factors therefore provide their own normalization proof. -/
 theorem tomitaQuadratic_trace_ne_zero_of_ne_zero
@@ -167,35 +197,21 @@ theorem normalizedTomitaQuadratic_trace
     Matrix.trace (normalizedTomitaQuadratic δ X hTrace) = 1 := by
   unfold normalizedTomitaQuadratic
   rw [Matrix.trace_smul]
-  field_simp [hTrace]
-
-theorem normalizedTomitaQuadratic_posSemidef
-    (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ)
-    (hTrace : 0 < Matrix.trace (tomitaQuadratic δ X)) :
-    Matrix.PosSemidef
-      (normalizedTomitaQuadratic δ X (ne_of_gt hTrace)) := by
-  unfold normalizedTomitaQuadratic
-  exact (tomitaQuadratic_posSemidef δ X).smul
-    (inv_nonneg.mpr (le_of_lt hTrace))
-
-theorem normalizedTomitaQuadratic_posSemidef_of_trace_ne_zero
-    (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ)
-    (hTrace : Matrix.trace (tomitaQuadratic δ X) ≠ 0) :
-    Matrix.PosSemidef (normalizedTomitaQuadratic δ X hTrace) := by
-  have hTrace_pos : 0 < Matrix.trace (tomitaQuadratic δ X) :=
-    lt_of_le_of_ne (tomitaQuadratic_trace_nonneg δ X) (Ne.symm hTrace)
-  simpa using normalizedTomitaQuadratic_posSemidef δ X hTrace_pos
-
-theorem normalizedTomitaQuadratic_isHermitian
-    (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ)
-    (hTrace : 0 < Matrix.trace (tomitaQuadratic δ X)) :
-    (normalizedTomitaQuadratic δ X (ne_of_gt hTrace)).IsHermitian := by
-  exact (normalizedTomitaQuadratic_posSemidef δ X hTrace).isHermitian
+  rw [smul_eq_mul, inv_mul_cancel₀ hTrace]
 
 theorem normalizedTomitaQuadratic_isHermitian_of_trace_ne_zero
     (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ)
-    (hTrace : Matrix.trace (tomitaQuadratic δ X) ≠ 0) :
+  (hTrace : Matrix.trace (tomitaQuadratic δ X) ≠ 0) :
     (normalizedTomitaQuadratic δ X hTrace).IsHermitian := by
-  exact (normalizedTomitaQuadratic_posSemidef_of_trace_ne_zero δ X hTrace).isHermitian
+  have hQ : (tomitaQuadratic δ X).IsHermitian := tomitaQuadratic_isHermitian δ X
+  have htr : star (Matrix.trace (tomitaQuadratic δ X)) =
+      Matrix.trace (tomitaQuadratic δ X) := by
+    rw [← Matrix.trace_conjTranspose, hQ.eq]
+  have hinv : star (Matrix.trace (tomitaQuadratic δ X))⁻¹ =
+      (Matrix.trace (tomitaQuadratic δ X))⁻¹ := by
+    rw [star_inv₀, htr]
+  unfold normalizedTomitaQuadratic Matrix.IsHermitian
+  rw [Matrix.conjTranspose_smul]
+  rw [hinv, hQ.eq]
 
 end InfoGeometry.OperatorAlgebra

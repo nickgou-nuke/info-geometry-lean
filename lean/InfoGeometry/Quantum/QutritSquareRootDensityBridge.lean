@@ -12,11 +12,13 @@ by `QutritDensityMatrix`.
 -/
 
 open scoped BigOperators
+open scoped ComplexConjugate
 
 namespace InfoGeometry.Quantum.Qutrit
 
 open InfoGeometry.Probability.Homological
 open InfoGeometry.Probability.SquareRootSimplexBridge
+open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.FiniteMatrix
 
 theorem qutrit_squareRootEmbedding_sum_sq (ψ : QutritState) :
     ∑ i, (squareRootEmbedding 3 (computationalProbability ψ) i) ^ 2 = 4 := by
@@ -33,11 +35,6 @@ theorem pureDensityMatrix_diagonal_eq_squareRoot_sq_div_four
   rw [squareRootEmbedding_sq (computationalProbability ψ)
     (fun j => computationalProbability_nonneg ψ j) i]
   norm_num
-
-theorem pureDensityMatrix_posSemidef (ψ : QutritState) :
-    Matrix.PosSemidef (pureDensityMatrix ψ) := by
-  simpa [pureDensityMatrix, Matrix.vecMulVec_apply] using
-    (Matrix.posSemidef_vecMulVec_self_star (ψ : QutritSpace))
 
 theorem pureDensityMatrix_globalPhaseAct_invariant
     (δ : ℝ) (ψ : QutritState) :
@@ -68,6 +65,8 @@ theorem qutrit_squareRootEmbedding_globalPhase_invariant
     squareRootEmbedding 3 (computationalProbability (globalPhaseAct δ ψ)) =
       squareRootEmbedding 3 (computationalProbability ψ) := by
   funext i
-  rw [computationalProbability_globalPhaseAct δ ψ i]
+  congr 1
+  funext j
+  exact computationalProbability_globalPhaseAct δ ψ j
 
 end InfoGeometry.Quantum.Qutrit

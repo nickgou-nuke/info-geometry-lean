@@ -182,4 +182,31 @@ matches multiplication in the native split-Pin group. -/
   exact congrArg (fun e : Equiv.Perm (Unordered Q55 n) => e p)
     (map_mul (realSplitPinUnorderedNullAction n) g h)
 
+/-! The native Mathlib action target is `MulAction` on the carrier.  A
+`Homeomorph` has no canonical monoid structure, so the homeomorphisms are
+recorded separately by `realSplitPinUnorderedNullHomeomorph`. -/
+
+instance realSplitPinUnorderedNullMulAction (n : ℕ) :
+    MulAction (↥realSplitPin55) (Unordered Q55 n) where
+  smul g p := realSplitPinUnorderedNullAction n g p
+  one_smul p := by
+    exact congrArg (fun e : Equiv.Perm (Unordered Q55 n) => e p)
+      (map_one (realSplitPinUnorderedNullAction n))
+  mul_smul g h p := by
+    change realSplitPinUnorderedNullAction n (g * h) p =
+      realSplitPinUnorderedNullAction n g
+        (realSplitPinUnorderedNullAction n h p)
+    simpa only [Equiv.Perm.mul_apply] using
+      congrArg (fun e : Equiv.Perm (Unordered Q55 n) => e p)
+        (map_mul (realSplitPinUnorderedNullAction n) g h)
+
+@[simp] theorem realSplitPinUnorderedNullHomeomorph_smul
+    (g : realSplitPin55) (n : ℕ) (p : Unordered Q55 n) :
+    let _ := unorderedConfigurationTopology Q55 n
+    realSplitPinUnorderedNullHomeomorph g n p = g • p := by
+  letI : TopologicalSpace (Unordered Q55 n) :=
+    unorderedConfigurationTopology Q55 n
+  rw [realSplitPinUnorderedNullHomeomorph_apply]
+  rfl
+
 end InfoGeometry.Twistor.Cl55RealSplitPinNullConfigurationTopology

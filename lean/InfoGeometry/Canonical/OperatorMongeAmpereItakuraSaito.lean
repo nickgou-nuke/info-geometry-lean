@@ -39,6 +39,17 @@ noncomputable def volumeDefect (κ : ℝ) : ℝ :=
 noncomputable def shapeDefect (κ a : ℝ) : ℝ :=
   2 * Real.exp (-κ) * (Real.cosh a - 1)
 
+theorem volumeDefect_nonneg (κ : ℝ) : 0 ≤ volumeDefect κ := by
+  unfold volumeDefect
+  have h := add_one_le_exp (-κ)
+  linarith
+
+theorem shapeDefect_nonneg (κ a : ℝ) : 0 ≤ shapeDefect κ a := by
+  unfold shapeDefect
+  have hexp : 0 ≤ Real.exp (-κ) := le_of_lt (Real.exp_pos _)
+  have hcosh : 0 ≤ Real.cosh a - 1 := sub_nonneg.mpr (Real.one_le_cosh a)
+  exact mul_nonneg (mul_nonneg (by norm_num) hexp) hcosh
+
 lemma surprisal_val (κ a : ℝ) :
     surprisal κ a = !![κ + a, 0; 0, κ - a] := by
   ext i j
@@ -116,6 +127,11 @@ theorem defect_trace_eq_volumeDefect_add_shapeDefect (κ a : ℝ) :
   rw [defect_trace]
   unfold volumeDefect shapeDefect
   ring
+
+theorem defect_trace_nonneg (κ a : ℝ) :
+    0 ≤ trace2 (operatorDefect κ a) := by
+  rw [defect_trace_eq_volumeDefect_add_shapeDefect]
+  exact add_nonneg (volumeDefect_nonneg κ) (shapeDefect_nonneg κ a)
 
 end
 

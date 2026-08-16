@@ -97,7 +97,17 @@ theorem concreteStep_injective (n : ℕ) :
   simpa [concreteStep, e, Matrix.reindexAlgEquiv] using hentry
 
 /-- Successor maps and preservation of the normalized matrix trace. -/
-abbrev Data := ∀ n, MatrixStage n →⋆ₐ[ℂ] MatrixStage (n + 1)
+abbrev StepFamily := ∀ n, MatrixStage n →⋆ₐ[ℂ] MatrixStage (n + 1)
+
+/-! `Data` is retained as a compatibility alias for existing colimit owners.
+The trace evidence is packaged separately below, so raw filtered maps do not
+carry an artificial state or order structure. -/
+abbrev Data := StepFamily
+
+structure TraceCompatibleData where
+  step : StepFamily
+  trace_compatible :
+    ∀ n A, matrixTraceState (n + 1) (step n A) = matrixTraceState n A
 
 /-! The abstract interface now has a concrete noncommutative matrix instance.
 The only scalar calculation here is normalization of the genuine matrix
@@ -110,6 +120,10 @@ theorem concrete_trace_compatible (n : ℕ) (A : MatrixStage n) :
   rw [concreteStep_trace]
   rw [pow_succ]
   field_simp [show (2 : ℂ) ^ n ≠ 0 by norm_num]
+
+def concreteTraceCompatibleData : TraceCompatibleData where
+  step := concreteStep
+  trace_compatible := concrete_trace_compatible
 
 /-- Iterate the supplied successor embedding along a proof `i ≤ j`. -/
 def map (T : Data) {i j : ℕ} (hij : i ≤ j) :

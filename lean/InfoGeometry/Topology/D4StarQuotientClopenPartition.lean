@@ -8,31 +8,26 @@ open InfoGeometry.Canonical
 
 theorem centreClass_union_outerClass :
     centreClass ∪ outerClass = (Set.univ : Set D4StarQuotient) := by
-  ext q
+  apply Set.eq_univ_of_forall
+  intro q
   induction q using Quotient.inductionOn with
   | _ v =>
       cases v with
       | inr u =>
           cases u
+          change starQuotientMap centralVertex ∈ centreClass ∪ outerClass
           change (starQuotientMap centralVertex =
               starQuotientMap centralVertex ∨
               starQuotientMap centralVertex =
-                starQuotientMap (outerVertex ColorChannel.red)) ↔ True
-          constructor
-          · intro _
-            trivial
-          · intro _
-            exact Or.inl rfl
+                starQuotientMap (outerVertex ColorChannel.red))
+          exact Or.inl rfl
       | inl c =>
+          change starQuotientMap (outerVertex c) ∈ centreClass ∪ outerClass
           change (starQuotientMap (outerVertex c) =
               starQuotientMap centralVertex ∨
               starQuotientMap (outerVertex c) =
-                starQuotientMap (outerVertex ColorChannel.red)) ↔ True
-          constructor
-          · intro _
-            trivial
-          · intro _
-            exact Or.inr (outer_vertices_same_class c ColorChannel.red)
+                starQuotientMap (outerVertex ColorChannel.red))
+          exact Or.inr (outer_vertices_same_class c ColorChannel.red)
 
 theorem centreClass_inter_outerClass :
     centreClass ∩ outerClass = (∅ : Set D4StarQuotient) := by

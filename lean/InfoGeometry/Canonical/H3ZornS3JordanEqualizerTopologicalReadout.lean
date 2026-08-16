@@ -24,12 +24,8 @@ theorem isClosed_S3JordanProductEqualizer (σ : S3Perm) :
 
 theorem S3JordanProductEqualizer_eq_univ (σ : S3Perm) :
     S3JordanProductEqualizer σ = Set.univ := by
-  ext p
-  change S3JordanProductResidual σ p = 0 ↔ True
-  constructor
-  · intro _
-    trivial
-  · intro _
-    exact S3JordanProductResidual_eq_zero σ p.1 p.2
+  apply Set.eq_univ_of_forall
+  intro p
+  exact S3JordanProductResidual_eq_zero σ p.1 p.2
 
 end InfoGeometry.Canonical

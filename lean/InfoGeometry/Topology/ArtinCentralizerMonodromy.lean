@@ -81,7 +81,7 @@ instance : CommGroup CentralSign where
     cases a <;> cases b <;> decide
 
 /-- The nontrivial central element squares to the identity. -/
-theorem negI_sq : negI * negI = I := rfl
+@[simp] theorem negI_sq : negI * negI = I := rfl
 
 /-- `I` is a left unit. -/
 @[simp] theorem I_mul (a : CentralSign) : I * a = a := by
@@ -96,16 +96,31 @@ theorem cmul_comm (a b : CentralSign) : a * b = b * a := by
   cases a <;> cases b <;> rfl
 
 /-- Winding parity as centralizer monodromy: even windings give `I`, odd give `-I`. -/
-def centralFromWinding (w : ℕ) : CentralSign :=
-  if Even w then I else negI
+def centralFromWinding : ℕ → CentralSign
+  | 0 => I
+  | n + 1 => negI * centralFromWinding n
+
+@[simp] theorem centralFromWinding_zero :
+    centralFromWinding 0 = I := rfl
+
+@[simp] theorem centralFromWinding_succ (n : ℕ) :
+    centralFromWinding (n + 1) = negI * centralFromWinding n := rfl
 
 /-- Even winding is central-trivial. -/
 theorem centralFromWinding_even {w : ℕ} (h : Even w) : centralFromWinding w = I := by
-  simp [centralFromWinding, h]
+  rcases h with ⟨k, rfl⟩
+  induction k with
+  | zero => rfl
+  | succ k ih =>
+      simp [Nat.succ_add, centralFromWinding, ih]
 
 /-- Odd winding is the nontrivial central element. -/
 theorem centralFromWinding_odd {w : ℕ} (h : Odd w) : centralFromWinding w = negI := by
-  simp [centralFromWinding, Nat.not_even_iff_odd.mpr h]
+  rcases h with ⟨k, rfl⟩
+  have hk : centralFromWinding (k + k) = I :=
+    centralFromWinding_even (w := k + k) (Even.add_self k)
+  rw [show 2 * k + 1 = (k + k) + 1 by omega]
+  simp [centralFromWinding, hk]
 
 /-- A finite positive Artin word, represented by generator indices. -/
 abbrev ArtinWord := List ℕ
@@ -117,38 +132,30 @@ instance artinWordMonoid : Monoid ArtinWord where
   one_mul := List.nil_append
   mul_one := List.append_nil
 
-/-- The scalar centralizer monodromy of an Artin word is its length parity. -/
-def artinCentralMonodromy (w : ArtinWord) : CentralSign :=
-  centralFromWinding w.length
-
 /-! The semantic API name makes explicit that this is the length-parity
 character, not the quarter-turn spinor phase from the separate braid owner. -/
 def artinParitySign (w : ArtinWord) : CentralSign :=
-  artinCentralMonodromy w
+  centralFromWinding w.length
+
+/-! Backward-compatible name: this is the parity character, not spinorial
+half-twist monodromy. -/
+abbrev artinCentralMonodromy := artinParitySign
 
 /-- Central parity is additive under concatenation of words. -/
 theorem centralFromWinding_add (m n : ℕ) :
     centralFromWinding (m + n) =
       centralFromWinding m * centralFromWinding n := by
-  by_cases hm : Even m
-  · by_cases hn : Even n
-    · simp [centralFromWinding, hm, hn, Nat.even_add]
-    · simp [centralFromWinding, hm, hn, Nat.even_add, I_mul]
-  · by_cases hn : Even n
-    · simp [centralFromWinding, hm, hn, Nat.even_add]
-    · simp [centralFromWinding, hm, hn, Nat.even_add, negI_sq]
-
-/-- central parity is multiplicative over word concatenation. -/
-theorem artinCentralMonodromy_append (w₁ w₂ : ArtinWord) :
-    artinCentralMonodromy (w₁ ++ w₂) =
-      artinCentralMonodromy w₁ * artinCentralMonodromy w₂ := by
-  rw [artinCentralMonodromy, artinCentralMonodromy, artinCentralMonodromy,
-    List.length_append, centralFromWinding_add]
+  induction m with
+  | zero => simp
+  | succ m ih =>
+      rw [Nat.succ_add, centralFromWinding_succ, ih]
+      simp [centralFromWinding_succ, mul_assoc]
 
 @[simp] theorem artinParitySign_append (w₁ w₂ : ArtinWord) :
     artinParitySign (w₁ ++ w₂) =
       artinParitySign w₁ * artinParitySign w₂ := by
-  exact artinCentralMonodromy_append w₁ w₂
+  rw [artinParitySign, artinParitySign, artinParitySign,
+    List.length_append, centralFromWinding_add]
 
 /-- The Artin length-parity character as a native monoid homomorphism. -/
 def artinParitySignMonoidHom : ArtinWord →* CentralSign where
@@ -158,41 +165,40 @@ def artinParitySignMonoidHom : ArtinWord →* CentralSign where
     simp [centralFromWinding]
   map_mul' w₁ w₂ := artinParitySign_append w₁ w₂
 
-/-- Adjacent Artin braid relation preserves central monodromy. -/
-theorem adjacent_artin_monodromy (i : ℕ) :
+/-- Short semantic alias for the parity character homomorphism. -/
+abbrev artinParitySignHom : ArtinWord →* CentralSign :=
+  artinParitySignMonoidHom
+
+/-- Adjacent Artin braid relation preserves the parity character. -/
+theorem adjacent_artin_parity (i : ℕ) :
     artinCentralMonodromy [i, i + 1, i] =
       artinCentralMonodromy [i + 1, i, i + 1] := by
   rfl
 
-/-- Trivial two-letter commutation on separated indices preserves central monodromy. -/
-theorem separated_artin_monodromy (i j : ℕ) (_hij : i + 2 ≤ j ∨ j + 2 ≤ i) :
-    artinCentralMonodromy [i, j] = artinCentralMonodromy [j, i] := by
-  rfl
-
-/-- Length-parity readback of a two-letter separated exchange. -/
-theorem separated_artin_monodromy_raw (i j : ℕ) :
+/-- Trivial two-letter commutation on separated indices preserves the parity character. -/
+theorem separated_artin_parity (i j : ℕ) (_hij : i + 2 ≤ j ∨ j + 2 ≤ i) :
     artinCentralMonodromy [i, j] = artinCentralMonodromy [j, i] := by
   rfl
 
 /-- The adjacent braid word has odd winding and therefore maps to `-I`. -/
-theorem adjacent_artin_hits_negI (i : ℕ) :
+theorem adjacent_artin_parity_negI (i : ℕ) :
     artinCentralMonodromy [i, i + 1, i] = negI := by
-  norm_num [artinCentralMonodromy, centralFromWinding]
+  norm_num [artinParitySign, centralFromWinding]
 
 /-- A separated two-generator exchange has even winding and therefore maps to `I`. -/
-theorem separated_artin_hits_I (i j : ℕ) :
+theorem separated_artin_parity_I (i j : ℕ) :
     artinCentralMonodromy [i, j] = I := by
-  norm_num [artinCentralMonodromy, centralFromWinding]
+  norm_num [artinParitySign, centralFromWinding]
 
 /-- An `n`-fold winding datum for a target finite central sign. -/
-structure NFoldCentralRoot (n : ℕ) (target : CentralSign) where
+structure NFoldCentralWinding (n : ℕ) (target : CentralSign) where
   winding : ℕ
   hits_target : centralFromWinding (n * winding) = target
 
 /-- Semantic name for the finite datum above.  It witnesses an `n`-fold
 winding and does not assert existence of an algebraic `n`th root. -/
-abbrev NFoldWindingDatum (n : ℕ) (target : CentralSign) :=
-  NFoldCentralRoot n target
+abbrev NFoldCentralRoot := NFoldCentralWinding
+abbrev NFoldWindingDatum := NFoldCentralWinding
 
 theorem odd_unit_winding_negI {n : ℕ} (h : Odd n) :
     centralFromWinding (n * 1) = negI := by
@@ -203,12 +209,12 @@ theorem even_unit_winding_I {n : ℕ} (h : Even n) :
   simpa using centralFromWinding_even (w := n) h
 
 /-- For odd `n`, unit winding maps to the nontrivial central sign. -/
-def oddUnitRootOfNegI {n : ℕ} (h : Odd n) : NFoldCentralRoot n negI where
+def oddUnitRootOfNegI {n : ℕ} (h : Odd n) : NFoldCentralWinding n negI where
   winding := 1
   hits_target := odd_unit_winding_negI h
 
 /-- For even `n`, unit winding maps to the trivial central sign. -/
-def evenUnitRootOfI {n : ℕ} (h : Even n) : NFoldCentralRoot n I where
+def evenUnitRootOfI {n : ℕ} (h : Even n) : NFoldCentralWinding n I where
   winding := 1
   hits_target := even_unit_winding_I h
 
@@ -226,8 +232,8 @@ theorem fullTwistWinding_even (n : ℕ) : Even (fullTwistWinding n) := by
       omega
     exact Even.mul_left hpred n
 
-/-- Therefore the full twist has trivial `{I,-I}` centralizer monodromy. -/
-theorem fullTwist_central_trivial (n : ℕ) :
+/-- Therefore the full twist has trivial parity character. -/
+theorem fullTwist_parity_trivial (n : ℕ) :
     centralFromWinding (fullTwistWinding n) = I := by
   exact centralFromWinding_even (fullTwistWinding_even n)
 
@@ -322,6 +328,18 @@ def centralizerElementSpinHom : CentralSign →* InfoGeometry.Clifford.Clifford5
 
 @[simp] theorem centralizerElement_apply (c : CentralSign) :
     centralizerElementHom c = centralizerElement c := rfl
+
+@[simp] theorem centralizerElement_I :
+    centralizerElement I = (1 : InfoGeometry.Clifford.Clifford55.Pin55) := rfl
+
+@[simp] theorem centralizerElement_negI :
+    centralizerElement negI = negOnePin55 := rfl
+
+theorem centralizerElement_mul (a b : CentralSign) :
+    centralizerElement (a * b) =
+      centralizerElement a * centralizerElement b := by
+  simpa [centralizerElementHom] using
+    (map_mul centralizerElementHom a b)
 
 @[simp] theorem centralizerElementSpin_apply (c : CentralSign) :
     centralizerElementSpinHom c = centralizerElementSpin c := rfl

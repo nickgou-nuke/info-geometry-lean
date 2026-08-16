@@ -24,6 +24,14 @@ def gradeNeg : TKKGrade → TKKGrade
   | p1 => m1
   | p2 => m2
 
+@[simp] theorem gradeNeg_involutive (g : TKKGrade) :
+    gradeNeg (gradeNeg g) = g := by
+  cases g <;> rfl
+
+theorem gradeNeg_eq_self_iff (g : TKKGrade) :
+    gradeNeg g = g ↔ g = z0 := by
+  cases g <;> simp [gradeNeg]
+
 @[simp] theorem weight_gradeNeg (g : TKKGrade) :
     weight (gradeNeg g) = -weight g := by
   cases g <;> rfl
@@ -58,7 +66,7 @@ theorem conformalGradeReversal_mem_grade_neg
 theorem conformalGradeReversal_involutive (A : ConformalMatrix) :
     conformalGradeReversal (conformalGradeReversal A) = A := by
   ext r c
-  simp [conformalGradeReversal, Matrix.transpose_apply]
+  simp [conformalGradeReversal]
 
 theorem conformalGradeReversal_bracket (A B : ConformalMatrix) :
     conformalGradeReversal ⁅A, B⁆ =
@@ -99,6 +107,15 @@ noncomputable def conformalGradeReversalLieAut :
 @[simp] theorem conformalGradeReversalLieAut_apply (A : ConformalMatrix) :
     conformalGradeReversalLieAut.1 A = conformalGradeReversal A := by
   rfl
+
+/-- The grade-reversing Lie automorphism is an involutive group element. -/
+theorem conformalGradeReversalLieAut_mul_self :
+    conformalGradeReversalLieAut.1.trans
+        conformalGradeReversalLieAut.1 =
+      (LieEquiv.refl : ConformalMatrix ≃ₗ⁅ℝ⁆ ConformalMatrix) := by
+  apply LieEquiv.ext
+  intro A
+  simp
 
 /-! The same concrete reversal is now exposed as a native symmetric Lie
 algebra, so its even/odd Cartan sectors use the existing Core machinery. -/

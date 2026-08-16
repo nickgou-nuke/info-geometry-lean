@@ -61,40 +61,41 @@ theorem detZ_scaleCell_zero (u : ℝˣ) (X : Cell) :
     simp
 
 theorem scaleCell_ne_zero (u : ℝˣ) (X : Cell) :
-    X ≠ 0 → scaleCell u X ≠ 0 := by
+    X ≠ (zornZero : Cell) → scaleCell u X ≠ (zornZero : Cell) := by
   intro hX hscaled
   apply hX
   cases X with
   | mk r s x1 x2 x3 y1 y2 y3 =>
       have hr : (u : ℝ) * r = 0 := by
-        exact congrArg ZornCell.r hscaled
+        simpa [scaleCell, zornZero] using congrArg ZornCell.r hscaled
       have hs : (u : ℝ) * s = 0 := by
-        exact congrArg ZornCell.s hscaled
+        simpa [scaleCell, zornZero] using congrArg ZornCell.s hscaled
       have hx1 : (u : ℝ) * x1 = 0 := by
-        exact congrArg ZornCell.x1 hscaled
+        simpa [scaleCell, zornZero] using congrArg ZornCell.x1 hscaled
       have hx2 : (u : ℝ) * x2 = 0 := by
-        exact congrArg ZornCell.x2 hscaled
+        simpa [scaleCell, zornZero] using congrArg ZornCell.x2 hscaled
       have hx3 : (u : ℝ) * x3 = 0 := by
-        exact congrArg ZornCell.x3 hscaled
+        simpa [scaleCell, zornZero] using congrArg ZornCell.x3 hscaled
       have hy1 : (u : ℝ) * y1 = 0 := by
-        exact congrArg ZornCell.y1 hscaled
+        simpa [scaleCell, zornZero] using congrArg ZornCell.y1 hscaled
       have hy2 : (u : ℝ) * y2 = 0 := by
-        exact congrArg ZornCell.y2 hscaled
+        simpa [scaleCell, zornZero] using congrArg ZornCell.y2 hscaled
       have hy3 : (u : ℝ) * y3 = 0 := by
-        exact congrArg ZornCell.y3 hscaled
-      have : r = 0 := (mul_eq_zero.mp hr).resolve_left (Units.ne_zero u)
-      have : s = 0 := (mul_eq_zero.mp hs).resolve_left (Units.ne_zero u)
-      have : x1 = 0 := (mul_eq_zero.mp hx1).resolve_left (Units.ne_zero u)
-      have : x2 = 0 := (mul_eq_zero.mp hx2).resolve_left (Units.ne_zero u)
-      have : x3 = 0 := (mul_eq_zero.mp hx3).resolve_left (Units.ne_zero u)
-      have : y1 = 0 := (mul_eq_zero.mp hy1).resolve_left (Units.ne_zero u)
-      have : y2 = 0 := (mul_eq_zero.mp hy2).resolve_left (Units.ne_zero u)
-      have : y3 = 0 := (mul_eq_zero.mp hy3).resolve_left (Units.ne_zero u)
-      simp_all
+        simpa [scaleCell, zornZero] using congrArg ZornCell.y3 hscaled
+      have hr0 : r = 0 := (mul_eq_zero.mp hr).resolve_left (Units.ne_zero u)
+      have hs0 : s = 0 := (mul_eq_zero.mp hs).resolve_left (Units.ne_zero u)
+      have hx10 : x1 = 0 := (mul_eq_zero.mp hx1).resolve_left (Units.ne_zero u)
+      have hx20 : x2 = 0 := (mul_eq_zero.mp hx2).resolve_left (Units.ne_zero u)
+      have hx30 : x3 = 0 := (mul_eq_zero.mp hx3).resolve_left (Units.ne_zero u)
+      have hy10 : y1 = 0 := (mul_eq_zero.mp hy1).resolve_left (Units.ne_zero u)
+      have hy20 : y2 = 0 := (mul_eq_zero.mp hy2).resolve_left (Units.ne_zero u)
+      have hy30 : y3 = 0 := (mul_eq_zero.mp hy3).resolve_left (Units.ne_zero u)
+      rw [ZornCell.mk.injEq]
+      exact ⟨hr0, hs0, hx10, hx20, hx30, hy10, hy20, hy30⟩
 
 def datum : ProjectiveNullBoundaryDatum ℝ ℝ Cell where
   q := detZ
-  zero := 0
+  zero := (zornZero : Cell)
   scale := scaleCell
   scale_one := scaleCell_one
   scale_mul := scaleCell_mul

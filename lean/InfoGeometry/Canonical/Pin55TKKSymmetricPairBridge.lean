@@ -51,7 +51,7 @@ theorem gradeNeg_gradeAdd
     (hijk : gradeAdd i j = some k) :
     gradeAdd (gradeNeg i) (gradeNeg j) = some (gradeNeg k) := by
   cases i <;> cases j <;> cases k <;>
-    simp [gradeAdd, gradeNeg] at hijk ⊢
+    simp [gradeAdd, gradeNeg, weight, ofWeight] at hijk ⊢
 
 /-- Brackets outside the five-grade window remain outside after reversal. -/
 theorem gradeNeg_gradeAdd_none
@@ -59,7 +59,7 @@ theorem gradeNeg_gradeAdd_none
     (hij : gradeAdd i j = none) :
     gradeAdd (gradeNeg i) (gradeNeg j) = none := by
   cases i <;> cases j <;>
-    simp [gradeAdd, gradeNeg] at hij ⊢
+    simp [gradeAdd, gradeNeg, weight, ofWeight] at hij ⊢
 
 /-- A Lie involution reverses the five TKK grades. -/
 def ReversesFiveGrade (G : FiveGradedLieAlgebra ℝ)

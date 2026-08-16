@@ -38,11 +38,6 @@ structure CartanProjectors (L : Type*) [LieRing L] [Ring L] [AddCommGroup L] [Mo
   J_on_P_plus : ∀ x, J.toFun (P_plus x) = P_plus x
   J_on_P_minus : ∀ x, J.toFun (P_minus x) = -(P_minus x)
 
-def constructProjectors (L : Type*) [LieRing L] [Ring L] [AddCommGroup L] [Module ℝ L] [Algebra ℝ L] [LieAlgebra ℝ L] [Pin55LieAlgebra L]
-    (J : CartanInvolution L) (P : CartanProjectors L J) :
-    CartanProjectors L J :=
-  P
-
 structure CartanSubalgebra (L : Type*) [LieRing L] [Ring L] [AddCommGroup L] [Module ℝ L] [Algebra ℝ L] [LieAlgebra ℝ L] [Pin55LieAlgebra L] where
   H : Submodule ℝ L
   abelian : ∀ x y, x ∈ H → y ∈ H → ⁅x, y⁆ = 0
@@ -76,28 +71,19 @@ structure SU2SubalgebraSearch (L : Type*) [LieRing L] [Ring L] [AddCommGroup L] 
 structure SU3SubalgebraSearch (L : Type*) [LieRing L] [Ring L] [AddCommGroup L] [Module ℝ L] [Algebra ℝ L] [LieAlgebra ℝ L] [Pin55LieAlgebra L] (Cas : CasimirOperators L) where
   su3 : Subalgebra ℝ L
 
-theorem dewitt_anomaly_cancellation : anomalyIndex 5 5 = 0 := anomalyIndex_55_zero
+/-!
+The old `standard_model_emerges_from_pin55` theorem has intentionally been
+removed.  Its conclusion only projected fields from `CartanProjectors` and
+the arithmetic identity `5 - 5 = 0`; its root, Casimir, CSCO, and SU(2)/SU(3)
+arguments did not participate in the proof.  A genuine Standard Model
+identification requires actual Lie-subalgebra embeddings, root spaces, and
+representation theorems, which are not provided by this compatibility layer.
+The native Cartan projector and symmetric-pair theorems are owned by
+`InfoGeometry.Core.Involution` and `InfoGeometry.Core.SymmetricLie`.
+-/
 
-theorem standard_model_emerges_from_pin55
-    (L : Type*) [LieRing L] [Ring L] [AddCommGroup L] [Module ℝ L] [Algebra ℝ L] [LieAlgebra ℝ L] [Pin55LieAlgebra L]
-    (J : CartanInvolution L)
-    (P : CartanProjectors L J)
-    (𝔥 : CartanSubalgebra L)
-    (roots : RootSpaceDecomposition L 𝔥)
-    (Cas : CasimirOperators L)
-    (csc : CSCO L 𝔥 Cas J)
-    (su2_search : SU2SubalgebraSearch L Cas)
-    (su3_search : SU3SubalgebraSearch L Cas)
-    (_h_anomaly : anomalyIndex 5 5 = 0) :
-    (∀ x, P.P_plus (P.P_minus x) = 0) ∧
-    (∀ x, J.toFun (P.P_plus x) = P.P_plus x) ∧
-    (∀ x, J.toFun (P.P_minus x) = -(P.P_minus x)) ∧
-    anomalyIndex 5 5 = 0 := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact P.orthogonal
-  · exact P.J_on_P_plus
-  · exact P.J_on_P_minus
-  · exact dewitt_anomaly_cancellation
+theorem split_signature_index_55_zero : anomalyIndex 5 5 = 0 :=
+  anomalyIndex_55_zero
 
 end Pin55CartanDecomposition
 end noncomputable section

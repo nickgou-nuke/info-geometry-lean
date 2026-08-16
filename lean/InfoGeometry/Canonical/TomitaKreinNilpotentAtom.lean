@@ -208,6 +208,40 @@ theorem concrete_majorana_swap_is_phs_invariant :
     InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteAnnihilation_apply_to_doubled,
     add_comm]
 
+/-! ### Hestenes presentation of the same real CAR channels -/
+
+@[rep_depth krein]
+theorem hestenesPionPlus_eq_concreteCARCreation :
+    InfoGeometry.Krein.hestenesPionPlus (E := E) =
+      concreteCARCreation (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hu : to_doubled (WithLp.fst u) (WithLp.snd u) = u := by
+    apply DoubledSpace.ext <;> simp [to_doubled]
+  rw [← hu]
+  apply DoubledSpace.ext <;>
+    simp [InfoGeometry.Krein.hestenesPionPlus,
+      InfoGeometry.Krein.modular_j_to_doubled,
+      InfoGeometry.Krein.clockAxis_to_doubled,
+      concreteCARCreation,
+      InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteCreation_apply_to_doubled]
+
+@[rep_depth krein]
+theorem hestenesPionMinus_eq_concreteCARAnnihilation :
+    InfoGeometry.Krein.hestenesPionMinus (E := E) =
+      concreteCARAnnihilation (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hu : to_doubled (WithLp.fst u) (WithLp.snd u) = u := by
+    apply DoubledSpace.ext <;> simp [to_doubled]
+  rw [← hu]
+  apply DoubledSpace.ext <;>
+    simp [InfoGeometry.Krein.hestenesPionMinus,
+      InfoGeometry.Krein.modular_j_to_doubled,
+      InfoGeometry.Krein.clockAxis_to_doubled,
+      concreteCARAnnihilation,
+      InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteAnnihilation_apply_to_doubled]
+
 /--
 Single exported finite spine for the doubled real Krein map:
 Tomita atom, idempotent projector split, and nilpotent CAR split-null fit.

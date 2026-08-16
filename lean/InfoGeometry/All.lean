@@ -2932,6 +2932,7 @@ import InfoGeometry.Canonical.PrimonThermalDiracHeatKernelNativeBridge
 import InfoGeometry.Canonical.PrimonVirasoroCentralChargeBridge
 import InfoGeometry.Canonical.ProjectedLFunctionCalibration
 import InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
+import InfoGeometry.Canonical.PACNativeCliffordBridge
 import InfoGeometry.Canonical.ProjectiveAlgebraComparison
 import InfoGeometry.Canonical.ProjectiveCCR
 import InfoGeometry.Canonical.ProjectiveCountsModularBridge

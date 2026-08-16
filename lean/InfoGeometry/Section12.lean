@@ -328,32 +328,4 @@ theorem finiteShiftCommutator_eq_diag :
     norm_num [finiteShiftCommutator, finiteShiftL, finiteShiftR, Matrix.mul_apply,
       Fin.sum_univ_two]
 
-theorem section12_capstone :
-    (∀ Gamma : ConnectionCoeff, ∀ a b c : Fin 4,
-      torsionTensor Gamma a c b = -torsionTensor Gamma a b c) ∧
-    (∀ Gamma : ConnectionCoeff,
-      (∀ a b c : Fin 4, torsionTensor Gamma a b c = 0) ↔
-        ∀ a b c : Fin 4, Gamma a b c = Gamma a c b) ∧
-    (∀ a b c : Fin 4, torsionTensor zeroConnection a b c = 0) ∧
-    (∀ e : FrameCoeff, ∀ a b c : Fin 4,
-      torsionTwoFormCoeff zeroConnection zeroConnection e a b c = 0) ∧
-    (∀ Gamma : ConnectionCoeff, ∀ a b c : Fin 4,
-      torsionTwoFormCoeff zeroConnection (coordinateConnectionForm Gamma)
-        coordinateFrame a b c = torsionTensor Gamma a b c) ∧
-    (∀ a b c : Fin 4, contorsionFromTorsion (fun _ _ _ => 0) a b c = 0) ∧
-    (∀ E : SpinMat, cliffordSolderingDerivative 0 0 E = 0) ∧
-    (∀ omegaLeviCivita : SpinConnection, ∀ mu : Fin 4,
-      spinConnectionWithContorsion omegaLeviCivita 0 mu = omegaLeviCivita mu) ∧
-    (∀ q : Quat, quaternionTorsion 0 0 q = 0) ∧
-    (∀ q : Quat, quaternionTorsion 0 (Section8.Quat.quaternionConnection q 0) q = 0) ∧
-    (∀ e : QuaternionOneForm, ∀ mu nu : SpacetimeIdx,
-      quaternionTorsionTwoFormCoeff (fun _ _ => 0) (fun _ => 0) e mu nu = 0) ∧
-    finiteShiftCommutator ≠ 0 := by
-  exact ⟨torsionTensor_antisymmetric_lower, torsionTensor_zero_iff_lower_symmetric,
-    torsionTensor_flat, torsionTwoFormCoeff_flat,
-    torsionTwoFormCoeff_coordinate_eq_torsionTensor, contorsionFromTorsion_zero,
-    cliffordSolderingDerivative_flat, spinConnectionWithContorsion_zero,
-    quaternionTorsion_flat, quaternionTorsion_of_constant_field_connection,
-    quaternionTorsionTwoFormCoeff_flat, finiteShiftCommutator_ne_zero⟩
-
 end Section12

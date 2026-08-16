@@ -104,8 +104,8 @@ def load_text(path: Path) -> str:
     return path.read_text(encoding="utf-8")
 
 
-def load_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def tail_text(text: str, max_chars: int) -> str:

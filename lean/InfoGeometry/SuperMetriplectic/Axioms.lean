@@ -1,5 +1,7 @@
 import InfoGeometry.Core.SymmetricLie
 import InfoGeometry.Canonical.AssociativeSuperBracket
+import InfoGeometry.Canonical.MoorePenrose
+import InfoGeometry.Canonical.Drazin
 
 /-!
 # Supergraded Metriplectic Axioms
@@ -14,9 +16,9 @@ algebraic/computational skeleton:
 
 * odd-odd supercharge closure `Q,Q -> P + Z`;
 * a Cartan-compatible split supplied by an admissible involution;
-* Moore-Penrose-stabilized scalar Schur reduction;
+* Moore-Penrose-stabilized operator Schur reduction;
 * Drazin projector extraction of the persistent defect lane;
-* body-level entropy production as the observable nonnegative quantity.
+* associative operator closure on the native carrier.
 -/
 
 namespace InfoGeometry.SuperMetriplectic
@@ -58,11 +60,12 @@ theorem anticommutator_eq_translation_add_defect (C : SuperchargeClosure A) :
 end SuperchargeClosure
 
 /--
-Chiral scalar odd-odd closure packet.
+Chiral odd-odd closure packet on an associative carrier.
 
 This is the chiral refinement of `SuperchargeClosure`: the odd lane is first
-split into explicit left/right scalar shadows, then recombined into the net odd
-shadow `Q_R - Q_L`.  The closure law is still conservative and scalar/body-level.
+split into explicit left/right carrier elements, then recombined into the net
+odd carrier element `Q_R - Q_L`.  No commutative or scalar representation is
+assumed by this interface.
 -/
 structure ChiralSuperchargeClosure (A : Type*) [Ring A] [Algebra ℝ A] where
   QL : A
@@ -76,7 +79,7 @@ namespace ChiralSuperchargeClosure
 
 variable {A : Type*} [Ring A] [Algebra ℝ A]
 
-/-- The net odd shadow obtained from the right-minus-left chiral scalar lanes. -/
+/-- The net odd carrier element obtained from the right-minus-left chiral lanes. -/
 noncomputable def netOddShadow (C : ChiralSuperchargeClosure A) : A :=
   C.QR - C.QL
 
@@ -100,7 +103,7 @@ theorem anticommutator_netOddShadow_eq_translation_add_defect
       = C.gamma • C.translationShadow + C.defectShadow := by
   simpa [netOddShadow, translationShadow, defectShadow] using C.netOddOddClosure
 
-/-- Forget the chiral packet to the older undifferentiated scalar closure packet. -/
+/-- Forget the chiral packet to the undifferentiated carrier closure packet. -/
 noncomputable def toSuperchargeClosure (C : ChiralSuperchargeClosure A) :
     SuperchargeClosure A where
   Q₁ := C.netOddShadow
@@ -144,157 +147,63 @@ theorem dissipativeRange_is_cartan_p (C : CartanOnsagerSplit L) :
 
 end CartanOnsagerSplit
 
-/--
-Scalar Moore-Penrose inverse property.
+/-! ### Native noncommutative Schur/Drazin block -/
 
-This is the one-dimensional body-level shadow of the operator inverse data.
-Higher-dimensional/operator versions should replace `ℝ` with the existing
-`CertifiedInverseKernel` surfaces.
--/
-structure ScalarPenroseInverse where
-  a : ℝ
-  aPlus : ℝ
-  aba : a * aPlus * a = a
-  bab : aPlus * a * aPlus = aPlus
-
-/-- Scalar Drazin inverse property for spectral/topological memory. -/
-structure ScalarDrazinInverse where
-  a : ℝ
-  aD : ℝ
+/-- A Schur/Drazin block on an actual noncommutative observable algebra. -/
+structure OperatorSchurDrazinBlock
+    (A : Type*) [Ring A] [StarRing A] where
+  LPP : A
+  LPΘ : A
+  LΘP : A
+  LΘΘ : A
+  penroseElement : A
+  drazinElement : A
   index : ℕ
-  commute : a * aD = aD * a
-  reflexive : aD * a * aD = aD
-  spectral :
-    a ^ (index + 1) * aD = a ^ index
+  penrose_is_inverse :
+    InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse
+      LΘΘ penroseElement
+  drazin_is_inverse :
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse
+      LΘΘ drazinElement index
 
-/--
-Two-block scalar shadow of a hidden-sector Onsager matrix.
+namespace OperatorSchurDrazinBlock
 
-The fields represent the block matrix
-`[[LPP, LPΘ], [LΘP, LΘΘ]]`, together with explicit Penrose and Drazin witnesses
-for the hidden block `LΘΘ`.
--/
-structure ScalarSchurDrazinBlock where
-  LPP : ℝ
-  LPΘ : ℝ
-  LΘP : ℝ
-  LΘΘ : ℝ
-  penrose : ScalarPenroseInverse
-  drazin : ScalarDrazinInverse
-  penrose_matches_hidden : penrose.a = LΘΘ
-  drazin_matches_hidden : drazin.a = LΘΘ
+variable {A : Type*} [Ring A] [StarRing A]
 
-/-- Readout-first alias for the scalar Schur/Penrose/Drazin block packet. -/
-abbrev ScalarReadoutSchurDrazinBlock := ScalarSchurDrazinBlock
+/-- The noncommutative stabilized Schur complement. -/
+def effectiveSchur (B : OperatorSchurDrazinBlock A) : A :=
+  B.LPP - B.LPΘ * B.penroseElement * B.LΘP
 
-namespace ScalarSchurDrazinBlock
+/-- The complementary Drazin projector on the hidden operator lane. -/
+def drazinDefectProjector (B : OperatorSchurDrazinBlock A) : A :=
+  1 - B.LΘΘ * B.drazinElement
 
-/--
-Moore-Penrose-stabilized Schur complement:
-`LPP - LPΘ * (LΘΘ)^+ * LΘP`.
--/
-noncomputable def effectiveEvenOnsager (B : ScalarSchurDrazinBlock) : ℝ :=
-  B.LPP - B.LPΘ * B.penrose.aPlus * B.LΘP
-
-/-- Drazin defect projector scalar shadow: `1 - LΘΘ * (LΘΘ)^D`. -/
-noncomputable def drazinDefectProjector (B : ScalarSchurDrazinBlock) : ℝ :=
-  1 - B.LΘΘ * B.drazin.aD
-
-/-- Public equation for the stabilized Schur complement. -/
-theorem effectiveEvenOnsager_eq (B : ScalarSchurDrazinBlock) :
-    B.effectiveEvenOnsager = B.LPP - B.LPΘ * B.penrose.aPlus * B.LΘP :=
+theorem effectiveSchur_eq (B : OperatorSchurDrazinBlock A) :
+    B.effectiveSchur = B.LPP - B.LPΘ * B.penroseElement * B.LΘP :=
   rfl
 
-/-- Readout-first restatement of the stabilized Schur complement equation. -/
-theorem effectiveEvenOnsager_readout_eq (B : ScalarSchurDrazinBlock) :
-    B.effectiveEvenOnsager = B.LPP - B.LPΘ * B.penrose.aPlus * B.LΘP :=
-  effectiveEvenOnsager_eq B
-
-/-- Public equation for the Drazin defect projector. -/
-theorem drazinDefectProjector_eq (B : ScalarSchurDrazinBlock) :
-    B.drazinDefectProjector = 1 - B.LΘΘ * B.drazin.aD :=
+theorem drazinDefectProjector_eq (B : OperatorSchurDrazinBlock A) :
+    B.drazinDefectProjector = 1 - B.LΘΘ * B.drazinElement :=
   rfl
 
-/-- Readout-first restatement of the scalar Drazin defect-projector equation. -/
-theorem drazinDefectProjector_readout_eq (B : ScalarSchurDrazinBlock) :
-    B.drazinDefectProjector = 1 - B.LΘΘ * B.drazin.aD :=
-  drazinDefectProjector_eq B
+/-- The Drazin defect projector is idempotent on the operator carrier. -/
+  theorem drazinDefectProjector_idempotent (B : OperatorSchurDrazinBlock A) :
+    B.drazinDefectProjector * B.drazinDefectProjector =
+      B.drazinDefectProjector := by
+  simpa [drazinDefectProjector,
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection] using
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_is_idempotent
+      B.drazin_is_inverse
 
-end ScalarSchurDrazinBlock
+/-- The Moore--Penrose range projector is idempotent on the operator carrier. -/
+theorem penroseRangeProjector_idempotent (B : OperatorSchurDrazinBlock A) :
+    (B.LΘΘ * B.penroseElement) * (B.LΘΘ * B.penroseElement) =
+      B.LΘΘ * B.penroseElement := by
+  simpa [InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.rightProjector] using
+    InfoGeometry.Canonical.MoorePenrose.IsMoorePenroseInverse.rightProjector_idempotent
+      B.penrose_is_inverse
 
-/--
-Body-level entropy production packet.
+end OperatorSchurDrazinBlock
 
-Grassmann/nilpotent contributions are not ordered here.  The observable second
-law is represented by a real body projection and an explicit nonnegativity
-property.
--/
-structure BodyEntropyProduction where
-  bodyForce : ℝ
-  effectiveOnsager : ℝ
-  production : ℝ
-  production_eq : production = bodyForce * effectiveOnsager * bodyForce
-  production_nonneg : 0 ≤ production
-
-namespace BodyEntropyProduction
-
-/-- Observable body-level second-law statement. -/
-theorem body_second_law (E : BodyEntropyProduction) :
-    0 ≤ E.production :=
-  E.production_nonneg
-
-/-- The production is the real body quadratic form carried by the packet. -/
-theorem production_eq_body_quadratic (E : BodyEntropyProduction) :
-    E.production = E.bodyForce * E.effectiveOnsager * E.bodyForce :=
-  E.production_eq
-
-end BodyEntropyProduction
-
-/--
-Minimal computational triad joining Schur, Penrose, Drazin, and body positivity.
--/
-structure DrazinPenroseSchurTriad where
-  block : ScalarSchurDrazinBlock
-  entropy : BodyEntropyProduction
-  entropy_uses_effective_block :
-    entropy.effectiveOnsager = block.effectiveEvenOnsager
-
-namespace DrazinPenroseSchurTriad
-
-/-- Scalar readout of the effective Onsager coefficient carried by the triad packet. -/
-noncomputable def effectiveOnsagerReadout (T : DrazinPenroseSchurTriad) : ℝ :=
-  T.block.effectiveEvenOnsager
-
-/-- Scalar readout of the Drazin defect-projector coefficient carried by the triad packet. -/
-noncomputable def defectProjectorReadout (T : DrazinPenroseSchurTriad) : ℝ :=
-  T.block.drazinDefectProjector
-
-/--
-Readout-seal theorem for the scalar triad packet.
-
-This records that exported scalar quantities are readouts tied to the carried
-Schur/Penrose/Drazin block; it does not replace noncommuting operator lanes.
--/
-theorem scalar_readout_seal (T : DrazinPenroseSchurTriad) :
-    (T.effectiveOnsagerReadout = T.block.effectiveEvenOnsager)
-      ∧ (T.defectProjectorReadout = T.block.drazinDefectProjector) := by
-  exact ⟨rfl, rfl⟩
-
-/--
-The effective macroscopic Onsager coefficient is the
-Moore-Penrose-stabilized Schur complement of the hidden sector.
--/
-theorem effective_metric_is_schur_complement (T : DrazinPenroseSchurTriad) :
-    T.entropy.effectiveOnsager =
-      T.block.LPP - T.block.LPΘ * T.block.penrose.aPlus * T.block.LΘP := by
-  rw [T.entropy_uses_effective_block]
-  rfl
-
-/-- The observable second-law statement is carried at body level. -/
-theorem body_entropy_nonnegative (T : DrazinPenroseSchurTriad) :
-    0 ≤ T.entropy.production :=
-  T.entropy.production_nonneg
-
-end DrazinPenroseSchurTriad
 
 end InfoGeometry.SuperMetriplectic

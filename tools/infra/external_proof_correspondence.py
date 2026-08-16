@@ -14,8 +14,8 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def read_jsonl(path: Path) -> list[dict[str, Any]]:
-    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+# [lossless-compact] read_jsonl folded into igf.common.json_io.read_jsonl
+from igf.common.json_io import read_jsonl
 
 
 def classify(packet: dict[str, Any]) -> str:

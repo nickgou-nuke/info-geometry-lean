@@ -197,11 +197,6 @@ def splitNullUnipotentFlow (t : ℝ) : SplitQuaternion :=
   unipotentFlow splitNull t
 
 /-- **Unipotent Inverse Law for the Null Element**: `U_null(−t) · U_null(t) = 1` and `U_null(t) · U_null(−t) = 1`. -/
-theorem splitNull_unipotentFlow_inverse_law (t : ℝ) :
-    splitNullUnipotentFlow (-t) * splitNullUnipotentFlow t = splitOne ∧
-    splitNullUnipotentFlow t * splitNullUnipotentFlow (-t) = splitOne :=
-  unipotentFlow_inv_law splitNull splitNull_sq t
-
 theorem splitQuaternion_basis_span (A : SplitQuaternion) :
     ∃ (a b c d : ℝ),
       A = a • splitOne + b • splitL + c • splitI + d • splitIL := by

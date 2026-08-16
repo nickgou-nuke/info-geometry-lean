@@ -18,12 +18,8 @@ if str(REPO_ROOT) not in sys.path:
 from tools.infra.hermes_bounded_runner import Packet, build_truth_transport_packet, write_json
 
 
-def load_json(path: Path) -> dict[str, Any]:
-    with path.open("r", encoding="utf-8") as handle:
-        data = json.load(handle)
-    if not isinstance(data, dict):
-        raise SystemExit(f"expected JSON object: {path}")
-    return data
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def infer_run_id(run_path: Path, run_data: dict[str, Any]) -> str:

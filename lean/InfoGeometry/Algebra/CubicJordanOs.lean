@@ -159,7 +159,7 @@ lemma smul_z₂ (r : ℝ) (X : AlbertMatrix) : (r • X).z₂ = r • X.z₂ := 
 lemma smul_z₃ (r : ℝ) (X : AlbertMatrix) : (r • X).z₃ = r • X.z₃ := rfl
 
 lemma subZ_zeroZ : subZ zeroZ zeroZ = (zeroZ : SplitOct) := by
-  simp [subZ, negZ, zeroZ]
+  simp [subZ, zeroZ]
 
 lemma conjZ_zeroZ : conjZ (zeroZ : SplitOct) = zeroZ := by
   simp [conjZ, zeroZ]
@@ -178,13 +178,13 @@ lemma adjointQuad_zeroZ (α₁ α₂ α₃ : ℝ) :
     { α₁ := α₂ * α₃, α₂ := α₁ * α₃, α₃ := α₁ * α₂,
       z₁ := zeroZ, z₂ := zeroZ, z₃ := zeroZ } := by
   dsimp [adjointQuad]
-  simp [detZ_zeroZ_cast, conjZ_zeroZ, mulZ_zero, smul_zeroZ, subZ_zeroZ, octTrace]
+  simp [detZ_zeroZ_cast, conjZ_zeroZ, mulZ_zero, smul_zeroZ, subZ_zeroZ]
 
 lemma normCubic_zeroZ (α₁ α₂ α₃ : ℝ) :
     normCubic { α₁ := α₁, α₂ := α₂, α₃ := α₃,
                 z₁ := zeroZ, z₂ := zeroZ, z₃ := zeroZ } = α₁ * α₂ * α₃ := by
   dsimp [normCubic]
-  simp [detZ, zeroZ, octTrace, mulZ, mulZ_zero]
+  simp [detZ, zeroZ, octTrace, mulZ]
 
 theorem freudenthal_identity_diagonal (X : AlbertMatrix)
     (hz₁ : X.z₁ = zeroZ) (hz₂ : X.z₂ = zeroZ) (hz₃ : X.z₃ = zeroZ) :

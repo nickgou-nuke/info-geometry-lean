@@ -13,14 +13,15 @@ It does not assert KMS, critical-line localization, Riemann-zero confinement,
 or an infinite-dimensional Witten-index theorem.
 """
 
+import sys
+from pathlib import Path
 import sympy as sp
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def assert_matrix_eq(lhs, rhs, label):
-    diff = sp.simplify(lhs - rhs)
-    if diff != sp.zeros(*lhs.shape):
-        raise AssertionError(f"{label} failed:\n{diff}")
-    print(f"ok: {label}")
+from tools.sympy.common import assert_matrix_eq
 
 
 def main():

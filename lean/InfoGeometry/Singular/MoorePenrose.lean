@@ -47,12 +47,6 @@ theorem bab_eq_b (h : IsMoorePenroseInverse A B) : B * A * B = B := h.2.1
 theorem ab_adj_eq (h : IsMoorePenroseInverse A B) : (A * B)† = A * B := h.2.2.1
 theorem ba_adj_eq (h : IsMoorePenroseInverse A B) : (B * A)† = B * A := h.2.2.2
 
--- Backward-compatible aliases.
-theorem eq1 (h : IsMoorePenroseInverse A B) : A * B * A = A := h.aba_eq_a
-theorem eq2 (h : IsMoorePenroseInverse A B) : B * A * B = B := h.bab_eq_b
-theorem eq3 (h : IsMoorePenroseInverse A B) : (A * B)† = A * B := h.ab_adj_eq
-theorem eq4 (h : IsMoorePenroseInverse A B) : (B * A)† = B * A := h.ba_adj_eq
-
 end IsMoorePenroseInverse
 
 /-- Star distributes over a triple product. -/

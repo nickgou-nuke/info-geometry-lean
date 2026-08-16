@@ -153,7 +153,7 @@ theorem compactifiedInversion_commutes_boundaryLoopAction
         boundaryLoopAction, AlgebraicCompactification.map, hcomm]
 
 /-- A finite packet of boundary loop symmetry data. -/
-structure BoundaryLoopClosurePacket where
+structure BoundaryLoopClosureData where
   /-- Cayley--Möbius inversion. -/
   cayley : CayleyMobiusInversion ℕ
   /-- Loop word acting on boundary labels. -/
@@ -162,30 +162,30 @@ structure BoundaryLoopClosurePacket where
   commutes_with_cayley : ∀ n : ℕ,
     cayley.inv (evalBraidWord loop n) = evalBraidWord loop (cayley.inv n)
 
-namespace BoundaryLoopClosurePacket
+namespace BoundaryLoopClosureData
 
 /-- The packet loop action preserves boundary states. -/
-theorem preserves_boundary (P : BoundaryLoopClosurePacket)
+theorem preserves_boundary (P : BoundaryLoopClosureData)
     {p : CayleyMobiusBoundaryBraidClosure.AlgebraicCompactification ℕ}
     (hp : CayleyMobiusBoundaryBraidClosure.AlgebraicCompactification.IsBoundary p) :
     CayleyMobiusBoundaryBraidClosure.AlgebraicCompactification.IsBoundary (boundaryLoopAction P.loop p) :=
   boundaryLoopAction_preserves_boundary P.loop hp
 
 /-- The packet Cayley inversion commutes with its loop action. -/
-theorem cayley_commutes_loop (P : BoundaryLoopClosurePacket)
+theorem cayley_commutes_loop (P : BoundaryLoopClosureData)
     (p : CayleyMobiusBoundaryBraidClosure.AlgebraicCompactification ℕ) :
     P.cayley.compactifiedInversion (boundaryLoopAction P.loop p) =
       boundaryLoopAction P.loop (P.cayley.compactifiedInversion p) :=
   compactifiedInversion_commutes_boundaryLoopAction P.cayley P.loop P.commutes_with_cayley p
 
 /-- The packet lifted loop action commutes with the deck involution. -/
-theorem lifted_commutes_deck (P : BoundaryLoopClosurePacket)
+theorem lifted_commutes_deck (P : BoundaryLoopClosureData)
     (x : CayleyMobiusBoundaryBraidClosure.DoubleCover
       (CayleyMobiusBoundaryBraidClosure.AlgebraicCompactification ℕ)) :
     liftedBoundaryLoopAction P.loop (CayleyMobiusBoundaryBraidClosure.deckInvolution x) =
       CayleyMobiusBoundaryBraidClosure.deckInvolution (liftedBoundaryLoopAction P.loop x) :=
   liftedBoundaryLoopAction_commutes_deck P.loop x
 
-end BoundaryLoopClosurePacket
+end BoundaryLoopClosureData
 
 end InfoGeometry.Canonical.BoundaryLoopSuperClosure

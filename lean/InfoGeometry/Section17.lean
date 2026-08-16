@@ -67,6 +67,52 @@ theorem matrixToBiquat_biquatToMatrix (q : BiquatCoord) :
   fin_cases i <;>
     simp [biquatToMatrix, matrixToBiquat] <;> ring_nf <;> try simp [complex_I_sq] <;> try ring
 
+/-- The explicit biquaternion coordinate map is complex-linear. -/
+def biquatToMatrixLinear : BiquatCoord →ₗ[ℂ] Mat2C where
+  toFun := biquatToMatrix
+  map_add' q r := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [biquatToMatrix, Matrix.smul_apply] <;> ring
+  map_smul' c q := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [biquatToMatrix, Matrix.smul_apply] <;> ring
+
+/-- The explicit inverse coordinate map is complex-linear. -/
+def matrixToBiquatLinear : Mat2C →ₗ[ℂ] BiquatCoord where
+  toFun := matrixToBiquat
+  map_add' M N := by
+    funext i
+    fin_cases i <;>
+      simp [matrixToBiquat] <;> ring
+  map_smul' c M := by
+    funext i
+    fin_cases i <;>
+      simp [matrixToBiquat] <;> ring
+
+/-- The biquaternion coordinate carrier and `M₂(ℂ)` are linearly equivalent. -/
+def biquatMatrixLinearEquiv : BiquatCoord ≃ₗ[ℂ] Mat2C :=
+  LinearEquiv.ofBijective biquatToMatrixLinear
+    ⟨by
+      intro q r h
+      have h' := congrArg matrixToBiquat h
+      simpa [biquatToMatrixLinear, matrixToBiquat_biquatToMatrix] using h',
+      by
+        intro M
+        exact ⟨matrixToBiquat M, by
+          simpa [biquatToMatrixLinear] using biquatToMatrix_matrixToBiquat M⟩⟩
+
+@[simp] theorem biquatMatrixLinearEquiv_apply (q : BiquatCoord) :
+    biquatMatrixLinearEquiv q = biquatToMatrix q := rfl
+
+@[simp] theorem biquatMatrixLinearEquiv_symm_apply (M : Mat2C) :
+    biquatMatrixLinearEquiv.symm M = matrixToBiquat M := by
+  apply (biquatMatrixLinearEquiv.injective)
+  rw [biquatMatrixLinearEquiv.apply_symm_apply]
+  change M = biquatToMatrix (matrixToBiquat M)
+  exact (biquatToMatrix_matrixToBiquat M).symm
+
 def I₂ : Mat2C :=
   1
 
@@ -135,32 +181,5 @@ theorem biquatToMatrix_eq_section16_evenToMatrix (q : BiquatCoord) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [biquatToMatrix, Section16.evenToMatrix] <;> ring
-
-theorem section17_capstone :
-    (∀ M : Mat2C, biquatToMatrix (matrixToBiquat M) = M) ∧
-    (∀ q : BiquatCoord, matrixToBiquat (biquatToMatrix q) = q) ∧
-    Qi * Qi = -I₂ ∧ Qj * Qj = -I₂ ∧ Qk * Qk = -I₂ ∧
-    Qi * Qj = Qk ∧ Qj * Qk = Qi ∧ Qk * Qi = Qj ∧
-    Qj * Qi = -Qk ∧ Qk * Qj = -Qi ∧ Qi * Qk = -Qj ∧
-    (∀ q : BiquatCoord,
-      biquatToMatrix q =
-        Section16.evenToMatrix (fun
-          | 0 => q 0
-          | 1 => q 3
-          | 2 => -q 1
-          | 3 => -q 2)) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact biquatToMatrix_matrixToBiquat
-  · exact matrixToBiquat_biquatToMatrix
-  · exact basis_square_Qi
-  · exact basis_square_Qj
-  · exact basis_square_Qk
-  · exact basis_product_Qi_Qj
-  · exact basis_product_Qj_Qk
-  · exact basis_product_Qk_Qi
-  · exact basis_product_Qj_Qi
-  · exact basis_product_Qk_Qj
-  · exact basis_product_Qi_Qk
-  · exact biquatToMatrix_eq_section16_evenToMatrix
 
 end Section17

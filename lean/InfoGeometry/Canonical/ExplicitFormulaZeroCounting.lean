@@ -104,9 +104,10 @@ def ExplicitFormulaPsiStatement (x : ℝ) (zeros : Finset ZetaZero) : Prop :=
         (Real.log (2 * Real.pi) : ℂ) -
         ((1 / 2 : ℝ) * Real.log (1 - x ^ (-2 : ℝ)) : ℂ)
 
-/-- Riemann-von Mangoldt formula for N(T).
-N(T) = (T/2π) log(T/2πe) + 7/8 + S(T) + O(1/T). -/
-theorem riemann_von_mangoldt_formula (T : ℝ) (hT : T ≥ 2) :
+/-- The declared `N_function` decomposes exactly into its finite main term and
+the explicitly included `S_function`.  This is not an asymptotic
+Riemann--von Mangoldt theorem. -/
+theorem N_function_main_term_decomposition (T : ℝ) (hT : T ≥ 2) :
   |N_function T - ((T / (2 * Real.pi)) * Real.log (T / (2 * Real.pi * Real.exp 1)) + 7 / 8 + S_function T)| ≤ 1 / T := by
   have hTpos : 0 < T := lt_of_lt_of_le (by norm_num) hT
   simp [N_function, not_le.mpr hTpos, abs_zero]

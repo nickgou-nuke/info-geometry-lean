@@ -11,9 +11,11 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from tools.pathing import normalize_user_path, repo_root
+    from tools.quality.common import load_json, strip_lean_comments
     from tools.quality.witness_pattern_scanner import scan_directory
 else:
     from tools.pathing import normalize_user_path, repo_root
+    from tools.quality.common import load_json, strip_lean_comments
     from tools.quality.witness_pattern_scanner import scan_directory
 
 
@@ -34,84 +36,6 @@ def parse_args() -> argparse.Namespace:
         help="Path to mandate policy JSON.",
     )
     return p.parse_args()
-
-
-def load_json(path: Path) -> dict[str, Any]:
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except Exception as ex:
-        raise SystemExit(f"[proof-only-gate] failed reading {path}: {ex}") from ex
-    if not isinstance(payload, dict):
-        raise SystemExit(f"[proof-only-gate] expected object JSON at {path}")
-    return payload
-
-
-def strip_lean_comments(text: str) -> str:
-    out: list[str] = []
-    i = 0
-    depth = 0
-    in_string = False
-    in_char = False
-
-    while i < len(text):
-        ch = text[i]
-        nxt = text[i + 1] if i + 1 < len(text) else ""
-
-        if depth > 0:
-            if ch == "/" and nxt == "-":
-                depth += 1
-                out.extend("  ")
-                i += 2
-            elif ch == "-" and nxt == "/":
-                depth -= 1
-                out.extend("  ")
-                i += 2
-            else:
-                out.append("\n" if ch == "\n" else " ")
-                i += 1
-            continue
-
-        if in_string:
-            out.append(ch)
-            if ch == "\\" and i + 1 < len(text):
-                out.append(text[i + 1])
-                i += 2
-            else:
-                if ch == "\"":
-                    in_string = False
-                i += 1
-            continue
-
-        if in_char:
-            out.append(ch)
-            if ch == "\\" and i + 1 < len(text):
-                out.append(text[i + 1])
-                i += 2
-            else:
-                if ch == "'":
-                    in_char = False
-                i += 1
-            continue
-
-        if ch == "-" and nxt == "-":
-            out.extend(" " for _ in iter(text[i:].split("\n", 1)[0]))
-            i += len(text[i:].split("\n", 1)[0])
-            continue
-
-        if ch == "/" and nxt == "-":
-            depth = 1
-            out.extend("  ")
-            i += 2
-            continue
-
-        if ch == "\"":
-            in_string = True
-        elif ch == "'":
-            in_char = True
-        out.append(ch)
-        i += 1
-
-    return "".join(out)
 
 
 def main() -> int:

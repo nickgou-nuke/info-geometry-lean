@@ -33,7 +33,10 @@ theorem finite_readout
   exact finiteRealSpinorWittenReadout_eq_weylDenominator_squareWeights
     P.modes P.amplitude
 
-theorem PrimeSpinorWittenIndex
+/-! The following is a finite Pfaffian/Weyl readout packet.  It is not a
+Witten-index theorem: no supersymmetry, grading, or beta-independence is
+encoded here. -/
+theorem finite_spinor_pfaffian_weyl_packet
   {PrimeLabel R : Type*}
   [CommRing R]
   (P : PrimeSpinorWittenIndexPacket PrimeLabel R) :

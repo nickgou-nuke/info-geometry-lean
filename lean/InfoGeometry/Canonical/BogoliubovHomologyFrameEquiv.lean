@@ -45,10 +45,10 @@ structure HomologyFrameEquiv where
   Uinv : EndH
 
   /-- Left inverse law. -/
-  left_inv : Uinv.comp U = ContinuousLinearMap.id ℝ H₂
+  inverse_left : Uinv.comp U = ContinuousLinearMap.id ℝ H₂
 
   /-- Right inverse law. -/
-  right_inv : U.comp Uinv = ContinuousLinearMap.id ℝ H₂
+  inverse_right : U.comp Uinv = ContinuousLinearMap.id ℝ H₂
 
   /-- Source boundary/differential. -/
   Dsrc : EndH
@@ -145,7 +145,7 @@ theorem transportedScalarWitness_readout_eq
   unfold transportScalarWitness
   have hx : F.Uinv (F.U x) = x := by
     simpa [ContinuousLinearMap.comp_apply] using
-      congrArg (fun T : EndH => T x) F.left_inv
+      congrArg (fun T : EndH => T x) F.inverse_left
   simp [hx]
 
 /-- Krein-pairing readouts are frame-invariant. -/

@@ -86,6 +86,8 @@ def coordinateReflectionGL : GL10 :=
 
 theorem coordinateReflectionGL_val :
     (coordinateReflectionGL : O55Matrix) = coordinateReflection := by
+  ext i j
+  change ((coordinateReflection : O55Matrix) i j) = ((coordinateReflection : O55Matrix) i j)
   rfl
 
 theorem coordinateReflection_sq :

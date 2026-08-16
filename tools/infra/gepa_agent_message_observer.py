@@ -331,11 +331,8 @@ def recommendations(observations: list[MessageObservation]) -> list[dict[str, st
     return recs
 
 
-def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, sort_keys=True, ensure_ascii=False) + "\n")
+# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
+from igf.common.json_io import write_jsonl
 
 
 def write_review(path: Path, report: dict[str, Any], recs: list[dict[str, str]]) -> None:

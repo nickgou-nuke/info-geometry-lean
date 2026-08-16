@@ -16,14 +16,15 @@ exceptional-point topology, GR/QCD physics, entropy production, or continuum
 monodromy.  These require separate analytic/topological owner theorems.
 """
 
-from __future__ import annotations
-
+import sys
+from pathlib import Path
 import sympy as sp
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def assert_matrix_eq(label: str, actual: sp.Matrix, expected: sp.Matrix) -> None:
-    if sp.simplify(actual - expected) != sp.zeros(*actual.shape):
-        raise AssertionError(f"{label}:\nactual={actual}\nexpected={expected}")
+from tools.sympy.common import assert_matrix_eq
 
 
 def main() -> None:

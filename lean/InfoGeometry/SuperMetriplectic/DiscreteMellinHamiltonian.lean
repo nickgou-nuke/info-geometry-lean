@@ -1,4 +1,3 @@
-import InfoGeometry.SuperMetriplectic.SouriauTomitaBKM
 import InfoGeometry.Canonical.DiscreteMellinModularBridge
 import InfoGeometry.Canonical.DiscreteModularMellinShift
 import InfoGeometry.Canonical.CasimirWeylDrazinContext
@@ -32,7 +31,7 @@ DFT-on-log-samples packet.
 `dmtSpectrum` is definitionally carried as the DFT spectrum of logarithmic
 samples.  This is the discrete version of "Mellin is Fourier after `x = exp u`".
 -/
-structure LogSampledDFTMellinPacket (Index : Type*) where
+structure LogSampledDFTMellinData (Index : Type*) where
   linearSample : Index → ℝ
   logarithmicSample : Index → ℝ
   logCoordinate : Index → ℝ
@@ -43,21 +42,21 @@ structure LogSampledDFTMellinPacket (Index : Type*) where
   dmt_eq_dft_on_logSamples :
     dmtSpectrum = dftSpectrum
 
-namespace LogSampledDFTMellinPacket
+namespace LogSampledDFTMellinData
 
 /-- The DMT spectrum is the DFT spectrum computed on the logarithmic sample lane. -/
 theorem dmtSpectrum_eq_dftSpectrum
-    {Index : Type*} (P : LogSampledDFTMellinPacket Index) :
+    {Index : Type*} (P : LogSampledDFTMellinData Index) :
     P.dmtSpectrum = P.dftSpectrum :=
   P.dmt_eq_dft_on_logSamples
 
 /-- Logarithmic samples expose additive rapidity/log coordinates. -/
 theorem logSample_eq_logCoordinate
-    {Index : Type*} (P : LogSampledDFTMellinPacket Index) (k : Index) :
+    {Index : Type*} (P : LogSampledDFTMellinData Index) (k : Index) :
     Real.log (P.logarithmicSample k) = P.logCoordinate k :=
   P.log_sample_eq_coordinate k
 
-end LogSampledDFTMellinPacket
+end LogSampledDFTMellinData
 
 /--
 Discrete modular Hamiltonian from Mellin/rapidity spectral data.
@@ -66,7 +65,7 @@ The Hamiltonian itself is supplied by the owner
 `OperatorialDiscreteModularHamiltonianContext`, which enforces the
 projector-commutation gate.
 -/
-structure DiscreteMellinModularHamiltonianPacket
+structure DiscreteMellinModularHamiltonianData
     (η0 Δη : ℝ) (P : ℤ → EndH) where
   context :
     OperatorialDiscreteModularHamiltonianContext (E := E) η0 Δη P
@@ -77,12 +76,12 @@ structure DiscreteMellinModularHamiltonianPacket
   hamiltonianReadout_eq_context :
     hamiltonianReadout = context.H
 
-namespace DiscreteMellinModularHamiltonianPacket
+namespace DiscreteMellinModularHamiltonianData
 
 /-- Mellin spectral weights are additive rapidity grid values. -/
 theorem mellinWeight_eq_rapidity
     {η0 Δη : ℝ} {P : ℤ → EndH}
-    (M : DiscreteMellinModularHamiltonianPacket (E := E) η0 Δη P)
+    (M : DiscreteMellinModularHamiltonianData (E := E) η0 Δη P)
     (k : ℤ) :
     M.mellinWeight k = discreteRapidity η0 Δη k :=
   M.mellinWeight_eq_discreteRapidity k
@@ -90,14 +89,14 @@ theorem mellinWeight_eq_rapidity
 /-- The Hamiltonian readout is the operatorial spectral Hamiltonian, not a matrix coordinate. -/
 theorem hamiltonianReadout_eq_operatorialContext
     {η0 Δη : ℝ} {P : ℤ → EndH}
-    (M : DiscreteMellinModularHamiltonianPacket (E := E) η0 Δη P) :
+    (M : DiscreteMellinModularHamiltonianData (E := E) η0 Δη P) :
     M.hamiltonianReadout = M.context.H :=
   M.hamiltonianReadout_eq_context
 
 /-- The discrete modular Hamiltonian commutes with its spectral projectors. -/
 theorem hamiltonian_commutes_spectralProjectors
     {η0 Δη : ℝ} {P : ℤ → EndH}
-    (M : DiscreteMellinModularHamiltonianPacket (E := E) η0 Δη P)
+    (M : DiscreteMellinModularHamiltonianData (E := E) η0 Δη P)
     (k : ℤ) :
     Commute M.hamiltonianReadout (P k) := by
   rw [M.hamiltonianReadout_eq_operatorialContext]
@@ -105,7 +104,7 @@ theorem hamiltonian_commutes_spectralProjectors
     InfoGeometry.Canonical.DiscreteMellinModularBridge.modularHamiltonian_commutes_spectralProjectors
       (E := E) M.context k
 
-end DiscreteMellinModularHamiltonianPacket
+end DiscreteMellinModularHamiltonianData
 
 /--
 Discrete Lorentz/Mellin quantization packet.
@@ -113,29 +112,29 @@ Discrete Lorentz/Mellin quantization packet.
 It connects logarithmic sampling, light-cone rapidity scaling, and the
 operatorial discrete modular Hamiltonian.
 -/
-structure DiscreteLorentzMellinQuantizationPacket
+structure DiscreteLorentzMellinQuantizationData
     (η0 Δη : ℝ) (P : ℤ → EndH) where
-  dmt : LogSampledDFTMellinPacket ℤ
+  dmt : LogSampledDFTMellinData ℤ
   modularHamiltonian :
-    DiscreteMellinModularHamiltonianPacket (E := E) η0 Δη P
+    DiscreteMellinModularHamiltonianData (E := E) η0 Δη P
   samples_match_owner :
     ∀ k : ℤ, dmt.logarithmicSample k = logarithmicSample η0 Δη k
   logCoordinates_match_rapidity :
     ∀ k : ℤ, dmt.logCoordinate k = discreteRapidity η0 Δη k
 
-namespace DiscreteLorentzMellinQuantizationPacket
+namespace DiscreteLorentzMellinQuantizationData
 
 /-- The DMT is the DFT on the logarithmic sampling lane. -/
 theorem dmt_eq_dft_on_logSamples
     {η0 Δη : ℝ} {P : ℤ → EndH}
-    (Q : DiscreteLorentzMellinQuantizationPacket (E := E) η0 Δη P) :
+    (Q : DiscreteLorentzMellinQuantizationData (E := E) η0 Δη P) :
     Q.dmt.dmtSpectrum = Q.dmt.dftSpectrum :=
   Q.dmt.dmtSpectrum_eq_dftSpectrum
 
 /-- The logarithmic sampling lane matches the owner rapidity grid. -/
 theorem logSample_owner_grid
     {η0 Δη : ℝ} {P : ℤ → EndH}
-    (Q : DiscreteLorentzMellinQuantizationPacket (E := E) η0 Δη P)
+    (Q : DiscreteLorentzMellinQuantizationData (E := E) η0 Δη P)
     (k : ℤ) :
     Real.log (Q.dmt.logarithmicSample k) = discreteRapidity η0 Δη k := by
   rw [Q.dmt.logSample_eq_logCoordinate k]
@@ -144,7 +143,7 @@ theorem logSample_owner_grid
 /-- The modular Hamiltonian commutes with every property Mellin spectral projector. -/
 theorem modularHamiltonian_commutes_spectralProjectors
     {η0 Δη : ℝ} {P : ℤ → EndH}
-    (Q : DiscreteLorentzMellinQuantizationPacket (E := E) η0 Δη P)
+    (Q : DiscreteLorentzMellinQuantizationData (E := E) η0 Δη P)
     (k : ℤ) :
     Commute Q.modularHamiltonian.hamiltonianReadout (P k) :=
   Q.modularHamiltonian.hamiltonian_commutes_spectralProjectors k
@@ -157,7 +156,7 @@ spectral-projector commutation.
 -/
 theorem discrete_mellin_modular_hamiltonian_theorem
     {η0 Δη : ℝ} {P : ℤ → EndH}
-    (Q : DiscreteLorentzMellinQuantizationPacket (E := E) η0 Δη P)
+    (Q : DiscreteLorentzMellinQuantizationData (E := E) η0 Δη P)
     (k : ℤ) :
     Q.dmt.dmtSpectrum = Q.dmt.dftSpectrum
       ∧ Real.log (Q.dmt.logarithmicSample k) = discreteRapidity η0 Δη k
@@ -166,7 +165,7 @@ theorem discrete_mellin_modular_hamiltonian_theorem
     Q.logSample_owner_grid k,
     Q.modularHamiltonian_commutes_spectralProjectors k⟩
 
-end DiscreteLorentzMellinQuantizationPacket
+end DiscreteLorentzMellinQuantizationData
 
 /--
 Proof-carrying Casimir residual quantization packet over a discrete modular
@@ -178,7 +177,7 @@ data, while the lattice and band-limit witnesses guarantee that the claim lives
 on the existing operatorial discrete-Mellin owner surface.
 -/
 @[capstone, rep_depth operator]
-structure DiscreteMellinCasimirQuantizationPacket
+structure DiscreteMellinCasimirQuantizationData
     (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂) where
   lattice : InfoGeometry.Canonical.DiscreteModularSpectrum.ModularMellinLattice E CIK
   casimir :
@@ -192,13 +191,13 @@ structure DiscreteMellinCasimirQuantizationPacket
   zetaCasimirResidual_eq_mode_logGap :
     casimir.zetaCasimirResidual = (mode : ℝ) * Real.log lattice.q
 
-namespace DiscreteMellinCasimirQuantizationPacket
+namespace DiscreteMellinCasimirQuantizationData
 
 /-- The residual is quantized in integer multiples of the lattice log-gap. -/
 @[capstone, rep_depth operator]
 theorem zetaCasimirResidual_quantized
     {CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂}
-    (Q : DiscreteMellinCasimirQuantizationPacket (E := E) CIK) :
+    (Q : DiscreteMellinCasimirQuantizationData (E := E) CIK) :
     ∃ n : ℤ, Q.casimir.zetaCasimirResidual = (n : ℝ) * Real.log Q.lattice.q :=
   ⟨Q.mode, Q.zetaCasimirResidual_eq_mode_logGap⟩
 
@@ -206,10 +205,10 @@ theorem zetaCasimirResidual_quantized
 @[rep_depth transport]
 theorem thermal_gap_eq_log_q
     {CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂}
-    (Q : DiscreteMellinCasimirQuantizationPacket (E := E) CIK) :
+    (Q : DiscreteMellinCasimirQuantizationData (E := E) CIK) :
     Q.lattice.thermalTimeStep 1 = Real.log Q.lattice.q := by
   simp [InfoGeometry.Canonical.DiscreteModularSpectrum.ModularMellinLattice.thermalTimeStep]
 
-end DiscreteMellinCasimirQuantizationPacket
+end DiscreteMellinCasimirQuantizationData
 
 end InfoGeometry.SuperMetriplectic

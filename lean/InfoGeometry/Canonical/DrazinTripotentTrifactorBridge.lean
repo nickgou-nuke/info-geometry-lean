@@ -99,6 +99,20 @@ theorem tripotent_drazin_null_projector_eq_P_zero
   rfl
 
 omit [Invertible (2 : R)] in
+/-- The complementary Drazin null projector is idempotent. -/
+theorem tripotent_drazin_null_projector_idempotent
+    (T : R) (hT : T ^ 3 = T) :
+    tripotentDrazinNullProjector T * tripotentDrazinNullProjector T =
+      tripotentDrazinNullProjector T := by
+  have hP := tripotent_drazin_projector_idempotent T hT
+  unfold tripotentDrazinNullProjector
+  calc
+    (1 - tripotentDrazinProjector T) * (1 - tripotentDrazinProjector T) =
+        1 - tripotentDrazinProjector T - tripotentDrazinProjector T +
+          tripotentDrazinProjector T * tripotentDrazinProjector T := by ring
+    _ = 1 - tripotentDrazinProjector T := by rw [hP]; ring
+
+omit [Invertible (2 : R)] in
 /-- The tripotent annihilates its Drazin null projector. -/
 theorem tripotent_annihilates_drazin_null_projector
     (T : R) (hT : T ^ 3 = T) :
@@ -108,6 +122,14 @@ theorem tripotent_annihilates_drazin_null_projector
     T * (1 - T * T) = T - T ^ 3 := by ring
     _ = T - T := by rw [hT]
     _ = 0 := by ring
+
+omit [Invertible (2 : R)] in
+/-- In a commutative ring the Drazin null projector is also right-annihilated. -/
+theorem tripotent_drazin_null_projector_annihilates
+    (T : R) (hT : T ^ 3 = T) :
+    tripotentDrazinNullProjector T * T = 0 := by
+  rw [mul_comm]
+  exact tripotent_annihilates_drazin_null_projector T hT
 
 /--
 Bundled finite Drazin/trifactor dictionary.

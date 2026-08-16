@@ -15,9 +15,15 @@ nonassociativity, Binet identities over radicals, Catalan/Cassini identities, or
 norm formulas. Those require later owner files.
 """
 
-from __future__ import annotations
-
+import sys
+from pathlib import Path
 import sympy as sp
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from tools.sympy.common import assert_matrix_eq
 
 
 def horadam_values(a, b, p, q, count: int) -> list[sp.Expr]:
@@ -29,11 +35,6 @@ def horadam_values(a, b, p, q, count: int) -> list[sp.Expr]:
 
 def ion(vals: list[sp.Expr], n: int, N: int) -> sp.Matrix:
     return sp.Matrix([vals[n + s] for s in range(N)])
-
-
-def assert_matrix_eq(label: str, actual: sp.Matrix, expected: sp.Matrix) -> None:
-    if sp.simplify(actual - expected) != sp.zeros(*actual.shape):
-        raise AssertionError(f"{label}:\nactual={actual}\nexpected={expected}")
 
 
 def main() -> None:

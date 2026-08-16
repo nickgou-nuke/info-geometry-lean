@@ -17,7 +17,7 @@ All hard colimit assertions are fields.  In particular, this structure does not
 construct the operator, prove a Fredholm determinant identity, prove the
 Riemann--Weil explicit formula, or prove RH.
 -/
-structure RelativeMBKDeterminantScatteringPacket
+structure RelativeMBKDeterminantScatteringData
     (Operator ScatteringMatrix DeterminantReadout : Type) where
   diracCutoff : Operator
   diracFree : Operator

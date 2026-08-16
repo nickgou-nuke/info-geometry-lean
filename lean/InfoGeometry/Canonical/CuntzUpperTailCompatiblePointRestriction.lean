@@ -47,11 +47,11 @@ def upperTailCompatibleCuntzPointFamily
   compatible_c := by
     intro j k hjk
     simpa [upperTailContinuousStarSystem] using
-      family.compatible_c (show j.1 ≤ k.1 from hjk)
+      family.map_c (show j.1 ≤ k.1 from hjk)
   compatible_cstar := by
     intro j k hjk
     simpa [upperTailContinuousStarSystem] using
-      family.compatible_cstar (show j.1 ≤ k.1 from hjk)
+      family.map_cstar (show j.1 ≤ k.1 from hjk)
 
 theorem upperTailCompatibleCuntzPointFamily_point
     (family : CompatibleCuntzPointFamily T.toContinuousStarInductiveSystem)

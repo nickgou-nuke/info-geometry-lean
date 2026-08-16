@@ -103,6 +103,81 @@ theorem canonicalNeutralBilin_nondegenerate :
   rcases X with ⟨x, ξ⟩
   simp [canonicalNeutralFormUnscaled, canonicalNeutralForm_apply]
 
+/-! The canonical para-complex and skew forms on `E ⊕ E*`. -/
+
+@[rep_depth operator]
+noncomputable def neutralParaInvolution :
+    Module.End ℝ (PhaseSpaceCarrier E) where
+  toFun := fun X => (X.1, -X.2)
+  map_add' := by
+    intro X Y
+    refine Prod.ext ?_ ?_
+    · rfl
+    · simp [add_comm]
+  map_smul' := by
+    intro r X
+    refine Prod.ext ?_ ?_
+    · rfl
+    · simp
+
+@[rep_depth operator, simp] theorem neutralParaInvolution_apply
+    (X : PhaseSpaceCarrier E) :
+    neutralParaInvolution X = (X.1, -X.2) := rfl
+
+@[rep_depth operator] theorem neutralParaInvolution_sq :
+    neutralParaInvolution (E := E) * neutralParaInvolution = 1 := by
+  apply LinearMap.ext
+  intro X
+  rcases X with ⟨x, ξ⟩
+  refine Prod.ext ?_ ?_
+  · rfl
+  · simp
+
+@[rep_depth operator] theorem canonicalNeutralBilin_para_anti_isometry
+    (X Y : PhaseSpaceCarrier E) :
+    canonicalNeutralBilin (E := E)
+        (neutralParaInvolution X) (neutralParaInvolution Y) =
+      -canonicalNeutralBilin (E := E) X Y := by
+  rcases X with ⟨x, ξ⟩
+  rcases Y with ⟨y, η⟩
+  simp [canonicalNeutralBilin_apply]
+  abel
+
+@[rep_depth operator]
+noncomputable def neutralOmega :
+    LinearMap.BilinForm ℝ (PhaseSpaceCarrier E) :=
+  -((canonicalNeutralBilin (E := E)).compl₂
+    (neutralParaInvolution (E := E))
+    )
+
+@[rep_depth operator, simp] theorem neutralOmega_apply
+    (X Y : PhaseSpaceCarrier E) :
+    neutralOmega (E := E) X Y = Y.2 X.1 - X.2 Y.1 := by
+  rcases X with ⟨x, ξ⟩
+  rcases Y with ⟨y, η⟩
+  simp [neutralOmega, neutralParaInvolution,
+    canonicalNeutralBilin_apply]
+  ring
+
+@[rep_depth operator] theorem neutralOmega_skew
+    (X Y : PhaseSpaceCarrier E) :
+    neutralOmega (E := E) X Y = -neutralOmega (E := E) Y X := by
+  rcases X with ⟨x, ξ⟩
+  rcases Y with ⟨y, η⟩
+  simp [neutralOmega_apply]
+
+@[rep_depth krein] theorem canonicalNeutralFormUnscaled_polar
+    (X Y : PhaseSpaceCarrier E) :
+    QuadraticMap.polar
+        (canonicalNeutralFormUnscaled (E := E)) X Y =
+      canonicalNeutralBilin (E := E) X Y := by
+  rcases X with ⟨x, ξ⟩
+  rcases Y with ⟨y, η⟩
+  rw [QuadraticMap.polar]
+  simp [canonicalNeutralFormUnscaled_apply,
+    canonicalNeutralBilin_apply]
+  ring
+
 @[rep_depth krein] theorem canonicalNeutralForm_eq_two_smul_canonicalNeutralFormUnscaled :
     canonicalNeutralForm (E := E) = (2 : ℝ) • canonicalNeutralFormUnscaled (E := E) := by
   ext X

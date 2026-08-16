@@ -9,10 +9,10 @@ available in the repository:
 
 * the square-lattice embedding `(u, v) ↦ (u, v, -u, -v, 0)` lands in the
   displayed `D₅` coordinate shadow;
-* the `y`-axis reflection corresponds to the `D₅` shadow matrix
-  `weylD5CrossSection 6`;
-* the diagonal reflection corresponds to the `D₅` shadow matrix
-  `weylD5CrossSection 5`.
+* the `y`-axis reflection is realized by the displayed `D₅` shadow matrix
+  `sigmaXMatrix`;
+* the diagonal reflection is realized by the displayed `D₅` shadow matrix
+  `sigmaDMatrix`.
 
 It does **not** construct a full wallpaper group carrier `ℤ² ⋊ D₄` or a global
 affine Weyl group `W_aff(D₅)`.  The full group-level carrier is not present in
@@ -64,14 +64,14 @@ theorem latticeEmbed_sum_zero (t : Z2) :
   rcases t with ⟨u, v⟩
   simp [latticeEmbed]
 
-/-- The `y`-axis reflection is realized by the `D₅` shadow matrix `6`. -/
+/-- The `y`-axis reflection is realized by the displayed `D₅` shadow matrix. -/
 theorem latticeEmbed_sigmaX (t : Z2) :
     matVec5 sigmaXMatrix (latticeEmbed t) = latticeEmbed (sigmaX t) := by
   rcases t with ⟨u, v⟩
   ext i
   fin_cases i <;> simp [matVec5, latticeEmbed, sigmaX, sigmaXMatrix]
 
-/-- The diagonal reflection is realized by the `D₅` shadow matrix `5`. -/
+/-- The diagonal reflection is realized by the displayed `D₅` shadow matrix. -/
 theorem latticeEmbed_sigmaD (t : Z2) :
     matVec5 sigmaDMatrix (latticeEmbed t) = latticeEmbed (sigmaD t) := by
   rcases t with ⟨u, v⟩

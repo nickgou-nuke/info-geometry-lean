@@ -595,11 +595,6 @@ namespace AlgebraicRNDensity
 
 variable {ω φ : AlgebraicState (R := R) (A := A)}
 
-/-- Readout of the RN representation law. -/
-theorem apply (D : AlgebraicRNDensity (R := R) (A := A) ω φ) (a : A) :
-    φ a = ω (D.density * a) :=
-  D.rn_law a
-
 /-- Normalization of the target state reads the density against the reference state. -/
 theorem density_normalized (D : AlgebraicRNDensity (R := R) (A := A) ω φ) :
     ω D.density = 1 := by
@@ -640,15 +635,6 @@ theorem AlgebraicRNDensity.comp_density
     (Dωφ.comp Dφψ).density = Dωφ.density * Dφψ.density :=
   rfl
 
-/-- Readout form of the algebraic Radon--Nikodym chain rule. -/
-theorem AlgebraicRNDensity.comp_apply
-    {ω φ ψ : AlgebraicState (R := R) (A := A)}
-    (Dωφ : AlgebraicRNDensity (R := R) (A := A) ω φ)
-    (Dφψ : AlgebraicRNDensity (R := R) (A := A) φ ψ)
-    (a : A) :
-    ψ a = ω ((Dωφ.density * Dφψ.density) * a) :=
-  (Dωφ.comp Dφψ).rn_law a
-
 /-- Absolute continuity is transitive by composing algebraic RN densities. -/
 def AlgebraicAbsolutelyContinuous.trans
     {ω φ ψ : AlgebraicState (R := R) (A := A)}
@@ -671,7 +657,7 @@ relative to a reference state.
 This is a finite, algebraic bridge from empirical averaging to density-state
 semantics: no positivity, topology, or analytic RN theorem is assumed.
 -/
-structure EmpiricalRNDensityPacket where
+structure EmpiricalRNDensityData where
   /-- Reference state against which the empirical state is represented. -/
   referenceState : AlgebraicState (R := K) (A := B)
   /-- Finite list of characters used to form the empirical target state. -/
@@ -684,29 +670,16 @@ structure EmpiricalRNDensityPacket where
     referenceState
     (empiricalState (K := K) (B := B) chars hchars)
 
-namespace EmpiricalRNDensityPacket
+namespace EmpiricalRNDensityData
 
-variable (P : EmpiricalRNDensityPacket (K := K) (B := B))
-
-/-- The list-sum empirical state is represented by the supplied RN density. -/
-theorem empirical_eq_reference_density_readout (a : B) :
-    empiricalState (K := K) (B := B) P.chars P.hchars a =
-      P.referenceState (P.rnDensity.density * a) :=
-  P.rnDensity.rn_law a
-
-/-- The recursive empirical state has the same RN density readout. -/
-theorem empirical_recursive_eq_reference_density_readout (a : B) :
-    empiricalStateRecursive (K := K) (B := B) P.chars P.hchars a =
-      P.referenceState (P.rnDensity.density * a) := by
-  rw [empiricalStateRecursive_toLinearMap]
-  exact P.rnDensity.rn_law a
+variable (P : EmpiricalRNDensityData (K := K) (B := B))
 
 /-- The empirical RN density is normalized against the reference state. -/
 theorem empirical_density_normalized :
     P.referenceState P.rnDensity.density = 1 :=
   P.rnDensity.density_normalized
 
-end EmpiricalRNDensityPacket
+end EmpiricalRNDensityData
 
 end EmpiricalRN
 
@@ -721,7 +694,7 @@ represented as a density over a reference state.  This packet is algebraic
 owner-side data only: it does not assert positivity, completion, modular-flow
 generation, or any general noncommutative Radon--Nikodym theorem.
 -/
-structure ErlangenJaynesGromovPacket where
+structure ErlangenJaynesGromovData where
   /-- The underlying operator Erlangen system. -/
   system : OperatorErlangenSystem R A S
   /-- Reference state/weight. -/
@@ -733,9 +706,9 @@ structure ErlangenJaynesGromovPacket where
   /-- Algebraic RN-density datum, if supplied. -/
   rnDensity : AlgebraicRNDensity (R := R) (A := A) referenceState targetState
 
-namespace ErlangenJaynesGromovPacket
+namespace ErlangenJaynesGromovData
 
-variable (P : ErlangenJaynesGromovPacket (R := R) (A := A) (S := S))
+variable (P : ErlangenJaynesGromovData (R := R) (A := A) (S := S))
 
 /-- The Gromov projection is idempotent on observables. -/
 theorem gromov_projection_idempotent (a : A) :
@@ -748,17 +721,12 @@ theorem gromov_projection_equivariant (s : S) (a : A) :
       P.system.act s (P.projection.project a) :=
   P.projection.equivariant s a
 
-/-- The target state is represented by the RN density over the reference state. -/
-theorem target_eq_reference_density_readout (a : A) :
-    P.targetState a = P.referenceState (P.rnDensity.density * a) :=
-  P.rnDensity.rn_law a
-
 /-- The supplied RN density is normalized against the reference state. -/
 theorem rn_density_normalized :
     P.referenceState P.rnDensity.density = 1 :=
   P.rnDensity.density_normalized
 
-end ErlangenJaynesGromovPacket
+end ErlangenJaynesGromovData
 
 /-! ## 9. Universal parabolic sector -/
 

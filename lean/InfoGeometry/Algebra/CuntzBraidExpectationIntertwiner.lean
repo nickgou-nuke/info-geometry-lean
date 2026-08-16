@@ -6,9 +6,9 @@ import InfoGeometry.Algebra.CuntzTensorTreeRealizationBridge
 
 This file constructs the genuine algebraic action of finite label permutations
 on the Cuntz quotient.  It records the action on arbitrary Cuntz words and its
-first-level compatibility with the algebraic expectation.  The permutation
-action is a symmetric-group reference sector: involutive generators have
-trivial monodromy.  No Spin-space intertwiner, Yang--Baxter operator,
+global compatibility with the algebraic expectation.  The permutation action
+is a symmetric-group reference sector: involutive generators have trivial
+monodromy.  No Spin-space intertwiner, Yang--Baxter operator,
 C*-completion, localized endomorphism, or Jones-type structure is asserted.
 -/
 
@@ -390,11 +390,9 @@ theorem expectation_permutedRangeProjector_sum (σ : Equiv.Perm (Fin n)) :
   rw [permutedRangeProjector_sum_one σ]
   exact expectation_one n
 
-/--
-The finite permutation shadow preserves every cylinder of length one after
-reindexing its label.  This is first-level expectation compatibility, not yet
-the global theorem `expectation ∘ α = α ∘ expectation` on the whole quotient.
--/
+/-- The finite permutation action preserves the conditional expectation on
+every element of the algebraic Cuntz quotient; the length-one projector
+statement below is a concrete corollary. -/
 theorem expectation_fixes_permutedRangeProjector
     (σ : Equiv.Perm (Fin n)) (i : Fin n) :
     expectation n (permutedRangeProjector σ i) =

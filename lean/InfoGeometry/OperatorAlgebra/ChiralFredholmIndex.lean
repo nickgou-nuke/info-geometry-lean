@@ -76,6 +76,26 @@ theorem index_eq_finrank_ker_sub_finrank_coker :
         (Module.finrank ℝ (W ⧸ LinearMap.range F.operator) : ℤ) :=
   rfl
 
+/--
+If the operator is bijective, both the kernel and cokernel vanish, so the
+native algebraic Fredholm index is zero.  This is deliberately stated for
+the abstract datum and does not invoke any analytic Fredholm theory.
+-/
+theorem index_eq_zero_of_bijective
+    (hbij : Function.Bijective F.operator) :
+    F.index = 0 := by
+  unfold FredholmIndexDatum.index
+  have hker : LinearMap.ker F.operator = ⊥ :=
+    LinearMap.ker_eq_bot.mpr hbij.1
+  have hrange : LinearMap.range F.operator = ⊤ :=
+    LinearMap.range_eq_top.mpr hbij.2
+  rw [hker, hrange]
+  have hzero : Module.finrank ℝ
+      (W ⧸ (⊤ : Submodule ℝ W)) = 0 := by
+    exact Module.finrank_zero_of_subsingleton
+  rw [hzero]
+  simp
+
 end FredholmIndexDatum
 
 /-! ## 2. Chiral kernel-count shadow -/

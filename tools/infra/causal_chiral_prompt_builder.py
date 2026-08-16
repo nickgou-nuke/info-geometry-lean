@@ -22,18 +22,8 @@ else:
 SCHEMA = "info_geometry.causal_chiral_prompt_packet.v1"
 
 
-def iter_jsonl(path: Path):
-    if not path.exists():
-        return
-    with path.open("r", encoding="utf-8") as handle:
-        for line in handle:
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                yield json.loads(line)
-            except json.JSONDecodeError:
-                continue
+# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
+from igf.common.json_io import iter_jsonl
 
 
 def load_decl_index(path: Path) -> dict[str, dict[str, Any]]:

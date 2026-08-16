@@ -35,6 +35,20 @@ def cl11ToMatrix_sq_statement : Prop :=
     cl11ToMatrix v * cl11ToMatrix v =
       algebraMap ℚ (Matrix (Fin 2) (Fin 2) ℝ) (q11 v)
 
+/-- The displayed split-quaternion matrices satisfy the `(1,1)` quadratic relation. -/
+theorem cl11ToMatrix_sq : cl11ToMatrix_sq_statement := by
+  intro v
+  have hv : v = ![v 0, v 1] := by
+    funext i
+    fin_cases i <;> rfl
+  rw [hv]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [cl11ToMatrix, q11, QuadraticMap.proj_apply,
+      Algebra.algebraMap_eq_smul_one, splitI, splitJ,
+      Matrix.mul_apply, Fin.sum_univ_two] <;>
+    ring
+
 end
 
 end InfoGeometry.Recovered.CliffordMatrixBridge

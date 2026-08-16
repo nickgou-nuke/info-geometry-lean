@@ -66,12 +66,7 @@ from outreach_task_spec import (  # noqa: E402
 # ---------------------------------------------------------------------------
 
 
-def _now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
-
-
-def _now_tag() -> str:
-    return datetime.now().strftime("%Y%m%d_%H%M%S")
+from igf.common.time_utils import now_tag as _now_tag, utc_now_iso as _now_iso
 
 
 def writeback_log(msg: str) -> None:

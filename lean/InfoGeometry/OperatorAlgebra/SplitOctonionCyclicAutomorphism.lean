@@ -38,6 +38,16 @@ theorem rho_ePlus : rho ePlus = ePlus := by
 theorem rho_eMinus : rho eMinus = eMinus := by
   exact Eq.refl eMinus
 
+/-- The cyclic map preserves the additive zero. -/
+@[simp] theorem rho_zero : rho (0 : SplitOct) = 0 := by
+  rfl
+
+/-- The cyclic map is additive on the explicit Zorn carrier. -/
+theorem rho_add (X Y : SplitOct) : rho (X + Y) = rho X + rho Y := by
+  cases X
+  cases Y
+  rfl
+
 /-- `rho` cyclically permutes the upper `1 + 3` vector slots. -/
 theorem rho_upper_slots : rho up0 = up1 ∧ rho up1 = up2 ∧ rho up2 = up0 := by
   exact ⟨Eq.refl up1, Eq.refl up2, Eq.refl up0⟩

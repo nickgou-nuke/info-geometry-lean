@@ -1,26 +1,22 @@
-import Mathlib.Tactic
+import InfoGeometry.Canonical.SouriauTheoremTranslatorPacket
 
 namespace Automath.Generated
 
-variable {E : Type*}
-variable [NormedAddCommGroup E] [NormedSpace ℝ E]
+open InfoGeometry.Canonical.SouriauTheoremTranslatorPacket
 
-/-- A continuous bilinear form representing either an entropy Hessian or an
-inverse information metric on the thermodynamic parameter space `E`. -/
-abbrev ThermodynamicBilinearForm (E : Type*)
-    [NormedAddCommGroup E] [NormedSpace ℝ E] :=
-  E →L[ℝ] E →L[ℝ] ℝ
-
-/--
-The Hessian of the Massieu/entropy potential equals the inverse of the
-Souriau–Fisher information metric.
+/-!
+This generated module is only a compatibility consumer.  It does not prove
+the analytic identity `Hess(S) = Fisher⁻¹`: that identity is an explicit
+stage-2 gate in the canonical translator packet.  Keeping the gate visible
+prevents a pointwise identification supplied by a caller from being advertised
+as a native Hessian/Fisher derivation.
 -/
-theorem entropyHessian_eq_fisherInverse
-    (entropyHessian fisherInverse : ThermodynamicBilinearForm E)
-    (hIdentification :
-      ∀ x y : E, entropyHessian x y = fisherInverse x y) :
-    entropyHessian = fisherInverse := by
-  ext x y
-  exact hIdentification x y
+
+/-- Read the inverse-Hessian equality from its explicit proof-carrying gate. -/
+theorem entropyHessian_eq_fisherInverse_of_gate
+    {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+    (G : EntropyFisherInverseGate E) :
+    G.entropyHessian = G.fisherInverse :=
+  G.entropy_hessian_eq_fisher_inverse
 
 end Automath.Generated

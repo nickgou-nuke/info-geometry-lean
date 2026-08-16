@@ -72,12 +72,23 @@ theorem negativeVectorPin_orthogonalAction_eq_quadraticReflectionElement
   rw [negativeVectorPin_twistedAction_eq_quadraticReflection]
   rfl
 
+noncomputable def negativeQuadraticReflectionElement
+    (v : V55) (hv : Q55 v = -1) : orthogonalGroup55 :=
+  quadraticReflectionElement v (by simp [hv])
+
 def negativeQuadraticReflectionSet : Set orthogonalGroup55 :=
   {g | ∃ (v : V55) (hv : Q55 v = -1),
-      g = quadraticReflectionElement v (by simp [hv])}
+      g = negativeQuadraticReflectionElement v hv}
 
 def negativeQuadraticReflectionSubgroup : Subgroup orthogonalGroup55 :=
   Subgroup.closure negativeQuadraticReflectionSet
+
+theorem negativeQuadraticReflectionElement_mem
+    (v : V55) (hv : Q55 v = -1) :
+    negativeQuadraticReflectionElement v hv ∈
+      negativeQuadraticReflectionSubgroup := by
+  apply Subgroup.subset_closure
+  exact ⟨v, hv, rfl⟩
 
 theorem negativeQuadraticReflectionSubgroup_le_pinImage :
     negativeQuadraticReflectionSubgroup ≤

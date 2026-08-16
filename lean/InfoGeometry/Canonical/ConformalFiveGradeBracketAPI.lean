@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.ConformalFiveGradeClosurePacket
+import InfoGeometry.Canonical.ConformalFiveGradeSectorSeparation
 import InfoGeometry.OperatorAlgebra.WeylWeightBalance
 
 /-!
@@ -19,7 +19,6 @@ noncomputable section
 
 namespace InfoGeometry.Canonical.ConformalFiveGradeBracketAPI
 
-open InfoGeometry.Canonical.ConformalFiveGradeClosurePacket
 open InfoGeometry.Canonical.ConformalFiveGradeCurrentPacket
 open InfoGeometry.Canonical.ConformalFiveGradeInversion
 open InfoGeometry.OperatorAlgebra.WeylWeightBalance
@@ -70,6 +69,12 @@ namespace FiveGradeBracketPacket
 variable {L ι R : Type*}
 variable [Fintype ι] [DecidableEq ι] [Ring R]
 
+private theorem has_grade_compat
+    (P : FiveGradeBracketPacket L ι R) :
+    ∀ x : L,
+      P.gradeCarrier.gradeOf x = toWeylGrade (P.closure.inversion.grade x) := by
+  exact P.gradeCompat
+
 /-- The source sector has weight `+2`. -/
 theorem source_weight
     (P : FiveGradeBracketPacket L ι R)
@@ -79,7 +84,7 @@ theorem source_weight
   have hxgrade :
       P.closure.inversion.grade x = ConformalGrade.posTwo := by
     simpa [FiveGradeBoundaryCurrentPacket.sourceSet] using hx
-  rw [P.gradeCompat x, hxgrade]
+  rw [P.has_grade_compat x, hxgrade]
   simp [toWeylGrade, FiveGrade.weight]
 
 /-- The sink sector has weight `-2`. -/
@@ -91,7 +96,7 @@ theorem sink_weight
   have hxgrade :
       P.closure.inversion.grade x = ConformalGrade.negTwo := by
     simpa [FiveGradeBoundaryCurrentPacket.sinkSet] using hx
-  rw [P.gradeCompat x, hxgrade]
+  rw [P.has_grade_compat x, hxgrade]
   simp [toWeylGrade, FiveGrade.weight]
 
 /-- The incoming boundary sector has weight `-1`. -/
@@ -103,7 +108,7 @@ theorem incoming_weight
   have hxgrade :
       P.closure.inversion.grade x = ConformalGrade.negOne := by
     simpa [FiveGradedConformalInversion.incomingSet] using hx
-  rw [P.gradeCompat x, hxgrade]
+  rw [P.has_grade_compat x, hxgrade]
   simp [toWeylGrade, FiveGrade.weight]
 
 /-- The outgoing boundary sector has weight `+1`. -/
@@ -115,7 +120,7 @@ theorem outgoing_weight
   have hxgrade :
       P.closure.inversion.grade x = ConformalGrade.posOne := by
     simpa [FiveGradedConformalInversion.outgoingSet] using hx
-  rw [P.gradeCompat x, hxgrade]
+  rw [P.has_grade_compat x, hxgrade]
   simp [toWeylGrade, FiveGrade.weight]
 
 /-- The modular center has weight `0`. -/
@@ -127,7 +132,7 @@ theorem center_weight
   have hxgrade :
       P.closure.inversion.grade x = ConformalGrade.zero := by
     simpa [FiveGradeBoundaryCurrentPacket.centerSet] using hx
-  rw [P.gradeCompat x, hxgrade]
+  rw [P.has_grade_compat x, hxgrade]
   simp [toWeylGrade, FiveGrade.weight]
 
 /-- Source and sink are weight-balanced. -/

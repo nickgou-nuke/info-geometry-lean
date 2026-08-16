@@ -30,7 +30,7 @@ that wants to invoke the owner theorems directly.
 @[rep_depth transport]
 structure BinaryCrystalSouriauWeylBridge
     (G : Type*) [Group G] [MulAction G BinaryLattice] (𝔤 : Type*) where
-  crystal : BinaryCrystalWeylBlochPacket G
+  crystal : BinaryCrystalWeylBlochData G
   souriauWeyl : SouriauWeylPartitionPacket 𝔤
 
 end InfoGeometry.Canonical.BinaryCrystalSouriauWeyl

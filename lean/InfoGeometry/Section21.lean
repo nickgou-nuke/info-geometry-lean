@@ -90,13 +90,4 @@ theorem spinConnectionWithContorsionFinite_zero
     spinConnectionWithContorsionFinite omegaLeviCivita 0 mu = omegaLeviCivita mu :=
   Section12.spinConnectionWithContorsion_zero omegaLeviCivita mu
 
-theorem section21_capstone :
-    spinorProjector * spinorProjector = spinorProjector ∧
-    (∀ e : Vielbein, ∀ mu nu : Fin 4, inducedMetric e mu nu = inducedMetric e nu mu) ∧
-    (∀ mu nu : Fin 4, gammaSigma nu mu = -gammaSigma mu nu) ∧
-    (∀ omegaLeviCivita : SpinConnection, ∀ mu : Fin 4,
-      spinConnectionWithContorsionFinite omegaLeviCivita 0 mu = omegaLeviCivita mu) := by
-  exact ⟨spinorProjector_idempotent, inducedMetric_symmetric, gammaSigma_antisymmetric,
-    spinConnectionWithContorsionFinite_zero⟩
-
 end Section21

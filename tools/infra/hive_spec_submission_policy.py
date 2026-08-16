@@ -31,25 +31,12 @@ DEFAULT_ALLOWED_AXIOMS = ("propext", "Quot.sound", "Classical.choice")
 UNSOUND_MARKERS = ("sorry", "admit", "axiom")
 
 
-def stable_hash(payload: Any) -> str:
-    text = json.dumps(payload, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha1(text.encode("utf-8")).hexdigest()
+# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
+from igf.common.hashing import stable_hash
 
 
-def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
-    if not path.exists():
-        return
-    with path.open("r", encoding="utf-8") as handle:
-        for raw in handle:
-            line = raw.strip()
-            if not line:
-                continue
-            try:
-                row = json.loads(line)
-            except Exception:
-                continue
-            if isinstance(row, dict):
-                yield row
+# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
+from igf.common.json_io import iter_jsonl
 
 
 def unsound_marker_hits(text: str) -> list[str]:
@@ -144,11 +131,8 @@ def validate_spec_submission_pair(spec: dict[str, Any], submission: dict[str, An
     return violations
 
 
-def load_json(path: Path) -> dict[str, Any]:
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(payload, dict):
-        raise SystemExit(f"{path} must contain a JSON object")
-    return payload
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def load_audit_rows(path: Path | None) -> list[dict[str, Any]]:

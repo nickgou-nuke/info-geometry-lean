@@ -174,30 +174,4 @@ the Bott periodicity tower to CL(5,5) and O(5,5).
 split-orthogonal action.
 -/
 
-/--
-**Bott Periodicity Reconciliation Capstone** (Genuine Proof).
-
-The self-similarity CL(1,1)⁵ = CL(5,5) ≅ M₃₂(ℝ) together with the
-trifactor determinant classifier det(T) ∈ {-1,0,1} provides a unified
-description of split orthogonal geometry from a single CL(1,1) block.
-
-Genuinely proved:
-  1. CL(1,1) generators: e₁²=I, e₂²=-I, {e₁,e₂}=0 (entrywise)
-  2. CL(1,1) ≅ M₂(ℝ): Pauli basis spans all 2×2 real matrices
-  3. The Bott tower: CL(1,1)ⁿ = CL(n,n) by tensor product (structural)
-
-Zero axioms. Zero sorries.
--/
-theorem bott_trifactor_capstone :
-    (-- CL(1,1) generators: e₁²=I, e₂²=-I, {e₁,e₂}=0
-     sigma1 * sigma1 = I2 ∧ epsilon * epsilon = -I2 ∧
-     sigma1 * epsilon + epsilon * sigma1 = 0) ∧
-    (-- CL(1,1) ≅ M₂(ℝ): the Pauli basis spans all 2×2 real matrices
-     ∀ A : Matrix (Fin 2) (Fin 2) ℝ,
-       ∃ (a b c d : ℝ),
-         A = a • I2 + b • sigma1 + c • epsilon + d • sigma3) := by
-  refine ⟨?_, ?_⟩
-  · exact cl11_generator_relations
-  · exact cl11_basis_spans_M2
-
 end BottPeriodicityReconciliation

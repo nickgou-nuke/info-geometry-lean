@@ -43,45 +43,17 @@ theorem spinActionOrthogonal_eq_pinOrthogonalAction (g : Spin55) :
     simpa using (spinGroup.involute_eq g.property)
   simpa only [pinTwistedAdj, hu, hinv]
 
-noncomputable def fNegPinTwistedOrthogonal (i : Fin 5) : orthogonalGroup55 :=
-  ⟨pinTwistedActionEquiv (fNegPin i), by
-    rw [pinTwistedActionEquiv_fNegPin_eq_negativeReflection]
-    exact negativeReflection_preserves_Q55 i⟩
+noncomputable def spinActionOrthogonalHom : Spin55 →* orthogonalGroup55 :=
+  pinOrthogonalAction.comp spinToPinHom
 
-theorem fNegPinTwistedOrthogonal_eq_coordinateReflection (i : Fin 5) :
-    fNegPinTwistedOrthogonal i = coordinateReflectionGenerator i := by
-  apply Subtype.ext
-  exact pinTwistedActionEquiv_fNegPin_eq_negativeReflection i
+theorem spinActionOrthogonalHom_eq_pinOrthogonalAction_comp :
+    spinActionOrthogonalHom =
+      pinOrthogonalAction.comp spinToPinHom :=
+  rfl
 
-noncomputable def globalSheetPinTwistedOrthogonal : orthogonalGroup55 :=
-  ⟨pinTwistedActionEquiv globalSheetPin, by
-    rw [pinTwistedActionEquiv_globalSheetPin_eq_globalSheetReflection]
-    exact globalSheetReflection_preserves_Q55⟩
-
-theorem globalSheetPinTwistedOrthogonal_eq_coordinateReflection :
-    globalSheetPinTwistedOrthogonal = globalSheetReflectionGenerator := by
-  apply Subtype.ext
-  exact pinTwistedActionEquiv_globalSheetPin_eq_globalSheetReflection
-
-noncomputable def spinActionOrthogonalHom : Spin55 →* orthogonalGroup55 where
-  toFun := spinActionOrthogonal
-  map_one' := by
-    apply Subtype.ext
-    apply LinearEquiv.ext
-    intro v
-    change pinTwistedActionEquiv (spinToPin (1 : Spin55)) v = v
-    rw [show spinToPin (1 : Spin55) = 1 by rfl]
-    change pinTwistedAction (1 : Pin55) v = v
-    rw [pinTwistedAction_one]
-    rfl
-  map_mul' g h := by
-    apply Subtype.ext
-    apply LinearEquiv.ext
-    intro v
-    change pinTwistedActionEquiv (spinToPin (g * h)) v =
-      (pinTwistedActionEquiv (spinToPin g) *
-        pinTwistedActionEquiv (spinToPin h)) v
-    rw [show spinToPin (g * h) = spinToPin g * spinToPin h by rfl]
-    exact pinTwistedActionEquiv_mul_apply (spinToPin g) (spinToPin h) v
+theorem spinActionOrthogonalHom_apply (g : Spin55) :
+    spinActionOrthogonalHom g = spinActionOrthogonal g := by
+  rw [spinActionOrthogonal_eq_pinOrthogonalAction]
+  rfl
 
 end InfoGeometry.Clifford.Clifford55

@@ -10,10 +10,10 @@ from pathlib import Path
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-    from tools.quality.common import QUARANTINE_MANIFEST_PATH
+    from tools.quality.common import QUARANTINE_MANIFEST_PATH, line_of, module_to_path, rel
     from tools.pathing import repo_root
 else:
-    from tools.quality.common import QUARANTINE_MANIFEST_PATH
+    from tools.quality.common import QUARANTINE_MANIFEST_PATH, line_of, module_to_path, rel
     from tools.pathing import repo_root
 
 ROOT = repo_root()
@@ -86,20 +86,6 @@ class Finding:
     detail: str
 
 
-def rel(path: Path) -> str:
-    return path.relative_to(ROOT).as_posix()
-
-
-def module_to_path(module: str) -> Path | None:
-    lean_path = ROOT / "lean" / Path(module.replace(".", "/")).with_suffix(".lean")
-    if lean_path.exists():
-        return lean_path
-    direct_path = ROOT / Path(module.replace(".", "/")).with_suffix(".lean")
-    if direct_path.exists():
-        return direct_path
-    return None
-
-
 def read_quarantine_manifest() -> dict[str, str]:
     manifest: dict[str, str] = {}
     for raw_line in MANIFEST.read_text().splitlines():
@@ -145,10 +131,6 @@ def iter_files(mode: str) -> list[Path]:
             continue
         stable_files.append(path)
     return stable_files
-
-
-def line_of(text: str, offset: int) -> int:
-    return text.count("\n", 0, offset) + 1
 
 
 def strip_comments(

@@ -276,19 +276,4 @@ structure DeterminantVandermondeComparisonGate
   compare : DeterminantReadout → VandermondeReadout → Prop
   valid_law : compare determinant vandermonde
 
-namespace DeterminantVandermondeComparisonGate
-
-/--
-Explicit debt: a determinant/Vandermonde comparison needs a concrete owner
-model, not a caller-chosen predicate bundled with its own proof.
--/
-theorem valid
-    {DeterminantReadout VandermondeReadout : Type*}
-    (G : DeterminantVandermondeComparisonGate
-      DeterminantReadout VandermondeReadout) :
-    G.compare G.determinant G.vandermonde :=
-    G.valid_law
-
-end DeterminantVandermondeComparisonGate
-
 end InfoGeometry.Arithmetic.MobiusFermionBosonization

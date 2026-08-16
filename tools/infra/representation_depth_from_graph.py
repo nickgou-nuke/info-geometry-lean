@@ -26,17 +26,8 @@ DEPTH_SLUGS = {
 }
 
 
-def read_jsonl(path: Path) -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
-    with path.open("r", encoding="utf-8") as handle:
-        for line in handle:
-            line = line.strip()
-            if line:
-                row = json.loads(line)
-                if not isinstance(row, dict):
-                    raise ValueError(f"{path}: expected JSON object rows")
-                rows.append(row)
-    return rows
+# [lossless-compact] read_jsonl folded into igf.common.json_io.read_jsonl
+from igf.common.json_io import read_jsonl
 
 
 def as_int(value: Any) -> int | None:

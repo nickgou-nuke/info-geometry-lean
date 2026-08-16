@@ -33,6 +33,7 @@ import InfoGeometry.Quantum.QutritCircuitGeometry
 import InfoGeometry.Quantum.QutritDensityMatrix
 import InfoGeometry.Quantum.QutritGates
 import InfoGeometry.Quantum.QutritMeasurement
+import InfoGeometry.Quantum.QutritSquareRootDensityBridge
 import InfoGeometry.Quantum.QutritMobiusFiniteFlowClassification
 import InfoGeometry.Quantum.QutritMobiusTripotentOrientationBridge
 import InfoGeometry.Quantum.QutritProjectiveColorBridge

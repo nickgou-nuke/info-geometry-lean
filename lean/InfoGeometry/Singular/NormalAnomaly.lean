@@ -36,9 +36,9 @@ lemma EP_implies_group_inverse
     (hMP : IsMoorePenroseInverse A B)
     (hEP : IsEP A B hMP) :
     B * A * B = B ∧ A * B = B * A ∧ A = A * A * B := by
-  refine ⟨hMP.eq2, hEP, ?_⟩
+  refine ⟨hMP.bab_eq_b, hEP, ?_⟩
   calc
-    A = A * B * A := hMP.eq1.symm
+    A = A * B * A := hMP.aba_eq_a.symm
     _ = A * (B * A) := by rw [mul_assoc]
     _ = A * (A * B) := by rw [← hEP]
     _ = A * A * B := by rw[← mul_assoc]

@@ -171,6 +171,54 @@ theorem Pleft_sub_Pright :
             rw [smul_smul]
             norm_num
 
+@[simp] theorem chi_mul_Pleft :
+    C.chi * C.Pleft = C.Pleft := by
+  dsimp [Pleft]
+  rw [Algebra.mul_smul_comm]
+  congr 1
+  calc
+    C.chi * ((1 : Op) + C.chi) = C.chi + C.chi * C.chi := by
+      noncomm_ring
+    _ = C.chi + 1 := by rw [C.chi_sq]
+    _ = (1 : Op) + C.chi := by abel
+
+@[simp] theorem chi_mul_Pright :
+    C.chi * C.Pright = -C.Pright := by
+  dsimp [Pright]
+  rw [Algebra.mul_smul_comm]
+  have h : C.chi * ((1 : Op) - C.chi) =
+      -((1 : Op) - C.chi) := by
+    calc
+      C.chi * ((1 : Op) - C.chi) = C.chi - C.chi * C.chi := by
+        noncomm_ring
+      _ = C.chi - 1 := by rw [C.chi_sq]
+      _ = -((1 : Op) - C.chi) := by abel
+  rw [h, smul_neg]
+
+@[simp] theorem Pleft_mul_chi :
+    C.Pleft * C.chi = C.Pleft := by
+  dsimp [Pleft]
+  rw [smul_mul_assoc]
+  congr 1
+  calc
+    ((1 : Op) + C.chi) * C.chi = C.chi + C.chi * C.chi := by
+      noncomm_ring
+    _ = C.chi + 1 := by rw [C.chi_sq]
+    _ = (1 : Op) + C.chi := by abel
+
+@[simp] theorem Pright_mul_chi :
+    C.Pright * C.chi = -C.Pright := by
+  dsimp [Pright]
+  rw [smul_mul_assoc]
+  have h : ((1 : Op) - C.chi) * C.chi =
+      -((1 : Op) - C.chi) := by
+    calc
+      ((1 : Op) - C.chi) * C.chi = C.chi - C.chi * C.chi := by
+        noncomm_ring
+      _ = C.chi - 1 := by rw [C.chi_sq]
+      _ = -((1 : Op) - C.chi) := by abel
+  rw [h, smul_neg]
+
 /--
 Export the constructive involution as the broader proof-carrying
 `CircularPolarization` socket.

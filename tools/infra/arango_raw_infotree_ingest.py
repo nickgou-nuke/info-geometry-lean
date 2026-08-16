@@ -271,16 +271,8 @@ def collection_count(target: ArangoTarget, collection: str) -> int:
     return count if isinstance(count, int) else -1
 
 
-def iter_jsonl(path: Path) -> Iterator[dict[str, Any]]:
-    with path.open("r", encoding="utf-8") as handle:
-        for line_no, line in enumerate(handle, start=1):
-            line = line.strip()
-            if not line:
-                continue
-            row = json.loads(line)
-            if not isinstance(row, dict):
-                raise ValueError(f"{path}:{line_no}: expected JSON object")
-            yield row
+# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
+from igf.common.json_io import iter_jsonl
 
 
 def count_jsonl(path: Path) -> int:

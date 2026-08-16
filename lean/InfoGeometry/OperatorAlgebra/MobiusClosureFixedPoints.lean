@@ -58,15 +58,6 @@ theorem theta_theta
     Θ.theta (Θ.theta x) = x :=
   Θ.theta_sq x
 
-/--
-If an element is fixed, applying the closure map does nothing.
--/
-theorem theta_eq_self_of_fixed
-    {x : X}
-    (h : Θ.IsFixed x) :
-    Θ.theta x = x :=
-  h
-
 end ClosureInvolution
 
 /-! ## 2. Linear closure involution and e₋/e₊ pairs -/

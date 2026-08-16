@@ -38,10 +38,10 @@ variable [∀ n, Semiring (A n)] [∀ n, Algebra R (A n)]
 A stationary Bayesian state on the tensor limit is read out as a finite
 degree-one Hodge current.
 -/
-structure BayesianMarkovHodgePacket
+structure BayesianMarkovHodgeData
     (bond : ∀ n : ℕ, A n →ₐ[R] A (n + 1))
     (L : TensorInductiveLimit bond) where
-  kms : KMSStationarityPacket L
+  kms : KMSStationarityData L
   n0 : ℕ
   n1 : ℕ
   n2 : ℕ
@@ -52,11 +52,11 @@ structure BayesianMarkovHodgePacket
   stateToCurrent_eq : stateToCurrent kms.kmsState = current
   harmonic_current : IsHarmonicCodeState d0 d1 current
 
-namespace BayesianMarkovHodgePacket
+namespace BayesianMarkovHodgeData
 
 variable {bond : ∀ n : ℕ, A n →ₐ[R] A (n + 1)}
 variable {L : TensorInductiveLimit bond}
-variable (B : BayesianMarkovHodgePacket (A := A) bond L)
+variable (B : BayesianMarkovHodgeData (A := A) bond L)
 
 /-- The stationary KMS state is read out as the supplied current. -/
 theorem stationary_current_readout :
@@ -99,6 +99,6 @@ theorem stationary_current_hodge_protection
   hodge_orthogonal_protection B.d0 B.d1
     (B.stationary_current_is_harmonic) he hc
 
-end BayesianMarkovHodgePacket
+end BayesianMarkovHodgeData
 
 end InfoGeometry.Canonical.BayesianMarkovHodgeBridge

@@ -71,6 +71,37 @@ theorem IsAlgebraicallyPositive.normal [Semigroup A]
     IsNormalElement x :=
   hx.self_adjoint.normal
 
+/-- Positive elements are stable under the noncommutative sandwich action.
+
+This is the algebraic counterpart of `A* X A` preserving a positive cone.  It
+uses only the existing `star` anti-multiplicativity and does not assume a
+commutative or diagonal model. -/
+theorem IsAlgebraicallyPositive.sandwich
+    {x : A} (hx : IsAlgebraicallyPositive x)
+    (hassoc : ∀ x y z : A, x * y * z = x * (y * z)) (a : A) :
+    IsAlgebraicallyPositive (star a * x * a) := by
+  rcases hx with ⟨y, rfl⟩
+  refine ⟨y * a, ?_⟩
+  calc
+    star a * (star y * y) * a = (star a * star y) * (y * a) := by
+      calc
+        star a * (star y * y) * a = star a * ((star y * y) * a) := by
+          exact hassoc _ _ _
+        _ = star a * (star y * (y * a)) := by
+          exact congrArg (fun z => star a * z) (hassoc _ _ _)
+        _ = (star a * star y) * (y * a) := by
+          exact (hassoc _ _ _).symm
+
+    _ = star (y * a) * (y * a) := by
+      rw [star_mul]
+
+/-- Set-level form of noncommutative sandwich closure. -/
+theorem sandwich_mem_algebraicPositiveCone
+    {x : A} (hx : x ∈ algebraicPositiveCone A)
+    (hassoc : ∀ x y z : A, x * y * z = x * (y * z)) (a : A) :
+    star a * x * a ∈ algebraicPositiveCone A :=
+  IsAlgebraicallyPositive.sandwich hx hassoc a
+
 /-- Membership readback for the algebraic positive cone. -/
 theorem mem_algebraicPositiveCone_iff (x : A) :
     x ∈ algebraicPositiveCone A ↔ IsAlgebraicallyPositive x :=

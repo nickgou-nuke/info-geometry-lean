@@ -1,6 +1,7 @@
 import InfoGeometry.Topology.CantorBoundaryCuntzFamily
 import InfoGeometry.Topology.ArtinMonodromyPin55
 import InfoGeometry.External.Auto.UHFInductiveColimit
+import InfoGeometry.Clifford.Clifford55AnomalyOSP
 
 /-!
 # Möbius symmetry, Cantor fractal self-similarity, and TKK closure

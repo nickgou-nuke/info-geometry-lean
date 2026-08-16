@@ -62,8 +62,8 @@ twistor owner.  The explicit property below is the nonzero vector
 abbrev PenroseProjectiveNullTwistor : Type :=
   InfoGeometry.Twistor.PenroseTwistor.NullTwistorSpace
 
-noncomputable def penroseProjectiveNullTwistor_nonempty :
-    Nonempty PenroseProjectiveNullTwistor := by
+noncomputable def penroseProjectiveNullTwistor :
+    PenroseProjectiveNullTwistor := by
   let z : InfoGeometry.Twistor.PenroseTwistor.TwistorCarrier :=
     fun i => if i = 0 then 1 else if i = 2 then 1 else 0
   have hz : z ≠ 0 := by
@@ -75,6 +75,10 @@ noncomputable def penroseProjectiveNullTwistor_nonempty :
       InfoGeometry.Twistor.PenroseTwistor.twistorHermitian_apply]
     norm_num [z, Fin.sum_univ_succ]
     simp [z]
-  exact ⟨InfoGeometry.Twistor.PenroseTwistor.twistorMk z hz hnull⟩
+  exact InfoGeometry.Twistor.PenroseTwistor.twistorMk z hz hnull
+
+theorem penroseProjectiveNullTwistor_nonempty :
+    Nonempty PenroseProjectiveNullTwistor :=
+  ⟨penroseProjectiveNullTwistor⟩
 
 end InfoGeometry.Projective.Twistor

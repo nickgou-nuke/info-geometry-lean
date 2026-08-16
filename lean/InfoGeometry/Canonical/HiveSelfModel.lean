@@ -68,7 +68,7 @@ structure CognitiveSelfModel (n : Nat) (E α : Type*)
   memoryManifests : Array String
 
   /-- Black-book source-to-lineage packets. -/
-  blackBooks : Array InfoGeometry.Canonical.BlackBookIntegration.BlackBookPacket
+  blackBooks : Array InfoGeometry.Canonical.BlackBookIntegration.BlackBookData
 
   /-- Open debt and shadow content. -/
   shadowDebt : Array String
@@ -118,7 +118,7 @@ def memoryCount : Nat :=
 /-- The number of black-book packets. -/
 def blackBookCount : Nat :=
   Array.size
-    (α := InfoGeometry.Canonical.BlackBookIntegration.BlackBookPacket)
+    (α := InfoGeometry.Canonical.BlackBookIntegration.BlackBookData)
     (CognitiveSelfModel.blackBooks M)
 
 /-- The number of rejection patterns. -/

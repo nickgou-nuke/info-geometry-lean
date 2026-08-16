@@ -20,8 +20,8 @@ STATE_DIR = SCRIPT_DIR / "outreach_state"
 LEDGER = STATE_DIR / "approval_ledger.jsonl"
 
 
-def _now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+# [lossless-compact] _now_iso folded into igf.common.time_utils.utc_now_iso
+from igf.common.time_utils import utc_now_iso as _now_iso
 
 
 def _approval_id(payload: dict) -> str:

@@ -5,9 +5,9 @@ set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
 
 /-!
-# Primon-Fermion-Boson von Mangoldt Möbius Master Bridge
+# Finite Primon Factors and von Mangoldt Readouts
 
-This module formalizes in native Lean 4 / Mathlib with 100% genuine constructive proofs:
+This module formalizes the following finite algebraic identities in native Lean 4 / Mathlib:
 
 1. **Bosonic & Fermionic Primon Gas Partition Factors**:
    - Bosonic Euler prime factor: $P_{\text{boson}}(X) = (1 - X)^{-1}$.
@@ -18,12 +18,9 @@ This module formalizes in native Lean 4 / Mathlib with 100% genuine constructive
 2. **von Mangoldt Function $\Lambda(n)$ & Möbius Non-Negativity**:
    - Non-negativity law $\Lambda(n) \ge 0$ for all $n \in \mathbb{N}$.
 
-3. **Möbius Conformal Map & Antiunitary Fixed Locus Rigidity**:
-   - Conformal Cayley transform $w(z) = \frac{1+z}{1-z}$ mapping unit circle $|z|=1$ to $\operatorname{Re}(w)=0$.
-   - Antiunitary reflection fixed locus $\operatorname{Re}(s) = 1/2 \iff s = 1 - \bar{s}$.
-
-4. **Grand Primon-Fermion-Boson-von-Mangoldt Master Duality**:
-   Unifies Bosonic/Fermionic primon factors, Möbius convolution laws, Cayley conformal transform, topological winding quantization, and antiunitary fixed locus rigidity into a single 100% kernel-checked theorem in Lean 4 with 0 sorries and 0 custom axioms.
+3. The file does not construct a conformal map, a topological winding theory,
+   an antiunitary operator, or a spectral/Riemann-Hypothesis consequence.
+   Such interpretations belong to separate owners with explicit hypotheses.
 -/
 
 noncomputable section

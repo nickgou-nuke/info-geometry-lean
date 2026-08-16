@@ -353,11 +353,36 @@ theorem sigmaComplex_bijective (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) :
       (sigmaComplex_comp_neg n primes z)
     simpa [AlgHom.comp_apply] using h
 
-/-- For real t, σ_t^ℂ = σ_t. -/
-@[simp] lemma sigmaComplex_real (n : ℕ) (primes : Fin n → ℕ) (t : ℝ) :
-    sigmaComplex n primes (t : ℂ) = sigma n primes t := by
+/-- The complex-time modular map packaged as an algebra equivalence.  This is
+the algebraic inverse supplied by complex time `-z`; no C⋆-continuity or KMS
+state is asserted here. -/
+noncomputable def sigmaComplexEquiv (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) :
+    CuntzAlg n ≃ₐ[ℂ] CuntzAlg n :=
+  AlgEquiv.ofBijective (sigmaComplex n primes z)
+    (sigmaComplex_bijective n primes z)
+
+@[simp] theorem sigmaComplexEquiv_apply (n : ℕ) (primes : Fin n → ℕ)
+    (z : ℂ) (x : CuntzAlg n) :
+    sigmaComplexEquiv n primes z x = sigmaComplex n primes z x :=
+  rfl
+
+/-- The inverse of the complex-time modular equivalence is the map at `-z`.
+This is an algebraic equivalence identity; no analytic continuation or KMS
+assertion is used. -/
+theorem sigmaComplexEquiv_symm_apply (n : ℕ) (primes : Fin n → ℕ)
+    (z : ℂ) (x : CuntzAlg n) :
+    (sigmaComplexEquiv n primes z).symm x = sigmaComplex n primes (-z) x := by
+  apply (sigmaComplexEquiv n primes z).injective
+  rw [AlgEquiv.apply_symm_apply]
+  have h := congrArg (fun F : CuntzAlg n →ₐ[ℂ] CuntzAlg n => F x)
+    (sigmaComplex_comp_neg n primes z)
+  simpa [AlgHom.comp_apply, sigmaComplexEquiv_apply] using h.symm
+
+theorem sigmaComplexEquiv_symm_eq (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) :
+    (sigmaComplexEquiv n primes z).symm = sigmaComplexEquiv n primes (-z) := by
   ext x
-  simp [sigmaComplex_mk, sigma_mk', sigmaTensorComplex_real]
+  rw [sigmaComplexEquiv_symm_apply]
+  rfl
 
 /-- Projectors P_i = S_i Sdag_i are fixed by σ_z for any complex z:
     σ_z(P_i) = p_i^{iz} · p_i^{-iz} · P_i = P_i. -/
@@ -366,12 +391,19 @@ theorem sigmaComplex_bijective (n : ℕ) (primes : Fin n → ℕ) (z : ℂ) :
   dsimp [cuntzS, cuntzSdag, cuntzMk]
   rw [map_mul, sigmaComplex_mk, sigmaComplex_mk, sigmaTensorComplex_S, sigmaTensorComplex_Sdag]
   rw [map_smul, map_smul, smul_mul_smul]
-  have h_phase : modularPhaseComplex (primes i) z * modularPhaseComplexInv (primes i) z = 1 := by
-    dsimp [modularPhaseComplex, modularPhaseComplexInv]
-    rw [← Complex.exp_add]
-    have h2 : I * z * (Real.log (primes i : ℝ) : ℂ) + -(I * z * (Real.log (primes i : ℝ) : ℂ)) = 0 := by ring
-    rw [h2, Complex.exp_zero]
-  rw [h_phase, one_smul]
+  rw [modularPhaseComplex_mul_inv, one_smul]
+
+@[simp] theorem sigmaComplexEquiv_fixes_projector (n : ℕ)
+    (primes : Fin n → ℕ) (z : ℂ) (i : Fin n) :
+    sigmaComplexEquiv n primes z (cuntzS n i * cuntzSdag n i) =
+      cuntzS n i * cuntzSdag n i := by
+  exact sigmaComplex_fixes_projector n primes z i
+
+/-- For real t, σ_t^ℂ = σ_t. -/
+@[simp] lemma sigmaComplex_real (n : ℕ) (primes : Fin n → ℕ) (t : ℝ) :
+    sigmaComplex n primes (t : ℂ) = sigma n primes t := by
+  ext x
+  simp [sigmaComplex_mk, sigma_mk', sigmaTensorComplex_real]
 
 /-- At imaginary time iβ: σ_{iβ}(S_i) = p_i^{-β} · S_i. -/
 lemma sigmaComplex_imag_S (n : ℕ) (primes : Fin n → ℕ) (hprimes : ∀ j, primes j ≠ 0) (β : ℝ) (i : Fin n) :

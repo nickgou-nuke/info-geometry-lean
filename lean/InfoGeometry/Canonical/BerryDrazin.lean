@@ -32,7 +32,7 @@ projector.  The `J/JD` commutation laws are available for downstream Varlamov
 covariance, but the Berry projector law only needs idempotence of `p_A`.
 -/
 @[rep_depth operator]
-structure LeanSafeCarrier
+structure BerryDrazinData
     (Op : Type*) [Ring Op] where
   p_A : Op
   H_L : Op
@@ -53,10 +53,10 @@ abbrev ExteriorDerivative
     (Op : Type*) [Ring Op] :=
   InfoGeometry.Canonical.VarlamovClifford.ExteriorDerivative Op
 
-namespace LeanSafeCarrier
+namespace BerryDrazinData
 
 variable {Op : Type*} [Ring Op]
-variable (C : LeanSafeCarrier Op)
+variable (C : BerryDrazinData Op)
 variable (D : ExteriorDerivative Op)
 
 /-- Differential off-diagonality of the Drazin horizon projector. -/
@@ -111,6 +111,6 @@ theorem harmonicBerryConnection_mul_HL_eq_zero :
   unfold harmonicBerryConnection
   simpa [mul_assoc] using C.d_HL_off_diagonal D
 
-end LeanSafeCarrier
+end BerryDrazinData
 
 end InfoGeometry.Canonical.BerryDrazin

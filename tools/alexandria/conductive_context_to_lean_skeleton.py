@@ -30,9 +30,8 @@ class LeanCandidate:
     ancestry_sources: list[str]
 
 
-def stable_hash(*parts: Any, size: int = 16) -> str:
-    payload = json.dumps(parts, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
-    return hashlib.blake2b(payload.encode("utf-8"), digest_size=size).hexdigest()
+# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
+from igf.common.hashing import stable_hash
 
 
 def load_packet(path: Path) -> dict[str, Any]:

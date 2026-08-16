@@ -155,7 +155,7 @@ mass carrier.
 @[rep_depth operator]
 structure BKMDriftMetricMassFusion
     (State : Type*) where
-  metric : BKMDriftMetricCarrier State
+  metric : BKMDriftMetricDatum State
   mass : WeylBKMDriftMassCarrier State
 
 /-- External predicate: mass drift/gauge channels are inherited from the metric carrier. -/

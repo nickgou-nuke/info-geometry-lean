@@ -233,6 +233,7 @@ variable [MeasurableSpace T] [MeasurableSingletonClass T] [Nonempty T]
 noncomputable def toProjectiveState (s : ScoreSlice (T := T)) : MeasureProjective.ProjectiveState T :=
   pmfToProjectiveState s.gaugeSection
 
+omit [MeasurableSingletonClass T] in
 @[simp] theorem normalize_toProjectiveState (s : ScoreSlice (T := T)) :
     MeasureProjective.ProjectiveState.normalize (toProjectiveState s) = pmfToProbMeasure s.gaugeSection := by
   simp [toProjectiveState]
@@ -250,9 +251,11 @@ noncomputable def projectiveState : ScoreRay (T := T) → MeasureProjective.Proj
           s₁.nonzero s₁.finite
           s₂.nonzero s₂.finite |>.symm)
 
+omit [MeasurableSingletonClass T] in
 @[simp] theorem projectiveState_mk (s : ScoreSlice (T := T)) :
     projectiveState (T := T) (Quotient.mk (scoreSliceSetoid (T := T)) s) = toProjectiveState s := rfl
 
+omit [MeasurableSingletonClass T] in
 @[simp] theorem normalize_projectiveState
     (q : ScoreRay (T := T)) :
     MeasureProjective.ProjectiveState.normalize (projectiveState (T := T) q) =

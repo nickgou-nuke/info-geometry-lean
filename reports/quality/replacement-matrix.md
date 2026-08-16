@@ -2,7 +2,7 @@
 
 This is a conservative evidence report. Manifest statuses are preserved; filename/topic matches are not promoted to equivalence.
 
-- Active Lean files scanned: 17688
+- Active Lean files scanned: 18970
 - Quarantine records: 88
 - Equivalence claims emitted: 0
 
@@ -19,17 +19,17 @@ This is a conservative evidence report. Manifest statuses are preserved; filenam
 | `agent_memory_recovery/KinematicLieAlgebra.lean/2026-07-06_02-59-11_1a22bff9.lean.disabled` | `safe_owner_exists_not_equivalent_to_snapshot` | `explicitly_weaker_or_non_equivalent` | 1 | 1/1 | 2 | 2 |
 | `agent_memory_recovery/KinematicLieAlgebra.lean/2026-07-06_03-06-36_1a22bff9.lean.disabled` | `safe_owner_exists_not_equivalent_to_snapshot` | `explicitly_weaker_or_non_equivalent` | 1 | 1/1 | 1 | 1 |
 | `agent_memory_recovery/MajoranaPolyaHilbertSocket.lean/2026-07-06_04-06-15_3503088e.lean.disabled` | `topic_owner_exists` | `candidate_owner_not_equivalence_verified` | 2 | 2/2 | 2 | 2 |
-| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-06-11_6aadb3be.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 45 | 34 |
-| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-09-01_088a60ea.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 46 | 35 |
-| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-11-03_9b2a1430.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 47 | 36 |
-| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-18-24_3cd8ebee.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 50 | 39 |
-| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-20-55_9d1295ea.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 52 | 41 |
-| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-23-07_2a79680d.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 54 | 43 |
-| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-25-49_16aca7e0.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 55 | 44 |
-| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-28-39_cdf24636.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 57 | 46 |
-| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-33-44_ffca5b56.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 59 | 47 |
-| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-39-29_239faf15.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 60 | 48 |
-| `agent_memory_recovery/MobiusGeometry.lean/2026-07-01_03-35-02_070fe0d3.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 66 | 59 |
+| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-06-11_6aadb3be.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 45 | 31 |
+| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-09-01_088a60ea.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 46 | 31 |
+| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-11-03_9b2a1430.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 47 | 31 |
+| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-18-24_3cd8ebee.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 50 | 33 |
+| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-20-55_9d1295ea.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 52 | 35 |
+| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-23-07_2a79680d.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 54 | 36 |
+| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-25-49_16aca7e0.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 55 | 37 |
+| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-28-39_cdf24636.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 57 | 39 |
+| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-33-44_ffca5b56.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 59 | 40 |
+| `agent_memory_recovery/MobiusGeometry.lean/2026-06-30_21-39-29_239faf15.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 60 | 41 |
+| `agent_memory_recovery/MobiusGeometry.lean/2026-07-01_03-35-02_070fe0d3.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 66 | 52 |
 | `agent_memory_recovery/SusceptibilityHessian.lean/2026-07-06_04-06-49_63048b67.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 1 | 1/2 | 32 | 31 |
 | `agent_memory_recovery/SusceptibilityHessian.lean/2026-07-06_04-07-28_63048b67.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 1 | 1/2 | 0 | 0 |
 | `agent_memory_recovery/TestMobiusGeometry.lean/2026-07-06_04-07-59_376f2747.lean.disabled` | `topic_owners_exist_split_across_modules` | `split_across_owners` | 2 | 2/3 | 5 | 5 |

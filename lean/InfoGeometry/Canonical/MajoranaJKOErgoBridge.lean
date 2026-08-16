@@ -45,7 +45,8 @@ The key data are:
 -/
 structure MajoranaJKOErgoBridge
     (State LieGroup LieAlgebra LieDual Observable : Type*)
-    [Ring Observable] where
+    [AddMonoid LieAlgebra]
+    [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable] where
   /-- Doubled real Majorana/Hestenes carrier. -/
   majorana :
     ProjectivePolarizedBigradedBogoliubovDatum (E := E)
@@ -111,7 +112,8 @@ namespace MajoranaJKOErgoBridge
 
 variable
     {State LieGroup LieAlgebra LieDual Observable : Type*}
-variable [Ring Observable]
+variable [AddMonoid LieAlgebra]
+variable [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable]
 
 variable
     (B : MajoranaJKOErgoBridge
@@ -183,7 +185,7 @@ theorem freeEnergy_eq_entropy_plus_expectation
     B.flow.freeEnergy.freeEnergy ρ =
       B.flow.freeEnergy.entropyTerm ρ +
         B.flow.freeEnergy.expectationTerm ρ :=
-  B.flow.freeEnergy.freeEnergy_eq ρ
+  FreeEnergyFunctional.freeEnergy_eq_split B.flow.freeEnergy ρ
 
 /-! ## 3. Encoded Bregman geometry -/
 
@@ -661,7 +663,9 @@ Bayesian/Bregman projection, and the installed Bayes/JKO compatibility law.
 def MajoranaJKOErgoBridgeOwnerTarget : Prop :=
   ∀ (E : Type)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],
-  ∀ (State LieGroup LieAlgebra LieDual Observable : Type*) [Ring Observable],
+  ∀ (State LieGroup LieAlgebra LieDual Observable : Type*)
+    [AddMonoid LieAlgebra]
+    [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable],
     ∀ (B : MajoranaJKOErgoBridge
       (E := E) State LieGroup LieAlgebra LieDual Observable),
       ∀ (ρ alt : Density State),
@@ -678,7 +682,9 @@ def MajoranaJKOErgoBridgeOwnerTarget : Prop :=
 theorem majoranaJKOErgoBridgeOwnerTarget :
     ∀ (E : Type)
       [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],
-    ∀ (State LieGroup LieAlgebra LieDual Observable : Type*) [Ring Observable],
+    ∀ (State LieGroup LieAlgebra LieDual Observable : Type*)
+      [AddMonoid LieAlgebra]
+      [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable],
       ∀ (B : MajoranaJKOErgoBridge
         (E := E) State LieGroup LieAlgebra LieDual Observable),
         ∀ (ρ alt : Density State),
@@ -690,7 +696,7 @@ theorem majoranaJKOErgoBridgeOwnerTarget :
                 B.encodedDivergence B.jko.next B.jko.previous
               ∧
             B.bayesUpdate B.jko.previous = B.jko.next := by
-  intro E _ _ _ State LieGroup LieAlgebra LieDual Observable _ B ρ alt halt
+  intro E _ _ _ State LieGroup LieAlgebra LieDual Observable _ _ _ _ B ρ alt halt
   exact
     ⟨B.jko_minimizing ρ,
       B.bayesian_projection_identity alt halt,

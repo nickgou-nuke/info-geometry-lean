@@ -205,7 +205,7 @@ theorem H3ZornJordanIdentityTarget_iff_TJordanCommutation :
 
 /-- McCrimmon's quadratic-representation identities close the scalar-free
 `T`-commutation law. -/
-theorem TJordanCommutation_proof : TJordanCommutation := by
+theorem TJordanCommutation_holds : TJordanCommutation := by
   intro a b
   rw [T_symm_outer (T a 1 b) 1 (T a 1 a)]
   rw [T_symm_outer b 1 (T a 1 a)]
@@ -236,12 +236,8 @@ theorem H3ZornJordanQuadraticReconstruction (X Y : H3Zorn ℝ) :
   simpa [smul_add, smul_sub, smul_smul, T_smul_left, T_smul_right] using h
 
 /-- The installed product satisfies the Jordan identity. -/
-theorem H3ZornJordanProductLaw_proof : H3ZornJordanProductLaw :=
-  H3ZornJordanProductLaw_iff_TJordanCommutation.mpr TJordanCommutation_proof
-
-/-- The paper-facing H3 Jordan-identity target is natively closed. -/
-theorem H3ZornJordanIdentityTarget_proof : H3ZornJordanIdentityTarget :=
-  H3ZornJordanIdentityTarget_iff_product_law.mpr H3ZornJordanProductLaw_proof
+theorem H3ZornJordanProductLaw_holds : H3ZornJordanProductLaw :=
+  H3ZornJordanProductLaw_iff_TJordanCommutation.mpr TJordanCommutation_holds
 
 /--
 A theorem that the cubic norm axioms of a `CubicJordanDatum` imply that the
@@ -255,6 +251,6 @@ theorem isCommJordan_of_cubicJordanDatum [CommMagma (H3Zorn ℝ)]
     IsCommJordan (H3Zorn ℝ) where
   lmul_comm_rmul_rmul x y := by
     simp_rw [h_mul]
-    exact H3ZornJordanProductLaw_proof x y
+    exact H3ZornJordanProductLaw_holds x y
 
 end InfoGeometry.Algebra

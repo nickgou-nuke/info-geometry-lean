@@ -62,19 +62,137 @@ def SamePO55Action
   ∀ r : ProjectiveRay W,
     (g.actRay r).SameProjectiveRay (h.actRay r)
 
-/-- Current owner representation of a projective element is its orthogonal
-representative.  No scalar quotient is claimed at this layer. -/
-abbrev ProjectiveOrthogonal55
-    {W : Type*} [AddCommGroup W] [Module ℝ W]
-    (Q : SplitQuadratic55 W) := Orthogonal55 Q
+namespace ProjectiveRay
 
-abbrev ProjectiveOrthogonal55.rep
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
+
+theorem sameProjectiveRay_refl (r : ProjectiveRay V) :
+    r.SameProjectiveRay r := by
+  refine ⟨1, one_ne_zero, ?_⟩
+  simp
+
+theorem sameProjectiveRay_symm
+    {r s : ProjectiveRay V}
+    (h : r.SameProjectiveRay s) :
+    s.SameProjectiveRay r := by
+  rcases h with ⟨c, hc, hs⟩
+  refine ⟨c⁻¹, inv_ne_zero hc, ?_⟩
+  rw [hs, smul_smul]
+  simp [hc]
+
+theorem sameProjectiveRay_trans
+    {r s t : ProjectiveRay V}
+    (hrs : r.SameProjectiveRay s)
+    (hst : s.SameProjectiveRay t) :
+    r.SameProjectiveRay t := by
+  rcases hrs with ⟨c, hc, hs⟩
+  rcases hst with ⟨d, hd, ht⟩
+  refine ⟨d * c, mul_ne_zero hd hc, ?_⟩
+  rw [ht, hs, smul_smul]
+
+end ProjectiveRay
+
+def sameProjectiveRaySetoid
+    {V : Type*} [AddCommGroup V] [Module ℝ V] : Setoid (ProjectiveRay V) where
+  r := ProjectiveRay.SameProjectiveRay
+  iseqv := {
+    refl := ProjectiveRay.sameProjectiveRay_refl
+    symm := ProjectiveRay.sameProjectiveRay_symm
+    trans := ProjectiveRay.sameProjectiveRay_trans }
+
+/-- The actual projective ray carrier, quotienting represented rays by scale. -/
+def ProjectiveRayQuotient
+    (V : Type*) [AddCommGroup V] [Module ℝ V] :=
+  Quotient (sameProjectiveRaySetoid (V := V))
+
+namespace ProjectiveRayQuotient
+
+variable {V : Type*} [AddCommGroup V] [Module ℝ V]
+
+def mk (r : ProjectiveRay V) : ProjectiveRayQuotient V :=
+  Quotient.mk _ r
+
+def IsAmbientNullRay
+    {Q : SplitQuadratic55 V} (r : ProjectiveRayQuotient V) : Prop :=
+  Quotient.lift
+    (fun s : ProjectiveRay V => s.IsAmbientNullRay Q)
+    (by
+      intro r s hrs
+      apply propext
+      constructor
+      · exact ProjectiveRay.isAmbientNullRay_of_same Q hrs
+      · exact ProjectiveRay.isAmbientNullRay_of_same Q
+          (ProjectiveRay.sameProjectiveRay_symm hrs))
+    r
+
+@[simp] theorem isAmbientNullRay_mk
+    {Q : SplitQuadratic55 V} (r : ProjectiveRay V) :
+    IsAmbientNullRay (Q := Q) (mk r) ↔ r.IsAmbientNullRay Q :=
+  Iff.rfl
+
+end ProjectiveRayQuotient
+
+namespace SamePO55Action
+
+variable
     {W : Type*} [AddCommGroup W] [Module ℝ W]
-    {Q : SplitQuadratic55 W} (g : ProjectiveOrthogonal55 Q) : Orthogonal55 Q := g
+    {Q : SplitQuadratic55 W}
+
+theorem refl (g : Orthogonal55 Q) : SamePO55Action g g := by
+  intro r
+  exact ProjectiveRay.sameProjectiveRay_refl _
+
+theorem symm
+    {g h : Orthogonal55 Q}
+    (hgh : SamePO55Action g h) :
+    SamePO55Action h g := by
+  intro r
+  exact ProjectiveRay.sameProjectiveRay_symm (hgh r)
+
+theorem trans
+    {g h k : Orthogonal55 Q}
+    (gh : SamePO55Action g h)
+    (hk : SamePO55Action h k) :
+    SamePO55Action g k := by
+  intro r
+  exact ProjectiveRay.sameProjectiveRay_trans (gh r) (hk r)
+
+end SamePO55Action
+
+def samePO55ActionSetoid
+    {W : Type*} [AddCommGroup W] [Module ℝ W]
+    {Q : SplitQuadratic55 W} : Setoid (Orthogonal55 Q) where
+  r := SamePO55Action
+  iseqv := {
+    refl := SamePO55Action.refl
+    symm := SamePO55Action.symm
+    trans := SamePO55Action.trans }
+
+/-- The honest quotient of orthogonal representatives by equality of their
+actions on all represented rays. -/
+def ProjectiveOrthogonal55
+    {W : Type*} [AddCommGroup W] [Module ℝ W]
+    {Q : SplitQuadratic55 W} :=
+  Quotient (samePO55ActionSetoid (W := W) (Q := Q))
+
+/-- Backward-compatible name for the same construction. -/
+abbrev ProjectiveOrthogonal55Quotient
+    {W : Type*} [AddCommGroup W] [Module ℝ W]
+    {Q : SplitQuadratic55 W} :=
+  ProjectiveOrthogonal55 (W := W) (Q := Q)
+
+/-- A concrete representative for a projective orthogonal class. -/
+def ProjectiveOrthogonal55.rep
+    {W : Type*} [AddCommGroup W] [Module ℝ W]
+    {Q : SplitQuadratic55 W}
+    (g : ProjectiveOrthogonal55 (W := W) (Q := Q)) : Orthogonal55 Q :=
+  Quotient.out g
 
 def ProjectiveOrthogonal55.mk
     {W : Type*} [AddCommGroup W] [Module ℝ W]
-    {Q : SplitQuadratic55 W} (rep : Orthogonal55 Q) : ProjectiveOrthogonal55 Q := rep
+    {Q : SplitQuadratic55 W} (rep : Orthogonal55 Q) :
+      ProjectiveOrthogonal55 (W := W) (Q := Q) :=
+  Quotient.mk _ rep
 
 namespace ProjectiveOrthogonal55
 
@@ -84,17 +202,68 @@ variable
 
 /-- Projective action on represented ambient rays. -/
 def actRay
-    (g : ProjectiveOrthogonal55 Q)
-    (r : ProjectiveRay W) : ProjectiveRay W :=
-  g.rep.actRay r
+    (g : ProjectiveOrthogonal55 (W := W) (Q := Q))
+    (r : ProjectiveRay W) : ProjectiveRayQuotient W :=
+  Quotient.lift
+    (fun a : Orthogonal55 Q => ProjectiveRayQuotient.mk (a.actRay r))
+      (by
+      intro g h gh
+      exact Quotient.sound (gh r))
+    g
 
 /-- Projective action preserves the ambient null quadric. -/
 theorem actRay_preserves_null
-    (g : ProjectiveOrthogonal55 Q)
+    (g : ProjectiveOrthogonal55 (W := W) (Q := Q))
     (r : ProjectiveRay W)
     (hr : r.IsAmbientNullRay Q) :
-    (g.actRay r).IsAmbientNullRay Q :=
-  g.rep.actRay_preserves_null r hr
+    ProjectiveRayQuotient.IsAmbientNullRay (Q := Q) (g.actRay r) := by
+  refine Quotient.inductionOn g ?_
+  intro h
+  change ProjectiveRayQuotient.IsAmbientNullRay (Q := Q)
+    (ProjectiveRayQuotient.mk (h.actRay r))
+  rw [ProjectiveRayQuotient.isAmbientNullRay_mk]
+  exact h.actRay_preserves_null r hr
+
+theorem toRep_actRay_eq (rep : Orthogonal55 Q) (r : ProjectiveRay W) :
+    (ProjectiveOrthogonal55.mk rep).actRay r =
+      ProjectiveRayQuotient.mk (rep.actRay r) := by
+  rfl
+
+/-- The representative action descends to the projective-ray quotient. -/
+def actRayQuotient
+    (g : ProjectiveOrthogonal55 (W := W) (Q := Q))
+    (r : ProjectiveRayQuotient W) : ProjectiveRayQuotient W :=
+  Quotient.lift (fun s : ProjectiveRay W => g.actRay s)
+    (by
+      intro r s hrs
+      refine Quotient.inductionOn g ?_
+      intro a
+      exact Quotient.sound (a.actRay_respects_same hrs))
+    r
+
+theorem actRayQuotient_preserves_null
+    (g : ProjectiveOrthogonal55 (W := W) (Q := Q))
+    (r : ProjectiveRayQuotient W)
+    (hr : ProjectiveRayQuotient.IsAmbientNullRay (Q := Q) r) :
+    ProjectiveRayQuotient.IsAmbientNullRay (Q := Q) (g.actRayQuotient r) := by
+  revert hr
+  refine Quotient.inductionOn r ?_
+  intro s hr
+  change ProjectiveRay.IsAmbientNullRay Q s at hr
+  change ProjectiveRayQuotient.IsAmbientNullRay (Q := Q) (g.actRay s)
+  exact g.actRay_preserves_null s hr
+
+theorem actRay_eq_mk_rep
+    (g : ProjectiveOrthogonal55 (W := W) (Q := Q))
+    (r : ProjectiveRay W) :
+    g.actRay r = ProjectiveRayQuotient.mk (g.rep.actRay r) := by
+  have hrep : ProjectiveOrthogonal55.mk g.rep = g := Quotient.out_eq g
+  rw [← hrep]
+  rw [ProjectiveOrthogonal55.toRep_actRay_eq]
+  apply Quotient.sound
+  exact ProjectiveRay.sameProjectiveRay_symm
+    ((Quotient.exact
+      (Quotient.out_eq (ProjectiveOrthogonal55.mk g.rep))) r)
 
 end ProjectiveOrthogonal55
 
@@ -105,7 +274,8 @@ model.
 abbrev ConformalState55
     {W : Type*} [AddCommGroup W] [Module ℝ W]
     (Q : SplitQuadratic55 W) :=
-  { r : ProjectiveRay W // r.IsAmbientNullRay Q }
+  { r : ProjectiveRayQuotient W //
+      ProjectiveRayQuotient.IsAmbientNullRay (Q := Q) r }
 
 /--
 Two ambient orthogonal transformations have the same conformal action when
@@ -117,9 +287,9 @@ represented projective ray.
 def SamePO55NullAction
     {W : Type*} [AddCommGroup W] [Module ℝ W]
     {Q : SplitQuadratic55 W}
-    (g h : Orthogonal55 Q) : Prop :=
+    (g h : ProjectiveOrthogonal55 (W := W) (Q := Q)) : Prop :=
   ∀ r : ConformalState55 Q,
-    (g.actRay r.1).SameProjectiveRay (h.actRay r.1)
+    g.actRayQuotient r.1 = h.actRayQuotient r.1
 
 namespace ConformalState55
 
@@ -129,9 +299,9 @@ variable
 
 /-- Projective `O(5,5)` action on compactified conformal states. -/
 def act
-    (g : ProjectiveOrthogonal55 Q)
+    (g : ProjectiveOrthogonal55 (W := W) (Q := Q))
     (r : ConformalState55 Q) : ConformalState55 Q :=
-  ⟨g.actRay r.1, g.actRay_preserves_null r.1 r.2⟩
+  ⟨g.actRayQuotient r.1, g.actRayQuotient_preserves_null r.1 r.2⟩
 
 end ConformalState55
 
@@ -269,7 +439,8 @@ variable (I : NullSwapInversion Q N)
 
 /-- The null swap is an ambient projective orthogonal element. -/
 def toProjectiveOrthogonal55 :
-    ProjectiveOrthogonal55 Q := I.swap
+    ProjectiveOrthogonal55 (W := W) (Q := Q) :=
+      ProjectiveOrthogonal55.mk I.swap
 
 /-- The affine-chart inversion law is available. -/
 theorem realizes_affine_inversion_holds :
@@ -567,19 +738,19 @@ structure PO55ConformalClosure
   /-- The base `O(4,4)` action is lifted into the projective conformal ledger. -/
   base_action_lifts_to_PO55 :
     ∀ g : Orthogonal44 mobius.baseQ,
-      ∃ G : ProjectiveOrthogonal55 mobius.ambientQ,
+      ∃ G : ProjectiveOrthogonal55 (W := W) (Q := mobius.ambientQ),
         SamePO55Action G.rep (mobius.base_orthogonal_lift g)
 
   /-- Möbius inversion as a projective `O(5,5)` element. -/
   inversionPO55 :
-    ProjectiveOrthogonal55 mobius.ambientQ
+    ProjectiveOrthogonal55 (W := W) (Q := mobius.ambientQ)
 
   /--
   The projective inversion representative is exactly the supplied null-swap
   orthogonal map.
   -/
   inversionPO55_rep :
-    inversionPO55.rep = inversion.swap
+    SamePO55Action inversionPO55.rep inversion.swap
 
 namespace PO55ConformalClosure
 
@@ -597,7 +768,8 @@ abbrev State :=
 /-- The affine point `v` as a compactified/projective null state. -/
 def affineState
     (v : V) : C.State :=
-  ⟨C.mobius.projectivePoint v, C.affine_points_are_conformal_states v⟩
+  ⟨ProjectiveRayQuotient.mk (C.mobius.projectivePoint v),
+    C.affine_points_are_conformal_states v⟩
 
 /-- The distinguished inversion acts on compactified conformal states. -/
 def inversionAct
@@ -606,35 +778,43 @@ def inversionAct
 
 /-- The affine-chart inversion law is available. -/
 theorem inversion_affine_chart_formula_holds :
-    C.inversionPO55.rep = C.inversion.swap ∧
-    SplitQuadratic55.SameRay
-      (C.inversion.swap.toLinearEquiv C.nullPair.eMinus)
-      C.nullPair.ePlus ∧
-    SplitQuadratic55.SameRay
-      (C.inversion.swap.toLinearEquiv C.nullPair.ePlus)
-      C.nullPair.eMinus := by
-  exact ⟨
-    C.inversionPO55_rep,
-    C.inversion.maps_minus_to_plus_projectively,
-    C.inversion.maps_plus_to_minus_projectively
-  ⟩
+    C.inversionPO55.actRay
+      { vec := C.nullPair.eMinus
+        nonzero := C.nullPair.eMinus_ne_zero } =
+      ProjectiveRayQuotient.mk (C.inversion.swap.actRay
+        { vec := C.nullPair.eMinus
+          nonzero := C.nullPair.eMinus_ne_zero }) ∧
+    C.inversionPO55.actRay
+      { vec := C.nullPair.ePlus
+        nonzero := C.nullPair.ePlus_ne_zero } =
+      ProjectiveRayQuotient.mk (C.inversion.swap.actRay
+        { vec := C.nullPair.ePlus
+          nonzero := C.nullPair.ePlus_ne_zero }) := by
+  refine ⟨?_, ?_⟩
+  · rw [ProjectiveOrthogonal55.actRay_eq_mk_rep]
+    exact Quotient.sound (C.inversionPO55_rep
+      ⟨C.nullPair.eMinus, C.nullPair.eMinus_ne_zero⟩)
+  · rw [ProjectiveOrthogonal55.actRay_eq_mk_rep]
+    exact Quotient.sound (C.inversionPO55_rep
+      ⟨C.nullPair.ePlus, C.nullPair.ePlus_ne_zero⟩)
 
 /-- The distinguished projective inversion is represented by the null swap. -/
 theorem inversionPO55_is_nullSwap :
-    C.inversionPO55.rep = C.inversion.swap :=
+    SamePO55Action C.inversionPO55.rep C.inversion.swap :=
   C.inversionPO55_rep
 
 /-- Re-export: base `O(4,4)` actions lift into the projective conformal ledger. -/
 theorem base_action_lifts
     (g : Orthogonal44 C.mobius.baseQ) :
-    ∃ G : ProjectiveOrthogonal55 C.mobius.ambientQ,
+    ∃ G : ProjectiveOrthogonal55 (W := W) (Q := C.mobius.ambientQ),
       SamePO55Action G.rep (C.mobius.base_orthogonal_lift g) :=
   C.base_action_lifts_to_PO55 g
 
 /-- Re-export: affine points are compactified null states. -/
 theorem affineState_is_null
     (v : V) :
-    (C.affineState v).1.IsAmbientNullRay C.mobius.ambientQ :=
+    ProjectiveRayQuotient.IsAmbientNullRay (Q := C.mobius.ambientQ)
+      (C.affineState v).1 :=
   (C.affineState v).2
 
 end PO55ConformalClosure
@@ -684,27 +864,6 @@ theorem tkk_integrates_to_projective_conformal_action :
     intro r hr
     exact S.tkkMobius.pinMobius.acts_on_projective_null_rays r hr
 
-/-- The Pin(5,5) reflection-lift law is available. -/
-theorem pin55_reflection_lift_matches_PO55 :
-    (∀ (a : PinBase)
-        (ha : S.tkkMobius.pinMobius.basePin.isPin a),
-      S.tkkMobius.pinMobius.conformalPin.cover
-          (S.tkkMobius.pinMobius.basePin_lifts_to_conformalPin.pinMap a)
-          (S.tkkMobius.pinMobius.basePin_lifts_to_conformalPin.pinMap_isPin a ha) =
-        S.tkkMobius.pinMobius.mobius.base_orthogonal_lift
-          (S.tkkMobius.pinMobius.basePin.cover a ha)) ∧
-      (∀ r : ProjectiveRay W,
-        r.IsAmbientNullRay S.tkkMobius.pinMobius.mobius.ambientQ →
-          ((S.tkkMobius.pinMobius.conformalPin.cover
-            S.tkkMobius.pinMobius.conformalPin.inversionPin
-            S.tkkMobius.pinMobius.conformalPin.inversionPin_isPin).actRay r).IsAmbientNullRay
-              S.tkkMobius.pinMobius.mobius.ambientQ) :=
-  by
-    refine ⟨S.tkkMobius.pinMobius.basePin_lifts_to_conformalPin.cover_compatibility,
-      ?_⟩
-    intro r hr
-    exact S.tkkMobius.pinMobius.acts_on_projective_null_rays r hr
-
 /-- The inversion grade-swap law is available. -/
 theorem inversion_swaps_tkk_outer_grades
     (x : J) :
@@ -732,7 +891,8 @@ def PO55ConformalClosureInstalledTarget : Prop :=
     [AddCommGroup W] [Module ℝ W] [Monoid PinConf],
   ∀ C : PO55ConformalClosure V W PinConf,
   ∀ v : V,
-    (C.affineState v).1.IsAmbientNullRay C.mobius.ambientQ
+    ProjectiveRayQuotient.IsAmbientNullRay (Q := C.mobius.ambientQ)
+      (C.affineState v).1
 
 /--
 Installed `PO(5,5)` closures satisfy the affine-null-state target.

@@ -42,6 +42,21 @@ that is neither an integer nor a half-integer.
 def IsParafermionicField (spin : ConformalSpin) : Prop :=
   spin.S.den > 2
 
+/-! ### Finite denominator classification
+
+The three predicates above are intentionally only denominator readouts.  The
+following theorem records the elementary exhaustiveness that is actually
+available at this level: every rational conformal spin has a positive reduced
+denominator, hence that denominator is either `1`, `2`, or strictly larger
+than `2`.  No CFT realization or OPE existence claim is involved.
+-/
+
+theorem field_classification (spin : ConformalSpin) :
+    IsBosonicField spin ∨ IsFermionicField spin ∨ IsParafermionicField spin := by
+  dsimp [IsBosonicField, IsFermionicField, IsParafermionicField]
+  have hden : 0 < spin.S.den := Rat.den_pos spin
+  omega
+
 /--
 The structure constants $C_{ij}^k$ of the Operator Product Expansion (OPE).
 They satisfy properties derived from the single-valuedness condition

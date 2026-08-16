@@ -27,6 +27,7 @@ section Core
 
 variable {E LieAlgebra : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable [AddMonoid LieAlgebra]
 variable [KreinSpace (DoubledSpace E)]
 
 local notation "H₂" => DoubledSpace E

@@ -148,6 +148,63 @@ lemma realKMSWeight_sum_eq_one (n : ℕ) [NeZero n] (primes : Fin n → ℕ) (hp
   rw [← Finset.sum_div]
   exact div_self (ne_of_gt (realPartitionSum_pos n primes hpos β))
 
+theorem realKMSWeight_nonneg (n : ℕ) [NeZero n] (primes : Fin n → ℕ)
+    (hpos : ∀ i, 0 < primes i) (β : ℝ) (i : Fin n) :
+    0 ≤ realKMSWeight n primes β i := by
+  unfold realKMSWeight
+  exact div_nonneg (Real.rpow_nonneg (Nat.cast_nonneg _) _)
+    (le_of_lt (realPartitionSum_pos n primes hpos β))
+
+theorem realKMSWeight_pos (n : ℕ) [NeZero n] (primes : Fin n → ℕ)
+    (hpos : ∀ i, 0 < primes i) (β : ℝ) (i : Fin n) :
+    0 < realKMSWeight n primes β i := by
+  unfold realKMSWeight
+  exact div_pos (Real.rpow_pos_of_pos (Nat.cast_pos.mpr (hpos i)) _)
+    (realPartitionSum_pos n primes hpos β)
+
+theorem realKMSWeight_le_one (n : ℕ) [NeZero n] (primes : Fin n → ℕ)
+    (hpos : ∀ i, 0 < primes i) (β : ℝ) (i : Fin n) :
+    realKMSWeight n primes β i ≤ 1 := by
+  unfold realKMSWeight
+  have hden : 0 < realPartitionSum n primes β :=
+    realPartitionSum_pos n primes hpos β
+  have hnonneg : ∀ j : Fin n, 0 ≤ realBoltzmannFactor (primes j : ℝ) β := by
+    intro j
+    exact Real.rpow_nonneg (Nat.cast_nonneg _) _
+  have hle : realBoltzmannFactor (primes i : ℝ) β ≤
+      ∑ j : Fin n, realBoltzmannFactor (primes j : ℝ) β := by
+    exact Finset.single_le_sum (fun j _ => hnonneg j) (Finset.mem_univ i)
+  rw [div_le_iff₀ hden]
+  simpa [realPartitionSum] using hle
+
+theorem realKMSWeight_lt_one (n : ℕ) (hn : 2 ≤ n) (primes : Fin n → ℕ)
+    (hpos : ∀ i, 0 < primes i) (β : ℝ) (i : Fin n) :
+    realKMSWeight n primes β i < 1 := by
+  let j : Fin n := if i.val = 0 then ⟨1, by omega⟩ else ⟨0, by omega⟩
+  have hji : j ≠ i := by
+    by_cases hi : i.val = 0
+    · have hj : j = ⟨1, by omega⟩ := by simp [j, hi]
+      rw [hj]
+      intro h
+      have hv : (1 : ℕ) = i.val := by
+        simpa using congrArg Fin.val h
+      omega
+    · have hj : j = ⟨0, by omega⟩ := by simp [j, hi]
+      rw [hj]
+      intro h
+      have hv : (0 : ℕ) = i.val := by
+        simpa using congrArg Fin.val h
+      exact hi hv.symm
+  letI : NeZero n := ⟨by omega⟩
+  have hsumlt : realBoltzmannFactor (primes i : ℝ) β <
+      ∑ k : Fin n, realBoltzmannFactor (primes k : ℝ) β := by
+    exact Finset.single_lt_sum hji (Finset.mem_univ i) (Finset.mem_univ j)
+      (Real.rpow_pos_of_pos (Nat.cast_pos.mpr (hpos j)) _)
+      (fun k _ _ => Real.rpow_nonneg (Nat.cast_nonneg _) _)
+  unfold realKMSWeight
+  rw [div_lt_iff₀ (realPartitionSum_pos n primes hpos β)]
+  simpa [realPartitionSum] using hsumlt
+
 lemma KMSWeight_eq_ratio (n : ℕ) [NeZero n] (primes : Fin n → ℕ) (hpos : ∀ i, 0 < primes i) (i : Fin n) (β : ℝ) :
   realKMSWeight n primes β i =
   ((primes i : ℝ) / (primes 0 : ℝ)) ^ (-β) / ∑ j : Fin n, ((primes j : ℝ) / (primes 0 : ℝ)) ^ (-β) := by

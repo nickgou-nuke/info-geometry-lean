@@ -19,8 +19,10 @@ This file records the theorem shapes extracted from the literature:
 * Grace's theorem for multiaffine symmetric diagonal slices;
 * the finite Lee--Yang source claim already used by the repository.
 
-No contraction proof is claimed here.  The file is the theorem-packet and
-owner-map surface that keeps the missing proof substrate explicit.
+The unrestricted source claim is deliberately kept separate and is refuted
+below.  The closed-and-bounded source claim is consumed by the downstream
+native topological reduction owner; no endpoint property is silently treated
+as an unconditional theorem in this digest.
 -/
 
 noncomputable section
@@ -884,7 +886,6 @@ def AsanoRuelleLemmaSourceClaimClosedBounded : Prop :=
       Bornology.IsBounded K1 → Bornology.IsBounded K2 →
       (∀ z1 z2 : ℂ, z1 ∉ K1 → z2 ∉ K2 → P.eval z1 z2 ≠ 0) →
         ∀ z : ℂ, z ∉ asanoForbiddenSet K1 K2 → P.contract z ≠ 0
-
 
 
 /--

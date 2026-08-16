@@ -508,7 +508,7 @@ topological-endpoint claim surface.
 @[rep_depth operator]
 theorem asanoNondegenerateTopologicalTheoremBounded_of_topologicalEndpoint
     (hTop :
-      ∀ {K₁ K₂ : Set ℂ} {A B C D z : ℂ},
+      ∀ {K₁ K₂ : Set ℂ} {A B C D : ℂ},
         (h0K₁ : (0 : ℂ) ∉ K₁) →
         (h0K₂ : (0 : ℂ) ∉ K₂) →
         (hClosed₁ : IsClosed K₁) →
@@ -521,9 +521,8 @@ theorem asanoNondegenerateTopologicalTheoremBounded_of_topologicalEndpoint
             A + B * z₁ + C * z₂ + D * z₁ * z₂ ≠ 0) →
         (hD : D ≠ 0) →
         (hDet : A * D - B * C ≠ 0) →
-        (hQ : A + D * z = 0) →
         InfoGeometry.AsanoRuelle.asanoRuelleTopologicalEndpointClaim
-          K₁ K₂ hClosed₁ hClosed₂ hB₂ A B C D z hPhi hD hDet hQ) :
+          K₁ K₂ B C D) :
     AsanoNondegenerateTopologicalTheoremBounded := by
   intro K₁ K₂ A B C D z h0K₁ h0K₂ hClosed₁ hClosed₂ _hB₁ hB₂ hD hDet hPhi hroot
   have hend :
@@ -531,52 +530,11 @@ theorem asanoNondegenerateTopologicalTheoremBounded_of_topologicalEndpoint
     have hclaim :=
       hTop h0K₁ h0K₂ hClosed₁ hClosed₂ hB₂
         (fun z₁ z₂ hz₁ hz₂ => hPhi z₁ z₂ hz₁ hz₂)
-        hD hDet hroot
+        hD hDet
     simpa [InfoGeometry.AsanoRuelle.asanoRuelleTopologicalEndpointClaim, neg_div] using hclaim
   exact
     asano_nondegenerate_root_mem_negProductSet_of_endpoint
       h0K₁ h0K₂ hD hPhi hroot hend
-
-/--
-Pointwise endpoint alternative derived from the explicit topological-endpoint
-claim surface.
-
-This bridges `AsanoRuelle.TopologicalEndpoint` into the native nondegenerate
-Asano lane for fixed coefficients and forbidden sets.
--/
-@[rep_depth operator]
-theorem endpoint_alternative_of_topologicalEndpoint_pointwise
-    {K₁ K₂ : Set ℂ} {A B C D : ℂ}
-    (h0K₁ : (0 : ℂ) ∉ K₁)
-    (h0K₂ : (0 : ℂ) ∉ K₂)
-    (hClosed₁ : IsClosed K₁)
-    (hClosed₂ : IsClosed K₂)
-    (hK₂_bdd : Bornology.IsBounded K₂)
-    (hD : D ≠ 0)
-    (hDet : A * D - B * C ≠ 0)
-    (hPhi :
-      ∀ z₁ z₂ : ℂ,
-        z₁ ∉ K₁ →
-        z₂ ∉ K₂ →
-        asanoPhi A B C D z₁ z₂ ≠ 0)
-    (hTop :
-      ∀ z : ℂ, ∀ hQ : A + D * z = 0,
-        InfoGeometry.AsanoRuelle.asanoRuelleTopologicalEndpointClaim
-          K₁ K₂ hClosed₁ hClosed₂ hK₂_bdd
-          A B C D z
-          (fun z₁ z₂ hz₁ hz₂ => hPhi z₁ z₂ hz₁ hz₂)
-          hD hDet hQ) :
-    (C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂) := by
-  have hzf :
-      InfoGeometry.Analysis.AsanoContractionNative.ZeroFreeOutside K₁ K₂ A B C D := by
-    intro z₁ z₂ hz₁ hz₂
-    simpa [InfoGeometry.Analysis.AsanoContractionNative.asanoPoly]
-      using hPhi z₁ z₂ hz₁ hz₂
-  exact InfoGeometry.Analysis.AsanoContractionNative.nonDegenerate_endpoint_of_topologicalEndpointSpec
-    hClosed₁ hClosed₂ hK₂_bdd hzf hD hDet
-    (by
-      intro z hQ
-      simpa [InfoGeometry.AsanoRuelle.asanoRuelleTopologicalEndpointClaim] using hTop z hQ)
 
 /--
 Full two-variable Asano contraction, reduced to the remaining native
@@ -750,7 +708,6 @@ theorem asano_contraction_full_of_topological_left
     (h0K₁ : (0 : ℂ) ∉ K₁)
     (h0K₂ : (0 : ℂ) ∉ K₂)
     (hClosed₁ : IsClosed K₁)
-    (hClosed₂ : IsClosed K₂)
     (hBdd₂ : Bornology.IsBounded K₂)
     (hPhi :
       ∀ z₁ z₂ : ℂ,

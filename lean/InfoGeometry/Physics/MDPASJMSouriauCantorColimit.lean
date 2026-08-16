@@ -65,8 +65,8 @@ repo-owned Cantor fractal boundary.
 -/
 structure MDPASCantorAddressSystem
     (ι : Type*) [Fintype ι] [Nonempty ι]
-    (Op : Type*) [Ring Op] [Algebra ℝ Op]
-    (State LieAlgebra LieDual : Type*) where
+    (Op : Type*) [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
+    (State LieAlgebra LieDual : Type*) [AddMonoid LieAlgebra] where
   direct : FiniteMDPASJMDirectSystem ι Op State LieAlgebra LieDual
   address : ∀ _n : ℕ, Op → (ℕ → Bool)
   address_bond : ∀ n x, address (n + 1) (direct.bond n x) = address n x
@@ -74,8 +74,8 @@ structure MDPASCantorAddressSystem
 namespace MDPASCantorAddressSystem
 
 variable {ι : Type*} [Fintype ι] [Nonempty ι]
-variable {Op : Type*} [Ring Op] [Algebra ℝ Op]
-variable {State LieAlgebra LieDual : Type*}
+variable {Op : Type*} [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
+variable {State LieAlgebra LieDual : Type*} [AddMonoid LieAlgebra]
 
 /-- The proper infinite carrier is the established Cantor fractal boundary. -/
 abbrev ProperCantorCarrier (_T : MDPASCantorAddressSystem ι Op State LieAlgebra LieDual) : Type :=

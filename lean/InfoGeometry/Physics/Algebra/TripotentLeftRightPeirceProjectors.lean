@@ -393,6 +393,80 @@ theorem fiveGradeProjectors_sum_eq_id (e : R) :
   have h := jointPeirce_reconstruction e x
   simpa only [add_assoc, add_comm, add_left_comm] using h
 
+/-- The grouped weight `+2` projector is idempotent. -/
+@[simp] theorem gradePosTwoProjector_idempotent
+    {e : R} (he : e * e * e = e) :
+    gradePosTwoProjector e * gradePosTwoProjector e =
+      gradePosTwoProjector e := by
+  simpa [gradePosTwoProjector] using
+    (jointPeirceProjector_idempotent he .pos .neg)
+
+/-- The grouped weight `+1` projector is idempotent. -/
+@[simp] theorem gradePosOneProjector_idempotent
+    {e : R} (he : e * e * e = e) :
+    gradePosOneProjector e * gradePosOneProjector e =
+      gradePosOneProjector e := by
+  dsimp [gradePosOneProjector]
+  rw [add_mul, mul_add, mul_add]
+  rw [jointPeirceProjector_idempotent he .pos .zero,
+    jointPeirceProjector_idempotent he .zero .neg,
+    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.pos ≠ .zero),
+    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.zero ≠ .pos)]
+  simp
+
+/-- The grouped weight `0` projector is idempotent. -/
+@[simp] theorem gradeZeroProjector_idempotent
+    {e : R} (he : e * e * e = e) :
+    gradeZeroProjector e * gradeZeroProjector e =
+      gradeZeroProjector e := by
+  dsimp [gradeZeroProjector]
+  rw [add_mul, add_mul, mul_add, mul_add, mul_add, mul_add, mul_add, mul_add]
+  rw [jointPeirceProjector_idempotent he .pos .pos,
+    jointPeirceProjector_idempotent he .zero .zero,
+    jointPeirceProjector_idempotent he .neg .neg,
+    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.pos ≠ .zero),
+    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.pos ≠ .neg),
+    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.zero ≠ .pos),
+    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.zero ≠ .neg),
+    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.neg ≠ .pos),
+    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.neg ≠ .zero)]
+  simp
+
+/-- The grouped weight `-1` projector is idempotent. -/
+@[simp] theorem gradeNegOneProjector_idempotent
+    {e : R} (he : e * e * e = e) :
+    gradeNegOneProjector e * gradeNegOneProjector e =
+      gradeNegOneProjector e := by
+  dsimp [gradeNegOneProjector]
+  rw [add_mul, mul_add, mul_add]
+  rw [jointPeirceProjector_idempotent he .zero .pos,
+    jointPeirceProjector_idempotent he .neg .zero,
+    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.zero ≠ .neg),
+    jointPeirceProjector_mul_eq_zero_of_left_ne he (by decide : PeirceSign.neg ≠ .zero)]
+  simp
+
+/-- The grouped weight `-2` projector is idempotent. -/
+@[simp] theorem gradeNegTwoProjector_idempotent
+    {e : R} (he : e * e * e = e) :
+    gradeNegTwoProjector e * gradeNegTwoProjector e =
+      gradeNegTwoProjector e := by
+  simpa [gradeNegTwoProjector] using
+    (jointPeirceProjector_idempotent he .neg .pos)
+
+/-- All five adjoint-weight projectors are idempotent simultaneously. -/
+theorem fiveGradeProjectors_idempotent
+    {e : R} (he : e * e * e = e) :
+    gradeNegTwoProjector e * gradeNegTwoProjector e = gradeNegTwoProjector e ∧
+    gradeNegOneProjector e * gradeNegOneProjector e = gradeNegOneProjector e ∧
+    gradeZeroProjector e * gradeZeroProjector e = gradeZeroProjector e ∧
+    gradePosOneProjector e * gradePosOneProjector e = gradePosOneProjector e ∧
+    gradePosTwoProjector e * gradePosTwoProjector e = gradePosTwoProjector e := by
+  exact ⟨gradeNegTwoProjector_idempotent he,
+    gradeNegOneProjector_idempotent he,
+    gradeZeroProjector_idempotent he,
+    gradePosOneProjector_idempotent he,
+    gradePosTwoProjector_idempotent he⟩
+
 @[simp] theorem gradePosTwo_adjoint_weight
     {e : R} (he : e * e * e = e) (x : R) :
     e * gradePosTwoProjector e x -

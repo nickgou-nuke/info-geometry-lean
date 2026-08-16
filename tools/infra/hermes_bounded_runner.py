@@ -68,11 +68,8 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def load_json(path: Path, default: Any) -> Any:
-    if not path.exists():
-        return default
-    with path.open("r", encoding="utf-8") as handle:
-        return json.load(handle)
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def write_json(path: Path, payload: Any) -> None:

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
+import InfoGeometry.Physics.SolderingSpinConnectionBogoliubov
 import InfoGeometry.Optics.OperatorCausalSoldering
 import InfoGeometry.Optics.AbelianOperatorValuedConnection
 import InfoGeometry.Optics.JonesPoincareSphere
@@ -26,6 +27,32 @@ open InfoGeometry.Optics.OperatorValuedConnection
 open InfoGeometry.Optics.JonesPoincareSphere
 
 def matrixCommutator (A B : M2C) : M2C := A * B - B * A
+
+/-! ## Canonical soldering compatibility -/
+
+/-- The active spin-connection soldering form is the same Pauli matrix as the
+    canonical chiral momentum readout.  This promotes the earlier proof-level
+    identity to the physics owner used by the downstream operator bridges. -/
+theorem soldering_eq_pauliMomentum (P : FourMomentum) :
+    SolderingSpinConnectionBogoliubov.solder P.E P.px P.py P.pz =
+      pauliMomentum P := by
+  rcases P with ⟨E, px, py, pz⟩
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [SolderingSpinConnectionBogoliubov.solder,
+      SolderingSpinConnectionBogoliubov.σ1,
+      SolderingSpinConnectionBogoliubov.σ2,
+      SolderingSpinConnectionBogoliubov.σ3,
+      pauliMomentum, Matrix.smul_apply, Matrix.add_apply] <;>
+    ring_nf
+
+/-- The soldered spin-connection determinant is the Minkowski quadratic
+    invariant of the same four-momentum. -/
+theorem soldering_det_eq_minkowskiSq (P : FourMomentum) :
+    (SolderingSpinConnectionBogoliubov.solder P.E P.px P.py P.pz).det =
+      minkowskiSq P := by
+  rw [soldering_eq_pauliMomentum P]
+  exact det_pauliMomentum P
 
 theorem pauli_commutator_sigma1_sigma2 :
     matrixCommutator σ1 σ2 = (2 * Complex.I) • σ3 := by

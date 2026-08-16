@@ -198,7 +198,7 @@ A finite Dirac packet on the prime-Cantor lattice.
 finite algebraic module.
 -/
 @[rep_depth krein]
-abbrev PrimeCantorDirac (P : PrimeRegister) := ℕ → ℝ
+abbrev PrimeCantorDirac (_P : PrimeRegister) := ℕ → ℝ
 
 namespace PrimeCantorDirac
 

@@ -70,26 +70,30 @@ This combines:
 * the electron/hole channel flip square `C² = 1`;
 * the concrete `2×2` horizon isometry plus trace-zero/GW readback.
 -/
-theorem finite_andreev_diii_signature_packet
-    (state : InfallingParticle)
-    (ψ : AndreevAmplitude) :
-    AndreevTwin (AndreevTwin state) = -state ∧
-      InfoGeometry.Physics.FermionicAndreevReflection.amplitudeNormSq
+theorem finite_andreev_twin_square_readback (state : InfallingParticle) :
+    AndreevTwin (AndreevTwin state) = -state :=
+  andreevTwin_sq state
+
+theorem finite_andreev_twin_norm_readback (state : InfallingParticle) :
+    InfoGeometry.Physics.FermionicAndreevReflection.amplitudeNormSq
           (AndreevTwin state) =
-        InfoGeometry.Physics.FermionicAndreevReflection.amplitudeNormSq
-          state ∧
-      AndreevTwin (AndreevTwin (AndreevTwin (AndreevTwin state))) = state ∧
-      andreevFlipLinear (andreevFlipLinear ψ) = ψ ∧
-      ((concreteAndreevHorizonSMatrix.closure.moebiusParity.transpose *
-          concreteAndreevHorizonSMatrix.closure.moebiusParity =
-            concreteAndreevHorizonSMatrix.closure.I) ∧
-        concreteAndreevHorizonSMatrix.closure.gromovWittenIndex = 0) := by
-  exact ⟨
-    andreevTwin_sq state,
-    andreevTwin_normSq state,
-    andreevTwin_fourth state,
-    andreevFlipLinear_sq ψ,
-    concreteAndreevHorizon_information_preservation⟩
+        InfoGeometry.Physics.FermionicAndreevReflection.amplitudeNormSq state :=
+  andreevTwin_normSq state
+
+theorem finite_andreev_twin_fourth_readback (state : InfallingParticle) :
+    AndreevTwin (AndreevTwin (AndreevTwin (AndreevTwin state))) = state :=
+  andreevTwin_fourth state
+
+theorem finite_andreev_flip_square_readback (ψ : AndreevAmplitude) :
+    andreevFlipLinear (andreevFlipLinear ψ) = ψ :=
+  andreevFlipLinear_sq ψ
+
+theorem concrete_andreev_horizon_information_readback :
+    concreteAndreevHorizonSMatrix.closure.moebiusParity.transpose *
+        concreteAndreevHorizonSMatrix.closure.moebiusParity =
+      concreteAndreevHorizonSMatrix.closure.I ∧
+    concreteAndreevHorizonSMatrix.closure.gromovWittenIndex = 0 :=
+  concreteAndreevHorizon_information_preservation
 
 -- 2. Canonical DIII symmetry laws on the doubled real BdG carrier.
 

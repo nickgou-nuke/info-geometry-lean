@@ -16,8 +16,13 @@ namespace Legacy
 
 open Complex
 
-/-- The abstract C*-algebra analog for the Bost-Connes system. -/
-class BostConnesAlgebra (A : Type*) [Ring A] [Algebra ℂ A]
+/--
+The algebraic carrier used by this finite readout owner.
+
+The existing Mathlib `Algebra ℂ A` instance is the complete content here;
+this alias does not claim a C*-completion or a Bost--Connes dynamical system.
+-/
+abbrev BostConnesAlgebra (A : Type*) [Ring A] [Algebra ℂ A] := Algebra ℂ A
 
 /-- The Gelfand-Naimark-Segal (GNS) representation mapping for a state. -/
 structure GNSRepresentation (A H : Type*) [Ring A] [Algebra ℂ A] [AddCommGroup H] [Module ℂ H] where
@@ -35,9 +40,6 @@ noncomputable def kmsState (β : ℂ) : ℂ :=
 
 /-- The formal critical-point parameter. -/
 def criticalBeta : ℂ := 1
-
-/-- The formal readout at the critical-point parameter. -/
-theorem kmsState_critical : kmsState criticalBeta = riemannZeta 1 := rfl
 
 /-- Cyclicity of the supplied GNS representation carrier. -/
 theorem cyclic_vacuum_representation_exists

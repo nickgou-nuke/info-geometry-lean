@@ -103,14 +103,12 @@ Mac Lane triangle-style graph law on the Zorn diagonal shell.
 Interpreting the first leg as a diagonal source factor matches the local
 associator-vanishing branch recorded in `ProjectiveLine.lean`.
 -/
-theorem MacLane_Triangle_Equation
+theorem diagonal_associator_vanishes
     {R : Type*} [CommRing R]
     {V : Type*} [AddCommGroup V] [Module R V]
     (B : V →ₗ[R] V →ₗ[R] R)
-    (_v_i : ZornMatrix R V)
     (v_j x : ZornMatrix R V)
-    (z : R)
-    (_hx : half_eq_e1 x) :
+    (z : R) :
     associator B (ZornMatrix.diag (1 : R) z) x (star (mul B v_j x)) = ZornMatrix.diag 0 0 := by
   exact op1_associator_vanishes_of_diag_left (B := B) v_j x z
 

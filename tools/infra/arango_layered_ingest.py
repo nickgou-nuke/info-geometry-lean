@@ -147,49 +147,8 @@ def rewrite_endpoint(endpoint: Any, *, raw_collection: str | None, overlay_colle
     return endpoint
 
 
-def iter_jsonl(path: Path, spec: CollectionSpec) -> Iterable[dict[str, Any]]:
-    with path.open("r", encoding="utf-8") as handle:
-        for line_no, line in enumerate(handle, start=1):
-            line = line.strip()
-            if not line:
-                continue
-            row = json.loads(line)
-            if not isinstance(row, dict):
-                raise ValueError(f"{path}:{line_no}: expected JSON object")
-            
-            # Map declaration DAG rows to Arango document/edge rows when the
-            # JSONL source is the authoritative artifacts/dag/index projection.
-            # Keep existing _key/_from/_to values untouched for already-Arango-shaped
-            # exports such as topology overlays or wire topology rows.
-            if not spec.edge and "_key" not in row:
-                name = row.get("name")
-                if name:
-                    row["_key"] = dag_decl_key(name)
-            elif spec.edge and ("_from" not in row or "_to" not in row):
-                src = row.get("src")
-                dst = row.get("dst")
-                vertex_collection = spec.vertex_collection or "ig_nodes"
-                if src and dst:
-                    row["_from"] = f"{vertex_collection}/{dag_decl_key(src)}"
-                    row["_to"] = f"{vertex_collection}/{dag_decl_key(dst)}"
-
-            if spec.edge:
-                row["_from"] = rewrite_endpoint(
-                    row.get("_from"),
-                    raw_collection=spec.vertex_collection,
-                    overlay_collection=spec.overlay_collection,
-                    row=row,
-                    endpoint_type="from",
-                )
-                row["_to"] = rewrite_endpoint(
-                    row.get("_to"),
-                    raw_collection=spec.vertex_collection,
-                    overlay_collection=spec.overlay_collection,
-                    row=row,
-                    endpoint_type="to",
-                )
-
-            yield row
+# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
+from igf.common.json_io import iter_jsonl
 
 
 def import_batch(target: ArangoTarget, collection: str, rows: list[dict[str, Any]]) -> dict[str, int]:

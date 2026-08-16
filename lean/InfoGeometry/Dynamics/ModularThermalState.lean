@@ -284,40 +284,6 @@ noncomputable def unruhHestenesKreinAnalyticContinuation (beta : ℝ) :
     intro t a
     simp [unruhSigmaC, complexClockPoint, add_comm]
 
-/--
-KMS strip data on the doubled/Krein carrier with a symmetric evaluation map.
--/
-noncomputable def unruhHestenesKreinKMSStripData (beta : ℝ) :
-    HestenesKreinKMSStripData Obs where
-  omega_eval := fun _a _b => 0
-  analytic := unruhHestenesKreinAnalyticContinuation (E := E) beta
-  boundary_lower := by
-    intro t a b
-    rfl
-  boundary_upper := by
-    intro t a b
-    rfl
-
-/--
-Generalized Stokes socket on doubled/Krein observables (conservative identity
-interface).
--/
-def unruhGeneralizedStokesBoundaryData : GeneralizedStokesBoundaryData Obs where
-  contourIntegral := fun _F => 0
-  interiorIntegral := fun _F => 0
-  stokes_balance := by intro F; rfl
-
-/--
-Concrete Hestenes-Krein KMS+Stokes bridge on the doubled carrier.
--/
-noncomputable def unruhHestenesKreinKMSStokesBridge (beta : ℝ) :
-    HestenesKreinKMSStokesBridge Obs where
-  strip := unruhHestenesKreinKMSStripData (E := E) beta
-  stokes := unruhGeneralizedStokesBoundaryData (E := E)
-  kms_from_stokes := by
-    intro t a b
-    exact kms_upper_from_strip_top (K := unruhHestenesKreinKMSStripData (E := E) beta) t a b
-
 end UnruhKreinInstantiation
 
 end InfoGeometry.Dynamics

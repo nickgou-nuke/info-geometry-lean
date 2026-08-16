@@ -102,19 +102,4 @@ theorem basis_product_E31_E12 : E31 * E12 = E23 := by
   fin_cases i <;> fin_cases j <;>
     norm_num [E12, E23, E31, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_mul_I]
 
-theorem section16_capstone :
-    (∀ M : Mat2C, evenToMatrix (matrixToEven M) = M) ∧
-    (∀ x : EvenCoord, matrixToEven (evenToMatrix x) = x) ∧
-    E12 * E12 = -I₂ ∧ E23 * E23 = -I₂ ∧ E31 * E31 = -I₂ ∧
-    E12 * E23 = E31 ∧ E23 * E31 = E12 ∧ E31 * E12 = E23 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact evenToMatrix_matrixToEven
-  · exact matrixToEven_evenToMatrix
-  · exact basis_square_E12
-  · exact basis_square_E23
-  · exact basis_square_E31
-  · exact basis_product_E12_E23
-  · exact basis_product_E23_E31
-  · exact basis_product_E31_E12
-
 end Section16

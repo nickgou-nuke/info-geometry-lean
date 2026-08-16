@@ -15,9 +15,9 @@ open InfoGeometry.Algebra.FiveGradedTKK
 variable (R L : Type*) [CommRing R]
 variable [LieRing L] [LieAlgebra R L]
 
-namespace FiveGradedLieCarrier
+namespace FiveGradedLieData
 
-variable (G : FiveGradedLieCarrier R L)
+variable (G : FiveGradedLieData R L)
 
 /-- Homogeneous inputs satisfy the ambient cyclic Jacobi identity. Grade
 membership records the intended five-graded inputs without asserting bracket
@@ -30,6 +30,6 @@ theorem lie_jacobi_identity
     ⁅x, ⁅y, z⁆⁆ + ⁅y, ⁅z, x⁆⁆ + ⁅z, ⁅x, y⁆⁆ = 0 := by
   exact lie_jacobi x y z
 
-end FiveGradedLieCarrier
+end FiveGradedLieData
 
 end InfoGeometry.Algebra.FiveGradedLieAntisymmetry

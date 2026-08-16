@@ -246,7 +246,7 @@ abbrev WeylIntegrationPillarData
     (WeylIntegrationData GaugeGroup Torus ×
       (InfiniteCoadjointOrbitMetriplecticContext Orbit LieAlg LieCoalg ×
         (FiniteMellinScalingDatum Func R ×
-          (SpectralTaylorMellinPacket ι × LaplaceMellinScaleShapePacket))))
+          (SpectralTaylorMellinData ι × LaplaceMellinScaleShapePacket))))
 
 abbrev WeylIntegrationPillarData.quotient
     {Space GaugeGroup Torus Orbit LieAlg LieCoalg Func R ι : Type}
@@ -306,12 +306,6 @@ theorem moment_mem_coadjoint_orbit (x : Orbit) :
     P.orbit.isOnCoadjointOrbit (P.orbit.moment x) :=
   InfiniteCoadjointOrbitMetriplecticContext.moment_lands_on_coadjoint_orbit P.orbit x
 
-/-- Metriplectic nonnegativity is delegated to the coadjoint-orbit owner. -/
-theorem totalEntropyRate_nonnegative (x : Orbit) :
-    0 ≤ P.orbit.totalEntropyRate x :=
-  InfiniteCoadjointOrbitMetriplecticContext.coadjoint_orbit_metriplectic_second_law
-    P.orbit x
-
 /-- Finite root/orbit Mellin character factorization is delegated to the Mellin owner. -/
 theorem finite_mellin_orbit_factor (A : Finset ℕ) (f : Func) :
     P.mellin.Mellin (Finset.sum A (fun n => P.mellin.sample n f)) =
@@ -343,7 +337,7 @@ theorem spectral_heat_readout_eq_prefix (t : ℂ) (N : ℕ) :
       InfoGeometry.Analysis.FiniteSpectralMellinTaylor.FiniteSpectralData.taylorMomentPrefix
         P.spectral.data
         (InfoGeometry.Analysis.FiniteSpectralHeatMellin.heatTaylorCoeff t) N :=
-  SpectralTaylorMellinPacket.heat_readout_eq_prefix P.spectral t N
+  SpectralTaylorMellinData.heat_readout_eq_prefix P.spectral t N
 
 /-- Finite spectral scalar readout uses the Taylor/Mellin owner. -/
 theorem spectral_scalar_readout_eq :
@@ -351,7 +345,7 @@ theorem spectral_scalar_readout_eq :
         P.spectral.data P.spectral.heatMellinScalar =
       InfoGeometry.Analysis.FiniteSpectralHeatMellin.spectralScalingReadout
         P.spectral.data P.spectral.scaleScalar :=
-  SpectralTaylorMellinPacket.scalar_readout_eq P.spectral
+  SpectralTaylorMellinData.scalar_readout_eq P.spectral
 
 end WeylIntegrationPillarData
 
@@ -364,44 +358,6 @@ theorem weylKernel_laplaceTransform_eq_fourierChar
       ∫ t : ℝ, (Real.fourierChar (-(w * t)) : ℂ) • f t :=
   InfoGeometry.Analysis.LaplaceFourierComparison.laplaceTransform_eq_fourierChar
     (f := f) (w := w)
-
-/--
-Algebraic two-channel shadow of a split boundary metric bracket.
-
-The factors `gPlus` and `gMinus` are the dual metric coefficients after
-restriction to the boundary; `left` and `right` are the already-evaluated
-chiral operator/readout products.
--/
-def splitBoundaryMetricBracket {R : Type*} [Semiring R]
-    (gPlus gMinus left right : R) : R :=
-  gPlus * left + gMinus * right
-
-/--
-If both boundary dual metric coefficients vanish, the split metric bracket
-vanishes.  This is the kernel-checkable algebraic part of the proposed
-metriplectic boundary barrier.
--/
-theorem splitBoundaryMetricBracket_eq_zero_of_boundary_dual_zero
-    {R : Type*} [Semiring R]
-    {gPlus gMinus left right : R}
-    (hgPlus : gPlus = 0) (hgMinus : gMinus = 0) :
-    splitBoundaryMetricBracket gPlus gMinus left right = 0 := by
-  simp [splitBoundaryMetricBracket, hgPlus, hgMinus]
-
-/-- Coordinate-free algebraic Connes/Radon--Nikodym boundary velocity shadow. -/
-def connesBoundaryCocycleDerivative
-    {E : Type*} [AddCommGroup E] [Module ℂ E]
-    (H₁ H₂ : E) : E :=
-  Complex.I • (H₂ - H₁)
-
-/-- Equal Hamiltonian readouts give zero boundary cocycle derivative. -/
-theorem connesBoundaryCocycleDerivative_eq_zero_of_eq
-    {E : Type*} [AddCommGroup E] [Module ℂ E]
-    {H₁ H₂ : E}
-    (hH : H₁ = H₂) :
-    connesBoundaryCocycleDerivative H₁ H₂ = 0 := by
-  subst H₂
-  simp [connesBoundaryCocycleDerivative]
 
 /-- Minimal carrier for the Klein-bottle sheet flip used by non-orientable boundary maps. -/
 abbrev KleinBottleSheet (Carrier : Type*) := Carrier × Chirality

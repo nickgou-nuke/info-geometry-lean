@@ -105,6 +105,14 @@ theorem symplecticI_apply_I4c_mulVec (x : R4) :
   simp [I4c, Matrix.mulVec, dotProduct, Fin.sum_univ_succ]
   ring
 
+/-! The bilinear Kähler compatibility behind the diagonal readout. -/
+
+theorem symplecticI_I4c_mulVec_eq_dot4 (x y : R4) :
+    symplecticI x (I4c.mulVec y) = dot4 x y := by
+  dsimp [symplecticI, dot4]
+  simp [I4c, Matrix.mulVec, dotProduct, Fin.sum_univ_succ]
+  ring
+
 theorem dot4_pos_of_exists_ne_zero (x : R4) (hx : ∃ i : Fin 4, x i ≠ 0) :
     0 < dot4 x x := by
   rcases hx with ⟨i, hi⟩

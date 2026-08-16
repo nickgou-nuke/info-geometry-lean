@@ -235,12 +235,8 @@ def normalize_row(source_path: Path, row: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=True, sort_keys=True) + "\n")
-    return len(rows)
+# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
+from igf.common.json_io import write_jsonl
 
 
 def summarize(rows: list[dict[str, Any]], input_path: Path, out_path: Path) -> dict[str, Any]:

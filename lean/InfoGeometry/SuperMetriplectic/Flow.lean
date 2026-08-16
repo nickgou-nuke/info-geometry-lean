@@ -138,36 +138,6 @@ theorem equilibrium_iff_dissipativeFlow_eq_zero
 end MetriplecticFlow
 
 /--
-Scalar-body shadow of the coadjoint-leaf decomposition.
-
-`leafEntropyChange` records the reversible/symplectic motion along a leaf,
-while `transverseEntropyProduction` records the Onsager motion across leaves.
--/
-structure CoadjointLeafEntropySplit where
-  transverseEntropyProduction : ℝ
-  totalEntropyChange : ℝ
-  transverseEntropyProduction_nonnegative :
-    0 ≤ transverseEntropyProduction
-  totalEntropyChange_eq_transverse :
-    totalEntropyChange = transverseEntropyProduction
-
-namespace CoadjointLeafEntropySplit
-
-/-- Transverse Onsager motion carries nonnegative entropy production. -/
-theorem transverse_entropy_nonnegative (S : CoadjointLeafEntropySplit) :
-    0 ≤ S.transverseEntropyProduction :=
-  S.transverseEntropyProduction_nonnegative
-
-/-- Total entropy change is nonnegative. -/
-theorem totalEntropyChange_nonnegative
-    (S : CoadjointLeafEntropySplit) :
-    0 ≤ S.totalEntropyChange := by
-  rw [S.totalEntropyChange_eq_transverse]
-  exact S.transverseEntropyProduction_nonnegative
-
-end CoadjointLeafEntropySplit
-
-/--
 Capstone packet for relativistic conformal viscous hydrodynamics at the
 body-level abstraction used in this folder.
 

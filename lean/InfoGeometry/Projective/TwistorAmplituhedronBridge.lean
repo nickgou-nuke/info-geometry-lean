@@ -65,10 +65,14 @@ theorem common_twistor_incidence_forces_null_boundary
     q22 (X - Y) = 0 :=
   incident_points_null_separated Z X Y hX hY hPi
 
-/-- The Penrose projective null twistor space has a concrete inhabitant. -/
+/- The Penrose projective null twistor owner exposes a concrete point. -/
+noncomputable abbrev penrose_projective_null_twistor_point :
+    PenroseProjectiveNullTwistor :=
+  penroseProjectiveNullTwistor
+
 theorem penrose_projective_null_twistor_readout :
     Nonempty PenroseProjectiveNullTwistor :=
-  penroseProjectiveNullTwistor_nonempty
+  ⟨penrose_projective_null_twistor_point⟩
 
 /--
 Readout of the existing candidate `Conf₃` spin-tiled rank arithmetic.

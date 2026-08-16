@@ -155,7 +155,7 @@ open DAG
 
 The theorem below packages the finite identities used by this owner.
 -/
-def inductionColimitPillar : Prop :=
+def finite_induction_readout : Prop :=
         InfoGeometry.Canonical.SplitCliffordJordanWigner.P *
           InfoGeometry.Canonical.SplitCliffordJordanWigner.P =
         (1 : InfoGeometry.Canonical.SplitCliffordJordanWigner.M2R) ∧
@@ -173,7 +173,7 @@ def inductionColimitPillar : Prop :=
             InfoGeometry.Quantum.KitaevChain.macroscopicVolume chain₂) ∧
       ∃ ε : DAG.AnalyticBridge.UHFAlgebra, ε * ε = 0
 
-theorem pillar_induction_is_colimit : inductionColimitPillar := by
+theorem finite_induction_readout_proved : finite_induction_readout := by
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
   · exact InfoGeometry.Canonical.SplitCliffordJordanWigner.parity_sq_eq_one
   · exact InfoGeometry.Canonical.SplitCliffordJordanWigner.TwoMode.jw_cross_annihilate_anticomm
@@ -188,7 +188,7 @@ theorem pillar_induction_is_colimit : inductionColimitPillar := by
 
 The theorem below states the supplied chain rule and invariant readout.
 -/
-theorem pillar_determinant_is_radon_nikodym
+theorem finite_scalar_rn_chain_readout
     {A : Type*} [Monoid A] (vol : A →* ℝˣ) :
     (∀ f g : A,
         InfoGeometry.Volume.RadonNikodym.scalarRN vol (f * g) =
@@ -208,7 +208,7 @@ theorem pillar_determinant_is_radon_nikodym
 
 The theorem below derives the stated readouts from explicit premises.
 -/
-theorem pillar_monge_ampere_is_modular
+theorem finite_monge_ampere_readout
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] [FiniteDimensional ℝ E]
     (n : Nat)
@@ -229,7 +229,7 @@ theorem pillar_monge_ampere_is_modular
 /--
 **Pillar 4: finite Weyl/primon readouts.**
 -/
-theorem pillar_weyl_character_is_inverse_zeta
+theorem finite_weyl_partition_readout
     (L : FormalPrimeRootLattice) (β : ℝ) :
     finitePrimonPartition L β = (evaluatedWeylDenominator L β)⁻¹ ∧
       finitePrimonPartition L β =
@@ -244,13 +244,13 @@ theorem pillar_weyl_character_is_inverse_zeta
 def primonColimitIdeleSymmetryFormalizationDebt : String :=
   "No Lean owner currently exposes an idèle/profinite-unit group action on the primon colimit; the available kernel-backed symmetry is finite Boolean Weyl data."
 
-theorem pillar_symmetry_available_boolean_weyl
+theorem finite_boolean_weyl_sign_readout
     (L : FormalPrimeRootLattice) (w : BooleanWeylGroup L) :
     weylSign w = (-1 : ℝ) ^ w.support.card :=
   rfl
 
 /-- A finite conjunction of the four supplied pillar readouts used below. -/
-theorem absolute_capstone
+theorem finite_readout_packet
     {A : Type*} [Monoid A] (vol : A →* ℝˣ)
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
     [CompleteSpace E] [FiniteDimensional ℝ E]
@@ -262,7 +262,7 @@ theorem absolute_capstone
     (hUnit : InfoGeometry.Canonical.MoE.relativeVolumeChangeRN n M = 1)
     (x : E)
     (L : FormalPrimeRootLattice) (β : ℝ) :
-    inductionColimitPillar ∧
+    finite_induction_readout ∧
       (∀ f g : A,
         InfoGeometry.Volume.RadonNikodym.scalarRN vol (f * g) =
           InfoGeometry.Volume.RadonNikodym.scalarRN vol f +
@@ -273,10 +273,10 @@ theorem absolute_capstone
         finitePrimonPartition L β =
           ∏ p ∈ L.primes, (1 - (p : ℝ) ^ (-β))⁻¹) := by
   exact
-    ⟨pillar_induction_is_colimit,
-      (pillar_determinant_is_radon_nikodym vol).1,
-      pillar_monge_ampere_is_modular (n := n) (Kgeo := Kgeo) (M := M)
+    ⟨finite_induction_readout_proved,
+      (finite_scalar_rn_chain_readout vol).1,
+      finite_monge_ampere_readout (n := n) (Kgeo := Kgeo) (M := M)
         hSource hUnit x,
-      pillar_weyl_character_is_inverse_zeta L β⟩
+      finite_weyl_partition_readout L β⟩
 
 end InfoGeometry.Arithmetic.AbsoluteCapstone

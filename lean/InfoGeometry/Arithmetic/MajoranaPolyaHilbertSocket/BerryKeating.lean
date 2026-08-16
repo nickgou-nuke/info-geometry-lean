@@ -15,7 +15,7 @@ The critical line is attributed to the unitary Mellin spectrum of the
 Berry--Keating dilation sector, not to ordinary Fock-space summability of
 Dirichlet coefficients.
 -/
-structure MellinPlancherelCriticalLinePacket
+structure MellinPlancherelCriticalLineData
     (MellinWave MellinNorm : Type) where
   realPart : ℝ
   imaginaryHeight : ℝ
@@ -23,10 +23,10 @@ structure MellinPlancherelCriticalLinePacket
   mellinNorm : MellinNorm
   realPart_eq_half : realPart = (1 / 2 : ℝ)
 
-namespace MellinPlancherelCriticalLinePacket
+namespace MellinPlancherelCriticalLineData
 
 variable {MellinWave MellinNorm : Type}
-variable (P : MellinPlancherelCriticalLinePacket MellinWave MellinNorm)
+variable (P : MellinPlancherelCriticalLineData MellinWave MellinNorm)
 
 /-- The packet places the real part on the critical line. -/
 theorem criticalLine : IsCriticalLineRealPart P.realPart := by
@@ -37,14 +37,14 @@ The critical-line proof is definitional because `IsCriticalLineRealPart σ`
 is the equality `σ = 1 / 2`. -/
 def mkCriticalLine (MellinWave MellinNorm : Type)
     (mellinWave : MellinWave) (mellinNorm : MellinNorm) (imaginaryHeight : ℝ) :
-    MellinPlancherelCriticalLinePacket MellinWave MellinNorm where
+    MellinPlancherelCriticalLineData MellinWave MellinNorm where
   realPart := 1/2
   imaginaryHeight := imaginaryHeight
   mellinWave := mellinWave
   mellinNorm := mellinNorm
   realPart_eq_half := by rfl
 
-end MellinPlancherelCriticalLinePacket
+end MellinPlancherelCriticalLineData
 
 /--
 Formal Berry--Keating operator packet.
@@ -54,7 +54,7 @@ The intended model is a symmetrized dilation operator of the form
 closure, boundary conditions, and self-adjoint extension data are analytic
 choices supplied by a concrete owner.
 -/
-structure BerryKeatingOperatorPacket
+structure BerryKeatingOperatorData
     (Carrier Operator Domain : Type) where
   carrier : Carrier
   domain : Domain
@@ -62,9 +62,9 @@ structure BerryKeatingOperatorPacket
   momentum : Operator
   symmetrizedDilation : Operator
 
-namespace BerryKeatingOperatorPacket
+namespace BerryKeatingOperatorData
 
-end BerryKeatingOperatorPacket
+end BerryKeatingOperatorData
 
 /--
 Majorana modification of a Berry--Keating spectral operator.
@@ -73,16 +73,16 @@ The `majoranaDirac` field is the candidate real operator whose zero modes are
 to be compared with zeta zero data.  The square-root normalization and
 split-Clifford/CAR compatibility are supplied as laws by the concrete model.
 -/
-structure MajoranaBerryKeatingOperatorPacket
+structure MajoranaBerryKeatingOperatorData
     (Carrier Operator Domain Mode : Type) where
-  berryKeating : BerryKeatingOperatorPacket Carrier Operator Domain
+  berryKeating : BerryKeatingOperatorData Carrier Operator Domain
   majoranaMode : Mode → Operator
   thermalOperator : Mode → Operator
   majoranaDirac : Operator
   squareRootEnergyCoefficient : Mode → ℝ
 
-namespace MajoranaBerryKeatingOperatorPacket
+namespace MajoranaBerryKeatingOperatorData
 
-end MajoranaBerryKeatingOperatorPacket
+end MajoranaBerryKeatingOperatorData
 
 end InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket

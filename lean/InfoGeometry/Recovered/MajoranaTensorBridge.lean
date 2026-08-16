@@ -50,6 +50,66 @@ def majoranaSignatureSquaresStatement : Prop :=
   gamma2_maj * gamma2_maj = -1 ∧
   gamma3_maj * gamma3_maj = -1
 
+/-- The displayed real Majorana matrices satisfy their stated signature squares. -/
+theorem majoranaSignatureSquares : majoranaSignatureSquaresStatement := by
+  unfold majoranaSignatureSquaresStatement
+  constructor
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [gamma0_maj, Matrix.mul_apply, Fin.sum_univ_four]
+  constructor
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [gamma1_maj, Matrix.mul_apply, Fin.sum_univ_four]
+  constructor
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [gamma2_maj, Matrix.mul_apply, Fin.sum_univ_four]
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [gamma3_maj, Matrix.mul_apply, Fin.sum_univ_four]
+
+lemma gamma0_gamma1_anticommute :
+    gamma0_maj * gamma1_maj + gamma1_maj * gamma0_maj = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma0_maj, gamma1_maj]
+
+lemma gamma0_gamma2_anticommute :
+    gamma0_maj * gamma2_maj + gamma2_maj * gamma0_maj = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma0_maj, gamma2_maj]
+
+lemma gamma1_gamma2_anticommute :
+    gamma1_maj * gamma2_maj + gamma2_maj * gamma1_maj = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma1_maj, gamma2_maj]
+
+lemma gamma1_gamma3_anticommute :
+    gamma1_maj * gamma3_maj + gamma3_maj * gamma1_maj = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma1_maj, gamma3_maj]
+
+lemma gamma2_gamma3_anticommute :
+    gamma2_maj * gamma3_maj + gamma3_maj * gamma2_maj = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma2_maj, gamma3_maj]
+
+/-- The displayed Majorana generators anticommute in every mixed pair. -/
+theorem majorana_mixed_anticommutation :
+    gamma0_maj * gamma1_maj + gamma1_maj * gamma0_maj = 0 ∧
+    gamma0_maj * gamma2_maj + gamma2_maj * gamma0_maj = 0 ∧
+    gamma1_maj * gamma2_maj + gamma2_maj * gamma1_maj = 0 ∧
+    gamma1_maj * gamma3_maj + gamma3_maj * gamma1_maj = 0 ∧
+    gamma2_maj * gamma3_maj + gamma3_maj * gamma2_maj = 0 := by
+  exact ⟨gamma0_gamma1_anticommute, gamma0_gamma2_anticommute,
+    gamma1_gamma2_anticommute, gamma1_gamma3_anticommute,
+    gamma2_gamma3_anticommute⟩
+
 /-- The mixed commutator `Σᵘᵛ = [γᵘ, γᵛ]`. -/
 noncomputable def realLorentzGenerator (gamma_u gamma_v : MajoranaMatrix) : MajoranaMatrix :=
   gamma_u * gamma_v - gamma_v * gamma_u
@@ -73,8 +133,16 @@ theorem majorana_lorentz_sandwich (S V S_inv : MajoranaMatrix)
 noncomputable def gamma5_maj : MajoranaMatrix :=
   gamma0_maj * gamma1_maj * gamma2_maj * gamma3_maj
 
-/-- Statement shape for the grading identity. -/
+/-- Statement for the grading identity. -/
 def gamma5_maj_sq_statement : Prop := gamma5_maj * gamma5_maj = 1
+
+/-- The displayed volume element has the expected real grading square. -/
+theorem gamma5_maj_sq : gamma5_maj_sq_statement := by
+  unfold gamma5_maj_sq_statement gamma5_maj
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma0_maj, gamma1_maj, gamma2_maj, gamma3_maj,
+      Matrix.mul_apply, Fin.sum_univ_four]
 
 /-- Candidate chiral projectors. -/
 noncomputable def chiralProjectorL : MajoranaMatrix := (1 / 2 : ℝ) • (1 - gamma5_maj)
@@ -83,11 +151,31 @@ noncomputable def chiralProjectorR : MajoranaMatrix := (1 / 2 : ℝ) • (1 + ga
 /-- Chiral supertrace expression. -/
 noncomputable def chiralSupertrace (A : MajoranaMatrix) : ℝ := Matrix.trace (gamma5_maj * A)
 
-/-- Statement shape for the basic chiral trace identities. -/
+/-- Statement for the basic chiral trace identities. -/
 def chiralTraceStatement : Prop :=
   chiralSupertrace 1 = 0 ∧
   Matrix.trace chiralProjectorL = 2 ∧
   Matrix.trace chiralProjectorR = 2
+
+/-- The displayed chiral grading has vanishing supertrace and balanced traces. -/
+theorem chiralTrace : chiralTraceStatement := by
+  unfold chiralTraceStatement chiralSupertrace chiralProjectorL chiralProjectorR
+  have hgamma5 : gamma5_maj =
+      !![ 0,  0,  0,  1;
+          0,  0, -1,  0;
+          0, -1,  0,  0;
+          1,  0,  0,  0] := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [gamma5_maj, gamma0_maj, gamma1_maj, gamma2_maj, gamma3_maj,
+        Matrix.mul_apply, Fin.sum_univ_four]
+  rw [hgamma5]
+  constructor
+  · norm_num [Matrix.trace, Matrix.mul_apply, Fin.sum_univ_four,
+      Matrix.cons_val_two, Matrix.cons_val_three]
+  constructor <;>
+    norm_num [Matrix.trace, Fin.sum_univ_four,
+      Matrix.cons_val_two, Matrix.cons_val_three]
 
 /-- Candidate nilpotent generator. -/
 noncomputable def cuntzGeneratorPlus : MajoranaMatrix := (1 / 2 : ℝ) • (gamma0_maj + gamma2_maj)
@@ -95,10 +183,35 @@ noncomputable def cuntzGeneratorPlus : MajoranaMatrix := (1 / 2 : ℝ) • (gamm
 /-- Candidate parity-conjugate nilpotent generator. -/
 noncomputable def cuntzGeneratorMinus : MajoranaMatrix := (1 / 2 : ℝ) • (gamma0_maj - gamma2_maj)
 
-/-- Statement shape for the nilpotent/anticommutator identities. -/
+/-- Statement for the nilpotent/anticommutator identities. -/
 def cuntzGeneratorStatement : Prop :=
   cuntzGeneratorPlus * cuntzGeneratorPlus = 0 ∧
   cuntzGeneratorMinus * cuntzGeneratorMinus = 0 ∧
   cuntzGeneratorPlus * cuntzGeneratorMinus + cuntzGeneratorMinus * cuntzGeneratorPlus = 1
+
+/-- The displayed generators satisfy the finite nilpotent Cuntz relations. -/
+theorem cuntzGenerator : cuntzGeneratorStatement := by
+  unfold cuntzGeneratorStatement
+  have h0 : gamma0_maj * gamma0_maj = (1 : MajoranaMatrix) :=
+    majoranaSignatureSquares.1
+  have h2 : gamma2_maj * gamma2_maj = (-1 : MajoranaMatrix) :=
+    majoranaSignatureSquares.2.2.1
+  have h02 : gamma0_maj * gamma2_maj = -(gamma2_maj * gamma0_maj) :=
+    eq_neg_of_add_eq_zero_left gamma0_gamma2_anticommute
+  constructor
+  · dsimp [cuntzGeneratorPlus]
+    simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm]
+    rw [h0, h2, h02]
+    module
+  constructor
+  · dsimp [cuntzGeneratorMinus]
+    simp only [sub_mul, mul_sub, smul_mul_assoc, mul_smul_comm]
+    rw [h0, h2, h02]
+    module
+  · dsimp [cuntzGeneratorPlus, cuntzGeneratorMinus]
+    simp only [add_mul, mul_add, sub_mul, mul_sub, smul_mul_assoc,
+      mul_smul_comm]
+    rw [h0, h2, h02]
+    module
 
 end InfoGeometry.MajoranaTensorBridge

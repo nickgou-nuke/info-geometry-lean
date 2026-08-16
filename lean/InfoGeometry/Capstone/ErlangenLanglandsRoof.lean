@@ -20,8 +20,6 @@ export InfoGeometry.Capstone.ErlangenLanglandsConnesCapstone
    langlands_galois_state_separation
    ConnesAnomalyDikinStatement
    connes_anomaly_and_dikin_readout
-   TomitaJMatrixStatement
-   tomita_j_matrix_readout
    FibonacciQuantumGroupStatement
    fibonacci_quantum_group_readout
    TrinityCapstoneStatement

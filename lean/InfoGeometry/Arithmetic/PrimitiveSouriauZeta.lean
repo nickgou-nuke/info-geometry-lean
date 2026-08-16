@@ -173,7 +173,7 @@ Finite MaxEnt-style optimizer property for the primitive arithmetic objective.
 This is proof-carrying optimization data.  It does not assert that primes are
 the optimizer unless such a property is supplied.
 -/
-structure FinitePrimitiveMaxEntWitness
+structure FinitePrimitiveMaxEntData
     (threshold : ℕ)
     (candidate : Finset ℕ) where
   candidate_primitive : PrimitiveFinset candidate
@@ -184,13 +184,13 @@ structure FinitePrimitiveMaxEntWitness
       SupportedAboveFinset threshold A →
         primitiveWeightSum A ≤ primitiveWeightSum candidate
 
-namespace FinitePrimitiveMaxEntWitness
+namespace FinitePrimitiveMaxEntData
 
 variable {threshold : ℕ} {candidate : Finset ℕ}
 
 /-- Re-export of the supplied primitive-weight maximality law. -/
 theorem weight_le_candidate
-    (W : FinitePrimitiveMaxEntWitness threshold candidate)
+    (W : FinitePrimitiveMaxEntData threshold candidate)
     (A : Finset ℕ)
     (hPrim : PrimitiveFinset A)
     (hSupp : SupportedAboveFinset threshold A) :
@@ -199,7 +199,7 @@ theorem weight_le_candidate
 
 /-- The candidate of a finite MaxEnt property is itself admissible finite data. -/
 def candidateAdmissible
-    (W : FinitePrimitiveMaxEntWitness threshold candidate) :
+    (W : FinitePrimitiveMaxEntData threshold candidate) :
     PrimitiveAdmissibleFinset where
   support := candidate
   threshold := threshold
@@ -207,11 +207,11 @@ def candidateAdmissible
   supportedAbove := W.candidate_supported
 
 @[simp] theorem candidateAdmissible_objective
-    (W : FinitePrimitiveMaxEntWitness threshold candidate) :
+    (W : FinitePrimitiveMaxEntData threshold candidate) :
     W.candidateAdmissible.objective = primitiveWeightSum candidate := by
   rfl
 
-end FinitePrimitiveMaxEntWitness
+end FinitePrimitiveMaxEntData
 
 /-! ## 3. Souriau calibration socket -/
 
@@ -402,7 +402,7 @@ model satisfying `PrimitiveSouriauZetaCalibration`.
 -/
 theorem entropyReadout_le_candidate_of_maxEnt
     {threshold : ℕ} {candidate A : Finset ℕ}
-    (W : FinitePrimitiveMaxEntWitness threshold candidate)
+    (W : FinitePrimitiveMaxEntData threshold candidate)
     (hPrim : PrimitiveFinset A)
     (hSupp : SupportedAboveFinset threshold A) :
     C.entropyReadout (C.stateOfFinset A) ≤
@@ -417,7 +417,7 @@ Souriau model satisfying `PrimitiveSouriauZetaCalibration`.
 -/
 theorem objectiveReadout_le_candidate_of_maxEnt
     {threshold : ℕ} {candidate A : Finset ℕ}
-    (W : FinitePrimitiveMaxEntWitness threshold candidate)
+    (W : FinitePrimitiveMaxEntData threshold candidate)
     (hPrim : PrimitiveFinset A)
     (hSupp : SupportedAboveFinset threshold A) :
     C.objectiveReadout (C.stateOfFinset A) ≤
@@ -430,7 +430,7 @@ theorem objectiveReadout_le_candidate_of_maxEnt
 theorem entropy_le_candidate_of_maxEnt
     {threshold : ℕ} {candidate A : Finset ℕ}
     (C : PrimitiveSouriauZetaCalibration State)
-    (W : FinitePrimitiveMaxEntWitness threshold candidate)
+    (W : FinitePrimitiveMaxEntData threshold candidate)
     (hPrim : PrimitiveFinset A)
     (hSupp : SupportedAboveFinset threshold A) :
     C.entropyReadout (C.stateOfFinset A) ≤
@@ -444,7 +444,7 @@ theorem entropy_le_candidate_of_maxEnt
 theorem objective_le_candidate_of_maxEnt
     {threshold : ℕ} {candidate A : Finset ℕ}
     (C : PrimitiveSouriauZetaCalibration State)
-    (W : FinitePrimitiveMaxEntWitness threshold candidate)
+    (W : FinitePrimitiveMaxEntData threshold candidate)
     (hPrim : PrimitiveFinset A)
     (hSupp : SupportedAboveFinset threshold A) :
     C.objectiveReadout (C.stateOfFinset A) ≤
@@ -459,7 +459,7 @@ Legacy compatibility: free-energy maximality follows from objective naming.
 -/
 theorem freeEnergyReadout_le_candidate_of_maxEnt
     {threshold : ℕ} {candidate A : Finset ℕ}
-    (W : FinitePrimitiveMaxEntWitness threshold candidate)
+    (W : FinitePrimitiveMaxEntData threshold candidate)
     (hPrim : PrimitiveFinset A)
     (hSupp : SupportedAboveFinset threshold A) :
     C.freeEnergyReadout (C.stateOfFinset A) ≤
@@ -472,7 +472,7 @@ theorem freeEnergyReadout_le_candidate_of_maxEnt
 theorem entropyReadout_le_candidate_of_admissible_maxEnt
     (A : PrimitiveAdmissibleFinset)
     {candidate : Finset ℕ}
-    (W : FinitePrimitiveMaxEntWitness A.threshold candidate) :
+    (W : FinitePrimitiveMaxEntData A.threshold candidate) :
     C.entropyReadout (C.stateOfFinset A.support) ≤
       C.entropyReadout (C.stateOfFinset candidate) := by
   rw [C.entropy_eq_primitiveWeightSum A.support,
@@ -483,7 +483,7 @@ theorem entropyReadout_le_candidate_of_admissible_maxEnt
 theorem objectiveReadout_le_candidate_of_admissible_maxEnt
     (A : PrimitiveAdmissibleFinset)
     {candidate : Finset ℕ}
-    (W : FinitePrimitiveMaxEntWitness A.threshold candidate) :
+    (W : FinitePrimitiveMaxEntData A.threshold candidate) :
     C.objectiveReadout (C.stateOfFinset A.support) ≤
       C.objectiveReadout (C.stateOfFinset candidate) := by
   rw [C.objective_eq_primitiveWeightSum A.support,
@@ -495,7 +495,7 @@ theorem entropy_le_candidate_of_admissible_maxEnt
     (A : PrimitiveAdmissibleFinset)
     {candidate : Finset ℕ}
     (C : PrimitiveSouriauZetaCalibration State)
-    (W : FinitePrimitiveMaxEntWitness A.threshold candidate) :
+    (W : FinitePrimitiveMaxEntData A.threshold candidate) :
     C.entropyReadout (C.stateOfFinset A.support) ≤
       C.entropyReadout (C.stateOfFinset candidate) :=
   by
@@ -508,7 +508,7 @@ theorem objective_le_candidate_of_admissible_maxEnt
     (A : PrimitiveAdmissibleFinset)
     {candidate : Finset ℕ}
     (C : PrimitiveSouriauZetaCalibration State)
-    (W : FinitePrimitiveMaxEntWitness A.threshold candidate) :
+    (W : FinitePrimitiveMaxEntData A.threshold candidate) :
     C.objectiveReadout (C.stateOfFinset A.support) ≤
       C.objectiveReadout (C.stateOfFinset candidate) :=
   by
@@ -519,7 +519,7 @@ theorem objective_le_candidate_of_admissible_maxEnt
 theorem freeEnergyReadout_le_candidate_of_admissible_maxEnt
     (A : PrimitiveAdmissibleFinset)
     {candidate : Finset ℕ}
-    (W : FinitePrimitiveMaxEntWitness A.threshold candidate) :
+    (W : FinitePrimitiveMaxEntData A.threshold candidate) :
     C.freeEnergyReadout (C.stateOfFinset A.support) ≤
       C.freeEnergyReadout (C.stateOfFinset candidate) := by
   rw [C.freeEnergy_eq_objective A.support,

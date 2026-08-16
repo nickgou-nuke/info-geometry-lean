@@ -8,9 +8,15 @@ no universal Clifford-algebra isomorphism, full Cartan decomposition theorem,
 or bundle-level embedding is claimed.
 """
 
-from __future__ import annotations
-
+import sys
+from pathlib import Path
 import sympy as sp
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from tools.sympy.common import assert_matrix_eq
 
 
 I = sp.I
@@ -50,12 +56,6 @@ gamma3 = mat(
 embed_i = gamma1 * gamma2
 embed_j = gamma2 * gamma3
 embed_k = gamma3 * gamma1
-
-
-def assert_matrix_eq(lhs, rhs, label: str):
-    diff = sp.simplify(lhs - rhs)
-    if diff != sp.zeros(*lhs.shape):
-        raise AssertionError(f"{label} failed:\n{sp.expand(diff)}")
 
 
 def main() -> None:

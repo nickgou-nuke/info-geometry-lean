@@ -126,8 +126,8 @@ The true algebraic Connes Radon-Nikodym cocycle derivative
 vanishes when the modular generators coincide.
 -/
 theorem cocycleVanishingOnCantorFiber (H : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator) (beta μ μχ : ℝ) :
-    ConnesCocycle.connesRadonNikodymDerivative H H beta μ μχ beta μ μχ = 0 :=
-  ConnesCocycle.connesRadonNikodymDerivative_zero_of_eq H beta μ μχ
+    ConnesCocycle.relativeModularGeneratorDifference H H beta μ μχ beta μ μχ = 0 :=
+  ConnesCocycle.relativeModularGeneratorDifference_zero_of_eq H beta μ μχ
 
 /-! ## 4. Unification — colimit fixed point -/
 
@@ -145,7 +145,7 @@ This combines:
 theorem weylCantorColimitFixedPoint
     (L : FormalPrimeRootLattice) (H : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator) (beta μ μχ : ℝ) :
     weylDenominatorProduct L (fun _ : ℕ => 0) = weylAlternatingSum L (fun _ : ℕ => 0) ∧
-    ConnesCocycle.connesRadonNikodymDerivative H H beta μ μχ beta μ μχ = 0 := by
+    ConnesCocycle.relativeModularGeneratorDifference H H beta μ μχ beta μ μχ = 0 := by
   constructor
   · exact finite_prime_weyl_denominator L (fun _ : ℕ => 0)
   · exact cocycleVanishingOnCantorFiber H beta μ μχ

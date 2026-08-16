@@ -128,7 +128,7 @@ Finite arithmetic KMS property.
 encoding and the modular-flow calibration; the finite KMS statement is derived
 as a separate theorem.
 -/
-structure ArithmeticKMSWitness
+structure ArithmeticKMSData
     (State : Type*) where
   /-- Encode a finite arithmetic support as a model state. -/
   stateOfFinset : Finset ℕ → State
@@ -147,15 +147,15 @@ Native Mathlib construction of the finite arithmetic KMS property.
 This explicit model over `Finset ℕ` pays off the formal closure debt
 by providing a fully constructive proof that such a state encoding exists.
 -/
-def arithmeticKMSModel : ArithmeticKMSWitness (Finset ℕ) where
+def arithmeticKMSModel : ArithmeticKMSData (Finset ℕ) where
   stateOfFinset := id
   modularFlowReadout := fun s β => arithmeticGibbsPartition s β
   modularFlow_eq_gibbsPartition := fun A β => rfl
 
-namespace ArithmeticKMSWitness
+namespace ArithmeticKMSData
 
 variable {State : Type*}
-variable (K : ArithmeticKMSWitness State)
+variable (K : ArithmeticKMSData State)
 
 /-- Derived finite arithmetic equilibrium predicate. -/
 def IsKMSAt (s : State) (β : ℝ) : Prop :=
@@ -235,7 +235,7 @@ theorem arithmeticGibbsPartition_zero_iff_forall_le_one (A : Finset ℕ) :
 
 /-- KMS property implies the state is KMS at all temperatures. -/
 theorem kms_at_all_temperatures
-    (K : ArithmeticKMSWitness State)
+    (K : ArithmeticKMSData State)
     (A : Finset ℕ)
     (β : ℝ) :
     K.IsKMSAt (K.stateOfFinset A) β :=
@@ -244,7 +244,7 @@ theorem kms_at_all_temperatures
 /-- Two KMS witnesses with matching state encoding, modular flow, and KMS
 predicate are equal. -/
 theorem kms_property_eq_of_flow_eq
-    (K1 K2 : ArithmeticKMSWitness State)
+    (K1 K2 : ArithmeticKMSData State)
     (hstate : ∀ A, K1.stateOfFinset A = K2.stateOfFinset A)
     (hflow : ∀ s β, K1.modularFlowReadout s β = K2.modularFlowReadout s β) :
     K1 = K2 := by
@@ -261,7 +261,7 @@ theorem kms_property_eq_of_flow_eq
       cases hf
       simp
 
-end ArithmeticKMSWitness
+end ArithmeticKMSData
 
 /-! ## 4. Projective KMS property -/
 
@@ -273,7 +273,7 @@ payload. The property stores only the state encoding and the projective-flow
 calibration. No global analytic continuation through the critical point is
 claimed.
 -/
-structure ProjectiveArithmeticKMSWitness
+structure ProjectiveArithmeticKMSData
     (State : Type*) where
   /-- Encode a finite arithmetic support as a model state. -/
   stateOfFinset : Finset ℕ → State
@@ -287,10 +287,10 @@ structure ProjectiveArithmeticKMSWitness
       projectiveModularFlowReadout (stateOfFinset A) u =
         projectiveArithmeticGibbsPartition A u
 
-namespace ProjectiveArithmeticKMSWitness
+namespace ProjectiveArithmeticKMSData
 
 variable {State : Type*}
-variable (K : ProjectiveArithmeticKMSWitness State)
+variable (K : ProjectiveArithmeticKMSData State)
 
 /-- Derived compact-sector projective equilibrium predicate. -/
 def IsProjectiveKMSAt (s : State) (u : ℝ) : Prop :=
@@ -328,7 +328,7 @@ lemma projectiveModularFlowReadout_pos_of_mem_gt_one
   rw [K.projectiveFlow_eq_gibbsPartition A u hu]
   exact projectiveArithmeticGibbsPartition_pos_of_mem_gt_one A u h
 
-end ProjectiveArithmeticKMSWitness
+end ProjectiveArithmeticKMSData
 
 /-! ## 5. Prime/projective-flow compatibility -/
 
@@ -339,7 +339,7 @@ prime-flow calibration.
 structure ProjectiveKMSPrimeCompatibility
     (State : Type*) where
   /-- Projective arithmetic KMS property. -/
-  kms : ProjectiveArithmeticKMSWitness State
+  kms : ProjectiveArithmeticKMSData State
 
   /-- Projective prime-flow calibration. -/
   prime : ProjectivePrimeCalibration State

@@ -4,8 +4,8 @@ noncomputable section
 
 namespace InfoGeometry.Algebra.SplitCliffordTensorTowerBridge
 
-/-- **Definition**: Cl(1,1) Split Clifford Atom Generators.
-    e1^2 = +1, e2^2 = -1, {e1, e2} = 0. -/
+/-- Finite scalar data satisfying the displayed Cl(1,1) multiplication
+    relations. -/
 structure Cl11Atom (R : Type*) [Ring R] where
   e1 : R
   e2 : R
@@ -17,10 +17,10 @@ namespace Cl11Atom
 
 variable {R : Type*} [Ring R] (atom : Cl11Atom R)
 
-/-- CPT Operator / Grade-Reversing Involution Pseudoscalar J = e1 e2. -/
+/-- Product readout `e1 * e2`. -/
 def cptOperator : R := atom.e1 * atom.e2
 
-/-- **Theorem**: CPT Operator Square is +1 in Cl(1,1). -/
+/-- The product readout squares to `1` under the supplied relations. -/
 theorem cptOperator_squared : atom.cptOperator * atom.cptOperator = 1 := by
   dsimp [cptOperator]
   have h_anticomm : atom.e2 * atom.e1 = - (atom.e1 * atom.e2) :=
@@ -34,30 +34,28 @@ theorem cptOperator_squared : atom.cptOperator * atom.cptOperator = 1 := by
 
 end Cl11Atom
 
-/-- **Definition**: Cl(5,5) Pin(5,5) Metric Signature.
-    5 positive squared generators and 5 negative squared generators. -/
+/-- A finite integer signature function with five `+1` and five `-1`
+    entries. -/
 def cl55Metric (i : Fin 10) : ℤ :=
   if i.val < 5 then 1 else -1
 
-/-- **Theorem**: Pin(5,5) Metric Trace Neutrality ∑ eta_ii = 0.
-    5 positive dimensions cancel 5 negative dimensions, proving anomaly cancellation balance. -/
+/-- The finite signature sum is zero.  This is an arithmetic readout, not a
+    Pin-group or anomaly-cancellation theorem. -/
 theorem pin55_metric_trace_neutrality :
     (Finset.univ : Finset (Fin 10)).sum cl55Metric = 0 := by
-  decide
+  norm_num [cl55Metric, Fin.sum_univ_succ]
 
-/-- **Theorem**: Dimension of Cl(N,N) Split Clifford Algebra is 2^(2N).
-    For N = 5, dim Cl(5,5) = 2^10 = 1024. -/
+/-- The displayed arithmetic value `2^(2*5) = 1024`.  No Clifford-algebra
+    dimension isomorphism is constructed by this theorem. -/
 theorem cl55_dimension : (2 : ℕ)^(2 * 5) = 1024 := by
-  rfl
+  norm_num
 
-/-- **Definition**: Inductive Step for Split Clifford Tensor Tower Cl(N,N) -> Cl(N+1,N+1).
-    Embeds X into X ⊗ I_4 via tensoring with the Cl(1,1) atom. -/
+/-- The scalar dimension recurrence used by the finite tower calculation. -/
 def splitCliffordTensorEmbedding (dimN : ℕ) : ℕ :=
   dimN * 4
 
-/-- **Theorem**: Infinite UHF Split Clifford Dimension Growth.
-    Under 5 iterations of the Cl(1,1) atom tensor product (starting from 1),
-    the dimension grows as 4^5 = 1024 = 2^10. -/
+/-- Five finite applications of the scalar recurrence give `4^5 = 1024`.
+    This does not construct an infinite UHF limit. -/
 theorem tensor_tower_5_step_growth :
     (((1 * 4) * 4) * 4) * 4 * 4 = 1024 := by
   rfl

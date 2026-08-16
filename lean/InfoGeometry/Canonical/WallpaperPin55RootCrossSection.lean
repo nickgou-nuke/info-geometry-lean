@@ -113,21 +113,21 @@ theorem pin55LiftOfWallpaperRoot_isD5Root (i : Fin 8) :
     IsD5Root (pin55LiftOfWallpaperRoot i) := by
   fin_cases i
   · refine ⟨0, 2, 0, 0, by decide, ?_⟩
-    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+    funext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
   · refine ⟨0, 2, 1, 0, by decide, ?_⟩
-    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+    funext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
   · refine ⟨1, 2, 0, 0, by decide, ?_⟩
-    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+    funext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
   · refine ⟨1, 2, 1, 0, by decide, ?_⟩
-    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+    funext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
   · refine ⟨0, 1, 0, 0, by decide, ?_⟩
-    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+    funext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
   · refine ⟨0, 1, 1, 1, by decide, ?_⟩
-    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+    funext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
   · refine ⟨0, 1, 0, 1, by decide, ?_⟩
-    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+    funext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
   · refine ⟨0, 1, 1, 0, by decide, ?_⟩
-    ext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
+    funext k <;> fin_cases k <;> simp [pin55LiftOfWallpaperRoot, d5RootOf, signQ]
 
 /-! ## Wallpaper action and Weyl lifts -/
 
@@ -226,7 +226,7 @@ def projectWeyl2 (M : Mat5Q) : Mat2Q :=
 /-- The `D₅` cross-section projects exactly to the wallpaper `D₄` matrices. -/
 theorem weylD5CrossSection_projects_wallpaper (g : Fin 8) :
     projectWeyl2 (weylD5CrossSection g) = wallpaperD4 g := by
-  fin_cases g <;> native_decide
+  fin_cases g <;> ext i j <;> fin_cases i <;> fin_cases j <;> native_decide
 
 /-- The cross-section representatives are signed orthogonal matrices. -/
 theorem weylD5CrossSection_orthogonal (g : Fin 8) :
@@ -354,7 +354,8 @@ def o55BlockLift (P : Mat5Q) : MatSplit55Q :=
 theorem weylD5CrossSection_preserves_splitMetric55 (g : Fin 8) :
     (o55BlockLift (weylD5CrossSection g)).transpose * splitMetric55 *
         o55BlockLift (weylD5CrossSection g) = splitMetric55 := by
-  fin_cases g <;> native_decide
+  ext a b
+  fin_cases g <;> fin_cases a <;> fin_cases b <;> native_decide
 
 /-- Compact packet collecting the finite wallpaper/root/metric cross-section. -/
 theorem wallpaper_pin55_root_cross_section_packet (g r : Fin 8) :

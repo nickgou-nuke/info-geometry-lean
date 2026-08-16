@@ -20,6 +20,61 @@ abbrev creation (i : Fin 5) : MatStage 5 := jwCreation 5 i
 /-- The five-mode real Witt annihilation operators in the native stage-5 tower. -/
 abbrev annihilation (i : Fin 5) : MatStage 5 := jwAnnihilation 5 i
 
+private theorem wittCreationBase_transpose :
+    wittCreationBaseᵀ = wittAnnihilationBase := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    rfl
+
+private theorem gamma_chiral_base_transpose :
+    gamma_chiral_baseᵀ = gamma_chiral_base := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [gamma_chiral_base, gamma_0_base, gamma_1_base,
+      InfoGeometry.Clifford.Cl11Matrix.J1,
+      InfoGeometry.Clifford.Cl11Matrix.Eminus,
+      Matrix.transpose_apply, Matrix.mul_apply, Fin.sum_univ_two]
+
+private theorem jwStringWithBase_transpose
+    (localMat : Matrix (Fin 2) (Fin 2) ℝ) :
+    ∀ (n : ℕ) (k : Fin n),
+      (jwStringWithBase localMat n k)ᵀ =
+        jwStringWithBase localMatᵀ n k
+  | 0, k => Fin.elim0 k
+  | n + 1, k => by
+      by_cases h : (k : ℕ) < n
+      · simp only [jwStringWithBase, dif_pos h]
+        rw [InfoGeometry.Clifford.TowerMatrix.transpose_kronecker]
+        simp only [transpose_one]
+        rw [jwStringWithBase_transpose localMat n ⟨k, h⟩]
+      · simp only [jwStringWithBase, dif_neg h]
+        rw [InfoGeometry.Clifford.TowerMatrix.transpose_kronecker]
+        simp only [globalChirality]
+        have hgc :
+            (InfoGeometry.Clifford.TowerMatrix.kronPow gamma_chiral_base n)ᵀ =
+              InfoGeometry.Clifford.TowerMatrix.kronPow gamma_chiral_base n := by
+          simpa [InfoGeometry.Clifford.TowerMatrix.Jn] using
+            (InfoGeometry.Clifford.TowerMatrix.Jn_transpose
+              gamma_chiral_base gamma_chiral_base_transpose n)
+        rw [hgc]
+
+theorem globalChirality_transpose (n : ℕ) :
+    (globalChirality n)ᵀ = globalChirality n := by
+  unfold globalChirality
+  have hgc :
+      (InfoGeometry.Clifford.TowerMatrix.kronPow gamma_chiral_base n)ᵀ =
+        InfoGeometry.Clifford.TowerMatrix.kronPow gamma_chiral_base n := by
+    simpa [InfoGeometry.Clifford.TowerMatrix.Jn] using
+      (InfoGeometry.Clifford.TowerMatrix.Jn_transpose
+        gamma_chiral_base gamma_chiral_base_transpose n)
+  exact hgc
+
+theorem creation_transpose (i : Fin 5) :
+    (creation i)ᵀ = annihilation i := by
+  simpa [creation, annihilation, jwCreation, jwAnnihilation,
+    wittCreationBase_transpose] using
+    (jwStringWithBase_transpose wittCreationBase 5 i)
+
 theorem creation_sq :
     ∀ (n : ℕ) (k : Fin n), jwCreation n k * jwCreation n k = 0
   | 0, k => Fin.elim0 k

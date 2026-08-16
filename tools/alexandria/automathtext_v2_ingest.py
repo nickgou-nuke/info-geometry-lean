@@ -87,9 +87,8 @@ class Fragment:
     parent_id: str | None
 
 
-def stable_hash(*parts: Any, size: int = 16) -> str:
-    payload = json.dumps(parts, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
-    return hashlib.blake2b(payload.encode("utf-8"), digest_size=size).hexdigest()
+# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
+from igf.common.hashing import stable_hash
 
 
 def load_jsonl(path: Path) -> Iterator[dict[str, Any]]:
@@ -351,17 +350,8 @@ def extract_binder_graph(chunk_key: str, text: str) -> tuple[list[dict[str, Any]
     return nodes, edges, [var for var, _ in binders]
 
 
-def write_jsonl(path: Path, rows: Iterable[dict[str, Any]], *, gzip_output: bool = False) -> int:
-    if gzip_output and path.suffix != ".gz":
-        path = path.with_suffix(path.suffix + ".gz")
-    path.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
-    opener = gzip.open if gzip_output else open
-    with opener(path, "wt", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=True, sort_keys=True) + "\n")
-            count += 1
-    return count
+# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
+from igf.common.json_io import write_jsonl
 
 
 def row_text(row: dict[str, Any]) -> str:

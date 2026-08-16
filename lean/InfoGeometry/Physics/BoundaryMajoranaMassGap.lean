@@ -36,11 +36,6 @@ theorem majoranaPairGap_nonneg (lambda : ℝ) :
   unfold majoranaPairGap
   exact abs_nonneg lambda
 
-/-- The explicit two-state splitting is twice the BdG gap. -/
-theorem majoranaPairSplitting_eq_two_mul_gap (lambda : ℝ) :
-    majoranaPairSplitting lambda = 2 * majoranaPairGap lambda :=
-  rfl
-
 /-- The one-pair gap vanishes exactly when the singular value vanishes. -/
 theorem majoranaPairGap_eq_zero_iff (lambda : ℝ) :
     majoranaPairGap lambda = 0 ↔ lambda = 0 := by
@@ -81,13 +76,6 @@ def netChiralMajorana (rightModes leftModes : ℝ) : ℝ :=
 /-- Chiral Majorana central charge `c_- = (N_R - N_L)/2`. -/
 noncomputable def chiralMajoranaCentralCharge (rightModes leftModes : ℝ) : ℝ :=
   netChiralMajorana rightModes leftModes / 2
-
-/-- Chiral central charge is half the net chiral Majorana count. -/
-theorem chiralMajoranaCentralCharge_eq_half_net
-    (rightModes leftModes : ℝ) :
-    chiralMajoranaCentralCharge rightModes leftModes =
-      netChiralMajorana rightModes leftModes / 2 :=
-  rfl
 
 /-- If `c_- = 8`, then the net chiral Majorana count is `16`. -/
 theorem netChiral_eq_sixteen_of_cMinus_eq_eight

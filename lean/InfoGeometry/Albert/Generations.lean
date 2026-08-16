@@ -1,11 +1,15 @@
 import Mathlib
-import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
-import InfoGeometry.Algebra.CubicJordanOs
+
+/-!
+# Finite fermion quantum-number table
+
+This owner records only the finite list of quantum-number labels and the
+identities that follow from that list.  It does **not** identify the table
+with a split-octonion or Albert-algebra decomposition: that realization needs
+an explicit carrier map and is a separate theorem obligation.
+-/
 
 namespace InfoGeometry.Albert.Generations
-
-open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
-open InfoGeometry.Algebra.CubicJordanOs
 
 /-- Color charges for the Standard Model fermions. -/
 inductive Color where
@@ -15,8 +19,8 @@ inductive Color where
   | blue
   deriving DecidableEq
 
-/-- Map Peirce components to Standard Model quantum numbers.
-    Each generation gets: (Q, T₃, Y, Color) from the 𝕆_s structure. -/
+/-- Finite quantum-number labels for one listed generation.  The connection
+to Peirce components is not part of this owner. -/
 structure FermionQuantumNumbers where
   charge : ℚ        -- electric charge
   weakIsospin : ℚ   -- T₃
@@ -24,7 +28,7 @@ structure FermionQuantumNumbers where
   color : Color     -- RGB singlet/triplet
   deriving DecidableEq
 
-/-- The 8 fermion states in one octonionic generation (𝕆_s) -/
+/-- The eight labels in the finite one-generation table. -/
 def singleGenFermions : List FermionQuantumNumbers := [
   ⟨0, 1/2, -1, Color.singlet⟩,       -- ν (neutrino)
   ⟨-1, -1/2, -1, Color.singlet⟩,     -- e⁻ / μ⁻ / τ⁻
@@ -36,24 +40,18 @@ def singleGenFermions : List FermionQuantumNumbers := [
   ⟨-1/3, -1/2, 1/3, Color.blue⟩      -- d_B / s_B / b_B
 ]
 
-/-- The split-octonion basis naturally encodes one generation.
-    This function provides a placeholder mapping representing the unpacking. -/
-def splitOctToFermions (_z : SplitOct) : List FermionQuantumNumbers :=
-  singleGenFermions
-
-/-- The full 24-state from the three generations of off-diagonal Peirce spaces. -/
+/-- The finite table obtained by listing three copies of the one-generation
+quantum-number table.  No geometric realization is asserted here. -/
 def threeGenerationsFermions : List FermionQuantumNumbers :=
   singleGenFermions ++ singleGenFermions ++ singleGenFermions
 
 theorem single_gen_fermions_count : singleGenFermions.length = 8 := rfl
 
-/-- Three-generation theorem: the 24 off-diagonal components decompose as
-    3 × (1 charged lepton + 1 neutrino + 3 up-quarks + 3 down-quarks) -/
+/-- The finite table has 24 entries after three copies are concatenated. -/
 theorem three_generation_decomposition :
     threeGenerationsFermions.length = 24 := rfl
 
-/-- Master Theorem for the Anomalous Cancellation of Three Generations:
-    The total electric charge of the 24 off-diagonal Peirce states is exactly 0. -/
+/-- The total charge of the finite 24-entry table is zero. -/
 theorem three_generations_charge_sum_zero :
     (threeGenerationsFermions.map FermionQuantumNumbers.charge).sum = 0 := by
   dsimp [threeGenerationsFermions, singleGenFermions]

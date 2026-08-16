@@ -613,36 +613,6 @@ theorem asanoRuelle_premise_of_nonDegenerate_endpoint
     h0₁ h0₂ hzf hD hend hw
 
 /--
-Derive the nondegenerate endpoint alternative from a topological-endpoint
-specification evaluated at contracted roots.
-
-This is the bridge from the explicit topological target surface in
-`InfoGeometry.AsanoRuelle.TopologicalEndpoint` to the algebraic endpoint
-alternative consumed in this file.
--/
-theorem nonDegenerate_endpoint_of_topologicalEndpointSpec
-    {K₁ K₂ : Set ℂ} {A B C D : ℂ}
-    (hK₁_closed : IsClosed K₁)
-    (hK₂_closed : IsClosed K₂)
-    (hK₂_bdd : Bornology.IsBounded K₂)
-    (hzf : ZeroFreeOutside K₁ K₂ A B C D)
-    (hD : D ≠ 0)
-    (hdet : A * D - B * C ≠ 0)
-    (hTop :
-      ∀ z : ℂ, ∀ hQ : A + D * z = 0,
-          InfoGeometry.AsanoRuelle.asanoRuelleTopologicalEndpointClaim
-            K₁ K₂ hK₁_closed hK₂_closed hK₂_bdd
-            A B C D z
-            (fun z₁ z₂ hz₁ hz₂ => hzf z₁ z₂ hz₁ hz₂)
-            hD hdet hQ) :
-    (C ≠ 0 ∧ -(C / D) ∈ K₁) ∨ (B ≠ 0 ∧ -(B / D) ∈ K₂) := by
-  have hroot : A + D * (-(A / D)) = 0 := by
-    field_simp [hD]
-    ring
-  simpa [InfoGeometry.AsanoRuelle.asanoRuelleTopologicalEndpointClaim, neg_div] using
-    hTop (-(A / D)) hroot
-
-/--
 Rank-one algebraic Asano closure.
 
 Assume the original two-variable affine polynomial is zero-free whenever

@@ -132,10 +132,16 @@ theorem splitCl44_projective_null_nonempty :
     Nonempty InfoGeometry.Projective.SplitCl44NullBoundary.SplitCl44ProjectiveNullSpace :=
   InfoGeometry.Projective.SplitCl44NullBoundary.splitCl44ProjectiveNullSpace_nonempty
 
-/-- The conformal `Cl(5,5)` null-pair construction is still explicit theorem debt. -/
+/- The concrete conformal `Cl(5,5)` null pair is owned by the split Bott
+   construction. The `Nonempty` theorem below is retained only as a
+   compatibility readout for older route packets. -/
+noncomputable abbrev conformal_null_pair :
+    InfoGeometry.Clifford.ConformalLift55.ConformalNullPair :=
+  InfoGeometry.Clifford.ConformalLift55.conformalNullPair
+
 theorem conformal_null_pair_exists :
     Nonempty InfoGeometry.Clifford.ConformalLift55.ConformalNullPair :=
-  InfoGeometry.Clifford.ConformalLift55.conformalNullPair_exists
+  ⟨conformal_null_pair⟩
 
 /--
 The actual bridge theorem the repository owns:

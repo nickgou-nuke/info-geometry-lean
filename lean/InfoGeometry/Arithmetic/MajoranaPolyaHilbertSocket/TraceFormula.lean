@@ -15,7 +15,7 @@ additional bosonic/Dirichlet data or a supplied superdeterminant inversion
 mechanism.
 -/
 @[socket_debt_tag]
-structure BosonFermionSuperdeterminantSocket
+structure BosonFermionSuperdeterminantData
     (BosonicReadout FermionicReadout SuperdeterminantReadout
       ZetaReadout InverseZetaReadout : Type) where
   bosonicReadout : BosonicReadout
@@ -32,7 +32,7 @@ The finite-prime Euler product does not contain the factor
 target must supply an Archimedean/local-infinity readout and a completion law.
 -/
 @[socket_debt_tag]
-structure ArchimedeanGammaFactorSocket
+structure ArchimedeanGammaFactorData
     (SpectralParameter ArchimedeanReadout FinitePrimeReadout
       CompletedZetaReadout : Type) where
   parameter : SpectralParameter
@@ -40,8 +40,8 @@ structure ArchimedeanGammaFactorSocket
   finitePrimeReadout : FinitePrimeReadout
   completedZetaReadout : CompletedZetaReadout
 
-namespace ArchimedeanGammaFactorSocket
-end ArchimedeanGammaFactorSocket
+namespace ArchimedeanGammaFactorData
+end ArchimedeanGammaFactorData
 
 /--
 Boundary/scattering mechanism socket.
@@ -52,7 +52,7 @@ matrix, or an absorption-spectrum mechanism that produces the relevant
 spectral zero data.
 -/
 @[socket_debt_tag]
-structure BoundaryScatteringDiscretizationSocket
+structure BoundaryScatteringDiscretizationData
     (BoundaryData ScatteringMatrix ContinuousSpectrum
       DiscreteOrAbsorptionReadout PhaseShiftReadout : Type) where
   boundaryData : BoundaryData
@@ -69,7 +69,7 @@ The nontrivial analytic test is that a Mellin transform or scattering trace
 formula recovers the Riemann--Weil explicit formula.
 -/
 @[socket_debt_tag]
-structure MBKHeatTraceExplicitFormulaSocket
+structure MBKHeatTraceExplicitFormulaData
     (HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
       ExplicitFormulaReadout : Type) where
   heatTrace : HeatTrace
@@ -78,7 +78,7 @@ structure MBKHeatTraceExplicitFormulaSocket
   mellinTransformReadout : MellinTransformReadout
   explicitFormulaReadout : ExplicitFormulaReadout
 
-namespace MBKHeatTraceExplicitFormulaSocket
-end MBKHeatTraceExplicitFormulaSocket
+namespace MBKHeatTraceExplicitFormulaData
+end MBKHeatTraceExplicitFormulaData
 
 end InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket

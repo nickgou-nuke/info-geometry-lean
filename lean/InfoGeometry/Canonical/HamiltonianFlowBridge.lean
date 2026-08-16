@@ -160,7 +160,7 @@ transported quasilattice operator at `t = 0` reads back exactly that seed.
 theorem majoranaDirac_as_quasilatticeDirac_zero
     {Carrier Domain Mode : Type}
     {E0 : Type} [NormedAddCommGroup E0] [InnerProductSpace ℝ E0] [CompleteSpace E0]
-    (M : InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.MajoranaBerryKeatingOperatorPacket
+    (M : InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.MajoranaBerryKeatingOperatorData
       Carrier (DoubledSpace E0 →L[ℝ] DoubledSpace E0) Domain Mode)
     (V : InfoGeometry.Canonical.BogoliubovVielbein.BogoliubovVielbeinBundle (E := E0))
     (hSeed : M.majoranaDirac = V.connectionGenerator) :

@@ -15,6 +15,7 @@ claimed.
 namespace InfoGeometry.Clifford.SpinorRep
 
 open InfoGeometry.Algebra
+open InfoGeometry.Algebra.ZornMatrix
 
 abbrev Spinor32 := SpinorSpace 5
 
@@ -103,5 +104,33 @@ theorem spinor32ZornReadout_smul (c : ℝ) (ψ : Spinor32) :
   · funext i
     fin_cases i <;> rfl
   · rfl
+
+theorem spinor32ZornReadout_basis_a :
+    spinor32ZornReadout (Pi.single zornAIndex (1 : ℝ)) = E11 := by
+  apply ZornMatrix.ext
+  · simp [spinor32ZornReadout, zornAIndex, zornBIndex, zornVIndex,
+      zornWIndex, E11, Pi.single_apply]
+  · funext i
+    fin_cases i <;> simp [spinor32ZornReadout, zornAIndex, zornBIndex,
+      zornVIndex, zornWIndex, E11, Pi.single_apply]
+  · funext i
+    fin_cases i <;> simp [spinor32ZornReadout, zornAIndex, zornBIndex,
+      zornVIndex, zornWIndex, E11, Pi.single_apply]
+  · simp [spinor32ZornReadout, zornAIndex, zornBIndex, zornVIndex,
+      zornWIndex, E11, Pi.single_apply]
+
+theorem spinor32ZornReadout_basis_b :
+    spinor32ZornReadout (Pi.single zornBIndex (1 : ℝ)) = E22 := by
+  apply ZornMatrix.ext
+  · simp [spinor32ZornReadout, zornAIndex, zornBIndex, zornVIndex,
+      zornWIndex, E22, Pi.single_apply]
+  · funext i
+    fin_cases i <;> simp [spinor32ZornReadout, zornAIndex, zornBIndex,
+      zornVIndex, zornWIndex, E22, Pi.single_apply]
+  · funext i
+    fin_cases i <;> simp [spinor32ZornReadout, zornAIndex, zornBIndex,
+      zornVIndex, zornWIndex, E22, Pi.single_apply]
+  · simp [spinor32ZornReadout, zornAIndex, zornBIndex, zornVIndex,
+      zornWIndex, E22, Pi.single_apply]
 
 end InfoGeometry.Clifford.SpinorRep

@@ -51,18 +51,19 @@ structure Bridge where
   P : PrimeRegister
   energyWeight : ℕ → ℝ
   temperature : SouriauTemperature
-  beta : ℝ
-  beta_eq_realPart_proof : beta = temperature.s.re
   chemicalPotential : ℝ
   massieuModel : LegendreModel
-  massieu_eq_packet_proof :
+  massieu_eq_packet :
     ∀ θ : ℝ, massieuModel.massieu θ = InfoGeometry.GrandCanonical.potentialGC (primeGrandCanonicalParams P energyWeight) θ chemicalPotential
-  dualCoord_eq_meanShift_proof :
+  dualCoord_eq_meanShift :
     ∀ θ : ℝ, massieuModel.dualCoord θ = InfoGeometry.GrandCanonical.meanShift (primeGrandCanonicalParams P energyWeight) θ chemicalPotential
 
 namespace Bridge
 
 variable (B : Bridge)
+
+/-! The inverse-temperature coordinate is derived from the Souriau datum. -/
+def beta : ℝ := B.temperature.s.re
 
 /-! ## 2. Bridge readouts -/
 
@@ -70,19 +71,19 @@ variable (B : Bridge)
 @[rep_depth transport]
 theorem beta_eq_realPart_of_bridge :
     B.beta = B.temperature.s.re :=
-  B.beta_eq_realPart_proof
+  rfl
 
 /-- The Massieu readout matches the prime grand-canonical potential. -/
 @[rep_depth thermo]
 theorem massieu_eq_potential (θ : ℝ) :
     B.massieuModel.massieu θ = InfoGeometry.GrandCanonical.potentialGC (primeGrandCanonicalParams B.P B.energyWeight) θ B.chemicalPotential :=
-  B.massieu_eq_packet_proof θ
+  B.massieu_eq_packet θ
 
 /-- The dual coordinate is the mean-shift readout. -/
 @[rep_depth thermo]
 theorem dualCoord_eq_meanShift_of_bridge (θ : ℝ) :
     B.massieuModel.dualCoord θ = InfoGeometry.GrandCanonical.meanShift (primeGrandCanonicalParams B.P B.energyWeight) θ B.chemicalPotential :=
-  B.dualCoord_eq_meanShift_proof θ
+  B.dualCoord_eq_meanShift θ
 
 /-- The canonical free energy is the scaled negative Massieu potential. -/
 @[rep_depth thermo]

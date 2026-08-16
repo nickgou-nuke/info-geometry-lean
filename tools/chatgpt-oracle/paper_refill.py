@@ -50,10 +50,11 @@ QUEUE_VERSION = 1
 
 sys.path.insert(0, str(SCRIPT_DIR))
 import oracle_dispatch  # noqa: E402
+from igf.common.time_utils import utc_now_iso
 
 
-def _now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+# [lossless-compact] _now_iso folded into igf.common.time_utils.utc_now_iso
+from igf.common.time_utils import utc_now_iso as _now_iso
 
 
 def _existing_paper_names() -> list[str]:

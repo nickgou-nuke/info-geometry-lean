@@ -491,7 +491,7 @@ def RealSpectrumAwayFromDefinitizingZeros
     (q : Polynomial ℂ) (T : Carrier → Carrier) : Prop :=
   ∀ lambda : ℂ, EigenvalueEquation T lambda → q.eval lambda ≠ 0 → lambda.im = 0
 
-structure KreinDefinitizableRealSpectrumPacket
+structure KreinDefinitizableRealSpectrumData
     {Carrier : Type*} [Zero Carrier] [SMul ℂ Carrier]
     (pairing : Carrier → Carrier → ℂ)
     (T : Carrier → Carrier) where
@@ -502,31 +502,31 @@ structure KreinDefinitizableRealSpectrumPacket
   realAwayFromDefinitizingZeros :
     RealSpectrumAwayFromDefinitizingZeros definitizingPolynomial T
 
-namespace KreinDefinitizableRealSpectrumPacket
+namespace KreinDefinitizableRealSpectrumData
 
 variable {Carrier : Type*} [Zero Carrier] [SMul ℂ Carrier]
 variable {pairing : Carrier → Carrier → ℂ} {T : Carrier → Carrier}
 
 theorem eigen_im_eq_zero
-    (P : KreinDefinitizableRealSpectrumPacket pairing T)
+    (P : KreinDefinitizableRealSpectrumData pairing T)
     (lambda : ℂ) (hEigen : EigenvalueEquation T lambda) :
     lambda.im = 0 :=
   P.realAwayFromDefinitizingZeros lambda hEigen
     (P.avoidsDefinitizingZeros lambda hEigen)
 
 theorem toHestenesKreinRealSpectrumLemma
-    (P : KreinDefinitizableRealSpectrumPacket pairing T) :
+    (P : KreinDefinitizableRealSpectrumData pairing T) :
     HestenesKreinRealSpectrumLemma pairing T := by
   intro _ lambda hEigen
   exact P.eigen_im_eq_zero lambda hEigen
 
-end KreinDefinitizableRealSpectrumPacket
+end KreinDefinitizableRealSpectrumData
 
 theorem kreinDefinitizableRealSpectrum_of_packet
     {Carrier : Type*} [Zero Carrier] [SMul ℂ Carrier]
     (pairing : Carrier → Carrier → ℂ)
     (T : Carrier → Carrier)
-    (P : KreinDefinitizableRealSpectrumPacket pairing T) :
+    (P : KreinDefinitizableRealSpectrumData pairing T) :
     HestenesKreinRealSpectrumLemma pairing T :=
   P.toHestenesKreinRealSpectrumLemma
 
@@ -625,7 +625,7 @@ def CompletedXiSpectralDeterminantLemma
     (Xi : ℂ → ℂ) (T : Carrier → Carrier) : Prop :=
   ∀ s : ℂ, Xi s = 0 → EigenvalueEquation T (hilbertPolyaEigenparameter s)
 
-structure CompletedXiSpectralDeterminantPacket
+structure CompletedXiSpectralDeterminantData
     {Carrier : Type*} [Zero Carrier] [SMul ℂ Carrier]
     (Xi : ℂ → ℂ) (T : Carrier → Carrier) where
   spectralDeterminant : ℂ → ℂ
@@ -637,13 +637,13 @@ structure CompletedXiSpectralDeterminantPacket
     ∀ s : ℂ, spectralDeterminant s = 0 →
       EigenvalueEquation T (hilbertPolyaEigenparameter s)
 
-namespace CompletedXiSpectralDeterminantPacket
+namespace CompletedXiSpectralDeterminantData
 
 variable {Carrier : Type*} [Zero Carrier] [SMul ℂ Carrier]
 variable {Xi : ℂ → ℂ} {T : Carrier → Carrier}
 
 theorem spectralDeterminant_zero_of_xi_zero
-    (P : CompletedXiSpectralDeterminantPacket Xi T)
+    (P : CompletedXiSpectralDeterminantData Xi T)
     {s : ℂ} (hXi : Xi s = 0) :
     P.spectralDeterminant s = 0 := by
   have hUnitDet : P.normalizingUnit s * P.spectralDeterminant s = 0 := by
@@ -651,44 +651,44 @@ theorem spectralDeterminant_zero_of_xi_zero
   exact Or.resolve_left (mul_eq_zero.mp hUnitDet) (P.normalizingUnit_nonzero s)
 
 theorem xi_zero_of_spectralDeterminant_zero
-    (P : CompletedXiSpectralDeterminantPacket Xi T)
+    (P : CompletedXiSpectralDeterminantData Xi T)
     {s : ℂ} (hDet : P.spectralDeterminant s = 0) :
     Xi s = 0 := by
   rw [P.xi_eq_unit_mul_det s, hDet, mul_zero]
 
 theorem xi_zero_iff_spectralDeterminant_zero
-    (P : CompletedXiSpectralDeterminantPacket Xi T) (s : ℂ) :
+    (P : CompletedXiSpectralDeterminantData Xi T) (s : ℂ) :
     Xi s = 0 ↔ P.spectralDeterminant s = 0 :=
   ⟨P.spectralDeterminant_zero_of_xi_zero, P.xi_zero_of_spectralDeterminant_zero⟩
 
 theorem spectralDeterminant_ne_zero_of_xi_ne_zero
-    (P : CompletedXiSpectralDeterminantPacket Xi T)
+    (P : CompletedXiSpectralDeterminantData Xi T)
     {s : ℂ} (hXi : Xi s ≠ 0) :
     P.spectralDeterminant s ≠ 0 := by
   intro hDet
   exact hXi (P.xi_zero_of_spectralDeterminant_zero hDet)
 
 theorem xi_ne_zero_of_spectralDeterminant_ne_zero
-    (P : CompletedXiSpectralDeterminantPacket Xi T)
+    (P : CompletedXiSpectralDeterminantData Xi T)
     {s : ℂ} (hDet : P.spectralDeterminant s ≠ 0) :
     Xi s ≠ 0 := by
   intro hXi
   exact hDet (P.spectralDeterminant_zero_of_xi_zero hXi)
 
 theorem xi_ne_zero_iff_spectralDeterminant_ne_zero
-    (P : CompletedXiSpectralDeterminantPacket Xi T) (s : ℂ) :
+    (P : CompletedXiSpectralDeterminantData Xi T) (s : ℂ) :
     Xi s ≠ 0 ↔ P.spectralDeterminant s ≠ 0 :=
   ⟨P.spectralDeterminant_ne_zero_of_xi_ne_zero,
     P.xi_ne_zero_of_spectralDeterminant_ne_zero⟩
 
 theorem eigen_of_xi_zero
-    (P : CompletedXiSpectralDeterminantPacket Xi T)
+    (P : CompletedXiSpectralDeterminantData Xi T)
     {s : ℂ} (hXi : Xi s = 0) :
     EigenvalueEquation T (hilbertPolyaEigenparameter s) :=
   P.determinant_zero_to_eigen s (P.spectralDeterminant_zero_of_xi_zero hXi)
 
 theorem spectralDeterminant_ne_zero_of_not_eigen
-    (P : CompletedXiSpectralDeterminantPacket Xi T)
+    (P : CompletedXiSpectralDeterminantData Xi T)
     {s : ℂ}
     (hNoEigen : ¬ EigenvalueEquation T (hilbertPolyaEigenparameter s)) :
     P.spectralDeterminant s ≠ 0 := by
@@ -696,19 +696,19 @@ theorem spectralDeterminant_ne_zero_of_not_eigen
   exact hNoEigen (P.determinant_zero_to_eigen s hDet)
 
 theorem xi_ne_zero_of_not_eigen
-    (P : CompletedXiSpectralDeterminantPacket Xi T)
+    (P : CompletedXiSpectralDeterminantData Xi T)
     {s : ℂ}
     (hNoEigen : ¬ EigenvalueEquation T (hilbertPolyaEigenparameter s)) :
     Xi s ≠ 0 :=
   P.xi_ne_zero_of_spectralDeterminant_ne_zero
     (P.spectralDeterminant_ne_zero_of_not_eigen hNoEigen)
 
-end CompletedXiSpectralDeterminantPacket
+end CompletedXiSpectralDeterminantData
 
 theorem completedXiSpectralDeterminant_of_packet
     {Carrier : Type*} [Zero Carrier] [SMul ℂ Carrier]
     (Xi : ℂ → ℂ) (T : Carrier → Carrier)
-    (P : CompletedXiSpectralDeterminantPacket Xi T) :
+    (P : CompletedXiSpectralDeterminantData Xi T) :
     CompletedXiSpectralDeterminantLemma Xi T := by
   intro s hXi
   exact P.eigen_of_xi_zero hXi
@@ -725,7 +725,7 @@ def completedXiSpectralDeterminantPacket_of_finiteCharacteristicDeterminant
         Xi s =
           normalizingUnit s *
             finiteCharacteristicDeterminant T (hilbertPolyaEigenparameter s)) :
-    CompletedXiSpectralDeterminantPacket Xi (fun x => T x) where
+    CompletedXiSpectralDeterminantData Xi (fun x => T x) where
   spectralDeterminant s :=
     finiteCharacteristicDeterminant T (hilbertPolyaEigenparameter s)
   normalizingUnit := normalizingUnit
@@ -854,8 +854,8 @@ theorem hilbertPolyaCriticalLineConclusion_of_kreinDefinitizable_packet
     (Xi : ℂ → ℂ)
     (pairing : Carrier → Carrier → ℂ)
     (T : Carrier → Carrier)
-    (K : KreinDefinitizableRealSpectrumPacket pairing T)
-    (D : CompletedXiSpectralDeterminantPacket Xi T) :
+    (K : KreinDefinitizableRealSpectrumData pairing T)
+    (D : CompletedXiSpectralDeterminantData Xi T) :
     HilbertPolyaCriticalLineConclusion Xi :=
   hilbertPolyaCriticalLineConclusion_of_lemmaSeries
     Xi pairing T K.symmetric
@@ -867,8 +867,8 @@ theorem hilbertPolyaNoOffCriticalZerosConclusion_of_kreinDefinitizable_packet
     (Xi : ℂ → ℂ)
     (pairing : Carrier → Carrier → ℂ)
     (T : Carrier → Carrier)
-    (K : KreinDefinitizableRealSpectrumPacket pairing T)
-    (D : CompletedXiSpectralDeterminantPacket Xi T) :
+    (K : KreinDefinitizableRealSpectrumData pairing T)
+    (D : CompletedXiSpectralDeterminantData Xi T) :
     HilbertPolyaNoOffCriticalZerosConclusion Xi :=
   hilbertPolyaNoOffCriticalZerosConclusion_of_criticalLine Xi
     (hilbertPolyaCriticalLineConclusion_of_kreinDefinitizable_packet Xi pairing T K D)
@@ -878,8 +878,8 @@ theorem xi_ne_zero_of_kreinDefinitizable_packet_offCritical
     (Xi : ℂ → ℂ)
     (pairing : Carrier → Carrier → ℂ)
     (T : Carrier → Carrier)
-    (K : KreinDefinitizableRealSpectrumPacket pairing T)
-    (D : CompletedXiSpectralDeterminantPacket Xi T)
+    (K : KreinDefinitizableRealSpectrumData pairing T)
+    (D : CompletedXiSpectralDeterminantData Xi T)
     {s : ℂ} (hOff : s.re ≠ 1 / 2) :
     Xi s ≠ 0 :=
   (hilbertPolyaNoOffCriticalZerosConclusion_of_kreinDefinitizable_packet
@@ -935,7 +935,7 @@ theorem hilbertPolyaCriticalLineConclusion_of_hilbertSelfAdjoint_packet
     (Xi : ℂ → ℂ)
     (T : Carrier →L[ℂ] Carrier)
     (hSelf : IsSelfAdjoint T)
-    (P : CompletedXiSpectralDeterminantPacket Xi (fun x => T x)) :
+    (P : CompletedXiSpectralDeterminantData Xi (fun x => T x)) :
     HilbertPolyaCriticalLineConclusion Xi :=
   hilbertPolyaCriticalLineConclusion_of_hilbertSelfAdjoint
     Xi T hSelf (completedXiSpectralDeterminant_of_packet Xi (fun x => T x) P)
@@ -946,7 +946,7 @@ theorem hilbertPolyaNoOffCriticalZerosConclusion_of_hilbertSelfAdjoint_packet
     (Xi : ℂ → ℂ)
     (T : Carrier →L[ℂ] Carrier)
     (hSelf : IsSelfAdjoint T)
-    (P : CompletedXiSpectralDeterminantPacket Xi (fun x => T x)) :
+    (P : CompletedXiSpectralDeterminantData Xi (fun x => T x)) :
     HilbertPolyaNoOffCriticalZerosConclusion Xi :=
   hilbertPolyaNoOffCriticalZerosConclusion_of_criticalLine Xi
     (hilbertPolyaCriticalLineConclusion_of_hilbertSelfAdjoint_packet Xi T hSelf P)
@@ -957,7 +957,7 @@ theorem xi_ne_zero_of_hilbertSelfAdjoint_packet_offCritical
     (Xi : ℂ → ℂ)
     (T : Carrier →L[ℂ] Carrier)
     (hSelf : IsSelfAdjoint T)
-    (P : CompletedXiSpectralDeterminantPacket Xi (fun x => T x))
+    (P : CompletedXiSpectralDeterminantData Xi (fun x => T x))
     {s : ℂ} (hOff : s.re ≠ 1 / 2) :
     Xi s ≠ 0 :=
   (hilbertPolyaNoOffCriticalZerosConclusion_of_hilbertSelfAdjoint_packet

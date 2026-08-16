@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import Mathlib.Algebra.BigOperators.GroupWithZero.Action
 import InfoGeometry.Physics.BogoliubovSU3ParafermionProofChain
 
 /-!
@@ -67,8 +68,38 @@ action. -/
 def colorLieAction4_commutator_statement {V : Type*} [AddCommGroup V] [Module ℂ V]
     (A B : M3C) (ψ : ColorSpinor4 V) : Prop :=
   colorLieAction4 (A * B - B * A) ψ =
-    colorLieAction4 A (colorLieAction4 B ψ) -
+      colorLieAction4 A (colorLieAction4 B ψ) -
       colorLieAction4 B (colorLieAction4 A ψ)
+
+theorem colorLieAction4_mul
+    {V : Type*} [AddCommMonoid V] [Module ℂ V]
+    (A B : M3C) (ψ : ColorSpinor4 V) :
+    colorLieAction4 (A * B) ψ = colorLieAction4 A (colorLieAction4 B ψ) := by
+  apply Prod.ext
+  · funext i
+    fin_cases i <;>
+      simp [colorLieAction4, Matrix.mul_apply, Fin.sum_univ_three,
+        add_smul, smul_add, smul_smul] <;>
+      module
+  · simp [colorLieAction4]
+
+theorem colorLieAction4_commutator
+    {V : Type*} [AddCommGroup V] [Module ℂ V]
+    (A B : M3C) (ψ : ColorSpinor4 V) :
+    colorLieAction4 (A * B - B * A) ψ =
+      colorLieAction4 A (colorLieAction4 B ψ) -
+        colorLieAction4 B (colorLieAction4 A ψ) := by
+  have hlin :
+      colorLieAction4 (A * B - B * A) ψ =
+        colorLieAction4 (A * B) ψ - colorLieAction4 (B * A) ψ := by
+    apply Prod.ext
+    · funext i
+      change (∑ j : Fin 3, (A * B - B * A) i j • ψ.1 j) =
+        (∑ j : Fin 3, (A * B) i j • ψ.1 j) -
+          ∑ j : Fin 3, (B * A) i j • ψ.1 j
+      simp only [Matrix.sub_apply, sub_smul, Finset.sum_sub_distrib]
+    · simp [colorLieAction4]
+  rw [hlin, colorLieAction4_mul, colorLieAction4_mul]
 
 /-- Minimal inertial-frame record used by downstream statement surfaces. -/
 abbrev BogoliubovInertialFrame :=

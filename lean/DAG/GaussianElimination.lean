@@ -965,7 +965,7 @@ lemma pivot_step (A : Matrix m n ℚ) (i : m) (j : n) (hij : A i j ≠ 0) :
     rw [Matrix.mul_assoc]
     exact h_kj_zero k hk
 
-lemma filtered_elimination_row_readback (A1 : Matrix m n ℚ) (i r : m) (j c : n)
+lemma filtered_elimination_row_formula (A1 : Matrix m n ℚ) (i r : m) (j c : n)
     (hr : r ≠ i) :
     let notI : Finset m := Finset.filter (λ k => k ≠ i) Finset.univ
     (((1 : Matrix m m ℚ) + Finset.sum notI (λ k => -(A1 k j) • stdBasisMatrix k i 1)) * A1) r c =
@@ -1021,7 +1021,7 @@ lemma pivot_step_formula (M : Matrix m n ℚ) (i : m) (j : n)
     let Ej := E2 * E1
     (Ej * M) r c = M r c - M r j * s * M i c := by
   intro s E1 A1 notI a E2 Ej
-  have hcore := filtered_elimination_row_readback A1 i r j c hr_ne
+  have hcore := filtered_elimination_row_formula A1 i r j c hr_ne
   have hA1_i_c : A1 i c = s * M i c := by
     dsimp [A1, E1]
     exact scaleRowMat_mul_entry_row_i M i c s

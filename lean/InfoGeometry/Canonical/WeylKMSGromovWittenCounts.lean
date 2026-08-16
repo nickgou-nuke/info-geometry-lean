@@ -140,27 +140,6 @@ theorem sum_gwWeight_eq_orbitPartitionFunction
   intro γ _
   exact h_gwWeight_eq_weylKMS γ
 
-/- A calibrated effective volume law is stated directly as an equality. -/
-theorem volume_eq_weighted_count
-    {Γ : Type*} [Fintype Γ]
-    {S : SuperOrbitSpace Γ} {Ω : WeylGaugeWeight Γ} {φ : KMSOrbitState Γ}
-    (volume scale : ℝ)
-    (h : volume = scale * weightedZeroModeCount S Ω φ) :
-    volume = scale * weightedZeroModeCount S Ω φ :=
-  h
-
-/-- Read back the calibrated effective volume law. -/
-theorem effective_volume_from_weyl_kms_counts
-    {Γ : Type*}
-    [Fintype Γ]
-    (S : SuperOrbitSpace Γ)
-    (Ω : WeylGaugeWeight Γ)
-    (φ : KMSOrbitState Γ)
-    (volume scale : ℝ)
-    (h : volume = scale * weightedZeroModeCount S Ω φ) :
-    volume = scale * weightedZeroModeCount S Ω φ :=
-  volume_eq_weighted_count volume scale h
-
 /--
 Real Fierz channels for projective count readout.
 

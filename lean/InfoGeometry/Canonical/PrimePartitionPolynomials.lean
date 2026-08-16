@@ -219,6 +219,54 @@ structure RiemannFieldPullback
     ∀ s : ℂ, (field s).re = 0 →
       s.re = (1 / 2 : ℝ)
 
+/-- Canonical explicit realization of `RiemannFieldPullback` using complex exponential arithmetic. -/
+noncomputable def canonicalRiemannFieldPullback (D : FinitePrimeChainData N) :
+    RiemannFieldPullback D where
+  field s := s - (1 / 2 : ℂ)
+  localFugacity s i := Complex.exp (-(s - (1 / 2 : ℂ)) * (D.ell i : ℂ))
+  re_pos_inner := by
+    intro s hpos i
+    change Complex.normSq (Complex.exp (-(s - (1 / 2 : ℂ)) * (D.ell i : ℂ))) < 1
+    have h_re : (-(s - (1 / 2 : ℂ)) * (D.ell i : ℂ)).re = -(s - (1 / 2 : ℂ)).re * D.ell i := by
+      simp only [Complex.neg_re, Complex.sub_re, Complex.mul_re, Complex.ofReal_re,
+                 Complex.ofReal_im, mul_zero, sub_zero]
+    rw [Complex.normSq_eq_norm_sq, Complex.norm_exp, h_re]
+    have h_prod_neg : -(s - (1 / 2 : ℂ)).re * D.ell i < 0 := by
+      have h1 : -(s - (1 / 2 : ℂ)).re < 0 := by linarith
+      have h2 : 0 < D.ell i := D.ell_pos i
+      nlinarith
+    have hexp : Real.exp (-(s - (1 / 2 : ℂ)).re * D.ell i) < 1 := by
+      have hlt : Real.exp (-(s - (1 / 2 : ℂ)).re * D.ell i) < Real.exp 0 :=
+        Real.exp_lt_exp.mpr h_prod_neg
+      rw [Real.exp_zero] at hlt
+      exact hlt
+    have hexp_pos : 0 ≤ Real.exp (-(s - (1 / 2 : ℂ)).re * D.ell i) := (Real.exp_pos _).le
+    nlinarith
+  re_neg_outer := by
+    intro s hneg i
+    change 1 < Complex.normSq (Complex.exp (-(s - (1 / 2 : ℂ)) * (D.ell i : ℂ)))
+    have h_re : (-(s - (1 / 2 : ℂ)) * (D.ell i : ℂ)).re = -(s - (1 / 2 : ℂ)).re * D.ell i := by
+      simp only [Complex.neg_re, Complex.sub_re, Complex.mul_re, Complex.ofReal_re,
+                 Complex.ofReal_im, mul_zero, sub_zero]
+    rw [Complex.normSq_eq_norm_sq, Complex.norm_exp, h_re]
+    have h_prod_pos : 0 < -(s - (1 / 2 : ℂ)).re * D.ell i := by
+      have h1 : 0 < -(s - (1 / 2 : ℂ)).re := by linarith
+      have h2 : 0 < D.ell i := D.ell_pos i
+      nlinarith
+    have hexp : 1 < Real.exp (-(s - (1 / 2 : ℂ)).re * D.ell i) := by
+      have hlt : Real.exp 0 < Real.exp (-(s - (1 / 2 : ℂ)).re * D.ell i) :=
+        Real.exp_lt_exp.mpr h_prod_pos
+      rw [Real.exp_zero] at hlt
+      exact hlt
+    nlinarith
+  critical_of_field_re_zero := by
+    intro s hzero
+    have hre : (s - (1 / 2 : ℂ)).re = s.re - 1 / 2 := by
+      simp only [Complex.sub_re]
+      norm_num
+    have hf : (s - (1 / 2 : ℂ)).re = 0 := hzero
+    linarith
+
 /-- The pulled-back one-parameter partition function. -/
 @[rep_depth thermo]
 def pulledPartition

@@ -39,14 +39,6 @@ theorem modularFlowCl11_zero (q : Cl11) :
     modularFlowCl11 0 q = q := by
   ext <;> simp [modularFlowCl11]
 
-@[simp]
-theorem modularFlowCl11_scalar_coord (t : ThermalTime) (q : Cl11) :
-    (modularFlowCl11 t q).s = q.s := rfl
-
-@[simp]
-theorem modularFlowCl11_e1_coord (t : ThermalTime) (q : Cl11) :
-    (modularFlowCl11 t q).e1 = q.e1 := rfl
-
 theorem modularFlowCl11_group_property (t s : ThermalTime) (q : Cl11) :
     modularFlowCl11 (t + s) q = modularFlowCl11 t (modularFlowCl11 s q) := by
   have hangle : 2 * (t + s) = 2 * t + 2 * s := by ring
@@ -223,10 +215,6 @@ def modularCommutatorGenerator : Cl11 → Cl11 :=
 def infinitesimalGenerator (q : Cl11) : Cl11 :=
   modularCommutatorGenerator q
 
-theorem infinitesimalGenerator_eq_modularCommutatorGenerator (q : Cl11) :
-    infinitesimalGenerator q = modularCommutatorGenerator q := by
-  rfl
-
 /-!
 ## 4. Thermal Time Hypothesis
 -/
@@ -353,13 +341,14 @@ def mersenneTemperatureLevels : List ℝ :=
   [3, 7, 127]
 
 /--
-Conjecture: At β = M_n (Mersenne primes), the Bost-Connes system
-exhibits enhanced symmetry related to the Cl(n,n) structure.
+This predicate records only the finite seed levels used by this module.
+Any claim that the Bost--Connes system has enhanced symmetry at these levels
+requires additional dynamical data and is not asserted here.
 -/
 def IsMersenneSeedLevel (n : ℕ) : Prop :=
   n = 2 ∨ n = 3 ∨ n = 7
 
-theorem mersenneSymmetryConjecture :
+theorem mersenne_seed_levels_mem_declared_set :
     ∀ n ∈ [2, 3, 7], IsMersenneSeedLevel n := by
   intro n hn
   simp [IsMersenneSeedLevel] at hn ⊢

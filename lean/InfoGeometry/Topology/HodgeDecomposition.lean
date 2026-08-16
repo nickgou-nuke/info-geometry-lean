@@ -38,22 +38,6 @@ def IsHodgeDecomposition (d δ : EndCochain n) (x : Cochains n) : Prop :=
     c ∈ coexactSubmodule δ ∧
     h ∈ harmonicSubmodule d δ
 
-theorem decomposition_readout
-    (d δ : EndCochain n) (x : Cochains n)
-    (h : IsHodgeDecomposition d δ x) :
-    ∃ e c h' : Cochains n,
-      x = e + c + h' ∧
-      e ∈ exactSubmodule d ∧
-      c ∈ coexactSubmodule δ ∧
-      h' ∈ harmonicSubmodule d δ :=
-  h
-
-theorem decomposition_exists_of_membership
-    (d δ : EndCochain n) (x : Cochains n)
-    (h : IsHodgeDecomposition d δ x) :
-    IsHodgeDecomposition d δ x :=
-  h
-
 theorem exact_closed_of_nilpotent
     (d : EndCochain n) (hd : d * d = 0)
     {x : Cochains n} (hx : x ∈ exactSubmodule d) :

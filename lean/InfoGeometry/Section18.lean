@@ -85,15 +85,4 @@ theorem gamma_jordan_metric_readout (mu nu : Fin 4) :
       (2 * Section5.η mu nu) • (1 : DiracMatrix) :=
   Section5.clifford_anticomm_full mu nu
 
-theorem section18_capstone :
-    (∀ k : ℕ, matrixAlgebraDim (complexMatrixSize k) = 2 ^ (2 * k)) ∧
-    (∀ k : ℕ, doubledMatrixAlgebraDim (complexMatrixSize k) = 2 ^ (2 * k + 1)) ∧
-    (∀ mu nu : Fin 4,
-      Section5.γ mu * Section5.γ nu + Section5.γ nu * Section5.γ mu =
-        (2 * Section5.η mu nu) • (1 : DiracMatrix)) := by
-  refine ⟨?_, ?_, ?_⟩
-  · exact even_level_dimension
-  · exact odd_level_dimension
-  · exact gamma_jordan_metric_readout
-
 end Section18

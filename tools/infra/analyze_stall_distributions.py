@@ -19,20 +19,8 @@ DEFAULT_STATS = Path("reports/training/tactic_path_ranking.stats.json")
 DEFAULT_OUT = Path("reports/training/tactic_path_ranking.analysis.json")
 
 
-def iter_jsonl(path: Path):
-    if not path.exists():
-        return
-    with path.open("r", encoding="utf-8") as handle:
-        for raw in handle:
-            line = raw.strip()
-            if not line:
-                continue
-            try:
-                row = json.loads(line)
-            except Exception:
-                continue
-            if isinstance(row, dict):
-                yield row
+# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
+from igf.common.json_io import iter_jsonl
 
 
 def cone_bucket(depth: int) -> str:

@@ -21,8 +21,9 @@ theorem sum_bitWord_succ_real (n : ℕ) (g : BitWord (n + 1) → ℝ) :
     (∑ w : BitWord (n + 1), g w) =
       (∑ w : BitWord n, g (extendSucc n w false)) +
         (∑ w : BitWord n, g (extendSucc n w true)) := by
-  have h_comp := Equiv.sum_comp (bitWordSuccEquiv n).symm g
-  dsimp [bitWordSuccEquiv] at h_comp
+  have h_comp := Equiv.sum_comp
+    (InfoGeometry.Canonical.KMSTraceColimit.bitWordSuccEquiv n).symm g
+  dsimp [InfoGeometry.Canonical.KMSTraceColimit.bitWordSuccEquiv] at h_comp
   rw [← h_comp, Fintype.sum_prod_type]
   simp [Finset.sum_add_distrib, add_comm]
 

@@ -94,8 +94,11 @@ noncomputable def bosonInternalEnergy (S : Finset ℕ) (β : ℝ) : ℝ :=
 noncomputable def bosonFreeEnergy (S : Finset ℕ) (β : ℝ) : ℝ :=
   -(1 / β) * Real.log (bosonPartition S β)
 
-/-- Witten index for finite S: Z_f · Z_b = Π (fermion · boson). -/
-theorem witten_index_finite (S : Finset ℕ) (β : ℝ) :
+/-- Finite boson/fermion product readout: `Z_f · Z_b = Π (fermion · boson)`.
+
+This is not a Witten index: no supersymmetric Hamiltonian or supertrace is
+defined in this finite partition module. -/
+theorem finite_boson_fermion_product_readout (S : Finset ℕ) (β : ℝ) :
     fermionPartition S β * bosonPartition S β =
     ∏ p ∈ S, (fermionFactor p β * bosonFactor p β) := by
   rw [fermionPartition, bosonPartition]

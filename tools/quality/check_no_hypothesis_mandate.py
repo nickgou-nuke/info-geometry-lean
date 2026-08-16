@@ -9,8 +9,10 @@ from pathlib import Path
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from tools.pathing import normalize_user_path, repo_root
+    from tools.quality.common import strip_lean_comments
 else:
     from tools.pathing import normalize_user_path, repo_root
+    from tools.quality.common import strip_lean_comments
 
 
 ROOT = repo_root()
@@ -25,38 +27,6 @@ BAD_NAME_RE = re.compile(
 )
 # Honest open debt is allowed via `sorry`; non-honest placeholders remain banned.
 BAD_BODY_RE = re.compile(r"\b(admit|axiom|postulate)\b")
-
-
-def strip_lean_comments(text: str) -> str:
-    """Remove Lean line/block comments before checking proof-hole tokens."""
-    out: list[str] = []
-    i = 0
-    depth = 0
-    while i < len(text):
-        if depth:
-            if text.startswith("/-", i):
-                depth += 1
-                out.extend("  ")
-                i += 2
-            elif text.startswith("-/", i):
-                depth -= 1
-                out.extend("  ")
-                i += 2
-            else:
-                out.append("\n" if text[i] == "\n" else " ")
-                i += 1
-        elif text.startswith("/-", i):
-            depth = 1
-            out.extend("  ")
-            i += 2
-        elif text.startswith("--", i):
-            while i < len(text) and text[i] != "\n":
-                out.append(" ")
-                i += 1
-        else:
-            out.append(text[i])
-            i += 1
-    return "".join(out)
 
 
 def parse_args() -> argparse.Namespace:
@@ -80,6 +50,11 @@ def main() -> int:
     failures: list[str] = []
     for path in sorted(scan_root.rglob("*.lean")):
         if any(x in str(path) for x in ["/lake-packages/", "/.lake/", "/archive/"]):
+            continue
+        # Repository snapshots may contain tracked links into an external
+        # checkout.  A broken link is not a Lean source file and must not make
+        # this lexical gate fail before it reaches repo-owned declarations.
+        if path.is_symlink() and not path.exists():
             continue
         text = path.read_text(encoding="utf-8")
         code = strip_lean_comments(text)

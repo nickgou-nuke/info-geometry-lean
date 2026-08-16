@@ -1,4 +1,6 @@
 import Mathlib.Algebra.Ring.Associator
+import Mathlib.Algebra.Module.Basic
+import Mathlib.Data.Real.Basic
 
 /-!
 # The generic Akivis identity
@@ -40,6 +42,43 @@ theorem rightNestedJacobiator_eq_neg (x y z : A) :
 theorem akivisBracket_swap (x y : A) :
     akivisBracket x y = -akivisBracket y x := by
   simp [akivisBracket]
+
+/-! ## Normalized Jordan/Lie channels and the associator action defect -/
+
+noncomputable def jordanChannel {A : Type*} [NonUnitalNonAssocRing A] [Module ℝ A]
+    (x y : A) : A :=
+  (2 : ℝ)⁻¹ • (x * y + y * x)
+
+noncomputable def lieChannel {A : Type*} [NonUnitalNonAssocRing A] [Module ℝ A]
+    (x y : A) : A :=
+  (2 : ℝ)⁻¹ • (x * y - y * x)
+
+theorem binary_jordan_lie_split
+    {A : Type*} [NonUnitalNonAssocRing A] [Module ℝ A]
+    (x y : A) :
+    x * y = jordanChannel x y + lieChannel x y := by
+  dsimp [jordanChannel, lieChannel]
+  rw [← smul_add]
+  have hsum :
+      x * y + y * x + (x * y - y * x) = x * y + x * y := by
+    abel
+  rw [hsum, ← two_smul ℝ (x * y), smul_smul]
+  rw [inv_mul_cancel₀ (by norm_num : (2 : ℝ) ≠ 0), one_smul]
+
+theorem jordan_lie_action_eq_chain_plus_associator
+    {A : Type*} [NonUnitalNonAssocRing A] [Module ℝ A]
+    (x y z : A) :
+    (jordanChannel x y + lieChannel x y) * z =
+      x * (y * z) + _root_.associator x y z := by
+  rw [← binary_jordan_lie_split x y]
+  simp only [_root_.associator_apply]
+  abel
+
+theorem jordan_lie_action_eq_chain_of_associator_zero
+    {A : Type*} [NonUnitalNonAssocRing A] [Module ℝ A]
+    (x y z : A) (hassoc : _root_.associator x y z = 0) :
+    (jordanChannel x y + lieChannel x y) * z = x * (y * z) := by
+  rw [jordan_lie_action_eq_chain_plus_associator x y z, hassoc, add_zero]
 
 def leftMultiplication (x z : A) : A := x * z
 

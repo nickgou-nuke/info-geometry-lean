@@ -319,6 +319,23 @@ theorem eventMass_univ {n : ℕ} (P : FiniteBayesianState n) :
   classical
   simp [eventMass, P.normalized]
 
+theorem eventMass_compl {n : ℕ}
+    (P : FiniteBayesianState n) (A : FiniteBooleanAlgebra n) :
+    P.eventMass Aᶜ = 1 - P.eventMass A := by
+  classical
+  calc
+    P.eventMass Aᶜ =
+        ∑ w, (P.weight w - if h : w ∈ A then P.weight w else 0) := by
+      simp only [eventMass]
+      apply Finset.sum_congr rfl
+      intro w hw
+      by_cases hA : w ∈ A <;> simp [hA]
+    _ = (∑ w, P.weight w) -
+        ∑ w, (if h : w ∈ A then P.weight w else 0) := by
+      rw [Finset.sum_sub_distrib]
+    _ = 1 - P.eventMass A := by
+      simp [eventMass, P.normalized]
+
 theorem eventMass_nonnegative {n : ℕ}
     (P : FiniteBayesianState n) (A : FiniteBooleanAlgebra n) :
     0 ≤ P.eventMass A := by

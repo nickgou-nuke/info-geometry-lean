@@ -403,20 +403,6 @@ structure CompletedLFunctionWitness
   completed_functional_equation_law :
     HasCompletedFunctionalEquation L completedL
 
-namespace CompletedLFunctionWitness
-
-variable {L : ℂ → ℂ}
-variable (C : CompletedLFunctionWitness L)
-
-/--
-Forgetful adapter to the legacy completed-functional-equation predicate.
--/
-theorem toHasCompletedFunctionalEquation :
-    HasCompletedFunctionalEquation L C.completedL :=
-  C.completed_functional_equation_law
-
-end CompletedLFunctionWitness
-
 /--
 Strengthened Langlands-prime resonance property.
 
@@ -457,7 +443,7 @@ def toWeakWitness :
   eulerProduct := R.eulerProduct.toEulerProductData
   completedL := R.completed.completedL
   completedFunctionalEquation :=
-    R.completed.toHasCompletedFunctionalEquation
+    R.completed.completed_functional_equation_law
 
 end LanglandsPrimeResonanceStrongWitness
 

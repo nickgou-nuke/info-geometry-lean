@@ -71,7 +71,7 @@ section DictionaryLedger
 
 variable {Θ V State Op Alg X : Type*}
 variable [AddCommGroup V] [AddGroup Op] [Ring Alg]
-variable (P : InfinitesimalDictionaryPacket Θ V State Op Alg X)
+variable (P : InfinitesimalDictionaryModel Θ V State Op Alg X)
 
 /-- Compact finite packet for the infinitesimal dictionary lane. -/
 theorem infinitesimal_dictionary_packet (θ : Θ) (ω φ : State) :
@@ -114,7 +114,7 @@ section IntegratedLedger
 
 variable {Θ V State Op Alg X : Type*}
 variable [AddCommGroup V] [AddGroup Op] [Ring Alg]
-variable (P : InfinitesimalDictionaryPacket Θ V State Op Alg X)
+variable (P : InfinitesimalDictionaryModel Θ V State Op Alg X)
 
 variable {n0 n1 n2 : ℕ}
 

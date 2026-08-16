@@ -53,6 +53,10 @@ def J (p : ConformalNullPair) : Cl55 := p.u - p.v
 
 variable (p : ConformalNullPair)
 
+/-- The canonical conformal reflection built from the native split-Bott pair. -/
+noncomputable abbrev canonicalJ : Cl55 :=
+  J ConformalLift55.conformalNullPair
+
 /-! ### Core identity: J² = −1 -/
 
 /--
@@ -141,6 +145,19 @@ theorem J_mul_neg_J : J p * (-J p) = 1 := by
 /-- `J` is right-invertible with inverse `−J`: `(−J) · J = 1`. -/
 theorem neg_J_mul_J : (-J p) * J p = 1 := by
   rw [neg_mul, ← sq, J_sq, neg_neg]
+
+theorem canonicalJ_sq : canonicalJ ^ 2 = -1 := by
+  exact J_sq ConformalLift55.conformalNullPair
+
+theorem canonicalJ_swap_origin :
+    canonicalJ * ConformalLift55.conformalNullPair.u * canonicalJ =
+      ConformalLift55.conformalNullPair.v := by
+  exact J_swap_origin ConformalLift55.conformalNullPair
+
+theorem canonicalJ_swap_infinity :
+    canonicalJ * ConformalLift55.conformalNullPair.v * canonicalJ =
+      ConformalLift55.conformalNullPair.u := by
+  exact J_swap_infinity ConformalLift55.conformalNullPair
 
 /-! ### Involutivity of the sandwich swap -/
 

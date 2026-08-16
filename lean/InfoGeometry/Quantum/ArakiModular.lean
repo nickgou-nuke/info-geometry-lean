@@ -29,12 +29,6 @@ theorem arakiModular_one (hv0_norm : Q v0 = 1) (X : ClPlus Q) : arakiRelativeMod
   dsimp
   rw [mul_one, one_mul]
 
-lemma val_mul_eq_mul_val (a b : ClPlus Q) : (a * b).val = a.val * b.val := rfl
-lemma val_add_eq_add_val (a b : ClPlus Q) : (a + b).val = a.val + b.val := rfl
-lemma val_sub_eq_sub_val (a b : ClPlus Q) : (a - b).val = a.val - b.val := rfl
-lemma val_smul_eq_smul_val (r : R) (a : ClPlus Q) : (r • a).val = r • a.val := rfl
-lemma val_one_eq_one_val : (1 : ClPlus Q).val = 1 := rfl
-
 lemma hestenesAdjoint_add (A B : ClPlus Q) : 
   hestenesAdjoint Q v0 (A + B) = hestenesAdjoint Q v0 A + hestenesAdjoint Q v0 B := by
   apply Subtype.ext

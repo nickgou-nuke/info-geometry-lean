@@ -178,4 +178,46 @@ lemma sigma_mk' (n : ℕ) (primes : Fin n → ℕ) (t : ℝ) (x : CuntzTensor n)
   rcases RingQuot.mkAlgHom_surjective ℂ (CuntzRel n) x with ⟨y, rfl⟩
   rw [sigma_mk', sigmaTensor_zero]; rfl
 
+/-!
+### Automorphism upgrade
+
+The additive flow law already proved for `sigma` supplies its inverse at
+time `-t`.  Packaging that inverse as an `AlgEquiv` is an algebraic
+automorphism statement only; it does not assert a C⋆-continuous modular
+action or the existence of a KMS state.
+-/
+
+noncomputable def sigmaEquiv (n : ℕ) (primes : Fin n → ℕ) (t : ℝ) :
+    CuntzAlg n ≃ₐ[ℂ] CuntzAlg n :=
+  AlgEquiv.ofAlgHom (sigma n primes t) (sigma n primes (-t)) (by
+    rw [← sigma_add]
+    simp) (by
+    rw [← sigma_add]
+    simp)
+
+@[simp] theorem sigmaEquiv_apply (n : ℕ) (primes : Fin n → ℕ) (t : ℝ)
+    (x : CuntzAlg n) :
+    sigmaEquiv n primes t x = sigma n primes t x :=
+  rfl
+
+@[simp] theorem sigmaEquiv_apply_cuntzS (n : ℕ) (primes : Fin n → ℕ)
+    (t : ℝ) (i : Fin n) :
+    sigmaEquiv n primes t (cuntzS n i) =
+      modularPhase (primes i) t • cuntzS n i := by
+  exact sigma_cuntzS n primes t i
+
+@[simp] theorem sigmaEquiv_fixes_projector (n : ℕ) (primes : Fin n → ℕ)
+    (t : ℝ) (i : Fin n) :
+    sigmaEquiv n primes t (cuntzS n i * cuntzSdag n i) =
+      cuntzS n i * cuntzSdag n i := by
+  exact sigma_fixes_projector n primes t i
+
+theorem sigmaEquiv_add_apply (n : ℕ) (primes : Fin n → ℕ)
+    (t s : ℝ) (x : CuntzAlg n) :
+    sigmaEquiv n primes (t + s) x =
+      sigmaEquiv n primes t (sigmaEquiv n primes s x) := by
+  change sigma n primes (t + s) x = sigma n primes t (sigma n primes s x)
+  rw [sigma_add]
+  rfl
+
 end InfoGeometry.Algebra.CuntzModularAutomorphism

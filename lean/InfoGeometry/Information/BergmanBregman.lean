@@ -1,23 +1,13 @@
-import Mathlib.Analysis.Calculus.Deriv.Basic
-import InfoGeometry.Convex.Bregman
+import InfoGeometry.Canonical.SouriauOperatorBregmanModular
+import InfoGeometry.Canonical.SouriauModularBregmanOperator
 
-namespace InfoGeometry.Information
+/-!
+# Bregman information compatibility surface
 
-/-- A simple information-theoretic localization packet built from a one-dimensional
-Bregman divergence and a pointwise residual. -/
-noncomputable def bergmanLocalization (F : ℝ → ℝ) (x y : ℝ) : ℝ :=
-  InfoGeometry.bregmanDiv F x y
+The former file exposed a one-dimensional real `bregmanDiv` wrapper.  That
+surface was not consumed by any downstream theorem and is not an owner for the
+noncommutative information geometry used by this repository.  The maintained
+owners are the operator-valued Souriau/Bregman modules imported above.
 
-/-- The localization packet vanishes on the diagonal. -/
-theorem bergmanLocalization_self (F : ℝ → ℝ) (x : ℝ) :
-    bergmanLocalization F x x = 0 := by
-  simpa [bergmanLocalization] using InfoGeometry.bregmanDiv_self F x
-
-/-- If the derivatives match, the localization packet obeys the three-point law. -/
-theorem bergmanLocalization_threePoint_eq
-    (F : ℝ → ℝ) (x y z : ℝ)
-    (hderiv : deriv F y = deriv F z) :
-    bergmanLocalization F x z = bergmanLocalization F x y + bergmanLocalization F y z := by
-  simpa [bergmanLocalization] using InfoGeometry.bregmanThreePoint_eq_of_deriv_eq F x y z hderiv
-
-end InfoGeometry.Information
+No scalar localization or surrogate commutative theorem is introduced here.
+-/

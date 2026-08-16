@@ -26,8 +26,8 @@ except ModuleNotFoundError:  # script execution from repo root
 ALLOWED_VERDICTS = {"UNIFIED", "CONDITIONAL", "BIFURCATED"}
 
 
-def utc_now_iso() -> str:
-    return dt.datetime.now(dt.timezone.utc).isoformat()
+# [lossless-compact] utc_now_iso folded into igf.common.time_utils.utc_now_iso
+from igf.common.time_utils import utc_now_iso
 
 
 def sha256_json(obj: Any) -> str:
@@ -35,9 +35,8 @@ def sha256_json(obj: Any) -> str:
     return hashlib.sha256(payload).hexdigest()
 
 
-def load_json(path: pathlib.Path) -> Dict[str, Any]:
-    with path.open("r", encoding="utf-8") as f:
-        return json.load(f)
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def load_jsonl(path: pathlib.Path) -> Iterable[Dict[str, Any]]:

@@ -215,9 +215,8 @@ if not logger.handlers:
     logger.addHandler(_file_handler)
 
 
-def _now_iso() -> str:
-    """Return a compact UTC timestamp for persisted state files."""
-    return datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+# [lossless-compact] _now_iso folded into igf.common.time_utils.utc_now_iso
+from igf.common.time_utils import utc_now_iso as _now_iso
 
 
 def io_path(path: Path) -> str:

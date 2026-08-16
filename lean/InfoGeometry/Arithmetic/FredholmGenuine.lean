@@ -71,7 +71,7 @@ of type 2^∞. Its spectrum is the Cantor set {0,1}^ℕ.
 For the Fredholm determinant application:
 - The finite operators T_N = -diag(n^{-β})_{n≤N} live in the diagonal
   subalgebra of M_N(ℂ).
-- The inclusion ι_{N,N+1} adds one more prime mode: T_N ↦ diag(T_N, (N+1)^{-β}).
+- The inclusion ι_{N,N+1} adds one more integer mode: T_N ↦ diag(T_N, (N+1)^{-β}).
 - The colimit T = lim T_N = -diag(n^{-β})_{n∈ℕ^+} is the diagonal operator
   on ℓ²(ℕ^+).
 -/
@@ -89,7 +89,10 @@ colimit identity hold: because T_N → T in trace norm, and the Fredholm
 determinant det(I+·) is continuous in trace norm, we have:
 
     det(I+T) = lim_{N→∞} det(I+T_N) = lim_{N→∞} ∏_{n≤N} (1-n^{-β})
-             = ∏_{n=1}^∞ (1-n^{-β}) = 1/ζ(β)
+             = ∏_{n=1}^∞ (1-n^{-β}).
+
+The last product is not identified with `1/ζ(β)` here: the Euler product for
+`1/ζ` is over primes, and an integer-mode product needs a separate theorem.
 
 The construction requires:
 1. Defining the trace norm ‖·‖₁ on the algebra of trace-class operators B₁

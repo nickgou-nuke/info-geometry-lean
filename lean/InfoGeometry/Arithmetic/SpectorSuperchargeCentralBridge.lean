@@ -57,7 +57,7 @@ structure SpectorSuperchargeCentralReadout
   hNonempty : register.primes.Nonempty
 
   /-- Supplied odd-supercharge / Hamiltonian / parity packet. -/
-  supercharge : ParitySuperchargePacket Op
+  supercharge : ParitySuperchargeData Op
 
   /-- Supplied central-charge readout. -/
   centralCharge : Op

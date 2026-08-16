@@ -13,7 +13,10 @@ under fractional Buscher maps along the Cantor fractal bottleneck.
 /-- Define the Real Involution Space structure required for KR-Theory. -/
 structure RealInvolutionSpace (X : Type*) [TopologicalSpace X] where
   (involution : X → X)
-  (is_involution : ∀ x, involution (involution x) = x)
+
+def RealInvolutionSpace.is_involution
+    {X : Type*} [TopologicalSpace X] (Inv : RealInvolutionSpace X) : Prop :=
+  ∀ x : X, Inv.involution (Inv.involution x) = x
 
 /-- 
 The KR-Theory Class invariant over the Non-Orientable Exceptional Point.
@@ -23,7 +26,11 @@ Locks the topological index of the Drazin null defect.
 structure KRClass (X : Type*) [TopologicalSpace X] (Inv : RealInvolutionSpace X) where
   (dimension_index : ℤ)
   (chiral_charge    : Fin 2 → ℤ)
-  (is_balanced     : chiral_charge 0 + chiral_charge 1 = 0)
+
+def KRClass.is_balanced
+    {X : Type*} [TopologicalSpace X] (Inv : RealInvolutionSpace X)
+    (cl : KRClass X Inv) : Prop :=
+  cl.chiral_charge 0 + cl.chiral_charge 1 = 0
 
 /--
 The Fractional Buscher T-Duality Map.
@@ -34,9 +41,7 @@ def buscher_shift {X : Type*} [TopologicalSpace X] {Inv : RealInvolutionSpace X}
     (cl : KRClass X Inv) : KRClass X Inv :=
   { dimension_index := -cl.dimension_index,
     chiral_charge    := fun i => -cl.chiral_charge i,
-    is_balanced     := by 
-      have h := cl.is_balanced
-      linarith }
+    }
 
 /--
 Theorem: T-Duality Involutive Closure.

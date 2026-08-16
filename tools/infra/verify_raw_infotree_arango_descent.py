@@ -76,10 +76,8 @@ def run_aql(target: ArangoTarget, query: str, bind_vars: dict[str, Any] | None =
     return rows
 
 
-def load_json(path: Path | None) -> dict[str, Any] | None:
-    if path is None:
-        return None
-    return json.loads(path.read_text(encoding="utf-8"))
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def structural_checks() -> list[QueryCheck]:

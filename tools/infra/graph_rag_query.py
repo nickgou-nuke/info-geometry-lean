@@ -104,22 +104,8 @@ def search_text_roots(roots: list[Path], query: str, limit: int) -> list[Hit]:
     return hits[:limit]
 
 
-def read_jsonl(path: Path) -> list[dict[str, Any]]:
-    out: list[dict[str, Any]] = []
-    if not path.exists():
-        return out
-    with path.open("r", encoding="utf-8") as handle:
-        for raw in handle:
-            raw = raw.strip()
-            if not raw:
-                continue
-            try:
-                row = json.loads(raw)
-            except Exception:
-                continue
-            if isinstance(row, dict):
-                out.append(row)
-    return out
+# [lossless-compact] read_jsonl folded into igf.common.json_io.read_jsonl
+from igf.common.json_io import read_jsonl
 
 
 def search_lean_records(records_path: Path, query: str, limit: int) -> list[Hit]:

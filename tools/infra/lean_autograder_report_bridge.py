@@ -13,17 +13,22 @@ import argparse
 import hashlib
 import json
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any, Iterable
+
+ROOT = Path(__file__).resolve().parents[2]
+_SRC = ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from igf.common.hashing import stable_hash
 
 
 SCHEMA = "info_geometry.lean_autograder_report.v1"
 SUMMARY_SCHEMA = "info_geometry.lean_autograder_report.summary.v1"
-
-
-def stable_hash(payload: Any) -> str:
-    text = json.dumps(payload, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha1(text.encode("utf-8")).hexdigest()
 
 
 def iter_json_docs(path: Path) -> Iterable[tuple[Any, Path]]:

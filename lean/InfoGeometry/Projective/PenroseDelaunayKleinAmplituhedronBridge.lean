@@ -1,7 +1,9 @@
 import InfoGeometry.Algebra.SplitQuaternionMatrices
 import InfoGeometry.Causal.ProofDAGRepresentation
 import InfoGeometry.Geometry.PenroseKleinTiling
+import InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge
 import InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge
+import InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge
 
 /-!
 # Penrose / Delaunay / Klein / Amplituhedron Comparison Corridor
@@ -30,6 +32,7 @@ Not closed here:
 namespace InfoGeometry.Projective.PenroseDelaunayKleinAmplituhedronBridge
 
 open InfoGeometry.Projective.TwistorAmplituhedronConfigurationBridge
+open InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge
 open InfoGeometry.Projective.PenroseSpinTiling
 open InfoGeometry.Topology.Delaunay
 open InfoGeometry.Topology.PureBraid
@@ -124,27 +127,42 @@ Delaunay, Klein, and amplituhedron carriers can be used through the same
 amplituhedron carrier, while the existing twistor/amplituhedron owner still
 supplies its finite Klein-line, rank, and Rohozhkin descent readouts.
 -/
-theorem comparison_corridor_packet
+theorem comparison_corridor_dag_via_klein_nonempty
+    (C : PenroseDelaunayKleinAmplituhedronCorridor.{u} moving) :
+    Nonempty (C.DagCarrier ≃ C.AmplituhedronCarrier) :=
+  ⟨C.dagToAmplituhedronViaKlein⟩
+
+theorem comparison_corridor_splitQuaternion_nonempty
+    (C : PenroseDelaunayKleinAmplituhedronCorridor.{u} moving) :
+    Nonempty (C.SplitQuaternionCarrier ≃ C.AmplituhedronCarrier) :=
+  ⟨C.splitQuaternionToAmplituhedronViaKlein⟩
+
+theorem comparison_corridor_routes_commute
     (C : PenroseDelaunayKleinAmplituhedronCorridor.{u} moving)
-    (i : Fin 3)
     (hComm : C.RoutesCommute) :
-    Nonempty (C.DagCarrier ≃ C.AmplituhedronCarrier) ∧
-      Nonempty (C.SplitQuaternionCarrier ≃ C.AmplituhedronCarrier) ∧
-      C.RoutesCommute ∧
+    C.RoutesCommute :=
+  hComm
+
+theorem comparison_corridor_twistor_line_isKlein
+    (C : PenroseDelaunayKleinAmplituhedronCorridor.{u} moving)
+    (i : Fin 3) :
       InfoGeometry.Projective.KleinQuadric.Plucker6.IsKlein
-        (C.twistor.lines.line i) ∧
+        (C.twistor.lines.line i) := by
+  exact twistor_line_isKlein C.twistor i
+
+theorem comparison_corridor_twistor_rank_budget
+    (C : PenroseDelaunayKleinAmplituhedronCorridor.{u} moving) :
       C.twistor.rank.data.totalRank * spinTilingMultiplicity =
-        C.twistor.rank.stateBudget ∧
+        C.twistor.rank.stateBudget := by
+  exact twistor_rank_budget C.twistor
+
+theorem comparison_corridor_twistor_rohozhkin_descent
+    (C : PenroseDelaunayKleinAmplituhedronCorridor.{u} moving) :
       ∃ ρ : RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving,
         ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving),
-          ρ (of g) = InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge.rohozhkinProjectiveBraidPacketGen C.twistor.rohozhkin.packet g := by
-  have hTwistor := twistor_amplituhedron_bridge_packet C.twistor i
-  exact ⟨⟨C.dagToAmplituhedronViaKlein⟩,
-    ⟨C.splitQuaternionToAmplituhedronViaKlein⟩,
-    hComm,
-    hTwistor.1,
-    hTwistor.2.1,
-    hTwistor.2.2⟩
+          ρ (of g) =
+            rohozhkinProjectiveBraidPacketGen C.twistor.rohozhkin.packet g := by
+  exact twistor_rohozhkin_descent C.twistor
 
 end PenroseDelaunayKleinAmplituhedronCorridor
 

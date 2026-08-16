@@ -253,17 +253,6 @@ theorem map_bianchi_zero_all
     C.spinor.map_cyclicSum_of_zero X Y Z h,
     C.quaternion.map_cyclicSum_of_zero X Y Z h⟩
 
-/-- The trifactor law transports to all three representation channels. -/
-theorem map_trifactor_law_all
-    (C : ThreeConnectionChannels (A := A) (V := V) (S := S) (Q := Q))
-    (T : A) (hT : T ^ 3 = T) :
-    C.vector.map T ^ 3 = C.vector.map T
-      ∧ C.spinor.map T ^ 3 = C.spinor.map T
-      ∧ C.quaternion.map T ^ 3 = C.quaternion.map T := by
-  exact ⟨C.vector.map_trifactor_law T hT,
-    C.spinor.map_trifactor_law T hT,
-    C.quaternion.map_trifactor_law T hT⟩
-
 end ThreeConnectionChannels
 
 end ThreeChannels

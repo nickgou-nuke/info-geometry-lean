@@ -15,19 +15,19 @@ open InfoGeometry.Physics.ThreeColorSL3ZornAction
 abbrev ColourVector := InfoGeometry.Physics.ThreeColorSL3ZornAction.ColourVector
 abbrev Zorn := InfoGeometry.Physics.ThreeColorSL3ZornAction.Zorn
 
-noncomputable def colourFundamentalAction
+noncomputable abbrev colourFundamentalAction
     (g : Matrix.SpecialLinearGroup (Fin 3) ℂ) :=
   InfoGeometry.Physics.ThreeColorSL3ZornAction.colourFundamentalAction g
 
-noncomputable def colourFundamentalActionLinear
+noncomputable abbrev colourFundamentalActionLinear
     (g : Matrix.SpecialLinearGroup (Fin 3) ℂ) :=
   InfoGeometry.Physics.ThreeColorSL3ZornAction.colourFundamentalActionLinear g
 
-noncomputable def colourDualAction
+noncomputable abbrev colourDualAction
     (g : Matrix.SpecialLinearGroup (Fin 3) ℂ) :=
   InfoGeometry.Physics.ThreeColorSL3ZornAction.colourDualAction g
 
-noncomputable def colourDualActionLinear
+noncomputable abbrev colourDualActionLinear
     (g : Matrix.SpecialLinearGroup (Fin 3) ℂ) :=
   InfoGeometry.Physics.ThreeColorSL3ZornAction.colourDualActionLinear g
 
@@ -41,7 +41,7 @@ theorem continuous_colourDualAction
     Continuous (colourDualAction g) :=
   InfoGeometry.Physics.ThreeColorSL3ZornAction.continuous_colourDualAction g
 
-noncomputable def zornSL3Action
+noncomputable abbrev zornSL3Action
     (g : Matrix.SpecialLinearGroup (Fin 3) ℂ) :=
   InfoGeometry.Physics.ThreeColorSL3ZornAction.zornSL3Action g
 

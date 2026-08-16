@@ -221,25 +221,6 @@ theorem period_eq_logPrime
     period p = B.logPrime p :=
   hperiod p
 
-theorem extension_of_boundary
-    {P : PrimeCutoff}
-    {B : FiniteBerryKeatingCantorDirac P}
-    (extensionOperator : CantorField P →L[ℂ] CantorField P)
-    (boundaryDomain : Set (CantorField P))
-    (hboundary : ∀ f ∈ boundaryDomain, extensionOperator f = B.H f)
-    {f : CantorField P}
-    (hf : f ∈ boundaryDomain) :
-    extensionOperator f = B.H f :=
-  hboundary f hf
-
-theorem extension_selfAdjoint
-    {P : PrimeCutoff}
-    {B : FiniteBerryKeatingCantorDirac P}
-    (extensionOperator extensionAdjoint : CantorField P →L[ℂ] CantorField P)
-    (h : extensionAdjoint = extensionOperator) :
-    extensionAdjoint = extensionOperator :=
-  h
-
 /- Direct RH-safe spectral gate. -/
 
 theorem zero_implies_critical

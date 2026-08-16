@@ -20,7 +20,7 @@ section Core
 variable {E : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable (B : DrazinHodgeChiralBridge (E := E))
-variable [KreinSpace E]
+variable [InfoGeometry.Krein.KreinSpace E]
 
 /-- The generic Hodge-star linear map on the Drazin carrier. -/
 noncomputable def nativeHodgeStar : E →ₗ[ℝ] E :=

@@ -386,11 +386,8 @@ def digest_document(path: Path) -> tuple[dict, list[Section], list[Chunk], list[
     return document, sections, chunks, entities, adjacent_edges, relations
 
 
-def write_jsonl(path: Path, rows: list[dict]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=True) + "\n")
+# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
+from igf.common.json_io import write_jsonl
 
 
 def main() -> int:

@@ -57,7 +57,7 @@ theorem nilpotent_radical_generator (f : (ℕ → Bool) → ℂ) :
 
 /-- The momentum variance of a valid condensate is strictly positive. -/
 theorem condensate_varP_pos {E : Type*}
-    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+  [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [FiniteDimensional ℝ E] (vac : ProjectiveCondensate E) :
     vac.VarP > 0 := by
   have h_pos := vac.VarX_pos

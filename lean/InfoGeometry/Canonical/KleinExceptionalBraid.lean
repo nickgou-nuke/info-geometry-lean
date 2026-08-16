@@ -7,46 +7,35 @@ namespace InfoGeometry.Canonical.KleinExceptionalBraid
 open Matrix
 
 /-!
-# Non-orientable Exceptional Points in Twisted Boundary Systems
+# Finite matrix identities for a glide and a quarter-turn
 
-Formalizes the cyclic permutation and inequivalent braiding of
-Exceptional Points (EPs) on a non-orientable Klein Brillouin zone.
-
-Based on arXiv:2504.11983 (Ryu et al. 2025).
-We model the momentum-space glide symmetry `G` and the 
-EP braid encirclement `B`. 
+This owner contains only the displayed integer `2 × 2` matrices and their
+kernel-checked products.  It does not formalize a Brillouin zone, exceptional
+point topology, or a physical Berry-phase transport.
 -/
 
-/-- The standard 2x2 counter-clockwise braid representation of an EP encirclement. 
-    It swaps state 1 and state 2, picking up a geometric phase of π on one. -/
+/-- A concrete integer `2 × 2` quarter-turn matrix. -/
 def B_EP : Matrix (Fin 2) (Fin 2) ℤ :=
   ![![0, -1],
     ![1,  0]]
 
-/-- The momentum-space glide symmetry operator of the Klein Brillouin zone. 
-    It reverses parity and swaps the basis states. -/
+/-- A concrete integer `2 × 2` basis-swap matrix. -/
 def G_Glide : Matrix (Fin 2) (Fin 2) ℤ :=
   ![![0, 1],
     ![1, 0]]
 
-/-- 
-Theorem: The glide symmetry is a true involution (G^2 = I). 
--/
+/-- The basis-swap matrix squares to the identity. -/
 theorem glide_involution :
     G_Glide * G_Glide = 1 := by
-  decide
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [G_Glide, Matrix.mul_apply, Fin.sum_univ_two]
 
-/-- 
-Theorem: The EP braid representation under the momentum-space glide symmetry 
-is strictly inverted.
-This proves that traversing the non-orientable loop physically inverts the
-chirality of the EP encirclement (inequivalent braiding representations).
-`G * B * G^{-1} = B^{-1}`
-Since G is an involution, G^{-1} = G.
-We prove `G * B * G = -B`, and note that `B^{-1} = -B` for this orthogonal braid.
--/
+/-- Conjugation by the basis-swap matrix negates the quarter-turn matrix. -/
 theorem klein_twist_anti_isomorphism :
     G_Glide * B_EP * G_Glide = - B_EP := by
-  decide
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [G_Glide, B_EP, Matrix.mul_apply, Fin.sum_univ_two]
 
 end InfoGeometry.Canonical.KleinExceptionalBraid

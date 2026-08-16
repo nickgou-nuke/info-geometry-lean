@@ -79,13 +79,13 @@ theorem spinFactorTriple_outer (x y z : CommonCarrier) :
   ext <;> simp [spinFactorTriple, commonAdd, commonScale, commonNeg, commonB,
     add_comm, add_left_comm, add_assoc, mul_comm, mul_left_comm, mul_assoc]
 
-structure RealCarrier where
+structure RealJordanData where
   scalar : ℝ
   vector : Fin 3 → ℝ
 
-def realB (x y : RealCarrier) : ℝ :=
+def realB (x y : RealJordanData) : ℝ :=
   x.scalar * y.scalar + ∑ i, x.vector i * y.vector i
 
-def extendedRealCarrier := ℝ × RealCarrier × ℝ
+def extendedRealCarrier := ℝ × RealJordanData × ℝ
 
 end InfoGeometry.Canonical.ComplexPolarizedJordanPair

@@ -25,6 +25,17 @@ def finiteOperatorTraceCLM (n : ℕ) :
     finiteOperatorTraceCLM n T = finiteOperatorTrace T :=
   rfl
 
+/-- The coordinate matrix trace used by the finite BKM owner is exactly
+Mathlib's basis-independent trace of the underlying linear endomorphism. -/
+theorem finiteOperatorTrace_eq_linearMap_trace
+    (T : FiniteOperatorAlgebra n) :
+    finiteOperatorTrace T =
+      LinearMap.trace ℂ (FiniteHilbertSpace n) T.toLinearMap := by
+  unfold finiteOperatorTrace
+  exact (LinearMap.trace_eq_matrix_trace ℂ
+    (InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CblinfunMatrix.ketBasis
+      (Fin n)) T.toLinearMap).symm
+
 /--
 Continuity of the finite Kubo--Mori integrand follows from continuity of the
 `CFC.rpow` parameter path.  The latter remains an explicit model hypothesis:

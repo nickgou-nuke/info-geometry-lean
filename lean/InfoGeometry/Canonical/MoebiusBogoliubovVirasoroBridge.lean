@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.CantorCuntzCliffordBridge
 import InfoGeometry.Canonical.BogoliubovFockSuper
+import InfoGeometry.Canonical.BogoliubovCovariantMellinKreinQuantizationBridge
 import InfoGeometry.Canonical.FractalCantorCuntzKacMoodyVirasoroBridge
 import InfoGeometry.Meta.Architecture
 
@@ -122,6 +123,22 @@ theorem moebius_to_bogoliubov_mapping
   constructor
   · simp [HyperbolicMixingParams.ofAngle, Real.cosh_log hη]
   · simp [HyperbolicMixingParams.ofAngle, Real.sinh_log hη]
+
+/-! ## 2a. Mellin rapidity weld -/
+
+/-- The positive Möbius boost `exp r` has exactly the Mellin rapidity `r`.
+This is only a parameter-identification theorem; it asserts no Fock-space
+implementability or infinite-mode product. -/
+theorem moebius_boost_of_mellinRapidity
+    (n : ℕ) (u : ℝ) :
+    let r := InfoGeometry.Canonical.BogoliubovMellinKrein.bogoliubovRapidity n u
+    let B := bogoliubovTiltOfBoost (Real.exp r)
+    B.u = Real.cosh r ∧ B.v = Real.sinh r := by
+  dsimp
+  simpa [bogoliubovTiltOfBoost, HyperbolicMixingParams.ofAngle] using
+    (moebius_to_bogoliubov_mapping
+      (Real.exp (InfoGeometry.Canonical.BogoliubovMellinKrein.bogoliubovRapidity n u))
+      (Real.exp_pos _))
 
 /-! ## 2. Virasoro `L₀` as a binary-depth dilation readout -/
 

@@ -26,28 +26,13 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from tools.infra.aesop_tactic_prior import classify_tactic
+from igf.common.json_io import iter_jsonl, write_jsonl
 
 
 SCHEMA_SFT = "info_geometry.tactic_sft.v1"
 SCHEMA_DPO = "info_geometry.tactic_dpo.v1"
 SCHEMA_FAILURE = "info_geometry.tactic_failure.v1"
 SCHEMA_STATS = "info_geometry.tactic_training_dataset.stats.v1"
-
-
-def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
-    if not path.exists():
-        return
-    with path.open("r", encoding="utf-8") as handle:
-        for raw in handle:
-            line = raw.strip()
-            if not line:
-                continue
-            try:
-                row = json.loads(line)
-            except Exception:
-                continue
-            if isinstance(row, dict):
-                yield row
 
 
 def iter_json_docs(path: Path) -> Iterable[dict[str, Any]]:
@@ -73,9 +58,8 @@ def iter_json_docs(path: Path) -> Iterable[dict[str, Any]]:
             yield from iter_json_docs(child)
 
 
-def stable_hash(*parts: Any) -> str:
-    text = json.dumps(parts, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha1(text.encode("utf-8")).hexdigest()
+# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
+from igf.common.hashing import stable_hash
 
 
 def normalize_goal(text: Any) -> str:
@@ -561,16 +545,6 @@ def dpo_rows(
         "unpaired_successes": sum(len(v) for k, v in success_by_key.items() if k not in paired_success_keys),
         "unpaired_failures": sum(len(v) for k, v in failure_by_key.items() if k not in paired_failure_keys),
     }
-
-
-def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
-    with path.open("w", encoding="utf-8") as out:
-        for row in rows:
-            out.write(json.dumps(row, ensure_ascii=True, sort_keys=True) + "\n")
-            count += 1
-    return count
 
 
 def build_dataset(args: argparse.Namespace) -> dict[str, Any]:

@@ -44,6 +44,12 @@ def concreteBoundaryState : BoundaryState where
 def isSewn (s : BoundaryState) : Prop :=
   switch * s.rho * switch = s.rho
 
+theorem concreteBoundaryState_not_sewn :
+    ¬ isSewn concreteBoundaryState := by
+  intro h_sewn
+  have h_entry := congrFun (congrFun h_sewn 0) 0
+  norm_num [isSewn, concreteBoundaryState, switch, Matrix.mul_apply] at h_entry
+
 lemma trace_rot (A B C : Matrix (Fin 2) (Fin 2) ℂ) : (A * B * C).trace = (B * C * A).trace := by
   calc
     (A * B * C).trace = ((A * B) * C).trace := by simp [mul_assoc]

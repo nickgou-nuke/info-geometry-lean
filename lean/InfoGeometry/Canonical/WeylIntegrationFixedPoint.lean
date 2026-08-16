@@ -122,8 +122,8 @@ theorem det_invariant_on_orbit {n : Type*} [Fintype n] [DecidableEq n]
 The Connes Radon-Nikodym cocycle derivative vanishes when the modular generators coincide.
 -/
 theorem fiberCocycleVanishing (H : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator) (beta μ μχ : ℝ) :
-    ConnesCocycle.connesRadonNikodymDerivative H H beta μ μχ beta μ μχ = 0 :=
-  ConnesCocycle.connesRadonNikodymDerivative_zero_of_eq H beta μ μχ
+    ConnesCocycle.relativeModularGeneratorDifference H H beta μ μχ beta μ μχ = 0 :=
+  ConnesCocycle.relativeModularGeneratorDifference_zero_of_eq H beta μ μχ
 
 /-! ## 4. Fixed point theorem — Weyl integral invariance -/
 
@@ -147,7 +147,7 @@ theorem weylIntegration_is_colimit_fixedPoint
     -- The Weyl denominator factor equals the finite prime Weyl denominator
     weylDenominatorProduct L x = weylAlternatingSum L x ∧
     -- The cocycle derivative vanishes on fiber directions
-    ConnesCocycle.connesRadonNikodymDerivative H H beta μ μχ beta μ μχ = 0 := by
+    ConnesCocycle.relativeModularGeneratorDifference H H beta μ μχ beta μ μχ = 0 := by
   constructor
   · exact weylDenominatorIdentity L x
   · exact fiberCocycleVanishing H beta μ μχ

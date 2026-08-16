@@ -84,6 +84,50 @@ theorem hodgeStar_antiSelfDualPart (F : TwoFormC) :
   all_goals simp [Complex.I_sq]
   all_goals ring_nf
 
+/-! The two spectral readouts are genuine idempotent projections. -/
+
+theorem selfDualPart_idempotent (F : TwoFormC) :
+    selfDualPart (selfDualPart F) = selfDualPart F := by
+  have h := hodgeStar_selfDualPart F
+  funext i
+  dsimp [selfDualPart]
+  rw [congrFun h i]
+  calc (selfDualPart F i - Complex.I * (Complex.I * selfDualPart F i)) / 2
+    _ = (selfDualPart F i - (Complex.I * Complex.I) * selfDualPart F i) / 2 := by ring
+    _ = (selfDualPart F i - (-1) * selfDualPart F i) / 2 := by rw [Complex.I_mul_I]
+    _ = selfDualPart F i := by ring
+
+theorem antiSelfDualPart_idempotent (F : TwoFormC) :
+    antiSelfDualPart (antiSelfDualPart F) = antiSelfDualPart F := by
+  have h := hodgeStar_antiSelfDualPart F
+  funext i
+  dsimp [antiSelfDualPart]
+  rw [congrFun h i]
+  calc (antiSelfDualPart F i + Complex.I * (-Complex.I * antiSelfDualPart F i)) / 2
+    _ = (antiSelfDualPart F i - (Complex.I * Complex.I) * antiSelfDualPart F i) / 2 := by ring
+    _ = (antiSelfDualPart F i - (-1) * antiSelfDualPart F i) / 2 := by rw [Complex.I_mul_I]
+    _ = antiSelfDualPart F i := by ring
+
+theorem selfDualPart_antiSelfDualPart_zero (F : TwoFormC) :
+    selfDualPart (antiSelfDualPart F) = 0 := by
+  have h := hodgeStar_antiSelfDualPart F
+  funext i
+  change (antiSelfDualPart F i - Complex.I * hodgeStar (antiSelfDualPart F) i) / 2 = 0
+  rw [congrFun h i]
+  dsimp [antiSelfDualPart]
+  ring_nf
+  simp [Complex.I_sq]
+
+theorem antiSelfDualPart_selfDualPart_zero (F : TwoFormC) :
+    antiSelfDualPart (selfDualPart F) = 0 := by
+  have h := hodgeStar_selfDualPart F
+  funext i
+  change (selfDualPart F i + Complex.I * hodgeStar (selfDualPart F) i) / 2 = 0
+  rw [congrFun h i]
+  dsimp [selfDualPart]
+  ring_nf
+  simp [Complex.I_sq]
+
 /-- The self-dual and anti-self-dual projections reconstruct the input form. -/
 theorem self_plus_anti (F : TwoFormC) :
     (fun i => selfDualPart F i + antiSelfDualPart F i) = F := by

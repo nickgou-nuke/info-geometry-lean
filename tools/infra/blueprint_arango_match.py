@@ -16,29 +16,17 @@ from pathlib import Path
 from typing import Any, Iterable
 
 ROOT = Path(__file__).resolve().parents[2]
+_SRC = ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from igf.common.json_io import iter_jsonl, write_jsonl
 from tools.infra.leansearch_local import DEFAULT_RECORDS, search_records
 
 
 SCHEMA = "info_geometry.blueprint_arango_match.v1"
-
-
-def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
-    if not path.exists():
-        return
-    with path.open("r", encoding="utf-8") as handle:
-        for raw in handle:
-            line = raw.strip()
-            if not line:
-                continue
-            try:
-                row = json.loads(line)
-            except Exception:
-                continue
-            if isinstance(row, dict):
-                yield row
 
 
 def node_query(node: dict[str, Any]) -> str:
@@ -87,16 +75,6 @@ def match_node(node: dict[str, Any], *, records: Path, top_k: int) -> dict[str, 
             "lean_remains_proof_authority": True,
         },
     }
-
-
-def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=True, sort_keys=True) + "\n")
-            count += 1
-    return count
 
 
 def main() -> int:

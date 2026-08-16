@@ -17,7 +17,15 @@ charge claim is made.
 from __future__ import annotations
 
 import itertools
+import sys
+from pathlib import Path
 import sympy as sp
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from tools.sympy.common import assert_matrix_zero
 
 
 def charge(w: tuple[int | sp.Expr, int | sp.Expr]) -> tuple[sp.Expr, sp.Expr]:
@@ -35,12 +43,6 @@ def root_shift(a, b):
 def assert_equal(lhs, rhs, label: str) -> None:
     if lhs != rhs:
         raise AssertionError(f"{label} failed: {lhs} != {rhs}")
-
-
-def assert_matrix_zero(mat: sp.Matrix, label: str) -> None:
-    reduced = mat.applyfunc(lambda x: sp.expand(sp.simplify(x)))
-    if reduced != sp.zeros(*reduced.shape):
-        raise AssertionError(f"{label} failed:\n{reduced}")
 
 
 def main() -> int:

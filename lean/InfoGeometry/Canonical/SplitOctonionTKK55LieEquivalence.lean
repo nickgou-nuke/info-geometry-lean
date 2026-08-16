@@ -43,6 +43,8 @@ theorem tkkBracket_apply (d e : TKKCarrier) :
               d.1 • e.2.2.1 + e.1 • d.2.2.1,
             d.2.1.1.mulVec e.2.2.2 - e.2.1.1.mulVec d.2.2.2 +
               d.1 • e.2.2.2 - e.1 • d.2.2.2))) := by
+  rcases d with ⟨a, K, x, y⟩
+  rcases e with ⟨b, L, u, v⟩
   rfl
 
 def dMap (a : ℝ) (K : OrthogonalMiddle) :
@@ -77,7 +79,8 @@ def dMap (a : ℝ) (K : OrthogonalMiddle) :
 
 theorem dMap_apply (a : ℝ) (K : OrthogonalMiddle)
     (z : SplitOctonionTKK55.Carrier) :
-    dMap a K z = D a K z := rfl
+    dMap a K z = D a K z := by
+  rfl
 
 theorem blockOperator_decomposition (d : TKKCarrier) :
     blockOperator d =

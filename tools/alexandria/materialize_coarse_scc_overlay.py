@@ -45,12 +45,8 @@ def representative_terms(members: list[str], entities_for_chunk: dict[str, list[
     return [term for term, _ in sorted(counts.items(), key=lambda item: (item[1], item[0]), reverse=True)[:16]]
 
 
-def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=True, sort_keys=True) + "\n")
-    return len(rows)
+# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
+from igf.common.json_io import write_jsonl
 
 
 def materialize(input_dir: Path, output_dir: Path, *, query: str, conductive: bool) -> dict[str, Any]:

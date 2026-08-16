@@ -9,15 +9,12 @@ open Matrix
 variable {𝕜 V : Type*} [Field 𝕜] [AddCommGroup V] [Module 𝕜 V]
 
 /-!
-# The Full Representation and All Properties of the Cl(5,5) Symmetry Group
+# The split `O(5,5)` matrix carrier and its algebraic closure
 
-This file formalizes the exact TKK (Tits-Kantor-Koecher) five-graded symmetry closure
-for the Cl(1,1)^5 ≅ Cl(5,5) split signature operator framework.
-By utilizing the specific D_5 Weyl structure where the chiral parity index identically vanishes,
-the boundary anomalies cancel out entirely unconditionally, allowing for the direct colimit
-stabilization of the Super-Virasoro target algebra.
-
-We include the full algebraic structure of the O(5,5) symmetry.
+This file owns the concrete split-signature matrix carrier used by the finite
+window statements below. The boundary theorems retain an explicit zero-mode
+hypothesis; they do not identify that hypothesis with intrinsic Clifford
+chirality or with a Pin double cover.
 -/
 
 namespace InfoGeometry.Canonical
@@ -29,10 +26,89 @@ def O55Form : Matrix (Fin 10) (Fin 10) 𝕜 :=
   diagonal (fun i => if i.val < 5 then 1 else -1)
 
 /-- The Lie Algebra so(5,5) consisting of matrices skew-symmetric with respect to O55Form. -/
-def so55LieAlgebra := { X : Matrix (Fin 10) (Fin 10) 𝕜 // Xᵀ * O55Form + O55Form * X = 0 }
+def so55LieAlgebra : Submodule 𝕜 (Matrix (Fin 10) (Fin 10) 𝕜) where
+  carrier := {X | Xᵀ * O55Form + O55Form * X = 0}
+  zero_mem' := by simp
+  add_mem' := by
+    intro A B hA hB
+    change (A + B)ᵀ * O55Form + O55Form * (A + B) = 0
+    rw [Matrix.transpose_add, add_mul, mul_add]
+    calc
+      (Aᵀ * O55Form + Bᵀ * O55Form) +
+          (O55Form * A + O55Form * B) =
+        (Aᵀ * O55Form + O55Form * A) +
+          (Bᵀ * O55Form + O55Form * B) := by abel
+      _ = 0 := by rw [hA, hB, add_zero]
+  smul_mem' := by
+    intro r A hA
+    change (r • A)ᵀ * O55Form + O55Form * (r • A) = 0
+    rw [Matrix.transpose_smul, Matrix.smul_mul, Matrix.mul_smul]
+    rw [← smul_add, hA, smul_zero]
+
+theorem so55_bracket_mem {𝕜 : Type*} [Field 𝕜]
+    (A B : so55LieAlgebra (𝕜 := 𝕜)) :
+    (A.1 * B.1 - B.1 * A.1)ᵀ * O55Form +
+      O55Form * (A.1 * B.1 - B.1 * A.1) = 0 := by
+  have hA : A.1ᵀ * O55Form + O55Form * A.1 = 0 := A.2
+  have hB : B.1ᵀ * O55Form + O55Form * B.1 = 0 := B.2
+  have hA' : A.1ᵀ * O55Form = -(O55Form * A.1) :=
+    eq_neg_of_add_eq_zero_left hA
+  have hB' : B.1ᵀ * O55Form = -(O55Form * B.1) :=
+    eq_neg_of_add_eq_zero_left hB
+  rw [Matrix.transpose_sub, Matrix.transpose_mul, Matrix.transpose_mul,
+    sub_mul, mul_sub, Matrix.mul_assoc, Matrix.mul_assoc, hA', hB']
+  simp only [mul_neg]
+  rw [← Matrix.mul_assoc B.1ᵀ O55Form A.1,
+    ← Matrix.mul_assoc A.1ᵀ O55Form B.1, hB', hA']
+  simp only [neg_mul, neg_neg]
+  rw [← Matrix.mul_assoc O55Form A.1 B.1,
+    ← Matrix.mul_assoc O55Form B.1 A.1]
+  abel
+
+def so55Bracket {𝕜 : Type*} [Field 𝕜]
+    (A B : so55LieAlgebra (𝕜 := 𝕜)) : so55LieAlgebra (𝕜 := 𝕜) :=
+  ⟨A.1 * B.1 - B.1 * A.1,
+    so55_bracket_mem A B⟩
+
+noncomputable instance so55LieRing {𝕜 : Type*} [Field 𝕜] :
+    LieRing (so55LieAlgebra (𝕜 := 𝕜)) where
+  bracket := so55Bracket
+  add_lie := by
+    intro A B C
+    apply Subtype.ext
+    change (A.1 + B.1) * C.1 - C.1 * (A.1 + B.1) =
+      (A.1 * C.1 - C.1 * A.1) + (B.1 * C.1 - C.1 * B.1)
+    rw [add_mul, mul_add]
+    abel
+  lie_add := by
+    intro A B C
+    apply Subtype.ext
+    change A.1 * (B.1 + C.1) - (B.1 + C.1) * A.1 =
+      (A.1 * B.1 - B.1 * A.1) + (A.1 * C.1 - C.1 * A.1)
+    rw [mul_add, add_mul]
+    abel
+  lie_self := by
+    intro A
+    apply Subtype.ext
+    simp [so55Bracket]
+  leibniz_lie := by
+    intro A B C
+    apply Subtype.ext
+    simp [so55Bracket]
+    noncomm_ring
+
+noncomputable instance so55LieAlgebraInstance {𝕜 : Type*} [Field 𝕜] :
+    LieAlgebra 𝕜 (so55LieAlgebra (𝕜 := 𝕜)) where
+  lie_smul := by
+    intro r A B
+    apply Subtype.ext
+    change A.1 * (r • B.1) - (r • B.1) * A.1 =
+      r • (A.1 * B.1 - B.1 * A.1)
+    rw [Matrix.mul_smul, Matrix.smul_mul, smul_sub]
 
 /-- The dimension of the Lie Algebra so(5,5) is 45. -/
-lemma so55_dim : Fintype.card (Fin 10) * (Fintype.card (Fin 10) - 1) / 2 = 45 := by rfl
+lemma so55_dim : Fintype.card (Fin 10) * (Fintype.card (Fin 10) - 1) / 2 = 45 := by
+  norm_num
 
 /-- The canonical TKK 5-grading structure mapping index over Z. -/
 def TKKGrading (i : ℤ) : Prop := i ∈ ({-2, -1, 0, 1, 2} : Set ℤ)
@@ -56,7 +132,8 @@ theorem trace_gamma_11_zero
 end O55ChiralParityZero
 
 /-- The Weyl Group order for D_5 is 2^(5-1) * 5! = 1920 -/
-lemma weyl_group_D5_order : 2^4 * Nat.factorial 5 = 1920 := by rfl
+lemma weyl_group_D5_order : 2^4 * Nat.factorial 5 = 1920 := by
+  norm_num
 
 /-- Chiral Cuntz generators for the Klein Tube boundary condition.
 The Klein Quadric boundary (Q = 0) represents the on-shell factorization
@@ -73,20 +150,12 @@ theorem on_shell_factorization_klein_quadric
   · exact h.1
   · exact h.2
 
-/-- The Pin(5,5) symmetry double-covering O(5,5), necessary for unoriented string worldsheets 
-(Klein bottle replacing the torus). It incorporates orientation-reversing glide reflections. -/
+/-- A finite involutive orientation-reversal readout.
+
+This predicate records only the square relation.  It is deliberately not
+presented as a construction of the Pin(5,5) group or of its double cover. -/
 def Pin55Symmetry (P : Module.End 𝕜 V) : Prop :=
   P * P = 1
-
-/-- The Klein Bottle boundary intrinsically relies on Pin(5,5) glide reflections. -/
-theorem klein_bottle_requires_pin55 (P : Module.End 𝕜 V) (h : Pin55Symmetry P) :
-  P ^ 2 = 1 := by
-  exact h
-
-/-- The orientation-reversal readout is the same involutive glide law carried by the Pin packet. -/
-theorem pin55_orientation_reversal_readout (P : Module.End 𝕜 V) (h : Pin55Symmetry P) :
-    P * P = 1 :=
-  h
 
 end O55Representation
 

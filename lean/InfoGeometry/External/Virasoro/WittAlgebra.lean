@@ -152,6 +152,18 @@ lemma bracket_lgen_lgen (n m : ℤ) :
     ⁅lgen 𝕜 n, lgen 𝕜 m⁆ = (n - m : 𝕜) • lgen 𝕜 (n + m) :=
   bracket_lgen_lgen' 𝕜 n m
 
+/-- The three modes `ℓ₋₁, ℓ₀, ℓ₁` satisfy the standard finite `sl₂` mode
+relations inside the Witt algebra. -/
+theorem sl2_mode_relations :
+    ⁅lgen 𝕜 (-1), lgen 𝕜 1⁆ = (-2 : 𝕜) • lgen 𝕜 0 ∧
+      ⁅lgen 𝕜 0, lgen 𝕜 1⁆ = (-1 : 𝕜) • lgen 𝕜 1 ∧
+        ⁅lgen 𝕜 0, lgen 𝕜 (-1)⁆ = (1 : 𝕜) • lgen 𝕜 (-1) := by
+  constructor
+  · convert bracket_lgen_lgen 𝕜 (-1) 1 using 1 <;> norm_num
+  constructor
+  · convert bracket_lgen_lgen 𝕜 0 1 using 1 <;> norm_num
+  · convert bracket_lgen_lgen 𝕜 0 (-1) using 1 <;> norm_num
+
 end WittAlgebra -- namespace
 
 end VirasoroProject -- namespace

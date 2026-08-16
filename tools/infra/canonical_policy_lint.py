@@ -141,10 +141,8 @@ class SuspectTheorem:
         return (self.file, self.name)
 
 
-def load_json(path: Path) -> dict:
-    if not path.exists():
-        return {}
-    return json.loads(path.read_text(encoding='utf-8'))
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def surface_key(surface: PropSurface) -> tuple[str, str, str]:

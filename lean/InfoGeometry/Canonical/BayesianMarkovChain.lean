@@ -247,7 +247,7 @@ relations:
 The twist is stored as an algebra endomorphism because the KMS boundary
 operation must preserve the observable algebra structure.
 -/
-structure KMSStationarityPacket where
+structure KMSStationarityData where
   markov : MarkovDualOperator L
   kmsState : LimitState L
   kmsTwist : L.AInf →ₐ[R] L.AInf
@@ -261,10 +261,10 @@ structure KMSStationarityPacket where
     markov.Tstar s = s → s = kmsState
   stationary : markov.Tstar kmsState = kmsState
 
-namespace KMSStationarityPacket
+namespace KMSStationarityData
 
 variable {L}
-variable (K : KMSStationarityPacket L)
+variable (K : KMSStationarityData L)
 
 /-- Readback: the supplied KMS state is stationary for the Markov dual update. -/
 theorem kms_stationary : K.markov.Tstar K.kmsState = K.kmsState :=
@@ -305,7 +305,7 @@ theorem fixed_state_eq_kms_of_unique
     s = K.kmsState :=
   K.uniqueInvariant s hs
 
-end KMSStationarityPacket
+end KMSStationarityData
 
 /-! ## Bayesian projection as an explicit minimizer -/
 

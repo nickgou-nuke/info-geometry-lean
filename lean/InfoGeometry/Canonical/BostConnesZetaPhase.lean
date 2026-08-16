@@ -14,7 +14,7 @@ namespace InfoGeometry.Canonical.BostConnesZetaPhase
 
 /-- A finite zeta-phase carrier recording the low-temperature Gibbs readout and
 the Pauli synchronicity invariant. -/
-structure ZetaPhaseCarrier (R : Type*) [CommRing R] (clock : PauliWorldClock R)
+structure ZetaPhaseData (R : Type*) [CommRing R] (clock : PauliWorldClock R)
     (β : ℝ) where
   hβ : 1 < β
   partition_eq : InfoGeometry.Canonical.BostConnesKMS.bostConnesPartition β =
@@ -33,7 +33,7 @@ structure ZetaPhaseCarrier (R : Type*) [CommRing R] (clock : PauliWorldClock R)
 Pauli synchronicity invariant. -/
 theorem zetaPhaseCarrier_exists
     (R : Type*) [CommRing R] (clock : PauliWorldClock R) (β : ℝ) (hβ : 1 < β) :
-    ZetaPhaseCarrier R clock β := by
+    ZetaPhaseData R clock β := by
   rcases InfoGeometry.Canonical.bostConnes_pauli_synchronicity_package clock β hβ with
     ⟨hLow, hPart, hMass, hPos, hSync⟩
   exact

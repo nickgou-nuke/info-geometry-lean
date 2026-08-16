@@ -30,28 +30,12 @@ DEFAULT_OUT = Path("reports/training/tactic_path_ranking.spectral_enriched.jsonl
 DEFAULT_STATS = Path("reports/training/tactic_path_ranking.spectral_enriched.stats.json")
 
 
-def iter_jsonl(path: Path):
-    if not path.exists():
-        raise SystemExit(f"input JSONL does not exist: {path}")
-    with path.open("r", encoding="utf-8") as f:
-        for lineno, line in enumerate(f, start=1):
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                row = json.loads(line)
-            except json.JSONDecodeError as exc:
-                raise SystemExit(f"malformed JSON in {path} at line {lineno}: {exc}") from exc
-            if isinstance(row, dict):
-                yield row
+# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
+from igf.common.json_io import iter_jsonl
 
 
-def stable_hash(*parts: Any) -> str:
-    h = hashlib.sha256()
-    for part in parts:
-        h.update(json.dumps(part, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8"))
-        h.update(b"\0")
-    return h.hexdigest()[:24]
+# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
+from igf.common.hashing import stable_hash
 
 
 def clamp01(x: float) -> float:
@@ -272,11 +256,8 @@ def enrich_rows(
     return enriched, stats
 
 
-def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as f:
-        for row in rows:
-            f.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
+from igf.common.json_io import write_jsonl
 
 
 def main() -> int:

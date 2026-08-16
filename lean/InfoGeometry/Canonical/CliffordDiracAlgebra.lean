@@ -111,9 +111,9 @@ open HodgeHelmholtzKreinDecomposition
 
 variable {R : Type*} [Ring R] {W : Type*} [AddCommGroup W] [Module R W]
 
-def Dirac (H : HodgePacket (R := R) (V := W)) : Module.End R W := H.d + H.δ
+def Dirac (H : HodgeLaplacianData (R := R) (V := W)) : Module.End R W := H.d + H.δ
 
-theorem dirac_sq_eq_delta (H : HodgePacket (R := R) (V := W)) :
+theorem dirac_sq_eq_delta (H : HodgeLaplacianData (R := R) (V := W)) :
     Dirac H * Dirac H = H.Δ := by
   simp [Dirac, H.Δ_def]
   ext x

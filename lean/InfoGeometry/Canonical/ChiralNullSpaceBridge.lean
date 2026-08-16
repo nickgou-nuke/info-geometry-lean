@@ -25,7 +25,7 @@ variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 local notation "EndH" => E →L[ℝ] E
 
 /-- Witness that the heat kernel has a vacuum mode that is subtracted out. -/
-structure ZeroModeSubtractionWitness where
+structure ZeroModeSubtractionData where
   heatKernel : ℝ → ℂ
   vacuumMode : ℂ
   vacuum_eq_one : vacuumMode = 1
@@ -45,12 +45,12 @@ theorem excitedStateSector_eq_orthogonal (Q : EndH) :
 
 /-- The regulated heat kernel is exactly the vacuum-subtracted kernel property. -/
 theorem regulatedHeatKernel_eq_subtract_one
-    (W : ZeroModeSubtractionWitness) (t : ℝ) :
+    (W : ZeroModeSubtractionData) (t : ℝ) :
     W.regulatedHeatKernel t = W.heatKernel t - W.vacuumMode := by
   simpa using W.regulated_eq_subtract t
 
 /-- The vacuum mode is explicitly normalized to one in the prime-gas boundary package. -/
-theorem vacuumMode_eq_one (W : ZeroModeSubtractionWitness) :
+theorem vacuumMode_eq_one (W : ZeroModeSubtractionData) :
     W.vacuumMode = 1 := W.vacuum_eq_one
 
 end Core

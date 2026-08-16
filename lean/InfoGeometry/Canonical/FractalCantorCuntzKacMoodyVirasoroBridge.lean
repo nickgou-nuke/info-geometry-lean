@@ -132,11 +132,11 @@ structure FractalCantorCuntzKacMoodyVirasoroBridge
 
   /-- The prime-mode spinor square-root dictionary. -/
   boost :
-    PrimeSpinorSquareRootPacket ℕ ℝ
+    PrimeSpinorSquareRootData ℕ ℝ
 
   /-- Real Bogoliubov transformation shadow data. -/
   bogoljubov :
-    InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket
+    InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowData
       E Op Op Op Op Op
 
   /--
@@ -216,15 +216,15 @@ theorem majorana_packet_K_sq_eq_neg_id :
 @[rep_depth operator]
 theorem bogoljubov_packet_phaseAxisForce_from_cartanScaleShadow
     [CompleteSpace E]
-    (H : InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.doubledKreinEnd
+    (H : InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowData.doubledKreinEnd
         (E := E)) :
-    InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.cartanGaugeShadow
+    InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowData.cartanGaugeShadow
         (E := E) H +
-      InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.cartanScaleShadow
+      InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowData.cartanScaleShadow
         (E := E) H =
         BogoliubovTransport.modularTransportGenerator (E := E) H := by
   simpa using
-    (InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowPacket.cartanGaugeShadow_add_cartanScaleShadow
+    (InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift.BogoliubovKANShadowData.cartanGaugeShadow_add_cartanScaleShadow
       (E := E) H)
 
 

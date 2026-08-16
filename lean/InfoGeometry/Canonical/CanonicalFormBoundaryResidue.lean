@@ -27,17 +27,6 @@ abbrev ProductBoundaryFactorization {A Ω Boundary : Type*}
   geom.canonicalForm (geom.boundaryGeometry a B) =
     geom.space.wedge (geom.canonicalForm b_L) (geom.canonicalForm b_R)
 
-namespace ProductBoundaryFactorization
-
-theorem productBoundary_canonicalForm
-    {A Ω Boundary : Type*}
-    (geom : PositiveGeometry A Ω Boundary) (a : A) (B : Boundary) (b_L b_R : A)
-    (h : ProductBoundaryFactorization geom a B b_L b_R) :
-    geom.canonicalForm (geom.boundaryGeometry a B) =
-      geom.space.wedge (geom.canonicalForm b_L) (geom.canonicalForm b_R) := h
-
-end ProductBoundaryFactorization
-
 /-- 
 BCFW boundary factorization: If B is a BCFW product boundary of an amplituhedron A, 
 then the residue of A at B factorizes into the wedge product of the left and right canonical forms.
@@ -47,8 +36,7 @@ theorem bcfwBoundary_factorization {A Ω Boundary : Type*}
     (h_prod : ProductBoundaryFactorization geom a B b_L b_R) :
     geom.space.residue (geom.canonicalForm a) B = geom.space.wedge (geom.canonicalForm b_L) (geom.canonicalForm b_R) := by
   rw [geom.residue_canonicalForm_boundary]
-  exact ProductBoundaryFactorization.productBoundary_canonicalForm
-    geom a B b_L b_R h_prod
+  exact h_prod
 
 open scoped BigOperators
 
@@ -70,6 +58,6 @@ theorem bcfw_recursion_from_residue_sum {A Ω Boundary : Type*} [AddCommMonoid �
   intro B hB
   have h_fact := h_product B hB
   rw [geom.residue_canonicalForm_boundary]
-  exact h_fact.productBoundary_canonicalForm
+  exact h_fact
 
 end InfoGeometry.Canonical

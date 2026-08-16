@@ -105,35 +105,4 @@ theorem colimit_stability {R : Type _} [CommRing R] (T : R) (h_cube : T ^ 3 = T)
       simp [h_mul, pow_succ, mul_assoc]
     _ = φ T := by rw [h_cube]
 
-/--
-**Mellin Colimit Trifactor Capstone** (Genuine Proof).
-
-The smooth manifold is not assumed — it emerges as the continuum colimit
-of discrete Cantor dust bound by Mellin transforms.
-
-Sectors:
-  det=+1 → H⁰(smooth)   — analytic continuation, modular flow Δ^{it}
-  det= 0 → H¹(p-adic)   — Euler product nodes, center 𝔐∩𝔐'
-  det=-1 → H²(discrete) — Dirichlet series fibers, conjugation J
-
-Zero axioms. Zero sorries.
--/
-theorem mellin_colimit_trifactor_capstone :
-    (-- 1. Tripotent classifier: d³=d ⇒ d∈{-1,0,1}
-     ∀ (d : ℤ), d ^ 3 = d → (d = 0 ∨ d = 1 ∨ d = -1)) ∧
-    (-- 2. Bott absorbs negative sector: d^80 ∈ {0,1}
-     ∀ (d : ℤ), d ^ 3 = d → (d ^ 80 = 0 ∨ d ^ 80 = 1)) ∧
-    (-- 3. Critical Mellin ≡ tripotent integers
-     (∀ s : ℤ, s = -1 ∨ s = 0 ∨ s = 1 → s ^ 3 = s) ∧
-      ∀ s : ℤ, s ^ 3 = s → (s = -1 ∨ s = 0 ∨ s = 1)) ∧
-    (-- 4. Colimit stability under multiplicative automorphisms
-     ∀ (R : Type _) [CommRing R] (T : R), T ^ 3 = T →
-       ∀ (φ : R → R), (∀ a b, φ (a * b) = φ a * φ b) → (φ T) ^ 3 = φ T) := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact tripotent_classifier
-  · exact bott_absorbs_negative_sector
-  · exact critical_mellin_are_tripotent
-  · intro R _ T hT φ h_mul
-    exact colimit_stability T hT φ h_mul
-
 end MellinColimitTrifactor

@@ -17,6 +17,11 @@ if __package__ in (None, ""):
         APPROVED_AXIOMS_PATH,
         AUDIT_AXIOMS_REPORT_PATH,
         QUARANTINE_MANIFEST_PATH,
+        line_of,
+        module_to_path,
+        path_to_module,
+        rel,
+        strip_lean_comments,
     )
     from tools.pathing import repo_root
 else:
@@ -24,6 +29,11 @@ else:
         APPROVED_AXIOMS_PATH,
         AUDIT_AXIOMS_REPORT_PATH,
         QUARANTINE_MANIFEST_PATH,
+        line_of,
+        module_to_path,
+        path_to_module,
+        rel,
+        strip_lean_comments,
     )
     from tools.pathing import repo_root
 
@@ -143,85 +153,6 @@ class InterfaceInfo:
     proof_fields: int
     data_fields: int
     context_fields: int
-
-
-def rel(path: Path) -> str:
-    return path.relative_to(ROOT).as_posix()
-
-
-def module_to_path(module: str) -> Path | None:
-    lean_path = ROOT / "lean" / Path(module.replace(".", "/")).with_suffix(".lean")
-    if lean_path.exists():
-        return lean_path
-    direct_path = ROOT / Path(module.replace(".", "/")).with_suffix(".lean")
-    if direct_path.exists():
-        return direct_path
-    return None
-
-
-def line_of(text: str, offset: int) -> int:
-    return text.count("\n", 0, offset) + 1
-
-
-def path_to_module(path: str) -> str | None:
-    path_obj = Path(path)
-    if path_obj.suffix != ".lean":
-        return None
-    parts = path_obj.parts
-    if len(parts) >= 2 and parts[0] == "lean":
-        return ".".join(Path(*parts[1:]).with_suffix("").parts)
-    return None
-
-
-def strip_lean_comments(source: str, keep_docstrings: bool = False) -> str:
-    out: list[str] = []
-    i = 0
-    n = len(source)
-    block_depth = 0
-    is_doc = False
-    while i < n:
-        if block_depth > 0:
-            if source.startswith("/-", i):
-                block_depth += 1
-                if is_doc:
-                    out.extend(["/", "-"])
-                i += 2
-                continue
-            if source.startswith("-/", i):
-                block_depth -= 1
-                if is_doc:
-                    out.extend(["-", "/"])
-                if block_depth == 0:
-                    is_doc = False
-                i += 2
-                continue
-            if is_doc:
-                out.append(source[i])
-            elif source[i] == "\n":
-                out.append("\n")
-            i += 1
-            continue
-
-        if source.startswith("--", i):
-            j = source.find("\n", i)
-            if j == -1:
-                break
-            out.append("\n")
-            i = j + 1
-            continue
-        if source.startswith("/-", i):
-            block_depth = 1
-            nnxt = source[i + 2] if i + 2 < n else ""
-            if keep_docstrings and (nnxt == "-" or nnxt == "!"):
-                is_doc = True
-                out.extend(["/", "-"])
-            i += 2
-            continue
-
-        out.append(source[i])
-        i += 1
-
-    return "".join(out)
 
 
 def declaration_modules(texts: dict[str, str]) -> list[str]:

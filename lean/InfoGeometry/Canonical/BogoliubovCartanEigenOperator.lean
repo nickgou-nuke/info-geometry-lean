@@ -496,10 +496,10 @@ structure CartanFrameEquiv
   Uinv : EndH
 
   /-- Left inverse law. -/
-  left_inv : Uinv * U = 1
+  inverse_left : Uinv * U = 1
 
   /-- Right inverse law. -/
-  right_inv : U * Uinv = 1
+  inverse_right : U * Uinv = 1
 
   /-- Cartan generator transport law. -/
   conjugatesCartan :

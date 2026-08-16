@@ -52,7 +52,6 @@ structure ModularFlowData where
   sigma_add : ∀ t s x, sigma (t + s) x = sigma t (sigma s x)
   sigma_neg_left : ∀ t x, sigma (-t) (sigma t x) = x
   sigma_neg_right : ∀ t x, sigma t (sigma (-t) x) = x
-  preserves : ∀ t, sigma t '' (Set.univ : Set A) ⊆ Set.univ
 
 theorem modular_flow_is_bijective
     (F : ModularFlowData A) (t : ℝ) :
@@ -73,16 +72,5 @@ theorem modular_flow_group_law
     (F : ModularFlowData A) (t s : ℝ) (x : A) :
     F.sigma (t + s) x = F.sigma t (F.sigma s x) :=
   F.sigma_add t s x
-
-theorem tomita_takesaki_algebraic_synthesis
-    (T : TomitaConjugationData A) (M : Set A)
-    (hT : TomitaCommutantData A T M)
-    (F : ModularFlowData A) (t s : ℝ) (x : A) :
-    (tomitaImage A T M = Commutant A M) ∧
-    (Function.Bijective (F.sigma t)) ∧
-    (F.sigma (t + s) x = F.sigma t (F.sigma s x)) :=
-  ⟨tomita_image_eq_commutant A T M hT,
-    modular_flow_is_bijective A F t,
-    modular_flow_group_law A F t s x⟩
 
 end InfoGeometry.Physics

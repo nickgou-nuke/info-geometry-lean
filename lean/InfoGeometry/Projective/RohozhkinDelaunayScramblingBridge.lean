@@ -117,7 +117,8 @@ theorem rohozhkin_horizon_flow_packet {moving horizonDim : ℕ}
     (β : RohozhkinPureBraidGroup moving)
     (state : HorizonMicrostates horizonDim) :
     IsUnitaryBraiding (R.flow β) ∧ InformationIsConserved (R.flow β) state :=
-  finite_unitary_braiding_packet (R.flow β) state
+  ⟨finite_unitary_braiding (R.flow β),
+    finite_information_is_conserved (R.flow β) state⟩
 
 /-! ## Fibonacci phase readout interface -/
 

@@ -19,9 +19,11 @@ difference of the range projections: K_Dirac = S_left·S*_left - S_right·S*_rig
 2. J·ε = -ε·J                        (anticommutation — in DoubledSpace)
 3. K² = -I                           (complex structure)
 4. J·K·J = -K                        (Legendre flip: Hodge star = -K)
-5. S_right is an isometry iff S_left is (J-conjugation preserves unitarity)
-6. K_Dirac is J-odd: J·K_Dirac·J = -K_Dirac
-7. The chiral charge Tr(K_Dirac) vanishes when S_left is an isometry
+5. The canonical Hodge--Dirac block decomposition is owned by
+   `Canonical.ChiralHodgeDiracBlockBridge`; this file only supplies the
+   doubled-carrier symmetries used by that construction.
+
+No Tomita--Takesaki identification is claimed here.
 
 All theorems operate directly on `DoubledSpace E` with its concrete
 modular conjugation and fundamental symmetry.

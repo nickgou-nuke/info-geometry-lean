@@ -4,6 +4,7 @@ import InfoGeometry.Categorical.TensorColimit
 import InfoGeometry.Categorical.CuntzCantorKMSColimitBridge
 import InfoGeometry.Categorical.FiniteWordPathWeights
 import InfoGeometry.Categorical.FibonacciBraidedCategory
+import InfoGeometry.Categorical.FibonacciMonoidalStructBridge
 import InfoGeometry.Categorical.G2TwistCategoricalBraidingBridge
 import InfoGeometry.Categorical.QuantumG2RMatrixBraidingDatum
 import InfoGeometry.Categorical.QuantumG2RMatrixTensorTransport

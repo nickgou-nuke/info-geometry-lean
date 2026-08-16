@@ -101,12 +101,15 @@ theorem dualToV5_apply_mul_sum (v : V5) (φ : Module.Dual ℝ V5) :
           congr 1
           funext i
           rw [dualToV5_apply_coord]
-    _ = φ (∑ i : Fin 5, v i • Pi.single i 1) := by
+    _ = ∑ i : Fin 5, φ (v i • (Pi.single i (1 : ℝ) : V5)) := by
+          apply Finset.sum_congr rfl
+          intro i hi
+          simp [smul_eq_mul, mul_comm]
+    _ = φ (∑ i : Fin 5, v i • (Pi.single i (1 : ℝ) : V5)) := by
           rw [map_sum]
-          simp [smul_eq_mul, mul_comm, Pi.single_apply]
     _ = φ v := by
           congr 1
-          funext i
+          funext j
           simp [Pi.single_apply]
 
 theorem q55_neutralToV55 (x : NeutralSpace) :

@@ -1,5 +1,6 @@
 import InfoGeometry.Clifford.Cl55WittPinNativeTwistedAction
 import InfoGeometry.Clifford.Cl55WittPinKernelEvidence
+import InfoGeometry.Clifford.Cl55WittPinSignatureBoundary
 import InfoGeometry.Clifford.Cl55WittNativeIsometryGroup
 
 namespace InfoGeometry.Clifford.Clifford55
@@ -15,10 +16,10 @@ not assert Cartan--Dieudonné surjectivity or equality of the full kernel with
 `{±1}`.
 -/
 
-noncomputable abbrev pin55OrthogonalAction : Pin55 →* orthogonalGroup55 :=
+noncomputable def pin55OrthogonalAction : Pin55 →* orthogonalGroup55 :=
   pinTwistedOrthogonalAction
 
-noncomputable abbrev pin55NativeOrthogonalAction : Pin55 →* Q55.IsometryEquiv Q55 :=
+noncomputable def pin55NativeOrthogonalAction : Pin55 →* Q55.IsometryEquiv Q55 :=
   pinTwistedNativeOrthogonalAction
 
 /-!
@@ -28,9 +29,9 @@ anisotropic vectors.  Its native action and exact covering theorems are
 already established by the Clifford owners imported below.
 -/
 
-abbrev RealPin55 := realSplitPin55
+abbrev RealPin55 := {g : Cl55ˣ // g ∈ realSplitPin55}
 
-noncomputable abbrev realPin55OrthogonalAction :
+noncomputable def realPin55OrthogonalAction :
     RealPin55 →* Q55.IsometryEquiv Q55 :=
   realSplitPinNativeOrthogonalAction
 
@@ -50,12 +51,21 @@ theorem pin55NativeOrthogonalAction_globalSheetPin :
       globalSheetReflectionIsometry := by
   exact pinTwistedNativeOrthogonalAction_globalSheetPin_eq_globalSheetReflectionIsometry
 
+/-- The native `pinGroup Q55` convention excludes positive unit vectors.
+
+This boundary is why the full split-signature cover is represented below by
+`RealPin55 = realSplitPin55`, rather than by the native `Pin55` alone.
+-/
+theorem pin55_positive_basis_vector_not_mem (i : Fin 5) :
+    ι55 (e_pos i) ∉ Pin55 :=
+  ePos_not_mem_pinGroup i
+
 theorem negOnePin_mem_pin55NativeOrthogonalAction_kernel :
     negOnePin ∈ (pin55NativeOrthogonalAction).ker := by
-  change pin55NativeOrthogonalAction negOnePin = 1
-  rw [pinTwistedNativeOrthogonalAction_apply]
-  exact congrArg orthogonalGroup55IsometryEquiv
-    pinTwistedOrthogonalAction_negOnePin
+  change pinTwistedNativeOrthogonalAction negOnePin = 1
+  rw [pinTwistedNativeOrthogonalAction_apply,
+    pinTwistedOrthogonalAction_negOnePin]
+  rfl
 
 theorem realPin55OrthogonalAction_surjective :
     Function.Surjective realPin55OrthogonalAction :=
@@ -82,19 +92,31 @@ theorem realPin55SignQuotientEquiv_mk
       realPin55OrthogonalAction g :=
   realSplitPinNativeSignQuotientEquiv_mk g
 
-/-- The native real split `Pin(5,5)` cover as one reusable theorem packet. -/
-theorem real_pin55_native_cover_packet :
-    Function.Surjective realPin55OrthogonalAction ∧
-      (realPin55OrthogonalAction).ker = realSplitPinSignSubgroup ∧
-      (∀ g : RealPin55,
-        g ∈ (realPin55OrthogonalAction).ker ↔
-          (g : Cl55ˣ) = 1 ∨ (g : Cl55ˣ) = -1) ∧
-      Nonempty ((RealPin55 ⧸
-        (realSplitPinSignSubgroup : Subgroup RealPin55)) ≃*
-          Q55.IsometryEquiv Q55) := by
-  exact ⟨realPin55OrthogonalAction_surjective,
-    realPin55OrthogonalAction_kernel_eq_signSubgroup,
-    realPin55OrthogonalAction_mem_kernel_iff_pm_one,
-    ⟨realPin55SignQuotientEquiv⟩⟩
+theorem realPin55SignQuotientEquiv_eq_native_transport :
+    realPin55SignQuotientEquiv =
+      realSplitPinSignQuotientEquiv.trans orthogonalGroup55MulEquiv :=
+  realSplitPinNativeSignQuotientEquiv_eq_transport
+
+/-! The fiber of the native orthogonal action is exactly one sign-subgroup
+coset.  This is the representative-level form of the sign quotient. -/
+theorem realPin55OrthogonalAction_fiber_iff
+    (g h : RealPin55) :
+    realPin55OrthogonalAction g = realPin55OrthogonalAction h ↔
+      h⁻¹ * g ∈ realSplitPinSignSubgroup := by
+  constructor
+  · intro hgh
+    apply (realPin55OrthogonalAction_mem_kernel_iff_pm_one (h⁻¹ * g)).mp
+    change realPin55OrthogonalAction (h⁻¹ * g) = 1
+    rw [map_mul, map_inv, hgh]
+    simp
+  · intro hker
+    have hker' : realPin55OrthogonalAction (h⁻¹ * g) = 1 :=
+      (realPin55OrthogonalAction_mem_kernel_iff_pm_one (h⁻¹ * g)).mpr hker
+    calc
+      realPin55OrthogonalAction g =
+          realPin55OrthogonalAction (h * (h⁻¹ * g)) := by simp
+      _ = realPin55OrthogonalAction h *
+          realPin55OrthogonalAction (h⁻¹ * g) := by rw [map_mul]
+      _ = realPin55OrthogonalAction h := by rw [hker', mul_one]
 
 end InfoGeometry.Clifford.Clifford55

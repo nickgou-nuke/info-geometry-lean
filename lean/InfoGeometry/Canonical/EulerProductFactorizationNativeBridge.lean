@@ -1,9 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
-set_option linter.unusedSectionVars false
-set_option linter.unusedVariables false
-
 /-!
 # Native Euler Product Factorization Master Bridge
 

@@ -32,8 +32,8 @@ SUPERVISOR_STOP_FILE = distill.SCRIPT_DIR / ".supervisor.stop"
 SUPERVISOR_LOG_DIR = distill.LOG_DIR / "supervisor"
 
 
-def _now_iso() -> str:
-    return datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+# [lossless-compact] _now_iso folded into igf.common.time_utils.utc_now_iso
+from igf.common.time_utils import utc_now_iso as _now_iso
 
 
 def _log(message: str) -> None:

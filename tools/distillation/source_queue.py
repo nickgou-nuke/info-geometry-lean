@@ -21,8 +21,8 @@ DEFAULT_ORACLE_LIMIT = 12
 TERMINAL_SEED_STATUSES = {"covered_by_oracle", "accepted", "running", "done", "rejected"}
 
 
-def _now_iso() -> str:
-    return datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+# [lossless-compact] _now_iso folded into igf.common.time_utils.utc_now_iso
+from igf.common.time_utils import utc_now_iso as _now_iso
 
 
 def _json(data: Any) -> str:

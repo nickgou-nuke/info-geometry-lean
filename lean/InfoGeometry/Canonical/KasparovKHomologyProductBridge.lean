@@ -16,7 +16,10 @@ open Matrix Complex
 
 namespace KasparovKHomologyProductBridge
 
-/-- Kasparov KK-Module Representation between C*-Algebras A and B in Mₙ(ℂ). -/
+/-- Finite matrix Fredholm-model datum in `Mₙ(ℂ)`.
+
+This is not a C*-algebraic Kasparov module: the file records only the
+displayed finite matrix hypotheses. -/
 abbrev KasparovModule (n : ℕ) [DecidableEq (Fin n)] :=
   { F : selfAdjoint (Matrix (Fin n) (Fin n) ℂ) //
       (F : Matrix (Fin n) (Fin n) ℂ) * F = 1 }
@@ -33,29 +36,28 @@ theorem h_self_adjoint : (fredholm_operator modAB).conjTranspose = fredholm_oper
 theorem h_involution : fredholm_operator modAB * fredholm_operator modAB = 1 := by
   exact modAB.2
 
-/-- **Theorem**: Kasparov Module Involutivity: F² = 1. -/
+/-- Involutivity of the finite matrix datum. -/
 theorem kasparov_module_involution :
     fredholm_operator modAB * fredholm_operator modAB = 1 :=
   h_involution modAB
 
-/-- **Theorem**: Kasparov Module Self-Adjointness: F† = F. -/
+/-- Self-adjointness of the finite matrix datum. -/
 theorem kasparov_module_self_adjoint :
     (fredholm_operator modAB).conjTranspose = fredholm_operator modAB :=
   h_self_adjoint modAB
 
-/-- Composite Kasparov Product Element F_AC = F_AB * F_BC. -/
+/-- Composite matrix representative `F_AB * F_BC` in the finite model. -/
 def kasparovProduct (x y : Matrix (Fin n) (Fin n) ℂ) : Matrix (Fin n) (Fin n) ℂ :=
   x * y
 
-/-- **Theorem**: Associativity of Kasparov KK-Composition Product:
-    (x ⊗_B y) ⊗_C z = x ⊗_B (y ⊗_C z). -/
+/-- Associativity of finite matrix composition. -/
 theorem kasparov_product_associativity (x y z : Matrix (Fin n) (Fin n) ℂ) :
     kasparovProduct (kasparovProduct x y) z = kasparovProduct x (kasparovProduct y z) := by
   dsimp [kasparovProduct]
   rw [mul_assoc]
 
-/-- **Theorem**: Tracial Index Pairing Formula for Composite Kasparov Product:
-    Tr((F_AB * F_BC) * (F_AB * F_BC)†) = n for self-adjoint involutions. -/
+/-- Trace identity for the finite matrix composite under the stated
+    self-adjoint involution hypotheses. -/
 theorem kasparov_product_trace_index (x y : Matrix (Fin n) (Fin n) ℂ)
     (hx_sa : x.conjTranspose = x) (hx_inv : x * x = 1)
     (hy_sa : y.conjTranspose = y) (hy_inv : y * y = 1) :

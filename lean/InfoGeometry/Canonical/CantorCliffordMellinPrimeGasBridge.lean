@@ -59,7 +59,7 @@ structure FinitePrimeProfile (k : ℕ) where
   /-- Prime label for each bit position. -/
   p : Fin k → ℕ
   /-- Prime property for each label. -/
-  prime_law : ∀ i, Nat.Prime (p i)
+  primeValues : ∀ i, Nat.Prime (p i)
   /-- Positive real base property for Mellin powers. -/
   p_pos : ∀ i, 0 < (p i : ℝ)
 
@@ -96,7 +96,7 @@ theorem profileEnergy_nonnegative
   intro i hi
   apply mul_nonneg (occ_nonnegative (ε i))
   apply Real.log_nonneg
-  exact_mod_cast (P.prime_law i).one_le
+    exact_mod_cast (P.primeValues i).one_le
 
 /-- Squarefree integer attached to a binary prime profile: `n(epsilon) = prod p_i^epsilon_i`. -/
 def profileNat
@@ -116,7 +116,7 @@ theorem profileNat_pos
   apply Finset.prod_pos
   intro i hi
   by_cases hε : ε i
-  · simpa [hε] using P.prime_law i |>.pos
+    · simpa [hε] using P.primeValues i |>.pos
   · simp [hε]
 
 theorem profileNat_ne_zero
@@ -151,7 +151,7 @@ theorem profileEnergy_eq_log_profileNat
     · simp [h]
   · intro i hi
     by_cases h : ε i
-    · simp [h, Nat.ne_of_gt (P.prime_law i).pos]
+    · simp [h, Nat.ne_of_gt (P.primeValues i).pos]
     · simp [h]
 
 /-- Finite Mellin kernel `exp(-beta * E(epsilon))`. -/

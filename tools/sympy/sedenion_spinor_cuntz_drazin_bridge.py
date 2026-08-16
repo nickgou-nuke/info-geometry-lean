@@ -15,15 +15,19 @@ Checked finite corridor:
   * GAP/Sage/clifford/galgebra sanity lanes.
 """
 
-from __future__ import annotations
-
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 import sympy as sp
 
 ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from tools.sympy.common import assert_matrix_eq
+
 SAGE = Path("/home/goutev/miniforge3/envs/sage/bin/sage")
 GAP = Path("/home/goutev/miniforge3/envs/sage/bin/gap")
 
@@ -68,11 +72,6 @@ def basis(n: int, i: int) -> Vec:
 def assert_vec(label: str, actual: Vec, expected: Vec) -> None:
     if actual != expected:
         raise AssertionError(f"{label}: actual={actual}, expected={expected}")
-
-
-def assert_matrix_eq(label: str, actual: sp.Matrix, expected: sp.Matrix) -> None:
-    if actual != expected:
-        raise AssertionError(f"{label}:\nactual={actual}\nexpected={expected}")
 
 
 def matrix_unit(n: int, i: int, j: int) -> sp.Matrix:

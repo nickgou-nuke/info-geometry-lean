@@ -43,12 +43,16 @@ def affinePinToAffineNativeOrthogonal :
 
 theorem affinePinToAffineNativeOrthogonal_left
     (x : AffinePin55Native) :
-    (affinePinToAffineNativeOrthogonal x).left = x.left := rfl
+    (affinePinToAffineNativeOrthogonal x).left = x.left := by
+  -- left coordinate is preserved by `SemidirectProduct.map`.
+  simpa [affinePinToAffineNativeOrthogonal]
 
 theorem affinePinToAffineNativeOrthogonal_right
     (x : AffinePin55Native) :
     (affinePinToAffineNativeOrthogonal x).right =
-      realSplitPinOrthogonalAction x.right := rfl
+      realSplitPinOrthogonalAction x.right := by
+  -- right coordinate follows the codomain action on the second component.
+  simpa [affinePinToAffineNativeOrthogonal]
 
 theorem affinePinToAffineNativeOrthogonal_mem_kernel_iff
     (x : AffinePin55Native) :
@@ -116,6 +120,11 @@ noncomputable def affinePinQuotientEquiv :
 theorem affinePinQuotientEquiv_mk (x : AffinePin55Native) :
     affinePinQuotientEquiv (QuotientGroup.mk x) =
       affinePinToAffineNativeOrthogonal x :=
-  rfl
+  by
+  change
+    QuotientGroup.kerLift affinePinToAffineNativeOrthogonal (QuotientGroup.mk x) =
+      affinePinToAffineNativeOrthogonal x
+  simpa [affinePinQuotientEquiv, QuotientGroup.quotientKerEquivOfSurjective] using
+    (QuotientGroup.kerLift_mk (φ := affinePinToAffineNativeOrthogonal) x)
 
 end AffinePin55Cover

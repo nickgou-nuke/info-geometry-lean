@@ -169,30 +169,7 @@ theorem parityWitness_signature_eq_mobius
       mobiusCoefficient n := by
   exact P.parityWitness.mobius_eq_weyl_signature_on_squarefree n h
 
-@[rep_depth thermo]
-theorem parity_trace_from_squarefree_property
-    (n : ℕ) (h : P.parityWitness.squareFree n) :
-    P.parityWitness.signature (P.parityWitness.squareFreeToWeyl n h) =
-      mobiusCoefficient n := by
-  exact P.parityWitness_signature_eq_mobius n h
-
 end SouriauWeylPartitionPacket
-
-/-- Compatibility alias for the prime-mode Weyl denominator surface. -/
-@[rep_depth thermo]
-structure WeylDenominatorPrimeModePacket where
-  rootSystem : WeylRootSystem
-  encoding : PrimeRapidityEncoding rootSystem
-  beta : ℝ
-  weylDenominatorProduct : ℝ
-  primeEulerProduct : ℝ
-  product_eq_euler : weylDenominatorProduct = primeEulerProduct
-
-@[rep_depth thermo]
-theorem weylDenominator_eulerProduct_isomorphic
-    (P : WeylDenominatorPrimeModePacket) :
-    P.weylDenominatorProduct = P.primeEulerProduct :=
-  P.product_eq_euler
 
 @[rep_depth thermo]
 theorem moebius_signature_equivalence
@@ -201,102 +178,6 @@ theorem moebius_signature_equivalence
       mobiusCoefficient n :=
   P.mobius_eq_weyl_signature_on_squarefree n h
 
-/-- Souriau thermal evaluation of prime-indexed Weyl roots. -/
-@[rep_depth thermo]
-structure SouriauThermalPrimeEvaluation where
-  beta : ℝ
-  prime : ℕ
-  prime_isPrime : Nat.Prime prime
-  e_neg_alpha : ℝ
-  p_neg_beta : ℝ
-  e_neg_alpha_eq_p_neg_beta : e_neg_alpha = p_neg_beta
-
-/-- Prime-indexed inverse-zeta/Weyl/parity-supertrace equality record. -/
-@[rep_depth thermo]
-structure InverseZetaWeylParitySupertrace where
-  beta : ℝ
-  inverseZetaValue : ℝ
-  weylDenominatorValue : ℝ
-  paritySupertrace : ℝ
-  inverseZeta_eq_weylDenominator : inverseZetaValue = weylDenominatorValue
-  weylDenominator_eq_paritySupertrace : weylDenominatorValue = paritySupertrace
-
-namespace InverseZetaWeylParitySupertrace
-
-variable (P : InverseZetaWeylParitySupertrace)
-
-@[rep_depth thermo]
-theorem inverseZeta_eq_weylDenominator_paritySupertrace :
-    P.inverseZetaValue = P.paritySupertrace := by
-  rw [P.inverseZeta_eq_weylDenominator, P.weylDenominator_eq_paritySupertrace]
-
-end InverseZetaWeylParitySupertrace
-
-/-- Reciprocal relation between the zeta value and bosonic prime partition readout. -/
-@[rep_depth thermo]
-structure BosonicZetaPartitionReciprocal where
-  beta : ℝ
-  zetaValue : ℝ
-  bosonicPartition : ℝ
-  zeta_mul_bosonicPartition : zetaValue * bosonicPartition = 1
-
-namespace BosonicZetaPartitionReciprocal
-
-variable (P : BosonicZetaPartitionReciprocal)
-
-@[rep_depth thermo]
-theorem zeta_eq_reciprocal_bosonic_partition :
-    P.zetaValue * P.bosonicPartition = 1 :=
-  P.zeta_mul_bosonicPartition
-
-end BosonicZetaPartitionReciprocal
-
-/--
-Compatibility packet bundling inverse-zeta, Weyl-denominator, parity-supertrace,
-and reciprocal bosonic-partition readouts for the prime-indexed Souriau lane.
--/
-@[rep_depth thermo]
-structure PrimeIndexedSouriauThermalEvaluation where
-  beta : ℝ
-  inverseZeta : ℝ
-  primeIndexedWeylDenominator : ℝ
-  paritySupertrace : ℝ
-  zeta : ℝ
-  reciprocalBosonicPartition : ℝ
-  inverseZeta_eq_primeIndexedWeylDenominator :
-    inverseZeta = primeIndexedWeylDenominator
-  inverseZeta_eq_paritySupertrace :
-    inverseZeta = paritySupertrace
-  zeta_eq_reciprocalBosonicPartition :
-    zeta = reciprocalBosonicPartition
-
-@[rep_depth thermo]
-theorem inverseZeta_eq_primeIndexedWeylDenominator
-    (E : PrimeIndexedSouriauThermalEvaluation) :
-    E.inverseZeta = E.primeIndexedWeylDenominator :=
-  E.inverseZeta_eq_primeIndexedWeylDenominator
-
-@[rep_depth thermo]
-theorem inverseZeta_eq_paritySupertrace
-    (E : PrimeIndexedSouriauThermalEvaluation) :
-    E.inverseZeta = E.paritySupertrace :=
-  E.inverseZeta_eq_paritySupertrace
-
-@[rep_depth thermo]
-theorem zeta_eq_reciprocalBosonicPartitionFunction
-    (E : PrimeIndexedSouriauThermalEvaluation) :
-    E.zeta = E.reciprocalBosonicPartition :=
-  E.zeta_eq_reciprocalBosonicPartition
-
-/--
-Corrected finite Souriau-Weyl supertrace packet: the denominator object is the
-parity trace; bosonic and ordinary fermionic traces are kept separate.
--/
-@[rep_depth thermo]
-structure CorrectedSouriauWeylSupertracePacket where
-  lattice : FormalPrimeRootSystem.FormalPrimeRootLattice
-  p_neg_beta : ℕ → ℝ
-
 @[rep_depth thermo]
 theorem finiteParityTrace_eq_weylDenominatorProduct
     (lattice : FormalPrimeRootSystem.FormalPrimeRootLattice)
@@ -304,66 +185,5 @@ theorem finiteParityTrace_eq_weylDenominatorProduct
     PrimeGasPartitions.finiteParityTrace lattice p_neg_beta =
       FormalPrimeRootSystem.weylDenominatorProduct lattice p_neg_beta := by
   rfl
-
-@[rep_depth thermo]
-theorem corrected_denominator_is_parity_supertrace
-    (P : CorrectedSouriauWeylSupertracePacket) :
-    PrimeGasPartitions.finiteParityTrace P.lattice P.p_neg_beta =
-      FormalPrimeRootSystem.weylDenominatorProduct P.lattice P.p_neg_beta :=
-  finiteParityTrace_eq_weylDenominatorProduct P.lattice P.p_neg_beta
-
-/--
-Split parity-supertrace compatibility packet for the Weyl denominator corridor.
-
-The prime/Weyl surface remains scalar and finite; this packet just renames the
-already-proved parity-trace readout in the new split supergeometry language.
--/
-@[rep_depth thermo]
-structure SplitWeylParitySupertracePacket where
-  inverseZeta : ℝ
-  paritySupertrace : ℝ
-  parityTrace : ℝ
-  inverseZeta_eq_paritySupertrace :
-    inverseZeta = paritySupertrace
-  paritySupertrace_eq_parityTrace :
-    paritySupertrace = parityTrace
-
-namespace SplitWeylParitySupertracePacket
-
-@[rep_depth thermo]
-theorem inverseZeta_eq_parityTrace
-    (P : SplitWeylParitySupertracePacket) :
-    P.inverseZeta = P.parityTrace := by
-  rw [P.inverseZeta_eq_paritySupertrace, P.paritySupertrace_eq_parityTrace]
-
-@[rep_depth thermo]
-theorem parityTrace_eq_inverseZeta
-    (P : SplitWeylParitySupertracePacket) :
-    P.parityTrace = P.inverseZeta := by
-  rw [P.inverseZeta_eq_parityTrace]
-
-end SplitWeylParitySupertracePacket
-
-/--
-Compatibility shadow for the corrected prime/Weyl packet in the split
-parity-supertrace language.
-
-This keeps the analytic and finite prime data untouched.
--/
-@[rep_depth thermo]
-structure SplitCorrectedSouriauWeylSupertracePacket where
-  lattice : FormalPrimeRootSystem.FormalPrimeRootLattice
-  p_neg_beta : ℕ → ℝ
-  paritySupertrace : ℝ
-  inverseZeta : ℝ
-  inverseZeta_eq_paritySupertrace :
-    inverseZeta = paritySupertrace
-
-@[rep_depth thermo]
-theorem split_corrected_denominator_is_parity_supertrace
-    (P : SplitCorrectedSouriauWeylSupertracePacket) :
-    PrimeGasPartitions.finiteParityTrace P.lattice P.p_neg_beta =
-      FormalPrimeRootSystem.weylDenominatorProduct P.lattice P.p_neg_beta :=
-  finiteParityTrace_eq_weylDenominatorProduct P.lattice P.p_neg_beta
 
 end InfoGeometry.Canonical.WeylCharacterEquivalence

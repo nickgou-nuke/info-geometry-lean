@@ -40,10 +40,8 @@ def count_jsonl(path: Path) -> int | None:
     return count
 
 
-def load_json(path: Path) -> dict[str, Any] | None:
-    if not path.exists():
-        return None
-    return json.loads(path.read_text(encoding="utf-8"))
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def arango_collection_count(base_url: str, db: str, collection: str) -> int | None:

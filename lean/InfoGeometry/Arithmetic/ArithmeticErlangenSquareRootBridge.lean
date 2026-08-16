@@ -121,7 +121,7 @@ Amplitude/probability square-root packet.
 
 This packages the finite version of `Ψ(n)^2 = ρ(n)`.
 -/
-structure FiniteAmplitudeSquareRootPacket
+structure FiniteAmplitudeSquareRootData
     (α R : Type*) [CommMonoid R] where
   support : Finset α
   amplitude : α → R
@@ -129,11 +129,11 @@ structure FiniteAmplitudeSquareRootPacket
   local_square :
     ∀ a ∈ support, probability a = amplitude a ^ 2
 
-namespace FiniteAmplitudeSquareRootPacket
+namespace FiniteAmplitudeSquareRootData
 
 variable
     {α R : Type*} [CommMonoid R]
-    (P : FiniteAmplitudeSquareRootPacket α R)
+    (P : FiniteAmplitudeSquareRootData α R)
 
 /-- Product-level square-root law for the packet. -/
 theorem probabilityProduct_eq_amplitudeProduct_sq :
@@ -142,7 +142,7 @@ theorem probabilityProduct_eq_amplitudeProduct_sq :
   finiteProbabilityProduct_eq_amplitudeProduct_sq
     P.support P.amplitude P.probability P.local_square
 
-end FiniteAmplitudeSquareRootPacket
+end FiniteAmplitudeSquareRootData
 
 
 

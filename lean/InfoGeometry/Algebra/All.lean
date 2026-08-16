@@ -1,9 +1,12 @@
 import InfoGeometry.Algebra.AkivisIdentity
+import InfoGeometry.Algebra.AkivisLeftRegularBridge
+import InfoGeometry.Algebra.RealAlbertJordanOperator
 import InfoGeometry.Algebra.PrimeA1RootSystem
 import InfoGeometry.Algebra.WeylDenominatorPrimeCutoff
 import InfoGeometry.Algebra.ZornVectorMatrix
 import InfoGeometry.Algebra.ZornSplitOctonionVectorMatrixEquiv
 import InfoGeometry.Algebra.ParityTwistedCross
+import InfoGeometry.Algebra.KleinBottleTwistedCommutantBridge
 import InfoGeometry.Algebra.Zorn.Basic
 import InfoGeometry.Algebra.Zorn.NullCone
 import InfoGeometry.Projective.SplitOctonions
@@ -188,6 +191,7 @@ import InfoGeometry.Algebra.NativeCuntzO3LieAlgebraCasimir
 import InfoGeometry.Algebra.CuntzInductiveLimit
 import InfoGeometry.Algebra.CuntzKMSCondition
 import InfoGeometry.Algebra.CuntzModularAutomorphism
+import InfoGeometry.Algebra.CuntzModularPhaseCharacterBridge
 import InfoGeometry.Algebra.OSp12ColimitReadback
 import InfoGeometry.Algebra.OSp12InductiveColimit
 import InfoGeometry.Algebra.ParafermionGaugeTwist
@@ -220,6 +224,7 @@ import InfoGeometry.Algebra.H3ZornJordanInstance
 import InfoGeometry.Algebra.H3ZornJordanProduct
 import InfoGeometry.Algebra.BaezF4H3Zorn
 import InfoGeometry.Algebra.BaezG2AlternativeDerivations
+import InfoGeometry.Algebra.SplitOctonionStandardDerivationThreeBracketBridge
 import InfoGeometry.Algebra.F4Derivations
 import InfoGeometry.Algebra.H3ZornTopologicalReadout
 import InfoGeometry.Algebra.CyclicTraceStokes
@@ -235,6 +240,7 @@ import InfoGeometry.Algebra.SplitCliffordTransformKernel
 import InfoGeometry.Algebra.ThompsonBraidedCoherenceBridge
 import InfoGeometry.Algebra.CantorTwistedThompsonCoherence
 import InfoGeometry.Algebra.CuntzModularTreeFlowBridge
+import InfoGeometry.Algebra.SplitOctonionPeirceExteriorBridge
 /-!
 # InfoGeometry.Algebra.All
 

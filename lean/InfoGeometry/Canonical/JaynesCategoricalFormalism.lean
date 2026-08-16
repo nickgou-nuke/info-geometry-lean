@@ -14,7 +14,7 @@ duplicate forwarding theorem layer.
 namespace InfoGeometry.Canonical.JaynesCategoricalFormalism
 
 export InfoGeometry.Canonical.CategoricalRecursiveClosureBridge (ConeCompatible)
-export InfoGeometry.Canonical.AFRecursiveLimitBridge (AFRecursiveLimitPacket)
+export InfoGeometry.Canonical.AFRecursiveLimitBridge (AFRecursiveLimitData)
 export InfoGeometry.Canonical.JaynesInductiveLimitBridge (JaynesInductivePacket)
 export InfoGeometry.Canonical.JaynesLDDSBridge (JaynesLDDSPacket)
 

@@ -18,7 +18,8 @@ This application-level bridge separates:
 * thermofield/GNS purification, which lives on a tensor-product carrier
   `H ⊗ Hbar`;
 * direct-sum Krein signature doubling, which lives on a carrier `H ⊕ H`;
-* the Möbius/Krein supertrace index, where the signed readout is `1 / ζ(β)`;
+* the Möbius/Krein supertrace sector, whose inverse-zeta-labelled value is
+  stored only through an explicit calibration field;
 * modular Hamiltonian normalization, where the scalar `log Z(β)` normalizes the
   state and does not itself create the modular flow.
 
@@ -287,7 +288,8 @@ automorphism flow.
 -/
 abbrev GibbsModularHamiltonianGate
     (E LieAlgebra : Type*)
-    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    [AddMonoid LieAlgebra] :=
   InfoGeometry.Canonical.BoundedModularFlowCalibration.Calibration
     (E := E) (LieAlgebra := LieAlgebra)
 
@@ -298,6 +300,7 @@ open InfoGeometry.Canonical.BoundedModularFlowCalibration
 variable
     {E LieAlgebra : Type*}
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    [AddMonoid LieAlgebra]
 
 /-- The normalized modular Hamiltonian is the Souriau generator plus its
 Massieu/partition-potential identity shift. -/
@@ -395,6 +398,7 @@ The positive state and the Krein index are not identified.
 structure PrimeKreinKMSBridgeData
     (State Observable ThermofieldVector Algebra FermionSpace Operator K
       LieAlgebra : Type*)
+    [AddMonoid LieAlgebra]
     [NormedAddCommGroup K] [InnerProductSpace ℝ K] [CompleteSpace K]
     [InfoGeometry.Krein.KreinSpace K]
     [NormedAddCommGroup ThermofieldVector] [Ring Observable] [Ring Algebra] where
@@ -430,6 +434,7 @@ namespace PrimeKreinKMSBridgeData
 variable
     {State Observable ThermofieldVector Algebra FermionSpace Operator K
       LieAlgebra : Type*}
+    [AddMonoid LieAlgebra]
     [NormedAddCommGroup K] [InnerProductSpace ℝ K] [CompleteSpace K]
     [InfoGeometry.Krein.KreinSpace K]
     [NormedAddCommGroup ThermofieldVector]

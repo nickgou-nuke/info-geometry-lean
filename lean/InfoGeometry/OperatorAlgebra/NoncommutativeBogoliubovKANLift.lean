@@ -16,7 +16,7 @@ This module makes explicit the noncommutative owner core:
 * optional Bogoliubov/KAN diagonal-readout packet (as secondary shadow)
 
 The diagonal is not the primitive object; it is only represented through this
-`BogoliubovKANShadowPacket` as a readout artifact.
+`BogoliubovKANShadowData` as a readout artifact.
 -/
 
 noncomputable section
@@ -163,7 +163,7 @@ Secondary representation packet: Bogoliubov/KAN diagonal shadow.
 This is a frame/representation lane on top of a polarized doubled Krein
 carrier. The diagonal readout is a chosen `A`-sector (Cartan) coordinate.
 -/
-structure BogoliubovKANShadowPacket
+structure BogoliubovKANShadowData
     (E : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (Bog Korth Asplit Nshear CartanDiag : Type*) where
@@ -182,13 +182,13 @@ structure BogoliubovKANShadowPacket
   /-- Diagonal readout from the Cartan sector. -/
   diagonalShadow : CartanDiag
 
-namespace BogoliubovKANShadowPacket
+namespace BogoliubovKANShadowData
 
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
   {Bog Korth Asplit Nshear CartanDiag : Type*}
 
-variable (P : BogoliubovKANShadowPacket E (Bog := Bog) (Korth := Korth)
+variable (P : BogoliubovKANShadowData E (Bog := Bog) (Korth := Korth)
   (Asplit := Asplit) (Nshear := Nshear) (CartanDiag := CartanDiag))
 
 /-- Endomorphisms of the actual doubled real Krein carrier used by Bogoliubov transport. -/
@@ -258,13 +258,13 @@ theorem phaseAxisForce_from_cartanScaleShadow
         BogoliubovTransport.phaseAxisForce_eq_from_phaseAntilinearPart
           (E := E) (BogoliubovTransport.modularTransportGenerator (E := E) H)
 
-end BogoliubovKANShadowPacket
+end BogoliubovKANShadowData
 
 /--
 Bridge packet: primary noncommutative modular packet + shadow diagonalization
 data.
 -/
-structure NoncommutativeModularToBogoliubovKANPacket
+structure NoncommutativeModularToBogoliubovKANData
     (A Weight Deriv Ham Phase Core E Bog Korth Asplit Nshear CartanDiag : Type*)
     [Ring A]
     [Mul Core]
@@ -276,16 +276,16 @@ structure NoncommutativeModularToBogoliubovKANPacket
   modularCore : NoncommutativeModularOperatorLift A Weight Deriv Ham Phase Core
 
   /-- Derived Bogoliubov representation shadow. -/
-  bogoliubovShadow : BogoliubovKANShadowPacket E Bog Korth Asplit Nshear CartanDiag
+  bogoliubovShadow : BogoliubovKANShadowData E Bog Korth Asplit Nshear CartanDiag
 
-namespace NoncommutativeModularToBogoliubovKANPacket
+namespace NoncommutativeModularToBogoliubovKANData
 
 variable {A Weight Deriv Ham Phase Core E Bog Korth Asplit Nshear CartanDiag : Type*}
   [Ring A] [Mul Core]
   [One Deriv] [Mul Deriv] [Zero Ham] [One Phase] [Mul Phase]
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-variable (P : NoncommutativeModularToBogoliubovKANPacket
+variable (P : NoncommutativeModularToBogoliubovKANData
   A Weight Deriv Ham Phase Core E Bog Korth Asplit Nshear CartanDiag)
 
 /--
@@ -294,7 +294,7 @@ The operator-owner is the primary noncommutative packet of the bridge.
 This theorem is a re-exported projection to keep downstream callers explicit.
 -/
 @[simp] theorem primary_modular_owner_is_noncommutative :
-    NoncommutativeModularToBogoliubovKANPacket.modularCore P = P.modularCore := by
+    NoncommutativeModularToBogoliubovKANData.modularCore P = P.modularCore := by
   rfl
 
 /--
@@ -308,7 +308,7 @@ theorem diagonal_shadow_available :
 
 /-- The bridge exposes the noncommutative owner property; the shadow does not replace it. -/
 theorem operator_owner_has_noncommuting_pair
-    (P : NoncommutativeModularToBogoliubovKANPacket
+    (P : NoncommutativeModularToBogoliubovKANData
       A Weight Deriv Ham Phase Core E Bog Korth Asplit Nshear CartanDiag) :
     ∃ a b : A, a * b ≠ b * a :=
   NoncommutativeModularOperatorLift.exists_noncommuting_pair P.modularCore
@@ -327,6 +327,6 @@ theorem bridge_typeIII_coreTraceOfBase_eq_coreTrace_traceOfEmbedded
       P.modularCore.typeIIIIntegration.coreTrace.traceOfEmbedded x :=
   P.modularCore.typeIII_coreTraceOfBase_eq_coreTrace_traceOfEmbedded x
 
-end NoncommutativeModularToBogoliubovKANPacket
+end NoncommutativeModularToBogoliubovKANData
 
 end InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift

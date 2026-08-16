@@ -12,18 +12,16 @@ local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
 
 /--
-**The "Red Line" Bridge: Radon-Nikodym Log-Volume to Fisher/BKM Metric**
+Operatorial Fisher/BKM probe bridge.
 
-Това е математическият мост, свързващ информационния обем (логаритъма от
-Радон-Никодим производната или Келеровия потенциал) с Квантовата Метрика
-на Фишер (Bogoliubov-Kubo-Mori).
-
-Втората производна (Хесианът) на логаритмичния скаларен readout на транспортния
-поток, изчислена в стационарния вакуум, съвпада точно с BKM метриката
-(двойния транспортен комутатор).
+The theorem below is a statement about the operatorial transport Hessian on
+`EndH`: after applying a continuous linear probe `ω`, the stationary second
+variation is the probe of the double transport commutator.  It does not
+identify that probe with a Radon--Nikodym derivative or with a
+measure-theoretic log-volume; such scalar readouts are downstream shadows.
 -/
 @[rep_depth transport, capstone]
-theorem radonNikodym_logVolume_to_fisherBKM_metric_bridge
+theorem operatorialHessian_probe_eq_double_transportCommutator
     (ω : EndH →L[ℝ] ℝ) (X A : EndH)
     (hNonzero : ∀ t : ℝ, scalarTransportReadout (E := E) ω X A t ≠ 0)
     (hNorm : ω A = 1)

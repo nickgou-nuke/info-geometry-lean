@@ -15,19 +15,15 @@ Verified theorem-safe content only:
 from __future__ import annotations
 
 import itertools
+import sys
+from pathlib import Path
 import sympy as sp
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def assert_zero(expr, label: str) -> None:
-    reduced = sp.expand(sp.simplify(expr))
-    if reduced != 0:
-        raise AssertionError(f"{label} failed:\n{reduced}")
-
-
-def assert_matrix_zero(mat: sp.Matrix, label: str) -> None:
-    reduced = mat.applyfunc(lambda x: sp.expand(sp.simplify(x)))
-    if reduced != sp.zeros(*reduced.shape):
-        raise AssertionError(f"{label} failed:\n{reduced}")
+from tools.sympy.common import assert_matrix_zero, assert_zero, pauli_matrices
 
 
 def main() -> int:
@@ -35,10 +31,7 @@ def main() -> int:
     print("MD 003 ISOMORPHIC REPRESENTATIONS FINITE CORE")
     print("=" * 72)
 
-    I2 = sp.eye(2)
-    s1 = sp.Matrix([[0, 1], [1, 0]])
-    s2 = sp.Matrix([[0, -sp.I], [sp.I, 0]])
-    s3 = sp.Matrix([[1, 0], [0, -1]])
+    I2, s1, s2, s3 = pauli_matrices()
     sigma = [I2, s1, s2, s3]
 
     dt, dx, dy, dz, c = sp.symbols("dt dx dy dz c")

@@ -265,17 +265,6 @@ namespace WeylRefinedSectorLabel
 variable {Obj Label : Type*}
 variable (W : WeylRefinedSectorLabel Obj Label)
 
-@[rep_depth operator]
-theorem label_apply (x : Obj) :
-    W.label x = W.label x := rfl
-
-@[rep_depth operator]
-theorem homogeneous_readout_scale (c : ℝ) (x : Obj) :
-    W.homogeneousReadout.readout (W.homogeneousReadout.scale c x)
-      =
-    c ^ W.homogeneousReadout.weight * W.homogeneousReadout.readout x :=
-  W.homogeneousReadout.readout_scale c x
-
 end WeylRefinedSectorLabel
 
 end InfoGeometry.OperatorAlgebra.ErlangenNet

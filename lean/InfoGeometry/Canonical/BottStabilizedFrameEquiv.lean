@@ -65,7 +65,7 @@ structure BottStabilizedHomologyFrame where
   project : H₂F →L[ℝ] H₂E
 
   /-- Readback after stabilization recovers the base representative. -/
-  left_inv : project.comp embed = ContinuousLinearMap.id ℝ H₂E
+  inverse_left : project.comp embed = ContinuousLinearMap.id ℝ H₂E
 
   /-- Source boundary is transported into the stabilized source boundary. -/
   source_boundary :
@@ -103,7 +103,7 @@ theorem project_embed
     (x : H₂E) :
     S.project (S.embed x) = x := by
   simpa [ContinuousLinearMap.comp_apply] using
-    congrArg (fun T : H₂E →L[ℝ] H₂E => T x) S.left_inv
+    congrArg (fun T : H₂E →L[ℝ] H₂E => T x) S.inverse_left
 
 /-- Stabilization maps source cycles to source cycles. -/
 @[rep_depth transport]

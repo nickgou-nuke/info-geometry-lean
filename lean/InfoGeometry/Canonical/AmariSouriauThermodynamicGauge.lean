@@ -20,9 +20,6 @@ owner modules. The closed theorems here are algebraic readbacks from that data.
 
 * Bregman divergence vanishes on the diagonal for the abstract log-partition
   interface.
-* The concrete two-coordinate quadratic log-partition model has the expected
-  dual coordinate, Bregman quadratic form, closed `d log Q` one-form, and
-  linear dual-coordinate relaxation.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT PREMISES
 
@@ -183,10 +180,6 @@ theorem log_partition_bregman_self (θ : Θ) :
     G.info.bregman θ θ = 0 :=
   G.info.bregman_self θ
 
-/-- The expectation coordinate is the gradient of the log-partition potential. -/
-theorem expectation_coord_eq_grad_log_partition (θ : Θ) :
-    G.info.dualCoord θ = G.info.gradΨ θ := rfl
-
 /-- Equilibrium simultaneously gives the Killing readout and diagonal Bregman vanishing. -/
 theorem equilibrium_killing_and_bregman_self
     (heq : entropy_production G.flow = 0)
@@ -201,10 +194,9 @@ end SouriauAmariGauge
 /--
 Finite interface for the Amari natural-gradient statement.
 
-The analytic computation of the natural gradient is supplied as `thetaFlow_eq`;
-the dually-flat simplification in expectation coordinates is supplied as
-`etaFlow_linear`.  This file records the theorem-safe readbacks and avoids
-claiming differentiability/ODE existence beyond the explicit premises.
+The analytic computation of the natural gradient is represented directly by
+the supplied flow definitions. This file records theorem-safe readbacks and
+avoids claiming differentiability/ODE existence beyond the explicit premises.
 -/
 structure DuallyFlatGradientFlow (Θ V : Type*) [AddCommGroup V] where
   info : DuallyFlatLogPartition Θ V
@@ -228,14 +220,6 @@ def thetaFlow (θ : Θ) : V := -(F.info.gradΨ θ - F.ηStar)
 /-- Native dual-coordinate relaxation field. -/
 def etaFlow (θ : Θ) : V := -(F.info.gradΨ θ - F.ηStar)
 
-/-- Defining equation for the primal flow. -/
-theorem thetaFlow_eq (θ : Θ) :
-    F.thetaFlow θ = -(F.info.gradΨ θ - F.ηStar) := rfl
-
-/-- Defining equation for the dual-coordinate flow. -/
-theorem etaFlow_linear (θ : Θ) :
-    F.etaFlow θ = -(F.info.gradΨ θ - F.ηStar) := rfl
-
 /-- The target expectation coordinate is the target gradient of the log-partition potential. -/
 theorem target_dual_coord_eq_grad : F.ηStar = F.info.gradΨ F.θStar :=
   F.etaStar_eq_grad
@@ -243,12 +227,12 @@ theorem target_dual_coord_eq_grad : F.ηStar = F.info.gradΨ F.θStar :=
 /-- Readback of the supplied primal natural-gradient law. -/
 theorem theta_natural_gradient_law (θ : Θ) :
     F.thetaFlow θ = -(F.info.gradΨ θ - F.ηStar) :=
-  F.thetaFlow_eq θ
+  rfl
 
 /-- In dual coordinates, the dually-flat relaxation is linear. -/
 theorem dual_linear_relaxation (θ : Θ) :
     F.etaFlow θ = -(F.info.gradΨ θ - F.ηStar) :=
-  F.etaFlow_linear θ
+  rfl
 
 /-- The dual linear relaxation may be written using the expectation coordinate `η = ∇Ψ`. -/
 theorem dual_linear_relaxation_dualCoord (θ : Θ) :
@@ -272,102 +256,5 @@ theorem target_fixed_point_packet :
     DuallyFlatGradientFlow.etaFlow_target_eq_zero (F := F)⟩
 
 end DuallyFlatGradientFlow
-
-/-! ## Concrete two-coordinate quadratic Amari model -/
-
-namespace QuadraticTwoCoordinate
-
-/-- Two-coordinate carrier for the finite quadratic Amari model. -/
-abbrev Coord := ℝ × ℝ
-
-/-- Log-partition potential `Ψ(θ) = 1/2 θᵀGθ` for `G = [[2, 1], [1, 3]]`. -/
-noncomputable def psi (θ : Coord) : ℝ :=
-  θ.1 ^ 2 + θ.1 * θ.2 + (3 / 2 : ℝ) * θ.2 ^ 2
-
-/-- Dual/expectation coordinate `η = ∇Ψ`. -/
-def eta (θ : Coord) : Coord :=
-  (2 * θ.1 + θ.2, θ.1 + 3 * θ.2)
-
-/-- Coordinate difference `θ' - θ`. -/
-def diff (θ' θ : Coord) : Coord :=
-  (θ'.1 - θ.1, θ'.2 - θ.2)
-
-/-- Euclidean pairing used for the finite coordinate readout. -/
-def pair (u v : Coord) : ℝ :=
-  u.1 * v.1 + u.2 * v.2
-
-/-- Bregman divergence for the quadratic log-partition potential. -/
-noncomputable def bregman (θ' θ : Coord) : ℝ :=
-  psi θ' - psi θ - pair (eta θ) (diff θ' θ)
-
-/-- Hessian/Fisher metric readout for the constant quadratic model. -/
-def fisherMetric (_θ u v : Coord) : ℝ :=
-  2 * u.1 * v.1 + u.1 * v.2 + u.2 * v.1 + 3 * u.2 * v.2
-
-/-- The gradient/dual coordinate has the expected two components. -/
-theorem eta_eq_gradient_formula (θ : Coord) :
-    eta θ = (2 * θ.1 + θ.2, θ.1 + 3 * θ.2) :=
-  rfl
-
-/-- The Bregman divergence has the quadratic energy-gap form. -/
-theorem bregman_eq_quadratic_gap (θ' θ : Coord) :
-    bregman θ' θ =
-      (θ'.1 - θ.1) ^ 2 +
-        (θ'.1 - θ.1) * (θ'.2 - θ.2) +
-        (3 / 2 : ℝ) * (θ'.2 - θ.2) ^ 2 := by
-  simp [bregman, psi, eta, pair, diff]
-  ring
-
-/-- The quadratic Bregman divergence vanishes on the diagonal. -/
-theorem bregman_self (θ : Coord) :
-    bregman θ θ = 0 := by
-  rw [bregman_eq_quadratic_gap]
-  ring
-
-/-- The Hessian/Fisher metric is symmetric in the two tangent slots. -/
-theorem fisherMetric_symm (θ u v : Coord) :
-    fisherMetric θ u v = fisherMetric θ v u := by
-  simp [fisherMetric]
-  ring
-
-/-- The `d log Q = dΨ` one-form is closed in the finite quadratic model. -/
-theorem dlogQ_closed_readout :
-    (1 : ℝ) - (1 : ℝ) = 0 := by
-  ring
-
-/-- Natural-gradient flow in primal coordinates for the quadratic model. -/
-def thetaFlow (θ θStar : Coord) : Coord :=
-  (θStar.1 - θ.1, θStar.2 - θ.2)
-
-/-- Induced dual-coordinate flow `ηdot = G θdot`. -/
-def etaFlow (θ θStar : Coord) : Coord :=
-  eta θStar - eta θ
-
-/-- The primal natural-gradient flow is relaxation toward the target. -/
-theorem thetaFlow_eq_negative_displacement (θ θStar : Coord) :
-    thetaFlow θ θStar = -(diff θ θStar) := by
-  ext <;> simp [thetaFlow, diff]
-
-/-- The dual-coordinate flow is exactly linear relaxation `ηdot = -(η - η*)`. -/
-theorem etaFlow_eq_negative_dual_displacement (θ θStar : Coord) :
-    etaFlow θ θStar = -(eta θ - eta θStar) := by
-  ext <;> simp [etaFlow]
-
-/-- At the target, the primal flow vanishes. -/
-theorem thetaFlow_target_eq_zero (θStar : Coord) :
-    thetaFlow θStar θStar = 0 := by
-  ext <;> simp [thetaFlow]
-
-/-- At the target, the dual-coordinate flow vanishes. -/
-theorem etaFlow_target_eq_zero (θStar : Coord) :
-    etaFlow θStar θStar = 0 := by
-  ext <;> simp [etaFlow]
-
-/-- Constant translation vector fields have zero Lie derivative of this constant metric. -/
-theorem constant_translation_lieMetric_zero :
-    (0 : ℝ) = 0 :=
-  rfl
-
-end QuadraticTwoCoordinate
 
 end InfoGeometry.Canonical.AmariSouriauThermodynamicGauge

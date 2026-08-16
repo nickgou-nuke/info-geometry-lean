@@ -138,22 +138,41 @@ structure OnShellQResidueComputationDatum {Op : Type*} [Ring Op] [Star Op] [Alge
   compression : DiagramCompressionDatum
 
 /-- Combined readback for the finite q-stable on-shell/residue interface. -/
-theorem on_shell_q_residue_packet {Op : Type*} [Ring Op] [Star Op] [Algebra ℝ Op]
+theorem on_shell_q_in_window {Op : Type*} [Ring Op] [Star Op] [Algebra ℝ Op]
     {moving : ℕ} {jewel : QuantumJewel Op}
     {trace : Op →ₗ[ℝ] ℝ}
-    (D : OnShellQResidueComputationDatum moving jewel trace)
-    (i : Fin 3) :
-    InKuzminOpenWindow D.qStable.q ∧
-      Nonempty (D.qStable.qCarrier ≃ D.qStable.toeplitzCarrier) ∧
-      D.compression.carrierCount < D.compression.diagramCount ∧
-      (jewel.dag_edge * amplituhedron_volume_element jewel =
-        amplituhedron_volume_element jewel * jewel.dag_edge) ∧
-      InfoGeometry.Projective.KleinQuadric.Plucker6.IsKlein (D.base.lines.line i) := by
-  exact ⟨D.qStable.inWindow,
-    ⟨D.qStable.stableEquiv⟩,
-    diagram_compression_count D.compression,
-    residue_bcfw jewel,
-    D.base.lines.line_isKlein i⟩
+    (D : OnShellQResidueComputationDatum moving jewel trace) :
+    InKuzminOpenWindow D.qStable.q :=
+  D.qStable.inWindow
+
+theorem on_shell_q_carrier_equiv_nonempty {Op : Type*} [Ring Op] [Star Op] [Algebra ℝ Op]
+    {moving : ℕ} {jewel : QuantumJewel Op}
+    {trace : Op →ₗ[ℝ] ℝ}
+    (D : OnShellQResidueComputationDatum moving jewel trace) :
+    Nonempty (D.qStable.qCarrier ≃ D.qStable.toeplitzCarrier) :=
+  ⟨D.qStable.stableEquiv⟩
+
+theorem on_shell_compression_count {Op : Type*} [Ring Op] [Star Op] [Algebra ℝ Op]
+    {moving : ℕ} {jewel : QuantumJewel Op}
+    {trace : Op →ₗ[ℝ] ℝ}
+    (D : OnShellQResidueComputationDatum moving jewel trace) :
+    D.compression.carrierCount < D.compression.diagramCount :=
+  diagram_compression_count D.compression
+
+theorem on_shell_residue_bcfw {Op : Type*} [Ring Op] [Star Op] [Algebra ℝ Op]
+    {moving : ℕ} {jewel : QuantumJewel Op}
+    {trace : Op →ₗ[ℝ] ℝ}
+    (_D : OnShellQResidueComputationDatum moving jewel trace) :
+    jewel.dag_edge * amplituhedron_volume_element jewel =
+      amplituhedron_volume_element jewel * jewel.dag_edge :=
+  residue_bcfw jewel
+
+theorem on_shell_line_isKlein {Op : Type*} [Ring Op] [Star Op] [Algebra ℝ Op]
+    {moving : ℕ} {jewel : QuantumJewel Op}
+    {trace : Op →ₗ[ℝ] ℝ}
+    (D : OnShellQResidueComputationDatum moving jewel trace) (i : Fin 3) :
+    InfoGeometry.Projective.KleinQuadric.Plucker6.IsKlein (D.base.lines.line i) :=
+  D.base.lines.line_isKlein i
 
 /--
 Package an on-shell residue packet into BCFW + curvature readouts.

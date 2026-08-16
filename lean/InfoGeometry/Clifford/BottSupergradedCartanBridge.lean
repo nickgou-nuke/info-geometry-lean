@@ -49,19 +49,27 @@ theorem clsplit_succ_equiv_superBracket_map
   simpa [InfoGeometry.Clifford.BottPeriodicity.splitBottStep_eq_clsplit_succ_equiv] using
     (splitBottStep_superBracket_map (n := n) (px := px) (py := py) (a := a) (b := b))
 
-/-- The split Bott step, chiral split, and Cartan involution can be read together. -/
-theorem supergraded_bott_chiral_cartan_packet
+/-! The chiral split projector decomposition is an independent readout. -/
+theorem splitQ11_chiral_projector_decomposition
+    (x : InfoGeometry.Clifford.SplitQ11PhaseFlip.Alg) :
+    InfoGeometry.Clifford.SplitQ11ChiralDecomposition.splitQ11ChiralProjectorPair.PL * x +
+      InfoGeometry.Clifford.SplitQ11ChiralDecomposition.splitQ11ChiralProjectorPair.PR * x = x :=
+  splitQ11_chiral_pair_decomposition x
+
+/-! The matrix-tower Cartan involution is an independent readout. -/
+theorem cartan_instance_is_involution
+    (n : ℕ) (J1 : Matrix (Fin 2) (Fin 2) ℝ)
+    (hJ1_sq : J1 * J1 = 1) (hJ1t : J1ᵀ = J1) :
+    InfoGeometry.Cartan.IsCartanInvolution
+      ((InfoGeometry.Clifford.CartanInstance.C
+        (J1 := J1) (n := n) hJ1_sq hJ1t).toLinearMap) :=
+  C_isCartanInvolution (J1 := J1) (n := n) hJ1_sq hJ1t
+
+/-! The Bott superbracket transport is an independent readout. -/
+theorem splitBottStep_superBracket_readout
     (n : ℕ) (px py : Bool) (a b : SplitBottClifford (n + 1))
-    (x : InfoGeometry.Clifford.SplitQ11PhaseFlip.Alg)
-    (J1 : Matrix (Fin 2) (Fin 2) ℝ) (hJ1_sq : J1 * J1 = 1) (hJ1t : J1ᵀ = J1) :
-    (splitBottStep n (superBracket px py a b) =
-      superBracket px py (splitBottStep n a) (splitBottStep n b)) ∧
-    (InfoGeometry.Clifford.SplitQ11ChiralDecomposition.splitQ11ChiralProjectorPair.PL * x +
-      InfoGeometry.Clifford.SplitQ11ChiralDecomposition.splitQ11ChiralProjectorPair.PR * x = x) ∧
-    (InfoGeometry.Cartan.IsCartanInvolution
-      ((InfoGeometry.Clifford.CartanInstance.C (J1 := J1) (n := n) hJ1_sq hJ1t).toLinearMap)) := by
-  exact ⟨splitBottStep_superBracket_map (n := n) (px := px) (py := py) (a := a) (b := b),
-    splitQ11_chiral_pair_decomposition x,
-    C_isCartanInvolution (J1 := J1) (n := n) hJ1_sq hJ1t⟩
+    : splitBottStep n (superBracket px py a b) =
+      superBracket px py (splitBottStep n a) (splitBottStep n b) :=
+  splitBottStep_superBracket_map n px py a b
 
 end InfoGeometry.Clifford.BottSupergradedCartanBridge

@@ -76,6 +76,8 @@ def Pin55KreinConformalPackage.IsValid
   pkg.J ∘ₗ pkg.J = LinearMap.id ∧
   pkg.χ ∘ₗ pkg.χ = LinearMap.id ∧
   pkg.ε ∘ₗ pkg.ε = LinearMap.id ∧
+  pkg.B.IsSymm ∧
+  pkg.B.Nondegenerate ∧
   (∀ (v : InfoGeometry.CliffordTower.SplitSpace 5),
     ∀ (x y : pkg.K),
       pkg.B (pkg.ρ (CliffordAlgebra.ι (SpinorRep.SplitQuad 5) v) x)
@@ -100,6 +102,16 @@ def ε_concrete : (Fin 32 → ℝ) →ₗ[ℝ] (Fin 32 → ℝ) :=
   { toFun := fun v i => if i.val % 2 = 0 then v i else -v i
     map_add' := fun x y => by ext i; dsimp; split_ifs <;> ring
     map_smul' := fun c x => by ext i; dsimp; split_ifs <;> ring }
+
+/-- In this concrete model the chiral grading is the negative of the Krein
+symmetry; the two named operators are not independent data. -/
+theorem χ_concrete_eq_neg_J_concrete :
+    χ_concrete = -J_concrete := by
+  apply LinearMap.ext
+  intro v
+  ext i
+  dsimp [χ_concrete, J_concrete]
+  split_ifs <;> ring
 
 theorem J_concrete_sq : J_concrete ∘ₗ J_concrete = LinearMap.id := by
   refine LinearMap.ext (fun v => ?_)
@@ -160,6 +172,15 @@ theorem B_krein_signature_neg_diagonal :
   dsimp [B_krein_signature, LinearMap.mk₂]
   simp [Pi.single_apply]
 
+/-! The concrete diagonal form is symmetric in its two arguments. -/
+theorem B_krein_signature_isSymm :
+    B_krein_signature.IsSymm := by
+  rw [LinearMap.BilinForm.isSymm_def]
+  intro x y
+  dsimp [B_krein_signature, LinearMap.mk₂]
+  rw [Finset.sum_congr rfl (fun i hi => mul_comm (x i) (y i))]
+  rw [Finset.sum_congr rfl (fun i hi => mul_comm (x i) (y i))]
+
 /-- Non-degeneracy theorem: B_krein_signature is strictly non-zero. -/
 theorem B_krein_signature_nonzero : B_krein_signature ≠ 0 := by
   intro h
@@ -167,6 +188,43 @@ theorem B_krein_signature_nonzero : B_krein_signature ≠ 0 := by
   rw [B_krein_signature_pos_diagonal] at h_eval
   dsimp at h_eval
   exact zero_ne_one h_eval.symm
+
+/-- The concrete signature form separates both arguments.  This establishes
+the genuine finite-dimensional Krein form used by the concrete packet; it
+does not assert that the spinor representation preserves this form. -/
+theorem B_krein_signature_nondegenerate :
+    B_krein_signature.Nondegenerate := by
+  constructor
+  · intro x hx
+    funext i
+    by_cases hi : i.val < 16
+    · have h := hx (Pi.single i 1)
+      have hnot : ¬ 16 ≤ i.val := by omega
+      dsimp [B_krein_signature, LinearMap.mk₂] at h
+      simp [hi, hnot, Pi.single_apply] at h
+      change x i = 0
+      exact h
+    · have hle : 16 ≤ i.val := by omega
+      have h := hx (Pi.single i 1)
+      dsimp [B_krein_signature, LinearMap.mk₂] at h
+      simp [hi, hle, Pi.single_apply] at h
+      change x i = 0
+      exact h
+  · intro y hy
+    funext i
+    by_cases hi : i.val < 16
+    · have h := hy (Pi.single i 1)
+      have hnot : ¬ 16 ≤ i.val := by omega
+      dsimp [B_krein_signature, LinearMap.mk₂] at h
+      simp [hi, hnot, Pi.single_apply] at h
+      change y i = 0
+      exact h
+    · have hle : 16 ≤ i.val := by omega
+      have h := hy (Pi.single i 1)
+      dsimp [B_krein_signature, LinearMap.mk₂] at h
+      simp [hi, hle, Pi.single_apply] at h
+      change y i = 0
+      exact h
 
 /-- Concrete algebra representation of Cl(5,5) on the 32D spinor module. -/
 noncomputable def ρ_spinor : SpinorRep.Cl_split 5 →ₐ[ℝ] Module.End ℝ (Fin 32 → ℝ) :=
@@ -185,6 +243,11 @@ theorem anomaly_index_zero_proof :
   rw [Fin.sum_univ_zero]
   dsimp
   ring
+
+/-- The same finite result under a theorem-honest trace terminology. -/
+theorem chiral_parity_trace_zero :
+    LinearMap.trace ℝ (Fin 32 → ℝ) (χ_concrete ∘ₗ ε_concrete) = 0 :=
+  anomaly_index_zero_proof
 
 /-- Clifford algebra generator squaring relation on the spinor representation. -/
 theorem ρ_spinor_ι_sq (v : InfoGeometry.CliffordTower.SplitSpace 5) :
@@ -275,6 +338,23 @@ theorem P_K_comp_ι_K_eq_id :
         · rfl
         · funext ⟨val, isLt⟩
           cases isLt
+
+theorem ι_K_concrete_injective : Function.Injective ι_K_concrete := by
+  intro x y hxy
+  calc
+    x = P_K_concrete (ι_K_concrete x) := by
+      have h := congrArg (fun f => f x) P_K_comp_ι_K_eq_id
+      simpa [LinearMap.comp_apply] using h.symm
+    _ = P_K_concrete (ι_K_concrete y) := congrArg P_K_concrete hxy
+    _ = y := by
+      have h := congrArg (fun f => f y) P_K_comp_ι_K_eq_id
+      simpa [LinearMap.comp_apply] using h
+
+theorem P_K_concrete_surjective : Function.Surjective P_K_concrete := by
+  intro v
+  refine ⟨ι_K_concrete v, ?_⟩
+  have h := congrArg (fun f => f v) P_K_comp_ι_K_eq_id
+  simpa [LinearMap.comp_apply] using h
 
 /-- The remaining finite-dimensional intertwining obligation for the concrete
 stage-4 carrier. An inhabitant must identify the selected eight spinor

@@ -59,9 +59,8 @@ LABEL_KEYS = (
 SPLIT_KEYS = ("split", "dataset_split", "subset")
 
 
-def stable_hash(payload: Any) -> str:
-    data = json.dumps(payload, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha256(data.encode("utf-8")).hexdigest()
+# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
+from igf.common.hashing import stable_hash
 
 
 def first(record: dict[str, Any], keys: Iterable[str]) -> Any:

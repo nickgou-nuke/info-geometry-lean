@@ -10,6 +10,7 @@ import InfoGeometry.Analysis.MellinInversePositiveAxis
 import InfoGeometry.Analysis.WaveletAdmissibilityCondition
 import InfoGeometry.Analysis.MellinZetaScaling
 import InfoGeometry.Analysis.FiniteDirichletShiftOperatorBridge
+import InfoGeometry.Analysis.FiniteDirichletShiftOperatorCoherence
 import InfoGeometry.Analysis.FiniteSpectralMellinTaylor
 import InfoGeometry.Analysis.FiniteSpectralHeatMellin
 import InfoGeometry.Analysis.FiniteSpectralHeatMellinTopological
@@ -25,6 +26,7 @@ import InfoGeometry.Analysis.FiniteMatrixJacobiDerivative
 import InfoGeometry.Analysis.NoncommutativeJacobiLiouvilleFlow
 import InfoGeometry.Analysis.NoncommutativeHessianCongruenceFlow
 import InfoGeometry.Analysis.LieExponentialTraceDeterminant
+import InfoGeometry.Analysis.LieFlowLogJacobianBridge
 import InfoGeometry.Analysis.GramLieFlowCompression
 import InfoGeometry.Analysis.MongeAmpereLieCongruence
 import InfoGeometry.Analysis.KatzSarnakDensity
@@ -37,3 +39,5 @@ import InfoGeometry.Analysis.FractalMeasure.Basic
 import InfoGeometry.Analysis.Graph
 import InfoGeometry.Analysis.RankOneTrace
 import InfoGeometry.Analysis.MobiusRadialTime
+import InfoGeometry.Analysis.LogarithmicDerivativeBridge
+import InfoGeometry.Analysis.AsanoLeeYangCircleBridge

@@ -6,7 +6,6 @@ import Mathlib.NumberTheory.LSeries.RiemannZeta
 import Mathlib.Analysis.Complex.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
-import InfoGeometry.Canonical.GlobalBostConnesFactorizationBridge
 
 set_option linter.unusedSectionVars false
 set_option linter.unnecessarySeqFocus false
@@ -15,7 +14,6 @@ open Complex ArithmeticFunction
 
 namespace InfoGeometry.Canonical.DirichletConvolutionUnityBridge
 
-open InfoGeometry.Canonical.GlobalBostConnesFactorizationBridge
 
 /-- 🏆 THEOREM 1: Pauli Exclusion Principle for Square-Free Modes:
     If a natural number n is NOT square-free, the Möbius operator vanishes: μ(n) = 0.

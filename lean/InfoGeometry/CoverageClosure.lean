@@ -75,7 +75,6 @@ import InfoGeometry.Automorphic.LFunctionRepresentationBridge
 import InfoGeometry.BottPeriodicityReconciliation
 import InfoGeometry.Bridge.ModularVirasoro
 import InfoGeometry.Bridge.VirasoroCrossFluxCocycleBridge
-import InfoGeometry.Canonical.AbstractExpLogMorphism
 import InfoGeometry.Canonical.AlgebraicDerivations
 import InfoGeometry.Canonical.ArakiConnesHaagerupBridge
 import InfoGeometry.Canonical.AsanoRuellePoleExclusion
@@ -117,9 +116,7 @@ import InfoGeometry.Canonical.CompactifiedThermalConeBridge
 import InfoGeometry.Canonical.ComplexModularFlow
 import InfoGeometry.Canonical.ComplexModularWeylFlow
 import InfoGeometry.Canonical.ConcreteCuntzKCommutation
-import InfoGeometry.Canonical.ConformalFiveGradeCommutatorTable
 import InfoGeometry.Canonical.ConformalProjectiveEmbedding
-import InfoGeometry.Canonical.ConformalRapidityRosetta
 import InfoGeometry.Canonical.ConformalSL2GeneratorBridge
 import InfoGeometry.Canonical.ConformalSubalgebraDebt
 import InfoGeometry.Canonical.ConnesRadonNikodymCocycle
@@ -562,7 +559,6 @@ import InfoGeometry.Section22
 import InfoGeometry.Section24
 import InfoGeometry.Section25
 import InfoGeometry.Section26
-import InfoGeometry.Section27
 import InfoGeometry.Section3
 import InfoGeometry.Section4
 import InfoGeometry.Section5

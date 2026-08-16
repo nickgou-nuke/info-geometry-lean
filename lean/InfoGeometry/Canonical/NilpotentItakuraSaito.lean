@@ -52,9 +52,6 @@ theorem nonzero_nilpotent_not_isUnit
   rw [hKsq] at hzeroUnit
   exact not_isUnit_zero hzeroUnit
 
-/-- Nilpotency kills the Fisher/Bures quadratic term `K²`. -/
-theorem fisher_quadratic_zero (K : BiquaternionKANnilpotent.M2C) (hK : K * K = 0) : K * K = 0 := hK
-
 /-! The complete finite conclusion for an explicitly supplied nilpotent mode. -/
 theorem nilpotent_itakura_saito_synthesis
     (K : BiquaternionKANnilpotent.M2C) (hK : K * K = 0)

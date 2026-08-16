@@ -19,23 +19,15 @@ anomaly cancellation theorem is claimed.
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
 import sympy as sp
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def assert_zero(expr, label: str) -> None:
-    reduced = sp.expand(sp.simplify(expr))
-    if reduced != 0:
-        raise AssertionError(f"{label} failed: {reduced}")
-
-
-def assert_matrix_zero(mat: sp.Matrix, label: str) -> None:
-    reduced = mat.applyfunc(lambda x: sp.expand(sp.simplify(x)))
-    if reduced != sp.zeros(*reduced.shape):
-        raise AssertionError(f"{label} failed:\n{reduced}")
-
-
-def mat2(prefix: str) -> sp.Matrix:
-    return sp.Matrix(2, 2, lambda i, j: sp.symbols(f"{prefix}{i}{j}"))
+from tools.sympy.common import assert_matrix_zero, assert_zero, comm, mat2, pauli_matrices
 
 
 def main() -> int:
@@ -54,9 +46,6 @@ def main() -> int:
 
     def conj(X: sp.Matrix) -> sp.Matrix:
         return U * X * V
-
-    def comm(X: sp.Matrix, Y: sp.Matrix) -> sp.Matrix:
-        return X * Y - Y * X
 
     assert_matrix_zero(comm(conj(A), conj(Phi)) - conj(comm(A, Phi)), "adjoint commutator covariance")
     assert_matrix_zero(conj(F) * conj(G) - conj(F * G), "finite product transport")

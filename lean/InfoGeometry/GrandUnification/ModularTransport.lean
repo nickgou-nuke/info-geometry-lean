@@ -1,5 +1,4 @@
 import InfoGeometry.GrandUnification.AlgebraicSouriauTomita
-import InfoGeometry.Thermodynamics.FiniteConnesCocycle
 
 /-!
 # Modular transport, theorem-stack version
@@ -10,8 +9,8 @@ that is already owned by `InfoGeometry.Thermodynamics.FiniteConnesCocycle`.
 
 What this module proves:
 
-* the finite unitary Connes phase satisfies the scalar cocycle law with the
-  explicit scalar reference modular action;
+* the native operator-valued Connes cocycle satisfies its cocycle law on the
+  doubled endomorphism algebra;
 * the corrected Souriau--Tomita roadmap target is available as a theorem-stack
   conjunction.
 
@@ -26,63 +25,19 @@ noncomputable section
 
 namespace InfoGeometry.GrandUnification
 
-/-- Finite modular transport theorem from the owner finite Connes cocycle. -/
+/-- Operatorial modular transport theorem from the native Connes owner. -/
 theorem modularTransportBridgeTarget :
-  ∀ (φ ψ : _root_.InfoGeometry.Thermodynamics.FiniteGibbsRelative.FiniteTemperature (Fin 2))
-      (s t : ℝ),
-    (fun i =>
-        _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
-          φ ψ (s + t) i) =
-      fun i =>
-        _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
-          φ ψ s i *
-          _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteScalarReferenceModularAction
-            φ s
-              (fun j =>
-                _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
-                  φ ψ t j) i := by
-  intro φ ψ s t
-  exact
-    _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finite_commuting_connes_cocycle_satisfies_cocycle
-      φ ψ s t
+  _root_.InfoGeometry.GrandUnification.OperatorialConnesTransportSurface ℝ := by
+  exact _root_.InfoGeometry.GrandUnification.operatorialConnesTransportSurface ℝ
 
-/--
-Compatibility readout for the finite modular transport theorem.
--/
+/-- Compatibility readout for the operatorial modular transport theorem. -/
 theorem constructModularTransportBridgeTarget :
-    ∀ (φ ψ : _root_.InfoGeometry.Thermodynamics.FiniteGibbsRelative.FiniteTemperature (Fin 2))
-        (s t : ℝ),
-      (fun i =>
-          _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
-            φ ψ (s + t) i) =
-        fun i =>
-          _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
-            φ ψ s i *
-            _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteScalarReferenceModularAction
-              φ s
-                (fun j =>
-                  _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
-                    φ ψ t j) i :=
+    _root_.InfoGeometry.GrandUnification.OperatorialConnesTransportSurface ℝ :=
   modularTransportBridgeTarget
 
-/--
-Tomita--Gromov theorem stack, narrowed to the currently proved finite theorem
-surface.
--/
+/-- Tomita--Gromov theorem stack on the currently proved operatorial surfaces. -/
 theorem tomitaGromovBridgeTarget :
-    (∀ (φ ψ : _root_.InfoGeometry.Thermodynamics.FiniteGibbsRelative.FiniteTemperature (Fin 2))
-        (s t : ℝ),
-      (fun i =>
-          _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
-            φ ψ (s + t) i) =
-        fun i =>
-          _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
-            φ ψ s i *
-            _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteScalarReferenceModularAction
-              φ s
-                (fun j =>
-                  _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
-                    φ ψ t j) i) ∧
+    _root_.InfoGeometry.GrandUnification.OperatorialConnesTransportSurface ℝ ∧
       AlgebraicSouriauTomitaTarget := by
   refine ⟨?_, ?_⟩
   · exact modularTransportBridgeTarget
@@ -90,19 +45,7 @@ theorem tomitaGromovBridgeTarget :
 
 /-- Constructor for the narrowed Tomita--Gromov endpoint from proved owner theorems. -/
 theorem constructTomitaGromovBridgeTarget :
-    (∀ (φ ψ : _root_.InfoGeometry.Thermodynamics.FiniteGibbsRelative.FiniteTemperature (Fin 2))
-        (s t : ℝ),
-      (fun i =>
-          _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
-            φ ψ (s + t) i) =
-        fun i =>
-          _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
-            φ ψ s i *
-            _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteScalarReferenceModularAction
-              φ s
-                (fun j =>
-                  _root_.InfoGeometry.Thermodynamics.FiniteConnesCocycle.finiteCommutingConnesPhaseOfStates
-                    φ ψ t j) i) ∧
+    _root_.InfoGeometry.GrandUnification.OperatorialConnesTransportSurface ℝ ∧
       AlgebraicSouriauTomitaTarget :=
   tomitaGromovBridgeTarget
 

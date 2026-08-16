@@ -1,6 +1,7 @@
 import InfoGeometry.Thermal.FiniteMatrix
 import InfoGeometry.Thermo.BuresWassersteinKMSCost
 import InfoGeometry.Thermo.FiniteDiagonal
+import InfoGeometry.Thermo.FiniteDiagonalSquareRootBridge
 import InfoGeometry.Thermo.FiniteMatrix
 import InfoGeometry.Thermo.CantorGibbsModularBridge
 import InfoGeometry.Thermo.ComplexCircularPolarizationBasis

@@ -212,20 +212,8 @@ def _normalize_lane_health(
     return normalized
 
 
-def iter_jsonl(path: Path | None) -> Iterable[dict[str, Any]]:
-    if path is None or not path.exists():
-        return
-    with path.open("r", encoding="utf-8") as handle:
-        for raw in handle:
-            line = raw.strip()
-            if not line:
-                continue
-            try:
-                row = json.loads(line)
-            except Exception:
-                continue
-            if isinstance(row, dict):
-                yield row
+# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
+from igf.common.json_io import iter_jsonl
 
 
 def load_json_docs(path: Path | None) -> list[dict[str, Any]]:

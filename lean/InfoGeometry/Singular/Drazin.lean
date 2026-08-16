@@ -34,13 +34,6 @@ theorem comm (h : IsDrazinInverse A D k) : A * D = D * A := h.2.1
 
 theorem pow_eq_pow_succ_mul (h : IsDrazinInverse A D k) : A^k = A^(k + 1) * D := h.2.2
 
--- Backward-compatible aliases
-theorem eq1 (h : IsDrazinInverse A D k) : D * A * D = D := h.dad_eq_d
-
-theorem eq2 (h : IsDrazinInverse A D k) : A * D = D * A := h.comm
-
-theorem eq3 (h : IsDrazinInverse A D k) : A^k = A^(k + 1) * D := h.pow_eq_pow_succ_mul
-
 end IsDrazinInverse
 
 namespace IsDrazinInverse
@@ -582,4 +575,3 @@ def IsNormal (A : R) : Prop := A * A† = A† * A
 
 end Anomaly
 end InfoGeometry.Singular.Drazin
-

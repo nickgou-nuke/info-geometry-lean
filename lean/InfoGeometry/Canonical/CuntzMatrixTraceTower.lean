@@ -194,6 +194,11 @@ def moduleDiagram (T : Data) : ℕ ⥤ ModuleCat ℂ where
 abbrev traceColimit (T : Data) : Type :=
   (colimit (moduleDiagram T) : ModuleCat ℂ)
 
+/-- The linear carrier is also exposed with its native filtered-colimit certificate. -/
+def traceColimit_isColimit (T : Data) :
+    IsColimit (colimit.cocone (moduleDiagram T)) := by
+  exact colimit.isColimit (moduleDiagram T)
+
 def traceColimitInclusion (T : Data) (n : ℕ) :
     MatrixStage n →ₗ[ℂ] traceColimit T :=
   (colimit.ι (moduleDiagram T) n).hom
@@ -226,6 +231,14 @@ theorem traceColimitFunctional_inclusion (T : Data)
       matrixTraceFunctional n A := by
   have h := colimit.ι_desc (traceCocone T hT) n
   exact congrArg (fun f => f A) h
+
+/-- The colimit trace readout is normalized on every canonical stage unit. -/
+theorem traceColimitFunctional_inclusion_one (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (n : ℕ) :
+    traceColimitFunctional T hT (traceColimitInclusion T n (1 : MatrixStage n)) = 1 := by
+  rw [traceColimitFunctional_inclusion T hT]
+  exact matrixTraceState_one n
 
 /-- The compatible normalized trace is the unique linear readout on the
 colimit with the prescribed finite-stage values. -/

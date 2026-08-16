@@ -13,12 +13,15 @@ No physical BdG, CPT, Pin(5,5), QCD, GR, or braid-statistics theorem is tested.
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
 import sympy as sp
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def assert_matrix_eq(label: str, actual: sp.Matrix, expected: sp.Matrix) -> None:
-    if actual != expected:
-        raise AssertionError(f"{label}: actual={actual}, expected={expected}")
+from tools.sympy.common import assert_matrix_eq
 
 
 def main() -> None:

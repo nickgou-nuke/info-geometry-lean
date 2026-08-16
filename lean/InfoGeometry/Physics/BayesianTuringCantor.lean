@@ -197,9 +197,4 @@ theorem logResidue_self {Q : ℚ} (hQ : Q ≠ 0) :
   unfold logResidue
   field_simp [hQ]
 
-/-- The tape carrier is definitionally the repository's Cantor boundary. -/
-theorem tape_carrier_eq : (ℕ → Bool) = TuringTape :=
-  rfl
-
-
 end InfoGeometry.Physics.BayesianTuringCantor

@@ -34,6 +34,18 @@ theorem tau_ePlus : tau ePlus = ePlus := by
 theorem tau_eMinus : tau eMinus = eMinus := by
   exact Eq.refl eMinus
 
+/-- The signed flip preserves the additive zero. -/
+@[simp] theorem tau_zero : tau (0 : SplitOct) = 0 := by
+  rfl
+
+/-- The signed flip is additive on the explicit Zorn carrier. -/
+theorem tau_add (X Y : SplitOct) : tau (X + Y) = tau X + tau Y := by
+  cases X
+  cases Y
+  ext <;>
+    simp [tau, add_a, add_b, add_x0, add_x1, add_x2, add_y0, add_y1, add_y2] <;>
+    ring
+
 /-- `tau` has order two. -/
 theorem tau_order_two (X : SplitOct) : tau (tau X) = X := by
   match X with

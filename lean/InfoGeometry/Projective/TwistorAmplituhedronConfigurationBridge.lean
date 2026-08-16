@@ -195,19 +195,23 @@ structure TwistorAmplituhedronBridgeDatum (moving : ℕ) where
   rank : Rank32ScatteringInterface
   rohozhkin : RohozhkinPlabicInterface moving
 
-/-- Combined readback: one selected line is Klein, the rank budget matches `32`,
-and the supplied Rohozhkin spec descends to the presented pure braid group. -/
-theorem twistor_amplituhedron_bridge_packet {moving : ℕ}
-    (D : TwistorAmplituhedronBridgeDatum moving)
-    (i : Fin 3) :
-    InfoGeometry.Projective.KleinQuadric.Plucker6.IsKlein (D.lines.line i) ∧
-      D.rank.data.totalRank * spinTilingMultiplicity = D.rank.stateBudget ∧
-      ∃ ρ : RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving,
-        ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving),
-          ρ (of g) = InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge.rohozhkinProjectiveBraidPacketGen D.rohozhkin.packet g := by
-  exact ⟨D.lines.line_isKlein i,
-    spin_tiled_rank_matches_stateBudget D.rank,
-    rohozhkin_plabic_descent_packet D.rohozhkin⟩
+/-- Native readouts for the Klein-line, rank-budget, and braid-descent lanes. -/
+theorem twistor_line_isKlein {moving : ℕ}
+    (D : TwistorAmplituhedronBridgeDatum moving) (i : Fin 3) :
+    InfoGeometry.Projective.KleinQuadric.Plucker6.IsKlein (D.lines.line i) :=
+  D.lines.line_isKlein i
+
+theorem twistor_rank_budget {moving : ℕ}
+    (D : TwistorAmplituhedronBridgeDatum moving) :
+    D.rank.data.totalRank * spinTilingMultiplicity = D.rank.stateBudget :=
+  spin_tiled_rank_matches_stateBudget D.rank
+
+theorem twistor_rohozhkin_descent {moving : ℕ}
+    (D : TwistorAmplituhedronBridgeDatum moving) :
+    ∃ ρ : RohozhkinPureBraidGroup moving →* RohozhkinMatrixUnits moving,
+      ∀ g : PureBraidGenerator (rohozhkinTotalPoints moving),
+        ρ (of g) = InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge.rohozhkinProjectiveBraidPacketGen D.rohozhkin.packet g :=
+  rohozhkin_plabic_descent_packet D.rohozhkin
 
 /-- The concrete Penrose projective null twistor space from the twistor owner is inhabited. -/
 theorem penrose_projective_null_twistor_nonempty_readback :

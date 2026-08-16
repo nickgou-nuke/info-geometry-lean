@@ -2,7 +2,6 @@ import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
-import InfoGeometry.Canonical.MetriplecticZetaResonance
 
 set_option linter.unusedSectionVars false
 set_option linter.unnecessarySeqFocus false
@@ -10,8 +9,6 @@ set_option linter.unnecessarySeqFocus false
 open Real
 
 namespace InfoGeometry.Canonical.SelbergTraceHarmonicSpectrumBridge
-
-open InfoGeometry.Canonical.MetriplecticZetaResonance
 
 /-- 1. Hyperbolic Geodesic Length Spectrum Map l_γ on Riemann Surfaces -/
 def geodesicLength (l : ℝ) : ℝ :=

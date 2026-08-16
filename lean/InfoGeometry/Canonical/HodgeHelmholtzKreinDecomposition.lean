@@ -30,7 +30,7 @@ def commutator (A B : Module.End R V) : Module.End R V :=
 Algebraic Hodge packet with explicit differential, codifferential,
 and Laplacian definition.
 -/
-structure HodgePacket where
+structure HodgeLaplacianData where
   d : Module.End R V
   δ : Module.End R V
   d_sq : d.comp d = 0
@@ -38,9 +38,9 @@ structure HodgePacket where
   Δ : Module.End R V
   Δ_def : Δ = d.comp δ + δ.comp d
 
-namespace HodgePacket
+namespace HodgeLaplacianData
 
-variable (H : HodgePacket (R := R) (V := V))
+variable (H : HodgeLaplacianData (R := R) (V := V))
 
 /-- `[d, Δ] = 0` under the explicit Hodge packet laws. -/
 theorem d_commutes_Δ : commutator H.d H.Δ = 0 := by
@@ -101,7 +101,7 @@ This is the algebraic interface layer: no analytic closed-range/Fredholm
 proof is asserted here; those hypotheses are represented by explicit projector
 equations.
 -/
-structure DecompositionPacket where
+structure ProjectorDecompositionData where
   Pex : Module.End R V
   Pcoex : Module.End R V
   Pharm : Module.End R V
@@ -116,9 +116,9 @@ structure DecompositionPacket where
   Pharm_Pcoex_zero : Pharm.comp Pcoex = 0
   partition_unity : Pex + Pcoex + Pharm = 1
 
-namespace DecompositionPacket
+namespace ProjectorDecompositionData
 
-variable (D : DecompositionPacket (R := R) (V := V))
+variable (D : ProjectorDecompositionData (R := R) (V := V))
 
 /-- Projector partition gives pointwise decomposition `x = Pex x + Pcoex x + Pharm x`. -/
 theorem decompose (x : V) :
@@ -146,9 +146,9 @@ theorem partition_unity_explicit :
   rw [← D.harmonic_as_complement]
   exact D.partition_unity
 
-end DecompositionPacket
+end ProjectorDecompositionData
 
-end HodgePacket
+end HodgeLaplacianData
 end
 
 end InfoGeometry.Canonical.HodgeHelmholtzKreinDecomposition

@@ -1,7 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 import InfoGeometry.Canonical.ZetaStandardRealizations
-import InfoGeometry.Canonical.SouriauOperatorialLogPotential
 import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 import InfoGeometry.Meta.Architecture
 
@@ -33,7 +32,6 @@ open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart
 open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart.ZetaCenteredChart
 open InfoGeometry.Canonical.ZetaStandardRealizations
-open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 open InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 
 abbrev CenteredChart :=
@@ -136,35 +134,6 @@ theorem centeredXi_JEvenProjection_eq_self
     (X : CompletedXiRealization) (z : ℂ) :
     JEvenProjection X.centeredXi z = X.centeredXi z := by
   exact JEvenProjection_eq_of_even X.centeredXi (fun w => X.centeredXi_even w) z
-
-section SouriauReadback
-
-variable {State LieAlgebra LieDual : Type*}
-
-/-- The Souriau modular potential reads back as the moment pairing plus Massieu shift. -/
-@[rep_depth thermo]
-theorem modularPotential_eq_pairing_add_partitionPotential
-    (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) (x : State) :
-    D.modularPotential x =
-      D.souriau.pairing (D.souriau.momentMap x) D.souriau.beta +
-        D.souriau.partitionPotential := by
-  rw [D.modularPotential_eq_K_beta_add_Phi, D.souriau.K_beta_eq_pairing x]
-
-/-- Entropy is the expectation of the pairing-plus-shift modular potential. -/
-@[rep_depth thermo]
-theorem entropy_eq_expectation_pairing_add_partitionPotential
-    (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) :
-    D.entropy =
-      D.expectationBeta
-        (fun x =>
-          D.souriau.pairing (D.souriau.momentMap x) D.souriau.beta +
-            D.souriau.partitionPotential) := by
-  rw [D.entropy_eq_expectation_modularPotential]
-  congr 1
-  funext x
-  exact modularPotential_eq_pairing_add_partitionPotential D x
-
-end SouriauReadback
 
 section TomitaReadback
 

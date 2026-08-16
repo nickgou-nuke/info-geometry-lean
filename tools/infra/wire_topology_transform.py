@@ -23,10 +23,21 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
+
+ROOT = Path(__file__).resolve().parents[2]
+_SRC = ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from igf.common.json_io import iter_jsonl, write_jsonl
+from igf.common.time_utils import utc_now_iso
 
 
 DEFAULT_INPUT_DIR = Path("artifacts/expr-graph/arango")
@@ -36,17 +47,7 @@ GATE_EXPR_TAGS = {"app", "lam", "forallE", "letE", "const", "proj", "mdata"}
 HASH_KINDS = ("ownerAwareHash", "patternHash", "roleHash")
 
 
-def utc_now_iso() -> str:
-    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-
-
-def stable_hash(*parts: Any) -> str:
-    payload = "|".join(str(part) for part in parts)
-    return "sha256:" + hashlib.sha256(payload.encode("utf-8")).hexdigest()
-
-
-def stable_key(prefix: str, *parts: Any) -> str:
-    return prefix + "_" + stable_hash(*parts).split(":", 1)[1][:32]
+from igf.common.hashing import prefixed_hash as stable_hash, stable_key
 
 
 def parse_doc_id(raw: Any, *, default_collection: str = "ig_nodes") -> str:
@@ -59,28 +60,6 @@ def parse_doc_id(raw: Any, *, default_collection: str = "ig_nodes") -> str:
 def parse_doc_key(raw: Any) -> str:
     text = str(raw)
     return text.split("/", 1)[1] if "/" in text else text
-
-
-def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
-    with path.open("r", encoding="utf-8") as handle:
-        for line_no, raw in enumerate(handle, start=1):
-            line = raw.strip()
-            if not line:
-                continue
-            row = json.loads(line)
-            if not isinstance(row, dict):
-                raise ValueError(f"{path}:{line_no}: expected JSON object")
-            yield row
-
-
-def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, sort_keys=True, ensure_ascii=True) + "\n")
-            count += 1
-    return count
 
 
 def load_expr_graph(input_dir: Path) -> tuple[dict[str, dict[str, Any]], list[dict[str, Any]]]:

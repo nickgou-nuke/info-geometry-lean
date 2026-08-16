@@ -30,10 +30,21 @@ import argparse
 import hashlib
 import json
 import math
+import sys
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
+
+ROOT = Path(__file__).resolve().parents[2]
+_SRC = ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from igf.common.json_io import iter_jsonl, write_jsonl
+from igf.common.time_utils import utc_now_iso
 
 
 DEFAULT_WIRE_DIR = Path("artifacts/expr-graph/wire-topology")
@@ -41,41 +52,13 @@ DEFAULT_RDF_DIR = Path("reports/dag")
 DEFAULT_OUTPUT_DIR = Path("artifacts/expr-graph/logic-vectors")
 
 
-def utc_now_iso() -> str:
-    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
-
-
-def stable_hash(payload: str) -> str:
-    return "sha256:" + hashlib.sha256(payload.encode("utf-8")).hexdigest()
+# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
+from igf.common.hashing import stable_hash
 
 
 def stable_key(prefix: str, *parts: Any) -> str:
     payload = "|".join(str(part) for part in parts)
     return prefix + "_" + hashlib.sha256(payload.encode("utf-8")).hexdigest()[:32]
-
-
-def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
-    if not path.exists():
-        return
-    with path.open("r", encoding="utf-8") as handle:
-        for line_no, raw in enumerate(handle, start=1):
-            line = raw.strip()
-            if not line:
-                continue
-            row = json.loads(line)
-            if not isinstance(row, dict):
-                raise ValueError(f"{path}:{line_no}: expected JSON object")
-            yield row
-
-
-def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=True, sort_keys=True) + "\n")
-            count += 1
-    return count
 
 
 def add_feature(features: dict[str, Counter[str]], decl: str, feature: str, weight: float = 1.0) -> None:

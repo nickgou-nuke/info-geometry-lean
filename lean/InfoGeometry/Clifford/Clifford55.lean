@@ -60,9 +60,9 @@ noncomputable def cl55ExteriorEquiv :
 
 theorem ι55_injective : Function.Injective (ι55) := by
   intro x y h
-  have hh := congrArg (CliffordAlgebra.equivExterior Q55) h
-  exact (ExteriorAlgebra.ι_inj ℝ x y).mp (by
-    simpa [CliffordAlgebra.equivExterior, CliffordAlgebra.changeForm_ι] using hh)
+  apply (ExteriorAlgebra.ι_inj ℝ x y).mp
+  have hh := congrArg cl55ExteriorEquiv h
+  simpa only [cl55ExteriorEquiv_ι] using hh
 
 noncomputable def ι55RangeEquiv : V55 ≃ₗ[ℝ] LinearMap.range (ι55) :=
   LinearEquiv.ofInjective ι55 ι55_injective
@@ -79,7 +79,7 @@ abbrev LipschitzGroup : Subgroup Cl55ˣ := LipschitzGroup55
 
 abbrev pinToUnits : Pin55 →* Cl55ˣ := pinGroup.toUnits
 
-def twisted_adj (g : Pin55) (v : V55) : Cl55 :=
+abbrev twisted_adj (g : Pin55) (v : V55) : Cl55 :=
   CliffordAlgebra.involute (pinToUnits g : Cl55) * ι55 v *
     (↑((pinToUnits g)⁻¹) : Cl55)
 

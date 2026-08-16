@@ -28,36 +28,33 @@ structure PlanckScaleCalibration where
 /-- Dimensionless Boltzmann constant in the repository's unit convention. -/
 def PlanckScaleCalibration.kB (_ : PlanckScaleCalibration) : ℝ := 1
 
-@[simp] theorem PlanckScaleCalibration.kB_eq_one
-    (P : PlanckScaleCalibration) : P.kB = 1 := rfl
-
 theorem PlanckScaleCalibration.kB_pos
     (P : PlanckScaleCalibration) : 0 < P.kB := by
   simp [PlanckScaleCalibration.kB]
 
 /-- Black-hole thermodynamic readout contract (property-gated (Native Closure Mandated: Closure Debt)). -/
 structure BlackHoleThermodynamics (P : PlanckScaleCalibration) (State : Type*) where
-  /-- Validity predicate for states to which laws apply. -/
-  valid_state : State → Prop
+  /-- Supplied admissibility predicate for states to which laws apply. -/
+  admissible_state : State → Prop
   /-- Dimensionless Bekenstein-Hawking entropy: `S / k_B = A / (4 l_p^2)`. -/
   entropy : State → ℝ
   /-- Geometric area field. -/
   area : State → ℝ
   /-- Mass field used in the horizon temperature relation. -/
   mass : State → ℝ
-  /-- Area law for valid states. -/
+  /-- Area law for admissible states. -/
   area_entropy_eq :
-    ∀ s, valid_state s → entropy s = area s / (4 * P.planckLengthSq)
-  /-- Temperature normalization for valid states. -/
+    ∀ s, admissible_state s → entropy s = area s / (4 * P.planckLengthSq)
+  /-- Temperature normalization for admissible states. -/
   temperature : State → ℝ
-  /-- Temperature law: Hawking-like normalization. -/
+  /-- Temperature law: finite calibration normalization. -/
   temperature_eq :
-    ∀ s, valid_state s →
+    ∀ s, admissible_state s →
       temperature s = 1 / (8 * Real.pi * P.G * mass s * P.kB)
-  /-- Positive mass for valid states. -/
-  mass_pos : ∀ s, valid_state s → 0 < mass s
-  /-- Geometric nonnegativity for valid states (optional for entropy proofs). -/
-  area_nonneg : ∀ s, valid_state s → 0 ≤ area s
+  /-- Positive mass for admissible states. -/
+  mass_pos : ∀ s, admissible_state s → 0 < mass s
+  /-- Geometric nonnegativity for admissible states (optional for entropy proofs). -/
+  area_nonneg : ∀ s, admissible_state s → 0 ≤ area s
 
 namespace BlackHoleThermodynamics
 
@@ -65,8 +62,8 @@ variable {P : PlanckScaleCalibration} {State : Type*}
 variable (BH : BlackHoleThermodynamics P State)
 
 /-- Temperature positivity from the Hawking-type normalization law. -/
-theorem temperature_pos_of_valid_state
-    (s : State) (hs : BH.valid_state s) : 0 < BH.temperature s := by
+theorem temperature_pos_of_admissible_state
+    (s : State) (hs : BH.admissible_state s) : 0 < BH.temperature s := by
   rw [BH.temperature_eq s hs]
   have hden :
       0 < 8 * Real.pi * P.G * BH.mass s * P.kB := by
@@ -82,8 +79,8 @@ theorem temperature_pos_of_valid_state
   exact one_div_pos.mpr hden
 
 /-- Entropy nonnegativity from area nonnegativity and the area law. -/
-theorem entropy_nonneg_of_valid_state
-    (s : State) (hs : BH.valid_state s) : 0 ≤ BH.entropy s := by
+theorem entropy_nonneg_of_admissible_state
+    (s : State) (hs : BH.admissible_state s) : 0 ≤ BH.entropy s := by
   rw [BH.area_entropy_eq s hs]
   have hden : 0 < 4 * P.planckLengthSq := by
     exact mul_pos (by norm_num) P.planckLengthSq_pos
@@ -92,21 +89,25 @@ theorem entropy_nonneg_of_valid_state
 end BlackHoleThermodynamics
 
 /--
-Native Mathlib construction of a macroscopic black-hole model.
-This pays off the formal closure debt by explicitly exhibiting a valid trivial state
-satisfying the Bekenstein-Hawking area-entropy law and Hawking temperature law.
+Native Mathlib construction of a finite two-state macroscopic model.
+The area is chosen so that the area law has the nonzero value `log 2`.
+This is an explicit finite model, not a general-relativistic theorem.
 -/
 def blackHoleThermodynamicsModel (P : PlanckScaleCalibration) :
-    BlackHoleThermodynamics P Unit where
-  valid_state := fun _ => True
-  entropy := fun _ => 0
-  area := fun _ => 0
+    BlackHoleThermodynamics P Bool where
+  admissible_state := fun _ => True
+  entropy := fun _ => Real.log 2
+  area := fun _ => 4 * P.planckLengthSq * Real.log 2
   mass := fun _ => 1
-  area_entropy_eq := fun _ _ => by simp
+  area_entropy_eq := fun _ _ => by
+    field_simp [ne_of_gt P.planckLengthSq_pos]
   temperature := fun _ => 1 / (8 * Real.pi * P.G * 1 * P.kB)
   temperature_eq := fun _ _ => by simp
   mass_pos := fun _ _ => by norm_num
-  area_nonneg := fun _ _ => le_refl 0
+  area_nonneg := fun _ _ => by
+    have hlog : 0 ≤ Real.log (2 : ℝ) := Real.log_nonneg (by norm_num)
+    exact mul_nonneg
+      (mul_nonneg (by norm_num) (le_of_lt P.planckLengthSq_pos)) hlog
 
 /-- Microscopic entropy calibration linking entropy to finite microstate counts. -/
 structure MicroscopicEntropyCalibration
@@ -115,27 +116,25 @@ structure MicroscopicEntropyCalibration
     (BH : BlackHoleThermodynamics P State) where
   microstatesOf : State → Finset MicroState
   microEntropy : State → ℝ
-  /-- Entropy matches a finite microscopic entropy field on valid states. -/
+  /-- Entropy matches a finite microscopic entropy field on admissible states. -/
   entropy_eq_microEntropy :
-    ∀ s, BH.valid_state s → BH.entropy s = microEntropy s
-  /-- Re-exported name expected in downstream code paths. -/
-  valid_microEntropy :
-    ∀ s, BH.valid_state s → microEntropy s = Real.log ((microstatesOf s).card : ℝ)
+    ∀ s, BH.admissible_state s → BH.entropy s = microEntropy s
+  /-- Finite microscopic entropy equals the logarithmic count. -/
+  microEntropy_eq_log_card :
+    ∀ s, BH.admissible_state s → microEntropy s = Real.log ((microstatesOf s).card : ℝ)
   /-- Optional nonemptiness of microstate sets. -/
-  microstates_nonempty : ∀ s, BH.valid_state s → (microstatesOf s).Nonempty
+  microstates_nonempty : ∀ s, BH.admissible_state s → (microstatesOf s).Nonempty
 
 /--
-Native Mathlib construction of a microscopic black-hole entropy calibration.
-This pays off the formal closure debt by explicitly exhibiting a finite microstate space (of size 1)
-whose logarithmic cardinality matches the macroscopic entropy (0).
+Native Mathlib construction of the two-state microscopic entropy calibration.
 -/
 def microscopicEntropyCalibrationModel (P : PlanckScaleCalibration) :
-    MicroscopicEntropyCalibration (blackHoleThermodynamicsModel P) (MicroState := Unit) where
-  microstatesOf := fun _ => {()}
-  microEntropy := fun _ => 0
-  entropy_eq_microEntropy := fun _ _ => rfl
-  valid_microEntropy := fun _ _ => by simp
-  microstates_nonempty := fun _ _ => ⟨(), Finset.mem_singleton.mpr rfl⟩
+    MicroscopicEntropyCalibration (blackHoleThermodynamicsModel P) (MicroState := Bool) where
+  microstatesOf := fun _ => Finset.univ
+  microEntropy := fun _ => Real.log 2
+  entropy_eq_microEntropy := fun _ _ => by simp [blackHoleThermodynamicsModel]
+  microEntropy_eq_log_card := fun _ _ => by simp
+  microstates_nonempty := fun _ _ => ⟨false, Finset.mem_univ _⟩
 
 namespace MicroscopicEntropyCalibration
 
@@ -151,21 +150,21 @@ microscopic states.
 theorem entropy_eq_log_card
     (C : MicroscopicEntropyCalibration (P := P) (State := State)
       (MicroState := MicroState) (BH := BH))
-    (s : State) (hs : BH.valid_state s) :
+    (s : State) (hs : BH.admissible_state s) :
     BH.entropy s = Real.log ((C.microstatesOf s).card : ℝ) := by
   calc
     BH.entropy s = C.microEntropy s := C.entropy_eq_microEntropy s hs
     _ = Real.log ((C.microstatesOf s).card : ℝ) :=
-      C.valid_microEntropy s hs
+      C.microEntropy_eq_log_card s hs
 
 /--
-Macroscopic area law equals microscopic logarithmic counting, for valid states.
+Macroscopic area law equals microscopic logarithmic counting, for admissible states.
 This is the usable black-hole/microstate bridge.
 -/
 theorem area_law_eq_log_card
     (C : MicroscopicEntropyCalibration (P := P) (State := State)
       (MicroState := MicroState) (BH := BH))
-    (s : State) (hs : BH.valid_state s) :
+    (s : State) (hs : BH.admissible_state s) :
     BH.area s / (4 * P.planckLengthSq) =
       Real.log ((C.microstatesOf s).card : ℝ) := by
   calc
@@ -174,22 +173,22 @@ theorem area_law_eq_log_card
             exact (BH.area_entropy_eq s hs).symm
     _ = C.microEntropy s := C.entropy_eq_microEntropy s hs
     _ = Real.log ((C.microstatesOf s).card : ℝ) :=
-      C.valid_microEntropy s hs
+      C.microEntropy_eq_log_card s hs
 
 /--
 If microstate fibers are nonempty, entropy is nonnegative.
 -/
-theorem entropy_nonneg_of_valid_state
+theorem entropy_nonneg_of_admissible_state
     (C : MicroscopicEntropyCalibration (P := P) (State := State)
       (MicroState := MicroState) (BH := BH))
-    (s : State) (hs : BH.valid_state s) :
+    (s : State) (hs : BH.admissible_state s) :
     0 ≤ BH.entropy s := by
   have hlog :
       BH.entropy s = Real.log ((C.microstatesOf s).card : ℝ) := by
     calc
       BH.entropy s = C.microEntropy s := C.entropy_eq_microEntropy s hs
       _ = Real.log ((C.microstatesOf s).card : ℝ) :=
-        C.valid_microEntropy s hs
+      C.microEntropy_eq_log_card s hs
   rw [hlog]
   have hcardNat : 0 < (C.microstatesOf s).card := by
     exact Finset.card_pos.mpr (C.microstates_nonempty s hs)
@@ -199,21 +198,21 @@ theorem entropy_nonneg_of_valid_state
 
 /-- The microstate fiber of any valid state has positive cardinality. -/
 @[simp]
-theorem microstates_card_pos_of_valid_state
+theorem microstates_card_pos_of_admissible_state
     (C : MicroscopicEntropyCalibration (P := P) (State := State)
       (MicroState := MicroState) (BH := BH))
-    (s : State) (hs : BH.valid_state s) :
+    (s : State) (hs : BH.admissible_state s) :
     0 < (C.microstatesOf s).card := by
   exact Finset.card_pos.mpr (C.microstates_nonempty s hs)
 
 /--
-For a valid calibrated black-hole state, the macroscopic area law and microscopic
+For an admissible calibrated finite state, the macroscopic area law and microscopic
 counting are compatible as calibrated equalities.
 -/
 theorem entropy_area_count_packet
     (C : MicroscopicEntropyCalibration (P := P) (State := State)
       (MicroState := MicroState) (BH := BH))
-    (s : State) (hs : BH.valid_state s) :
+    (s : State) (hs : BH.admissible_state s) :
     BH.entropy s = BH.area s / (4 * P.planckLengthSq) ∧
       BH.entropy s = Real.log ((C.microstatesOf s).card : ℝ) ∧
       BH.area s / (4 * P.planckLengthSq) =

@@ -154,31 +154,14 @@ theorem delaunay_pure_braid_descent_readback {moving : ℕ}
 Compact packet: the carrier supplies the cross-lane identification; the owner
 files supply the currently closed readbacks.
 -/
-theorem rosetta_owner_readback_packet {moving : ℕ}
-    (R : RosettaCarrier)
-    (D : TwistorAmplituhedronBridgeDatum moving)
-    (i : Fin 3) :
-    Nonempty (R.Carrier RosettaLane.dagGraph ≃ R.Carrier RosettaLane.amplituhedron) ∧
-    Nonempty
-      (InfoGeometry.Projective.SplitQuaternion ≃ₐ[ℝ]
-        Matrix (Fin 2) (Fin 2) ℝ) ∧
-    InfoGeometry.Geometry.PenroseKlein.KleinBottleRel ((0 : ℝ), (0 : ℝ)) (0, 1) ∧
-    InfoGeometry.Projective.KleinQuadric.Plucker6.IsKlein (D.lines.line i) ∧
-    D.rank.data.totalRank *
-      InfoGeometry.Projective.PenroseSpinTiling.spinTilingMultiplicity =
-        D.rank.stateBudget ∧
-    ∃ ρ :
-      InfoGeometry.Topology.RohozhkinBoundary.RohozhkinPureBraidGroup moving →*
-        InfoGeometry.Topology.RohozhkinBoundary.RohozhkinMatrixUnits moving,
-      ∀ g :
-        InfoGeometry.Topology.PureBraid.PureBraidGenerator
-          (InfoGeometry.Topology.Delaunay.rohozhkinTotalPoints moving),
-        ρ (InfoGeometry.Topology.PureBraid.of g) = InfoGeometry.Projective.RohozhkinDelaunayScramblingBridge.rohozhkinProjectiveBraidPacketGen D.rohozhkin.packet g := by
-  refine ⟨⟨R.laneEquiv RosettaLane.dagGraph RosettaLane.amplituhedron⟩,
-    split_quaternion_matrix_equiv_readback,
-    ?_, klein_quadric_line_readback D i,
-    amplituhedron_rank_budget_readback D,
-    delaunay_pure_braid_descent_readback D⟩
+theorem rosetta_dag_amplituhedron_equiv (R : RosettaCarrier) :
+    Nonempty (R.Carrier RosettaLane.dagGraph ≃
+      R.Carrier RosettaLane.amplituhedron) :=
+  ⟨R.laneEquiv RosettaLane.dagGraph RosettaLane.amplituhedron⟩
+
+theorem rosetta_penrose_origin_glide :
+    InfoGeometry.Geometry.PenroseKlein.KleinBottleRel
+      ((0 : ℝ), (0 : ℝ)) (0, 1) := by
   simpa using penrose_klein_glide_readback (0 : ℝ) (0 : ℝ)
 
 end InfoGeometry.Projective.PenroseDAGAmplituhedronRosetta

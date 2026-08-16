@@ -31,6 +31,7 @@ noncomputable section
 namespace InfoGeometry.Thermodynamics.SPIGL2020SouriauDigest
 
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
+open InfoGeometry.Canonical.NativeOperatorialExponentialFamily
 open InfoGeometry.Algebraic.CartanExponentialFamily
 open InfoGeometry.Thermodynamics.FiniteGibbsRelative
 open InfoGeometry.Thermodynamics.FiniteConnesCocycle
@@ -39,71 +40,45 @@ open InfoGeometry.Analysis
 /-! ## 1. Operatorial Souriau thermodynamics -/
 
 theorem entropy_eq_expectation_modularPotential
-    {State LieAlgebra LieDual : Type*}
-    (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) :
-    D.entropy = D.expectationBeta D.modularPotential :=
-  SouriauNegativeLogRNDerivative.entropy_eq_expectation_modularPotential D
+    {State LieAlgebra Obs : Type*} [AddMonoid LieAlgebra]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
+    (D : OperatorialRNDatum State LieAlgebra Obs) :
+    D.entropy = D.expectation D.modularPotential :=
+  OperatorialRNDatum.entropy_eq_expectation_modularPotential D
 
-theorem souriauEntropy_eq_Phi_add_pairing_Q_beta
-    {State LieAlgebra LieDual : Type*}
-    (D : SouriauNegativeLogRNDerivative State LieAlgebra LieDual) :
-    D.entropy = D.souriau.partitionPotential + D.souriau.pairing D.Q D.souriau.beta :=
-  SouriauNegativeLogRNDerivative.souriauEntropy_eq_Phi_add_pairing_Q_beta D
-
-theorem firstVariation_eq_negative_pairing_Q
-    {State LieAlgebra LieDual : Type*}
-    (M : MomentMapGeneratingPotential State LieAlgebra LieDual)
-    (δβ : LieAlgebra) :
-    M.dPhi δβ = -M.souriau.pairing M.Q δβ :=
-  MomentMapGeneratingPotential.firstVariation_eq_negative_pairing_Q M δβ
-
-theorem secondVariation_eq_covariance
-    {State LieAlgebra LieDual : Type*}
-    (M : MomentMapGeneratingPotential State LieAlgebra LieDual)
-    (ξ η : LieAlgebra) :
-    M.hessian ξ η = M.covarianceTensor ξ η :=
-  MomentMapGeneratingPotential.secondVariation_eq_covariance M ξ η
-
-theorem KL_eq_souriau_Bregman
-    {State LieAlgebra LieDual : Type*}
-    (B : SouriauKLBregmanWitness State LieAlgebra LieDual) :
-    B.klValue =
-      B.alphaPartitionPotential
-      - B.generator.souriau.partitionPotential
-      - B.generator.dPhi B.alphaMinusBeta :=
-  SouriauKLBregmanWitness.KL_eq_souriau_Bregman B
-
-theorem relativeEntropy_eq_expectation_difference
-    {State LieAlgebra LieDual : Type*}
-    (B : SouriauKLBregmanWitness State LieAlgebra LieDual) :
-    B.klValue =
-      B.alphaPartitionPotential
-      - B.generator.souriau.partitionPotential
-      - B.generator.dPhi B.alphaMinusBeta :=
-  SouriauKLBregmanWitness.relativeEntropy_eq_expectation_difference B
+theorem secondVariation_eq_bkmCovariance
+    {Param Obs : Type*} [AddMonoid Param]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
+    (M : OperatorialMomentGeneratingPotential Param Obs)
+    (β : Param) (A B : Obs) :
+    M.covarianceTensor β A B = M.bkmCovariance β A B :=
+  OperatorialMomentGeneratingPotential.covarianceTensor_eq_bkmCovariance M β A B
 
 theorem partitionPotential_eq_log_trace_theorem
-    {Param Op : Type*}
-    (E : OperatorialExponentialFamily Param Op)
+    {Param Op : Type*} [AddMonoid Param]
+    [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
+    (E : Family Param Op)
     (β : Param) :
-    E.partitionPotential β = Real.log (E.traceReadout (E.untracedExponential β)) :=
-  OperatorialExponentialFamily.partitionPotential_eq_log_trace_theorem E β
+    Real.log (E.partitionFunction β) =
+      Real.log (E.traceReadout (E.untracedExponential β)) := by
+  rfl
 
-theorem K_beta_eq_pairing_apply
-    {State LieAlgebra LieDual : Type*}
-    (D : SouriauLieThermoData State LieAlgebra LieDual)
+theorem K_beta_eq_operatorial_firstMoment
+    {State LieAlgebra Obs : Type*} [AddMonoid LieAlgebra]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
+    (D : OperatorialSouriauStateData State LieAlgebra Obs)
     (x : State) :
-    D.K_beta x = D.pairing (D.momentMap x) D.beta :=
-  SouriauLieThermoData.K_beta_eq_pairing_apply D x
+    D.K_beta x = D.family.traceReadout (D.family.Khat_beta * D.observable x) :=
+  rfl
 
-theorem gibbsDensity_eq_exp_neg_pairing_sub_Phi
-    {State LieAlgebra LieDual : Type*}
-    (D : SouriauLieThermoData State LieAlgebra LieDual)
+theorem gibbsDensity_eq_exp_neg_K_beta_sub_Phi
+    {State LieAlgebra Obs : Type*} [AddMonoid LieAlgebra]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
+    (D : OperatorialSouriauStateData State LieAlgebra Obs)
     (x : State) :
     D.gibbsDensity x =
-      Real.exp (-D.pairing (D.momentMap x) D.beta - D.partitionPotential) := by
-  simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using
-    SouriauLieThermoData.gibbsDensity_eq_exp_neg_pairing_sub_Phi D x
+      Real.exp (-D.K_beta x - D.partitionPotential) :=
+  D.gibbsDensity_eq_exp_neg_K_beta_sub_partitionPotential x
 
 /-! ## 2. Finite Cartan / Fisher / Connes shadows -/
 
@@ -182,76 +157,48 @@ an eventual inductive tower.  It does not assert any bonding compatibility by
 itself; it only packages the finite owner structures already proved in the
 repository.
 -/
-structure FiniteSouriauStageData (State LieAlgebra LieDual : Type*) where
-  thermo : SouriauLieThermoData State LieAlgebra LieDual
-  rn : SouriauNegativeLogRNDerivative State LieAlgebra LieDual
-  moment : MomentMapGeneratingPotential State LieAlgebra LieDual
-  bregman : SouriauKLBregmanWitness State LieAlgebra LieDual
+structure FiniteSouriauStageData
+    (State LieAlgebra LieDual Obs : Type*)
+    [AddMonoid LieAlgebra]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs] where
+  thermo : OperatorialSouriauStateData State LieAlgebra Obs
+  rn : OperatorialRNDatum State LieAlgebra Obs
+  moment : OperatorialMomentGeneratingPotential LieAlgebra Obs
 
 namespace FiniteSouriauStageData
 
-variable {State LieAlgebra LieDual : Type*}
+variable {State LieAlgebra LieDual Obs : Type*} [AddMonoid LieAlgebra]
+variable [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
 
 @[rep_depth thermo]
 theorem entropy_eq_expectation_modularPotential
-    (D : FiniteSouriauStageData State LieAlgebra LieDual) :
-    D.rn.entropy = D.rn.expectationBeta D.rn.modularPotential :=
-  SouriauNegativeLogRNDerivative.entropy_eq_expectation_modularPotential D.rn
+    (D : FiniteSouriauStageData State LieAlgebra LieDual Obs) :
+    D.rn.entropy = D.rn.expectation D.rn.modularPotential :=
+  OperatorialRNDatum.entropy_eq_expectation_modularPotential D.rn
 
 @[rep_depth thermo]
-theorem souriauEntropy_eq_Phi_add_pairing_Q_beta
-    (D : FiniteSouriauStageData State LieAlgebra LieDual) :
-    D.rn.entropy =
-      D.rn.souriau.partitionPotential + D.rn.souriau.pairing D.rn.Q D.rn.souriau.beta :=
-  SouriauNegativeLogRNDerivative.souriauEntropy_eq_Phi_add_pairing_Q_beta D.rn
+theorem secondVariation_eq_bkmCovariance
+    (D : FiniteSouriauStageData State LieAlgebra LieDual Obs)
+    (β : LieAlgebra) (A B : Obs) :
+    D.moment.covarianceTensor β A B = D.moment.bkmCovariance β A B :=
+  OperatorialMomentGeneratingPotential.covarianceTensor_eq_bkmCovariance
+    D.moment β A B
 
 @[rep_depth thermo]
-theorem firstVariation_eq_negative_pairing_Q
-    (D : FiniteSouriauStageData State LieAlgebra LieDual)
-    (δβ : LieAlgebra) :
-    D.moment.dPhi δβ = -D.moment.souriau.pairing D.moment.Q δβ :=
-  MomentMapGeneratingPotential.firstVariation_eq_negative_pairing_Q D.moment δβ
-
-@[rep_depth thermo]
-theorem secondVariation_eq_covariance
-    (D : FiniteSouriauStageData State LieAlgebra LieDual)
-    (ξ η : LieAlgebra) :
-    D.moment.hessian ξ η = D.moment.covarianceTensor ξ η :=
-  MomentMapGeneratingPotential.secondVariation_eq_covariance D.moment ξ η
-
-@[rep_depth thermo]
-theorem KL_eq_souriau_Bregman
-    (D : FiniteSouriauStageData State LieAlgebra LieDual) :
-    D.bregman.klValue =
-      D.bregman.alphaPartitionPotential
-      - D.bregman.generator.souriau.partitionPotential
-      - D.bregman.generator.dPhi D.bregman.alphaMinusBeta :=
-  SouriauKLBregmanWitness.KL_eq_souriau_Bregman D.bregman
-
-@[rep_depth thermo]
-theorem relativeEntropy_eq_expectation_difference
-    (D : FiniteSouriauStageData State LieAlgebra LieDual) :
-    D.bregman.klValue =
-      D.bregman.alphaPartitionPotential
-      - D.bregman.generator.souriau.partitionPotential
-      - D.bregman.generator.dPhi D.bregman.alphaMinusBeta :=
-  SouriauKLBregmanWitness.relativeEntropy_eq_expectation_difference D.bregman
-
-@[rep_depth thermo]
-theorem K_beta_eq_pairing_apply
-    (D : FiniteSouriauStageData State LieAlgebra LieDual)
+theorem K_beta_eq_operatorial_firstMoment
+    (D : FiniteSouriauStageData State LieAlgebra LieDual Obs)
     (x : State) :
-    D.thermo.K_beta x = D.thermo.pairing (D.thermo.momentMap x) D.thermo.beta :=
-  SouriauLieThermoData.K_beta_eq_pairing_apply D.thermo x
+    D.thermo.K_beta x =
+      D.thermo.family.traceReadout (D.thermo.family.Khat_beta * D.thermo.observable x) :=
+  rfl
 
 @[rep_depth thermo]
-theorem gibbsDensity_eq_exp_neg_pairing_sub_Phi
-    (D : FiniteSouriauStageData State LieAlgebra LieDual)
+theorem gibbsDensity_eq_exp_neg_K_beta_sub_Phi
+    (D : FiniteSouriauStageData State LieAlgebra LieDual Obs)
     (x : State) :
     D.thermo.gibbsDensity x =
-      Real.exp (-D.thermo.pairing (D.thermo.momentMap x) D.thermo.beta
-        - D.thermo.partitionPotential) :=
-  SouriauLieThermoData.gibbsDensity_eq_exp_neg_pairing_sub_Phi D.thermo x
+      Real.exp (-D.thermo.K_beta x - D.thermo.partitionPotential) :=
+  D.thermo.gibbsDensity_eq_exp_neg_K_beta_sub_partitionPotential x
 
 end FiniteSouriauStageData
 
@@ -262,54 +209,51 @@ The tower is deliberately lightweight: it stores a stagewise family of finite
 Souriau packets.  A future bonding/colimit module can add the actual
 compatibility maps without changing the finite owner data.
 -/
-abbrev FiniteSouriauTowerSeed (State LieAlg LieDual : Type*) :=
-  ℕ → FiniteSouriauStageData State LieAlg LieDual
+abbrev FiniteSouriauTowerSeed
+    (State LieAlg LieDual Obs : Type*) [AddMonoid LieAlg]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs] :=
+  ℕ → FiniteSouriauStageData State LieAlg LieDual Obs
 
 namespace FiniteSouriauTowerSeed
 
+variable {State LieAlg LieDual Obs : Type*} [AddMonoid LieAlg]
+variable [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
+
 abbrev stage
-    (T : FiniteSouriauTowerSeed State LieAlg LieDual) :
-    ℕ → FiniteSouriauStageData State LieAlg LieDual :=
+    (T : FiniteSouriauTowerSeed State LieAlg LieDual Obs) :
+    ℕ → FiniteSouriauStageData State LieAlg LieDual Obs :=
   T
 
 end FiniteSouriauTowerSeed
 
 namespace FiniteSouriauTowerSeed
 
-variable {State LieAlgebra LieDual : Type*}
+variable {State LieAlgebra LieDual Obs : Type*} [AddMonoid LieAlgebra]
+variable [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
 
 @[rep_depth thermo]
 theorem entropy_eq_expectation_modularPotential
-    (T : FiniteSouriauTowerSeed State LieAlgebra LieDual) (n : ℕ) :
+    (T : FiniteSouriauTowerSeed State LieAlgebra LieDual Obs) (n : ℕ) :
     (T.stage n).rn.entropy =
-      (T.stage n).rn.expectationBeta (T.stage n).rn.modularPotential :=
+      (T.stage n).rn.expectation (T.stage n).rn.modularPotential :=
   (T.stage n).entropy_eq_expectation_modularPotential
 
 @[rep_depth thermo]
-theorem souriauEntropy_eq_Phi_add_pairing_Q_beta
-    (T : FiniteSouriauTowerSeed State LieAlgebra LieDual) (n : ℕ) :
-    (T.stage n).rn.entropy =
-      (T.stage n).rn.souriau.partitionPotential
-      + (T.stage n).rn.souriau.pairing (T.stage n).rn.Q (T.stage n).rn.souriau.beta :=
-  (T.stage n).souriauEntropy_eq_Phi_add_pairing_Q_beta
-
-@[rep_depth thermo]
-theorem K_beta_eq_pairing_apply
-    (T : FiniteSouriauTowerSeed State LieAlgebra LieDual) (n : ℕ) (x : State) :
+theorem K_beta_eq_operatorial_firstMoment
+    (T : FiniteSouriauTowerSeed State LieAlgebra LieDual Obs) (n : ℕ) (x : State) :
     (T.stage n).thermo.K_beta x =
-      (T.stage n).thermo.pairing ((T.stage n).thermo.momentMap x)
-        (T.stage n).thermo.beta :=
-  (T.stage n).K_beta_eq_pairing_apply x
+      (T.stage n).thermo.family.traceReadout
+        ((T.stage n).thermo.family.Khat_beta * (T.stage n).thermo.observable x) :=
+  rfl
 
 @[rep_depth thermo]
-theorem gibbsDensity_eq_exp_neg_pairing_sub_Phi
-    (T : FiniteSouriauTowerSeed State LieAlgebra LieDual) (n : ℕ) (x : State) :
+theorem gibbsDensity_eq_exp_neg_K_beta_sub_Phi
+    (T : FiniteSouriauTowerSeed State LieAlgebra LieDual Obs) (n : ℕ) (x : State) :
     (T.stage n).thermo.gibbsDensity x =
       Real.exp
-        (- (T.stage n).thermo.pairing ((T.stage n).thermo.momentMap x)
-            (T.stage n).thermo.beta
+        (- (T.stage n).thermo.K_beta x
           - (T.stage n).thermo.partitionPotential) :=
-  (T.stage n).gibbsDensity_eq_exp_neg_pairing_sub_Phi x
+  (T.stage n).gibbsDensity_eq_exp_neg_K_beta_sub_Phi x
 
 end FiniteSouriauTowerSeed
 

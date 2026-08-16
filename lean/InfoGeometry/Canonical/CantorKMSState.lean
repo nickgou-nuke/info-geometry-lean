@@ -59,6 +59,96 @@ theorem card_BitWord (n : ℕ) : Fintype.card (BitWord n) = 2^n := by
 def DiagTrace (n : ℕ) (f : DiagAlg n) : ℂ :=
   (2 : ℂ)⁻¹ ^ n * Finset.sum Finset.univ f
 
+/-! ### Order-theoretic finite-stage readout
+
+The complex-valued diagonal trace above is the algebraic finite-stage
+functional used by the existing UHF/KMS corridor.  For the native
+`PositiveLinearMap` API we record its real finite-stage counterpart on the
+pointwise ordered function space.  This is deliberately a finite-stage
+construction; it does not assert a positive map on the completed Cuntz
+algebra.
+-/
+
+/-- The normalized real diagonal readout at a finite binary stage. -/
+def DiagTraceReal (n : ℕ) (f : BitWord n → ℝ) : ℝ :=
+  (2 : ℝ)⁻¹ ^ n * Finset.sum Finset.univ f
+
+/-- The real diagonal readout as a native linear map. -/
+def DiagTraceRealLinear (n : ℕ) :
+    (BitWord n → ℝ) →ₗ[ℝ] ℝ where
+  toFun := DiagTraceReal n
+  map_add' f g := by
+    simp only [DiagTraceReal, Pi.add_apply, Finset.sum_add_distrib]
+    ring
+  map_smul' c f := by
+    simp only [DiagTraceReal, Pi.smul_apply, smul_eq_mul]
+    rw [← Finset.mul_sum]
+    simp only [RingHom.id_apply]
+    ring
+
+@[simp] theorem DiagTraceRealLinear_apply (n : ℕ) (f : BitWord n → ℝ) :
+    DiagTraceRealLinear n f = DiagTraceReal n f :=
+  rfl
+
+theorem DiagTraceReal_nonneg (n : ℕ) {f : BitWord n → ℝ}
+    (hf : 0 ≤ f) : 0 ≤ DiagTraceReal n f := by
+  unfold DiagTraceReal
+  have hcoeff : 0 ≤ (2 : ℝ)⁻¹ ^ n := by positivity
+  exact mul_nonneg hcoeff (Finset.sum_nonneg fun i _ => hf i)
+
+/-- The finite diagonal readout is a genuine positive linear map. -/
+def DiagTraceRealPositive (n : ℕ) :
+    (BitWord n → ℝ) →ₚ[ℝ] ℝ :=
+  { DiagTraceRealLinear n with
+    monotone' := by
+      intro f g hfg
+      rw [← sub_nonneg]
+      simpa [DiagTraceRealLinear, DiagTraceReal] using
+        (DiagTraceReal_nonneg n (fun i => sub_nonneg.mpr (hfg i))) }
+
+@[simp] theorem DiagTraceRealPositive_apply (n : ℕ) (f : BitWord n → ℝ) :
+    DiagTraceRealPositive n f = DiagTraceReal n f :=
+  rfl
+
+theorem DiagTraceReal_one (n : ℕ) :
+    DiagTraceReal n 1 = 1 := by
+  simp [DiagTraceReal, Finset.sum_const, Finset.card_univ,
+    Nat.cast_pow, inv_pow]
+
+/-- The real-valued successor map on finite diagonal observables. -/
+def diagEmbedSuccReal (n : ℕ) :
+    (BitWord n → ℝ) → (BitWord (n + 1) → ℝ) :=
+  fun f w => f (prefixSucc n w)
+
+theorem DiagTraceReal_compat (n : ℕ) (f : BitWord n → ℝ) :
+    DiagTraceReal (n + 1) (diagEmbedSuccReal n f) = DiagTraceReal n f := by
+  dsimp [DiagTraceReal, diagEmbedSuccReal]
+  change (2 : ℝ)⁻¹ ^ (n + 1) *
+      Finset.sum Finset.univ
+        (fun w => (fun p : BitWord n × Bool => f p.1) (bitWordEquiv n w)) = _
+  have h_equiv := Equiv.sum_comp (bitWordEquiv n)
+    (fun p : BitWord n × Bool => f p.1)
+  rw [h_equiv]
+  rw [← Finset.univ_product_univ]
+  rw [Finset.sum_product]
+  have h_inner : ∀ x : BitWord n,
+      Finset.sum Finset.univ (fun _ : Bool => f x) = 2 * f x := by
+    intro x
+    simp
+  simp_rw [h_inner]
+  rw [← Finset.mul_sum]
+  have h_pow_succ : (2 : ℝ)⁻¹ ^ (n + 1) =
+      (2 : ℝ)⁻¹ ^ n * (2 : ℝ)⁻¹ := by
+    exact pow_succ (2 : ℝ)⁻¹ n
+  rw [h_pow_succ]
+  ring
+
+theorem DiagTraceRealPositive_compat (n : ℕ) (f : BitWord n → ℝ) :
+    DiagTraceRealPositive (n + 1) (diagEmbedSuccReal n f) =
+      DiagTraceRealPositive n f := by
+  rw [DiagTraceRealPositive_apply, DiagTraceRealPositive_apply,
+    DiagTraceReal_compat]
+
 theorem DiagTrace_eq_normalizedTrace (n : ℕ) (f : DiagAlg n) :
     DiagTrace n f =
       InfoGeometry.Canonical.KMSTraceColimit.normalizedTrace n f := by

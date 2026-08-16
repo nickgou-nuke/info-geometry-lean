@@ -2,6 +2,7 @@ import InfoGeometry.Clifford.Clifford55
 import InfoGeometry.Clifford.Cl55SpinorChirality
 import InfoGeometry.Clifford.Cl55RealSplitPin
 import InfoGeometry.Clifford.Cl55RealSplitPinAction
+import InfoGeometry.Clifford.Cl55RealSplitPinVolume
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
 
 namespace InfoGeometry.Clifford.Clifford55
@@ -38,6 +39,11 @@ private def q55ToFin10 : V55 ≃ₗ[ℝ] (Fin 10 → ℝ) :=
 private def q55ToSplit5 : V55 ≃ₗ[ℝ] SplitSpace 5 :=
   q55ToFin10.trans vec55SplitEquiv
 
+theorem q55ToSplit5_wittBasis (i : Fin 10) :
+    q55ToSplit5 (cl55WittBasisFin i) =
+      vec55SplitEquiv (vec55Basis i) := by
+  fin_cases i <;> rfl
+
 theorem qsplit5_q55ToSplit5 (v : V55) :
     Qsplit 5 (q55ToSplit5 v) = Q55 v := by
   change Qsplit 5 (vec55SplitEquiv (q55ToFin10 v)) = Q55 v
@@ -53,6 +59,14 @@ private noncomputable def q55ToSplit5Isometry :
 noncomputable def cl55ToSplitCl55 :
     Cl55 ≃ₐ[ℝ] SplitCl55Alg :=
   CliffordAlgebra.equivOfIsometry q55ToSplit5Isometry
+
+theorem cl55ToSplitCl55_map_ι (v : V55) :
+    cl55ToSplitCl55 (ι55 v) =
+      CliffordAlgebra.ι (InfoGeometry.Clifford.SpinorRep.SplitQuad 5)
+        (q55ToSplit5 v) := by
+  dsimp [cl55ToSplitCl55, CliffordAlgebra.equivOfIsometry]
+  rw [CliffordAlgebra.map_apply_ι]
+  rfl
 
 noncomputable def cl55ToCl11TensorCl44 :
     Cl55 ≃ₐ[ℝ] SplitClNNTensorStep 4 :=

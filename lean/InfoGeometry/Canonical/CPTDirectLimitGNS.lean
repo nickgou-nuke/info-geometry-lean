@@ -36,7 +36,7 @@ This is the conservative representation surface: the caller supplies the
 involution and the state on the direct-limit carrier, together with stagewise
 readback data compatible with the canonical embeddings.
 -/
-structure CPTDirectLimitGNSPacket where
+structure CPTDirectLimitGNSData where
   /-- Carrier-level involution on the identified direct-limit algebra. -/
   carrierStar : CPTGNSCarrier → CPTGNSCarrier
   /-- Involution law. -/
@@ -67,9 +67,9 @@ structure CPTDirectLimitGNSPacket where
     ∀ n : ℕ, ∀ x : Stage n, carrierStar (cptTensorInductiveLimit.inj n x) =
       cptTensorInductiveLimit.inj n (star x)
 
-namespace CPTDirectLimitGNSPacket
+namespace CPTDirectLimitGNSData
 
-variable (P : CPTDirectLimitGNSPacket)
+variable (P : CPTDirectLimitGNSData)
 
 /-- The GNS null set on the identified direct-limit carrier. -/
 def gnsNullSet : Set CPTGNSCarrier :=
@@ -79,21 +79,6 @@ def gnsNullSet : Set CPTGNSCarrier :=
     x ∈ P.gnsNullSet ↔ P.state (P.carrierStar x * x) = 0 :=
   Iff.rfl
 
-/-- The direct-limit unit is normalized. -/
-theorem eval_one : P.state 1 = 1 :=
-  P.normalized
-
-/-- Stage readback at depth `n`. -/
-theorem stage_eval (n : ℕ) (x : Stage n) :
-    P.state (cptTensorInductiveLimit.inj n x) = (P.stage_state n).eval x :=
-  P.stage_readback n x
-
-/-- Stagewise carrier involution readback at depth `n`. -/
-theorem stage_star (n : ℕ) (x : Stage n) :
-    P.carrierStar (cptTensorInductiveLimit.inj n x) =
-      cptTensorInductiveLimit.inj n (star x) :=
-  P.stage_star_readback n x
-
-end CPTDirectLimitGNSPacket
+end CPTDirectLimitGNSData
 
 end InfoGeometry.Canonical.CPTDirectLimitGNS

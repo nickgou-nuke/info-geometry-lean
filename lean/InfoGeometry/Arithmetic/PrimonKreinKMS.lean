@@ -132,12 +132,12 @@ def NormalizableBeta (β : ℝ) : Prop :=
 /--
 Finite arithmetic KMS socket with an explicit primon normalizability guard.
 
-The KMS law is supplied by the existing `ArithmeticKMSWitness` interface.
+The KMS law is supplied by the existing `ArithmeticKMSData` interface.
 -/
-structure NormalizableArithmeticKMSSocket
+structure NormalizableArithmeticKMSData
     (State : Type*) where
   /-- Finite arithmetic KMS property. -/
-  property : ArithmeticKMSWitness State
+  property : ArithmeticKMSData State
   /-- Finite arithmetic support. -/
   support : Finset ℕ
   /-- Inverse temperature. -/
@@ -145,15 +145,15 @@ structure NormalizableArithmeticKMSSocket
   /-- Positive Gibbs normalizability guard. -/
   normalizable : NormalizableBeta beta
 
-namespace NormalizableArithmeticKMSSocket
+namespace NormalizableArithmeticKMSData
 
 variable {State : Type*}
 
 /-- Encoded finite arithmetic state. -/
-def encodedState (S : NormalizableArithmeticKMSSocket State) : State :=
+def encodedState (S : NormalizableArithmeticKMSData State) : State :=
   S.property.stateOfFinset S.support
 
-end NormalizableArithmeticKMSSocket
+end NormalizableArithmeticKMSData
 
 /-! ## 4. KMS strip readout -/
 
@@ -236,7 +236,7 @@ Real doubled Krein/KMS socket.
 The KMS-like boundary law is the repository's finite Krein thermal predicate,
 not a global Tomita--Takesaki theorem.
 -/
-structure RealDoubledKreinKMSSocket
+structure RealDoubledKreinKMSData
     (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   /-- Inverse temperature. -/
   beta : ℝ
@@ -249,12 +249,12 @@ structure RealDoubledKreinKMSSocket
   /-- Repository KMS-like boundary law. -/
   kms : InfoGeometry.Krein.satisfies_kms generator state beta
 
-namespace RealDoubledKreinKMSSocket
+namespace RealDoubledKreinKMSData
 
 variable
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
-end RealDoubledKreinKMSSocket
+end RealDoubledKreinKMSData
 
 /-! ## 7. Combined primon doubled Krein/KMS bridge -/
 
@@ -265,17 +265,17 @@ The arithmetic KMS socket and doubled Krein socket share the same inverse
 temperature, while keeping positive KMS state data separate from indefinite
 Krein/supertrace bookkeeping.
 -/
-structure PrimonDoubledKreinKMSSocket
+structure PrimonDoubledKreinKMSData
     (State E : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
   /-- Positive finite arithmetic KMS side. -/
-  arithmetic : NormalizableArithmeticKMSSocket State
+  arithmetic : NormalizableArithmeticKMSData State
   /-- Direct-sum doubled Krein/KMS side. -/
-  krein : RealDoubledKreinKMSSocket E
+  krein : RealDoubledKreinKMSData E
   /-- Shared inverse-temperature readout. -/
   beta_agrees : krein.beta = arithmetic.beta
 
-namespace PrimonDoubledKreinKMSSocket
+namespace PrimonDoubledKreinKMSData
 
 variable
     {State E : Type*}
@@ -283,10 +283,10 @@ variable
 
 /-- The common inverse temperature is in the normalizable primon region. -/
 theorem arithmetic_beta_normalizable
-    (S : PrimonDoubledKreinKMSSocket State E) :
+    (S : PrimonDoubledKreinKMSData State E) :
     NormalizableBeta S.arithmetic.beta :=
   S.arithmetic.normalizable
 
-end PrimonDoubledKreinKMSSocket
+end PrimonDoubledKreinKMSData
 
 end InfoGeometry.Arithmetic.PrimonKreinKMS

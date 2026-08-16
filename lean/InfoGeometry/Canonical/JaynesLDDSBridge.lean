@@ -45,7 +45,7 @@ Jaynes LDDS packet:
 The centered score is the algebraic fluctuation `Δ - 1`.
 -/
 structure JaynesLDDSPacket where
-  tower : AFRecursiveLimitPacket (Stage := Stage) (Limit := Limit)
+  tower : AFRecursiveLimitData (Stage := Stage) (Limit := Limit)
   density : ∀ n : Nat, Stage n
   hDensity : ∀ n : Nat, tower.bond n (density n) = density (n + 1)
 

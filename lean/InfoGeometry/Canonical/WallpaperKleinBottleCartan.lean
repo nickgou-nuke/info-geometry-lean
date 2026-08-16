@@ -119,69 +119,60 @@ theorem wallpaperD4_reflections_anticommute (i : Fin 4) :
 /-- A finite classification property: an owner can identify any wallpaper
 point symmetry satisfying the Klein compatibility predicates with one of the
 eight displayed `D₄` elements. -/
-structure WallpaperKleinClassificationCertificate where
-  candidate : Mat2Q → Prop
-  candidate_compatible :
-    ∀ S, candidate S → IsKleinCompatibleWallpaper S
-  candidate_classified :
-    ∀ S, candidate S → ∃ i : Fin 8, S = wallpaperD4 i
+structure WallpaperKleinClassification where
+  candidate : Set Mat2Q
 
-namespace WallpaperKleinClassificationCertificate
+namespace WallpaperKleinClassification
 
-variable (C : WallpaperKleinClassificationCertificate)
+variable (C : WallpaperKleinClassification)
 
 /-- Read out the explicit eight-element classification from the property. -/
-theorem classified_as_D4 {S : Mat2Q} (hS : C.candidate S) :
+theorem classified_as_D4
+    {S : Mat2Q} (hS : S ∈ C.candidate)
+    (hClass : ∀ S : Mat2Q, S ∈ C.candidate → ∃ i : Fin 8, S = wallpaperD4 i) :
     ∃ i : Fin 8, S = wallpaperD4 i :=
-  C.candidate_classified S hS
+  hClass S hS
 
 /-- Any classified candidate is compatible with the Klein-bottle cell. -/
-theorem classified_is_compatible {S : Mat2Q} (hS : C.candidate S) :
+theorem classified_is_compatible
+    {S : Mat2Q} (hS : S ∈ C.candidate)
+    (hComp : ∀ S : Mat2Q, S ∈ C.candidate → IsKleinCompatibleWallpaper S) :
     IsKleinCompatibleWallpaper S :=
-  C.candidate_compatible S hS
+  hComp S hS
 
-end WallpaperKleinClassificationCertificate
+end WallpaperKleinClassification
 
 /-- Five-graded Cartan shadow for the split `O(5,5)`/Pin socket.  The Cartan and
 grade-compatibility claims are intentionally explicit predicates. -/
-structure Pin55CartanWallpaperSocket where
+structure Pin55CartanWallpaperData where
   cartan : Set Mat10Q
   grade : Fin 5 → Set Mat10Q
   wallpaperAction : Fin 8 → Mat10Q → Mat10Q
-  preservesCartan :
-    ∀ i : Fin 8, ∀ X : Mat10Q,
-      X ∈ cartan → wallpaperAction i X ∈ cartan
-  preservesFiveGrade :
-    ∀ i : Fin 8, ∀ g : Fin 5, ∀ X : Mat10Q,
-      X ∈ grade g → wallpaperAction i X ∈ grade g
-  kleinCompatible : ∀ i : Fin 8, IsKleinCompatibleWallpaper (wallpaperD4 i)
-  cartan_readout :
-    ∀ i : Fin 8, ∀ X : Mat10Q,
-      X ∈ cartan → wallpaperAction i X ∈ cartan
-  grade_readout :
-    ∀ i : Fin 8, ∀ g : Fin 5, ∀ X : Mat10Q,
-      X ∈ grade g → wallpaperAction i X ∈ grade g
 
-namespace Pin55CartanWallpaperSocket
+namespace Pin55CartanWallpaperData
 
 /-- The wallpaper `D₄` action preserves the supplied Cartan shadow. -/
-theorem preserves_cartan_readout (S : Pin55CartanWallpaperSocket) :
+theorem preserves_cartan_readout (S : Pin55CartanWallpaperData)
+    (hCartan :
+      ∀ i : Fin 8, ∀ X : Mat10Q,
+        X ∈ S.cartan → S.wallpaperAction i X ∈ S.cartan) :
     ∀ i : Fin 8, ∀ X : Mat10Q,
-      X ∈ S.cartan → S.wallpaperAction i X ∈ S.cartan :=
-  S.cartan_readout
+      X ∈ S.cartan → S.wallpaperAction i X ∈ S.cartan := hCartan
 
 /-- The wallpaper `D₄` action preserves the supplied five-grade decomposition. -/
-theorem preserves_five_grade_readout (S : Pin55CartanWallpaperSocket) :
+theorem preserves_five_grade_readout (S : Pin55CartanWallpaperData)
+    (hGrade :
+      ∀ i : Fin 8, ∀ g : Fin 5, ∀ X : Mat10Q,
+        X ∈ S.grade g → S.wallpaperAction i X ∈ S.grade g) :
     ∀ i : Fin 8, ∀ g : Fin 5, ∀ X : Mat10Q,
-      X ∈ S.grade g → S.wallpaperAction i X ∈ S.grade g :=
-  S.grade_readout
+      X ∈ S.grade g → S.wallpaperAction i X ∈ S.grade g := hGrade
 
 /-- Each finite wallpaper point symmetry is Klein-compatible. -/
-theorem klein_compatible_readout (S : Pin55CartanWallpaperSocket) (i : Fin 8) :
+theorem klein_compatible_readout (S : Pin55CartanWallpaperData) (i : Fin 8) :
     IsKleinCompatibleWallpaper (wallpaperD4 i) :=
-  S.kleinCompatible i
+  wallpaperD4_is_klein_compatible i
 
-end Pin55CartanWallpaperSocket
+end Pin55CartanWallpaperData
 
 /-- Canonical finite socket using the proved compatibility theorem for the eight
 point symmetries; the Cartan/five-grade preservation premises are supplied by
@@ -195,15 +186,10 @@ def pin55WallpaperSocketOfPremises
     (hGrade :
       ∀ i : Fin 8, ∀ g : Fin 5, ∀ X : Mat10Q,
         X ∈ grade g → wallpaperAction i X ∈ grade g) :
-    Pin55CartanWallpaperSocket where
+    Pin55CartanWallpaperData where
   cartan := cartan
   grade := grade
   wallpaperAction := wallpaperAction
-  preservesCartan := hCartan
-  preservesFiveGrade := hGrade
-  kleinCompatible := wallpaperD4_is_klein_compatible
-  cartan_readout := hCartan
-  grade_readout := hGrade
 
 end
 

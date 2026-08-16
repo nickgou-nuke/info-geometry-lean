@@ -45,7 +45,7 @@ section ScalarCurrentCalibration
 
 variable {Θ V State Op Alg X : Type*}
 variable [AddCommGroup V] [AddGroup Op] [Ring Alg]
-variable (P : InfinitesimalDictionaryPacket Θ V State Op Alg X)
+variable (P : InfinitesimalDictionaryModel Θ V State Op Alg X)
 
 /--
 If the antisymmetric divergence is calibrated to the packet's scalar current

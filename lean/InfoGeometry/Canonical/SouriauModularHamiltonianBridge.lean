@@ -37,6 +37,7 @@ section Core
 variable {E : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable {LieAlgebra : Type*}
+variable [AddMonoid LieAlgebra]
 
 local notation "EndH" => E →L[ℝ] E
 

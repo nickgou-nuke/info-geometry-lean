@@ -5,12 +5,15 @@ import InfoGeometry.Clifford.Cl55WittOrthogonalNative
 namespace InfoGeometry.Clifford.Clifford55
 
 /-!
-# The native Pin action on the Witt quadratic carrier
+# Ordinary-conjugation orthogonal representation of native Pin
 
-This file uses Mathlib's ordinary conjugation action on the Clifford vector
-range.  It gives a genuine homomorphism from the native `pinGroup` into the
-orthogonal group represented by `orthogonalGroup55`.  The twisted action used
-for individual reflections is kept separate in `Cl55WittPinAction`.
+This file transports Mathlib's ordinary conjugation action
+`g x g⁻¹` on the Clifford vector range back to `V55`.  It gives a genuine
+homomorphism from the native `pinGroup` into the orthogonal group represented
+by `orthogonalGroup55`.  The reflection-compatible action is the twisted
+adjoint in `Cl55WittPinAction`; the parity owner proves that the two actions
+agree on the even `Spin55` sector and differ by a global sign on odd Pin
+elements.
 -/
 
 noncomputable def pinConjAmbientLinear (g : Pin55) : Cl55 →ₗ[ℝ] Cl55 where
@@ -183,5 +186,24 @@ noncomputable def pinNativeOrthogonalAction :
     pinNativeOrthogonalAction g =
       orthogonalGroup55IsometryEquiv (pinOrthogonalAction g) :=
   rfl
+
+@[simp] theorem pinNativeOrthogonalAction_apply_vector
+    (g : Pin55) (v : V55) :
+    pinNativeOrthogonalAction g v = pinConjAction g v := by
+  rfl
+
+theorem pinNativeOrthogonalAction_mul_apply
+    (g h : Pin55) (v : V55) :
+    pinNativeOrthogonalAction (g * h) v =
+      pinNativeOrthogonalAction g (pinNativeOrthogonalAction h v) := by
+  change pinConjAction (g * h) v =
+    pinConjAction g (pinConjAction h v)
+  rw [pinConjAction_mul]
+  rfl
+
+theorem pinNativeOrthogonalAction_preserves_Q55
+    (g : Pin55) (v : V55) :
+    Q55 (pinNativeOrthogonalAction g v) = Q55 v := by
+  exact (pinOrthogonalAction g).property v
 
 end InfoGeometry.Clifford.Clifford55

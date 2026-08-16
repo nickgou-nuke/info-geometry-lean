@@ -47,7 +47,7 @@ structure Bridge
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg] where
   /-- KAN/Bogoliubov representation shadow. -/
   kanShadow :
-    BogoliubovKANShadowPacket E
+    BogoliubovKANShadowData E
       (Bog := Bog) (Korth := Korth) (Asplit := Asplit)
       (Nshear := Nshear) (CartanDiag := CartanDiag)
 

@@ -99,16 +99,4 @@ theorem contracted_bianchi_of_ricci_scalar_balance
   ext nu
   simp [einsteinDivergence, hBalance]
 
-theorem section11_capstone :
-    (∀ RmuNu RnuRho RrhoMu : RiemannCoeff,
-      cyclicSum RmuNu RnuRho RrhoMu = 0 →
-        cyclicSum
-          (Section9.spinCurvatureFromRiemann RmuNu)
-          (Section9.spinCurvatureFromRiemann RnuRho)
-          (Section9.spinCurvatureFromRiemann RrhoMu) = 0) ∧
-    (∀ divRicci gradScalar : VectorField4,
-      divRicci = (1 / 2 : ℂ) • gradScalar →
-        einsteinDivergence divRicci gradScalar = 0) := by
-  exact ⟨spinorial_first_bianchi_from_vector, contracted_bianchi_of_ricci_scalar_balance⟩
-
 end Section11

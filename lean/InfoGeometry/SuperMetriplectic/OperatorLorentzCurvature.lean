@@ -41,26 +41,26 @@ content: one transformed operator decomposes into scalar/vector/bivector/
 topological grade lanes.
 -/
 @[rep_depth operator]
-structure OperatorialCliffordFourierGradeSplit where
+structure OperatorialCliffordFourierGradeData where
   transformed : EndH
   scalarGrade : EndH
   vectorGrade : EndH
   bivectorGrade : EndH
   topologicalGrade : EndH
-  transformed_eq_grade_sum :
-    transformed = scalarGrade + vectorGrade + bivectorGrade + topologicalGrade
 
-namespace OperatorialCliffordFourierGradeSplit
+namespace OperatorialCliffordFourierGradeData
 
 /-- The Clifford-Fourier readout separates into the carried grade lanes. -/
 @[rep_depth operator]
 theorem transformed_eq_sum
-    (G : OperatorialCliffordFourierGradeSplit (E := E)) :
+    (G : OperatorialCliffordFourierGradeData (E := E))
+    (hSplit : G.transformed =
+      G.scalarGrade + G.vectorGrade + G.bivectorGrade + G.topologicalGrade) :
     G.transformed =
       G.scalarGrade + G.vectorGrade + G.bivectorGrade + G.topologicalGrade :=
-  G.transformed_eq_grade_sum
+  hSplit
 
-end OperatorialCliffordFourierGradeSplit
+end OperatorialCliffordFourierGradeData
 
 /--
 Bisognano-Wichmann-style compatibility packet.
@@ -70,21 +70,21 @@ same operator family viewed as the wedge/Lorentz boost.  The equality is carried
 as proof data or obtained from the canonical wedge bridge below.
 -/
 @[rep_depth operator]
-structure BisognanoWichmannModularLorentzPacket where
+structure BisognanoWichmannModularLorentzData where
   modularFlow : ℝ → EndH
   lorentzBoostFlow : ℝ → EndH
-  modular_eq_lorentz : ∀ τ : ℝ, modularFlow τ = lorentzBoostFlow τ
 
-namespace BisognanoWichmannModularLorentzPacket
+namespace BisognanoWichmannModularLorentzData
 
 /-- Modular flow and Lorentz boost flow are the same carried operator family. -/
 @[rep_depth operator]
 theorem modularFlow_eq_lorentzBoost
-    (B : BisognanoWichmannModularLorentzPacket (E := E)) (τ : ℝ) :
+    (B : BisognanoWichmannModularLorentzData (E := E)) (τ : ℝ)
+    (hFlow : ∀ τ : ℝ, B.modularFlow τ = B.lorentzBoostFlow τ) :
     B.modularFlow τ = B.lorentzBoostFlow τ :=
-  B.modular_eq_lorentz τ
+  hFlow τ
 
-end BisognanoWichmannModularLorentzPacket
+end BisognanoWichmannModularLorentzData
 
 /--
 Curvature packet from two modular/Lorentz directions.
@@ -94,47 +94,43 @@ commutator of two modular flows.  This is the strongest Lean statement supported
 here without importing a coordinate manifold and its tensor calculus.
 -/
 @[rep_depth operator]
-structure ModularLorentzCommutatorCurvaturePacket where
+structure ModularLorentzCommutatorCurvatureData where
   modularFlowX : ℝ → EndH
   modularFlowY : ℝ → EndH
   lorentzBoostX : ℝ → EndH
   lorentzBoostY : ℝ → EndH
   curvatureCommutator : ℝ → ℝ → EndH
   riemannReadout : ℝ → ℝ → EndH
-  modularX_eq_lorentzX :
-    ∀ s : ℝ, modularFlowX s = lorentzBoostX s
-  modularY_eq_lorentzY :
-    ∀ t : ℝ, modularFlowY t = lorentzBoostY t
-  curvatureCommutator_eq :
-    ∀ s t : ℝ,
-      curvatureCommutator s t =
-        modularFlowX s * modularFlowY t - modularFlowY t * modularFlowX s
-  riemannReadout_eq_curvature :
-    ∀ s t : ℝ, riemannReadout s t = curvatureCommutator s t
 
-namespace ModularLorentzCommutatorCurvaturePacket
+namespace ModularLorentzCommutatorCurvatureData
 
 /-- The curvature readout is the commutator of two modular flows. -/
 @[rep_depth operator]
 theorem riemannReadout_eq_modularCommutator
-    (C : ModularLorentzCommutatorCurvaturePacket (E := E)) (s t : ℝ) :
+    (C : ModularLorentzCommutatorCurvatureData (E := E)) (s t : ℝ)
+    (hReadout : C.riemannReadout s t = C.curvatureCommutator s t)
+    (hCommutator : C.curvatureCommutator s t =
+      C.modularFlowX s * C.modularFlowY t - C.modularFlowY t * C.modularFlowX s) :
     C.riemannReadout s t =
       C.modularFlowX s * C.modularFlowY t
         - C.modularFlowY t * C.modularFlowX s := by
-  rw [C.riemannReadout_eq_curvature s t]
-  exact C.curvatureCommutator_eq s t
+  rw [hReadout, hCommutator]
 
 /-- The same curvature readout as a Lorentz-boost commutator. -/
 @[rep_depth operator]
 theorem riemannReadout_eq_lorentzBoostCommutator
-    (C : ModularLorentzCommutatorCurvaturePacket (E := E)) (s t : ℝ) :
+    (C : ModularLorentzCommutatorCurvatureData (E := E)) (s t : ℝ)
+    (hReadout : C.riemannReadout s t = C.curvatureCommutator s t)
+    (hCommutator : C.curvatureCommutator s t =
+      C.modularFlowX s * C.modularFlowY t - C.modularFlowY t * C.modularFlowX s)
+    (hModX : C.modularFlowX s = C.lorentzBoostX s)
+    (hModY : C.modularFlowY t = C.lorentzBoostY t) :
     C.riemannReadout s t =
       C.lorentzBoostX s * C.lorentzBoostY t
         - C.lorentzBoostY t * C.lorentzBoostX s := by
-  rw [C.riemannReadout_eq_modularCommutator s t]
-  rw [C.modularX_eq_lorentzX s, C.modularY_eq_lorentzY t]
+  rw [hReadout, hCommutator, hModX, hModY]
 
-end ModularLorentzCommutatorCurvaturePacket
+end ModularLorentzCommutatorCurvatureData
 
 /--
 Capstone packet for the operatorial Clifford/Lorentz curvature bridge.
@@ -147,59 +143,52 @@ It keeps the four intended layers together:
 4. curvature as the commutator of the two modular/Lorentz flows.
 -/
 @[capstone, rep_depth operator]
-structure OperatorLorentzCurvatureCapstone where
-  gradeSplit : OperatorialCliffordFourierGradeSplit (E := E)
-  boostX : BisognanoWichmannModularLorentzPacket (E := E)
-  boostY : BisognanoWichmannModularLorentzPacket (E := E)
+structure OperatorLorentzCurvatureData where
+  gradeSplit : OperatorialCliffordFourierGradeData (E := E)
+  boostX : BisognanoWichmannModularLorentzData (E := E)
+  boostY : BisognanoWichmannModularLorentzData (E := E)
   drazinCoreProjector : EndH
   drazinCoreModularGenerator : EndH
   drazinCoreModularFlow : ℝ → EndH
-  drazinCore_generator_kills_left :
-    drazinCoreModularGenerator * drazinCoreProjector = 0
-  drazinCore_generator_kills_right :
-    drazinCoreProjector * drazinCoreModularGenerator = 0
-  drazinCore_flow_fixes_left :
-    ∀ τ : ℝ, drazinCoreModularFlow τ * drazinCoreProjector = drazinCoreProjector
-  drazinCore_flow_fixes_right :
-    ∀ τ : ℝ, drazinCoreProjector * drazinCoreModularFlow τ = drazinCoreProjector
-  curvature : ModularLorentzCommutatorCurvaturePacket (E := E)
-  curvature_modularFlowX_matches_boostX :
-    curvature.modularFlowX = boostX.modularFlow
-  curvature_modularFlowY_matches_boostY :
-    curvature.modularFlowY = boostY.modularFlow
-  curvature_lorentzBoostX_matches_boostX :
-    curvature.lorentzBoostX = boostX.lorentzBoostFlow
-  curvature_lorentzBoostY_matches_boostY :
-    curvature.lorentzBoostY = boostY.lorentzBoostFlow
+  curvature : ModularLorentzCommutatorCurvatureData (E := E)
 
-namespace OperatorLorentzCurvatureCapstone
+namespace OperatorLorentzCurvatureData
 
 /-- The capstone Clifford-Fourier transform readout splits by geometric grade. -/
 @[rep_depth operator]
 theorem gradeSplit_eq_sum
-    (C : OperatorLorentzCurvatureCapstone (E := E)) :
+    (C : OperatorLorentzCurvatureData (E := E))
+    (hSplit : C.gradeSplit.transformed =
+      C.gradeSplit.scalarGrade + C.gradeSplit.vectorGrade
+        + C.gradeSplit.bivectorGrade + C.gradeSplit.topologicalGrade) :
     C.gradeSplit.transformed =
       C.gradeSplit.scalarGrade + C.gradeSplit.vectorGrade
         + C.gradeSplit.bivectorGrade + C.gradeSplit.topologicalGrade :=
-  C.gradeSplit.transformed_eq_sum
+  hSplit
 
 /-- The capstone Drazin core is killed infinitesimally by the modular generator. -/
 @[rep_depth operator]
 theorem drazinCore_generator_killed
-    (C : OperatorLorentzCurvatureCapstone (E := E)) :
+    (C : OperatorLorentzCurvatureData (E := E))
+    (hLeft : C.drazinCoreModularGenerator * C.drazinCoreProjector = 0)
+    (hRight : C.drazinCoreProjector * C.drazinCoreModularGenerator = 0) :
     C.drazinCoreModularGenerator * C.drazinCoreProjector = 0
       ∧ C.drazinCoreProjector * C.drazinCoreModularGenerator = 0 :=
-  ⟨C.drazinCore_generator_kills_left, C.drazinCore_generator_kills_right⟩
+  ⟨hLeft, hRight⟩
 
 /-- The capstone Drazin core is fixed by finite modular/Lorentz flow. -/
 @[rep_depth operator]
 theorem drazinCore_flow_fixed
-    (C : OperatorLorentzCurvatureCapstone (E := E)) (τ : ℝ) :
+    (C : OperatorLorentzCurvatureData (E := E)) (τ : ℝ)
+    (hLeft : ∀ τ : ℝ,
+      C.drazinCoreModularFlow τ * C.drazinCoreProjector = C.drazinCoreProjector)
+    (hRight : ∀ τ : ℝ,
+      C.drazinCoreProjector * C.drazinCoreModularFlow τ = C.drazinCoreProjector) :
     C.drazinCoreModularFlow τ * C.drazinCoreProjector =
         C.drazinCoreProjector
       ∧ C.drazinCoreProjector * C.drazinCoreModularFlow τ =
         C.drazinCoreProjector :=
-  ⟨C.drazinCore_flow_fixes_left τ, C.drazinCore_flow_fixes_right τ⟩
+  ⟨hLeft τ, hRight τ⟩
 
 /--
 The capstone curvature/Riemann readout is the commutator of the two modular
@@ -207,13 +196,17 @@ flows.
 -/
 @[rep_depth operator]
 theorem riemannReadout_eq_modularCommutator
-    (C : OperatorLorentzCurvatureCapstone (E := E)) (s t : ℝ) :
+    (C : OperatorLorentzCurvatureData (E := E)) (s t : ℝ)
+    (hReadout : C.curvature.riemannReadout s t = C.curvature.curvatureCommutator s t)
+    (hCommutator : C.curvature.curvatureCommutator s t =
+      C.curvature.modularFlowX s * C.curvature.modularFlowY t
+        - C.curvature.modularFlowY t * C.curvature.modularFlowX s)
+    (hMatchX : C.curvature.modularFlowX = C.boostX.modularFlow)
+    (hMatchY : C.curvature.modularFlowY = C.boostY.modularFlow) :
     C.curvature.riemannReadout s t =
       C.boostX.modularFlow s * C.boostY.modularFlow t
         - C.boostY.modularFlow t * C.boostX.modularFlow s := by
-  rw [C.curvature.riemannReadout_eq_modularCommutator s t]
-  rw [C.curvature_modularFlowX_matches_boostX,
-    C.curvature_modularFlowY_matches_boostY]
+  rw [hReadout, hCommutator, hMatchX, hMatchY]
 
 /--
 The same capstone curvature/Riemann readout is the commutator of the two
@@ -221,13 +214,19 @@ Lorentz-boost flows.
 -/
 @[rep_depth operator]
 theorem riemannReadout_eq_lorentzBoostCommutator
-    (C : OperatorLorentzCurvatureCapstone (E := E)) (s t : ℝ) :
+    (C : OperatorLorentzCurvatureData (E := E)) (s t : ℝ)
+    (hReadout : C.curvature.riemannReadout s t = C.curvature.curvatureCommutator s t)
+    (hCommutator : C.curvature.curvatureCommutator s t =
+      C.curvature.modularFlowX s * C.curvature.modularFlowY t
+        - C.curvature.modularFlowY t * C.curvature.modularFlowX s)
+    (hMatchX : C.curvature.lorentzBoostX = C.boostX.lorentzBoostFlow)
+    (hMatchY : C.curvature.lorentzBoostY = C.boostY.lorentzBoostFlow)
+    (hModX : C.curvature.modularFlowX s = C.curvature.lorentzBoostX s)
+    (hModY : C.curvature.modularFlowY t = C.curvature.lorentzBoostY t) :
     C.curvature.riemannReadout s t =
       C.boostX.lorentzBoostFlow s * C.boostY.lorentzBoostFlow t
         - C.boostY.lorentzBoostFlow t * C.boostX.lorentzBoostFlow s := by
-  rw [C.curvature.riemannReadout_eq_lorentzBoostCommutator s t]
-  rw [C.curvature_lorentzBoostX_matches_boostX,
-    C.curvature_lorentzBoostY_matches_boostY]
+  rw [hReadout, hCommutator, hModX, hModY, hMatchX, hMatchY]
 
 /--
 Combined operatorial Lorentz-curvature theorem.
@@ -237,7 +236,26 @@ readout as both modular and Lorentz commutators.
 -/
 @[capstone, rep_depth operator]
 theorem operator_lorentz_curvature_theorem
-    (C : OperatorLorentzCurvatureCapstone (E := E)) (s t τ : ℝ) :
+    (C : OperatorLorentzCurvatureData (E := E)) (s t τ : ℝ)
+    (hSplit : C.gradeSplit.transformed =
+      C.gradeSplit.scalarGrade + C.gradeSplit.vectorGrade
+        + C.gradeSplit.bivectorGrade + C.gradeSplit.topologicalGrade)
+    (hGenLeft : C.drazinCoreModularGenerator * C.drazinCoreProjector = 0)
+    (hGenRight : C.drazinCoreProjector * C.drazinCoreModularGenerator = 0)
+    (hFlowLeft : ∀ τ : ℝ,
+      C.drazinCoreModularFlow τ * C.drazinCoreProjector = C.drazinCoreProjector)
+    (hFlowRight : ∀ τ : ℝ,
+      C.drazinCoreProjector * C.drazinCoreModularFlow τ = C.drazinCoreProjector)
+    (hReadout : C.curvature.riemannReadout s t = C.curvature.curvatureCommutator s t)
+    (hCommutator : C.curvature.curvatureCommutator s t =
+      C.curvature.modularFlowX s * C.curvature.modularFlowY t
+        - C.curvature.modularFlowY t * C.curvature.modularFlowX s)
+    (hMatchModX : C.curvature.modularFlowX = C.boostX.modularFlow)
+    (hMatchModY : C.curvature.modularFlowY = C.boostY.modularFlow)
+    (hMatchLorX : C.curvature.lorentzBoostX = C.boostX.lorentzBoostFlow)
+    (hMatchLorY : C.curvature.lorentzBoostY = C.boostY.lorentzBoostFlow)
+    (hModX : C.curvature.modularFlowX s = C.curvature.lorentzBoostX s)
+    (hModY : C.curvature.modularFlowY t = C.curvature.lorentzBoostY t) :
     C.gradeSplit.transformed =
         C.gradeSplit.scalarGrade + C.gradeSplit.vectorGrade
           + C.gradeSplit.bivectorGrade + C.gradeSplit.topologicalGrade
@@ -253,15 +271,13 @@ theorem operator_lorentz_curvature_theorem
       ∧ C.curvature.riemannReadout s t =
           C.boostX.lorentzBoostFlow s * C.boostY.lorentzBoostFlow t
             - C.boostY.lorentzBoostFlow t * C.boostX.lorentzBoostFlow s := by
-  exact ⟨C.gradeSplit_eq_sum,
-    C.drazinCore_generator_killed.1,
-    C.drazinCore_generator_killed.2,
-    (C.drazinCore_flow_fixed τ).1,
-    (C.drazinCore_flow_fixed τ).2,
-    C.riemannReadout_eq_modularCommutator s t,
-    C.riemannReadout_eq_lorentzBoostCommutator s t⟩
+  exact ⟨hSplit, hGenLeft, hGenRight, hFlowLeft τ, hFlowRight τ,
+    C.riemannReadout_eq_modularCommutator s t hReadout hCommutator
+      hMatchModX hMatchModY,
+    C.riemannReadout_eq_lorentzBoostCommutator s t hReadout hCommutator
+      hMatchLorX hMatchLorY hModX hModY⟩
 
-end OperatorLorentzCurvatureCapstone
+end OperatorLorentzCurvatureData
 
 /--
 Owner alias: the canonical wedge bridge identifies modular transport at

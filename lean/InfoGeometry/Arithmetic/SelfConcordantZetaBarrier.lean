@@ -139,61 +139,25 @@ def finiteLogBarrier {ι : Type} [Fintype ι] (x : ι → ℝ) : ℝ :=
 def PositiveOrthant {ι : Type} (x : ι → ℝ) : Prop :=
   ∀ i : ι, 0 < x i
 
-/-! ## 4. Analytic zeta/Souriau socket -/
+/-! ## 4. Self-concordant corridor data -/
 
 /--
-Socket for the analytic zeta Massieu potential.
+A real self-concordant corridor data package.
 
-This records the identities expected from analytic number theory without making
-Lean prove them inside this finite algebraic module.
+This records a real domain, a coordinate embedding, and a supplied
+one-dimensional self-concordance property.  It does not identify the corridor
+with a zeta or Massieu potential; that identification belongs to a separate
+analytic owner.
 -/
-structure ZetaMassieuSocket where
-  zeta : ℂ → ℂ
-  xi : ℂ → ℂ
-  vonMangoldtSeries : ℂ → ℂ
-  hessianMetric : ℂ → ℂ
-  thirdSlot : ℂ → ℂ
-  zeroFreeRegion : ℂ → Prop
-
-/-- The zeta Massieu potential as an explicit derived formula. -/
-def massieu (zeta : ℂ → ℂ) : ℂ → ℂ :=
-  fun s => - Complex.log (zeta s)
-
-/-- The zeta forcing term as an explicit derived formula. -/
-def force (vonMangoldtSeries : ℂ → ℂ) : ℂ → ℂ :=
-  fun s => vonMangoldtSeries s
-
-/-- Re-export of the derived zeta Massieu identity. -/
-@[rep_depth thermo]
-theorem massieu_eq_neg_log_zeta_of_region
-    (Z : ZetaMassieuSocket) (s : ℂ) (hs : Z.zeroFreeRegion s) :
-    massieu Z.zeta s = - Complex.log (Z.zeta s) :=
-  rfl
-
-/-- Re-export of the derived Souriau/von-Mangoldt force identity. -/
-@[rep_depth thermo]
-theorem force_eq_vonMangoldt_of_region
-    (Z : ZetaMassieuSocket) (s : ℂ) (hs : Z.zeroFreeRegion s) :
-    force Z.vonMangoldtSeries s = Z.vonMangoldtSeries s :=
-  rfl
-
-/--
-A real self-concordant corridor through the zeta Massieu surface.
-
-The actual analytic theorem to prove is the construction of such a corridor and
-property for the intended zeta potential.  This structure merely states the
-required data.
--/
-structure ZetaSelfConcordanceModel where
-  socket : ZetaMassieuSocket
+structure SelfConcordanceCorridorData where
   realDomain : ℝ → Prop
   embed : ℝ → ℂ
   corridor : C3Potential
   property : SelfConcordantBarrier1D realDomain corridor
 
-namespace ZetaSelfConcordanceModel
+namespace SelfConcordanceCorridorData
 
-variable (M : ZetaSelfConcordanceModel)
+variable (M : SelfConcordanceCorridorData)
 
 /-- Extract the NN differential bound from a property zeta barrier model. -/
 theorem nn_bound : NNBoundOn M.realDomain M.corridor :=
@@ -214,7 +178,7 @@ theorem third_sq_le_on_corridor {x : ℝ} (hx : M.realDomain x) :
     (M.corridor.d3 x)^2 ≤ 4 * (M.corridor.d2 x)^3 :=
   (M.nn_bound x hx).2
 
-end ZetaSelfConcordanceModel
+end SelfConcordanceCorridorData
 
 /-! ## 5. Genuine Nesterov-Nemirovski barriers for the zeta potential -/
 
@@ -285,16 +249,9 @@ theorem logBarrier_is_self_concordant_barrier :
       intro x hx
       exact logBarrier_third_derivative_nonpos hx)⟩
 
-/--
-Genuine self-concordance property for the zeta Massieu potential.
-
-The zeta Massieu potential is `Φ(s) = -log ζ(s)`.  On the critical line
-and in the zero-free region, the Hessian is nonnegative and the NN bound holds.
-
-This theorem states the exact conditions under which the property is valid.
--/
-theorem zeta_massieu_self_concordant_on_critical_corridor
-    (M : ZetaSelfConcordanceModel)
+/-- The supplied corridor data yields its stated NN bounds. -/
+theorem corridor_self_concordant_on_domain
+    (M : SelfConcordanceCorridorData)
     (x : ℝ) (hx : M.realDomain x) :
     0 ≤ M.corridor.d2 x ∧ (M.corridor.d3 x)^2 ≤ 4 * (M.corridor.d2 x)^3 := by
   exact M.nn_bound x hx

@@ -27,12 +27,40 @@ theorem zorn_null_clifford_generator_sq
   rw [CliffordAlgebra.ι_sq_scalar, hV]
   simp
 
+theorem zorn_clifford_generator_smul
+    (c : ℂ) (V : CanonicalZornCompositionTriality.Vector8) :
+    CliffordAlgebra.ι vectorQuadratic (c • V) =
+      c • CliffordAlgebra.ι vectorQuadratic V := by
+  exact (CliffordAlgebra.ι vectorQuadratic).map_smul c V
+
+theorem zorn_scaled_null_clifford_generator_sq
+    (c : ℂ) (V : CanonicalZornCompositionTriality.Vector8)
+    (hV : vectorQuadratic V = 0) :
+    CliffordAlgebra.ι vectorQuadratic (c • V) *
+        CliffordAlgebra.ι vectorQuadratic (c • V) = 0 := by
+  simp only [zorn_clifford_generator_smul]
+  simp [smul_mul_assoc, mul_smul_comm,
+    zorn_null_clifford_generator_sq V hV]
+
 theorem zorn_null_dirac_gamma_sq
     (V : CanonicalZornCompositionTriality.Vector8)
     (hV : vectorQuadratic V = 0) :
     diracGamma V * diracGamma V = 0 := by
   rw [diracGamma_sq, hV]
   simp
+
+theorem zorn_dirac_gamma_smul
+    (c : ℂ) (V : CanonicalZornCompositionTriality.Vector8) :
+    diracGamma (c • V) = c • diracGamma V := by
+  exact diracGammaLinear.map_smul c V
+
+theorem zorn_scaled_null_dirac_gamma_sq
+    (c : ℂ) (V : CanonicalZornCompositionTriality.Vector8)
+    (hV : vectorQuadratic V = 0) :
+    diracGamma (c • V) * diracGamma (c • V) = 0 := by
+  simp only [zorn_dirac_gamma_smul]
+  simp [smul_mul_assoc, mul_smul_comm,
+    zorn_null_dirac_gamma_sq V hV]
 
 theorem zorn_null_dirac_gamma_apply_sq
     (V : CanonicalZornCompositionTriality.Vector8)

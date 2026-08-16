@@ -474,6 +474,107 @@ theorem nilpotentPlusProjector_sub_minusProjector :
   unfold nilpotentPlusProjector nilpotentMinusProjector
   module
 
+/-! ## Eigen-actions of the complementary projectors -/
+
+theorem nilpotentPlus_mul_plusProjector :
+    D.nilpotentPlus * D.nilpotentPlusProjector = 0 := by
+  rw [nilpotentPlusProjector_eq_product]
+  rw [← mul_assoc, D.nilpotentPlus_sq]
+  simp
+
+theorem nilpotentPlus_mul_minusProjector :
+    D.nilpotentPlus * D.nilpotentMinusProjector = D.nilpotentPlus := by
+  have hzero : D.nilpotentPlus * D.nilpotentPlusProjector = 0 :=
+    nilpotentPlus_mul_plusProjector D
+  calc
+    D.nilpotentPlus * D.nilpotentMinusProjector =
+        D.nilpotentPlus *
+          (D.nilpotentPlusProjector + D.nilpotentMinusProjector) -
+          D.nilpotentPlus * D.nilpotentPlusProjector := by noncomm_ring
+    _ = D.nilpotentPlus * (1 : EndH) - 0 := by
+      rw [nilpotentPlusProjector_add_minusProjector, hzero]
+    _ = D.nilpotentPlus := by simp
+
+theorem nilpotentMinus_mul_plusProjector :
+    D.nilpotentMinus * D.nilpotentPlusProjector = D.nilpotentMinus := by
+  have hzero : D.nilpotentMinus * D.nilpotentMinusProjector = 0 := by
+    rw [nilpotentMinusProjector_eq_product]
+    rw [← mul_assoc, D.nilpotentMinus_sq]
+    simp
+  calc
+    D.nilpotentMinus * D.nilpotentPlusProjector =
+        D.nilpotentMinus *
+          (D.nilpotentPlusProjector + D.nilpotentMinusProjector) -
+          D.nilpotentMinus * D.nilpotentMinusProjector := by noncomm_ring
+    _ = D.nilpotentMinus * (1 : EndH) - 0 := by
+      rw [nilpotentPlusProjector_add_minusProjector, hzero]
+    _ = D.nilpotentMinus := by simp
+
+theorem nilpotentMinus_mul_minusProjector :
+    D.nilpotentMinus * D.nilpotentMinusProjector = 0 := by
+  rw [nilpotentMinusProjector_eq_product]
+  rw [← mul_assoc, D.nilpotentMinus_sq]
+  simp
+
+theorem nilpotentPlusProjector_mul_nilpotentPlus :
+    D.nilpotentPlusProjector * D.nilpotentPlus = D.nilpotentPlus := by
+  rw [nilpotentPlusProjector_eq_product, mul_assoc,
+    nilpotentMinus_mul_nilpotentPlus]
+  exact nilpotentPlus_mul_minusProjector D
+
+theorem nilpotentPlusProjector_mul_nilpotentMinus :
+    D.nilpotentPlusProjector * D.nilpotentMinus = 0 := by
+  rw [nilpotentPlusProjector_eq_product, mul_assoc, D.nilpotentMinus_sq]
+  simp
+
+theorem nilpotentMinusProjector_mul_nilpotentPlus :
+    D.nilpotentMinusProjector * D.nilpotentPlus = 0 := by
+  rw [nilpotentMinusProjector_eq_product, mul_assoc, D.nilpotentPlus_sq]
+  simp
+
+theorem nilpotentMinusProjector_mul_nilpotentMinus :
+    D.nilpotentMinusProjector * D.nilpotentMinus = D.nilpotentMinus := by
+  rw [nilpotentMinusProjector_eq_product, mul_assoc,
+    nilpotentPlus_mul_nilpotentMinus]
+  exact nilpotentMinus_mul_plusProjector D
+
+theorem Gamma_mul_nilpotentPlus :
+    D.Gamma * D.nilpotentPlus = D.nilpotentPlus := by
+  rw [← nilpotentPlusProjector_sub_minusProjector]
+  rw [sub_mul, nilpotentPlusProjector_mul_nilpotentPlus,
+    nilpotentMinusProjector_mul_nilpotentPlus]
+  simp
+
+theorem nilpotentPlus_mul_Gamma :
+    D.nilpotentPlus * D.Gamma = -D.nilpotentPlus := by
+  rw [← nilpotentPlusProjector_sub_minusProjector]
+  rw [mul_sub, nilpotentPlus_mul_plusProjector,
+    nilpotentPlus_mul_minusProjector]
+  simp
+
+theorem Gamma_mul_nilpotentMinus :
+    D.Gamma * D.nilpotentMinus = -D.nilpotentMinus := by
+  rw [← nilpotentPlusProjector_sub_minusProjector]
+  rw [sub_mul, nilpotentPlusProjector_mul_nilpotentMinus,
+    nilpotentMinusProjector_mul_nilpotentMinus]
+  simp
+
+theorem nilpotentMinus_mul_Gamma :
+    D.nilpotentMinus * D.Gamma = D.nilpotentMinus := by
+  rw [← nilpotentPlusProjector_sub_minusProjector]
+  rw [mul_sub, nilpotentMinus_mul_plusProjector,
+    nilpotentMinus_mul_minusProjector]
+  simp
+
+theorem Gamma_anticommutes_nilpotentPlus :
+    D.Gamma * D.nilpotentPlus = -(D.nilpotentPlus * D.Gamma) := by
+  rw [Gamma_mul_nilpotentPlus, nilpotentPlus_mul_Gamma]
+  simp
+
+theorem Gamma_anticommutes_nilpotentMinus :
+    D.Gamma * D.nilpotentMinus = -(D.nilpotentMinus * D.Gamma) := by
+  rw [Gamma_mul_nilpotentMinus, nilpotentMinus_mul_Gamma]
+
 theorem hestenesAxis_mul_eq_jordan_add_lie (A : EndH) :
     D.hestenesAxis * A = D.jordanChannel A + D.lieChannel A := by
   dsimp [jordanChannel, lieChannel]

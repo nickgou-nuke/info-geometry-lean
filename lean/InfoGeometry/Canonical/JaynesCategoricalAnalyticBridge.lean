@@ -84,12 +84,12 @@ theorem stage_centered_zero_and_cross_eq_entropy_add_kl
     (n : Nat)
     (hcentered :
       (∑ i : Atom n,
-        (P.reference n).weight i *
+        (P.reference n) i *
           centeredRelativeDensity (P.reference n) (P.observation n) i) = 0)
     (hobs : ∀ i : Atom n, 0 < (P.observation n) i)
     (href : IsPositive (P.reference n)) :
     ((∑ i : Atom n,
-      (P.reference n).weight i *
+      (P.reference n) i *
         centeredRelativeDensity (P.reference n) (P.observation n) i) = 0) ∧
     (finiteCrossEntropy (P.reference n) (P.observation n) =
       finiteShannonEntropy (P.observation n) +

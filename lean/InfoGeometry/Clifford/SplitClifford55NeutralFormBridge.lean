@@ -369,6 +369,17 @@ noncomputable def spinGroupTransportEquiv :
 @[simp] theorem spinGroupTransportEquiv_apply (g : ChevalleySpin55) :
     spinGroupTransportEquiv g = spinGroupTransportHom g := rfl
 
+theorem neutralCliffordAlgEquiv_spin_conjugation
+    (g : ChevalleySpin55) (a : CliffordAlgebra ChevalleyQ55) :
+    neutralCliffordAlgEquiv_for_chevalleyQ
+        ((g : CliffordAlgebra ChevalleyQ55) * a *
+          ((g⁻¹ : ChevalleySpin55) : CliffordAlgebra ChevalleyQ55)) =
+      (spinGroupTransport g : Clifford55.Cl55) *
+        neutralCliffordAlgEquiv_for_chevalleyQ a *
+          (spinGroupTransport g⁻¹ : Clifford55.Cl55) := by
+  rw [map_mul, map_mul]
+  simp only [spinGroupTransport_coe]
+
 @[simp] theorem neutralChevalleySpinorAlgEquiv_ι
     (x : Neutral55) :
     neutralChevalleySpinorAlgEquiv

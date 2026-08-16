@@ -47,7 +47,7 @@ def PreservesMass (Φ : ProfileTransport ι κ) : Prop :=
 /-- A profile transport sends one finite reference state to another. -/
 def MapsReference (Φ : ProfileTransport ι κ)
     (R : FiniteReferenceState ι) (S : FiniteReferenceState κ) : Prop :=
-  Φ R.weight = S.weight
+  Φ R = S
 
 /-- A profile transport sends one observation profile to another. -/
 def MapsObservation (Φ : ProfileTransport ι κ)
@@ -68,7 +68,7 @@ theorem map_centeredScore
     (hobs : MapsObservation Φ obs obs') :
     Φ (centeredScore R obs) = centeredScore S obs' := by
   unfold centeredScore
-  rw [hsub obs R.weight, hobs, href]
+  rw [hsub obs R, hobs, href]
 
 /-- Equal-mass Jaynes compatibility transports along a mass-preserving map. -/
 theorem map_equal_mass
@@ -84,9 +84,9 @@ theorem map_equal_mass
   calc
     ∑ j : κ, obs' j = ∑ j : κ, (Φ obs) j := by rw [hobs]
     _ = ∑ i : ι, obs i := hmassΦ obs
-    _ = ∑ i : ι, R.weight i := hmass
-    _ = ∑ j : κ, (Φ R.weight) j := by rw [hmassΦ R.weight]
-    _ = ∑ j : κ, S.weight j := by rw [href]
+    _ = ∑ i : ι, R i := hmass
+    _ = ∑ j : κ, (Φ R) j := by rw [hmassΦ R]
+    _ = ∑ j : κ, S j := by rw [href]
 
 /-- Build the next finite Jaynes pair from a compatible mass-preserving transport. -/
 def transportJaynesPair

@@ -1,4 +1,4 @@
-import Mathlib.Data.Matrix.Notation
+import Mathlib
 import Mathlib.Tactic
 
 /-!
@@ -18,11 +18,11 @@ open Matrix
 
 namespace InfoGeometry.Krein.FiniteCovarianceMajoranaBlock
 
-def covarianceProjection (c : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+noncomputable def covarianceProjection (c : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   !![c, Real.sqrt c * Real.sqrt (1 - c);
       Real.sqrt c * Real.sqrt (1 - c), 1 - c]
 
-def fundamentalSymmetry (c : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+noncomputable def fundamentalSymmetry (c : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   2 • covarianceProjection c - 1
 
 def complexAxis : Matrix (Fin 2) (Fin 2) ℝ := !![0, -1; 1, 0]
@@ -37,8 +37,13 @@ private lemma sqrt_covariance_identities {c : ℝ} (hc : 0 ≤ c) (hc1 : c ≤ 1
 private lemma covariance_cross_square {c : ℝ} (hc : 0 ≤ c) (hc1 : c ≤ 1) :
     (Real.sqrt c * Real.sqrt (1 - c)) *
         (Real.sqrt c * Real.sqrt (1 - c)) = c * (1 - c) := by
-  rw [mul_assoc, ← mul_mul_mul_comm, Real.mul_self_sqrt hc,
-    Real.mul_self_sqrt (sub_nonneg.mpr hc1)]
+  calc
+    (Real.sqrt c * Real.sqrt (1 - c)) *
+        (Real.sqrt c * Real.sqrt (1 - c)) =
+        (Real.sqrt c * Real.sqrt c) *
+          (Real.sqrt (1 - c) * Real.sqrt (1 - c)) := by ring
+    _ = c * (1 - c) := by
+      rw [Real.mul_self_sqrt hc, Real.mul_self_sqrt (sub_nonneg.mpr hc1)]
 
 theorem covarianceProjection_sq {c : ℝ} (hc : 0 ≤ c) (hc1 : c ≤ 1) :
     covarianceProjection c * covarianceProjection c = covarianceProjection c := by
@@ -49,7 +54,7 @@ theorem covarianceProjection_sq {c : ℝ} (hc : 0 ≤ c) (hc1 : c ≤ 1) :
   all_goals
     simp [covarianceProjection, Matrix.mul_apply, Fin.sum_univ_succ, hs.1, hs.2,
       hcross]
-    ring
+    <;> ring
 
 theorem covarianceProjection_self_adjoint {c : ℝ} :
     (covarianceProjection c).transpose = covarianceProjection c := by
@@ -59,15 +64,16 @@ theorem covarianceProjection_self_adjoint {c : ℝ} :
 theorem fundamentalSymmetry_sq {c : ℝ} (hc : 0 ≤ c) (hc1 : c ≤ 1) :
     fundamentalSymmetry c * fundamentalSymmetry c = 1 := by
   have hP := covarianceProjection_sq hc hc1
-  ext i j
-  fin_cases i <;> fin_cases j
-  all_goals
-    simp [fundamentalSymmetry, covarianceProjection, Matrix.mul_apply,
-      Fin.sum_univ_succ, hP]
-    have hs := sqrt_covariance_identities hc hc1
-    have hcross := covariance_cross_square hc hc1
-    simp [hs.1, hs.2, hcross]
-    ring
+  simp only [fundamentalSymmetry]
+  calc
+    (2 • covarianceProjection c - 1) *
+        (2 • covarianceProjection c - 1) =
+        4 • (covarianceProjection c * covarianceProjection c) -
+          4 • covarianceProjection c + 1 := by
+      simp only [sub_mul, mul_sub, Matrix.smul_mul, Matrix.mul_smul,
+        one_mul, mul_one, smul_add, add_smul, smul_sub, sub_smul]
+      noncomm_ring
+    _ = 1 := by rw [hP]; module
 
 theorem complexAxis_sq :
     complexAxis * complexAxis = -(1 : Matrix (Fin 2) (Fin 2) ℝ) := by
@@ -79,12 +85,14 @@ theorem complexAxis_anticommutes_fundamentalSymmetry
     {c : ℝ} (hc : 0 ≤ c) (hc1 : c ≤ 1) :
     complexAxis * fundamentalSymmetry c =
       -(fundamentalSymmetry c * complexAxis) := by
+  have hs := sqrt_covariance_identities hc hc1
+  have hcross := covariance_cross_square hc hc1
   ext i j
   fin_cases i <;> fin_cases j
   all_goals
     simp [complexAxis, fundamentalSymmetry, covarianceProjection,
-      Matrix.mul_apply, Fin.sum_univ_succ]
-    ring
+      Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_two, hs.1, hs.2, hcross]
+    <;> ring
 
 theorem covarianceMajorana_split_quaternionic_relations
     {c : ℝ} (hc : 0 ≤ c) (hc1 : c ≤ 1) :

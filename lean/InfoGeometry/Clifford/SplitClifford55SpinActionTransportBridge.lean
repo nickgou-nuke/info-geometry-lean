@@ -150,6 +150,13 @@ theorem transportedSpinCliffordRingEquiv_eq_chevalley_unit_conjugation
   rw [hsymm, hsymm, hsymm]
   rfl
 
+theorem transportedSpinCliffordRingEquiv_eq_unitConjugation
+    (g : ChevalleySpin55) :
+    transportedSpinCliffordRingEquiv g =
+      unitConjugationRingEquiv (spinGroup.toUnits g) := by
+  ext a
+  exact transportedSpinCliffordRingEquiv_eq_chevalley_unit_conjugation g a
+
 theorem transportedSpinCliffordRingEquiv_spinor_readback
     (g : ChevalleySpin55) (a : CliffordAlgebra ChevalleyQ55) :
     neutralChevalleySpinorAlgEquiv
@@ -195,6 +202,19 @@ theorem transportedSpinCliffordRingEquiv_vector_readback
     spinCliffordRingEquiv_vector_readback,
     neutralCliffordAlgEquiv_for_chevalleyQ_symm_ι]
   rfl
+
+theorem transportedSpinCliffordRingEquiv_spinor_vector_covariance
+    (g : ChevalleySpin55) (x : Neutral55) :
+    ((matrixSpinRepresentation g : SpinMatrixGL55) :
+        InfoGeometry.Clifford.SpinorRep.SpinorMatrix 5) *
+        neutralChevalleySpinorAlgEquiv
+          (CliffordAlgebra.ι ChevalleyQ55 x) *
+        (((matrixSpinRepresentation g)⁻¹ : SpinMatrixGL55) :
+          InfoGeometry.Clifford.SpinorRep.SpinorMatrix 5) =
+      neutralChevalleySpinorAlgEquiv
+        (CliffordAlgebra.ι ChevalleyQ55 (transportedSpinAction g x)) := by
+  rw [← transportedSpinCliffordRingEquiv_spinor_readback]
+  rw [transportedSpinCliffordRingEquiv_vector_readback]
 
 theorem transportedSpinCliffordRingEquiv_mul
     (g h : ChevalleySpin55) (x : CliffordAlgebra ChevalleyQ55) :

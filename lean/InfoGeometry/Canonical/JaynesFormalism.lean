@@ -174,7 +174,7 @@ theorem finiteGibbsProfile_mul_partition
     (R : FiniteReferenceState ι) (observable : ι → ℝ) (lam : ℝ) {i : ι}
     (hZ : finitePartition R observable lam ≠ 0) :
     finiteGibbsProfile R observable lam i * finitePartition R observable lam =
-      R.weight i * Real.exp (-lam * observable i) :=
+      R i * Real.exp (-lam * observable i) :=
   InfoGeometry.Canonical.FiniteJaynesFormalism.finiteGibbsProfile_mul_partition
     (R := R) (observable := observable) (lam := lam) (i := i) hZ
 

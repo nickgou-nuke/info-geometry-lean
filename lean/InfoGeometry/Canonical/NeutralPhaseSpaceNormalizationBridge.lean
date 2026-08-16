@@ -44,6 +44,24 @@ noncomputable def normalizationEquiv :
 @[simp] theorem normalizationEquiv_apply (X : PhaseSpaceCarrier E) :
     normalizationEquiv X = (X.1, (2 : ℝ) • X.2) := rfl
 
+@[simp] theorem normalizationEquiv_primal (u : E) :
+    normalizationEquiv ((u, 0) : PhaseSpaceCarrier E) = (u, 0) := by
+  simp [normalizationEquiv]
+
+@[simp] theorem normalizationEquiv_dual (ξ : Module.Dual ℝ E) :
+    normalizationEquiv ((0, ξ) : PhaseSpaceCarrier E) =
+      (0, (2 : ℝ) • ξ) := by
+  simp [normalizationEquiv]
+
+@[simp] theorem normalizationEquiv_symm_primal (u : E) :
+    normalizationEquiv.symm ((u, 0) : PhaseSpaceCarrier E) = (u, 0) := by
+  simp [normalizationEquiv]
+
+@[simp] theorem normalizationEquiv_symm_dual (ξ : Module.Dual ℝ E) :
+    normalizationEquiv.symm ((0, ξ) : PhaseSpaceCarrier E) =
+      (0, (1 / 2 : ℝ) • ξ) := by
+  rfl
+
 @[simp] theorem normalizationEquiv_preserves_form (X : PhaseSpaceCarrier E) :
     canonicalNeutralFormUnscaled (normalizationEquiv X) =
       canonicalNeutralForm X := by
@@ -180,9 +198,10 @@ theorem normalizationCliffordEquiv_dual_square_zero
         (CliffordAlgebra.ι (canonicalNeutralForm (E := E)) (0, ξ) *
           CliffordAlgebra.ι (canonicalNeutralForm (E := E)) (0, ξ)) = 0 := by
   simp only [map_mul, normalizationCliffordEquiv_ι]
+  rw [normalizationEquiv_dual]
   simpa [normalizationEquiv_apply,
     InfoGeometry.Canonical.NeutralDualPair.covectorGenerator] using
     (InfoGeometry.Canonical.NeutralDualPair.covectorGenerator_sq_zero
-      (U := E) ξ)
+      (U := E) ((2 : ℝ) • ξ))
 
 end InfoGeometry.Clifford.NeutralPhaseSpaceNormalizationBridge

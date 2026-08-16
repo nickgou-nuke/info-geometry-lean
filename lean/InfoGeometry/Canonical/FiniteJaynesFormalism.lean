@@ -37,11 +37,11 @@ noncomputable def finiteShannonEntropy (obs : FiniteProfile ι) : ℝ :=
 
 /-- Finite cross entropy of an observation profile against a reference profile. -/
 noncomputable def finiteCrossEntropy (R : FiniteReferenceState ι) (obs : FiniteProfile ι) : ℝ :=
-  -∑ i : ι, obs i * Real.log (R.weight i)
+  -∑ i : ι, obs i * Real.log (R i)
 
 /-- Finite KL/relative entropy of an observation profile against a reference profile. -/
 noncomputable def finiteKLDivergence (R : FiniteReferenceState ι) (obs : FiniteProfile ι) : ℝ :=
-  ∑ i : ι, obs i * Real.log (obs i / R.weight i)
+  ∑ i : ι, obs i * Real.log (obs i / R i)
 
 /-- Jaynes LDDS entropy: Shannon entropy corrected by the finite reference density. -/
 noncomputable def finiteLDDSEntropy (R : FiniteReferenceState ι) (obs : FiniteProfile ι) : ℝ :=
@@ -51,9 +51,9 @@ omit [Fintype ι] in
 /-- Positive observation/reference profiles give the pointwise KL decomposition. -/
 theorem pointwise_kl_eq_cross_sub_entropy
     (R : FiniteReferenceState ι) (obs : FiniteProfile ι)
-    {i : ι} (hobs : 0 < obs i) (href : 0 < R.weight i) :
-    obs i * Real.log (obs i / R.weight i) =
-      -(obs i * Real.log (R.weight i)) - (-(obs i * Real.log (obs i))) := by
+    {i : ι} (hobs : 0 < obs i) (href : 0 < R i) :
+    obs i * Real.log (obs i / R i) =
+      -(obs i * Real.log (R i)) - (-(obs i * Real.log (obs i))) := by
   rw [Real.log_div hobs.ne' href.ne']
   ring
 
@@ -65,15 +65,15 @@ theorem finiteCrossEntropy_eq_finiteShannonEntropy_add_KL
   unfold finiteCrossEntropy finiteShannonEntropy finiteKLDivergence IsPositive at *
   rw [← Finset.sum_neg_distrib, ← Finset.sum_neg_distrib]
   calc
-    ∑ i : ι, -(obs i * Real.log (R.weight i)) =
+    ∑ i : ι, -(obs i * Real.log (R i)) =
         ∑ i : ι, (-(obs i * Real.log (obs i)) +
-          obs i * Real.log (obs i / R.weight i)) := by
+          obs i * Real.log (obs i / R i)) := by
       refine Finset.sum_congr rfl ?_
       intro i hi
       rw [Real.log_div (hobs i).ne' (href i).ne']
       ring
     _ = (∑ i : ι, -(obs i * Real.log (obs i))) +
-        ∑ i : ι, obs i * Real.log (obs i / R.weight i) := by
+        ∑ i : ι, obs i * Real.log (obs i / R i) := by
       rw [Finset.sum_add_distrib]
 
 /-- Equivalent finite Jaynes identity for LDDS entropy. -/
@@ -92,7 +92,7 @@ def finiteExpectation (obs : FiniteProfile ι) (observable : ι → ℝ) : ℝ :
 /-- Finite partition function with a reference profile and observable. -/
 noncomputable def finitePartition
     (R : FiniteReferenceState ι) (observable : ι → ℝ) (lam : ℝ) : ℝ :=
-  ∑ i : ι, R.weight i * Real.exp (-lam * observable i)
+    ∑ i : ι, R i * Real.exp (-lam * observable i)
 
 /-- Finite Jaynes/Massieu dual readout `log Z + lam E`. -/
 noncomputable def finiteJaynesDual
@@ -102,14 +102,14 @@ noncomputable def finiteJaynesDual
 /-- Finite Gibbs profile relative to a reference profile. -/
 noncomputable def finiteGibbsProfile
     (R : FiniteReferenceState ι) (observable : ι → ℝ) (lam : ℝ) (i : ι) : ℝ :=
-  R.weight i * Real.exp (-lam * observable i) / finitePartition R observable lam
+  R i * Real.exp (-lam * observable i) / finitePartition R observable lam
 
 omit [Fintype ι] in
 /-- Positive reference weights give nonnegative partition summands. -/
 theorem finitePartition_summand_pos
     (R : FiniteReferenceState ι) (observable : ι → ℝ) (lam : ℝ)
     (href : IsPositive R) (i : ι) :
-    0 < R.weight i * Real.exp (-lam * observable i) :=
+    0 < R i * Real.exp (-lam * observable i) :=
   mul_pos (href i) (Real.exp_pos _)
 
 /-- If a finite atom is supplied, positive reference weights make the partition positive. -/
@@ -128,7 +128,7 @@ theorem finiteGibbsProfile_mul_partition
     (R : FiniteReferenceState ι) (observable : ι → ℝ) (lam : ℝ) {i : ι}
     (hZ : finitePartition R observable lam ≠ 0) :
     finiteGibbsProfile R observable lam i * finitePartition R observable lam =
-      R.weight i * Real.exp (-lam * observable i) := by
+      R i * Real.exp (-lam * observable i) := by
   unfold finiteGibbsProfile
   field_simp [hZ]
 

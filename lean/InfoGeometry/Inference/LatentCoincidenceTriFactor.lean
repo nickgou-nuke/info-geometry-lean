@@ -51,8 +51,8 @@ def gaugeLeft (L : Matrix I A ℝ) (d : A → ℝ) : Matrix I A ℝ :=
 def gaugeRight (R : Matrix J B ℝ) (e : B → ℝ) : Matrix J B ℝ :=
   fun j b => R j b * e b
 
-def gaugeMiddle (S : Matrix A B ℝ) (d : A → ℝ) (e : B → ℝ) : Matrix A B ℝ :=
-  fun a b => d a⁻¹ * S a b * e b⁻¹
+noncomputable def gaugeMiddle (S : Matrix A B ℝ) (d : A → ℝ) (e : B → ℝ) : Matrix A B ℝ :=
+  fun a b => (d a)⁻¹ * S a b * (e b)⁻¹
 
 theorem latentCoincidence_gauge_invariant
     (L : Matrix I A ℝ) (S : Matrix A B ℝ) (R : Matrix J B ℝ)
@@ -67,7 +67,6 @@ theorem latentCoincidence_gauge_invariant
   apply Finset.sum_congr rfl
   intro b hb
   field_simp [hd a, he b]
-  ring
 
 theorem latentCoincidence_eq_sum_rankOne
     (L : Matrix I A ℝ) (S : Matrix A B ℝ) (R : Matrix J B ℝ)

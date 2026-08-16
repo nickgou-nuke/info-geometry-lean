@@ -30,8 +30,7 @@ theorem gibbsDensity_diag_eq_squareRoot_sq_div_four
     (H : Fin n → ℝ) (β : ℝ) (i : Fin n) :
     gibbsDensity H β i i =
       ((squareRootEmbedding n (gibbsWeight H β) i) ^ 2 / 4 : ℝ) := by
-  change gibbsWeight H β i =
-    (squareRootEmbedding n (gibbsWeight H β) i) ^ 2 / 4
+  simp only [gibbsDensity, Matrix.diagonal_apply_eq]
   rw [squareRootEmbedding_sq (gibbsWeight H β)
     (fun j => gibbsWeight_nonneg H β j) i]
   ring

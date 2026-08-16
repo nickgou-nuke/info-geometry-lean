@@ -81,6 +81,27 @@ theorem trace_rotate3 {n : ℕ} (A B C : Mat n) :
     _ = Matrix.trace (B * (C * A)) := (Matrix.trace_mul_comm B (C * A)).symm
     _ = Matrix.trace (B * C * A) := by simp [mul_assoc]
 
+/-- Anticommutation with the grading is already sufficient for cancellation. -/
+@[rep_depth operator]
+theorem chiralTrace_vanishes_of_anticommute {n : ℕ} (γ ρ : Mat n)
+    (hanti : γ * ρ = -(ρ * γ)) :
+    chiralTrace γ ρ = 0 := by
+  unfold chiralTrace
+  have hneg : Matrix.trace (γ * ρ) = -Matrix.trace (γ * ρ) := by
+    calc
+      Matrix.trace (γ * ρ) = Matrix.trace (-(ρ * γ)) := by
+        rw [hanti]
+      _ = -Matrix.trace (ρ * γ) := by simp
+      _ = -Matrix.trace (γ * ρ) := by rw [Matrix.trace_mul_comm]
+  have htwo : (2 : ℂ) * Matrix.trace (γ * ρ) = 0 := by
+    calc
+      (2 : ℂ) * Matrix.trace (γ * ρ) =
+          Matrix.trace (γ * ρ) + Matrix.trace (γ * ρ) := by ring
+      _ = Matrix.trace (γ * ρ) + (-Matrix.trace (γ * ρ)) := by
+        nth_rw 2 [hneg]
+      _ = 0 := by simp
+  exact (mul_eq_zero.mp htwo).resolve_left (by norm_num)
+
 /--
 The sewn state has chiral trace equal to its own negative.
 -/

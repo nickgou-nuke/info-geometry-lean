@@ -68,4 +68,28 @@ theorem pinInfinityStabilizer_preserves_nativeConformalBoundary
   exact pinProjectivization_preserves_nativeConformalBoundary_of_fixing_infinity
     g.1 g.2 p hp
 
+/-! ## Hom-level native boundary symmetry
+
+The preceding theorem is pointwise.  This packages the same native
+`Pin(5,5)` action as the actual group hom carried by the infinity stabilizer.
+No matrix surrogate or new projective carrier is introduced.
+-/
+
+noncomputable def pinInfinityStabilizerProjectivizationAction :
+    pinInfinityStabilizer →* Function.End (ℙ ℝ V55) :=
+  pinProjectivizationAction.comp pinInfinityStabilizer.subtype
+
+@[simp] theorem pinInfinityStabilizerProjectivizationAction_apply
+    (g : pinInfinityStabilizer) (p : ℙ ℝ V55) :
+    pinInfinityStabilizerProjectivizationAction g p =
+      pinProjectivizationAction (g : Pin55) p := rfl
+
+theorem pinInfinityStabilizerProjectivizationAction_preserves_boundary
+    (g : pinInfinityStabilizer) (p : ℙ ℝ V55)
+    (hp : nativeConformalBoundary55 p) :
+    nativeConformalBoundary55
+      (pinInfinityStabilizerProjectivizationAction g p) := by
+  rw [pinInfinityStabilizerProjectivizationAction_apply]
+  exact pinInfinityStabilizer_preserves_nativeConformalBoundary g p hp
+
 end InfoGeometry.Canonical.Cl55WittPinConformalBoundaryBridge

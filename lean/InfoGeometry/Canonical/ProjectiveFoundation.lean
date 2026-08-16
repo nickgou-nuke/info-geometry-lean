@@ -334,6 +334,36 @@ def projectivizationAction (P : ProjectiveRepresentation K G V) : G →* Functio
     simpa [Function.End.one_def] using P.projectivizationMap_one
   map_mul' := P.projectivizationMap_mul
 
+/-!
+The representation parameter is not part of the carrier type, so this is an
+explicit action object rather than a global typeclass instance.  Downstream
+owners can install it with `letI := P.projectivizationMulAction`; this avoids
+an incoherent global choice when two projective representations share the
+same carrier.
+-/
+noncomputable def projectivizationMulAction
+    (P : ProjectiveRepresentation K G V) :
+    MulAction G (ℙ K V) where
+  smul := P.projectivizationMap
+  one_smul := by
+    intro x
+    exact congrFun P.projectivizationMap_one x
+  mul_smul := by
+    intro g h x
+    change P.projectivizationMap (g * h) x =
+      P.projectivizationMap g (P.projectivizationMap h x)
+    rw [P.projectivizationMap_mul]
+    rfl
+
+@[simp]
+theorem projectivizationMulAction_smul_eq
+    (P : ProjectiveRepresentation K G V)
+    (g : G) (x : ℙ K V) :
+    @SMul.smul G (ℙ K V)
+        (projectivizationMulAction P).toSMul g x =
+      P.projectivizationMap g x :=
+  rfl
+
 end ProjectivizationAction
 
 section CentralExtension
@@ -660,6 +690,42 @@ instance : Monoid (PGL (K := K) (V := V)) where
     intro e
     rfl
 
+/-! The quotient of linear equivalences is a genuine projective group. -/
+
+instance : Inv (PGL (K := K) (V := V)) where
+  inv := Quotient.map Inv.inv (by
+    intro e f h
+    rcases h with ⟨a, rfl⟩
+    refine ⟨a⁻¹, ?_⟩
+    ext v
+    simp)
+
+instance : Group (PGL (K := K) (V := V)) where
+  mul := (· * ·)
+  one := 1
+  inv := Inv.inv
+  mul_assoc := by
+    intro x y z
+    refine Quotient.inductionOn₃ x y z ?_
+    intro e f g
+    rfl
+  one_mul := by
+    intro x
+    refine Quotient.inductionOn x ?_
+    intro e
+    rfl
+  mul_one := by
+    intro x
+    refine Quotient.inductionOn x ?_
+    intro e
+    rfl
+  inv_mul_cancel := by
+    intro x
+    refine Quotient.inductionOn x ?_
+    intro e
+    change Quotient.mk _ (e⁻¹ * e) = Quotient.mk _ 1
+    simp
+
 /-- The canonical quotient map to `PGL`. -/
 def toPGL : (V ≃ₗ[K] V) → PGL (K := K) (V := V) :=
   Quotient.mk _
@@ -691,7 +757,52 @@ def pglAction : PGL (K := K) (V := V) → ℙ K V → ℙ K V :=
       rw [Units.smul_def, smul_smul]
       simp)
 
-/-- The quotient action agrees with the usual action of a chosen representative. -/
+/-- Native group action on projective space. -/
+noncomputable def pglMulAction :
+    MulAction (PGL (K := K) (V := V)) (ℙ K V) where
+  smul := pglAction (K := K) (V := V)
+  one_smul := by
+    intro p
+    refine Quotient.inductionOn p ?_
+    intro v
+    change Projectivization.map LinearMap.id Function.injective_id ⟦v⟧ =
+      ⟦v⟧
+    rw [Projectivization.map_id]
+    rfl
+  mul_smul := by
+    intro g h p
+    refine Quotient.inductionOn₃ g h p ?_
+    intro e f v
+    change Projectivization.map (e * f).toLinearMap (e * f).injective
+        ⟦v⟧ =
+      Projectivization.map e.toLinearMap e.injective
+        (Projectivization.map f.toLinearMap f.injective ⟦v⟧)
+    simpa [Function.comp] using
+      congrArg (fun q => q ⟦v⟧)
+        (Projectivization.map_comp (f := f.toLinearMap) (hf := f.injective)
+          (g := e.toLinearMap) (hg := e.injective))
+
+@[simp]
+theorem pglMulAction_smul_eq
+    (g : PGL (K := K) (V := V)) (p : ℙ K V) :
+    @SMul.smul (PGL (K := K) (V := V)) (ℙ K V)
+        (pglMulAction (K := K) (V := V)).toSMul g p =
+      pglAction (K := K) (V := V) g p :=
+  rfl
+
+/-! The canonical PGL quotient has a unique native action, so this one is
+safe as a global instance (unlike an arbitrary projective representation). -/
+noncomputable instance pglProjectiveMulAction :
+    MulAction (PGL (K := K) (V := V)) (ℙ K V) :=
+  pglMulAction (K := K) (V := V)
+
+@[simp]
+theorem pglProjective_smul_eq
+    (g : PGL (K := K) (V := V)) (p : ℙ K V) :
+    g • p = pglAction (K := K) (V := V) g p :=
+  rfl
+
+/-! The quotient action agrees with the usual action of a chosen representative. -/
 theorem pglAction_mk (e : V ≃ₗ[K] V) :
     pglAction (K := K) (V := V) (toPGL (K := K) (V := V) e)
       = Projectivization.map e.toLinearMap e.injective :=

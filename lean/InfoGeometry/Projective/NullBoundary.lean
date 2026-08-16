@@ -63,6 +63,18 @@ def scaleNull (u : Kˣ) (Z : NullRep D) : NullRep D where
   null := (D.null_scale u Z.Z).2 Z.null
   nonzero := D.scale_ne_zero u Z.Z Z.nonzero
 
+@[simp] theorem scaleNull_one (Z : NullRep D) :
+    scaleNull D 1 Z = Z := by
+  cases Z with
+  | mk Z hZ hne =>
+      simp [scaleNull, D.scale_one]
+
+theorem scaleNull_mul (u v : Kˣ) (Z : NullRep D) :
+    scaleNull D (u * v) Z = scaleNull D u (scaleNull D v Z) := by
+  cases Z with
+  | mk Z hZ hne =>
+      simp [scaleNull, D.scale_mul]
+
 /-- Projective equivalence on nonzero null representatives. -/
 def rayRel (X Y : NullRep D) : Prop :=
   ∃ u : Kˣ, D.scale u X.Z = Y.Z
@@ -104,6 +116,21 @@ def nullMk (Z : NullRep D) : ProjectiveNullBoundary D :=
     nullMk D Z = nullMk D (scaleNull D u Z) := by
   apply Quotient.sound
   exact ⟨u, rfl⟩
+
+theorem rayRel_scaleNull (u : Kˣ) (Z : NullRep D) :
+    rayRel D Z (scaleNull D u Z) := by
+  exact ⟨u, rfl⟩
+
+theorem nullMk_eq_iff_rayRel (X Y : NullRep D) :
+    nullMk D X = nullMk D Y ↔ rayRel D X Y := by
+  change Quotient.mk (nullRepSetoid D) X =
+    Quotient.mk (nullRepSetoid D) Y ↔ rayRel D X Y
+  constructor
+  · exact Quotient.exact
+  · intro h
+    apply Quotient.sound
+    change rayRel D X Y
+    exact h
 
 end ProjectiveNullBoundaryDatum
 

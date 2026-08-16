@@ -72,28 +72,20 @@ theorem osp_spatial_supersymmetry
   linarith
 
 /-- Concrete active atom: the external `osp` idea has a checked `2×2` model. -/
-theorem concrete_osp_atom :
-    Clifford55AnomalyOSP.Gatom * Clifford55AnomalyOSP.Gatom = Clifford55AnomalyOSP.Tatom ∧
-    Clifford55AnomalyOSP.Gatom * Clifford55AnomalyOSP.Gatom +
-        Clifford55AnomalyOSP.Gatom * Clifford55AnomalyOSP.Gatom =
-      (2 : ℂ) • Clifford55AnomalyOSP.Tatom := by
-  exact ⟨Clifford55AnomalyOSP.Gatom_sq, Clifford55AnomalyOSP.osp_atom_anticommutator⟩
+theorem concrete_osp_atom
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (S : Clifford55AnomalyOSP.OSpSurface (V := V)) :
+    S.G1 * S.G1 = S.Ep ∧
+      S.G1 * S.G1 + S.G1 * S.G1 = (2 : ℝ) • S.Ep := by
+  exact ⟨Clifford55AnomalyOSP.osp_G1_square S,
+    Clifford55AnomalyOSP.osp_G1_anticommutator S⟩
 
 /-- Consolidated finite `Cl(5,5)` anomaly arithmetic. -/
 theorem clifford_five_five_anomaly_arithmetic :
-    (4 : ℕ) * 256 = 1024 ∧ Clifford55AnomalyOSP.anomalyIndex 5 5 = 0 ∧
-    Clifford55AnomalyOSP.Trip * Clifford55AnomalyOSP.Trip * Clifford55AnomalyOSP.Trip =
-      Clifford55AnomalyOSP.Trip := by
+    (4 : ℕ) * 256 = 1024 ∧
+      Clifford55AnomalyOSP.anomalyIndex 5 5 = 0 := by
   constructor
   · exact clifford_tensor_factorization
-  constructor
   · exact Clifford55AnomalyOSP.anomalyIndex_55_zero
-  · exact Clifford55AnomalyOSP.Trip_tripotent
-
-#check clifford_tensor_factorization
-#check split_anomaly_cancellation
-#check osp_spatial_supersymmetry
-#check concrete_osp_atom
-#check clifford_five_five_anomaly_arithmetic
 
 end CliffordFiveFiveAnomaly

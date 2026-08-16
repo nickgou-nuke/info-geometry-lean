@@ -1,92 +1,80 @@
 import Mathlib.Algebra.Lie.Basic
 import Mathlib.Algebra.Lie.Subalgebra
-import Mathlib.Algebra.Lie.OfAssociative
-import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Complex.Basic
 
 /-!
-# TKK 5-Graded Closure & The Standard Model Architecture
-This file formalizes the 5-grading of the Tits-Kantor-Koecher (TKK) algebra
-and explicitly extracts the subalgebras corresponding to the Standard Model symmetries.
+# Zero-grade Lie-factor interface
+
+This file records only the native Lie-algebra data available at the zero
+grade of a five-graded carrier.  It deliberately does not identify arbitrary
+subalgebras with `su(2)` or `su(3)`: such an identification requires a model
+Lie algebra and a proved Lie equivalence.
+
+The commuting-factor theorem below is therefore parameterized by its actual
+bracket hypothesis.  Membership in a common ambient grade is not confused
+with commutation.
 -/
 
 namespace TKK_StandardModel
 
--- Let L be the total TKK Lie algebra over Complex numbers
 variable {L : Type*} [LieRing L] [LieAlgebra ℂ L]
 
-/-- The 5-Grading of the TKK Algebra: L = g_{-2} ⊕ g_{-1} ⊕ g_0 ⊕ g_1 ⊕ g_2 -/
+/-- The five zero-grade-carrier slots used by this compatibility interface. -/
 structure TKKGrading where
   g_minus_2 : LieSubalgebra ℂ L
   g_minus_1 : LieSubalgebra ℂ L
-  g_0       : LieSubalgebra ℂ L
-  g_1       : LieSubalgebra ℂ L
-  g_2       : LieSubalgebra ℂ L
+  g_0 : LieSubalgebra ℂ L
+  g_1 : LieSubalgebra ℂ L
+  g_2 : LieSubalgebra ℂ L
 
 variable (tkk : TKKGrading (L := L))
 
-/- 
---------------------------------------------------------------------------------
-1. THE NUCLEON SECTOR & ELECTROWEAK ISOSPIN (su(2))
-The SU(2) flavor symmetry resides entirely within the zero-graded sector g_0.
-Its Cartan generator provides the I_3 quantum number.
---------------------------------------------------------------------------------
--/
+/-- A Lie subalgebra chosen inside the zero-grade carrier. -/
+abbrev ZeroGradeLieSubalgebra
+    (tkk : TKKGrading (L := L)) := LieSubalgebra ℂ tkk.g_0
 
-/-- The SU(2) Isospin subalgebra embedded in g_0 -/
-def IsospinSU2 (su2_sub : LieSubalgebra ℂ tkk.g_0) : Prop :=
-  -- Formally, we require it to be isomorphic to su(2). 
-  -- We abstract this property for the skeletal representation.
-  su2_sub ≤ ⊤
+/-- A chosen zero-grade element, without a representation-theoretic label. -/
+structure ChosenZeroGradeElement where
+  carrier : ZeroGradeLieSubalgebra tkk
 
-/-- The Cartan Subalgebra of SU(2) representing the 3rd component of Isospin (I_3) -/
-structure NucleonCartan (su2_sub : LieSubalgebra ℂ tkk.g_0) where
-  I3 : su2_sub
-  -- Proton and Neutron correspond to the eigenvalues +1/2 and -1/2 of I3
+/-- Two zero-grade factors commute in the ambient Lie algebra. -/
+def ZeroGradeFactorsCommute
+    (a b : ZeroGradeLieSubalgebra tkk) : Prop :=
+  ∀ x : a, ∀ y : b, ⁅(x : L), (y : L)⁆ = 0
 
-/- 
---------------------------------------------------------------------------------
-2. THE STRONG INTERACTION (su(3) QCD)
-Color SU(3) is formed by the zero-graded tensor products g_0 ⊗ g_0.
-Because it preserves the grading (Grading 0), gluons do not change the 
-chirality or the spacetime vacuum structure.
---------------------------------------------------------------------------------
--/
+/-- The commutation predicate is symmetric by Lie anti-commutativity. -/
+theorem zeroGradeFactorsCommute_symm
+    {a b : ZeroGradeLieSubalgebra tkk}
+    (h : ZeroGradeFactorsCommute tkk a b) :
+    ZeroGradeFactorsCommute tkk b a := by
+  intro y x
+  calc
+    ⁅(y : L), (x : L)⁆ = -⁅(x : L), (y : L)⁆ := (lie_skew _ _).symm
+    _ = 0 := by rw [h x y, neg_zero]
 
-/-- The Color SU(3) subalgebra embedded in g_0 -/
-def ColorSU3 (su3_sub : LieSubalgebra ℂ tkk.g_0) : Prop :=
-  -- Isomorphic to su(3)
-  su3_sub ≤ ⊤
+/-- A factor packet with its actual zero-grade commutation evidence. -/
+structure ZeroGradeFactorPacket where
+  isospinFactor : ZeroGradeLieSubalgebra tkk
+  colorFactor : ZeroGradeLieSubalgebra tkk
+  commute : ZeroGradeFactorsCommute tkk isospinFactor colorFactor
 
-/- 
---------------------------------------------------------------------------------
-3. THE DIRAC SECTOR (Electron / Positron)
-The Dirac equation dynamics arise from the odd gradings (g_{-1} ⊕ g_1),
-with the Cartan involution from g_0 defining the projectors P+ and P-.
---------------------------------------------------------------------------------
--/
+/-- The packet commutation theorem in the ambient TKK carrier. -/
+theorem zeroGradeFactorPacket_bracket_eq_zero
+    (P : ZeroGradeFactorPacket tkk)
+    (x : P.colorFactor) (y : P.isospinFactor) :
+    ⁅(x : L), (y : L)⁆ = 0 := by
+  exact zeroGradeFactorsCommute_symm tkk P.commute x y
 
-/-
-The odd grading space where the Dirac Spinors live.
--- In a full implementation, we define the direct sum g_{-1} ⊕ g_1.
--- The Projectors P+ and P- split this space into the Electron and Positron sheets.
--/
+/-- A selected Cartan element is only a chosen element at this layer. -/
+structure ChosenZeroGradeCartan where
+  factor : ZeroGradeLieSubalgebra tkk
+  element : factor
 
-/- Coordinate sign maps used only as a finite carrier-level split.  They are
-   not claimed to be a Cartan involution of the TKK Lie algebra. -/
-def CartanInvolution_P_plus (v : L) : L := v
-def CartanInvolution_P_minus (v : L) : L := -v
-
-/-- 
-COMMUTATION RELATIONS (Theorem Skeleton)
-The SU(3) strong interaction generators commute with the SU(2) electroweak/Cartan generators,
-since color is independent of flavor in the Standard Model tensor product architecture!
--/
-theorem su3_and_isospin_membership
-    (su2_sub : LieSubalgebra ℂ tkk.g_0) (su3_sub : LieSubalgebra ℂ tkk.g_0)
-    (x : su3_sub) (y : su2_sub) :
-    -- In a strict formalization, the Lie bracket [x, y] evaluates to 0.
-    (x : tkk.g_0) ∈ su3_sub ∧ (y : tkk.g_0) ∈ su2_sub := by
-  exact ⟨x.property, y.property⟩
+/-- The grade-zero carrier is closed under its native Lie bracket. -/
+theorem zeroGrade_lie_closed
+    (tkk : TKKGrading (L := L))
+    {x y : tkk.g_0} :
+    ⁅(x : L), (y : L)⁆ ∈ tkk.g_0 := by
+  exact tkk.g_0.lie_mem x.property y.property
 
 end TKK_StandardModel

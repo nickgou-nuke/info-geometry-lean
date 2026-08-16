@@ -24,7 +24,7 @@ theorem realSplitPinOrthogonalAction_fNegRealPin
       coordinateReflectionGenerator i := by
   exact realSplitPinOrthogonalAction_eq_pinTwistedOrthogonalAction
     (fNegRealPin i) (fNegPin i)
-    (fNegRealPin_unit_eq_pinToUnits i) |>.trans
+      (fNegRealPin_unit_eq_pinToUnits i) |>.trans
       (pinTwistedOrthogonalAction_fNegPin i)
 
 noncomputable def realSplitNegOne : realSplitPin55 :=

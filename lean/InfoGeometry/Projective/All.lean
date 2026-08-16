@@ -116,6 +116,7 @@ import InfoGeometry.Projective.NoncommutativeCrossRatio
 import InfoGeometry.Projective.Normalize
 import InfoGeometry.Projective.Null
 import InfoGeometry.Projective.NullBoundary
+import InfoGeometry.Projective.SplitZornConcreteNullBoundary
 import InfoGeometry.Projective.SplitCl44NullBoundary
 import InfoGeometry.Projective.ProjectiveNullBoundaryBraidFrameBridge
 import InfoGeometry.Projective.ProjectiveNullBoundaryBraidFrameEquivariance

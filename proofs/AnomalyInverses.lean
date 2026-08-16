@@ -1,10 +1,12 @@
 import Mathlib
+import InfoGeometry.Singular.Drazin
 
 noncomputable section
 
 namespace VarlamovAnomaly
 
 open Matrix
+open InfoGeometry.Singular.Drazin
 
 /-- The nilpotent Null-Space Generator (Parafermion state) N -/
 def N : Matrix (Fin 2) (Fin 2) ℂ := ![![0, 1], ![0, 0]]
@@ -15,55 +17,25 @@ theorem n_is_nilpotent : N * N = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;> norm_num [Matrix.mul_apply, Fin.sum_univ_two]
 
-/-- 
-A matrix `X` is the Drazin inverse of `A` with index `k` if it satisfies
-the three defining conditions of Drazin inverses. 
--/
-structure IsDrazinInverse {n : Type*} [Fintype n] [DecidableEq n] 
-    {R : Type*} [CommRing R] (A X : Matrix n n R) (k : ℕ) : Prop where
-  comm : A * X = X * A
-  weak_inv : X * A * X = X
-  nil_pow : A ^ (k + 1) * X = A ^ k
+/-! The canonical Drazin owner is reused below; this concrete inverse is zero. -/
+def N_Drazin : Matrix (Fin 2) (Fin 2) ℂ := 0
+
+/-- Proof that `N_Drazin` satisfies the canonical Drazin conditions for `N`. -/
+theorem n_drazin_is_drazin : IsDrazinInverse N N_Drazin 2 := by
+  apply IsDrazinInverse.mk
+  · simp [N_Drazin]
+  · simp [N_Drazin]
+  · simp [N_Drazin, pow_two, n_is_nilpotent]
 
 /-- 
 A mathematically rigorous formalization of the Drazin inverse for the anomaly generator N.
 We prove through a genuine chain of lemmas that the Drazin inverse of N is uniquely 0,
 derived purely from the algebraic constraints of `IsDrazinInverse`.
 -/
-theorem nilpotent_drazin_unique (X : Matrix (Fin 2) (Fin 2) ℂ) (h : IsDrazinInverse N X 2) : X = 0 := by
-  have h_comm : N * X = X * N := h.comm
-  have h_weak : X * N * X = X := h.weak_inv
-  have h_xn : X * N = 0 := by
-    have h_right : (X * N * X) * N = X * N := by
-      exact congrArg (fun T => T * N) h_weak
-    calc
-      X * N = (X * N * X) * N := by simpa using h_right.symm
-      _ = X * (N * X) * N := by simp only [Matrix.mul_assoc]
-      _ = X * (X * N) * N := by rw [h_comm]
-      _ = X * X * (N * N) := by simp only [Matrix.mul_assoc]
-      _ = X * X * 0 := by rw [n_is_nilpotent]
-      _ = 0 := by simp only [Matrix.mul_zero]
-  calc
-    X = X * N * X := h_weak.symm
-    _ = (X * N) * X := by simp only [Matrix.mul_assoc]
-    _ = 0 * X := by rw [h_xn]
-    _ = 0 := by simp only [Matrix.zero_mul]
-
-/-- 
-The Drazin Inverse of the nilpotent matrix N is rigorously defined as the zero matrix,
-which is the unique solution to the Drazin constraints.
-This preserves the spectral properties (eigenvalues are all 0).
--/
-def N_Drazin : Matrix (Fin 2) (Fin 2) ℂ := 0
-
-/-- Proof that `N_Drazin` satisfies the Drazin inverse conditions for `N` with index 2 -/
-theorem n_drazin_is_drazin : IsDrazinInverse N N_Drazin 2 where
-  comm := by simp [N_Drazin]
-  weak_inv := by simp [N_Drazin]
-  nil_pow := by 
-    simp [N_Drazin]
-    rw [pow_two]
-    exact n_is_nilpotent.symm
+theorem nilpotent_drazin_unique
+    (X : Matrix (Fin 2) (Fin 2) ℂ)
+    (h : IsDrazinInverse N X 2) : X = 0 := by
+  exact Drazin_unique h n_drazin_is_drazin
 
 /-- The unique Drazin inverse annihilates `N` on the left. -/
 theorem N_Drazin_annihilates_N_left : N_Drazin * N = 0 := by

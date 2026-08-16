@@ -44,18 +44,18 @@ theorem bridgeSlice_zornMul
   rcases hX with ⟨huX1, huX2, hvX1, hvX2⟩
   rcases hY with ⟨huY1, huY2, hvY1, hvY2⟩
   constructor
-  · simp [bridgeSlice, ZornParavectorNullspace.zornMul,
+  · simp [ZornParavectorNullspace.zornMul,
       ZornParavectorNullspace.cross3, huX1, huX2, hvX1, hvX2,
       huY1, huY2, hvY1, hvY2]
   constructor
-  · simp [bridgeSlice, ZornParavectorNullspace.zornMul,
+  · simp [ZornParavectorNullspace.zornMul,
       ZornParavectorNullspace.cross3, huX1, huX2, hvX1, hvX2,
       huY1, huY2, hvY1, hvY2]
   constructor
-  · simp [bridgeSlice, ZornParavectorNullspace.zornMul,
+  · simp [ZornParavectorNullspace.zornMul,
       ZornParavectorNullspace.cross3, huX1, huX2, hvX1, hvX2,
       huY1, huY2, hvY1, hvY2]
-  · simp [bridgeSlice, ZornParavectorNullspace.zornMul,
+  · simp [ZornParavectorNullspace.zornMul,
       ZornParavectorNullspace.cross3, huX1, huX2, hvX1, hvX2,
       huY1, huY2, hvY1, hvY2]
 
@@ -197,7 +197,7 @@ structure BridgeSummary where
   pin55_lower_generator :
     Clifford55.ι55 (Clifford55.f_neg PinO55GlideReflection.crosscapIndex) ∈ Clifford55.Pin55
   pin55_central_sign : (-1 : Clifford55.Cl55) ∈ Clifford55.Pin55
-  pin55_anomaly_free : anomalyIndex 5 5 = 0
+  pin55_split_index_zero : anomalyIndex 5 5 = 0
   chiral_projector_sum :
     ChiralCausalConeTKKBridge.SPlus + ChiralCausalConeTKKBridge.SMinus = (1 : ChiralCausalCone.M2C)
   chiral_nilpotent_source :
@@ -247,7 +247,7 @@ def pin55_chiral_zorn_tkk_synthesis : BridgeSummary := by
   refine
     { pin55_lower_generator := PinO55GlideReflection.f_neg_mem_pin55 PinO55GlideReflection.crosscapIndex
       pin55_central_sign := ArtinCentralizerMonodromy.neg_one_mem_pin55
-      pin55_anomaly_free := Pin55CartanDecomposition.split_signature_index_55_zero
+      pin55_split_index_zero := Pin55CartanDecomposition.split_signature_index_55_zero
       chiral_projector_sum := ChiralCausalConeTKKBridge.projector_sum
       chiral_nilpotent_source := ChiralCausalConeTKKBridge.nilpotent_source
       zorn_weld := ⟨bridgeCarrier_lower_unit_is_sigmaMinus,

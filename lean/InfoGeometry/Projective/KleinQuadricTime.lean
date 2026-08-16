@@ -250,6 +250,18 @@ theorem kleinDLogAlong_scale_left
     InfoGeometry.Projective.KleinQuadric.Plucker6.kleinQ_scale]
   field_simp [hc]
 
+theorem kleinDLogAlong_scale_scale
+    (c d : ℂ) (P X : InfoGeometry.Projective.KleinQuadric.Plucker6 ℂ)
+    (hc : c ≠ 0) :
+    kleinDLogAlong
+        (InfoGeometry.Projective.KleinQuadric.Plucker6.scale c P)
+        (InfoGeometry.Projective.KleinQuadric.Plucker6.scale d X) =
+      d * c⁻¹ * kleinDLogAlong P X := by
+  rw [kleinDLogAlong_scale_left c P
+      (InfoGeometry.Projective.KleinQuadric.Plucker6.scale d X) hc,
+    kleinDLogAlong_scale_right d P X]
+  ring
+
 /-- The numerator of `kleinDLogAlong` is the coordinate gradient pairing. -/
 theorem kleinDLogAlong_eq_gradient_pairing_div
     (P X : InfoGeometry.Projective.KleinQuadric.Plucker6 ℂ) :

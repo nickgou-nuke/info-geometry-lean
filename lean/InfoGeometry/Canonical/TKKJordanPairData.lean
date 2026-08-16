@@ -153,6 +153,23 @@ theorem bracket_grade_outside_zero {R : Type*} [CommRing R] (G : FiveGradedLieAl
     ⁅x, y⁆ = 0 :=
   G.bracket_eq_zero_none hij hx hy
 
+/-!
+`gradeAdd` is a partial operation because the five-grade window is finite.
+The following theorem is the usable exhaustive closure statement: a bracket
+of homogeneous elements either lands in one of the five graded submodules or
+vanishes when the formal grade sum leaves the window.
+-/
+theorem bracket_grade_closed_or_zero
+    {R : Type*} [CommRing R] (G : FiveGradedLieAlgebra R)
+    {i j : TKKGrade} {x y : G.L}
+    (hx : x ∈ G.grade i) (hy : y ∈ G.grade j) :
+    (∃ k : TKKGrade, ⁅x, y⁆ ∈ G.grade k) ∨ ⁅x, y⁆ = 0 := by
+  cases h : gradeAdd i j with
+  | none =>
+      exact Or.inr (bracket_grade_outside_zero G h hx hy)
+  | some k =>
+      exact Or.inl ⟨k, bracket_grade_closed G h hx hy⟩
+
 theorem gradeAdd_none_iff_natAbs_weight_sum_gt_two
     (i j : TKKGrade) :
     gradeAdd i j = none ↔

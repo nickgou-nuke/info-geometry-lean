@@ -1,6 +1,7 @@
 import proofs.Clifford55
 import proofs.TorusKleinO55Bridge
 import proofs.O55CasimirIsospinHamiltonian
+import InfoGeometry.Clifford.Cl55RealSplitPinNullPairProjective
 
 /-!
 # `Pin(5,5)` / `O(5,5)` glide-reflection interface
@@ -25,6 +26,31 @@ abbrev Q := ℚ
 /-- The mandatory crosscap reflection index is the fifth positive generator,
 the one used by `Clifford55.n_vec` and `Clifford55.n_bar_vec`. -/
 def crosscapIndex : Fin 5 := 4
+
+/-!
+The canonical real split-Pin owner supplies the projective action readout for
+the same Witt index.  These theorems are intentionally kept separate from
+the older star-unitary `Pin55` packet and from the affine Klein glide laws:
+they identify a native Pin action on two projective null points, not a
+Pin-to-Klein representation theorem.
+-/
+theorem native_crosscap_projective_n_to_nbar :
+    InfoGeometry.Twistor.Cl55RealSplitPinNullIncidence.realSplitPinNullAction
+        (InfoGeometry.Clifford.Clifford55.fNegRealPin crosscapIndex)
+        (InfoGeometry.Clifford.Clifford55.nPairProjective crosscapIndex) =
+      InfoGeometry.Clifford.Clifford55.nbarPairProjective crosscapIndex := by
+  exact
+    InfoGeometry.Clifford.Clifford55.realSplitPinNullAction_fNegRealPin_nPairProjective
+      crosscapIndex
+
+theorem native_crosscap_projective_nbar_to_n :
+    InfoGeometry.Twistor.Cl55RealSplitPinNullIncidence.realSplitPinNullAction
+        (InfoGeometry.Clifford.Clifford55.fNegRealPin crosscapIndex)
+        (InfoGeometry.Clifford.Clifford55.nbarPairProjective crosscapIndex) =
+      InfoGeometry.Clifford.Clifford55.nPairProjective crosscapIndex := by
+  exact
+    InfoGeometry.Clifford.Clifford55.realSplitPinNullAction_fNegRealPin_nbarPairProjective
+      crosscapIndex
 
 /-- A negative unit Clifford generator lies in the canonical mathlib
 `Pin(5,5)` submonoid.  This is the mathlib star-unitary convention for the

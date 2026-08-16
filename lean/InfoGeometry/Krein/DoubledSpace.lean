@@ -296,7 +296,7 @@ lemma hestenesPionPlus_sq :
       (complex_i (E := E)).comp (modular_j (E := E)) = -(spectral_epsilon (E := E)) :=
     complex_i_comp_modular_j (E := E)
   simp [hestenesPionPlus, ContinuousLinearMap.smul_comp,
-    ContinuousLinearMap.comp_smul, ContinuousLinearMap.sub_comp,
+    ContinuousLinearMap.sub_comp,
     ContinuousLinearMap.comp_sub]
   rw [modular_j_involution, complex_i_sq, hJK, hKJ]
   module
@@ -310,7 +310,7 @@ lemma hestenesPionMinus_sq :
       (complex_i (E := E)).comp (modular_j (E := E)) = -(spectral_epsilon (E := E)) :=
     complex_i_comp_modular_j (E := E)
   simp [hestenesPionMinus, ContinuousLinearMap.smul_comp,
-    ContinuousLinearMap.comp_smul, ContinuousLinearMap.add_comp,
+    ContinuousLinearMap.add_comp,
     ContinuousLinearMap.comp_add]
   rw [modular_j_involution, complex_i_sq, hJK, hKJ]
   module
@@ -326,8 +326,7 @@ lemma hestenesPionPlus_mul_minus :
       (complex_i (E := E)).comp (modular_j (E := E)) = -(spectral_epsilon (E := E)) :=
     complex_i_comp_modular_j (E := E)
   simp [hestenesPionPlus, hestenesPionMinus, ContinuousLinearMap.smul_comp,
-    ContinuousLinearMap.comp_smul, ContinuousLinearMap.sub_comp,
-    ContinuousLinearMap.comp_sub, ContinuousLinearMap.add_comp,
+    ContinuousLinearMap.sub_comp,
     ContinuousLinearMap.comp_add]
   rw [modular_j_involution, complex_i_sq, hJK, hKJ]
   module
@@ -343,8 +342,7 @@ lemma hestenesPionMinus_mul_plus :
       (complex_i (E := E)).comp (modular_j (E := E)) = -(spectral_epsilon (E := E)) :=
     complex_i_comp_modular_j (E := E)
   simp [hestenesPionPlus, hestenesPionMinus, ContinuousLinearMap.smul_comp,
-    ContinuousLinearMap.comp_smul, ContinuousLinearMap.add_comp,
-    ContinuousLinearMap.comp_add, ContinuousLinearMap.sub_comp,
+    ContinuousLinearMap.add_comp,
     ContinuousLinearMap.comp_sub]
   rw [modular_j_involution, complex_i_sq, hJK, hKJ]
   module
@@ -406,18 +404,21 @@ lemma hestenesPion_zero_minus :
 
 /-! ### Inverse basis change for the real nilpotent atom -/
 
+omit [CompleteSpace E] in
 theorem hestenesPionPlus_add_hestenesPionMinus :
     hestenesPionPlus (E := E) + hestenesPionMinus (E := E) =
       modular_j (E := E) := by
   simp [hestenesPionPlus, hestenesPionMinus]
   module
 
+omit [CompleteSpace E] in
 theorem hestenesPionMinus_sub_hestenesPionPlus :
     hestenesPionMinus (E := E) - hestenesPionPlus (E := E) =
       clockAxis (E := E) := by
   simp [hestenesPionPlus, hestenesPionMinus, sub_eq_add_neg]
   module
 
+omit [CompleteSpace E] in
 theorem two_smul_hestenesPionZero :
     (2 : ℝ) • hestenesPionZero (E := E) =
       spectral_epsilon (E := E) := by

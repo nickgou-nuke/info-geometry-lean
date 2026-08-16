@@ -62,6 +62,30 @@ theorem realSplitPinProjectivizationAction_map_mul
         realSplitPinProjectivizationAction h := by
   exact realSplitPinProjectiveRepresentation.projectivizationMap_mul g h
 
+/-! ## Native Mathlib action surface -/
+
+noncomputable instance realSplitPinProjectivizationMulAction :
+    MulAction realSplitPin55 (ℙ ℝ V55) where
+  smul := fun g p =>
+    realSplitPinProjectiveRepresentation.projectivizationMap g p
+  one_smul := by
+    intro p
+    exact congrFun
+      realSplitPinProjectiveRepresentation.projectivizationMap_one p
+  mul_smul := by
+    intro g h p
+    change realSplitPinProjectiveRepresentation.projectivizationMap (g * h) p =
+      realSplitPinProjectiveRepresentation.projectivizationMap g
+        (realSplitPinProjectiveRepresentation.projectivizationMap h p)
+    rw [realSplitPinProjectiveRepresentation.projectivizationMap_mul]
+    rfl
+
+@[simp]
+theorem realSplitPinProjectivization_smul_eq
+    (g : realSplitPin55) (p : ℙ ℝ V55) :
+    g • p = realSplitPinProjectiveRepresentation.projectivizationMap g p :=
+  rfl
+
 theorem realSplitPinProjectivization_preserves_null
     (g : realSplitPin55) (p : ℙ ℝ V55)
     (hp : IsProjectiveNull Q55 p) :
@@ -74,6 +98,14 @@ theorem realSplitPinProjectivization_preserves_null
       change Q55 (realSplitPinTwistedActionEquiv g v) = 0
       change Q55 (realSplitPinTwistedAction g v) = 0
       rw [realSplitPinTwistedAction_preserves_Q55, hp]
+
+theorem realSplitPinProjectivization_smul_preserves_null
+    (g : realSplitPin55) (p : ℙ ℝ V55)
+    (hp : IsProjectiveNull Q55 p) :
+    IsProjectiveNull Q55 (g • p) := by
+  change IsProjectiveNull Q55
+    (realSplitPinProjectiveRepresentation.projectivizationMap g p)
+  exact realSplitPinProjectivization_preserves_null g p hp
 
 end
 

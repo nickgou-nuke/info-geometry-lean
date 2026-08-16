@@ -12,9 +12,8 @@ DEFAULT_DEPTH_INDEX = "reports/dag/representation-depth-index.json"
 DEFAULT_LEAN_TAGS = "artifacts/dag/representation-depth-tags.json"
 
 
-def load_json(path: Path) -> dict[str, Any]:
-    raw = json.loads(path.read_text(encoding="utf-8"))
-    return raw if isinstance(raw, dict) else {}
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def rel_repo_path(path: str | Path, root: Path | None = None) -> str:

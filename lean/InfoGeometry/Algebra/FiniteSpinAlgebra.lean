@@ -49,25 +49,6 @@ namespace SpinHalfBasis
 
 variable {n : ℕ} (basis : SpinHalfBasis n)
 
-/-- The `J₀,J₊` commutation relation read from a finite spin-half basis. -/
-theorem spin_z_plus_commutation
-    (h : basis.J_zero * basis.J_plus - basis.J_plus * basis.J_zero = basis.J_plus) :
-    basis.J_zero * basis.J_plus - basis.J_plus * basis.J_zero = basis.J_plus :=
-  h
-
-/-- The `J₀,J₋` commutation relation read from a finite spin-half basis. -/
-theorem spin_z_minus_commutation
-    (h : basis.J_zero * basis.J_minus - basis.J_minus * basis.J_zero = -basis.J_minus) :
-    basis.J_zero * basis.J_minus - basis.J_minus * basis.J_zero = -basis.J_minus :=
-  h
-
-/-- The `J₊,J₋` commutation relation read from a finite spin-half basis. -/
-theorem spin_plus_minus_commutation
-    (h : basis.J_plus * basis.J_minus - basis.J_minus * basis.J_plus =
-      (2 : ℂ) • basis.J_zero) :
-    basis.J_plus * basis.J_minus - basis.J_minus * basis.J_plus = (2 : ℂ) • basis.J_zero :=
-  h
-
 end SpinHalfBasis
 
 /-- Concrete finite relation `[J₀,J₊]=J₊`. -/

@@ -20,6 +20,20 @@ variable {R A : Type*} [CommSemiring R] [Ring A] [Algebra R A]
 def relativeAction (a : A) : A →ₗ[R] A :=
   leftAction (R := R) a - rightAction (R := R) a
 
+/-- The finite left-right quadratic action associated with an algebraic
+Tomita-style anti-automorphism.  The second factor acts from the commuting
+right side of the regular bimodule.  This is an algebraic readout only: no
+positivity or analytic standard-form assertion is made here. -/
+def commutantQuadraticAction
+    (J : InfoGeometry.Physics.AntiAutomorphism A) (a : A) : A →ₗ[R] A :=
+  (leftAction (R := R) a).comp (rightAction (R := R) (J.toFun a))
+
+@[simp] theorem commutantQuadraticAction_apply
+    (J : InfoGeometry.Physics.AntiAutomorphism A) (a x : A) :
+    commutantQuadraticAction (R := R) J a x = a * x * J.toFun a := by
+  simp [commutantQuadraticAction, leftAction, rightAction,
+    LinearMap.comp_apply, mul_assoc]
+
 @[simp] theorem relativeAction_apply (a x : A) :
     relativeAction (R := R) a x = a * x - x * a := by
   simp [relativeAction, leftAction, rightAction]
@@ -29,6 +43,12 @@ theorem leftRight_commute (a b : A) :
       (rightAction (R := R) b).comp (leftAction (R := R) a) := by
   ext x
   simp [leftAction, rightAction, LinearMap.comp_apply, mul_assoc]
+
+theorem commutantQuadraticAction_commuting_factors
+    (J : InfoGeometry.Physics.AntiAutomorphism A) (a : A) :
+    (leftAction (R := R) a).comp (rightAction (R := R) (J.toFun a)) =
+      (rightAction (R := R) (J.toFun a)).comp (leftAction (R := R) a) := by
+  exact leftRight_commute a (J.toFun a)
 
 theorem relativeAction_eq_zero_of_central (a : A)
     (ha : ∀ x : A, a * x = x * a) :

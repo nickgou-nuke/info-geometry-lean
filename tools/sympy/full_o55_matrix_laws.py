@@ -42,8 +42,13 @@ def is_so55(X: sp.Matrix) -> bool:
     return sp.simplify(X.T * eta + eta * X) == Z10
 
 
-def comm(A: sp.Matrix, B: sp.Matrix) -> sp.Matrix:
-    return A * B - B * A
+import sys
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from tools.sympy.common import comm
 
 
 def rot_plus(i: int, j: int) -> sp.Matrix:

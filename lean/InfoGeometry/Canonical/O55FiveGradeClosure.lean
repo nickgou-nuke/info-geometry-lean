@@ -205,5 +205,41 @@ theorem D_grade : D ∈ gradeSpace ConformalGrade.zero := by
   dsimp [adD, toInt]
   simp
 
+theorem u5_v5_commutator_grade_zero :
+    u5 * v5 - v5 * u5 ∈ gradeSpace ConformalGrade.zero := by
+  apply gradeSpace_commutator_of_sum ConformalGrade.posOne
+    ConformalGrade.negOne ConformalGrade.zero u5_grade v5_grade
+  rfl
+
+theorem u4_v4_commutator_grade_zero :
+    u4 * v4 - v4 * u4 ∈ gradeSpace ConformalGrade.zero := by
+  apply gradeSpace_commutator_of_sum ConformalGrade.posOne
+    ConformalGrade.negOne ConformalGrade.zero u4_grade v4_grade
+  rfl
+
+theorem u5_u4_commutator_grade_pos_two :
+    u5 * u4 - u4 * u5 ∈ gradeSpace ConformalGrade.posTwo := by
+  apply gradeSpace_commutator_of_sum ConformalGrade.posOne
+    ConformalGrade.posOne ConformalGrade.posTwo u5_grade u4_grade
+  rfl
+
+theorem v5_v4_commutator_grade_neg_two :
+    v5 * v4 - v4 * v5 ∈ gradeSpace ConformalGrade.negTwo := by
+  apply gradeSpace_commutator_of_sum ConformalGrade.negOne
+    ConformalGrade.negOne ConformalGrade.negTwo v5_grade v4_grade
+  rfl
+
+theorem u5_u4_anticommutator_grade_pos_two :
+    u5 * u4 + u4 * u5 ∈ gradeSpace ConformalGrade.posTwo := by
+  apply gradeSpace_anticommutator_of_sum ConformalGrade.posOne
+    ConformalGrade.posOne ConformalGrade.posTwo u5_grade u4_grade
+  rfl
+
+theorem v5_v4_anticommutator_grade_neg_two :
+    v5 * v4 + v4 * v5 ∈ gradeSpace ConformalGrade.negTwo := by
+  apply gradeSpace_anticommutator_of_sum ConformalGrade.negOne
+    ConformalGrade.negOne ConformalGrade.negTwo v5_grade v4_grade
+  rfl
+
 
 end InfoGeometry.Canonical.O55FiveGradeClosure

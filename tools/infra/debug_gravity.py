@@ -208,14 +208,8 @@ def expand_query_tokens(
     return expanded, matched_groups
 
 
-def read_jsonl(path: Path) -> list[dict[str, Any]]:
-    records: list[dict[str, Any]] = []
-    with path.open("r", encoding="utf-8") as handle:
-        for line in handle:
-            line = line.strip()
-            if line:
-                records.append(json.loads(line))
-    return records
+# [lossless-compact] read_jsonl folded into igf.common.json_io.read_jsonl
+from igf.common.json_io import read_jsonl
 
 
 def arango_request(base_url: str, db: str, payload: dict[str, Any]) -> dict[str, Any]:

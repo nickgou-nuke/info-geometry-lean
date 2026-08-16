@@ -30,7 +30,7 @@ variable (sys : ContinuousStarInductiveSystem Stage)
 
 structure CompatibleContinuousStateReadout where
   readout : ∀ i, Stage i →L[ℂ] ℂ
-  compatible : ∀ {i j : I} (hij : i ≤ j),
+  transition_naturality : ∀ {i j : I} (hij : i ≤ j),
     (readout j).comp (sys.transitionCLM Stage hij) = readout i
 
 namespace CompatibleContinuousStateReadout
@@ -41,7 +41,7 @@ variable (ρ : CompatibleContinuousStateReadout Stage sys)
     {i j : I} (hij : i ≤ j) (a : Stage i) :
     ρ.readout j (sys.map hij a) = ρ.readout i a := by
   have h := congrArg (fun f : Stage i →L[ℂ] ℂ => f a)
-    (ρ.compatible hij)
+    (ρ.transition_naturality hij)
   exact h
 
 theorem compatible_trans
@@ -158,7 +158,7 @@ def CompatibleStateFamily.toContinuousReadout
     (ω : CompatibleStateFamily Stage sys) :
     CompatibleContinuousStateReadout Stage sys where
   readout := fun i => (ω.state i).toContinuousLinearMap
-  compatible := by
+  transition_naturality := by
     intro i j hij
     exact continuousLinearMap_transition Stage sys ω hij
 

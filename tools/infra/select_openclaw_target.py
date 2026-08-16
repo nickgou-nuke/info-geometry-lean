@@ -67,18 +67,8 @@ def seed_for_row(row: dict[str, Any]) -> str:
     return str(row.get("module", row.get("label", "KasparovCycle.analyticalIndex")))
 
 
-def slugify(value: str) -> str:
-    out: list[str] = []
-    last_dash = False
-    for ch in value:
-        if ch.isalnum():
-            out.append(ch.lower())
-            last_dash = False
-        elif not last_dash:
-            out.append("-")
-            last_dash = True
-    slug = "".join(out).strip("-")
-    return slug or "target"
+# [lossless-compact] slugify folded into igf.common.strings.slugify
+from igf.common.strings import slugify
 
 
 def make_structural_commands(row: dict[str, Any], bucket: str) -> dict[str, str]:

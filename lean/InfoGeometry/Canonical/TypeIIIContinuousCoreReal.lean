@@ -166,23 +166,6 @@ noncomputable def boltzmannEntropyPotentialHom
         (H := E) R.additiveFlow u hCocycle B)
   map_add' := R.boltzmannEntropyPotential_add u hCocycle B
 
-@[simp] theorem boltzmannEntropyPotentialHom_apply
-    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd E)
-    (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle R.additiveFlow u)
-    (B : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := E) R.additiveFlow)
-    (t : ℝ) :
-    R.boltzmannEntropyPotentialHom u hCocycle B t = R.boltzmannEntropyPotential u B t :=
-  rfl
-
-@[rep_depth thermo, capstone]
-theorem exists_boltzmannEntropyPotential_of_cocycle
-    (u : ℝ → InfoGeometry.Volume.ConnesCocycle.AlgebraEnd E)
-    (hCocycle : InfoGeometry.Volume.ConnesCocycle.IsConnesCocycle R.additiveFlow u)
-    (B : InfoGeometry.Volume.ConnesCocycle.ScalarCocycleBridge (H := E) R.additiveFlow) :
-    ∃ Φ : ℝ → ℝ, ∀ s t, Φ (s + t) = Φ s + Φ t := by
-  refine ⟨R.boltzmannEntropyPotential u B, ?_⟩
-  exact R.boltzmannEntropyPotential_add u hCocycle B
-
 end RealTypeIIIModularData
 
 /--

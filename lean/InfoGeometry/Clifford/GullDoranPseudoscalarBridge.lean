@@ -148,6 +148,22 @@ theorem real_pseudoscalar_sq :
       (realSigma1 * realSigma2 * realSigma3) = -(1 : Mat4R) := by
   rw [real_pseudoscalar_eq_phaseAxis, realPhaseAxis_sq]
 
+/-! The odd-dimensional volume element is central in this concrete real carrier. -/
+theorem realPhaseAxis_comm_realSigma1 :
+    realPhaseAxis * realSigma1 = realSigma1 * realPhaseAxis := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [realPhaseAxis, realSigma1, Matrix.mul_apply, Fin.sum_univ_succ]
+
+theorem realPhaseAxis_comm_realSigma2 :
+    realPhaseAxis * realSigma2 = realSigma2 * realPhaseAxis := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [realPhaseAxis, realSigma2, Matrix.mul_apply, Fin.sum_univ_succ]
+
+theorem realPhaseAxis_comm_realSigma3 :
+    realPhaseAxis * realSigma3 = realSigma3 * realPhaseAxis := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [realPhaseAxis, realSigma3, Matrix.mul_apply, Fin.sum_univ_succ]
+
 /--
 Finite capstone: the Pauli `Cl(3)` pseudoscalar is a square-minus-one phase,
 and its realification is a concrete real `4 × 4` square-minus-one matrix.
@@ -162,10 +178,15 @@ theorem gull_doran_pseudoscalar_capstone :
     s1 * s2 * s3 = Complex.I • (1 : Mat2C) ∧
     (s1 * s2 * s3) * (s1 * s2 * s3) = -(1 : Mat2C) ∧
     realSigma1 * realSigma2 * realSigma3 = realPhaseAxis ∧
-    realPhaseAxis * realPhaseAxis = -(1 : Mat4R) :=
+    realPhaseAxis * realPhaseAxis = -(1 : Mat4R) ∧
+    realPhaseAxis * realSigma1 = realSigma1 * realPhaseAxis ∧
+    realPhaseAxis * realSigma2 = realSigma2 * realPhaseAxis ∧
+    realPhaseAxis * realSigma3 = realSigma3 * realPhaseAxis :=
   ⟨pauli_sigma1_sq, pauli_sigma2_sq, pauli_sigma3_sq,
     pauli_sigma1_sigma2_anticomm, pauli_sigma1_sigma3_anticomm,
     pauli_sigma2_sigma3_anticomm, pauli_pseudoscalar_eq_complex_phase,
-    pauli_pseudoscalar_sq, real_pseudoscalar_eq_phaseAxis, realPhaseAxis_sq⟩
+    pauli_pseudoscalar_sq, real_pseudoscalar_eq_phaseAxis, realPhaseAxis_sq,
+    realPhaseAxis_comm_realSigma1, realPhaseAxis_comm_realSigma2,
+    realPhaseAxis_comm_realSigma3⟩
 
 end InfoGeometry.Clifford.GullDoranPseudoscalarBridge

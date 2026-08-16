@@ -23,8 +23,8 @@ from typing import Any
 import requests
 
 
-def now_iso() -> str:
-    return dt.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+# [lossless-compact] now_iso folded into igf.common.time_utils.now_iso
+from igf.common.time_utils import now_iso
 
 
 def env(name: str, *aliases: str, required: bool = False, default: str | None = None) -> str | None:
@@ -56,9 +56,8 @@ class Arango:
         return r.json()
 
 
-def load_json(path: str) -> Any:
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def main() -> int:

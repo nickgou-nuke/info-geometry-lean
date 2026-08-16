@@ -1,46 +1,41 @@
-import Mathlib.Data.Real.Basic
-import Mathlib.Analysis.SpecialFunctions.Exp
-import Mathlib.Tactic.Ring
-import Mathlib.Tactic.Linarith
-import InfoGeometry.Canonical.TomitaTakesakiModularOperatorKMS
+import InfoGeometry.Canonical.ConnesArakiRadonNikodymCocycleG2
 
-set_option linter.unusedSectionVars false
-set_option linter.unnecessarySeqFocus false
+/-!
+# Matrix Connes--Araki Radon--Nikodym cocycle bridge
 
-open Real
+The previous version of this file encoded a cocycle by a scalar exponential.
+The maintained owner is the noncommutative `Fin 2` matrix realization in
+`ConnesArakiRadonNikodymCocycleG2`: the cocycle is an operator-valued matrix
+and its chain law is twisted by the Wiesbrock modular flow.  This file keeps a
+small namespace-level bridge to that owner and introduces no commutative
+surrogate.
+-/
+
+noncomputable section
 
 namespace InfoGeometry.Canonical.ConnesRadonNikodymCocycleChainBridge
 
-open InfoGeometry.Canonical.TomitaTakesakiModularOperatorKMS
+open InfoGeometry.Canonical.ConnesArakiRadonNikodymCocycleG2
 
-/-- 1. Connes Non-Commutative Radon-Nikodym Derivative Cocycle (Dψ : Dφ)_t -/
-noncomputable def connesRadonNikodymCocycle (a b t : ℝ) : ℝ :=
-  Real.exp (t * (a - b))
+abbrev MatrixCocycle := Matrix (Fin 2) (Fin 2) ℂ
 
-/-- 🏆 THEOREM 1: Connes Radon-Nikodym Cocycle Multiplicative Chain Rule:
-    (Dψ : Dω)_t = (Dψ : Dφ)_t · (Dφ : Dω)_t -/
-theorem connes_rn_cocycle_chain_rule (a b c t : ℝ) :
-    connesRadonNikodymCocycle a c t = connesRadonNikodymCocycle a b t * connesRadonNikodymCocycle b c t := by
-  dsimp [connesRadonNikodymCocycle]
-  rw [← Real.exp_add]
-  congr 1
-  ring
+abbrev modularFlow :=
+  InfoGeometry.Canonical.ConnesArakiRadonNikodymCocycleG2.modularFlow
 
-/-- 🏆 THEOREM 2: Self-Identity of the Radon-Nikodym Cocycle:
-    (Dψ : Dψ)_t = 1 -/
-theorem connes_rn_cocycle_identity (a t : ℝ) :
-    connesRadonNikodymCocycle a a t = 1 := by
-  dsimp [connesRadonNikodymCocycle]
-  have h : t * (a - a) = 0 := by ring
-  rw [h, Real.exp_zero]
+abbrev connesRadonNikodymCocycle :=
+  InfoGeometry.Canonical.ConnesArakiRadonNikodymCocycleG2.radonNikodymCocycle
 
-/-- 🏆 THEOREM 3: Inverse Symmetry of the Radon-Nikodym Cocycle:
-    (Dψ : Dφ)_t · (Dφ : Dψ)_t = 1 -/
-theorem connes_rn_cocycle_inverse (a b t : ℝ) :
-    connesRadonNikodymCocycle a b t * connesRadonNikodymCocycle b a t = 1 := by
-  dsimp [connesRadonNikodymCocycle]
-  rw [← Real.exp_add]
-  have h : t * (a - b) + t * (b - a) = 0 := by ring
-  rw [h, Real.exp_zero]
+theorem connes_rn_matrix_cocycle_condition (L t s : ℂ) :
+    connesRadonNikodymCocycle L (t + s) =
+      connesRadonNikodymCocycle L t * modularFlow t
+        (connesRadonNikodymCocycle L s) := by
+  exact connes_araki_cocycle_condition L t s
+
+theorem modular_flow_translationP (t : ℂ) :
+    InfoGeometry.Canonical.ConnesArakiRadonNikodymCocycleG2.modularFlow t
+      SL2RToG2Wiesbrock.translationP =
+      Complex.exp (Complex.I * t) •
+        SL2RToG2Wiesbrock.translationP := by
+  exact InfoGeometry.Canonical.ConnesArakiRadonNikodymCocycleG2.modularFlow_translationP t
 
 end InfoGeometry.Canonical.ConnesRadonNikodymCocycleChainBridge

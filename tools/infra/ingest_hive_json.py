@@ -95,12 +95,8 @@ def ingest_text(text: str, *, source: str) -> list[dict[str, Any]]:
     ]
 
 
-def write_jsonl(path: Path, records: list[dict[str, Any]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as handle:
-        for record in records:
-            handle.write(json.dumps(record, sort_keys=True, ensure_ascii=False))
-            handle.write("\n")
+# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
+from igf.common.json_io import write_jsonl
 
 
 def write_manifest(path: Path, *, source: str, out_path: Path, records: list[dict[str, Any]]) -> None:

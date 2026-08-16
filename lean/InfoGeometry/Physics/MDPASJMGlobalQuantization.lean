@@ -165,8 +165,8 @@ theorem halfSpin_prequantized (hbar : ℚ) :
 
 theorem directLimitCarrier_lifts_finiteIdentities_readback
     {ι : Type*} [Fintype ι] [Nonempty ι]
-    {Op : Type*} [Ring Op] [Algebra ℝ Op]
-    {State LieAlgebra LieDual : Type*}
+    {Op : Type*} [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
+    {State LieAlgebra LieDual : Type*} [AddMonoid LieAlgebra]
     (T : FiniteMDPASJMDirectSystem ι Op State LieAlgebra LieDual) :
     Nonempty (FiniteMDPASJMDirectSystem.DirectLimitCarrier T) ∧
       ∃ ofStageMap : ∀ _n : ℕ, Op →
@@ -195,7 +195,7 @@ theorem directLimitCarrier_lifts_finiteIdentities_readback
                 (T.tower.stage n).flow)) ∧
         (∀ n,
           (T.tower.stage n).rn.entropy =
-            (T.tower.stage n).rn.expectationBeta
+            (T.tower.stage n).rn.expectation
               (T.tower.stage n).rn.modularPotential) ∧
         (∀ n,
           (T.tower.stage n).pathPacket.pathEntropy =

@@ -16,23 +16,15 @@ electroweak theorem, or arrow-of-time theorem is claimed.
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
 import sympy as sp
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def assert_zero(expr, label: str) -> None:
-    reduced = sp.expand(sp.simplify(expr))
-    if reduced != 0:
-        raise AssertionError(f"{label} failed:\n{reduced}")
-
-
-def assert_matrix_zero(mat: sp.Matrix, label: str) -> None:
-    reduced = mat.applyfunc(lambda x: sp.expand(sp.simplify(x)))
-    if reduced != sp.zeros(*reduced.shape):
-        raise AssertionError(f"{label} failed:\n{reduced}")
-
-
-def mat2(prefix: str) -> sp.Matrix:
-    return sp.Matrix(2, 2, lambda i, j: sp.symbols(f"{prefix}{i}{j}"))
+from tools.sympy.common import assert_matrix_zero, assert_zero, mat2, pauli_matrices
 
 
 def main() -> int:

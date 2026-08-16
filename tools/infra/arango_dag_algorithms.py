@@ -464,9 +464,8 @@ def dominator_masks(preds: list[list[int]], order: list[int]) -> list[int]:
     return dom
 
 
-def stable_hash(obj: Any) -> str:
-    payload = json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
-    return hashlib.blake2b(payload.encode("utf-8"), digest_size=16).hexdigest()
+# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
+from igf.common.hashing import stable_hash
 
 
 def choose_seed(graph: QuotientGraph, representative: str | None, scc_id: int | None) -> int | None:

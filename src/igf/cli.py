@@ -82,6 +82,13 @@ def main(argv: list[str] | None = None) -> int:
     report.add_argument("--dir", default="artifacts/dag/index")
     report.add_argument("--print-json", action="store_true")
 
+    compact = sub.add_parser("compact")
+    compact.add_argument("--max-files", type=int, default=50, help="Max files to process in this pass")
+    compact.add_argument("--dry-run", action="store_true", help="Simulate without applying edits")
+
+    cpg_dedup = sub.add_parser("cpg-dedup")
+    cpg_dedup.add_argument("--out", default="reports/cpg_dedup_report.json")
+
     args = parser.parse_args(argv)
 
     if args.command == "preflight":
@@ -217,6 +224,20 @@ def main(argv: list[str] | None = None) -> int:
         )
         print(json.dumps(result, ensure_ascii=False))
         return int(result.get("exit_code", 1 if not result.get("ok") else 0))
+
+    if args.command == "compact":
+        from igf.cpg.self_compact import LosslessSelfCompactor
+
+        compactor = LosslessSelfCompactor()
+        summary = compactor.run_compactification_pass(max_files=args.max_files)
+        return 0 if summary.get("rolled_back", 0) == 0 else 1
+
+    if args.command == "cpg-dedup":
+        from igf.cpg.dedup import ArangoCPGDeduplicator
+
+        dedup = ArangoCPGDeduplicator()
+        manifest = dedup.generate_deduplication_manifest(out_path=Path(args.out))
+        return 0 if manifest else 1
 
     return 1
 

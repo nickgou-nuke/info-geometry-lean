@@ -22,11 +22,11 @@ namespace InfoGeometry.OperatorAlgebra.ConnesArakiG2
 In the split real form, G₂(ℝ) acts on the Zorn matrix algebra. 
 Here we define the purely algebraic generator of the Connes-Araki cocycle. -/
 noncomputable def connesArakiG2Generator (H1 H2 : Operator) (beta1 μ1 μχ1 beta2 μ2 μχ2 : ℝ) : Operator :=
-  connesRadonNikodymDerivative H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2
+  relativeModularGeneratorDifference H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2
 
 /-- The Connes-Araki cocycle generator vanishes when the modular states coincide. -/
 theorem connesArakiG2Generator_zero_of_eq (H : Operator) (beta μ μχ : ℝ) :
     connesArakiG2Generator H H beta μ μχ beta μ μχ = 0 :=
-  connesRadonNikodymDerivative_zero_of_eq H beta μ μχ
+  relativeModularGeneratorDifference_zero_of_eq H beta μ μχ
 
 end InfoGeometry.OperatorAlgebra.ConnesArakiG2

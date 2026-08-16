@@ -67,6 +67,10 @@ namespace FiveGradedConformalInversion
 variable {L : Type*}
 variable (G : FiveGradedConformalInversion L)
 
+private theorem has_grade_swap (G : FiveGradedConformalInversion L) :
+    ∀ x : L, G.grade (G.theta x) = ConformalGrade.swap (G.grade x) := by
+  exact G.grade_swap
+
 /-- The source sector: grade `+2`. -/
 def sourceSet : Set L := {x | G.grade x = ConformalGrade.posTwo}
 
@@ -87,7 +91,7 @@ def centerSet : Set L := {x | G.grade x = ConformalGrade.zero}
 
 @[simp] theorem grade_theta (x : L) :
     G.grade (G.theta x) = ConformalGrade.swap (G.grade x) :=
-  G.grade_swap x
+  G.has_grade_swap x
 
 /--
 The zero grade is stable under the inversion.

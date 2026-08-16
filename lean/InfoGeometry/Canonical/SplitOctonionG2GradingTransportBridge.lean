@@ -1,5 +1,6 @@
-import Mathlib.Algebra.Lie.Basic
-import Mathlib.Algebra.Group.Defs
+import Mathlib.Algebra.Lie.Submodule
+import Mathlib.Data.ZMod.Basic
+import Mathlib.Tactic
 
 /-!
 # Split Octonion G₂ Grading Transport Bridge
@@ -17,7 +18,7 @@ namespace InfoGeometry.Canonical.SplitOctonionG2GradingTransportBridge
 variable {𝕜 𝔤 : Type*} [CommRing 𝕜] [LieRing 𝔤] [LieAlgebra 𝕜 𝔤]
 
 /-- The grading group $(\mathbb{Z}_2)^3$. -/
-abbrev Z2_cube := Fin 2 × Fin 2 × Fin 2
+abbrev Z2_cube := ZMod 2 × ZMod 2 × ZMod 2
 
 /-- 
 The abstract specification of the $G_2$ grading structure.
@@ -25,7 +26,7 @@ The Lie algebra $\mathfrak{g}_2$ decomposes into components indexed by $(\mathbb
 -/
 structure G2GradingDatum where
   /-- The homogeneous components of the Lie algebra. -/
-  component : Z2_cube → LieSubmodule 𝕜 𝔤
+  component : Z2_cube → Submodule 𝕜 𝔤
 
   /-- CAPSTONE: The decisive theorem proving that the bracket respects the grading. -/
   bracket_grade_add : 

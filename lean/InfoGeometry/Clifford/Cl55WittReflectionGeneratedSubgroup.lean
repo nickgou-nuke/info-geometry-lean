@@ -28,12 +28,27 @@ theorem quadraticReflectionElement_mem_subgroup
   exact ⟨v, hv, rfl⟩
 
 theorem normalizedVectorAction_mem_quadraticReflectionSubgroup
-    (v : V55) (hv : Q55 v = 1 ∨ Q55 v = -1)
-    (hunit : IsUnit (Q55 v)) :
+    (v : V55) (hv : Q55 v = 1 ∨ Q55 v = -1) :
     realSplitPinOrthogonalAction
-        ⟨normalizedVectorUnit v hunit,
-          normalizedVectorUnit_mem_realSplitPin v hv hunit⟩ ∈
+        ⟨normalizedVectorUnit v (by
+            rcases hv with hv | hv
+            · rw [hv]
+              exact ⟨1, by simp⟩
+            · rw [hv]
+              exact ⟨-1, by simp⟩),
+          normalizedVectorUnit_mem_realSplitPin v hv (by
+            rcases hv with hv | hv
+            · rw [hv]
+              exact ⟨1, by simp⟩
+            · rw [hv]
+              exact ⟨-1, by simp⟩)⟩ ∈
       quadraticReflectionSubgroup := by
+  have hunit : IsUnit (Q55 v) := by
+    rcases hv with hv | hv
+    · rw [hv]
+      exact ⟨1, by simp⟩
+    · rw [hv]
+      exact ⟨-1, by simp⟩
   let g : realSplitPin55 :=
     ⟨normalizedVectorUnit v hunit,
       normalizedVectorUnit_mem_realSplitPin v hv hunit⟩
@@ -59,5 +74,23 @@ theorem normalizedVectorAction_mem_quadraticReflectionSubgroup
         normalizedVectorUnit_mem_realSplitPin v hv hunit⟩ =
       realSplitPinOrthogonalAction g by rfl, hgroup]
   exact quadraticReflectionElement_mem_subgroup v hne
+
+theorem normalizedVectorAction_mem_quadraticReflectionSubgroup_of_norm
+    (v : V55) (hv : Q55 v = 1 ∨ Q55 v = -1) :
+    realSplitPinOrthogonalAction
+    ⟨normalizedVectorUnit v (by
+            rcases hv with hv | hv
+            · rw [hv]
+              exact ⟨1, by simp⟩
+            · rw [hv]
+              exact ⟨-1, by simp⟩),
+          normalizedVectorUnit_mem_realSplitPin v hv (by
+            rcases hv with hv | hv
+            · rw [hv]
+              exact ⟨1, by simp⟩
+            · rw [hv]
+              exact ⟨-1, by simp⟩)⟩ ∈
+      quadraticReflectionSubgroup := by
+  exact normalizedVectorAction_mem_quadraticReflectionSubgroup v hv
 
 end InfoGeometry.Clifford.Clifford55

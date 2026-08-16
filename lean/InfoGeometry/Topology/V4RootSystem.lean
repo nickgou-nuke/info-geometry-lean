@@ -225,6 +225,17 @@ theorem v4Action_mul (g h : V4Group) (r : A1xA1Root) :
     v4Action (g * h) r = v4Action g (v4Action h r) := by
   cases g <;> cases h <;> cases r <;> rfl
 
+/-- The finite root action packages as a genuine monoid homomorphism into the
+endomorphism monoid of the root set. -/
+def v4ActionHom : V4Group →* Function.End A1xA1Root where
+  toFun := v4Action
+  map_one' := by
+    funext r
+    cases r <;> rfl
+  map_mul' g h := by
+    funext r
+    exact v4Action_mul g h r
+
 end A1xA1Root
 
 /--

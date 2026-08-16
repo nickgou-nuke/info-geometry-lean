@@ -64,6 +64,12 @@ def mul : V4 → V4 → V4
 instance : Mul V4 where
   mul := V4.mul
 
+instance : One V4 where
+  one := I
+
+instance : Inv V4 where
+  inv a := a
+
 /-- V₄ is abelian. -/
 theorem mul_comm (a b : V4) : a * b = b * a := by
   cases a <;> cases b <;> rfl
@@ -71,6 +77,21 @@ theorem mul_comm (a b : V4) : a * b = b * a := by
 /-- Every element squares to identity. -/
 theorem sq_eq_one (a : V4) : a * a = I := by
   cases a <;> rfl
+
+instance : Group V4 where
+  mul_assoc := by
+    intro a b c
+    cases a <;> cases b <;> cases c <;> rfl
+  one_mul := by
+    intro a
+    cases a <;> rfl
+  mul_one := by
+    intro a
+    cases a <;> rfl
+  inv_mul_cancel := by
+    intro a
+    change a * a = I
+    exact sq_eq_one a
 
 end V4
 

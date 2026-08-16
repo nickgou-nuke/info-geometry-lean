@@ -102,6 +102,19 @@ def TwistedFiniteDimensionalWitness
     (S : UnifiedCompactificationSystem) : Prop :=
   ∃ s : S.operatorLane.State, S.operatorLane.support s
 
+/-- A concrete finite witness for the twisted lane.  The paired-function
+presentation has a supported state as soon as its state alphabet is
+nontrivial; this discharges the finite existence clause without introducing
+an opaque witness or an analytic assumption. -/
+@[rep_depth krein]
+theorem twistedFiniteDimensionalWitness_pairedFunctionPresentation
+    {α : Type} [Nontrivial α] :
+    TwistedFiniteDimensionalWitness
+      { operatorLane := pairedFunctionPresentation α
+        causalCompactifiedLane := pairedFunctionPresentation α } := by
+  obtain ⟨a, b, hab⟩ := exists_pair_ne α
+  exact ⟨(a, b), hab⟩
+
 /-- Junction 4: tightened Weyl-anomaly response matrix contract. -/
 @[rep_depth krein]
 def TightenedWeylAnomalyResponse

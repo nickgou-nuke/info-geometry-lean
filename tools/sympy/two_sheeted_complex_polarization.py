@@ -14,15 +14,15 @@ This script checks the finite matrix atom:
 * a + b i reads back as a I + b K.
 """
 
-from __future__ import annotations
-
+import sys
+from pathlib import Path
 import sympy as sp
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def assert_matrix_eq(lhs: sp.Matrix, rhs: sp.Matrix, label: str) -> None:
-    delta = sp.simplify(lhs - rhs)
-    if delta != sp.zeros(*lhs.shape):
-        raise AssertionError(f"{label} failed:\n{delta}")
+from tools.sympy.common import assert_matrix_eq
 
 
 def main() -> None:

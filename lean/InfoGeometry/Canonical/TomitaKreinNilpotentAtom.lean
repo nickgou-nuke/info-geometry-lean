@@ -148,6 +148,20 @@ noncomputable def tomitaConjOp
     InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism E :=
   (modular_j (E := E)).comp (T.comp (modular_j (E := E)))
 
+/-- Tomita/PHS conjugation is an involution on the operator carrier. -/
+@[rep_depth krein]
+theorem tomitaConjOp_involutive
+    (T : InfoGeometry.Canonical.BogoliubovFockSuper.FockEndomorphism E) :
+    tomitaConjOp (tomitaConjOp T) = T := by
+  apply ContinuousLinearMap.ext
+  intro u
+  have hJ2 : modular_j (E := E) (modular_j (E := E) u) = u := by
+    have h := congrArg (fun L : FockEndomorphism E => L u)
+      (modular_j_involution E)
+    simpa [ContinuousLinearMap.comp_apply] using h
+  simp only [tomitaConjOp, ContinuousLinearMap.comp_apply]
+  rw [hJ2, hJ2]
+
 /-- Tomita/PHS conjugation swaps the concrete split-null creation operator to annihilation. -/
 @[rep_depth krein]
 theorem tomitaConj_creation_eq_annihilation :

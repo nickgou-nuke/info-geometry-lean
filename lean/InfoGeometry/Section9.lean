@@ -169,19 +169,4 @@ theorem quaternion_spin_riemann_flat_chain :
     quaternionCurvatureFromSpin (spinCurvatureFromRiemann 0) = 0 :=
   by rw [spinCurvatureFromRiemann_zero, quaternionCurvatureFromSpin_zero]
 
-theorem section9_capstone :
-    (∀ a b : Fin 4, (∑ i : Fin 2, sigma_ab a b i i) = (0 : ℂ)) ∧
-    quaternionCurvature 0 0 0 0 = (0 : Quat) ∧
-    spinCurvature 0 0 0 0 = (0 : Matrix (Fin 2) (Fin 2) ℂ) ∧
-    riemannCurvature 0 0 0 0 0 0 = 0 ∧
-    (∀ A B : Matrix (Fin 2) (Fin 2) ℂ, (∑ i : Fin 2, commutator A B i i) = 0) ∧
-    quaternionCurvatureFromSpin (spinCurvatureFromRiemann 0) = 0 := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact sigma_ab_traceless
-  · exact quaternionCurvature_flat
-  · exact spinCurvature_flat
-  · exact riemannCurvature_flat
-  · exact commutator_traceless
-  · exact quaternion_spin_riemann_flat_chain
-
 end Section9

@@ -112,14 +112,8 @@ def canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
 
 
-def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(canonical_json(row) + "\n")
-            count += 1
-    return count
+# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
+from igf.common.json_io import write_jsonl
 
 
 def clean_text(text: str) -> str:

@@ -27,16 +27,8 @@ def tokenize(text: str) -> set[str]:
     return {tok.lower() for tok in re.findall(r"[A-Za-z][A-Za-z0-9_]{2,}", text)}
 
 
-def read_jsonl(path: Path) -> list[dict[str, Any]]:
-    if not path.exists():
-        return []
-    rows: list[dict[str, Any]] = []
-    with path.open("r", encoding="utf-8") as handle:
-        for line in handle:
-            line = line.strip()
-            if line:
-                rows.append(json.loads(line))
-    return rows
+# [lossless-compact] read_jsonl folded into igf.common.json_io.read_jsonl
+from igf.common.json_io import read_jsonl
 
 
 def lexical_score(query_tokens: set[str], chunk: dict[str, Any]) -> int:

@@ -173,35 +173,6 @@ namespace HestenesKreinNaturalConeKMSBridge
 variable (B : HestenesKreinNaturalConeKMSBridge (H := H)
   (NormalPositive := NormalPositive) (Op := Op))
 
-/-- Compatibility constructor that re-export a KMS bridge while preserving
-the underlying complex state. -/
-@[rep_depth krein]
-def fromKMSBridgeCompat :
-    HestenesKreinNaturalConeKMSBridge (H := H)
-      (NormalPositive := NormalPositive) (Op := Op) := by
-  let kms : KMSState Op B.flow B.beta :=
-    { state := B.kms.state
-      flow_invariant := B.kms.flow_invariant
-      correlation := B.kms.correlation
-      correlation_differentiableOn_openStrip :=
-        B.kms.correlation_differentiableOn_openStrip
-      correlation_lower_boundary := B.kms.correlation_lower_boundary
-      correlation_upper_boundary := B.kms.correlation_upper_boundary }
-  exact
-    { vacuum := B.vacuum
-      omegaState := B.omegaState
-      flow := B.flow
-      beta := B.beta
-      kms := kms
-      coneVector_eq_Omega_law := B.coneVector_eq_Omega_law
-      complexEval_eq_realConeEval_law := B.complexEval_eq_realConeEval_law }
-
-/-- The re-exported `fromKMSBridge` keeps the same underlying state. -/
-@[rep_depth krein]
-theorem fromKMSBridge_state_eq_compat :
-    (B.fromKMSBridgeCompat).kms.state = B.kms.state := by
-  rfl
-
 /-- The complex KMS readout is represented by the vacuum vector, after calibration. -/
 @[rep_depth krein]
 theorem complexEval_eq_vacuum_readout

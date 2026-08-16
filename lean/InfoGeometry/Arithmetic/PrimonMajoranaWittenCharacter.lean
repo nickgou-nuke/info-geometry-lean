@@ -251,7 +251,7 @@ Transport a concrete split-Majorana OPE owner datum to the arithmetic property
 packet.
 
 This is an owner-side transport: the equalities live in the datum itself, and
-the arithmetic socket merely re-expresses them as proof-carrying fields.
+the arithmetic socket merely re-expresses their proposition-valued readouts.
 -/
 def toArithmeticSplitMajoranaOPE
     (O : SplitMajoranaOPEDatum Prime Field Singular) :
@@ -267,24 +267,6 @@ def toArithmeticSplitMajoranaOPE
     O.singular (O.dField p) (O.dField q) = if p = q then -1 else 0
   cd_regular := fun p q =>
     O.singular (O.cField p) (O.dField q) = 0
-  cc_proof := O.c_c_singular
-  dd_proof := O.d_d_singular
-  cd_proof := O.c_d_regular
-
-theorem toArithmeticSplitMajoranaOPE_cc_holds
-    (O : SplitMajoranaOPEDatum Prime Field Singular) (p q : Prime) :
-    (toArithmeticSplitMajoranaOPE O).cc_singular p q := by
-  exact O.c_c_singular p q
-
-theorem toArithmeticSplitMajoranaOPE_dd_holds
-    (O : SplitMajoranaOPEDatum Prime Field Singular) (p q : Prime) :
-    (toArithmeticSplitMajoranaOPE O).dd_singular p q := by
-  exact O.d_d_singular p q
-
-theorem toArithmeticSplitMajoranaOPE_cd_regular_holds
-    (O : SplitMajoranaOPEDatum Prime Field Singular) (p q : Prime) :
-    (toArithmeticSplitMajoranaOPE O).cd_regular p q := by
-  exact O.c_d_regular p q
 
 end SplitMajoranaOPEDatum
 

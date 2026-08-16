@@ -15,43 +15,31 @@ packets against the same Jixia transition rows without changing the report
 shape.
 """
 
-from __future__ import annotations
-
 import argparse
 import hashlib
 import json
 import re
+import sys
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any, Iterable
+
+ROOT = Path(__file__).resolve().parents[2]
+_SRC = ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from igf.common.hashing import stable_hash
+from igf.common.json_io import iter_jsonl
 
 
 SCHEMA = "info_geometry.paperproof_jixia_compare.v1"
 
 
-def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
-    if not path.exists():
-        return
-    with path.open("r", encoding="utf-8") as handle:
-        for raw in handle:
-            line = raw.strip()
-            if not line:
-                continue
-            try:
-                row = json.loads(line)
-            except Exception:
-                continue
-            if isinstance(row, dict):
-                yield row
-
-
 def normalize_text(value: Any) -> str:
     return re.sub(r"\s+", " ", str(value or "")).strip()
-
-
-def stable_hash(value: Any) -> str:
-    text = json.dumps(value, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha1(text.encode("utf-8")).hexdigest()
 
 
 def range_key(value: Any) -> str:

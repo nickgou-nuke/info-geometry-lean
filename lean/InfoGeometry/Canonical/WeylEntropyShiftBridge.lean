@@ -45,15 +45,6 @@ variable (W : WeylHomogeneousEntropy Op)
 noncomputable def entropy (A : Op) : ℝ :=
   Real.log (W.homogeneous.readout A)
 
-/-- Direct readback of the partition/readout scaling law. -/
-@[rep_depth operator]
-theorem readout_scale
-    (c : ℝ)
-    (A : Op) :
-    W.homogeneous.readout (W.homogeneous.scale c A) =
-      c ^ W.homogeneous.weight * W.homogeneous.readout A :=
-  W.homogeneous.readout_scale c A
-
 /--
 Logarithmic Weyl shift.
 
@@ -71,7 +62,7 @@ theorem entropy_scale_shift
   calc
     Real.log (W.homogeneous.readout (W.homogeneous.scale c A))
         = Real.log (c ^ W.homogeneous.weight * W.homogeneous.readout A) := by
-            rw [W.homogeneous.readout_scale]
+            rw [W.homogeneous.readout_scale_law]
     _ = Real.log (c ^ W.homogeneous.weight) +
           Real.log (W.homogeneous.readout A) := by
             rw [Real.log_mul (pow_ne_zero W.homogeneous.weight hc)

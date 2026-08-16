@@ -34,7 +34,7 @@ def formerJordanObstructionQuestion : Prop :=
 /-- The historical pair satisfies the Jordan law by the native global proof. -/
 theorem formerJordanObstructionQuestion_proof :
     formerJordanObstructionQuestion := by
-  exact H3ZornJordanProductLaw_proof
+  exact H3ZornJordanProductLaw_holds
     formerJordanObstructionA formerJordanObstructionB
 
 /-- The historical pair also satisfies the scalar-free `T`-commutation

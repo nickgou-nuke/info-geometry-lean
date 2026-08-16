@@ -18,12 +18,18 @@ No infinite Euler product, C*-completion, spectral mass-gap theorem, or RH
 claim is verified here.
 """
 
-from __future__ import annotations
-
+import sys
 from itertools import combinations
 from math import prod
+from pathlib import Path
 
 import sympy as sp
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from tools.sympy.common import assert_matrix_eq
 
 
 def subsets(xs: list[int]) -> list[tuple[int, ...]]:
@@ -32,12 +38,6 @@ def subsets(xs: list[int]) -> list[tuple[int, ...]]:
 
 def is_squarefree(n: int) -> bool:
     return sp.mobius(n) != 0
-
-
-def assert_matrix_eq(lhs: sp.Matrix, rhs: sp.Matrix, label: str) -> None:
-    delta = sp.simplify(lhs - rhs)
-    if delta != sp.zeros(*lhs.shape):
-        raise AssertionError(f"{label} failed:\n{delta}")
 
 
 def main() -> None:

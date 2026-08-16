@@ -70,12 +70,6 @@ def normalizedProbability (modes : Finset ℕ) (beta : ℝ) (p : ℕ) : ℝ :=
 def informationSurprisal (modes : Finset ℕ) (beta : ℝ) (p : ℕ) : ℝ :=
   -Real.log (normalizedProbability modes beta p)
 
-/-- The Souriau inverse-temperature readout is the real part of the complex coordinate. -/
-@[rep_depth transport]
-theorem beta_eq_realPart_of_packet (beta : ℝ) (temperature : InfoGeometry.Thermodynamics.SouriauTemperature)
-    (h : beta = temperature.s.re) :
-    beta = temperature.s.re := h
-
 /-- The normalized finite probabilities sum to one. -/
 @[rep_depth thermo]
 theorem normalizedProbability_sum_eq_one (modes : Finset ℕ) (beta : ℝ) (h_nonempty : modes.Nonempty) :

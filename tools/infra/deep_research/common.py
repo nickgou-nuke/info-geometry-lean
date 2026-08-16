@@ -51,8 +51,8 @@ def parse_json_text(text: str) -> Any:
         raise
 
 
-def load_json(path: Path) -> Any:
-    return json.loads(path.read_text(encoding="utf-8"))
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def write_json(path: Path, payload: Any) -> None:

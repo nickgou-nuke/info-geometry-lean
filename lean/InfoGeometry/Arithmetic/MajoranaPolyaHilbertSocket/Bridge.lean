@@ -26,33 +26,33 @@ structure MajoranaPolyaHilbertBridge
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
       ExplicitFormulaReadout : Type) where
   berryKeatingBlock :
-    BerryKeatingOperatorPacket Carrier Operator Mode
+    BerryKeatingOperatorData Carrier Operator Mode
   majoranaDirac :
-    MajoranaBerryKeatingOperatorPacket Carrier Operator Mode ZeroMode
+    MajoranaBerryKeatingOperatorData Carrier Operator Mode ZeroMode
   realMajorana :
     RealMajoranaBerryKeatingProblem Carrier Operator Mode ZeroMode
   normalizability :
-    MajoranaZeroModeNormalizabilityPacket ZeroMode NormReadout
+    MajoranaZeroModeNormalizabilityData ZeroMode NormReadout
   fockMellinGuard :
-    FockVsMellinNormalizabilityGuard FockState MellinState FockNorm MellinNorm
+    FockVsMellinNormalizabilityData FockState MellinState FockNorm MellinNorm
   pfaffianZeta :
-    MajoranaPfaffianZetaSpectralSocket SpectralParameter PfaffianReadout ZetaReadout
+    MajoranaPfaffianZetaSpectralData SpectralParameter PfaffianReadout ZetaReadout
   wittenCompletedXi :
-    WittenCharacterVsCompletedXiSocket
+    WittenCharacterVsCompletedXiData
       SpectralParameter WittenCharacter CompletedXiReadout SpectralPfaffianReadout
   bosonFermion :
-    BosonFermionSuperdeterminantSocket
+    BosonFermionSuperdeterminantData
       BosonicReadout FermionicReadout SuperdeterminantReadout
       ZetaReadout InverseZetaReadout
   archimedean :
-    ArchimedeanGammaFactorSocket
+    ArchimedeanGammaFactorData
       SpectralParameter ArchimedeanReadout FinitePrimeReadout CompletedXiReadout
   discretization :
-    BoundaryScatteringDiscretizationSocket
+    BoundaryScatteringDiscretizationData
       BoundaryData ScatteringMatrix ContinuousSpectrum
       DiscreteOrAbsorptionReadout PhaseShiftReadout
   heatTraceExplicit :
-    MBKHeatTraceExplicitFormulaSocket
+    MBKHeatTraceExplicitFormulaData
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
       ExplicitFormulaReadout
 

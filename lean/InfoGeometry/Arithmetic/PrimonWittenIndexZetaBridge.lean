@@ -2,6 +2,13 @@ import Mathlib
 import InfoGeometry.Arithmetic.PrimonGasDirichletAlgebraBridge
 import InfoGeometry.Arithmetic.MangoldtFunctionalMobiusParityBridge
 
+/-!
+This compatibility owner contains arithmetic Möbius-weighted terms, their
+finite prime factorization, and the reciprocal-zeta identity in the half-plane
+of absolute convergence.  Its historical filename is retained, but it does
+not define a supersymmetric Hamiltonian, supertrace, or Witten index.
+-/
+
 noncomputable section
 
 namespace InfoGeometry.Arithmetic.PrimonWittenIndexZetaBridge
@@ -21,8 +28,9 @@ theorem boltzmannWeight_eq_exp (β : ℝ) (n : ℕ) (hn : 0 < n) :
   have h_pos : 0 < (n : ℝ) := Nat.cast_pos.mpr hn
   rw [mul_comm, <- Real.rpow_def_of_pos h_pos]
 
-/-- Möbius-weighted real power readout. -/
-def wittenIndexTerm (β : ℝ) (n : ℕ) : ℝ :=
+/-- Möbius-weighted real power readout.  This is an arithmetic term, not a
+    supersymmetric Witten-index contribution. -/
+def moebiusWeightedTerm (β : ℝ) (n : ℕ) : ℝ :=
   (moebius n : ℝ) * boltzmannWeight β n
 
 /-- Multiplicativity of the real power weight. -/
@@ -33,9 +41,9 @@ theorem boltzmannWeight_mul (β : ℝ) {a b : ℕ} :
   exact Real.mul_rpow (Nat.cast_nonneg a) (Nat.cast_nonneg b)
 
 /-- Multiplicativity of the Möbius-weighted readout for coprime indices. -/
-theorem wittenIndexTerm_coprime (β : ℝ) {a b : ℕ} (h_cop : a.Coprime b) :
-    wittenIndexTerm β (a * b) = wittenIndexTerm β a * wittenIndexTerm β b := by
-  dsimp [wittenIndexTerm]
+theorem moebiusWeightedTerm_coprime (β : ℝ) {a b : ℕ} (h_cop : a.Coprime b) :
+    moebiusWeightedTerm β (a * b) = moebiusWeightedTerm β a * moebiusWeightedTerm β b := by
+  dsimp [moebiusWeightedTerm]
   have h_moeb : (moebius (a * b) : ℝ) = (moebius a : ℝ) * (moebius b : ℝ) := by
     rw [<- Int.cast_mul, isMultiplicative_moebius.map_mul_of_coprime h_cop]
   rw [h_moeb, boltzmannWeight_mul β]
@@ -47,24 +55,24 @@ theorem moebius_dirichlet_inverse_zeta :
   exact moebius_mul_coe_zeta
 
 /-- The Möbius-weighted readout at a prime index. -/
-theorem wittenIndexTerm_prime (β : ℝ) (p : ℕ) (hp : p.Prime) :
-    wittenIndexTerm β p = - Real.rpow (p : ℝ) (-β) := by
-  dsimp [wittenIndexTerm, boltzmannWeight]
+theorem moebiusWeightedTerm_prime (β : ℝ) (p : ℕ) (hp : p.Prime) :
+    moebiusWeightedTerm β p = - Real.rpow (p : ℝ) (-β) := by
+  dsimp [moebiusWeightedTerm, boltzmannWeight]
   rw [moebius_apply_prime hp]
   ring
 
 /-- The readout vanishes at nonsquarefree indices. -/
-theorem wittenIndexTerm_zero_of_not_squarefree (β : ℝ) (n : ℕ) (h_sq : ¬ Squarefree n) :
-    wittenIndexTerm β n = 0 := by
-  dsimp [wittenIndexTerm]
+theorem moebiusWeightedTerm_zero_of_not_squarefree (β : ℝ) (n : ℕ) (h_sq : ¬ Squarefree n) :
+    moebiusWeightedTerm β n = 0 := by
+  dsimp [moebiusWeightedTerm]
   have h_moeb : moebius n = 0 := ArithmeticFunction.moebius_eq_zero_of_not_squarefree h_sq
   rw [h_moeb, Int.cast_zero, zero_mul]
 
 /-- Finite product factorization over a finset of prime indices. -/
-theorem wittenIndexTerm_prime_set_prod (β : ℝ) (S : Finset ℕ) (h_primes : ∀ p ∈ S, p.Prime) :
-    wittenIndexTerm β (∏ p ∈ S, p) = ∏ p ∈ S, (- Real.rpow (p : ℝ) (-β)) := by
+theorem moebiusWeightedTerm_prime_set_prod (β : ℝ) (S : Finset ℕ) (h_primes : ∀ p ∈ S, p.Prime) :
+    moebiusWeightedTerm β (∏ p ∈ S, p) = ∏ p ∈ S, (- Real.rpow (p : ℝ) (-β)) := by
   induction' S using Finset.induction_on with p S hp ih
-  · dsimp [wittenIndexTerm, boltzmannWeight]
+  · dsimp [moebiusWeightedTerm, boltzmannWeight]
     have h1 : (moebius 1 : ℝ) = 1 := by rw [moebius_apply_one, Int.cast_one]
     rw [h1, Nat.cast_one, Real.one_rpow, mul_one]
   · rw [Finset.prod_insert hp, Finset.prod_insert hp]
@@ -76,24 +84,24 @@ theorem wittenIndexTerm_prime_set_prod (β : ℝ) (S : Finset ℕ) (h_primes : �
       have hq_prime : q.Prime := hS_primes q hq
       have h_ne : p ≠ q := fun h_eq => hp (h_eq ▸ hq)
       exact (Nat.coprime_primes hp_prime hq_prime).mpr h_ne
-    rw [wittenIndexTerm_coprime β h_coprime, wittenIndexTerm_prime β p hp_prime, ih hS_primes]
+    rw [moebiusWeightedTerm_coprime β h_coprime, moebiusWeightedTerm_prime β p hp_prime, ih hS_primes]
 
 /-- Bundles the preceding finite arithmetic identities. -/
 theorem master_primon_witten_index_synthesis
     (β : ℝ) (p : ℕ) (hp : p.Prime) (n : ℕ) (hn : 0 < n) (h_sq : ¬ Squarefree n)
     {a b : ℕ} (h_cop : a.Coprime b) (S : Finset ℕ) (h_primes : ∀ q ∈ S, q.Prime) :
     (Real.exp (-β * primonEnergy n) = boltzmannWeight β n) ∧
-    (wittenIndexTerm β (a * b) = wittenIndexTerm β a * wittenIndexTerm β b) ∧
+    (moebiusWeightedTerm β (a * b) = moebiusWeightedTerm β a * moebiusWeightedTerm β b) ∧
     ((moebius : ArithmeticFunction ℤ) * zeta = 1) ∧
-    (wittenIndexTerm β p = - Real.rpow (p : ℝ) (-β)) ∧
-    (wittenIndexTerm β n = 0) ∧
-    (wittenIndexTerm β (∏ q ∈ S, q) = ∏ q ∈ S, (- Real.rpow (q : ℝ) (-β))) := ⟨
+    (moebiusWeightedTerm β p = - Real.rpow (p : ℝ) (-β)) ∧
+    (moebiusWeightedTerm β n = 0) ∧
+    (moebiusWeightedTerm β (∏ q ∈ S, q) = ∏ q ∈ S, (- Real.rpow (q : ℝ) (-β))) := ⟨
   boltzmannWeight_eq_exp β n hn,
-  wittenIndexTerm_coprime β h_cop,
+  moebiusWeightedTerm_coprime β h_cop,
   moebius_dirichlet_inverse_zeta,
-  wittenIndexTerm_prime β p hp,
-  wittenIndexTerm_zero_of_not_squarefree β n h_sq,
-  wittenIndexTerm_prime_set_prod β S h_primes
+  moebiusWeightedTerm_prime β p hp,
+  moebiusWeightedTerm_zero_of_not_squarefree β n h_sq,
+  moebiusWeightedTerm_prime_set_prod β S h_primes
 ⟩
 
 end InfoGeometry.Arithmetic.PrimonWittenIndexZetaBridge

@@ -5,17 +5,22 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-
 REPO_ROOT = Path(__file__).resolve().parents[2]
+_SRC = REPO_ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
+if str(REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(REPO_ROOT))
+
+from igf.common.time_utils import utc_now_iso
+
 DEFAULT_STATE_PATH = REPO_ROOT / "reports" / "verification" / "pilot" / "state" / "superorganism_pilot_state.json"
-
-
-def utc_now() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+utc_now = utc_now_iso
 
 
 def _to_int(value: Any, fallback: int) -> int:

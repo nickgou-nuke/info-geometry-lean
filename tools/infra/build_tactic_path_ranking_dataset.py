@@ -27,6 +27,9 @@ except Exception:  # pragma: no cover - CLI fallback outside repo import path.
     def classify_tactic(tactic: str) -> dict[str, Any]:
         return {"family": str(tactic or "").split()[0] if str(tactic or "").split() else "", "phase": "unknown"}
 
+from igf.common.json_io import iter_jsonl, write_jsonl
+from igf.common.hashing import stable_hash
+
 
 SCHEMA = "info_geometry.tactic_path_ranking.v1"
 SUMMARY_SCHEMA = "info_geometry.tactic_path_ranking.summary.v1"
@@ -35,27 +38,6 @@ DEFAULT_FAILURES = Path("reports/training/tactic_failures.jsonl")
 DEFAULT_OUT = Path("reports/training/tactic_path_ranking.jsonl")
 DEFAULT_STATS = Path("reports/training/tactic_path_ranking.stats.json")
 STALL_KINDS = {"stall", "loop", "cycle", "no_progress", "repeated", "timeout"}
-
-
-def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
-    if not path.exists():
-        return
-    with path.open("r", encoding="utf-8") as handle:
-        for raw in handle:
-            line = raw.strip()
-            if not line:
-                continue
-            try:
-                row = json.loads(line)
-            except Exception:
-                continue
-            if isinstance(row, dict):
-                yield row
-
-
-def stable_hash(payload: Any) -> str:
-    data = json.dumps(payload, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha256(data.encode("utf-8")).hexdigest()
 
 
 def split_for(key: str, *, train_ratio: float, val_ratio: float, seed: int) -> str:
@@ -437,16 +419,6 @@ def _local_hypotheses(goal: str) -> list[str]:
         return []
     prefix = text.split("⊢", 1)[0]
     return [chunk.strip() for chunk in re.split(r"\n|;", prefix) if ":" in chunk]
-
-
-def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=True, sort_keys=True) + "\n")
-            count += 1
-    return count
 
 
 def run_builder(

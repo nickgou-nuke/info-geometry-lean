@@ -1,49 +1,15 @@
-import Mathlib.LinearAlgebra.Matrix.Trace
-
-noncomputable section
+import InfoGeometry.Clifford.LogCftMonodromy
 
 /-!
-# InfoGeometry.Physics.HadjiivanovCuntzBridge
+# Retired Hadjiivanov/Cuntz compatibility path
 
-Minimal owner-facing bridge for the finite Hadjiivanov logarithmic block used by
-`HadjiivanovBostConnesBridge`.
-
-This file does not claim a full Cuntz-algebra realization. It only packages the
-standard rank-two nilpotent Jordan block `[[0,1],[0,0]]` into a small record
-with a named `matrix` field, so downstream files can state and use trace
-computations honestly.
+The former contents of this module packaged a fixed `Fin 2` Jordan matrix and
+called its zero trace a Cuntz/KMS partition contribution.  No Cuntz-algebra
+representation or intertwiner justified that identification.  The maintained
+operator owner is `InfoGeometry.Clifford.LogCftMonodromy`; this module remains
+as an import-compatible retirement marker and exports no surrogate carrier.
 -/
 
 namespace InfoGeometry.Physics.Hadjiivanov
-
-open Matrix
-
-/-- Finite logarithmic block, natively represented by its matrix carrier. -/
-abbrev LogBlock (R : Type*) [Zero R] [One R] := Matrix (Fin 2) (Fin 2) R
-
-namespace LogBlock
-
-abbrev matrix {R : Type*} [Zero R] [One R] (B : LogBlock R) :
-    Matrix (Fin 2) (Fin 2) R := B
-
-end LogBlock
-
-/-- The square-zero upper Jordan shear `[[0,1],[0,0]]`. -/
-def jordanNilpotent (R : Type*) [Zero R] [One R] : Matrix (Fin 2) (Fin 2) R :=
-  !![0, 1; 0, 0]
-
-/--
-The standard Hadjiivanov logarithmic block is the square-zero upper Jordan shear
-`[[0,1],[0,0]]`.
--/
-def standardLogBlock (R : Type*) [Zero R] [One R] : LogBlock R :=
-  jordanNilpotent R
-
-@[simp] theorem standardLogBlock_matrix (R : Type*) [Zero R] [One R] :
-    (standardLogBlock R).matrix = jordanNilpotent R := rfl
-
-@[simp] theorem standardLogBlock_trace (R : Type*) [CommRing R] :
-    Matrix.trace (standardLogBlock R).matrix = 0 := by
-  simp [standardLogBlock, Matrix.trace_fin_two, jordanNilpotent]
 
 end InfoGeometry.Physics.Hadjiivanov

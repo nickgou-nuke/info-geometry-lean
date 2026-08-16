@@ -27,15 +27,6 @@ def SymbolicLatentModularFlow.toModularFlowData
   sigma_neg_right := by
     intro t x
     simpa [Φ.zero_apply] using (Φ.add_apply t (-t) x).symm
-  preserves := by
-    intro t
-    exact Set.subset_univ _
-
-theorem SymbolicLatentModularFlow.toModularFlowData_sigma
-    {X : Type*} [Ring X] [TopologicalSpace X]
-    (Φ : SymbolicLatentModularFlow X) (t : ℝ) (x : X) :
-    (Φ.toModularFlowData).sigma t x = Φ.act t x :=
-  rfl
 
 theorem SymbolicLatentModularFlow.toModularFlowData_bijective
     {X : Type*} [Ring X] [TopologicalSpace X]
@@ -60,8 +51,7 @@ theorem SymbolicLatentModularFlow.toModularFlowData_group_law
     (Φ : SymbolicLatentModularFlow X) (s t : ℝ) (x : X) :
     (Φ.toModularFlowData).sigma (s + t) x =
       (Φ.toModularFlowData).sigma s ((Φ.toModularFlowData).sigma t x) := by
-  simpa [SymbolicLatentModularFlow.toModularFlowData,
-    SymbolicLatentModularFlow.toModularFlowData_sigma] using
+  simpa [SymbolicLatentModularFlow.toModularFlowData] using
       Φ.add_apply s t x
 
 @[simp] theorem SymbolicLatentModularFlow.toModularFlowData_sigma_neg_left
@@ -71,12 +61,10 @@ theorem SymbolicLatentModularFlow.toModularFlowData_group_law
   calc
     (Φ.toModularFlowData).sigma (-t) ((Φ.toModularFlowData).sigma t x) =
         (Φ.toModularFlowData).sigma 0 x := by
-          simpa [SymbolicLatentModularFlow.toModularFlowData,
-            SymbolicLatentModularFlow.toModularFlowData_sigma] using
+          simpa [SymbolicLatentModularFlow.toModularFlowData] using
               (Φ.add_apply (-t) t x).symm
     _ = x := by
-      simpa [SymbolicLatentModularFlow.toModularFlowData,
-        SymbolicLatentModularFlow.toModularFlowData_sigma] using Φ.zero_apply x
+      simpa [SymbolicLatentModularFlow.toModularFlowData] using Φ.zero_apply x
 
 @[simp] theorem SymbolicLatentModularFlow.toModularFlowData_sigma_neg_right
     {X : Type*} [Ring X] [TopologicalSpace X]
@@ -85,11 +73,9 @@ theorem SymbolicLatentModularFlow.toModularFlowData_group_law
   calc
     (Φ.toModularFlowData).sigma t ((Φ.toModularFlowData).sigma (-t) x) =
         (Φ.toModularFlowData).sigma 0 x := by
-          simpa [SymbolicLatentModularFlow.toModularFlowData,
-            SymbolicLatentModularFlow.toModularFlowData_sigma] using
+          simpa [SymbolicLatentModularFlow.toModularFlowData] using
               (Φ.add_apply t (-t) x).symm
     _ = x := by
-      simpa [SymbolicLatentModularFlow.toModularFlowData,
-        SymbolicLatentModularFlow.toModularFlowData_sigma] using Φ.zero_apply x
+      simpa [SymbolicLatentModularFlow.toModularFlowData] using Φ.zero_apply x
 
 end InfoGeometry.Topology

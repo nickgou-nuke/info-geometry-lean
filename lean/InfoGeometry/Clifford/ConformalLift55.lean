@@ -57,8 +57,7 @@ Construct the conformal null pair inside the extra `Cl(1,1)` factor of
 
 This is not complexification of `Cl(4,4)`.
 -/
-theorem conformalNullPair_exists :
-    Nonempty ConformalNullPair := by
+noncomputable def conformalNullPair : ConformalNullPair := by
   let e0Vec : SplitSpace 5 := ((1, 1), (0 : SplitSpace 4))
   let eInfVec : SplitSpace 5 := ((1, -1), (0 : SplitSpace 4))
   let u0 : Cl55 := CliffordAlgebra.ι (Qsplit 5) e0Vec
@@ -67,10 +66,10 @@ theorem conformalNullPair_exists :
   let v : Cl55 := (1 / 4 : ℝ) • v0
   have hq0 : Qsplit 5 e0Vec = 0 := by
     change Q11 (1, 1) + Qsplit 4 (0 : SplitSpace 4) = 0
-    simp [Q11_apply]
+    simp
   have hqInf : Qsplit 5 eInfVec = 0 := by
     change Q11 (1, -1) + Qsplit 4 (0 : SplitSpace 4) = 0
-    simp [Q11_apply]
+    simp
   have hu0_sq : u0 * u0 = 0 := by
     simpa [u0, hq0] using (CliffordAlgebra.ι_sq_scalar (Q := Qsplit 5) e0Vec)
   have hv0_sq : v0 * v0 = 0 := by
@@ -81,7 +80,7 @@ theorem conformalNullPair_exists :
       norm_num [Q11_apply, hq0, hqInf]
     simpa [u0, v0, hpolarQ] using
       (CliffordAlgebra.ι_mul_ι_add_swap (Q := Qsplit 5) e0Vec eInfVec)
-  refine ⟨⟨u, v, ?_, ?_, ?_⟩⟩
+  refine ⟨u, v, ?_, ?_, ?_⟩
   · simpa [u, u0, pow_two] using hu0_sq
   · simpa [v, v0, pow_two, smul_mul_assoc, mul_smul] using hv0_sq
   · have hpair : u * v + v * u = (1 / 4 : ℝ) • (u0 * v0 + v0 * u0) := by
@@ -92,5 +91,9 @@ theorem conformalNullPair_exists :
       rw [← map_mul]
       norm_num
     exact hpair.trans hnorm
+
+theorem conformalNullPair_exists :
+    Nonempty ConformalNullPair :=
+  ⟨conformalNullPair⟩
 
 end InfoGeometry.Clifford.ConformalLift55

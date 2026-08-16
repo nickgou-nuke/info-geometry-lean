@@ -1,8 +1,5 @@
 import Mathlib.Tactic
 
-set_option linter.unusedSectionVars false
-set_option linter.unusedVariables false
-
 /-!
 # Native Lee-Yang Cayley Transform Master Bridge
 

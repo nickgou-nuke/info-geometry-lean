@@ -296,6 +296,19 @@ lemma variance_eq_zero_iff_energy_eq_mean
     intro x hx
     simp [hE x]
 
+lemma variance_pos_of_energy_ne
+    (params : GrandCanonicalParams α) (β : ℝ)
+    {x y : α} (hxy : params.energy x ≠ params.energy y) :
+    0 < variance params β := by
+  have hne : variance params β ≠ 0 := by
+    intro hzero
+    have hall := (variance_eq_zero_iff_energy_eq_mean params β).mp hzero
+    apply hxy
+    calc
+      params.energy x = mean params β := hall x
+      _ = params.energy y := (hall y).symm
+  exact lt_of_le_of_ne (variance_nonneg params β) (Ne.symm hne)
+
 /-- One-observable covariance, equal to variance. -/
 noncomputable def covariance (params : GrandCanonicalParams α) (β : ℝ) : ℝ :=
   variance params β

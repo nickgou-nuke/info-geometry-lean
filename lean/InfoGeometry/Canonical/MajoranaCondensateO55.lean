@@ -2,6 +2,7 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.CantorChirality
 import InfoGeometry.Canonical.BohmMadelungFisher
 import InfoGeometry.Canonical.CramerRaoUncertainty
+import InfoGeometry.Canonical.TKKJordanPairData
 
 /-!
 # Majorana Condensate, Pin(5,5) 5-Grading, and Witten Index Anomaly Cancellation
@@ -24,13 +25,41 @@ open InfoGeometry.Canonical.OmegaBoundaryRepresentation
 open InfoGeometry.Canonical.CantorDiracPropagation
 open InfoGeometry.Canonical.CantorChirality
 
-/-- 5-Graded decomposition of the conformal algebra. -/
-class Pin55_5GradedClosure (A : Type*) [Ring A] where
-  grade_minus2 : A → Prop
-  grade_minus1 : A → Prop  -- Left Majorana Zero Modes
-  grade_zero   : A → Prop  -- Conformal rotations
-  grade_plus1  : A → Prop  -- Right Majorana Zero Modes
-  grade_plus2  : A → Prop
+/--
+The noncommutative five-grade closure carried by an O(5,5) algebra.
+
+The grade is indexed by the TKK grades, rather than by an unstructured
+`Fin 5` label on individual elements.  The two closure fields are the actual
+bracket laws: brackets whose weight stays in `[-2,2]` land in the corresponding
+homogeneous submodule, while brackets outside that window vanish.
+-/
+class Pin55_5GradedClosure (A : Type*) [Ring A] [LieRing A]
+    [LieAlgebra ℤ A] where
+  grade : TKKJordanPairData.TKKGrade → Submodule ℤ A
+  bracket_mem_some : ∀ {i j k : TKKJordanPairData.TKKGrade},
+    TKKJordanPairData.gradeAdd i j = some k →
+      ∀ {x y : A}, x ∈ grade i → y ∈ grade j → ⁅x, y⁆ ∈ grade k
+  bracket_eq_zero_none : ∀ {i j : TKKJordanPairData.TKKGrade},
+    TKKJordanPairData.gradeAdd i j = none →
+      ∀ {x y : A}, x ∈ grade i → y ∈ grade j → ⁅x, y⁆ = 0
+
+theorem Pin55_5GradedClosure.bracket_mem_grade
+    {A : Type*} [Ring A] [LieRing A] [LieAlgebra ℤ A]
+    (G : Pin55_5GradedClosure A)
+    {i j k : TKKJordanPairData.TKKGrade}
+    (hijk : TKKJordanPairData.gradeAdd i j = some k)
+    {x y : A} (hx : x ∈ G.grade i) (hy : y ∈ G.grade j) :
+    ⁅x, y⁆ ∈ G.grade k :=
+  G.bracket_mem_some hijk hx hy
+
+theorem Pin55_5GradedClosure.bracket_eq_zero_outside_window
+    {A : Type*} [Ring A] [LieRing A] [LieAlgebra ℤ A]
+    (G : Pin55_5GradedClosure A)
+    {i j : TKKJordanPairData.TKKGrade}
+    (hij : TKKJordanPairData.gradeAdd i j = none)
+    {x y : A} (hx : x ∈ G.grade i) (hy : y ∈ G.grade j) :
+    ⁅x, y⁆ = 0 :=
+  G.bracket_eq_zero_none hij hx hy
 
 /-- The Witten Index of the Dirac-Chirality system with a kernel projector `K`. -/
 def WittenIndex (Γ : (Module.End ℂ ((ℕ → Bool) → ℂ))) (K : (Module.End ℂ ((ℕ → Bool) → ℂ))) (trace : (Module.End ℂ ((ℕ → Bool) → ℂ)) →ₗ[ℂ] ℂ) : ℂ :=

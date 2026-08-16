@@ -7,7 +7,6 @@ import InfoGeometry.Canonical.RelativeModularHamiltonian
 import InfoGeometry.Canonical.SouriauModularBregmanOperator
 import InfoGeometry.Topology.ThermodynamicGauge
 import InfoGeometry.Volume.ConnesInfinitesimal
-import InfoGeometry.Volume.LogarithmicOrderParameterConnesBridge
 
 /-!
 # Infinitesimal Dictionary Bridge
@@ -43,14 +42,14 @@ Explicit bridge data for the infinitesimal dictionary.
 constraint/current.  This keeps the classical divergence lane and the
 operator-valued thermodynamic lane honestly separated.
 -/
-structure InfinitesimalDictionaryPacket
+structure InfinitesimalDictionaryModel
     (Θ V State Op Alg X : Type*)
     [AddCommGroup V] [AddGroup Op] [Ring Alg] where
   logPartition : LogPartitionPotentialBridge Θ V
   gauge : SouriauAmariGauge Alg Θ V X
   divergence : State → State → ℝ
   toOperator : State → Op
-  operatorPacket : NoncommutativeItakuraSaitoPacket Op
+  operatorPacket : NoncommutativeItakuraSaitoModel Op
   pathConstraint : Alg
   pathReadout : Alg → ℝ
   pathConstraintScalar : ℝ
@@ -79,11 +78,11 @@ structure InfinitesimalDictionaryPacket
     restrictedAraki (fun s t => divergence s t) ω φ =
       operatorPacket.divergence (toOperator ω) (toOperator φ)
 
-namespace InfinitesimalDictionaryPacket
+namespace InfinitesimalDictionaryModel
 
 variable {Θ V State Op Alg X : Type*}
 variable [AddCommGroup V] [AddGroup Op] [Ring Alg]
-variable (P : InfinitesimalDictionaryPacket Θ V State Op Alg X)
+variable (P : InfinitesimalDictionaryModel Θ V State Op Alg X)
 
 /--
 Operator-valued variation of the state-surprisal generator.
@@ -230,7 +229,7 @@ theorem antisymmetric_eq_pathConstraintScalar_of_calibration
     antisymmetricDivergence P.divergence ω φ = P.pathConstraintScalar :=
   hcal
 
-end InfinitesimalDictionaryPacket
+end InfinitesimalDictionaryModel
 
 /-! ## Connes RN derivative owner readbacks -/
 
@@ -242,7 +241,7 @@ variable (flow : CausalNonequilibriumFlow InfoGeometry.Clifford.ChiralGrandCanon
 
 /-- The Connes cocycle derivative is definitionally the modular-Hamiltonian difference. -/
 theorem coadjoint_cocycleDerivative_eq_modularHamiltonianDifference :
-    ConnesCocycle.connesRadonNikodymDerivative H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2 =
+    ConnesCocycle.relativeModularGeneratorDifference H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2 =
       InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.grandCanonicalModularGenerator H2 beta2 μ2 μχ2 -
       InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.grandCanonicalModularGenerator H1 beta1 μ1 μχ1 :=
   rfl
@@ -251,7 +250,7 @@ theorem coadjoint_cocycleDerivative_eq_modularHamiltonianDifference :
 theorem coadjoint_cocycleDerivative_eq_dlnQ_of_modularDifference
     (hmod : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.grandCanonicalModularGenerator H2 beta2 μ2 μχ2 -
       InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.grandCanonicalModularGenerator H1 beta1 μ1 μχ1 = flow.d_ln_Q) :
-    ConnesCocycle.connesRadonNikodymDerivative H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2 =
+    ConnesCocycle.relativeModularGeneratorDifference H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2 =
       flow.d_ln_Q := by
   rw [coadjoint_cocycleDerivative_eq_modularHamiltonianDifference H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2]
   exact hmod
@@ -261,54 +260,12 @@ theorem coadjoint_cocycleDerivative_eq_entropyProduction_of_modularDifference
     (hmod : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.grandCanonicalModularGenerator H2 beta2 μ2 μχ2 -
       InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.grandCanonicalModularGenerator H1 beta1 μ1 μχ1 = flow.d_ln_Q)
     (hentropy : entropy_production flow = flow.d_ln_Q) :
-    ConnesCocycle.connesRadonNikodymDerivative H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2 =
+    ConnesCocycle.relativeModularGeneratorDifference H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2 =
       entropy_production flow := by
   rw [coadjoint_cocycleDerivative_eq_dlnQ_of_modularDifference
     H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2 flow hmod, ← hentropy]
 
 end CoadjointConnes
-
-/-! ## Scalar Connes modular-Hamiltonian shadow -/
-
-section ScalarConnesShadow
-
-variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-
-/-- Scalar Connes modular Hamiltonian is the negative cocycle log-potential. -/
-theorem connesScalarModularHamiltonian_eq_neg_cocycleLogPotential
-    (σ : AdditiveModularFlow (H := H))
-    (u : ℝ → AlgebraEnd H)
-    (B : ScalarCocycleBridge (H := H) σ)
-    (t : ℝ) :
-    InfoGeometry.Volume.LogarithmicOrderParameterConnesBridge.connesScalarModularHamiltonian
-        (H := H) σ u B t =
-      -cocycleLogPotential (H := H) σ u B t :=
-  rfl
-
-/--
-Concrete scalar Radon--Nikodym readout: along the positive exponential density
-path `exp(rate * t)`, the logarithmic RN derivative is exactly the modular
-Hamiltonian difference/rate.
--/
-theorem scalarRNLogDerivative_eq_modularHamiltonianDifference
-    (rate t : ℝ) :
-    HasDerivAt
-      (fun τ : ℝ => unitsRNBridge.rn (expUnitsPath rate τ))
-      rate t :=
-  unitsRNBridge_rn_expUnitsPath_hasDerivAt rate t
-
-/--
-At the infinitesimal base point, the scalar RN cocycle derivative is the
-modular-Hamiltonian difference/rate.
--/
-theorem scalarRNLogDerivative_at_zero_eq_modularHamiltonianDifference
-    (rate : ℝ) :
-    HasDerivAt
-      (fun τ : ℝ => unitsRNBridge.rn (expUnitsPath rate τ))
-      rate 0 :=
-  scalarRNLogDerivative_eq_modularHamiltonianDifference (rate := rate) 0
-
-end ScalarConnesShadow
 
 /-! ## Finite `Δ`-primary modular-Hamiltonian owner readback -/
 

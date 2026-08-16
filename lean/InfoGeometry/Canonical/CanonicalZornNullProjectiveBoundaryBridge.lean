@@ -1,4 +1,5 @@
 import Mathlib.LinearAlgebra.FreeModule.Finite.Basic
+import Mathlib.LinearAlgebra.Basis.VectorSpace
 import InfoGeometry.Lie.SplitOctonionAnnihilatorDimension
 import InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
 
@@ -299,11 +300,9 @@ theorem annihilator_fibre_finrank_three {X : Imaginary}
 pretending that the annihilator has a preferred coordinate basis. -/
 noncomputable def annihilatorBasis {X : Imaginary}
     (hX0 : X ≠ 0) (hXnull : X ∈ NormLevel 0) :
-    Module.Basis (Module.Free.ChooseBasisIndex ℝ (Annihilator X)) ℝ (Annihilator X) :=
-  letI : Module.Finite ℝ (Annihilator X) :=
-    Module.finite_of_finrank_eq_succ (by
-      simpa using annihilator_fibre_finrank_three hX0 hXnull)
-  Module.Free.chooseBasis ℝ (Annihilator X)
+    Module.Basis
+      (Module.Basis.ofVectorSpaceIndex ℝ (Annihilator X)) ℝ (Annihilator X) :=
+  Module.Basis.ofVectorSpace ℝ (Annihilator X)
 
 theorem annihilatorBasis_finrank_three {X : Imaginary}
     (hX0 : X ≠ 0) (hXnull : X ∈ NormLevel 0) :

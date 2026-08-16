@@ -33,6 +33,12 @@ import re
 import sys
 from pathlib import Path
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from tools.quality.common import strip_lean_comments
+else:
+    from tools.quality.common import strip_lean_comments
+
 # ── Regexes ──────────────────────────────────────────────────────────
 
 # Matches:  someField_statement : Prop
@@ -50,77 +56,6 @@ BARE_WITNESS_PROP_RE = re.compile(r"^\s{2,}(\w+_witness)\s*:\s*Prop\b")
 
 # Matches:  someField_witness :
 WITNESS_RE = re.compile(r"^\s+(\w+_witness)\s*:", re.MULTILINE)
-
-
-# ── Comment Stripping ────────────────────────────────────────────────
-
-def strip_lean_comments(text: str) -> str:
-    """Remove Lean line and block comments while preserving line numbers."""
-    out: list[str] = []
-    i = 0
-    depth = 0
-    in_string = False
-    in_char = False
-
-    while i < len(text):
-        ch = text[i]
-        nxt = text[i + 1] if i + 1 < len(text) else ""
-
-        if depth > 0:
-            if ch == "/" and nxt == "-":
-                depth += 1
-                out.extend("  ")
-                i += 2
-            elif ch == "-" and nxt == "/":
-                depth -= 1
-                out.extend("  ")
-                i += 2
-            else:
-                out.append("\n" if ch == "\n" else " ")
-                i += 1
-            continue
-
-        if in_string:
-            out.append(ch)
-            if ch == "\\" and i + 1 < len(text):
-                out.append(text[i + 1])
-                i += 2
-            else:
-                if ch == "\"":
-                    in_string = False
-                i += 1
-            continue
-
-        if in_char:
-            out.append(ch)
-            if ch == "\\" and i + 1 < len(text):
-                out.append(text[i + 1])
-                i += 2
-            else:
-                if ch == "'":
-                    in_char = False
-                i += 1
-            continue
-
-        if ch == "-" and nxt == "-":
-            out.extend(" " for _ in iter(text[i:].split("\n", 1)[0]))
-            i += len(text[i:].split("\n", 1)[0])
-            continue
-
-        if ch == "/" and nxt == "-":
-            depth = 1
-            out.extend("  ")
-            i += 2
-            continue
-
-        if ch == "\"":
-            in_string = True
-        elif ch == "'":
-            in_char = True
-        out.append(ch)
-        i += 1
-
-    return "".join(out)
 
 
 # ── Scanning ─────────────────────────────────────────────────────────

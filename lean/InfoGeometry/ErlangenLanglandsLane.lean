@@ -218,7 +218,8 @@ by
       {
         eulerProduct := packet.eulerProduct.toEulerProductData
         completedL := packet.completedLFunction.completedL
-        completedFunctionalEquation := packet.completedLFunction.toHasCompletedFunctionalEquation
+        completedFunctionalEquation :=
+          packet.completedLFunction.completed_functional_equation_law
       },
       rfl,
       rfl

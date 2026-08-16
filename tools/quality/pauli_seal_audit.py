@@ -11,8 +11,10 @@ from typing import Any
 
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+    from tools.quality.common import line_of
     from tools.pathing import repo_root
 else:
+    from tools.quality.common import line_of
     from tools.pathing import repo_root
 
 
@@ -182,10 +184,6 @@ def count_density(text: str) -> tuple[int, int]:
         ):
             signal_lines += 1
     return comment_lines, signal_lines
-
-
-def line_of(text: str, offset: int) -> int:
-    return text.count("\n", 0, offset) + 1
 
 
 def declaration_header(lines: list[str], start: int, max_lines: int = 20) -> str:
@@ -488,12 +486,8 @@ def scan_file(path: Path) -> list[Finding]:
     return findings
 
 
-def load_json(path: Path) -> dict[str, Any] | None:
-    try:
-        raw = json.loads(path.read_text(encoding="utf-8"))
-    except Exception:
-        return None
-    return raw if isinstance(raw, dict) else None
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def main() -> int:

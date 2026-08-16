@@ -27,6 +27,7 @@ namespace InfoGeometry.Canonical.RelativeModularPotential
 
 open InfoGeometry.Canonical.RelationalInformationCore
 open InfoGeometry.Canonical.StateDependentTransport
+open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Krein
 
 section Core
@@ -192,6 +193,24 @@ theorem firstVariation_eq_gauge_add_source
     gaugeVariation (E := E) P ψ A + sourceVariation (E := E) P ψ A := by
   unfold firstVariation gaugeVariation sourceVariation
   rw [stateInducedDynamics_eq_gauge_add_source (E := E) P.modularData ψ A]
+  simp
+
+/-!
+The zero-response statement is an operator-algebraic commutant theorem.  It
+does not assert that a scalar potential vanishes: an observable has zero first
+modular response precisely when it commutes with the relative modular
+generator on the same doubled carrier.
+-/
+
+@[rep_depth transport]
+theorem firstVariation_eq_zero_of_commute_generator
+    (P : PotentialDatum (E := E)) (ψ : H₂) (A : EndH)
+    (hComm : Commute A
+      (relativeModularKGenerator (E := E) (stateModularSeed (E := E) P.modularData ψ))) :
+    firstVariation (E := E) P ψ A = 0 := by
+  unfold firstVariation stateInducedDynamics
+  rw [relativeModularDeriv_eq_zero_of_commute_generator
+    (E := E) (stateModularSeed (E := E) P.modularData ψ) A hComm]
   simp
 
 @[rep_depth transport, simp] theorem comparisonPhaseReadout_eq_metric_comp_complex_i

@@ -19,21 +19,25 @@ variants and emits the same `info_geometry.paperproof_trace.v1` schema used by
 our Jixia-derived Paperproof-style packets.
 """
 
-from __future__ import annotations
-
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
 from typing import Any, Iterable
 
+ROOT = Path(__file__).resolve().parents[2]
+_SRC = ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from igf.common.hashing import stable_hash
+from igf.common.json_io import write_jsonl
+
 
 SCHEMA = "info_geometry.paperproof_trace.v1"
-
-
-def stable_hash(payload: Any) -> str:
-    text = json.dumps(payload, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha1(text.encode("utf-8")).hexdigest()
 
 
 def load_docs(path: Path) -> list[Any]:
@@ -157,16 +161,6 @@ def packet_from_doc(doc: Any, *, source_file: str = "", theorem: str = "", packe
             "lean_remains_proof_authority": True,
         },
     }
-
-
-def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=True, sort_keys=True) + "\n")
-            count += 1
-    return count
 
 
 def main() -> int:

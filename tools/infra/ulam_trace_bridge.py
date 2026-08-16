@@ -11,17 +11,22 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
 from typing import Any, Iterable
+
+ROOT = Path(__file__).resolve().parents[2]
+_SRC = ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from igf.common.hashing import stable_hash
 
 SCHEMA = "info_geometry.ulam_trace.v1"
 SUMMARY_SCHEMA = "info_geometry.ulam_trace.summary.v1"
 DEFAULT_OUTPUT_DIR = Path("artifacts/ulam")
-
-
-def stable_hash(payload: Any) -> str:
-    data = json.dumps(payload, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha256(data.encode("utf-8")).hexdigest()
 
 
 def as_text(value: Any) -> str:

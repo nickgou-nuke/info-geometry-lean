@@ -23,12 +23,8 @@ import sympy as sp
 from sympy import I, eye, zeros, simplify, kronecker_product
 from typing import List, Tuple
 
-def pauli_matrices() -> Tuple[sp.Matrix, sp.Matrix, sp.Matrix]:
-    """Return the three Pauli matrices σ₁, σ₂, σ₃."""
-    sigma1 = sp.Matrix([[0, 1], [1, 0]])
-    sigma2 = sp.Matrix([[0, -I], [I, 0]])
-    sigma3 = sp.Matrix([[1, 0], [0, -1]])
-    return sigma1, sigma2, sigma3
+# [lossless-compact] pauli_matrices folded into igf.cas.pauli.pauli_matrices
+from igf.cas.pauli import pauli_matrices
 
 def construct_gamma_matrices_recursive(d: int) -> List[sp.Matrix]:
     """

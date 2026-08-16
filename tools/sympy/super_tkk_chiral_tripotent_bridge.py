@@ -15,22 +15,21 @@ superconformal algebra, boundary braid category, or continuum anomaly theorem
 is asserted here.
 """
 
-from __future__ import annotations
-
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 import sympy as sp
 
 ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from tools.sympy.common import assert_matrix_eq
+
 SAGE = Path("/home/goutev/miniforge3/envs/sage/bin/sage")
 GAP = Path("/home/goutev/miniforge3/envs/sage/bin/gap")
-
-
-def assert_matrix_eq(label: str, actual: sp.Matrix, expected: sp.Matrix) -> None:
-    if actual != expected:
-        raise AssertionError(f"{label}:\nactual={actual}\nexpected={expected}")
 
 
 def run_gap_role_checks() -> dict[str, int | bool]:

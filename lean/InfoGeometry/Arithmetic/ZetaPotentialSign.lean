@@ -1,14 +1,10 @@
-/-
-InfoGeometry/Arithmetic/ZetaPotentialSign.lean
+import InfoGeometry.Canonical.RelativeSurprisalRadonNikodymBridge
+import InfoGeometry.Krein.DoubledSpace
 
-Log ζ sign convention.
+/-!
+# Zeta-potential compatibility surface
+
+The former `zetaPotentialSign : ℝ := 1` was a dummy scalar convention and was
+not consumed by the arithmetic L-function owner.  Potential signs are carried
+by the real doubled/Krein and relative-surprisal owners instead.
 -/
-
-import Mathlib.Tactic
-
-namespace InfoGeometry.Arithmetic.ZetaPotential
-
-/-- Dummy definition for Zeta potential sign convention. -/
-def zetaPotentialSign : ℝ := 1
-
-end InfoGeometry.Arithmetic.ZetaPotential

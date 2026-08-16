@@ -15,23 +15,12 @@ from pathlib import Path
 from typing import Any
 
 
-def read_jsonl(path: Path) -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
-    if not path.exists():
-        return rows
-    with path.open("r", encoding="utf-8") as handle:
-        for line in handle:
-            line = line.strip()
-            if line:
-                rows.append(json.loads(line))
-    return rows
+# [lossless-compact] read_jsonl folded into igf.common.json_io.read_jsonl
+from igf.common.json_io import read_jsonl
 
 
-def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=True) + "\n")
+# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
+from igf.common.json_io import write_jsonl
 
 
 def node_key(row: dict[str, Any]) -> str:

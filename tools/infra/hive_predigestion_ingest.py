@@ -38,8 +38,8 @@ def canonical_json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
 
 
-def stable_hash(value: Any) -> str:
-    return hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
+# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
+from igf.common.hashing import stable_hash
 
 
 def require_enum(value: str, allowed: set[str], name: str) -> str:
@@ -48,19 +48,8 @@ def require_enum(value: str, allowed: set[str], name: str) -> str:
     return value
 
 
-def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
-    with path.open("r", encoding="utf-8") as handle:
-        for line_no, raw in enumerate(handle, start=1):
-            line = raw.strip()
-            if not line:
-                continue
-            try:
-                row = json.loads(line)
-            except Exception as exc:  # noqa: BLE001
-                raise SystemExit(f"{path}:{line_no}: invalid JSONL row: {exc}") from exc
-            if not isinstance(row, dict):
-                raise SystemExit(f"{path}:{line_no}: expected JSON object row")
-            yield row
+# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
+from igf.common.json_io import iter_jsonl
 
 
 def validate_claim(row: dict[str, Any]) -> None:
@@ -112,14 +101,8 @@ def build_tasks(claims_path: Path, *, task_kind: str) -> list[dict[str, Any]]:
     return [make_task(claim, task_kind=task_kind) for claim in iter_jsonl(claims_path)]
 
 
-def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(canonical_json(row) + "\n")
-            count += 1
-    return count
+# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
+from igf.common.json_io import write_jsonl
 
 
 def summary_for(rows: list[dict[str, Any]], *, claims_path: Path, out: Path) -> dict[str, Any]:

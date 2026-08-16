@@ -114,8 +114,8 @@ def _now() -> float:
     return time.time()
 
 
-def _now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+# [lossless-compact] _now_iso folded into igf.common.time_utils.utc_now_iso
+from igf.common.time_utils import utc_now_iso as _now_iso
 
 
 def _now_tag_safe() -> str:

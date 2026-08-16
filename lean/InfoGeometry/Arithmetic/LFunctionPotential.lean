@@ -111,7 +111,7 @@ The unified horizon property in the real-doubled language.
 The correspondence is between the Jordan rank-collapse and the 
 L-function vanishing on the real carrier.
 -/
-structure UnifiedHorizonWitness
+structure UnifiedHorizonData
     (J : Type*) [AddCommGroup J] [Module ℝ J]
     (D : CubicJordanNormDatum J)
     (G : Type*) [Monoid G]
@@ -151,7 +151,7 @@ structure UnifiedHorizonWitness
       D.norm X = 0 →
         ArithmeticBarrierDivergesAt L (spectralMap X)
 
-namespace UnifiedHorizonWitness
+namespace UnifiedHorizonData
 
 variable
     {J : Type*} [AddCommGroup J] [Module ℝ J]
@@ -163,7 +163,7 @@ variable
 A Jordan rank-deficiency horizon maps to an arithmetic L-divisor.
 -/
 theorem geometric_horizon_is_arithmetic_horizon
-    (W : UnifiedHorizonWitness J D G L)
+    (W : UnifiedHorizonData J D G L)
     (X : J)
     (hRankDeficient : D.norm X = 0) :
     IsArithmeticHorizon L (W.spectralMap X) :=
@@ -174,7 +174,7 @@ An arithmetic L-divisor in the spectral image pulls back to a Jordan
 rank-deficiency horizon.
 -/
 theorem arithmetic_horizon_is_geometric_horizon
-    (W : UnifiedHorizonWitness J D G L)
+    (W : UnifiedHorizonData J D G L)
     (X : J)
     (hArithmetic : IsArithmeticHorizon L (W.spectralMap X)) :
     D.norm X = 0 :=
@@ -184,7 +184,7 @@ theorem arithmetic_horizon_is_geometric_horizon
 The exact equivalence between the Jordan divisor and the arithmetic divisor.
 -/
 theorem geometric_horizon_iff_arithmetic_horizon
-    (W : UnifiedHorizonWitness J D G L)
+    (W : UnifiedHorizonData J D G L)
     (X : J) :
     D.norm X = 0 ↔ IsArithmeticHorizon L (W.spectralMap X) :=
   W.horizonIff X
@@ -193,12 +193,12 @@ theorem geometric_horizon_iff_arithmetic_horizon
 At a geometric horizon, the arithmetic logarithmic barrier diverges.
 -/
 theorem arithmetic_barrier_diverges_at_geometric_horizon
-    (W : UnifiedHorizonWitness J D G L)
+    (W : UnifiedHorizonData J D G L)
     (X : J)
     (hRankDeficient : D.norm X = 0) :
     ArithmeticBarrierDivergesAt L (W.spectralMap X) :=
   W.arithmeticBarrierDivergesOnHorizon X hRankDeficient
 
-end UnifiedHorizonWitness
+end UnifiedHorizonData
 
 end InfoGeometry.Arithmetic.LFunction

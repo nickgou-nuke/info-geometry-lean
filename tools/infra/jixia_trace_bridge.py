@@ -12,8 +12,18 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
 from typing import Any, Iterable
+
+ROOT = Path(__file__).resolve().parents[2]
+_SRC = ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from igf.common.json_io import write_jsonl
 
 
 SCHEMA_DECL = "info_geometry.jixia.declaration.v1"
@@ -31,9 +41,8 @@ AGGREGATE_TACTIC_MARKERS = (
 )
 
 
-def stable_hash(payload: Any) -> str:
-    text = json.dumps(payload, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha1(text.encode("utf-8")).hexdigest()
+# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
+from igf.common.hashing import stable_hash
 
 
 def load_json_array(path: Path | None) -> list[Any]:
@@ -247,16 +256,6 @@ def normalize_line(row: dict[str, Any], source_file: Path, idx: int) -> dict[str
     }
     payload["id"] = stable_hash(["line", str(source_file), idx, payload["start"]])
     return payload
-
-
-def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=True, sort_keys=True) + "\n")
-            count += 1
-    return count
 
 
 def run_bridge(

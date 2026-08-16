@@ -27,6 +27,44 @@ open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
 def riemannXi (s : ℂ) : ℂ :=
   (1 / 2 : ℂ) * s * (s - 1) * completedRiemannZeta s
 
+/-! The concrete `riemannXi` readout inherits the differentiability domain of
+the completed zeta factor.  The removable behavior at `0` and `1` is a
+separate analytic owner obligation; no extension across those points is
+claimed here. -/
+
+theorem differentiableAt_riemannXi {s : ℂ} (hs0 : s ≠ 0) (hs1 : s ≠ 1) :
+    DifferentiableAt ℂ riemannXi s := by
+  have hζ : DifferentiableAt ℂ completedRiemannZeta s :=
+    differentiableAt_completedZeta hs0 hs1
+  unfold riemannXi
+  fun_prop
+
+/-- The concrete completed `riemannXi` readout is nonzero on the absolute
+convergence half-plane.  This supplies a genuine nontrivial witness for
+constructors that consume the actual completed function; it makes no claim
+about zeros in the critical strip. -/
+theorem riemannXi_ne_zero_of_one_lt_re {s : ℂ} (hs : 1 < s.re) :
+    riemannXi s ≠ 0 := by
+  have hs0 : s ≠ 0 := by
+    intro h
+    rw [h] at hs
+    norm_num at hs
+  have hs1 : s ≠ 1 := by
+    intro h
+    rw [h] at hs
+    norm_num at hs
+  have hGamma : Gammaℝ s ≠ 0 := Gammaℝ_ne_zero_of_re_pos (zero_lt_one.trans hs)
+  have hZeta : riemannZeta s ≠ 0 := riemannZeta_ne_zero_of_one_lt_re hs
+  have hs1' : s - 1 ≠ 0 := sub_ne_zero.mpr hs1
+  have hcompleted : completedRiemannZeta s = riemannZeta s * Gammaℝ s := by
+    have h := riemannZeta_def_of_ne_zero hs0
+    exact (eq_div_iff hGamma).mp h |>.symm
+  unfold riemannXi
+  rw [hcompleted]
+  exact mul_ne_zero
+    (mul_ne_zero (mul_ne_zero (by norm_num) hs0) hs1')
+    (mul_ne_zero hZeta hGamma)
+
 /-- Symmetry-adapted coordinate `z = s - 1/2`. -/
 def toSymmetryAdapted (s : ℂ) : ℂ :=
   s - (1 / 2 : ℂ)
@@ -38,6 +76,15 @@ def fromSymmetryAdapted (z : ℂ) : ℂ :=
 /-- `Ξ(z) = ξ(s(z))`. -/
 def symmetryAdaptedXi (z : ℂ) : ℂ :=
   riemannXi (fromSymmetryAdapted z)
+
+theorem differentiableAt_symmetryAdaptedXi {z : ℂ}
+    (h0 : fromSymmetryAdapted z ≠ 0)
+    (h1 : fromSymmetryAdapted z ≠ 1) :
+    DifferentiableAt ℂ symmetryAdaptedXi z := by
+  unfold symmetryAdaptedXi
+  apply (differentiableAt_riemannXi h0 h1).comp z
+  change DifferentiableAt ℂ (fun w : ℂ => w + (1 / 2 : ℂ)) z
+  exact (differentiableAt_id (𝕜 := ℂ) (x := z)).add_const (1 / 2 : ℂ)
 
 /-- The completed `riemannXi` readout is invariant under `s ↦ 1 - s`. -/
 theorem riemannXi_one_sub (s : ℂ) :

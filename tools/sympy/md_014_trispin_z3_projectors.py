@@ -16,13 +16,15 @@ violation, or Yukawa/mixing theorem is claimed.
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
 import sympy as sp
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def assert_matrix_zero(mat: sp.Matrix, label: str) -> None:
-    reduced = mat.applyfunc(lambda x: sp.expand(sp.simplify(x)))
-    if reduced != sp.zeros(*reduced.shape):
-        raise AssertionError(f"{label} failed:\n{reduced}")
+from tools.sympy.common import assert_matrix_zero
 
 
 def assert_equal(a, b, label: str) -> None:

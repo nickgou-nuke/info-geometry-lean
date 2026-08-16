@@ -14,8 +14,11 @@ namespace InfoGeometry.Physics.BostConnes
 
 open Complex
 
-/-- A ring carrying a complex algebra structure. -/
-class BostConnesAlgebra (A : Type*) [Ring A] [Algebra ℂ A]
+/--
+The algebraic carrier used by this finite readout owner. Its content is the
+native Mathlib `Algebra ℂ A` instance; no C*- or KMS structure is implied.
+-/
+abbrev BostConnesAlgebra (A : Type*) [Ring A] [Algebra ℂ A] := Algebra ℂ A
 
 /-- An algebra representation with a chosen cyclic vector. -/
 structure GNSRepresentation (A H : Type*) [Ring A] [Algebra ℂ A] [AddCommGroup H] [Module ℂ H] where
@@ -33,9 +36,6 @@ noncomputable def kmsState (β : ℂ) : ℂ :=
 
 /-- Reference parameter used by the readout. -/
 def criticalBeta : ℂ := 1
-
-/-- Definitional readout of the chosen value at `β = 1`. -/
-theorem kmsState_critical : kmsState criticalBeta = riemannZeta 1 := rfl
 
 /-- A cyclic representation has a preimage observable for every state vector,
 by the `cyclic` field. -/

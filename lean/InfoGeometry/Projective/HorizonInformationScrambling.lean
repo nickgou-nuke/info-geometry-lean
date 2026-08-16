@@ -85,9 +85,14 @@ theorem horizonFibonacciRegister_card (N : ℕ) :
 Finite unitary-braiding packet: supplied unitarity plus a supplied conservation
 property.
 -/
-theorem finite_unitary_braiding_packet {n : ℕ}
+theorem finite_unitary_braiding {n : ℕ}
+    (flow : ModularTimeFlow n) :
+    IsUnitaryBraiding flow :=
+  flow.is_unitary
+
+theorem finite_information_is_conserved {n : ℕ}
     (flow : ModularTimeFlow n) (state : HorizonMicrostates n) :
-    IsUnitaryBraiding flow ∧ InformationIsConserved flow state := by
-  exact ⟨flow.is_unitary, flow.conserves_information state⟩
+    InformationIsConserved flow state :=
+  flow.conserves_information state
 
 end InfoGeometry.Projective.Scrambling

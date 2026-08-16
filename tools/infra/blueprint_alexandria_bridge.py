@@ -17,9 +17,14 @@ from pathlib import Path
 from typing import Any, Iterable
 
 ROOT = Path(__file__).resolve().parents[2]
+_SRC = ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from igf.common.json_io import iter_jsonl, write_jsonl
+from igf.common.strings import slugify
 from tools.infra.leansearch_local import DEFAULT_RECORDS, search_records
 
 
@@ -28,30 +33,12 @@ SUMMARY_SCHEMA = "info_geometry.blueprint_alexandria_bridge.summary.v1"
 KINDS = {"theorem", "definition", "hypothesis", "proof", "remark", "chunk"}
 
 
-def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
-    if not path.exists():
-        return
-    with path.open("r", encoding="utf-8") as handle:
-        for raw in handle:
-            line = raw.strip()
-            if not line:
-                continue
-            try:
-                row = json.loads(line)
-            except Exception:
-                continue
-            if isinstance(row, dict):
-                yield row
-
-
-def stable_hash(*parts: Any) -> str:
-    text = json.dumps(parts, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha1(text.encode("utf-8")).hexdigest()
+# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
+from igf.common.hashing import stable_hash
 
 
 def slug(text: str) -> str:
-    out = re.sub(r"[^A-Za-z0-9]+", "_", text.strip()).strip("_")
-    return out[:80] or "node"
+    return slugify(text, max_len=80) or "node"
 
 
 def suggested_lean_name(title: str, idx: int) -> str:
@@ -138,16 +125,6 @@ def build_nodes(*, input_dir: Path, records: Path, top_k: int, include_kinds: se
         if max_nodes is not None and len(nodes) >= max_nodes:
             break
     return nodes
-
-
-def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=True, sort_keys=True) + "\n")
-            count += 1
-    return count
 
 
 def main() -> int:

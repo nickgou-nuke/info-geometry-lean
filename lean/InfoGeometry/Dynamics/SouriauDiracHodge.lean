@@ -75,6 +75,159 @@ noncomputable def J (_D : KreinOperatorData H) : H →L[ℝ] H :=
 noncomputable def S_right : H →L[ℝ] H :=
   D.J * D.S_left * D.J
 
+/-! ### Chiral Hodge--Dirac operators -/
+
+/-- The total chiral Hodge--Dirac operator `D = S_left + S_right`. -/
+noncomputable def hodgeDiracOperator : H →L[ℝ] H :=
+  D.S_left + D.S_right
+
+/-- The even Hodge Laplacian cross-term `Δ = S_left S_right + S_right S_left`. -/
+noncomputable def hodgeLaplacianOperator : H →L[ℝ] H :=
+  D.S_left * D.S_right + D.S_right * D.S_left
+
+/-- Nilpotent chiral branches square to the even Hodge Laplacian. -/
+theorem hodgeDiracOperator_sq
+    (hleft : D.S_left * D.S_left = 0)
+    (hright : D.S_right * D.S_right = 0) :
+    D.hodgeDiracOperator * D.hodgeDiracOperator =
+      D.hodgeLaplacianOperator := by
+  dsimp [hodgeDiracOperator, hodgeLaplacianOperator]
+  calc
+    (D.S_left + D.S_right) * (D.S_left + D.S_right) =
+        D.S_left * D.S_left + D.S_left * D.S_right +
+          D.S_right * D.S_left + D.S_right * D.S_right := by
+      noncomm_ring
+    _ = D.S_left * D.S_right + D.S_right * D.S_left := by
+      rw [hleft, hright]
+      simp
+
+/-- The Hodge-dual branch inherits nilpotence from the left branch. -/
+theorem S_right_sq_of_left_sq
+    (hleft : D.S_left * D.S_left = 0) :
+    D.S_right * D.S_right = 0 := by
+  have hJ2 : D.J * D.J = (1 : H →L[ℝ] H) := by
+    change D.J.comp D.J = ContinuousLinearMap.id ℝ H
+    simp [J]
+  dsimp [S_right]
+  calc
+    (D.J * D.S_left * D.J) * (D.J * D.S_left * D.J) =
+        D.J * D.S_left * (D.J * D.J) * D.S_left * D.J := by
+      noncomm_ring
+    _ = D.J * D.S_left * D.S_left * D.J := by rw [hJ2]; simp
+    _ = D.J * (D.S_left * D.S_left) * D.J := by noncomm_ring
+    _ = 0 := by rw [hleft]; simp
+
+/-- Oddness is transported from `d` to its Hodge dual by `JΓ = -ΓJ`. -/
+theorem S_right_odd_of_left_odd
+    (Gamma : H →L[ℝ] H)
+    (hGammaJ : Gamma * D.J = -(D.J * Gamma))
+    (hleft : Gamma * D.S_left = -(D.S_left * Gamma)) :
+    Gamma * D.S_right = -(D.S_right * Gamma) := by
+  dsimp [S_right]
+  calc
+    Gamma * (D.J * D.S_left * D.J) =
+        (Gamma * D.J) * D.S_left * D.J := by noncomm_ring
+    _ = (-(D.J * Gamma)) * D.S_left * D.J := by rw [hGammaJ]
+    _ = -(D.J * (Gamma * D.S_left) * D.J) := by noncomm_ring
+    _ = -(D.J * (-(D.S_left * Gamma)) * D.J) := by rw [hleft]
+    _ = D.J * D.S_left * Gamma * D.J := by noncomm_ring
+    _ = D.J * D.S_left * (Gamma * D.J) := by noncomm_ring
+    _ = D.J * D.S_left * (-(D.J * Gamma)) := by rw [hGammaJ]
+    _ = -((D.J * D.S_left * D.J) * Gamma) := by noncomm_ring
+
+/-- The total Hodge--Dirac operator is odd when both branches are odd. -/
+theorem hodgeDiracOperator_odd
+    (Gamma : H →L[ℝ] H)
+    (hGammaJ : Gamma * D.J = -(D.J * Gamma))
+    (hleft : Gamma * D.S_left = -(D.S_left * Gamma)) :
+    Gamma * D.hodgeDiracOperator =
+      -(D.hodgeDiracOperator * Gamma) := by
+  have hright := D.S_right_odd_of_left_odd Gamma hGammaJ hleft
+  dsimp [hodgeDiracOperator]
+  rw [mul_add, hleft, hright]
+  rw [add_mul, neg_add]
+
+/-- The Hodge Laplacian is even as the square of the odd Hodge--Dirac operator. -/
+theorem hodgeLaplacianOperator_even
+    (Gamma : H →L[ℝ] H)
+    (hGammaJ : Gamma * D.J = -(D.J * Gamma))
+    (hleftSq : D.S_left * D.S_left = 0)
+    (hleft : Gamma * D.S_left = -(D.S_left * Gamma)) :
+    Gamma * D.hodgeLaplacianOperator =
+      D.hodgeLaplacianOperator * Gamma := by
+  have hodd := D.hodgeDiracOperator_odd Gamma hGammaJ hleft
+  have hright := D.S_right_sq_of_left_sq hleftSq
+  have hsq := D.hodgeDiracOperator_sq hleftSq hright
+  rw [← hsq]
+  calc
+    Gamma * (D.hodgeDiracOperator * D.hodgeDiracOperator) =
+        (Gamma * D.hodgeDiracOperator) * D.hodgeDiracOperator := by
+      noncomm_ring
+    _ = (-(D.hodgeDiracOperator * Gamma)) * D.hodgeDiracOperator := by
+      rw [hodd]
+    _ = -(D.hodgeDiracOperator * (Gamma * D.hodgeDiracOperator)) := by
+      noncomm_ring
+    _ = -(D.hodgeDiracOperator *
+        (-(D.hodgeDiracOperator * Gamma))) := by
+      rw [hodd]
+    _ = (D.hodgeDiracOperator * D.hodgeDiracOperator) * Gamma := by
+      noncomm_ring
+
+/-- The Hodge/Tomita swap interwines the total chiral Dirac operator. -/
+theorem hodgeDiracOperator_hodge_intertwines :
+    D.J * D.hodgeDiracOperator = D.hodgeDiracOperator * D.J := by
+  dsimp [hodgeDiracOperator, S_right]
+  have hJ2 : D.J * D.J = (1 : H →L[ℝ] H) := by
+    change D.J.comp D.J = ContinuousLinearMap.id ℝ H
+    simp [J]
+  have hleft : D.J * (D.J * D.S_left * D.J) = D.S_left * D.J := by
+    calc
+      D.J * (D.J * D.S_left * D.J) =
+          (D.J * D.J) * D.S_left * D.J := by noncomm_ring
+      _ = D.S_left * D.J := by rw [hJ2]; simp
+  have hright : (D.J * D.S_left * D.J) * D.J = D.J * D.S_left := by
+    calc
+      (D.J * D.S_left * D.J) * D.J =
+          D.J * D.S_left * (D.J * D.J) := by noncomm_ring
+      _ = D.J * D.S_left := by rw [hJ2]; simp
+  calc
+    D.J * (D.S_left + D.J * D.S_left * D.J) =
+        D.J * D.S_left + D.S_left * D.J := by
+      rw [mul_add]
+      rw [hleft]
+    _ = D.S_left * D.J + D.J * D.S_left := add_comm _ _
+    _ = (D.S_left + D.J * D.S_left * D.J) * D.J := by
+      rw [add_mul]
+      rw [hright]
+
+/- The even Hodge Laplacian commutes with the Hodge/Tomita swap under
+   the same nilpotence hypotheses used for the Dirac square. -/
+theorem hodgeLaplacianOperator_hodge_intertwines
+    (hleft : D.S_left * D.S_left = 0)
+    (hright : D.S_right * D.S_right = 0) :
+    D.J * D.hodgeLaplacianOperator = D.hodgeLaplacianOperator * D.J := by
+  have hD := D.hodgeDiracOperator_hodge_intertwines
+  have hcross := D.hodgeDiracOperator_sq hleft hright
+  have hleft :
+      D.J * (D.hodgeDiracOperator * D.hodgeDiracOperator) =
+        (D.hodgeDiracOperator * D.hodgeDiracOperator) * D.J := by
+    calc
+      D.J * (D.hodgeDiracOperator * D.hodgeDiracOperator) =
+          (D.J * D.hodgeDiracOperator) * D.hodgeDiracOperator := by
+            noncomm_ring
+      _ = (D.hodgeDiracOperator * D.J) * D.hodgeDiracOperator := by
+            rw [hD]
+      _ = D.hodgeDiracOperator *
+          (D.J * D.hodgeDiracOperator) := by
+            noncomm_ring
+      _ = D.hodgeDiracOperator *
+          (D.hodgeDiracOperator * D.J) := by
+            rw [hD]
+      _ = (D.hodgeDiracOperator * D.hodgeDiracOperator) * D.J := by
+            noncomm_ring
+  rw [← hcross]
+  exact hleft
+
 /-- Chiral charge density operator. -/
 noncomputable def chiralChargeOperator : H →L[ℝ] H :=
   D.K
@@ -149,6 +302,33 @@ theorem hodge_star_executes_legendre_transform :
     _ = -(D.K * (D.J * D.J)) := by noncomm_ring
     _ = -(D.K * 1) := by rw [hJ2]
     _ = -D.K := by simp
+
+/-!
+The thermal chiral channel is still odd under the fundamental symmetry.
+This is the noncommutative compatibility obtained from thermal `J`-evenness
+and the `J`-odd phase axis; no scalar diagonalization is used.
+-/
+theorem thermal_chiral_channel_J_anticommute (beta : ℝ) :
+    D.J * (D.thermalDensityMatrix beta * D.chiralChargeOperator) =
+      -((D.thermalDensityMatrix beta * D.chiralChargeOperator) * D.J) := by
+  have hT : D.thermalDensityMatrix beta * D.J =
+      D.J * D.thermalDensityMatrix beta :=
+    D.thermal_J_commute beta
+  have hK : D.J * D.chiralChargeOperator =
+      -(D.chiralChargeOperator * D.J) := by
+    simpa [chiralChargeOperator] using D.J_K_anticommute
+  calc
+    D.J * (D.thermalDensityMatrix beta * D.chiralChargeOperator)
+        = (D.J * D.thermalDensityMatrix beta) * D.chiralChargeOperator := by
+            noncomm_ring
+    _ = (D.thermalDensityMatrix beta * D.J) * D.chiralChargeOperator := by
+          rw [hT]
+    _ = D.thermalDensityMatrix beta * (D.J * D.chiralChargeOperator) := by
+          noncomm_ring
+    _ = D.thermalDensityMatrix beta * (-(D.chiralChargeOperator * D.J)) := by
+          rw [hK]
+    _ = -((D.thermalDensityMatrix beta * D.chiralChargeOperator) * D.J) := by
+          noncomm_ring
 
 /--
 Zero-temperature anomaly cancellation in the supplied real Krein context.

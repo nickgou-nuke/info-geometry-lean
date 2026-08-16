@@ -1,5 +1,4 @@
 import InfoGeometry.Clifford.Cl55WittPinParity
-import InfoGeometry.Clifford.Cl55WittSpinOrthogonalAction
 
 namespace InfoGeometry.Clifford.Clifford55
 

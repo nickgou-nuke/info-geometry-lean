@@ -46,7 +46,7 @@ structure ExplicitFormula (x : ℝ) (zeros : Finset ℂ) (hx : 1 < x) where
   zeros_conjugate_pairs : ∀ ρ ∈ zeros, star ρ ∈ zeros
 
 /-! Construct the finite certificate from explicit inputs. -/
-theorem explicitFormulaFromRH
+theorem explicitFormula_of_supplied_data
     (x : ℝ) (hx : 1 < x)
     (zeros : Finset ℂ)
     (hzeros : ∀ ρ ∈ zeros, 0 < ρ.re ∧ ρ.re < 1)
@@ -57,10 +57,10 @@ theorem explicitFormulaFromRH
     ExplicitFormula x zeros hx := by
   exact ⟨hzeros, hformula, hconj⟩
 
-/-- Zero-counting function N(T) (Riemann-von Mangoldt formula).
-N(T) = #{ρ : 0 < Im(ρ) ≤ T}
-N(T) = (T/2π) log(T/2πe) + 7/8 + S(T) + O(1/T)
-where S(T) = (1/π) arg ζ(1/2 + iT). -/
+/-- Finite main-term readout used for the zero-counting placeholder.
+
+The definition intentionally omits the zero-counting and `S(T)` terms; it is
+not a formalization of the Riemann--von Mangoldt theorem. -/
 noncomputable def N_function (T : ℝ) : ℝ :=
   if T ≤ 0 then 0 else
     (T / (2 * Real.pi)) * (Real.log (T / (2 * Real.pi * Real.exp 1))) + 7 / 8
@@ -69,17 +69,16 @@ noncomputable def N_function (T : ℝ) : ℝ :=
 noncomputable def S_function (T : ℝ) : ℝ :=
   (1 / Real.pi) * (riemannZeta (1 / 2 + Complex.I * T)).arg
 
-/-- Riemann-von Mangoldt formula for N(T).
-N(T) = (T/2π) log(T/2πe) + 7/8 + S(T) + O(1/T). -/
-theorem riemann_von_mangoldt_formula (T : ℝ) (hT : T ≥ 2) :
+/-- The truncated `N_function` agrees exactly with its declared main term. -/
+theorem N_function_main_term_bound (T : ℝ) (hT : T ≥ 2) :
   |N_function T - ((T / (2 * Real.pi)) * Real.log (T / (2 * Real.pi * Real.exp 1)) + 7 / 8)| ≤ 1 / T := by
   have hTpos : 0 < T := lt_of_lt_of_le (by norm_num) hT
   rw [N_function]
   simp only [if_neg (not_le.mpr hTpos), sub_self, abs_zero]
   positivity
 
-/-! A supplied zero-free region readout. -/
-theorem zero_free_region_from_dirichlet_bounds :
+/-! A zero-free-region implication whose region premise is supplied explicitly. -/
+theorem zero_free_region_of_supplied_region :
   (∀ (t : ℝ), riemannZeta (1 + Complex.I * t) ≠ 0) →
   (∃ (c : ℝ), c > 0 ∧
     ∀ (s : ℂ), s.re ≥ 1 - c / Real.log (|s.im| + 2) →
@@ -95,16 +94,16 @@ noncomputable def xi (s : ℂ) : ℂ :=
   (1 / 2 : ℂ) * s * (s - 1) * Complex.exp (-(s / 2) * Complex.log (Real.pi)) *
     Complex.Gamma (s / 2) * riemannZeta s
 
-/-! A finite product equality supplied as an explicit hypothesis. -/
-theorem hadamard_product_xi (s : ℂ) (zeros : Finset ℂ)
+/-! A finite product equality read back from an explicit hypothesis. -/
+theorem hadamard_product_xi_given (s : ℂ) (zeros : Finset ℂ)
     (hproduct :
       xi s =
         xi 0 * zeros.prod (fun ρ => (1 - s / ρ) * Complex.exp (s / ρ))) :
   xi s = xi 0 * zeros.prod (fun ρ => (1 - s / ρ) * Complex.exp (s / ρ)) := by
   exact hproduct
 
-/-! A finite logarithmic-derivative equality supplied as an explicit hypothesis. -/
-theorem log_derivative_xi (s : ℂ) (zeros : Finset ℂ)
+/-! A finite logarithmic-derivative equality read back from an explicit hypothesis. -/
+theorem log_derivative_xi_given (s : ℂ) (zeros : Finset ℂ)
     (hlog :
       deriv xi s / xi s =
         zeros.sum (fun ρ => (1 / (s - ρ) + 1 / ρ))) :

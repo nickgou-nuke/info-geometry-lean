@@ -113,13 +113,6 @@ namespace WeylWeightedHorizonStringDiagram
 variable {State EdgeLabel Edge Weight Obj : Type*}
 variable (D : WeylWeightedHorizonStringDiagram State EdgeLabel Edge Weight Obj)
 
-@[rep_depth operator]
-theorem homogeneous_readout_scale (c : ℝ) (x : Obj) :
-    D.homogeneousReadout.readout (D.homogeneousReadout.scale c x)
-      =
-    c ^ D.homogeneousReadout.weight * D.homogeneousReadout.readout x :=
-  D.homogeneousReadout.readout_scale c x
-
 end WeylWeightedHorizonStringDiagram
 
 /--

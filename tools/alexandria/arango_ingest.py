@@ -88,12 +88,8 @@ def ensure_index(endpoint: str, database: str, username: str, password: str, col
     request_json("POST", db_url(endpoint, database, f"/_api/index?collection={quote(collection)}"), username, password, payload)
 
 
-def iter_jsonl(path: Path):
-    with path.open("r", encoding="utf-8") as handle:
-        for line in handle:
-            line = line.strip()
-            if line:
-                yield json.loads(line)
+# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
+from igf.common.json_io import iter_jsonl
 
 
 def import_rows(endpoint: str, database: str, username: str, password: str, collection: str, rows: list[dict[str, Any]]) -> None:

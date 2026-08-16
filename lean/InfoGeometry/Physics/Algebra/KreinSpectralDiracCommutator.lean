@@ -32,12 +32,6 @@ theorem continuous_kreinAdjoint
     (ContinuousLinearMap.postcomp (E := H) (F := H) (G := H) K.J).continuous.comp
       (ContinuousLinearMap.precomp (E := H) (F := H) (G := H) K.J).continuous
 
-theorem krein_jordan_self_adjointness
-    (K : KreinSpaceStructure H) (N Nstar : H →L[ℝ] H)
-    (h : K.J.comp (Nstar.comp K.J) = N) :
-    kreinOperatorAdjoint K N Nstar = N :=
-  h
-
 theorem spectral_dirac_monodromy_commutator
     (M : ContinuousMonodromyOperator H) (D : H →L[ℝ] H) :
     D.comp (M.lambda • ((1 : H →L[ℝ] H) + M.N)) -

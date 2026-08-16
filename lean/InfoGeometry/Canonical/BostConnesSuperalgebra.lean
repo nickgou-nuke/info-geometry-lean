@@ -46,8 +46,8 @@ abbrev StarWittenParity (A : Type*) [Ring A] [StarRing A] :=
 abbrev AlgebraicState (A : Type*) [Ring A] :=
   InfoGeometry.Canonical.BostConnesSuperalgebraConstructive.AlgebraicState A
 
-abbrev ParityEquivariantCuntzCarrier (A : Type*) [Ring A] [StarRing A] :=
-  InfoGeometry.Canonical.BostConnesSuperalgebraConstructive.ParityEquivariantCuntzCarrier A
+abbrev ParityEquivariantCuntzData (A : Type*) [Ring A] [StarRing A] :=
+  InfoGeometry.Canonical.BostConnesSuperalgebraConstructive.ParityEquivariantCuntzData A
 
 def supertrace
     {A : Type*} [Ring A] [StarRing A]
@@ -135,17 +135,17 @@ theorem invariant_state_supertrace_parity_odd_eq_zero
 /-- The Cuntz-derived CAR generator is parity-odd under an explicit branch grading. -/
 theorem cuntz_carFromCuntz_parity_odd
     {Op : Type*} [Ring Op] [StarRing Op]
-    (E : ParityEquivariantCuntzCarrier Op) :
+    (E : ParityEquivariantCuntzData Op) :
     ParityOdd E.parity (carFromCuntz E.cuntz) :=
-  InfoGeometry.Canonical.BostConnesSuperalgebraConstructive.ParityEquivariantCuntzCarrier.carFromCuntz_parity_odd E
+  InfoGeometry.Canonical.BostConnesSuperalgebraConstructive.ParityEquivariantCuntzData.carFromCuntz_parity_odd E
 
 /-- The Cuntz-derived CAR generator has zero supertrace for invariant states. -/
 theorem invariant_state_supertrace_carFromCuntz_eq_zero
     {Op : Type*} [Ring Op] [StarRing Op]
-    (E : ParityEquivariantCuntzCarrier Op)
+    (E : ParityEquivariantCuntzData Op)
     (φ : AlgebraicState Op) (hφ : StateParityInvariant E.parity φ) :
     supertrace E.parity φ (carFromCuntz E.cuntz) = 0 :=
-  InfoGeometry.Canonical.BostConnesSuperalgebraConstructive.ParityEquivariantCuntzCarrier.invariant_state_supertrace_carFromCuntz_eq_zero
+  InfoGeometry.Canonical.BostConnesSuperalgebraConstructive.ParityEquivariantCuntzData.invariant_state_supertrace_carFromCuntz_eq_zero
     E φ hφ
 
 end InfoGeometry.Canonical.BostConnesSuperalgebra

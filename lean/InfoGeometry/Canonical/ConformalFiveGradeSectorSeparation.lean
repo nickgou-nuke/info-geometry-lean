@@ -97,11 +97,6 @@ theorem sink_outgoing_disjoint
   have hneq : ConformalGrade.negTwo ≠ ConformalGrade.posOne := by decide
   exact hneq (hxsink.symm.trans hxout)
 
-/-- A packet obtained directly from the current packet. -/
-def ofPacket (P : FiveGradeBoundaryCurrentPacket L ι R) :
-    FiveGradeBoundaryCurrentPacket L ι R :=
-  P
-
 end FiveGradeSectorSeparationPacket
 
 end InfoGeometry.Canonical.ConformalFiveGradeSectorSeparation

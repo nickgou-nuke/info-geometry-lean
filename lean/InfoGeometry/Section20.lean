@@ -88,26 +88,4 @@ theorem finite_shift_generic_readout_ne_zero :
   rw [finite_shift_commutator_is_generic_readout]
   exact Section12.finiteShiftCommutator_ne_zero
 
-theorem section20_capstone :
-    (∀ Gamma : ConnectionCoeff, ∀ a b c : Fin 4,
-      Section12.torsionTensor Gamma a b c =
-        Section12Formalized.torsionTensor Gamma a b c) ∧
-    (∀ Gamma : ConnectionCoeff, ∀ a b c : Fin 4,
-      Section12.torsionTwoFormCoeff Section12.zeroConnection
-          (Section12.coordinateConnectionForm Gamma) Section12.coordinateFrame a b c =
-        Section12.torsionTensor Gamma a b c ∧
-      Section12Formalized.torsionTwoFormCoeff Section12Formalized.zeroConnection
-          Gamma Section12Formalized.coordinateFrame a c b =
-        Section12Formalized.torsionTensor Gamma a b c) ∧
-    (∀ dq Omega q : Quat,
-      Section12.quaternionTorsion dq Omega q =
-        Section12Formalized.quaternionTorsion dq Omega q) ∧
-        Section12Formalized.macroscopicCuntzTorsion
-        Section12.finiteShiftL Section12.finiteShiftR ≠ (0 : ShiftMat) := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact torsion_coefficient_definitions_agree
-  · exact coordinate_cartan_readouts_reconcile
-  · exact quaternion_torsion_definitions_agree
-  · exact finite_shift_generic_readout_ne_zero
-
 end Section20

@@ -37,10 +37,10 @@ namespace InfoGeometry.Lie.SpinorEquiv
 /-! ## Section 1: The Three Itakura Strands as de Rham Models -/
 
 /-- 1. **Araki/Itakura-Saito** → Curvature form `F = dA + A ∧ A`
-    The `NoncommutativeItakuraSaitoPacket.divergence` IS the operator Bregman
+    The `NoncommutativeItakuraSaitoModel.divergence` is the operator Bregman
     divergence, which under the bridge becomes `Tr(F ∧ F)` — the second Chern form. -/
 theorem araki_itakura_is_curvature_form :
-    ∀ (P : NoncommutativeItakuraSaitoPacket (Matrix (Fin 2) (Fin 2) ℂ))
+    ∀ (P : NoncommutativeItakuraSaitoModel (Matrix (Fin 2) (Fin 2) ℂ))
       (X : Matrix (Fin 2) (Fin 2) ℂ),
       P.divergence X X = 0 := by
   intro P X

@@ -305,27 +305,6 @@ structure MassieuPlanckLegendreCalibration (Param : Type*) where
     ∀ θ : Param,
       grandPotential θ = grandPotentialFromMassieu beta massieu θ
 
-namespace MassieuPlanckLegendreCalibration
-
-variable {Param : Type*}
-variable (C : MassieuPlanckLegendreCalibration Param)
-
-/-- Re-export of the Massieu Legendre transform law. -/
-@[rep_depth thermo]
-theorem massieu_eq_legendre (θ : Param) :
-    C.massieu θ =
-      massieuFromLegendre C.entropy C.beta C.energy C.chemicalPotential C.particleNumber θ :=
-  C.massieu_legendre_law θ
-
-/-- Re-export of the grand-potential law. -/
-@[rep_depth thermo]
-theorem grandPotential_eq (θ : Param) :
-    C.grandPotential θ = grandPotentialFromMassieu C.beta C.massieu θ :=
-  C.grandPotential_law θ
-
-end MassieuPlanckLegendreCalibration
-
-
 /-! ## 3. Complex KMS periodicity for the grand-canonical thermal vacuum -/
 
 section ComplexKMS

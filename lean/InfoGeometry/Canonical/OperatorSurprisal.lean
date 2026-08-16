@@ -52,31 +52,3 @@ theorem surprisal_total_equilibrium (β : ℝ) :
   norm_num [Matrix.mul_apply, Fin.sum_univ_two]
 
 end InfoGeometry.Canonical.OperatorSurprisal
-
-/-- Operator surprisal definition for a faithful real-valued density or probability p -/
-noncomputable def K_surprisal (p : ℝ) : ℝ := - Real.log p
-
-/-- The modular exponent recovers powers of p -/
-theorem exp_neg_s_K (s p : ℝ) (hp : 0 < p) :
-    Real.exp (- (s * K_surprisal p)) = p ^ s := by
-  dsimp [K_surprisal]
-  rw [mul_neg, neg_neg]
-  have h_exp_log : Real.exp (s * Real.log p) = p ^ s := by
-    rw [mul_comm, ← Real.rpow_def_of_pos hp]
-  exact h_exp_log
-
-namespace InfoGeometry.Canonical
-
-/-- The surprisal for a discrete probability state p. -/
-noncomputable def stateSurprisal {n : ℕ} (p : Fin n → ℝ) (i : Fin n) : ℝ :=
-  - Real.log (p i)
-
-/-- The Gibbs/Shannon entropy as the expectation of the surprisal. -/
-noncomputable def gibbsEntropy {n : ℕ} (kB : ℝ) (p : Fin n → ℝ) : ℝ :=
-  kB * Finset.sum Finset.univ (fun i => p i * stateSurprisal p i)
-
-/-- Relative operator surprisal (log-ratio) between p and w. -/
-noncomputable def relativeSurprisal {n : ℕ} (p w : Fin n → ℝ) (i : Fin n) : ℝ :=
-  - Real.log (p i / w i)
-
-end InfoGeometry.Canonical

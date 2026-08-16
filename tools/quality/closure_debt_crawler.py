@@ -30,9 +30,11 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from tools.pathing import normalize_user_path, repo_root
     from tools.quality import audit_constructivity
+    from tools.quality.common import rel
 else:
     from tools.pathing import normalize_user_path, repo_root
     from tools.quality import audit_constructivity
+    from tools.quality.common import rel
 
 ROOT = repo_root()
 
@@ -134,13 +136,6 @@ class CodingAgentAuditConfig:
     command: list[str]
     timeout_seconds: int
     max_chars: int
-
-
-def rel(path: Path) -> str:
-    try:
-        return path.resolve().relative_to(ROOT).as_posix()
-    except ValueError:
-        return path.as_posix()
 
 
 def module_name(path: Path) -> str:
@@ -527,6 +522,8 @@ def run_coding_agent_audit(
 
 
 def audit_file(path: Path, coding_agent: CodingAgentAuditConfig | None = None) -> FileReport:
+    if not path.is_file():
+        return FileReport(path=rel(path), findings=[], passed=True, category_counts={})
     raw = path.read_text(encoding="utf-8")
     clean = strip_comments(raw)
 

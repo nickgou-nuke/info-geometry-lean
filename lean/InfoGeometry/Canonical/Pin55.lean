@@ -1,25 +1,14 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.Pin55WeylWallpaper
+import InfoGeometry.Clifford.Clifford55
 
 /-!
-# O(5,5) and Pin(5,5) Construction and Quotient Mapping
+# Finite `(5,5)` reflection restriction
 
-This module formally defines the full `O(5,5)` orthogonal group, the `Cl(5,5)` 
-geometric algebra, and the `Pin(5,5)` double cover group. 
-
-We then map these strictly down to the Weyl group of the root system and its 
-adjoint quotient over the 2D wallpaper symmetry group.
-
-## 1. O(5,5) Split-Signature Orthogonal Group
-We define the (5,5) signature metric and the group of linear automorphisms 
-that preserve it.
-
-## 2. Pin(5,5) and Cl(5,5) Clifford Algebra
-We define the algebraic structure of Pin(5,5) via reflection generators 
-in the Clifford algebra.
-
-## 3. The Twisted Quotient Maps
-We prove the explicit exact sequences mapping Pin(5,5) -> O(5,5) -> Weyl(D5).
+This module is only a finite reflection restriction.  The authoritative
+quadratic carrier and native Pin group are `Clifford55.V55`, `Q55`, and
+`Clifford55.Pin55`; no new orthogonal group, Pin group, quotient, or exact
+sequence is defined here.
 -/
 
 noncomputable section
@@ -27,84 +16,115 @@ noncomputable section
 namespace InfoGeometry.Canonical.Pin55
 
 open InfoGeometry.Canonical.Pin55WeylWallpaper
+open InfoGeometry.Clifford.Clifford55
 
-/-!
-### 1. O(5,5) Split-Signature Orthogonal Group
--/
+/-! The legacy names below are readouts of the native `Clifford55` carrier. -/
 
-/-- The vector space ℝ¹⁰ structured as ℝ⁵ ⊕ ℝ⁵ for split signature. -/
-abbrev Split10D := (Fin 5 → ℝ) × (Fin 5 → ℝ)
+abbrev Split10D := V55
 
-/-- The split signature (5,5) quadratic form (x₁² + ... + x₅² - y₁² - ... - y₅²). -/
-def quadratic_form_5_5 (v : Split10D) : ℝ :=
-  dot_product v.1 v.1 - dot_product v.2 v.2
+def splitPair55 (v w : Split10D) : ℝ :=
+  dot_product v.1 w.1 - dot_product v.2 w.2
+
+def quadratic_form_5_5 (v : Split10D) : ℝ := splitPair55 v v
 
 /-- 
-The explicit group O(5,5): linear automorphisms preserving the split quadratic form. 
+A candidate linear isometry of the split `(5,5)` quadratic space.
 -/
-structure O55Group where
-  /-- The linear transformation. -/
-  transform : Split10D →ₗ[ℝ] Split10D
-  /-- The isometry condition. -/
-  preserves_form : ∀ v, quadratic_form_5_5 (transform v) = quadratic_form_5_5 v
+def FormPreservingLinearMap55 : Type :=
+  {f : Split10D →ₗ[ℝ] Split10D // ∀ v, quadratic_form_5_5 (f v) = quadratic_form_5_5 v}
 
 /-!
 ### 2. Cl(5,5) and Pin(5,5)
 -/
 
-variable {Cl55 : Type*} [Ring Cl55] [Algebra ℝ Cl55] 
-         (clifford_embed : Split10D →ₗ[ℝ] Cl55)
+variable {Cl55' : Type*} [Ring Cl55'] [Algebra ℝ Cl55']
+         (clifford_embed : Split10D →ₗ[ℝ] Cl55')
 
 /-- The fundamental Clifford identity v * v = Q(v) * 1. -/
-def IsClifford55 : Prop :=
-  ∀ v, clifford_embed v * clifford_embed v = algebraMap ℝ Cl55 (quadratic_form_5_5 v)
+def CliffordGeneratorRelation55 : Prop :=
+  ∀ v, clifford_embed v * clifford_embed v =
+    algebraMap ℝ Cl55' (quadratic_form_5_5 v)
 
-/-- 
-Pin(5,5) elements are constructed strictly from products of vectors 
-with Q(v) = ±1.
--/
-inductive Pin55Element : Cl55 → Prop
-  /-- A base reflection vector with unit norm is in Pin. -/
-  | base_reflection (v : Split10D) (h : quadratic_form_5_5 v = 1 ∨ quadratic_form_5_5 v = -1) : 
-      Pin55Element (clifford_embed v)
-  /-- The Pin group is closed under geometric multiplication. -/
-  | mul (a b : Cl55) (ha : Pin55Element a) (hb : Pin55Element b) : 
-      Pin55Element (a * b)
+/-! The native Pin group is owned by `Clifford55`; this file adds no local
+    generated predicate for it. -/
 
-/-!
-### 3. The Weyl Quotient to Wallpaper Symmetry
--/
+def scaleTorus (c : ℝ) (x : Torus5D) : Torus5D :=
+  fun i => c * x i
 
-/-- 
-The geometric reflection operator induced by a Pin(5,5) vector generator.
-v' = - n * v * n⁻¹
--/
-def pin_reflection (n v : Split10D) : Split10D :=
-  let Q := quadratic_form_5_5 n
-  (fun i => v.1 i - 2 * (dot_product v.1 n.1 / Q) * n.1 i, 
-   fun i => v.2 i - 2 * (dot_product v.2 n.2 / -Q) * n.2 i)
+def subTorus (x y : Torus5D) : Torus5D :=
+  fun i => x i - y i
 
-/-- 
-THEOREM: The Pin(5,5) adjoint quotient natively maps to the exact 
-O(5,5) Weyl reflections over the positive D_5 root subspace.
--/
-theorem pin_quotient_to_weyl (v : Torus5D) :
-    let n : Split10D := (alpha_12, fun _ => 0)
-    (pin_reflection n (v, fun _ => 0)).1 = weyl_reflect v alpha_12 := by
-  dsimp [pin_reflection, quadratic_form_5_5]
+/-- Totalized split-pair reflection formula.  Its isometry theorem below
+    requires a non-isotropic normal. -/
+def orthogonalReflection55
+    (n : Split10D) (hn : quadratic_form_5_5 n ≠ 0) (v : Split10D) : Split10D :=
+  let c := 2 * (dot_product v.1 n.1 - dot_product v.2 n.2) /
+    quadratic_form_5_5 n
+  (subTorus v.1 (scaleTorus c n.1), subTorus v.2 (scaleTorus c n.2))
+
+theorem splitPair55_self (v : Split10D) :
+    splitPair55 v v = quadratic_form_5_5 v := by
+  aesop (add simp [splitPair55, quadratic_form_5_5])
+
+theorem quadratic_form_5_5_eq_Q55 (v : Split10D) :
+    quadratic_form_5_5 v = Q55 v := by
+  simp [quadratic_form_5_5, splitPair55, Q55_apply, dot_product,
+    Fin.sum_univ_succ]
+  ring
+
+theorem q55_sub_scale
+    (x y a b : Torus5D) (c : ℝ) :
+    quadratic_form_5_5
+        (subTorus x (scaleTorus c a), subTorus y (scaleTorus c b)) =
+      quadratic_form_5_5 (x, y) - 2 * c * splitPair55 (x, y) (a, b) +
+        c ^ 2 * splitPair55 (a, b) (a, b) := by
+  simp [quadratic_form_5_5, subTorus, scaleTorus, splitPair55, dot_product,
+    sub_eq_add_neg]
+  ring
+
+theorem orthogonalReflection55_preserves_form
+    (n v : Split10D) (hn : quadratic_form_5_5 n ≠ 0) :
+    quadratic_form_5_5 (orthogonalReflection55 n hn v) = quadratic_form_5_5 v := by
+  have h_pair : dot_product v.1 n.1 - dot_product v.2 n.2 = splitPair55 v n := rfl
+  have h_scale := q55_sub_scale v.1 v.2 n.1 n.2
+    (2 * (dot_product v.1 n.1 - dot_product v.2 n.2) / quadratic_form_5_5 n)
+  have h_self : splitPair55 (n.1, n.2) (n.1, n.2) = quadratic_form_5_5 n := rfl
+  rw [orthogonalReflection55]
+  rw [h_scale]
+  rw [h_pair, h_self]
+  field_simp [hn]
+  ring
+
+def alpha12Split : Split10D := (alpha_12, fun _ => 0)
+
+theorem alpha12Split_nonisotropic : quadratic_form_5_5 alpha12Split ≠ 0 := by
+  intro h
+  have hq : quadratic_form_5_5 alpha12Split = 2 := by
+    simp [alpha12Split, quadratic_form_5_5, splitPair55, alpha_12,
+      dot_product]
+    ring
+  rw [hq] at h
+  norm_num at h
+
+/-! The positive `D₅` split reflection restricts to the native Weyl reflection. -/
+theorem alpha12_split_reflection_eq_weyl_reflection (v : Torus5D) :
+    (orthogonalReflection55 alpha12Split alpha12Split_nonisotropic
+      (v, fun _ => 0)).1 = weyl_reflect v alpha_12 := by
+  have h0 : dot_product (fun _ : Fin 5 => (0 : ℝ)) (fun _ : Fin 5 => (0 : ℝ)) = 0 := by
+    simp [dot_product]
+  have hQ : quadratic_form_5_5 (alpha_12, fun _ => 0) = dot_product alpha_12 alpha_12 := by
+    simp [quadratic_form_5_5, splitPair55, h0]
+  unfold orthogonalReflection55 alpha12Split weyl_reflect subTorus scaleTorus
+  dsimp
+  rw [h0, sub_zero, hQ]
   funext i
-  by_cases h0 : i = 0
-  · subst h0; dsimp [weyl_reflect, alpha_12, dot_product]; ring
-  · by_cases h1 : i = 1
-    · subst h1; dsimp [weyl_reflect, alpha_12, dot_product]; ring
-    · by_cases h2 : i = 2
-      · subst h2; dsimp [weyl_reflect, alpha_12, dot_product]; ring
-      · by_cases h3 : i = 3
-        · subst h3; dsimp [weyl_reflect, alpha_12, dot_product]; ring
-        · by_cases h4 : i = 4
-          · subst h4; dsimp [weyl_reflect, alpha_12, dot_product]; ring
-          · exfalso
-            revert i h0 h1 h2 h3 h4
-            decide
+  ring
+
+theorem alpha12_split_reflection_orthogonal (v : Torus5D) :
+    (orthogonalReflection55 alpha12Split alpha12Split_nonisotropic
+      (v, fun _ => 0)).2 = fun _ => 0 := by
+  unfold orthogonalReflection55 alpha12Split subTorus scaleTorus
+  ext i
+  simp
 
 end InfoGeometry.Canonical.Pin55

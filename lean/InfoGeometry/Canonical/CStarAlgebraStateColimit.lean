@@ -60,13 +60,13 @@ theorem gns_null_re_zero (a : A) (h_null : phi.gnsNullSpace a) :
     φ(a * b) = φ(b * σ_iβ(a)). -/
 structure KMSState (sigma_i_beta : A → A) where
   state : PositiveState A
-  kms_condition : ∀ a b : A, state (a * b) = state (b * sigma_i_beta a)
+  kmsLaw : ∀ a b : A, state (a * b) = state (b * sigma_i_beta a)
 
 /-- **Theorem**: KMS Boundary State Commutativity under Identity Modular Automorphism:
     If σ_iβ = Id, then φ(a * b) = φ(b * a) (Tracial State Condition). -/
 theorem kms_tracial_state (kms : KMSState (fun x => x)) (a b : A) :
     kms.state (a * b) = kms.state (b * a) :=
-  kms.kms_condition a b
+  kms.kmsLaw a b
 
 end PositiveState
 

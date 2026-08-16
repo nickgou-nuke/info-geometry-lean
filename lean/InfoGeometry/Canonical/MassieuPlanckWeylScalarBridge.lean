@@ -28,6 +28,8 @@ open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 section WeylPartition
 
 variable {State LieAlgebra Obs : Type*}
+variable [AddMonoid LieAlgebra]
+variable [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
 
 /--
 Scalar calibration identifying the projective Weyl gauge readout with the
@@ -112,7 +114,12 @@ end MassieuPlanckWeylScalarCalibration
 
 end WeylPartition
 
-section Bregman
+/-
+The former scalar Bregman adapter was removed.  The canonical KL/Bregman
+owner is the operatorial relative-modular layer; this file owns only the Weyl
+partition calibration.
+-/
+/-
 
 variable {State LieAlgebra LieDual Obs : Type*}
 
@@ -168,5 +175,6 @@ theorem KL_eq_log_weylScalar_Bregman :
 end MassieuPlanckBregmanBridge
 
 end Bregman
+-/
 
 end InfoGeometry.Canonical.MassieuPlanckWeylScalarBridge

@@ -32,6 +32,7 @@ section Core
 
 variable {E LieAlgebra : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable [AddMonoid LieAlgebra]
 
 local notation "EndH" => E →L[ℝ] E
 
@@ -138,7 +139,7 @@ theorem flow_invariant
     (t : ℝ) (A : EndH) :
     B.kms.state.eval (B.boundedFlow.modularFlow.toFlowDatum.flow t A) =
       B.kms.state.eval A :=
-  B.kms.flow_invariant_apply t A
+  B.kms.flow_invariant t A
 
 /--
 Read back the same real-time invariance statement on the legacy broad bounded
@@ -196,7 +197,7 @@ theorem flow_add_apply
 @[rep_depth thermo]
 theorem kms_boundary_holds :
     B.kms.boundaryCondition :=
-  B.kms.boundaryCondition_holds
+  KMSAnalyticCertificate.boundaryCondition_holds B.kms
 
 /--
 Build the narrowed integrated KMS carrier from the broad bounded bridge once

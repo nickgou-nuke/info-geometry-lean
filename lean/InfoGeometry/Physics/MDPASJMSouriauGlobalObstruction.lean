@@ -137,8 +137,8 @@ theorem spin_half_integral_prequantization (h : ℚ) :
 namespace DirectLimitReadback
 
 variable {ι : Type*} [Fintype ι] [Nonempty ι]
-variable {Op : Type*} [Ring Op] [Algebra ℝ Op]
-variable {State LieAlgebra LieDual : Type*}
+variable {Op : Type*} [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
+variable {State LieAlgebra LieDual : Type*} [AddMonoid LieAlgebra]
 
 /-- The MDPAS finite-stage tower has a genuine quotient carrier and compatible finite identities. -/
 theorem mdpas_direct_limit_theorem
@@ -163,7 +163,7 @@ theorem mdpas_direct_limit_theorem
               (thermodynamic_curvature (T.tower.stage n).flow)) ∧
         (∀ n,
           (T.tower.stage n).rn.entropy =
-            (T.tower.stage n).rn.expectationBeta
+            (T.tower.stage n).rn.expectation
               (T.tower.stage n).rn.modularPotential) ∧
         (∀ n,
           (T.tower.stage n).pathPacket.pathEntropy =

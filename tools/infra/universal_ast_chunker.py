@@ -20,9 +20,19 @@ import hashlib
 import json
 import os
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable
+
+ROOT = Path(__file__).resolve().parents[2]
+_SRC = ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from igf.common.json_io import write_jsonl
 
 try:
     from openai import OpenAI
@@ -358,15 +368,6 @@ def process_file(path: Path, args: argparse.Namespace) -> tuple[list[dict], list
         nodes.append(node)
         issues.extend(lint_chunk(chunk))
     return nodes, issues
-
-
-def write_jsonl(path: Path, rows: Iterable[dict]) -> int:
-    count = 0
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=False) + "\n")
-            count += 1
-    return count
 
 
 def main() -> None:

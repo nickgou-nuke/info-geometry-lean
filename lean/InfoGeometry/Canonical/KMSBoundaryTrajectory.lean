@@ -91,15 +91,15 @@ On the Zorn-maximal Cantor boundary, the Connes Radon-Nikodym cocycle
 derivative vanishes.
 -/
 theorem zornMaximalBoundary_flat (H : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator) (beta μ μχ : ℝ) :
-    connesRadonNikodymDerivative H H beta μ μχ beta μ μχ = 0 :=
-  connesRadonNikodymDerivative_zero_of_eq H beta μ μχ
+    relativeModularGeneratorDifference H H beta μ μχ beta μ μχ = 0 :=
+  relativeModularGeneratorDifference_zero_of_eq H beta μ μχ
 
 theorem cocycleDerivative_eq_zero_iff_hamiltonians_equal
     (H1 H2 : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator) (beta1 μ1 μχ1 beta2 μ2 μχ2 : ℝ) :
-    connesRadonNikodymDerivative H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2 = 0 ↔
+    relativeModularGeneratorDifference H1 H2 beta1 μ1 μχ1 beta2 μ2 μχ2 = 0 ↔
       InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.grandCanonicalModularGenerator H1 beta1 μ1 μχ1 =
       InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.grandCanonicalModularGenerator H2 beta2 μ2 μχ2 := by
-  unfold connesRadonNikodymDerivative
+  unfold relativeModularGeneratorDifference
   constructor
   · intro h
     exact (sub_eq_zero.mp h).symm
@@ -114,7 +114,7 @@ dissipationless: the total entropy rate vanishes.
 -/
 theorem sl2z_trajectory_dissipationless
     (H : InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry.Operator) (beta μ μχ : ℝ) :
-    connesRadonNikodymDerivative H H beta μ μχ beta μ μχ = 0 :=
+    relativeModularGeneratorDifference H H beta μ μχ beta μ μχ = 0 :=
   zornMaximalBoundary_flat H beta μ μχ
 
 end KMSBoundaryTrajectory

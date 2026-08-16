@@ -30,12 +30,6 @@ theorem isEP_iff_comm :
   unfold InverseKernel.IsEP InverseKernel.mpRangeProjector InverseKernel.metricProjector
   rfl
 
-/-- Under EP, the Moore-Penrose range and domain projectors coincide. -/
-theorem mpRangeProjector_eq_metricProjector_of_isEP
-    (hEP : IK.IsEP) :
-    IK.mpRangeProjector = IK.metricProjector :=
-  hEP
-
 /-- Under EP, the left/right mismatch operators coincide. -/
 theorem rightProjectorMismatch_eq_projectorMismatch_of_isEP
     (hEP : IK.IsEP) :
@@ -88,7 +82,7 @@ the EP packet is recovered internally from the gap collapse.
 theorem mpRangeProjector_eq_metricProjector_of_dilationGap_eq_zero
     (hGap : IK.dilationGap = 0) :
     IK.mpRangeProjector = IK.metricProjector :=
-  IK.mpRangeProjector_eq_metricProjector_of_isEP (IK.isEP_of_dilationGap_eq_zero hGap)
+  IK.isEP_of_dilationGap_eq_zero hGap
 
 /--
 Vanishing dilation gap is also a constructive route back to concrete
@@ -227,12 +221,6 @@ theorem isEP_iff_comm :
   simpa [CertifiedInverseKernel.IsEP, CertifiedInverseKernel.toInverseKernel'] using
     CIK.toInverseKernel'.isEP_iff_comm
 
-/-- Under property EP, the Moore-Penrose range and domain projectors agree. -/
-theorem mpRangeProjector_eq_metricProjector_of_isEP
-    (hEP : CIK.IsEP) :
-    CIK.mpRangeProjector = CIK.metricProjector :=
-  hEP
-
 /-- Under property EP, the left/right mismatch operators agree. -/
 theorem rightProjectorMismatch_eq_projectorMismatch_of_isEP
     (hEP : CIK.IsEP) :
@@ -284,8 +272,8 @@ Certified gap-collapse route to projector agreement: callers that already own
 -/
 theorem mpRangeProjector_eq_metricProjector_of_dilationGap_eq_zero
     (hGap : CIK.dilationGap = 0) :
-    CIK.mpRangeProjector = CIK.metricProjector :=
-  CIK.mpRangeProjector_eq_metricProjector_of_isEP (CIK.isEP_of_dilationGap_eq_zero hGap)
+    CIK.mpRangeProjector = CIK.metricProjector := by
+  simpa [CertifiedInverseKernel.IsEP] using CIK.isEP_of_dilationGap_eq_zero hGap
 
 /--
 Certified gap-collapse route back to concrete Moore-Penrose commutation: callers

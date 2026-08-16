@@ -170,11 +170,6 @@ def continuousFiveGradeComponentLinear
     simpa [hEq] using (continuousGradeProjector_continuous (A := A) e k)
   )
 
-theorem continuousFiveGradeComponentLinear_apply
-    (e : A) (k : FiveGrade) (x : A) :
-    continuousFiveGradeComponentLinear e k x =
-      fiveGradeComponentLinear e k x := rfl
-
 theorem continuousFiveGradeDecomposeLinear
     (e : A) : Continuous (fiveGradeDecomposeLinear e) := by
   have hNegTwo : Continuous (fun x : A =>

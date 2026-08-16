@@ -96,7 +96,7 @@ def swap : ChiralSheet → ChiralSheet
 end ChiralSheet
 
 /-- A finite two-sheet Berry connection represented by a real potential on each sheet. -/
-abbrev BerryConnection (gbz : GlideBrillouinZone BZ) := ChiralSheet → BZ → ℝ
+abbrev BerryConnection (_gbz : GlideBrillouinZone BZ) := ChiralSheet → BZ → ℝ
 
 namespace BerryConnection
 
@@ -106,7 +106,7 @@ abbrev potential {gbz : GlideBrillouinZone BZ}
 end BerryConnection
 
 /-- A finite two-sheet Berry curvature represented by a real curvature on each sheet. -/
-abbrev SheetBerryCurvature (gbz : GlideBrillouinZone BZ) := ChiralSheet → BZ → ℝ
+abbrev SheetBerryCurvature (_gbz : GlideBrillouinZone BZ) := ChiralSheet → BZ → ℝ
 
 namespace SheetBerryCurvature
 

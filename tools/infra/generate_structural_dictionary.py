@@ -62,11 +62,8 @@ def parse_args() -> argparse.Namespace:
     return ap.parse_args()
 
 
-def load_json(path: Path) -> dict[str, Any]:
-    if not path.exists():
-        return {}
-    raw = json.loads(path.read_text(encoding="utf-8"))
-    return raw if isinstance(raw, dict) else {}
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -95,9 +92,8 @@ def tokenize_name(text: str) -> list[str]:
     ]
 
 
-def stable_hash(obj: Any) -> str:
-    raw = json.dumps(obj, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    return hashlib.blake2b(raw, digest_size=12).hexdigest()
+# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
+from igf.common.hashing import stable_hash
 
 
 def bucket_degree(n: int) -> str:

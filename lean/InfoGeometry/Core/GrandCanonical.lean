@@ -62,6 +62,19 @@ lemma gc_hessian_nonneg (params : GrandCanonicalParams α) (β : ℝ) :
     0 ≤ hessian params β :=
   hessian_nonneg params β
 
+lemma gc_variance_pos_of_energy_ne
+    (params : GrandCanonicalParams α) (β : ℝ)
+    {x y : α} (hxy : params.energy x ≠ params.energy y) :
+    0 < variance params β :=
+  InfoGeometry.GrandCanonical.variance_pos_of_energy_ne params β hxy
+
+lemma gc_hessian_pos_of_energy_ne
+    (params : GrandCanonicalParams α) (β : ℝ)
+    {x y : α} (hxy : params.energy x ≠ params.energy y) :
+    0 < hessian params β := by
+  rw [gc_hessian_eq_variance]
+  exact gc_variance_pos_of_energy_ne params β hxy
+
 lemma gc_spinodal_iff_variance_eq_zero
     (params : GrandCanonicalParams α) (β : ℝ) :
     InfoGeometry.GrandCanonical.Spinodal params β ↔ variance params β = 0 :=

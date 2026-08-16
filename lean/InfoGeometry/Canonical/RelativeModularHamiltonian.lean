@@ -4,10 +4,10 @@ import InfoGeometry.Meta.Architecture
 open scoped BigOperators
 
 /-!
-# Relative Modular Hamiltonian
+# Relative Modular Surprisal
 
-Finite operator-owner lift with `Δ` primary and `K := -log Δ` as the derived
-relative modular Hamiltonian operator on the diagonal commuting lane.
+Finite operator-owner lift with `Δ` primary and `𝒦 := -log Δ` as the derived
+relative surprisal operator on the diagonal commuting lane.
 
 This file sits between:
 - `RelativeModularOperator`, which owns the finite relative modular operator
@@ -17,9 +17,10 @@ This file sits between:
 
 Methodological contract:
 - operator ownership is carried by `Δ`,
-- `K` is derived from `Δ` by logarithmic readout on the diagonal (finite
+- `𝒦` is derived from `Δ` by logarithmic readout on the diagonal (finite
   commuting spectral lane),
-- scalar Hamiltonian readouts remain shadows of the operator owner.
+- physical Hamiltonian readouts remain specialized shadows of the operator
+  surprisal owner.
 -/
 
 namespace InfoGeometry.Canonical.RelativeModularHamiltonian
@@ -33,11 +34,14 @@ section Finite
 
 variable {n : ℕ} [Nonempty (Fin n)]
 
-/--
+/-
 Diagonal logarithmic functional-calculus readout on a finite operator:
-`K(Δ) := diag(-log Δᵢᵢ)`.
+`𝒦(Δ) := diag(-log Δᵢᵢ)`.
+
+The historical declaration below retains the old Hamiltonian name for
+compatibility; the canonical surprisal aliases are defined at the end of the
+owner.
 -/
-@[rep_depth operator]
 noncomputable def modularHamiltonianFromDiagonal (Δ : FinMat n) : FinMat n :=
   diagMatrix (fun i => -Real.log (Δ i i))
 
@@ -53,11 +57,12 @@ omit [Nonempty (Fin n)] in
     modularHamiltonianFromDiagonal (n := n) Δ i j = 0 := by
   simp [modularHamiltonianFromDiagonal, diagMatrix, hij]
 
-/-- Relative modular Hamiltonian operator induced by the canonical finite `Δ(q,q₀)`. -/
+/-/ Relative modular Hamiltonian operator induced by the canonical finite `Δ(q,q₀)`. -/
 @[rep_depth operator]
 noncomputable def relativeModularHamiltonianOperator
     (q q0 : PositiveRay (Fin n)) : FinMat n :=
-  modularHamiltonianFromDiagonal (n := n) (relativeModularOperator (n := n) q q0)
+  modularHamiltonianFromDiagonal (n := n)
+    (relativeModularOperator (n := n) q q0)
 
 theorem relativeModularHamiltonianOperator_diag
     (q q0 : PositiveRay (Fin n)) (i : Fin n) :
@@ -108,6 +113,58 @@ theorem relativeModularHamiltonianOperator_cocycle
       relativeModularHamiltonianOperator_offdiag (hij := hij)]
     ring
 
+/-!
+## Canonical surprisal terminology
+
+The finite positive deformation is `Δ`; its additive logarithmic coordinate is
+therefore an operator surprisal.  The older `Hamiltonian` names remain the
+compatibility API for existing imports.
+-/
+
+noncomputable abbrev relativeSurprisalFromDiagonal {n : ℕ}
+    (Δ : FinMat n) : FinMat n :=
+  modularHamiltonianFromDiagonal Δ
+
+noncomputable abbrev relativeSurprisalOperator {n : ℕ} [Nonempty (Fin n)]
+    (q q0 : PositiveRay (Fin n)) : FinMat n :=
+  relativeModularHamiltonianOperator q q0
+
+theorem relativeSurprisalOperator_diag
+    (q q0 : PositiveRay (Fin n)) (i : Fin n) :
+    relativeSurprisalOperator (n := n) q q0 i i =
+      relativeModularPotential (α := Fin n) q q0 i :=
+  relativeModularHamiltonianOperator_diag (n := n) q q0 i
+
+theorem relativeSurprisalOperator_cocycle
+    (q q0 q1 : PositiveRay (Fin n)) :
+    relativeSurprisalOperator (n := n) q q1 =
+      relativeSurprisalOperator (n := n) q q0 +
+        relativeSurprisalOperator (n := n) q0 q1 :=
+  relativeModularHamiltonianOperator_cocycle (n := n) q q0 q1
+
+/--
+The finite operator-level volume identity:
+the negative logarithm of the determinant shadow is the trace of the
+relative surprisal operator `𝒦 = -log Δ`.
+
+This is stated over the canonical finite `Δ` owner; it is not a separate
+fixed-size matrix model.
+-/
+@[rep_depth operator, capstone]
+theorem neg_log_relativeModularVolumeShadow_eq_trace_relativeSurprisalOperator
+    (q q0 : PositiveRay (Fin n)) :
+    -Real.log (relativeModularVolumeShadow (n := n) q q0) =
+      Matrix.trace (relativeSurprisalOperator (n := n) q q0) := by
+  change relativeModularVolumePotential (n := n) q q0 =
+    Matrix.trace (relativeSurprisalOperator (n := n) q q0)
+  rw [relativeModularVolumePotential_eq_sum_relativeModularPotential]
+  rw [Matrix.trace]
+  refine Finset.sum_congr rfl ?_
+  intro i hi
+  change relativeModularPotential (α := Fin n) q q0 i =
+    relativeSurprisalOperator (n := n) q q0 i i
+  rw [relativeSurprisalOperator_diag]
+
 /-- Scalar shadow: diagonal-average readout of the operator owner `K(q,q₀)`. -/
 @[rep_depth operator]
 noncomputable def relativeModularHamiltonianExpectation
@@ -146,6 +203,17 @@ theorem relativeModularHamiltonianExpectation_self
     relativeModularHamiltonianExpectation (n := n) q q = 0 := by
   rw [relativeModularHamiltonianExpectation_eq_readout]
   exact relativeModularHamiltonianReadout_self (n := n) q
+
+/-- Canonical name for the diagonal-average surprisal readout. -/
+noncomputable abbrev relativeSurprisalExpectation {n : ℕ} [Nonempty (Fin n)]
+    (q q0 : PositiveRay (Fin n)) : ℝ :=
+  relativeModularHamiltonianExpectation q q0
+
+theorem relativeSurprisalExpectation_eq_readout
+    (q q0 : PositiveRay (Fin n)) :
+    relativeSurprisalExpectation (n := n) q q0 =
+      relativeModularHamiltonianReadout (n := n) q q0 :=
+  relativeModularHamiltonianExpectation_eq_readout (n := n) q q0
 
 end Finite
 

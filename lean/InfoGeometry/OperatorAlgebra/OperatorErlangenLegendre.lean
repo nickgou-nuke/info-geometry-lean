@@ -16,9 +16,11 @@ This file records the theorem-safe foundation layer:
 * spectra, determinants, and diagonal coordinates are readouts, not primitive
   ontology.
 
-It is intentionally a property-gated owner surface.  It does not construct a
-Tomita--Takesaki theory, prove a trace formula, or prove a Hilbert--Polya
-operator for the Riemann zeroes.
+The modular derivation, stabilizer predicate, and free-energy readout are
+defined from the stored noncommutative data below; their compatibility laws
+are derived theorems rather than supplied proof fields.  This file does not
+construct a Tomita--Takesaki theory, prove a trace formula, or prove a
+Hilbert--Polya operator for the Riemann zeroes.
 -/
 
 noncomputable section
@@ -66,51 +68,13 @@ structure OperatorErlangenLegendrePacket
   modularGenerator :
     StateSpace → Obs
 
-  /-- Modular derivation readout. -/
-  modularDerivation :
-    StateSpace → Obs → Obs
-
-  /--
-  Concrete modular-derivation compatibility with the supplied modular
-  generator.
-  -/
-  modularDerivation_eq_commutator :
-    ∀ ω x,
-      modularDerivation ω x =
-        modularGenerator ω * x - x * modularGenerator ω
-
   /-- A polarization/sector is chosen downstream of a state. -/
   Polarization :
     StateSpace → Type uPol
 
-  /-- Stabilizer predicate for a state under the symmetry action. -/
-  stabilizer :
-    StateSpace → Sym → Prop
-
-  /--
-  Concrete stabilizer criterion: a symmetry stabilizes a state precisely when
-  it preserves all expectation readouts of that state.
-  -/
-  stabilizer_iff_eval_invariant :
-    ∀ ω g,
-      stabilizer ω g ↔
-        ∀ x : Obs, eval ω ((symmetryAction.act g) x) = eval ω x
-
   /-- Exponential-family positive weight/readout shadow. -/
   exponentialWeight :
     StateSpace → Obs
-
-  /-- Free-energy / Massieu / Legendre readout shadow. -/
-  freeEnergyReadout :
-    StateSpace → ℝ
-
-  /--
-  Concrete Legendre readout criterion used by this finite interface: the
-  free-energy readout is the state evaluation of the supplied exponential
-  weight.
-  -/
-  freeEnergyReadout_eq_eval_exponentialWeight :
-    ∀ ω, freeEnergyReadout ω = eval ω (exponentialWeight ω)
 
   /--
   Guard: spectra and determinant counts are downstream readouts, not the
@@ -137,27 +101,44 @@ variable
 
 variable (P : OperatorErlangenLegendrePacket Obs Sym StateSpace)
 
+/-! These are derived from the observable algebra and its state readout.  The
+packet therefore carries no proof-valued copies of these identities. -/
+
+def modularDerivation
+    (ω : StateSpace)
+    (x : Obs) : Obs :=
+  P.modularGenerator ω * x - x * P.modularGenerator ω
+
+def stabilizer
+    (ω : StateSpace)
+    (g : Sym) : Prop :=
+  ∀ x : Obs, P.eval ω ((P.symmetryAction.act g) x) = P.eval ω x
+
+def freeEnergyReadout
+    (ω : StateSpace) : ℝ :=
+  P.eval ω (P.exponentialWeight ω)
+
 /-- The modular derivation is the commutator with the supplied generator. -/
-theorem modular_derivation_eq_commutator
+theorem modular_derivation_commutator
     (ω : StateSpace)
     (x : Obs) :
     P.modularDerivation ω x =
       P.modularGenerator ω * x - x * P.modularGenerator ω :=
-  P.modularDerivation_eq_commutator ω x
+  rfl
 
 /-- Stabilizer membership is expectation invariance under the symmetry action. -/
-theorem stabilizer_iff_eval_invariant_readback
+theorem stabilizer_iff_eval_invariant
     (ω : StateSpace)
     (g : Sym) :
     P.stabilizer ω g ↔
       ∀ x : Obs, P.eval ω ((P.symmetryAction.act g) x) = P.eval ω x :=
-  P.stabilizer_iff_eval_invariant ω g
+  Iff.rfl
 
 /-- The free-energy readout is evaluation of the supplied exponential weight. -/
-theorem freeEnergyReadout_eq_eval_exponentialWeight_readback
+theorem freeEnergyReadout_eq_eval_exponentialWeight
     (ω : StateSpace) :
     P.freeEnergyReadout ω = P.eval ω (P.exponentialWeight ω) :=
-  P.freeEnergyReadout_eq_eval_exponentialWeight ω
+  rfl
 
 /-- The state stabilizer as a set of symmetries. -/
 def StateStabilizer
@@ -219,9 +200,9 @@ theorem operatorErlangenLegendreTarget
     OperatorErlangenLegendreTarget.{uObs, uSym, uState, uPol} Obs Sym StateSpace := by
   intro P
   exact ⟨
-    (fun ω x => P.modular_derivation_eq_commutator ω x),
-    (fun ω g => P.stabilizer_iff_eval_invariant_readback ω g),
-    (fun ω => P.freeEnergyReadout_eq_eval_exponentialWeight_readback ω)⟩
+    (fun ω x => P.modular_derivation_commutator ω x),
+    (fun ω g => P.stabilizer_iff_eval_invariant ω g),
+    (fun ω => P.freeEnergyReadout_eq_eval_exponentialWeight ω)⟩
 
 /-! ## Conditional Hilbert--Polya socket -/
 

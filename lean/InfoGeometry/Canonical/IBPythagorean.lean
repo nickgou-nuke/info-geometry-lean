@@ -497,28 +497,6 @@ theorem IB_marginal_descent_of_pythagorean
     (β := β) (D := D) (encoder := encoder)
     (hKL_old := hKL_old) (hKL_new := hKL_new) h)
 
-theorem IB_next_marginal_descent_from_property
-    (pX : ProbabilityMeasure X)
-    (q_n : ProbabilityMeasure T)
-    (β : ℝ) (D : X → T → ℝ)
-    (hInt : ∀ x, Integrable (fun t => Real.exp (-β * D x t)) (q_n : Measure T))
-    (h_meas : Measurable (fun x => (IBNextEncoder q_n β D hInt x : Measure T)))
-    (hKL_current : FiniteKLFamily (q_n : Measure T) (IBNextEncoder q_n β D hInt))
-    (hKL_next :
-      FiniteKLFamily
-        ((IBNextMarginal pX q_n β D hInt h_meas : ProbabilityMeasure T) : Measure T)
-        (IBNextEncoder q_n β D hInt))
-    (h :
-      IBMarginalDescentWitness
-        pX q_n (IBNextMarginal pX q_n β D hInt h_meas)
-        β D (IBNextEncoder q_n β D hInt) hKL_current hKL_next) :
-    IBGlobalFreeEnergy pX (IBNextMarginal pX q_n β D hInt h_meas) β D
-      (IBNextEncoder q_n β D hInt) hKL_next
-      ≤
-    IBGlobalFreeEnergy pX q_n β D
-      (IBNextEncoder q_n β D hInt) hKL_current :=
-  h
-
 theorem IB_next_marginal_descent_of_pythagorean
     (pX : ProbabilityMeasure X)
     (q_n : ProbabilityMeasure T)

@@ -55,12 +55,33 @@ This is only a local compatibility condition on the chosen block carriers.
 The actual twistor projective geometry lives in the dedicated twistor files,
 and the split-octonion projective geometry lives in the split-octonion files.
 
-HONEST THEOREM DEBT:
+OPEN IDENTIFICATION:
 No claim here identifies this equation with a proved twistor incidence theorem.
+The predicate is an explicit finite block-level condition; a later owner must
+provide the projective carrier and an incidence map before any geometric
+interpretation is attached to it.
 
--- DEBT_KIND: SORRY
+-- DEBT_KIND: OPEN_IDENTIFICATION
 -/
 def TwistorIncidence (G : TwistorGrid) : Prop :=
   twistorPosition G = spacetimeCoord G * twistorMomentum G
+
+/-- The finite block predicate is exactly the corresponding entrywise matrix
+equation.  This is a coordinate readout only; it does not add a projective
+incidence interpretation. -/
+theorem twistorIncidence_iff_entrywise (G : TwistorGrid) :
+    TwistorIncidence G ↔
+      ∀ i j : Fin 2,
+        G 0 2 i j = ∑ k : Fin 2, G 0 1 i k * G 1 2 k j := by
+  constructor
+  · intro h i j
+    have h' := congrArg (fun B : TwistorBlock => B i j) h
+    simpa [TwistorIncidence, twistorPosition, spacetimeCoord, twistorMomentum,
+      Matrix.mul_apply] using h'
+  · intro h
+    apply Matrix.ext
+    intro i j
+    simpa [TwistorIncidence, twistorPosition, spacetimeCoord, twistorMomentum,
+      Matrix.mul_apply] using h i j
 
 end InfoGeometry.Projective

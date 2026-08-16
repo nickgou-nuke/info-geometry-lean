@@ -27,11 +27,6 @@ theorem anti_commutator_symmetric (A B : Matrix (Fin n) (Fin n) ℂ) :
   dsimp [antiCommutator]
   rw [add_comm (A * B) (B * A)]
 
-theorem car_identity
-    (a aD : Matrix (Fin n) (Fin n) ℂ)
-    (h : antiCommutator a aD = 1) :
-    a * aD + aD * a = 1 := h
-
 theorem car_sq_zero
     (a : Matrix (Fin n) (Fin n) ℂ)
     (h : antiCommutator a a = 0) :
@@ -45,7 +40,5 @@ theorem car_sq_zero
   cases smul_eq_zero.mp h_nil with
   | inl h_err => exfalso; exact h_two_ne h_err
   | inr h_res => exact h_res
-
-theorem uhf_embedding_id (X : Matrix (Fin n) (Fin n) ℂ) : X = X := rfl
 
 end UHFDirectLimitCAR

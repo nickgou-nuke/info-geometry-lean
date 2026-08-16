@@ -229,7 +229,8 @@ decomposition theorems.
 structure DensityOTIntertwiner
     (B : Bridge E)
     (State LieGroup LieAlgebra LieDual Observable : Type*)
-    [Ring Observable] where
+    [AddMonoid LieAlgebra]
+    [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable] where
   /-- The genuine Souriau/metriplectic/JKO density flow. -/
   otFlow :
     SouriauMetriplecticOTFlow
@@ -255,7 +256,8 @@ namespace DensityOTIntertwiner
 
 variable
     {State LieGroup LieAlgebra LieDual Observable : Type*}
-    [Ring Observable]
+    [AddMonoid LieAlgebra]
+    [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable]
 
 variable (B : Bridge E)
 
@@ -276,7 +278,7 @@ theorem total_intertwines
     (ρ : Density State) :
     I.encodeDensity (I.otFlow.totalFlow ρ) =
       B.metriplecticFlow.totalFlow (I.encodeDensity ρ) := by
-  rw [I.otFlow.totalFlow_eq_reversible_add_dissipative]
+  change I.encodeDensity (I.otFlow.reversibleFlow ρ + I.otFlow.dissipativeFlow ρ) = _
   rw [map_add]
   rw [I.reversible_intertwines, I.dissipative_intertwines]
   rw [B.metriplecticFlow.totalFlow_eq_reversible_add_dissipative]

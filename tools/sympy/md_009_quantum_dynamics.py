@@ -18,13 +18,15 @@ claimed.
 from __future__ import annotations
 
 import itertools
+import sys
+from pathlib import Path
 import sympy as sp
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def assert_zero(expr, label: str) -> None:
-    reduced = sp.expand(sp.simplify(expr))
-    if reduced != 0:
-        raise AssertionError(f"{label} failed: {reduced}")
+from tools.sympy.common import assert_zero
 
 
 def delta(i: int, j: int) -> int:

@@ -174,15 +174,6 @@ def toEulerProductData
     EulerProductData P.L :=
   P.eulerProduct.toEulerProductData
 
-/--
-Forget the strong Siegel--Jacobi completed-L packet to the existing
-completed-functional-equation predicate.
--/
-theorem toHasCompletedFunctionalEquation
-    (P : SiegelJacobiStandardLFunctionPacket D F) :
-    HasCompletedFunctionalEquation P.L P.completedLFunction.completedL :=
-  P.completedLFunction.toHasCompletedFunctionalEquation
-
 end SiegelJacobiStandardLFunctionPacket
 
 /--

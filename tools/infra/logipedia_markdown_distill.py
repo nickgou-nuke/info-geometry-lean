@@ -43,13 +43,12 @@ LEAN_DECL_RE = re.compile(r"^\s*(?:theorem|lemma|def|abbrev|structure|class|indu
 CODE_FENCE_RE = re.compile(r"```lean\s*(.*?)```", re.S)
 
 
-def now_iso() -> str:
-    return datetime.now(UTC).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+# [lossless-compact] now_iso folded into igf.common.time_utils.now_iso
+from igf.common.time_utils import now_iso
 
 
-def stable_hash(payload: dict[str, Any]) -> str:
-    body = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    return "sha256:" + hashlib.sha256(body.encode("utf-8")).hexdigest()
+# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
+from igf.common.hashing import stable_hash
 
 
 def slug(value: str, max_len: int = 80) -> str:
@@ -412,13 +411,8 @@ def validate_or_die(packet: dict[str, Any]) -> None:
         raise SystemExit("invalid generated packet " + packet.get("id", "<unknown>") + ":\n" + "\n".join(f"- {e}" for e in errors))
 
 
-def write_jsonl(path: Path, rows: list[dict[str, Any]], validate: bool = True) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            if validate:
-                validate_or_die(row)
-            handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
+# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
+from igf.common.json_io import write_jsonl
 
 
 def write_queue(path: Path, entries: list[dict[str, Any]], audits: list[dict[str, Any]]) -> None:

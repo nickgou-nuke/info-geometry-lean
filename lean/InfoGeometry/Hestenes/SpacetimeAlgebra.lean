@@ -124,8 +124,4 @@ theorem dirac_operator_iff_residual_zero (ψ : EvenMultivector) (m : ℝ) :
     dirac_operator ψ m ↔ dirac_residual ψ m = 0 := by
   rfl
 
-theorem dirac_eq_holds (ψ : EvenMultivector) (m : ℝ)
-    (h : dirac_residual ψ m = 0) : dirac_operator ψ m := by
-  exact h
-
 end HestenesSTA

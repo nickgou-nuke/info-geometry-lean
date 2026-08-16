@@ -45,7 +45,7 @@ finite-stage invariant that survives the inductive system.
 -/
 structure JaynesInductivePacket where
   /-- Underlying finite-stage/direct-limit tower. -/
-  tower : AFRecursiveLimitPacket (Stage := Stage) (Limit := Limit)
+  tower : AFRecursiveLimitData (Stage := Stage) (Limit := Limit)
   /-- Entropy-like stagewise readout into the target semiring. -/
   entropy : ∀ n : Nat, Stage n →+* Limit
   /-- Compatibility of the entropy readout with the stage bonds. -/

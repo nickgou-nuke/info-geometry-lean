@@ -17,7 +17,7 @@ packet records that obligation without asserting a Kato--Rellich or Nelson
 commutator theorem.
 -/
 @[socket_debt_tag]
-structure EssentialSelfAdjointLimitSocket
+structure EssentialSelfAdjointLimitData
     (Operator : Type) where
   diracCutoffSeq : ℕ → Operator
   essentialSelfAdjointLimit : Operator
@@ -30,7 +30,7 @@ program needs a heat-kernel subtraction/finite-part construction that turns a
 divergent trace into a renormalized spectral Pfaffian.
 -/
 @[socket_debt_tag]
-structure ZetaRegularizedPfaffianSocket
+structure ZetaRegularizedPfaffianData
     (Operator ZetaReadout : Type) where
   diracSquare : Operator
   zetaRegularizedDet : ZetaReadout
@@ -43,7 +43,7 @@ fermionic, and Archimedean factors combine into the completed zeta function,
 not merely the inverse-zeta Witten character.
 -/
 @[socket_debt_tag]
-structure CompletedXiSuperdeterminantIdentitySocket
+structure CompletedXiSuperdeterminantIdentityData
     (DeterminantReadout CompletedXiReadout : Type) where
   relativeSuperdeterminant : DeterminantReadout
   completedXiTarget : CompletedXiReadout
@@ -78,12 +78,12 @@ structure MBKAnalyticFrontier
       HeatTrace BKHeatTrace ArithmeticHeatTrace MellinTransformReadout
       ExplicitFormulaReadout
   relativeDeterminant :
-    RelativeMBKDeterminantScatteringPacket Operator ScatteringMatrix DeterminantReadout
+    RelativeMBKDeterminantScatteringData Operator ScatteringMatrix DeterminantReadout
   essentialSelfAdjoint :
-    EssentialSelfAdjointLimitSocket Operator
+    EssentialSelfAdjointLimitData Operator
   zetaRegularized :
-    ZetaRegularizedPfaffianSocket Operator ZetaReadout
+    ZetaRegularizedPfaffianData Operator ZetaReadout
   completedXiIdentity :
-    CompletedXiSuperdeterminantIdentitySocket DeterminantReadout CompletedXiReadout
+    CompletedXiSuperdeterminantIdentityData DeterminantReadout CompletedXiReadout
 
 end InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket

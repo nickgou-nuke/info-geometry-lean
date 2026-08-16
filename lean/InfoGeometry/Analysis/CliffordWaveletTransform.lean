@@ -145,6 +145,27 @@ theorem waveletTransform_reconstruction
     W.waveletTransform (W.reconstruction coeff) = coeff :=
   hRep coeff
 
+/- The supplied left and right inverse laws imply the native bijectivity
+contract for the wavelet transform.  The converse is deliberately exposed
+with an existential inverse below: bijectivity alone does not identify the
+model's stored `reconstruction` field. -/
+theorem admissible_and_reproducingKernel_bijective
+    (W : CliffordWaveletModel) :
+    W.admissible ∧ W.reproducingKernel → Function.Bijective W.waveletTransform := by
+  intro h
+  exact Function.bijective_iff_has_inverse.mpr
+    ⟨W.reconstruction, h.1, h.2⟩
+
+/-- Any bijective wavelet transform has a (possibly non-stored) two-sided
+inverse.  This is the exact converse available without identifying the
+model's reconstruction field with the chosen inverse. -/
+theorem bijective_waveletTransform_has_inverse
+    (W : CliffordWaveletModel) (hBijective : Function.Bijective W.waveletTransform) :
+    ∃ inverse,
+      Function.LeftInverse inverse W.waveletTransform ∧
+        Function.RightInverse inverse W.waveletTransform := by
+  exact Function.bijective_iff_has_inverse.mp hBijective
+
 end CliffordWaveletModel
 
 end InfoGeometry.Analysis.CliffordWaveletTransform

@@ -1,10 +1,19 @@
 import Mathlib.NumberTheory.LSeries.Dirichlet
 import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.BostConnes.BostConnesParity
+import InfoGeometry.Canonical.BostConnesLiouvilleModularComm
 
 open ArithmeticFunction BigOperators InfoGeometry.Arithmetic.BostConnesSystem
 open scoped ArithmeticFunction.Moebius
 open scoped LSeries.notation
+
+/-!
+This file provides operatorial Bost--Connes/Liouville intertwining and
+Möbius/L-series readouts.
+The historical namespace `BostConnesThermofield` is retained, but no Hilbert
+space thermofield-double state, KMS state, or supersymmetric index is
+constructed here.
+-/
 
 namespace BostConnesThermofield
 
@@ -28,31 +37,30 @@ theorem sector_ne_zero (g : BostConnesGenerator) : g.mu_n ≠ 0 :=
 
 end BostConnesGenerator
 
-noncomputable def modular_flow (t : ℝ) (n : ℕ) : ℂ :=
-  Complex.exp (Complex.I * t * Real.log n)
+/-! The modular lane is operatorial: it is the supplied flow on the Cuntz
+generators, not multiplication of two scalar readouts. -/
 
-noncomputable def modular_phase (t : ℝ) (n : ℕ) : ℂ :=
-  modular_flow t n
+theorem operatorial_liouville_modular_intertwining
+    {Op : Type*} [NormedRing Op] [NormedAlgebra ℂ Op] [StarRing Op]
+    (C : InfoGeometry.Arithmetic.BostConnesSystem.CuntzMultiplicativeIndexing Op)
+    (F : InfoGeometry.Canonical.BostConnesModularFlow.ArithmeticModularFlow C)
+    (grading : InfoGeometry.Canonical.BostConnesModularFlow.LiouvilleModularInvariance C F)
+    (t : ℝ) (n : ℕ+) :
+    grading.Γ (F.σ t (C.generator n)) = F.σ t (grading.Γ (C.generator n)) :=
+  InfoGeometry.Canonical.BostConnesModularFlow.witten_index_conserved_under_flow
+    C F grading t n
 
-/-- The modular phase at time `0` is `1`. -/
-theorem modular_phase_zero (n : ℕ) : modular_phase 0 n = 1 := by
-  simp [modular_phase, modular_flow]
-
-/-- The scalar Liouville readout commutes with the scalar modular phase. -/
-theorem liouville_commutes_modular_flow (n : ℕ) (t : ℝ) :
-    (InfoGeometry.BostConnes.liouvilleParity n : ℂ) * modular_phase t n =
-      modular_phase t n * (InfoGeometry.BostConnes.liouvilleParity n : ℂ) := by
-  rw [mul_comm]
-
-noncomputable def witten_index (beta : ℝ) : ℝ :=
+/-! The following is an arithmetic Möbius/L-series readout, not a Witten
+index: no supersymmetric Hamiltonian or supertrace is defined in this file. -/
+noncomputable def moebiusLSeriesReadout (beta : ℝ) : ℝ :=
   ∑' n : ℕ+, (ArithmeticFunction.moebius n.val : ℝ) * (n.val : ℝ) ^ (-beta)
 
-theorem witten_index_eq_tsum_nat_succ (beta : ℝ) :
-    witten_index beta =
+theorem moebiusLSeriesReadout_eq_tsum_nat_succ (beta : ℝ) :
+    moebiusLSeriesReadout beta =
       ∑' n : ℕ,
         (ArithmeticFunction.moebius (n + 1) : ℝ) *
           ((n + 1 : ℕ) : ℝ) ^ (-beta) := by
-  simpa [witten_index] using
+  simpa [moebiusLSeriesReadout] using
     (tsum_pnat_eq_tsum_succ
       (f := fun n : ℕ =>
         (ArithmeticFunction.moebius n : ℝ) * (n : ℝ) ^ (-beta)))
@@ -69,13 +77,13 @@ theorem moebius_LSeries_eq_reciprocal_zeta (beta : ℝ) (hbeta : beta > 1) :
   have hz : riemannZeta (beta : ℂ) ≠ 0 := riemannZeta_ne_zero_of_one_lt_re hs
   exact (mul_eq_one_iff_eq_inv₀ hz).mp hmul'
 
-theorem ofReal_witten_index_eq_moebius_LSeries
+theorem ofReal_moebiusLSeriesReadout_eq_moebius_LSeries
     (beta : ℝ) (hbeta : 1 < beta) :
-    (witten_index beta : ℂ) = L ↗μ (beta : ℂ) := by
+    (moebiusLSeriesReadout beta : ℂ) = L ↗μ (beta : ℂ) := by
   have hs : 1 < (beta : ℂ).re := by simpa using hbeta
   have hsum : Summable (LSeries.term (↗μ) (beta : ℂ)) := by
     exact ArithmeticFunction.LSeriesSummable_moebius_iff.mpr hs
-  rw [witten_index, Complex.ofReal_tsum]
+  rw [moebiusLSeriesReadout, Complex.ofReal_tsum]
   rw [LSeries]
   rw [hsum.tsum_eq_zero_add]
   simp only [LSeries.term_zero, zero_add]
@@ -94,19 +102,11 @@ theorem ofReal_witten_index_eq_moebius_LSeries
     norm_num
   · exact PNat.ne_zero n
 
-theorem ofReal_witten_index_eq_reciprocal_zeta
+theorem ofReal_moebiusLSeriesReadout_eq_reciprocal_zeta
     (beta : ℝ) (hbeta : 1 < beta) :
-    (witten_index beta : ℂ) = (riemannZeta (beta : ℂ))⁻¹ := by
-  rw [ofReal_witten_index_eq_moebius_LSeries beta hbeta]
+    (moebiusLSeriesReadout beta : ℂ) = (riemannZeta (beta : ℂ))⁻¹ := by
+  rw [ofReal_moebiusLSeriesReadout_eq_moebius_LSeries beta hbeta]
   exact moebius_LSeries_eq_reciprocal_zeta beta hbeta
-
-/-- Bundled form of the scalar commutation identity above. -/
-theorem thermal_anomaly_protection :
-    ∀ t : ℝ, ∀ n : ℕ,
-      (InfoGeometry.BostConnes.liouvilleParity n : ℂ) * modular_phase t n =
-        modular_phase t n * (InfoGeometry.BostConnes.liouvilleParity n : ℂ) := by
-  intro t n
-  exact liouville_commutes_modular_flow n t
 
 /--
 Möbius/Liouville decomposition statement.
@@ -133,6 +133,18 @@ This is the squarefree sector selected by the arithmetic predicate.
 -/
 def is_fermionic_sector (n : ℕ) : Prop :=
   Squarefree n
+
+/-- The fermionic sector is exactly the nonzero Möbius sector. -/
+theorem is_fermionic_sector_iff_moebius_ne_zero (n : ℕ) :
+    is_fermionic_sector n ↔ ArithmeticFunction.moebius n ≠ 0 := by
+  simpa [is_fermionic_sector] using
+    (ArithmeticFunction.moebius_ne_zero_iff_squarefree (n := n)).symm
+
+/-- The complementary arithmetic sector is exactly the zero Möbius sector. -/
+theorem not_is_fermionic_sector_iff_moebius_eq_zero (n : ℕ) :
+    ¬ is_fermionic_sector n ↔ ArithmeticFunction.moebius n = 0 := by
+  have h := not_congr (is_fermionic_sector_iff_moebius_ne_zero n)
+  simpa using h
 
 /--
 Even-parity sectors: λ(n) = +1.
@@ -177,7 +189,7 @@ noncomputable def count_bosonic (N : ℕ) : ℕ :=
   (Finset.range (N + 1)).filter
       (fun n => n > 0 ∧ InfoGeometry.BostConnes.liouvilleParity n = 1) |>.card
 
-noncomputable def witten_index_approx (N : ℕ) (beta : ℝ) : ℝ :=
+noncomputable def moebiusLSeriesReadout_approx (N : ℕ) (beta : ℝ) : ℝ :=
   ((Finset.range (N + 1)).filter (fun n => n > 0)).sum
     (fun n => (ArithmeticFunction.moebius n : ℝ) * (n : ℝ) ^ (-beta))
 

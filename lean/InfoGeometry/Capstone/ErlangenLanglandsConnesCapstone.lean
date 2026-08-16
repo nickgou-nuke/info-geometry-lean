@@ -1,7 +1,6 @@
 import InfoGeometry.Canonical.BostConnesHeckeCuntzCapstone
 import InfoGeometry.Canonical.SouriauDiracHodgeCoupling
 import InfoGeometry.Capstone.QuantumGroupFibonacci
-import InfoGeometry.Dynamics.TomitaTakesaki
 import InfoGeometry.Krein.HestenesAffineO55ClosureBridge
 
 /-!
@@ -24,7 +23,6 @@ open InfoGeometry.Canonical.BostConnesHeckeCuntzCapstone
 open InfoGeometry.Canonical.BostConnesSymmetryBreaking
 -- InfoGeometry.Canonical.ChiralAnomalyCantor has no namespace — all theorems are at top level
 open InfoGeometry.Canonical.SouriauDiracHodgeCoupling
-open InfoGeometry.Dynamics.TomitaTakesaki
 open InfoGeometry.Krein.HestenesAffineO55ClosureBridge
 open Matrix
 open scoped Matrix
@@ -155,34 +153,6 @@ theorem connes_anomaly_and_dikin_readout
 
 end Connes
 
-section Tomita
-
-/-- Proposition bundled by the finite Tomita matrix capstone theorem. -/
-def TomitaJMatrixStatement (s t : ℝ) : Prop :=
-    (modularConjugation * modularConjugation =
-        (1 : InfoGeometry.Dynamics.KmsBoundary.Mat2C)) ∧
-    (star modularConjugation = modularConjugation) ∧
-    (modularConjugation *
-        InfoGeometry.Dynamics.KmsBoundary.modularHamiltonian *
-        modularConjugation =
-      -InfoGeometry.Dynamics.KmsBoundary.modularHamiltonian) ∧
-    (finiteTomitaFlow s * finiteTomitaFlow t = finiteTomitaFlow (s + t))
-
-/--
-Finite Tomita readout: the matrix modular conjugation is involutive,
-self-adjoint, flips the finite boost Hamiltonian, and the finite modular flow
-is additive.
--/
-theorem tomita_j_matrix_readout (s t : ℝ) :
-    TomitaJMatrixStatement s t := by
-  exact
-    ⟨modularConjugation_is_involution,
-      modularConjugation_conjTranspose,
-      modularConjugation_reflects_hamiltonian,
-      finiteTomitaFlow_add s t⟩
-
-end Tomita
-
 section Fibonacci
 
 /-- Proposition bundled by the finite Fibonacci/quantum-group capstone theorem. -/
@@ -231,12 +201,10 @@ def TrinityCapstoneStatement
     (Op : Type u) (φ₁ φ₂ : Op → ℂ)
     (tilt proj : Matrix (Fin 2) (Fin 2) ℂ)
     (hProj : proj * proj = proj)
-    (ε : ℝ)
-    (s t : ℝ) : Prop :=
+    (ε : ℝ) : Prop :=
     ErlangenO55Statement B ξ hNatural hNull A i ∧
     LanglandsGaloisSeparationStatement Op φ₁ φ₂ ∧
     ConnesAnomalyDikinStatement tilt proj hProj ε ∧
-    TomitaJMatrixStatement s t ∧
     FibonacciQuantumGroupStatement
 
 /--
@@ -282,16 +250,14 @@ theorem trinity_capstone_unified
     (hAnti : D * tilt + tilt * D = 0)
     (hComm : D * proj = proj * D)
     (hDinv : ∃ D_inv, D * D_inv = 1 ∧ D_inv * D = 1)
-    (ε : ℝ) (hε : |ε| ≤ 1)
-    (s t : ℝ) :
-    TrinityCapstoneStatement B ξ hNatural hNull A i Op φ₁ φ₂ tilt proj hProj ε s t := by
+    (ε : ℝ) (hε : |ε| ≤ 1) :
+    TrinityCapstoneStatement B ξ hNatural hNull A i Op φ₁ φ₂ tilt proj hProj ε := by
   exact
     ⟨erlangen_o55_invariants B ξ hNatural hNull A i,
       langlands_galois_state_separation
         C_comm Op G Qab bsys χ ιab φ₁ φ₂ g₁ g₂
         h_state1 h_state2 hEmbedding hChiGenerating hne,
       connes_anomaly_and_dikin_readout tilt D proj hProj hAnti hComm hDinv ε hε,
-      tomita_j_matrix_readout s t,
       fibonacci_quantum_group_readout⟩
 
 end InfoGeometry.Capstone.ErlangenLanglandsConnesCapstone

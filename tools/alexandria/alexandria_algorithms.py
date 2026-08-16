@@ -34,21 +34,12 @@ class AlexandriaGraph:
     canonical_to_chunks: dict[str, list[str]]
 
 
-def stable_hash(obj: Any) -> str:
-    payload = json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
-    return hashlib.blake2b(payload.encode("utf-8"), digest_size=16).hexdigest()
+# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
+from igf.common.hashing import stable_hash
 
 
-def read_jsonl(path: Path) -> list[dict[str, Any]]:
-    if not path.exists():
-        return []
-    rows: list[dict[str, Any]] = []
-    with path.open("r", encoding="utf-8") as handle:
-        for line in handle:
-            line = line.strip()
-            if line:
-                rows.append(json.loads(line))
-    return rows
+# [lossless-compact] read_jsonl folded into igf.common.json_io.read_jsonl
+from igf.common.json_io import read_jsonl
 
 
 def chunk_key_from_doc_id(doc_id: str) -> str:
@@ -369,11 +360,8 @@ def basin_edge_docs(graph: AlexandriaGraph, basins: list[dict[str, Any]], *, run
     return docs
 
 
-def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=True) + "\n")
+# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
+from igf.common.json_io import write_jsonl
 
 
 def parse_args() -> argparse.Namespace:

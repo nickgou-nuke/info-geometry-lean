@@ -118,10 +118,11 @@ structure EulerProductDatum (S : Type uS) where
   absValue_eq_norm :
     ∀ s : S, admissible s → absValue s = ‖value s‖
   /--
-  Local Euler factor placeholder.
+  Local Euler factor readout.
 
   The input is an integer index; concrete instances may restrict this to primes
-  using an additional predicate.
+  using an additional predicate. No Euler-product law is implied by this
+  field; such a law belongs to `HasEulerProduct`/`EulerProductData` below.
   -/
   localFactor : ℕ → S → ℂ
 

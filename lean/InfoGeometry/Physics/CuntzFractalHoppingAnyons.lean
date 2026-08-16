@@ -49,12 +49,4 @@ theorem braidSigma01_braidSigma12_braidSigma01 :
     norm_num [braidSigma01, braidSigma12, Matrix.mul_apply,
       Fin.sum_univ_succ]
 
-theorem fractal_hopping_anyon_synthesis :
-    (braidSigma01 * defectVector = defectVector) ∧
-    (braidSigma12 * defectVector = defectVector) ∧
-    (braidSigma01 * braidSigma12 * braidSigma01 =
-      braidSigma12 * braidSigma01 * braidSigma12) :=
-  ⟨braidSigma01_defect_invariant, braidSigma12_defect_invariant,
-    braidSigma01_braidSigma12_braidSigma01⟩
-
 end InfoGeometry.Physics

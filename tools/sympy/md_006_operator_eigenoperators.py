@@ -14,21 +14,15 @@ Verified theorem-safe content only:
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
 import sympy as sp
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def assert_matrix_zero(mat: sp.Matrix, label: str) -> None:
-    reduced = mat.applyfunc(lambda x: sp.expand(sp.simplify(x)))
-    if reduced != sp.zeros(*reduced.shape):
-        raise AssertionError(f"{label} failed:\n{reduced}")
-
-
-def mat2(prefix: str) -> sp.Matrix:
-    return sp.Matrix(2, 2, lambda i, j: sp.symbols(f"{prefix}{i}{j}"))
-
-
-def comm(A: sp.Matrix, B: sp.Matrix) -> sp.Matrix:
-    return A * B - B * A
+from tools.sympy.common import assert_matrix_zero, comm, mat2, pauli_matrices
 
 
 def main() -> int:

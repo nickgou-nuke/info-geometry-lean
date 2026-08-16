@@ -55,18 +55,6 @@ theorem scalarRealityReadout_im_zero
   subst B
   simp [scalarRealityReadout]
 
-/-- The revised finite corridor keeps Section 24's Hamilton table and triple product. -/
-theorem revised_hamilton_basis_with_triple :
-    Section8.Quat.qi * Section8.Quat.qi = -(1 : Quat)
-      ∧ Section8.Quat.qj * Section8.Quat.qj = -(1 : Quat)
-      ∧ Section8.Quat.qk * Section8.Quat.qk = -(1 : Quat)
-      ∧ Section8.Quat.qi * Section8.Quat.qj = Section8.Quat.qk
-      ∧ Section8.Quat.qj * Section8.Quat.qk = Section8.Quat.qi
-      ∧ Section8.Quat.qk * Section8.Quat.qi = Section8.Quat.qj
-      ∧ (Section8.Quat.qi * Section8.Quat.qj) * Section8.Quat.qk =
-        -(1 : Quat) :=
-  Section24.hamilton_basis_with_triple
-
 /-- Quaternion norm scalar identity reused in the revised statement. -/
 theorem revised_quaternion_norm_scalar (Q : Quat) :
     Section8.Quat.conj Q * Q = Section8.Quat.scalar (Section8.Quat.normSq Q) :=
@@ -86,33 +74,5 @@ theorem revised_torsionCommutatorShadow_antisymmetric
     Section24.torsionCommutatorShadow kappa B lam nu mu =
       -Section24.torsionCommutatorShadow kappa B lam mu nu :=
   Section24.torsionCommutatorShadow_antisymmetric kappa B lam mu nu
-
-theorem section25_capstone :
-    (∀ A B : ℂ, B = starRingEnd ℂ A →
-      (scalarRealityReadout A B).im = 0) ∧
-    (∀ Q : Quat,
-      Section8.Quat.conj Q * Q =
-        Section8.Quat.scalar (Section8.Quat.normSq Q)) ∧
-    (Section8.Quat.qi * Section8.Quat.qi = -(1 : Quat)
-      ∧ Section8.Quat.qj * Section8.Quat.qj = -(1 : Quat)
-      ∧ Section8.Quat.qk * Section8.Quat.qk = -(1 : Quat)
-      ∧ Section8.Quat.qi * Section8.Quat.qj = Section8.Quat.qk
-      ∧ Section8.Quat.qj * Section8.Quat.qk = Section8.Quat.qi
-      ∧ Section8.Quat.qk * Section8.Quat.qi = Section8.Quat.qj
-      ∧ (Section8.Quat.qi * Section8.Quat.qj) * Section8.Quat.qk =
-        -(1 : Quat)) ∧
-    (∀ e : Fin 4 → Fin 4 → ℝ, ∀ mu nu : Fin 4,
-      Section22.quaternionInducedMetric e mu nu =
-        Section22.quaternionInducedMetric e nu mu) ∧
-    (∀ kappa : ℂ, ∀ B : Fin 4 → Fin 4 → Fin 4 → ℂ,
-      ∀ lam mu nu : Fin 4,
-        Section24.torsionCommutatorShadow kappa B lam nu mu =
-          -Section24.torsionCommutatorShadow kappa B lam mu nu) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · exact scalarRealityReadout_im_zero
-  · exact revised_quaternion_norm_scalar
-  · exact revised_hamilton_basis_with_triple
-  · exact revised_quaternion_metric_symmetric
-  · exact revised_torsionCommutatorShadow_antisymmetric
 
 end Section25

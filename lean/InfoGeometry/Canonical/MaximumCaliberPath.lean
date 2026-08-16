@@ -57,7 +57,7 @@ variable (L : GraphMaxCalPathLaw G PathSample)
 
 /-- Convert the MaxCal path law to the generic fluctuation-ratio owner packet. -/
 noncomputable def toPathProbabilityRatioLaw :
-    InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus.DirectedThermoGraph.PathProbabilityRatioLaw
+    InfoGeometry.Canonical.ThermodynamicChiralGraphCalculus.DirectedThermoGraph.PathProbabilityRatioData
       PathSample where
   forwardProbability := L.forwardProbability
   backwardProbability := L.backwardProbability
@@ -106,8 +106,8 @@ theorem detailedBalanceOnCycle_of_pathEntropyProduction_eq_zero
     (hpos : ∀ e ∈ C.edges, 0 < G.forwardRate e / G.reverseRate e)
     (hzero : G.pathEntropyProduction C.edges = 0) :
     G.DetailedBalanceOnCycle C := by
-  rw [(G.logWilsonCycleLaw_of_pos C hpos).detailedBalance_iff_zero_log_curvature]
-  simpa [cycle_pathEntropyProduction_eq_cycleCurvatureLog G C] using hzero
+  exact (G.logWilsonCycleLaw_of_pos C hpos).mpr
+    (by simpa [cycle_pathEntropyProduction_eq_cycleCurvatureLog G C] using hzero)
 
 end ThermodynamicGraph
 

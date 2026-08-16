@@ -128,43 +128,4 @@ theorem trace_of_commutator (A B : Matrix (Fin 2) (Fin 2) ℂ) :
 
 /-! ### 4. Coordinateless capstone: Erlangen 2.0 -/
 
-/--
-**Erlangen 2.0 Capstone** (Genuine Proofs).
-
-Every geometric identity of the connection structure (Sections 7–11)
-reduces, in the coordinateless formalism, to purely algebraic identities
-on M₂(ℂ):
-
-1. Jacobi identity: [A,[B,C]] + [B,[C,A]] + [C,[A,B]] = 0  (ring)
-2. Pauli commutation: [σ_a, σ_b] = 2i·ε_{abc}·σ_c  (16 cases)
-3. Pauli anticommutation: {σ_a, σ_b} = 2·δ_{ab}·I  (16 cases)
-4. Tr([A,B]) = 0: all commutators are traceless  (ring)
-5. Bianchi = Jacobi: curvature consistency is algebraic
-
-The group action (SL(2,ℂ), quaternions, I/J/K) replaces partial derivatives.
-The commutator bracket replaces the connection.
-Geometry = invariants under operator algebra automorphisms.
-
-Zero axioms. Zero sorries. Zero coordinates.
--/
-theorem erlangen_coordinateless_capstone :
-    (-- Jacobi identity: the coordinateless Bianchi
-     ∀ A B C : Matrix (Fin 2) (Fin 2) ℂ,
-       bracket A (bracket B C) + bracket B (bracket C A) + bracket C (bracket A B) = 0) ∧
-    (-- Bracket antisymmetry: [A,B] = -[B,A]
-     ∀ X Y : Matrix (Fin 2) (Fin 2) ℂ, bracket X Y = -bracket Y X) ∧
-    (-- Bianchi = Jacobi: [[A,B],C] + [[B,C],A] + [[C,A],B] = 0
-     ∀ A B C : Matrix (Fin 2) (Fin 2) ℂ,
-       bracket (bracket A B) C + bracket (bracket B C) A + bracket (bracket C A) B = 0) ∧
-    (-- Trace of commutator: tr([A,B]) = 0
-     ∀ A B : Matrix (Fin 2) (Fin 2) ℂ, Matrix.trace (bracket A B) = 0) ∧
-    (-- Pauli squares: σ_a² = I for all a
-     ∀ a : Fin 4, sigma a * sigma a = (1 : Matrix (Fin 2) (Fin 2) ℂ)) := by
-  refine ⟨?_, ?_, ?_, ?_, ?_⟩
-  · exact jacobi_identity
-  · exact bracket_antisymm
-  · exact bianchi_is_jacobi
-  · exact trace_of_commutator
-  · exact pauli_squares
-
 end ErlangenCoordinateless

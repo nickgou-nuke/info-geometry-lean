@@ -37,8 +37,8 @@ structure CompatibleCuntzPointFamily where
   c : ∀ i, Stage i
   cstar : ∀ i, Stage i
   relation : ∀ i, c i * cstar i = 1
-  compatible_c : ∀ {i j : I} (hij : i ≤ j), sys.map hij (c i) = c j
-  compatible_cstar : ∀ {i j : I} (hij : i ≤ j),
+  map_c : ∀ {i j : I} (hij : i ≤ j), sys.map hij (c i) = c j
+  map_cstar : ∀ {i j : I} (hij : i ≤ j),
     sys.map hij (cstar i) = cstar j
 
 def CompatibleCuntzPointFamily.toQCCR
@@ -60,8 +60,8 @@ theorem CompatibleCuntzPointFamily.toQCCR_compatible
     change qCcrParameterTransitionMap Stage sys hij
         (family.c i, (family.cstar i, (0 : Stage i))) =
       (family.c j, (family.cstar j, (0 : Stage j)))
-    simp [qCcrParameterTransitionMap, family.compatible_c hij,
-      family.compatible_cstar hij]
+    simp [qCcrParameterTransitionMap, family.map_c hij,
+      family.map_cstar hij]
 
 noncomputable def cuntzCompatiblePointColimitMap
     (family : CompatibleCuntzPointFamily sys) :

@@ -1,4 +1,7 @@
 import InfoGeometry.Clifford.Cl55RealSplitPin
+import InfoGeometry.Clifford.Cl55WittPinAction
+import InfoGeometry.Clifford.Cl55WittPinParity
+import InfoGeometry.Clifford.Cl55WittReflectionSubgroup
 
 namespace InfoGeometry.Clifford.Clifford55
 

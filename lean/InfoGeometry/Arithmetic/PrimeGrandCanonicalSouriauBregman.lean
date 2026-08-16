@@ -149,26 +149,6 @@ theorem grandPotential_eq_neg_inv_beta_mul_massieu
     (β Z : ℂ) :
     grandPotential β Z = -β⁻¹ * massieuPlanck Z := rfl
 
-/--
-The generic Massieu/Legendre calibration packet.
-
-This is the theorem-safe shell for the free-energy and Bregman layer.
--/
-@[socket_debt_tag, rep_depth transport]
-structure MassieuPlanckLegendreCalibration (Param : Type*) where
-  beta : Param → ℂ
-  chemicalPotential : Param → ℂ
-  entropy : Param → ℂ
-  energy : Param → ℂ
-  particleNumber : Param → ℂ
-  massieu : Param → ℂ
-  grandPotential : Param → ℂ
-  massieu_legendre_law :
-    ∀ θ, massieu θ =
-      entropy θ - beta θ * (energy θ - chemicalPotential θ * particleNumber θ)
-  grandPotential_law :
-    ∀ θ, grandPotential θ = - (beta θ)⁻¹ * massieu θ
-
 /-! ## 3. Real thermodynamic bridge and Bregman readback -/
 
 /--
@@ -180,14 +160,14 @@ Legendre/Bregman layer.  The analytic zeta identifications remain explicit
 socket data.
 -/
 @[rep_depth transport]
-structure PrimeGrandCanonicalSouriauBregmanPacket where
+structure PrimeGrandCanonicalSouriauBregmanData where
   massieuBridge : MassieuBridge
   zeta : ℂ → ℂ
   dzeta : ℂ → ℂ
 
-namespace PrimeGrandCanonicalSouriauBregmanPacket
+namespace PrimeGrandCanonicalSouriauBregmanData
 
-variable (B : PrimeGrandCanonicalSouriauBregmanPacket)
+variable (B : PrimeGrandCanonicalSouriauBregmanData)
 
 /-- Zeta free-energy potential, derived from the native complex thermodynamic owner. -/
 def zetaPotential : ℂ → ℂ :=
@@ -208,7 +188,7 @@ theorem zetaMomentMap_is_neg_zetaDeriv_over_zeta (s : ℂ) :
     B.zetaMomentMap s = -(B.dzeta s) / B.zeta s := by
   rfl
 
-end PrimeGrandCanonicalSouriauBregmanPacket
+end PrimeGrandCanonicalSouriauBregmanData
 
 /-! ## 4. Zeta-plane functional-equation symmetry -/
 
@@ -325,7 +305,7 @@ theorem finitePrimeGrandPotential_eq
 
 /-- The finite Souriau/Bregman owner target is proved. -/
 theorem primeGrandCanonicalSouriauBregmanOwnerTarget :
-    ∀ (B : PrimeGrandCanonicalSouriauBregmanPacket),
+    ∀ (B : PrimeGrandCanonicalSouriauBregmanData),
       let M : MassieuBridge :=
         B.massieuBridge
       M.beta = M.temperature.s.re ∧

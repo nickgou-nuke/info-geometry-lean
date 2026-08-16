@@ -69,80 +69,45 @@ theorem lipschitzUnit_involute_eq_or_neg
       · left
         simpa [map_mul, Units.val_mul, hy, hz]
 
+theorem pinTwistedAction_eq_pinConjAction_of_involute_eq
+    (g : Pin55)
+    (hg : CliffordAlgebra.involute (pinToUnits g : Cl55) =
+      (pinToUnits g : Cl55)) :
+    pinTwistedAction g = pinConjAction g := by
+  apply LinearMap.ext
+  intro v
+  apply ι55_injective
+  rw [pinTwistedAction_apply_ι, pinConjAction_apply_ι]
+  simp only [pinTwistedAdj, hg]
+
+theorem pinTwistedAction_eq_neg_pinConjAction_of_involute_eq_neg
+    (g : Pin55)
+    (hg : CliffordAlgebra.involute (pinToUnits g : Cl55) =
+      -(pinToUnits g : Cl55)) :
+    pinTwistedAction g = -(pinConjAction g) := by
+  apply LinearMap.ext
+  intro v
+  apply ι55_injective
+  rw [pinTwistedAction_apply_ι]
+  simp only [LinearMap.neg_apply, map_neg]
+  rw [pinConjAction_apply_ι]
+  simp only [pinTwistedAdj, hg]
+  noncomm_ring
+
 theorem pinTwistedAction_preserves_Q55 (g : Pin55) (v : V55) :
     Q55 (pinTwistedAction g v) = Q55 v := by
   have hparity := lipschitzUnit_involute_eq_or_neg
     (pinToUnits g) (pin_units_mem_lipschitz g)
-  have hι := pinTwistedAction_apply_ι g v
-  have hunit :
-      (↑((pinToUnits g)⁻¹) : Cl55) * (pinToUnits g : Cl55) = 1 := by
-    exact Units.inv_mul (pinToUnits g)
-  have hunitRight :
-      (pinToUnits g : Cl55) *
-          (↑((pinToUnits g)⁻¹) : Cl55) = 1 := by
-    exact Units.mul_inv (pinToUnits g)
-  have hconjSquare :
-      ((pinToUnits g : Cl55) * ι55 v *
-          (↑((pinToUnits g)⁻¹) : Cl55)) *
-        ((pinToUnits g : Cl55) * ι55 v *
-          (↑((pinToUnits g)⁻¹) : Cl55)) =
-      ι55 v * ι55 v := by
-    calc
-      _ = (pinToUnits g : Cl55) * ι55 v *
-          (((↑((pinToUnits g)⁻¹) : Cl55) *
-            (pinToUnits g : Cl55))) * ι55 v *
-          (↑((pinToUnits g)⁻¹) : Cl55) := by
-            noncomm_ring
-      _ = (pinToUnits g : Cl55) * ι55 v * 1 * ι55 v *
-          (↑((pinToUnits g)⁻¹) : Cl55) := by rw [hunit]
-      _ = (pinToUnits g : Cl55) * (ι55 v * ι55 v) *
-          (↑((pinToUnits g)⁻¹) : Cl55) := by
-            noncomm_ring
-      _ = (pinToUnits g : Cl55) *
-          algebraMap ℝ Cl55 (Q55 v) *
-          (↑((pinToUnits g)⁻¹) : Cl55) := by
-            rw [CliffordAlgebra.ι_sq_scalar]
-      _ = algebraMap ℝ Cl55 (Q55 v) *
-          ((pinToUnits g : Cl55) *
-            (↑((pinToUnits g)⁻¹) : Cl55)) := by
-            have hcomm :
-                (pinToUnits g : Cl55) * algebraMap ℝ Cl55 (Q55 v) =
-                  algebraMap ℝ Cl55 (Q55 v) * (pinToUnits g : Cl55) :=
-              (Algebra.commutes (Q55 v) (pinToUnits g : Cl55)).symm
-            rw [hcomm, mul_assoc]
-      _ = algebraMap ℝ Cl55 (Q55 v) := by
-            rw [hunitRight]
-            simp
-      _ = ι55 v * ι55 v := by
-            rw [CliffordAlgebra.ι_sq_scalar]
-  have htwistedSquare :
-      (CliffordAlgebra.involute (pinToUnits g : Cl55) * ι55 v *
-          (↑((pinToUnits g)⁻¹) : Cl55)) *
-        (CliffordAlgebra.involute (pinToUnits g : Cl55) * ι55 v *
-          (↑((pinToUnits g)⁻¹) : Cl55)) =
-      ι55 v * ι55 v := by
-    rcases hparity with hplus | hminus
-    · rw [hplus]
-      exact hconjSquare
-    · rw [hminus]
-      simpa only [neg_mul, mul_neg, neg_neg] using hconjSquare
-  have hq :
-      ι55 (pinTwistedAction g v) * ι55 (pinTwistedAction g v) =
-        ι55 v * ι55 v := by
-    simp only [pinTwistedAdj] at hι
-    rw [hι, htwistedSquare]
-  rw [CliffordAlgebra.ι_sq_scalar, CliffordAlgebra.ι_sq_scalar] at hq
-  exact (algebraMap ℝ Cl55).injective hq
+  rcases hparity with hplus | hminus
+  · rw [pinTwistedAction_eq_pinConjAction_of_involute_eq g hplus]
+    exact pinConjAction_preserves_Q55 g v
+  · rw [pinTwistedAction_eq_neg_pinConjAction_of_involute_eq_neg g hminus]
+    simpa using pinConjAction_preserves_Q55 g v
 
 theorem pinTwistedActionEquiv_mul_all (g h : Pin55) :
     pinTwistedActionEquiv (g * h) =
-      pinTwistedActionEquiv g * pinTwistedActionEquiv h := by
-  apply LinearEquiv.ext
-  intro v
-  change pinTwistedAction (g * h) v =
-    pinTwistedAction g (pinTwistedAction h v)
-  rw [pinTwistedAction_mul]
-  rfl
+      pinTwistedActionEquiv g * pinTwistedActionEquiv h :=
+  pinTwistedActionEquiv_mul g h
 
 noncomputable def pinTwistedOrthogonalAction : Pin55 →* orthogonalGroup55 where
   toFun g :=

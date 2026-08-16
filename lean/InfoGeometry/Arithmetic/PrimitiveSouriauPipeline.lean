@@ -52,7 +52,7 @@ All substantial mathematical claims remain in the supplied witnesses.  This
 structure exists so graph/orchestration tooling can point at one owner surface
 instead of many sidecars.
 -/
-structure PrimitiveSouriauPipelineWitness
+structure PrimitiveSouriauPipelineData
     (State : Type*) where
   /-- Finite support under inspection. -/
   support : Finset ℕ
@@ -77,7 +77,7 @@ structure PrimitiveSouriauPipelineWitness
   weyl : ProjectiveWeylGaugeCalibration State
 
   /-- Projective arithmetic KMS property. -/
-  kms : ProjectiveArithmeticKMSWitness State
+  kms : ProjectiveArithmeticKMSData State
 
   /-- Compatibility between projective KMS flow and prime flow. -/
   kmsPrime : ProjectiveKMSPrimeCompatibility State
@@ -87,10 +87,10 @@ structure PrimitiveSouriauPipelineWitness
     ArithmeticDivergenceReadout :=
       readoutOfProjectiveWeylGaugeCalibration weyl
 
-namespace PrimitiveSouriauPipelineWitness
+namespace PrimitiveSouriauPipelineData
 
 variable {State : Type*}
-variable (P : PrimitiveSouriauPipelineWitness State)
+variable (P : PrimitiveSouriauPipelineData State)
 
 /-- In the compact projective sector, the inverse temperature lies in the cold finite regime. -/
 theorem beta_cold :
@@ -150,7 +150,7 @@ theorem itakura_shape_scale_right
 
 /-- The owner target follows directly from the supplied property bundle. -/
 theorem primitiveSouriauPipelineOwnerTarget :
-    ∀ (State : Type*) (P : PrimitiveSouriauPipelineWitness State),
+    ∀ (State : Type*) (P : PrimitiveSouriauPipelineData State),
       1 < betaInvert P.u ∧
       0 ≤ projectiveArithmeticGibbsPartition P.support P.u ∧
       P.kms.projectiveModularFlowReadout (P.kms.stateOfFinset P.support) P.u =
@@ -175,6 +175,6 @@ theorem primitiveSouriauPipelineOwnerTarget :
     P.weyl_total_eq_scale_mul_shape
   ⟩
 
-end PrimitiveSouriauPipelineWitness
+end PrimitiveSouriauPipelineData
 
 end InfoGeometry.Arithmetic.PrimitiveSouriauPipeline

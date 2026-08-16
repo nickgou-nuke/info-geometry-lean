@@ -42,20 +42,19 @@ open InfoGeometry.Prequantum
 
 structure FiniteMDPASJMStageData
     (ι : Type*) [Fintype ι] [Nonempty ι]
-    (Op : Type*) [Ring Op] [Algebra ℝ Op]
-    (State LieAlgebra LieDual : Type*) where
-  thermo : SouriauLieThermoData State LieAlgebra LieDual
-  rn : SouriauNegativeLogRNDerivative State LieAlgebra LieDual
-  moment : MomentMapGeneratingPotential State LieAlgebra LieDual
-  bregman : SouriauKLBregmanWitness State LieAlgebra LieDual
+    (Op : Type*) [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
+    (State LieAlgebra LieDual : Type*) [AddMonoid LieAlgebra] where
+  thermo : OperatorialSouriauStateData State LieAlgebra Op
+  rn : OperatorialRNDatum State LieAlgebra Op
+  moment : OperatorialMomentGeneratingPotential LieAlgebra Op
   pathPacket : MaximumCaliberPacket Op
   prequantum : PrequantumData
 
 namespace FiniteMDPASJMStageData
 
 variable {ι : Type*} [Fintype ι] [Nonempty ι]
-variable {Op : Type*} [Ring Op] [Algebra ℝ Op]
-variable {State LieAlgebra LieDual : Type*}
+variable {Op : Type*} [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
+variable {State LieAlgebra LieDual : Type*} [AddMonoid LieAlgebra]
 
 /-- The stage flow is the flow carried by its maximum-caliber path packet. -/
 abbrev flow
@@ -71,47 +70,16 @@ theorem pathPacket_flow_eq
 @[rep_depth thermo]
 theorem entropy_eq_expectation_modularPotential
     (D : FiniteMDPASJMStageData ι Op State LieAlgebra LieDual) :
-    D.rn.entropy = D.rn.expectationBeta D.rn.modularPotential :=
-  D.rn.entropy_eq_expectation_modularPotential
+    D.rn.entropy = D.rn.expectation D.rn.modularPotential :=
+  OperatorialRNDatum.entropy_eq_expectation_modularPotential D.rn
 
 @[rep_depth thermo]
-theorem souriauEntropy_eq_Phi_add_pairing_Q_beta
-    (D : FiniteMDPASJMStageData ι Op State LieAlgebra LieDual) :
-    D.rn.entropy =
-      D.rn.souriau.partitionPotential + D.rn.souriau.pairing D.rn.Q D.rn.souriau.beta :=
-  D.rn.souriauEntropy_eq_Phi_add_pairing_Q_beta
-
-@[rep_depth thermo]
-theorem firstVariation_eq_negative_pairing_Q
+theorem secondVariation_eq_bkmCovariance
     (D : FiniteMDPASJMStageData ι Op State LieAlgebra LieDual)
-    (δβ : LieAlgebra) :
-    D.moment.dPhi δβ = -D.moment.souriau.pairing D.moment.Q δβ :=
-  D.moment.firstVariation_eq_negative_pairing_Q δβ
-
-@[rep_depth thermo]
-theorem secondVariation_eq_covariance
-    (D : FiniteMDPASJMStageData ι Op State LieAlgebra LieDual)
-    (ξ η : LieAlgebra) :
-    D.moment.hessian ξ η = D.moment.covarianceTensor ξ η :=
-  D.moment.secondVariation_eq_covariance ξ η
-
-@[rep_depth thermo]
-theorem KL_eq_souriau_Bregman
-    (D : FiniteMDPASJMStageData ι Op State LieAlgebra LieDual) :
-    D.bregman.klValue =
-      D.bregman.alphaPartitionPotential
-      - D.bregman.generator.souriau.partitionPotential
-      - D.bregman.generator.dPhi D.bregman.alphaMinusBeta :=
-  D.bregman.KL_eq_souriau_Bregman
-
-@[rep_depth thermo]
-theorem relativeEntropy_eq_expectation_difference
-    (D : FiniteMDPASJMStageData ι Op State LieAlgebra LieDual) :
-    D.bregman.klValue =
-      D.bregman.alphaPartitionPotential
-      - D.bregman.generator.souriau.partitionPotential
-      - D.bregman.generator.dPhi D.bregman.alphaMinusBeta :=
-  D.bregman.relativeEntropy_eq_expectation_difference
+    (β : LieAlgebra) (A B : Op) :
+    D.moment.covarianceTensor β A B = D.moment.bkmCovariance β A B :=
+  OperatorialMomentGeneratingPotential.covarianceTensor_eq_bkmCovariance
+    D.moment β A B
 
 @[rep_depth thermo]
 theorem pathEntropy_eq_zero_of_detailed_balance
@@ -168,27 +136,27 @@ fields of `FiniteMDPASJMStageData`.
 -/
 abbrev FiniteMDPASJMTowerSeed
     (ι : Type*) [Fintype ι] [Nonempty ι]
-    (Op : Type*) [Ring Op] [Algebra ℝ Op]
-    (State LieAlgebra LieDual : Type*) :=
+    (Op : Type*) [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
+    (State LieAlgebra LieDual : Type*) [AddMonoid LieAlgebra] :=
   ℕ → FiniteMDPASJMStageData ι Op State LieAlgebra LieDual
 
 abbrev FiniteMDPASJMTowerSeed.stage
     {ι : Type*} [Fintype ι] [Nonempty ι]
-    {Op : Type*} [Ring Op] [Algebra ℝ Op]
-    {State LieAlgebra LieDual : Type*}
+    {Op : Type*} [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
+    {State LieAlgebra LieDual : Type*} [AddMonoid LieAlgebra]
     (T : FiniteMDPASJMTowerSeed ι Op State LieAlgebra LieDual) :
     ℕ → FiniteMDPASJMStageData ι Op State LieAlgebra LieDual := T
 
 namespace FiniteMDPASJMTowerSeed
 
 variable {ι : Type*} [Fintype ι] [Nonempty ι]
-variable {Op : Type*} [Ring Op] [Algebra ℝ Op]
-variable {State LieAlgebra LieDual : Type*}
+variable {Op : Type*} [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
+variable {State LieAlgebra LieDual : Type*} [AddMonoid LieAlgebra]
 
 @[rep_depth thermo]
 theorem entropy_eq_expectation_modularPotential
     (T : FiniteMDPASJMTowerSeed ι Op State LieAlgebra LieDual) (n : ℕ) :
-    (T.stage n).rn.entropy = (T.stage n).rn.expectationBeta (T.stage n).rn.modularPotential :=
+    (T.stage n).rn.entropy = (T.stage n).rn.expectation (T.stage n).rn.modularPotential :=
   (T.stage n).entropy_eq_expectation_modularPotential
 
 @[rep_depth thermo]
@@ -224,8 +192,8 @@ opaque constructor-selectable proposition: the bonding maps must carry each flow
 -/
 structure FiniteMDPASJMDirectSystem
     (ι : Type*) [Fintype ι] [Nonempty ι]
-    (Op : Type*) [Ring Op] [Algebra ℝ Op]
-    (State LieAlgebra LieDual : Type*) where
+    (Op : Type*) [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
+    (State LieAlgebra LieDual : Type*) [AddMonoid LieAlgebra] where
   tower : FiniteMDPASJMTowerSeed ι Op State LieAlgebra LieDual
   bond : ℕ → Op →+* Op
   map_Q : ∀ n, bond n (tower.stage n).flow.Q = (tower.stage (n + 1)).flow.Q
@@ -238,8 +206,8 @@ structure FiniteMDPASJMDirectSystem
 namespace FiniteMDPASJMDirectSystem
 
 variable {ι : Type*} [Fintype ι] [Nonempty ι]
-variable {Op : Type*} [Ring Op] [Algebra ℝ Op]
-variable {State LieAlgebra LieDual : Type*}
+variable {Op : Type*} [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
+variable {State LieAlgebra LieDual : Type*} [AddMonoid LieAlgebra]
 
 /-- One-step relation generating the direct-limit quotient. -/
 inductive OneStep (T : FiniteMDPASJMDirectSystem ι Op State LieAlgebra LieDual) :
@@ -462,7 +430,7 @@ theorem directLimit_thermodynamic_curvature_compatible
 theorem stage_entropy_identity
     (T : FiniteMDPASJMDirectSystem ι Op State LieAlgebra LieDual) (n : ℕ) :
     (T.tower.stage n).rn.entropy =
-      (T.tower.stage n).rn.expectationBeta (T.tower.stage n).rn.modularPotential :=
+      (T.tower.stage n).rn.expectation (T.tower.stage n).rn.modularPotential :=
   (T.tower.stage n).entropy_eq_expectation_modularPotential
 
 /-- The existing finite curvature trace identity is available at every stage. -/
@@ -520,7 +488,7 @@ theorem inductiveLimitCarrier_lifts_finiteIdentities
               (thermodynamic_curvature (T.tower.stage n).flow)) ∧
         (∀ n,
           (T.tower.stage n).rn.entropy =
-            (T.tower.stage n).rn.expectationBeta
+            (T.tower.stage n).rn.expectation
               (T.tower.stage n).rn.modularPotential) ∧
         (∀ n,
           (T.tower.stage n).pathPacket.pathEntropy =

@@ -81,7 +81,18 @@ def pinIsometrySubgroup : Subgroup Pin55 where
       rw [hact]
     exact (hleft.symm.trans hcomp).symm
 
-abbrev Pin55Isometric := pinIsometrySubgroup
+theorem pinIsometrySubgroup_eq_top :
+    pinIsometrySubgroup = ⊤ := by
+  ext g
+  change pinIsometryPredicate g ↔ True
+  constructor
+  · intro _
+    trivial
+  · intro _
+    exact pinTwistedAction_preserves_Q55_all g
+
+def Pin55Isometric : Subgroup Pin55 :=
+  pinIsometrySubgroup
 
 def orthogonalV55Predicate (e : V55 ≃ₗ[ℝ] V55) : Prop :=
   ∀ v : V55, Q55 (e v) = Q55 v
@@ -129,7 +140,9 @@ noncomputable def pinToOrthogonalV55 :
       exact pinTwistedActionEquiv_mul g.1 h.1 }
 
 theorem pinToOrthogonalV55_apply (g : Pin55Isometric) (v : V55) :
-    (pinToOrthogonalV55 g : V55 ≃ₗ[ℝ] V55) v = pinTwistedAction g.1 v := rfl
+    (pinToOrthogonalV55 g : V55 ≃ₗ[ℝ] V55) v = pinTwistedAction g.1 v := by
+  change pinTwistedActionEquiv g.1 v = pinTwistedAction g.1 v
+  rfl
 
 theorem pinToOrthogonalV55_map_mul_apply
     (g h : Pin55Isometric) (v : V55) :
@@ -189,6 +202,7 @@ noncomputable def spinToOrthogonalV55 :
 
 theorem spinToOrthogonalV55_apply (g : Spin55) (v : V55) :
     (spinToOrthogonalV55 g : V55 ≃ₗ[ℝ] V55) v = spinAction g v := by
+  change spinActionIsometryEquiv g v = spinAction g v
   rfl
 
 noncomputable def pinToQ55Isometry (g : Pin55Isometric) :
@@ -196,7 +210,9 @@ noncomputable def pinToQ55Isometry (g : Pin55Isometric) :
   pinTwistedActionIsometryEquiv g.1 g.2
 
 theorem pinToQ55Isometry_apply (g : Pin55Isometric) (v : V55) :
-    pinToQ55Isometry g v = pinTwistedAction g.1 v := rfl
+    pinToQ55Isometry g v = pinTwistedAction g.1 v := by
+  change pinTwistedActionIsometryEquiv g.1 g.2 v = pinTwistedAction g.1 v
+  rfl
 
 theorem pinToQ55Isometry_mul_apply (g h : Pin55Isometric) (v : V55) :
     pinToQ55Isometry (g * h) v =

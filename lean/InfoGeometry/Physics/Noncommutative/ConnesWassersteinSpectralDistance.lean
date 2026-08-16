@@ -84,16 +84,4 @@ theorem cylinderStateDistanceBound_self
   intro n word hLip
   simp
 
-theorem connes_wasserstein_operator_synthesis
-    (T : CuntzCantorSpectralTriple Op H)
-    (μ ν ρ : Op → ℝ) (d₁ d₂ : ℝ)
-    (h₁ : cylinderStateDistanceBound T μ ν d₁)
-    (h₂ : cylinderStateDistanceBound T ν ρ d₂) :
-    cylinderStateDistanceBound T ν μ d₁ ∧
-      cylinderStateDistanceBound T μ ρ (d₁ + d₂) ∧
-      cylinderStateDistanceBound T μ μ 0 := by
-  exact ⟨cylinderStateDistanceBound_symmetry T μ ν d₁ h₁,
-    cylinderStateDistanceBound_triangle T μ ν ρ d₁ d₂ h₁ h₂,
-    cylinderStateDistanceBound_self T μ⟩
-
 end InfoGeometry.Physics.Noncommutative

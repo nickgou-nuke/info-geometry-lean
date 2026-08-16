@@ -28,6 +28,14 @@ def levelZeroOctonionicAction (a : ExteriorAlgebra R V) (Z : GunaydinGurseySplit
   ⟨a * Z.u0, a * Z.u1, a * Z.u2, a * Z.u3,
    a * Z.u0s, a * Z.u1s, a * Z.u2s, a * Z.u3s⟩
 
+def splitBasisAdd (Z1 Z2 : GunaydinGurseySplitBasis R V) :
+    GunaydinGurseySplitBasis R V :=
+  ⟨Z1.u0 + Z2.u0, Z1.u1 + Z2.u1, Z1.u2 + Z2.u2, Z1.u3 + Z2.u3,
+   Z1.u0s + Z2.u0s, Z1.u1s + Z2.u1s, Z1.u2s + Z2.u2s, Z1.u3s + Z2.u3s⟩
+
+def splitBasisZero : GunaydinGurseySplitBasis R V :=
+  ⟨0, 0, 0, 0, 0, 0, 0, 0⟩
+
 /-- **Теорема 1**: Линейност на Level-Zero Октонионното Действие J^a · (Z₁ + Z₂) = J^a · Z₁ + J^a · Z₂ -/
 theorem levelZero_action_add (a : ExteriorAlgebra R V) (Z1 Z2 : GunaydinGurseySplitBasis R V) :
     levelZeroOctonionicAction a ⟨Z1.u0 + Z2.u0, Z1.u1 + Z2.u1, Z1.u2 + Z2.u2, Z1.u3 + Z2.u3,
@@ -45,7 +53,14 @@ theorem levelZero_action_add (a : ExteriorAlgebra R V) (Z1 Z2 : GunaydinGurseySp
 
 /-- **Master Synthesis**: Günaydin-Gürsey Supertwistor & Level-Zero Action Synthesis -/
 theorem master_split_octonion_supertwistor_synthesis
-    (_a : ExteriorAlgebra R V) (_Z1 _Z2 : GunaydinGurseySplitBasis R V) :
-    True := ⟨⟩
+    (a : ExteriorAlgebra R V) (Z1 Z2 : GunaydinGurseySplitBasis R V) :
+    levelZeroOctonionicAction a (splitBasisAdd Z1 Z2) =
+        splitBasisAdd (levelZeroOctonionicAction a Z1)
+          (levelZeroOctonionicAction a Z2) ∧
+      levelZeroOctonionicAction a splitBasisZero = splitBasisZero := by
+  constructor
+  · exact levelZero_action_add a Z1 Z2
+  · dsimp [levelZeroOctonionicAction, splitBasisZero]
+    ext <;> simp
 
 end InfoGeometry.Canonical

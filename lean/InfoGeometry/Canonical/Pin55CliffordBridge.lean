@@ -8,56 +8,68 @@ namespace InfoGeometry.Canonical.Pin55CliffordBridge
 open InfoGeometry.Clifford.ConformalLift55
 open InfoGeometry.Clifford.ConformalLieAlgebra55
 
-def PolarizationReadback55 : Prop :=
-  (u5 * u5 = 0 ∧ v5 * v5 = 0 ∧ u5 * v5 + v5 * u5 = 1) ∧
-    (u4 * u4 = 0 ∧ v4 * v4 = 0 ∧ u4 * v4 + v4 * u4 = 1) ∧
-    J5 * J5 = -1 ∧
-    J4 * J4 = -1 ∧
-    J * J = -1 ∧
-    D * u5 - u5 * D = u5 ∧
-    D * v5 - v5 * D = -v5 ∧
-    D * u4 - u4 * D = u4 ∧
-    D * v4 - v4 * D = -v4
-
-namespace PolarizationReadback55
-
-variable (h : PolarizationReadback55)
-
-theorem null5 (h : PolarizationReadback55) : u5 * u5 = 0 ∧ v5 * v5 = 0 ∧ u5 * v5 + v5 * u5 = 1 := h.1
-theorem null4 (h : PolarizationReadback55) : u4 * u4 = 0 ∧ v4 * v4 = 0 ∧ u4 * v4 + v4 * u4 = 1 := h.2.1
-theorem phase5 (h : PolarizationReadback55) : J5 * J5 = -1 := h.2.2.1
-theorem phase4 (h : PolarizationReadback55) : J4 * J4 = -1 := h.2.2.2.1
-theorem combinedPhase (h : PolarizationReadback55) : J * J = -1 := h.2.2.2.2.1
-theorem dilationPlus5 (h : PolarizationReadback55) : D * u5 - u5 * D = u5 := h.2.2.2.2.2.1
-theorem dilationMinus5 (h : PolarizationReadback55) : D * v5 - v5 * D = -v5 := h.2.2.2.2.2.2.1
-theorem dilationPlus4 (h : PolarizationReadback55) : D * u4 - u4 * D = u4 := h.2.2.2.2.2.2.2.1
-theorem dilationMinus4 (h : PolarizationReadback55) : D * v4 - v4 * D = -v4 := h.2.2.2.2.2.2.2.2
-
-end PolarizationReadback55
-
-theorem polarizationReadback55Installed :
-    PolarizationReadback55 := by
-  exact ⟨⟨InfoGeometry.Clifford.ConformalLieAlgebra55.u5_sq,
-      InfoGeometry.Clifford.ConformalLieAlgebra55.v5_sq,
-      InfoGeometry.Clifford.ConformalLieAlgebra55.u5_v5_add_v5_u5⟩,
-    ⟨InfoGeometry.Clifford.ConformalLieAlgebra55.u4_sq,
-      InfoGeometry.Clifford.ConformalLieAlgebra55.v4_sq,
-      InfoGeometry.Clifford.ConformalLieAlgebra55.u4_v4_add_v4_u4⟩,
-    InfoGeometry.Clifford.ConformalLieAlgebra55.J5_sq,
-    InfoGeometry.Clifford.ConformalLieAlgebra55.J4_sq,
-    InfoGeometry.Clifford.ConformalLieAlgebra55.J_sq,
-    InfoGeometry.Clifford.ConformalLieAlgebra55.adD_u5,
-    InfoGeometry.Clifford.ConformalLieAlgebra55Dilation.adD_v5,
-    InfoGeometry.Clifford.ConformalLieAlgebra55.adD_u4,
-    InfoGeometry.Clifford.ConformalLieAlgebra55Dilation.adD_v4⟩
-
 theorem two_smul_D5 :
     (2 : ℝ) • D5 = u5 * v5 - v5 * u5 := by
-  simp [D5, smul_smul]
+  dsimp [D5]
+  rw [smul_smul]
+  norm_num
 
 theorem two_smul_D4 :
     (2 : ℝ) • D4 = u4 * v4 - v4 * u4 := by
-  simp [D4, smul_smul]
+  dsimp [D4]
+  rw [smul_smul]
+  norm_num
+
+theorem nullPair_phase_factorization
+    {A : Type*} [Ring A] (u v : A)
+    (hu : u * u = 0) (hv : v * v = 0)
+    (hcar : u * v + v * u = 1) :
+    u - v = (u * v - v * u) * (u + v) := by
+  have huv : u * v * u = u := by
+    calc
+      u * v * u = (u * v + v * u) * u := by
+        rw [add_mul, mul_assoc v u u, hu, mul_zero, add_zero]
+      _ = 1 * u := by rw [hcar]
+      _ = u := one_mul _
+  have vuv : v * u * v = v := by
+    calc
+      v * u * v = (u * v + v * u) * v := by
+        rw [add_mul, mul_assoc u v v, hv, mul_zero, zero_add]
+      _ = 1 * v := by rw [hcar]
+      _ = v := one_mul _
+  calc
+    u - v = u * v * u - v * u * v := by rw [huv, vuv]
+    _ = (u * v - v * u) * (u + v) := by
+      simp only [sub_mul, mul_add]
+      rw [mul_assoc u v v, hv, mul_zero,
+        mul_assoc v u u, hu, mul_zero]
+      abel
+
+theorem nullPair_phase_reverse_factorization
+    {A : Type*} [Ring A] (u v : A)
+    (hu : u * u = 0) (hv : v * v = 0)
+    (hcar : u * v + v * u = 1) :
+    (u + v) * (u * v - v * u) = -(u - v) := by
+  have huv : u * v * u = u := by
+    calc
+      u * v * u = (u * v + v * u) * u := by
+        rw [add_mul, mul_assoc v u u, hu, mul_zero, add_zero]
+      _ = 1 * u := by rw [hcar]
+      _ = u := one_mul _
+  have vuv : v * u * v = v := by
+    calc
+      v * u * v = (u * v + v * u) * v := by
+        rw [add_mul, mul_assoc u v v, hv, mul_zero, zero_add]
+      _ = 1 * v := by rw [hcar]
+      _ = v := one_mul _
+  calc
+    (u + v) * (u * v - v * u) =
+        u * u * v - u * v * u + v * u * v - v * v * u := by
+      noncomm_ring
+    _ = -(u - v) := by
+      rw [hu, zero_mul, hv, zero_mul,
+        huv, vuv]
+      abel
 
 lemma u5_v5_u5 :
     u5 * v5 * u5 = u5 := by
@@ -224,20 +236,5 @@ theorem jordanNullSwap :
           (InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q X) := by
   intro X
   exact InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q_nullSwap X
-
-theorem polarization : PolarizationReadback55 :=
-  polarizationReadback55Installed
-
-theorem jordanCliffordPolarizationEvidence55Installed :
-  (∀ X : InfoGeometry.Algebra.JordanCayleyInversionOsQ.Herm2x2OsQ,
-      X.det = InfoGeometry.Physics.Pin55Formal.q55
-        (InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q X)) ∧
-    (∀ X : InfoGeometry.Algebra.JordanCayleyInversionOsQ.Herm2x2OsQ,
-      InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q
-          (InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.nullSwap X) =
-        InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.nullSwap55Vec
-          (InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q X)) ∧
-    PolarizationReadback55 := by
-  exact ⟨jordanDet, jordanNullSwap, polarization⟩
 
 end InfoGeometry.Canonical.Pin55CliffordBridge

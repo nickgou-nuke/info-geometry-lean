@@ -103,6 +103,75 @@ theorem cartan_commutes : ∀ i j : Fin 5, comm (boost i i) (boost j j) = 0 := b
   fin_cases i <;> fin_cases j <;>
     unfold comm boost unit posIndex negIndex <;> native_decide
 
+/-- The split orthogonal Lie predicate is closed under addition. -/
+theorem IsSO55Lie_add {X Y : M10Z} (hX : IsSO55Lie X) (hY : IsSO55Lie Y) :
+    IsSO55Lie (X + Y) := by
+  unfold IsSO55Lie at hX hY ⊢
+  calc
+    (X + Y)ᵀ * eta + eta * (X + Y) =
+        (Xᵀ * eta + eta * X) + (Yᵀ * eta + eta * Y) := by
+      simp only [transpose_add, add_mul, mul_add]
+      abel
+    _ = 0 := by rw [hX, hY, add_zero]
+
+/-- The split orthogonal Lie predicate is closed under negation. -/
+theorem IsSO55Lie_neg {X : M10Z} (hX : IsSO55Lie X) :
+    IsSO55Lie (-X) := by
+  unfold IsSO55Lie at hX ⊢
+  calc
+    (-X)ᵀ * eta + eta * (-X) = -(Xᵀ * eta + eta * X) := by
+      simp only [transpose_neg, neg_mul, mul_neg]
+      abel
+    _ = 0 := by rw [hX, neg_zero]
+
+/-- The zero matrix satisfies the split orthogonal Lie predicate. -/
+theorem IsSO55Lie_zero : IsSO55Lie (0 : M10Z) := by
+  unfold IsSO55Lie
+  simp
+
+/-- The split orthogonal Lie predicate is closed under integer scaling. -/
+theorem IsSO55Lie_smul (a : ℤ) {X : M10Z} (hX : IsSO55Lie X) :
+    IsSO55Lie (a • X) := by
+  unfold IsSO55Lie at hX ⊢
+  calc
+    (a • X)ᵀ * eta + eta * (a • X) =
+        a • (Xᵀ * eta + eta * X) := by
+      rw [Matrix.transpose_smul, Matrix.smul_mul, Matrix.mul_smul,
+        smul_add]
+    _ = 0 := by rw [hX, smul_zero]
+
+/-- The split orthogonal Lie predicate is closed under subtraction. -/
+theorem IsSO55Lie_sub {X Y : M10Z} (hX : IsSO55Lie X) (hY : IsSO55Lie Y) :
+    IsSO55Lie (X - Y) := by
+  simpa [sub_eq_add_neg] using IsSO55Lie_add hX (IsSO55Lie_neg hY)
+
+/-- The split orthogonal Lie predicate is closed under matrix commutators. -/
+theorem IsSO55Lie_comm {X Y : M10Z} (hX : IsSO55Lie X) (hY : IsSO55Lie Y) :
+    IsSO55Lie (comm X Y) := by
+  unfold IsSO55Lie at hX hY ⊢
+  change (X * Y - Y * X)ᵀ * eta + eta * (X * Y - Y * X) = 0
+  have hx : Xᵀ * eta = -(eta * X) := by
+    exact eq_neg_of_add_eq_zero_left hX
+  have hy : Yᵀ * eta = -(eta * Y) := by
+    exact eq_neg_of_add_eq_zero_left hY
+  calc
+    (X * Y - Y * X)ᵀ * eta + eta * (X * Y - Y * X) =
+        Yᵀ * (Xᵀ * eta) - Xᵀ * (Yᵀ * eta) +
+          (eta * X * Y - eta * Y * X) := by
+            simp only [transpose_sub, transpose_mul, sub_mul, mul_sub, mul_assoc]
+    _ = -(Yᵀ * (eta * X)) + Xᵀ * (eta * Y) +
+          (eta * X * Y - eta * Y * X) := by
+            rw [hx, hy]
+            noncomm_ring
+    _ = -((Yᵀ * eta) * X) + (Xᵀ * eta) * Y +
+          (eta * X * Y - eta * Y * X) := by
+            simp only [mul_assoc]
+    _ = -((-(eta * Y)) * X) + (-(eta * X)) * Y +
+          (eta * X * Y - eta * Y * X) := by
+            rw [hx, hy]
+    _ = 0 := by
+          noncomm_ring
+
 /-- A coordinate-pair swap, exchanging the first two positive and negative coordinates. -/
 def pairSwap01 : M10Z :=
   !![0, 1, 0, 0, 0, 0, 0, 0, 0, 0;
@@ -155,6 +224,30 @@ def singleSignFlip0 : M10Z :=
 /-- A single coordinate sign flip is still an `O(5,5)` matrix. -/
 theorem singleSignFlip0_is_o55 : IsO55 singleSignFlip0 := by
   unfold IsO55
+  native_decide
+
+/-- The finite split orthogonal predicate is closed under matrix multiplication. -/
+theorem IsO55_mul {A B : M10Z} (hA : IsO55 A) (hB : IsO55 B) :
+    IsO55 (A * B) := by
+  unfold IsO55 at hA hB ⊢
+  rw [transpose_mul]
+  calc
+    (Bᵀ * Aᵀ) * eta * (A * B) = Bᵀ * (Aᵀ * eta * A) * B := by
+      simp only [mul_assoc]
+    _ = Bᵀ * eta * B := by rw [hA]
+    _ = eta := hB
+
+/-- The explicit disconnected representatives are involutions. -/
+theorem pairSwap01_involutive : pairSwap01 * pairSwap01 = 1 := by
+  unfold pairSwap01
+  native_decide
+
+theorem evenSignFlip01_involutive : evenSignFlip01 * evenSignFlip01 = 1 := by
+  unfold evenSignFlip01
+  native_decide
+
+theorem singleSignFlip0_involutive : singleSignFlip0 * singleSignFlip0 = 1 := by
+  unfold singleSignFlip0
   native_decide
 
 /-- Bilinear form associated to `η`. -/

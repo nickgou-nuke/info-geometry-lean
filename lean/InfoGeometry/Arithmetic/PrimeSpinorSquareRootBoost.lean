@@ -284,23 +284,23 @@ Majorana spinor readout packet.
 This packages only the finite modes and amplitudes used by the finite spinor
 bilinear theorem.
 -/
-structure PrimeSpinorSquareRootPacket
+structure PrimeSpinorSquareRootData
     (PrimeLabel R : Type*) [DecidableEq PrimeLabel] [CommRing R] where
   modes : Finset PrimeLabel
   amplitude : PrimeLabel → R
 
-namespace PrimeSpinorSquareRootPacket
+namespace PrimeSpinorSquareRootData
 
 /-- Packet-level finite spinor bilinear partition theorem, proved from the owner theorem. -/
 theorem bilinear_partition
     {PrimeLabel R : Type*}
     [DecidableEq PrimeLabel] [CommRing R]
-    (P : PrimeSpinorSquareRootPacket PrimeLabel R) :
+    (P : PrimeSpinorSquareRootData PrimeLabel R) :
     finitePrimeSpinorBilinearProduct P.modes P.amplitude =
       finitePrimeWeylDenominator P.modes
         (fun p => scalarWeightFromSpinor (P.amplitude p)) :=
   finitePrimeSpinorBilinearProduct_eq_weylDenominator_squareWeights P.modes P.amplitude
 
-end PrimeSpinorSquareRootPacket
+end PrimeSpinorSquareRootData
 
 end InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost

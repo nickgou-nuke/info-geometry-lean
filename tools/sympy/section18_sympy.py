@@ -20,18 +20,20 @@ Not claimed here:
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
 import sympy as sp
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from tools.sympy.common import assert_matrix_zero
 
 
 def assert_equal(left, right, label: str) -> None:
     if sp.simplify(left - right) != 0:
         raise AssertionError(f"{label} failed: {left} != {right}")
-
-
-def assert_matrix_zero(M: sp.Matrix, label: str) -> None:
-    reduced = M.applyfunc(lambda x: sp.expand(sp.simplify(x)))
-    if reduced != sp.zeros(*M.shape):
-        raise AssertionError(f"{label} failed:\n{reduced}")
 
 
 def main() -> None:

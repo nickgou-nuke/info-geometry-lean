@@ -2469,8 +2469,9 @@ In supergeometry, volume is replaced by a Berezinian or supervolume:
   `Str(A) = Tr(A_even) - Tr(A_odd)`.
 The superpartition function is `Z_super(β) = Str(e^{-βH})`.
 
-Arithmetic prime-gas example (Spector):
-  `Str(e^{-sH_F}) = Σ_{n≥1} μ(n)/n^s = 1/ζ(s)`.
+An arithmetic prime-gas formula of the form
+  `Str(e^{-sH_F}) = Σ_{n≥1} μ(n)/n^s = 1/ζ(s)`
+is a downstream analytic target, not a theorem supplied by this packet.
 
 **Precision:** A supertrace is NOT a positive measure.  It is a signed/graded
 index-type functional.  Positivity must be recovered by restricting to an even
@@ -2680,27 +2681,31 @@ section SpectralThermalNormalization
 
 The former packet stored analytic claims as `Type*` witnesses.  The native
 operator-first owner is `Canonical.SouriauOperatorialLogPotential`, whose
-`SouriauLieThermoData` carries the moment map, geometric inverse temperature,
-pairing, positive partition function, and statewise Gibbs log generator.
+operatorial state and RN data carry the operator-valued Hamiltonian, trace
+readout, Gibbs density, and modular surprisal.
 -/
 
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
-abbrev SpectralThermalNormalizationData (State LieAlgebra LieDual : Type*) :=
-  SouriauLieThermoData State LieAlgebra LieDual
+abbrev SpectralThermalNormalizationData
+    (State LieAlgebra Obs : Type*) [AddMonoid LieAlgebra]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs] :=
+  OperatorialSouriauStateData State LieAlgebra Obs
 
-theorem boltzmannPotential_is_beta_times_energy
-    {State LieAlgebra LieDual : Type*}
-    (D : SpectralThermalNormalizationData State LieAlgebra LieDual)
+theorem boltzmannPotential_is_operatorial_hamiltonian_readout
+    {State LieAlgebra Obs : Type*} [AddMonoid LieAlgebra]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
+    (D : SpectralThermalNormalizationData State LieAlgebra Obs)
     (e : State) :
-    D.K_beta e = D.pairing (D.momentMap e) D.beta :=
-  D.K_beta_eq_pairing e
+    D.K_beta e = D.family.traceReadout (D.operatorialHamiltonian e) :=
+  rfl
 
 theorem spectralThermalNormalization_partition_pos
-    {State LieAlgebra LieDual : Type*}
-    (D : SpectralThermalNormalizationData State LieAlgebra LieDual) :
-    0 < D.partitionFunction :=
-  D.partitionFunction_pos
+    {State LieAlgebra Obs : Type*} [AddMonoid LieAlgebra]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
+    (D : SpectralThermalNormalizationData State LieAlgebra Obs) :
+    0 < D.family.partitionFunction :=
+  D.family.partitionFunction_pos
 
 theorem logRN_potential_form
     (pkt : SpectralVolumeWeightPacket)
@@ -2717,11 +2722,14 @@ theorem logRN_potential_form
   field_simp [ne_of_gt pkt.partitionFunction_pos]
 
 theorem spectralThermalNormalization_statewise_log_generator
-    {State LieAlgebra LieDual : Type*}
-    (D : SpectralThermalNormalizationData State LieAlgebra LieDual)
+    {State LieAlgebra Obs : Type*} [AddMonoid LieAlgebra]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
+    (D : OperatorialRNDatum State LieAlgebra Obs)
     (e : State) :
-    D.K_beta e = -Real.log (D.gibbsDensity e) - D.partitionPotential :=
-  D.modularHamiltonian_statewise_neg_log_gibbs_sub_PartitionPotential e
+    D.souriau.K_beta e =
+      D.modularPotential e - D.souriau.partitionPotential := by
+  rw [D.modularPotential_eq_K_beta_add_partitionPotential e]
+  ring
 
 end SpectralThermalNormalization
 

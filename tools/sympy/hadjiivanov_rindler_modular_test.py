@@ -16,12 +16,16 @@ theorems.  It is the computational witness for the owner surfaces in
 InfoGeometry.Canonical and InfoGeometry.Clifford.
 """
 
+import sys
+from pathlib import Path
 import sympy as sp
 from sympy import Matrix, eye, zeros, Rational
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def comm(a: Matrix, b: Matrix) -> Matrix:
-    return a * b - b * a
+from tools.sympy.common import comm
 
 
 def is_zero(m: Matrix) -> bool:

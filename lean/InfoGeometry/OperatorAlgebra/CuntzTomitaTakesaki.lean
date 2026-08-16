@@ -61,4 +61,16 @@ theorem tomita_cuntz_cancellation (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
     rw [h_exp_neg, mul_assoc, ← Complex.exp_add, neg_add_cancel (↑δ : ℂ), Complex.exp_zero, mul_one]
   · simp
 
+theorem tomita_cuntz_involutive (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    S_tomita δ (S_tomita δ X) = X := by
+  rw [tomita_cuntz_cancellation, tomita_cuntz_cancellation]
+  exact Matrix.conjTranspose_conjTranspose X
+
+/-- The finite Tomita map reverses matrix multiplication. -/
+theorem tomita_cuntz_anti_mul (δ : ℝ)
+    (X Y : Matrix (Fin 2) (Fin 2) ℂ) :
+    S_tomita δ (X * Y) = S_tomita δ Y * S_tomita δ X := by
+  rw [tomita_cuntz_cancellation, tomita_cuntz_cancellation,
+    tomita_cuntz_cancellation, Matrix.conjTranspose_mul]
+
 end InfoGeometry.OperatorAlgebra

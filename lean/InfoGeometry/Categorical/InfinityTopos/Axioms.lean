@@ -1,16 +1,30 @@
 import InfoGeometry.Categorical.InfinityTopos.Category
+import Mathlib.CategoryTheory.Limits.HasLimits
 
 namespace InfoGeometry.Categorical
 
 universe v u
 
-/-- Axiom 1: All small colimits exist in the ∞-category -/
-class HasAllSmallColimits (C : Type u) [InfinityCategory C]
+/--
+The ordinary Mathlib colimit part of the proposed infinity-topos interface.
 
-/-- Axiom 2: Effective epimorphisms (Descent datum) -/
+This is deliberately tied to the native `HasColimits` class; it is not an
+empty marker.  Higher-categorical descent and classifier data remain separate
+interfaces below.
+-/
+class HasAllSmallColimits (C : Type u) [InfinityCategory C]
+    extends CategoryTheory.Limits.HasColimits C
+
+/--
+Interface for the effective-epimorphism/descent component.  No native
+Mathlib infinity-categorical implementation is asserted by this marker.
+-/
 class EffectiveEpis (C : Type u) [InfinityCategory C]
 
-/-- Axiom 3: Object classifiers (Universes) -/
+/--
+Interface for the object-classifier component.  No native Mathlib
+infinity-topos classifier is asserted by this marker.
+-/
 class ObjectClassifier (C : Type u) [InfinityCategory C]
 
 end InfoGeometry.Categorical

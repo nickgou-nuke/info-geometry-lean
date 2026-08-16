@@ -305,16 +305,6 @@ positivity assumptions. -/
 def LogWilsonCycleLaw (C : Cycle E) : Prop :=
   G.DetailedBalanceOnCycle C ↔ G.cycleCurvatureLog C = 0
 
-namespace LogWilsonCycleLaw
-
-/-- Compatibility theorem for the former one-field law packet. -/
-theorem detailedBalance_iff_zero_log_curvature
-    (h : G.LogWilsonCycleLaw C) :
-    G.DetailedBalanceOnCycle C ↔ G.cycleCurvatureLog C = 0 :=
-  h
-
-end LogWilsonCycleLaw
-
 /-- Global detailed balance relative to a chosen family of cycles. -/
 def GlobalDetailedBalance (cycles : Set (Cycle E)) : Prop :=
   ∀ C, C ∈ cycles → G.DetailedBalanceOnCycle C
@@ -512,7 +502,7 @@ theorem pathForwardBackwardRatio_eq_exp_pathEntropyProduction
 /-- Abstract finite-ensemble integral fluctuation law: the expectation of
 `exp(-σ)` is one.  The expectation functional is supplied by the owner
 probability model over paths. -/
-structure IntegralFluctuationLaw (PathSample : Type) where
+structure IntegralFluctuationData (PathSample : Type) where
   entropyProduction : PathSample → ℝ
   expectation : (PathSample → ℝ) → ℝ
   exp_neg_entropy_expectation_eq_one :
@@ -520,31 +510,18 @@ structure IntegralFluctuationLaw (PathSample : Type) where
 
 /-- Integral fluctuation theorem readback from the owner probability packet. -/
 theorem integral_fluctuation_theorem {PathSample : Type}
-    (L : IntegralFluctuationLaw PathSample) :
+    (L : IntegralFluctuationData PathSample) :
     L.expectation (fun ω => Real.exp (-(L.entropyProduction ω))) = 1 :=
   L.exp_neg_entropy_expectation_eq_one
 
 /-- A path-level Gallavotti--Cohen style ratio packet connecting forward/backward
 path probabilities to entropy production. -/
-structure PathProbabilityRatioLaw (PathSample : Type) where
+structure PathProbabilityRatioData (PathSample : Type) where
   forwardProbability : PathSample → ℝ
   backwardProbability : PathSample → ℝ
   entropyProduction : PathSample → ℝ
   ratio_law : ∀ ω, forwardProbability ω / backwardProbability ω =
     Real.exp (entropyProduction ω)
-
-/-- Forward/backward path probability ratio equals exponentiated path entropy
-production by direct readback from the owner law. -/
-theorem forward_backward_path_probability_ratio_eq_exp_entropy
-    {PathSample : Type} (L : PathProbabilityRatioLaw PathSample) (ω : PathSample) :
-    L.forwardProbability ω / L.backwardProbability ω = Real.exp (L.entropyProduction ω) :=
-  L.ratio_law ω
-
-/-- Read back the detailed-balance/log-curvature equivalence from an owner law. -/
-theorem detailedBalanceOnCycle_iff_cycleCurvatureLog_eq_zero_of_law
-    (C : Cycle E) (H : G.LogWilsonCycleLaw C) :
-    G.DetailedBalanceOnCycle C ↔ G.cycleCurvatureLog C = 0 :=
-  H.detailedBalance_iff_zero_log_curvature
 
 /-- Auxiliary: the Wilson loop equals `exp` of the additive log-curvature,
 under positivity of all rate ratios along the cycle.
@@ -592,11 +569,11 @@ theorem globalDetailedBalance_iff_allLogCurvaturesVanish_of_pos
   constructor
   · intro hDB C hC
     exact
-      (G.logWilsonCycleLaw_of_pos C (hpos C hC)).detailedBalance_iff_zero_log_curvature.1
+      (G.logWilsonCycleLaw_of_pos C (hpos C hC)).1
         (hDB C hC)
   · intro hLog C hC
     exact
-      (G.logWilsonCycleLaw_of_pos C (hpos C hC)).detailedBalance_iff_zero_log_curvature.2
+      (G.logWilsonCycleLaw_of_pos C (hpos C hC)).2
         (hLog C hC)
 
 /-! ### Kirchhoff conservation law -/
@@ -830,16 +807,34 @@ def graph (T : ChiralTriangleRates) : DirectedThermoGraph TriangleVertex Triangl
     | TriangleEdge.AB => T.kBA
     | TriangleEdge.BC => T.kCB
     | TriangleEdge.CA => T.kAC
-  -- DEBT_ID: CTG_TRIVIAL_READOUTS
-  -- DEBT_KIND: ZERO_DATUM
-  -- ZERO_DATUM: Trivial placeholders for triangle graph model
-  conductance := fun _ => 0
-  bias := fun _ => 0
-  capacity := fun _ => 0
-  probability := fun _ => 0
-  potential := fun _ => 0
-  flow := fun _ => 0
-  affinity := fun _ => 0
+  conductance
+    | TriangleEdge.AB => T.kAB
+    | TriangleEdge.BC => T.kBC
+    | TriangleEdge.CA => T.kCA
+  bias
+    | TriangleEdge.AB => T.kBA
+    | TriangleEdge.BC => T.kCB
+    | TriangleEdge.CA => T.kAC
+  capacity
+    | TriangleVertex.A => 1
+    | TriangleVertex.B => 1
+    | TriangleVertex.C => 1
+  probability
+    | TriangleVertex.A => 1 / 3
+    | TriangleVertex.B => 1 / 3
+    | TriangleVertex.C => 1 / 3
+  potential
+    | TriangleVertex.A => 0
+    | TriangleVertex.B => 0
+    | TriangleVertex.C => 0
+  flow
+    | TriangleEdge.AB => T.kAB - T.kBA
+    | TriangleEdge.BC => T.kBC - T.kCB
+    | TriangleEdge.CA => T.kCA - T.kAC
+  affinity
+    | TriangleEdge.AB => Real.log (T.kAB / T.kBA)
+    | TriangleEdge.BC => Real.log (T.kBC / T.kCB)
+    | TriangleEdge.CA => Real.log (T.kCA / T.kAC)
 
 /-- The ordered oriented triangle cycle `A → B → C → A`. -/
 def cycle : Cycle TriangleEdge where
@@ -963,7 +958,7 @@ end ThermoTerm
 
 The fields are deliberately proof-carrying assumptions/witnesses, not analytic
 closure claims.  Later modules can replace these fields by owner theorems. -/
-structure ThermodynamicGraphLambdaPacket where
+structure ThermodynamicGraphLambdaData where
   term : ThermoTerm
   Vertex : Type
   Edge : Type
@@ -973,33 +968,28 @@ structure ThermodynamicGraphLambdaPacket where
   probabilisticSemantics : ∀ v : Vertex, 0 ≤ graph.probability v
   circuitSemantics : DirectedThermoGraph.CircuitSemantics graph
   wilsonLoopSemantics : DirectedThermoGraph.WilsonLoopSemantics graph
-  semanticInterpretation_cert : DirectedThermoGraph.ThermodynamicSemantics graph
-  linearResourceDiscipline_cert : ThermoTerm.IsLinear term
-  probabilisticSemantics_cert : ∀ v : Vertex, 0 ≤ graph.probability v
-  circuitSemantics_cert : DirectedThermoGraph.CircuitSemantics graph
-  wilsonLoopSemantics_cert : DirectedThermoGraph.WilsonLoopSemantics graph
 
-namespace ThermodynamicGraphLambdaPacket
+namespace ThermodynamicGraphLambdaData
 
-@[simp] theorem semanticInterpretation_holds (P : ThermodynamicGraphLambdaPacket) :
+@[simp] theorem semanticInterpretation_holds (P : ThermodynamicGraphLambdaData) :
     DirectedThermoGraph.ThermodynamicSemantics P.graph :=
-  P.semanticInterpretation_cert
+  P.semanticInterpretation
 
-@[simp] theorem linearResourceDiscipline_holds (P : ThermodynamicGraphLambdaPacket) :
+@[simp] theorem linearResourceDiscipline_holds (P : ThermodynamicGraphLambdaData) :
     ThermoTerm.IsLinear P.term :=
-  P.linearResourceDiscipline_cert
+  P.linearResourceDiscipline
 
-@[simp] theorem probabilisticSemantics_holds (P : ThermodynamicGraphLambdaPacket) :
+@[simp] theorem probabilisticSemantics_holds (P : ThermodynamicGraphLambdaData) :
     ∀ v : P.Vertex, 0 ≤ P.graph.probability v :=
-  P.probabilisticSemantics_cert
+  P.probabilisticSemantics
 
-@[simp] theorem circuitSemantics_holds (P : ThermodynamicGraphLambdaPacket) :
+@[simp] theorem circuitSemantics_holds (P : ThermodynamicGraphLambdaData) :
     DirectedThermoGraph.CircuitSemantics P.graph :=
-  P.circuitSemantics_cert
+  P.circuitSemantics
 
-@[simp] theorem wilsonLoopSemantics_holds (P : ThermodynamicGraphLambdaPacket) :
+@[simp] theorem wilsonLoopSemantics_holds (P : ThermodynamicGraphLambdaData) :
     DirectedThermoGraph.WilsonLoopSemantics P.graph :=
-  P.wilsonLoopSemantics_cert
+  P.wilsonLoopSemantics
 
 /-- Construct a packet from the actual syntax and probability obligations.
 
@@ -1011,7 +1001,7 @@ def ofReadouts
     (graph : DirectedThermoGraph V E)
     (hlinear : ThermoTerm.IsLinear term)
     (hprob : ∀ v : V, 0 ≤ graph.probability v) :
-    ThermodynamicGraphLambdaPacket where
+    ThermodynamicGraphLambdaData where
   term := term
   Vertex := V
   Edge := E
@@ -1021,13 +1011,8 @@ def ofReadouts
   probabilisticSemantics := hprob
   circuitSemantics := DirectedThermoGraph.circuitSemantics_holds graph
   wilsonLoopSemantics := DirectedThermoGraph.wilsonLoopSemantics_holds graph
-  semanticInterpretation_cert := DirectedThermoGraph.thermodynamicSemantics_holds graph
-  linearResourceDiscipline_cert := hlinear
-  probabilisticSemantics_cert := hprob
-  circuitSemantics_cert := DirectedThermoGraph.circuitSemantics_holds graph
-  wilsonLoopSemantics_cert := DirectedThermoGraph.wilsonLoopSemantics_holds graph
 
-end ThermodynamicGraphLambdaPacket
+end ThermodynamicGraphLambdaData
 
 end
 

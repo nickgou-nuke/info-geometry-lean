@@ -88,8 +88,11 @@ def _is_extraction_failure_response(response: str) -> bool:
     return cleaned.startswith("ERROR: Response too short or empty")
 
 
+from igf.common.time_utils import utc_now_iso
+
+
 def _now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+    return utc_now_iso()
 
 
 def _ensure_dirs() -> None:

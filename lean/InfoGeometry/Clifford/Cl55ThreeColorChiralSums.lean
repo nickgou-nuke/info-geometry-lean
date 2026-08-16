@@ -109,4 +109,58 @@ theorem chiralDiracSum_sq : chiralDiracSum * chiralDiracSum = (3 : Cl55) := by
     chiralMinusSum_sq, zero_add, add_zero]
   simpa [add_comm] using chiralMinusSum_plusSum_anticommutator
 
+/-- The colour-summed Dirac element has an explicit two-sided inverse. -/
+theorem chiralDiracSum_has_two_sided_inverse :
+    ∃ U : Cl55, U * chiralDiracSum = 1 ∧ chiralDiracSum * U = 1 := by
+  refine ⟨(1 / 3 : ℝ) • chiralDiracSum, ?_, ?_⟩
+  · rw [smul_mul_assoc, chiralDiracSum_sq]
+    change algebraMap ℝ Cl55 (1 / 3 : ℝ) *
+      algebraMap ℝ Cl55 (3 : ℝ) = 1
+    rw [← map_mul]
+    norm_num
+  · rw [mul_smul_comm, chiralDiracSum_sq]
+    change algebraMap ℝ Cl55 (1 / 3 : ℝ) *
+      algebraMap ℝ Cl55 (3 : ℝ) = 1
+    rw [← map_mul]
+    norm_num
+
+/-- The finite Dirac element is a unit of the Clifford algebra. -/
+theorem chiralDiracSum_isUnit : IsUnit chiralDiracSum := by
+  apply isUnit_iff_exists.mpr
+  obtain ⟨U, hleft, hright⟩ := chiralDiracSum_has_two_sided_inverse
+  exact ⟨U, hright, hleft⟩
+
+/-- The colour-summed Dirac element is nonzero. -/
+theorem chiralDiracSum_ne_zero : chiralDiracSum ≠ 0 := by
+  intro h
+  obtain ⟨U, hleft, _⟩ := chiralDiracSum_has_two_sided_inverse
+  rw [h] at hleft
+  simpa using hleft
+
+/-- Left multiplication by the finite Dirac element has trivial kernel. -/
+theorem chiralDiracSum_mul_eq_zero_iff (x : Cl55) :
+    chiralDiracSum * x = 0 ↔ x = 0 := by
+  constructor
+  · intro hx
+    obtain ⟨U, hleft, _⟩ := chiralDiracSum_has_two_sided_inverse
+    have h := congrArg (fun z : Cl55 => U * z) hx
+    change U * (chiralDiracSum * x) = U * 0 at h
+    rw [← mul_assoc, hleft, one_mul, mul_zero] at h
+    exact h
+  · intro hx
+    rw [hx, mul_zero]
+
+/-- Right multiplication by the finite Dirac element has trivial kernel. -/
+theorem mul_chiralDiracSum_eq_zero_iff (x : Cl55) :
+    x * chiralDiracSum = 0 ↔ x = 0 := by
+  constructor
+  · intro hx
+    obtain ⟨U, _, hright⟩ := chiralDiracSum_has_two_sided_inverse
+    have h := congrArg (fun z : Cl55 => z * U) hx
+    change (x * chiralDiracSum) * U = 0 * U at h
+    rw [mul_assoc, hright, mul_one, zero_mul] at h
+    exact h
+  · intro hx
+    rw [hx, zero_mul]
+
 end InfoGeometry.Clifford.Clifford55

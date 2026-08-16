@@ -26,8 +26,10 @@ def WassersteinMetric (P : Type*) : Prop :=
     (∀ p q : P, dist p q = 0 → p = q) ∧
     (∀ p q r : P, dist p r ≤ dist p q + dist q r)
 
-/-- A zero-valued placeholder functional used by the finite interface. -/
-def ShannonEntropy (_p : P) : ℝ := 0 -- Abstracted for formal topological properties
+/-! Shannon entropy is intentionally not defined on an arbitrary type `P`.
+    A probability law, finite support, or reference measure is required before
+    an entropy functional has mathematical meaning; use the finite Jaynes
+    entropy owner for that concrete construction. -/
 
 /-- The rational function `1 / x²`. -/
 noncomputable def BarrierSecondDeriv (x : ℝ) : ℝ :=

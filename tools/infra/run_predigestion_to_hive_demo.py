@@ -44,17 +44,8 @@ def write_json(path: Path, payload: dict[str, Any]) -> None:
     path.write_text(json.dumps(payload, indent=2, ensure_ascii=True, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def read_jsonl(path: Path) -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
-    if not path.exists():
-        return rows
-    for raw in path.read_text(encoding="utf-8").splitlines():
-        line = raw.strip()
-        if line:
-            payload = json.loads(line)
-            if isinstance(payload, dict):
-                rows.append(payload)
-    return rows
+# [lossless-compact] read_jsonl folded into igf.common.json_io.read_jsonl
+from igf.common.json_io import read_jsonl
 
 
 def sample_rows(rows: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:

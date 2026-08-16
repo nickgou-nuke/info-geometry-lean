@@ -286,43 +286,41 @@ theorem albertTrace_id :
   dsimp [albertTrace, albertId]
   ring
 
-/-- Прокси за Октонионните норми и тройни произведения върху ExteriorAlgebra -/
-class OctonionLikeProxy (R V : Type*) [Field R] [AddCommGroup V] [Module R V] where
+/-- Explicit norm/triple-product datum used by the finite determinant formula.
+It is not an octonion-algebra realization or an `E₆` representation. -/
+class OctonionLikeDatum (R V : Type*) [Field R] [AddCommGroup V] [Module R V] where
   octNormSq : ExteriorAlgebra R V → R
   octTripleProd : ExteriorAlgebra R V → ExteriorAlgebra R V → ExteriorAlgebra R V → R
 
-/-- **Стъпка 5: Кубична форма на Алберт (Детерминанта) и E₆ Инвариант**
-    N(X) = α₁α₂α₃ + 2 Re(x₁x₂x₃) - α₁|x₁|² - α₂|x₂|² - α₃|x₃|² 
-    Тази кубична форма е фундаменталният инвариант на групата E₆. -/
-def albertDeterminant [OctonionLikeProxy R V] (X : AlbertMatrix R V) : R :=
+/-- A cubic scalar readout built from the supplied norm and triple-product
+datum.  No Albert determinant theorem or `E₆` invariance is asserted here. -/
+def albertDeterminant [OctonionLikeDatum R V] (X : AlbertMatrix R V) : R :=
   X.diag1 * X.diag2 * X.diag3 
-  + (2 : R) * OctonionLikeProxy.octTripleProd X.gen1 X.gen2 X.gen3
-  - X.diag1 * OctonionLikeProxy.octNormSq X.gen1
-  - X.diag2 * OctonionLikeProxy.octNormSq X.gen2
-  - X.diag3 * OctonionLikeProxy.octNormSq X.gen3
+  + (2 : R) * OctonionLikeDatum.octTripleProd X.gen1 X.gen2 X.gen3
+  - X.diag1 * OctonionLikeDatum.octNormSq X.gen1
+  - X.diag2 * OctonionLikeDatum.octNormSq X.gen2
+  - X.diag3 * OctonionLikeDatum.octNormSq X.gen3
 
 /-- **Теорема**: Детерминантата на идентитета е 1. -/
-theorem albertDeterminant_id [OctonionLikeProxy R V]
-    (h_norm_zero : OctonionLikeProxy.octNormSq (0 : ExteriorAlgebra R V) = 0)
-    (h_triple_zero : OctonionLikeProxy.octTripleProd (0 : ExteriorAlgebra R V) (0 : ExteriorAlgebra R V) (0 : ExteriorAlgebra R V) = 0) :
+theorem albertDeterminant_id [OctonionLikeDatum R V]
+    (h_norm_zero : OctonionLikeDatum.octNormSq (0 : ExteriorAlgebra R V) = 0)
+    (h_triple_zero : OctonionLikeDatum.octTripleProd (0 : ExteriorAlgebra R V) (0 : ExteriorAlgebra R V) (0 : ExteriorAlgebra R V) = 0) :
     albertDeterminant (albertId (R:=R) (V:=V)) = 1 := by
   dsimp [albertDeterminant, albertId]
   rw [h_norm_zero, h_triple_zero]
   ring
 
-/-- **Стъпка 6: Супер-Келеров Потенциал (The "Red Line" from the Black Books)**
-    Потенциалът на деформацията на вакуума е негативният логаритъм 
-    от абсолютната стойност на детерминантата на Алберт.
-    Това отразява "negative log determinant of the jacobian of the relative volume changes".
-    В супергравитацията (N=2, D=4), това е точно Келеровият потенциал K(X) = - log |N(X)|. -/
-noncomputable def albertKahlerPotential {V : Type*} [AddCommGroup V] [Module ℝ V] [OctonionLikeProxy ℝ V] (X : AlbertMatrix ℝ V) : ℝ :=
+/-- Negative logarithm of the absolute value of the supplied cubic readout.
+This is a scalar definition; it is not a Kähler, entropy, or flow-Jacobian
+theorem without additional geometric data. -/
+noncomputable def albertKahlerPotential {V : Type*} [AddCommGroup V] [Module ℝ V] [OctonionLikeDatum ℝ V] (X : AlbertMatrix ℝ V) : ℝ :=
   - Real.log |albertDeterminant X|
 
-/-- **Теорема**: Супер-Келеровият потенциал на недеформирания вакуум (Идентитета) е 0.
-    Това доказва, че непертурбативният вакуум има нулева относителна ентропия. -/
-theorem albertKahlerPotential_id {V : Type*} [AddCommGroup V] [Module ℝ V] [OctonionLikeProxy ℝ V]
-    (h_norm_zero : OctonionLikeProxy.octNormSq (0 : ExteriorAlgebra ℝ V) = 0)
-    (h_triple_zero : OctonionLikeProxy.octTripleProd (0 : ExteriorAlgebra ℝ V) (0 : ExteriorAlgebra ℝ V) (0 : ExteriorAlgebra ℝ V) = 0) :
+/-- The scalar potential vanishes at the identity when the supplied datum
+vanishes on the zero off-diagonal components. -/
+theorem albertKahlerPotential_id {V : Type*} [AddCommGroup V] [Module ℝ V] [OctonionLikeDatum ℝ V]
+    (h_norm_zero : OctonionLikeDatum.octNormSq (0 : ExteriorAlgebra ℝ V) = 0)
+    (h_triple_zero : OctonionLikeDatum.octTripleProd (0 : ExteriorAlgebra ℝ V) (0 : ExteriorAlgebra ℝ V) (0 : ExteriorAlgebra ℝ V) = 0) :
     albertKahlerPotential (albertId (R:=ℝ) (V:=V)) = 0 := by
   dsimp [albertKahlerPotential]
   have h_det : albertDeterminant (albertId (R:=ℝ) (V:=V)) = 1 := albertDeterminant_id h_norm_zero h_triple_zero
@@ -330,60 +328,4 @@ theorem albertKahlerPotential_id {V : Type*} [AddCommGroup V] [Module ℝ V] [Oc
   have h_abs : |(1 : ℝ)| = 1 := abs_one
   rw [h_abs, Real.log_one, neg_zero]
 
-/- **Стъпка 7: Фермионни Квантови Числа и Трите Поколения**
-    Всяка 8D октонионна алгебра в Peirce оф-диагоналния сектор J_{ij} ≅ 𝕆_s
-    декомпозира точно в 1 зареден лептон, 1 неутрино, 3 up-кварка и 3 down-кварка. -/
-
-inductive Color where
-  | singlet
-  | red
-  | green
-  | blue
-  deriving DecidableEq
-
-structure FermionQuantumNumbers where
-  charge : ℚ        -- Електричен заряд Q
-  weakIsospin : ℚ   -- T₃
-  hypercharge : ℚ   -- Y (Gell-Mann-Nishijima: Q = T₃ + Y/2)
-  color : Color
-  deriving DecidableEq
-
-/-- 8-те фермионни състояния в едно октонионно поколение (𝕆_s) -/
-def singleGenFermions : List FermionQuantumNumbers := [
-  ⟨0, 1/2, -1, Color.singlet⟩,       -- ν (неутрино)
-  ⟨-1, -1/2, -1, Color.singlet⟩,     -- e⁻ / μ⁻ / τ⁻
-  ⟨2/3, 1/2, 1/3, Color.red⟩,        -- u_R / c_R / t_R
-  ⟨2/3, 1/2, 1/3, Color.green⟩,      -- u_G / c_G / t_G
-  ⟨2/3, 1/2, 1/3, Color.blue⟩,       -- u_B / c_B / t_B
-  ⟨-1/3, -1/2, 1/3, Color.red⟩,      -- d_R / s_R / b_R
-  ⟨-1/3, -1/2, 1/3, Color.green⟩,    -- d_G / s_G / b_G
-  ⟨-1/3, -1/2, 1/3, Color.blue⟩      -- d_B / s_B / b_B
-]
-
-/-- **Теорема за 8D Поколение**: Едно октонионно Peirce пространство съдържа точно 8 фермионни състояния. -/
-theorem single_gen_fermions_count : singleGenFermions.length = 8 := rfl
-
-/-- **Теорема за Нулев Заряд на Поколение**: Сумата от електричните заряди в едно поколение е 0 (Аномална отмяна). -/
-theorem single_gen_charge_sum_zero :
-    (singleGenFermions.map FermionQuantumNumbers.charge).sum = 0 := by
-  dsimp [singleGenFermions]
-  norm_num
-
-/-- Пълното 24-състояние на трите поколения от трите оф-диагонални Пърс пространства (J₂₃, J₃₁, J₁₂) -/
-def threeGenerationsFermions : List FermionQuantumNumbers :=
-  singleGenFermions ++ singleGenFermions ++ singleGenFermions
-
-/-- **Теорема за 3 Поколения (24 Фермионни Състояния)**:
-    Трите оф-диагонални Пърс пространства в J₃(𝕆_s) съдържат точно 24 фермионни състояния
-    (3 поколения × (1 зареден лептон + 1 неутрино + 3 up-кварка + 3 down-кварка)). -/
-theorem three_generation_decomposition : threeGenerationsFermions.length = 24 := rfl
-
-/-- **Мастър Теорема за Аномалната Отмяна на Трите Поколения**:
-    Общият електричен заряд на 24-те оф-диагонални Пърс състояния е точно 0. -/
-theorem three_generations_charge_sum_zero :
-    (threeGenerationsFermions.map FermionQuantumNumbers.charge).sum = 0 := by
-  dsimp [threeGenerationsFermions, singleGenFermions]
-  norm_num
-
 end InfoGeometry.Canonical
-

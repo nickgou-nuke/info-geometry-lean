@@ -224,7 +224,7 @@ export InfoGeometry.Experimental.ModularSpinorBridge (
   ModularBerryBridge
   SpinorInnovationBridge
   spinorBilinear_eq_berryPhase
-  spinorBilinear_eq_klDivergence
+  spinorBilinear_eq_relativeModularPotential
 )
 
 export InfoGeometry.Canonical.ChiralCliffordBridge (

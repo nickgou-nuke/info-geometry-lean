@@ -13,16 +13,15 @@ The script checks only the finite algebra:
 It does not claim or numerically test the Riemann Hypothesis.
 """
 
-from __future__ import annotations
-
+import sys
+from pathlib import Path
 import sympy as sp
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def assert_matrix_eq(name: str, lhs: sp.Matrix, rhs: sp.Matrix) -> None:
-    diff = (lhs - rhs).applyfunc(sp.simplify)
-    if diff != sp.zeros(*diff.shape):
-        raise AssertionError(f"{name} failed:\n{diff}")
-    print(f"  {name}: OK")
+from tools.sympy.common import assert_matrix_eq
 
 
 def assert_expr_eq(name: str, lhs: sp.Expr, rhs: sp.Expr) -> None:

@@ -62,11 +62,11 @@ def glideReflection (M : Matrix (Fin 2) (Fin 2) ℤ) : Matrix (Fin 2) (Fin 2) �
         = (CPT_local * (CPT_local * M)) * (CPT_local * CPT_local) := by
             simp [Matrix.mul_assoc]
     _ = CPT_local * (CPT_local * M) := by
-          rw [CptInvolution.is_involution CPT_local_is_involution, Matrix.mul_one]
+      rw [CPT_local_is_involution, Matrix.mul_one]
     _ = (CPT_local * CPT_local) * M := by
           rw [← Matrix.mul_assoc]
     _ = M := by
-          rw [CptInvolution.is_involution CPT_local_is_involution, Matrix.one_mul]
+      rw [CPT_local_is_involution, Matrix.one_mul]
 
 @[simp] theorem glideReflection_zero_to_infinity :
     glideReflection P_zero = L_spectator := by

@@ -10,15 +10,11 @@ import InfoGeometry.Canonical.E8ExceptionalLieAlgebraTriality
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 
 /-!
-# Primon Exceptional Riemann Bridge (Topological Expansion)
+# Primon Exceptional Riemann Bridge (Finite typed expansion)
 
-This module expands the knowledge context graph by linking paths 
-leading to the Riemann Hypothesis with the neighbourhood of known mathematics:
-1. **Primes and Primon Systems**: The finite Cantor/Cuntz basis arrays representing primes.
-2. **Möbius Discrete Symmetries**: Split-octonionic Cauchy-Riemann readout limits.
-3. **Hurwitz and Exceptional Lattices**: The underlying E8 Triality and Lee-Yang formulations 
-   for projective zeroes.
-4. **Double Diabolic Star Structure**: Root system expansions matching fractal primes.
+This module records a finite typed context for several independently supplied
+data packages.  It does not identify them with one another or prove an
+analytic Riemann-Hypothesis statement.
 
 This file asserts zero analytic continuation and zero unproved Riemann theorems. 
 It establishes the finite algebraic type signatures bridging these domains.
@@ -37,40 +33,36 @@ open InfoGeometry.Canonical.PrimeHurwitzLimit
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open E8ExceptionalLieAlgebraTriality.E8ExceptionalLieAlgebraTriality
 
-/--
-The Double Diabolic Star Exceptional Lattice links the discrete Möbius
-triality over E8 to the finite prime cutoffs of the Cantor/Cuntz algebra.
+/-- A finite record combining supplied prime, matrix, and split-octonion data.
+
+No E8 realization or Möbius/prime equivalence is inferred from the record.
 -/
 structure DoubleDiabolicStarExceptionalLattice where
   /-- Finite property prime cutoff representing fractal primes. -/
   P : PrimeCutoff
-  /-- The underlying E8 triality automorphism representing the Möbius discrete twist. -/
+  /-- A supplied finite order-three unitary matrix datum. -/
   triality : TrialityAutomorphism
-  /-- Split octonion field on the unit lattice for discrete Cauchy-Riemann symmetries. -/
+  /-- A supplied split-octonion field datum. -/
   mobiusField : InfoGeometry.Canonical.SplitOctonionField
-  /-- The field is discrete-monogenic, enforcing the topological Möbius symmetry. -/
+  /-- The supplied field satisfies the recorded monogenic predicate. -/
   mobius_monogenic : InfoGeometry.Canonical.discreteSplitMonogenic mobiusField
 
 namespace DoubleDiabolicStarExceptionalLattice
 
 variable (L : DoubleDiabolicStarExceptionalLattice)
 
-/-- 
-The discrete Möbius/Triality symmetric charge is conserved 
-over the diabolic double lattice structure.
--/
+/-- The finite trace readout is invariant under the supplied unitary matrix. -/
 theorem triality_trace_conservation (X : Matrix (Fin 8) (Fin 8) ℂ) :
     trace (triality_matrix L.triality * X * (triality_matrix L.triality).conjTranspose) = trace X := by
   exact E8ExceptionalLieAlgebraTriality.E8ExceptionalLieAlgebraTriality.triality_trace_conservation L.triality X
 
 end DoubleDiabolicStarExceptionalLattice
 
-/--
-The Grand Riemann Exceptional Expansion bridges the abstract Riemann Hypothesis
-(via projective zero limits) to the finite exceptional primon lattice.
+/-- A finite record pairing an explicit projective-circle hypothesis with
+finite exceptional-lattice input.  It is not a proof of the hypothesis.
 -/
 structure GrandRiemannExceptionalExpansion where
-  /-- The projective formulation of the Riemann Hypothesis over the Lee-Yang circle. -/
+  /-- An explicit hypothesis about the projective zero set. -/
   rh_hypothesis : RiemannHypothesisProjectiveCircle
   /-- The underlying Double Diabolic Star Exceptional Lattice data. -/
   exceptionalLattice : DoubleDiabolicStarExceptionalLattice
@@ -79,9 +71,8 @@ namespace GrandRiemannExceptionalExpansion
 
 variable (G : GrandRiemannExceptionalExpansion)
 
-/--
-If the Grand Riemann Exceptional Expansion holds, all nontrivial Riemann zeros
-projectively lie on the Lee-Yang unit circle (the Hurwitz limit).
+/-- Conditional transport of the supplied projective hypothesis to one zero.
+The theorem does not establish the hypothesis.
 -/
 theorem nontrivial_zeros_on_lee_yang_circle
     (G : GrandRiemannExceptionalExpansion)

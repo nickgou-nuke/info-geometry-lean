@@ -68,15 +68,4 @@ theorem freudenthal_diag_zero_zero_one :
     { α₁ := (0 : ℝ), α₂ := (0 : ℝ), α₃ := (1 : ℝ)
       z₁ := zeroZ, z₂ := zeroZ, z₃ := zeroZ } := by
   simpa using freudenthal_diagonal (0 : ℝ) 0 1
-
-
-
-/-! The full Albert identity remains outside this owner.  The genuine
-noncommutative Jordan theorem available in the repository is the proved
-`H3Zorn` quadratic-representation law, exposed here under the legacy name
-without weakening it to a proposition marker. -/
-theorem freudenthal_jordan_product :
-    InfoGeometry.Algebra.H3ZornJordanProductLaw :=
-  InfoGeometry.Algebra.H3ZornJordanProductLaw_proof
-
 end InfoGeometry.Algebra.FreudenthalComplete

@@ -23,9 +23,19 @@ import argparse
 import hashlib
 import json
 import math
+import sys
 from collections import Counter
 from pathlib import Path
 from typing import Any, Iterable
+
+ROOT = Path(__file__).resolve().parents[2]
+_SRC = ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from igf.common.json_io import iter_jsonl, write_jsonl
 
 ROW_SCHEMA = "info_geometry.tactic_operator_spectrum.v1"
 STATS_SCHEMA = "info_geometry.tactic_operator_spectrum.stats.v1"
@@ -34,35 +44,8 @@ DEFAULT_OUT = Path("reports/training/tactic_path_ranking.operator_enriched.jsonl
 DEFAULT_STATS = Path("reports/training/tactic_path_operator_spectrum.stats.json")
 
 
-def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
-    if not path.exists():
-        raise SystemExit(f"input JSONL does not exist: {path}")
-    with path.open("r", encoding="utf-8") as handle:
-        for lineno, raw in enumerate(handle, start=1):
-            line = raw.strip()
-            if not line:
-                continue
-            try:
-                row = json.loads(line)
-            except json.JSONDecodeError as exc:
-                raise SystemExit(f"malformed JSON in {path} at line {lineno}: {exc}") from exc
-            if isinstance(row, dict):
-                yield row
-
-
-def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=False, sort_keys=True) + "\n")
-            count += 1
-    return count
-
-
-def stable_hash(payload: Any) -> str:
-    data = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha256(data.encode("utf-8")).hexdigest()[:24]
+# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
+from igf.common.hashing import stable_hash
 
 
 def safe_float(value: Any, default: float = 0.0) -> float:

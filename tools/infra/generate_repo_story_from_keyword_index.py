@@ -194,8 +194,8 @@ def git_head(root: Path) -> str:
         return "unknown"
 
 
-def load_json(path: Path) -> dict:
-    return json.loads(path.read_text(encoding="utf-8"))
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def list_tracked_lean_files(root: Path) -> list[Path]:

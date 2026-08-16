@@ -131,24 +131,6 @@ def canonicalPrimeVielbein : PrimeVielbeinCarrier where
   traceLogSupervolume := zetaTraceSupervolume
   eulerSupervolume := zetaTraceEulerSupervolume
 
-@[simp]
-theorem canonicalPrimeVielbein_convergenceDomain
-    (s : ℂ) :
-    canonicalPrimeVielbein.convergenceDomain s ↔ 1 < s.re :=
-  Iff.rfl
-
-@[simp]
-theorem canonicalPrimeVielbein_traceLogSupervolume
-    (s : ℂ) :
-    canonicalPrimeVielbein.traceLogSupervolume s = zetaTraceSupervolume s :=
-  rfl
-
-@[simp]
-theorem canonicalPrimeVielbein_eulerSupervolume
-    (s : ℂ) :
-    canonicalPrimeVielbein.eulerSupervolume s = zetaTraceEulerSupervolume s :=
-  rfl
-
 /-- Canonical trace-log readout equals `riemannZeta` on the standard half-plane. -/
 theorem canonicalPrimeVielbein_traceLogSupervolume_eq_riemannZeta
     {s : ℂ} (hs : 1 < s.re) :

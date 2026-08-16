@@ -33,20 +33,12 @@ abbrev NavierStokesOperator (E : Type _) [NormedAddCommGroup E] [InnerProductSpa
 abbrev MadelungOperator (E : Type _) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
   VelocityField E
 
-/-- Placeholder instance for classical Navier‑Stokes – to be refined with concrete definitions. -/
-instance fluidOperator_NavierStokes {E : Type _} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    FluidOperator E where
-  divergence := 0
-  gradient := 0
-  laplacian := 0
-  timeEvolution := fun _ v => v
-
-/-- Placeholder instance for quantum Madelung operator – to be refined with concrete definitions. -/
-instance fluidOperator_Madelung {E : Type _} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    FluidOperator E where
-  divergence := 0
-  gradient := 0
-  laplacian := 0
-  timeEvolution := fun _ v => v
+/-!
+No default `FluidOperator` instance is installed here.  A zero operator with
+identity evolution would satisfy the record syntactically while proving none
+of the Navier--Stokes or Madelung equations.  Concrete PDE owners must supply
+the divergence, gradient, Laplacian, and evolution maps together with their
+analytic laws.
+-/
 
 end InfoGeometry.Canonical

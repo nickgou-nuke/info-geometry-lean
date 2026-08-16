@@ -7,9 +7,15 @@ finite embedding A |-> A ⊗ I_2.  This does not construct an infinite Clifford
 algebra or prove a universal Bott-periodicity isomorphism.
 """
 
-from __future__ import annotations
-
+import sys
+from pathlib import Path
 import sympy as sp
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from tools.sympy.common import assert_matrix_eq, assert_zero
 
 
 def embed(a: sp.Matrix) -> sp.Matrix:
@@ -25,18 +31,6 @@ def propagate(n: int, p: sp.Matrix) -> sp.Matrix:
 
 def normalized_trace(stage: int, a: sp.Matrix) -> sp.Expr:
     return sp.simplify(sp.trace(a) / (sp.Integer(2) ** stage))
-
-
-def assert_matrix_eq(lhs: sp.Matrix, rhs: sp.Matrix, label: str) -> None:
-    diff = sp.simplify(lhs - rhs)
-    if diff != sp.zeros(*lhs.shape):
-        raise AssertionError(f"{label} failed:\n{diff}")
-
-
-def assert_zero(expr: sp.Expr, label: str) -> None:
-    reduced = sp.simplify(expr)
-    if reduced != 0:
-        raise AssertionError(f"{label} failed: {reduced}")
 
 
 def main() -> None:

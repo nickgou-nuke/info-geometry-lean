@@ -50,22 +50,8 @@ def sha256_hex(payload: str) -> str:
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-def iter_jsonl(path: Path) -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
-    if not path.exists():
-        return rows
-    with path.open("r", encoding="utf-8") as handle:
-        for raw in handle:
-            line = raw.strip()
-            if not line:
-                continue
-            try:
-                obj = json.loads(line)
-            except Exception:
-                continue
-            if isinstance(obj, dict):
-                rows.append(obj)
-    return rows
+# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
+from igf.common.json_io import iter_jsonl
 
 
 def compute_sccs_directed(
@@ -305,11 +291,8 @@ def build_translation_sccs(
     return verified_edges, scc_nodes, scc_members_map
 
 
-def write_jsonl(path: Path, rows: list[dict[str, Any]]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=True) + "\n")
+# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
+from igf.common.json_io import write_jsonl
 
 
 def build_dedup_report(

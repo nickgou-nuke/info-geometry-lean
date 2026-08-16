@@ -169,19 +169,8 @@ class ImportPlanRow:
         }
 
 
-def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
-    with path.open("r", encoding="utf-8") as handle:
-        for line_no, line in enumerate(handle, start=1):
-            line = line.strip()
-            if not line:
-                continue
-            try:
-                row = json.loads(line)
-            except json.JSONDecodeError as exc:
-                raise ValueError(f"Invalid JSONL in {path}:{line_no}: {exc}") from exc
-            if not isinstance(row, dict):
-                raise ValueError(f"Expected JSON object in {path}:{line_no}, got {type(row).__name__}")
-            yield row
+# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
+from igf.common.json_io import iter_jsonl
 
 
 def count_jsonl(path: Path) -> int:

@@ -30,6 +30,25 @@ def qPlus {A : Type*} [Semiring A] (a : A) : Matrix Two Two A :=
 def qMinus {A : Type*} [Semiring A] (b : A) : Matrix Two Two A :=
   !![0, 0; b, 0]
 
+/-! The split-Cartan element acting on the two chiral sheets. -/
+def cartanA {A : Type*} [Ring A] [Algebra ℝ A] (t : ℝ) : Matrix Two Two A :=
+  !![algebraMap ℝ A (Real.exp t), 0;
+     0, algebraMap ℝ A (Real.exp (-t))]
+
+private lemma cartanA_exp_square {A : Type*} [Ring A] [Algebra ℝ A] (t : ℝ) :
+    algebraMap ℝ A (Real.exp t) * algebraMap ℝ A (Real.exp t) =
+      algebraMap ℝ A (Real.exp (2 * t)) := by
+  rw [← map_mul, ← Real.exp_add]
+  congr 1
+  ring_nf
+
+private lemma cartanA_neg_exp_square {A : Type*} [Ring A] [Algebra ℝ A] (t : ℝ) :
+    algebraMap ℝ A (Real.exp (-t)) * algebraMap ℝ A (Real.exp (-t)) =
+      algebraMap ℝ A (Real.exp (-(2 * t))) := by
+  rw [← map_mul, ← Real.exp_add]
+  congr 1
+  ring_nf
+
 /-- The even anticommutator of the two chiral odd channels. -/
 def qAnticomm {A : Type*} [Semiring A] (a b : A) : Matrix Two Two A :=
   qPlus a * qMinus b + qMinus b * qPlus a
@@ -40,11 +59,59 @@ def qAnticomm {A : Type*} [Semiring A] (a b : A) : Matrix Two Two A :=
   fin_cases i <;> fin_cases j <;>
     simp [qPlus, Matrix.mul_apply, Fin.sum_univ_two]
 
+theorem qPlus_mul_qPlus {A : Type*} [Semiring A] (a b : A) :
+    qPlus a * qPlus b = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [qPlus, Matrix.mul_apply, Fin.sum_univ_two]
+
 @[simp] theorem qMinus_sq {A : Type*} [Semiring A] (b : A) :
     qMinus b * qMinus b = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [qMinus, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem qMinus_mul_qMinus {A : Type*} [Semiring A] (a b : A) :
+    qMinus a * qMinus b = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [qMinus, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem cartanConj_qPlus {A : Type*} [Ring A] [Algebra ℝ A]
+    (t : ℝ) (a : A) :
+    cartanA t * qPlus a * cartanA (-t) =
+      qPlus (Real.exp (2 * t) • a) := by
+  ext i j
+  fin_cases i <;> fin_cases j
+  · simp [cartanA, qPlus, Matrix.mul_apply, Fin.sum_univ_two]
+  · simp [cartanA, qPlus, Matrix.mul_apply, Fin.sum_univ_two,
+      Algebra.smul_def]
+    change
+      (algebraMap ℝ A (Real.exp t) * a) *
+          algebraMap ℝ A (Real.exp t) =
+        algebraMap ℝ A (Real.exp (2 * t)) * a
+    rw [mul_assoc, ← Algebra.commutes (Real.exp t) a,
+      ← mul_assoc, cartanA_exp_square]
+  · simp [cartanA, qPlus, Matrix.mul_apply, Fin.sum_univ_two]
+  · simp [cartanA, qPlus, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem cartanConj_qMinus {A : Type*} [Ring A] [Algebra ℝ A]
+    (t : ℝ) (b : A) :
+    cartanA t * qMinus b * cartanA (-t) =
+      qMinus (Real.exp (-2 * t) • b) := by
+  ext i j
+  fin_cases i <;> fin_cases j
+  · simp [cartanA, qMinus, Matrix.mul_apply, Fin.sum_univ_two]
+  · simp [cartanA, qMinus, Matrix.mul_apply, Fin.sum_univ_two]
+  · simp [cartanA, qMinus, Matrix.mul_apply, Fin.sum_univ_two,
+      Algebra.smul_def]
+    change
+      (algebraMap ℝ A (Real.exp (-t)) * b) *
+          algebraMap ℝ A (Real.exp (-t)) =
+        algebraMap ℝ A (Real.exp (-(2 * t))) * b
+    rw [mul_assoc, ← Algebra.commutes (Real.exp (-t)) b,
+      ← mul_assoc, cartanA_neg_exp_square]
+  · simp [cartanA, qMinus, Matrix.mul_apply, Fin.sum_univ_two]
 
 theorem qPlus_mul_qMinus {A : Type*} [Semiring A] (a b : A) :
     qPlus a * qMinus b = !![a * b, 0; 0, 0] := by
@@ -74,7 +141,7 @@ theorem qDirac_square {A : Type*} [Semiring A] (a b : A) :
       noncomm_ring
     _ = qAnticomm a b := by
       rw [qPlus_sq, qMinus_sq]
-      simp [qAnticomm, add_assoc]
+      simp [qAnticomm]
 
 /-! ## Chiral grading and projectors -/
 
@@ -104,6 +171,61 @@ theorem gamma_qMinus_anticomm {A : Type*} [Ring A] (b : A) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [gamma, qMinus, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem gamma_commutator_qPlus {A : Type*} [Ring A] (a : A) :
+    gamma * qPlus a - qPlus a * gamma = qPlus a + qPlus a := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma, qPlus, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem gamma_commutator_qMinus {A : Type*} [Ring A] (b : A) :
+    gamma * qMinus b - qMinus b * gamma = -(qMinus b + qMinus b) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma, qMinus, Matrix.mul_apply, Fin.sum_univ_two] <;> abel
+
+theorem qAnticomm_comm_qPlus {A : Type*} [Ring A] (a b : A) :
+    qAnticomm a b * qPlus a - qPlus a * qAnticomm a b = 0 := by
+  have hplus : qPlus a * qPlus a = 0 := qPlus_sq a
+  calc
+    qAnticomm a b * qPlus a - qPlus a * qAnticomm a b =
+        qPlus a * (qMinus b * qPlus a) +
+          qMinus b * (qPlus a * qPlus a) -
+          (qPlus a * (qPlus a * qMinus b) +
+            qPlus a * (qMinus b * qPlus a)) := by
+      simp only [qAnticomm, mul_add, add_mul]
+      noncomm_ring
+    _ = 0 := by
+      have hleft : qPlus a * (qPlus a * qMinus b) = 0 := by
+        rw [← mul_assoc, hplus, zero_mul]
+      rw [hplus]
+      rw [hleft]
+      simp
+
+theorem qAnticomm_comm_qMinus {A : Type*} [Ring A] (a b : A) :
+    qAnticomm a b * qMinus b - qMinus b * qAnticomm a b = 0 := by
+  have hminus : qMinus b * qMinus b = 0 := qMinus_sq b
+  calc
+    qAnticomm a b * qMinus b - qMinus b * qAnticomm a b =
+        qPlus a * (qMinus b * qMinus b) +
+          qMinus b * (qPlus a * qMinus b) -
+          (qMinus b * (qPlus a * qMinus b) +
+            qMinus b * (qMinus b * qPlus a)) := by
+      simp only [qAnticomm, mul_add, add_mul]
+      noncomm_ring
+    _ = 0 := by
+      have hleft : qMinus b * (qMinus b * qPlus a) = 0 := by
+        rw [← mul_assoc, hminus, zero_mul]
+      rw [hminus]
+      rw [hleft]
+      simp
+
+theorem gamma_commutator_qAnticomm {A : Type*} [Ring A] (a b : A) :
+    gamma * qAnticomm a b - qAnticomm a b * gamma = 0 := by
+  rw [qAnticomm_eq_partnerHamiltonian]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma, Matrix.mul_apply, Fin.sum_univ_two]
 
 @[simp] theorem projectors_sum {A : Type*} [Ring A] :
     uPlus + uMinus = (1 : Matrix Two Two A) := by

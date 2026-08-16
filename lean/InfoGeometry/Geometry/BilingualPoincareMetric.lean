@@ -546,18 +546,18 @@ theorem moebiusTangentPushForward_op
 /-! ## Admissible Mobius/isometry blocks -/
 
 /--
-Placeholder predicate for the Mobius blocks that are genuine Poincare
-isometries.
+Phase-linearity predicate for a Mobius coefficient block.
 
-A future concrete version should encode the appropriate real Krein/symplectic
-conditions on the block matrix
+This predicate intentionally does not encode Poincare isometry.  A concrete
+isometry predicate must additionally encode the appropriate real
+Krein/symplectic conditions on the block matrix
 
 `[[A, B], [C, D]]`.
 
 Phase-linearity and denominator invertibility alone are not enough to guarantee
 metric invariance.
 -/
-def IsPoincareMobiusBlock
+def IsPhaseLinearMobiusBlock
     (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E))
     (M : PhaseLinearMobiusCoefficients D) : Prop :=
   PhaseLinear D M.A ∧
@@ -566,9 +566,9 @@ def IsPoincareMobiusBlock
         PhaseLinear D M.Dop
 
 /-- Every phase-linear Mobius coefficient packet satisfies the admissible block carrier. -/
-theorem isPoincareMobiusBlock_of_phaseLinear
+theorem isPhaseLinearMobiusBlock_of_phaseLinear
     (M : PhaseLinearMobiusCoefficients D) :
-    IsPoincareMobiusBlock D M := by
+    IsPhaseLinearMobiusBlock D M := by
   exact ⟨M.A_phase, M.B_phase, M.C_phase, M.D_phase⟩
 
 /-! ## Poincare metric datum -/
@@ -620,7 +620,7 @@ structure PoincareMetricDatum
   -/
   moebius_invariant :
     ∀ (M : PhaseLinearMobiusCoefficients D),
-      IsPoincareMobiusBlock D M →
+      IsPhaseLinearMobiusBlock D M →
       ∀ (Z : BilingualUpperHalfPlane D)
       (hInv : MobiusDenominatorInverse M Z)
       (hPos : KHalfPlanePositive D (moebiusActionOperator M Z hInv))
@@ -672,7 +672,7 @@ Named re-export of Mobius invariance for admissible Mobius blocks.
 -/
 theorem metric_mobius_invariant
     (M : PhaseLinearMobiusCoefficients D)
-    (hM : IsPoincareMobiusBlock D M)
+    (hM : IsPhaseLinearMobiusBlock D M)
     (Z : BilingualUpperHalfPlane D)
     (hInv : MobiusDenominatorInverse M Z)
     (hPos : KHalfPlanePositive D (moebiusActionOperator M Z hInv))
@@ -693,7 +693,7 @@ automorphic layers.
 -/
 theorem moebius_isometry
     (M : PhaseLinearMobiusCoefficients D)
-    (hM : IsPoincareMobiusBlock D M)
+    (hM : IsPhaseLinearMobiusBlock D M)
     (Z : BilingualUpperHalfPlane D)
     (hInv : MobiusDenominatorInverse M Z)
     (hPos : KHalfPlanePositive D (moebiusActionOperator M Z hInv))

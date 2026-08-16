@@ -142,7 +142,7 @@ The group action is supplied externally by the caller; this bridge only
 packages the symbolic crystal/lattice/spectral interface.
 -/
 @[rep_depth operator]
-structure BinaryCrystalWeylBlochPacket (G : Type*)
+structure BinaryCrystalWeylBlochData (G : Type*)
     [Group G] [MulAction G BinaryLattice] where
   root : BinaryLattice
   bloch : BinaryBlochWave

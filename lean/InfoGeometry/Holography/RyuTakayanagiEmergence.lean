@@ -110,20 +110,4 @@ theorem braidEntanglementStep_pos : braidEntanglementStep > 0 := by
     nlinarith
   exact Real.log_pos hphi
 
-/--
-**Theorem (Entanglement = Geometry)**.
-
-The von Neumann entropy at the Jaynes point equals ln 2, and the braid
-entanglement per step equals ln φ. Together they establish the holographic
-dictionary: boundary information = bulk geometry.
-
-  S(p=1/2) = ln 2 = minimal geodesic length in H²
-  ΔS_braid = ln φ = quantum dimension of Fibonacci anyon
--/
-theorem entanglement_geometry_capstone :
-    vonNeumannEntropy (1/2 : ℝ) = Real.log 2 ∧ braidEntanglementStep > 0 := by
-  refine ⟨?_, ?_⟩
-  · exact maxEntropy_twoState
-  · exact braidEntanglementStep_pos
-
 end InfoGeometry.Holography.RyuTakayanagiEmergence

@@ -158,10 +158,8 @@ def sort_targets(targets: list[DebtTarget]) -> list[DebtTarget]:
     return sorted(targets, key=key)
 
 
-def slugify(value: str) -> str:
-    slug = re.sub(r"[^A-Za-z0-9_]+", "_", value)
-    slug = re.sub(r"_+", "_", slug).strip("_")
-    return slug or "debt_target"
+# [lossless-compact] slugify folded into igf.common.strings.slugify
+from igf.common.strings import slugify
 
 
 def locate_decl_start(lines: list[str], approx_line: int | None, name: str) -> int | None:

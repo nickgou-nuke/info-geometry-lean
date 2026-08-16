@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import Mathlib.NumberTheory.LSeries.RiemannZeta
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -39,7 +38,7 @@ The stored centering equation turns evenness of `xi` into the corresponding
 affine equality for `lambda`:
 $$\Lambda(1/2 + z) = \Lambda(1/2 - z) \iff \Xi(z) = \Xi(-z).$$
 -/
-theorem centered_xi_evenness_iff_functional_equation
+theorem centered_evenness_iff_affine_reflection
     (data : CompletedXiData) (z : ℂ) :
     data.xi z = data.xi (-z) ↔ data.lambda (1 / 2 + z) = data.lambda (1 / 2 - z) := by
   constructor
@@ -59,7 +58,7 @@ theorem centered_xi_evenness_iff_functional_equation
 The two centered affine points sum to `1`:
 $$\left(\frac{1}{2} + z\right) + \left(\frac{1}{2} - z\right) = 1.$$
 -/
-theorem spectral_reflection_sum_identity (z : ℂ) :
+theorem affine_reflection_sum_identity (z : ℂ) :
     ((1 / 2 : ℂ) + z) + ((1 / 2 : ℂ) - z) = 1 := by
   ring
 

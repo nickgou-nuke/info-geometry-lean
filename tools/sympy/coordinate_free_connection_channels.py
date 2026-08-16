@@ -15,20 +15,20 @@ No external certificate is consumed.  The identities are derived by exact
 symbolic matrix algebra.
 """
 
-from __future__ import annotations
-
+import sys
+from pathlib import Path
 import sympy as sp
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from tools.sympy.common import assert_matrix_zero as _assert_matrix_zero, comm as commutator
 
 
 def assert_matrix_zero(name: str, matrix: sp.Matrix) -> None:
-    diff = matrix.applyfunc(sp.simplify)
-    if diff != sp.zeros(*diff.shape):
-        raise AssertionError(f"{name} failed:\n{diff}")
+    _assert_matrix_zero(matrix, name)
     print(f"  {name}: OK")
-
-
-def commutator(a: sp.Matrix, b: sp.Matrix) -> sp.Matrix:
-    return a * b - b * a
 
 
 def two_slot_curvature(

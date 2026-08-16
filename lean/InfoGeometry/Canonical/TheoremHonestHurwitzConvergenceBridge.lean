@@ -3,9 +3,6 @@ import InfoGeometry.Canonical.FilteredColimitLeeYangVirasoroMasterBridge
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
 
-set_option linter.unusedSectionVars false
-set_option linter.unusedVariables false
-
 /-!
 # Finite Euler-factor and closed-circle readouts
 

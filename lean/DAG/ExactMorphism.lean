@@ -65,7 +65,7 @@ namespace DAG
 /-! ### Trace diagnostics -/
 
 initialize registerTraceClass `DAG.Morphism
-initialize registerTraceClass `DAG.Morphism.admit
+initialize registerTraceClass `DAG.Morphism.accept
 initialize registerTraceClass `DAG.Morphism.reject
 initialize registerTraceClass `DAG.Commutativity
 initialize registerTraceClass `DAG.Commutativity.rehydrate
@@ -217,7 +217,7 @@ def mkMorphismEntry? (declName : Name) (ci : ConstantInfo) :
   withUnaryMorphismSignature ci.type fun dom cod => do
     let domHead ← headNameOf dom
     let codHead ← headNameOf cod
-    trace[DAG.Morphism.admit] "{declName}: {domHead} → {codHead}"
+    trace[DAG.Morphism.accept] "{declName}: {domHead} → {codHead}"
     pure { decl := declName, domHead, codHead }
 
 /-! ### On-demand verification -/

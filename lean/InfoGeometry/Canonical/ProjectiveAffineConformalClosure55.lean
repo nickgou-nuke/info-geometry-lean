@@ -84,6 +84,16 @@ def smul55 (a : ℝ) (X : PACSplit55) : PACSplit55 where
   u := a * X.u
   v := a * X.v
 
+@[simp] theorem smul55_one (X : PACSplit55) : smul55 1 X = X := by
+  cases X
+  simp [smul55]
+
+theorem smul55_smul (a b : ℝ) (X : PACSplit55) :
+    smul55 a (smul55 b X) = smul55 (a * b) X := by
+  cases X
+  simp only [smul55]
+  congr 1 <;> ring
+
 /-- Projective same-line relation in the ambient conformal space. -/
 def sameProjectiveLine55 (X Y : PACSplit55) : Prop :=
   ∃ a : ℝ, a ≠ 0 ∧ Y = smul55 a X
@@ -94,6 +104,36 @@ theorem sameProjectiveLine55_refl (X : PACSplit55) :
   refine ⟨1, by norm_num, ?_⟩
   cases X
   simp [smul55]
+
+theorem sameProjectiveLine55_symm {X Y : PACSplit55}
+    (h : sameProjectiveLine55 X Y) :
+    sameProjectiveLine55 Y X := by
+  rcases h with ⟨a, ha, rfl⟩
+  refine ⟨a⁻¹, inv_ne_zero ha, ?_⟩
+  rw [smul55_smul, inv_mul_cancel₀ ha, smul55_one]
+
+theorem sameProjectiveLine55_trans {X Y Z : PACSplit55}
+    (hXY : sameProjectiveLine55 X Y)
+    (hYZ : sameProjectiveLine55 Y Z) :
+    sameProjectiveLine55 X Z := by
+  rcases hXY with ⟨a, ha, rfl⟩
+  rcases hYZ with ⟨b, hb, rfl⟩
+  refine ⟨b * a, mul_ne_zero hb ha, ?_⟩
+  rw [smul55_smul]
+
+def projectiveSetoid55 : Setoid PACSplit55 where
+  r := sameProjectiveLine55
+  iseqv := {
+    refl := sameProjectiveLine55_refl
+    symm := sameProjectiveLine55_symm
+    trans := sameProjectiveLine55_trans
+  }
+
+/-- The actual projective carrier of the split conformal ambient space. -/
+abbrev Projective55 := Quotient projectiveSetoid55
+
+def projectiveMk55 (X : PACSplit55) : Projective55 :=
+  Quotient.mk projectiveSetoid55 X
 
 /-- The null cone condition is invariant under nonzero projective rescaling. -/
 theorem Q55_smul (a : ℝ) (X : PACSplit55) :
@@ -110,6 +150,20 @@ theorem projective_rescale_preserves_null
   rw [Q55_smul, hX]
   ring
 
+theorem sameProjectiveLine55_null_iff {X Y : PACSplit55}
+    (h : sameProjectiveLine55 X Y) :
+    Q55 X = 0 ↔ Q55 Y = 0 := by
+  constructor
+  · exact projective_rescale_preserves_null h
+  · exact projective_rescale_preserves_null (sameProjectiveLine55_symm h)
+
+/-- Nullity is a well-defined predicate on the projective quotient. -/
+def projectiveNull55 : Projective55 → Prop :=
+  Quotient.lift (fun X => Q55 X = 0) (by
+    intro X Y h
+    apply propext
+    exact sameProjectiveLine55_null_iff h)
+
 /-- A concrete `O(5,5)`-type reflection: flip the added positive coordinate. -/
 def reflectU (X : PACSplit55) : PACSplit55 where
   x0 := X.x0; x1 := X.x1; x2 := X.x2; x3 := X.x3
@@ -121,6 +175,34 @@ def reflectV (X : PACSplit55) : PACSplit55 where
   x0 := X.x0; x1 := X.x1; x2 := X.x2; x3 := X.x3
   y0 := X.y0; y1 := X.y1; y2 := X.y2; y3 := X.y3
   u := X.u; v := -X.v
+
+theorem reflectU_smul (a : ℝ) (X : PACSplit55) :
+    reflectU (smul55 a X) = smul55 a (reflectU X) := by
+  cases X
+  simp [reflectU, smul55]
+
+theorem reflectV_smul (a : ℝ) (X : PACSplit55) :
+    reflectV (smul55 a X) = smul55 a (reflectV X) := by
+  cases X
+  simp [reflectV, smul55]
+
+def reflectUProjective : Projective55 → Projective55 :=
+  Quotient.lift (fun X => projectiveMk55 (reflectU X)) (by
+    intro X Y hXY
+    rcases hXY with ⟨a, ha, hXY⟩
+    change projectiveMk55 (reflectU X) = projectiveMk55 (reflectU Y)
+    apply Quotient.sound
+    refine ⟨a, ha, ?_⟩
+    rw [hXY, reflectU_smul])
+
+def reflectVProjective : Projective55 → Projective55 :=
+  Quotient.lift (fun X => projectiveMk55 (reflectV X)) (by
+    intro X Y hXY
+    rcases hXY with ⟨a, ha, hXY⟩
+    change projectiveMk55 (reflectV X) = projectiveMk55 (reflectV Y)
+    apply Quotient.sound
+    refine ⟨a, ha, ?_⟩
+    rw [hXY, reflectV_smul])
 
 /-- The `u` reflection preserves the split `(5,5)` quadratic form. -/
 theorem reflectU_preserves_Q55 (X : PACSplit55) :
@@ -145,6 +227,73 @@ theorem reflectV_preserves_null (X : PACSplit55) (hX : Q55 X = 0) :
     Q55 (reflectV X) = 0 := by
   rw [reflectV_preserves_Q55, hX]
 
+theorem reflectUProjective_preserves_null (P : Projective55)
+    (hP : projectiveNull55 P) :
+    projectiveNull55 (reflectUProjective P) := by
+  revert hP
+  refine Quotient.inductionOn P ?_
+  intro X hX
+  change Q55 X = 0 at hX
+  change Q55 (reflectU X) = 0
+  rw [reflectU_preserves_Q55, hX]
+
+theorem reflectVProjective_preserves_null (P : Projective55)
+    (hP : projectiveNull55 P) :
+    projectiveNull55 (reflectVProjective P) := by
+  revert hP
+  refine Quotient.inductionOn P ?_
+  intro X hX
+  change Q55 X = 0 at hX
+  change Q55 (reflectV X) = 0
+  rw [reflectV_preserves_Q55, hX]
+
+@[simp] theorem reflectUProjective_involutive (P : Projective55) :
+    reflectUProjective (reflectUProjective P) = P := by
+  refine Quotient.inductionOn P ?_
+  intro X
+  change projectiveMk55 (reflectU (reflectU X)) = projectiveMk55 X
+  cases X
+  simp [reflectU]
+
+@[simp] theorem reflectVProjective_involutive (P : Projective55) :
+    reflectVProjective (reflectVProjective P) = P := by
+  refine Quotient.inductionOn P ?_
+  intro X
+  change projectiveMk55 (reflectV (reflectV X)) = projectiveMk55 X
+  cases X
+  simp [reflectV]
+
+/-- The `u` reflection as an involutive projective equivalence. -/
+def reflectUProjectiveEquiv : Projective55 ≃ Projective55 where
+  toFun := reflectUProjective
+  invFun := reflectUProjective
+  left_inv := reflectUProjective_involutive
+  right_inv := reflectUProjective_involutive
+
+/-- The `v` reflection as an involutive projective equivalence. -/
+def reflectVProjectiveEquiv : Projective55 ≃ Projective55 where
+  toFun := reflectVProjective
+  invFun := reflectVProjective
+  left_inv := reflectVProjective_involutive
+  right_inv := reflectVProjective_involutive
+
+theorem reflectUProjective_commute_reflectVProjective (P : Projective55) :
+    reflectUProjective (reflectVProjective P) =
+      reflectVProjective (reflectUProjective P) := by
+  refine Quotient.inductionOn P ?_
+  intro X
+  change projectiveMk55 (reflectU (reflectV X)) =
+    projectiveMk55 (reflectV (reflectU X))
+  cases X
+  rfl
+
+theorem reflectUProjectiveEquiv_commute_reflectVProjectiveEquiv :
+    reflectUProjectiveEquiv * reflectVProjectiveEquiv =
+      reflectVProjectiveEquiv * reflectUProjectiveEquiv := by
+  apply Equiv.ext
+  intro P
+  exact reflectUProjective_commute_reflectVProjective P
+
 /-- Spectral CPT involution `s ↦ 1 - conj(s)`. -/
 def spectralCPT (s : ℂ) : ℂ :=
   1 - conj s
@@ -163,19 +312,6 @@ theorem spectralCPT_fixed_iff_criticalLine (s : ℂ) :
     · simp [spectralCPT, h]
       norm_num
     · simp [spectralCPT]
-
-/-- Combined finite projective/null-cone algebra statement. -/
-theorem projective_affine_conformal_closure_55_synthesis
-    (x : PACSplit44) (X : PACSplit55)
-    (hX : Q55 X = 0) :
-    Q55 (conformalEmbed44to55 x) = 0 ∧
-    Q55 (reflectU X) = 0 ∧
-    Q55 (reflectV X) = 0 ∧
-    (∀ s : ℂ, spectralCPT s = s ↔ s.re = 1 / 2) := by
-  exact ⟨conformalEmbed44to55_null x,
-    reflectU_preserves_null X hX,
-    reflectV_preserves_null X hX,
-    spectralCPT_fixed_iff_criticalLine⟩
 
 end ProjectiveAffineConformalClosure55
 

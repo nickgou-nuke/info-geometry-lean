@@ -31,14 +31,8 @@ class StoreError(RuntimeError):
     pass
 
 
-def load_json(path: Path) -> dict[str, Any]:
-    try:
-        data = json.loads(path.read_text(encoding="utf-8"))
-    except json.JSONDecodeError as exc:
-        raise StoreError(f"invalid JSON in {path}: {exc}") from exc
-    if not isinstance(data, dict):
-        raise StoreError(f"packet must be a JSON object: {path}")
-    return data
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def canonical_packet(packet: dict[str, Any]) -> dict[str, Any]:

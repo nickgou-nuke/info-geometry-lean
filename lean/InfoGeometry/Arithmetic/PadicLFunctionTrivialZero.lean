@@ -74,4 +74,25 @@ def padic_filtration_linear_combination_prop {V : Type} [AddCommGroup V] [Module
   (2 * b.lambda) • omega_e b - (2 * b.lambda) • fil_minus1_second_vector b = 
   b.e_0 - (b.lambda ^ 2) • b.e_minus2
 
+/-- The displayed filtration identity is a finite module calculation. -/
+theorem padic_filtration_linear_combination
+    {V : Type} [AddCommGroup V] [Module ℝ V]
+    (b : PadicFiltrationBasis V) (h_lambda : b.lambda ≠ 0) :
+    (2 * b.lambda) • omega_e b - (2 * b.lambda) • fil_minus1_second_vector b =
+      b.e_0 - (b.lambda ^ 2) • b.e_minus2 := by
+  dsimp [omega_e, fil_minus1_second_vector]
+  have h_two_lambda : 2 * b.lambda ≠ 0 := mul_ne_zero (by norm_num) h_lambda
+  have h_inv : (2 * b.lambda) * (1 / (2 * b.lambda)) = (1 : ℝ) := by
+    field_simp [h_two_lambda]
+  simp only [smul_add, smul_smul, sub_eq_add_neg]
+  rw [h_inv]
+  module
+
+theorem padic_filtration_linear_combination_satisfies_prop
+    {V : Type} [AddCommGroup V] [Module ℝ V]
+    (b : PadicFiltrationBasis V) :
+    padic_filtration_linear_combination_prop b := by
+  intro h_lambda
+  exact padic_filtration_linear_combination b h_lambda
+
 end InfoGeometry.Arithmetic.PadicLFunction

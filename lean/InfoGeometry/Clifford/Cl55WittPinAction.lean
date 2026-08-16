@@ -260,28 +260,12 @@ theorem f_neg_isOrtho_of_ne {i j : Fin 5} (hij : i ≠ j) :
   rw [hsum, hi, hj]
   norm_num
 
-private theorem pin_twisted_orthogonal {A : Type*} [Ring A]
-    (e f : A) (hff : f * f = -1)
-    (hanti : f * e + e * f = 0) :
-    -f * e * (-f) = e := by
-  have hfe : f * e = -(e * f) := by
-    rw [← add_eq_zero_iff_eq_neg]
-    exact hanti
-  calc
-    -f * e * (-f) = f * e * f := by noncomm_ring
-    _ = -(e * f) * f := by rw [hfe]
-    _ = e := by
-      calc
-        -(e * f) * f = -((e * f) * f) := by rw [neg_mul]
-        _ = -(e * (f * f)) := by rw [mul_assoc]
-        _ = e := by rw [hff]; simp
-
 theorem pinTwistedAdj_f_neg_apply_e_pos_all (i j : Fin 5) :
     pinTwistedAdj ⟨ι55 (f_neg i), f_neg_mem_pinGroup i⟩ (e_pos j) =
       ι55 (e_pos j) := by
   rw [pinTwistedAdj_f_neg_eq, fNegUnit_coe,
     CliffordAlgebra.involute_ι, fNegUnit_inv_coe]
-  apply pin_twisted_orthogonal
+  apply neg_sq_twisted_fix_of_anticomm
   · exact f_neg_mul_self i
   · have h := CliffordAlgebra.ι_mul_ι_comm_of_isOrtho
       (Q := Q55) (e_pos_ortho_f_neg j i)
@@ -303,7 +287,7 @@ theorem pinTwistedAdj_f_neg_apply_f_neg_ne (i j : Fin 5) (hji : j ≠ i) :
       ι55 (f_neg j) := by
   rw [pinTwistedAdj_f_neg_eq, fNegUnit_coe,
     CliffordAlgebra.involute_ι, fNegUnit_inv_coe]
-  apply pin_twisted_orthogonal
+  apply neg_sq_twisted_fix_of_anticomm
   · exact f_neg_mul_self i
   · apply (add_eq_zero_iff_eq_neg).mpr
     have h := CliffordAlgebra.ι_mul_ι_comm_of_isOrtho
@@ -556,6 +540,11 @@ theorem pinTwistedActionEquiv_globalSheetPin_eq_globalSheetReflection :
 
 noncomputable def spinToPin (g : Spin55) : Pin55 :=
   ⟨g, spinGroup.mem_pin g.property⟩
+
+noncomputable def spinToPinHom : Spin55 →* Pin55 where
+  toFun := spinToPin
+  map_one' := rfl
+  map_mul' _ _ := rfl
 
 noncomputable def spinAction (g : Spin55) : V55 →ₗ[ℝ] V55 :=
   pinTwistedAction (spinToPin g)

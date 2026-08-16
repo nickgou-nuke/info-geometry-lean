@@ -98,13 +98,6 @@ theorem macroscopic_center_is_tomita_invariant
     rw [J.inv z] at h1 h2
     exact ⟨h2, h1⟩
 
-theorem algebraic_tomita_takesaki_synthesis
-    (hJ : IsTomitaConjugation J S) (z : A) :
-    (z ∈ Commutant A S ↔ J.toFun z ∈ S) ∧
-    (z ∈ SubsystemCenter S ↔ J.toFun z ∈ SubsystemCenter S) :=
-  ⟨tomita_conjugation_maps_commutant_to_algebra J S hJ z,
-    macroscopic_center_is_tomita_invariant J S hJ z⟩
-
 end AlgebraicTomitaTakesaki
 
 end InfoGeometry.Physics

@@ -26,29 +26,6 @@ variable {𝕂 E : Type*} [NormedField 𝕂] [NormedAddCommGroup E] [NormedSpace
 variable {T : E →L[𝕂] E}
 
 /--
-Bridge constructor for the finite ascent/descent lane at spectral point `0`.
-
-This is an explicit property re-projection surface:
-- it records that the spectral isolation property `h` is in scope;
-- it does not hide any additional algebraic requirements.
--/
-@[rep_depth operator]
-noncomputable def HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum
-    (_h : ZeroIsolatedInSpectrum T)
-    (hFinite : HasFiniteAscentDescentAtZero T.toLinearMap) :
-    HasFiniteAscentDescentAtZero T.toLinearMap :=
-  hFinite
-
-/--
-The finite ascent/descent bridge constructor is definitional on the finite property.
--/
-@[rep_depth operator]
-theorem HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum_eq
-    (h : ZeroIsolatedInSpectrum T)
-    (hFinite : HasFiniteAscentDescentAtZero T.toLinearMap) :
-    HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum (T := T) h hFinite = hFinite := rfl
-
-/--
 Bridge constructor for the full infinite-dimensional Drazin property package.
 
 This definition is intentionally explicit: every nontrivial algebraic field is
@@ -61,8 +38,7 @@ noncomputable def DrazinInfiniteAssumptions_of_zeroIsolatedInSpectrum
     (hClassical : HasClassicalRieszDecompositionAtZero T)
     (hGeneralized : HasGeneralizedRieszDecompositionAtZero T) :
     DrazinInfiniteAssumptions T where
-  finite_ascent_descent :=
-    HasFiniteAscentDescentAtZero_of_zeroIsolatedInSpectrum h hFinite
+  finite_ascent_descent := hFinite
   zero_isolated_spectrum := h
   classical_riesz := hClassical
   generalized_riesz := hGeneralized

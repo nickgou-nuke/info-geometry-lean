@@ -10,42 +10,39 @@ a KMS condition, or a Type-III modular theorem.  The native owner is
 generator and its positive partition readout in typed data and proves the
 available identities directly.
 
-This module intentionally exports that owner without introducing a second
-packet or a scalar surrogate for the missing measure-theoretic construction.
+This module intentionally exports the operator-valued Souriau family without
+introducing a scalar surrogate for the missing measure-theoretic construction.
 -/
 
 namespace InfoGeometry.GrandUnification
 
 open InfoGeometry.Canonical.SouriauOperatorialLogPotential
 
-abbrev SpectralThermalNormalizationData (State LieAlgebra LieDual : Type*) :=
-  SouriauLieThermoData State LieAlgebra LieDual
+abbrev SpectralThermalNormalizationData (LieAlgebra Obs : Type*)
+    [AddMonoid LieAlgebra]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs] :=
+  QuantumOperatorialSouriauFamily LieAlgebra Obs
 
 theorem spectralThermalNormalization_partition_pos
-    {State LieAlgebra LieDual : Type*}
-    (D : SpectralThermalNormalizationData State LieAlgebra LieDual) :
+    {LieAlgebra Obs : Type*} [AddMonoid LieAlgebra]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
+    (D : SpectralThermalNormalizationData LieAlgebra Obs) :
     0 < D.partitionFunction :=
-  D.partitionFunction_pos
+  QuantumOperatorialSouriauFamily.partitionFunction_pos D
 
 theorem spectralThermalNormalization_partitionPotential_eq_logZ
-    {State LieAlgebra LieDual : Type*}
-    (D : SpectralThermalNormalizationData State LieAlgebra LieDual) :
+    {LieAlgebra Obs : Type*} [AddMonoid LieAlgebra]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
+    (D : SpectralThermalNormalizationData LieAlgebra Obs) :
     D.partitionPotential = Real.log D.partitionFunction :=
-  D.partitionPotential_eq_logZ
+  QuantumOperatorialSouriauFamily.partitionPotential_eq_log_trace D
 
-theorem spectralThermalNormalization_negativeLogGibbsDensity
-    {State LieAlgebra LieDual : Type*}
-    (D : SpectralThermalNormalizationData State LieAlgebra LieDual)
-    (x : State) :
-    -Real.log (D.gibbsDensity x) =
-      D.K_beta x + D.partitionPotential :=
-  D.negativeLogGibbsDensity_eq_K_beta_add_Phi x
-
-theorem spectralThermalNormalization_statewise_log_generator
-    {State LieAlgebra LieDual : Type*}
-    (D : SpectralThermalNormalizationData State LieAlgebra LieDual)
-    (x : State) :
-    D.K_beta x = -Real.log (D.gibbsDensity x) - D.partitionPotential :=
-  D.modularHamiltonian_statewise_neg_log_gibbs_sub_PartitionPotential x
+theorem spectralThermalNormalization_modularHamiltonian_eq_bare_add_logZ
+    {LieAlgebra Obs : Type*} [AddMonoid LieAlgebra]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
+    (D : SpectralThermalNormalizationData LieAlgebra Obs) :
+    D.modularHamiltonian =
+      D.Khat_beta + D.partitionPotential • (1 : Obs) :=
+  QuantumOperatorialSouriauFamily.modularHamiltonian_eq_Khat_add_logZ D
 
 end InfoGeometry.GrandUnification

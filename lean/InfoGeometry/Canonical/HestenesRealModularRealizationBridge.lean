@@ -94,4 +94,31 @@ theorem hestenes_prime_power_sampling
       ext v
       rfl
 
+/-- Multiplicative arithmetic becomes additive Hestenes time under `log`.
+
+This is the native finite-scale bridge used by Dirichlet readouts.  It is an
+algebraic identity for the supplied flow law; it does not assert an analytic
+exponential representation of the flow. -/
+theorem hestenes_realFlow_log_mul
+    {M : Type*} [AddCommGroup M] [Module ℝ M]
+    (D : HestenesModularDatum M) (m n : ℕ) (hm : 0 < m) (hn : 0 < n) :
+    D.realFlow (Real.log ((m * n : ℕ) : ℝ)) =
+      D.realFlow (Real.log (m : ℝ)) ∘ₗ D.realFlow (Real.log (n : ℝ)) := by
+  have hm_pos : (0 : ℝ) < (m : ℝ) := Nat.cast_pos.mpr hm
+  have hn_pos : (0 : ℝ) < (n : ℝ) := Nat.cast_pos.mpr hn
+  have hlog : Real.log ((m * n : ℕ) : ℝ) =
+      Real.log (m : ℝ) + Real.log (n : ℝ) := by
+    push_cast
+    exact Real.log_mul (ne_of_gt hm_pos) (ne_of_gt hn_pos)
+  rw [hlog, D.realFlow_add]
+
+/-- The logarithmic sample is a multiplicative monoid representation on
+positive natural indices, at the level of linear-map composition. -/
+theorem hestenesPrimeSample_mul
+    {M : Type*} [AddCommGroup M] [Module ℝ M]
+    (D : HestenesModularDatum M) (m n : ℕ) (hm : 0 < m) (hn : 0 < n) :
+    hestenesPrimeSample D (m * n) =
+      hestenesPrimeSample D m ∘ₗ hestenesPrimeSample D n := by
+  exact hestenes_realFlow_log_mul D m n hm hn
+
 end InfoGeometry.Canonical.HestenesRealModularRealizationBridge

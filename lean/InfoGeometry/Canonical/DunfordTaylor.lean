@@ -138,6 +138,19 @@ theorem dunfordTaylorIntegral_const_contour
     dunfordTaylorIntegral (fun _ : ℝ => z₀) f a b = 0 := by
   simp [dunfordTaylorIntegral]
 
+omit [CompleteSpace E] in
+/-- A contour with identically vanishing derivative contributes no integral.
+
+This is the exact degenerate-contour case available without introducing the
+regularity and resolvent-avoidance hypotheses required by the full
+Dunford--Taylor calculus.
+-/
+theorem dunfordTaylorIntegral_zero_of_deriv_eq_zero
+    (γ : ℝ → ℂ) (f : ℂ → EndH) (a b : ℝ)
+    (hγ : ∀ t, deriv γ t = 0) :
+    dunfordTaylorIntegral γ f a b = 0 := by
+  simp [dunfordTaylorIntegral, hγ]
+
 /--
 The Riesz projection associated to a contour expression:
 

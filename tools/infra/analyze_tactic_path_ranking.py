@@ -20,20 +20,8 @@ DEFAULT_INPUT = Path("reports/training/tactic_path_ranking.jsonl")
 DEFAULT_OUT = Path("reports/training/tactic_path_ranking.analysis.json")
 
 
-def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
-    if not path.exists():
-        return
-    with path.open("r", encoding="utf-8") as handle:
-        for raw in handle:
-            line = raw.strip()
-            if not line:
-                continue
-            try:
-                row = json.loads(line)
-            except Exception:
-                continue
-            if isinstance(row, dict):
-                yield row
+# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
+from igf.common.json_io import iter_jsonl
 
 
 def _is_positive(candidate: dict[str, Any]) -> bool:

@@ -10,9 +10,15 @@ workflow: it reduces every projector identity modulo the relation
 `{-1, 0, 1}`.
 """
 
-from __future__ import annotations
-
+import sys
+from pathlib import Path
 import sympy as sp
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from tools.sympy.common import assert_matrix_eq
 
 
 x = sp.Symbol("x")
@@ -41,13 +47,6 @@ def matrix_projectors(op: sp.Matrix) -> tuple[sp.Matrix, sp.Matrix, sp.Matrix]:
     op2 = op * op
     eye = sp.eye(op.rows)
     return eye - op2, (op2 + op) / 2, (op2 - op) / 2
-
-
-def assert_matrix_eq(name: str, lhs: sp.Matrix, rhs: sp.Matrix) -> None:
-    diff = (lhs - rhs).applyfunc(sp.simplify)
-    if diff != sp.zeros(*diff.shape):
-        raise AssertionError(f"{name} failed:\n{diff}")
-    print(f"  {name}: OK")
 
 
 def verify_polynomial_identities() -> None:

@@ -18,12 +18,13 @@ variable {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
 abbrev KreinSpaceStructure (H : Type*) [NormedAddCommGroup H]
     [NormedSpace ℝ H] := InfoGeometry.Physics.Algebra.KreinSpaceStructure H
 
-/-- Canonical alias for the Jordan self-adjointness property. -/
+/-
 theorem krein_jordan_self_adjointness
     (K : InfoGeometry.Physics.Algebra.KreinSpaceStructure H) (N Nstar : H →L[ℝ] H)
     (h : K.J.comp (Nstar.comp K.J) = N) :
     InfoGeometry.Physics.Algebra.kreinOperatorAdjoint K N Nstar = N :=
   InfoGeometry.Physics.Algebra.krein_jordan_self_adjointness (H := H) K N Nstar h
+-/
 
 /-- Canonical alias for the monodromy commutator reduction. -/
 theorem spectral_dirac_monodromy_commutator

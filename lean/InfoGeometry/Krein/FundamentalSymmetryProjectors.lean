@@ -134,6 +134,56 @@ theorem K_minus_idempotent
     abel
   rw [hsub, smul_add, ← add_smul, hhalf, one_smul]
 
+/-- The two eigensector projectors annihilate each other pointwise. -/
+theorem K_plus_K_minus_zero
+    (J : V →ₗ[ℝ] V)
+    (hJ2 : J.comp J = LinearMap.id)
+    (half : ℝ)
+    (x : V) :
+    K_plus half J (K_minus half J x) = 0 := by
+  rw [K_plus_apply, J_K_minus J hJ2 half x]
+  have hcancel : K_minus half J x + -K_minus half J x = 0 := by
+    exact add_neg_cancel _
+  rw [hcancel, smul_zero]
+
+theorem K_minus_K_plus_zero
+    (J : V →ₗ[ℝ] V)
+    (hJ2 : J.comp J = LinearMap.id)
+    (half : ℝ)
+    (x : V) :
+    K_minus half J (K_plus half J x) = 0 := by
+  rw [K_minus_apply, J_K_plus J hJ2 half x]
+  have hcancel : K_plus half J x - K_plus half J x = 0 := by
+    exact sub_self _
+  rw [hcancel, smul_zero]
+
+theorem K_plus_add_K_minus_eq_id
+    (J : V →ₗ[ℝ] V)
+    (half : ℝ)
+    (hhalf : half + half = 1) :
+    K_plus half J + K_minus half J = LinearMap.id := by
+  apply LinearMap.ext
+  intro x
+  simpa using K_plus_add_K_minus J half hhalf x
+
+theorem K_plus_comp_K_minus_eq_zero
+    (J : V →ₗ[ℝ] V)
+    (hJ2 : J.comp J = LinearMap.id)
+    (half : ℝ) :
+    (K_plus half J).comp (K_minus half J) = 0 := by
+  apply LinearMap.ext
+  intro x
+  simpa using K_plus_K_minus_zero J hJ2 half x
+
+theorem K_minus_comp_K_plus_eq_zero
+    (J : V →ₗ[ℝ] V)
+    (hJ2 : J.comp J = LinearMap.id)
+    (half : ℝ) :
+    (K_minus half J).comp (K_plus half J) = 0 := by
+  apply LinearMap.ext
+  intro x
+  simpa using K_minus_K_plus_zero J hJ2 half x
+
 /-- Right negation exits a symmetric left-linear indefinite pairing. -/
 theorem indef_inner_neg_right
     (indefInner : V → V → ℝ)

@@ -67,53 +67,24 @@ def horizonS_of_topological_socket {n : ℕ}
     HorizonSMatrix n :=
   { closure := S.inv.closure, unitarity := h_unitarity }
 
-/--
-From a topological socket and external isometry premise, inherit the existing
-information-preservation conjunction.
+/-
+The two information-preservation readouts are exposed separately so downstream
+users do not have to unpack a conjunction wrapper.
 -/
-theorem information_preservation_from_topological_socket {n : ℕ}
+theorem topological_socket_unitarity {n : ℕ}
     (S : TopologicalSpinSocket n)
     (h_unitarity : S.inv.closure.moebiusParity.transpose * S.inv.closure.moebiusParity =
       S.inv.closure.I) :
-    (S.inv.closure.moebiusParity.transpose * S.inv.closure.moebiusParity =
-      S.inv.closure.I) ∧ (S.inv.closure.gromovWittenIndex = 0) := by
-  constructor
-  · exact h_unitarity
-  · exact spin_socket_gw_zero S
+    S.inv.closure.moebiusParity.transpose * S.inv.closure.moebiusParity =
+      S.inv.closure.I :=
+  h_unitarity
 
-/--
-Inject spin-topological anomaly data into the finite globality packet pipeline.
--/
-theorem anomaly_packet_from_topological_socket
-    {M State Info : Type*}
-    {n : ℕ}
+theorem topological_socket_gw_zero {n : ℕ}
     (S : TopologicalSpinSocket n)
-    (G : ConformalFiveGradeSystem M)
-    (A : GradeTwoInformationLedger State Info)
-    (step : ℝ)
-    (s : State)
-    (k : ℕ)
-    (chi_global_4 moebius_strip_4 : Matrix (Fin 4) (Fin 4) ℚ)
-    (witten_parity_factor : ℕ → ℤ)
-    (h_chi_global : Matrix.trace chi_global_4 = 0)
-    (h_moebius_chiral : Matrix.trace (moebius_strip_4 * chi_global_4) = 0)
-    (h_witten_parity :
-      witten_parity_factor 1 + witten_parity_factor 2 +
-      witten_parity_factor 3 + witten_parity_factor 4 = 0) :
-    S.inv.closure.gromovWittenIndex = 0 ∧
-    S.inv.closure.moebiusParity * S.inv.closure.moebiusParity = -S.inv.closure.I ∧
-    (∀ x, x ∈ G.sourceSet ↔ G.theta x ∈ G.sinkSet) ∧
-    (∀ x, x ∈ G.incomingSet ↔ G.theta x ∈ G.outgoingSet) ∧
-    (∀ x, x ∈ G.centerSet ↔ G.theta x ∈ G.centerSet) ∧
-    Matrix.trace chi_global_4 = 0 ∧
-    Matrix.trace (moebius_strip_4 * chi_global_4) = 0 ∧
-    witten_parity_factor 1 + witten_parity_factor 2 +
-      witten_parity_factor 3 + witten_parity_factor 4 = 0 ∧
-    (A.visible s - A.visible (stateAt A step s k) =
-      A.gradeTwo (stateAt A step s k) - A.gradeTwo s) := by
-  refine ⟨spin_socket_gw_zero S, spin_socket_ribbon_twist_eq_minus_id S, ?_⟩
-  exact five_graded_mobius_witten_globality_packet G A step s k
-    chi_global_4 moebius_strip_4 witten_parity_factor h_chi_global h_moebius_chiral h_witten_parity
+    (_h_unitarity : S.inv.closure.moebiusParity.transpose * S.inv.closure.moebiusParity =
+      S.inv.closure.I) :
+    S.inv.closure.gromovWittenIndex = 0 :=
+  spin_socket_gw_zero S
 
 /-- A ready-made concrete property from the finite `2×2` Möbius model. -/
 def concreteTopologicalSocket2 : TopologicalSpinSocket 2 :=

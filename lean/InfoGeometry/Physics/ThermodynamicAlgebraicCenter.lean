@@ -45,16 +45,4 @@ theorem center_is_global_commutant :
   · intro h x
     exact h x (Set.mem_univ x)
 
-theorem thermodynamic_center_synthesis (z1 z2 : A)
-    (hz1 : z1 ∈ ThermodynamicCenter A)
-    (hz2 : z2 ∈ ThermodynamicCenter A) :
-    ((1 : A) ∈ ThermodynamicCenter A) ∧
-    (z1 * z2 ∈ ThermodynamicCenter A) ∧
-    (∀ S : Set A, S ⊆ Commutant A (Commutant A S)) ∧
-    (ThermodynamicCenter A = Commutant A (Set.univ : Set A)) :=
-  ⟨center_contains_vacuum_background A,
-    center_closed_under_multiplication A z1 z2 hz1 hz2,
-    double_commutant_emergence A,
-    center_is_global_commutant A⟩
-
 end InfoGeometry.Physics

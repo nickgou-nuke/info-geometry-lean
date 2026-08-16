@@ -54,10 +54,7 @@ analytic VOA/Laurent construction beyond the supplied equations.
 -/
 def toArithmeticSplitMajoranaOPE
     {PrimeLabel Field Kernel : Type*} [Zero Kernel] [Neg Kernel]
-    (OPE : SplitMajoranaOPE PrimeLabel Field Kernel)
-    (hcc : IsCCOPE OPE)
-    (hdd : IsDDOPE OPE)
-    (hcd : IsCDRegular OPE) :
+    (OPE : SplitMajoranaOPE PrimeLabel Field Kernel) :
     InfoGeometry.Arithmetic.PrimeMajoranaOPE.SplitMajoranaOPE PrimeLabel Field Kernel where
   cField := OPE.c
   dField := OPE.d
@@ -70,8 +67,5 @@ def toArithmeticSplitMajoranaOPE
     OPE.singularPart (OPE.d p) (OPE.d q) = OPE.negDeltaPole p q
   cd_regular := fun p q =>
     OPE.singularPart (OPE.c p) (OPE.d q) = OPE.regularPart
-  cc_proof := hcc
-  dd_proof := hdd
-  cd_proof := hcd
 
 end InfoGeometry.Quantum.PrimeMajoranaOPE

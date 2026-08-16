@@ -50,7 +50,7 @@ theorem carCompatiblePointTopCatFamily_natural
   have h := carParameterPointTopCatHom_transition_natural sys hij
     (family.c i) (family.cstar i) (family.relation i)
   simpa [carCompatiblePointTopCatFamily,
-    family.compatible_c hij, family.compatible_cstar hij] using h
+    family.map_c hij, family.map_cstar hij] using h
 
 noncomputable def carCompatiblePointLimitMap
     (family : CompatibleCARPointFamily sys) :
@@ -111,7 +111,7 @@ theorem ccrCompatiblePointTopCatFamily_natural
   have h := ccrParameterPointTopCatHom_transition_natural sys hij
     (family.c i) (family.cstar i) (family.relation i)
   simpa [ccrCompatiblePointTopCatFamily,
-    family.compatible_c hij, family.compatible_cstar hij] using h
+    family.map_c hij, family.map_cstar hij] using h
 
 noncomputable def ccrCompatiblePointLimitMap
     (family : CompatibleCCRPointFamily sys) :

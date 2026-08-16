@@ -25,22 +25,12 @@ DEFAULT_JSON_OUT = Path("reports/dag/certificate-authority-layers.json")
 DEFAULT_MD_OUT = Path("reports/dag/certificate-authority-layers.md")
 
 
-def utc_now_iso() -> str:
-    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+# [lossless-compact] utc_now_iso folded into igf.common.time_utils.utc_now_iso
+from igf.common.time_utils import utc_now_iso
 
 
-def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
-    if not path.exists():
-        return
-    with path.open("r", encoding="utf-8") as handle:
-        for line_no, raw in enumerate(handle, start=1):
-            line = raw.strip()
-            if not line:
-                continue
-            row = json.loads(line)
-            if not isinstance(row, dict):
-                raise ValueError(f"{path}:{line_no}: expected JSON object")
-            yield row
+# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
+from igf.common.json_io import iter_jsonl
 
 
 def pair_key_from_edge(row: dict[str, Any]) -> tuple[str, str]:

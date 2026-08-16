@@ -99,50 +99,6 @@ theorem flow_add_apply
 
 end KMSReadoutDatum
 
-/--
-Backward-compatible alias.
-
-Prefer `KMSReadoutDatum` in new code. This alias exists so older modules that
-refer to `KMSStateDatum` do not need to be migrated immediately.
--/
-abbrev KMSStateDatum
-    (Obs : Type*) [AddCommGroup Obs] [Module ℝ Obs] :=
-  KMSReadoutDatum Obs
-
-namespace KMSStateDatum
-
-variable
-    {Obs : Type*} [AddCommGroup Obs] [Module ℝ Obs]
-
-variable (K : KMSStateDatum Obs)
-
-/-- Compatibility alias for `KMSReadoutDatum.invariant`. -/
-theorem invariant
-    (t : ℝ)
-    (x : Obs) :
-    K.state (K.flow t x) = K.state x :=
-  KMSReadoutDatum.invariant K t x
-
-/-- Compatibility alias for `KMSReadoutDatum.beta_ne_zero`. -/
-theorem beta_ne_zero :
-    K.beta ≠ 0 :=
-  KMSReadoutDatum.beta_ne_zero K
-
-/-- Compatibility alias for `KMSReadoutDatum.flow_zero_apply`. -/
-theorem flow_zero_apply
-    (x : Obs) :
-    K.flow 0 x = x :=
-  KMSReadoutDatum.flow_zero_apply K x
-
-/-- Compatibility alias for `KMSReadoutDatum.flow_add_apply`. -/
-theorem flow_add_apply
-    (s t : ℝ)
-    (x : Obs) :
-    K.flow (s + t) x = K.flow s (K.flow t x) :=
-  KMSReadoutDatum.flow_add_apply K s t x
-
-end KMSStateDatum
-
 /-! ## 2. Horizon temperature normalization -/
 
 /--
@@ -727,29 +683,6 @@ structure GradeTwoMemoryRecoveryData
     ∀ x y : J,
       exteriorData (A.observedDefect x y) =
         B.memoryReadout (A.hiddenTotal x y)
-
-namespace GradeTwoMemoryRecoveryData
-
-variable
-    {J L Obs Memory : Type*}
-    [AddCommGroup J] [Module ℝ J]
-    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
-    [AddCommGroup Obs] [Module ℝ Obs]
-    [AddCommGroup Memory] [Module ℝ Memory]
-    {G : FiveGrading L}
-    {A : FiveGradeProjectedAccounting J L Obs G}
-    {B : BlackHoleInformationLedger J L Obs Memory A}
-
-variable (R : GradeTwoMemoryRecoveryData J L Obs Memory B)
-
-/-- Hidden memory is recoverable from exterior observed-defect data. -/
-theorem recover_hidden_memory
-    (x y : J) :
-    R.exteriorData (A.observedDefect x y) =
-      B.memoryReadout (A.hiddenTotal x y) :=
-  R.recover_hidden_memory_law x y
-
-end GradeTwoMemoryRecoveryData
 
 /-! ## 8. Thermodynamic Tomita/KMS bridge -/
 

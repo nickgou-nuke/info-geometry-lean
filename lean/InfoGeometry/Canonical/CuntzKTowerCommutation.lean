@@ -62,14 +62,17 @@ abbrev TowerLimit : Type :=
 [Exact theorem statements that remain unproved. No wrappers, sockets, fields, witnesses,
 certificates, or renamed placeholders.]
 
-* Construct the concrete analytic `S_left` on the intended `ℓ²` Cantor-boundary
-  completion.
-* Construct the concrete finite-stage phase-axis representatives `Kstage n`.
-* Prove the concrete compatibility laws
-  `stageEmbed n (S_left n) = S_left (n + 1)` and
-  `stageEmbed n (Kstage n) = Kstage (n + 1)`.
-* Prove the finite-stage commutation law
-  `S_left n * Kstage n = Kstage n * S_left n`.
+* Identify the analytic `S_left` on the intended `ℓ²` Cantor-boundary completion
+  with a representation of the tensor-tower limit.  A finite-stage Cuntz family
+  cannot supply this identification: the trace obstruction is proved in
+  `CuntzFiniteStageObstruction.no_binary_cuntz_family_at_finite_stage`.
+* Prove a genuine representation/intertwiner from the Hilbert-space branch
+  operator to the direct-limit carrier.
+
+The phase-axis representatives are no longer open: `stageKFromOne` gives a
+concrete compatible sequence from `Stage 1`, with its square and colimit
+commutation laws proved above.  What remains is precisely the analytic-to-limit
+representation theorem and not another abstract compatible-family wrapper.
 -/
 
 /-- The direct-limit element represented by stage zero of a compatible sequence. -/
@@ -259,10 +262,48 @@ theorem stageKFromOne_sq (k : ℕ) :
       simpa only [map_neg, map_one]
 
 @[rep_depth operator]
+theorem stageKFromOne_mul_neg_eq_one (k : ℕ) :
+    stageKFromOne k * (-stageKFromOne k) =
+      (1 : TowerStage (k + 1)) := by
+  calc
+    stageKFromOne k * (-stageKFromOne k) =
+        -(stageKFromOne k * stageKFromOne k) := by rw [mul_neg]
+    _ = -(-(1 : TowerStage (k + 1))) := by rw [stageKFromOne_sq]
+    _ = 1 := by simp
+
+@[rep_depth operator]
+theorem neg_stageKFromOne_mul_eq_one (k : ℕ) :
+    (-stageKFromOne k) * stageKFromOne k =
+      (1 : TowerStage (k + 1)) := by
+  calc
+    (-stageKFromOne k) * stageKFromOne k =
+        -(stageKFromOne k * stageKFromOne k) := by rw [neg_mul]
+    _ = -(-(1 : TowerStage (k + 1))) := by rw [stageKFromOne_sq]
+    _ = 1 := by simp
+
+@[rep_depth operator]
 theorem limitKFromOne_sq :
     limitKFromOne * limitKFromOne = -(1 : TowerLimit) := by
   rw [← limitKFromOne_wellDefined 0]
   rw [← ofStage_mul, stageKFromOne_sq, ofStage_neg, ofStage_one]
+
+@[rep_depth operator]
+theorem limitKFromOne_mul_neg_eq_one :
+    limitKFromOne * (-limitKFromOne) = (1 : TowerLimit) := by
+  calc
+    limitKFromOne * (-limitKFromOne) =
+        -(limitKFromOne * limitKFromOne) := by rw [mul_neg]
+    _ = -(-(1 : TowerLimit)) := by rw [limitKFromOne_sq]
+    _ = 1 := by simp
+
+@[rep_depth operator]
+theorem neg_limitKFromOne_mul_eq_one :
+    (-limitKFromOne) * limitKFromOne = (1 : TowerLimit) := by
+  calc
+    (-limitKFromOne) * limitKFromOne =
+        -(limitKFromOne * limitKFromOne) := by rw [neg_mul]
+    _ = -(-(1 : TowerLimit)) := by rw [limitKFromOne_sq]
+    _ = 1 := by simp
 
 /--
 Compatible offset finite-stage representatives that commute at every stage have

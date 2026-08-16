@@ -36,6 +36,37 @@ open InfoGeometry.Arithmetic.ZetaCoordinateSymmetry.ZetaAffineChart.ZetaCentered
 
 /-! ## Finite zeta symmetry frame on centered coordinates -/
 
+theorem chartSymmetryCompose_assoc (g h k : ChartSymmetry) :
+    chartSymmetryCompose (chartSymmetryCompose g h) k =
+      chartSymmetryCompose g (chartSymmetryCompose h k) := by
+  cases g <;> cases h <;> cases k <;> rfl
+
+@[simp] theorem chartSymmetry_identity_compose (g : ChartSymmetry) :
+    chartSymmetryCompose ChartSymmetry.identity g = g := by
+  rfl
+
+@[simp] theorem chartSymmetry_compose_identity (g : ChartSymmetry) :
+    chartSymmetryCompose g ChartSymmetry.identity = g := by
+  cases g <;> rfl
+
+instance chartSymmetryCommGroup : CommGroup ChartSymmetry where
+  one := ChartSymmetry.identity
+  mul := chartSymmetryCompose
+  inv := id
+  one_mul := chartSymmetry_identity_compose
+  mul_one := chartSymmetry_compose_identity
+  mul_assoc := chartSymmetryCompose_assoc
+  inv_mul_cancel := chartSymmetryCompose_self
+  mul_comm := chartSymmetryCompose_commute
+
+@[simp] theorem chartSymmetry_mul_self (g : ChartSymmetry) :
+    g * g = 1 := by
+  exact chartSymmetryCompose_self g
+
+theorem chartSymmetry_mul_comm (g h : ChartSymmetry) :
+    g * h = h * g := by
+  exact chartSymmetryCompose_commute g h
+
 /-- Action of the exact finite zeta chart symmetry frame on centered coordinates. -/
 def centeredChartSymmetryAct :
     ChartSymmetry → ZetaCenteredChart → ZetaCenteredChart
@@ -65,6 +96,29 @@ theorem zetaHeightSign_compose (g h : ChartSymmetry) :
     zetaHeightSign (chartSymmetryCompose g h) =
       zetaHeightSign g * zetaHeightSign h := by
   cases g <;> cases h <;> norm_num [zetaHeightSign, chartSymmetryCompose]
+
+/-- The height sign as a unit-valued character of the finite frame. -/
+def zetaHeightSignUnit (g : ChartSymmetry) : ℝˣ :=
+  Units.mk0 (zetaHeightSign g) (by
+    cases g <;> norm_num [zetaHeightSign])
+
+@[simp] theorem coe_zetaHeightSignUnit (g : ChartSymmetry) :
+    (zetaHeightSignUnit g : ℝ) = zetaHeightSign g := by
+  rfl
+
+def zetaHeightSignHom : ChartSymmetry →* ℝˣ where
+  toFun := zetaHeightSignUnit
+  map_one' := by
+    change zetaHeightSignUnit ChartSymmetry.identity = 1
+    ext
+    simp [zetaHeightSignUnit, zetaHeightSign]
+  map_mul' := by
+    intro g h
+    change zetaHeightSignUnit (chartSymmetryCompose g h) =
+      zetaHeightSignUnit g * zetaHeightSignUnit h
+    cases g <;> cases h <;>
+      ext <;> norm_num [zetaHeightSignUnit, zetaHeightSign,
+        chartSymmetryCompose]
 
 /-- The centered finite action composes according to the existing Klein table. -/
 theorem centeredChartSymmetryAct_compose
@@ -192,6 +246,16 @@ theorem compose_assoc
   · cases g <;> simp [compose, inverse, identity, zetaHeightSign,
       chartSymmetryCompose]
 
+/-- Native group packaging of the finite-by-real semidirect chart symmetry. -/
+instance : Group ZetaSouriauLieSymmetry where
+  one := identity
+  mul := compose
+  inv := inverse
+  one_mul := identity_compose
+  mul_one := compose_identity
+  mul_assoc := compose_assoc
+  inv_mul_cancel := inverse_compose
+
 /-- The semidirect composition law agrees with composition of the chart action. -/
 theorem act_compose
     (A B : ZetaSouriauLieSymmetry) (x : ZetaCenteredChart) :
@@ -207,9 +271,25 @@ theorem act_compose
     ring
 
 @[simp] theorem act_identity (x : ZetaCenteredChart) :
-    act identity x = x := by
+  act identity x = x := by
   cases x
   simp [act, identity, centeredChartSymmetryAct, heightTranslation]
+
+/-- Native `MulAction` packaging of the semidirect chart action. -/
+instance : SMul ZetaSouriauLieSymmetry ZetaCenteredChart :=
+  ⟨act⟩
+
+instance : MulAction ZetaSouriauLieSymmetry ZetaCenteredChart where
+  one_smul := act_identity
+  mul_smul := by
+    intro A B x
+    exact act_compose A B x
+
+@[simp] theorem smul_compose
+    (A B : ZetaSouriauLieSymmetry) (x : ZetaCenteredChart) :
+    (A * B) • x = A • (B • x) := by
+  change act (compose A B) x = act A (act B x)
+  exact act_compose A B x
 
 /-- The full finite-by-real chart action preserves flat displacement. -/
 theorem act_preserves_flatDisplacement
@@ -221,6 +301,12 @@ theorem act_preserves_flatDisplacement
     simp [act, centeredChartSymmetryAct, heightTranslation, flatDisplacement,
       conjugation, functionalDual, criticalMirror] <;>
     ring
+
+theorem smul_preserves_flatDisplacement
+    (A : ZetaSouriauLieSymmetry) (x y : ZetaCenteredChart) :
+    flatDisplacement (A • x) (A • y) = flatDisplacement x y := by
+  change flatDisplacement (act A x) (act A y) = flatDisplacement x y
+  exact act_preserves_flatDisplacement A x y
 
 /--
 Thermodynamic 1-cocycle of a chart potential.
@@ -297,6 +383,25 @@ def zetaSouriauLinearPartition
     (moment : State → ZetaCenteredChart)
     (beta : ZetaCenteredChart) : ℝ :=
   ∑ x : State, Real.exp (-(zetaSouriauPairing beta (moment x)))
+
+theorem zetaSouriauLinearPartition_pos
+    {State : Type*} [Fintype State] [Nonempty State]
+    (moment : State → ZetaCenteredChart)
+    (beta : ZetaCenteredChart) :
+    0 < zetaSouriauLinearPartition moment beta := by
+  unfold zetaSouriauLinearPartition
+  apply Finset.sum_pos'
+  · intro i hi
+    exact le_of_lt (Real.exp_pos _)
+  · let i₀ : State := Classical.choice (inferInstance : Nonempty State)
+    exact ⟨i₀, Finset.mem_univ _, Real.exp_pos _⟩
+
+theorem zetaSouriauLinearPartition_ne_zero
+    {State : Type*} [Fintype State] [Nonempty State]
+    (moment : State → ZetaCenteredChart)
+    (beta : ZetaCenteredChart) :
+    zetaSouriauLinearPartition moment beta ≠ 0 :=
+  ne_of_gt (zetaSouriauLinearPartition_pos moment beta)
 
 /-- Linear Massieu potential `Φ = log Z` for the finite zeta Souriau partition. -/
 def zetaSouriauLinearMassieu
@@ -379,6 +484,25 @@ def zetaSouriauDisplacementPartition
     (beta : ZetaCenteredChart) : ℝ :=
   ∑ x : State, Real.exp (-(zetaSouriauDisplacementEnergy beta (moment x)))
 
+theorem zetaSouriauDisplacementPartition_pos
+    {State : Type*} [Fintype State] [Nonempty State]
+    (moment : State → ZetaCenteredChart)
+    (beta : ZetaCenteredChart) :
+    0 < zetaSouriauDisplacementPartition moment beta := by
+  unfold zetaSouriauDisplacementPartition
+  apply Finset.sum_pos'
+  · intro i hi
+    exact le_of_lt (Real.exp_pos _)
+  · let i₀ : State := Classical.choice (inferInstance : Nonempty State)
+    exact ⟨i₀, Finset.mem_univ _, Real.exp_pos _⟩
+
+theorem zetaSouriauDisplacementPartition_ne_zero
+    {State : Type*} [Fintype State] [Nonempty State]
+    (moment : State → ZetaCenteredChart)
+    (beta : ZetaCenteredChart) :
+    zetaSouriauDisplacementPartition moment beta ≠ 0 :=
+  ne_of_gt (zetaSouriauDisplacementPartition_pos moment beta)
+
 /-- Displacement Massieu potential `Φ = log Z`. -/
 def zetaSouriauDisplacementMassieu
     {State : Type*} [Fintype State]
@@ -412,6 +536,43 @@ theorem zetaSouriauDisplacementMassieu_invariant
       zetaSouriauDisplacementMassieu moment beta := by
   unfold zetaSouriauDisplacementMassieu
   rw [zetaSouriauDisplacementPartition_invariant]
+
+/-- A finite displacement-Massieu contour at level `r` in the centered chart. -/
+def zetaSouriauDisplacementMassieuLevelSet
+    {State : Type*} [Fintype State]
+    (moment : State → ZetaCenteredChart) (r : ℝ) : Set ZetaCenteredChart :=
+  {beta | zetaSouriauDisplacementMassieu moment beta = r}
+
+/-- Simultaneous chart symmetries transport finite displacement-Massieu contours. -/
+theorem zetaSouriauDisplacementMassieuLevelSet_mem_iff
+    {State : Type*} [Fintype State]
+    (A : ZetaSouriauLieSymmetry)
+    (moment : State → ZetaCenteredChart)
+    (r : ℝ) (beta : ZetaCenteredChart) :
+    A.act beta ∈
+        zetaSouriauDisplacementMassieuLevelSet
+          (fun x => A.act (moment x)) r ↔
+      beta ∈ zetaSouriauDisplacementMassieuLevelSet moment r := by
+  change zetaSouriauDisplacementMassieu
+      (fun x => A.act (moment x)) (A.act beta) = r ↔
+    zetaSouriauDisplacementMassieu moment beta = r
+  rw [zetaSouriauDisplacementMassieu_invariant]
+
+/-- A finite displacement-energy contour at level `r` in the centered chart. -/
+def zetaSouriauDisplacementEnergyLevelSet
+    (moment : ZetaCenteredChart) (r : ℝ) : Set ZetaCenteredChart :=
+  {beta | zetaSouriauDisplacementEnergy beta moment = r}
+
+/-- The full `ℝ ⋊ V₄` chart action transports displacement-energy contours. -/
+theorem zetaSouriauDisplacementEnergyLevelSet_mem_iff
+    (A : ZetaSouriauLieSymmetry)
+    (moment : ZetaCenteredChart)
+    (r : ℝ) (beta : ZetaCenteredChart) :
+    A.act beta ∈ zetaSouriauDisplacementEnergyLevelSet (A.act moment) r ↔
+      beta ∈ zetaSouriauDisplacementEnergyLevelSet moment r := by
+  change zetaSouriauDisplacementEnergy (A.act beta) (A.act moment) = r ↔
+    zetaSouriauDisplacementEnergy beta moment = r
+  rw [zetaSouriauDisplacementEnergy_invariant]
 
 /--
 Massieu cocycle for the displacement Souriau partition under simultaneous

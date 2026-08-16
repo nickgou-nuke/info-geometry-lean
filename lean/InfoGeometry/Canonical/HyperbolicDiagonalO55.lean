@@ -100,7 +100,7 @@ def hyperbolicSubmodule : Submodule ℝ HMatrix where
     rw [Matrix.transpose_smul, Matrix.smul_mul, Matrix.mul_smul,
       ← smul_add, hA, smul_zero]
 
-abbrev HyperbolicOrthogonal := hyperbolicSubmodule
+def HyperbolicOrthogonal := hyperbolicSubmodule
 
 def hyperbolicToDiagonal (A : HMatrix) : HMatrix :=
   endpointChangeInv * A * endpointChange
@@ -137,7 +137,7 @@ def hyperbolicLieSubalgebra : LieSubalgebra ℝ HMatrix :=
       intro A B hA hB
       exact hyperbolicPredicate_commutator hA hB }
 
-abbrev HyperbolicOrthogonalLie := hyperbolicLieSubalgebra
+def HyperbolicOrthogonalLie := hyperbolicLieSubalgebra
 
 def diagonalToHyperbolicInv (A : HMatrix) : HMatrix :=
   endpointChange * A * endpointChangeInv
@@ -291,7 +291,13 @@ noncomputable def hyperbolicDiagonalLinearEquiv :
 theorem hyperbolicDiagonalLinearEquiv_apply (A : HyperbolicOrthogonalLie) :
     hyperbolicDiagonalLinearEquiv A =
       ⟨hyperbolicToDiagonal A.1,
-        hyperbolicToDiagonal_preserves_constraint A.2⟩ := rfl
+        hyperbolicToDiagonal_preserves_constraint A.2⟩ :=
+  -- This is the structure equation unfolding to the defining maps of the
+  -- transport equivalence.
+  by
+    cases A with
+    | mk A h =>
+      rfl
 
 theorem hyperbolicToDiagonal_bracket (A B : HyperbolicOrthogonalLie) :
     hyperbolicToDiagonalMap ⁅A, B⁆ =

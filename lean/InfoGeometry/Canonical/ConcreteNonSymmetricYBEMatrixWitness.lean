@@ -37,31 +37,26 @@ theorem monodromy_ne_id : R12 * R12 ≠ (1 : Matrix (Fin 8) (Fin 8) ℂ) := by
 noncomputable def R12Inv : Matrix (Fin 8) (Fin 8) ℂ := (1 / 4 : ℂ) • R12
 
 theorem R12_left_inverse : R12Inv * R12 = (1 : Matrix (Fin 8) (Fin 8) ℂ) := by
-  calc
-    R12Inv * R12 = (1 / 4 : ℂ) • (R12 * R12) := by
-      rw [R12Inv, Matrix.smul_mul]
-    _ = (1 : Matrix (Fin 8) (Fin 8) ℂ) := by
-      rw [R12_sq]
-      norm_num
+  dsimp [R12Inv]
+  rw [Matrix.smul_mul, R12_sq, smul_smul]
+  have : (1 / 4 : ℂ) * 4 = 1 := by norm_num
+  rw [this, one_smul]
 
 theorem R12_right_inverse : R12 * R12Inv = (1 : Matrix (Fin 8) (Fin 8) ℂ) := by
-  calc
-    R12 * R12Inv = (1 / 4 : ℂ) • (R12 * R12) := by
-      rw [R12Inv, Matrix.mul_smul]
-    _ = (1 : Matrix (Fin 8) (Fin 8) ℂ) := by
-      rw [R12_sq]
-      norm_num
+  dsimp [R12Inv]
+  rw [Matrix.mul_smul, R12_sq, smul_smul]
+  have : (1 / 4 : ℂ) * 4 = 1 := by norm_num
+  rw [this, one_smul]
 
-theorem R12_invertible : Function.Bijective (R12 * ·) := by
+theorem R12_invertible : Function.Bijective (fun X => R12 * X) := by
   constructor
-  · intro X Y h
-    have h' := congrArg (fun Z => R12Inv * Z) h
-    rw [← Matrix.mul_assoc, R12_left_inverse] at h'
-    simpa using h'
+  · intro X Y (h : R12 * X = R12 * Y)
+    have h' : R12Inv * (R12 * X) = R12Inv * (R12 * Y) := by rw [h]
+    rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, R12_left_inverse, Matrix.one_mul, Matrix.one_mul] at h'
+    exact h'
   · intro Y
     refine ⟨R12Inv * Y, ?_⟩
-    change R12 * (R12Inv * Y) = Y
-    rw [Matrix.mul_assoc, R12_right_inverse]
-    simp
+    dsimp
+    rw [← Matrix.mul_assoc, R12_right_inverse, Matrix.one_mul]
 
 end InfoGeometry.Canonical.ConcreteNonSymmetricYBEMatrixWitness

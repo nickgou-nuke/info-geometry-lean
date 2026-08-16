@@ -18,29 +18,17 @@ Not claimed:
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
 import sympy as sp
 from clifford import Cl
 from galgebra.ga import Ga
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def assert_zero(expr: sp.Expr, label: str) -> None:
-    reduced = sp.expand(sp.simplify(expr))
-    if reduced != 0:
-        raise AssertionError(f"{label} failed: {reduced}")
-
-
-def assert_matrix_zero(mat: sp.Matrix, label: str) -> None:
-    reduced = mat.applyfunc(lambda x: sp.expand(sp.simplify(x)))
-    if reduced != sp.zeros(*reduced.shape):
-        raise AssertionError(f"{label} failed:\n{reduced}")
-
-
-def pauli_matrices() -> tuple[sp.Matrix, sp.Matrix, sp.Matrix, sp.Matrix]:
-    I2 = sp.eye(2)
-    sigma1 = sp.Matrix([[0, 1], [1, 0]])
-    sigma2 = sp.Matrix([[0, -sp.I], [sp.I, 0]])
-    sigma3 = sp.Matrix([[1, 0], [0, -1]])
-    return I2, sigma1, sigma2, sigma3
+from tools.sympy.common import assert_matrix_zero, assert_zero, pauli_matrices
 
 
 def hermitian_spacetime(t: sp.Expr, x: sp.Expr, y: sp.Expr, z: sp.Expr) -> sp.Matrix:

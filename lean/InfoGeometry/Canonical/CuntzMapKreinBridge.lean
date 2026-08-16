@@ -315,7 +315,7 @@ end RealDoubledKreinCuntzRepresentation
 theorem graph_J_eq_modular_j
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {α : Type*} [BEq α] [Hashable α]
-    (G : DAG.RealDoubledKreinGraphHodgePacket E α) :
+    (G : DAG.RealDoubledKreinGraphHodgeData E α) :
     G.J = modular_j (E := E) :=
   G.J_eq
 
@@ -323,7 +323,7 @@ theorem graph_J_eq_modular_j
 theorem graph_epsilon_eq_spectral_epsilon
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {α : Type*} [BEq α] [Hashable α]
-    (G : DAG.RealDoubledKreinGraphHodgePacket E α) :
+    (G : DAG.RealDoubledKreinGraphHodgeData E α) :
     G.ε = spectral_epsilon (E := E) :=
   G.epsilon_eq
 
@@ -331,7 +331,7 @@ theorem graph_epsilon_eq_spectral_epsilon
 theorem graph_clock_eq_clockAxis
     {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     {α : Type*} [BEq α] [Hashable α]
-    (G : DAG.RealDoubledKreinGraphHodgePacket E α) :
+    (G : DAG.RealDoubledKreinGraphHodgeData E α) :
     G.K = clockAxis (E := E) :=
   G.K_eq
 

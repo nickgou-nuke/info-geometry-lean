@@ -12,20 +12,21 @@ Checks:
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
 import sympy as sp
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from tools.sympy.common import assert_matrix_zero, comm
+
+assert_zero_matrix = assert_matrix_zero
 
 
 def zmat(n: int) -> sp.Matrix:
     return sp.zeros(n)
-
-
-def comm(a: sp.Matrix, b: sp.Matrix) -> sp.Matrix:
-    return sp.simplify(a * b - b * a)
-
-
-def assert_zero_matrix(m: sp.Matrix, label: str) -> None:
-    if any(sp.simplify(entry) != 0 for entry in m):
-        raise AssertionError(f"{label} failed:\n{m}")
 
 
 def se2_group(c: sp.Expr, s: sp.Expr, tx: sp.Expr, ty: sp.Expr) -> sp.Matrix:

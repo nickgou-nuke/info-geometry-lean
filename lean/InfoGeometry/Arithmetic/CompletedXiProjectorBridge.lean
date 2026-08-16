@@ -103,41 +103,41 @@ A theorem-safe completed-ξ projector packet.
 `packet` is the existing completed-zeta Massieu shell; `anchor` is the native
 fixed-locus subtype above.
 -/
-structure CompletedXiProjectorPacket where
+structure CompletedXiProjectorData where
   packet : CompletedZetaMassieuPacket
   anchor : CompletedXiAnchor
 
-namespace CompletedXiProjectorPacket
+namespace CompletedXiProjectorData
 
-def anchorValue (P : CompletedXiProjectorPacket) : ℂ :=
+def anchorValue (P : CompletedXiProjectorData) : ℂ :=
   P.anchor.1
 
-theorem xi_anchor_fixed (P : CompletedXiProjectorPacket) :
+theorem xi_anchor_fixed (P : CompletedXiProjectorData) :
     CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection
         P.anchorValue = P.anchorValue :=
   P.anchor.2
 
-end CompletedXiProjectorPacket
+end CompletedXiProjectorData
 
 /-- The supplied anchor lies on the complex critical line. -/
-theorem xi_anchor_on_criticalLine (P : CompletedXiProjectorPacket) :
+theorem xi_anchor_on_criticalLine (P : CompletedXiProjectorData) :
     CompletedZetaSouriauDInfinityThermodynamics.CriticalLine P.anchorValue := by
   exact
     (CompletedZetaSouriauDInfinityThermodynamics.fixed_antiunitaryCriticalReflection_iff_criticalLine
       P.anchorValue).mp P.xi_anchor_fixed
 
 /-- The supplied anchor is fixed by the centered critical mirror. -/
-theorem xi_anchor_centered_fixed (P : CompletedXiProjectorPacket) :
+theorem xi_anchor_centered_fixed (P : CompletedXiProjectorData) :
     criticalMirror (centeredOfComplex P.anchorValue) = centeredOfComplex P.anchorValue :=
   centered_fixed_of_complex_fixed P.xi_anchor_fixed
 
 /-- The supplied anchor lies entirely in the `J`-even/tangent sector. -/
-theorem xi_anchor_tangent_projector_eq_self (P : CompletedXiProjectorPacket) :
+theorem xi_anchor_tangent_projector_eq_self (P : CompletedXiProjectorData) :
     criticalTangentProjector (centeredOfComplex P.anchorValue) = centeredOfComplex P.anchorValue :=
   criticalTangentProjector_eq_self_of_complex_fixed P.xi_anchor_fixed
 
 /-- The supplied anchor has zero `J`-odd/normal component. -/
-theorem xi_anchor_normal_projector_eq_zero (P : CompletedXiProjectorPacket) :
+theorem xi_anchor_normal_projector_eq_zero (P : CompletedXiProjectorData) :
     criticalNormalProjector (centeredOfComplex P.anchorValue) = zero :=
   criticalNormalProjector_eq_zero_of_complex_fixed P.xi_anchor_fixed
 

@@ -5,7 +5,13 @@ import Mathlib.Analysis.Calculus.Deriv.Basic
 # Grand Canonical Response Matrix
 
 Two-parameter thermodynamic Hessian / susceptibility surface for the finite
-grand-canonical model.
+grand-canonical model. The entries and mixed-partial identities below are
+genuine finite calculus theorems. Positive semidefiniteness of the displayed
+`(β, μ)` Hessian is deliberately not asserted unconditionally: the parameter
+map contains the product `β * μ`, so convexity in natural exponential-family
+coordinates does not automatically imply determinant nonnegativity in these
+coordinates. The determinant condition is therefore an explicit hypothesis
+in the PSD interface.
 -/
 
 namespace InfoGeometry.GrandCanonical
@@ -389,6 +395,9 @@ lemma responseMatrix_positiveSemidefinite
     (hdet : 0 ≤ (responseMatrix params β μ).det) :
     (responseMatrix params β μ).PositiveSemidefinite :=
   ⟨hββ, hμμ, hdet⟩
+
+/- The determinant premise is substantive: it is not derivable from the two
+diagonal variance bounds alone in the non-natural `(β, μ)` coordinates. -/
 
 /--
 Concrete PSD interface for the grand-canonical response matrix.

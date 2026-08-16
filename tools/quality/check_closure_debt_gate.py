@@ -11,8 +11,10 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
     from tools.pathing import normalize_user_path, repo_root
+    from tools.quality.common import load_json
 else:
     from tools.pathing import normalize_user_path, repo_root
+    from tools.quality.common import load_json
 
 
 ROOT = repo_root()
@@ -32,16 +34,6 @@ def parse_args() -> argparse.Namespace:
         help="Path to closure debt gate policy JSON.",
     )
     return parser.parse_args()
-
-
-def load_json(path: Path) -> dict[str, Any]:
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except Exception as ex:
-        raise SystemExit(f"[closure-gate] failed reading {path}: {ex}") from ex
-    if not isinstance(payload, dict):
-        raise SystemExit(f"[closure-gate] expected object JSON at {path}")
-    return payload
 
 
 def tokenize_count(text: str, token: str) -> int:

@@ -14,19 +14,20 @@ Out of scope:
 - infinite-dimensional von Neumann standard-form analysis.
 """
 
-from __future__ import annotations
-
+import sys
+from pathlib import Path
 import sympy as sp
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from tools.sympy.common import assert_matrix_eq
 
 
 def assert_eq(lhs, rhs, label: str) -> None:
     if sp.simplify(lhs - rhs) != 0:
         raise AssertionError(f"{label} failed: {sp.simplify(lhs - rhs)}")
-
-
-def assert_matrix_eq(lhs: sp.Matrix, rhs: sp.Matrix, label: str) -> None:
-    if sp.simplify(lhs - rhs) != sp.zeros(*lhs.shape):
-        raise AssertionError(f"{label} failed:\n{sp.simplify(lhs - rhs)}")
 
 
 def verify_centered_coordinate() -> None:

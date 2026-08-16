@@ -157,18 +157,8 @@ def read_json(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def read_jsonl(path: Path) -> list[dict[str, Any]]:
-    if not path.exists():
-        return []
-    rows: list[dict[str, Any]] = []
-    for line in path.read_text(encoding="utf-8").splitlines():
-        s = line.strip()
-        if not s:
-            continue
-        obj = json.loads(s)
-        if isinstance(obj, dict):
-            rows.append(obj)
-    return rows
+# [lossless-compact] read_jsonl folded into igf.common.json_io.read_jsonl
+from igf.common.json_io import read_jsonl
 
 
 def git_show_text(commit: str, rel_path: str) -> str | None:

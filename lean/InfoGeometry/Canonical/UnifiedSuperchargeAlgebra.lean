@@ -216,47 +216,41 @@ def isParabolic
     (v : V) : Prop :=
   v * v = 0
 
-/--
-Chiral null-cone carrier with a star involution and square-zero/parabolic
-equivalence surface.
+/-
+`isParabolic` is intentionally the square-zero predicate itself.  The former
+`ChiralCone` class stored this definitional equivalence as a field, which made
+the API accept a tautological proof witness rather than adding structure.
+Expose the equivalence directly so callers provide only the algebraic
+operations they actually use.
 -/
 @[rep_depth thermo]
-class ChiralCone (V : Type*) extends AddCommGroup V, Mul V, Zero V where
-  starInvolution : V → V
-  nilpotent_core : ∀ v : V, (v * v = 0) ↔ isParabolic v
+theorem isParabolic_iff_square_zero
+    {V : Type*} [Mul V] [Zero V] (v : V) :
+    isParabolic v ↔ v * v = 0 := Iff.rfl
 
-/--
-In any `ChiralCone`, square-zero implies parabolic by definition.
--/
 @[rep_depth thermo]
-theorem chiralCone_nilpotent_isParabolic
-    {V : Type*} [ChiralCone V] {v : V}
+theorem square_zero_isParabolic
+    {V : Type*} [Mul V] [Zero V] {v : V}
     (hv : v * v = 0) :
-    isParabolic v := by
-  exact (ChiralCone.nilpotent_core v).1 hv
+    isParabolic v := hv
 
-/--
-In any `ChiralCone`, parabolic implies square-zero by definition.
--/
 @[rep_depth thermo]
-theorem chiralCone_isParabolic_nilpotent
-    {V : Type*} [ChiralCone V] {v : V}
+theorem isParabolic_square_zero
+    {V : Type*} [Mul V] [Zero V] {v : V}
     (hv : isParabolic v) :
-    v * v = 0 := by
-  exact (ChiralCone.nilpotent_core v).2 hv
+    v * v = 0 := hv
 
 /--
 Two null-cone generators with square-zero hypotheses are parabolic.
 -/
 @[rep_depth thermo]
 theorem chiral_null_generators_parabolic
-    {V : Type*} [ChiralCone V]
+    {V : Type*} [Mul V] [Zero V]
     {ePlus eMinus : V}
     (hPlus : ePlus * ePlus = 0)
     (hMinus : eMinus * eMinus = 0) :
     isParabolic ePlus ∧ isParabolic eMinus := by
-  exact ⟨chiralCone_nilpotent_isParabolic hPlus,
-    chiralCone_nilpotent_isParabolic hMinus⟩
+  exact ⟨hPlus, hMinus⟩
 
 /--
 Three-way square class used in the Cayley--Klein local corridor.
@@ -3440,22 +3434,17 @@ theorem offdiag_hyperbolic_of_square_id
   simpa [bogoliubovMixingGenerator] using
     bogoliubov_generator_hyperbolic_of_square_id (𝕜 := 𝕜) (E := E) T h
 
-/--
-Minimal Drazin-index-1 surrogate on the off-diagonal lane:
-strict nilpotency (`T² = 0`).
+/-
+Square-zero predicate on the linear operator lane.  Square-zero alone is not
+a Drazin-index theorem, so this definition exposes only the property proved.
 -/
-def hasDrazinIndexOneSurrogate (T : E →ₗ[𝕜] E) : Prop :=
+def hasSquareZero (T : E →ₗ[𝕜] E) : Prop :=
   T.comp T = 0
 
-theorem hasDrazinIndexOneSurrogate_iff_parabolic
+theorem hasSquareZero_iff_parabolic
     (T : E →ₗ[𝕜] E) :
-    hasDrazinIndexOneSurrogate T ↔ hasLinearSquareClass T CKSignature.parabolic := by
+    hasSquareZero T ↔ hasLinearSquareClass T CKSignature.parabolic := by
   rfl
-
-theorem offdiag_hasDrazinIndexOneSurrogate_of_square_zero
-    (T : NambuGorkovLinearOp (𝕜 := 𝕜) (E := E))
-    (h : T.offdiag.comp T.offdiag = 0) :
-    hasDrazinIndexOneSurrogate T.offdiag := h
 
 theorem linear_square_hyperbolic_not_parabolic
     (T : E →ₗ[𝕜] E)
@@ -3873,16 +3862,16 @@ theorem exceptionalPoint_nambu_offdiag_parabolic
     hasEndoSquareClass (nambuBlockOffDiag b c) CKSignature.parabolic := by
   simpa using nambu_offdiag_has_parabolic_square (A := A) b c hbc hcb
 
-/--
-Drazin-index-1 surrogate on the linear operator lane:
-strict nilpotency is equivalent to parabolic class.
+/-
+The square-zero predicate is exactly the parabolic square class on the linear
+operator lane.  No Drazin index is inferred here.
 -/
 @[rep_depth thermo]
-theorem parabolic_drazinIndexOneSurrogate_iff
+theorem parabolic_square_zero_iff
     {𝕜 E : Type*} [Ring 𝕜] [AddCommGroup E] [Module 𝕜 E]
     (T : E →ₗ[𝕜] E) :
-    hasDrazinIndexOneSurrogate T ↔ hasLinearSquareClass T CKSignature.parabolic := by
-  simpa using hasDrazinIndexOneSurrogate_iff_parabolic (𝕜 := 𝕜) (E := E) T
+    hasSquareZero T ↔ hasLinearSquareClass T CKSignature.parabolic := by
+  simpa using hasSquareZero_iff_parabolic (𝕜 := 𝕜) (E := E) T
 
 end ParabolicSectorAPI
 

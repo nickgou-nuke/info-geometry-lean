@@ -12,13 +12,6 @@ open Matrix
 def CptInvolution (CPT : Matrix (Fin 2) (Fin 2) ℤ) : Prop :=
   CPT * CPT = 1
 
-namespace CptInvolution
-
-theorem is_involution {CPT : Matrix (Fin 2) (Fin 2) ℤ}
-    (h : CptInvolution CPT) : CPT * CPT = 1 := h
-
-end CptInvolution
-
 /-- The explicit integer matrix used by the finite boundary packet. -/
 def CPT_local : Matrix (Fin 2) (Fin 2) ℤ :=
   !![0, -1;

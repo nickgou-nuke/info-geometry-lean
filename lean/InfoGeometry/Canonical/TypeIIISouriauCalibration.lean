@@ -29,6 +29,7 @@ section Core
 variable {E : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 variable {LieAlgebra : Type*}
+variable [AddMonoid LieAlgebra]
 
 local notation "H₂" => InfoGeometry.Krein.DoubledSpace E
 local notation "EndH₂" => H₂ →L[ℝ] H₂

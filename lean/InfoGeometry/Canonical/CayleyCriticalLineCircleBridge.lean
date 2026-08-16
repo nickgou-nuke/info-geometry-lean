@@ -225,23 +225,6 @@ theorem cayleyToFugacity_one_sub_eq_inv
   field_simp [hs, h1s]
   ring
 
-/-! ## Lee--Yang admissibility socket -/
-
-/--
-Data carrier for a possible Lee--Yang admissible determinant readout through
-the Cayley transform.
-
-The Lee--Yang circle theorem is not proved here. A concrete prime/Majorana
-system must prove admissibility, the determinant identification with completed
-`xi`, and the zero-location law outside this data structure.
--/
-@[socket_debt_tag]
-structure LeeYangCayleyRiemannWitness
-    (PartitionFunction CompletedXiReadout ZeroReadout : Type*) where
-  partitionFunction : PartitionFunction
-  completedXiReadout : CompletedXiReadout
-  zeroReadout : ZeroReadout
-
 /-! ## Prime-gas Lee--Yang approximation socket -/
 
 /--

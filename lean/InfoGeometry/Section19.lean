@@ -93,11 +93,4 @@ theorem corrected_spatial_pair_anticomm :
       InfoGeometry.Clifford.DiracPauliGamma.gamma3 * InfoGeometry.Clifford.DiracPauliGamma.gamma1 = (0 : Mat4C) :=
   InfoGeometry.Clifford.DiracPauliGamma.gamma1_gamma3_anticomm
 
-theorem section19_capstone :
-    (∀ mu : Fin 4, cl4Generator mu * cl4Generator mu = -(1 : Mat4C)) ∧
-    (∀ mu nu : Fin 4, mu ≠ nu →
-      cl4Generator mu * cl4Generator nu + cl4Generator nu * cl4Generator mu =
-        (0 : Mat4C)) := by
-  exact ⟨cl4Generator_square, cl4Generator_anticomm⟩
-
 end Section19

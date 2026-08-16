@@ -170,18 +170,4 @@ def TomitaCliffordJordanLieBridgeOwnerTarget
       ∧ B.mirror.mirror (B.mirror.noncompactLift B.noncompactOddGenerator) =
           -B.mirror.noncompactLift B.noncompactOddGenerator
 
-@[rep_depth transport]
-theorem tomitaCliffordJordanLieBridgeOwnerTarget
-    (α : Type uα) (Op : Type uOp) (H : Type) [Ring Op]
-    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] :
-    TomitaCliffordJordanLieBridgeOwnerTarget α Op H := by
-  intro B x y
-  exact
-    ⟨B.compactLift_mirror_even x,
-      B.noncompactLift_mirror_odd y,
-      B.commutator_eq_two_smul_lieProduct,
-      B.anticommutator_eq_two_smul_jordanProduct,
-      B.compactEvenGenerator_mirror_even,
-      B.noncompactOddGenerator_mirror_odd⟩
-
 end InfoGeometry.Canonical.TomitaCliffordJordanLieBridge

@@ -15,15 +15,16 @@ It does not construct gauge bundles, Yang-Mills curvature, or physical
 SU(2)/SU(3) dynamics.
 """
 
-from __future__ import annotations
-
+import sys
+from pathlib import Path
 import sympy as sp
 from sympy.physics.matrices import msigma
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def pauli_matrices():
-    s1, s2, s3 = msigma(1), msigma(2), msigma(3)
-    return s1, s2, s3
+from tools.sympy.common import assert_matrix_eq, pauli_matrices
 
 
 def gell_mann_matrices():
@@ -36,7 +37,7 @@ def gell_mann_matrices():
 def dirac_gamma_matrices():
     I2 = sp.eye(2)
     Z2 = sp.zeros(2)
-    s1, s2, s3 = pauli_matrices()
+    _, s1, s2, s3 = pauli_matrices()
     g0 = sp.Matrix(sp.BlockMatrix([[I2, Z2], [Z2, -I2]]))
     g1 = sp.Matrix(sp.BlockMatrix([[Z2, s1], [-s1, Z2]]))
     g2 = sp.Matrix(sp.BlockMatrix([[Z2, s2], [-s2, Z2]]))
@@ -62,12 +63,6 @@ def gauge_insertion_bilinear(psi, m, ta, g0):
     return spinor_bilinear(psi, m, ta * psi, g0)
 
 
-def assert_matrix_eq(a, b, label):
-    diff = sp.simplify(a - b)
-    if diff != sp.zeros(*a.shape):
-        raise AssertionError(f"{label} failed:\n{sp.simplify(diff)}")
-
-
 def assert_scalar_eq(a, b, label):
     diff = sp.simplify(sp.expand(a - b))
     if diff != 0:
@@ -79,7 +74,7 @@ def main() -> None:
     print("EMERGENT NON-ABELIAN GAUGE -- FINITE SYMPY VERIFICATION")
     print("=" * 72)
 
-    tau1, tau2, tau3 = pauli_matrices()
+    _, tau1, tau2, tau3 = pauli_matrices()
     lam1, lam2, lam3 = gell_mann_matrices()
     g0, g1, g2, g3, g5 = dirac_gamma_matrices()
 

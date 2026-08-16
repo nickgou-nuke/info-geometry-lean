@@ -18,6 +18,14 @@ import sys
 from pathlib import Path
 from typing import Any, Iterable
 
+ROOT = Path(__file__).resolve().parents[2]
+_SRC = ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from igf.common.json_io import iter_jsonl, load_json, write_jsonl
 from tools.infra.arango_env import (
     arango_database,
     arango_endpoint,
@@ -33,7 +41,6 @@ from tools.infra.arango_raw_infotree_ingest import (
     ensure_database,
     ensure_index,
     import_rows,
-    iter_jsonl,
     list_collections,
     truncate_collection,
 )
@@ -66,17 +73,10 @@ INDEX_SPECS: list[list[str]] = [
 ]
 
 
-def stable_hash(*parts: Any) -> str:
-    payload = "|".join(str(part) for part in parts)
-    return "sha256:" + hashlib.sha256(payload.encode("utf-8")).hexdigest()
+from igf.common.hashing import prefixed_hash as stable_hash, stable_key
 
 
-def stable_key(prefix: str, *parts: Any) -> str:
-    return prefix + "_" + stable_hash(*parts).split(":", 1)[1][:32]
-
-
-def read_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
+read_json = load_json
 
 
 def bool_field(row: dict[str, Any], field: str) -> bool:
@@ -250,16 +250,6 @@ def materialize_edges(
                 )
             )
     return rows
-
-
-def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            handle.write(json.dumps(row, ensure_ascii=True, sort_keys=True) + "\n")
-            count += 1
-    return count
 
 
 def ensure_certificate_collection(target: ArangoTarget, *, edge_collection: str, truncate: bool) -> dict[str, Any]:

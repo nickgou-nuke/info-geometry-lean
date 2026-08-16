@@ -146,7 +146,7 @@ Proof-carrying Cuntz carrier with Witten parity equivariance.
 The left branch is declared parity-even and the right branch parity-odd.  This
 is model data, not derived from bare Cuntz relations.
 -/
-structure ParityEquivariantCuntzCarrier
+structure ParityEquivariantCuntzData
     (Op : Type*) [Ring Op] [StarRing Op] where
   parity : StarWittenParity Op
   cuntz : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op
@@ -155,10 +155,10 @@ structure ParityEquivariantCuntzCarrier
   right_odd : ParityOdd parity
     (InfoGeometry.Topology.CuntzO2Carrier.S_right cuntz)
 
-namespace ParityEquivariantCuntzCarrier
+namespace ParityEquivariantCuntzData
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
-variable (E : ParityEquivariantCuntzCarrier Op)
+variable (E : ParityEquivariantCuntzData Op)
 
 /-- The Cuntz-derived CAR generator is parity-odd under the supplied branch grading. -/
 theorem carFromCuntz_parity_odd :
@@ -177,7 +177,7 @@ theorem invariant_state_supertrace_carFromCuntz_eq_zero
   supertrace_eq_zero_of_invariant_state_on_odd
     E.parity φ hφ (E.carFromCuntz_parity_odd)
 
-end ParityEquivariantCuntzCarrier
+end ParityEquivariantCuntzData
 
 end InfoGeometry.Canonical.BostConnesSuperalgebraConstructive
 

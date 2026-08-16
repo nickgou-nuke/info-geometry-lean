@@ -24,12 +24,12 @@ variable [LieRing L] [LieAlgebra R L]
 /-- Five distinguished homogeneous submodules of an ambient Lie algebra.
 Further owners may add closure and decomposition contracts without changing
 the ambient bracket. -/
-structure FiveGradedLieCarrier where
+structure FiveGradedLieData where
   component : Weight5 → Submodule R L
 
-namespace FiveGradedLieCarrier
+namespace FiveGradedLieData
 
-variable (G : FiveGradedLieCarrier R L)
+variable (G : FiveGradedLieData R L)
 
 /-- Membership in one of the five declared homogeneous components. -/
 def IsHomogeneous (w : Weight5) (x : L) : Prop :=
@@ -52,6 +52,6 @@ theorem lie_self_eq_zero
     ⁅x, x⁆ = 0 := by
   exact lie_self x
 
-end FiveGradedLieCarrier
+end FiveGradedLieData
 
 end InfoGeometry.Algebra.FiveGradedLieAntisymmetry

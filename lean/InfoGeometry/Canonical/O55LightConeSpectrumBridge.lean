@@ -90,17 +90,25 @@ theorem intercept_zero_reduces_standard_massSq
     {alphaPrime excitation intercept : ℝ} (hintercept : intercept = 0) :
     standardClosedMassSq alphaPrime excitation intercept =
       doubledClosedMassSq alphaPrime excitation := by
-  simp [standardClosedMassSq, doubledClosedMassSq, hintercept]
+  calc
+    standardClosedMassSq alphaPrime excitation intercept
+        = (4 / alphaPrime) * (excitation - 0) := by
+          simp [standardClosedMassSq, hintercept]
+    _ = doubledClosedMassSq alphaPrime excitation := by
+      simp [standardClosedMassSq, doubledClosedMassSq]
 
 /-- The zero-intercept ground-state readout is massless algebraically. -/
 theorem doubled_ground_massSq_zero (alphaPrime : ℝ) :
     doubledClosedMassSq alphaPrime 0 = 0 := by
-  simp [doubledClosedMassSq]
+  -- zero excitation collapses the `doubled` normalization factor.
+  change (4 / alphaPrime) * (0 : ℝ) = 0
+  ring
 
 /-- The first excited zero-intercept readout is `4 / alphaPrime`. -/
 theorem doubled_first_excited_massSq (alphaPrime : ℝ) :
     doubledClosedMassSq alphaPrime 1 = 4 / alphaPrime := by
-  simp [doubledClosedMassSq]
+  -- the first excitation step is exactly one normalized quantum.
+  simpa [doubledClosedMassSq]
 
 /-- The finite packet combining the light-cone integer core and zero-intercept readout. -/
 theorem lightCone_zeroIntercept_packet (alphaPrime : ℝ) :

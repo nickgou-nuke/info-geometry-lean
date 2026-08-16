@@ -143,10 +143,8 @@ def validate_schema(rows: list[JsonDict], label: str, expected: int) -> None:
 
 
 
-def write_jsonl(path: Path, rows: list[JsonDict]) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    lines = [json.dumps(row, ensure_ascii=True, sort_keys=True) for row in rows]
-    path.write_text(("\n".join(lines) + "\n") if lines else "", encoding="utf-8")
+# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
+from igf.common.json_io import write_jsonl
 
 
 

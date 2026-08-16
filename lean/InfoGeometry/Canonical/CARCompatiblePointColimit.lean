@@ -36,8 +36,8 @@ structure CompatibleCARPointFamily where
   c : ∀ i, Stage i
   cstar : ∀ i, Stage i
   relation : ∀ i, c i * cstar i + cstar i * c i = 1
-  compatible_c : ∀ {i j : I} (hij : i ≤ j), sys.map hij (c i) = c j
-  compatible_cstar : ∀ {i j : I} (hij : i ≤ j),
+  map_c : ∀ {i j : I} (hij : i ≤ j), sys.map hij (c i) = c j
+  map_cstar : ∀ {i j : I} (hij : i ≤ j),
     sys.map hij (cstar i) = cstar j
 
 def CompatibleCARPointFamily.toQCCR
@@ -60,7 +60,7 @@ theorem CompatibleCARPointFamily.toQCCR_compatible
         (carParameterPoint (family.c i) (family.cstar i)) =
       carParameterPoint (family.c j) (family.cstar j)
     simp [qCcrParameterTransitionMap, carParameterPoint,
-      family.compatible_c hij, family.compatible_cstar hij]
+      family.map_c hij, family.map_cstar hij]
 
 noncomputable def carCompatiblePointColimitMap
     (family : CompatibleCARPointFamily sys) :

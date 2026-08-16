@@ -91,7 +91,7 @@ theorem realSplitPinImage_eq_quadraticReflectionSubgroup :
     have hg : realSplitPinOrthogonalAction g ∈
         quadraticReflectionSubgroup := by
       rw [hgc]
-      exact normalizedVectorAction_mem_quadraticReflectionSubgroup v hv hunit
+      exact normalizedVectorAction_mem_quadraticReflectionSubgroup_of_norm v hv
     simpa [g, huv] using hg
   · exact quadraticReflectionSubgroup_le_realSplitPin_image
 

@@ -11,9 +11,15 @@ No external certificate is used; the factorization is derived by SymPy and the
 matrix examples are exact rational/integer computations.
 """
 
-from __future__ import annotations
-
+import sys
+from pathlib import Path
 import sympy as sp
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from tools.sympy.common import assert_matrix_eq
 
 
 d = sp.Symbol("d")
@@ -31,13 +37,6 @@ def verify_scalar_factorization() -> None:
     if set(roots) != {-1, 0, 1}:
         raise AssertionError(f"unexpected roots: {roots}")
     print(f"  roots = {roots}: OK")
-
-
-def assert_matrix_eq(name: str, lhs: sp.Matrix, rhs: sp.Matrix) -> None:
-    diff = (lhs - rhs).applyfunc(sp.simplify)
-    if diff != sp.zeros(*diff.shape):
-        raise AssertionError(f"{name} failed:\n{diff}")
-    print(f"  {name}: OK")
 
 
 def verify_matrix(name: str, T: sp.Matrix, expected_det: int) -> None:

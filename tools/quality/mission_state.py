@@ -32,50 +32,35 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import datetime, timezone
 from pathlib import Path
 
-STATE_FILE = Path(__file__).resolve().parents[2] / ".codex" / "mission" / "state.json"
-HISTORY_FILE = STATE_FILE.parent / "history.jsonl"
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+_SRC = _REPO_ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
 
-VALID_SOCKET_CLASSES = {
-    "closed_by_kernel",
-    "closed_by_mathlib",
-    "closed_by_repo_owner",
-    "literature_owned_unformalized",
-    "open_problem_socket",
-    "invalid_or_overclaimed_socket",
-}
+from igf.quality.mission import MissionStateManager, OPEN_PROBLEM_STOP, VALID_SOCKET_CLASSES
 
-OPEN_PROBLEM_STOP = "open_problem_socket"
+_mgr = MissionStateManager(_REPO_ROOT)
+STATE_FILE = _mgr.state_file
+HISTORY_FILE = _mgr.history_file
 
 
 def _now() -> str:
-    return datetime.now(timezone.utc).isoformat()
+    from igf.common.time_utils import utc_now_iso
+    return utc_now_iso()
 
 
 def load() -> dict:
-    try:
-        return json.loads(STATE_FILE.read_text())
-    except (OSError, json.JSONDecodeError) as e:
-        print(f"ERROR: cannot load state: {e}", file=sys.stderr)
-        sys.exit(2)
+    return _mgr.load()
 
 
 def save(state: dict) -> None:
-    try:
-        STATE_FILE.write_text(json.dumps(state, indent=2) + "\n")
-    except OSError as e:
-        print(f"ERROR: cannot save state: {e}", file=sys.stderr)
-        sys.exit(2)
+    _mgr.save(state)
 
 
 def append_history(event: dict) -> None:
-    try:
-        with HISTORY_FILE.open("a") as f:
-            f.write(json.dumps({**event, "ts": _now()}) + "\n")
-    except OSError:
-        pass  # history is advisory
+    _mgr.append_history(event)
 
 
 def cmd_get() -> None:

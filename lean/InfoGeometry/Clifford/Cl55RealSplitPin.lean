@@ -1,4 +1,5 @@
 import InfoGeometry.Clifford.Cl55WittPinSignatureBoundary
+import InfoGeometry.Clifford.Cl55WittPinReflections
 
 namespace InfoGeometry.Clifford.Clifford55
 
@@ -49,6 +50,11 @@ theorem normalizedVectorUnit_coe
     (v : V55) (hv : IsUnit (Q55 v)) :
     (normalizedVectorUnit v hv : Cl55) = ι55 v := by
   exact (CliffordAlgebra.isUnit_ι_of_isUnit Q55 hv).unit_spec
+
+theorem realSplitPin55_le_lipschitzGroup :
+    realSplitPin55 ≤ LipschitzGroup55 := by
+  intro u hu
+  exact realSplitPin_mem_lipschitz u hu
 
 theorem ePos_mem_realSplitPin (i : Fin 5) :
     ∃ g : realSplitPin55, ((g : Cl55ˣ) : Cl55) = ι55 (e_pos i) := by

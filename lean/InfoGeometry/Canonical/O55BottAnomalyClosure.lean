@@ -20,7 +20,7 @@ close the conjugation anomaly over the Hestenes-Krein doubled spaces.
 
 /-- The recursive sequence reducing Cl(5,5) to explicit Bott-step equivalences. -/
 @[rep_depth krein]
-noncomputable abbrev cl55_bott_reduction_sequence :
+noncomputable def cl55_bott_reduction_sequence :
     (SplitClNNAlg 5 ≃ₐ[ℝ] SplitClNNTensorStep 4) ×
       (SplitClNNAlg 4 ≃ₐ[ℝ] SplitClNNTensorStep 3) ×
         (SplitClNNAlg 3 ≃ₐ[ℝ] SplitClNNTensorStep 2) ×
@@ -54,7 +54,7 @@ Since each Cl(1,1) cell carries an exact involutive parity symmetry,
 the global anomaly closes flawlessly without requiring infinite-dimensional regularization.
 -/
 @[rep_depth krein]
-noncomputable abbrev cl55_bott_anomaly_closure_achieved :
+noncomputable def cl55_bott_anomaly_closure_achieved :
     SplitClNNAlg 5 ≃ₐ[ℝ] SplitClNNTensorStep 4 :=
   splitCl55_headCl11TensorCl44Equiv
 

@@ -71,24 +71,6 @@ def infiniteAdjacent (i j : InfiniteBraidGenerators) : Prop :=
 def infiniteSeparated (i j : InfiniteBraidGenerators) : Prop :=
   i + 2 ≤ j ∨ j + 2 ≤ i
 
-theorem adjacent_embeds_to_infinite
-    {n : ℕ} {i j : FiniteBraidGenerators n}
-    (h : finiteAdjacent i j) :
-    infiniteAdjacent (finiteToInfinite i) (finiteToInfinite j) := by
-  exact h
-
-theorem separated_embeds_to_infinite
-    {n : ℕ} {i j : FiniteBraidGenerators n}
-    (h : finiteSeparated i j) :
-    infiniteSeparated (finiteToInfinite i) (finiteToInfinite j) := by
-  exact h
-
-theorem adjacent_stable_under_succ
-    {n : ℕ} {i j : FiniteBraidGenerators n}
-    (h : finiteAdjacent i j) :
-    finiteAdjacent (finiteSuccEmbed n i) (finiteSuccEmbed n j) := by
-  exact h
-
 theorem separated_stable_under_succ
     {n : ℕ} {i j : FiniteBraidGenerators n}
     (h : finiteSeparated i j) :

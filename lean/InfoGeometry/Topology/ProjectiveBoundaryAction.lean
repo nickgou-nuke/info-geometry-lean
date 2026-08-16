@@ -56,6 +56,40 @@ def ProjectiveBoundaryAction.comp
     intro p q hpq
     exact B.respects_units (A.respects_units hpq)
 
+instance {R : Type*} [CommRing R] : One (ProjectiveBoundaryAction R) :=
+  ⟨ProjectiveBoundaryAction.identity⟩
+
+instance {R : Type*} [CommRing R] : Mul (ProjectiveBoundaryAction R) :=
+  ⟨fun B A => B.comp A⟩
+
+theorem ProjectiveBoundaryAction.one_mul
+    {R : Type*} [CommRing R] (A : ProjectiveBoundaryAction R) :
+    (1 : ProjectiveBoundaryAction R) * A = A := by
+  cases A
+  rfl
+
+theorem ProjectiveBoundaryAction.mul_one
+    {R : Type*} [CommRing R] (A : ProjectiveBoundaryAction R) :
+    A * (1 : ProjectiveBoundaryAction R) = A := by
+  cases A
+  rfl
+
+theorem ProjectiveBoundaryAction.mul_assoc
+    {R : Type*} [CommRing R]
+    (A B C : ProjectiveBoundaryAction R) :
+    (A * B) * C = A * (B * C) := by
+  cases A
+  cases B
+  cases C
+  rfl
+
+instance {R : Type*} [CommRing R] : Monoid (ProjectiveBoundaryAction R) where
+  one := 1
+  mul := (· * ·)
+  one_mul := ProjectiveBoundaryAction.one_mul
+  mul_one := ProjectiveBoundaryAction.mul_one
+  mul_assoc := ProjectiveBoundaryAction.mul_assoc
+
 theorem ProjectiveBoundaryAction.comp_onBoundary
     {R : Type*} [CommRing R]
     (B A : ProjectiveBoundaryAction R) (p : ProjectiveBoundary R) :
@@ -63,5 +97,16 @@ theorem ProjectiveBoundaryAction.comp_onBoundary
   refine Quotient.inductionOn p ?_
   intro q
   rfl
+
+instance {R : Type*} [CommRing R] :
+    SMul (ProjectiveBoundaryAction R) (ProjectiveBoundary R) :=
+  ⟨fun A p => A.onBoundary p⟩
+
+instance {R : Type*} [CommRing R] :
+    MulAction (ProjectiveBoundaryAction R) (ProjectiveBoundary R) where
+  one_smul := ProjectiveBoundaryAction.identity_onBoundary
+  mul_smul := by
+    intro B A p
+    exact ProjectiveBoundaryAction.comp_onBoundary B A p
 
 end InfoGeometry.Topology

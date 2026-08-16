@@ -137,17 +137,19 @@ theorem sum_normSq_eq_one_of_paraunitary (F : ParaunitaryCliffordFilterBank)
     F.sum_normSq_eq_one :=
   F.sum_normSq_eq_one_of_normalizedBranches h
 
-/-- Historical compatibility alias: this owner does not prove perfect reconstruction. -/
+/-- Historical compatibility alias: this owner exposes only the normalized
+sum-rule readout, not a perfect-reconstruction theorem. -/
 @[rep_depth operator]
-theorem perfectReconstruction_of_paraunitary
+theorem sumRule_of_paraunitary_legacy
     (F : ParaunitaryCliffordFilterBank)
     (h : paraunitary F) :
     F.sum_normSq_eq_one :=
   sum_normSq_eq_one_of_paraunitary F h
 
-/-- Historical compatibility alias: this owner does not prove an energy isometry. -/
+/-- Historical compatibility alias: this owner exposes only the normalized
+sum-rule readout, not an energy-isometry theorem. -/
 @[rep_depth operator]
-theorem energyPreservation_of_paraunitary
+theorem sumRule_of_paraunitary_energy_legacy
     (F : ParaunitaryCliffordFilterBank)
     (h : paraunitary F) :
     F.sum_normSq_eq_one :=

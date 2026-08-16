@@ -11,7 +11,7 @@ current central readouts.
 This module does not claim that dual flatness automatically implies
 Kac--Moody closure.  It only names the calibration point:
 
-* Souriau covariance (or equivalently Hessian) gives a Fisher-information readout;
+* the operatorial BKM covariance gives a Fisher-information readout;
 * a supplied affine current bridge has a central scalar channel
   (`AffineCurrentDatum.killingForm`);
 * if those scalar channels are calibrated to agree, the affine central readout
@@ -30,17 +30,19 @@ open InfoGeometry.OperatorAlgebra.LightConeSugawaraCalibration
 Carrier for the information-geometry/affine-current calibration.
 
 `Finite` is the finite current algebra carrier used by the affine socket.
-`Source` is the Souriau source tangent carrier.  The map `toSource`
-selects the Souriau source variation associated to a finite current direction.
+`Source` is the parameter carrier of the operatorial Souriau family.  The map
+`toSource` selects the parameter associated to a finite current direction.
 -/
 @[rep_depth operator]
 structure InformationAffineKacMoodyCarrier
-    (State Source LieDual E Finite Alg Bog Korth Asplit Nshear CartanDiag : Type*)
+    (Source Obs E Finite Alg Bog Korth Asplit Nshear CartanDiag : Type*)
+    [AddMonoid Source]
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
-    [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg] where
+    [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs] where
   /-- Souriau moment/covariance generator. -/
-  momentGenerator : MomentMapGeneratingPotential State Source LieDual
+  momentGenerator : MomentGeneratingReadout Source Obs
 
   /-- Lightcone Sugawara/affine socket. -/
   sugawaraBridge :
@@ -55,38 +57,33 @@ structure InformationAffineKacMoodyCarrier
 namespace InformationAffineKacMoodyCarrier
 
 variable
-    {State Source LieDual E Finite Alg Bog Korth Asplit Nshear CartanDiag : Type*}
+    {Source Obs E Finite Alg Bog Korth Asplit Nshear CartanDiag : Type*}
+    [AddMonoid Source]
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
 
 variable (B :
   InformationAffineKacMoodyCarrier
-    State Source LieDual E Finite Alg Bog Korth Asplit Nshear CartanDiag)
+    Source Obs E Finite Alg Bog Korth Asplit Nshear CartanDiag)
 
-/-- Souriau Hessian readout pulled back to finite current directions. -/
+/-- BKM covariance readout pulled back to finite current directions. -/
 @[rep_depth operator]
-def souriauHessianReadout (X Y : Finite) : ℝ :=
-  B.momentGenerator.hessian (B.toSource X) (B.toSource Y)
+def souriauCovarianceReadout (X Y : Finite) : ℝ :=
+  B.momentGenerator.bkmCovariance
+    (B.toSource X) (B.momentGenerator.family.generator (B.toSource X))
+    (B.momentGenerator.family.generator (B.toSource Y))
 
 /--
-External predicate: the Fisher metric is the Souriau Hessian pulled back along
-`toSource`.
--/
-@[rep_depth operator]
-def IsFisherMetricFromSouriauHessian : Prop :=
-  ∀ X Y : Finite,
-    B.fisherMetric X Y = B.souriauHessianReadout X Y
-
-/--
-External predicate: the Fisher metric is the Souriau covariance tensor pulled
-back along `toSource`.
+External predicate: the Fisher metric is the operatorial BKM covariance pulled
+back along the native family generators and the parameter map, rather than a
+scalar Hessian.
 -/
 @[rep_depth operator]
 def IsFisherMetricFromSouriauCovariance : Prop :=
   ∀ X Y : Finite,
-    B.fisherMetric X Y =
-      B.momentGenerator.covarianceTensor (B.toSource X) (B.toSource Y)
+    B.fisherMetric X Y = B.souriauCovarianceReadout X Y
 
 /--
 External predicate: the affine central scalar channel is calibrated by the
@@ -98,38 +95,28 @@ def IsAffineCentralReadoutCalibratedByFisher : Prop :=
     B.sugawaraBridge.kanAffine.affineLightCone.affine.killingForm X Y =
       B.fisherMetric X Y
 
-/-- Souriau Hessian equals covariance, pulled back to finite current directions. -/
+/-- Operatorial BKM covariance is the finite-current readout. -/
 @[rep_depth operator]
-theorem souriauHessianReadout_eq_covarianceTensor
+theorem souriauCovarianceReadout_eq_bkmCovariance
     (X Y : Finite) :
-    B.souriauHessianReadout X Y =
-      B.momentGenerator.covarianceTensor (B.toSource X) (B.toSource Y) := by
-  unfold souriauHessianReadout
-  exact B.momentGenerator.secondVariation_eq_covariance (B.toSource X) (B.toSource Y)
-
-/-- If Fisher is the Souriau Hessian, then Fisher is the covariance readout. -/
-@[rep_depth operator]
-theorem fisherMetric_eq_souriauCovariance_of_hessian
-    (hF : B.IsFisherMetricFromSouriauHessian)
-    (X Y : Finite) :
-    B.fisherMetric X Y =
-      B.momentGenerator.covarianceTensor (B.toSource X) (B.toSource Y) := by
-  rw [hF X Y]
-  exact B.souriauHessianReadout_eq_covarianceTensor X Y
+      B.souriauCovarianceReadout X Y =
+      B.momentGenerator.bkmCovariance
+        (B.toSource X) (B.momentGenerator.family.generator (B.toSource X))
+        (B.momentGenerator.family.generator (B.toSource Y)) := by
+  rfl
 
 /-- Direct readback for the covariance-calibrated Fisher metric. -/
 @[rep_depth operator]
 theorem fisherMetric_eq_souriauCovariance
     (hF : B.IsFisherMetricFromSouriauCovariance)
     (X Y : Finite) :
-    B.fisherMetric X Y =
-      B.momentGenerator.covarianceTensor (B.toSource X) (B.toSource Y) :=
+    B.fisherMetric X Y = B.souriauCovarianceReadout X Y :=
   hF X Y
 
 /--
 Pure calibration readback: if the affine central scalar channel is Fisher, and
-Fisher is the Souriau Hessian/covariance readout, then the affine central scalar
-channel is exactly the Souriau covariance channel.
+Fisher is the operatorial BKM covariance readout, then the affine central
+scalar channel is exactly that covariance channel.
 -/
 @[rep_depth operator]
 theorem affineCentralReadout_eq_souriauCovariance
@@ -137,24 +124,9 @@ theorem affineCentralReadout_eq_souriauCovariance
     (hC : B.IsAffineCentralReadoutCalibratedByFisher)
     (X Y : Finite) :
     B.sugawaraBridge.kanAffine.affineLightCone.affine.killingForm X Y =
-      B.momentGenerator.covarianceTensor (B.toSource X) (B.toSource Y) := by
+      B.souriauCovarianceReadout X Y := by
   rw [hC X Y]
   exact B.fisherMetric_eq_souriauCovariance hF X Y
-
-/--
-Hessian-lane variant: a Hessian-calibrated Fisher metric also gives the same
-Souriau covariance calibration by the owner theorem
-`MomentMapGeneratingPotential.secondVariation_eq_covariance`.
--/
-@[rep_depth operator]
-theorem affineCentralReadout_eq_souriauCovariance_of_hessian
-    (hF : B.IsFisherMetricFromSouriauHessian)
-    (hC : B.IsAffineCentralReadoutCalibratedByFisher)
-    (X Y : Finite) :
-    B.sugawaraBridge.kanAffine.affineLightCone.affine.killingForm X Y =
-      B.momentGenerator.covarianceTensor (B.toSource X) (B.toSource Y) := by
-  rw [hC X Y]
-  exact B.fisherMetric_eq_souriauCovariance_of_hessian hF X Y
 
 /--
 Under the same calibration, the affine central scalar appearing in the current
@@ -166,18 +138,9 @@ theorem affineCentralCoefficient_eq_mode_mul_souriauCovariance
     (hC : B.IsAffineCentralReadoutCalibratedByFisher)
     (m : ℤ) (X Y : Finite) :
     (m : ℝ) * B.sugawaraBridge.kanAffine.affineLightCone.affine.killingForm X Y =
-      (m : ℝ) * B.momentGenerator.covarianceTensor (B.toSource X) (B.toSource Y) := by
+      (m : ℝ) * B.souriauCovarianceReadout X Y := by
   rw [B.affineCentralReadout_eq_souriauCovariance hF hC X Y]
 
-/-- Hessian-lane variant of the affine central coefficient readback. -/
-@[rep_depth operator]
-theorem affineCentralCoefficient_eq_mode_mul_souriauCovariance_of_hessian
-    (hF : B.IsFisherMetricFromSouriauHessian)
-    (hC : B.IsAffineCentralReadoutCalibratedByFisher)
-    (m : ℤ) (X Y : Finite) :
-    (m : ℝ) * B.sugawaraBridge.kanAffine.affineLightCone.affine.killingForm X Y =
-      (m : ℝ) * B.momentGenerator.covarianceTensor (B.toSource X) (B.toSource Y) := by
-  rw [B.affineCentralReadout_eq_souriauCovariance_of_hessian hF hC X Y]
 
 end InformationAffineKacMoodyCarrier
 

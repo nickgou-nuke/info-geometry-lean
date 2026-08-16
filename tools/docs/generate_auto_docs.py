@@ -27,8 +27,8 @@ class ModuleSummary:
     top_hubs: list[str]
 
 
-def load_json(path: Path) -> dict[str, Any]:
-    return json.loads(path.read_text(encoding="utf-8"))
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def count_lean_files_and_loc(root: Path) -> tuple[int, int]:

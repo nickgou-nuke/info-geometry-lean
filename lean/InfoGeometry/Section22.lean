@@ -95,26 +95,4 @@ theorem quaternionBasis_hamilton_table :
   · ext <;> norm_num [Section8.Quat.qi, Section8.Quat.qj, Section8.Quat.qk]
   · ext <;> norm_num [Section8.Quat.qi, Section8.Quat.qj, Section8.Quat.qk]
 
-theorem section22_capstone :
-    (∀ Q : Quat, Section8.Quat.conj Q * Q =
-      Section8.Quat.scalar (Section8.Quat.normSq Q)) ∧
-    (∀ Q : Quat, ∀ a mu : Fin 4,
-      quaternionBilinear Q (fun _ => 0) a mu = 0) ∧
-    (∀ e : Fin 4 → Fin 4 → ℝ, ∀ mu nu : Fin 4,
-      quaternionInducedMetric e mu nu = quaternionInducedMetric e nu mu) ∧
-    Section8.Quat.qi * Section8.Quat.qi = -(1 : Quat) ∧
-    Section8.Quat.qj * Section8.Quat.qj = -(1 : Quat) ∧
-    Section8.Quat.qk * Section8.Quat.qk = -(1 : Quat) ∧
-    Section8.Quat.qi * Section8.Quat.qj = Section8.Quat.qk ∧
-    Section8.Quat.qj * Section8.Quat.qk = Section8.Quat.qi ∧
-    Section8.Quat.qk * Section8.Quat.qi = Section8.Quat.qj := by
-  refine ⟨quaternion_conj_mul_self_scalar, quaternionBilinear_zero_derivative,
-    quaternionInducedMetric_symmetric, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact quaternionBasis_hamilton_table.1
-  · exact quaternionBasis_hamilton_table.2.1
-  · exact quaternionBasis_hamilton_table.2.2.1
-  · exact quaternionBasis_hamilton_table.2.2.2.1
-  · exact quaternionBasis_hamilton_table.2.2.2.2.1
-  · exact quaternionBasis_hamilton_table.2.2.2.2.2
-
 end Section22

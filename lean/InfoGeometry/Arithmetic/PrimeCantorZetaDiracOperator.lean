@@ -151,14 +151,14 @@ theorem annihilationPush_comm_of_ne {P : PrimeCutoff}
   · by_cases hq : q ∈ S
     · have herase : (S.erase q).erase p = (S.erase p).erase q := by
         ext r
-        simp [hpq, Ne.symm hpq, and_assoc, and_left_comm, and_comm]
+        simp [and_left_comm]
       simp [annihilationPush, PrimeExteriorGraphDirac.annihilate,
         hp, hq, hpq, Ne.symm hpq, herase]
     · simp [annihilationPush, PrimeExteriorGraphDirac.annihilate,
         hp, hq]
   · by_cases hq : q ∈ S
     · simp [annihilationPush, PrimeExteriorGraphDirac.annihilate,
-        hp, hq, hpq, Ne.symm hpq]
+        hp, hq, hpq]
     · simp [annihilationPush, PrimeExteriorGraphDirac.annihilate, hp, hq]
 
 theorem creationPush_comm_of_ne_funext {P : PrimeCutoff}
@@ -193,7 +193,7 @@ theorem creation_annihilationPush_comm_of_ne {P : PrimeCutoff}
         simp [hq, Ne.symm hpq]
       simp [creationPush, annihilationPush,
         PrimeExteriorGraphDirac.create,
-        PrimeExteriorGraphDirac.annihilate, hp, hq, hq_insert]
+        PrimeExteriorGraphDirac.annihilate, hp, hq]
   · by_cases hq : q ∈ S
     · have hq_insert : q ∈ insert p S := by
         simp [hq]
@@ -206,8 +206,8 @@ theorem creation_annihilationPush_comm_of_ne {P : PrimeCutoff}
           simp [hp, hpq]
         · by_cases hrq : r = q
           · subst r
-            simp [hpq, Ne.symm hpq]
-          · simp [Finset.mem_erase, hrp, hrq, hpq, Ne.symm hpq]
+            simp [Finset.mem_erase, hpq, hrp]
+          · simp [Finset.mem_erase, hrp, hrq]
       simp [creationPush, annihilationPush,
         PrimeExteriorGraphDirac.create,
         PrimeExteriorGraphDirac.annihilate, hp, hq, hq_insert,
@@ -1235,9 +1235,9 @@ theorem creationPush_eq_creationKernel_sum {P : PrimeCutoff}
   unfold creationPush creationKernel optionEval
   cases h : PrimeExteriorGraphDirac.create p S with
   | none =>
-      simp [h]
+      simp
   | some U =>
-      simp [h, Finset.sum_ite_eq, Finset.sum_ite_irrel]
+      simp [Finset.sum_ite_eq]
 
 /--
 Single-axis annihilation action equals the corresponding single-axis kernel action.
@@ -1253,9 +1253,9 @@ theorem annihilationPush_eq_annihilationKernel_sum {P : PrimeCutoff}
   unfold annihilationPush annihilationKernel optionEval
   cases h : PrimeExteriorGraphDirac.annihilate p S with
   | none =>
-      simp [h]
+      simp
   | some U =>
-      simp [h, Finset.sum_ite_eq, Finset.sum_ite_irrel]
+      simp [Finset.sum_ite_eq]
 
 /-! ## 3. Supercharges and finite Cantor--Dirac operator -/
 
@@ -1406,9 +1406,9 @@ theorem normalizedPrimeHolonomy_normSq {P : PrimeCutoff}
   unfold normalizedPrimeHolonomy Complex.normSq
   set a : ℝ := ((1 : ℝ) / 2 - s.re) * logPrime p
   set θ : ℝ := -(s.im * logPrime p)
-  simp [pow_two, mul_assoc, mul_left_comm, mul_comm]
-  have htrig : Real.cos θ ^ 2 + Real.sin θ ^ 2 = 1 := by
-    simpa [add_comm] using Real.cos_sq_add_sin_sq θ
+  simp [pow_two, mul_left_comm, mul_comm]
+  have htrig : Real.cos θ ^ 2 + Real.sin θ ^ 2 = 1 :=
+    Real.cos_sq_add_sin_sq θ
   nlinarith [htrig]
 
 /--
@@ -2462,7 +2462,7 @@ theorem op_pairing_hermitian_of_kernel_conj_symm
         = ∑ S, ∑ T, (star (D.kernel s S T) * star (f T)) * g S := by
             simp [Finset.sum_mul]
     _ = ∑ S, ∑ T, star (f T) * (star (D.kernel s S T) * g S) := by
-            simp [mul_assoc, mul_left_comm, mul_comm]
+            simp [mul_left_comm, mul_comm]
     _ = ∑ T, ∑ S, star (f T) * (star (D.kernel s S T) * g S) := by
             rw [Finset.sum_comm]
     _ = ∑ T, ∑ S, star (f T) * (D.kernel s T S * g S) := by
@@ -2531,8 +2531,8 @@ This eliminates explicit modewise adjoint hypotheses by deriving them from
 -/
 @[rep_depth thermo]
 theorem op_isSelfAdjoint_of_unitary_data_of_HolonomyUnitaryAt_zetaHolonomy
-    (hP : P.primes.Nonempty) (s : ℂ)
-    (hhol : D.holonomy s = zetaHolonomy (P := P) s)
+    (_hP : P.primes.Nonempty) (s : ℂ)
+    (_hhol : D.holonomy s = zetaHolonomy (P := P) s)
     (hU : D.HolonomyUnitaryAt s)
     (hAmp : ∀ p : PrimeMode P, star (D.amplitude p) = D.amplitude p) :
     IsAdjointPair (P := P) (D.op s) (D.op s) := by

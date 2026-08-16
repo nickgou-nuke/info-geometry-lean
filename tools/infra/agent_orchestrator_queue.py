@@ -47,8 +47,8 @@ def rel(path: Path) -> str:
         return str(path)
 
 
-def now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat()
+# [lossless-compact] now_iso folded into igf.common.time_utils.now_iso
+from igf.common.time_utils import now_iso
 
 
 def load_queue() -> dict[str, Any]:

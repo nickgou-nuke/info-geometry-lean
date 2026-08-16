@@ -10,25 +10,28 @@ from __future__ import annotations
 
 import hashlib
 import json
+import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+ROOT = Path(__file__).resolve().parents[2]
+_SRC = ROOT / "src"
+if str(_SRC) not in sys.path:
+    sys.path.insert(0, str(_SRC))
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from igf.common.hashing import stable_hash
+from igf.common.time_utils import utc_now_iso
+
+utc_now = utc_now_iso
 
 AuthorityLevel = str  # "heuristic" | "policy" | "kernel" | "lean-authority"
 Evidence = dict[str, Any]
 SCHEMA = "info_geometry.verification_result.v1"
 CONTRACT_VERSION = "1"
-
-
-def utc_now() -> str:
-    return datetime.now(tz=timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-
-
-def stable_hash(payload: Any) -> str:
-    text = json.dumps(payload, ensure_ascii=True, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha1(text.encode("utf-8")).hexdigest()
 
 
 @dataclass

@@ -1,4 +1,6 @@
 import Mathlib.Tactic
+import Mathlib.Data.Fintype.Pi
+import Mathlib.Data.Fintype.Prod
 
 /-!
 # Finite `G₂(2)` split-octonion automorphism theorem surface
@@ -35,11 +37,14 @@ file reads back only through a conditional theorem.
 
 namespace InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
+
 /-- One bit of the field `F₂`, represented as `Bool`. -/
 abbrev F2Bit := Bool
 
 /-- Addition in `F₂`. -/
-def add2 (x y : F2Bit) : F2Bit := decide (x ≠ y)
+def add2 (x y : F2Bit) : F2Bit := Bool.xor x y
 
 /-- Multiplication in `F₂`. -/
 def mul2 (x y : F2Bit) : F2Bit := x && y
@@ -81,7 +86,7 @@ def splitOctF2EquivBits : SplitOctF2 ≃ (Fin 8 → Bool) where
     funext i
     fin_cases i <;> rfl
 
-noncomputable instance : Fintype SplitOctF2 :=
+instance : Fintype SplitOctF2 :=
   Fintype.ofEquiv (Fin 8 → Bool) splitOctF2EquivBits.symm
 
 /-- The degree of the Atlas permutation action used for the outer `C₂` property. -/
@@ -159,6 +164,67 @@ def mul (X Y : SplitOctF2) : SplitOctF2 :=
     add2 (add2 (mul2 X.b Y.y1) (mul2 Y.a X.y1)) (cross1 X.x0 X.x2 Y.x0 Y.x2),
     add2 (add2 (mul2 X.b Y.y2) (mul2 Y.a X.y2)) (cross2 X.x0 X.x1 Y.x0 Y.x1) ⟩
 
+/-- Coordinatewise addition in the finite field `F₂`. -/
+def add (X Y : SplitOctF2) : SplitOctF2 :=
+  ⟨add2 X.a Y.a, add2 X.b Y.b, add2 X.x0 Y.x0, add2 X.x1 Y.x1,
+    add2 X.x2 Y.x2, add2 X.y0 Y.y0, add2 X.y1 Y.y1, add2 X.y2 Y.y2⟩
+
+theorem add_zero (X : SplitOctF2) : add X zero = X := by
+  native_decide +revert
+
+theorem zero_add (X : SplitOctF2) : add zero X = X := by
+  native_decide +revert
+
+theorem add_comm (X Y : SplitOctF2) : add X Y = add Y X := by
+  native_decide +revert
+
+theorem add_assoc (X Y Z : SplitOctF2) : add (add X Y) Z = add X (add Y Z) := by
+  native_decide +revert
+
+theorem add_self (X : SplitOctF2) : add X X = zero := by
+  native_decide +revert
+
+theorem mul_add (X Y Z : SplitOctF2) :
+    mul X (add Y Z) = add (mul X Y) (mul X Z) := by
+  native_decide +revert
+
+theorem add_mul (X Y Z : SplitOctF2) :
+    mul (add X Y) Z = add (mul X Z) (mul Y Z) := by
+  native_decide +revert
+
+/-- The finite Zorn multiplication has the declared zero as a two-sided zero. -/
+theorem mul_zero (X : SplitOctF2) : mul X zero = zero := by
+  native_decide +revert
+
+theorem zero_mul (X : SplitOctF2) : mul zero X = zero := by
+  native_decide +revert
+
+/-- The finite Zorn multiplication has the declared unit as a two-sided unit. -/
+theorem mul_one (X : SplitOctF2) : mul X one = X := by
+  native_decide +revert
+
+theorem one_mul (X : SplitOctF2) : mul one X = X := by
+  native_decide +revert
+
+/-- Basic diagonal idempotent and orthogonality laws in the finite Zorn basis. -/
+theorem ePlus_mul_ePlus : mul ePlus ePlus = ePlus := by
+  rfl
+
+theorem eMinus_mul_eMinus : mul eMinus eMinus = eMinus := by
+  rfl
+
+theorem ePlus_mul_eMinus : mul ePlus eMinus = zero := by
+  rfl
+
+theorem eMinus_mul_ePlus : mul eMinus ePlus = zero := by
+  rfl
+
+theorem up0_mul_down0 : mul up0 down0 = ePlus := by
+  rfl
+
+theorem down0_mul_up0 : mul down0 up0 = eMinus := by
+  rfl
+
 /-- The order of the finite Chevalley group `G₂(2)`. -/
 def g2twoOrder : Nat := 12096
 
@@ -184,11 +250,14 @@ theorem psu33_order_is_half_g2two : psu33Order * 2 = g2twoOrder := by
 theorem pgl33_order_ne_g2two_order : pgl33Order ≠ g2twoOrder := by
   norm_num [pgl33Order, g2twoOrder]
 
-/-- Predicate for a unital split-octonion algebra automorphism over `F₂`. -/
+/- The predicate is unital and additive/multiplicative on the Bool carrier;
+it does not assert a separate scalar `F₂`-module structure. -/
 def IsSplitOctF2Aut (f : SplitOctF2 ≃ SplitOctF2) : Prop :=
-  f one = one ∧ ∀ X Y : SplitOctF2, f (mul X Y) = mul (f X) (f Y)
+  f one = one ∧
+    (∀ X Y : SplitOctF2, f (add X Y) = add (f X) (f Y)) ∧
+    (∀ X Y : SplitOctF2, f (mul X Y) = mul (f X) (f Y))
 
-/-- The finite automorphism type `Aut(O_s(F₂))`. -/
+/-- The finite unital additive/multiplicative automorphism type of the carrier. -/
 def SplitOctF2Aut := { f : SplitOctF2 ≃ SplitOctF2 // IsSplitOctF2Aut f }
 
 attribute [local instance] Classical.decEq
@@ -202,9 +271,9 @@ noncomputable instance : Fintype SplitOctF2Aut := by
 The theorem-level finite classification readout.
 
 The premise is the explicit enumeration property produced by
-`tools/sympy/g2_2_automorphism_theorem.py`: all unital multiplication-preserving
-linear maps of the split Zorn algebra over `F₂` have been counted, and the count
-is `12096`.
+`tools/sympy/g2_2_automorphism_theorem.py`: the chosen finite
+unital additive/multiplicative equivalences of the Bool carrier have been
+counted, and the count is `12096`.
 -/
 theorem aut_splitOctF2_card_eq_g2twoOrder_from_enumeration
     (h_enum : Fintype.card SplitOctF2Aut = 12096) :

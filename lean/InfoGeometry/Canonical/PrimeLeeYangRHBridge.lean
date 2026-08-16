@@ -2,9 +2,6 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 
-set_option linter.unusedSectionVars false
-set_option linter.unusedVariables false
-
 /-!
 # Prime Lee-Yang RH Conformal Bridge
 

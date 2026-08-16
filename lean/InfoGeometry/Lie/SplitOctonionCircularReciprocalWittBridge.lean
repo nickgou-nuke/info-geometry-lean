@@ -16,6 +16,7 @@ namespace InfoGeometry.Lie.SplitOctonionCircularReciprocalWittBridge
 
 open InfoGeometry.Lie.SplitOctonionCircularReciprocalExponentialBridge
 open InfoGeometry.Lie.SplitOctonionEllCircularAxialGrading
+open InfoGeometry.Lie.SplitOctonionEllCircularQuadraticCoordinates
 open InfoGeometry.Lie.SplitOctonionCircularHyperbolicFlow
 open InfoGeometry.Lie.SplitOctonionCircularWittForm
 
@@ -58,6 +59,48 @@ theorem reciprocalExponentialPair_zero_axialFlowCoordinate_zero :
       axialFlowCoordinate 0 =
         (LinearMap.id : Coordinate →ₗ[ℝ] Coordinate) := by
   exact ⟨reciprocalExponentialPair_zero, axialFlowCoordinate_zero⟩
+
+/- The reciprocal group law is realized by composition of the concrete flow. -/
+theorem axialFlowCoordinate_add_from_reciprocalPair (s t : ℝ) :
+    axialFlowCoordinate (s + t) =
+      (axialFlowCoordinate s).comp (axialFlowCoordinate t) := by
+  exact InfoGeometry.Lie.SplitOctonionEllCircularAxialGrading.axialFlowCoordinate_add
+    s t
+
+/-- The reciprocal axial flow as a quadratic isometry of circular coordinates. -/
+noncomputable def axialFlowCoordinateQuadraticIsometry (t : ℝ) :
+    circularPeirceQuadratic.IsometryEquiv circularPeirceQuadratic :=
+  { hyperbolicFlowCoordinateEquiv t with
+    map_app' := fun x => by
+      change circularPeirceQuadratic (hyperbolicFlowCoordinate t x) =
+        circularPeirceQuadratic x
+      rw [← axialFlowCoordinate_eq_hyperbolicFlowCoordinate t]
+      exact circularPeirceQuadratic_axialFlowCoordinate t x }
+
+@[simp] theorem axialFlowCoordinateQuadraticIsometry_apply
+    (t : ℝ) (x : Coordinate) :
+    axialFlowCoordinateQuadraticIsometry t x = axialFlowCoordinate t x := by
+  change hyperbolicFlowCoordinate t x = axialFlowCoordinate t x
+  rw [axialFlowCoordinate_eq_hyperbolicFlowCoordinate]
+
+@[simp] theorem axialFlowCoordinateQuadraticIsometry_preserves_form
+    (t : ℝ) (x : Coordinate) :
+    circularPeirceQuadratic (axialFlowCoordinateQuadraticIsometry t x) =
+      circularPeirceQuadratic x :=
+  QuadraticMap.IsometryEquiv.map_app
+    (axialFlowCoordinateQuadraticIsometry t) x
+
+/- The pair group law acts componentwise on every Witt channel. -/
+theorem reciprocalExponentialPair_add_channel_scale
+    (s t xPlus xMinus : ℝ) :
+    ((reciprocalExponentialPair (s + t)).1 * xPlus,
+      (reciprocalExponentialPair (s + t)).2 * xMinus) =
+      ((reciprocalExponentialPair s).1 *
+          ((reciprocalExponentialPair t).1 * xPlus),
+       (reciprocalExponentialPair s).2 *
+          ((reciprocalExponentialPair t).2 * xMinus)) := by
+  rw [reciprocalExponentialPair_add]
+  apply Prod.ext <;> ring
 
 theorem axialFlowCoordinate_oppositePair_invariant
     (t : ℝ) (x : Coordinate) (i : Fin 3) :

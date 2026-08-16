@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
+import InfoGeometry.Canonical.NativeOperatorialExponentialFamily
 import InfoGeometry.Canonical.OperatorModularTemperatureDuality
 import InfoGeometry.Meta.Architecture
 
@@ -18,7 +19,9 @@ also operatorial: `betaOperator : Obs`. Scalar beta/time coordinates are not the
 owner objects; they are chart/readout shadows supplied only after `eval`.
 -/
 structure Family
-    (LieAlg Obs State Direction : Type*) where
+    (LieAlg Obs State Direction : Type*)
+    [AddMonoid Obs]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs] where
   /-- Closed product/trace surface used by the modular-temperature duality. -/
   frobenius : OperatorFrobeniusClosure Obs
 
@@ -38,7 +41,7 @@ structure Family
   expWeight : Obs
 
   /-- Operatorial exponential-family owner packet with parameter carrier `Obs`. -/
-  exponentialFamily : OperatorialExponentialFamily Obs Obs
+  exponentialFamily : NativeOperatorialExponentialFamily.Family Obs Obs
 
   /-- Duhamel/ordered-product derivative owner packet. -/
   duhamelDerivative : DuhamelOperatorDerivative Obs Obs Direction
@@ -69,7 +72,7 @@ structure Family
   operator beta is the Souriau generator.
   -/
   exponentialFamily_K_beta_eq_souriauGenerator :
-    exponentialFamily.K betaOperator = souriauGenerator
+    exponentialFamily.generator betaOperator = souriauGenerator
 
   /--
   Bridge to the existing operatorial exponential family: its untraced exponential
@@ -81,11 +84,13 @@ structure Family
 namespace Family
 
 variable {LieAlg Obs State Direction : Type*}
+variable [AddMonoid Obs]
+variable [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
 variable (P : Family LieAlg Obs State Direction)
 
 /-- The existing operatorial exponential family has generator `K_B` at operator beta. -/
 theorem exponentialFamily_K_beta_eq_souriauGenerator_holds :
-    P.exponentialFamily.K P.betaOperator = P.souriauGenerator :=
+    P.exponentialFamily.generator P.betaOperator = P.souriauGenerator :=
   P.exponentialFamily_K_beta_eq_souriauGenerator
 
 /-- The existing operatorial exponential family has untraced weight `exp(-K_B)`. -/

@@ -28,23 +28,23 @@ variable {B : Type v} [CStarAlgebra B]
 the actual injectivity proof for its algebraic descent. -/
 structure FaithfulRealization where
   stageMap : ∀ i, Stage i →⋆ₐ[ℂ] B
-  compatible : ∀ {i j : I} (hij : i ≤ j) (x : Stage i),
+  stage_coherence : ∀ {i j : I} (hij : i ≤ j) (x : Stage i),
     stageMap j (sys.map hij x) = stageMap i x
   faithful : Function.Injective
-    (lift Stage sys stageMap (fun hij x => compatible hij x))
+    (lift Stage sys stageMap (fun hij x => stage_coherence hij x))
 
 /-- The descended star-algebra representation supplied by a faithful
 realization. -/
 def representation (R : FaithfulRealization Stage sys (B := B)) :
     Carrier Stage sys →⋆ₐ[ℂ] B :=
-  lift Stage sys R.stageMap (fun hij x => R.compatible hij x)
+  lift Stage sys R.stageMap (fun hij x => R.stage_coherence hij x)
 
 @[simp] theorem representation_stage
     (R : FaithfulRealization Stage sys (B := B))
     (i : I) (x : Stage i) :
     representation Stage sys R (stageInjection Stage sys i x) =
       R.stageMap i x := by
-  exact lift_stage Stage sys R.stageMap (fun hij x => R.compatible hij x) i x
+  exact lift_stage Stage sys R.stageMap (fun hij x => R.stage_coherence hij x) i x
 
 /-- The stage-form realization is an instance of the generic faithful
 representation interface. -/

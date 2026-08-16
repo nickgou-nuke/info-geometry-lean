@@ -30,6 +30,7 @@ section Core
 
 variable {E H LieAlgebra Word : Type*}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+variable [AddMonoid LieAlgebra]
 variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 variable [KreinSpace (DoubledSpace H)]
 variable [Fintype Word] [DecidableEq Word]

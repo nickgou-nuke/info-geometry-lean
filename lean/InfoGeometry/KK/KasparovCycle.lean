@@ -183,6 +183,44 @@ theorem index_bridge_spectral_zero [FiniteDimensional ℝ H]
   rw [hSlicePlus, hSliceMinus]
   simp
 
+/-
+The same finite index conclusion holds when the square is any nonzero scalar
+multiple of the identity. This is the form needed by normalized finite Dirac
+phases whose square is `c • I` with `c ≠ 0`.
+-/
+theorem index_bridge_spectral_zero_of_nonzero_scalar_square
+    [FiniteDimensional ℝ H] {c : ℝ} (hc : c ≠ 0)
+    (hF : X.F * X.F = c • (1 : EndH H)) :
+    X.analyticalIndex = 0 := by
+  have hSq : ∀ x : H, X.F (X.F x) = c • x := by
+    intro x
+    simpa using DFunLike.congr_fun hF x
+  have hKer : LinearMap.ker X.F.toLinearMap = ⊥ := by
+    rw [LinearMap.ker_eq_bot]
+    intro x y hxy
+    have hscaled : c • (x - y) = 0 := by
+      calc
+        c • (x - y) = (c • x) - (c • y) := by rw [smul_sub]
+        _ = X.F (X.F x) - X.F (X.F y) := by rw [hSq, hSq]
+        _ = 0 := by
+          have hcomp : X.F (X.F x) = X.F (X.F y) := congrArg X.F hxy
+          rw [hcomp, sub_self]
+    exact sub_eq_zero.mp ((smul_eq_zero.mp hscaled).resolve_left hc)
+  have hSlicePlus :
+      RealSplitKreinKasparovCycle.chiralKernelSlicePlus X = ⊥ := by
+    unfold RealSplitKreinKasparovCycle.chiralKernelSlicePlus
+    rw [hKer]
+    simp
+  have hSliceMinus :
+      RealSplitKreinKasparovCycle.chiralKernelSliceMinus X = ⊥ := by
+    unfold RealSplitKreinKasparovCycle.chiralKernelSliceMinus
+    rw [hKer]
+    simp
+  unfold KasparovCycle.analyticalIndex RealSplitKreinKasparovCycle.finiteAnalyticalIndex
+  rw [RealSplitKreinKasparovCycle.analyticalIndex_eq_finrank_chiralKernelDifference (X := X)]
+  rw [hSlicePlus, hSliceMinus]
+  simp
+
 /--
 The constant Dirac/grading family determined by a spectral bounded primitive
 phase has invariant analytical index.

@@ -11,14 +11,15 @@ It does not claim or verify a full PO(5,5), Pin(5,5), Super-TKK, SU(3), or
 Aut(O_s)=G2(2) classification theorem.
 """
 
-from __future__ import annotations
-
+import sys
+from pathlib import Path
 import numpy as np
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def assert_matrix_eq(lhs, rhs, msg: str) -> None:
-    if not np.array_equal(lhs, rhs):
-        raise AssertionError(f"{msg}:\n{lhs}\n!=\n{rhs}")
+from tools.sympy.common import assert_matrix_eq
 
 
 def block_diag(a: np.ndarray, b: np.ndarray) -> np.ndarray:

@@ -1,63 +1,82 @@
+import Mathlib.Analysis.CStarAlgebra.GelfandNaimarkSegal
 import Mathlib.Tactic
 
 /-!
-# Operator Itakura-Saito and Araki Relative Entropy Equivalence
+# Operator Itakura--Saito and Araki relative entropy
 
-This file formalizes the exact mathematical bridge between Classical Information Geometry
-(Itakura-Saito divergence) and Algebraic Quantum Field Theory (Araki Relative Entropy).
-Specifically, it proves that the vacuum expectation value of the operator Itakura-Saito
-divergence of the relative modular operator Δ collapses exactly to the Araki Relative Entropy,
-as the linear operator terms Δ - I cancel out under the vacuum state.
+This owner is stated on a genuine noncommutative C*-algebra.  A positive
+linear functional is the state/readout, while `Delta` and `logDelta` remain
+elements of the algebra; no diagonal matrix model or commuting spectral
+assumption is introduced.
+
+The theorem below is the algebraic cancellation behind the bounded
+Itakura--Saito/Araki comparison.  It does not construct an unbounded
+Tomita--Takesaki logarithm or assert that an arbitrary pair of algebra
+elements is a relative modular operator.  Those analytic hypotheses belong to
+the standard-form/modular owners.
 -/
 
 noncomputable section
 
+open scoped ComplexOrder
+
 namespace InfoGeometry.Canonical.ArakiItakuraSaitoEquivalence
 
-variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
+variable {A : Type*} [CStarAlgebra A] [PartialOrder A]
 
-/-- The Operator Itakura-Saito Divergence: Δ - log(Δ) - I -/
-def operatorItakuraSaito (Delta logDelta : H →L[ℂ] H) : H →L[ℂ] H :=
-  Delta - logDelta - ContinuousLinearMap.id ℂ H
+/-! ## Native noncommutative operators and positive readout -/
 
-/-- The Araki Relative Entropy defined as the negative vacuum expectation of the modular logarithm. -/
-def arakiRelativeEntropy (logDelta : H →L[ℂ] H) (Ω : H) : ℂ :=
-  - inner ℂ Ω (logDelta Ω)
+/-- The operator-valued Itakura--Saito expression `Delta - log Delta - 1`. -/
+def operatorItakuraSaito (Delta logDelta : A) : A :=
+  Delta - logDelta - 1
 
-/--
-THE CAPSTONE THEOREM:
-The expectation value of the Operator Itakura-Saito Divergence on the vacuum
-collapses EXACTLY to the Araki Relative Entropy.
+/-- Araki's relative-entropy readout for a supplied logarithmic modular datum. -/
+def arakiRelativeEntropy (phi : A →ₚ[ℂ] ℂ) (logDelta : A) : ℂ :=
+  -phi logDelta
+
+/-!
+## The cancellation theorem on the noncommutative carrier
+
+Only the normalization of the positive functional on `Delta` and on the unit
+is used.  No commutation of `Delta` and `logDelta` is needed.
 -/
+
 theorem itakuraSaito_expectation_eq_araki
-    (Delta logDelta : H →L[ℂ] H) (Ω : H)
-    (h_delta_vacuum : inner ℂ Ω (Delta Ω) = 1)
-    (h_norm_vacuum : inner ℂ Ω Ω = 1) :
-    inner ℂ Ω (operatorItakuraSaito Delta logDelta Ω) = arakiRelativeEntropy logDelta Ω := by
+    (phi : A →ₚ[ℂ] ℂ) (Delta logDelta : A)
+    (h_delta : phi Delta = phi 1) :
+    phi (operatorItakuraSaito Delta logDelta) =
+      arakiRelativeEntropy phi logDelta := by
   unfold operatorItakuraSaito arakiRelativeEntropy
-  simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.id_apply]
-  rw [inner_sub_right, inner_sub_right]
-  rw [h_delta_vacuum, h_norm_vacuum]
-  ring
+  rw [map_sub, map_sub, h_delta]
+  simp
+
+/-- Normalized-state specialization of the cancellation theorem. -/
+theorem itakuraSaito_expectation_eq_araki_of_state
+    (phi : A →ₚ[ℂ] ℂ) (Delta logDelta : A)
+    (h_phi_one : phi 1 = 1)
+    (h_delta : phi Delta = 1) :
+    phi (operatorItakuraSaito Delta logDelta) =
+      arakiRelativeEntropy phi logDelta := by
+  apply itakuraSaito_expectation_eq_araki phi Delta logDelta
+  simpa [h_phi_one] using h_delta
 
 /--
-Quantum scale-shift theorem:
-Scaling the modular operator Delta by c shifts the vacuum expectation value of the
-operator Itakura-Saito divergence by exactly the scalar Itakura-Saito divergence of c.
+Scaling the modular element and shifting its logarithmic datum is still an
+algebraic statement on the positive-functional readout.  It is deliberately
+separate from any claim that `c • Delta` has logarithm
+`logDelta + logc • 1`.
 -/
 theorem itakuraSaito_expectation_scale_shift
-    (Delta logDelta : H →L[ℂ] H) (Ω : H) (c logc : ℂ)
-    (h_delta_vacuum : inner ℂ Ω (Delta Ω) = 1)
-    (h_norm_vacuum : inner ℂ Ω Ω = 1) :
-    let Delta' := c • Delta
-    let logDelta' := logDelta + logc • ContinuousLinearMap.id ℂ H
-    inner ℂ Ω (operatorItakuraSaito Delta' logDelta' Ω) =
-      (c - logc - 1) * inner ℂ Ω Ω + inner ℂ Ω (operatorItakuraSaito Delta logDelta Ω) := by
-  intro Delta' logDelta'
+    (phi : A →ₚ[ℂ] ℂ) (Delta logDelta : A) (c logc : ℂ)
+    (h_delta : phi Delta = phi 1) :
+    phi (operatorItakuraSaito (c • Delta)
+      (logDelta + logc • (1 : A))) =
+      (c - logc - 1) * phi 1 +
+        phi (operatorItakuraSaito Delta logDelta) := by
   unfold operatorItakuraSaito
-  dsimp [Delta', logDelta']
-  simp only [inner_sub_right, inner_add_right, inner_smul_right]
-  rw [h_delta_vacuum, h_norm_vacuum]
+  rw [map_sub, map_sub, map_add, map_smul, map_sub, map_sub]
+  rw [h_delta]
+  simp
   ring
 
 end InfoGeometry.Canonical.ArakiItakuraSaitoEquivalence

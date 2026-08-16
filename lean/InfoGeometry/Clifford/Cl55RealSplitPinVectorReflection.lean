@@ -135,4 +135,35 @@ noncomputable def normalizedVectorReflectionIsometry
       normalizedVectorReflection v hunit x :=
   rfl
 
+/- The normalized Clifford generator has the corresponding native
+quadratic-reflection action. -/
+theorem normalizedVector_orthogonalAction_eq_quadraticReflection
+    (v : V55) (hv : Q55 v = 1 ∨ Q55 v = -1)
+    (hunit : IsUnit (Q55 v)) :
+    realSplitPinOrthogonalAction
+        ⟨normalizedVectorUnit v hunit,
+          normalizedVectorUnit_mem_realSplitPin v hv hunit⟩ =
+      orthogonalGroup55FromIsometry
+        (quadraticReflectionIsometry v (by
+          rcases hv with hv | hv <;> simp [hv])) := by
+  apply Subtype.ext
+  apply LinearEquiv.ext
+  intro x
+  change realSplitPinTwistedAction
+      ⟨normalizedVectorUnit v hunit,
+        normalizedVectorUnit_mem_realSplitPin v hv hunit⟩ x =
+    quadraticReflection v (by
+      rcases hv with hv | hv <;> simp [hv]) x
+  apply ι55_injective
+  calc
+    ι55 (realSplitPinTwistedAction
+        ⟨normalizedVectorUnit v hunit,
+          normalizedVectorUnit_mem_realSplitPin v hv hunit⟩ x) =
+        ι55 (normalizedVectorReflection v hunit x) :=
+      normalizedVector_action_apply_ι v x hv hunit _
+    _ = ι55 (quadraticReflection v (by
+      rcases hv with hv | hv <;> simp [hv]) x) := by
+      simpa using congrArg (fun f => ι55 (f x))
+        (normalizedVectorReflection_eq_quadraticReflection v hv hunit)
+
 end InfoGeometry.Clifford.Clifford55

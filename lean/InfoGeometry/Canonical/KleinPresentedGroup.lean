@@ -42,6 +42,52 @@ theorem kleinRelator_eq_one : toKlein kleinRelator = 1 := by
   change (QuotientGroup.mk' KleinNormal) kleinRelator = 1
   exact (QuotientGroup.eq_one_iff kleinRelator).2 kleinRelator_mem_normal
 
+/-- The defining Klein-bottle conjugation relation in the quotient group. -/
+theorem klein_generator_relation :
+    toKlein genA * toKlein genB * (toKlein genA)⁻¹ =
+      (toKlein genB)⁻¹ := by
+  have h := kleinRelator_eq_one
+  change
+    (toKlein genA * toKlein genB * (toKlein genA)⁻¹) *
+        toKlein genB = 1 at h
+  calc
+    toKlein genA * toKlein genB * (toKlein genA)⁻¹ =
+        (toKlein genA * toKlein genB * (toKlein genA)⁻¹) *
+          (toKlein genB * (toKlein genB)⁻¹) := by simp
+    _ = ((toKlein genA * toKlein genB * (toKlein genA)⁻¹) *
+          toKlein genB) * (toKlein genB)⁻¹ := by simp [mul_assoc]
+    _ = (toKlein genB)⁻¹ := by rw [h, one_mul]
+
+/-- The square of the orientation-reversing generator commutes with the
+transverse generator, expressing the ordinary even sector of the double cover. -/
+theorem klein_glide_square_commutes_with_transverse :
+    (toKlein genA * toKlein genA) * toKlein genB =
+      toKlein genB * (toKlein genA * toKlein genA) := by
+  let a : KleinGroup := toKlein genA
+  let b : KleinGroup := toKlein genB
+  have hrel : a * b * a⁻¹ = b⁻¹ := by
+    simpa [a, b] using klein_generator_relation
+  have hab : a * b = b⁻¹ * a := by
+    calc
+      a * b = (a * b * a⁻¹) * a := by simp [mul_assoc]
+      _ = b⁻¹ * a := by rw [hrel]
+  have hinv : a * b⁻¹ = b * a := by
+    have hrelInv : a * b⁻¹ * a⁻¹ = b := by
+      calc
+        a * b⁻¹ * a⁻¹ = (a * b * a⁻¹)⁻¹ := by simp [mul_assoc]
+        _ = (b⁻¹)⁻¹ := by rw [hrel]
+        _ = b := by simp
+    calc
+      a * b⁻¹ = (a * b⁻¹ * a⁻¹) * a := by simp [mul_assoc]
+      _ = b * a := by rw [hrelInv]
+  change (a * a) * b = b * (a * a)
+  calc
+    (a * a) * b = a * (a * b) := by rw [mul_assoc]
+    _ = a * (b⁻¹ * a) := by rw [hab]
+    _ = (a * b⁻¹) * a := by rw [mul_assoc]
+    _ = (b * a) * a := by rw [hinv]
+    _ = b * (a * a) := by rw [mul_assoc]
+
 /-- The universal free-group representation for a Klein relation. -/
 def freeKleinRep {G : Type*} [Group G] (A B : G)
     (_hrel : A * B * A⁻¹ = B⁻¹) : KleinFree →* G :=

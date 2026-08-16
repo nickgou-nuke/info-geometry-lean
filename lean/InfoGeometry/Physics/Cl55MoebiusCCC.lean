@@ -1,10 +1,6 @@
 import Mathlib.Tactic
-import InfoGeometry.OperatorAlgebra.CliffordCAR
 import InfoGeometry.OperatorAlgebra.Cl44FockParity
-import InfoGeometry.OperatorAlgebra.FullPin55MatrixLaws
-import InfoGeometry.OperatorAlgebra.FullO55MatrixLaws
-import InfoGeometry.Physics.OrbitClassification55
-import InfoGeometry.Physics.WeightGrading55
+import InfoGeometry.Physics.SplitCliffordAlgebras
 
 /-!
 # Cl(5,5) finite parity readout
@@ -22,10 +18,6 @@ about future infinity or a next aeon.
 
 namespace InfoGeometry.Physics.Cl55MoebiusCCC
 
-open InfoGeometry.OperatorAlgebra.CliffordCAR
-open InfoGeometry.Physics.OrbitClassification55
-open InfoGeometry.Physics.WeightGrading55
-
 /-! ## 1. Finite parity shadow used by the readout -/
 
 theorem cl44_witten_index_zero : ((8 : ℤ) - 8) = 0 := by
@@ -36,5 +28,23 @@ theorem cl44_witten_index_zero : ((8 : ℤ) - 8) = 0 := by
 /-- A finite integer readout for the chiral parity balance. -/
 theorem chiral_parity_compensation : ((16 : ℤ) - 16) = 0 := by
   norm_num
+
+/-- The arithmetic parity balance transported from the existing finite
+`Cl(4,4)` chiral-sheet dimension readout.  This uses the supplied dimension
+definition only; it does not assert an intrinsic half-spin decomposition. -/
+theorem chiral_sheet_dimension_parity_compensation :
+    ((SplitClifford.chiralSheetDim : ℤ) - SplitClifford.chiralSheetDim) = 0 := by
+  rw [SplitClifford.chiralSheetDim_eq_16]
+  norm_num
+
+/-! ## 3. The finite packet contains no further structure -/
+
+/-- The two finite parity readouts packaged together.
+
+This conjunction is only an arithmetic packet: it does not identify the two
+terms with dimensions of a proved chiral representation. -/
+theorem finite_parity_packet :
+    (((8 : ℤ) - 8) = 0) ∧ (((16 : ℤ) - 16) = 0) := by
+  exact ⟨cl44_witten_index_zero, chiral_parity_compensation⟩
 
 end InfoGeometry.Physics.Cl55MoebiusCCC

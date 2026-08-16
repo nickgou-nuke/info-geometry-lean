@@ -5,15 +5,20 @@ Rosetta Stone — conformal/rapidity/inversion/Möbius/adjoint translation table
 Each verified identity maps to a theorem in the existing Lean owner surfaces.
 """
 
+import sys
+from pathlib import Path
 import sympy as sp
 from sympy import Matrix, eye, zeros, Rational
+
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from tools.sympy.common import comm
 
 z = sp.Symbol("z")
 λ, λ1, λ2 = sp.symbols("λ λ1 λ2", real=True)
 η, r = sp.symbols("η r", real=True)
-
-def comm(a, b):
-    return sp.simplify(a * b - b * a)
 
 
 def mobius_action(m, zz):

@@ -32,7 +32,7 @@ Parity/supercharge/Hamiltonian packet in an abstract operator ring.
 `Γ` is the square-free/Möbius parity involution, `Q` is the odd supercharge,
 and `H` is its square.
 -/
-structure ParitySuperchargePacket
+structure ParitySuperchargeData
     (Op : Type*) [Ring Op] where
   parity : Op
   supercharge : Op
@@ -44,11 +44,11 @@ structure ParitySuperchargePacket
   squareLaw :
     supercharge * supercharge = hamiltonian
 
-namespace ParitySuperchargePacket
+namespace ParitySuperchargeData
 
 variable
     {Op : Type*} [Ring Op]
-    (P : ParitySuperchargePacket Op)
+    (P : ParitySuperchargeData Op)
 
 /--
 The square of an odd supercharge commutes with parity.
@@ -99,6 +99,6 @@ theorem supercharge_commutes_with_hamiltonian :
     _ = P.hamiltonian * P.supercharge := by
           rw [P.squareLaw]
 
-end ParitySuperchargePacket
+end ParitySuperchargeData
 
 end InfoGeometry.Arithmetic.ArithmeticSuperchargeHopfBridge

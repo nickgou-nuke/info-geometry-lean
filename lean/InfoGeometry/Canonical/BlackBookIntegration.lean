@@ -22,7 +22,7 @@ Typed record for a black-book corridor.
 The object keeps the raw symbolic seed separate from the formal lineage and
 the recurring archetype tags observed during integration.
 -/
-structure BlackBookPacket where
+structure BlackBookData where
   /-- Stable source anchor, e.g. a chapter or note identifier. -/
   sourceAnchor : String
 
@@ -50,9 +50,9 @@ structure BlackBookPacket where
   /-- Current integration status. -/
   status : String
 
-namespace BlackBookPacket
+namespace BlackBookData
 
-variable (B : BlackBookPacket)
+variable (B : BlackBookData)
 
 /-- Number of conjectural statements attached to the packet. -/
 def conjectureCount : Nat :=
@@ -121,6 +121,6 @@ def summary : Summary :=
     manifestCount := B.manifestCount
     status := B.status }
 
-end BlackBookPacket
+end BlackBookData
 
 end InfoGeometry.Canonical.BlackBookIntegration

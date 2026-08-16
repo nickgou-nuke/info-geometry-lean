@@ -22,13 +22,15 @@ third generators would commute rather than anticommute.
 
 from __future__ import annotations
 
+import sys
+from pathlib import Path
 import sympy as sp
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def assert_matrix_zero(M: sp.Matrix, label: str) -> None:
-    reduced = M.applyfunc(lambda x: sp.expand(sp.simplify(x)))
-    if reduced != sp.zeros(*M.shape):
-        raise AssertionError(f"{label} failed:\n{reduced}")
+from tools.sympy.common import assert_matrix_zero
 
 
 def main() -> None:

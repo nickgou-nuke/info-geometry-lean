@@ -96,11 +96,6 @@ def completedL :
     ℂ → ℂ :=
   B.resonance.completed.completedL
 
-/-- Legacy completed-functional-equation property read back from the strong property lane. -/
-theorem completedFunctionalEquation :
-    HasCompletedFunctionalEquation P.L B.completedL :=
-  B.resonance.completed.toHasCompletedFunctionalEquation
-
 /--
 The bridge packages the supplied Euler/completed data as a
 `LanglandsPrimeResonanceWitness`.

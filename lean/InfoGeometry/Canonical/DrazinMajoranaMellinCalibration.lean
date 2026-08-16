@@ -39,9 +39,9 @@ structure DrazinMajoranaMellinCalibration
   drazin :
     InfoGeometry.Canonical.DrazinCentralizerErlangen.FinalDrazinFierzLaw Obs
   majorana :
-    MajoranaZeroModeNormalizabilityPacket ZeroMode NormReadout
+    MajoranaZeroModeNormalizabilityData ZeroMode NormReadout
   mellin :
-    MellinPlancherelCriticalLinePacket MellinWave MellinNorm
+    MellinPlancherelCriticalLineData MellinWave MellinNorm
   channel :
     InfoGeometry.Canonical.DrazinFierzBridge.FierzChannel
   scalarReadout : ℝ

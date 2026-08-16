@@ -49,7 +49,7 @@ open InfoGeometry.KK.RealSplitKreinKasparovCycle
 /--
 Prime-to-Virasoro compatibility packet.
 
-`ArithmeticKMSWitness` carries the finite primon gas support and Gibbs flow.
+`ArithmeticKMSData` carries the finite primon gas support and Gibbs flow.
 `PrimeGasSuperKMSBridge` carries the even/odd supertemperature split.
 `MassieuPlanckWeylScalarCalibration` carries the Souriau/Massieu scalar lane.
 `PrimeVielbeinCarrier` carries the zeta-trace prime volume lane.
@@ -61,15 +61,17 @@ The bridge itself only stores the calibration equalities between those lanes.
 @[rep_depth thermo]
 structure PrimonVirasoroCentralChargeBridge
     (State LieAlg Obs PrimeLabel Field Coeff Finite Alg A B E : Type)
+    [AddMonoid LieAlg]
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
     [NormedRing A] [NormedRing B]
     [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [KreinSpace (DoubledSpace E)]
     [KreinGradedModule (DoubledSpace E)] where
   /-- Finite arithmetic KMS owner. -/
-  arithmetic : ArithmeticKMSWitness State
+  arithmetic : ArithmeticKMSData State
 
   /-- Finite support used for the arithmetic Gibbs readout. -/
   support : Finset ℕ
@@ -151,10 +153,12 @@ namespace Bridge
 
 variable
     {State LieAlg Obs PrimeLabel Field Coeff Finite Alg A B E : Type}
+    [AddMonoid LieAlg]
     [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
     [NormedRing A] [NormedRing B]
     [NormedAlgebra ℝ A] [NormedAlgebra ℝ B]
+    [NormedRing Obs] [NormedAlgebra ℝ Obs] [CompleteSpace Obs]
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     [KreinSpace (DoubledSpace E)]
     [KreinGradedModule (DoubledSpace E)]

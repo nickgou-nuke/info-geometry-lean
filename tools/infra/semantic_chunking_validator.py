@@ -29,11 +29,8 @@ INLINE_PAREN_OPEN_RE = re.compile(r"\\\(")
 INLINE_PAREN_CLOSE_RE = re.compile(r"\\\)")
 
 
-def load_json(path: Path) -> dict[str, Any]:
-    data = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(data, dict):
-        raise ValueError("top-level JSON must be object")
-    return data
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def build_math_env_state(lines: list[str]) -> list[dict[str, Any]]:

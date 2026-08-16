@@ -1,61 +1,31 @@
-import InfoGeometry.Arithmetic.PrimeBosonFermionGas
-import InfoGeometry.Arithmetic.PrimeMajoranaPfaffian
-import Mathlib.Analysis.Analytic.Basic
-import Mathlib.Order.Filter.Basic
+import InfoGeometry.Canonical.WeylSupertraceOwner
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.Bridge
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.RelativeDeterminant
 
 /-!
-# Conditional analytic and kernel data
+# Zeta/supertrace routing marker
 
-This module records explicit hypotheses for a convergent family of finite
-Euler-product readouts and for a zero of a linear operator.  It proves no
-convergence, analytic continuation, determinant identity, or zero-spectrum
-correspondence on its own.
+The former contents of this module were two conditional hypothesis packets:
+
+* a `Tendsto` witness for finite Euler readouts, and
+* a supplied equivalence between a scalar function zero and a linear-kernel
+  witness.
+
+Neither packet constructed an Euler-product limit, an analytic continuation,
+an operator determinant, or a noncommutative zero-spectrum theorem.  Keeping
+those fields under this legacy name made a hypothesis socket look like a
+proved supertrace bridge.
+
+The maintained owners are now imported explicitly:
+
+* `Canonical.WeylSupertraceOwner` owns the finite parity/Weyl supertrace and
+  its proved inverse-zeta statement on the stated half-plane;
+* `MajoranaPolyaHilbertSocket.Bridge` owns the typed Majorana/Pólya--Hilbert
+  obligation packet;
+* `MajoranaPolyaHilbertSocket.RelativeDeterminant` owns the typed relative
+  determinant/scattering target.
+
+No declarations are re-exported here.  In particular, this marker does not
+claim a completed noncommutative determinant identity or a zero correspondence.
 -/
 
-noncomputable section
-
-namespace InfoGeometry.Arithmetic.ZetaSupertraceBridge
-
-open scoped BigOperators
-
-/-- Data witnessing convergence of finite readouts to a supplied function. -/
-structure InfiniteEulerProductWitness (s : ℂ) where
-  /-- Finite readouts indexed by a cutoff. -/
-  finiteEulerProduct : ℕ → ℂ → ℂ
-
-  /-- The target function on the spectral parameter. -/
-  zeta : ℂ → ℂ
-
-  /-- The readouts converge to the target value at `s`. -/
-  euler_limit :
-    Filter.Tendsto
-      (fun N => finiteEulerProduct N s)
-      Filter.atTop (nhds (zeta s))
-
-  /-- The target function is analytic on the supplied domain. -/
-  analyticDomain : Set ℂ
-  analytic_continuation :
-    AnalyticOnNhd ℂ zeta analyticDomain
-
-/-- Data relating a specified function zero to a nontrivial operator kernel. -/
-structure MajoranaZeroModeHypothesis
-    (s : ℂ) (H : Type*)
-    [AddCommGroup H] [Module ℂ H] where
-  /-- The supplied complex-valued function. -/
-  zeta : ℂ → ℂ
-
-  /-- The function vanishes at `s`. -/
-  is_zeta_zero : zeta s = 0
-
-  /-- The linear operator whose kernel is being tested. -/
-  operator : H →ₗ[ℂ] H
-
-  /-- The operator has a nonzero vector in its kernel. -/
-  has_zero_mode :
-    ∃ v : H, v ≠ 0 ∧ operator v = 0
-
-  /-- The supplied function zero is equivalent to the kernel condition. -/
-  zero_correspondence :
-    zeta s = 0 ↔ ∃ v : H, v ≠ 0 ∧ operator v = 0
-
-end InfoGeometry.Arithmetic.ZetaSupertraceBridge

@@ -4,11 +4,9 @@ import InfoGeometry.Canonical.AssociativeSuperBracket
 /-!
 # Supergraded Metriplectic Block Packets
 
-Block-level algebraic packets for the matrix language used in the
-supergraded/TKK formulation.  The file keeps the claims conservative:
-reciprocity, cocycle corrections, Weyl scaling, and Hestenes/chiral-cone cross
-response are represented by proof-carrying structures rather than by new
-analytic existence theorems.
+Noncommutative TKK/Hestenes block packets. The retained structures use the
+supplied `Ring`/`Algebra` carrier and expose their commutator equations
+directly; scalar entry-wise shadow packets are deliberately not defined here.
 -/
 
 namespace InfoGeometry.SuperMetriplectic
@@ -34,81 +32,6 @@ def dual : TKKGrade → TKKGrade
   cases g <;> rfl
 
 end TKKGrade
-
-/--
-Scalar shadow of a `3 × 3` TKK Onsager block matrix.
-
-The entries are real body-level response coefficients.  Graded signs and
-nilpotent parts should be carried by richer downstream models; this scalar
-packet records the observable reciprocal block data.
--/
-structure TKKOnsagerMatrix where
-  entry : TKKGrade → TKKGrade → ℝ
-  reciprocal : ∀ i j, entry i j = entry j i
-
-namespace TKKOnsagerMatrix
-
-/-- Public matrix entry notation as a definition. -/
-abbrev L (M : TKKOnsagerMatrix) (i j : TKKGrade) : ℝ :=
-  M.entry i j
-
-/-- Onsager reciprocity for any two TKK lanes. -/
-theorem reciprocal_entry (M : TKKOnsagerMatrix) (i j : TKKGrade) :
-    M.L i j = M.L j i :=
-  M.reciprocal i j
-
-/-- The mixed `g_+ / g_-` response block is reciprocal. -/
-theorem plus_minus_reciprocal (M : TKKOnsagerMatrix) :
-    M.L TKKGrade.plus TKKGrade.minus =
-      M.L TKKGrade.minus TKKGrade.plus :=
-  M.reciprocal _ _
-
-end TKKOnsagerMatrix
-
-/--
-Cocycle-modified Hessian entry.
-
-This is the scalar packet for the formula
-`L_ab = Cov_ab + theta_ab`; it does not assert that `theta` satisfies the full
-Chevalley-Eilenberg cocycle identity.
--/
-structure CocycleModifiedHessianEntry where
-  covariance : ℝ
-  souriauCocycle : ℝ
-  hessianEntry : ℝ
-  hessian_eq_covariance_add_cocycle :
-    hessianEntry = covariance + souriauCocycle
-
-namespace CocycleModifiedHessianEntry
-
-/-- Public cocycle-modified Hessian equation. -/
-theorem hessian_eq (H : CocycleModifiedHessianEntry) :
-    H.hessianEntry = H.covariance + H.souriauCocycle :=
-  H.hessian_eq_covariance_add_cocycle
-
-end CocycleModifiedHessianEntry
-
-/--
-Weyl scaling packet for a scalar Onsager block.
-
-`factor` is the already-computed positive or signed Weyl scale in the chosen
-model.  This layer only records covariance of the block coefficient under that
-scale.
--/
-structure WeylScaledOnsagerEntry where
-  oldEntry : ℝ
-  newEntry : ℝ
-  factor : ℝ
-  new_eq_factor_mul_old : newEntry = factor * oldEntry
-
-namespace WeylScaledOnsagerEntry
-
-/-- Public Weyl scaling equation for a scalar response entry. -/
-theorem new_eq (W : WeylScaledOnsagerEntry) :
-    W.newEntry = W.factor * W.oldEntry :=
-  W.new_eq_factor_mul_old
-
-end WeylScaledOnsagerEntry
 
 /--
 Hestenes/chiral-cone cross response packet.
@@ -300,7 +223,7 @@ The packet records the conservative implication used by the hydrodynamic
 reading: a vanishing conformal trace/anomaly disables the bulk-viscous scalar
 channel, while a nonzero channel is kept as explicit data rather than derived.
 -/
-structure ConformalBulkViscosityPacket where
+structure ConformalBulkViscosityData where
   traceStress : ℝ
   bulkViscosity : ℝ
   conformalAnomaly : ℝ
@@ -308,29 +231,29 @@ structure ConformalBulkViscosityPacket where
   bulkViscosity_eq_zero_of_trace_zero :
     traceStress = 0 → bulkViscosity = 0
 
-namespace ConformalBulkViscosityPacket
+namespace ConformalBulkViscosityData
 
 /-- Exact conformal trace/anomaly readout carried by the packet. -/
-theorem trace_eq (C : ConformalBulkViscosityPacket) :
+theorem trace_eq (C : ConformalBulkViscosityData) :
     C.traceStress = C.conformalAnomaly :=
   C.trace_eq_anomaly
 
 /-- If the conformal trace vanishes, the scalar bulk-viscosity channel vanishes. -/
 theorem bulkViscosity_eq_zero_of_conformal_trace_zero
-    (C : ConformalBulkViscosityPacket)
+    (C : ConformalBulkViscosityData)
     (hTrace : C.traceStress = 0) :
     C.bulkViscosity = 0 :=
   C.bulkViscosity_eq_zero_of_trace_zero hTrace
 
 /-- If the anomaly vanishes, the scalar bulk-viscosity channel vanishes. -/
 theorem bulkViscosity_eq_zero_of_anomaly_zero
-    (C : ConformalBulkViscosityPacket)
+    (C : ConformalBulkViscosityData)
     (hAnomaly : C.conformalAnomaly = 0) :
     C.bulkViscosity = 0 := by
   apply C.bulkViscosity_eq_zero_of_trace_zero
   rw [C.trace_eq_anomaly, hAnomaly]
 
-end ConformalBulkViscosityPacket
+end ConformalBulkViscosityData
 
 /--
 Perfect-CFT gate for conformal dissipative blocks.

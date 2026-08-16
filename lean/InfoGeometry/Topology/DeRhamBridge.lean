@@ -42,7 +42,7 @@ open Filter
 /-! ## Section 1: The Three Itakura Strands as de Rham Models -/
 
 /-- 1. **Araki/Itakura-Saito** → Curvature form `F = dA + A ∧ A`
-    The `NoncommutativeItakuraSaitoPacket.divergence` IS the operator Bregman
+    The `NoncommutativeItakuraSaitoModel.divergence` is the operator Bregman
     divergence, which under the bridge becomes `Tr(F ∧ F)` — the second Chern form.
 
     For the Cuntz algebra embedding `ι : M₂(ℂ) → O₂`, the connection 1-form is
@@ -50,7 +50,7 @@ open Filter
     divergence `D(X,Y) = Tr(X* log X - X* log Y - X* + Y*)` equals
     `∫ Tr(F ∧ F)` for the associated connection. -/
 theorem araki_itakura_is_curvature_form :
-    ∀ (P : NoncommutativeItakuraSaitoPacket (Matrix (Fin 2) (Fin 2) ℂ)),
+    ∀ (P : NoncommutativeItakuraSaitoModel (Matrix (Fin 2) (Fin 2) ℂ)),
     ∀ (X : Matrix (Fin 2) (Fin 2) ℂ), P.divergence X X = 0 := by
   intro P X
   exact P.divergence_self X

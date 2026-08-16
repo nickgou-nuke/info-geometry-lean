@@ -34,7 +34,7 @@ structure GNSRestrictedOperatorCollapse
   gns : AbstractGNSState A
 
   /-- Noncommutative Itakura--Saito/Burg operator packet. -/
-  packet : NoncommutativeItakuraSaitoPacket Op
+  packet : NoncommutativeItakuraSaitoModel Op
 
   /-- Map from the ambient algebra to the noncommutative operator chart. -/
   toOperator : A → Op

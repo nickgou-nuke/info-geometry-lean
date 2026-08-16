@@ -3,12 +3,13 @@ import InfoGeometry.Clifford.Cl55WittPinAction
 import InfoGeometry.Canonical.SplitOctonionThreeColorSplitQuaternionCores
 
 /-!
-# Six-channel chiral soldering into `Cl(5,5)`
+# Six-channel chiral colour readout in `Cl(5,5)`
 
 This file packages the already existing first-three CAR pairs as one
 operator-valued six-channel readout.  It is deliberately a readout layer:
 it does not assert a multiplicative embedding of the non-associative Zorn
-algebra into the associative Clifford algebra.
+algebra into the associative Clifford algebra.  The colour labels below are
+only a chosen convention for the first three Witt slots.
 -/
 
 namespace InfoGeometry.Canonical.Cl55ChiralSolderingReadout
@@ -18,102 +19,123 @@ open InfoGeometry.Canonical
 
 noncomputable section
 
-abbrev ChiralIndex := Bool × Fin 3
+def ChiralIndex := Bool × Fin 3
 
 /-- The six chiral labels, with `true` denoting the plus sheet. -/
-noncomputable def soldering (s : ChiralIndex) : Cl55 :=
+noncomputable def chiralReadout (s : ChiralIndex) : Cl55 :=
   if s.1 then chiralPlus55 s.2 else chiralMinus55 s.2
 
-/- The explicit identification of the three split-quaternionic colour planes
-   `(i,l)`, `(j,l)`, `(k,l)` with the first three Witt pairs. -/
-def colourToFin3 : SplitOctonionColour → Fin 3
-  | .red => 0
-  | .green => 1
-  | .blue => 2
+/- The colours are assigned to the first three Witt slots by convention;
+   this is not a global identification of nonassociative carriers. -/
+def colourFin3Equiv : SplitOctonionColour ≃ Fin 3 where
+  toFun
+    | .red => 0
+    | .green => 1
+    | .blue => 2
+  invFun
+    | 0 => .red
+    | 1 => .green
+    | 2 => .blue
+  left_inv := by
+    intro c
+    cases c <;> rfl
+  right_inv := by
+    intro i
+    fin_cases i <;> rfl
 
-theorem colourToFin3_injective : Function.Injective colourToFin3 := by
-  intro a b h
-  cases a <;> cases b <;> simp [colourToFin3] at h ⊢
+noncomputable def colourChiralReadout (s : Bool) (c : SplitOctonionColour) : Cl55 :=
+  chiralReadout (s, colourFin3Equiv c)
 
-def solderingColour (s : Bool) (c : SplitOctonionColour) : Cl55 :=
-  soldering (s, colourToFin3 c)
+noncomputable def chiralVectorReadout (s : ChiralIndex) : V55 :=
+  if s.1 then
+    (1 / 2 : ℝ) • nbar_pair (Fin.castAdd 2 s.2)
+  else
+    (1 / 2 : ℝ) • n_pair (Fin.castAdd 2 s.2)
 
-@[simp] theorem solderingColour_red (s : Bool) :
-    solderingColour s .red = soldering (s, 0) := by
+@[simp] theorem colourChiralReadout_red (s : Bool) :
+    colourChiralReadout s .red = chiralReadout (s, 0) := by
   rfl
 
-@[simp] theorem solderingColour_green (s : Bool) :
-    solderingColour s .green = soldering (s, 1) := by
+@[simp] theorem colourChiralReadout_green (s : Bool) :
+    colourChiralReadout s .green = chiralReadout (s, 1) := by
   rfl
 
-@[simp] theorem solderingColour_blue (s : Bool) :
-    solderingColour s .blue = soldering (s, 2) := by
+@[simp] theorem colourChiralReadout_blue (s : Bool) :
+    colourChiralReadout s .blue = chiralReadout (s, 2) := by
   rfl
 
-@[simp] theorem soldering_plus (i : Fin 3) :
-    soldering (true, i) = chiralPlus55 i := by
-  simp [soldering]
+@[simp] theorem chiralReadout_plus (i : Fin 3) :
+    chiralReadout (true, i) = chiralPlus55 i := by
+  simp [chiralReadout]
 
-@[simp] theorem soldering_minus (i : Fin 3) :
-    soldering (false, i) = chiralMinus55 i := by
-  simp [soldering]
+@[simp] theorem chiralReadout_minus (i : Fin 3) :
+    chiralReadout (false, i) = chiralMinus55 i := by
+  simp [chiralReadout]
 
-@[simp] theorem soldering_sq (s : ChiralIndex) :
-    soldering s * soldering s = 0 := by
+@[simp] theorem chiralReadout_sq (s : ChiralIndex) :
+    chiralReadout s * chiralReadout s = 0 := by
   cases s with
   | mk b i =>
-      cases b <;> simp [soldering]
+      cases b <;> simp [chiralReadout]
+
+@[simp] theorem ι55_chiralVectorReadout (s : ChiralIndex) :
+    ι55 (chiralVectorReadout s) = chiralReadout s := by
+  cases s with
+  | mk b i =>
+      cases b <;>
+        simp [chiralVectorReadout, chiralReadout, chiralPlus55,
+          chiralMinus55, creation55, annihilation55]
 
 theorem plus_anticommutator (i j : Fin 3) :
-    soldering (true, i) * soldering (true, j) +
-        soldering (true, j) * soldering (true, i) = 0 := by
-  simpa [soldering] using chiralPlus55_anticommutator i j
+    chiralReadout (true, i) * chiralReadout (true, j) +
+        chiralReadout (true, j) * chiralReadout (true, i) = 0 := by
+  simpa [chiralReadout] using chiralPlus55_anticommutator i j
 
 theorem minus_anticommutator (i j : Fin 3) :
-    soldering (false, i) * soldering (false, j) +
-        soldering (false, j) * soldering (false, i) = 0 := by
-  simpa [soldering] using chiralMinus55_anticommutator i j
+    chiralReadout (false, i) * chiralReadout (false, j) +
+        chiralReadout (false, j) * chiralReadout (false, i) = 0 := by
+  simpa [chiralReadout] using chiralMinus55_anticommutator i j
 
 theorem mixed_anticommutator (i j : Fin 3) :
-    soldering (false, i) * soldering (true, j) +
-        soldering (true, j) * soldering (false, i) =
+    chiralReadout (false, i) * chiralReadout (true, j) +
+        chiralReadout (true, j) * chiralReadout (false, i) =
       if i = j then 1 else 0 := by
-  simpa [soldering] using chiralMinus55_plus55_anticommutator i j
+  simpa [chiralReadout] using chiralMinus55_plus55_anticommutator i j
 
 theorem plus_commutator_mem_grade_two (i j : Fin 3) :
-    soldering (true, i) * soldering (true, j) -
-        soldering (true, j) * soldering (true, i) ∈
+    chiralReadout (true, i) * chiralReadout (true, j) -
+        chiralReadout (true, j) * chiralReadout (true, i) ∈
       cl55GradeSubmodule 2 := by
-  simpa [soldering] using chiralPlus55_commutator_mem_grade_two i j
+  simpa [chiralReadout] using chiralPlus55_commutator_mem_grade_two i j
 
 theorem minus_commutator_mem_grade_neg_two (i j : Fin 3) :
-    soldering (false, i) * soldering (false, j) -
-        soldering (false, j) * soldering (false, i) ∈
+    chiralReadout (false, i) * chiralReadout (false, j) -
+        chiralReadout (false, j) * chiralReadout (false, i) ∈
       cl55GradeSubmodule (-2) := by
-  simpa [soldering] using chiralMinus55_commutator_mem_grade_neg_two i j
+  simpa [chiralReadout] using chiralMinus55_commutator_mem_grade_neg_two i j
 
 theorem mixed_commutator_mem_grade_zero (i j : Fin 3) :
-    soldering (true, i) * soldering (false, j) -
-        soldering (false, j) * soldering (true, i) ∈
+    chiralReadout (true, i) * chiralReadout (false, j) -
+        chiralReadout (false, j) * chiralReadout (true, i) ∈
       cl55GradeSubmodule 0 := by
-  simpa [soldering] using chiralPlus55_minus55_commutator_mem_grade_zero i j
+  simpa [chiralReadout] using chiralPlus55_minus55_commutator_mem_grade_zero i j
 
 /- The Pin action is stated on the genuine Clifford vector readout.  The
    repository's native action transports vectors into `LinearMap.range ι55`;
    no unproved permutation formula for the six selected generators is added. -/
-theorem pin_soldering_vector_readout (g : Pin55) (v : V55) :
-    pinTwistedAdj g v ∈ LinearMap.range (ι55) := by
-  exact pinTwistedAdj_mem_ι_range g v
+theorem pin_chiralReadout_mem_vector_range (g : Pin55) (s : ChiralIndex) :
+    pinTwistedAdj g (chiralVectorReadout s) ∈ LinearMap.range (ι55) := by
+  exact pinTwistedAdj_mem_ι_range g (chiralVectorReadout s)
 
-theorem spin_soldering_plus_grade (g : Spin55) (i : Fin 3) :
-    spinCliffordRingEquiv g (soldering (true, i)) ∈
+theorem spin_chiralReadout_plus_grade (g : Spin55) (i : Fin 3) :
+    spinCliffordRingEquiv g (chiralReadout (true, i)) ∈
       spinTransportedCl55GradeSubmodule g 1 := by
-  simpa [soldering] using chiralPlus55_spin_transport g i
+  simpa [chiralReadout] using chiralPlus55_spin_transport g i
 
-theorem spin_soldering_minus_grade (g : Spin55) (i : Fin 3) :
-    spinCliffordRingEquiv g (soldering (false, i)) ∈
+theorem spin_chiralReadout_minus_grade (g : Spin55) (i : Fin 3) :
+    spinCliffordRingEquiv g (chiralReadout (false, i)) ∈
       spinTransportedCl55GradeSubmodule g (-1) := by
-  simpa [soldering] using chiralMinus55_spin_transport g i
+  simpa [chiralReadout] using chiralMinus55_spin_transport g i
 
 end
 

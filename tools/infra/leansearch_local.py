@@ -70,20 +70,8 @@ def normalize_identifier_text(text: str) -> str:
     return IDENTIFIER_CHAR_RE.sub("", text.lower())
 
 
-def iter_jsonl(path: Path) -> Iterable[dict[str, Any]]:
-    if not path.exists():
-        return
-    with path.open("r", encoding="utf-8") as handle:
-        for raw in handle:
-            line = raw.strip()
-            if not line:
-                continue
-            try:
-                row = json.loads(line)
-            except Exception:
-                continue
-            if isinstance(row, dict):
-                yield row
+# [lossless-compact] iter_jsonl folded into igf.common.json_io.iter_jsonl
+from igf.common.json_io import iter_jsonl
 
 
 def load_types(path: Path) -> dict[str, dict[str, Any]]:

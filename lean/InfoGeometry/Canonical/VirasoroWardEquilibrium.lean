@@ -39,12 +39,12 @@ instantiations.
 structure VirasoroWardEquilibriumPacket
     (Alg Op : Type*)
     [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
-    [NormedAddCommGroup Op] [NormedSpace ℝ Op] where
+    [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op] where
   /-- Virasoro generator datum. -/
   virasoro : VirasoroDatum Alg
 
   /-- Thermodynamic owner packet carrying the global log-partition potential. -/
-  thermodynamics : OperatorThermodynamicsPacket Op
+  thermodynamics : OperatorFirstThermodynamicsPacket Unit Op
 
   /-- Abstract Ward action on the scalar free-energy readout. -/
   wardAction : ℤ → ℝ → ℝ
@@ -69,7 +69,7 @@ namespace VirasoroWardEquilibriumPacket
 
 variable {Alg Op : Type*}
 variable [AddCommGroup Alg] [Module ℝ Alg] [LieRing Alg] [LieAlgebra ℝ Alg]
-variable [NormedAddCommGroup Op] [NormedSpace ℝ Op]
+variable [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
 
 /-- The free-energy readout of a Virasoro Ward packet is the existing operatorial one. -/
 @[simp]
@@ -77,8 +77,7 @@ theorem freeEnergy_eq_neg_log_partition
     (W : VirasoroWardEquilibriumPacket Alg Op) :
     W.thermodynamics.freeEnergy =
       - Real.log W.thermodynamics.partitionFunction :=
-  OperatorThermodynamicsPacket.freeEnergy_eq_neg_log_partition'
-    W.thermodynamics
+  rfl
 
 /-- The Ward residual is the abstract action applied to the free-energy readout. -/
 def wardResidual (W : VirasoroWardEquilibriumPacket Alg Op) (n : ℤ) : ℝ :=

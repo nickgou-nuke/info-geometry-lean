@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Algebra.CuntzConditionalExpectation
+import InfoGeometry.Algebra.CuntzSuperalgebra
 
 /-!
 # Cuntz Tensor Tree Realization Bridge
@@ -14,6 +15,7 @@ namespace InfoGeometry.Algebra.CuntzTensorTreeRealizationBridge
 open InfoGeometry.Algebra.CuntzTensorQuotient
 open InfoGeometry.Algebra.CuntzConditionalExpectation
 open InfoGeometry.Algebra.CuntzContractionLemmas
+open InfoGeometry.Algebra.CuntzSuperalgebra
 
 variable {n : ℕ}
 
@@ -42,6 +44,86 @@ theorem cuntzWordShiftDag_append (w₁ w₂ : List (Fin n)) :
 
 def cylinderProjection (w : List (Fin n)) : CuntzAlg n :=
   cuntzWordShift w * cuntzWordShiftDag w
+
+/-! The native Cuntz parity sees word shifts by their word length. -/
+
+theorem parity_cuntzWordShift (w : List (Fin n)) :
+    parity n (cuntzWordShift w) =
+      ((-1 : ℂ) ^ w.length) • cuntzWordShift w := by
+  induction w with
+  | nil => simp [cuntzWordShift]
+  | cons i w ih =>
+      simp only [cuntzWordShift, map_mul, parity_S, ih,
+        List.length_cons, pow_succ]
+      simp only [mul_neg, mul_one]
+      change
+        (-cuntzS n i) * (((-1 : ℂ) ^ w.length) • cuntzWordShift w) =
+          (-((-1 : ℂ) ^ w.length) : ℂ) •
+            (cuntzS n i * cuntzWordShift w)
+      calc
+        (-cuntzS n i) * (((-1 : ℂ) ^ w.length) • cuntzWordShift w) =
+            -(cuntzS n i * (((-1 : ℂ) ^ w.length) • cuntzWordShift w)) := by
+              exact neg_mul (cuntzS n i)
+                (((-1 : ℂ) ^ w.length) • cuntzWordShift w)
+        _ = -( ((-1 : ℂ) ^ w.length) •
+            (cuntzS n i * cuntzWordShift w)) := by
+              rw [mul_smul_comm]
+        _ = (-((-1 : ℂ) ^ w.length) : ℂ) •
+            (cuntzS n i * cuntzWordShift w) := by
+              exact (neg_smul ((-1 : ℂ) ^ w.length)
+                (cuntzS n i * cuntzWordShift w)).symm
+
+theorem parity_cuntzWordShiftDag (w : List (Fin n)) :
+    parity n (cuntzWordShiftDag w) =
+      ((-1 : ℂ) ^ w.length) • cuntzWordShiftDag w := by
+  induction w with
+  | nil => simp [cuntzWordShiftDag]
+  | cons i w ih =>
+      simp only [cuntzWordShiftDag, map_mul, parity_Sdag, ih,
+        List.length_cons, pow_succ]
+      simp only [mul_neg, mul_one]
+      change
+        (((-1 : ℂ) ^ w.length) • cuntzWordShiftDag w) *
+            (-cuntzSdag n i) =
+          (-((-1 : ℂ) ^ w.length) : ℂ) •
+            (cuntzWordShiftDag w * cuntzSdag n i)
+      calc
+        (((-1 : ℂ) ^ w.length) • cuntzWordShiftDag w) *
+            (-cuntzSdag n i) =
+              -((((-1 : ℂ) ^ w.length) • cuntzWordShiftDag w) *
+              cuntzSdag n i) := by
+                exact mul_neg (((-1 : ℂ) ^ w.length) • cuntzWordShiftDag w)
+                  (cuntzSdag n i)
+        _ = -(((-1 : ℂ) ^ w.length) •
+            (cuntzWordShiftDag w * cuntzSdag n i)) := by
+              rw [smul_mul_assoc]
+        _ = (-((-1 : ℂ) ^ w.length) : ℂ) •
+            (cuntzWordShiftDag w * cuntzSdag n i) := by
+              exact (neg_smul ((-1 : ℂ) ^ w.length)
+                (cuntzWordShiftDag w * cuntzSdag n i)).symm
+
+/-- Cylinder projections are even for the native Cuntz parity grading. -/
+theorem parity_cylinderProjection (w : List (Fin n)) :
+    parity n (cylinderProjection w) = cylinderProjection w := by
+  rw [cylinderProjection, map_mul, parity_cuntzWordShift,
+    parity_cuntzWordShiftDag]
+  have hsign : ((-1 : ℂ) ^ w.length) * ((-1 : ℂ) ^ w.length) = 1 := by
+    rw [← pow_add]
+    have h_even : w.length + w.length = 2 * w.length := by
+      simp [two_mul]
+    rw [h_even, pow_mul]
+    norm_num
+  calc
+    (((-1 : ℂ) ^ w.length) • cuntzWordShift w) *
+          ((-1 : ℂ) ^ w.length • cuntzWordShiftDag w) =
+        ((-1 : ℂ) ^ w.length) •
+          ((-1 : ℂ) ^ w.length •
+            (cuntzWordShift w * cuntzWordShiftDag w)) := by
+              rw [smul_mul_assoc, mul_smul_comm]
+    _ = (((-1 : ℂ) ^ w.length) * ((-1 : ℂ) ^ w.length)) •
+          (cuntzWordShift w * cuntzWordShiftDag w) := by
+            rw [smul_smul]
+    _ = cylinderProjection w := by rw [hsign]; simp [cylinderProjection]
 
 def cuntzPrefixEndomorphism (x : CuntzAlg n) : CuntzAlg n :=
   ∑ i : Fin n, cuntzS n i * x * cuntzSdag n i

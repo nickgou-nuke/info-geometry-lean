@@ -57,6 +57,12 @@ def xPlus (half : ℝ) (J : V →ₗ[ℝ] V) (x : V) : V :=
 def xMinus (half : ℝ) (J : V →ₗ[ℝ] V) (x : V) : V :=
   half • (x - J x)
 
+/-- The canonical half-sum and half-difference reconstruct the original vector. -/
+theorem xPlus_add_xMinus (J : V →ₗ[ℝ] V) (x : V) :
+    xPlus (1 / 2 : ℝ) J x + xMinus (1 / 2 : ℝ) J x = x := by
+  unfold xPlus xMinus
+  module
+
 lemma J_xPlus (half : ℝ) (J : V →ₗ[ℝ] V) (hJ2 : J.comp J = LinearMap.id) (x : V) :
     J (xPlus half J x) = xPlus half J x := by
   unfold xPlus
@@ -69,6 +75,24 @@ lemma J_xMinus (half : ℝ) (J : V →ₗ[ℝ] V) (hJ2 : J.comp J = LinearMap.id
   have h : J x - x = -(x - J x) := by
     abel
   rw [h, smul_neg]
+
+/-- The `+1` half-projector is idempotent for an involution. -/
+theorem xPlus_idempotent (J : V →ₗ[ℝ] V)
+    (hJ2 : J.comp J = LinearMap.id) (x : V) :
+    xPlus (1 / 2 : ℝ) J (xPlus (1 / 2 : ℝ) J x) =
+      xPlus (1 / 2 : ℝ) J x := by
+  unfold xPlus
+  rw [map_smul, map_add, J_J J hJ2 x]
+  module
+
+/-- The `-1` half-projector is idempotent for an involution. -/
+theorem xMinus_idempotent (J : V →ₗ[ℝ] V)
+    (hJ2 : J.comp J = LinearMap.id) (x : V) :
+    xMinus (1 / 2 : ℝ) J (xMinus (1 / 2 : ℝ) J x) =
+      xMinus (1 / 2 : ℝ) J x := by
+  unfold xMinus
+  rw [map_smul, map_sub, J_J J hJ2 x]
+  module
 
 /-- Finite Krein-style readback pairing induced by `J`. -/
 def bKrein (B : V → V → ℝ) (J : V →ₗ[ℝ] V) (x y : V) : ℝ :=

@@ -7,18 +7,19 @@ set_option linter.unusedVariables false
 
 noncomputable section
 
-namespace KasparovKK
+namespace FiniteContinuousBivariantModel
 
 /--
-This file replaces the legacy scalar index toy model with a true
-non-commutative operatorial foundation for Kasparov KK-classes.
-Instead of burying the boundary in a scalar `ℝ`, a genuine KK-class
-is represented as a bounded continuous linear map between state spaces.
+This file records a finite continuous-linear bivariant model.
+It is deliberately *not* a definition of standard Kasparov `KK`-theory:
+no C*-algebras, Hilbert modules, positivity, or compactness axioms are
+introduced here.  The model is useful only for the associative composition
+laws of bounded continuous linear maps, which are proved below.
 -/
-abbrev KKElement (A B : Type*) [NormedAddCommGroup A] [NormedSpace ℂ A] [NormedAddCommGroup B] [NormedSpace ℂ B] :=
+abbrev Element (A B : Type*) [NormedAddCommGroup A] [NormedSpace ℂ A] [NormedAddCommGroup B] [NormedSpace ℂ B] :=
   A →L[ℂ] B
 
-namespace KKElement
+namespace Element
 
 variable {A B C D : Type*}
 variable [NormedAddCommGroup A] [NormedSpace ℂ A]
@@ -26,35 +27,37 @@ variable [NormedAddCommGroup B] [NormedSpace ℂ B]
 variable [NormedAddCommGroup C] [NormedSpace ℂ C]
 variable [NormedAddCommGroup D] [NormedSpace ℂ D]
 
-/-- Kasparov Product x ∘ y : KK(A, B) × KK(B, C) → KK(A, C) is given by strict operator composition. -/
-def kasparovProduct (x : KKElement A B) (y : KKElement B C) : KKElement A C :=
+/-- Finite bivariant composition `x : A → B`, `y : B → C`, by operator composition.
+
+This is a continuous-linear model operation, not the internal Kasparov product. -/
+def composition (x : Element A B) (y : Element B C) : Element A C :=
   y.comp x
 
-/-- **Theorem**: Associativity of Kasparov Product: (x ∘ y) ∘ z = x ∘ (y ∘ z). -/
-theorem kasparov_product_assoc (x : KKElement A B) (y : KKElement B C) (z : KKElement C D) :
-    kasparovProduct (kasparovProduct x y) z = kasparovProduct x (kasparovProduct y z) := by
+/-- Associativity of the continuous-linear composition model. -/
+theorem composition_assoc (x : Element A B) (y : Element B C) (z : Element C D) :
+    composition (composition x y) z = composition x (composition y z) := by
   change z.comp (y.comp x) = (z.comp y).comp x
   ext
   rfl
 
-/-- Unitary identity element 1_A ∈ KK(A, A). -/
-def kkIdentity (A : Type*) [NormedAddCommGroup A] [NormedSpace ℂ A] : KKElement A A :=
+/-- Identity element for the continuous-linear composition model. -/
+def identity (A : Type*) [NormedAddCommGroup A] [NormedSpace ℂ A] : Element A A :=
   ContinuousLinearMap.id ℂ A
 
-/-- **Theorem**: Left Identity of Kasparov Product: 1_A ∘ x = x. -/
-theorem kasparov_product_left_id (x : KKElement A B) :
-    kasparovProduct (kkIdentity A) x = x := by
+/-- Left identity for the continuous-linear composition model. -/
+theorem composition_left_identity (x : Element A B) :
+    composition (identity A) x = x := by
   change x.comp (ContinuousLinearMap.id ℂ A) = x
   ext
   rfl
 
-/-- **Theorem**: Right Identity of Kasparov Product: x ∘ 1_B = x. -/
-theorem kasparov_product_right_id (x : KKElement A B) :
-    kasparovProduct x (kkIdentity B) = x := by
+/-- Right identity for the continuous-linear composition model. -/
+theorem composition_right_identity (x : Element A B) :
+    composition x (identity B) = x := by
   change (ContinuousLinearMap.id ℂ B).comp x = x
   ext
   rfl
 
-end KKElement
+end Element
 
-end KasparovKK
+end FiniteContinuousBivariantModel

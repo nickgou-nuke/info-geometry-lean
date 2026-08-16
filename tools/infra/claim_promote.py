@@ -29,8 +29,8 @@ ALLOWED = {
 }
 
 
-def now_iso() -> str:
-    return dt.datetime.utcnow().replace(microsecond=0).isoformat() + "Z"
+# [lossless-compact] now_iso folded into igf.common.time_utils.now_iso
+from igf.common.time_utils import now_iso
 
 
 def env(name: str, *aliases: str, required: bool = False, default: str | None = None) -> str | None:

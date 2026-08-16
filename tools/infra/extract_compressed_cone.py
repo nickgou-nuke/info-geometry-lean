@@ -57,10 +57,8 @@ FORBIDDEN_AUTHORITY_CLAIMS = [
 ]
 
 
-def stable_hash(value: Any) -> str:
-    return hashlib.sha256(
-        json.dumps(value, ensure_ascii=True, sort_keys=True, separators=(",", ":")).encode("utf-8")
-    ).hexdigest()
+# [lossless-compact] stable_hash folded into igf.common.hashing.stable_hash
+from igf.common.hashing import stable_hash
 
 
 def component_id(row: dict[str, Any]) -> str:

@@ -29,9 +29,8 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
-def slugify(text: str) -> str:
-    cleaned = re.sub(r"[^a-zA-Z0-9]+", "-", text.strip().lower()).strip("-")
-    return cleaned[:64] or "research-goal"
+# [lossless-compact] slugify folded into igf.common.strings.slugify
+from igf.common.strings import slugify
 
 
 @dataclass
@@ -104,13 +103,8 @@ def run_cmd(cmd: list[str], cwd: Path, timeout_sec: int) -> CommandResult:
         )
 
 
-def load_json(path: Path) -> Any | None:
-    if not path.exists():
-        return None
-    try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except Exception:
-        return None
+# [lossless-compact] load_json folded into igf.common.json_io.load_json
+from igf.common.json_io import load_json
 
 
 def file_age_hours(path: Path) -> float | None:

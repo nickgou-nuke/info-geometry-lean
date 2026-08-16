@@ -566,7 +566,7 @@ private def appendDirectPathCandidates
     (eventMap : Std.HashMap Name ProcessEvent)
     (edgeMap : Std.HashMap String FlowEdge)
     (seen : NameSet)
-    (out : Array LawfulPathCandidate) : NameSet × Array LawfulPathCandidate := Id.run do
+    (out : Array TypedPathCandidate) : NameSet × Array TypedPathCandidate := Id.run do
   let mut seen' := seen
   let mut out' := out
   for dst in directDsts do
@@ -594,7 +594,7 @@ private def appendTwoStepPathCandidates
     (eventMap : Std.HashMap Name ProcessEvent)
     (edgeMap : Std.HashMap String FlowEdge)
     (seen : NameSet)
-    (out : Array LawfulPathCandidate) : NameSet × Array LawfulPathCandidate := Id.run do
+    (out : Array TypedPathCandidate) : NameSet × Array TypedPathCandidate := Id.run do
   let mut seen' := seen
   let mut out' := out
   let directDsts := adj.getD srcEv.node #[]
@@ -629,7 +629,7 @@ private def appendTwoStepPathCandidates
   return (seen', out')
 
 -- Bounded ancestry path candidates: declaration -> direct/transitive dependency chain.
-private def lawfulPathsRaw (events : Array ProcessEvent) (edges : Array FlowEdge) : Array LawfulPathCandidate := Id.run do
+private def lawfulPathsRaw (events : Array ProcessEvent) (edges : Array FlowEdge) : Array TypedPathCandidate := Id.run do
   let adj := adjacencyOfEdges edges
   let edgeMap := flowEdgeMap edges
   let eventMap : Std.HashMap Name ProcessEvent :=
@@ -655,7 +655,7 @@ private def edgeDefectRowsOf (edges : Array FlowEdge) : Array DefectRow :=
         defect := defectOfTag tag 0 edge.dst
       }
 
-private def pathDefectRowsOf (paths : Array LawfulPathCandidate) : Array DefectRow :=
+private def pathDefectRowsOf (paths : Array TypedPathCandidate) : Array DefectRow :=
   paths.foldl (init := #[]) fun acc path =>
     path.defects.foldl (init := acc) fun acc' defect =>
       acc'.push {
@@ -696,9 +696,9 @@ private def runExport (importModsStr outDirStr : String) : IO UInt32 := do
   IO.println s!"[ProcessFlowExport] semanticMorphisms={semanticMorphisms.size}"
   let paths := lawfulPathsRaw events flowEdges
   IO.println s!"[ProcessFlowExport] paths={paths.size}"
-  let typedPaths := paths.map LawfulPathCandidate.toLawfulTypedCompositePath
+  let typedPaths := paths.map TypedPathCandidate.toTypedCompositePathWithDefects
   IO.println s!"[ProcessFlowExport] typedPaths={typedPaths.size}"
-  let lawfulCones := events.map (ProcessEvent.toLawfulCone paths)
+  let lawfulCones := events.map (ProcessEvent.toTypedCone paths)
   IO.println s!"[ProcessFlowExport] lawfulCones={lawfulCones.size}"
   let defects := edgeDefectRowsOf flowEdges ++ pathDefectRowsOf paths
   IO.println s!"[ProcessFlowExport] defects={defects.size}"

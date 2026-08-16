@@ -16,7 +16,7 @@ The square-free Möbius spinor/Fock series has its own summability domain; the
 critical line in the Berry--Keating program is instead a unitary Mellin
 normalization statement.
 -/
-structure FockVsMellinNormalizabilityGuard
+structure FockVsMellinNormalizabilityData
     (FockState MellinState FockNorm MellinNorm : Type) where
   fockState : FockState
   mellinState : MellinState
@@ -30,7 +30,7 @@ Majorana zero-mode normalizability packet.
 the theorem-safe critical-line predicate is only the algebraic condition
 `realPart = 1/2`.
 -/
-structure MajoranaZeroModeNormalizabilityPacket
+structure MajoranaZeroModeNormalizabilityData
     (ZeroMode NormReadout : Type) where
   realPart : ℝ
   imaginaryHeight : ℝ
@@ -38,7 +38,7 @@ structure MajoranaZeroModeNormalizabilityPacket
   normReadout : NormReadout
   realPart_eq_half : realPart = (1 / 2 : ℝ)
 
-namespace MajoranaZeroModeNormalizabilityPacket
+namespace MajoranaZeroModeNormalizabilityData
 
 /-- Concrete model: zero-mode packet on the critical line Re(s) = 1/2.
 
@@ -46,7 +46,7 @@ The critical-line part is definitional because `IsCriticalLineRealPart σ`
 is the equality `σ = 1 / 2`. -/
 def mkCriticalLine (ZeroMode NormReadout : Type)
     (zeroMode : ZeroMode) (normReadout : NormReadout) (imaginaryHeight : ℝ) :
-    MajoranaZeroModeNormalizabilityPacket ZeroMode NormReadout where
+    MajoranaZeroModeNormalizabilityData ZeroMode NormReadout where
   realPart := 1/2
   imaginaryHeight := imaginaryHeight
   zeroMode := zeroMode
@@ -54,13 +54,13 @@ def mkCriticalLine (ZeroMode NormReadout : Type)
   realPart_eq_half := by rfl
 
 variable {ZeroMode NormReadout : Type}
-variable (P : MajoranaZeroModeNormalizabilityPacket ZeroMode NormReadout)
+variable (P : MajoranaZeroModeNormalizabilityData ZeroMode NormReadout)
 
 /-- The packet places the zero-mode real part on the critical line. -/
 theorem criticalLine : IsCriticalLineRealPart P.realPart := by
   simpa [IsCriticalLineRealPart] using P.realPart_eq_half
 
-end MajoranaZeroModeNormalizabilityPacket
+end MajoranaZeroModeNormalizabilityData
 
 /--
 Hestenes--Krein/colimit Pfaffian/zeta spectral identity socket.
@@ -70,7 +70,7 @@ determinant readout to the zeta colimit readout.  It also separates zeros of
 zeta from singularities of reciprocal zeta.
 -/
 @[socket_debt_tag]
-structure MajoranaPfaffianZetaSpectralSocket
+structure MajoranaPfaffianZetaSpectralData
     (SpectralParameter PfaffianReadout ZetaReadout : Type) where
   parameter : SpectralParameter
   pfaffianReadout : PfaffianReadout
@@ -78,16 +78,17 @@ structure MajoranaPfaffianZetaSpectralSocket
 
 
 /--
-Separation between the inverse-zeta Witten character and the completed-zeta
-spectral target.
+Separation between a possible inverse-zeta Witten character and the
+completed-zeta spectral target.
 
-The Majorana/Fock parity supertrace naturally produces a readout of
-`1 / ζ(s)` in the Euler-product half-plane.  A Hilbert--Pólya spectral operator
-must instead have a determinant/Pfaffian target proportional to the completed
-function on the critical line, commonly written `Ξ(t) = ξ(1/2 + it)`.
+This socket does not define a Fock trace or prove an inverse-zeta identity;
+`1 / ζ(s)` is only the intended comparison target in the Euler-product
+half-plane.  A Hilbert--Pólya spectral operator would instead need a proved
+determinant/Pfaffian target proportional to the completed function on the
+critical line, commonly written `Ξ(t) = ξ(1/2 + it)`.
 -/
 @[socket_debt_tag]
-structure WittenCharacterVsCompletedXiSocket
+structure WittenCharacterVsCompletedXiData
     (SpectralParameter WittenCharacter CompletedXiReadout
       SpectralPfaffianReadout : Type) where
   parameter : SpectralParameter
@@ -95,8 +96,8 @@ structure WittenCharacterVsCompletedXiSocket
   completedXi : CompletedXiReadout
   spectralPfaffian : SpectralPfaffianReadout
 
-namespace WittenCharacterVsCompletedXiSocket
+namespace WittenCharacterVsCompletedXiData
 
-end WittenCharacterVsCompletedXiSocket
+end WittenCharacterVsCompletedXiData
 
 end InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket

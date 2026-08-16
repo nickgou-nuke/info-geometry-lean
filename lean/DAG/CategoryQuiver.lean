@@ -52,11 +52,11 @@ abbrev VerifiedCategoryData := Category HeadObj
 
 noncomputable def ofVerifiedData (D : VerifiedCategoryData) : Category HeadObj := D
 
-structure HarvestWitnesses where
+structure HarvestData where
   morphs : Array MorphismEntry
   category : Category HeadObj
 
-noncomputable def HarvestWitnesses.toCategory (W : HarvestWitnesses) : Category HeadObj :=
+noncomputable def HarvestData.toCategory (W : HarvestData) : Category HeadObj :=
   W.category
 
 def hasVerifiedIdentity (obj : HeadObj) (morphs : Array MorphismEntry) : MetaM Bool := do

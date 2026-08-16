@@ -105,6 +105,38 @@ theorem leibniz_entropy_eq_metric_right
   unfold leibniz
   rw [h_casimir_right x, zero_add]
 
+/-! ### Separation of Hamiltonian and entropy roles -/
+
+/--
+Identifying the entropy with the Hamiltonian collapses both metriplectic
+channels on that distinguished element.  This is an audit theorem, not a
+construction: a nontrivial response therefore rules out `Entropy = Hamiltonian`.
+-/
+theorem entropy_eq_hamiltonian_collapses_channels
+    (hSH : M.Entropy = M.Hamiltonian) :
+    (∀ x, M.poisson x M.Hamiltonian = 0) ∧
+    (∀ x, M.metric x M.Hamiltonian = 0) := by
+  constructor
+  · intro x
+    rw [← hSH]
+    exact M.poisson_entropy_zero x
+  · intro x
+    exact M.hamiltonian_conserved x
+
+/-- A nonzero Poisson response excludes identifying entropy and Hamiltonian. -/
+theorem entropy_ne_hamiltonian_of_poisson_response
+    (x : A) (h_response : M.poisson x M.Hamiltonian ≠ 0) :
+    M.Entropy ≠ M.Hamiltonian := by
+  intro hSH
+  exact h_response ((M.entropy_eq_hamiltonian_collapses_channels hSH).1 x)
+
+/-- A nonzero metric response excludes identifying entropy and Hamiltonian. -/
+theorem entropy_ne_hamiltonian_of_metric_response
+    (x : A) (h_response : M.metric x M.Hamiltonian ≠ 0) :
+    M.Entropy ≠ M.Hamiltonian := by
+  intro hSH
+  exact h_response ((M.entropy_eq_hamiltonian_collapses_channels hSH).2 x)
+
 /-- Packaged finite metriplectic core summary: bracket antisymmetry,
 kernel identities, and the two first/second-law style readbacks. -/
 theorem metriplectic_summary

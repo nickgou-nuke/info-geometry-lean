@@ -14,15 +14,15 @@ No BRST, Virasoro, modular-invariance, E6(6), or physical string-spectrum
 claim is asserted here.
 """
 
-from __future__ import annotations
-
+import sys
+from pathlib import Path
 import sympy as sp
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def assert_matrix_eq(left: sp.Matrix, right: sp.Matrix, label: str) -> None:
-    diff = sp.simplify(left - right)
-    if diff != sp.zeros(*left.shape):
-        raise AssertionError(f"{label} failed:\n{diff}")
+from tools.sympy.common import assert_matrix_eq
 
 
 def main() -> None:

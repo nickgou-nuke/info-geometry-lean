@@ -937,6 +937,12 @@ theorem orderedGammaVolume55_eq_chiralityMatrix :
     ← List.prod_eq_foldl, hlist]
   exact hpaired.trans hchir
 
+theorem orderedGammaVolume55_sq :
+    orderedGammaVolume55 * orderedGammaVolume55 =
+      (1 : SpinorMatrix 5) := by
+  rw [orderedGammaVolume55_eq_chiralityMatrix]
+  exact chiralityMatrix_sq
+
 /-- Canonical concrete `Cl(5,5)` chirality owner on the recursive spinor
 matrix carrier. -/
 noncomputable def chirality55 : SpinorMatrix 5 :=

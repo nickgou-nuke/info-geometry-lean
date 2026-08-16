@@ -77,7 +77,7 @@ end FiniteSpectralData
 Finite spectral packet exposing the additive/Taylor and multiplicative/Mellin
 readouts side by side.
 -/
-structure SpectralTaylorMellinPacket (ι : Type*) where
+structure SpectralTaylorMellinData (ι : Type*) where
   /-- Finite spectral datum. -/
   data : FiniteSpectralData ι ℂ
   /-- Taylor coefficient family. -/
@@ -90,12 +90,12 @@ structure SpectralTaylorMellinPacket (ι : Type*) where
   hpoint : ∀ i : ι, heatMellinScalar (data.spectralValue i) =
     scaleScalar (data.spectralValue i)
 
-namespace SpectralTaylorMellinPacket
+namespace SpectralTaylorMellinData
 
 variable {ι : Type*} [Fintype ι]
 
 /-- The finite heat readout is the finite Taylor/Mellin prefix. -/
-theorem heat_readout_eq_prefix (P : SpectralTaylorMellinPacket ι) (t : ℂ) (N : ℕ) :
+theorem heat_readout_eq_prefix (P : SpectralTaylorMellinData ι) (t : ℂ) (N : ℕ) :
     InfoGeometry.Analysis.FiniteSpectralHeatMellin.heatTaylorReadout P.data t N =
       InfoGeometry.Analysis.FiniteSpectralMellinTaylor.FiniteSpectralData.taylorMomentPrefix P.data
         (InfoGeometry.Analysis.FiniteSpectralHeatMellin.heatTaylorCoeff t) N :=
@@ -103,14 +103,14 @@ theorem heat_readout_eq_prefix (P : SpectralTaylorMellinPacket ι) (t : ℂ) (N 
     P.data t N
 
 /-- The finite scalar Mellin readout equals the finite spectral scaling readout. -/
-theorem scalar_readout_eq (P : SpectralTaylorMellinPacket ι) :
+theorem scalar_readout_eq (P : SpectralTaylorMellinData ι) :
     InfoGeometry.Analysis.FiniteSpectralHeatMellin.heatMellinReadout P.data P.heatMellinScalar =
       InfoGeometry.Analysis.FiniteSpectralHeatMellin.spectralScalingReadout P.data P.scaleScalar :=
   InfoGeometry.Analysis.SpectralTaylorMellinBridge.FiniteSpectralData.scaling_readout_eq_of_pointwise
     P.data P.heatMellinScalar P.scaleScalar P.hpoint
 
 /-- The finite Taylor prefix recursion is preserved in the packet. -/
-theorem prefix_succ (P : SpectralTaylorMellinPacket ι) (N : ℕ) :
+theorem prefix_succ (P : SpectralTaylorMellinData ι) (N : ℕ) :
     InfoGeometry.Analysis.FiniteSpectralMellinTaylor.FiniteSpectralData.taylorMomentPrefix P.data P.coeff
         (N + 1) =
       InfoGeometry.Analysis.FiniteSpectralMellinTaylor.FiniteSpectralData.taylorMomentPrefix P.data P.coeff
@@ -120,6 +120,6 @@ theorem prefix_succ (P : SpectralTaylorMellinPacket ι) (N : ℕ) :
   InfoGeometry.Analysis.SpectralTaylorMellinBridge.FiniteSpectralData.additiveTaylor_prefix_succ
     P.data P.coeff N
 
-end SpectralTaylorMellinPacket
+end SpectralTaylorMellinData
 
 end InfoGeometry.Analysis.SpectralTaylorMellinBridge

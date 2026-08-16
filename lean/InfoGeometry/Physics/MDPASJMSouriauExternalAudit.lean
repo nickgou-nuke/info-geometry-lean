@@ -143,8 +143,8 @@ Kaluza--Klein, prequantization, and inductive-limit carrier existence.
 -/
 theorem finite_global_story_packet
     {ι : Type*} [Fintype ι] [Nonempty ι]
-    {Op : Type*} [Ring Op] [Algebra ℝ Op]
-    {State LieAlgebra LieDual : Type*}
+    {Op : Type*} [NormedRing Op] [NormedAlgebra ℝ Op] [CompleteSpace Op]
+    {State LieAlgebra LieDual : Type*} [AddMonoid LieAlgebra]
     (T : FiniteMDPASJMDirectSystem ι Op State LieAlgebra LieDual) :
     ¬ Exact2 sphereArea ∧
       omega2 e0 e1 = 1 ∧

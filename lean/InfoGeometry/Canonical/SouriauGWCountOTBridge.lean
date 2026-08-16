@@ -22,23 +22,25 @@ open InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 open InfoGeometry.GromovWittenErlangen
 
 variable {State LieGroup LieAlgebra LieDual Observable : Type*}
+variable [AddMonoid LieAlgebra]
 variable {n : ℕ} [Nonempty (Fin n)]
 variable {LG T Target Coeff : Type*}
-variable [Ring Observable]
+variable [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable]
 
 /--
 Calibration connecting Souriau thermal dynamics, GW projective count rays, and
 metriplectic optimal transport.
 
 The two index maps are intentionally separate: `SouriauLieThermoData.K_beta`
-is a state-level readout, while `FreeEnergyFunctional.expectationTerm` is a
-readout on densities `State → ℝ`.
+is the state-level readout of the operatorial normalized-trace first moment,
+while `FreeEnergyFunctional.expectationTerm` is a readout on densities
+`State → ℝ`.
 -/
 @[rep_depth thermo]
 structure SouriauGWCountOTCalibration
-    [Ring Observable] where
-  /-- Souriau Lie-thermodynamic moment/temperature/pairing data. -/
-  souriau : SouriauLieThermoData State LieGroup LieAlgebra LieDual
+    [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable] where
+  /-- Souriau temperature and operatorial normalized-trace readout data. -/
+  souriau : SouriauLieThermoData State LieGroup LieAlgebra LieDual Observable
 
   /-- GW projective count-ray realization. -/
   gw : GWCanonicalCountRayBridge n LG T Target Coeff

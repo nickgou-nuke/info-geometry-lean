@@ -10,9 +10,15 @@ It is not a C*-O_2 completion, Tomita--Takesaki theorem, KMS construction, or
 Lorentz/Pin(5,5) proof.  Those are socketed in Lean.
 """
 
-from __future__ import annotations
-
+import sys
+from pathlib import Path
 import sympy as sp
+
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from tools.sympy.common import assert_matrix_eq
 
 I = sp.I
 
@@ -54,11 +60,6 @@ def swap_state(v: sp.Matrix) -> sp.Matrix:
 
 def swap_operator(A: sp.Matrix) -> sp.Matrix:
     return sigma_x * A * sigma_x
-
-
-def assert_matrix_eq(A: sp.Matrix, B: sp.Matrix, msg: str) -> None:
-    D = sp.simplify(A - B)
-    assert D == sp.zeros(*A.shape), f"{msg}: {D}"
 
 
 def main() -> None:

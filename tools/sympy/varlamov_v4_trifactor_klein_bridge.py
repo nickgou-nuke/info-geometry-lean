@@ -15,14 +15,15 @@ No Clifford classification, quotient-manifold classification, or physical
 triality theorem is asserted.
 """
 
-from __future__ import annotations
-
+import sys
+from pathlib import Path
 import sympy as sp
 
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
 
-def assert_matrix_eq(label: str, actual: sp.Matrix, expected: sp.Matrix) -> None:
-    if actual != expected:
-        raise AssertionError(f"{label}: actual={actual}, expected={expected}")
+from tools.sympy.common import assert_matrix_eq
 
 
 def verify_varlamov_v4_trifactor_klein_bridge() -> None:

@@ -777,14 +777,8 @@ def llm_prompt(chunk_row: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def write_jsonl(path: Path, rows: Iterable[dict[str, Any]]) -> int:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    count = 0
-    with path.open("w", encoding="utf-8") as handle:
-        for row in rows:
-            count += 1
-            handle.write(json.dumps(row, ensure_ascii=True, sort_keys=True) + "\n")
-    return count
+# [lossless-compact] write_jsonl folded into igf.common.json_io.write_jsonl
+from igf.common.json_io import write_jsonl
 
 
 def process_document(path: Path, *, source_format: str, max_chars: int, bind_proofs: bool) -> dict[str, list[dict[str, Any]]]:

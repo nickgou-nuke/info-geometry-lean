@@ -76,11 +76,13 @@ def fNegUnit (i : Fin 5) : Cl55ˣ :=
 
 @[simp] theorem coe_ePosUnit (i : Fin 5) :
     ((ePosUnit i : Cl55ˣ) : Cl55) = ι55 (e_pos i) :=
-  coe_vectorUnit _ _
+  coe_normalizedVectorUnit
+    (e_pos i) (Or.inl (Q55_e_pos i))
 
 @[simp] theorem coe_fNegUnit (i : Fin 5) :
     ((fNegUnit i : Cl55ˣ) : Cl55) = ι55 (f_neg i) :=
-  coe_vectorUnit _ _
+  coe_normalizedVectorUnit
+    (f_neg i) (Or.inr (Q55_f_neg i))
 
 theorem ePosUnit_mem (i : Fin 5) : ePosUnit i ∈ FullPin55 := by
   exact normalizedVectorUnit_mem_fullPin55
@@ -120,15 +122,21 @@ theorem fNegUnit_mem (i : Fin 5) : fNegUnit i ∈ FullPin55 := by
 
 /-! ## Native Lipschitz containment -/
 
+theorem normalizedVectorUnits_subset_lipschitzGenerators :
+    normalizedVectorUnits ⊆
+      ((↑) ⁻¹' Set.range ι55 : Set Cl55ˣ) := by
+  intro u hu
+  rcases hu with ⟨v, hnorm, huv⟩
+  change (u : Cl55) ∈ Set.range ι55
+  exact ⟨v, huv.symm⟩
+
 theorem normalizedVectorUnits_subset_lipschitz :
     normalizedVectorUnits ⊆ LipschitzGroup55 := by
   intro u hu
-  rcases hu with ⟨v, hnorm, huv⟩
-  change u ∈ Subgroup.closure
-    ((↑) ⁻¹' Set.range ι55 : Set Cl55ˣ)
-  apply Subgroup.subset_closure
-  change (u : Cl55) ∈ Set.range ι55
-  exact ⟨v, huv.symm⟩
+  have hulip : u ∈ lipschitzGroup Q55 :=
+    Subgroup.subset_closure
+      (normalizedVectorUnits_subset_lipschitzGenerators hu)
+  simpa [LipschitzGroup55] using hulip
 
 /-- The signature-correct real Pin closure lies in the native Lipschitz group.
 -/

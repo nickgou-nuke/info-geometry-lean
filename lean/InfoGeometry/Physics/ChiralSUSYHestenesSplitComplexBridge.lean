@@ -37,17 +37,18 @@ theorem chiralParity_eq_q_commutator :
 theorem chiralPhaseAxis_sq :
     chiralPhaseAxis (A := ℝ) * chiralPhaseAxis =
       -(1 : ChiralBlock ℝ) := by
-  unfold chiralPhaseAxis
-  rw [sub_mul, mul_sub, chiralQMinus_sq, chiralQPlus_sq]
-  rw [chiralUnit_qPlus_anticomm]
-  ring
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [chiralPhaseAxis, chiralQPlus, chiralQMinus, Matrix.mul_apply,
+      Fin.sum_univ_two] <;> ring
 
 theorem chiralPhaseAxis_parity_anticomm :
     chiralPhaseAxis (A := ℝ) * chiralParity +
         chiralParity * chiralPhaseAxis = 0 := by
-  unfold chiralPhaseAxis
-  rw [chiralParity_qMinus_anticomm, chiralParity_qPlus_anticomm]
-  module
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [chiralPhaseAxis, chiralParity, chiralQPlus, chiralQMinus,
+      Matrix.mul_apply, Fin.sum_univ_two] <;> ring
 
 theorem chiralParity_sq_coherence :
     chiralParity * chiralParity = (1 : ChiralBlock ℝ) :=
@@ -114,6 +115,6 @@ theorem chiralParity_hodgeDiracUnit_anticommute :
 theorem chiralParity_phaseAxis_anticommute_coherence :
     chiralParity * chiralPhaseAxis (A := ℝ) +
         chiralPhaseAxis * chiralParity = 0 :=
-  chiralPhaseAxis_parity_anticomm
+  by rw [add_comm]; exact chiralPhaseAxis_parity_anticomm
 
 end InfoGeometry.Physics

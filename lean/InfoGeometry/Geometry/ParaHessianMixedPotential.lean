@@ -1,4 +1,5 @@
 import InfoGeometry.Geometry.DualFlatKreinLegendreGraph
+import InfoGeometry.Krein.Metric
 import Mathlib.Analysis.InnerProductSpace.Calculus
 import Mathlib.Analysis.InnerProductSpace.Dual
 import Mathlib.Analysis.Normed.Operator.Prod
@@ -75,6 +76,12 @@ def metric (U V : Doubled E) : ℝ :=
 
 theorem metric_apply (U V : Doubled E) :
     metric U V = inner ℝ U.1 V.2 + inner ℝ U.2 V.1 := rfl
+
+theorem metric_eq_hessian_indefinite_formCoord (U V : Doubled E) :
+    metric U V =
+      InfoGeometry.Krein.hessian_indefinite_formCoord U V := by
+  simp [metric, InfoGeometry.Krein.hessian_indefinite_formCoord,
+    real_inner_comm]
 
 theorem metric_symmetric (U V : Doubled E) : metric U V = metric V U := by
   simp [metric_apply, real_inner_comm, add_comm]

@@ -27,6 +27,7 @@ theorem gramMatrix_symmetric {n m : Type*} [Fintype m] [DecidableEq m]
     (B : Matrix n m ℝ) :
     (gramMatrix B).transpose = gramMatrix B := by
   ext i j
+  change gramMatrix B j i = gramMatrix B i j
   rw [gramMatrix_apply, gramMatrix_apply]
   apply Finset.sum_congr rfl
   intro k hk

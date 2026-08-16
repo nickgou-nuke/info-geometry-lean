@@ -291,10 +291,50 @@ theorem complexify_apply (A : M2R) (i j : Fin 2) :
     complexify A i j = (A i j : ℂ) :=
   rfl
 
+@[simp]
+theorem complexify_one :
+    complexify (1 : M2R) = (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  ext i j
+  by_cases h : i = j <;> simp [complexify, Matrix.one_apply, h]
+
+theorem complexify_mul (A B : M2R) :
+    complexify (A * B) = complexify A * complexify B := by
+  ext i j
+  simp [complexify, Matrix.mul_apply, Fin.sum_univ_succ]
+
 /-- The real matrix atom acting on the complex homogeneous pair. -/
 def actMatrix (A : M2R) (v : HomogeneousPair) : HomogeneousPair :=
   ( ((complexify A).mulVec ![v.1, v.2]) 0,
     ((complexify A).mulVec ![v.1, v.2]) 1 )
+
+theorem actMatrix_mul
+    (A B : M2R) (v : HomogeneousPair) :
+    actMatrix (A * B) v =
+      actMatrix A (actMatrix B v) := by
+  rcases v with ⟨p, q⟩
+  have hvec :
+      ![((complexify B).mulVec ![p, q]) 0,
+        ((complexify B).mulVec ![p, q]) 1] =
+        (complexify B).mulVec ![p, q] := by
+    funext i
+    fin_cases i <;> rfl
+  have hmul :
+      (complexify (A * B)).mulVec ![p, q] =
+        (complexify A).mulVec ((complexify B).mulVec ![p, q]) := by
+    rw [complexify_mul, Matrix.mulVec_mulVec]
+  apply Prod.ext
+  · change ((complexify (A * B)).mulVec ![p, q]) 0 =
+      ((complexify A).mulVec
+        ![((complexify B).mulVec ![p, q]) 0,
+          ((complexify B).mulVec ![p, q]) 1]) 0
+    rw [hvec]
+    exact congrArg (fun w => w 0) hmul
+  · change ((complexify (A * B)).mulVec ![p, q]) 1 =
+      ((complexify A).mulVec
+        ![((complexify B).mulVec ![p, q]) 0,
+          ((complexify B).mulVec ![p, q]) 1]) 1
+    rw [hvec]
+    exact congrArg (fun w => w 1) hmul
 
 @[simp]
 theorem actMatrix_matH (v : HomogeneousPair) :

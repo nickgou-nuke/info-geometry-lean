@@ -327,4 +327,55 @@ ladder relations without introducing a second matrix or operator carrier.
   rw [epsGen_mul_nullMinus_sub_nullMinus_mul_epsGen]
   module
 
+/-! ### Real nilpotent / Cartan ladder notation
+
+The existing `nullPlus`, `nullMinus`, and `epsGen` are the canonical native
+split-null generators and Cartan axis.  These aliases expose the conventional
+`π₊`, `π₋`, `π₀` notation without introducing another carrier.
+-/
+
+noncomputable abbrev piPlus : Alg := nullPlus
+
+noncomputable abbrev piMinus : Alg := nullMinus
+
+noncomputable abbrev piZero : Alg := (1 / 2 : ℝ) • epsGen
+
+@[rep_depth krein, simp] theorem piPlus_sq :
+    piPlus * piPlus = 0 := by
+  simpa [piPlus] using nullPlus_sq
+
+@[rep_depth krein, simp] theorem piMinus_sq :
+    piMinus * piMinus = 0 := by
+  simpa [piMinus] using nullMinus_sq
+
+@[rep_depth krein, simp] theorem piPlus_piMinus_anticommutator :
+    piPlus * piMinus + piMinus * piPlus = (1 : Alg) := by
+  simpa [piPlus, piMinus, add_comm] using
+    nullMinus_mul_nullPlus_add_swap
+
+@[rep_depth krein, simp] theorem piPlus_piMinus_commutator :
+    piPlus * piMinus - piMinus * piPlus = (2 : ℝ) • piZero := by
+  rw [piPlus, piMinus, piZero]
+  rw [nullPlus_mul_nullMinus_sub_nullMinus_mul_nullPlus]
+  module
+
+@[rep_depth krein, simp] theorem piZero_piPlus_commutator :
+    piZero * piPlus - piPlus * piZero = piPlus := by
+  simpa [piZero, piPlus] using half_epsGen_comm_nullPlus
+
+@[rep_depth krein, simp] theorem piZero_piMinus_commutator :
+    piZero * piMinus - piMinus * piZero = -piMinus := by
+  simpa [piZero, piMinus] using half_epsGen_comm_nullMinus
+
+@[rep_depth krein, simp] theorem piPlus_add_piMinus_eq_jGen :
+    piPlus + piMinus = jGen := by
+  simpa [piPlus, piMinus] using nullPlus_add_nullMinus_eq_jGen
+
+@[rep_depth krein, simp] theorem piMinus_sub_piPlus_eq_kGen :
+    piMinus - piPlus = kGen := by
+  simpa [piPlus, piMinus] using nullMinus_sub_nullPlus_eq_kGen
+
+@[rep_depth krein, simp] theorem piZero_eq_half_epsGen :
+    piZero = (1 / 2 : ℝ) • epsGen := rfl
+
 end InfoGeometry.Clifford.SplitQ11Projectors

@@ -49,7 +49,7 @@ theorem polar_eq_two_smul_B55 (u v : V55) :
   exact h.symm
 
 theorem anisotropicReflection_eq_self_of_ortho {a v : V55}
-    (ha : Q55 a ≠ 0) (hav : B55 a v = 0) :
+    (_ha : Q55 a ≠ 0) (hav : B55 a v = 0) :
     anisotropicReflection a v = v := by
   unfold anisotropicReflection
   rw [polar_eq_two_smul_B55, hav]

@@ -110,6 +110,13 @@ theorem centralFromWinding_odd {w : ℕ} (h : Odd w) : centralFromWinding w = ne
 /-- A finite positive Artin word, represented by generator indices. -/
 abbrev ArtinWord := List ℕ
 
+instance artinWordMonoid : Monoid ArtinWord where
+  mul := List.append
+  one := []
+  mul_assoc := List.append_assoc
+  one_mul := List.nil_append
+  mul_one := List.append_nil
+
 /-- The scalar centralizer monodromy of an Artin word is its length parity. -/
 def artinCentralMonodromy (w : ArtinWord) : CentralSign :=
   centralFromWinding w.length

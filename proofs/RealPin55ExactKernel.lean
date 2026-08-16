@@ -158,6 +158,25 @@ theorem fullPinToO55_kernel_exact :
     MonoidHom.ker fullPinToO55 = centralSignSubgroup := by
   apply le_antisymm kernel_le_centralSignSubgroup centralSignSubgroup_le_kernel
 
+/-! ## Quotient form of the first isomorphism theorem -/
+
+/-- The central-sign subgroup is normal because it is the kernel of the native
+orthogonal representation. -/
+instance centralSignSubgroup_normal :
+    centralSignSubgroup.Normal := by
+  rw [← fullPinToO55_kernel_exact]
+  infer_instance
+
+/-- The real split Pin group modulo its exact central sign kernel is
+canonically equivalent to the range of its orthogonal representation. -/
+def fullPin55QuotientEquivRange :
+    FullPin55 ⧸ centralSignSubgroup ≃*
+      MonoidHom.range fullPinToO55 := by
+  exact
+    (QuotientGroup.quotientMulEquivOfEq
+      (G := FullPin55) fullPinToO55_kernel_exact.symm).trans
+      (QuotientGroup.quotientKerEquivRange fullPinToO55)
+
 /-- Literal form of the exact kernel theorem. -/
 theorem mem_fullPinToO55_kernel_iff (g : FullPin55) :
     g ∈ MonoidHom.ker fullPinToO55 ↔ g = 1 ∨ g = pinNegOne := by

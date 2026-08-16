@@ -224,7 +224,8 @@ theorem hestenesPionPlus_eq_concreteCARCreation :
       InfoGeometry.Krein.modular_j_to_doubled,
       InfoGeometry.Krein.clockAxis_to_doubled,
       concreteCARCreation,
-      InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteCreation_apply_to_doubled]
+      InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteCreation_apply_to_doubled] <;>
+    module
 
 @[rep_depth krein]
 theorem hestenesPionMinus_eq_concreteCARAnnihilation :
@@ -240,7 +241,8 @@ theorem hestenesPionMinus_eq_concreteCARAnnihilation :
       InfoGeometry.Krein.modular_j_to_doubled,
       InfoGeometry.Krein.clockAxis_to_doubled,
       concreteCARAnnihilation,
-      InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteAnnihilation_apply_to_doubled]
+      InfoGeometry.Canonical.BogoliubovFockSuper.cliffordConcreteAnnihilation_apply_to_doubled] <;>
+    module
 
 /--
 Single exported finite spine for the doubled real Krein map:

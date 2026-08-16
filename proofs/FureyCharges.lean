@@ -40,7 +40,7 @@ def totalFureyNumber : FureyAlg :=
 This is intentionally named `fureyCharge`, not `electricCharge`: particle labels,
 conjugate ideals, and the sign-reversed convention are separate layers. -/
 def fureyCharge : FureyAlg :=
-  (1 / 3 : ℂ) • totalFureyNumber
+  (1 / 3 : ℝ) • totalFureyNumber
 
 /-- Each Furey number operator is a projector. -/
 theorem fureyNumber_idempotent (i : Fin 3) :

@@ -197,14 +197,14 @@ repository-owned concrete CAR presentation. -/
 theorem hestenesPionPlus_eq_doubledSpace_formula :
     hestenesPionPlus (E := E) =
       InfoGeometry.Krein.hestenesPionPlus (E := E) := by
-  exact (InfoGeometry.Canonical.TomitaKreinNilpotentAtom
-    .hestenesPionPlus_eq_concreteCARCreation (E := E)).symm
+  exact (TomitaKreinNilpotentAtom.hestenesPionPlus_eq_concreteCARCreation
+    (E := E)).symm
 
 theorem hestenesPionMinus_eq_doubledSpace_formula :
     hestenesPionMinus (E := E) =
       InfoGeometry.Krein.hestenesPionMinus (E := E) := by
-  exact (InfoGeometry.Canonical.TomitaKreinNilpotentAtom
-    .hestenesPionMinus_eq_concreteCARAnnihilation (E := E)).symm
+  exact (TomitaKreinNilpotentAtom.hestenesPionMinus_eq_concreteCARAnnihilation
+    (E := E)).symm
 
 @[simp] theorem hestenesPionPlus_sq :
     (hestenesPionPlus (E := E)).comp

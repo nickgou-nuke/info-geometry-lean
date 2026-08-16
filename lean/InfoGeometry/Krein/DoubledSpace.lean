@@ -268,6 +268,145 @@ lemma clockAxis_sq (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] 
     (clockAxis (E := E)).comp clockAxis = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
   simpa [clockAxis] using complex_i_sq (E := E)
 
+/-! ### Real Hestenes pion atom
+
+The doubled carrier has two anticommuting involutions `J` and `ε`, with
+`K = J ε` a square-minus-one axis.  The nilpotent channels therefore use the
+`J/K` pair, not the two involutions `J/ε` directly.  This is the real
+Hestenes presentation of the finite chiral atom.
+-/
+
+noncomputable def hestenesPionPlus : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  ((2 : ℝ)⁻¹) •
+    (modular_j (E := E) - clockAxis (E := E))
+
+noncomputable def hestenesPionMinus : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  ((2 : ℝ)⁻¹) •
+    (modular_j (E := E) + clockAxis (E := E))
+
+noncomputable def hestenesPionZero : DoubledSpace E →L[ℝ] DoubledSpace E :=
+  ((2 : ℝ)⁻¹) • spectral_epsilon (E := E)
+
+lemma hestenesPionPlus_sq :
+    (hestenesPionPlus (E := E)).comp hestenesPionPlus = 0 := by
+  have hJK :
+      (modular_j (E := E)).comp (complex_i (E := E)) = spectral_epsilon (E := E) :=
+    modular_j_comp_complex_i (E := E)
+  have hKJ :
+      (complex_i (E := E)).comp (modular_j (E := E)) = -(spectral_epsilon (E := E)) :=
+    complex_i_comp_modular_j (E := E)
+  simp [hestenesPionPlus, ContinuousLinearMap.smul_comp,
+    ContinuousLinearMap.comp_smul, ContinuousLinearMap.sub_comp,
+    ContinuousLinearMap.comp_sub]
+  rw [modular_j_involution, complex_i_sq, hJK, hKJ]
+  module
+
+lemma hestenesPionMinus_sq :
+    (hestenesPionMinus (E := E)).comp hestenesPionMinus = 0 := by
+  have hJK :
+      (modular_j (E := E)).comp (complex_i (E := E)) = spectral_epsilon (E := E) :=
+    modular_j_comp_complex_i (E := E)
+  have hKJ :
+      (complex_i (E := E)).comp (modular_j (E := E)) = -(spectral_epsilon (E := E)) :=
+    complex_i_comp_modular_j (E := E)
+  simp [hestenesPionMinus, ContinuousLinearMap.smul_comp,
+    ContinuousLinearMap.comp_smul, ContinuousLinearMap.add_comp,
+    ContinuousLinearMap.comp_add]
+  rw [modular_j_involution, complex_i_sq, hJK, hKJ]
+  module
+
+lemma hestenesPionPlus_mul_minus :
+    (hestenesPionPlus (E := E)).comp hestenesPionMinus =
+      ((1 / 2 : ℝ) •
+        (ContinuousLinearMap.id ℝ (DoubledSpace E) + spectral_epsilon (E := E))) := by
+  have hJK :
+      (modular_j (E := E)).comp (complex_i (E := E)) = spectral_epsilon (E := E) :=
+    modular_j_comp_complex_i (E := E)
+  have hKJ :
+      (complex_i (E := E)).comp (modular_j (E := E)) = -(spectral_epsilon (E := E)) :=
+    complex_i_comp_modular_j (E := E)
+  simp [hestenesPionPlus, hestenesPionMinus, ContinuousLinearMap.smul_comp,
+    ContinuousLinearMap.comp_smul, ContinuousLinearMap.sub_comp,
+    ContinuousLinearMap.comp_sub, ContinuousLinearMap.add_comp,
+    ContinuousLinearMap.comp_add]
+  rw [modular_j_involution, complex_i_sq, hJK, hKJ]
+  module
+
+lemma hestenesPionMinus_mul_plus :
+    (hestenesPionMinus (E := E)).comp hestenesPionPlus =
+      ((1 / 2 : ℝ) •
+        (ContinuousLinearMap.id ℝ (DoubledSpace E) - spectral_epsilon (E := E))) := by
+  have hJK :
+      (modular_j (E := E)).comp (complex_i (E := E)) = spectral_epsilon (E := E) :=
+    modular_j_comp_complex_i (E := E)
+  have hKJ :
+      (complex_i (E := E)).comp (modular_j (E := E)) = -(spectral_epsilon (E := E)) :=
+    complex_i_comp_modular_j (E := E)
+  simp [hestenesPionPlus, hestenesPionMinus, ContinuousLinearMap.smul_comp,
+    ContinuousLinearMap.comp_smul, ContinuousLinearMap.add_comp,
+    ContinuousLinearMap.comp_add, ContinuousLinearMap.sub_comp,
+    ContinuousLinearMap.comp_sub]
+  rw [modular_j_involution, complex_i_sq, hJK, hKJ]
+  module
+
+lemma hestenesPion_car :
+    (hestenesPionPlus (E := E)).comp hestenesPionMinus +
+        (hestenesPionMinus (E := E)).comp hestenesPionPlus =
+      ContinuousLinearMap.id ℝ (DoubledSpace E) := by
+  rw [hestenesPionPlus_mul_minus, hestenesPionMinus_mul_plus]
+  module
+
+lemma hestenesPion_commutator :
+    (hestenesPionPlus (E := E)).comp hestenesPionMinus -
+        (hestenesPionMinus (E := E)).comp hestenesPionPlus =
+      spectral_epsilon (E := E) := by
+  rw [hestenesPionPlus_mul_minus, hestenesPionMinus_mul_plus]
+  module
+
+lemma hestenesPion_zero_plus :
+    (hestenesPionZero (E := E)).comp hestenesPionPlus -
+        (hestenesPionPlus (E := E)).comp hestenesPionZero =
+      hestenesPionPlus (E := E) := by
+  have hεJ :
+      (spectral_epsilon (E := E)).comp (modular_j (E := E)) = -(clockAxis (E := E)) := by
+    simpa [clockAxis] using spectral_epsilon_comp_modular_j (E := E)
+  have hεK :
+      (spectral_epsilon (E := E)).comp clockAxis = -(modular_j (E := E)) := by
+    simpa [clockAxis] using spectral_epsilon_comp_complex_i (E := E)
+  have hJε :
+      (modular_j (E := E)).comp (spectral_epsilon (E := E)) = clockAxis := by
+    rfl
+  have hKε :
+      clockAxis.comp (spectral_epsilon (E := E)) = modular_j (E := E) := by
+    simpa [clockAxis] using complex_i_comp_spectral_epsilon (E := E)
+  simp only [hestenesPionZero, hestenesPionPlus,
+    ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul,
+    ContinuousLinearMap.sub_comp, ContinuousLinearMap.comp_sub]
+  rw [hεJ, hεK, hJε, hKε]
+  norm_num [smul_add, add_smul, smul_smul]
+
+lemma hestenesPion_zero_minus :
+    (hestenesPionZero (E := E)).comp hestenesPionMinus -
+        (hestenesPionMinus (E := E)).comp hestenesPionZero =
+      -hestenesPionMinus (E := E) := by
+  have hεJ :
+      (spectral_epsilon (E := E)).comp (modular_j (E := E)) = -(clockAxis (E := E)) := by
+    simpa [clockAxis] using spectral_epsilon_comp_modular_j (E := E)
+  have hεK :
+      (spectral_epsilon (E := E)).comp clockAxis = -(modular_j (E := E)) := by
+    simpa [clockAxis] using spectral_epsilon_comp_complex_i (E := E)
+  have hJε :
+      (modular_j (E := E)).comp (spectral_epsilon (E := E)) = clockAxis := by
+    rfl
+  have hKε :
+      clockAxis.comp (spectral_epsilon (E := E)) = modular_j (E := E) := by
+    simpa [clockAxis] using complex_i_comp_spectral_epsilon (E := E)
+  simp only [hestenesPionZero, hestenesPionMinus,
+    ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul,
+    ContinuousLinearMap.add_comp, ContinuousLinearMap.comp_add]
+  rw [hεJ, hεK, hJε, hKε]
+  norm_num [smul_add, add_smul, smul_smul]
+
 theorem modular_j_spectral_epsilon_has_cl11_relations (E : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     cl11_relations (modular_j (E := E)) spectral_epsilon :=

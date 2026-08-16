@@ -211,7 +211,7 @@ theorem numberOp2_idem : numberOp2 * numberOp2 = numberOp2 := by
 The CAR submodule is a left τ-ideal. The chiral numbers N₊, N₋ partition unity,
 their difference is the CPT compass σ₃, and they are orthogonal.
 The ladder number operators are idempotent. -/
-theorem color_car_standard_model_synthesis :
+theorem color_car_finite_car_projector_synthesis :
     e ∈ R_CAR ∧
     IsLeftTauIdeal (K := ℂ) (H := M2C) (H_dual := M2C) R_CAR (qCrossMap (K := ℂ) Complex.I) ∧
     N_plus + N_minus = 1 ∧

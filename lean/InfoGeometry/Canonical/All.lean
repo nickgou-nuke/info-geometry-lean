@@ -274,6 +274,9 @@ import InfoGeometry.Canonical.SplitOctonionNullConeAffineChartTransition
 import InfoGeometry.Canonical.PeirceProjectorGrothendieckClass
 import InfoGeometry.Canonical.CuntzGrothendieckShadow
 import InfoGeometry.Canonical.ThreeColorGellMannSL3Bridge
+import InfoGeometry.Canonical.HolographicGaugeSymmetryFiniteBridge
+import InfoGeometry.Canonical.PionChiralGoldstoneNative
+import InfoGeometry.Canonical.ChiralParabolicNilpotentWeld
 import InfoGeometry.Canonical.ThreeColorSL3ZornActionBridge
 import InfoGeometry.Canonical.ThreeColorSL3ZornActionTopologicalBridge
 import InfoGeometry.Canonical.KreinSpectralDiracBridge
@@ -1628,6 +1631,7 @@ import InfoGeometry.Canonical.Cl55OperatorAlgebraHom
 import InfoGeometry.Canonical.Cl55OperatorRingCatColimit
 import InfoGeometry.Canonical.ModularZ2CubeGrading
 import InfoGeometry.Canonical.TKKJordanPairData
+import InfoGeometry.Canonical.Pin55TKKSymmetricPairBridge
 import InfoGeometry.Canonical.KantorPeirceFiveGrading
 import InfoGeometry.Canonical.ZornTrialityTKKBridge
 import InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge

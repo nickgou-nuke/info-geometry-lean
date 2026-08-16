@@ -348,6 +348,56 @@ theorem cartan_decomposition (S : SymmetricLieAlgebra L) (x : L) :
     _ = ((2 : ℝ)⁻¹) • x + ((2 : ℝ)⁻¹) • x := by simp [add_smul]
     _ = S.P_plus x + S.P_minus x := hsplit.symm
 
+/-! ## Spectral projector laws -/
+
+theorem P_plus_mem_even (S : SymmetricLieAlgebra L) (x : L) :
+    S.P_plus x ∈ S.evenSubmodule := by
+  change S.θ (Projector.plus S.θ x) = Projector.plus S.θ x
+  exact Projector.plus_fixed S.θ x
+
+theorem P_minus_mem_odd (S : SymmetricLieAlgebra L) (x : L) :
+    S.P_minus x ∈ S.oddSubmodule := by
+  change S.θ (Projector.minus S.θ x) = -(Projector.minus S.θ x)
+  exact Projector.minus_neg_fixed S.θ x
+
+theorem P_plus_idempotent (S : SymmetricLieAlgebra L) (x : L) :
+    S.P_plus (S.P_plus x) = S.P_plus x := by
+  change Projector.plus S.θ (Projector.plus S.θ x) = Projector.plus S.θ x
+  exact Projector.plus_idempotent S.θ x
+
+theorem P_minus_idempotent (S : SymmetricLieAlgebra L) (x : L) :
+    S.P_minus (S.P_minus x) = S.P_minus x := by
+  change Projector.minus S.θ (Projector.minus S.θ x) = Projector.minus S.θ x
+  exact Projector.minus_idempotent S.θ x
+
+theorem P_plus_P_minus_zero (S : SymmetricLieAlgebra L) (x : L) :
+    S.P_plus (S.P_minus x) = 0 := by
+  change Projector.plus S.θ (Projector.minus S.θ x) = 0
+  exact Projector.plus_minus S.θ x
+
+theorem P_minus_P_plus_zero (S : SymmetricLieAlgebra L) (x : L) :
+    S.P_minus (S.P_plus x) = 0 := by
+  change Projector.minus S.θ (Projector.plus S.θ x) = 0
+  exact Projector.minus_plus S.θ x
+
+theorem P_plus_sub_P_minus (S : SymmetricLieAlgebra L) (x : L) :
+    S.P_plus x - S.P_minus x = S.θ x := by
+  change ((2 : ℝ)⁻¹) • (x + S.θ x) -
+    ((2 : ℝ)⁻¹) • (x - S.θ x) = S.θ x
+  rw [← smul_sub]
+  have h : (x + S.θ x) - (x - S.θ x) = (2 : ℝ) • S.θ x := by
+    simp [sub_eq_add_neg, two_smul, add_assoc, add_left_comm, add_comm]
+  rw [h, smul_smul]
+  norm_num
+
+theorem theta_P_plus (S : SymmetricLieAlgebra L) (x : L) :
+    S.θ (S.P_plus x) = S.P_plus x := by
+  exact (S.mem_evenSubmodule_iff).mp (S.P_plus_mem_even x)
+
+theorem theta_P_minus (S : SymmetricLieAlgebra L) (x : L) :
+    S.θ (S.P_minus x) = -(S.P_minus x) := by
+  exact (S.mem_oddSubmodule_iff).mp (S.P_minus_mem_odd x)
+
 /-- Bracket parity `[𝔨, 𝔨] ⊆ 𝔨` in compatibility naming. -/
 theorem bracket_k_k
     (S : SymmetricLieAlgebra L)

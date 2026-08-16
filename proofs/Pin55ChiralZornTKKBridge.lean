@@ -25,6 +25,56 @@ summary below. -/
 def bridgeCarrierMap (X : ZornParavectorNullspace.Zorn) : ChiralCausalCone.M2C :=
   !![X.a, X.u 0; X.v 0, X.b]
 
+/-! ### The restricted four-coordinate slice
+
+`bridgeCarrierMap` is not a representation of the full Zorn carrier.  On the
+slice where the last two coordinates of both vector lanes vanish, the cross
+products vanish and the map becomes multiplicative. -/
+
+def bridgeSlice (X : ZornParavectorNullspace.Zorn) : Prop :=
+  X.u 1 = 0 ∧ X.u 2 = 0 ∧ X.v 1 = 0 ∧ X.v 2 = 0
+
+abbrev RestrictedZorn :=
+  {X : ZornParavectorNullspace.Zorn // bridgeSlice X}
+
+theorem bridgeSlice_zornMul
+    {X Y : ZornParavectorNullspace.Zorn}
+    (hX : bridgeSlice X) (hY : bridgeSlice Y) :
+    bridgeSlice (ZornParavectorNullspace.zornMul X Y) := by
+  rcases hX with ⟨huX1, huX2, hvX1, hvX2⟩
+  rcases hY with ⟨huY1, huY2, hvY1, hvY2⟩
+  constructor
+  · simp [bridgeSlice, ZornParavectorNullspace.zornMul,
+      ZornParavectorNullspace.cross3, huX1, huX2, hvX1, hvX2,
+      huY1, huY2, hvY1, hvY2]
+  constructor
+  · simp [bridgeSlice, ZornParavectorNullspace.zornMul,
+      ZornParavectorNullspace.cross3, huX1, huX2, hvX1, hvX2,
+      huY1, huY2, hvY1, hvY2]
+  constructor
+  · simp [bridgeSlice, ZornParavectorNullspace.zornMul,
+      ZornParavectorNullspace.cross3, huX1, huX2, hvX1, hvX2,
+      huY1, huY2, hvY1, hvY2]
+  · simp [bridgeSlice, ZornParavectorNullspace.zornMul,
+      ZornParavectorNullspace.cross3, huX1, huX2, hvX1, hvX2,
+      huY1, huY2, hvY1, hvY2]
+
+theorem bridgeCarrierMap_restricted_mul
+    {X Y : RestrictedZorn} :
+    bridgeCarrierMap (ZornParavectorNullspace.zornMul X.1 Y.1) =
+      bridgeCarrierMap X.1 * bridgeCarrierMap Y.1 := by
+  rcases X with ⟨X, hX⟩
+  rcases Y with ⟨Y, hY⟩
+  rcases hX with ⟨huX1, huX2, hvX1, hvX2⟩
+  rcases hY with ⟨huY1, huY2, hvY1, hvY2⟩
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [bridgeCarrierMap, ZornParavectorNullspace.zornMul,
+      ZornParavectorNullspace.dot3, ZornParavectorNullspace.cross3,
+      Fin.sum_univ_three,
+      huX1, huX2, hvX1, hvX2, huY1, huY2, hvY1, hvY2] <;>
+    ring
+
 /-- Canonical upper nilpotent lane used by the local bridge. -/
 def bridgeCanonicalUpper : ZornParavectorNullspace.Zorn :=
   { a := 0, b := 0, u := fun | 0 => 1 | _ => 0, v := fun _ => 0 }
@@ -197,7 +247,7 @@ def pin55_chiral_zorn_tkk_synthesis : BridgeSummary := by
   refine
     { pin55_lower_generator := PinO55GlideReflection.f_neg_mem_pin55 PinO55GlideReflection.crosscapIndex
       pin55_central_sign := ArtinCentralizerMonodromy.neg_one_mem_pin55
-      pin55_anomaly_free := Pin55CartanDecomposition.dewitt_anomaly_cancellation
+      pin55_anomaly_free := Pin55CartanDecomposition.split_signature_index_55_zero
       chiral_projector_sum := ChiralCausalConeTKKBridge.projector_sum
       chiral_nilpotent_source := ChiralCausalConeTKKBridge.nilpotent_source
       zorn_weld := ⟨bridgeCarrier_lower_unit_is_sigmaMinus,

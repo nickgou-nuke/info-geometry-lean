@@ -196,6 +196,21 @@ theorem outerCarrierMap_bracket_compatibility :
 structure BridgeSummary where
   pin55_lower_generator :
     Clifford55.ι55 (Clifford55.f_neg PinO55GlideReflection.crosscapIndex) ∈ Clifford55.Pin55
+  native_projective_null_swap :
+    InfoGeometry.Twistor.Cl55RealSplitPinNullIncidence.realSplitPinNullAction
+        (InfoGeometry.Clifford.Clifford55.fNegRealPin
+          PinO55GlideReflection.crosscapIndex)
+        (InfoGeometry.Clifford.Clifford55.nPairProjective
+          PinO55GlideReflection.crosscapIndex) =
+      InfoGeometry.Clifford.Clifford55.nbarPairProjective
+        PinO55GlideReflection.crosscapIndex ∧
+    InfoGeometry.Twistor.Cl55RealSplitPinNullIncidence.realSplitPinNullAction
+        (InfoGeometry.Clifford.Clifford55.fNegRealPin
+          PinO55GlideReflection.crosscapIndex)
+        (InfoGeometry.Clifford.Clifford55.nbarPairProjective
+          PinO55GlideReflection.crosscapIndex) =
+      InfoGeometry.Clifford.Clifford55.nPairProjective
+        PinO55GlideReflection.crosscapIndex
   pin55_central_sign : (-1 : Clifford55.Cl55) ∈ Clifford55.Pin55
   pin55_split_index_zero : anomalyIndex 5 5 = 0
   chiral_projector_sum :
@@ -236,16 +251,19 @@ structure BridgeSummary where
       TKKJordanPairData.TKKGrade.m1 ∧
     ZornTrialityTKKBridge.laneGrade ZornTrialityTKKBridge.SplitOctonionLane.associatorWitness =
       TKKJordanPairData.TKKGrade.p2 ∧
-    ZornTrialityTKKBridge.laneMirror
+    ZornTrialityTKKBridge.laneGrade
         (ZornTrialityTKKBridge.laneMirror
           ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent) =
-      ZornTrialityTKKBridge.SplitOctonionLane.upperNilpotent
+      TKKJordanPairData.TKKGrade.m1
 
 /-- The actual bridge theorem: `Pin(5,5)` carrier facts, chiral projectors,
 Zorn weld, and TKK grading sit in one finite package. -/
 def pin55_chiral_zorn_tkk_synthesis : BridgeSummary := by
   refine
     { pin55_lower_generator := PinO55GlideReflection.f_neg_mem_pin55 PinO55GlideReflection.crosscapIndex
+      native_projective_null_swap :=
+        ⟨PinO55GlideReflection.native_crosscap_projective_n_to_nbar,
+          PinO55GlideReflection.native_crosscap_projective_nbar_to_n⟩
       pin55_central_sign := ArtinCentralizerMonodromy.neg_one_mem_pin55
       pin55_split_index_zero := Pin55CartanDecomposition.split_signature_index_55_zero
       chiral_projector_sum := ChiralCausalConeTKKBridge.projector_sum
@@ -255,7 +273,13 @@ def pin55_chiral_zorn_tkk_synthesis : BridgeSummary := by
       zorn_bracket_compatibility := bridgeCarrier_bracket_compatibility
       outer_pair_commutes := outerCarrierMap_mirror_commutes
         (bridgeCanonicalUpper, bridgeCanonicalLower)
-      tkk_lane_grade := ZornTrialityTKKBridge.canonical_lane_grade_synthesis }
+      tkk_lane_grade := by
+        exact ⟨
+          ZornTrialityTKKBridge.laneGrade_diagonalProjector,
+          ZornTrialityTKKBridge.laneGrade_upperNilpotent,
+          ZornTrialityTKKBridge.laneGrade_lowerNilpotent,
+          ZornTrialityTKKBridge.laneGrade_associatorWitness,
+          ZornTrialityTKKBridge.laneGrade_mirror_upper⟩ }
 
 end Pin55ChiralZornTKKBridge
 

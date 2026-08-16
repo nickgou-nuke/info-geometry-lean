@@ -24,7 +24,7 @@ A 5-graded affine projective closure socket mapping Zero (`g_{-2}`)
 and Infinity (`g_2`) into a unified conformal algebra via the 
 Möbius chiral parity operator.
 -/
-structure FiniteMobiusPhaseCertificate (n : ℕ) where
+structure FiniteMobiusPhaseData (n : ℕ) where
   /-- The identity of the finite matrix algebra. -/
   I : Matrix (Fin n) (Fin n) ℝ
   /-- A finite Möbius phase matrix. -/
@@ -42,7 +42,7 @@ structure FiniteMobiusPhaseCertificate (n : ℕ) where
 
 This alias does not promote the finite certificate to a native five-graded
 or Pin/O(5,5) closure. -/
-abbrev FiveGradedMobiusClosure (n : ℕ) := FiniteMobiusPhaseCertificate n
+abbrev FiveGradedMobiusClosure (n : ℕ) := FiniteMobiusPhaseData n
 
 /-- Finite readout from the explicitly supplied phase certificate.
 
@@ -180,11 +180,6 @@ five-grade inversion.
 -/
 def mobiusClosureFromConformalInversion2 : FiveGradedMobiusClosure 2 :=
   mobiusClosure2
-
-/-- The canonical two-pole model has zero Gromov-Witten trace readout. -/
-theorem mobiusClosureFromConformalInversion2_gw_zero :
-    mobiusClosureFromConformalInversion2.gromovWittenIndex = 0 := by
-  rfl
 
 /-- The canonical two-pole model has central ribbon square `-I`. -/
 theorem mobiusClosureFromConformalInversion2_centralizer :

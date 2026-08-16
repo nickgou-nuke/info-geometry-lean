@@ -1680,6 +1680,7 @@ import InfoGeometry.Krein.Superphysics
 import InfoGeometry.Clifford.Tower
 import InfoGeometry.Canonical.GaugeUnified
 import InfoGeometry.Canonical.Cl11ModularAtom
+import InfoGeometry.Canonical.PionHestenesNormalization
 import InfoGeometry.Canonical.PrimeCl11ModularAtom
 import InfoGeometry.Canonical.CliffordFractalWaveletBridge
 import InfoGeometry.Canonical.ClNNBottBridge

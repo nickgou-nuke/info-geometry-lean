@@ -153,40 +153,61 @@ theorem exists_generated_correction_fixing_first :
           rw [anisotropicReflection_self hx] at hinv
           exact hinv
 
-theorem reflectionGeneratedOQ55_eq_top : reflectionGeneratedOQ55 = ⊤ := by
-  rw [Subgroup.eq_top_iff']
-  intro f
+theorem exists_generated_left_inverse
+    (f : OQ55) :
+    ∃ q : OQ55,
+      q ∈ reflectionGeneratedOQ55 ∧
+        q * f = 1 := by
   rcases exists_generated_correction_fixing_first 10 le_rfl f with
     ⟨q, hq, hfix⟩
-  have hqf : q * f = 1 := by
-    apply Subtype.ext
-    apply LinearEquiv.toLinearMap_injective
-    apply fin10Basis55.ext
-    intro i
-    simpa using hfix i i.isLt
+  refine ⟨q, hq, ?_⟩
+  apply Subtype.ext
+  apply LinearEquiv.toLinearMap_injective
+  apply fin10Basis55.ext
+  intro i
+  simpa using hfix i i.isLt
+
+theorem reflectionGeneratedOQ55_eq_top : reflectionGeneratedOQ55 = ⊤ := by
+  apply top_unique
+  intro f _hf
+  rcases exists_generated_left_inverse f with
+    ⟨q, hq, hqf⟩
   have hf : f = q⁻¹ := by
     calc
-      f = 1 * f := by simp
-      _ = (q⁻¹ * q) * f := by rw [inv_mul_cancel]
-      _ = q⁻¹ * (q * f) := by rw [mul_assoc]
-      _ = q⁻¹ := by rw [hqf, mul_one]
+      f = q⁻¹ * (q * f) := by simp
+      _ = q⁻¹ := by rw [hqf]; simp
   rw [hf]
   exact reflectionGeneratedOQ55.inv_mem hq
+
+theorem oqReflection_mem_pinRange
+    (a : V55) (ha : Q55 a ≠ 0) :
+    oqReflection a ha ∈ MonoidHom.range fullPinToOQ55 := by
+  exact ⟨anisotropicPinLift a ha, rfl⟩
 
 theorem reflectionGeneratedOQ55_le_pinRange :
     reflectionGeneratedOQ55 ≤ MonoidHom.range fullPinToOQ55 := by
   rw [reflectionGeneratedOQ55, Subgroup.closure_le]
   intro r hr
   rcases hr with ⟨a, ha, rfl⟩
-  exact ⟨anisotropicPinLift a ha, rfl⟩
+  exact oqReflection_mem_pinRange a ha
 
 /-- Constructive indefinite Cartan--Dieudonne gives surjectivity of the full
 real Pin action onto the native quadratic orthogonal group. -/
 theorem fullPinToOQ55_surjective : Function.Surjective fullPinToOQ55 := by
-  rw [← MonoidHom.range_eq_top]
+  apply MonoidHom.range_eq_top.mp
   apply top_unique
   rw [← reflectionGeneratedOQ55_eq_top]
   exact reflectionGeneratedOQ55_le_pinRange
+
+@[simp]
+theorem fullPinToOQ55_range_eq_top :
+    MonoidHom.range fullPinToOQ55 = (⊤ : Subgroup OQ55) := by
+  exact MonoidHom.range_eq_top_of_surjective
+    fullPinToOQ55 fullPinToOQ55_surjective
+
+theorem reflectionGeneratedOQ55_eq_pinRange :
+    reflectionGeneratedOQ55 = MonoidHom.range fullPinToOQ55 := by
+  rw [reflectionGeneratedOQ55_eq_top, fullPinToOQ55_range_eq_top]
 
 end RealO55CartanDieudonne
 end noncomputable section

@@ -53,8 +53,7 @@ theorem oddQuarterTurn_anticommutator (X Y : M2C) :
       -SuperPoincareOperatorCharges.anti X Y := by
   ext i j
   simp [oddQuarterTurn, SuperPoincareOperatorCharges.anti,
-    Matrix.mul_apply, Fin.sum_univ_two]
-  rw [Complex.I_sq]
+    Matrix.mul_apply, Fin.sum_univ_two, ← mul_assoc]
   ring
 
 theorem oddQuarterTurn_reverses_hoppingAnticommutator

@@ -77,6 +77,18 @@ theorem chargeSwap_preserves_hyperbolicPair
   simp only [SplitCharge.hyperbolicPair, chargeSwapLinearEquiv_apply, SplitCharge.momentum,
     SplitCharge.winding, add_comm]
 
+@[simp]
+theorem chargeSwap_involutive (n : ℕ) (q : SplitCharge n) :
+    chargeSwapLinearEquiv n (chargeSwapLinearEquiv n q) = q := by
+  rfl
+
+theorem chargeSwap_preserves_hyperbolicNorm
+    (n : ℕ) (q : SplitCharge n) :
+    SplitCharge.hyperbolicNorm (chargeSwapLinearEquiv n q) =
+      SplitCharge.hyperbolicNorm q := by
+  unfold SplitCharge.hyperbolicNorm
+  exact chargeSwap_preserves_hyperbolicPair n q q
+
 /--
 Global sign flip of the split charge lattice.
 
@@ -116,6 +128,18 @@ theorem chargeParityTwist_preserves_hyperbolicPair
   intro x _
   dsimp
   ring
+
+@[simp]
+theorem chargeParityTwist_involutive (n : ℕ) (q : SplitCharge n) :
+    chargeParityTwistLinearEquiv n (chargeParityTwistLinearEquiv n q) = q := by
+  ext i <;> simp [chargeParityTwistLinearEquiv_apply]
+
+theorem chargeParityTwist_preserves_hyperbolicNorm
+    (n : ℕ) (q : SplitCharge n) :
+    SplitCharge.hyperbolicNorm (chargeParityTwistLinearEquiv n q) =
+      SplitCharge.hyperbolicNorm q := by
+  unfold SplitCharge.hyperbolicNorm
+  exact chargeParityTwist_preserves_hyperbolicPair n q q
 
 /--
 Canonical orthogonal symmetries of the Narain charge lattice.

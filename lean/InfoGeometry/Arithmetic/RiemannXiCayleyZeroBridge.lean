@@ -60,6 +60,13 @@ theorem riemannXiCayley_inv_eq
   rw [cayleyToTemperature_inv_eq_one_sub hz hz',
     InfoGeometry.Arithmetic.RiemannZetaEquivalences.riemannXi_one_sub]
 
+/-- The Cayley-composed completed Xi zero locus is invariant under the
+involution `z ↦ z⁻¹` on its domain. -/
+theorem riemannXiCayley_zero_inv_iff
+    {z : ℂ} (hz : z ≠ 0) (hz' : 1 + z ≠ 0) :
+    riemannXiCayley z⁻¹ = 0 ↔ riemannXiCayley z = 0 := by
+  rw [riemannXiCayley_inv_eq hz hz']
+
 theorem riemannXiCayley_zero_iff_riemannZeta_zero_of_strip
     {s : ℂ} (hRe : 0 < s.re) (hRe' : s.re < 1) :
     riemannZeta s = 0 ↔

@@ -68,6 +68,41 @@ theorem pinInfinityStabilizer_preserves_nativeConformalBoundary
   exact pinProjectivization_preserves_nativeConformalBoundary_of_fixing_infinity
     g.1 g.2 p hp
 
+/-! The complementary affine chart is preserved by the same native action. -/
+theorem pinInfinityStabilizer_preserves_nativeAffineChart
+    (g : pinInfinityStabilizer)
+    (p : ℙ ℝ V55)
+    (hp : nativeAffineChart55 p) :
+    nativeAffineChart55
+      (pinProjectiveRepresentation.projectivizationMap g.1 p) := by
+  apply (nativeAffineChart55_iff_not_nativeConformalBoundary55
+    (pinProjectiveRepresentation.projectivizationMap g.1 p)).2
+  intro hboundary
+  have hp' : ¬ nativeConformalBoundary55 p :=
+    (nativeAffineChart55_iff_not_nativeConformalBoundary55 p).1 hp
+  have hboundary' :=
+    pinInfinityStabilizer_preserves_nativeConformalBoundary
+      (g := g⁻¹)
+      (p := pinProjectiveRepresentation.projectivizationMap g.1 p)
+      hboundary
+  have hcomp :=
+    congrFun
+      (pinProjectiveRepresentation.projectivizationMap_mul
+        (g.1)⁻¹ g.1) p
+  have hcomp' :
+      pinProjectiveRepresentation.projectivizationMap (g.1)⁻¹
+          (pinProjectiveRepresentation.projectivizationMap g.1 p) = p := by
+    rw [inv_mul_cancel,
+      pinProjectiveRepresentation.projectivizationMap_one] at hcomp
+    simpa [Function.comp_def] using hcomp.symm
+  have hboundary'' :
+      nativeConformalBoundary55
+        (pinProjectiveRepresentation.projectivizationMap (g.1)⁻¹
+          (pinProjectiveRepresentation.projectivizationMap g.1 p)) := by
+    simpa using hboundary'
+  rw [hcomp'] at hboundary''
+  exact hp' hboundary''
+
 /-! ## Hom-level native boundary symmetry
 
 The preceding theorem is pointwise.  This packages the same native
@@ -91,5 +126,54 @@ theorem pinInfinityStabilizerProjectivizationAction_preserves_boundary
       (pinInfinityStabilizerProjectivizationAction g p) := by
   rw [pinInfinityStabilizerProjectivizationAction_apply]
   exact pinInfinityStabilizer_preserves_nativeConformalBoundary g p hp
+
+/-! ## Restricted action on the native null affine chart -/
+
+abbrev nativeNullAffineChart55Carrier : Type :=
+  {p : ℙ ℝ V55 // nativeNullAffineChart55 p}
+
+noncomputable def pinInfinityStabilizerNativeNullAffineChartAction
+    (g : pinInfinityStabilizer) :
+    nativeNullAffineChart55Carrier → nativeNullAffineChart55Carrier :=
+  fun p =>
+    ⟨pinProjectiveRepresentation.projectivizationMap g.1 p.1,
+      ⟨pinProjectivization_preserves_null g.1 p.1 p.2.1,
+        pinInfinityStabilizer_preserves_nativeAffineChart g p.1 p.2.2⟩⟩
+
+noncomputable def pinInfinityStabilizerNativeNullAffineChartActionHom :
+    pinInfinityStabilizer →*
+      Function.End nativeNullAffineChart55Carrier where
+  toFun := pinInfinityStabilizerNativeNullAffineChartAction
+  map_one' := by
+    funext p
+    apply Subtype.ext
+    change pinProjectiveRepresentation.projectivizationMap
+      (1 : Pin55) p.1 = p.1
+    rw [pinProjectiveRepresentation.projectivizationMap_one]
+    rfl
+  map_mul' := by
+    intro g h
+    funext p
+    apply Subtype.ext
+    have hmul :=
+      congrFun
+        (pinProjectiveRepresentation.projectivizationMap_mul
+          (g.1) (h.1)) p.1
+    simpa [pinInfinityStabilizerNativeNullAffineChartAction,
+      Function.comp_def] using hmul
+
+@[simp] theorem pinInfinityStabilizerNativeNullAffineChartActionHom_apply
+    (g : pinInfinityStabilizer)
+    (p : nativeNullAffineChart55Carrier) :
+    pinInfinityStabilizerNativeNullAffineChartActionHom g p =
+      pinInfinityStabilizerNativeNullAffineChartAction g p :=
+  rfl
+
+theorem pinInfinityStabilizerNativeNullAffineChartAction_preserves_null
+    (g : pinInfinityStabilizer)
+    (p : nativeNullAffineChart55Carrier) :
+    (pinInfinityStabilizerNativeNullAffineChartAction g p).1 =
+      pinProjectiveRepresentation.projectivizationMap g.1 p.1 :=
+  rfl
 
 end InfoGeometry.Canonical.Cl55WittPinConformalBoundaryBridge

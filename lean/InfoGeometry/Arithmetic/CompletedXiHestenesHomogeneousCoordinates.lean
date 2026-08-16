@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 
 import InfoGeometry.Arithmetic.RiemannXiCayleyZeroBridge
+import InfoGeometry.Canonical.KleinBottleWallpaper
 
 /-!
 # Completed Xi in homogeneous Hestenes coordinates
@@ -19,6 +20,8 @@ namespace InfoGeometry.Arithmetic.CompletedXiHestenesHomogeneousCoordinates
 
 open InfoGeometry.Arithmetic.RiemannZetaEquivalences
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
+open InfoGeometry.Canonical.KleinBottleWallpaper
+open InfoGeometry.Canonical.HolographicSouriauClosure
 
 abbrev HomogeneousCoord : Type := ℂ × ℂ
 
@@ -45,6 +48,76 @@ def projectiveRatio (X : HomogeneousCoord) : ℂ :=
 /-- The zeta projective coordinate `τ = s/(1-s)`. -/
 def tau (s : ℂ) : ℂ :=
   projectiveRatio (homogeneousCoord s)
+
+/-! ## Native pointwise Hestenes algebra -/
+
+@[simp] theorem hestenesSwap_sq (X : HomogeneousCoord) :
+    hestenesSwap (hestenesSwap X) = X := by
+  rcases X with ⟨p, q⟩
+  rfl
+
+@[simp] theorem hestenesEpsilon_sq (X : HomogeneousCoord) :
+    hestenesEpsilon (hestenesEpsilon X) = X := by
+  rcases X with ⟨p, q⟩
+  simp [hestenesEpsilon]
+
+@[simp] theorem hestenesK_sq (X : HomogeneousCoord) :
+    hestenesK (hestenesK X) = (-X.1, -X.2) := by
+  rcases X with ⟨p, q⟩
+  rfl
+
+theorem hestenesSwap_epsilon_anticommute (X : HomogeneousCoord) :
+    hestenesSwap (hestenesEpsilon X) =
+      -(hestenesEpsilon (hestenesSwap X)) := by
+  rcases X with ⟨p, q⟩
+  simp [hestenesSwap, hestenesEpsilon]
+
+theorem projectiveRatio_hestenesEpsilon
+    (p q : ℂ) :
+    projectiveRatio (hestenesEpsilon (p, q)) =
+      -projectiveRatio (p, q) := by
+  simpa [projectiveRatio, hestenesEpsilon] using (div_neg p)
+
+theorem hestenesK_eq_swap_epsilon (X : HomogeneousCoord) :
+    hestenesK X = hestenesSwap (hestenesEpsilon X) := by
+  rfl
+
+/-! ## Projective reconstruction and generic functional descent -/
+
+def projectiveS (X : HomogeneousCoord) : ℂ :=
+  X.1 / (X.1 + X.2)
+
+theorem projectiveS_homogeneousCoord (s : ℂ) :
+    projectiveS (homogeneousCoord s) = s := by
+  simp [projectiveS, homogeneousCoord]
+
+def homogeneousFunction (f : ℂ → ℂ) (X : HomogeneousCoord) : ℂ :=
+  f (projectiveS X)
+
+theorem homogeneousFunction_swap_invariant
+    (f : ℂ → ℂ)
+    (hfunc : ∀ s, f (1 - s) = f s)
+    {X : HomogeneousCoord}
+    (hX : X.1 + X.2 ≠ 0) :
+    homogeneousFunction f (hestenesSwap X) =
+      homogeneousFunction f X := by
+  unfold homogeneousFunction projectiveS hestenesSwap
+  have hX' : X.2 + X.1 ≠ 0 := by
+    simpa [add_comm] using hX
+  have harg : X.2 / (X.2 + X.1) =
+      1 - X.1 / (X.1 + X.2) := by
+    apply (div_eq_iff hX').2
+    field_simp [hX]
+    ring
+  rw [harg]
+  exact hfunc _
+
+theorem completedXi_homogeneousFunction_swap (X : HomogeneousCoord)
+    (hX : X.1 + X.2 ≠ 0) :
+    homogeneousFunction riemannXi (hestenesSwap X) =
+      homogeneousFunction riemannXi X := by
+  exact homogeneousFunction_swap_invariant riemannXi
+    (fun s => riemannXi_one_sub s) hX
 
 theorem homogeneousCoord_one_sub (s : ℂ) :
     homogeneousCoord (1 - s) =
@@ -131,6 +204,94 @@ theorem completedXi_homogeneous_closure (s : ℂ) :
   exact ⟨homogeneous_functional_intertwining s,
     tau_one_sub_eq_inv s,
     completedXi_functional_equation s⟩
+
+/-! ## Centered zeta coordinates and the native wallpaper glide -/
+
+abbrev CenteredZetaCoord : Type := ℝ × ℝ
+
+/-- The centered real/imaginary coordinates `s = 1/2 + u + iv`. -/
+def centeredZetaCoord (s : ℂ) : CenteredZetaCoord :=
+  (s.re - (1 / 2 : ℝ), s.im)
+
+/-- The functional reflection `s ↦ 1 - s` in centered coordinates. -/
+theorem centeredZetaCoord_one_sub (s : ℂ) :
+    centeredZetaCoord (1 - s) =
+      (-((centeredZetaCoord s).1), -((centeredZetaCoord s).2)) := by
+  unfold centeredZetaCoord
+  simp only [Complex.sub_re, Complex.one_re, Complex.sub_im, Complex.one_im,
+    neg_sub, sub_neg_eq_add]
+  ext <;> ring
+
+/-- The critical seam is the zero first coordinate in the centered chart. -/
+def centeredCriticalSeam (p : CenteredZetaCoord) : Prop :=
+  p.1 = 0
+
+theorem centeredZetaCoord_mem_seam_iff (s : ℂ) :
+    centeredCriticalSeam (centeredZetaCoord s) ↔ OnCriticalLine s := by
+  unfold centeredCriticalSeam centeredZetaCoord OnCriticalLine
+  constructor <;> intro h <;> linarith
+
+/-- The existing wallpaper glide, read in centered zeta coordinates. -/
+def zetaWallpaperGlide (p : CenteredZetaCoord) : CenteredZetaCoord :=
+  InfoGeometry.Canonical.HolographicSouriauClosure.glide_reflection p
+
+theorem zetaWallpaperGlide_apply (u v : ℝ) :
+    zetaWallpaperGlide (u, v) = (-u, v + 1 / 2) := by
+  rfl
+
+theorem zetaWallpaperGlide_square (p : CenteredZetaCoord) :
+    zetaWallpaperGlide (zetaWallpaperGlide p) = (p.1, p.2 + 1) := by
+  exact InfoGeometry.Canonical.HolographicSouriauClosure.glide_reflection_squared p
+
+theorem centeredZetaCoord_glide_readout (s : ℂ) :
+    zetaWallpaperGlide (centeredZetaCoord s) =
+      (-((centeredZetaCoord s).1), (centeredZetaCoord s).2 + 1 / 2) := by
+  rfl
+
+theorem zetaWallpaperGlide_preserves_seam (p : CenteredZetaCoord)
+    (hp : centeredCriticalSeam p) :
+    centeredCriticalSeam (zetaWallpaperGlide p) := by
+  unfold centeredCriticalSeam zetaWallpaperGlide
+    InfoGeometry.Canonical.HolographicSouriauClosure.glide_reflection at *
+  simp [hp]
+
+def transverseTranslation (a : ℝ) (p : CenteredZetaCoord) : CenteredZetaCoord :=
+  (p.1 + a, p.2)
+
+theorem transverseTranslation_zero (p : CenteredZetaCoord) :
+    transverseTranslation 0 p = p := by
+  rcases p with ⟨u, v⟩
+  simp [transverseTranslation]
+
+theorem transverseTranslation_add (a b : ℝ) (p : CenteredZetaCoord) :
+    transverseTranslation a (transverseTranslation b p) =
+      transverseTranslation (a + b) p := by
+  rcases p with ⟨u, v⟩
+  simp [transverseTranslation]
+  ring
+
+theorem zetaWallpaperGlide_conjugates_transverseTranslation (a : ℝ)
+    (p : CenteredZetaCoord) :
+    zetaWallpaperGlide (transverseTranslation a (G_inv p)) =
+      transverseTranslation (-a) p := by
+  rcases p with ⟨u, v⟩
+  simp [zetaWallpaperGlide, G_inv,
+    InfoGeometry.Canonical.HolographicSouriauClosure.glide_reflection,
+    transverseTranslation]
+  ring
+
+theorem zetaWallpaperGlide_conjugates_unit_transverseTranslation
+    (p : CenteredZetaCoord) :
+    zetaWallpaperGlide (transverseTranslation 1 (G_inv p)) =
+      transverseTranslation (-1) p := by
+  simpa using zetaWallpaperGlide_conjugates_transverseTranslation 1 p
+
+theorem centeredZetaCoord_functional_glide_dictionary (s : ℂ) :
+    centeredZetaCoord (1 - s) =
+      (-((centeredZetaCoord s).1), -((centeredZetaCoord s).2)) ∧
+    zetaWallpaperGlide (centeredZetaCoord s) =
+      (-((centeredZetaCoord s).1), (centeredZetaCoord s).2 + 1 / 2) := by
+  exact ⟨centeredZetaCoord_one_sub s, centeredZetaCoord_glide_readout s⟩
 
 end InfoGeometry.Arithmetic.CompletedXiHestenesHomogeneousCoordinates
 

@@ -70,6 +70,10 @@ noncomputable def concreteStep (n : ℕ) :
         fin_cases i₂ <;> fin_cases j₂ <;>
           simp [hi, hj, Matrix.star_apply]
 
+@[simp] theorem concreteStep_star (n : ℕ) (A : MatrixStage n) :
+    concreteStep n (star A) = star (concreteStep n A) := by
+  exact (concreteStep n).map_star' A
+
 lemma trace_reindex {m n R : Type*} [Fintype m] [Fintype n]
     [DecidableEq m] [DecidableEq n] [CommSemiring R]
     (e : m ≃ n) (A : Matrix m m R) :
@@ -208,6 +212,10 @@ theorem concreteMap_comp {i j k : ℕ} (hij : i ≤ j) (hjk : j ≤ k) :
 theorem concreteMap_trace {i j : ℕ} (hij : i ≤ j) (A : MatrixStage i) :
     matrixTraceState j (concreteMap hij A) = matrixTraceState i A := by
   exact trace_compatible concreteStep concrete_trace_compatible hij A
+
+@[simp] theorem concreteMap_star {i j : ℕ} (hij : i ≤ j) (A : MatrixStage i) :
+    concreteMap hij (star A) = star (concreteMap hij A) := by
+  exact (concreteMap hij).map_star' A
 
 /-! ### Categorical filtered colimit of the raw matrix tower
 

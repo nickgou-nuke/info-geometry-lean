@@ -34,13 +34,9 @@ theorem S3CrossProductResidual_eq_zero (σ : S3Perm)
 
 theorem S3CrossProductEqualizer_eq_univ (σ : S3Perm) :
     S3CrossProductEqualizer σ = Set.univ := by
-  ext p
-  change S3CrossProductResidual σ p = 0 ↔ True
-  constructor
-  · intro _
-    trivial
-  · intro _
-    exact S3CrossProductResidual_eq_zero σ p
+  apply Set.eq_univ_of_forall
+  intro p
+  exact S3CrossProductResidual_eq_zero σ p
 
 def S3AdjointEqualizer (σ : S3Perm) : Set (H3Zorn ℝ) :=
   {X | S3AdjointResidual σ X = 0}
@@ -58,13 +54,9 @@ theorem S3AdjointResidual_eq_zero (σ : S3Perm) (X : H3Zorn ℝ) :
 
 theorem S3AdjointEqualizer_eq_univ (σ : S3Perm) :
     S3AdjointEqualizer σ = Set.univ := by
-  ext X
-  change S3AdjointResidual σ X = 0 ↔ True
-  constructor
-  · intro _
-    trivial
-  · intro _
-    exact S3AdjointResidual_eq_zero σ X
+  apply Set.eq_univ_of_forall
+  intro X
+  exact S3AdjointResidual_eq_zero σ X
 
 theorem S3OnH3ZornHomeomorph_normCubic_level_eq
     (σ : S3Perm) (r : ℝ) :

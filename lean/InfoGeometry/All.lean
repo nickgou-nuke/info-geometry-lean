@@ -5859,6 +5859,7 @@ import InfoGeometry.Physics.CPTAtom
 import InfoGeometry.Physics.CrystalKasparovAtiyahSingerBridge
 import InfoGeometry.Physics.CStarCuntzTensorQuotient
 import InfoGeometry.Physics.CuntzDeformedSuperPoincare
+import InfoGeometry.Physics.DiracCrystalOperatorChargeBridge
 import InfoGeometry.Physics.CuntzFractalHoppingAnyons
 import InfoGeometry.Physics.CuntzMatrixUnitFiveGradingBridge
 import InfoGeometry.Physics.CyclicCohomologyChernCharacter

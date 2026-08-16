@@ -52,6 +52,11 @@ theorem pinTwistedAction_preserves_Q55_all (g : Pin55) (v : V55) :
 def pinIsometryPredicate (g : Pin55) : Prop :=
   ∀ v : V55, Q55 (pinTwistedAction g v) = Q55 v
 
+theorem pinIsometryPredicate_all (g : Pin55) :
+    pinIsometryPredicate g := by
+  intro v
+  exact pinTwistedAction_preserves_Q55_all g v
+
 def pinIsometrySubgroup : Subgroup Pin55 where
   carrier := {g | pinIsometryPredicate g}
   one_mem' := by
@@ -84,12 +89,12 @@ def pinIsometrySubgroup : Subgroup Pin55 where
 theorem pinIsometrySubgroup_eq_top :
     pinIsometrySubgroup = ⊤ := by
   ext g
-  change pinIsometryPredicate g ↔ True
   constructor
   · intro _
     trivial
   · intro _
-    exact pinTwistedAction_preserves_Q55_all g
+    change pinIsometryPredicate g
+    exact pinIsometryPredicate_all g
 
 def Pin55Isometric : Subgroup Pin55 :=
   pinIsometrySubgroup

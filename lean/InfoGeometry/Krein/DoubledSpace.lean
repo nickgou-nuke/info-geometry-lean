@@ -367,45 +367,42 @@ lemma hestenesPion_zero_plus :
     (hestenesPionZero (E := E)).comp hestenesPionPlus -
         (hestenesPionPlus (E := E)).comp hestenesPionZero =
       hestenesPionPlus (E := E) := by
-  have hεJ :
-      (spectral_epsilon (E := E)).comp (modular_j (E := E)) = -(clockAxis (E := E)) := by
-    simpa [clockAxis] using spectral_epsilon_comp_modular_j (E := E)
-  have hεK :
-      (spectral_epsilon (E := E)).comp clockAxis = -(modular_j (E := E)) := by
-    simpa [clockAxis] using spectral_epsilon_comp_complex_i (E := E)
-  have hJε :
-      (modular_j (E := E)).comp (spectral_epsilon (E := E)) = clockAxis := by
-    rfl
-  have hKε :
-      clockAxis.comp (spectral_epsilon (E := E)) = modular_j (E := E) := by
-    simpa [clockAxis] using complex_i_comp_spectral_epsilon (E := E)
   simp only [hestenesPionZero, hestenesPionPlus,
     ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul,
     ContinuousLinearMap.sub_comp, ContinuousLinearMap.comp_sub]
-  rw [hεJ, hεK, hJε, hKε]
-  norm_num [smul_add, add_smul, smul_smul]
+  rw [show (spectral_epsilon (E := E)).comp (modular_j (E := E)) =
+      -(clockAxis (E := E)) by
+        simpa [clockAxis] using spectral_epsilon_comp_modular_j (E := E),
+    show (spectral_epsilon (E := E)).comp clockAxis =
+      -(modular_j (E := E)) by
+        simpa [clockAxis] using spectral_epsilon_comp_complex_i (E := E),
+    show (modular_j (E := E)).comp (spectral_epsilon (E := E)) =
+      clockAxis (E := E) by rfl,
+    show (clockAxis (E := E)).comp (spectral_epsilon (E := E)) =
+      modular_j (E := E) by
+        simpa [clockAxis] using complex_i_comp_spectral_epsilon (E := E)]
+  module
 
 lemma hestenesPion_zero_minus :
     (hestenesPionZero (E := E)).comp hestenesPionMinus -
         (hestenesPionMinus (E := E)).comp hestenesPionZero =
       -hestenesPionMinus (E := E) := by
-  have hεJ :
-      (spectral_epsilon (E := E)).comp (modular_j (E := E)) = -(clockAxis (E := E)) := by
-    simpa [clockAxis] using spectral_epsilon_comp_modular_j (E := E)
-  have hεK :
-      (spectral_epsilon (E := E)).comp clockAxis = -(modular_j (E := E)) := by
-    simpa [clockAxis] using spectral_epsilon_comp_complex_i (E := E)
-  have hJε :
-      (modular_j (E := E)).comp (spectral_epsilon (E := E)) = clockAxis := by
-    rfl
-  have hKε :
-      clockAxis.comp (spectral_epsilon (E := E)) = modular_j (E := E) := by
-    simpa [clockAxis] using complex_i_comp_spectral_epsilon (E := E)
   simp only [hestenesPionZero, hestenesPionMinus,
     ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_smul,
-    ContinuousLinearMap.add_comp, ContinuousLinearMap.comp_add]
-  rw [hεJ, hεK, hJε, hKε]
-  norm_num [smul_add, add_smul, smul_smul]
+    ContinuousLinearMap.add_comp, ContinuousLinearMap.comp_add,
+    smul_smul]
+  rw [show (spectral_epsilon (E := E)).comp (modular_j (E := E)) =
+      -(clockAxis (E := E)) by
+        simpa [clockAxis] using spectral_epsilon_comp_modular_j (E := E),
+    show (spectral_epsilon (E := E)).comp clockAxis =
+      -(modular_j (E := E)) by
+        simpa [clockAxis] using spectral_epsilon_comp_complex_i (E := E),
+    show (modular_j (E := E)).comp (spectral_epsilon (E := E)) =
+      clockAxis (E := E) by rfl,
+    show (clockAxis (E := E)).comp (spectral_epsilon (E := E)) =
+      modular_j (E := E) by
+        simpa [clockAxis] using complex_i_comp_spectral_epsilon (E := E)]
+  module
 
 theorem modular_j_spectral_epsilon_has_cl11_relations (E : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :

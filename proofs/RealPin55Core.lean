@@ -1,4 +1,5 @@
 import proofs.Clifford55
+import InfoGeometry.Clifford.Cl55RealSplitPin
 
 /-! # Signature-correct real `Pin(5,5)` core
 
@@ -82,30 +83,20 @@ theorem fNegUnit_mem (i : Fin 5) : fNegUnit i ∈ FullPin55 := by
 
 /-! ## Native Lipschitz containment -/
 
-set_option maxHeartbeats 800000 in
-theorem normalizedVectorUnit_mem_lipschitz
-    {u : Cl55ˣ}
-    (hu : u ∈ normalizedVectorUnits) :
-    u ∈ LipschitzGroup55 := by
-  change ∃ v : V55,
-    (Q55 v = 1 ∨ Q55 v = -1) ∧
-      (u : Cl55) = ι55 v at hu
-  rcases hu with ⟨v, _hv, huv⟩
-  have hgen :
-      u ∈ ((↑) ⁻¹' Set.range ι55 : Set Cl55ˣ) := by
-    change (u : Cl55) ∈ Set.range ι55
-    exact ⟨v, huv.symm⟩
-  change u ∈ Subgroup.closure
-    ((↑) ⁻¹' Set.range ι55 : Set Cl55ˣ)
-  exact Subgroup.subset_closure hgen
+theorem normalizedVectorUnits_subset_lipschitz :
+    normalizedVectorUnits ⊆ LipschitzGroup55 := by
+  intro u hu
+  rcases hu with ⟨v, hnorm, huv⟩
+  apply InfoGeometry.Clifford.Clifford55.normalizedVector_mem_lipschitz
+  exact ⟨v, hnorm, huv.symm⟩
 
 /-- The signature-correct real Pin closure lies in the native Lipschitz group.
 -/
 theorem fullPin55_le_lipschitzGroup55 :
     FullPin55 ≤ LipschitzGroup55 := by
-  rw [FullPin55, LipschitzGroup55, lipschitzGroup, Subgroup.closure_le]
-  intro u hu
-  exact normalizedVectorUnit_mem_lipschitz hu
+  change Subgroup.closure normalizedVectorUnits ≤ LipschitzGroup55
+  exact (Subgroup.closure_le LipschitzGroup55).2
+    normalizedVectorUnits_subset_lipschitz
 
 theorem fullPin55_mem_lipschitzGroup55 (g : FullPin55) :
     (g : Cl55ˣ) ∈ LipschitzGroup55 :=

@@ -70,6 +70,21 @@ theorem realSplitPinNullAction_isHomeomorph (g : realSplitPin55) :
     (splitPinLinearFamily_symm_continuous g)
   convert h using 1
 
+/-- Actual homeomorphism representing one real split-Pin element on the
+projective `Q55` null boundary. -/
+def realSplitPinNullActionHomeomorph
+    (g : realSplitPin55) :
+    let _ := nullBoundaryTopology Q55
+    TwistorSpace Q55 ≃ₜ TwistorSpace Q55 := by
+  letI : TopologicalSpace (TwistorSpace Q55) := nullBoundaryTopology Q55
+  exact (realSplitPinNullAction_isHomeomorph g).homeomorph _
+
+@[simp] theorem realSplitPinNullActionHomeomorph_apply
+    (g : realSplitPin55) (p : TwistorSpace Q55) :
+    let _ := nullBoundaryTopology Q55
+    realSplitPinNullActionHomeomorph g p = realSplitPinNullAction g p := by
+  rfl
+
 /-- The concrete componentwise split-Pin action agrees with the existing
 generic ordered-configuration map. -/
 theorem realSplitPinOrderedNullAction_eq_mapOrderedConfiguration
@@ -94,6 +109,65 @@ theorem realSplitPinOrderedNullAction_isHomeomorph
     (splitPinLinearFamily_continuous g)
     (splitPinLinearFamily_symm_continuous g)
   convert h using 1
+
+/-- Actual homeomorphism representing one real split-Pin element on ordered
+distinct projective-null configurations. -/
+def realSplitPinOrderedNullActionHomeomorph
+    (g : realSplitPin55) (n : ℕ) :
+    let _ := orderedConfigurationTopology Q55 n
+    Ordered Q55 n ≃ₜ Ordered Q55 n := by
+  letI : TopologicalSpace (Ordered Q55 n) :=
+    orderedConfigurationTopology Q55 n
+  exact (realSplitPinOrderedNullAction_isHomeomorph g n).homeomorph _
+
+@[simp] theorem realSplitPinOrderedNullActionHomeomorph_apply
+    (g : realSplitPin55) (n : ℕ) (p : Ordered Q55 n) :
+    let _ := orderedConfigurationTopology Q55 n
+    realSplitPinOrderedNullActionHomeomorph g n p =
+      realSplitPinOrderedNullAction n g p := by
+  rfl
+
+instance realSplitPinNullMulAction :
+    MulAction (↥realSplitPin55) (TwistorSpace Q55) where
+  smul g p := realSplitPinNullAction g p
+  one_smul p := by
+    exact congrArg (fun e : Equiv.Perm (TwistorSpace Q55) => e p)
+      (map_one (realSplitPinNullAction))
+  mul_smul g h p := by
+    change realSplitPinNullAction (g * h) p =
+      realSplitPinNullAction g (realSplitPinNullAction h p)
+    exact congrArg (fun e : Equiv.Perm (TwistorSpace Q55) => e p)
+      (map_mul (realSplitPinNullAction) g h)
+
+instance realSplitPinOrderedNullMulAction (n : ℕ) :
+    MulAction (↥realSplitPin55) (Ordered Q55 n) where
+  smul g p := realSplitPinOrderedNullAction n g p
+  one_smul p := by
+    exact congrArg (fun e : Equiv.Perm (Ordered Q55 n) => e p)
+      (map_one (realSplitPinOrderedNullAction n))
+  mul_smul g h p := by
+    change realSplitPinOrderedNullAction n (g * h) p =
+      realSplitPinOrderedNullAction n g
+        (realSplitPinOrderedNullAction n h p)
+    exact congrArg (fun e : Equiv.Perm (Ordered Q55 n) => e p)
+      (map_mul (realSplitPinOrderedNullAction n) g h)
+
+@[simp] theorem realSplitPinNullActionHomeomorph_smul
+    (g : realSplitPin55) (p : TwistorSpace Q55) :
+    let _ := nullBoundaryTopology Q55
+    realSplitPinNullActionHomeomorph g p = g • p := by
+  letI : TopologicalSpace (TwistorSpace Q55) := nullBoundaryTopology Q55
+  rw [realSplitPinNullActionHomeomorph_apply]
+  rfl
+
+@[simp] theorem realSplitPinOrderedNullActionHomeomorph_smul
+    (g : realSplitPin55) (n : ℕ) (p : Ordered Q55 n) :
+    let _ := orderedConfigurationTopology Q55 n
+    realSplitPinOrderedNullActionHomeomorph g n p = g • p := by
+  letI : TopologicalSpace (Ordered Q55 n) :=
+    orderedConfigurationTopology Q55 n
+  rw [realSplitPinOrderedNullActionHomeomorph_apply]
+  rfl
 
 /-- The descended split-Pin action agrees with the existing generic
 unordered-configuration quotient map. -/

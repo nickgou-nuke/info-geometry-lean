@@ -67,7 +67,7 @@ def realSplitPinNullEquiv (g : realSplitPin55) :
   rfl
 
 /-- The concrete real split-Pin group action on projective `Q55` null
-rays. -/
+lines. Projectivization identifies all nonzero real scalar multiples. -/
 def realSplitPinNullAction :
     realSplitPin55 →* Equiv.Perm (TwistorSpace Q55) where
   toFun := realSplitPinNullEquiv

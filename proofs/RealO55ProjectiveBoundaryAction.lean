@@ -18,6 +18,7 @@ open RealPin55Core
 open RealPin55TwistedAction
 open RealPin55OrthogonalAction
 open RealPin55QuadraticRepresentation
+open RealPin55ReflectionGenerators
 open InfoGeometry.Projective
 open InfoGeometry.Projective.Cl55NullBoundaryBridge
 open InfoGeometry.Projective.ProjectiveNullBoundaryDatum
@@ -204,6 +205,191 @@ theorem fullPinBoundaryRepresentation_factorization :
   apply congrArg (nullMk Cl55NullBoundaryBridge.datum)
   apply NullRep.ext_Z
   rfl
+
+/-- Surjectivity of the real Pin-to-orthogonal map makes the full Pin and
+`OQ55` boundary representations have the same range. -/
+theorem fullPinBoundaryRepresentation_range_eq :
+    Set.range fullPinBoundaryRepresentation =
+      Set.range oqBoundaryRepresentation := by
+  apply Set.Subset.antisymm
+  · intro F hF
+    rcases hF with ⟨g, rfl⟩
+    exact ⟨fullPinToOQ55 g, rfl⟩
+  · intro F hF
+    rcases hF with ⟨f, rfl⟩
+    rcases RealO55CartanDieudonne.fullPinToOQ55_surjective f with
+      ⟨g, hg⟩
+    refine ⟨g, ?_⟩
+    calc
+      fullPinBoundaryRepresentation g =
+          (oqBoundaryRepresentation.comp fullPinToOQ55) g := by
+            rw [fullPinBoundaryRepresentation_factorization]
+      _ = oqBoundaryRepresentation (fullPinToOQ55 g) := rfl
+      _ = oqBoundaryRepresentation f := by rw [hg]
+
+/-! ## Reflection-generated closure on the native boundary -/
+
+open RealO55CartanDieudonne
+
+/-- Inclusion of the constructive reflection subgroup into `OQ55`. -/
+noncomputable def reflectionGeneratedOQ55_subtypeHom :
+    reflectionGeneratedOQ55 →* OQ55 :=
+  Subgroup.subtype reflectionGeneratedOQ55
+
+/-- Restriction of the native `OQ55` boundary representation to the
+reflection-generated subgroup. -/
+noncomputable def reflectionGeneratedBoundaryRepresentation :
+    reflectionGeneratedOQ55 →* Function.End Boundary :=
+  oqBoundaryRepresentation.comp reflectionGeneratedOQ55_subtypeHom
+
+theorem reflectionGeneratedBoundaryRepresentation_apply
+    (g : reflectionGeneratedOQ55) :
+    reflectionGeneratedBoundaryRepresentation g =
+      oqBoundaryRepresentation g.1 :=
+  rfl
+
+/-- Constructive Cartan--Dieudonné makes the reflection-generated boundary
+action have exactly the full native `OQ55` action range. -/
+theorem reflectionGeneratedBoundaryRepresentation_range_eq :
+    Set.range reflectionGeneratedBoundaryRepresentation =
+      Set.range oqBoundaryRepresentation := by
+  apply Set.Subset.antisymm
+  · intro F hF
+    rcases hF with ⟨g, rfl⟩
+    exact ⟨g.1, rfl⟩
+  · intro F hF
+    rcases hF with ⟨f, rfl⟩
+    have hf : f ∈ reflectionGeneratedOQ55 := by
+      rw [RealO55CartanDieudonne.reflectionGeneratedOQ55_eq_top]
+      trivial
+    refine ⟨⟨f, hf⟩, ?_⟩
+    rfl
+
+/-- The reflection-generated, orthogonal, and full-real-Pin boundary action
+ranges coincide. -/
+theorem reflectionGeneratedBoundaryRepresentation_range_eq_fullPin :
+    Set.range reflectionGeneratedBoundaryRepresentation =
+      Set.range fullPinBoundaryRepresentation := by
+  rw [reflectionGeneratedBoundaryRepresentation_range_eq,
+    fullPinBoundaryRepresentation_range_eq]
+
+/-! ## Native Mathlib actions -/
+
+/-- The native quadratic orthogonal group acts on its projective null boundary. -/
+noncomputable instance oqBoundaryMulAction :
+    MulAction OQ55 Boundary where
+  smul := oqBoundaryAction
+  one_smul := by
+    intro X
+    change oqBoundaryRepresentation (1 : OQ55) X = X
+    rw [map_one]
+    rfl
+  mul_smul := by
+    intro f g X
+    change oqBoundaryRepresentation (f * g) X =
+      oqBoundaryRepresentation f
+        (oqBoundaryRepresentation g X)
+    rw [map_mul]
+    rfl
+
+@[simp]
+theorem oqBoundary_smul_eq
+    (f : OQ55) (X : Boundary) :
+    f • X = oqBoundaryAction f X :=
+  rfl
+
+/-- The full real Pin carrier acts through its native orthogonal boundary
+representation. -/
+noncomputable instance fullPinBoundaryMulAction :
+    MulAction RealPin55Core.FullPin55 Boundary where
+  smul := fullPinBoundaryAction
+  one_smul := by
+    intro X
+    change fullPinBoundaryRepresentation
+        (1 : RealPin55Core.FullPin55) X = X
+    rw [map_one]
+    rfl
+  mul_smul := by
+    intro g h X
+    change fullPinBoundaryRepresentation (g * h) X =
+      fullPinBoundaryRepresentation g
+        (fullPinBoundaryRepresentation h X)
+    rw [map_mul]
+    rfl
+
+@[simp]
+theorem fullPinBoundary_smul_eq
+    (g : RealPin55Core.FullPin55) (X : Boundary) :
+    g • X = fullPinBoundaryAction g X :=
+  rfl
+
+theorem fullPinBoundary_smul_factors_through_oq
+    (g : RealPin55Core.FullPin55) (X : Boundary) :
+    g • X = (fullPinToOQ55 g) • X := by
+  change fullPinBoundaryRepresentation g X =
+    oqBoundaryRepresentation (fullPinToOQ55 g) X
+  rw [fullPinBoundaryRepresentation_factorization]
+  rfl
+
+/-- Every native orthogonal boundary action has a full real Pin lift. -/
+theorem exists_fullPin_boundary_smul_eq
+    (f : OQ55) (X : Boundary) :
+    ∃ p : RealPin55Core.FullPin55, p • X = f • X := by
+  rcases RealO55CartanDieudonne.fullPinToOQ55_surjective f with
+    ⟨p, hp⟩
+  refine ⟨p, ?_⟩
+  rw [fullPinBoundary_smul_factors_through_oq, hp]
+
+/-- The canonical Pin lift of an anisotropic vector and its native
+orthogonal reflection induce the same boundary action. -/
+theorem anisotropicPinLift_boundary_smul_eq
+    (a : V55) (ha : Q55 a ≠ 0) (X : Boundary) :
+    anisotropicPinLift a ha • X =
+      RealO55CartanDieudonne.oqReflection a ha • X := by
+  rw [fullPinBoundary_smul_factors_through_oq]
+  rfl
+
+/-- The constructive reflection-generated subgroup acts on the native
+projective boundary. -/
+noncomputable instance reflectionGeneratedBoundaryMulAction :
+    MulAction reflectionGeneratedOQ55 Boundary where
+  smul := fun g X => oqBoundaryAction g.1 X
+  one_smul := by
+    intro X
+    change oqBoundaryRepresentation
+        (1 : OQ55) X = X
+    rw [map_one]
+    rfl
+  mul_smul := by
+    intro g h X
+    change oqBoundaryRepresentation (g.1 * h.1) X =
+      oqBoundaryRepresentation g.1
+        (oqBoundaryRepresentation h.1 X)
+    rw [map_mul]
+    rfl
+
+@[simp]
+theorem reflectionGeneratedBoundary_smul_eq
+    (g : reflectionGeneratedOQ55) (X : Boundary) :
+    g • X = oqBoundaryAction g.1 X :=
+  rfl
+
+/-- Every native orthogonal boundary action is realized by a product of
+anisotropic reflections. -/
+theorem exists_reflectionGenerated_boundary_smul_eq
+    (f : OQ55) (X : Boundary) :
+    ∃ r : reflectionGeneratedOQ55, r • X = f • X := by
+  have hf : f ∈ reflectionGeneratedOQ55 := by
+    rw [RealO55CartanDieudonne.reflectionGeneratedOQ55_eq_top]
+    trivial
+  refine ⟨⟨f, hf⟩, ?_⟩
+  rfl
+
+/-- The reflection-generated boundary action has the native inverse law. -/
+theorem reflectionGeneratedBoundary_inv_smul_smul
+    (r : reflectionGeneratedOQ55) (X : Boundary) :
+    r⁻¹ • r • X = X := by
+  exact inv_smul_smul r X
 
 end RealO55ProjectiveBoundaryAction
 

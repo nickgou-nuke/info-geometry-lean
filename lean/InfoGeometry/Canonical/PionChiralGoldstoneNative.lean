@@ -4,6 +4,7 @@ import Mathlib.Algebra.Lie.Subalgebra
 import InfoGeometry.Core.SymmetricLieSpaces
 import InfoGeometry.Physics.ChiralCausalCone
 import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
+import InfoGeometry.Canonical.Cl11PolarizedBasis
 
 /-!
 # Native chiral Lie/CAR closure
@@ -178,6 +179,7 @@ section RealHestenesKrein
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
 open InfoGeometry.Canonical.TomitaKreinNilpotentAtom
+open InfoGeometry.Canonical.Cl11PolarizedBasis
 
 variable {E : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -250,6 +252,70 @@ theorem hestenesPion_real_closure :
     hestenesPionMinus_sq (E := E),
     hestenesPion_plus_minus_car (E := E),
     hestenesPion_plus_minus_lie (E := E)⟩
+
+/-! ## Weld to the generic polarized `g₊₁/g₋₁` owner
+
+The concrete CAR pair above is the repository-owned fixed doubled-space
+realization.  The following equalities identify it with the generic KKT
+polarized channels; they do not introduce another nilpotent algebra.
+-/
+
+local notation "H₂" => DoubledSpace E
+local notation "EndH" => H₂ →L[ℝ] H₂
+
+theorem doubledUPlus_modular_j_eq_hestenesPionPlus :
+    doubledUPlus (E := E) (modular_j (E := E)) =
+      hestenesPionPlus (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro v
+  have hv : to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
+    apply DoubledSpace.ext <;> simp [to_doubled]
+  rw [← hv]
+  apply DoubledSpace.ext <;>
+    simp [doubledUPlus, uPlus,
+      InfoGeometry.Canonical.KKTCore.gOnePart,
+      InfoGeometry.Canonical.KKTCore.plusProjector,
+      InfoGeometry.Canonical.KKTCore.minusProjector,
+      InfoGeometry.Quantum.doubledSpaceCl11Action,
+      hestenesPionPlus,
+      concreteCARCreation] <;>
+    module
+
+theorem doubledUMinus_modular_j_eq_hestenesPionMinus :
+    doubledUMinus (E := E) (modular_j (E := E)) =
+      hestenesPionMinus (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro v
+  have hv : to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
+    apply DoubledSpace.ext <;> simp [to_doubled]
+  rw [← hv]
+  apply DoubledSpace.ext <;>
+    simp [doubledUMinus, uMinus,
+      InfoGeometry.Canonical.KKTCore.gNegOnePart,
+      InfoGeometry.Canonical.KKTCore.plusProjector,
+      InfoGeometry.Canonical.KKTCore.minusProjector,
+      InfoGeometry.Quantum.doubledSpaceCl11Action,
+      hestenesPionMinus,
+      concreteCARAnnihilation] <;>
+    module
+
+theorem hestenesPionPlus_isGOne :
+    InfoGeometry.Canonical.KKTCore.IsGOne
+      (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+      (hestenesPionPlus (E := E)) := by
+  rw [← doubledUPlus_modular_j_eq_hestenesPionPlus (E := E)]
+  exact isGOne_uPlus
+    (X := InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+    (A := modular_j (E := E))
+
+theorem hestenesPionMinus_isGNegOne :
+    InfoGeometry.Canonical.KKTCore.IsGNegOne
+      (InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+      (hestenesPionMinus (E := E)) := by
+  rw [← doubledUMinus_modular_j_eq_hestenesPionMinus (E := E)]
+  exact isGNegOne_uMinus
+    (X := InfoGeometry.Quantum.doubledSpaceCl11Action (E := E))
+    (A := modular_j (E := E))
 
 end RealHestenesKrein
 

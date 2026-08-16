@@ -12,12 +12,7 @@ open RealPin55MatrixRepresentation
 open V55Fin10Coordinates
 
 theorem negOne_mem_fullPin55 : (-1 : Cl55ˣ) ∈ FullPin55 := by
-  let i : Fin 5 := ⟨0, by decide⟩
-  have hs : fNegUnit i * fNegUnit i = (-1 : Cl55ˣ) := by
-    apply Units.ext
-    exact coe_fNegUnit_sq i
-  rw [← hs]
-  exact Subgroup.mul_mem _ (fNegUnit_mem i) (fNegUnit_mem i)
+  exact RealPin55Core.neg_one_mem_fullPin55
 
 def pinNegOne : FullPin55 := ⟨-1, negOne_mem_fullPin55⟩
 

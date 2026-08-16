@@ -177,6 +177,13 @@ def fullPin55QuotientEquivRange :
       (G := FullPin55) fullPinToO55_kernel_exact.symm).trans
       (QuotientGroup.quotientKerEquivRange fullPinToO55)
 
+/-- Descriptive alias for the first-isomorphism equivalence by the central
+sign subgroup. -/
+noncomputable def fullPin55SignQuotientEquivRange :
+    FullPin55 ⧸ centralSignSubgroup ≃*
+      MonoidHom.range fullPinToO55 :=
+  fullPin55QuotientEquivRange
+
 /-- Literal form of the exact kernel theorem. -/
 theorem mem_fullPinToO55_kernel_iff (g : FullPin55) :
     g ∈ MonoidHom.ker fullPinToO55 ↔ g = 1 ∨ g = pinNegOne := by
@@ -198,6 +205,11 @@ theorem centralSignSubgroup_fullPinToO55_mulExact :
 image. -/
 @[simp] theorem fullPin55QuotientEquivRange_mk (g : FullPin55) :
     fullPin55QuotientEquivRange (QuotientGroup.mk g) =
+      fullPinToO55.rangeRestrict g :=
+  rfl
+
+@[simp] theorem fullPin55SignQuotientEquivRange_mk (g : FullPin55) :
+    fullPin55SignQuotientEquivRange (QuotientGroup.mk g) =
       fullPinToO55.rangeRestrict g :=
   rfl
 

@@ -48,6 +48,24 @@ def hestenesK : HomogeneousCoord → HomogeneousCoord :=
 def projectiveRatio (X : HomogeneousCoord) : ℂ :=
   X.1 / X.2
 
+/-! ## Projective scaling invariance -/
+
+/-- The ratio chart is invariant under nonzero common scaling.
+
+This is the concrete projective statement behind the homogeneous pair
+notation.  The totalized field division is handled explicitly at the pole
+`q = 0`; no projective-line quotient is claimed here.
+-/
+theorem projectiveRatio_smul
+    (c : ℂ) (hc : c ≠ 0) (X : HomogeneousCoord) :
+    projectiveRatio (c • X) = projectiveRatio X := by
+  rcases X with ⟨p, q⟩
+  by_cases hq : q = 0
+  · simp [projectiveRatio, hq]
+  · simp only [Prod.smul_mk, smul_eq_mul]
+    change (c * p) / (c * q) = p / q
+    field_simp [hc, hq]
+
 /-- The zeta projective coordinate `τ = s/(1-s)`. -/
 def tau (s : ℂ) : ℂ :=
   projectiveRatio (homogeneousCoord s)
@@ -90,12 +108,36 @@ theorem hestenesK_eq_swap_epsilon (X : HomogeneousCoord) :
 def projectiveS (X : HomogeneousCoord) : ℂ :=
   X.1 / (X.1 + X.2)
 
+/-- The affine chart is invariant under nonzero common scaling away from its
+denominator pole `p + q = 0`.
+-/
+theorem projectiveS_smul
+    (c : ℂ) (hc : c ≠ 0) (X : HomogeneousCoord)
+    (hX : X.1 + X.2 ≠ 0) :
+    projectiveS (c • X) = projectiveS X := by
+  rcases X with ⟨p, q⟩
+  simp only [Prod.smul_mk, smul_eq_mul]
+  have hsum : p + q ≠ 0 := hX
+  change (c * p) / (c * p + c * q) = p / (p + q)
+  rw [← mul_add]
+  field_simp [hc, hsum]
+
 theorem projectiveS_homogeneousCoord (s : ℂ) :
     projectiveS (homogeneousCoord s) = s := by
   simp [projectiveS, homogeneousCoord]
 
 def homogeneousFunction (f : ℂ → ℂ) (X : HomogeneousCoord) : ℂ :=
   f (projectiveS X)
+
+/-- Any readout through the affine chart descends along nonzero homogeneous
+scaling, provided both representatives remain in the chart.
+-/
+theorem homogeneousFunction_smul
+    (f : ℂ → ℂ) (c : ℂ) (hc : c ≠ 0)
+    {X : HomogeneousCoord} (hX : X.1 + X.2 ≠ 0) :
+    homogeneousFunction f (c • X) = homogeneousFunction f X := by
+  unfold homogeneousFunction
+  rw [projectiveS_smul c hc X hX]
 
 theorem homogeneousFunction_swap_invariant
     (f : ℂ → ℂ)

@@ -71,6 +71,47 @@ theorem conformalEmbed44to55_null (x : PACSplit44) :
   unfold Q55 conformalEmbed44to55 Q44
   ring
 
+@[simp]
+theorem conformalEmbed44to55_affine_gauge (x : PACSplit44) :
+    (conformalEmbed44to55 x).u + (conformalEmbed44to55 x).v = 1 := by
+  unfold conformalEmbed44to55
+  ring
+
+@[simp]
+theorem conformalEmbed44to55_complementary_gauge (x : PACSplit44) :
+    (conformalEmbed44to55 x).u - (conformalEmbed44to55 x).v = -(Q44 x) := by
+  unfold conformalEmbed44to55
+  ring
+
+/-- The base `(4,4)` coordinates of an ambient PAC point. -/
+def pac55Base44 (X : PACSplit55) : PACSplit44 where
+  x0 := X.x0
+  x1 := X.x1
+  x2 := X.x2
+  x3 := X.x3
+  y0 := X.y0
+  y1 := X.y1
+  y2 := X.y2
+  y3 := X.y3
+
+theorem Q55_eq_Q44_of_gauge_zero (X : PACSplit55)
+    (hGauge : X.u + X.v = 0) :
+    Q55 X = Q44 (pac55Base44 X) := by
+  unfold Q55 Q44 pac55Base44
+  have hv : X.v = -X.u := by linarith
+  rw [hv]
+  ring
+
+theorem Q55_eq_zero_iff_Q44_eq_zero_of_gauge_zero (X : PACSplit55)
+    (hGauge : X.u + X.v = 0) :
+    Q55 X = 0 ↔ Q44 (pac55Base44 X) = 0 := by
+  rw [Q55_eq_Q44_of_gauge_zero X hGauge]
+
+theorem conformal_boundary_null_iff_base_null (X : PACSplit55)
+    (hGauge : X.u + X.v = 0) :
+    Q55 X = 0 ↔ Q44 (pac55Base44 X) = 0 := by
+  exact Q55_eq_zero_iff_Q44_eq_zero_of_gauge_zero X hGauge
+
 /-- Scalar multiplication in the ambient projective space. -/
 def smul55 (a : ℝ) (X : PACSplit55) : PACSplit55 where
   x0 := a * X.x0

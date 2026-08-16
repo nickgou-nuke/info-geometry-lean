@@ -165,6 +165,21 @@ def concreteMap {i j : ℕ} (hij : i ≤ j) :
     concreteMap (Nat.le_succ n) = concreteStep n := by
   simpa [concreteMap] using (map_succ concreteStep (le_refl n))
 
+theorem concreteMap_injective {i j : ℕ} (hij : i ≤ j) :
+    Function.Injective (concreteMap hij) := by
+  induction hij with
+  | refl =>
+      intro A B hAB
+      simpa using hAB
+  | step hjm ih =>
+      intro A B hAB
+      apply ih
+      apply concreteStep_injective _
+      change map concreteStep (Nat.le.step hjm) A =
+        map concreteStep (Nat.le.step hjm) B at hAB
+      rw [map_succ concreteStep hjm] at hAB
+      exact hAB
+
 @[simp] theorem concreteMap_id (i : ℕ) :
     concreteMap (le_refl i) = StarAlgHom.id ℂ (MatrixStage i) := by
   exact map_id concreteStep i

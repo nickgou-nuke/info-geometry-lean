@@ -182,7 +182,7 @@ noncomputable def nativeReflectUEquiv :
     apply Prod.ext <;> funext i <;> fin_cases i <;> simp
   map_add' := by
     intro v w
-    apply Prod.ext <;> funext i <;> fin_cases i <;> simp <;> ring
+    apply Prod.ext <;> funext i <;> fin_cases i <;> simp; ring
   map_smul' := by
     intro a v
     apply Prod.ext <;> funext i <;> fin_cases i <;> simp
@@ -221,7 +221,7 @@ noncomputable def nativeReflectVEquiv :
     apply Prod.ext <;> funext i <;> fin_cases i <;> simp
   map_add' := by
     intro v w
-    apply Prod.ext <;> funext i <;> fin_cases i <;> simp <;> ring
+    apply Prod.ext <;> funext i <;> fin_cases i <;> simp; ring
   map_smul' := by
     intro a v
     apply Prod.ext <;> funext i <;> fin_cases i <;> simp
@@ -447,6 +447,200 @@ theorem pacReflectV_native_boundary_conjugacy
       InfoGeometry.Projective.Cl55NullBoundaryBridge.datum)
   apply ProjectiveNullBoundaryDatum.NullRep.ext_Z
   exact nativeReflectV_coordinate_weld Z.Z
+
+/-! ## Native Mathlib group actions -/
+
+noncomputable instance transportedOQBoundaryMulAction :
+    MulAction RealPin55QuadraticRepresentation.OQ55 PACBoundary where
+  smul := fun f X => transportedOQBoundaryRepresentation f X
+  one_smul := by
+    intro X
+    exact transportedOQBoundaryRepresentation_one X
+  mul_smul := by
+    intro f g X
+    exact transportedOQBoundaryRepresentation_mul f g X
+
+@[simp] theorem transportedOQBoundary_smul_eq
+    (f : RealPin55QuadraticRepresentation.OQ55) (X : PACBoundary) :
+    f • X = transportedOQBoundaryRepresentation f X :=
+  rfl
+
+noncomputable instance transportedFullPinBoundaryMulAction :
+    MulAction RealPin55Core.FullPin55 PACBoundary where
+  smul := fun g X => transportedFullPinBoundaryRepresentation g X
+  one_smul := by
+    intro X
+    change transportedFullPinBoundaryRepresentation
+        (1 : RealPin55Core.FullPin55) X = X
+    rw [map_one]
+    rfl
+  mul_smul := by
+    intro g h X
+    change transportedFullPinBoundaryRepresentation (g * h) X =
+      transportedFullPinBoundaryRepresentation g
+        (transportedFullPinBoundaryRepresentation h X)
+    rw [map_mul]
+    rfl
+
+@[simp] theorem transportedFullPinBoundary_smul_eq
+    (g : RealPin55Core.FullPin55) (X : PACBoundary) :
+    g • X = transportedFullPinBoundaryRepresentation g X :=
+  rfl
+
+theorem fullPin_smul_factors_through_OQ55
+    (g : RealPin55Core.FullPin55) (X : PACBoundary) :
+    g • X = (RealPin55QuadraticRepresentation.fullPinToOQ55 g) • X := by
+  change transportedFullPinBoundaryRepresentation g X =
+    transportedOQBoundaryRepresentation
+      (RealPin55QuadraticRepresentation.fullPinToOQ55 g) X
+  rw [transportedFullPinBoundaryRepresentation_factorization]
+  rfl
+
+/-! ## Reflection-generated projective-affine action -/
+
+/-- The concrete native reflection subgroup acts on the native boundary. -/
+noncomputable instance nativePACReflectionGroupMulAction :
+    MulAction nativePACReflectionGroup NativeBoundary where
+  smul := fun g X => oqBoundaryAction g.1 X
+  one_smul := by
+    intro X
+    change oqBoundaryRepresentation (1 : RealPin55QuadraticRepresentation.OQ55) X = X
+    rw [map_one]
+    rfl
+  mul_smul := by
+    intro g h X
+    change oqBoundaryAction (g.1 * h.1) X =
+      oqBoundaryAction g.1 (oqBoundaryAction h.1 X)
+    change oqBoundaryRepresentation (g.1 * h.1) X =
+      oqBoundaryRepresentation g.1
+        (oqBoundaryRepresentation h.1 X)
+    rw [map_mul]
+    rfl
+
+@[simp] theorem nativePACReflectionGroup_smul_eq
+    (g : nativePACReflectionGroup) (X : NativeBoundary) :
+    g • X = oqBoundaryAction g.1 X :=
+  rfl
+
+theorem pacReflectU_native_smul_conjugacy
+    (X : PACBoundary) :
+    pacToNativeBoundaryAction (pacReflectUBoundaryAction X) =
+      (⟨nativeReflectU, nativeReflectU_mem_nativePACReflectionGroup⟩ :
+        nativePACReflectionGroup) •
+        pacToNativeBoundaryAction X := by
+  simpa only [nativePACReflectionGroup_smul_eq,
+    oqBoundaryAction, transportedOQBoundaryRepresentation] using
+    pacReflectU_native_boundary_conjugacy X
+
+theorem pacReflectV_native_smul_conjugacy
+    (X : PACBoundary) :
+    pacToNativeBoundaryAction (pacReflectVBoundaryAction X) =
+      (⟨nativeReflectV, nativeReflectV_mem_nativePACReflectionGroup⟩ :
+        nativePACReflectionGroup) •
+        pacToNativeBoundaryAction X := by
+  simpa only [nativePACReflectionGroup_smul_eq,
+    oqBoundaryAction, transportedOQBoundaryRepresentation] using
+    pacReflectV_native_boundary_conjugacy X
+
+/-- The PAC/native projective boundary equivalence intertwines the native
+reflection subgroup actions. -/
+theorem boundaryEquiv_nativePACReflectionGroup_smul
+    (g : nativePACReflectionGroup) (X : PACBoundary) :
+    boundaryEquiv (g • X) = g • boundaryEquiv X := by
+  change boundaryEquiv
+      (transportedOQBoundaryRepresentation g.1 X) =
+    oqBoundaryAction g.1 (boundaryEquiv X)
+  simpa only [oqBoundaryAction] using
+    transportedOQBoundaryRepresentation_conjugates g.1 X
+
+/-- The PAC/native boundary equivalence intertwines the full native `OQ55`
+action. -/
+theorem boundaryEquiv_oq_smul
+    (f : RealPin55QuadraticRepresentation.OQ55) (X : PACBoundary) :
+    boundaryEquiv (f • X) =
+      oqBoundaryAction f (boundaryEquiv X) := by
+  change boundaryEquiv
+      (transportedOQBoundaryRepresentation f X) =
+    oqBoundaryAction f (boundaryEquiv X)
+  simpa only [oqBoundaryAction] using
+    transportedOQBoundaryRepresentation_conjugates f X
+
+/-! ## Constructive reflection action on the PAC boundary -/
+
+noncomputable instance reflectionGeneratedPACBoundaryMulAction :
+    MulAction RealO55CartanDieudonne.reflectionGeneratedOQ55 PACBoundary where
+  smul := fun r X => transportedOQBoundaryRepresentation r.1 X
+  one_smul := by
+    intro X
+    change transportedOQBoundaryRepresentation
+        (1 : RealPin55QuadraticRepresentation.OQ55) X = X
+    rw [map_one]
+    rfl
+  mul_smul := by
+    intro r h X
+    change transportedOQBoundaryRepresentation (r.1 * h.1) X =
+      transportedOQBoundaryRepresentation r.1
+        (transportedOQBoundaryRepresentation h.1 X)
+    rw [map_mul]
+    rfl
+
+@[simp] theorem reflectionGeneratedPACBoundary_smul_eq
+    (r : RealO55CartanDieudonne.reflectionGeneratedOQ55)
+    (X : PACBoundary) :
+    r • X = transportedOQBoundaryRepresentation r.1 X :=
+  rfl
+
+theorem exists_reflectionGenerated_pacBoundary_smul_eq
+    (X Y : PACBoundary)
+    (hXY : ∃ f : RealPin55QuadraticRepresentation.OQ55,
+      f • boundaryEquiv X = boundaryEquiv Y) :
+    ∃ r : RealO55CartanDieudonne.reflectionGeneratedOQ55, r • X = Y := by
+  rcases hXY with ⟨f, hf⟩
+  rcases
+      RealO55ProjectiveBoundaryAction.exists_reflectionGenerated_boundary_smul_eq
+        f (boundaryEquiv X) with
+    ⟨r, hr⟩
+  refine ⟨r, ?_⟩
+  apply boundaryEquiv.injective
+  calc
+    boundaryEquiv (r • X) = r • boundaryEquiv X :=
+      boundaryEquiv_oq_smul r.1 X
+    _ = f • boundaryEquiv X := hr
+    _ = boundaryEquiv Y := hf
+
+/-- The PAC/native boundary equivalence intertwines the full real Pin
+action. -/
+theorem boundaryEquiv_fullPin_smul
+    (g : RealPin55Core.FullPin55) (X : PACBoundary) :
+    boundaryEquiv (g • X) =
+      fullPinBoundaryAction g (boundaryEquiv X) := by
+  change boundaryEquiv
+      (transportedFullPinBoundaryRepresentation g X) =
+    fullPinBoundaryAction g (boundaryEquiv X)
+  rw [transportedFullPinBoundaryRepresentation_apply]
+  exact boundaryEquiv.apply_symm_apply _
+
+/-- A native orthogonal transporter lifts to a full-Pin transporter on the
+PAC boundary.  Transitivity is deliberately supplied as an explicit orbit
+hypothesis rather than asserted by the representation bridge. -/
+theorem exists_fullPin_pacBoundary_smul_eq
+    (X Y : PACBoundary)
+    (hXY : ∃ f : RealPin55QuadraticRepresentation.OQ55,
+      f • boundaryEquiv X = boundaryEquiv Y) :
+    ∃ g : RealPin55Core.FullPin55, g • X = Y := by
+  rcases hXY with ⟨f, hf⟩
+  rcases
+      RealO55ProjectiveBoundaryAction.exists_fullPin_boundary_smul_eq
+        f (boundaryEquiv X) with
+    ⟨g, hg⟩
+  refine ⟨g, ?_⟩
+  apply boundaryEquiv.injective
+  calc
+    boundaryEquiv (g • X) = fullPinBoundaryAction g (boundaryEquiv X) :=
+      boundaryEquiv_fullPin_smul g X
+    _ = g • boundaryEquiv X := rfl
+    _ = f • boundaryEquiv X := hg
+    _ = boundaryEquiv Y := hf
 
 end ProjectiveAffineConformalNativeActionWeld
 

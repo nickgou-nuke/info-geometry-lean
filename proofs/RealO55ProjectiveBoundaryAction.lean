@@ -90,6 +90,82 @@ theorem fullPinBoundaryAction_mul (g h : FullPin55) (Z : NullRep) :
   rw [map_mul]
   rfl
 
+/-! ## The orthogonal action and Pin-to-orthogonal factorization -/
+
+/-- An `OQ55` transformation acts equivariantly on the same null quotient. -/
+noncomputable def oqBoundaryHom (f : OQ55) :
+    BoundaryHom Cl55NullBoundaryBridge.datum Cl55NullBoundaryBridge.datum where
+  toFun := f.1
+  map_zero := f.1.map_zero
+  map_null := by
+    intro v hv
+    calc
+      Q55 (f.1 v) = Q55 v := f.2 v
+      _ = 0 := hv
+  map_ne_zero := by
+    intro v hv hzero
+    apply hv
+    apply f.1.injective
+    have hzero0 : f.1 v = (0 : V55) := by
+      simpa [Cl55NullBoundaryBridge.datum] using hzero
+    calc
+      f.1 v = 0 := hzero0
+      _ = f.1 (0 : V55) := by rw [f.1.map_zero]
+      _ = f.1 Cl55NullBoundaryBridge.datum.zero := rfl
+  map_scale := by
+    intro u v
+    exact f.1.map_smul (u : ℝ) v
+
+noncomputable def oqBoundaryAction (f : OQ55) : Boundary → Boundary :=
+  BoundaryHom.mapBoundary (oqBoundaryHom f)
+
+@[simp]
+theorem oqBoundaryAction_mk (f : OQ55) (Z : NullRep) :
+    oqBoundaryAction f (Cl55NullBoundaryBridge.mk Z) =
+      nullMk Cl55NullBoundaryBridge.datum
+        (BoundaryHom.mapNullRep (oqBoundaryHom f) Z) :=
+  rfl
+
+theorem oqBoundaryAction_one (Z : NullRep) :
+    oqBoundaryAction (1 : OQ55) (Cl55NullBoundaryBridge.mk Z) =
+      Cl55NullBoundaryBridge.mk Z := by
+  rw [oqBoundaryAction_mk]
+  apply congrArg (nullMk Cl55NullBoundaryBridge.datum)
+  apply NullRep.ext_Z
+  change (1 : OQ55).1 Z.Z = Z.Z
+  simp
+
+theorem oqBoundaryAction_mul (f h : OQ55) (Z : NullRep) :
+    oqBoundaryAction (f * h) (Cl55NullBoundaryBridge.mk Z) =
+      oqBoundaryAction f (oqBoundaryAction h (Cl55NullBoundaryBridge.mk Z)) := by
+  rw [oqBoundaryAction_mk, oqBoundaryAction_mk]
+  apply congrArg (nullMk Cl55NullBoundaryBridge.datum)
+  apply NullRep.ext_Z
+  change (f * h).1 Z.Z = f.1 (h.1 Z.Z)
+  rfl
+
+/-- The native `OQ55` action on the projective null boundary. -/
+noncomputable def oqBoundaryRepresentation :
+    OQ55 →* Function.End Boundary where
+  toFun := oqBoundaryAction
+  map_one' := by
+    funext x
+    refine Quotient.inductionOn
+      (s := nullRepSetoid Cl55NullBoundaryBridge.datum) x ?_
+    intro Z
+    exact oqBoundaryAction_one Z
+  map_mul' := by
+    intro f h
+    funext x
+    refine Quotient.inductionOn
+      (s := nullRepSetoid Cl55NullBoundaryBridge.datum) x ?_
+    intro Z
+    change oqBoundaryAction (f * h)
+        (Cl55NullBoundaryBridge.mk Z) =
+      oqBoundaryAction f
+        (oqBoundaryAction h (Cl55NullBoundaryBridge.mk Z))
+    exact oqBoundaryAction_mul f h Z
+
 /-- The full-real Pin action on the projective null boundary is a monoid
 homomorphism, hence a genuine noncommutative group action. -/
 noncomputable def fullPinBoundaryRepresentation :
@@ -112,6 +188,22 @@ noncomputable def fullPinBoundaryRepresentation :
       fullPinBoundaryAction g
         (fullPinBoundaryAction h (Cl55NullBoundaryBridge.mk Z))
     exact fullPinBoundaryAction_mul g h Z
+
+theorem fullPinBoundaryRepresentation_factorization :
+    fullPinBoundaryRepresentation =
+      oqBoundaryRepresentation.comp fullPinToOQ55 := by
+  apply MonoidHom.ext
+  intro g
+  funext x
+  refine Quotient.inductionOn
+    (s := nullRepSetoid Cl55NullBoundaryBridge.datum) x ?_
+  intro Z
+  change fullPinBoundaryAction g (Cl55NullBoundaryBridge.mk Z) =
+    oqBoundaryAction (fullPinToOQ55 g) (Cl55NullBoundaryBridge.mk Z)
+  rw [fullPinBoundaryAction_mk, oqBoundaryAction_mk]
+  apply congrArg (nullMk Cl55NullBoundaryBridge.datum)
+  apply NullRep.ext_Z
+  rfl
 
 end RealO55ProjectiveBoundaryAction
 

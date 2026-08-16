@@ -105,6 +105,58 @@ theorem zeta_criticalMirror_fixed_iff (z : ZetaAffineChart) :
     chartCriticalMirror z = z ↔ chartCriticalLine z :=
   fixed_chartCriticalMirror_iff_criticalLine z
 
+/-! ## Height Cayley compactification -/
+
+/-- Cayley compactification of the real height coordinate. -/
+def heightCayley (v : ℝ) : ℂ :=
+  ((v : ℂ) - Complex.I) / ((v : ℂ) + Complex.I)
+
+theorem heightCayley_normSq (v : ℝ) :
+    Complex.normSq (heightCayley v) = 1 := by
+  rw [heightCayley, Complex.normSq_div]
+  simp [Complex.normSq]
+  have hv : 0 < (1 + v ^ 2 : ℝ) := by positivity
+  field_simp [ne_of_gt hv]
+  all_goals nlinarith [sq_nonneg v]
+
+theorem heightCayley_neg (v : ℝ) :
+    heightCayley (-v) = (heightCayley v)⁻¹ := by
+  unfold heightCayley
+  rw [inv_div]
+  have hnum : ((-v : ℂ) - Complex.I) = -((v : ℂ) + Complex.I) := by
+    ring
+  have hden : ((-v : ℂ) + Complex.I) = -((v : ℂ) - Complex.I) := by
+    ring
+  have hplus : ((v : ℂ) + Complex.I) ≠ 0 := by
+    intro h
+    have hi := congrArg Complex.im h
+    norm_num at hi
+  have hminus : ((v : ℂ) - Complex.I) ≠ 0 := by
+    intro h
+    have hi := congrArg Complex.im h
+    norm_num at hi
+  have hcast : ((-v : ℝ) : ℂ) = -(v : ℂ) := by
+    norm_num
+  rw [hcast]
+  rw [hnum, hden]
+  field_simp [hplus, hminus]
+
+theorem heightCayley_norm (v : ℝ) :
+    ‖heightCayley v‖ = 1 := by
+  have h := heightCayley_normSq v
+  rw [← Complex.sq_norm] at h
+  nlinarith [norm_nonneg (heightCayley v)]
+
+def zetaCylinderCoordinate (z : ZetaAffineChart) : ℝ × ℂ :=
+  (centeredSigma z, heightCayley z.tau)
+
+theorem zetaCylinderCoordinate_functionalDual (z : ZetaAffineChart) :
+    zetaCylinderCoordinate (chartFunctionalDual z) =
+      (-centeredSigma z, (heightCayley z.tau)⁻¹) := by
+  ext <;> simp [zetaCylinderCoordinate, chartFunctionalDual,
+    centeredSigma, heightCayley_neg]
+  <;> ring
+
 end InfoGeometry.Arithmetic.ZetaCenteredWallpaperKleinBridge
 
 end noncomputable section

@@ -50,7 +50,11 @@ theorem radialCartanFlow_apply (t : ℝ) (x : LogCylinderCoordinate) :
 @[simp]
 theorem radialCartanFlow_zero (x : LogCylinderCoordinate) :
     radialCartanFlow 0 x = x := by
-  simp [radialCartanFlow]
+  cases x with
+  | mk rho theta =>
+      apply LogCylinderCoordinate.ext
+      · norm_num [radialCartanFlow, transverseTranslation]
+      · rfl
 
 theorem radialCartanFlow_add (s t : ℝ) (x : LogCylinderCoordinate) :
     radialCartanFlow (s + t) x =

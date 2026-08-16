@@ -1,5 +1,5 @@
+import Mathlib.Tactic
 import proofs.Clifford55
-import InfoGeometry.Clifford.Cl55RealSplitPin
 
 /-! # Signature-correct real `Pin(5,5)` core
 
@@ -23,6 +23,17 @@ def vectorUnit (v : V55) (hv : IsUnit (Q55 v)) : Cl55ˣ :=
     ((vectorUnit v hv : Cl55ˣ) : Cl55) = ι55 v :=
   (CliffordAlgebra.isUnit_ι_of_isUnit Q55 hv).unit_spec
 
+theorem isUnit_Q55_of_normalized
+    {v : V55}
+    (hv : Q55 v = 1 ∨ Q55 v = -1) :
+    IsUnit (Q55 v) := by
+  apply isUnit_iff_ne_zero.mpr
+  rcases hv with hv | hv
+  · rw [hv]
+    norm_num
+  · rw [hv]
+    norm_num
+
 /-- Unit Clifford vectors normalized to either sign of the real split form. -/
 def normalizedVectorUnits : Set Cl55ˣ :=
   {u | ∃ v : V55, (Q55 v = 1 ∨ Q55 v = -1) ∧ (u : Cl55) = ι55 v}
@@ -32,19 +43,36 @@ normalized positive and negative Clifford vectors. -/
 def FullPin55 : Subgroup Cl55ˣ :=
   Subgroup.closure normalizedVectorUnits
 
+def normalizedVectorUnit
+    (v : V55)
+    (hv : Q55 v = 1 ∨ Q55 v = -1) : Cl55ˣ :=
+  vectorUnit v (isUnit_Q55_of_normalized hv)
+
+@[simp] theorem coe_normalizedVectorUnit
+    (v : V55)
+    (hv : Q55 v = 1 ∨ Q55 v = -1) :
+    ((normalizedVectorUnit v hv : Cl55ˣ) : Cl55) = ι55 v := by
+  simpa [normalizedVectorUnit] using
+    coe_vectorUnit v (isUnit_Q55_of_normalized hv)
+
 theorem vectorUnit_mem_fullPin55 (v : V55) (hv : IsUnit (Q55 v))
     (hnorm : Q55 v = 1 ∨ Q55 v = -1) :
     vectorUnit v hv ∈ FullPin55 := by
   apply Subgroup.subset_closure
   exact ⟨v, hnorm, coe_vectorUnit v hv⟩
 
+theorem normalizedVectorUnit_mem_fullPin55
+    (v : V55)
+    (hv : Q55 v = 1 ∨ Q55 v = -1) :
+    normalizedVectorUnit v hv ∈ FullPin55 := by
+  apply Subgroup.subset_closure
+  exact ⟨v, hv, coe_normalizedVectorUnit v hv⟩
+
 def ePosUnit (i : Fin 5) : Cl55ˣ :=
-  vectorUnit (e_pos i) (by rw [Q55_e_pos]; exact isUnit_one)
+  normalizedVectorUnit (e_pos i) (Or.inl (Q55_e_pos i))
 
 def fNegUnit (i : Fin 5) : Cl55ˣ :=
-  vectorUnit (f_neg i) (by
-    rw [Q55_f_neg]
-    exact isUnit_iff_ne_zero.mpr (by norm_num))
+  normalizedVectorUnit (f_neg i) (Or.inr (Q55_f_neg i))
 
 @[simp] theorem coe_ePosUnit (i : Fin 5) :
     ((ePosUnit i : Cl55ˣ) : Cl55) = ι55 (e_pos i) :=
@@ -55,30 +83,39 @@ def fNegUnit (i : Fin 5) : Cl55ˣ :=
   coe_vectorUnit _ _
 
 theorem ePosUnit_mem (i : Fin 5) : ePosUnit i ∈ FullPin55 := by
-  apply vectorUnit_mem_fullPin55
-  exact Or.inl (Q55_e_pos i)
+  exact normalizedVectorUnit_mem_fullPin55
+    (e_pos i) (Or.inl (Q55_e_pos i))
 
 theorem fNegUnit_mem (i : Fin 5) : fNegUnit i ∈ FullPin55 := by
-  apply vectorUnit_mem_fullPin55
-  exact Or.inr (Q55_f_neg i)
+  exact normalizedVectorUnit_mem_fullPin55
+    (f_neg i) (Or.inr (Q55_f_neg i))
 
 /-- Positive generators square to the identity in the unit group. -/
 @[simp] theorem ePosUnit_sq (i : Fin 5) : ePosUnit i * ePosUnit i = 1 := by
   apply Units.ext
-  change ι55 (e_pos i) * ι55 (e_pos i) = 1
+  change
+    ((ePosUnit i : Cl55ˣ) : Cl55) *
+        ((ePosUnit i : Cl55ˣ) : Cl55) = 1
+  rw [coe_ePosUnit]
   exact e_pos_mul_self i
 
 /-- Negative generators square to the central sign in the Clifford algebra. -/
 @[simp] theorem coe_fNegUnit_sq (i : Fin 5) :
     (((fNegUnit i * fNegUnit i : Cl55ˣ) : Cl55)) = -1 := by
-  change ι55 (f_neg i) * ι55 (f_neg i) = -1
+  change
+    ((fNegUnit i : Cl55ˣ) : Cl55) *
+        ((fNegUnit i : Cl55ˣ) : Cl55) = -1
+  rw [coe_fNegUnit]
   exact f_neg_mul_self i
 
 /-- Negative generators square to the central sign in the unit group. -/
 @[simp] theorem fNegUnit_sq (i : Fin 5) :
     fNegUnit i * fNegUnit i = (-1 : Cl55ˣ) := by
   apply Units.ext
-  change ι55 (f_neg i) * ι55 (f_neg i) = (-1 : Cl55)
+  change
+    ((fNegUnit i : Cl55ˣ) : Cl55) *
+        ((fNegUnit i : Cl55ˣ) : Cl55) = (-1 : Cl55)
+  rw [coe_fNegUnit]
   exact f_neg_mul_self i
 
 /-! ## Native Lipschitz containment -/
@@ -87,8 +124,11 @@ theorem normalizedVectorUnits_subset_lipschitz :
     normalizedVectorUnits ⊆ LipschitzGroup55 := by
   intro u hu
   rcases hu with ⟨v, hnorm, huv⟩
-  apply InfoGeometry.Clifford.Clifford55.normalizedVector_mem_lipschitz
-  exact ⟨v, hnorm, huv.symm⟩
+  change u ∈ Subgroup.closure
+    ((↑) ⁻¹' Set.range ι55 : Set Cl55ˣ)
+  apply Subgroup.subset_closure
+  change (u : Cl55) ∈ Set.range ι55
+  exact ⟨v, huv.symm⟩
 
 /-- The signature-correct real Pin closure lies in the native Lipschitz group.
 -/
@@ -99,8 +139,24 @@ theorem fullPin55_le_lipschitzGroup55 :
     normalizedVectorUnits_subset_lipschitz
 
 theorem fullPin55_mem_lipschitzGroup55 (g : FullPin55) :
-    (g : Cl55ˣ) ∈ LipschitzGroup55 :=
+  (g : Cl55ˣ) ∈ LipschitzGroup55 :=
   fullPin55_le_lipschitzGroup55 g.2
+
+theorem fNegUnit_mem_starPin55
+    (i : Fin 5) :
+    ((fNegUnit i : Cl55ˣ) : Cl55) ∈ Clifford55.Pin55 := by
+  rw [pinGroup.units_mem_iff]
+  constructor
+  · apply normalizedVectorUnits_subset_lipschitz
+    exact ⟨f_neg i, Or.inr (Q55_f_neg i), coe_fNegUnit i⟩
+  · rw [Unitary.mem_iff]
+    constructor
+    · rw [coe_fNegUnit, CliffordAlgebra.star_ι, neg_mul,
+        f_neg_mul_self]
+      simp
+    · rw [coe_fNegUnit, CliffordAlgebra.star_ι, mul_neg,
+        f_neg_mul_self]
+      simp
 
 /-- The central Clifford sign belongs to the signature-correct Pin group. -/
 theorem neg_one_mem_fullPin55 :
@@ -116,6 +172,15 @@ older star-unitary `Clifford55.Pin55`. -/
 theorem positive_generator_full_not_starUnitary (i : Fin 5) :
     ePosUnit i ∈ FullPin55 ∧ ¬ ι55 (e_pos i) ∈ Clifford55.Pin55 :=
   ⟨ePosUnit_mem i, e_pos_not_mem_pin55 i⟩
+
+/-- Explicit witness that the signature-correct closure is strictly larger
+than Mathlib's star-unitary Pin subgroup in split signature. -/
+theorem exists_fullPin55_generator_not_in_starPin55 :
+    ∃ u : Cl55ˣ,
+      u ∈ FullPin55 ∧
+        ¬ ((u : Cl55) ∈ Clifford55.Pin55) := by
+  refine ⟨ePosUnit (0 : Fin 5), ePosUnit_mem (0 : Fin 5), ?_⟩
+  simpa using e_pos_not_mem_pin55 (0 : Fin 5)
 
 /-- All ten coordinate reflection lifts are present. -/
 theorem coordinate_generators_mem :

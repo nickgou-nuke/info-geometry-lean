@@ -135,7 +135,7 @@ theorem pionZero_pionMinus_lie :
       concreteCARAnnihilation, cliffordConcreteAnnihilation_apply_to_doubled]
   · simp [pionZero, pionMinus, spectral_epsilon,
       concreteCARAnnihilation, cliffordConcreteAnnihilation_apply_to_doubled]
-    rw [← neg_add, ← add_smul, hhalf, one_smul]
+    rw [sub_eq_add_neg, ← neg_add, ← add_smul, hhalf, one_smul]
 
 /-- The complete finite real pion atom: CAR plus the `sl₂` ladder weights. -/
 theorem pion_real_atom :

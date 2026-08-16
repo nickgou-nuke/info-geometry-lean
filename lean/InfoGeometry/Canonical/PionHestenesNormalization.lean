@@ -23,10 +23,12 @@ namespace InfoGeometry.Canonical.PionHestenesNormalization
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.SuperchargeCARCCRBridge
 open InfoGeometry.Canonical.PionChiralGoldstoneNative
+open InfoGeometry.Canonical.TomitaKreinNilpotentAtom
+open InfoGeometry.Canonical.BogoliubovFockSuper
 open InfoGeometry.Canonical.BogoliubovTransport
 open InfoGeometry.Canonical.BogoliubovClosedForms
 
-variable {E : Type*}
+variable {E : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
 
 local notation "H₂" => DoubledSpace E
@@ -100,6 +102,57 @@ theorem pion_raise_lower_lie :
   simpa [pionZero, CCRBracket, fockCommutator_eq] using
     (concrete_car_creation_annihilation_ccrBracket_eq_spectral_epsilon
       (E := E))
+
+/-- The neutral grading has weight `+1` on the positive null lane. -/
+theorem pionZero_pionPlus_lie :
+    ⁅pionZero (E := E), pionPlus (E := E)⁆ = pionPlus (E := E) := by
+  rw [LieRing.of_associative_ring_bracket]
+  have hhalf : (2 : ℝ)⁻¹ + (2 : ℝ)⁻¹ = 1 := by norm_num
+  apply ContinuousLinearMap.ext
+  intro v
+  have hv :
+      InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
+    apply DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
+  rw [← hv]
+  apply DoubledSpace.ext <;>
+    simp [pionZero, pionPlus, spectral_epsilon,
+      concreteCARCreation, cliffordConcreteCreation_apply_to_doubled,
+      ← add_smul, hhalf]
+
+/-- The neutral grading has weight `-1` on the negative null lane. -/
+theorem pionZero_pionMinus_lie :
+    ⁅pionZero (E := E), pionMinus (E := E)⁆ = -(pionMinus (E := E)) := by
+  rw [LieRing.of_associative_ring_bracket]
+  have hhalf : (2 : ℝ)⁻¹ + (2 : ℝ)⁻¹ = 1 := by norm_num
+  apply ContinuousLinearMap.ext
+  intro v
+  have hv :
+      InfoGeometry.Krein.to_doubled (WithLp.fst v) (WithLp.snd v) = v := by
+    apply DoubledSpace.ext <;> simp [InfoGeometry.Krein.to_doubled]
+  rw [← hv]
+  apply DoubledSpace.ext
+  · simp [pionZero, pionMinus, spectral_epsilon,
+      concreteCARAnnihilation, cliffordConcreteAnnihilation_apply_to_doubled]
+  · simp [pionZero, pionMinus, spectral_epsilon,
+      concreteCARAnnihilation, cliffordConcreteAnnihilation_apply_to_doubled]
+    rw [← neg_add, ← add_smul, hhalf, one_smul]
+
+/-- The complete finite real pion atom: CAR plus the `sl₂` ladder weights. -/
+theorem pion_real_atom :
+    (pionPlus (E := E)).comp (pionPlus (E := E)) = 0 ∧
+    (pionMinus (E := E)).comp (pionMinus (E := E)) = 0 ∧
+    CARBracket (E := E) (pionMinus (E := E)) (pionPlus (E := E)) =
+      ContinuousLinearMap.id ℝ (DoubledSpace E) ∧
+    ⁅pionPlus (E := E), pionMinus (E := E)⁆ =
+      (2 : ℝ) • pionZero (E := E) ∧
+    ⁅pionZero (E := E), pionPlus (E := E)⁆ = pionPlus (E := E) ∧
+    ⁅pionZero (E := E), pionMinus (E := E)⁆ = -(pionMinus (E := E)) := by
+  exact ⟨pionPlus_sq (E := E),
+    pionMinus_sq (E := E),
+    pion_CAR (E := E),
+    pion_raise_lower_lie (E := E),
+    pionZero_pionPlus_lie (E := E),
+    pionZero_pionMinus_lie (E := E)⟩
 
 /-! The internal phase axis is exposed only through the existing rotor owner. -/
 

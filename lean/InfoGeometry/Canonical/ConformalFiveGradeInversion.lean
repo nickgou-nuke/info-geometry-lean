@@ -89,6 +89,27 @@ def centerSet : Set L := {x | G.grade x = ConformalGrade.zero}
 @[simp] theorem theta_theta (x : L) : G.theta (G.theta x) = x :=
   G.theta_involutive x
 
+/-- The five-graded inversion as a genuine self-equivalence of the carrier. -/
+noncomputable def thetaEquiv : L ≃ L where
+  toFun := G.theta
+  invFun := G.theta
+  left_inv := G.theta_involutive
+  right_inv := G.theta_involutive
+
+@[simp] theorem thetaEquiv_apply (x : L) :
+    G.thetaEquiv x = G.theta x :=
+  rfl
+
+@[simp] theorem thetaEquiv_symm :
+    G.thetaEquiv.symm = G.thetaEquiv := by
+  apply Equiv.ext
+  intro x
+  rfl
+
+theorem thetaEquiv_grade (x : L) :
+    G.grade (G.thetaEquiv x) = ConformalGrade.swap (G.grade x) := by
+  exact G.grade_swap x
+
 @[simp] theorem grade_theta (x : L) :
     G.grade (G.theta x) = ConformalGrade.swap (G.grade x) :=
   G.has_grade_swap x

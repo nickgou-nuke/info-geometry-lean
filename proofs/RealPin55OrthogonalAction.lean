@@ -271,5 +271,32 @@ theorem fullPin55_preserves_Q (g : FullPin55) (v : V55) :
       exact (ihx (twistedVector gy w)).trans (ihy w)
   exact hp v
 
+/-! ## Native action on the quadratic carrier -/
+
+noncomputable def fullPin55VectorMulActionData :
+    MulAction FullPin55 V55 where
+  smul := twistedVector
+  one_smul := twistedVector_one
+  mul_smul := twistedVector_mul
+
+noncomputable instance fullPin55VectorMulAction :
+    MulAction FullPin55 V55 :=
+  fullPin55VectorMulActionData
+
+@[simp]
+theorem fullPin55_smul_eq_twistedVector
+    (g : FullPin55) (v : V55) :
+    @SMul.smul FullPin55 V55
+        fullPin55VectorMulActionData.toSMul g v =
+      twistedVector g v :=
+  rfl
+
+theorem fullPin55_smul_preserves_Q
+    (g : FullPin55) (v : V55) :
+    Q55 (@SMul.smul FullPin55 V55
+      fullPin55VectorMulActionData.toSMul g v) = Q55 v := by
+  rw [fullPin55_smul_eq_twistedVector]
+  exact fullPin55_preserves_Q g v
+
 end RealPin55OrthogonalAction
 end noncomputable section

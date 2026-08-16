@@ -20,10 +20,10 @@ variable {ι : Type*}
 def diagonalGauge (r c : ι → ℝ) (F : Matrix ι ι ℝ) : Matrix ι ι ℝ :=
   fun i j => r i * F i j * c j
 
-def cycleRatio (F : Matrix ι ι ℝ) (i j k : ι) : ℝ :=
+noncomputable def cycleRatio (F : Matrix ι ι ℝ) (i j k : ι) : ℝ :=
   (F i j * F j k * F k i) / (F j i * F k j * F i k)
 
-def crossRatio (F : Matrix ι ι ℝ) (i k j l : ι) : ℝ :=
+noncomputable def crossRatio (F : Matrix ι ι ℝ) (i k j l : ι) : ℝ :=
   (F i j * F k l) / (F i l * F k j)
 
 theorem cycleRatio_diagonalGauge_invariant
@@ -34,7 +34,6 @@ theorem cycleRatio_diagonalGauge_invariant
     cycleRatio (diagonalGauge r c F) i j k = cycleRatio F i j k := by
   unfold cycleRatio diagonalGauge
   field_simp [hji, hkj, hik, hr_i, hr_j, hr_k, hc_i, hc_j, hc_k]
-  ring
 
 theorem crossRatio_diagonalGauge_invariant
     (r c : ι → ℝ) (F : Matrix ι ι ℝ) (i k j l : ι)
@@ -44,6 +43,5 @@ theorem crossRatio_diagonalGauge_invariant
     crossRatio (diagonalGauge r c F) i k j l = crossRatio F i k j l := by
   unfold crossRatio diagonalGauge
   field_simp [hil, hkj, hr_i, hr_k, hc_j, hc_l]
-  ring
 
 end InfoGeometry.Inference.FiniteDiagonalGaugeInvariants

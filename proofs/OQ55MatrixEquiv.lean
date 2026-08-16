@@ -92,5 +92,34 @@ theorem fullPinToO55_surjective : Function.Surjective fullPinToO55 := by
   change matrixUnitOfLinearEquiv (fullPinVectorRepresentation p) = g.1
   rw [hlin, matrixUnitOf_matrixUnitV55Equiv]
 
+/-! ## Compatibility with the quadratic-linear representation -/
+
+/--
+The coordinate-matrix and quadratic-linear realizations of the full Pin
+action form one commuting square.
+-/
+theorem fullPinToOQ55_eq_o55ToOQ55_fullPinToO55
+    (g : RealPin55Core.FullPin55) :
+    RealPin55QuadraticRepresentation.fullPinToOQ55 g =
+      o55ToOQ55 (RealPin55MatrixRepresentation.fullPinToO55 g) := by
+  apply Subtype.ext
+  apply LinearEquiv.ext
+  intro v
+  change
+    ((RealPin55QuadraticRepresentation.fullPinToOQ55 g).1 v) =
+      matrixUnitV55Equiv
+        (RealPin55MatrixRepresentation.fullPinToO55 g).1 v
+  apply v55Fin10Equiv.injective
+  change
+    v55Fin10Equiv
+        ((RealPin55QuadraticRepresentation.fullPinToOQ55 g).1 v) =
+      v55Fin10Equiv
+        (matrixUnitV55Equiv
+          (RealPin55MatrixRepresentation.fullPinToO55 g).1 v)
+  rw [matrixUnitV55Equiv_coordinates]
+  rw [RealPin55MatrixRepresentation.fullPinToO55_coe]
+  rw [RealPin55QuadraticRepresentation.fullPinToOQ55_apply]
+  exact (RealPin55MatrixRepresentation.fullPinMatrix_mulVec g v).symm
+
 end OQ55MatrixEquiv
 end noncomputable section

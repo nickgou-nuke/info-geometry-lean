@@ -20,14 +20,11 @@ theorem iota55_injective : Function.Injective ι55 := by
 
 /-- Every signature-correct Pin generator is a Lipschitz generator, hence the
 whole generated subgroup lies in Mathlib's Lipschitz group. -/
-theorem fullPin55_le_lipschitz : FullPin55 ≤ LipschitzGroup55 := by
-  exact RealPin55Core.fullPin55_le_lipschitzGroup55
-
 theorem twisted_clifford_mem_range (g : FullPin55) (v : V55) :
     CliffordAlgebra.involute (g.1 : Cl55) * ι55 v *
         ((g.1⁻¹ : Cl55ˣ) : Cl55) ∈ LinearMap.range ι55 :=
   lipschitzGroup.involute_act_ι_mem_range_ι
-    (fullPin55_le_lipschitz g.2) v
+    (RealPin55Core.fullPin55_le_lipschitzGroup55 g.2) v
 
 /-- The unique vector represented by twisted Clifford conjugation. -/
 def twistedVector (g : FullPin55) (v : V55) : V55 :=

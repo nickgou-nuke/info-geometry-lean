@@ -73,6 +73,52 @@ theorem fNegUnit_mem (i : Fin 5) : fNegUnit i ∈ FullPin55 := by
   change ι55 (f_neg i) * ι55 (f_neg i) = -1
   exact f_neg_mul_self i
 
+/-- Negative generators square to the central sign in the unit group. -/
+@[simp] theorem fNegUnit_sq (i : Fin 5) :
+    fNegUnit i * fNegUnit i = (-1 : Cl55ˣ) := by
+  apply Units.ext
+  change ι55 (f_neg i) * ι55 (f_neg i) = (-1 : Cl55)
+  exact f_neg_mul_self i
+
+/-! ## Native Lipschitz containment -/
+
+set_option maxHeartbeats 800000 in
+theorem normalizedVectorUnit_mem_lipschitz
+    {u : Cl55ˣ}
+    (hu : u ∈ normalizedVectorUnits) :
+    u ∈ LipschitzGroup55 := by
+  change ∃ v : V55,
+    (Q55 v = 1 ∨ Q55 v = -1) ∧
+      (u : Cl55) = ι55 v at hu
+  rcases hu with ⟨v, _hv, huv⟩
+  have hgen :
+      u ∈ ((↑) ⁻¹' Set.range ι55 : Set Cl55ˣ) := by
+    change (u : Cl55) ∈ Set.range ι55
+    exact ⟨v, huv.symm⟩
+  change u ∈ Subgroup.closure
+    ((↑) ⁻¹' Set.range ι55 : Set Cl55ˣ)
+  exact Subgroup.subset_closure hgen
+
+/-- The signature-correct real Pin closure lies in the native Lipschitz group.
+-/
+theorem fullPin55_le_lipschitzGroup55 :
+    FullPin55 ≤ LipschitzGroup55 := by
+  rw [FullPin55, LipschitzGroup55, lipschitzGroup, Subgroup.closure_le]
+  intro u hu
+  exact normalizedVectorUnit_mem_lipschitz hu
+
+theorem fullPin55_mem_lipschitzGroup55 (g : FullPin55) :
+    (g : Cl55ˣ) ∈ LipschitzGroup55 :=
+  fullPin55_le_lipschitzGroup55 g.2
+
+/-- The central Clifford sign belongs to the signature-correct Pin group. -/
+theorem neg_one_mem_fullPin55 :
+    (-1 : Cl55ˣ) ∈ FullPin55 := by
+  simpa using
+    FullPin55.mul_mem
+      (fNegUnit_mem (0 : Fin 5))
+      (fNegUnit_mem (0 : Fin 5))
+
 /-- The new group genuinely repairs the indefinite-signature gap: every
 positive unit vector belongs to `FullPin55`, while it does not belong to the
 older star-unitary `Clifford55.Pin55`. -/
@@ -81,7 +127,7 @@ theorem positive_generator_full_not_starUnitary (i : Fin 5) :
   ⟨ePosUnit_mem i, e_pos_not_mem_pin55 i⟩
 
 /-- All ten coordinate reflection lifts are present. -/
-theorem coordinate_generators_complete :
+theorem coordinate_generators_mem :
     (∀ i : Fin 5, ePosUnit i ∈ FullPin55) ∧
       (∀ i : Fin 5, fNegUnit i ∈ FullPin55) :=
   ⟨ePosUnit_mem, fNegUnit_mem⟩

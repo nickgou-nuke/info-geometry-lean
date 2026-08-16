@@ -1,6 +1,7 @@
 import Mathlib.Tactic
 
 import InfoGeometry.Arithmetic.RiemannXiCayleyZeroBridge
+import InfoGeometry.Arithmetic.RHRealDoubledKreinReformulation
 import InfoGeometry.Canonical.KleinBottleWallpaper
 
 /-!
@@ -22,6 +23,8 @@ open InfoGeometry.Arithmetic.RiemannZetaEquivalences
 open InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 open InfoGeometry.Canonical.KleinBottleWallpaper
 open InfoGeometry.Canonical.HolographicSouriauClosure
+open InfoGeometry.Arithmetic.RHRealDoubledKreinReformulation
+open InfoGeometry.Krein
 
 abbrev HomogeneousCoord : Type := ℂ × ℂ
 
@@ -292,6 +295,36 @@ theorem centeredZetaCoord_functional_glide_dictionary (s : ℂ) :
     zetaWallpaperGlide (centeredZetaCoord s) =
       (-((centeredZetaCoord s).1), (centeredZetaCoord s).2 + 1 / 2) := by
   exact ⟨centeredZetaCoord_one_sub s, centeredZetaCoord_glide_readout s⟩
+
+/-! ## Thin transport into the existing real Hestenes carrier -/
+
+/-- The centered zeta coordinate as an operator on the repository's native
+real doubled Hestenes/Krein carrier. -/
+noncomputable abbrev centeredHestenesCoordinate
+    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] (s : ℂ) :
+    DoubledSpace E →L[ℝ] DoubledSpace E :=
+  hestenesComplexCoordinate E (s - (1 / 2 : ℂ))
+
+theorem centeredHestenesCoordinate_conjugation
+    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] (s : ℂ) :
+    modular_j (E := E) * centeredHestenesCoordinate E s * modular_j (E := E) =
+      centeredHestenesCoordinate E (star s) := by
+  unfold centeredHestenesCoordinate
+  rw [hestenesComplexCoordinate_conjugation]
+  congr 1
+  simp [map_sub]
+
+theorem centeredHestenesCoordinate_antiunitary_reflection
+    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] (s : ℂ) :
+    centeredHestenesCoordinate E (1 - star s) =
+      hestenesComplexCoordinate E (-(star (s - (1 / 2 : ℂ)))) := by
+  unfold centeredHestenesCoordinate
+  congr 1
+  simp [map_sub]
+  ring
 
 end InfoGeometry.Arithmetic.CompletedXiHestenesHomogeneousCoordinates
 

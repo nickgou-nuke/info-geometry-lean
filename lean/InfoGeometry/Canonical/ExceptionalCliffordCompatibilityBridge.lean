@@ -3,6 +3,8 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.Cl55WittCAR
 import InfoGeometry.Canonical.SplitOctonionDAGHodgeIntertwinerBridge
 import InfoGeometry.Lie.SplitOctonionPeirceExteriorBridge
+import InfoGeometry.Canonical.CanonicalZornProjectiveTKKBridge
+import InfoGeometry.Canonical.PACNativeCliffordBridge
 
 set_option linter.unusedSimpArgs false
 
@@ -34,6 +36,8 @@ noncomputable section
 namespace InfoGeometry.Canonical.ExceptionalCliffordCompatibilityBridge
 
 open Matrix
+open ProjectiveAffineConformalClosure55
+open CanonicalZornProjectiveTKKBridge
 
 /-- Exact TKK grading dimensions for e_{7(7)}: 27 + (78 + 1) + 27 = 133 -/
 def dim_albert_J3 : ℕ := 27
@@ -94,5 +98,104 @@ theorem lie_subalgebra_hierarchy :
     exceptional-to-spinor representation map remains a separate target. -/
 def peirceCarrierIdentityReadout : Carrier8 ≃ₗ[ℝ] (Fin 8 → ℝ) :=
   LinearEquiv.refl ℝ (Fin 8 → ℝ)
+
+/-! ## The full finite chiral carrier readback
+
+`Carrier8` is deliberately the existing eight-slot coordinate carrier.  The
+maps below identify it with the already-owned `PACSplit44` and real Zorn
+coordinates.  They do not add a second octonion multiplication or a second
+Clifford carrier.
+-/
+
+def pac44ToCarrier8 (x : PACSplit44) : Carrier8 :=
+  ![x.x0, x.x1, x.x2, x.x3, x.y0, x.y1, x.y2, x.y3]
+
+def carrier8ToPAC44 (x : Carrier8) : PACSplit44 where
+  x0 := x 0
+  x1 := x 1
+  x2 := x 2
+  x3 := x 3
+  y0 := x 4
+  y1 := x 5
+  y2 := x 6
+  y3 := x 7
+
+theorem carrier8ToPAC44_pac44ToCarrier8 (x : PACSplit44) :
+    carrier8ToPAC44 (pac44ToCarrier8 x) = x := by
+  cases x
+  rfl
+
+theorem pac44ToCarrier8_carrier8ToPAC44 (x : Carrier8) :
+    pac44ToCarrier8 (carrier8ToPAC44 x) = x := by
+  funext i
+  fin_cases i <;> rfl
+
+noncomputable def pac44Carrier8Equiv : PACSplit44 ≃ Carrier8 where
+  toFun := pac44ToCarrier8
+  invFun := carrier8ToPAC44
+  left_inv := carrier8ToPAC44_pac44ToCarrier8
+  right_inv := pac44ToCarrier8_carrier8ToPAC44
+
+def carrier8Quadratic (x : Carrier8) : ℝ :=
+  x 0 ^ 2 + x 1 ^ 2 + x 2 ^ 2 + x 3 ^ 2 -
+    (x 4 ^ 2 + x 5 ^ 2 + x 6 ^ 2 + x 7 ^ 2)
+
+theorem carrier8Quadratic_pac44 (x : PACSplit44) :
+    carrier8Quadratic (pac44ToCarrier8 x) = Q44 x := by
+  simp [carrier8Quadratic, pac44ToCarrier8, Q44]
+
+noncomputable def zornToCarrier8Equiv : ZornCore.Zorn ≃ Carrier8 :=
+  CanonicalZornProjectiveTKKBridge.pac44CoreZornEquiv.symm.trans
+    pac44Carrier8Equiv
+
+theorem zornToCarrier8Equiv_quadratic (X : ZornCore.Zorn) :
+    carrier8Quadratic (zornToCarrier8Equiv X) = ZornCore.det X := by
+  change carrier8Quadratic
+      (pac44ToCarrier8
+        (CanonicalZornProjectiveTKKBridge.coreZornToPAC44 X)) =
+    ZornCore.det X
+  rw [carrier8Quadratic_pac44]
+  exact CanonicalZornProjectiveTKKBridge.coreZornToPAC44_Q44 X
+
+theorem zornToCarrier8Equiv_injective :
+    Function.Injective zornToCarrier8Equiv :=
+  zornToCarrier8Equiv.injective
+
+theorem zornToCarrier8Equiv_surjective :
+    Function.Surjective zornToCarrier8Equiv :=
+  zornToCarrier8Equiv.surjective
+
+theorem zornToCarrier8Equiv_null_iff (X : ZornCore.Zorn) :
+    carrier8Quadratic (zornToCarrier8Equiv X) = 0 ↔
+      ZornCore.det X = 0 := by
+  rw [zornToCarrier8Equiv_quadratic]
+
+theorem carrier8ToPAC44_apply (x : Carrier8) :
+    carrier8ToPAC44 x =
+      { x0 := x 0, x1 := x 1, x2 := x 2, x3 := x 3,
+        y0 := x 4, y1 := x 5, y2 := x 6, y3 := x 7 } := rfl
+
+/-! ## Affine-chart readback into the native null Clifford carrier
+
+The following map uses the existing conformal affine section.  It is a map
+on chosen representatives, not a map from projective equivalence classes to
+individual Clifford elements.
+-/
+
+def carrier8NativeNullVector (x : Carrier8) :
+    InfoGeometry.Clifford.Clifford55.V55 :=
+  InfoGeometry.Canonical.PACNativeCliffordBridge.pac44NativeNullVector
+    (carrier8ToPAC44 x)
+
+theorem carrier8NativeNullVector_Q55 (x : Carrier8) :
+    InfoGeometry.Clifford.Clifford55.Q55 (carrier8NativeNullVector x) = 0 := by
+  exact InfoGeometry.Canonical.PACNativeCliffordBridge.pac44NativeNullVector_Q55
+    (carrier8ToPAC44 x)
+
+theorem carrier8NativeNullClifford_sq_zero (x : Carrier8) :
+    InfoGeometry.Clifford.Clifford55.ι55 (carrier8NativeNullVector x) *
+        InfoGeometry.Clifford.Clifford55.ι55 (carrier8NativeNullVector x) = 0 := by
+  exact InfoGeometry.Canonical.PACNativeCliffordBridge.pac44NativeNullClifford_sq_zero
+    (carrier8ToPAC44 x)
 
 end InfoGeometry.Canonical.ExceptionalCliffordCompatibilityBridge

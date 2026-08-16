@@ -353,6 +353,24 @@ noncomputable abbrev piZero : Alg := (1 / 2 : ℝ) • epsGen
   simpa [piPlus, piMinus, add_comm] using
     nullMinus_mul_nullPlus_add_swap
 
+@[rep_depth krein, simp] theorem piPlus_piMinus_eq_epsPlusProjector :
+    piPlus * piMinus = epsPlusProjector := by
+  simpa [piPlus, piMinus] using nullPlus_mul_nullMinus_eq_epsPlusProjector
+
+@[rep_depth krein, simp] theorem piMinus_piPlus_eq_epsMinusProjector :
+    piMinus * piPlus = epsMinusProjector := by
+  simpa [piPlus, piMinus] using nullMinus_mul_nullPlus_eq_epsMinusProjector
+
+@[rep_depth krein, simp] theorem piPlus_piMinus_projector_sum :
+    piPlus * piMinus + piMinus * piPlus =
+      epsPlusProjector + epsMinusProjector := by
+  rw [piPlus_piMinus_eq_epsPlusProjector,
+    piMinus_piPlus_eq_epsMinusProjector]
+
+@[rep_depth krein, simp] theorem piPlus_piMinus_projector_sum_eq_one :
+    piPlus * piMinus + piMinus * piPlus = (1 : Alg) := by
+  simpa using piPlus_piMinus_anticommutator
+
 @[rep_depth krein, simp] theorem piPlus_piMinus_commutator :
     piPlus * piMinus - piMinus * piPlus = (2 : ℝ) • piZero := by
   rw [piPlus, piMinus, piZero]

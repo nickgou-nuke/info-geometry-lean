@@ -68,11 +68,17 @@ theorem homogeneousConformalLift_scale (a : ℝ) (p : HomogeneousPAC44) :
 
 theorem homogeneousConformalLift_ne_zero_of_time_ne_zero
     (p : HomogeneousPAC44) (ht : p.t ≠ 0) :
-    homogeneousConformalLift p ≠ pacSplit55Zero := by
+    homogeneousConformalLift p ≠
+      ProjectiveAffineConformalClosure55.pacSplit55Zero := by
   intro h
   have hu := congrArg PACSplit55.u h
   have hv := congrArg PACSplit55.v h
-  dsimp [homogeneousConformalLift, pacSplit55Zero] at hu hv
+  dsimp [homogeneousConformalLift,
+    ProjectiveAffineConformalClosure55.pacSplit55Zero] at hu hv
+  have hu' : (p.t ^ 2 - Q44 p.x) / 2 = 0 := by
+    simpa using hu
+  have hv' : (p.t ^ 2 + Q44 p.x) / 2 = 0 := by
+    simpa using hv
   have : p.t ^ 2 = 0 := by linarith
   exact ht (sq_eq_zero_iff.mp this)
 

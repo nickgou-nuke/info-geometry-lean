@@ -404,6 +404,25 @@ lemma hestenesPion_zero_minus :
         simpa [clockAxis] using complex_i_comp_spectral_epsilon (E := E)]
   module
 
+/-! ### Inverse basis change for the real nilpotent atom -/
+
+theorem hestenesPionPlus_add_hestenesPionMinus :
+    hestenesPionPlus (E := E) + hestenesPionMinus (E := E) =
+      modular_j (E := E) := by
+  simp [hestenesPionPlus, hestenesPionMinus]
+  module
+
+theorem hestenesPionMinus_sub_hestenesPionPlus :
+    hestenesPionMinus (E := E) - hestenesPionPlus (E := E) =
+      clockAxis (E := E) := by
+  simp [hestenesPionPlus, hestenesPionMinus, sub_eq_add_neg]
+  module
+
+theorem two_smul_hestenesPionZero :
+    (2 : ℝ) • hestenesPionZero (E := E) =
+      spectral_epsilon (E := E) := by
+  simp [hestenesPionZero]
+
 theorem modular_j_spectral_epsilon_has_cl11_relations (E : Type*)
     [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     cl11_relations (modular_j (E := E)) spectral_epsilon :=

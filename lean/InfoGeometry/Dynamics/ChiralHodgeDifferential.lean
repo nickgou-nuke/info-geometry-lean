@@ -157,6 +157,323 @@ theorem hestenesAxis_gamma_commutator :
           rw [D.Gamma_sq]
           simp [two_smul]
 
+/-! ## Real nilpotent/projector basis
+
+The three operators below are derived from the existing real involutions.  In
+particular, `J` remains the Hodge/Tomita involution, `Gamma` remains the
+grading, and `hestenesAxis = J * Gamma` is the real phase axis.  No complex
+scalar or second Clifford carrier is introduced.
+-/
+
+noncomputable def nilpotentPlus : EndH :=
+  (2 : ℝ)⁻¹ • (D.J - D.hestenesAxis)
+
+noncomputable def nilpotentMinus : EndH :=
+  (2 : ℝ)⁻¹ • (D.J + D.hestenesAxis)
+
+noncomputable def nilpotentZero : EndH :=
+  (2 : ℝ)⁻¹ • D.Gamma
+
+theorem hestenesAxis_mul_J : D.hestenesAxis * D.J = -D.Gamma := by
+  dsimp [hestenesAxis]
+  have hGammaJ : D.Gamma * D.J = -(D.J * D.Gamma) := by
+    rw [D.J_Gamma_anticomm]
+    simp
+  calc
+    (D.J * D.Gamma) * D.J = D.J * (D.Gamma * D.J) := by rw [mul_assoc]
+    _ = D.J * (-(D.J * D.Gamma)) := by rw [hGammaJ]
+    _ = -(D.J * (D.J * D.Gamma)) := by rw [mul_neg]
+    _ = -D.Gamma := by rw [← mul_assoc, D.J_sq]; simp
+
+theorem J_mul_hestenesAxis : D.J * D.hestenesAxis = D.Gamma := by
+  dsimp [hestenesAxis]
+  rw [← mul_assoc, D.J_sq]
+  simp
+
+private theorem nilpotentPlus_numerator_sq :
+    (D.J - D.hestenesAxis) * (D.J - D.hestenesAxis) = 0 := by
+  calc
+    (D.J - D.hestenesAxis) * (D.J - D.hestenesAxis) =
+        D.J * D.J - D.J * D.hestenesAxis -
+          D.hestenesAxis * D.J + D.hestenesAxis * D.hestenesAxis := by
+            noncomm_ring
+    _ = 0 := by
+      rw [D.J_sq, J_mul_hestenesAxis, hestenesAxis_mul_J, D.hestenesAxis_sq]
+      module
+
+private theorem nilpotentMinus_numerator_sq :
+    (D.J + D.hestenesAxis) * (D.J + D.hestenesAxis) = 0 := by
+  calc
+    (D.J + D.hestenesAxis) * (D.J + D.hestenesAxis) =
+        D.J * D.J + D.J * D.hestenesAxis +
+          D.hestenesAxis * D.J + D.hestenesAxis * D.hestenesAxis := by
+            noncomm_ring
+    _ = 0 := by
+      rw [D.J_sq, J_mul_hestenesAxis, hestenesAxis_mul_J, D.hestenesAxis_sq]
+      module
+
+private theorem smul_mul_smul (c d : ℝ) (A B : EndH) :
+    (c • A) * (d • B) = (c * d) • (A * B) := by
+  simp only [Algebra.smul_def]
+  calc
+    (algebraMap ℝ EndH c * A) * (algebraMap ℝ EndH d * B) =
+        algebraMap ℝ EndH c * (A * algebraMap ℝ EndH d) * B := by
+          simp only [mul_assoc]
+    _ = algebraMap ℝ EndH c * (algebraMap ℝ EndH d * A) * B := by
+          rw [(Algebra.commutes d A).symm]
+    _ = (algebraMap ℝ EndH c * algebraMap ℝ EndH d) * (A * B) := by
+          simp only [mul_assoc]
+    _ = (c * d) • (A * B) := by
+          rw [← map_mul, Algebra.smul_def]
+
+@[simp] theorem nilpotentPlus_sq : D.nilpotentPlus * D.nilpotentPlus = 0 := by
+  dsimp [nilpotentPlus]
+  rw [smul_mul_smul, nilpotentPlus_numerator_sq]
+  simp
+
+@[simp] theorem nilpotentMinus_sq : D.nilpotentMinus * D.nilpotentMinus = 0 := by
+  dsimp [nilpotentMinus]
+  rw [smul_mul_smul, nilpotentMinus_numerator_sq]
+  simp
+
+theorem nilpotentPlus_mul_nilpotentMinus :
+    D.nilpotentPlus * D.nilpotentMinus =
+      (2 : ℝ)⁻¹ • ((1 : EndH) + D.Gamma) := by
+  dsimp [nilpotentPlus, nilpotentMinus]
+  rw [smul_mul_smul]
+  have hprod :
+      (D.J - D.hestenesAxis) * (D.J + D.hestenesAxis) =
+        (2 : ℝ) • ((1 : EndH) + D.Gamma) := by
+    calc
+      (D.J - D.hestenesAxis) * (D.J + D.hestenesAxis) =
+          D.J * D.J + D.J * D.hestenesAxis -
+            D.hestenesAxis * D.J - D.hestenesAxis * D.hestenesAxis := by
+              noncomm_ring
+      _ = (2 : ℝ) • ((1 : EndH) + D.Gamma) := by
+        rw [D.J_sq, J_mul_hestenesAxis, hestenesAxis_mul_J,
+          D.hestenesAxis_sq]
+        module
+  rw [hprod]
+  simp [smul_smul]
+
+theorem nilpotentMinus_mul_nilpotentPlus :
+    D.nilpotentMinus * D.nilpotentPlus =
+      (2 : ℝ)⁻¹ • ((1 : EndH) - D.Gamma) := by
+  dsimp [nilpotentPlus, nilpotentMinus]
+  rw [smul_mul_smul]
+  have hprod :
+      (D.J + D.hestenesAxis) * (D.J - D.hestenesAxis) =
+        (2 : ℝ) • ((1 : EndH) - D.Gamma) := by
+    calc
+      (D.J + D.hestenesAxis) * (D.J - D.hestenesAxis) =
+          D.J * D.J - D.J * D.hestenesAxis +
+            D.hestenesAxis * D.J - D.hestenesAxis * D.hestenesAxis := by
+              noncomm_ring
+      _ = (2 : ℝ) • ((1 : EndH) - D.Gamma) := by
+        rw [D.J_sq, J_mul_hestenesAxis, hestenesAxis_mul_J,
+          D.hestenesAxis_sq]
+        module
+  rw [hprod]
+  simp [smul_smul]
+
+theorem nilpotent_anticommutator :
+    D.nilpotentPlus * D.nilpotentMinus +
+        D.nilpotentMinus * D.nilpotentPlus = (1 : EndH) := by
+  rw [nilpotentPlus_mul_nilpotentMinus,
+    nilpotentMinus_mul_nilpotentPlus]
+  module
+
+theorem nilpotent_commutator :
+    D.nilpotentPlus * D.nilpotentMinus -
+        D.nilpotentMinus * D.nilpotentPlus = D.Gamma := by
+  rw [nilpotentPlus_mul_nilpotentMinus,
+    nilpotentMinus_mul_nilpotentPlus]
+  module
+
+theorem nilpotentPlus_add_nilpotentMinus :
+    D.nilpotentPlus + D.nilpotentMinus = D.J := by
+  dsimp [nilpotentPlus, nilpotentMinus]
+  module
+
+theorem nilpotentMinus_sub_nilpotentPlus :
+    D.nilpotentMinus - D.nilpotentPlus = D.hestenesAxis := by
+  dsimp [nilpotentPlus, nilpotentMinus]
+  module
+
+theorem nilpotentZero_two : (2 : ℝ) • D.nilpotentZero = D.Gamma := by
+  dsimp [nilpotentZero]
+  module
+
+theorem nilpotentZero_mul_plus_sub_plus_mul_zero :
+    D.nilpotentZero * D.nilpotentPlus -
+        D.nilpotentPlus * D.nilpotentZero = D.nilpotentPlus := by
+  dsimp [nilpotentZero, nilpotentPlus]
+  have hGammaJ : D.Gamma * D.J = -(D.J * D.Gamma) := by
+    rw [D.J_Gamma_anticomm]
+    simp
+  have hGammaK : D.Gamma * D.hestenesAxis = -D.J := by
+    dsimp [hestenesAxis]
+    calc
+      D.Gamma * (D.J * D.Gamma) =
+          (D.Gamma * D.J) * D.Gamma := by rw [mul_assoc]
+      _ = (-(D.J * D.Gamma)) * D.Gamma := by rw [hGammaJ]
+      _ = -((D.J * D.Gamma) * D.Gamma) := by simp
+      _ = -(D.J * (D.Gamma * D.Gamma)) := by rw [mul_assoc]
+      _ = -D.J := by rw [D.Gamma_sq]; simp
+  have hKGamma : D.hestenesAxis * D.Gamma = D.J := by
+    dsimp [hestenesAxis]
+    rw [mul_assoc, D.Gamma_sq]
+    simp
+  rw [smul_mul_smul, smul_mul_smul]
+  have hKGamma' : (D.J * D.Gamma) * D.Gamma = D.J := by
+    rw [mul_assoc, D.Gamma_sq]
+    simp
+  have hnum :
+      D.Gamma * (D.J - D.hestenesAxis) -
+          (D.J - D.hestenesAxis) * D.Gamma =
+        (2 : ℝ) • (D.J - D.hestenesAxis) := by
+    calc
+      D.Gamma * (D.J - D.hestenesAxis) -
+          (D.J - D.hestenesAxis) * D.Gamma =
+          D.Gamma * D.J - D.Gamma * D.hestenesAxis -
+            D.J * D.Gamma + D.hestenesAxis * D.Gamma := by
+              noncomm_ring
+      _ = (2 : ℝ) • (D.J - D.hestenesAxis) := by
+        rw [hGammaJ, hGammaK, hKGamma]
+        change -(D.J * D.Gamma) - -D.J - D.J * D.Gamma + D.J =
+          (2 : ℝ) • (D.J - D.J * D.Gamma)
+        module
+  rw [← smul_sub, hnum]
+  module
+
+theorem nilpotentZero_mul_minus_sub_minus_mul_zero :
+    D.nilpotentZero * D.nilpotentMinus -
+        D.nilpotentMinus * D.nilpotentZero = -D.nilpotentMinus := by
+  dsimp [nilpotentZero, nilpotentMinus]
+  have hGammaJ : D.Gamma * D.J = -(D.J * D.Gamma) := by
+    rw [D.J_Gamma_anticomm]
+    simp
+  have hGammaK : D.Gamma * D.hestenesAxis = -D.J := by
+    dsimp [hestenesAxis]
+    calc
+      D.Gamma * (D.J * D.Gamma) =
+          (D.Gamma * D.J) * D.Gamma := by rw [mul_assoc]
+      _ = (-(D.J * D.Gamma)) * D.Gamma := by rw [hGammaJ]
+      _ = -((D.J * D.Gamma) * D.Gamma) := by simp
+      _ = -(D.J * (D.Gamma * D.Gamma)) := by rw [mul_assoc]
+      _ = -D.J := by rw [D.Gamma_sq]; simp
+  have hKGamma : D.hestenesAxis * D.Gamma = D.J := by
+    dsimp [hestenesAxis]
+    rw [mul_assoc, D.Gamma_sq]
+    simp
+  rw [smul_mul_smul, smul_mul_smul]
+  have hKGamma' : (D.J * D.Gamma) * D.Gamma = D.J := by
+    rw [mul_assoc, D.Gamma_sq]
+    simp
+  have hnum :
+      D.Gamma * (D.J + D.hestenesAxis) -
+          (D.J + D.hestenesAxis) * D.Gamma =
+        -(2 : ℝ) • (D.J + D.hestenesAxis) := by
+    calc
+      D.Gamma * (D.J + D.hestenesAxis) -
+          (D.J + D.hestenesAxis) * D.Gamma =
+          D.Gamma * D.J + D.Gamma * D.hestenesAxis -
+            D.J * D.Gamma - D.hestenesAxis * D.Gamma := by
+              noncomm_ring
+      _ = -(2 : ℝ) • (D.J + D.hestenesAxis) := by
+        rw [hGammaJ, hGammaK, hKGamma]
+        change -(D.J * D.Gamma) + -D.J - D.J * D.Gamma - D.J =
+          -(2 : ℝ) • (D.J + D.J * D.Gamma)
+        module
+  rw [← smul_sub, hnum]
+  module
+
+/-! ## Complementary idempotents generated by the nilpotent pair -/
+
+/-- The `+` projector generated by the nilpotent pair. -/
+noncomputable def nilpotentPlusProjector : EndH :=
+  (2 : ℝ)⁻¹ • ((1 : EndH) + D.Gamma)
+
+/-- The `-` projector generated by the nilpotent pair. -/
+noncomputable def nilpotentMinusProjector : EndH :=
+  (2 : ℝ)⁻¹ • ((1 : EndH) - D.Gamma)
+
+theorem nilpotentPlusProjector_eq_product :
+    D.nilpotentPlusProjector = D.nilpotentPlus * D.nilpotentMinus := by
+  rw [nilpotentPlus_mul_nilpotentMinus]
+  rfl
+
+theorem nilpotentMinusProjector_eq_product :
+    D.nilpotentMinusProjector = D.nilpotentMinus * D.nilpotentPlus := by
+  rw [nilpotentMinus_mul_nilpotentPlus]
+  rfl
+
+@[simp] theorem nilpotentPlusProjector_sq :
+    D.nilpotentPlusProjector * D.nilpotentPlusProjector =
+      D.nilpotentPlusProjector := by
+  unfold nilpotentPlusProjector
+  rw [smul_mul_smul]
+  have h : ((1 : EndH) + D.Gamma) * ((1 : EndH) + D.Gamma) =
+      (2 : ℝ) • ((1 : EndH) + D.Gamma) := by
+    calc
+      ((1 : EndH) + D.Gamma) * ((1 : EndH) + D.Gamma) =
+          1 + D.Gamma + D.Gamma + D.Gamma * D.Gamma := by noncomm_ring
+      _ = 1 + D.Gamma + D.Gamma + 1 := by rw [D.Gamma_sq]
+      _ = (2 : ℝ) • ((1 : EndH) + D.Gamma) := by module
+  rw [h, smul_smul]
+  norm_num
+
+@[simp] theorem nilpotentMinusProjector_sq :
+    D.nilpotentMinusProjector * D.nilpotentMinusProjector =
+      D.nilpotentMinusProjector := by
+  unfold nilpotentMinusProjector
+  rw [smul_mul_smul]
+  have h : ((1 : EndH) - D.Gamma) * ((1 : EndH) - D.Gamma) =
+      (2 : ℝ) • ((1 : EndH) - D.Gamma) := by
+    calc
+      ((1 : EndH) - D.Gamma) * ((1 : EndH) - D.Gamma) =
+          1 - D.Gamma - D.Gamma + D.Gamma * D.Gamma := by noncomm_ring
+      _ = 1 - D.Gamma - D.Gamma + 1 := by rw [D.Gamma_sq]
+      _ = (2 : ℝ) • ((1 : EndH) - D.Gamma) := by module
+  rw [h, smul_smul]
+  norm_num
+
+theorem nilpotentPlusProjector_mul_minusProjector :
+    D.nilpotentPlusProjector * D.nilpotentMinusProjector = 0 := by
+  unfold nilpotentPlusProjector nilpotentMinusProjector
+  rw [smul_mul_smul]
+  have h : ((1 : EndH) + D.Gamma) * ((1 : EndH) - D.Gamma) = 0 := by
+    calc
+      ((1 : EndH) + D.Gamma) * ((1 : EndH) - D.Gamma) =
+          1 - D.Gamma + D.Gamma - D.Gamma * D.Gamma := by noncomm_ring
+      _ = 1 - D.Gamma + D.Gamma - 1 := by rw [D.Gamma_sq]
+      _ = 0 := by module
+  rw [h]
+  simp
+
+theorem nilpotentMinusProjector_mul_plusProjector :
+    D.nilpotentMinusProjector * D.nilpotentPlusProjector = 0 := by
+  unfold nilpotentMinusProjector nilpotentPlusProjector
+  rw [smul_mul_smul]
+  have h : ((1 : EndH) - D.Gamma) * ((1 : EndH) + D.Gamma) = 0 := by
+    calc
+      ((1 : EndH) - D.Gamma) * ((1 : EndH) + D.Gamma) =
+          1 + D.Gamma - D.Gamma - D.Gamma * D.Gamma := by noncomm_ring
+      _ = 1 + D.Gamma - D.Gamma - 1 := by rw [D.Gamma_sq]
+      _ = 0 := by module
+  rw [h]
+  simp
+
+theorem nilpotentPlusProjector_add_minusProjector :
+    D.nilpotentPlusProjector + D.nilpotentMinusProjector = (1 : EndH) := by
+  unfold nilpotentPlusProjector nilpotentMinusProjector
+  module
+
+theorem nilpotentPlusProjector_sub_minusProjector :
+    D.nilpotentPlusProjector - D.nilpotentMinusProjector = D.Gamma := by
+  unfold nilpotentPlusProjector nilpotentMinusProjector
+  module
+
 theorem hestenesAxis_mul_eq_jordan_add_lie (A : EndH) :
     D.hestenesAxis * A = D.jordanChannel A + D.lieChannel A := by
   dsimp [jordanChannel, lieChannel]

@@ -40,4 +40,36 @@ theorem realSplitPinNativeOrthogonalAction_fNegRealPin_nbar_pair
     by_cases h : j = i <;> simp [negativeReflection, n_pair,
       nbar_pair, e_pos, f_neg, h]
 
+theorem realSplitPinNativeOrthogonalAction_globalSheet_n_pair
+    (i : Fin 5) :
+    realSplitPinNativeOrthogonalAction globalSheetRealSplitPin (n_pair i) =
+      nbar_pair i := by
+  have hAction :
+      realSplitPinNativeOrthogonalAction globalSheetRealSplitPin =
+        globalSheetReflectionIsometry := by
+    apply DFunLike.ext _ _
+    intro v
+    change realSplitPinTwistedAction globalSheetRealSplitPin v =
+      globalSheetReflection v
+    rw [realSplitPinTwistedAction_globalSheet_eq_globalSheetReflection]
+    rfl
+  rw [hAction]
+  simp [globalSheetReflection, n_pair, nbar_pair, e_pos, f_neg]
+
+theorem realSplitPinNativeOrthogonalAction_globalSheet_nbar_pair
+    (i : Fin 5) :
+    realSplitPinNativeOrthogonalAction globalSheetRealSplitPin (nbar_pair i) =
+      n_pair i := by
+  have hAction :
+      realSplitPinNativeOrthogonalAction globalSheetRealSplitPin =
+        globalSheetReflectionIsometry := by
+    apply DFunLike.ext _ _
+    intro v
+    change realSplitPinTwistedAction globalSheetRealSplitPin v =
+      globalSheetReflection v
+    rw [realSplitPinTwistedAction_globalSheet_eq_globalSheetReflection]
+    rfl
+  rw [hAction]
+  simp [globalSheetReflection, n_pair, nbar_pair, e_pos, f_neg]
+
 end InfoGeometry.Clifford.Clifford55

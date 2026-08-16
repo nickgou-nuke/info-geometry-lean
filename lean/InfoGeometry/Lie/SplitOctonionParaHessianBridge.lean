@@ -368,9 +368,11 @@ def activePotentialHilbertReadout (X : HilbertWitt) : ℝ :=
   activePotential (activeHilbertLinearEquiv X)
 
 theorem activePotentialHilbertReadout_eq_potential (X : HilbertWitt) :
-    activePotentialHilbertReadout X = potential X := by
+    activePotentialHilbertReadout X =
+      InfoGeometry.Geometry.ParaHessianMixedPotential.potential X := by
   rw [activePotentialHilbertReadout, activePotential, activeHilbertLinearEquiv]
-  simp [hilbertWittLinearEquiv, wittPotential, potential]
+  simp [hilbertWittLinearEquiv, wittPotential,
+    InfoGeometry.Geometry.ParaHessianMixedPotential.potential]
   rw [PiLp.inner_apply]
   simp [dot, Fin.sum_univ_three]
   ring
@@ -388,12 +390,14 @@ theorem activeMetric_hilbertReadout_eq_metric (U V : HilbertWitt) :
 /-- The native active potential has the literal Mathlib first derivative after
 pullback to the canonical Euclidean realization. -/
 theorem hasFDerivAt_activePotentialHilbertReadout (X : HilbertWitt) :
-    HasFDerivAt activePotentialHilbertReadout (potentialDerivative X) X := by
-  have hfun : activePotentialHilbertReadout = potential := by
+    HasFDerivAt activePotentialHilbertReadout
+      (InfoGeometry.Geometry.ParaHessianMixedPotential.potentialDerivative X) X := by
+  have hfun : activePotentialHilbertReadout =
+      InfoGeometry.Geometry.ParaHessianMixedPotential.potential := by
     funext Y
     exact activePotentialHilbertReadout_eq_potential Y
   rw [hfun]
-  exact hasFDerivAt_potential X
+  exact InfoGeometry.Geometry.ParaHessianMixedPotential.hasFDerivAt_potential X
 
 theorem fderiv_activePotentialHilbertReadout_apply
     (X U : HilbertWitt) :
@@ -402,7 +406,7 @@ theorem fderiv_activePotentialHilbertReadout_apply
         (activeHilbertLinearEquiv U) := by
   rw [(hasFDerivAt_activePotentialHilbertReadout X).fderiv]
   rw [activeMetric_hilbertReadout_eq_metric,
-    potentialDerivative_eq_metric]
+    InfoGeometry.Geometry.ParaHessianMixedPotential.potentialDerivative_eq_metric]
 
 /-- Literal Hessian-generation theorem: pairing the Fréchet derivative of the
 Riesz gradient equals the native active metric after the canonical transport.

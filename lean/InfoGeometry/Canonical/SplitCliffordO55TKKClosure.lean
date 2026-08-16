@@ -113,71 +113,95 @@ lemma so55_dim : Fintype.card (Fin 10) * (Fintype.card (Fin 10) - 1) / 2 = 45 :=
 /-- The canonical TKK 5-grading structure mapping index over Z. -/
 def TKKGrading (i : ℤ) : Prop := i ∈ ({-2, -1, 0, 1, 2} : Set ℤ)
 
-/-- The Chiral Parity Index constraint intrinsic to O(5,5) split symmetry. 
-We construct the property by projecting onto the purely bosonic sector,
-which universally forces the fermionic modes to zero, thus trivializing
-the superconformal anomaly natively reflecting Tr(Γ₁₁) = 0. -/
-def O55ChiralParityZero (_J ψ : ℤ → Module.End 𝕜 V) : Prop :=
+/-! The mode-vanishing predicate below is only an explicit algebraic
+hypothesis on the supplied family; it does not derive chirality. -/
+def fermionicModesZero (_J ψ : ℤ → Module.End 𝕜 V) : Prop :=
   ψ = fun _ => 0
 
-namespace O55ChiralParityZero
+namespace fermionicModesZero
 
-/-- The gamma-11 trace readout follows from the projected-out fermionic sector. -/
+/-! A direct consequence of the explicit mode-vanishing hypothesis. -/
 theorem trace_gamma_11_zero
     {J ψ : ℤ → Module.End 𝕜 V}
-  (h : O55ChiralParityZero J ψ) :
+  (h : fermionicModesZero J ψ) :
     ψ 0 = 0 := by
   rw [h]
 
-end O55ChiralParityZero
+end fermionicModesZero
 
 /-- The Weyl Group order for D_5 is 2^(5-1) * 5! = 1920 -/
 lemma weyl_group_D5_order : 2^4 * Nat.factorial 5 = 1920 := by
   norm_num
 
-/-- Chiral Cuntz generators for the Klein Tube boundary condition.
-The Klein Quadric boundary (Q = 0) represents the on-shell factorization
-replacing the standard torus. It is characterized by nilpotent 
-chiral generators S_plus^2 = 0 and S_minus^2 = 0. -/
-def KleinTubeBoundary (S_plus S_minus : Module.End 𝕜 V) : Prop :=
+/-! A pair of square-zero endomorphisms; no boundary interpretation is
+assumed at this algebraic layer. -/
+def nilpotentChiralPair (S_plus S_minus : Module.End 𝕜 V) : Prop :=
   S_plus * S_plus = 0 ∧ S_minus * S_minus = 0
 
-/-- The topological constraint of the Klein Quadric Boundary replaces the standard torus. -/
-theorem on_shell_factorization_klein_quadric
-    (S_plus S_minus : Module.End 𝕜 V) (h : KleinTubeBoundary S_plus S_minus) :
+/-! The pair's two square-zero equations. -/
+theorem nilpotentChiralPair_sq
+    (S_plus S_minus : Module.End 𝕜 V) (h : nilpotentChiralPair S_plus S_minus) :
     S_plus ^ 2 = 0 ∧ S_minus ^ 2 = 0 := by
   constructor
   · exact h.1
   · exact h.2
 
-/-- A finite involutive orientation-reversal readout.
-
-This predicate records only the square relation.  It is deliberately not
-presented as a construction of the Pin(5,5) group or of its double cover. -/
-def Pin55Symmetry (P : Module.End 𝕜 V) : Prop :=
+/-! A finite involutive endomorphism predicate. -/
+def involutiveEndomorphism (P : Module.End 𝕜 V) : Prop :=
   P * P = 1
 
 end O55Representation
 
 open O55Representation
 
-/-- Under the zero chiral parity condition (anomaly cancellation), the boundary defect vanishes universally. -/
-theorem o55_tkk_anomaly_cancellation
+/-! ## Defect-aware noncommutative mixed bracket -/
+
+/--
+The native finite-window mixed superbracket retains its boundary defect.  This
+is the primary O(5,5) statement; no zero-mode or chiral-parity hypothesis is
+silently inserted.
+-/
+theorem o55_superBracket_LG_decomposition
+    (m r : ℤ) (J ψ : ℤ → Module.End 𝕜 V) (N : ℤ) :
+    L_trunc N m J ψ * G_trunc N r J ψ -
+        G_trunc N r J ψ * L_trunc N m J ψ =
+      (LG_coeff (𝕜 := 𝕜) m r) • G_trunc N (m + r) J ψ +
+        boundaryDefect_LG (𝕜 := 𝕜) N m r J ψ := by
+  exact superBracket_LG_decompose (𝕜 := 𝕜) N m r J ψ
+
+/--
+Exact mixed-bracket closure under the explicit finite-window condition that
+the boundary defect vanishes.  This is independent of the degenerate
+zero-fermion specialization below.
+-/
+theorem o55_superBracket_LG_of_zero_defect
+    (m r : ℤ) (J ψ : ℤ → Module.End 𝕜 V) (N : ℤ)
+    (hdef : boundaryDefect_LG (𝕜 := 𝕜) N m r J ψ = 0) :
+    L_trunc N m J ψ * G_trunc N r J ψ -
+        G_trunc N r J ψ * L_trunc N m J ψ =
+      (LG_coeff (𝕜 := 𝕜) m r) • G_trunc N (m + r) J ψ := by
+  exact superBracket_LG_of_boundaryDefect_zero
+    (𝕜 := 𝕜) N m r J ψ hdef
+
+/-! Under explicit vanishing of the supplied fermionic modes, the boundary
+defect vanishes.  This is a degenerate specialization, not an anomaly
+cancellation theorem. -/
+theorem o55_boundaryDefect_zero_of_fermionicModesZero
     (m r : ℤ) (J ψ : ℤ → Module.End 𝕜 V)
-    (h : O55ChiralParityZero J ψ) :
+    (h : fermionicModesZero J ψ) :
     ∀ N > 5, boundaryDefect_LG (𝕜 := 𝕜) N m r J ψ = 0 := by
   intro N _
   rw [h]
   exact boundaryDefect_LG_eq_zero_of_psi_zero N m r J
 
-/-- The exact Super Bracket closure on the Virasoro modes for Cl(5,5) splits. -/
-theorem o55_superBracket_LG_exact
+/-! Exact closure in the same degenerate zero-mode specialization. -/
+theorem o55_superBracket_LG_of_fermionicModesZero
     (m r : ℤ) (J ψ : ℤ → Module.End 𝕜 V)
-    (h : O55ChiralParityZero J ψ) (N : ℤ) (hN : N > 5) :
+    (h : fermionicModesZero J ψ) (N : ℤ) (hN : N > 5) :
     L_trunc N m J ψ * G_trunc N r J ψ - G_trunc N r J ψ * L_trunc N m J ψ =
       (m / 2 - r : 𝕜) • G_trunc N (m + r) J ψ := by
   have hdef : boundaryDefect_LG (𝕜 := 𝕜) N m r J ψ = 0 :=
-    o55_tkk_anomaly_cancellation m r J ψ h N hN
+    o55_boundaryDefect_zero_of_fermionicModesZero m r J ψ h N hN
   have h_base := superBracket_LG_decompose (𝕜 := 𝕜) N m r J ψ
   rw [hdef] at h_base
   rw [add_zero] at h_base

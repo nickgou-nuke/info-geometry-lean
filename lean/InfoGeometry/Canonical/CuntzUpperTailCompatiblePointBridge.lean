@@ -46,10 +46,10 @@ def upperTailCompatibleCuntzPointFamily
   cstar j := (T.family j.1).S (Fin.castLE j.2 i)
   relation j := by
     exact (T.family j.1).isometry_relation (Fin.castLE j.2 i)
-  compatible_c := by
+  map_c := by
     intro j k hjk
     simp [upperTailContinuousStarSystem, T.map_generator, map_star]
-  compatible_cstar := by
+  map_cstar := by
     intro j k hjk
     simp [upperTailContinuousStarSystem, T.map_generator]
 

@@ -35,6 +35,7 @@ import InfoGeometry.Clifford.CliffordAxialCommutantImage
 import InfoGeometry.Clifford.ChiralLorentzCARLift
 import InfoGeometry.Clifford.ChiralLorentzFockQuadratic
 import InfoGeometry.Clifford.Cl55OperatorDiracSystem
+import InfoGeometry.Clifford.Cl55OperatorLieSubalgebra
 import InfoGeometry.Clifford.Cl55QuadraticSpinAction
 import InfoGeometry.Clifford.Cl55WittReflectionDeterminant
 import InfoGeometry.Clifford.Cl55WittReflectionPairDeterminant

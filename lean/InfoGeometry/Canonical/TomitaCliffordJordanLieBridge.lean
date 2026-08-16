@@ -139,35 +139,4 @@ theorem anticommutator_eq_two_smul_jordanProduct :
 
 end Bridge
 
-/-! ## Owner target -/
-
-universe uα uOp
-
-/--
-Owner target for a concrete Tomita-Cartan parity to Clifford Jordan/Lie bridge.
-
-The target is not mere inhabitation of a socket.  A supplied bridge must read
-out the Tomita parity laws, the Clifford/TKK Jordan-Lie product laws, and the
-two calibration proof fields.
--/
-def TomitaCliffordJordanLieBridgeOwnerTarget
-    (α : Type uα) (Op : Type uOp) (H : Type) [Ring Op]
-    [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H] : Prop :=
-  ∀ (B : _root_.InfoGeometry.Canonical.TomitaCliffordJordanLieBridge.Bridge (α := α) (Op := Op) (H := H))
-    (x y : Op),
-    B.mirror.mirror (B.mirror.compactLift x) = B.mirror.compactLift x
-      ∧ B.mirror.mirror (B.mirror.noncompactLift y) = -B.mirror.noncompactLift y
-      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockCommutator (E := H)
-          B.gibbs.conformalGeometricTemperature
-          (InfoGeometry.Canonical.SouriauConformalKKT.weylTemperature B.gibbs B.weylGauge) =
-            (2 : ℝ) • InfoGeometry.Canonical.SouriauConformalKKT.lieProductTemperatureWeyl B.gibbs B.weylGauge
-      ∧ InfoGeometry.Canonical.BogoliubovFockSuper.fockAnticommutator (E := H)
-          B.gibbs.conformalGeometricTemperature
-          (InfoGeometry.Canonical.SouriauConformalKKT.weylTemperature B.gibbs B.weylGauge) =
-            (2 : ℝ) • InfoGeometry.Canonical.SouriauConformalKKT.jordanProductTemperatureWeyl B.gibbs B.weylGauge
-      ∧ B.mirror.mirror (B.mirror.compactLift B.compactEvenGenerator) =
-          B.mirror.compactLift B.compactEvenGenerator
-      ∧ B.mirror.mirror (B.mirror.noncompactLift B.noncompactOddGenerator) =
-          -B.mirror.noncompactLift B.noncompactOddGenerator
-
 end InfoGeometry.Canonical.TomitaCliffordJordanLieBridge

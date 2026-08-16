@@ -1607,6 +1607,7 @@ import InfoGeometry.Canonical.ZornComposition
 import InfoGeometry.Canonical.ZornBasisTable
 import InfoGeometry.Canonical.ProjectiveAffineConformalClosure55
 import InfoGeometry.Canonical.PACSplit55Cl55CoordinateBridge
+import InfoGeometry.Canonical.Cl55WittPinConformalBoundaryBridge
 import InfoGeometry.Canonical.Cl55InfinityWittBoundary
 import InfoGeometry.Canonical.Cl55NativeSpinorNullIncidence
 import InfoGeometry.Canonical.Cl55SpinProjectiveRepresentation
@@ -2316,7 +2317,6 @@ import InfoGeometry.Canonical.OperatorialVolumePreservation
 import InfoGeometry.Canonical.OperatorLightconeCoordinates
 import InfoGeometry.Canonical.OperatorJKOStep
 import InfoGeometry.Canonical.OperatorPartitionSupervolumeBridge
-import InfoGeometry.Canonical.OperatorPenroseUnification
 import InfoGeometry.Canonical.OperatorProjectorMismatch
 import InfoGeometry.Canonical.Operators
 import InfoGeometry.Canonical.OperatorSpacetimeObservables

@@ -96,7 +96,7 @@ theorem profileEnergy_nonnegative
   intro i hi
   apply mul_nonneg (occ_nonnegative (ε i))
   apply Real.log_nonneg
-    exact_mod_cast (P.primeValues i).one_le
+  simpa using (Nat.cast_le (α := ℝ)).mpr (P.primeValues i).one_le
 
 /-- Squarefree integer attached to a binary prime profile: `n(epsilon) = prod p_i^epsilon_i`. -/
 def profileNat
@@ -115,8 +115,9 @@ theorem profileNat_pos
   unfold profileNat
   apply Finset.prod_pos
   intro i hi
-  by_cases hε : ε i
-    · simpa [hε] using P.primeValues i |>.pos
+  by_cases hε : ε i = true
+  · simp [hε]
+    exact (P.primeValues i).pos
   · simp [hε]
 
 theorem profileNat_ne_zero

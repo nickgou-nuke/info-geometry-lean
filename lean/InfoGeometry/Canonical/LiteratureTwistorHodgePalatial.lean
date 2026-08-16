@@ -79,7 +79,7 @@ structure PenroseContourIntegralData
   integrand : Tw → A
   field : Field
   contourReadout_eq_field :
-    readout.toHolonomy
+    readout
       (integrator.integrate (fun i => integrand (contour.point i))) =
         field
 
@@ -91,7 +91,7 @@ variable (P : PenroseContourIntegralData I Tw A S Field)
 /-- The contour-holonomy readout is the represented Penrose field. -/
 @[rep_depth transport]
 theorem contourReadout_eq :
-    P.readout.toHolonomy
+    P.readout
       (P.integrator.integrate (fun i => P.integrand (P.contour.point i))) =
         P.field :=
   P.contourReadout_eq_field
@@ -121,7 +121,7 @@ variable (P : PenroseHodgeIntegralData I Tw A S Field Ω)
 /-- The Penrose contour readout still controls the underlying field. -/
 @[rep_depth transport]
 theorem contourReadout_eq_field :
-    P.contour.readout.toHolonomy
+    P.contour.readout
       (P.contour.integrator.integrate
         (fun i => P.contour.integrand (P.contour.contour.point i))) =
         P.contour.field :=
@@ -199,7 +199,7 @@ theorem operatorRealization_eq_contourField :
 /-- The same field is the contour-holonomy readout. -/
 @[rep_depth transport]
 theorem contourReadout_eq_operatorRealization :
-    B.penroseHodge.contour.readout.toHolonomy
+    B.penroseHodge.contour.readout
       (B.penroseHodge.contour.integrator.integrate
         (fun i =>
           B.penroseHodge.contour.integrand

@@ -155,10 +155,11 @@ theorem tomitaConjOp_involutive
     tomitaConjOp (tomitaConjOp T) = T := by
   apply ContinuousLinearMap.ext
   intro u
-  have hJ2 : modular_j (E := E) (modular_j (E := E) u) = u := by
-    have h := congrArg (fun L : FockEndomorphism E => L u)
-      (modular_j_involution E)
-    simpa [ContinuousLinearMap.comp_apply] using h
+  have hJ2 (z : DoubledSpace E) :
+      modular_j (E := E) (modular_j (E := E) z) = z := by
+    change ((modular_j (E := E)).comp (modular_j (E := E))) z = z
+    rw [modular_j_involution E]
+    rfl
   simp only [tomitaConjOp, ContinuousLinearMap.comp_apply]
   rw [hJ2, hJ2]
 

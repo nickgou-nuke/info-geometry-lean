@@ -33,13 +33,6 @@ abbrev FiniteProfile (ι : Type*) :=
 /-- A finite reference weight family.  Positivity/normalization remain explicit hypotheses. -/
 abbrev FiniteReferenceState (ι : Type*) := FiniteProfile ι
 
-namespace FiniteReferenceState
-
-/-- Compatibility projection for the former named reference weight field. -/
-abbrev weight {ι : Type*} (R : FiniteReferenceState ι) : ι → ℝ := R
-
-end FiniteReferenceState
-
 /-- A finite Jaynes pair: observation data with equal total mass to the reference. -/
 structure FiniteJaynesPair (ι : Type*) [Fintype ι] where
   /-- Reference/background finite LDDS weights. -/

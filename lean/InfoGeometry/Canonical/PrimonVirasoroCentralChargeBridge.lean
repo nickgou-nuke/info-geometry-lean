@@ -253,23 +253,6 @@ theorem virasoroCentralCharge_calibrated :
       P.primeVirasoro.affineVirasoro.centralCharge :=
   rfl
 
-/-- The stored bridge data give the four concrete prime-to-Virasoro readouts. -/
-@[rep_depth thermo]
-theorem primonVirasoroCentralChargeOwnerTarget :
-    P.massieu.souriau.partitionPotential = Real.log P.arithmeticPartition
-      ∧ let V : PrimeVielbeinCarrier := P.primeVielbein
-        InfoGeometry.Arithmetic.PrimeVielbeinCarrier.traceLogSupervolume V P.zetaParameter =
-          riemannZeta P.zetaParameter
-      ∧ P.operatorialCharge =
-          operatorialCentralCharge
-            (A := A) (B := B) (E := E) P.topologicalChargeX P.topologicalChargehX
-      ∧ P.virasoroCentralCharge = P.primeVirasoro.affineVirasoro.centralCharge := by
-  refine ⟨?_, ?_, ?_, ?_⟩
-  · exact partitionPotential_eq_log_arithmeticPartition (P := P)
-  · exact primeTraceLogSupervolume_eq_riemannZeta (P := P)
-  · exact operatorialCharge_eq_analyticIndex (P := P)
-  · exact virasoroCentralCharge_eq_sugawara (P := P)
-
 end Bridge
 
 end InfoGeometry.Canonical.PrimonVirasoroCentralCharge

@@ -94,34 +94,4 @@ theorem finite_euler_weyl_identity {L : FormalPrimeRootLattice}
   unfold finiteEvaluatedDenominator finiteEvaluatedAlternatingSum evaluatedPrimeMonomial
   simpa using (finite_prime_weyl_denominator L E.p_neg_beta)
 
-/-- Legacy compatibility name for the individual thermal evaluation factor. -/
-@[rep_depth thermo]
-def rootThermalEvaluation {L : FormalPrimeRootLattice}
-    (E : SouriauThermalEvaluation L) (p : ℕ) : ℝ :=
-  E.e_neg_alpha p
-
-/-- Legacy compatibility name for the finite parity product. -/
-@[rep_depth thermo]
-def finiteParityProduct {L : FormalPrimeRootLattice}
-    (E : SouriauThermalEvaluation L) : ℝ :=
-  finiteEvaluatedDenominator E
-
-/-- Legacy compatibility name for the finite parity alternating sum. -/
-@[rep_depth thermo]
-def finiteParitySubsetSum {L : FormalPrimeRootLattice}
-    (E : SouriauThermalEvaluation L) : ℝ :=
-  finiteEvaluatedAlternatingSum E
-
-/-- Compatibility alias for the finite parity/supertrace readout. -/
-@[rep_depth thermo]
-def splitFiniteParityTrace {L : FormalPrimeRootLattice}
-    (E : SouriauThermalEvaluation L) : ℝ :=
-  finiteParityProduct E
-
-/-- Compatibility alias for the finite parity alternating-sum readout. -/
-@[rep_depth thermo]
-def splitFiniteParitySupertrace {L : FormalPrimeRootLattice}
-    (E : SouriauThermalEvaluation L) : ℝ :=
-  finiteParitySubsetSum E
-
 end InfoGeometry.Canonical.SouriauThermalEvaluation

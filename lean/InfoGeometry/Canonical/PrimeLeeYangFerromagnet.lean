@@ -308,19 +308,6 @@ theorem spinHamiltonian_ising_decomposition (lam w : ℝ) (σ : Fin N → ℝ) (
   rw [h_coupling_term]
   ring
 
-/-- The owner target follows from the explicit finite matrix elements. -/
-theorem primeLeeYangFerromagnetOwnerTarget :
-    ∀ {N : ℕ} (D : FinitePrimeChainData N) {lam : ℝ},
-      0 ≤ lam →
-        ∀ i j : Fin N,
-          0 ≤ D.spinCoupling lam i j ∧
-            D.spinCoupling lam i j = D.spinCoupling lam j i ∧
-              D.spinCoupling lam i j = (if i = j then 0 else (lam / 2) * D.ell i * D.ell j) ∧
-              D.spinCoupling lam i i = 0 := by
-  intro N D lam hLam i j
-  exact ⟨D.spinCoupling_nonneg hLam i j, D.spinCoupling_symm lam i j,
-    rfl, D.spinCoupling_self lam i⟩
-
 end FinitePrimeChainData
 
 end InfoGeometry.Canonical.PrimeLeeYangFerromagnet

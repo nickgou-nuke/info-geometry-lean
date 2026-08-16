@@ -48,10 +48,6 @@ open scoped BigOperators
 abbrev SuperOrbitSpace (Γ : Type*) := Γ → Bool
 
 namespace SuperOrbitSpace
-
-/-- Projection-compatible name for the direct parity function. -/
-abbrev parity {Γ : Type*} (S : SuperOrbitSpace Γ) : Γ → Bool := S
-
 end SuperOrbitSpace
 
 /-- Real Witten sign of an orbit sector. -/
@@ -160,13 +156,6 @@ abbrev FierzFromProjectiveCounts (Γ : Type*) [Fintype Γ] :=
 
 /-- Residual measuring failure of the intended Fierz--Klein relation. -/
 abbrev FierzKleinResidual := (FierzChannel → ℝ) → ℝ
-
-namespace FierzKleinResidual
-
-/-- Projection-compatible name for the direct residual function. -/
-abbrev residual (R : FierzKleinResidual) : (FierzChannel → ℝ) → ℝ := R
-
-end FierzKleinResidual
 
 /--
 Projective Weyl/KMS count readout data for Fierz--Klein coordinates.

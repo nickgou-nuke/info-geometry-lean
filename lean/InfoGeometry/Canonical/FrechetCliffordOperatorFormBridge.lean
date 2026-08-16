@@ -23,23 +23,9 @@ def Form0 (n : ℕ) [DecidableEq (Fin n)] := Matrix (Fin n) (Fin n) ℂ
 abbrev Form1 (n : ℕ) [DecidableEq (Fin n)] :=
   Matrix (Fin n) (Fin n) ℂ
 
-namespace Form1
-
-/-- Compatibility accessor for the native first differential matrix. -/
-abbrev frechet_differential (df : Form1 n) : Matrix (Fin n) (Fin n) ℂ := df
-
-end Form1
-
 /-- 2-Form Second Fréchet Differential d²A(H₁, H₂) ∈ Mₙ(ℂ). -/
 abbrev Form2 (n : ℕ) [DecidableEq (Fin n)] :=
   Matrix (Fin n) (Fin n) ℂ
-
-namespace Form2
-
-/-- Compatibility accessor for the native second differential matrix. -/
-abbrev frechet_second_differential (df : Form2 n) : Matrix (Fin n) (Fin n) ℂ := df
-
-end Form2
 
 namespace Form1
 

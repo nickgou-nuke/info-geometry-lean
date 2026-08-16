@@ -9,81 +9,6 @@ namespace InfoGeometry.Algebra.AiStudioNativeMathlibFindings
 open Matrix
 open InfoGeometry.Canonical.SL2CZhukovsky
 
-/-!
-# Native mathlib extraction of AI Studio algebraic findings
-
-This file records the mathlib-native algebraic core of selected AI Studio code
-blocks.  The statements are scalar or matrix identities over standard mathlib
-objects: complex scalar discriminants and the standard `2 × 2` square-zero
-unipotent shear.
--/
-
-/-! ## Complex scalar discriminant packet -/
-
-/-- Trace scalar `a + b` for a two-eigenvalue shadow. -/
-def scalarTrace (a b : ℂ) : ℂ :=
-  a + b
-
-/-- Determinant scalar `ab - q`, where `q` is the off-diagonal contraction. -/
-def scalarDet (a b q : ℂ) : ℂ :=
-  a * b - q
-
-/-- Characteristic discriminant `tr² - 4 det`. -/
-def scalarDisc (a b q : ℂ) : ℂ :=
-  scalarTrace a b ^ 2 - 4 * scalarDet a b q
-
-/-- Parabolic scalar shadow: vanishing characteristic discriminant. -/
-def IsScalarParabolic (a b q : ℂ) : Prop :=
-  scalarDisc a b q = 0
-
-/-- Loxodromic scalar shadow: nonzero imaginary part of the discriminant. -/
-def IsScalarStrictlyLoxodromic (a b q : ℂ) : Prop :=
-  (scalarDisc a b q).im ≠ 0
-
-/-- The discriminant splits into diagonal gap squared plus off-diagonal contraction. -/
-theorem scalarDisc_gap_split (a b q : ℂ) :
-    scalarDisc a b q = (a - b) ^ 2 + 4 * q := by
-  simp [scalarDisc, scalarTrace, scalarDet]
-  ring
-
-/-- A scalar loxodromic shadow is not parabolic. -/
-theorem scalar_loxodromic_not_parabolic {a b q : ℂ}
-    (h : IsScalarStrictlyLoxodromic a b q) :
-    ¬ IsScalarParabolic a b q := by
-  intro hpara
-  exact h (by simpa [IsScalarParabolic] using congrArg Complex.im hpara)
-
-/-- AI Studio alias: a loxodromic shadow is never parabolic. -/
-theorem loxodromic_never_parabolic {a b q : ℂ}
-    (h : IsScalarStrictlyLoxodromic a b q) :
-    ¬ IsScalarParabolic a b q :=
-  scalar_loxodromic_not_parabolic h
-
-/-- AI Studio alias: the loxodromic phase split. -/
-theorem loxodromic_phase_split (a b q : ℂ) :
-    scalarDisc a b q = (a - b) ^ 2 + 4 * q :=
-  scalarDisc_gap_split a b q
-
-/--
-If the diagonal gap square has real value and the discriminant has nonzero
-imaginary part, then the off-diagonal contraction has nonzero imaginary part.
--/
-theorem scalar_bosonic_real_forces_coupling_imag {a b q : ℂ}
-    (hgap : ((a - b) ^ 2).im = 0)
-    (hdisc : IsScalarStrictlyLoxodromic a b q) :
-    q.im ≠ 0 := by
-  intro hq
-  apply hdisc
-  rw [scalarDisc_gap_split]
-  simp [Complex.add_im, Complex.mul_im, hgap, hq]
-
-/-- AI Studio alias: bosonic reality forces an imaginary coupling. -/
-theorem bosonic_real_forces_fermionic_dissipation {a b q : ℂ}
-    (hgap : ((a - b) ^ 2).im = 0)
-    (hdisc : IsScalarStrictlyLoxodromic a b q) :
-    q.im ≠ 0 :=
-  scalar_bosonic_real_forces_coupling_imag hgap hdisc
-
 /-! ## Zorn spectral packet -/
 
 /-- AI Studio alias: Cayley-Hamilton for split Zorn matrices. -/
@@ -102,38 +27,6 @@ theorem zorn_fredholm_expansion {R : Type*} [CommRing R]
       1 - t * InfoGeometry.Algebra.ZornMatrix.zornTrace X + t ^ 2 *
         InfoGeometry.Algebra.ZornMatrix.zornNorm X :=
   InfoGeometry.Algebra.ZornMatrix.fredholm_expansion t X
-
-/-- The chiral scalar gap used by the extracted Brillouin-zone proposal. -/
-def chiralGap (a b : ℂ) : ℂ :=
-  a - b
-
-/-- The off-diagonal inter-sheet coupling scalar. -/
-def interSheetCoupling (q : ℂ) : ℂ :=
-  q
-
-/-- The discriminant is gap squared plus four times the inter-sheet coupling. -/
-theorem scalarDisc_chiral_split (a b q : ℂ) :
-    scalarDisc a b q = chiralGap a b ^ 2 + 4 * interSheetCoupling q := by
-  simpa [chiralGap, interSheetCoupling] using scalarDisc_gap_split a b q
-
-/-- AI Studio alias: the chiral discriminant split. -/
-theorem discZ_chiral_split (a b q : ℂ) :
-    scalarDisc a b q = chiralGap a b ^ 2 + 4 * interSheetCoupling q :=
-  scalarDisc_chiral_split a b q
-
-/-- If the gap and coupling vanish, the scalar shadow is parabolic. -/
-theorem scalar_gap_and_coupling_zero_imply_parabolic {a b q : ℂ}
-    (hgap : chiralGap a b = 0) (hcoup : interSheetCoupling q = 0) :
-    IsScalarParabolic a b q := by
-  dsimp [IsScalarParabolic]
-  rw [scalarDisc_chiral_split, hgap, hcoup]
-  ring
-
-/-- AI Studio alias: pgg boundary plus defect node forces parabolicity. -/
-theorem pgg_defect_implies_parabolic {a b q : ℂ}
-    (h_pgg : chiralGap a b = 0) (h_node : interSheetCoupling q = 0) :
-    IsScalarParabolic a b q :=
-  scalar_gap_and_coupling_zero_imply_parabolic h_pgg h_node
 
 /-! ## Native `2 × 2` square-zero shear packet -/
 

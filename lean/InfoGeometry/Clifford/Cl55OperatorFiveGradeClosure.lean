@@ -10,6 +10,7 @@ record are introduced here.
 -/
 
 noncomputable section
+set_option maxHeartbeats 800000
 
 namespace InfoGeometry.Clifford.Clifford55
 
@@ -62,6 +63,19 @@ theorem spinTransported_grade_mem_iff
     simpa only [map_sub, map_mul, map_smul,
       RingEquiv.symm_apply_apply] using hMapped
   · exact spinTransported_grade_mem_of_mem g k
+
+theorem spinTransported_grade_mul_mem_of_mem
+    (g : Spin55) (k l : ℤ) {X Y : Cl55}
+    (hX : X ∈ cl55GradeSubmodule k)
+    (hY : Y ∈ cl55GradeSubmodule l) :
+    spinCliffordRingEquiv g (X * Y) ∈
+      spinTransportedCl55GradeSubmodule g (k + l) := by
+  change HasOperatorGrade (spinTransportedNumberOperator55 g)
+    (spinCliffordRingEquiv g (X * Y)) (k + l)
+  rw [(spinCliffordRingEquiv g).map_mul]
+  exact grade_mul
+    (spinTransported_grade_mem_of_mem g k hX)
+    (spinTransported_grade_mem_of_mem g l hY)
 
 theorem spinTransported_grade_commutator_mem_of_mem
     (g : Spin55) (k l : ℤ) {X Y : Cl55}
@@ -119,6 +133,37 @@ theorem spinTransported_annihilation55_mem_grade_neg_one
     (spinCliffordRingEquiv g (annihilation55 i)) (-1)
   simpa [HasOperatorGrade] using
     spinTransportedNumberOperator55_commutator_annihilation g i
+
+theorem spinTransported_creation55_mul_creation55_mem_grade_two
+    (g : Spin55) (i j : Fin 5) :
+    spinCliffordRingEquiv g (creation55 i * creation55 j) ∈
+      spinTransportedCl55GradeSubmodule g 2 := by
+  have hi : creation55 i ∈ cl55GradeSubmodule 1 := creation55_mem_grade_one i
+  have hj : creation55 j ∈ cl55GradeSubmodule 1 := creation55_mem_grade_one j
+  exact spinTransported_grade_mul_mem_of_mem g 1 1 hi hj
+
+theorem spinTransported_annihilation55_mul_annihilation55_mem_grade_neg_two
+    (g : Spin55) (i j : Fin 5) :
+    spinCliffordRingEquiv g (annihilation55 i * annihilation55 j) ∈
+      spinTransportedCl55GradeSubmodule g (-2) := by
+  have hi : annihilation55 i ∈ cl55GradeSubmodule (-1) :=
+    annihilation55_mem_grade_neg_one i
+  have hj : annihilation55 j ∈ cl55GradeSubmodule (-1) :=
+    annihilation55_mem_grade_neg_one j
+  have h := spinTransported_grade_mul_mem_of_mem
+    g (-1 : ℤ) (-1 : ℤ) hi hj
+  convert h using 1 <;> norm_num
+
+theorem spinTransported_creation55_mul_annihilation55_mem_grade_zero
+    (g : Spin55) (i j : Fin 5) :
+    spinCliffordRingEquiv g (creation55 i * annihilation55 j) ∈
+      spinTransportedCl55GradeSubmodule g 0 := by
+  have hi : creation55 i ∈ cl55GradeSubmodule 1 := creation55_mem_grade_one i
+  have hj : annihilation55 j ∈ cl55GradeSubmodule (-1) :=
+    annihilation55_mem_grade_neg_one j
+  have h := spinTransported_grade_mul_mem_of_mem
+    g (1 : ℤ) (-1 : ℤ) hi hj
+  convert h using 1 <;> norm_num
 
 theorem creation55_mul_creation55_mem_grade_two (i j : Fin 5) :
     creation55 i * creation55 j ∈ cl55GradeSubmodule 2 := by

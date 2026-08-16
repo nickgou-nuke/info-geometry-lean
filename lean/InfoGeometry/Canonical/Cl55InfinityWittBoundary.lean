@@ -461,4 +461,41 @@ theorem originProjector55_eq_half_sub_grading :
         (1 - (infinityClifford55 * originClifford55 -
           originClifford55 * infinityClifford55)) := by rw [hsum]
 
+/-! ### A scalar deformation of the normalized Witt generator -/
+
+def deformedInfinityClifford55 (κ : ℝ) : Cl55 :=
+  infinityClifford55 + κ • originClifford55
+
+theorem deformedInfinityClifford55_sq (κ : ℝ) :
+    deformedInfinityClifford55 κ * deformedInfinityClifford55 κ =
+      algebraMap ℝ Cl55 κ := by
+  have hI : infinityClifford55 * infinityClifford55 = 0 :=
+    infinityClifford55_sq_zero
+  have hO : originClifford55 * originClifford55 = 0 :=
+    originClifford55_sq_zero
+  have hCAR :
+      infinityClifford55 * originClifford55 +
+          originClifford55 * infinityClifford55 = 1 :=
+    infinity_origin_CAR_clifford
+  unfold deformedInfinityClifford55
+  calc
+    (infinityClifford55 + κ • originClifford55) *
+        (infinityClifford55 + κ • originClifford55) =
+        infinityClifford55 * infinityClifford55 +
+          κ • (infinityClifford55 * originClifford55) +
+          κ • (originClifford55 * infinityClifford55) +
+          (κ * κ) • (originClifford55 * originClifford55) := by
+            simp only [add_mul, mul_add, mul_smul_comm, smul_mul_assoc,
+              smul_add, smul_smul]
+            abel
+    _ = κ •
+        (infinityClifford55 * originClifford55 +
+          originClifford55 * infinityClifford55) := by
+      rw [hI, hO]
+      module
+    _ = κ • (1 : Cl55) := by rw [hCAR]
+    _ = algebraMap ℝ Cl55 κ := by
+      rw [Algebra.smul_def]
+      simp
+
 end InfoGeometry.Canonical.Cl55InfinityWittBoundary

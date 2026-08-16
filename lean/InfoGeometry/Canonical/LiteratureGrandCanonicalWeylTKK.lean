@@ -53,7 +53,7 @@ structure ResidueContourHolonomyData
   residueField : X → A
   lapseResidue : ℝ
   contourResidue_eq_lapseResidue :
-    residueMap.toHolonomy
+    residueMap
       (lineIntegrator.integrate (fun i => residueField (contour.point i))) =
         lapseResidue
 
@@ -65,7 +65,7 @@ variable (C : ResidueContourHolonomyData I X A S)
 /-- The contour holonomy/readout equals the lapse residue. -/
 @[rep_depth thermo]
 theorem contourHolonomy_eq_lapseResidue :
-    C.residueMap.toHolonomy
+    C.residueMap
       (C.lineIntegrator.integrate (fun i => C.residueField (C.contour.point i))) =
         C.lapseResidue :=
   C.contourResidue_eq_lapseResidue
@@ -665,7 +665,7 @@ theorem grandCanonicalActionAffine
 /-- The bridge supplies the contour-holonomy readout of the lapse residue. -/
 @[rep_depth thermo]
 theorem contourHolonomyReadsLapseResidue :
-    B.contourResidue.residueMap.toHolonomy
+      B.contourResidue.residueMap
       (B.contourResidue.lineIntegrator.integrate
         (fun i => B.contourResidue.residueField
           (B.contourResidue.contour.point i))) =

@@ -34,10 +34,6 @@ local notation "Op" => DoubledSpace E →L[ℝ] DoubledSpace E
 abbrev SignedContribution := Chirality
 
 namespace SignedContribution
-
-/-- Projection-compatible name for the direct chirality carrier. -/
-abbrev chirality (s : SignedContribution) : Chirality := s
-
 end SignedContribution
 
 /-- Positive lane predicate. -/

@@ -21,7 +21,7 @@ namespace InfoGeometry.OperatorAlgebra.RadonNikodymCocycleKMSBridge
 open InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 open ConnesTomita
 
-variable {M : Type*} [Monoid M]
+variable {M : Type*} [AddMonoid M] [Monoid M]
 
 abbrev UnitCocycle (mod : ModularAutomorphism M) :=
   ModularAutomorphism.RadonNikodymCocycle M
@@ -43,10 +43,15 @@ theorem unit_cocycle_chain_assoc
     u (t₁ + t₂ + t₃) =
       Units.map (mod.flow t₁).toMonoidHom
           (Units.map (mod.flow t₂).toMonoidHom (u t₃) * u t₂) * u t₁ := by
-  rw [unit_cocycle_chain c u (t₁ + t₂) t₃]
-  rw [unit_cocycle_chain c u t₁ t₂]
-  rw [(mod.flow t₁).toMonoidHom.map_mul]
-  rw [← mod.flow_add]
+  calc
+    u (t₁ + t₂ + t₃) = u (t₁ + (t₂ + t₃)) := by
+      congr 1
+      ring
+    _ = Units.map (mod.flow t₁).toMonoidHom (u (t₂ + t₃)) * u t₁ := by
+      rw [unit_cocycle_chain c u t₁ (t₂ + t₃)]
+    _ = Units.map (mod.flow t₁).toMonoidHom
+          (Units.map (mod.flow t₂).toMonoidHom (u t₃) * u t₂) * u t₁ := by
+      rw [unit_cocycle_chain c u t₂ t₃]
 
 /-- A typed package carrying both a genuine KMS boundary state and a unit
 Connes cocycle for the same modular flow. -/

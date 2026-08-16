@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Clifford.Clifford55
+import InfoGeometry.Canonical.Pin55NativeCover
 
 open CliffordAlgebra
 
@@ -113,6 +114,11 @@ abbrev ArtinWord := List ℕ
 def artinCentralMonodromy (w : ArtinWord) : CentralSign :=
   centralFromWinding w.length
 
+/-! The semantic API name makes explicit that this is the length-parity
+character, not the quarter-turn spinor phase from the separate braid owner. -/
+def artinParitySign (w : ArtinWord) : CentralSign :=
+  artinCentralMonodromy w
+
 /-- Central parity is additive under concatenation of words. -/
 theorem centralFromWinding_add (m n : ℕ) :
     centralFromWinding (m + n) =
@@ -130,6 +136,19 @@ theorem artinCentralMonodromy_append (w₁ w₂ : ArtinWord) :
     artinCentralMonodromy (w₁ ++ w₂) =
       artinCentralMonodromy w₁ * artinCentralMonodromy w₂ := by
   simp [artinCentralMonodromy, centralFromWinding_add, List.length_append]
+
+@[simp] theorem artinParitySign_append (w₁ w₂ : ArtinWord) :
+    artinParitySign (w₁ ++ w₂) =
+      artinParitySign w₁ * artinParitySign w₂ := by
+  exact artinCentralMonodromy_append w₁ w₂
+
+/-- The Artin length-parity character as a native monoid homomorphism. -/
+def artinParitySignMonoidHom : ArtinWord →* CentralSign where
+  toFun := artinParitySign
+  map_one' := by
+    change centralFromWinding 0 = I
+    simp [centralFromWinding]
+  map_mul' w₁ w₂ := artinParitySign_append w₁ w₂
 
 /-- Adjacent Artin braid relation preserves central monodromy. -/
 theorem adjacent_artin_monodromy (i : ℕ) :
@@ -161,6 +180,11 @@ theorem separated_artin_hits_I (i j : ℕ) :
 structure NFoldCentralRoot (n : ℕ) (target : CentralSign) where
   winding : ℕ
   hits_target : centralFromWinding (n * winding) = target
+
+/-- Semantic name for the finite datum above.  It witnesses an `n`-fold
+winding and does not assert existence of an algebraic `n`th root. -/
+abbrev NFoldWindingDatum (n : ℕ) (target : CentralSign) :=
+  NFoldCentralRoot n target
 
 theorem odd_unit_winding_negI {n : ℕ} (h : Odd n) :
     centralFromWinding (n * 1) = negI := by
@@ -293,5 +317,30 @@ def centralizerElementSpinHom : CentralSign →* InfoGeometry.Clifford.Clifford5
 
 @[simp] theorem centralizerElementSpin_apply (c : CentralSign) :
     centralizerElementSpinHom c = centralizerElementSpin c := rfl
+
+/-- Every parity sign lies over the identity under the native Pin orthogonal
+action.  This is the finite sign-kernel readout, not the spinor half-twist
+representation. -/
+theorem centralizerElementHom_mem_native_kernel (c : CentralSign) :
+    centralizerElementHom c ∈
+      (InfoGeometry.Clifford.Clifford55.pin55NativeOrthogonalAction).ker := by
+  cases c with
+  | I =>
+      simp [centralizerElementHom, centralizerElement]
+  | negI =>
+      have hneg : negOnePin55 = InfoGeometry.Clifford.Clifford55.negOnePin := by
+        apply Subtype.ext
+        change (-1 : InfoGeometry.Clifford.Clifford55.Cl55) =
+          (InfoGeometry.Clifford.Clifford55.negOnePin :
+            InfoGeometry.Clifford.Clifford55.Cl55)
+        rw [InfoGeometry.Clifford.Clifford55.negOnePin_coe]
+      rw [show centralizerElementHom negI = negOnePin55 by
+        rfl, hneg]
+      exact InfoGeometry.Clifford.Clifford55.negOnePin_mem_pin55NativeOrthogonalAction_kernel
+
+@[simp] theorem centralizerElementHom_native_action (c : CentralSign) :
+    InfoGeometry.Clifford.Clifford55.pin55NativeOrthogonalAction
+        (centralizerElementHom c) = 1 := by
+  exact centralizerElementHom_mem_native_kernel c
 
 end InfoGeometry.Topology.ArtinCentralizerMonodromy

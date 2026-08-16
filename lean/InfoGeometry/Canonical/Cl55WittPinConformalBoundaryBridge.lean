@@ -169,11 +169,86 @@ noncomputable def pinInfinityStabilizerNativeNullAffineChartActionHom :
       pinInfinityStabilizerNativeNullAffineChartAction g p :=
   rfl
 
-theorem pinInfinityStabilizerNativeNullAffineChartAction_preserves_null
+/-! ## Induced action on the affine `PACSplit44` chart -/
+
+noncomputable def pinInfinityStabilizerAffinePACAction
+    (g : pinInfinityStabilizer) :
+    ProjectiveAffineConformalClosure55.PACSplit44 →
+      ProjectiveAffineConformalClosure55.PACSplit44 :=
+  fun x =>
+    nativeAffineChartRetract
+      (pinInfinityStabilizerNativeNullAffineChartActionHom g
+        (nativeAffineChartLift x))
+
+noncomputable def pinInfinityStabilizerAffinePACActionHom :
+    pinInfinityStabilizer →*
+      Function.End ProjectiveAffineConformalClosure55.PACSplit44 where
+  toFun := pinInfinityStabilizerAffinePACAction
+  map_one' := by
+    funext x
+    change nativeAffineChartRetract
+      (pinInfinityStabilizerNativeNullAffineChartActionHom 1
+        (nativeAffineChartLift x)) = x
+    have hone := congrFun
+      (pinInfinityStabilizerNativeNullAffineChartActionHom.map_one)
+      (nativeAffineChartLift x)
+    rw [hone]
+    exact nativeAffineChartRetract_lift x
+  map_mul' := by
+    intro g h
+    funext x
+    change nativeAffineChartRetract
+        (pinInfinityStabilizerNativeNullAffineChartActionHom (g * h)
+          (nativeAffineChartLift x)) =
+      nativeAffineChartRetract
+        (pinInfinityStabilizerNativeNullAffineChartActionHom g
+          (nativeAffineChartLift
+            (pinInfinityStabilizerAffinePACAction h x)))
+    have hmul := congrFun
+      (pinInfinityStabilizerNativeNullAffineChartActionHom.map_mul g h)
+      (nativeAffineChartLift x)
+    rw [hmul]
+    change nativeAffineChartRetract
+        (pinInfinityStabilizerNativeNullAffineChartActionHom g
+          (pinInfinityStabilizerNativeNullAffineChartActionHom h
+            (nativeAffineChartLift x))) =
+      nativeAffineChartRetract
+        (pinInfinityStabilizerNativeNullAffineChartActionHom g
+          (nativeAffineChartLift
+            (nativeAffineChartRetract
+              (pinInfinityStabilizerNativeNullAffineChartActionHom h
+                (nativeAffineChartLift x)))))
+    rw [nativeAffineChartLift_retract]
+
+@[simp] theorem pinInfinityStabilizerAffinePACActionHom_apply
+    (g : pinInfinityStabilizer)
+    (x : ProjectiveAffineConformalClosure55.PACSplit44) :
+    pinInfinityStabilizerAffinePACActionHom g x =
+      pinInfinityStabilizerAffinePACAction g x :=
+  rfl
+
+/-! The affine and projective actions form a genuine commuting square. -/
+
+theorem pinInfinityStabilizer_affineAction_lift
+    (g : pinInfinityStabilizer)
+    (x : ProjectiveAffineConformalClosure55.PACSplit44) :
+    nativeAffineChartLift
+        (pinInfinityStabilizerAffinePACAction g x) =
+      pinInfinityStabilizerNativeNullAffineChartActionHom g
+        (nativeAffineChartLift x) := by
+  unfold pinInfinityStabilizerAffinePACAction
+  exact nativeAffineChartLift_retract
+    (pinInfinityStabilizerNativeNullAffineChartActionHom g
+      (nativeAffineChartLift x))
+
+theorem pinInfinityStabilizer_affineAction_retract
     (g : pinInfinityStabilizer)
     (p : nativeNullAffineChart55Carrier) :
-    (pinInfinityStabilizerNativeNullAffineChartAction g p).1 =
-      pinProjectiveRepresentation.projectivizationMap g.1 p.1 :=
-  rfl
+    pinInfinityStabilizerAffinePACAction g
+        (nativeAffineChartRetract p) =
+      nativeAffineChartRetract
+        (pinInfinityStabilizerNativeNullAffineChartActionHom g p) := by
+  unfold pinInfinityStabilizerAffinePACAction
+  rw [nativeAffineChartLift_retract]
 
 end InfoGeometry.Canonical.Cl55WittPinConformalBoundaryBridge

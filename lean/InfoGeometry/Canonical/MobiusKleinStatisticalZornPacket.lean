@@ -90,7 +90,6 @@ def normalizedMobiusMatrix (z₁ z₂ z₃ : ℂ) : ComplexMat2 :=
   have h₂₃' : z₂ - z₃ ≠ 0 := sub_ne_zero.mpr h₂₃
   unfold normalizedMobius
   field_simp [h₂₁, h₂₃']
-  ring
 
 /-- The displayed matrix induces the normalized affine formula. -/
 theorem fractionalLinear_normalizedMobiusMatrix
@@ -509,18 +508,22 @@ theorem zorn_left_bracketing :
         (zornE1 + zornE2 + zornE3)
         (zornE1 - zornE2 - zornE3) := by
   apply zornCoord_extensionality
-  · norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
-      zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
-  · norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
-      zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
+  · simp [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+      zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3] <;>
+      ring
+  · simp [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+      zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3] <;>
+      ring
   · funext i
     fin_cases i <;>
-      norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
-        zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
+      simp [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+        zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3] <;>
+      ring
   · funext i
     fin_cases i <;>
-      norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
-        zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
+      simp [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+        zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3] <;>
+      ring
 
 /-- Right bracketing of the three explicit generators. -/
 theorem zorn_right_bracketing :
@@ -529,18 +532,22 @@ theorem zorn_right_bracketing :
         (zornE1 + zornE2 + zornE3)
         (zornE1 - zornE2) := by
   apply zornCoord_extensionality
-  · norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
-      zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
-  · norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
-      zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
+  · simp [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+      zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3] <;>
+      ring
+  · simp [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+      zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3] <;>
+      ring
   · funext i
     fin_cases i <;>
-      norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
-        zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
+      simp [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+        zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3] <;>
+      ring
   · funext i
     fin_cases i <;>
-      norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
-        zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
+      simp [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+        zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3] <;>
+      ring
 
 /-- The exact nonzero additive associator of `S₁`, `S₂`, and `U₃`. -/
 theorem zorn_additive_associator_exact :
@@ -548,12 +555,16 @@ theorem zorn_additive_associator_exact :
       zornMk (-1) 1 0 (-zornE3) := by
   rw [zornAdditiveAssociator, zorn_left_bracketing, zorn_right_bracketing]
   apply zornCoord_extensionality
-  · norm_num [zornMk, zornA]
-  · norm_num [zornMk, zornB]
+  · simp [zornMk, zornA] <;> ring
+  · simp [zornMk, zornB] <;> ring
   · funext i
-    fin_cases i <;> norm_num [zornMk, zornX, zornE1, zornE2, zornE3]
+    fin_cases i <;>
+      simp [zornMk, zornX, zornE1, zornE2, zornE3] <;>
+      ring
   · funext i
-    fin_cases i <;> norm_num [zornMk, zornY, zornE1, zornE2, zornE3]
+    fin_cases i <;>
+      simp [zornMk, zornY, zornE1, zornE2, zornE3] <;>
+      ring
 
 /-- The explicit additive associator is nonzero. -/
 theorem zorn_additive_associator_ne_zero :
@@ -572,24 +583,26 @@ theorem zorn_multiplicative_associator_exact :
       zornMk 0 3 zornE3 (-zornE1 + zornE2 - zornE3) := by
   rw [zornMultiplicativeAssociator, zorn_left_bracketing, zorn_right_bracketing]
   apply zornCoord_extensionality
-  · norm_num [zornConj, zornMul, zornMk, zornA, zornB, zornX, zornY,
-      zornE1, zornE2, zornE3, dot3, cross3]
-  · norm_num [zornConj, zornMul, zornMk, zornA, zornB, zornX, zornY,
-      zornE1, zornE2, zornE3, dot3, cross3]
+  · simp [zornConj, zornMul, zornMk, zornA, zornB, zornX, zornY,
+      zornE1, zornE2, zornE3, dot3, cross3] <;>
+      ring
+  · simp [zornConj, zornMul, zornMk, zornA, zornB, zornX, zornY,
+      zornE1, zornE2, zornE3, dot3, cross3] <;>
+      ring
   · funext i
     fin_cases i <;>
-      norm_num [zornConj, zornMul, zornMk, zornA, zornB, zornX, zornY,
-        zornE1, zornE2, zornE3, dot3, cross3]
+      simp [zornConj, zornMul, zornMk, zornA, zornB, zornX, zornY,
+        zornE1, zornE2, zornE3, dot3, cross3] <;>
+      ring
   · funext i
     fin_cases i <;>
-      norm_num [zornConj, zornMul, zornMk, zornA, zornB, zornX, zornY,
-        zornE1, zornE2, zornE3, dot3, cross3]
+      simp [zornConj, zornMul, zornMk, zornA, zornB, zornX, zornY,
+        zornE1, zornE2, zornE3, dot3, cross3] <;>
+      ring
 
 @[simp] theorem zorn_multiplicative_associator_norm :
     zornNorm (zornMultiplicativeAssociator zornS1 zornS2 zornU3) = 1 := by
-  rw [zorn_multiplicative_associator_exact]
-  change 0 * 3 - (0 * (-1) + 0 * 1 + 1 * (-1)) = 1
-  norm_num
+  simp [zornMultiplicativeAssociator, zornNorm_mul, zornNorm_conj]
 
 /-- The explicit multiplicative associator is not the identity. -/
 theorem zorn_multiplicative_associator_ne_one :

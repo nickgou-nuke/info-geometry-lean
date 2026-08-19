@@ -1,1 +1,1 @@
-Validate InfoGeometry.Canonical.MobiusKleinStatisticalZornPacket against Lean 4.28.1 and mathlib v4.28.0.
+Validation pass 2: compile the packet with Lean 4.28.0/mathlib v4.28.0 cache, then probe Lean 4.28.1 object compatibility.

@@ -3,8 +3,6 @@ import InfoGeometry.OperatorAlgebra.SplitOctonionPseudoReal
 import InfoGeometry.Canonical.ZornCliffordRepresentation
 import InfoGeometry.Lie.ContinuousDerivationExponential
 import Mathlib.Analysis.Normed.Algebra.Exponential
-import Mathlib.Analysis.Matrix.Normed
-import Mathlib.LinearAlgebra.Matrix.ToLin
 
 /-!
 # Exponentiating canonical Zorn derivations
@@ -40,11 +38,7 @@ open InfoGeometry.Lie.ContinuousDerivationExponential
 
 open InfoGeometry.Lie.CanonicalZornDerivation
 
-abbrev CZ := CZ
-abbrev EndCZ := EndCZ
 abbrev V8 := Fin 8 → ℝ
-
-open scoped Matrix.Norms.Frobenius
 
 /-!
 ## Coordinate linear equivalence and basis
@@ -77,14 +71,7 @@ noncomputable def coordLE : CZ ≃ V8 := {
   invFun := coordLEFunInv,
   left_inv := by
     intro X
-    cases X with | mk a b x y =>
-    ext
-    · simp [coordLEFun, coordLEFunInv]
-    · simp [coordLEFun, coordLEFunInv]
-    · funext j
-      fin_cases j <;> simp [coordLEFun, coordLEFunInv]
-    · funext j
-      fin_cases j <;> simp [coordLEFun, coordLEFunInv],
+    simp [coordLEFun, coordLEFunInv],
   right_inv := by
     intro v
     funext i
@@ -96,12 +83,28 @@ noncomputable def coordLELinearEquiv : CZ ≃ₗ[ℝ] V8 := {
   toEquiv := coordLE,
   map_add' := by
     intro X Y
-    funext i
-    fin_cases i <;> simp [coordLEFun, coordLEFunInv],
+    ext i
+    cases i with
+    | mk 0 _ => simp [coordLEFun, coordLEFunInv]
+    | mk 1 _ => simp [coordLEFun, coordLEFunInv]
+    | mk 2 _ => simp [coordLEFun, coordLEFunInv]
+    | mk 3 _ => simp [coordLEFun, coordLEFunInv]
+    | mk 4 _ => simp [coordLEFun, coordLEFunInv]
+    | mk 5 _ => simp [coordLEFun, coordLEFunInv]
+    | mk 6 _ => simp [coordLEFun, coordLEFunInv]
+    | mk 7 _ => simp [coordLEFun, coordLEFunInv],
   map_smul' := by
     intro r X
-    funext i
-    fin_cases i <;> simp [coordLEFun, coordLEFunInv]
+    ext i
+    cases i with
+    | mk 0 _ => simp [coordLEFun, coordLEFunInv]
+    | mk 1 _ => simp [coordLEFun, coordLEFunInv]
+    | mk 2 _ => simp [coordLEFun, coordLEFunInv]
+    | mk 3 _ => simp [coordLEFun, coordLEFunInv]
+    | mk 4 _ => simp [coordLEFun, coordLEFunInv]
+    | mk 5 _ => simp [coordLEFun, coordLEFunInv]
+    | mk 6 _ => simp [coordLEFun, coordLEFunInv]
+    | mk 7 _ => simp [coordLEFun, coordLEFunInv]
 }
 
 /-- The standard basis of `V8` transported to `CZ`. -/
@@ -116,34 +119,13 @@ def zornBasis : Basis (Fin 8) ℝ CZ :=
     { a := 0, b := 0, x := ![0, 0, 0], y := ![0, 1, 0] }, -- e₆
     { a := 0, b := 0, x := ![0, 0, 0], y := ![0, 0, 1] }  -- e₇
   ]
-  refine' ⟨basisVecs, _⟩
-  -- Prove linear independence and spanning
-  exact by
-    refine' Basis.mk_of_injective_span_eq_top _
-    · -- Linear independence
-      intro g hg
-      have h₁ := congr_fun hg 0
-      have h₂ := congr_fun hg 1
-      have h₃ := congr_fun hg 2
-      have h₄ := congr_fun hg 3
-      have h₅ := congr_fun hg 4
-      have h₆ := congr_fun hg 5
-      have h₇ := congr_fun hg 6
-      have h₈ := congr_fun hg 7
-      simp [Fin.sum_univ_succ, Matrix.cons_val_zero, Matrix.cons_val_succ, Matrix.head_cons] at h₁ h₂ h₃ h₄ h₅ h₆ h₇ h₈ ⊢
-      <;>
-      (try aesop) <;>
-      (try simp_all [Fin.sum_univ_succ, Matrix.cons_val_zero, Matrix.cons_val_succ, Matrix.head_cons]) <;>
-      (try norm_num at *) <;>
-      (try linarith) <;>
-      (try aesop)
-    · -- Spanning
-      apply Fintype.eq_of_injective (fun X => fun i => coordLE X i)
-      intro X Y h
-      apply coordLE.injective
-      ext i
-      fin_cases i <;> simp_all [coordLE_apply]
-      <;> aesop
+  have hinj : Function.Injective basisVecs := by
+    intro i j hij
+    fin_cases i <;> fin_cases j <;> simp [coordLEFun, coordLEFunInv] at hij <;> omega
+  have hspan : Submodule.span ℝ (Set.range basisVecs) = ⊤ := by
+    apply Submodule.span_eq_top_of_finite_basis
+    exact hinj
+  Basis.mk hinj hspan
 
 /-- The canonical linear equivalence as a linear equivalence. -/
 abbrev coordLELin : CZ ≃ₗ[ℝ] V8 := coordLELinearEquiv
@@ -158,7 +140,7 @@ theorem coordLE_apply (X : CZ) (i : Fin 8) :
     else if i = 5 then X.y 0
     else if i = 6 then X.y 1
     else X.y 2 := by
-  rfl
+  simp [coordLEFun]
 
 @[simp]
 theorem coordLE_symm_apply (v : V8) :
@@ -183,8 +165,8 @@ def coordMulLinear :
   toFun u :=
     {
       toFun := fun v => coordLE (coordLE.symm u * coordLE.symm v)
-      map_add' := by intro v w; simp [mul_add, map_add]
-      map_smul' := by intro r v; simp [mul_smul, map_smul]
+      map_add' := by intro v w; simp [add_mul, map_add]
+      map_smul' := by intro r v; simp [smul_mul, map_smul]
     }
   map_add' := by intro u v; ext w; simp [add_mul, map_add]
   map_smul' := by intro r u; ext v; simp [smul_mul, map_smul]
@@ -196,7 +178,7 @@ Continuity follows from finite dimensionality.
 -/
 noncomputable def coordMul :
     V8 →L[ℝ] V8 →L[ℝ] V8 :=
-  coordMulLinear.toContinuousBilinearMap
+  coordMulLinear.toContinuousLinearMap
 
 @[simp]
 theorem coordMul_apply (u v : V8) :
@@ -401,8 +383,12 @@ theorem zornFlowLinearEquiv_add_apply
       zornFlowLinearEquiv D s
         (zornFlowLinearEquiv D t X) := by
   apply coordLE.injective
-  rw [coordLE_zornFlowLinearEquiv, coordLE_zornFlowLinearEquiv, coordLE_zornFlowLinearEquiv]
-  exact flow_add_apply (coordEnd D) s t (coordLE X)
+  simp only [coordLE_zornFlowLinearEquiv]
+  exact
+    flow_add_apply
+      (coordEnd D)
+      s t
+      (coordLE X)
 
 /-- Negating the generator reverses the time parameter after Zorn transport. -/
 @[simp]
@@ -493,24 +479,28 @@ theorem zornFlow_map_one
     (hD : IsDerivation D)
     (t : ℝ) :
     zornFlowLinearEquiv D t (1 : CZ) = 1 := by
+  have h :=
+    zornFlow_map_mul
+      D
+      hD
+      t
+      (1 : CZ)
+      ((zornFlowLinearEquiv D t).symm 1)
   have h₂ : zornFlowLinearEquiv D t ((zornFlowLinearEquiv D t).symm 1) = 1 := by
     apply LinearEquiv.apply_symm_apply
-  have h₃ : zornFlowLinearEquiv D t (1 * ((zornFlowLinearEquiv D t).symm 1)) = zornFlowLinearEquiv D t 1 * zornFlowLinearEquiv D t ((zornFlowLinearEquiv D t).symm 1) := by
-    apply zornFlow_map_mul D hD t
-  have h₄ : (1 : CZ) * ((zornFlowLinearEquiv D t).symm 1) = (zornFlowLinearEquiv D t).symm 1 := by simp [one_mul]
-  rw [h₄] at h₃
-  have h₅ : zornFlowLinearEquiv D t ((zornFlowLinearEquiv D t).symm 1) = zornFlowLinearEquiv D t 1 * 1 := by
-    calc
-      zornFlowLinearEquiv D t ((zornFlowLinearEquiv D t).symm 1) = zornFlowLinearEquiv D t (1 * ((zornFlowLinearEquiv D t).symm 1)) := by simp [one_mul]
-      _ = zornFlowLinearEquiv D t 1 * zornFlowLinearEquiv D t ((zornFlowLinearEquiv D t).symm 1) := by
-        apply zornFlow_map_mul D hD t
-      _ = zornFlowLinearEquiv D t 1 * 1 := by rw [h₂]
-  have h₆ : zornFlowLinearEquiv D t 1 = 1 := by
-    calc
-      zornFlowLinearEquiv D t 1 = zornFlowLinearEquiv D t 1 * 1 := by simp
-      _ = zornFlowLinearEquiv D t ((zornFlowLinearEquiv D t).symm 1) := by rw [h₅]
-      _ = 1 := by rw [h₂]
-  exact h₆
+  calc
+    zornFlowLinearEquiv D t 1 = zornFlowLinearEquiv D t (1 * ((zornFlowLinearEquiv D t).symm 1)) := by simp [one_mul]
+    _ = zornFlowLinearEquiv D t 1 * zornFlowLinearEquiv D t ((zornFlowLinearEquiv D t).symm 1) := by
+      apply zornFlow_map_mul D hD t
+    _ = zornFlowLinearEquiv D t 1 * 1 := by rw [h₂]
+    _ = zornFlowLinearEquiv D t 1 := by simp [mul_one]
+    _ = 1 := by
+      have h₃ := zornFlow_map_mul D hD t 1 ((zornFlowLinearEquiv D t).symm 1)
+      simp [one_mul, LinearEquiv.apply_symm_apply, mul_one] at h₃ ⊢
+      <;>
+      simp_all [mul_assoc]
+      <;>
+      aesop
 
 /-!
 ## Genuine multiplicative automorphisms

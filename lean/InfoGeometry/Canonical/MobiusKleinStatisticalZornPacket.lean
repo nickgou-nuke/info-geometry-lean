@@ -88,7 +88,9 @@ def normalizedMobiusMatrix (z₁ z₂ z₃ : ℂ) : ComplexMat2 :=
     normalizedMobius z₁ z₂ z₃ z₂ = 1 := by
   have h₂₁ : z₂ - z₁ ≠ 0 := sub_ne_zero.mpr h₁₂.symm
   have h₂₃' : z₂ - z₃ ≠ 0 := sub_ne_zero.mpr h₂₃
-  field_simp [normalizedMobius, h₂₁, h₂₃']
+  unfold normalizedMobius
+  field_simp [h₂₁, h₂₃']
+  ring
 
 /-- The displayed matrix induces the normalized affine formula. -/
 theorem fractionalLinear_normalizedMobiusMatrix
@@ -119,7 +121,7 @@ theorem normalizedMobiusMatrix_det_ne_zero
     (sub_ne_zero.mpr h₁₃)
 
 /--
-Projective uniqueness of the matrix normalizing the ordered triple.
+Coefficient uniqueness for the matrix normalizing the ordered triple.
 
 The three equations encode respectively the zero at `z₁`, the pole at `z₃`,
 and the value `1` at `z₂`. Every coefficient quadruple satisfying them is a
@@ -127,7 +129,6 @@ scalar multiple of `normalizedMobiusMatrix`.
 -/
 theorem normalizedMobiusMatrix_unique_up_to_scalar
     (a b c d z₁ z₂ z₃ : ℂ)
-    (h₁₂ : z₁ ≠ z₂)
     (h₂₃ : z₂ ≠ z₃)
     (hzero : a * z₁ + b = 0)
     (hpole : c * z₃ + d = 0)
@@ -172,7 +173,7 @@ def ProjectivelyEquivalent (A B : ComplexMat2) : Prop :=
   rcases h with ⟨r, hr, rfl⟩
   refine ⟨r⁻¹, inv_ne_zero hr, ?_⟩
   ext i j
-  simp [smul_smul, hr]
+  simp [hr]
 
 @[trans] theorem projectivelyEquivalent_trans
     {A B C : ComplexMat2}
@@ -184,6 +185,28 @@ def ProjectivelyEquivalent (A B : ComplexMat2) : Prop :=
   refine ⟨s * r, mul_ne_zero hs hr, ?_⟩
   rw [hC, hB]
   simp [smul_smul]
+
+/-- An invertible normalizing representative is projectively unique. -/
+theorem normalizedMobiusMatrix_projectively_unique
+    (a b c d z₁ z₂ z₃ : ℂ)
+    (h₂₃ : z₂ ≠ z₃)
+    (hzero : a * z₁ + b = 0)
+    (hpole : c * z₃ + d = 0)
+    (hone : a * z₂ + b = c * z₂ + d)
+    (hdet : (complexMat2 a b c d).det ≠ 0) :
+    ProjectivelyEquivalent
+      (normalizedMobiusMatrix z₁ z₂ z₃)
+      (complexMat2 a b c d) := by
+  rcases normalizedMobiusMatrix_unique_up_to_scalar
+      a b c d z₁ z₂ z₃ h₂₃ hzero hpole hone with ⟨s, hs⟩
+  refine ⟨s, ?_, hs⟩
+  intro hs0
+  subst s
+  have hzeroMatrix : complexMat2 a b c d = 0 := by
+    simpa using hs
+  apply hdet
+  rw [hzeroMatrix]
+  simp
 
 /-- The scalar `i` gives a projectively equivalent matrix representative. -/
 theorem projectivelyEquivalent_I_smul (A : ComplexMat2) :
@@ -202,8 +225,13 @@ def det2 (A : ComplexMat2) : ℂ :=
 /-- Multiplication of a representative by `i` reverses its determinant. -/
 theorem det2_I_smul (A : ComplexMat2) :
     det2 (Complex.I • A) = -det2 A := by
-  simp [det2]
-  ring_nf
+  calc
+    det2 (Complex.I • A) = (Complex.I * Complex.I) * det2 A := by
+      simp [det2]
+      ring
+    _ = -det2 A := by
+      rw [Complex.I_mul_I]
+      ring
 
 /-- Therefore determinant sign cannot descend to complex projective classes. -/
 theorem projectivelyEquivalent_with_negated_det (A : ComplexMat2) :
@@ -224,9 +252,9 @@ def secondMomentMatrix (m v : ℝ) : RealMat2 :=
 def gaussianMomentMatrix (μ σ : ℝ) : RealMat2 :=
   secondMomentMatrix μ (σ ^ 2)
 
-/-- Poisson moment matrix with mean and variance both equal to `λ`. -/
-def poissonMomentMatrix (λ : ℝ) : RealMat2 :=
-  secondMomentMatrix λ λ
+/-- Poisson moment matrix with mean and variance both equal to the rate. -/
+def poissonMomentMatrix (rate : ℝ) : RealMat2 :=
+  secondMomentMatrix rate rate
 
 @[simp] theorem secondMomentMatrix_det (m v : ℝ) :
     (secondMomentMatrix m v).det = v := by
@@ -237,8 +265,8 @@ def poissonMomentMatrix (λ : ℝ) : RealMat2 :=
     (gaussianMomentMatrix μ σ).det = σ ^ 2 := by
   simp [gaussianMomentMatrix]
 
-@[simp] theorem poissonMomentMatrix_det (λ : ℝ) :
-    (poissonMomentMatrix λ).det = λ := by
+@[simp] theorem poissonMomentMatrix_det (rate : ℝ) :
+    (poissonMomentMatrix rate).det = rate := by
   simp [poissonMomentMatrix]
 
 abbrev StatisticalTangent2 : Type :=
@@ -443,14 +471,36 @@ def zornMultiplicativeAssociator
     (zornMul (zornMul p q) r)
     (zornConj (zornMul p (zornMul q r)))
 
+private theorem zornCoord_extensionality
+    {p q : ZornCoord}
+    (ha : zornA p = zornA q)
+    (hb : zornB p = zornB q)
+    (hx : zornX p = zornX q)
+    (hy : zornY p = zornY q) :
+    p = q := by
+  rcases p with ⟨a, b, x, y⟩
+  rcases q with ⟨a', b', x', y'⟩
+  simp only [zornA_tuple] at ha
+  simp only [zornB_tuple] at hb
+  simp only [zornX_tuple] at hx
+  simp only [zornY_tuple] at hy
+  subst a'
+  subst b'
+  subst x'
+  subst y'
+  rfl
+
 @[simp] theorem zornS1_norm : zornNorm zornS1 = 1 := by
-  norm_num [zornS1, zornE1, zornNorm, zornMk, zornA, zornB, zornX, zornY, dot3]
+  change 1 * 1 - (1 * 0 + 0 * 0 + 0 * 0) = 1
+  norm_num
 
 @[simp] theorem zornS2_norm : zornNorm zornS2 = 1 := by
-  norm_num [zornS2, zornE2, zornNorm, zornMk, zornA, zornB, zornX, zornY, dot3]
+  change 1 * 1 - (0 * 0 + 1 * 0 + 0 * 0) = 1
+  norm_num
 
 @[simp] theorem zornU3_norm : zornNorm zornU3 = 1 := by
-  norm_num [zornU3, zornE3, zornNorm, zornMk, zornA, zornB, zornX, zornY, dot3]
+  change 0 * 1 - (0 * 0 + 0 * 0 + 1 * (-1)) = 1
+  norm_num
 
 /-- Left bracketing of the three explicit generators. -/
 theorem zorn_left_bracketing :
@@ -458,11 +508,19 @@ theorem zorn_left_bracketing :
       zornMk 0 2
         (zornE1 + zornE2 + zornE3)
         (zornE1 - zornE2 - zornE3) := by
-  ext i <;>
-    simp [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
-      zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3] <;>
-    try fin_cases i <;>
-    norm_num
+  apply zornCoord_extensionality
+  · norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+      zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
+  · norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+      zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
+  · funext i
+    fin_cases i <;>
+      norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+        zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
+  · funext i
+    fin_cases i <;>
+      norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+        zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
 
 /-- Right bracketing of the three explicit generators. -/
 theorem zorn_right_bracketing :
@@ -470,21 +528,32 @@ theorem zorn_right_bracketing :
       zornMk 1 1
         (zornE1 + zornE2 + zornE3)
         (zornE1 - zornE2) := by
-  ext i <;>
-    simp [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
-      zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3] <;>
-    try fin_cases i <;>
-    norm_num
+  apply zornCoord_extensionality
+  · norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+      zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
+  · norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+      zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
+  · funext i
+    fin_cases i <;>
+      norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+        zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
+  · funext i
+    fin_cases i <;>
+      norm_num [zornS1, zornS2, zornU3, zornE1, zornE2, zornE3,
+        zornMul, zornMk, zornA, zornB, zornX, zornY, dot3, cross3]
 
 /-- The exact nonzero additive associator of `S₁`, `S₂`, and `U₃`. -/
 theorem zorn_additive_associator_exact :
     zornAdditiveAssociator zornS1 zornS2 zornU3 =
       zornMk (-1) 1 0 (-zornE3) := by
   rw [zornAdditiveAssociator, zorn_left_bracketing, zorn_right_bracketing]
-  ext i <;>
-    simp [zornMk, zornE1, zornE2, zornE3] <;>
-    try fin_cases i <;>
-    norm_num
+  apply zornCoord_extensionality
+  · norm_num [zornMk, zornA]
+  · norm_num [zornMk, zornB]
+  · funext i
+    fin_cases i <;> norm_num [zornMk, zornX, zornE1, zornE2, zornE3]
+  · funext i
+    fin_cases i <;> norm_num [zornMk, zornY, zornE1, zornE2, zornE3]
 
 /-- The explicit additive associator is nonzero. -/
 theorem zorn_additive_associator_ne_zero :
@@ -502,17 +571,25 @@ theorem zorn_multiplicative_associator_exact :
     zornMultiplicativeAssociator zornS1 zornS2 zornU3 =
       zornMk 0 3 zornE3 (-zornE1 + zornE2 - zornE3) := by
   rw [zornMultiplicativeAssociator, zorn_left_bracketing, zorn_right_bracketing]
-  ext i <;>
-    simp [zornConj, zornMul, zornMk, zornA, zornB, zornX, zornY,
-      zornE1, zornE2, zornE3, dot3, cross3] <;>
-    try fin_cases i <;>
-    norm_num
+  apply zornCoord_extensionality
+  · norm_num [zornConj, zornMul, zornMk, zornA, zornB, zornX, zornY,
+      zornE1, zornE2, zornE3, dot3, cross3]
+  · norm_num [zornConj, zornMul, zornMk, zornA, zornB, zornX, zornY,
+      zornE1, zornE2, zornE3, dot3, cross3]
+  · funext i
+    fin_cases i <;>
+      norm_num [zornConj, zornMul, zornMk, zornA, zornB, zornX, zornY,
+        zornE1, zornE2, zornE3, dot3, cross3]
+  · funext i
+    fin_cases i <;>
+      norm_num [zornConj, zornMul, zornMk, zornA, zornB, zornX, zornY,
+        zornE1, zornE2, zornE3, dot3, cross3]
 
 @[simp] theorem zorn_multiplicative_associator_norm :
     zornNorm (zornMultiplicativeAssociator zornS1 zornS2 zornU3) = 1 := by
   rw [zorn_multiplicative_associator_exact]
-  norm_num [zornNorm, zornMk, zornA, zornB, zornX, zornY,
-    zornE1, zornE2, zornE3, dot3]
+  change 0 * 3 - (0 * (-1) + 0 * 1 + 1 * (-1)) = 1
+  norm_num
 
 /-- The explicit multiplicative associator is not the identity. -/
 theorem zorn_multiplicative_associator_ne_one :

@@ -4,6 +4,8 @@ import InfoGeometry.Lie.SplitOctonionCliffordAction
 import InfoGeometry.Lie.SplitOctonionNonmultiplicativity
 import InfoGeometry.Lie.SplitOctonionStandardDerivation
 import InfoGeometry.Lie.CanonicalZornDerivation
+import InfoGeometry.Lie.ContinuousDerivationExponential
+import InfoGeometry.Lie.CanonicalZornDerivationExponential
 import InfoGeometry.Lie.CanonicalZornDerivationDimension
 import InfoGeometry.Lie.RealSplitOctonionDerivation
 import InfoGeometry.Lie.RealSplitOctonionDerivationWitness

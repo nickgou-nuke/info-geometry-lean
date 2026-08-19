@@ -513,24 +513,6 @@ theorem zornFlow_map_one
   exact h₆
 
 /-!
-## One-parameter group law on the Zorn carrier
--/
-
-/--
-Pointwise one-parameter group law on the Zorn carrier.
--/
-theorem zornFlowLinearEquiv_add_apply
-    (D : EndCZ)
-    (s t : ℝ)
-    (X : CZ) :
-    zornFlowLinearEquiv D (s + t) X =
-      zornFlowLinearEquiv D s
-        (zornFlowLinearEquiv D t X) := by
-  apply coordLE.injective
-  rw [coordLE_zornFlowLinearEquiv, coordLE_zornFlowLinearEquiv, coordLE_zornFlowLinearEquiv]
-  exact flow_add_apply (coordEnd D) s t (coordLE X)
-
-/-!
 ## Genuine multiplicative automorphisms
 -/
 

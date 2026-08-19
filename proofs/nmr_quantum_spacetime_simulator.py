@@ -3,7 +3,7 @@
 
 Audits the finite constants in Li et al., "Quantum spacetime on a quantum
 simulator" and checks the elementary Bell-link / five-tetrahedra arithmetic.
-The NMR experiment and LQG interpretation remain socketed in Lean.
+The NMR experiment and LQG interpretation remain deferred_interface in Lean.
 """
 
 import sympy as sp

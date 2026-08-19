@@ -37,7 +37,8 @@ def qDeformedCuntzPairRelation {A : Type*} [Mul A] [SMul ℂ A]
 
 theorem q_zero_cuntz_pair_relation_of_distinct {n : ℕ} {i j : Fin n} (hij : i ≠ j) :
     qDeformedCuntzPairRelation (0 : ℂ) (cuntzSdag n i) (cuntzS n j) := by
-  simp [qDeformedCuntzPairRelation, cuntz_distinct_orthogonal n hij]
+  unfold qDeformedCuntzPairRelation
+  rw [cuntz_distinct_orthogonal n hij, zero_smul]
 
 /-- Finite Cuntz grading/deformation parameters: a binary grading label and a q-parameter. -/
 structure CuntzGradingDeformation (n : ℕ) where
@@ -80,7 +81,13 @@ theorem majoranaSupercharge_odd_of_label_true {i : Fin n} (hi : D.label i = true
 /-- If the label marks a mode even, its Majorana Cuntz supercharge is even. -/
 theorem majoranaSupercharge_even_of_label_false {i : Fin n} (hi : D.label i = false) :
     D.IsEven (cuntzMajoranaSupercharge n i) := by
-  simp [IsEven, gradingOperator, cuntzMajoranaSupercharge, labelSign, hi]
+  unfold IsEven gradingOperator cuntzMajoranaSupercharge
+  rw [map_add, labeledParity_S, labeledParity_Sdag]
+  unfold labelSign
+  rw [hi]
+  have hfalse : ¬ (false = true) := by decide
+  rw [if_neg hfalse]
+  rw [one_smul, one_smul]
 
 /-- The square of an odd labeled Cuntz supercharge is even. -/
 theorem superMomentum_even_of_label_true {i : Fin n} (hi : D.label i = true) :
@@ -261,11 +268,13 @@ variable (T : CuntzPresentationOperator n D G)
 theorem map_anticommutator (g : G) (x y : CuntzAlg n) :
     T.op g (algebraicAnticommutator x y) =
       algebraicAnticommutator (T.op g x) (T.op g y) := by
-  simp [algebraicAnticommutator]
+  unfold algebraicAnticommutator
+  rw [map_add, map_mul, map_mul]
 
 theorem map_superMomentum (g : G) (Q : CuntzAlg n) :
     T.op g (superMomentum Q) = superMomentum (T.op g Q) := by
-  simp [superMomentum]
+  unfold superMomentum
+  rw [map_mul]
 
 theorem preserves_superMomentum_of_preserves_supercharge
     (g : G) (Q : CuntzAlg n) (hQ : T.op g Q = Q) :
@@ -285,6 +294,16 @@ theorem preserves_even (g : G) {x : CuntzAlg n} (hx : D.IsEven x)
     D.IsEven (T.op g x) := by
   unfold CuntzGradingDeformation.IsEven at hx ⊢
   rw [h_commutes_grading, hx]
+
+theorem preserves_superMomentum_even_of_odd
+    (g : G) (Q : CuntzAlg n) (hQ : D.IsOdd Q)
+    (h_commutes_grading : ∀ y : CuntzAlg n,
+      D.gradingOperator (T.op g y) = T.op g (D.gradingOperator y)) :
+    D.IsEven (T.op g (superMomentum Q)) := by
+  unfold CuntzGradingDeformation.IsEven superMomentum
+  rw [h_commutes_grading (Q * Q), map_mul (D.gradingOperator)]
+  rw [hQ]
+  exact congrArg (T.op g) (neg_mul_neg Q Q)
 
 end CuntzPresentationOperator
 

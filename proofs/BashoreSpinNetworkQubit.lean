@@ -19,7 +19,7 @@ spin-network quantum simulations.  This layer records the finite algebraic core:
   bookkeeping before the final `1/√3` normalization of the triplet state.
 
 Actual SU(2) representation theory, Wigner-symbol values, quantum hardware
-execution, and LQG transition-amplitude physics remain sockets.
+execution, and LQG transition-amplitude physics remain outside this finite owner.
 -/
 
 noncomputable section

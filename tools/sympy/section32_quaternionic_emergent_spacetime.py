@@ -29,7 +29,7 @@ from tools.sympy.common import assert_matrix_zero, assert_zero, mat2, pauli_matr
 
 def main() -> int:
     print("=" * 72)
-    print("REPAIRED SECTION 32 FINITE QUATERNIONIC SPACETIME SOCKET")
+    print("REPAIRED SECTION 32 FINITE QUATERNIONIC SPACETIME INTERFACE")
     print("=" * 72)
 
     eye = sp.eye(2)
@@ -78,7 +78,7 @@ def main() -> int:
     print("finite Lüders numerator support: OK")
 
     print("=" * 72)
-    print("REPAIRED SECTION 32 FINITE SOCKET VERIFIED")
+    print("REPAIRED SECTION 32 FINITE INTERFACE VERIFIED")
     print("=" * 72)
     return 0
 

@@ -27,4 +27,23 @@ theorem stageLimitOf_injective (n : ℕ) :
   apply directLimitOf_injective
   exact primeBond_injective
 
+theorem stageLimitOf_eq_iff {n : ℕ} {x y : PrimeStage n} :
+    stageLimitOf n x = stageLimitOf n y ↔ x = y := by
+  exact directLimitOf_eq_iff_of_injective primeBond primeBond_injective
+
+theorem stageLimitOf_eq_zero_iff {n : ℕ} {x : PrimeStage n} :
+    stageLimitOf n x = 0 ↔ x = 0 := by
+  exact directLimitOf_eq_zero_iff_of_injective primeBond primeBond_injective
+
+theorem stageLimitOf_powZero_iff (n k : ℕ) (x : PrimeStage n) :
+    stageLimitOf n x ^ k = 0 ↔ x ^ k = 0 := by
+  constructor
+  · intro h
+    apply (directLimitOf_eq_zero_iff_of_injective primeBond primeBond_injective).mp
+    rw [map_pow]
+    exact h
+  · intro h
+    rw [← map_pow, h]
+    exact map_zero (stageLimitOf n)
+
 end InfoGeometry.Categorical.PrimeThermodynamicDirectLimit

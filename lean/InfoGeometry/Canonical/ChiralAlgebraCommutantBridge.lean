@@ -6,12 +6,18 @@ noncomputable section
 namespace InfoGeometry.Canonical.ChiralAlgebraCommutantBridge
 
 /-- **Definition**: Commutant Operator T in A' satisfying [T, A] = 0 for all A in Chiral Algebra. -/
-structure ChiralCommutant (R : Type*) [Ring R] where
+structure ChiralCommutantData (R : Type*) [Ring R] where
   T : R
   ePlus : R
   eMinus : R
-  commute_ePlus : T * ePlus = ePlus * T
-  commute_eMinus : T * eMinus = eMinus * T
+
+def ChiralCommutantLaws {R : Type*} [Ring R]
+    (c : ChiralCommutantData R) : Prop :=
+  c.T * c.ePlus = c.ePlus * c.T ∧
+  c.T * c.eMinus = c.eMinus * c.T
+
+def ChiralCommutant (R : Type*) [Ring R] :=
+  {c : ChiralCommutantData R // ChiralCommutantLaws c}
 
 namespace ChiralCommutant
 
@@ -19,21 +25,22 @@ variable {R : Type*} [Ring R] (c : ChiralCommutant R)
 
 /-- **Theorem**: Commutant Operator Preserves Chiral Projection e+ (T e+ = e+ T). -/
 theorem commute_ePlus_id :
-    c.T * c.ePlus = c.ePlus * c.T :=
-  c.commute_ePlus
+    c.1.T * c.1.ePlus = c.1.ePlus * c.1.T :=
+  c.2.1
 
 /-- **Theorem**: Commutant Operator Preserves Chiral Projection e- (T e- = e- T). -/
 theorem commute_eMinus_id :
-    c.T * c.eMinus = c.eMinus * c.T :=
-  c.commute_eMinus
+    c.1.T * c.1.eMinus = c.1.eMinus * c.1.T :=
+  c.2.2
 
 /-- **Theorem**: Commutant Preserves Full Chiral Resolution of Identity e+ + e-. -/
 theorem commute_resolution :
-    c.T * (c.ePlus + c.eMinus) = (c.ePlus + c.eMinus) * c.T := by
-  calc c.T * (c.ePlus + c.eMinus)
-    _ = c.T * c.ePlus + c.T * c.eMinus := by noncomm_ring
-    _ = c.ePlus * c.T + c.eMinus * c.T := by rw [c.commute_ePlus, c.commute_eMinus]
-    _ = (c.ePlus + c.eMinus) * c.T := by noncomm_ring
+    c.1.T * (c.1.ePlus + c.1.eMinus) =
+      (c.1.ePlus + c.1.eMinus) * c.1.T := by
+  calc c.1.T * (c.1.ePlus + c.1.eMinus)
+    _ = c.1.T * c.1.ePlus + c.1.T * c.1.eMinus := by noncomm_ring
+    _ = c.1.ePlus * c.1.T + c.1.eMinus * c.1.T := by rw [c.2.1, c.2.2]
+    _ = (c.1.ePlus + c.1.eMinus) * c.1.T := by noncomm_ring
 
 end ChiralCommutant
 

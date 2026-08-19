@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """SymPy witness for HolographicGaugeSymmetryUniqueness.lean.
 
-Audits the finite algebraic core of the theorem-honest uniqueness socket:
+Audits the finite algebraic core of the theorem-honest uniqueness deferred_interface:
   * SU(3) Gell-Mann commutators lift to loop modes;
   * B3/S3 and q-scaled braid/Yang--Baxter shadows hold;
   * split (5,5) anomaly index vanishes;
@@ -10,7 +10,7 @@ Audits the finite algebraic core of the theorem-honest uniqueness socket:
 
 The completed Cuntz--Jones theorem, Cantor loop group, SU(3)_k conformal net,
 DHR sectors, Kazhdan--Lusztig equivalence, and uniqueness theorem are Lean
-sockets, not claims discharged by this script.
+deferred_interfaces, not claims discharged by this script.
 """
 
 import sympy as sp

@@ -9,7 +9,7 @@ scalar/associative energy and leaves the lower nilpotent
 
     Z = [[0, 0], [p, 0]],
 
-which has N(Z)=0 and Z^2=0.  This is the algebraic lightcone/parafermion socket.
+which has N(Z)=0 and Z^2=0.  This is the algebraic lightcone/parafermion deferred_interface.
 """
 
 import sympy as sp

@@ -73,7 +73,7 @@ def main() -> int:
     print("source-compatible matrix-biquaternion product table: OK")
 
     print("=" * 72)
-    print("REPAIRED SECTION 34 FINITE SOCKET VERIFIED")
+    print("REPAIRED SECTION 34 FINITE INTERFACE VERIFIED")
     print("=" * 72)
     return 0
 

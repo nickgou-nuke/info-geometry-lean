@@ -19,7 +19,7 @@ The calibration point is deliberately strict:
 * modular-Hamiltonian identification is an external readout predicate, not an
   automatic theorem of this carrier.
 
-This file is a small canonical socket.  It does not construct Araki relative
+This file is a small canonical interface.  It does not construct Araki relative
 entropy, KMS flow, Tomita modular operators, or unbounded logarithms.
 -/
 
@@ -114,7 +114,7 @@ end ScalarThermalGauge
 /--
 Carrier for an explicit modular-Hamiltonian/free-energy readout.
 
-This names the capstone socket without asserting that every modular Hamiltonian
+This names the capstone interface without asserting that every modular Hamiltonian
 is automatically the Souriau free-energy operator.
 -/
 @[rep_depth thermo]

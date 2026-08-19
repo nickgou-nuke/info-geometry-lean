@@ -170,6 +170,65 @@ theorem realAlbert_diagonalSupport_sub
     rw [hX₃, hY₃]
     ext <;> simp [RealSplitOct.zero, RealSplitOct.add, RealSplitOct.neg]
 
+theorem realAlbert_diagonalSupport_add
+    (X Y : RealAlbertMatrix)
+    (hX : IsRealDiagonalSupport X) (hY : IsRealDiagonalSupport Y) :
+    IsRealDiagonalSupport (X + Y) := by
+  rcases hX with ⟨hX₁, hX₂, hX₃⟩
+  rcases hY with ⟨hY₁, hY₂, hY₃⟩
+  constructor
+  · change X.z₁ + Y.z₁ = RealSplitOct.zero
+    rw [hX₁, hY₁]
+    ext <;> simp [RealSplitOct.zero, RealSplitOct.add]
+  constructor
+  · change X.z₂ + Y.z₂ = RealSplitOct.zero
+    rw [hX₂, hY₂]
+    ext <;> simp [RealSplitOct.zero, RealSplitOct.add]
+  · change X.z₃ + Y.z₃ = RealSplitOct.zero
+    rw [hX₃, hY₃]
+    ext <;> simp [RealSplitOct.zero, RealSplitOct.add]
+
+theorem realAlbert_diagonalSupport_zero :
+    IsRealDiagonalSupport (0 : RealAlbertMatrix) := by
+  change RealSplitOct.zero = RealSplitOct.zero ∧
+    RealSplitOct.zero = RealSplitOct.zero ∧
+      RealSplitOct.zero = RealSplitOct.zero
+  exact ⟨rfl, rfl, rfl⟩
+
+theorem realAlbert_diagonalSupport_neg
+    (X : RealAlbertMatrix)
+    (hX : IsRealDiagonalSupport X) :
+    IsRealDiagonalSupport (-X) := by
+  rcases hX with ⟨hX₁, hX₂, hX₃⟩
+  constructor
+  · change -X.z₁ = RealSplitOct.zero
+    rw [hX₁]
+    exact neg_zero
+  constructor
+  · change -X.z₂ = RealSplitOct.zero
+    rw [hX₂]
+    exact neg_zero
+  · change -X.z₃ = RealSplitOct.zero
+    rw [hX₃]
+    exact neg_zero
+
+theorem realAlbert_diagonalSupport_smul
+    (r : ℝ) (X : RealAlbertMatrix)
+    (hX : IsRealDiagonalSupport X) :
+    IsRealDiagonalSupport (r • X) := by
+  rcases hX with ⟨hX₁, hX₂, hX₃⟩
+  constructor
+  · change r • X.z₁ = RealSplitOct.zero
+    rw [hX₁]
+    exact smul_zero r
+  constructor
+  · change r • X.z₂ = RealSplitOct.zero
+    rw [hX₂]
+    exact smul_zero r
+  · change r • X.z₃ = RealSplitOct.zero
+    rw [hX₃]
+    exact smul_zero r
+
 theorem realAlbert_peirce_triangle_associator_isDiagonalSupport
     (x y z : RealSplitOct) :
     IsRealDiagonalSupport

@@ -3,15 +3,15 @@ import InfoGeometry.Algebra.QCCRKuzmin
 import InfoGeometry.Algebra.CuntzToeplitzStarHom
 
 /-!
-# Kuzmin q-CCR → Cuntz–Toeplitz Transmutation Socket
+# Kuzmin q-CCR → Cuntz–Toeplitz Transmutation
 
 This file packages the algebraic side of Alexey Kuzmin's `q`-CCR corridor as a
-Lean-readable socket.  It provides:
+Lean-readable interface.  It provides:
 
 * a local `q`-CCR presentation structure over a `CommRing` with `StarRing`;
 * endpoint extraction lemmas for CAR (`q=-1`) and CCR (`q=1`);
 * an explicit Toeplitz endpoint (`q=0`) readout;
-* a transmutation socket that assumes (as a property) a star-ring equivalence to
+* a transmutation interface that assumes (as a property) a star-ring equivalence to
   the algebraic Cuntz–Toeplitz algebra.
 
 No full C*-isomorphism theorem is proved in this file; those analytical claims are
@@ -33,16 +33,6 @@ structure QCCRSeed (R : Type*) [CommRing R] [StarRing R] where
   hstar : ∀ i, star (annihilation i) = creation i
   hrel : ∀ i j,
     creation i * annihilation j = (if i = j then 1 else 0) + q * (annihilation j * creation i)
-
-/--
-A conservative transmutation socket for Kuzmin's corridor.
-
-The `toCuntzToeplitz` field is intentionally explicit and property-only: it
-models the claimed algebraic bridge without asserting an analytic construction.
--/
-structure QCCRToCuntzSocket (R : Type*) [CommRing R] [StarRing R] where
-  seed : QCCRSeed R
-  toCuntzToeplitz : R ≃⋆+* CuntzToeplitzAlg 2
 
 /--
 From the seed assumptions at `q = -1`, the CAR anticommutation channel reads as
@@ -105,43 +95,25 @@ Transported Toeplitz orthogonality under an explicit isomorphism to
 -/
 theorem transported_toeplitz_orthogonality
     {R : Type*} [CommRing R] [StarRing R]
-    (H : QCCRToCuntzSocket R)
-    (hq : H.seed.q = (0 : R))
+    (H : QCCRSeed R)
+    (e : R ≃⋆+* CuntzToeplitzAlg 2)
+    (hq : H.q = (0 : R))
     (i j : Fin 2) :
-    H.toCuntzToeplitz (H.seed.creation i) * H.toCuntzToeplitz (H.seed.annihilation j) =
+    e (H.creation i) * e (H.annihilation j) =
       (if i = j then 1 else 0) := by
-  have h0 := seed_toeplitz_limit (H := H.seed) hq i j
-  simpa using congrArg H.toCuntzToeplitz h0
+  have h0 := seed_toeplitz_limit (H := H) hq i j
+  simpa using congrArg e h0
 
 /--
-Conservative CAR readout under an assumed transmutation socket.
+Conservative CAR readout under an assumed transmutation interface.
 -/
 theorem transmutation_car_packet
     {R : Type*} [CommRing R] [StarRing R]
-    (H : QCCRToCuntzSocket R)
-    (hcar : H.seed.q = (-1 : R))
+    (H : QCCRSeed R)
+    (hcar : H.q = (-1 : R))
     (i j : Fin 2) :
-    H.seed.creation i * H.seed.annihilation j + H.seed.annihilation j * H.seed.creation i =
+    H.creation i * H.annihilation j + H.annihilation j * H.creation i =
       (if i = j then 1 else 0) := by
-  exact seed_car_from_minus_one (H := H.seed) hcar i j
-
-/--
-A packet-style consequence statement mirroring the requested physical interface.
--/
-structure KuzminCuntzPathPacket (R : Type*) [CommRing R] [StarRing R] where
-  q : R
-  seed : QCCRSeed R
-  toCuntzToeplitz : R ≃⋆+* CuntzToeplitzAlg 2
-  q_norm : q = seed.q
-
-/--
-Conservative specialization: a path packet is present exactly as an explicit
-property (no hidden completion).
--/
-theorem path_packet_is_explicit
-    {R : Type*} [CommRing R] [StarRing R]
-    (P : KuzminCuntzPathPacket R) :
-    P.seed.q = P.q := by
-  simp [P.q_norm]
+  exact seed_car_from_minus_one (H := H) hcar i j
 
 end InfoGeometry.Projective.KuzminCuntzPath

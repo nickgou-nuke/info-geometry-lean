@@ -12,7 +12,7 @@ from tools.infra import hive_leantrail_bee as lane
 
 def _ns(**kwargs):
     defaults = {
-        "hive_endpoint": "http://127.0.0.1:8530",
+        "hive_endpoint": "http://127.0.0.1:8540",
         "hive_database": "hive_live",
         "hive_username": "root",
         "hive_password": "alexandria_root",

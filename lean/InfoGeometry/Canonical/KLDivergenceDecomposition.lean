@@ -90,7 +90,7 @@ theorem symmetricPart_nonneg_of_pair_nonneg
   nlinarith
 
 /--
-A Legendre-dual readout socket for the antisymmetric KL/Bregman component.
+A Legendre-dual readout interface for the antisymmetric KL/Bregman component.
 The formula is supplied by the dually-flat owner; this file only exposes it.
 -/
 structure LegendreAntisymmetricReadout (Coord Dual : Type*) where
@@ -119,7 +119,7 @@ theorem antisymmetric_eq_legendre_formula (θ θ' : Coord) :
 end LegendreAntisymmetricReadout
 
 /--
-Thermodynamic identification socket: the antisymmetric divergence between two
+Thermodynamic identification interface: the antisymmetric divergence between two
 states is calibrated to entropy production of a finite thermodynamic-gauge flow.
 -/
 structure AntisymmetricThermodynamicBridge

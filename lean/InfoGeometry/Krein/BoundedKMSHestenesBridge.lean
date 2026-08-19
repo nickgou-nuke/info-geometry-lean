@@ -9,7 +9,7 @@ noncomputable section
 /-!
 # InfoGeometry.Krein.BoundedKMSHestenesBridge
 
-Adapter from the bounded Souriau/Drazin KMS socket to the existing
+Adapter from the bounded Souriau/Drazin KMS datum to the existing
 Hestenes/Krein real-form KMS packet.
 
 This file does not reprove the analytic KMS strip theorem, and it does not
@@ -55,7 +55,7 @@ the Hestenes observable flow with the bounded modular flow datum.
 -/
 @[rep_depth krein]
 structure BoundedKMSHestenesBridge where
-  /-- Bounded Souriau/Drazin state-functional KMS socket. -/
+  /-- Bounded Souriau/Drazin state-functional KMS datum. -/
   boundedKMS :
     InfoGeometry.Canonical.BoundedKMSConditionBridge.Bridge
       (E := E) (LieAlgebra := LieAlgebra)

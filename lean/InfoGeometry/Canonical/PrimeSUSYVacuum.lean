@@ -1,6 +1,5 @@
 import InfoGeometry.Arithmetic.PrimeSuperalgebraReadback
 import InfoGeometry.Canonical.PrimeMertensDefectBoundary
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.PrimeSUSYVacuum

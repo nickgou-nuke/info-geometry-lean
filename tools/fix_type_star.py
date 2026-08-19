@@ -1,6 +1,6 @@
 import os
 
-target_dir = "lean/InfoGeometry/Arithmetic/MajoranaPolyaHilbertSocket"
+target_dir = "lean/InfoGeometry/Arithmetic/MajoranaPolyaHilbert"
 for root, _, files in os.walk(target_dir):
     for file in files:
         if file.endswith(".lean"):

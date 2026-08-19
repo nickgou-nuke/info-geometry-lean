@@ -3,25 +3,25 @@ import Mathlib.Tactic
 
 namespace Omega.Zeta
 
-/-- Concrete witness data for the bad-prime analysis of a finite Hankel determinant family. The
-witness determinants are the `content` scaled by the finitely many factors in `witnessScales`; the
-distinguished scale `1` guarantees that the content itself is one of the witnesses. -/
+/-- Data for the bad-prime analysis of a finite Hankel determinant family. The
+determinants are the `content` scaled by the finitely many factors in `scales`; the
+distinguished scale `1` guarantees that the content itself is included. -/
 structure XiHankelBadPrimeData where
-  witnessScales : Finset ℤ
+  scales : Finset ℤ
   content : ℤ
-  one_mem_witnessScales : 1 ∈ witnessScales
+  one_mem_scales : 1 ∈ scales
 
 namespace XiHankelBadPrimeData
 
-/-- The finite set of witness determinants. -/
-def witnessDeterminants (D : XiHankelBadPrimeData) : Finset ℤ :=
-  D.witnessScales.image fun k => D.content * k
+/-- The finite determinant set. -/
+def determinantSet (D : XiHankelBadPrimeData) : Finset ℤ :=
+  D.scales.image fun k => D.content * k
 
-/-- Full rank modulo `p` means that some witness determinant stays nonzero modulo `p`. -/
+/-- Full rank modulo `p` means that some determinant stays nonzero modulo `p`. -/
 def fullRankModPrime (D : XiHankelBadPrimeData) (p : ℕ) : Prop :=
-  ∃ δ ∈ D.witnessDeterminants, ((δ : ℤ) : ZMod p) ≠ 0
+  ∃ δ ∈ D.determinantSet, ((δ : ℤ) : ZMod p) ≠ 0
 
-/-- A bad prime is a prime at which every witness determinant vanishes modulo `p`. -/
+/-- A bad prime is a prime at which every determinant vanishes modulo `p`. -/
 def badPrime (D : XiHankelBadPrimeData) (p : ℕ) : Prop :=
   Nat.Prime p ∧ ¬ D.fullRankModPrime p
 
@@ -33,14 +33,14 @@ def fullRankModPrimeIffPrimeNotDvdContent (D : XiHankelBadPrimeData) : Prop :=
 def badPrimesExactlyPrimeDivisors (D : XiHankelBadPrimeData) : Prop :=
   ∀ p : ℕ, Nat.Prime p → (D.badPrime p ↔ ((p : ℤ) ∣ D.content))
 
-/-- The determinantal content divides every witness determinant. -/
-def contentDvdEveryWitness (D : XiHankelBadPrimeData) : Prop :=
-  ∀ δ ∈ D.witnessDeterminants, D.content ∣ δ
+/-- The determinantal content divides every determinant in the finite set. -/
+def contentDvdEveryDeterminant (D : XiHankelBadPrimeData) : Prop :=
+  ∀ δ ∈ D.determinantSet, D.content ∣ δ
 
-lemma content_mem_witnessDeterminants (D : XiHankelBadPrimeData) :
-    D.content ∈ D.witnessDeterminants := by
+lemma content_mem_determinantSet (D : XiHankelBadPrimeData) :
+    D.content ∈ D.determinantSet := by
   refine Finset.mem_image.mpr ?_
-  exact ⟨1, D.one_mem_witnessScales, by simp [witnessDeterminants]⟩
+  exact ⟨1, D.one_mem_scales, by simp [determinantSet]⟩
 
 lemma fullRankModPrime_iff_not_dvd_content (D : XiHankelBadPrimeData) (p : ℕ) :
     D.fullRankModPrime p ↔ ¬ ((p : ℤ) ∣ D.content) := by
@@ -54,27 +54,27 @@ lemma fullRankModPrime_iff_not_dvd_content (D : XiHankelBadPrimeData) (p : ℕ) 
       simp [hzero]
     exact hδnz this
   · intro hNotDvd
-    refine ⟨D.content, D.content_mem_witnessDeterminants, ?_⟩
+    refine ⟨D.content, D.content_mem_determinantSet, ?_⟩
     intro hzero
     exact hNotDvd ((ZMod.intCast_zmod_eq_zero_iff_dvd _ _).1 (by simpa using hzero))
 
-lemma content_dvd_every_witness (D : XiHankelBadPrimeData) :
-    D.contentDvdEveryWitness := by
+lemma content_dvd_every_determinant (D : XiHankelBadPrimeData) :
+    D.contentDvdEveryDeterminant := by
   intro δ hδ
   rcases Finset.mem_image.mp hδ with ⟨k, -, rfl⟩
-  exact ⟨k, by simp [witnessDeterminants, mul_comm]⟩
+  exact ⟨k, by simp [determinantSet, mul_comm]⟩
 
 end XiHankelBadPrimeData
 
 open XiHankelBadPrimeData
 
-/-- Define the determinantal content via the distinguished witness `content`, observe that full
-rank modulo `p` is exactly the existence of a witness determinant that survives modulo `p`, and
+/-- Define the determinantal content via the distinguished `content`, observe that full
+rank modulo `p` is exactly the existence of a determinant that survives modulo `p`, and
 translate this into the prime-divisor criterion for the bad-prime set. -/
 theorem paper_xi_hankel_discriminant_unavoidable_bad_primes (D : XiHankelBadPrimeData) :
     D.fullRankModPrimeIffPrimeNotDvdContent ∧ D.badPrimesExactlyPrimeDivisors ∧
-      D.contentDvdEveryWitness := by
-  refine ⟨?_, ?_, D.content_dvd_every_witness⟩
+      D.contentDvdEveryDeterminant := by
+  refine ⟨?_, ?_, D.content_dvd_every_determinant⟩
   · intro p hp
     exact D.fullRankModPrime_iff_not_dvd_content p
   · intro p hp

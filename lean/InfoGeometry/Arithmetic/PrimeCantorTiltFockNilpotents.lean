@@ -7,7 +7,7 @@ import InfoGeometry.Canonical.OperatorSurgery
 
 Real nilpotent spinors from the finite tilt/switch `Cl(1,1)` atom.
 
-No sockets.
+No deferred interfaces.
 No wrappers.
 No new carrier.
 

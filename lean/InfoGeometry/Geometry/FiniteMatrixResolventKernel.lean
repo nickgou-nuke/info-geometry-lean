@@ -3,9 +3,7 @@ InfoGeometry/Geometry/FiniteMatrixResolventKernel.lean
 
 Finite matrix resolvent kernel individuation.
 
-This file replaces the abstract resolvent-exists socket by explicit finite
-matrix inverse data.  For a finite matrix `A` and spectral parameter `z`, the
-resolvent difference is
+For a finite matrix `A` and spectral parameter `z`, the resolvent difference is
 
   M(z,A) = z • I - A.
 
@@ -13,7 +11,6 @@ A resolvent kernel is a matrix `R` equipped with two-sided inverse proofs.
 -/
 
 import Mathlib.Tactic
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -129,6 +126,92 @@ def matrixResolventKernelOfUnit
     rw [← hU]
     exact U.inv_val
 
+/-! The inverse laws can be consumed directly from Mathlib's `IsUnit`
+    theorem, without constructing a second kernel datum. -/
+
+theorem resolventDiff_mul_unit_inv_of_isUnit
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (A : Matrix n n ℂ)
+    (z : ℂ)
+    (hU : IsUnit (resolventDiff z A)) :
+    resolventDiff z A * (hU.unit⁻¹ : Matrix n n ℂ) = 1 := by
+  simpa [hU.unit_spec] using hU.unit.val_inv
+
+theorem unit_inv_mul_resolventDiff_of_isUnit
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (A : Matrix n n ℂ)
+    (z : ℂ)
+    (hU : IsUnit (resolventDiff z A)) :
+    (hU.unit⁻¹ : Matrix n n ℂ) * resolventDiff z A = 1 := by
+  simpa [hU.unit_spec] using hU.unit.inv_val
+
+theorem resolventDiff_mul_inv_of_det_ne_zero
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (A : Matrix n n ℂ)
+    (z : ℂ)
+    (hdet : (resolventDiff z A).det ≠ 0) :
+    resolventDiff z A * (resolventDiff z A)⁻¹ = 1 := by
+  apply resolventDiff_mul_unit_inv_of_isUnit A z
+  rw [Matrix.isUnit_iff_isUnit_det, isUnit_iff_ne_zero]
+  exact hdet
+
+theorem inv_mul_resolventDiff_of_det_ne_zero
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (A : Matrix n n ℂ)
+    (z : ℂ)
+    (hdet : (resolventDiff z A).det ≠ 0) :
+    (resolventDiff z A)⁻¹ * resolventDiff z A = 1 := by
+  apply unit_inv_mul_resolventDiff_of_isUnit A z
+  rw [Matrix.isUnit_iff_isUnit_det, isUnit_iff_ne_zero]
+  exact hdet
+
+theorem exists_resolvent_inverse_of_det_ne_zero
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (A : Matrix n n ℂ)
+    (z : ℂ)
+    (hdet : (resolventDiff z A).det ≠ 0) :
+    ∃ R : Matrix n n ℂ,
+      resolventDiff z A * R = 1 ∧ R * resolventDiff z A = 1 := by
+  refine ⟨(resolventDiff z A)⁻¹, ?_, ?_⟩
+  · exact resolventDiff_mul_inv_of_det_ne_zero A z hdet
+  · exact inv_mul_resolventDiff_of_det_ne_zero A z hdet
+
+/-- A finite resolvent exists exactly when its determinant is nonzero. -/
+theorem resolvent_exists_iff_det_ne_zero
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (A : Matrix n n ℂ)
+    (z : ℂ) :
+    (∃ R : Matrix n n ℂ,
+      resolventDiff z A * R = 1 ∧ R * resolventDiff z A = 1) ↔
+      (resolventDiff z A).det ≠ 0 := by
+  constructor
+  · rintro ⟨R, hleft, _⟩
+    exact Matrix.det_ne_zero_of_right_inverse hleft
+  · intro hdet
+    exact exists_resolvent_inverse_of_det_ne_zero A z hdet
+
+theorem MatrixResolventKernel.kernel_eq_matrix_inv_of_det_ne_zero
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (K : MatrixResolventKernel n)
+    (hdet : (resolventDiff K.z K.A).det ≠ 0) :
+    K.kernel = (resolventDiff K.z K.A)⁻¹ := by
+  symm
+  apply K.kernel_unique
+  · exact resolventDiff_mul_inv_of_det_ne_zero K.A K.z hdet
+  · exact inv_mul_resolventDiff_of_det_ne_zero K.A K.z hdet
+
+theorem MatrixResolventKernel.resolventDiff_det_ne_zero
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (K : MatrixResolventKernel n) :
+    (resolventDiff K.z K.A).det ≠ 0 := by
+  exact Matrix.det_ne_zero_of_right_inverse K.diff_mul_kernel
+
+theorem MatrixResolventKernel.kernel_eq_matrix_inv
+    {n : Type*} [Fintype n] [DecidableEq n]
+    (K : MatrixResolventKernel n) :
+    K.kernel = (resolventDiff K.z K.A)⁻¹ := by
+  exact K.kernel_eq_matrix_inv_of_det_ne_zero K.resolventDiff_det_ne_zero
+
 /-- The kernel produced from a unit is the inverse component of that unit. -/
 @[simp]
 theorem matrixResolventKernelOfUnit_kernel
@@ -207,6 +290,35 @@ theorem scalarOneByOneResolventKernel_entry
       (z - a)⁻¹ :=
   rfl
 
+/-- At the scalar eigenvalue, the resolvent difference has no right inverse. -/
+theorem scalarOneByOne_no_right_inverse_at_pole (a : ℂ) :
+    ¬ ∃ R : Matrix (Fin 1) (Fin 1) ℂ,
+      R * resolventDiff a (scalarOneByOne a) = 1 := by
+  rintro ⟨R, hR⟩
+  have hzero : (0 : ℂ) = 1 := by
+    calc
+      (0 : ℂ) = (R * resolventDiff a (scalarOneByOne a)) 0 0 := by
+        simp [resolventDiff_scalarOneByOne, scalarOneByOne, Matrix.mul_apply]
+      _ = (1 : Matrix (Fin 1) (Fin 1) ℂ) 0 0 := by rw [hR]
+      _ = 1 := by simp
+  exact zero_ne_one hzero
+
+/-- The scalar one-by-one resolvent exists exactly away from its scalar pole. -/
+theorem scalarOneByOne_resolvent_exists_iff (z a : ℂ) :
+    (∃ R : Matrix (Fin 1) (Fin 1) ℂ,
+      resolventDiff z (scalarOneByOne a) * R = 1 ∧
+        R * resolventDiff z (scalarOneByOne a) = 1) ↔
+      z - a ≠ 0 := by
+  constructor
+  · rintro ⟨R, hleft, hright⟩ hza
+    have hza' : z = a := sub_eq_zero.mp hza
+    subst z
+    exact scalarOneByOne_no_right_inverse_at_pole a ⟨R, hright⟩
+  · intro h
+    exact ⟨(scalarOneByOneResolventKernel z a h).kernel,
+      (scalarOneByOneResolventKernel z a h).diff_mul_kernel,
+      (scalarOneByOneResolventKernel z a h).kernel_mul_diff⟩
+
 /-- Uniqueness of the scalar one-by-one resolvent kernel. -/
 theorem scalarOneByOneResolventKernel_unique
     (z a : ℂ)
@@ -225,7 +337,7 @@ theorem scalarOneByOneResolventKernel_unique
 /-! ## 5. Constructive theorem packets -/
 
 /-- Constructive proof of finite matrix resolvent uniqueness. -/
-theorem finiteMatrixResolventUniquenessOwnerTarget :
+theorem finiteMatrixResolventUniqueness :
     ∀ (n : Type*) [Fintype n] [DecidableEq n],
     ∀ (A : Matrix n n ℂ) (z : ℂ),
     ∀ (R₁ R₂ : Matrix n n ℂ),
@@ -244,7 +356,7 @@ theorem finiteMatrixResolventUniquenessOwnerTarget :
   exact K.kernel_unique R₁ h₁L h₁R
 
 /-- Constructive proof of scalar one-by-one resolvent existence. -/
-theorem scalarOneByOneResolventOwnerTarget :
+theorem scalarOneByOneResolvent :
     ∀ z a : ℂ,
       z - a ≠ 0 →
         resolventDiff z (scalarOneByOne a) *
@@ -256,7 +368,7 @@ theorem scalarOneByOneResolventOwnerTarget :
     (scalarOneByOneResolventKernel z a h).kernel_mul_diff⟩
 
 /-- Constructive proof of matrix resolvent construction from a unit. -/
-theorem matrixResolventFromUnitOwnerTarget :
+theorem matrixResolventFromUnit :
     ∀ (n : Type*) [Fintype n] [DecidableEq n],
     ∀ (A : Matrix n n ℂ) (z : ℂ),
     ∀ U : Units (Matrix n n ℂ),
@@ -268,8 +380,7 @@ theorem matrixResolventFromUnitOwnerTarget :
     (matrixResolventKernelOfUnit A z U hU).kernel_mul_diff⟩
 
 /-- Combined finite resolvent packet: uniqueness, scalar construction, and unit construction. -/
-@[owner_target_tag]
-theorem finiteMatrixResolventKernel_packet :
+theorem finiteMatrixResolventConsequences :
     (∀ (n : Type*) [Fintype n] [DecidableEq n],
       ∀ (A : Matrix n n ℂ) (z : ℂ),
       ∀ (R₁ R₂ : Matrix n n ℂ),
@@ -290,8 +401,8 @@ theorem finiteMatrixResolventKernel_packet :
           U.val = resolventDiff z A →
             resolventDiff z A * U.inv = 1 ∧
               U.inv * resolventDiff z A = 1) := by
-  exact ⟨finiteMatrixResolventUniquenessOwnerTarget,
-    scalarOneByOneResolventOwnerTarget,
-    matrixResolventFromUnitOwnerTarget⟩
+  exact ⟨finiteMatrixResolventUniqueness,
+    scalarOneByOneResolvent,
+    matrixResolventFromUnit⟩
 
 end InfoGeometry.Geometry.FiniteMatrixResolventKernel

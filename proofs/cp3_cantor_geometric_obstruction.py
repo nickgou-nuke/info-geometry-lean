@@ -9,7 +9,7 @@ Checks the finite algebraic content:
     on a finite prefix sample.
 
 The full topology of CP3, Cantor topology, quotient manifolds, and C*-completion
-remain Lean sockets.
+remain Lean deferred_interfaces.
 """
 
 import sympy as sp

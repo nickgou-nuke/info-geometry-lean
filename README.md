@@ -43,3 +43,26 @@ While full real-world sensor testing remains an ongoing obligation, the empirica
 
 ---
 *Generated as part of the v0.1.0-mobius-cmos release.*
+
+## Native Modular/KMS Colimit Bridge
+
+The repository also contains a separate, theorem-scoped operator-algebraic
+lane for the algebraic matrix colimit.  Its current application facade is
+[`PrimonModularColimitBridge.lean`](lean/InfoGeometry/Canonical/PrimonModularColimitBridge.lean).
+
+The verified readouts are:
+
+- finite propagated Gibbs densities produce a unit in the algebraic colimit;
+- that unit defines the delta-first inner algebra automorphism
+  `x ↦ δ * x * δ⁻¹`;
+- the existing cyclic colimit trace is invariant under this automorphism;
+- the normalized density-weighted functional satisfies the algebraic KMS
+  boundary identity and has unit value one;
+- all stage readouts reduce to the native finite matrix trace functional.
+
+The bridge deliberately does not identify an `AlgebraEnd H` modular generator
+with the algebraic colimit carrier, and it does not assert a Type III
+completion, a spectral theorem, or a Riemann-zero consequence.  The relevant
+generator and Frechet-derivative results remain owned by the operatorial
+modules, while the delta-first KMS result remains owned by
+`AlgebraicKMSStateColimit`.

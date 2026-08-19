@@ -225,7 +225,19 @@ A property that exterior data has collapsed distinct hidden memories.
 
 This is the precise obstruction to faithful Revelation-style recovery.
 -/
-structure ExteriorCollapseWitness
+theorem no_faithful_recovery_of_observation_collision
+    {Event Obs Memory : Type*}
+    (L : HiddenMemoryLedger Event Obs Memory)
+    {e₁ e₂ : Event}
+    (hobs : L.observedDefect e₁ = L.observedDefect e₂)
+    (hmem : L.hiddenMemory e₁ ≠ L.hiddenMemory e₂) :
+    ¬ Nonempty (RevelationRecoveryDatum L) := by
+  intro hR
+  rcases hR with ⟨R⟩
+  exact hmem (R.hidden_eq_of_observed_eq hobs)
+
+/-
+structure ExteriorCollapseData
     {Event Obs Memory : Type*}
     (L : HiddenMemoryLedger Event Obs Memory) where
   e₁ : Event
@@ -239,26 +251,27 @@ structure ExteriorCollapseWitness
   distinct_hidden :
     L.hiddenMemory e₁ ≠ L.hiddenMemory e₂
 
-namespace ExteriorCollapseWitness
+namespace ExteriorCollapseData
 
 variable {Event Obs Memory : Type*}
 variable {L : HiddenMemoryLedger Event Obs Memory}
-variable (W : ExteriorCollapseWitness L)
+variable (W : ExteriorCollapseData L)
 
 /--
 Exterior collapse of distinct hidden memories blocks faithful recovery.
 -/
 theorem no_faithful_recovery
-    (W : ExteriorCollapseWitness L) :
+    (W : ExteriorCollapseData L) :
     ¬ Nonempty (RevelationRecoveryDatum L) := by
   intro hR
   rcases hR with ⟨R⟩
   exact
-    (ExteriorCollapseWitness.distinct_hidden W)
+    (ExteriorCollapseData.distinct_hidden W)
       (RevelationRecoveryDatum.hidden_eq_of_observed_eq R
-        (ExteriorCollapseWitness.same_observed W))
+        (ExteriorCollapseData.same_observed W))
 
-end ExteriorCollapseWitness
+end ExteriorCollapseData
+-/
 
 /--
 Evaporation plus an exterior-collapse property does not yield Revelation.
@@ -266,7 +279,18 @@ Evaporation plus an exterior-collapse property does not yield Revelation.
 This is the honest replacement for the invalid slogan
 “evaporation does not imply recovery” as a bare theorem.
 -/
-structure EvaporationWithoutRecoveryWitness
+theorem evaporation_does_not_restore_recovery
+    {Time Entropy Event Obs Memory : Type*}
+    (_E : HorizonEvaporationDatum Time Entropy)
+    (L : HiddenMemoryLedger Event Obs Memory)
+    {e₁ e₂ : Event}
+    (hobs : L.observedDefect e₁ = L.observedDefect e₂)
+    (hmem : L.hiddenMemory e₁ ≠ L.hiddenMemory e₂) :
+    ¬ Nonempty (RevelationRecoveryDatum L) :=
+  no_faithful_recovery_of_observation_collision L hobs hmem
+
+/-
+structure EvaporationWithoutRecoveryData
     (Time Entropy Event Obs Memory : Type*) where
   evaporation :
     HorizonEvaporationDatum Time Entropy
@@ -275,13 +299,13 @@ structure EvaporationWithoutRecoveryWitness
     HiddenMemoryLedger Event Obs Memory
 
   collapse :
-    ExteriorCollapseWitness ledger
+    ExteriorCollapseData ledger
 
-namespace EvaporationWithoutRecoveryWitness
+namespace EvaporationWithoutRecoveryData
 
 variable {Time Entropy Event Obs Memory : Type*}
 variable (W :
-  EvaporationWithoutRecoveryWitness Time Entropy Event Obs Memory)
+  EvaporationWithoutRecoveryData Time Entropy Event Obs Memory)
 
 /--
 Given a concrete exterior-collapse property, there is no faithful recovery datum
@@ -289,9 +313,10 @@ for the ledger.
 -/
 theorem no_faithful_recovery :
     ¬ Nonempty (RevelationRecoveryDatum W.ledger) :=
-  ExteriorCollapseWitness.no_faithful_recovery W.collapse
+  ExteriorCollapseData.no_faithful_recovery W.collapse
 
-end EvaporationWithoutRecoveryWitness
+end EvaporationWithoutRecoveryData
+-/
 
 /-! ## 7. Mahapralaya: terminal dissolution -/
 
@@ -375,7 +400,17 @@ end PralayaDissolutionDatum
 A ledger has a genuine hidden distinction when two events carry different
 hidden memories.
 -/
-structure HiddenDistinctionWitness
+theorem pralaya_not_injective_of_hidden_distinction
+    {Event Obs Memory Terminal : Type*}
+    (L : HiddenMemoryLedger Event Obs Memory)
+    {e₁ e₂ : Event}
+    (hmem : L.hiddenMemory e₁ ≠ L.hiddenMemory e₂)
+    (P : PralayaDissolutionDatum Memory Terminal) :
+    ¬ Function.Injective P.thermalize :=
+  P.not_injective_of_distinct_memories hmem
+
+/-
+structure HiddenDistinctionData
     {Event Obs Memory : Type*}
     (L : HiddenMemoryLedger Event Obs Memory) where
   e₁ : Event
@@ -384,24 +419,25 @@ structure HiddenDistinctionWitness
   hidden_ne :
     L.hiddenMemory e₁ ≠ L.hiddenMemory e₂
 
-namespace HiddenDistinctionWitness
+namespace HiddenDistinctionData
 
 variable {Event Obs Memory : Type*}
 variable {L : HiddenMemoryLedger Event Obs Memory}
-variable (W : HiddenDistinctionWitness L)
+variable (W : HiddenDistinctionData L)
 
 /--
 If a Pralaya map dissolves all hidden memory to one terminal state, it cannot
 be a faithful recovery of a genuine hidden distinction.
 -/
 theorem pralaya_not_faithful_recovery
-    (W : HiddenDistinctionWitness L)
+    (W : HiddenDistinctionData L)
     {Terminal : Type*}
     (P : PralayaDissolutionDatum Memory Terminal) :
     ¬ Function.Injective P.thermalize :=
-  P.not_injective_of_distinct_memories (HiddenDistinctionWitness.hidden_ne W)
+  P.not_injective_of_distinct_memories (HiddenDistinctionData.hidden_ne W)
 
-end HiddenDistinctionWitness
+end HiddenDistinctionData
+-/
 
 /-! ## 9. Outcome property package -/
 
@@ -409,7 +445,7 @@ end HiddenDistinctionWitness
 Operational eschaton package.
 
 Evaporation is separated from the actual outcome. The outcome is determined
-only after recovery/dissolution/unresolved witnesses are supplied.
+only after recovery or dissolution hypotheses are supplied.
 -/
 structure HorizonEschatonDatum
     (Time Entropy Event Obs Memory Terminal : Type*) where
@@ -652,171 +688,98 @@ theorem exhaustive :
 
 end HorizonProcessClassification
 
-/-! ## 11. Owner targets -/
-
-/--
-Owner target for Genesis/quench split readout.
--/
-def GenesisQuenchOwnerTarget
-    (Latent Observable Hidden Boundary : Type*) : Prop :=
-  ∀ G : GenesisSplitDatum Latent Observable Hidden Boundary,
-    ∀ x y : Latent,
-      G.toObservable x = G.toObservable y →
-      G.toHidden x = G.toHidden y →
-      G.boundaryOf x = G.boundaryOf y →
-        x = y
-
 /-- A supplied Genesis split datum separates latent states by full readout. -/
-theorem genesisQuenchOwnerTarget
-    (Latent Observable Hidden Boundary : Type*) :
-    GenesisQuenchOwnerTarget Latent Observable Hidden Boundary := by
-  intro G x y hobs hhidden hboundary
+theorem genesisQuench_separates
+    {Latent Observable Hidden Boundary : Type*}
+    (G : GenesisSplitDatum Latent Observable Hidden Boundary)
+    (x y : Latent)
+    (hobs : G.toObservable x = G.toObservable y)
+    (hhidden : G.toHidden x = G.toHidden y)
+    (hboundary : G.boundaryOf x = G.boundaryOf y) :
+    x = y := by
   exact G.latent_eq_of_split_eq hobs hhidden hboundary
 
-/--
-Owner target for Revelation/recovery readout.
--/
-def RevelationRecoveryOwnerTarget
-    (Event Obs Memory : Type*) : Prop :=
-  ∀ L : HiddenMemoryLedger Event Obs Memory,
-    ∀ R : RevelationRecoveryDatum L,
-      L.ExteriorSeparatesHidden ∧
-        (∀ e : Event,
-          R.exteriorDecode (L.observedDefect e) = L.hiddenMemory e)
-
 /-- A supplied Revelation datum separates hidden memory through exterior data. -/
-theorem revelationRecoveryOwnerTarget
-    (Event Obs Memory : Type*) :
-    RevelationRecoveryOwnerTarget Event Obs Memory := by
-  intro L R
+theorem revelationRecovery_separates
+    {Event Obs Memory : Type*}
+    (L : HiddenMemoryLedger Event Obs Memory)
+    (R : RevelationRecoveryDatum L) :
+    L.ExteriorSeparatesHidden ∧
+      (∀ e : Event,
+        R.exteriorDecode (L.observedDefect e) = L.hiddenMemory e) := by
   exact ⟨R.exterior_separates_hidden, fun e => R.faithful_recovery e⟩
 
-/--
-Owner target for Pralaya/dissolution readout.
--/
-def PralayaDissolutionOwnerTarget
-    (Memory Thermal : Type*) : Prop :=
-  ∀ P : PralayaDissolutionDatum Memory Thermal,
-    ∀ m₁ m₂ : Memory,
-      P.thermalize m₁ = P.thermalize m₂
-
 /-- A supplied Pralaya datum collapses all memories to the same terminal image. -/
-theorem pralayaDissolutionOwnerTarget
-    (Memory Thermal : Type*) :
-    PralayaDissolutionOwnerTarget Memory Thermal := by
-  intro P m₁ m₂
+theorem pralayaDissolution_collapses
+    {Memory Thermal : Type*}
+    (P : PralayaDissolutionDatum Memory Thermal)
+    (m₁ m₂ : Memory) :
+    P.thermalize m₁ = P.thermalize m₂ := by
   exact P.thermalize_eq_thermalize m₁ m₂
 
-/--
-Owner target for evaporation plus exterior-collapse obstruction.
--/
-def EvaporationWithoutRecoveryOwnerTarget
-    (Time Entropy Event Obs Memory : Type*) : Prop :=
-  ∀ W : EvaporationWithoutRecoveryWitness Time Entropy Event Obs Memory,
-    ¬ Nonempty (RevelationRecoveryDatum W.ledger)
-
 /-- Exterior collapse blocks faithful Revelation recovery for the property ledger. -/
-theorem evaporationWithoutRecoveryOwnerTarget
-    (Time Entropy Event Obs Memory : Type*) :
-    EvaporationWithoutRecoveryOwnerTarget Time Entropy Event Obs Memory := by
-  intro W
-  exact W.no_faithful_recovery
+theorem evaporation_without_recovery
+    {Time Entropy Event Obs Memory : Type*}
+    (E : HorizonEvaporationDatum Time Entropy)
+    (L : HiddenMemoryLedger Event Obs Memory)
+    {e₁ e₂ : Event}
+    (hobs : L.observedDefect e₁ = L.observedDefect e₂)
+    (hmem : L.hiddenMemory e₁ ≠ L.hiddenMemory e₂) :
+    ¬ Nonempty (RevelationRecoveryDatum L) :=
+  evaporation_does_not_restore_recovery E L hobs hmem
 
-/--
-Owner target for operational eschaton branch readout.
--/
-def HorizonEschatonOwnerTarget
-    (Time Entropy Event Obs Memory Terminal : Type*) : Prop :=
-  ∀ E : HorizonEschatonDatum Time Entropy Event Obs Memory Terminal,
+/-- A supplied eschaton datum exposes the Revelation and Pralaya branch laws. -/
+theorem horizonEschaton_properties
+    {Time Entropy Event Obs Memory Terminal : Type*}
+    (E : HorizonEschatonDatum Time Entropy Event Obs Memory Terminal) :
     (∀ R : RevelationRecoveryDatum E.ledger,
       ∀ e : Event,
         R.exteriorDecode (E.ledger.observedDefect e) =
           E.ledger.hiddenMemory e) ∧
     (∀ P : PralayaDissolutionDatum Memory Terminal,
       ∀ m₁ m₂ : Memory,
-        P.thermalize m₁ = P.thermalize m₂)
-
-/-- A supplied eschaton datum exposes the Revelation and Pralaya branch laws. -/
-theorem horizonEschatonOwnerTarget
-    (Time Entropy Event Obs Memory Terminal : Type*) :
-    HorizonEschatonOwnerTarget Time Entropy Event Obs Memory Terminal := by
-  intro E
+        P.thermalize m₁ = P.thermalize m₂) := by
   exact ⟨
     (fun R e => E.revelation_recovers R e),
     (fun P m₁ m₂ =>
       HorizonEschatonDatum.pralaya_collapses
         (P := P) (m₁ := m₁) (m₂ := m₂))⟩
 
-/--
-Owner target for holographic terminal memory retention.
--/
-def HolographicMemoryRetentionOwnerTarget
-    (State Memory Readout : Type*) : Prop :=
-  ∀ H : HolographicMemoryRetention State Memory Readout,
-    ∀ x y : State,
-      H.readout (H.terminalize x) =
-        H.readout (H.terminalize y) →
-          H.memoryOf x = H.memoryOf y
-
 /-- A supplied terminal-retention datum faithfully reads memory from terminal data. -/
-theorem holographicMemoryRetentionOwnerTarget
-    (State Memory Readout : Type*) :
-    HolographicMemoryRetentionOwnerTarget State Memory Readout := by
-  intro H x y hread
+theorem holographicMemoryRetention_readout
+    {State Memory Readout : Type*}
+    (H : HolographicMemoryRetention State Memory Readout)
+    (x y : State)
+    (hread : H.readout (H.terminalize x) = H.readout (H.terminalize y)) :
+    H.memoryOf x = H.memoryOf y := by
   exact H.memory_eq_of_terminal_readout_eq hread
 
-/--
-Owner target for Mahapralaya/reset obstruction.
--/
-def MahapralayaResetOwnerTarget
-    (State Memory Readout : Type*) : Prop :=
-  ∀ R : MahapralayaResetDatum State Memory Readout,
-    (∀ x y : State,
-      R.readout (R.terminalize x) =
-        R.readout (R.terminalize y)) ∧
-    ¬ ∀ x y : State,
-      R.readout (R.terminalize x) =
-        R.readout (R.terminalize y) →
-          R.memoryOf x = R.memoryOf y
-
 /-- A supplied reset datum collapses terminal readout and forbids faithful retention. -/
-theorem mahapralayaResetOwnerTarget
-    (State Memory Readout : Type*) :
-    MahapralayaResetOwnerTarget State Memory Readout := by
-  intro R
+theorem mahapralayaReset_properties
+    {State Memory Readout : Type*}
+    (R : MahapralayaResetDatum State Memory Readout) :
+    (∀ x y : State,
+      R.readout (R.terminalize x) = R.readout (R.terminalize y)) ∧
+    ¬ ∀ x y : State,
+      R.readout (R.terminalize x) = R.readout (R.terminalize y) →
+        R.memoryOf x = R.memoryOf y := by
   exact ⟨
     (fun x y => R.terminal_readout_eq x y),
     R.terminal_collapse_not_faithful⟩
 
-/--
-Owner target for memory-level holographic retention data.
--/
-def HolographicRetentionOwnerTarget
-    (Memory Readout : Type*) : Prop :=
-  ∀ H : HolographicRetentionDatum Memory Readout,
-    Function.Injective H.encode
-
 /-- A supplied memory-level retention datum is exactly an injective encoding. -/
-theorem holographicRetentionOwnerTarget
-    (Memory Readout : Type*) :
-    HolographicRetentionOwnerTarget Memory Readout := by
-  intro H
+theorem holographicRetention_injective
+    {Memory Readout : Type*}
+    (H : HolographicRetentionDatum Memory Readout) :
+    Function.Injective H.encode := by
   exact H.faithful
 
-/--
-Owner target for memory-level computational reset data.
--/
-def ComputationalResetOwnerTarget
-    (Memory Readout : Type*) : Prop :=
-  ∀ R : ComputationalResetDatum Memory Readout,
-    (∀ m₁ m₂ : Memory, R.encode m₁ = R.encode m₂) ∧
-      ¬ Function.Injective R.encode
-
 /-- A supplied computational reset collapses encoding and cannot be faithful. -/
-theorem computationalResetOwnerTarget
-    (Memory Readout : Type*) :
-    ComputationalResetOwnerTarget Memory Readout := by
-  intro R
+theorem computationalReset_properties
+    {Memory Readout : Type*}
+    (R : ComputationalResetDatum Memory Readout) :
+    (∀ m₁ m₂ : Memory, R.encode m₁ = R.encode m₂) ∧
+      ¬ Function.Injective R.encode := by
   exact ⟨
     (fun m₁ m₂ => R.encode_eq_encode m₁ m₂),
     R.collapse_forbids_faithful_retention⟩

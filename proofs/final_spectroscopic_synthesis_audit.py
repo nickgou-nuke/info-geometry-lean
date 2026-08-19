@@ -3,7 +3,7 @@
 
 This witness checks the finite bookkeeping behind the final spectroscopic
 synthesis.  It deliberately does not certify physical QFT/nuclear-data claims;
-those are socketed in Lean.
+those are deferred_interface in Lean.
 """
 
 import sympy as sp

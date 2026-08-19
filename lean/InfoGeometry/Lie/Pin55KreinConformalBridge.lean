@@ -247,7 +247,16 @@ theorem anomaly_index_zero_proof :
 /-- The same finite result under a theorem-honest trace terminology. -/
 theorem chiral_parity_trace_zero :
     LinearMap.trace ℝ (Fin 32 → ℝ) (χ_concrete ∘ₗ ε_concrete) = 0 :=
-  anomaly_index_zero_proof
+  by
+    rw [LinearMap.trace_eq_matrix_trace ℝ (Pi.basisFun ℝ (Fin 32))]
+    simp only [Matrix.trace, Matrix.diag, LinearMap.toMatrix_apply,
+      Pi.basisFun_apply, LinearMap.comp_apply, Pi.basisFun_repr]
+    dsimp [χ_concrete, ε_concrete]
+    simp only [Pi.single_eq_same]
+    repeat rw [Fin.sum_univ_succ]
+    rw [Fin.sum_univ_zero]
+    dsimp
+    ring
 
 /-- Clifford algebra generator squaring relation on the spinor representation. -/
 theorem ρ_spinor_ι_sq (v : InfoGeometry.CliffordTower.SplitSpace 5) :

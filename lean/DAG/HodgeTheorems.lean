@@ -97,6 +97,11 @@ theorem boundary_squared_zero_triangle :
     boundarySquaredZero canonicalTriangleComplex = true := by
   native_decide
 
+theorem boundary_law_triangle :
+    BoundaryLaw canonicalTriangleComplex := by
+  rw [boundaryLaw_iff_matrix_zero]
+  native_decide
+
 /-- The actual boundary composition vanishes on the canonical triangle. -/
 theorem boundary2_mul_boundary1_triangle :
     matMul (boundary2 canonicalTriangleComplex) (boundary1 canonicalTriangleComplex) =
@@ -122,6 +127,29 @@ theorem laplacian1_triangle_matrix :
 theorem boundary_squared_zero_digon :
     boundarySquaredZero canonicalDigonComplex = true := by
   native_decide
+
+theorem boundary_law_digon :
+    BoundaryLaw canonicalDigonComplex := by
+  rw [boundaryLaw_iff_matrix_zero]
+  native_decide
+
+/-! The proposition-level laws can be installed as lawful complexes without
+    weakening them to the executable Boolean readout. -/
+def canonicalTriangleBoundaryComplex : FiniteBoundaryComplex Nat :=
+  ⟨canonicalTriangleComplex, boundary_law_triangle⟩
+
+def canonicalDigonBoundaryComplex : FiniteBoundaryComplex Nat :=
+  ⟨canonicalDigonComplex, boundary_law_digon⟩
+
+theorem canonicalTriangleBoundaryComplex_boundary_matrix_zero :
+    boundary2Matrix canonicalTriangleBoundaryComplex.1 *
+        boundary1Matrix canonicalTriangleBoundaryComplex.1 = 0 := by
+  exact canonicalTriangleBoundaryComplex.boundary_matrix_zero
+
+theorem canonicalDigonBoundaryComplex_boundary_matrix_zero :
+    boundary2Matrix canonicalDigonBoundaryComplex.1 *
+        boundary1Matrix canonicalDigonBoundaryComplex.1 = 0 := by
+  exact canonicalDigonBoundaryComplex.boundary_matrix_zero
 
 /-- The digon boundary composition vanishes explicitly. -/
 theorem boundary2_mul_boundary1_digon :

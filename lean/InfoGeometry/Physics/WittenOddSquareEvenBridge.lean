@@ -30,6 +30,7 @@ theorem target_susy_algebra
     [AddCommGroup V] [Module ℚ V]
     [AddCommGroup VInf] [Module ℚ VInf]
     (stage : SupergradedDiracSystem V)
+    (hstage : SupergradedDiracLaws stage)
     (targetQ targetH : VInf →ₗ[ℚ] VInf)
     (map : V →ₗ[ℚ] VInf)
     (map_surjective : Function.Surjective map)
@@ -44,13 +45,14 @@ theorem target_susy_algebra
     ← charge_intertwines (stage.Q x),
     ← hamiltonian_intertwines x]
   simpa [LinearMap.comp_apply] using
-    congrArg (fun y => map y) (congrArg (fun L => L x) stage.susy_algebra)
+      congrArg (fun y => map y) (congrArg (fun L => L x) hstage.2.2)
 
 theorem target_witten_odd
     {V VInf : Type*}
     [AddCommGroup V] [Module ℚ V]
     [AddCommGroup VInf] [Module ℚ VInf]
     (stage : SupergradedDiracSystem V)
+    (hstage : SupergradedDiracLaws stage)
     (targetGamma targetQ : VInf →ₗ[ℚ] VInf)
     (map : V →ₗ[ℚ] VInf)
     (map_surjective : Function.Surjective map)
@@ -66,13 +68,14 @@ theorem target_witten_odd
     ← gamma_intertwines x,
     ← charge_intertwines (stage.Gamma x)]
   simpa [LinearMap.comp_apply] using
-    congrArg (fun y => map y) (congrArg (fun L => L x) stage.witten_odd)
+      congrArg (fun y => map y) (congrArg (fun L => L x) hstage.2.1)
 
 theorem target_hamiltonian_even
     {V VInf : Type*}
     [AddCommGroup V] [Module ℚ V]
     [AddCommGroup VInf] [Module ℚ VInf]
     (stage : SupergradedDiracSystem V)
+    (hstage : SupergradedDiracLaws stage)
     (targetGamma targetH : VInf →ₗ[ℚ] VInf)
     (map : V →ₗ[ℚ] VInf)
     (map_surjective : Function.Surjective map)
@@ -89,6 +92,6 @@ theorem target_hamiltonian_even
     ← hamiltonian_intertwines (stage.Gamma x)]
   simpa [LinearMap.comp_apply] using
     congrArg (fun y => map y)
-      (congrArg (fun L => L x) (SupergradedDiracSystem.hamiltonian_even stage))
+      (congrArg (fun L => L x) (SupergradedDiracSystem.hamiltonian_even stage hstage))
 
 end InfoGeometry.Physics

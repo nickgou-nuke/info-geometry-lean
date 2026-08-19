@@ -1,6 +1,6 @@
 import InfoGeometry.Clifford.Cl55WittPinParity
 import InfoGeometry.Clifford.Cl55WittPinOrthogonalAction
-import InfoGeometry.Clifford.Cl55WittPinCoverEvidence
+import InfoGeometry.Clifford.Cl55WittPinCoverBridge
 import InfoGeometry.Clifford.Cl55WittNegativeVectorPin
 import InfoGeometry.Clifford.Cl55WittOrthogonalNative
 

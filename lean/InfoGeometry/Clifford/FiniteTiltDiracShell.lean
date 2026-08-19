@@ -206,23 +206,7 @@ theorem finiteTiltDiracShell_charpoly (m : ℝ) :
   simp [sub_eq_add_neg, add_comm, add_left_comm, add_assoc]
 
 @[rep_depth operator]
-theorem finiteTiltDiracShellSpectralTarget_trace_zero (m : ℝ) :
-    Matrix.trace (finiteTiltDiracShell m) = 0 :=
-  finiteTiltDiracShell_trace m
-
-@[rep_depth operator]
-theorem finiteTiltDiracShellSpectralTarget_det_eq (m : ℝ) :
-    Matrix.det (finiteTiltDiracShell m) = - m ^ 2 :=
-  finiteTiltDiracShell_det m
-
-@[rep_depth operator]
-theorem finiteTiltDiracShellSpectralTarget_charpoly_eq (m : ℝ) :
-    (finiteTiltDiracShell m).charpoly =
-      Polynomial.X ^ 2 - Polynomial.C (m ^ 2 : ℝ) :=
-  finiteTiltDiracShell_charpoly m
-
-@[rep_depth operator]
-theorem finiteTiltDiracShellOwnerTarget_shell_square (m : ℝ) :
+theorem finiteTiltDiracShell_shell_square (m : ℝ) :
     finiteTiltDiracShell m * finiteTiltDiracShell m =
     (m ^ 2 : ℝ) • (1 : Mat2) :=
   finiteTiltDiracShell_sq m

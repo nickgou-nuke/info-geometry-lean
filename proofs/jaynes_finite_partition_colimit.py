@@ -106,7 +106,7 @@ def verify_colimit_convergence():
     """
     Verify that finite entropies converge to continuous integrals
     for specific densities. This is the numerical audit that the
-    colimit socket is properly targeted.
+    colimit deferred_interface is properly targeted.
     """
     print("\n" + "=" * 64)
     print("  Layer 2: Colimit Convergence Audit")
@@ -236,11 +236,11 @@ def run_all():
     S_renorm = S − log N = 0 (uniform)     ✓  at every N
     Refinement preserves total mass        ✓  dyadic succ
 
-  LAYER 2 (SOCKETED — colimit target, numerically verified):
+  LAYER 2 (DEFERRED_INTERFACE — colimit target, numerically verified):
     S_N → S_∞ as N → ∞                     ✓  convergence audited
     Bures boundary never touched           ✓  safe regularization
     Smooth: O(1/N²), Singular: O(1/√N)    ✓  rate identified
-    Continuum = colimit survivor           ✓  structural socket
+    Continuum = colimit survivor           ✓  structural deferred_interface
 
   THE BRIDGE IS SAFE BECAUSE:
     - Every computation is on a finite set of distinguishable alternatives.

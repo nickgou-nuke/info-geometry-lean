@@ -20,20 +20,6 @@ variable {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteS
 local notation "H₂" => DoubledSpace E
 local notation "EndH" => H₂ →L[ℝ] H₂
 
-/-- 
-**Structural Verification**:
-Verify the anticommutation of chirality and conjugation and its synthesis 
-of the complex structure.
--/
-theorem cl11_structural_identities :
-    let d := Cl11Dictionary.canonical (E := E)
-    d.ε.comp d.ε = ContinuousLinearMap.id ℝ (DoubledSpace E) ∧
-    d.J.comp d.J = ContinuousLinearMap.id ℝ (DoubledSpace E) ∧
-    d.J.comp d.ε = -(d.ε.comp d.J) ∧
-    d.K.comp d.K = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
-  let d := Cl11Dictionary.canonical (E := E)
-  exact ⟨d.ε_inv, d.J_inv, d.anticomm, d.K_sq⟩
-
 /--
 **Berry Phase Theorem**:
 On the diagonal channel $\psi$, the Berry curvature evaluated on the 

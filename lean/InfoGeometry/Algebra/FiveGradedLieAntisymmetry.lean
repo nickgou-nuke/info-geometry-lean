@@ -5,10 +5,9 @@ import Mathlib.Algebra.Lie.Basic
 # Lie antisymmetry for a five-graded carrier
 
 `FiveGradedTKK` currently owns the five weights and coordinate decomposition,
-but not a Lie bracket.  This file adds the smallest honest socket: five named
-linear submodules inside an already existing mathlib Lie algebra.  The first
-required law, antisymmetry, is therefore inherited from `LieRing` rather than
-reintroduced as an unverified assumption.
+but not a Lie bracket.  This file adds five named linear submodules inside an
+already existing mathlib Lie algebra.  Antisymmetry is inherited directly from
+`LieRing`.
 
 No bracket-closure, direct-sum, TKK, Kantor, or structurable identity is claimed
 in this owner.
@@ -22,7 +21,7 @@ variable (R L : Type*) [CommRing R]
 variable [LieRing L] [LieAlgebra R L]
 
 /-- Five distinguished homogeneous submodules of an ambient Lie algebra.
-Further owners may add closure and decomposition contracts without changing
+ Further owners may add closure and decomposition theorems without changing
 the ambient bracket. -/
 structure FiveGradedLieData where
   component : Weight5 → Submodule R L

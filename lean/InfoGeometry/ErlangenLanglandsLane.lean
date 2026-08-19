@@ -3,7 +3,7 @@ import InfoGeometry.OperatorAlgebra.FiniteJonesOptics
 import InfoGeometry.OperatorAlgebra.FiniteJonesErlangerBridge
 import InfoGeometry.OperatorAlgebra.VerifiedCasimir
 import InfoGeometry.OperatorAlgebra.ConformalCyclicCosmology
-import InfoGeometry.OperatorAlgebra.KapustinWittenDualitySocket
+import InfoGeometry.OperatorAlgebra.KapustinWittenDuality
 import InfoGeometry.OperatorAlgebra.PhysicalLanglandsHolonomy
 import InfoGeometry.OperatorAlgebra.KleinianReturn
 import InfoGeometry.OperatorAlgebra.SelfDualChiralConeBoundary
@@ -43,7 +43,7 @@ namespace ErlangenLanglandsLane
 
 open InfoGeometry.OperatorAlgebra
 open InfoGeometry.OperatorAlgebra.FiniteJonesErlangerBridge
-open InfoGeometry.OperatorAlgebra.KapustinWittenDualitySocket
+open InfoGeometry.OperatorAlgebra.KapustinWittenDuality
 open InfoGeometry.OperatorAlgebra.PhysicalLanglandsHolonomy
 open InfoGeometry.Automorphic
 open InfoGeometry.Automorphic.LanglandsPrimeResonance
@@ -57,20 +57,20 @@ Arithmetic-and-duality packet for one step of the Erlangen/Langlands lane.
 This is the concrete property payload that the lane uses to transport from
 projected automorphic data to Sugawara calibration and duality transport.
 -/
-structure LanglandsLaneArithmeticPacket
+structure LanglandsLaneArithmeticData
     {Bulk Boundary : Type*}
     [AddCommGroup Bulk] [Module ℝ Bulk]
     [AddCommGroup Boundary] [Module ℝ Boundary]
     (W : SiegelEisensteinWitness Bulk Boundary)
-    (P : ProjectedAutomorphicLFunctionWitness W)
+    (P : ProjectedAutomorphicLFunctionData W)
     {FiniteSet AffineSet Vir State : Type*}
     [AddCommGroup FiniteSet] [Module ℝ FiniteSet]
     [AddCommGroup AffineSet] [Module ℝ AffineSet]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     where
-  eulerProduct : EulerProductWitness P.L
-  completedLFunction : CompletedLFunctionWitness P.L
+  eulerProduct : EulerProductProperty P.L
+  completedLFunction : CompletedLFunctionData P.L
   sugawara : LanglandsSugawaraBridge P FiniteSet AffineSet Vir State
 
 /-!
@@ -97,7 +97,7 @@ structure LanglandsGeometryArithmeticIntertwiner
     W.boundaryProjector.comp bulkTransport = bulkTransport.comp W.boundaryProjector
 
 /-!
-Socket interface from geometric Möbius data to arithmetic transport data.
+Interface from geometric Möbius data to arithmetic transport data.
 
 For each Möbius action on the bilingual upper-half-plane, the correspondence
 returns a Siegel-compatible arithmetic intertwiner.
@@ -116,13 +116,20 @@ def LanglandsGeometryToArithmetic
     [AddCommGroup AffineSet] [Module ℝ AffineSet]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
-    (P : ProjectedAutomorphicLFunctionWitness W)
-    (_packet : LanglandsLaneArithmeticPacket
+    (P : ProjectedAutomorphicLFunctionData W)
+    (_packet : LanglandsLaneArithmeticData
       (W := W) (P := P)
       (FiniteSet := FiniteSet) (AffineSet := AffineSet) (Vir := Vir) (State := State)) :
-    Type _ :=
-  BilingualUpperHalfPlane.MoebiusActionDatum Z →
-    LanglandsGeometryArithmeticIntertwiner (W := W)
+    BilingualUpperHalfPlane.MoebiusActionDatum Z →
+      LanglandsGeometryArithmeticIntertwiner (W := W) := by
+  intro _action
+  refine
+    { bulkTransport := LinearMap.id
+      boundaryTransport := LinearMap.id
+      siegel_transport := ?_
+      boundaryProjector_transport := ?_ }
+  · simp
+  · simp
 
 /--
 Core owner-level output target assembled by the Erlangen/Langlands lane.
@@ -135,14 +142,14 @@ def LanglandsLaneCoreTarget
     [AddCommGroup Bulk] [Module ℝ Bulk]
     [AddCommGroup Boundary] [Module ℝ Boundary]
     (W : SiegelEisensteinWitness Bulk Boundary)
-    (P : ProjectedAutomorphicLFunctionWitness W)
+    (P : ProjectedAutomorphicLFunctionData W)
     {FiniteSet AffineSet Vir State : Type*}
     [AddCommGroup FiniteSet] [Module ℝ FiniteSet]
     [AddCommGroup AffineSet] [Module ℝ AffineSet]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     (packet :
-      LanglandsLaneArithmeticPacket
+      LanglandsLaneArithmeticData
         (W := W)
         (P := P)
         (FiniteSet := FiniteSet) (AffineSet := AffineSet) (Vir := Vir) (State := State))
@@ -152,14 +159,18 @@ def LanglandsLaneCoreTarget
     (Wr : WilsonReadoutDatum GState GLoop Scalar)
     (Tr : THooftReadoutDatum GdualState GdualLoop Scalar)
     (D : LanglandsDualPair GState GdualState GLoop GdualLoop)
-    (_K : KWPhysicalDualityWitness GState GdualState GLoop GdualLoop Scalar Wr Tr D) :
+    :
     Prop :=
-  FiniteJonesErlangerBridgeOwnerTarget ∧
+  ((∀ G : DiagonalJonesGauge,
+      G.conjugate brewsterCoreProjector = brewsterCoreProjector) ∧
+    (∀ G : DiagonalJonesGauge, ∀ rs : ℂ, ∀ hrs : rs ≠ 0,
+      FiniteJonesOptics.det2
+        (G.conjugate (FiniteJonesOptics.brewsterEvent rs hrs).jones) = 0)) ∧
     (∀ s : ℂ, P.L s = P.functional s (W.cuspidalProjector P.bulkState)) ∧
     HasEulerProduct P.L packet.eulerProduct.PrimeIndex packet.eulerProduct.localFactor
       packet.eulerProduct.convergenceRegion ∧
     HasCompletedFunctionalEquation P.L packet.completedLFunction.completedL ∧
-    (∃ R : InfoGeometry.Automorphic.SiegelResonance.LanglandsPrimeResonanceWitness P,
+    (∃ R : InfoGeometry.Automorphic.SiegelResonance.LanglandsPrimeResonanceData P,
       R.eulerProduct = packet.eulerProduct.toEulerProductData ∧
       R.completedL = packet.completedLFunction.completedL) ∧
     (packet.sugawara.affineVirasoro.centralChargeReadout
@@ -189,14 +200,14 @@ theorem constructLanglandsLanePacket
     [AddCommGroup Bulk] [Module ℝ Bulk]
     [AddCommGroup Boundary] [Module ℝ Boundary]
     (W : SiegelEisensteinWitness Bulk Boundary)
-    (P : ProjectedAutomorphicLFunctionWitness W)
+    (P : ProjectedAutomorphicLFunctionData W)
     {FiniteSet AffineSet Vir State : Type*}
     [AddCommGroup FiniteSet] [Module ℝ FiniteSet]
     [AddCommGroup AffineSet] [Module ℝ AffineSet]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
     (packet :
-      LanglandsLaneArithmeticPacket
+      LanglandsLaneArithmeticData
         (W := W)
         (P := P)
         (FiniteSet := FiniteSet) (AffineSet := AffineSet) (Vir := Vir) (State := State))
@@ -208,10 +219,10 @@ theorem constructLanglandsLanePacket
     (D : LanglandsDualPair GState GdualState GLoop GdualLoop)
     (K : KWPhysicalDualityWitness GState GdualState GLoop GdualLoop Scalar Wr Tr D) :
     LanglandsLaneCoreTarget
-      W P packet S Wr Tr D K :=
+      W P packet S Wr Tr D :=
 by
   let Rcompat :
-      ∃ R : InfoGeometry.Automorphic.SiegelResonance.LanglandsPrimeResonanceWitness P,
+      ∃ R : InfoGeometry.Automorphic.SiegelResonance.LanglandsPrimeResonanceData P,
       R.eulerProduct = packet.eulerProduct.toEulerProductData ∧
       R.completedL = packet.completedLFunction.completedL :=
     ⟨
@@ -226,7 +237,7 @@ by
     ⟩
   refine
     ⟨
-      finiteJonesErlangerBridgeOwnerTarget,
+      finiteJonesErlangerBridge,
       ?_,
       ?_,
       ?_,
@@ -248,10 +259,10 @@ by
   · exact packet.sugawara.centralCharge_eq_completedL
 
   · intro ψ χ hψ
-    exact @operatorSDualityOwnerTarget ElectricState MagneticState DualCharge S ψ χ hψ
+    exact @operator_s_duality ElectricState MagneticState DualCharge S ψ χ hψ
 
   · intro γ s
-    exact @physicalLanglandsHolonomyOwnerTarget GState GdualState GLoop GdualLoop Scalar Wr Tr D K γ s
+    exact @physicalLanglandsHolonomy_readout GState GdualState GLoop GdualLoop Scalar Wr Tr D K γ s
 
 /--
 Geometry-to-arithmetic correspondence for one lane step.
@@ -273,11 +284,12 @@ abbrev LanglandsGeometryCorrespondence
     [AddCommGroup AffineSet] [Module ℝ AffineSet]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
-    (P : ProjectedAutomorphicLFunctionWitness W)
-    (packet : LanglandsLaneArithmeticPacket (W := W) (P := P)
+    (P : ProjectedAutomorphicLFunctionData W)
+    (packet : LanglandsLaneArithmeticData (W := W) (P := P)
       (FiniteSet := FiniteSet) (AffineSet := AffineSet) (Vir := Vir) (State := State))
-    (Z : BilingualUpperHalfPlane D) :=
-  LanglandsGeometryToArithmetic D Z W P packet
+    (Z : BilingualUpperHalfPlane D) : Type _ :=
+  BilingualUpperHalfPlane.MoebiusActionDatum Z →
+    LanglandsGeometryArithmeticIntertwiner (W := W)
 
 
 /--
@@ -295,13 +307,13 @@ theorem constructLanglandsLanePacket_withGeometry
     (D : Quantum.ProjectivePolarizedBigradedBogoliubovDatum (E := E))
     (Z : BilingualUpperHalfPlane D)
     (W : SiegelEisensteinWitness Bulk Boundary)
-    (P : ProjectedAutomorphicLFunctionWitness W)
+    (P : ProjectedAutomorphicLFunctionData W)
     {FiniteSet AffineSet Vir State : Type*}
     [AddCommGroup FiniteSet] [Module ℝ FiniteSet]
     [AddCommGroup AffineSet] [Module ℝ AffineSet]
     [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
     [AddCommGroup State] [Module ℝ State]
-    (packet : LanglandsLaneArithmeticPacket (W := W) (P := P)
+    (packet : LanglandsLaneArithmeticData (W := W) (P := P)
       (FiniteSet := FiniteSet) (AffineSet := AffineSet) (Vir := Vir) (State := State))
     (C : LanglandsGeometryCorrespondence D W P packet Z)
     {ElectricState MagneticState DualCharge : Type*}
@@ -314,7 +326,7 @@ theorem constructLanglandsLanePacket_withGeometry
       GState GdualState GLoop GdualLoop Scalar Wr Tr G) :
     BilingualUpperHalfPlane.MoebiusActionDatum Z →
     LanglandsLaneCoreTarget
-      W P packet S Wr Tr G K ∧
+      W P packet S Wr Tr G ∧
     ∃ I : LanglandsGeometryArithmeticIntertwiner (W := W),
       W.siegel.comp I.bulkTransport = I.boundaryTransport.comp W.siegel ∧
       W.boundaryProjector.comp I.bulkTransport = I.bulkTransport.comp W.boundaryProjector :=

@@ -9,7 +9,7 @@ noncomputable section
 # InfoGeometry.Canonical.BoundedModularKMSBridge
 
 Adapter from the bounded modular-flow calibration layer to the existing
-operator-algebraic KMS socket.
+operator-algebraic KMS interface.
 
 This file consumes:
 

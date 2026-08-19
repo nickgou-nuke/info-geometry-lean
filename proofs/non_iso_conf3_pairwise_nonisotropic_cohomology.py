@@ -9,7 +9,7 @@ This mirrors the theorem-honest Lean layer:
   internal edge and two outer edges.
 
 It does not prove the analytic de Rham comparison theorem; that is the Lean
-socket discharged by Dupont/Gysin/rank-decision hypotheses.
+deferred_interface discharged by Dupont/Gysin/rank-decision hypotheses.
 """
 
 from __future__ import annotations
@@ -92,7 +92,7 @@ def main() -> None:
         print(f"  OS-alpha    P(t) = {p_os}")
 
     print("pairwise non-isotropic Conf3 finite cohomology/cooperad audit passed")
-    print("selected finite branch under rank-decision/log-potential socket: productLeray")
+    print("selected finite branch under rank-decision/log-potential deferred_interface: productLeray")
 
 
 if __name__ == "__main__":

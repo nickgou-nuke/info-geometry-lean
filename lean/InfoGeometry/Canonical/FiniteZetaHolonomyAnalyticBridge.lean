@@ -58,7 +58,7 @@ theorem zetaNormalizedPrimeHolonomy_analyticAt
   exact hdiff.analyticAt s
 
 /--
-The finite zeta holonomy satisfies the repository's Cauchy-analytic socket.
+The finite zeta holonomy satisfies the repository's Cauchy-analytic interface.
 
 This is only the honest one-way bridge: native Mathlib `AnalyticAt` implies the
 repo's derivative-plus-phase-linearity formulation.
@@ -71,7 +71,7 @@ def zetaHolonomy_cauchyAnalyticAt
 
 /--
 The normalized finite prime holonomy satisfies the repository's Cauchy-analytic
-socket by the same one-way bridge.
+interface by the same one-way bridge.
 -/
 def zetaNormalizedPrimeHolonomy_cauchyAnalyticAt
     {P : PrimeCutoff} (p : PrimeMode P) (s : ℂ) :
@@ -102,4 +102,3 @@ def zetaNormalizedPrimeHolonomy_lifted_doubled_cauchyAnalyticAt
     (zetaNormalizedPrimeHolonomy_analyticAt p s)
 
 end InfoGeometry.Canonical.FiniteZetaHolonomyAnalyticBridge
-

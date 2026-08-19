@@ -30,8 +30,8 @@ results.
 - `bKrein_xPlus_self`
 - `bKrein_xMinus_self`
 
-#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-Theorems are conditional on explicit witnesses such as:
+#### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES
+Theorems are conditional on explicit hypotheses such as:
 - `hJ2 : J.comp J = LinearMap.id`
 - `hBcomm : ∀ x y, B x y = B y x`
 - `hBsmulLeft : ∀ r x y, B (r • x) y = r * B x y`
@@ -92,6 +92,21 @@ theorem xMinus_idempotent (J : V →ₗ[ℝ] V)
       xMinus (1 / 2 : ℝ) J x := by
   unfold xMinus
   rw [map_smul, map_sub, J_J J hJ2 x]
+  module
+
+/-- The two finite eigenspace components annihilate each other. -/
+theorem xPlus_xMinus_zero (J : V →ₗ[ℝ] V)
+    (hJ2 : J.comp J = LinearMap.id) (x : V) :
+    xPlus (1 / 2 : ℝ) J (xMinus (1 / 2 : ℝ) J x) = 0 := by
+  unfold xPlus
+  rw [J_xMinus (1 / 2 : ℝ) J hJ2 x]
+  module
+
+theorem xMinus_xPlus_zero (J : V →ₗ[ℝ] V)
+    (hJ2 : J.comp J = LinearMap.id) (x : V) :
+    xMinus (1 / 2 : ℝ) J (xPlus (1 / 2 : ℝ) J x) = 0 := by
+  unfold xMinus
+  rw [J_xPlus (1 / 2 : ℝ) J hJ2 x]
   module
 
 /-- Finite Krein-style readback pairing induced by `J`. -/

@@ -17,7 +17,7 @@ tensor-factor statement:
 * the Brillouin twist/glide remains confined to the geometric factor.
 
 No global bundle, analytic modular uniqueness, or full compact `SU(3)` theorem
-is asserted here.  The compact form remains a real-form/socket choice after
+is asserted here.  The compact form remains a real-form/interface choice after
 complexification; the closed theorem is the rational matrix factorization.
 -/
 

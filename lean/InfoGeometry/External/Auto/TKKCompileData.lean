@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.TKKJordanPairData
 # Native TKK compilation bridge
 
 This compatibility module preserves the archived compilation idea while
-reusing the canonical TKK owner.  The aliases below are not new evidence
+reusing the canonical TKK owner.  The aliases below are not new proof
 packets: `JordanPairData` already carries the Jordan-pair identities and
 `TKKLieData` already carries the native Lie/module structure and grade
 closure laws.

@@ -175,6 +175,11 @@ structure PfaffianMatchingExpansionPacket where
   pfaffian_sq_eq_determinantEvenVolume :
     pfaffianAmplitude ^ 2 = determinantEvenVolume
 
+theorem PfaffianMatchingExpansionPacket.pairingSign_eq_one_or_neg_one
+    (P : PfaffianMatchingExpansionPacket) (p : P.PerfectPairing) :
+    P.pairingSign p = 1 ∨ P.pairingSign p = -1 := by
+  exact sq_eq_one_iff.mp (P.pairingSign_sq p)
+
 /--
 The signed Pfaffian is the signed sum over perfect pairings.
 -/
@@ -195,6 +200,18 @@ theorem determinant_even_volume_eq_pfaffian_sq
     (P : PfaffianMatchingExpansionPacket) :
     P.determinantEvenVolume = P.pfaffianAmplitude ^ 2 := by
   exact P.pfaffian_sq_eq_determinantEvenVolume.symm
+
+theorem PfaffianMatchingExpansionPacket.determinantEvenVolume_nonneg
+    (P : PfaffianMatchingExpansionPacket) :
+    0 ≤ P.determinantEvenVolume := by
+  rw [← P.pfaffian_sq_eq_determinantEvenVolume]
+  exact sq_nonneg _
+
+theorem PfaffianMatchingExpansionPacket.determinantEvenVolume_eq_zero_iff
+    (P : PfaffianMatchingExpansionPacket) :
+    P.determinantEvenVolume = 0 ↔ P.pfaffianAmplitude = 0 := by
+  rw [← P.pfaffian_sq_eq_determinantEvenVolume]
+  exact sq_eq_zero_iff
 
 /-! ## 3. Compatibility with positive-branch Pfaffian -/
 
@@ -218,6 +235,19 @@ structure PositiveBranchPfaffianCompatibility
 
   pf_pos_eq_abs_signed :
     pf_pos = |P.pfaffianAmplitude|
+
+theorem PositiveBranchPfaffianCompatibility.pf_pos_nonneg
+    {P : PfaffianMatchingExpansionPacket}
+    (C : PositiveBranchPfaffianCompatibility P) :
+    0 ≤ C.pf_pos := by
+  rw [C.pf_pos_eq_abs_signed]
+  exact abs_nonneg _
+
+theorem PositiveBranchPfaffianCompatibility.pf_pos_eq_zero_iff
+    {P : PfaffianMatchingExpansionPacket}
+    (C : PositiveBranchPfaffianCompatibility P) :
+    C.pf_pos = 0 ↔ P.pfaffianAmplitude = 0 := by
+  rw [C.pf_pos_eq_abs_signed, abs_eq_zero]
 
 /-! ## 4. Chiral arrow interpretation -/
 
@@ -283,7 +313,7 @@ the Pfaffian matching packet carries the even-volume shadow identity.
 This is the honest theorem currently owed by the packet. Stronger signed path /
 chiral-word comparison theorems require property terms, not just property types.
 -/
-theorem constructPfaffianPathBridgeTarget
+theorem pfaffian_sq_eq_determinantEvenVolume
     (P : PfaffianPathBridgePacket) :
     P.pfaffianPairings.pfaffianAmplitude ^ 2 =
       P.pfaffianPairings.determinantEvenVolume :=

@@ -65,6 +65,23 @@ def dualInverseTransition (sys : DirectInductiveSystem R I A) {i j : I} (hij : i
   map_add' phi1 phi2 := rfl
   map_smul' c phi := rfl
 
+/-- The dual transition along an identity arrow is the identity map. -/
+theorem dual_inverse_id
+    (sys : DirectInductiveSystem R I A) (i : I)
+    (phi_i : A i →ₗ[R] R) :
+    dualInverseTransition sys (le_refl i) phi_i = phi_i := by
+  dsimp [dualInverseTransition]
+  rw [sys.f_id]
+  rfl
+
+/-- The dual transition along an identity arrow is the identity linear map. -/
+theorem dual_inverse_id_map
+    (sys : DirectInductiveSystem R I A) (i : I) :
+    dualInverseTransition sys (le_refl i) = LinearMap.id := by
+  apply LinearMap.ext
+  intro phi
+  simpa using dual_inverse_id sys i phi
+
 /-- **Theorem**: Dual Inverse System Composition Property:
     g_{i, h} ∘ g_{j, i} = g_{j, h} for dual functionals. -/
 theorem dual_inverse_comp (sys : DirectInductiveSystem R I A) {i j k : I} (hij : i ≤ j) (hjk : j ≤ k) (phi_k : A k →ₗ[R] R) :
@@ -76,6 +93,18 @@ theorem dual_inverse_comp (sys : DirectInductiveSystem R I A) {i j k : I} (hij :
   have h_eval := LinearMap.congr_fun h_comp x
   dsimp at h_eval
   rw [h_eval]
+
+/-- The dual transition maps satisfy the inverse-system composition law as a
+    linear-map equality. -/
+theorem dual_inverse_comp_map
+    (sys : DirectInductiveSystem R I A) {i j k : I}
+    (hij : i ≤ j) (hjk : j ≤ k) :
+    (dualInverseTransition sys hij).comp
+        (dualInverseTransition sys hjk) =
+      dualInverseTransition sys (le_trans hij hjk) := by
+  apply LinearMap.ext
+  intro phi
+  simpa using dual_inverse_comp sys hij hjk phi
 
 /-- **Theorem**: Filtered Direct Colimit State Duality Pairings:
     The pairing <ψ_i(x), φ_inf> on the colimit equals the local stage pairing <x, φ_i>
@@ -149,6 +178,20 @@ theorem moduleColimit_desc_stage
     colimit.ι (moduleDiagram sys) i ≫ descendModuleCocone sys cocone =
       (moduleCocone sys cocone).ι.app i := by
   exact colimit.ι_desc (moduleCocone sys cocone) i
+
+/-! The descended map is uniquely determined by its finite-stage readouts. -/
+theorem descendModuleCocone_unique
+    (sys : DirectInductiveSystem R I A)
+    (cocone : InductiveCocone R sys (A_inf := A_inf))
+    (g : colimit (moduleDiagram sys) ⟶ ModuleCat.of R A_inf)
+    (hg : ∀ i,
+      colimit.ι (moduleDiagram sys) i ≫ g =
+        (moduleCocone sys cocone).ι.app i) :
+    g = descendModuleCocone sys cocone := by
+  apply colimit.hom_ext
+  intro i
+  rw [moduleColimit_desc_stage sys cocone i]
+  exact hg i
 
 variable {K : Type u} [Category.{u} K]
 

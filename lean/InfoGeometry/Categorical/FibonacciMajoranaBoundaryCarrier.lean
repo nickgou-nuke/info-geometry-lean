@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.BulkBoundaryZeroModeOwner
 /-!
 # InfoGeometry.Categorical.FibonacciMajoranaBoundaryCarrier
 
-Stage-4 bridge from the Fibonacci self-dual carrier socket to the existing
+Stage-4 bridge from the Fibonacci self-dual carrier interface to the existing
 Majorana bulk-boundary zero-mode owner.
 
 This file does not construct an O(5,5) representation or identify every

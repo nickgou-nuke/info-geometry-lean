@@ -99,32 +99,18 @@ structure SplitCliffordAtomSystem
   /-- Negative-square split generator. -/
   f : ι → Op
 
-  /-- `e_i^2 = +1`. -/
-  e_sq :
-    ∀ i : ι, e i * e i = 1
+def SplitCliffordAtomSystem.H
+    {ι Op : Type*} [Fintype ι] [Ring Op]
+    (A : SplitCliffordAtomSystem ι Op) (i : ι) : Op :=
+  A.e i * A.f i
 
-  /-- `f_i^2 = -1`. -/
-  f_sq :
-    ∀ i : ι, f i * f i = -1
-
-  /-- Same-atom anticommutation. -/
-  same_anticomm :
-    ∀ i : ι, e i * f i = -(f i * e i)
-
-  /-- Local Cartan/chiral involution. -/
-  H : ι → Op
-
-  /-- `H_i = e_i f_i`. -/
-  H_def :
-    ∀ i : ι, H i = e i * f i
-
-  /-- `H_i^2 = 1`. -/
-  H_sq :
-    ∀ i : ι, H i * H i = 1
-
-  /-- The Cartan involutions commute. -/
-  H_comm :
-    ∀ i j : ι, H i * H j = H j * H i
+def SplitCliffordAtomSystemLaws
+    {ι Op : Type*} [Fintype ι] [Ring Op]
+    (A : SplitCliffordAtomSystem ι Op) : Prop :=
+  (∀ i : ι, A.e i * A.e i = 1) ∧
+  (∀ i : ι, A.f i * A.f i = -1) ∧
+  (∀ i : ι, A.e i * A.f i = -(A.f i * A.e i)) ∧
+  (∀ i j : ι, A.H i * A.H j = A.H j * A.H i)
 
 namespace SplitCliffordAtomSystem
 
@@ -133,15 +119,30 @@ variable (A : SplitCliffordAtomSystem ι Op)
 
 /-- Re-export the local Cartan square law. -/
 theorem H_square
+    (hA : SplitCliffordAtomSystemLaws A)
     (i : ι) :
     A.H i * A.H i = 1 :=
-  A.H_sq i
+  by
+    dsimp [SplitCliffordAtomSystem.H]
+    calc
+      (A.e i * A.f i) * (A.e i * A.f i) =
+          A.e i * (A.f i * A.e i) * A.f i := by noncomm_ring
+      _ = A.e i * (-(A.e i * A.f i)) * A.f i := by
+        have hfe : A.f i * A.e i = -(A.e i * A.f i) := by
+          calc
+            A.f i * A.e i = -(-(A.f i * A.e i)) := by simp
+            _ = -(A.e i * A.f i) := by rw [hA.2.2.1 i]
+        rw [hfe]
+      _ = -(A.e i * A.e i) * (A.f i * A.f i) := by noncomm_ring
+      _ = -(1 : Op) * (-1 : Op) := by rw [hA.1 i, hA.2.1 i]
+      _ = 1 := by simp
 
 /-- Re-export commutativity of the local Cartan involutions. -/
 theorem H_mul_comm
+    (hA : SplitCliffordAtomSystemLaws A)
     (i j : ι) :
     A.H i * A.H j = A.H j * A.H i :=
-  A.H_comm i j
+  hA.2.2.2 i j
 
 /-- The local Cartan involution attached to an atom. -/
 def cartan

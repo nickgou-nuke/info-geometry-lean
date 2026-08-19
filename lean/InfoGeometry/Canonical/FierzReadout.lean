@@ -24,17 +24,30 @@ Typed Fierz readout package.
 It records scalar channels and the algebraic closure identity they must satisfy.
 -/
 @[rep_depth operator]
-structure FierzChannelReadout where
+structure FierzChannelReadoutDatum where
   State : Type
   scalar : State → ℝ
   symplectic : State → ℝ
   hilbert : State → ℝ
   area : State → ℝ
-  hilbert_nonneg : ∀ ψ, 0 ≤ hilbert ψ
-  fierzIdentity :
-    ∀ ψ, (hilbert ψ)^2 = (scalar ψ)^2 + (symplectic ψ)^2 + 4 * (area ψ)
+
+def FierzChannelReadoutValid (R : FierzChannelReadoutDatum) : Prop :=
+  (∀ ψ, 0 ≤ R.hilbert ψ) ∧
+    (∀ ψ, (R.hilbert ψ)^2 = (R.scalar ψ)^2 + (R.symplectic ψ)^2 + 4 * (R.area ψ))
+
+def FierzChannelReadout :=
+  {R : FierzChannelReadoutDatum // FierzChannelReadoutValid R}
 
 namespace FierzChannelReadout
+
+abbrev State (R : FierzChannelReadout) := R.1.State
+abbrev scalar (R : FierzChannelReadout) : R.State → ℝ := R.1.scalar
+abbrev symplectic (R : FierzChannelReadout) : R.State → ℝ := R.1.symplectic
+abbrev hilbert (R : FierzChannelReadout) : R.State → ℝ := R.1.hilbert
+abbrev area (R : FierzChannelReadout) : R.State → ℝ := R.1.area
+abbrev hilbert_nonneg (R : FierzChannelReadout) : ∀ ψ, 0 ≤ R.hilbert ψ := R.2.1
+abbrev fierzIdentity (R : FierzChannelReadout) :
+    ∀ ψ, (R.hilbert ψ)^2 = (R.scalar ψ)^2 + (R.symplectic ψ)^2 + 4 * (R.area ψ) := R.2.2
 
 /-- Majorana-shadow predicate on a Fierz readout package. -/
 @[rep_depth operator]
@@ -122,14 +135,14 @@ local notation "H₂" => InfoGeometry.Krein.DoubledSpace E
 Canonical doubled-carrier Fierz readout package from existing owner channels.
 -/
 @[rep_depth operator]
-noncomputable def doubledFierzReadout : FierzChannelReadout where
-  State := H₂
-  scalar := infoScalar (E := E)
-  symplectic := infoSymplectic (E := E)
-  hilbert := infoHilbert (E := E)
-  area := infoArea (E := E)
-  hilbert_nonneg := InfoGeometry.Quantum.Fierz.infoHilbert_nonneg (E := E)
-  fierzIdentity := information_fierz_identity (E := E)
+noncomputable def doubledFierzReadout : FierzChannelReadout :=
+  ⟨{ State := H₂
+     scalar := infoScalar (E := E)
+     symplectic := infoSymplectic (E := E)
+     hilbert := infoHilbert (E := E)
+     area := infoArea (E := E) },
+    ⟨InfoGeometry.Quantum.Fierz.infoHilbert_nonneg (E := E),
+      information_fierz_identity (E := E)⟩⟩
 
 /-- Tagged presentation property for the doubled/Krein Fierz lane. -/
 @[rep_depth operator]

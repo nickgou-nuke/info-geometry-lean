@@ -6,7 +6,7 @@ authority.  lean-auto has a strong architecture:
 
 * local/user/lemma-database fact collection;
 * monomorphization and lambda reification;
-* SMT/TPTP/native backend sockets;
+* SMT/TPTP/native backend interfaces;
 * unsat-core / premise-selection traces;
 * optional proof reconstruction through a Lean-native backend.
 

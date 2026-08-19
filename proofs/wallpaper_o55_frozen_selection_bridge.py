@@ -14,7 +14,7 @@ full_o55_generators = full_positive_rotations + full_negative_rotations + full_m
 active_compact = 10
 active_mixed_boosts = 5
 active_o55_generators = active_compact + active_mixed_boosts
-scalar_base_socket = 1
+scalar_base_deferred_interface = 1
 
 print("wallpaper count =", wallpaper_count)
 print("pg H2 exponent =", pg_h2)
@@ -30,7 +30,7 @@ print("active frozen-flow grading =", {
     "compact": active_compact,
     "mixed_boosts": active_mixed_boosts,
     "active_total": active_o55_generators,
-    "plus_scalar_base": active_o55_generators + scalar_base_socket,
+    "plus_scalar_base": active_o55_generators + scalar_base_deferred_interface,
 })
 
 assert wallpaper_count == 17
@@ -39,5 +39,5 @@ assert p6m_h2 == 4
 assert p6m_non_equiv_psa == 16
 assert full_o55_generators == 45
 assert active_o55_generators == 15
-assert active_o55_generators + scalar_base_socket == p6m_non_equiv_psa
+assert active_o55_generators + scalar_base_deferred_interface == p6m_non_equiv_psa
 print("wallpaper_o55_frozen_selection_bridge.py: bridge audit passed")

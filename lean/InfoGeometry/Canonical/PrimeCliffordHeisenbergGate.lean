@@ -75,7 +75,7 @@ theorem mertens_bounded_by_dispersion
 
 /--
 The gate exposes the supplied RH-scale dispersion bound as an explicit
-inequality, not as an arbitrary proof-carrying `Prop` socket.
+inequality, not as an arbitrary proof-carrying `Prop` interface.
 -/
 @[rep_depth operator]
 theorem dispersion_scaling

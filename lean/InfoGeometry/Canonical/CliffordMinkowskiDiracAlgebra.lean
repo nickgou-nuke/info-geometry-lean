@@ -86,10 +86,47 @@ theorem gamma0_gamma1_anticommute : gamma0 * gamma1 + gamma1 * gamma0 = 0 := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [add_apply]
 
+theorem gamma0_gamma2_anticommute : gamma0 * gamma2 + gamma2 * gamma0 = 0 := by
+  dsimp [gamma0, gamma2]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [mul_apply, Fin.sum_univ_four, add_apply]
+
+theorem gamma0_gamma3_anticommute : gamma0 * gamma3 + gamma3 * gamma0 = 0 := by
+  dsimp [gamma0, gamma3]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [mul_apply, Fin.sum_univ_four, add_apply]
+
+theorem gamma1_gamma2_anticommute : gamma1 * gamma2 + gamma2 * gamma1 = 0 := by
+  dsimp [gamma1, gamma2]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [mul_apply, Fin.sum_univ_four, add_apply, Complex.I_mul_I]
+
+theorem gamma1_gamma3_anticommute : gamma1 * gamma3 + gamma3 * gamma1 = 0 := by
+  dsimp [gamma1, gamma3]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [mul_apply, Fin.sum_univ_four, add_apply]
+
+theorem gamma2_gamma3_anticommute : gamma2 * gamma3 + gamma3 * gamma2 = 0 := by
+  dsimp [gamma2, gamma3]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [mul_apply, Fin.sum_univ_four, add_apply, Complex.I_mul_I]
+
 /-- **Theorem**: Charge Conjugation Matrix Square: C² = -I₄. -/
 theorem charge_conjugation_square : chargeConjugation * chargeConjugation = -1 := by
   dsimp [chargeConjugation, gamma2, gamma0]
   ext i j
   fin_cases i <;> fin_cases j <;> simp [mul_apply, Fin.sum_univ_four]
+
+theorem charge_conjugation_mul_neg :
+    chargeConjugation * (-chargeConjugation) = 1 := by
+  rw [mul_neg, charge_conjugation_square]
+  simp
+
+theorem neg_charge_conjugation_mul :
+    (-chargeConjugation) * chargeConjugation = 1 := by
+  rw [neg_mul, charge_conjugation_square]
+  simp
 
 end InfoGeometry.Canonical.CliffordMinkowskiDiracAlgebra

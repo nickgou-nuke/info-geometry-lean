@@ -27,7 +27,7 @@ char = sp.factor((lam*I2 - X).det())
 assert sp.expand(char - ((lam-t)**2 - (x**2+y**2+z**2))) == 0
 print("   Tr(X)=2t, det(X)=Minkowski metric, char=(λ-t)^2-|r|^2 ✓")
 
-print("§3  Lorentz/SL2C determinant invariance socket witness")
+print("§3  Lorentz/SL2C determinant invariance deferred_interface witness")
 a, b, c, d = sp.symbols("a b c d")
 L = sp.Matrix([[a, b], [c, d]])
 Xp = L * X * L.T  # algebraic transpose witness; dagger version analogous with conjugates

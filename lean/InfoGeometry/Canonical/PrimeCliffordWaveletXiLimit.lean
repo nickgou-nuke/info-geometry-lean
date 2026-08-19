@@ -6,7 +6,7 @@ import InfoGeometry.Analysis.CliffordWaveletTransform
 /-!
 # InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
 
-Prime-specific Clifford wavelet limit socket.
+Prime-specific Clifford wavelet limit interface.
 
 This file connects the Clifford-wavelet reconstruction machinery to the
 renormalized prime Lee--Yang approximants.

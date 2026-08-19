@@ -38,11 +38,32 @@ The determinant readout for the simple causal matrix model.
 def CausalDeterminant (t x y z : R) : R :=
   (CausalMatrix t x y z).det
 
+/-- The causal determinant is the split quadratic form
+`t² - x² - z² + y²`. -/
+theorem causalDeterminant_formula (t x y z : R) :
+    CausalDeterminant t x y z = t ^ 2 - x ^ 2 - z ^ 2 + y ^ 2 := by
+  simp [CausalDeterminant, CausalMatrix, Matrix.det_fin_two]
+  ring
+
 /-- 
 The determinant-zero locus in the simple causal matrix model.
 -/
 def KleinQuadric (t x y z : R) : Prop :=
   CausalDeterminant t x y z = 0
+
+/-- The finite Klein-quadric predicate is exactly the split quadratic equation. -/
+theorem kleinQuadric_iff (t x y z : R) :
+    KleinQuadric t x y z ↔ t ^ 2 - x ^ 2 - z ^ 2 + y ^ 2 = 0 := by
+  unfold KleinQuadric
+  rw [causalDeterminant_formula]
+
+/-- Positivity of the causal determinant is positivity of the split quadratic
+form in the finite matrix model. -/
+theorem causalDeterminant_pos_iff
+    {t x y z : ℝ} :
+    0 < CausalDeterminant t x y z ↔
+      0 < t ^ 2 - x ^ 2 - z ^ 2 + y ^ 2 := by
+  rw [causalDeterminant_formula]
 
 /-- 
 A logarithmic barrier potential on the open determinant-positive region.
@@ -62,8 +83,6 @@ constructed in this file.
 class MonodromyWinding where
   /-- The base manifold (Minkowski space) excluding the Klein quadric singularity. -/
   base_space : Type*
-  /-- Placeholder for the scalar observable whose winding one wants to track. -/
-  omega : base_space → ℝ
   /-- The chosen winding-number readout. -/
   winding_number : ℤ
 

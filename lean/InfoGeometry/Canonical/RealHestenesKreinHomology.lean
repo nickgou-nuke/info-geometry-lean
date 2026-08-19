@@ -21,7 +21,7 @@ open InfoGeometry.Canonical.HestenesRealStructures
 /-!
 # Real Hestenes--Krein Homology
 
-This file provides a theorem-safe real homology/cohomology socket:
+This file provides a theorem-safe real homology/cohomology interface:
 
 * a real nilpotent differential gives cycles and boundaries;
 * homology equivalence is difference by a real boundary;
@@ -122,31 +122,16 @@ theorem HomologyEquivalent_isEquivalence :
 
 /-! ## 5. Boundary-vanishing witnesses descend to homology -/
 
-/--
-A real homology property/readout.
-
-It descends to homology if it vanishes on generated boundaries.
--/
-@[rep_depth operator]
-abbrev BoundaryVanishingWitness : Type _ :=
-  InfoGeometry.Canonical.RealHomologyCohomologyDictionary.RealBoundaryOperator.BoundaryVanishingWitness
-    𝒟
-
-namespace BoundaryVanishingWitness
-
-variable {𝒟}
-variable (ω : BoundaryVanishingWitness 𝒟)
-
 /-- Boundary-vanishing witnesses are constant on homology classes. -/
 @[rep_depth operator]
 theorem descends_to_homology_equivalence
+    (ω : C →ₗ[ℝ] ℝ)
+    (hω : ∀ y : C, ω (𝒟.d y) = 0)
     {x y : C}
     (hxy : 𝒟.HomologyEquivalent x y) :
-    ω.1 x = ω.1 y := by
-  exact InfoGeometry.Canonical.RealHomologyCohomologyDictionary.RealBoundaryOperator.BoundaryVanishingWitness.descends_to_homology_equivalence
-    ω hxy
-
-end BoundaryVanishingWitness
+    ω x = ω y := by
+  exact InfoGeometry.Canonical.RealHomologyCohomologyDictionary.RealBoundaryOperator.descends_to_homology_equivalence
+    𝒟 ω hω hxy
 
 end RealDifferential
 

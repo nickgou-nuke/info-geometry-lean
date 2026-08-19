@@ -85,4 +85,25 @@ theorem cuntzGeneratorKMS_log_three_synthesis
       simp [hβ, Real.exp_neg, Real.exp_log (by norm_num : (0 : ℝ) < 3)]
     · simpa [hij] using hKMS.2 i j
 
+theorem generatorKMS_characterization
+    (φ : CuntzAlg 3 →ₗ[ℂ] ℂ) (β : ℝ) :
+    GeneratorKMSAt φ β ↔
+      (β = Real.log 3 ∧
+        φ 1 = 1 ∧
+        ∀ i j : Fin 3,
+          φ (cuntzS 3 i * cuntzSdag 3 j) =
+            if i = j then (1 / 3 : ℂ) else 0) := by
+  constructor
+  · intro hKMS
+    have h := cuntzGeneratorKMS_log_three_synthesis hKMS
+    exact ⟨h.1, hKMS.1, h.2⟩
+  · rintro ⟨hβ, hOne, hTwo⟩
+    refine ⟨hOne, ?_⟩
+    intro i j
+    rw [hTwo i j, hβ]
+    by_cases hij : i = j
+    · subst j
+      simp [Real.exp_neg, Real.exp_log (by norm_num : (0 : ℝ) < 3)]
+    · simp [hij]
+
 end InfoGeometry.Canonical

@@ -68,6 +68,17 @@ theorem bosonicInverse_mul_weylDenominator_cancel
     _ = 1 := by
             simp
 
+theorem bosonicInverse_eq_inv_weylDenominator
+    {PrimeLabel R : Type*} [Field R]
+    (S : Finset PrimeLabel)
+    (q : PrimeLabel → R)
+    (h : ∀ p ∈ S, 1 - q p ≠ 0) :
+    finitePrimeBosonicInverseDenominator S q =
+      (finitePrimeWeylDenominator S q)⁻¹ := by
+  apply eq_inv_of_mul_eq_one_left
+  simpa [mul_comm] using
+    (bosonicInverse_mul_weylDenominator_cancel S q h)
+
 
 def symmetricRootFactor
     {R : Type*} [Field R]

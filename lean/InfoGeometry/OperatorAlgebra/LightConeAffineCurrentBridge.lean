@@ -8,7 +8,7 @@ set_option linter.dupNamespace false
 namespace InfoGeometry.OperatorAlgebra.LightConeAffineCurrentBridge
 
 /--
-Affine-current socket for lightcone-arrow modes.
+Affine-current bridge for lightcone-arrow modes.
 
 This bridge does not identify the nilpotent lightcone arrows with Virasoro
 generators.  It records that selected finite symmetry elements represent the
@@ -167,17 +167,6 @@ theorem virasoro_acts_on_uMinusCurrent
   have h :=
     B.bridge.virasoro_acts_on_currents m n B.uMinusRoot hact
   simpa [uMinusCurrent, B.bridge_virasoro_eq_theorem, B.bridge_affine_eq_theorem] using h
-
-/-- The bridge central charge remains the Sugawara-calibrated central charge. -/
-@[rep_depth operator]
-theorem centralCharge_calibrated :
-    (hcc : B.bridge.centralCharge =
-      B.bridge.level * B.bridge.finiteDimension /
-        (B.bridge.level + B.bridge.dualCoxeterNumber)) →
-    B.bridge.centralCharge =
-      B.bridge.level * B.bridge.finiteDimension /
-        (B.bridge.level + B.bridge.dualCoxeterNumber) :=
-  B.bridge.centralCharge_calibrated
 
 end LightConeAffineCurrentBridge
 

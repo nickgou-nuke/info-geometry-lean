@@ -1,8 +1,6 @@
 import Mathlib.Tactic
-import InfoGeometry.Topology.FractalCantorFockWitness
+import InfoGeometry.Topology.FractalCantorFock
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Topology.CliffordFractalWaveletBridge
@@ -25,7 +23,7 @@ noncomputable section
 
 namespace InfoGeometry.Topology.CliffordFractalWaveletBridge
 
-open InfoGeometry.Topology.FractalCantorFockWitness
+open InfoGeometry.Topology.FractalCantorFock
 
 /-! ## 1. Binary addresses and fractal wavelet modes -/
 
@@ -37,21 +35,21 @@ structure FractalWaveletAddress where
   waveletOfWord : Fin depth → Bool → WaveletMode
 
 /--
-Abstract Clifford fractal wavelet socket.
+Abstract Clifford fractal wavelet system.
 
-This is the primitive socket for the corrected slogan:
+This is the primitive system for the corrected slogan:
 `geometry from Clifford fractal wavelets`.
 -/
-@[socket_debt_tag, rep_depth operator]
-structure CliffordFractalWaveletSocket
+@[rep_depth operator]
+structure CliffordFractalWaveletSystem
     (Op : Type*) [Ring Op] where
   address : FractalWaveletAddress
   representation : RealDoubledCantorCliffordRepresentation Op
 
-namespace CliffordFractalWaveletSocket
+namespace CliffordFractalWaveletSystem
 
 variable {Op : Type*} [Ring Op]
-variable (C : CliffordFractalWaveletSocket Op)
+variable (C : CliffordFractalWaveletSystem Op)
 
 /-- Tilt squares to one. -/
 @[rep_depth operator]
@@ -101,7 +99,7 @@ theorem gamma_commutator {i j : ℕ} (hij : i ≠ j) :
   simpa [sub_eq_add_neg] using
     (two_mul (-(C.representation.gamma j * C.representation.gamma i))).symm
 
-end CliffordFractalWaveletSocket
+end CliffordFractalWaveletSystem
 
 /-! ## Direct relation for the Clifford fractal wavelet generators -/
 
@@ -115,9 +113,9 @@ def IsCliffordFractalWaveletSystem
   (∀ i, gamma i * gamma i = 1) ∧
   (∀ i j, i ≠ j → gamma i * gamma j = -(gamma j * gamma i))
 
-theorem CliffordFractalWaveletSocket.isSystem
+theorem CliffordFractalWaveletSystem.isSystem
     {Op : Type*} [Ring Op]
-    (C : CliffordFractalWaveletSocket Op) :
+    (C : CliffordFractalWaveletSystem Op) :
     IsCliffordFractalWaveletSystem
       C.representation.tiltSwitch.T C.representation.tiltSwitch.S
       C.representation.gamma := by
@@ -127,9 +125,9 @@ theorem CliffordFractalWaveletSocket.isSystem
     C.representation.tiltSwitch.T_S_comm_ne,
     C.representation.gamma_sq, C.representation.gamma_anticomm⟩
 
-theorem CliffordFractalWaveletSocket.tilt_switch_product_sq
+theorem CliffordFractalWaveletSystem.tilt_switch_product_sq
     {Op : Type*} [Ring Op]
-    (C : CliffordFractalWaveletSocket Op) (j : ℕ) :
+    (C : CliffordFractalWaveletSystem Op) (j : ℕ) :
     (C.representation.tiltSwitch.T j * C.representation.tiltSwitch.S j) *
         (C.representation.tiltSwitch.T j * C.representation.tiltSwitch.S j) = -1 := by
   have hrev : C.representation.tiltSwitch.S j * C.representation.tiltSwitch.T j =
@@ -204,7 +202,7 @@ The physical coefficient is the harmonic Drazin envelope.
 @[rep_depth operator]
 structure StabilizedCliffordFractalWavelet
     (Op : Type*) [Ring Op] where
-  wavelet : CliffordFractalWaveletSocket Op
+  wavelet : CliffordFractalWaveletSystem Op
   horizon : DrazinHorizon Op
   harmonic : DrazinGreenHarmonic Op
   rawWaveletObservable : Op

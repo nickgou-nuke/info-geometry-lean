@@ -15,14 +15,12 @@ Lean remains proof authority; the overlay is an external analysis surface.
   static scanner for Lean sources, alpha-normalized wrapper silhouettes, WL hashes,
   SCC summaries, and dashboard/report generation.
 - `auto_tagger.py`
-  narrow Lean metadata tagger for exact `OwnerTarget` and `Socket` surfaces.
-  It injects `InfoGeometry.Meta.OwnerTarget` / `InfoGeometry.Meta.SocketTarget`
-  only when a matching declaration is present, and it normalizes attribute
-  stacks so owner-targets stay plain and socket-debt contracts can share a
-  combined `@[socket_debt_tag, rep_depth ...]` line.
-- `socket_debt_ledger.py`
-  derived socket audit ledger. It groups explicit `@[socket_debt_tag]`
-  declarations into ownerless and bridge-backed buckets so proof-plugging can
+  narrow Lean metadata tagger for owner-target and deferred-interface surfaces.
+  It injects the corresponding metadata only when a matching declaration is
+  present, and normalizes attribute stacks.
+- `deferred_interface_ledger.py`
+  derived deferred-interface ledger. It groups explicit deferred-interface
+  declarations into ownerless and bridge-backed buckets so proof work can
   start from a concrete list instead of a raw count.
 
 ## Smoke Test
@@ -38,16 +36,16 @@ Lane-scoped arithmetic pass:
 ```bash
 python3 tools/observability/lean_graph_overlay.py lean/InfoGeometry/Arithmetic \
   --filter-prefix InfoGeometry.Arithmetic \
-  --include-tags rep_depth,owner_target_tag,bridge_target_tag,socket_debt_tag \
+  --include-tags rep_depth,owner_target_tag,bridge_target_tag,deferred_interface_tag \
   --wl-rounds 3 \
   --out-dir reports/overlay/arithmetic_wl
 ```
 
-Socket-debt ledger:
+Deferred-interface ledger:
 
 ```bash
-python3 tools/observability/socket_debt_ledger.py lean/InfoGeometry \
-  --out-dir reports/socket_debt_ledger
+python3 tools/observability/deferred_interface_ledger.py lean/InfoGeometry \
+  --out-dir reports/deferred_interface_ledger
 ```
 
 Outputs:
@@ -66,7 +64,7 @@ python3 tools/observability/auto_tagger.py --root lean/InfoGeometry --dry-run
 python3 tools/observability/auto_tagger.py --root lean/InfoGeometry
 ```
 
-It targets only the repo's existing `OwnerTarget` and `Socket` naming
+It targets only the repo's existing `OwnerTarget` and deferred-interface naming
 conventions and ignores comments/docstring examples.
 
 ## Intended Use
@@ -74,8 +72,8 @@ conventions and ignores comments/docstring examples.
 - identify repeated wrapper silhouettes
 - inspect SCC basins and theorem-graph neighborhoods
 - generate a lightweight audit overlay before any Lean-native exporter exists
-- bulk-tag the remaining exact owner-target and socket-debt contracts without
-  widening the contract surface beyond the repo's existing `OwnerTarget` / `Socket`
+- bulk-tag the remaining exact owner-target and deferred-interface contracts
+  without widening the contract surface beyond the repo's existing metadata
   naming conventions
 
 ## Boundary

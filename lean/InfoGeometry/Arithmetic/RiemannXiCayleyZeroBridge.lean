@@ -156,6 +156,43 @@ def homogeneousEpsilon : HomogeneousLane → HomogeneousLane :=
 def homogeneousK : HomogeneousLane → HomogeneousLane :=
   fun z => (-z.2, z.1)
 
+theorem homogeneousSwap_involutive (z : HomogeneousLane) :
+    homogeneousSwap (homogeneousSwap z) = z := by
+  rcases z with ⟨p, q⟩
+  rfl
+
+theorem homogeneousEpsilon_square (z : HomogeneousLane) :
+    homogeneousEpsilon (homogeneousEpsilon z) = z := by
+  rcases z with ⟨p, q⟩
+  simp [homogeneousEpsilon]
+
+theorem homogeneousK_square (z : HomogeneousLane) :
+    homogeneousK (homogeneousK z) = -z := by
+  rcases z with ⟨p, q⟩
+  rfl
+
+theorem homogeneousK_eq_swap_epsilon (z : HomogeneousLane) :
+    homogeneousK z = homogeneousSwap (homogeneousEpsilon z) := by
+  rfl
+
+theorem homogeneousSwap_epsilon_anticommute (z : HomogeneousLane) :
+    homogeneousSwap (homogeneousEpsilon z) =
+      -homogeneousEpsilon (homogeneousSwap z) := by
+  rcases z with ⟨p, q⟩
+  ext <;> simp [homogeneousSwap, homogeneousEpsilon]
+
+theorem homogeneousEpsilon_K_anticommute (z : HomogeneousLane) :
+    homogeneousEpsilon (homogeneousK z) =
+      -homogeneousK (homogeneousEpsilon z) := by
+  rcases z with ⟨p, q⟩
+  ext <;> simp [homogeneousEpsilon, homogeneousK]
+
+theorem homogeneousK_eq_neg_epsilon_swap (z : HomogeneousLane) :
+    homogeneousK z =
+      -homogeneousEpsilon (homogeneousSwap z) := by
+  rcases z with ⟨p, q⟩
+  ext <;> simp [homogeneousK, homogeneousEpsilon, homogeneousSwap]
+
 theorem homogeneousLanes_one_sub (s : ℂ) :
     homogeneousLanes (1 - s) =
       homogeneousSwap (homogeneousLanes s) := by
@@ -165,6 +202,16 @@ theorem homogeneousLanes_one_sub (s : ℂ) :
 /-- The projective coordinate of a homogeneous pair. -/
 def homogeneousTau (z : HomogeneousLane) : ℂ :=
   z.1 / z.2
+
+theorem homogeneousTau_smul
+    (c : ℂ) (hc : c ≠ 0) (z : HomogeneousLane) :
+    homogeneousTau (c • z) = homogeneousTau z := by
+  rcases z with ⟨p, q⟩
+  by_cases hq : q = 0
+  · simp [homogeneousTau, hq]
+  · simp only [Prod.smul_mk, smul_eq_mul]
+    change (c * p) / (c * q) = p / q
+    field_simp [hc, hq]
 
 theorem homogeneousTau_lanes (s : ℂ) :
     homogeneousTau (homogeneousLanes s) = cayleyToFugacity s := by
@@ -187,6 +234,23 @@ theorem homogeneousTau_K_eq_neg_inv
 /-! A determinant-one diagonal action on the two lanes. -/
 def diagonalLaneFlow (a : ℂˣ) : HomogeneousLane → HomogeneousLane :=
   fun z => ((a : ℂ) * z.1, (a⁻¹ : ℂ) * z.2)
+
+theorem diagonalLaneFlow_one (z : HomogeneousLane) :
+    diagonalLaneFlow 1 z = z := by
+  rcases z with ⟨p, q⟩
+  simp [diagonalLaneFlow]
+
+theorem diagonalLaneFlow_mul (a b : ℂˣ) (z : HomogeneousLane) :
+    diagonalLaneFlow (a * b) z =
+      diagonalLaneFlow a (diagonalLaneFlow b z) := by
+  rcases z with ⟨p, q⟩
+  simp [diagonalLaneFlow, mul_assoc]
+  ring
+
+theorem diagonalLaneFlow_inv (a : ℂˣ) (z : HomogeneousLane) :
+    diagonalLaneFlow a⁻¹ (diagonalLaneFlow a z) = z := by
+  rw [← diagonalLaneFlow_mul]
+  simp [diagonalLaneFlow_one]
 
 theorem diagonalLaneFlow_tau
     (a : ℂˣ) {p q : ℂ} (hq : q ≠ 0) :

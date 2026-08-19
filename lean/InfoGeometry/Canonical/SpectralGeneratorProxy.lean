@@ -1,7 +1,7 @@
 /-
 InfoGeometry/Canonical/SpectralGeneratorProxy.lean
 
-Bounded proxy sockets for unbounded spectral generators.
+Bounded proxy interfaces for unbounded spectral generators.
 
 This file does not fake an unbounded closed-operator API.  It records bounded
 data extracted from a spectral generator and proves the algebraic consequences
@@ -10,7 +10,6 @@ that can be proved at this layer.
 
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -240,7 +239,7 @@ variable (B : BoundedTransformDatum K)
 
 end BoundedTransformDatum
 
-/-! ## 4. Abstract adjoint and compact-defect sockets -/
+/-! ## 4. Abstract adjoint and compact-defect interfaces -/
 
 /--
 Abstract adjoint datum on bounded endomorphisms.
@@ -258,7 +257,7 @@ abbrev adj (a : OperatorAdjointDatum (H := H)) : EndR H → EndR H :=
 end OperatorAdjointDatum
 
 /--
-Bounded Kasparov/Fredholm-cycle socket.
+Bounded Kasparov/Fredholm-cycle interface.
 
 This is intentionally property-gated.  Compactness, Fredholmness, and
 commutator compactness are not consequences of the bounded transform alone.
@@ -275,7 +274,7 @@ structure BoundedKasparovCycle
   /-- Adjoint datum. -/
   adjoint : OperatorAdjointDatum (H := H)
 
-  /-- Compact-operator ideal/socket. -/
+  /-- Compact-operator ideal/interface. -/
   compactIdeal : Set (EndR H)
 
   /-- The representation preserves the phase axis. -/
@@ -299,7 +298,7 @@ structure BoundedKasparovCycle
     ∀ a : A,
       F.comp (rep a) - (rep a).comp F ∈ compactIdeal
 
-/-! ## 5. Bridge from bounded transform to Kasparov socket -/
+/-! ## 5. Bridge from bounded transform to Kasparov interface -/
 
 /--
 Admissibility data for promoting a bounded transform to a bounded Kasparov
@@ -318,7 +317,7 @@ structure KasparovAdmissibility
   /-- Adjoint datum. -/
   adjoint : OperatorAdjointDatum (H := H)
 
-  /-- Compact-operator ideal/socket. -/
+  /-- Compact-operator ideal/interface. -/
   compactIdeal : Set (EndR H)
 
   /-- The representation preserves the phase axis. -/

@@ -24,7 +24,7 @@ def basisOfGrade (x : Grade) : IntegralSplitBasis := basisOfIndex (gradeIndex x)
 
 /-- The executable Cayley--Dickson multiplication and the explicit basis table
 are not interchangeable without an additional convention-compatibility
-theorem.  This finite witness records that the two current implementations
+theorem.  This finite discrepancy records that the two current implementations
 do not agree on every basis pair. -/
 theorem splitOctonionMul_basisMul_not_universal :
     ∃ p q : IntegralSplitBasis,

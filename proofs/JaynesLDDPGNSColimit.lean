@@ -16,7 +16,7 @@ Finite proved core:
   `UHFInductiveColimit`;
 * a GNS-like vacuum expectation is represented as a reference functional.
 
-Analytic/continuum completions remain socketed: no C⋆ completion, measure
+Analytic/continuum completions remain outside this algebraic owner: no C⋆ completion, measure
 limit, or GNS Hilbert-space completion is asserted here.
 -/
 

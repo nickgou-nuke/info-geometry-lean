@@ -49,6 +49,21 @@ theorem exponentialActivity_add_sub
   rw [exponentialActivity_mul]
   congr 1
 
+/-- A positive multiplicative dilation is an additive logarithmic shift. -/
+theorem exponentialActivity_log_shift
+    (generator deformationScale scaleFactor : ℝ)
+    (hscale : deformationScale ≠ 0) (hscaleFactor : 0 < scaleFactor) :
+    exponentialActivity
+        (generator + deformationScale * Real.log scaleFactor) deformationScale =
+      scaleFactor * exponentialActivity generator deformationScale := by
+  unfold exponentialActivity
+  have harg :
+    (generator + deformationScale * Real.log scaleFactor) / deformationScale =
+        generator / deformationScale + Real.log scaleFactor := by
+    field_simp [hscale]
+  rw [harg, Real.exp_add, Real.exp_log hscaleFactor]
+  ring
+
 theorem gibbsWeight_eq_exponentialActivity
     {Ω : Type*} [Fintype Ω] [Nonempty Ω]
     (energy : Ω → ℝ) (deformationScale : ℝ) (ω : Ω) :

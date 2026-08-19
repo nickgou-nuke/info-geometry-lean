@@ -85,7 +85,7 @@ theorem cartanEigenOperator_conjugate
 
 end Algebraic
 
-/-! ## 2. Exponential-flow calibration socket -/
+/-! ## 2. Exponential-flow calibration interface -/
 
 section ExponentialFlow
 
@@ -95,7 +95,7 @@ variable [AddCommGroup V] [Module ℝ V]
 /--
 A supplied exponential eigen-flow.
 
-The integrated calibration is `Φ_t(X) = exp(tλ) X`.  This is a socket,
+The integrated calibration is `Φ_t(X) = exp(tλ) X`.  This is an interface,
 not an analytic ODE theorem.
 -/
 @[rep_depth operator]

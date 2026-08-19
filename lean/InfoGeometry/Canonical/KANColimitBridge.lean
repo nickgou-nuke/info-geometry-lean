@@ -4,7 +4,7 @@ import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 /-!
 # KAN Colimit Bridge
 
-Theorem-safe colimit socket for KAN/Iwasawa signatures.
+Colimit transport theorems for KAN/Iwasawa signatures.
 
 A finite KAN decomposition at stage `n` is not final by itself.  The compact
 `K`, abelian/hyperbolic `A`, and parabolic/nilpotent `N` signatures must be
@@ -12,8 +12,8 @@ compatible with the bonding maps and then read through the inductive-colimit
 cone.  This file proves that transport pattern generically.
 
 No analytic Iwasawa decomposition theorem, C*-completion, `O(5,5)` theorem, or
-operator-algebraic uniqueness statement is asserted here.  Those belong to
-specialized owner modules as explicit witnesses.
+operator-algebraic uniqueness statement is asserted here.  The file proves
+only the stated finite-stage compatibility and direct-limit transport laws.
 -/
 
 namespace InfoGeometry.Canonical.KANColimitBridge

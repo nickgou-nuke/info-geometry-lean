@@ -29,26 +29,34 @@ The full coherence geometry over a Cuntz-Cantor tensor tree.
 It instantiates the abstract `R` with the concrete `CuntzConditionalExpectation`
 and introduces the `θ` twist.
 -/
-structure CantorTwistedThompsonCoherence (n N : ℕ) where
-  
-  /-- The underlying Thompson-Braided Coherence on the Cuntz algebra.
-      Note: Since C* algebras are associative, α = 0, but the signature
-      remains valid as a classical/degenerate quasi-tensor leaf. -/
-  baseCoherence : ThompsonBraidedCoherence (CuntzAlg n) N
-  
-  /-- The framing twist `θ` drawn from the G₂-twisted braiding framework.
-      It controls the orientability/chirality of the tensor sectors. -/
-  framingTwist : G2TwistedSystem (Fin N)
-  
-  /-- The coarse-graining flow `R` is exactly the canonical Cuntz conditional
-      expectation down to the diagonal Cantor boundary. -/
-  coarseGraining_eq_cuntzExpectation :
-    baseCoherence.coarseGraining = expectation n
+def CantorTwistedThompsonCoherenceLaws (n N : ℕ)
+    (baseCoherence : ThompsonBraidedCoherence (CuntzAlg n) N)
+    (framingTwist : G2TwistedSystem (Fin N)) : Prop :=
+  baseCoherence.coarseGraining = expectation n ∧
+    ∀ (x : CuntzAlg n) (i j : Fin N),
+      baseCoherence.coarseGraining (framingTwist.val i j • x) =
+        framingTwist.val i j • baseCoherence.coarseGraining x
 
-  /-- The framing twist is preserved by the conditional expectation (it is a pure
-      boundary phase/diagonal invariant). -/
-  twist_coherence : ∀ (x : CuntzAlg n) (i j : Fin N),
-    baseCoherence.coarseGraining (framingTwist.val i j • x) =
-      framingTwist.val i j • baseCoherence.coarseGraining x
+def CantorTwistedThompsonCoherence (n N : ℕ) :=
+  {p : ThompsonBraidedCoherence (CuntzAlg n) N × G2TwistedSystem (Fin N) //
+    CantorTwistedThompsonCoherenceLaws n N p.1 p.2}
+
+def CantorTwistedThompsonCoherence.baseCoherence
+    {n N : ℕ} (A : CantorTwistedThompsonCoherence n N) :
+    ThompsonBraidedCoherence (CuntzAlg n) N := A.1.1
+
+def CantorTwistedThompsonCoherence.framingTwist
+    {n N : ℕ} (A : CantorTwistedThompsonCoherence n N) :
+    G2TwistedSystem (Fin N) := A.1.2
+
+theorem CantorTwistedThompsonCoherence.coarseGraining_eq_cuntzExpectation
+    {n N : ℕ} (A : CantorTwistedThompsonCoherence n N) :
+    A.baseCoherence.coarseGraining = expectation n := A.2.1
+
+theorem CantorTwistedThompsonCoherence.twist_coherence
+    {n N : ℕ} (A : CantorTwistedThompsonCoherence n N)
+    (x : CuntzAlg n) (i j : Fin N) :
+    A.baseCoherence.coarseGraining (A.framingTwist.val i j • x) =
+      A.framingTwist.val i j • A.baseCoherence.coarseGraining x := A.2.2 x i j
 
 end InfoGeometry.Algebra.CantorThompsonBridge

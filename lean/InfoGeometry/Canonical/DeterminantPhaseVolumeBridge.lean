@@ -6,11 +6,11 @@ noncomputable section
 /-!
 # InfoGeometry.Canonical.DeterminantPhaseVolumeBridge
 
-Theorem-safe determinant/phase-volume and RG fixed-point sockets.
+Determinant/phase-volume and RG fixed-point theorems.
 
 This file deliberately does not model determinant as a ring homomorphism out of
-operators.  Determinant/phase-volume data is a calibrated readout channel, and
-flow invariance is supplied as an explicit law.  Renormalization fixed-point
+operators.  Determinant/phase-volume data is a readout channel, and flow
+invariance is supplied as an explicit law.  Renormalization fixed-point
 invariance is kept as a separate theorem surface.
 -/
 

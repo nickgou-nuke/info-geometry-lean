@@ -119,7 +119,7 @@ def HasDrivenShear
 /--
 A covariant readout of operator strain.
 
-This is the Erlanger socket for quantities such as effective metric,
+This is the Erlangen interface for quantities such as effective metric,
 curvature, Einstein tensor, stress tensor, or anomaly current.
 -/
 structure CovariantReadout
@@ -258,59 +258,5 @@ abbrev anomaly_protected_by_charge :
         P.anomalyReadout s ≠ 0 := P.2
 
 end ProtectedAnomalyDatum
-
-/--
-A stabilization property for the “flat membrane snaps into tubule” mechanism.
-
-This is intentionally model-level.  Clifford grading plus anomaly data do not
-alone prove stability; a variational/energy property is required.
--/
-structure AnomalousTubuleStabilizationWitness
-    (State : Type*) where
-  flatVacuum : State → Prop
-  stableNonflat : State → Prop
-
-  anomaly : State → ℝ
-  topologicalCharge : State → ℤ
-  energy : State → ℝ
-
-  /-- Protected nonzero anomaly and charge force a stable non-flat solution. -/
-  anomaly_charge_forces_stable_nonflat :
-    ∀ s : State,
-      anomaly s ≠ 0 →
-      topologicalCharge s ≠ 0 →
-        ∃ y : State, stableNonflat y
-
-/-! ## 6. GR/Erlanger property layer -/
-
-/--
-An Erlanger-GR reconstruction property.
-
-This says that effective geometric data are reconstructed from driven operator
-shear and anomaly-height data.  It does not assert the Einstein equations as a
-universal theorem.
--/
-structure ErlangerGRReconstructionWitness
-    (G : Type*) (Op : Type*) [Group G] [Ring Op]
-    (α : SymmetryAction G Op)
-    (Geometry : Type*) where
-  inertial : InertialStage Op
-  drivenFlow : DrivenOperatorFlow Op
-
-  curvatureReadout :
-    CurvatureFromShear G Op α Geometry
-
-  /-- Model-specific effective geometry extracted from shear. -/
-  effectiveGeometry :
-    Op → Geometry
-
-  effectiveGeometry_eq_curvature :
-    ∀ shear : Op,
-      effectiveGeometry shear =
-        curvatureReadout.curvatureOf shear
-
-  /-- Height/scale reconstructed from anomaly data. -/
-  heightDatum :
-    FiniteAnomalyHeightDatum Op
 
 end InfoGeometry.Geometry.AnomalousErlangerHeight

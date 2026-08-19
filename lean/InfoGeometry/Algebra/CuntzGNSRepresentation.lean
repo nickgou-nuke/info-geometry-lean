@@ -50,7 +50,8 @@ def gnsNull (φ : CuntzAlg n →ₗ[ℂ] ℂ) (a : CuntzAlg n) : Prop :=
 
 theorem gnsNull_zero (φ : CuntzAlg n →ₗ[ℂ] ℂ) :
     gnsNull φ 0 := by
-  simp [gnsNull, kmsInner]
+  unfold gnsNull kmsInner
+  rw [star_zero, zero_mul, map_zero]
 
 theorem gnsNull_smul (φ : CuntzAlg n →ₗ[ℂ] ℂ)
     (c : ℂ) {a : CuntzAlg n} (ha : gnsNull φ a) :
@@ -97,7 +98,8 @@ theorem leftMultiplication_mul
   (n : ℕ) (a b : CuntzAlg n) (x : CuntzAlg n) :
       leftMultiplication n a (leftMultiplication n b x) =
         leftMultiplication n (a * b) x := by
-    simp [leftMultiplication, LinearMap.mulLeft_apply]
+    change a * (b * x) = (a * b) * x
+    exact (mul_assoc a b x).symm
 
 theorem kmsInner_leftMultiplication_star
     (φ : CuntzAlg n →ₗ[ℂ] ℂ)

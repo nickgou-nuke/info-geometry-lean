@@ -88,7 +88,7 @@ theorem eta_selfadjoint : star eta = eta := by
   ext i j <;> fin_cases i <;> fin_cases j <;> simp [eta]
 
 /-- Finite linear shadow of the unified Dirac--Krein--Tomita adjoint:
-`X ↦ η X† η`.  The antiunitary Tomita `J` is intentionally socketed below. -/
+`X ↦ η X† η`.  The antiunitary Tomita `J` is outside this finite owner. -/
 def dktAdjoint (X : M2C) : M2C := eta * star X * eta
 
 /-- The finite DKT/Krein adjoint shadow is involutive. -/
@@ -113,7 +113,7 @@ theorem dktAdjoint_stageOperator (lam : ℝ) : dktAdjoint (stageOperator lam) = 
 
 /-- On the diagonal Cayley boundary, the finite DKT/Krein shadow collapses to the
 ordinary Hilbert adjoint.  This is the finite algebraic version of
-`U⋆ = U* = U⁻¹`; the full anti-linear Tomita step remains socketed. -/
+`U⋆ = U* = U⁻¹`; the full anti-linear Tomita step remains outside this finite owner. -/
 theorem dktAdjoint_cayleyStage_eq_star (lam : ℝ) :
     dktAdjoint (cayleyStage lam) = star (cayleyStage lam) := by
   ext i j <;> fin_cases i <;> fin_cases j <;>

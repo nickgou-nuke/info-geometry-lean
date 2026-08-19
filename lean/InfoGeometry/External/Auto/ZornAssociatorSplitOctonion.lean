@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 
 /-!
-# Zorn Associator and Split-Octonion Witness
+# Zorn Associator and Split-Octonion Data
 
 The determinant/null bridge gives the vector-matrix container.  This layer
 records the key split-octonion feature: Zorn multiplication is generally

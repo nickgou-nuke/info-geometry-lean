@@ -174,7 +174,7 @@ theorem fibonacciBraid_cuntz_nonabelian
   have h_mat_eq := h_inj h_eq
   exact fibonacci_generators_noncommute h_mat_eq
 
-/-! ## Itakura--Saito socket and conjugation invariance -/
+/-! ## Itakura--Saito interface and conjugation invariance -/
 
 /-! ## Itakura--Saito divergence on the native Cuntz image -/
 

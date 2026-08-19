@@ -1,6 +1,6 @@
 import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
-import InfoGeometry.OperatorAlgebra.SplitOctonionDerivationWitness
+import InfoGeometry.OperatorAlgebra.SplitOctonionDerivationData
 import InfoGeometry.Lie.SplitOctonionStandardDerivation
 
 /-!
@@ -16,7 +16,7 @@ noncomputable section
 namespace InfoGeometry.Lie.G2FromSplitOctonions
 
 open InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication
-open InfoGeometry.OperatorAlgebra.SplitOctonions.DerivationWitness
+open InfoGeometry.OperatorAlgebra.SplitOctonions.DerivationData
 
 def DerivSpace : Type := SplitOct → SplitOct
 

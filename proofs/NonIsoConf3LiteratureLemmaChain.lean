@@ -10,7 +10,7 @@ import proofs.NonIsoConf3LogCFTPotential
 # Literature lemma chain for the non-isotropic three-point problem
 
 This file records the genuine external lemma chain needed to discharge the
-remaining sockets.  It deliberately does not assert the analytic comparison
+remaining interfaces.  It deliberately does not assert the analytic comparison
 theorems as proved in Lean; instead it names the exact mathematical bridges
 that must be supplied.
 

@@ -31,7 +31,8 @@ theorem superBracket_eq_mul_sub_sign (px py : Bool) (x y : A) :
     superBracket px py x y =
       x * y - gradedSign (R := R) px py • (y * x) := by
   cases px <;> cases py <;>
-    simp [superBracket, gradedSign, commutator, anticommutator, sub_eq_add_neg]
+    simp [superBracket, gradedSign, InvariantTransport.commutator,
+      InvariantTransport.anticommutator, sub_eq_add_neg]
 
 /-- The graded-symmetric/Jordan companion of `superBracket`. -/
 def gradedJordanProduct (px py : Bool) (x y : A) : A :=
@@ -68,12 +69,16 @@ theorem gradedProduct_decomposition (px py : Bool) (x y : A) :
         ((2 : R)⁻¹ • u + (2 : R)⁻¹ • v) := by
     simpa [smul_add, smul_sub] using (hhalf_sub_add u v).symm
   cases px <;> cases py <;>
-    simp [gradedJordanProduct, gradedSign, superBracket, commutator,
-      anticommutator]
-  · simpa only [smul_sub] using hhalf_add_sub_expanded (x * y) (y * x)
-  · simpa only [smul_sub] using hhalf_add_sub_expanded (x * y) (y * x)
-  · simpa only [smul_sub] using hhalf_add_sub_expanded (x * y) (y * x)
-  · simpa [sub_eq_add_neg] using hhalf_sub_add_expanded (x * y) (y * x)
+    simp [gradedJordanProduct, gradedSign, superBracket,
+      InvariantTransport.commutator, InvariantTransport.anticommutator]
+  · simpa only [smul_sub, InvariantTransport.commutator] using
+      hhalf_add_sub_expanded (x * y) (y * x)
+  · simpa only [smul_sub, InvariantTransport.commutator] using
+      hhalf_add_sub_expanded (x * y) (y * x)
+  · simpa only [smul_sub, InvariantTransport.commutator] using
+      hhalf_add_sub_expanded (x * y) (y * x)
+  · simpa [sub_eq_add_neg, InvariantTransport.anticommutator] using
+      hhalf_sub_add_expanded (x * y) (y * x)
 
 theorem gradedJordanProduct_swap (px py : Bool) (x y : A) :
     gradedJordanProduct (R := R) px py x y =
@@ -87,7 +92,8 @@ theorem superBracket_graded_skew (px py : Bool) (x y : A) :
     superBracket px py x y =
       - gradedSign (R := R) px py • superBracket py px y x := by
   cases px <;> cases py <;>
-    simp [superBracket, gradedSign, commutator, anticommutator,
+    simp [superBracket, gradedSign, InvariantTransport.commutator,
+      InvariantTransport.anticommutator,
       smul_smul, add_comm, add_left_comm, add_assoc]
 
 theorem superBracket_superJacobi (px py pz : Bool) (x y z : A) :
@@ -98,7 +104,8 @@ theorem superBracket_superJacobi (px py pz : Bool) (x y z : A) :
         gradedSign (R := R) pz py •
           superBracket pz (px ^^ py) z (superBracket px py x y) = 0 := by
   cases px <;> cases py <;> cases pz <;>
-    simp [gradedSign, superBracket, commutator, anticommutator,
+    simp [gradedSign, superBracket, InvariantTransport.commutator,
+      InvariantTransport.anticommutator,
       Bool.xor, smul_add, smul_sub, smul_smul] <;>
     noncomm_ring
 

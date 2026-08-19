@@ -9,7 +9,7 @@ This file proves the finite optical conservation identity:
       =>
   1 - R† R = V† V.
 
-The theorem is constructive and contains no physical property socket.
+The theorem is constructive and contains no physical property assumption.
 Physical interpretations such as "metal lattice", "heat", or "commutant" are
 added in later calibration layers.
 -/

@@ -61,7 +61,7 @@ A spectral ground-state packet for a physical Hamiltonian.
 
 The field `energy_nonnegative` is the concrete quadratic-form positivity
 condition used below.  The no-negative-eigenvectors statement is derived from
-that positivity theorem, not stored as a separate property socket.
+that positivity theorem, not stored as a separate property field.
 -/
 structure SpectralGroundState
     (V : Type*) [NormedAddCommGroup V] [InnerProductSpace ℝ V] where

@@ -101,6 +101,38 @@ theorem boundedOperatorBregman_self
     boundedOperatorBregman (E := E) ψ Phi gradPhi X X = 0 := by
   simp [boundedOperatorBregman]
 
+/-! ## Convexity boundary for the bounded noncommutative readout -/
+
+/--
+First-order convexity datum for a bounded operator potential.
+
+The product remains the noncommutative operator product and is converted to a
+real number only by the chosen Krein expectation.  No commutativity or
+analytic derivative is built into this boundary: the lower tangent inequality
+is the explicit hypothesis needed for nonnegativity.
+-/
+structure BoundedOperatorFirstOrderConvexityDatum
+    (ψ : H₂)
+    (Phi : OperatorPrimal (E := E) → ℝ)
+    (gradPhi : OperatorPrimal (E := E) → OperatorDual (E := E)) : Prop where
+  lower_bound : ∀ X Y,
+    Phi Y + operatorProductPairing (E := E) ψ (gradPhi Y) (X - Y) ≤
+      Phi X
+
+/--
+The bounded noncommutative Bregman divergence is nonnegative under the
+explicit first-order convexity datum.
+-/
+theorem boundedOperatorBregman_nonneg
+    (ψ : H₂)
+    (Phi : OperatorPrimal (E := E) → ℝ)
+    (gradPhi : OperatorPrimal (E := E) → OperatorDual (E := E))
+    (C : BoundedOperatorFirstOrderConvexityDatum (E := E) ψ Phi gradPhi)
+    (X Y : OperatorPrimal (E := E)) :
+    0 ≤ boundedOperatorBregman (E := E) ψ Phi gradPhi X Y := by
+  unfold boundedOperatorBregman
+  linarith [C.lower_bound X Y]
+
 /-- A Souriau representation by bounded operators on the real doubled carrier. -/
 @[rep_depth thermo]
 abbrev SouriauOperatorRepresentation (g : Type*) :=

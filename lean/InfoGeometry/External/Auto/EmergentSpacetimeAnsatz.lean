@@ -103,7 +103,7 @@ theorem null_cone_locus_iff_minkowski_null
   rw [null_cone_locus, determinant_is_minkowski_norm_proved X hx]
   norm_cast
 
-/-- The finite spacetime ansatz is witnessed by the owner Pauli representative. -/
+/-- The finite spacetime ansatz is represented by the owner Pauli representative. -/
 def emergent_spacetime_ansatz : Prop :=
   ∃ t x y z : ℝ,
     is_hermitian (PauliZornTrifactor.pauliHermitian t x y z) ∧

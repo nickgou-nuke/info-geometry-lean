@@ -29,6 +29,14 @@ noncomputable def jForm (u : SplitKreinSpace (E := E)) : ℝ :=
 @[simp] theorem jForm_eq_kreinInner_twist (u : SplitKreinSpace (E := E)) :
     jForm (E := E) u = KreinSpace.kreinInner (H := H₂) u (spectral_epsilon (E := E) u) := rfl
 
+/-- The Hilbertized Krein form is nonnegative on the doubled carrier. -/
+theorem jForm_nonneg (u : SplitKreinSpace (E := E)) :
+    0 ≤ jForm (E := E) u := by
+  unfold jForm
+  rw [krein_inner_prod_l2 (E := E)]
+  simp [spectral_epsilon, WithLp.prod_inner_apply]
+  positivity
+
 /-- A vector is null when its split quadratic form vanishes. -/
 def IsNull (u : SplitKreinSpace (E := E)) : Prop :=
   qform (E := E) u = 0

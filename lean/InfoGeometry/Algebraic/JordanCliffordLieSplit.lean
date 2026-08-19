@@ -43,4 +43,25 @@ theorem jordan_lie_split (a b : A) :
   rw [← add_smul]
   norm_num
 
+theorem jordanProduct_comm (a b : A) :
+    jordanProduct a b = jordanProduct b a := by
+  unfold jordanProduct
+  rw [add_comm]
+
+theorem jordanProduct_self (a : A) :
+    jordanProduct a a = a * a := by
+  unfold jordanProduct
+  module
+
+theorem lieBracket_anti (a b : A) :
+    lieBracket b a = -lieBracket a b := by
+  unfold lieBracket
+  rw [← smul_neg]
+  simp [sub_eq_add_neg, add_comm]
+
+theorem lieBracket_self (a : A) :
+    lieBracket a a = 0 := by
+  unfold lieBracket
+  simp
+
 end InfoGeometry.Algebraic

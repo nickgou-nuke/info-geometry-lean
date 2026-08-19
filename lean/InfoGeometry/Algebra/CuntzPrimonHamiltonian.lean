@@ -74,4 +74,32 @@ theorem H_pow_eq (n : ℕ) (ε : Fin n → ℂ) (k : ℕ) :
       rw [h₁ i]
   exact h_main k
 
+theorem H_pow_mul_P (n : ℕ) (ε : Fin n → ℂ) (k : ℕ) (i : Fin n) :
+    (hamiltonian n ε) ^ k * P n i = (ε i) ^ k • P n i := by
+  rw [H_pow_eq]
+  rw [Finset.sum_mul]
+  have h : ∀ j, ((ε j) ^ k • P n j) * P n i =
+      (if j = i then (ε i) ^ k • P n i else 0) := by
+    intro j
+    by_cases hji : j = i
+    · subst j
+      simp [P_idem n i]
+    · simp [P_ortho n hji, hji]
+  rw [Finset.sum_congr rfl (fun j _ => h j)]
+  simp [Finset.mem_univ]
+
+theorem P_mul_H_pow (n : ℕ) (ε : Fin n → ℂ) (k : ℕ) (i : Fin n) :
+    P n i * (hamiltonian n ε) ^ k = (ε i) ^ k • P n i := by
+  rw [H_pow_eq]
+  rw [Finset.mul_sum]
+  have h : ∀ j, P n i * ((ε j) ^ k • P n j) =
+      (if j = i then (ε i) ^ k • P n i else 0) := by
+    intro j
+    by_cases hji : j = i
+    · subst j
+      simp [P_idem n i]
+    · simp [P_ortho n (Ne.symm hji), hji]
+  rw [Finset.sum_congr rfl (fun j _ => h j)]
+  simp [Finset.mem_univ]
+
 end InfoGeometry.Algebra.CuntzPrimonHamiltonian

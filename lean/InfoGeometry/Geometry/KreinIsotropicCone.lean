@@ -223,24 +223,16 @@ end DefectMapsToIsotropic
 
 /-! ## Owner target -/
 
-/--
-Owner target for connecting represented algebraic defects to carrier-null
-geometry.
--/
-def DefectToIsotropicOwnerTarget
-    (Split H : Type*) [AddCommGroup H] [Module ℝ H]
-    (Q : KreinQuadraticDatum H) : Prop :=
-  ∀ W : DefectMapsToIsotropic Split H Q,
-    (∀ a : Split, a ∈ W.defectLocus →
-      W.carrierReadout a ∈ IsotropicCone Q) ∧
-    (∀ a : Split, a ∈ W.defectLocus →
-      Q.q (W.carrierReadout a) = 0)
+/-! ## Native defect-to-isotropic theorem -/
 
-/-- The represented defect bridge supplies the null-cone readout laws. -/
-theorem defectToIsotropicOwnerTarget
+theorem defect_to_isotropic
     (Split H : Type*) [AddCommGroup H] [Module ℝ H]
     (Q : KreinQuadraticDatum H) :
-    DefectToIsotropicOwnerTarget Split H Q := by
+    ∀ W : DefectMapsToIsotropic Split H Q,
+      (∀ a : Split, a ∈ W.defectLocus →
+        W.carrierReadout a ∈ IsotropicCone Q) ∧
+      (∀ a : Split, a ∈ W.defectLocus →
+        Q.q (W.carrierReadout a) = 0) := by
   intro W
   exact ⟨
     (fun a ha => W.defect_mem_isotropic ha),

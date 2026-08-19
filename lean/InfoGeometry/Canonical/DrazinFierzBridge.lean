@@ -1,11 +1,10 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # Drazin--Fierz bridge
 
-Böttcher--Spitkovsky-style two-projection socket for Drazin-stable Fierz
+Böttcher--Spitkovsky-style two-projection interface for Drazin-stable Fierz
 readouts, stated in expectation-only form.
 
 This file is a local operator chart, not a theorem that two projections
@@ -76,7 +75,7 @@ abbrev FiberMatrix :=
 The trace-free Böttcher--Spitkovsky fiber representation.
 
 In the paper the entries are essentially bounded complex functions on the
-spectrum of the relative-position operator `H`.  This socket keeps the domain
+spectrum of the relative-position operator `H`.  This interface keeps the domain
 as `ℝ`; spectral support and spectral measure are supplied separately.
 -/
 @[rep_depth operator]
@@ -149,7 +148,7 @@ end BSExpectationPhi
 Essential separation from zero on a spectral stratum.
 
 `νH` is the spectral measure associated with the relative-position operator.
-This is a measure-theoretic socket; no spectral theorem is proved here.
+This is a measure-theoretic interface; no spectral theorem is proved here.
 -/
 @[rep_depth operator]
 def EssSeparatedFromZeroOn
@@ -207,7 +206,7 @@ structure NoTraceDrazinData
 
 end BSExpectationPhi
 
-/-! ## 3. Drazin-stable Fierz readout sockets -/
+/-! ## 3. Drazin-stable Fierz readout interfaces -/
 
 /--
 Model-specific map extracting normalized Fierz coordinates from the stable
@@ -438,7 +437,7 @@ theorem drazin_filter_lands_on_fierz_quadric
     C.residual (C.readout Φ νH σH) = 0 :=
   C.sound Φ νH σH hD
 
-/-! ## 5. Strong alternating-projection limit socket -/
+/-! ## 5. Strong alternating-projection limit interface -/
 
 /-- Strong operator convergence of bounded-operator sequences. -/
 @[rep_depth operator]
@@ -475,7 +474,7 @@ theorem alternating_projection_strong_limit
     StrongTendsto A.step A.limit :=
   A.strong_limit
 
-/-! ## 6. Expectation-correlation Birkhoff socket -/
+/-! ## 6. Expectation-correlation Birkhoff interface -/
 
 /-- A stochastic channel observable sampled along discrete time. -/
 @[rep_depth projective]
@@ -553,7 +552,7 @@ def permutationMatrix4 (π : Equiv.Perm (Fin 4)) :
     Matrix (Fin 4) (Fin 4) ℝ :=
   fun i j => if π i = j then 1 else 0
 
-/-- Birkhoff decomposition socket for a bistochastic `4 × 4` matrix. -/
+/-- Birkhoff decomposition interface for a bistochastic `4 × 4` matrix. -/
 @[rep_depth projective]
 structure BirkhoffDecomposition4
     (B : Bistochastic4) where

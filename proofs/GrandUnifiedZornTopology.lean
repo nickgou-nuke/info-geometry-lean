@@ -7,7 +7,7 @@ import proofs.NonAbelianBrillouinKleinBottle
 # Grand Unified Zorn Topology
 
 This module integrates the algebraic Zorn matrix engine with the topological
-Brillouin Klein Bottle and the O(5,5) String Duality sockets.
+Brillouin Klein Bottle and the O(5,5) String Duality interfaces.
 
 It mathematically formalizes how the continuous `scaledZornPhi` braid
 representations interface with the discrete topological folds.

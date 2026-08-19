@@ -1,5 +1,4 @@
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
 import InfoGeometry.Canonical.PrimeHurwitzLimit
 
@@ -282,7 +281,7 @@ Lee--Yang zero-free theorem after Riemann pullback.
 If the pulled partition function vanishes, the shifted field must lie on the
 imaginary axis.
 -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem zero_implies_field_re_zero
     (D : FinitePrimeChainData N)
     (LY : LeeYangPolydiscWitness)
@@ -305,7 +304,7 @@ theorem zero_implies_field_re_zero
 /-- Under the supplied pullback chart, a zero of the finite pulled partition has
 real coordinate `1/2`.  This is a chart-local Lee--Yang readout, not a theorem
 about Riemann zeta zeros. -/
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem zero_implies_critical_line
     (D : FinitePrimeChainData N)
     (LY : LeeYangPolydiscWitness)
@@ -334,6 +333,114 @@ def partitionPolynomial
   ∑ σ : SpinConfig N,
     Polynomial.C ((configurationWeight D lam σ : ℝ) : ℂ) *
       Polynomial.X ^ occupiedCount σ
+
+/-! ## One-site Lee--Yang closure -/
+
+private theorem oneSite_hopfieldWeight_eq
+    (D : FinitePrimeChainData 1)
+    (lam : ℝ)
+    (σ : SpinConfig 1) :
+    hopfieldInteractionWeight D lam σ =
+      hopfieldInteractionWeight D lam (fun _ => false) := by
+  have hσ : σ 0 = true ∨ σ 0 = false := by
+    cases h : σ 0 <;> simp [h]
+  rcases hσ with hσ | hσ
+  · have hfun : σ = (fun _ => true) := by
+      funext i
+      have hi : i = 0 := Fin.eq_zero i
+      subst i
+      exact hσ
+    subst σ
+    simp [hopfieldInteractionWeight, centeredLogMagnetization, centeredBit,
+      Fin.sum_univ_succ]
+  · have hfun : σ = (fun _ => false) := by
+      funext i
+      have hi : i = 0 := Fin.eq_zero i
+      subst i
+      exact hσ
+    subst σ
+    rfl
+
+private theorem oneSite_configurationWeight_eq_one
+    (D : FinitePrimeChainData 1)
+    (lam : ℝ)
+    (σ : SpinConfig 1) :
+    configurationWeight D lam σ = 1 := by
+  unfold configurationWeight interactionEnergy
+  simp [D.spinCoupling_self, Fin.sum_univ_succ]
+
+theorem oneSite_partitionPolynomial_eq
+    (D : FinitePrimeChainData 1)
+    (lam : ℝ) :
+    partitionPolynomial D lam =
+      Polynomial.X + 1 := by
+  classical
+  let e : (SpinConfig 1) ≃ Bool := Equiv.funUnique (Fin 1) Bool
+  unfold partitionPolynomial
+  calc
+    (∑ σ : SpinConfig 1,
+      Polynomial.C ((configurationWeight D lam σ : ℝ) : ℂ) *
+        Polynomial.X ^ occupiedCount σ) =
+        ∑ b : Bool, Polynomial.X ^ (if b then 1 else 0) := by
+      apply Fintype.sum_equiv e
+      intro σ
+      have hweight := oneSite_configurationWeight_eq_one D lam σ
+      have hocc : occupiedCount σ = if e σ then 1 else 0 := by
+        by_cases h : σ 0 = true
+        · have hfun : σ = (fun _ => true) := by
+            funext i
+            have hi : i = 0 := Fin.eq_zero i
+            subst i
+            exact h
+          subst σ
+          simp [occupiedCount, e]
+        · have h' : σ 0 = false := Bool.eq_false_of_not_eq_true h
+          have hfun : σ = (fun _ => false) := by
+            funext i
+            have hi : i = 0 := Fin.eq_zero i
+            subst i
+            exact h'
+          subst σ
+          simp [occupiedCount, e]
+      rw [hweight, hocc]
+      simp
+    _ = Polynomial.X + 1 := by
+      simp [Polynomial.C_mul, mul_add, add_mul, mul_one, one_mul]
+
+theorem oneSite_partitionPolynomial_root_on_leeYangCircle
+    (D : FinitePrimeChainData 1)
+    (lam : ℝ)
+    (z : ℂ)
+    (hz : (partitionPolynomial D lam).IsRoot z) :
+    OnUnitCircle z := by
+  have hpoly := oneSite_partitionPolynomial_eq D lam
+  have hw :
+      (1 : ℂ) ≠ 0 := by
+    norm_num
+  have hfactor :
+      (1 : ℂ) * ((Polynomial.X + 1).eval z) = 0 := by
+    rw [hpoly] at hz
+    simpa [Polynomial.eval_mul] using hz
+  have hlinear : (Polynomial.X + 1).eval z = 0 :=
+    (mul_eq_zero.mp hfactor).resolve_left hw
+  have hzneg : z = -1 := by
+    have hlinear' : z + 1 = 0 := by
+      simpa [Polynomial.eval_add, Polynomial.eval_X] using hlinear
+    linear_combination hlinear'
+  rw [hzneg]
+  simp [OnUnitCircle, Complex.normSq]
+
+/-! The one-site polynomial supplies a concrete finite Lee--Yang witness.
+This closes only the `N = 1` case; the general Asano/Grace contraction remains
+represented by `LeeYangPolynomialWitness` below. -/
+theorem oneSite_leeYang_polynomial_witness
+    (D : FinitePrimeChainData 1)
+    {lam : ℝ}
+    (_hLam : 0 ≤ lam)
+    (z : ℂ)
+    (hz : (partitionPolynomial D lam).IsRoot z) :
+    OnUnitCircle z := by
+  exact oneSite_partitionPolynomial_root_on_leeYangCircle D lam z hz
 
 /-- The corresponding partition function is polynomial evaluation. -/
 @[rep_depth thermo]
@@ -364,22 +471,6 @@ def LeeYangPolynomialWitness : Prop :=
     0 ≤ lam →
       ∀ z : ℂ, (partitionPolynomial D lam).IsRoot z →
         OnUnitCircle z
-
-namespace LeeYangPolynomialWitness
-
-/-- Re-export of the supplied Lee--Yang circle law for a finite prime chain. -/
-@[bridge_target_tag, rep_depth thermo]
-theorem roots_on_circle
-    (LY : LeeYangPolynomialWitness)
-    (D : FinitePrimeChainData N)
-    {lam : ℝ}
-    (hLam : 0 ≤ lam)
-    (z : ℂ)
-    (hz : (partitionPolynomial D lam).IsRoot z) :
-    OnUnitCircle z :=
-  LY D hLam z hz
-
-end LeeYangPolynomialWitness
 
 /--
 Finite-volume prime-chain family feeding the Hurwitz layer.
@@ -440,37 +531,9 @@ def toLeeYangApproximants
   R := F.R
   lee_yang := by
     intro N z hz
-    exact LeeYangPolynomialWitness.roots_on_circle LY (F.D N) (F.lam_nonneg N) z
-      (F.isRoot_of_Z_eq_zero N z hz)
+    exact LY (F.D N) (F.lam_nonneg N) z (F.isRoot_of_Z_eq_zero N z hz)
   renorm_nonzero :=
     F.R_nonzero
-
-/-- The constructed approximants preserve the family renormalization. -/
-@[rep_depth thermo]
-theorem toLeeYangApproximants_R
-    (F : PrimePartitionPolynomialFamily)
-    (LY : LeeYangPolynomialWitness) :
-    (F.toLeeYangApproximants LY).R = F.R := rfl
-
-/-- The constructed approximants use the partition-polynomial evaluation. -/
-@[rep_depth thermo]
-theorem toLeeYangApproximants_Z
-    (F : PrimePartitionPolynomialFamily)
-    (LY : LeeYangPolynomialWitness)
-    (N : ℕ)
-    (z : ℂ) :
-    (F.toLeeYangApproximants LY).Z N z = (F.Zpoly N).eval z := rfl
-
-/-- The constructed Hurwitz approximants satisfy the finite Lee--Yang law. -/
-@[rep_depth thermo]
-theorem toLeeYangApproximants_leeYang
-    (F : PrimePartitionPolynomialFamily)
-    (LY : LeeYangPolynomialWitness)
-    (N : ℕ)
-    (z : ℂ)
-    (hz : (F.toLeeYangApproximants LY).Z N z = 0) :
-    OnUnitCircle z :=
-  (F.toLeeYangApproximants LY).lee_yang N z hz
 
 end PrimePartitionPolynomialFamily
 
@@ -518,6 +581,19 @@ theorem global_preserves_unit_circle
     (hz : OnUnitCircle z) :
     OnUnitCircle (W.globalFugacity z) :=
   (W.preserves_unit_circle z hz).1
+
+@[rep_depth thermo]
+theorem global_preserves_unit_circle_of_local
+    {N : ℕ}
+    {D : FinitePrimeChainData N}
+    (W : LocalFugacityProjectionWitness N D)
+    (z : ℂ)
+    (hlocal : ∀ i : Fin N, OnUnitCircle (W.localFugacity i z)) :
+    OnUnitCircle (W.globalFugacity z) := by
+  classical
+  rw [W.projection_eq_product z]
+  exact onUnitCircle_finset_prod Finset.univ
+    (fun i => W.localFugacity i z) (fun i _ => hlocal i)
 
 /-- The supplied unit-circle preservation law holds. -/
 @[rep_depth thermo]

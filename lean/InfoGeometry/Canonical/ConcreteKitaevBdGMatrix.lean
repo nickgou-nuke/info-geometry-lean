@@ -76,6 +76,11 @@ theorem kitaevBdG4_particle_hole_symmetry (mu t delta : ℝ) :
   ext i j
   fin_cases i <;> fin_cases j <;> simp [mul_apply, Fin.sum_univ_four]
 
+/-- The finite BdG Hamiltonian has cancelling particle and hole diagonal trace. -/
+theorem kitaevBdG4_trace_zero (mu t delta : ℝ) :
+    Matrix.trace (kitaevBdG4 mu t delta) = 0 := by
+  simp [kitaevBdG4, Matrix.trace, Fin.sum_univ_four]
+
 /-- **Theorem**: Left Boundary Majorana Zero Mode Energy Eigenvalue: H_sweet · γ₁ = 0. -/
 theorem left_majorana_zero_mode_energy (t : ℝ) :
     (kitaevSweetSpot4 t).mulVec majoranaZeroModeLeft = 0 := by

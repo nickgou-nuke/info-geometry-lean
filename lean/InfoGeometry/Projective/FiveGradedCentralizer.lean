@@ -20,7 +20,7 @@ namespace InfoGeometry.Projective.Closure
 open InfoGeometry.Canonical.ConformalFiveGradeInversion
 
 /-- 
-A 5-graded affine projective closure socket mapping Zero (`g_{-2}`)
+A 5-graded affine projective closure interface mapping Zero (`g_{-2}`)
 and Infinity (`g_2`) into a unified conformal algebra via the 
 Möbius chiral parity operator.
 -/

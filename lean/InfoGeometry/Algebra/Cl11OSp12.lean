@@ -137,55 +137,43 @@ by itself an analytic construction of an unbounded oscillator representation.
 structure BosonicOscillatorSurface (Op : Type*) [Ring Op] where
   a : Op
   adag : Op
-  commutator : a * adag - adag * a = 1
 
-/-- Trivial instance of BosonicOscillatorSurface on PUnit. -/
-def punitBosonicOscillatorSurface : BosonicOscillatorSurface PUnit where
-  a := ⟨⟩
-  adag := ⟨⟩
-  commutator := rfl
+def BosonicOscillatorSurfaceLaws
+    {Op : Type*} [Ring Op] (B : BosonicOscillatorSurface Op) : Prop :=
+  B.a * B.adag - B.adag * B.a = 1
 
 /-- A fermionic CAR surface. -/
 structure FermionicCARSurface (Op : Type*) [Ring Op] where
   b : Op
   bdag : Op
-  b_sq : b * b = 0
-  bdag_sq : bdag * bdag = 0
-  anticomm : b * bdag + bdag * b = 1
 
-/-- Trivial instance of FermionicCARSurface on PUnit. -/
-def punitFermionicCARSurface : FermionicCARSurface PUnit where
-  b := ⟨⟩
-  bdag := ⟨⟩
-  b_sq := rfl
-  bdag_sq := rfl
-  anticomm := rfl
+def FermionicCARSurfaceLaws
+    {Op : Type*} [Ring Op] (F : FermionicCARSurface Op) : Prop :=
+  F.b * F.b = 0 ∧
+  F.bdag * F.bdag = 0 ∧
+  F.b * F.bdag + F.bdag * F.b = 1
 
 /-- The split `Cl(1,1)` ladder pair as a genuine CAR surface. -/
 def cl11FermionicCARSurface : FermionicCARSurface (CliffordAlgebra q11) where
   b := b
   bdag := bdag
-  b_sq := b_sq
-  bdag_sq := bdag_sq
-  anticomm := anticomm_bbdag
+
+theorem cl11FermionicCARSurface_laws :
+    FermionicCARSurfaceLaws cl11FermionicCARSurface := by
+  exact ⟨b_sq, bdag_sq, anticomm_bbdag⟩
 
 /--
 Compatibility asserting that the bosonic and fermionic oscillator generators
 commute as independent tensor factors/readouts.
 -/
-structure BosonFermionInterface (Op : Type*) [Ring Op]
-    (B : BosonicOscillatorSurface Op) (F : FermionicCARSurface Op) where
-  a_b : B.a * F.b = F.b * B.a
-  adag_b : B.adag * F.b = F.b * B.adag
-  a_bdag : B.a * F.bdag = F.bdag * B.a
-  adag_bdag : B.adag * F.bdag = F.bdag * B.adag
-
-/-- Trivial instance of BosonFermionInterface on PUnit. -/
-def punitBosonFermionInterface : BosonFermionInterface PUnit punitBosonicOscillatorSurface punitFermionicCARSurface where
-  a_b := rfl
-  adag_b := rfl
-  a_bdag := rfl
-  adag_bdag := rfl
+def BosonFermionInterfaceLaws
+    {Op : Type*} [Ring Op]
+    (B : BosonicOscillatorSurface Op) (F : FermionicCARSurface Op)
+    : Prop :=
+  B.a * F.b = F.b * B.a ∧
+  B.adag * F.b = F.b * B.adag ∧
+  B.a * F.bdag = F.bdag * B.a ∧
+  B.adag * F.bdag = F.bdag * B.adag
 
 variable {Op : Type*} [Ring Op]
 
@@ -206,22 +194,22 @@ def susyOscillatorHamiltonian (B : BosonicOscillatorSurface Op) (F : FermionicCA
 
 private theorem qplus_qminus_factor
     (B : BosonicOscillatorSurface Op) (F : FermionicCARSurface Op)
-    (I : BosonFermionInterface Op B F) :
+    (hI : BosonFermionInterfaceLaws B F) :
     (B.adag * F.b) * (B.a * F.bdag) = B.adag * B.a * (F.b * F.bdag) := by
   calc
     (B.adag * F.b) * (B.a * F.bdag)
         = B.adag * (F.b * B.a) * F.bdag := by noncomm_ring
-    _ = B.adag * (B.a * F.b) * F.bdag := by rw [← I.a_b]
+    _ = B.adag * (B.a * F.b) * F.bdag := by rw [← hI.1]
     _ = B.adag * B.a * (F.b * F.bdag) := by noncomm_ring
 
 private theorem qminus_qplus_factor
     (B : BosonicOscillatorSurface Op) (F : FermionicCARSurface Op)
-    (I : BosonFermionInterface Op B F) :
+    (hI : BosonFermionInterfaceLaws B F) :
     (B.a * F.bdag) * (B.adag * F.b) = B.a * B.adag * (F.bdag * F.b) := by
   calc
     (B.a * F.bdag) * (B.adag * F.b)
         = B.a * (F.bdag * B.adag) * F.b := by noncomm_ring
-    _ = B.a * (B.adag * F.bdag) * F.b := by rw [← I.adag_bdag]
+    _ = B.a * (B.adag * F.bdag) * F.b := by rw [← hI.2.2.2]
     _ = B.a * B.adag * (F.bdag * F.b) := by noncomm_ring
 
 /--
@@ -235,10 +223,10 @@ an analytic unbounded-operator representation.
 -/
 theorem osp_supercharge_oscillator_closure
     (B : BosonicOscillatorSurface Op) (F : FermionicCARSurface Op)
-    (I : BosonFermionInterface Op B F) :
+    (hI : BosonFermionInterfaceLaws B F) :
     Qplus B F * Qminus B F + Qminus B F * Qplus B F =
       susyOscillatorHamiltonian B F := by
   unfold Qplus Qminus susyOscillatorHamiltonian
-  rw [qplus_qminus_factor B F I, qminus_qplus_factor B F I]
+  rw [qplus_qminus_factor B F hI, qminus_qplus_factor B F hI]
 
 end InfoGeometry.Algebra.Cl11OSp12

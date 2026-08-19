@@ -1,4 +1,4 @@
-import InfoGeometry.Clifford.Cl55RealSplitPinReflectionEvidence
+import InfoGeometry.Clifford.Cl55RealSplitPinReflectionBridge
 
 namespace InfoGeometry.Clifford.Clifford55
 

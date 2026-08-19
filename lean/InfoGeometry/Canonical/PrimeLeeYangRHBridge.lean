@@ -24,12 +24,11 @@ The condition `z.re ≠ -1` removes the pole `z = -1` of
 `cayleyToTemperature z = z / (1 + z)`.
 -/
 theorem partitionRoot_mapsToCriticalLine
-    {n : ℕ}
-    (W : LeeYangStabilityWitness (n := n))
+    (partitionPolynomial : Polynomial ℂ)
     (hLeeYang :
-      ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
+      ∀ z : ℂ, partitionPolynomial.IsRoot z → OnLeeYangCircle z)
     {z : ℂ}
-    (hz : W.partitionPolynomial.IsRoot z)
+    (hz : partitionPolynomial.IsRoot z)
     (hpole : z.re ≠ -1) :
     OnCriticalLine (cayleyToTemperature z) := by
   exact cayleyToTemperature_mem_criticalLine_of_unitCircle z (hLeeYang z hz) hpole
@@ -43,17 +42,16 @@ This is the exact finite algebraic content of the Lee--Yang/critical-line
 coordinate dictionary.  No statement about zeta zeros is used.
 -/
 theorem partitionRoot_cayleyRoundTrip
-    {n : ℕ}
-    (W : LeeYangStabilityWitness (n := n))
+    (partitionPolynomial : Polynomial ℂ)
     (hLeeYang :
-      ∀ z : ℂ, W.partitionPolynomial.IsRoot z → OnLeeYangCircle z)
+      ∀ z : ℂ, partitionPolynomial.IsRoot z → OnLeeYangCircle z)
     {z : ℂ}
-    (hz : W.partitionPolynomial.IsRoot z)
+    (hz : partitionPolynomial.IsRoot z)
     (hpole : z.re ≠ -1) :
     OnCriticalLine (cayleyToTemperature z) ∧
       cayleyToFugacity (cayleyToTemperature z) = z := by
   constructor
-  · exact partitionRoot_mapsToCriticalLine W hLeeYang hz hpole
+  · exact partitionRoot_mapsToCriticalLine partitionPolynomial hLeeYang hz hpole
   · apply cayleyToFugacity_cayleyToTemperature
     intro hzero
     have hre : (1 + z).re = 0 := by rw [hzero]; simp

@@ -14,7 +14,7 @@ on bounded linear operators B(H) on Hilbert spaces, proving:
 1. Identity flow: σ₀(A) = A
 2. Multiplicative flow homomorphism: σ_t(A B) = σ_t(A) σ_t(B)
 3. Composition group property: σ_{t1 + t2}(A) = σ_{t1}(σ_{t2}(A))
-4. State invariance under modular flow for KMS states.
+4. The explicit state-invariance contract for modular states.
 -/
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
@@ -64,10 +64,66 @@ theorem modularFlow_add (MUG : ModularUnitaryGroup H) (t1 t2 : ℝ) (A : H →L[
   rw [MUG.map_add t1 t2, h_neg, MUG.map_add (-t2) (-t1)]
   rfl
 
-/-- **Theorem**: State invariance under modular flow for modular trace states. -/
+/-- The modular flow has an explicit inverse at every time. -/
+theorem modularFlow_neg_left (MUG : ModularUnitaryGroup H) (t : ℝ)
+    (A : H →L[ℂ] H) :
+    modularFlow MUG (-t) (modularFlow MUG t A) = A := by
+  have h := modularFlow_add MUG (-t) t A
+  have hzero : -t + t = 0 := by ring
+  rw [hzero] at h
+  exact h.symm.trans (modularFlow_zero MUG A)
+
+/-- The inverse identity also holds with the two time directions exchanged. -/
+theorem modularFlow_neg_right (MUG : ModularUnitaryGroup H) (t : ℝ)
+    (A : H →L[ℂ] H) :
+    modularFlow MUG t (modularFlow MUG (-t) A) = A := by
+  have h := modularFlow_add MUG t (-t) A
+  have hzero : t + -t = 0 := by ring
+  rw [hzero] at h
+  exact h.symm.trans (modularFlow_zero MUG A)
+
+/-- Conjugation transports the operator norm pointwise along the unitary orbit. -/
+theorem modularFlow_apply_unitary_norm (MUG : ModularUnitaryGroup H) (t : ℝ)
+    (A : H →L[ℂ] H) (x : H) :
+    ‖modularFlow MUG t A (MUG.U t x)‖ = ‖A x‖ := by
+  dsimp [modularFlow]
+  rw [MUG.inv_cancel t]
+  exact (MUG.U t).norm_map _
+
+/-- The product compatibility of modular conjugation.
+
+This identity is valid for every functional `omega`; by itself it is not a
+state-invariance theorem.  State invariance is recorded separately below as
+an explicit property of the chosen state. -/
 theorem kms_state_modular_flow_product (MUG : ModularUnitaryGroup H) (t : ℝ)
     (omega : (H →L[ℂ] H) → ℂ) (A B : H →L[ℂ] H) :
     omega (modularFlow MUG t (A.comp B)) = omega ((modularFlow MUG t A).comp (modularFlow MUG t B)) := by
   rw [modularFlow_mul]
+
+/-- A state together with its modular-flow invariance law.
+
+The invariance law is model data here: an arbitrary functional on bounded
+operators is not invariant under conjugation without an additional theorem or
+an explicit finite-dimensional trace hypothesis. -/
+structure ModularInvariantState (MUG : ModularUnitaryGroup H) where
+  omega : (H →L[ℂ] H) → ℂ
+  invariant : ∀ t : ℝ, ∀ A : H →L[ℂ] H,
+    omega (modularFlow MUG t A) = omega A
+
+/-- The state readout is constant along the supplied modular flow. -/
+theorem modularFlow_state_invariant
+    (MUG : ModularUnitaryGroup H)
+    (S : ModularInvariantState MUG)
+    (t : ℝ) (A : H →L[ℂ] H) :
+    S.omega (modularFlow MUG t A) = S.omega A := by
+  exact S.invariant t A
+
+/-- Invariance also applies to products of observables. -/
+theorem modularFlow_product_state_invariant
+    (MUG : ModularUnitaryGroup H)
+    (S : ModularInvariantState MUG)
+    (t : ℝ) (A B : H →L[ℂ] H) :
+    S.omega (modularFlow MUG t (A.comp B)) = S.omega (A.comp B) := by
+  exact S.invariant t (A.comp B)
 
 end InfoGeometry.Canonical.TomitaModularAutomorphismFlow

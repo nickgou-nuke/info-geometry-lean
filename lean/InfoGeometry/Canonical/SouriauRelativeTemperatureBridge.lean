@@ -90,12 +90,6 @@ theorem temperature_eq_inv_beta :
     C.scalarCalibration.firstLaw.T = C.scalarCalibration.souriauTemperature.beta⁻¹ :=
   C.scalarCalibration.temperature_eq_inv_beta
 
-/-- The Tomita logarithmic datum is the modular Hamiltonian. -/
-@[rep_depth operator]
-theorem tomitaDelta_eq_modularHamiltonian :
-    C.tomitaLogContext.toRealModularLogData = C.tomitaLogContext.modularHamiltonian := by
-  rfl
-
 /-- The Tomita standard-form carrier uses the modular Hamiltonian as `Delta`. -/
 @[rep_depth operator]
 theorem tomitaStandardFormCarrier_eq :

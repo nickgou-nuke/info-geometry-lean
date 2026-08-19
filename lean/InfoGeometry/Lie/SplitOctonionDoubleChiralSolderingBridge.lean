@@ -34,6 +34,16 @@ def doubleMinkowskiSolder (t x1 x2 x3 tau y1 y2 y3 : ℝ) : Matrix BiSpinor BiSp
     (pauliSolder2x2 t x1 x2 x3) 0
     0 (pauliSolder2x2 tau y1 y2 y3)
 
+/-- The determinant of the doubled soldering carrier factors over its two
+    chiral blocks. -/
+theorem doubleMinkowskiSolder_det_factor
+    (t x1 x2 x3 tau y1 y2 y3 : ℝ) :
+    (doubleMinkowskiSolder t x1 x2 x3 tau y1 y2 y3).det =
+      (pauliSolder2x2 t x1 x2 x3).det *
+        (pauliSolder2x2 tau y1 y2 y3).det := by
+  dsimp [doubleMinkowskiSolder]
+  rw [Matrix.det_fromBlocks_zero₂₁]
+
 /-- 🏆 THEOREM 1: The difference of the $2 \times 2$ soldered determinants matches the split-octonion norm. -/
 theorem doubleMinkowskiSolder_det_diff (t x1 x2 x3 tau y1 y2 y3 : ℝ) :
     (pauliSolder2x2 t x1 x2 x3).det - (pauliSolder2x2 tau y1 y2 y3).det =

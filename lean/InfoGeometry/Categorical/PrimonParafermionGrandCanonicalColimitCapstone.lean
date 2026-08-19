@@ -8,14 +8,15 @@ import InfoGeometry.Categorical.PrimeStateSumModeEquivalence
 # Primon Parafermion Grand Canonical Colimit Capstone
 
 This module consolidates the entire colimit theorem DAG for the Primon Gas.
-It proves that the universal thermodynamic state spaces built from the State Sum 
-and the Prime Mode finite recurrences are categorically equivalent, and that the 
-global observables (the partition function `Q` and its arbitrary derivative `D log Q`)
-are perfectly preserved across this equivalence.
+It proves that the universal categorical thermodynamic state spaces built from
+the State Sum and the Prime Mode finite recurrences are categorically
+equivalent, and that the observables (the partition function `Q` and its
+arbitrary derived readout `D log Q`) are preserved across this equivalence.
 
-This officially seals the algebraic colimit corridor, proving that physical
-infinity in the Primon model operates canonically through compatible inductive limits
-without requiring analytic closures.
+This seals the algebraic colimit corridor: every construction is expressed by
+finite stages, compatible maps, and categorical colimit readouts.  This file
+does not identify these state-sum/prime-mode carriers with the separate
+diagonal Gibbs colimit owner.
 -/
 
 noncomputable section
@@ -30,9 +31,9 @@ open InfoGeometry.Categorical.PrimeStateSumModeEquivalence
 open InfoGeometry.Categorical.PrimeThermodynamicReadoutCones
 open InfoGeometry.Categorical.PrimeThermodynamicLimitCapstone
 
-/-- The final consolidation of the Primon thermodynamic colimit framework. 
-It establishes the true thermodynamic equivalence:
-(StateSum_∞, Q_state, D_state) ≅ (PrimeMode_∞, Q_mode, D_mode) -/
+/-- The final consolidation of the Primon thermodynamic colimit framework.
+It establishes the categorical equivalence of the two universal stage-built
+carriers and preserves both their partition and derived readouts. -/
 theorem primonThermodynamicColimitCapstone (z s : ℂ) (D : ℂ → ℂ) :
     ∃ (StateSum PrimeMode : Type)
       (_instS : CommRing StateSum) (_instP : CommRing PrimeMode)

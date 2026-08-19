@@ -165,12 +165,21 @@ abbrev ProjectiveTemperatureInversion :=
 
 namespace ProjectiveTemperatureInversion
 
+def negId : ProjectiveTemperatureInversion :=
+  ⟨negIdSL2R, by
+    apply Subtype.ext
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [negIdSL2R, Matrix.mul_apply, Fin.sum_univ_two]⟩
+
+@[simp] theorem negId_element : negId.1 = negIdSL2R := rfl
+
 abbrev element (I : ProjectiveTemperatureInversion) : SL2R := I.1
 
 abbrev element_sq (I : ProjectiveTemperatureInversion) : I.element * I.element = 1 := I.2
 
 /--
-The existing abstract closure-involution socket applied to the transported
+The existing abstract closure-involution interface applied to the transported
 temperature action.
 -/
 def closure
@@ -196,7 +205,7 @@ theorem closure_theta
 
 /--
 Invariant temperature readouts are expressed through the existing
-`InvariantReadout` socket, not by adding a new invariance structure.
+`InvariantReadout` interface, not by adding a new invariance structure.
 -/
 abbrev InvariantTemperatureReadout
     (I : ProjectiveTemperatureInversion)
@@ -226,6 +235,11 @@ def StationaryTemperature
     (I : ProjectiveTemperatureInversion)
     (T : PositiveSouriauTemperature) : Prop :=
   I.closure.IsFixed T
+
+theorem negId_stationary (T : PositiveSouriauTemperature) :
+    StationaryTemperature negId T := by
+  change negIdSL2R • T = T
+  exact negIdSL2R_smul T
 
 /-- Equivalently, the supplied `SL2R` element fixes a stationary temperature. -/
 theorem smul_eq_self_of_stationary
@@ -262,7 +276,7 @@ end ProjectiveTemperatureInversion
 A lift-level projective temperature inversion supplied by an `SL2R` element
 whose square is either `I` or `-I`.
 
-This is the concrete socket for matrices such as the modular `S` element:
+This is the concrete interface for matrices such as the modular `S` element:
 `S^2 = -I` in `SL2R`, but `-I` acts trivially on the upper half-plane.
 -/
 abbrev ProjectiveLiftTemperatureInversion :=
@@ -286,7 +300,7 @@ theorem smul_trivial_of_projective_sq
     exact negIdSL2R_smul T
 
 /--
-The abstract closure-involution socket applied to the projective lift action.
+The abstract closure-involution interface applied to the projective lift action.
 -/
 def closure
     (I : ProjectiveLiftTemperatureInversion) :
@@ -363,7 +377,7 @@ end ProjectiveLiftTemperatureInversion
 A projective temperature inversion represented by an `SL2R` lift whose square
 is trivial after descending to `PSL2R`.
 
-This is the correct socket for matrices such as the modular `S` element:
+This is the correct interface for matrices such as the modular `S` element:
 upstairs in `SL2R` one has `S^2 = -I`, while downstairs in `PSL2R` this becomes
 an involution.
 -/

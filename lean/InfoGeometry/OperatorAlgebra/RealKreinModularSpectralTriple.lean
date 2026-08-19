@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/RealKreinModularSpectralTriple.lean
 
-Real Krein modular spectral triple socket.
+Real Krein modular spectral triple data.
 
 This module bridges modular sign/CPT data to phase-real spectral geometry:
 
@@ -68,7 +68,7 @@ def modularPhaseAxis
 /-! ## 2. Real Krein modular spectral triple -/
 
 /--
-Real Krein modular spectral triple socket.
+Real Krein modular spectral triple data.
 
 The carrier is fixed; modular signs, chiral sectors, spectral commutators,
 weights, core traces, and renormalized readouts are attached as proof-carrying

@@ -7,7 +7,7 @@ using evolutionary mutation and reflection cycles. Reads error traces
 collected by the Pi extension pipeline and evolves better prompts.
 
 Requirements:
-  pip install gepa websocket-client
+  pip install gepa webdeferred_interface-client
 
 Or run the standalone evolutionary loop below without GEPA dependency.
 """

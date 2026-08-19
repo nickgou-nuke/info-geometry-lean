@@ -86,7 +86,7 @@ LOCAL_HYPOTHESIS_RE = re.compile(
     r"(?m)^\s*(?:have|suffices)\s+([A-Za-z0-9_']+)?\s*:\s*(.{1,240}?)\s*(?::=|by|from)"
 )
 BRIDGE_NAME_RE = re.compile(
-    r"(?:^|[_.'])(?:bridge|compat|compatibility|readback|socket|packet|claim|witness|external|hyp|assumption|admit|stub|placeholder)(?:$|[_.'])",
+    r"(?:^|[_.'])(?:bridge|compat|compatibility|readback|interface|packet|claim|witness|external|hyp|assumption|admit|stub|placeholder)(?:$|[_.'])",
     re.I,
 )
 PROP_LIKE_FIELD_RE = re.compile(r"(?m)^\s*([A-Za-z0-9_']+)\s*:\s*([^\n]+)$")

@@ -307,6 +307,18 @@ theorem axialCartanFlow_commute
       axialCartanFlow l t (axialCartanFlow k s X) := by
   ext i <;> simp [axialCartanFlow] <;> ring
 
+theorem axialCartanFlow_parameter_add
+    (k l : Fin 3 → ℝ) (t : ℝ) (X : CZ) :
+    axialCartanFlow (k + l) t X =
+      axialCartanFlow k t (axialCartanFlow l t X) := by
+  ext i <;> simp [axialCartanFlow]
+  · rw [show t * (k i + l i) = t * k i + t * l i by ring,
+      Real.exp_add]
+    ring
+  · rw [show -(t * (k i + l i)) = -(t * k i) + -(t * l i) by ring,
+      Real.exp_add]
+    ring
+
 theorem axialCartanCompositionAut_commute
     (k l : Fin 3 → ℝ) (hk : ∑ i, k i = 0) (hl : ∑ i, l i = 0)
     (s t : ℝ) (X : CZ) :

@@ -137,7 +137,7 @@ theorem sameModeCurrentD (F : PrimeLocalCARFamily PrimeLabel Op) :
 
 /--
 Transport the concrete same-mode current action to the symbolic arithmetic
-current socket.
+current interface.
 
 Boundary: this only packages same-mode local action laws. Distinct-prime OPE
 relations and Laurent/VOA semantics remain open owner debt.
@@ -212,7 +212,7 @@ theorem offDiagCurrentD :
 
 /--
 Concrete transport of the normalized Weyl-gauge owner current into the symbolic
-current socket.
+current interface.
 
 The current laws are packaged as conjunctions of same-mode action and
 off-diagonal commutation. Laurent/OPE singular-part semantics still remain open.

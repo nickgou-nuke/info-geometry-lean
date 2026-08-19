@@ -149,7 +149,7 @@ end WeylBKMDriftMassCarrier
 /-! ## Compatibility with the existing `BKMDriftMetric` carrier -/
 
 /--
-Fusion socket from the earlier metric/stiffness carrier to the named modular
+Fusion interface from the earlier metric/stiffness carrier to the named modular
 mass carrier.
 -/
 @[rep_depth operator]

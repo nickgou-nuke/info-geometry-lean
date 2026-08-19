@@ -238,4 +238,39 @@ theorem modularHamiltonianAction_eq_generatedFlow
     InfoGeometry.Krein.modular_shift (E := H) K t A
   simp [expTransport, InfoGeometry.Krein.krein_modular_shift, smul_neg]
 
+/-! ## Finite additive-time law -/
+
+/-- The finite modular Hamiltonian action is an additive-time flow. -/
+theorem modularHamiltonianAction_add
+    (K A : AlgebraEnd H) (s t : ℝ) :
+    modularHamiltonianAction (H := H) K A (s + t) =
+      modularHamiltonianAction (H := H) K
+        (modularHamiltonianAction (H := H) K A t) s := by
+  have hcomm : Commute (s • K) (t • K) :=
+    ((Commute.refl K).smul_left s).smul_right t
+  have hcommNeg : Commute (t • (-K)) (s • (-K)) :=
+    ((Commute.refl (-K)).smul_left t).smul_right s
+  have hneg : (s + t) • (-K) = t • (-K) + s • (-K) := by
+    module
+  unfold modularHamiltonianAction expTransport
+  rw [add_smul, NormedSpace.exp_add_of_commute hcomm, hneg,
+    NormedSpace.exp_add_of_commute hcommNeg]
+  noncomm_ring
+
+/-- A finite modular Hamiltonian flow is inverted by reversing its time. -/
+theorem modularHamiltonianAction_neg_left
+    (K A : AlgebraEnd H) (t : ℝ) :
+    modularHamiltonianAction (H := H) K
+        (modularHamiltonianAction (H := H) K A (-t)) t = A := by
+  rw [← modularHamiltonianAction_add (H := H) K A t (-t)]
+  simp
+
+/-- The opposite composition gives the same finite-time inverse law. -/
+theorem modularHamiltonianAction_neg_right
+    (K A : AlgebraEnd H) (t : ℝ) :
+    modularHamiltonianAction (H := H) K
+        (modularHamiltonianAction (H := H) K A t) (-t) = A := by
+  rw [← modularHamiltonianAction_add (H := H) K A (-t) t]
+  simp
+
 end InfoGeometry.Volume.ConnesInfinitesimal

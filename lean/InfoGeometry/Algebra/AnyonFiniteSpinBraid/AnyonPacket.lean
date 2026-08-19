@@ -21,7 +21,7 @@ theorem finite_spin_anyon_braid_packet :
           canonicalHomologicalBraidStability.unpairedLeak = 0 ∧
           gapD4Order = 192 ∧
           gapD5Order = 1920 :=
-  ⟨canonical_create_eq, canonical_annihilate_eq,
+  ⟨rfl, rfl,
     witten_index_trace_vanishes, canonical_no_unpaired_leak,
     CoxeterDQuotientCertificate.D4_order_readout,
     CoxeterDQuotientCertificate.D5_order_readout⟩

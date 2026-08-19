@@ -32,7 +32,7 @@ used by the Hamiltonian-flow layer.
 structure BinaryCrystalHamiltonianFlowBridge
     (𝔤 : Type*) where
   /-- Souriau/Weyl finite character packet. -/
-  souriauPacket : SouriauWeylPartitionPacket 𝔤
+  souriauPacket : SouriauWeylPartitionData 𝔤
 
 namespace BinaryCrystalHamiltonianFlowBridge
 

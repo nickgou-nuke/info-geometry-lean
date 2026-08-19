@@ -66,8 +66,8 @@ def run_queries(db):
           LET doc = DOCUMENT(target)
           RETURN {name: doc.name, used_by: c}
     """))
-    # 4. Sockets
-    result["socket_inventory"] = list(db.aql.execute("""
+    # 4. DeferredInterfaces
+    result["deferred_interface_inventory"] = list(db.aql.execute("""
         FOR decl IN lean_decls
           FILTER decl.kind IN ["def","structure","axiom","opaque"]
           FILTER LENGTH(FOR e IN references FILTER e._to == decl._id RETURN 1) == 0
@@ -176,8 +176,8 @@ def write_md(data):
     md += "\n## Key Module Inventory\n| Module | Theorems | Defs |\n|---|---|---|\n"
     for m in data["module_inventory"]:
         md += f"| `{m['module']}` | {m['theorems']} | {m['defs']} |\n"
-    md += "\n## Socket / Boundary Inventory\n| Kind | Name |\n|---|---|\n"
-    for s in data["socket_inventory"]:
+    md += "\n## DeferredInterface / Boundary Inventory\n| Kind | Name |\n|---|---|\n"
+    for s in data["deferred_interface_inventory"]:
         md += f"| `{s['kind']}` | `{s['module']}.{s['name']}` |\n"
     md += "\n## Proof Complexity (AST Nodes)\n| Cell | AST Nodes |\n|---|---|\n"
     for cplx in data["proof_complexity"]:
@@ -206,7 +206,7 @@ def main():
     print(f"  Cells: {len(cells)}  Vacuity: {data['vacuity_scan']['sorry_admit_count']}  "
           f"Decls: {data['graph_counts']['lean_decls']}  "
           f"Refs: {data['graph_counts']['references']}  "
-          f"Sockets: {len(data['socket_inventory'])}", file=sys.stderr)
+          f"DeferredInterfaces: {len(data['deferred_interface_inventory'])}", file=sys.stderr)
 
 
 if __name__ == "__main__":

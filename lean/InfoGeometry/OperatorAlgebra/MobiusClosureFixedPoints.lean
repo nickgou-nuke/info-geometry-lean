@@ -65,7 +65,7 @@ end ClosureInvolution
 /--
 A real-linear closure involution.
 
-This is the correct socket for grade-swapping statements such as `e₋ ↔ e₊`.
+This is the correct interface for grade-swapping statements such as `e₋ ↔ e₊`.
 -/
 structure LinearClosureInvolution
     (V : Type*) [AddCommGroup V] [Module ℝ V] where

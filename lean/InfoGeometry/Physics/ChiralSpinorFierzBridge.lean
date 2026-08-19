@@ -40,9 +40,4 @@ theorem chiral_spinor_basis_dictionary :
   · exact σPlus_eq_carAnn
   · exact σMinus_eq_carCre
 
-/-- The finite Fierz completeness statement exposed as the chiral-spinor readout. -/
-theorem chiral_spinor_fierz_statement :
-    InfoGeometry.Physics.LorentzChiralCuntzBridge.chiralFierzStatement := by
-  exact InfoGeometry.Physics.FierzIdentities.chiral_fierz_identity
-
 end InfoGeometry.Physics.ChiralSpinorFierzBridge

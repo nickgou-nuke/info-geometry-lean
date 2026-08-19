@@ -77,4 +77,49 @@ theorem heisenbergFiniteModeColimitMap_surjective :
   have hstage' := congrArg (fun f => f.hom) hstage
   exact congrArg (fun f => f x) hstage'
 
+theorem heisenbergFiniteModeColimitMap_injective :
+    Function.Injective
+      (heisenbergFiniteModeColimitMap (𝕜 := 𝕜)).hom := by
+  let F := heisenbergFiniteModeDiagram (𝕜 := 𝕜)
+  letI : PreservesFilteredColimitsOfSize.{0, 0} (forget (ModuleCat 𝕜)) :=
+    preservesSmallestFilteredColimits_of_preservesFilteredColimits
+      (forget (ModuleCat 𝕜))
+  letI : PreservesColimit F (forget (ModuleCat 𝕜)) :=
+    PreservesColimitsOfShape.preservesColimit
+  intro x y hxy
+  obtain ⟨s, a, hxa⟩ := Concrete.colimit_exists_rep F x
+  obtain ⟨t, b, hby⟩ := Concrete.colimit_exists_rep F y
+  rw [← hxa, ← hby] at hxy
+  have hxy' :
+      (heisenbergFiniteModeCocone (𝕜 := 𝕜)).ι.app s a =
+        (heisenbergFiniteModeCocone (𝕜 := 𝕜)).ι.app t b := by
+    have hs := heisenbergFiniteModeColimitMap_stage (𝕜 := 𝕜) s
+    have ht := heisenbergFiniteModeColimitMap_stage (𝕜 := 𝕜) t
+    have hs' := congrArg (fun f => f.hom a) hs
+    have ht' := congrArg (fun f => f.hom b) ht
+    exact hs'.symm.trans (hxy.trans ht')
+  let k := s ∪ t
+  let f : s ⟶ k := ⟨PLift.up Finset.subset_union_left⟩
+  let g : t ⟶ k := ⟨PLift.up Finset.subset_union_right⟩
+  have hfg : F.map f a = F.map g b := by
+    apply Subtype.ext
+    exact hxy'
+  have hcol :
+      colimit.ι F s a = colimit.ι F t b :=
+    Concrete.colimit_rep_eq_of_exists F a b ⟨k, f, g, hfg⟩
+  exact hxa.symm.trans (hcol.trans hby)
+
+theorem heisenbergFiniteModeColimitMap_bijective :
+    Function.Bijective
+      (heisenbergFiniteModeColimitMap (𝕜 := 𝕜)).hom :=
+  ⟨heisenbergFiniteModeColimitMap_injective (𝕜 := 𝕜),
+    heisenbergFiniteModeColimitMap_surjective (𝕜 := 𝕜)⟩
+
+noncomputable def heisenbergFiniteModeColimitEquiv :
+    (heisenbergFiniteModeColimit (𝕜 := 𝕜) : Type _) ≃ₗ[𝕜]
+      HeisenbergAlgebra 𝕜 :=
+  LinearEquiv.ofBijective
+    (heisenbergFiniteModeColimitMap (𝕜 := 𝕜)).hom
+    (heisenbergFiniteModeColimitMap_bijective (𝕜 := 𝕜))
+
 end InfoGeometry.Canonical

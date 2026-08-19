@@ -387,4 +387,19 @@ def BayesianSymmetryOrbit.update
   orbit.update 0 = prior := by
   simp [BayesianSymmetryOrbit.update, orbit.U_zero]
 
+theorem BayesianSymmetryOrbit.update_preserves_hessian
+    {prior : DSpace E}
+    (orbit : BayesianSymmetryOrbit (E := E) prior)
+    (t : ℝ) (x y : DSpace E) :
+    hessian_indefinite_form (E := E) (orbit.U t x) (orbit.U t y) =
+      hessian_indefinite_form (E := E) x y := by
+  exact orbit.preserves_hessian t x y
+
+theorem BayesianSymmetryOrbit.update_hessian_invariant
+    {prior : DSpace E}
+    (orbit : BayesianSymmetryOrbit (E := E) prior) (t : ℝ) :
+    hessian_indefinite_form (E := E) (orbit.update t) (orbit.update t) =
+      hessian_indefinite_form (E := E) prior prior := by
+  exact orbit.preserves_hessian t prior prior
+
 end InfoGeometry.Canonical.NoetherInference

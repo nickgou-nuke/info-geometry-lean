@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.LogCftMonodromyBridge
 import InfoGeometry.Capstone.ZornOrderCapstone
 
 /-!
-# Hestenes--Krein critical-line statement sockets
+# Hestenes--Krein critical-line statements
 
 This file does **not** prove the Riemann Hypothesis.  It packages conditional
 finite Hestenes--Krein readouts: if a supplied spectral chart/property says

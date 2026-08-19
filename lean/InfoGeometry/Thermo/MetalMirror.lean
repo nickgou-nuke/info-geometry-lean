@@ -266,7 +266,6 @@ structure MetalMirrorRicciFluxBridge
     {ω : OperatorEnd E →L[ℝ] ℝ}
     {gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ}
     {F : ModularRegularConeFlow c}
-    {D2 : SecondVariationAtZero}
     {J L Obs : Type*}
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L]
@@ -274,7 +273,7 @@ structure MetalMirrorRicciFluxBridge
     {T : TKKLieClosure J L}
     {R : RicciFluxReadout J L Obs T}
     (M : MetalMirrorChannel c)
-    (B : BregmanRicciFluxBridge c ω gradPhi F D2 J L Obs T R) where
+    (B : BregmanRicciFluxBridge c ω gradPhi F J L Obs T R) where
   /-- Left/source generator extracted from a regular cone input. -/
   sourceLeft : RegularConePoint c → J
 
@@ -294,7 +293,6 @@ variable
     {ω : OperatorEnd E →L[ℝ] ℝ}
     {gradPhi : OperatorEnd E → OperatorEnd E →L[ℝ] ℝ}
     {F : ModularRegularConeFlow c}
-    {D2 : SecondVariationAtZero}
     {J L Obs : Type*}
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L]
@@ -302,7 +300,7 @@ variable
     {T : TKKLieClosure J L}
     {R : RicciFluxReadout J L Obs T}
     {M : MetalMirrorChannel c}
-    {B : BregmanRicciFluxBridge c ω gradPhi F D2 J L Obs T R}
+    {B : BregmanRicciFluxBridge c ω gradPhi F J L Obs T R}
     (X : MetalMirrorRicciFluxBridge M B)
 
 /-- Re-export the heat/Ricci-flux bridge law. -/

@@ -214,7 +214,9 @@ export InfoGeometry.Canonical.SuperInference (
   susyHamiltonian
   superCharge_boson_eq_zero
   superCharge_fermion_eq_dualMap
-  susyHamiltonian_eq_self
+  susyHamiltonian_eq_charge_square
+  susyHamiltonian_eq_zero_of_dualMap_zero
+  susyHamiltonian_eq_self_of_fixed
 )
 
 export InfoGeometry.Experimental.ModularSpinorBridge (

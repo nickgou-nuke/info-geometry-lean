@@ -132,4 +132,20 @@ instance : CommRing (Grothendieck M) :=
     npow_succ := fun n x => rfl
   }
 
+@[simp]
+theorem grothendieckMap_one :
+    grothendieckMap M 1 = (1 : Grothendieck M) := by
+  apply Quotient.sound
+  use 0
+  simp [add_comm]
+
+@[simp]
+theorem grothendieckMap_mul (x y : M) :
+    grothendieckMap M (x * y) =
+      grothendieckMap M x * grothendieckMap M y := by
+  apply Quotient.sound
+  use 0
+  dsimp [grothendieckMap, grothendieckMul]
+  simp
+
 end InfoGeometry.Algebra.GrothendieckRing

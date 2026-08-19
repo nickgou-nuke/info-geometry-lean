@@ -14,7 +14,7 @@ The point of this file is to make the final symmetry layer explicit:
 * The global conformal ledger is the projective action of `O(5,5)`, with the
   Clifford reflection lift supplied by ambient `Pin(5,5)`.
 
-This is an owner-level socket.  It does not quotient by `±1` as an actual Lean
+This is an owner-level datum.  It does not quotient by `±1` as an actual Lean
 quotient type; instead it records projective equality by equality of actions on
 rays.  Concrete matrix/Clifford models can later instantiate the quotient.
 -/
@@ -661,7 +661,7 @@ theorem invariantReadout_inv_eq
 /--
 The paired readout that remembers both chart representatives.
 
-This is the formal socket for symmetrized visible/hidden memory accounting:
+This is the formal datum for symmetrized visible/hidden memory accounting:
 under inversion, the two components swap.
 -/
 def symmetrizedReadout
@@ -879,27 +879,14 @@ theorem projective_null_rays_are_closed_states :
 
 end TKKPO55ClosedSymmetry
 
-/-! ## 7. Owner target -/
-
-/--
-Installed-owner target: once a `PO55ConformalClosure` property is supplied, each
-base affine point gives a compactified projective null state.
--/
-def PO55ConformalClosureInstalledTarget : Prop :=
-  ∀ (V W PinConf : Type*)
+theorem po55ConformalClosure_affine_state_is_null
+    {V W PinConf : Type*}
     [AddCommGroup V] [Module ℝ V]
-    [AddCommGroup W] [Module ℝ W] [Monoid PinConf],
-  ∀ C : PO55ConformalClosure V W PinConf,
-  ∀ v : V,
+    [AddCommGroup W] [Module ℝ W] [Monoid PinConf]
+    (C : PO55ConformalClosure V W PinConf)
+    (v : V) :
     ProjectiveRayQuotient.IsAmbientNullRay (Q := C.mobius.ambientQ)
-      (C.affineState v).1
-
-/--
-Installed `PO(5,5)` closures satisfy the affine-null-state target.
--/
-theorem po55ConformalClosureInstalledTarget :
-    PO55ConformalClosureInstalledTarget := by
-  intro V W PinConf _ _ _ _ _ C v
+      (C.affineState v).1 := by
   exact C.affineState_is_null v
 
 end InfoGeometry.OperatorAlgebra

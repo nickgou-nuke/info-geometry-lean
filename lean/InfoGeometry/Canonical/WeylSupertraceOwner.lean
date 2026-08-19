@@ -1,6 +1,6 @@
 import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Canonical.SouriauThermalEvaluation
-import InfoGeometry.Canonical.ParityTraceWitness
+import InfoGeometry.Canonical.ParityTraceData
 import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Arithmetic.MobiusDirichletInverseBridge
 import InfoGeometry.Arithmetic.PrimeSuperalgebra
@@ -20,7 +20,7 @@ open InfoGeometry.Algebraic.SplitSignature
 
 open InfoGeometry.Canonical.FormalPrimeRootSystem
 open InfoGeometry.Canonical.SouriauThermalEvaluation
-open InfoGeometry.Canonical.ParityTraceWitness
+open InfoGeometry.Canonical.ParityTraceData
 open InfoGeometry.Canonical.PrimeGasPartitions
 open InfoGeometry.Arithmetic.PrimeSuperalgebra
 

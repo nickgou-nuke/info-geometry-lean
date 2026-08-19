@@ -1,4 +1,5 @@
 import Mathlib.Tactic
+import InfoGeometry.Arithmetic.IndexTheorem
 
 /-!
 # Kudinoor supersymmetry/Witten-index bridge, finite owner surface
@@ -29,6 +30,7 @@ or continuum Witten-index theorem is proved here.
 namespace InfoGeometry.Arithmetic.KudinoorWittenIndexBridge
 
 open scoped BigOperators
+open InfoGeometry.Arithmetic.IndexTheorem
 
 set_option linter.unusedSectionVars false
 
@@ -43,6 +45,62 @@ def finiteWittenIndex
     (levels : Finset ι) (zero : ι → Prop) [DecidablePred zero]
     (boson fermion : ι → Nat) : Int :=
   ∑ i ∈ levels.filter zero, levelSuperdimension boson fermion i
+
+/-! ## Finite kernel realization of the zero-level index -/
+
+/-- Rational carrier with one basis vector for every zero-level boson state. -/
+abbrev zeroLevelBosonCarrier
+    (levels : Finset ι) (zero : ι → Prop) [DecidablePred zero]
+    (boson : ι → Nat) : Type :=
+  Fin (∑ i ∈ levels.filter zero, boson i) → ℚ
+
+/-- Rational carrier with one basis vector for every zero-level fermion state. -/
+abbrev zeroLevelFermionCarrier
+    (levels : Finset ι) (zero : ι → Prop) [DecidablePred zero]
+    (fermion : ι → Nat) : Type :=
+  Fin (∑ i ∈ levels.filter zero, fermion i) → ℚ
+
+/-- The explicit zero-differential complex carried by the zero-energy modes. -/
+def zeroLevelParityComplex
+    (levels : Finset ι) (zero : ι → Prop) [DecidablePred zero]
+    (boson fermion : ι → Nat) :
+    FiniteTwoTermComplex
+      (K := ℚ)
+      (Vp := zeroLevelBosonCarrier levels zero boson)
+      (Vm := zeroLevelFermionCarrier levels zero fermion) :=
+  zeroFiniteTwoTermComplex
+
+/-- The genuine finite kernel index equals the zero-level Witten index. -/
+theorem finiteKernelIndex_zeroLevel_eq_finiteWittenIndex
+    (levels : Finset ι) (zero : ι → Prop) [DecidablePred zero]
+    (boson fermion : ι → Nat) :
+    finiteKernelIndex (zeroLevelParityComplex levels zero boson fermion) =
+      finiteWittenIndex levels zero boson fermion := by
+  unfold zeroLevelParityComplex
+  rw [finiteKernelIndex_zero]
+  simp only [zeroLevelBosonCarrier, zeroLevelFermionCarrier,
+    Module.finrank_fintype_fun_eq_card, Fintype.card_fin]
+  push_cast
+  simp [finiteWittenIndex, levelSuperdimension, Finset.sum_sub_distrib]
+
+/--
+An explicit finite order-to-kernel correspondence identifies the genuine
+zero-level kernel index with the signed divisor charge.  The correspondence
+is an input: no analytic residue theorem or infinite spectral identification
+is hidden in this finite bridge.
+-/
+theorem finiteKernelIndex_eq_finiteDivisorIndex_of_order_correspondence
+    (levels : Finset ι) (zero : ι → Prop) [DecidablePred zero]
+    (boson fermion : ι → Nat) (order : ι → Int)
+    (horder : ∀ i ∈ levels.filter zero,
+      order i = levelSuperdimension boson fermion i) :
+    finiteKernelIndex (zeroLevelParityComplex levels zero boson fermion) =
+      finiteDivisorIndex (levels.filter zero) order := by
+  rw [finiteKernelIndex_zeroLevel_eq_finiteWittenIndex]
+  unfold finiteWittenIndex finiteDivisorIndex
+  apply Finset.sum_congr rfl
+  intro i hi
+  exact (horder i hi).symm
 
 /-- Finite weighted supertrace over a supplied level weight. -/
 def finiteWeightedSupertrace
@@ -87,6 +145,40 @@ theorem finiteWeightedSupertrace_eq_finiteWittenIndex
   · simp [hz, hzero i hi hz]
   · have hbf : boson i = fermion i := hpair i hi hz
     simp [hz, levelSuperdimension, hbf]
+
+/--
+Under the same explicit order correspondence, a paired finite weighted
+supertrace is the signed divisor charge.  This is the finite algebraic bridge
+between the parity readout and divisor language.
+-/
+theorem finiteWeightedSupertrace_eq_finiteDivisorIndex_of_order_correspondence
+    (levels : Finset ι) (zero : ι → Prop) [DecidablePred zero]
+    (boson fermion : ι → Nat) (weight : ι → Int) (order : ι → Int)
+    (hzero : ∀ i ∈ levels, zero i → weight i = 1)
+    (hpair : ∀ i ∈ levels, ¬ zero i → boson i = fermion i)
+    (horder : ∀ i ∈ levels.filter zero,
+      order i = levelSuperdimension boson fermion i) :
+    finiteWeightedSupertrace levels boson fermion weight =
+      finiteDivisorIndex (levels.filter zero) order := by
+  rw [finiteWeightedSupertrace_eq_finiteWittenIndex
+    levels zero boson fermion weight hzero hpair]
+  unfold finiteWittenIndex finiteDivisorIndex
+  apply Finset.sum_congr rfl
+  intro i hi
+  exact (horder i hi).symm
+
+/-- The finite weighted supertrace is the kernel index of the explicit
+zero-level parity complex when the nonzero levels pair. -/
+theorem finiteWeightedSupertrace_eq_zeroLevelKernelIndex
+    (levels : Finset ι) (zero : ι → Prop) [DecidablePred zero]
+    (boson fermion : ι → Nat) (weight : ι → Int)
+    (hzero : ∀ i ∈ levels, zero i → weight i = 1)
+    (hpair : ∀ i ∈ levels, ¬ zero i → boson i = fermion i) :
+    finiteWeightedSupertrace levels boson fermion weight =
+      finiteKernelIndex (zeroLevelParityComplex levels zero boson fermion) := by
+  rw [finiteWeightedSupertrace_eq_finiteWittenIndex
+    levels zero boson fermion weight hzero hpair,
+    finiteKernelIndex_zeroLevel_eq_finiteWittenIndex]
 
 /--
 Finite beta/weight-independence shadow.

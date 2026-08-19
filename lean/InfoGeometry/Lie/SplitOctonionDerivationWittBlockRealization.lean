@@ -20,6 +20,22 @@ def wittIndex : Fin 4 ⊕ Fin 4 → Fin 8
   | Sum.inl i => ⟨i.val, by omega⟩
   | Sum.inr i => ⟨i.val + 4, by omega⟩
 
+abbrev wittEquiv : Fin 4 ⊕ Fin 4 ≃ Fin 8 := @finSumFinEquiv 4 4
+
+@[simp] theorem wittIndex_eq_finSumFinEquiv :
+    wittIndex = wittEquiv := by
+  funext i
+  cases i with
+  | inl i => rfl
+  | inr i =>
+      apply Fin.ext
+      simp [wittIndex, wittEquiv, finSumFinEquiv]
+
+@[simp] theorem wittIndex_finSumFinEquiv_symm (i : Fin 8) :
+    wittIndex (wittEquiv.symm i) = i := by
+  rw [wittIndex_eq_finSumFinEquiv]
+  exact wittEquiv.apply_symm_apply i
+
 def transportedDerivation (D : Derivation) : Coord8 →ₗ[ℝ] Coord8 :=
   neutralCanonicalToCoord.toLinearMap.comp (D.1.comp neutralCanonicalToCoord.symm.toLinearMap)
 
@@ -275,5 +291,57 @@ theorem canonicalDerivationBlock_lowerLeft_skew (D : Derivation) :
 theorem derivation_lowerLeft_skew (D : Derivation) :
     (canonicalDerivationBlock D).Cᵀ = -(canonicalDerivationBlock D).C :=
   canonicalDerivationBlock_lowerLeft_skew D
+
+theorem trace_canonicalDerivationFinMatrix (D : Derivation) :
+    Matrix.trace (canonicalDerivationFinMatrix D) = 0 := by
+  have hblock := canonicalDerivationBlock_equations D
+  have htrace :
+      Matrix.trace (canonicalDerivationFinMatrix D) =
+        Matrix.trace (canonicalDerivationBlock D).A +
+          Matrix.trace (canonicalDerivationBlock D).D := by
+    have hreindex :
+        canonicalDerivationFinMatrix D =
+          Matrix.reindexAlgEquiv ℝ ℝ wittEquiv
+            (canonicalDerivationMatrix D) := by
+      ext i j
+      change
+        (transportedDerivation D) (Pi.single j 1) i =
+          (transportedDerivation D)
+            (Pi.single (wittIndex (wittEquiv.symm j)) 1)
+            (wittIndex (wittEquiv.symm i))
+      rw [wittIndex_finSumFinEquiv_symm, wittIndex_finSumFinEquiv_symm]
+    rw [hreindex]
+    change
+      (∑ i : Fin 8,
+        canonicalDerivationMatrix D (wittEquiv.symm i)
+          (wittEquiv.symm i)) = _
+    calc
+      _ = ∑ i : Fin 4 ⊕ Fin 4, canonicalDerivationMatrix D i i := by
+        symm
+        exact Equiv.sum_comp wittEquiv
+          (fun i : Fin 8 =>
+            canonicalDerivationMatrix D (wittEquiv.symm i) (wittEquiv.symm i))
+      _ = Matrix.trace (canonicalDerivationBlock D).A +
+          Matrix.trace (canonicalDerivationBlock D).D := by
+        rw [← canonicalDerivationBlock_toMat8 D]
+        simp [Matrix.trace, toMat8]
+  rw [htrace, hblock.1, Matrix.trace_neg, Matrix.trace_transpose]
+  ring
+
+theorem transportedDerivation_trace_zero (D : Derivation) :
+    LinearMap.trace ℝ Coord8 (transportedDerivation D) = 0 := by
+  rw [LinearMap.trace_eq_matrix_trace ℝ (Pi.basisFun ℝ (Fin 8))]
+  exact trace_canonicalDerivationFinMatrix D
+
+theorem canonicalDerivation_trace_zero (D : Derivation) :
+    LinearMap.trace ℝ CanonicalZorn D.1 = 0 := by
+  have h := transportedDerivation_trace_zero D
+  calc
+    LinearMap.trace ℝ CanonicalZorn D.1 =
+        LinearMap.trace ℝ Coord8
+          (neutralCanonicalToCoord.conj D.1) :=
+      (LinearMap.trace_conj' D.1 neutralCanonicalToCoord).symm
+    _ = 0 := by
+      simpa [transportedDerivation, LinearEquiv.conj] using h
 
 end InfoGeometry.Lie.SplitOctonionDerivationWittBlockRealization

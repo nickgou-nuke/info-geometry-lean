@@ -4,7 +4,7 @@ InfoGeometry/OperatorAlgebra/EntanglementGeometryLedger.lean
 Entanglement, AMPS monogamy, ER-bridge identification, and complexity growth.
 
 This file processes the Susskind ER=EPR / complexity lecture into proof-carrying
-operator-geometry sockets.
+operator-geometry interfaces.
 
 It does not assert ER=EPR as an unconditional theorem.
 
@@ -160,12 +160,12 @@ theorem er_identification_forced :
 
 end AMPSMonogamyData
 
-/-! ## 3. Entanglement/connectivity bridge socket -/
+/-! ## 3. Entanglement/connectivity bridge -/
 
 /--
 A bridge between entanglement and geometric connectivity.
 
-This is the property-gated ER=EPR socket. It does not identify entanglement and
+This is the property-gated ER=EPR interface. It does not identify entanglement and
 geometry definitionally. It records how a concrete model translates between
 the two.
 -/
@@ -216,7 +216,7 @@ theorem no_bridge_of_not_entangled
 
 end EntanglementConnectivityBridge
 
-/-! ## 4. ER route / nontraversability socket -/
+/-! ## 4. ER route / nontraversability -/
 
 /--
 A nontraversable ER route property.
@@ -266,7 +266,7 @@ theorem exists_interior_meeting :
 
 end NonTraversableERRoute
 
-/-! ## 5. Measurement / GHZ socket -/
+/-! ## 5. Measurement / GHZ -/
 
 /--
 Tripartite entanglement pattern.

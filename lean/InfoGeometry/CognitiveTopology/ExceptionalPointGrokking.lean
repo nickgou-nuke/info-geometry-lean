@@ -9,7 +9,7 @@ This file records a theorem-safe finite/operator shadow of the slogan
 
 It does **not** prove that trained LLMs grok, that hallucinations are impossible,
 or that black-hole horizons, SUSY charges, and neural attention operators are
-physically identical.  It proves only the common algebraic socket used by those
+physically identical.  It proves only the common algebraic interface used by those
 finite bridges: a Jordan exceptional-point property carries a square-zero
 nilpotent part, and the concrete KAN wallpaper translation generator has the
 same square-zero property.
@@ -20,14 +20,14 @@ same square-zero property.
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
 
-`exceptionalPoint_nilpotent_part_square_zero`, `grokking_is_event_horizon`,
-and `exceptionalPoint_and_KAN_share_square_zero_socket`.
+`exceptionalPoint_nilpotent_part_square_zero` and
+`exceptionalPoint_and_KAN_square_zero`.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 
 Actual LLM grokking dynamics, hallucination behavior, non-Hermitian spectral
 flow, and physical black-hole horizons remain outside this finite/operator
-socket unless supplied by additional explicit premises.
+claim unless supplied by additional explicit premises.
 -/
 
 noncomputable section
@@ -56,16 +56,28 @@ theorem exceptionalPoint_nilpotent_part_square_zero (A N : H →L[ℂ] H)
     N ∘L N = 0 :=
   h_ep.2
 
-/--
-Compatibility name for the finite/operator grokking socket.
-
-Read this as: an explicitly supplied exceptional-point property has the same
-square-zero nilpotent shape used by the finite KAN horizon bridge.
--/
-theorem grokking_is_event_horizon (A N : H →L[ℂ] H)
+theorem exceptionalPoint_displacement_square_zero (A N : H →L[ℂ] H)
     (h_ep : IsExceptionalPoint A N) :
-    N ∘L N = 0 :=
-  exceptionalPoint_nilpotent_part_square_zero A N h_ep
+    (A - ContinuousLinearMap.id ℂ H) ∘L
+        (A - ContinuousLinearMap.id ℂ H) = 0 := by
+  rw [h_ep.1]
+  simp only [add_sub_cancel_left]
+  exact h_ep.2
+
+theorem exceptionalPoint_displacement_eq_nilpotent_part
+    (A N : H →L[ℂ] H)
+    (h_ep : IsExceptionalPoint A N) :
+    A - ContinuousLinearMap.id ℂ H = N := by
+  rw [h_ep.1]
+  exact add_sub_cancel_left _ _
+
+theorem exceptionalPoint_displacement_commutes (A N : H →L[ℂ] H)
+    (h_ep : IsExceptionalPoint A N) :
+    (A - ContinuousLinearMap.id ℂ H) ∘L A =
+      A ∘L (A - ContinuousLinearMap.id ℂ H) := by
+  rw [h_ep.1]
+  simp only [add_sub_cancel_left]
+  rw [comp_add, add_comp, comp_id, id_comp, h_ep.2]
 
 /-- The KAN wallpaper nilpotent generator carries the same square-zero property. -/
 theorem KAN_nilpotent_generator_square_zero :
@@ -73,10 +85,10 @@ theorem KAN_nilpotent_generator_square_zero :
   translation_is_nilpotent_horizon
 
 /--
-Finite socket combining the two square-zero certificates without identifying
+Finite conjunction of the two square-zero certificates without identifying
 their carriers or claiming a physical/cognitive theorem.
 -/
-theorem exceptionalPoint_and_KAN_share_square_zero_socket (A N : H →L[ℂ] H)
+theorem exceptionalPoint_and_KAN_square_zero (A N : H →L[ℂ] H)
     (h_ep : IsExceptionalPoint A N) :
     (N ∘L N = 0) ∧ (n * n = 0) := by
   refine ⟨?_, ?_⟩

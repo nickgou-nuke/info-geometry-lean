@@ -32,12 +32,12 @@ local instance : IsScalarTower ℝ EndH EndH := inferInstance
 
 /-- The unipotent monodromy flow as a KMS-style readout datum. -/
 def unipotentMonodromyReadoutDatum
-    (M : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperator H) :
+    (M : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperator H)
+    (hM : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperatorLaws M) :
     KMSReadoutDatum EndH where
   flow := fun t T => InfoGeometry.Physics.Algebra.continuousUnipotentFlow M t * T
   state := fun _ => 0
-  beta := 1
-  beta_pos := by positivity
+  beta := ⟨1, by norm_num⟩
   flow_zero := by
     intro T
     simp [InfoGeometry.Physics.Algebra.continuousUnipotentFlow]
@@ -47,7 +47,7 @@ def unipotentMonodromyReadoutDatum
       InfoGeometry.Physics.Algebra.continuousUnipotentFlow M (s + t) * T =
           (InfoGeometry.Physics.Algebra.continuousUnipotentFlow M s *
             InfoGeometry.Physics.Algebra.continuousUnipotentFlow M t) * T := by
-              rw [InfoGeometry.Physics.Algebra.continuousUnipotentFlow_add]
+              rw [InfoGeometry.Physics.Algebra.continuousUnipotentFlow_add M hM]
       _ = InfoGeometry.Physics.Algebra.continuousUnipotentFlow M s *
             (InfoGeometry.Physics.Algebra.continuousUnipotentFlow M t * T) := by
           rw [mul_assoc]
@@ -61,7 +61,7 @@ equivalence with inverse at the negated parameter.
 -/
 noncomputable def unipotentMonodromyReadoutEquiv
     (M : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperator H)
-    (t : ℝ) : EndH ≃L[ℝ] EndH := by
+    (t : ℝ) (hM : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperatorLaws M) : EndH ≃L[ℝ] EndH := by
   let e : EndH ≃ₗ[ℝ] EndH :=
     { toLinearMap := ContinuousLinearMap.mul ℝ EndH
         (InfoGeometry.Physics.Algebra.continuousUnipotentFlow M t)
@@ -73,7 +73,7 @@ noncomputable def unipotentMonodromyReadoutEquiv
         change (((InfoGeometry.Physics.Algebra.continuousUnipotentFlow M (-t)) *
             (InfoGeometry.Physics.Algebra.continuousUnipotentFlow M t)) * T) x =
           T x
-        rw [InfoGeometry.Physics.Algebra.continuousUnipotentFlow_neg_mul (M := M) t]
+        rw [InfoGeometry.Physics.Algebra.continuousUnipotentFlow_neg_mul M hM t]
         simp
       right_inv := by
         intro T
@@ -81,7 +81,7 @@ noncomputable def unipotentMonodromyReadoutEquiv
         change (((InfoGeometry.Physics.Algebra.continuousUnipotentFlow M t) *
             (InfoGeometry.Physics.Algebra.continuousUnipotentFlow M (-t))) * T) x =
           T x
-        rw [InfoGeometry.Physics.Algebra.continuousUnipotentFlow_mul_neg (M := M) t]
+        rw [InfoGeometry.Physics.Algebra.continuousUnipotentFlow_mul_neg M hM t]
         simp }
   exact ContinuousLinearEquiv.mk e
     (ContinuousLinearMap.mul ℝ EndH
@@ -92,12 +92,13 @@ noncomputable def unipotentMonodromyReadoutEquiv
 omit [CompleteSpace H] in
 theorem unipotentMonodromyReadoutEquiv_comp
     (M : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperator H)
-    (s t : ℝ) :
-    (unipotentMonodromyReadoutEquiv (H := H) M t).trans
-        (unipotentMonodromyReadoutEquiv (H := H) M s) =
-      unipotentMonodromyReadoutEquiv (H := H) M (t + s) := by
+    (s t : ℝ)
+    (hM : InfoGeometry.Physics.Algebra.ContinuousMonodromyOperatorLaws M) :
+    (unipotentMonodromyReadoutEquiv (H := H) M t hM).trans
+        (unipotentMonodromyReadoutEquiv (H := H) M s hM) =
+      unipotentMonodromyReadoutEquiv (H := H) M (t + s) hM := by
   ext T x
-  have h := InfoGeometry.Physics.Algebra.continuousUnipotentFlow_add (M := M) s t
+  have h := InfoGeometry.Physics.Algebra.continuousUnipotentFlow_add M hM s t
   simpa [add_comm, unipotentMonodromyReadoutEquiv, ContinuousLinearMap.mul_apply] using
     congrArg (fun Y : EndH => Y (T x)) h
 

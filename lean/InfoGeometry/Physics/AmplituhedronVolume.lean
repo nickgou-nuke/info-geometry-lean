@@ -8,7 +8,7 @@ import InfoGeometry.Clifford.LogCftMonodromy
 The old file depended on an unavailable log-CFT monodromy packet and promoted a
 formal trace calculation into a zeta/amplituhedron theorem.  This replacement
 keeps only the Dirichlet-term expression and records the zeta identification as
-a categorical/Hestenes--Krein colimit statement socket.
+a categorical/Hestenes--Krein colimit statement.
 -/
 
 namespace InfoGeometry.Physics.AmplituhedronVolume
@@ -45,14 +45,9 @@ theorem amplituhedronVolume_eq_zeta_sum (β : ℂ) :
     amplituhedronVolume β = ∑' n : ℕ, Complex.exp (-β * Real.log ((n + 1 : ℕ) : ℝ)) := by
   simp [amplituhedronVolume, dirichletTerm]
 
-/-- Statement shape for the missing categorical/Hestenes--Krein colimit
- identification with the Riemann zeta readout on its guarded domain. -/
-def amplituhedronVolume_zeta_statement : Prop :=
-  ∀ β : ℂ, 1 < β.re → amplituhedronVolume β = riemannZeta β
-
 /-! ### Zeta identification theorem
 
-This closes the statement socket: the formal amplituhedron volume series
+This proves the statement: the formal amplituhedron volume series
 is exactly the Riemann zeta function on the half-plane `1 < β.re`.
 
 The proof mirrors `bostConnesPartition_eq_riemannZeta_re` but works directly
@@ -103,5 +98,10 @@ theorem amplituhedronVolume_zeta (β : ℂ) (hβ : 1 < β.re) :
   apply tsum_congr
   intro n
   simpa [dirichletTerm, Nat.cast_add, Nat.cast_one] using dirichletTerm_eq_inv_cpow β n
+
+theorem amplituhedronVolume_zeta_on_halfplane :
+    ∀ β : ℂ, 1 < β.re → amplituhedronVolume β = riemannZeta β := by
+  intro β hβ
+  exact amplituhedronVolume_zeta β hβ
 
 end InfoGeometry.Physics.AmplituhedronVolume

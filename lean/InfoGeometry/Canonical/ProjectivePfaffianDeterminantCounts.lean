@@ -20,12 +20,11 @@ Authors: Nikolay Goutev, Dimitar Tonev
 
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # InfoGeometry.Canonical.ProjectivePfaffianDeterminantCounts
 
-Projective Pfaffian/determinant count socket.
+Projective Pfaffian/determinant count interface.
 
 The theorem-safe doctrine is:
 

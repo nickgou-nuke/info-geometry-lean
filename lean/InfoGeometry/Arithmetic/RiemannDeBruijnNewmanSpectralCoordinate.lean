@@ -67,6 +67,18 @@ theorem RiemannSpectralProbe_eq_shift (s : ℂ) :
   · simp [Complex.mul_re, Complex.sub_re, Complex.mul_im, Complex.sub_im]
   · simp [Complex.mul_re, Complex.sub_re, Complex.mul_im, Complex.sub_im]
 
+theorem RiemannSpectralProbe_eq_zero_iff (s : ℂ) :
+    RiemannSpectralProbe s = 0 ↔ s = (1 / 2 : ℂ) := by
+  rw [RiemannSpectralProbe_eq_shift]
+  constructor
+  · intro h
+    rcases mul_eq_zero.mp h with hI | hshift
+    · norm_num at hI
+    · exact sub_eq_zero.mp hshift
+  · intro h
+    rw [h]
+    norm_num
+
 theorem critical_line_iff_real_spectral_probe (s : ℂ) :
     (RiemannSpectralProbe s).im = 0 ↔ s.re = 1 / 2 := by
   rw [RiemannSpectralProbe_eq_shift]

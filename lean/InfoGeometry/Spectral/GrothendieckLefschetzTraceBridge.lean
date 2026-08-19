@@ -62,6 +62,14 @@ theorem modalDampedCosineTerm_abs_le (lambda_n sqrt_n gamma_S tau t ln_n : ℝ)
     linarith
   exact le_trans h_step1 h_step2
 
+/-- A finite damped cosine mode vanishes exactly at a zero weight or phase. -/
+theorem modalDampedCosineTerm_eq_zero_iff
+    (lambda_n sqrt_n gamma_S tau t ln_n : ℝ)
+    (h_sqrt : sqrt_n ≠ 0) :
+    modalDampedCosineTerm lambda_n sqrt_n gamma_S tau t ln_n = 0 ↔
+      lambda_n = 0 ∨ Real.cos (t * ln_n) = 0 := by
+  simp [modalDampedCosineTerm, h_sqrt, Real.exp_ne_zero]
+
 /-- Scalar contraction denominator `1 - exp(-gamma * tau)`. -/
 def contractionDenominator (gamma_S tau : ℝ) : ℝ :=
   1 - Real.exp (- gamma_S * tau)

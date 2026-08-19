@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/DIIISuperfluid.lean
 
-Class DIII superfluid/BdG symmetry sockets.
+Class DIII superfluid/BdG symmetry definitions.
 
 This module keeps DIII as a concrete physical symmetry-class branch:
 
@@ -16,7 +16,6 @@ or a richer index/winding datum depending on dimension and interaction regime.
 -/
 
 import Mathlib.Tactic
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -36,7 +35,7 @@ abbrev EndR
 /--
 Algebraic DIII sign datum.
 
-This is the pure sign skeleton behind the real-linear DIII sockets.  It proves
+This is the pure sign skeleton behind the real-linear DIII maps.  It proves
 the formal consequences of the Altland-Zirnbauer DIII signs without choosing a
 particular carrier or Hamiltonian representation.
 -/
@@ -254,7 +253,7 @@ structure DIIISuperfluidDatum
   Xi_BdG :
     Xi.comp BdG = -(BdG.comp Xi)
 
-  /-- Time-reversal symmetry in the real-space/no-momentum-reversal socket. -/
+  /-- Time-reversal symmetry in the real-space/no-momentum-reversal model. -/
   Theta_BdG :
     Theta.comp BdG = BdG.comp Theta
 
@@ -372,7 +371,7 @@ operators, and topological invariant must be supplied by a model.  What it
 proves is not mere inhabitation; it exposes the kernel-checked sign,
 phase-reversal, chiral, and BdG covariance laws carried by that datum.
 -/
-theorem dIIISuperfluidOwnerTarget :
+theorem dIIISuperfluid_properties :
   ∀ (H : Type uH) [NormedAddCommGroup H] [NormedSpace ℝ H],
     ∀ D : DIIISuperfluidDatum H,
       D.K.comp D.K = -(ContinuousLinearMap.id ℝ H) ∧

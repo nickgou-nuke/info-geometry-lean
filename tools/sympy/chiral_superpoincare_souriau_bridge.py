@@ -86,7 +86,7 @@ def main() -> None:
     beta_sq_gamma = sp.simplify(beta_sq.subs(gamma**2, 1 / (1 - v**2)))
     assert_zero(beta_sq_gamma - 1 / T**2, "boosted beta square = 1/T^2")
 
-    # Poincare metric coefficients (+---), matching the Lean socket.
+    # Poincare metric coefficients (+---), matching the Lean interface.
     eta = sp.diag(1, -1, -1, -1)
     assert eta[0, 0] == 1
     for mu in [1, 2, 3]:

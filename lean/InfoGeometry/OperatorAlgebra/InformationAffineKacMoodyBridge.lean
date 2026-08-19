@@ -29,7 +29,7 @@ open InfoGeometry.OperatorAlgebra.LightConeSugawaraCalibration
 /--
 Carrier for the information-geometry/affine-current calibration.
 
-`Finite` is the finite current algebra carrier used by the affine socket.
+`Finite` is the finite current algebra carrier used by the affine construction.
 `Source` is the parameter carrier of the operatorial Souriau family.  The map
 `toSource` selects the parameter associated to a finite current direction.
 -/
@@ -44,7 +44,7 @@ structure InformationAffineKacMoodyCarrier
   /-- Souriau moment/covariance generator. -/
   momentGenerator : MomentGeneratingReadout Source Obs
 
-  /-- Lightcone Sugawara/affine socket. -/
+  /-- Lightcone Sugawara/affine relation. -/
   sugawaraBridge :
     Calibration E Finite Alg Bog Korth Asplit Nshear CartanDiag
 

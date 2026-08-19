@@ -68,24 +68,24 @@ theorem even_zero_reflection {F : ℂ → ℂ} (hEven : EvenCentered F) {z : ℂ
 /-! ## Counterexample to the heuristic implication -/
 
 /-- A minimal even function with off-axis zeros: `z^2 - 1`. -/
-def evenOffAxisWitness (z : ℂ) : ℂ :=
+def evenOffAxisPolynomial (z : ℂ) : ℂ :=
   z ^ 2 - 1
 
 /-- The property is centered-even. -/
-theorem evenOffAxisWitness_even : EvenCentered evenOffAxisWitness := by
+theorem evenOffAxisPolynomial_even : EvenCentered evenOffAxisPolynomial := by
   intro z
-  unfold evenOffAxisWitness
+  unfold evenOffAxisPolynomial
   ring
 
 /-- `z = 1` is a zero of the property. -/
-theorem evenOffAxisWitness_one_zero : ZeroAt evenOffAxisWitness (1 : ℂ) := by
-  unfold ZeroAt evenOffAxisWitness
+theorem evenOffAxisPolynomial_one_zero : ZeroAt evenOffAxisPolynomial (1 : ℂ) := by
+  unfold ZeroAt evenOffAxisPolynomial
   norm_num
 
 /-- `z = -1` is the reflected zero of the property. -/
-theorem evenOffAxisWitness_neg_one_zero : ZeroAt evenOffAxisWitness (-1 : ℂ) := by
+theorem evenOffAxisPolynomial_neg_one_zero : ZeroAt evenOffAxisPolynomial (-1 : ℂ) := by
   simpa using
-    (even_zero_reflection evenOffAxisWitness_even evenOffAxisWitness_one_zero)
+    (even_zero_reflection evenOffAxisPolynomial_even evenOffAxisPolynomial_one_zero)
 
 /-- The zero `z = 1` is not on the centered critical line. -/
 theorem one_not_centeredCriticalLine : ¬ centeredCriticalLine (1 : ℂ) := by
@@ -99,9 +99,9 @@ Even centered symmetry does not imply critical-line confinement.  The polynomial
 theorem even_symmetry_allows_off_axis_zero_pair :
     ∃ F : ℂ → ℂ, ∃ z : ℂ,
       EvenCentered F ∧ ZeroAt F z ∧ ZeroAt F (-z) ∧ z.re ≠ 0 := by
-  refine ⟨evenOffAxisWitness, (1 : ℂ), evenOffAxisWitness_even,
-    evenOffAxisWitness_one_zero, ?_, ?_⟩
-  · simpa using evenOffAxisWitness_neg_one_zero
+  refine ⟨evenOffAxisPolynomial, (1 : ℂ), evenOffAxisPolynomial_even,
+    evenOffAxisPolynomial_one_zero, ?_, ?_⟩
+  · simpa using evenOffAxisPolynomial_neg_one_zero
   · norm_num
 
 /-! ## The explicit complement needed for confinement -/

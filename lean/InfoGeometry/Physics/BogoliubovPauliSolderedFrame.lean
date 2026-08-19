@@ -307,6 +307,18 @@ theorem unifiedBogoliubov_pauli_tetrad_reconstruct
     simp
 
 omit [CompleteSpace E] in
+theorem unifiedBogoliubov_reconstruct
+    (m : UnifiedBogoliubovMode (E := E)) :
+    (unifiedBogoliubovPauliTetradFrame (E := E)).annihilator m
+      + (unifiedBogoliubovPauliTetradFrame (E := E)).creator m =
+      match m with
+      | Sum.inl A => (A, 0)
+      | Sum.inr v => (0, pauliTetradSoldering v) := by
+  cases m with
+  | inl A => exact unifiedBogoliubov_operator_reconstruct A
+  | inr v => exact unifiedBogoliubov_pauli_tetrad_reconstruct v
+
+omit [CompleteSpace E] in
 /--
 The one merged Bogoliubov frame has the Pauli/tetrad determinant readout on
 Pauli/tetrad modes.

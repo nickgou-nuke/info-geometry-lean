@@ -49,36 +49,6 @@ namespace DuhamelOperatorDerivative
     rfl
 end DuhamelOperatorDerivative
 
-theorem duhamelFormulaClaim {Param Op Direction : Type*} (D : DuhamelOperatorDerivative Param Op Direction) (β : Param) (δ : Direction) :
-  D.derivativeOfExp β δ = D.higherSimplexOrderedForms 1 β [δ] :=
-  D.derivativeOfExp_eq_first_ordered_form β δ
-theorem higherSimplexOrderedLawClaim
-    {Param Op Direction : Type*}
-    (D : DuhamelOperatorDerivative Param Op Direction)
-    (β : Param) (δ : Direction) :
-    D.higherSimplexOrderedForms 1 β [δ] = D.derivativeOfExp β δ := by
-  exact (D.derivativeOfExp_eq_first_ordered_form β δ).symm
-
-theorem tracedCumulantReadoutLawClaim
-    {Param Op Direction : Type*}
-    (D : DuhamelOperatorDerivative Param Op Direction)
-    (β : Param) (δ : Direction) :
-    D.traceStateKMSReadout (D.derivativeOfExp β δ) =
-      D.traceStateKMSReadout (D.higherSimplexOrderedForms 1 β [δ]) := by
-  exact congrArg D.traceStateKMSReadout (D.derivativeOfExp_eq_first_ordered_form β δ)
-
-abbrev DuhamelOperatorialNForms := DuhamelOperatorDerivative
-
-namespace DuhamelOperatorDerivative
-  variable {Param Op Direction : Type*}
-end DuhamelOperatorDerivative
-
-def instDuhamelOperatorDerivative : DuhamelOperatorDerivative Unit Unit Unit :=
-  { K := fun _ => ()
-    directionToInsertion := fun _ => ()
-    higherSimplexOrderedForms := fun _ _ _ => ()
-    traceStateKMSReadout := fun _ => 0 }
-
 @[rep_depth operator]
 structure MomentGeneratingReadout
     (Param Op : Type*)

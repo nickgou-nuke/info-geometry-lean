@@ -57,20 +57,6 @@ theorem gellMannParafermionSolder_singlet_zero
     (gellMannParafermionSolder R A).2 = 0 := by
   rfl
 
-/-- Statement shape for multiplicativity of the ordinary matrix action on the
-color lane. -/
-def colorLieAction4_mul_statement {V : Type*} [AddCommMonoid V] [Module ℂ V]
-    (A B : M3C) (ψ : ColorSpinor4 V) : Prop :=
-  colorLieAction4 (A * B) ψ = colorLieAction4 A (colorLieAction4 B ψ)
-
-/-- Statement shape for the additive commutator readout of the ordinary matrix
-action. -/
-def colorLieAction4_commutator_statement {V : Type*} [AddCommGroup V] [Module ℂ V]
-    (A B : M3C) (ψ : ColorSpinor4 V) : Prop :=
-  colorLieAction4 (A * B - B * A) ψ =
-      colorLieAction4 A (colorLieAction4 B ψ) -
-      colorLieAction4 B (colorLieAction4 A ψ)
-
 theorem colorLieAction4_mul
     {V : Type*} [AddCommMonoid V] [Module ℂ V]
     (A B : M3C) (ψ : ColorSpinor4 V) :

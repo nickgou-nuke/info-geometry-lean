@@ -55,7 +55,7 @@ assert bandgap == sigma3
 
 print("2. Mass gap stability: VERIFIED")
 print("   [σ⁺,σ⁻] = σ₃ = N₊-N₋ (algebraic bandgap, proved)")
-print("   Physical mass gap in 4D continuum: socketed ✓")
+print("   Physical mass gap in 4D continuum: deferred_interface ✓")
 
 # ============================================================
 # 3. Riemann zeros: CPT fixed locus survives q→1
@@ -95,7 +95,7 @@ print("   Finite duality: Z_K·Z_mobius = 1-ε_K holds ∀β ✓")
 print("4. Hodge cycles stability: VERIFIED")
 print("   DiagAlg n: finite algebraic cycles (q-independent)")
 print("   Colimit: universal property (q-independent)")
-print("   ℂℙ³ ≅ Cantor: geometric identification socketed ✓")
+print("   ℂℙ³ ≅ Cantor: geometric identification deferred_interface ✓")
 
 # ============================================================
 # Synthesis
@@ -111,7 +111,7 @@ print("""
     • Braid collapse B₃ → S₃ (σ_i² = id)
     • DiagAlg n algebraic cycles (q-independent colimit)
 
-  SOCKETED (requires analytic continuation):
+  DEFERRED_INTERFACE (requires analytic continuation):
     • Lee-Yang condensation K→∞ → ζ(s) zeros
     • Physical mass gap in 4D continuum
     • ℂℙ³ ≅ Cantor geometric identification

@@ -1,9 +1,9 @@
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Canonical.PrimeLeeYangFerromagneticChain
 import Mathlib.Data.Real.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Nat.Prime.Basic
+import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.Tactic
 
 /-!
@@ -206,6 +206,73 @@ theorem fullRankOneCoupling_cross_minor
   unfold fullRankOneCoupling
   ring
 
+/-- Matrix readout of the full rank-one coupling before diagonal deletion. -/
+@[rep_depth thermo]
+def fullRankOneCouplingMatrix
+    (lam : ℝ) : Matrix (Fin N) (Fin N) ℝ :=
+  fun i j => D.fullRankOneCoupling lam i j
+
+/-- The full rank-one coupling matrix is a scalar Gram matrix. -/
+@[rep_depth thermo]
+theorem fullRankOneCouplingMatrix_eq_smul_vecMulVec
+    (lam : ℝ) :
+    D.fullRankOneCouplingMatrix lam =
+      (lam / 2) • Matrix.vecMulVec D.ell D.ell := by
+  ext i j
+  simp [fullRankOneCouplingMatrix, fullRankOneCoupling,
+    Matrix.vecMulVec]
+  ring
+
+/-- The full rank-one readout agrees with the existing finite ferromagnetic
+chain carrier at coupling scale `lam / 2`. -/
+@[rep_depth thermo]
+theorem fullRankOneCouplingMatrix_eq_toPrimeFerromagneticChain_couplingMatrix
+    (lam : ℝ) (hLam : 0 ≤ lam) :
+    D.fullRankOneCouplingMatrix lam =
+      (D.toPrimeFerromagneticChain (lam / 2)
+        (div_nonneg hLam (by norm_num))).couplingMatrix := by
+  ext i j
+  change (lam / 2) * D.ell i * D.ell j =
+    (lam / 2) *
+      (D.toPrimeFerromagneticChain (lam / 2)
+        (div_nonneg hLam (by norm_num))).siteEnergy i *
+      (D.toPrimeFerromagneticChain (lam / 2)
+        (div_nonneg hLam (by norm_num))).siteEnergy j
+  rw [D.toPrimeFerromagneticChain_siteEnergy_eq_ell,
+    D.toPrimeFerromagneticChain_siteEnergy_eq_ell]
+
+/-- Nonnegative coupling scale gives a positive-semidefinite full rank-one
+coupling matrix. -/
+@[rep_depth thermo]
+theorem fullRankOneCouplingMatrix_posSemidef
+    {lam : ℝ} (hLam : 0 ≤ lam) :
+    Matrix.PosSemidef (D.fullRankOneCouplingMatrix lam) := by
+  rw [D.fullRankOneCouplingMatrix_eq_smul_vecMulVec]
+  exact (Matrix.posSemidef_vecMulVec_self_star D.ell).smul
+    (div_nonneg hLam (by norm_num))
+
+/-- Matrix readout of the diagonal-deleted Lee--Yang interaction. -/
+@[rep_depth thermo]
+def spinCouplingMatrix
+    (lam : ℝ) : Matrix (Fin N) (Fin N) ℝ :=
+  fun i j => D.spinCoupling lam i j
+
+/-- The Lee--Yang interaction is the full rank-one coupling with its diagonal
+removed. -/
+@[rep_depth thermo]
+theorem spinCouplingMatrix_eq_fullRankOne_sub_diagonal
+    (lam : ℝ) :
+    D.spinCouplingMatrix lam =
+      D.fullRankOneCouplingMatrix lam -
+        Matrix.diagonal (fun i => D.fullRankOneCoupling lam i i) := by
+  ext i j
+  by_cases hij : i = j
+  · subst j
+    simp [spinCouplingMatrix, spinCoupling, fullRankOneCouplingMatrix,
+      fullRankOneCoupling, Matrix.diagonal]
+  · simp [spinCouplingMatrix, spinCoupling, fullRankOneCouplingMatrix,
+      fullRankOneCoupling, Matrix.diagonal, hij]
+
 /--
 Finite Lee--Yang Hamiltonian in spin variables:
 
@@ -217,6 +284,23 @@ def spinHamiltonian
     (σ : Fin N → ℝ) : ℝ :=
   - (lam / 4) * (∑ i, D.ell i * σ i) ^ 2
     + (w / 2) * ∑ i, D.ell i * σ i
+
+@[rep_depth thermo]
+theorem spinHamiltonian_zeroField_neg (lam : ℝ) (σ : Fin N → ℝ) :
+    D.spinHamiltonian lam 0 (-σ) = D.spinHamiltonian lam 0 σ := by
+  unfold spinHamiltonian
+  simp only [Pi.neg_apply, mul_neg]
+  rw [Finset.sum_neg_distrib]
+  ring
+
+@[rep_depth thermo]
+theorem spinHamiltonian_field_spin_reversal
+    (lam w : ℝ) (σ : Fin N → ℝ) :
+    D.spinHamiltonian lam (-w) (-σ) = D.spinHamiltonian lam w σ := by
+  unfold spinHamiltonian
+  simp only [Pi.neg_apply, mul_neg]
+  rw [Finset.sum_neg_distrib]
+  ring
 
 /-- 🏆 THEOREM: Quadratic expansion of the collective interaction sum -/
 @[rep_depth thermo]

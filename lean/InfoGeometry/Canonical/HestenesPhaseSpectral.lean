@@ -142,7 +142,7 @@ theorem isPhaseLinear_comp
           simp [ContinuousLinearMap.comp_assoc]
 
 /--
-Projector compatibility socket: any projector commuting with `K = clockAxis` is Hestenes-linear.
+Projector compatibility interface: any projector commuting with `K = clockAxis` is Hestenes-linear.
 -/
 theorem spectral_projector_isHestenesLinear
     (P : EndH)

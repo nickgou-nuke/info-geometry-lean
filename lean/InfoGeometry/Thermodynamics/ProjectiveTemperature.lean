@@ -51,6 +51,21 @@ theorem betaInvert_one :
     betaInvert 1 = 1 := by
   simp [betaInvert]
 
+/-- Positive fixed points of temperature inversion are uniquely critical. -/
+theorem betaInvert_fixed_iff_of_pos {β : ℝ} (hβ : 0 < β) :
+    betaInvert β = β ↔ β = 1 := by
+  constructor
+  · intro hfix
+    have hne : β ≠ 0 := ne_of_gt hβ
+    have hsq : β ^ 2 = 1 := by
+      have hmul := congrArg (fun x : ℝ => x * β) hfix
+      simp [betaInvert, hne] at hmul
+      nlinarith
+    nlinarith [sq_nonneg (β - 1), sq_nonneg (β + 1)]
+  · intro h
+    subst β
+    exact betaInvert_one
+
 /-- Positive temperatures stay positive under inversion. -/
 theorem betaInvert_pos {β : ℝ} (hβ : 0 < β) :
     0 < betaInvert β := by
@@ -73,7 +88,7 @@ theorem one_lt_betaInvert_of_mem_Ioo_zero_one {β : ℝ}
 The real-shadow closure involution associated to temperature inversion.
 
 This connects the thermodynamic temperature ray to the existing abstract
-Möbius/Tomita fixed-point socket without claiming that this real map is itself
+Möbius/Tomita fixed-point interface without claiming that this real map is itself
 a Tomita operator.
 -/
 def temperatureClosureInvolution : ClosureInvolution ℝ where
@@ -131,6 +146,27 @@ theorem stereographicTemperature_on_unit_circle (β : ℝ) :
   field_simp [hden]
   ring
 
+theorem stereographicTemperatureX_betaInvert {β : ℝ} (hβ : β ≠ 0) :
+    stereographicTemperatureX (betaInvert β) =
+      stereographicTemperatureX β := by
+  unfold stereographicTemperatureX betaInvert
+  field_simp [hβ]
+  ring
+
+theorem stereographicTemperatureY_betaInvert {β : ℝ} (hβ : β ≠ 0) :
+    stereographicTemperatureY (betaInvert β) =
+      -stereographicTemperatureY β := by
+  unfold stereographicTemperatureY betaInvert
+  field_simp [hβ]
+  ring
+
+theorem stereographicTemperature_betaInvert {β : ℝ} (hβ : β ≠ 0) :
+    stereographicTemperature (betaInvert β) =
+      (stereographicTemperatureX β, -stereographicTemperatureY β) := by
+  apply Prod.ext
+  · exact stereographicTemperatureX_betaInvert hβ
+  · exact stereographicTemperatureY_betaInvert hβ
+
 /-! ## 3. Primitive objective under inverted temperature coordinates -/
 
 /--
@@ -156,7 +192,7 @@ def primitiveInvertedPartitionDensity (A : Finset ℕ) (u : ℝ) : ℝ :=
 Witness that the projective temperature inversion correctly transports the
 finite primitive/Riemann-gas objective integral.
 
-This is a calibration socket, not a proof of a general measure-substitution
+This is a calibration interface, not a proof of a general measure-substitution
 theorem.
 -/
 def PrimitiveTemperatureInversionCalibration (A : Finset ℕ) : Prop :=

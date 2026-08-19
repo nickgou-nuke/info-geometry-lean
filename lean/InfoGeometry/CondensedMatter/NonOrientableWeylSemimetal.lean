@@ -156,16 +156,6 @@ theorem totalChargeModTwo_local_orientation_choice_invariant
     (fun i _ => orientation_sign_mul_invisible_mod_two (hsign i))
 
 /--
-Finite exactness socket for the semimetal charge map.
-
-If `β : Semimetal → ι → ℤ` sends semimetal data to local Weyl charges, this is
-the exactness consequence `im β ⊆ ker Σ`, where `Σ` is `totalChargeModTwo`.
--/
-def ExactAtLocalCharges {Semimetal ι : Type} [Fintype ι]
-    (β : Semimetal → ι → ℤ) : Prop :=
-  ∀ s, ModTwoChargeNeutral (β s)
-
-/--
 Conditional form of the Douwes--Stålhammar mod-two cancellation step.
 
 Once the relevant twisted Mayer--Vietoris sequence supplies exactness at the
@@ -175,7 +165,7 @@ has zero total charge in `ZMod 2`.
 theorem exactness_gives_mod_two_charge_cancellation
     {Semimetal ι : Type} [Fintype ι]
     (β : Semimetal → ι → ℤ)
-    (hExact : ExactAtLocalCharges β)
+    (hExact : ∀ s, ModTwoChargeNeutral (β s))
     (s : Semimetal) :
     ModTwoChargeNeutral (β s) :=
   hExact s

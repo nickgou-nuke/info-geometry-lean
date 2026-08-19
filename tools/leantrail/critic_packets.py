@@ -24,7 +24,7 @@ STRONG_DOC_TOKENS = {
 
 OBFUSCATION_TOKENS = {
     "placeholder", "trust", "unsafe", "admit", "admitax", "axiom", "opaque",
-    "certificate", "witness", "socket", "readback", "sorryproof", "proofsocket",
+    "certificate", "witness", "deferred", "readback", "sorryproof", "placeholderproof",
     "kms_sorryproof", "fake", "stub", "todo_proof", "proof_placeholder",
 }
 
@@ -294,7 +294,7 @@ def generate_for_node(node: dict[str, Any], pkt_index: PacketIndex) -> list[dict
 
     name_strong = contains_any(name, STRONG_NAME_TOKENS)
     doc_strong = contains_any(doc, STRONG_DOC_TOKENS)
-    is_transport = role in {"fake_transport", "pure_conductor", "dead_socket"}
+    is_transport = role in {"fake_transport", "pure_conductor", "deferred_interface"}
 
     if is_transport and name_strong:
         packets.append(mk_packet(
@@ -302,13 +302,13 @@ def generate_for_node(node: dict[str, Any], pkt_index: PacketIndex) -> list[dict
             module=module,
             file=file,
             critic_kind="proof_shape_name_mismatch",
-            severity="high" if role == "dead_socket" else "medium",
+        severity="high" if role == "deferred_interface" else "medium",
             confidence=0.86 if role == "fake_transport" else 0.78,
             evidence_refs=evidence_refs,
             claim={
                 "surface_name": name,
                 "vacuity_role": role,
-                "problem": "The declaration name suggests a substantive theorem or bridge, but the proof-shape audit classifies it as transport/conductor/dead socket.",
+                "problem": "The declaration name suggests a substantive theorem or bridge, but the proof-shape audit classifies it as transport/conductor/deferred interface.",
             },
             allowed_next_actions=[
                 "rename theorem",

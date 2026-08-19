@@ -6,6 +6,7 @@ import Mathlib.Analysis.Complex.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic
+import InfoGeometry.Canonical.Berezinian
 
 /-!
 # Supergraded Primon Algebra, Berezinian Dirichlet Convolution, Surprisal & Massieu Free Energy
@@ -90,6 +91,13 @@ theorem free_energy_legendre_relation
 theorem primon_boson_fermion_berezinian_cancellation (zeta_val : ℂ) (hzeta : zeta_val ≠ 0) :
     zeta_val * (1 / zeta_val) = 1 :=
   mul_one_div_cancel hzeta
+
+/-! The product cancellation above is distinct from the Berezinian ratio. -/
+
+/-- Reciprocal determinant blocks have Berezinian `a²`, not `1`. -/
+theorem primon_reciprocal_blocks_berezinian (a : ℝ) (ha : a ≠ 0) :
+    InfoGeometry.Canonical.Berezinian.ber a a⁻¹ (inv_ne_zero ha) = a ^ 2 :=
+  InfoGeometry.Canonical.Berezinian.ber_reciprocal_blocks a ha
 
 /-! ### 5. Master Primon Berezinian Massieu Synthesis Packet -/
 

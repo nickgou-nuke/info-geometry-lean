@@ -5,8 +5,8 @@ This is a repo-local orchestration wrapper around the standing goal state machin
 in `tools/infra/goal_loop.py`.
 
 The loop is eternal at the mission level: it never marks the repository mission
-itself as done. Individual debt sockets may close; the mission re-arms on the
-next open socket until the user clears or pauses it.
+itself as done. Individual debt deferred_interfaces may close; the mission re-arms on the
+next open deferred_interface until the user clears or pauses it.
 """
 
 from __future__ import annotations
@@ -31,13 +31,13 @@ else:
 DEFAULT_STATE_DIR = Path("artifacts/mission-loop")
 DEFAULT_GOAL_STATE_DIR = Path("artifacts/goal-loop")
 DEFAULT_HEARTBEAT_LOG = Path("artifacts/hermes_loop/heartbeat/native_closure_mission.log")
-DEFAULT_LEDGER = Path("reports/closure/socket-owner-ledger.json")
+DEFAULT_LEDGER = Path("reports/closure/deferred_interface-owner-ledger.json")
 DEFAULT_GATE_POLICY = Path("tools/quality/closure_debt_gate.json")
 DEFAULT_BUILD_TARGET = "InfoGeometry.Canonical.All"
 DEFAULT_MISSION = "Pay the Native Closure Debts of the repository"
 DEFAULT_MODE = "eternal"
 
-TERMINAL_SOCKET_STATUSES = {
+TERMINAL_DEFERRED_INTERFACE_STATUSES = {
     "done",
     "closed",
     "closed_by_repo_owner",
@@ -60,9 +60,9 @@ class MissionState:
     created_at: float = 0.0
     last_tick_at: float = 0.0
     ticks_used: int = 0
-    current_socket_id: str | None = None
-    current_socket_title: str | None = None
-    closed_sockets: list[str] = field(default_factory=list)
+    current_deferred_interface_id: str | None = None
+    current_deferred_interface_title: str | None = None
+    closed_deferred_interfaces: list[str] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
 
     @classmethod
@@ -106,9 +106,9 @@ class MissionState:
             created_at=float(data.get("created_at", 0.0) or 0.0),
             last_tick_at=float(data.get("last_tick_at", 0.0) or 0.0),
             ticks_used=int(data.get("ticks_used", 0) or 0),
-            current_socket_id=data.get("current_socket_id"),
-            current_socket_title=data.get("current_socket_title"),
-            closed_sockets=[str(s) for s in (data.get("closed_sockets") or []) if str(s).strip()],
+            current_deferred_interface_id=data.get("current_deferred_interface_id"),
+            current_deferred_interface_title=data.get("current_deferred_interface_title"),
+            closed_deferred_interfaces=[str(s) for s in (data.get("closed_deferred_interfaces") or []) if str(s).strip()],
             notes=[str(s) for s in (data.get("notes") or []) if str(s).strip()],
         )
 
@@ -145,14 +145,14 @@ def save_mission_state(state_dir: Path, session_id: str, state: MissionState) ->
     return path
 
 
-def write_heartbeat_log(path: Path, *, state: MissionState, socket_id: str | None, verdict: dict[str, Any] | None) -> None:
+def write_heartbeat_log(path: Path, *, state: MissionState, deferred_interface_id: str | None, verdict: dict[str, Any] | None) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     lines = [
         f"## heartbeat {utc_now()}",
         f"mission: {state.mission}",
         f"session: {state.session}",
         f"status: {state.status}",
-        f"socket: {socket_id or ''}",
+        f"deferred_interface: {deferred_interface_id or ''}",
         f"ticks_used: {state.ticks_used}",
     ]
     if verdict is not None:
@@ -171,7 +171,7 @@ def load_ledger_rows(ledger_path: Path) -> list[dict[str, Any]]:
     except Exception:
         return []
     if isinstance(data, dict):
-        rows = data.get("sockets") or data.get("rows") or []
+        rows = data.get("deferred_interfaces") or data.get("rows") or []
     else:
         rows = data
     if not isinstance(rows, list):
@@ -183,29 +183,29 @@ def load_ledger_rows(ledger_path: Path) -> list[dict[str, Any]]:
     return out
 
 
-def socket_is_open(row: dict[str, Any], closed_sockets: set[str]) -> bool:
-    socket_id = str(row.get("id") or row.get("socket") or "").strip()
-    if not socket_id or socket_id in closed_sockets:
+def deferred_interface_is_open(row: dict[str, Any], closed_deferred_interfaces: set[str]) -> bool:
+    deferred_interface_id = str(row.get("id") or row.get("deferred_interface") or "").strip()
+    if not deferred_interface_id or deferred_interface_id in closed_deferred_interfaces:
         return False
     status = str(row.get("status") or "").strip().lower()
-    if status in TERMINAL_SOCKET_STATUSES:
+    if status in TERMINAL_DEFERRED_INTERFACE_STATUSES:
         return False
     return True
 
 
-def select_next_socket(rows: list[dict[str, Any]], closed_sockets: set[str]) -> dict[str, Any] | None:
+def select_next_deferred_interface(rows: list[dict[str, Any]], closed_deferred_interfaces: set[str]) -> dict[str, Any] | None:
     for row in rows:
-        if socket_is_open(row, closed_sockets):
+        if deferred_interface_is_open(row, closed_deferred_interfaces):
             return row
     return None
 
 
-def socket_label(row: dict[str, Any]) -> str:
-    socket_id = str(row.get("id") or row.get("socket") or "unknown").strip()
-    owner_target = str(row.get("owner_target") or row.get("socket") or "").strip()
+def deferred_interface_label(row: dict[str, Any]) -> str:
+    deferred_interface_id = str(row.get("id") or row.get("deferred_interface") or "unknown").strip()
+    owner_target = str(row.get("owner_target") or row.get("deferred_interface") or "").strip()
     if owner_target:
-        return f"{socket_id}: {owner_target}"
-    return socket_id
+        return f"{deferred_interface_id}: {owner_target}"
+    return deferred_interface_id
 
 
 def sync_goal_state(
@@ -213,7 +213,7 @@ def sync_goal_state(
     goal_state_dir: Path,
     session: str,
     mission: str,
-    socket_label_text: str | None,
+    deferred_interface_label_text: str | None,
     max_turns: int,
 ) -> GoalState:
     goal = load_goal_state(goal_state_dir, session)
@@ -225,8 +225,8 @@ def sync_goal_state(
     goal.status = "active"
     goal.paused_reason = None
     goal.turns_used = 0
-    if socket_label_text and socket_label_text not in goal.subgoals:
-        goal.subgoals.append(socket_label_text)
+    if deferred_interface_label_text and deferred_interface_label_text not in goal.subgoals:
+        goal.subgoals.append(deferred_interface_label_text)
     goal.last_turn_at = time.time()
     save_goal_state(goal_state_dir, session, goal)
     return goal
@@ -318,7 +318,7 @@ def build_packet(
     *,
     mission: MissionState,
     goal: GoalState | None,
-    socket_row: dict[str, Any] | None,
+    deferred_interface_row: dict[str, Any] | None,
     verdict: dict[str, Any] | None,
     open_count: int,
 ) -> dict[str, Any]:
@@ -335,21 +335,21 @@ def build_packet(
             "created_at": mission.created_at,
             "last_tick_at": mission.last_tick_at,
         },
-        "socket": {
-            "id": (socket_row or {}).get("id") or (socket_row or {}).get("socket") or "",
-            "title": socket_label(socket_row) if socket_row else "",
-            "owner_class": (socket_row or {}).get("owner_class") or "",
-            "owner_target": (socket_row or {}).get("owner_target") or "",
-            "status": (socket_row or {}).get("status") or "",
+        "deferred_interface": {
+            "id": (deferred_interface_row or {}).get("id") or (deferred_interface_row or {}).get("deferred_interface") or "",
+            "title": deferred_interface_label(deferred_interface_row) if deferred_interface_row else "",
+            "owner_class": (deferred_interface_row or {}).get("owner_class") or "",
+            "owner_target": (deferred_interface_row or {}).get("owner_target") or "",
+            "status": (deferred_interface_row or {}).get("status") or "",
         },
         "counts": {
-            "open_sockets": open_count,
-            "closed_sockets": len(mission.closed_sockets),
+            "open_deferred_interfaces": open_count,
+            "closed_deferred_interfaces": len(mission.closed_deferred_interfaces),
         },
         "goal_prompt": goal_prompt,
         "verdict": verdict or {},
         "recommended_commands": {
-            "lean": f"lake env lean {socket_row.get('lean_file', '')}" if socket_row else "",
+            "lean": f"lake env lean {deferred_interface_row.get('lean_file', '')}" if deferred_interface_row else "",
             "build": f"lake build {mission.build_target}" if mission.build_target else "",
             "gate": f"python3 tools/quality/check_closure_debt_gate.py --policy {mission.gate_policy}",
             "judge": (
@@ -376,7 +376,7 @@ def mission_set(args: argparse.Namespace) -> int:
         goal_state_dir=args.goal_state_dir,
         session=args.session,
         mission=mission_text,
-        socket_label_text=None,
+        deferred_interface_label_text=None,
         max_turns=args.max_turns,
     )
     print(state.to_json(), end="")
@@ -393,9 +393,9 @@ def mission_status(args: argparse.Namespace) -> int:
     packet = build_packet(
         mission=state,
         goal=goal,
-        socket_row=None,
+        deferred_interface_row=None,
         verdict=None,
-        open_count=sum(1 for row in rows if socket_is_open(row, set(state.closed_sockets))),
+        open_count=sum(1 for row in rows if deferred_interface_is_open(row, set(state.closed_deferred_interfaces))),
     )
     print(json.dumps(packet, ensure_ascii=False, indent=2))
     return 0
@@ -468,25 +468,25 @@ def mission_heartbeat(args: argparse.Namespace) -> int:
         return 2
 
     rows = load_ledger_rows(Path(state.ledger))
-    closed = set(state.closed_sockets)
-    socket_row = None
-    if state.current_socket_id:
+    closed = set(state.closed_deferred_interfaces)
+    deferred_interface_row = None
+    if state.current_deferred_interface_id:
         for row in rows:
-            row_id = str(row.get("id") or row.get("socket") or "").strip()
-            if row_id == state.current_socket_id and socket_is_open(row, closed):
-                socket_row = row
+            row_id = str(row.get("id") or row.get("deferred_interface") or "").strip()
+            if row_id == state.current_deferred_interface_id and deferred_interface_is_open(row, closed):
+                deferred_interface_row = row
                 break
-    if socket_row is None:
-        socket_row = select_next_socket(rows, closed)
+    if deferred_interface_row is None:
+        deferred_interface_row = select_next_deferred_interface(rows, closed)
 
-    socket_id = str(socket_row.get("id") or socket_row.get("socket") or "").strip() if socket_row else None
-    socket_title = socket_label(socket_row) if socket_row else None
+    deferred_interface_id = str(deferred_interface_row.get("id") or deferred_interface_row.get("deferred_interface") or "").strip() if deferred_interface_row else None
+    deferred_interface_title = deferred_interface_label(deferred_interface_row) if deferred_interface_row else None
 
     goal = sync_goal_state(
         goal_state_dir=args.goal_state_dir,
         session=args.session,
         mission=state.mission,
-        socket_label_text=socket_title,
+        deferred_interface_label_text=deferred_interface_title,
         max_turns=args.max_turns,
     )
 
@@ -498,14 +498,14 @@ def mission_heartbeat(args: argparse.Namespace) -> int:
         build_target=args.build_target if args.run_build else None,
     )
 
-    if verdict["status"] == "done" and socket_id:
-        if socket_id not in state.closed_sockets:
-            state.closed_sockets.append(socket_id)
-        state.current_socket_id = None
-        state.current_socket_title = None
-    elif socket_id:
-        state.current_socket_id = socket_id
-        state.current_socket_title = socket_title
+    if verdict["status"] == "done" and deferred_interface_id:
+        if deferred_interface_id not in state.closed_deferred_interfaces:
+            state.closed_deferred_interfaces.append(deferred_interface_id)
+        state.current_deferred_interface_id = None
+        state.current_deferred_interface_title = None
+    elif deferred_interface_id:
+        state.current_deferred_interface_id = deferred_interface_id
+        state.current_deferred_interface_title = deferred_interface_title
 
     state.ticks_used += 1
     state.last_tick_at = time.time()
@@ -514,15 +514,15 @@ def mission_heartbeat(args: argparse.Namespace) -> int:
         state.notes.append(verdict.get("reason", "blocked"))
     save_mission_state(args.state_dir, args.session, state)
 
-    open_count = sum(1 for row in rows if socket_is_open(row, set(state.closed_sockets)))
+    open_count = sum(1 for row in rows if deferred_interface_is_open(row, set(state.closed_deferred_interfaces)))
     packet = build_packet(
         mission=state,
         goal=goal,
-        socket_row=socket_row,
+        deferred_interface_row=deferred_interface_row,
         verdict=verdict,
         open_count=open_count,
     )
-    write_heartbeat_log(Path(state.heartbeat_log), state=state, socket_id=socket_id, verdict=verdict)
+    write_heartbeat_log(Path(state.heartbeat_log), state=state, deferred_interface_id=deferred_interface_id, verdict=verdict)
     print(json.dumps(packet, ensure_ascii=False, indent=2))
     return 0
 

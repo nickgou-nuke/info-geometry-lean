@@ -168,6 +168,18 @@ def diracGammaLinear : Vector8 →ₗ[ℂ] Module.End ℂ DiracSpinor16 where
     · apply ZornCopy.ext
       simp [diracGamma, cliffordPlus, copy_smul_val, smul_zornMul]
 
+@[simp] theorem diracGamma_zero :
+    diracGamma (0 : Vector8) = 0 := by
+  exact diracGammaLinear.map_zero
+
+theorem diracGamma_add (V W : Vector8) :
+    diracGamma (V + W) = diracGamma V + diracGamma W := by
+  exact diracGammaLinear.map_add V W
+
+theorem diracGamma_smul (c : ℂ) (V : Vector8) :
+    diracGamma (c • V) = c • diracGamma V := by
+  exact diracGammaLinear.map_smul c V
+
 /-- The universal Clifford-algebra representation on the Zorn Dirac carrier. -/
 def zornCliffordRepresentation :
     CliffordAlgebra vectorQuadratic →ₐ[ℂ] Module.End ℂ DiracSpinor16 :=

@@ -135,7 +135,7 @@ def main() -> None:
     print("b-function / indicial polynomial:")
     sp.pprint(b_poly)
     print("roots checked: s=0 and s=a+b")
-    print("Full Groebner/resolution/integration pipeline remains a D-module socket.")
+    print("Full Groebner/resolution/integration pipeline remains a D-module deferred_interface.")
 
 
 if __name__ == "__main__":

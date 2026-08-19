@@ -1,11 +1,11 @@
 import Mathlib.Tactic
-import InfoGeometry.Topology.FractalCantorFockWitness
+import InfoGeometry.Topology.FractalCantorFock
 import InfoGeometry.Clifford.BottPeriodicity
 
 /-!
 # InfoGeometry.Topology.BottPeriodicCantorEntropyGraph
 
-Bott-periodic Cantor entropy graph socket.
+Bott-periodic Cantor entropy graph data.
 
 The ordinary binary Cantor boundary uses one stream of bits.  The Bott-periodic
 boundary keeps a finite clock of parallel bit streams:
@@ -28,7 +28,7 @@ open scoped TensorProduct
 
 /-! ## 1. Bott clocks and multi-stream binary addresses -/
 
-/-- The two Bott clocks used by the boundary socket. -/
+/-- The two Bott clocks used by the boundary data. -/
 inductive BottKind where
   | complex
   | real
@@ -272,8 +272,8 @@ theorem matrix_amplification
 
 /- The Fierz--Klein law is a direct proposition on readout data. -/
 def BottPeriodicFierzKleinLaw
-    (coords : FractalCantorFockWitness.FierzChannel → ℝ)
-    (residual : (FractalCantorFockWitness.FierzChannel → ℝ) → ℝ) : Prop :=
+    (coords : FractalCantorFock.FierzChannel → ℝ)
+    (residual : (FractalCantorFock.FierzChannel → ℝ) → ℝ) : Prop :=
   residual coords = 0
 
 end InfoGeometry.Topology.BottPeriodicCantorEntropyGraph

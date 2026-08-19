@@ -17,7 +17,7 @@ identify minimal proof patches.
     module      : namespace prefix  (e.g. "DAG.LaplacianRank")
     file        : relative lean source path
     line        : line number
-    role        : owner | translator | pure_conductor | closure_debt | dead_socket
+    role        : owner | translator | pure_conductor | closure_debt | deferred_interface
     rep_depth   : L0_Count | L1_Projective | ... | L5_ThermodynamicClosure
     module_family: carrier algebraic family tag
 
@@ -74,7 +74,7 @@ NODE_ROLES = {
     "translator",         # bridges two module families
     "pure_conductor",     # 0-sorries, fully-proved leaf
     "closure_debt",       # has a _sorry structural field
-    "dead_socket",        # unused, no incoming edges
+    "deferred_interface",        # unused, no incoming edges
     "contaminated",       # transitively depends on axiom/sorry
     "fake_transport",     # True := sorry placeholder
 }
@@ -186,7 +186,7 @@ class AQLQueries:
         """
         return f"""
         FOR n IN @@{self.nodes_collection}
-          FILTER n.role IN ["contaminated", "closure_debt", "dead_socket"]
+          FILTER n.role IN ["contaminated", "closure_debt", "deferred_interface"]
           SORT n.module, n.name
           RETURN {{
             id: n._id, name: n.name, kind: n.kind, module: n.module,

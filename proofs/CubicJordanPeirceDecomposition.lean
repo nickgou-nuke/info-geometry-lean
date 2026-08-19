@@ -5,7 +5,7 @@ import Mathlib
 
 Finite associative-ring Peirce anchors for the canonical tripotent
 `P = E₁ - E₂`.  The true Albert/Jordan/split-octonion setting is represented by
-sockets elsewhere; here we prove the diagonal Peirce algebra identities without
+interfaces elsewhere; here we prove the diagonal Peirce algebra identities without
 commutativity assumptions by explicitly requiring two-sided orthogonality.
 -/
 

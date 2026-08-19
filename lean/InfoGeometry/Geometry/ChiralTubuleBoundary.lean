@@ -15,7 +15,6 @@ only through proof-carrying calibration data.
 import Mathlib.Tactic
 import Mathlib.Analysis.Normed.Operator.Banach
 import InfoGeometry.OperatorAlgebra.TopologicalSnap
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -162,7 +161,7 @@ abbrev thermal_critical_implies_extreme_shear :
 
 end ThermalShearCalibration
 
-/-! ## 4. Majorana-Weyl residue socket -/
+/-! ## 4. Majorana-Weyl residue -/
 
 /--
 A stable chiral residue created at a snap boundary.
@@ -404,7 +403,7 @@ Chiral tubule boundary readout.
 It is intentionally property-gated by thermal/shear calibration and a transition
 law.
 -/
-theorem chiralTubuleBoundaryOwnerTarget :
+theorem chiralTubuleBoundary_exists :
   ∀ (Op Charge Residue : Type*)
     [NormedAddCommGroup Op] [NormedSpace ℝ Op]
     [Zero Charge],
@@ -419,21 +418,5 @@ theorem chiralTubuleBoundaryOwnerTarget :
         C.boundaryState = U := by
   intro Op Charge Residue _ _ _ H G T L U hSnap hThermal
   exact L.thermal_snap_implies_crystallization U hSnap hThermal
-
-/-- Packet readout for one thermally triggered chiral tubule boundary. -/
-theorem chiralTubuleBoundary_packet
-    (Op Charge Residue : Type*)
-    [NormedAddCommGroup Op] [NormedSpace ℝ Op]
-    [Zero Charge]
-    (H : BregmanHessianDatum Op)
-    (G : DualFlatOperatorGeometry Op)
-    (T : ThermalDriveDatum Op)
-    (L : ThermalTriggeredTubuleLaw Op Charge Residue H G T)
-    (U : Op)
-    (hSnap : IsTopologicalSnapBoundary H U)
-    (hThermal : IsThermallyCritical T U) :
-    ∃ C : ChiralTubuleCrystallization Op Charge Residue H,
-      C.boundaryState = U :=
-  chiralTubuleBoundaryOwnerTarget Op Charge Residue H G T L U hSnap hThermal
 
 end InfoGeometry.Geometry.ChiralTubuleBoundary

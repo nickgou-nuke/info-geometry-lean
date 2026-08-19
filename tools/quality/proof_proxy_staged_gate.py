@@ -9,7 +9,7 @@ import sys
 
 FIELD_RE = re.compile(r"^\s{2,}([A-Za-z_][A-Za-z0-9_']*)\s*:\s*(?!=)(.+?)\s*$")
 PROHIBITED_NAME_RE = re.compile(
-    r"(?:^|_)(law|laws|certificate|cert|witness|valid|guard|socket|readback|assumption|axiom|proof)(?:_|$)",
+    r"(?:^|_)(law|laws|certificate|cert|witness|valid|guard|interface|readback|assumption|axiom|proof)(?:_|$)",
     re.IGNORECASE,
 )
 PROPISH_TYPE_RE = re.compile(r"\bProp\b|=|↔|<->|≤|>=|≥|<|>|∈|∉|⊆|⊂|⊇|∧|∨|∀|∃")

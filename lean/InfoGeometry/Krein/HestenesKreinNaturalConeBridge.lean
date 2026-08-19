@@ -18,7 +18,7 @@ variable [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
 variable [KreinSpace H]
 
 /--
-Standard-form natural-cone socket over a Hestenes/Krein carrier.
+Standard-form natural-cone data over a Hestenes/Krein carrier.
 
 The `naturalCone` field is not defined as the Krein nonnegative/light cone.
 It is supplied as the candidate standard-form natural positive cone.  The
@@ -84,6 +84,86 @@ theorem J_fixes_coneVector
 theorem naturalCone_self_dual :
     B.naturalCone = {ξ | ∀ η ∈ B.naturalCone, ⟪ξ, η⟫_ℝ ≥ 0} :=
   B.naturalCone_self_dual_holds
+
+theorem mem_naturalCone_iff (ξ : H) :
+    ξ ∈ B.naturalCone ↔ ∀ η ∈ B.naturalCone, ⟪ξ, η⟫_ℝ ≥ 0 := by
+  exact Set.ext_iff.mp B.naturalCone_self_dual ξ
+
+@[simp] theorem zero_mem_naturalCone :
+    (0 : H) ∈ B.naturalCone := by
+  rw [B.naturalCone_self_dual]
+  intro η hη
+  simp
+
+theorem add_mem_naturalCone {ξ ζ : H}
+    (hξ : ξ ∈ B.naturalCone) (hζ : ζ ∈ B.naturalCone) :
+    ξ + ζ ∈ B.naturalCone := by
+  rw [B.naturalCone_self_dual]
+  intro η hη
+  have hξdual : ξ ∈ {x | ∀ y ∈ B.naturalCone, ⟪x, y⟫_ℝ ≥ 0} := by
+    rw [← B.naturalCone_self_dual]
+    exact hξ
+  have hζdual : ζ ∈ {x | ∀ y ∈ B.naturalCone, ⟪x, y⟫_ℝ ≥ 0} := by
+    rw [← B.naturalCone_self_dual]
+    exact hζ
+  have hξ' : ⟪ξ, η⟫_ℝ ≥ 0 := hξdual η hη
+  have hζ' : ⟪ζ, η⟫_ℝ ≥ 0 := hζdual η hη
+  rw [inner_add_left]
+  exact add_nonneg hξ' hζ'
+
+theorem smul_mem_naturalCone {r : ℝ} {ξ : H}
+    (hr : 0 ≤ r) (hξ : ξ ∈ B.naturalCone) :
+    r • ξ ∈ B.naturalCone := by
+  rw [B.naturalCone_self_dual]
+  intro η hη
+  have hξdual : ξ ∈ {x | ∀ y ∈ B.naturalCone, ⟪x, y⟫_ℝ ≥ 0} := by
+    rw [← B.naturalCone_self_dual]
+    exact hξ
+  have hξ' : ⟪ξ, η⟫_ℝ ≥ 0 := hξdual η hη
+  rw [real_inner_smul_left]
+  exact mul_nonneg hr hξ'
+
+theorem naturalCone_neg_mem_eq_zero {ξ : H}
+    (hξ : ξ ∈ B.naturalCone) (hneg : -ξ ∈ B.naturalCone) :
+    ξ = 0 := by
+  have hpos : 0 ≤ ⟪ξ, ξ⟫_ℝ := by
+    exact (B.mem_naturalCone_iff ξ).mp hξ ξ hξ
+  have hnegpos : 0 ≤ ⟪-ξ, ξ⟫_ℝ := by
+    exact (B.mem_naturalCone_iff (-ξ)).mp hneg ξ hξ
+  rw [inner_neg_left] at hnegpos
+  have hzero : ⟪ξ, ξ⟫_ℝ = 0 := by linarith
+  exact inner_self_eq_zero.mp hzero
+
+theorem neg_not_mem_naturalCone {ξ : H}
+    (hξ : ξ ∈ B.naturalCone) (hξ0 : ξ ≠ 0) :
+    -ξ ∉ B.naturalCone := by
+  intro hneg
+  exact hξ0 (B.naturalCone_neg_mem_eq_zero hξ hneg)
+
+theorem convex_naturalCone : Convex ℝ B.naturalCone := by
+  intro ξ hξ ζ hζ a b ha hb hab
+  exact B.add_mem_naturalCone
+    (B.smul_mem_naturalCone ha hξ)
+    (B.smul_mem_naturalCone hb hζ)
+
+theorem eval_zero_of_act_zero
+    (ω : NormalPositive) (A : Op) (hA : B.act A = 0) :
+    B.eval ω A = 0 := by
+  rw [B.eval_eq_krein_vector_readout_law ω A, hA]
+  simp
+
+theorem eval_zero_of_coneVector_zero
+    (ω : NormalPositive) (A : Op) (hω : B.coneVector ω = 0) :
+    B.eval ω A = 0 := by
+  rw [B.eval_eq_krein_vector_readout_law ω A, hω]
+  simp
+
+theorem eval_zero_of_act_at_coneVector_zero
+    (ω : NormalPositive) (A : Op)
+    (hA : B.act A (B.coneVector ω) = 0) :
+    B.eval ω A = 0 := by
+  rw [B.eval_eq_krein_vector_readout_law ω A, hA]
+  simp
 
 end Bridge
 

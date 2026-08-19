@@ -28,7 +28,8 @@ theorem map_anticomm
     {B C : Type*} [Ring B] [Ring C]
     (φ : B →+* C) (Q R : B) :
     φ (anticomm Q R) = anticomm (φ Q) (φ R) := by
-  simp [anticomm]
+  change φ (Q * R + R * Q) = φ Q * φ R + φ R * φ Q
+  rw [map_add, map_mul, map_mul]
 
 /--
 Transport of one finite `N=2` closure relation.

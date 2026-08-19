@@ -1,9 +1,9 @@
 """SymPy witness: split-octonion zero divisors and B3 -> S3 color permutations.
 
-Computational layer for the topological strong-interaction socket:
+Computational layer for the topological strong-interaction deferred_interface:
 - Artin braid generators project to adjacent transpositions in S3;
 - the braid relation s1 s2 s1 = s2 s1 s2 holds after projection;
-- S3 acts by permuting three color labels (Weyl-group socket for SU(3));
+- S3 acts by permuting three color labels (Weyl-group deferred_interface for SU(3));
 - split-octonion (4,4) norm has nonzero null vectors;
 - Zorn split-octonion model contains nonzero nilpotents N^2=0;
 - tripotent scale polynomial retains zero-mode pole s=0.

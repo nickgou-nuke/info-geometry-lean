@@ -43,7 +43,7 @@ def main():
     print("Jones/Fierz torsion matrix =")
     sp.pprint(Jtau)
     print("trace=0, transpose=-matrix, action=(tau*v1, -tau*v0)")
-    print("Analytic Chentsov uniqueness / Poisson limit / Fierz derivation forms remain sockets.")
+    print("Analytic Chentsov uniqueness / Poisson limit / Fierz derivation forms remain deferred_interfaces.")
 
 
 if __name__ == "__main__":

@@ -883,21 +883,21 @@ structure ColRNBarrierCountProfileLift
 Native existential statement that row counts are positive and have total mass
 `n`.  No custom proof packet is needed for these two dependent propositions.
 -/
-def RowCountMassNormalizedWitness
+def RowCountMassNormalized
     {n : Nat}
     [Nonempty (Fin n)]
     (M : SinkhornMatrix n) : Prop :=
   ∃ hrow : HasPositiveRowSums n M,
     countMass (rowSumCounts n M) hrow = n
 
-namespace RowCountMassNormalizedWitness
+namespace RowCountMassNormalized
 
 /-- Positive-row component selected from the native existential statement. -/
 noncomputable def hrow
     {n : Nat}
     [Nonempty (Fin n)]
     {M : SinkhornMatrix n}
-    (W : RowCountMassNormalizedWitness M) :
+    (W : RowCountMassNormalized M) :
     HasPositiveRowSums n M :=
   Classical.choose W
 
@@ -906,11 +906,11 @@ theorem hMass
     {n : Nat}
     [Nonempty (Fin n)]
     {M : SinkhornMatrix n}
-    (W : RowCountMassNormalizedWitness M) :
+    (W : RowCountMassNormalized M) :
     countMass (rowSumCounts n M) W.hrow = n :=
   Classical.choose_spec W
 
-end RowCountMassNormalizedWitness
+end RowCountMassNormalized
 
 /--
 Construct the row RN-barrier profile lift from positive observed row counts
@@ -1103,13 +1103,13 @@ profile lift.
 This narrows the explicit `hrow` / `hMass` pair to a single proof-carrying
 mass-normalization property.
 -/
-noncomputable def SinkhornRNBarrierProfileLift.ofRowCountMassNormalizedWitness
+noncomputable def SinkhornRNBarrierProfileLift.ofRowCountMassNormalized
     {n : Nat}
     [Nonempty (Fin n)]
     {T : SinkhornTrajectory n}
     {k : Nat}
     (hk : phaseAt k = SinkhornPhase.col)
-    (W : RowCountMassNormalizedWitness (M := T.state k)) :
+    (W : RowCountMassNormalized (M := T.state k)) :
     SinkhornRNBarrierProfileLift n T k :=
   SinkhornRNBarrierProfileLift.ofPhase
     (T := T) (k := k)
@@ -1207,17 +1207,17 @@ noncomputable def WeylThermodynamicProfileComparison.ofMassNormalizedRowCounts
 Witness-routed row-count constructor for the profile Weyl/thermodynamic
 comparison packet.
 -/
-noncomputable def WeylThermodynamicProfileComparison.ofRowCountMassNormalizedWitness
+noncomputable def WeylThermodynamicProfileComparison.ofRowCountMassNormalized
     {n : Nat}
     [Nonempty (Fin n)]
     (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
     (hk : phaseAt C.k = SinkhornPhase.col)
-    (W : RowCountMassNormalizedWitness (M := C.T.state C.k)) :
+    (W : RowCountMassNormalized (M := C.T.state C.k)) :
     WeylThermodynamicProfileComparison (E := E)
       C.B.routerResidual
       (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) C.B.CIK) :=
   WeylThermodynamicProfileComparison.ofSinkhornRNBarrier (E := E) C
-    (SinkhornRNBarrierProfileLift.ofRowCountMassNormalizedWitness
+    (SinkhornRNBarrierProfileLift.ofRowCountMassNormalized
       (T := C.T) (k := C.k) hk W)
 
 /--
@@ -1278,12 +1278,12 @@ theorem operatorInformationNormReadout_le_of_massNormalizedRowCounts
 Witness-routed row-count mass-normalization is enough to derive the operator
 readout inequality.
 -/
-theorem operatorInformationNormReadout_le_of_rowCountMassNormalizedWitness
+theorem operatorInformationNormReadout_le_of_rowCountMassNormalized
     {n : Nat}
     [Nonempty (Fin n)]
     (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
     (hk : phaseAt C.k = SinkhornPhase.col)
-    (W : RowCountMassNormalizedWitness (M := C.T.state C.k)) :
+    (W : RowCountMassNormalized (M := C.T.state C.k)) :
     C.B.comparison.operatorInformationNormReadout C.B.routerResidual
       ≤
     C.B.comparison.operatorInformationNormReadout
@@ -1291,7 +1291,7 @@ theorem operatorInformationNormReadout_le_of_rowCountMassNormalizedWitness
   exact
     RouterDefectBoundBridge.operatorInformationNormReadout_le_of_weylThermodynamicProfileComparison
       (E := E)
-      (WeylThermodynamicProfileComparison.ofRowCountMassNormalizedWitness
+      (WeylThermodynamicProfileComparison.ofRowCountMassNormalized
         (E := E) C hk W)
 
 /--

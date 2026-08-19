@@ -88,5 +88,13 @@ noncomputable def inducedIso (η θ : F ⟶ F)
   inv_hom_id := by
     rw [induced_comp, hθη, induced_id]
 
+theorem inducedIso_symm (η θ : F ⟶ F)
+    (hηθ : η ≫ θ = 𝟙 F)
+    (hθη : θ ≫ η = 𝟙 F) :
+    (inducedIso F η θ hηθ hθη).symm =
+      inducedIso F θ η hθη hηθ := by
+  apply Iso.ext
+  rfl
+
 end
 end InfoGeometry.Canonical.TopCatColimitCompatibleEndomorphism

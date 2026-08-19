@@ -310,7 +310,7 @@ theorem refl
 
 end ProjectiveJonesDatum
 
-/-! ## 3. Optical branch sockets -/
+/-! ## 3. Optical branch data -/
 
 /--
 Brewster rank-collapse branch.
@@ -459,45 +459,5 @@ structure PolarizationChannel
   /-- Channel action. -/
   channel : Op → Op
 
-
-/-- Rough reflection is represented by the native statistical channel carrier. -/
-abbrev RoughReflectionChannel
-    (Op : Type*) [Ring Op] := PolarizationChannel Op
-
-abbrev RoughReflectionChannel.toPolarizationChannel
-    {Op : Type*} [Ring Op]
-    (R : RoughReflectionChannel Op) : PolarizationChannel Op := R
-
-/-! ## 5. Owner target -/
-
-/-- The owner target is exactly the native projector-pair carrier. -/
-abbrev OperatorialJonesOwnerTarget
-    (Op : Type*) [Ring Op] [Algebra ℂ Op] :=
-  PolarizationProjectorPair Op
-
-abbrev OperatorialJonesOwnerTarget.projectors
-    {Op : Type*} [Ring Op] [Algebra ℂ Op]
-    (T : OperatorialJonesOwnerTarget Op) : PolarizationProjectorPair Op := T
-
-def OperatorialJonesOwnerTarget.mk
-    {Op : Type*} [Ring Op] [Algebra ℂ Op]
-    (P : PolarizationProjectorPair Op) : OperatorialJonesOwnerTarget Op := P
-
-namespace OperatorialJonesOwnerTarget
-
-variable {Op : Type*} [Ring Op] [Algebra ℂ Op]
-
-/-- Read back the concrete projector pair carried by the owner target. -/
-def toProjectorPair
-    (T : OperatorialJonesOwnerTarget Op) :
-    PolarizationProjectorPair Op :=
-  T.projectors
-
-@[simp] theorem toProjectorPair_mk
-    (P : PolarizationProjectorPair Op) :
-    toProjectorPair (OperatorialJonesOwnerTarget.mk P) = P :=
-  rfl
-
-end OperatorialJonesOwnerTarget
 
 end InfoGeometry.Optics.OperatorialJonesCalculus

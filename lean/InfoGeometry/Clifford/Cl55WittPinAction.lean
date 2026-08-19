@@ -120,6 +120,20 @@ noncomputable def pinTwistedActionEquiv (g : Pin55) : V55 ≃ₗ[ℝ] V55 :=
     (by
       rw [← pinTwistedAction_mul, inv_mul_cancel, pinTwistedAction_one])
 
+@[simp] theorem pinTwistedActionEquiv_symm (g : Pin55) :
+    (pinTwistedActionEquiv g).symm = pinTwistedActionEquiv g⁻¹ := by
+  apply LinearEquiv.ext
+  intro v
+  rfl
+
+@[simp] theorem pinTwistedActionEquiv_one :
+    pinTwistedActionEquiv (1 : Pin55) = LinearEquiv.refl ℝ V55 := by
+  apply LinearEquiv.ext
+  intro v
+  change pinTwistedAction (1 : Pin55) v = v
+  rw [pinTwistedAction_one]
+  rfl
+
 theorem pinTwistedActionEquiv_mul_apply (g h : Pin55) (v : V55) :
     pinTwistedActionEquiv (g * h) v =
       pinTwistedActionEquiv g (pinTwistedActionEquiv h v) := by

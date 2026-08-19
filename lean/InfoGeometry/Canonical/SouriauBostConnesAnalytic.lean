@@ -5,22 +5,22 @@ import InfoGeometry.Canonical.TensorTowerColimit
 import InfoGeometry.Canonical.ErlangenColimitResolution
 
 /-!
-# Analytic Souriau-Bost-Connes Transition and Colimit Continuum
+# Finite Souriau-Bost-Connes Vacuum Readout and Colimit Boundary
 
-This module resolves the open closure debt of the Souriau-Bost-Connes Transition
-by constructing the analytic Bost-Connes partition and the zero-temperature 
-phase-space shattering (crystallization) rigorously through the Colimit Continuum.
+This module supplies the finite vacuum readout for the Souriau-Bost-Connes
+transition and transports it through the existing colimit boundary owner.
+It does not construct an analytic Bost-Connes partition, a zero-temperature
+limit, or an infinite trace.
 
 Following the Colimit Continuum Mandate, we do not rely on brute-force real analysis 
 or classical measure theory. Instead, we project the finite algebraic models natively 
 through `UHFInductiveColimitBoundary` and `TensorTowerColimit`.
 
 ## Key Constructions
-1. **Analytic Bost-Connes KMS State**: Defined via the inductive colimit of finite-stage 
-   diagonal observables, ensuring strictly commutative traces (`colimit_trace_comm`).
-2. **Zero-Temperature Shattering (`β → ∞`)**: The infinite limit is resolved algebraically
-   by showing that the zero-temperature trace concentrates completely on the 
-   vacuum word (the Cantor boundary crystallization).
+1. **Finite vacuum evaluation**: a linear readout on each finite diagonal stage.
+2. **Stage coherence**: the readout is preserved by the successor embedding.
+3. **Colimit boundary readout**: the finite cylinder evaluation agrees with the
+   corresponding boundary-prefix evaluation.
 -/
 
 noncomputable section
@@ -31,9 +31,10 @@ open InfoGeometry.Canonical.SouriauBostConnesTransition
 open InfoGeometry.Canonical.UHFInductiveColimitBoundary
 
 /-!
-### 1. Colimit Zero-Temperature Boundary State
-We define the zero-temperature KMS state strictly at the finite $n$-th stage 
-of the UHF diagonal algebra `DiagAlg n`.
+### 1. Finite Vacuum Boundary Readout
+We define a vacuum evaluation at the finite $n$-th stage of the UHF diagonal
+algebra `DiagAlg n`. The legacy "zero-temperature" name denotes only this
+finite readout; no temperature limit is asserted.
 -/
 
 /-- The all-zero vacuum bit-word at finite stage `n`. -/
@@ -57,10 +58,10 @@ theorem prefixSucc_finiteVacuumWord (n : ℕ) :
   rfl
 
 /-- 
-**Colimit Continuum Coherence**:
-The zero-temperature state trace commutes exactly with the diagonal successor embeddings.
-This proves that the local finite KMS state evaluations transport flawlessly to the 
-infinite colimit continuum boundary, without needing topological limits.
+**Stage coherence**:
+The finite vacuum evaluation commutes exactly with the diagonal successor
+embedding. This is the finite cocone equation used by the existing colimit
+boundary owner; it is not an analytic or topological-limit theorem.
 -/
 theorem zeroTempState_commutes_with_embedding (n : ℕ) (f : DiagAlg n) :
     finiteZeroTempState (n + 1) (diagEmbedSucc n f) = finiteZeroTempState n f := by
@@ -68,8 +69,10 @@ theorem zeroTempState_commutes_with_embedding (n : ℕ) (f : DiagAlg n) :
   rw [prefixSucc_finiteVacuumWord n]
 
 /-!
-### 2. Phase-Space Shattering to the Cantor Boundary
-We now construct the global colimit trace on the infinite Cantor Boundary.
+### 2. Boundary-prefix readout
+We evaluate finite cylinder observables on the supplied boundary word. The
+boundary is the carrier of the colimit readout, not an analytic thermodynamic
+limit.
 -/
 
 /-- The all-zero vacuum word on the infinite Cantor boundary.
@@ -86,11 +89,9 @@ def colimitZeroTempState (n : ℕ) (f : DiagAlg n) : ℂ :=
   cylinder n f cantorVacuumBoundary
 
 /-- 
-**Phase-Space Shattering Theorem** (`β → ∞` Transition)
-The global evaluation on the infinite Cantor boundary is exactly equivalent 
-to the finite local evaluation at any stage.
-This proves that the phase space *shatters* onto the Cantor boundary natively 
-through the UHF colimit, fulfilling the zero-temperature limit algebraically.
+**Boundary-prefix agreement**
+The boundary evaluation is exactly equivalent to the finite local vacuum
+evaluation at the same stage. This is an algebraic cylinder identity.
 -/
 theorem phase_space_shattering_to_cantor_boundary (n : ℕ) (f : DiagAlg n) :
     colimitZeroTempState n f = finiteZeroTempState n f := by
@@ -102,17 +103,23 @@ theorem phase_space_shattering_to_cantor_boundary (n : ℕ) (f : DiagAlg n) :
   rw [hprefix]
 
 /-!
-### 3. Analytic Bost-Connes Partition Limit Compatibility
+### 3. Colimit-indexed coherence
 -/
 
 /-- 
-**Analytic Crystallization Resolution**
-By passing the Bost-Connes state through the `UHFInductiveColimitBoundary`, 
-we resolve the closure debt natively: the limit `β → ∞` crystallization 
-exists unconditionally in the operator algebraic colimit.
+**Successor coherence of the boundary readout**
+Passing the finite readout through the `UHFInductiveColimitBoundary` gives the
+successor-stage cocone equality. The legacy theorem name is retained, but the
+statement is finite colimit coherence, not an analytic limit or an unconditional
+KMS theorem.
 -/
 theorem colimit_crystallization_resolves_closure_debt (n : ℕ) (f : DiagAlg n) :
     colimitZeroTempState (n + 1) (diagEmbedSucc n f) = colimitZeroTempState n f :=
   rfl
+
+/- The theorem-safe name for the same finite successor-stage equation. -/
+theorem colimit_vacuum_readout_succ_coherent (n : ℕ) (f : DiagAlg n) :
+    colimitZeroTempState (n + 1) (diagEmbedSucc n f) = colimitZeroTempState n f :=
+  colimit_crystallization_resolves_closure_debt n f
 
 end InfoGeometry.Canonical.SouriauBostConnesAnalytic

@@ -4,7 +4,7 @@ import InfoGeometry.Canonical.DrazinHodgeChiralBridge
 /-!
 # Generic Hodge-star involution on the calibrated Drazin carrier
 
-This is an explicit comparison socket between the minimal generic Hodge-star
+This is an explicit comparison interface between the minimal generic Hodge-star
 owner and the repository's concrete Drazin Hodge/Dirac carrier.  The pointwise
 compatibility hypothesis is intentional: the two owners use different
 `KreinSpace` structures and cannot be identified from their types alone.

@@ -18,18 +18,26 @@ def Ad (V : Type*) {G} [Group G] [NormedAddCommGroup V] [NormedSpace ℝ V] [Lin
   LinearGroupAction.action g
 
 /-- An affine coadjoint cocycle (Souriau cocycle) for the group action. -/
-structure AffineCoadjointCocycle where
-  toFun : G → LieDual V
-  cocycle_mul' : ∀ g h : G, toFun (g * h) = toFun g + coadjoint (Ad V g) (toFun h)
+def AffineCoadjointCocycleLaws (f : G → LieDual V) : Prop :=
+  ∀ g h : G, f (g * h) = f g + coadjoint (Ad V g) (f h)
+
+def AffineCoadjointCocycle :=
+  {f : G → LieDual V // AffineCoadjointCocycleLaws G V f}
+
+def AffineCoadjointCocycle.toFun (Θ : AffineCoadjointCocycle G V) : G → LieDual V := Θ.1
 
 instance : CoeFun (AffineCoadjointCocycle G V) (fun _ => G → LieDual V) :=
-  ⟨AffineCoadjointCocycle.toFun⟩
+  ⟨fun Θ => Θ.1⟩
+
+theorem AffineCoadjointCocycle.cocycle_mul'
+    (Θ : AffineCoadjointCocycle G V) (g h : G) :
+    Θ.1 (g * h) = Θ.1 g + coadjoint (Ad V g) (Θ.1 h) := Θ.2 g h
 
 variable (Θ : AffineCoadjointCocycle G V)
 
 theorem coadjointCocycle_mul (g h : G) :
     Θ (g * h) = Θ g + coadjoint (Ad V g) (Θ h) :=
-  Θ.cocycle_mul' g h
+  AffineCoadjointCocycle.cocycle_mul' G V Θ g h
 
 theorem coadjointCocycle_one : Θ (1 : G) = 0 := by
   have h := coadjointCocycle_mul G V Θ 1 1
@@ -78,10 +86,18 @@ theorem affineCoadjointAction_mul (g h : G) (μ : LieDual V) :
   abel
 
 /-- An affine equivariant moment map. -/
-structure AffineMomentMap (State : Type*) [MulAction G State] where
-  momentMap : State → LieDual V
-  momentMap_affine_equivariant : ∀ (g : G) (m : State),
-    momentMap (g • m) = affineCoadjointAction G V Θ g (momentMap m)
+def AffineMomentMap (State : Type*) [MulAction G State] :=
+  {f : State → LieDual V //
+    ∀ (g : G) (m : State), f (g • m) = affineCoadjointAction G V Θ g (f m)}
+
+def AffineMomentMap.momentMap {State : Type*} [MulAction G State]
+    (A : AffineMomentMap G V Θ State) : State → LieDual V := A.1
+
+theorem AffineMomentMap.momentMap_affine_equivariant
+    {State : Type*} [MulAction G State]
+    (A : AffineMomentMap G V Θ State) (g : G) (m : State) :
+    AffineMomentMap.momentMap G V Θ A (g • m) =
+      affineCoadjointAction G V Θ g (AffineMomentMap.momentMap G V Θ A m) := A.2 g m
 
 def coadjointEquiv (g : G) : LieDual V ≃+ LieDual V where
   toFun := coadjoint (Ad V g)
@@ -134,7 +150,8 @@ theorem affineCoadjointAction_sub (g : G) (μ ν : LieDual V) :
 
 theorem AffineMomentMap.momentMap_eq_affineCoadjointAction
     {State : Type*} [MulAction G State] (A : AffineMomentMap G V Θ State) (g : G) (x : State) :
-    A.momentMap (g • x) = affineCoadjointAction G V Θ g (A.momentMap x) :=
-  A.momentMap_affine_equivariant g x
+    AffineMomentMap.momentMap G V Θ A (g • x) =
+      affineCoadjointAction G V Θ g (AffineMomentMap.momentMap G V Θ A x) :=
+  AffineMomentMap.momentMap_affine_equivariant G V Θ A g x
 
 end InfoGeometry.Algebra

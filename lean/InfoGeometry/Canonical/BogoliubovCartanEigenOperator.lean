@@ -485,7 +485,7 @@ Kernel-clean Cartan frame equivalence.
 
 This carrier contains only the data needed to prove Cartan weight transport:
 a two-sided inverse pair and Cartan conjugacy.  Drazin, chiral, and Krein
-compatibility live in `BogoliubovCartanFrameEquiv` as additional witnesses.
+compatibility are intentionally outside this minimal Cartan transport record.
 -/
 structure CartanFrameEquiv
     (Hsrc Htgt : EndH) where
@@ -504,44 +504,6 @@ structure CartanFrameEquiv
   /-- Cartan generator transport law. -/
   conjugatesCartan :
     Htgt = U * Hsrc * Uinv
-
-
-/--
-Structure form of a Bogoliubov-Cartan frame equivalence.
-
-The frame is a representative choice.  The invariant data are the Cartan
-weights, Drazin sector support, chiral grading, and Krein pairing.  This
-structure packages the same hypotheses as `IsBogoliubovCartanFrameChange`,
-but makes downstream readbacks field-projection friendly.
--/
-structure BogoliubovCartanFrameEquiv
-    (T TD Hsrc Htgt : EndH) where
-  /-- Kernel-clean Cartan frame component. -/
-  cartan :
-    CartanFrameEquiv (E := E) Hsrc Htgt
-
-  /-- Regular Drazin projector is preserved by the frame. -/
-  preservesPreg :
-    cartan.U * Preg T TD = Preg T TD * cartan.U
-
-  /-- Defect/null Drazin projector is preserved by the frame. -/
-  preservesPzero :
-    cartan.U * Pzero T TD = Pzero T TD * cartan.U
-
-  /-- The fixed doubled chiral grading is preserved by the frame. -/
-  preservesGammaS :
-    cartan.U * spectral_epsilon (E := E) = spectral_epsilon (E := E) * cartan.U
-
-  /--
-  The frame preserves the Krein pairing.
-
-  Kept as an abstract property at this layer.  Concrete bilinear-form transport
-  can be installed by a carrier-specific specialization without making the
-  Cartan weight transport depend on that analytic backend.
-  -/
-  preservesKrein :
-    Prop
-
 
 end Core
 

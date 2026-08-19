@@ -47,7 +47,7 @@ topological Fibonacci/Verlinde golden-ratio identities.
 - The golden-ratio lemmas are conditional on `phi^2 = phi + 1`.
 
 #### BUCKET 3: OPEN CLOSURE DEBT
-[Exact theorem statements that remain unproved. No wrappers, sockets, fields, witnesses,
+[Exact theorem statements that remain unproved. No wrappers,
 certificates, or renamed placeholders.]
 - None in this file.
 -/

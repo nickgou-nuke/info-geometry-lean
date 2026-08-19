@@ -127,7 +127,10 @@ structure SplitHierarchyDiagnostic where
   quaternionTier : SplitHierarchyPacket 2
   octonionTier : SplitHierarchyPacket 4
   trialityPlacement : TrialityLeviPlacement
-  conformalNormalization : Cl44ConformalNormalizationOwnerTarget
+  conformalNormalization :
+    QuadraticLightConeConformalRoute ∧
+      SpinFactorConformalRoute ∧
+      TrialityLeviPlacement
 
 /-- Canonical diagnostic readout for the split hierarchy corridor. -/
 def canonicalDiagnostic : SplitHierarchyDiagnostic where
@@ -135,7 +138,7 @@ def canonicalDiagnostic : SplitHierarchyDiagnostic where
   quaternionTier := canonicalSplitQuaternionPacket
   octonionTier := canonicalSplitOctonionPacket
   trialityPlacement := TrialityLeviPlacement.canonical
-  conformalNormalization := cl44ConformalNormalizationOwnerTarget
+  conformalNormalization := cl44ConformalNormalization_properties
 
 /-- The canonical diagnostic has the canonical local seed. -/
 theorem canonicalDiagnostic_localSeed :

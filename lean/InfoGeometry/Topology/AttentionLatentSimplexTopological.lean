@@ -96,6 +96,21 @@ theorem latentSimplexMap_coordinate_pos
     0 < (latentSimplexMap logits x : n → ℝ) i :=
   latentSoftmax_coordinate_pos logits x i
 
+theorem latentSoftmax_uniformShift
+    (logits : X → n → ℝ) (c : X → ℝ) :
+    latentSoftmax (fun x => logits x + c x • uniformShift) =
+      latentSoftmax logits := by
+  funext x
+  exact softmax_add_uniformShift (logits x) (c x)
+
+theorem latentSimplexMap_uniformShift
+    (logits : X → n → ℝ) (c : X → ℝ) :
+    latentSimplexMap (fun x => logits x + c x • uniformShift) =
+      latentSimplexMap logits := by
+  funext x
+  apply Subtype.ext
+  exact congrFun (latentSoftmax_uniformShift logits c) x
+
 theorem latentSoftmax_coordinate_fiber_isClosed
     (logits : X → n → ℝ)
     (hlogits : ∀ i, Continuous (fun x => logits x i))

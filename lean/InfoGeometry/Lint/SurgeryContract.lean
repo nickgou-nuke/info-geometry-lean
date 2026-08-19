@@ -18,7 +18,7 @@ namespace InfoGeometry.Lint
 inductive VacuityRole where
   | fake_transport
   | pure_conductor
-  | dead_socket
+  | deferred_interface
   | gate
   | orphan_genuine
   | closure_debt

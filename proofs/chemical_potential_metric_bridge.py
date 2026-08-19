@@ -21,7 +21,7 @@ def main():
     scaled_q = g00 * E**2 - px**2 - py**2 - pz**2
     assert sp.simplify(X_scaled.det() - scaled_q) == 0
 
-    # Tolman/Ehrenfest-style algebraic socket: lambda * mu = mu0,
+    # Tolman/Ehrenfest-style algebraic deferred_interface: lambda * mu = mu0,
     # so if solved formally lambda = mu0/mu, then g00 = (mu0/mu)^2.
     g00_mu = (mu0 / mu) ** 2
     assert sp.simplify(g00_mu - (mu0**2 / mu**2)) == 0
@@ -33,7 +33,7 @@ def main():
     print("expected shifted quadric:", sp.factor(shifted_q))
     print("time-scaled determinant:", sp.factor(X_scaled.det()))
     print("effective g00:", g00)
-    print("Tolman-style socket g00=(mu0/mu)^2:", g00_mu)
+    print("Tolman-style deferred_interface g00=(mu0/mu)^2:", g00_mu)
     print("additive determinant perturbation Δq:", sp.factor(delta_q))
     print("chemical_potential_metric_bridge.py: finite audit passed")
 

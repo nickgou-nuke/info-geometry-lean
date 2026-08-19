@@ -13,10 +13,10 @@ The existing file owns:
 * Drazin support horizons,
 * physical horizons,
 
-This file adds the theorem-safe zitter socket:
+This file adds the theorem-safe zitter data:
 
 * a discrete involutive symmetry for chiral/CPT/V₄-style trembling;
-* a structural Klein-four-style action socket;
+* a structural Klein-four-style action datum;
 * a Drazin frequency projector `1 - L * Lᴰ` for harmonic envelopes;
 * a horizon zitter mode whose raw observable may move, while its envelope is
   explicitly extracted by double-sided harmonic compression of the
@@ -42,7 +42,7 @@ abbrev DrazinHorizon
 /--
 A discrete involutive multiplicative symmetry.
 
-This is an abstract socket for chirality, CPT, or a generator of a Klein-four
+This is an abstract datum for chirality, CPT, or a generator of a Klein-four
 symmetry.  The file does not assume such a symmetry exists canonically.
 -/
 @[rep_depth operator]

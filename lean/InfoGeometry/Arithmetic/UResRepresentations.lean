@@ -60,7 +60,7 @@ lemma boltzmannWeight_ne_zero (β : ℝ) (p : ℕ+) :
 def liouvilleWeightVector (p : ℕ+) (_hp : Nat.Prime (p.val)) : ℂ :=
   -1
 
-/- ## Optional KMS comparison socket
+/- ## Optional KMS comparison interface
 
 The analytic KMS and phase-transition statements associated with this
 notation are not constructed by the finite declarations in this module.

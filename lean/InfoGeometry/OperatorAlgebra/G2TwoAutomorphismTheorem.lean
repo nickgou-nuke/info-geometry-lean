@@ -90,28 +90,28 @@ instance : Fintype SplitOctF2 :=
   Fintype.ofEquiv (Fin 8 → Bool) splitOctF2EquivBits.symm
 
 /-- The degree of the Atlas permutation action used for the outer `C₂` property. -/
-def outerC2WitnessDegree : Nat := 63
+def outerC2ProfileDegree : Nat := 63
 
 /-- The number of transpositions in the chosen outer `C₂` property. -/
-def outerC2WitnessTranspositions : Nat := 28
+def outerC2ProfileTranspositions : Nat := 28
 
 /-- The number of fixed points in the chosen outer `C₂` property. -/
-def outerC2WitnessFixedPoints : Nat := 7
+def outerC2ProfileFixedPoints : Nat := 7
 
-theorem outerC2Witness_cycle_profile_accounting :
-    2 * outerC2WitnessTranspositions + outerC2WitnessFixedPoints = outerC2WitnessDegree := by
-  norm_num [outerC2WitnessTranspositions, outerC2WitnessFixedPoints, outerC2WitnessDegree]
+theorem outerC2Profile_cycle_accounting :
+    2 * outerC2ProfileTranspositions + outerC2ProfileFixedPoints = outerC2ProfileDegree := by
+  norm_num [outerC2ProfileTranspositions, outerC2ProfileFixedPoints, outerC2ProfileDegree]
 
-theorem outerC2Witness_fixed_point_count :
-    outerC2WitnessFixedPoints = 7 := by
+theorem outerC2Profile_fixed_point_count :
+    outerC2ProfileFixedPoints = 7 := by
   rfl
 
-theorem outerC2Witness_transposition_count :
-    outerC2WitnessTranspositions = 28 := by
+theorem outerC2Profile_transposition_count :
+    outerC2ProfileTranspositions = 28 := by
   rfl
 
-theorem outerC2Witness_degree :
-    outerC2WitnessDegree = 63 := by
+theorem outerC2Profile_degree :
+    outerC2ProfileDegree = 63 := by
   rfl
 
 /-- Coordinatewise zero. -/

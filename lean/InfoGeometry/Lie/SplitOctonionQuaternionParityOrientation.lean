@@ -62,6 +62,41 @@ theorem cross_swapJK (u v : V3) :
     simp [swapJK, InfoGeometry.Canonical.ZornMatrix.cross,
       InfoGeometry.Canonical.ZornVectorMatrixExplicit.cross3]
 
+/-! ## The doubled mirror--rail operator
+
+The following operator is the Cartesian-coordinate form of the combined
+scalar/rail swap for the orientation-reversing transposition `swapJK`.  It is
+recorded as a linear involution and a `(4,4)` norm isometry; no multiplicativity
+claim is hidden here. -/
+
+def mirrorRailSwapJK : CartesianCoordinates →ₗ[ℝ] CartesianCoordinates where
+  toFun qr := ((qr.1.1, -(swapJK qr.1.2)), (-qr.2.1, swapJK qr.2.2))
+  map_add' X Y := by
+    apply Prod.ext <;> apply Prod.ext <;> simp <;> abel
+  map_smul' c X := by
+    apply Prod.ext <;> apply Prod.ext <;> simp <;> module
+
+@[simp] theorem mirrorRailSwapJK_apply (qr : CartesianCoordinates) :
+    mirrorRailSwapJK qr =
+      ((qr.1.1, -(swapJK qr.1.2)), (-qr.2.1, swapJK qr.2.2)) := rfl
+
+theorem mirrorRailSwapJK_involutive (qr : CartesianCoordinates) :
+    mirrorRailSwapJK (mirrorRailSwapJK qr) = qr := by
+  apply Prod.ext <;> apply Prod.ext
+  · rfl
+  · simp [mirrorRailSwapJK, swapJK_involutive]
+  · simp [mirrorRailSwapJK]
+  · simp [mirrorRailSwapJK, swapJK_involutive]
+
+theorem mirrorRailSwapJK_preserves_normDifference
+    (qr : CartesianCoordinates) :
+    quaternionNorm (mirrorRailSwapJK qr).1 -
+        quaternionNorm (mirrorRailSwapJK qr).2 =
+      quaternionNorm qr.1 - quaternionNorm qr.2 := by
+  rcases qr with ⟨⟨q0, q⟩, ⟨r0, r⟩⟩
+  simp [mirrorRailSwapJK, quaternionNorm, dot]
+  ring
+
 /-- The optional ordering is a post-pairing permutation: it fixes the first
 axis and interchanges only the second and third `ell` partners. -/
 theorem swapJK_axes :

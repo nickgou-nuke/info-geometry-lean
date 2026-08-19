@@ -13,7 +13,7 @@ namespace InfoGeometry.Canonical.V4SemidirectS3Bridge
 
 open InfoGeometry.Canonical.TrialitySpin8Permutations
 
-/-- Four-element Klein four model used in the Cl(5,5) boundary layers. -/
+/- Four-element Klein four model used in the Cl(5,5) boundary layers. -/
 inductive V4Element
   | I | J | S | JS
   deriving DecidableEq, Repr, Fintype

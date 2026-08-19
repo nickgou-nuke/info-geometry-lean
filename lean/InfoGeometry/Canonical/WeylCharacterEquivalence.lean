@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.SouriauThermodynamics
 import InfoGeometry.Canonical.PrimeGasMaxEnt
 import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Canonical.SouriauThermalEvaluation
-import InfoGeometry.Canonical.ParityTraceWitness
+import InfoGeometry.Canonical.ParityTraceData
 import InfoGeometry.Canonical.PrimeGasPartitions
 import InfoGeometry.Canonical.DeformationLayer
 import InfoGeometry.Thermodynamics.SouriauTemperature
@@ -20,14 +20,14 @@ bosonic zeta partition function.  The bosonic trace is the reciprocal product.
 
 This module records the finite boundary for the Souriau-Weyl partition
 corridor.  The arithmetic Möbius coefficient is imported from
-`InfoGeometry.Canonical.ParityTraceWitness`, where it is defined from
+`InfoGeometry.Canonical.ParityTraceData`, where it is defined from
 `ArithmeticFunction.moebius`.
 -/
 
 namespace InfoGeometry.Canonical.WeylCharacterEquivalence
 
 open InfoGeometry.Algebraic.SplitSignature
-open ParityTraceWitness
+open InfoGeometry.Canonical.ParityTraceData
 
 /-- Phantom-parameter alias for the thermodynamic temperature carrier. -/
 abbrev SouriauTemperature (_ : Type*) := InfoGeometry.Thermodynamics.SouriauTemperature
@@ -92,7 +92,7 @@ end WeylDenominatorEulerProductBridge
 
 /-- Weyl signature equals the supplied Möbius coefficient on square-free integers. -/
 @[rep_depth thermo]
-structure ParityTraceWitness where
+structure ParityTraceData where
   WeylGroup : Type _
   signature : WeylGroup → ℤ
   squareFree : ℕ → Prop
@@ -101,9 +101,9 @@ structure ParityTraceWitness where
     ∀ n (h : squareFree n),
       signature (squareFreeToWeyl n h) = mobiusCoefficient n
 
-namespace ParityTraceWitness
+namespace ParityTraceData
 
-variable (P : ParityTraceWitness)
+variable (P : ParityTraceData)
 
 @[rep_depth thermo]
 theorem mobius_eq_weyl_signature_on_squarefree
@@ -112,7 +112,7 @@ theorem mobius_eq_weyl_signature_on_squarefree
       mobiusCoefficient n :=
   P.signature_eq_mobius n h
 
-end ParityTraceWitness
+end ParityTraceData
 
 /-- Deformed Souriau-Weyl character packet. -/
 @[rep_depth thermo]
@@ -138,17 +138,17 @@ end DeformedSouriauWeylCharacter
 
 /-- Complete conservative packet for the Souriau-Weyl partition corridor. -/
 @[rep_depth thermo]
-structure SouriauWeylPartitionPacket (𝔤 : Type*) where
+structure SouriauWeylPartitionData (𝔤 : Type*) where
   beta : SouriauTemperature 𝔤
   representation : ThermalRepresentation 𝔤
   denominatorBridge : WeylDenominatorEulerProductBridge
-  parityWitness : ParityTraceWitness
+  parityData : ParityTraceData
   deformedCharacter : DeformedSouriauWeylCharacter 𝔤
   deformed_beta : deformedCharacter.beta = beta
 
-namespace SouriauWeylPartitionPacket
+namespace SouriauWeylPartitionData
 
-variable {𝔤 : Type*} (P : SouriauWeylPartitionPacket 𝔤)
+variable {𝔤 : Type*} (P : SouriauWeylPartitionData 𝔤)
 
 @[rep_depth thermo]
 theorem partitionFunction_is_souriau_character :
@@ -162,18 +162,18 @@ theorem denominator_is_prime_euler_product :
   P.denominatorBridge.weylDenominator_eq_primeEulerProduct
 
 @[rep_depth thermo]
-theorem parityWitness_signature_eq_mobius
+theorem parityData_signature_eq_mobius
     (n : ℕ)
-    (h : P.parityWitness.squareFree n) :
-    P.parityWitness.signature (P.parityWitness.squareFreeToWeyl n h) =
+    (h : P.parityData.squareFree n) :
+    P.parityData.signature (P.parityData.squareFreeToWeyl n h) =
       mobiusCoefficient n := by
-  exact P.parityWitness.mobius_eq_weyl_signature_on_squarefree n h
+  exact P.parityData.mobius_eq_weyl_signature_on_squarefree n h
 
-end SouriauWeylPartitionPacket
+end SouriauWeylPartitionData
 
 @[rep_depth thermo]
 theorem moebius_signature_equivalence
-    (P : ParityTraceWitness) (n : ℕ) (h : P.squareFree n) :
+    (P : ParityTraceData) (n : ℕ) (h : P.squareFree n) :
     P.signature (P.squareFreeToWeyl n h) =
       mobiusCoefficient n :=
   P.mobius_eq_weyl_signature_on_squarefree n h

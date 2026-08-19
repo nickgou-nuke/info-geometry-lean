@@ -304,14 +304,6 @@ lemma thermodynamicPreference_pos
   unfold thermodynamicPreference
   exact Real.exp_pos _
 
-/-- A formal property for the asymptotic equipartition statement. -/
-structure AsymptoticEquipartitionWitness (p : Fin n → ℝ) where
-  countsSeq : ℕ → Fin n → ℕ
-  total_pos : ∀ N, 0 < totalCount (countsSeq N)
-  tendsToEntropy :
-    Filter.Tendsto (fun N => normalizedLogMultiplicity (countsSeq N))
-      Filter.atTop (nhds (ShannonEntropy p))
-
 end Multiplicity
 
 section LinearConstraints

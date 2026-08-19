@@ -4,7 +4,7 @@ targets = [
     ("lean/InfoGeometry/Projective/Twistor/Basic.lean", "lean/InfoGeometry/Projective/Twistor/Basic", "InfoGeometry.Projective.Twistor.Basic"),
     ("lean/InfoGeometry/OperatorAlgebra/SusceptibilityHessian.lean", "lean/InfoGeometry/OperatorAlgebra/SusceptibilityHessian", "InfoGeometry.OperatorAlgebra.SusceptibilityHessian"),
     ("lean/InfoGeometry/Quantum/SouriauFoliation.lean", "lean/InfoGeometry/Quantum/SouriauFoliation", "InfoGeometry.Quantum.SouriauFoliation"),
-    ("lean/InfoGeometry/Arithmetic/MajoranaPolyaHilbertSocket.lean", "lean/InfoGeometry/Arithmetic/MajoranaPolyaHilbertSocket", "InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket")
+    ("lean/InfoGeometry/Arithmetic/MajoranaPolyaHilbert.lean", "lean/InfoGeometry/Arithmetic/MajoranaPolyaHilbert", "InfoGeometry.Arithmetic.MajoranaPolyaHilbert")
 ]
 
 for file_path, dir_path, namespace in targets:

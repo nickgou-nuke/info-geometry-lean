@@ -67,7 +67,7 @@ def main() -> int:
     print("finite Hamiltonian asymmetry readout: OK")
 
     print("=" * 72)
-    print("REPAIRED SECTION 36 FINITE SOCKET VERIFIED")
+    print("REPAIRED SECTION 36 FINITE INTERFACE VERIFIED")
     print("=" * 72)
     return 0
 

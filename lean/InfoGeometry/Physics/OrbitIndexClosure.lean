@@ -32,7 +32,7 @@ theorem cl11_local_compensation_identities :
   · exact bdag_sq
   · exact anticomm_bbdag
 
-/-! ## 2. Refined orbit tags available from the 5-graded socket -/
+/-! ## 2. Refined orbit tags available from the 5-graded model -/
 
 /--
 At the current finite level, every `JordanMatrix10D` carries a refined orbit tag

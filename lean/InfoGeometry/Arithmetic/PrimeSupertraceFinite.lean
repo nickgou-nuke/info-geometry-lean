@@ -1,7 +1,8 @@
 import Mathlib.Tactic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge
-import InfoGeometry.Meta.SocketTarget
+import InfoGeometry.Arithmetic.IndexTheorem
+import InfoGeometry.GrandCanonical.Core
 
 /-!
 # InfoGeometry.Arithmetic.PrimeSupertraceFinite
@@ -37,6 +38,9 @@ open scoped BigOperators
 namespace InfoGeometry.Arithmetic.PrimeSupertraceFinite
 
 open InfoGeometry.Arithmetic.PrimitiveBinarySuperZetaBridge
+open InfoGeometry.Arithmetic.IndexTheorem
+
+local instance (p : Prop) : Decidable p := Classical.propDecidable p
 
 /-! ## 1. Finite occupation space -/
 
@@ -67,6 +71,18 @@ def isEven
 def paritySign
     (x : Occupation ι) : ℝ :=
   if fermionNumber x % 2 = 0 then 1 else -1
+
+omit [DecidableEq ι] in
+theorem paritySign_eq_neg_one_pow_fermionNumber
+    (x : Occupation ι) :
+    paritySign x = (-1 : ℝ) ^ fermionNumber x := by
+  unfold paritySign
+  by_cases h : fermionNumber x % 2 = 0
+  · rw [if_pos h]
+    exact (Even.neg_one_pow (Nat.even_iff.mpr h)).symm
+  · rw [if_neg h]
+    exact (Odd.neg_one_pow
+      (Nat.not_even_iff_odd.mp (fun he => h (Nat.even_iff.mp he)))).symm
 
 /-- Empty occupation state. -/
 def empty : Occupation ι :=
@@ -146,6 +162,34 @@ def finitePartition
   Finset.sum Finset.univ (fun x : Occupation ι =>
     occupationGibbsWeight E β x)
 
+/-- The occupation partition is the canonical finite grand-canonical
+partition for the same energy readout. -/
+theorem finitePartition_eq_grandCanonical_partition
+    (E : ModeEnergy ι) (β : ℝ) :
+    finitePartition E β =
+      InfoGeometry.GrandCanonical.partition
+        (occupationEnergy E) β := by
+  rfl
+
+/-- Occupation-state weights become canonical normalized weights after the
+partition factor is restored. -/
+theorem occupationGibbsWeight_eq_partition_mul_grandCanonical_gibbsWeight
+    (E : ModeEnergy ι) (β : ℝ) (x : Occupation ι) :
+    occupationGibbsWeight E β x =
+      InfoGeometry.GrandCanonical.partition
+        (occupationEnergy E) β *
+      InfoGeometry.GrandCanonical.gibbsWeight
+        (occupationEnergy E) β x := by
+  unfold occupationGibbsWeight InfoGeometry.GrandCanonical.gibbsWeight
+  change Real.exp (-β * occupationEnergy E x) =
+    InfoGeometry.GrandCanonical.partition (occupationEnergy E) β *
+      (Real.exp (-β * occupationEnergy E x) /
+        InfoGeometry.GrandCanonical.partition (occupationEnergy E) β)
+  field_simp [InfoGeometry.GrandCanonical.partition_pos
+    (occupationEnergy E) β]
+  exact (div_self (InfoGeometry.GrandCanonical.partition_pos
+    (occupationEnergy E) β).ne').symm
+
 /-- Finite superpartition / Witten-index-style readout. -/
 def finiteSuperPartition
     (E : ModeEnergy ι)
@@ -221,6 +265,45 @@ lemma finitePartition_ne_zero
     (E : ModeEnergy ι) (β : ℝ) :
     finitePartition E β ≠ 0 :=
   (finitePartition_pos E β).ne'
+
+/-- The finite Gibbs partition factors into the two local occupation choices
+    at each mode. -/
+theorem finitePartition_eq_product_one_add_exp_neg_mul
+    (E : ModeEnergy ι)
+    (β : ℝ) :
+    finitePartition E β =
+      ∏ i : ι, (1 + Real.exp (-β * E i)) := by
+  classical
+  unfold finitePartition occupationGibbsWeight occupationEnergy
+  have hfactor (x : Occupation ι) :
+      Real.exp (-β * (Finset.sum (Occupation.occupied x) E)) =
+        ∏ i : ι, if x i then Real.exp (-β * E i) else 1 := by
+    have henergy : Finset.sum (Occupation.occupied x) E =
+        ∑ i : ι, if x i then E i else 0 := by
+      unfold Occupation.occupied
+      rw [Finset.sum_filter]
+    have hscale : -β * (∑ i : ι, if x i then E i else 0) =
+        ∑ i : ι, (-β) * (if x i then E i else 0) := by
+      exact Finset.mul_sum (Finset.univ : Finset ι)
+        (fun i => if x i then E i else 0) (-β)
+    rw [henergy, hscale, Real.exp_sum]
+    apply Finset.prod_congr rfl
+    intro i hi
+    by_cases h : x i <;> simp [h]
+  rw [show (∑ x : Occupation ι,
+      Real.exp (-β * ∑ i ∈ Occupation.occupied x, E i)) =
+      ∑ x : Occupation ι, ∏ i : ι, if x i then Real.exp (-β * E i) else 1 by
+        apply Finset.sum_congr rfl
+        intro x hx
+        exact hfactor x]
+  have hlocal (i : ι) :
+      ((∑ b : Bool, if b then Real.exp (-β * E i) else 1) : ℝ) =
+        1 + Real.exp (-β * E i) := by
+    simp
+    ring
+  rw [← Finset.prod_congr rfl (fun i _hi => hlocal i)]
+  rw [← Finset.sum_prod_piFinset]
+  rw [Fintype.piFinset_univ]
 
 /-! ## 3. Even/odd split of the finite supertrace -/
 
@@ -317,6 +400,165 @@ theorem finiteSuperPartition_eq_even_sub_odd
           (fun x => occupationGibbsWeight E β x) := by
         rw [hEven, hOdd]
         ring
+
+/-- The generic finite occupation superpartition is the product of its local
+    signed mode factors.  This is the finite algebraic bridge between the
+    occupation-state readout and the exterior/Euler denominator readout. -/
+theorem finiteSuperPartition_eq_product_one_sub_exp_neg_mul
+    (E : ModeEnergy ι)
+    (β : ℝ) :
+    finiteSuperPartition E β =
+      ∏ i : ι, (1 - Real.exp (-β * E i)) := by
+  classical
+  unfold finiteSuperPartition occupationGibbsWeight occupationEnergy
+  have hfactor (x : Occupation ι) :
+      Occupation.paritySign x *
+          Real.exp (-β * (Finset.sum (Occupation.occupied x) E)) =
+        ∏ i : ι, if x i then -Real.exp (-β * E i) else 1 := by
+    have hparity : Occupation.paritySign x =
+        ∏ i : ι, if x i then (-1 : ℝ) else 1 := by
+      unfold Occupation.paritySign Occupation.fermionNumber Occupation.occupied
+      rw [← Finset.prod_filter]
+      simp only [Finset.prod_const]
+      change (if (Finset.univ.filter (fun i => x i = true)).card % 2 = 0 then 1 else -1) =
+        (-1 : ℝ) ^ (Finset.univ.filter (fun i => x i = true)).card
+      by_cases h : (Finset.univ.filter (fun i => x i = true)).card % 2 = 0
+      · rw [if_pos h]
+        exact (Even.neg_one_pow (Nat.even_iff.mpr h)).symm
+      · rw [if_neg h]
+        exact (Odd.neg_one_pow
+          (Nat.not_even_iff_odd.mp (fun he => h (Nat.even_iff.mp he)))).symm
+    have henergy : Finset.sum (Occupation.occupied x) E =
+        ∑ i : ι, if x i then E i else 0 := by
+      unfold Occupation.occupied
+      rw [Finset.sum_filter]
+    have hscale : -β * (∑ i : ι, if x i then E i else 0) =
+        ∑ i : ι, (-β) * (if x i then E i else 0) := by
+      exact Finset.mul_sum (Finset.univ : Finset ι)
+        (fun i => if x i then E i else 0) (-β)
+    rw [hparity, henergy, hscale, Real.exp_sum]
+    calc
+      (∏ i : ι, if x i then (-1 : ℝ) else 1) *
+          (∏ i : ι, Real.exp (-β * (if x i then E i else 0))) =
+          ∏ i : ι,
+            (if x i then (-1 : ℝ) else 1) *
+              Real.exp (-β * (if x i then E i else 0)) := by
+                rw [Finset.prod_mul_distrib]
+      _ = ∏ i : ι, if x i then -Real.exp (-β * E i) else 1 := by
+        apply Finset.prod_congr rfl
+        intro i hi
+        by_cases h : x i <;> simp [h]
+  rw [show (∑ x : Occupation ι,
+      Occupation.paritySign x * Real.exp (-β * ∑ i ∈ Occupation.occupied x, E i)) =
+      ∑ x : Occupation ι, ∏ i : ι, if x i then -Real.exp (-β * E i) else 1 by
+        apply Finset.sum_congr rfl
+        intro x hx
+        exact hfactor x]
+  have hlocal (i : ι) :
+      ((∑ b : Bool, if b then -Real.exp (-β * E i) else 1) : ℝ) =
+        1 - Real.exp (-β * E i) := by
+    simp
+    ring
+  rw [← Finset.prod_congr rfl (fun i _hi => hlocal i)]
+  rw [← Finset.sum_prod_piFinset]
+  rw [Fintype.piFinset_univ]
+
+/-- At zero inverse temperature, the signed Gibbs readout is the finite
+    parity/Witten sum. -/
+theorem finiteSuperPartition_zero_eq_paritySum
+    (E : ModeEnergy ι) :
+    finiteSuperPartition E 0 =
+      ∑ x : Occupation ι, Occupation.paritySign x := by
+  simp [finiteSuperPartition, occupationGibbsWeight]
+
+/-- Character form of the zero-parameter finite Witten readout. -/
+theorem finiteSuperPartition_zero_eq_fermionCharacterSum
+    (E : ModeEnergy ι) :
+    finiteSuperPartition E 0 =
+      ∑ x : Occupation ι, (-1 : ℝ) ^ Occupation.fermionNumber x := by
+  rw [finiteSuperPartition_zero_eq_paritySum]
+  apply Finset.sum_congr rfl
+  intro x hx
+  exact Occupation.paritySign_eq_neg_one_pow_fermionNumber x
+
+/-- A nonempty finite mode register has vanishing zero-parameter Witten
+    superpartition. -/
+theorem finiteSuperPartition_zero_eq_zero
+    [Nonempty ι]
+    (E : ModeEnergy ι) :
+    finiteSuperPartition E 0 = 0 := by
+  rw [finiteSuperPartition_eq_product_one_sub_exp_neg_mul]
+  simp
+
+/-! ## 4. Generic finite occupation index -/
+
+/-
+The occupation supertrace has a genuine finite Euler-index realization.  The
+complex below is the zero-differential two-term complex whose graded carriers
+are the even and odd occupation sectors.  This is deliberately an algebraic
+finite statement; it does not identify a divisor or analytic residue index.
+-/
+
+abbrev evenOccupationCarrier (ι : Type*) [Fintype ι] [DecidableEq ι] : Type _ :=
+  {x : Occupation ι // x ∈ evenOccupations} → ℚ
+
+abbrev oddOccupationCarrier (ι : Type*) [Fintype ι] [DecidableEq ι] : Type _ :=
+  {x : Occupation ι // x ∈ oddOccupations} → ℚ
+
+def occupationParityComplex (ι : Type*) [Fintype ι] [DecidableEq ι] :
+    FiniteTwoTermComplex
+      (K := ℚ)
+      (Vp := evenOccupationCarrier (ι := ι))
+      (Vm := oddOccupationCarrier (ι := ι)) :=
+  zeroFiniteTwoTermComplex
+
+theorem occupationParitySum_eq_even_card_sub_odd_card :
+    (∑ x : Occupation ι,
+      if Occupation.isEven x then (1 : ℤ) else -1) =
+      (evenOccupations (ι := ι)).card - (oddOccupations (ι := ι)).card := by
+  classical
+  have hterm (x : Occupation ι) :
+      (if Occupation.isEven x then (1 : ℤ) else -1) =
+        (if Occupation.isEven x then (1 : ℤ) else 0) -
+          (if ¬ Occupation.isEven x then (1 : ℤ) else 0) := by
+    by_cases h : Occupation.isEven x <;> simp [h]
+  calc
+    (∑ x : Occupation ι,
+        if Occupation.isEven x then (1 : ℤ) else -1) =
+        ∑ x : Occupation ι,
+          ((if Occupation.isEven x then (1 : ℤ) else 0) -
+            (if ¬ Occupation.isEven x then (1 : ℤ) else 0)) := by
+      apply Finset.sum_congr rfl
+      intro x hx
+      exact hterm x
+    _ = (evenOccupations (ι := ι)).card -
+          (oddOccupations (ι := ι)).card := by
+      rw [Finset.sum_sub_distrib]
+      rw [← Finset.sum_filter, ← Finset.sum_filter]
+      simp [evenOccupations, oddOccupations]
+
+theorem finiteKernelIndex_occupationParity :
+    finiteKernelIndex (occupationParityComplex (ι := ι)) =
+      ∑ x : Occupation ι,
+        if Occupation.isEven x then (1 : ℤ) else -1 := by
+  change finiteKernelIndex (zeroFiniteTwoTermComplex
+    (K := ℚ)
+    (Vp := evenOccupationCarrier (ι := ι))
+    (Vm := oddOccupationCarrier (ι := ι))) = _
+  rw [finiteKernelIndex_zero]
+  simp only [evenOccupationCarrier, oddOccupationCarrier,
+    Module.finrank_fintype_fun_eq_card]
+  rw [occupationParitySum_eq_even_card_sub_odd_card]
+  simp only [Fintype.card_coe]
+
+theorem finiteSuperPartition_zero_eq_real_kernelIndex
+    (E : ModeEnergy ι) :
+    (finiteKernelIndex (occupationParityComplex (ι := ι)) : ℝ) =
+      finiteSuperPartition E 0 := by
+  rw [finiteKernelIndex_occupationParity,
+    finiteSuperPartition_zero_eq_paritySum]
+  norm_cast
+  simp [Occupation.paritySign, Occupation.isEven]
 
 /-! ## 4. Prime-labelled finite models -/
 
@@ -439,6 +681,73 @@ theorem finiteExteriorProductSupertrace_eq_denominator
   rw [← Finset.sum_prod_piFinset]
   rw [Fintype.piFinset_univ]
 
+/-- The occupation-state superpartition at prime-log energies agrees with the
+    existing finite prime-bit exterior denominator. -/
+theorem finiteSuperPartition_primeEnergy_eq_exteriorEulerDenominator
+    (P : FinitePrimeBitLattice)
+    (β : ℝ) :
+    finiteSuperPartition
+        (fun i : P.Index => Real.log (P.prime i : ℝ)) β =
+      P.finiteExteriorEulerDenominator β := by
+  rw [finiteSuperPartition_eq_product_one_sub_exp_neg_mul]
+  rfl
+
+/-- The occupation superpartition and the exterior product supertrace are the
+    same finite signed Gibbs readout.  Both remain finite carriers; no
+    infinite inverse-zeta or analytic trace identity is inferred. -/
+theorem finiteSuperPartition_primeEnergy_eq_exteriorProductSupertrace
+    (P : FinitePrimeBitLattice)
+    (β : ℝ) :
+    finiteSuperPartition
+        (fun i : P.Index => Real.log (P.prime i : ℝ)) β =
+      P.finiteExteriorProductSupertrace β := by
+  rw [finiteSuperPartition_primeEnergy_eq_exteriorEulerDenominator]
+  exact (P.finiteExteriorProductSupertrace_eq_denominator β).symm
+
+/--
+The finite prime-bit supertrace has one coherent readout: the occupation
+superpartition, the exterior-product supertrace, and the local Euler
+denominator agree exactly at every finite inverse-temperature stage.
+
+This is a finite algebraic packet. The infinite inverse-zeta comparison is
+kept separate in `SupersymmetricPrimonZetaCalibration`.
+-/
+theorem finitePrimeBitSupertrace_readout_packet
+    (P : FinitePrimeBitLattice) (β : ℝ) :
+    P.finiteExteriorProductSupertrace β =
+        P.finiteExteriorEulerDenominator β ∧
+      finiteSuperPartition
+          (fun i : P.Index => Real.log (P.prime i : ℝ)) β =
+        P.finiteExteriorProductSupertrace β ∧
+      finiteSuperPartition
+          (fun i : P.Index => Real.log (P.prime i : ℝ)) β =
+        P.finiteExteriorEulerDenominator β := by
+  refine ⟨P.finiteExteriorProductSupertrace_eq_denominator β,
+    finiteSuperPartition_primeEnergy_eq_exteriorProductSupertrace P β,
+    finiteSuperPartition_primeEnergy_eq_exteriorEulerDenominator P β⟩
+
+/-- The zero-parameter exterior supertrace is the finite prime-bit parity sum. -/
+theorem finiteExteriorProductSupertrace_zero_eq_bitParitySum
+    (P : FinitePrimeBitLattice) :
+    P.finiteExteriorProductSupertrace 0 =
+      ∑ ε : P.Profile, P.bitFermionParity ε := by
+  rw [finiteExteriorProductSupertrace_eq_denominator]
+  rw [← finiteSuperPartition_primeEnergy_eq_exteriorEulerDenominator]
+  simpa [FinitePrimeBitLattice.bitFermionParity] using
+    (finiteSuperPartition_zero_eq_paritySum
+      (fun i : P.Index => Real.log (P.prime i : ℝ)))
+
+/-- A nonempty finite prime register has vanishing zero-parameter exterior
+    supertrace. -/
+theorem finiteExteriorProductSupertrace_zero_eq_zero
+    (P : FinitePrimeBitLattice)
+    [Nonempty P.Index] :
+    P.finiteExteriorProductSupertrace 0 = 0 := by
+  rw [finiteExteriorProductSupertrace_eq_denominator]
+  unfold finiteExteriorEulerDenominator localPrimeWeight
+  have hcard : Fintype.card P.Index ≠ 0 := Fintype.card_ne_zero
+  simp [hcard]
+
 /--
 Re-export of the finite bit-energy identity from the primitive binary bridge:
 
@@ -465,45 +774,5 @@ theorem primitiveMellinKernel_bitInteger_eq_exp_neg_mul_bitEnergy
 
 end FinitePrimeBitLattice
 
-/-! ## 6. Infinite zeta/supertrace property socket -/
-
-/--
-Witness-gated infinite supersymmetric primon zeta calibration.
-
-This is where the analytic identity
-
-```text
-sum mu(n) n^(-beta) = 1 / zeta(beta)
-```
-
-belongs.  It is not proved by the finite occupation skeleton.
--/
-structure SupersymmetricPrimonZetaCalibration where
-  /-- Inverse temperature domain, e.g. `1 < beta`. -/
-  BetaAdmissible : ℝ → Prop
-  /-- Infinite supertrace readout. -/
-  supertrace : ℝ → ℝ
-  /-- Zeta readout. -/
-  zeta : ℝ → ℝ
-  /-- Nonvanishing of zeta on the admissible domain. -/
-  zeta_ne_zero :
-    ∀ β : ℝ, BetaAdmissible β → zeta β ≠ 0
-  /-- Analytic calibration law. -/
-  supertrace_eq_inv_zeta :
-    ∀ β : ℝ, BetaAdmissible β →
-      supertrace β = 1 / zeta β
-
-namespace SupersymmetricPrimonZetaCalibration
-
-variable (C : SupersymmetricPrimonZetaCalibration)
-
-/-- Re-export of the supplied infinite supertrace/zeta calibration. -/
-theorem supertrace_eq_inv_zeta_of_admissible
-    (β : ℝ)
-    (hβ : C.BetaAdmissible β) :
-    C.supertrace β = 1 / C.zeta β :=
-  C.supertrace_eq_inv_zeta β hβ
-
-end SupersymmetricPrimonZetaCalibration
 
 end InfoGeometry.Arithmetic.PrimeSupertraceFinite

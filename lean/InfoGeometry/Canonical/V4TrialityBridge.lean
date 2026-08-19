@@ -120,14 +120,10 @@ theorem varlamov_v4_trifactor_triality :
 /-- Concrete `pg` wallpaper relation `G T_y G⁻¹ = T_y⁻¹`. -/
 theorem concrete_kleinBottlePresentation_relation
     (p : InfoGeometry.Topology.Wallpaper.Lattice2D) :
-    (InfoGeometry.Topology.WallpaperKleinBottlePresentation.WallpaperGroupPG.kleinBottlePresentation
-        InfoGeometry.Topology.Wallpaper.concretePG).glide
-      ((InfoGeometry.Topology.WallpaperKleinBottlePresentation.WallpaperGroupPG.kleinBottlePresentation
-          InfoGeometry.Topology.Wallpaper.concretePG).yTranslation
-        ((InfoGeometry.Topology.WallpaperKleinBottlePresentation.WallpaperGroupPG.kleinBottlePresentation
-            InfoGeometry.Topology.Wallpaper.concretePG).glide.symm p)) =
-      ((InfoGeometry.Topology.WallpaperKleinBottlePresentation.WallpaperGroupPG.kleinBottlePresentation
-          InfoGeometry.Topology.Wallpaper.concretePG).yTranslation.symm p) :=
+    InfoGeometry.Topology.Wallpaper.concretePG.G
+        (InfoGeometry.Topology.Wallpaper.concretePG.T_y
+          (InfoGeometry.Topology.Wallpaper.concretePG.G.symm p)) =
+      InfoGeometry.Topology.Wallpaper.concretePG.T_y.symm p :=
   InfoGeometry.Topology.WallpaperKleinBottlePresentation.concrete_kleinBottlePresentation_relation p
 
 /-- Finite Pin-style glide square in split `(5,5)` coordinates. -/

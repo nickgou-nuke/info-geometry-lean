@@ -8,7 +8,7 @@ Concrete proper-carrier self-dual extension for symmetric split Cartan spaces.
 
 This file keeps the owner theorem surface theorem-only. The split Cartan tower
 is represented by the sigma carrier of finite split-orthogonal Cartan stages,
-and the cumulative proper carriers are the initial stage segments. No socket,
+and the cumulative proper carriers are the initial stage segments. No interface,
 property, property packet, or structure field is used to hide a proof.
 
 #### BUCKET 1: CLOSED FINITE/COLIMIT THEOREMS

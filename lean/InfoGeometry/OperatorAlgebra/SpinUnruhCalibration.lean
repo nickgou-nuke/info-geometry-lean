@@ -2,7 +2,6 @@ import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 import InfoGeometry.Dynamics.UnruhKMS
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # Spin-Unruh Calibration
@@ -228,7 +227,7 @@ def unitModularAccelerationCalibration : ModularAccelerationCalibration where
   temperature_eq_inv_beta := rfl
 
 /-- The concrete unit modular acceleration calibration has the Unruh readout laws. -/
-theorem modularUnruhCalibrationOwnerTarget :
+theorem modularUnruhCalibration_properties :
     unitModularAccelerationCalibration.betaModular = 2 * Real.pi ∧
       unitModularAccelerationCalibration.betaPhysical =
         (2 * Real.pi) / unitModularAccelerationCalibration.acceleration ∧
@@ -257,7 +256,7 @@ def unitSpinUnruhCalibration
     field_simp [Real.pi_ne_zero]
 
 /-- The concrete unit-acceleration spin-Unruh calibration has the readout laws. -/
-theorem spinUnruhCalibrationOwnerTarget
+theorem spinUnruhCalibration_properties
     (State : Type*) :
     (unitSpinUnruhCalibration State).temperature =
         unruhTemperatureNatural (unitSpinUnruhCalibration State).spinModular ∧
@@ -281,9 +280,9 @@ attribute [rep_depth operator]
   ModularBoostTemperatureCalibration
   ModularBoostTemperatureCalibration.temperature_eq_unruh
   unitModularAccelerationCalibration
-  modularUnruhCalibrationOwnerTarget
+  modularUnruhCalibration_properties
   unitSpinModularCompatibility
   unitSpinUnruhCalibration
-  spinUnruhCalibrationOwnerTarget
+  spinUnruhCalibration_properties
 
 end InfoGeometry.OperatorAlgebra.SpinUnruhCalibration

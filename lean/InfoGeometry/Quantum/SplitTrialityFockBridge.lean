@@ -121,8 +121,8 @@ canonical triality supercharge square closes onto the identity even seed.
 The triality left/right spinor channels themselves satisfy the concrete CAR
 property transported from the split-`Cl(1,1)` null-mode realization.
 -/
-theorem triality_channels_CARWitness :
-    InfoGeometry.Quantum.RealMajoranaCategory.CARWitness
+theorem triality_channels_CARRelation :
+    InfoGeometry.Quantum.RealMajoranaCategory.CARRelation
       (InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E)
       (InfoGeometry.Quantum.vectorToLeftSpinor (E := E))
       (InfoGeometry.Quantum.vectorToRightSpinor (E := E)) := by

@@ -3,7 +3,6 @@ import InfoGeometry.Canonical.OperatorJKOStep
 import InfoGeometry.Canonical.SouriauMetriplecticOptimalTransport
 import InfoGeometry.Geometry.DualFlat
 import InfoGeometry.Quantum.HestenesKahler
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -619,33 +618,14 @@ theorem step_unique_minimizer
 
 end ScalarJKOParameters
 
-/-! ## 5. Owner targets -/
-
-/-- Owner target for scalar deterministic JKO minimization. -/
-@[owner_target_tag]
-def ScalarJKOOwnerTarget : Prop :=
-  ∀ P : ScalarJKOParameters,
-    ∀ x : ℝ,
-      P.functional P.step ≤ P.functional x
-
-/-- Constructive proof of scalar deterministic JKO minimization. -/
-theorem scalarJKOOwnerTarget :
+theorem scalarJKO_minimizes :
     ∀ P : ScalarJKOParameters,
       ∀ x : ℝ,
         P.functional P.step ≤ P.functional x := by
   intro P x
   exact P.step_minimizes x
 
-/-- Owner target for uniqueness of scalar deterministic JKO minimization. -/
-@[owner_target_tag]
-def ScalarJKOUniqueOwnerTarget : Prop :=
-  ∀ P : ScalarJKOParameters,
-    ∀ x : ℝ,
-      (∀ y : ℝ, P.functional x ≤ P.functional y) →
-        x = P.step
-
-/-- Constructive proof of scalar deterministic JKO uniqueness. -/
-theorem scalarJKOUniqueOwnerTarget :
+theorem scalarJKO_unique_minimizer :
     ∀ P : ScalarJKOParameters,
       ∀ x : ℝ,
         (∀ y : ℝ, P.functional x ≤ P.functional y) →
@@ -653,33 +633,7 @@ theorem scalarJKOUniqueOwnerTarget :
   intro P x hmin
   exact P.step_unique_minimizer hmin
 
-/--
-Owner target for the Majorana/JKO/Ergo bridge once a bridge property is supplied.
-
-This records the constructive payload of the bridge: JKO minimization,
-Bayesian/Bregman projection, and the installed Bayes/JKO compatibility law.
--/
-@[owner_target_tag]
-def MajoranaJKOErgoBridgeOwnerTarget : Prop :=
-  ∀ (E : Type)
-    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],
-  ∀ (State LieGroup LieAlgebra LieDual Observable : Type*)
-    [AddMonoid LieAlgebra]
-    [NormedRing Observable] [NormedAlgebra ℝ Observable] [CompleteSpace Observable],
-    ∀ (B : MajoranaJKOErgoBridge
-      (E := E) State LieGroup LieAlgebra LieDual Observable),
-      ∀ (ρ alt : Density State),
-        B.feasibleAlternative alt →
-          B.jko.objective B.jko.next ≤ B.jko.objective ρ
-            ∧
-          B.encodedDivergence alt B.jko.previous =
-            B.encodedDivergence alt B.jko.next +
-              B.encodedDivergence B.jko.next B.jko.previous
-            ∧
-          B.bayesUpdate B.jko.previous = B.jko.next
-
-/-- The Majorana/JKO/Ergo bridge owner target is discharged by the supplied bridge. -/
-theorem majoranaJKOErgoBridgeOwnerTarget :
+theorem majoranaJKOErgoBridge_properties :
     ∀ (E : Type)
       [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E],
     ∀ (State LieGroup LieAlgebra LieDual Observable : Type*)

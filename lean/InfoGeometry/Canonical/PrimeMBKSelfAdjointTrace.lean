@@ -14,7 +14,7 @@ does not prove trace-class/temperedness of a relative heat kernel, and does not
 identify a Mellin transform with the logarithmic derivative of completed `xi`.
 
 It records the finite/infinite MBK operator readouts together with later
-analytic socket fields for the unresolved spectral statements.
+analytic interface fields for the unresolved spectral statements.
 
 In this cleanup cycle, the vacuous finite-volume law/property wrappers were
 removed rather than preserved as proof proxies.
@@ -91,30 +91,5 @@ structure RelativeHeatTracePacket
     ℝ → HeatTrace
   relativeDistribution :
     Distribution
-
-/--
-Mellin transform and completed-`xi` logarithmic-derivative packet.
-
-The equality with `- d/ds log ξ(s)` and the singular-support identification are
-the hard spectral/analytic trace formula claims.
--/
-@[rep_depth operator]
-structure MBKMellinXiTracePacket
-    (Cutoff ContinuousHilbert FockSpace Operator PrimeLabel Domain KreinMetric
-      HeatTrace Distribution MellinReadout SpectralDensity FrequencyReadout : Type*) where
-  heatTrace :
-    RelativeHeatTracePacket
-      Cutoff ContinuousHilbert FockSpace Operator PrimeLabel Domain KreinMetric
-      HeatTrace Distribution
-  xiZeros :
-    CompletedXiZeroPredicate
-  mellinTransform :
-    ℂ → MellinReadout
-  completedXiLogDerivative :
-    ℂ → MellinReadout
-  spectralDensity :
-    SpectralDensity
-  zeroFrequency :
-    ℂ → FrequencyReadout
 
 end InfoGeometry.Canonical.PrimeMBKSelfAdjointTrace

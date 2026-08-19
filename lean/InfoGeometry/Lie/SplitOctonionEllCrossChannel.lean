@@ -252,6 +252,46 @@ theorem rootMinus_mul_lUnit (a : Fin 3) :
     show InfoGeometry.Algebra.Zorn.G2TrifactorSU3.zMul (rootMinus a) uMinus =
       0 from rootMinus_mul_uMinus a, sub_zero]
 
+/-! The two root channels form the signed eigenspaces for multiplication by
+the distinguished split axis. -/
+
+theorem lUnit_mul_rootChannel (b : Bool) (a : Fin 3) :
+    lUnit * (if b then rootPlus a else rootMinus a) =
+      if b then rootPlus a else -rootMinus a := by
+  cases b
+  · exact lUnit_mul_rootMinus a
+  · exact lUnit_mul_rootPlus a
+
+theorem rootChannel_mul_lUnit (b : Bool) (a : Fin 3) :
+    (if b then rootPlus a else rootMinus a) * lUnit =
+      if b then -rootPlus a else rootMinus a := by
+  cases b
+  · exact rootMinus_mul_lUnit a
+  · exact rootPlus_mul_lUnit a
+
+theorem lUnit_rootChannel_commutator (b : Bool) (a : Fin 3) :
+    lUnit * (if b then rootPlus a else rootMinus a) -
+        (if b then rootPlus a else rootMinus a) * lUnit =
+      if b then 2 • rootPlus a else -(2 • rootMinus a) := by
+  cases b
+  · change lUnit * rootMinus a - rootMinus a * lUnit = -(2 • rootMinus a)
+    rw [lUnit_mul_rootMinus, rootMinus_mul_lUnit]
+    module
+  · change lUnit * rootPlus a - rootPlus a * lUnit = 2 • rootPlus a
+    rw [lUnit_mul_rootPlus, rootPlus_mul_lUnit]
+    module
+
+theorem lUnit_rootChannel_anticommutator (b : Bool) (a : Fin 3) :
+    lUnit * (if b then rootPlus a else rootMinus a) +
+        (if b then rootPlus a else rootMinus a) * lUnit = 0 := by
+  cases b
+  · change lUnit * rootMinus a + rootMinus a * lUnit = 0
+    rw [lUnit_mul_rootMinus, rootMinus_mul_lUnit]
+    module
+  · change lUnit * rootPlus a + rootPlus a * lUnit = 0
+    rw [lUnit_mul_rootPlus, rootPlus_mul_lUnit]
+    module
+
 /-- The commutator of the paired root channels recovers the axial generator. -/
 theorem root_commutator (a : Fin 3) :
     rootPlus a * rootMinus a - rootMinus a * rootPlus a = lUnit := by

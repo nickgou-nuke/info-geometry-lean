@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/RealPhaseSpectralTriple.lean
 
-Real phase-compatible spectral triple sockets.
+Real phase-compatible spectral triple definitions.
 
 This module keeps the strict separation:
 
@@ -195,10 +195,10 @@ theorem lipschitzSeminorm_nonneg
     0 ≤ lipschitzSeminorm ρ D a :=
   norm_nonneg _
 
-/-! ## 5. Phase-real spectral triple socket -/
+/-! ## 5. Phase-real spectral triple -/
 
 /--
-Real, phase-compatible spectral triple socket.
+Real, phase-compatible spectral triple relation.
 
 The `order_one` field is supplied abstractly and should be proved in concrete
 representation modules.

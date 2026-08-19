@@ -29,10 +29,10 @@ variable (psi_comm : ∀ n, (psi (n + 1)).comp (iota n) = psi n)
 namespace NoncommutativeGeometry
 
 /-- The grading operator survives the colimit map. -/
-lemma colimit_grading_survival (n : ℕ) (Γ_n : A n) [hΓ : OperatorChirality Γ_n] :
-    OperatorChirality (psi n Γ_n) where
-  inv_sq := by
-    have h1 : Γ_n * Γ_n = 1 := hΓ.inv_sq
+lemma colimit_grading_survival (n : ℕ) (Γ_n : A n) (hΓ : OperatorChirality Γ_n) :
+    OperatorChirality (psi n Γ_n) := by
+    unfold OperatorChirality at hΓ ⊢
+    have h1 : Γ_n * Γ_n = 1 := hΓ
     calc
       psi n Γ_n * psi n Γ_n = psi n (Γ_n * Γ_n) := (map_mul (psi n) Γ_n Γ_n).symm
       _ = psi n 1 := by rw [h1]
@@ -69,7 +69,7 @@ If Q and Q' are finite-stage chiral supercharges, their anticommutator
 condenses to an even central supercharge structurally intact inside the 
 continuum boundary A_∞.
 -/
-theorem continuum_superalgebra_closure (n : ℕ) (Γ_n : A n) [OperatorChirality Γ_n]
+theorem continuum_superalgebra_closure (n : ℕ) (Γ_n : A n)
     (Q Q' : A n) [hQ : IsChiralSupercharge Γ_n Q] [hQ' : IsChiralSupercharge Γ_n Q'] :
     isEven (psi n Γ_n) (anticomm (psi n Q) (psi n Q')) := by
   rw [anticommutator_map]

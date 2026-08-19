@@ -22,6 +22,7 @@ import InfoGeometry.Algebra.Zorn.Z2ThreeCochainBridge
 import InfoGeometry.Algebra.Zorn.ZornTwistedGroupReadoutObstruction
 import InfoGeometry.Algebra.Zorn.ScalarJacobian8
 import InfoGeometry.Algebra.Zorn.InverseAdjugate
+import InfoGeometry.Algebra.Zorn.PolarDecomposition
 import InfoGeometry.Algebra.Zorn.SplitOctonionG2TwoClassificationBoundary
 import InfoGeometry.Algebra.Zorn.SplitOctonionG2ClassificationCertificate
 import InfoGeometry.Algebra.Zorn.G2TwoAutomorphismOrderLedger
@@ -138,6 +139,7 @@ import InfoGeometry.Algebra.TriFacetScalar
 import InfoGeometry.Algebra.LevGFQT
 import InfoGeometry.Algebra.ZornMatrix
 import InfoGeometry.Algebra.ChiralZornBasisSoldering
+import InfoGeometry.Algebra.ChiralZornCARAndSchurBridge
 import InfoGeometry.Algebra.JordanTripleTKK
 import InfoGeometry.Algebra.FiveGradedTKK
 import InfoGeometry.Algebra.FiveGradedLieAntisymmetry
@@ -145,8 +147,7 @@ import InfoGeometry.Algebra.FiveGradedLieJacobi
 import InfoGeometry.Algebra.LightConePair
 import InfoGeometry.Algebra.SplitJordanSpinor
 import InfoGeometry.Algebra.KleinSpinorOrbit
-import InfoGeometry.Algebra.KleinSpinorOrbitSocketClosure
-import InfoGeometry.Algebra.KleinSpinorOrbitCertifiedPacket
+import InfoGeometry.Algebra.KleinSpinorOrbitClosure
 import InfoGeometry.Algebra.KleinSpinorOrbitCompleteness
 import InfoGeometry.Algebra.JordanCayleyInversion
 import InfoGeometry.Algebra.JordanCayleyInversionCs

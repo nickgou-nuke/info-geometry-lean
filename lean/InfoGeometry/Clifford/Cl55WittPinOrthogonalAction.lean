@@ -105,6 +105,20 @@ noncomputable def pinConjActionEquiv (g : Pin55) : V55 ≃ₗ[ℝ] V55 :=
     (by
       rw [← pinConjAction_mul, inv_mul_cancel, pinConjAction_one])
 
+@[simp] theorem pinConjActionEquiv_symm (g : Pin55) :
+    (pinConjActionEquiv g).symm = pinConjActionEquiv g⁻¹ := by
+  apply LinearEquiv.ext
+  intro v
+  rfl
+
+@[simp] theorem pinConjActionEquiv_one :
+    pinConjActionEquiv (1 : Pin55) = LinearEquiv.refl ℝ V55 := by
+  apply LinearEquiv.ext
+  intro v
+  change pinConjAction (1 : Pin55) v = v
+  rw [pinConjAction_one]
+  rfl
+
 theorem pinConjAction_preserves_Q55 (g : Pin55) (v : V55) :
     Q55 (pinConjAction g v) = Q55 v := by
   have hι := pinConjAction_apply_ι g v

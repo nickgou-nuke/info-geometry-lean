@@ -30,4 +30,10 @@ theorem diag_succ_preserves_add (n : ℕ) (f g : DiagAlg n) :
     diagEmbedSucc n (f + g) = diagEmbedSucc n f + diagEmbedSucc n g :=
   diagEmbedSucc_add n f g
 
+/-! Polynomial powers transport through the same finite-stage embedding. -/
+
+theorem diag_succ_preserves_pow (n k : ℕ) (f : DiagAlg n) :
+    diagEmbedSucc n (f ^ k) = (diagEmbedSucc n f) ^ k := by
+  exact map_pow (diagEmbedSuccRingHom n) f k
+
 end InfoGeometry.Causal.ZornPresheafColimitBridge

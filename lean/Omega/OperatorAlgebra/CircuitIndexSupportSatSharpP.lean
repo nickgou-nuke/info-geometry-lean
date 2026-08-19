@@ -19,7 +19,7 @@ theorem paper_index_support_sat_np_hard_index_coeff_sharpp
   have h := index_support_sat_np_hard_index_coeff_sharpp_characterization
     (fun _ : Unit => φ)
   constructor
-  · simpa [verifierWitnessCount, verifierWitnesses] using h.2 ()
+  · simpa [verifierCandidateCount, verifierCandidates] using h.2 ()
   · simpa [satisfiable] using h.1 ()
 
 end Omega.OperatorAlgebra

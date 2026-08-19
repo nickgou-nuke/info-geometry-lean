@@ -19,7 +19,7 @@ single interface for:
 * log-partition potentials;
 * Bregman/KL readouts;
 * the thermodynamic force `d_ln_Q`; and
-* the equilibrium Killing-field socket already owned by the canonical bridge.
+* the equilibrium Killing-field datum already owned by the canonical bridge.
 -/
 
 namespace InfoGeometry.Thermo.AmariSouriauBridge
@@ -34,7 +34,7 @@ Scalar Amari/Souriau bridge packet.
 
 `legendre` carries the dually flat potential, `logPotential` gives the
 root-level log-potential shadow, and `gauge` carries the thermodynamic
-`d log Q` force together with the equilibrium Killing-field socket.
+`d log Q` force together with the equilibrium Killing-field datum.
 -/
 structure Bridge
     (Op X : Type*) [Ring Op] where
@@ -47,7 +47,7 @@ structure Bridge
   /-- The log-potential shadow is the same scalar function as `legendre.f`. -/
   logPotential_eq : logPotential = legendre.f
 
-  /-- Thermodynamic gauge / Souriau socket. -/
+  /-- Thermodynamic gauge / Souriau datum. -/
   gauge : SouriauAmariGauge Op ℝ ℝ X
 
   /-- The gauge-side log-partition potential is the same scalar potential. -/
@@ -88,6 +88,18 @@ theorem entropy_production_eq_dlogQ
     entropy_production B.gauge.flow = B.thermodynamicForce := by
   simpa [thermodynamicForce] using
     B.gauge.entropy_production_eq_dlogQ hcomm
+
+theorem thermodynamicForce_eq_zero_of_equilibrium
+    (hcomm :
+      B.gauge.flow.P_forward * B.gauge.flow.P_backward -
+        B.gauge.flow.P_backward * B.gauge.flow.P_forward =
+        B.gauge.flow.d_ln_Q)
+    (heq : entropy_production B.gauge.flow = 0) :
+    B.thermodynamicForce = 0 := by
+  have hforce : entropy_production B.gauge.flow = B.thermodynamicForce := by
+    apply B.entropy_production_eq_dlogQ
+    exact hcomm
+  rw [← hforce, heq]
 
 /-- At detailed balance, the generated `d log Q` vector is Killing. -/
 theorem generated_field_killing_of_equilibrium

@@ -6,7 +6,7 @@ import Mathlib.Tactic
 This file puts the Radon--Nikodym / modular Hamiltonian / log-partition /
 Legendre--Fenchel words in their natural finite Souriau context.
 
-The analytic measure-theoretic and Tomita--Takesaki claims are not asserted here.
+The analytic measure-theoretic and Tomita--Takesaki claims are outside this owner.
 The proved core is the exponential-family identity
 
   `-log exp(-βE - ψ) = βE + ψ`,
@@ -164,7 +164,7 @@ theorem normalized_expectation_modularHamiltonianOp
 
 The regularized modular deviation is the operator-level Bregman divergence
 generator. Its second-order truncation `(ε²/2)·K²` is well-defined in any
-`Ring A` with `Algebra ℝ A`. The full exponential series is socketed. -/
+`Ring A` with `Algebra ℝ A`. The full exponential series is outside this finite truncation. -/
 
 /-- Second-order truncation of the Goutev–Tonev regularized deviation:
 `(ε²/2)·K²`. This is the leading term of `exp(ε·K) - I - ε·K` and is
@@ -179,7 +179,7 @@ def identityOp : A := 1
 
 The second-order truncation `goutevTonevUnit` is proved above.  The full
 operator exponential `exp(ε·K)` is represented by an explicit parameter
-`expOp : A → A`; convergence/functional calculus is an analytic socket.
+`expOp : A → A`; convergence and functional calculus are analytic extensions.
 
 The information unit is operatorial before it is scalar:
 

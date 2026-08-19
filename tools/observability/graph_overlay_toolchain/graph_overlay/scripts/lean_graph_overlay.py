@@ -72,10 +72,10 @@ class Decl:
     wl_hash: str = ""
     is_owner: bool = False
     is_bridge: bool = False
-    is_socket: bool = False
+    is_deferred_interface: bool = False
     rep_depth: str = ""
     template_role: str = ""
-    socket_debt_class: str = ""
+    deferred_interface_class: str = ""
 
 
 def sha256_short(s: str, n: int = 16) -> str:
@@ -140,8 +140,8 @@ def split_decl_body(block: str) -> Tuple[str, str]:
 
 def decl_template_role(kind: str, name: str, attr_text: str) -> str:
     lowered = name.lower()
-    if "socket_debt_tag" in attr_text:
-        return "Socket"
+    if "deferred_interface_tag" in attr_text:
+        return "DeferredInterface"
     if "bridge_target_tag" in attr_text:
         return "Bridge"
     if "owner_target_tag" in attr_text:
@@ -150,16 +150,16 @@ def decl_template_role(kind: str, name: str, attr_text: str) -> str:
         return "Gate"
     if "bridge" in lowered:
         return "Bridge"
-    if "socket" in lowered:
-        return "Socket"
+    if "deferred" in lowered or "interface" in lowered:
+        return "DeferredInterface"
     if kind in {"theorem", "lemma", "example"}:
         return "Witness"
     return "Source"
 
 
-def decl_socket_debt_class(is_socket: bool, is_owner: bool, is_bridge: bool, contains_sorry: bool, contains_axiom_like: bool, name: str, kind: str) -> str:
-    if is_socket:
-        return "socket_debt"
+def decl_deferred_interface_class(is_deferred_interface: bool, is_owner: bool, is_bridge: bool, contains_sorry: bool, contains_axiom_like: bool, name: str, kind: str) -> str:
+    if is_deferred_interface:
+        return "deferred_interface"
     if is_bridge:
         return "bridge_preservation"
     if is_owner:
@@ -218,7 +218,7 @@ def parse_file(path: Path, root: Path) -> Tuple[List[str], List[Decl]]:
         
         is_owner = "owner_target_tag" in attr_text
         is_bridge = "bridge_target_tag" in attr_text
-        is_socket = "socket_debt_tag" in attr_text
+        is_deferred_interface = "deferred_interface_tag" in attr_text
         template_role = decl_template_role(kind, name, attr_text)
 
         rep_depth = ""
@@ -254,10 +254,10 @@ def parse_file(path: Path, root: Path) -> Tuple[List[str], List[Decl]]:
             contains_axiom_like=(kind in {"axiom", "constant", "opaque"}),
             is_owner=is_owner,
             is_bridge=is_bridge,
-            is_socket=is_socket,
+            is_deferred_interface=is_deferred_interface,
             rep_depth=rep_depth,
             template_role=template_role,
-            socket_debt_class=decl_socket_debt_class(is_socket, is_owner, is_bridge, bool(re.search(r"\b(sorry|admit)\b", strip_comments(block))), kind in {"axiom", "constant", "opaque"}, name, kind),
+            deferred_interface_class=decl_deferred_interface_class(is_deferred_interface, is_owner, is_bridge, bool(re.search(r"\b(sorry|admit)\b", strip_comments(block))), kind in {"axiom", "constant", "opaque"}, name, kind),
         ))
     return imports, decls
 
@@ -343,10 +343,10 @@ def build_graph(root: Path, wl_rounds: int = 4) -> Dict[str, Any]:
             "contains_axiom_like": d.contains_axiom_like,
             "is_owner": d.is_owner,
             "is_bridge": d.is_bridge,
-            "is_socket": d.is_socket,
+            "is_deferred_interface": d.is_deferred_interface,
             "rep_depth": d.rep_depth,
             "template_role": d.template_role,
-            "socket_debt_class": d.socket_debt_class,
+            "deferred_interface_class": d.deferred_interface_class,
             "refs": d.refs,
             "direct_dependencies": sorted(
                 id_to_fq.get(dep.split("decl:", 1)[1], dep) for dep in decl_out_deps.get(f"decl:{d.id}", set())
@@ -451,7 +451,7 @@ def build_graph(root: Path, wl_rounds: int = 4) -> Dict[str, Any]:
             "axiom_like_decl_count": sum(1 for d in decls if d.contains_axiom_like),
             "owner_target_count": sum(1 for d in decls if d.is_owner),
             "bridge_target_count": sum(1 for d in decls if d.is_bridge),
-            "socket_debt_count": sum(1 for d in decls if d.is_socket),
+            "deferred_interface_count": sum(1 for d in decls if d.is_deferred_interface),
             "wl_rounds": wl_rounds,
         }
     }
@@ -485,8 +485,8 @@ def filter_graph_by_prefix(graph: Dict[str, Any], prefix: str) -> Dict[str, Any]
 def cluster_classification(members: List[Dict[str, Any]]) -> str:
     if not members:
         return "unclassified"
-    if any(m.get("is_socket") or m.get("socket_debt_class") == "socket_debt" for m in members):
-        return "socket_debt"
+    if any(m.get("is_deferred_interface") or m.get("deferred_interface_class") == "deferred_interface" for m in members):
+        return "deferred_interface"
     if any(m.get("is_bridge") for m in members):
         return "bridge_preservation"
     if any(m.get("is_owner") for m in members) and all(not m.get("contains_sorry") for m in members):
@@ -552,7 +552,7 @@ def write_lane_report(graph: Dict[str, Any], out_dir: Path, stem: str) -> None:
     if class_counts:
         lines.append("## Cluster classification summary")
         lines.append("")
-        for label in ["closed_owner", "bridge_preservation", "duplicate_alias", "socket_debt", "source_claim", "unclassified"]:
+        for label in ["closed_owner", "bridge_preservation", "duplicate_alias", "deferred_interface", "source_claim", "unclassified"]:
             lines.append(f"- `{label}`: **{class_counts.get(label, 0)}**")
         lines.append("")
     lines.append("## Duplicate clusters")
@@ -566,17 +566,17 @@ def write_lane_report(graph: Dict[str, Any], out_dir: Path, stem: str) -> None:
                 lines.append(
                     f"- `{m['fqname']}` [{m['decl_kind']}] `{m['file']}:{m['start_line']}-{m['end_line']}` "
                     f"`rep_depth={m.get('rep_depth','')}` `role={m.get('template_role','')}` "
-                    f"`owner={m.get('is_owner')}` `bridge={m.get('is_bridge')}` `socket={m.get('is_socket')}`"
+                    f"`owner={m.get('is_owner')}` `bridge={m.get('is_bridge')}` `deferred_interface={m.get('is_deferred_interface')}`"
                 )
             lines.append("")
     lines.append("## AQL query templates")
     lines.append("")
     lines.append("```aql")
     lines.append("FOR d IN declarations")
-    lines.append("  FILTER d.socket_debt_tag == true")
+    lines.append("  FILTER d.deferred_interface_tag == true")
     lines.append("  LET owners = (")
     lines.append("    FOR e IN edges")
-    lines.append("      FILTER e._to == d._id AND e.kind == \"owns_socket\"")
+    lines.append("      FILTER e._to == d._id AND e.kind == \"owns_deferred_interface\"")
     lines.append("      RETURN e")
     lines.append("  )")
     lines.append("  FILTER LENGTH(owners) == 0")
@@ -584,7 +584,7 @@ def write_lane_report(graph: Dict[str, Any], out_dir: Path, stem: str) -> None:
     lines.append("    name: d.name,")
     lines.append("    module: d.module,")
     lines.append("    rep_depth: d.rep_depth,")
-    lines.append("    socket_debt_class: d.socket_debt_class")
+    lines.append("    deferred_interface_class: d.deferred_interface_class")
     lines.append("  }")
     lines.append("```")
     lines.append("")
@@ -602,8 +602,8 @@ def write_lane_report(graph: Dict[str, Any], out_dir: Path, stem: str) -> None:
     lines.append("")
     lines.append("```aql")
     lines.append("FOR d IN declarations")
-    lines.append("  FILTER d.template_role IN [\"Gate\", \"Bridge\", \"Socket\", \"Witness\"]")
-    lines.append("  FILTER d.socket_debt_tag != true AND d.owner_target_tag != true AND d.bridge_target_tag != true")
+    lines.append("  FILTER d.template_role IN [\"Gate\", \"Bridge\", \"DeferredInterface\", \"Witness\"]")
+    lines.append("  FILTER d.deferred_interface_tag != true AND d.owner_target_tag != true AND d.bridge_target_tag != true")
     lines.append("  RETURN {")
     lines.append("    name: d.name,")
     lines.append("    module: d.module,")
@@ -619,7 +619,7 @@ def write_lane_report(graph: Dict[str, Any], out_dir: Path, stem: str) -> None:
             f"- `{d['fqname']}` [{d['decl_kind']}] "
             f"`type_hash={d.get('type_hash_alpha','')}` `proof_hash={d.get('proof_hash_alpha','')}` "
             f"`rep_depth={d.get('rep_depth','')}` `role={d.get('template_role','')}` "
-            f"`socket_debt_class={d.get('socket_debt_class','')}`"
+            f"`deferred_interface_class={d.get('deferred_interface_class','')}`"
         )
     lines.append("")
     lines.append("## Interpretation")

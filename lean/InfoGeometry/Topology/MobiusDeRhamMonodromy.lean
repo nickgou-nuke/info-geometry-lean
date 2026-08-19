@@ -5,7 +5,14 @@ import InfoGeometry.Canonical.ThermalTimeMonodromyBridge
 import InfoGeometry.Clifford.DiscreteMoebiusGroup
 
 /-!
-# Möbius–de Rham Monodromy Bridge
+# Möbius–de Rham Monodromy Bridge (classical comparison lane)
+
+This file is retained as a compatibility/comparison lane for the older
+complex-contour formulation.  It is not the native real Hestenes owner.  The
+finite replacement without scalar complex phases, contour integrals, or
+analytic continuation is provided by
+`InfoGeometry.Algebraic.EulerLaurentHestenesDivisor` and
+`InfoGeometry.Arithmetic.RiemannPoleZeroMonodromy`.
 
 This module bridges three existing owner lanes:
 

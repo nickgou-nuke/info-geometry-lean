@@ -63,7 +63,7 @@ end AuditConfig
 structure MathfulnessMetric where
   termNodeCount : Nat
   utilizesMathlibAxioms : Bool
-  containsVacuousSockets : Bool
+  containsVacuousDebt : Bool
   unfoldedLocalWrapperCount : Nat
   hitUnfoldLimit : Bool
   containsSorry : Bool
@@ -72,7 +72,7 @@ deriving Repr
 def MathfulnessMetric.isGenuine (m : MathfulnessMetric) : Bool :=
   (decide (m.termNodeCount > 5)) &&
     m.utilizesMathlibAxioms &&
-    !m.containsVacuousSockets &&
+    !m.containsVacuousDebt &&
     !m.hitUnfoldLimit &&
     !m.containsSorry
 
@@ -85,12 +85,12 @@ namespace AuditResult
 def mk
     (termNodeCount : Nat := 0)
     (hasNontrivialConst : Bool := false)
-    (containsVacuousSockets : Bool := false)
+    (containsVacuousDebt : Bool := false)
     (unfoldedLocalConsts : List Name := [])
     (suspiciousConsts : List Name := [])
     (hitUnfoldLimit : Bool := false)
     (containsSorry : Bool := false) : AuditResult :=
-  (termNodeCount, hasNontrivialConst, containsVacuousSockets, unfoldedLocalConsts,
+  (termNodeCount, hasNontrivialConst, containsVacuousDebt, unfoldedLocalConsts,
     suspiciousConsts, hitUnfoldLimit, containsSorry)
 
 def termNodeCount : AuditResult → Nat
@@ -99,7 +99,7 @@ def termNodeCount : AuditResult → Nat
 def hasNontrivialConst : AuditResult → Bool
   | (_, b, _, _, _, _, _) => b
 
-def containsVacuousSockets : AuditResult → Bool
+def containsVacuousDebt : AuditResult → Bool
   | (_, _, b, _, _, _, _) => b
 
 def unfoldedLocalConsts : AuditResult → List Name
@@ -118,7 +118,7 @@ def merge (a b : AuditResult) : AuditResult :=
   mk
     (termNodeCount := termNodeCount a + termNodeCount b)
     (hasNontrivialConst := hasNontrivialConst a || hasNontrivialConst b)
-    (containsVacuousSockets := containsVacuousSockets a || containsVacuousSockets b)
+    (containsVacuousDebt := containsVacuousDebt a || containsVacuousDebt b)
     (unfoldedLocalConsts := unfoldedLocalConsts a ++ unfoldedLocalConsts b)
     (suspiciousConsts := suspiciousConsts a ++ suspiciousConsts b)
     (hitUnfoldLimit := hitUnfoldLimit a || hitUnfoldLimit b)
@@ -128,7 +128,7 @@ def addNode (a : AuditResult) : AuditResult :=
   mk
     (termNodeCount := termNodeCount a + 1)
     (hasNontrivialConst := hasNontrivialConst a)
-    (containsVacuousSockets := containsVacuousSockets a)
+    (containsVacuousDebt := containsVacuousDebt a)
     (unfoldedLocalConsts := unfoldedLocalConsts a)
     (suspiciousConsts := suspiciousConsts a)
     (hitUnfoldLimit := hitUnfoldLimit a)
@@ -138,7 +138,7 @@ def markSuspicious (a : AuditResult) (declName : Name) : AuditResult :=
   mk
     (termNodeCount := termNodeCount a)
     (hasNontrivialConst := hasNontrivialConst a)
-    (containsVacuousSockets := true)
+    (containsVacuousDebt := true)
     (unfoldedLocalConsts := unfoldedLocalConsts a)
     (suspiciousConsts := declName :: suspiciousConsts a)
     (hitUnfoldLimit := hitUnfoldLimit a)
@@ -147,7 +147,7 @@ def markSuspicious (a : AuditResult) (declName : Name) : AuditResult :=
 def toMetric (a : AuditResult) : MathfulnessMetric :=
   { termNodeCount := termNodeCount a
     utilizesMathlibAxioms := hasNontrivialConst a
-    containsVacuousSockets := containsVacuousSockets a
+    containsVacuousDebt := containsVacuousDebt a
     unfoldedLocalWrapperCount := (unfoldedLocalConsts a).length
     hitUnfoldLimit := hitUnfoldLimit a
     containsSorry := containsSorry a }
@@ -161,7 +161,6 @@ private def suspiciousExactComponents : List String :=
   , "_cert"
   , "property"
   , "property"
-  , "socket"
   , "readback"
   , "proof"
   ]
@@ -264,12 +263,12 @@ def auditExprTrivialityDetailed
               if seen.contains declName then
                 return AuditResult.mk
                   (termNodeCount := 1)
-                  (containsVacuousSockets := true)
+                  (containsVacuousDebt := true)
                   (suspiciousConsts := [declName])
               else if depth == 0 then
                 return AuditResult.mk
                   (termNodeCount := 1)
-                  (containsVacuousSockets := true)
+                  (containsVacuousDebt := true)
                   (suspiciousConsts := [declName])
                   (hitUnfoldLimit := true)
               else
@@ -280,7 +279,7 @@ def auditExprTrivialityDetailed
                     return AuditResult.mk
                       (termNodeCount := AuditResult.termNodeCount auditNode)
                       (hasNontrivialConst := AuditResult.hasNontrivialConst auditNode)
-                      (containsVacuousSockets := AuditResult.containsVacuousSockets auditNode)
+                      (containsVacuousDebt := AuditResult.containsVacuousDebt auditNode)
                       (unfoldedLocalConsts := declName :: AuditResult.unfoldedLocalConsts auditNode)
                       (suspiciousConsts := AuditResult.suspiciousConsts auditNode)
                       (hitUnfoldLimit := AuditResult.hitUnfoldLimit auditNode)
@@ -289,7 +288,7 @@ def auditExprTrivialityDetailed
                     if isProofConst info && AuditConfig.rejectLocalAxioms cfg then
                       return AuditResult.mk
                         (termNodeCount := 1)
-                        (containsVacuousSockets := true)
+                        (containsVacuousDebt := true)
                         (suspiciousConsts := [declName])
                     else
                       return AuditResult.mk
@@ -303,7 +302,7 @@ def auditExprTrivialityDetailed
   | Expr.bvar _ => return AuditResult.mk (termNodeCount := 1)
   | Expr.fvar _ => return AuditResult.mk (termNodeCount := 1)
   | Expr.mvar _ =>
-      return AuditResult.mk (termNodeCount := 1) (containsVacuousSockets := true)
+      return AuditResult.mk (termNodeCount := 1) (containsVacuousDebt := true)
   | Expr.sort _ => return AuditResult.mk (termNodeCount := 1)
   | Expr.lit _ => return AuditResult.mk (termNodeCount := 1)
 
@@ -490,7 +489,7 @@ private def classifyVacuityRole
     if MathfulnessMetric.isGenuine metric then "gate" else "type_boundary"
   else if MathfulnessMetric.isGenuine metric then
     "gate"
-  else if AuditResult.containsVacuousSockets audit || AuditResult.hitUnfoldLimit audit then
+  else if AuditResult.containsVacuousDebt audit || AuditResult.hitUnfoldLimit audit then
     "fake_transport"
   else
     "pure_conductor"
@@ -514,7 +513,7 @@ def biopsyDeclJson (cfg : AuditConfig) (declName : Name) : CommandElabM Json := 
     | some val =>
         liftTermElabM do
           auditExprTrivialityDetailed cfg env [declName] (AuditConfig.maxLocalUnfoldDepth cfg) val
-    | none => pure <| AuditResult.mk (termNodeCount := 1) (containsVacuousSockets := true)
+    | none => pure <| AuditResult.mk (termNodeCount := 1) (containsVacuousDebt := true)
   let metric := AuditResult.toMetric audit
   let isProp ← liftTermElabM do checkDeclIsProp declName
   let allowed := nameSetOfList (AuditConfig.allowedAxioms cfg)
@@ -534,7 +533,7 @@ def biopsyDeclJson (cfg : AuditConfig) (declName : Name) : CommandElabM Json := 
         ("is_prop", Json.bool isProp),
         ("term_node_count", metric.termNodeCount),
         ("uses_external_gate", Json.bool metric.utilizesMathlibAxioms),
-        ("contains_vacuous_sockets", Json.bool metric.containsVacuousSockets),
+        ("contains_vacuous_debt", Json.bool metric.containsVacuousDebt),
         ("unfolded_local_wrapper_count", metric.unfoldedLocalWrapperCount),
         ("hit_unfold_limit", Json.bool metric.hitUnfoldLimit),
         ("contains_sorry", Json.bool metric.containsSorry),

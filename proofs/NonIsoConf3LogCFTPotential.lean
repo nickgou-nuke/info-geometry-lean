@@ -82,7 +82,7 @@ def productSystem (sys1 : LogPotentialSystem S₁) (sys2 : LogPotentialSystem S�
     exact ⟨(s1, s2)⟩
 
 /-- Conditional factorization of the log-generating potential.  This is the
-honest algebraic interface used by later sockets. -/
+honest algebraic interface used by later constructions. -/
 theorem logGenerating_additive_of_partition_mul
     (sys1 : LogPotentialSystem S₁) (sys2 : LogPotentialSystem S₂)
     (hβ : sys1.beta = sys2.beta)

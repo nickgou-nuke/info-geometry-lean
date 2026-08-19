@@ -2,10 +2,10 @@ import InfoGeometry.Canonical.ThreeColorChiralJordanPair
 import InfoGeometry.OperatorAlgebra.TKKClosure
 
 /-!
-# Two-sheet Jordan-triple input for the native TKK socket
+# Two-sheet Jordan-triple input for the native TKK interface
 
 The repository already owns the upper/lower rectangular Jordan pair on the
-two chiral three-colour lanes.  The TKK socket, however, consumes one carrier
+two chiral three-colour lanes.  The TKK interface, however, consumes one carrier
 with a Jordan triple product.  This file supplies exactly that adapter on the
 direct sum of the two lanes.
 

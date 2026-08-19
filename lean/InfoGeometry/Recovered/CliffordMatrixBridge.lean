@@ -30,14 +30,9 @@ def cl11ToMatrix (v : Fin 2 → ℚ) : Matrix (Fin 2) (Fin 2) ℝ :=
 
 /-- Metric-closure obligation needed before constructing a Clifford algebra
 homomorphism by the universal property. -/
-def cl11ToMatrix_sq_statement : Prop :=
-  ∀ v : Fin 2 → ℚ,
+theorem cl11ToMatrix_sq (v : Fin 2 → ℚ) :
     cl11ToMatrix v * cl11ToMatrix v =
-      algebraMap ℚ (Matrix (Fin 2) (Fin 2) ℝ) (q11 v)
-
-/-- The displayed split-quaternion matrices satisfy the `(1,1)` quadratic relation. -/
-theorem cl11ToMatrix_sq : cl11ToMatrix_sq_statement := by
-  intro v
+      algebraMap ℚ (Matrix (Fin 2) (Fin 2) ℝ) (q11 v) := by
   have hv : v = ![v 0, v 1] := by
     funext i
     fin_cases i <;> rfl

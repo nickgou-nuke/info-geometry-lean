@@ -27,7 +27,7 @@ theorem phaseRotation_transpose_mul (φ : ℝ) :
     nlinarith [Real.sin_sq_add_cos_sq φ]
   · simp [phaseRotation, Matrix.mul_apply, Fin.sum_univ_succ] <;> ring_nf
   · simp [phaseRotation, Matrix.mul_apply, Fin.sum_univ_succ] <;> ring
-  · simp [phaseRotation, Matrix.mul_apply, Fin.sum_univ_succ] <;> ring
+  · simp [phaseRotation, Matrix.mul_apply, Fin.sum_univ_succ] <;> ring_nf
     nlinarith [Real.sin_sq_add_cos_sq φ]
 
 theorem phaseRotation_mul_transpose (φ : ℝ) :
@@ -53,5 +53,22 @@ theorem phaseRotation_zero :
     phaseRotation 0 = 1 := by
   ext i j
   fin_cases i <;> fin_cases j <;> simp [phaseRotation]
+
+/-- Reversing the real phase is transposition of the rotation matrix. -/
+theorem phaseRotation_neg (φ : ℝ) :
+    phaseRotation (-φ) = (phaseRotation φ).transpose := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [phaseRotation, Real.sin_neg, Real.cos_neg]
+
+/-- The negative phase is a right inverse of the finite rotation. -/
+theorem phaseRotation_mul_neg (φ : ℝ) :
+    phaseRotation φ * phaseRotation (-φ) = 1 := by
+  rw [phaseRotation_add φ (-φ), add_neg_cancel, phaseRotation_zero]
+
+/-- The negative phase is a left inverse of the finite rotation. -/
+theorem phaseRotation_neg_mul (φ : ℝ) :
+    phaseRotation (-φ) * phaseRotation φ = 1 := by
+  rw [phaseRotation_add (-φ) φ, neg_add_cancel, phaseRotation_zero]
 
 end InfoGeometry.Krein.FiniteMadelungPhaseRotation

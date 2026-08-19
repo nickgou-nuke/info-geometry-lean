@@ -1,7 +1,6 @@
 import InfoGeometry.Meta.Admission
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Meta.OwnerTarget
-import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Meta.Trust
 
 /-!
@@ -21,7 +20,6 @@ This module is descriptive. Enforcement lives in the existing policy and lint
 layers:
 
 - `InfoGeometry.Meta.OwnerTarget`
-- `InfoGeometry.Meta.SocketTarget`
 - `InfoGeometry.Meta.Trust`
 - `InfoGeometry.Meta.Admission`
 - `InfoGeometry.Meta.Vacuity`
@@ -50,8 +48,6 @@ structure HonestyPolicy where
   explicitZeroDatumAllowed : Bool
   /-- Zero-datum surfaces must be named and documented as debt, not proof. -/
   explicitZeroDatumMustBeNamed : Bool
-  /-- Socket-level debt must be machine-visible. -/
-  socketDebtMustBeTagged : Bool
   /-- Owner-target debt must be machine-visible. -/
   ownerDebtMustBeMachineVisible : Bool
   /-- Textual mandate for future maintainers. -/
@@ -64,7 +60,6 @@ def defaultHonestyPolicy : HonestyPolicy :=
     bannerClaimsMustMatchBody := true
     explicitZeroDatumAllowed := true
     explicitZeroDatumMustBeNamed := true
-    socketDebtMustBeTagged := true
     ownerDebtMustBeMachineVisible := true
     mandateText :=
       "If a Mathlib-rooted derivation chain is missing, expose the gap explicitly as sorry or an explicit zero-datum. Do not hide debt behind fake witnesses, empty shells, or misleading certification banners." }

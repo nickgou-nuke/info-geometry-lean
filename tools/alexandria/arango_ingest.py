@@ -9,8 +9,9 @@ from typing import Any
 from urllib.parse import quote
 from urllib.request import Request, urlopen
 
+from arango import ArangoClient
 from tools.infra.arango_env import (
-    arango_endpoint,
+    alexandria_arango_endpoint,
     arango_password,
     arango_username,
     load_repo_arango_env,
@@ -95,20 +96,17 @@ from igf.common.json_io import iter_jsonl
 def import_rows(endpoint: str, database: str, username: str, password: str, collection: str, rows: list[dict[str, Any]]) -> None:
     if not rows:
         return
-    request_json(
-        "POST",
-        db_url(endpoint, database, f"/_api/import?collection={quote(collection)}&type=documents&overwriteMode=replace"),
-        username,
-        password,
-        rows,
-    )
+    client = ArangoClient(hosts=endpoint)
+    db = client.db(database, username=username, password=password)
+    col = db.collection(collection)
+    col.import_bulk(rows, on_duplicate="replace", batch_size=1000)
 
 
 def main() -> int:
     load_repo_arango_env(Path.cwd())
     ap = argparse.ArgumentParser(description="Ingest Alexandria JSONL artifacts into a second ArangoDB instance")
     ap.add_argument("--input-dir", required=True)
-    ap.add_argument("--endpoint", default=arango_endpoint())
+    ap.add_argument("--endpoint", default=alexandria_arango_endpoint())
     ap.add_argument("--database", default="alexandria")
     ap.add_argument("--username", default=arango_username())
     ap.add_argument("--password", default=arango_password("alexandria_root"))

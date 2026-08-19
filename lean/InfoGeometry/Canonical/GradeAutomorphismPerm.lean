@@ -1,6 +1,6 @@
 import Mathlib.Data.Fintype.Basic
 import Mathlib.GroupTheory.Perm.Sign
-import Mathlib.Data.ZMod.Basic
+import InfoGeometry.Geometry.KleinFourTag
 
 namespace InfoGeometry.Canonical
 
@@ -15,7 +15,7 @@ action on the grading sector.
 -/
 
 -- The Klein‑four group used throughout the file
-abbrev KleinFour := ZMod 2 × ZMod 2
+abbrev KleinFour := InfoGeometry.Geometry.KleinFourTag.Tag
 
 /-- The three non‑zero grades of `KleinFour`. -/
 inductive NonZeroGrade

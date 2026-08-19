@@ -32,15 +32,15 @@ END_RE = re.compile(
     r"^\s*(def|theorem|lemma|abbrev|structure|class|inductive|namespace|section|end|variable|open|import)\b"
 )
 PROHIBITED_NAME_RE = re.compile(
-    r"(?:^|_)(law|laws|certificate|cert|witness|valid|guard|socket|readback|assumption|axiom|proof)(?:_|$)",
+    r"(?:^|_)(law|laws|certificate|cert|witness|valid|guard|interface|readback|assumption|axiom|proof)(?:_|$)",
     re.IGNORECASE,
 )
 PROXY_DECL_NAME_RE = re.compile(
-    r"(Witness|Certificate|Certified|Socket|Guard|Law|Proxy|Readback|Assumption|Packet|Carrier|(?:^|_)of_witness(?:_|$)|(?:^|_)of_identification(?:_|$))",
+    r"(Witness|Certificate|Certified|Interface|Guard|Law|Proxy|Readback|Assumption|Packet|Carrier|(?:^|_)of_witness(?:_|$)|(?:^|_)of_identification(?:_|$))",
     re.IGNORECASE,
 )
 PROXY_FILE_RE = re.compile(
-    r"(Witness|Certificate|Socket|Proxy|Packet|Carrier)\.lean$",
+    r"(Witness|Certificate|Interface|Proxy|Packet|Carrier)\.lean$",
     re.IGNORECASE,
 )
 PROPISH_TYPE_RE = re.compile(

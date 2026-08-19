@@ -44,6 +44,64 @@ theorem sl3ConjAct_mul_matrix (g : SL3C) (A B : M3C) :
     sl3ConjAct g (A * B) = sl3ConjAct g A * sl3ConjAct g B := by
   simp [sl3ConjAct, mul_assoc]
 
+theorem sl3ConjAct_det (g : SL3C) (A : M3C) :
+    (sl3ConjAct g A).det = A.det := by
+  simp [sl3ConjAct, Matrix.det_mul]
+
+theorem sl3ConjAct_injective (g : SL3C) :
+    Function.Injective (sl3ConjAct g) := by
+  intro A B h
+  have h' := congrArg (sl3ConjAct (g⁻¹)) h
+  simpa [← sl3ConjAct_mul] using h'
+
+theorem sl3ConjAct_surjective (g : SL3C) :
+    Function.Surjective (sl3ConjAct g) := by
+  intro A
+  refine ⟨sl3ConjAct (g⁻¹) A, ?_⟩
+  simpa [← sl3ConjAct_mul]
+
+theorem sl3ConjAct_bijective (g : SL3C) :
+    Function.Bijective (sl3ConjAct g) := by
+  exact ⟨sl3ConjAct_injective g, sl3ConjAct_surjective g⟩
+
+/-- Native equivalence induced by conjugation and conjugation by the inverse. -/
+def sl3ConjActEquiv (g : SL3C) : M3C ≃ M3C where
+  toFun := sl3ConjAct g
+  invFun := sl3ConjAct g⁻¹
+  left_inv := by
+    intro A
+    simpa [← sl3ConjAct_mul]
+  right_inv := by
+    intro A
+    simpa [← sl3ConjAct_mul]
+
+@[simp] theorem sl3ConjActEquiv_apply (g : SL3C) (A : M3C) :
+    sl3ConjActEquiv g A = sl3ConjAct g A := rfl
+
+@[simp] theorem sl3ConjActEquiv_symm_apply (g : SL3C) (A : M3C) :
+    (sl3ConjActEquiv g).symm A = sl3ConjAct g⁻¹ A := rfl
+
+/-- Conjugation is a complex-linear equivalence of the matrix carrier. -/
+def sl3ConjActLinearEquiv (g : SL3C) : M3C ≃ₗ[ℂ] M3C where
+  toFun := sl3ConjAct g
+  invFun := sl3ConjAct g⁻¹
+  left_inv := by
+    intro A
+    simpa [← sl3ConjAct_mul]
+  right_inv := by
+    intro A
+    simpa [← sl3ConjAct_mul]
+  map_add' := sl3ConjAct_add g
+  map_smul' := by
+    intro c A
+    simp [sl3ConjAct, Algebra.mul_smul_comm, Algebra.smul_mul_assoc]
+
+@[simp] theorem sl3ConjActLinearEquiv_apply (g : SL3C) (A : M3C) :
+    sl3ConjActLinearEquiv g A = sl3ConjAct g A := rfl
+
+@[simp] theorem sl3ConjActLinearEquiv_symm_apply (g : SL3C) (A : M3C) :
+    (sl3ConjActLinearEquiv g).symm A = sl3ConjAct g⁻¹ A := rfl
+
 theorem sl3ConjAct_commutator (g : SL3C) (A B : M3C) :
     sl3ConjAct g (A * B - B * A) =
       sl3ConjAct g A * sl3ConjAct g B -

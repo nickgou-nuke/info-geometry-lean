@@ -31,13 +31,8 @@ open InfoGeometry.Clifford.Cl11TensorTower
 
 /-- Cardinality of the binary matrix-tower index set. -/
 theorem card_tower_idx (n : ℕ) :
-    Fintype.card (InfoGeometry.Clifford.TowerMatrix.Idx n) = 2 ^ n := by
-  induction n with
-  | zero => rfl
-  | succ n ih =>
-      dsimp [InfoGeometry.Clifford.TowerMatrix.Idx]
-      rw [Fintype.card_prod, ih]
-      rfl
+    Fintype.card (InfoGeometry.Clifford.TowerMatrix.Idx n) = 2 ^ n :=
+  InfoGeometry.Clifford.TowerMatrix.idx_card_pow_two n
 
 /-- Trace of the identity at binary depth `n`. -/
 theorem trace_one_matStage (n : ℕ) :

@@ -11,7 +11,7 @@ import InfoGeometry.Canonical.Arithmetic.ZetaEulerProductBridge
 Proof-only layer for the finite prime grand-canonical lane.
 
 This file carries formulas as functions and proves the finite identities
-directly.  It does not introduce certificates, sockets, axioms, or property
+directly.  It does not introduce certificates, interfaces, axioms, or property
 packets.
 
 The layer closes the finite pieces used by the prime/zeta thermodynamic lane:

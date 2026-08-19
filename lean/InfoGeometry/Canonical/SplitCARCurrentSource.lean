@@ -27,7 +27,7 @@ A CAR-to-current property.
 This is the exact package needed to build a `CurrentHeisenbergRep` once a
 source-side construction has been proved.
 -/
-structure SplitCARCurrentWitness
+structure SplitCARCurrentProperty
     (𝕜 A V : Type*) [Field 𝕜] [CharZero 𝕜]
     [Ring A] [AddCommGroup V] [Module 𝕜 V] where
   /-- A raw CAR packet carried by the property. -/
@@ -41,14 +41,14 @@ structure SplitCARCurrentWitness
     ∀ m n, (J m).commutator (J n) =
       if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0
 
-namespace SplitCARCurrentWitness
+namespace SplitCARCurrentProperty
 
 variable {𝕜 A V : Type*} [Field 𝕜] [CharZero 𝕜]
 variable [Ring A] [AddCommGroup V] [Module 𝕜 V]
 
 /-- Convert the property into the repository's `CurrentHeisenbergRep`. -/
 def toCurrentHeisenbergRep
-    (W : SplitCARCurrentWitness 𝕜 A V) :
+    (W : SplitCARCurrentProperty 𝕜 A V) :
     CurrentHeisenbergRep 𝕜 V where
   J := W.J
   trunc := W.trunc
@@ -56,11 +56,11 @@ def toCurrentHeisenbergRep
 
 /-- Any such property yields a `CurrentHeisenbergRep`. -/
 theorem toCurrentHeisenbergRep_nonempty
-    (W : SplitCARCurrentWitness 𝕜 A V) :
+    (W : SplitCARCurrentProperty 𝕜 A V) :
     Nonempty (CurrentHeisenbergRep 𝕜 V) :=
   ⟨W.toCurrentHeisenbergRep⟩
 
-end SplitCARCurrentWitness
+end SplitCARCurrentProperty
 
 /-
 Concrete example property
@@ -70,9 +70,9 @@ module.  We package that concrete property together with the raw CAR source
 packet used elsewhere in the current/Sugawara corridor.
 -/
 
-noncomputable def chargedFockSpaceSplitCARCurrentWitness
+noncomputable def chargedFockSpaceSplitCARCurrentProperty
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    SplitCARCurrentWitness 𝕜
+    SplitCARCurrentProperty 𝕜
       (InfoGeometry.Canonical.CanonicalNormalOrdering.EndFock
         (R := 𝕜) (M := InfoGeometry.Canonical.CanonicalNormalOrdering.IntModeSpace 𝕜))
       (VirasoroProject.ChargedFockSpace 𝕜 α) where
@@ -84,50 +84,50 @@ noncomputable def chargedFockSpaceSplitCARCurrentWitness
   trunc := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc
   comm := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm
 
-@[simp] theorem chargedFockSpaceSplitCARCurrentWitness_J
+@[simp] theorem chargedFockSpaceSplitCARCurrentProperty_J
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int) :
-    (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).J n =
+    (chargedFockSpaceSplitCARCurrentProperty 𝕜 α).J n =
       (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n :=
   rfl
 
-@[simp] theorem chargedFockSpaceSplitCARCurrentWitness_trunc
+@[simp] theorem chargedFockSpaceSplitCARCurrentProperty_trunc
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).trunc =
+    (chargedFockSpaceSplitCARCurrentProperty 𝕜 α).trunc =
       (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc :=
   rfl
 
-@[simp] theorem chargedFockSpaceSplitCARCurrentWitness_comm
+@[simp] theorem chargedFockSpaceSplitCARCurrentProperty_comm
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).comm =
+    (chargedFockSpaceSplitCARCurrentProperty 𝕜 α).comm =
       (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm :=
   rfl
 
 /-- The concrete charged-Fock CAR property is nonempty. -/
-theorem chargedFockSpaceSplitCARCurrentWitness_nonempty
+theorem chargedFockSpaceSplitCARCurrentProperty_nonempty
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
-    Nonempty (SplitCARCurrentWitness 𝕜
+    Nonempty (SplitCARCurrentProperty 𝕜
       (InfoGeometry.Canonical.CanonicalNormalOrdering.EndFock
         (R := 𝕜) (M := InfoGeometry.Canonical.CanonicalNormalOrdering.IntModeSpace 𝕜))
       (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
-  ⟨chargedFockSpaceSplitCARCurrentWitness 𝕜 α⟩
+  ⟨chargedFockSpaceSplitCARCurrentProperty 𝕜 α⟩
 
 /-- The concrete charged-Fock CAR property canonically yields a Sugawara morphism. -/
 noncomputable def chargedFockSpaceSplitCARCurrentSugawaraMorphism
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     CurrentSugawaraMorphism 𝕜 (VirasoroProject.ChargedFockSpace 𝕜 α) :=
   CurrentSugawaraMorphism.ofHeisenberg
-    (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).toCurrentHeisenbergRep
+    (chargedFockSpaceSplitCARCurrentProperty 𝕜 α).toCurrentHeisenbergRep
 
 @[simp] theorem chargedFockSpaceSplitCARCurrentSugawaraMorphism_heisenberg
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     (chargedFockSpaceSplitCARCurrentSugawaraMorphism 𝕜 α).heisenberg =
-      (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).toCurrentHeisenbergRep :=
+      (chargedFockSpaceSplitCARCurrentProperty 𝕜 α).toCurrentHeisenbergRep :=
   rfl
 
 @[simp] theorem chargedFockSpaceSplitCARCurrentSugawaraMorphism_virasoro
     (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
     (chargedFockSpaceSplitCARCurrentSugawaraMorphism 𝕜 α).virasoro =
-      (chargedFockSpaceSplitCARCurrentWitness 𝕜 α).toCurrentHeisenbergRep.currentSugawaraRepresentation :=
+      (chargedFockSpaceSplitCARCurrentProperty 𝕜 α).toCurrentHeisenbergRep.currentSugawaraRepresentation :=
   rfl
 
 /-- The concrete charged-Fock CAR property also yields the packaged Sugawara surface. -/

@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.SplitCliffordTensorBridge
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 import InfoGeometry.Canonical.RealDoubledCliffordFiniteSpine
 import InfoGeometry.Canonical.CantorCuntzCliffordBridge
-import InfoGeometry.Topology.FractalCantorFockWitness
+import InfoGeometry.Topology.FractalCantorFock
 import InfoGeometry.Canonical.CelikKocakKreinSupergradedLift
 import InfoGeometry.Canonical.CuntzMapKreinBridge
 import InfoGeometry.Quantum.RealMajoranaCategory
@@ -38,7 +38,7 @@ open InfoGeometry.Canonical.CelikKocakKreinSupergradedLift
 open InfoGeometry.Canonical.CuntzMapKreinBridge
 open InfoGeometry.Quantum
 open InfoGeometry.Clifford.ClNN
-open InfoGeometry.Topology.FractalCantorFockWitness
+open InfoGeometry.Topology.FractalCantorFock
 open InfoGeometry.Krein
 open KreinGradedModule
 
@@ -176,14 +176,14 @@ theorem splitCliffordInfinity_boundary_complement
 The split infinite boundary and the concrete CAR property can be packaged
 together without introducing any new infinite tensor product theorem.
 
-The Cantor/Fock socket lives over a complex carrier `E`, while the concrete CAR
+The Cantor/Fock interface lives over a complex carrier `E`, while the concrete CAR
 property lives over a real doubled carrier `F`; the theorem keeps those ambient
 types separate.
 -/
 @[rep_depth operator]
 theorem splitCliffordInfinity_fock_completion
     {F : Type*} [NormedAddCommGroup F] [InnerProductSpace ℝ F] [CompleteSpace F] :
-    CARWitness (cl11CanonicalPolarizedMajorana (E := F)).core
+    CARRelation (cl11CanonicalPolarizedMajorana (E := F)).core
         (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := F))
           (cl11SplitCliffordDatum F) (cl11_concrete_ladder_realization (E := F))).annihil
         (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := F))
@@ -243,7 +243,7 @@ theorem splitCliffordInfinity_root_branch_completion
     (((InfoGeometry.Topology.CuntzO2Carrier.S_left C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_left C)) * seed + ((InfoGeometry.Topology.CuntzO2Carrier.S_right C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_right C)) * seed = seed) ∧
       (((InfoGeometry.Topology.CuntzO2Carrier.S_left C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_left C)) * ((InfoGeometry.Topology.CuntzO2Carrier.S_right C) * star (InfoGeometry.Topology.CuntzO2Carrier.S_right C)) = 0) ∧
       (ξ = boundaryCons (boundaryHead ξ) (boundaryTail ξ)) ∧
-      CARWitness (cl11CanonicalPolarizedMajorana (E := F)).core
+      CARRelation (cl11CanonicalPolarizedMajorana (E := F)).core
         (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := F))
           (cl11SplitCliffordDatum F) (cl11_concrete_ladder_realization (E := F))).annihil
         (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := F))
@@ -304,7 +304,7 @@ theorem celikKocak_cuntzCAR_splitFock_fixedReadout_packet
       ∧
       (ξ = boundaryCons (boundaryHead ξ) (boundaryTail ξ))
       ∧
-      CARWitness (cl11CanonicalPolarizedMajorana (E := F)).core
+      CARRelation (cl11CanonicalPolarizedMajorana (E := F)).core
         (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := F))
           (cl11SplitCliffordDatum F) (cl11_concrete_ladder_realization (E := F))).annihil
         (ladderOfRealization (cl11CanonicalPolarizedMajorana (E := F))

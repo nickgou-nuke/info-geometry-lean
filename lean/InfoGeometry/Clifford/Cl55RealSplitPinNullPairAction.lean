@@ -1,4 +1,4 @@
-import InfoGeometry.Clifford.Cl55RealSplitPinKernelEvidence
+import InfoGeometry.Clifford.Cl55RealSplitPinKernelBridge
 import InfoGeometry.Clifford.Cl55WittNativeIsometryGroup
 
 namespace InfoGeometry.Clifford.Clifford55

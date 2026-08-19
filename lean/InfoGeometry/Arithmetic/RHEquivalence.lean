@@ -2,12 +2,10 @@ import InfoGeometry.Analysis.BregmanAnalyticBound
 import Mathlib.Analysis.Complex.Basic
 
 /-!
-# Dikin positivity and RH-equivalence socket
+# Dikin positivity
 
-This module proves the elementary positivity of the Dikin envelope.  It does
-not prove any equivalence with the Riemann Hypothesis, Fredholm determinants, or
-Möbius summatory bounds; future equivalences must be routed through the
-Hestenes--Krein/categorical-colimit owner layer.
+This module contains the elementary analytic inequality only.  RH
+equivalences belong to their concrete zeta or spectral owners.
 -/
 
 open Complex
@@ -28,10 +26,5 @@ theorem dikinOmega_pos (t : ℝ) (ht : 0 < t) : 0 < dikinOmega t := by
   have hlog : Real.log (1 + t) < t := by
     simpa [Real.log_exp] using hlog0
   linarith
-
-/-- Statement shape for any future RH-equivalence theorem.  The required
-categorical-colimit bridges are explicit inputs rather than hidden assumptions. -/
-def rhEquivalenceStatement (RH fredholm mobius : Prop) : Prop :=
-  (RH ↔ fredholm) ∧ (RH ↔ mobius)
 
 end InfoGeometry.Arithmetic.RHEquivalence

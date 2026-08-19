@@ -193,6 +193,23 @@ variable (X : InvolutiveSelfDualCarrier)
 def flat : X.H →ₗ[ℝ] Module.Dual ℝ X.H :=
   pairingFlat X.kreinPairing
 
+@[simp] theorem flat_apply (u v : X.H) :
+    X.flat u v = X.kreinPairing u v :=
+  rfl
+
+theorem flat_injective :
+    Function.Injective X.flat := by
+  simpa [flat] using X.pairing_nondegenerate
+
+theorem flat_eq_zero_iff (u : X.H) :
+    X.flat u = 0 ↔ u = 0 := by
+  constructor
+  · intro h
+    apply X.flat_injective
+    simpa using h
+  · intro h
+    simpa [h]
+
 /-- The internal phase axis (Complexifier). K = Jε. -/
 noncomputable def K : X.H →L[ℝ] X.H := X.J.comp X.ε
 
@@ -205,6 +222,32 @@ noncomputable def Pminus : X.H →L[ℝ] X.H :=
   (⅟ (2 : ℝ)) • (ContinuousLinearMap.id ℝ X.H - X.ε)
 
 section Algebra
+
+theorem pairing_J_left_eq_right (u v : X.H) :
+    X.kreinPairing (X.J u) v =
+      X.kreinPairing u (X.J v) := by
+  have hJ : X.J (X.J u) = u := by
+    have h := congrArg (fun f : X.H →L[ℝ] X.H => f u) X.J_sq
+    simpa [ContinuousLinearMap.comp_apply] using h
+  calc
+    X.kreinPairing (X.J u) v =
+        X.kreinPairing (X.J (X.J u)) (X.J v) := by
+          symm
+          exact X.pairing_J_invariant (X.J u) v
+    _ = X.kreinPairing u (X.J v) := by rw [hJ]
+
+theorem pairing_ε_left_eq_right (u v : X.H) :
+    X.kreinPairing (X.ε u) v =
+      X.kreinPairing u (X.ε v) := by
+  have hε : X.ε (X.ε u) = u := by
+    have h := congrArg (fun f : X.H →L[ℝ] X.H => f u) X.ε_sq
+    simpa [ContinuousLinearMap.comp_apply] using h
+  calc
+    X.kreinPairing (X.ε u) v =
+        X.kreinPairing (X.ε (X.ε u)) (X.ε v) := by
+          symm
+          exact X.pairing_ε_invariant (X.ε u) v
+    _ = X.kreinPairing u (X.ε v) := by rw [hε]
 
 @[simp] theorem K_sq : X.K.comp X.K = -(ContinuousLinearMap.id ℝ X.H) := by
   ext x
@@ -273,6 +316,31 @@ section Algebra
     _ = -X.J x := by rw [hEE (X.J x)]
     _ = (-(X.J)) x := rfl
 
+theorem pairing_K_invariant (u v : X.H) :
+    X.kreinPairing (X.K u) (X.K v) =
+      X.kreinPairing u v := by
+  calc
+    X.kreinPairing (X.K u) (X.K v) =
+        X.kreinPairing (X.J (X.ε u)) (X.J (X.ε v)) := rfl
+    _ = X.kreinPairing (X.ε u) (X.ε v) :=
+      X.pairing_J_invariant (X.ε u) (X.ε v)
+    _ = X.kreinPairing u v := X.pairing_ε_invariant u v
+
+theorem pairing_K_skew (u v : X.H) :
+    X.kreinPairing (X.K u) v =
+      -X.kreinPairing u (X.K v) := by
+  have h := X.pairing_K_invariant u (X.K v)
+  have hk : X.K (X.K v) = -v := by
+    have hk' := congrArg (fun T : X.H →L[ℝ] X.H => T v) X.K_sq
+    change (X.K.comp X.K) v = (-(ContinuousLinearMap.id ℝ X.H)) v at hk'
+    change X.K (X.K v) = -v at hk'
+    exact hk'
+  rw [hk] at h
+  have h' : -X.kreinPairing (X.K u) v =
+      X.kreinPairing u (X.K v) := by
+    simpa using h
+  linarith
+
 private theorem ε_is_cartan (X : InvolutiveSelfDualCarrier) :
     InfoGeometry.Cartan.IsCartanInvolution (𝕜 := ℝ) (E := X.H) X.ε.toLinearMap := by
   dsimp [InfoGeometry.Cartan.IsCartanInvolution]
@@ -334,6 +402,62 @@ theorem ε_eq_Pplus_sub_Pminus : X.ε = X.Pplus - X.Pminus := by
     simpa [ContinuousLinearMap.add_comp, Pplus_idempotent (X := X), add_comm, add_left_comm,
       add_assoc] using h
   exact add_left_cancel h'
+
+theorem Pplus_idempotent_apply (x : X.H) :
+    X.Pplus (X.Pplus x) = X.Pplus x := by
+  change (X.Pplus.comp X.Pplus) x = X.Pplus x
+  rw [X.Pplus_idempotent]
+
+theorem Pminus_idempotent_apply (x : X.H) :
+    X.Pminus (X.Pminus x) = X.Pminus x := by
+  change (X.Pminus.comp X.Pminus) x = X.Pminus x
+  rw [X.Pminus_idempotent]
+
+theorem Pplus_add_Pminus_apply (x : X.H) :
+    X.Pplus x + X.Pminus x = x := by
+  change (X.Pplus + X.Pminus) x = x
+  rw [X.Pplus_add_Pminus]
+  rfl
+
+theorem Pplus_comp_Pminus_apply (x : X.H) :
+    X.Pplus (X.Pminus x) = 0 := by
+  change (X.Pplus.comp X.Pminus) x = 0
+  rw [X.Pplus_comp_Pminus]
+  rfl
+
+theorem Pminus_comp_Pplus_apply (x : X.H) :
+    X.Pminus (X.Pplus x) = 0 := by
+  change (X.Pminus.comp X.Pplus) x = 0
+  rw [X.Pminus_comp_Pplus]
+  rfl
+
+theorem K_sq_apply (x : X.H) :
+    X.K (X.K x) = -x := by
+  change (X.K.comp X.K) x = -x
+  rw [X.K_sq]
+  rfl
+
+theorem J_comp_K_apply (x : X.H) :
+    X.J (X.K x) = X.ε x := by
+  change (X.J.comp X.K) x = X.ε x
+  rw [X.J_comp_K]
+
+theorem K_comp_J_apply (x : X.H) :
+    X.K (X.J x) = -X.ε x := by
+  change (X.K.comp X.J) x = -X.ε x
+  rw [X.K_comp_J]
+  rfl
+
+theorem K_comp_ε_apply (x : X.H) :
+    X.K (X.ε x) = X.J x := by
+  change (X.K.comp X.ε) x = X.J x
+  rw [X.K_comp_ε]
+
+theorem ε_comp_K_apply (x : X.H) :
+    X.ε (X.K x) = -X.J x := by
+  change (X.ε.comp X.K) x = -X.J x
+  rw [X.ε_comp_K]
+  simp
 
 end Algebra
 

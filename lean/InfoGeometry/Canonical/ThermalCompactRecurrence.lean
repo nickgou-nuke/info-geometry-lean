@@ -93,7 +93,7 @@ theorem compactified_doubling_step
 /--
 Cross-multiplied compactified-coordinate relation.
 
-This is the finite algebraic socket `T * (1 + q) = 1 - q`; it is not a KMS
+This is the finite algebraic interface `T * (1 + q) = 1 - q`; it is not a KMS
 condition, an operator logarithm identity, or a functional-calculus statement.
 -/
 def CompactifiedRelation (q T : R) : Prop :=

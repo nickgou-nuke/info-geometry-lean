@@ -66,6 +66,19 @@ instance : Coe (HessianOrthogonalGroup E) (NeutralSpace E ≃L[ℝ] NeutralSpace
 
 end HessianOrthogonalGroup
 
+namespace HessianOrthogonalGroup
+
+@[simp] lemma mul_equiv_apply (U V : HessianOrthogonalGroup E) (x : NeutralSpace E) :
+    (U * V).equiv x = V.equiv (U.equiv x) := rfl
+
+@[simp] lemma one_equiv_apply (x : NeutralSpace E) :
+    (1 : HessianOrthogonalGroup E).equiv x = x := rfl
+
+@[simp] lemma inv_equiv_apply (U : HessianOrthogonalGroup E) (x : NeutralSpace E) :
+    U⁻¹.equiv x = U.equiv.symm x := rfl
+
+end HessianOrthogonalGroup
+
 /-- Swap involution as an element of the Hessian orthogonal group. -/
 noncomputable def modular_jHessianOrthogonal : HessianOrthogonalGroup E :=
   ⟨(NeutralSpace.neutralJ (E := E)).toContinuousLinearEquiv, IsKreinIsometry.J⟩

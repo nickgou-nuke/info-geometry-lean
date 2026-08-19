@@ -79,7 +79,7 @@ def main() -> int:
     print("Hamiltonian-asymmetry zero test: OK")
 
     print("=" * 72)
-    print("REPAIRED SECTION 37 FINITE SOCKET VERIFIED")
+    print("REPAIRED SECTION 37 FINITE INTERFACE VERIFIED")
     print("=" * 72)
     return 0
 

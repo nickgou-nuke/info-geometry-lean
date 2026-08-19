@@ -36,6 +36,11 @@ noncomputable def canonicalVectorEquiv : CZ ≃ VZ where
         (canonicalVectorEquiv X) (canonicalVectorEquiv Y) := by
   rfl
 
+@[simp] theorem canonicalVectorEquiv_neg (X : CZ) :
+    canonicalVectorEquiv (-X) =
+      InfoGeometry.Algebra.ZornVectorMatrix.neg (canonicalVectorEquiv X) := by
+  rfl
+
 @[simp] theorem canonicalVectorEquiv_smul (r : ℝ) (X : CZ) :
     canonicalVectorEquiv (r • X) =
       InfoGeometry.Algebra.ZornVectorMatrix.smul r (canonicalVectorEquiv X) := by
@@ -61,6 +66,18 @@ noncomputable def canonicalVectorEquiv : CZ ≃ VZ where
       r • canonicalVectorEquiv.symm X := by
   apply canonicalVectorEquiv.injective
   simp only [Equiv.apply_symm_apply, canonicalVectorEquiv_smul]
+
+@[simp] theorem canonicalVectorEquiv_symm_neg (X : VZ) :
+    canonicalVectorEquiv.symm (InfoGeometry.Algebra.ZornVectorMatrix.neg X) =
+      -canonicalVectorEquiv.symm X := by
+  apply canonicalVectorEquiv.injective
+  simp only [Equiv.apply_symm_apply, canonicalVectorEquiv_neg]
+
+@[simp] theorem canonicalVectorEquiv_symm_sub (X Y : VZ) :
+    canonicalVectorEquiv.symm (InfoGeometry.Algebra.ZornVectorMatrix.sub X Y) =
+      canonicalVectorEquiv.symm X - canonicalVectorEquiv.symm Y := by
+  apply canonicalVectorEquiv.injective
+  simp only [Equiv.apply_symm_apply, canonicalVectorEquiv_sub]
 
 @[simp] theorem canonicalVectorEquiv_symm_one :
     canonicalVectorEquiv.symm InfoGeometry.Algebra.ZornVectorMatrix.one = (1 : CZ) := by
@@ -144,5 +161,15 @@ theorem mul_sub (X Y Z : CZ) : X * (Y - Z) = X * Y - X * Z := by
   apply canonicalVectorEquiv.injective
   simp only [canonicalVectorEquiv_mul, canonicalVectorEquiv_zero]
   exact InfoGeometry.Algebra.ZornVectorMatrix.mul_zero _
+
+@[simp] theorem mul_one (X : CZ) : X * (1 : CZ) = X := by
+  apply canonicalVectorEquiv.injective
+  simp only [canonicalVectorEquiv_mul, canonicalVectorEquiv_one]
+  exact InfoGeometry.Algebra.ZornVectorMatrix.mul_one _
+
+@[simp] theorem one_mul (X : CZ) : (1 : CZ) * X = X := by
+  apply canonicalVectorEquiv.injective
+  simp only [canonicalVectorEquiv_mul, canonicalVectorEquiv_one]
+  exact InfoGeometry.Algebra.ZornVectorMatrix.one_mul _
 
 end InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge

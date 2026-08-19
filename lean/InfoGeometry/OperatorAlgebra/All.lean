@@ -46,7 +46,6 @@ import InfoGeometry.OperatorAlgebra.D4StarCrossedProductColimitFlowHomeomorph
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductColimitObservable
 import InfoGeometry.OperatorAlgebra.D4StarCrossedProductColimitBoolReadout
 import InfoGeometry.OperatorAlgebra.AnomalyTubuleStability
-import InfoGeometry.OperatorAlgebra.AnomalousFlowStabilization
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 import InfoGeometry.OperatorAlgebra.DiracKahlerSpinorBridge
 import InfoGeometry.OperatorAlgebra.G2GaugeSymmetryBridge
@@ -81,7 +80,7 @@ namespace InfoGeometry.OperatorAlgebra
 /-!
 # Operator Algebra Interfaces
 
-Stable operator-algebra sockets for defect predicates, circular polarization,
+Stable operator-algebra interfaces for defect predicates, circular polarization,
 and represented Drazin splitting.
 -/
 

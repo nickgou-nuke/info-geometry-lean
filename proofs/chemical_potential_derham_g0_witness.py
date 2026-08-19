@@ -47,7 +47,7 @@ def main() -> None:
     mixed_relation = a12 * b23 - a12 * b13 + a23 * b13
     beta23_compensation = sp.solve(sp.Eq(mixed_relation, 0), b23)[0]
 
-    # Tolman/Ehrenfest-style normalization audit.  This is a symbolic socket
+    # Tolman/Ehrenfest-style normalization audit.  This is a symbolic deferred_interface
     # check: once the geometric comparison supplies g00*mu^2=const, the inverse
     # scaling is algebraically forced.
     mu, kappa = sp.symbols("mu kappa", nonzero=True)
@@ -63,9 +63,9 @@ def main() -> None:
     print("d(i_X omega) =", d_iota)
     print("direct Lie derivative L_X omega =", lie)
     print("exact triangle alpha12+alpha23+alpha31 =", sp.simplify(alpha12 + alpha23 + alpha31))
-    print("mixed Arnold socket expression =", mixed_relation)
+    print("mixed Arnold deferred_interface expression =", mixed_relation)
     print("beta23 compensation solving mixed relation =", beta23_compensation)
-    print("Tolman socket normalization g00*mu^2 =", tolman_constant)
+    print("Tolman deferred_interface normalization g00*mu^2 =", tolman_constant)
     print("chemical_potential_derham_g0_witness.py: finite audit passed")
 
 

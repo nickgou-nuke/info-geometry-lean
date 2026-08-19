@@ -13,7 +13,7 @@ from tools.infra import hive_bee
 
 def sample_config() -> hive_bee.BeeConfig:
     return hive_bee.BeeConfig(
-        hive_endpoint="http://127.0.0.1:8530",
+        hive_endpoint="http://127.0.0.1:8540",
         hive_database="hive_live",
         hive_username="root",
         hive_password="alexandria_root",

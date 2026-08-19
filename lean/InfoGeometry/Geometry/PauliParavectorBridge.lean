@@ -2,7 +2,6 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.PauliHestenesSpinMomentum
 import InfoGeometry.Physics.MDPASJMSouriau
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # Pauli Paravector Bridge
@@ -118,116 +117,6 @@ theorem det_pauliMatrix_eq_mass_sq
     Matrix.det (pauliMatrix p) = ((m ^ 2 : ℝ) : ℂ) := by
   rw [det_pauliMatrix, hp]
 
-/-! ## 2. Spin/rotor readout sockets -/
-
-/--
-Spinor transport socket.
-
-A model supplies a spinor action on Pauli matrices, intended as `X ↦ L X L†`.
-This file does not prove the `SL(2,ℂ)` double-cover theorem.
--/
-@[rep_depth operator]
-def PauliSpinorTransport :=
-  {transform : PauliMat → PauliMat //
-    ∀ v : Minkowski4,
-      Matrix.det (transform (pauliMatrix v)) = Matrix.det (pauliMatrix v)}
-
-namespace PauliSpinorTransport
-
-/-- Transport/action on Pauli matrices. -/
-abbrev transform (T : PauliSpinorTransport) : PauliMat → PauliMat := T.1
-
-/-- Determinant preservation under the supplied transport. -/
-theorem preservesQuadratic
-    (T : PauliSpinorTransport) (v : Minkowski4) :
-    Matrix.det (T.transform (pauliMatrix v)) = Matrix.det (pauliMatrix v) :=
-  T.2 v
-
-variable (T : PauliSpinorTransport)
-
-/-- Re-export of determinant/Minkowski-norm preservation. -/
-@[rep_depth operator]
-theorem determinant_preserved
-    (v : Minkowski4) :
-    Matrix.det (T.transform (pauliMatrix v)) = Matrix.det (pauliMatrix v) :=
-  T.preservesQuadratic v
-
-end PauliSpinorTransport
-
-/--
-Bivector/spin-plane readout socket.
-
-In Hestenes language, spin is a bivector/rotor datum extracted from the spinor,
-not a component of the momentum paravector itself.
-
-This finite interface owns only the readout map.  A model-specific law requires
-actual bivector operations and is not represented by an opaque proposition.
--/
-@[rep_depth operator]
-abbrev SpinBivectorReadout
-    (Spinor Bivector : Type*) :=
-  {p : (Spinor → Bivector) × (Spinor → Bivector → Prop) //
-    ∀ psi, p.2 psi (p.1 psi)}
-
-namespace SpinBivectorReadout
-
-variable {Spinor Bivector : Type*}
-
-abbrev spinPlane (S : SpinBivectorReadout Spinor Bivector) : Spinor → Bivector := S.1.1
-abbrev IsSpinPlaneReadout (S : SpinBivectorReadout Spinor Bivector) :
-    Spinor → Bivector → Prop := S.1.2
-abbrev spinPlane_spec (S : SpinBivectorReadout Spinor Bivector) :
-    ∀ psi, S.IsSpinPlaneReadout psi (S.spinPlane psi) := S.2
-
-theorem readout_holds
-    (S : SpinBivectorReadout Spinor Bivector) (psi : Spinor) :
-    S.IsSpinPlaneReadout psi (S.spinPlane psi) :=
-  S.spinPlane_spec psi
-
-end SpinBivectorReadout
-
-/--
-Momentum-spin coupling socket.
-
-Momentum and spin are read together through a common spinor carrier.  No
-Pauli--Lubanski coupling equation is asserted until a concrete representation
-supplies one.
--/
-@[rep_depth operator]
-structure MomentumSpinCoupling
-    (Spinor Bivector : Type*) where
-  /-- Momentum/paravector readout. -/
-  momentum : Spinor → Minkowski4
-
-  /-- Spin bivector/plane readout. -/
-  spinReadout : SpinBivectorReadout Spinor Bivector
-
-  /-- Helicity readout. -/
-  helicity : Spinor → ℝ
-
-  /-- Pauli-Lubanski-style readout. -/
-  pauliLubanskiReadout : Spinor → Minkowski4
-
-  /-- Relation coupling the four model-specific readouts. -/
-  CouplingLaw : Minkowski4 → Bivector → ℝ → Minkowski4 → Prop
-
-  /-- The selected readouts satisfy the coupling relation. -/
-  coupling :
-    ∀ psi,
-      CouplingLaw (momentum psi) (spinReadout.spinPlane psi)
-        (helicity psi) (pauliLubanskiReadout psi)
-
-namespace MomentumSpinCoupling
-
-variable {Spinor Bivector : Type*}
-
-theorem coupling_holds
-    (C : MomentumSpinCoupling Spinor Bivector) (psi : Spinor) :
-    C.CouplingLaw (C.momentum psi) (C.spinReadout.spinPlane psi)
-      (C.helicity psi) (C.pauliLubanskiReadout psi) :=
-  C.coupling psi
-
-end MomentumSpinCoupling
 
 /-! ## 3. Native finite Souriau spin-particle realization -/
 

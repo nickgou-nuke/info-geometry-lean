@@ -331,6 +331,12 @@ variable {N P : Type u} [AddCommMonoid N] [AddCommMonoid P]
 def grothendieckFunctor (f : M →+ N) : Grothendieck M →+ Grothendieck N :=
   grothendieckLift ((grothendieckMap N).comp f)
 
+@[simp]
+theorem grothendieckFunctor_map (f : M →+ N) (m : M) :
+    grothendieckFunctor f (grothendieckMap M m) =
+      grothendieckMap N (f m) := by
+  exact grothendieckLift_comp ((grothendieckMap N).comp f) m
+
 theorem grothendieckFunctor_mk (f : M →+ N) (x : M × M) :
     grothendieckFunctor f (Quotient.mk (grothendieckSetoid M) x) =
       Quotient.mk (grothendieckSetoid N) (f x.1, f x.2) := by
@@ -364,5 +370,20 @@ theorem grothendieckFunctor_comp (f : M →+ N) (g : N →+ P) :
               simp [grothendieckFunctor_mk, grothendieckMap]
             _ = ((grothendieckMap P).comp (g.comp f)) m := by simp)
         x
+
+/-- The universal lift is natural with respect to the induced Grothendieck
+    functor. -/
+theorem grothendieckLift_naturality
+    {A : Type*} [AddCommGroup A] (f : M →+ N) (g : N →+ A) :
+    grothendieckLift (g.comp f) =
+      (grothendieckLift g).comp (grothendieckFunctor f) := by
+  ext x
+  exact (grothendieckLift_unique (g.comp f)
+    ((grothendieckLift g).comp (grothendieckFunctor f)) (by
+      intro m
+      change grothendieckLift g
+          (grothendieckFunctor f (grothendieckMap M m)) = g (f m)
+      rw [grothendieckFunctor_map]
+      exact grothendieckLift_comp g (f m)) x).symm
 
 end functoriality

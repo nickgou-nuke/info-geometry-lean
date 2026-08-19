@@ -272,10 +272,10 @@ theorem J_D_comm_or_anticomm_eq :
 
 end ModularMirrorFredholmCompatibility
 
-/-! ## 5. Even Kasparov/Fredholm module socket -/
+/-! ## 5. Even Kasparov/Fredholm module datum -/
 
 /--
-A proof-carrying even Fredholm/Kasparov-cycle socket.
+A proof-carrying even Fredholm/Kasparov-cycle datum.
 
 This is not a full KK-theory implementation. It records the conditions needed
 downstream for index pairings:
@@ -324,7 +324,7 @@ structure EvenKasparovCycleDatum
       IsCompactOperator
         ((rep a * (F - ContinuousLinearMap.adjoint F) : H →L[ℝ] H) : H → H)
 
-  /-- Abstract Fredholm index pairing socket. -/
+  /-- Abstract Fredholm index pairing datum. -/
   indexPairing : A → ℤ
 
 /--
@@ -369,29 +369,5 @@ theorem ofIndexPairing_cocycleReadout
 
 end ChiralIndexFormulaDatum
 
-/-! ## 6. Owner targets -/
-
-/-- Owner target for constructing chiral Fredholm index data. -/
-def ChiralFredholmIndexOwnerTarget
-    (H : Type*) [AddCommGroup H] [Module ℝ H] : Prop :=
-  ∀ F : ChiralFredholmDatum H,
-    F.chi.comp F.chi = LinearMap.id ∧
-      F.chi.comp F.D = -(F.D.comp F.chi) ∧
-      F.fredholmIndex.index = F.kernelCount.index ∧
-      F.kernelCount.mirror.index = -F.kernelCount.index
-
-/-- Owner target for constructing an even Kasparov-cycle socket. -/
-def EvenKasparovCycleOwnerTarget
-    (A H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H]
-    [CompleteSpace H] : Prop :=
-  ∀ K : EvenKasparovCycleDatum A H,
-    K.chi.comp K.chi = ContinuousLinearMap.id ℝ H ∧
-      K.chi.comp K.F = -(K.F.comp K.chi) ∧
-      (∀ a : A, IsCompactOperator
-        ((K.F * K.rep a - K.rep a * K.F : H →L[ℝ] H) : H → H)) ∧
-      (∀ a : A, IsCompactOperator
-        ((K.rep a * (K.F * K.F - (1 : H →L[ℝ] H)) : H →L[ℝ] H) : H → H)) ∧
-      (∀ a : A, IsCompactOperator
-        ((K.rep a * (K.F - ContinuousLinearMap.adjoint K.F) : H →L[ℝ] H) : H → H))
 
 end InfoGeometry.OperatorAlgebra.ChiralFredholmIndex

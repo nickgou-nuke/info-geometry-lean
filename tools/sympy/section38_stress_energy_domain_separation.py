@@ -65,7 +65,7 @@ def main() -> int:
     print("finite 4-index domain-separated stress witness: OK")
 
     print("=" * 72)
-    print("REPAIRED SECTION 38 FINITE SOCKET VERIFIED")
+    print("REPAIRED SECTION 38 FINITE INTERFACE VERIFIED")
     print("=" * 72)
     return 0
 

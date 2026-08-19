@@ -14,7 +14,7 @@ circuits with two-qubit and three-qubit spin-network/Schur gates, Heisenberg
 its main simulations require a custom `PennyLane-Lightning` branch
 (`merge_mat_sparse_adj`), so this Lean layer records only finite code-level
 bookkeeping.  Numerical VQE performance and hardware/runtime correctness remain
-external sockets.
+external interfaces.
 -/
 
 namespace XanaduSpinNetworkCodeDigest

@@ -1,130 +1,169 @@
-import Mathlib
-import InfoGeometry.Algebra.CuntzO3TriSupersymmetry
+import Mathlib.Tactic.NoncommRing
+import InfoGeometry.Algebra.NativeCuntzO3TriSupersymmetry
 
 noncomputable section
 
 namespace InfoGeometry.Algebra.CuntzO3LieAlgebraCasimir
 
-open InfoGeometry.Algebra.CuntzO3TriSupersymmetry
+open InfoGeometry.Algebra.NativeCuntzO3TriSupersymmetry
+open InfoGeometry.Algebra.CuntzTensorQuotient
 
-/-- The Quadratic Casimir Operator C_2 for su(3) in the Cuntz O_3 representation. -/
-def casimir2 {R : Type*} [CommRing R] [Invertible (2 : R)] [Invertible (6 : R)] (g : CuntzO3Generators R) : R :=
-  Q12 g * Q21 g + Q21 g * Q12 g +
-  Q23 g * Q32 g + Q32 g * Q23 g +
-  Q31 g * Q13 g + Q13 g * Q31 g +
-  (⅟(2 : R)) * (Lambda3 g * Lambda3 g) +
-  (⅟(6 : R)) * (Lambda8 g * Lambda8 g)
+def invTwo : Carrier := algebraMap ℂ Carrier ((2 : ℂ)⁻¹)
 
-/-- **Theorem**: Off-diagonal root product sum in Cuntz O3 is 2 * 1. -/
-theorem cuntz_off_diagonal_root_sum {R : Type*} [CommRing R] (g : CuntzO3Generators R) :
-    Q12 g * Q21 g + Q21 g * Q12 g +
-    Q23 g * Q32 g + Q32 g * Q23 g +
-    Q31 g * Q13 g + Q13 g * Q31 g = 2 := by
-  dsimp [Q12, Q21, Q23, Q32, Q31, Q13]
-  have h11 : g.S1star * g.S1 = 1 := g.S1star_S1
-  have h22 : g.S2star * g.S2 = 1 := g.S2star_S2
-  have h33 : g.S3star * g.S3 = 1 := g.S3star_S3
-  have h_c : g.S1 * g.S1star + g.S2 * g.S2star + g.S3 * g.S3star = 1 := g.completeness
-  have t1 : g.S1 * g.S2star * (g.S2 * g.S1star) = g.S1 * g.S1star := by rw [mul_assoc, ← mul_assoc g.S2star, h22, one_mul]
-  have t2 : g.S2 * g.S1star * (g.S1 * g.S2star) = g.S2 * g.S2star := by rw [mul_assoc, ← mul_assoc g.S1star, h11, one_mul]
-  have t3 : g.S2 * g.S3star * (g.S3 * g.S2star) = g.S2 * g.S2star := by rw [mul_assoc, ← mul_assoc g.S3star, h33, one_mul]
-  have t4 : g.S3 * g.S2star * (g.S2 * g.S3star) = g.S3 * g.S3star := by rw [mul_assoc, ← mul_assoc g.S2star, h22, one_mul]
-  have t5 : g.S3 * g.S1star * (g.S1 * g.S3star) = g.S3 * g.S3star := by rw [mul_assoc, ← mul_assoc g.S1star, h11, one_mul]
-  have t6 : g.S1 * g.S3star * (g.S3 * g.S1star) = g.S1 * g.S1star := by rw [mul_assoc, ← mul_assoc g.S3star, h33, one_mul]
-  rw [t1, t2, t3, t4, t5, t6]
-  have h_ring : g.S1 * g.S1star + g.S2 * g.S2star + g.S2 * g.S2star + g.S3 * g.S3star + g.S3 * g.S3star + g.S1 * g.S1star = 2 * (g.S1 * g.S1star + g.S2 * g.S2star + g.S3 * g.S3star) := by ring
-  rw [h_ring, h_c, mul_one]
+def invSix : Carrier := algebraMap ℂ Carrier ((6 : ℂ)⁻¹)
 
-/-- **Theorem**: Square of Isospin Cartan Generator λ3^2 = P1 + P2. -/
-theorem lambda3_squared {R : Type*} [CommRing R] (g : CuntzO3Generators R) :
-    Lambda3 g * Lambda3 g = g.S1 * g.S1star + g.S2 * g.S2star := by
-  dsimp [Lambda3]
-  have h11 : g.S1star * g.S1 = 1 := g.S1star_S1
-  have h22 : g.S2star * g.S2 = 1 := g.S2star_S2
-  have h12 : g.S1star * g.S2 = 0 := g.S1star_S2
-  have h21 : g.S2star * g.S1 = 0 := g.S2star_S1
-  have t1 : g.S1 * g.S1star * (g.S1 * g.S1star) = g.S1 * g.S1star := by rw [mul_assoc, ← mul_assoc g.S1star, h11, one_mul]
-  have t2 : g.S2 * g.S2star * (g.S2 * g.S2star) = g.S2 * g.S2star := by rw [mul_assoc, ← mul_assoc g.S2star, h22, one_mul]
-  have z1 : g.S1 * g.S1star * (g.S2 * g.S2star) = 0 := by rw [mul_assoc, ← mul_assoc g.S1star, h12, zero_mul, mul_zero]
-  have z2 : g.S2 * g.S2star * (g.S1 * g.S1star) = 0 := by rw [mul_assoc, ← mul_assoc g.S2star, h21, zero_mul, mul_zero]
-  calc (g.S1 * g.S1star - g.S2 * g.S2star) * (g.S1 * g.S1star - g.S2 * g.S2star)
-    _ = g.S1 * g.S1star * (g.S1 * g.S1star) - g.S1 * g.S1star * (g.S2 * g.S2star) -
-        g.S2 * g.S2star * (g.S1 * g.S1star) + g.S2 * g.S2star * (g.S2 * g.S2star) := by ring
-    _ = g.S1 * g.S1star - 0 - 0 + g.S2 * g.S2star := by rw [t1, t2, z1, z2]
-    _ = g.S1 * g.S1star + g.S2 * g.S2star := by ring
+def casimir2 : Carrier :=
+  Q12 * Q21 + Q21 * Q12 +
+  Q23 * Q32 + Q32 * Q23 +
+  Q31 * Q13 + Q13 * Q31 +
+  invTwo * (Lambda3 * Lambda3) +
+  invSix * (Lambda8 * Lambda8)
 
-/-- **Theorem**: Square of Hypercharge Cartan Generator λ8^2 = P1 + P2 + 4 P3. -/
-theorem lambda8_squared {R : Type*} [CommRing R] (g : CuntzO3Generators R) :
-    Lambda8 g * Lambda8 g = g.S1 * g.S1star + g.S2 * g.S2star + 4 * (g.S3 * g.S3star) := by
-  dsimp [Lambda8]
-  have h11 : g.S1star * g.S1 = 1 := g.S1star_S1
-  have h22 : g.S2star * g.S2 = 1 := g.S2star_S2
-  have h33 : g.S3star * g.S3 = 1 := g.S3star_S3
-  have h12 : g.S1star * g.S2 = 0 := g.S1star_S2
-  have h21 : g.S2star * g.S1 = 0 := g.S2star_S1
-  have h13 : g.S1star * g.S3 = 0 := g.S1star_S3
-  have h31 : g.S3star * g.S1 = 0 := g.S3star_S1
-  have h23 : g.S2star * g.S3 = 0 := g.S2star_S3
-  have h32 : g.S3star * g.S2 = 0 := g.S3star_S2
-  have t1 : g.S1 * g.S1star * (g.S1 * g.S1star) = g.S1 * g.S1star := by rw [mul_assoc, ← mul_assoc g.S1star, h11, one_mul]
-  have t2 : g.S2 * g.S2star * (g.S2 * g.S2star) = g.S2 * g.S2star := by rw [mul_assoc, ← mul_assoc g.S2star, h22, one_mul]
-  have t3 : g.S3 * g.S3star * (g.S3 * g.S3star) = g.S3 * g.S3star := by rw [mul_assoc, ← mul_assoc g.S3star, h33, one_mul]
-  have z1 : g.S1 * g.S1star * (g.S2 * g.S2star) = 0 := by rw [mul_assoc, ← mul_assoc g.S1star, h12, zero_mul, mul_zero]
-  have z2 : g.S2 * g.S2star * (g.S1 * g.S1star) = 0 := by rw [mul_assoc, ← mul_assoc g.S2star, h21, zero_mul, mul_zero]
-  have z3 : g.S1 * g.S1star * (g.S3 * g.S3star) = 0 := by rw [mul_assoc, ← mul_assoc g.S1star, h13, zero_mul, mul_zero]
-  have z4 : g.S3 * g.S3star * (g.S1 * g.S1star) = 0 := by rw [mul_assoc, ← mul_assoc g.S3star, h31, zero_mul, mul_zero]
-  have z5 : g.S2 * g.S2star * (g.S3 * g.S3star) = 0 := by rw [mul_assoc, ← mul_assoc g.S2star, h23, zero_mul, mul_zero]
-  have z6 : g.S3 * g.S3star * (g.S2 * g.S2star) = 0 := by rw [mul_assoc, ← mul_assoc g.S3star, h32, zero_mul, mul_zero]
-  calc (g.S1 * g.S1star + g.S2 * g.S2star - 2 * (g.S3 * g.S3star)) * (g.S1 * g.S1star + g.S2 * g.S2star - 2 * (g.S3 * g.S3star))
-    _ = g.S1 * g.S1star * (g.S1 * g.S1star) + g.S2 * g.S2star * (g.S2 * g.S2star) + 4 * (g.S3 * g.S3star * (g.S3 * g.S3star)) +
-        g.S1 * g.S1star * (g.S2 * g.S2star) + g.S2 * g.S2star * (g.S1 * g.S1star) -
-        2 * (g.S1 * g.S1star * (g.S3 * g.S3star)) - 2 * (g.S3 * g.S3star * (g.S1 * g.S1star)) -
-        2 * (g.S2 * g.S2star * (g.S3 * g.S3star)) - 2 * (g.S3 * g.S3star * (g.S2 * g.S2star)) := by ring
-    _ = g.S1 * g.S1star + g.S2 * g.S2star + 4 * (g.S3 * g.S3star) := by rw [t1, t2, t3, z1, z2, z3, z4, z5, z6]; ring
+theorem cuntz_off_diagonal_root_sum :
+    Q12 * Q21 + Q21 * Q12 +
+    Q23 * Q32 + Q32 * Q23 +
+    Q31 * Q13 + Q13 * Q31 = 2 := by
+  rw [q12_q21_product, q21_q12_product,
+    q23_q32_product, q32_q23_product,
+    q31_q13_product, q13_q31_product]
+  have hP : rangeProjection 0 + rangeProjection 1 + rangeProjection 2 = 1 := by
+    rw [← q12_q21_product, ← q23_q32_product, ← q31_q13_product]
+    exact tri_susy_hamiltonian_completeness
+  calc
+    rangeProjection 0 + rangeProjection 1 +
+        rangeProjection 1 + rangeProjection 2 +
+        rangeProjection 2 + rangeProjection 0 =
+      2 * (rangeProjection 0 + rangeProjection 1 + rangeProjection 2) := by
+        noncomm_ring
+    _ = 2 := by
+      rw [hP]
+      norm_num
 
-/-- **Theorem**: Projection P3 Orthogonality to Q12 Root Generator.
-    P3 Q12 = 0 and Q12 P3 = 0. -/
-theorem p3_q12_ortho {R : Type*} [Ring R] (g : CuntzO3Generators R) :
-    (g.S3 * g.S3star) * Q12 g = 0 ∧ Q12 g * (g.S3 * g.S3star) = 0 := ⟨
-  by dsimp [Q12]; rw [mul_assoc, ← mul_assoc g.S3star, g.S3star_S1, zero_mul, mul_zero],
-  by dsimp [Q12]; rw [mul_assoc, ← mul_assoc g.S2star, g.S2star_S3, zero_mul, mul_zero]
-⟩
+theorem lambda3_squared :
+    Lambda3 * Lambda3 = rangeProjection 0 + rangeProjection 1 :=
+  InfoGeometry.Algebra.NativeCuntzO3TriSupersymmetry.lambda3_squared
 
-/-- **Theorem**: Casimir Invariance / Schur's Lemma for Cuntz su(3) Representation.
-    The Quadratic Casimir Operator C_2 commutes with Q12: [C_2, Q12] = 0. -/
-theorem casimir2_commutes_q12 {R : Type*} [CommRing R] [Invertible (2 : R)] [Invertible (6 : R)] (g : CuntzO3Generators R) :
-    lieBracket (casimir2 g) (Q12 g) = 0 := by
+theorem lambda8_squared :
+    Lambda8 * Lambda8 = rangeProjection 0 + rangeProjection 1 +
+      4 * rangeProjection 2 :=
+  InfoGeometry.Algebra.NativeCuntzO3TriSupersymmetry.lambda8_squared
+
+theorem p3_q12_ortho :
+    rangeProjection 2 * Q12 = 0 ∧ Q12 * rangeProjection 2 = 0 := by
+  constructor
+  · dsimp [rangeProjection, Q12]
+    have h : cuntzS 3 (2 : Fin 3) * star (cuntzS 3 (2 : Fin 3)) *
+        (cuntzS 3 (0 : Fin 3) * star (cuntzS 3 (1 : Fin 3))) =
+        cuntzS 3 (2 : Fin 3) *
+          (star (cuntzS 3 (2 : Fin 3)) * cuntzS 3 (0 : Fin 3)) *
+          star (cuntzS 3 (1 : Fin 3)) := by
+      noncomm_ring
+    simp only [star_cuntzS] at h ⊢
+    rw [h, cuntz_orthogonality]
+    simp
+  · dsimp [Q12, rangeProjection]
+    have h : cuntzS 3 (0 : Fin 3) * star (cuntzS 3 (1 : Fin 3)) *
+        (cuntzS 3 (2 : Fin 3) * star (cuntzS 3 (2 : Fin 3))) =
+        cuntzS 3 (0 : Fin 3) *
+          (star (cuntzS 3 (1 : Fin 3)) * cuntzS 3 (2 : Fin 3)) *
+          star (cuntzS 3 (2 : Fin 3)) := by
+      noncomm_ring
+    simp only [star_cuntzS] at h ⊢
+    rw [h, cuntz_orthogonality]
+    simp
+
+theorem casimir2_commutes_q12 :
+    lieBracket casimir2 Q12 = 0 := by
   dsimp [lieBracket, casimir2]
-  rw [cuntz_off_diagonal_root_sum g, lambda3_squared g, lambda8_squared g]
-  have ⟨h_p3_left, h_p3_right⟩ := p3_q12_ortho g
-  have h1 : (2 : R) * Q12 g - Q12 g * 2 = 0 := by ring
-  have h2 : (g.S1 * g.S1star + g.S2 * g.S2star) * Q12 g - Q12 g * (g.S1 * g.S1star + g.S2 * g.S2star) = 0 := by
-    have h_c : g.S1 * g.S1star + g.S2 * g.S2star = 1 - g.S3 * g.S3star := by
-      calc g.S1 * g.S1star + g.S2 * g.S2star
-        _ = (g.S1 * g.S1star + g.S2 * g.S2star + g.S3 * g.S3star) - g.S3 * g.S3star := by ring
-        _ = 1 - g.S3 * g.S3star := by rw [g.completeness]
-    rw [h_c]
-    calc (1 - g.S3 * g.S3star) * Q12 g - Q12 g * (1 - g.S3 * g.S3star)
-      _ = Q12 g - g.S3 * g.S3star * Q12 g - (Q12 g - Q12 g * (g.S3 * g.S3star)) := by ring
-      _ = Q12 g - 0 - (Q12 g - 0) := by rw [h_p3_left, h_p3_right]
-      _ = 0 := by ring
-  have h3 : (g.S1 * g.S1star + g.S2 * g.S2star + 4 * (g.S3 * g.S3star)) * Q12 g -
-            Q12 g * (g.S1 * g.S1star + g.S2 * g.S2star + 4 * (g.S3 * g.S3star)) = 0 := by
-    have h_c8 : g.S1 * g.S1star + g.S2 * g.S2star + 4 * (g.S3 * g.S3star) = 1 + 3 * (g.S3 * g.S3star) := by
-      calc g.S1 * g.S1star + g.S2 * g.S2star + 4 * (g.S3 * g.S3star)
-        _ = (g.S1 * g.S1star + g.S2 * g.S2star + g.S3 * g.S3star) + 3 * (g.S3 * g.S3star) := by ring
-        _ = 1 + 3 * (g.S3 * g.S3star) := by rw [g.completeness]
-    rw [h_c8]
-    calc (1 + 3 * (g.S3 * g.S3star)) * Q12 g - Q12 g * (1 + 3 * (g.S3 * g.S3star))
-      _ = Q12 g + 3 * (g.S3 * g.S3star * Q12 g) - (Q12 g + 3 * (Q12 g * (g.S3 * g.S3star))) := by ring
-      _ = Q12 g + 3 * 0 - (Q12 g + 3 * 0) := by rw [h_p3_left, h_p3_right]
-      _ = 0 := by ring
-  calc (2 + ⅟(2 : R) * (g.S1 * g.S1star + g.S2 * g.S2star) + ⅟(6 : R) * (g.S1 * g.S1star + g.S2 * g.S2star + 4 * (g.S3 * g.S3star))) * Q12 g -
-       Q12 g * (2 + ⅟(2 : R) * (g.S1 * g.S1star + g.S2 * g.S2star) + ⅟(6 : R) * (g.S1 * g.S1star + g.S2 * g.S2star + 4 * (g.S3 * g.S3star)))
-    _ = (2 * Q12 g - Q12 g * 2) +
-        ⅟(2 : R) * ((g.S1 * g.S1star + g.S2 * g.S2star) * Q12 g - Q12 g * (g.S1 * g.S1star + g.S2 * g.S2star)) +
-        ⅟(6 : R) * ((g.S1 * g.S1star + g.S2 * g.S2star + 4 * (g.S3 * g.S3star)) * Q12 g - Q12 g * (g.S1 * g.S1star + g.S2 * g.S2star + 4 * (g.S3 * g.S3star))) := by ring
-    _ = 0 + ⅟(2 : R) * 0 + ⅟(6 : R) * 0 := by rw [h1, h2, h3]
-    _ = 0 := by ring
+  have hP : rangeProjection 0 + rangeProjection 1 + rangeProjection 2 = 1 := by
+    rw [← q12_q21_product, ← q23_q32_product, ← q31_q13_product]
+    exact tri_susy_hamiltonian_completeness
+  rw [cuntz_off_diagonal_root_sum,
+    lambda3_squared, lambda8_squared]
+  have hproj := p3_q12_ortho
+  have h1 : (2 : Carrier) * Q12 - Q12 * 2 = 0 := by
+    noncomm_ring
+  have hcentralTwo (x : Carrier) : invTwo * x = x * invTwo := by
+    dsimp [invTwo]
+    exact Algebra.commutes ((2 : ℂ)⁻¹) x
+  have hcentralSix (x : Carrier) : invSix * x = x * invSix := by
+    dsimp [invSix]
+    exact Algebra.commutes ((6 : ℂ)⁻¹) x
+  have htwoLeft (a b : Carrier) : a * (invTwo * b) = invTwo * (a * b) := by
+    calc
+      a * (invTwo * b) = (a * invTwo) * b := by rw [mul_assoc]
+      _ = (invTwo * a) * b := by rw [hcentralTwo]
+      _ = invTwo * (a * b) := by rw [mul_assoc]
+  have htwoRight (a b : Carrier) : a * (b * invTwo) = (a * b) * invTwo := by
+    rw [← mul_assoc]
+  have hsixLeft (a b : Carrier) : a * (invSix * b) = invSix * (a * b) := by
+    calc
+      a * (invSix * b) = (a * invSix) * b := by rw [mul_assoc]
+      _ = (invSix * a) * b := by rw [hcentralSix]
+      _ = invSix * (a * b) := by rw [mul_assoc]
+  have hsixRight (a b : Carrier) : a * (b * invSix) = (a * b) * invSix := by
+    rw [← mul_assoc]
+  have h2 : (rangeProjection 0 + rangeProjection 1) * Q12 -
+      Q12 * (rangeProjection 0 + rangeProjection 1) = 0 := by
+    have hsum : rangeProjection 0 + rangeProjection 1 =
+        1 - rangeProjection 2 := by
+      calc
+        rangeProjection 0 + rangeProjection 1 =
+            (rangeProjection 0 + rangeProjection 1 + rangeProjection 2) -
+              rangeProjection 2 := by noncomm_ring
+        _ = 1 - rangeProjection 2 := by
+          rw [hP]
+    rw [hsum]
+    rcases hproj with ⟨hleft, hright⟩
+    calc
+      (1 - rangeProjection 2) * Q12 - Q12 * (1 - rangeProjection 2) =
+            Q12 - rangeProjection 2 * Q12 -
+            (Q12 - Q12 * rangeProjection 2) := by
+              simp only [sub_mul, mul_sub]
+              noncomm_ring
+      _ = Q12 - 0 - (Q12 - 0) := by rw [hleft, hright]
+      _ = 0 := by noncomm_ring
+  have h3 : (rangeProjection 0 + rangeProjection 1 +
+      4 * rangeProjection 2) * Q12 -
+      Q12 * (rangeProjection 0 + rangeProjection 1 +
+        4 * rangeProjection 2) = 0 := by
+    have hsum : rangeProjection 0 + rangeProjection 1 +
+        4 * rangeProjection 2 = 1 + 3 * rangeProjection 2 := by
+      calc
+        rangeProjection 0 + rangeProjection 1 + 4 * rangeProjection 2 =
+            (rangeProjection 0 + rangeProjection 1 + rangeProjection 2) +
+              3 * rangeProjection 2 := by noncomm_ring
+        _ = 1 + 3 * rangeProjection 2 := by
+          rw [hP]
+    rw [hsum]
+    rcases hproj with ⟨hleft, hright⟩
+    calc
+      (1 + 3 * rangeProjection 2) * Q12 -
+          Q12 * (1 + 3 * rangeProjection 2) =
+          Q12 + 3 * (rangeProjection 2 * Q12) -
+            (Q12 + 3 * (Q12 * rangeProjection 2)) := by noncomm_ring
+      _ = Q12 + 3 * 0 - (Q12 + 3 * 0) := by rw [hleft, hright]
+      _ = 0 := by noncomm_ring
+  calc
+    (2 + invTwo * (rangeProjection 0 + rangeProjection 1) +
+        invSix *
+          (rangeProjection 0 + rangeProjection 1 + 4 * rangeProjection 2)) * Q12 -
+      Q12 * (2 + invTwo * (rangeProjection 0 + rangeProjection 1) +
+        invSix *
+          (rangeProjection 0 + rangeProjection 1 + 4 * rangeProjection 2)) =
+      (2 * Q12 - Q12 * 2) +
+        invTwo *
+          ((rangeProjection 0 + rangeProjection 1) * Q12 -
+            Q12 * (rangeProjection 0 + rangeProjection 1)) +
+        invSix *
+          ((rangeProjection 0 + rangeProjection 1 + 4 * rangeProjection 2) * Q12 -
+            Q12 * (rangeProjection 0 + rangeProjection 1 + 4 * rangeProjection 2)) := by
+          simp only [sub_mul, mul_sub, add_mul, mul_add,
+            neg_mul, mul_neg, neg_one_zsmul, zsmul_eq_mul]
+          simp only [htwoLeft, htwoRight, hsixLeft, hsixRight]
+          noncomm_ring
+    _ = 0 + invTwo * 0 + invSix * 0 := by
+      rw [h1, h2, h3]
+    _ = 0 := by noncomm_ring
 
 end InfoGeometry.Algebra.CuntzO3LieAlgebraCasimir

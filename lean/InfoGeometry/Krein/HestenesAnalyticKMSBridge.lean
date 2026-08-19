@@ -86,4 +86,24 @@ structure Bridge where
 
 end Core
 
+namespace Bridge
+
+variable {E : Type 0}
+variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+
+local notation "H₂" => DoubledSpace E
+local notation "EndH" => H₂ →L[ℝ] H₂
+
+variable (B : Bridge (E := E))
+
+theorem flow_neg_apply (t : ℝ) (A : EndH) :
+    B.flow.flow (-t) (B.flow.flow t A) = A := by
+  exact OperatorFlow.flow_neg_apply B.flow t A
+
+theorem flow_mul_apply (t : ℝ) (A C : EndH) :
+    B.flow.flow t (A * C) = B.flow.flow t A * B.flow.flow t C := by
+  exact OperatorFlow.flow_mul_apply B.flow t A C
+
+end Bridge
+
 end InfoGeometry.Krein.HestenesAnalyticKMSBridge

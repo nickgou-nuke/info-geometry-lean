@@ -537,7 +537,7 @@ derived later from polarization choices.
 theorem car_realization_of_clifford
     (M : RealMajorana.RealMajoranaDatum (S := DoubledSpace E))
     (T : RealMajorana.RealBogoliubovTransform (S := DoubledSpace E) M) :
-    RealMajorana.MajoranaCARWitness
+    RealMajorana.MajoranaCAR
       (S := DoubledSpace E)
       (fun u v => inner ℝ u v)
       (RealMajorana.RealBogoliubovTransform.transportGamma (T := T)) := by
@@ -610,10 +610,10 @@ theorem projectorSuperPair_of_chiralityPolarization
 Adapter from the algebraic real-Majorana CAR property to the continuous Fock-side
 CAR pair property on doubled space.
 -/
-theorem isCARPair_of_linear_CARWitness
+theorem isCARPair_of_linear_CARRelation
     (a adag : FockEnd E)
     (hLinearCAR :
-      RealMajoranaCategory.CARWitness
+      RealMajoranaCategory.CARRelation
         (RealMajoranaCategory.cl11DoubledCore E)
         a.toLinearMap adag.toLinearMap) :
     IsCARPair (E := E) a adag := by
@@ -762,7 +762,7 @@ theorem cliffordConcreteIsCARPair :
     IsCARPair (E := E)
       (cliffordConcreteAnnihilation (E := E))
       (cliffordConcreteCreation (E := E)) := by
-  apply isCARPair_of_linear_CARWitness (E := E)
+  apply isCARPair_of_linear_CARRelation (E := E)
   simpa using (RealMajoranaCategory.car_realization_of_clifford_concrete (E := E))
 
 end CliffordCAR

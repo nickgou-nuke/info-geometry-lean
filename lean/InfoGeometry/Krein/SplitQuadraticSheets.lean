@@ -92,6 +92,18 @@ omit [CompleteSpace E] in
     change spectral_epsilon (E := E) u = -u
     apply DoubledSpace.ext <;> simp [spectral_epsilon, hfst]
 
+/-- The positive and negative eigensheets overlap only at the zero vector. -/
+theorem mem_plusSheet_and_minusSheet_iff_eq_zero (u : H₂) :
+    u ∈ plusSheet (E := E) ∧ u ∈ minusSheet (E := E) ↔ u = 0 := by
+  constructor
+  · rintro ⟨hp, hm⟩
+    apply DoubledSpace.ext
+    · simpa [mem_minusSheet_iff_fst_eq_zero (E := E) u |>.mp hm]
+    · simpa [mem_plusSheet_iff_snd_eq_zero (E := E) u |>.mp hp]
+  · intro hu
+    subst u
+    constructor <;> simp [plusSheet, minusSheet, spectral_epsilon]
+
 omit [CompleteSpace E] in
 theorem eq_plusPoint_of_mem_plusSheet {u : H₂} (hu : u ∈ plusSheet (E := E)) :
     u = plusPoint (E := E) (WithLp.fst u) := by
@@ -123,6 +135,38 @@ theorem minusPoint_sub (ξ η : E) :
     simp [minusPoint]
   · rw [WithLp.sub_snd]
     simp [minusPoint]
+
+omit [InnerProductSpace ℝ E] [CompleteSpace E] in
+theorem plusPoint_injective :
+    Function.Injective (plusPoint (E := E)) := by
+  intro x y h
+  have hfst := congrArg WithLp.fst h
+  simpa using hfst
+
+omit [InnerProductSpace ℝ E] [CompleteSpace E] in
+theorem minusPoint_injective :
+    Function.Injective (minusPoint (E := E)) := by
+  intro ξ η h
+  have hsnd := congrArg WithLp.snd h
+  simpa using hsnd
+
+omit [CompleteSpace E] in
+theorem mem_plusSheet_iff_exists_plusPoint (u : H₂) :
+    u ∈ plusSheet (E := E) ↔ ∃ x : E, u = plusPoint (E := E) x := by
+  constructor
+  · intro hu
+    exact ⟨WithLp.fst u, eq_plusPoint_of_mem_plusSheet (E := E) hu⟩
+  · rintro ⟨x, rfl⟩
+    exact plusPoint_mem_plusSheet (E := E) x
+
+omit [CompleteSpace E] in
+theorem mem_minusSheet_iff_exists_minusPoint (u : H₂) :
+    u ∈ minusSheet (E := E) ↔ ∃ ξ : E, u = minusPoint (E := E) ξ := by
+  constructor
+  · intro hu
+    exact ⟨WithLp.snd u, eq_minusPoint_of_mem_minusSheet (E := E) hu⟩
+  · rintro ⟨ξ, rfl⟩
+    exact minusPoint_mem_minusSheet (E := E) ξ
 
 theorem kreinInner_plusPoint (x y : E) :
     KreinSpace.kreinInner (H := H₂) (plusPoint (E := E) x) (plusPoint (E := E) y)

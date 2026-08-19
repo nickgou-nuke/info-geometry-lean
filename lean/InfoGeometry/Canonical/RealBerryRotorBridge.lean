@@ -200,11 +200,15 @@ structure SplitRealBerryRotorShadow
   boundaryRotor : R
   supertraceReadout : ℝ
   superBerezinianReadout : ℝ
-  supervolumePotential : ℝ
-  supervolumePotential_eq :
-    supervolumePotential = supertraceReadout
 
 namespace SplitRealBerryRotorShadow
+
+def supervolumePotential
+    {R Bivector : Type*}
+    [Group R] [TopologicalSpace R]
+    [NormedAddCommGroup Bivector] [NormedSpace ℝ Bivector]
+    (S : SplitRealBerryRotorShadow (R := R) (Bivector := Bivector)) : ℝ :=
+  S.supertraceReadout
 
 @[simp]
 theorem supervolumePotential_eq_supertraceReadout
@@ -214,7 +218,7 @@ theorem supervolumePotential_eq_supertraceReadout
     (S : SplitRealBerryRotorShadow
       (R := R) (Bivector := Bivector)) :
     S.supervolumePotential = S.supertraceReadout :=
-  S.supervolumePotential_eq
+  rfl
 
 end SplitRealBerryRotorShadow
 

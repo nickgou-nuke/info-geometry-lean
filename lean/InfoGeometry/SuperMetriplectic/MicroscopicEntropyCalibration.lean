@@ -226,7 +226,7 @@ theorem entropy_area_count_packet
 end MicroscopicEntropyCalibration
 
 /--
-Finite-coordinate holographic simulator readout socket.
+Finite-coordinate holographic simulator readout interface.
 It is intentionally a finite map from boundary coefficients to bulk modes;
 adding normalization constraints can be done by supplying a predicate on the domain.
 -/

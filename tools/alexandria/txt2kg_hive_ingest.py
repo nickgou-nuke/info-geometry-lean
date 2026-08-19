@@ -37,8 +37,8 @@ from tools.alexandria.arango_ingest import (
 )
 from tools.alexandria.structural_chunking import tokenize
 from tools.infra.arango_env import (
+    alexandria_arango_endpoint,
     arango_database,
-    arango_endpoint,
     arango_password,
     arango_username,
     load_repo_arango_env,
@@ -832,7 +832,7 @@ def source_kind_for_predigestion(source_rows: list[dict[str, Any]], override: st
 
 def run_pipeline(args: argparse.Namespace) -> dict[str, Any]:
     load_repo_arango_env(REPO_ROOT)
-    arango_endpoint_resolved = args.arango_endpoint or arango_endpoint()
+    arango_endpoint_resolved = args.arango_endpoint or alexandria_arango_endpoint()
     arango_database_resolved = args.arango_database or arango_database()
     arango_username_resolved = args.arango_username or arango_username()
     arango_password_resolved = args.arango_password or arango_password()

@@ -5,16 +5,16 @@ open Matrix Complex
 /-!
 # Spinor monodromy stepping stone
 
-This file formalizes the abstract bridge requested after the concrete
-biquaternion/braid witnesses:
+This file formalizes the abstract bridge requested after concrete
+biquaternion/braid constructions:
 
 * a half-twist operator whose square is the full twist;
 * spinorial monodromy means the full twist acts by `-I`;
 * consequently the half-twist is a square root of negative identity;
 * logarithm branches are shifted by integral `2πi` data.
 
-The point is deliberately theorem-honest and reusable: later braid/KZ/cyclic-cover
-models can instantiate this socket with their concrete monodromy matrices.
+The point is deliberately theorem-honest and reusable for later concrete
+monodromy matrices.
 -/
 
 noncomputable section

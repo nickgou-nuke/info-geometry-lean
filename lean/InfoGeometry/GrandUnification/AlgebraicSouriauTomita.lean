@@ -99,17 +99,6 @@ def BoundaryWickAnomalySurface : Prop :=
             _root_.InfoGeometry.Canonical.BoundaryMatrixUnitWick.occ c) • (1 : A)
         else 0)
 
-/--
-Owner target for the corrected algebraic Souriau--Tomita roadmap.
-
-This is not a `Nonempty` wrapper around supplied data.  It is a conjunction of
-already-proved theorem surfaces.
--/
-def AlgebraicSouriauTomitaTarget : Prop :=
-  H1VolumeCocycleSurface ∧
-    MassieuVolumeSeparationSurface ∧
-      OperatorialConnesTransportSurface ℝ ∧
-        BoundaryWickAnomalySurface
 
 /-- The concrete H¹ diagonal volume-cocycle surface is available. -/
 theorem h1VolumeCocycleSurface :
@@ -144,8 +133,8 @@ Constructor for the corrected roadmap target.
 
 No external data are accepted: each component is discharged by its owner theorem.
 -/
-theorem constructAlgebraicSouriauTomitaTarget :
-    AlgebraicSouriauTomitaTarget := by
+theorem algebraicSouriauTomita_properties :
+    (H1VolumeCocycleSurface ∧ MassieuVolumeSeparationSurface ∧ OperatorialConnesTransportSurface ℝ ∧ BoundaryWickAnomalySurface) := by
   refine ⟨?_, ?_, ?_, ?_⟩
   · exact h1VolumeCocycleSurface
   · exact massieuVolumeSeparationSurface

@@ -92,7 +92,7 @@ theorem flow_mul_apply
 
 end OperatorFlow
 
-/-! ## 2. KMS state socket -/
+/-! ## 2. KMS state -/
 
 /--
 KMS state at inverse temperature `beta`.
@@ -470,12 +470,12 @@ def reduced_state_is_kms :
 
 end HorizonKMSThermodynamics
 
-/-! ## 5. Modular KMS theorem socket -/
+/-! ## 5. Modular KMS theorem -/
 
 /--
 A modular KMS datum.
 
-This is the formal Tomita-Takesaki socket: the state restricted to the
+This is the formal Tomita-Takesaki relation: the state restricted to the
 observable algebra is KMS for its modular flow.
 -/
 structure ModularKMSDatum
@@ -488,6 +488,26 @@ structure ModularKMSDatum
 
   /-- The modular/KMS state. -/
   kms : KMSState Op modularFlow beta
+
+theorem ModularKMSDatum.flow_invariant
+    {Op : Type*} [AddMonoid Op] [Monoid Op]
+    (M : ModularKMSDatum Op) (t : ℝ) (x : Op) :
+    M.kms.state.eval (M.modularFlow.flow t x) = M.kms.state.eval x :=
+  M.kms.flow_invariant t x
+
+theorem ModularKMSDatum.correlation_lower_boundary
+    {Op : Type*} [AddMonoid Op] [Monoid Op]
+    (M : ModularKMSDatum Op) (A B : Op) (t : ℝ) :
+    M.kms.correlation A B (t : ℂ) =
+      M.kms.state.eval (A * M.modularFlow.flow t B) :=
+  M.kms.correlation_lower_boundary A B t
+
+theorem ModularKMSDatum.correlation_upper_boundary
+    {Op : Type*} [AddMonoid Op] [Monoid Op]
+    (M : ModularKMSDatum Op) (A B : Op) (t : ℝ) :
+    M.kms.correlation A B ((t : ℂ) + (M.beta : ℂ) * Complex.I) =
+      M.kms.state.eval (M.modularFlow.flow t B * A) :=
+  M.kms.correlation_upper_boundary A B t
 
 
 /-! ## 6. Horizon / Unruh / Hawking calibration -/
@@ -522,7 +542,7 @@ modular KMS state plus a flow calibration yields a comparison readout.
 -/
 structure EmergentThermalRadiation
     (Op : Type*) [AddMonoid Op] [Monoid Op] where
-  /-- Modular KMS theorem socket. -/
+  /-- Modular KMS theorem. -/
   modularKMS : ModularKMSDatum Op
 
   /-- Flow calibration. -/
@@ -554,6 +574,18 @@ def modularThermalState :
 @[simp] theorem modularThermalState_eq_kms :
     E.modularThermalState = E.modularKMS.kms :=
   rfl
+
+theorem modular_flow_eq_calibrated_physical_flow
+    (t : ℝ) (x : Op) :
+    E.modularKMS.modularFlow.flow t x =
+      E.horizonCalibration.physicalFlow.flow
+        (E.horizonCalibration.time_rescaling * t) x :=
+  E.horizonCalibration.modular_eq_physical_after_rescaling t x
+
+theorem physicalBeta_eq_rescaled_modularBeta :
+    E.physicalBeta =
+      E.horizonCalibration.time_rescaling * E.modularKMS.beta :=
+  E.beta_calibration
 
 end EmergentThermalRadiation
 
@@ -804,7 +836,7 @@ structure KMSAnalyticBoundary
 /--
 Tomita-KMS datum.
 
-This is the abstract socket for the Tomita-Takesaki theorem: a faithful normal
+This is the abstract interface for the Tomita-Takesaki theorem: a faithful normal
 state is KMS with respect to its modular automorphism group.  The analytic
 theorem itself is supplied here as the `kms` property.
 -/
@@ -1218,7 +1250,7 @@ theorem thermal_eval_eq_global_visible_eval
 
 end ObservableKMSReduction
 
-/-! ## 6. Flow-calibration socket -/
+/-! ## 6. Flow calibration -/
 
 /--
 Geometric calibration turning modular KMS thermality into a comparison readout.

@@ -67,7 +67,7 @@ LEAN_DECL_NAME = re.compile(
 PY_IMPORT_OR_ASSIGN = (ast.Import, ast.ImportFrom, ast.Assign, ast.AnnAssign)
 DEBT_RE = re.compile(
     r"\b(?:open debt|closure debt|remaining debt|fake debt|todo|fixme|sorry|admit|"
-    r"axiom|external certificate|certificate socket|unproven)\b",
+    r"axiom|external certificate|certificate interface|unproven)\b",
     re.IGNORECASE,
 )
 FORMULA_RE = re.compile(

@@ -14,7 +14,7 @@ Do not hallucinate external dependencies. You must strictly align with the provi
 
 === EXTRACTED CAUSAL CONE ===
 
-Declaration: InfiniteLightConeConfColimit.AnalyticColimitComparisonSocket.deRhamCommutesWithFilteredColimit
+Declaration: InfiniteLightConeConfColimit.AnalyticColimitComparisonDeferredInterface.deRhamCommutesWithFilteredColimit
 ----------------------------------------
 Declaration: InfiniteLightConeConfColimit.deRhamCommutesWithFilteredColimit
 ----------------------------------------

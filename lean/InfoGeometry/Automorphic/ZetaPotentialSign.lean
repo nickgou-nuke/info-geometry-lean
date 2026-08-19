@@ -263,23 +263,4 @@ end ZetaJordanPotentialCorrespondence
 
 /-! ## 5. Owner targets -/
 
-/--
-Owner target for constructing a calibrated arithmetic zeta/L-potential.
--/
-def ArithmeticPotentialOwnerTarget
-    (S : Type uS) : Prop :=
-  ∃ L : EulerProductDatum S,
-    Nonempty (PotentialSignCalibration L)
-
-/--
-Owner target for matching a geometric Jordan barrier to an arithmetic
-Euler/L-function potential.
--/
-def ZetaJordanCorrespondenceOwnerTarget
-    (X : Type uX)
-    (S : Type uS) : Prop :=
-  ∃ (J : JordanBarrierDatum X)
-    (L : EulerProductDatum S),
-      Nonempty (ZetaJordanPotentialCorrespondence J L)
-
 end InfoGeometry.Automorphic.ZetaPotentialSign

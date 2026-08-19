@@ -12,15 +12,24 @@ involution `eta` and a self-adjoint grading `gamma`; it does not assert a
 Hilbert-space representation, a Fredholm index, or a Kasparov product.
 -/
 
-structure KasparovKreinData (A : Type*) [Ring A] [StarRing A] where
+structure KasparovKreinDataRaw (A : Type*) [Ring A] [StarRing A] where
   eta : A
-  eta_sq : eta * eta = 1
-  eta_star : star eta = eta
   gamma : A
-  gamma_sq : gamma * gamma = 1
-  gamma_star : star gamma = gamma
+
+def KasparovKreinDataLaws {A : Type*} [Ring A] [StarRing A]
+    (K : KasparovKreinDataRaw A) : Prop :=
+  K.eta * K.eta = 1 ∧
+  star K.eta = K.eta ∧
+  K.gamma * K.gamma = 1 ∧
+  star K.gamma = K.gamma
+
+def KasparovKreinData (A : Type*) [Ring A] [StarRing A] :=
+  { K : KasparovKreinDataRaw A // KasparovKreinDataLaws K }
 
 namespace KasparovKreinData
+
+def eta {A : Type*} [Ring A] [StarRing A] (K : KasparovKreinData A) : A := K.1.eta
+def gamma {A : Type*} [Ring A] [StarRing A] (K : KasparovKreinData A) : A := K.1.gamma
 
 variable {A : Type*} [Ring A] [StarRing A]
 variable (K : KasparovKreinData A)
@@ -29,25 +38,31 @@ variable (K : KasparovKreinData A)
 def diracAdjoint (T : A) : A :=
   K.eta * star T * K.eta
 
-theorem diracAdjoint_involution (T : A) :
+theorem diracAdjoint_involution (T : A)
+    :
     diracAdjoint K (diracAdjoint K T) = T := by
   dsimp [diracAdjoint]
-  simp only [star_mul, K.eta_star, star_star]
+  have hstar : star K.eta = K.eta := K.2.2.1
+  have heta : K.eta * K.eta = 1 := K.2.1
+  simp only [star_mul, star_star]
+  rw [hstar]
   calc
     K.eta * (K.eta * (T * K.eta)) * K.eta
         = (K.eta * K.eta) * T * (K.eta * K.eta) := by
             simp [mul_assoc]
-    _ = 1 * T * 1 := by rw [K.eta_sq]
+    _ = 1 * T * 1 := by rw [heta]
     _ = T := by simp
 
-theorem diracAdjoint_mul (T S : A) :
+theorem diracAdjoint_mul (T S : A)
+    :
     diracAdjoint K (T * S) = diracAdjoint K S * diracAdjoint K T := by
   dsimp [diracAdjoint]
   rw [star_mul]
+  have heta : K.eta * K.eta = 1 := K.2.1
   calc
     K.eta * (star S * star T) * K.eta
         = K.eta * star S * (K.eta * K.eta) * star T * K.eta := by
-            rw [K.eta_sq]
+            rw [heta]
             simp only [mul_one, mul_assoc]
     _ = (K.eta * star S * K.eta) *
           (K.eta * star T * K.eta) := by

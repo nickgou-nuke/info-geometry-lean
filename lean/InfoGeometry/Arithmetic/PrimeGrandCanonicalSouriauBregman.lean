@@ -4,9 +4,6 @@ import InfoGeometry.Arithmetic.PrimeGrandCanonicalMassieuBridge
 import InfoGeometry.Arithmetic.PrimonFinite
 import InfoGeometry.Arithmetic.ZetaSouriauComplexLift
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Potential.Thermo
 import InfoGeometry.Thermodynamics.SouriauTemperature
 
@@ -21,7 +18,7 @@ This file keeps the theorem-carrying part finite and algebraic:
 * finite fermionic / bosonic / signed-Moebius partition readouts;
 * Massieu-Planck and grand-potential scalar readouts;
 * re-export of the existing finite Legendre/Bregman thermodynamic bridge;
-* abstract sockets for the analytic zeta identifications and symmetry group.
+* abstract interfaces for the analytic zeta identifications and symmetry group.
 
 No infinite Euler product, analytic continuation, Lee-Yang theorem,
 Hilbert--Polya operator, or RH claim is made here.
@@ -89,7 +86,7 @@ def complexBosonGrandPartition
     (energy mu : ℕ → ℝ) : ℂ :=
   ZB P.primes (complexGrandModeWeight β energy mu)
 
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem complexFermionGrandPartition_eq_prod
   (P : PrimeRegister) (β : SouriauTemperature)
   (energy mu : ℕ → ℝ) :
@@ -98,7 +95,7 @@ theorem complexFermionGrandPartition_eq_prod
   simpa [complexFermionGrandPartition] using
     (ZF_eq_prod P.primes (complexGrandModeWeight β energy mu))
 
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem complexFermionGrandSupertrace_eq_prod
   (P : PrimeRegister) (β : SouriauTemperature)
   (energy mu : ℕ → ℝ) :
@@ -107,7 +104,7 @@ theorem complexFermionGrandSupertrace_eq_prod
   simpa [complexFermionGrandSupertrace] using
     (STrF_eq_prod P.primes (complexGrandModeWeight β energy mu))
 
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem complexBosonGrandPartition_eq_prod_inv
     (P : PrimeRegister) (β : SouriauTemperature)
     (energy mu : ℕ → ℝ) :
@@ -121,7 +118,7 @@ lemma complexBosonGrandPartition_ne_zero
     complexBosonGrandPartition P β energy mu ≠ 0 := by
   exact ZB_ne_zero (modes := P.primes) (q := complexGrandModeWeight β energy mu) h
 
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem complexBoson_mul_signedFermionGrandSupertrace_eq_one
     (P : PrimeRegister) (β : SouriauTemperature)
     (energy mu : ℕ → ℝ)
@@ -144,7 +141,7 @@ def massieuPlanck (Z : ℂ) : ℂ :=
 def grandPotential (β Z : ℂ) : ℂ :=
   -β⁻¹ * massieuPlanck Z
 
-@[simp, bridge_target_tag, rep_depth thermo]
+@[simp, rep_depth thermo]
 theorem grandPotential_eq_neg_inv_beta_mul_massieu
     (β Z : ℂ) :
     grandPotential β Z = -β⁻¹ * massieuPlanck Z := rfl
@@ -157,7 +154,7 @@ Massieu bridge.
 
 The finite thermodynamic identities are re-exported from the existing real
 Legendre/Bregman layer.  The analytic zeta identifications remain explicit
-socket data.
+interface data.
 -/
 @[rep_depth transport]
 structure PrimeGrandCanonicalSouriauBregmanData where
@@ -215,6 +212,14 @@ def zetaPlaneAct : ZetaPlaneSymmetry → ℂ → ℂ
     zetaPlaneAct g (zetaPlaneAct g s) = s := by
   cases g <;> simp [zetaPlaneAct]
 
+@[simp]
+theorem zetaPlaneAct_functionalEquation_conjugation_commute (s : ℂ) :
+    zetaPlaneAct ZetaPlaneSymmetry.functionalEquation
+        (zetaPlaneAct ZetaPlaneSymmetry.conjugation s) =
+      zetaPlaneAct ZetaPlaneSymmetry.conjugation
+        (zetaPlaneAct ZetaPlaneSymmetry.functionalEquation s) := by
+  simp [zetaPlaneAct]
+
 /-- Critical line preserved by the finite symmetry package. -/
 theorem zetaPlaneAct_preserves_criticalLine
     (g : ZetaPlaneSymmetry) {s : ℂ}
@@ -222,25 +227,22 @@ theorem zetaPlaneAct_preserves_criticalLine
     (zetaPlaneAct g s).re = (1 : ℝ) / 2 := by
   cases g <;> simp [zetaPlaneAct, hs] <;> norm_num
 
-/-! ## 5. Souriau Lie-group thermodynamics socket -/
-
-/--
-Abstract Souriau thermodynamics of a symmetry group acting on the zeta plane.
-
-The group action and invariance are recorded as theorem-safe interface data.
--/
-@[socket_debt_tag, rep_depth transport]
-structure SouriauZetaLieGroupThermodynamics
-    (G : Type*) [Group G] where
-  actOnBeta : G → ℂ → ℂ
-  one_act : ∀ β, actOnBeta 1 β = β
-  mul_act : ∀ g h β, actOnBeta (g * h) β = actOnBeta g (actOnBeta h β)
-  partition : ℂ → ℂ
-  massieu : ℂ → ℂ
-  massieu_eq_log_partition : ∀ β, massieu β = Complex.log (partition β)
-  isThermalSymmetry : G → Prop
-  partition_invariant :
-    ∀ g β, isThermalSymmetry g → partition (actOnBeta g β) = partition β
+/-! ## 5. Souriau Lie-group thermodynamics -/
+/-- Thermal symmetry transports the calibrated Massieu readout unchanged. -/
+@[rep_depth thermo]
+theorem massieu_invariant_of_thermal_symmetry
+    {G : Type*} [Group G]
+    (actOnBeta : G → ℂ → ℂ)
+    (partition massieu : ℂ → ℂ)
+    (isThermalSymmetry : G → Prop)
+    (massieu_eq_log_partition : ∀ β, massieu β = Complex.log (partition β))
+    (partition_invariant :
+      ∀ g β, isThermalSymmetry g → partition (actOnBeta g β) = partition β)
+    (g : G) (β : ℂ)
+    (hg : isThermalSymmetry g) :
+    massieu (actOnBeta g β) = massieu β := by
+  rw [massieu_eq_log_partition, massieu_eq_log_partition,
+    partition_invariant g β hg]
 
 /-! ## 6. Prime specialization -/
 
@@ -271,7 +273,7 @@ def finitePrimeGrandPotential
     (P : PrimeRegister) (β : SouriauTemperature) : ℂ :=
   grandPotential β.s (finitePrimeBosonGrandPartition P β)
 
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem finitePrimeBosonGrandPartition_eq_prod
     (P : PrimeRegister) (β : SouriauTemperature) :
     finitePrimeBosonGrandPartition P β =
@@ -286,7 +288,7 @@ lemma finitePrimeBosonGrandPartition_ne_zero
   exact complexBosonGrandPartition_ne_zero
     (P := P) (β := β) (energy := primeEnergy) (mu := zeroChemicalPotential) h
 
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem finitePrimeSignedGrandSupertrace_eq_prod
     (P : PrimeRegister) (β : SouriauTemperature) :
     finitePrimeSignedGrandSupertrace P β =
@@ -294,17 +296,34 @@ theorem finitePrimeSignedGrandSupertrace_eq_prod
   simpa [finitePrimeSignedGrandSupertrace] using
     (complexFermionGrandSupertrace_eq_prod P β primeEnergy zeroChemicalPotential)
 
-@[bridge_target_tag, rep_depth thermo]
+@[rep_depth thermo]
 theorem finitePrimeGrandPotential_eq
     (P : PrimeRegister) (β : SouriauTemperature) :
     finitePrimeGrandPotential P β =
       -β.s⁻¹ * massieuPlanck (finitePrimeBosonGrandPartition P β) := by
   rfl
 
+/--
+The prime-specialized finite bosonic partition cancels its signed
+Möbius/fermionic supertrace.
+
+This is the concrete prime-register instance of the general finite
+Souriau cancellation above; it does not assert an infinite Euler identity.
+-/
+@[rep_depth thermo]
+theorem finitePrimeBosonGrandPartition_mul_signedGrandSupertrace_eq_one
+    (P : PrimeRegister) (β : SouriauTemperature)
+    (h : ∀ p ∈ P.primes,
+      1 - complexGrandModeWeight β primeEnergy zeroChemicalPotential p ≠ 0) :
+    finitePrimeBosonGrandPartition P β *
+        finitePrimeSignedGrandSupertrace P β = 1 := by
+  exact complexBoson_mul_signedFermionGrandSupertrace_eq_one
+    P β primeEnergy zeroChemicalPotential h
+
 /-! ## 7. Owner theorem -/
 
 /-- The finite Souriau/Bregman owner target is proved. -/
-theorem primeGrandCanonicalSouriauBregmanOwnerTarget :
+theorem primeGrandCanonicalSouriauBregman_properties :
     ∀ (B : PrimeGrandCanonicalSouriauBregmanData),
       let M : MassieuBridge :=
         B.massieuBridge

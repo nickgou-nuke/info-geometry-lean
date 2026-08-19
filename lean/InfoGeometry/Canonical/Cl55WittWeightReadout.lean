@@ -29,6 +29,23 @@ def positiveTwoWeight (i j : Fin 5) : Fin 5 → ℤ :=
 def negativeTwoWeight (i j : Fin 5) : Fin 5 → ℤ :=
   fun k => (-if k = i then 1 else 0) + (-if k = j then 1 else 0)
 
+theorem annihilationWeight_eq_neg_creationWeight (i : Fin 5) :
+    annihilationWeight i = -creationWeight i := by
+  funext k
+  by_cases h : k = i <;> simp [annihilationWeight, creationWeight, h]
+
+theorem zeroWeight_eq_creation_add_annihilation (i j : Fin 5) :
+    zeroWeight i j = creationWeight i + annihilationWeight j := by
+  funext k
+  simp only [zeroWeight, creationWeight, annihilationWeight, Pi.add_apply]
+  split_ifs <;> ring
+
+theorem negativeTwoWeight_eq_neg_positiveTwoWeight (i j : Fin 5) :
+    negativeTwoWeight i j = -positiveTwoWeight i j := by
+  funext k
+  simp [negativeTwoWeight, positiveTwoWeight]
+  ring
+
 theorem diagonal_creation_weight (k i : Fin 5) :
     bracket (E k k) (creation i) =
       (creationWeight i k : ℝ) • creation i := by

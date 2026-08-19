@@ -142,10 +142,10 @@ theorem penalty_le_energy_drop :
 
 end OperatorJKOArgmin
 
-/-! ## 3. Argmin backend socket -/
+/-! ## 3. Argmin backend interface -/
 
 /--
-Backend socket for selecting deterministic JKO argmins.
+Backend interface for selecting deterministic JKO argmins.
 
 This is a property layer: a concrete compactness/convexity argument may fill it,
 but no such existence theorem is proved here.

@@ -1,4 +1,5 @@
 import InfoGeometry.Physics.LorentzChiralCuntzBridge
+import InfoGeometry.Physics.ChiralPoincareSemidirect
 
 /-!
 # Hestenes-style spacetime algebra over the Cuntz-deformed operator layer
@@ -25,6 +26,7 @@ namespace InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
 open Matrix
 open ChiralPoincareSouriauBridge
 open LorentzChiralCuntzBridge
+open ChiralPoincareSemidirect
 
 /-- Local polarization pairing from the quadratic form. -/
 def hestenesPair (P Q : FourMomentum) : ℂ :=
@@ -39,13 +41,36 @@ theorem hestenesPair_apply (P Q : FourMomentum) :
   simp [hestenesPair, addFourMomentum, minkowskiSq]
   ring
 
-/-- The coordinate duals recover the components of a soldered paravector. -/
-theorem coordinate_duals_recover (P : FourMomentum) :
-    recoverE (pauliMomentum P) = P.E ∧
-    recoverPx (pauliMomentum P) = P.px ∧
-    recoverPy (pauliMomentum P) = P.py ∧
-    recoverPz (pauliMomentum P) = P.pz := by
-  simp
+/-! The polarization laws of the finite Minkowski quadratic. -/
+
+theorem hestenesPair_comm (P Q : FourMomentum) :
+    hestenesPair P Q = hestenesPair Q P := by
+  rw [hestenesPair_apply, hestenesPair_apply]
+  ring
+
+theorem hestenesPair_zero_left (Q : FourMomentum) :
+    hestenesPair zeroFourMomentum Q = 0 := by
+  rw [hestenesPair_apply]
+  simp [zeroFourMomentum]
+
+theorem hestenesPair_zero_right (P : FourMomentum) :
+    hestenesPair P zeroFourMomentum = 0 := by
+  rw [hestenesPair_apply]
+  simp [zeroFourMomentum]
+
+theorem hestenesPair_add_left (P Q R : FourMomentum) :
+    hestenesPair (addFourMomentum P Q) R =
+      hestenesPair P R + hestenesPair Q R := by
+  rw [hestenesPair_apply, hestenesPair_apply, hestenesPair_apply]
+  simp [addFourMomentum]
+  ring
+
+theorem hestenesPair_add_right (P Q R : FourMomentum) :
+    hestenesPair P (addFourMomentum Q R) =
+      hestenesPair P Q + hestenesPair P R := by
+  rw [hestenesPair_apply, hestenesPair_apply, hestenesPair_apply]
+  simp [addFourMomentum]
+  ring
 
 /-- Re-soldering the coordinate readouts of an operator recovers that operator. -/
 theorem coordinate_operator_roundtrip (X : M2C) :
@@ -76,7 +101,8 @@ theorem hestenes_poincare_group_law
   exact chiralPoincareAct_comp G H P
 
 /-- Fierz completeness supplies the finite soldering completeness relation. -/
-theorem hestenes_fierz_completeness : chiralFierzStatement := by
+theorem hestenes_fierz_completeness :
+    InfoGeometry.Physics.LorentzChiralCuntzBridge.chiralFierzStatement := by
   exact FierzIdentities.chiral_fierz_identity
 
 /-! ## Pauli/Clifford finite spatial spine -/
@@ -144,15 +170,16 @@ theorem hestenes_cuntz_deformed_super_poincare (β : ℂ) (x y : M2C) :
 
 /-- Lorentz transport of the Cuntz-deformed operator super-Poincaré relation. -/
 theorem hestenes_cuntz_lorentz_transport
-    (g : SL2C) (S : CuntzDeformedSuperPoincare.ChiralOperatorPresentation) :
-    CuntzDeformedSuperPoincare.transportedRelation
-      (spinMatrix g) (spinMatrix g⁻¹) S := by
-  exact sl2c_transportedRelation_holds g S
+    (g : SL2C) (S : CuntzDeformedSuperPoincare.ChiralOperatorPresentation)
+    (hS : CuntzDeformedSuperPoincare.ChiralOperatorPresentationLaws S) :
+    transportedRelation (spinMatrix g) (spinMatrix g⁻¹) S := by
+  exact sl2c_transportedRelation_holds g S hS
 
 /-- Consolidated finite Hestenes/Cuntz spacetime algebra package. -/
 theorem hestenes_cuntz_spacetime_synthesis
     (g : SL2C) (G H : ChiralPoincareElement) (P Q : FourMomentum)
     (S : CuntzDeformedSuperPoincare.ChiralOperatorPresentation)
+    (hS : CuntzDeformedSuperPoincare.ChiralOperatorPresentationLaws S)
     (β : ℂ) (x y : M2C) :
     recoverE (pauliMomentum P) = P.E ∧
     recoverPx (pauliMomentum P) = P.px ∧
@@ -177,13 +204,13 @@ theorem hestenes_cuntz_spacetime_synthesis
       (1 - β) • SupergradedCuntzBdG.lieBracket x y +
         β • SupergradedCuntzBdG.jordanProduct x y := by
   constructor
-  · exact (coordinate_duals_recover P).1
+  · exact recoverE_pauliMomentum P
   constructor
-  · exact (coordinate_duals_recover P).2.1
+  · exact recoverPx_pauliMomentum P
   constructor
-  · exact (coordinate_duals_recover P).2.2.1
+  · exact recoverPy_pauliMomentum P
   constructor
-  · exact (coordinate_duals_recover P).2.2.2
+  · exact recoverPz_pauliMomentum P
   constructor
   · exact hestenes_metric_from_determinant P
   constructor
@@ -207,8 +234,8 @@ theorem hestenes_cuntz_spacetime_synthesis
   constructor
   · exact pauli_sigma2_anti_sigma3
   constructor
-  · exact hestenes_cuntz_lorentz_transport g S
-  · exact hestenes_cuntz_deformed_super_poincare β x y
+  · exact hestenes_cuntz_lorentz_transport g S hS
+  · exact CuntzDeformedSuperPoincare.cuntzDeformed_odd_odd_lie_jordan_split β x y
 
 end InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
 

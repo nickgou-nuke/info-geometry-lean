@@ -30,7 +30,7 @@ open InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 open InfoGeometry.OperatorAlgebra.Thermodynamics
 open InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 
-/-! ## 1. Modular KMS readout socket -/
+/-! ## 1. Modular KMS readout -/
 
 /--
 A KMS readout datum for a modular or horizon flow.
@@ -47,11 +47,8 @@ structure KMSReadoutDatum
   /-- State or weight readout. -/
   state : Obs → ℝ
 
-  /-- Inverse temperature. -/
-  beta : ℝ
-
-  /-- Positive inverse temperature. -/
-  beta_pos : 0 < beta
+  /-- Positive inverse temperature, represented by its native subtype. -/
+  beta : {b : ℝ // 0 < b}
 
   /-- Zero-time flow law. -/
   flow_zero :
@@ -81,8 +78,12 @@ theorem invariant
 
 /-- The inverse temperature is nonzero. -/
 theorem beta_ne_zero :
-    K.beta ≠ 0 :=
-  ne_of_gt K.beta_pos
+    (K.beta : ℝ) ≠ 0 :=
+  ne_of_gt K.beta.property
+
+@[simp] theorem beta_pos :
+    (0 : ℝ) < K.beta :=
+  K.beta.property
 
 /-- Re-export zero-time flow. -/
 theorem flow_zero_apply
@@ -110,46 +111,37 @@ gravity in the black-hole/Hawking case. Natural units are used:
 `β = 2π / κ`, hence `T = κ / 2π`.
 -/
 structure HorizonKMSNormalization where
-  /-- Acceleration or surface gravity. -/
-  surfaceGravity : ℝ
-
-  /-- Positive acceleration/surface gravity. -/
-  surfaceGravity_pos :
-    0 < surfaceGravity
-
-  /-- Inverse temperature. -/
-  beta : ℝ
-
-  /-- Temperature. -/
-  temperature : ℝ
-
-  /--
-  Modular/horizon normalization.
-
-  Natural units: `β = 2π / κ`.
-  -/
-  beta_eq_two_pi_over_surfaceGravity :
-    beta = (2 * Real.pi) / surfaceGravity
-
-  /--
-  Natural-unit temperature law.
-
-  `T = κ / 2π`.
-  -/
-  temperature_eq_surfaceGravity_over_two_pi :
-    temperature = surfaceGravity / (2 * Real.pi)
-
-  /--
-  Explicit horizon-modular calibration law.
-
-  Natural units: `β * κ = 2π`.
-  -/
-  horizon_modular_calibration :
-    beta * surfaceGravity = 2 * Real.pi
+  /-- Positive acceleration or surface gravity. -/
+  surfaceGravity : {κ : ℝ // 0 < κ}
 
 namespace HorizonKMSNormalization
 
 variable (N : HorizonKMSNormalization)
+
+/-- Inverse temperature determined by the positive surface gravity. -/
+noncomputable def beta : ℝ :=
+  (2 * Real.pi) / (N.surfaceGravity : ℝ)
+
+/-- Temperature determined by the positive surface gravity. -/
+noncomputable def temperature : ℝ :=
+  (N.surfaceGravity : ℝ) / (2 * Real.pi)
+
+theorem surfaceGravity_pos :
+    0 < (N.surfaceGravity : ℝ) :=
+  N.surfaceGravity.property
+
+theorem beta_eq_two_pi_over_surfaceGravity :
+    N.beta = (2 * Real.pi) / (N.surfaceGravity : ℝ) :=
+  rfl
+
+theorem temperature_eq_surfaceGravity_over_two_pi :
+    N.temperature = (N.surfaceGravity : ℝ) / (2 * Real.pi) :=
+  rfl
+
+theorem horizon_modular_calibration :
+    N.beta * (N.surfaceGravity : ℝ) = 2 * Real.pi := by
+  unfold beta
+  field_simp [ne_of_gt N.surfaceGravity_pos]
 
 /-- The calibrated inverse temperature is positive. -/
 theorem beta_pos :
@@ -170,7 +162,7 @@ theorem beta_mul_temperature_eq_one :
     N.beta_eq_two_pi_over_surfaceGravity,
     N.temperature_eq_surfaceGravity_over_two_pi
   ]
-  have hκ : N.surfaceGravity ≠ 0 :=
+  have hκ : (N.surfaceGravity : ℝ) ≠ 0 :=
     ne_of_gt N.surfaceGravity_pos
   have h2π : (2 * Real.pi : ℝ) ≠ 0 := by positivity
   field_simp [hκ, h2π]
@@ -193,7 +185,7 @@ theorem temperature_ne_zero :
 
 /-- Re-export the explicit horizon-modular calibration law. -/
 theorem horizon_modular_calibration_eq :
-    N.beta * N.surfaceGravity = 2 * Real.pi :=
+    N.beta * (N.surfaceGravity : ℝ) = 2 * Real.pi :=
   N.horizon_modular_calibration
 
 end HorizonKMSNormalization
@@ -416,19 +408,19 @@ The exterior KMS inverse temperature equals the horizon-normalized inverse
 temperature.
 -/
 theorem beta_eq_horizon_beta :
-    H.kms.beta = H.normalization.beta :=
+    (H.kms.beta : ℝ) = H.normalization.beta :=
   H.kms_beta_eq_horizon_beta
 
 /-- The horizon-normalized KMS inverse temperature is positive. -/
 theorem kms_beta_pos :
-    0 < H.kms.beta := by
+    0 < (H.kms.beta : ℝ) := by
   rw [H.beta_eq_horizon_beta]
   exact H.normalization.beta_pos
 
 /-- The KMS inverse temperature is nonzero. -/
 theorem kms_beta_ne_zero :
-    H.kms.beta ≠ 0 :=
-  ne_of_gt H.kms_beta_pos
+    (H.kms.beta : ℝ) ≠ 0 :=
+  ne_of_gt (kms_beta_pos H)
 
 /-- The horizon-normalized temperature is positive. -/
 theorem horizon_temperature_pos :
@@ -689,7 +681,7 @@ structure GradeTwoMemoryRecoveryData
 /--
 Horizon KMS memory bridge using the repository's thermodynamic/Tomita API.
 
-This is the stronger socket tying the five-grade ledger to:
+This is the stronger interface tying the five-grade ledger to:
 
 * a Tomita algebra/commutant split;
 * a ring-level modular flow;
@@ -850,88 +842,26 @@ theorem thermal_agrees_with_global_on_observable
 
 end HorizonKMSThermodynamicMemoryBridge
 
-/-! ## 9. Owner target -/
 
-/--
-Owner target for installing a horizon KMS five-grade bridge.
--/
-def HorizonKMSFiveGradeBridgeOwnerTarget
-    (J L Obs Memory : Type*)
-    [AddCommGroup J] [Module ℝ J]
-    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
-    [AddCommGroup Obs] [Module ℝ Obs]
-    [AddCommGroup Memory] [Module ℝ Memory] : Prop :=
-  ∀ G : FiveGrading L,
-  ∀ A : FiveGradeProjectedAccounting J L Obs G,
-  ∀ H : HorizonKMSFiveGradeBridge J L Obs Memory A,
-  ∀ x y : J,
-    H.heatCalibration.observedHeat (A.observedDefect x y) =
-      H.heatCalibration.memoryHeat
-        (H.ledger.memoryReadout (A.hiddenTotal x y))
+/-! ## 9. Native horizon KMS calibration theorem -/
 
-/-!
-The installed-owner name is retained as an API alias, but its proposition is
-owned by `HorizonKMSFiveGradeBridgeOwnerTarget` above.
--/
-abbrev HorizonKMSFiveGradeBridgeInstalledTarget
-    (J L Obs Memory : Type*)
-    [AddCommGroup J] [Module ℝ J]
-    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
-    [AddCommGroup Obs] [Module ℝ Obs]
-    [AddCommGroup Memory] [Module ℝ Memory] : Prop :=
-  HorizonKMSFiveGradeBridgeOwnerTarget J L Obs Memory
-
-/--
-The installed-owner target follows from the supplied bridge property.
--/
-theorem horizonKMSFiveGradeBridgeInstalledTarget
+theorem horizonKMSFiveGradeBridge_heat
     (J L Obs Memory : Type*)
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
     [AddCommGroup Obs] [Module ℝ Obs]
     [AddCommGroup Memory] [Module ℝ Memory] :
-    HorizonKMSFiveGradeBridgeInstalledTarget J L Obs Memory := by
+    ∀ G : FiveGrading L,
+    ∀ A : FiveGradeProjectedAccounting J L Obs G,
+    ∀ H : HorizonKMSFiveGradeBridge J L Obs Memory A,
+    ∀ x y : J,
+      H.heatCalibration.observedHeat (A.observedDefect x y) =
+        H.heatCalibration.memoryHeat
+          (H.ledger.memoryReadout (A.hiddenTotal x y)) := by
   intro G A H x y
   exact H.observed_heat_eq_gradeTwo_memory_heat x y
 
-/--
-Owner target for grade-two memory recovery.
-
-This remains separate from KMS thermality.
--/
-def GradeTwoMemoryRecoveryOwnerTarget
-    (J L Obs Memory : Type*)
-    [AddCommGroup J] [Module ℝ J]
-    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
-    [AddCommGroup Obs] [Module ℝ Obs]
-    [AddCommGroup Memory] [Module ℝ Memory] : Prop :=
-  ∀ G : FiveGrading L,
-  ∀ A : FiveGradeProjectedAccounting J L Obs G,
-  ∀ B : BlackHoleInformationLedger J L Obs Memory A,
-    ∃ exteriorData : Obs → Memory,
-      ∀ x y : J,
-        exteriorData (A.observedDefect x y) =
-          B.memoryReadout (A.hiddenTotal x y)
-
-/--
-Owner target for the thermodynamic/Tomita horizon KMS memory bridge.
--/
-def HorizonKMSThermodynamicMemoryBridgeOwnerTarget
-    (J L Obs Memory Op : Type*)
-    [AddCommGroup J] [Module ℝ J]
-    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
-    [AddCommGroup Obs] [Module ℝ Obs]
-    [AddCommGroup Memory] [Module ℝ Memory]
-    [Ring Op] : Prop :=
-  ∀ G : FiveGrading L,
-  ∀ A : FiveGradeProjectedAccounting J L Obs G,
-  ∀ H : HorizonKMSThermodynamicMemoryBridge (G := G) J L Obs Memory Op A,
-    H.beta = H.normalization.beta ∧
-      (∀ x y : J,
-        H.memoryToOperator (H.ledger.memoryReadout (A.hiddenTotal x y)) ∈ H.tomita.Mcomm)
-
 /-! ## 10. Exterior KMS flow calibration structure -/
-
 /--
 Exterior KMS flow calibration structure.
 

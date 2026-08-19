@@ -10,7 +10,7 @@ Source: `github-nick:nickgou-nuke/MD`, file `010.md`.
 
 Chapter 10 reviews gauge theory, Standard Model interpretation, spontaneous
 symmetry breaking, mass terms, hierarchy mechanisms, and anomaly cancellation.
-This owner formalizes only the finite algebraic socket:
+This owner formalizes only the finite algebraic core:
 
 * adjoint covariant-derivative commutator covariance under finite conjugation;
 * finite curvature/product transport under an explicit inverse gate;

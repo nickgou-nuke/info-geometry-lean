@@ -8,7 +8,7 @@ import Mathlib.Analysis.SpecialFunctions.Complex.Log
 
 import InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
 import InfoGeometry.Canonical.NilpotentItakuraSaito
-import InfoGeometry.Algebra.CuntzTraceSocketConjugation
+import InfoGeometry.Algebra.CuntzTraceConjugation
 import InfoGeometry.Algebra.FibonacciGrothendieckRing
 import InfoGeometry.Topology.AmplituhedronBoundary
 import Omega.CircleDimension.StokesHomologyExactSplitting
@@ -27,7 +27,7 @@ open Units
 
 open InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
 open InfoGeometry.Canonical.NilpotentItakuraSaito
-open InfoGeometry.Algebra.CuntzTraceSocketConjugation
+open InfoGeometry.Algebra.CuntzTraceConjugation
 open InfoGeometry.Algebra.FibonacciGrothendieckRing
 open Omega.CircleDimension.StokesHomologyExactSplitting
 open InfoGeometry.Topology.ThermodynamicGauge
@@ -41,10 +41,12 @@ namespace InfoGeometry.Lie.SpinorEquiv
     divergence, which under the bridge becomes `Tr(F ∧ F)` — the second Chern form. -/
 theorem araki_itakura_is_curvature_form :
     ∀ (P : NoncommutativeItakuraSaitoModel (Matrix (Fin 2) (Fin 2) ℂ))
+      (hzero : ∀ X : Matrix (Fin 2) (Fin 2) ℂ,
+        P.readout.readout (P.readout.product X 0) = 0)
       (X : Matrix (Fin 2) (Fin 2) ℂ),
       P.divergence X X = 0 := by
-  intro P X
-  exact P.divergence_self X
+  intro P hzero X
+  exact P.divergence_self hzero X
 
 /-- 2. **Thermodynamic Gauge** → Connection 1-form `A`
     The `thermodynamic_gauge_connection` IS a connection 1-form;

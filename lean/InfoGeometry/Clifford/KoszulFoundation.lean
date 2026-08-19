@@ -22,6 +22,37 @@ variable {R : Type*} [CommRing R]
 variable {M : Type*} [AddCommGroup M] [Module R M]
 variable {Q : QuadraticForm R M}
 
+section TwoVectorGradeSplit
+
+variable {K : Type*} [Field K] [CharZero K]
+variable {N : Type*} [AddCommGroup N] [Module K N]
+variable {P : QuadraticForm K N}
+
+/-- The symmetric two-vector Clifford channel. -/
+def scalarTwoVectorChannel (v w : N) : CliffordAlgebra P :=
+  (1 / 2 : K) • algebraMap K (CliffordAlgebra P) (QuadraticMap.polar P v w)
+
+/-- The antisymmetric two-vector Clifford channel. -/
+def bivectorTwoVectorChannel (v w : N) : CliffordAlgebra P :=
+  (1 / 2 : K) •
+    (CliffordAlgebra.ι P v * CliffordAlgebra.ι P w -
+      CliffordAlgebra.ι P w * CliffordAlgebra.ι P v)
+
+/-- Two Clifford vector generators split into scalar and bivector channels. -/
+theorem clifford_twoVector_grade_split (v w : N) :
+    CliffordAlgebra.ι P v * CliffordAlgebra.ι P w =
+      scalarTwoVectorChannel v w + bivectorTwoVectorChannel v w := by
+  have h := CliffordAlgebra.ι_mul_ι_add_swap (Q := P) v w
+  unfold scalarTwoVectorChannel bivectorTwoVectorChannel
+  rw [show (1 / 2 : K) • algebraMap K (CliffordAlgebra P)
+        (QuadraticMap.polar P v w) =
+      (1 / 2 : K) •
+        (CliffordAlgebra.ι P v * CliffordAlgebra.ι P w +
+          CliffordAlgebra.ι P w * CliffordAlgebra.ι P v) by rw [h]]
+  module
+
+end TwoVectorGradeSplit
+
 /-- The native Clifford anticommutator is the polar form of the quadratic form. -/
 theorem clifford_polarization (v w : M) :
     CliffordAlgebra.ι Q v * CliffordAlgebra.ι Q w +

@@ -33,13 +33,15 @@ from tools.infra.arango_env import (
     arango_endpoint,
     arango_password,
     arango_username,
+    hive_arango_database,
+    hive_arango_endpoint,
     load_repo_arango_env,
 )
 
 load_repo_arango_env(Path.cwd())
 
-DEFAULT_ENDPOINT = arango_endpoint()
-DEFAULT_DATABASE = arango_database("hive_live")
+DEFAULT_ENDPOINT = hive_arango_endpoint()
+DEFAULT_DATABASE = hive_arango_database("hive_live")
 DEFAULT_USERNAME = arango_username()
 DEFAULT_PASSWORD = arango_password("alexandria_root")
 DEFAULT_QUEUE = "proof-search"

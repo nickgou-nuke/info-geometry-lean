@@ -264,6 +264,31 @@ lemma complex_i_sq (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] 
   simpa [complex_i, doubledCarrier]
     using (InvolutiveSelfDualCarrier.K_sq (X := doubledCarrier (E := E)))
 
+/-- The real elliptic Hestenes axis as a linear equivalence, with inverse `-I`. -/
+noncomputable def complex_iLE (E : Type*) [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [CompleteSpace E] :
+    DoubledSpace E ≃ₗ[ℝ] DoubledSpace E :=
+  { (complex_i (E := E)).toLinearMap with
+    invFun := fun x => -(complex_i (E := E) x)
+    left_inv := by
+      intro x
+      apply DoubledSpace.ext <;> simp [complex_i]
+    right_inv := by
+      intro x
+      apply DoubledSpace.ext <;> simp [complex_i] }
+
+@[simp]
+lemma complex_iLE_apply (E : Type*) [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [CompleteSpace E] (x : DoubledSpace E) :
+    complex_iLE E x = complex_i (E := E) x := by
+  rfl
+
+@[simp]
+lemma complex_iLE_symm_apply (E : Type*) [NormedAddCommGroup E]
+    [InnerProductSpace ℝ E] [CompleteSpace E] (x : DoubledSpace E) :
+    (complex_iLE E).symm x = -(complex_i (E := E) x) := by
+  rfl
+
 lemma clockAxis_sq (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
     (clockAxis (E := E)).comp clockAxis = -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
   simpa [clockAxis] using complex_i_sq (E := E)
@@ -509,5 +534,66 @@ noncomputable def information_lie_algebra :
       (KreinSpace.isKreinSkewAdjoint_lie (H := H₂) (hA := hA) (hB := hB))
 
 end KreinAnalytic
+
+lemma hestenesPionPlus_sq_apply
+    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] (x : DoubledSpace E) :
+    hestenesPionPlus (E := E) (hestenesPionPlus (E := E) x) = 0 := by
+  have h := congrArg
+    (fun f : DoubledSpace E →L[ℝ] DoubledSpace E => f x)
+    (hestenesPionPlus_sq (E := E))
+  simpa [ContinuousLinearMap.comp_apply] using h
+
+lemma hestenesPionMinus_sq_apply
+    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] (x : DoubledSpace E) :
+    hestenesPionMinus (E := E) (hestenesPionMinus (E := E) x) = 0 := by
+  have h := congrArg
+    (fun f : DoubledSpace E →L[ℝ] DoubledSpace E => f x)
+    (hestenesPionMinus_sq (E := E))
+  simpa [ContinuousLinearMap.comp_apply] using h
+
+lemma hestenesPion_car_apply
+    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] (x : DoubledSpace E) :
+    hestenesPionPlus (E := E) (hestenesPionMinus (E := E) x) +
+        hestenesPionMinus (E := E) (hestenesPionPlus (E := E) x) = x := by
+  have h := congrArg
+    (fun f : DoubledSpace E →L[ℝ] DoubledSpace E => f x)
+    (hestenesPion_car (E := E))
+  simpa [ContinuousLinearMap.comp_apply] using h
+
+lemma hestenesPion_commutator_apply
+    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] (x : DoubledSpace E) :
+    hestenesPionPlus (E := E) (hestenesPionMinus (E := E) x) -
+        hestenesPionMinus (E := E) (hestenesPionPlus (E := E) x) =
+      spectral_epsilon (E := E) x := by
+  have h := congrArg
+    (fun f : DoubledSpace E →L[ℝ] DoubledSpace E => f x)
+    (hestenesPion_commutator (E := E))
+  simpa [ContinuousLinearMap.comp_apply] using h
+
+lemma hestenesPion_zero_plus_apply
+    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] (x : DoubledSpace E) :
+    hestenesPionZero (E := E) (hestenesPionPlus (E := E) x) -
+        hestenesPionPlus (E := E) (hestenesPionZero (E := E) x) =
+      hestenesPionPlus (E := E) x := by
+  have h := congrArg
+    (fun f : DoubledSpace E →L[ℝ] DoubledSpace E => f x)
+    (hestenesPion_zero_plus (E := E))
+  simpa [ContinuousLinearMap.comp_apply] using h
+
+lemma hestenesPion_zero_minus_apply
+    (E : Type*) [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] (x : DoubledSpace E) :
+    hestenesPionZero (E := E) (hestenesPionMinus (E := E) x) -
+        hestenesPionMinus (E := E) (hestenesPionZero (E := E) x) =
+      -hestenesPionMinus (E := E) x := by
+  have h := congrArg
+    (fun f : DoubledSpace E →L[ℝ] DoubledSpace E => f x)
+    (hestenesPion_zero_minus (E := E))
+  simpa [ContinuousLinearMap.comp_apply] using h
 
 end InfoGeometry.Krein

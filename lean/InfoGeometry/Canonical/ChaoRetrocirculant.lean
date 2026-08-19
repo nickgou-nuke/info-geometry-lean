@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 
 /-!
-# Chao retrocirculant spectral sockets
+# Chao retrocirculant spectral interfaces
 
 Formalization scaffold for Chong-Yun Chao, "On a Type of Circulants",
 Linear Algebra Appl. 6, 241--248 (1973).

@@ -32,6 +32,136 @@ abbrev M2Q := Matrix (Fin 2) (Fin 2) ℚ
 def ProjectivelyEqual (A B : M2Q) : Prop :=
   A = B ∨ A = -B
 
+theorem projectivelyEqual_refl (A : M2Q) :
+    ProjectivelyEqual A A := by
+  exact Or.inl rfl
+
+theorem projectivelyEqual_symm {A B : M2Q}
+    (h : ProjectivelyEqual A B) :
+    ProjectivelyEqual B A := by
+  rcases h with h | h
+  · exact Or.inl h.symm
+  · right
+    rw [h]
+    simp
+
+theorem projectivelyEqual_trans {A B C : M2Q}
+    (hAB : ProjectivelyEqual A B)
+    (hBC : ProjectivelyEqual B C) :
+    ProjectivelyEqual A C := by
+  rcases hAB with hAB | hAB <;> rcases hBC with hBC | hBC
+  · exact Or.inl (hAB.trans hBC)
+  · right
+    rw [hAB, hBC]
+  · right
+    rw [hAB, hBC]
+  · left
+    rw [hAB, hBC]
+    simp
+
+/-- The central-sign quotient used by this finite projective chart. -/
+def centralSignSetoid : Setoid M2Q where
+  r := ProjectivelyEqual
+  iseqv := {
+    refl := projectivelyEqual_refl
+    symm := projectivelyEqual_symm
+    trans := projectivelyEqual_trans
+  }
+
+/-- Quotient carrier for the finite central-sign projective relation. -/
+abbrev CentralSignQuotient := Quotient centralSignSetoid
+
+/-- The canonical quotient map to central-sign classes. -/
+def centralSignClass (A : M2Q) : CentralSignQuotient :=
+  Quotient.mk centralSignSetoid A
+
+theorem centralSignClass_eq_iff (A B : M2Q) :
+    centralSignClass A = centralSignClass B ↔ ProjectivelyEqual A B := by
+  exact Quotient.eq
+
+theorem projectivelyEqual_mul {A A' B B' : M2Q}
+    (hA : ProjectivelyEqual A A')
+    (hB : ProjectivelyEqual B B') :
+    ProjectivelyEqual (A * B) (A' * B') := by
+  rcases hA with hA | hA <;> rcases hB with hB | hB
+  · exact Or.inl (congrArg₂ (· * ·) hA hB)
+  · right
+    rw [hA, hB]
+    simp
+  · right
+    rw [hA, hB]
+    simp
+  · left
+    rw [hA, hB]
+    simp
+
+/-- Multiplication on central-sign classes induced by matrix multiplication. -/
+def centralSignMul (x y : CentralSignQuotient) : CentralSignQuotient :=
+  Quotient.liftOn₂ x y
+    (fun A B => centralSignClass (A * B))
+    (by
+      intro A B A' B' hA hB
+      change ProjectivelyEqual A A' at hA
+      change ProjectivelyEqual B B' at hB
+      exact (centralSignClass_eq_iff (A * B) (A' * B')).2
+        (projectivelyEqual_mul hA hB))
+
+theorem centralSignMul_mk (A B : M2Q) :
+    centralSignMul (centralSignClass A) (centralSignClass B) =
+      centralSignClass (A * B) := by
+  rfl
+
+theorem centralSignMul_assoc (x y z : CentralSignQuotient) :
+    centralSignMul (centralSignMul x y) z =
+      centralSignMul x (centralSignMul y z) := by
+  induction x using Quotient.inductionOn with
+  | _ A =>
+    induction y using Quotient.inductionOn with
+    | _ B =>
+    induction z using Quotient.inductionOn with
+    | _ C =>
+        change centralSignMul
+          (centralSignMul (centralSignClass A) (centralSignClass B))
+          (centralSignClass C) =
+          centralSignMul (centralSignClass A)
+            (centralSignMul (centralSignClass B) (centralSignClass C))
+        rw [centralSignMul_mk, centralSignMul_mk,
+          centralSignMul_mk, centralSignMul_mk, mul_assoc]
+
+def centralSignOne : CentralSignQuotient :=
+  centralSignClass (1 : M2Q)
+
+theorem centralSignMul_one (x : CentralSignQuotient) :
+    centralSignMul x centralSignOne = x := by
+  induction x using Quotient.inductionOn with
+  | _ A =>
+    change centralSignMul (centralSignClass A)
+      (centralSignClass (1 : M2Q)) = centralSignClass A
+    rw [centralSignMul_mk]
+    simp
+
+theorem centralSignOne_mul (x : CentralSignQuotient) :
+    centralSignMul centralSignOne x = x := by
+  induction x using Quotient.inductionOn with
+  | _ A =>
+    change centralSignMul (centralSignClass (1 : M2Q))
+      (centralSignClass A) = centralSignClass A
+    rw [centralSignMul_mk]
+    simp
+
+instance : Monoid CentralSignQuotient where
+  mul := centralSignMul
+  one := centralSignOne
+  mul_assoc := centralSignMul_assoc
+  one_mul := centralSignOne_mul
+  mul_one := centralSignMul_one
+
+/-- The canonical multiplicative projection to central-sign classes. -/
+def centralSignClassHom : M2Q →* CentralSignQuotient where
+  toFun := centralSignClass
+  map_one' := rfl
+  map_mul' A B := (centralSignMul_mk A B).symm
+
 /-- Identity matrix in the finite projective chart. -/
 def I2 : M2Q := 1
 

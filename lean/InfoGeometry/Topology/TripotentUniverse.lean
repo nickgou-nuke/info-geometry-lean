@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 
 /-!
-# Finite tripotent algebra socket
+# Finite tripotent algebra
 
 This module records elementary algebraic consequences of a supplied tripotent
 operator `op^3 = op` in an arbitrary ring.

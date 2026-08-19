@@ -4,8 +4,8 @@
   "categories": {
     "proof_carrier_field": {
       "severity": "error",
-      "description": "A structure/class field carries a proposition, equality, witness, law, certificate, guard, socket, validity claim, or readback instead of proving an owner-side theorem.",
-      "name_regex": "(?:^|_)(law|laws|certificate|cert|witness|valid|guard|socket|readback|assumption|axiom|proof|sorryProof|True|true|preserved|compatible|holds|condition|property|inv|noncollapse|supportLowerBound|donoho_stark_support)(?:_|$)",
+      "description": "A structure/class field carries a proposition, equality, witness, law, certificate, guard, interface, validity claim, or readback instead of proving an owner-side theorem.",
+      "name_regex": "(?:^|_)(law|laws|certificate|cert|witness|valid|guard|interface|readback|assumption|axiom|proof|sorryProof|True|true|preserved|compatible|holds|condition|property|inv|noncollapse|supportLowerBound|donoho_stark_support)(?:_|$)",
       "type_regex": "\\bProp\\b|=|↔|<->|≤|>=|≥|<|>|∈|∉|⊆|⊂|⊇|∧|∨|∀|∃"
     },
     "proof_like_field_type": {
@@ -14,13 +14,18 @@
     },
     "carrier_witness_name": {
       "severity": "error",
-      "description": "A structure/class name itself advertises witness/certificate/socket/guard/proxy packaging.",
-      "name_regex": "(Witness|Certificate|Certified|Socket|Guard|Law|Proxy|Readback|Assumption|Packet|Carrier)"
+      "description": "A structure/class name itself advertises witness/certificate/interface/guard/proxy packaging.",
+      "name_regex": "(Witness|Certificate|Certified|Interface|Guard|Law|Proxy|Readback|Assumption|Packet|Carrier)"
+    },
+    "typed_surface_name": {
+      "severity": "warning",
+      "description": "A definition-level Type surface uses witness/interface/packet vocabulary and must be reviewed for an actual owner construction.",
+      "name_regex": "(Witness|Certificate|Certified|Interface|Guard|Law|Proxy|Readback|Assumption|Packet)"
     },
     "projection_reexport": {
       "severity": "error",
       "description": "A theorem/lemma is only a projection or direct re-export of a proof-carrying field/hypothesis.",
-      "proof_regex": "\\b[A-Za-z0-9_'.]+_(?:law|laws|certificate|cert|witness|valid|guard|socket|readback|proof|sorryProof|True|true|noncollapse|supportLowerBound|donoho_stark_support)\\b"
+      "proof_regex": "\\b[A-Za-z0-9_'.]+_(?:law|laws|certificate|cert|witness|valid|guard|interface|readback|proof|sorryProof|True|true|noncollapse|supportLowerBound|donoho_stark_support)\\b"
     },
     "trivial_surface": {
       "severity": "warning",

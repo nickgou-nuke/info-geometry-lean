@@ -59,7 +59,7 @@ obtained only through the repository-owned product/readout interface.
 @[rep_depth operator]
 structure NoncommutativeItakuraSaitoModel (Op : Type*) [AddGroup Op] where
   /-- Product/readout interface: trace, KMS state, vector state, or regularized weight. -/
-  readout : OperatorPrimalDualSocket Op
+  readout : OperatorPrimalDualData Op
   /-- Operator Burg/log potential. -/
   potential : Op → ℝ
   /-- Operator gradient of the Burg/log potential. -/
@@ -81,9 +81,11 @@ theorem divergence_eq_operatorBregman (X Y : Op) :
 
 /-- Diagonal vanishing inherited from the operatorial Bregman owner. -/
 @[simp, rep_depth operator]
-theorem divergence_self (X : Op) :
+theorem divergence_self
+    (hzero : ∀ X : Op, P.readout.readout (P.readout.product X 0) = 0)
+    (X : Op) :
     P.divergence X X = 0 := by
-  simp [divergence]
+  exact operatorBregman_self P.readout hzero P.potential P.gradient X
 
 end NoncommutativeItakuraSaitoModel
 
@@ -150,13 +152,14 @@ theorem restrictedAraki_self_eq_zero_of_noncommutative_collapse
     (arakiRelativeEntropy : State → State → ℝ)
     (toOperator : State → Op)
     (P : NoncommutativeItakuraSaitoModel Op)
+    (hzero : ∀ X : Op, P.readout.readout (P.readout.product X 0) = 0)
     (ω : State)
     (hcollapse :
       restrictedAraki arakiRelativeEntropy ω ω =
         P.divergence (toOperator ω) (toOperator ω)) :
     restrictedAraki arakiRelativeEntropy ω ω = 0 := by
   rw [hcollapse]
-  exact P.divergence_self (toOperator ω)
+  exact P.divergence_self hzero (toOperator ω)
 
 /--
 Thermodynamic comparison readout after the noncommutative Araki/IS collapse.
@@ -223,7 +226,7 @@ def ofSouriauOperatorialBregmanPacket
     {LieAlgebra : Type*}
     (P : SouriauOperatorialBregmanPacket (E := E) LieAlgebra) :
     NoncommutativeItakuraSaitoModel EndH where
-  readout := P.socket
+  readout := P.productReadout
   potential := P.potential
   gradient := P.gradient
 
@@ -235,8 +238,10 @@ theorem ofSouriauOperatorialBregmanPacket_divergence
     (P : SouriauOperatorialBregmanPacket (E := E) LieAlgebra)
     (X Y : EndH) :
     (ofSouriauOperatorialBregmanPacket (E := E) P).divergence X Y =
-      P.divergence X Y :=
-  rfl
+      P.divergence X Y := by
+  simp [ofSouriauOperatorialBregmanPacket,
+    NoncommutativeItakuraSaitoModel.divergence,
+    SouriauOperatorialBregmanPacket.divergence]
 
 end BoundedDoubledCarrier
 

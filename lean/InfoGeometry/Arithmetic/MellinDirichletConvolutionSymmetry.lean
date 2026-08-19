@@ -107,12 +107,13 @@ theorem critical_mirror_negates_centered_sigma (z : ZetaAffineChart) :
 @[rep_depth thermo]
 theorem standard_midpoint_is_half :
     ZetaAffineChart.markedPairMidpoint 0 1 = (1 / 2 : ℝ) := by
-  norm_num [ZetaAffineChart.markedPairMidpoint]
+  exact ZetaAffineChart.standard_markedPairMidpoint
 
 @[rep_depth thermo]
 theorem standard_marked_pair_half_is_fixed :
     ZetaAffineChart.markedPairReflection 0 1 (1 / 2 : ℝ) = (1 / 2 : ℝ) := by
-  norm_num [ZetaAffineChart.markedPairReflection]
+  rw [ZetaAffineChart.standard_markedPairReflection_eq_functional_real]
+  norm_num
 
 @[rep_depth thermo]
 theorem normalized_midpoint_of_standard_pair_is_half :

@@ -82,6 +82,22 @@ theorem finiteFermionSupertrace_eq_eulerProduct
     PrimeSuperalgebra.finitePrimeDenominator]
     using PrimeSuperalgebra.finitePrimeSupertrace_eq_denominator P β
 
+/--
+The finite signed Krein/Möbius readout cancels the finite bosonic partition.
+
+This is the finite algebraic counterpart of the Möbius inverse identity.  It
+does not assert an infinite Euler product or identify a signed supertrace
+with a positive KMS state.
+-/
+theorem finiteFermionSupertrace_mul_finiteBosonicPrimePartition_eq_one
+    (P : PrimeCutoff) (β : ℝ)
+    (hdenom : PrimeSuperalgebra.finitePrimeDenominator P β ≠ 0) :
+    finiteFermionSupertrace P β *
+        PrimeSuperalgebra.finiteBosonicPrimePartition P β = 1 := by
+  simpa [finiteFermionSupertrace] using
+    PrimeSuperalgebra.finitePrimeSupertrace_mul_finiteBosonicPrimePartition_eq_one
+      P β hdenom
+
 lemma finiteFermionPartition_pos (P : PrimeCutoff) (β : ℝ) :
     0 < finiteFermionPartition P β := by
   rw [finiteFermionPartition_eq_eulerProduct]
@@ -129,8 +145,53 @@ for the positive Gibbs state.
 def NormalizableBeta (β : ℝ) : Prop :=
   1 < β
 
+/-- The normalizable region places every prime-mode weight strictly below one. -/
+lemma primeModeWeight_lt_one_of_normalizable
+    {β : ℝ} (hβ : NormalizableBeta β)
+    {p : ℕ} (hp : Nat.Prime p) :
+    primeModeWeight β p < 1 := by
+  have hβ0 : 1 < β := hβ
+  have hβ' : 0 < β := by linarith
+  have hlogp : 0 < Real.log (p : ℝ) := by
+    exact Real.log_pos (by exact_mod_cast hp.one_lt)
+  unfold primeModeWeight PrimeSuperalgebra.primeWeight
+  apply Real.exp_lt_one_iff.mpr
+  have hprod : 0 < β * Real.log (p : ℝ) := mul_pos hβ' hlogp
+  have hneg : -(β * Real.log (p : ℝ)) < 0 := neg_lt_zero.mpr hprod
+  simpa [PrimeSuperalgebra.primeEnergy] using hneg
+
+/-- The signed finite supertrace is positive in the normalizable region. -/
+lemma finiteFermionSupertrace_pos_of_normalizable
+    (P : PrimeCutoff) {β : ℝ} (hβ : NormalizableBeta β) :
+    0 < finiteFermionSupertrace P β := by
+  rw [finiteFermionSupertrace_eq_eulerProduct]
+  apply Finset.prod_pos
+  intro p hp
+  exact sub_pos.mpr
+    (primeModeWeight_lt_one_of_normalizable hβ (P.prime_mem p hp))
+
+/-- The finite boson/signed-supertrace cancellation needs no extra
+nonvanishing hypothesis once the normalizable region is supplied. -/
+theorem finiteFermionSupertrace_mul_finiteBosonicPrimePartition_eq_one_of_normalizable
+    (P : PrimeCutoff) {β : ℝ} (hβ : NormalizableBeta β) :
+    finiteFermionSupertrace P β *
+        PrimeSuperalgebra.finiteBosonicPrimePartition P β = 1 := by
+  have htrace : 0 < finiteFermionSupertrace P β :=
+    finiteFermionSupertrace_pos_of_normalizable P hβ
+  have hdenom : PrimeSuperalgebra.finitePrimeDenominator P β ≠ 0 := by
+    have hdenom_eq :
+        PrimeSuperalgebra.finitePrimeDenominator P β =
+          finiteFermionSupertrace P β := by
+      symm
+      simpa [finiteFermionSupertrace] using
+        PrimeSuperalgebra.finitePrimeSupertrace_eq_denominator P β
+    rw [hdenom_eq]
+    exact htrace.ne'
+  exact finiteFermionSupertrace_mul_finiteBosonicPrimePartition_eq_one P β
+    hdenom
+
 /--
-Finite arithmetic KMS socket with an explicit primon normalizability guard.
+Finite arithmetic KMS interface with an explicit primon normalizability guard.
 
 The KMS law is supplied by the existing `ArithmeticKMSData` interface.
 -/
@@ -226,12 +287,12 @@ theorem modular_j_reverses_splitDoubledKreinForm
 
 end DoubledKrein
 
-/-! ## 6. Real doubled Krein/KMS socket -/
+/-! ## 6. Real doubled Krein/KMS interface -/
 
 open InfoGeometry.Krein
 
 /--
-Real doubled Krein/KMS socket.
+Real doubled Krein/KMS interface.
 
 The KMS-like boundary law is the repository's finite Krein thermal predicate,
 not a global Tomita--Takesaki theorem.
@@ -261,7 +322,7 @@ end RealDoubledKreinKMSData
 /--
 Combined bridge packet.
 
-The arithmetic KMS socket and doubled Krein socket share the same inverse
+The arithmetic KMS interface and doubled Krein interface share the same inverse
 temperature, while keeping positive KMS state data separate from indefinite
 Krein/supertrace bookkeeping.
 -/

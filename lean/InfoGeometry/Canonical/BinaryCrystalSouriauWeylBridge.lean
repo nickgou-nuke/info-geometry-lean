@@ -31,6 +31,6 @@ that wants to invoke the owner theorems directly.
 structure BinaryCrystalSouriauWeylBridge
     (G : Type*) [Group G] [MulAction G BinaryLattice] (𝔤 : Type*) where
   crystal : BinaryCrystalWeylBlochData G
-  souriauWeyl : SouriauWeylPartitionPacket 𝔤
+  souriauWeyl : SouriauWeylPartitionData 𝔤
 
 end InfoGeometry.Canonical.BinaryCrystalSouriauWeyl

@@ -34,13 +34,27 @@ abbrev FiniteProfile (ι : Type*) :=
 abbrev FiniteReferenceState (ι : Type*) := FiniteProfile ι
 
 /-- A finite Jaynes pair: observation data with equal total mass to the reference. -/
-structure FiniteJaynesPair (ι : Type*) [Fintype ι] where
+structure FiniteJaynesPairDatum (ι : Type*) [Fintype ι] where
   /-- Reference/background finite LDDS weights. -/
   reference : FiniteReferenceState ι
   /-- Observed finite density/profile on the same atoms. -/
   observation : FiniteProfile ι
-  /-- Jaynes-compatible finite normalization: observed and reference masses agree. -/
-  equal_mass : ∑ i : ι, observation i = ∑ i : ι, reference i
+
+def FiniteJaynesPairValid {ι : Type*} [Fintype ι]
+    (P : FiniteJaynesPairDatum ι) : Prop :=
+  ∑ i : ι, P.observation i = ∑ i : ι, P.reference i
+
+def FiniteJaynesPair (ι : Type*) [Fintype ι] :=
+  {P : FiniteJaynesPairDatum ι // FiniteJaynesPairValid P}
+
+namespace FiniteJaynesPair
+
+abbrev reference {ι : Type*} [Fintype ι] (P : FiniteJaynesPair ι) := P.1.reference
+abbrev observation {ι : Type*} [Fintype ι] (P : FiniteJaynesPair ι) := P.1.observation
+abbrev equal_mass {ι : Type*} [Fintype ι] (P : FiniteJaynesPair ι) :
+    ∑ i : ι, P.observation i = ∑ i : ι, P.reference i := P.2
+
+end FiniteJaynesPair
 
 namespace FiniteReferenceStateOps
 

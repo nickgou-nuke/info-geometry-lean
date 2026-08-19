@@ -101,7 +101,7 @@ A Majorana-style plug for a localized puncture.
 
 The plug is a closure-fixed state installed at the puncture.
 -/
-structure MajoranaPlugWitness
+structure MajoranaPlugData
     (Memory : Type*) [AddCommGroup Memory] [Module ℝ Memory]
     (V : VortexCoreDatum Memory) where
   plug : Memory
@@ -112,13 +112,13 @@ structure MajoranaPlugWitness
   /-- The core state is recovered/resolved by the plug. -/
   core_eq_plug : V.coreState = plug
 
-namespace MajoranaPlugWitness
+namespace MajoranaPlugData
 
 variable
     {Memory : Type*} [AddCommGroup Memory] [Module ℝ Memory]
     {V : VortexCoreDatum Memory}
 
-variable (P : MajoranaPlugWitness Memory V)
+variable (P : MajoranaPlugData Memory V)
 
 /-- The plug is pointwise fixed by closure. -/
 theorem theta_plug_eq_plug :
@@ -127,12 +127,12 @@ theorem theta_plug_eq_plug :
 
 /-- The core state is closure-fixed because it equals the plug. -/
 theorem theta_coreState_eq_coreState
-    (P : MajoranaPlugWitness Memory V) :
+    (P : MajoranaPlugData Memory V) :
     V.closure.theta V.coreState = V.coreState := by
-  rw [MajoranaPlugWitness.core_eq_plug P]
+  rw [MajoranaPlugData.core_eq_plug P]
   exact P.theta_plug_eq_plug
 
-end MajoranaPlugWitness
+end MajoranaPlugData
 
 /-! ## 4. YSR / subgap localized repair datum -/
 
@@ -143,9 +143,9 @@ This abstracts YSR-type or vortex-core subgap localization.
 
 It says an unresolved localized defect is isolated into a controlled subgap
 state. It does not assert topological Majorana protection unless paired with a
-`MajoranaPlugWitness`.
+`MajoranaPlugData`.
 -/
-structure SubgapRepairWitness
+structure SubgapRepairData
     (Memory : Type*) [AddCommGroup Memory] [Module ℝ Memory]
     (V : VortexCoreDatum Memory) where
   /-- Localized subgap state. -/
@@ -154,13 +154,13 @@ structure SubgapRepairWitness
   /-- The core state is represented by the localized subgap state. -/
   core_eq_subgap : V.coreState = subgapState
 
-namespace SubgapRepairWitness
+namespace SubgapRepairData
 
 variable
     {Memory : Type*} [AddCommGroup Memory] [Module ℝ Memory]
     {V : VortexCoreDatum Memory}
 
-variable (S : SubgapRepairWitness Memory V)
+variable (S : SubgapRepairData Memory V)
 
 /-- The core state is represented by the subgap state. -/
 theorem core_eq_subgap_state :
@@ -183,7 +183,7 @@ theorem resolved_iff_core_eq_subgap :
     S.Resolved ↔ V.coreState = S.subgapState := by
   exact sub_eq_zero
 
-end SubgapRepairWitness
+end SubgapRepairData
 
 /-! ## 5. Audit bridge -/
 

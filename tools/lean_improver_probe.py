@@ -104,11 +104,11 @@ REPO_ROOT_SIGNALS = (
     "leftProjector_",
 )
 
-SOCKET_SIGNALS = (
+DEFERRED_INTERFACE_SIGNALS = (
     "Packet",
     "Context",
-    "Socket",
-    "socket",
+    "Interface",
+    "interface",
     "certificate",
     "Certificate",
     "witness",
@@ -120,7 +120,7 @@ SOCKET_SIGNALS = (
 
 
 def authority_class_for(block: list[str], imports: list[str], name: str) -> tuple[str, list[str]]:
-    """Classify whether a candidate is proof-rooted or socket/interface-shaped.
+    """Classify whether a candidate is proof-rooted or deferred-interface-shaped.
 
     This is deliberately conservative.  It does not prove authority; it prevents
     the optimizer queue from treating witness/certificate/interface wrappers as
@@ -132,27 +132,27 @@ def authority_class_for(block: list[str], imports: list[str], name: str) -> tupl
 
     mathlib_hits = [sig for sig in MATHLIB_ROOT_SIGNALS if sig in text]
     repo_hits = [sig for sig in REPO_ROOT_SIGNALS if sig in text]
-    socket_hits = [sig for sig in SOCKET_SIGNALS if sig in text or sig in name]
+    interface_hits = [sig for sig in DEFERRED_INTERFACE_SIGNALS if sig in text or sig in name]
 
     if mathlib_hits:
         signals.append("mathlib:" + ",".join(mathlib_hits[:4]))
     if repo_hits:
         signals.append("repo:" + ",".join(repo_hits[:4]))
-    if socket_hits:
-        signals.append("socket:" + ",".join(socket_hits[:4]))
+    if interface_hits:
+        signals.append("interface:" + ",".join(interface_hits[:4]))
 
     has_root = bool(mathlib_hits or repo_hits)
-    has_socket = bool(socket_hits)
-    if has_root and has_socket:
-        return "mixed_root_and_socket", signals
+    has_interface = bool(interface_hits)
+    if has_root and has_interface:
+        return "mixed_root_and_interface", signals
     if mathlib_hits:
         return "mathlib_rooted_proof_chain", signals
     if repo_hits:
         return "repo_rooted_proof_chain", signals
-    if has_socket:
-        if any(sig.lower() in {"certificate", "witness"} for sig in socket_hits):
-            return "certificate_socket", signals
-        return "interface_socket", signals
+    if has_interface:
+        if any(sig.lower() in {"certificate", "witness"} for sig in interface_hits):
+            return "certificate_interface", signals
+        return "deferred_interface", signals
     return "unclassified_local_proof", signals
 
 

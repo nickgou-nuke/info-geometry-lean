@@ -3,7 +3,7 @@ import Mathlib.Tactic
 /-!
 # Finite Aharonov--Bohm vortex phase certificates
 
-This module records a theorem-safe finite phase socket: a supplied phase whose
+This module records a theorem-safe finite phase interface: a supplied phase whose
 third power is `1` gives a stable triple-winding identity, and the corresponding
 `3 × 3` diagonal vortex operator cubes to the identity.
 

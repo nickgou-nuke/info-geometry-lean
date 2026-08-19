@@ -94,16 +94,12 @@ theorem cuntzSupercharge_dirac_square (i : Fin 3) :
       qAnticomm (S (R := ℝ) i) (T (R := ℝ) i) :=
   cuntzQ_dirac_square i
 
-/-! ## Explicit separation of the braided witness -/
+/-! ## Direct braided Yang--Baxter readout -/
 
-structure BraidedWitness (A : Type*) [Mul A] where
-  R12 : A
-  R23 : A
-  yangBaxter : HasSalihCelikZ3CartanYBE R12 R23
-
-theorem braidedWitness_yangBaxter {A : Type*} [Mul A]
-    (W : BraidedWitness A) :
-    W.R12 * W.R23 * W.R12 = W.R23 * W.R12 * W.R23 :=
-  W.yangBaxter
+theorem braided_yangBaxter {A : Type*} [Mul A]
+    (R12 R23 : A)
+    (h : HasSalihCelikZ3CartanYBE R12 R23) :
+    R12 * R23 * R12 = R23 * R12 * R23 :=
+  h
 
 end InfoGeometry.OperatorAlgebra.ChiralCuntzBraidedSuperchargeBridge

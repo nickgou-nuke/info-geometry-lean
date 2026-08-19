@@ -13,6 +13,7 @@ import InfoGeometry.Quantum.GeometricTensor
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
 import InfoGeometry.Quantum.ComplexPureStateQGT
 import InfoGeometry.Quantum.GeometricTensorTransport
+import InfoGeometry.Quantum.GeometricTensorFrameTransport
 import InfoGeometry.Quantum.HestenesKahler
 import InfoGeometry.Quantum.Hurwitz
 import InfoGeometry.Quantum.HurwitzRGFlow

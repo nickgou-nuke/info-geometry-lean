@@ -24,19 +24,7 @@ def L_fermionic_trunc (N n : ℤ) (ψ : ℤ → Module.End 𝕜 V) : Module.End 
 def L_trunc (N n : ℤ) (J ψ : ℤ → Module.End 𝕜 V) : Module.End 𝕜 V :=
   L_bosonic_trunc N n J + L_fermionic_trunc N n ψ
 
-/-- Step-3 target for `[L,G]`. -/
-def SuperBracket_L_G_Target
-    (N m r : ℤ) (J ψ : ℤ → Module.End 𝕜 V) (defect : Module.End 𝕜 V) : Prop :=
-  (L_trunc N m J ψ) * (G_trunc N r J ψ) - (G_trunc N r J ψ) * (L_trunc N m J ψ)
-    = ((m : 𝕜) / 2 - (r : 𝕜)) • G_trunc N (m + r) J ψ + defect
-
-/-- Step-3 target for `{G,G}`. -/
-def SuperBracket_G_G_Target
-    (N r s : ℤ) (J ψ : ℤ → Module.End 𝕜 V)
-    (central_N : ℤ → ℤ → 𝕜) (defect : Module.End 𝕜 V) : Prop :=
-  (G_trunc N r J ψ) * (G_trunc N s J ψ) + (G_trunc N s J ψ) * (G_trunc N r J ψ)
-    = (2 : 𝕜) • L_trunc N (r + s) J ψ + (central_N r s) • (1 : Module.End 𝕜 V) + defect
-
+/- Step-3 finite targets for `[L,G]` and `{G,G}`. -/
 /-- Explicit finite defect for `[L,G]`. -/
 def defect_LG
     (N m r : ℤ) (J ψ : ℤ → Module.End 𝕜 V) : Module.End 𝕜 V :=
@@ -51,17 +39,20 @@ def defect_GG
     - ((2 : 𝕜) • L_trunc N (r + s) J ψ + (central_N r s) • (1 : Module.End 𝕜 V))
 
 /-- Finite evaluation of `[L,G]` with explicit defect. -/
-theorem superBracket_L_G_target_with_defect
+theorem superBracket_L_G_eq_with_defect
     (N m r : ℤ) (J ψ : ℤ → Module.End 𝕜 V) :
-    SuperBracket_L_G_Target N m r J ψ (defect_LG N m r J ψ) := by
-  unfold SuperBracket_L_G_Target defect_LG
+    (L_trunc N m J ψ) * (G_trunc N r J ψ) - (G_trunc N r J ψ) * (L_trunc N m J ψ)
+      = ((m : 𝕜) / 2 - (r : 𝕜)) • G_trunc N (m + r) J ψ + defect_LG N m r J ψ := by
+  unfold defect_LG
   abel_nf
 
 /-- Finite evaluation of `{G,G}` with explicit defect. -/
-theorem superBracket_G_G_target_with_defect
+theorem superBracket_G_G_eq_with_defect
     (N r s : ℤ) (J ψ : ℤ → Module.End 𝕜 V) (central_N : ℤ → ℤ → 𝕜) :
-    SuperBracket_G_G_Target N r s J ψ central_N (defect_GG N r s J ψ central_N) := by
-  unfold SuperBracket_G_G_Target defect_GG
+    (G_trunc N r J ψ) * (G_trunc N s J ψ) + (G_trunc N s J ψ) * (G_trunc N r J ψ)
+      = (2 : 𝕜) • L_trunc N (r + s) J ψ + (central_N r s) • (1 : Module.End 𝕜 V)
+        + defect_GG N r s J ψ central_N := by
+  unfold defect_GG
   abel_nf
 
 /--
@@ -79,7 +70,7 @@ theorem eventually_exact_LG_on_vector
         =
       ((((m : 𝕜) / 2 - (r : 𝕜)) • G_trunc N (m + r) J ψ) v) := by
   filter_upwards [hdef] with N hN
-  have h := superBracket_L_G_target_with_defect (N := N) (m := m) (r := r) J ψ
+  have h := superBracket_L_G_eq_with_defect (N := N) (m := m) (r := r) J ψ
   have hv := congrArg (fun T : Module.End 𝕜 V => T v) h
   simpa [hN, sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using hv
 
@@ -98,7 +89,7 @@ theorem eventually_exact_GG_on_vector
         =
       (((((2 : 𝕜) • L_trunc N (r + s) J ψ) + (central_N r s) • (1 : Module.End 𝕜 V)) v)) := by
   filter_upwards [hdef] with N hN
-  have h := superBracket_G_G_target_with_defect (N := N) (r := r) (s := s) J ψ central_N
+  have h := superBracket_G_G_eq_with_defect (N := N) (r := r) (s := s) J ψ central_N
   have hv := congrArg (fun T : Module.End 𝕜 V => T v) h
   -- use the supplied eventual vanishing of the concrete defect action
   -- to remove the residual term on this vector

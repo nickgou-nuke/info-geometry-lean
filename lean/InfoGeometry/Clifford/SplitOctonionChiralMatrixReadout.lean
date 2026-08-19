@@ -132,6 +132,111 @@ def chiralCoordinates (a₀ a₁ a₂ a₃ b₀ b₁ b₂ b₃ : ℝ) : ChiralMa
   a₀ • uPlus + a₁ • uOne + a₂ • uTwo + a₃ • uThree +
     b₀ • uMinus + b₁ • vOne + b₂ • vTwo + b₃ • vThree
 
+def chiralCoordinatesLinear : (Fin 8 → ℝ) →ₗ[ℝ] ChiralMatrix where
+  toFun c := chiralCoordinates (c 0) (c 1) (c 2) (c 3) (c 4) (c 5) (c 6) (c 7)
+  map_add' c d := by
+    apply Matrix.ext
+    intro i j
+    fin_cases i <;> fin_cases j <;>
+      simp [chiralCoordinates, add_smul] <;>
+        abel
+  map_smul' r c := by
+    apply Matrix.ext
+    intro i j
+    fin_cases i <;> fin_cases j <;>
+      simp [chiralCoordinates, smul_smul]
+
+@[simp] theorem chiralCoordinatesLinear_apply (c : Fin 8 → ℝ) :
+    chiralCoordinatesLinear c =
+      chiralCoordinates (c 0) (c 1) (c 2) (c 3) (c 4) (c 5) (c 6) (c 7) := rfl
+
+theorem chiralCoordinatesLinear_eq_basis_sum (c : Fin 8 → ℝ) :
+    chiralCoordinatesLinear c = ∑ i : Fin 8, c i • chiralBasis i := by
+  apply Matrix.ext
+  intro i j
+  fin_cases i <;> fin_cases j <;>
+      simp [chiralCoordinatesLinear, chiralCoordinates, chiralBasis, uPlus, uMinus,
+      rhoPlus, rhoMinus, uOne, uTwo, uThree, vOne, vTwo, vThree,
+      entryOne, entryI, entryJ, entryK, entryZero, Fin.sum_univ_succ] <;>
+        abel
+
+theorem chiralCoordinatesLinear_injective :
+    Function.Injective chiralCoordinatesLinear := by
+  intro c d h
+  funext i
+  fin_cases i
+  · have h00 := congrArg (fun M : ChiralMatrix => (M 0 0).re) h
+    simpa [chiralCoordinates, uPlus, uMinus, rhoPlus, rhoMinus, entryOne,
+      entryZero, uOne, uTwo, uThree, vOne, vTwo, vThree, entryI, entryJ,
+      entryK] using h00
+  · have h01 := congrArg (fun M : ChiralMatrix => (M 0 1).imI) h
+    simpa [chiralCoordinates, uPlus, uMinus, rhoPlus, rhoMinus, uOne, uTwo,
+      uThree, vOne, vTwo, vThree, entryI, entryJ, entryK, entryOne,
+      entryZero] using h01
+  · have h01 := congrArg (fun M : ChiralMatrix => (M 0 1).imJ) h
+    simpa [chiralCoordinates, uPlus, uMinus, rhoPlus, rhoMinus, uOne, uTwo,
+      uThree, vOne, vTwo, vThree, entryI, entryJ, entryK, entryOne,
+      entryZero] using h01
+  · have h01 := congrArg (fun M : ChiralMatrix => (M 0 1).imK) h
+    simpa [chiralCoordinates, uPlus, uMinus, rhoPlus, rhoMinus, uOne, uTwo,
+      uThree, vOne, vTwo, vThree, entryI, entryJ, entryK, entryOne,
+      entryZero] using h01
+  · have h11 := congrArg (fun M : ChiralMatrix => (M 1 1).re) h
+    simpa [chiralCoordinates, uPlus, uMinus, rhoPlus, rhoMinus, entryOne,
+      entryZero, uOne, uTwo, uThree, vOne, vTwo, vThree, entryI, entryJ,
+      entryK] using h11
+  · have h10 := congrArg (fun M : ChiralMatrix => (M 1 0).imI) h
+    simpa [chiralCoordinates, uPlus, uMinus, rhoPlus, rhoMinus, uOne, uTwo,
+      uThree, vOne, vTwo, vThree, entryI, entryJ, entryK, entryOne,
+      entryZero] using h10
+  · have h10 := congrArg (fun M : ChiralMatrix => (M 1 0).imJ) h
+    simpa [chiralCoordinates, uPlus, uMinus, rhoPlus, rhoMinus, uOne, uTwo,
+      uThree, vOne, vTwo, vThree, entryI, entryJ, entryK, entryOne,
+      entryZero] using h10
+  · have h10 := congrArg (fun M : ChiralMatrix => (M 1 0).imK) h
+    simpa [chiralCoordinates, uPlus, uMinus, rhoPlus, rhoMinus, uOne, uTwo,
+      uThree, vOne, vTwo, vThree, entryI, entryJ, entryK, entryOne,
+      entryZero] using h10
+
+theorem chiralCoordinatesLinear_eq_zero_iff (c : Fin 8 → ℝ) :
+    chiralCoordinatesLinear c = 0 ↔ ∀ i, c i = 0 := by
+  constructor
+  · intro h
+    have hc : c = 0 := by
+      apply chiralCoordinatesLinear_injective
+      rw [map_zero]
+      exact h
+    intro i
+    exact congrFun hc i
+  · intro h
+    have hc : c = 0 := by
+      funext i
+      exact h i
+    rw [hc, map_zero]
+
+def chiralCayleyCarrier : Submodule ℝ ChiralMatrix :=
+  LinearMap.range chiralCoordinatesLinear
+
+noncomputable def chiralCoordinatesEquiv :
+    (Fin 8 → ℝ) ≃ₗ[ℝ] chiralCayleyCarrier :=
+  LinearEquiv.ofInjective chiralCoordinatesLinear
+    chiralCoordinatesLinear_injective
+
+theorem chiralCoordinatesLinear_mem_carrier (c : Fin 8 → ℝ) :
+    chiralCoordinatesLinear c ∈ chiralCayleyCarrier :=
+  ⟨c, rfl⟩
+
+theorem chiralCayleyCarrier_finrank :
+    Module.finrank ℝ chiralCayleyCarrier = 8 := by
+  rw [chiralCayleyCarrier,
+    LinearMap.finrank_range_of_inj chiralCoordinatesLinear_injective]
+  simp
+
+@[simp] theorem chiralCoordinatesEquiv_symm_apply
+    (z : chiralCayleyCarrier) :
+    chiralCoordinatesLinear (chiralCoordinatesEquiv.symm z) = z.1 := by
+  exact congrArg Subtype.val (chiralCoordinatesEquiv.apply_symm_apply z)
+
 theorem chiralOne_eq_uPlus_add_uMinus :
     chiralOne = uPlus + uMinus := rfl
 

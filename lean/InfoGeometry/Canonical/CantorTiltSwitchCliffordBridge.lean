@@ -13,7 +13,7 @@ The primary bridge in this file is not Cuntz `O_2`.  It is:
 `Cantor addresses -> tilt/switch operators -> Clifford representation`.
 
 Cuntz/IFS branching remains an optional dynamics layer elsewhere.  This module
-records the direct finite and infinite Cantor/Clifford representation sockets and
+records the direct finite and infinite Cantor/Clifford representation interfaces and
 then exposes the Drazin--Hodge matter envelope consumed by downstream Fierz--Klein
 readouts.
 

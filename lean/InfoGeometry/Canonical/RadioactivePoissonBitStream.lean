@@ -1,13 +1,11 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
-import InfoGeometry.Meta.SocketTarget
 
 /-!
 # Radioactive Poisson bit streams
 
-Physical source socket for primordial bit streams.
+Physical source data for primordial bit streams.
 
 This file records the theorem-safe dictionary:
 
@@ -16,9 +14,9 @@ radioactive decay
   -> Poisson window counts
   -> parity bits
   -> optional von Neumann extraction
-  -> spinor socket bit streams
+  -> spinor bit streams
   -> centered covariance calibration
-  -> Clifford quadratic-form socket.
+  -> Clifford quadratic-form data.
 ```
 
 The stochastic laws are not proved here.  They are stored as explicit
@@ -194,6 +192,13 @@ theorem poissonOddProb_le_one (μ : ℝ) :
   nlinarith
 
 @[rep_depth projective]
+theorem poissonOddProb_lt_one {μ : ℝ} :
+    poissonOddProb μ < 1 := by
+  have h_exp : 0 < Real.exp (-2 * μ) := Real.exp_pos _
+  apply (div_lt_iff₀ (by norm_num : (0 : ℝ) < 2)).mpr
+  nlinarith
+
+@[rep_depth projective]
 theorem centeredBit_denominator_pos
     {p : ℝ} (hp0 : 0 < p) (hp1 : p < 1) :
     0 < Real.sqrt (p * (1 - p)) := by
@@ -303,40 +308,6 @@ theorem idealOddProbability_le_one :
 
 end RadioactiveDecayChannel
 
-/--
-Calibration property that a channel's parity bit has the ideal Poisson
-odd-count probability.
-
-This is property data, not a theorem derived from `counts`.
--/
-@[rep_depth projective]
-structure ParityPoissonCalibrationAssumption
-    (ch : RadioactiveDecayChannel) where
-  oddProbability : ℝ
-  oddProbability_eq_poisson :
-    oddProbability = ch.idealOddProbability
-
-/-! A spinor socket is the indexed family of bit streams itself. -/
-@[socket_debt_tag, rep_depth projective]
-abbrev SpinorSocket := Fin 4 → (ℕ → Bool)
-
-/-! A radioactive spinor socket is the indexed family of decay channels itself. -/
-@[socket_debt_tag, rep_depth projective]
-abbrev RadioactiveSpinorSocket := Fin 4 → RadioactiveDecayChannel
-
-/-- Convert four radioactive channels to four parity-bit streams. -/
-@[rep_depth projective]
-def RadioactiveSpinorSocket.toSpinorSocket
-    (rss : RadioactiveSpinorSocket) : SpinorSocket :=
-  fun i => (rss i).bitstream
-
-@[simp, rep_depth projective]
-theorem RadioactiveSpinorSocket.toSpinorSocket_apply
-    (rss : RadioactiveSpinorSocket) (i : Fin 4) (n : ℕ) :
-    RadioactiveSpinorSocket.toSpinorSocket rss i n =
-      decayBit ((rss i).counts n) := by
-  rfl
-
 /-- Centered and variance-normalized bit readout for a Bernoulli probability `p`. -/
 @[rep_depth projective]
 def centeredBit (p : ℝ) (s : ℕ → Bool) (n : ℕ) : ℝ :=
@@ -365,24 +336,18 @@ This explicitly records the statistical bridge:
 ```text
 Poisson independence + centering/normalization
   -> diagonal covariance
-  -> Clifford quadratic-form socket.
+  -> Clifford quadratic-form data.
 ```
 -/
 @[rep_depth projective]
-structure IndependentCenteredSpinorCalibration
-    (S : SpinorSocket) where
-  centered : Fin 4 → ℕ → ℝ
-  covariance : Fin 4 → Fin 4 → ℝ
-
-@[bridge_target_tag, rep_depth projective]
 theorem centered_calibration_eq
-    (S : SpinorSocket)
-    (C : IndependentCenteredSpinorCalibration S)
+    (S : Fin 4 → ℕ → Bool)
+    (centered : Fin 4 → ℕ → ℝ)
+    (covariance : Fin 4 → Fin 4 → ℝ)
     (hcentered :
-      ∀ i n, C.centered i n =
-        centeredBit (C.covariance i i) (S i) n)
+      ∀ i n, centered i n = centeredBit (covariance i i) (S i) n)
     (i : Fin 4) (n : ℕ) :
-    C.centered i n = centeredBit (C.covariance i i) (S i) n :=
+    centered i n = centeredBit (covariance i i) (S i) n :=
   hcentered i n
 
 /--
@@ -390,14 +355,14 @@ Readback: an independent centered spinor calibration has diagonal covariance.
 
 This is a calibration-field readout, not a probabilistic limit theorem.
 -/
-@[bridge_target_tag, rep_depth projective]
+@[rep_depth projective]
 theorem covariance_eq_clifford_delta
-    (S : SpinorSocket)
-    (C : IndependentCenteredSpinorCalibration S)
+    (S : Fin 4 → ℕ → Bool)
+    (covariance : Fin 4 → Fin 4 → ℝ)
     (hcovariance :
-      ∀ i j, C.covariance i j = deltaFin4 i j)
+      ∀ i j, covariance i j = deltaFin4 i j)
     (i j : Fin 4) :
-    C.covariance i j = deltaFin4 i j :=
+    covariance i j = deltaFin4 i j :=
   hcovariance i j
 
 end InfoGeometry.Canonical.RadioactivePoissonBitStream

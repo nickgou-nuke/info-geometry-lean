@@ -8,7 +8,7 @@ Theorem-honest finite layer:
 
 * prove the Plucker polynomial bookkeeping for the Klein quadric in `P^5`;
 * reuse the already-proved five-grade TKK arithmetic;
-* connect the `K₃` incidence tile to Klein/Erlangen/motivic sockets without
+* connect the `K₃` incidence tile to Klein/Erlangen/motivic interfaces without
   asserting the analytic/geometric/Langlands conclusions as proved.
 -/
 

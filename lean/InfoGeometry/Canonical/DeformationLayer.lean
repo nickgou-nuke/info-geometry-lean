@@ -30,47 +30,47 @@ end DeformationParameter
 
 /-- Explicit property connecting a deformation parameter to a chosen thermal map. -/
 @[rep_depth thermo]
-def DeformationParameterWitness :=
+def DeformationParameterData :=
   {x : ℝ × (ℝ × Set ℝ) //
     x.1 = x.2.1 ∧ x.1 ∈ x.2.2 ∧ x.2.1 ∈ x.2.2}
 
-namespace DeformationParameterWitness
+namespace DeformationParameterData
 
-abbrev q (W : DeformationParameterWitness) : ℝ := W.1.1
+abbrev q (W : DeformationParameterData) : ℝ := W.1.1
 
-abbrev thermalParameter (W : DeformationParameterWitness) : ℝ := W.1.2.1
+abbrev thermalParameter (W : DeformationParameterData) : ℝ := W.1.2.1
 
-def q_eq_thermalParameter (W : DeformationParameterWitness) :
+def q_eq_thermalParameter (W : DeformationParameterData) :
     q W = thermalParameter W := W.2.1
 
-abbrev deformationDomain (W : DeformationParameterWitness) : Set ℝ := W.1.2.2
+abbrev deformationDomain (W : DeformationParameterData) : Set ℝ := W.1.2.2
 
-def q_in_deformationDomain (W : DeformationParameterWitness) :
+def q_in_deformationDomain (W : DeformationParameterData) :
     q W ∈ deformationDomain W := W.2.2.1
 
-def thermalParameter_in_deformationDomain (W : DeformationParameterWitness) :
+def thermalParameter_in_deformationDomain (W : DeformationParameterData) :
     thermalParameter W ∈ deformationDomain W := W.2.2.2
 
-end DeformationParameterWitness
+end DeformationParameterData
 
 /-- Packet for a deformed character layer, gated by a deformation property. -/
 @[rep_depth thermo]
-def DeformedCharacterWitness :=
-  {x : ℝ × (ℝ × DeformationParameterWitness) // x.1 = x.2.1}
+def DeformedCharacterData :=
+  {x : ℝ × (ℝ × DeformationParameterData) // x.1 = x.2.1}
 
-namespace DeformedCharacterWitness
+namespace DeformedCharacterData
 
-abbrev undeformedCharacter (W : DeformedCharacterWitness) : ℝ := W.1.1
+abbrev undeformedCharacter (W : DeformedCharacterData) : ℝ := W.1.1
 
-abbrev deformedCharacter (W : DeformedCharacterWitness) : ℝ := W.1.2.1
+abbrev deformedCharacter (W : DeformedCharacterData) : ℝ := W.1.2.1
 
-abbrev deformation (W : DeformedCharacterWitness) : DeformationParameterWitness :=
+abbrev deformation (W : DeformedCharacterData) : DeformationParameterData :=
   W.1.2.2
 
-def deformationLaw (W : DeformedCharacterWitness) :
+def deformationLaw (W : DeformedCharacterData) :
     deformedCharacter W = undeformedCharacter W := W.2.symm
 
-end DeformedCharacterWitness
+end DeformedCharacterData
 
 @[rep_depth thermo]
 abbrev ThermalEvaluationMap : Type := ℝ
@@ -82,22 +82,16 @@ def thermalParameter (thermal : ThermalEvaluationMap) : ℝ :=
 
 end ThermalEvaluationMap
 
-@[rep_depth thermo]
-structure SeparatedDeformationWitness where
-  deformation : DeformationParameter
-  thermal : ThermalEvaluationMap
-  separated : deformation.q = thermal.thermalParameter
-
 /-- Identification of `q` with a thermal parameter is available only from property data. -/
 @[rep_depth thermo]
 theorem q_identification_from_property
-    (W : DeformationParameterWitness) :
+    (W : DeformationParameterData) :
     W.q = W.thermalParameter :=
   W.q_eq_thermalParameter
 
 @[rep_depth thermo]
 theorem q_identified_with_thermal_parameter_from_property
-    (W : DeformationParameterWitness) :
+    (W : DeformationParameterData) :
     W.q = W.thermalParameter :=
   W.q_eq_thermalParameter
 

@@ -1,3 +1,0 @@
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
-import InfoGeometry.Arithmetic.PrimeBitWittenIndex
-import InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator

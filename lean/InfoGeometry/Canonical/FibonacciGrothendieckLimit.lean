@@ -225,6 +225,16 @@ def fibFusionLZeroLift (L : V →ₗ[𝕜] V) :
     (fun n => fibFusionLZeroReadout L n)
     (fun i j hij x => fibFusionLZeroReadout_tensorMap L i j hij x)
 
+/-! The universal property gives a readout for every finite-stage class, not
+    only for the distinguished Fibonacci vector. -/
+
+omit [CharZero 𝕜] in
+theorem fibFusionGrothendieck_lzero_lift_of
+    (L : V →ₗ[𝕜] V) (n : Nat) (x : fibFusionClass) :
+    fibFusionLZeroLift L (fibFusionOf n x) =
+      fibFusionLZeroReadout L n x := by
+  rw [fibFusionLZeroLift, fibFusionOf, AddCommGroup.DirectLimit.lift_of]
+
 omit [CharZero 𝕜] in
 /-- The finite Fibonacci vector at every stage reads as the chosen operator `L`. -/
 theorem fibFusionLZeroReadout_vector

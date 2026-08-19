@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 
 /-!
-# Finite Pin(5,5)-style reflection and glide socket
+# Finite Pin(5,5)-style reflection and glide
 
 This module gives an explicit theorem-safe split-signature `(5,5)` finite
 coordinate model over `ℚ`.

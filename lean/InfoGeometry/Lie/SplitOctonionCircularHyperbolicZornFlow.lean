@@ -149,6 +149,24 @@ theorem hyperbolicFlowZornEquiv_symm (t : ℝ) :
   intro X
   rfl
 
+theorem hyperbolicFlowZornEquiv_zero_apply (X : CanonicalZorn) :
+    hyperbolicFlowZornEquiv 0 X = X := by
+  change hyperbolicFlowZorn 0 X = X
+  exact LinearMap.congr_fun hyperbolicFlowZorn_zero X
+
+theorem hyperbolicFlowZornEquiv_add_apply (s t : ℝ) (X : CanonicalZorn) :
+    hyperbolicFlowZornEquiv (s + t) X =
+      hyperbolicFlowZornEquiv s (hyperbolicFlowZornEquiv t X) := by
+  change hyperbolicFlowZorn (s + t) X =
+    hyperbolicFlowZorn s (hyperbolicFlowZorn t X)
+  rw [hyperbolicFlowZorn_add]
+  rfl
+
+theorem hyperbolicFlowZornEquiv_neg_apply (t : ℝ) (X : CanonicalZorn) :
+    hyperbolicFlowZornEquiv (-t) (hyperbolicFlowZornEquiv t X) = X := by
+  change hyperbolicFlowZorn (-t) (hyperbolicFlowZorn t X) = X
+  exact LinearMap.congr_fun (hyperbolicFlowZorn_neg t) X
+
 /-- The hyperbolic flow on CanonicalZorn preserves the zero-norm cone (and the full algebraic norm). -/
 theorem hyperbolicFlowZorn_preserves_norm (t : ℝ) (X : CanonicalZorn) :
     detZ (hyperbolicFlowZorn t X) = detZ X := by

@@ -5,7 +5,7 @@ namespace InfoGeometry.Canonical
 /-!
 # Discrete Hodge-compatible split-`G₂` calibration
 
-This is the first cochain-level torsion-free socket.  The degree `3 → 4`
+This is the first cochain-level torsion-free interface.  The degree `3 → 4`
 operator is explicit data on the chosen finite cell complex; it is not inferred
 from the pointwise octonion metric.  Closedness is likewise recorded as a
 geometric/cellular property, not as a consequence of Moufang identities.

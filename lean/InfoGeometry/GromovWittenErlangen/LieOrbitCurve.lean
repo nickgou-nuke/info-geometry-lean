@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 
 /-!
-# InfoGeometry.GromovWittenErlangen.LieOrbitCurveWitness
+# InfoGeometry.GromovWittenErlangen.LieOrbitCurveData
 
 Theorem-safe property surface for the Klein--Gromov synthesis:
 
@@ -48,7 +48,7 @@ fixed labels `x` and `y`. For `G/B`, this includes the Schubert line sectors
 governed by roots; for `G/P` this records the corresponding partial-flag
 quotient.
 -/
-structure LieOrbitCurveWitness (G T Target : Type*) where
+structure LieOrbitCurveData (G T Target : Type*) where
   /-- Root/coroot shadow for symmetry combinatorics. -/
   rootShadow : HomogeneousRootShadow G
   /-- Realization of fixed labels as fixed sectors in the target. -/
@@ -68,20 +68,20 @@ structure LieOrbitCurveWitness (G T Target : Type*) where
 
 /-- Terminology alias for the GKM presentation of the same skeleton. -/
 abbrev GKMOrbitCurveWitness (G T Target : Type*) :=
-  LieOrbitCurveWitness G T Target
+  LieOrbitCurveData G T Target
 
 /--
 Localization graph property for fixed-sector contributions.
 
 Vertices are fixed sectors; edges are orbit sectors between vertices.
 -/
-structure LocalizationGraphWitness (G T Target : Type*) where
+structure LocalizationGraphData (G T Target : Type*) where
   /-- Underlying orbit skeleton. -/
-  orbitWitness : LieOrbitCurveWitness G T Target
+  orbitData : LieOrbitCurveData G T Target
   /-- Vertices of the localization graph. Pinned to `Type` for universe safety. -/
   Vertex : Type
   /-- Map from graph vertices to fixed labels. -/
-  vertexLabel : Vertex → orbitWitness.rootShadow.FixedLabel
+  vertexLabel : Vertex → orbitData.rootShadow.FixedLabel
   /-- Edges of the localization graph. Pinned to `Type` for universe safety. -/
   Edge : Type
   /-- Edge source. -/
@@ -91,15 +91,15 @@ structure LocalizationGraphWitness (G T Target : Type*) where
   /-- Edge orbit realization. -/
   edgeCurve :
     ∀ e : Edge,
-      orbitWitness.OrbitCurve
+      orbitData.OrbitCurve
         (vertexLabel (source e))
         (vertexLabel (target e))
   /-- Edge degree class. -/
-  edgeDegree : Edge → orbitWitness.rootShadow.CurveDegree
+  edgeDegree : Edge → orbitData.rootShadow.CurveDegree
   /-- Compatibility with orbit-degree. -/
   edgeDegree_eq :
     ∀ e : Edge,
-      edgeDegree e = orbitWitness.orbitDegree (edgeCurve e)
+      edgeDegree e = orbitData.orbitDegree (edgeCurve e)
 
 /--
 Minimal virtual-localization sector packet.
@@ -107,8 +107,8 @@ Minimal virtual-localization sector packet.
 This records the fixed/edge-sector shape used by the localization sum; no
 analytic/algebro-geometric localization theorem is asserted here.
 -/
-structure VirtualLocalizationOrbitPacket (G T Target Coeff : Type*) where
-  graph : LocalizationGraphWitness G T Target
+structure VirtualLocalizationOrbitData (G T Target Coeff : Type*) where
+  graph : LocalizationGraphData G T Target
   /-- Vertex-sector contribution term. -/
   vertexContribution : graph.Vertex → Coeff
   /-- Edge-sector contribution term / inverse Euler denominator. -/
@@ -132,14 +132,14 @@ structure LanglandsDualCurveDegreeTransport
 /--
 Langlands/Klein/Gromov packet that pairs an orbit skeleton with dual transport.
 -/
-structure LanglandsKleinGromovPacket (G LG T Target : Type*) where
-  orbit : LieOrbitCurveWitness G T Target
+structure LanglandsKleinGromovData (G LG T Target : Type*) where
+  orbit : LieOrbitCurveData G T Target
   dualShadow : HomogeneousRootShadow LG
   dualTransport :
     LanglandsDualCurveDegreeTransport G LG orbit.rootShadow dualShadow
 
-structure LanglandsDualOrbitCurveWitness {G T Target : Type*}
-    (C : LieOrbitCurveWitness G T Target) where
+structure LanglandsDualOrbitCurveData {G T Target : Type*}
+    (C : LieOrbitCurveData G T Target) where
   /-- Langlands-dual group type. Pinned to `Type` for universe safety. -/
   DualGroup : Type
   dualShadow : HomogeneousRootShadow DualGroup
@@ -149,22 +149,22 @@ structure LanglandsDualOrbitCurveWitness {G T Target : Type*}
 /--
 Integrated Klein--Gromov packet used in downstream owner assembly.
 -/
-structure KleinGromovPacket (G T Target Coeff : Type*) where
-  orbitCurves : LieOrbitCurveWitness G T Target
-  localizationGraph : LocalizationGraphWitness G T Target
-  dualTransport : LanglandsDualOrbitCurveWitness orbitCurves
-  virtualLocalization : VirtualLocalizationOrbitPacket G T Target Coeff
+structure KleinGromovData (G T Target Coeff : Type*) where
+  orbitCurves : LieOrbitCurveData G T Target
+  localizationGraph : LocalizationGraphData G T Target
+  dualTransport : LanglandsDualOrbitCurveData orbitCurves
+  virtualLocalization : VirtualLocalizationOrbitData G T Target Coeff
 
 /--
 Constructor for the integrated packet.
 -/
-def constructKleinGromovPacket
+def constructKleinGromovData
     {G T Target Coeff : Type*}
-    (C : LieOrbitCurveWitness G T Target)
-    (Γ : LocalizationGraphWitness G T Target)
-    (D : LanglandsDualOrbitCurveWitness C)
-    (V : VirtualLocalizationOrbitPacket G T Target Coeff) :
-    KleinGromovPacket G T Target Coeff :=
+    (C : LieOrbitCurveData G T Target)
+    (Γ : LocalizationGraphData G T Target)
+    (D : LanglandsDualOrbitCurveData C)
+    (V : VirtualLocalizationOrbitData G T Target Coeff) :
+    KleinGromovData G T Target Coeff :=
   { orbitCurves := C
     localizationGraph := Γ
     dualTransport := D

@@ -16,6 +16,7 @@ asserted.
 namespace InfoGeometry.OperatorAlgebra
 
 open scoped Matrix
+open scoped ComplexOrder
 
 noncomputable def tomitaQuadratic
     (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
@@ -139,9 +140,31 @@ theorem tomitaQuadratic_isHermitian
     rw [tomitaQuadratic_eq_observable_mul_conjTranspose]
     exact Matrix.isHermitian_mul_conjTranspose_self X
 
+theorem tomitaQuadratic_posSemidef
+    (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    (tomitaQuadratic δ X).PosSemidef := by
+  rw [tomitaQuadratic_eq_observable_mul_conjTranspose]
+  exact Matrix.posSemidef_self_mul_conjTranspose X
+
 noncomputable def tomitaQuadraticRealTrace
     (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) : ℝ :=
   (Matrix.trace (tomitaQuadratic δ X)).re
+
+theorem tomitaQuadratic_trace_eq_real_cast
+    (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
+    Matrix.trace (tomitaQuadratic δ X) =
+      (tomitaQuadraticRealTrace δ X : ℂ) := by
+  have hQ := tomitaQuadratic_isHermitian δ X
+  have htrace : star (Matrix.trace (tomitaQuadratic δ X)) =
+      Matrix.trace (tomitaQuadratic δ X) := by
+    rw [← Matrix.trace_conjTranspose, hQ.eq]
+  apply Complex.ext
+  · rfl
+  · have him := congrArg Complex.im htrace
+    simp at him
+    have him0 : (Matrix.trace (tomitaQuadratic δ X)).im = 0 := by
+      linarith
+    simp [tomitaQuadraticRealTrace, him0]
 
 theorem tomitaQuadraticRealTrace_eq_frobenius
     (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
@@ -213,5 +236,23 @@ theorem normalizedTomitaQuadratic_isHermitian_of_trace_ne_zero
   unfold normalizedTomitaQuadratic Matrix.IsHermitian
   rw [Matrix.conjTranspose_smul]
   rw [hinv, hQ.eq]
+
+theorem normalizedTomitaQuadratic_posSemidef_of_trace_ne_zero
+    (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ)
+    (hTrace : Matrix.trace (tomitaQuadratic δ X) ≠ 0) :
+    (normalizedTomitaQuadratic δ X hTrace).PosSemidef := by
+  rw [normalizedTomitaQuadratic, tomitaQuadratic_trace_eq_real_cast]
+  have hpos : 0 < tomitaQuadraticRealTrace δ X := by
+    exact tomitaQuadraticRealTrace_pos_of_ne_zero δ
+      (by
+        intro hX
+        apply hTrace
+        rw [hX]
+        simp [tomitaQuadratic])
+  have hnonneg : (0 : ℂ) ≤
+      (((tomitaQuadraticRealTrace δ X)⁻¹ : ℝ) : ℂ) := by
+    exact Complex.zero_le_real.mpr (inv_nonneg.mpr hpos.le)
+  simpa using
+    (Matrix.PosSemidef.smul (tomitaQuadratic_posSemidef δ X) hnonneg)
 
 end InfoGeometry.OperatorAlgebra

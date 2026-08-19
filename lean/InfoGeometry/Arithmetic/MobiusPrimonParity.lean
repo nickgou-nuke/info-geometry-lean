@@ -89,6 +89,17 @@ theorem majoranaChirality_eq_mobiusReadout
     S.majoranaChirality = S.mobiusReadout := by
   rw [majoranaChirality_eq_fermionParity, mobiusReadout_eq_fermionParity]
 
+/-- The finite square-free parity triangle, exposed as one reusable readout
+packet for the split-Majorana, fermion-parity, and Möbius lanes. -/
+theorem squareFreePrimonParity_packet
+    (S : SquareFreePrimonState P) :
+    S.majoranaChirality = S.fermionParity ∧
+      S.mobiusReadout = S.fermionParity ∧
+      S.majoranaChirality = S.mobiusReadout := by
+  exact ⟨majoranaChirality_eq_fermionParity S,
+    mobiusReadout_eq_fermionParity S,
+    majoranaChirality_eq_mobiusReadout S⟩
+
 end SquareFreePrimonState
 
 /-! ## 2. Finite chirality character readbacks -/

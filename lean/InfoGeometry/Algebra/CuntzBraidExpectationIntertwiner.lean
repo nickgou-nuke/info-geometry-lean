@@ -347,7 +347,8 @@ def permutedRangeProjector (σ : Equiv.Perm (Fin n)) (i : Fin n) : CuntzAlg n :=
 theorem permCuntzAlgHom_rangeProjector (σ : Equiv.Perm (Fin n)) (i : Fin n) :
     permCuntzAlgHom σ (cuntzS n i * cuntzSdag n i) =
       permutedRangeProjector σ i := by
-  simp [permutedRangeProjector]
+  unfold permutedRangeProjector
+  rw [map_mul, permCuntzAlgHom_generator, permCuntzAlgHom_generator_dag]
 
 theorem permCuntzAlgHom_partition (σ : Equiv.Perm (Fin n)) :
     permCuntzAlgHom σ (∑ i : Fin n,

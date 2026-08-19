@@ -3,7 +3,7 @@ import InfoGeometryCore.Basic
 
 open InfoGeometryCore
 /-!
-# Finite V4 root-system socket
+# Finite V4 root-system interface
 
 This module records the Klein four group table associated with the two sign
 reflections of the finite `A₁ × A₁` root picture.  It proves the point-inversion

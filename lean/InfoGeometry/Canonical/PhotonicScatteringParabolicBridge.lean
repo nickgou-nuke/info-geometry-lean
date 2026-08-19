@@ -55,6 +55,24 @@ theorem scattering_transportClass_parabolic_of_nilpotent
   unfold transportClass
   simp [scattering_channels_collapse Ω h_nilpotent]
 
+/-- The concrete scattering classifier detects nilpotence exactly. -/
+theorem scattering_transportClass_parabolic_iff_nilpotent
+    (Ω : ParOp) :
+    transportClass (scatteringOfOmega Ω) = TransportClass.Parabolic ↔
+      mul Ω Ω = zero := by
+  constructor
+  · intro hclass
+    classical
+    by_cases hchannels :
+        (scatteringOfOmega Ω).Splus = ChiralChannel.Parabolic ∧
+          (scatteringOfOmega Ω).Sminus = ChiralChannel.Parabolic
+    · have hplus : channelOfOmega Ω = ChiralChannel.Parabolic := by
+        simpa [scatteringOfOmega] using hchannels.1
+      exact PhotonicParabolicChannel.nilpotent_of_chiral_collapse Ω hplus
+    · simp [transportClass, hchannels] at hclass
+  · intro h_nilpotent
+    exact scattering_transportClass_parabolic_of_nilpotent Ω h_nilpotent
+
 /--
 Witness-based packet (owner-side): no global collapse claim without hypotheses.
 `collapseWitness` explicitly certifies that both channels are parabolic.

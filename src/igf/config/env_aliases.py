@@ -7,6 +7,8 @@ from typing import Optional
 
 
 DEFAULT_ARANGO_ENDPOINT = "http://127.0.0.1:8530"
+DEFAULT_ALEXANDRIA_ARANGO_ENDPOINT = "http://127.0.0.1:8532"
+DEFAULT_HIVE_ARANGO_ENDPOINT = "http://127.0.0.1:8540"
 DEFAULT_ARANGO_DATABASE = "infogeometry"
 DEFAULT_HIVE_ARANGO_DATABASE = "hive_live"
 DEFAULT_ARANGO_ENV = Path("configs/local/hive_arango.env")
@@ -16,6 +18,13 @@ ALIASES = {
     "ARANGO_PASS": ("ARANGO_PASS", "ARANGO_PASSWORD"),
     "ARANGO_ENDPOINT": ("ARANGO_ENDPOINT",),
     "ARANGO_DATABASE": ("ARANGO_DATABASE",),
+}
+
+ALEXANDRIA_ALIASES = {
+    "ARANGO_USER": ("ALEXANDRIA_ARANGO_USERNAME", "ARANGO_USER", "ARANGO_USERNAME"),
+    "ARANGO_PASS": ("ALEXANDRIA_ARANGO_PASSWORD", "ARANGO_PASS", "ARANGO_PASSWORD"),
+    "ARANGO_ENDPOINT": ("ALEXANDRIA_ARANGO_ENDPOINT",),
+    "ARANGO_DATABASE": ("ALEXANDRIA_ARANGO_DB",),
 }
 
 HIVE_ALIASES = {
@@ -79,8 +88,10 @@ def load_repo_arango_env(repo_root: Path | None = None) -> Path | None:
         os.environ.setdefault("ARANGO_PASSWORD", password)
         os.environ.setdefault("HIVE_ARANGO_PASS", os.environ.get("HIVE_ARANGO_PASS", password))
         os.environ.setdefault("HIVE_ARANGO_PASSWORD", os.environ.get("HIVE_ARANGO_PASSWORD", password))
-    endpoint = os.environ.get("ARANGO_ENDPOINT") or DEFAULT_ARANGO_ENDPOINT
-    os.environ.setdefault("HIVE_ARANGO_ENDPOINT", os.environ.get("HIVE_ARANGO_ENDPOINT", endpoint))
+    os.environ.setdefault(
+        "HIVE_ARANGO_ENDPOINT",
+        os.environ.get("HIVE_ARANGO_ENDPOINT", DEFAULT_HIVE_ARANGO_ENDPOINT),
+    )
     os.environ.setdefault("HIVE_ENDPOINT", os.environ.get("HIVE_ENDPOINT", os.environ["HIVE_ARANGO_ENDPOINT"]))
     os.environ.setdefault(
         "HIVE_ARANGO_DATABASE",
@@ -112,7 +123,7 @@ def normalized_arango_env() -> dict[str, str]:
 
 
 def normalized_hive_arango_env() -> dict[str, str]:
-    endpoint = get_env_alias(*HIVE_ALIASES["ARANGO_ENDPOINT"]) or DEFAULT_ARANGO_ENDPOINT
+    endpoint = get_env_alias(*HIVE_ALIASES["ARANGO_ENDPOINT"]) or DEFAULT_HIVE_ARANGO_ENDPOINT
     database = get_env_alias(*HIVE_ALIASES["ARANGO_DATABASE"]) or DEFAULT_HIVE_ARANGO_DATABASE
     user = get_env_alias(*HIVE_ALIASES["ARANGO_USER"])
     password = get_env_alias(*HIVE_ALIASES["ARANGO_PASS"])
@@ -147,7 +158,7 @@ def arango_password(default: str = "") -> str:
     return os.environ.get("ARANGO_PASS") or os.environ.get("ARANGO_PASSWORD") or default
 
 
-def hive_arango_endpoint(default: str = DEFAULT_ARANGO_ENDPOINT) -> str:
+def hive_arango_endpoint(default: str = DEFAULT_HIVE_ARANGO_ENDPOINT) -> str:
     return get_env_alias(*HIVE_ALIASES["ARANGO_ENDPOINT"]) or default
 
 
@@ -161,3 +172,32 @@ def hive_arango_username(default: str = "root") -> str:
 
 def hive_arango_password(default: str = "") -> str:
     return get_env_alias(*HIVE_ALIASES["ARANGO_PASS"]) or default
+
+
+def alexandria_arango_endpoint(default: str = DEFAULT_ALEXANDRIA_ARANGO_ENDPOINT) -> str:
+    return get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_ENDPOINT"]) or default
+
+
+def alexandria_arango_database(default: str = "alexandria") -> str:
+    return get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_DATABASE"]) or default
+
+
+def alexandria_arango_username(default: str = "root") -> str:
+    return get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_USER"]) or default
+
+
+def alexandria_arango_password(default: str = "") -> str:
+    return get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_PASS"]) or default
+
+
+def normalized_alexandria_arango_env() -> dict[str, str]:
+    endpoint = alexandria_arango_endpoint()
+    database = alexandria_arango_database()
+    user = alexandria_arango_username()
+    password = alexandria_arango_password()
+    return {
+        "endpoint": endpoint.rstrip("/"),
+        "database": database,
+        "user": user,
+        "password": password,
+    }

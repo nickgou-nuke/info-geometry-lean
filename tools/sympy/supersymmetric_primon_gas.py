@@ -12,7 +12,7 @@ Verified finite layers:
 * finite identities behind `1/zeta(s)` and `zeta(s)/zeta(2s)`;
 * Mobius parity on squarefree states and zero on repeated-prime sectors;
 * tripotent `{+1,-1,0}` projectors for boson/fermion/ghost sectors;
-* a conditional matrix socket for `Q^2 = H`.
+* a conditional matrix interface for `Q^2 = H`.
 
 No infinite Euler product, C*-completion, spectral mass-gap theorem, or RH
 claim is verified here.
@@ -87,7 +87,7 @@ def main() -> None:
     assert_matrix_eq(T * P_fermion, -P_fermion, "T on -1 sector")
     assert_matrix_eq(T * P_ghost, Z3, "T on 0 sector")
 
-    # Conditional supercharge socket: here we choose a concrete Q and define H=Q^2.
+    # Conditional supercharge interface: here we choose a concrete Q and define H=Q^2.
     Q = sp.Matrix([[0, 1], [1, 0]])
     H = Q**2
     assert_matrix_eq(Q**2, H, "supercharge square Q^2=H")
@@ -100,7 +100,7 @@ def main() -> None:
     print("  zeta-ratio shadow: Z_boson * Z_second_order = Z_fermion")
     print("  Mobius grading: squarefree parity, repeated-prime sectors -> 0")
     print("  trifactor: +1 boson, -1 fermion, 0 ghost projectors resolve identity")
-    print("  supercharge socket: Q^2=H and QH=HQ after supplying Q")
+    print("  supercharge interface: Q^2=H and QH=HQ after supplying Q")
 
 
 if __name__ == "__main__":

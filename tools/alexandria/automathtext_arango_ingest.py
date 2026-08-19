@@ -29,7 +29,7 @@ from tools.alexandria.arango_ingest import (  # noqa: E402
     import_rows,
 )
 from tools.infra.arango_env import (  # noqa: E402
-    arango_endpoint,
+    alexandria_arango_endpoint,
     arango_password,
     arango_username,
     load_repo_arango_env,
@@ -312,7 +312,7 @@ def import_automath_graph(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--input-dir", required=True, type=Path)
-    parser.add_argument("--endpoint", default=arango_endpoint())
+    parser.add_argument("--endpoint", default=alexandria_arango_endpoint())
     parser.add_argument("--database", default="alexandria")
     parser.add_argument("--username", default=arango_username())
     parser.add_argument("--password", default=arango_password("alexandria_root"))

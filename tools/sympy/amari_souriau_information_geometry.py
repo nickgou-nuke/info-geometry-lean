@@ -8,7 +8,7 @@ This script mirrors the Lean-facing identities at the symbolic level:
 * `eta(theta) = d Psi / d theta`
 * `Bregman(Psi)` and `KL_param` share the same algebraic readout
 * `d log Q` is the thermodynamic force / commutator current in the finite
-  socket
+  interface
 
 It is deliberately conservative: it verifies symbolic identities under the
 chosen expressions, not a general theorem about arbitrary manifolds.

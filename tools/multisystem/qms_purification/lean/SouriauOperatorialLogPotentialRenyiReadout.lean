@@ -2,7 +2,7 @@ import Mathlib
 
 /-!
 QMS isolated proof targets for purifying the `RenyiMellinSouriauReadout`
-sockets in `InfoGeometry.Canonical.SouriauOperatorialLogPotential`.
+deferred interfaces in `InfoGeometry.Canonical.SouriauOperatorialLogPotential`.
 
 Mathematical context:
 - `State` is the state carrier.
@@ -22,7 +22,7 @@ Existing mathlib/literature context:
   this abstract owner surface.
 
 QMS purification move:
-- Replace impossible analytic sockets by positive readbacks of existing data:
+- Replace impossible analytic deferred interfaces by positive readbacks of existing data:
   1. positivity of the two scalar partition readouts;
   2. nonzero denominator `1 - gamma` from `gamma_ne_one`;
   3. ordered-pair projection preserving the Petz and sandwiched readouts as two

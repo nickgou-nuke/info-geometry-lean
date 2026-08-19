@@ -328,7 +328,7 @@ theorem cuntz_range_projectors_orthogonal (n : ℕ) {i j : Fin n} (hij : i ≠ j
 /-- Range projectors are self-adjoint: `(Sᵢ Sᵢ†)† = Sᵢ Sᵢ†`. -/
 theorem cuntz_range_projector_star (n : ℕ) (i : Fin n) :
     star (cuntzS n i * cuntzSdag n i) = cuntzS n i * cuntzSdag n i := by
-  simp [star_mul, star_cuntzS, star_cuntzSdag]
+  rw [star_mul, star_cuntzSdag, star_cuntzS]
 
 /-- Partial isometry: `(Sᵢ Sᵢ†) * Sᵢ = Sᵢ`. The range projector absorbs Sᵢ. -/
 theorem cuntz_range_projector_mul_S (n : ℕ) (i : Fin n) :

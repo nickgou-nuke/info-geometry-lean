@@ -14,7 +14,7 @@ Proved in kernel:
 * the finite affine/Rindler log-clock is translated by the parabolic parameter;
 * a formal parabolic shear clock composes additively.
 
-Socketed:
+Deferred interface:
 
 * actual `dlog Q` generator in the smooth quadric-complement de Rham complex;
 * Connes cocycle/Tomita--Takesaki realization;
@@ -52,7 +52,7 @@ def ParabolicShearClock.inv (A : ParabolicShearClock) : ParabolicShearClock wher
 
 /-- Data asserting that the forbidden-cone `dlog Q` de Rham class is the same
 object as the modular automorphism derivation, normalized by a KMS/residue
-period.  The equality is intentionally socketed: it is the target of analytic
+period.  The equality is intentionally deferred: it is the target of analytic
 Tomita--Takesaki/de Rham comparison, not a hidden finite theorem. -/
 structure DeRhamModularTimeIdentification
     (C : AbstractDeRhamComplex) (R : Type*) [CommRing R]
@@ -80,7 +80,7 @@ theorem dlog_modular_derivation_preserves_grades
   exact ⟨I.modularDerivation.derivation_mem_g0,
     fun i x hx => modular_derivation_preserves_grade G I.modularDerivation i hx⟩
 
-/-- Capstone finite/socket theorem: the forbidden-cone `dlog Q` class is
+/-- Capstone finite-interface theorem: the forbidden-cone `dlog Q` class is
 packaged as the modular derivation, the KMS/residue clock normalization is
 recorded, and the parabolic/affine log-clock advances by the same parameter. -/
 theorem modular_time_clocks_deRham_forbidden_cone

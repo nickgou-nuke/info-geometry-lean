@@ -2,7 +2,7 @@ import InfoGeometry.Canonical.UnifiedMatrixQuantumGeometryFinite
 import InfoGeometry.Physics.Section31UnifiedMatrixDynamics
 
 /-!
-# Section 32 repaired: quaternionic emergent-spacetime finite socket
+# Section 32 repaired: finite quaternionic emergent-spacetime algebra
 
 The source text states an axiomatic quaternionic-emergent-spacetime program.  In
 this repository we keep only the finite algebra that the kernel can check:
@@ -35,6 +35,16 @@ def blochSpacetimePoint (t r n1 n2 n3 : ℂ) : Mat2 :=
 /-- The associated trace-one Bloch density at radius `r`. -/
 def blochDensityAtRadius (r n1 n2 n3 : ℂ) : Mat2 :=
   densityMatrix (r * n1) (r * n2) (r * n3)
+
+/-- The spacetime point carries scalar trace `2t`. -/
+theorem blochSpacetimePoint_trace (t r n1 n2 n3 : ℂ) :
+    Matrix.trace (blochSpacetimePoint t r n1 n2 n3) = 2 * t := by
+  rw [blochSpacetimePoint, pauliPointRaw_trace]
+
+/-- The associated Bloch density remains trace one for every radius. -/
+theorem blochDensityAtRadius_trace (r n1 n2 n3 : ℂ) :
+    Matrix.trace (blochDensityAtRadius r n1 n2 n3) = 1 := by
+  rw [blochDensityAtRadius, densityMatrix_trace]
 
 /-- The Section 32 point is exactly `2t` times the associated density matrix. -/
 theorem blochSpacetimePoint_eq_two_t_smul_density (t r n1 n2 n3 : ℂ) :

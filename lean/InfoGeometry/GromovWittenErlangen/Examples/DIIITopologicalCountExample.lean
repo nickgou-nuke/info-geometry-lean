@@ -49,16 +49,6 @@ inductive Sector where
   | residue
 deriving DecidableEq, Repr
 
-/--
-Witness that a concrete Kitaev chain is in the nontrivial DIII/`ZMod 2` sector.
-
-This is intentionally separated from the count example: the present file fixes
-the arithmetic/operator target surface, while a model-specific BdG file supplies
-the actual chain property.
--/
-def DIIIZ2SectorWitness (chain : List KitaevCell) : Prop :=
-  topologicalIndexZ2 chain = 1
-
 /-- Positive three-sector count representative for the DIII count target. -/
 def counts : RelativeCounts 3 :=
   fun i =>

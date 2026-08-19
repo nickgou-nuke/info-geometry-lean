@@ -1,6 +1,7 @@
 import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.FormalPrimeRootSystem
 import InfoGeometry.Arithmetic.PrimeSuperalgebra
+import InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge
 
 /-!
 # Prime-gas partition functions
@@ -15,8 +16,10 @@ noncomputable section
 namespace InfoGeometry.Canonical.PrimeGasPartitions
 
 open scoped BigOperators
+open Filter Topology
 open FormalPrimeRootSystem
 open InfoGeometry.Arithmetic.PrimeSuperalgebra
+open InfoGeometry.Canonical.PrimeEulerProductConvergenceBridge
 
 /-! ## Finite prime traces -/
 
@@ -77,6 +80,27 @@ theorem finiteFermionTrace_mul_finiteParityTrace
 def infiniteBosonTrace (s : ℂ) : ℂ :=
   infiniteComplexBosonicEulerProduct s
 
+/-! ## Finite complex cutoff readout -/
+
+/-- The finite complex boson partition on the subtype prime cutoff is exactly
+the natural-number prime cutoff used by the convergence owner. -/
+theorem finiteComplexBosonPartition_primeSubtypesBelow_eq_primeBosonicCutoff
+    (n : ℕ) (s : ℂ) :
+    finiteComplexBosonPartition (primeSubtypesBelow n) s =
+      primeBosonicCutoff n s := by
+  unfold finiteComplexBosonPartition primeBosonicCutoff
+  exact prod_primeSubtypesBelow_eq n s
+
+/-- The finite complex boson partitions converge to `riemannZeta` on the
+absolute-convergence half-plane. -/
+theorem finiteComplexBosonPartition_primeSubtypesBelow_tendsto_riemannZeta
+    {s : ℂ} (hs : 1 < s.re) :
+    Tendsto (fun n : ℕ =>
+      finiteComplexBosonPartition (primeSubtypesBelow n) s) atTop
+      (𝓝 (riemannZeta s)) := by
+  simpa only [finiteComplexBosonPartition_primeSubtypesBelow_eq_primeBosonicCutoff] using
+    primeBosonicCutoff_tendsto_riemannZeta hs
+
 /-- Infinite positive-fermion zeta-ratio channel. -/
 def infiniteFermionTrace (s : ℂ) : ℂ :=
   infiniteComplexPositiveFermionZetaRatio s
@@ -84,41 +108,6 @@ def infiniteFermionTrace (s : ℂ) : ℂ :=
 /-- Infinite parity channel, defined as the reciprocal bosonic product. -/
 def infiniteParityTrace (s : ℂ) : ℂ :=
   (infiniteBosonTrace s)⁻¹
-
-/--
-Proof-carrying half-plane context for the genuine infinite Euler products.
--/
-@[rep_depth thermo]
-abbrev InfiniteEulerProductConvergenceWitness :=
-  {s : ℂ // 1 < s.re}
-
-namespace InfiniteEulerProductConvergenceWitness
-
-/-- Compatibility accessor for the complex parameter of the half-plane subtype. -/
-abbrev s (W : InfiniteEulerProductConvergenceWitness) : ℂ := W.1
-
-/-- Compatibility accessor for its genuine half-plane property. -/
-abbrev halfPlane_Re_gt_one (W : InfiniteEulerProductConvergenceWitness) : 1 < W.s.re := W.2
-
-def zeta (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
-  riemannZeta W.s
-
-def zeta_two_beta (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
-  riemannZeta ((2 : ℂ) * W.s)
-
-def inverseZeta (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
-  (riemannZeta W.s)⁻¹
-
-def bosonTrace (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
-  infiniteBosonTrace W.s
-
-def fermionTrace (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
-  infiniteFermionTrace W.s
-
-def parityTrace (W : InfiniteEulerProductConvergenceWitness) : ℂ :=
-  infiniteParityTrace W.s
-
-end InfiniteEulerProductConvergenceWitness
 
 /-- The bosonic trace is Riemann zeta on `Re(s)>1`. -/
 @[rep_depth thermo]
@@ -150,23 +139,6 @@ theorem infiniteFermionTrace_eq_zeta_div_zeta_two
     norm_num [Complex.mul_re]
   rw [htwo]
   linarith
-
-@[rep_depth thermo]
-theorem bosonTrace_eq_zeta (W : InfiniteEulerProductConvergenceWitness) :
-    W.bosonTrace = W.zeta :=
-  infiniteBosonTrace_eq_riemannZeta W.halfPlane_Re_gt_one
-
-@[rep_depth thermo]
-theorem fermionTrace_eq_zeta_div_zeta_two_beta
-    (W : InfiniteEulerProductConvergenceWitness) :
-    W.fermionTrace = W.zeta / W.zeta_two_beta :=
-  infiniteFermionTrace_eq_zeta_div_zeta_two W.halfPlane_Re_gt_one
-
-@[rep_depth thermo]
-theorem parityTrace_eq_inverse_zeta
-    (W : InfiniteEulerProductConvergenceWitness) :
-    W.parityTrace = W.inverseZeta :=
-  infiniteParityTrace_eq_inverse_riemannZeta W.halfPlane_Re_gt_one
 
 /-! The native equality relation identifying parity and supertrace readouts.
 
@@ -207,5 +179,24 @@ theorem parityTrace_eq_supertrace
     finiteParityTrace L (primeWeight β) =
       finitePrimeSupertrace (primeCutoffOfRootLattice L) β :=
   finiteParityTrace_eq_finitePrimeSupertrace L β
+
+/-! ## Composed finite boson/supertrace cancellation -/
+
+/--
+The formal prime-root bosonic trace cancels the canonical finite exterior
+supertrace on the same finite prime register.
+
+This is a genuine carrier bridge: the cancellation is inherited from the
+finite parity product, while the supertrace is the canonical
+`PrimeSuperalgebra` readout.  No infinite Euler product is used.
+-/
+@[rep_depth thermo]
+theorem finiteBosonTrace_mul_finitePrimeSupertrace_eq_one
+    (L : FormalPrimeRootLattice) (β : ℝ)
+    (h : ∀ p ∈ L.primes, 1 - primeWeight β p ≠ 0) :
+    finiteBosonTrace L (primeWeight β) *
+        finitePrimeSupertrace (primeCutoffOfRootLattice L) β = 1 := by
+  rw [← finiteParityTrace_eq_finitePrimeSupertrace L β]
+  exact finiteBosonTrace_mul_finiteParityTrace L (primeWeight β) h
 
 end InfoGeometry.Canonical.PrimeGasPartitions

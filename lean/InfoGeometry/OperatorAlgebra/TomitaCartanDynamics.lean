@@ -4,7 +4,7 @@ InfoGeometry/OperatorAlgebra/TomitaCartanDynamics.lean
 Cartan dynamics into Tomita-center collapse and Krein isotropic defects.
 
 This module connects the kinematic mechanism isolated in
-`TomitaCartanSplit.lean` to a dynamical Cartan-flow socket:
+`TomitaCartanSplit.lean` to a dynamical Cartan-flow interface:
 
 * noncompact Cartan directions are the antisymmetric Tomita branch;
 * a model may supply a flow saying that such directions hit the
@@ -89,13 +89,13 @@ theorem noncompact_globalGenerator_eq_zero_of_tomita_fixed
 
 end CartanTomitaGenerator
 
-/-! ## 2. Cartan flow socket hitting the algebra/commutant overlap -/
+/-! ## 2. Cartan flow hitting the algebra/commutant overlap -/
 
 /--
 A Cartan dynamics property saying that noncompact directions reach the
 algebra/commutant overlap at a supplied hitting time.
 
-This is intentionally a property socket.  Analytic statements such as convergence
+This is intentionally a property interface.  Analytic statements such as convergence
 of a noncompact one-parameter group to a projective boundary should be proved in
 concrete models and then supplied through `noncompact_hits_overlap`.
 -/
@@ -176,7 +176,7 @@ theorem noncompact_hit_isotropic
 
 end CartanDynamicsToOverlap
 
-/-! ## 3. Cartan flow socket hitting a Tomita/Drazin defect locus -/
+/-! ## 3. Cartan flow hitting a Tomita/Drazin defect locus -/
 
 /--
 A Cartan dynamics property saying that noncompact directions hit an already
@@ -302,8 +302,8 @@ def hit
 Main theorem: noncompact Cartan dynamics generates an isotropic doubled-Krein
 carrier readout.
 
-All analytic/geometric content is in the supplied witnesses.  The theorem here
-is the formal composition of those witnesses.
+All analytic/geometric content is in the supplied hypotheses.  The theorem here
+is the formal composition of those hypotheses.
 -/
 theorem noncompact_generates_isotropic
     {X : Gen} {x : Op}

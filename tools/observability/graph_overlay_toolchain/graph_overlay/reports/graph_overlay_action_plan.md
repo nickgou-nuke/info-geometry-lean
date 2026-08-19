@@ -88,7 +88,7 @@ LeanFile
 LeanDecl
 LeanImport
 HashClass
-ClosureSocket
+DeferredInterface
 ```
 
 Recommended edges:
@@ -99,7 +99,7 @@ imports: LeanFile → LeanImport
 lexical_ref: LeanDecl → LeanDecl
 same_alpha_hash: LeanDecl → HashClass
 same_wl_hash: LeanDecl → HashClass
-owns_socket: LeanDecl → ClosureSocket
+owns_deferred_interface: LeanDecl → DeferredInterface
 ```
 
 ## Closure policy

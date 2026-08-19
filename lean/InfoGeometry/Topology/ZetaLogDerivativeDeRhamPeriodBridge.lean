@@ -5,7 +5,11 @@ import Mathlib.Data.Int.Basic
 import Mathlib.Tactic
 
 /-!
-# Algebraic Logarithmic-Derivative Coefficients and Residue Witnesses
+# Classical Comparison Lane: Logarithmic-Derivative Coefficients
+
+The native finite real divisor/residue owner is
+`InfoGeometry.Arithmetic.RiemannPoleZeroMonodromy`.  This file preserves an
+older complex-coefficient comparison API and does not replace that owner.
 
 This module formalizes the algebraic coefficient of the logarithmic derivative:
 $$\omega_f = d\log(1/f) = - \frac{f'(s)}{f(s)} \, ds$$
@@ -30,10 +34,11 @@ class, or an analytic period theorem.
    $-m$.  The integer-cast theorem below is only an algebraic witness and is
    not a contour-period statement.
 
-4. **$V_4$ Klein Symmetries on Periods and Residues:**
-   - Functional reflection $\tau(s) = 1 - s$ maps zero $\rho$ to $1 - \rho$ with identical multiplicity.
-   - Schwarz conjugation $\sigma(s) = s^*$ maps zero $\rho$ to $\rho^*$ with conjugated residue.
-   - Antiunitary reflection $\gamma = \tau \circ \sigma$ fixes the critical line $\operatorname{Re}(s) = 1/2$.
+4. **$V_4$ comparison labels on coefficients:**
+   - Functional reflection, Schwarz conjugation, and their composite are
+     recorded as finite coordinate involutions.
+   - This file does not construct a zero set or prove multiplicity transport;
+     those statements require explicit divisor data in the native owner.
 -/
 
 noncomputable section

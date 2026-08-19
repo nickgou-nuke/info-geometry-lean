@@ -369,4 +369,15 @@ theorem colimitNilpotent_sq_zero : colimitNilpotent * colimitNilpotent = 0 := by
   change (colimit.ι zornStageFunctor 0).hom 0 = 0
   exact (colimit.ι zornStageFunctor 0).hom.map_zero
 
+/-- Every pair of scalar multiples of the transported nilpotent still has
+square-zero product.  This is the native colimit form of the homogeneous
+nilpotent lane, obtained solely from bilinearity and the seed relation. -/
+theorem colimitNilpotent_smul_mul_smul (c d : ℂ) :
+    (c • colimitNilpotent) * (d • colimitNilpotent) = 0 := by
+  change colimitProduct (c • colimitNilpotent) (d • colimitNilpotent) = 0
+  rw [colimitProduct_smul_left, colimitProduct_smul_right,
+    show colimitProduct colimitNilpotent colimitNilpotent = 0 from
+      colimitNilpotent_sq_zero, smul_zero]
+  simp
+
 end InfoGeometry.Categorical.ZornUHFColimit

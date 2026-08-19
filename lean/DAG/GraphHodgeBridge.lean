@@ -206,11 +206,37 @@ theorem canonicalEndomorphism_one
   simpa [canonicalEndomorphism] using
     InfoGeometry.Topology.CuntzO2Carrier.range_sum P.cuntz
 
+theorem canonicalEndomorphism_zero
+    (P : RealDoubledKreinCuntzTransferData E α) :
+    canonicalEndomorphism P 0 = 0 := by
+  unfold canonicalEndomorphism
+  rw [mul_zero, mul_zero, zero_mul, zero_mul, add_zero]
+
+theorem canonicalEndomorphism_add
+    (P : RealDoubledKreinCuntzTransferData E α)
+    (A B : RealDoubledKreinDAGEnd E) :
+    canonicalEndomorphism P (A + B) =
+      canonicalEndomorphism P A + canonicalEndomorphism P B := by
+  unfold canonicalEndomorphism
+  noncomm_ring
+
 /-- The packet's discrete modular step is unital. -/
 theorem discreteModularStep_one
     (P : RealDoubledKreinCuntzTransferData E α) :
     discreteModularStep P 1 = 1 := by
   simpa [discreteModularStep] using canonicalEndomorphism_one P
+
+theorem discreteModularStep_zero
+    (P : RealDoubledKreinCuntzTransferData E α) :
+    discreteModularStep P 0 = 0 := by
+  simpa [discreteModularStep] using canonicalEndomorphism_zero P
+
+theorem discreteModularStep_add
+    (P : RealDoubledKreinCuntzTransferData E α)
+    (A B : RealDoubledKreinDAGEnd E) :
+    discreteModularStep P (A + B) =
+      discreteModularStep P A + discreteModularStep P B := by
+  simpa [discreteModularStep] using canonicalEndomorphism_add P A B
 
 /--
 KMS fixed-point law for the Cuntz transfer.

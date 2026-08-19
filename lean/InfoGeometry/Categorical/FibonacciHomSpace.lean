@@ -44,9 +44,10 @@ noncomputable def FibHom.comp {X Y Z : FibCat} (f : FibHom X Y) (g : FibHom Y Z)
     tau_comp  := f.tau_comp * g.tau_comp }
 
 /-- 
-Open Debt: 
-The Category instance mapping the explicit matrix operations to mathlib's `Category`.
-This establishes the explicit `Hom(X, Y)` vector spaces for the Fibonacci Braided Category.
+The explicit matrix operations are already packaged as a native `Category`
+instance below, with `Hom(X, Y) = FibHom X Y`.  The remaining boundary is
+not the category instance itself: a full bundled monoidal/braided promotion
+still requires the corresponding naturality and coherence fields.
 -/
 noncomputable instance : Category FibCat where
   Hom X Y := FibHom X Y

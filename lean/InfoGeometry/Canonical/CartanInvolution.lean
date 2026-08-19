@@ -82,6 +82,25 @@ def embedH4 (q : H4) : DiracMatrix :=
   fin_cases r <;> fin_cases c <;>
     simp [cartan_involution, gamma0, gamma1, Matrix.mul_apply, Fin.sum_univ_succ]
 
+@[simp] theorem compact_projection_embedI :
+    compact_projection gamma0 embedI = embedI := by
+  simp [compact_projection]
+  module
+
+@[simp] theorem compact_projection_embedJ :
+    compact_projection gamma0 embedJ = embedJ := by
+  simp [compact_projection]
+  module
+
+@[simp] theorem compact_projection_embedK :
+    compact_projection gamma0 embedK = embedK := by
+  simp [compact_projection]
+  module
+
+@[simp] theorem compact_projection_boost :
+    compact_projection gamma0 (gamma0 * gamma1) = 0 := by
+  simp [compact_projection]
+
 @[simp] theorem embedI_sq : embedI * embedI = -embedOne := by
   ext r c
   fin_cases r <;> fin_cases c <;>

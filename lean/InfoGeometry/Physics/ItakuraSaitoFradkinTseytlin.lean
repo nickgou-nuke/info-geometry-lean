@@ -31,62 +31,47 @@ noncomputable def bohmMadelungQuantumPotential (_ρ : ℝ) (grad2LogRho : ℝ) (
   - (grad2LogRho + (1/2) * gradLogRhoSq)
 
 /-- Independent positive-scale and quantum-gradient data. -/
-def FourthOrderScalePacket : Type :=
-  {p : ℝ × ℝ // p.1 > 0}
+def spectral_base (P : ℝ × ℝ) : ℝ :=
+  P.1
 
-namespace FourthOrderScalePacket
+theorem spectral_base_pos (P : ℝ × ℝ) (hP : P.1 > 0) : 0 < spectral_base P :=
+  hP
 
-def spectral_base (P : FourthOrderScalePacket) : ℝ :=
-  P.1.1
-
-def is_positive (P : FourthOrderScalePacket) : P.spectral_base > 0 :=
+def quantum_potential_gradient (P : ℝ × ℝ) : ℝ :=
   P.2
 
-def quantum_potential_gradient (P : FourthOrderScalePacket) : ℝ :=
-  P.1.2
-
 /-- The fourth-order scalar term is canonically the gradient square. -/
-def four_derivative_term (P : FourthOrderScalePacket) : ℝ :=
-  P.quantum_potential_gradient ^ 2
+def four_derivative_term (P : ℝ × ℝ) : ℝ :=
+  quantum_potential_gradient P ^ 2
 
 /-- The scale relation is definitional, not separately supplied evidence. -/
-theorem scaling_eq (P : FourthOrderScalePacket) :
-    P.quantum_potential_gradient ^ 2 = P.four_derivative_term :=
+theorem scaling_eq (P : ℝ × ℝ) :
+    quantum_potential_gradient P ^ 2 = four_derivative_term P :=
   rfl
 
-end FourthOrderScalePacket
-
 /-- A finite count packet with explicit balance equations. -/
-def ScaleInvariantCocycles : Type :=
-  {p : (ℕ × ℕ) × ℕ //
-    p.1.2 = 4 * p.1.1 ∧ p.2 = 3 * p.1.1}
+def gauge_bosons (P : (ℕ × ℕ) × ℕ) : ℕ :=
+  P.1.1
 
-namespace ScaleInvariantCocycles
-
-def gauge_bosons (P : ScaleInvariantCocycles) : ℕ :=
-  P.1.1.1
-
-def weyl_spinors (P : ScaleInvariantCocycles) : ℕ :=
-  P.1.1.2
-
-def ft_scalars (P : ScaleInvariantCocycles) : ℕ :=
+def weyl_spinors (P : (ℕ × ℕ) × ℕ) : ℕ :=
   P.1.2
 
-def susy_balance (P : ScaleInvariantCocycles) :
-    P.weyl_spinors = 4 * P.gauge_bosons :=
-  P.2.1
+def ft_scalars (P : (ℕ × ℕ) × ℕ) : ℕ :=
+  P.2
 
-def scalar_balance (P : ScaleInvariantCocycles) :
-    P.ft_scalars = 3 * P.gauge_bosons :=
-  P.2.2
+theorem susy_balance (P : (ℕ × ℕ) × ℕ) (hP : P.1.2 = 4 * P.1.1) :
+    weyl_spinors P = 4 * gauge_bosons P :=
+  hP
 
-end ScaleInvariantCocycles
+theorem scalar_balance (P : (ℕ × ℕ) × ℕ) (hP : P.2 = 3 * P.1.1) :
+    ft_scalars P = 3 * gauge_bosons P :=
+  hP
 
 /-- A concrete finite count packet with values `12`, `48`, and `36`. -/
-def exampleCocycles : ScaleInvariantCocycles :=
-  ⟨((12, 48), 36), by norm_num⟩
+def exampleCocycles : (ℕ × ℕ) × ℕ :=
+  ((12, 48), 36)
 
 theorem exampleCocycles_ft_scalars_eq :
-  exampleCocycles.ft_scalars = 36 := rfl
+  ft_scalars exampleCocycles = 36 := rfl
 
 end InfoGeometry.Physics.ItakuraSaitoFradkinTseytlin

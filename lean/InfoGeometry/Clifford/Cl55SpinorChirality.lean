@@ -1127,19 +1127,22 @@ noncomputable def cl55R5 : SpinorMatrix 5 :=
 noncomputable def cl55Atom : Cl11Atom (SpinorMatrix 5) where
   r0 := cl55R0
   r5 := cl55R5
-  r0_sq := by
+ 
+noncomputable def cl55AtomLaws : Cl11AtomLaws cl55Atom := by
+  refine ⟨?_, ?_, ?_⟩
+  ·
     have hq : SplitQuad 5 cl55R0Vec = 1 := by
       norm_num [cl55R0Vec, headPair, SplitQuad, Qsplit,
         CliffordTower.Q11]
     simpa [cl55R0] using (recursiveGamma_sq 5 cl55R0Vec).trans
       (by rw [hq]; simp)
-  r5_sq := by
+  ·
     have hq : SplitQuad 5 cl55R5Vec = -1 := by
       norm_num [cl55R5Vec, headPair, SplitQuad, Qsplit,
         CliffordTower.Q11]
     simpa [cl55R5] using (recursiveGamma_sq 5 cl55R5Vec).trans
       (by rw [hq]; simp)
-  anticommute := by
+  ·
     have h := gammaGenerator_anticomm 5 cl55R0Vec cl55R5Vec
     have hm := congrArg (spinorRepresentation 5) h
     have hp : QuadraticMap.polar (SplitQuad 5) cl55R0Vec cl55R5Vec = 0 := by
@@ -1153,7 +1156,7 @@ noncomputable def cl55Atom : Cl11Atom (SpinorMatrix 5) where
     exact eq_neg_of_add_eq_zero_left hm0
 
 noncomputable def cl55ChiralityOperator : ChiralityOperator cl55Atom :=
-  eulerAsChirality cl55Atom
+  eulerAsChirality cl55Atom cl55AtomLaws
 
 theorem cl55ChiralityOperator_sq :
     cl55ChiralityOperator.rho * cl55ChiralityOperator.rho =
@@ -1178,7 +1181,7 @@ noncomputable def cl55ChiralProjectorMinus : SpinorMatrix 5 :=
 
 theorem cl55ChiralProjectors_orthogonal :
     cl55ChiralProjectorPlus * cl55ChiralProjectorMinus = 0 :=
-  chiral_sheets_orthogonal cl55Atom
+  chiral_sheets_orthogonal cl55Atom cl55AtomLaws
 
 theorem cl55ChiralProjectors_partition :
     cl55ChiralProjectorPlus + cl55ChiralProjectorMinus =
@@ -1188,17 +1191,17 @@ theorem cl55ChiralProjectors_partition :
 theorem cl55ChiralProjectorPlus_idempotent :
     cl55ChiralProjectorPlus * cl55ChiralProjectorPlus =
       cl55ChiralProjectorPlus :=
-  chiral_plus_idempotent cl55Atom
+  chiral_plus_idempotent cl55Atom cl55AtomLaws
 
 theorem cl55ChiralProjectorMinus_idempotent :
     cl55ChiralProjectorMinus * cl55ChiralProjectorMinus =
       cl55ChiralProjectorMinus :=
-  chiral_minus_idempotent cl55Atom
+  chiral_minus_idempotent cl55Atom cl55AtomLaws
 
 theorem cl55Euler_flips_chiral_sheets :
     cl55ChiralProjectorPlus * cl55ChiralityOperator.rho =
       cl55ChiralityOperator.rho * cl55ChiralProjectorMinus :=
-  euler_operator_reverses_chiral_sheets cl55Atom
+  euler_operator_reverses_chiral_sheets cl55Atom cl55AtomLaws
 
 /-- Matrix action on the real spinor carrier. -/
 def matrixApply (A : SpinorMatrix 5) (ψ : SpinorSpace 5) : SpinorSpace 5 :=

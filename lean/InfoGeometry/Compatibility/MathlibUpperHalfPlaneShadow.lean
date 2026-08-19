@@ -12,6 +12,7 @@ import Mathlib.Analysis.Complex.UpperHalfPlane.MoebiusAction
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Geometry.RealUpperHalfPlane
 import InfoGeometry.Geometry.RealMoebiusAction
+import InfoGeometry.Geometry.RealRotorCore
 import InfoGeometry.Algebraic.RealModularReadout
 
 noncomputable section
@@ -77,6 +78,38 @@ theorem realToMathlibUHP_eq_re_add_im (τ : RealUpperHalfPlane) :
   apply Complex.ext <;> simp [realToMathlibUHP]
 
 /-! ### 2. Chiral phase / complex shadow -/
+
+/-! The rotor carrier and the modular-readout carrier have the same
+coordinate data.  This is a genuine carrier equivalence, not a second phase
+definition. -/
+
+def realChiralPhaseEquiv : RealChiralPhase ≃ ChiralPhase where
+  toFun z :=
+    ⟨InfoGeometry.Geometry.RealChiralPhase.scalar z,
+      InfoGeometry.Geometry.RealChiralPhase.bivector z⟩
+  invFun z := (z.scalar, z.bivector)
+  left_inv z := by rfl
+  right_inv z := by cases z; rfl
+
+@[simp]
+theorem realChiralPhaseEquiv_scalar (z : RealChiralPhase) :
+    (realChiralPhaseEquiv z).scalar =
+      InfoGeometry.Geometry.RealChiralPhase.scalar z := rfl
+
+@[simp]
+theorem realChiralPhaseEquiv_bivector (z : RealChiralPhase) :
+    (realChiralPhaseEquiv z).bivector =
+      InfoGeometry.Geometry.RealChiralPhase.bivector z := rfl
+
+theorem realChiralPhaseEquiv_mul (z w : RealChiralPhase) :
+    realChiralPhaseEquiv (InfoGeometry.Geometry.RealChiralPhase.mul z w) =
+      realChiralPhaseEquiv z * realChiralPhaseEquiv w := by
+  rfl
+
+theorem realChiralPhaseEquiv_normSq (z : RealChiralPhase) :
+    (realChiralPhaseEquiv z).normSq =
+      InfoGeometry.Geometry.RealChiralPhase.normSq z := by
+  rfl
 
 /-- Complex readout of a real scalar/bivector phase. -/
 def chiralToComplex (z : ChiralPhase) : ℂ :=

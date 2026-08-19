@@ -2,7 +2,7 @@
 """SymPy witness: dlog forbidden-cone generator as modular time derivation.
 
 Audit only.  Lean remains the proof kernel; analytic TT/Connes/BW claims are
-socketed in Lean.
+deferred_interface in Lean.
 """
 
 import sympy as sp

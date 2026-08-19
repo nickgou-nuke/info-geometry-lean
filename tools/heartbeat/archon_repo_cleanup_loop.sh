@@ -76,7 +76,7 @@ score_from_report() {
   local sorry proxy prop reexport semantic style docs naming
   sorry="$(metric_value "$file" sorry)"
   proxy="$(metric_value "$file" proxy_field)"
-  prop="$(metric_value "$file" prop_socket)"
+  prop="$(metric_value "$file" prop_interface)"
   reexport="$(metric_value "$file" reexport_proxy)"
   semantic="$(semantic_vacuity_value "$file")"
   style="$(style_violations_value "$file")"
@@ -156,7 +156,7 @@ append_summary() {
   local sorry proxy prop reexport semantic style docs naming score
   sorry="$(metric_value "$report" sorry)"
   proxy="$(metric_value "$report" proxy_field)"
-  prop="$(metric_value "$report" prop_socket)"
+  prop="$(metric_value "$report" prop_interface)"
   reexport="$(metric_value "$report" reexport_proxy)"
   semantic="$(semantic_vacuity_value "$report")"
   style="$(style_violations_value "$report")"
@@ -270,7 +270,7 @@ run_post_tick_command() {
 }
 
 if [[ ! -f "$SUMMARY_FILE" ]]; then
-  printf "iter\tphase\tsorry\tproxy_field\tprop_socket\treexport_proxy\tsemantic_vacuity\tstyle_violations\tdocstring_violations\tnaming_violations\tscore\treport\n" > "$SUMMARY_FILE"
+  printf "iter\tphase\tsorry\tproxy_field\tprop_interface\treexport_proxy\tsemantic_vacuity\tstyle_violations\tdocstring_violations\tnaming_violations\tscore\treport\n" > "$SUMMARY_FILE"
 fi
 
 best_score=999999999

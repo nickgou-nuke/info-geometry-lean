@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/SuperTKKConformalClosure.lean
 
-Super-TKK conformal closure sockets.
+Super-TKK conformal closure data.
 
 This file records the safe algebraic version of the slogan:
 
@@ -22,7 +22,7 @@ The concrete operatorial central-charge owner remains the existing canonical
 lane in `Canonical.OperatorialCentralCharge`,
 `Canonical.SuperchargeOddOddDecomposition`, and
 `Canonical.SuperchargeCentralChargeClosure`. This file is only the abstract
-super-TKK socket over `TKKConformalClosure.TKKRicciFluxDatum`.
+super-TKK interface over `TKKConformalClosure.TKKRicciFluxDatum`.
 -/
 
 import Mathlib.Tactic
@@ -34,7 +34,7 @@ namespace InfoGeometry.OperatorAlgebra.SuperTKKConformalClosure
 
 
 
-/-! ## 1. Five-grade closure socket -/
+/-! ## 1. Five-grade closure -/
 
 /--
 A five-grading on a Lie algebra with explicit coordinates.
@@ -199,7 +199,7 @@ theorem pos_two_is_abelian
 
 end FiveGrading
 
-/-! ## 2. Supercharge square-root socket -/
+/-! ## 2. Supercharge square-root data -/
 
 /--
 Supercharge square-root data over a five-graded even Lie algebra.

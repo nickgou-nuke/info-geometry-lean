@@ -25,10 +25,7 @@ open ProjectiveAffineConformalClosure55
 open RealO55ProjectiveBoundaryAction
 open InfoGeometry.Projective
 
-abbrev PACBoundary := GenericProjectiveNullBoundary55
-abbrev NativeBoundary := RealO55ProjectiveBoundaryAction.Boundary
-
-noncomputable abbrev boundaryEquiv : PACBoundary ≃ NativeBoundary :=
+noncomputable abbrev boundaryEquiv : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 ≃ InfoGeometry.Projective.Cl55NullBoundaryBridge.Boundary :=
   ProjectiveAffineConformalClosure55.pacNativeProjectiveBoundaryEquiv
 
 /-! ## Transport of the native orthogonal action -/
@@ -36,7 +33,7 @@ noncomputable abbrev boundaryEquiv : PACBoundary ≃ NativeBoundary :=
 /-- Conjugate the native `OQ55` action to the PAC boundary quotient. -/
 noncomputable def transportedOQBoundaryRepresentation :
     RealPin55QuadraticRepresentation.OQ55 →*
-      Function.End PACBoundary where
+      Function.End ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 where
   toFun := fun f X =>
     boundaryEquiv.symm
       (oqBoundaryRepresentation f (boundaryEquiv X))
@@ -62,32 +59,50 @@ noncomputable def transportedOQBoundaryRepresentation :
           (oqBoundaryRepresentation g (boundaryEquiv X))) = _
     rfl
 
-@[simp]
-theorem transportedOQBoundaryRepresentation_apply
-    (f : RealPin55QuadraticRepresentation.OQ55) (X : PACBoundary) :
-    transportedOQBoundaryRepresentation f X =
-      boundaryEquiv.symm
-        (oqBoundaryRepresentation f (boundaryEquiv X)) :=
-  rfl
-
 /-- The transported action is conjugate to the native action pointwise. -/
 theorem transportedOQBoundaryRepresentation_conjugates
-    (f : RealPin55QuadraticRepresentation.OQ55) (X : PACBoundary) :
+    (f : RealPin55QuadraticRepresentation.OQ55) (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
     boundaryEquiv (transportedOQBoundaryRepresentation f X) =
       oqBoundaryRepresentation f (boundaryEquiv X) := by
-  rw [transportedOQBoundaryRepresentation_apply]
+  change boundaryEquiv
+      (boundaryEquiv.symm
+        (oqBoundaryRepresentation f (boundaryEquiv X))) =
+    oqBoundaryRepresentation f (boundaryEquiv X)
   exact boundaryEquiv.apply_symm_apply _
+
+/-! Native permutation-valued transport.  The older `Function.End` action
+above remains as a compatibility surface; this is the bijective owner. -/
+
+noncomputable def transportedOQBoundaryPermutationRepresentation :
+    RealPin55QuadraticRepresentation.OQ55 →* Equiv.Perm ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 :=
+  { toFun := fun f =>
+      boundaryEquiv.trans
+        ((oqBoundaryPermutationRepresentation f).trans boundaryEquiv.symm)
+    map_one' := by
+      ext X
+      simp
+    map_mul' := by
+      intro f g
+      ext X
+      simp [Equiv.Perm.mul_apply] }
+
+@[simp] theorem transportedOQBoundaryPermutationRepresentation_apply
+    (f : RealPin55QuadraticRepresentation.OQ55) (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
+    transportedOQBoundaryPermutationRepresentation f X =
+      boundaryEquiv.symm
+        (oqBoundaryPermutationRepresentation f (boundaryEquiv X)) :=
+  rfl
 
 /-! ## Transport of the full real Pin action -/
 
 /-- Transport the full-real Pin boundary action to the PAC quotient. -/
 noncomputable def transportedFullPinBoundaryRepresentation :
-    RealPin55Core.FullPin55 →* Function.End PACBoundary :=
+    RealPin55Core.FullPin55 →* Function.End ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 :=
   transportedOQBoundaryRepresentation.comp
     RealPin55QuadraticRepresentation.fullPinToOQ55
 
 theorem transportedFullPinBoundaryRepresentation_apply
-    (g : RealPin55Core.FullPin55) (X : PACBoundary) :
+    (g : RealPin55Core.FullPin55) (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
     transportedFullPinBoundaryRepresentation g X =
       boundaryEquiv.symm
         (fullPinBoundaryRepresentation g (boundaryEquiv X)) := by
@@ -101,7 +116,7 @@ theorem transportedFullPinBoundaryRepresentation_apply
           RealPin55QuadraticRepresentation.fullPinToOQ55) g :=
     congrArg
       (fun F : RealPin55Core.FullPin55 →*
-          Function.End NativeBoundary => F g)
+          Function.End InfoGeometry.Projective.Cl55NullBoundaryBridge.Boundary => F g)
       fullPinBoundaryRepresentation_factorization
   rw [hfactor]
   rfl
@@ -113,6 +128,20 @@ theorem transportedFullPinBoundaryRepresentation_factorization :
         RealPin55QuadraticRepresentation.fullPinToOQ55 :=
   by
     simp [transportedFullPinBoundaryRepresentation]
+
+noncomputable def transportedFullPinBoundaryPermutationRepresentation :
+    RealPin55Core.FullPin55 →* Equiv.Perm ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 :=
+  transportedOQBoundaryPermutationRepresentation.comp
+    RealPin55QuadraticRepresentation.fullPinToOQ55
+
+@[simp] theorem transportedFullPinBoundaryPermutationRepresentation_apply
+    (g : RealPin55Core.FullPin55) (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
+    transportedFullPinBoundaryPermutationRepresentation g X =
+      boundaryEquiv.symm
+        (oqBoundaryPermutationRepresentation
+          (RealPin55QuadraticRepresentation.fullPinToOQ55 g)
+          (boundaryEquiv X)) :=
+  rfl
 
 /-! ## Surjectivity transferred to the PAC boundary carrier -/
 
@@ -138,7 +167,7 @@ theorem transportedFullPinBoundaryRepresentation_range_eq :
 
 /-! ## Transported action laws as native boundary theorems -/
 
-theorem transportedOQBoundaryRepresentation_one (X : PACBoundary) :
+theorem transportedOQBoundaryRepresentation_one (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
     transportedOQBoundaryRepresentation
       (1 : RealPin55QuadraticRepresentation.OQ55) X = X := by
   change boundaryEquiv.symm
@@ -147,7 +176,7 @@ theorem transportedOQBoundaryRepresentation_one (X : PACBoundary) :
   exact boundaryEquiv.symm_apply_apply X
 
 theorem transportedOQBoundaryRepresentation_mul
-    (f g : RealPin55QuadraticRepresentation.OQ55) (X : PACBoundary) :
+    (f g : RealPin55QuadraticRepresentation.OQ55) (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
     transportedOQBoundaryRepresentation (f * g) X =
       transportedOQBoundaryRepresentation f
         (transportedOQBoundaryRepresentation g X) := by
@@ -273,25 +302,29 @@ theorem nativePACReflectionGroup_le_fullReflectionGroup :
     trivial
 
 noncomputable def nativePACBoundaryRepresentation :
-    nativePACReflectionGroup →* Function.End NativeBoundary :=
+    nativePACReflectionGroup →* Function.End InfoGeometry.Projective.Cl55NullBoundaryBridge.Boundary :=
   oqBoundaryRepresentation.comp (Subgroup.subtype nativePACReflectionGroup)
 
 noncomputable def transportedNativePACBoundaryRepresentation :
-    nativePACReflectionGroup →* Function.End PACBoundary :=
+    nativePACReflectionGroup →* Function.End ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 :=
   transportedOQBoundaryRepresentation.comp
     (Subgroup.subtype nativePACReflectionGroup)
 
-@[simp] theorem nativePACBoundaryRepresentation_apply
-    (g : nativePACReflectionGroup) :
-    nativePACBoundaryRepresentation g =
-      oqBoundaryRepresentation g.1 :=
-  rfl
+noncomputable def nativePACBoundaryPermutationRepresentation :
+    nativePACReflectionGroup →* Equiv.Perm InfoGeometry.Projective.Cl55NullBoundaryBridge.Boundary :=
+  oqBoundaryPermutationRepresentation.comp
+    (Subgroup.subtype nativePACReflectionGroup)
 
-@[simp] theorem transportedNativePACBoundaryRepresentation_apply
-    (g : nativePACReflectionGroup) (X : PACBoundary) :
-    transportedNativePACBoundaryRepresentation g X =
+noncomputable def transportedNativePACBoundaryPermutationRepresentation :
+    nativePACReflectionGroup →* Equiv.Perm ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 :=
+  transportedOQBoundaryPermutationRepresentation.comp
+    (Subgroup.subtype nativePACReflectionGroup)
+
+@[simp] theorem transportedNativePACBoundaryPermutationRepresentation_apply
+    (g : nativePACReflectionGroup) (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
+    transportedNativePACBoundaryPermutationRepresentation g X =
       boundaryEquiv.symm
-        (oqBoundaryRepresentation g.1 (boundaryEquiv X)) :=
+        (oqBoundaryPermutationRepresentation g.1 (boundaryEquiv X)) :=
   rfl
 
 /-! ## Descended generator actions -/
@@ -362,16 +395,16 @@ noncomputable def pacReflectVBoundaryHom :
     intro u X
     exact reflectV_smul (u : ℝ) X
 
-noncomputable def pacReflectUBoundaryAction : PACBoundary → PACBoundary :=
+noncomputable def pacReflectUBoundaryAction : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 → ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 :=
   ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary
     pacReflectUBoundaryHom
 
-noncomputable def pacReflectVBoundaryAction : PACBoundary → PACBoundary :=
+noncomputable def pacReflectVBoundaryAction : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 → ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 :=
   ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary
     pacReflectVBoundaryHom
 
 theorem pacReflectU_native_boundary_conjugacy
-    (X : PACBoundary) :
+    (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
     pacToNativeBoundaryAction (pacReflectUBoundaryAction X) =
       oqBoundaryAction nativeReflectU
         (pacToNativeBoundaryAction X) := by
@@ -410,7 +443,7 @@ theorem pacReflectU_native_boundary_conjugacy
   exact nativeReflectU_coordinate_weld Z.Z
 
 theorem pacReflectV_native_boundary_conjugacy
-    (X : PACBoundary) :
+    (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
     pacToNativeBoundaryAction (pacReflectVBoundaryAction X) =
       oqBoundaryAction nativeReflectV
         (pacToNativeBoundaryAction X) := by
@@ -451,7 +484,7 @@ theorem pacReflectV_native_boundary_conjugacy
 /-! ## Native Mathlib group actions -/
 
 noncomputable instance transportedOQBoundaryMulAction :
-    MulAction RealPin55QuadraticRepresentation.OQ55 PACBoundary where
+    MulAction RealPin55QuadraticRepresentation.OQ55 ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 where
   smul := fun f X => transportedOQBoundaryRepresentation f X
   one_smul := by
     intro X
@@ -460,13 +493,8 @@ noncomputable instance transportedOQBoundaryMulAction :
     intro f g X
     exact transportedOQBoundaryRepresentation_mul f g X
 
-@[simp] theorem transportedOQBoundary_smul_eq
-    (f : RealPin55QuadraticRepresentation.OQ55) (X : PACBoundary) :
-    f • X = transportedOQBoundaryRepresentation f X :=
-  rfl
-
 noncomputable instance transportedFullPinBoundaryMulAction :
-    MulAction RealPin55Core.FullPin55 PACBoundary where
+    MulAction RealPin55Core.FullPin55 ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 where
   smul := fun g X => transportedFullPinBoundaryRepresentation g X
   one_smul := by
     intro X
@@ -482,13 +510,8 @@ noncomputable instance transportedFullPinBoundaryMulAction :
     rw [map_mul]
     rfl
 
-@[simp] theorem transportedFullPinBoundary_smul_eq
-    (g : RealPin55Core.FullPin55) (X : PACBoundary) :
-    g • X = transportedFullPinBoundaryRepresentation g X :=
-  rfl
-
 theorem fullPin_smul_factors_through_OQ55
-    (g : RealPin55Core.FullPin55) (X : PACBoundary) :
+    (g : RealPin55Core.FullPin55) (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
     g • X = (RealPin55QuadraticRepresentation.fullPinToOQ55 g) • X := by
   change transportedFullPinBoundaryRepresentation g X =
     transportedOQBoundaryRepresentation
@@ -500,7 +523,7 @@ theorem fullPin_smul_factors_through_OQ55
 
 /-- The concrete native reflection subgroup acts on the native boundary. -/
 noncomputable instance nativePACReflectionGroupMulAction :
-    MulAction nativePACReflectionGroup NativeBoundary where
+    MulAction nativePACReflectionGroup InfoGeometry.Projective.Cl55NullBoundaryBridge.Boundary where
   smul := fun g X => oqBoundaryAction g.1 X
   one_smul := by
     intro X
@@ -518,12 +541,12 @@ noncomputable instance nativePACReflectionGroupMulAction :
     rfl
 
 @[simp] theorem nativePACReflectionGroup_smul_eq
-    (g : nativePACReflectionGroup) (X : NativeBoundary) :
+    (g : nativePACReflectionGroup) (X : InfoGeometry.Projective.Cl55NullBoundaryBridge.Boundary) :
     g • X = oqBoundaryAction g.1 X :=
   rfl
 
 theorem pacReflectU_native_smul_conjugacy
-    (X : PACBoundary) :
+    (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
     pacToNativeBoundaryAction (pacReflectUBoundaryAction X) =
       (⟨nativeReflectU, nativeReflectU_mem_nativePACReflectionGroup⟩ :
         nativePACReflectionGroup) •
@@ -533,7 +556,7 @@ theorem pacReflectU_native_smul_conjugacy
     pacReflectU_native_boundary_conjugacy X
 
 theorem pacReflectV_native_smul_conjugacy
-    (X : PACBoundary) :
+    (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
     pacToNativeBoundaryAction (pacReflectVBoundaryAction X) =
       (⟨nativeReflectV, nativeReflectV_mem_nativePACReflectionGroup⟩ :
         nativePACReflectionGroup) •
@@ -545,7 +568,7 @@ theorem pacReflectV_native_smul_conjugacy
 /-- The PAC/native projective boundary equivalence intertwines the native
 reflection subgroup actions. -/
 theorem boundaryEquiv_nativePACReflectionGroup_smul
-    (g : nativePACReflectionGroup) (X : PACBoundary) :
+    (g : nativePACReflectionGroup) (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
     boundaryEquiv (g • X) = g • boundaryEquiv X := by
   change boundaryEquiv
       (transportedOQBoundaryRepresentation g.1 X) =
@@ -556,7 +579,7 @@ theorem boundaryEquiv_nativePACReflectionGroup_smul
 /-- The PAC/native boundary equivalence intertwines the full native `OQ55`
 action. -/
 theorem boundaryEquiv_oq_smul
-    (f : RealPin55QuadraticRepresentation.OQ55) (X : PACBoundary) :
+    (f : RealPin55QuadraticRepresentation.OQ55) (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
     boundaryEquiv (f • X) =
       oqBoundaryAction f (boundaryEquiv X) := by
   change boundaryEquiv
@@ -568,7 +591,7 @@ theorem boundaryEquiv_oq_smul
 /-! ## Constructive reflection action on the PAC boundary -/
 
 noncomputable instance reflectionGeneratedPACBoundaryMulAction :
-    MulAction RealO55CartanDieudonne.reflectionGeneratedOQ55 PACBoundary where
+    MulAction RealO55CartanDieudonne.reflectionGeneratedOQ55 ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 where
   smul := fun r X => transportedOQBoundaryRepresentation r.1 X
   one_smul := by
     intro X
@@ -584,14 +607,8 @@ noncomputable instance reflectionGeneratedPACBoundaryMulAction :
     rw [map_mul]
     rfl
 
-@[simp] theorem reflectionGeneratedPACBoundary_smul_eq
-    (r : RealO55CartanDieudonne.reflectionGeneratedOQ55)
-    (X : PACBoundary) :
-    r • X = transportedOQBoundaryRepresentation r.1 X :=
-  rfl
-
 theorem exists_reflectionGenerated_pacBoundary_smul_eq
-    (X Y : PACBoundary)
+    (X Y : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55)
     (hXY : ∃ f : RealPin55QuadraticRepresentation.OQ55,
       f • boundaryEquiv X = boundaryEquiv Y) :
     ∃ r : RealO55CartanDieudonne.reflectionGeneratedOQ55, r • X = Y := by
@@ -611,7 +628,7 @@ theorem exists_reflectionGenerated_pacBoundary_smul_eq
 /-- The PAC/native boundary equivalence intertwines the full real Pin
 action. -/
 theorem boundaryEquiv_fullPin_smul
-    (g : RealPin55Core.FullPin55) (X : PACBoundary) :
+    (g : RealPin55Core.FullPin55) (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
     boundaryEquiv (g • X) =
       fullPinBoundaryAction g (boundaryEquiv X) := by
   change boundaryEquiv
@@ -624,7 +641,7 @@ theorem boundaryEquiv_fullPin_smul
 PAC boundary.  Transitivity is deliberately supplied as an explicit orbit
 hypothesis rather than asserted by the representation bridge. -/
 theorem exists_fullPin_pacBoundary_smul_eq
-    (X Y : PACBoundary)
+    (X Y : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55)
     (hXY : ∃ f : RealPin55QuadraticRepresentation.OQ55,
       f • boundaryEquiv X = boundaryEquiv Y) :
     ∃ g : RealPin55Core.FullPin55, g • X = Y := by

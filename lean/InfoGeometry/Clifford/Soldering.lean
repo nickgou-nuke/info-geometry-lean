@@ -66,6 +66,10 @@ theorem det_soldering_eq_q22 (v : Vec22) : (soldering v).det = q22 v := by
   simp [soldering, sigma0, sigma1, sigma3, epsilon, Matrix.det_fin_two]
   ring
 
+theorem soldering_det_eq_zero_iff_q22_eq_zero (v : Vec22) :
+    (soldering v).det = 0 ↔ q22 v = 0 := by
+  rw [det_soldering_eq_q22]
+
 /-- 
 The Quaternionic Basis in M₂(ℝ) for Split Quaternions ℍ(1, 1).
 Parameters: c₁=1, c₂=0, c₃=1.
@@ -96,6 +100,31 @@ This identifies spacetime points with linear operators on spinor space.
 noncomputable def pointAction (X : Vec22) (π : ℝ × ℝ) : ℝ × ℝ :=
   let M := soldering X
   (M 0 0 * π.1 + M 0 1 * π.2, M 1 0 * π.1 + M 1 1 * π.2)
+
+theorem pointAction_add (X Y : Vec22) (π : ℝ × ℝ) :
+    pointAction (X + Y) π = pointAction X π + pointAction Y π := by
+  rcases π with ⟨p, q⟩
+  simp [pointAction, LinearMap.map_add, Matrix.add_apply]
+  constructor <;> ring
+
+theorem pointAction_smul (r : ℝ) (X : Vec22) (π : ℝ × ℝ) :
+    pointAction (r • X) π = r • pointAction X π := by
+  rcases π with ⟨p, q⟩
+  simp [pointAction, LinearMap.map_smul, Matrix.smul_apply]
+  constructor <;> ring
+
+theorem pointAction_pi_add (X : Vec22) (π ρ : ℝ × ℝ) :
+    pointAction X (π + ρ) = pointAction X π + pointAction X ρ := by
+  rcases π with ⟨p, q⟩
+  rcases ρ with ⟨r, s⟩
+  simp [pointAction]
+  constructor <;> ring
+
+theorem pointAction_pi_smul (X : Vec22) (r : ℝ) (π : ℝ × ℝ) :
+    pointAction X (r • π) = r • pointAction X π := by
+  rcases π with ⟨p, q⟩
+  simp [pointAction]
+  constructor <;> ring
 
 def Incident (ω π : ℝ × ℝ) (X : Vec22) : Prop :=
   ω = pointAction X π

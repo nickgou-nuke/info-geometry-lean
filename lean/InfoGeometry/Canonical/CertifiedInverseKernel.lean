@@ -111,6 +111,13 @@ theorem chiralScale_eq_zero_iff_chiralAnomaly_eq_zero :
     IK.chiralScale = 0 ↔ IK.chiralAnomaly = 0 := by
   simp [InverseKernel.chiralScale, InverseKernel.chiralAnomaly]
 
+theorem chiralScale_eq_zero_iff_spectralProjector_commutes_metricProjector :
+    IK.chiralScale = 0 ↔
+      IK.spectralProjector * IK.metricProjector =
+        IK.metricProjector * IK.spectralProjector := by
+  rw [IK.chiralScale_eq_zero_iff_chiralAnomaly_eq_zero]
+  simp [InverseKernel.chiralAnomaly, sub_eq_zero]
+
 /-- If the Moore-Penrose range and domain projectors agree, the two anomaly conventions agree. -/
 theorem rightChiralAnomaly_eq_chiralAnomaly_of_projectorAgreement
     (hProj : IK.mpRangeProjector = IK.metricProjector) :

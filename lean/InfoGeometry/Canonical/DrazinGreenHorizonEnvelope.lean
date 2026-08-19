@@ -5,7 +5,7 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.Canonical.DrazinGreenHorizonEnvelope
 
-Drazin-Green-Hodge envelope socket.
+Drazin-Green-Hodge envelope interface.
 
 This module separates the two Drazin roles:
 
@@ -169,8 +169,54 @@ theorem envelope_eq_combined_support_compression
     _ = (H.p * G.P_harm) * x * (H.p * G.P_harm) := by
             rw [← hComm]
 
+theorem envelope_left_matterSupport_stable
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (H : DrazinHorizon Obs)
+    (G : DrazinGreenData Obs)
+    (x : Obs)
+    (hComm : H.p * G.P_harm = G.P_harm * H.p) :
+    matterSupport H G * horizonHarmonicEnvelope H G x =
+      horizonHarmonicEnvelope H G x := by
+  rw [envelope_eq_combined_support_compression H G x hComm]
+  have he : matterSupport H G * matterSupport H G = matterSupport H G :=
+    matterSupport_idempotent H G hComm
+  calc
+    matterSupport H G * (matterSupport H G * x * matterSupport H G) =
+        (matterSupport H G * matterSupport H G) * x * matterSupport H G := by
+          simp only [mul_assoc]
+    _ = matterSupport H G * x * matterSupport H G := by rw [he]
+
+theorem envelope_right_matterSupport_stable
+    {Obs : Type*} [Ring Obs] [Star Obs]
+    (H : DrazinHorizon Obs)
+    (G : DrazinGreenData Obs)
+    (x : Obs)
+    (hComm : H.p * G.P_harm = G.P_harm * H.p) :
+    horizonHarmonicEnvelope H G x * matterSupport H G =
+      horizonHarmonicEnvelope H G x := by
+  rw [envelope_eq_combined_support_compression H G x hComm]
+  have he : matterSupport H G * matterSupport H G = matterSupport H G :=
+    matterSupport_idempotent H G hComm
+  calc
+    (matterSupport H G * x * matterSupport H G) * matterSupport H G =
+        matterSupport H G * x * (matterSupport H G * matterSupport H G) := by
+          simp only [mul_assoc]
+    _ = matterSupport H G * x * matterSupport H G := by rw [he]
+
+theorem horizonHarmonicEnvelope_self_adjoint
+    {Obs : Type*} [Ring Obs] [StarRing Obs]
+    (H : DrazinHorizon Obs)
+    (G : DrazinGreenData Obs)
+    (x : Obs)
+    (hx : star x = x) :
+    star (horizonHarmonicEnvelope H G x) =
+      horizonHarmonicEnvelope H G x := by
+  unfold horizonHarmonicEnvelope
+  simp [star_mul, H.p_self_adjoint, G.P_harm_self_adjoint, hx]
+  noncomm_ring
+
 /--
-Convert `DrazinGreenData` into the frequency socket used by horizon zitter
+Convert `DrazinGreenData` into the frequency interface used by horizon zitter
 modes.
 -/
 @[rep_depth operator]

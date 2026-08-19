@@ -20,7 +20,7 @@ It proves:
 
 It does **not** assert a full Clifford algebra model of `Pin(5,5)`, a proof of
 the double cover map `Pin(5,5) → O(5,5)`, or any spacetime interpretation.
-Those remain outside this finite socket.
+Those remain outside this finite theorem layer.
 
 -/
 

@@ -4,28 +4,28 @@ import Mathlib.LinearAlgebra.Dimension.Constructions
 namespace InfoGeometry.Physics
 
 /-!
-This file defines only a matrix-valued Zorn-shaped carrier.
+This file defines only a matrix-valued Zorn-shaped data record.
 It is a 32-dimensional rational vector-space candidate when `A = BdGBlock ℚ`.
 No Zorn multiplication, ring instance, octonion tensor product, or physical
 representation theorem is asserted here.
 -/
 
-structure MatrixValuedZornCarrier (A : Type*) where
+structure MatrixValuedZornData (A : Type*) where
   alpha : A
   beta : A
   vecX : Fin 3 → A
   vecY : Fin 3 → A
 
 def matrixValuedZornCarrierEquiv (A : Type*) :
-    MatrixValuedZornCarrier A ≃
+    MatrixValuedZornData A ≃
       A × A × (Fin 3 → A) × (Fin 3 → A) where
   toFun x := (x.alpha, x.beta, x.vecX, x.vecY)
   invFun x := ⟨x.1, x.2.1, x.2.2.1, x.2.2.2⟩
   left_inv x := by cases x; rfl
   right_inv x := by cases x; rfl
 
-abbrev BdGValuedZornCarrier :=
-  MatrixValuedZornCarrier (BdGBlock ℚ)
+abbrev BdGValuedZornData :=
+  MatrixValuedZornData (BdGBlock ℚ)
 
 /-!
 The vector-space version uses products directly, so the additive and scalar
@@ -53,7 +53,7 @@ theorem finrank_bdgValuedZornVectorCarrier :
   simp [BdGBlock, Module.finrank_matrix]
 
 
-def localDiracMultiplet (Delta : Fin 3 → ℚ) : BdGValuedZornCarrier where
+def localDiracMultiplet (Delta : Fin 3 → ℚ) : BdGValuedZornData where
   alpha := 0
   beta := 0
   vecX := fun i => diracOperator (Delta i)

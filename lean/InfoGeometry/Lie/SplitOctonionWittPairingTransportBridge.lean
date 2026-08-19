@@ -8,7 +8,7 @@ import InfoGeometry.Lie.SplitOctonionDerivationWittOrthogonalBridge
 The vector/covector carrier `V₊ × V₋` is linearly equivalent to the eight
 coordinate functions used by the matrix-level Witt owner.  The symmetric
 neutral pairing is written explicitly on both sides, giving a concrete
-instance of the abstract `PairingTransport` socket.
+instance of the abstract `PairingTransport` interface.
 -/
 
 noncomputable section

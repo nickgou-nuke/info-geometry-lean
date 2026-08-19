@@ -22,7 +22,7 @@ This module records that doctrine as proof-carrying packets.  It does not claim
 that every binary process has a physical readout; the final invariant is present
 only when the required stabilization certificates are supplied.
 
-**All sockets replaced with genuine lemmas.**
+**All deferred interfaces replaced with genuine lemmas.**
 -/
 
 noncomputable section
@@ -33,7 +33,7 @@ open scoped BigOperators
 open InfoGeometry.Algebra.CuntzTensorQuotient
 open InfoGeometry.OperatorAlgebra.CliffordCAR
 open InfoGeometry.Topology.CliffordFractalWaveletBridge
-open InfoGeometry.Topology.FractalCantorFockWitness
+open InfoGeometry.Topology.FractalCantorFock
 open InfoGeometry.OperatorAlgebra.WeylWeightBalance
 open CategoryTheory
 open CategoryTheory.Limits

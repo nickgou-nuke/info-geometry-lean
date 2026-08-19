@@ -79,6 +79,28 @@ theorem massieu_eq_potential (θ : ℝ) :
     B.massieuModel.massieu θ = InfoGeometry.GrandCanonical.potentialGC (primeGrandCanonicalParams B.P B.energyWeight) θ B.chemicalPotential :=
   B.massieu_eq_packet θ
 
+/--
+The bridge Massieu readout is the logarithm of the explicit finite Euler
+product owned by the prime grand-canonical ensemble.
+-/
+@[rep_depth thermo]
+theorem massieu_eq_log_finiteEulerProduct (θ : ℝ) :
+    B.massieuModel.massieu θ =
+      Real.log (finiteEulerProduct B.P B.energyWeight θ B.chemicalPotential) := by
+  rw [B.massieu_eq_potential θ]
+  exact potential_eq_log_finiteEulerProduct
+    B.P B.energyWeight θ B.chemicalPotential
+
+/-- The finite bridge Massieu potential is the sum of local log factors. -/
+@[rep_depth thermo]
+theorem massieu_eq_sum_local_log_finiteEulerProduct (θ : ℝ) :
+    B.massieuModel.massieu θ =
+      ∑ p ∈ InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister.primes B.P,
+        Real.log (1 + Real.exp (-θ * (B.energyWeight p - B.chemicalPotential))) := by
+  rw [B.massieu_eq_potential θ]
+  exact potential_eq_sum_local_log_finiteEulerProduct
+    B.P B.energyWeight θ B.chemicalPotential
+
 /-- The dual coordinate is the mean-shift readout. -/
 @[rep_depth thermo]
 theorem dualCoord_eq_meanShift_of_bridge (θ : ℝ) :

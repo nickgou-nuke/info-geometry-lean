@@ -273,58 +273,6 @@ def modularAction
     h.denominator_inverse
     h.positivity
 
-/--
-The translation action datum owner target.
-
-In the scalar model this is automatic: `T • z = z + 1`.
-In the operator model, the positivity proof normally uses skewness of `K`
-against the identity direction, e.g. `⟪v, K v⟫ = 0`.
--/
-def ModularTActionOwnerTarget
-    (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E)) : Prop :=
-  ∀ Z : BilingualUpperHalfPlane D,
-    ∃ hDen :
-      MobiusDenominatorInverse
-        (ModularMatrix.T.toMobiusCoefficients (D := D)) Z,
-      KHalfPlanePositive D
-        (moebiusActionOperator
-          (ModularMatrix.T.toMobiusCoefficients (D := D))
-          Z
-          hDen)
-
-/--
-The inversion action datum owner target.
-
-In the scalar model this is automatic because `z ≠ 0` on the upper half-plane.
-In the operator model, strict positivity gives strong injectivity evidence, but
-bounded inverse data must still be supplied or proved.
--/
-def ModularSActionOwnerTarget
-    (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E)) : Prop :=
-  ∀ Z : BilingualUpperHalfPlane D,
-    ∃ hDen :
-      MobiusDenominatorInverse
-        (ModularMatrix.S.toMobiusCoefficients (D := D)) Z,
-      KHalfPlanePositive D
-        (moebiusActionOperator
-          (ModularMatrix.S.toMobiusCoefficients (D := D))
-          Z
-          hDen)
-
-/--
-Owner target for the full discrete modular action.
--/
-def DiscreteModularActionOwnerTarget
-    (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E)) : Prop :=
-  ∀ (γ : ModularMatrix) (Z : BilingualUpperHalfPlane D),
-    ∃ hDen :
-      MobiusDenominatorInverse
-        (γ.toMobiusCoefficients (D := D)) Z,
-      KHalfPlanePositive D
-        (moebiusActionOperator
-          (γ.toMobiusCoefficients (D := D))
-          Z
-          hDen)
 
 end BilingualUpperHalfPlane
 

@@ -176,7 +176,7 @@ theorem root_tomita_conj_chiral_difference_anti_fixed
       InfoGeometry.Krein.to_doubled]
 
 /-! The derived Krein fundamental symmetry has its own parity law.  It is
-not the assumed PT socket above: for the native root arrows, `ε` is odd for
+not the assumed PT interface above: for the native root arrows, `ε` is odd for
 both arrows, hence also for their sum and difference. -/
 
 theorem root_spectralEpsilon_antiintertwines_plus
@@ -262,7 +262,7 @@ theorem root_derived_pt_parity
     rw [hp, hm]
     abel
 
-/-! ## A separate PT intertwiner socket
+/-! ## A separate PT intertwiner interface
 
 The Tomita involution `H.J` and a Krein/PT fundamental symmetry are not the
 same datum.  The following structure records only the additional linear

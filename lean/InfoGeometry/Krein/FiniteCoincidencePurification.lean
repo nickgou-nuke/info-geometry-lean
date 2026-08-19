@@ -62,4 +62,16 @@ theorem fundamentalSymmetry_transpose (R T : Matrix n n ℝ)
     doubledCovarianceProjection_transpose R T hR hT]
   noncomm_ring
 
+/-- The finite fundamental symmetry fixes its purified projection on the left. -/
+theorem fundamentalSymmetry_mul_projection (R T : Matrix n n ℝ)
+    (hsum : R * R + T * T = 1) :
+    fundamentalSymmetry R T * projection R T = projection R T := by
+  exact doubledCovarianceSymmetry_mul_projection R T hsum
+
+/-- The finite fundamental symmetry fixes its purified projection on the right. -/
+theorem projection_mul_fundamentalSymmetry (R T : Matrix n n ℝ)
+    (hsum : R * R + T * T = 1) :
+    projection R T * fundamentalSymmetry R T = projection R T := by
+  exact doubledCovarianceProjection_mul_symmetry R T hsum
+
 end InfoGeometry.Krein.FiniteCoincidencePurification

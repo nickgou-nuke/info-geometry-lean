@@ -23,7 +23,7 @@ The closed result is deliberately finite:
   `ℚ⁵ ⊕ ℚ⁵`.
 
 This does not construct the global crystallographic wallpaper group, a Pin
-double cover, or an analytic Cartan bundle.  Those remain higher-level sockets;
+double cover, or an analytic Cartan bundle.  Those remain higher-level interfaces;
 this module supplies the exact finite algebraic cross-section used by them.
 -/
 
@@ -250,8 +250,8 @@ structure D5RootData where
   si : Fin 2
   sj : Fin 2
 
-/-- Witness table for the transformed lifted roots. -/
-def d5ActionWitness : Fin 8 → Fin 8 → D5RootData
+/-- Data table for the transformed lifted roots. -/
+def d5ActionData : Fin 8 → Fin 8 → D5RootData
   | 0, 0 => ⟨0, 2, 0, 0⟩
   | 0, 1 => ⟨0, 2, 1, 0⟩
   | 0, 2 => ⟨1, 2, 0, 0⟩
@@ -318,23 +318,23 @@ def d5ActionWitness : Fin 8 → Fin 8 → D5RootData
   | 7, 7 => ⟨0, 1, 1, 0⟩
 
 /-- The property table always chooses two distinct `D₅` coordinates. -/
-theorem d5ActionWitness_ne (g r : Fin 8) :
-    (d5ActionWitness g r).i ≠ (d5ActionWitness g r).j := by
+theorem d5ActionData_ne (g r : Fin 8) :
+    (d5ActionData g r).i ≠ (d5ActionData g r).j := by
   fin_cases g <;> fin_cases r <;> decide
 
 /-- The `D₅` action table agrees with matrix multiplication on lifted roots. -/
 theorem weylD5CrossSection_action_root_eq (g r : Fin 8) :
     matVec5 (weylD5CrossSection g) (pin55LiftOfWallpaperRoot r) =
-      d5RootOf (d5ActionWitness g r).i (d5ActionWitness g r).j
-        (d5ActionWitness g r).si (d5ActionWitness g r).sj := by
+      d5RootOf (d5ActionData g r).i (d5ActionData g r).j
+        (d5ActionData g r).si (d5ActionData g r).sj := by
   fin_cases g <;> fin_cases r <;> native_decide
 
 /-- The lifted cross-section action preserves the finite `D₅` root system. -/
 theorem weylD5CrossSection_preserves_lifted_d5_roots (g r : Fin 8) :
     IsD5Root (matVec5 (weylD5CrossSection g) (pin55LiftOfWallpaperRoot r)) := by
-  refine ⟨(d5ActionWitness g r).i, (d5ActionWitness g r).j,
-    (d5ActionWitness g r).si, (d5ActionWitness g r).sj,
-    d5ActionWitness_ne g r, ?_⟩
+  refine ⟨(d5ActionData g r).i, (d5ActionData g r).j,
+    (d5ActionData g r).si, (d5ActionData g r).sj,
+    d5ActionData_ne g r, ?_⟩
   exact weylD5CrossSection_action_root_eq g r
 
 /-! ## Split `O(5,5)` metric preservation -/

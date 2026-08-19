@@ -32,127 +32,151 @@ section DirectLimitRelations
 @[simp] theorem directLimit_hΓ
     (bond : ∀ _n : ℕ, EndV →+* EndV)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
+    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     φ (surf n).Γ * φ (surf n).Γ = 1 :=
   by
     dsimp
-    simpa using congrArg (ofStage (bond := bond) n) (surf n).hΓ
+    simpa using congrArg (ofStage (bond := bond) n)
+      (OperatorSurfaceLaws.hΓ (hSurf n))
 
 @[simp] theorem directLimit_G1_odd
     (bond : ∀ _n : ℕ, EndV →+* EndV)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
+    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     φ ((surf n).Γ * (surf n).G1) = -φ ((surf n).G1 * (surf n).Γ) :=
   by
     dsimp
-    simpa using congrArg (ofStage (bond := bond) n) (surf n).G1_odd
+    simpa using congrArg (ofStage (bond := bond) n)
+      (OperatorSurfaceLaws.G1_odd (hSurf n))
 
 @[simp] theorem directLimit_H_Ep
     (bond : ∀ _n : ℕ, EndV →+* EndV)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
+    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     superBracket false false (φ (surf n).H) (φ (surf n).Ep) =
       φ ((2 : ℝ) • (surf n).Ep) :=
   by
     dsimp
-    exact superBracket_eq_transport (ofStage (bond := bond) n) (surf n).H_Ep
+    exact superBracket_eq_transport (ofStage (bond := bond) n)
+      (OperatorSurfaceLaws.H_Ep (hSurf n))
 
 @[simp] theorem directLimit_H_Em
     (bond : ∀ _n : ℕ, EndV →+* EndV)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
+    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     superBracket false false (φ (surf n).H) (φ (surf n).Em) =
       φ ((-2 : ℝ) • (surf n).Em) :=
   by
     dsimp
-    exact superBracket_eq_transport (ofStage (bond := bond) n) (surf n).H_Em
+    exact superBracket_eq_transport (ofStage (bond := bond) n)
+      (OperatorSurfaceLaws.H_Em (hSurf n))
 
 @[simp] theorem directLimit_Ep_Em
     (bond : ∀ _n : ℕ, EndV →+* EndV)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
+    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     superBracket false false (φ (surf n).Ep) (φ (surf n).Em) = φ (surf n).H :=
   by
     dsimp
-    exact superBracket_eq_transport (ofStage (bond := bond) n) (surf n).Ep_Em
+    exact superBracket_eq_transport (ofStage (bond := bond) n)
+      (OperatorSurfaceLaws.Ep_Em (hSurf n))
 
 @[simp] theorem directLimit_H_G1
     (bond : ∀ _n : ℕ, EndV →+* EndV)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
+    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     superBracket false true (φ (surf n).H) (φ (surf n).G1) = φ (surf n).G1 :=
   by
     dsimp
-    simpa using superBracket_eq_transport (ofStage (bond := bond) n) (surf n).H_G1
+    simpa using superBracket_eq_transport (ofStage (bond := bond) n)
+      (OperatorSurfaceLaws.H_G1 (hSurf n))
 
 @[simp] theorem directLimit_H_G2
     (bond : ∀ _n : ℕ, EndV →+* EndV)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
+    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     superBracket false true (φ (surf n).H) (φ (surf n).G2) =
       φ ((-1 : ℝ) • (surf n).G2) :=
   by
     dsimp
-    exact superBracket_eq_transport (ofStage (bond := bond) n) (surf n).H_G2
+    exact superBracket_eq_transport (ofStage (bond := bond) n)
+      (OperatorSurfaceLaws.H_G2 (hSurf n))
 
 @[simp] theorem directLimit_Ep_G2
     (bond : ∀ _n : ℕ, EndV →+* EndV)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
+    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     superBracket false true (φ (surf n).Ep) (φ (surf n).G2) = φ (surf n).G1 :=
   by
     dsimp
-    exact superBracket_eq_transport (ofStage (bond := bond) n) (surf n).Ep_G2
+    exact superBracket_eq_transport (ofStage (bond := bond) n)
+      (OperatorSurfaceLaws.Ep_G2 (hSurf n))
 
 @[simp] theorem directLimit_Em_G1
     (bond : ∀ _n : ℕ, EndV →+* EndV)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
+    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     superBracket false true (φ (surf n).Em) (φ (surf n).G1) = φ (surf n).G2 :=
   by
     dsimp
-    exact superBracket_eq_transport (ofStage (bond := bond) n) (surf n).Em_G1
+    exact superBracket_eq_transport (ofStage (bond := bond) n)
+      (OperatorSurfaceLaws.Em_G1 (hSurf n))
 
 @[simp] theorem directLimit_G1_G1
     (bond : ∀ _n : ℕ, EndV →+* EndV)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
+    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     superBracket true true (φ (surf n).G1) (φ (surf n).G1) =
       φ ((2 : ℝ) • (surf n).Ep) :=
   by
     dsimp
-    exact superBracket_eq_transport (ofStage (bond := bond) n) (surf n).G1_G1
+    exact superBracket_eq_transport (ofStage (bond := bond) n)
+      (OperatorSurfaceLaws.G1_G1 (hSurf n))
 
 @[simp] theorem directLimit_G2_G2
     (bond : ∀ _n : ℕ, EndV →+* EndV)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
+    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     superBracket true true (φ (surf n).G2) (φ (surf n).G2) =
       φ ((-2 : ℝ) • (surf n).Em) :=
   by
     dsimp
-    exact superBracket_eq_transport (ofStage (bond := bond) n) (surf n).G2_G2
+    exact superBracket_eq_transport (ofStage (bond := bond) n)
+      (OperatorSurfaceLaws.G2_G2 (hSurf n))
 
 @[simp] theorem directLimit_G1_G2
     (bond : ∀ _n : ℕ, EndV →+* EndV)
     (surf : ∀ n : ℕ, OperatorSurface (V := V))
+    (hSurf : ∀ n : ℕ, OperatorSurfaceLaws (surf n))
     (n : ℕ) :
     let φ := ofStage (bond := bond) n
     superBracket true true (φ (surf n).G1) (φ (surf n).G2) = -φ (surf n).H :=
   by
     dsimp
-    exact superBracket_eq_transport (ofStage (bond := bond) n) (surf n).G1_G2
+    exact superBracket_eq_transport (ofStage (bond := bond) n)
+      (OperatorSurfaceLaws.G1_G2 (hSurf n))
 
 end DirectLimitRelations
 

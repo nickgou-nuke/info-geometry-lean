@@ -7,7 +7,7 @@ import InfoGeometry.Meta.Architecture
 /-!
 # InfoGeometry.Canonical.DrazinDilationGapBridge
 
-Black-Book-safe bridge from the generic dilation-gap socket to the repository
+Black-Book-safe bridge from the generic dilation-gap interface to the repository
 owned `CertifiedInverseKernel` Drazin supercharge lane.
 
 The theorem-owned identities here are:

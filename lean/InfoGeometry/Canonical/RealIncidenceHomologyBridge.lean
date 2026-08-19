@@ -7,7 +7,7 @@ open scoped InnerProductSpace
 /-!
 # InfoGeometry.Canonical.RealIncidenceHomologyBridge
 
-Theorem-safe real homology/cohomology socket for incidence and wire complexes.
+Real homology/cohomology transport layer for incidence and wire complexes.
 
 This file records the real Hestenes--Krein translation:
 
@@ -30,7 +30,7 @@ open InfoGeometry.Canonical.ChiralHodgeDecomposition
 open InfoGeometry.Canonical.HestenesPhaseSemilinear
 
 /--
-A real chain-complex socket.
+A real chain-complex structure.
 
 `C n` is the degree-`n` chain carrier, `boundary n : C (n+1) -> C n` is the
 real boundary map, and `boundary_boundary_zero` is the supplied chain-complex
@@ -68,7 +68,7 @@ theorem boundary_is_cycle
 end RealChainComplex
 
 /--
-A real cochain-complex socket.
+A real cochain-complex datum.
 
 This is the dual readout lane. `coboundary n` sends degree-`n` cochains to
 degree-`n+1` cochains, and `coboundary_coboundary_zero` supplies `d d = 0`.

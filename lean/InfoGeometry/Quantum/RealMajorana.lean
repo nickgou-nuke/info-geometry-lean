@@ -37,7 +37,7 @@ noncomputable def anticommutator (A B : EndS (S := S)) : EndS (S := S) :=
 /--
 Constructive CAR property for a real Majorana field `γ` with pairing `g`.
 -/
-def MajoranaCARWitness (g : S → S → ℝ) (γ : S → EndS (S := S)) : Prop :=
+def MajoranaCAR (g : S → S → ℝ) (γ : S → EndS (S := S)) : Prop :=
   ∀ u v : S,
     anticommutator (γ u) (γ v)
       = (2 * g u v) • ContinuousLinearMap.id ℝ S
@@ -74,7 +74,7 @@ Primitive constructive CAR theorem: the split-Clifford Majorana field already
 realizes CAR in the real channel.
 -/
 theorem car_realization_of_clifford :
-    MajoranaCARWitness (S := S) (pairing (S := S)) M.gamma := by
+    MajoranaCAR (S := S) (pairing (S := S)) M.gamma := by
   intro u v
   simpa [pairing] using M.car u v
 
@@ -546,7 +546,7 @@ because transport acts by an isometric real automorphism on the Majorana mode
 space.
 -/
 theorem car_realization_of_clifford :
-    MajoranaCARWitness (S := S) (fun u v => inner ℝ u v) (transportGamma (T := T)) := by
+    MajoranaCAR (S := S) (fun u v => inner ℝ u v) (transportGamma (T := T)) := by
   intro u v
   exact T.transportGamma_car u v
 

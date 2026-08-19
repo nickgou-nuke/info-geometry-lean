@@ -9,8 +9,7 @@ This module packages the local alphabet
 
 `{N₊, N₋, s₊, s₋, s₃}`
 
-as a theorem-honest capstone over `ChiralCausalCone`.  It keeps the analytic and
-non-orientable monodromy claims as sockets, while proving the finite `M₂(ℂ)`
+as a theorem-honest capstone over `ChiralCausalCone`.  It proves the finite `M₂(ℂ)`
 matrix facts in the kernel:
 
 * `s₊²=s₋²=0`;
@@ -108,7 +107,7 @@ theorem apex_pauli_exclusion :
   exact ⟨NPlus_NMinus_zero, NMinus_NPlus_zero⟩
 
 /-- Finite capstone for the requested alphabet.  The kernel proves the local
-matrix algebra; the socket fields have been removed and replaced with genuine proofs. -/
+matrix algebra. -/
 theorem chiral_cone_alphabet_synthesis :
     sPlus * sPlus = 0 ∧
     sMinus * sMinus = 0 ∧

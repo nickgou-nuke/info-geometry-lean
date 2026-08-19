@@ -38,20 +38,6 @@ structure QuantumG2FusionCoherenceDatum where
   /-- The R-move (Braiding) acting on a fusion channel. -/
   Rmove : ∀ a b c, FusionSpace a b c → FusionSpace b a c → 𝕜
   
-  /-- The Pentagon proposition for the supplied fusion data.
-
-  This is deliberately an explicit obligation: the abstract interface does
-  not manufacture the multi-summation identity for an arbitrary collection of
-  `Fmove`s.
-  -/
-  F_pentagon : Prop
-
-  /-- The left Hexagon proposition for the supplied fusion data. -/
-  FR_hexagon_left : Prop
-
-  /-- The right Hexagon proposition for the supplied fusion data. -/
-  FR_hexagon_right : Prop
-
 -- The interface is exported for downstream usage.
 variable {𝕜} (D : QuantumG2FusionCoherenceDatum 𝕜)
 
@@ -61,12 +47,5 @@ def FusionSpace := D.FusionSpace
 
 def Fmove := D.Fmove
 def Rmove := D.Rmove
-
-/-! These are proposition-valued obligations of the abstract interface.  They
-are deliberately exposed as statements, not promoted to proofs: a concrete
-fusion realization must provide the corresponding witnesses separately. -/
-def F_pentagon_statement : Prop := D.F_pentagon
-def FR_hexagon_left_statement : Prop := D.FR_hexagon_left
-def FR_hexagon_right_statement : Prop := D.FR_hexagon_right
 
 end InfoGeometry.Categorical

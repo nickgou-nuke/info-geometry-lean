@@ -103,6 +103,36 @@ theorem partitionFunction_eq_configuration_sum
   intro σ _
   simp only [Polynomial.eval_mul, Polynomial.eval_C, Polynomial.eval_pow, Polynomial.eval_X]
 
+/-- A finite Lee--Yang partition polynomial cannot vanish at a positive real
+fugacity, because every configuration contribution is strictly positive. -/
+theorem partitionFunction_ne_zero_of_pos
+    (D : FinitePrimeChainData N) (lam : ℝ)
+    {z : ℝ} (hz : 0 < z) :
+    partitionFunction D lam (z : ℂ) ≠ 0 := by
+  rw [partitionFunction_eq_configuration_sum]
+  have hterm : ∀ σ : SpinConfig N,
+      0 < configurationWeight D lam σ * z ^ occupiedCount σ := by
+    intro σ
+    exact mul_pos (configurationWeight_pos D lam σ) (pow_pos hz _)
+  have hsum : 0 < ∑ σ : SpinConfig N,
+      configurationWeight D lam σ * z ^ occupiedCount σ := by
+    exact Finset.sum_pos (fun σ _ => hterm σ)
+      ⟨fun _ => false, Finset.mem_univ _⟩
+  intro hzero
+  have hreal := congrArg Complex.re hzero
+  simp at hreal
+  have hpow (n : ℕ) : ((z : ℂ) ^ n).re = z ^ n := by
+    calc
+      ((z : ℂ) ^ n).re = ((z ^ n : ℝ) : ℂ).re := by
+        rw [Complex.ofReal_pow]
+      _ = z ^ n := Complex.ofReal_re _
+  simp_rw [hpow] at hreal
+  have hreal' :
+      ∑ σ : SpinConfig N,
+        configurationWeight D lam σ * z ^ occupiedCount σ = 0 := by
+    exact hreal
+  exact (ne_of_gt hsum) hreal'
+
 theorem multiPartition_uniform_eq_hopfield_sum
     (D : FinitePrimeChainData N) (lam : ℝ) (z : ℂ) :
     multiPartition D lam (fun _ : Fin N => z) =
@@ -147,6 +177,17 @@ theorem multiPartition_uniform_eq_normalized_partitionFunction
           ∑ σ : SpinConfig N, (configurationWeight D lam σ : ℂ) * z ^ occupiedCount σ := by
           rw [Finset.mul_sum]
 
+/-- The normalized multivariate partition is also nonzero at a positive real
+uniform fugacity. -/
+theorem multiPartition_uniform_ne_zero_of_pos
+    (D : FinitePrimeChainData N) (lam : ℝ)
+    {z : ℝ} (hz : 0 < z) :
+    multiPartition D (2 * lam) (fun _ : Fin N => (z : ℂ)) ≠ 0 := by
+  rw [multiPartition_uniform_eq_normalized_partitionFunction]
+  exact mul_ne_zero
+    (Complex.ofReal_ne_zero.mpr (Real.exp_ne_zero _))
+    (partitionFunction_ne_zero_of_pos D lam hz)
+
 /-- Concrete coherence witness supplied by the finite configuration identities above. -/
 def concreteNormalizedGlobalFugacityCoherence :
     NormalizedGlobalFugacityCoherence where
@@ -156,12 +197,7 @@ def concreteNormalizedGlobalFugacityCoherence :
 
 /-! ## The honest positive-coupling polynomial consequence -/
 
-/-- Circle law for the coarse polynomial, at strictly positive coupling. -/
-def PositiveLeeYangPolynomialWitness : Prop :=
-  ∀ {N : ℕ} (D : FinitePrimeChainData N) {lam : ℝ},
-    0 < lam →
-      ∀ z : ℂ, (partitionPolynomial D lam).IsRoot z → OnUnitCircle z
-
+/- Circle law for the coarse polynomial, at strictly positive coupling. -/
 /--
 The multivariate inside/outside zero-free property implies the one-variable
 circle law once the two finite readouts are coherently identified.
@@ -169,8 +205,9 @@ circle law once the two finite readouts are coherently identified.
 theorem positivePolynomialWitness_of_polydisc
     (LY : LeeYangPolydiscWitness)
     (coh : NormalizedGlobalFugacityCoherence) :
-    PositiveLeeYangPolynomialWitness := by
-  unfold PositiveLeeYangPolynomialWitness
+    ∀ {N : ℕ} (D : FinitePrimeChainData N) {lam : ℝ},
+      0 < lam →
+        ∀ z : ℂ, (partitionPolynomial D lam).IsRoot z → OnUnitCircle z := by
   intro N D lam hlam z hz
   unfold OnUnitCircle
   by_contra hnot
@@ -192,7 +229,9 @@ theorem positivePolynomialWitness_of_polydisc
 
 theorem positivePolynomialWitness_of_polydisc_concrete
     (LY : LeeYangPolydiscWitness) :
-    PositiveLeeYangPolynomialWitness := by
+    ∀ {N : ℕ} (D : FinitePrimeChainData N) {lam : ℝ},
+      0 < lam →
+        ∀ z : ℂ, (partitionPolynomial D lam).IsRoot z → OnUnitCircle z := by
   exact positivePolynomialWitness_of_polydisc LY concreteNormalizedGlobalFugacityCoherence
 
 end InfoGeometry.Canonical.PrimeLeeYangCoherence

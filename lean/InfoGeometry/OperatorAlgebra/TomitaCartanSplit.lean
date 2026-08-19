@@ -24,7 +24,7 @@ namespace InfoGeometry.OperatorAlgebra.TomitaCartanSplit
 
 universe uOp uSplit uCarrier uH
 
-/-! ## 0. Cartan routing, overlap, and chiral-stage sockets -/
+/-! ## 0. Cartan routing, overlap, and chiral-stage data -/
 
 /-! ## 0a. Tomita mirror involution -/
 
@@ -32,7 +32,7 @@ universe uOp uSplit uCarrier uH
 A Tomita-style mirror involution on an ambient operator algebra.
 
 The intended model is `mirror X = J X J`, sending an algebra into its commutant
-and back.  This socket records only the algebraic laws needed to prove the
+and back.  This datum records only the algebraic laws needed to prove the
 mirror-even/mirror-odd lift theorems.
 -/
 structure MirrorInvolution
@@ -418,36 +418,17 @@ theorem act_right_sector_trivial
 
 end LeftChiralDynamics
 
-/--
-Owner target for the Tomita-Cartan algebraic routing layer.
-
-The nontrivial analytic/von-Neumann content is supplied by concrete modules.
-This owner target only records that once the data are supplied, the compact and
-noncompact lift signs are formally available.
--/
-structure TomitaCartanSplitOwnerTarget where
-  /-- Compact Cartan lifts follow the `+` sign rule. -/
-  compact_transport :
+/-- Cartan compact/noncompact generators obey the native sign-routing laws. -/
+theorem tomitaCartanSplit_signs :
     ∀ (Op : Type uOp) [Ring Op],
     ∀ C : TomitaCartanDatum Op,
-    ∀ X : Op,
-      C.IsCompactGenerator X → C.globalGenerator X = X + C.mirror X
+    (∀ X : Op, C.IsCompactGenerator X → C.globalGenerator X = X + C.mirror X) ∧
+    (∀ X : Op, C.IsNoncompactGenerator X → C.globalGenerator X = X - C.mirror X) := by
+  intro Op _ C
+  exact ⟨
+    (fun X hX => C.globalGenerator_compact hX),
+    (fun X hX => C.globalGenerator_noncompact hX)⟩
 
-  /-- Noncompact Cartan lifts follow the `-` sign rule. -/
-  noncompact_transport :
-    ∀ (Op : Type uOp) [Ring Op],
-    ∀ C : TomitaCartanDatum Op,
-    ∀ X : Op,
-      C.IsNoncompactGenerator X → C.globalGenerator X = X - C.mirror X
-
-/-- The owner target is proved by the Cartan sign-routing theorems. -/
-theorem tomitaCartanSplitOwnerTarget :
-    TomitaCartanSplitOwnerTarget := by
-  refine ⟨?_, ?_⟩
-  · intro Op _ C X hX
-    exact C.globalGenerator_compact hX
-  · intro Op _ C X hX
-    exact C.globalGenerator_noncompact hX
 
 /-! ## 1. Tomita algebra/commutant skeleton -/
 
@@ -974,7 +955,7 @@ theorem equal_magnitude_isotropic
 
 end SplitPairingDatum
 
-/-! ## 4. Defect-to-null bridge socket -/
+/-! ## 4. Defect-to-null bridge -/
 
 /--
 A bridge from algebraic Tomita/Drazin defects to a carrier null readout.
@@ -1372,33 +1353,8 @@ theorem defect_maps_to_isotropic
 
 end TomitaCartanSplitDatum
 
-/--
-Owner target for constructing a mirror-involution Tomita-Cartan split model.
 
-Concrete QFT/operator-algebra modules should supply the Tomita mirror, the
-factor overlap theorem, and the Krein defect-to-null readout.
--/
-def TomitaCartanSplitModelOwnerTarget
-    (Op Split H : Type*)
-    [Ring Op]
-    [AddCommGroup H] [Module ℝ H] : Prop :=
-  ∀ T : TomitaCartanSplitDatum Op Split H,
-    (∀ x : Op,
-      T.mirror.mirror (T.mirror.compactLift x) =
-        T.mirror.compactLift x) ∧
-    (∀ x : Op,
-      T.mirror.mirror (T.mirror.noncompactLift x) =
-        -T.mirror.noncompactLift x) ∧
-    (∀ x : Op,
-      T.factorOverlap.inAlgebra x →
-        T.factorOverlap.inCommutant x →
-          T.factorOverlap.isScalar x) ∧
-    (∀ a : Split,
-      a ∈ T.defectToIsotropic.defectLocus →
-        T.defectToIsotropic.carrierReadout a ∈
-          InfoGeometry.Geometry.KreinIsotropicCone.IsotropicCone T.kreinQuadratic)
-
-/-! ## 6. Concise Tomita/Drazin bridge sockets -/
+/-! ## 6. Concise Tomita/Drazin bridges -/
 
 /-- Abstract membership data for an algebra and its commutant. -/
 structure AlgebraCommutantDatum

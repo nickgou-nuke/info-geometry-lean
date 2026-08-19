@@ -56,7 +56,7 @@ def main():
     print("eta = Nplus - Nminus and eta^2 = I")
     print("finite DKT/Krein adjoint X ↦ η X† η is an anti-involution")
     print("for the finite Cayley stage: U^DKT = U† and U U^DKT = I")
-    print("Analytic C*-colimit / full Tomita J / inverse-Cayley boundary recovery remain sockets.")
+    print("Analytic C*-colimit / full Tomita J / inverse-Cayley boundary recovery remain deferred_interfaces.")
 
 
 if __name__ == "__main__":

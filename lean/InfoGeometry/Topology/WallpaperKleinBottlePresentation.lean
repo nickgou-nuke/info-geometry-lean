@@ -35,47 +35,18 @@ namespace InfoGeometry.Topology.WallpaperKleinBottlePresentation
 
 open InfoGeometry.Topology.Wallpaper
 
-/--
-Finite presentation property for the pointwise Klein-bottle relation carried by a
-`pg` wallpaper action.
--/
-structure KleinBottlePresentationWitness where
-  xTranslation : Lattice2D ≃ Lattice2D
-  yTranslation : Lattice2D ≃ Lattice2D
-  glide : Lattice2D ≃ Lattice2D
-  glide_squared_eq_xTranslation : ∀ p : Lattice2D, glide (glide p) = xTranslation p
-  glide_conjugates_yTranslation_to_inverse :
-    ∀ p : Lattice2D, glide (yTranslation (glide.symm p)) = yTranslation.symm p
-
 namespace WallpaperGroupPG
 
-/-- Any `pg` wallpaper package determines a finite Klein-bottle presentation property. -/
-def kleinBottlePresentation (pg : WallpaperGroupPG) : KleinBottlePresentationWitness where
-  xTranslation := pg.T_x
-  yTranslation := pg.T_y
-  glide := pg.G
-  glide_squared_eq_xTranslation := pg.h_glide_squared
-  glide_conjugates_yTranslation_to_inverse := by
-    intro p
-    have h := pg.h_commutation (pg.G.symm p)
-    simpa using h
-
-/-- Read back the pointwise Klein-bottle presentation relation from the property. -/
 theorem kleinBottlePresentation_relation (pg : WallpaperGroupPG) (p : Lattice2D) :
-    (WallpaperGroupPG.kleinBottlePresentation pg).glide
-        ((WallpaperGroupPG.kleinBottlePresentation pg).yTranslation
-          ((WallpaperGroupPG.kleinBottlePresentation pg).glide.symm p)) =
-      ((WallpaperGroupPG.kleinBottlePresentation pg).yTranslation.symm p) :=
-  (WallpaperGroupPG.kleinBottlePresentation pg).glide_conjugates_yTranslation_to_inverse p
+    pg.G (pg.T_y (pg.G.symm p)) = pg.T_y.symm p := by
+  have h := pg.h_commutation (pg.G.symm p)
+  simpa using h
 
 end WallpaperGroupPG
 
 /-- The concrete Euclidean `pg` action yields the finite Klein-bottle presentation relation. -/
 theorem concrete_kleinBottlePresentation_relation (p : Lattice2D) :
-    (WallpaperGroupPG.kleinBottlePresentation concretePG).glide
-        ((WallpaperGroupPG.kleinBottlePresentation concretePG).yTranslation
-          ((WallpaperGroupPG.kleinBottlePresentation concretePG).glide.symm p)) =
-      ((WallpaperGroupPG.kleinBottlePresentation concretePG).yTranslation.symm p) :=
+    concretePG.G (concretePG.T_y (concretePG.G.symm p)) = concretePG.T_y.symm p :=
   WallpaperGroupPG.kleinBottlePresentation_relation concretePG p
 
 end InfoGeometry.Topology.WallpaperKleinBottlePresentation

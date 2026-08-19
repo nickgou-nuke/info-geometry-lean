@@ -32,6 +32,16 @@ theorem permuteWeight_comp (σ τ : Equiv.Perm (Fin 5)) (w : Weight) :
   funext k
   simp [permuteWeight, Equiv.trans_apply]
 
+theorem permuteWeight_add (σ : Equiv.Perm (Fin 5)) (w v : Weight) :
+    permuteWeight σ (w + v) = permuteWeight σ w + permuteWeight σ v := by
+  funext k
+  simp [permuteWeight]
+
+theorem permuteWeight_neg (σ : Equiv.Perm (Fin 5)) (w : Weight) :
+    permuteWeight σ (-w) = -permuteWeight σ w := by
+  funext k
+  simp [permuteWeight]
+
 theorem modeSwap_involutive (i j : Fin 5) (w : Weight) :
     permuteWeight (modeSwap i j) (permuteWeight (modeSwap i j) w) = w := by
   funext k
@@ -39,6 +49,16 @@ theorem modeSwap_involutive (i j : Fin 5) (w : Weight) :
 
 theorem signWeight_involutive (i : Fin 5) (w : Weight) :
     signWeight i (signWeight i w) = w := by
+  funext k
+  by_cases h : k = i <;> simp [signWeight, h]
+
+theorem signWeight_add (i : Fin 5) (w v : Weight) :
+    signWeight i (w + v) = signWeight i w + signWeight i v := by
+  funext k
+  by_cases h : k = i <;> simp [signWeight, h] <;> ring
+
+theorem signWeight_neg (i : Fin 5) (w : Weight) :
+    signWeight i (-w) = -signWeight i w := by
   funext k
   by_cases h : k = i <;> simp [signWeight, h]
 

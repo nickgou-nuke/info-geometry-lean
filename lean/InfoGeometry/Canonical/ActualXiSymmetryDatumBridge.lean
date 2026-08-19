@@ -96,6 +96,18 @@ theorem centeredRiemannXi_schwarz
     apply Complex.ext <;> simp
   rw [harg, hSchwarz]
 
+theorem centeredRiemannXiReal_neg_tau
+    (hSchwarz : ActualXiSchwarzHypothesis) (u tau : ℝ) :
+    centeredRiemannXiReal u (-tau) = centeredRiemannXiReal u tau := by
+  have h := congrArg Complex.re (centeredRiemannXi_schwarz hSchwarz u tau)
+  simpa [centeredRiemannXiReal] using h
+
+theorem centeredRiemannXiImag_neg_tau
+    (hSchwarz : ActualXiSchwarzHypothesis) (u tau : ℝ) :
+    centeredRiemannXiImag u (-tau) = -centeredRiemannXiImag u tau := by
+  have h := congrArg Complex.im (centeredRiemannXi_schwarz hSchwarz u tau)
+  simpa [centeredRiemannXiImag] using h
+
 /--
 The concrete centered `riemannXi` readout forms the existing symmetry datum
 once Schwarz conjugation is supplied.  The only non-definitional input is
@@ -160,5 +172,11 @@ theorem actualXiSymmetryDatum_concrete_criticalLine_real (tau : ℝ) :
     centeredRiemannXi 0 tau =
       (centeredRiemannXiReal 0 tau : ℂ) :=
   actualXiSymmetryDatum_criticalLine_real actualXiSchwarzHypothesis_concrete tau
+
+theorem actualXiSymmetryDatum_concrete_criticalLine_imag_zero (tau : ℝ) :
+    centeredRiemannXiImag 0 tau = 0 := by
+  have h := congrArg Complex.im
+    (actualXiSymmetryDatum_concrete_criticalLine_real tau)
+  simpa [centeredRiemannXiImag] using h
 
 end InfoGeometry.Canonical.ActualXiSymmetryDatumBridge

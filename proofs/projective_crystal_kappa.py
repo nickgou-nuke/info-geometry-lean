@@ -29,7 +29,7 @@ assert Mx*Ly == -Ly*Mx
 assert Mx*Ly*Mx == -Ly
 print("   ρ(Mx)ρ(Ly)=-ρ(Ly)ρ(Mx), encoding ν(Mx,Ly)=-1 ✓")
 
-print("§4  Z2 invariant parity socket")
+print("§4  Z2 invariant parity deferred_interface")
 n = sp.symbols("n", integer=True)
 for val in range(-4,5):
     assert (val + 2) % 2 == val % 2

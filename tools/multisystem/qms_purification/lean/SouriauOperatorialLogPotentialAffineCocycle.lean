@@ -26,7 +26,7 @@ Existing mathlib/literature context:
   absent from this owner surface.
 
 QMS purification move:
-- Replace the impossible partition-potential analytic socket by the explicit
+- Replace the impossible partition-potential analytic deferred interface by the explicit
   affine cocycle theorem already carried by the structure.
 -/
 
@@ -47,7 +47,7 @@ structure LieCovarianceAndCocycle
   affineCocycle :
     ∀ g h, cocycle (g * h) = coadjointAction g (cocycle h) + cocycle g
 
-/-- The affine-correction socket reduces to the supplied Souriau cocycle law. -/
+/-- The affine-correction deferred interface reduces to the supplied Souriau cocycle law. -/
 theorem partitionPotentialAffineCorrection_as_cocycle_law
     {State LieGroup LieAlgebra LieDual : Type*} [Mul LieGroup] [Add LieDual]
     (L : LieCovarianceAndCocycle State LieGroup LieAlgebra LieDual)

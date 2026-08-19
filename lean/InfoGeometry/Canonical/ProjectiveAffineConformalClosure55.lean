@@ -176,9 +176,7 @@ def projectiveSetoid55 : Setoid PACSplit55 where
   }
 
 /-- The actual projective carrier of the split conformal ambient space. -/
-abbrev Projective55 := Quotient projectiveSetoid55
-
-def projectiveMk55 (X : PACSplit55) : Projective55 :=
+def projectiveMk55 (X : PACSplit55) : Quotient projectiveSetoid55 :=
   Quotient.mk projectiveSetoid55 X
 
 /-- The null cone condition is invariant under nonzero projective rescaling. -/
@@ -202,15 +200,13 @@ def pacSplit55Zero : PACSplit55 where
 
 /-! ## Explicit identification with the native `V55` carrier -/
 
-abbrev NativeV55 := InfoGeometry.Clifford.Clifford55.V55
-
 /-- Coordinate-preserving map from the local PAC record to native `V55`. -/
-def pacSplit55ToNativeV55 (X : PACSplit55) : NativeV55 :=
+def pacSplit55ToNativeV55 (X : PACSplit55) : InfoGeometry.Clifford.Clifford55.V55 :=
   (![X.x0, X.x1, X.x2, X.x3, X.u],
     ![X.y0, X.y1, X.y2, X.y3, X.v])
 
 /-- Coordinate-preserving inverse map from native `V55` to the PAC record. -/
-def nativeV55ToPacSplit55 (v : NativeV55) : PACSplit55 where
+def nativeV55ToPacSplit55 (v : InfoGeometry.Clifford.Clifford55.V55) : PACSplit55 where
   x0 := v.1 0
   x1 := v.1 1
   x2 := v.1 2
@@ -231,7 +227,7 @@ theorem nativeV55ToPacSplit55_pacSplit55ToNativeV55
 
 @[simp]
 theorem pacSplit55ToNativeV55_nativeV55ToPacSplit55
-    (v : NativeV55) :
+    (v : InfoGeometry.Clifford.Clifford55.V55) :
     pacSplit55ToNativeV55 (nativeV55ToPacSplit55 v) = v := by
   apply Prod.ext <;> funext i <;> fin_cases i <;> rfl
 
@@ -333,20 +329,13 @@ noncomputable def pacToNativeBoundaryHom :
       (u : ℝ) • pacSplit55ToNativeV55 X
     exact pacSplit55ToNativeV55_smul (u : ℝ) X
 
-abbrev GenericProjectiveNullRep55 :=
-  ProjectiveNullBoundaryDatum.NullRep projectiveNullBoundaryDatum55
-
-abbrev GenericProjectiveNullBoundary55 :=
-  ProjectiveNullBoundaryDatum.ProjectiveNullBoundary
-    projectiveNullBoundaryDatum55
-
 noncomputable def pacToNativeBoundaryAction
-    (X : GenericProjectiveNullBoundary55) :
+    (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
     InfoGeometry.Projective.Cl55NullBoundaryBridge.Boundary :=
   ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary
     pacToNativeBoundaryHom X
 
-theorem nativeV55ToPacSplit55_smul (a : ℝ) (v : NativeV55) :
+theorem nativeV55ToPacSplit55_smul (a : ℝ) (v : InfoGeometry.Clifford.Clifford55.V55) :
     nativeV55ToPacSplit55 (a • v) =
       smul55 a (nativeV55ToPacSplit55 v) := by
   apply Function.LeftInverse.injective
@@ -367,7 +356,7 @@ noncomputable def nativeToPacBoundaryHom :
       projectiveNullBoundaryDatum55 where
   toFun := nativeV55ToPacSplit55
   map_zero := by
-    cases (0 : NativeV55)
+    cases (0 : InfoGeometry.Clifford.Clifford55.V55)
     rfl
   map_null := by
     intro v hv
@@ -383,7 +372,7 @@ noncomputable def nativeToPacBoundaryHom :
     change nativeV55ToPacSplit55 v = pacSplit55Zero at hzero
     have hzero' := congrArg pacSplit55ToNativeV55 hzero
     have hzero_pac :
-        pacSplit55ToNativeV55 pacSplit55Zero = (0 : NativeV55) := by
+        pacSplit55ToNativeV55 pacSplit55Zero = (0 : InfoGeometry.Clifford.Clifford55.V55) := by
       apply Prod.ext <;> funext i <;> fin_cases i <;> rfl
     have hzero'' : v = pacSplit55ToNativeV55 pacSplit55Zero := by
       simpa using hzero'
@@ -394,17 +383,14 @@ noncomputable def nativeToPacBoundaryHom :
     intro u v
     exact nativeV55ToPacSplit55_smul (u : ℝ) v
 
-abbrev NativeProjectiveNullBoundary55 :=
-  InfoGeometry.Projective.Cl55NullBoundaryBridge.Boundary
-
 noncomputable def nativeToPacBoundaryAction
-    (X : NativeProjectiveNullBoundary55) :
-    GenericProjectiveNullBoundary55 :=
+    (X : InfoGeometry.Projective.Cl55NullBoundaryBridge.Boundary) :
+    ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 :=
   ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary
     nativeToPacBoundaryHom X
 
 theorem pacToNativeBoundaryAction_left_inverse
-    (X : GenericProjectiveNullBoundary55) :
+    (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
     nativeToPacBoundaryAction (pacToNativeBoundaryAction X) = X := by
   refine Quotient.inductionOn X ?_
   intro Z
@@ -424,7 +410,7 @@ theorem pacToNativeBoundaryAction_left_inverse
   simp
 
 theorem pacToNativeBoundaryAction_right_inverse
-    (X : NativeProjectiveNullBoundary55) :
+    (X : InfoGeometry.Projective.Cl55NullBoundaryBridge.Boundary) :
     pacToNativeBoundaryAction (nativeToPacBoundaryAction X) = X := by
   refine Quotient.inductionOn X ?_
   intro Z
@@ -447,14 +433,14 @@ theorem pacToNativeBoundaryAction_right_inverse
 /-- Canonical equivalence between the local PAC quotient and the native
 `Cl(5,5)` projective null boundary. -/
 noncomputable def pacNativeProjectiveBoundaryEquiv :
-    GenericProjectiveNullBoundary55 ≃ NativeProjectiveNullBoundary55 where
+    ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 ≃ InfoGeometry.Projective.Cl55NullBoundaryBridge.Boundary where
   toFun := pacToNativeBoundaryAction
   invFun := nativeToPacBoundaryAction
   left_inv := pacToNativeBoundaryAction_left_inverse
   right_inv := pacToNativeBoundaryAction_right_inverse
 
-def genericProjectiveNullMk55 (Z : GenericProjectiveNullRep55) :
-    GenericProjectiveNullBoundary55 :=
+def genericProjectiveNullMk55 (Z : ProjectiveNullBoundaryDatum.NullRep projectiveNullBoundaryDatum55) :
+    ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 :=
   ProjectiveNullBoundaryDatum.nullMk projectiveNullBoundaryDatum55 Z
 
 /-- The nonzero null part of the bespoke projective carrier.  The separate
@@ -462,14 +448,14 @@ nonzero condition excludes the zero projective class, which is not present in
 the generic `NullRep` quotient.
 -/
 def ProjectiveNonzeroNull55 : Type :=
-  {P : Projective55 //
+  {P : Quotient projectiveSetoid55 //
     ∃ X : PACSplit55,
       projectiveMk55 X = P ∧ Q55 X = 0 ∧ X ≠ pacSplit55Zero}
 
 noncomputable def genericNullBoundary_to_projectiveNonzeroNull55 :
-    GenericProjectiveNullBoundary55 → ProjectiveNonzeroNull55 :=
+    ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 → ProjectiveNonzeroNull55 :=
   Quotient.lift
-    (fun Z : GenericProjectiveNullRep55 =>
+    (fun Z : ProjectiveNullBoundaryDatum.NullRep projectiveNullBoundaryDatum55 =>
       (⟨projectiveMk55 Z.Z,
         ⟨Z.Z, rfl, Z.null, Z.nonzero⟩⟩ : ProjectiveNonzeroNull55))
     (by
@@ -515,7 +501,7 @@ theorem projectiveNonzeroNull55_representative_nonzero
   (Classical.choose_spec P.property).2.2
 
 noncomputable def projectiveNonzeroNull55_to_genericNullBoundary :
-    ProjectiveNonzeroNull55 → GenericProjectiveNullBoundary55 :=
+    ProjectiveNonzeroNull55 → ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 :=
   fun P =>
     genericProjectiveNullMk55
       ⟨projectiveNonzeroNull55_representative P,
@@ -530,7 +516,7 @@ theorem genericNullBoundary_to_projectiveNonzeroNull55_right_inverse
   exact projectiveNonzeroNull55_representative_projective P
 
 theorem projectiveNonzeroNull55_to_genericNullBoundary_left_inverse
-    (Z : GenericProjectiveNullBoundary55) :
+    (Z : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
     projectiveNonzeroNull55_to_genericNullBoundary
         (genericNullBoundary_to_projectiveNonzeroNull55 Z) = Z := by
   apply genericNullBoundary_to_projectiveNonzeroNull55_injective
@@ -538,7 +524,7 @@ theorem projectiveNonzeroNull55_to_genericNullBoundary_left_inverse
     (genericNullBoundary_to_projectiveNonzeroNull55 Z)
 
 noncomputable def genericNullBoundary_projectiveNonzeroNull55_equiv :
-    GenericProjectiveNullBoundary55 ≃ ProjectiveNonzeroNull55 where
+    ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55 ≃ ProjectiveNonzeroNull55 where
   toFun := genericNullBoundary_to_projectiveNonzeroNull55
   invFun := projectiveNonzeroNull55_to_genericNullBoundary
   left_inv := projectiveNonzeroNull55_to_genericNullBoundary_left_inverse
@@ -560,7 +546,7 @@ theorem sameProjectiveLine55_null_iff {X Y : PACSplit55}
   · exact projective_rescale_preserves_null (sameProjectiveLine55_symm h)
 
 /-- Nullity is a well-defined predicate on the projective quotient. -/
-def projectiveNull55 : Projective55 → Prop :=
+def projectiveNull55 : Quotient projectiveSetoid55 → Prop :=
   Quotient.lift (fun X => Q55 X = 0) (by
     intro X Y h
     apply propext
@@ -578,6 +564,21 @@ def reflectV (X : PACSplit55) : PACSplit55 where
   y0 := X.y0; y1 := X.y1; y2 := X.y2; y3 := X.y3
   u := X.u; v := -X.v
 
+@[simp] theorem reflectU_involutive (X : PACSplit55) :
+    reflectU (reflectU X) = X := by
+  cases X
+  simp [reflectU]
+
+@[simp] theorem reflectV_involutive (X : PACSplit55) :
+    reflectV (reflectV X) = X := by
+  cases X
+  simp [reflectV]
+
+@[simp] theorem reflectU_reflectV_commute (X : PACSplit55) :
+    reflectU (reflectV X) = reflectV (reflectU X) := by
+  cases X
+  rfl
+
 theorem reflectU_smul (a : ℝ) (X : PACSplit55) :
     reflectU (smul55 a X) = smul55 a (reflectU X) := by
   cases X
@@ -588,7 +589,7 @@ theorem reflectV_smul (a : ℝ) (X : PACSplit55) :
   cases X
   simp [reflectV, smul55]
 
-def reflectUProjective : Projective55 → Projective55 :=
+def reflectUProjective : Quotient projectiveSetoid55 → Quotient projectiveSetoid55 :=
   Quotient.lift (fun X => projectiveMk55 (reflectU X)) (by
     intro X Y hXY
     rcases hXY with ⟨a, ha, hXY⟩
@@ -597,7 +598,7 @@ def reflectUProjective : Projective55 → Projective55 :=
     refine ⟨a, ha, ?_⟩
     rw [hXY, reflectU_smul])
 
-def reflectVProjective : Projective55 → Projective55 :=
+def reflectVProjective : Quotient projectiveSetoid55 → Quotient projectiveSetoid55 :=
   Quotient.lift (fun X => projectiveMk55 (reflectV X)) (by
     intro X Y hXY
     rcases hXY with ⟨a, ha, hXY⟩
@@ -629,7 +630,7 @@ theorem reflectV_preserves_null (X : PACSplit55) (hX : Q55 X = 0) :
     Q55 (reflectV X) = 0 := by
   rw [reflectV_preserves_Q55, hX]
 
-theorem reflectUProjective_preserves_null (P : Projective55)
+theorem reflectUProjective_preserves_null (P : Quotient projectiveSetoid55)
     (hP : projectiveNull55 P) :
     projectiveNull55 (reflectUProjective P) := by
   revert hP
@@ -639,7 +640,7 @@ theorem reflectUProjective_preserves_null (P : Projective55)
   change Q55 (reflectU X) = 0
   rw [reflectU_preserves_Q55, hX]
 
-theorem reflectVProjective_preserves_null (P : Projective55)
+theorem reflectVProjective_preserves_null (P : Quotient projectiveSetoid55)
     (hP : projectiveNull55 P) :
     projectiveNull55 (reflectVProjective P) := by
   revert hP
@@ -649,7 +650,7 @@ theorem reflectVProjective_preserves_null (P : Projective55)
   change Q55 (reflectV X) = 0
   rw [reflectV_preserves_Q55, hX]
 
-@[simp] theorem reflectUProjective_involutive (P : Projective55) :
+@[simp] theorem reflectUProjective_involutive (P : Quotient projectiveSetoid55) :
     reflectUProjective (reflectUProjective P) = P := by
   refine Quotient.inductionOn P ?_
   intro X
@@ -657,7 +658,7 @@ theorem reflectVProjective_preserves_null (P : Projective55)
   cases X
   simp [reflectU]
 
-@[simp] theorem reflectVProjective_involutive (P : Projective55) :
+@[simp] theorem reflectVProjective_involutive (P : Quotient projectiveSetoid55) :
     reflectVProjective (reflectVProjective P) = P := by
   refine Quotient.inductionOn P ?_
   intro X
@@ -666,20 +667,20 @@ theorem reflectVProjective_preserves_null (P : Projective55)
   simp [reflectV]
 
 /-- The `u` reflection as an involutive projective equivalence. -/
-def reflectUProjectiveEquiv : Projective55 ≃ Projective55 where
+def reflectUProjectiveEquiv : Quotient projectiveSetoid55 ≃ Quotient projectiveSetoid55 where
   toFun := reflectUProjective
   invFun := reflectUProjective
   left_inv := reflectUProjective_involutive
   right_inv := reflectUProjective_involutive
 
 /-- The `v` reflection as an involutive projective equivalence. -/
-def reflectVProjectiveEquiv : Projective55 ≃ Projective55 where
+def reflectVProjectiveEquiv : Quotient projectiveSetoid55 ≃ Quotient projectiveSetoid55 where
   toFun := reflectVProjective
   invFun := reflectVProjective
   left_inv := reflectVProjective_involutive
   right_inv := reflectVProjective_involutive
 
-theorem reflectUProjective_commute_reflectVProjective (P : Projective55) :
+theorem reflectUProjective_commute_reflectVProjective (P : Quotient projectiveSetoid55) :
     reflectUProjective (reflectVProjective P) =
       reflectVProjective (reflectUProjective P) := by
   refine Quotient.inductionOn P ?_
@@ -702,14 +703,14 @@ theorem reflectUProjectiveEquiv_commute_reflectVProjectiveEquiv :
 directions.  The `↔` is essential: it makes the predicate closed under
 permutation inverses, rather than recording only a one-way readout.
 -/
-def preservesProjectiveNull (e : Equiv.Perm Projective55) : Prop :=
+def preservesProjectiveNull (e : Equiv.Perm (Quotient projectiveSetoid55)) : Prop :=
   ∀ P, projectiveNull55 (e P) ↔ projectiveNull55 P
 
 /-- The projective permutations preserving the null boundary form a native
 subgroup of the full permutation group.
 -/
 def projectiveNullPreservingPermSubgroup :
-    Subgroup (Equiv.Perm Projective55) where
+    Subgroup (Equiv.Perm (Quotient projectiveSetoid55)) where
   carrier := {e | preservesProjectiveNull e}
   one_mem' := by
     intro P
@@ -724,7 +725,7 @@ def projectiveNullPreservingPermSubgroup :
     have h := he (e⁻¹ P)
     simpa using h.symm
 
-theorem reflectUProjective_preserves_null_iff (P : Projective55) :
+theorem reflectUProjective_preserves_null_iff (P : Quotient projectiveSetoid55) :
     projectiveNull55 (reflectUProjective P) ↔ projectiveNull55 P := by
   constructor
   · intro h
@@ -733,7 +734,7 @@ theorem reflectUProjective_preserves_null_iff (P : Projective55) :
     simpa using h'
   · exact reflectUProjective_preserves_null P
 
-theorem reflectVProjective_preserves_null_iff (P : Projective55) :
+theorem reflectVProjective_preserves_null_iff (P : Quotient projectiveSetoid55) :
     projectiveNull55 (reflectVProjective P) ↔ projectiveNull55 P := by
   constructor
   · intro h
@@ -758,22 +759,22 @@ theorem reflectVProjectiveEquiv_mem_nullPreservingSubgroup :
 null-boundary-preserving projective symmetry group.
 -/
 def projectiveNullReflectionGroup :
-    Subgroup (Equiv.Perm Projective55) :=
+    Subgroup (Equiv.Perm (Quotient projectiveSetoid55)) :=
   Subgroup.closure
     {e | e = reflectUProjectiveEquiv ∨ e = reflectVProjectiveEquiv}
 
 theorem projectiveNullReflectionGroup_le_nullPreserving :
     projectiveNullReflectionGroup ≤
       projectiveNullPreservingPermSubgroup := by
-  rw [projectiveNullReflectionGroup, Subgroup.closure_le]
+  refine (Subgroup.closure_le _).2 ?_
   intro e he
   rcases he with rfl | rfl
   · exact reflectUProjectiveEquiv_mem_nullPreservingSubgroup
   · exact reflectVProjectiveEquiv_mem_nullPreservingSubgroup
 
 theorem projectiveNullReflectionGroup_preserves_null
-    {e : Equiv.Perm Projective55}
-    (he : e ∈ projectiveNullReflectionGroup) (P : Projective55) :
+    {e : Equiv.Perm (Quotient projectiveSetoid55)}
+    (he : e ∈ projectiveNullReflectionGroup) (P : Quotient projectiveSetoid55) :
     projectiveNull55 (e P) ↔ projectiveNull55 P := by
   exact projectiveNullReflectionGroup_le_nullPreserving he P
 
@@ -784,33 +785,33 @@ native permutations.  This is the group-level action surface, rather than a
 pointwise packet of reflection identities.
 -/
 noncomputable def projectiveNullReflectionRepresentation :
-    projectiveNullReflectionGroup →* Function.End Projective55 where
-  toFun := fun g P => g.1 P
-  map_one' := by
-    funext P
-    rfl
-  map_mul' := by
-    intro g h
-    funext P
-    rfl
+    projectiveNullReflectionGroup →* Equiv.Perm (Quotient projectiveSetoid55) :=
+  Subgroup.subtype projectiveNullReflectionGroup
 
 theorem projectiveNullReflectionRepresentation_preserves_null
-    (g : projectiveNullReflectionGroup) (P : Projective55)
+    (g : projectiveNullReflectionGroup) (P : Quotient projectiveSetoid55)
     (hP : projectiveNull55 P) :
     projectiveNull55
         (projectiveNullReflectionRepresentation g P) := by
   change projectiveNull55 (g.1 P)
   exact (projectiveNullReflectionGroup_preserves_null g.2 P).2 hP
 
+theorem projectiveNullReflectionRepresentation_injective :
+    Function.Injective projectiveNullReflectionRepresentation := by
+  intro g h hgh
+  apply Subtype.ext
+  exact hgh
+
 /-! The permutation representation is also exposed as the native Mathlib
 `MulAction` on the full projective carrier. -/
 
 noncomputable instance projectiveNullReflectionGroupProjectiveMulAction :
-    MulAction projectiveNullReflectionGroup Projective55 where
+    MulAction projectiveNullReflectionGroup (Quotient projectiveSetoid55) where
   smul := fun g P => projectiveNullReflectionRepresentation g P
   one_smul := by
     intro P
-    exact congrFun projectiveNullReflectionRepresentation.map_one P
+    exact congrArg (fun e : Equiv.Perm (Quotient projectiveSetoid55) => e P)
+      projectiveNullReflectionRepresentation.map_one
   mul_smul := by
     intro g h P
     change projectiveNullReflectionRepresentation (g * h) P =
@@ -819,23 +820,18 @@ noncomputable instance projectiveNullReflectionGroupProjectiveMulAction :
     rw [projectiveNullReflectionRepresentation.map_mul]
     rfl
 
-@[simp]
-theorem projectiveNullReflectionGroup_smul_eq
-    (g : projectiveNullReflectionGroup) (P : Projective55) :
-    g • P = projectiveNullReflectionRepresentation g P :=
-  rfl
-
 theorem projectiveNullReflectionGroup_smul_preserves_null
-    (g : projectiveNullReflectionGroup) (P : Projective55)
+    (g : projectiveNullReflectionGroup) (P : Quotient projectiveSetoid55)
     (hP : projectiveNull55 P) :
     projectiveNull55 (g • P) := by
-  rw [projectiveNullReflectionGroup_smul_eq]
+  change projectiveNull55
+    (projectiveNullReflectionRepresentation g P)
   exact projectiveNullReflectionRepresentation_preserves_null g P hP
 
 /-! ## Restricted nonzero-null action -/
 
 /-- The zero projective class of the bespoke quotient. -/
-def projectiveZeroClass55 : Projective55 :=
+def projectiveZeroClass55 : Quotient projectiveSetoid55 :=
   projectiveMk55 pacSplit55Zero
 
 @[simp]
@@ -854,7 +850,7 @@ theorem reflectVProjective_zeroClass55 :
 
 /-- Projective permutations fixing the zero class form a subgroup. -/
 def projectiveZeroClassPreservingSubgroup :
-    Subgroup (Equiv.Perm Projective55) where
+    Subgroup (Equiv.Perm (Quotient projectiveSetoid55)) where
   carrier := {e | e projectiveZeroClass55 = projectiveZeroClass55}
   one_mem' := by simp
   mul_mem' := by
@@ -869,7 +865,7 @@ def projectiveZeroClassPreservingSubgroup :
 theorem projectiveNullReflectionGroup_le_zeroClassPreserving :
     projectiveNullReflectionGroup ≤
       projectiveZeroClassPreservingSubgroup := by
-  rw [projectiveNullReflectionGroup, Subgroup.closure_le]
+  refine (Subgroup.closure_le _).2 ?_
   intro e he
   rcases he with rfl | rfl
   · change reflectUProjectiveEquiv projectiveZeroClass55 =
@@ -933,15 +929,27 @@ noncomputable def restrictedProjectiveNullMap
 nonzero null carrier, with the group law inherited from `Equiv.Perm`. -/
 noncomputable def restrictedProjectiveNullRepresentation :
     projectiveNullReflectionGroup →*
-      Function.End ProjectiveNonzeroNull55 where
-  toFun := restrictedProjectiveNullMap
+      Equiv.Perm (ProjectiveNonzeroNull55) where
+  toFun := fun g =>
+    { toFun := restrictedProjectiveNullMap g
+      invFun := restrictedProjectiveNullMap g⁻¹
+      left_inv := by
+        intro P
+        apply Subtype.ext
+        change g.1.symm (g.1 P.1) = P.1
+        exact g.1.left_inv P.1
+      right_inv := by
+        intro P
+        apply Subtype.ext
+        change g.1 (g.1.symm P.1) = P.1
+        exact g.1.right_inv P.1 }
   map_one' := by
-    funext P
+    ext P
     apply Subtype.ext
     rfl
   map_mul' := by
     intro g h
-    funext P
+    ext P
     apply Subtype.ext
     rfl
 
@@ -968,53 +976,54 @@ noncomputable instance projectiveNullReflectionGroupNonzeroNullMulAction :
   one_smul := restrictedProjectiveNullMap_one
   mul_smul := restrictedProjectiveNullMap_mul
 
-@[simp]
-theorem restrictedProjectiveNull_smul_eq
-    (g : projectiveNullReflectionGroup)
-    (P : ProjectiveNonzeroNull55) :
-    g • P = restrictedProjectiveNullMap g P :=
-  rfl
-
 /-! ## Transport to the generic null-boundary quotient -/
 
 /-- The restricted reflection action transported across the canonical
 equivalence with the generic projective-null quotient. -/
 noncomputable def genericProjectiveNullReflectionRepresentation :
     projectiveNullReflectionGroup →*
-      Function.End GenericProjectiveNullBoundary55 where
-  toFun := fun g X =>
-    genericNullBoundary_projectiveNonzeroNull55_equiv.symm
-      (restrictedProjectiveNullRepresentation g
-        (genericNullBoundary_projectiveNonzeroNull55_equiv X))
+      Equiv.Perm
+        (ProjectiveNullBoundaryDatum.ProjectiveNullBoundary
+          projectiveNullBoundaryDatum55) where
+  toFun := fun g =>
+    genericNullBoundary_projectiveNonzeroNull55_equiv.trans
+      ((restrictedProjectiveNullRepresentation g).trans
+        genericNullBoundary_projectiveNonzeroNull55_equiv.symm)
   map_one' := by
-    funext X
+    ext X
     change genericNullBoundary_projectiveNonzeroNull55_equiv.symm
-        (restrictedProjectiveNullMap 1
+        (restrictedProjectiveNullRepresentation 1
           (genericNullBoundary_projectiveNonzeroNull55_equiv X)) = X
-    rw [restrictedProjectiveNullMap_one]
+    rw [restrictedProjectiveNullRepresentation.map_one]
     exact genericNullBoundary_projectiveNonzeroNull55_equiv.symm_apply_apply X
   map_mul' := by
     intro g h
-    funext X
+    ext X
     change genericNullBoundary_projectiveNonzeroNull55_equiv.symm
-        (restrictedProjectiveNullMap (g * h)
+        (restrictedProjectiveNullRepresentation (g * h)
           (genericNullBoundary_projectiveNonzeroNull55_equiv X)) =
       genericNullBoundary_projectiveNonzeroNull55_equiv.symm
-        (restrictedProjectiveNullMap g
+        (restrictedProjectiveNullRepresentation g
           (genericNullBoundary_projectiveNonzeroNull55_equiv
             (genericNullBoundary_projectiveNonzeroNull55_equiv.symm
-              (restrictedProjectiveNullMap h
+              (restrictedProjectiveNullRepresentation h
                 (genericNullBoundary_projectiveNonzeroNull55_equiv X)))))
-    rw [restrictedProjectiveNullMap_mul]
+    rw [restrictedProjectiveNullRepresentation.map_mul]
+    rw [Equiv.Perm.mul_apply]
     rw [genericNullBoundary_projectiveNonzeroNull55_equiv.apply_symm_apply]
 
 noncomputable instance projectiveNullReflectionGroupGenericBoundaryMulAction :
-    MulAction projectiveNullReflectionGroup GenericProjectiveNullBoundary55 where
+    MulAction projectiveNullReflectionGroup
+      (ProjectiveNullBoundaryDatum.ProjectiveNullBoundary
+        projectiveNullBoundaryDatum55) where
   smul := fun g X => genericProjectiveNullReflectionRepresentation g X
   one_smul := by
     intro X
-    exact congrFun
-      genericProjectiveNullReflectionRepresentation.map_one X
+    exact congrArg
+      (fun e : Equiv.Perm
+        (ProjectiveNullBoundaryDatum.ProjectiveNullBoundary
+          projectiveNullBoundaryDatum55) => e X)
+      genericProjectiveNullReflectionRepresentation.map_one
   mul_smul := by
     intro g h X
     change genericProjectiveNullReflectionRepresentation (g * h) X =
@@ -1023,20 +1032,17 @@ noncomputable instance projectiveNullReflectionGroupGenericBoundaryMulAction :
     rw [genericProjectiveNullReflectionRepresentation.map_mul]
     rfl
 
-@[simp]
-theorem genericProjectiveNullReflectionGroup_smul_eq
-    (g : projectiveNullReflectionGroup)
-    (X : GenericProjectiveNullBoundary55) :
-    g • X = genericProjectiveNullReflectionRepresentation g X :=
-  rfl
-
 theorem genericProjectiveNullReflectionRepresentation_conjugates
     (g : projectiveNullReflectionGroup)
-    (X : GenericProjectiveNullBoundary55) :
+    (X : ProjectiveNullBoundaryDatum.ProjectiveNullBoundary projectiveNullBoundaryDatum55) :
     genericProjectiveNullReflectionRepresentation g X =
       genericNullBoundary_projectiveNonzeroNull55_equiv.symm
         (restrictedProjectiveNullRepresentation g
           (genericNullBoundary_projectiveNonzeroNull55_equiv X)) := by
+  change
+    genericNullBoundary_projectiveNonzeroNull55_equiv.symm
+        (restrictedProjectiveNullRepresentation g
+          (genericNullBoundary_projectiveNonzeroNull55_equiv X)) = _
   rfl
 
 /-- Spectral CPT involution `s ↦ 1 - conj(s)`. -/

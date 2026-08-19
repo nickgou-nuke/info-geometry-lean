@@ -24,10 +24,6 @@ def matrixUnitOfLinearEquiv (f : V55 ≃ₗ[ℝ] V55) : M10ˣ where
     rw [← LinearMap.toMatrix_comp]
     simp
 
-@[simp] theorem coe_matrixUnitOfLinearEquiv (f : V55 ≃ₗ[ℝ] V55) :
-    (matrixUnitOfLinearEquiv f : M10) =
-      LinearMap.toMatrix fin10Basis55 fin10Basis55 f := rfl
-
 def linearEquivToMatrixUnits : (V55 ≃ₗ[ℝ] V55) →* M10ˣ where
   toFun := matrixUnitOfLinearEquiv
   map_one' := by

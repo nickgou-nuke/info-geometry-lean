@@ -44,24 +44,75 @@ def finsupp_d1 {V E F : Type*} [AddCommGroup V] [AddCommGroup E] [AddCommGroup F
     (d1_mat : Matrix F E R) (ω : FinsuppOneForm V E R) : FinsuppTwoForm V E F R :=
   Finsupp.onFinset Finset.univ (fun f => ∑ e, d1_mat f e * ω e) (by simp)
 
+theorem finsupp_d1_d0_eq_zero_of_matrix_condition
+    {V E F : Type*} [AddCommGroup V] [AddCommGroup E] [AddCommGroup F]
+    [Fintype V] [Fintype E] [Fintype F] {R : Type*} [CommRing R]
+    (d0_mat : Matrix E V R) (d1_mat : Matrix F E R)
+    (h : d1_mat * d0_mat = 0)
+    (f : FinsuppZeroForm V R) (x : F) :
+    finsupp_d1 d1_mat (finsupp_d0 d0_mat f) x = 0 := by
+  classical
+  simp [finsupp_d1, finsupp_d0]
+  simp_rw [Finset.mul_sum, ← mul_assoc]
+  rw [Finset.sum_comm]
+  apply Finset.sum_eq_zero
+  intro y hy
+  rw [← Finset.sum_mul]
+  have hxy : ∑ e, d1_mat x e * d0_mat e y = 0 := by
+    have hxy0 := congrFun (congrFun h x) y
+    simpa [Matrix.mul_apply] using hxy0
+  rw [hxy, zero_mul]
+
 /-- The De Rham complex structure using Finsupp forms, backed by finite matrices d0/d1. -/
 class FinsuppDeRhamComplex (V E F : Type*) [AddCommGroup V] [AddCommGroup E] [AddCommGroup F]
     [Fintype V] [Fintype E] [Fintype F] (R : Type*) [CommRing R] where
   d0_mat : Matrix E V R
   d1_mat : Matrix F E R
-  complex_condition : d1_mat * d0_mat = 0
-  d0 : FinsuppZeroForm V R → FinsuppOneForm V E R
-  d1 : FinsuppOneForm V E R → FinsuppTwoForm V E F R
-  d0_spec : ∀ ω, d0 ω = finsupp_d0 d0_mat ω
-  d1_spec : ∀ ω, d1 ω = finsupp_d1 d1_mat ω
-  d_squared_zero : ∀ (f : FinsuppZeroForm V R) (x : F), d1 (d0 f) x = (0 : R)
 
-/-- The Information Geometry Metric (Hessian) as a symmetric 2-form on Finsupp. -/
-class FinsuppHessianMetric (V E F : Type*) [AddCommGroup V] [AddCommGroup E] [AddCommGroup F]
-    [Fintype V] [Fintype E] [Fintype F] (R : Type*) [CommRing R]
-    [FinsuppDeRhamComplex V E F R] (logQ : V → R) where
-  metric : V → V → R
-  metric_eq_symmetric_differential : ∀ x y, metric x y = metric y x
+def FinsuppDeRhamComplex.d0
+    {V E F : Type*} [AddCommGroup V] [AddCommGroup E] [AddCommGroup F]
+    [Fintype V] [Fintype E] [Fintype F] {R : Type*} [CommRing R]
+    [FinsuppDeRhamComplex V E F R] :
+    FinsuppZeroForm V R → FinsuppOneForm V E R :=
+  finsupp_d0 (FinsuppDeRhamComplex.d0_mat
+    (V := V) (E := E) (F := F) (R := R))
+
+def FinsuppDeRhamComplex.d1
+    {V E F : Type*} [AddCommGroup V] [AddCommGroup E] [AddCommGroup F]
+    [Fintype V] [Fintype E] [Fintype F] {R : Type*} [CommRing R]
+    [FinsuppDeRhamComplex V E F R] :
+    FinsuppOneForm V E R → FinsuppTwoForm V E F R :=
+  finsupp_d1 (FinsuppDeRhamComplex.d1_mat
+    (V := V) (E := E) (F := F) (R := R))
+
+theorem FinsuppDeRhamComplex.d_squared_zero
+    {V E F : Type*} [AddCommGroup V] [AddCommGroup E] [AddCommGroup F]
+    [Fintype V] [Fintype E] [Fintype F] {R : Type*} [CommRing R]
+    [FinsuppDeRhamComplex V E F R]
+    (h : (FinsuppDeRhamComplex.d1_mat (V := V) (E := E) (F := F) (R := R)) *
+        (FinsuppDeRhamComplex.d0_mat (V := V) (E := E) (F := F) (R := R)) = 0)
+    (f : FinsuppZeroForm V R) (x : F) :
+    (inferInstance : FinsuppDeRhamComplex V E F R).d1
+        ((inferInstance : FinsuppDeRhamComplex V E F R).d0 f) x = 0 := by
+  rw [FinsuppDeRhamComplex.d1, FinsuppDeRhamComplex.d0]
+  exact finsupp_d1_d0_eq_zero_of_matrix_condition
+    (FinsuppDeRhamComplex.d0_mat (V := V) (E := E) (F := F) (R := R))
+    (FinsuppDeRhamComplex.d1_mat (V := V) (E := E) (F := F) (R := R))
+    h f x
+
+/-- The Hessian symmetry predicate for a finite Finsupp metric. -/
+def FinsuppHessianMetric (V E F : Type*) [AddCommGroup V] [AddCommGroup E]
+    [AddCommGroup F] [Fintype V] [Fintype E] [Fintype F] (R : Type*) [CommRing R]
+    [FinsuppDeRhamComplex V E F R] (logQ : V → R) (metric : V → V → R) : Prop :=
+  ∀ x y, metric x y = metric y x
+
+theorem FinsuppHessianMetric.metric_eq_symmetric_differential
+    {V E F : Type*} [AddCommGroup V] [AddCommGroup E] [AddCommGroup F]
+    [Fintype V] [Fintype E] [Fintype F] {R : Type*} [CommRing R]
+    [FinsuppDeRhamComplex V E F R] (logQ : V → R) (metric : V → V → R)
+    (hmetric : FinsuppHessianMetric V E F R logQ metric) (x y : V) :
+    metric x y = metric y x :=
+  hmetric x y
 
 /-- The finite defect model provides concrete d0/d1 matrices for the 2×2 model. -/
 def finiteDefectD0 : Matrix (Fin 1) (Fin 1) ℝ :=
@@ -74,19 +125,15 @@ def finiteDefectD1 : Matrix (Fin 1) (Fin 1) ℝ :=
 instance : FinsuppDeRhamComplex Unit Unit Unit ℝ where
   d0_mat := (fun _ _ => (1 : ℝ))
   d1_mat := (fun _ _ => (0 : ℝ))
-  complex_condition := by
-    ext i j
-    fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_succ, finiteDefectD0, finiteDefectD1]
-    <;> norm_num
-  d0 := fun ω => finsupp_d0 (fun _ _ => (1 : ℝ)) ω
-  d1 := fun ω => finsupp_d1 (fun _ _ => (0 : ℝ)) ω
-  d0_spec := by intro ω; rfl
-  d1_spec := by intro ω; rfl
-  d_squared_zero := by
-    intro f x
-    simp [finsupp_d1, finsupp_d0, Fin.sum_univ_succ]
-    <;> simp_all [Matrix.mul_apply, Fin.sum_univ_succ]
-    <;> norm_num
+
+theorem finiteDefect_d_squared_zero
+    (f : FinsuppZeroForm Unit ℝ) (x : Unit) :
+    (inferInstance : FinsuppDeRhamComplex Unit Unit Unit ℝ).d1
+        ((inferInstance : FinsuppDeRhamComplex Unit Unit Unit ℝ).d0 f) x = 0 := by
+  apply FinsuppDeRhamComplex.d_squared_zero
+  ext i j
+  change (∑ k : Unit, (0 : ℝ) * 1) = 0
+  simp
 
 /-- The Hestenes geometric derivative lifted to Finsupp forms. -/
 def finsuppGeometricDerivative {V E F : Type*} [AddCommGroup V] [AddCommGroup E] [AddCommGroup F]

@@ -50,7 +50,7 @@ set_option synthInstance.maxHeartbeats 200000
 /-- The concrete split-`Cl(1,1)` datum already yields a primitive Majorana CAR property. -/
 theorem splitClifford_cl11_majorana_car
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
-    InfoGeometry.Quantum.RealMajoranaCategory.MajoranaCARWitness
+    InfoGeometry.Quantum.RealMajoranaCategory.MajoranaCAR
       (InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E)
       (InfoGeometry.Quantum.RealMajoranaCategory.SplitCliffordDatum.majoranaPairing
         (InfoGeometry.Quantum.RealMajoranaCategory.cl11SplitCliffordDatum E))
@@ -289,7 +289,8 @@ theorem lightconeSugawara_centralCharge_calibrated
         (S.sugawara.bridge.level + S.sugawara.bridge.dualCoxeterNumber) :=
   by
     rw [S.uses_lightcone_affine_bridge] at hcc ⊢
-    exact S.kanAffine.affineLightCone.centralCharge_calibrated hcc
+    exact InfoGeometry.OperatorAlgebra.KANLightConeAffineBridge.Bridge.centralCharge_calibrated
+      S.kanAffine hcc
 
 /--
 The theorem-only canonical chain:
@@ -369,7 +370,7 @@ surface facts.  It does not claim a new split-to-Heisenberg morphism.
 theorem splitClifford_literature_bosonization_chain
     {E : Type} [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
     (α : ℂ) :
-    (InfoGeometry.Quantum.RealMajoranaCategory.CARWitness
+    (InfoGeometry.Quantum.RealMajoranaCategory.CARRelation
       (InfoGeometry.Quantum.RealMajoranaCategory.cl11DoubledCore E)
       (InfoGeometry.Quantum.vectorToLeftSpinor (E := E))
       (InfoGeometry.Quantum.vectorToRightSpinor (E := E))) ∧
@@ -389,7 +390,7 @@ theorem splitClifford_literature_bosonization_chain
         (VirasoroProject.ChargedFockSpace.vacuum ℂ α) = 0) ∧
     (InfoGeometry.OperatorAlgebra.VirasoroProjectBridge.heisenbergSugawaraDatum.centralCharge = 1) := by
   constructor
-  · exact triality_channels_CARWitness (E := E)
+  · exact triality_channels_CARRelation (E := E)
   · constructor
     · exact cliffordConcreteIsCARPair (E := E)
     · rcases externalHeisenberg_virasoroVermaToChargedFockSpace_highestWeight α with

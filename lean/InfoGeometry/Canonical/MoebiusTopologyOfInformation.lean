@@ -1,5 +1,4 @@
 import Mathlib.Tactic
-import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Arithmetic.PrimeBitWittenIndex
 import InfoGeometry.Arithmetic.PrimeBooleanCube
 import InfoGeometry.Geometry.RealMoebiusAction

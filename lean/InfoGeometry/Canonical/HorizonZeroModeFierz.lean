@@ -3,7 +3,7 @@ import InfoGeometry.Canonical.DrazinCentralizerErlangen
 import InfoGeometry.Meta.Architecture
 
 /-!
-# Horizon zero-mode Fierz socket
+# Horizon zero-mode Fierz interface
 
 Publication-facing facade for the final principle:
 

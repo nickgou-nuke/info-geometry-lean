@@ -12,16 +12,16 @@ from typing import Any, Optional
 from igf.common.json_io import dump_json, load_json_dict
 from igf.common.time_utils import utc_now_iso
 
-VALID_SOCKET_CLASSES = {
+VALID_DEFERRED_INTERFACE_CLASSES = {
     "closed_by_kernel",
     "closed_by_mathlib",
     "closed_by_repo_owner",
     "literature_owned_unformalized",
-    "open_problem_socket",
-    "invalid_or_overclaimed_socket",
+    "open_problem_interface",
+    "invalid_or_overclaimed_interface",
 }
 
-OPEN_PROBLEM_STOP = "open_problem_socket"
+OPEN_PROBLEM_STOP = "open_problem_interface"
 
 
 class MissionStateManager:
@@ -45,7 +45,7 @@ class MissionStateManager:
                 "next_blocker": None,
                 "build_target": None,
                 "scope_file": None,
-                "socket_classification": None,
+                "deferred_interface_classification": None,
                 "turns_used": 0,
                 "max_turns": 30,
                 "consecutive_blockers": 0,

@@ -9,7 +9,7 @@ This sidecar installs the standard matrix
 
 as an `SL2R` lift whose square is the named central lift `negIdSL2R`.  Since
 that lift acts trivially on the real upper half-plane, the existing
-`ProjectiveLiftTemperatureInversion` socket turns this into a genuine closure
+`ProjectiveLiftTemperatureInversion` interface turns this into a genuine closure
 involution on positive Souriau temperatures.
 
 The file does not claim a modular-form theorem, KMS existence theorem, or a

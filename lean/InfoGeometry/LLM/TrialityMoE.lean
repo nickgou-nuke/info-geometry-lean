@@ -2,7 +2,6 @@ import InfoGeometry.Canonical.ObserverDefect
 import InfoGeometry.Canonical.ModularSourceBridge
 import InfoGeometry.Canonical.KKTClosureSymmetry
 import InfoGeometry.Canonical.RelativePotentialCore
-import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
@@ -273,14 +272,14 @@ noncomputable def sourcedGenerator (B : RouterDefectBridge (E := E)) : EndH :=
   B.flow.K0 + B.routerResidual
 
 /-- LLM-side sourced generator coincides with canonical sourced modular generator under bridge equality. -/
-@[bridge_target_tag, rep_depth transport]
+@[rep_depth transport]
 theorem sourcedGenerator_eq_canonical (B : RouterDefectBridge (E := E)) :
     B.sourcedGenerator = sourcedModularGenerator B.CIK B.obs B.flow := by
   unfold sourcedGenerator sourcedModularGenerator
   simp [B.residual_eq_observerDefect]
 
 /-- Drazin-cut preservation follows immediately once the router residual is identified canonically. -/
-@[bridge_target_tag, rep_depth transport]
+@[rep_depth transport]
 theorem sourcedGenerator_respects_cut (B : RouterDefectBridge (E := E)) :
     Commute B.sourcedGenerator B.CIK.spectralComplementaryProjector := by
   rw [sourcedGenerator_eq_canonical (B := B)]

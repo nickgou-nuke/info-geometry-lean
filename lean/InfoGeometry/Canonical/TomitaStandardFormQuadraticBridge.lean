@@ -52,6 +52,25 @@ theorem jConjugate_involutive
           noncomm_ring
     _ = A := by rw [S.J_sq]; simp
 
+theorem jConjugate_mul
+    (S : RealStandardForm (E := E)) (A B : EndH) :
+    jConjugate S.J (A * B) =
+      jConjugate S.J A * jConjugate S.J B := by
+  unfold jConjugate
+  calc
+    S.J * (A * B) * S.J =
+        S.J * A * (S.J * S.J) * B * S.J := by
+          rw [S.J_sq]
+          noncomm_ring
+    _ = (S.J * A * S.J) * (S.J * B * S.J) := by
+          noncomm_ring
+
+theorem leftRightQuadratic_jConjugate
+    (S : RealStandardForm (E := E)) (A : EndH) :
+    jConjugate S.J (leftRightQuadratic S A) =
+      jConjugate S.J A * A := by
+  rw [leftRightQuadratic, jConjugate_mul, jConjugate_involutive]
+
 theorem jConjugate_mem_left_iff
     (S : RealStandardForm (E := E)) (A : EndH) :
     jConjugate S.J A ∈ S.leftAlgebra ↔ A ∈ S.rightAlgebra := by

@@ -17,6 +17,7 @@ import InfoGeometry.Spectral.Algebra.IteratedAssociatedGraded
 import InfoGeometry.Spectral.Algebra.ConcreteIteratedExactCouple
 import InfoGeometry.Spectral.Algebra.SpectralSequence
 import InfoGeometry.Spectral.Spectrum.Basic
+import InfoGeometry.Spectral.WeilPositivityCriterion
 import InfoGeometry.Spectral.Homotopy
 import InfoGeometry.Spectral.Colimit
 import InfoGeometry.Spectral.Cohomology.Basic

@@ -32,7 +32,7 @@ None.
   group homomorphism `PB_{moving+3} → GL_{2*moving+1}(ℚ)`.
 - Markov-move invariance and any knot invariant.
 
-This is intentionally a presentation-level socket.  It does not identify the
+This is intentionally a presentation-level datum.  It does not identify the
 rational Delaunay transport matrices with any anyon or Yang--Baxter
 representation.
 -/
@@ -263,7 +263,7 @@ theorem rohozhkin_invariant_under_equiv {n : ℕ} {W₁ W₂ : DelaunayFlipWord 
   | trans _ _ _ _ _ ih1 ih2 => exact ih1.trans ih2
   | step _ _ _ h_step => exact rohozhkin_invariant_under_propertyed_move h_step
 
-/-- The presentation group socket is the quotient of words by the move equivalence. -/
+/-- The presentation group is the quotient of words by the move equivalence. -/
 def DelaunayQuotient (n : ℕ) := Quot (@DelaunayEquiv n)
 
 /-- The Rohozhkin matrix descends to the quotient, providing the core representation. -/
@@ -271,7 +271,7 @@ def rohozhkinQuotientMatrix {n : ℕ} (q : DelaunayQuotient n) : Matrix (Fin (ro
   Quot.lift rohozhkinMatrix (fun _ _ h => rohozhkin_invariant_under_equiv h) q
 
 /--
-Boundary socket for a source pure-braid group map into the Delaunay flip-word
+Boundary datum for a source pure-braid group map into the Delaunay flip-word
 quotient.  This is still the quotient/factorization boundary, not yet the final
 matrix-unit representation theorem.
 -/

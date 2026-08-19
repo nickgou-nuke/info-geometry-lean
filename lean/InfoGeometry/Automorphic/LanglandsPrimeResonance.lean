@@ -28,7 +28,6 @@ This is the PR-safe closure of the AQL-discovered Langlands/Siegel corridor.
 import Mathlib.Tactic
 import InfoGeometry.Automorphic.SiegelResonance
 import InfoGeometry.Automorphic.LFunctionResonance
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -290,7 +289,7 @@ Langlands prime resonance property.
 This combines the existing automorphic L-resonance package with the new
 Sugawara/completed-L bridge.
 -/
-structure LanglandsPrimeResonanceWitness
+structure LanglandsPrimeResonanceData
     (W : SiegelEisensteinWitness Bulk Boundary)
     {Stress : Type uStress}
     {Spectral : Type uSpectral}
@@ -298,7 +297,7 @@ structure LanglandsPrimeResonanceWitness
     [Zero Scalar] where
   /-- Existing automorphic L-resonance data. -/
   automorphic :
-    AutomorphicLResonanceWitness.{uBulk, uBoundary, uHecke} W
+    AutomorphicLResonanceData.{uBulk, uBoundary, uHecke} W
 
   /-- Completed L-function readout on boundary data. -/
   completed :
@@ -312,7 +311,7 @@ structure LanglandsPrimeResonanceWitness
   bridge :
     LanglandsSugawaraBridge W completed sugawara
 
-namespace LanglandsPrimeResonanceWitness
+namespace LanglandsPrimeResonanceData
 
 variable
     {W : SiegelEisensteinWitness Bulk Boundary}
@@ -323,7 +322,7 @@ variable
 
 variable
     (R :
-      LanglandsPrimeResonanceWitness.{uBulk, uBoundary, uStress, uSpectral, uScalar, uHecke}
+      LanglandsPrimeResonanceData.{uBulk, uBoundary, uStress, uSpectral, uScalar, uHecke}
         (Bulk := Bulk) (Boundary := Boundary)
         (Stress := Stress) (Spectral := Spectral) (Scalar := Scalar) W)
 
@@ -348,7 +347,7 @@ theorem boundaryProjector_preserves_prime_resonance
       IsBulkLanglandsPrimeResonance W R.completed F :=
   LanglandsSugawaraBridge.bulk_prime_resonance_boundaryProjector_iff R.bridge F
 
-end LanglandsPrimeResonanceWitness
+end LanglandsPrimeResonanceData
 
 /-! ## 5. Admissibility and owner target -/
 
@@ -365,7 +364,7 @@ structure LanglandsPrimeResonanceAdmissible
     {Scalar : Type uScalar}
     [Zero Scalar] where
   automorphic :
-    AutomorphicLResonanceWitness.{uBulk, uBoundary, uHecke} W
+    AutomorphicLResonanceData.{uBulk, uBoundary, uHecke} W
 
   completed :
     CompletedLReadout Boundary Spectral Scalar
@@ -377,7 +376,7 @@ structure LanglandsPrimeResonanceAdmissible
     LanglandsSugawaraBridge W completed sugawara
 
 /-- A Langlands prime resonance property from admissible data. -/
-def langlandsPrimeResonanceWitness_of_admissible
+def langlandsPrimeResonanceData_of_admissible
     {W : SiegelEisensteinWitness Bulk Boundary}
     {Stress : Type uStress}
     {Spectral : Type uSpectral}
@@ -387,7 +386,7 @@ def langlandsPrimeResonanceWitness_of_admissible
       LanglandsPrimeResonanceAdmissible.{uBulk, uBoundary, uStress, uSpectral, uScalar, uHecke}
         (Bulk := Bulk) (Boundary := Boundary)
         (Stress := Stress) (Spectral := Spectral) (Scalar := Scalar) W) :
-    LanglandsPrimeResonanceWitness.{uBulk, uBoundary, uStress, uSpectral, uScalar, uHecke}
+    LanglandsPrimeResonanceData.{uBulk, uBoundary, uStress, uSpectral, uScalar, uHecke}
       (Bulk := Bulk) (Boundary := Boundary)
       (Stress := Stress) (Spectral := Spectral) (Scalar := Scalar) W :=
   {

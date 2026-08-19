@@ -19,7 +19,7 @@ This module pays the finite exterior-space debt:
 No infinite Euler product.
 No analytic continuation.
 No Hilbert--Polya claim.
-No zeta/RH socket.
+No zeta/RH interface.
 -/
 
 noncomputable section

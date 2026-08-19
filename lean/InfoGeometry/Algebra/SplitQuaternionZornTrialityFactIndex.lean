@@ -112,8 +112,9 @@ theorem zorn_lower_lightray_null {R : Type*} [CommRing R]
 /-- The `Cl(1,1)` chiral projectors are orthogonal. -/
 theorem cl11_chiral_sheets_orthogonal
     {K : Type*} [Ring K] [Algebra ℝ K] (atom : Cl11Atom K) :
-    chiralProjectorPlus atom * chiralProjectorMinus atom = 0 :=
-  chiral_sheets_orthogonal atom
+    Cl11AtomLaws atom → chiralProjectorPlus atom * chiralProjectorMinus atom = 0 := by
+  intro h
+  exact chiral_sheets_orthogonal atom h
 
 /-- The `Cl(1,1)` chiral projectors partition unity. -/
 theorem cl11_chiral_sheets_partition_unity
@@ -124,9 +125,11 @@ theorem cl11_chiral_sheets_partition_unity
 /-- The `Cl(1,1)` Euler operator reverses the two chiral sheets. -/
 theorem cl11_euler_reverses_chiral_sheets
     {K : Type*} [Ring K] [Algebra ℝ K] (atom : Cl11Atom K) :
-    chiralProjectorPlus atom * EulerOperator atom =
-      EulerOperator atom * chiralProjectorMinus atom :=
-  euler_operator_reverses_chiral_sheets atom
+    Cl11AtomLaws atom →
+      chiralProjectorPlus atom * EulerOperator atom =
+        EulerOperator atom * chiralProjectorMinus atom := by
+  intro h
+  exact euler_operator_reverses_chiral_sheets atom h
 
 /-- Concrete finite `B₃` spin operators satisfy the Artin braid packet. -/
 theorem finite_b3_spin_artin_packet :

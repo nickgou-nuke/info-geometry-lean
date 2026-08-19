@@ -82,4 +82,28 @@ theorem doubledCovarianceSymmetry_sq (R T : Matrix n n ℝ)
     _ = 4 • P - 4 • P + 1 := by rw [hP]
     _ = 1 := by noncomm_ring
 
+/-- The fundamental symmetry fixes the doubled covariance projection on the
+    left. -/
+theorem doubledCovarianceSymmetry_mul_projection (R T : Matrix n n ℝ)
+    (hsum : R * R + T * T = 1) :
+    doubledCovarianceSymmetry R T * doubledCovarianceProjection R T =
+      doubledCovarianceProjection R T := by
+  let P := doubledCovarianceProjection R T
+  have hP : P * P = P := doubledCovarianceProjection_sq R T hsum
+  change (2 • P - 1) * P = P
+  rw [sub_mul, smul_mul, one_mul, hP]
+  noncomm_ring
+
+/-- The fundamental symmetry fixes the doubled covariance projection on the
+    right. -/
+theorem doubledCovarianceProjection_mul_symmetry (R T : Matrix n n ℝ)
+    (hsum : R * R + T * T = 1) :
+    doubledCovarianceProjection R T * doubledCovarianceSymmetry R T =
+      doubledCovarianceProjection R T := by
+  let P := doubledCovarianceProjection R T
+  have hP : P * P = P := doubledCovarianceProjection_sq R T hsum
+  change P * (2 • P - 1) = P
+  rw [mul_sub, Matrix.mul_smul, mul_one, hP]
+  noncomm_ring
+
 end InfoGeometry.Krein

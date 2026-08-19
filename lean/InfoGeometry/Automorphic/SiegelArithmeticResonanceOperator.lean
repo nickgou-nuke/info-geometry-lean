@@ -180,7 +180,7 @@ theorem resonanceReadout_boundaryNoise_eq_zero
 
 end SiegelArithmeticReadoutCalibration
 
-/-! ## 3. Finite zeta-trace calibration socket -/
+/-! ## 3. Finite zeta-trace calibration -/
 
 /--
 Finite zeta-trace calibration for a Siegel-purified arithmetic state.
@@ -354,7 +354,7 @@ This identifies a parabolic constant-term operator with the abstract Siegel
 operator already carried by `SiegelArithmeticResonanceFilter`.
 
 Group names such as `E₈(8)`, `E₇(7)`, and `E₆(6)` remain calibration labels;
-no exceptional classification theorem is asserted in this socket.
+no exceptional classification theorem is asserted here.
 -/
 structure ExceptionalSiegelConstantTermLayer
     (Bulk : Type uBulk) (Boundary : Type uBoundary)
@@ -556,44 +556,5 @@ theorem exceptional_constantTerm_automorphicSignal_eq_zero
 
 end ThreeLayerSiegelResonanceOperator
 
-/-! ## 9. Owner targets -/
-
-/-- Owner target for installing a Siegel arithmetic resonance filter. -/
-abbrev SiegelArithmeticResonanceFilterOwnerTarget
-    (Bulk : Type uBulk) (Boundary : Type uBoundary)
-    [AddCommGroup Bulk] [Module ℝ Bulk]
-    [AddCommGroup Boundary] [Module ℝ Boundary] : Prop :=
-  Nonempty (SiegelArithmeticResonanceFilter Bulk Boundary)
-
-/-- Owner target for attaching a readout to a Siegel arithmetic resonance filter. -/
-abbrev SiegelArithmeticReadoutOwnerTarget
-    (Bulk : Type uBulk) (Boundary : Type uBoundary) (Readout : Type uReadout)
-    [AddCommGroup Bulk] [Module ℝ Bulk]
-    [AddCommGroup Boundary] [Module ℝ Boundary]
-    [AddCommGroup Readout] [Module ℝ Readout]
-    (F : SiegelArithmeticResonanceFilter Bulk Boundary) : Prop :=
-  Nonempty (SiegelArithmeticReadoutCalibration Bulk Boundary Readout F)
-
-/-- Owner target for finite zeta-trace calibration of a Siegel-purified state. -/
-abbrev SiegelZetaTraceCalibrationOwnerTarget
-    (Bulk : Type uBulk) (Boundary : Type uBoundary)
-    [AddCommGroup Bulk] [Module ℝ Bulk]
-    [AddCommGroup Boundary] [Module ℝ Boundary]
-    (L : FormalPrimeRootLattice)
-    (F : SiegelArithmeticResonanceFilter Bulk Boundary) : Prop :=
-  Nonempty (SiegelZetaTraceCalibration Bulk Boundary L F)
-
-/-- Owner target for a Jordan-Siegel norm reduction. -/
-abbrev JordanSiegelNormReductionOwnerTarget
-    (Cubic Boundary : Type*) : Prop :=
-  Nonempty (JordanSiegelNormReduction Cubic Boundary)
-
-/-- Owner target for the three-layer Siegel resonance operator. -/
-abbrev ThreeLayerSiegelResonanceOperatorOwnerTarget
-    (Cubic JordanBoundary : Type*)
-    (Bulk : Type uBulk) (AutoBoundary : Type uBoundary)
-    [AddCommGroup Bulk] [Module ℝ Bulk]
-    [AddCommGroup AutoBoundary] [Module ℝ AutoBoundary] : Prop :=
-  Nonempty (ThreeLayerSiegelResonanceOperator Cubic JordanBoundary Bulk AutoBoundary)
 
 end InfoGeometry.Automorphic.SiegelArithmeticResonanceOperator

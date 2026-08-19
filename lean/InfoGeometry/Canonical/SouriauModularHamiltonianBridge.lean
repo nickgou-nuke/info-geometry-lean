@@ -100,7 +100,7 @@ structure Bridge where
   /-- The operatorial Souriau family carrying `K̂_β`, `Φ(β)`, and `H_mod`. -/
   family : QuantumOperatorialSouriauFamily LieAlgebra EndH
 
-  /-- Calibration socket: the Souriau bare source is the bounded surrogate. -/
+  /-- Calibration interface: the Souriau bare source is the bounded surrogate. -/
   Khat_beta_eq_Ksur : family.Khat_beta = superBridge.Ksur
 
 namespace Bridge
@@ -288,7 +288,7 @@ Intended formula:
 
 `K_sur = μ_Q • (P_D * (Q * Q) * P_D)`.
 
-This is a bounded/compressed surrogate socket.  It is not asserted to be the
+This is a bounded/compressed surrogate interface.  It is not asserted to be the
 unbounded Type III modular Hamiltonian.
 -/
 @[rep_depth operator]

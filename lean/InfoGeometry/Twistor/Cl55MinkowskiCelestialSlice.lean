@@ -53,6 +53,32 @@ the slice. -/
     Q55 (minkowskiSlice z) = z.1 ^ 2 - ∑ i : Fin 3, z.2 i ^ 2 := by
   simp [minkowskiSlice, Q55_apply, Fin.sum_univ_succ]
 
+/-- The null equation is invariant under normalizing a nonzero time scale. -/
+theorem Q55_minkowskiSlice_eq_zero_iff_normalized_sphere
+    (t : ℝ) (x : Fin 3 → ℝ) (ht : t ≠ 0) :
+    Q55 (minkowskiSlice (t, x)) = 0 ↔
+      ∑ i : Fin 3, (x i / t) ^ 2 = 1 := by
+  rw [Q55_minkowskiSlice]
+  have ht2 : t ^ 2 ≠ 0 := pow_ne_zero 2 ht
+  constructor
+  · intro h
+    change t ^ 2 - ∑ i : Fin 3, x i ^ 2 = 0 at h
+    have hsum : ∑ i : Fin 3, x i ^ 2 = t ^ 2 := by
+      exact (sub_eq_zero.mp h).symm
+    calc
+      ∑ i : Fin 3, (x i / t) ^ 2 =
+          (∑ i : Fin 3, x i ^ 2) / t ^ 2 := by
+            simp_rw [div_pow]
+            rw [← Finset.sum_div]
+      _ = 1 := by rw [hsum, div_self ht2]
+  · intro h
+    change t ^ 2 - ∑ i : Fin 3, x i ^ 2 = 0
+    have hsum : ∑ i : Fin 3, x i ^ 2 = t ^ 2 := by
+      have hquot : (∑ i : Fin 3, x i ^ 2) / t ^ 2 = 1 := by
+        simpa [div_pow, ← Finset.sum_div] using h
+      simpa using (div_eq_iff ht2).mp hquot
+    exact sub_eq_zero.mpr hsum.symm
+
 /-- The normalized celestial two-sphere, written with its Euclidean equation
 rather than an ambient projective alias. -/
 abbrev CelestialSphere := {x : Fin 3 → ℝ // ∑ i : Fin 3, x i ^ 2 = 1}

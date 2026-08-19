@@ -8,9 +8,9 @@ from pathlib import Path
 
 DECL_RE = re.compile(r"^\s*(?:@[^\n]*\s*)?(theorem|lemma|example)\b")
 
-SOCKET_TOKENS = (
+DEFERRED_INTERFACE_TOKENS = (
     "packet",
-    "socket",
+    "interface",
     "witness",
     "certificate",
     "nonempty",
@@ -69,16 +69,16 @@ def _classify(block: dict, imports: list[str]) -> tuple[str, list[str]]:
     if has_mathlib_root:
         signals.append("mathlib:import")
 
-    socket_hits = [tok for tok in SOCKET_TOKENS if tok in text or tok in name]
-    if socket_hits:
-        signals.append("socket:" + ",".join(socket_hits[:4]))
+    interface_hits = [tok for tok in DEFERRED_INTERFACE_TOKENS if tok in text or tok in name]
+    if interface_hits:
+        signals.append("interface:" + ",".join(interface_hits[:4]))
 
-    if has_mathlib_root and socket_hits:
-        return "mixed_root_and_socket", signals
+    if has_mathlib_root and interface_hits:
+        return "mixed_root_and_interface", signals
     if has_mathlib_root:
         return "mathlib_rooted_proof_chain", signals
-    if socket_hits:
-        return "interface_socket", signals
+    if interface_hits:
+        return "deferred_interface", signals
     return "unclassified_local_proof", signals
 
 
@@ -107,7 +107,7 @@ def build_queue(file_path: Path, target_limit: int) -> dict:
         "targetDetails": details,
         "closureRules": [
             "preserve theorem statements and declaration names",
-            "distinguish mathlib/repo-rooted proof chains from interface/socket wrappers",
+            "distinguish mathlib/repo-rooted proof chains from interface wrappers",
             "optimize only after authority class review and targeted Lean gate",
         ],
     }

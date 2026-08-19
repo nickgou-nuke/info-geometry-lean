@@ -292,11 +292,10 @@ def centeredXiSymmetryPacketOfReflection
         star (centeredAnalyticField xi x) =
           centeredAnalyticField xi (conjugation x))
     (hReflection : ∀ s, xi s = xi (riemannReflection s)) :
-    CenteredXiSymmetryPacket where
-  xi := centeredAnalyticField xi
-  schwarz_reflection := hSchwarz
-  functional_equation := by
-    intro x
+    CenteredXiSymmetry (centeredAnalyticField xi) := by
+  constructor
+  · exact hSchwarz
+  · intro x
     unfold centeredAnalyticField
     rw [centeredParameter_functionalDual x]
     exact (hReflection (centeredParameter x)).symm
@@ -313,7 +312,9 @@ theorem centeredXi_JOddProjector_eq_zero_of_schwarz_reflection
           centeredAnalyticField xi (conjugation x))
     (hReflection : ∀ s, xi s = xi (riemannReflection s)) :
     JOddProjector (centeredAnalyticField xi) = 0 :=
-  (centeredXiSymmetryPacketOfReflection xi hSchwarz hReflection).xi_JOddProjector_eq_zero
+  CenteredXiSymmetry.xi_JOddProjector_eq_zero
+    (centeredAnalyticField xi)
+    (centeredXiSymmetryPacketOfReflection xi hSchwarz hReflection)
 
 /-- The same hypotheses put completed xi into the symbolic `J`-fixed cone. -/
 theorem centeredXi_mem_JFixedCone_of_schwarz_reflection
@@ -324,7 +325,9 @@ theorem centeredXi_mem_JFixedCone_of_schwarz_reflection
           centeredAnalyticField xi (conjugation x))
     (hReflection : ∀ s, xi s = xi (riemannReflection s)) :
     centeredAnalyticField xi ∈ JFixedCone :=
-  (centeredXiSymmetryPacketOfReflection xi hSchwarz hReflection).xi_mem_JFixedCone
+  CenteredXiSymmetry.xi_mem_JFixedCone
+    (centeredAnalyticField xi)
+    (centeredXiSymmetryPacketOfReflection xi hSchwarz hReflection)
 
 /-- Dirichlet-series definition of zeta at `s`; convergence is part of `HasSum`. -/
 def DirichletSeriesDefinition (zeta : ℂ → ℂ) (s : ℂ) : Prop :=

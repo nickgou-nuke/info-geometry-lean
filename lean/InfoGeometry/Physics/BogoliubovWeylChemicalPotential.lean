@@ -111,6 +111,39 @@ theorem grandCanonicalRapidity_charge_shift (β E μ Q δQ : ℝ) :
   simp [grandCanonicalRapidity]
   ring
 
+theorem frameWeylLogClock_energy_shift
+    (F : BogoliubovInertialFrame) (δE : ℝ) :
+    frameWeylLogClock { F with E := F.E + δE } =
+      frameWeylLogClock F - F.β * δE := by
+  cases F
+  simp [frameWeylLogClock, frameGrandCanonicalRapidity,
+    grandCanonicalRapidity_energy_shift]
+  ring
+
+theorem frameWeylLogClock_charge_shift
+    (F : BogoliubovInertialFrame) (δQ : ℝ) :
+    frameWeylLogClock { F with Q := F.Q + δQ } =
+      frameWeylLogClock F + F.β * F.μ * δQ := by
+  cases F
+  simp [frameWeylLogClock, frameGrandCanonicalRapidity,
+    grandCanonicalRapidity_charge_shift]
+  ring
+
+theorem frameWeylQ_mu_shift (F : BogoliubovInertialFrame) (δμ : ℝ) :
+    frameWeylQ { F with μ := F.μ + δμ } =
+      qRapidity (frameWeylLogClock F + F.β * δμ * F.Q) := by
+  rw [frameWeylQ_eq_qRapidity_logClock, frameWeylLogClock_mu_shift]
+
+theorem frameWeylQ_energy_shift (F : BogoliubovInertialFrame) (δE : ℝ) :
+    frameWeylQ { F with E := F.E + δE } =
+      qRapidity (frameWeylLogClock F - F.β * δE) := by
+  rw [frameWeylQ_eq_qRapidity_logClock, frameWeylLogClock_energy_shift]
+
+theorem frameWeylQ_charge_shift (F : BogoliubovInertialFrame) (δQ : ℝ) :
+    frameWeylQ { F with Q := F.Q + δQ } =
+      qRapidity (frameWeylLogClock F + F.β * F.μ * δQ) := by
+  rw [frameWeylQ_eq_qRapidity_logClock, frameWeylLogClock_charge_shift]
+
 /-- The Cuntz/BdG grand-canonical odd--odd bracket uses the q-weight determined
 by the Bogoliubov/Weyl log-clock. -/
 theorem frame_grandCanonicalBracket_odd_odd {A : Type*} [Semiring A] [Algebra ℂ A]

@@ -44,6 +44,16 @@ theorem spinTransportElementMatrix55_mul
   ext i j
   exact spinCliffordRingEquiv_mul g h (M i j)
 
+theorem spinTransportElementMatrix55_injective
+    (g : Spin55) :
+    Function.Injective (spinTransportElementMatrix55 g) := by
+  exact (spinTransportElementMatrix55 g).injective
+
+theorem spinTransportElementMatrix55_surjective
+    (g : Spin55) :
+    Function.Surjective (spinTransportElementMatrix55 g) := by
+  exact (spinTransportElementMatrix55 g).surjective
+
 noncomputable def spinTransportElementMatrix55Hom :
     Spin55 →* (Cl55ElementMatrix ≃+* Cl55ElementMatrix) where
   toFun := spinTransportElementMatrix55
@@ -60,6 +70,15 @@ noncomputable def spinTransportElementMatrix55Hom :
     (g : Spin55) (v : Fin 2 → Cl55) (i : Fin 2) :
     spinTransportCarrier55 g v i = spinCARAutomorphism g (v i) :=
   rfl
+
+theorem spinTransportCarrier55_mul
+    (g h : Spin55) (v : Fin 2 → Cl55) :
+    spinTransportCarrier55 (g * h) v =
+      spinTransportCarrier55 g (spinTransportCarrier55 h v) := by
+  funext i
+  change spinCARAutomorphism (g * h) (v i) =
+    spinCARAutomorphism g (spinCARAutomorphism h (v i))
+  exact spinCliffordRingEquiv_mul g h (v i)
 
 theorem spinTransportMatrix55_action
     (g : Spin55) (M : Cl55ElementMatrix) (v : Fin 2 → Cl55) (i : Fin 2) :

@@ -1,10 +1,10 @@
 import Mathlib.Tactic
 import InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
-import InfoGeometry.Canonical.TomitaMatrixClosabilityWitness
+import InfoGeometry.Canonical.TomitaMatrixClosability
 
 open Matrix
 open InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
-open InfoGeometry.Canonical.TomitaMatrixClosabilityWitness
+open InfoGeometry.Canonical.TomitaMatrixClosability
 
 noncomputable section
 

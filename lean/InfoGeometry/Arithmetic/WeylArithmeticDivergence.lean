@@ -1,7 +1,7 @@
 /-
 InfoGeometry/Arithmetic/WeylArithmeticDivergence.lean
 
-Gauge-invariant and gauge-covariant arithmetic divergence sockets over the
+Gauge-invariant and gauge-covariant arithmetic divergence data over the
 projective temperature coordinate.
 
 This module is a narrow sidecar over `ProjectiveWeylGauge` and
@@ -205,6 +205,55 @@ theorem itakuraSaito_nonneg {x y : ℝ} (hx : 0 < x) (hy : 0 < y) :
   have hlog := Real.log_le_sub_one_of_pos hratio
   linarith
 
+/-! Logarithmic coordinates make the common scale quotient explicit. -/
+
+theorem itakuraSaito_exp_exp_eq_log_difference (u v : ℝ) :
+    itakuraSaito (Real.exp u) (Real.exp v) =
+      Real.exp (u - v) - (u - v) - 1 := by
+  unfold itakuraSaito
+  have hratio : Real.exp u / Real.exp v = Real.exp (u - v) := by
+    rw [← Real.exp_sub]
+  rw [hratio, Real.log_exp]
+
+theorem itakuraSaito_exp_exp_common_shift (u v c : ℝ) :
+    itakuraSaito (Real.exp (u + c)) (Real.exp (v + c)) =
+      itakuraSaito (Real.exp u) (Real.exp v) := by
+  rw [itakuraSaito_exp_exp_eq_log_difference,
+    itakuraSaito_exp_exp_eq_log_difference]
+  have hshift : u + c - (v + c) = u - v := by ring
+  rw [hshift]
+
+theorem itakuraSaito_scale_invariant {x y c : ℝ} (hc : c ≠ 0) :
+    itakuraSaito (c * x) (c * y) = itakuraSaito x y := by
+  unfold itakuraSaito
+  have hratio : (c * x) / (c * y) = x / y := by
+    field_simp [hc]
+  rw [hratio]
+
+theorem itakuraSaito_self_eq_zero {x : ℝ} (hx : x ≠ 0) :
+    itakuraSaito x x = 0 := by
+  unfold itakuraSaito
+  rw [div_self hx, Real.log_one]
+  norm_num
+
+theorem itakuraSaito_eq_zero_iff {x y : ℝ} (hx : 0 < x) (hy : 0 < y) :
+    itakuraSaito x y = 0 ↔ x = y := by
+  constructor
+  · intro hzero
+    have hratio : 0 < x / y := div_pos hx hy
+    by_contra hxy
+    have hratio_ne : x / y ≠ 1 := by
+      intro hone
+      apply hxy
+      field_simp [ne_of_gt hy] at hone
+      exact hone
+    have hstrict := Real.log_lt_sub_one_of_pos hratio hratio_ne
+    unfold itakuraSaito at hzero
+    linarith
+  · intro hxy
+    subst y
+    exact itakuraSaito_self_eq_zero (ne_of_gt hx)
+
 /--
 Arithmetic scale-invariant shape divergence between two finite count profiles.
 
@@ -237,55 +286,34 @@ def weylThermalScale
 
 /-! ## 6. Finite Weyl gauge decomposition property -/
 
-/--
-A calibration property asserting that a model's total divergence readout
-factorizes into a Weyl thermal scale and a scale-invariant Itakura-Saito shape
-core.
-
-This is a sidecar contract: it does not prove that every arithmetic or zeta
-divergence admits such a factorization.
--/
-structure WeylGaugeDecompositionWitness
-    (State : Type*) where
-  /-- Encode a finite arithmetic support as a geometric state. -/
-  stateOfFinset : Finset ℕ → State
-
-  /-- Model-specific total divergence readout. -/
-  totalDivergence : State → State → ℝ
-
-  /-- Supplied Weyl gauge decomposition law. -/
-  weyl_decomposition_law :
-    ∀ (A : Finset ℕ) (countsP countsQ : ℕ → ℝ),
-      0 < arithmeticTotalMass A countsP →
-      0 < arithmeticTotalMass A countsQ →
-        totalDivergence (stateOfFinset A) (stateOfFinset A) =
-          weylThermalScale A countsP countsQ *
-            arithmeticShapeDivergence A countsP countsQ
-
-namespace WeylGaugeDecompositionWitness
-
 variable {State : Type*}
-variable (W : WeylGaugeDecompositionWitness State)
 
 /--
 If the thermal masses are identical, the Weyl scale is `1`, so the total
 divergence reduces to the scale-invariant Itakura-Saito shape core.
 -/
 theorem totalDivergence_eq_shape_of_equal_mass
+    (stateOfFinset : Finset ℕ → State)
+    (totalDivergence : State → State → ℝ)
+    (weyl_decomposition_law :
+      ∀ (A : Finset ℕ) (countsP countsQ : ℕ → ℝ),
+        0 < arithmeticTotalMass A countsP →
+        0 < arithmeticTotalMass A countsQ →
+          totalDivergence (stateOfFinset A) (stateOfFinset A) =
+            weylThermalScale A countsP countsQ *
+              arithmeticShapeDivergence A countsP countsQ)
     (A : Finset ℕ) (countsP countsQ : ℕ → ℝ)
     (hP : 0 < arithmeticTotalMass A countsP)
     (hQ : 0 < arithmeticTotalMass A countsQ)
     (hMassEq : arithmeticTotalMass A countsP = arithmeticTotalMass A countsQ) :
-    W.totalDivergence (W.stateOfFinset A) (W.stateOfFinset A) =
+    totalDivergence (stateOfFinset A) (stateOfFinset A) =
       arithmeticShapeDivergence A countsP countsQ := by
   have hScaleOne : weylThermalScale A countsP countsQ = 1 := by
     unfold weylThermalScale
     rw [hMassEq]
     exact div_self hQ.ne'
-  rw [W.weyl_decomposition_law A countsP countsQ hP hQ]
+  rw [weyl_decomposition_law A countsP countsQ hP hQ]
   rw [hScaleOne]
   ring
-
-end WeylGaugeDecompositionWitness
 
 end InfoGeometry.Arithmetic.WeylArithmeticDivergence

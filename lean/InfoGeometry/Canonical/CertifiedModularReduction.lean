@@ -193,11 +193,31 @@ theorem Kambient_supported_on_Preg :
     Preg c * Kambient c = Kambient c ∧ Kambient c * Preg c = Kambient c := by
   simpa [Preg, Kambient, Kreg, compress] using c.hKambient_supported_on_Preg
 
+/- The regular generator commutes with its supporting spectral projector. -/
+@[rep_depth operator]
+theorem Kambient_commutes_Preg :
+    Commute (Preg c) (Kambient c) := by
+  change Preg c * Kambient c = Kambient c * Preg c
+  rw [(Kambient_supported_on_Preg (c := c)).1,
+    (Kambient_supported_on_Preg (c := c)).2]
+
 /-- `Kambient` annihilates the Drazin defect lane on both sides. -/
 @[rep_depth operator]
 theorem Kambient_kills_Pzero :
     Pzero c * Kambient c = 0 ∧ Kambient c * Pzero c = 0 := by
   simpa [Pzero, Kambient, Kreg, compress] using c.hKambient_kills_Pzero
+
+/- The regular generator has no matrix element from the defect lane. -/
+@[rep_depth operator]
+theorem Pzero_Kambient_eq_zero :
+    Pzero c * Kambient c = 0 :=
+  (Kambient_kills_Pzero (c := c)).1
+
+/- The regular generator has no matrix element into the defect lane. -/
+@[rep_depth operator]
+theorem Kambient_Pzero_eq_zero :
+    Kambient c * Pzero c = 0 :=
+  (Kambient_kills_Pzero (c := c)).2
 
 /-- No analytic logarithm property is available on the pure defect compression. -/
 @[rep_depth operator]

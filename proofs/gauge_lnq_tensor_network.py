@@ -2,7 +2,7 @@
 """Finite U(1) gauge ln(Q) tensor-network toy.
 
 External numerical witness only.  This promotes the previous ln(Q) node-potential
-Boltzmann model to a finite lattice-gauge/tensor-network socket:
+Boltzmann model to a finite lattice-gauge/tensor-network deferred_interface:
 
 * node matter amplitudes psi_i(s_i) built from positive Q_i(s_i),
 * U(1) edge links U_ij,

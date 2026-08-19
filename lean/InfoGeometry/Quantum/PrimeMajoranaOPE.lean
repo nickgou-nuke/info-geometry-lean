@@ -4,7 +4,7 @@ import InfoGeometry.Arithmetic.PrimeMajoranaOPE
 /-!
 # InfoGeometry.Quantum.PrimeMajoranaOPE
 
-OPE Socket for Prime Majorana fields.
+OPE interface for Prime Majorana fields.
 This module defines the structural predicates for the Operator Product Expansion
 (OPE) limits of the split-Majorana prime gas. 
 It intentionally defers the actual analytic mode expansions to a later, full CFT

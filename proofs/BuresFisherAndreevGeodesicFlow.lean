@@ -15,7 +15,7 @@ Andreev-pump tile:
 * the Andreev gain/loss condition is reused from `TopologicalAndreevPump`.
 
 The continuum Bures metric, global geodesic uniqueness, dissipative PDE/Onsager
-semigroups, and physical supercurrent/BEC realizations remain sockets.
+semigroups, and physical supercurrent/BEC realizations remain outside this finite owner.
 -/
 
 noncomputable section
@@ -143,7 +143,7 @@ theorem fisher_gradient_eq (I θ : ℝ) :
 
 /-- Capstone: finite Bures/Fisher dynamics connects to the already-formalized
 Andreev nonlinear gain tile; analytic dynamics and physical supercurrents remain
-sockets. -/
+interfaces. -/
 theorem bures_fisher_andreev_geodesic_flow_synthesis
     (p q : BuresPoint) (I θ gain loss K : ℝ) (A : ℂ)
     (hIpos : 0 < I) :

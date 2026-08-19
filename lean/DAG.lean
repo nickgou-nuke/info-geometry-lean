@@ -2,6 +2,8 @@ import DAG.Analysis
 import DAG.AlgebraicExponential
 import DAG.AnalyticBridge
 import DAG.Basic
+import DAG.ProofRelevantRelation
+import DAG.ReductionTrace
 import DAG.BlockDecomposition
 import DAG.BlockExport
 import DAG.ConnesHodgeBridge
@@ -9,6 +11,7 @@ import DAG.DiracLaplacian
 import DAG.Dominators
 import DAG.FinalSearch
 import DAG.GeneralizedTwoComplex
+import DAG.TwoComplexGeneralizedBridge
 import DAG.GradedBottInclusion
 import DAG.GradedBottPeriodicity
 import DAG.Hydrate

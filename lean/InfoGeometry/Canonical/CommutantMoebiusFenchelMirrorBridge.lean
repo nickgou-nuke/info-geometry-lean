@@ -13,11 +13,11 @@ This file packages four existing owner surfaces into one theorem-safe finite
 window:
 
 * the Hestenes phase-axis commutant is closed under multiplication;
-* the property-gated Möbius socket fixes the Hestenes phase axis;
+* the property-gated Möbius interface fixes the Hestenes phase axis;
 * the scalar Fenchel gap is invariant under paired primal/dual symmetries;
 * the Tomita/Cartan mirror is involutive;
 * the `Cl(5,5)` head anti-diagonal Cartan hop realizes the Witt/CAR pair.
-* the supplied `O(5,5)` socket preserves the natural cone, null cone, and
+* the supplied `O(5,5)` interface preserves the natural cone, null cone, and
   Ω-volume readout;
 * the real Dirac-Hodge lane proves J-gated twisted-index vanishing and the
   Hodge-star phase-axis flip.

@@ -16,7 +16,7 @@ open InfoGeometry.Canonical.HestenesCohomology
 /-!
 # Bogoliubov homology frame equivalence
 
-This file packages the real homology/cohomology frame-change socket.
+This file packages the real homology/cohomology frame-change interface.
 
 A frame equivalence is not just an invertible operator.  It carries explicit
 transport laws for the boundary, Drazin defect projector, harmonic projector,

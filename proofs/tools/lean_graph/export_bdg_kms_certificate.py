@@ -49,28 +49,28 @@ FINITE_BLOCKERS = [
     }
 ]
 
-ANALYTIC_SOCKETS = [
+ANALYTIC_DEFERRED_INTERFACES = [
     {
-        "name": "CStarCuntzTensorQuotient.UniversalCStarCompletionSocket",
+        "name": "CStarCuntzTensorQuotient.UniversalCStarCompletionDeferredInterface",
         "layer": "C*/universal completion",
     },
     {
-        "name": "SupergradedCuntzBdG.KMSStateSocket",
+        "name": "SupergradedCuntzBdG.KMSStateDeferredInterface",
         "layer": "algebraic KMS expectation interface",
     },
     {
-        "name": "SupergradedCuntzBdG.TomitaTakesakiKMSRealizationSocket",
+        "name": "SupergradedCuntzBdG.TomitaTakesakiKMSRealizationDeferredInterface",
         "layer": "GNS/Tomita cyclic-separating realization",
     },
     {
-        "name": "ModularRenyiEntropy.ModularRenyiEntropySocket",
+        "name": "ModularRenyiEntropy.ModularRenyiEntropyDeferredInterface",
         "layer": "future spectral/Renyi/Mellin analytic layer",
     },
 ]
 
 BOUNDARY_PHRASE = (
     "Excellent — that’s the right boundary: finite algebraic BdG/KMS layer "
-    "closed, analytic completion explicitly socketed instead of faked."
+    "closed, analytic completion explicitly deferred_interfaceed instead of faked."
 )
 
 
@@ -119,21 +119,21 @@ def run_queries(db):
             bind_vars={"blockers": FINITE_BLOCKERS},
         )
     )
-    result["analytic_sockets"] = list(
+    result["analytic_deferred_interfaces"] = list(
         db.aql.execute(
             """
-            FOR socket IN @sockets
-              LET decl = FIRST(FOR d IN lean_decls FILTER d.name == socket.name RETURN d)
+            FOR deferred_interface IN @deferred_interfaces
+              LET decl = FIRST(FOR d IN lean_decls FILTER d.name == deferred_interface.name RETURN d)
               RETURN {
-                name: socket.name,
+                name: deferred_interface.name,
                 exists: decl != null,
                 kind: decl == null ? "future" : (decl.kind == null ? "unknown" : decl.kind),
                 module: decl == null ? "future" : (decl.module == null ? "unknown" : decl.module),
-                layer: socket.layer,
-                classification: "analytic-socket"
+                layer: deferred_interface.layer,
+                classification: "analytic-deferred_interface"
               }
             """,
-            bind_vars={"sockets": ANALYTIC_SOCKETS},
+            bind_vars={"deferred_interfaces": ANALYTIC_DEFERRED_INTERFACES},
         )
     )
     result["module_inventory"] = list(
@@ -155,23 +155,23 @@ def run_queries(db):
             """
         )
     )
-    result["socket_users"] = list(
+    result["deferred_interface_users"] = list(
         db.aql.execute(
             """
-            FOR socket IN lean_decls
-              FILTER socket.name IN [
-                "SupergradedCuntzBdG.KMSStateSocket",
-                "SupergradedCuntzBdG.TomitaTakesakiKMSRealizationSocket",
-                "CStarCuntzTensorQuotient.UniversalCStarCompletionSocket"
+            FOR deferred_interface IN lean_decls
+              FILTER deferred_interface.name IN [
+                "SupergradedCuntzBdG.KMSStateDeferredInterface",
+                "SupergradedCuntzBdG.TomitaTakesakiKMSRealizationDeferredInterface",
+                "CStarCuntzTensorQuotient.UniversalCStarCompletionDeferredInterface"
               ]
               LET users = (
-                FOR v IN 1..5 INBOUND socket._id references
+                FOR v IN 1..5 INBOUND deferred_interface._id references
                   COLLECT name = v.name
                   SORT name
                   RETURN name
               )
-              SORT socket.name
-              RETURN {socket: socket.name, transitive_users: users}
+              SORT deferred_interface.name
+              RETURN {deferred_interface: deferred_interface.name, transitive_users: users}
             """
         )
     )
@@ -215,12 +215,12 @@ def write_md(data):
     counts = data["graph_counts"]
     finite = data["finite_theorems"]
     blockers = data["finite_blockers"]
-    sockets = data["analytic_sockets"]
+    deferred_interfaces = data["analytic_deferred_interfaces"]
     vacuity = data["vacuity_scan"]
     finite_present = sum(1 for item in finite if item["exists"])
     theorem_kind_present = sum(1 for item in finite if item["kind"] == "theorem")
     blockers_present = sum(1 for item in blockers if item["exists"])
-    sockets_present = sum(1 for item in sockets if item["exists"])
+    deferred_interfaces_present = sum(1 for item in deferred_interfaces if item["exists"])
 
     md = f"""# BdG/KMS Finite Algebraic Certificate
 
@@ -235,7 +235,7 @@ def write_md(data):
 | finite theorem declarations present | {finite_present}/{len(finite)} |
 | theorem-kind metadata present | {theorem_kind_present}/{len(finite)} |
 | finite algebraic blockers | {blockers_present}/{len(blockers)} |
-| analytic sockets present | {sockets_present}/{len(sockets)} |
+| analytic deferred_interfaces present | {deferred_interfaces_present}/{len(deferred_interfaces)} |
 | BdG/KMS sorry/admit atoms | {vacuity["sorry_admit_count"]} |
 
 ## Graph Counts
@@ -264,8 +264,8 @@ def write_md(data):
             f"`{item['classification']}` | {item['blocker']} |\n"
         )
 
-    md += "\n## Analytic Socket Frontier\n| Declaration | Exists | Kind | Layer |\n|---|---|---|---|\n"
-    for item in sockets:
+    md += "\n## Analytic DeferredInterface Frontier\n| Declaration | Exists | Kind | Layer |\n|---|---|---|---|\n"
+    for item in deferred_interfaces:
         md += (
             f"| `{item['name']}` | {item['exists']} | "
             f"`{item['kind']}` | {item['layer']} |\n"
@@ -278,12 +278,12 @@ def write_md(data):
             f"{item['structures']} | {item['total']} |\n"
         )
 
-    md += "\n## Socket Users\n| Socket | Transitive Users |\n|---|---|\n"
-    for item in data["socket_users"]:
+    md += "\n## DeferredInterface Users\n| DeferredInterface | Transitive Users |\n|---|---|\n"
+    for item in data["deferred_interface_users"]:
         users = ", ".join(f"`{name}`" for name in item["transitive_users"][:8])
         if len(item["transitive_users"]) > 8:
             users += f", … +{len(item['transitive_users']) - 8}"
-        md += f"| `{item['socket']}` | {users or 'none'} |\n"
+        md += f"| `{item['deferred_interface']}` | {users or 'none'} |\n"
 
     path.write_text(md, encoding="utf-8")
     return path
@@ -305,7 +305,7 @@ def main():
         f"{finite_present}/{len(data['finite_theorems'])} present "
         f"({theorem_kind_present}/{len(data['finite_theorems'])} theorem-kind metadata)  "
         f"Blockers: {sum(1 for item in data['finite_blockers'] if item['exists'])}  "
-        f"Sockets: {sum(1 for item in data['analytic_sockets'] if item['exists'])}  "
+        f"DeferredInterfaces: {sum(1 for item in data['analytic_deferred_interfaces'] if item['exists'])}  "
         f"Vacuity: {data['vacuity_scan']['sorry_admit_count']}",
         file=sys.stderr,
     )

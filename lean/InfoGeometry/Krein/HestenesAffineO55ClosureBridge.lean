@@ -8,10 +8,10 @@ noncomputable section
 /-!
 # InfoGeometry.Krein.HestenesAffineO55ClosureBridge
 
-Affine `O(5,5)` / `Cl(5,5)` closure socket for the Hestenes--Krein arithmetic
+Affine `O(5,5)` / `Cl(5,5)` closure interface for the Hestenes--Krein arithmetic
 lane.
 
-This file is a post-seal backend socket.  It does not construct a split
+This file is a post-seal backend interface.  It does not construct a split
 Clifford algebra `Cl(5,5)`, prove a universal affine D4 closure theorem, or
 derive `O(5,5)` T-duality from first principles.  Those facts belong to a
 concrete Clifford/lattice/string backend.
@@ -125,7 +125,7 @@ theorem o55_preserves_naturalCone {ξ : H₂}
   simpa using hξ
 
 /-! The supplied vector action now has an explicit operator-level Krein
-adjoint law.  This is the honest compatibility socket for the generic
+adjoint law.  This is the honest compatibility interface for the generic
 `kreinConjugation` calculus; it does not identify the supplied operator-side
 automorphism with conjugation by this vector action. -/
 
@@ -198,14 +198,14 @@ theorem total_hurwitz_root_expectation_o55_invariant :
             exact B.hurwitzRoot_expectation_o55_invariant i
     _ = 1 := B.total_hurwitz_root_expectation_is_unity
 
-/-- Same-arrow nilpotence for the positive affine null-root socket. -/
+/-- Same-arrow nilpotence for the positive affine null root. -/
 @[rep_depth operator]
 theorem affineNullRootPlus_same_arrow_nilpotent (A C : EndH) :
     B.duality.arithmetic.affineNullRootPlus A *
         B.duality.arithmetic.affineNullRootPlus C = 0 :=
   B.duality.arithmetic.affineNullRootPlus_mul_affineNullRootPlus_eq_zero A C
 
-/-- Same-arrow nilpotence for the negative affine null-root socket. -/
+/-- Same-arrow nilpotence for the negative affine null root. -/
 @[rep_depth operator]
 theorem affineNullRootMinus_same_arrow_nilpotent (A C : EndH) :
     B.duality.arithmetic.affineNullRootMinus A *

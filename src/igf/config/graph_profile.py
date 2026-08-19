@@ -11,7 +11,7 @@ class GraphCollections:
     raw_edges: str = "raw_info_edges"
     overlay_nodes: str = "topology_overlay"
     overlay_edges: str = "topology_overlay_edges"
-    hive_endpoint: str = "http://127.0.0.1:8530"
+    hive_endpoint: str = "http://127.0.0.1:8540"
     hive_database: str = "hive_live"
     hive_thoughts: str = "Thoughts"
     hive_causal_links: str = "CausalLinks"

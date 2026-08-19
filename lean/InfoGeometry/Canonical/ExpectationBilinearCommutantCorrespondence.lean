@@ -86,7 +86,7 @@ theorem expectationBilinearReadout_kernel_characterization
   exact expectationBilinearReadout_eq_zero_iff φ C A
 
 /-- The expectation-valued bilinear package attached to an admissible modular
-operator socket. -/
+operator interface. -/
 def expectationBilinears (E : OperatorErlangenFierzKlein Obs) :
     InfoGeometry.Canonical.FierzKleinFoundation.FierzBilinears :=
   E.fierzBilinears

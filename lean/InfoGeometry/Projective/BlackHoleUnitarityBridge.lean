@@ -12,7 +12,7 @@ This module does not prove the physical black-hole information theorem. It
 records the finite premises currently available in the projective layer:
 
 1. a rank-bound readback from explicit Betti data;
-2. a real-matrix unitarity/isometry socket for the Möbius parity operator;
+2. a real-matrix unitarity/isometry interface for the Möbius parity operator;
 3. trace-zero readback of the stored Gromov-Witten scalar.
 -/
 
@@ -21,7 +21,7 @@ namespace InfoGeometry.Projective.Unitarity
 open InfoGeometry.Projective.Closure
 open InfoGeometry.Projective.NonIsoConf3RankIngestion
 
-/-- S-matrix socket defined by the 5-graded Möbius parity inversion. -/
+/-- S-matrix interface defined by the 5-graded Möbius parity inversion. -/
 structure HorizonSMatrix (n : ℕ) where
   closure : FiveGradedMobiusClosure n
   

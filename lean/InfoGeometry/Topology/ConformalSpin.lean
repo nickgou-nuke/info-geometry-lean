@@ -57,6 +57,37 @@ theorem field_classification (spin : ConformalSpin) :
   have hden : 0 < spin.S.den := Rat.den_pos spin
   omega
 
+theorem field_classification_exclusive (spin : ConformalSpin) :
+    (IsBosonicField spin → ¬ IsFermionicField spin ∧ ¬ IsParafermionicField spin) ∧
+    (IsFermionicField spin → ¬ IsBosonicField spin ∧ ¬ IsParafermionicField spin) ∧
+    (IsParafermionicField spin → ¬ IsBosonicField spin ∧ ¬ IsFermionicField spin) := by
+  dsimp [IsBosonicField, IsFermionicField, IsParafermionicField]
+  have hden : 0 < spin.S.den := Rat.den_pos spin
+  omega
+
+theorem isParafermionicField_iff_not_bosonic_or_fermionic
+    (spin : ConformalSpin) :
+    IsParafermionicField spin ↔
+      ¬ IsBosonicField spin ∧ ¬ IsFermionicField spin := by
+  dsimp [IsBosonicField, IsFermionicField, IsParafermionicField]
+  have hden : 0 < spin.S.den := Rat.den_pos spin
+  omega
+
+theorem isBosonicField_add {s t : ConformalSpin}
+    (hs : IsBosonicField s) (ht : IsBosonicField t) :
+    IsBosonicField (s + t) := by
+  have hs' : (s.num : ℚ) = s := (Rat.den_eq_one_iff s).mp hs
+  have ht' : (t.num : ℚ) = t := (Rat.den_eq_one_iff t).mp ht
+  rw [← hs', ← ht']
+  simp [IsBosonicField]
+
+theorem isBosonicField_neg {s : ConformalSpin}
+    (hs : IsBosonicField s) :
+    IsBosonicField (-s) := by
+  have hs' : (s.num : ℚ) = s := (Rat.den_eq_one_iff s).mp hs
+  rw [← hs']
+  simp [IsBosonicField]
+
 /--
 The structure constants $C_{ij}^k$ of the Operator Product Expansion (OPE).
 They satisfy properties derived from the single-valuedness condition

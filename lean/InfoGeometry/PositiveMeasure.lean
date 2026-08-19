@@ -253,6 +253,58 @@ theorem generalizedKL_pos_of_ne (μ ν : PositiveMeasure α ℝ) (h : μ ≠ ν)
     simpa [eq_comm] using hne
   exact lt_of_le_of_ne hnonneg hne'
 
+/-! ## Extended entropy and its finite Bregman tangent -/
+
+/--
+The extended negative entropy potential on the strictly positive cone.
+
+The linear term is retained so that the tangent derivative is exactly
+`log (μ a)` rather than `log (μ a) + 1`.
+-/
+noncomputable def extendedEntropyPotential (μ : PositiveMeasure α ℝ) : ℝ :=
+  ∑ a ∈ (Finset.univ : Finset α), (μ a * Real.log (μ a) - μ a)
+
+/--
+Finite Bregman tangent subtraction for the extended negative entropy
+potential.  The multiplication in each summand is the scalar readout of the
+finite coordinate cone; no probability normalization is assumed.
+-/
+noncomputable def extendedEntropyBregman
+    (μ ν : PositiveMeasure α ℝ) : ℝ :=
+  extendedEntropyPotential μ - extendedEntropyPotential ν -
+    ∑ a ∈ (Finset.univ : Finset α),
+      (Real.log (ν a) * (μ a - ν a))
+
+/-- The generalized I-divergence is exactly the extended-entropy Bregman gap. -/
+theorem generalizedKL_eq_extendedEntropyBregman
+    (μ ν : PositiveMeasure α ℝ) :
+    generalizedKL μ ν = extendedEntropyBregman μ ν := by
+  classical
+  unfold generalizedKL extendedEntropyBregman extendedEntropyPotential gklTerm
+  calc
+    (∑ a ∈ (Finset.univ : Finset α),
+        (μ a * Real.log (μ a / ν a) - μ a + ν a)) =
+      ∑ a ∈ (Finset.univ : Finset α),
+        ((μ a * Real.log (μ a) - μ a) -
+          (ν a * Real.log (ν a) - ν a) -
+          Real.log (ν a) * (μ a - ν a)) := by
+      apply Finset.sum_congr
+        (s₁ := (Finset.univ : Finset α))
+        (s₂ := (Finset.univ : Finset α)) rfl
+      intro a ha
+      have hμ : μ a ≠ 0 := (μ.pos a).ne'
+      have hν : ν a ≠ 0 := (ν.pos a).ne'
+      rw [Real.log_div hμ hν]
+      ring
+    _ =
+      (∑ a ∈ (Finset.univ : Finset α),
+        (μ a * Real.log (μ a) - μ a)) -
+        (∑ a ∈ (Finset.univ : Finset α),
+          (ν a * Real.log (ν a) - ν a)) -
+        ∑ a ∈ (Finset.univ : Finset α),
+          Real.log (ν a) * (μ a - ν a) := by
+      rw [Finset.sum_sub_distrib, Finset.sum_sub_distrib]
+
 end GeneralizedKL
 
 end PositiveMeasure

@@ -48,7 +48,7 @@ theorem IsRationalComplex.of_eq
 /--
 Rankin-Selberg theta integral representation property.
 
-This is the algebraic socket for the paper's Theorem 1:
+This is the algebraic interface for the paper's Theorem 1:
 
 `⟨θ f₁ · E_s, θ f₂⟩_G =
   ⟨f₁, f₂⟩_H · L^S(s + 1/2, π ⊗ χ) · L_bad(s)`.
@@ -181,7 +181,7 @@ end SiegelWeilKudlaRallisFormulaWitness
 /--
 Finite pullback/decomposition formula property.
 
-This is the algebraic socket for the paper's decomposition formula:
+This is the algebraic interface for the paper's decomposition formula:
 
 `E_s(ι(g₁,g₂)) = Σ_f f(g₁) f̄(g₂) · λ(f) / ⟨f,f⟩`.
 
@@ -326,13 +326,13 @@ theorem lambda_div_inner_is_rational
 
 end NormalizedSpecialValueRationalityWitness
 
-/-! ## 6. Bridge to existing projected L-function socket -/
+/-! ## 6. Bridge to existing projected L-function data -/
 
 /--
 Projected L-function data supplied by a Rankin-Selberg/theta integral model.
 
 This connects the SWKR/doubling-method lane to the existing
-`ProjectedAutomorphicLFunctionWitness` API by a supplied equality between the
+`ProjectedAutomorphicLFunctionData` API by a supplied equality between the
 projected L-function and the standard L-function readout.
 -/
 structure RankinSelbergProjectedLBridge
@@ -340,7 +340,7 @@ structure RankinSelbergProjectedLBridge
     [AddCommGroup Bulk] [Module ℝ Bulk]
     [AddCommGroup Boundary] [Module ℝ Boundary]
     {W : SiegelEisensteinWitness Bulk Boundary}
-    (P : ProjectedAutomorphicLFunctionWitness W)
+    (P : ProjectedAutomorphicLFunctionData W)
     (Cusp : Type*) where
   /-- Rankin-Selberg theta integral property. -/
   rankinSelberg :
@@ -360,7 +360,7 @@ variable
     [AddCommGroup Bulk] [Module ℝ Bulk]
     [AddCommGroup Boundary] [Module ℝ Boundary]
     {W : SiegelEisensteinWitness Bulk Boundary}
-    {P : ProjectedAutomorphicLFunctionWitness W}
+    {P : ProjectedAutomorphicLFunctionData W}
     {Cusp : Type*}
 
 variable (B : RankinSelbergProjectedLBridge P Cusp)

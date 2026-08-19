@@ -25,7 +25,6 @@ The physical statement is property-gated:
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.HorizonKMS
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -145,7 +144,7 @@ end HiddenMemoryAffineCurrentCalibration
 /--
 A scalar Virasoro/stress readout of the hidden memory sector.
 
-This is the formal socket for saying:
+This is the formal interface for saying:
 
   hidden grade-two memory contributes to the Virasoro stress/anomaly ledger.
 
@@ -271,7 +270,7 @@ end HiddenMemoryVirasoroReadout
 /--
 Combined horizon KMS and exceptional affine/Virasoro bridge.
 
-This is the exact socket for:
+This is the exact interface for:
 
   hidden grade-two memory
       -> affine current mode
@@ -594,7 +593,7 @@ Once the bridge is supplied:
 * hidden grade-two memory is represented as an affine current;
 * the hidden memory scalar equals the Virasoro/current stress readout.
 -/
-theorem exceptionalVirasoroBridgeOwnerTarget :
+theorem exceptionalVirasoroBridge_readout :
   ∀ (J L Obs Memory Finite AffineAlg : Type*)
     [AddCommGroup J] [Module ℝ J]
     [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]

@@ -8,24 +8,24 @@ Usage:
   python3 tools/quality/mission_state.py set-subgoal "<subgoal>"
   python3 tools/quality/mission_state.py verify "<theorem_name>"    # mark last_verified
   python3 tools/quality/mission_state.py block "<reason>"           # set next_blocker
-  python3 tools/quality/mission_state.py classify <socket_class>    # set socket_classification
+  python3 tools/quality/mission_state.py classify <interface_class>    # set deferred_interface_classification
   python3 tools/quality/mission_state.py pause
   python3 tools/quality/mission_state.py resume
   python3 tools/quality/mission_state.py clear
   python3 tools/quality/mission_state.py tick                       # increment turns_used
   python3 tools/quality/mission_state.py status                     # human-readable status
 
-Socket classes (socket_classification):
+Deferred-interface classes (deferred_interface_classification):
   closed_by_kernel
   closed_by_mathlib
   closed_by_repo_owner
   literature_owned_unformalized
-  open_problem_socket
-  invalid_or_overclaimed_socket
+  open_problem_interface
+  invalid_or_overclaimed_interface
 
 Exit codes:
   0 — success
-  1 — state error (invalid transition, open_problem_socket stop signal)
+  1 — state error (invalid transition, open_problem_interface stop signal)
   2 — file I/O error
 """
 from __future__ import annotations
@@ -39,7 +39,7 @@ _SRC = _REPO_ROOT / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from igf.quality.mission import MissionStateManager, OPEN_PROBLEM_STOP, VALID_SOCKET_CLASSES
+from igf.quality.mission import MissionStateManager, OPEN_PROBLEM_STOP, VALID_DEFERRED_INTERFACE_CLASSES
 
 _mgr = MissionStateManager(_REPO_ROOT)
 STATE_FILE = _mgr.state_file
@@ -80,7 +80,7 @@ def cmd_set_goal(goal: str, scope: str | None, build: str | None) -> None:
         "consecutive_blocked": 0,
         "scope_file": scope,
         "baseline_debt": None,
-        "socket_classification": None,
+        "deferred_interface_classification": None,
     })
     save(state)
     append_history({"event": "set_goal", "goal": goal, "scope": scope, "build": build})
@@ -125,19 +125,19 @@ def cmd_block(reason: str) -> None:
     print(f"Blocked: {reason} (count: {state['consecutive_blocked']})")
 
 
-def cmd_classify(socket_class: str) -> None:
-    if socket_class not in VALID_SOCKET_CLASSES:
-        print(f"ERROR: unknown class {socket_class!r}. Valid: {sorted(VALID_SOCKET_CLASSES)}", file=sys.stderr)
+def cmd_classify(interface_class: str) -> None:
+    if interface_class not in VALID_DEFERRED_INTERFACE_CLASSES:
+        print(f"ERROR: unknown class {interface_class!r}. Valid: {sorted(VALID_DEFERRED_INTERFACE_CLASSES)}", file=sys.stderr)
         sys.exit(1)
     state = load()
-    state["socket_classification"] = socket_class
+    state["deferred_interface_classification"] = interface_class
     save(state)
-    append_history({"event": "classify", "class": socket_class})
+    append_history({"event": "classify", "class": interface_class})
 
-    if socket_class == OPEN_PROBLEM_STOP:
-        print(f"OPEN PROBLEM SOCKET — loop must stop. Emit report entry, do not fake a proof.")
+    if interface_class == OPEN_PROBLEM_STOP:
+        print(f"OPEN PROBLEM INTERFACE — loop must stop. Emit report entry, do not fake a proof.")
         sys.exit(1)  # signal to caller: stop, do not continue
-    print(f"Socket classified: {socket_class}")
+    print(f"Interface classified: {interface_class}")
 
 
 def cmd_pause() -> None:
@@ -165,7 +165,7 @@ def cmd_clear() -> None:
         "goal": None, "subgoal": None, "last_verified": None,
         "next_blocker": None, "build_target": None, "status": "idle",
         "turns_used": 0, "max_turns": 30, "consecutive_blocked": 0,
-        "scope_file": None, "baseline_debt": None, "socket_classification": None,
+        "scope_file": None, "baseline_debt": None, "deferred_interface_classification": None,
     }
     save(state)
     append_history({"event": "clear"})
@@ -194,7 +194,7 @@ def cmd_status() -> None:
     print(f"Next blocker   : {s.get('next_blocker') or '(none)'}")
     print(f"Build target   : {s.get('build_target') or '(none)'}")
     print(f"Scope file     : {s.get('scope_file') or '(none)'}")
-    print(f"Classification : {s.get('socket_classification') or '(none)'}")
+    print(f"Classification : {s.get('deferred_interface_classification') or '(none)'}")
     print(f"Turns used     : {s.get('turns_used', 0)}/{s.get('max_turns', 30)}")
     print(f"Consecutive blk: {s.get('consecutive_blocked', 0)}")
 
@@ -233,7 +233,7 @@ def main() -> None:
         cmd_block(args[1])
     elif cmd == "classify":
         if len(args) < 2:
-            print(f"Usage: classify <class>  ({' | '.join(sorted(VALID_SOCKET_CLASSES))})", file=sys.stderr)
+            print(f"Usage: classify <class>  ({' | '.join(sorted(VALID_DEFERRED_INTERFACE_CLASSES))})", file=sys.stderr)
             sys.exit(1)
         cmd_classify(args[1])
     elif cmd == "pause":

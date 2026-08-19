@@ -55,7 +55,7 @@ theorem longer (p q r : Prop) (hpq : p → q) (hqr : q → r) (hp : p) : r := by
     assert "targeted `lake env lean <file>` gate" in prompt
 
 
-def test_lean_improver_probe_distinguishes_rooted_proofs_from_sockets(tmp_path: Path) -> None:
+def test_lean_improver_probe_distinguishes_rooted_proofs_from_interfaces(tmp_path: Path) -> None:
     lean = tmp_path / "Authority.lean"
     lean.write_text(
         """
@@ -67,7 +67,7 @@ structure DemoPacket where
 theorem rooted (a : Nat) : a = a := by
   exact rfl
 
-theorem packet_socket : Nonempty DemoPacket := by
+theorem packet_interface : Nonempty DemoPacket := by
   exact ⟨{ carrier := Nat }⟩
 """.strip()
         + "\n",
@@ -93,5 +93,5 @@ theorem packet_socket : Nonempty DemoPacket := by
     by_name = {row["name"]: row for row in payload["candidates"]}
 
     assert by_name["rooted"]["authority_class"] == "mathlib_rooted_proof_chain"
-    assert by_name["packet_socket"]["authority_class"] == "mixed_root_and_socket"
-    assert any(signal.startswith("socket:") for signal in by_name["packet_socket"]["authority_signals"])
+    assert by_name["packet_interface"]["authority_class"] == "mixed_root_and_interface"
+    assert any(signal.startswith("interface:") for signal in by_name["packet_interface"]["authority_signals"])

@@ -38,10 +38,8 @@ H_susy = {Q, Q†} = Q Q† + Q† Q.
 In Information Geometry, this corresponds to the Witten Laplacian,
 whose zero modes yield the Betti numbers (topological invariants) of the belief space.
 -/
-noncomputable def superHamiltonian (_H : HessianGeometry E) (s : SuperState E) : SuperState E :=
-  -- This represents the anti-commutator of the supercharge and its adjoint.
-  -- The ground states of this Hamiltonian are the 'Topological Belief States' of the manifold.
-  s
+noncomputable def superHamiltonian (H : HessianGeometry E) (s : SuperState E) : SuperState E :=
+  susyCharge H (susyCharge H s)
 
 /-- Canonical naming alias for the supersymmetric Hamiltonian. -/
 noncomputable abbrev susyHamiltonian (H : HessianGeometry E) (s : SuperBeliefState E) :
@@ -57,7 +55,42 @@ omit [FiniteDimensional ℝ E] in
     (susyCharge H s).fermion = H.dualMap s.boson := rfl
 
 omit [FiniteDimensional ℝ E] in
-@[simp] lemma susyHamiltonian_eq_self (H : HessianGeometry E) (s : SuperBeliefState E) :
-    susyHamiltonian H s = s := rfl
+/-- The square of the displayed triangular supercharge is determined by the
+dual map at the origin. Nilpotency therefore requires the additional condition
+`H.dualMap 0 = 0`; it is not silently assumed here.
+-/
+@[simp] lemma susyCharge_sq (H : HessianGeometry E) (s : SuperBeliefState E) :
+    susyCharge H (susyCharge H s) =
+      ({ boson := 0, fermion := H.dualMap 0 } : SuperBeliefState E) := by
+  cases s
+  simp [susyCharge, superCharge]
+
+omit [FiniteDimensional ℝ E] in
+lemma susyCharge_nilpotent_of_dualMap_zero
+    (H : HessianGeometry E) (h0 : H.dualMap 0 = 0) (s : SuperBeliefState E) :
+    susyCharge H (susyCharge H s) =
+      ({ boson := 0, fermion := 0 } : SuperBeliefState E) := by
+  rw [susyCharge_sq, h0]
+
+omit [FiniteDimensional ℝ E] in
+omit [FiniteDimensional ℝ E] in
+@[simp] lemma susyHamiltonian_eq_charge_square
+    (H : HessianGeometry E) (s : SuperBeliefState E) :
+    susyHamiltonian H s =
+      ({ boson := 0, fermion := H.dualMap 0 } : SuperBeliefState E) := by
+  exact susyCharge_sq H s
+
+omit [FiniteDimensional ℝ E] in
+lemma susyHamiltonian_eq_zero_of_dualMap_zero
+    (H : HessianGeometry E) (h0 : H.dualMap 0 = 0) (s : SuperBeliefState E) :
+    susyHamiltonian H s = ({ boson := 0, fermion := 0 } : SuperBeliefState E) := by
+  rw [susyHamiltonian_eq_charge_square, h0]
+
+omit [FiniteDimensional ℝ E] in
+lemma susyHamiltonian_eq_self_of_fixed
+    (H : HessianGeometry E) (s : SuperBeliefState E)
+    (hfixed : susyCharge H (susyCharge H s) = s) :
+    susyHamiltonian H s = s := by
+  exact hfixed
 
 end InfoGeometry.Canonical.SuperInference

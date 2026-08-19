@@ -2,7 +2,6 @@ import Mathlib.Analysis.Complex.Basic
 import Mathlib.Data.Complex.Basic
 import Mathlib.GroupTheory.GroupAction.Basic
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.SocketTarget
 
 open scoped ComplexConjugate
 

@@ -9,8 +9,8 @@ The Lean file proves:
 * Dirichlet-series equality on `Re(s) > 1`.
 
 It keeps eta continuation and Ramanujan's odd-zeta transformation as
-proof-carrying sockets.  This script provides numerical witnesses for those
-open analytic sockets and checks that the executable series use the same
+proof-carrying interfaces.  This script provides numerical checks for those
+open analytic interfaces and checks that the executable series use the same
 zero-mode-free and integer-parity conventions as the Lean definitions.
 """
 
@@ -19,7 +19,7 @@ from __future__ import annotations
 import mpmath as mp
 import sympy as sp
 
-from ramanujan_odd_zeta_socket import (
+from ramanujan_odd_zeta_interface import (
     ramanujan_lhs,
     ramanujan_rhs,
     reflected_modular_weight,
@@ -77,7 +77,7 @@ def verify_positive_index_conventions() -> None:
     assert first_eta_terms[3].real < 0
 
 
-def verify_ramanujan_socket() -> None:
+def verify_ramanujan_interface() -> None:
     samples = [
         (1, mp.pi, mp.pi),
         (1, mp.pi / 2, 2 * mp.pi),
@@ -95,7 +95,7 @@ def verify_ramanujan_socket() -> None:
         assert_close(
             ramanujan_lhs(n, alpha),
             ramanujan_rhs(n, alpha, beta),
-            f"Ramanujan odd-zeta socket n={n}",
+            f"Ramanujan odd-zeta interface n={n}",
             mp.mpf("1e-45"),
         )
 
@@ -135,8 +135,8 @@ def verify_equivalences() -> None:
     assert_close(euler_product(s_conv), mp.zeta(s_conv), "Euler product", mp.mpf("2e-5"))
     print("  Euler product: checked")
 
-    verify_ramanujan_socket()
-    print("  Ramanujan odd-zeta socket: checked")
+    verify_ramanujan_interface()
+    print("  Ramanujan odd-zeta interface: checked")
 
     print("RIEMANN ZETA EQUIVALENCES VERIFIED")
 

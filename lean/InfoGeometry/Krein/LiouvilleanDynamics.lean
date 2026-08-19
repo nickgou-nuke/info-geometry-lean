@@ -9,7 +9,7 @@ Liouvillean and eta-unitarity gates.
 A Krein-self-adjoint Liouvillean and a Krein-skew-adjoint flow generator are
 represented by subtypes of continuous linear endomorphisms.  The modular flow
 is then constructed by `modularFlowOfGenerator`; its identity, composition,
-and Krein-isometry laws are derived theorems rather than stored evidence.
+and Krein-isometry laws are derived theorems.
 -/
 
 namespace InfoGeometry.Krein

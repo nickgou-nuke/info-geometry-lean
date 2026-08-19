@@ -118,4 +118,8 @@ theorem transition_dictionary_nonempty : Nonempty TransitionDictionary := by
   · exact R_phases_unitary.2
   · exact R_product
 
+theorem transition_dictionary : TransitionDictionary := by
+  exact ⟨quantum_dimension_tau_eq_phi, R_phases_unitary.1,
+    R_phases_unitary.2, R_product⟩
+
 end InfoGeometry.Dynamics.SouriauBostConnesTheorem

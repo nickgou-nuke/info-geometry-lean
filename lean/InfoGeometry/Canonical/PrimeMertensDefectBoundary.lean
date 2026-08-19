@@ -53,13 +53,13 @@ def defectExponent : ℝ → Prop :=
 
 end MertensDefectBoundary
 
-/-! ## RH-scale Mertens/LDP boundary socket -/
+/-! ## RH-scale Mertens/LDP boundary data -/
 
 /--
 Möbius/Mertens data.
 
 `μ` is intentionally supplied as data rather than tied to a particular
-number-theory implementation.  This keeps the defect-boundary socket independent
+number-theory implementation.  This keeps the defect-boundary data independent
 of arithmetic infrastructure choices.
 -/
 structure MobiusMertensData where
@@ -70,13 +70,46 @@ structure MobiusMertensData where
 
 namespace MobiusMertensData
 
+theorem mertens_zero (D : MobiusMertensData) :
+    D.M 0 = 0 := by
+  rw [D.M_eq_sum]
+  simp
+
 /-- Real absolute value of the Mertens readout. -/
 def absMertens (D : MobiusMertensData) (N : ℕ) : ℝ :=
   |((D.M N) : ℝ)|
 
+theorem absMertens_eq_zero_iff (D : MobiusMertensData) (N : ℕ) :
+    D.absMertens N = 0 ↔ D.M N = 0 := by
+  unfold absMertens
+  rw [abs_eq_zero, Int.cast_eq_zero]
+
 /-- Square-root normalized Mertens defect. -/
 def normalizedDefect (D : MobiusMertensData) (N : ℕ) : ℝ :=
   D.absMertens N / Real.sqrt ((N : ℝ))
+
+theorem absMertens_nonneg (D : MobiusMertensData) (N : ℕ) :
+    0 ≤ D.absMertens N := by
+  exact abs_nonneg _
+
+theorem normalizedDefect_nonneg (D : MobiusMertensData) (N : ℕ) :
+    0 ≤ D.normalizedDefect N := by
+  unfold normalizedDefect absMertens
+  exact div_nonneg (absMertens_nonneg D N) (Real.sqrt_nonneg _)
+
+theorem normalizedDefect_eq_zero_of_mertens_eq_zero
+    (D : MobiusMertensData) {N : ℕ} (hM : D.M N = 0) :
+    D.normalizedDefect N = 0 := by
+  simp [normalizedDefect, absMertens, hM]
+
+theorem normalizedDefect_eq_zero_iff
+    (D : MobiusMertensData) {N : ℕ} (hN : 0 < N) :
+    D.normalizedDefect N = 0 ↔ D.M N = 0 := by
+  unfold normalizedDefect absMertens
+  have hsqrt : Real.sqrt (N : ℝ) ≠ 0 := by
+    exact ne_of_gt (Real.sqrt_pos.2 (by exact_mod_cast hN))
+  rw [div_eq_zero_iff]
+  simp [hsqrt, abs_eq_zero, Int.cast_eq_zero]
 
 end MobiusMertensData
 
@@ -118,7 +151,7 @@ def normalizedDefectRatio
 /--
 Conditional large-deviation boundary for the Mertens defect.
 
-`entropyDominatesDefect` is the formal socket for an LDP estimate saying that
+`entropyDominatesDefect` is the formal hypothesis for an LDP estimate saying that
 the entropy barrier beats the parity-defect cost.  The analytic implication from
 that statement to the RH-scale Mertens boundary remains explicit data.
 -/
@@ -160,29 +193,10 @@ theorem RHScaleBoundary_of_entropyDominance
 end MertensLDPBoundary
 
 /--
-Packaged Mertens boundary theorem surface.
-
-Later bridge files can consume this packet without asserting RH or a global
-Mertens theorem.
--/
-structure MertensBoundaryPacket where
-  mertensData : MobiusMertensData
-  boundary : RHScaleBoundary mertensData
-
-/-- Build a boundary packet from an LDP property. -/
-def MertensBoundaryPacket.ofLDP
-    (D : MobiusMertensData)
-    (B : MertensLDPBoundary D)
-    (h : B.readout.defectCost ≤ B.readout.entropyBarrier) :
-    MertensBoundaryPacket where
-  mertensData := D
-  boundary := MertensLDPBoundary.RHScaleBoundary_of_entropyDominance B h
-
-/--
 Analytic bridge data needed to turn a Mertens boundary packet into a
 defect-free Lee--Yang limit packet.
 
-This keeps the finite Lee--Yang approximation, large-deviation socket, `xi`
+This keeps the finite Lee--Yang approximation, large-deviation data, `xi`
 limit, and stability persistence separate from the Mertens/random-walk
 boundary itself.
 -/

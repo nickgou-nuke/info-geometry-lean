@@ -1,17 +1,16 @@
 import Mathlib.Tactic
 import InfoGeometry.Analysis.DiscreteHurwitzCliffordWavelet
 import InfoGeometry.Quantum.Hurwitz
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Analysis.D23HurwitzCliffordFilterBank
 
 The D23 Hurwitz--Clifford filter-bank packet.
 
-This file instantiates the repo's discrete normalized-branch filter-bank owner
+This file instantiates the repo's discrete normalized-branch filter-bank
 surface with a Hurwitz quaternion carrier and a two-channel coefficient lane.
-It packages pointwise norm-square readouts of the existing
-`ParaunitaryCliffordFilterBank` socket.
+It proves pointwise norm-square readouts of the existing
+`ParaunitaryCliffordFilterBank` structure.
 
 It does not prove a new quaternionic wavelet theorem, a perfect-reconstruction
 law, or an analysis-energy isometry.
@@ -126,14 +125,9 @@ theorem d23HurwitzCliffordFilterBank_energyPreservation :
     d23HurwitzCliffordFilterBank.sum_normSq_eq_one :=
   d23HurwitzCliffordFilterBank_branchEnergyReadout
 
-/--
-Combined theorem-safe owner target for the D23 Hurwitz--Clifford layer.
-
-This records the instantiated filter bank through its repo-owned readouts,
-rather than claiming a full paraunitary PR/isometry theorem.
--/
+/-! Combined readouts for the D23 Hurwitz--Clifford layer. -/
 @[rep_depth operator]
-theorem d23HurwitzCliffordFilterBankOwnerTarget :
+theorem d23HurwitzCliffordFilterBank_readouts :
     normalizedBranches d23HurwitzCliffordFilterBank ∧
       Quaternion.normSq (d23HurwitzCliffordFilterBank.lowPass (show Fin 2 from 0)) =
         (1 / 2 : ℝ) ∧
@@ -144,15 +138,5 @@ theorem d23HurwitzCliffordFilterBankOwnerTarget :
     d23_lowPass_normSq,
     d23_highPass_normSq,
     d23HurwitzCliffordFilterBank_sum_normSq_eq_one⟩
-
-@[owner_target_tag, rep_depth operator]
-theorem d23HurwitzCliffordFilterBank_packet :
-    normalizedBranches d23HurwitzCliffordFilterBank ∧
-      Quaternion.normSq (d23HurwitzCliffordFilterBank.lowPass (show Fin 2 from 0)) =
-        (1 / 2 : ℝ) ∧
-      (∀ i : Fin 2,
-        Quaternion.normSq (d23HurwitzCliffordFilterBank.highPass i) = (1 / 2 : ℝ)) ∧
-      d23HurwitzCliffordFilterBank.sum_normSq_eq_one :=
-  d23HurwitzCliffordFilterBankOwnerTarget
 
 end InfoGeometry.Analysis.D23HurwitzCliffordFilterBank

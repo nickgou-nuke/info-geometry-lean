@@ -197,7 +197,7 @@ theorem fieldCondition_of_all_generated
 
 end FullBasicGenerationCertificate
 
-/-- Rank-refined factorization socket for Gibson Theorem 3.5. -/
+/-- Rank-refined factorization interface for Gibson Theorem 3.5. -/
 structure RankDefectBasicFactorizationCertificate
     (F : Type u) [Field F] (n : ℕ) where
   rank : Matrix (Fin n) (Fin n) F → ℕ
@@ -225,7 +225,7 @@ theorem exact_singular_count_readout
 
 end RankDefectBasicFactorizationCertificate
 
-/-- Characteristic-two orthogonal/symmetric inverse socket for Gibson Theorem 3.7. -/
+/-- Characteristic-two orthogonal/symmetric inverse interface for Gibson Theorem 3.7. -/
 structure CharacteristicTwoTransposeInverseCertificate
     (F : Type u) [Field F] (n : ℕ) where
   generatedByBasics : Matrix (Fin n) (Fin n) F → Prop

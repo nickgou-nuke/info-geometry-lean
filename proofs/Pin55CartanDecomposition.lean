@@ -6,7 +6,7 @@ import proofs.Clifford55AnomalyOSP
 # Pin/TKK compatibility surface
 
 The former file duplicated five-graded carriers, Cartan involutions,
-projector packets, root-space sockets, and generic enveloping-algebra labels.
+projector packets, root-space interfaces, and generic enveloping-algebra labels.
 Those structures either already belong to the canonical TKK/SymmetricLie
 owners or were only assumptions with no Pin-specific construction.
 

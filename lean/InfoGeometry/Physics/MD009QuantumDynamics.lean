@@ -9,7 +9,7 @@ Chapter 9 discusses canonical position/momentum operators, matrix CCRs,
 quaternion derivative conventions, Hilbert spaces, Schrödinger/Heisenberg
 pictures, and path-integral/propagator outlines.  The continuum claims require
 unbounded operators, domains, differentiability, Hilbert-space analysis, and
-measure theory, so this owner extracts only the finite algebraic socket:
+measure theory, so this owner extracts only the finite algebraic core:
 
 * normalized Pauli completeness behind the matrix CCR coefficient;
 * transport of a vector CCR Kronecker table through the Pauli soldering forms;

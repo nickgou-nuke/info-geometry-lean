@@ -127,24 +127,23 @@ theorem markedCount_add_unmarkedCount
   unfold markedCount unmarkedCount
   exact Finset.card_filter_add_card_filter_not (s := A) (p := marked)
 
-/-! ## 3. Prime-oracle and quantum-counting sockets -/
+/-! ## 3. Prime-oracle and quantum-counting layer -/
 
-/--
-Finite prime-oracle packet.
-
-The `marked` predicate is intended to be primality on a finite register, but it
-is stored as a supplied decidable predicate so the oracle layer stays generic.
--/
-structure FinitePrimeOraclePacket where
+/-- A finite register of natural-number modes.  Marking is native primality. -/
+structure FinitePrimeOracleRegister where
   support : Finset ℕ
-  marked : ℕ → Prop
-  decidableMarked : DecidablePred marked
 
-namespace FinitePrimeOraclePacket
+def FinitePrimeOracleRegister.marked (_P : FinitePrimeOracleRegister) (n : ℕ) : Prop :=
+  Nat.Prime n
 
-attribute [local instance] decidableMarked
+instance FinitePrimeOracleRegister.decidableMarked (P : FinitePrimeOracleRegister) :
+    DecidablePred P.marked := fun n => by
+      change Decidable (Nat.Prime n)
+      infer_instance
 
-variable (P : FinitePrimeOraclePacket)
+namespace FinitePrimeOracleRegister
+
+variable (P : FinitePrimeOracleRegister)
 
 /-- Phase sign for the packet's marked predicate. -/
 def sign (n : ℕ) : ℝ :=
@@ -178,7 +177,7 @@ theorem markedCard_add_unmarkedCard :
     P.markedCard + P.unmarkedCard = P.support.card := by
   exact markedCount_add_unmarkedCount P.support P.marked
 
-end FinitePrimeOraclePacket
+end FinitePrimeOracleRegister
 
 /--
 Historical quantum-counting gate name, now owned by the concrete numerical

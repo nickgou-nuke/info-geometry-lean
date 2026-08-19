@@ -23,8 +23,6 @@ open InfoGeometry.Projective
 open InfoGeometry.Projective.Cl55NullBoundaryBridge
 open InfoGeometry.Projective.ProjectiveNullBoundaryDatum
 
-abbrev Boundary := Cl55NullBoundaryBridge.Boundary
-abbrev NullRep := Cl55NullBoundaryBridge.NullRep
 
 /-- The full-real Pin action as an equivariant map of `Q55` carriers. -/
 noncomputable def fullPinBoundaryHom (g : FullPin55) :
@@ -53,39 +51,27 @@ noncomputable def fullPinBoundaryHom (g : FullPin55) :
     intro u v
     exact (fullPinVectorRepresentation g).map_smul (u : ℝ) v
 
-@[simp]
-theorem fullPinBoundaryHom_apply (g : FullPin55) (v : V55) :
-    (fullPinBoundaryHom g).toFun v = fullPinVectorRepresentation g v :=
-  rfl
-
 /-- Descent of the full-real Pin action to the projective null quotient. -/
-noncomputable def fullPinBoundaryAction (g : FullPin55) : Boundary → Boundary :=
+noncomputable def fullPinBoundaryAction (g : FullPin55) : Cl55NullBoundaryBridge.Boundary → Cl55NullBoundaryBridge.Boundary :=
   BoundaryHom.mapBoundary (fullPinBoundaryHom g)
 
-@[simp]
-theorem fullPinBoundaryAction_mk (g : FullPin55) (Z : NullRep) :
-    fullPinBoundaryAction g (Cl55NullBoundaryBridge.mk Z) =
-      nullMk Cl55NullBoundaryBridge.datum
-        (BoundaryHom.mapNullRep (fullPinBoundaryHom g) Z) :=
-  rfl
-
-theorem fullPinBoundaryAction_one (Z : NullRep) :
+theorem fullPinBoundaryAction_one (Z : Cl55NullBoundaryBridge.NullRep) :
     fullPinBoundaryAction (1 : FullPin55) (Cl55NullBoundaryBridge.mk Z) =
       Cl55NullBoundaryBridge.mk Z := by
-  rw [fullPinBoundaryAction_mk]
+  rw [ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk]
   apply congrArg (nullMk Cl55NullBoundaryBridge.datum)
-  apply NullRep.ext_Z
+  apply ProjectiveNullBoundaryDatum.NullRep.ext_Z
   change fullPinVectorRepresentation (1 : FullPin55) Z.Z = Z.Z
   rw [map_one]
   rfl
 
-theorem fullPinBoundaryAction_mul (g h : FullPin55) (Z : NullRep) :
+theorem fullPinBoundaryAction_mul (g h : FullPin55) (Z : Cl55NullBoundaryBridge.NullRep) :
     fullPinBoundaryAction (g * h) (Cl55NullBoundaryBridge.mk Z) =
       fullPinBoundaryAction g
         (fullPinBoundaryAction h (Cl55NullBoundaryBridge.mk Z)) := by
-  rw [fullPinBoundaryAction_mk, fullPinBoundaryAction_mk]
+  rw [ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk, ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk]
   apply congrArg (nullMk Cl55NullBoundaryBridge.datum)
-  apply NullRep.ext_Z
+  apply ProjectiveNullBoundaryDatum.NullRep.ext_Z
   change fullPinVectorRepresentation (g * h) Z.Z =
     fullPinVectorRepresentation g (fullPinVectorRepresentation h Z.Z)
   rw [map_mul]
@@ -117,37 +103,78 @@ noncomputable def oqBoundaryHom (f : OQ55) :
     intro u v
     exact f.1.map_smul (u : ℝ) v
 
-noncomputable def oqBoundaryAction (f : OQ55) : Boundary → Boundary :=
+noncomputable def oqBoundaryAction (f : OQ55) : Cl55NullBoundaryBridge.Boundary → Cl55NullBoundaryBridge.Boundary :=
   BoundaryHom.mapBoundary (oqBoundaryHom f)
 
-@[simp]
-theorem oqBoundaryAction_mk (f : OQ55) (Z : NullRep) :
-    oqBoundaryAction f (Cl55NullBoundaryBridge.mk Z) =
-      nullMk Cl55NullBoundaryBridge.datum
-        (BoundaryHom.mapNullRep (oqBoundaryHom f) Z) :=
-  rfl
-
-theorem oqBoundaryAction_one (Z : NullRep) :
+theorem oqBoundaryAction_one (Z : Cl55NullBoundaryBridge.NullRep) :
     oqBoundaryAction (1 : OQ55) (Cl55NullBoundaryBridge.mk Z) =
       Cl55NullBoundaryBridge.mk Z := by
-  rw [oqBoundaryAction_mk]
+  rw [ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk]
   apply congrArg (nullMk Cl55NullBoundaryBridge.datum)
-  apply NullRep.ext_Z
+  apply ProjectiveNullBoundaryDatum.NullRep.ext_Z
   change (1 : OQ55).1 Z.Z = Z.Z
   simp
 
-theorem oqBoundaryAction_mul (f h : OQ55) (Z : NullRep) :
+theorem oqBoundaryAction_mul (f h : OQ55) (Z : Cl55NullBoundaryBridge.NullRep) :
     oqBoundaryAction (f * h) (Cl55NullBoundaryBridge.mk Z) =
       oqBoundaryAction f (oqBoundaryAction h (Cl55NullBoundaryBridge.mk Z)) := by
-  rw [oqBoundaryAction_mk, oqBoundaryAction_mk]
+  rw [ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk, ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk]
   apply congrArg (nullMk Cl55NullBoundaryBridge.datum)
-  apply NullRep.ext_Z
+  apply ProjectiveNullBoundaryDatum.NullRep.ext_Z
   change (f * h).1 Z.Z = f.1 (h.1 Z.Z)
   rfl
 
+/-- The native orthogonal boundary action is invertible, with inverse induced
+by the inverse orthogonal transformation. -/
+noncomputable def oqBoundaryPermutation (f : OQ55) : Equiv.Perm Cl55NullBoundaryBridge.Boundary where
+  toFun := oqBoundaryAction f
+  invFun := oqBoundaryAction f⁻¹
+  left_inv := by
+    intro X
+    refine Quotient.inductionOn X ?_
+    intro Z
+    change oqBoundaryAction f⁻¹
+        (oqBoundaryAction f (Cl55NullBoundaryBridge.mk Z)) =
+      Cl55NullBoundaryBridge.mk Z
+    rw [← oqBoundaryAction_mul]
+    simpa [ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk] using oqBoundaryAction_one Z
+  right_inv := by
+    intro X
+    refine Quotient.inductionOn X ?_
+    intro Z
+    change oqBoundaryAction f
+        (oqBoundaryAction f⁻¹ (Cl55NullBoundaryBridge.mk Z)) =
+      Cl55NullBoundaryBridge.mk Z
+    rw [← oqBoundaryAction_mul]
+    simpa [ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk] using oqBoundaryAction_one Z
+
+/-- Native permutation-valued representation of `OQ55` on the projective
+null boundary. -/
+noncomputable def oqBoundaryPermutationRepresentation :
+    OQ55 →* Equiv.Perm Cl55NullBoundaryBridge.Boundary where
+  toFun := oqBoundaryPermutation
+  map_one' := by
+    ext X
+    refine Quotient.inductionOn X ?_
+    intro Z
+    change oqBoundaryAction (1 : OQ55)
+        (Cl55NullBoundaryBridge.mk Z) =
+      Cl55NullBoundaryBridge.mk Z
+    exact oqBoundaryAction_one Z
+  map_mul' := by
+    intro f h
+    ext X
+    refine Quotient.inductionOn X ?_
+    intro Z
+    change oqBoundaryAction (f * h)
+        (Cl55NullBoundaryBridge.mk Z) =
+      oqBoundaryAction f
+        (oqBoundaryAction h (Cl55NullBoundaryBridge.mk Z))
+    exact oqBoundaryAction_mul f h Z
+
 /-- The native `OQ55` action on the projective null boundary. -/
 noncomputable def oqBoundaryRepresentation :
-    OQ55 →* Function.End Boundary where
+    OQ55 →* Function.End Cl55NullBoundaryBridge.Boundary where
   toFun := oqBoundaryAction
   map_one' := by
     funext x
@@ -170,7 +197,7 @@ noncomputable def oqBoundaryRepresentation :
 /-- The full-real Pin action on the projective null boundary is a monoid
 homomorphism, hence a genuine noncommutative group action. -/
 noncomputable def fullPinBoundaryRepresentation :
-    FullPin55 →* Function.End Boundary where
+    FullPin55 →* Function.End Cl55NullBoundaryBridge.Boundary where
   toFun := fullPinBoundaryAction
   map_one' := by
     funext x
@@ -201,9 +228,9 @@ theorem fullPinBoundaryRepresentation_factorization :
   intro Z
   change fullPinBoundaryAction g (Cl55NullBoundaryBridge.mk Z) =
     oqBoundaryAction (fullPinToOQ55 g) (Cl55NullBoundaryBridge.mk Z)
-  rw [fullPinBoundaryAction_mk, oqBoundaryAction_mk]
+  rw [ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk, ProjectiveNullBoundaryDatum.BoundaryHom.mapBoundary_nullMk]
   apply congrArg (nullMk Cl55NullBoundaryBridge.datum)
-  apply NullRep.ext_Z
+  apply ProjectiveNullBoundaryDatum.NullRep.ext_Z
   rfl
 
 /-- Surjectivity of the real Pin-to-orthogonal map makes the full Pin and
@@ -239,14 +266,24 @@ noncomputable def reflectionGeneratedOQ55_subtypeHom :
 /-- Restriction of the native `OQ55` boundary representation to the
 reflection-generated subgroup. -/
 noncomputable def reflectionGeneratedBoundaryRepresentation :
-    reflectionGeneratedOQ55 →* Function.End Boundary :=
+    reflectionGeneratedOQ55 →* Function.End Cl55NullBoundaryBridge.Boundary :=
   oqBoundaryRepresentation.comp reflectionGeneratedOQ55_subtypeHom
 
-theorem reflectionGeneratedBoundaryRepresentation_apply
-    (g : reflectionGeneratedOQ55) :
-    reflectionGeneratedBoundaryRepresentation g =
-      oqBoundaryRepresentation g.1 :=
-  rfl
+/-! ## Native permutation-valued restrictions -/
+
+/-- The full real Pin boundary action as a genuine permutation-valued
+representation.  This is obtained by composing the native orthogonal
+permutation representation with the already-proved Pin-to-orthogonal map. -/
+noncomputable def fullPinBoundaryPermutationRepresentation :
+    FullPin55 →* Equiv.Perm Cl55NullBoundaryBridge.Boundary :=
+  oqBoundaryPermutationRepresentation.comp fullPinToOQ55
+
+/-- The reflection-generated boundary action as a genuine permutation-valued
+representation, obtained by restricting the native `OQ55` permutation
+representation along the reflection-subgroup inclusion. -/
+noncomputable def reflectionGeneratedBoundaryPermutationRepresentation :
+    reflectionGeneratedOQ55 →* Equiv.Perm Cl55NullBoundaryBridge.Boundary :=
+  oqBoundaryPermutationRepresentation.comp reflectionGeneratedOQ55_subtypeHom
 
 /-- Constructive Cartan--Dieudonné makes the reflection-generated boundary
 action have exactly the full native `OQ55` action range. -/
@@ -277,7 +314,7 @@ theorem reflectionGeneratedBoundaryRepresentation_range_eq_fullPin :
 
 /-- The native quadratic orthogonal group acts on its projective null boundary. -/
 noncomputable instance oqBoundaryMulAction :
-    MulAction OQ55 Boundary where
+    MulAction OQ55 Cl55NullBoundaryBridge.Boundary where
   smul := oqBoundaryAction
   one_smul := by
     intro X
@@ -292,16 +329,10 @@ noncomputable instance oqBoundaryMulAction :
     rw [map_mul]
     rfl
 
-@[simp]
-theorem oqBoundary_smul_eq
-    (f : OQ55) (X : Boundary) :
-    f • X = oqBoundaryAction f X :=
-  rfl
-
 /-- The full real Pin carrier acts through its native orthogonal boundary
 representation. -/
 noncomputable instance fullPinBoundaryMulAction :
-    MulAction RealPin55Core.FullPin55 Boundary where
+    MulAction RealPin55Core.FullPin55 Cl55NullBoundaryBridge.Boundary where
   smul := fullPinBoundaryAction
   one_smul := by
     intro X
@@ -317,14 +348,8 @@ noncomputable instance fullPinBoundaryMulAction :
     rw [map_mul]
     rfl
 
-@[simp]
-theorem fullPinBoundary_smul_eq
-    (g : RealPin55Core.FullPin55) (X : Boundary) :
-    g • X = fullPinBoundaryAction g X :=
-  rfl
-
 theorem fullPinBoundary_smul_factors_through_oq
-    (g : RealPin55Core.FullPin55) (X : Boundary) :
+    (g : RealPin55Core.FullPin55) (X : Cl55NullBoundaryBridge.Boundary) :
     g • X = (fullPinToOQ55 g) • X := by
   change fullPinBoundaryRepresentation g X =
     oqBoundaryRepresentation (fullPinToOQ55 g) X
@@ -333,7 +358,7 @@ theorem fullPinBoundary_smul_factors_through_oq
 
 /-- Every native orthogonal boundary action has a full real Pin lift. -/
 theorem exists_fullPin_boundary_smul_eq
-    (f : OQ55) (X : Boundary) :
+    (f : OQ55) (X : Cl55NullBoundaryBridge.Boundary) :
     ∃ p : RealPin55Core.FullPin55, p • X = f • X := by
   rcases RealO55CartanDieudonne.fullPinToOQ55_surjective f with
     ⟨p, hp⟩
@@ -343,7 +368,7 @@ theorem exists_fullPin_boundary_smul_eq
 /-- The canonical Pin lift of an anisotropic vector and its native
 orthogonal reflection induce the same boundary action. -/
 theorem anisotropicPinLift_boundary_smul_eq
-    (a : V55) (ha : Q55 a ≠ 0) (X : Boundary) :
+    (a : V55) (ha : Q55 a ≠ 0) (X : Cl55NullBoundaryBridge.Boundary) :
     anisotropicPinLift a ha • X =
       RealO55CartanDieudonne.oqReflection a ha • X := by
   rw [fullPinBoundary_smul_factors_through_oq]
@@ -352,7 +377,7 @@ theorem anisotropicPinLift_boundary_smul_eq
 /-- The constructive reflection-generated subgroup acts on the native
 projective boundary. -/
 noncomputable instance reflectionGeneratedBoundaryMulAction :
-    MulAction reflectionGeneratedOQ55 Boundary where
+    MulAction reflectionGeneratedOQ55 Cl55NullBoundaryBridge.Boundary where
   smul := fun g X => oqBoundaryAction g.1 X
   one_smul := by
     intro X
@@ -368,16 +393,10 @@ noncomputable instance reflectionGeneratedBoundaryMulAction :
     rw [map_mul]
     rfl
 
-@[simp]
-theorem reflectionGeneratedBoundary_smul_eq
-    (g : reflectionGeneratedOQ55) (X : Boundary) :
-    g • X = oqBoundaryAction g.1 X :=
-  rfl
-
 /-- Every native orthogonal boundary action is realized by a product of
 anisotropic reflections. -/
 theorem exists_reflectionGenerated_boundary_smul_eq
-    (f : OQ55) (X : Boundary) :
+    (f : OQ55) (X : Cl55NullBoundaryBridge.Boundary) :
     ∃ r : reflectionGeneratedOQ55, r • X = f • X := by
   have hf : f ∈ reflectionGeneratedOQ55 := by
     rw [RealO55CartanDieudonne.reflectionGeneratedOQ55_eq_top]
@@ -387,7 +406,7 @@ theorem exists_reflectionGenerated_boundary_smul_eq
 
 /-- The reflection-generated boundary action has the native inverse law. -/
 theorem reflectionGeneratedBoundary_inv_smul_smul
-    (r : reflectionGeneratedOQ55) (X : Boundary) :
+    (r : reflectionGeneratedOQ55) (X : Cl55NullBoundaryBridge.Boundary) :
     r⁻¹ • r • X = X := by
   exact inv_smul_smul r X
 

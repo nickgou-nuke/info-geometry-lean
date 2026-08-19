@@ -105,4 +105,16 @@ theorem compatibleRealStateNet_state (T : Data)
       (matrixTraceRealAlgebraicState n).toLinearMap A :=
   rfl
 
+/- The real part of the complex colimit readout agrees with the compatible
+   algebraic state on every finite-stage representative. -/
+theorem realPart_traceColimitFunctional_inclusion
+    (T : Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A)
+    (n : ℕ) (A : MatrixStage n) :
+    (traceColimitFunctional T hT
+      (traceColimitInclusion T n A)).re =
+      (compatibleRealStateNet T hT).state n A := by
+  rw [traceColimitFunctional_inclusion T hT]
+  rfl
+
 end InfoGeometry.Canonical.CuntzMatrixTraceRealGNSBridge

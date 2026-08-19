@@ -5,7 +5,7 @@ import InfoGeometry.Canonical.SplitOctonionPolarizedJordanMalcev
 /-!
 # Canonical split-octonion chiral closure aggregate
 
-This owner is an aggregation socket, not a second multiplication table.  It
+This owner is an aggregation interface, not a second multiplication table.  It
 re-exports the native circular Peirce packet, the raw Jacobiator obstruction,
 and the typed rectangular Jordan-pair layer.
 -/

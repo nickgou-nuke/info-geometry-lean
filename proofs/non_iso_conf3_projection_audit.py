@@ -9,7 +9,7 @@ This script checks the point that matters for theorem honesty:
 * the rank-24 Orlik--Solomon alpha model is therefore a quotient/projection
   branch, not the literal dlog algebra of the quadric divisors;
 * the rank-32 product/Leray branch is finite bookkeeping and still requires the
-  Dupont/Gysin/de Rham comparison socket to be the actual cohomology theorem.
+  Dupont/Gysin/de Rham comparison interface to be the actual cohomology theorem.
 """
 
 from __future__ import annotations

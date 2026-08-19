@@ -2,7 +2,7 @@ import InfoGeometry.Projective.HadjiivanovLogConnectionColimitBridge
 import InfoGeometry.Canonical.FilteredHestenesKreinColimit
 
 /-!
-# Hestenes--Krein consumer socket for a colimit logarithmic connection
+# Hestenes--Krein consumer interface for a colimit logarithmic connection
 
 This final adapter is deliberately conditional.  It requires an explicit
 continuous-linear identification of the supplied algebraic ambient carrier

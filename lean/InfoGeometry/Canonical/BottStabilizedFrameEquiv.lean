@@ -16,7 +16,7 @@ open InfoGeometry.Canonical.BogoliubovCartanEigenOperator
 /-!
 # Bott-stabilized frame equivalence
 
-This file is a theorem-safe socket for Bott/Clifford stabilization of the real
+This file is a theorem-safe interface for Bott/Clifford stabilization of the real
 Hestenes--Krein homology frame language.
 
 It does not construct a universal Clifford tensor product equivalence.  Instead
@@ -32,7 +32,7 @@ same readouts as the base frame:
 * Cartan weight preservation as an explicitly supplied operator transport law.
 -/
 
-section StabilizationSocket
+section StabilizationInterface
 
 variable {E F : Type 0}
 variable [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -243,9 +243,9 @@ theorem pullbackStabilizedWitness_descends_on_base
 
 end BottStabilizedHomologyFrame
 
-end StabilizationSocket
+end StabilizationInterface
 
-/-! ## Cartan-weight stabilization socket -/
+/-! ## Cartan-weight stabilization interface -/
 
 section CartanWeight
 

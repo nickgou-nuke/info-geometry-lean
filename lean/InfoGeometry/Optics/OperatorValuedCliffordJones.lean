@@ -142,6 +142,15 @@ abbrev ComplexSheetMatrix := Matrix (Fin 2) (Fin 2) ℂ
 
 def sheetRatio (ψ : Fin 2 → ℂ) : ℂ := ψ 1 / ψ 0
 
+/-- The affine sheet ratio is invariant under nonzero rescaling of a spinor. -/
+theorem sheetRatio_smul (c : ℂ) (ψ : Fin 2 → ℂ)
+    (hc : c ≠ 0) (hψ : ψ 0 ≠ 0) :
+    sheetRatio (c • ψ) = sheetRatio ψ := by
+  simp only [sheetRatio, Pi.smul_apply]
+  field_simp [hc, hψ]
+  simp only [smul_eq_mul]
+  ring
+
 def mobiusReadout (G : ComplexSheetMatrix) (z : ℂ) : ℂ :=
   (G 1 0 + G 1 1 * z) / (G 0 0 + G 0 1 * z)
 

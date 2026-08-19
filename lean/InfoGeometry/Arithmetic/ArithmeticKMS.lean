@@ -1,7 +1,7 @@
 /-
 InfoGeometry/Arithmetic/ArithmeticKMS.lean
 
-Witness-gated KMS sockets for the finite arithmetic/Riemann-gas sidecar.
+Theorem-gated KMS interfaces for the finite arithmetic/Riemann-gas sidecar.
 
 This module does not prove the Bost-Connes theorem, KMS existence/uniqueness,
 spontaneous symmetry breaking, the prime number theorem, or a global
@@ -83,6 +83,43 @@ lemma projectiveArithmeticGibbsPartition_pos_of_mem_gt_one
     rw [primitiveMellinKernel_eq_exp_neg_mul_log hn]
     positivity
 
+/-- Projective temperature does not change which finite supports have positive
+Gibbs mass. -/
+theorem projectiveArithmeticGibbsPartition_pos_iff_mem_gt_one
+    (A : Finset ℕ) (u : ℝ) :
+    0 < projectiveArithmeticGibbsPartition A u ↔ ∃ n ∈ A, 1 < n := by
+  constructor
+  · intro h
+    by_contra hmem
+    push_neg at hmem
+    have hz : projectiveArithmeticGibbsPartition A u = 0 := by
+      unfold projectiveArithmeticGibbsPartition arithmeticGibbsPartition
+      rw [Finset.sum_eq_zero]
+      intro n hn
+      unfold arithmeticGibbsWeight
+      rw [primitiveMellinKernel_eq_zero_of_le_one (hmem n hn)]
+    linarith
+  · exact projectiveArithmeticGibbsPartition_pos_of_mem_gt_one A u
+
+/-- Projective Gibbs mass vanishes exactly when every support index is at most
+the cutoff `1`. -/
+theorem projectiveArithmeticGibbsPartition_zero_iff_forall_le_one
+    (A : Finset ℕ) (u : ℝ) :
+    projectiveArithmeticGibbsPartition A u = 0 ↔ ∀ n ∈ A, n ≤ 1 := by
+  constructor
+  · intro h n hn
+    by_contra hle
+    have hpos : 0 < projectiveArithmeticGibbsPartition A u :=
+      projectiveArithmeticGibbsPartition_pos_of_mem_gt_one A u
+        ⟨n, hn, lt_of_not_ge hle⟩
+    linarith
+  · intro h
+    unfold projectiveArithmeticGibbsPartition arithmeticGibbsPartition
+    rw [Finset.sum_eq_zero]
+    intro n hn
+    unfold arithmeticGibbsWeight
+    rw [primitiveMellinKernel_eq_zero_of_le_one (h n hn)]
+
 /-- In the compact cold sector `u ∈ (0, 1)`, the corresponding `β` satisfies `1 < β`. -/
 theorem one_lt_beta_of_projective_cold {u : ℝ}
     (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
@@ -119,7 +156,7 @@ theorem cold_phase_of_projective_Ioo
     PhaseAtProjectiveTemperature u ArithmeticKMSPhase.cold :=
   one_lt_beta_of_projective_cold hu
 
-/-! ## 3. property-gated (Native Closure Mandated: Closure Debt) modular/KMS socket -/
+/-! ## 3. property-gated (Native Closure Mandated: Closure Debt) modular/KMS interface -/
 
 /--
 Finite arithmetic KMS property.
@@ -232,6 +269,23 @@ theorem arithmeticGibbsPartition_zero_iff_forall_le_one (A : Finset ℕ) :
     rw [Finset.sum_eq_zero]
     intro n hn
     rw [primitiveMellinKernel_eq_zero_of_le_one (h n hn)]
+
+/-- The finite Gibbs partition is positive exactly when the support contains
+an index strictly above the zero-temperature cutoff. -/
+theorem arithmeticGibbsPartition_pos_iff_mem_gt_one
+    (A : Finset ℕ) (β : ℝ) :
+    0 < arithmeticGibbsPartition A β ↔ ∃ n ∈ A, 1 < n := by
+  constructor
+  · intro h
+    by_contra hmem
+    push_neg at hmem
+    have hβ : arithmeticGibbsPartition A β = 0 := by
+      unfold arithmeticGibbsPartition arithmeticGibbsWeight
+      rw [Finset.sum_eq_zero]
+      intro n hn
+      rw [primitiveMellinKernel_eq_zero_of_le_one (hmem n hn)]
+    linarith
+  · exact arithmeticGibbsPartition_pos_of_mem_gt_one A β
 
 /-- KMS property implies the state is KMS at all temperatures. -/
 theorem kms_at_all_temperatures
@@ -370,12 +424,29 @@ theorem primeFlow_eq_kmsFlow
       C.kms.projectiveModularFlowReadout (C.kms.stateOfFinset A) u :=
   C.prime_flow_eq_kms_flow A u hu
 
+/-- The compatible prime flow has the calibrated finite Gibbs readout. -/
+theorem primeFlow_eq_projectiveArithmeticGibbsPartition
+    (A : Finset ℕ) {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
+    C.prime.modularFlowReadout (C.prime.stateOfFinset A) u =
+      projectiveArithmeticGibbsPartition A u := by
+  rw [C.primeFlow_eq_kmsFlow A hu]
+  exact C.kms.projectiveModularFlowReadout_eq_gibbsPartition A hu
+
 /-- The compatible prime flow is nonnegative in the compact cold sector. -/
 theorem primeFlow_nonneg
     (A : Finset ℕ) {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) :
     0 ≤ C.prime.modularFlowReadout (C.prime.stateOfFinset A) u := by
   rw [C.primeFlow_eq_kmsFlow A hu]
   exact C.kms.projectiveModularFlowReadout_nonneg A hu
+
+/-- The compatible prime flow is positive when the support contains a mode
+with arithmetic energy strictly above the unit mode. -/
+theorem primeFlow_pos_of_mem_gt_one
+    (A : Finset ℕ) {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1)
+    (h : ∃ n ∈ A, 1 < n) :
+    0 < C.prime.modularFlowReadout (C.prime.stateOfFinset A) u := by
+  rw [C.primeFlow_eq_kmsFlow A hu]
+  exact C.kms.projectiveModularFlowReadout_pos_of_mem_gt_one A hu h
 
 end ProjectiveKMSPrimeCompatibility
 

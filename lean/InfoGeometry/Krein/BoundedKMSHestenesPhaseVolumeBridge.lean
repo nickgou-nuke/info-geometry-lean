@@ -49,7 +49,7 @@ local instance : IsScalarTower ℝ EndH EndH :=
   inferInstance
 
 /--
-Bounded KMS Hestenes phase-volume socket.
+Bounded KMS Hestenes phase-volume interface.
 
 `detUnits` is the multiplicative determinant/phase-volume channel on invertible
 operators.  `phaseVolume` is the general readout used on arbitrary bounded

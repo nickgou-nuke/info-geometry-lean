@@ -304,8 +304,6 @@ structure OperatorFreudenthalBoundaryFluxBridge
   resolvent : CliffordResolventFamily (P := P) D.A
   normalizationFactor : ℝ
   observer : RealEnd E →L[ℝ] ℝ
-  stokes :
-    StokesTheoremWitness D.A resolvent D.boundary
   horizonOperator_eq_flux :
     D.horizonOperator =
       geometricCoreProjector D.A resolvent D.boundary normalizationFactor
@@ -363,7 +361,7 @@ abbrev OperatorFreudenthalBoundaryFluxConstructionProblem
     [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     [NormedAddCommGroup P] [NormedSpace ℝ P]
     (D : OperatorFreudenthalBoundaryDatum.{uE, uP, uQ, uΩ} E P Charge) :=
-  OperatorFreudenthalBoundaryFluxBridge.{uE, uP, uQ, uΩ, uVolume} D
+  OperatorFreudenthalBoundaryFluxBridge D
 
 /--
 Construct an operator/Freudenthal flux bridge from explicit witnesses.
@@ -382,7 +380,6 @@ def operatorFreudenthalBoundaryFluxBridge_from_propertyes
     (resolvent : CliffordResolventFamily (P := P) D.A)
     (normalizationFactor : ℝ)
     (observer : RealEnd E →L[ℝ] ℝ)
-    (stokes : StokesTheoremWitness.{uE, uP, uVolume, uΩ} D.A resolvent D.boundary)
     (horizonOperator_eq_flux :
       D.horizonOperator =
         geometricCoreProjector D.A resolvent D.boundary normalizationFactor)
@@ -390,12 +387,11 @@ def operatorFreudenthalBoundaryFluxBridge_from_propertyes
       FluxEqualsBoundaryEntropy
         D.A resolvent D.boundary normalizationFactor observer
         D.geometry D.boundaryCharges) :
-    OperatorFreudenthalBoundaryFluxBridge.{uE, uP, uQ, uΩ, uVolume} D where
+    OperatorFreudenthalBoundaryFluxBridge D where
   phase := phase
   resolvent := resolvent
   normalizationFactor := normalizationFactor
   observer := observer
-  stokes := stokes
   horizonOperator_eq_flux := horizonOperator_eq_flux
   scalarFlux_eq_entropy := scalarFlux_eq_entropy
 

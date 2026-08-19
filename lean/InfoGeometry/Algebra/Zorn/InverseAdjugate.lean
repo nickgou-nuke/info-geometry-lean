@@ -27,6 +27,11 @@ def scaleZ (c : R) (X : ZornCell R) : ZornCell R :=
   ⟨c * X.r, c * X.s, c * X.x1, c * X.x2, c * X.x3,
     c * X.y1, c * X.y2, c * X.y3⟩
 
+theorem scaleZ_scalarZ (c d : R) :
+    scaleZ c (scalarZ d) = scalarZ (c * d) := by
+  unfold scaleZ scalarZ
+  congr <;> ring
+
 /-- Right scalar extraction for the concrete Zorn product. -/
 theorem mul_scaleZ_right (c : R) (X Y : ZornCell R) :
     X * scaleZ c Y = scaleZ c (X * Y) := by
@@ -50,6 +55,36 @@ theorem mul_scaleZ_left (c : R) (X Y : ZornCell R) :
 /-- Zorn conjugation / adjugate: swap diagonal slots and negate vector slots. -/
 def conjZ (X : ZornCell R) : ZornCell R :=
   ⟨X.s, X.r, -X.x1, -X.x2, -X.x3, -X.y1, -X.y2, -X.y3⟩
+
+theorem conjZ_scalarZ (c : R) :
+    conjZ (scalarZ c) = scalarZ c := by
+  unfold conjZ scalarZ
+  congr <;> simp
+
+theorem conjZ_scaleZ (c : R) (X : ZornCell R) :
+    conjZ (scaleZ c X) = scaleZ c (conjZ X) := by
+  rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
+  unfold conjZ scaleZ
+  congr <;> ring
+
+theorem conjZ_involutive (X : ZornCell R) :
+    conjZ (conjZ X) = X := by
+  rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
+  simp [conjZ]
+
+theorem detZ_conjZ (X : ZornCell R) :
+    detZ (conjZ X) = detZ X := by
+  rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
+  simp [conjZ, detZ]
+  ring
+
+theorem conjZ_mul_reverse (X Y : ZornCell R) :
+    conjZ (X * Y) = conjZ Y * conjZ X := by
+  change conjZ (mulZ X Y) = mulZ (conjZ Y) (conjZ X)
+  rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
+  rcases Y with ⟨r', s', u1, u2, u3, v1, v2, v3⟩
+  unfold conjZ mulZ
+  congr <;> ring
 
 /-- Left adjugate identity: `X * conjZ X = detZ X · 1`. -/
 theorem mul_conjZ (X : ZornCell R) :

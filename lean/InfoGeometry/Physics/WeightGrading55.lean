@@ -35,7 +35,7 @@ abbrev weightMinusOne (X : JordanMatrix10D) : SplitOct := X.z
 abbrev weightPlusOne (X : JordanMatrix10D) : SplitOct := X.z
 
 /--
-A finite record of the five weight slots used in the local `J₂(𝕆_s)` socket.
+A finite record of the five weight slots used in the local `J₂(𝕆_s)` model.
 
 This is only a coordinate packet: it records the pieces named by the grading,
 but does not claim any Lie-bracket closure or global TKK theorem.

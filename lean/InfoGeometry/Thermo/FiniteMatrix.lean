@@ -123,9 +123,65 @@ def SatisfiesKMSLikeOn (M : ThermalModel n) (ω : Op n → ℝ) (Obs : Set (Op n
   ∀ {A B}, A ∈ Obs → B ∈ Obs → ω (A * M.modularShift M.β B) = ω (B * A)
 
 @[simp] lemma modularShift_zero (M : ThermalModel n) (A : Op n) :
-    M.modularShift 0 A = A := by
+  M.modularShift 0 A = A := by
   unfold modularShift
   simp
+
+/-- Additive-time law for finite matrix modular conjugation. -/
+lemma modularShift_add (M : ThermalModel n) (s t : ℝ) (A : Op n) :
+    M.modularShift (s + t) A =
+      M.modularShift s (M.modularShift t A) := by
+  have h_comm : Commute (s • M.H) (t • M.H) :=
+    ((Commute.refl M.H).smul_left s).smul_right t
+  have h_comm_neg : Commute ((-t) • M.H) ((-s) • M.H) :=
+    ((Commute.refl M.H).smul_left (-t)).smul_right (-s)
+  unfold modularShift
+  change
+    NormedSpace.exp ((s + t) • M.H) * A *
+        NormedSpace.exp ((-(s + t)) • M.H) =
+      NormedSpace.exp (s • M.H) *
+          (NormedSpace.exp (t • M.H) * A *
+            NormedSpace.exp ((-t) • M.H)) *
+        NormedSpace.exp ((-s) • M.H)
+  calc
+    NormedSpace.exp ((s + t) • M.H) * A *
+          NormedSpace.exp ((-(s + t)) • M.H) =
+        (NormedSpace.exp (s • M.H) * NormedSpace.exp (t • M.H)) * A *
+          (NormedSpace.exp ((-t) • M.H) * NormedSpace.exp ((-s) • M.H)) := by
+            rw [← Matrix.exp_add_of_commute _ _ h_comm]
+            rw [← Matrix.exp_add_of_commute _ _ h_comm_neg]
+            simp [add_smul, mul_assoc, add_comm]
+    _ = NormedSpace.exp (s • M.H) *
+          (NormedSpace.exp (t • M.H) * A *
+            NormedSpace.exp ((-t) • M.H)) *
+          NormedSpace.exp ((-s) • M.H) := by
+            ring_nf
+            simp [mul_assoc]
+
+/-- Modular conjugation preserves multiplication of finite observables. -/
+lemma modularShift_mul (M : ThermalModel n) (t : ℝ) (A B : Op n) :
+    M.modularShift t (A * B) =
+      M.modularShift t A * M.modularShift t B := by
+  unfold modularShift
+  have h_inv :
+      NormedSpace.exp ((-t) • M.H) * NormedSpace.exp (t • M.H) =
+        (1 : Op n) := by
+    rw [← Matrix.exp_add_of_commute _ _]
+    · simp
+    · exact ((Commute.refl M.H).smul_left (-t)).smul_right t
+  calc
+    NormedSpace.exp (t • M.H) * (A * B) *
+          NormedSpace.exp ((-t) • M.H) =
+        NormedSpace.exp (t • M.H) * A *
+          (NormedSpace.exp ((-t) • M.H) * NormedSpace.exp (t • M.H)) * B *
+          NormedSpace.exp ((-t) • M.H) := by
+            rw [h_inv]
+            simp [mul_assoc]
+    _ = (NormedSpace.exp (t • M.H) * A *
+          NormedSpace.exp ((-t) • M.H)) *
+          (NormedSpace.exp (t • M.H) * B *
+            NormedSpace.exp ((-t) • M.H)) := by
+            simp [mul_assoc]
 
 end ThermalModel
 

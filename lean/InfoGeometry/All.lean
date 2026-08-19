@@ -106,13 +106,14 @@ import InfoGeometry.Algebra.CuntzTensorQuotient
 import InfoGeometry.Algebra.CuntzThermalState
 import InfoGeometry.Algebra.CuntzToeplitzPhaseTransition
 import InfoGeometry.Algebra.CuntzToeplitzStarHom
-import InfoGeometry.Algebra.CuntzTraceSocketConjugation
+import InfoGeometry.Algebra.CuntzTraceConjugation
 import InfoGeometry.Algebra.CyclicGroup
 import InfoGeometry.Algebra.CyclicTraceStokes
 import InfoGeometry.Algebra.Det2
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 import InfoGeometry.Algebra.DualQuaternion
 import InfoGeometry.Algebra.EquivariantBranching
+import InfoGeometry.Algebra.EulerLaurentDerivation
 import InfoGeometry.Algebra.F4Derivations
 import InfoGeometry.Algebra.F4S3JordanObstruction
 import InfoGeometry.Algebra.FibonacciGradedOffDiagonalBridge
@@ -230,10 +231,8 @@ import InfoGeometry.Algebra.KingdonArtinBraidAction
 import InfoGeometry.Algebra.KingdonHypebasis
 import InfoGeometry.Algebra.KingdonPeterssonIsotope
 import InfoGeometry.Algebra.KingdonSplitOctonion
-import InfoGeometry.Algebra.KleinSpinorOrbitCertifiedPacket
 import InfoGeometry.Algebra.KleinSpinorOrbitCompleteness
 import InfoGeometry.Algebra.KleinSpinorOrbit
-import InfoGeometry.Algebra.KleinSpinorOrbitSocketClosure
 import InfoGeometry.Algebra.KreinPosNegDecomposition
 import InfoGeometry.Algebra.L2CuntzConvergence
 import InfoGeometry.Algebra
@@ -466,12 +465,12 @@ import InfoGeometry.Arithmetic.ArithmeticSuperchargeHopfBridge
 import InfoGeometry.Arithmetic.Arxiv160803679BenderHamiltonian
 import InfoGeometry.Arithmetic.Arxiv230901382RiemannZerosSymmetry
 import InfoGeometry.Arithmetic.BenderBrodyMullerHamiltonian
-import InfoGeometry.Arithmetic.BosonFermionSwap
 import InfoGeometry.Arithmetic.BostConnesCriticality
 import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Arithmetic.BostConnesZeta
 import InfoGeometry.Arithmetic.BostConnesNativeZetaPartition
 import InfoGeometry.Arithmetic.ActualZetaPoleAsymptoticBridge
+import InfoGeometry.Arithmetic.ZetaEulerLaurentMonodromy
 import InfoGeometry.Arithmetic.ActualZetaRealPartitionDerivativeBridge
 import InfoGeometry.Arithmetic.ActualZetaRealFisherAsymptoticTransport
 import InfoGeometry.Arithmetic.BostConnesActualZetaResidueNormalization
@@ -506,7 +505,6 @@ import InfoGeometry.Arithmetic.GrothendieckMotive
 import InfoGeometry.Arithmetic.HestenesKreinChiralProjectors
 import InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics
 import InfoGeometry.Arithmetic.HestenesKreinSplitHolomorphic
-import InfoGeometry.Arithmetic.HilbertPolyaBridge
 import InfoGeometry.Arithmetic.HoradamIonBinetSlice
 import InfoGeometry.Arithmetic.HoradamIonCatalanSlice
 import InfoGeometry.Arithmetic.HoradamIonGeneratingSlice
@@ -520,6 +518,9 @@ import InfoGeometry.Arithmetic.ConnesWeightedFiniteTraceBridge
 import InfoGeometry.Arithmetic.FiniteWeilMangoldtQuadraticFormBridge
 import InfoGeometry.Arithmetic.FiniteWeilRankOnePerturbationBridge
 import InfoGeometry.Arithmetic.IndexTheorem
+import InfoGeometry.Arithmetic.PrimeBitFiniteKernelIndexBridge
+import InfoGeometry.Arithmetic.RiemannPoleZeroMonodromy
+import InfoGeometry.Arithmetic.MeromorphicLogLocalSystem
 import InfoGeometry.Arithmetic.InfinitePrimonGasBostConnes
 import InfoGeometry.Arithmetic.JordanAlgebraZeta
 import InfoGeometry.Arithmetic.KudinoorWittenIndexBridge
@@ -531,15 +532,15 @@ import InfoGeometry.Arithmetic.LiouvilleParity
 import InfoGeometry.Arithmetic.LogCFTCritical
 import InfoGeometry.Arithmetic.LowLyingZerosQuaternion
 import InfoGeometry.Arithmetic.LPrimitive
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.AnalyticFrontier
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.BerryKeating
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.Bridge
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.HilbertPolya
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.RealProblem
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.RelativeDeterminant
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.TraceFormula
-import InfoGeometry.Arithmetic.MajoranaPolyaHilbertSocket.ZetaSpectral
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.AnalyticFrontier
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.BerryKeating
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.Bridge
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.HilbertPolya
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbert
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.RealProblem
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.RelativeDeterminant
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.TraceFormula
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.ZetaSpectral
 import InfoGeometry.Arithmetic.MangoldtFunctionalMobiusParityBridge
 import InfoGeometry.Arithmetic.MasterIdentity
 import InfoGeometry.Arithmetic.MellinDirichletConvolutionSymmetry
@@ -563,7 +564,6 @@ import InfoGeometry.Arithmetic.MoebiusSignature
 import InfoGeometry.Arithmetic.MoebiusWeylEuler
 import InfoGeometry.Arithmetic.PadicLFunctionTrivialZero
 import InfoGeometry.Arithmetic.PhysicsRiemannHypothesisFinite
-import InfoGeometry.Arithmetic.PolesAsCharacters
 import InfoGeometry.Arithmetic.PolyaHilbertDiracHodgeCantorBridge
 import InfoGeometry.Arithmetic.PrimeBitLattice
 import InfoGeometry.Arithmetic.PrimeBitFiniteGibbsBridge
@@ -618,7 +618,6 @@ import InfoGeometry.Arithmetic.PrimeInformationKMSTopological
 import InfoGeometry.Arithmetic.PrimeLatticeGasVariational
 import InfoGeometry.Arithmetic.PrimeMajoranaBitFlip
 import InfoGeometry.Arithmetic.PrimeMajoranaCAR
-import InfoGeometry.Arithmetic.PrimeMajoranaDiracFiniteBridge
 import InfoGeometry.Arithmetic.PrimeMajoranaDiracFinite
 import InfoGeometry.Arithmetic.PrimeMajoranaInfiniteCAR
 import InfoGeometry.Arithmetic.PrimeMajoranaLocalMode
@@ -732,6 +731,16 @@ import InfoGeometry.Arithmetic.BogoliubovRiemannXiCenteredWeld
 import InfoGeometry.Arithmetic.MellinBogoliubovNullEigenvalueBridge
 import InfoGeometry.Arithmetic.MellinBogoliubovMatrixReadoutBridge
 import InfoGeometry.Arithmetic.MellinBogoliubovFiniteCovarianceBridge
+import InfoGeometry.Arithmetic.AmariZetaDuallyFlatGeometry
+import InfoGeometry.Arithmetic.AmariCayleyQuantumBridge
+import InfoGeometry.Arithmetic.SpectralActionConfinement
+import InfoGeometry.TraceFormula.HestenesGeometricIntegralConfinement
+import InfoGeometry.TraceFormula.DeRhamHolonomyStokes
+import InfoGeometry.TraceFormula.ColimitTrace
+import InfoGeometry.TraceFormula.ItakuraSaitoMongeAmpere
+import InfoGeometry.TraceFormula.PrimonColimitHamiltonianSystem
+import InfoGeometry.TraceFormula.DeterminantBondNative
+import InfoGeometry.TraceFormula.FiniteISColimitInverseLimitSearch
 import InfoGeometry.Canonical.BogoliubovFiniteGroupLawBridge
 import InfoGeometry.Arithmetic.ZetaSouriauThermodynamics
 import InfoGeometry.Arithmetic.ZetaSupertraceBridge
@@ -930,10 +939,9 @@ import InfoGeometry.Canonical.BerezinianTrace
 import InfoGeometry.Canonical.BernsteinSatoMonodromy
 import InfoGeometry.Canonical.BerryConnection
 import InfoGeometry.Canonical.BerryDrazin
-import InfoGeometry.Canonical.BerryKeatingXPCantorDiracSocket
 import InfoGeometry.Canonical.BerryRotorBridge
 import InfoGeometry.Canonical.BetaDivergence
-import InfoGeometry.Canonical.BetaSplitEvidenceBridge
+import InfoGeometry.Canonical.BetaSplitBridge
 import InfoGeometry.Canonical.BilingualBiquaternionBridge
 import InfoGeometry.Canonical.BilingualRealHestenesDictionary
 import InfoGeometry.Canonical.BinaryCrystalHamiltonianFlowBridge
@@ -1145,7 +1153,7 @@ import InfoGeometry.Canonical.CantorCylinderReadoutTopCat
 import InfoGeometry.Canonical.CantorCylinderTopology
 import InfoGeometry.Canonical.CantorDiracPropagation
 import InfoGeometry.Canonical.CantorDiracSeaHopping
-import InfoGeometry.Canonical.CantorDiracZetaBraneSocket
+import InfoGeometry.Canonical.CantorDiracZetaBrane
 import InfoGeometry.Canonical.CantorFockSpace
 import InfoGeometry.Canonical.CantorFractalShiftTilt
 import InfoGeometry.Canonical.CantorGoldenMeanBitwordBridge
@@ -1214,7 +1222,7 @@ import InfoGeometry.Canonical.CausalVortexCooperPairing
 import InfoGeometry.Canonical.CausalVortexPauliEigenspaces
 import InfoGeometry.Canonical.CausalVortexPauliPositivity
 import InfoGeometry.Canonical.CausalVortexPauliSpectral
-import InfoGeometry.Canonical.CausalVortexPauliWitness
+import InfoGeometry.Canonical.CausalVortexPauliMajorana
 import InfoGeometry.Canonical.CayleyBoundaryContinuity
 import InfoGeometry.Canonical.CayleyBoundaryFlowBridge
 import InfoGeometry.Canonical.CayleyBoundaryIntertwiningOnDomain
@@ -1244,7 +1252,6 @@ import InfoGeometry.Canonical.CelikKocakCuntzFockBridge
 import InfoGeometry.Canonical.CelikKocakEndpointRankOne
 import InfoGeometry.Canonical.CelikKocakFiniteCARAllDepth
 import InfoGeometry.Canonical.CelikKocakFiniteCARClosure
-import InfoGeometry.Canonical.CelikKocakInfiniteCantorCliffordFockSocket
 import InfoGeometry.Canonical.CelikKocakKreinSupergradedLift
 import InfoGeometry.Canonical.CelikKocakPairTermClosure
 import InfoGeometry.Canonical.CelikKocakPaperAllDepthClosure
@@ -1356,7 +1363,7 @@ import InfoGeometry.Canonical.Cl11SplitQuaternionMobiusBridge
 import InfoGeometry.Canonical.Cl11SuperKaehlerConductiveMasterBridge
 import InfoGeometry.Canonical.Cl11TensorInductiveLimitTopologicalComparison
 import InfoGeometry.Canonical.Cl11TensorInductiveLimitTopologicalTrace
-import InfoGeometry.Canonical.Cl11TensorInductiveLimitWitness
+import InfoGeometry.Canonical.Cl11TensorInductiveLimit
 import InfoGeometry.Canonical.Cl11TensorTowerBridge
 import InfoGeometry.Canonical.Cl11TensorTowerCrossSiteCAR
 import InfoGeometry.Canonical.Cl11TensorTowerGlobalParity
@@ -1692,7 +1699,6 @@ import InfoGeometry.Canonical.DiscreteSplitOctonionCochainS3Action
 import InfoGeometry.Canonical.DiscreteSplitOctonionStokes
 import InfoGeometry.Canonical.DiscreteSplitOctonionStokesTransport
 import InfoGeometry.Canonical.DiscreteStokesFinite
-import InfoGeometry.Canonical.DiscreteTransportBayesMonodromy
 import InfoGeometry.Canonical.DModuleLagrangianBridge
 import InfoGeometry.Canonical.DoubledFibonacciCondensationBridge
 import InfoGeometry.Canonical.DPDWedgeCompatibility
@@ -1736,7 +1742,7 @@ import InfoGeometry.Canonical.DrazinSpectralBridge
 import InfoGeometry.Canonical.DrazinSpectralProjectorBridge
 import InfoGeometry.Canonical.DrazinSum
 import InfoGeometry.Canonical.DrazinSupercharge
-import InfoGeometry.Canonical.DrazinSupergradedWeylSocket
+import InfoGeometry.Canonical.DrazinSupergradedWeyl
 import InfoGeometry.Canonical.DrazinTopologicalRealization
 import InfoGeometry.Canonical.DrazinTripotentTrifactorBridge
 import InfoGeometry.Canonical.DrazinWeylConstructive
@@ -1809,7 +1815,7 @@ import InfoGeometry.Canonical.EvenCurvatureExteriorLeibnizBridge
 import InfoGeometry.Canonical.ExceptionalQuarticInvariant
 import InfoGeometry.Canonical.ExplicitFormulaZeroCounting
 import InfoGeometry.Canonical.ExplicitHalfTriFacetAlgebra
-import InfoGeometry.Canonical.ExplicitWitnessObligations
+import InfoGeometry.Canonical.ProjectorSpectralPower
 import InfoGeometry.Canonical.ExplicitZetaColimitFormBridge
 import InfoGeometry.Canonical.ExteriorContractionCARBridge
 import InfoGeometry.Canonical.ExteriorContractionOperatorBridge
@@ -2145,7 +2151,6 @@ import InfoGeometry.Canonical.H3ZornS3JordanTopologicalReadout
 import InfoGeometry.Canonical.H3ZornTopCatReadout
 import InfoGeometry.Canonical.HaagerupSubfactorAnyonBridge
 import InfoGeometry.Canonical.HaagKastlerReehSchliederAQFT
-import InfoGeometry.Canonical.HadjiivanovMonodromyProjection
 import InfoGeometry.Canonical.HadjiivanovRindlerModularBridge
 import InfoGeometry.Canonical.HagedornKMSBoundary
 import InfoGeometry.Canonical.HamiltonianFlowBridge
@@ -2195,7 +2200,6 @@ import InfoGeometry.Canonical.HestenesIntrinsicEvenHodge
 import InfoGeometry.Canonical.HestenesKramersBridge
 import InfoGeometry.Canonical.HestenesKreinAnalyticFlowBridge
 import InfoGeometry.Canonical.HestenesKreinFilteredColimitAnalyticityBridge
-import InfoGeometry.Canonical.HestenesKreinKleinWitnessPacket
 import InfoGeometry.Canonical.HestenesKreinModularGeometry
 import InfoGeometry.Canonical.HestenesKreinSpectralReadout
 import InfoGeometry.Canonical.HestenesKreinVacuum
@@ -2566,7 +2570,6 @@ import InfoGeometry.Canonical.MatrixDetExpTraceJacobi
 import InfoGeometry.Canonical.MatrixExponentialTraceDet
 import InfoGeometry.Canonical.MatrixTracedChernWeilBridge
 import InfoGeometry.Canonical.MatrixValuedDerivativeMoorePenrose
-import InfoGeometry.Canonical.MaurerCartanJordanWitness
 import InfoGeometry.Canonical.MaximumCaliberKLSplit
 import InfoGeometry.Canonical.MaximumCaliberPath
 import InfoGeometry.Canonical.MealyAlgebraicIdentityConsequences
@@ -2790,7 +2793,7 @@ import InfoGeometry.Canonical.OTOCScramblingChaosBridge
 import InfoGeometry.Canonical.PageCurveEntanglementEvaporationBridge
 import InfoGeometry.Canonical.ParabolicContractionBridge
 import InfoGeometry.Canonical.ParafermionCentralizer
-import InfoGeometry.Canonical.ParityTraceWitness
+import InfoGeometry.Canonical.ParityTraceData
 import InfoGeometry.Canonical.PartitionHierarchy
 import InfoGeometry.Canonical.PathIntegral
 import InfoGeometry.Canonical.PauliArithmeticModularFlowBridge
@@ -2804,7 +2807,7 @@ import InfoGeometry.Canonical.PeirceBCFWKinematicBridge
 import InfoGeometry.Canonical.PeirceBCFWResidueFactorization
 import InfoGeometry.Canonical.PeirceBCFWResidueSpecialization
 import InfoGeometry.Canonical.PeirceBCFWShiftSpecialization
-import InfoGeometry.Canonical.PeirceCanonicalBoundaryResidueSocket
+import InfoGeometry.Canonical.PeirceCanonicalBoundaryResidue
 import InfoGeometry.Canonical.PeirceChiralConeSpinFrameBridge
 import InfoGeometry.Canonical.PeirceChiralOperatorBridge
 import InfoGeometry.Canonical.PeirceDeWittIdealModularBridge
@@ -3136,7 +3139,6 @@ import InfoGeometry.Canonical.RegularSupportSecondLaw
 import InfoGeometry.Canonical.RegularSupportSecondLawNativeBridge
 import InfoGeometry.Canonical.RelationalInformationCore
 import InfoGeometry.Canonical.RelationalInformationDynamics
-import InfoGeometry.Canonical.RelativeDeterminantScatteringSocket
 import InfoGeometry.Canonical.RelativeModularBerezinianBridge
 import InfoGeometry.Canonical.RelativeModularBlockDiagonalCore
 import InfoGeometry.Canonical.RelativeModularBoundedCommutingInterface
@@ -3241,7 +3243,7 @@ import InfoGeometry.Canonical.S_left_K_commutation
 import InfoGeometry.Canonical.SmithBlockCirculantMoorePenrose
 import InfoGeometry.Canonical.SmithRetrocirculantMoorePenrose
 import InfoGeometry.Canonical.SO3FenchelDuality
-import InfoGeometry.Canonical.SO3RotationFenchelWitness
+import InfoGeometry.Canonical.SO3RotationFenchel
 import InfoGeometry.Canonical.SolderedMetricCompatibility
 import InfoGeometry.Canonical.SolderingQuaternionicGaugeBianchiBridge
 import InfoGeometry.Canonical.SolderingRicciVielbeinBridge
@@ -3415,7 +3417,7 @@ import InfoGeometry.Canonical.SplitG2DiscreteCalibrationBoundary
 import InfoGeometry.Canonical.SplitG2DiscreteCalibrationCohomology
 import InfoGeometry.Canonical.SplitG2DiscreteCalibration
 import InfoGeometry.Canonical.SplitG2DiscreteCoframePullback
-import InfoGeometry.Canonical.SplitG2DiscreteCurvatureWitness
+import InfoGeometry.Canonical.SplitG2DiscreteCurvature
 import InfoGeometry.Canonical.SplitG2DiscreteGaugeCochain
 import InfoGeometry.Canonical.SplitG2DiscreteHodgeCalibration
 import InfoGeometry.Canonical.SplitG2GaugeCochainCurvature
@@ -3427,7 +3429,7 @@ import InfoGeometry.Canonical.SplitG2MetricCalibrationPrerequisites
 import InfoGeometry.Canonical.SplitG2MetricDerivedHodgeStar
 import InfoGeometry.Canonical.SplitG2StructureOnImaginaryOctonions
 import InfoGeometry.Canonical.SplitG2VolumeAndGramPairing
-import InfoGeometry.Canonical.SplitG2ZeroFlatClosedWitness
+import InfoGeometry.Canonical.SplitG2ZeroFlatClosed
 import InfoGeometry.Canonical.SplitGaugeGroup
 import InfoGeometry.Canonical.SplitGaugeLieAlgebra
 import InfoGeometry.Canonical.SplitHierarchy
@@ -3454,7 +3456,7 @@ import InfoGeometry.Canonical.SplitOctonionDiracTwoFactorAlgebraicReduction
 import InfoGeometry.Canonical.SplitOctonionExpLog
 import InfoGeometry.Canonical.SplitOctonionFixedColorCl11Bridge
 import InfoGeometry.Canonical.SplitOctonionFourPlaneConfiguration
-import InfoGeometry.Canonical.SplitOctonionG2AutomorphismWitness
+import InfoGeometry.Canonical.SplitOctonionColorAutomorphism
 import InfoGeometry.Canonical.SplitOctonionGogberashviliNormBridge
 import InfoGeometry.Canonical.SplitOctonionJordanCore
 import InfoGeometry.Canonical.SplitOctonionJordanForm
@@ -3679,7 +3681,7 @@ import InfoGeometry.Canonical.TomitaConnesBridge
 import InfoGeometry.Canonical.TomitaDissipativeBreak
 import InfoGeometry.Canonical.TomitaFisherMetric
 import InfoGeometry.Canonical.TomitaKreinNilpotentAtom
-import InfoGeometry.Canonical.TomitaMatrixClosabilityWitness
+import InfoGeometry.Canonical.TomitaMatrixClosability
 import InfoGeometry.Canonical.TomitaModularAutomorphismFlow
 import InfoGeometry.Canonical.TomitaStaticVsDissipative
 import InfoGeometry.Canonical.TomitaTakesakiCommutantBridge
@@ -3688,7 +3690,6 @@ import InfoGeometry.Canonical.TomitaTakesaki
 import InfoGeometry.Canonical.TomitaTakesakiModularCocycle
 import InfoGeometry.Canonical.TomitaTakesakiModularFlow
 import InfoGeometry.Canonical.TomitaTakesakiModularOperatorKMS
-import InfoGeometry.Canonical.TomitaTakesakiRealificationAudit
 import InfoGeometry.Canonical.TomitaTakesakiRealification
 import InfoGeometry.Canonical.TomitaTakesakiRealStandardForm
 import InfoGeometry.Canonical.TomitaTakesakiTFDModularOperator
@@ -3901,7 +3902,7 @@ import InfoGeometry.Canonical.ZeroVolumeNullSpaceBridge
 import InfoGeometry.Canonical.ZetaBraneCantorDirac
 import InfoGeometry.Canonical.ZetaChiralConeAlgebra
 import InfoGeometry.Canonical.ZetaDeterminant
-import InfoGeometry.Canonical.ZetaFunctionalEquationDualitySocket
+import InfoGeometry.Canonical.ZetaFunctionalEquationDuality
 import InfoGeometry.Canonical.ZetaFunctionalEquationLayer
 import InfoGeometry.Canonical.ZetaFunctionalSymmetryNativeBridge
 import InfoGeometry.Canonical.ZetaJuliaYangBaxterBridge
@@ -4100,7 +4101,7 @@ import InfoGeometry.Clifford.Cl55RealSplitPinAction
 import InfoGeometry.Clifford.Cl55RealSplitPinDeterminant
 import InfoGeometry.Clifford.Cl55RealSplitPinImage
 import InfoGeometry.Clifford.Cl55RealSplitPinKernelCenter
-import InfoGeometry.Clifford.Cl55RealSplitPinKernelEvidence
+import InfoGeometry.Clifford.Cl55RealSplitPinKernelBridge
 import InfoGeometry.Clifford.Cl55RealSplitPinKernelExact
 import InfoGeometry.Clifford.Cl55RealSplitPinKernelNative
 import InfoGeometry.Clifford.Cl55RealSplitPinKernelReduction
@@ -4109,7 +4110,7 @@ import InfoGeometry.Clifford.Cl55RealSplitPinKernelSpinorReduction
 import InfoGeometry.Clifford.Cl55RealSplitPinKernelVolumeElimination
 import InfoGeometry.Clifford.Cl55RealSplitPin
 import InfoGeometry.Clifford.Cl55RealSplitPinProjectiveQuotient
-import InfoGeometry.Clifford.Cl55RealSplitPinReflectionEvidence
+import InfoGeometry.Clifford.Cl55RealSplitPinReflectionBridge
 import InfoGeometry.Clifford.Cl55RealSplitPinReflectionImage
 import InfoGeometry.Clifford.Cl55RealSplitPinReverseNorm
 import InfoGeometry.Clifford.Cl55RealSplitPinScalarKernel
@@ -4134,8 +4135,8 @@ import InfoGeometry.Clifford.Cl55WittOrthogonalBasis
 import InfoGeometry.Clifford.Cl55WittOrthogonalNative
 import InfoGeometry.Clifford.Cl55WittOrthogonalReflections
 import InfoGeometry.Clifford.Cl55WittPinAction
-import InfoGeometry.Clifford.Cl55WittPinCoverEvidence
-import InfoGeometry.Clifford.Cl55WittPinKernelEvidence
+import InfoGeometry.Clifford.Cl55WittPinCoverBridge
+import InfoGeometry.Clifford.Cl55WittPinKernel
 import InfoGeometry.Clifford.Cl55WittPinNativeTwistedAction
 import InfoGeometry.Clifford.Cl55WittPinOrthogonalAction
 import InfoGeometry.Clifford.Cl55WittPinParity
@@ -4204,6 +4205,7 @@ import InfoGeometry.Clifford.HestenesOddSector
 import InfoGeometry.Clifford.HestenesParavectorPair
 import InfoGeometry.Clifford.HestenesSpinRotorCartanDieudonne
 import InfoGeometry.Clifford.HestenesSpinRotor
+import InfoGeometry.Clifford.HestenesWindingRotor
 import InfoGeometry.Clifford.Hurwitz3DGeometricAlgebra
 import InfoGeometry.Clifford.InductiveColimitCrystal
 import InfoGeometry.Clifford.JordanWignerBridge
@@ -4350,34 +4352,29 @@ import InfoGeometry.DeterminantTrifactor
 import InfoGeometry.Differential.CurveHolonomy
 import InfoGeometry.Differential.RealAbelianCurvature
 import InfoGeometry.Dynamics.All
-import InfoGeometry.Dynamics.BisognanoWichmann
 import InfoGeometry.Dynamics.ConnesLottHiggs
 import InfoGeometry.Dynamics.DynamicalZetaFunction
 import InfoGeometry.Dynamics.HamiltonianFlowBridge
 import InfoGeometry.Dynamics.HyperbolicComponent
 import InfoGeometry.Dynamics.JkoWeylGromov
 import InfoGeometry.Dynamics.KanDecomposition
-import InfoGeometry.Dynamics.KmsBoundary
 import InfoGeometry.Dynamics.MirrorPhaseLLM
 import InfoGeometry.Dynamics.ModularThermalState
 import InfoGeometry.Dynamics.OperatorialRicciFlow
 import InfoGeometry.Dynamics.RapiditySpace
 import InfoGeometry.Dynamics.RindlerWedge
 import InfoGeometry.Dynamics.RindlerWedgeTopology
-import InfoGeometry.Dynamics.SouriauAPSBoundarySocket
+import InfoGeometry.Dynamics.SouriauAPSBoundary
 import InfoGeometry.Dynamics.SouriauBostConnesFlowExtensions
 import InfoGeometry.Dynamics.SouriauBostConnesFlow
 import InfoGeometry.Dynamics.SouriauBostConnesTheorem
 import InfoGeometry.Dynamics.SouriauDiracHodge
 import InfoGeometry.Dynamics.ThermalChiralConservation
-import InfoGeometry.Dynamics.TomitaTakesakiFisherGaloisBridge
-import InfoGeometry.Dynamics.TomitaTakesaki
 import InfoGeometry.Dynamics.UnruhKMS
 import InfoGeometry.Dynamics.UnruhRindlerSuperpotential
 import InfoGeometry.Dynamics.UnruhRindlerTjurinaNumber
 import InfoGeometry.Dynamics.VertexOperatorAlgebra
 import InfoGeometry.Dynamics.WassersteinProximalBridge
-import InfoGeometry.E8.E8TrialityThermalProtection
 import InfoGeometry.EntropicInference
 import InfoGeometry.Epistemology.SemanticReflector
 import InfoGeometry.ErlangenCoordinateless
@@ -5055,7 +5052,6 @@ import InfoGeometry.GromovWittenErlangen.GWCanonicalCountRayBridge
 import InfoGeometry.GromovWittenErlangen.GWProjectiveCountCalibration
 import InfoGeometry.GromovWittenErlangen.GWProjectiveCountTopologicalReadout
 import InfoGeometry.GromovWittenErlangen.LieOrbitCurve
-import InfoGeometry.GromovWittenErlangen.LieOrbitCurveWitness
 import InfoGeometry.GromovWittenErlangen.LocalizedDrazinFrobeniusBridge
 import InfoGeometry.GromovWittenErlangen.ProjectiveCountBridge
 import InfoGeometry.GromovWittenErlangen.ProjectiveCountDrazinFrobeniusBridge
@@ -5266,7 +5262,7 @@ import InfoGeometry.Lie.G2RollingBall
 import InfoGeometry.Lie.Pin55GenuineSieveBridge
 import InfoGeometry.Lie.Pin55KreinConformalBridge
 import InfoGeometry.Lie.RealSplitOctonionDerivation
-import InfoGeometry.Lie.RealSplitOctonionDerivationWitness
+import InfoGeometry.Lie.RealSplitOctonionDerivationData
 import InfoGeometry.Lie.RealSplitOctonionG2Classification
 import InfoGeometry.Lie.SagerschnigS2S3Distribution
 import InfoGeometry.Lie.SpinorEquiv
@@ -5287,7 +5283,7 @@ import InfoGeometry.Lint.NonTriviality
 import InfoGeometry.Lint.Pauli
 import InfoGeometry.Lint.SurgeryContract
 import InfoGeometry.Lint.Vacuity
-import InfoGeometry.Lint.WitnessLint
+import InfoGeometry.Lint.VacuityPackLint
 import InfoGeometry.LLM.AllTopThermodynamicRouter
 import InfoGeometry.LLM.AllTopThermodynamicTransformer
 import InfoGeometry.LLM.CliffordCantorGraphRouting
@@ -5349,7 +5345,6 @@ import InfoGeometry.Measure.RadonNikodymNormalForms
 import InfoGeometry.MellinColimitTrifactor
 import InfoGeometry.Meta.Admission
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.CalibrationReexport
 import InfoGeometry.Meta.ClosureAttribute
 import InfoGeometry.Meta.CompilerTelemetry
@@ -5362,18 +5357,15 @@ import InfoGeometry.Meta.FiniteToInfiniteTransitionSOP
 import InfoGeometry.Meta.FormalLogos
 import InfoGeometry.Meta.GromovErgostructureBridge
 import InfoGeometry.Meta.HiveLogos
-import InfoGeometry.Meta.HonestyPolicy
 import InfoGeometry.Meta.InductionHandbook
 import InfoGeometry.Meta.InductiveInvariantPacket
 import InfoGeometry.Meta.InductiveLimitClosureInterface
 import InfoGeometry.Meta.KeywordIndex
 import InfoGeometry.Meta
 import InfoGeometry.Meta.MarkovJonesInduction
-import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Meta.ProofShape
 import InfoGeometry.Meta.RegionPolicy
 import InfoGeometry.Meta.ShadowLedger
-import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Meta.StrictDef
 import InfoGeometry.Meta.StrictSurface
 import InfoGeometry.Meta.TestTactic
@@ -5405,12 +5397,9 @@ import InfoGeometry.OperatorAlgebra.All
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
 import InfoGeometry.OperatorAlgebra.AndreevHorizonBridge
 import InfoGeometry.OperatorAlgebra.AndreevLedger
-import InfoGeometry.OperatorAlgebra.AnomalousFlowStabilization
 import InfoGeometry.OperatorAlgebra.AnomalyTubuleStability
-import InfoGeometry.OperatorAlgebra.BaryonAsymmetryWitness
 import InfoGeometry.OperatorAlgebra.BianchiOperatorLift
 import InfoGeometry.OperatorAlgebra.BottPeriodicInduction
-import InfoGeometry.OperatorAlgebra.BoundaryFiveGradingShadow
 import InfoGeometry.OperatorAlgebra.BoundedTransformSpectralTriple
 import InfoGeometry.OperatorAlgebra.BrewsterDrazinIntersection
 import InfoGeometry.OperatorAlgebra.CARFermionParity
@@ -5490,7 +5479,6 @@ import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.SpectralRadius
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.UrysohnLCH
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.VSConnect
 import InfoGeometry.OperatorAlgebra.ConcreteWeylAnomaly
-import InfoGeometry.OperatorAlgebra.CondensateSaturationAudit
 import InfoGeometry.OperatorAlgebra.ConformalCrossover
 import InfoGeometry.OperatorAlgebra.ConformalCyclicCosmology
 import InfoGeometry.OperatorAlgebra.ConformalLedgerBridge
@@ -5589,7 +5577,6 @@ import InfoGeometry.OperatorAlgebra.G2GaugeSymmetryBridge
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismOrderLedger
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 import InfoGeometry.OperatorAlgebra.G2TwoFixedPointIncidence
-import InfoGeometry.OperatorAlgebra.G2TwoHexagonIncidenceWitness
 import InfoGeometry.OperatorAlgebra.GeneralizedNilpotentTripotent
 import InfoGeometry.OperatorAlgebra.GenericZorn
 import InfoGeometry.OperatorAlgebra.GNSMathlibBridge
@@ -5610,7 +5597,7 @@ import InfoGeometry.OperatorAlgebra.JonesCalibration
 import InfoGeometry.OperatorAlgebra.JUnitaryTopologicalCharge
 import InfoGeometry.OperatorAlgebra.KacMoodyAlgebraicLemmas
 import InfoGeometry.OperatorAlgebra.KANLightConeAffineBridge
-import InfoGeometry.OperatorAlgebra.KapustinWittenDualitySocket
+import InfoGeometry.OperatorAlgebra.KapustinWittenDuality
 import InfoGeometry.OperatorAlgebra.KasparovKreinDIIIBridge
 import InfoGeometry.OperatorAlgebra.KleinBerryConnectionFinite
 import InfoGeometry.OperatorAlgebra.KleinianReturn
@@ -5647,7 +5634,6 @@ import InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre
 import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus.JonesLayers
 import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus
 import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus.OpticalBranches
-import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus.OwnerTarget
 import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus.PolarizationProjectors
 import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus.ProjectiveTransport
 import InfoGeometry.OperatorAlgebra.OperatorialJonesCalculus.StatisticalChannels
@@ -5701,7 +5687,7 @@ import InfoGeometry.OperatorAlgebra.SplitOctonionalIdeals
 import InfoGeometry.OperatorAlgebra.SplitOctonionAxiomaticSummary
 import InfoGeometry.OperatorAlgebra.SplitOctonionCuntzInductionBridge
 import InfoGeometry.OperatorAlgebra.SplitOctonionCyclicAutomorphism
-import InfoGeometry.OperatorAlgebra.SplitOctonionDerivationWitness
+import InfoGeometry.OperatorAlgebra.SplitOctonionDerivationData
 import InfoGeometry.OperatorAlgebra.SplitOctonionG2TypeGenerators
 import InfoGeometry.OperatorAlgebra.SplitOctonionGroundedCrossSection
 import InfoGeometry.OperatorAlgebra.SplitOctonionLoxodromic
@@ -5887,8 +5873,6 @@ import InfoGeometry.Physics.GellMannParafermionSolder
 import InfoGeometry.Physics.GellMannSU3
 import InfoGeometry.Physics.Geometry.CayleyPoincareTransform
 import InfoGeometry.Physics.GoldenAlphaApproximation
-import InfoGeometry.Physics.HadjiivanovBostConnesBridge
-import InfoGeometry.Physics.HadjiivanovCuntzBridge
 import InfoGeometry.Physics.HermitianDensityTangentSpace
 import InfoGeometry.Physics.HestenesCuntzPhaseSpace
 import InfoGeometry.Physics.HestenesCuntzSpacetimeAlgebra
@@ -6060,6 +6044,7 @@ import InfoGeometry.Probability.FiniteChannelDataProcessing
 import InfoGeometry.Probability.FiniteDeformationEntropyReadout
 import InfoGeometry.Probability.FiniteGibbsDeformationReadout
 import InfoGeometry.Probability.FiniteGibbsVariational
+import InfoGeometry.Probability.FiniteMarkovWeightedAdjoint
 import InfoGeometry.Probability.GromovConcentration
 import InfoGeometry.Probability.GromovFiniteCounting
 import InfoGeometry.Probability.GromovJaynesProbability
@@ -6239,6 +6224,7 @@ import InfoGeometry.Quantum.GeometricTensor
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
 import InfoGeometry.Quantum.GeometricTensorTest
 import InfoGeometry.Quantum.GeometricTensorTransport
+import InfoGeometry.Quantum.GeometricTensorFrameTransport
 import InfoGeometry.Quantum.GolayLeechStabilizerCode
 import InfoGeometry.Quantum.HestenesKahler
 import InfoGeometry.Quantum.HurwitzFenchel
@@ -6280,7 +6266,6 @@ import InfoGeometry.Quantum.RealMajorana
 import InfoGeometry.Quantum.RealSplitClifford
 import InfoGeometry.Quantum.RelativeEntropyFlow
 import InfoGeometry.Quantum.RosettaSynthesis
-import InfoGeometry.Quantum.SouriauFoliationFiniteShadow
 import InfoGeometry.Quantum.SplitCliffordAtom
 import InfoGeometry.Quantum.SplitTrialityFockBridge
 import InfoGeometry.Quantum.SplitTrialityKernel
@@ -6297,6 +6282,7 @@ import InfoGeometry.Quantum.TriadicTransportProjective
 import InfoGeometry.Quantum.TriadicWeylBridge
 import InfoGeometry.Quantum.WeldedProjectorCorrelationBridge
 import InfoGeometry.Quantum.ZeroPointEnergy
+import InfoGeometry.QuantumGeometry.Projective
 import InfoGeometry.Quiver.BetheAnsatzXXZ
 import InfoGeometry.Quiver.FermiGTIsometry
 import InfoGeometry.Quiver.HbarOper
@@ -6495,6 +6481,7 @@ import InfoGeometry.Thermodynamics.FiniteConnesCocycle
 import InfoGeometry.Thermodynamics.FiniteEntropyLeaves
 import InfoGeometry.Thermodynamics.FiniteGibbsRelative
 import InfoGeometry.Thermodynamics.PrimonGasPhaseTransition
+import InfoGeometry.Thermodynamics.PrimonLogDeRham
 import InfoGeometry.Thermodynamics.ProjectiveTemperature
 import InfoGeometry.Thermodynamics.SoftmaxPartitionBridge
 import InfoGeometry.Thermodynamics.SouriauFoliation
@@ -6505,6 +6492,7 @@ import InfoGeometry.Thermodynamics.SouriauTemperatureProjective
 import InfoGeometry.Thermodynamics.SouriauWeylPartitionBridge
 import InfoGeometry.Thermodynamics.SPIGL2020SouriauDigest
 import InfoGeometry.Thermodynamics.TAPRepulsion
+import InfoGeometry.Thermodynamics.TomitaModularDeviance
 import InfoGeometry.Thermodynamics.UnruhTemperature
 import InfoGeometry.Thermo.FiniteDiagonal
 import InfoGeometry.Thermo.FiniteMatrix
@@ -6544,6 +6532,7 @@ import InfoGeometry.Topology.AharonovBohmConcreteVortex
 import InfoGeometry.Topology.AharonovBohmVortices
 import InfoGeometry.Topology.AlbertPeirceChiralFrameTopological
 import InfoGeometry.Topology.AlgebraicCuntzQuotient
+import InfoGeometry.Topology.AlgebraicPunctureDeRham
 import InfoGeometry.Topology.All
 import InfoGeometry.Topology.AmplituhedronBoundaryExternalDeRhamBridge
 import InfoGeometry.Topology.AmplituhedronBoundaryExternalRankBridge
@@ -6725,7 +6714,7 @@ import InfoGeometry.Topology.FibonacciBraidRepresentation
 import InfoGeometry.Topology.FibonacciFR
 import InfoGeometry.Topology.FibonacciGrothendieckLimitTopological
 import InfoGeometry.Topology.FiniteContinuousObservableTopCat
-import InfoGeometry.Topology.FractalCantorFockWitness
+import InfoGeometry.Topology.FractalCantorFock
 import InfoGeometry.Topology.G2AutomorphismTrialityGroup
 import InfoGeometry.Topology.GaloisZornTrialityTopological
 import InfoGeometry.Topology.GeneralizedCircleMobius
@@ -6811,7 +6800,6 @@ import InfoGeometry.Topology.O55V4KleinBottleStabilizerShadow
 import InfoGeometry.Topology.OrderThreeHomeomorphOrbitQuotient
 import InfoGeometry.Topology.OrderThreeInvariantMetricAction
 import InfoGeometry.Topology.OrderThreeKreinSpinorMetricCompatibility
-import InfoGeometry.Topology.OrderThreeKreinSpinorMetricWitness
 import InfoGeometry.Topology.OrderThreeOrbitCostDescent
 import InfoGeometry.Topology.OrderThreeOrbitInvariantStarObservables
 import InfoGeometry.Topology.OrderThreeOrbitObservable
@@ -6831,7 +6819,7 @@ import InfoGeometry.Topology.PeirceBoundaryStrataDisjointnessTopology
 import InfoGeometry.Topology.PeirceBoundaryStrataIntersectionTopology
 import InfoGeometry.Topology.PeirceCanonicalBoundaryFormContract
 import InfoGeometry.Topology.PeirceChiralConeSpinFrameTopological
-import InfoGeometry.Topology.PeirceDifferentialFormSocket
+import InfoGeometry.Topology.PeirceDifferentialForm
 import InfoGeometry.Topology.PeirceNullConeKinematicTopological
 import InfoGeometry.Topology.PeircePositiveBoundaryTopological
 import InfoGeometry.Topology.PeircePositiveCellCoverImageTopology
@@ -6889,7 +6877,7 @@ import InfoGeometry.Topology.SpinorOrbitStratum
 import InfoGeometry.Topology.SpinorOrbitStratumTopological
 import InfoGeometry.Topology.SpinorSpectrumTopCatColimit
 import InfoGeometry.Topology.SplitCliffordChargedFockSugawaraTopological
-import InfoGeometry.Topology.SplitCliffordChargedFockWitnessTopological
+import InfoGeometry.Topology.SplitCliffordChargedFockTopological
 import InfoGeometry.Topology.SplitCliffordHeisenbergTopological
 import InfoGeometry.Topology.SplitOctonionImaginaryActionTopological
 import InfoGeometry.Topology.SplitOctonionSupertwistorTopological
@@ -7314,6 +7302,11 @@ import InfoGeometry.Categorical.PrimeThermodynamicLimitCapstone
 import InfoGeometry.Canonical.PrimonThermodynamicColimit
 import InfoGeometry.Arithmetic.PrimeCutoffFiniteEuler
 import InfoGeometry.Arithmetic.PrimeEnergyNative
+import InfoGeometry.Arithmetic.PrimonPhaseLift
+import InfoGeometry.Arithmetic.PrimonLogCFTInjection
+import InfoGeometry.Arithmetic.PrimonProjectiveNullDescent
+import InfoGeometry.Arithmetic.ProjectiveConePhaseOrbit
+import InfoGeometry.Canonical.FiniteJostFredholmFramework
 import InfoGeometry.Arithmetic.PrimeThermodynamicLogRecurrence
 import InfoGeometry.Arithmetic.PrimeThermodynamicPrimeLogRecurrence
 import InfoGeometry.Arithmetic.PrimeCutoffNative
@@ -7337,3 +7330,4 @@ import InfoGeometry.Physics.Algebra.NPotentZeroModeProjectorBridge
 import InfoGeometry.Canonical.CayleyConjugationExteriorDualityBridge
 import InfoGeometry.Canonical.SplitOctonionLeftRightAssociatorCommutantBridge
 import InfoGeometry.Canonical.ZornRegularMultiplicationClassificationBridge
+import InfoGeometry.Algebra.KleinSpinorOrbitClosure

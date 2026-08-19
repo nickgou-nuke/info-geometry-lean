@@ -83,16 +83,4 @@ theorem tripotent_eigenvalue_zero_or_one_or_neg_one
     · exact Or.inr (Or.inl hone)
     · exact Or.inr (Or.inr hneg)
 
-/-- A conformal-spin readout is an explicit extra datum, not a consequence of
-`T ^ N = T`.  This predicate records the required phase witness. -/
-def HasBoundarySpinWitness (N : ℕ) (lambda : ℂ) (spin : ConformalSpin) : Prop :=
-  lambda = Complex.exp (2 * Real.pi * Complex.I * (spin : ℂ)) ∧
-    lambda ^ N = lambda
-
-theorem boundarySpinWitness_phase_relation
-    (N : ℕ) (lambda : ℂ) (spin : ConformalSpin)
-    (h : HasBoundarySpinWitness N lambda spin) :
-    lambda ^ N = lambda :=
-  h.2
-
 end InfoGeometry.Canonical.NPotentBoundarySpinBridge

@@ -152,6 +152,12 @@ theorem smithA_det_eq :
     Matrix.det smithA = (18 : ℚ) := by
   native_decide
 
+/-- The determinant of the explicit Moore--Penrose inverse is the reciprocal
+    of the determinant of the invertible Smith matrix. -/
+theorem smithAMP_det_eq :
+    Matrix.det smithAMP = (1 / 18 : ℚ) := by
+  native_decide
+
 /-- The exact inverse is the Moore-Penrose inverse in the existing repo predicate. -/
 theorem smithAMP_isMoorePenrose :
     MoorePenrose.IsMoorePenroseInverse smithA smithAMP := by

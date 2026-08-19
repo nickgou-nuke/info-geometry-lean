@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/PO55RicciFlux.lean
 
-Ricci-flux and grade-slippage sockets for the PO(5,5)/TKK ledger.
+Ricci-flux and grade-slippage data for the PO(5,5)/TKK ledger.
 
 This file records the precise algebraic place where an "Einstein anomaly" can
 live in the closed conformal stack:
@@ -18,7 +18,7 @@ and
 
   ρ (expected grade-zero element).
 
-That defect is the algebraic "Ricci-flux" socket.  It is not asserted to be the
+That defect is the algebraic "Ricci-flux" readout.  It is not asserted to be the
 Einstein tensor by definition; concrete metric/connection modules must supply
 the contraction/readout theorem.
 -/
@@ -26,85 +26,12 @@ the contraction/readout theorem.
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.TKKClosure
 import InfoGeometry.OperatorAlgebra.PO55ConformalClosure
-import InfoGeometry.OperatorAlgebra.AnomalousFlowStabilization
-import InfoGeometry.Meta.SocketTarget
 
 noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra
 
-/-! ## 1. Abstract conformal bracket socket -/
-
-/--
-A conformal-bracket socket for a signature `(4,4)` conformal algebra.
-
-The intended relation is the standard conformal algebra pattern
-
-`[P_a, K_b] = 2 • (η_ab • D + M_ab)`,
-
-up to the sign convention chosen by the concrete model.  This structure carries
-that convention explicitly in `cross_closure`.
--/
-structure ConformalBracketSocket
-    (Idx L : Type*) [AddCommGroup L] [Module ℝ L]
-    [LieRing L] [LieAlgebra ℝ L] where
-  /-- Split metric coefficients on the index set. -/
-  eta : Idx → Idx → ℝ
-
-  /-- Translation generators, grade `-1`. -/
-  P : Idx → L
-
-  /-- Special conformal generators, grade `+1`. -/
-  K : Idx → L
-
-  /-- Lorentz/split-orthogonal grade-zero generators. -/
-  M : Idx → Idx → L
-
-  /-- Dilation/Weyl/modular grade-zero generator. -/
-  D : L
-
-  /-- Exact cross-bracket closure in the chosen convention. -/
-  cross_closure :
-    ∀ a b : Idx,
-      ⁅P a, K b⁆ =
-        2 • ((eta a b) • D + M a b)
-
-  /-- Translation grade is abelian. -/
-  translations_abelian :
-    ∀ a b : Idx, ⁅P a, P b⁆ = 0
-
-  /-- Special conformal grade is abelian. -/
-  specials_abelian :
-    ∀ a b : Idx, ⁅K a, K b⁆ = 0
-
-namespace ConformalBracketSocket
-
-variable
-    {Idx L : Type*} [AddCommGroup L] [Module ℝ L]
-    [LieRing L] [LieAlgebra ℝ L]
-    (C : ConformalBracketSocket Idx L)
-
-/-- The expected grade-zero cross bracket `[P_a,K_b]`. -/
-def expectedCross
-    (a b : Idx) : L :=
-  2 • ((C.eta a b) • C.D + C.M a b)
-
-/-- The exact cross-bracket defect.  For a closed model this is zero. -/
-def crossDefect
-    (a b : Idx) : L :=
-  ⁅C.P a, C.K b⁆ - C.expectedCross a b
-
-/-- In the exact conformal/TKK model, the cross defect vanishes. -/
-theorem crossDefect_eq_zero
-    (a b : Idx) :
-    C.crossDefect a b = 0 := by
-  dsimp [crossDefect, expectedCross]
-  rw [C.cross_closure]
-  simp
-
-end ConformalBracketSocket
-
-/-! ## 2. Exact TKK cross defect -/
+/-! ## Exact TKK cross defect -/
 
 namespace TKKLieClosure
 
@@ -185,7 +112,7 @@ Observed cross-grade slippage:
 
 `[ρ(g₋₁ x), ρ(g₊₁ y)]_obs - ρ(g₀(x,y))`.
 
-This is the algebraic socket for an Einstein/Ricci-flux-type anomaly.
+This is the algebraic readout for an Einstein/Ricci-flux-type anomaly.
 -/
 def crossGradeSlippage
     (x y : J) : Obs :=
@@ -204,12 +131,12 @@ theorem crossGradeSlippage_eq_zero_of_exact
 
 end ObservedTKKBracket
 
-/-! ## 4. Ricci-flux readout socket -/
+/-! ## 4. Ricci-flux readout -/
 
 /--
 A scalar readout of observed TKK grade slippage.
 
-The name `RicciFlux` is intentionally a readout socket, not a definition of the
+The name `RicciFlux` is intentionally a readout, not a definition of the
 Ricci tensor.  A metric/connection module must later prove that this scalar or
 tensorial readout equals a curvature contraction.
 -/
@@ -295,7 +222,7 @@ structure HiddenInertiaReadout
     ∃ x : J, inertia x ≠ 0
 
 
-/-! ## 6. Conformal height socket -/
+/-! ## 6. Conformal height -/
 
 /--
 A positive conformal height on the projective null quadric.
@@ -335,7 +262,7 @@ theorem height_pos
 end ConformalHeightDatum
 
 /--
-A Bilingual Poincaré metric socket over a conformal-height chart.
+A Bilingual Poincaré metric datum over a conformal-height chart.
 
 Concrete modules can instantiate this by a Fisher/Kähler/Poincaré formula, for
 example `ds² = (dx² + dy²)/y²` on an upper-half-plane chart.

@@ -64,9 +64,14 @@ Any actual resolution of this node would constitute a proof of RH.
 @[edge_kind conjectural_bridge]
 structure MertensRHEquivalenceBridge where
   /-- The forward implication: Mertens cancellation implies the Fredholm/RH nonvanishing claim. -/
-  impliesRH : MertensSquareRootCancellation → InfoGeometry.Arithmetic.RiemannHypothesis.FredholmHalfPlaneCertificate
+  impliesRH : MertensSquareRootCancellation →
+    ∃ determinant : ℂ → ℂ,
+      InfoGeometry.Arithmetic.RiemannHypothesis.FredholmHalfPlaneProperty determinant
   /-- The reverse implication: RH property implies Mertens cancellation. -/
-  impliesMertens : InfoGeometry.Arithmetic.RiemannHypothesis.FredholmHalfPlaneCertificate → MertensSquareRootCancellation
+  impliesMertens :
+    (∃ determinant : ℂ → ℂ,
+      InfoGeometry.Arithmetic.RiemannHypothesis.FredholmHalfPlaneProperty determinant) →
+      MertensSquareRootCancellation
 
 open InfoGeometry.Arithmetic.PrimeBitLattice
 

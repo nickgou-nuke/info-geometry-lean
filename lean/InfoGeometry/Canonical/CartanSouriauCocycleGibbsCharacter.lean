@@ -33,25 +33,31 @@ variable [Fintype State] [Nonempty State] [MulAction G State]
 variable (J : AffineMomentMap G V Θ State)
 
 /-- Unnormalized twisted Gibbs character (statistical weight). -/
-def twistedGibbsCharacter (β : V) (m : State) : ℝ :=
-  Real.exp (-(J.momentMap m β))
+def twistedGibbsCharacter
+    (Θ : AffineCoadjointCocycle G V) (J : AffineMomentMap G V Θ State)
+    (β : V) (m : State) : ℝ :=
+  Real.exp (-(AffineMomentMap.momentMap G V Θ J m β))
 
 /-- The exact hierarchy: additive coadjoint cocycle -> multiplicative thermodynamic cocycle. -/
 theorem twistedGibbsCharacter_equivariant (g : G) (β : V) (m : State) :
     twistedGibbsCharacter Θ J β (g • m) =
       cocycleGibbsMultiplier Θ g β * twistedGibbsCharacter Θ J ((Ad V g).symm β) m := by
   unfold twistedGibbsCharacter cocycleGibbsMultiplier
-  rw [J.momentMap_affine_equivariant g m]
+  rw [AffineMomentMap.momentMap_affine_equivariant G V Θ J g m]
   unfold affineCoadjointAction
-  have h_eval : (coadjoint (Ad V g) (J.momentMap m) + Θ g) β =
-      coadjoint (Ad V g) (J.momentMap m) β + Θ g β := rfl
+  have h_eval :
+      (coadjoint (Ad V g) (AffineMomentMap.momentMap G V Θ J m) + Θ g) β =
+      coadjoint (Ad V g) (AffineMomentMap.momentMap G V Θ J m) β + Θ g β := rfl
   rw [h_eval]
-  have h_coad : coadjoint (Ad V g) (J.momentMap m) β =
-      J.momentMap m ((Ad V g).symm β) := rfl
+  have h_coad :
+      coadjoint (Ad V g) (AffineMomentMap.momentMap G V Θ J m) β =
+      AffineMomentMap.momentMap G V Θ J m ((Ad V g).symm β) := rfl
   rw [h_coad]
   rw [neg_add, Real.exp_add, mul_comm]
 
-def twistedGibbsPartition (β : V) : ℝ :=
+def twistedGibbsPartition
+    (Θ : AffineCoadjointCocycle G V) (J : AffineMomentMap G V Θ State)
+    (β : V) : ℝ :=
   ∑ m : State, twistedGibbsCharacter Θ J β m
 
 theorem twistedGibbsPartition_pos (β : V) : 0 < twistedGibbsPartition Θ J β := by
@@ -69,7 +75,9 @@ theorem twistedGibbsPartition_transformation (g : G) (β : V) :
   simp_rw [twistedGibbsCharacter_equivariant Θ J g β]
   rw [Finset.mul_sum]
 
-def twistedMassieu (β : V) : ℝ :=
+def twistedMassieu
+    (Θ : AffineCoadjointCocycle G V) (J : AffineMomentMap G V Θ State)
+    (β : V) : ℝ :=
   Real.log (twistedGibbsPartition Θ J β)
 
 /-- The Massieu potential naturally linearizes the multiplicative cocycle. -/

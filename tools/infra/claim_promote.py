@@ -2,7 +2,7 @@
 """Phase-1 claim promotion guard.
 
 Promotes claim.status according to an allowed transition lattice.
-Enforces witness/formal/audit gates for formal_candidate promotion.
+Enforces formal/audit gates for formal_candidate promotion.
 """
 
 from __future__ import annotations
@@ -20,8 +20,8 @@ import requests
 ALLOWED = {
     "prima_materia": {"analogy", "hypothesis"},
     "analogy": {"hypothesis", "rejected", "unsafe_overclaim"},
-    "hypothesis": {"witness_socket", "unsafe_overclaim", "rejected"},
-    "witness_socket": {"formal_candidate", "rejected"},
+    "hypothesis": {"deferred_interface", "unsafe_overclaim", "rejected"},
+    "deferred_interface": {"formal_candidate", "rejected"},
     "formal_candidate": {"lean_theorem", "rejected"},
     "lean_theorem": set(),
     "unsafe_overclaim": {"rejected"},
@@ -88,8 +88,8 @@ def main() -> int:
     if nxt == "formal_candidate":
         if not claim.get("formal_target"):
             raise RuntimeError("formal_candidate requires formal_target")
-        if claim.get("status") != "witness_socket":
-            raise RuntimeError("formal_candidate requires current status witness_socket")
+        if claim.get("status") != "deferred_interface":
+            raise RuntimeError("formal_candidate requires current status deferred_interface")
         if not claim.get("pauli_audit_note"):
             raise RuntimeError("formal_candidate requires pauli_audit_note")
 

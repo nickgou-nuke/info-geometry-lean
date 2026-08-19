@@ -20,12 +20,64 @@ def rightAction (b : A) : A →ₗ[R] A := LinearMap.mulRight R b
 def leftCommutant : Set (A →ₗ[R] A) :=
   {T | ∀ a : A, T.comp (leftAction a) = (leftAction a).comp T}
 
+@[simp] theorem leftAction_one :
+    leftAction (R := R) (1 : A) = LinearMap.id := by
+  ext x
+  simp [leftAction]
+
+@[simp] theorem rightAction_one :
+    rightAction (R := R) (1 : A) = LinearMap.id := by
+  ext x
+  simp [rightAction]
+
+theorem leftAction_mul (a b : A) :
+    leftAction (R := R) (a * b) =
+      (leftAction (R := R) a).comp (leftAction (R := R) b) := by
+  ext x
+  simp [leftAction, LinearMap.comp_apply, mul_assoc]
+
+theorem rightAction_mul (a b : A) :
+    rightAction (R := R) (a * b) =
+      (rightAction (R := R) b).comp (rightAction (R := R) a) := by
+  ext x
+  simp [rightAction, LinearMap.comp_apply, mul_assoc]
+
+theorem leftAction_add (a b : A) :
+    leftAction (R := R) (a + b) =
+      leftAction (R := R) a + leftAction (R := R) b := by
+  ext x
+  simp [leftAction, add_mul]
+
+theorem rightAction_add (a b : A) :
+    rightAction (R := R) (a + b) =
+      rightAction (R := R) a + rightAction (R := R) b := by
+  ext x
+  simp [rightAction, mul_add]
+
+theorem leftAction_injective :
+    Function.Injective (fun a : A => leftAction (R := R) a) := by
+  intro a b h
+  have h' := congrArg (fun T : A →ₗ[R] A => T 1) h
+  simpa [leftAction] using h'
+
+theorem rightAction_injective :
+    Function.Injective (fun b : A => rightAction (R := R) b) := by
+  intro a b h
+  have h' := congrArg (fun T : A →ₗ[R] A => T 1) h
+  simpa [rightAction] using h'
+
 theorem rightAction_mem_leftCommutant (b : A) :
     rightAction b ∈ leftCommutant (R := R) := by
   intro a
   ext x
   simp [leftAction, rightAction,
     LinearMap.comp_apply, mul_assoc]
+
+theorem leftAction_comp_rightAction (a b : A) :
+    (leftAction (R := R) a).comp (rightAction (R := R) b) =
+      (rightAction (R := R) b).comp (leftAction (R := R) a) := by
+  ext x
+  simp [leftAction, rightAction, LinearMap.comp_apply, mul_assoc]
 
 theorem leftCommutant_eq_rightActionRange :
     leftCommutant (R := R) = Set.range (fun b : A => rightAction (R := R) b) := by

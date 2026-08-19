@@ -10,7 +10,7 @@ Core target criterion:
 Classifications:
   - non_vacuous
   - bookkeeping_vacuous
-  - socket_pass_through
+  - deferred_interface_pass_through
   - suspiciously_vacuous
 """
 
@@ -61,8 +61,8 @@ TRIVIAL_PATTERN_NAMES = {
 }
 
 OBFUSCATION_TOKENS = (
-    "Socket",
-    "Socketed",
+    "DeferredInterface",
+    "DeferredInterfaceBacked",
     "Witness",
     "witness",
     "Certificate",
@@ -105,7 +105,7 @@ PREMISE_FIELD_TOKENS = (
     "computed",
     "constructed",
     "realized",
-    "socketed",
+    "deferred_interface",
     "discharged",
     "proved",
     "claim",
@@ -124,7 +124,7 @@ PREMISE_FIELD_TOKENS = (
     "opaque",
 )
 
-SOCKET_HINTS = OBFUSCATION_TOKENS
+DEFERRED_INTERFACE_HINTS = OBFUSCATION_TOKENS
 
 
 def suspicious_identifier(name: str) -> bool:
@@ -247,7 +247,7 @@ def compute_honesty_score(code: str) -> float:
     return 1.0 - compute_vacuity_score(code)
 
 
-def source_has_socket_shape(code: str) -> bool:
+def source_has_deferred_interface_shape(code: str) -> bool:
     cleaned = strip_lean_comments_and_strings(code)
     tokens = OBFUSCATION_TOKENS + ANTI_CONFAB_VOCABULARY
     return bool(re.search(r"\b(" + "|".join(map(re.escape, tokens)) + r")\b", cleaned, re.IGNORECASE))
@@ -257,7 +257,7 @@ def anti_obfuscation_findings(code: str) -> list[dict[str, Any]]:
     """Detect premise-laundering patterns.
 
     Policy: `sorry` is an honest hole.  Structures/theorems named with
-    socket/witness/certificate/sample/bound/debt language that merely carry
+    deferred-interface/witness/certificate/sample/bound/debt language that merely carry
     `Prop` fields are obfuscated holes and should be
     replaced by explicit premises or an honest `sorry` theorem.
     """
@@ -279,7 +279,7 @@ def anti_obfuscation_findings(code: str) -> list[dict[str, Any]]:
             "severity": 1.0,
             "name": "obfuscating_structure_name",
             "match": m.group(0),
-            "reason": "Structure/class name advertises socket/witness/certificate/sample/bound/debt prose instead of an explicit theorem premise or `sorry`.",
+            "reason": "Structure/class name advertises deferred-interface/witness/certificate/sample/bound/debt prose instead of an explicit theorem premise or `sorry`.",
         })
 
     for m in re.finditer(r"\b(structure|class)\s+([A-Za-z_][\w'.]*)[\s\S]*?\bwhere\b([\s\S]*?)(?=\n\s*(?:theorem|lemma|def|structure|class|inductive|namespace|end)\b|\Z)", cleaned):
@@ -303,7 +303,7 @@ def anti_obfuscation_findings(code: str) -> list[dict[str, Any]]:
             "severity": 0.8,
             "name": "obfuscating_theorem_name",
             "match": m.group(0),
-            "reason": "Theorem/lemma name contains socket/witness/certificate/sample/bound/debt/bookkeeping language; verify it is not just premise forwarding.",
+            "reason": "Theorem/lemma name contains deferred-interface/witness/certificate/sample/bound/debt/bookkeeping language; verify it is not just premise forwarding.",
         })
 
     local_hypothesis_name = r"h(?:[0-9A-Z_'][A-Za-z0-9_']*|_[A-Za-z0-9_']*)?"
@@ -328,7 +328,7 @@ def anti_obfuscation_findings(code: str) -> list[dict[str, Any]]:
             "severity": -1.0,
             "name": "honest_sorry_hole",
             "match": "sorry",
-            "reason": "Honest visible proof hole; preferable to socket/witness/certificate/sample/bound obfuscation.",
+            "reason": "Honest visible proof hole; preferable to deferred-interface/witness/certificate/sample/bound obfuscation.",
         })
 
     return findings
@@ -392,13 +392,13 @@ def classify(code: str, graph_metrics: dict[str, Any]) -> str:
     if not ast_ok:
         return "suspiciously_vacuous"
     if proof_looks_pass_through(code) and not deps_ok:
-        return "socket_pass_through"
+        return "deferred_interface_pass_through"
     if ast_ok and deps_ok and proof_ok:
         return "non_vacuous"
     if ast_ok and deps_ok and not proof_ok:
         return "bookkeeping_vacuous" if not detect_vacuity(code) else "suspiciously_vacuous"
-    if ast_ok and not deps_ok and source_has_socket_shape(code):
-        return "socket_pass_through"
+    if ast_ok and not deps_ok and source_has_deferred_interface_shape(code):
+        return "deferred_interface_pass_through"
     return "suspiciously_vacuous"
 
 
@@ -452,7 +452,7 @@ def analyze(code: str, graph_records: list[dict[str, Any]] | None = None) -> dic
         ],
         "anti_obfuscation_findings": anti_findings,
         "graph_metrics": graph_metrics,
-        "socket_pass_through_hint": source_has_socket_shape(code) and proof_looks_pass_through(code),
+        "deferred_interface_pass_through_hint": source_has_deferred_interface_shape(code) and proof_looks_pass_through(code),
         "suggested_mathematical_context": suggested_context,
     }
     return result

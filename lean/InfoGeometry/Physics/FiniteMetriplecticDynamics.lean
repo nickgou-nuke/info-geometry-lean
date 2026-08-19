@@ -36,9 +36,82 @@ def entropyRate
       ∀ ρ, Tangent ρ →ₗ[ℝ] Tangent ρ)
     (energyGradient entropyGradient : ∀ ρ, Tangent ρ)
     (ρ : State) : ℝ :=
-  pairing ρ (entropyGradient ρ)
-    (metriplecticVelocity poissonOperator onsagerOperator
+    pairing ρ (entropyGradient ρ)
+      (metriplecticVelocity poissonOperator onsagerOperator
       energyGradient entropyGradient ρ)
+
+theorem metriplecticVelocity_eq_zero_of_degenerate
+    (poissonOperator onsagerOperator :
+      ∀ ρ, Tangent ρ →ₗ[ℝ] Tangent ρ)
+    (energyGradient entropyGradient : ∀ ρ, Tangent ρ)
+    (ρ : State)
+    (hP : poissonOperator ρ (energyGradient ρ) = 0)
+    (hM : onsagerOperator ρ (entropyGradient ρ) = 0) :
+    metriplecticVelocity poissonOperator onsagerOperator
+      energyGradient entropyGradient ρ = 0 := by
+  dsimp [metriplecticVelocity]
+  rw [hP, hM]
+  exact add_zero 0
+
+theorem metriplectic_stationary_rates
+    (pairing : ∀ ρ, Tangent ρ →ₗ[ℝ] Tangent ρ →ₗ[ℝ] ℝ)
+    (poissonOperator onsagerOperator :
+      ∀ ρ, Tangent ρ →ₗ[ℝ] Tangent ρ)
+    (energyGradient entropyGradient : ∀ ρ, Tangent ρ)
+    (ρ : State)
+    (hstationary :
+      metriplecticVelocity poissonOperator onsagerOperator
+        energyGradient entropyGradient ρ = 0) :
+    energyRate pairing poissonOperator onsagerOperator
+        energyGradient entropyGradient ρ = 0 ∧
+    entropyRate pairing poissonOperator onsagerOperator
+        energyGradient entropyGradient ρ = 0 := by
+  constructor
+  · simp [energyRate, hstationary]
+  · simp [entropyRate, hstationary]
+
+theorem entropyRate_eq_zero_of_degenerate
+    (pairing : ∀ ρ, Tangent ρ →ₗ[ℝ] Tangent ρ →ₗ[ℝ] ℝ)
+    (poissonOperator onsagerOperator :
+      ∀ ρ, Tangent ρ →ₗ[ℝ] Tangent ρ)
+    (energyGradient entropyGradient : ∀ ρ, Tangent ρ)
+    (ρ : State)
+    (hP : poissonOperator ρ (energyGradient ρ) = 0)
+    (hM : onsagerOperator ρ (entropyGradient ρ) = 0) :
+    entropyRate pairing poissonOperator onsagerOperator
+      energyGradient entropyGradient ρ = 0 := by
+  dsimp [entropyRate, metriplecticVelocity]
+  rw [hP, hM]
+  simp
+
+theorem entropyRate_eq_onsager_quadratic
+    (pairing : ∀ ρ, Tangent ρ →ₗ[ℝ] Tangent ρ →ₗ[ℝ] ℝ)
+    (pairing_symm : ∀ ρ X Y, pairing ρ X Y = pairing ρ Y X)
+    (poissonOperator onsagerOperator :
+      ∀ ρ, Tangent ρ →ₗ[ℝ] Tangent ρ)
+    (poisson_skew : ∀ ρ X Y,
+      pairing ρ (poissonOperator ρ X) Y =
+        -pairing ρ X (poissonOperator ρ Y))
+    (energyGradient entropyGradient : ∀ ρ, Tangent ρ)
+    (entropy_casimir : ∀ ρ,
+      poissonOperator ρ (entropyGradient ρ) = 0)
+    (ρ : State) :
+    entropyRate pairing poissonOperator onsagerOperator
+        energyGradient entropyGradient ρ =
+      pairing ρ (entropyGradient ρ)
+        (onsagerOperator ρ (entropyGradient ρ)) := by
+  dsimp [entropyRate, metriplecticVelocity]
+  rw [LinearMap.map_add]
+  have hJ :
+      pairing ρ (entropyGradient ρ)
+        (poissonOperator ρ (energyGradient ρ)) = 0 := by
+    have hsymm := pairing_symm ρ (entropyGradient ρ)
+      (poissonOperator ρ (energyGradient ρ))
+    rw [hsymm]
+    have hskew := poisson_skew ρ (energyGradient ρ) (entropyGradient ρ)
+    rw [hskew, entropy_casimir ρ]
+    simp
+  rw [hJ, zero_add]
 
 theorem energy_conserved
     (pairing : ∀ ρ, Tangent ρ →ₗ[ℝ] Tangent ρ →ₗ[ℝ] ℝ)
@@ -141,5 +214,57 @@ theorem casimir_conserved
     rw [onsager_casimir]
     simp
   simp [hJ, hM]
+
+noncomputable def symmetricPart {n : Type*} (W : Matrix n n ℝ) : Matrix n n ℝ :=
+  (1 / 2 : ℝ) • (W + W.transpose)
+
+noncomputable def antisymmetricPart {n : Type*} (W : Matrix n n ℝ) : Matrix n n ℝ :=
+  (1 / 2 : ℝ) • (W - W.transpose)
+
+theorem symmetricPart_transpose {n : Type*} (W : Matrix n n ℝ) :
+    (symmetricPart W).transpose = symmetricPart W := by
+  ext i j
+  simp [symmetricPart, Matrix.transpose_apply]
+  ring
+
+theorem antisymmetricPart_transpose {n : Type*} (W : Matrix n n ℝ) :
+    (antisymmetricPart W).transpose = -antisymmetricPart W := by
+  ext i j
+  simp [antisymmetricPart, Matrix.transpose_apply]
+  ring
+
+theorem symmetricPart_add_antisymmetricPart {n : Type*} (W : Matrix n n ℝ) :
+    symmetricPart W + antisymmetricPart W = W := by
+  ext i j
+  simp [symmetricPart, antisymmetricPart, Matrix.transpose_apply]
+  ring
+
+theorem symmetricPart_eq_of_symmetric_add_skew
+    {n : Type*} {W S A : Matrix n n ℝ}
+    (hS : S.transpose = S)
+    (hA : A.transpose = -A)
+    (decomposition : S + A = W) :
+    symmetricPart W = S := by
+  ext i j
+  have hSij := congrArg (fun M : Matrix n n ℝ => M i j) hS
+  have hAij := congrArg (fun M : Matrix n n ℝ => M i j) hA
+  have hWij := congrArg (fun M : Matrix n n ℝ => M i j) decomposition
+  have hWji := congrArg (fun M : Matrix n n ℝ => M j i) decomposition
+  simp [symmetricPart, Matrix.transpose_apply] at hSij hAij hWij hWji ⊢
+  linarith
+
+theorem antisymmetricPart_eq_of_symmetric_add_skew
+    {n : Type*} {W S A : Matrix n n ℝ}
+    (hS : S.transpose = S)
+    (hA : A.transpose = -A)
+    (decomposition : S + A = W) :
+    antisymmetricPart W = A := by
+  ext i j
+  have hSij := congrArg (fun M : Matrix n n ℝ => M i j) hS
+  have hAij := congrArg (fun M : Matrix n n ℝ => M i j) hA
+  have hWij := congrArg (fun M : Matrix n n ℝ => M i j) decomposition
+  have hWji := congrArg (fun M : Matrix n n ℝ => M j i) decomposition
+  simp [antisymmetricPart, Matrix.transpose_apply] at hSij hAij hWij hWji ⊢
+  linarith
 
 end InfoGeometry.Physics

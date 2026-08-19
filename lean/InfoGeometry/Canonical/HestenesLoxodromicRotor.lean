@@ -11,6 +11,24 @@ def realLoxodromicAction
     (K I : V →ₗ[ℝ] V) (t θ : ℝ) (v : V) : V :=
   realBoostAction K t (realRotorAction I θ v)
 
+/-! The finite four-channel expansion keeps the boost and elliptic axes real. -/
+
+theorem realLoxodromicAction_four_channel
+    (K I : V →ₗ[ℝ] V) (t θ : ℝ) (v : V) :
+    realLoxodromicAction K I t θ v =
+      (Real.cosh t * Real.cos θ) • v +
+        (Real.sinh t * Real.cos θ) • K v +
+        (Real.cosh t * Real.sin θ) • I v +
+        (Real.sinh t * Real.sin θ) • K (I v) := by
+  simp only [realLoxodromicAction, realBoostAction, realRotorAction,
+    map_add, map_smul, smul_add, smul_smul]
+  module
+
+theorem hyperbolic_weights_reciprocal (a b : ℝ)
+    (h : a ^ 2 - b ^ 2 = 1) :
+    (a + b) * (a - b) = 1 := by
+  nlinarith
+
 theorem realLoxodromicAction_zero
     (K I : V →ₗ[ℝ] V) (v : V) :
     realLoxodromicAction K I 0 0 v = v := by

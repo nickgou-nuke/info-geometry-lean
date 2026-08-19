@@ -30,4 +30,39 @@ theorem madelung_quantum_potential_linearization (u laplacian_u Q : ℝ)
       rw [h1, h2]
     _ = 0 := by ring
 
+/--
+The pointwise Bohm readout expressed in surprisal coordinates.  The hypotheses
+are the second-order chain-rule data for an amplitude of the form
+`u = exp (-K / 2)`: `dK` and `d2K` are the first and second surprisal
+derivatives, and `d2u` is the resulting second amplitude derivative.
+-/
+theorem bohm_potential_eq_surprisal_laplacian_sub_gradientSq
+    (u dK d2K d2u : ℝ) (hu : 0 < u)
+    (hd2u : d2u = u * ((dK ^ 2) / 4 - d2K / 2)) :
+    - (1 / 2) * (d2u / u) = (1 / 4) * d2K - (1 / 8) * dK ^ 2 := by
+  have hu_ne : u ≠ 0 := ne_of_gt hu
+  rw [hd2u]
+  field_simp [hu_ne]
+  ring
+
+/-- The scalar surprisal-coordinate Bohm readout used in the doubled formulas. -/
+def surprisalBohmReadout (d2K dK : ℝ) : ℝ :=
+  (1 / 4) * d2K - (1 / 8) * dK ^ 2
+
+theorem doubled_surprisal_bohm_common_readout
+    (d2Kc d2Kr dKc dKr : ℝ) :
+    (surprisalBohmReadout (d2Kc + d2Kr) (dKc + dKr) +
+      surprisalBohmReadout (d2Kc - d2Kr) (dKc - dKr)) / 2 =
+      (1 / 4) * d2Kc - (1 / 8) * (dKc ^ 2 + dKr ^ 2) := by
+  unfold surprisalBohmReadout
+  ring
+
+theorem doubled_surprisal_bohm_relative_readout
+    (d2Kc d2Kr dKc dKr : ℝ) :
+    (surprisalBohmReadout (d2Kc + d2Kr) (dKc + dKr) -
+      surprisalBohmReadout (d2Kc - d2Kr) (dKc - dKr)) / 2 =
+      (1 / 4) * d2Kr - (1 / 4) * dKc * dKr := by
+  unfold surprisalBohmReadout
+  ring
+
 end InfoGeometry.Canonical.MadelungFisherRaoSynthesisBridge

@@ -26,7 +26,6 @@ It does not assert that every fixed diagonal is a protected Majorana edge mode.
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.ClosureInvolution
 import InfoGeometry.OperatorAlgebra.AndreevBoundary
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -238,15 +237,15 @@ theorem diagonal_transparent :
 
 end MirrorBalanceLedger
 
-/-! ## 4. Horizon membrane socket -/
+/-! ## 4. Horizon membrane data -/
 
 /--
-A horizon membrane mirror socket.
+A horizon membrane mirror datum.
 
 This captures the membrane-paradigm fact that a horizon can be modeled as a
 finite-resistance membrane/mirror.
 
-Positive surface resistance explicitly prevents treating this socket as a
+Positive surface resistance explicitly prevents treating this datum as a
 zero-resistance superconductor without extra data.
 -/
 structure HorizonMembraneMirror
@@ -266,7 +265,7 @@ variable
 
 variable (H : HorizonMembraneMirror V)
 
-/-- The horizon membrane socket is not a zero-resistance surface. -/
+/-- The horizon membrane datum is not a zero-resistance surface. -/
 theorem surfaceResistance_ne_zero :
     H.surfaceResistance ≠ 0 :=
   ne_of_gt H.surfaceResistance_pos
@@ -335,37 +334,13 @@ end UniqueTransparentLine
 
 /-! ## 6. Optional flux-expulsion / Meissner-like property -/
 
-/--
-A property-gated flux-expulsion socket.
-
-This is suitable for extremal black-hole Meissner-like effects or genuine
-superconducting Meissner effects, but the expulsion theorem is not automatic
-from closure-mirror algebra.
--/
-structure FluxExpulsionWitness
-    (Cap Flux : Type*) [Zero Flux] where
-  /-- Flux through a boundary cap/surface. -/
-  fluxThrough :
-    Cap → Flux
-
-  /-- Expulsion condition. -/
-  flux_expelled :
-    ∀ c : Cap, fluxThrough c = 0
-
-namespace FluxExpulsionWitness
-
-variable
-    {Cap Flux : Type*} [Zero Flux]
-
-variable (F : FluxExpulsionWitness Cap Flux)
-
-/-- The supplied flux-expulsion property gives zero flux through every cap. -/
 theorem fluxThrough_eq_zero
+    {Cap Flux : Type*} [Zero Flux]
+    (fluxThrough : Cap → Flux)
+    (flux_expelled : ∀ c : Cap, fluxThrough c = 0)
     (c : Cap) :
-    F.fluxThrough c = 0 :=
-  F.flux_expelled c
-
-end FluxExpulsionWitness
+    fluxThrough c = 0 :=
+  flux_expelled c
 
 /-! ## 7. Boundary readout -/
 
@@ -374,7 +349,7 @@ Modular mirror boundary readout.
 
 Every closure mirror has a transparent diagonal and an anti-fixed imbalance.
 -/
-theorem modularMirrorBoundaryOwnerTarget :
+theorem modularMirrorBoundary_properties :
   ∀ (V : Type*) [AddCommGroup V] [Module ℝ V],
   ∀ M : ClosureMirrorBoundary V,
     M.IsTransparent M.diagonal ∧

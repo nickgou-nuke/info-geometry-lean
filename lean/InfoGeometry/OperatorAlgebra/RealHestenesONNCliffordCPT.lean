@@ -14,19 +14,4 @@ noncomputable section
 
 namespace InfoGeometry.OperatorAlgebra
 
-structure RealHestenesO44PinCPTPacket
-    {V PinEl State Bog Kpart Apart Npart CartanShadow : Type*}
-    [AddCommGroup V] [Module ℝ V]
-    [Monoid PinEl] [Monoid Bog] where
-  splitQuadratic44 : SplitQuadratic44 V
-  fullO44Transform : Orthogonal44 splitQuadratic44
-  pin44Cover : Pin44CoverDatum (V := V) (PinEl := PinEl) splitQuadratic44
-  cptReflection :
-    CPTPin44ReflectionCalibration splitQuadratic44 pin44Cover State
-  realBogoliubovTransform : Bog
-  kComponent : Kpart
-  aComponent : Apart
-  nComponent : Npart
-  cartanDiagonalShadow : CartanShadow
-
 end InfoGeometry.OperatorAlgebra

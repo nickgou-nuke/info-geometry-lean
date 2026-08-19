@@ -115,6 +115,13 @@ theorem gamma5_mul_self : gamma5 * gamma5 = 1 := by
   fin_cases i <;> fin_cases j <;>
     simp [gamma5, Matrix.mul_apply, Fin.sum_univ_succ]
 
+@[simp] theorem gamma5_gamma5_anticomm :
+    gamma5 * gamma5 + gamma5 * gamma5 = (2 : ℂ) • (1 : DiracMatrix) := by
+  rw [gamma5_mul_self]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.smul_apply] <;> norm_num
+
 @[simp] theorem gamma0_gamma0_anticomm :
     gamma0 * gamma0 + gamma0 * gamma0 = (2 : ℂ) • (1 : DiracMatrix) := by
   rw [gamma0_mul_self]

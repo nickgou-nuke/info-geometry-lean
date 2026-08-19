@@ -305,11 +305,11 @@ print(f"""
     GUE->CUE: statistical transition, verified numerically.
     Montgomery-Dyson: pair correlation matches GUE prediction.
     Braid group: YBE holds for Fibonacci anyon representation.
-    Hilbert-Polya: SOCKETED (existence of H_zeta = RH).
-    Full GUE universality: SOCKETED.
-    Grothendieck motive equivalence: SOCKETED.
+    Hilbert-Polya: DEFERRED_INTERFACE (existence of H_zeta = RH).
+    Full GUE universality: DEFERRED_INTERFACE.
+    Grothendieck motive equivalence: DEFERRED_INTERFACE.
 
-  The algebra is complete. The sockets are named.
+  The algebra is complete. The deferred_interfaces are named.
   The Cayley transform is the bridge from real-line to unit-circle.
   The braid group is the bridge from statistics to topology.
   The TKK closure is the bridge from local to global geometry.

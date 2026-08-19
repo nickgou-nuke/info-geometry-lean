@@ -13,7 +13,7 @@ as external witnesses:
   arXiv:2602.20226.
 
 This file does **not** certify the numerical software.  It records finite shape
-bookkeeping useful for socketing these packages as external audit/computation
+bookkeeping useful for connecting these packages to external audit/computation
 layers:
 
 * a quaternion scalar has four real components;

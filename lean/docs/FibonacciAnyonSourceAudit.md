@@ -133,7 +133,7 @@ golden-ratio scalar lemmas
   -> F^2 = 1, det F = -1, B = F R F
   -> concrete Artin / Yang-Baxter matrix relation
   -> finite braid-word/projective readout interfaces
-  -> categorical hexagon/Yang-Baxter coherence socket
+  -> categorical hexagon/Yang-Baxter coherence  interface
   -> density/universality theorem target
   -> physical Z3 parafermion / Read--Rezayi realization target
 ```

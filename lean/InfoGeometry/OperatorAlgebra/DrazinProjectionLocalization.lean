@@ -154,7 +154,7 @@ end FiberwiseDrazinData
 /--
 External algebra decomposed into Drazin fibers.
 
-This is the theorem-safe socket for later direct-sum/direct-integral models:
+This is the theorem-safe interface for later direct-sum/direct-integral models:
 a concrete model supplies the ring equivalence to a product of fibers, and the
 finite product theorem runs on the product side.
 -/

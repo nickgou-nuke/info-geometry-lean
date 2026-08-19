@@ -116,7 +116,7 @@ end BKMDriftMetricDatum
 /-! ## Fusion with the existing Connes/BKM metric owner lane -/
 
 /--
-Canonical socket connecting an existing `BKMMetricDatum` to a Weyl-normalized
+Canonical interface connecting an existing `BKMMetricDatum` to a Weyl-normalized
 mass/stiffness readout.
 
 The equality between `metric φ X X` and `driftIntensity` is an external

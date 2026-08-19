@@ -39,10 +39,19 @@ lemma clmComm_eq_lie (A B : DoubledSpace E →L[ℝ] DoubledSpace E) :
     clmComm A B = ⁅A, B⁆ := by
   ext v <;> simp [clmComm, Ring.lie_def]
 
+lemma clmComm_mul (A B C : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    clmComm A (B.comp C) =
+      (clmComm A B).comp C + B.comp (clmComm A C) := by
+  ext v <;> simp [clmComm, ContinuousLinearMap.comp_apply] <;> abel_nf
+
 /-- Jordan product on doubled-space endomorphisms. -/
 noncomputable def jordanProd (A B : DoubledSpace E →L[ℝ] DoubledSpace E) :
     DoubledSpace E →L[ℝ] DoubledSpace E :=
   ((2 : ℝ)⁻¹) • (A.comp B + B.comp A)
+
+lemma jordanProd_comm (A B : DoubledSpace E →L[ℝ] DoubledSpace E) :
+    jordanProd A B = jordanProd B A := by
+  simp [jordanProd, add_comm]
 
 /-- Even operators commute with the geometric grading involution `J`. -/
 def isEven (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
@@ -51,6 +60,120 @@ def isEven (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
 /-- Odd operators anticommute with the geometric grading involution `J`. -/
 def isOdd (A : DoubledSpace E →L[ℝ] DoubledSpace E) : Prop :=
   (modular_j (E := E)).comp A = -(A.comp (modular_j (E := E)))
+
+lemma isEven_comp
+    {A B : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (hA : isEven (E := E) A)
+    (hB : isEven (E := E) B) :
+    isEven (E := E) (A.comp B) := by
+  change (modular_j (E := E)).comp (A.comp B) =
+    (A.comp B).comp (modular_j (E := E))
+  calc
+    (modular_j (E := E)).comp (A.comp B) =
+        ((modular_j (E := E)).comp A).comp B :=
+      (ContinuousLinearMap.comp_assoc _ _ _).symm
+    _ = (A.comp (modular_j (E := E))).comp B := by rw [hA]
+    _ = A.comp ((modular_j (E := E)).comp B) :=
+      ContinuousLinearMap.comp_assoc _ _ _
+    _ = A.comp (B.comp (modular_j (E := E))) := by rw [hB]
+    _ = (A.comp B).comp (modular_j (E := E)) :=
+      (ContinuousLinearMap.comp_assoc _ _ _).symm
+
+lemma isOdd_comp_even
+    {A B : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (hA : isOdd (E := E) A)
+    (hB : isEven (E := E) B) :
+    isOdd (E := E) (A.comp B) := by
+  change (modular_j (E := E)).comp (A.comp B) =
+    -((A.comp B).comp (modular_j (E := E)))
+  have hneg :
+      (-(A.comp (modular_j (E := E)))).comp B =
+        -((A.comp (modular_j (E := E))).comp B) := by
+    ext v
+    simp [ContinuousLinearMap.comp_apply]
+    rfl
+  calc
+    (modular_j (E := E)).comp (A.comp B) =
+        ((modular_j (E := E)).comp A).comp B :=
+      (ContinuousLinearMap.comp_assoc _ _ _).symm
+    _ = (-(A.comp (modular_j (E := E)))).comp B := by rw [hA]
+    _ = -((A.comp (modular_j (E := E))).comp B) := hneg
+    _ = -(A.comp ((modular_j (E := E)).comp B)) := by
+      rw [ContinuousLinearMap.comp_assoc]
+    _ = -(A.comp (B.comp (modular_j (E := E)))) := by rw [hB]
+    _ = -((A.comp B).comp (modular_j (E := E))) := by
+      rw [ContinuousLinearMap.comp_assoc]
+
+lemma isEven_comp_odd_odd
+    {A B : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (hA : isOdd (E := E) A)
+    (hB : isOdd (E := E) B) :
+    isEven (E := E) (A.comp B) := by
+  change (modular_j (E := E)).comp (A.comp B) =
+    (A.comp B).comp (modular_j (E := E))
+  have hneg₁ :
+      (-(A.comp (modular_j (E := E)))).comp B =
+        -((A.comp (modular_j (E := E))).comp B) := by
+    ext v
+    simp [ContinuousLinearMap.comp_apply]
+    rfl
+  have hneg₂ :
+      A.comp (-(B.comp (modular_j (E := E)))) =
+        -(A.comp (B.comp (modular_j (E := E)))) := by
+    ext v
+    have hpoint :
+        (A.comp (-(B.comp (modular_j (E := E)))) ) v =
+          -(A.comp (B.comp (modular_j (E := E)))) v := by
+      simp [ContinuousLinearMap.comp_apply]
+    all_goals
+      first
+      | simpa using congrArg WithLp.fst hpoint
+      | simpa using congrArg WithLp.snd hpoint
+  calc
+    (modular_j (E := E)).comp (A.comp B) =
+        ((modular_j (E := E)).comp A).comp B :=
+      (ContinuousLinearMap.comp_assoc _ _ _).symm
+    _ = (-(A.comp (modular_j (E := E)))).comp B := by rw [hA]
+    _ = -((A.comp (modular_j (E := E))).comp B) := hneg₁
+    _ = -(A.comp ((modular_j (E := E)).comp B)) := by
+      rw [ContinuousLinearMap.comp_assoc]
+    _ = -(A.comp (-(B.comp (modular_j (E := E))))) := by rw [hB]
+    _ = A.comp (B.comp (modular_j (E := E))) := by
+      rw [hneg₂]
+      simp
+    _ = (A.comp B).comp (modular_j (E := E)) :=
+      (ContinuousLinearMap.comp_assoc _ _ _).symm
+
+lemma isEven_comp_odd
+    {A B : DoubledSpace E →L[ℝ] DoubledSpace E}
+    (hA : isEven (E := E) A)
+    (hB : isOdd (E := E) B) :
+    isOdd (E := E) (A.comp B) := by
+  change (modular_j (E := E)).comp (A.comp B) =
+    -((A.comp B).comp (modular_j (E := E)))
+  have hneg :
+      A.comp (-(B.comp (modular_j (E := E)))) =
+        -(A.comp (B.comp (modular_j (E := E)))) := by
+    ext v
+    have hpoint :
+        (A.comp (-(B.comp (modular_j (E := E)))) ) v =
+          -(A.comp (B.comp (modular_j (E := E)))) v := by
+      simp [ContinuousLinearMap.comp_apply]
+    all_goals
+      first
+      | simpa using congrArg WithLp.fst hpoint
+      | simpa using congrArg WithLp.snd hpoint
+  calc
+    (modular_j (E := E)).comp (A.comp B) =
+        ((modular_j (E := E)).comp A).comp B :=
+      (ContinuousLinearMap.comp_assoc _ _ _).symm
+    _ = (A.comp (modular_j (E := E))).comp B := by rw [hA]
+    _ = A.comp ((modular_j (E := E)).comp B) :=
+      ContinuousLinearMap.comp_assoc _ _ _
+    _ = A.comp (-(B.comp (modular_j (E := E)))) := by rw [hB]
+    _ = -(A.comp (B.comp (modular_j (E := E)))) := hneg
+    _ = -((A.comp B).comp (modular_j (E := E))) := by
+      rw [ContinuousLinearMap.comp_assoc]
 
 /-- `+1` eigenspace predicate for the grading involution `J`. -/
 def inGradePlus (v : DoubledSpace E) : Prop := modular_j (E := E) v = v
@@ -197,8 +320,8 @@ end InfoGeometry.Krein
 
 -- Preserve exports for backward compatibility
 export InfoGeometry.Krein
-  (clmComm clmComm_eq_lie
-   jordanProd
+  (clmComm clmComm_eq_lie clmComm_mul
+   jordanProd jordanProd_comm
    isEven isOdd
    inGradePlus inGradeMinus
    gradePlusProj gradeMinusProj spectralPlusProj spectralMinusProj

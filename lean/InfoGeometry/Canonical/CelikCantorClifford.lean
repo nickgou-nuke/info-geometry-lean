@@ -1,4 +1,4 @@
-import InfoGeometry.Topology.FractalCantorFockWitness
+import InfoGeometry.Topology.FractalCantorFock
 import InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
 
 /-!
@@ -7,11 +7,11 @@ import InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
 From Derya Çelik, "A new approach to matrix isomorphisms of complex Clifford
 algebras via Cantor set", Turkish Journal of Mathematics 47 (2023), 75-86.
 
-The repo's `FractalCantorFockWitness.lean` already formalizes Lemma 2.2
+The repo's `FractalCantorFock.lean` already formalizes Lemma 2.2
 (tilt/switch commutation). This file records Theorem 3.1 — the Clifford
 representation — delegating all commutation proofs to the existing owner.
 
-## Lemma 2.2 → Already proved in FractalCantorFockWitness
+## Lemma 2.2 → Already proved in FractalCantorFock
 
   tilt_sq (j)              → Tⱼ² = I           (Çelik Lemma 2.2, proved)
   switch_sq (j)            → Sⱼ² = I           (Çelik Lemma 2.2, proved)
@@ -29,7 +29,7 @@ The paper's finite-rank theorem says that the representation
 
 where Fₙ is the Cantor boundary function space and the representation
 uses the tilt/switch operators.  The repo owns the base Pauli relations below
-and the tilt/switch commutation lemmas in `FractalCantorFockWitness`.  The
+and the tilt/switch commutation lemmas in `FractalCantorFock`.  The
 arbitrary-depth finite homomorphism is now constructed in
 `CelikKocakPaperCliffordLift` using Mathlib's native `CliffordAlgebra.lift`;
 the stronger matrix/tensor-product isomorphism remains separate proof debt.
@@ -47,14 +47,14 @@ finite-rank isomorphism as proved.
 
 set_option linter.unusedVariables false
 
-open InfoGeometry.Topology.FractalCantorFockWitness
+open InfoGeometry.Topology.FractalCantorFock
 open InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
 
 noncomputable section
 
 namespace InfoGeometry.Canonical.CelikCantorClifford
 
-/-! ### 1. Lemma 2.2 — Already proved in FractalCantorFockWitness -/
+/-! ### 1. Lemma 2.2 — Already proved in FractalCantorFock -/
 
 -- All six commutation relations are proved:
 --   tilt_sq j             : Tⱼ² = I           (Lemma 2.2, Čelik)

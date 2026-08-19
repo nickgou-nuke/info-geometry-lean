@@ -7,7 +7,7 @@ matrix-unit/CAR shadow, the indefinite Krein metric eta=diag(1,-1), the Krein
 adjoint A^x = eta A^dag eta, and exact matrix-element reconstruction.
 
 It is not a C*-O_2 completion, Tomita--Takesaki theorem, KMS construction, or
-Lorentz/Pin(5,5) proof.  Those are socketed in Lean.
+Lorentz/Pin(5,5) proof.  Those are deferred_interface in Lean.
 """
 
 import sys
@@ -114,7 +114,7 @@ def main() -> None:
     print("  finite chiral Cuntz/CAR shadow: closed")
     print("  eta^2=I and Krein adjoint action: closed")
     print("  matrix-element reconstruction/covariance: closed")
-    print("  full C*-O2/Tomita/KMS/Lorentz completion: socketed")
+    print("  full C*-O2/Tomita/KMS/Lorentz completion: deferred_interface")
 
 
 if __name__ == "__main__":

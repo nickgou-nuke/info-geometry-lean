@@ -1,4 +1,5 @@
 import InfoGeometry.Algebraic.CartanExponentialFamily
+import InfoGeometry.Probability.FiniteGibbsVariational
 
 /-!
 # Finite Gibbs relative thermodynamics
@@ -57,10 +58,191 @@ noncomputable def fisherMetric
 /-- Pointwise log-density difference for two finite Cartan Gibbs states. -/
 theorem logDensity_sub_logDensity
     (θ η : FiniteTemperature ι) (i : ι) :
-    logDensity θ i - logDensity η i =
+    InfoGeometry.Algebraic.CartanExponentialFamily.logDensity θ i -
+        InfoGeometry.Algebraic.CartanExponentialFamily.logDensity η i =
       (θ i - η i) + (massieuPotential η - massieuPotential θ) := by
-  unfold logDensity massieuPotential
+  unfold InfoGeometry.Algebraic.CartanExponentialFamily.logDensity massieuPotential
   ring
+
+/-!
+The pointwise relative surprisal is the log-density difference with the
+orientation used by `kl θ η`.  This is an algebraic identity in the finite
+Cartan model; no measure-theoretic Radon--Nikodym construction is needed.
+-/
+theorem surprisal_difference_eq_logDensity_sub_logDensity
+    (θ η : FiniteTemperature ι) (i : ι) :
+    InfoGeometry.Algebraic.CartanExponentialFamily.surprisal η i -
+        InfoGeometry.Algebraic.CartanExponentialFamily.surprisal θ i =
+      InfoGeometry.Algebraic.CartanExponentialFamily.logDensity θ i -
+        InfoGeometry.Algebraic.CartanExponentialFamily.logDensity η i := by
+  rw [InfoGeometry.Algebraic.CartanExponentialFamily.surprisal_eq_neg_logDensity,
+    InfoGeometry.Algebraic.CartanExponentialFamily.surprisal_eq_neg_logDensity]
+  ring
+
+/-!
+Expectation-level deviance readout: finite relative entropy is the expected
+difference of surprisals under the first Cartan state.
+-/
+theorem relativeEntropy_eq_expect_surprisal_difference
+    (θ η : FiniteTemperature ι) :
+    relativeEntropy θ η =
+      InfoGeometry.Algebraic.CartanExponentialFamily.expect θ (fun i =>
+        InfoGeometry.Algebraic.CartanExponentialFamily.surprisal η i -
+          InfoGeometry.Algebraic.CartanExponentialFamily.surprisal θ i) := by
+  unfold relativeEntropy InfoGeometry.Algebraic.CartanExponentialFamily.kl
+    InfoGeometry.Algebraic.CartanExponentialFamily.expect
+  apply Finset.sum_congr rfl
+  intro i hi
+  change InfoGeometry.Algebraic.CartanExponentialFamily.prob θ i *
+      (InfoGeometry.Algebraic.CartanExponentialFamily.logDensity θ i -
+        InfoGeometry.Algebraic.CartanExponentialFamily.logDensity η i) =
+    InfoGeometry.Algebraic.CartanExponentialFamily.prob θ i *
+      (InfoGeometry.Algebraic.CartanExponentialFamily.surprisal η i -
+        InfoGeometry.Algebraic.CartanExponentialFamily.surprisal θ i)
+  rw [surprisal_difference_eq_logDensity_sub_logDensity θ η i]
+
+/-!
+The Cartan `kl` owner and the normalized finite-KL owner use the same
+probability law, but expose it through different coordinates.  This bridge
+allows the existing Gibbs inequality and equality-case theorems to be reused
+without duplicating their proofs here.
+-/
+theorem relativeEntropy_eq_normalizedFiniteRelativeEntropy
+    [Nonempty ι] (θ η : FiniteTemperature ι)
+    (hθ : 0 < Z θ) (hη : 0 < Z η) :
+    relativeEntropy θ η =
+      InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy
+        (InfoGeometry.Algebraic.CartanExponentialFamily.prob θ)
+        (InfoGeometry.Algebraic.CartanExponentialFamily.prob η) := by
+  unfold relativeEntropy InfoGeometry.Algebraic.CartanExponentialFamily.kl
+    InfoGeometry.Algebraic.CartanExponentialFamily.expect
+  apply Finset.sum_congr rfl
+  intro i hi
+  have hθi : 0 < InfoGeometry.Algebraic.CartanExponentialFamily.prob θ i :=
+    InfoGeometry.Algebraic.CartanExponentialFamily.prob_pos θ hθ i
+  have hηi : 0 < InfoGeometry.Algebraic.CartanExponentialFamily.prob η i :=
+    InfoGeometry.Algebraic.CartanExponentialFamily.prob_pos η hη i
+  have hlogθ :
+      Real.log (InfoGeometry.Algebraic.CartanExponentialFamily.prob θ i) =
+      InfoGeometry.Algebraic.CartanExponentialFamily.logDensity θ i := by
+    unfold InfoGeometry.Algebraic.CartanExponentialFamily.prob
+      InfoGeometry.Algebraic.CartanExponentialFamily.logDensity
+    rw [Real.log_div (Real.exp_ne_zero _) hθ.ne', Real.log_exp]
+    rfl
+  have hlogη :
+      Real.log (InfoGeometry.Algebraic.CartanExponentialFamily.prob η i) =
+      InfoGeometry.Algebraic.CartanExponentialFamily.logDensity η i := by
+    unfold InfoGeometry.Algebraic.CartanExponentialFamily.prob
+      InfoGeometry.Algebraic.CartanExponentialFamily.logDensity
+    rw [Real.log_div (Real.exp_ne_zero _) hη.ne', Real.log_exp]
+    rfl
+  rw [Real.log_div hθi.ne' hηi.ne', hlogθ, hlogη]
+
+/-- Nonnegativity transported from the normalized finite-KL owner. -/
+theorem relativeEntropy_nonneg
+    [Nonempty ι] (θ η : FiniteTemperature ι)
+    (hθ : 0 < Z θ) (hη : 0 < Z η) :
+    0 ≤ relativeEntropy θ η := by
+  rw [relativeEntropy_eq_normalizedFiniteRelativeEntropy θ η hθ hη]
+  exact InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy_nonneg
+    (prob θ) (prob η)
+    (fun i => prob_pos θ hθ i)
+    (fun i => prob_pos η hη i)
+    (prob_sum_one θ hθ)
+    (prob_sum_one η hη)
+
+/-- Equality in Cartan relative entropy is equality of normalized Gibbs laws.
+The common additive Cartan shift is intentionally not quotiented here. -/
+theorem relativeEntropy_eq_zero_iff_prob_eq
+    [Nonempty ι] (θ η : FiniteTemperature ι)
+    (hθ : 0 < Z θ) (hη : 0 < Z η) :
+    relativeEntropy θ η = 0 ↔ prob θ = prob η := by
+  rw [relativeEntropy_eq_normalizedFiniteRelativeEntropy θ η hθ hη]
+  exact InfoGeometry.Probability.FiniteGibbsVariational.finiteRelativeEntropy_eq_zero_iff
+    (prob θ) (prob η)
+    (fun i => prob_pos θ hθ i)
+    (fun i => prob_pos η hη i)
+    (prob_sum_one θ hθ)
+    (prob_sum_one η hη)
+
+/-!
+The additive Cartan gauge is invisible to the normalized Gibbs law.  This is
+the concrete finite consequence of the preceding equality characterization;
+it does not quotient the parameter space or identify it with the determinant
+readout.
+-/
+theorem relativeEntropy_zero_of_common_shift
+    [Nonempty ι] (θ : FiniteTemperature ι) (c : ℝ) (hθ : 0 < Z θ) :
+    relativeEntropy θ (fun i => θ i + c) = 0 := by
+  apply (relativeEntropy_eq_zero_iff_prob_eq θ (fun i => θ i + c) hθ
+    (Z_pos (fun i => θ i + c))).2
+  funext i
+  exact (prob_add_const θ c i).symm
+
+/--
+Zero finite relative entropy characterizes precisely the additive Cartan
+gauge orbit.  This is the finite identifiability statement for the
+normalized Gibbs chart: equal probabilities determine the natural parameters
+up to one common scalar shift.
+-/
+theorem relativeEntropy_eq_zero_iff_common_shift
+    [Nonempty ι] (θ η : FiniteTemperature ι)
+    (hθ : 0 < Z θ) (hη : 0 < Z η) :
+    relativeEntropy θ η = 0 ↔
+      ∃ c : ℝ, ∀ i, η i = θ i + c := by
+  constructor
+  · intro hzero
+    have hprob : prob θ = prob η :=
+      (relativeEntropy_eq_zero_iff_prob_eq θ η hθ hη).1 hzero
+    let c : ℝ := Phi η - Phi θ
+    refine ⟨c, ?_⟩
+    intro i
+    have hlogθ :
+        Real.log (prob θ i) =
+          InfoGeometry.Algebraic.CartanExponentialFamily.logDensity θ i := by
+      unfold prob InfoGeometry.Algebraic.CartanExponentialFamily.logDensity
+      rw [Real.log_div (Real.exp_ne_zero _) hθ.ne', Real.log_exp]
+      rfl
+    have hlogη :
+        Real.log (prob η i) =
+          InfoGeometry.Algebraic.CartanExponentialFamily.logDensity η i := by
+      unfold prob InfoGeometry.Algebraic.CartanExponentialFamily.logDensity
+      rw [Real.log_div (Real.exp_ne_zero _) hη.ne', Real.log_exp]
+      rfl
+    have hlogDensity :
+        InfoGeometry.Algebraic.CartanExponentialFamily.logDensity θ i =
+          InfoGeometry.Algebraic.CartanExponentialFamily.logDensity η i := by
+      calc
+        InfoGeometry.Algebraic.CartanExponentialFamily.logDensity θ i =
+            Real.log (prob θ i) := hlogθ.symm
+        _ = Real.log (prob η i) := by rw [congrFun hprob i]
+        _ = InfoGeometry.Algebraic.CartanExponentialFamily.logDensity η i := hlogη
+    unfold InfoGeometry.Algebraic.CartanExponentialFamily.logDensity at hlogDensity
+    dsimp [c]
+    linarith
+  · rintro ⟨c, hc⟩
+    have hηeq : η = (fun i => θ i + c) := by
+      funext i
+      exact hc i
+    rw [hηeq]
+    exact relativeEntropy_zero_of_common_shift θ c hθ
+
+/--
+Strict finite Gibbs dissipation away from the additive Cartan gauge orbit.
+This is the exact finite Lyapunov criterion; no global convexity or analytic
+continuation is involved.
+-/
+theorem relativeEntropy_pos_of_not_common_shift
+    [Nonempty ι] (θ η : FiniteTemperature ι)
+    (hθ : 0 < Z θ) (hη : 0 < Z η)
+    (hnot : ¬ ∃ c : ℝ, ∀ i, η i = θ i + c) :
+    0 < relativeEntropy θ η := by
+  have hnonneg : 0 ≤ relativeEntropy θ η :=
+    relativeEntropy_nonneg θ η hθ hη
+  have hne : relativeEntropy θ η ≠ 0 := by
+    intro hzero
+    exact hnot ((relativeEntropy_eq_zero_iff_common_shift θ η hθ hη).1 hzero)
+  exact lt_of_le_of_ne hnonneg (Ne.symm hne)
 
 /--
 The finite relative modular readout is exactly the Massieu-Bregman divergence.
@@ -97,6 +279,32 @@ theorem fisherMetric_self_nonneg
     [Nonempty ι] (θ : FiniteTemperature ι) (X : ι → ℝ) (hZ : 0 < Z θ) :
     0 ≤ fisherMetric θ X X := by
   exact fisherCov_self_nonneg θ X hZ
+
+/-- The finite Fisher self-covariance is strictly positive for every
+nonconstant observable.  This is the finite strictness criterion behind the
+Souriau/Fisher metric; no infinite or analytic identification is used. -/
+theorem fisherMetric_self_pos_of_nonconstant
+    [Nonempty ι] (θ : FiniteTemperature ι) (X : ι → ℝ) (hZ : 0 < Z θ)
+    (hX : ∃ i j : ι, X i ≠ X j) :
+    0 < fisherMetric θ X X := by
+  obtain ⟨i, j, hij⟩ := hX
+  have hcenter : ∃ k : ι, X k - expect θ X ≠ 0 := by
+    by_contra h
+    push_neg at h
+    apply hij
+    linarith [h i, h j]
+  obtain ⟨k, hk⟩ := hcenter
+  change 0 < fisherCov θ X X
+  unfold fisherCov
+  apply Finset.sum_pos' (s := Finset.univ)
+  · intro l hl
+    have hprob : 0 ≤ prob θ l := prob_nonneg (θ := θ) hZ l
+    simpa [pow_two, mul_assoc] using
+      mul_nonneg hprob (sq_nonneg (X l - expect θ X))
+  · refine ⟨k, Finset.mem_univ k, ?_⟩
+    have hprob : 0 < prob θ k := prob_pos θ hZ k
+    simpa [pow_two, mul_assoc] using
+      mul_pos hprob (sq_pos_of_ne_zero hk)
 
 /--
 At the symmetric Cartan point, centered directions reduce the Fisher metric to

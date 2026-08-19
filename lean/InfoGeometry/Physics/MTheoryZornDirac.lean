@@ -10,7 +10,7 @@ carrier with a finite family of off-diagonal BdG blocks.  It does not add a
 Zorn product or identify the carrier with a Clifford or supergravity algebra.
 -/
 
-abbrev MTheoryZornCarrier := BdGValuedZornCarrier
+abbrev MTheoryZornCarrier := BdGValuedZornData
 
 def gaugeMultiplet (Delta : Fin 3 → ℚ) : MTheoryZornCarrier where
   alpha := 0

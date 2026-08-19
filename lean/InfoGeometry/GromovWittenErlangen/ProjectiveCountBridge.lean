@@ -35,7 +35,7 @@ structure GWProjectiveCountState
     (G T Target Coeff : Type*) where
   /-- Finite GW/Erlangen localization packet. -/
   localization :
-    InfoGeometry.GromovWittenErlangen.VirtualLocalizationOrbitPacket
+    InfoGeometry.GromovWittenErlangen.VirtualLocalizationOrbitData
       G T Target Coeff
 
   /-- Raw unnormalized count profile. -/

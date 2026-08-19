@@ -11,7 +11,7 @@ Operator-first Connes-spatial modular lane.
 This module makes explicit the noncommutative owner core:
 
 * unnormalized weight-comparison on operators (`ConnesSpatialDerivative`)
-* Connes cocycle derivative and modular flow sockets
+* Connes cocycle derivative and modular flow data
 * type-III aware integration backends
 * optional Bogoliubov/KAN diagonal-readout packet (as secondary shadow)
 
@@ -32,7 +32,7 @@ open InfoGeometry.Canonical
 /--
 Primary owner packet for the noncommutative modular operator lane.
 
-The fields are intentionally proof-carrying sockets: concrete witnesses and
+The fields are intentionally explicit: concrete properties and
 backend choices are explicit, while commutative diagonalization lives in a
 separate shadow packet.
 -/
@@ -44,7 +44,7 @@ structure NoncommutativeModularOperatorLift
     [Zero Ham]
     [One Phase] [Mul Phase] where
   /-- Explicitly noncommutative carrier property. -/
-  noncommutativeWitness : ∃ a b : A, a * b ≠ b * a
+  noncommutative_pair : ∃ a b : A, a * b ≠ b * a
 
   /-- Modular integration on the base algebra is by weight, not bare trace. -/
   modularWeight : ModularWeightDatum A
@@ -127,7 +127,7 @@ theorem modularFlow_mul
 theorem exists_noncommuting_pair
     (P : NoncommutativeModularOperatorLift A Weight Deriv Ham Phase Core) :
     ∃ a b : A, a * b ≠ b * a :=
-  NoncommutativeModularOperatorLift.noncommutativeWitness P
+  NoncommutativeModularOperatorLift.noncommutative_pair P
 
 /--
 Type-III base integration is routed through the modular weight contained in the

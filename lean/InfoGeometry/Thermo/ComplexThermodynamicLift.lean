@@ -1,5 +1,6 @@
 import Mathlib.Tactic
 import Mathlib.Tactic.FieldSimp
+import Mathlib.Data.Complex.Basic
 import InfoGeometry.Meta.Architecture
 
 /-!
@@ -18,7 +19,7 @@ No zeta theorem.
 No analytic continuation.
 No self-concordance claim.
 No Hilbert--Pólya claim.
-No socket.
+No interface.
 No property.
 -/
 
@@ -275,7 +276,6 @@ theorem cayley_inverse_right
   unfold invCayleyCompact cayleyCompact
   field_simp [hy]
   ring
-
 
 /-! ## 5. Two-phase Yang--Lee algebra -/
 

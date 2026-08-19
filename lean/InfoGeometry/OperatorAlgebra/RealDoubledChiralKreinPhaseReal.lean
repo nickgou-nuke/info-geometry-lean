@@ -2,7 +2,7 @@ import InfoGeometry.OperatorAlgebra.RealPhaseSpectralTriple
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinAdjoint
 
 /-!
-# Phase-axis/Real-structure socket for the doubled chiral carrier
+# Phase-axis/Real-structure data for the doubled chiral carrier
 
 This file connects the finite doubled construction to the repository's
 existing `PhaseAxis` and `PhaseRealStructure` interfaces.  The `J` here is

@@ -69,4 +69,26 @@ instance : CommSemiring FibFusionSemiring :=
 
 abbrev FibonacciFusionRing := Grothendieck FibFusionSemiring
 
+def fibFusionUnitK0 : FibonacciFusionRing :=
+  grothendieckMap FibFusionSemiring (1, 0)
+
+def fibFusionTauK0 : FibonacciFusionRing :=
+  grothendieckMap FibFusionSemiring (0, 1)
+
+theorem fibFusion_tau_sq :
+    fibMul (0, 1) (0, 1) = (1, 0) + (0, 1) := by
+  ext <;> norm_num [fibMul]
+
+theorem fibFusionTauK0_sq :
+    fibFusionTauK0 * fibFusionTauK0 =
+      fibFusionUnitK0 + fibFusionTauK0 := by
+  change
+    grothendieckMap FibFusionSemiring (0, 1) *
+        grothendieckMap FibFusionSemiring (0, 1) =
+      grothendieckMap FibFusionSemiring (1, 0) +
+        grothendieckMap FibFusionSemiring (0, 1)
+  rw [← InfoGeometry.Algebra.GrothendieckRing.grothendieckMap_mul,
+    ← map_add]
+  exact congrArg (grothendieckMap FibFusionSemiring) fibFusion_tau_sq
+
 end InfoGeometry.Canonical

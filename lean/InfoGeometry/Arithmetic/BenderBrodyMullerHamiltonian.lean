@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 
 /-!
-# Bender--Brody--Müller Hamiltonian socket
+# Bender--Brody--Müller Hamiltonian algebra
 
 Finite/theorem-safe algebraic interfaces for
 Carl M. Bender, Dorje C. Brody, Markus P. Müller,
@@ -20,8 +20,8 @@ This Lean module proves only closed algebraic fragments:
   then the corresponding zeta value is zero;
 * a similarity transform transfers eigenvectors from the Berry--Keating block to
   the BBM Hamiltonian whenever the inverse/left-inverse laws are supplied;
-* PT/pseudo-Hermitian/self-adjoint/RH consequences are recorded only as socket
-  data, never as proved analytic theorems.
+* PT/pseudo-Hermitian/self-adjoint/RH consequences remain separate from the
+  closed algebraic theorems proved here.
 
 #### BUCKET 1: CLOSED FINITE THEOREMS
 
@@ -163,12 +163,11 @@ theorem berryKeating_commuting_shadow {R : Type*} [Semiring R]
   rw [hcomm]
   rw [two_mul]
 
-/-! ## Analytic obligation socket -/
+/-! ## Conditional implication -/
 
 /--
-Projection from explicit analytic obligations.  This theorem is intentionally
-conditional: it does not construct the BBM domain, metric, self-adjoint closure,
-or RH consequence.
+Conditional implication from explicit analytic hypotheses.  This theorem does
+not construct analytic data.
 -/
 theorem rhConsequence_of_selfAdjointClosure
     (domainChosen deltaInverseOnDomain boundaryConditionSelectsNontrivialZeros

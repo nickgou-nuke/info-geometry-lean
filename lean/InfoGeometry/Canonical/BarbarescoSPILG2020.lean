@@ -13,7 +13,7 @@ This file extracts theorem-safe algebraic content from
 
 It intentionally does **not** claim the analytic/global statements of the
 slides: no global coadjoint-orbit theorem, no measure-theoretic Gibbs state,
-and no differentiable Lie-group construction.  Those remain sockets for owner
+and no differentiable Lie-group construction.  Those remain interfaces for owner
 files with the needed hypotheses.
 -/
 

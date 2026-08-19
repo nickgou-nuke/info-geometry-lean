@@ -8,7 +8,7 @@ Formal checks:
 - 0D BDI condition is exactly chi(d)=-1 and D(d)^2=-1;
 - BDI invariant is parity N_occ mod 2, so nodes occur at parity-domain walls;
 - Majorana/BdG toy pairing has particle-hole symmetric spectrum ±sqrt(xi^2+Delta^2);
-- in the null-mode limit xi=Delta=0 the quasiparticle is a zero-energy Majorana socket.
+- in the null-mode limit xi=Delta=0 the quasiparticle is a zero-energy Majorana deferred_interface.
 """
 
 import sympy as sp

@@ -270,6 +270,58 @@ theorem transportedFlow_eq_bogoliubovGeneratorFlow
         (Real.sinh η) • V.connectionGenerator.toLinearMap := by
   simp [transportedFlow, D.transportedGenerator_eq_connectionGenerator]
 
+theorem transportedGenerator_apply
+    (D : SplitOctonionBogoliubovCarrierDatum (E := E) g V) (x : H₂) :
+    transportedGenerator D x =
+      D.carrierEquiv ((doubledHyperbolicOperator g)
+        (D.carrierEquiv.symm x)) := by
+  rfl
+
+theorem transportedGenerator_sq_apply
+    (D : SplitOctonionBogoliubovCarrierDatum (E := E) g V)
+    (hg : Quaternion.normSq g = 1) (x : H₂) :
+    D.transportedGenerator (D.transportedGenerator x) = x := by
+  simpa using LinearMap.congr_fun (D.transportedGenerator_sq hg) x
+
+theorem transportedFlow_apply
+    (D : SplitOctonionBogoliubovCarrierDatum (E := E) g V)
+    (η : ℝ) (x : H₂) :
+    D.transportedFlow η x =
+      Real.cosh η • x + Real.sinh η • D.transportedGenerator x := by
+  simp [transportedFlow]
+
+theorem transportedFlow_comp
+    (D : SplitOctonionBogoliubovCarrierDatum (E := E) g V)
+    (hg : Quaternion.normSq g = 1) (η ζ : ℝ) :
+    (D.transportedFlow η).comp (D.transportedFlow ζ) =
+      D.transportedFlow (η + ζ) := by
+  apply LinearMap.ext
+  intro x
+  have hG : D.transportedGenerator (D.transportedGenerator x) = x :=
+    D.transportedGenerator_sq_apply hg x
+  change
+    (Real.cosh η) •
+          ((Real.cosh ζ) • x + (Real.sinh ζ) • D.transportedGenerator x) +
+        (Real.sinh η) •
+          D.transportedGenerator
+            ((Real.cosh ζ) • x + (Real.sinh ζ) • D.transportedGenerator x) =
+      (Real.cosh (η + ζ)) • x +
+        (Real.sinh (η + ζ)) • D.transportedGenerator x
+  rw [map_add, map_smul, map_smul, hG]
+  rw [Real.cosh_add, Real.sinh_add]
+  module
+
+theorem transportedFlow_inverse
+    (D : SplitOctonionBogoliubovCarrierDatum (E := E) g V)
+    (hg : Quaternion.normSq g = 1) (η : ℝ) :
+    (D.transportedFlow (-η)).comp (D.transportedFlow η) = LinearMap.id ∧
+      (D.transportedFlow η).comp (D.transportedFlow (-η)) = LinearMap.id := by
+  constructor
+  · rw [D.transportedFlow_comp hg (-η) η]
+    simp [transportedFlow]
+  · rw [D.transportedFlow_comp hg η (-η)]
+    simp [transportedFlow]
+
 end SplitOctonionBogoliubovCarrierDatum
 
 end InfoGeometry.Canonical

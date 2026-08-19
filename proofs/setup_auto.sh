@@ -95,7 +95,7 @@ VERIFY_FILES=(
   "CanonicalSplitOctonionTKK.lean"
   "ChiralCausalConeTKKBridge.lean"
   "Pin55ChiralZornTKKBridge.lean"
-  "ZornTrialityFormSocket.lean"
+  "ZornTrialityForm.lean"
 )
 for f in "${VERIFY_FILES[@]}"; do
   echo -n "  Checking $f... "

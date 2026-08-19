@@ -260,27 +260,43 @@ theorem causal_null_closure_laws :
 @[rep_depth krein]
 theorem causalNullPlus_sq :
     causalNullPlus * causalNullPlus = 0 :=
-  causal_null_closure_laws.1
+  by
+    simp [causalNullPlus, splitQuaternionI, splitQuaternionJ,
+      mul_add, add_mul, smul_add]
+    module
 
 @[rep_depth krein]
 theorem causalNullMinus_sq :
     causalNullMinus * causalNullMinus = 0 :=
-  causal_null_closure_laws.2.1
+  by
+    simp [causalNullMinus, splitQuaternionI, splitQuaternionJ,
+      sub_eq_add_neg, mul_add, add_mul, smul_add]
+    module
 
 @[rep_depth krein]
 theorem causalNullPlus_mul_causalNullMinus :
     causalNullPlus * causalNullMinus = kreinPlusProjector :=
-  causal_null_closure_laws.2.2.1
+  by
+    simp [causalNullPlus, causalNullMinus, kreinPlusProjector,
+      splitQuaternionI, splitQuaternionJ, splitQuaternionK,
+      sub_eq_add_neg, mul_add, add_mul, smul_add]
+    module
 
 @[rep_depth krein]
 theorem causalNullMinus_mul_causalNullPlus :
     causalNullMinus * causalNullPlus = kreinMinusProjector :=
-  causal_null_closure_laws.2.2.2.1
+  by
+    simp [causalNullPlus, causalNullMinus, kreinMinusProjector,
+      splitQuaternionI, splitQuaternionJ, splitQuaternionK,
+      sub_eq_add_neg, mul_add, add_mul, smul_add]
+    module
 
 @[rep_depth krein]
 theorem kreinProjector_sum :
     kreinPlusProjector + kreinMinusProjector = (1 : Alg) :=
-  krein_projector_laws.2.2.2.2
+  by
+    simp [kreinPlusProjector, kreinMinusProjector, splitQuaternionK]
+    module
 
 @[rep_depth krein]
 theorem kreinMinusProjector_mul_causalNullPlus :

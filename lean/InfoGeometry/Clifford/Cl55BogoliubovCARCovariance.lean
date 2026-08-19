@@ -35,6 +35,10 @@ def realBogoliubovCreator
 def realAnticommutator (x y : RealCAROperator) : RealCAROperator :=
   x * y + y * x
 
+@[simp] theorem realAnticommutator_comm (x y : RealCAROperator) :
+    realAnticommutator x y = realAnticommutator y x := by
+  simp [realAnticommutator, add_comm]
+
 theorem realAnticommutator_expand
     (x₁ x₂ y₁ y₂ : RealCAROperator) (c₁ c₂ d₁ d₂ : ℝ) :
     realAnticommutator (c₁ • x₁ + c₂ • x₂) (d₁ • y₁ + d₂ • y₂) =
@@ -71,6 +75,19 @@ theorem real_bogoliubov_car_preserved
   simp only [hac, hdb, hab, hdc, smul_zero, add_zero]
   rw [← add_smul, show u * u = u ^ 2 by ring,
     show v * v = v ^ 2 by ring, huv, one_smul]
+
+theorem real_bogoliubov_car_preserved_reverse
+    (a c b d : RealCAROperator) (u v : ℝ)
+    (huv : u ^ 2 + v ^ 2 = 1)
+    (hac : realAnticommutator a c = 1)
+    (hbd : realAnticommutator b d = 1)
+    (hab : realAnticommutator a b = 0)
+    (hcd : realAnticommutator c d = 0) :
+    realAnticommutator
+        (realBogoliubovCreator c b u v)
+        (realBogoliubovAnnihilator a d u v) = 1 := by
+  simpa [realAnticommutator_comm] using
+    real_bogoliubov_car_preserved a c b d u v huv hac hbd hab hcd
 
 theorem real_bogoliubov_annihilator_nilpotent
     (a d : RealCAROperator) (u v : ℝ)
@@ -227,5 +244,21 @@ theorem cl55_leftAction_bogoliubov_isCARPair
       h_ann_sq h_cre_sq h_cross_ann_cre
   · exact real_bogoliubov_creator_nilpotent _ _ u v
       h_cre_sq_i h_ann_sq_j h_cross_cre_ann
+
+theorem cl55_leftAction_bogoliubov_car_preserved_reverse
+    (i j : Fin 5) (u v : ℝ) (huv : u ^ 2 + v ^ 2 = 1) :
+    realAnticommutator
+        (cl55BogoliubovCreator i j u v)
+        (cl55BogoliubovAnnihilator i j u v) = 1 := by
+  simpa [cl55BogoliubovAnnihilator, cl55BogoliubovCreator] using
+    real_bogoliubov_car_preserved_reverse
+      (leftAction55 (annihilation55 i))
+      (leftAction55 (creation55 i))
+      (leftAction55 (annihilation55 j))
+      (leftAction55 (creation55 j)) u v huv
+      (cl55CAR_leftAction_anticommutator i)
+      (cl55CAR_leftAction_anticommutator j)
+      (cl55_leftAction_annihilation_anticommutator i j)
+      (cl55_leftAction_creation_anticommutator i j)
 
 end InfoGeometry.Clifford.Clifford55

@@ -381,6 +381,18 @@ lemma gibbsProb_eq_prior_mul_exp_tilt
     _ = (J.prior x).toReal * Real.exp (J.energy lam x - Real.log (J.partition lam)) := by
           rw [Real.exp_sub]
 
+lemma log_gibbsProb_eq_log_prior_add_energy_sub_logPartition
+    (J : FiniteJaynesProblem α ι)
+    (hprior : J.FullSupportPrior)
+    (lam : ι → ℝ)
+    (hZ : J.partition lam ≠ 0)
+    (x : α) :
+    Real.log (J.gibbsProb lam hZ x) =
+      Real.log ((J.prior x).toReal) + J.energy lam x - J.logPartition lam := by
+  rw [J.gibbsProb_eq_prior_mul_exp_tilt lam hZ x]
+  rw [Real.log_mul (hprior x).ne' (Real.exp_ne_zero _), Real.log_exp]
+  ring
+
 lemma log_gibbsRatio_eq_energy_sub_logPartition
     (J : FiniteJaynesProblem α ι)
     (hprior : J.FullSupportPrior)

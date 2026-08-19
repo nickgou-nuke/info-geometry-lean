@@ -17,7 +17,7 @@ The content is deliberately finite and algebraic:
 * pointwise left/right projection of split-valued kernels;
 * exact reconstruction by the idempotent split basis.
 
-No socket.
+No deferred interface.
 No property.
 No CFT claim.
 -/

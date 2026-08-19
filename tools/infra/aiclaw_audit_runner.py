@@ -52,7 +52,7 @@ Hard rules:
 2. Use one fenced `lean4` code block under a `### Replacement` heading when possible.
 3. No conversational prose inside the Lean code block.
 4. Do not use `sorry`, `admit`, `axiom`, fake instances, `unsafe`, or vacuous `True` claims.
-5. Do not create wrappers, sockets, certificate packets, `_True`, `_valid`, `_law`, `_proof`, or renamed placeholder surfaces.
+5. Do not create wrappers, deferred interfaces, certificate packets, `_True`, `_valid`, `_law`, `_proof`, or renamed placeholder surfaces.
 6. Do not hide assumptions in structure fields or class fields. A proof is a theorem or lemma, not a data field.
 7. Every lemma must contain real, non-vacuous mathematical content derived from Mathlib, repository imports, explicit theorem hypotheses, and verified tactics.
 8. Keep the file small and mathlib-style: minimal imports, cohesive owner scope, short local helper lemmas only when they reduce the proof.

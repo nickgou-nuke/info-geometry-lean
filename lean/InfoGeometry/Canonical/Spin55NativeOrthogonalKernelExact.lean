@@ -1,4 +1,4 @@
-import InfoGeometry.Canonical.Spin55NativeOrthogonalCentralKernelEvidence
+import InfoGeometry.Canonical.Spin55NativeOrthogonalCentralKernel
 import InfoGeometry.Clifford.Cl55NativeCenterScalar
 
 namespace InfoGeometry.Clifford.Clifford55

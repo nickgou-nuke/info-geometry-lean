@@ -40,19 +40,11 @@ theorem card_aut_eq_group [Fintype G] (C : CompleteGroupCertificate G) :
   letI : Fintype (MulAut G) := CompleteGroupCertificate.autFintype C
   exact Fintype.card_congr (C.symm : MulAut G ≃* G).toEquiv
 
-/-- The bounded finite-stage cardinal ledger used by the executable multi-engine
+/- The bounded finite-stage cardinal ledger used by the executable multi-engine
 sandbox once a complete-group property is available. -/
-def towerCard [Fintype G] (_C : CompleteGroupCertificate G) (_n : ℕ) : ℕ :=
-  Fintype.card G
-
-/-- Once the complete-group property is supplied, the bounded ledger is stable
+ /- Once the complete-group property is supplied, the bounded ledger is stable
 from one stage to the next.  This is not the transfinite automorphism-tower
 theorem; it is the exact local fixed-point readback. -/
-theorem towerCard_stable [Fintype G] (C : CompleteGroupCertificate G) (n : ℕ) :
-    CompleteGroupCertificate.towerCard C (n + 1) =
-      CompleteGroupCertificate.towerCard C n := by
-  rfl
-
 /-- Concrete low-cardinality sanity check used by the external lanes: the
 permutation group on three letters has six elements.  The statement is about the
 standard permutation group only; it does not assert completeness of `S₃`. -/

@@ -43,6 +43,18 @@ structure HasFiniteCarrierStage {E : Type*} (K : ℕ → Set E) where
   stage : E → ℕ
   mem_stage : ∀ x : E, x ∈ K (stage x)
 
+/-- The stage-index structure is equivalent to pointwise finite-stage coverage. -/
+theorem hasFiniteCarrierStage_iff_exists_stage
+    {E : Type*} (K : ℕ → Set E) :
+    Nonempty (HasFiniteCarrierStage K) ↔ ∀ x : E, ∃ n : ℕ, x ∈ K n := by
+  constructor
+  · rintro ⟨h⟩ x
+    exact ⟨h.stage x, h.mem_stage x⟩
+  · intro h
+    classical
+    let stage : E → ℕ := fun x => Classical.choose (h x)
+    exact ⟨⟨stage, fun x => Classical.choose_spec (h x)⟩⟩
+
 /--
 A concrete stage index yields the detector premise: if an element pairs
 nonnegatively with every element of the directed union, then it already belongs

@@ -1,6 +1,5 @@
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.SocketTarget
 import InfoGeometry.Canonical.PrimeCliffordWaveletXiLimit
 import InfoGeometry.Canonical.PrimeHurwitzLimit
 import InfoGeometry.Canonical.PrimeLeeYangConvergence
@@ -9,8 +8,8 @@ import InfoGeometry.Analysis.LeeYangRootLimit
 /-!
 # InfoGeometry.Canonical.PrimeLeeYangToHurwitz
 
-Relay layer from the prime convergence socket to the Hurwitz zero-transfer
-socket.
+Relay layer from the prime convergence interface to the Hurwitz zero-transfer
+interface.
 
 This file does not prove any prime-to-`xi` convergence statement and does not
 prove RH. It isolates the transfer step that comes after the analytic

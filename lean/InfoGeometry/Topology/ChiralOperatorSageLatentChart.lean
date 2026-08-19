@@ -12,7 +12,7 @@ the order
 The observation target is a finite product of the coefficient algebra.  This
 keeps noncommutative multiplication and commutators visible; the scalar norm
 readout below is only an optional secondary observation required by the
-generic observable-system socket.
+generic observable-system interface.
 -/
 
 namespace InfoGeometry.Topology

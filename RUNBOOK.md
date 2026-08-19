@@ -16,25 +16,16 @@ This executes the compilation of all Lean 4 modules across the repository (over 
 * `InfoGeometry.Projective.KuzminCuntzPath` (Verifies the Cuntz-Toeplitz $q$-CCR algebraic path)
 * `InfoGeometry.KasparovKreinDIIIBridge` (Verifies the Class DIII equivalence)
 
-## 2. Running Symbolic Witnesses
-For specific algebraic computations that bridge into physical observables (like Yang-Baxter phase checks or large matrix reductions), we use SymPy scripts as external witnesses. 
-
-To run the Fibonacci MZM and Kuzmin path witness:
-```bash
-uv run python3 octonionic_cuntz_scrambling.py
-```
-*Note: Ensure `uv` is installed, or run `python3 -m pip install sympy` locally.*
-
-## 3. The Strict "Native Lean Closure" Policy
+## 2. The Strict "Native Lean Closure" Policy
 As defined in `GEMINI.md`:
-> "Effective immediately, replacing witness-gated and external-certificate leftovers with native Lean proofs is the top-priority mandate."
+> "Effective immediately, every mathematical claim must be discharged by a native Lean proof."
 
 **Rules of Execution:**
-1. **No Proof by Python:** SymPy scripts, Mathematica outputs, and AI-generated certificates are **scaffolding only**. They are not accepted as mathematical truth.
+1. **No Proof by Python:** External computations are not accepted as mathematical truth.
 2. **Lean Kernel Authority:** Every proposition must be discharged by a native Lean 4 derivation path.
-3. **Open Debt:** If a bridge is structurally formulated but lacks a native Lean proof term, it must be marked with `sorry` and clearly labeled as open closure debt. Do not remove debt labels until the Lean kernel accepts the proof without warnings.
+3. **Open Claims:** If a bridge lacks a native Lean proof term, it is not a theorem and must not be presented as one.
 
-## 4. Advanced Graph Tooling
+## 3. Advanced Graph Tooling
 For redundancy cleanup, namespace deduplication, or legacy compatibility checks across the DAG/ArangoDB graphs, use the dedicated skill library:
 
 ```bash

@@ -25,7 +25,7 @@ Layer 1 (proved): η = S₁S₁*−S₂S₂* in the 2×2 matrix representation.
 Layer 2 (built): q-deformed CCRs defined. Connection to tanh via
   [n]_q = sinh(nθ)/sinh(θ) established. Root-of-unity truncation defined.
 
-Layer 3 (socketed): Full O_q(M|N) representation theory. Supertrace as
+Layer 3: Full O_q(M|N) representation theory. Supertrace as
   the unique invariant functional. q→1 colimit as the classical limit.
   Anomaly cancellation via q-trace identities.
 -/

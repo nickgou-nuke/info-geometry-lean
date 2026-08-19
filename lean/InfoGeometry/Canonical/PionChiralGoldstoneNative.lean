@@ -10,9 +10,10 @@ import InfoGeometry.Canonical.Cl11PolarizedBasis
 /-!
 # Native chiral Lie/CAR closure
 
-This is the theorem-safe replacement for the former proof-only pion packet.
-It uses the existing generic symmetric-Lie owner for Cartan eigenspaces and
-the existing finite chiral `σ⁺/σ⁻/σ³` owner for the concrete matrix model.
+This is the theorem-safe native owner for the pion/CAR packet.  It uses the
+existing generic symmetric-Lie owner for Cartan eigenspaces and the existing
+finite chiral `σ⁺/σ⁻/σ³` owner only as a matrix readout.  The canonical
+concrete pion carrier below is the repository-owned real doubled CAR atom.
 
 No Pin group, TKK, Casimir, Zorn, or Goldstone-physics identification is
 asserted here. The proved content is the algebraic symmetric-pair closure
@@ -125,7 +126,12 @@ theorem piZero_from_piPlus_piMinus :
     (1 / 2 : ℂ) • ⁅σPlus, σMinus⁆
   rw [LieRing.of_associative_ring_bracket, comm_σPlus_σMinus]
 
-/-! ## Readback to the existing real `Cl(1,1)` atom -/
+/-! ## Compatibility readback to the complexified `Cl(1,1)` block
+
+These identities are retained as compatibility readouts.  They are not the
+definition of the native pion channels; the real doubled-space packet below
+is canonical.
+-/
 
 theorem piPlus_from_real_CPTAtom :
     piPlus = (1 / 2 : ℂ) •
@@ -253,6 +259,39 @@ theorem hestenesPion_real_closure :
     hestenesPionMinus_sq (E := E),
     hestenesPion_plus_minus_car (E := E),
     hestenesPion_plus_minus_lie (E := E)⟩
+
+/-! ### Canonical real pion/phase packet
+
+The neutral pion direction is the real grading axis `ε / 2`.  The distinct
+Hestenes/Krein phase axis is `K = Jε`; it is not identified with the neutral
+pion direction.
+-/
+
+theorem hestenesPion_triplet_real_closure :
+    (hestenesPionPlus (E := E)).comp
+        (hestenesPionPlus (E := E)) = 0 ∧
+    (hestenesPionMinus (E := E)).comp
+        (hestenesPionMinus (E := E)) = 0 ∧
+    CARBracket (E := E)
+        (hestenesPionMinus (E := E))
+        (hestenesPionPlus (E := E)) =
+      ContinuousLinearMap.id ℝ (DoubledSpace E) ∧
+    CCRBracket (E := E)
+        (hestenesPionPlus (E := E))
+        (hestenesPionMinus (E := E)) =
+      (2 : ℝ) • hestenesPionZero (E := E) ∧
+    (complex_i (E := E)).comp (complex_i (E := E)) =
+      -(ContinuousLinearMap.id ℝ (DoubledSpace E)) := by
+  exact ⟨hestenesPionPlus_sq (E := E),
+    hestenesPionMinus_sq (E := E),
+    hestenesPion_plus_minus_car (E := E),
+    hestenesPion_plus_minus_lie (E := E),
+    complex_i_sq E⟩
+
+theorem hestenesPionZero_eq_half_spectral_epsilon :
+    hestenesPionZero (E := E) =
+      (1 / 2 : ℝ) • spectral_epsilon (E := E) := by
+  rfl
 
 /-! ## Weld to the generic polarized `g₊₁/g₋₁` owner
 

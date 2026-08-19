@@ -163,6 +163,12 @@ theorem realTraceState_cyclic (x y : Carrier) :
       realTraceState.eval (y * x) := by
   rw [realTraceState_eval, realTraceState_eval, traceFunctional_cyclic]
 
+theorem realTraceState_commutator_zero (x y : Carrier) :
+    realTraceState.eval (x * y - y * x) = 0 := by
+  rw [realTraceState_eval]
+  have h := traceFunctional_commutator_zero x y
+  exact congrArg Complex.re h
+
 theorem realTraceState_positive (x : Carrier) :
     0 ≤ realTraceState.eval (star x * x) :=
   realTraceFunctional_positive x

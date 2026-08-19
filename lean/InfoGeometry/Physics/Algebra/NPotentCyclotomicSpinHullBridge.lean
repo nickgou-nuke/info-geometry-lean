@@ -304,20 +304,12 @@ carrier.
 def fibonacciScalarOperator : Module.End ℂ ℂ :=
   fibonacciTopologicalTwist • (1 : Module.End ℂ ℂ)
 
-theorem fibonacciScalarOperator_apply (z : ℂ) :
-    fibonacciScalarOperator z = fibonacciTopologicalTwist * z := by
-  simp [fibonacciScalarOperator]
-
 /-- The vector `1` is a nonzero Fibonacci eigenvector. -/
-theorem fibonacciScalarOperator_has_eigenvalue :
-    fibonacciScalarOperator 1 = fibonacciTopologicalTwist • (1 : ℂ) := by
-  simp [fibonacciScalarOperator]
-
 theorem fibonacciScalarOperator_has_nonzero_fibonacci_eigenvector :
     (1 : ℂ) ∈ fibonacciEigenspace fibonacciScalarOperator ∧
       (1 : ℂ) ≠ 0 := by
   refine ⟨(mem_fibonacciEigenspace_iff fibonacciScalarOperator 1).2 ?_, one_ne_zero⟩
-  exact fibonacciScalarOperator_has_eigenvalue
+  simp [fibonacciScalarOperator]
 
 /-- The explicit scalar model has a genuinely nontrivial Fibonacci eigenspace.
 

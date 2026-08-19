@@ -125,14 +125,14 @@
       "replacement_status": "safe_owner_exists_not_equivalent_to_snapshot"
     },
     {
-      "file": "agent_memory_recovery/MajoranaPolyaHilbertSocket.lean/2026-07-06_04-06-15_3503088e.lean.disabled",
+      "file": "agent_memory_recovery/MajoranaPolyaHilbertDeferredInterface.lean/2026-07-06_04-06-15_3503088e.lean.disabled",
       "finding_count": 3,
       "category": "historical_recovery_snapshot",
       "reason": "Recovery or scratch snapshot; not a maintained owner and contains unresolved proof debt.",
       "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
       "replacement_paths": [
-        "lean/InfoGeometry/Arithmetic/MajoranaPolyaHilbertSocket.lean",
-        "lean/InfoGeometry/Arithmetic/MajoranaPolyaHilbertSocket/Bridge.lean"
+        "lean/InfoGeometry/Arithmetic/MajoranaPolyaHilbertDeferredInterface.lean",
+        "lean/InfoGeometry/Arithmetic/MajoranaPolyaHilbertDeferredInterface/Bridge.lean"
       ],
       "replacement_status": "topic_owner_exists"
     },
@@ -348,7 +348,7 @@
       "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
       "replacement_paths": [
         "lean/InfoGeometry/Canonical/ZetaBraneCantorDirac.lean",
-        "lean/InfoGeometry/Canonical/CantorDiracZetaBraneSocket.lean"
+        "lean/InfoGeometry/Canonical/CantorDiracZetaBraneDeferredInterface.lean"
       ],
       "replacement_status": "topic_owners_exist"
     },
@@ -452,7 +452,7 @@
       "exit_path": "Either repair the original mathematics and kernel-check it after reactivation, or explicitly retire the artifact as non-proof material; do not promote it by renaming alone.",
       "replacement_paths": [
         "lean/InfoGeometry/Canonical/ZetaBraneCantorDirac.lean",
-        "lean/InfoGeometry/Canonical/CantorDiracZetaBraneSocket.lean"
+        "lean/InfoGeometry/Canonical/CantorDiracZetaBraneDeferredInterface.lean"
       ],
       "replacement_status": "topic_owners_exist"
     },
@@ -594,4 +594,3 @@
     }
   ]
 }
-

@@ -152,7 +152,7 @@ abbrev WeylSpinor := Fin 2 → ℚ
 /-- A `2 × 2` rational matrix acting on Weyl spinors. -/
 abbrev Matrix2Q := Fin 2 → Fin 2 → ℚ
 
-/-- Matrix-vector action for the finite twistor-incidence socket. -/
+/-- Matrix-vector action for the finite twistor-incidence relation. -/
 def matVec (X : Matrix2Q) (π : WeylSpinor) : WeylSpinor :=
   fun i => ∑ j : Fin 2, X i j * π j
 

@@ -10,24 +10,15 @@ structure BostConnesSystem (R : Type*) [Ring R] where
   x : ℕ+ → R
   x_star : ℕ+ → R
   e : ℚ → R
-  x_star_x : ∀ n : ℕ+, x_star n * x n = 1
-  x_mul : ∀ m n : ℕ+, x (m * n) = x m * x n
-  x_star_mul : ∀ m n : ℕ+, x_star (m * n) = x_star n * x_star m
-  e_zero : e 0 = 1
-  e_add : ∀ r s, e (r + s) = e r * e s
-  e_periodic : ∀ r, e (r + 1) = e r
 
-/-- Trivial instance of BostConnesSystem on PUnit. -/
-def punitBostConnesSystem : BostConnesSystem PUnit where
-  x _ := ⟨⟩
-  x_star _ := ⟨⟩
-  e _ := ⟨⟩
-  x_star_x _ := rfl
-  x_mul _ _ := rfl
-  x_star_mul _ _ := rfl
-  e_zero := rfl
-  e_add _ _ := rfl
-  e_periodic _ := rfl
+def BostConnesSystemLaws {R : Type*} [Ring R]
+    (g : BostConnesSystem R) : Prop :=
+  (∀ n : ℕ+, g.x_star n * g.x n = 1) ∧
+  (∀ m n : ℕ+, g.x (m * n) = g.x m * g.x n) ∧
+  (∀ m n : ℕ+, g.x_star (m * n) = g.x_star n * g.x_star m) ∧
+  g.e 0 = 1 ∧
+  (∀ r s, g.e (r + s) = g.e r * g.e s) ∧
+  (∀ r, g.e (r + 1) = g.e r)
 
 /-- Time evolution flow σ_t on the Bost-Connes algebra for real parameter t.
     σ_t(x_n) = n^(i t) x_n. On formal elements with energy E_n = ln n,
@@ -62,11 +53,12 @@ theorem continuous_thermalKMSWeight (n : ℕ+) :
 /-- **Theorem**: Projection Mode Projection Operator Identity.
     In the Bost-Connes system, the element p_n = x_n x_n^* is a self-adjoint projection
     (idempotent: p_n^2 = p_n) representing the range of the mode isometry x_n. -/
-theorem projection_mode_idempotent {R : Type*} [Ring R] (g : BostConnesSystem R) (n : ℕ+) :
+theorem projection_mode_idempotent {R : Type*} [Ring R]
+    (g : BostConnesSystem R) (hG : BostConnesSystemLaws g) (n : ℕ+) :
     (g.x n * g.x_star n) * (g.x n * g.x_star n) = g.x n * g.x_star n := by
   calc (g.x n * g.x_star n) * (g.x n * g.x_star n)
     _ = g.x n * (g.x_star n * g.x n) * g.x_star n := by noncomm_ring
-    _ = g.x n * 1 * g.x_star n := by rw [g.x_star_x n]
+    _ = g.x n * 1 * g.x_star n := by rw [hG.1 n]
     _ = g.x n * g.x_star n := by noncomm_ring
 
 /-!
@@ -95,7 +87,9 @@ theorem kms_projection_expectation (β : ℝ) (n : ℕ+) :
 
 /-- The phase package records the proved arithmetic relations and the temperature split. -/
 theorem master_bost_connes_kms_synthesis
-    {R : Type*} [Ring R] (g : BostConnesSystem R) (m n : ℕ+) (β : ℝ) (h_low : isLowTemperaturePhase β) :
+    {R : Type*} [Ring R] (g : BostConnesSystem R)
+    (hG : BostConnesSystemLaws g) (m n : ℕ+) (β : ℝ)
+    (h_low : isLowTemperaturePhase β) :
     (g.x_star n * g.x n = 1) ∧
     (g.x (m * n) = g.x m * g.x n) ∧
     ((g.x n * g.x_star n) * (g.x n * g.x_star n) = g.x n * g.x_star n) ∧
@@ -103,9 +97,9 @@ theorem master_bost_connes_kms_synthesis
     (¬ (isHighTemperaturePhase β ∧ isLowTemperaturePhase β)) ∧
     (1 < β) := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
-  · exact g.x_star_x n
-  · exact g.x_mul m n
-  · exact projection_mode_idempotent g n
+  · exact hG.1 n
+  · exact hG.2.1 m n
+  · exact projection_mode_idempotent g hG n
   · exact thermalKMSWeight_mul β m n
   · exact phase_stratification_disjoint β
   · exact critical_temperature_boundary β h_low

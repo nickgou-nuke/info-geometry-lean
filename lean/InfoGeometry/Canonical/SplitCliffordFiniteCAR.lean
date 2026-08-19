@@ -21,6 +21,69 @@ abbrev Mode := Fin 2
 def commM4 (X Y : M4R) : M4R :=
   X * Y - Y * X
 
+@[simp] theorem commM4_self (X : M4R) :
+    commM4 X X = 0 := by
+  simp [commM4]
+
+theorem commM4_skew (X Y : M4R) :
+    commM4 X Y = -commM4 Y X := by
+  unfold commM4
+  abel
+
+theorem commM4_add_left (X Y Z : M4R) :
+    commM4 (X + Y) Z = commM4 X Z + commM4 Y Z := by
+  unfold commM4
+  noncomm_ring
+
+theorem commM4_add_right (X Y Z : M4R) :
+    commM4 X (Y + Z) = commM4 X Y + commM4 X Z := by
+  unfold commM4
+  noncomm_ring
+
+theorem commM4_mul_left (X Y Z : M4R) :
+    commM4 (X * Y) Z = X * commM4 Y Z + commM4 X Z * Y := by
+  unfold commM4
+  noncomm_ring
+
+theorem commM4_mul_right (X Y Z : M4R) :
+    commM4 X (Y * Z) = commM4 X Y * Z + Y * commM4 X Z := by
+  unfold commM4
+  noncomm_ring
+
+theorem commM4_jacobi (X Y Z : M4R) :
+    commM4 X (commM4 Y Z) +
+        commM4 Y (commM4 Z X) +
+        commM4 Z (commM4 X Y) = 0 := by
+  unfold commM4
+  noncomm_ring
+
+theorem commM4_sub_left (X Y Z : M4R) :
+    commM4 (X - Y) Z = commM4 X Z - commM4 Y Z := by
+  unfold commM4
+  noncomm_ring
+
+theorem commM4_sub_right (X Y Z : M4R) :
+    commM4 X (Y - Z) = commM4 X Y - commM4 X Z := by
+  unfold commM4
+  noncomm_ring
+
+theorem commM4_smul_left (r : ℝ) (X Y : M4R) :
+    commM4 (r • X) Y = r • commM4 X Y := by
+  simpa [commM4] using (smul_sub r (X * Y) (Y * X)).symm
+
+theorem commM4_smul_right (r : ℝ) (X Y : M4R) :
+    commM4 X (r • Y) = r • commM4 X Y := by
+  simpa [commM4] using (smul_sub r (X * Y) (Y * X)).symm
+
+theorem commM4_eq_zero_iff (X Y : M4R) :
+    commM4 X Y = 0 ↔ X * Y = Y * X := by
+  simp [commM4, sub_eq_zero]
+
+theorem commM4_swap (X Y : M4R) :
+    commM4 Y X = -commM4 X Y := by
+  unfold commM4
+  noncomm_ring
+
 /-- Indexed annihilation operators on two modes. -/
 def aMode : Mode → M4R
   | 0 => a1
@@ -56,6 +119,59 @@ theorem cross_mixed_anticomm
     ext r c
     fin_cases r <;> fin_cases c <;>
       norm_num [aMode, adagMode, a1Dag, a2, Matrix.mul_apply, Fin.sum_univ_four]
+
+theorem indexed_car (i j : Mode) :
+    aMode i * adagMode j + adagMode j * aMode i =
+      if i = j then (1 : M4R) else 0 := by
+  by_cases hij : i = j
+  · subst j
+    simpa using same_mode_car i
+  · rw [if_neg hij]
+    exact cross_mixed_anticomm i j hij
+
+theorem indexed_creation_anticomm (i j : Mode) :
+    adagMode i * adagMode j + adagMode j * adagMode i = (0 : M4R) := by
+  by_cases hij : i = j
+  · subst j
+    fin_cases i
+    · simpa [adagMode] using
+        (show a1Dag * a1Dag + a1Dag * a1Dag = (0 : M4R) by
+          rw [mode1Dag_square_zero]
+          simp)
+    · simpa [adagMode] using
+        (show a2Dag * a2Dag + a2Dag * a2Dag = (0 : M4R) by
+          rw [mode2Dag_square_zero]
+          simp)
+  · fin_cases i <;> fin_cases j <;> try contradiction
+    · simpa [adagMode] using cross_creation_anticommute
+    · simpa [adagMode, add_comm] using cross_creation_anticommute
+
+theorem indexed_annihilation_anticomm (i j : Mode) :
+    aMode i * aMode j + aMode j * aMode i = (0 : M4R) := by
+  by_cases hij : i = j
+  · subst j
+    fin_cases i
+    · simpa [aMode] using
+        (show a1 * a1 + a1 * a1 = (0 : M4R) by
+          rw [mode1_square_zero]
+          simp)
+    · simpa [aMode] using
+        (show a2 * a2 + a2 * a2 = (0 : M4R) by
+          rw [mode2_square_zero]
+          simp)
+  · simp only [aMode]
+    fin_cases i <;> fin_cases j <;> try contradiction
+    · simpa using cross_annihilate_anticommute
+    · simpa [add_comm] using cross_annihilate_anticommute
+
+theorem indexed_creation_annihilation_car (i j : Mode) :
+    adagMode i * aMode j + aMode j * adagMode i =
+      if i = j then (1 : M4R) else 0 := by
+  by_cases hij : i = j
+  · subst j
+    simpa [add_comm] using same_mode_car i
+  · rw [if_neg hij]
+    simpa [add_comm] using cross_mixed_anticomm j i (Ne.symm hij)
 
 /-- Finite indexed current family with support on modes `±1`. -/
 def JfinIndexed (n : Int) : M4R :=

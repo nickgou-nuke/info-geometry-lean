@@ -2,7 +2,7 @@ import Mathlib.Tactic
 import InfoGeometry.Canonical.ModularNilpotentAutomorphism
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 import InfoGeometry.Canonical.CantorFockSpace
-import InfoGeometry.Topology.FractalCantorFockWitness
+import InfoGeometry.Topology.FractalCantorFock
 
 /-!
 # InfoGeometry.Canonical.DiracSea
@@ -25,7 +25,7 @@ open Matrix
 open InfoGeometry.Canonical.SplitCliffordSourceWickBase
 open InfoGeometry.Canonical.ModularNilpotentAutomorphism
 open InfoGeometry.Canonical.FractalCantorCliffordFockBridge
-open InfoGeometry.Topology.FractalCantorFockWitness
+open InfoGeometry.Topology.FractalCantorFock
 open InfoGeometry.Canonical.CantorFockSpace
 
 /-- The carrier step is the same square-zero modular seed (`N`). -/

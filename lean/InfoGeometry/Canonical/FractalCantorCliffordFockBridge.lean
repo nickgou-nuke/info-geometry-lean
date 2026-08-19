@@ -1,6 +1,6 @@
 import Mathlib.Tactic
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
-import InfoGeometry.Topology.FractalCantorFockWitness
+import InfoGeometry.Topology.FractalCantorFock
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
 import InfoGeometry.Canonical.CantorCuntzCliffordBridge
 import InfoGeometry.Canonical.CantorCuntzBasis
@@ -31,7 +31,7 @@ noncomputable section
 namespace InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 
 open InfoGeometry.Topology
-open InfoGeometry.Topology.FractalCantorFockWitness
+open InfoGeometry.Topology.FractalCantorFock
 open InfoGeometry.Canonical.TypeIIIModularCantorSystem
 open InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge
 open InfoGeometry.Canonical.SplitCliffordDirectLimit

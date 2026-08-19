@@ -41,7 +41,7 @@ def glide(x: sp.Matrix) -> sp.Matrix:
 
 
 def main() -> None:
-    print("--- SymPy Twin: finite Pin(5,5) reflection/glide socket ---")
+    print("--- SymPy Twin: finite Pin(5,5) reflection/glide interface ---")
 
     x_symbols = sp.symbols("x0:10")
     y_symbols = sp.symbols("y0:10")

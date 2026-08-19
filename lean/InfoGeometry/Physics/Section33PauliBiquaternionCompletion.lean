@@ -1,7 +1,7 @@
 import InfoGeometry.Physics.Section32QuaternionicEmergentSpacetime
 
 /-!
-# Section 33 repaired: Pauli completion and finite biquaternion socket
+# Section 33 repaired: Pauli completion and finite biquaternion pair
 
 The source repeats the Section 32 quaternionic-emergent-spacetime program and
 adds much stronger continuum/phenomenological claims.  This repaired file keeps
@@ -116,7 +116,7 @@ theorem blochSpacetimePoint_det_zero_of_scaled_unit (t r n1 n2 n3 : ℂ)
   rw [blochSpacetimePoint_det, hunit]
   ring
 
-/-! ## Finite biquaternion-pair socket -/
+/-! ## Finite biquaternion-pair construction -/
 
 /-- The theorem-safe finite shadow of a biquaternion: two Pauli-matrix parts. -/
 abbrev BiquaternionPair := Mat2 × Mat2
@@ -148,6 +148,13 @@ theorem pauliRecomposePair_eq_self (q : BiquaternionPair) :
     pauliRecomposePair q = q := by
   cases q
   simp [pauliRecomposePair, pauli_recompose_eq_self]
+
+/-- Pauli recomposition is equivariant for the primal/dual swap. -/
+theorem dualSwap_pauliRecomposePair (q : BiquaternionPair) :
+    dualSwap (pauliRecomposePair q) =
+      pauliRecomposePair (dualSwap q) := by
+  cases q
+  rfl
 
 /-- Repaired Section 33 packet: basis completion, pure density, and null boundary. -/
 theorem repaired_section33_pauli_biquaternion_packet

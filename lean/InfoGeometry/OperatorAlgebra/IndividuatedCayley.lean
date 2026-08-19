@@ -25,7 +25,6 @@ The proof is algebraic and works in any starred ring.
 
 import Mathlib.Tactic
 import InfoGeometry.Meta.Architecture
-import InfoGeometry.Meta.OwnerTarget
 
 noncomputable section
 
@@ -644,7 +643,7 @@ Constructive Cayley unitarity readout.
 Given explicit self-adjoint/skew-adjoint resolvent data, the Cayley transform
 is constructively unitary.
 -/
-theorem cayleyUnitarityOwnerTarget :
+theorem cayley_unity_properties :
   ∀ (A : Type*) [Ring A] [StarRing A],
   ∀ R : VerifiedCayleyResolvent A,
     star R.cayley * R.cayley = 1 ∧

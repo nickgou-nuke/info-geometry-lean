@@ -96,9 +96,6 @@ def twistedVectorEquiv (g : FullPin55) : V55 ≃ₗ[ℝ] V55 where
     change twistedVector g (twistedVector g⁻¹ v) = v
     simpa using h.symm
 
-@[simp] theorem twistedVectorEquiv_apply (g : FullPin55) (v : V55) :
-    twistedVectorEquiv g v = twistedVector g v := rfl
-
 /-- The signature-correct Pin core acts natively by real linear
 automorphisms of the ten-dimensional vector carrier. -/
 def fullPinVectorRepresentation : FullPin55 →* (V55 ≃ₗ[ℝ] V55) where
@@ -111,9 +108,6 @@ def fullPinVectorRepresentation : FullPin55 →* (V55 ≃ₗ[ℝ] V55) where
     apply LinearEquiv.ext
     intro v
     exact twistedVector_mul g h v
-
-theorem fullPinVectorRepresentation_apply (g : FullPin55) (v : V55) :
-    fullPinVectorRepresentation g v = twistedVector g v := rfl
 
 end RealPin55TwistedAction
 end noncomputable section

@@ -69,10 +69,12 @@ theorem smul_superBracket
   have hyx : g • (y * x) = (g • y) * (g • x) :=
     hmul g y x
   cases p <;> cases q <;>
-    simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
-      InfoGeometry.Algebra.SupergradedBracket.commutator,
-      InfoGeometry.Algebra.SupergradedBracket.anticommutator,
-      smul_sub, smul_add, hxy, hyx]
+      simp [InfoGeometry.Algebra.SupergradedBracket.superBracket,
+        InfoGeometry.Algebra.SupergradedBracket.commutator,
+        InfoGeometry.Algebra.SupergradedBracket.anticommutator,
+        InfoGeometry.Algebra.InvariantTransport.commutator,
+        InfoGeometry.Algebra.InvariantTransport.anticommutator,
+        smul_sub, smul_add, hxy, hyx]
 
 theorem fixedPointSet_superBracket_mem
     (hmul : ∀ (g : G) (x y : B), g • (x * y) = (g • x) * (g • y))

@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/SpectralTriple.lean
 
-Real, phase-compatible, integration-aware spectral triple sockets.
+Real, phase-compatible, integration-aware spectral triple data.
 
 This file separates:
 
@@ -265,7 +265,7 @@ def RealStructureDiracCompatible
 A represented real operator algebra.
 
 A future `StarRing` refinement should strengthen the interaction between
-`star` and the representation. This socket only requires the operation needed
+`star` and the representation. This datum only requires the operation needed
 to write `b*` in the opposite representation.
 -/
 structure RepresentedAlgebra
@@ -386,12 +386,12 @@ def ConnesDistanceAdmissibleValue
     lipschitzSeminorm ρ D a ≤ 1 ∧
       r = |φ.eval a - ψ.eval a|
 
-/-! ## 8. Renormalized integration sockets -/
+/-! ## 8. Renormalized integration data -/
 
 /--
 Dixmier-trace-like backend.
 
-This is the logarithmic-divergence socket. Use it for critical summability,
+This is the logarithmic-divergence datum. Use it for critical summability,
 where ordinary trace-class integration is not available.
 -/
 structure DixmierTraceDatum
@@ -420,7 +420,7 @@ end DixmierTraceDatum
 /--
 Zeta-function renormalization backend.
 
-This is the socket for readouts such as residues or finite parts of
+This is the datum for readouts such as residues or finite parts of
 
 `Tr(a |D|^{-s})`.
 -/
@@ -473,7 +473,7 @@ end RenormalizedIntegrationBackend
 /-! ## 9. Real, phase-compatible spectral triple -/
 
 /--
-A real, phase-compatible, integration-aware spectral triple socket.
+A real, phase-compatible, integration-aware spectral triple datum.
 
 This is deliberately property-based. It separates:
 

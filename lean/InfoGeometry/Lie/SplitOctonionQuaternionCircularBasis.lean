@@ -274,7 +274,7 @@ theorem cartesianZorn_root_commutator (i : Fin 3) :
       diagEll := by
   rw [cartesianZorn_rootPlus_mul_rootMinus,
     cartesianZorn_rootMinus_mul_rootPlus]
-  rfl
+  simp [diagEll, zornPlus, zornMinus]
 
 theorem cartesianZorn_root_anticommutator (i : Fin 3) :
     cartesianZornLinearEquiv (rootPlus i) *
@@ -356,6 +356,58 @@ theorem cartesianZorn_root_anticommutator_if (i j : Fin 3) :
     simp only [if_pos rfl]
     exact zornPlus_add_zornMinus (R := ℝ)
   · simp [h, Ne.symm h]
+
+/-! ## Finite color completeness -/
+
+theorem cartesianZorn_rootPlus_mul_rootMinus_sum :
+    ∑ i : Fin 3,
+      cartesianZornLinearEquiv (rootPlus i) *
+        cartesianZornLinearEquiv (rootMinus i) =
+      zornPlus + zornPlus + zornPlus := by
+  simp only [cartesianZorn_rootPlus_mul_rootMinus]
+  rw [Fin.sum_univ_succ]
+  rw [Fin.sum_univ_succ]
+  rw [Fin.sum_univ_succ]
+  ext <;> simp <;> ring
+
+theorem cartesianZorn_rootMinus_mul_rootPlus_sum :
+    ∑ i : Fin 3,
+      cartesianZornLinearEquiv (rootMinus i) *
+        cartesianZornLinearEquiv (rootPlus i) =
+      zornMinus + zornMinus + zornMinus := by
+  simp only [cartesianZorn_rootMinus_mul_rootPlus]
+  rw [Fin.sum_univ_succ]
+  rw [Fin.sum_univ_succ]
+  rw [Fin.sum_univ_succ]
+  ext <;> simp <;> ring
+
+theorem cartesianZorn_root_anticommutator_sum :
+    ∑ i : Fin 3,
+      (cartesianZornLinearEquiv (rootPlus i) *
+          cartesianZornLinearEquiv (rootMinus i) +
+        cartesianZornLinearEquiv (rootMinus i) *
+          cartesianZornLinearEquiv (rootPlus i)) =
+      (zornPlus + zornMinus) + (zornPlus + zornMinus) +
+        (zornPlus + zornMinus) := by
+  simp only [cartesianZorn_rootPlus_mul_rootMinus_if,
+    cartesianZorn_rootMinus_mul_rootPlus_if, if_pos rfl]
+  rw [Fin.sum_univ_succ]
+  rw [Fin.sum_univ_succ]
+  rw [Fin.sum_univ_succ]
+  simp [add_assoc, add_left_comm, add_comm]
+
+theorem cartesianZorn_root_commutator_sum :
+    ∑ i : Fin 3,
+      (cartesianZornLinearEquiv (rootPlus i) *
+          cartesianZornLinearEquiv (rootMinus i) -
+        cartesianZornLinearEquiv (rootMinus i) *
+          cartesianZornLinearEquiv (rootPlus i)) =
+      diagEll + diagEll + diagEll := by
+  simp only [cartesianZorn_root_commutator]
+  rw [Fin.sum_univ_succ]
+  rw [Fin.sum_univ_succ]
+  rw [Fin.sum_univ_succ]
+  ext <;> simp <;> ring
 
 theorem cartesianZorn_rootPlus_mul_rootPlus_cross (i j : Fin 3) :
     cartesianZornLinearEquiv (rootPlus i) *

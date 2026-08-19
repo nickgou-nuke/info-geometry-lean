@@ -1,7 +1,7 @@
 import Mathlib.Tactic
 
 /-!
-# Finite Witt-coordinate pair-flip/glide socket
+# Finite Witt-coordinate pair-flip/glide action
 
 This module proves finite split-signature pair-flip/glide identities in a
 legacy Witt-coordinate carrier.  The native quadratic carrier and native

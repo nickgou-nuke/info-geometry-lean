@@ -1,7 +1,7 @@
 /-
 InfoGeometry/OperatorAlgebra/FiveGradedInformationLedger.lean
 
-Projected information accounting identity and five-grade memory ledger sockets.
+Projected information accounting identity and five-grade memory ledger interfaces.
 -/
 
 import Mathlib
@@ -46,7 +46,7 @@ theorem observedDefect_eq_obs_hidden_of_cross_identity
   rw [hassoc, map_add]
   abel
 
-/-- Five-graded Lie-algebra carrier used by horizon/ledger sockets. -/
+/-- Five-graded Lie-algebra carrier used by horizon/ledger interfaces. -/
 structure FiveGrading
     (L : Type*) [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L] where
   gNegTwo : Submodule ℝ L
@@ -177,7 +177,7 @@ theorem true_bracket_mem_zero
 end FiveGradeProjectedAccounting
 
 /--
-Five-grade black-hole information ledger socket.
+Five-grade black-hole information ledger interface.
 -/
 structure BlackHoleInformationLedger
     (J L Obs Memory : Type*)

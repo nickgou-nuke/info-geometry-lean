@@ -8,9 +8,8 @@ import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 
 This owner keeps only finite, type-safe carriers.  It does not identify an
 identity map with a creation or annihilation operator, and a null determinant
-is not treated as a spinor theorem: a kernel vector must be supplied by an
-explicit witness.  CCR, coherent-state equations, and analytic Fock-space
-constructions belong to separate owners.
+is not treated as a spinor theorem.  CCR, coherent-state equations, and
+analytic Fock-space constructions belong to separate owners.
 -/
 
 noncomputable section
@@ -23,7 +22,7 @@ def FockSym (n : ℕ) (H : Type v) : Type v := Fin n → H
 
 def BosonicFockSpace (H : Type v) : Type v := Σ n : ℕ, FockSym n H
 
-/-! ## Null-matrix kernel witnesses -/
+/-! ## Null-matrix kernel data -/
 
 structure NullPauliKernelData where
   matrix : Matrix (Fin 2) (Fin 2) ℂ

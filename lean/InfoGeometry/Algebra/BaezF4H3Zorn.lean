@@ -27,67 +27,79 @@ namespace InfoGeometry.Algebra
 open H3Zorn
 
 /-- Linear Jordan automorphisms of the verified real split `H3Zorn` product. -/
-structure H3ZornJordanAut where
-  toLinearEquiv : H3Zorn ℝ ≃ₗ[ℝ] H3Zorn ℝ
-  map_one' : toLinearEquiv 1 = 1
-  map_mul' : ∀ X Y : H3Zorn ℝ, toLinearEquiv (X * Y) = toLinearEquiv X * toLinearEquiv Y
+def H3ZornJordanAutLaws (e : H3Zorn ℝ ≃ₗ[ℝ] H3Zorn ℝ) : Prop :=
+  e 1 = 1 ∧
+    ∀ X Y : H3Zorn ℝ, e (X * Y) = e X * e Y
+
+def H3ZornJordanAut :=
+  {e : H3Zorn ℝ ≃ₗ[ℝ] H3Zorn ℝ // H3ZornJordanAutLaws e}
 
 namespace H3ZornJordanAut
 
 instance : CoeFun H3ZornJordanAut (fun _ => H3Zorn ℝ → H3Zorn ℝ) where
-  coe A := A.toLinearEquiv
+  coe A := A.1
+
+def toLinearEquiv (A : H3ZornJordanAut) : H3Zorn ℝ ≃ₗ[ℝ] H3Zorn ℝ := A.1
 
 @[ext] theorem ext {A B : H3ZornJordanAut}
     (h : A.toLinearEquiv = B.toLinearEquiv) : A = B := by
-  cases A
-  cases B
-  cases h
-  rfl
+  exact Subtype.ext h
 
 /-- A Jordan automorphism fixes the unit. -/
 @[simp] theorem map_one (A : H3ZornJordanAut) : A 1 = 1 :=
-  A.map_one'
+  A.2.1
 
 /-- A Jordan automorphism preserves the installed Jordan product. -/
 @[simp] theorem map_mul (A : H3ZornJordanAut) (X Y : H3Zorn ℝ) :
     A (X * Y) = A X * A Y :=
-  A.map_mul' X Y
+  A.2.2 X Y
 
 /-- The identity Jordan automorphism. -/
-def id : H3ZornJordanAut where
-  toLinearEquiv := LinearEquiv.refl ℝ (H3Zorn ℝ)
-  map_one' := rfl
-  map_mul' := by intro X Y; rfl
+def id : H3ZornJordanAut :=
+  ⟨LinearEquiv.refl ℝ (H3Zorn ℝ), ⟨rfl, by intro X Y; rfl⟩⟩
 
 @[simp] theorem id_apply (X : H3Zorn ℝ) : id X = X := rfl
 
 /-- Composition of Jordan automorphisms. -/
-def comp (A B : H3ZornJordanAut) : H3ZornJordanAut where
-  toLinearEquiv := A.toLinearEquiv.trans B.toLinearEquiv
-  map_one' := by simp
-  map_mul' := by intro X Y; simp
+def comp (A B : H3ZornJordanAut) : H3ZornJordanAut :=
+  ⟨A.toLinearEquiv.trans B.toLinearEquiv, ⟨by
+    change B (A 1) = 1
+    rw [A.map_one]
+    exact B.map_one, by
+    intro X Y
+    simp only [LinearEquiv.trans_apply]
+    calc
+      B.toLinearEquiv (A.toLinearEquiv (X * Y)) =
+          B.toLinearEquiv (A.toLinearEquiv X * A.toLinearEquiv Y) :=
+        congrArg B.toLinearEquiv (A.2.2 X Y)
+      _ = B.toLinearEquiv (A.toLinearEquiv X) *
+          B.toLinearEquiv (A.toLinearEquiv Y) := B.2.2 _ _⟩⟩
 
 @[simp] theorem comp_apply (A B : H3ZornJordanAut) (X : H3Zorn ℝ) :
     comp A B X = B (A X) := rfl
 
 /-- The inverse of a Jordan automorphism is again a Jordan automorphism. -/
-def inv (A : H3ZornJordanAut) : H3ZornJordanAut where
-  toLinearEquiv := A.toLinearEquiv.symm
-  map_one' := by
+def inv (A : H3ZornJordanAut) : H3ZornJordanAut :=
+  ⟨A.toLinearEquiv.symm, ⟨by
     apply A.toLinearEquiv.injective
-    simp
-  map_mul' := by
+    simpa only [A.toLinearEquiv.apply_symm_apply] using A.map_one.symm, by
     intro X Y
     apply A.toLinearEquiv.injective
-    rw [A.map_mul]
-    simp
+    calc
+      A.toLinearEquiv (A.toLinearEquiv.symm (X * Y)) = X * Y :=
+        A.toLinearEquiv.apply_symm_apply _
+      _ = A.toLinearEquiv (A.toLinearEquiv.symm X) *
+          A.toLinearEquiv (A.toLinearEquiv.symm Y) := by simp
+      _ = A.toLinearEquiv
+          (A.toLinearEquiv.symm X * A.toLinearEquiv.symm Y) :=
+        (A.2.2 _ _).symm⟩⟩
 
 @[simp] theorem inv_apply_apply (A : H3ZornJordanAut) (X : H3Zorn ℝ) :
-    A (inv A X) = X := by
+    A (H3ZornJordanAut.inv A X) = X := by
   exact A.toLinearEquiv.apply_symm_apply X
 
 @[simp] theorem apply_inv_apply (A : H3ZornJordanAut) (X : H3Zorn ℝ) :
-    inv A (A X) = X := by
+    H3ZornJordanAut.inv A (A X) = X := by
   exact A.toLinearEquiv.symm_apply_apply X
 
 instance : One H3ZornJordanAut := ⟨id⟩

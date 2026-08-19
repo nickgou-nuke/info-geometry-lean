@@ -11,7 +11,7 @@ Integrated audit of the finite kernels:
   * CPT averaging projects to Re(s)=1/2;
   * UHF diagonal duplication preserves normalized reference averages.
 
-Analytic CP3/Cantor, Pin(5,5), C*-GNS, and Hilbert--Polya claims are sockets
+Analytic CP3/Cantor, Pin(5,5), C*-GNS, and Hilbert--Polya claims are deferred_interfaces
 in Lean, not asserted by this script.
 """
 

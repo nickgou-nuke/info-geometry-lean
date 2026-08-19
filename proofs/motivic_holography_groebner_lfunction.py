@@ -27,7 +27,7 @@ def main() -> None:
     print("normal forms: 32")
     print("countPolynomial(3): 1296")
     print("local first denominator: 1 - 1296*T")
-    print("Full Groebner/Koszul/L-function/GW/holography claims remain sockets.")
+    print("Full Groebner/Koszul/L-function/GW/holography claims remain deferred_interfaces.")
 
 
 if __name__ == "__main__":

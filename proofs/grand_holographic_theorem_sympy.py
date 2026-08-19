@@ -7,7 +7,7 @@ This script verifies the concrete algebraic kernels behind the capstone:
 - Gaussian Pauli/Souriau closure;
 - Bogoliubov frame preserves the Krein form;
 - Cl(5,5) anomaly index 5-5=0.
-High-level physical implications are represented in Lean as sockets.
+High-level physical implications are represented in Lean as deferred_interfaces.
 """
 
 import sympy as sp

@@ -78,13 +78,16 @@ zeros of the classical Riemann zeta function remains an unproved hypothesis.
 -/
 structure AutomorphicZetaRHEquivalenceBridge where
   automorphic_zeta : EpsteinAutomorphicZeta
-  rh_cert : InfoGeometry.Arithmetic.RiemannHypothesis.FredholmHalfPlaneCertificate
+  fredholm_determinant : ℂ → ℂ
+  fredholm_nonzero :
+    InfoGeometry.Arithmetic.RiemannHypothesis.FredholmHalfPlaneProperty
+      fredholm_determinant
   /--
   OPEN HYPOTHESIS: The zeros of the automorphic zeta function coincide with the
   zeros of the Riemann zeta function (or its associated Fredholm determinant) on
   the critical strip.
   -/
   open_spectral_identification : ∀ (s : ℂ) (_ : 0 < s.re) (_ : s.re < 1),
-    automorphic_zeta.zeta_func s = 0 ↔ rh_cert.determinant s = 0
+    automorphic_zeta.zeta_func s = 0 ↔ fredholm_determinant s = 0
 
 end InfoGeometry.Lie

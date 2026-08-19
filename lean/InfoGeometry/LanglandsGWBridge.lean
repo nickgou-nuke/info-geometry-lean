@@ -63,7 +63,7 @@ variable {Space GaugeGroup : Type}
 variable [NormedAddCommGroup Space] [InnerProductSpace ℝ Space]
 variable [Group GaugeGroup]
 
-/-- The momentum-value carrier is the dual module, not an untyped socket. -/
+/-- The momentum-value carrier is the dual module, not an untyped placeholder. -/
 abbrev momentumValue (Q : SymplecticQuotientData Space GaugeGroup) :=
   Module.Dual ℝ Space
 

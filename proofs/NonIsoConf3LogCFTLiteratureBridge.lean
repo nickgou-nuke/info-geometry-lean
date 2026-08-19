@@ -5,7 +5,7 @@ import proofs.PenroseSpinTilingCapstone
 import proofs.NonIsoConf3RankDecision
 
 /-!
-# Log-CFT alternative discharge list for the non-isotropic Conf3 sockets
+# Log-CFT alternative discharge list for the non-isotropic Conf3 interfaces
 
 This module previously packaged the entropic/log-potential branch selector as an
 alternative front-end for the literature lemma chain.

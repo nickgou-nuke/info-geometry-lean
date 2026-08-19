@@ -93,10 +93,8 @@ theorem realMatToCantor_symm_realCantorOpEmbed (n : ℕ) (X : RealCantorOp n) :
 /-- The binary tower index set and the finite Cantor-address set have the same cardinality. -/
 theorem idx_card_eq_cantorAddress_card (n : ℕ) :
     Fintype.card (Idx n) = Fintype.card (((Fin n) → Bool)) := by
-  induction n with
-  | zero => simp [Idx]
-  | succ n ih =>
-      simp [Idx, ih, pow_succ, Nat.mul_comm]
+  rw [idx_card_pow_two]
+  simp
 
 /-- Canonical Boolean encoding of `Fin 2`. -/
 def fin2EquivBool : Fin 2 ≃ Bool where

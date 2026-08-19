@@ -60,20 +60,25 @@ Weyl denominator, and the property stores the equality between them.
 -/
 structure PrimeVielbeinReadout (L : FormalPrimeRootLattice) where
   evaluation : SouriauThermalEvaluation L
-  supertraceReadout : ℝ
-  supervolumeReadout : ℝ
-  supertrace_eq_supervolume : supertraceReadout = supervolumeReadout
 
 namespace PrimeVielbeinReadout
 
 variable {L : FormalPrimeRootLattice}
 
+def supertraceReadout (R : PrimeVielbeinReadout L) : ℝ :=
+  finitePrimeVielbeinSupertrace R.evaluation
+
+def supervolumeReadout (R : PrimeVielbeinReadout L) : ℝ :=
+  finitePrimeVielbeinSupervolume R.evaluation
+
+theorem supertraceReadout_eq_supervolumeReadout
+    (R : PrimeVielbeinReadout L) :
+    R.supertraceReadout = R.supervolumeReadout := by
+  exact finitePrimeVielbeinSupertrace_eq_supervolume R.evaluation
+
 /-- Canonical finite prime-vielbein readout. -/
 def canonical (E : SouriauThermalEvaluation L) : PrimeVielbeinReadout L where
   evaluation := E
-  supertraceReadout := finitePrimeVielbeinSupertrace (E := E)
-  supervolumeReadout := finitePrimeVielbeinSupervolume (E := E)
-  supertrace_eq_supervolume := finitePrimeVielbeinSupertrace_eq_supervolume E
 
 end PrimeVielbeinReadout
 

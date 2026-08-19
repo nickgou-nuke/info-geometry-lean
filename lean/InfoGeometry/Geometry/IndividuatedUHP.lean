@@ -362,6 +362,15 @@ theorem realShifted_injective
     P.realShifted_kernel_trivial ζ hker
   exact sub_eq_zero.mp hzero
 
+/-- In finite dimension, the real shifted operator is also surjective. -/
+theorem realShifted_surjective
+    [FiniteDimensional ℝ E]
+    (ζ : ℝ) :
+    Function.Surjective (P.realShifted ζ) := by
+  exact LinearMap.surjective_of_injective
+    (f := (P.realShifted ζ).toLinearMap)
+    (P.realShifted_injective ζ)
+
 /--
 The physical sector datum induces a genuine point in the bilingual upper
 half-plane.
@@ -373,6 +382,40 @@ def toUHP :
   K_positivity := P.tau_K_positivity
 
 end PhysicalSectorDatum
+
+/-- A physical sector with a uniform positive height gap. -/
+structure UniformPhysicalSectorDatum
+    (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E))
+    extends PhysicalSectorDatum D where
+  heightGap : ℝ
+  heightGap_pos : 0 < heightGap
+  Y_coercive : ∀ v : H₂, heightGap * ‖v‖ ^ 2 ≤ ⟪v, Y v⟫_ℝ
+
+namespace UniformPhysicalSectorDatum
+
+variable {D : ProjectivePolarizedBigradedBogoliubovDatum (E := E)}
+variable (P : UniformPhysicalSectorDatum D)
+
+/-- Coercivity gives a uniform lower bound for the Cartesian UHP height. -/
+theorem uniform_positive_height
+    (v : H₂) :
+    P.heightGap * ‖v‖ ^ 2 ≤
+      -⟪v, D.K (PhysicalSectorDatum.tau P.toPhysicalSectorDatum v)⟫_ℝ := by
+  rw [PhysicalSectorDatum.neg_K_tau_quadratic_eq_Y P.toPhysicalSectorDatum v]
+  exact P.Y_coercive v
+
+/-- The coercive sector is strictly positive on every nonzero vector. -/
+theorem positive_height
+    (v : H₂)
+    (hv : v ≠ 0) :
+    0 < -⟪v, D.K (PhysicalSectorDatum.tau P.toPhysicalSectorDatum v)⟫_ℝ := by
+  have hnorm : 0 < ‖v‖ ^ 2 := by positivity
+  calc
+    0 < P.heightGap * ‖v‖ ^ 2 := mul_pos P.heightGap_pos hnorm
+    _ ≤ -⟪v, D.K (PhysicalSectorDatum.tau P.toPhysicalSectorDatum v)⟫_ℝ :=
+      P.uniform_positive_height v
+
+end UniformPhysicalSectorDatum
 
 /-! ## 3. Cauchy kernel from an explicit unit property -/
 
@@ -389,16 +432,7 @@ def kernelInPhysicalSector
     (P : PhysicalSectorDatum D)
     (ζ : ℝ)
     (h_invertible : IsUnit (P.realShifted ζ)) :
-    VerifiedKernel (D.K : EndH) P.tau ζ :=
-  let U := h_invertible.unit
-  { kernelVal := ↑U⁻¹
-    inv_right := by
-      change P.realShifted ζ * ↑U⁻¹ = 1
-      rw [← h_invertible.unit_spec]
-      exact U.mul_inv
-    inv_left := by
-      change ↑U⁻¹ * P.realShifted ζ = 1
-      rw [← h_invertible.unit_spec]
-      exact U.inv_mul }
+    InfoGeometry.Geometry.VerifiedCauchyKernel.VerifiedResolvent P.tau ζ :=
+  h_invertible
 
 end InfoGeometry.Geometry.IndividuatedUHP

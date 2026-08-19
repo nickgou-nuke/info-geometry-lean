@@ -200,6 +200,8 @@ theorem odd_odd_product_decomposition
     InfoGeometry.Algebra.SupergradedBracket.gradedProduct_decomposition
       (R := K) (A := Value) true true (ω p X) (ω p Y)
   simpa [gradedWedgeSquare, hX, hY,
+    InfoGeometry.Algebra.SupergradedBracket.gradedJordanProduct,
+    InfoGeometry.Algebra.InvariantTransport.anticommutator,
     InfoGeometry.Algebra.SupergradedBracket.superBracket,
     InfoGeometry.Algebra.SupergradedBracket.anticommutator,
     InfoGeometry.Algebra.SupergradedBracket.gradedSign] using h

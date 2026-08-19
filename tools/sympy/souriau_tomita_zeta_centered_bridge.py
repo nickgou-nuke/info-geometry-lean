@@ -125,7 +125,7 @@ def check_toy_souriau_modular_potential() -> None:
     print("toy Souriau RN/modular-potential identity verified")
 
 
-def check_ramanujan_socket_sample() -> None:
+def check_ramanujan_interface_sample() -> None:
     samples = [
         (1, mp.pi, mp.pi),
         (1, mp.pi / 2, 2 * mp.pi),
@@ -133,13 +133,13 @@ def check_ramanujan_socket_sample() -> None:
     for n, alpha, beta in samples:
         lhs = alpha ** (-n) * ramanujan_block(n, alpha) - (-beta) ** (-n) * ramanujan_block(n, beta)
         rhs = ramanujan_rhs(n, alpha, beta)
-        assert_close(complex(lhs), complex(rhs), f"Ramanujan odd-zeta socket sample n={n}", tol=1e-18)
-    print("Ramanujan/Lambert witness socket sample verified")
+        assert_close(complex(lhs), complex(rhs), f"Ramanujan odd-zeta interface sample n={n}", tol=1e-18)
+    print("Ramanujan/Lambert interface sample verified")
 
 
 if __name__ == "__main__":
     check_centered_mode_factorization()
     check_centered_xi_jodd_zero()
     check_toy_souriau_modular_potential()
-    check_ramanujan_socket_sample()
+    check_ramanujan_interface_sample()
     print("SOURIAU TOMITA ZETA CENTERED BRIDGE VERIFIED")

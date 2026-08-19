@@ -70,6 +70,22 @@ theorem descendedSymbolicLatentObservationFlow_mk
         (symbolicLatentObservationQuotientMap S x) =
       symbolicLatentObservationQuotientMap S (Φ.act t x) := rfl
 
+theorem descendedSymbolicLatentObservationFlow_continuous
+    {X : Type*} [TopologicalSpace X]
+    {ι : Type*} [Fintype ι]
+    {S : FiniteSymbolicLatentSystem X ι}
+    (Φ : SymbolicLatentObservableModularFlow S) :
+    Continuous (fun p : ℝ × SymbolicLatentObservationQuotient S =>
+      descendedSymbolicLatentObservationFlow Φ p.1 p.2) := by
+  apply Topology.IsQuotientMap.continuous_lift_prod_right
+    (f := symbolicLatentObservationQuotientMap S)
+    (g := fun p : ℝ × SymbolicLatentObservationQuotient S =>
+      descendedSymbolicLatentObservationFlow Φ p.1 p.2)
+    (isQuotientMap_quot_mk :
+      Topology.IsQuotientMap (symbolicLatentObservationQuotientMap S))
+  simpa only [Function.comp_apply, descendedSymbolicLatentObservationFlow_mk] using
+    (continuous_quotient_mk'.comp Φ.continuous_act)
+
 def symbolicLatentObservationQuotientFlow
     {X : Type*} [TopologicalSpace X]
     {ι : Type*} [Fintype ι]

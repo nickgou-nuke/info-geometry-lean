@@ -6,7 +6,7 @@ import InfoGeometry.Probability.HomologicalProbability
 /-!
 # InfoGeometry.Arithmetic.PrimonFreeEnergyRelativeTrace
 
-Witness-gated free-energy and relative-trace socket for the MBK/primon program.
+Hypothesis-gated free-energy and relative-trace interface for the MBK/primon program.
 
 This file records the theorem-safe version of the conceptual passage
 
@@ -116,20 +116,6 @@ theorem GibbsKMS_freeEnergy_ge_gibbs
     gk.freeEnergy gk.gibbsState ≤ gk.freeEnergy ρ := by
   have hgap := GibbsKMS_freeEnergy_gap_nonneg gk ρ hrel hβ
   linarith
-
-/--
-Root-corridor identification of the primitive-set analytic-input lane.
-
-This is only the definitional owner surface currently available in
-`PrimitiveSetsAbove`: the analytic input implies the finite primitive-set
-statement. It does not assert a Mellin functional equation or critical-axis
-theorem.
--/
-theorem primitiveMellinParityIdentification :
-    InfoGeometry.Arithmetic.PrimitiveWeightSumAssemblyFromAnalyticInput =
-      (InfoGeometry.Arithmetic.PrimitiveLargeDivisorAnalyticInput →
-        InfoGeometry.Arithmetic.PrimitiveSetsAboveFiniteStatement) :=
-  rfl
 
 /-! ## 8b. Mathlib-backed completed-zeta parity lane -/
 

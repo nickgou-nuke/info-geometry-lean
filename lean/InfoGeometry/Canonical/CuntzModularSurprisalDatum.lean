@@ -2,13 +2,14 @@ import InfoGeometry.Canonical.LogScaleModularSurprisalBridge
 import InfoGeometry.Algebra.CuntzModularTreeFlowBridge
 
 /-!
-# Concrete Cuntz modular surprisal datum
+# Cuntz modular surprisal flow datum
 
-The existing Cuntz gauge flow supplies a concrete inhabitant of the algebraic
-`ModularSurprisalDatum` interface.  The generator field is deliberately the
-zero operator: no exponential or unbounded-generator identification is
-claimed here.  The verified content is the one-parameter group law and its
-logarithmic arithmetic sampling.
+The existing Cuntz gauge flow supplies the one-parameter-group part of the
+algebraic `ModularSurprisalDatum` interface.  Its infinitesimal generator is
+kept as explicit supplied data: the repository does not identify the bounded
+gauge flow with an exponential of an unbounded modular generator.  The
+verified content is the one-parameter group law and its logarithmic arithmetic
+sampling.
 -/
 
 noncomputable section
@@ -21,8 +22,8 @@ open InfoGeometry.Canonical.LogScaleModularSurprisalBridge
 
 variable {n : ℕ} (primes : Fin n → ℕ)
 
-def datum : ModularSurprisalDatum (CuntzAlg n) where
-  K := 0
+def datum (K : CuntzAlg n →ₗ[ℂ] CuntzAlg n) : ModularSurprisalDatum (CuntzAlg n) where
+  K := K
   U := fun t => (sigma n primes t).toLinearMap
   flow_zero := by
     ext x
@@ -34,28 +35,32 @@ def datum : ModularSurprisalDatum (CuntzAlg n) where
     simpa using congrArg (fun F : CuntzAlg n →ₐ[ℂ] CuntzAlg n => F x)
       (sigma_add n primes s t)
 
-@[simp] theorem datum_U (t : ℝ) :
-    (datum primes).U t = (sigma n primes t).toLinearMap := rfl
+@[simp] theorem datum_U (K : CuntzAlg n →ₗ[ℂ] CuntzAlg n) (t : ℝ) :
+    (datum primes K).U t = (sigma n primes t).toLinearMap := rfl
 
-theorem dirichletModularSample_eq_sigma (p : ℕ) :
-    dirichletModularSample (datum primes) p =
+theorem dirichletModularSample_eq_sigma
+    (K : CuntzAlg n →ₗ[ℂ] CuntzAlg n) (p : ℕ) :
+    dirichletModularSample (datum primes K) p =
       (sigma n primes (Real.log p)).toLinearMap := rfl
 
-theorem prime_modular_sample_eq_sigma (p : ℕ) (_hp : Nat.Prime p) :
-    dirichletModularSample (datum primes) p =
+theorem prime_modular_sample_eq_sigma
+    (K : CuntzAlg n →ₗ[ℂ] CuntzAlg n) (p : ℕ) (_hp : Nat.Prime p) :
+    dirichletModularSample (datum primes K) p =
       (sigma n primes (Real.log p)).toLinearMap :=
-  dirichletModularSample_eq_sigma primes p
+  dirichletModularSample_eq_sigma primes K p
 
-theorem nat_power_sample_eq_iterate (p k : ℕ) :
-    dirichletModularSample (datum primes) (p ^ k) =
+theorem nat_power_sample_eq_iterate
+    (K : CuntzAlg n →ₗ[ℂ] CuntzAlg n) (p k : ℕ) :
+    dirichletModularSample (datum primes K) (p ^ k) =
       ((sigma n primes (Real.log p)).toLinearMap) ^ k := by
   simpa [datum_U] using
-    (dirichletModularSample_prime_power (datum primes) p k)
+    (dirichletModularSample_prime_power (datum primes K) p k)
 
-theorem prime_power_sample_eq_iterate (p k : ℕ) (_hp : Nat.Prime p) :
-    dirichletModularSample (datum primes) (p ^ k) =
+theorem prime_power_sample_eq_iterate
+    (K : CuntzAlg n →ₗ[ℂ] CuntzAlg n) (p k : ℕ) (_hp : Nat.Prime p) :
+    dirichletModularSample (datum primes K) (p ^ k) =
       ((sigma n primes (Real.log p)).toLinearMap) ^ k :=
-  nat_power_sample_eq_iterate primes p k
+  nat_power_sample_eq_iterate primes K p k
 
 end InfoGeometry.Canonical.CuntzModularSurprisalDatum
 

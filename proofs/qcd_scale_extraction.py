@@ -108,7 +108,7 @@ for K in K_vals:
 # The actual Λ_QCD ≈ 200-300 MeV in MS-bar scheme
 # The topological prediction in natural units (0.165) needs
 # a physical scale reference to convert to MeV.
-# This is socketed — the absolute scale requires the C*-completion.
+# This is deferred_interface — the absolute scale requires the C*-completion.
 
 lambda_qcd_natural = 0.165
 # If 1 natural unit = 1.22 × 10^19 GeV / (scaling factor)
@@ -117,7 +117,7 @@ lambda_qcd_natural = 0.165
 # This large hierarchy is the gauge hierarchy problem,
 # topologically encoded in the Cantor set's self-similarity.
 
-print(f"\n5. Physical scale (socketed):")
+print(f"\n5. Physical scale (deferred_interface):")
 print(f"   Λ_QCD(natural) = {lambda_qcd_natural}")
 print(f"   Conversion to MeV requires an external physical reference scale")
 print(f"   The hierarchy interpretation is project roadmap commentary")

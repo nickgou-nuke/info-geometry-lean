@@ -23,28 +23,53 @@ open InfoGeometry.Canonical.ActualEntireRiemannXiLogDerivativeCirclePeriodBridge
 open InfoGeometry.Canonical.ActualEntireRiemannXiZeroFreeClosedForm
 open InfoGeometry.Canonical.ZetaLogarithmicPoleCirclePeriod
 
-structure Datum where
+structure DatumData where
   rho : ℂ
   m : ℕ
-  m_pos : 0 < m
   radius : ℝ
-  radius_pos : 0 < radius
   g : ℂ → ℂ
   h : ℂ → ℂ
-  factorization :
-    entireRiemannXi = fun z => (z - rho) ^ m * g z
-  g_differentiable :
-    DifferentiableOn ℂ g (Metric.closedBall rho radius)
-  h_differentiable :
-    DifferentiableOn ℂ h (Metric.closedBall rho radius)
-  g_deriv : ∀ z, HasDerivAt g (h z) z
-  g_ne_zero : ∀ z, g z ≠ 0
-  pole_integrable :
+
+def DatumValid (D : DatumData) : Prop :=
+  0 < D.m ∧
+  0 < D.radius ∧
+  (entireRiemannXi = fun z => (z - D.rho) ^ D.m * D.g z) ∧
+  DifferentiableOn ℂ D.g (Metric.closedBall D.rho D.radius) ∧
+  DifferentiableOn ℂ D.h (Metric.closedBall D.rho D.radius) ∧
+  (∀ z, HasDerivAt D.g (D.h z) z) ∧
+  (∀ z, D.g z ≠ 0) ∧
+  CircleIntegrable
+    (ZetaLogarithmicPoleCirclePeriod.logarithmicPole D.rho (D.m : ℤ))
+    D.rho D.radius ∧
+  CircleIntegrable (fun z => D.h z / D.g z) D.rho D.radius
+
+def Datum := {D : DatumData // DatumValid D}
+
+namespace Datum
+
+abbrev rho (D : Datum) := D.1.rho
+abbrev m (D : Datum) := D.1.m
+abbrev radius (D : Datum) := D.1.radius
+abbrev g (D : Datum) := D.1.g
+abbrev h (D : Datum) := D.1.h
+abbrev m_pos (D : Datum) : 0 < D.m := D.2.1
+abbrev radius_pos (D : Datum) : 0 < D.radius := D.2.2.1
+abbrev factorization (D : Datum) :
+    entireRiemannXi = fun z => (z - D.rho) ^ D.m * D.g z := D.2.2.2.1
+abbrev g_differentiable (D : Datum) :
+    DifferentiableOn ℂ D.g (Metric.closedBall D.rho D.radius) := D.2.2.2.2.1
+abbrev h_differentiable (D : Datum) :
+    DifferentiableOn ℂ D.h (Metric.closedBall D.rho D.radius) := D.2.2.2.2.2.1
+abbrev g_deriv (D : Datum) : ∀ z, HasDerivAt D.g (D.h z) z := D.2.2.2.2.2.2.1
+abbrev g_ne_zero (D : Datum) : ∀ z, D.g z ≠ 0 := D.2.2.2.2.2.2.2.1
+abbrev pole_integrable (D : Datum) :
     CircleIntegrable
-      (ZetaLogarithmicPoleCirclePeriod.logarithmicPole rho (m : ℤ))
-      rho radius
-  correction_integrable :
-    CircleIntegrable (fun z => h z / g z) rho radius
+      (ZetaLogarithmicPoleCirclePeriod.logarithmicPole D.rho (D.m : ℤ))
+      D.rho D.radius := D.2.2.2.2.2.2.2.2.1
+abbrev correction_integrable (D : Datum) :
+    CircleIntegrable (fun z => D.h z / D.g z) D.rho D.radius := D.2.2.2.2.2.2.2.2.2
+
+end Datum
 
 theorem normalized_logDifferential_circleIntegral (D : Datum) :
     (2 * Real.pi * Complex.I : ℂ)⁻¹ *

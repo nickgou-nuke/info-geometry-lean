@@ -9,7 +9,7 @@ This mirrors QSuperRegularizationRosetta.lean at the concrete 2x2 level:
   4. Cayley(T) lies on the unit circle and is DKT-unitary
 
 The q->1 colimit, root-of-unity representation theory, and TKK spacetime
-recovery remain sockets; this script only audits the finite contracts.
+recovery remain deferred_interfaces; this script only audits the finite contracts.
 """
 
 from __future__ import annotations
@@ -67,7 +67,7 @@ def main() -> None:
     print("q root-of-unity sample: q = exp(i*pi/4)")
     print("[3]_q hyperbolic witness =")
     sp.pprint(sp.simplify(q_integer_3))
-    print("q->1 colimit, root-of-unity truncation theory, and TKK recovery remain sockets.")
+    print("q->1 colimit, root-of-unity truncation theory, and TKK recovery remain deferred_interfaces.")
 
 
 if __name__ == "__main__":

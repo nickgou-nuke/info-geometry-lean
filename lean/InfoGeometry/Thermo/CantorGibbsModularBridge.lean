@@ -1,6 +1,7 @@
 import InfoGeometry.Canonical.CantorKMSState
 import InfoGeometry.Canonical.CantorLocalCl11HopParity
 import InfoGeometry.Thermo.FiniteDiagonal
+import InfoGeometry.Canonical.AmariBinarySimplexBridge
 
 /-!
 # Cantor Gibbs deformation and local modular eigenmodes
@@ -23,6 +24,7 @@ open Matrix
 open InfoGeometry.Canonical.SplitCliffordCantorFock
 open InfoGeometry.Canonical.CantorLocalCl11HopParity
 open InfoGeometry.Thermo.FiniteDiagonal
+open InfoGeometry.Canonical.AmariBinarySimplexBridge
 
 abbrev LocalMat := M2R
 
@@ -59,6 +61,25 @@ theorem localWeightMinus_eq (β ε : ℝ) :
   rw [localPartition_eq]
   simp [localEnergy]
 
+/-! The one-site Gibbs coordinate is exactly the Amari logistic coordinate.
+These are finite identities on the same two-state carrier. -/
+
+theorem localWeightPlus_eq_logistic (β ε : ℝ) :
+    localWeightPlus β ε = logistic (β * ε) := by
+  rw [localWeightPlus_eq]
+  unfold logistic
+  let x : ℝ := β * ε
+  have hprod : Real.exp x * Real.exp (-x) = 1 := by
+    rw [← Real.exp_add]
+    simp
+  have hden : Real.exp x * (1 + Real.exp (-x)) = 1 + Real.exp x := by
+    rw [mul_add, mul_one, hprod]
+    ring
+  have hleft : 1 + Real.exp (-(β * ε)) ≠ 0 := by positivity
+  dsimp [x] at hden ⊢
+  rw [← hden]
+  field_simp [hleft, Real.exp_ne_zero]
+
 theorem localWeightPlus_pos (β ε : ℝ) : 0 < localWeightPlus β ε := by
   unfold localWeightPlus
   exact gibbsWeight_pos (localEnergy ε) β 0
@@ -71,6 +92,26 @@ theorem localWeights_sum_one (β ε : ℝ) :
     localWeightPlus β ε + localWeightMinus β ε = 1 := by
   unfold localWeightPlus localWeightMinus
   simpa using gibbsWeight_sum_one (localEnergy ε) β
+
+theorem localWeightMinus_eq_one_sub_logistic (β ε : ℝ) :
+    localWeightMinus β ε = 1 - logistic (β * ε) := by
+  rw [← localWeights_sum_one β ε, localWeightPlus_eq_logistic]
+  ring
+
+theorem localWeight_variance_eq_fisherExp (β ε : ℝ) :
+    localWeightPlus β ε * localWeightMinus β ε = fisherExp (β * ε) := by
+  rw [localWeightPlus_eq_logistic,
+    localWeightMinus_eq_one_sub_logistic]
+  rfl
+
+/-- The one-site Gibbs fluctuation is the squared coherence of the native
+finite covariance/Majorana block at the same logistic coordinate. -/
+theorem localWeight_variance_eq_covariance_offdiag_sq (β ε : ℝ) :
+    localWeightPlus β ε * localWeightMinus β ε =
+      (InfoGeometry.Krein.FiniteCovarianceMajoranaBlock.covarianceProjection
+        (logistic (β * ε)) 0 1) ^ 2 := by
+  rw [localWeight_variance_eq_fisherExp,
+    InfoGeometry.Canonical.AmariBinarySimplexBridge.fisherExp_eq_covariance_offdiag_sq]
 
 theorem localWeightPlus_beta_zero (ε : ℝ) :
     localWeightPlus 0 ε = 1 / 2 := by

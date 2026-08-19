@@ -7,7 +7,6 @@ import Mathlib.MeasureTheory.Measure.MeasureSpace
 import Mathlib.Data.Complex.Basic
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Tactic
-import InfoGeometry.Meta.OwnerTarget
 
 /-!
 # InfoGeometry.Probability.HomologicalProbability
@@ -1432,7 +1431,7 @@ The homological degree of such a curve is the **coroot** `αˇ ∈ CoRootLat`.
 point `p` to `q`; `orbitDegree` labels each by its coroot; `coroot_surjective`
 asserts every positive coroot arises from some orbit curve.
 -/
-structure LieOrbitCurveWitness
+structure LieOrbitCurveData
     (G T FixedPts CoRootLat : Type*)
     (TorusOrbits : FixedPts → FixedPts → Type*) where
   /-- The homogeneous target space `G/P`. -/
@@ -1513,7 +1512,7 @@ abbrev KleinGromovOwnerWitness
     (gwInvariant : CoRootLat → GWClass)
     (locShadow   : WeylGraphLocalizationData WeylGroup CoRootLat Vertex Edge → GWClass) : Type _ :=
   HomogeneousTarget G P X mulG oneG embed ×
-    (LieOrbitCurveWitness G T Vertex CoRootLat TorusOrbits ×
+    (LieOrbitCurveData G T Vertex CoRootLat TorusOrbits ×
       (Σ' weylGraph : WeylGraphLocalizationData WeylGroup CoRootLat Vertex Edge,
         KleinGromovAlignmentStatement WeylGroup CoRootLat Vertex GWClass
           Edge gwInvariant locShadow))
@@ -2022,7 +2021,7 @@ end ClassicalRadonNikodymPacket
 /--
 **Packet 25.2 — Noncommutative Radon–Nikodym / Tomita–Takesaki layer.**
 
-Theorem-bank safe: packages comparison witnesses rather than asserting
+Theorem-bank safe: packages comparison statements rather than asserting
 type-isomorphism between modular operators and classical RN densities.
 
 - `Δ_{ψ|φ}` or `[Dψ:Dφ]_t` plays the role of `dψ/dφ`.
@@ -2133,8 +2132,7 @@ Owner-target readback for the Gibbs/KMS free-energy identity.
 
 This packages the actual packet theorem as a graph-visible proof surface.
 -/
-@[owner_target_tag]
-theorem freeEnergyEntropyRelation_ownerTarget
+theorem freeEnergyEntropyRelation_eq
     (gk : GibbsKMSPacket) :
     ∀ ρ : gk.ObservableAlgebra,
       gk.relativeEntropyToGibbs ρ =

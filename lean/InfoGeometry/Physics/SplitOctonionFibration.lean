@@ -15,8 +15,17 @@ Split-Octonion SO(4,4) Triality structure to yield exactly 3 generations.
 /-- The Amari Information Manifold (Base Space) -/
 structure AmariBase where
   (e_connection : ℝ → ℝ)
-  (m_connection : ℝ → ℝ)
-  (duality : ∀ x, e_connection x = - m_connection x) -- Flat affine geometry
+
+namespace AmariBase
+
+def m_connection (B : AmariBase) : ℝ → ℝ :=
+  fun x => -B.e_connection x
+
+theorem duality (B : AmariBase) (x : ℝ) :
+    B.e_connection x = -B.m_connection x := by
+  simp [m_connection]
+
+end AmariBase
 
 /-- The SO(4,4) Triality target generating exactly 3 generations -/
 abbrev TrialityTarget := TrialityPacket ℝ

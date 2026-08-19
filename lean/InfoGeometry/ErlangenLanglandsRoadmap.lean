@@ -51,11 +51,11 @@ def erlangenLanglandsRoadmap : List RoadmapEdge := [
     requires := ["central-readout bridge", "spectral zero calibration"] },
 
   { src := "InfoGeometry.Automorphic.LanglandsPrimeResonance",
-    dst := "InfoGeometry.OperatorAlgebra.KapustinWittenDualitySocket",
+    dst := "InfoGeometry.OperatorAlgebra.KapustinWittenDuality",
     theorem_name := "bulk_central_zero_iff_prime_resonance",
     requires := ["bulk Siegel data", "central-zero stability"] },
 
-  { src := "InfoGeometry.OperatorAlgebra.KapustinWittenDualitySocket",
+  { src := "InfoGeometry.OperatorAlgebra.KapustinWittenDuality",
     dst := "InfoGeometry.OperatorAlgebra.PhysicalLanglandsHolonomy",
     theorem_name := "wilsonEigen_transports_to_tHooftEigen",
     requires := ["S-duality property", "operator readout compatibility"] },

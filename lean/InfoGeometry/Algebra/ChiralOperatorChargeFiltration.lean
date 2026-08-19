@@ -17,6 +17,20 @@ def ChiralWordGrade (k : ℤ) :=
 
 def chiralChargeModThree (k : ℤ) : ZMod 3 := k
 
+def chiralChargeModThreeHom : ℤ →+ ZMod 3 := Int.castAddHom (ZMod 3)
+
+@[simp] theorem chiralChargeModThreeHom_apply (k : ℤ) :
+    chiralChargeModThreeHom k = chiralChargeModThree k :=
+  rfl
+
+@[simp] theorem chiralChargeModThree_zero :
+    chiralChargeModThree 0 = 0 := by
+  exact chiralChargeModThreeHom.map_zero
+
+@[simp] theorem chiralChargeModThree_neg (k : ℤ) :
+    chiralChargeModThree (-k) = -chiralChargeModThree k := by
+  exact chiralChargeModThreeHom.map_neg k
+
 def chiralWordCyclotomicCharge
     (w : List ChiralGenerator) : ZMod 3 :=
   chiralChargeModThree (wordDegree w)
@@ -40,6 +54,22 @@ theorem chiralWordCyclotomicCharge_append
       chiralWordCyclotomicCharge u + chiralWordCyclotomicCharge v := by
   simp [chiralWordCyclotomicCharge, chiralChargeModThree,
     wordDegree_append]
+
+def ChiralWordCyclotomicGrade (q : ZMod 3) :=
+  {w : List ChiralGenerator // chiralWordCyclotomicCharge w = q}
+
+def chiralWordCyclotomicGradeAppend {q r : ZMod 3}
+    (u : ChiralWordCyclotomicGrade q)
+    (v : ChiralWordCyclotomicGrade r) :
+    ChiralWordCyclotomicGrade (q + r) :=
+  ⟨u.1 ++ v.1, by
+    rw [chiralWordCyclotomicCharge_append, u.2, v.2]⟩
+
+@[simp] theorem chiralWordCyclotomicGradeAppend_val {q r : ZMod 3}
+    (u : ChiralWordCyclotomicGrade q)
+    (v : ChiralWordCyclotomicGrade r) :
+    (chiralWordCyclotomicGradeAppend u v).1 = u.1 ++ v.1 :=
+  rfl
 
 def chiralGeneratorWordGrade
     (g : ChiralGenerator) : ChiralWordGrade (generatorDegree g) :=
@@ -86,24 +116,58 @@ theorem chiralTripleWordGrade_operator
 
 theorem sPlus_pair_has_charge_two (i j : Fin 3) :
     wordDegree [ChiralGenerator.sPlus i, ChiralGenerator.sPlus j] = 2 := by
-  simp [wordDegree, generatorDegree]
+  norm_num [wordDegree, generatorDegree]
 
 theorem sPlus_triple_has_charge_three (i j k : Fin 3) :
     wordDegree [ChiralGenerator.sPlus i,
       ChiralGenerator.sPlus j, ChiralGenerator.sPlus k] = 3 := by
-  simp [wordDegree, generatorDegree]
+  norm_num [wordDegree, generatorDegree]
 
 theorem sMinus_pair_has_charge_neg_two (i j : Fin 3) :
     wordDegree [ChiralGenerator.sMinus i, ChiralGenerator.sMinus j] = -2 := by
-  simp [wordDegree, generatorDegree]
+  norm_num [wordDegree, generatorDegree]
 
 theorem sMinus_triple_has_charge_neg_three (i j k : Fin 3) :
     wordDegree [ChiralGenerator.sMinus i,
       ChiralGenerator.sMinus j, ChiralGenerator.sMinus k] = -3 := by
-  simp [wordDegree, generatorDegree]
+  norm_num [wordDegree, generatorDegree]
 
 theorem mixed_pair_has_charge_zero (g h : Fin 3) :
     wordDegree [ChiralGenerator.sPlus g, ChiralGenerator.sMinus h] = 0 := by
-  simp [wordDegree, generatorDegree]
+  norm_num [wordDegree, generatorDegree]
+
+@[simp] theorem sPlus_pair_cyclotomicCharge (i j : Fin 3) :
+    chiralWordCyclotomicCharge
+        [ChiralGenerator.sPlus i, ChiralGenerator.sPlus j] =
+      (-1 : ZMod 3) := by
+  rw [chiralWordCyclotomicCharge, sPlus_pair_has_charge_two]
+  decide
+
+@[simp] theorem sMinus_pair_cyclotomicCharge (i j : Fin 3) :
+    chiralWordCyclotomicCharge
+        [ChiralGenerator.sMinus i, ChiralGenerator.sMinus j] =
+      (1 : ZMod 3) := by
+  rw [chiralWordCyclotomicCharge, sMinus_pair_has_charge_neg_two]
+  decide
+
+@[simp] theorem sPlus_triple_cyclotomicCharge (i j k : Fin 3) :
+    chiralWordCyclotomicCharge
+        [ChiralGenerator.sPlus i, ChiralGenerator.sPlus j,
+          ChiralGenerator.sPlus k] = 0 := by
+  rw [chiralWordCyclotomicCharge, sPlus_triple_has_charge_three]
+  decide
+
+@[simp] theorem sMinus_triple_cyclotomicCharge (i j k : Fin 3) :
+    chiralWordCyclotomicCharge
+        [ChiralGenerator.sMinus i, ChiralGenerator.sMinus j,
+          ChiralGenerator.sMinus k] = 0 := by
+  rw [chiralWordCyclotomicCharge, sMinus_triple_has_charge_neg_three]
+  decide
+
+@[simp] theorem mixed_pair_cyclotomicCharge (i j : Fin 3) :
+    chiralWordCyclotomicCharge
+        [ChiralGenerator.sPlus i, ChiralGenerator.sMinus j] = 0 := by
+  rw [chiralWordCyclotomicCharge, mixed_pair_has_charge_zero]
+  rfl
 
 end InfoGeometry.Algebra

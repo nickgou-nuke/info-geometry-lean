@@ -8,7 +8,7 @@ Audit-only finite model:
 The script checks finite-cut insertion, prime-log coefficients, heat-trace
 compatibility, and the non-identification of primon log energies with HP gamma
 spectral parameters.  Analytic convergence to a Wu--Sprung/Berry--Keating
-potential remains a socket in Lean.
+potential remains a deferred_interface in Lean.
 """
 
 import sympy as sp

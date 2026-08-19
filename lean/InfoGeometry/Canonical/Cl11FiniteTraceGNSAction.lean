@@ -63,8 +63,9 @@ noncomputable def cl11RepresentationState (n : ℕ) :
     have hx0 : x = 0 :=
       (normalizedTrace_star_mul_self_eq_zero_iff n x).mp hx
     subst x
-    simpa [cl11AbstractGNSState] using
-      (normalizedTrace_star_mul_self_eq_zero_iff n (0 : MatStage n)).mpr rfl
+    have hz := cl11AbstractGNSState_zero_null n
+    rw [AbstractGNSState.mem_gnsNullSet_iff] at hz
+    simpa using hz
 
 abbrev cl11RepresentationQuotient (n : ℕ) : Type _ :=
   AbstractGNSState.gnsQuotient (cl11RepresentationState n).state

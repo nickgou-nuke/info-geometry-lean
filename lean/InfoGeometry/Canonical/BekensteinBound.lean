@@ -482,7 +482,7 @@ def CocycleGeneratorLiftWitness
 /--
 Proof-carrying Connes-cocycle generator-lift property.
 
-This bundles the legacy `IsConnesCocycle` compatibility socket together with
+This bundles the legacy `IsConnesCocycle` compatibility interface together with
 the smaller proof-carrying generator-lift property, so downstream routes can
 consume one constructive packet instead of the explicit triple
 `(hCocycle, hBridge, hLift)`.
@@ -1175,7 +1175,7 @@ def MinimalCasiniIncrementWitness
 /--
 Proof-carrying Connes/minimal-Casini property.
 
-This bundles the legacy `IsConnesCocycle` compatibility socket together with the
+This bundles the legacy `IsConnesCocycle` compatibility interface together with the
 smaller proof-carrying minimal Casini increment property, so downstream routes
 can consume one constructive packet instead of the explicit pair
 `(hCocycle, W : MinimalCasiniIncrementWitness ...)`.
@@ -1656,7 +1656,7 @@ theorem topologicalBekensteinBound_of_tomitaGeneratorLiftWitness
 /--
 Proof-carrying Tomita/Connes generator-lift property.
 
-This packages the legacy `IsConnesCocycle` socket together with the smaller
+This packages the legacy `IsConnesCocycle` interface together with the smaller
 Tomita generator-lift property, so the compatibility route can consume one
 constructive object instead of the explicit triple
 `(hCocycle, hBridge, hLift)`.

@@ -1,6 +1,4 @@
 import InfoGeometry.Algebra.AlternativeDerivations
-import InfoGeometry.Algebra.Zorn.Associator
-import InfoGeometry.Algebra.ZornDerivationBridge
 
 /-!
 # Regular-action commutator and the associator

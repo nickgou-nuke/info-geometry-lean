@@ -31,8 +31,8 @@ For every nonassociative ring in the native Mathlib hierarchy,
 -/
 theorem leftRightCommutator_apply (x y z : A) :
     leftRightCommutator (R := R) x y z = -associator x z y := by
-  simp only [leftRightCommutator, LinearMap.sub_apply, LinearMap.comp_apply,
-    L_map, R_map, associator_apply]
+  unfold leftRightCommutator
+  simp [LinearMap.sub_apply, LinearMap.comp_apply, L_map, R_map, associator_apply]
   abel
 
 /--
@@ -85,7 +85,7 @@ theorem zorn_leftRightCommutator_apply
   have h_assoc : _root_.associator x y z = ZornVectorMatrix.associator x y z := by
     unfold _root_.associator ZornVectorMatrix.associator
     simp [zvm_mul_def, zvm_neg_def, zvm_add_def, sub_eq_add_neg]
-  rw [h_assoc] at h ⊢
+  rw [h_assoc] at h
   exact h
 
 /-- Canonical Zorn regular-action commutator is alternating in its parameters. -/

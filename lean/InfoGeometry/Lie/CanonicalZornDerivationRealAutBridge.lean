@@ -74,8 +74,7 @@ noncomputable def zornFlowRealAut
   ⟨CZDE.zornFlowLinearEquiv D.1 t, by
     constructor
     · change CZDE.zornFlowLinearEquiv D.1 t (1 : CZ) = 1
-      simpa only [CZDE.zornFlowMulEquiv_apply] using
-        (map_one (CZDE.zornFlowMulEquiv D t))
+      exact CZDE.zornFlow_map_one D.1 D.2 t
     · intro X Y
       exact CZDE.zornFlow_map_mul D.1 D.2 t X Y⟩
 

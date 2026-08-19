@@ -1,0 +1,1 @@
+Validate InfoGeometry.Canonical.MobiusKleinStatisticalZornPacket against Lean 4.28.1 and mathlib v4.28.0.

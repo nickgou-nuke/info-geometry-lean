@@ -1,9 +1,9 @@
 name: Validate Möbius Klein statistical Zorn packet
 
 on:
-  push:
+  pull_request:
     branches:
-      - agent/mobius-klein-statistical-zorn
+      - agent/mobius-validation-base
 
 permissions:
   contents: read
